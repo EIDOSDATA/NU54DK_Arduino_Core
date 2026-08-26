@@ -2,7 +2,8 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M3 **CONDITIONAL GO** — 내부 기준선 통과, 추가 계측·자동 시험 대기 |
+| 문서 상태 | M3 진행 중 — 내부 기준선 통과, 추가 계측·자동 시험 대기 |
+| 결정 게이트 | **CONDITIONAL GO** |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 Zephyr | Zephyr 4.4.0 |
@@ -405,9 +406,9 @@ PoC 소스에 `P0.xx`와 같은 물리 핀 번호를 직접 쓰지 않는다.
 
 ## 9. 완료 기준
 
-다음 조건을 모두 만족하면 west-native Blink PoC를 최종 완료 및 M3 GO로 판정한다.
-현재는 build와 육안·내부 trace 기준선을 통과했지만 외부 계측과 자동 시험 증거가
-남아 있으므로 **CONDITIONAL GO**다.
+다음 조건을 모두 만족하면 west-native Blink PoC를 완료하고 M3 결정 게이트를 GO로
+전환한다. 현재 상태는 진행 중이다. build와 육안·내부 trace 기준선은 통과했지만 외부
+계측과 자동 시험 증거가 남아 있어 결정 게이트는 **CONDITIONAL GO**다.
 
 1. 고정 board target과 두 root 인자로 clean configure가 성공한다.
 2. build가 `--no-sysbuild` 단일 이미지로 완료된다.
