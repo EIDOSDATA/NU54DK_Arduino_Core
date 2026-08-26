@@ -1,0 +1,14 @@
+# 빌드 및 임시 출력
+/build/
+/out/
+/.cache/
+/.venv/
+
+# Python 도구 캐시
+**/__pycache__/
+*.py[cod]
+
+# 운영체제 임시 파일
+.DS_Store
+Thumbs.db
+

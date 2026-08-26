@@ -1,0 +1,3 @@
+[submodule "board_package/NU54DK_Zephyr_DTS"]
+	path = board_package/NU54DK_Zephyr_DTS
+	url = https://github.com/Nucode01/NU54DK_Zephyr_DTS.git
