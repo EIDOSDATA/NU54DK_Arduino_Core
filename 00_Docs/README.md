@@ -10,9 +10,9 @@
 | nRF Connect SDK | v3.4.0 |
 | Zephyr | 4.4.0 |
 | 대상 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
-| 보드 정의 | `board_package/NU54DK_Zephyr_DTS` Git 서브모듈 |
+| 보드 정의 | `board_package/NU54DK_Zephyr_DTS` Git 서브모듈, `fe65f2f0880b` 고정·읽기 전용 |
 | 초기 지원 운영체제 | Windows |
-| 기본 플래시 경로 | 온보드 CMSIS-DAP + pyOCD |
+| 기본 플래시 경로 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 선택 플래시 경로 | 외부 J-Link |
 | 펌웨어 구조 | Loader/LLEXT 없는 전체 Zephyr 정적 이미지 |
 
@@ -58,7 +58,7 @@
 
 ### 04. 검증 기록
 
-- [M1 도구 환경과 보드 실기 기준선](<./04_검증 기록/01_M1_도구와_보드_기준선.md>): 고정 도구 버전, C++ clean build, pyOCD runner 안정화와 실제 LED 실행 증거
+- [M1 도구 환경과 보드 실기 기준선](<./04_검증 기록/01_M1_도구와_보드_기준선.md>): 고정 도구 버전, C++ pristine build, CMSIS-DAP V2/pyOCD 기본 경로와 실제 LED 실행 증거
 - [M2 Zephyr module과 runtime 기준선](<./04_검증 기록/02_M2_Zephyr_Module과_Runtime_기준선.md>): Core module, C++ runtime 정책, negative build와 `setup()`/`loop()` 실기 증거
 - [M3 GPIO·시간·Scheduler 기준선](<./04_검증 기록/03_M3_GPIO_시간과_Scheduler_기준선.md>): GPIO·시간 API, loop 정책, sample/negative build와 현재 실기 증거 및 미완료 항목
 
@@ -67,9 +67,9 @@
 | 단계 | 상태 | 설명 |
 | --- | --- | --- |
 | M0 기반 고정 | 완료 | 저장소 구조와 NU54DK 보드 서브모듈 연결 완료 |
-| M1 도구·보드 실기 기준선 | 진행 중 | 로컬 실기 통과, 보드 runner commit과 gitlink 고정 대기 |
-| M2 Zephyr module·Core 골격 | 진행 중 | 로컬 build·link·실기 통과, Core와 보드 기준 commit 고정 대기 |
-| M3 west-native Blink | 진행 중 — **CONDITIONAL GO** | sample 3종·negative 2종과 Blink/버튼·timing trace 통과, 추가 계측과 자동 시험 대기 |
+| M1 도구·보드 실기 기준선 | **완료 — GO** | read-only 보드 package로 C++·Blinky pristine build 통과, 기존 CMSIS-DAP V2/pyOCD 실기 검증 유지 |
+| M2 Zephyr module·Core 골격 | **완료 — GO** | clean module·runtime·Core 비활성·C++ 정책 build 통과, 기존 runtime HIL 유지 |
+| M3 west-native Blink | 진행 중 — **CONDITIONAL GO** | clean sample 3종·negative 2종 통과, 기존 HIL과 timing trace 유지; 추가 계측과 자동 시험 대기 |
 | M4~M11 | 대기 | M3 조건부 게이트에 따라 M4 착수 가능, 이후 단계는 각 선행 게이트 뒤 진행 |
 
 상세 상태는 [구현 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)을 단일 기준으로 관리한다.
@@ -78,7 +78,7 @@
 
 1. 구현되지 않은 기능을 지원 완료로 표시하지 않는다.
 2. 로드맵 상태를 완료로 변경할 때 빌드 로그, 시험 결과 또는 CI 실행 기록을 함께 남긴다.
-3. 물리 핀과 주변장치 정보는 보드 패키지를 단일 원본으로 유지한다.
+3. 물리 핀과 주변장치 정보는 보드 패키지를 단일 원본으로 유지하며, Core 작업에서는 서브모듈을 읽기 전용 입력으로 취급한다.
 4. Core 문서에는 Arduino 논리 번호, 변환 규칙 및 API 의미만 기록한다.
 5. NCS, Zephyr, Toolchain 또는 보드 package 기준 commit이 바뀌면 모든 검증 결과의 유효성을 다시 판단한다.
 6. 설계 변경이 아키텍처 결정에 영향을 주면 결정서의 결정 이력과 로드맵을 함께 갱신한다.

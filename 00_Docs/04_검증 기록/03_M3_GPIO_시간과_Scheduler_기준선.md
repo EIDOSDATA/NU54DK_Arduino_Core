@@ -2,22 +2,21 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 검증 결과 | **CONDITIONAL GO** — GPIO·시간 구현과 로컬 HIL 통과, 공개 기준 commit 및 잔여 계측 대기 |
+| 검증 결과 | **CONDITIONAL GO** — clean revision과 GPIO·시간 로컬 HIL 통과, 잔여 계측·자동 시험 대기 |
 | 검증일 | 2026-08-26 (Asia/Seoul) |
 | 작성자 | Quantum / NUCODE |
 | 대상 구조 | Loader/LLEXT 없는 Native Full Zephyr 정적 이미지 |
 | 대상 보드 | NU54DK |
 | Zephyr 보드 타깃 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
-| Core 기준 revision | `618cb3d56041135130615896c45bb04e467611c8` + M3 작업 트리 |
-| 보드 package 기준 revision | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` + M1 runner 작업 트리 |
+| Core 기준 revision | `a8d62ea75fef57cdf166738eb45ad4f61e0eaa9c` (clean) |
+| 보드 package 기준 revision | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` (clean, 읽기 전용) |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 기준 compiler | Arm GCC 14.3.0, C++17, exception·RTTI 비활성 |
-| 기본 연결 | 온보드 CMSIS-DAP + pyOCD |
+| 기본 연결 | 온보드 CMSIS-DAP V2 + pyOCD |
 
-> Core, Variant와 보드 runner는 아직 commit되지 않아 두 revision은 `-dirty`다. 이 문서의
-> hash는 검증한 로컬 작업 트리를 식별하지만 다른 사용자가 같은 source를 checkout할 수
-> 있음을 보장하지 않는다. 공개 재현 기준선은 보드 package commit, submodule gitlink 갱신,
-> Core commit과 clean rebuild 뒤 확정한다.
+> 상위 gitlink와 서브모듈 HEAD는 위 보드 revision으로 일치한다.
+> `NU54DK_Zephyr_DTS`는 읽기 전용 빌드 입력으로 사용했고, M3 pristine 재검증 중
+> 서브모듈 내부 파일을 수정하지 않았다.
 
 ---
 
@@ -176,19 +175,22 @@ deprecated `NRF_PLATFORM_LUMOS`이며 Core compile 또는 link 오류는 아니�
 
 | build | 파일 | 크기 | SHA-256 |
 | --- | --- | ---: | --- |
-| Blink | `zephyr.elf` | 1,142,736 B | `8FB1FDA5DF15D689E34E290A5E9E8BAFF17039B25D769BADD39F9AA5965D57C7` |
+| Blink | `zephyr.elf` | 1,142,736 B | `00784B02C4148BAC37BA2304C84A4DB6F130456306B1C65250D4396B81B081F4` |
 | Blink | `zephyr.hex` | 86,499 B | `AB2D489BF5BF0CE3EAEA3ABB8C2E5D08ADEB6760FFB54B693C473BE115CB7F0E` |
 | Blink | `zephyr.bin` | 30,728 B | `958A29601D1A551374912CDF918531A90CDF03986D18BC712237989731115FC7` |
-| GPIO input | `zephyr.elf` | 1,146,616 B | `0B54A09180992ECFAD799CA01D519B5E74905A85BB7BB6BD9D65E9E892ECC5B0` |
+| GPIO input | `zephyr.elf` | 1,146,616 B | `41BF6F1092F486A03726912D91B22F0050F5E437805BC5B255CE97E3259A3616` |
 | GPIO input | `zephyr.hex` | 87,407 B | `C84F2C42BA5DA8658744C22A9ADE03E7E461AF95F23417EEA83203C3CCFEC3DC` |
 | GPIO input | `zephyr.bin` | 31,048 B | `13BF75724BE22FC46CB702518A2C33D9F745B367E99A5D938F77B042DF9C5A71` |
-| Runtime timing | `zephyr.elf` | 1,311,760 B | `475D18216D8840388CAD302655664B27A59C467AFDA2CB338DEF73DA77BD5338` |
+| Runtime timing | `zephyr.elf` | 1,311,760 B | `31209CBF2D90A982A1FA3491EDB5E65D81DD30E4BFA2CBBF5A3343099777E44B` |
 | Runtime timing | `zephyr.hex` | 97,733 B | `EF62E4394C32016DC09C2F16B0DD68FE837351554B5F14072D819DB660FA5944` |
 | Runtime timing | `zephyr.bin` | 34,720 B | `4BEA5C1DE7B1830A944C8288B873B0C2A2AB280D594117861013880087B84B6C` |
 
-소스 포맷과 compile-time DTS 진단을 정리한 뒤 ELF의 debug 정보 hash는 바뀌었지만 세
-HEX/BIN hash는 실기에서 사용한 image와 동일하다. 따라서 아래 HIL은 최종 flashable
-firmware byte와 직접 연결된다.
+clean revision의 provenance를 반영하면서 ELF hash는 바뀌었지만 세 HEX/BIN hash는 기존
+실기에서 사용한 image와 동일하다. 따라서 아래 HIL은 현재 flashable firmware byte와
+직접 연결된다. 이번 재검증 자체는 build-only이며 장치에 다시 flash하지 않았다.
+
+세 성공 build의 `runners.yaml`은 모두 flash/debug 기본 runner를 `pyocd`로 생성하고,
+pyOCD 인자는 `--dt-flash=y`와 `--target=nrf54l`만 포함한다.
 
 ### 4.2 Link와 증분 build
 
@@ -223,8 +225,8 @@ digitalWrite(LED_BUILTIN, LOW);
 delay(250);
 ```
 
-기본 pyOCD runner로 32,768 B, 8 page image를 기록한 뒤 사용자가 NU54DK LED의 지속적인
-점멸을 육안 확인했다. mass erase와 recover는 사용하지 않았다.
+기존 HIL에서 CMSIS-DAP V2/pyOCD 경로로 사용자가 NU54DK LED의 지속적인 점멸을
+확인했다. 현재 clean HEX는 그 image와 동일하며 이번 갱신에서는 다시 flash하지 않았다.
 
 ### 5.2 버튼 입력
 
@@ -248,8 +250,8 @@ CMSIS-DAP가 안정적으로 halt하지 못해
 PASS**, self-check 결과는 **간접 PASS**, 각 세부 값의 debugger trace는
 **EVIDENCE MISSING**으로 구분한다.
 
-동일 GPIO HEX를 다시 flash했을 때 32,768 B 전체가 비교 후 skip되었고 exit 0으로
-종료했다. 이는 보드에서 동작한 image와 최종 GPIO HEX가 동일함을 보조 확인한다.
+기존 GPIO HIL에서 동일 HEX의 compare/skip과 실행을 확인했다. 현재 clean GPIO HEX
+SHA-256도 그 image와 동일하다.
 
 ---
 
@@ -258,29 +260,10 @@ PASS**, self-check 결과는 **간접 PASS**, 각 세부 값의 debugger trace�
 `samples/zephyr/runtime_timing`은 측정 자체에 Core 반환 후 개입이 섞이지 않도록
 `CONFIG_NUCODE_ARDUINO_LOOP_NONE=y`를 사용하고 네 동작을 각각 400 ms 측정한다.
 
-추적값은 target을 under-reset으로 연결한 한 pyOCD session 안에서 실행한 뒤 halt하여
-`nu54_m3_runtime_timing_trace` symbol의 RAM을 읽었다. 실제 probe UID 대신 공개 명령에서는
-자리표시자를 사용한다.
-
-```powershell
-arm-zephyr-eabi-nm -S -C <BUILD_DIR>/zephyr/zephyr.elf |
-  Select-String "nu54_m3_runtime_timing_trace"
-
-pyocd commander `
-  -u <PROBE_UID> `
-  -t nrf54l `
-  -f 250000 `
-  -M under-reset `
-  -O auto_unlock=false `
-  -O cmsis_dap.prefer_v1=true `
-  --elf <BUILD_DIR>/zephyr/zephyr.elf `
-  -c "reset halt emulated" `
-  -c "go" `
-  -c "sleep 3000" `
-  -c "halt" `
-  -c "read32 <TRACE_ADDRESS> <TRACE_SIZE>" `
-  -c "go"
-```
+아래 추적값은 기존 pyOCD HIL에서 `nu54_m3_runtime_timing_trace` RAM을 읽어 확보했다.
+이번 clean 기준선 갱신에서는 RAM trace를 다시 회수하지 않았다. 현재 기준 transport는
+CMSIS-DAP V2이며 V1 우선 옵션을 사용하지 않는다. 재현 가능한 CMSIS-DAP V2 trace 절차는
+M8 debugger/HIL 단계에서 다시 기록하고 보드 package의 runner 설정은 변경하지 않는다.
 
 ### 6.1 시간 API 결과
 
@@ -342,8 +325,8 @@ Zephyr `samples/hello_world`에 Core module과 NU54DK `BOARD_ROOT`를 전달하�
 
 ### 7.2 필수 `led0` alias 누락
 
-Blink에 다음 임시 overlay를 적용해 `led0` alias를 삭제한 pristine build는 의도대로
-실패했다.
+읽기 전용 보드 package를 유지한 채 Blink에 다음 임시 overlay를 적용해 `led0` alias를
+삭제한 pristine build는 의도대로 실패했다.
 
 ```dts
 / {
@@ -370,7 +353,7 @@ Kconfig string quoting 경고가 먼저 발생할 수 있어, 이 negative test�
 
 | 항목 | M3 상태와 후속 조치 |
 | --- | --- |
-| 작업 트리 revision | Core·Variant, 문서와 보드 runner를 commit한 뒤 clean checkout에서 hash를 갱신한다. |
+| revision 기준 | Core `a8d62ea75fef`, 보드 `fe65f2f0880b` clean provenance와 pristine artifact hash를 확보했다. 보드 서브모듈은 읽기 전용이다. |
 | provenance | 표준 `build_info.yml`은 configure 시점 snapshot이고 `nucode_arduino_core_build.yml`은 매 build의 live record다. 증분 source 변경 후 두 값이 다를 수 있으며 최종 image는 pristine build와 artifact SHA-256으로 고정한다. |
 | LED 물리 식별 | generated DTS의 `led0`는 P2.9이지만 사용자는 반응 LED를 P1.14로 식별했다. LED별 전용 HIL로 재확인한다. |
 | GPIO RAM trace | 버튼·LED 육안 HIL과 self-check 제어 흐름은 PASS지만 세부 trace 값은 미회수다. M8 debugger/HIL 자동화에서 보완한다. |
@@ -391,18 +374,17 @@ Kconfig string quoting 경고가 먼저 발생할 수 있어, 이 negative test�
 | 완료 기준 | 결과 | 증거 |
 | --- | --- | --- |
 | DTS 기반 최소 Variant | 통과 | `led0`/`sw0` 두 descriptor, 물리 pin 하드코딩 없음 |
-| Arduino Blink build·실행 | 통과 | pristine build, pyOCD flash와 LED 육안 확인 |
+| Arduino Blink build·실행 | 통과 | clean HEX가 기존 CMSIS-DAP V2/pyOCD HIL image와 동일; 이번 갱신에서 flash 미수행 |
 | GPIO input 실기 | 조건부 통과 | BUTTON 1에 따른 LED 전환 확인; generated DTS는 P2.9, 사용자 식별은 P1.14로 서로 달라 재확인 필요; 내부 RAM trace는 미회수 |
 | 시간 API 기본 동작 | 통과 | delay/busy-wait/ISR trace `PASS`, `failure=0` |
 | Zephyr scheduler 공존 정책 | 통과 | 네 400 ms 단계 실측과 기본 one-tick 결정 |
 | Core 비활성 회귀 | 통과 | Core compile/archive/symbol 0개 |
-| 필수 DTS alias negative | 통과 | 명시적인 한국어 compile error |
-| 변경 없는 rebuild | 통과 | provenance target 외 compile·link 0개 |
-| 공개 재현 가능한 revision | 미완료 | Core와 보드 package가 `-dirty` |
+| 필수 DTS alias negative | 통과 | pristine build가 명시적인 한국어 compile error로 expected fail |
+| 변경 없는 rebuild | 기존 회귀 통과 | 이번 기준선 갱신은 pristine build만 수행 |
+| 공개 재현 가능한 revision | 통과 | clean Core·보드 revision과 source/artifact SHA-256 확보 |
 
-**결정 게이트: CONDITIONAL GO.** M3의 Loader 없는 Zephyr 기반 GPIO·시간 수직 경로와
-기본 scheduler 정책은 실제 NU54DK에서 성립했다. 따라서 M4 ArduinoCore-API revision
-고정과 공통 타입·class 통합으로 진행할 수 있다. M3를 최종 GO로 닫을 때는 clean revision
-고정, LED 물리 식별, GPIO trace 자동화, 외부 전압·시간 계측, runtime rollover,
-PM/idle 증거와 ztest/Twister 회귀 시험이 필요하다. 이들은 M4 개발 착수를 막지 않지만
-M3 최종 GO로 전환하려면 모두 닫아야 한다.
+**결정 게이트: CONDITIONAL GO.** M3의 GPIO·시간 수직 경로와 기본 scheduler 정책은
+실제 NU54DK에서 성립했고 clean HEX/BIN이 기존 HIL image와 동일함을 확인했다. clean
+revision 고정은 완료됐으므로 더 이상 GO 전환 대기 항목이 아니다. 남은 조건은 LED 물리
+식별, GPIO trace 자동화, 외부 전압·시간 계측, runtime rollover, PM/idle과 ztest/Twister
+회귀다. 이들은 M4 착수를 막지 않지만 M3 최종 GO 전환 전에는 완료해야 한다.
