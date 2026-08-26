@@ -25,6 +25,7 @@ struct RuntimeSmokeTrace
 	std::uint32_t loop_calls;
 	std::uint32_t result;
 	std::uint32_t failure;
+	std::uint32_t serial_event_calls;
 };
 
 extern "C"
@@ -68,6 +69,7 @@ namespace
 			nu54_m2_runtime_trace.loop_calls = 0U;
 			nu54_m2_runtime_trace.result = 0U;
 			nu54_m2_runtime_trace.failure = 0U;
+			nu54_m2_runtime_trace.serial_event_calls = 0U;
 			nu54_m2_runtime_trace.signature = trace_signature;
 		}
 	};
@@ -92,6 +94,25 @@ namespace
 		}
 	}
 
+}
+
+/**
+ * @brief 강한 serialEventRun symbol이 호출할 순서 검증 본체입니다.
+ */
+extern "C" void nu54M2SerialEventProbe(void)
+{
+	if (nu54_m2_runtime_trace.loop_calls !=
+		(nu54_m2_runtime_trace.serial_event_calls + 1U))
+	{
+		fail("serialEventRun did not follow exactly one loop", 8U);
+	}
+
+	++nu54_m2_runtime_trace.serial_event_calls;
+	if (nu54_m2_runtime_trace.serial_event_calls == 3U)
+	{
+		nu54_m2_runtime_trace.result = trace_pass;
+		printk("M2_RUNTIME_SMOKE: serial_event=3 PASS\n");
+	}
 }
 
 /**
@@ -126,13 +147,17 @@ void setup(void)
 }
 
 /**
- * @brief 반복 호출을 계수하고 세 번째 호출에서 통과 상태를 기록합니다.
+ * @brief 반복 호출을 계수하고 직전 serialEventRun 순서를 검증합니다.
  */
 void loop(void)
 {
 	if (nu54_m2_runtime_trace.setup_calls != 1U)
 	{
 		fail("loop observed an invalid setup count", 3U);
+	}
+	if (nu54_m2_runtime_trace.serial_event_calls != nu54_m2_runtime_trace.loop_calls)
+	{
+		fail("previous loop did not run serialEventRun", 7U);
 	}
 
 	++nu54_m2_runtime_trace.loop_calls;
@@ -146,12 +171,6 @@ void loop(void)
 	{
 		printk("M2_RUNTIME_SMOKE: loop=%u\n",
 			   static_cast<unsigned int>(nu54_m2_runtime_trace.loop_calls));
-	}
-
-	if (nu54_m2_runtime_trace.loop_calls == 3U)
-	{
-		nu54_m2_runtime_trace.result = trace_pass;
-		printk("M2_RUNTIME_SMOKE: PASS\n");
 	}
 
 	k_msleep(250);

@@ -495,9 +495,10 @@ M3에서 통과한 범위는 다음과 같다.
 4. `NUM_DIGITAL_PINS`를 invalid pin으로 사용한 호출 전후에 LED 상태가 유지되는
    self-check를 포함했다.
 
-아직 남은 HIL은 logic analyzer를 사용한 GPIO 전압/250 ms 정량 측정, pull-down,
-Active Low cross-board case, 입력 pin의 `digitalWrite()`, ISR, debounce, 장시간 반복,
-동시 호출과 PWM/GPIO ownership이다. 현재 육안 HIL만으로 이 항목을 지원 선언하지 않는다.
+M6는 GPIO emulator로 raw edge ISR 의미를 자동 검증했으며, 실제 P1.13 active-low 버튼의
+FALLING/RISING/CHANGE 수동 확인만 남았다. 외부 logic analyzer/oscilloscope 계측은 사용자
+결정으로 필수 증거에서 제외한다. pull-down, 입력 pin의 `digitalWrite()`, debounce,
+장시간 반복, 동시 호출과 PWM/GPIO ownership은 해당 API 단계에서 별도 검증한다.
 
 ### 12.4 회귀 검사
 

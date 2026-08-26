@@ -200,6 +200,22 @@ def test_incremental(cli: Path, config: Path, root: Path, repository: Path) -> N
         raise SmokeFailure("incremental compile repeated a pristine configure")
 
 
+## @brief M6 Serial과 GPIO interrupt 공개 예제를 Arduino CLI로 끝까지 빌드합니다.
+def test_m6_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    examples = (
+        ("serial-echo", repository / "examples" / "04.Communication" / "SerialEcho", "SerialEcho.ino"),
+        (
+            "interrupt-button",
+            repository / "examples" / "02.Digital" / "InterruptButton",
+            "InterruptButton.ino",
+        ),
+    )
+    for build_name, sketch, project_name in examples:
+        build = root / f"build-m6-{build_name}"
+        run(compile_command(cli, config, build, sketch))
+        assert_build(build, project_name)
+
+
 ## @brief 선택된 M5 smoke test를 격리된 hardware root에서 실행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
@@ -207,8 +223,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--tests",
         nargs="+",
-        choices=("blink", "library", "config", "error", "parallel", "incremental"),
-        default=("blink", "library", "config", "error", "parallel", "incremental"),
+        choices=("blink", "library", "config", "error", "parallel", "incremental", "m6"),
+        default=("blink", "library", "config", "error", "parallel", "incremental", "m6"),
     )
     args = parser.parse_args(arguments)
     repository = Path(__file__).resolve().parents[2]
@@ -229,6 +245,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "error": test_compile_error,
             "parallel": test_parallel,
             "incremental": test_incremental,
+            "m6": test_m6_examples,
         }
         for name in args.tests:
             tests[name](cli, config, root, repository)

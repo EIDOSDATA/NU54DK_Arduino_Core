@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | 설계·구현 동기화 — M3 west-native/HIL 기준 |
+| 문서 상태 | 설계·구현 동기화 — M6 조건부 완료 기준 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 RTOS | Zephyr v4.4.0 |
@@ -28,8 +28,9 @@
 - `yield()`
 
 목표는 Arduino의 관례를 유지하면서도 Zephyr의 device, scheduler 및 ISR 규칙을
-위반하지 않는 것이다. M3에서 구현한 digital GPIO와 시간 API는 현재 동작으로 명시하고,
-external interrupt, 전체 핀맵, pin ownership과 추가 호환 동작은 향후 목표로 구분한다.
+위반하지 않는 것이다. M3에서 구현한 digital GPIO·시간 API와 M6에서 구현한 external
+edge interrupt를 현재 동작으로 명시한다. 전체 핀맵, 범용 pin ownership과 level
+interrupt는 향후 목표로 구분한다.
 
 ---
 
@@ -106,10 +107,9 @@ GRTC 계측은 1,026 us였지만, 실제 최소 resolution, 외부 시간 기준
 - millisecond sleep과 microsecond busy wait 구현
 - yield 가능 문맥과 ISR 문맥 검사
 
-### 3.3 `wiring_interrupts.cpp`
+### 3.3 `wiring_interrupt.cpp`
 
-GPIO interrupt를 별도 파일로 나누는 방안을 기본으로 한다. M3에는 이 파일과
-`attachInterrupt()`/`detachInterrupt()` 구현이 없다.
+M6는 GPIO interrupt를 digital GPIO 구현과 분리한 이 파일에 구현한다.
 
 책임:
 
@@ -118,17 +118,21 @@ GPIO interrupt를 별도 파일로 나누는 방안을 기본으로 한다. M3�
 - Zephyr `gpio_callback` 등록과 해제
 - 공통 ISR trampoline에서 사용자 callback 호출
 
-아래 interrupt 설계는 향후 목표이며 현재 지원 상태가 아니다.
+아래 raw edge interrupt 설계는 M6 현재 구현이다. level trigger와 전역 interrupt 제어는
+아직 지원 상태가 아니다.
 
 ### 3.4 Variant와 내부 pin state
 
-Variant descriptor는 물리 자원을 immutable data로 제공한다. M3 Core는 별도의 runtime
-state에 다음 정보만 유지한다.
+Variant descriptor는 물리 자원을 immutable data로 제공한다. Core는 별도의 runtime
+state에 다음 정보를 유지한다.
 
 - 현재 Arduino pin mode
 - 성공한 output write의 마지막 raw 값
+- 논리 핀별 고정 interrupt callback slot, callback 종류와 parameter
+- callback 등록·활성 상태와 진행 중 callback 수
 
-interrupt callback, trigger mode와 pin ownership 상태는 아직 구현하지 않았다.
+범용 peripheral pin ownership registry는 아직 구현하지 않았다. `pinMode()`가 핀 구성을
+바꾸는 경우 같은 논리 핀의 Arduino interrupt는 자동 detach한다.
 
 runtime state에 controller 이름과 물리 pin 번호를 다시 저장해 별도 원본으로 만들지 않는다.
 
@@ -210,6 +214,8 @@ GPIO device readiness와 Devicetree flag 검사
         ↓
 mode와 digital capability 검사
         ↓
+같은 논리 핀의 Arduino interrupt 자동 detach
+        ↓
 mode와 latch를 Zephyr flags로 변환
         ↓
 gpio_pin_configure()
@@ -217,7 +223,8 @@ gpio_pin_configure()
 성공 시 runtime mode 갱신
 ~~~
 
-driver 호출이 실패하면 이전 mode 상태를 성공한 것으로 기록하지 않는다.
+driver 호출이 실패하면 이전 mode 상태를 성공한 것으로 기록하지 않는다. M6 target
+ztest에서 `pinMode()` 뒤 이전 callback이 실행되지 않는 auto-detach를 확인했다.
 
 ---
 
@@ -280,17 +287,17 @@ output latch를 그대로 돌려주는 방식은 물리 단락을 숨길 수 있
 
 ---
 
-## 8. External interrupt 설계
+## 8. External interrupt 구현
 
 ### 8.1 지원 mode
 
-| Arduino mode | Zephyr flag안 |
-| --- | --- |
-| `RISING` | `GPIO_INT_EDGE_RISING` |
-| `FALLING` | `GPIO_INT_EDGE_FALLING` |
-| `CHANGE` | `GPIO_INT_EDGE_BOTH` |
-| `LOW` | `GPIO_INT_LEVEL_LOW` 지원 시 |
-| `HIGH` | `GPIO_INT_LEVEL_HIGH` 지원 시 |
+| Arduino mode | Zephyr flag | M6 상태 |
+| --- | --- | --- |
+| `RISING` | `GPIO_INT_EDGE_RISING` | 구현, target GPIO emulator PASS |
+| `FALLING` | `GPIO_INT_EDGE_FALLING` | 구현, target GPIO emulator PASS |
+| `CHANGE` | `GPIO_INT_EDGE_BOTH` | 구현, target GPIO emulator PASS |
+| `LOW` | 해당 없음 | 미구현, 요청 거부 |
+| `HIGH` | 해당 없음 | 미구현, 요청 거부 |
 
 Level trigger 지원은 nRF54L15 Zephyr GPIO driver와 전력 정책을 HIL로 확인한 뒤 공개한다. 지원하지 않는 trigger를 edge trigger로 조용히 바꾸지 않는다.
 
@@ -298,8 +305,10 @@ Level trigger 지원은 nRF54L15 Zephyr GPIO driver와 전력 정책을 HIL로 �
 
 - pin마다 최대 하나의 Arduino callback을 등록한다.
 - 정적 크기 table을 사용하고 ISR 등록 과정에서 heap을 사용하지 않는다.
-- 재등록은 기존 callback을 원자적으로 교체하거나 먼저 disable한 뒤 교체한다.
-- `detachInterrupt()`는 hardware interrupt를 disable한 뒤 callback slot을 비운다.
+- `attachInterrupt()`와 parameter를 받는 `attachInterruptParam()`을 제공한다.
+- 재등록은 기존 callback을 disable·제거한 뒤 새 callback을 등록한다.
+- `detachInterrupt()`는 hardware interrupt를 disable하고 driver callback을 제거한 뒤 slot을 비운다.
+- interrupt를 붙이기 전에 해당 논리 핀을 input mode로 구성해야 한다.
 
 ### 8.3 호출 흐름
 
@@ -319,7 +328,14 @@ logical pin callback lookup
 
 ### 8.4 동시성
 
-`attachInterrupt()`와 `detachInterrupt()`는 thread 문맥 전용이다. callback pointer 교체와 ISR lookup 사이에는 interrupt disable 또는 atomic pointer 규칙을 사용한다. callback 실행 중 detach가 호출되는 경쟁 조건도 시험한다.
+`attachInterrupt()`와 `detachInterrupt()`는 thread 문맥 전용이다. configuration mutex와
+slot spinlock을 사용하고, detach는 in-flight callback이 끝난 뒤 slot을 비운다. M6 target
+ztest에서 재등록, parameter callback, detach 후 무호출, invalid pin/mode/null callback과
+`pinMode()` auto-detach를 통과했다.
+
+실제 P1.13 active-low 버튼의 ISR edge는 사용자가 부재하여 아직 누르며 확인하지 못했다.
+누름은 raw `FALLING`, 해제는 raw `RISING`으로 확인할 예정이다. 외부 계측 장비는 이
+잔여 확인의 필수 조건이 아니다.
 
 ---
 
@@ -441,8 +457,8 @@ M3 내부 계측에서 1,000 us 요청은 1,026 us였다. 최소 유효 값, 여
 | `digitalWrite` output | 허용 | 금지, no-op | driver 경로 | 사전 output configure 필요 |
 | `digitalWrite` input | 현재 거부 | 금지, no-op | 아니요 | pull 전환 미구현 |
 | `digitalRead` | 허용 | 금지, `LOW` 반환 | driver 경로 | raw input |
-| `attachInterrupt` | 미구현 | 미구현 | 해당 없음 | 향후 callback 등록 |
-| `detachInterrupt` | 미구현 | 미구현 | 해당 없음 | 향후 callback 해제 |
+| `attachInterrupt` | 허용 | 금지 | driver 구성 동안 | input 구성 후 raw edge callback 등록 |
+| `detachInterrupt` | 허용 | 금지 | in-flight callback 정리 동안 | interrupt disable과 slot 해제 |
 | `millis` | 허용 | 허용 | 아니요 | timer ISR 실기 호출 확인 |
 | `micros` | 허용 | 허용 | 아니요 | timer ISR 실기 호출 확인 |
 | `delay` | 허용 | 금지, no-op | 예 | `k_can_yield()` 검사 |
@@ -499,10 +515,11 @@ Arduino의 `noInterrupts()`와 `interrupts()`는 token 없는 전역 API라 Zeph
 | 설정 | 기본값 | 목적 |
 | --- | ---: | --- |
 | `CONFIG_NUCODE_ARDUINO_GPIO` | Core 활성 시 `y` | digital GPIO API |
+| `CONFIG_NUCODE_ARDUINO_INTERRUPTS` | Core 활성 시 `y` | GPIO raw edge interrupt API |
 | `CONFIG_NUCODE_ARDUINO_TIME` | Core 활성 시 `y` | `millis/micros/delay/yield` API |
 
-`CONFIG_NUCODE_ARDUINO_GPIO_INTERRUPT`, pin/time diagnostics와 별도
-`CONFIG_NUCODE_ARDUINO_MICROS`는 현재 존재하지 않는 향후 검토안이다.
+pin/time diagnostics와 별도 `CONFIG_NUCODE_ARDUINO_MICROS`는 현재 존재하지 않는 향후
+검토안이다.
 
 Zephyr 기본 의존성은 다음을 사용한다.
 
@@ -522,31 +539,31 @@ Zephyr 기본 의존성은 다음을 사용한다.
 - [x] Core에 물리 pin 번호가 없다.
 - [x] `HIGH`와 `LOW`가 raw 전기 값과 일치하며 Active High LED를 육안 확인했다.
 - [x] `INPUT_PULLUP` 버튼과 `OUTPUT` LED가 실기에서 동작한다.
-- [ ] `INPUT`과 `INPUT_PULLDOWN`을 외부 신호/저항으로 실기 확인한다.
 - [x] invalid pin self-check 뒤 버튼 연동 loop에 진입했다. 이 제어 흐름은 self-check
   PASS의 간접 oracle이며 세부 RAM trace 값은 미회수다.
-- [ ] `nu54_m3_gpio_input_trace`의 최종 RAM 값을 회수·보관한다.
-- [ ] output latch 전환에 의도하지 않은 pulse가 없는지 logic analyzer로 확인한다.
-- [ ] GPIO/peripheral ownership 충돌이 명확히 실패한다.
+
+`INPUT_PULLDOWN`의 추가 물리 조합과 GPIO/peripheral ownership은 전체 핀맵과 M7 이후
+범위다. GPIO RAM trace와 외부 pulse 계측은 사용자 결정으로 필수 증거에서 제외했다.
 
 ### 13.2 Interrupt
 
-- [ ] RISING, FALLING, CHANGE callback 횟수가 입력 edge와 일치한다.
-- [ ] detach 후 callback이 실행되지 않는다.
-- [ ] callback은 ISR 문맥임이 확인된다.
-- [ ] attach/detach 경쟁 조건에 use-after-free가 없다.
-- [ ] 지원하지 않는 level trigger가 조용히 다른 mode로 바뀌지 않는다.
+- [x] target GPIO emulator에서 RISING, FALLING, CHANGE callback 횟수가 입력 edge와 일치한다.
+- [x] detach 후 callback이 실행되지 않는다.
+- [x] callback은 Zephyr GPIO ISR에서 직접 실행된다.
+- [x] in-flight count와 slot 정리로 callback 실행 중 detach의 use-after-free를 방지한다.
+- [x] 지원하지 않는 level trigger와 잘못된 mode가 조용히 다른 mode로 바뀌지 않는다.
+- [ ] 실제 P1.13 active-low 버튼에서 누름 FALLING·해제 RISING·양 edge CHANGE를 수동 확인한다.
 
 ### 13.3 시간
 
 - [x] `millis()`와 `micros()`가 M3 실행 구간에서 증가하고 unsigned elapsed 산술 검사를 통과한다.
-- [ ] 실제 API counter가 wrap 경계를 지나는 장시간/주입 시험을 수행한다.
+- [x] production helper에 32-bit wrap 경계값을 주입해 rollover 산술을 검증한다.
 - [x] `millis()`와 `micros()`를 timer ISR에서 1,582회 호출했다.
 - [x] `delay(20)`이 20 ms보다 일찍 복귀하지 않았다.
 - [x] `delay()` 중 worker thread, timer와 workqueue가 진행했다.
 - [x] `delayMicroseconds(1000)`을 내부 시간원으로 계측해 1,026 us를 기록했다.
-- [ ] 여러 busy-wait 구간과 긴 chunk 경계를 외부 계측기로 확인한다.
-- [ ] 저전력 진입 전후 `micros()` 정책을 확정한다.
+- [x] 긴 delay와 busy-wait chunk 경계를 자동 경계값 시험으로 검증한다.
+- [ ] 저전력 진입 전후 `micros()` 정책은 사용자 결정으로 M3/M6 필수 범위에서 제외한다.
 
 ---
 
@@ -573,18 +590,19 @@ Zephyr 기본 의존성은 다음을 사용한다.
 
 | 시험 | 측정 방법 |
 | --- | --- |
-| Blink | built-in LED와 oscilloscope/logic analyzer |
+| Blink | built-in LED 육안 확인 |
 | Input pull | 사용자 버튼과 외부 저항 |
-| Raw polarity | GPIO 전압과 API 반환 비교 |
-| Edge interrupt | signal generator 또는 연결된 output pin |
-| Delay | logic analyzer pulse width |
-| Micros drift | 일정 주기의 toggle과 외부 시간 기준 비교 |
+| Raw polarity | 온보드 active-low 버튼 상태와 API 반환 비교 |
+| Edge interrupt | 온보드 P1.13 버튼 또는 자동 GPIO emulator |
+| Delay | target 내부 counter와 경계값 주입 |
+| Micros rollover | production helper 경계값 주입 |
 | Scheduler 공존 | worker counter와 timer latency 기록 |
 
-M3에서는 Blink와 pull-up/Active Low 버튼에 따른 LED 전환을 육안 확인했고,
-`runtime_timing` trace를 회수했다. GPIO 전압, output 전환 pulse, 외부 시간 기준과
-저전력 profile은 아직 HIL 완료로 표시하지 않는다. GPIO RAM trace도 아직 회수하지
-못했으며, 이 M3 결과는 Twister 자동화나 Arduino CLI/IDE 경로의 검증을 의미하지 않는다.
+M3에서는 Blink와 pull-up/Active Low 버튼에 따른 LED 전환을 육안 확인하고
+`runtime_timing` trace와 NU54DK Twister 9/9를 회수했다. M6는 GPIO emulator 기반 edge
+interrupt 2/2와 Arduino CLI InterruptButton build를 통과했다. GPIO RAM trace, 외부
+GPIO/time 계측과 저전력 profile은 사용자 결정으로 필수 증거에서 제외한다. 실제 P1.13
+버튼 ISR edge 수동 확인만 M6 조건으로 남긴다.
 
 ### 14.4 Negative test
 

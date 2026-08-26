@@ -9,7 +9,7 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
 
   if(NOT CONFIG_BOARD_NRF54L15DK_NRF54L15_CPUAPP_NU54DK)
     message(FATAL_ERROR
-      "NUCODE Arduino Core M3 currently requires the NU54DK board variant"
+      "NUCODE Arduino Core currently requires the NU54DK board variant"
     )
   endif()
 
@@ -26,22 +26,71 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
     )
   endif()
 
-  set(NUCODE_ARDUINO_CORE_SOURCES
-    "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/main.cpp"
-    "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/runtime_scheduler.cpp"
-  )
+  set(NUCODE_ARDUINO_CORE_SOURCES)
+
+  if(CONFIG_NUCODE_ARDUINO_RUNTIME)
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/main.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/runtime_scheduler.cpp"
+    )
+  endif()
+
+  if(CONFIG_NUCODE_ARDUINO_API)
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
+      "${NUCODE_ARDUINO_API_ROOT}/api/Common.cpp"
+      "${NUCODE_ARDUINO_API_ROOT}/api/Print.cpp"
+      "${NUCODE_ARDUINO_API_ROOT}/api/Stream.cpp"
+      "${NUCODE_ARDUINO_API_ROOT}/api/String.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/api_compat.cpp"
+    )
+
+    if(CONFIG_COMMON_LIBC_MALLOC_ARENA_SIZE LESS 1)
+      message(FATAL_ERROR
+        "Arduino String requires a bounded positive CONFIG_COMMON_LIBC_MALLOC_ARENA_SIZE"
+      )
+    endif()
+  endif()
 
   if(CONFIG_NUCODE_ARDUINO_GPIO)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/wiring_digital.cpp"
       "${NUCODE_ARDUINO_VARIANT_ROOT}/variant.cpp"
     )
+
+    if(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+      list(APPEND NUCODE_ARDUINO_CORE_SOURCES
+        "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/wiring_interrupt.cpp"
+      )
+    endif()
   endif()
 
   if(CONFIG_NUCODE_ARDUINO_TIME)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/wiring_time.cpp"
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/time_backend_nrf54.cpp"
+    )
+  endif()
+
+  if(CONFIG_NUCODE_ARDUINO_SERIAL)
+    foreach(conflict_symbol IN ITEMS
+      SHELL_BACKEND_SERIAL
+      CONSOLE_HANDLER
+      CONSOLE_GETCHAR
+      UART_MCUMGR
+      MCUMGR_TRANSPORT_UART
+      MCUMGR_TRANSPORT_UART_ASYNC
+      LOG_BACKEND_UART_ASYNC
+      TRACING_BACKEND_UART
+    )
+      if(CONFIG_${conflict_symbol})
+        message(FATAL_ERROR
+          "Arduino Serial RX cannot share the chosen UART callback with CONFIG_${conflict_symbol}"
+        )
+      endif()
+    endforeach()
+
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/HardwareSerial.cpp"
     )
   endif()
 

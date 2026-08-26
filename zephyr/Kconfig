@@ -9,11 +9,29 @@ config NUCODE_ARDUINO_CORE
 	  setup()/loop() 런타임을 링크합니다. 이 옵션은 기본적으로 비활성화되며,
 	  애플리케이션이 C++17 이상의 표준을 명시해야 합니다.
 
-	  M2 런타임은 동적 메모리를 할당하지 않습니다. 힙 크기는 Core가
-	  강제하지 않으며 최종 애플리케이션의 Kconfig가 소유합니다. 예외와
-	  RTTI의 기본 검증값은 비활성이지만 Core가 구조적으로 금지하지 않습니다.
+	  setup()/loop() 런타임 자체는 동적 메모리를 할당하지 않습니다.
+	  ArduinoCore-API String을 활성화하면 별도로 제한된 common libc malloc
+	  arena를 사용합니다. 그 밖의 힙 크기는 최종 애플리케이션의 Kconfig가
+	  소유합니다. 예외와 RTTI의 기본 검증값은 비활성이지만 Core가
+	  구조적으로 금지하지 않습니다.
 
 if NUCODE_ARDUINO_CORE
+
+config NUCODE_ARDUINO_RUNTIME
+	bool "Arduino setup()/loop() 런타임 활성화"
+	default y
+	help
+	  Zephyr main entry에서 init(), initVariant(), setup()과 loop()를
+	  실행합니다. Core 구성요소를 ztest에서 독립 검증할 때만 비활성화합니다.
+
+config NUCODE_ARDUINO_API
+	bool "ArduinoCore-API 공통 구현 활성화"
+	default y
+	select COMMON_LIBC_MALLOC
+	select REQUIRES_FLOAT_PRINTF
+	help
+	  ArduinoCore-API 1.5.2의 Common, String, Print와 Stream 구현을
+	  Core image에 연결합니다. String은 libc malloc arena를 사용합니다.
 
 config NUCODE_ARDUINO_GPIO
 	bool "Arduino digital GPIO API 활성화"
@@ -24,6 +42,15 @@ config NUCODE_ARDUINO_GPIO
 	  digitalRead()를 제공합니다. 물리 GPIO controller와 pin 번호는 보드
 	  Devicetree가 소유합니다.
 
+config NUCODE_ARDUINO_INTERRUPTS
+	bool "Arduino GPIO edge interrupt API 활성화"
+	default y
+	depends on NUCODE_ARDUINO_GPIO
+	help
+	  Variant가 interrupt capability를 부여한 input 핀에 RISING,
+	  FALLING과 CHANGE callback을 제공합니다. callback은 GPIO ISR에서
+	  직접 실행되므로 blocking API를 호출할 수 없습니다.
+
 config NUCODE_ARDUINO_TIME
 	bool "Arduino 시간 API 활성화"
 	default y
@@ -31,6 +58,28 @@ config NUCODE_ARDUINO_TIME
 	help
 	  Zephyr uptime과 64-bit hardware cycle counter를 사용해 millis(),
 	  micros(), delay(), delayMicroseconds()와 yield()를 제공합니다.
+
+config NUCODE_ARDUINO_SERIAL
+	bool "Zephyr console 기반 Arduino Serial 활성화"
+	default y
+	depends on NUCODE_ARDUINO_API
+	depends on SERIAL
+	depends on SERIAL_SUPPORT_INTERRUPT
+	select UART_INTERRUPT_DRIVEN
+	select UART_USE_RUNTIME_CONFIGURE
+	help
+	  zephyr,console chosen UART의 실제 설정을 읽어 검증하되 재설정하지
+	  않고 빌려 사용합니다. TX는 polling, RX는 interrupt와 고정 message
+	  queue를 사용합니다.
+
+config NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE
+	int "Arduino Serial RX queue byte 수"
+	default 128
+	range 16 1024
+	depends on NUCODE_ARDUINO_SERIAL
+	help
+	  queue가 가득 차면 새 RX byte를 버리고 내부 drop counter를
+	  증가시킵니다.
 
 choice NUCODE_ARDUINO_LOOP_POLICY
 	prompt "Sketch loop 반환 후 Zephyr 공존 정책"
@@ -60,5 +109,8 @@ config NUCODE_ARDUINO_LOOP_NONE
 endchoice
 
 endif
+
+config COMMON_LIBC_MALLOC_ARENA_SIZE
+	default 8192 if NUCODE_ARDUINO_API
 
 endmenu

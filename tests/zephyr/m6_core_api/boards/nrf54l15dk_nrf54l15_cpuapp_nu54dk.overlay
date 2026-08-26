@@ -1,0 +1,48 @@
+/**
+ * SPDX-License-Identifier: MIT
+ */
+
+/ {
+	chosen {
+		nucode,arduino-serial = &m6_uart;
+	};
+
+	aliases {
+		led0 = &m6_led;
+		sw0 = &m6_button;
+	};
+
+	m6_gpio: m6-gpio {
+		compatible = "zephyr,gpio-emul";
+		status = "okay";
+		gpio-controller;
+		#gpio-cells = <2>;
+		ngpios = <2>;
+		rising-edge;
+		falling-edge;
+	};
+
+	m6-leds {
+		compatible = "gpio-leds";
+
+		m6_led: led-0 {
+			gpios = <&m6_gpio 0 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	m6-buttons {
+		compatible = "gpio-keys";
+
+		m6_button: button-0 {
+			gpios = <&m6_gpio 1 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+		};
+	};
+
+	m6_uart: m6-uart {
+		compatible = "zephyr,uart-emul";
+		status = "okay";
+		current-speed = <115200>;
+		rx-fifo-size = <256>;
+		tx-fifo-size = <256>;
+	};
+};

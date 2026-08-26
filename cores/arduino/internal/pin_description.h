@@ -24,6 +24,7 @@ namespace nucode::arduino::internal
 		none = 0U,
 		digital_input = 1U << 0U,
 		digital_output = 1U << 1U,
+		interrupt = 1U << 2U,
 	};
 
 	/**
@@ -80,6 +81,9 @@ namespace nucode::arduino::internal
 		device_not_ready,
 		pin_not_configured,
 		wrong_mode,
+		null_callback,
+		invalid_interrupt_mode,
+		interrupt_not_configured,
 		driver_error,
 	};
 
@@ -119,6 +123,25 @@ namespace nucode::arduino::internal
 	 * @brief 마지막 GPIO 내부 오류와 driver 오류를 초기화합니다.
 	 */
 	void clearGpioError() noexcept;
+
+	/**
+	 * @brief GPIO backend 구현에서 공통 오류를 기록합니다.
+	 *
+	 * @param error Core 내부 오류 분류입니다.
+	 * @param driver_error Zephyr GPIO가 반환한 오류 번호입니다.
+	 */
+	void setGpioBackendError(GpioError error, int driver_error = 0) noexcept;
+
+	/** @brief GPIO backend 구현에서 성공 상태를 기록합니다. */
+	void setGpioBackendSuccess() noexcept;
+
+	/**
+	 * @brief 논리 핀이 Arduino input mode로 설정되었는지 확인합니다.
+	 *
+	 * @param logical_pin 확인할 Arduino 논리 핀입니다.
+	 * @return INPUT 계열 mode가 적용되었으면 true입니다.
+	 */
+	[[nodiscard]] bool isPinConfiguredForInput(std::size_t logical_pin) noexcept;
 
 }
 

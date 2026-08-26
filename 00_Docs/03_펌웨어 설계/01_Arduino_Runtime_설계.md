@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | 설계·구현 동기화 — M3 west-native/HIL 기준 |
+| 문서 상태 | 설계·구현 동기화 — M6 조건부 완료 기준 |
 | 작성자 | Quantum / NUCODE |
 | 실행 방식 | Loader 없는 Native Full Zephyr 정적 펌웨어 |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
@@ -23,10 +23,10 @@
 - ISR callback과 일반 Arduino API 사이의 경계는 무엇인가?
 - 초기화 또는 실행 오류는 어떻게 처리하는가?
 
-M3 현재 구현은 Zephyr `main` thread 기반 runtime과 선택 가능한 post-loop 정책까지
-포함한다. 이 문서에서 “현재 구현”이라고 명시한 내용은 M3 source와 실측에 대응하며,
-Serial hook, 복합 subsystem stack 정책과 전용 Arduino thread 같은 항목은 향후 목표로
-구분한다.
+현재 구현은 Zephyr `main` thread 기반 runtime, 선택 가능한 post-loop 정책과 M6의
+`serialEventRun()` hook까지 포함한다. 이 문서에서 “현재 구현”이라고 명시한 내용은
+M3~M6 source와 실측에 대응한다. 복합 subsystem stack 정책과 전용 Arduino thread 같은
+항목은 향후 목표로 구분한다.
 
 ---
 
@@ -94,13 +94,17 @@ Zephyr init level별 kernel/device 초기화
       ↓
 Core가 제공하는 main()
       ↓
-Arduino Runtime 상태 초기화
+init()
       ↓
 initVariant()
       ↓
 setup() 1회
       ↓
-loop() 반복
+loop()
+      ↓
+serialEventRun()이 존재하면 호출
+      ↓
+post-loop 정책 뒤 loop() 반복
 ~~~
 
 Zephyr가 `main()`을 호출할 때 kernel scheduler와 정상적인 init level의 device 초기화는 이미 완료되어 있어야 한다. Core는 `__libc_init_array()`를 다시 호출하거나 SoC startup을 중복 실행하지 않는다.
@@ -124,6 +128,9 @@ Zephyr가 `main()`을 호출할 때 kernel scheduler와 정상적인 init level�
 ~~~cpp
 for (;;) {
     loop();
+    if (serialEventRun exists) {
+        serialEventRun();
+    }
     runtimePostLoop();
 }
 ~~~
@@ -134,9 +141,11 @@ for (;;) {
 - 선택값: `k_yield()`
 - 선택값: Core scheduler 개입 없음
 
-`serialEventRun()` 호환 hook과 지연된 Core 진단 처리는 아직 구현하지 않았다. Blink는
-Sketch 내부의 `delay()`로도 실행 기회를 반환하지만, 빠르게 반환하는 일반 `loop()`의
-공정성은 post-loop 정책이 별도로 책임진다.
+ArduinoCore-API의 weak `serialEventRun()` symbol이 실제로 존재하면 각 `loop()` 직후,
+`runtimePostLoop()` 전에 한 번 호출한다. M6 runtime smoke의 ELF에서 hook과 probe가 모두
+strong `T` symbol임을 확인했고, DAPLink sequence 10/COM10 HIL에서 loop 1·2·3 뒤
+`serial_event=3 PASS`를 회수했다. Blink는 Sketch 내부의 `delay()`로도 실행 기회를
+반환하지만, 빠르게 반환하는 일반 `loop()`의 공정성은 post-loop 정책이 별도로 책임진다.
 
 ---
 
@@ -338,7 +347,7 @@ Arduino API는 Zephyr를 감추기 위한 별도 운영체제가 아니다. Zeph
 | `micros()` | 허용 | 허용 | GRTC cycle 조회, timer ISR 실기 호출 확인 |
 | `delayMicroseconds()` | 허용 | 공개 계약상 금지, no-op | thread에서 busy wait |
 | `digitalWrite()` | 허용 | 금지, no-op | M3 GPIO 공개 API는 thread 전용 |
-| `Serial.write()` | 허용 | 금지 | lock 또는 buffering 가능 |
+| `Serial.write()` | 허용 | 금지 | polling TX와 Core mutex; ISR 호출은 오류와 0 반환 |
 | interrupt callback | 해당 없음 | 실행 | ISR-safe API만 호출 |
 
 공통 규칙은 다음과 같다.
@@ -366,7 +375,7 @@ C++20 clean build도 통과했다. 최종 Arduino library 호환성 시험에서
 
 - C++ exception 비활성
 - RTTI 비활성
-- heap 사용 최소화
+- ArduinoCore-API `String`용 common libc malloc arena 기본 8192 byte
 - static initialization은 허용하되 device 사용은 `main()` 이후로 제한
 
 Exception 또는 full C++ standard library가 필요한 Sketch는 project `prj.conf`에서
@@ -415,6 +424,14 @@ Zephyr fatal error handler와 coredump/debugger 정보를 우선 사용한다. C
 | 설정 | 기본값/소유자 | 설명 |
 | --- | --- | --- |
 | `CONFIG_NUCODE_ARDUINO_CORE` | application이 활성화 | Runtime과 Core 편입 |
+| `CONFIG_NUCODE_ARDUINO_RUNTIME` | 기본 `y` | `init()`/`initVariant()`/`setup()`/`loop()`와 `serialEventRun()` lifecycle |
+| `CONFIG_NUCODE_ARDUINO_API` | 기본 `y` | `Common`, `String`, `Print`, `Stream`; common libc malloc과 float printf 선택 |
+| `CONFIG_NUCODE_ARDUINO_GPIO` | 기본 `y` | Variant/DTS 기반 digital GPIO |
+| `CONFIG_NUCODE_ARDUINO_INTERRUPTS` | 기본 `y` | raw edge GPIO ISR callback |
+| `CONFIG_NUCODE_ARDUINO_TIME` | 기본 `y` | Arduino 시간 API |
+| `CONFIG_NUCODE_ARDUINO_SERIAL` | 기본 `y` | chosen console UART의 non-owning Serial |
+| `CONFIG_NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE` | 기본 `128` | drop-newest 고정 RX queue 크기 |
+| `CONFIG_COMMON_LIBC_MALLOC_ARENA_SIZE` | Core API 기본 `8192` | `String`용 bounded heap |
 | `CONFIG_NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK` | Core 기본값 | loop 뒤 한 kernel tick sleep |
 | `CONFIG_NUCODE_ARDUINO_LOOP_YIELD` | application 선택 | loop 뒤 scheduler yield |
 | `CONFIG_NUCODE_ARDUINO_LOOP_NONE` | application 선택 | loop 뒤 Core scheduler 개입 없음 |
@@ -424,7 +441,7 @@ Zephyr fatal error handler와 coredump/debugger 정보를 우선 사용한다. C
 | C++ 표준 choice | application 선택 | `CONFIG_STD_CPP_VERSION >= 201703`; C++17 이상 필요 |
 
 `CONFIG_NUCODE_ARDUINO_RUNTIME_LOG_LEVEL`, loop millisecond 최소 sleep과
-`CONFIG_NUCODE_ARDUINO_SERIAL_EVENT`는 현재 존재하지 않는 향후 검토 항목이다.
+`serialEventRun()`을 강제로 끄는 별도 option은 현재 존재하지 않는 향후 검토 항목이다.
 
 Sketch별 설정이 가능한 Full Zephyr 구조이므로 Core가 고정 profile만 허용해서는 안 된다.
 
@@ -441,14 +458,15 @@ Runtime v0 완료 조건은 다음과 같다.
 - [x] C++ 정적 초기화가 한 번만 수행된다.
 - [x] `delay()`가 main thread만 block하고 kernel timer와 workqueue는 계속 진행한다.
 - [x] 빈 loop 공정성 시험 결과와 기본 one-tick 정책이 기록된다.
+- [x] `serialEventRun()`이 존재하면 각 `loop()` 직후 post-loop 정책보다 먼저 호출된다.
 - [ ] stack watermark를 Blink, Serial 및 복합 Sketch에서 측정한다.
 - [ ] fault backtrace에서 Sketch와 Core symbol을 확인할 수 있다.
 - [x] 리셋 후 별도 Loader command 없이 Sketch가 즉시 시작한다.
 
-위 완료 표시는 M2 west-native runtime 검증과 M3 NU54DK HIL에 한정한다. M3 runtime을
-Twister 자동화 또는 Arduino CLI/IDE Build Adapter 경로로 실행한 검증은 아직 없으며,
-Serial·Bluetooth 복합 subsystem, stack watermark, fault backtrace와 저전력 profile도
-완료 범위에 포함하지 않는다.
+위 완료 표시는 M2 west-native runtime, M3 NU54DK HIL/Twister와 M5·M6 Arduino CLI/target
+회귀에 한정한다. `serialEventRun()`은 M6 runtime smoke target HIL까지 통과했다.
+Bluetooth 복합 subsystem, stack watermark, fault backtrace와 저전력 profile은 완료
+범위에 포함하지 않는다.
 
 ---
 
@@ -528,7 +546,7 @@ nRF54L15 target에는 native USB peripheral이 없다. 온보드 CMSIS-DAP의 US
 | one-tick 기본값의 장기 유지 여부 | 복합 subsystem과 전력 HIL 후 | worker latency, loop rate, power |
 | main thread priority | 복합 subsystem 시험 후 | Bluetooth/UART/workqueue 공존 |
 | 기본 stack 크기 | API 단계별 watermark 후 | 최대 관측값과 안전 여유 |
-| `serialEventRun()` 기본 활성화 | Serial 구현 후 | Arduino library 호환성 및 비용 |
+| `serialEventRun()` 세부 최적화 | 기본 hook HIL 완료 후 | 다양한 Arduino library 호환성과 symbol/link 비용 |
 | exception/RTTI 공개 menu | library 호환 시험 후 | Flash/RAM 및 실제 사용 사례 |
 
 ---

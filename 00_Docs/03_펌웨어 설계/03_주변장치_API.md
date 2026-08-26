@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | 설계 기준선 — 구현 전 |
+| 문서 상태 | M6 Serial 구현·HIL 완료; M7 Wire·SPI·ADC·PWM 구현 전 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 RTOS | Zephyr v4.4.0 |
@@ -23,7 +23,8 @@
 - thread와 ISR에서 허용되는 호출을 구분한다.
 - Devicetree에서 비활성인 장치를 API 호출만으로 몰래 활성화하지 않는다.
 
-이 문서는 설계 상태다. 아래의 `Serial`, `Wire`, `SPI`, ADC 및 PWM API가 이미 구현되었다는 의미가 아니다.
+M6에서 `Serial`은 구현·target ztest·실제 COM10 HIL까지 완료했다. `Wire`, `SPI`, ADC와
+PWM은 M7 구현 전 설계이며 이미 지원된다는 의미가 아니다.
 
 ---
 
@@ -171,8 +172,9 @@ v1 정책은 다음과 같다.
 
 1. `Serial.begin(115200)`은 이미 구성된 UART에 attach한다.
 2. 다른 baud를 요청하면 console이 활성인 상태에서 UART를 묵시적으로 재구성하지 않는다.
-3. 사용자는 overlay의 `current-speed`를 변경해 전체 build에 반영한다.
-4. 요청 baud와 실제 baud가 다르면 `Serial`을 ready로 표시하지 않고 진단을 남긴다.
+3. M6 기본 객체는 115200 8N1만 지원한다. overlay에서 다른 속도를 선택한 build에서는
+   `Serial.begin(115200)`이 실제 설정 불일치로 실패한다.
+4. 요청 baud/config와 실제 설정이 다르면 `Serial`을 ready로 표시하지 않고 진단을 남긴다.
 
 Arduino `begin()`은 `void`라 오류를 직접 반환하지 않는다. `operator bool()`과 Core 진단 상태를 통해 준비 여부를 확인하는 방안을 사용한다.
 
@@ -193,24 +195,21 @@ RX는 두 소비자가 동시에 가져가면 byte ownership이 불명확해진�
 
 TX는 물리적으로 공유할 수 있지만 message가 byte 단위로 섞이지 않도록 Arduino 내부 TX lock을 사용한다. 이 lock은 Zephyr console 전체와 공유되지 않으므로 log line과 Sketch 출력의 완전한 원자성을 보장하지 않는다. release profile에서는 불필요한 logging을 끄는 것을 기본으로 한다.
 
-### 5.4 구현 단계
+### 5.4 M6 구현
 
-#### Stage S0 — PoC
+- TX는 Core mutex로 직렬화한 `uart_poll_out()`을 사용한다.
+- RX는 interrupt-driven 고정 `k_msgq`를 사용하며 기본 크기는 128 byte다.
+- RX queue가 가득 차면 기존 byte를 보존하고 새 byte를 버리는 drop-newest 정책과 drop
+  counter를 사용한다.
+- `begin()`, `end()`, `available()`, `peek()`, `read()`, `write()`,
+  `availableForWrite()`, `flush()`와 `operator bool()`을 구현했다.
+- `begin()`은 `uart_config_get()`으로 115200 8N1 실제 설정을 확인할 뿐
+  `uart_configure()`를 호출하지 않는다.
+- `flush()`는 polling TX 호출이 반환한 상태를 보장하며 RX discard가 아니다.
+- public `Serial` API는 ISR에서 거부한다.
 
-- polling TX
-- `uart_poll_in()` 기반 최소 RX
-- `begin`, `write`, `read`, `available`, `operator bool`
-- console baud 일치 확인
-
-#### Stage S1 — v1 완료 목표
-
-- interrupt-driven RX ring buffer
-- 필요 시 TX ring buffer
-- `peek`, `flush`, timeout
-- buffer overflow 계수와 진단
-- blocking write의 timeout 정책
-
-PoC polling 구현을 최종 비동기 구현으로 과장하지 않는다.
+TX ring buffer와 비동기 TX는 M6 계약에 포함하지 않는다. polling TX가 block될 수 있다는
+의미를 문서화하고 이를 비동기 구현으로 표시하지 않는다.
 
 ### 5.5 데이터 흐름
 
@@ -294,7 +293,8 @@ endTransmission(stop)
       ↓ Arduino status code
 ~~~
 
-Repeated start는 Zephyr message flag 조합으로 표현하고 logic analyzer로 검증한다.
+Repeated start는 Zephyr message flag 조합으로 표현하고 transaction emulator와 연결된 known
+I2C device의 register read로 검증한다. logic analyzer는 필수 완료 장비가 아니다.
 
 ### 6.5 오류 변환
 
@@ -503,8 +503,8 @@ CMSIS-DAP interface MCU
 | API/동작 | Thread | ISR | Blocking 가능 | 비고 |
 | --- | --- | --- | --- | --- |
 | `Serial.begin/end` | 허용 | 금지 | 예 | lifecycle 변경 |
-| `Serial.write` | 허용 | 금지 | buffer full 시 | ISR 전용 별도 API 없음 |
-| UART RX driver callback | 해당 없음 | 실행 | 금지 | ring buffer만 조작 |
+| `Serial.write` | 허용 | 금지 | polling TX 동안 | Core mutex로 호출 직렬화; ISR은 0과 진단 반환 |
+| UART RX driver callback | 해당 없음 | 실행 | 금지 | 고정 RX queue와 drop counter만 조작 |
 | `Wire` transaction | 허용 | 금지 | 예 | bus mutex와 transfer |
 | `SPI` transaction | 허용 | 금지 | 예 | bus lock과 transfer |
 | `analogRead` | 허용 | 금지 | 예 | synchronous conversion |
@@ -515,7 +515,7 @@ ISR callback은 다음 원칙을 따른다.
 
 - heap allocation 금지
 - mutex와 sleep 금지
-- UART ring buffer와 atomic flag 등 제한된 상태만 갱신
+- UART RX queue와 atomic flag 등 제한된 상태만 갱신
 - 사용자 callback이 필요한 API는 ISR인지 workqueue인지 명시
 - 긴 처리는 `k_work` 또는 message queue로 thread에 전달
 
@@ -566,13 +566,13 @@ Zephyr의 원래 negative errno는 디버깅을 위해 보존한다. Arduino 호
 
 ## 14. 설정 항목
 
-아래 이름은 구현 예정안이다.
+Serial 항목은 M6 실제 구현값이고 나머지는 M7 이후 설계안이다.
 
-| 설정안 | 기본값안 | 설명 |
+| 설정 | 기본값 | 설명 |
 | --- | ---: | --- |
 | `CONFIG_NUCODE_ARDUINO_SERIAL` | `y` | 기본 `Serial` wrapper |
-| `CONFIG_NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE` | 측정 후 결정 | RX ring buffer |
-| `CONFIG_NUCODE_ARDUINO_SERIAL_TX_BUFFER_SIZE` | 측정 후 결정 | TX ring buffer |
+| `CONFIG_NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE` | `128` | IRQ RX 고정 queue, overflow는 drop-newest |
+| Serial TX buffer | 없음 | polling TX와 Core mutex 사용 |
 | `CONFIG_NUCODE_ARDUINO_WIRE` | `y` | I2C master wrapper |
 | `CONFIG_NUCODE_ARDUINO_WIRE_BUFFER_SIZE` | Arduino 호환 시험 후 | I2C static buffer |
 | `CONFIG_NUCODE_ARDUINO_SPI` | overlay 조건부 | SPI wrapper |
@@ -597,13 +597,15 @@ Zephyr dependency 예시는 다음과 같다.
 
 ### 15.1 Serial
 
-- [ ] `Serial`이 `DT_CHOSEN(zephyr_console)`에서 device를 얻는다.
-- [ ] Core에 UART instance와 pin 번호 하드코딩이 없다.
-- [ ] `Serial.begin(115200)`이 console 설정을 손상시키지 않는다.
-- [ ] 다른 baud 요청이 묵시적으로 console을 재구성하지 않는다.
-- [ ] `Serial.end()` 후 Zephyr fault/console 출력 경로가 유지된다.
-- [ ] RX ring overflow와 TX timeout이 안전하게 처리된다.
-- [ ] shell 동시 사용 제한이 build 또는 문서에서 명확하다.
+- [x] `Serial`이 `DT_CHOSEN(zephyr_console)`에서 device를 얻는다.
+- [x] Core에 UART instance와 pin 번호를 별도 board truth로 하드코딩하지 않는다.
+- [x] `Serial.begin(115200, SERIAL_8N1)`이 실제 설정을 읽기만 하고 console 설정을 바꾸지 않는다.
+- [x] 다른 baud/config 요청이 묵시적으로 console을 재구성하지 않고 실패한다.
+- [x] `Serial.end()`이 Arduino RX callback/queue만 정리하고 Zephyr UART lifetime을 유지한다.
+- [x] 128-byte RX overflow가 drop-newest와 counter로 처리된다.
+- [x] polling TX, `flush()`와 ISR 금지 의미가 문서화되어 있다.
+- [x] shell·console input·UART mcumgr·async UART log/tracing 동시 사용 제한이 build에서 진단된다.
+- [x] COM10에서 boot READY와 실행마다 고유한 echo payload가 실제로 왕복한다.
 
 ### 15.2 Wire
 
@@ -640,7 +642,7 @@ Zephyr dependency 예시는 다음과 같다.
 
 ### 16.2 Host test
 
-- Serial ring buffer wrap와 overflow
+- Serial 고정 RX queue 경계와 drop-newest overflow
 - I2C Arduino status 변환
 - SPI settings 변환
 - ADC/PWM scaling과 overflow
@@ -659,12 +661,12 @@ Zephyr dependency 예시는 다음과 같다.
 
 | 기능 | 시험 |
 | --- | --- |
-| Serial | VCOM loopback, 연속 RX/TX, reset message, overflow |
+| Serial | **M6 PASS:** DAPLink sequence 7, COM10 boot READY·고유 echo; target ztest에서 RX/TX·overflow·end·ISR 거부 |
 | Console 공유 | Zephyr log와 Sketch 출력의 관측 및 제한 확인 |
 | I2C | 외부 known device, address NACK, repeated start |
-| SPI | 외부 loopback 또는 known peripheral, mode별 logic analyzer |
-| ADC | 정밀 전압원과 raw sample 비교 |
-| PWM | duty/frequency를 oscilloscope로 측정 |
+| SPI | emulator config/transfer와 사용 가능한 경우 known peripheral |
+| ADC | 활성 channel raw read와 resolution/range 변환; 외부 정밀 전압원은 선택 |
+| PWM | driver duty 적용과 온보드 출력 상태; 외부 duty/frequency 계측은 선택 |
 | Ownership | GPIO↔PWM 전환과 충돌 negative test |
 
 ---
@@ -692,9 +694,9 @@ USB upload나 drag-and-drop firmware 기능이 필요하면 CMSIS-DAP 인터페�
 
 | 항목 | 현재 상태 | 결정 근거 |
 | --- | --- | --- |
-| Serial ring buffer 기본 크기 | 대기 | throughput과 RAM 계측 |
-| Serial TX polling/IRQ 최종 방식 | S0 polling, S1 IRQ 목표 | console 공유 HIL |
-| 다른 console baud의 처리 UX | 기본 거부 결정, 상세 API 대기 | Arduino library 사용성 |
+| Serial RX queue 기본 크기 | M6 `128` byte | target overflow 시험과 RAM 비용 |
+| Serial TX 방식 | M6 polling + mutex | COM10 실제 echo와 단순한 non-owning 소유권 |
+| 다른 console baud/config 처리 | M6 거부 | 실제 설정은 읽기만 하고 Zephyr 소유 UART를 재구성하지 않음 |
 | `Serial1` 공개 | 대기 | overlay와 physical route |
 | I2C buffer 크기 | 대기 | library 호환성과 RAM |
 | I2C target mode | v1 제외 | 실제 사용 사례 |

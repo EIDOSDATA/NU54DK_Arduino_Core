@@ -44,11 +44,12 @@ namespace nucode::arduino::internal
 		const PinDescription pin_descriptions[] = {
 			{
 				GPIO_DT_SPEC_GET(NUCODE_NU54DK_LED0_NODE, gpios),
-				PinCapability::digital_input | PinCapability::digital_output,
+				PinCapability::digital_input | PinCapability::digital_output |
+					PinCapability::interrupt,
 			},
 			{
 				GPIO_DT_SPEC_GET(NUCODE_NU54DK_SW0_NODE, gpios),
-				PinCapability::digital_input,
+				PinCapability::digital_input | PinCapability::interrupt,
 			},
 		};
 

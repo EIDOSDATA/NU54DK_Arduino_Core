@@ -21,6 +21,10 @@ target_include_directories(app BEFORE PRIVATE
   ${NUCODE_CORE_ROOT}/cores/arduino
 )
 
+target_include_directories(app SYSTEM PRIVATE
+  ${NUCODE_CORE_ROOT}/third_party/ArduinoCore-API
+)
+
 target_compile_definitions(app PRIVATE
   CONFIG_NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK=1
 )

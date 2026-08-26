@@ -1,6 +1,6 @@
 /**
  * @file wiring_digital.cpp
- * @brief Zephyr GPIO 위에 M3 Arduino digital API를 구현합니다.
+ * @brief Zephyr GPIO 위에 Arduino digital API를 구현합니다.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -52,7 +52,7 @@ namespace
 	atomic_t last_gpio_driver_error = ATOMIC_INIT(0);
 
 	/**
-	 * @brief M3에서 허용하는 Devicetree GPIO flag 비트입니다.
+	 * @brief Core에서 허용하는 Devicetree GPIO flag 비트입니다.
 	 *
 	 * Pull 설정은 Arduino pin mode가 소유하므로 descriptor의 pull flag를 설정 시
 	 * 그대로 합치지 않습니다. Polarity는 향후 interrupt 의미를 보존하되 digital
@@ -105,7 +105,7 @@ namespace
 	}
 
 	/**
-	 * @brief 현재 M3 공개 GPIO API가 허용하는 thread 문맥인지 확인합니다.
+	 * @brief 현재 공개 GPIO API가 허용하는 thread 문맥인지 확인합니다.
 	 *
 	 * @return thread 문맥이면 true, ISR 문맥이면 false입니다.
 	 */
@@ -138,7 +138,7 @@ namespace
 	}
 
 	/**
-	 * @brief 현재 M3가 해석할 수 없는 Devicetree flag가 있는지 확인합니다.
+	 * @brief 현재 Core가 해석할 수 없는 Devicetree flag가 있는지 확인합니다.
 	 *
 	 * @param description 검사할 핀 설명자입니다.
 	 * @return 모든 flag를 안전하게 처리할 수 있으면 true입니다.
@@ -185,6 +185,30 @@ namespace nucode::arduino::internal
 	void clearGpioError() noexcept
 	{
 		recordSuccess();
+	}
+
+	void setGpioBackendError(GpioError error, int driver_error) noexcept
+	{
+		recordError(error, driver_error);
+	}
+
+	void setGpioBackendSuccess() noexcept
+	{
+		recordSuccess();
+	}
+
+	bool isPinConfiguredForInput(std::size_t logical_pin) noexcept
+	{
+		if (logical_pin >= NUM_DIGITAL_PINS)
+		{
+			return false;
+		}
+
+		const auto mode = static_cast<RuntimePinMode>(
+			atomic_get(&pin_runtime_states[logical_pin].mode));
+		return (mode == RuntimePinMode::input) ||
+			   (mode == RuntimePinMode::input_pullup) ||
+			   (mode == RuntimePinMode::input_pulldown);
 	}
 
 }
@@ -263,6 +287,14 @@ void pinMode(pin_size_t pin, PinMode mode)
 		recordError(GpioError::invalid_mode);
 		return;
 	}
+
+#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+	/**
+	 * 핀 재설정과 동시에 남은 edge callback이 새 mode에서 실행되는 것을
+	 * 방지하기 위해 등록된 callback을 먼저 해제합니다.
+	 */
+	detachInterrupt(pin);
+#endif
 
 	const int result = gpio_pin_configure(description->gpio.port, description->gpio.pin, flags);
 	if (result < 0)
