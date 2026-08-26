@@ -18,4 +18,17 @@
  */
 void initVariant(void);
 
+namespace nucode::arduino::internal
+{
+
+	/**
+	 * @brief 한 번의 Sketch `loop()` 반환 뒤 선택한 Zephyr 공존 정책을 적용합니다.
+	 *
+	 * 기본 설정에서는 현재 main thread를 한 kernel tick 동안 재워 낮은 우선순위
+	 * thread와 idle thread가 실행 가능한 구간을 만듭니다.
+	 */
+	void runtimePostLoop(void);
+
+}
+
 #endif

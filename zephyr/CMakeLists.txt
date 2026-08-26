@@ -19,6 +19,7 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
 
   set(NUCODE_ARDUINO_CORE_SOURCES
     "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/main.cpp"
+    "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/runtime_scheduler.cpp"
   )
 
   if(CONFIG_NUCODE_ARDUINO_GPIO)

@@ -16,11 +16,11 @@ NU54DK에서 Loader 없이 동작하는 Native Full Zephyr 기반 Arduino Core�
 - M1 완료, clean 보드 package 기반 C++·Blinky pristine build와 실기 기준선 통과
 - M2 완료, Zephyr module·Core runtime·Core 비활성 회귀와 C++ 정책 build 통과
 - M3 Blink·버튼 육안 동작과 시간·scheduler trace 통과
-- M3 sample 3종과 Core 비활성·`led0` 누락 negative build 통과
-- M3 진행 중, LED 물리 식별과 GPIO RAM trace·외부 계측·Twister·rollover·PM/idle 검증 대기
-- M3 결정 게이트는 **CONDITIONAL GO**이며 M4 착수 가능
+- M3 sample 3종 pristine build와 Core 비활성·`led0` 누락 negative build 통과
+- M3 GPIO·시간·scheduler ztest/Twister NU54DK HIL 9/9 통과
+- M3 완료; GPIO RAM trace·외부 계측·실제 PM·외장 J-Link는 합의된 범위에 따라 필수 증거에서 제외
 - 외장 J-Link flash/debug HIL은 M3 필수 게이트가 아니라 M8에서 별도 검증
-- 이번 clean 기준선 갱신은 build-only이며 장치 플래시는 다시 수행하지 않음
+- M3 자동 회귀 이미지는 온보드 DAPLink MSD로 플래시하고 COM10에서 Twister 결과를 수집
 
 ## 보드 정의
 

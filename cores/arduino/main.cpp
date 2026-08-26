@@ -20,27 +20,6 @@
  */
 __weak void initVariant(void) {}
 
-namespace
-{
-
-    /**
-     * @brief 한 번의 Sketch `loop()` 반환 뒤 Zephyr 공존 정책을 적용합니다.
-     *
-     * 기본 정책은 한 kernel tick 동안 현재 main thread를 재워 낮은 priority
-     * thread와 idle thread에도 실행 기회를 제공합니다. Kconfig로 yield 또는 무개입
-     * 정책을 선택할 수 있습니다.
-     */
-    void runtimePostLoop(void)
-    {
-#if defined(CONFIG_NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK)
-        (void)k_sleep(K_TICKS(1));
-#elif defined(CONFIG_NUCODE_ARDUINO_LOOP_YIELD)
-        k_yield();
-#endif
-    }
-
-}
-
 /**
  * @brief Arduino Sketch 런타임을 시작합니다.
  *
@@ -60,6 +39,6 @@ int main(void)
     for (;;)
     {
         loop();
-        runtimePostLoop();
+        nucode::arduino::internal::runtimePostLoop();
     }
 }

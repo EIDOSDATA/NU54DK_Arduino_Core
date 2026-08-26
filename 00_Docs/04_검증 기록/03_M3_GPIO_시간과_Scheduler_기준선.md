@@ -2,21 +2,21 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | 진행 중 |
-| 결정 게이트 | **CONDITIONAL GO** — clean revision과 GPIO·시간 로컬 HIL 통과, 잔여 계측·자동 시험 대기 |
-| 검증일 | 2026-08-26 (Asia/Seoul) |
+| 문서 상태 | 완료 |
+| M3 판정 | **완료** — sample 3종 pristine build, expected-fail 및 NU54DK Twister HIL 9/9 통과 |
+| 검증일 | 2026-08-27 (Asia/Seoul) |
 | 작성자 | Quantum / NUCODE |
 | 대상 구조 | Loader/LLEXT 없는 Native Full Zephyr 정적 이미지 |
 | 대상 보드 | NU54DK |
 | Zephyr 보드 타깃 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
-| Core 기준 revision | `a8d62ea75fef57cdf166738eb45ad4f61e0eaa9c` (clean) |
+| Core 기준 | `7df96d2a536e` 기반 M3 완료 source, Core source SHA-256 `c4aca6cdcd1c5d125d65c08edc140c7f7fe1144a850a03a3edcb0ef72f1b664a` |
 | 보드 package 기준 revision | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` (clean, 읽기 전용) |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 기준 compiler | Arm GCC 14.3.0, C++17, exception·RTTI 비활성 |
-| 기본 연결 | 온보드 CMSIS-DAP V2 + pyOCD |
+| 실기 연결 | 온보드 CMSIS-DAP V2, DAPLink MSD flash + COM console |
 
 > 상위 gitlink와 서브모듈 HEAD는 위 보드 revision으로 일치한다.
-> `NU54DK_Zephyr_DTS`는 읽기 전용 빌드 입력으로 사용했고, M3 pristine 재검증 중
+> `NU54DK_Zephyr_DTS`는 읽기 전용 빌드 입력으로 사용했고, M3 구현·시험 중
 > 서브모듈 내부 파일을 수정하지 않았다.
 
 ---
@@ -151,44 +151,68 @@ west -z "$NcsRoot/zephyr" build `
   "-DBOARD_ROOT=$BoardRoot" `
   "-DEXTRA_ZEPHYR_MODULES=$CoreRoot"
 
-west -z "$NcsRoot/zephyr" flash `
-  -d "$CoreRoot/build/m3-blink" `
-  --dev-id <PROBE_UID>
+$Python = "C:/ncs/toolchains/dcbdc366a1/opt/bin/python.exe"
+$Twister = "$NcsRoot/zephyr/scripts/twister"
+$TwisterOut = Join-Path $env:TEMP "nu54dk-m3-twister"
+
+& $Python $Twister `
+  -T "$CoreRoot/tests/zephyr/m3_runtime" `
+  -p $Board `
+  --board-root "$BoardRoot/boards" `
+  --extra-args "BOARD_ROOT=$BoardRoot" `
+  --device-testing `
+  --device-serial COM10 `
+  --device-serial-baud 115200 `
+  --device-flash-timeout 60 `
+  --flash-command "$CoreRoot/tests/zephyr/m3_runtime/scripts/daplink_msd_flash.cmd" `
+  --short-build-path `
+  --outdir $TwisterOut
+
+& $Python "$CoreRoot/tests/zephyr/m3_runtime/scripts/check_missing_led0.py"
 ```
 
-일반 flash에는 `--erase`나 recover를 사용하지 않는다. `<PROBE_UID>`는 공개 문서에 실제
-장치 식별값으로 치환해 commit하지 않는다.
+`COM10`은 이 검증 PC에서 확인한 console이므로 다른 PC에서는 실제 CMSIS-DAP V2 UART
+포트로 바꾼다. Twister의 `--board-root`에는 `boards` 디렉터리를, CMake의 `BOARD_ROOT`에는
+package 루트를 전달해야 한다. `--short-build-path`는 Windows의 sysbuild 경로 길이 문제를
+피한다.
+
+flash wrapper는 드라이브 문자를 고정하지 않고 `DETAILS.TXT`의 `Target Detect: nRF54L15`를
+찾아 HEX를 복사한다. flash 전후 `Flash Sequence` 변화와 `Last Flash Result: SUCCESS`를
+확인하며 mass erase와 recover는 호출하지 않는다. 여러 NU54DK가 연결된 경우에는 wrapper의
+`--board-id`로 한 장치를 지정한다. 실제 probe UID는 공개 문서에 기록하지 않는다.
 
 ---
 
 ## 4. Clean build와 산출물
 
-세 M3 sample을 최종 source에서 각각 pristine build했다. 유일한 공통 경고는 보드/NCS의
-deprecated `NRF_PLATFORM_LUMOS`이며 Core compile 또는 link 오류는 아니다.
+세 M3 sample을 M3 완료 source에서 각각 새 build 디렉터리로 pristine build했다. 유일한
+공통 경고는 보드/NCS의 deprecated `NRF_PLATFORM_LUMOS`이며 Core compile 또는 link 오류는
+아니다.
 
 | build | 결과 | FLASH | RAM | ELF 크기 |
 | --- | --- | ---: | ---: | ---: |
-| `m3-blink` | 274/274, PASS | 30,728 B | 6,856 B | 1,142,736 B |
-| `m3-gpio-input` | 274/274, PASS | 31,048 B | 6,888 B | 1,146,616 B |
-| `m3-runtime-timing` | 276/276, PASS | 34,720 B | 12,936 B | 1,311,760 B |
+| `m3-final-blink` | 275/275, PASS | 30,728 B | 6,856 B | 1,144,156 B |
+| `m3-final-gpio-input` | 275/275, PASS | 31,048 B | 6,888 B | 1,148,032 B |
+| `m3-final-runtime-timing` | 277/277, PASS | 34,720 B | 12,936 B | 1,313,232 B |
 
 ### 4.1 최종 산출물 SHA-256
 
 | build | 파일 | 크기 | SHA-256 |
 | --- | --- | ---: | --- |
-| Blink | `zephyr.elf` | 1,142,736 B | `00784B02C4148BAC37BA2304C84A4DB6F130456306B1C65250D4396B81B081F4` |
-| Blink | `zephyr.hex` | 86,499 B | `AB2D489BF5BF0CE3EAEA3ABB8C2E5D08ADEB6760FFB54B693C473BE115CB7F0E` |
-| Blink | `zephyr.bin` | 30,728 B | `958A29601D1A551374912CDF918531A90CDF03986D18BC712237989731115FC7` |
-| GPIO input | `zephyr.elf` | 1,146,616 B | `41BF6F1092F486A03726912D91B22F0050F5E437805BC5B255CE97E3259A3616` |
-| GPIO input | `zephyr.hex` | 87,407 B | `C84F2C42BA5DA8658744C22A9ADE03E7E461AF95F23417EEA83203C3CCFEC3DC` |
-| GPIO input | `zephyr.bin` | 31,048 B | `13BF75724BE22FC46CB702518A2C33D9F745B367E99A5D938F77B042DF9C5A71` |
-| Runtime timing | `zephyr.elf` | 1,311,760 B | `31209CBF2D90A982A1FA3491EDB5E65D81DD30E4BFA2CBBF5A3343099777E44B` |
-| Runtime timing | `zephyr.hex` | 97,733 B | `EF62E4394C32016DC09C2F16B0DD68FE837351554B5F14072D819DB660FA5944` |
-| Runtime timing | `zephyr.bin` | 34,720 B | `4BEA5C1DE7B1830A944C8288B873B0C2A2AB280D594117861013880087B84B6C` |
+| Blink | `zephyr.elf` | 1,144,156 B | `901289DF9FEA09C1E993AD0A7B9D214F955A4A2C2DADAC0C46ED9342568B91E7` |
+| Blink | `zephyr.hex` | 86,507 B | `A91DBCEB00FAEC56AA08484B2A12F195F9ADD9EDDBBD8D7146CBCA1F61967493` |
+| Blink | `zephyr.bin` | 30,728 B | `D07F591850B67BCF1D4FF74E75C5731675DEFE082C2D24B4C787B12CD35555D3` |
+| GPIO input | `zephyr.elf` | 1,148,032 B | `F3B3A208D45572729B15C1C9823574284F815C8C83EFDBE487B3368179112FBE` |
+| GPIO input | `zephyr.hex` | 87,428 B | `6955BB632C708A9B0994120890C70E480FDAD68ECCFB116C50E119B845639E7F` |
+| GPIO input | `zephyr.bin` | 31,048 B | `3CDB83D02941368B53F5739064C3EB80F21939E4F7734791253DBC109BD72282` |
+| Runtime timing | `zephyr.elf` | 1,313,232 B | `6531CD5E67FFAB2E06F4ADE1B5F8DEB943C64B1E506A60E30D60AB9B53A7189F` |
+| Runtime timing | `zephyr.hex` | 97,717 B | `0AA1D692714EE29B74EEC6209744B38F487F30B75477766DBE3BADA703FF1D65` |
+| Runtime timing | `zephyr.bin` | 34,720 B | `AB91504A19723A94CBA3573E207CABA6D7D9571A3AC6DE869625F9F6629E4567` |
 
-clean revision의 provenance를 반영하면서 ELF hash는 바뀌었지만 세 HEX/BIN hash는 기존
-실기에서 사용한 image와 동일하다. 따라서 아래 HIL은 현재 flashable firmware byte와
-직접 연결된다. 이번 재검증 자체는 build-only이며 장치에 다시 flash하지 않았다.
+이번 완료 변경은 시간 chunk 계산과 loop 반환 정책을 직접 시험할 수 있도록 내부 순수 함수와
+`runtimePostLoop()` 경계를 분리했으므로 이전 기준선과 artifact hash가 다르다. 세 sample의
+FLASH/RAM 사용량은 이전 값과 동일하며, 새 source는 아래 Twister HIL에서 같은 GPIO·시간·
+scheduler backend로 검증했다.
 
 세 성공 build의 `runners.yaml`은 모두 flash/debug 기본 runner를 `pyocd`로 생성하고,
 pyOCD 인자는 `--dt-flash=y`와 `--target=nrf54l`만 포함한다.
@@ -227,7 +251,8 @@ delay(250);
 ```
 
 기존 HIL에서 CMSIS-DAP V2/pyOCD 경로로 사용자가 NU54DK LED의 지속적인 점멸을
-확인했다. 현재 clean HEX는 그 image와 동일하며 이번 갱신에서는 다시 flash하지 않았다.
+확인했다. M3 완료 source에서는 세 sample pristine build와 GPIO emulator 실기 회귀를
+추가로 통과했다.
 
 ### 5.2 버튼 입력
 
@@ -244,15 +269,14 @@ sample에는 다음 self-check도 포함된다.
 - `NUM_DIGITAL_PINS` 범위 밖 pin의 no-op/`LOW` 정책
 - invalid pin 호출 전후 LED 상태 보존
 
-버튼 연동 loop는 위 self-check가 모두 통과한 뒤에만 진입한다. 따라서 버튼에 따른
-LED 반응은 self-check PASS의 간접 제어 흐름 oracle이다. 다만 저전력 대기 중인 target을
-CMSIS-DAP가 안정적으로 halt하지 못해
-`nu54_m3_gpio_input_trace` RAM 값은 회수하지 못했다. 따라서 버튼·LED 경로는 **육안 HIL
-PASS**, self-check 결과는 **간접 PASS**, 각 세부 값의 debugger trace는
-**EVIDENCE MISSING**으로 구분한다.
+버튼 연동 loop는 위 self-check가 모두 통과한 뒤에만 진입한다. 따라서 버튼에 따른 LED
+반응은 self-check PASS의 간접 제어 흐름 oracle이다. 여기에 ztest가 GPIO emulator로 raw
+HIGH/LOW read/write, 잘못된 pin/mode/value, 미설정 pin, capability와 Devicetree flag 오류를
+자동 검증했다.
 
-기존 GPIO HIL에서 동일 HEX의 compare/skip과 실행을 확인했다. 현재 clean GPIO HEX
-SHA-256도 그 image와 동일하다.
+`nu54_m3_gpio_input_trace` RAM 값은 회수하지 않았다. 사용자는 버튼·LED 육안 동작과 자동
+GPIO 회귀로 M3 GPIO 계약을 판정하기로 했으며, debugger RAM trace와 외부 GPIO 계측은 M3
+완료 필수 증거에서 제외했다. 이는 기능 실패가 아니라 검증 범위를 정한 것이다.
 
 ---
 
@@ -277,8 +301,19 @@ M8 debugger/HIL 단계에서 다시 기록하고 보드 package의 runner 설정
 | timer ISR의 `millis()`/`micros()` 읽기 | 1,582회 |
 
 이 값은 firmware 내부 GRTC/Zephyr 시간원으로 시작과 끝을 읽은 결과다. 외부 logic analyzer
-또는 oscilloscope에 의한 절대 정확도 검증은 아니다. 실제 32-bit rollover, 장시간 drift,
-저전력 상태 전후 연속성과 `INT32_MAX`/1초 chunk 경계도 아직 별도 시험하지 않았다.
+또는 oscilloscope에 의한 절대 정확도 검증은 아니며, 해당 외부 계측은 사용자 결정에 따라
+M3 완료 필수 증거에서 제외했다.
+
+ztest는 장시간을 실제로 기다리지 않고 같은 production helper에 경계값을 주입했다.
+
+| 자동 경계 시험 | 입력 | 기대·실제 결과 |
+| --- | --- | --- |
+| 32-bit rollover 차이 | `0xFFFFFFF0 → 0x00000020` | unsigned modulo 차이 48, PASS |
+| 최대 `delay()` 분할 | `UINT32_MAX` ms | `INT32_MAX`, `INT32_MAX`, `1`, PASS |
+| 긴 busy-wait 분할 | 2,000,017 us | 1,000,000 + 1,000,000 + 17 us, PASS |
+
+따라서 32-bit API의 wrap-safe 차이 계산과 긴 delay의 경계·분할 의미는 자동 검증했다.
+약 49.7일을 실제 대기하는 시험, 장시간 drift와 PM 상태 전후 연속성은 M3 범위에서 제외한다.
 
 ### 6.2 공정성 결과
 
@@ -298,11 +333,33 @@ priority worker와 idle은 진행하지 못했다. `yield()`는 같은 priority 
 반복률이 필요한 사용자는 `YIELD` 또는 `NONE`을 선택할 수 있지만 낮은 priority Zephyr
 작업과 idle의 공존 책임을 애플리케이션이 져야 한다.
 
+ztest에서도 기본 `runtimePostLoop()`가 한 tick 이상 현재 thread를 block하는지, 그 구간에
+낮은 우선순위 worker가 실행되는지, `delay(2)` 중 같은 우선순위 worker가 실행되는지를 각각
+검증했다. 세 scheduler test가 모두 통과했으므로 실제 system PM 전환이나 전류 계측 없이도
+M3의 scheduler 공존·idle 진입 가능 구간 계약은 자동 회귀된다.
+
 ---
 
-## 7. Negative 회귀
+## 7. 자동 회귀와 Negative 회귀
 
-### 7.1 Core 비활성 앱
+### 7.1 ztest/Twister NU54DK HIL
+
+`tests/zephyr/m3_runtime`은 GPIO, 시간과 scheduler를 각각 세 건씩 검증한다. 온보드
+CMSIS-DAP V2의 DAPLink MSD에 새 image를 기록했고 `DETAILS.TXT`에서 flash sequence 증가와
+`Last Flash Result: SUCCESS`를 확인한 뒤 COM console을 Twister가 판독했다.
+
+| suite | 결과 | 검증 내용 |
+| --- | ---: | --- |
+| `m3_gpio` | 3/3 PASS | emulator read/write, argument·state 오류, DTS flag 오류 |
+| `m3_scheduler` | 3/3 PASS | 낮은·같은 priority 공존, one-tick idle 가능 구간 |
+| `m3_time` | 3/3 PASS | 32-bit rollover, 최대 delay, busy-wait 분할 |
+| 전체 | **9/9 PASS** | 1/1 configuration, Twister 판정 경고 0, `PROJECT EXECUTION SUCCESSFUL` |
+
+시험 image는 FLASH 59,036 B, RAM 12,816 B였다. 현재 session에서 pyOCD는 SWD `No ACK`로
+재접속하지 못했으므로 mass erase/recover를 시도하지 않고 DAPLink MSD fallback을 사용했다.
+이 fallback은 drive letter 자동 탐색, flash 결과 확인과 Twister console 판정을 포함한다.
+
+### 7.2 Core 비활성 앱
 
 Zephyr `samples/hello_world`에 Core module과 NU54DK `BOARD_ROOT`를 전달하되
 `CONFIG_NUCODE_ARDUINO_CORE`를 켜지 않고 pristine build했다.
@@ -324,10 +381,11 @@ Zephyr `samples/hello_world`에 Core module과 NU54DK `BOARD_ROOT`를 전달하�
 | `zephyr.hex` | 85,096 B | `E700B202855D509911277594C844DFC2C4BD9F3589125328559FD5C95EF84C8A` |
 | `zephyr.bin` | 30,224 B | `4A34BD35DF89DDFB62C543BC7A4A2D978B1ADA8FB024593B2ED52701FD995B00` |
 
-### 7.2 필수 `led0` alias 누락
+### 7.3 필수 `led0` alias 누락
 
-읽기 전용 보드 package를 유지한 채 Blink에 다음 임시 overlay를 적용해 `led0` alias를
-삭제한 pristine build는 의도대로 실패했다.
+읽기 전용 보드 package를 유지한 채 `check_missing_led0.py`가 Blink에 다음 overlay를
+적용해 `led0` alias를 삭제한 pristine build를 실행한다. build는 의도대로 실패했고
+스크립트는 진단 문자열까지 일치한 경우에만 성공을 반환했다.
 
 ```dts
 / {
@@ -343,10 +401,10 @@ Zephyr `samples/hello_world`에 Core module과 NU54DK `BOARD_ROOT`를 전달하�
 error: #error "NU54DK Arduino Variant에는 활성화된 led0 alias가 필요합니다."
 ```
 
-실패용 overlay는 검증 뒤 제거했으며 정상 sample이나 보드 package를 변경하지 않았다.
-NCS v3.4.0 Windows에서 기존 build tree에 overlay를 추가해 CMake를 재구성하면 generated
-Kconfig string quoting 경고가 먼저 발생할 수 있어, 이 negative test도 pristine build가
-재현 기준이다.
+실패용 overlay는 `tests/zephyr/m3_runtime/negative`에 회귀 입력으로 보관한다. 정상 sample과
+보드 package는 변경하지 않았다. NCS v3.4.0 Windows에서 기존 build tree에 overlay를 추가해
+CMake를 재구성하면 generated Kconfig string quoting 경고가 먼저 발생할 수 있어 이
+negative test도 매번 별도 pristine build 디렉터리를 사용한다.
 
 ---
 
@@ -354,18 +412,19 @@ Kconfig string quoting 경고가 먼저 발생할 수 있어, 이 negative test�
 
 | 항목 | M3 상태와 후속 조치 |
 | --- | --- |
-| revision 기준 | Core `a8d62ea75fef`, 보드 `fe65f2f0880b` clean provenance와 pristine artifact hash를 확보했다. 보드 서브모듈은 읽기 전용이다. |
+| source 기준 | Core source SHA-256 `c4aca6cd…1b664a`와 보드 `fe65f2f0880b` pristine artifact hash를 확보했다. 보드 서브모듈은 읽기 전용이다. |
 | provenance | 표준 `build_info.yml`은 configure 시점 snapshot이고 `nucode_arduino_core_build.yml`은 매 build의 live record다. 증분 source 변경 후 두 값이 다를 수 있으며 최종 image는 pristine build와 artifact SHA-256으로 고정한다. |
-| LED 물리 식별 | generated DTS의 `led0`는 P2.9이지만 사용자는 반응 LED를 P1.14로 식별했다. LED별 전용 HIL로 재확인한다. |
-| GPIO RAM trace | 버튼·LED 육안 HIL과 self-check 제어 흐름은 PASS지만 세부 trace 값은 미회수다. M8 debugger/HIL 자동화에서 보완한다. |
-| 외부 timing 계측 | 내부 GRTC 측정만 통과했다. logic analyzer/oscilloscope로 period와 busy wait 정확도를 검증한다. |
-| rollover와 긴 대기 | compile-time modulo 계산만 있으며 실제 32-bit rollover, `INT32_MAX` sleep 및 긴 busy-wait는 NOT RUN이다. |
-| 저전력 연속성 | GRTC 기반 `micros()`의 PM 상태 전후 연속성과 drift는 NOT RUN이다. |
+| LED 물리 식별 | generated DTS의 `led0`는 P2.9이지만 사용자는 반응 LED를 P1.14로 식별했다. Arduino alias 경로와 버튼 동작은 통과했으며 실물 표기 대조는 비차단 후속 확인이다. |
+| GPIO RAM trace·외부 계측 | 사용자 결정에 따라 M3 필수 증거에서 제외했다. 육안 버튼·LED HIL과 GPIO emulator 자동 회귀를 완료 증거로 사용한다. |
+| 외부 timing 계측 | 사용자 결정에 따라 logic analyzer/oscilloscope 계측을 M3 필수에서 제외했다. 내부 GRTC trace와 자동 경계 시험을 사용한다. |
+| rollover와 긴 대기 | 32-bit modulo rollover, `UINT32_MAX` ms sleep 3분할, 2,000,017 us busy-wait 3분할을 production helper 경계 주입으로 PASS했다. |
+| 저전력 연속성 | 실제 system PM·전류·장시간 drift는 사용자 결정에 따라 M3 필수에서 제외했다. one-tick block과 worker 진행은 자동 검증했다. |
 | GPIO 동시성 | M3는 thread-only이며 여러 thread의 같은 pin 경쟁, ownership과 peripheral 충돌은 미구현이다. |
 | Interrupt | `attachInterrupt()`/`detachInterrupt()`와 ISR digital GPIO 계약은 M3 범위 밖이다. |
-| Twister/ztest | west-native clean/negative와 로컬 HIL은 통과했지만 자동 test suite는 아직 없다. |
+| Twister/ztest | NU54DK device test 1/1 configuration, 9/9 test case PASS. DAPLink MSD flash 결과와 COM console을 자동 판정한다. |
 | Arduino CLI/IDE | `.ino`, library discovery, Build Adapter와 Actions upload는 M5 이후 범위다. |
-| 외장 J-Link | runner metadata는 생성되지만 실제 외장 J-Link flash/debug HIL은 M8까지 미검증이다. |
+| 외장 J-Link | M3 필수 증거가 아니다. 실제 외장 J-Link flash/debug는 M8 선택 경로에서 검증한다. |
+| pyOCD 현재 연결 | board runner는 그대로 유지했다. 이번 자동 시험 session의 SWD `No ACK`에는 DAPLink MSD fallback을 사용했으며 보드 package를 수정하거나 erase/recover하지 않았다. |
 | nRF54 내부 symbol | `z_nrf_grtc_timer_startup_value_get()`는 Zephyr 내부 API이므로 NCS 업그레이드 때 compile과 의미를 다시 검증한다. |
 
 ---
@@ -375,17 +434,17 @@ Kconfig string quoting 경고가 먼저 발생할 수 있어, 이 negative test�
 | 완료 기준 | 결과 | 증거 |
 | --- | --- | --- |
 | DTS 기반 최소 Variant | 통과 | `led0`/`sw0` 두 descriptor, 물리 pin 하드코딩 없음 |
-| Arduino Blink build·실행 | 통과 | clean HEX가 기존 CMSIS-DAP V2/pyOCD HIL image와 동일; 이번 갱신에서 flash 미수행 |
-| GPIO input 실기 | 조건부 통과 | BUTTON 1에 따른 LED 전환 확인; generated DTS는 P2.9, 사용자 식별은 P1.14로 서로 달라 재확인 필요; 내부 RAM trace는 미회수 |
-| 시간 API 기본 동작 | 통과 | delay/busy-wait/ISR trace `PASS`, `failure=0` |
-| Zephyr scheduler 공존 정책 | 통과 | 네 400 ms 단계 실측과 기본 one-tick 결정 |
+| Arduino Blink build·실행 | 통과 | pristine build, 기존 사용자 LED 점멸 HIL |
+| GPIO input 실기 | 통과 | BUTTON 1에 따른 LED 전환 확인, emulator GPIO와 오류 정책 3/3 PASS |
+| 시간 API 기본 동작 | 통과 | delay/busy-wait/ISR trace와 rollover·긴 delay 경계 3/3 PASS |
+| Zephyr scheduler 공존 정책 | 통과 | 네 400 ms 단계 실측, 기본 one-tick 결정과 자동 회귀 3/3 PASS |
 | Core 비활성 회귀 | 통과 | Core compile/archive/symbol 0개 |
-| 필수 DTS alias negative | 통과 | pristine build가 명시적인 한국어 compile error로 expected fail |
-| 변경 없는 rebuild | 기존 회귀 통과 | 이번 기준선 갱신은 pristine build만 수행 |
-| 공개 재현 가능한 revision | 통과 | clean Core·보드 revision과 source/artifact SHA-256 확보 |
+| ztest/Twister HIL | 통과 | DAPLink MSD flash SUCCESS, COM console, 9/9 PASS |
+| 필수 DTS alias negative | 통과 | 자동 pristine build가 명시적인 한국어 compile error로 expected fail |
+| 기존 sample 회귀 | 통과 | 세 sample 새 디렉터리 pristine build PASS |
+| 공개 재현 가능한 source | 통과 | Core·보드 source 및 artifact SHA-256 확보 |
 
-**결정 게이트: CONDITIONAL GO.** M3의 GPIO·시간 수직 경로와 기본 scheduler 정책은
-실제 NU54DK에서 성립했고 clean HEX/BIN이 기존 HIL image와 동일함을 확인했다. clean
-revision 고정은 완료됐으므로 더 이상 GO 전환 대기 항목이 아니다. 남은 조건은 LED 물리
-식별, GPIO trace 자동화, 외부 전압·시간 계측, runtime rollover, PM/idle과 ztest/Twister
-회귀다. 이들은 M4 착수를 막지 않지만 M3 결정 게이트를 GO로 전환하기 전에는 완료해야 한다.
+**M3는 2026-08-27 완료했다.** GPIO·시간 수직 경로, scheduler 정책, negative build와
+NU54DK 자동 HIL이 모두 완료 기준을 충족한다. RAM trace, 외부 logic analyzer/oscilloscope,
+실제 system PM 계측과 외장 J-Link는 사용자 결정과 단계 범위에 따라 M3 필수 증거에서
+제외했다. 이 항목은 M3 미완료 조건이 아니며 필요할 때 M8 또는 별도 장기 시험에서 다룬다.

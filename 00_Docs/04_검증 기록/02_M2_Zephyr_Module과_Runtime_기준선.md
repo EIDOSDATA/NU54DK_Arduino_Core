@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 상태 | 완료 |
-| 결정 게이트 | **GO** — clean module·runtime·정책·negative build와 기존 runtime HIL 통과 |
+| M2 상태 | **완료** — clean module·runtime·정책·negative build와 기존 runtime HIL 통과 |
 | 검증일 | 2026-08-26 (Asia/Seoul) |
 | 작성자 | Quantum / NUCODE |
 | 대상 구조 | Loader/LLEXT 없는 Native Full Zephyr 정적 이미지 |
@@ -387,6 +387,6 @@ HEX를 장치에 다시 기록하지 않았다.
 | C++17 이상과 사용자 C++ 정책 | 통과 | C++20 및 common libc malloc을 포함한 full libstdc++ + exception/RTTI pristine link |
 | 변경 없는 증분 build | 기존 회귀 통과 | 이번 기준선 갱신은 pristine build만 수행 |
 
-**결정 게이트: GO.** M2의 module·runtime 구조, Core 비활성 회귀, C++20과 full C++
+**M2 완료.** M2의 module·runtime 구조, Core 비활성 회귀, C++20과 full C++
 정책 build를 clean Core·보드 revision으로 다시 확인했다. 기존 NU54DK runtime 실기
 증거와 이번 pristine build 증거를 구분해 기록했으며, 보드 서브모듈은 변경하지 않았다.

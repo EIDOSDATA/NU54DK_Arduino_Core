@@ -2,8 +2,8 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M3 진행 중 — 내부 기준선 통과, 추가 계측·자동 시험 대기 |
-| 결정 게이트 | **CONDITIONAL GO** |
+| 문서 상태 | M3 완료 — west-native와 자동 HIL 기준선 통과 |
+| M3 상태 | **완료** |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 Zephyr | Zephyr 4.4.0 |
@@ -74,17 +74,18 @@ $CoreRoot = (Resolve-Path ".").Path.Replace('\', '/')
 
 ### 2.3 현재 M3 실행 결과
 
-2026-08-26 기준 west-native 수직 경로의 판정은 **CONDITIONAL GO**다.
+2026-08-27 기준 west-native 수직 경로와 M3 자동 회귀를 완료했다.
 
 | 검증 | 결과 | 비고 |
 | --- | --- | --- |
 | `blink` clean/warm build | PASS | 무변경 rebuild에서 Core compile과 link는 발생하지 않음 |
 | `gpio_input_smoke` clean build와 버튼 육안 | PASS | 버튼에 따른 LED 동작 확인 |
-| GPIO 입력 RAM trace | 미회수 | 육안 PASS와 별개인 증거로 유지 |
+| GPIO 입력 RAM trace | 범위 제외 | 사용자 결정에 따라 M3 필수 증거에서 제외 |
 | `runtime_timing` clean build와 trace | PASS | 내부 시간·scheduler 판정 PASS |
 | Core 비활성 negative | PASS | Core archive와 runtime의 비의도 주입 없음 |
 | `led0` 누락 negative | PASS | 의도한 configure 실패 확인 |
 | Blink와 버튼 실기 | PASS | 사용자 육안 판정 |
+| ztest/Twister NU54DK HIL | PASS | DAPLink MSD flash, COM console, 9/9 test case |
 
 기본 loop 반환 정책은 `CONFIG_NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK=y`다. 계측용
 `runtime_timing` sample만 자동 loop 정책을 끄고 spin, `yield()`, 한 tick sleep 및
@@ -92,8 +93,9 @@ $CoreRoot = (Resolve-Path ".").Path.Replace('\', '/')
 
 생성된 `runners.yaml`에는 `nrfutil`, `jlink`, `pyocd`가 available runner로 나타나며
 flash/debug 기본값은 `pyocd`다. J-Link device와 speed metadata는 생성되지만 외장
-J-Link flash/debug HIL은 실행하지 않았다. 외부 계측, Twister, 실제 rollover와 PM 시험도
-아직 실행하지 않았다.
+J-Link flash/debug HIL은 실행하지 않았다. 외부 계측과 실제 system PM 시험은 사용자
+결정에 따라 M3 필수 증거에서 제외했다. 32-bit rollover와 긴 delay 경계는 production
+helper에 값을 주입하는 ztest로 검증했다.
 
 ---
 
@@ -406,9 +408,7 @@ PoC 소스에 `P0.xx`와 같은 물리 핀 번호를 직접 쓰지 않는다.
 
 ## 9. 완료 기준
 
-다음 조건을 모두 만족하면 west-native Blink PoC를 완료하고 M3 결정 게이트를 GO로
-전환한다. 현재 상태는 진행 중이다. build와 육안·내부 trace 기준선은 통과했지만 외부
-계측과 자동 시험 증거가 남아 있어 결정 게이트는 **CONDITIONAL GO**다.
+다음 조건과 합의된 자동 시험 기준을 만족해 west-native Blink PoC와 M3를 완료했다.
 
 1. 고정 board target과 두 root 인자로 clean configure가 성공한다.
 2. build가 `--no-sysbuild` 단일 이미지로 완료된다.
@@ -421,10 +421,10 @@ PoC 소스에 `P0.xx`와 같은 물리 핀 번호를 직접 쓰지 않는다.
 9. 무변경 두 번째 빌드가 전체 pristine rebuild를 수행하지 않는다.
 10. `.ino`, Arduino CLI 또는 IDE가 없어도 이 기준선 시험을 반복할 수 있다.
 
-현재 판정의 상세 근거와 미수행 항목은
+완료 판정의 상세 근거와 범위 제외 항목은
 [M3 GPIO·시간·Scheduler 기준선](<../04_검증 기록/03_M3_GPIO_시간과_Scheduler_기준선.md>)을
-따른다. 특히 GPIO RAM trace 미회수는 버튼 육안 PASS로 대체하지 않으며, 외부 계측,
-Twister, runtime rollover, PM 및 J-Link HIL은 실행 전 상태로 유지한다.
+따른다. GPIO RAM trace, 외부 계측, 실제 system PM과 외장 J-Link HIL은 M3 필수 증거에서
+제외했다. Twister 9/9와 runtime rollover·긴 delay 경계 자동 시험은 통과했다.
 
 ---
 
