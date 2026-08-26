@@ -1,0 +1,51 @@
+name=NUCODE NU54DK Zephyr Boards
+version=0.1.0-dev
+
+# M5에서는 Arduino compiler recipe를 source graph 수집기로 사용한다.
+compiler.warning_flags=-Wall
+compiler.warning_flags.none=
+compiler.warning_flags.default=-Wall
+compiler.warning_flags.more=-Wall -Wextra
+compiler.warning_flags.all=-Wall -Wextra -Wpedantic
+compiler.c.extra_flags=
+compiler.cpp.extra_flags=
+compiler.S.extra_flags=
+compiler.ar.extra_flags=
+compiler.c.elf.extra_flags=
+compiler.libraries.ldflags=
+build.extra_flags=
+
+nu54.builder="{runtime.platform.path}/tools/nu54-builder/nu54-builder.cmd"
+nu54.common_args=--platform-root "{runtime.platform.path}" --build-path "{build.path}" --sketch-root "{build.source.path}" --fqbn "{build.fqbn}" --project-name "{build.project_name}" --board "{build.zephyr_board}"
+
+# 모든 source record가 생성되기 전에는 Zephyr를 configure만 한다.
+recipe.hooks.prebuild.1.pattern={nu54.builder} prepare {nu54.common_args}
+
+# Arduino 전처리와 library discovery는 NCS target preprocessor를 사용한다.
+recipe.preproc.macros={nu54.builder} preprocess {nu54.common_args} --mode macros --arduino-version "{runtime.ide.version}" --discovery-phase "{build.library_discovery_phase}" --source "{source_file}" --output "{preprocessed_file_path}" {includes}
+
+# 원자적인 source record와 placeholder object만 만든다. 실제 compile은 west가 소유한다.
+recipe.c.o.pattern={nu54.builder} record {nu54.common_args} --language c --source "{source_file}" --object "{object_file}" {includes}
+recipe.cpp.o.pattern={nu54.builder} record {nu54.common_args} --language cxx --source "{source_file}" --object "{object_file}" {includes}
+recipe.S.o.pattern={nu54.builder} record {nu54.common_args} --language asm --source "{source_file}" --object "{object_file}" {includes}
+
+archive_file_path={build.path}/{archive_file}
+recipe.ar.pattern={nu54.builder} archive {nu54.common_args} --archive "{archive_file_path}" --object "{object_file}"
+
+# 전달된 sketch/library object에 대응하는 source만 sources.cmake로 만들고 west를 실행한다.
+recipe.c.combine.pattern={nu54.builder} link {nu54.common_args} --archive "{archive_file_path}" --objects {object_files}
+
+# zephyr.hex/bin은 link 단계에서 이미 export되므로 후속 objcopy는 검증만 한다.
+recipe.objcopy.hex.pattern={nu54.builder} verify-artifact {nu54.common_args} --artifact "{build.path}/{build.project_name}.hex"
+recipe.objcopy.bin.pattern={nu54.builder} verify-artifact {nu54.common_args} --artifact "{build.path}/{build.project_name}.bin"
+
+recipe.size.pattern={nu54.builder} size {nu54.common_args}
+recipe.size.regex=^NU54_FLASH_USED=([0-9]+)\r?$
+recipe.size.regex.data=^NU54_RAM_USED=([0-9]+)\r?$
+
+recipe.output.tmp_file={build.project_name}.hex
+recipe.output.save_file={build.project_name}.nu54dk.hex
+
+# M8 전에는 upload/flash recipe를 의도적으로 제공하지 않는다.
+pluggable_discovery.required.0=builtin:serial-discovery
+pluggable_monitor.required.serial=builtin:serial-monitor

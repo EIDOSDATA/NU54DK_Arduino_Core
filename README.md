@@ -22,6 +22,9 @@ NU54DK에서 Loader 없이 동작하는 Native Full Zephyr 기반 Arduino Core�
 - 외장 J-Link flash/debug HIL은 M3 필수 게이트가 아니라 M8에서 별도 검증
 - M3 자동 회귀 이미지는 온보드 DAPLink MSD로 플래시하고 COM10에서 Twister 결과를 수집
 - M4 완료, ArduinoCore-API 1.5.2를 정확한 commit과 LF 원본으로 vendor하고 NU54DK target API 계약 build 통과
+- M5 완료, `nucode:zephyr:nu54dk` FQBN에서 `.ino`와 Arduino library를 Loader 없는 Full Zephyr ELF·HEX·BIN·map으로 빌드
+- M5 staged-copy 자동 회귀 6/6 통과: Blink, compile error, library dependency, config/overlay, parallel 격리, incremental build
+- Arduino Upload/Flash recipe와 pyOCD/J-Link 선택은 아직 미구현이며 M8 범위
 - ArduinoCore-API 공통 구현과 hardware backend 연결은 아직 지원 완료가 아니며 M6·M7에서 단계적으로 진행
 
 ## 보드 정의
@@ -64,6 +67,7 @@ Boards Manager용 배포 archive에는 고정된 서브모듈 commit의 실제 �
 - [M2 Zephyr module과 runtime 기준선](./00_Docs/04_검증%20기록/02_M2_Zephyr_Module과_Runtime_기준선.md)
 - [M3 GPIO·시간·Scheduler 기준선](./00_Docs/04_검증%20기록/03_M3_GPIO_시간과_Scheduler_기준선.md)
 - [M4 ArduinoCore-API 계약 기준선](./00_Docs/04_검증%20기록/04_M4_ArduinoCore_API_계약_기준선.md)
+- [M5 Arduino CLI Build Adapter 기준선](./00_Docs/04_검증%20기록/05_M5_Arduino_CLI_Build_Adapter_기준선.md)
 
 ## 작성자
 

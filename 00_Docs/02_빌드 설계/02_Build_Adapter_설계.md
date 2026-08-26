@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | 제안 설계 — 구현 및 실증 전 |
+| 문서 상태 | M5 build 경로 구현·실증 완료 — upload는 M8 예정 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 Zephyr | Zephyr 4.4.0 |
@@ -70,14 +70,18 @@ Loader, LLEXT, EDK, export symbol table 및 별도 sketch partition은 사용하
 | PoC sysbuild | `false`, `--no-sysbuild` |
 | 기본 runner | `pyocd` |
 
-### 2.3 설계 상태 주의
+### 2.3 M5에서 확정한 방식
 
-이 문서의 Arduino recipe와 imported archive 연결 방식은 공식 기능을 조합한 제안이며 아직 NU54DK에서 end-to-end로 검증되지 않았다. 다음 두 항목은 구현 초기에 반드시 실증해야 한다.
+2026-08-27 M5 실증에서는 imported Arduino object 방식을 사용하지 않고 **source manifest
+방식**을 확정했다. Arduino compile recipe는 source/object 일대일 record와 lifecycle용 빈
+object만 만들며, `recipe.c.combine`이 실제 object 목록에 대응하는 Sketch/library source를
+`sources.cmake`로 전달한다. Zephyr app target이 해당 source를 현재 `autoconf.h`, Devicetree,
+compiler ABI로 다시 컴파일한다.
 
-1. Arduino가 생성한 sketch/library object를 `zephyr_library_import()`로 연결했을 때 Zephyr의 모든 link pass와 symbol resolution이 정상인지
-2. Arduino Core source를 Zephyr module이 단독으로 소유하고 Arduino core cache와 중복 컴파일하지 않는 구조가 Arduino CLI에서 정상인지
-
-검증 결과에 따라 object import 방식이 불안정하면 source manifest를 CMake에 전달하여 CMake가 sketch/library source를 다시 컴파일하는 대안을 평가한다. 단, 첫 구현부터 두 방식을 동시에 지원하지 않는다.
+Arduino Core와 Variant source는 Zephyr module이 단독으로 소유한다. Arduino가 Core lifecycle
+중 만든 placeholder `core.a`는 final link 입력이 아니며, 이 구조에서 Core 중복 symbol 없이
+NU54DK Full Zephyr ELF가 생성되는 것을 확인했다. object import와 source manifest를 동시에
+지원하지 않는다.
 
 ---
 
@@ -643,7 +647,8 @@ JSON mode에서는 code, phase, message, detail, next_action, log_path 및 child
 
 ## 11. 완료 기준
 
-Build Adapter v0 PoC는 다음을 모두 충족해야 한다.
+Build Adapter v0의 전체 설계 기준은 다음과 같다. M5는 1~11의 build 경로를 검증하며,
+12번 flash는 사용자의 단계 경계에 따라 M8에서 검증한다.
 
 1. `doctor`가 NCS v3.4.0, Zephyr 4.4.0 및 board target을 검증한다.
 2. `prepare`가 Arduino prebuild 시점에서 configure-only build를 생성한다.
@@ -656,7 +661,7 @@ Build Adapter v0 PoC는 다음을 모두 충족해야 한다.
 9. 첫 configure 이후 일반 sketch 변경에서 kernel 전체를 다시 빌드하지 않는다.
 10. 공백과 한글이 포함된 Windows path에서 성공한다.
 11. 오류 단계와 해결 방향이 IDE console에 표시된다.
-12. 일반 `flash`가 mass erase 없이 pyOCD로 성공한다.
+12. **M8 범위:** 일반 `flash`가 mass erase 없이 pyOCD로 성공한다.
 
 ---
 

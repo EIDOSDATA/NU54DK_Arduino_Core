@@ -25,9 +25,10 @@
 5. [M2 Zephyr module과 runtime 기준선](<./04_검증 기록/02_M2_Zephyr_Module과_Runtime_기준선.md>)
 6. [M3 GPIO·시간·Scheduler 기준선](<./04_검증 기록/03_M3_GPIO_시간과_Scheduler_기준선.md>)
 7. [M4 ArduinoCore-API 계약 기준선](<./04_검증 기록/04_M4_ArduinoCore_API_계약_기준선.md>)
-8. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
-9. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
-10. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
+8. [M5 Arduino CLI Build Adapter 기준선](<./04_검증 기록/05_M5_Arduino_CLI_Build_Adapter_기준선.md>)
+9. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
+10. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
+11. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
 
 ## 문서 구성
 
@@ -63,6 +64,7 @@
 - [M2 Zephyr module과 runtime 기준선](<./04_검증 기록/02_M2_Zephyr_Module과_Runtime_기준선.md>): Core module, C++ runtime 정책, negative build와 `setup()`/`loop()` 실기 증거
 - [M3 GPIO·시간·Scheduler 기준선](<./04_검증 기록/03_M3_GPIO_시간과_Scheduler_기준선.md>): GPIO·시간 API, loop 정책, sample/negative build와 Twister HIL 완료 증거
 - [M4 ArduinoCore-API 계약 기준선](<./04_검증 기록/04_M4_ArduinoCore_API_계약_기준선.md>): 고정 upstream snapshot, 라이선스 경계와 NU54DK target compile 증거
+- [M5 Arduino CLI Build Adapter 기준선](<./04_검증 기록/05_M5_Arduino_CLI_Build_Adapter_기준선.md>): `.ino`·library discovery에서 Full Zephyr 산출물까지의 Arduino CLI 수직 경로와 자동 회귀 증거
 
 ## 현재 진행 상태
 
@@ -73,7 +75,8 @@
 | M2 Zephyr module·Core 골격 | **완료** | clean module·runtime·Core 비활성·C++ 정책 build 통과, 기존 runtime HIL 유지 |
 | M3 west-native GPIO·시간 | **완료** | sample 3종 pristine build, negative와 NU54DK ztest/Twister HIL 9/9 통과 |
 | M4 ArduinoCore-API 계약 | **완료** | 1.5.2 고정 snapshot·라이선스 고지·NU54DK API 계약 pristine build 통과 |
-| M5~M11 | 대기 | 이후 단계는 각 선행조건과 검증 결과에 따라 진행 |
+| M5 Arduino CLI Build Adapter | **완료** | Full Zephyr 산출물 5종 생성과 staged-copy 자동 회귀 6/6 통과 |
+| M6~M11 | 대기 | 이후 단계는 각 선행조건과 검증 결과에 따라 진행 |
 
 상세 상태는 [구현 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)을 단일 기준으로 관리한다.
 

@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | 제안 설계 — Arduino CLI end-to-end 검증 전 |
+| 문서 상태 | M5 Arduino CLI compile 실증 완료 — IDE GUI/upload는 후속 단계 |
 | 작성자 | Quantum / NUCODE |
 | 대상 | Arduino CLI 및 Arduino IDE 2.x |
 | 제안 FQBN | `nucode:zephyr:nu54dk` |
@@ -26,7 +26,10 @@
 
 내부에서는 Arduino가 최종 firmware를 직접 링크하지 않는다. Arduino는 `.ino` 전처리와 library dependency resolution을 수행하고, Build Adapter가 그 결과를 NCS/Zephyr 전체 빌드에 연결한다.
 
-이 문서의 recipe는 아직 구현 검증 전이다. `platform.txt`에 확정 문법으로 반영하기 전에 Arduino CLI verbose build로 각 자동 property와 hook 시점을 검증해야 한다.
+M5에서 `boards.txt`, `platform.txt`와 Build Adapter를 실제 구현하고 Arduino CLI 1.5.1
+verbose build로 property와 hook 시점을 검증했다. `.ino`/library에서 Full Zephyr
+ELF·HEX·BIN까지의 compile 경로는 완료됐고, Arduino IDE 2.x GUI와 Upload/Flash 경로는 각각
+후속 GUI 회귀와 M8 범위다.
 
 ---
 
@@ -533,7 +536,8 @@ Adapter child process의 실제 exit code를 Arduino CLI에 반환한다. 실패
 
 ## 13. 완료 기준
 
-Arduino CLI 통합 v0는 다음을 모두 충족해야 한다.
+Arduino CLI 통합 v0의 전체 build/upload 기준은 다음과 같다. M5는 compile, source graph와
+artifact 항목을 검증한다. Upload/Flash와 IDE GUI 항목은 M8 및 package 단계의 후속 기준이다.
 
 1. `nucode:zephyr:nu54dk`가 board 목록과 IDE에 표시된다.
 2. 표준 Blink `.ino`가 prototype 처리와 함께 compile된다.
@@ -542,11 +546,11 @@ Arduino CLI 통합 v0는 다음을 모두 충족해야 한다.
 5. `recipe.c.combine`에서 west 최종 link가 한 번 실행된다.
 6. final ELF/HEX가 Native Full Zephyr image다.
 7. sketch별 `prj.conf`와 `app.overlay`가 반영된다.
-8. pyOCD 선택으로 Upload 버튼이 erase 없이 성공한다.
-9. J-Link 선택은 runner 등록 후 성공하고, 미등록 시 명확히 실패한다.
+8. **M8 범위:** pyOCD 선택으로 Upload 버튼이 erase 없이 성공한다.
+9. **M8 범위:** J-Link 선택은 runner 등록 후 성공하고, 미등록 시 명확히 실패한다.
 10. Windows의 공백/한글 경로에서 compile된다.
 11. 무변경 두 번째 compile이 전체 pristine rebuild가 아니다.
-12. Arduino IDE 2.x와 Arduino CLI의 산출물이 기능적으로 동일하다.
+12. **package/GUI 후속 범위:** Arduino IDE 2.x와 Arduino CLI의 산출물이 기능적으로 동일하다.
 
 ---
 

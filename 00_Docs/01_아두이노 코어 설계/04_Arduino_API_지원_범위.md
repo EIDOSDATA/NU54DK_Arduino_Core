@@ -136,9 +136,9 @@ ISR, 동시 호출, input `digitalWrite()`, ownership와 interrupt는 아직 검
 
 | API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
-| `Arduino.h` include | P0 | 부분 지원 | 지원 | M3 Runtime/GPIO/시간 최소 계약 유지; M4 upstream header는 별도 TU target compile 통과, 생산 header 통합과 일반 library compile은 M6 전 미검증 |
-| `setup()` | P0 | 부분 지원 | 지원 | 전역 constructor 이후 한 번 실행하는 M2/M3 HIL 통과; Arduino CLI 회귀 미검증 |
-| `loop()` | P0 | 의미 차이 | 의미 차이 | Zephyr main thread에서 반복하고 기본적으로 반환 뒤 한 tick sleep; 네 scheduler 단계의 fairness/idle 정량 HIL 통과, Arduino CLI·PM 회귀 미검증 |
+| `Arduino.h` include | P0 | 부분 지원 | 지원 | M3 Runtime/GPIO/시간 최소 계약과 M5 `.ino`·local library Full Zephyr compile 통과; upstream 생산 header 통합은 M6 범위 |
+| `setup()` | P0 | 부분 지원 | 지원 | 전역 constructor 이후 한 번 실행하는 M2/M3 HIL과 M5 Arduino CLI compile/link 통과 |
+| `loop()` | P0 | 의미 차이 | 의미 차이 | Zephyr main thread에서 반복하고 기본적으로 반환 뒤 한 tick sleep; scheduler HIL과 M5 Arduino CLI compile/link 통과, 실제 PM 회귀는 별도 범위 |
 | `yield()` | P0 | 의미 차이 | 의미 차이 | guarded `k_yield()`이며 같은 priority worker는 진행했지만 낮은 priority와 idle은 진행하지 못함; yield 불가능 문맥에서는 no-op |
 | `init()`/`initVariant()` 내부 hook | P0 | 부분 지원 | 부분 지원 | weak no-op `initVariant()`와 override 계약만 구현; 실제 Variant override 없음 |
 | `HIGH`, `LOW`, `INPUT`, `OUTPUT` | P0 | 부분 지원 | 지원 | LED output과 raw HIGH/LOW HIL 통과; 전체 핀/mode 조합 미검증 |

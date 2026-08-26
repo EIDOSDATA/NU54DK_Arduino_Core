@@ -1,0 +1,11 @@
+nu54dk.name=NU54DK (nRF54L15, Zephyr)
+nu54dk.build.board=NUCODE_NU54DK
+nu54dk.build.core=arduino
+nu54dk.build.variant=nu54dk
+nu54dk.build.mcu=nrf54l15
+nu54dk.build.f_cpu=128000000L
+nu54dk.build.zephyr_board=nrf54l15dk/nrf54l15/cpuapp/nu54dk
+nu54dk.build.sysbuild=false
+nu54dk.build.extra_flags=-DARDUINO_NUCODE_NU54DK
+nu54dk.upload.maximum_size=1560576
+nu54dk.upload.maximum_data_size=262144
