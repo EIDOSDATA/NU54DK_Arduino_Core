@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief NU54DK Arduino CLI M5 end-to-end 회귀를 실행합니다. """
+"""! @brief NU54DK Arduino CLI M5~M7 end-to-end 회귀를 실행합니다. """
 
 from __future__ import annotations
 
@@ -49,7 +49,16 @@ def stage_platform(repository: Path, user_root: Path) -> Path:
     platform.mkdir(parents=True)
     for name in ("boards.txt", "platform.txt", "LICENSE"):
         shutil.copy2(repository / name, platform / name)
-    for name in ("board_package", "cores", "third_party", "tools", "variants", "zephyr"):
+    for name in (
+        "board_package",
+        "cores",
+        "dts",
+        "libraries",
+        "third_party",
+        "tools",
+        "variants",
+        "zephyr",
+    ):
         shutil.copytree(
             repository / name,
             platform / name,
@@ -88,12 +97,168 @@ def assert_build(build_path: Path, project_name: str) -> dict:
         raise SmokeFailure(f"missing context: {context_path}")
     context = json.loads(context_path.read_text(encoding="utf-8"))
     if context.get("sysbuild") is not False:
-        raise SmokeFailure("M5 build unexpectedly enabled sysbuild")
+        raise SmokeFailure("smoke build unexpectedly enabled sysbuild")
     for extension in ("elf", "hex", "bin", "map", "nu54-build.json"):
         artifact = build_path / f"{project_name}.{extension}"
         if not artifact.is_file() or artifact.stat().st_size == 0:
             raise SmokeFailure(f"missing artifact: {artifact}")
     return context
+
+
+## @brief materialized Kconfig에서 boolean symbol의 최종 값을 읽습니다.
+def read_kconfig_boolean(configuration: str, symbol: str) -> bool:
+    lines = set(configuration.splitlines())
+    if f"{symbol}=y" in lines:
+        return True
+    if f"# {symbol} is not set" in lines:
+        return False
+    raise SmokeFailure(f"Kconfig boolean symbol was not materialized: {symbol}")
+
+
+## @brief live build record에서 작은따옴표로 감싼 필드를 읽습니다.
+def read_build_record_field(record: Path, field: str) -> str:
+    content = record.read_text(encoding="utf-8")
+    match = re.search(rf"^  {re.escape(field)}: '((?:''|[^'])*)'$", content, re.MULTILINE)
+    if match is None:
+        raise SmokeFailure(f"live build record field was not materialized: {field}")
+    return match.group(1).replace("''", "'")
+
+
+## @brief CMake GLOB_RECURSE 선언에서 core root 기준 상대 경로 집합을 읽습니다.
+def read_cmake_glob_scope(cmake_file: Path, collection: str, root_variable: str) -> set[str]:
+    content = cmake_file.read_text(encoding="utf-8")
+    match = re.search(
+        rf"file\(GLOB_RECURSE\s+{re.escape(collection)}\b(.*?)\n\s*\)",
+        content,
+        re.DOTALL,
+    )
+    if match is None:
+        raise SmokeFailure(f"CMake core input scope was not found: {cmake_file}: {collection}")
+    return set(re.findall(rf'"\$\{{{re.escape(root_variable)}\}}/([^\"]+)"', match.group(1)))
+
+
+## @brief 공개 header, library metadata, DTS binding이 live core provenance에 포함되는지 검증합니다.
+def test_live_build_record_scope(context: dict, root: Path) -> None:
+    platform = Path(context["platform_root"])
+    configure_scope = read_cmake_glob_scope(
+        platform / "zephyr" / "CMakeLists.txt",
+        "NUCODE_CORE_BUILD_INPUTS",
+        "NUCODE_ARDUINO_CORE_ROOT",
+    )
+    live_scope = read_cmake_glob_scope(
+        platform / "zephyr" / "cmake" / "write_build_record.cmake",
+        "core_inputs",
+        "NUCODE_CORE_ROOT",
+    )
+    if live_scope != configure_scope:
+        raise SmokeFailure(
+            "configure/live core provenance scope mismatch: "
+            f"configure={sorted(configure_scope)}, live={sorted(live_scope)}"
+        )
+
+    core = root / "build-record-core"
+    application = root / "build-record-application"
+    board = root / "build-record-board"
+    record = root / "nucode_arduino_core_build.yml"
+    fixture_files = (
+        Path("cores/arduino/Arduino.h"),
+        Path("dts/bindings/misc/nucode,arduino-adc-input.yaml"),
+        Path("libraries/SPI/library.properties"),
+        Path("third_party/ArduinoCore-API/api/ArduinoAPI.h"),
+        Path("third_party/ArduinoCore-API.provenance.yml"),
+        Path("variants/nu54dk/variant.h"),
+        Path("zephyr/module.yml"),
+        Path("zephyr/cmake/write_build_record.cmake"),
+    )
+    for relative_path in fixture_files:
+        source = platform / relative_path
+        destination = core / relative_path
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
+    application.mkdir()
+    board.mkdir()
+    (application / "fixture.ino").write_text("void setup() {}\nvoid loop() {}\n", encoding="utf-8")
+    (board / "fixture.dts").write_text("/dts-v1/;\n/ {};\n", encoding="utf-8")
+
+    git = shutil.which("git")
+    cmake = Path(context["toolchain_root"]) / "opt" / "bin" / "cmake.exe"
+    if git is None or not cmake.is_file():
+        raise SmokeFailure("live build record regression requires git and the NCS cmake executable")
+    run((git, "init", core))
+    run((git, "-C", core, "add", "cores", "dts", "libraries", "third_party", "variants", "zephyr"))
+    run(
+        (
+            git,
+            "-C",
+            core,
+            "-c",
+            "user.name=NUCODE Smoke",
+            "-c",
+            "user.email=smoke@nucode.invalid",
+            "commit",
+            "-m",
+            "빌드 기록 검증 기준선",
+        )
+    )
+
+    writer = core / "zephyr" / "cmake" / "write_build_record.cmake"
+    writer_command = (
+        cmake,
+        f"-DNUCODE_GIT_EXECUTABLE={Path(git).as_posix()}",
+        f"-DNUCODE_CORE_ROOT={core.as_posix()}",
+        f"-DNUCODE_BOARD_PACKAGE_ROOT={board.as_posix()}",
+        f"-DNUCODE_APPLICATION_SOURCE_DIR={application.as_posix()}",
+        f"-DNUCODE_NRF_DIR={(Path(context['ncs_root']) / 'nrf').as_posix()}",
+        f"-DNUCODE_ZEPHYR_BASE={(Path(context['ncs_root']) / 'zephyr').as_posix()}",
+        f"-DNUCODE_BUILD_RECORD={record.as_posix()}",
+        "-DNUCODE_BOARD=nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "-DNUCODE_BOARD_QUALIFIERS=nrf54l15/cpuapp/nu54dk",
+        "-DNUCODE_TOOLCHAIN_VARIANT=zephyr",
+        f"-DNUCODE_TOOLCHAIN_PATH={Path(context['toolchain_root']).as_posix()}",
+        f"-DNUCODE_CXX_COMPILER={Path(context['cxx_compiler']).as_posix()}",
+        "-P",
+        writer,
+    )
+    run(writer_command)
+    baseline_hash = read_build_record_field(record, "core_source_sha256")
+    baseline_revision = read_build_record_field(record, "core_revision")
+    if baseline_hash == "unknown" or baseline_revision == "unknown" or baseline_revision.endswith("-dirty"):
+        raise SmokeFailure("live build record baseline provenance is invalid")
+
+    mutations = (
+        (
+            "public header",
+            core / "cores" / "arduino" / "Arduino.h",
+            "\n/** @brief 빌드 기록 변경 검증용 표식입니다. */\n".encode("utf-8"),
+        ),
+        (
+            "library metadata",
+            core / "libraries" / "SPI" / "library.properties",
+            "\n# 빌드 기록 변경 검증용 표식입니다.\n".encode("utf-8"),
+        ),
+        (
+            "DTS binding",
+            core / "dts" / "bindings" / "misc" / "nucode,arduino-adc-input.yaml",
+            "\n# 빌드 기록 변경 검증용 표식입니다.\n".encode("utf-8"),
+        ),
+    )
+    for label, target, suffix in mutations:
+        original = target.read_bytes()
+        target.write_bytes(original + suffix)
+        run(writer_command)
+        changed_hash = read_build_record_field(record, "core_source_sha256")
+        changed_revision = read_build_record_field(record, "core_revision")
+        if changed_hash == baseline_hash:
+            raise SmokeFailure(f"{label} mutation did not change live core_source_sha256")
+        if not changed_revision.endswith("-dirty"):
+            raise SmokeFailure(f"{label} mutation did not mark live core_revision dirty")
+
+        target.write_bytes(original)
+        run(writer_command)
+        if read_build_record_field(record, "core_source_sha256") != baseline_hash:
+            raise SmokeFailure(f"{label} mutation was not isolated from the next regression case")
+        if read_build_record_field(record, "core_revision") != baseline_revision:
+            raise SmokeFailure(f"{label} mutation did not restore the clean core revision")
 
 
 ## @brief board discovery와 Blink full build를 검증합니다.
@@ -180,7 +345,7 @@ def test_parallel(cli: Path, config: Path, root: Path, repository: Path) -> None
         raise SmokeFailure("parallel builds shared a Zephyr workspace")
 
 
-## @brief sketch 수정 전후 같은 Ninja tree를 재사용하고 pristine을 반복하지 않는지 검증합니다.
+## @brief sketch와 DTS module 입력 변경 때 같은 tree를 안전하게 재구성하는지 검증합니다.
 def test_incremental(cli: Path, config: Path, root: Path, repository: Path) -> None:
     source = (repository / "examples" / "01.Basics" / "Blink" / "Blink.ino").read_text(encoding="utf-8")
     sketch = root / "sketches" / "Incremental"
@@ -199,6 +364,41 @@ def test_incremental(cli: Path, config: Path, root: Path, repository: Path) -> N
     if second.get("pristine_configure_count") != 1:
         raise SmokeFailure("incremental compile repeated a pristine configure")
 
+    platform = root / "user" / "hardware" / "nucode" / "zephyr"
+    module_manifest = platform / "zephyr" / "module.yml"
+    binding = platform / "dts" / "bindings" / "misc" / "nucode,arduino-adc-input.yaml"
+    module_manifest.write_text(
+        module_manifest.read_text(encoding="utf-8")
+        + "\n# 모듈 지문 변경 검증용 표식입니다.\n",
+        encoding="utf-8",
+    )
+    run(command)
+    third = assert_build(build, "Incremental.ino")
+    if third["zephyr_build_dir"] != second["zephyr_build_dir"]:
+        raise SmokeFailure("module.yml fingerprint update changed the Zephyr workspace")
+    if third.get("configuration_fingerprint") == second.get("configuration_fingerprint"):
+        raise SmokeFailure("module.yml 변경이 fingerprint에 반영되지 않았습니다")
+    if third.get("configure_skipped") is not False:
+        raise SmokeFailure("module.yml 변경 뒤 configure가 생략되었습니다")
+    if third.get("pristine_configure_count") != 1:
+        raise SmokeFailure("module.yml fingerprint update repeated a pristine configure")
+
+    binding.write_text(
+        binding.read_text(encoding="utf-8")
+        + "\n# DTS 바인딩 지문 변경 검증용 표식입니다.\n",
+        encoding="utf-8",
+    )
+    run(command)
+    fourth = assert_build(build, "Incremental.ino")
+    if fourth["zephyr_build_dir"] != third["zephyr_build_dir"]:
+        raise SmokeFailure("DTS binding fingerprint update changed the Zephyr workspace")
+    if fourth.get("configuration_fingerprint") == third.get("configuration_fingerprint"):
+        raise SmokeFailure("DTS binding 변경이 fingerprint에 반영되지 않았습니다")
+    if fourth.get("configure_skipped") is not False:
+        raise SmokeFailure("DTS binding 변경 뒤 configure가 생략되었습니다")
+    if fourth.get("pristine_configure_count") != 1:
+        raise SmokeFailure("DTS binding fingerprint update repeated a pristine configure")
+
 
 ## @brief M6 Serial과 GPIO interrupt 공개 예제를 Arduino CLI로 끝까지 빌드합니다.
 def test_m6_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
@@ -216,15 +416,88 @@ def test_m6_examples(cli: Path, config: Path, root: Path, repository: Path) -> N
         assert_build(build, project_name)
 
 
-## @brief 선택된 M5 smoke test를 격리된 hardware root에서 실행합니다.
+## @brief M7 주변장치 공개 예제와 sketch별 Zephyr 설정 병합을 검증합니다.
+def test_m7_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    peripheral_symbols = (
+        "CONFIG_NUCODE_ARDUINO_WIRE",
+        "CONFIG_NUCODE_ARDUINO_SPI",
+        "CONFIG_NUCODE_ARDUINO_ADC",
+        "CONFIG_NUCODE_ARDUINO_PWM",
+    )
+    examples = (
+        (
+            "wire-who-am-i",
+            repository / "examples" / "04.Communication" / "WireWhoAmI",
+            "WireWhoAmI.ino",
+            "CONFIG_NUCODE_ARDUINO_WIRE",
+            "nucode,arduino-wire",
+        ),
+        (
+            "spi-transaction",
+            repository / "examples" / "04.Communication" / "SPITransaction",
+            "SPITransaction.ino",
+            "CONFIG_NUCODE_ARDUINO_SPI",
+            "nucode,arduino-spi",
+        ),
+        (
+            "analog-read-a0",
+            repository / "examples" / "03.Analog" / "AnalogReadA0",
+            "AnalogReadA0.ino",
+            "CONFIG_NUCODE_ARDUINO_ADC",
+            "nucode,arduino-adc",
+        ),
+        (
+            "pwm-fade",
+            repository / "examples" / "03.Analog" / "PWMFade",
+            "PWMFade.ino",
+            "CONFIG_NUCODE_ARDUINO_PWM",
+            "nucode,arduino-pwm",
+        ),
+    )
+    for build_name, sketch, project_name, enabled_symbol, devicetree_marker in examples:
+        if (
+            not (sketch / project_name).is_file()
+            or not (sketch / "prj.conf").is_file()
+            or not (sketch / "app.overlay").is_file()
+        ):
+            raise SmokeFailure(f"incomplete M7 example: {sketch}")
+        build = root / f"build-m7-{build_name}"
+        run(compile_command(cli, config, build, sketch))
+        context = assert_build(build, project_name)
+        zephyr = Path(context["zephyr_build_dir"]) / "zephyr"
+        configuration = (zephyr / ".config").read_text(encoding="utf-8")
+        for symbol in peripheral_symbols:
+            expected = symbol == enabled_symbol
+            if read_kconfig_boolean(configuration, symbol) is not expected:
+                expected_value = "y" if expected else "n"
+                raise SmokeFailure(
+                    f"M7 example Kconfig matrix mismatch: {sketch}: "
+                    f"{symbol} expected {expected_value}"
+                )
+
+        materialized_overlay = (
+            Path(context["app_dir"]) / "app.overlay"
+        ).read_text(encoding="utf-8")
+        sketch_overlay = (sketch / "app.overlay").read_text(encoding="utf-8").rstrip()
+        if sketch_overlay not in materialized_overlay:
+            raise SmokeFailure(f"M7 example app.overlay source was not merged: {sketch}")
+
+        devicetree = (zephyr / "zephyr.dts").read_text(encoding="utf-8")
+        if devicetree_marker not in devicetree:
+            raise SmokeFailure(f"M7 example devicetree contract was not merged: {sketch}")
+
+    test_live_build_record_scope(context, root)
+
+
+## @brief 선택된 M5~M7 smoke test를 격리된 hardware root에서 실행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--cli", type=Path, default=default_cli())
     parser.add_argument(
         "--tests",
         nargs="+",
-        choices=("blink", "library", "config", "error", "parallel", "incremental", "m6"),
-        default=("blink", "library", "config", "error", "parallel", "incremental", "m6"),
+        choices=("blink", "library", "config", "error", "parallel", "incremental", "m6", "m7"),
+        default=("blink", "library", "config", "error", "parallel", "incremental", "m6", "m7"),
     )
     args = parser.parse_args(arguments)
     repository = Path(__file__).resolve().parents[2]
@@ -246,6 +519,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "parallel": test_parallel,
             "incremental": test_incremental,
             "m6": test_m6_examples,
+            "m7": test_m7_examples,
         }
         for name in args.tests:
             tests[name](cli, config, root, repository)

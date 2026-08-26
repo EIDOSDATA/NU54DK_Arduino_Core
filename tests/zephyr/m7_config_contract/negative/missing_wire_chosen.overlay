@@ -1,0 +1,10 @@
+/**
+ * @file missing_wire_chosen.overlay
+ * @brief Wire chosen 누락 진단을 검증하기 위해 application chosen을 제거합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+&{/chosen} {
+	/delete-property/ nucode,arduino-wire;
+};

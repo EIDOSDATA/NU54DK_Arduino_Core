@@ -74,6 +74,10 @@ endfunction()
 file(GLOB_RECURSE core_inputs
   LIST_DIRECTORIES FALSE
   "${NUCODE_CORE_ROOT}/cores/arduino/*"
+  "${NUCODE_CORE_ROOT}/dts/*"
+  "${NUCODE_CORE_ROOT}/libraries/*"
+  "${NUCODE_CORE_ROOT}/third_party/ArduinoCore-API/*"
+  "${NUCODE_CORE_ROOT}/third_party/ArduinoCore-API.provenance.yml"
   "${NUCODE_CORE_ROOT}/variants/nu54dk/*"
   "${NUCODE_CORE_ROOT}/zephyr/*"
 )
@@ -92,7 +96,8 @@ file(GLOB_RECURSE application_inputs
 list(SORT application_inputs)
 
 nucode_git_revision(
-  "${NUCODE_CORE_ROOT}" core_revision TRUE cores variants zephyr
+  "${NUCODE_CORE_ROOT}" core_revision TRUE
+  cores dts libraries third_party variants zephyr
 )
 nucode_git_revision(
   "${NUCODE_BOARD_PACKAGE_ROOT}" board_revision TRUE boards/nucode/nu54dk

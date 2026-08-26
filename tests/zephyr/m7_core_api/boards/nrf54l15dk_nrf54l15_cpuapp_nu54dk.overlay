@@ -1,0 +1,104 @@
+/**
+ * @file nrf54l15dk_nrf54l15_cpuapp_nu54dk.overlay
+ * @brief M7 주변장치 API를 실제 NU54DK target의 emulator와 fake로 검증합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <zephyr/dt-bindings/i2c/i2c.h>
+#include <zephyr/dt-bindings/adc/adc.h>
+#include <zephyr/dt-bindings/pwm/pwm.h>
+
+/ {
+	chosen {
+		nucode,arduino-wire = &m7_i2c;
+		nucode,arduino-spi = &m7_spi;
+		nucode,arduino-adc = &m7_adc_inputs;
+		nucode,arduino-pwm = &m7_pwm_led;
+	};
+
+	aliases {
+		led0 = &m7_led;
+		sw0 = &m7_button;
+		pwm-led0 = &m7_pwm_led;
+	};
+
+	m7_gpio: m7-gpio {
+		compatible = "zephyr,gpio-emul";
+		status = "okay";
+		gpio-controller;
+		#gpio-cells = <2>;
+		ngpios = <2>;
+	};
+
+	m7-leds {
+		compatible = "gpio-leds";
+
+		m7_led: led-0 {
+			gpios = <&m7_gpio 0 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	m7-buttons {
+		compatible = "gpio-keys";
+
+		m7_button: button-0 {
+			gpios = <&m7_gpio 1 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+		};
+	};
+
+	m7_i2c: i2c@700 {
+		compatible = "zephyr,i2c-emul-controller";
+		status = "okay";
+		reg = <0x700 4>;
+		clock-frequency = <I2C_BITRATE_STANDARD>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+	};
+
+	m7_spi: spi@710 {
+		compatible = "zephyr,spi-emul-controller";
+		status = "okay";
+		reg = <0x710 4>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+	};
+
+	m7_adc: adc {
+		compatible = "zephyr,adc-emul";
+		status = "okay";
+		#io-channel-cells = <1>;
+		nchannels = <6>;
+		ref-internal-mv = <600>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		channel@5 {
+			reg = <5>;
+			zephyr,gain = "ADC_GAIN_1_4";
+			zephyr,reference = "ADC_REF_INTERNAL";
+			zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+			zephyr,resolution = <12>;
+		};
+	};
+
+	m7_adc_inputs: arduino-adc-inputs {
+		compatible = "nucode,arduino-adc-input";
+		io-channels = <&m7_adc 5>;
+	};
+
+	m7_pwm: pwm {
+		compatible = "zephyr,fake-pwm";
+		status = "okay";
+		#pwm-cells = <2>;
+		frequency = <1000000>;
+	};
+
+	m7-pwm-leds {
+		compatible = "pwm-leds";
+
+		m7_pwm_led: pwm-led-0 {
+			pwms = <&m7_pwm 0 PWM_MSEC(20)>;
+		};
+	};
+};

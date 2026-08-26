@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M6 Serial 구현·HIL 완료; M7 Wire·SPI·ADC·PWM 구현 전 |
+| 문서 상태 | M6 Serial 조건부 완료; M7 Wire·SPI·ADC·PWM 조건부 완료 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 RTOS | Zephyr v4.4.0 |
@@ -23,8 +23,10 @@
 - thread와 ISR에서 허용되는 호출을 구분한다.
 - Devicetree에서 비활성인 장치를 API 호출만으로 몰래 활성화하지 않는다.
 
-M6에서 `Serial`은 구현·target ztest·실제 COM10 HIL까지 완료했다. `Wire`, `SPI`, ADC와
-PWM은 M7 구현 전 설계이며 이미 지원된다는 의미가 아니다.
+M6에서 `Serial`은 구현·target ztest·실제 COM10 HIL까지 완료했다. M7의 `Wire`, `SPI`, ADC와
+PWM production source와 builder profile은 NU54DK Twister target 11/11, Arduino CLI 4/4 및 승인된
+NU54DK driver HIL을 통과했다. 실제 IMU 응답과 물리 SPI data 경로는 확인하지 못했으므로
+확정된 구현 계약과 미검증 경계를 함께 기록하고 M7을 `조건부 완료`로 판정한다.
 
 ---
 
@@ -74,11 +76,11 @@ Core source를 수정하거나 prebuilt profile을 새로 만들 필요가 없�
 | --- | --- | --- |
 | 기본 UART | `zephyr,console`로 선택, 115200 bps | `Serial` 기본 후보 |
 | 두 번째 UART | pinctrl과 속도 정의, 기본 비활성 | `Serial1`은 overlay 없이는 제공하지 않음 |
-| I2C | 기본 bus 활성, 100 kHz | `Wire` 후보 |
-| BQ25186 | I2C child node 비활성 | Core가 자동 활성화하지 않음 |
-| SPI | pinctrl만 정의, controller 기본 비활성 | `SPI`는 overlay가 필요 |
-| PWM | PWM20 활성, 한 channel이 LED 2 pin과 공유 | GPIO/PWM ownership 필요 |
-| ADC | ADC와 channel 5 활성 | 논리 analog mapping 승인 필요 |
+| I2C22 | 기본 활성, SDA P1.2/SCL P1.3, 100 kHz | Core chosen `nucode,arduino-wire`; 100/400 kHz controller |
+| BQ25186 | I2C22의 0x6A child node 비활성 | Core가 자동 활성화하지 않으며 M7 IMU HIL은 0x6A에 접근 금지 |
+| SPI00 | P2.1/P2.2/P2.4 pinctrl만 정의, controller 기본 비활성 | Core overlay가 활성화; uart00과 동시 활성 금지 |
+| PWM | pwm20 channel 0의 `pwm_led1` 역할 활성, P1.10 | Core chosen `nucode,arduino-pwm`; 20 ms·8-bit 전용 역할 |
+| ADC | ADC와 channel 5 활성, P1.12 | Core chosen `nucode,arduino-adc`; A0 고정 12-bit raw |
 | VBAT divider | consumer node 비활성 | 솔더브리지와 overlay 필요 |
 | Radio/802.15.4 | 보드에서 활성 | Zephyr/NCS subsystem으로 사용 |
 | Native USB | nRF54L15에 없음 | target USB CDC/HID/MSC 제공 불가 |
@@ -249,7 +251,9 @@ CMSIS-DAP 인터페이스 MCU가 USB를 처리한다. nRF54L15 target이 USB CDC
 
 ### 6.1 기본 역할
 
-`Wire`는 Variant가 지정한 기본 I2C bus의 Arduino master wrapper다. 현재 NU54DK 보드 정의에는 100 kHz I2C bus가 활성화되어 있다.
+`TwoWire`는 `arduino::HardwareI2C`의 호환 이름이며 전역 `TwoWire &Wire`가
+`nucode,arduino-wire` chosen의 I2C22를 사용한다. 현재 NU54DK 보드 정의에는 P1.2 SDA,
+P1.3 SCL의 100 kHz I2C22가 활성화되어 있다.
 
 v1 범위:
 
@@ -268,17 +272,19 @@ Target/slave mode와 callback API는 별도 단계로 둔다.
 
 - 고정 크기 TX/RX buffer를 사용한다.
 - heap을 기본으로 사용하지 않는다.
-- buffer 크기는 Kconfig로 조정 가능하게 한다.
+- 기본 32 byte이며 `CONFIG_NUCODE_ARDUINO_WIRE_BUFFER_SIZE`로 16..512 byte 범위에서 조정한다.
 - overflow 시 추가 byte를 기록하지 않고 오류 상태를 설정한다.
 - `endTransmission()` 전에 overflow가 발생하면 bus transaction을 보내지 않는 정책을 우선한다.
 
 ### 6.3 Clock ownership
 
-Devicetree의 `clock-frequency`가 기본 원본이다. `Wire.setClock()`은 bus를 Arduino Core가 exclusive하게 소유하고 driver가 runtime configure를 지원할 때만 적용한다.
+Devicetree의 `clock-frequency`가 기본 원본이다. `Wire.setClock()`은 100 kHz와 400 kHz만
+허용하고 Zephyr `i2c_configure()`로 적용한다. 다른 값은 조용히 근사하지 않고 진단한다.
+같은 bus의 모든 client가 controller clock 변경의 영향을 받는다는 제약을 Sketch가 소유한다.
 
-같은 bus에 Zephyr device driver가 붙어 있으면 clock 변경이 다른 client에 영향을 준다. 이런 구성에서는 overlay에서 bus speed를 결정하고 runtime 변경을 거부한다.
-
-현재 BQ25186 child node는 비활성이므로 Core가 자동으로 enable하지 않는다. 이를 활성화한 application에서는 Zephyr BQ25186 driver와 `Wire` raw transaction의 동시 접근을 bus mutex로 보호해야 한다.
+현재 BQ25186 child node는 비활성이므로 Core가 자동으로 enable하지 않는다. 이를 활성화한
+application은 Zephyr BQ25186 driver 경로와 `Wire` 경로를 application 소유의 공통 mutex로
+감싸야 한다. Core의 private `wire_mutex`는 다른 Zephyr I2C client를 직렬화하지 않는다.
 
 ### 6.4 호출 흐름
 
@@ -287,16 +293,33 @@ beginTransmission(address)
       ↓ address와 state 저장
 write(bytes)
       ↓ 고정 TX buffer
-endTransmission(stop)
-      ↓ ownership + device readiness
-      ↓ Zephyr i2c_write/i2c_transfer
-      ↓ Arduino status code
+endTransmission(true)
+      ↓ Zephyr i2c_write + STOP
+endTransmission(false)
+      ↓ address와 TX buffer만 보류, bus 전송 없음
+requestFrom(same_address, length, true)
+      ↓ i2c_write_read()의 WRITE + RESTART + READ + STOP
 ~~~
 
-Repeated start는 Zephyr message flag 조합으로 표현하고 transaction emulator와 연결된 known
-I2C device의 register read로 검증한다. logic analyzer는 필수 완료 장비가 아니다.
+Zephyr 4.4 nRF TWIM의 단독 no-STOP write 제약 때문에 repeated-start는 deferred 방식으로
+구현한다. 보류 중 새 transmission, 다른 address 또는 다른 thread가 개입하면 전송하지 않고
+진단한다. 마지막 read 뒤 STOP을 생략하는 `requestFrom(..., false)`는 지원하지 않으며 0을
+반환한다. TX byte 없이 `endTransmission(true)`를 호출하면 zero-byte write와 STOP을 실제
+driver에 전달해 address-only probe를 수행한다. 이 범용 Core 기능과 달리 M7 IMU HIL에서는
+임의 주소 probe·scan을 허용하지 않는다. logic analyzer는 필수 완료 장비가 아니다.
 
-### 6.5 오류 변환
+### 6.5 M7 IMU HIL 안전 경계
+
+Qwiic 장치 HIL은 오직 `0x6B`의 `WHO_AM_I` register `0x0F`를 repeated-start로 1 byte
+읽는다. 기대 반환 값은 `0x6A`지만 이는 접근 주소가 아니다. PMIC 충돌 위험 때문에 HIL
+image·host protocol·실행 절차는 address `0x6A`의 probe, register pointer write, read, write와
+fallback을 모두 금지한다. address scan을 완료 기준이나 예제로 사용하지 않는다.
+
+HIL command line과 UART payload는 address·register·expected value·scan을 외부 입력으로
+노출하지 않는다. 범용 `Wire` Core backend는 정상 7-bit address를 모두 전달하므로 이
+HIL 안전 규칙을 전역 address blacklist로 바꾸지 않는다.
+
+### 6.6 오류 변환
 
 Arduino `endTransmission()`의 호환 코드와 Zephyr errno를 연결하되 상세 errno를 내부 상태에 보존한다.
 
@@ -304,12 +327,15 @@ Arduino `endTransmission()`의 호환 코드와 Zephyr errno를 연결하되 상
 | ---: | --- |
 | 0 | 성공 |
 | 1 | TX buffer overflow |
-| 2 | address NACK |
-| 3 | data NACK |
+| 2 | address NACK용 호환 코드; 현재 adapter는 반환하지 않음 |
+| 3 | data NACK용 호환 코드; 현재 adapter는 반환하지 않음 |
 | 4 | 기타 bus/driver 오류 |
-| 5 | timeout을 구분할 때 사용 여부 결정 |
+| 5 | timeout |
 
-Zephyr driver가 address NACK과 data NACK을 구분하지 못하면 거짓으로 세분화하지 않고 기타 오류로 처리하며 제한을 문서화한다.
+현재 adapter는 TX buffer overflow를 1, `-ETIMEDOUT`을 5로 반환하며 그 밖의 negative driver
+errno는 공개 status 4로 변환한다. 따라서 NACK도 address/data를 나눠 2 또는 3으로 반환하지 않는다. 원래 errno는
+Core 비공개 진단에 보존한다. target ztest는 overflow와 `-EIO`→4·원본 errno 보존을 검증했으며
+timeout 5와 실제 NACK 세분화는 검증하지 않았다.
 
 ---
 
@@ -317,14 +343,13 @@ Zephyr driver가 address NACK과 data NACK을 구분하지 못하면 거짓으�
 
 ### 7.1 현재 상태
 
-NU54DK 보드 패키지는 SPI00 pinctrl을 정의하지만 controller를 기본 활성화하지 않는다. 따라서 overlay 없이 `SPI`가 준비되었다고 간주하지 않는다.
-
-SPI 사용 application은 최소한 다음을 제공해야 한다.
-
-- SPI controller `status = "okay"`
-- pinctrl reference
-- 필요하면 CS GPIO 또는 child device
-- Variant의 기본 SPI mapping
+`SPIClass`와 `SPISettings`는 ArduinoCore-API 형식이며 전역 `SPIClass &SPI`가
+`nucode,arduino-spi` chosen을 사용한다. NU54DK 보드 package는 SPI00의 P2.1 SCK, P2.2 MOSI,
+P2.4 MISO pinctrl을 제공하지만 controller는 기본 비활성이다. Arduino builder의 Core overlay가
+SPI00을 활성화한다. SPI00과 uart00은 같은 하드웨어 instance를 공유하므로 동시에 활성화할 수
+없으며 충돌 profile은 configure/build 단계에서 실패해야 한다. NU54DK production Core는
+chosen이 SPI00이 아닌 구성도 compile-time에 거부한다. fake driver를 쓰는 M7 target test만
+명시적인 test 전용 compile definition으로 이 instance 검사를 우회한다.
 
 ### 7.2 API 범위
 
@@ -336,35 +361,50 @@ v1 목표:
 - `endTransaction()`
 - mode 0~3
 - MSB/LSB order의 driver 지원 범위
-- transaction별 frequency
+- transaction별 nrfx runtime prescaler 조건을 통과하는 frequency; shipped sample/HIL 기본은 4 MHz
+- Core가 관리하지 않는 Sketch 소유 chip-select
+
+SPI00은 128 MHz core clock에 4..126 범위의 짝수 prescaler를 사용한다. 1 MHz는 divider 128이
+필요해 표현할 수 없고, 4 MHz는 divider 32로 정확히 표현할 수 있다. sequence 14에서는 1 MHz가
+첫 transfer에서 driver `-EINVAL`로 드러났다. 최종 Core는 0 Hz·32 MHz 초과와 함께 nrfx
+runtime predicate `(128 MHz % frequency) < prescaler` 및 prescaler 짝수·범위 조건을
+`beginTransaction()`에서 동일하게 선검증한다. 이 runtime 조건은 나머지가 0인 값만 허용하는
+exact-division 검사가 아니며 near-divisor도 허용할 수 있다. 실제 SCK는 128 MHz/prescaler로
+양자화된다. Core는 별도의 가까운 frequency 탐색이나 임의 반올림을 하지 않으며 실제 driver
+호출에서 발생한 errno는 진단에 보존한다. shipped sample/HIL 기본값은 4 MHz로 고쳤고 재시험
+결과는 M7 기준선에 보존한다.
 
 ### 7.3 Transaction ownership
 
 `beginTransaction()`은 다음을 수행한다.
 
 1. thread 문맥을 확인한다.
-2. bus mutex를 획득한다.
+2. 짧게 Core 내부 `spi_mutex`를 잡아 transaction owner와 상태를 갱신한다.
 3. `SPISettings`를 Zephyr `spi_config`로 변환한다.
-4. 지원하지 않는 bit order, word size 또는 frequency를 거부한다.
+4. 지원하지 않는 mode·bit order와 nrfx runtime prescaler predicate가 거부하는 frequency를
+   `invalid_frequency`로 거부한 뒤 mutex를 해제한다.
 
-`endTransaction()`은 CS가 inactive인지 확인한 뒤 mutex를 해제한다.
-
-Arduino 관례상 application이 digital GPIO로 CS를 제어할 수 있다. Zephyr child device의 `cs-gpios`를 사용하는 방식과 혼용할 때 이중 제어가 일어나지 않도록 한 transaction에서 한 소유 모델만 선택한다.
+Core는 자동 CS, 기본 SS pin 또는 Zephyr child device를 만들지 않는다. Sketch가 사용할
+digital GPIO를 직접 선택하고 `beginTransaction()` 전후가 아니라 실제 transfer 구간 앞뒤에서
+CS를 제어한다. 각 `transfer()`도 Core 상태 검사와 해당 driver 호출 동안만 내부 mutex를 잡는다.
+`SPI_LOCK_ON`이나 `spi_release()`를 사용하지 않으므로 `beginTransaction()`부터
+`endTransaction()`까지 Zephyr bus 전체를 독점하지 않는다. 다른 Zephyr SPI client의 호출은
+Arduino transaction 사이에 개입할 수 있으며, 해당 공존이 필요한 application이 별도 상위
+직렬화 정책을 제공해야 한다. `endTransaction()`은 Core owner 상태만 정리한다.
 
 ### 7.4 호출 흐름
 
 ~~~text
 SPI.beginTransaction(settings)
-        ↓ bus lock
-        ↓ settings 변환
-digitalWrite(CS, LOW) 또는 Zephyr CS spec
+        ↓ Core owner/state 설정 후 mutex 해제
+Sketch digitalWrite(CS, LOW)
         ↓
 SPI.transfer(buffer)
-        ↓
+        ↓ Core mutex + driver 호출 + mutex 해제
 Zephyr spi_transceive()
         ↓
-CS 해제 + endTransaction()
-        ↓ bus unlock
+Sketch CS 해제 + endTransaction()
+        ↓ Core owner/state 정리
 ~~~
 
 v1 SPI API는 thread 문맥 전용이다. ISR transfer를 지원한다고 표시하지 않는다.
@@ -375,20 +415,19 @@ v1 SPI API는 thread 문맥 전용이다. ISR transfer를 지원한다고 표시
 
 ### 8.1 Mapping
 
-`A0...An`의 논리 순서가 확정되기 전에는 물리 AIN 번호를 Core에 하드코딩하지 않는다. Variant descriptor가 Devicetree ADC channel reference를 제공해야 한다.
-
-현재 보드에는 ADC channel 5가 정의되어 있지만 이것만으로 `A0` 번호가 확정된 것은 아니다.
+`PIN_A0`/`A0`는 논리 index 2이며 `NUM_DIGITAL_PINS=2` 범위 밖의 analog 전용 역할이다.
+Core overlay의 `nucode,arduino-adc` chosen node가 `io-channels = <&adc 5>`를 제공한다. 최종
+Devicetree 기준 물리 입력은 P1.12/SAADC channel 5다.
 
 ### 8.2 API 범위
 
-v1 목표:
+M7 계약은 다음과 같다.
 
-- `analogRead(pin)`
-- `analogReadResolution(bits)`
-- raw sample 반환
-- acquisition time, gain 및 reference는 Devicetree 기본값 사용
-
-`analogReference()`는 nRF ADC와 Zephyr channel configuration의 의미를 검토한 뒤 지원 범위를 정한다. AVR 이름을 받아 실제로 적용하지 않는 no-op 구현은 만들지 않는다.
+- `analogRead(A0)`의 고정 12-bit raw 0..4095
+- 잘못된 pin, ISR, 준비되지 않은 device, DTS 불일치와 driver 오류는 `-1`
+- Core overlay가 정한 channel 5, `ADC_GAIN_1_4`, `ADC_REF_INTERNAL` 계약 검사
+- `analogReference(AR_DEFAULT)`만 허용; `AR_INTERNAL`은 같은 값의 설명용 별칭
+- `analogReadResolution()`은 vendored ArduinoCore-API 1.5.2에 선언이 없어 미구현
 
 ### 8.3 호출 흐름
 
@@ -399,10 +438,19 @@ analogRead(logical_pin)
        ↓ ADC device readiness
        ↓ sequence 구성
        ↓ adc_read()
-       ↓ requested Arduino resolution로 정규화
+       ↓ 12-bit raw 0..4095 또는 오류 -1
 ~~~
 
 ADC read는 thread 문맥 전용이며 synchronous conversion 동안 block될 수 있다.
+
+보드 package의 channel 5는 `ADC_GAIN_1_6`을 선언하지만 nRF54L15에서 이 gain은
+`-EINVAL`이다. 읽기 전용 서브모듈은 수정하지 않고 Core builder·sample·example overlay가
+channel 5를 12-bit, internal reference, `ADC_GAIN_1_4`로 override한다. sequence 14에서
+발견한 1/6 실패와 수정 후 재시험 결과는 M7 검증 기준선에 함께 보존한다.
+
+internal 0.6 V reference와 gain 1/4의 nominal full-scale 입력은 약 2.4 V이므로 그 이상은
+12-bit raw에서 saturation될 수 있다. 이는 절대최대 정격이나 안전 입력 전압 안내가 아니다.
+정확도와 허용 전압은 SoC/보드 전기 사양을 따르며 `analogRead()` 계약은 raw 0..4095뿐이다.
 
 ### 8.4 VBAT
 
@@ -421,41 +469,32 @@ ADC read는 thread 문맥 전용이며 synchronous conversion 동안 block될 �
 
 ### 9.1 Mapping과 충돌
 
-현재 PWM channel 하나가 사용자 LED 2 GPIO와 같은 물리 핀을 공유한다. Variant와 Core는 이 사실을 Devicetree reference와 ownership 상태로 처리해야 한다.
+`PIN_PWM0`과 `PIN_PWM_LED`는 같은 논리 index 3이며 digital pin이 아니다. Core overlay의
+`nucode,arduino-pwm` chosen은 보드 `pwm_led1` node를 가리키고, 이 node는 `pwm-led0` alias와
+같은 P1.10/pwm20 channel 0 역할이다. `LED_BUILTIN`은 별도 P2.9 digital GPIO이며 PWM 핀이 아니다.
 
 ### 9.2 API 범위
 
-v1 목표:
+M7 계약은 다음과 같다.
 
-- PWM capability가 있는 logical pin의 `analogWrite()`
-- `analogWriteResolution()`
-- 기본 frequency/period 정책
-- duty 0과 최대값 처리
-- Core가 소유한 GPIO와 PWM 사이의 안전한 전환
+- `analogWrite(PIN_PWM0, value)` 또는 같은 역할 별칭 `PIN_PWM_LED`
+- 고정 20 ms period와 고정 8-bit 0..255 duty
+- 0은 pulse 0, 255는 full period, 중간값은 64-bit 연산으로 반올림
+- 범위 밖의 값과 다른 pin은 clamp하지 않고 거부
+- `analogWriteResolution()`과 PWM frequency setter는 미구현
 
 ### 9.3 Ownership 전환
 
-GPIO와 PWM이 모두 Arduino Core 관리 대상이고 Variant가 shareable로 표시한 pin에 한해 다음 전환을 허용한다.
-
-~~~text
-digital GPIO owner
-       ↓ analogWrite()
-GPIO output 비활성/상태 보존
-       ↓
-PWM owner
-       ↓ digitalWrite()를 thread에서 호출
-PWM stop
-       ↓
-GPIO owner로 명시적 복귀
-~~~
-
-UART, SPI, I2C, debug 또는 Zephyr device가 소유한 pin을 `analogWrite()`가 자동으로 빼앗지 않는다. ISR에서 ownership 전환을 수행하지 않는다.
+M7은 P1.10을 digital descriptor로 추가하지 않으므로 GPIO↔PWM 자동 ownership 전환이 없다.
+UART, SPI, I2C, debug 또는 다른 Zephyr device가 소유한 pin을 `analogWrite()`가 자동으로
+빼앗지 않으며 ISR 호출은 거부한다. 다른 P1.10 소비자가 필요하면 Sketch overlay가 정적으로
+구성을 바꾸고 충돌 책임을 진다.
 
 ### 9.4 값 변환
 
-Arduino resolution의 최대값을 PWM period에 비례해 pulse width로 변환한다. overflow를 피하기 위해 64-bit 중간 연산을 사용한다.
-
-실제 frequency와 resolution 조합은 PWM clock과 period 범위에 제한된다. 표현 불가능한 설정을 조용히 clamp할지 오류로 처리할지는 HIL과 Arduino library 호환 시험 후 확정하되, 실제 적용값을 조회할 진단 방법을 제공한다.
+8-bit 최대값 255를 20 ms period에 비례해 pulse width로 변환한다. overflow를 피하기 위해
+64-bit 중간 연산을 사용한다. DTS period가 정확히 20 ms가 아니면 조용히 다른 파형을
+출력하지 않고 오류 상태를 남긴다.
 
 ---
 
@@ -505,10 +544,10 @@ CMSIS-DAP interface MCU
 | `Serial.begin/end` | 허용 | 금지 | 예 | lifecycle 변경 |
 | `Serial.write` | 허용 | 금지 | polling TX 동안 | Core mutex로 호출 직렬화; ISR은 0과 진단 반환 |
 | UART RX driver callback | 해당 없음 | 실행 | 금지 | 고정 RX queue와 drop counter만 조작 |
-| `Wire` transaction | 허용 | 금지 | 예 | bus mutex와 transfer |
-| `SPI` transaction | 허용 | 금지 | 예 | bus lock과 transfer |
+| `Wire` transaction | 허용 | 금지 | 예 | Core state mutex와 transfer; 다른 Zephyr client는 별도 직렬화 |
+| `SPI` transaction | 허용 | 금지 | 예 | Core owner/state는 보호하지만 Zephyr bus 전체 lock은 아님 |
 | `analogRead` | 허용 | 금지 | 예 | synchronous conversion |
-| `analogWrite` 동일 owner | 허용 | 제한적 | driver 검증 필요 | ownership 전환은 ISR 금지 |
+| `analogWrite` | 허용 | 금지 | driver 호출 동안 | PIN_PWM0 전용; GPIO ownership 전환 없음 |
 | peripheral event callback | API별 | 주로 ISR/workqueue | API별 | 문맥을 문서화 |
 
 ISR callback은 다음 원칙을 따른다.
@@ -550,10 +589,11 @@ Zephyr의 원래 negative errno는 디버깅을 위해 보존한다. Arduino 호
 
 ### 13.3 Timeout
 
-- 무한 대기를 기본으로 사용하지 않는다.
-- timeout은 Kconfig 또는 객체 API로 설정 가능하게 한다.
-- timeout 발생 후 bus lock과 CS를 반드시 정리한다.
-- UART buffer full, I2C bus hang 및 SPI driver stall을 HIL로 시험한다.
+- adapter가 제어할 수 있는 대기에는 무한 대기를 기본으로 두지 않는다.
+- timeout Kconfig 또는 객체 API는 실제 구현과 시험이 추가된 뒤에만 지원으로 표시한다.
+- 오류나 timeout 뒤에는 해당 adapter가 실제로 소유한 Core mutex와 transaction state만
+  정리한다. M7 SPI는 bus-wide lock과 CS를 소유하지 않으므로 Sketch 소유 CS를 변경하지 않는다.
+- UART buffer full, I2C bus hang 및 SPI driver stall의 추가 HIL은 후속 검증 범위다.
 
 ### 13.4 진단과 release
 
@@ -566,19 +606,19 @@ Zephyr의 원래 negative errno는 디버깅을 위해 보존한다. Arduino 호
 
 ## 14. 설정 항목
 
-Serial 항목은 M6 실제 구현값이고 나머지는 M7 이후 설계안이다.
+Serial 항목은 M6 구현값이다. M7 항목은 module 수준 기본값과 Arduino builder 기본 profile을
+구분한다.
 
 | 설정 | 기본값 | 설명 |
 | --- | ---: | --- |
 | `CONFIG_NUCODE_ARDUINO_SERIAL` | `y` | 기본 `Serial` wrapper |
 | `CONFIG_NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE` | `128` | IRQ RX 고정 queue, overflow는 drop-newest |
 | Serial TX buffer | 없음 | polling TX와 Core mutex 사용 |
-| `CONFIG_NUCODE_ARDUINO_WIRE` | `y` | I2C master wrapper |
-| `CONFIG_NUCODE_ARDUINO_WIRE_BUFFER_SIZE` | Arduino 호환 시험 후 | I2C static buffer |
-| `CONFIG_NUCODE_ARDUINO_SPI` | overlay 조건부 | SPI wrapper |
-| `CONFIG_NUCODE_ARDUINO_ADC` | logical mapping 후 | `analogRead` |
-| `CONFIG_NUCODE_ARDUINO_PWM` | logical mapping 후 | `analogWrite` |
-| `CONFIG_NUCODE_ARDUINO_PERIPHERAL_DIAGNOSTICS` | 개발 `y` | 오류 log와 counter |
+| `CONFIG_NUCODE_ARDUINO_WIRE` | module `n`, builder `y` | I2C22 controller wrapper |
+| `CONFIG_NUCODE_ARDUINO_WIRE_BUFFER_SIZE` | `32` | TX/RX 각각의 고정 buffer, 16..512 |
+| `CONFIG_NUCODE_ARDUINO_SPI` | module `n`, builder `y` | Core overlay의 SPI00, CS 제외 |
+| `CONFIG_NUCODE_ARDUINO_ADC` | module `n`, builder `y` | A0 고정 12-bit raw |
+| `CONFIG_NUCODE_ARDUINO_PWM` | module `n`, builder `y` | P1.10 고정 20 ms·8-bit |
 
 Zephyr dependency 예시는 다음과 같다.
 
@@ -609,24 +649,32 @@ Zephyr dependency 예시는 다음과 같다.
 
 ### 15.2 Wire
 
-- [ ] address scan, write, read와 repeated start가 동작한다.
-- [ ] NACK, timeout, overflow와 bus 오류가 구분된다.
+- [x] deferred write와 같은 주소 read가 repeated-start로 결합된다.
+- [x] `requestFrom(..., false)`가 전송 없이 0과 미지원 진단을 반환한다.
+- [x] zero-byte `endTransmission(true)` address probe와 driver 오류 변환을 검증한다.
+- [x] TX overflow=1과 `-EIO` 등 generic driver 오류=4·원본 errno 보존을 검증한다.
 - [ ] shared Zephyr client가 있을 때 bus lock과 clock 정책이 지켜진다.
-- [ ] 비활성 BQ25186을 Core가 자동 활성화하지 않는다.
+- [x] 최종 generated Devicetree에서 BQ25186이 `status = "disabled"`로 유지된다.
+- [x] Wire가 활성인데 `nucode,arduino-wire` chosen이 없으면 configure/build에서 실패한다.
+- [x] HIL protocol이 `0x6A`에 전혀 접근하지 않고 오직 `0x6B/0x0F`만 허용한다.
 
 ### 15.3 SPI
 
-- [ ] overlay 없이 SPI가 준비된 것처럼 동작하지 않는다.
-- [ ] mode 0~3, frequency 및 buffer transfer를 검증한다.
-- [ ] CS ownership이 중복되지 않는다.
-- [ ] transaction 오류 후 lock과 CS가 복구된다.
+- [x] overlay 없이 SPI가 준비된 것처럼 동작하지 않는다.
+- [x] mode 0~3, frequency 및 buffer transfer를 target ztest로 검증한다.
+- [x] 1 MHz/div128 실패를 보존하고 4 MHz/div32 실제 driver 경로를 재검증한다.
+- [x] NU54DK production chosen이 SPI00이 아니면 stable diagnostic으로 실패한다.
+- [x] SPI00과 uart00 동시 활성 구성이 configure/build 단계에서 실패한다.
+- [x] Core가 CS를 만들지 않고 Sketch가 별도 GPIO CS를 소유한다.
+- [x] transaction 오류 후 Core owner/state가 복구된다.
 
 ### 15.4 ADC/PWM
 
-- [ ] A0 및 PWM logical mapping이 Variant 문서와 일치한다.
-- [ ] ADC channel, gain, reference가 최종 Devicetree와 일치한다.
-- [ ] analog resolution 변환의 overflow가 없다.
-- [ ] GPIO/PWM 공유 pin 전환이 glitch와 동시 구동을 만들지 않는다.
+- [x] A0 및 PWM logical mapping이 Variant 문서와 일치한다.
+- [x] ADC channel, gain, reference가 최종 Devicetree와 일치한다.
+- [x] ADC 12-bit raw 0..4095와 오류 `-1`을 검증한다.
+- [x] PWM 0·중간값·255 변환에 overflow가 없다.
+- [x] PWM 전용 역할 이외의 pin이 PWM 역할로 오인되지 않는다.
 - [ ] VBAT는 명시적 overlay 없이 배터리 전압 API로 노출되지 않는다.
 
 ---
@@ -663,11 +711,11 @@ Zephyr dependency 예시는 다음과 같다.
 | --- | --- |
 | Serial | **M6 PASS:** DAPLink sequence 7, COM10 boot READY·고유 echo; target ztest에서 RX/TX·overflow·end·ISR 거부 |
 | Console 공유 | Zephyr log와 Sketch 출력의 관측 및 제한 확인 |
-| I2C | 외부 known device, address NACK, repeated start |
-| SPI | emulator config/transfer와 사용 가능한 경우 known peripheral |
-| ADC | 활성 channel raw read와 resolution/range 변환; 외부 정밀 전압원은 선택 |
-| PWM | driver duty 적용과 온보드 출력 상태; 외부 duty/frequency 계측은 선택 |
-| Ownership | GPIO↔PWM 전환과 충돌 negative test |
+| I2C | **미확정:** seq18 고정 0x6B/0x0F에서 RX 오류; 0x6A 접근·scan·fallback 없음 |
+| SPI | **부분 통과:** seq17 4 MHz driver 호출 PASS, rx=0x00; physical data/loopback 미검증 |
+| ADC | **PASS:** seq17 gain 1/4 A0 raw=3176; raw 범위만 검증, 전압 정확도 주장 없음 |
+| PWM | **PASS:** seq17 P1.10 duty 0/128/255 driver 호출; 외부 파형 주장 없음 |
+| Conflict | SPI00/uart00, 잘못된 analog pin과 LED_BUILTIN PWM negative test |
 
 ---
 
@@ -678,7 +726,7 @@ v1 주변장치 API에서 다음은 제외한다.
 - target native USB CDC/HID/MSC
 - `SerialUSB`
 - 같은 UART에서 Zephyr shell과 Arduino RX의 동시 소비
-- overlay 없이 비활성 SPI와 UART를 자동 활성화하는 기능
+- API 호출만으로 비활성 SPI와 UART를 runtime에 활성화하는 기능
 - I2C target/slave mode
 - ISR에서 blocking Serial/Wire/SPI 호출
 - 모든 sensor를 Core에 내장하는 기능
@@ -698,11 +746,12 @@ USB upload나 drag-and-drop firmware 기능이 필요하면 CMSIS-DAP 인터페�
 | Serial TX 방식 | M6 polling + mutex | COM10 실제 echo와 단순한 non-owning 소유권 |
 | 다른 console baud/config 처리 | M6 거부 | 실제 설정은 읽기만 하고 Zephyr 소유 UART를 재구성하지 않음 |
 | `Serial1` 공개 | 대기 | overlay와 physical route |
-| I2C buffer 크기 | 대기 | library 호환성과 RAM |
+| I2C buffer 크기 | M7 `32` byte | Kconfig 16..512 범위의 고정 TX/RX buffer |
 | I2C target mode | v1 제외 | 실제 사용 사례 |
-| 기본 SPI 논리 bus | 대기 | 전체 Variant 핀맵 승인 |
-| A0...An 순서 | 대기 | Variant/connector 설계 승인 |
-| PWM 기본 frequency | 대기 | Arduino 호환성과 nRF54 계측 |
+| 기본 SPI 논리 bus | M7 SPI00 | Core overlay, P2.1/P2.2/P2.4와 uart00 충돌 |
+| analog 논리 역할 | M7 A0만 | P1.12/SAADC channel 5, A1 이후는 대기 |
+| PWM 기본 주기·해상도 | M7 20 ms·8-bit | 보드 pwm_led1 역할과 고정 API 계약 |
+| 물리 SPI HIL | 미검증 | fixture가 없어 data/loopback 일치를 주장하지 않으며 M7 조건부 완료 사유로 유지 |
 
 ---
 
@@ -714,6 +763,10 @@ Zephyr가 device 초기화와 lifetime을 소유한다.
 Arduino wrapper가 begin/end와 buffer를 소유한다.
 
 Serial = zephyr,console UART의 non-owning wrapper
+Wire = I2C22의 deferred repeated-start controller
+SPI = Core overlay가 활성화한 CS 없는 SPI00 controller
+A0 = P1.12/SAADC channel 5의 12-bit raw 역할
+PIN_PWM0 = P1.10/pwm20의 20 ms·8-bit 역할
 USB VCOM = CMSIS-DAP interface MCU의 UART bridge
 Native USB = nRF54L15에 없음
 ~~~

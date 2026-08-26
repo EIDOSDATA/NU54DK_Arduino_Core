@@ -1,0 +1,12 @@
+/**
+ * @file non_spi00_chosen.overlay
+ * @brief SPI00 전용 구현에 다른 controller를 chosen으로 주입합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+/ {
+	chosen {
+		nucode,arduino-spi = &i2c22;
+	};
+};

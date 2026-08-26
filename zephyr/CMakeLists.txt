@@ -94,6 +94,24 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
     )
   endif()
 
+  if(CONFIG_NUCODE_ARDUINO_WIRE)
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/Wire.cpp"
+    )
+  endif()
+
+  if(CONFIG_NUCODE_ARDUINO_SPI)
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/SPI.cpp"
+    )
+  endif()
+
+  if(CONFIG_NUCODE_ARDUINO_ADC OR CONFIG_NUCODE_ARDUINO_PWM)
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/wiring_analog.cpp"
+    )
+  endif()
+
   zephyr_library_named(nucode_arduino_core)
   zephyr_library_sources(${NUCODE_ARDUINO_CORE_SOURCES})
   zephyr_include_directories(
@@ -198,6 +216,8 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   file(GLOB_RECURSE NUCODE_CORE_BUILD_INPUTS
     LIST_DIRECTORIES FALSE
     "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/*"
+    "${NUCODE_ARDUINO_CORE_ROOT}/dts/*"
+    "${NUCODE_ARDUINO_CORE_ROOT}/libraries/*"
     "${NUCODE_ARDUINO_CORE_ROOT}/third_party/ArduinoCore-API/*"
     "${NUCODE_ARDUINO_CORE_ROOT}/third_party/ArduinoCore-API.provenance.yml"
     "${NUCODE_ARDUINO_CORE_ROOT}/variants/nu54dk/*"
@@ -222,7 +242,7 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
 
   nucode_git_revision(
     "${NUCODE_ARDUINO_CORE_ROOT}" NUCODE_CORE_REVISION TRUE
-    cores third_party variants zephyr
+    cores dts libraries third_party variants zephyr
   )
   nucode_git_revision(
     "${NUCODE_BOARD_PACKAGE_ROOT}" NUCODE_BOARD_REVISION TRUE

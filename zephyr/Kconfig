@@ -81,6 +81,52 @@ config NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE
 	  queue가 가득 차면 새 RX byte를 버리고 내부 drop counter를
 	  증가시킵니다.
 
+config NUCODE_ARDUINO_WIRE
+	bool "Arduino Wire I2C controller 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	select I2C
+	help
+	  nucode,arduino-wire chosen controller를 ArduinoCore-API HardwareI2C로
+	  노출합니다. controller mode, 100/400 kHz와 고정 TX/RX buffer만
+	  지원합니다.
+
+config NUCODE_ARDUINO_WIRE_BUFFER_SIZE
+	int "Arduino Wire TX/RX buffer byte 수"
+	default 32
+	range 16 512
+	depends on NUCODE_ARDUINO_WIRE
+	help
+	  TX와 RX에 각각 할당하는 고정 buffer 크기입니다. 동적 메모리는
+	  사용하지 않습니다.
+
+config NUCODE_ARDUINO_SPI
+	bool "Arduino SPI controller 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	select SPI
+	help
+	  nucode,arduino-spi chosen controller를 CS 없는 HardwareSPI로
+	  노출합니다. 외부 target의 CS 역할은 Sketch가 직접 소유합니다.
+
+config NUCODE_ARDUINO_ADC
+	bool "Arduino A0 ADC 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	select ADC
+	help
+	  nucode,arduino-adc chosen io-channel을 PIN_A0/A0으로 노출합니다.
+	  NU54DK 계약은 SAADC channel 5의 12-bit raw 값 0..4095입니다.
+
+config NUCODE_ARDUINO_PWM
+	bool "Arduino PIN_PWM0 analogWrite 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	select PWM
+	help
+	  nucode,arduino-pwm chosen 역할의 DTS 주기를 유지하면서 8-bit
+	  0..255 duty를 PIN_PWM0에 출력합니다.
+
 choice NUCODE_ARDUINO_LOOP_POLICY
 	prompt "Sketch loop 반환 후 Zephyr 공존 정책"
 	default NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK

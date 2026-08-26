@@ -1,0 +1,6 @@
+/** @brief PIN_PWM0을 board pwm_led1/P1.10 역할에 연결합니다. */
+/ {
+	chosen {
+		nucode,arduino-pwm = &pwm_led1;
+	};
+};

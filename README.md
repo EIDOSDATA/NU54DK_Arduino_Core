@@ -27,7 +27,9 @@ NU54DK에서 Loader 없이 동작하는 Native Full Zephyr 기반 Arduino Core�
 - M6 조건부 완료, ArduinoCore-API `Common`·`String`·`Print`·`Stream`, non-owning UART20 `Serial`과 GPIO edge interrupt 구현
 - M6 NU54DK target ztest 10/10과 COM10 실제 Serial READY·고유 echo HIL 통과
 - M6의 유일한 잔여 조건은 실제 P1.13 active-low 버튼을 눌렀다 놓으며 `FALLING`·`RISING`·`CHANGE` ISR edge를 확인하는 것
-- M7 Wire·SPI·ADC·PWM은 아직 시작 전
+- M7 조건부 완료, NU54DK Twister target 11/11·Arduino CLI 4/4·ADC/PWM/SPI driver HIL 통과
+- M7 통합 staged Builder 회귀 8/8 named group 통과: blink, library, config, error, parallel, incremental, m6, m7
+- M7 잔여 제한은 고정 0x6B IMU의 RX 오류로 미확정인 `WHO_AM_I`와 fixture가 없는 물리 SPI data 경로
 - Arduino Upload/Flash recipe와 pyOCD/J-Link 선택은 아직 미구현이며 M8 범위
 
 ## 보드 정의
@@ -72,6 +74,7 @@ Boards Manager용 배포 archive에는 고정된 서브모듈 commit의 실제 �
 - [M4 ArduinoCore-API 계약 기준선](./00_Docs/04_검증%20기록/04_M4_ArduinoCore_API_계약_기준선.md)
 - [M5 Arduino CLI Build Adapter 기준선](./00_Docs/04_검증%20기록/05_M5_Arduino_CLI_Build_Adapter_기준선.md)
 - [M6 기본 Arduino API, Serial과 인터럽트 기준선](./00_Docs/04_검증%20기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md)
+- [M7 Wire·SPI·ADC·PWM 기준선](./00_Docs/04_검증%20기록/07_M7_Wire_SPI_ADC_PWM_기준선.md)
 
 ## 작성자
 

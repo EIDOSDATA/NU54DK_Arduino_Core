@@ -281,10 +281,20 @@ def configuration_fingerprint(platform_root: Path, sketch_root: Path, board: str
         platform_root / "tools" / "nu54-builder" / "src" / "nu54_builder.py",
         platform_root / "tools" / "nu54-builder" / "templates" / "zephyr-app" / "CMakeLists.txt",
         platform_root / "tools" / "nu54-builder" / "templates" / "zephyr-app" / "prj.conf",
+        platform_root / "tools" / "nu54-builder" / "templates" / "zephyr-app" / "app.overlay",
         platform_root / "tools" / "nu54-builder" / "templates" / "zephyr-app" / "src" / "bootstrap.cpp",
+        platform_root / "zephyr" / "module.yml",
         sketch_root / "prj.conf",
         sketch_root / "app.overlay",
     ]
+    bindings_root = platform_root / "dts" / "bindings"
+    if bindings_root.is_dir():
+        inputs.extend(
+            sorted(
+                (path for path in bindings_root.rglob("*") if path.is_file()),
+                key=path_key,
+            )
+        )
     for source in inputs:
         digest.update(path_key(source).encode("utf-8"))
         if source.is_file():
@@ -298,7 +308,7 @@ def materialize_application(paths: dict[str, Path]) -> None:
     sketch_root = paths["sketch_root"]
     app_root = paths["app"]
     template = platform_root / "tools" / "nu54-builder" / "templates" / "zephyr-app"
-    for required in ("CMakeLists.txt", "prj.conf", "sources.cmake", "src/bootstrap.cpp"):
+    for required in ("CMakeLists.txt", "prj.conf", "app.overlay", "sources.cmake", "src/bootstrap.cpp"):
         if not (template / required).is_file():
             raise AdapterError(f"Zephyr application template이 불완전합니다: {template / required}")
     app_root.mkdir(parents=True, exist_ok=True)
@@ -315,11 +325,18 @@ def materialize_application(paths: dict[str, Path]) -> None:
     atomic_write_text(app_root / "prj.conf", base_config)
 
     generated_overlay = app_root / "app.overlay"
+    base_overlay = (template / "app.overlay").read_text(encoding="utf-8").rstrip() + "\n"
     sketch_overlay = sketch_root / "app.overlay"
     if sketch_overlay.is_file():
-        atomic_write_bytes_if_changed(generated_overlay, sketch_overlay.read_bytes())
-    elif generated_overlay.exists():
-        generated_overlay.unlink()
+        combined_overlay = (
+            base_overlay
+            + "\n/** Sketch가 제공한 app.overlay override입니다. */\n"
+            + sketch_overlay.read_text(encoding="utf-8").rstrip()
+            + "\n"
+        )
+        atomic_write_text(generated_overlay, combined_overlay)
+    else:
+        atomic_write_text(generated_overlay, base_overlay)
 
 
 ## @brief 현재 고정 입력으로 Zephyr configure-only를 수행하고 context를 기록합니다.

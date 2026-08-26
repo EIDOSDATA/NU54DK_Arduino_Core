@@ -1,0 +1,6 @@
+/** @brief Wire를 NU54DK Qwiic i2c22 controller에 연결합니다. */
+/ {
+	chosen {
+		nucode,arduino-wire = &i2c22;
+	};
+};

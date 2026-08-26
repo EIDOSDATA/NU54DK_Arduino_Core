@@ -27,9 +27,10 @@
 7. [M4 ArduinoCore-API 계약 기준선](<./04_검증 기록/04_M4_ArduinoCore_API_계약_기준선.md>)
 8. [M5 Arduino CLI Build Adapter 기준선](<./04_검증 기록/05_M5_Arduino_CLI_Build_Adapter_기준선.md>)
 9. [M6 기본 Arduino API, Serial과 인터럽트 기준선](<./04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md>)
-10. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
-11. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
-12. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
+10. [M7 Wire·SPI·ADC·PWM 기준선](<./04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md>)
+11. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
+12. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
+13. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
 
 ## 문서 구성
 
@@ -67,6 +68,7 @@
 - [M4 ArduinoCore-API 계약 기준선](<./04_검증 기록/04_M4_ArduinoCore_API_계약_기준선.md>): 고정 upstream snapshot, 라이선스 경계와 NU54DK target compile 증거
 - [M5 Arduino CLI Build Adapter 기준선](<./04_검증 기록/05_M5_Arduino_CLI_Build_Adapter_기준선.md>): `.ino`·library discovery에서 Full Zephyr 산출물까지의 Arduino CLI 수직 경로와 자동 회귀 증거
 - [M6 기본 Arduino API, Serial과 인터럽트 기준선](<./04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md>): ArduinoCore-API 공통 구현, 실제 UART Serial HIL, target ztest와 P1.13 물리 edge 잔여 조건
+- [M7 Wire·SPI·ADC·PWM 기준선](<./04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md>): M7 공개 API·DTS/Kconfig 계약, 0x6A HIL 안전 경계와 실제·미검증 결과 행렬
 
 ## 현재 진행 상태
 
@@ -79,7 +81,8 @@
 | M4 ArduinoCore-API 계약 | **완료** | 1.5.2 고정 snapshot·라이선스 고지·NU54DK API 계약 pristine build 통과 |
 | M5 Arduino CLI Build Adapter | **완료** | Full Zephyr 산출물 5종 생성과 staged-copy 자동 회귀 6/6 통과 |
 | M6 기본 Arduino API | **조건부 완료** | 공통 API·Serial·interrupt 구현, target ztest 10/10과 COM10 Serial HIL 통과; 실제 P1.13 버튼 edge 수동 확인만 남음 |
-| M7~M11 | 대기 | M7은 아직 시작 전이며 이후 단계는 각 선행조건과 검증 결과에 따라 진행 |
+| M7 버스·아날로그·PWM API | **조건부 완료** | NU54DK Twister target 11/11·전체 Builder 8/8(M7 예제 4/4)·driver HIL 통과; IMU WHO_AM_I 미확정과 물리 SPI data 경로 미검증 |
+| M8~M11 | 대기 | M8 Upload/Flash recipe를 포함한 이후 단계는 아직 미구현이며 선행 단계 결과를 기다림 |
 
 상세 상태는 [구현 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)을 단일 기준으로 관리한다.
 
