@@ -392,7 +392,7 @@ arduino-cli board details --fqbn 'nucode:zephyr:nu54dk'
 ### 9.2 최초 compile
 
 ~~~powershell
-$RepoRoot = 'C:\Users\eidos\GitHub\NU54DK_Arduino_Core'
+$RepoRoot = (Resolve-Path '.').Path
 $SketchDir = Join-Path $RepoRoot 'examples\01.Basics\Blink'
 $ArduinoBuild = Join-Path $RepoRoot 'build\arduino-cli\Blink'
 

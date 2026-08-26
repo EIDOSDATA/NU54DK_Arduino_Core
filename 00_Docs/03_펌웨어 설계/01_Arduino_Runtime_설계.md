@@ -2,13 +2,13 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | 설계 기준선 — 구현 전 |
+| 문서 상태 | 설계·구현 동기화 — M3 west-native/HIL 기준 |
 | 작성자 | Quantum / NUCODE |
 | 실행 방식 | Loader 없는 Native Full Zephyr 정적 펌웨어 |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 RTOS | Zephyr v4.4.0 |
 | 기준 타깃 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
-| 기본 실행 문맥 | PoC: Zephyr `main` thread |
+| 기본 실행 문맥 | Zephyr `main` thread, loop 후 기본 한 kernel tick sleep |
 
 ---
 
@@ -23,7 +23,10 @@
 - ISR callback과 일반 Arduino API 사이의 경계는 무엇인가?
 - 초기화 또는 실행 오류는 어떻게 처리하는가?
 
-이 문서는 목표 설계를 정의하며 현재 runtime 구현이 완료되었다는 의미가 아니다.
+M3 현재 구현은 Zephyr `main` thread 기반 runtime과 선택 가능한 post-loop 정책까지
+포함한다. 이 문서에서 “현재 구현”이라고 명시한 내용은 M3 source와 실측에 대응하며,
+Serial hook, 복합 subsystem stack 정책과 전용 Arduino thread 같은 항목은 향후 목표로
+구분한다.
 
 ---
 
@@ -125,14 +128,15 @@ for (;;) {
 }
 ~~~
 
-`runtimePostLoop()`는 향후 다음 기능을 선택적으로 수행할 수 있는 내부 hook다.
+현재 `runtimePostLoop()`는 Kconfig choice에 따라 다음 중 하나를 수행한다.
 
-- `serialEventRun()` 호환 hook
-- cooperative yield
-- optional minimum sleep
-- 지연된 Core 진단 처리
+- 기본값: `k_sleep(K_TICKS(1))`
+- 선택값: `k_yield()`
+- 선택값: Core scheduler 개입 없음
 
-PoC에서는 Blink의 `loop()`가 `delay()`를 호출하므로 scheduler에 자연스럽게 실행 기회를 반환한다.
+`serialEventRun()` 호환 hook과 지연된 Core 진단 처리는 아직 구현하지 않았다. Blink는
+Sketch 내부의 `delay()`로도 실행 기회를 반환하지만, 빠르게 반환하는 일반 `loop()`의
+공정성은 post-loop 정책이 별도로 책임진다.
 
 ---
 
@@ -140,7 +144,10 @@ PoC에서는 Blink의 `loop()`가 `delay()`를 호출하므로 scheduler에 자�
 
 ### 5.1 PoC 기본 결정
 
-west-native PoC는 별도의 Arduino thread를 생성하지 않고 Zephyr가 제공하는 `main` thread에서 `setup()`과 `loop()`를 실행한다. v1에서도 이 모델을 유지할지는 loop 공정성, stack 및 priority 실측 후 결정한다.
+M3 west-native 구현은 별도의 Arduino thread를 생성하지 않고 Zephyr가 제공하는 `main`
+thread에서 `setup()`과 `loop()`를 실행한다. M3 공정성 실측 결과에 따라 현재는 이 모델과
+기본 one-tick 정책을 유지한다. Serial, Bluetooth 또는 복합 Sketch의 stack·priority
+실측에서 격리가 필요하다고 확인되면 전용 Arduino thread를 다시 검토한다.
 
 선정 이유는 다음과 같다.
 
@@ -161,7 +168,9 @@ Runtime은 Zephyr 표준 설정을 사용한다.
 | scheduler | Zephyr kernel 설정 |
 | system workqueue | Zephyr subsystem 설정 |
 
-Core가 별도의 고정 숫자를 소스에 넣지 않는다. 첫 PoC는 작은 Blink에 필요한 값으로 시작하고, Serial·network·Bluetooth와 복잡한 C++ library를 추가하면서 stack watermark를 계측한다.
+Core가 별도의 고정 숫자를 소스에 넣지 않는다. M3 Blink와 `runtime_timing`은 각 sample의
+`prj.conf`가 정한 값을 사용했다. Serial·network·Bluetooth와 복잡한 C++ library를
+추가한 stack watermark는 아직 측정하지 않았다.
 
 ### 5.3 Background 실행
 
@@ -178,23 +187,37 @@ Arduino Runtime이 main thread에서 실행되어도 Zephyr의 다음 요소는 
 
 ### 5.4 Loop 공정성 정책
 
-초기 설계는 다음과 같이 구분한다.
+현재 구현은 다음 정책을 제공한다.
 
-| 정책 | 상태 |
-| --- | --- |
-| `delay()`가 있는 loop | `k_msleep()`으로 main thread block |
-| Sketch가 호출하는 `yield()` | `k_yield()`에 연결 |
-| 매 loop 뒤의 강제 1 ms sleep | 기본 비활성 제안 |
-| configurable minimum sleep | 도입 제안, 실측 후 기본값 확정 |
+| 정책 | Kconfig | 현재 상태 |
+| --- | --- | --- |
+| 한 kernel tick sleep | `CONFIG_NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK` | 기본값 |
+| scheduler yield | `CONFIG_NUCODE_ARDUINO_LOOP_YIELD` | 선택 가능 |
+| Core 개입 없음 | `CONFIG_NUCODE_ARDUINO_LOOP_NONE` | 선택 가능 |
+| Sketch의 `delay()` | API 호출 시 `k_msleep()` | 현재 main thread block |
+| Sketch의 `yield()` | API 호출 시 `k_yield()` | 같은 priority 중심 |
 
-`k_yield()`는 같은 priority의 ready thread에 실행 기회를 주지만 더 낮은 priority의 thread까지 보장하지 않는다. 따라서 다음 실기 시험 전에 “yield를 넣었으니 안전하다”고 간주하지 않는다.
+one-tick은 1 ms 고정 지연이 아니다. M3 기준
+`CONFIG_SYS_CLOCK_TICKS_PER_SEC=31250`이므로 명목상 한 tick은 약 32 us이며, 실제 한 번의
+loop 주기는 scheduler와 다른 ready thread 실행 시간까지 포함한다.
 
-1. 빈 `loop()`를 최대 속도로 실행한다.
-2. main보다 낮은 priority의 test worker를 생성한다.
-3. system workqueue, timer 및 UART RX 진행 여부를 측정한다.
-4. 필요하면 `CONFIG_NUCODE_ARDUINO_LOOP_MIN_SLEEP_MS`의 기본값 또는 main priority를 조정한다.
+`runtime_timing` sample은 Core post-loop 개입을 `NONE`으로 둔 뒤 400 ms씩 네 정책을 직접
+적용해 다음 결과를 얻었다. `하위순위`는 main보다 수치상 priority가 1 큰 worker다.
 
-출시 기본값은 이 시험 결과를 기록한 후 확정한다. 이는 명시적인 결정 대기 항목이다.
+| 단계 | loop 호출 | 동순위 worker | 하위순위 worker | timer | workqueue | idle 비율 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| spin | 177,986 | 0 | 0 | 390 | 40 | 0% |
+| `yield()` | 66,937 | 371 | 0 | 391 | 40 | 0% |
+| 한 tick sleep | 4,048 | 368 | 368 | 390 | 40 | 85.53% |
+| `delay(1)` | 368 | 367 | 367 | 391 | 39 | 96.71% |
+
+최종 trace는 `PASS`, `failure=0`이었다. spin에서도 interrupt와 system workqueue는
+진행했지만 동순위·하위순위 worker와 idle은 진행하지 않았다. `yield()`는
+동순위 worker를 진행시켰으나 하위순위와 idle을 보장하지 않았다. 한 tick sleep과
+`delay(1)`은 하위순위와 idle을 모두 진행시켰다.
+
+따라서 M3 기본 정책은 한 kernel tick sleep으로 확정한다. 최대 loop rate가 필요한
+application은 `YIELD` 또는 `NONE`을 명시적으로 선택하고 Zephyr 공존 책임을 함께 진다.
 
 ---
 
@@ -202,12 +225,15 @@ Arduino Runtime이 main thread에서 실행되어도 Zephyr의 다음 요소는 
 
 ### 6.1 `cores/arduino/main.cpp`
 
-책임:
+현재 책임:
 
 - Zephyr 애플리케이션의 단일 `main()` 제공
 - `initVariant()`, `setup()`, `loop()` 호출 순서 보장
 - post-loop hook 실행
-- Runtime의 최상위 비복구 오류 정책 적용
+
+최상위 비복구 오류를 분류해 별도 Core 진단으로 남기는 계층은 아직 없다. M3 sample의
+실패 판정은 sample 자체의 trace와 LED 표시를 사용하며, 해당하는 경우에만 `k_panic()`으로
+정지한다.
 
 금지:
 
@@ -218,18 +244,20 @@ Arduino Runtime이 main thread에서 실행되어도 Zephyr의 다음 요소는 
 
 ### 6.2 Runtime 내부 상태
 
-Core 내부 상태는 다음 범주만 유지한다.
+M3 runtime entry 자체는 phase나 lifecycle 상태를 저장하지 않는다. 현재 Core의 가변
+상태는 digital GPIO 구현이 보유한 다음 항목뿐이다.
 
-- Runtime phase
-- 마지막 Core 진단 코드
-- pin mode와 output latch 같은 API 구현 상태
-- 활성 peripheral wrapper의 lifecycle 상태
+- 논리 핀별 현재 mode와 output latch
+- 마지막 비공개 GPIO 오류와 driver 오류
 
-보드의 물리 설정을 상태로 복사해 두지 않는다.
+Runtime phase, 공통 Core 진단 코드와 peripheral wrapper lifecycle은 향후 subsystem이
+필요로 할 때 추가할 설계 범위다. 추가하더라도 보드의 물리 설정을 가변 상태에 복사해
+별도 원본으로 만들지 않는다.
 
 ### 6.3 `initVariant()`
 
-`initVariant()`는 약한 기본 구현을 제공하고, NU54DK Variant가 필요할 때 재정의할 수 있다.
+현재 `initVariant()`는 Core가 제공하는 weak no-op이며 `main()`이 `setup()`보다 먼저 한 번
+호출한다. NU54DK Variant가 초기화를 요구하게 되면 strong 구현으로 재정의할 수 있다.
 
 허용되는 동작:
 
@@ -244,7 +272,7 @@ Core 내부 상태는 다음 범주만 유지한다.
 - 긴 blocking 작업
 - `setup()` 대신 사용자 application을 초기화하는 동작
 
-첫 PoC에서 별도 동작이 필요하지 않으면 빈 구현을 사용한다.
+M3 NU54DK Variant는 별도 초기화가 필요하지 않아 현재 weak no-op을 그대로 사용한다.
 
 ### 6.4 Sketch
 
@@ -304,10 +332,12 @@ Arduino API는 Zephyr를 감추기 위한 별도 운영체제가 아니다. Zeph
 | --- | --- | --- | --- |
 | `setup()` | 허용 | 해당 없음 | main thread에서 1회 |
 | `loop()` | 허용 | 해당 없음 | main thread에서 반복 |
-| `delay()` | 허용 | 금지 | current thread를 sleep |
-| `yield()` | 허용 | 금지 | scheduler yield |
-| `millis()` | 허용 | 허용 목표 | lock 없는 uptime 조회 |
-| `digitalWrite()` | 허용 | 사전 구성 pin에 한해 검증 후 허용 목표 | driver context 제약 준수 |
+| `delay()` | 허용 | 금지, no-op | `k_can_yield()`가 허용할 때 current thread를 sleep |
+| `yield()` | 허용 | 금지, no-op | `k_can_yield()`가 허용할 때 scheduler yield |
+| `millis()` | 허용 | 허용 | Zephyr uptime 조회, timer ISR 실기 호출 확인 |
+| `micros()` | 허용 | 허용 | GRTC cycle 조회, timer ISR 실기 호출 확인 |
+| `delayMicroseconds()` | 허용 | 공개 계약상 금지, no-op | thread에서 busy wait |
+| `digitalWrite()` | 허용 | 금지, no-op | M3 GPIO 공개 API는 thread 전용 |
 | `Serial.write()` | 허용 | 금지 | lock 또는 buffering 가능 |
 | interrupt callback | 해당 없음 | 실행 | ISR-safe API만 호출 |
 
@@ -315,7 +345,9 @@ Arduino API는 Zephyr를 감추기 위한 별도 운영체제가 아니다. Zeph
 
 - ISR에서 heap allocation, mutex, sleep 및 일반 logging을 호출하지 않는다.
 - ISR callback은 필요한 데이터를 atomic 또는 queue에 기록하고 thread에서 처리한다.
-- Runtime 내부 API는 `k_is_in_isr()`로 문맥을 구분할 수 있지만, 잘못된 호출을 정상 동작으로 가장하지 않는다.
+- Runtime 내부 API는 `k_can_yield()`와 `k_is_in_isr()`로 문맥을 구분한다.
+- M3 시간 진단 계층은 아직 없으므로 금지 문맥의 `delay()`, `yield()`와
+  `delayMicroseconds()`는 안전하게 no-op하고 오류 상태를 기록하지 않는다.
 - thread-safe와 ISR-safe를 같은 의미로 사용하지 않는다.
 
 ---
@@ -324,18 +356,22 @@ Arduino API는 Zephyr를 감추기 위한 별도 운영체제가 아니다. Zeph
 
 ### 9.1 언어 버전
 
-최초 구현안은 `CONFIG_CPP=y`와 C++17을 기준으로 한다. 최종 Arduino library 호환성 시험에서 필요한 경우 표준 버전을 조정한다.
+M3 기준은 `CONFIG_CPP=y`와 C++17이다. Core Kconfig는 C++17 이상을 허용하며 M2에서
+C++20 clean build도 통과했다. 최종 Arduino library 호환성 시험에서 기본 표준 변경이
+필요한지는 별도로 판단한다.
 
 ### 9.2 Exception과 RTTI
 
-초기 기본값은 다음과 같이 제안한다.
+현재 기본 검증값은 다음과 같다.
 
 - C++ exception 비활성
 - RTTI 비활성
 - heap 사용 최소화
 - static initialization은 허용하되 device 사용은 `main()` 이후로 제한
 
-Exception 또는 full C++ standard library가 필요한 Sketch는 project `prj.conf`에서 명시적으로 활성화할 수 있어야 한다. Core가 이를 구조적으로 금지하지는 않지만 Flash/RAM 비용은 빌드 report로 확인한다.
+Exception 또는 full C++ standard library가 필요한 Sketch는 project `prj.conf`에서
+명시적으로 활성화할 수 있다. M2에서 full libstdc++ + exception + RTTI clean link를
+통과했으며, Flash/RAM 비용은 각 빌드 report로 확인한다.
 
 ### 9.3 정적 객체
 
@@ -352,7 +388,7 @@ Exception 또는 full C++ standard library가 필요한 Sketch는 project `prj.c
 | Build invariant | 필수 alias 없음, 지원하지 않는 board | 빌드 실패 |
 | Startup fatal | Core 필수 상태 손상 | 명확한 log 후 `k_panic()` 검토 |
 | Recoverable init | UART device 준비 실패 | 객체를 not-ready로 두고 Sketch가 확인 |
-| API misuse | ISR에서 `delay()` 호출 | 동작 거부, 개발 진단 기록 |
+| API misuse | ISR에서 `delay()` 호출 | M3는 안전한 no-op, 진단 기록은 미구현 |
 | Driver I/O | UART/SPI/I2C 오류 | API별 반환값 또는 상태에 전달 |
 
 `k_panic()`은 메모리 손상처럼 계속 실행할 수 없는 조건에만 사용한다. 사용자가 유효하지 않은 pin 하나를 전달했다고 전체 보드를 panic시키는 정책은 기본값으로 사용하지 않는다.
@@ -362,7 +398,7 @@ Exception 또는 full C++ standard library가 필요한 Sketch는 project `prj.c
 Arduino API 중 반환값이 없는 함수는 다음 원칙을 따른다.
 
 - 안전하지 않은 동작은 수행하지 않는다.
-- 개발 build에서는 진단 log 또는 assertion을 선택적으로 제공한다.
+- GPIO는 비공개 atomic 오류 상태를 제공하지만 Runtime/time용 log와 assertion은 아직 없다.
 - release build에서도 메모리 범위 검사를 제거하지 않는다.
 - Core extension으로 마지막 오류를 조회하는 방안은 별도 API 문서에서 결정한다.
 
@@ -374,18 +410,21 @@ Zephyr fatal error handler와 coredump/debugger 정보를 우선 사용한다. C
 
 ## 11. 설정 항목
 
-다음은 구현 예정안이다. 아직 존재하는 설정으로 간주하지 않는다.
+현재 존재하는 설정은 다음과 같다.
 
-| 설정안 | 기본값안 | 설명 |
-| --- | ---: | --- |
-| `CONFIG_NUCODE_ARDUINO_CORE` | `y` | Runtime과 Core 편입 |
-| `CONFIG_NUCODE_ARDUINO_RUNTIME_LOG_LEVEL` | `WRN` | Runtime 진단 수준 |
-| `CONFIG_NUCODE_ARDUINO_LOOP_MIN_SLEEP_MS` | 결정 대기 | loop 뒤 최소 sleep |
-| `CONFIG_NUCODE_ARDUINO_SERIAL_EVENT` | `n` | post-loop serial event hook |
-| `CONFIG_MAIN_STACK_SIZE` | PoC 측정 후 확정 | setup/loop stack |
-| `CONFIG_MAIN_THREAD_PRIORITY` | Zephyr 기본에서 시작 | Arduino 실행 priority |
-| `CONFIG_CPP` | `y` | C++ application 지원 |
-| `CONFIG_STD_CPP17` | `y` 제안 | 초기 언어 기준 |
+| 설정 | 기본값/소유자 | 설명 |
+| --- | --- | --- |
+| `CONFIG_NUCODE_ARDUINO_CORE` | application이 활성화 | Runtime과 Core 편입 |
+| `CONFIG_NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK` | Core 기본값 | loop 뒤 한 kernel tick sleep |
+| `CONFIG_NUCODE_ARDUINO_LOOP_YIELD` | application 선택 | loop 뒤 scheduler yield |
+| `CONFIG_NUCODE_ARDUINO_LOOP_NONE` | application 선택 | loop 뒤 Core scheduler 개입 없음 |
+| `CONFIG_MAIN_STACK_SIZE` | application 소유 | setup/loop stack |
+| `CONFIG_MAIN_THREAD_PRIORITY` | Zephyr/application 소유 | Arduino 실행 priority |
+| `CONFIG_CPP` | application이 활성화 | C++ application 지원 |
+| C++ 표준 choice | application 선택 | `CONFIG_STD_CPP_VERSION >= 201703`; C++17 이상 필요 |
+
+`CONFIG_NUCODE_ARDUINO_RUNTIME_LOG_LEVEL`, loop millisecond 최소 sleep과
+`CONFIG_NUCODE_ARDUINO_SERIAL_EVENT`는 현재 존재하지 않는 향후 검토 항목이다.
 
 Sketch별 설정이 가능한 Full Zephyr 구조이므로 Core가 고정 profile만 허용해서는 안 된다.
 
@@ -395,16 +434,21 @@ Sketch별 설정이 가능한 Full Zephyr 구조이므로 Core가 고정 profile
 
 Runtime v0 완료 조건은 다음과 같다.
 
-- [ ] `setup()`이 리셋당 정확히 한 번 호출된다.
-- [ ] `setup()` 반환 후 `loop()`가 반복된다.
-- [ ] Sketch, Core, Zephyr가 하나의 `zephyr.elf`에 정적 링크된다.
-- [ ] Loader, LLEXT, EDK 또는 동적 Sketch partition이 필요하지 않다.
-- [ ] C++ 정적 초기화가 한 번만 수행된다.
-- [ ] `delay()`가 main thread만 block하고 kernel timer와 workqueue는 계속 진행한다.
-- [ ] 빈 loop 공정성 시험 결과와 선택한 기본 정책이 기록된다.
+- [x] `setup()`이 리셋당 정확히 한 번 호출된다.
+- [x] `setup()` 반환 후 `loop()`가 반복된다.
+- [x] Sketch, Core, Zephyr가 하나의 `zephyr.elf`에 정적 링크된다.
+- [x] Loader, LLEXT, EDK 또는 동적 Sketch partition이 필요하지 않다.
+- [x] C++ 정적 초기화가 한 번만 수행된다.
+- [x] `delay()`가 main thread만 block하고 kernel timer와 workqueue는 계속 진행한다.
+- [x] 빈 loop 공정성 시험 결과와 기본 one-tick 정책이 기록된다.
 - [ ] stack watermark를 Blink, Serial 및 복합 Sketch에서 측정한다.
 - [ ] fault backtrace에서 Sketch와 Core symbol을 확인할 수 있다.
-- [ ] 리셋 후 별도 Loader command 없이 Sketch가 즉시 시작한다.
+- [x] 리셋 후 별도 Loader command 없이 Sketch가 즉시 시작한다.
+
+위 완료 표시는 M2 west-native runtime 검증과 M3 NU54DK HIL에 한정한다. M3 runtime을
+Twister 자동화 또는 Arduino CLI/IDE Build Adapter 경로로 실행한 검증은 아직 없으며,
+Serial·Bluetooth 복합 subsystem, stack watermark, fault backtrace와 저전력 profile도
+완료 범위에 포함하지 않는다.
 
 ---
 
@@ -440,18 +484,18 @@ loop 2
 - 빈 loop 중 낮은 priority worker 진행
 - system workqueue 처리량
 - timer callback jitter
-- 선택적인 minimum sleep별 loop rate와 background latency 비교
+- `NONE`, `YIELD`, 한 tick sleep과 `delay(1)`의 loop rate·background 진행 비교
 
 ### 13.4 Fault test
 
 - stack overflow 보호 동작
 - null access fault의 symbolized backtrace
-- ISR에서 금지 API 호출 진단
+- ISR에서 금지 GPIO 호출의 private 오류와 시간 API no-op 동작
 - device not-ready의 recoverable 처리
 
 ### 13.5 Incremental build test
 
-- 변경 없음: Ninja `no work to do`
+- 변경 없음: provenance target 외 C/C++ compile·archive·link 0건
 - Sketch만 변경: Core와 Zephyr의 불필요한 전체 재컴파일 없음
 - `prj.conf` 변경: 필요한 build graph만 재구성
 - board package commit 변경: pristine이 필요한 조건을 Build Adapter가 감지
@@ -480,8 +524,8 @@ nRF54L15 target에는 native USB peripheral이 없다. 온보드 CMSIS-DAP의 US
 
 | 항목 | 결정 시점 | 필요한 근거 |
 | --- | --- | --- |
-| main thread 유지 또는 전용 Arduino thread 전환 | scheduler·stack HIL 후 | starvation, 격리 효과, 추가 RAM |
-| loop 최소 sleep 기본값 | scheduler HIL 후 | worker latency, loop rate, power |
+| 복합 subsystem에서 main thread 유지 여부 재검토 | Serial/Bluetooth·stack HIL 후 | 격리 효과, 추가 RAM, stack watermark |
+| one-tick 기본값의 장기 유지 여부 | 복합 subsystem과 전력 HIL 후 | worker latency, loop rate, power |
 | main thread priority | 복합 subsystem 시험 후 | Bluetooth/UART/workqueue 공존 |
 | 기본 stack 크기 | API 단계별 watermark 후 | 최대 관측값과 안전 여유 |
 | `serialEventRun()` 기본 활성화 | Serial 구현 후 | Arduino library 호환성 및 비용 |

@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | 설계 기준선 — 구현 전 |
+| 문서 상태 | 설계·구현 동기화 — M3 west-native/HIL 기준 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 RTOS | Zephyr v4.4.0 |
@@ -27,7 +27,9 @@
 - `delayMicroseconds()`
 - `yield()`
 
-목표는 Arduino의 관례를 유지하면서도 Zephyr의 device, scheduler 및 ISR 규칙을 위반하지 않는 것이다. 이 문서는 구현 완료 보고서가 아니다.
+목표는 Arduino의 관례를 유지하면서도 Zephyr의 device, scheduler 및 ISR 규칙을
+위반하지 않는 것이다. M3에서 구현한 digital GPIO와 시간 API는 현재 동작으로 명시하고,
+external interrupt, 전체 핀맵, pin ownership과 추가 호환 동작은 향후 목표로 구분한다.
 
 ---
 
@@ -53,10 +55,12 @@ Core는 Variant descriptor를 통해 생성된 `gpio_dt_spec` 또는 동등 정�
 
 ### 2.2 논리 핀
 
-Arduino 논리 순서는 `variants/nu54dk`가 소유한다. 최초 PoC에서는 다음 연결만 필수다.
+Arduino 논리 순서는 `variants/nu54dk`가 소유한다. M3 Variant는 다음 두 연결만 제공한다.
 
 ~~~text
 LED_BUILTIN → DT_ALIAS(led0)
+PIN_BUTTON0 → DT_ALIAS(sw0)
+NUM_DIGITAL_PINS = 2
 ~~~
 
 전체 논리 핀 정책은 [핀과 Variant 설계](../01_아두이노%20코어%20설계/03_핀과_Variant_설계.md)를 따른다.
@@ -68,12 +72,14 @@ LED_BUILTIN → DT_ALIAS(led0)
 | Arduino API | Zephyr 원본안 |
 | --- | --- |
 | `millis()` | `k_uptime_get_32()` |
-| `micros()` | `k_cycle_get_64()`와 `k_cyc_to_us_floor64()` |
-| `delay()` | `k_msleep()` |
-| `delayMicroseconds()` | `k_busy_wait()` |
-| `yield()` | `k_yield()` |
+| `micros()` | GRTC startup offset을 뺀 `k_cycle_get_64()`와 `k_cyc_to_us_floor64()` |
+| `delay()` | `k_can_yield()` 검사와 deadline 기반 `k_msleep()` 반복 |
+| `delayMicroseconds()` | ISR 검사와 안전한 크기로 나눈 `k_busy_wait()` |
+| `yield()` | `k_can_yield()` 검사 후 `k_yield()` |
 
-`micros()`의 실제 resolution과 저전력 상태에서의 연속성은 nRF54L15 HIL로 검증한 뒤 확정한다.
+M3 구성의 `CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC`는 1 MHz다. 1,000 us 요청에 대한 내부
+GRTC 계측은 1,026 us였지만, 실제 최소 resolution, 외부 시간 기준 오차와 저전력 상태의
+연속성은 아직 확정하지 않았다.
 
 ---
 
@@ -90,18 +96,20 @@ LED_BUILTIN → DT_ALIAS(led0)
 - pin runtime state 관리
 - driver 오류를 Core 오류 정책으로 변환
 
-### 3.2 `wiring_time.cpp`
+### 3.2 `wiring_time.cpp`와 nRF54 backend
 
-책임:
+`wiring_time.cpp`는 ArduinoCore-API의 C linkage signature를 제공하고 비공개 backend로
+전달한다. `internal/time_backend_nrf54.cpp`가 다음 실제 정책을 소유한다.
 
-- kernel timebase를 Arduino 반환형으로 변환
-- 32-bit rollover 의미 보존
+- kernel timebase를 32-bit Arduino 반환형으로 변환
+- GRTC startup offset과 rollover 의미 처리
 - millisecond sleep과 microsecond busy wait 구현
-- thread와 ISR 문맥 검사
+- yield 가능 문맥과 ISR 문맥 검사
 
 ### 3.3 `wiring_interrupts.cpp`
 
-GPIO interrupt를 별도 파일로 나누는 방안을 기본으로 한다.
+GPIO interrupt를 별도 파일로 나누는 방안을 기본으로 한다. M3에는 이 파일과
+`attachInterrupt()`/`detachInterrupt()` 구현이 없다.
 
 책임:
 
@@ -110,16 +118,17 @@ GPIO interrupt를 별도 파일로 나누는 방안을 기본으로 한다.
 - Zephyr `gpio_callback` 등록과 해제
 - 공통 ISR trampoline에서 사용자 callback 호출
 
-첫 Blink PoC에는 포함하지 않고 GPIO input 단계에서 추가한다.
+아래 interrupt 설계는 향후 목표이며 현재 지원 상태가 아니다.
 
 ### 3.4 Variant와 내부 pin state
 
-Variant descriptor는 물리 자원을 immutable data로 제공한다. Core는 별도의 runtime state에 다음 최소 정보만 유지한다.
+Variant descriptor는 물리 자원을 immutable data로 제공한다. M3 Core는 별도의 runtime
+state에 다음 정보만 유지한다.
 
 - 현재 Arduino pin mode
-- output latch의 마지막 raw 값
-- interrupt callback과 trigger mode
-- pin ownership 상태
+- 성공한 output write의 마지막 raw 값
+
+interrupt callback, trigger mode와 pin ownership 상태는 아직 구현하지 않았다.
 
 runtime state에 controller 이름과 물리 pin 번호를 다시 저장해 별도 원본으로 만들지 않는다.
 
@@ -160,42 +169,46 @@ digitalWrite(LED_BUILTIN, HIGH);
 
 ### 5.1 Mode 변환
 
-| Arduino mode | Zephyr 설정안 | 비고 |
+| Arduino mode | 현재 Zephyr 설정 | M3 상태 |
 | --- | --- | --- |
-| `INPUT` | `GPIO_INPUT` | pull 없음 |
-| `INPUT_PULLUP` | `GPIO_INPUT | GPIO_PULL_UP` | nRF GPIO 지원 확인 |
-| `INPUT_PULLDOWN` | `GPIO_INPUT | GPIO_PULL_DOWN` | 지원 대상으로 포함 |
-| `OUTPUT` | `GPIO_OUTPUT_HIGH/LOW` | 저장된 output latch를 적용 |
-| `OUTPUT_OPEN_DRAIN` | 구현 후 확장 | capability와 driver 지원 필요 |
+| `INPUT` | `GPIO_INPUT` | 구현, 외부 신호 HIL 미완료 |
+| `INPUT_PULLUP` | `GPIO_INPUT \| GPIO_PULL_UP` | 구현, 버튼 HIL 확인 |
+| `INPUT_PULLDOWN` | `GPIO_INPUT \| GPIO_PULL_DOWN` | 구현, 외부 저항 HIL 미완료 |
+| `OUTPUT` | `GPIO_OUTPUT_HIGH/LOW` | 구현, 저장된 output latch 적용 |
+| `OUTPUT_OPENDRAIN` | 미구현, 요청 거부 | capability와 driver 지원 필요 |
 
 지원하지 않는 mode는 임의의 다른 mode로 바꾸지 않는다.
 
 ### 5.2 Output latch
 
-Arduino 호환성을 위해 logical pin별 마지막 output 값을 유지한다.
+M3는 logical pin별 마지막으로 성공한 output 값을 유지한다.
 
 ~~~text
-digitalWrite(pin, HIGH)
-    ↓ output latch = 1
-
 pinMode(pin, OUTPUT)
-    ↓ GPIO_OUTPUT_HIGH로 configure
+    ↓ 초기 output latch 0을 적용
+
+digitalWrite(pin, HIGH)
+    ↓ raw write 성공 후 output latch = 1
 ~~~
 
-이 방식은 input 상태에서 미리 `digitalWrite(HIGH)`를 호출한 뒤 output으로 바꾸는 기존 Sketch의 동작과 output 전환 glitch를 함께 고려한다.
+input 상태에서 `digitalWrite(HIGH)`로 latch를 미리 설정하는 Arduino 호환 동작은 M3에
+없다. 현재는 output mode가 아니면 `wrong_mode`로 동작을 거부한다. 이 호환 동작을
+추가하려면 input pull 전환 의미와 함께 별도 시험을 거쳐야 한다.
 
-초기 latch 값은 `LOW`로 정의한다. 단, application overlay가 boot-time pin state를 별도로 요구하는 경우에는 그 장치가 GPIO API에 넘겨지기 전에 pinctrl ownership을 해제해야 한다.
+초기 latch 값은 `LOW`로 정의한다. application overlay가 boot-time pin state를 별도로
+요구하면 application이 GPIO 전환 전 peripheral pinctrl을 해제해야 한다. M3 Core는 이
+ownership 충돌을 자동 검출하지 않는다.
 
 ### 5.3 호출 흐름
 
 ~~~text
 pinMode(logical_pin, mode)
         ↓
-범위와 digital capability 검사
+thread 문맥과 논리 핀 범위 검사
         ↓
-pin ownership 검사
+GPIO device readiness와 Devicetree flag 검사
         ↓
-GPIO device readiness 검사
+mode와 digital capability 검사
         ↓
 mode와 latch를 Zephyr flags로 변환
         ↓
@@ -214,14 +227,16 @@ driver 호출이 실패하면 이전 mode 상태를 성공한 것으로 기록�
 
 output으로 구성된 pin에서는 다음 순서를 사용한다.
 
-1. logical pin과 capability를 검사한다.
-2. output latch를 raw 0 또는 1로 갱신한다.
+1. thread 문맥, logical pin과 capability를 검사한다.
+2. 현재 mode가 output인지 확인한다.
 3. `gpio_pin_set_raw()`를 호출한다.
-4. driver 오류를 기록한다.
+4. 성공한 경우에만 output latch를 raw 0 또는 1로 갱신한다.
+5. 실패하면 driver 오류를 비공개 Core 상태에 보존한다.
 
 ### 6.2 Input pin
 
-Arduino 관례에 따라 input pin에서 `digitalWrite(HIGH)`는 internal pull-up 활성화, `LOW`는 pull 비활성으로 해석할 수 있다. v1 목표 동작은 다음과 같다.
+Arduino 관례에 따라 input pin에서 `digitalWrite(HIGH)`를 internal pull-up 활성화,
+`LOW`를 pull 비활성으로 해석하는 Core도 있다. 아래 표는 향후 호환 목표 후보다.
 
 | 현재 mode | `LOW` | `HIGH` |
 | --- | --- | --- |
@@ -229,11 +244,15 @@ Arduino 관례에 따라 input pin에서 `digitalWrite(HIGH)`는 internal pull-u
 | `INPUT_PULLUP` | `INPUT`으로 재구성 | 유지 |
 | `INPUT_PULLDOWN` | pull-down 유지 | 잘못된 조합으로 진단 후 정책 결정 |
 
-Input 재구성은 `gpio_pin_configure()`를 호출하므로 ISR에서 허용하지 않는다. ISR에서 input pin에 `digitalWrite()`가 호출되면 동작을 거부하고 진단 상태만 기록한다.
+M3는 이 전환을 구현하지 않는다. input pin의 `digitalWrite()`는 `wrong_mode`로 거부하며,
+모든 `digitalWrite()` 호출은 ISR에서 no-op된다.
 
 ### 6.3 Ownership
 
-PWM, UART, SPI 또는 I2C가 소유한 pin에 `digitalWrite()`를 호출해 peripheral pinctrl을 자동 해제하지 않는다. 해당 pin을 GPIO로 사용하려면 application overlay 또는 명시적인 peripheral `end()` 정책에 따라 ownership을 전환해야 한다.
+PWM, UART, SPI 또는 I2C가 소유한 pin에 `digitalWrite()`를 호출해 peripheral pinctrl을
+자동 해제하지 않는다. M3에는 ownership registry와 충돌 진단도 없다. 현재 두 논리 핀은
+M3 sample의 GPIO 용도만 검증했으며, 향후 전체 핀맵에서는 application overlay 또는
+명시적인 peripheral lifecycle과 ownership 검사가 필요하다.
 
 ---
 
@@ -242,7 +261,9 @@ PWM, UART, SPI 또는 I2C가 소유한 pin에 `digitalWrite()`를 호출해 peri
 ~~~text
 digitalRead(logical_pin)
         ↓
-범위와 digital capability 검사
+thread 문맥, 범위와 digital input capability 검사
+        ↓
+구성되지 않은 pin인지 검사
         ↓
 GPIO device readiness 검사
         ↓
@@ -254,7 +275,8 @@ raw 1 → HIGH
 
 Driver가 음수 오류를 반환해도 Arduino API 반환형에는 `LOW`와 `HIGH`만 존재한다. 오류 시 기본 반환값은 `LOW`로 두되, Core 진단 상태에 driver 오류를 보존한다. 오류를 실제 LOW 입력과 구분해야 하는 application은 향후 제공할 상세 오류 API 또는 Zephyr GPIO API를 직접 사용한다.
 
-Output pin에서 `digitalRead()`는 가능하면 실제 pin input 값을 읽는다. output latch를 그대로 돌려주는 방식은 물리 단락을 숨길 수 있으므로 기본으로 사용하지 않는다.
+digital input capability가 있는 Output pin에서 `digitalRead()`는 실제 pin input 값을 읽는다.
+output latch를 그대로 돌려주는 방식은 물리 단락을 숨길 수 있으므로 사용하지 않는다.
 
 ---
 
@@ -305,10 +327,10 @@ logical pin callback lookup
 
 ### 9.1 `millis()`
 
-예정 구현:
+현재 구현:
 
 ~~~text
-return lower_32_bits(k_uptime_get_32())
+return k_uptime_get_32()
 ~~~
 
 Arduino와 같은 32-bit unsigned rollover 의미를 유지한다. 약 49.7일 후 wrap되는 것은 오류가 아니다. elapsed time 비교는 unsigned subtraction으로 수행해야 한다.
@@ -317,61 +339,97 @@ Arduino와 같은 32-bit unsigned rollover 의미를 유지한다. 약 49.7일 �
 
 ### 9.2 `micros()`
 
-초기 구현 후보:
+현재 nRF54L15 구현:
 
 ~~~text
 k_cycle_get_64()
+      ↓ GRTC startup value 차감
+z_nrf_grtc_timer_startup_value_get()
       ↓
 k_cyc_to_us_floor64()
       ↓
 lower 32 bit 반환
 ~~~
 
-목표 특성:
+현재 특성:
 
-- lock 없이 단조 증가
-- thread와 ISR에서 조회 가능
+- 별도 heap, mutex 또는 sleep 없이 GRTC counter 조회
+- thread와 ISR에서 조회 가능하며 M3 timer ISR에서 실기 확인
 - 32-bit Arduino 반환형에 맞춰 약 71.6분마다 wrap
 - clock frequency 변환은 Zephyr API에 위임
 
-다음 항목은 실측 전 확정하지 않는다.
+다음 항목은 아직 확정하지 않는다.
 
 - 실제 최소 resolution
 - system sleep 동안의 연속성
 - dynamic clock 변경 시 정확도
 - `millis()`와 장시간 drift 관계
 
-조건을 만족하지 못하면 uptime tick 기반 구현과 SoC counter 기반 구현을 비교한다. nRF register를 Core 공통 코드에서 직접 읽는 방식은 최후 수단으로 두고 별도 HAL 계층과 검증을 요구한다.
+GRTC는 system clock 초기화 전에 이미 진행할 수 있고 startup에서 0으로 지워지지 않으므로
+startup offset 차감이 필요하다. Core 공통 진입점은 register를 직접 읽지 않고 nRF54 전용
+backend에서 Zephyr timer API를 사용한다. 이때 사용하는
+`z_nrf_grtc_timer_startup_value_get()`는 Zephyr의 internal symbol이므로 NCS/Zephyr를
+업그레이드할 때 compile과 기준점 동작을 다시 검증해야 한다.
 
 ### 9.3 `delay(ms)`
 
-| 입력 | 동작안 |
-| ---: | --- |
-| `0` | `k_yield()` |
-| `1` 이상 | `k_msleep(ms)` |
+| 입력/문맥 | 현재 동작 |
+| --- | --- |
+| `0`, yield 가능한 thread | guarded `k_yield()` |
+| `1` 이상, block 가능한 thread | deadline까지 `k_msleep()` 반복 |
+| ISR, pre-kernel, idle 또는 IRQ lock 문맥 | 안전한 no-op |
 
-`delay()`는 busy loop가 아니다. 현재 Arduino main thread만 sleep하며 Zephyr의 다른 ready thread와 interrupt는 계속 실행된다.
+Arduino signature의 `unsigned long`은 target에서 32-bit지만 Zephyr `k_msleep()` 인자는
+`int32_t`다. 따라서 최대 `INT32_MAX` ms 단위로 나누고, `k_wakeup()` 등으로 일찍
+깨어나면 uptime deadline을 다시 계산해 남은 시간을 재시도한다.
+
+`delay()`는 busy loop가 아니다. API를 호출한 current thread만 sleep하며 Zephyr의 다른
+ready thread와 interrupt는 계속 실행된다. 일반 Sketch의 `loop()` 경로에서는 이 current
+thread가 Zephyr main thread다.
 
 Scheduler 지연 때문에 실제 복귀 시간이 요청값보다 길 수 있다. 요청 시간보다 일찍 복귀하지 않는 것을 기본 정확도 조건으로 한다.
 
 ### 9.4 `delayMicroseconds(us)`
 
-초기 구현은 `k_busy_wait(us)`를 사용한다.
+현재 구현은 `k_busy_wait()`를 사용하되 한 번의 호출을 최대 1,000,000 us로 제한한다.
+이는 nRF54L busy-wait 하위 구현의 32-bit cycle 계산 overflow를 피하기 위한 내부
+분할이며 긴 요청도 sleep으로 자동 전환하지 않는다.
 
 - `0`은 즉시 반환한다.
 - scheduler에 CPU를 양보하지 않는다.
 - 긴 대기는 전력과 latency를 악화하므로 `delay()` 사용을 권고한다.
 - interrupt가 실행되면 실제 지연은 길어질 수 있다.
 - Zephyr power management가 busy-wait용 clock을 정지시키는 구성에서는 동작하지 않을 수 있으므로 실제 PM profile마다 검증한다.
-- ISR에서의 사용은 짧은 hardware timing에 한해 기술적으로 가능할 수 있지만 v1 공개 계약에서는 금지한다.
+- ISR 사용은 v1 공개 계약에서 금지하며 M3 구현은 안전한 no-op로 반환한다.
 
-실측 후 busy wait의 최소 유효 값과 오차를 문서화한다.
+M3 내부 계측에서 1,000 us 요청은 1,026 us였다. 최소 유효 값, 여러 구간의 오차와
+외부 logic analyzer 기준은 아직 측정하지 않았다.
 
 ### 9.5 `yield()`
 
-`yield()`는 `k_yield()`에 연결한다. 이는 current thread를 같은 priority queue의 뒤로 보내는 동작이며, 낮은 priority thread 실행을 보장하는 sleep이 아니다.
+`yield()`는 `k_can_yield()`가 true일 때만 `k_yield()`를 호출한다. 이는 current thread를
+같은 priority queue의 뒤로 보내는 동작이며, 낮은 priority thread 실행을 보장하는 sleep이
+아니다. 금지 문맥에서는 no-op한다.
 
 `yield()`를 power management 진입이나 1 ms sleep으로 몰래 바꾸지 않는다. loop 최소 sleep은 Runtime Kconfig의 별도 정책으로 다룬다.
+
+### 9.6 M3 시간·scheduler 실측
+
+`runtime_timing`의 최종 trace는 `PASS`, `failure=0`이었다.
+
+| 항목 | 결과 |
+| --- | ---: |
+| `delay(20)`의 millisecond 경과 | 20 ms |
+| `delay(20)`의 microsecond 경과 | 20,084 us |
+| `delayMicroseconds(1000)` 경과 | 1,026 us |
+| timer ISR의 `millis()`/`micros()` 읽기 | 1,582회 |
+
+400 ms 단계별 공정성 실측에서는 spin과 `yield()`의 idle 비율이 0%, 한 tick sleep이
+85.53%, `delay(1)`이 96.71%였다. 전체 loop/worker/timer/workqueue 수치는
+[Arduino Runtime 설계](./01_Arduino_Runtime_설계.md#54-loop-공정성-정책)에 기록한다.
+
+이 값은 한 보드·한 firmware 구성의 내부 시간원 측정이다. 외부 clock 정확도,
+저전력 진입 전후 연속성과 장시간 drift를 검증한 결과로 확대 해석하지 않는다.
 
 ---
 
@@ -380,18 +438,20 @@ Scheduler 지연 때문에 실제 복귀 시간이 요청값보다 길 수 있�
 | API | Thread | ISR | Blocking | 비고 |
 | --- | --- | --- | --- | --- |
 | `pinMode` | 허용 | 금지 | driver 의존 | pin 재구성 |
-| `digitalWrite` output | 허용 | 검증 후 허용 목표 | 비차단 목표 | 사전 configure 필요 |
-| `digitalWrite` input | 허용 | 금지 | 재구성 | pull 전환 가능 |
-| `digitalRead` | 허용 | 검증 후 허용 목표 | 비차단 목표 | raw input |
-| `attachInterrupt` | 허용 | 금지 | 설정 작업 | callback 등록 |
-| `detachInterrupt` | 허용 | 금지 | 설정 작업 | callback 해제 |
-| `millis` | 허용 | 허용 목표 | 아니요 | uptime read |
-| `micros` | 허용 | 허용 목표 | 아니요 | cycle read |
-| `delay` | 허용 | 금지 | 예 | current thread sleep |
-| `delayMicroseconds` | 허용 | 공개 계약상 금지 | busy wait | 짧은 지연 전용 |
-| `yield` | 허용 | 금지 | scheduler | 같은 priority 중심 |
+| `digitalWrite` output | 허용 | 금지, no-op | driver 경로 | 사전 output configure 필요 |
+| `digitalWrite` input | 현재 거부 | 금지, no-op | 아니요 | pull 전환 미구현 |
+| `digitalRead` | 허용 | 금지, `LOW` 반환 | driver 경로 | raw input |
+| `attachInterrupt` | 미구현 | 미구현 | 해당 없음 | 향후 callback 등록 |
+| `detachInterrupt` | 미구현 | 미구현 | 해당 없음 | 향후 callback 해제 |
+| `millis` | 허용 | 허용 | 아니요 | timer ISR 실기 호출 확인 |
+| `micros` | 허용 | 허용 | 아니요 | timer ISR 실기 호출 확인 |
+| `delay` | 허용 | 금지, no-op | 예 | `k_can_yield()` 검사 |
+| `delayMicroseconds` | 허용 | 공개 계약상 금지, no-op | busy wait | 1초 단위 내부 분할 |
+| `yield` | 허용 | 금지, no-op | scheduler | `k_can_yield()` 검사 |
 
-“허용 목표”는 nRF54L15의 Zephyr driver 경로를 HIL로 확인한 뒤 완료 상태로 바꾼다.
+`delay()`와 `yield()`는 ISR뿐 아니라 pre-kernel, idle thread와 interrupt-locked 문맥처럼
+`k_can_yield()`가 false인 곳에서도 no-op한다. `delayMicroseconds()`는 scheduler를
+사용하지 않지만 M3 공개 계약과 구현 모두 ISR만 명시적으로 거부한다.
 
 ---
 
@@ -401,17 +461,20 @@ Scheduler 지연 때문에 실제 복귀 시간이 요청값보다 길 수 있�
 
 | 오류 | 반환 가능한 API | `void` API |
 | --- | --- | --- |
-| invalid pin | sentinel + 진단 | no-op + 진단 |
-| capability 불일치 | sentinel + 진단 | no-op + 진단 |
-| device not ready | sentinel + driver 오류 보존 | no-op + 진단 |
+| invalid pin | `LOW` + private 오류 | no-op + private 오류 |
+| capability 불일치 | `LOW` + private 오류 | no-op + private 오류 |
+| device not ready | `LOW` + `device_not_ready` | no-op + `device_not_ready` |
 | driver I/O 오류 | Core 상태에 보존 | Core 상태에 보존 |
-| ISR 금지 호출 | 즉시 실패 | no-op, ISR-safe 상태 기록 |
+| ISR 금지 GPIO 호출 | `LOW` 또는 해당 없음 | no-op, private GPIO 오류 기록 |
+| ISR 금지 시간 호출 | 해당 없음 | no-op, M3 진단 기록 없음 |
 
 ### 11.2 진단
 
-- 개발 build에서는 logical pin, API 및 오류 코드를 Zephyr log로 남긴다.
+- GPIO는 `lastGpioError()`, `lastGpioDriverError()` 비공개 atomic 상태를 제공한다.
+- 이 상태는 Sketch 공개 API가 아니며 현재 Zephyr log나 Kconfig diagnostics가 없다.
+- 시간 API는 금지 문맥 no-op를 별도 상태에 기록하지 않는다.
 - ISR에서는 문자열 formatting과 logging을 하지 않는다.
-- release에서도 범위 검사와 ownership 검사를 제거하지 않는다.
+- release에서도 논리 핀 범위와 capability 검사를 제거하지 않는다.
 - 고빈도 API인 `digitalWrite()`의 성공 경로에는 logging과 mutex를 넣지 않는다.
 
 ### 11.3 전역 interrupt API
@@ -431,15 +494,15 @@ Arduino의 `noInterrupts()`와 `interrupts()`는 token 없는 전역 API라 Zeph
 
 ## 12. 설정 항목
 
-아래는 구현 예정안이다.
+현재 존재하는 Core 설정은 다음과 같다.
 
-| 설정안 | 기본값안 | 목적 |
+| 설정 | 기본값 | 목적 |
 | --- | ---: | --- |
-| `CONFIG_NUCODE_ARDUINO_GPIO` | `y` | digital GPIO API |
-| `CONFIG_NUCODE_ARDUINO_GPIO_INTERRUPT` | `y` | external interrupt API |
-| `CONFIG_NUCODE_ARDUINO_PIN_DIAGNOSTICS` | 개발 `y` | 잘못된 pin 진단 |
-| `CONFIG_NUCODE_ARDUINO_MICROS` | `y` | high-resolution time API |
-| `CONFIG_NUCODE_ARDUINO_TIME_DIAGNOSTICS` | 개발 `y` | 금지 문맥 호출 진단 |
+| `CONFIG_NUCODE_ARDUINO_GPIO` | Core 활성 시 `y` | digital GPIO API |
+| `CONFIG_NUCODE_ARDUINO_TIME` | Core 활성 시 `y` | `millis/micros/delay/yield` API |
+
+`CONFIG_NUCODE_ARDUINO_GPIO_INTERRUPT`, pin/time diagnostics와 별도
+`CONFIG_NUCODE_ARDUINO_MICROS`는 현재 존재하지 않는 향후 검토안이다.
 
 Zephyr 기본 의존성은 다음을 사용한다.
 
@@ -455,11 +518,14 @@ Zephyr 기본 의존성은 다음을 사용한다.
 
 ### 13.1 GPIO
 
-- [ ] `LED_BUILTIN`이 `DT_ALIAS(led0)`를 사용한다.
-- [ ] Core에 물리 pin 번호가 없다.
-- [ ] `HIGH`와 `LOW`가 raw 전기 값과 일치한다.
-- [ ] `INPUT`, `INPUT_PULLUP`, `INPUT_PULLDOWN`, `OUTPUT`이 동작한다.
-- [ ] invalid pin이 memory access나 다른 GPIO 변경을 만들지 않는다.
+- [x] `LED_BUILTIN`이 `DT_ALIAS(led0)`를 사용한다.
+- [x] Core에 물리 pin 번호가 없다.
+- [x] `HIGH`와 `LOW`가 raw 전기 값과 일치하며 Active High LED를 육안 확인했다.
+- [x] `INPUT_PULLUP` 버튼과 `OUTPUT` LED가 실기에서 동작한다.
+- [ ] `INPUT`과 `INPUT_PULLDOWN`을 외부 신호/저항으로 실기 확인한다.
+- [x] invalid pin self-check 뒤 버튼 연동 loop에 진입했다. 이 제어 흐름은 self-check
+  PASS의 간접 oracle이며 세부 RAM trace 값은 미회수다.
+- [ ] `nu54_m3_gpio_input_trace`의 최종 RAM 값을 회수·보관한다.
 - [ ] output latch 전환에 의도하지 않은 pulse가 없는지 logic analyzer로 확인한다.
 - [ ] GPIO/peripheral ownership 충돌이 명확히 실패한다.
 
@@ -473,11 +539,13 @@ Zephyr 기본 의존성은 다음을 사용한다.
 
 ### 13.3 시간
 
-- [ ] `millis()`가 monotonic하고 32-bit rollover test를 통과한다.
-- [ ] `micros()`가 thread와 ISR에서 monotonic하다.
-- [ ] `delay()`가 요청 시간보다 일찍 복귀하지 않는다.
-- [ ] `delay()` 중 worker thread와 timer가 진행한다.
-- [ ] `delayMicroseconds()` 오차와 유효 범위를 계측해 기록한다.
+- [x] `millis()`와 `micros()`가 M3 실행 구간에서 증가하고 unsigned elapsed 산술 검사를 통과한다.
+- [ ] 실제 API counter가 wrap 경계를 지나는 장시간/주입 시험을 수행한다.
+- [x] `millis()`와 `micros()`를 timer ISR에서 1,582회 호출했다.
+- [x] `delay(20)`이 20 ms보다 일찍 복귀하지 않았다.
+- [x] `delay()` 중 worker thread, timer와 workqueue가 진행했다.
+- [x] `delayMicroseconds(1000)`을 내부 시간원으로 계측해 1,026 us를 기록했다.
+- [ ] 여러 busy-wait 구간과 긴 chunk 경계를 외부 계측기로 확인한다.
 - [ ] 저전력 진입 전후 `micros()` 정책을 확정한다.
 
 ---
@@ -512,6 +580,11 @@ Zephyr 기본 의존성은 다음을 사용한다.
 | Delay | logic analyzer pulse width |
 | Micros drift | 일정 주기의 toggle과 외부 시간 기준 비교 |
 | Scheduler 공존 | worker counter와 timer latency 기록 |
+
+M3에서는 Blink와 pull-up/Active Low 버튼에 따른 LED 전환을 육안 확인했고,
+`runtime_timing` trace를 회수했다. GPIO 전압, output 전환 pulse, 외부 시간 기준과
+저전력 profile은 아직 HIL 완료로 표시하지 않는다. GPIO RAM trace도 아직 회수하지
+못했으며, 이 M3 결과는 Twister 자동화나 Arduino CLI/IDE 경로의 검증을 의미하지 않는다.
 
 ### 14.4 Negative test
 

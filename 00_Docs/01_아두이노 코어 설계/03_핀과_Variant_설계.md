@@ -2,13 +2,13 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | 설계 기준선 — 구현 전 |
+| 문서 상태 | M3 최소 Variant 구현 및 제한적 NU54DK HIL 통과 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 RTOS | Zephyr v4.4.0 |
 | 기준 타깃 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | 보드 정의 원본 | `board_package/NU54DK_Zephyr_DTS` |
-| 최초 PoC 범위 | `LED_BUILTIN`과 `DT_ALIAS(led0)` |
+| M3 구현 범위 | `LED_BUILTIN`/`DT_ALIAS(led0)`, `PIN_BUTTON0`/`DT_ALIAS(sw0)` |
 
 ---
 
@@ -22,7 +22,9 @@
 - 잘못된 핀 조합과 필수 Devicetree 누락을 가능한 한 빌드 시점에 발견한다.
 - GPIO, ADC, PWM, UART, SPI 및 I2C 구현이 같은 핀 해석 규칙을 사용하도록 한다.
 
-이 문서는 설계 문서다. 아래에 정의된 전체 핀 테이블과 API가 현재 구현되어 있다는 뜻은 아니다.
+이 문서는 장기 설계와 현재 구현 상태를 함께 관리한다. M3에서 실제 구현한 범위는 논리 핀
+2개와 thread 문맥의 digital GPIO뿐이다. 아래의 전체 D/A 핀, peripheral capability,
+ownership 및 interrupt 설계는 아직 구현되었다는 뜻이 아니다.
 
 ---
 
@@ -90,7 +92,22 @@ Variant는 물리 controller와 pin 번호를 직접 소유하지 않는다. 논
 4. `digitalWrite(HIGH)`와 `digitalRead()`는 Arduino의 전기적 High/Low 의미를 보존하기 위해 raw GPIO 값으로 처리한다.
 5. peripheral 충돌은 Variant가 런타임에 몰래 전환하지 않고, Devicetree overlay와 Kconfig에서 명시적으로 해결한다.
 
-### 3.2 결정 대기 항목
+### 3.2 M3 구현 기준선
+
+| 논리 index | 공개 이름 | Devicetree 원본 | M3 capability |
+| ---: | --- | --- | --- |
+| 0 | `LED_BUILTIN` | `DT_ALIAS(led0)` | digital input + output |
+| 1 | `PIN_BUTTON0` | `DT_ALIAS(sw0)` | digital input only |
+
+`NUM_DIGITAL_PINS`는 2다. descriptor는 `GPIO_DT_SPEC_GET()`으로 alias의 controller, pin과
+flag를 얻으므로 Variant에 실제 nRF GPIO 번호를 복제하지 않는다. `led0`와 `sw0` alias가
+없거나 활성 GPIO spec을 제공하지 않으면 compile 단계에서 실패한다.
+
+M3 공개 GPIO API는 thread 문맥에서만 동작한다. ISR 호출은 수행하지 않고 `digitalRead()`는
+`LOW`를 반환한다. pin mode, output latch, 마지막 오류와 driver 오류는 Core 내부 atomic
+상태로 보존하지만 Sketch에 공개하는 진단 API는 아직 없다.
+
+### 3.3 결정 대기 항목
 
 다음 내용은 실제 보드 커넥터의 사용자 표기와 Arduino 호환성 검토 후 확정한다.
 
@@ -108,7 +125,7 @@ Variant는 물리 controller와 pin 번호를 직접 소유하지 않는다. 논
 
 ### 4.1 `variant.h`
 
-예정 경로:
+현재 경로:
 
 ~~~text
 variants/nu54dk/variant.h
@@ -117,15 +134,15 @@ variants/nu54dk/variant.h
 책임은 다음과 같다.
 
 - Arduino Sketch에 노출할 논리 상수 선언
-- `LED_BUILTIN` 선언
-- `NUM_DIGITAL_PINS`, `NUM_ANALOG_INPUTS` 등 확정된 개수 선언
+- `LED_BUILTIN`, `PIN_BUTTON0` 선언
+- 현재 `NUM_DIGITAL_PINS=2` 선언
 - Variant descriptor 조회 함수의 내부 선언 연결
 
 물리 controller 이름과 pin 번호는 넣지 않는다.
 
 ### 4.2 `variant.cpp`
 
-예정 경로:
+현재 경로:
 
 ~~~text
 variants/nu54dk/variant.cpp
@@ -138,11 +155,14 @@ variants/nu54dk/variant.cpp
 - 필수 alias와 node에 대한 compile-time assertion 제공
 - Variant 초기화 hook가 필요할 때 최소한의 board-specific 동작 제공
 
-첫 PoC의 descriptor는 `DT_ALIAS(led0)` 하나만 사용한다.
+M3 descriptor는 `DT_ALIAS(led0)`와 `DT_ALIAS(sw0)`를 사용한다. LED descriptor에는
+digital input/output capability를, 버튼 descriptor에는 digital input capability만 둔다.
+따라서 버튼을 `OUTPUT`으로 바꾸거나 `digitalWrite()`로 구동하려는 요청은 no-op으로
+거부된다.
 
 ### 4.3 `pin_description.h`
 
-예정 경로:
+현재 경로:
 
 ~~~text
 cores/arduino/internal/pin_description.h
@@ -162,17 +182,20 @@ PinDescription
 
 ### 4.4 보드 패키지
 
-보드 패키지는 다음 alias를 첫 PoC에 제공해야 한다.
+보드 패키지는 다음 alias를 M3에 제공해야 한다.
 
 ~~~dts
 / {
     aliases {
         led0 = &led0;
+        sw0 = &button0;
     };
 };
 ~~~
 
-현재 보드 정의에서 `led0`는 NU54DK 사용자 LED 1을 가리킨다. Core는 `led0`의 실제 GPIO 숫자를 알 필요가 없다.
+위 DTS는 관계를 설명하는 축약 예시이며 실제 label은 보드 패키지가 소유한다. 현재 보드
+정의에서 `led0`는 NU54DK 사용자 LED 1을, `sw0`는 사용자 버튼 1을 가리킨다. Core는 두
+alias의 실제 GPIO 숫자를 알 필요가 없다.
 
 ### 4.5 Build Adapter
 
@@ -204,9 +227,12 @@ Zephyr device + GPIO pin
 
 예를 들어 `LED_BUILTIN`이 논리 index 0이라고 하더라도 이것이 `P0.0`을 의미하지 않는다. 그 index의 descriptor가 `DT_ALIAS(led0)`에서 생성된 GPIO를 가리킨다는 뜻이다.
 
+현재 공개한 index 0과 1은 `LED_BUILTIN`과 `PIN_BUTTON0`이라는 역할 이름으로만 노출한다.
+아직 승인되지 않은 `D0`, `D1` 번호표로 확대 해석하지 않는다.
+
 ### 5.2 `LED_BUILTIN`
 
-최초 PoC의 필수 규칙은 다음과 같다.
+M3 구현 규칙은 다음과 같다.
 
 - `LED_BUILTIN`의 실제 자원은 `DT_ALIAS(led0)`에서 얻는다.
 - alias가 없거나 GPIO node가 비활성이면 빌드를 실패시킨다.
@@ -215,7 +241,18 @@ Zephyr device + GPIO pin
 
 현재 NU54DK의 LED 1은 Active High다. 그러나 Core의 raw GPIO 규칙은 향후 Active Low 핀을 일반 digital pin으로 취급할 때도 `HIGH`가 실제 High 전압을 뜻하도록 유지한다.
 
-### 5.3 전체 핀맵 확장
+### 5.3 `PIN_BUTTON0`
+
+- `PIN_BUTTON0`의 실제 자원은 `DT_ALIAS(sw0)`에서 얻는다.
+- 논리 index는 1이며 digital input capability만 갖는다.
+- `INPUT_PULLUP`의 raw 입력은 해제 `HIGH`, 누름 `LOW`다.
+- `digitalWrite(PIN_BUTTON0, ...)`와 `pinMode(PIN_BUTTON0, OUTPUT)`은 다른 핀을 건드리지
+  않고 거부된다.
+
+실제 NU54DK 버튼 HIL에서 해제/누름 raw 값에 따라 LED가 꺼지고 켜지는 경로를 확인했다.
+debounce, interrupt와 장시간 반복 입력은 이 결과에 포함하지 않는다.
+
+### 5.4 전체 핀맵 확장
 
 전체 핀맵을 추가할 때는 보드 패키지에 connector 또는 Arduino용 mapping node를 추가하는 방식을 우선 검토한다.
 
@@ -230,7 +267,7 @@ PinDescription table
 
 NU54DK가 물리적으로 Arduino R3 header가 아니라면 `arduino-header-r3`라는 이름을 억지로 사용하지 않는다. 보드의 실제 connector 구조를 나타내는 전용 binding이나 일반 GPIO mapping node를 사용한다.
 
-### 5.4 capability
+### 5.5 capability
 
 논리 핀의 capability는 최소한 다음 범주를 표현할 수 있어야 한다.
 
@@ -238,10 +275,10 @@ NU54DK가 물리적으로 Arduino R3 header가 아니라면 `arduino-header-r3`�
 | --- | --- |
 | Digital input | `pinMode(INPUT...)`, `digitalRead` 가능 |
 | Digital output | `pinMode(OUTPUT)`, `digitalWrite` 가능 |
-| Interrupt | GPIO interrupt controller를 통한 callback 가능 |
-| ADC | 해당 logical pin에 연결된 ADC input 존재 |
-| PWM | 해당 logical pin으로 route 가능한 활성 PWM channel 존재 |
-| Reserved | console, crystal, debug 등으로 기본 예약됨 |
+| Interrupt | 향후 GPIO interrupt controller를 통한 callback 가능; M3 미구현 |
+| ADC | 향후 해당 logical pin에 연결된 ADC input 존재; M3 미구현 |
+| PWM | 향후 해당 logical pin으로 route 가능한 활성 PWM channel 존재; M3 미구현 |
+| Reserved | 향후 console, crystal, debug 등으로 기본 예약됨; M3 ownership 미구현 |
 
 capability bit는 Arduino API의 빠른 사전 검사용이다. 실제 활성 가능 여부는 최종 Devicetree와 device readiness가 결정한다. Variant의 bit만으로 비활성 peripheral을 활성화하지 않는다.
 
@@ -258,12 +295,17 @@ Sketch pinMode(logical_pin, mode)
           ↓
 Variant descriptor 조회
           ↓
-device_is_ready() 검사
+gpio_is_ready_dt() 검사
           ↓
 Arduino mode → Zephyr gpio_flags_t 변환
           ↓
 gpio_pin_configure()
 ~~~
+
+M3는 `INPUT`, `INPUT_PULLUP`, `INPUT_PULLDOWN`, `OUTPUT`을 변환한다.
+`OUTPUT_OPENDRAIN`은 공개 enum에 향후 값으로 존재하지만 구현되지 않았다. `OUTPUT`으로
+전환할 때 마지막 output latch를 적용하며, LED처럼 input capability도 있는 output은 실제
+핀 readback을 위해 input buffer도 연결한다.
 
 ### 6.2 `digitalWrite`
 
@@ -281,6 +323,11 @@ gpio_pin_set_raw()
 
 `gpio_pin_set_dt()`는 `GPIO_ACTIVE_LOW`를 논리적으로 반전할 수 있으므로 일반 Arduino digital API의 기본 구현으로 사용하지 않는다.
 
+M3 `digitalWrite()`는 output capability가 있고 `OUTPUT`으로 성공적으로 구성된 핀에서만
+동작한다. input 핀에서 `HIGH`/`LOW`로 pull-up을 켜고 끄는 Arduino 관례는 아직 구현하지
+않았다. `digitalRead()`는 input capability와 성공한 pin 구성을 요구하며 raw 값을
+`LOW`/`HIGH`로 반환한다. invalid pin, 잘못된 mode 또는 driver 오류는 panic하지 않는다.
+
 ### 6.3 ADC 또는 PWM
 
 ~~~text
@@ -296,6 +343,9 @@ Zephyr ADC/PWM API
 ~~~
 
 Variant는 실행 중 pinctrl을 임의로 바꾸지 않는다. GPIO와 PWM처럼 같은 물리 핀을 공유하는 기능은 application overlay와 API ownership 정책에 따라 한 소비자만 선택해야 한다.
+
+위 ownership 문장은 목표 정책이다. M3에는 peripheral owner table, lifecycle 전환과 충돌
+진단이 아직 없으며 PWM/ADC descriptor도 제공하지 않는다.
 
 ---
 
@@ -330,10 +380,16 @@ Variant descriptor는 빌드 후 변경되지 않는 read-only data로 구현한
 | 논리 핀 범위 검사 | 허용 | 허용 | 메모리 할당과 lock을 사용하지 않음 |
 | descriptor 조회 | 허용 | 허용 | immutable table |
 | device readiness 검사 | 허용 | 조건부 | 초기화 완료 후 값만 조회 |
+| `pinMode()` | 허용 | 거부 | ISR에서는 no-op과 private 오류 기록 |
+| `digitalWrite()` | 허용 | 거부 | ISR에서는 no-op과 private 오류 기록 |
+| `digitalRead()` | 허용 | 거부 | ISR에서는 private 오류 기록 후 `LOW` |
 | Variant 초기화 | 허용 | 금지 | Zephyr `main` 진입 후 한 번 수행 |
 | 동적 핀맵 변경 | 지원하지 않음 | 지원하지 않음 | overlay 재빌드 대상 |
 
-Variant lookup에서 heap, mutex 또는 logging을 필수로 요구하면 안 된다. ISR에서 발생한 오류의 문자열 logging은 즉시 수행하지 않고, 정수 상태를 기록하거나 조용히 실패하는 정책을 사용한다.
+Variant lookup에서 heap, mutex 또는 logging을 사용하지 않는다. M3의 mode, output latch,
+마지막 Core 오류와 원래 driver 오류는 `atomic_t`로 보존한다. 이 상태의 조회 함수는
+`internal/pin_description.h`에만 있으며 Arduino Sketch 공개 API가 아니다. GPIO API의
+동시 재구성을 직렬화하는 ownership lock은 아직 구현하지 않았다.
 
 ---
 
@@ -345,6 +401,7 @@ Variant lookup에서 heap, mutex 또는 logging을 필수로 요구하면 안 �
 
 - `DT_ALIAS(led0)`가 없음
 - `led0`가 GPIO spec을 제공하지 않음
+- `DT_ALIAS(sw0)`가 없거나 GPIO spec을 제공하지 않음
 - 필수 Variant node가 `okay`가 아님
 - 논리 핀 수와 descriptor 수가 다름
 - 같은 논리 index가 상충하는 필수 capability로 정의됨
@@ -361,13 +418,17 @@ Variant lookup에서 heap, mutex 또는 logging을 필수로 요구하면 안 �
 - 이미 다른 peripheral이 소유한 pin
 - driver가 반환한 I/O 오류
 
+이 가운데 peripheral ownership 검사는 목표 정책이며 M3에는 구현되지 않았다. 현재는 논리
+범위, digital capability, mode, device readiness, 지원하지 않는 Devicetree flag와 driver
+오류만 검사한다.
+
 Arduino 표준의 `void` API는 오류를 직접 반환할 수 없다. 기본 정책은 다음과 같다.
 
 1. 메모리를 손상시키거나 다른 핀을 잘못 제어하지 않는다.
 2. 해당 동작을 수행하지 않는다.
-3. thread 문맥이고 진단 기능이 켜져 있으면 Zephyr log를 남긴다.
-4. ISR에서는 logging하지 않는다.
-5. 디버그용 Core 상태 조회 API의 도입 여부는 API 설계 단계에서 결정한다.
+3. M3는 Zephyr log 대신 private atomic 오류와 원래 driver 오류를 기록한다.
+4. ISR에서는 logging하지 않고 공개 GPIO 동작을 거부한다.
+5. 공개 진단 API의 도입 여부는 이후 API 설계에서 결정한다.
 
 유효하지 않은 pin을 배열 index로 그대로 사용하거나 modulo 연산으로 다른 pin에 매핑해서는 안 된다.
 
@@ -375,14 +436,14 @@ Arduino 표준의 `void` API는 오류를 직접 반환할 수 없다. 기본 �
 
 ## 10. 설정 항목
 
-아래 이름은 구현 예정안이며 현재 존재하는 Kconfig로 간주하면 안 된다.
+현재 M3 Kconfig와 향후 후보를 구분한다.
 
-| 설정안 | 기본값안 | 목적 |
-| --- | ---: | --- |
-| `CONFIG_NUCODE_ARDUINO_CORE` | `y` | Arduino Core 정적 편입 |
-| `CONFIG_NUCODE_ARDUINO_GPIO` | `y` | digital GPIO API 활성화 |
-| `CONFIG_NUCODE_ARDUINO_PIN_DIAGNOSTICS` | 개발 `y` | invalid pin과 capability 오류 log |
-| `CONFIG_NUCODE_ARDUINO_STRICT_PIN_CHECK` | CI `y` | 가능한 오류를 assertion으로 강화 |
+| 설정 | 상태 | 기본값/용도 |
+| --- | --- | --- |
+| `CONFIG_NUCODE_ARDUINO_CORE` | 구현 | 기본 `n`; Arduino Core 정적 편입 |
+| `CONFIG_NUCODE_ARDUINO_GPIO` | 구현 | Core 활성 시 기본 `y`; digital GPIO API와 Zephyr GPIO 선택 |
+| `CONFIG_NUCODE_ARDUINO_PIN_DIAGNOSTICS` | 미구현 후보 | invalid pin과 capability 오류 log |
+| `CONFIG_NUCODE_ARDUINO_STRICT_PIN_CHECK` | 미구현 후보 | CI에서 가능한 오류를 assertion으로 강화 |
 
 보드 물리 설정을 Kconfig 문자열로 다시 입력하는 옵션은 만들지 않는다. 예를 들어 `CONFIG_LED0_PIN=41` 같은 설정은 단일 원본 원칙에 위배된다.
 
@@ -392,13 +453,17 @@ Arduino 표준의 `void` API는 오류를 직접 반환할 수 없다. 기본 �
 
 핀과 Variant v0가 완료되었다고 판단하려면 다음 조건을 모두 충족해야 한다.
 
-- [ ] `LED_BUILTIN`이 `DT_ALIAS(led0)`에서 생성된다.
-- [ ] Core와 Variant에 `P2.9` 하드코딩이 없다.
-- [ ] `nrf54l15dk/nrf54l15/cpuapp/nu54dk` 전체 정적 빌드가 성공한다.
-- [ ] 최종 `zephyr.dts`와 descriptor가 같은 GPIO를 가리킨다.
-- [ ] invalid pin이 out-of-bounds access를 만들지 않는다.
-- [ ] LED Blink가 pyOCD 플래시 후 리셋부터 즉시 동작한다.
+- [x] `LED_BUILTIN`이 `DT_ALIAS(led0)`에서 생성된다.
+- [x] `PIN_BUTTON0`이 `DT_ALIAS(sw0)`에서 생성된다.
+- [x] Core와 Variant에 `P2.9` 같은 실제 GPIO pin 하드코딩이 없다.
+- [x] `nrf54l15dk/nrf54l15/cpuapp/nu54dk` 전체 정적 빌드가 성공한다.
+- [x] 최종 Devicetree alias에서 descriptor가 생성된다.
+- [x] invalid pin self-check 후에만 도달하는 버튼 연동 loop를 육안 확인했다.
+  세부 RAM trace 값은 미회수다.
+- [x] LED Blink와 버튼 raw 입력/LED 연동이 NU54DK HIL에서 동작한다.
 - [ ] 동일 source로 pristine build와 incremental build 결과가 일치한다.
+- [ ] ISR 거부, 동시 호출과 오류 상태를 자동 회귀 시험으로 고정한다.
+- [ ] input `digitalWrite()`, peripheral ownership와 interrupt 정책을 구현·검증한다.
 - [ ] 전체 D/A 순서를 추가하기 전에 connector 및 중복 mapping 정책이 문서로 승인된다.
 
 ---
@@ -421,11 +486,18 @@ Arduino 표준의 `void` API는 오류를 직접 반환할 수 없다. 기본 �
 
 ### 12.3 NU54DK HIL
 
-1. `LED_BUILTIN`을 output으로 설정한다.
-2. `HIGH`와 `LOW`를 번갈아 기록한다.
-3. LED 상태와 GPIO 전압을 확인한다.
-4. 사용자 버튼 alias를 추가한 뒤 pull-up과 Active Low 입력을 확인한다.
-5. PWM/GPIO 공유 핀은 각기 다른 overlay로 빌드해 단독 동작을 확인한다.
+M3에서 통과한 범위는 다음과 같다.
+
+1. `LED_BUILTIN`을 output으로 설정하고 Arduino API만으로 250 ms Blink를 실행했다.
+2. `PIN_BUTTON0`을 `INPUT_PULLUP`으로 설정하고 해제 `HIGH`, 누름 `LOW` raw 의미를
+   확인했다.
+3. 버튼을 누르면 LED가 켜지고 해제하면 꺼지는 연동을 확인했다.
+4. `NUM_DIGITAL_PINS`를 invalid pin으로 사용한 호출 전후에 LED 상태가 유지되는
+   self-check를 포함했다.
+
+아직 남은 HIL은 logic analyzer를 사용한 GPIO 전압/250 ms 정량 측정, pull-down,
+Active Low cross-board case, 입력 pin의 `digitalWrite()`, ISR, debounce, 장시간 반복,
+동시 호출과 PWM/GPIO ownership이다. 현재 육안 HIL만으로 이 항목을 지원 선언하지 않는다.
 
 ### 12.4 회귀 검사
 
@@ -469,6 +541,14 @@ API 동작과 검증
 
 LED_BUILTIN
         = DT_ALIAS(led0)
+
+PIN_BUTTON0
+        = DT_ALIAS(sw0)
+
+M3 논리 핀 수
+        = 2
 ~~~
 
-이 분리를 유지하면 보드 회로 변경과 Arduino API 변경을 서로 독립적으로 관리할 수 있으며, Full Zephyr 빌드가 제공하는 Devicetree 검증을 그대로 활용할 수 있다.
+이 분리를 유지하면 보드 회로 변경과 Arduino API 변경을 서로 독립적으로 관리할 수 있으며,
+Full Zephyr 빌드가 제공하는 Devicetree 검증을 그대로 활용할 수 있다. M3 결과는 두 논리
+핀의 제한적 기준선이며 전체 Arduino 핀맵, ownership 또는 interrupt 완료 판정이 아니다.

@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | 구현 기준선 — PoC 실행 전 |
+| 문서 상태 | M3 **CONDITIONAL GO** — 내부 기준선 통과, 추가 계측·자동 시험 대기 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 Zephyr | Zephyr 4.4.0 |
@@ -26,6 +26,10 @@
 6. CMSIS-DAP와 pyOCD를 사용해 전체 Zephyr 이미지를 플래시할 수 있다.
 
 이 결과는 이후 Build Adapter와 Arduino CLI 통합의 기준선이다. west-native PoC가 통과하기 전에는 Arduino recipe 문제와 Core 자체 문제를 섞어서 디버깅하지 않는다.
+
+실제 실행 명령과 증거 경계는
+[M3 GPIO·시간·Scheduler 기준선](<../04_검증 기록/03_M3_GPIO_시간과_Scheduler_기준선.md>)에
+보관한다.
 
 ---
 
@@ -60,11 +64,35 @@
 | 기본 flash runner | `pyocd` |
 | 일반 업로드 erase | 사용하지 않음 |
 
-`<repo>`는 `NU54DK_Arduino_Core` 저장소의 절대 경로다. CMake에 전달할 때는 Windows 경로도 `/` 구분자로 정규화한다.
+`<repo>`는 `NU54DK_Arduino_Core` 저장소의 절대 경로다. PowerShell에서는 현재 checkout을
+기준으로 계산하고, CMake에 전달할 때 Windows 경로도 `/` 구분자로 정규화한다.
 
-~~~text
-C:/Users/eidos/GitHub/NU54DK_Arduino_Core
+~~~powershell
+$CoreRoot = (Resolve-Path ".").Path.Replace('\', '/')
 ~~~
+
+### 2.3 현재 M3 실행 결과
+
+2026-08-26 기준 west-native 수직 경로의 판정은 **CONDITIONAL GO**다.
+
+| 검증 | 결과 | 비고 |
+| --- | --- | --- |
+| `blink` clean/warm build | PASS | 무변경 rebuild에서 Core compile과 link는 발생하지 않음 |
+| `gpio_input_smoke` clean build와 버튼 육안 | PASS | 버튼에 따른 LED 동작 확인 |
+| GPIO 입력 RAM trace | 미회수 | 육안 PASS와 별개인 증거로 유지 |
+| `runtime_timing` clean build와 trace | PASS | 내부 시간·scheduler 판정 PASS |
+| Core 비활성 negative | PASS | Core archive와 runtime의 비의도 주입 없음 |
+| `led0` 누락 negative | PASS | 의도한 configure 실패 확인 |
+| Blink와 버튼 실기 | PASS | 사용자 육안 판정 |
+
+기본 loop 반환 정책은 `CONFIG_NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK=y`다. 계측용
+`runtime_timing` sample만 자동 loop 정책을 끄고 spin, `yield()`, 한 tick sleep 및
+`delay(1)`을 직접 비교한다.
+
+생성된 `runners.yaml`에는 `nrfutil`, `jlink`, `pyocd`가 available runner로 나타나며
+flash/debug 기본값은 `pyocd`다. J-Link device와 speed metadata는 생성되지만 외장
+J-Link flash/debug HIL은 실행하지 않았다. 외부 계측, Twister, 실제 rollover와 PM 시험도
+아직 실행하지 않았다.
 
 ---
 
@@ -196,7 +224,7 @@ PoC는 빌드와 플래시를 분리해서 실행한다. 빌드 실패와 probe 
 NCS v3.4.0 Toolchain이 활성화된 PowerShell에서 실행한다.
 
 ~~~powershell
-$RepoRoot = (Resolve-Path 'C:\Users\eidos\GitHub\NU54DK_Arduino_Core').Path
+$RepoRoot = (Resolve-Path '.').Path
 $SourceDir = Join-Path $RepoRoot 'samples\zephyr\blink'
 $BuildDir = Join-Path $RepoRoot 'build\west-native-blink'
 $BoardRoot = Join-Path $RepoRoot 'board_package\NU54DK_Zephyr_DTS'
@@ -377,7 +405,9 @@ PoC 소스에 `P0.xx`와 같은 물리 핀 번호를 직접 쓰지 않는다.
 
 ## 9. 완료 기준
 
-다음 조건을 모두 만족하면 west-native Blink PoC를 완료로 판정한다.
+다음 조건을 모두 만족하면 west-native Blink PoC를 최종 완료 및 M3 GO로 판정한다.
+현재는 build와 육안·내부 trace 기준선을 통과했지만 외부 계측과 자동 시험 증거가
+남아 있으므로 **CONDITIONAL GO**다.
 
 1. 고정 board target과 두 root 인자로 clean configure가 성공한다.
 2. build가 `--no-sysbuild` 단일 이미지로 완료된다.
@@ -390,9 +420,17 @@ PoC 소스에 `P0.xx`와 같은 물리 핀 번호를 직접 쓰지 않는다.
 9. 무변경 두 번째 빌드가 전체 pristine rebuild를 수행하지 않는다.
 10. `.ino`, Arduino CLI 또는 IDE가 없어도 이 기준선 시험을 반복할 수 있다.
 
+현재 판정의 상세 근거와 미수행 항목은
+[M3 GPIO·시간·Scheduler 기준선](<../04_검증 기록/03_M3_GPIO_시간과_Scheduler_기준선.md>)을
+따른다. 특히 GPIO RAM trace 미회수는 버튼 육안 PASS로 대체하지 않으며, 외부 계측,
+Twister, runtime rollover, PM 및 J-Link HIL은 실행 전 상태로 유지한다.
+
 ---
 
 ## 10. 검증 체크리스트
+
+아래 목록은 반복 실행용 전체 체크리스트다. 현재 실행 결과를 표시한 목록이 아니며,
+실제 PASS/미회수/미실행 상태는 위 M3 검증 기록을 기준으로 판단한다.
 
 ### 10.1 환경
 

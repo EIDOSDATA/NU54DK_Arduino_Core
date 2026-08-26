@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | 구현 전 지원 계획 |
+| 문서 상태 | M3 최소 Runtime/GPIO/시간 구현 — 제한적 NU54DK HIL 통과 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 Zephyr | Zephyr 4.4.0 |
@@ -16,7 +16,10 @@
 
 이 문서는 NU54DK Arduino Core가 어떤 Arduino API를 어느 수준까지 제공할지 정의한다. API 이름이나 header가 존재한다는 이유만으로 `지원`이라고 선언하지 않는다. 실제 상태, v0.1 목표, 하드웨어 제약 및 검증 증거를 분리하여 관리한다.
 
-현재 저장소는 구현 착수 단계다. 따라서 이 문서에 별도 구현 증거가 연결되지 않은 API의 **현재 상태는 `미구현`**이다. 아래의 v0.1 목표 상태는 설계 목표이지 완료 보고가 아니다.
+현재 저장소에는 M3 최소 Runtime, GPIO와 시간 backend가 존재한다. 그러나 source와 symbol이
+존재한다는 사실만으로 `지원`이라고 선언하지 않는다. 아래 표에서 M3 build/HIL 증거가
+있는 제한 범위만 `부분 지원` 또는 `의미 차이`로 표시하고, 구현됐어도 의미·문맥 검증이
+끝나지 않은 API는 `미구현` 상태를 유지한다. v0.1 목표 상태는 완료 보고가 아니다.
 
 관련 문서는 다음과 같다.
 
@@ -109,30 +112,50 @@ v0.1 release gate에서 P1이 미구현으로 남으면 기능명을 조용히 �
 
 표의 `현재 상태`는 이 문서 작성 시점의 구현 증거를 나타낸다. `v0.1 목표`는 완료 후 기대 상태다. 목표 상태가 `의미 차이` 또는 `부분 지원`이면 차이를 없애겠다는 뜻이 아니라 정확히 문서화하고 시험하겠다는 뜻이다.
 
+### 5.0 M3 검증 경계
+
+현재 Variant는 다음 두 논리 핀만 제공한다.
+
+| index | 이름 | Devicetree 원본 | capability |
+| ---: | --- | --- | --- |
+| 0 | `LED_BUILTIN` | `DT_ALIAS(led0)` | digital input + output |
+| 1 | `PIN_BUTTON0` | `DT_ALIAS(sw0)` | digital input only |
+
+`NUM_DIGITAL_PINS`는 2다. GPIO controller, 실제 pin과 flag는 DTS에서 생성하며 Variant에
+복제하지 않는다. 공개 GPIO API는 thread-only이고 ISR에서는 no-op 또는 `LOW`다. mode,
+output latch와 마지막 오류는 private atomic 상태로 관리하며 공개 진단 API는 없다.
+
+M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP` 버튼의 raw
+해제 `HIGH`/누름 `LOW`, 버튼-LED 연동을 확인했다. invalid pin 호출이 LED 상태를 바꾸지
+않는 sample self-check도 포함한다. logic analyzer 정량 측정, ztest/Twister, Arduino CLI,
+ISR, 동시 호출, input `digitalWrite()`, ownership와 interrupt는 아직 검증 또는 구현되지
+않았다.
+
 ### 5.1 Runtime과 기본 형식
 
 | API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
-| `Arduino.h` include | P0 | 미구현 | 지원 | ArduinoCore-API와 NU54DK backend의 단일 공개 진입점 |
-| `setup()` | P0 | 미구현 | 지원 | 정확히 한 번, C++ 전역 constructor 이후 실행 |
-| `loop()` | P0 | 미구현 | 의미 차이 | PoC는 Zephyr main thread에서 반복. fairness HIL 후 main thread 유지 또는 전용 thread와 idle 정책을 최종 확정 |
-| `yield()` | P0 | 미구현 | 의미 차이 | 단순 busy spin을 만들지 않는 Zephyr scheduler 의미 정의 |
-| `init()`/`initVariant()` 내부 hook | P0 | 미구현 | 부분 지원 | Sketch 공개 API가 아니라 Core/variant 초기화 계약으로 사용 |
-| `HIGH`, `LOW`, `INPUT`, `OUTPUT` | P0 | 미구현 | 지원 | GPIO polarity와 논리값을 혼동하지 않도록 test |
-| `INPUT_PULLUP`, `INPUT_PULLDOWN` | P0 | 미구현 | 지원 | nRF GPIO 설정과 실제 button active-low 검증 |
-| `LSBFIRST`, `MSBFIRST`, interrupt mode 상수 | P0/P1 | 미구현 | 지원 | 사용하는 subsystem과 함께 검증 |
+| `Arduino.h` include | P0 | 부분 지원 | 지원 | M3 Runtime/GPIO/시간 최소 계약만 제공; ArduinoCore-API 통합과 일반 library compile 미검증 |
+| `setup()` | P0 | 부분 지원 | 지원 | 전역 constructor 이후 한 번 실행하는 M2/M3 HIL 통과; Arduino CLI 회귀 미검증 |
+| `loop()` | P0 | 의미 차이 | 의미 차이 | Zephyr main thread에서 반복하고 기본적으로 반환 뒤 한 tick sleep; 네 scheduler 단계의 fairness/idle 정량 HIL 통과, Arduino CLI·PM 회귀 미검증 |
+| `yield()` | P0 | 의미 차이 | 의미 차이 | guarded `k_yield()`이며 같은 priority worker는 진행했지만 낮은 priority와 idle은 진행하지 못함; yield 불가능 문맥에서는 no-op |
+| `init()`/`initVariant()` 내부 hook | P0 | 부분 지원 | 부분 지원 | weak no-op `initVariant()`와 override 계약만 구현; 실제 Variant override 없음 |
+| `HIGH`, `LOW`, `INPUT`, `OUTPUT` | P0 | 부분 지원 | 지원 | LED output과 raw HIGH/LOW HIL 통과; 전체 핀/mode 조합 미검증 |
+| `INPUT_PULLUP`, `INPUT_PULLDOWN` | P0 | 부분 지원 | 지원 | 버튼 `INPUT_PULLUP` HIL 통과; pull-down과 전체 핀 조합 미검증 |
+| `LSBFIRST`, `MSBFIRST`, interrupt mode 상수 | P0/P1 | 미구현 | 지원 | `RISING`/`FALLING`/`CHANGE` 값만 존재; interrupt backend와 bit-order 상수 미구현 |
 | `byte`, `word`, `boolean` 등 호환 type | P0 | 미구현 | 지원 | fixed-width type와 overload compile test |
-| C++ static object initialization | P0 | 미구현 | 지원 | `Serial`, `Wire`, `SPI` 전역 객체의 constructor 순서 포함 |
-| C++ exception/RTTI | P1 | 미구현 | 의미 차이 | v0.1 기본값을 Kconfig/build policy로 고정; library 기대와 비교 |
+| C++ static object initialization | P0 | 부분 지원 | 지원 | 시험용 전역 constructor 선행 실행 HIL 통과; `Serial`, `Wire`, `SPI` 객체는 미구현 |
+| C++ exception/RTTI | P1 | 미구현 | 의미 차이 | enable 구성의 compile/link만 확인; 실제 throw/RTTI/heap 의미는 미검증 |
 
 ### 5.2 Digital I/O
 
 | API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
-| `pinMode()` | P0 | 미구현 | 지원 | 유효 Arduino pin과 mode 검증, 오류 정책 고정 |
-| `digitalWrite()` | P0 | 미구현 | 지원 | output level과 active-low peripheral alias를 구분 |
-| `digitalRead()` | P0 | 미구현 | 지원 | input, pull 및 output readback 범위 시험 |
-| `LED_BUILTIN` | P0 | 미구현 | 지원 | `DT_ALIAS(led0)`를 단일 원본으로 사용 |
+| `pinMode()` | P0 | 부분 지원 | 지원 | index 0/1에서 capability가 허용하는 input/pull/output만 thread에서 구현; open-drain, ISR, ownership 미구현 |
+| `digitalWrite()` | P0 | 부분 지원 | 지원 | `OUTPUT`으로 구성된 index 0에서 raw write HIL 통과; input pull 전환, ISR, ownership 미구현 |
+| `digitalRead()` | P0 | 부분 지원 | 지원 | LED readback self-check 후 버튼 loop 진입을 육안 확인; 정확한 RAM trace는 미회수, index 0/1 및 thread 문맥으로 제한 |
+| `LED_BUILTIN` | P0 | 부분 지원 | 지원 | index 0, DTS `led0`, input+output; Blink HIL 통과, 정량 timing/voltage 미측정 |
+| `PIN_BUTTON0` | P0 | 부분 지원 | 부분 지원 | index 1, DTS `sw0`, input-only; pull-up raw 버튼 HIL 통과, debounce/interrupt 미구현 |
 | 전체 `D0...Dn` 논리 pin map | P1 | 미구현 | 부분 지원 | 회로에 노출되고 안전하게 사용할 수 있는 pin만 정의 |
 | `digitalPinToInterrupt()` | P0 | 미구현 | 지원 | pin mapping과 interrupt capability 검증 |
 | direct port/register access | 제외 | 하드웨어 미지원 | 하드웨어 미지원 | AVR/SAMD register 호환을 제공하지 않음; Zephyr/nrfx 직접 API는 별도 영역 |
@@ -141,10 +164,10 @@ v0.1 release gate에서 P1이 미구현으로 남으면 기능명을 조용히 �
 
 | API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
-| `millis()` | P0 | 미구현 | 지원 | 단조 증가와 wrap-around 차이 계산 시험 |
-| `micros()` | P0 | 미구현 | 부분 지원 | 실제 resolution과 ISR 호출 가능 범위를 측정해 공개 |
-| `delay()` | P0 | 미구현 | 의미 차이 | Zephyr sleep을 사용하고 다른 thread 실행 보장 |
-| `delayMicroseconds()` | P0 | 미구현 | 의미 차이 | 짧은 busy wait와 긴 delay의 scheduler 영향을 문서화 |
+| `millis()` | P0 | 부분 지원 | 지원 | uptime backend, `delay(20)`의 20 ms 경과와 timer ISR 반복 읽기 HIL 통과; 실제 wrap·PM 장기 연속성 미검증 |
+| `micros()` | P0 | 부분 지원 | 부분 지원 | GRTC startup offset을 뺀 64-bit cycle backend와 timer ISR 반복 읽기 HIL 통과; 외부 resolution·실제 wrap·PM 미검증 |
+| `delay()` | P0 | 의미 차이 | 의미 차이 | 64-bit deadline sleep, 20 ms/20,084 us 내부 계측과 worker 공존 HIL 통과; 긴 `INT32_MAX` chunk와 금지 문맥 진단 미검증 |
+| `delayMicroseconds()` | P0 | 의미 차이 | 의미 차이 | 1초 chunk busy-wait의 1,000 us 요청을 내부에서 1,026 us로 측정; ISR에서는 no-op이며 외부 정확도·긴 chunk 경계 미검증 |
 | `map()` | P1 | 미구현 | 지원 | ArduinoCore-API 구현 재사용 후보, overflow 특성 포함 |
 | `constrain()`, `min()`, `max()`, `abs()` | P1 | 미구현 | 지원 | macro/template 충돌 및 type test |
 | `bitRead`, `bitWrite`, `bitSet`, `bitClear` | P1 | 미구현 | 지원 | compile 및 정수 폭 test |
@@ -156,12 +179,12 @@ v0.1 release gate에서 P1이 미구현으로 남으면 기능명을 조용히 �
 
 | API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
-| `attachInterrupt()` | P0 | 미구현 | 의미 차이 | Zephyr GPIO callback 문맥, callback lifetime 및 pin 제한 공개 |
+| `attachInterrupt()` | P0 | 미구현 | 의미 차이 | M3 pin descriptor에는 interrupt capability/backend가 없음; callback 문맥과 lifetime 설계 필요 |
 | `detachInterrupt()` | P0 | 미구현 | 지원 | pending callback과 detach 경쟁 상태 시험 |
-| `RISING`, `FALLING`, `CHANGE` | P0 | 미구현 | 지원 | 실제 신호 발생기/버튼으로 edge 검증 |
+| `RISING`, `FALLING`, `CHANGE` | P0 | 미구현 | 지원 | enum 값만 존재하며 실제 interrupt 동작은 없음; 신호 발생기/버튼 edge 검증 필요 |
 | `LOW`, `HIGH` level interrupt | P1 | 미구현 | 부분 지원 | Zephyr/nRF hardware와 driver가 안정적으로 제공하는 mode만 노출 |
 | `noInterrupts()`/`interrupts()` | P1 | 미구현 | 의미 차이 | system 전체 IRQ 차단을 남용하지 않도록 nesting/context 정책 정의 |
-| ISR 안의 Arduino API 호출 | P0 | 미구현 | 부분 지원 | ISR-safe 목록을 별도로 관리; block/heap/Serial 호출 제한 |
+| ISR 안의 Arduino API 호출 | P0 | 미구현 | 부분 지원 | M3 GPIO 세 API는 ISR에서 모두 거부; ISR-safe API 목록과 자동 negative test 미구현 |
 
 ### 5.5 String, Print와 Stream
 

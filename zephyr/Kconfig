@@ -1,0 +1,64 @@
+menu "NUCODE Arduino Core"
+
+config NUCODE_ARDUINO_CORE
+	bool "NUCODE Arduino Core 런타임 활성화"
+	depends on CPP
+	depends on STD_CPP_VERSION >= 201703
+	help
+	  Loader 없이 하나의 Zephyr 애플리케이션 이미지에 Arduino 호환
+	  setup()/loop() 런타임을 링크합니다. 이 옵션은 기본적으로 비활성화되며,
+	  애플리케이션이 C++17 이상의 표준을 명시해야 합니다.
+
+	  M2 런타임은 동적 메모리를 할당하지 않습니다. 힙 크기는 Core가
+	  강제하지 않으며 최종 애플리케이션의 Kconfig가 소유합니다. 예외와
+	  RTTI의 기본 검증값은 비활성이지만 Core가 구조적으로 금지하지 않습니다.
+
+if NUCODE_ARDUINO_CORE
+
+config NUCODE_ARDUINO_GPIO
+	bool "Arduino digital GPIO API 활성화"
+	default y
+	select GPIO
+	help
+	  Variant의 Devicetree descriptor를 통해 pinMode(), digitalWrite()와
+	  digitalRead()를 제공합니다. 물리 GPIO controller와 pin 번호는 보드
+	  Devicetree가 소유합니다.
+
+config NUCODE_ARDUINO_TIME
+	bool "Arduino 시간 API 활성화"
+	default y
+	depends on TIMER_HAS_64BIT_CYCLE_COUNTER
+	help
+	  Zephyr uptime과 64-bit hardware cycle counter를 사용해 millis(),
+	  micros(), delay(), delayMicroseconds()와 yield()를 제공합니다.
+
+choice NUCODE_ARDUINO_LOOP_POLICY
+	prompt "Sketch loop 반환 후 Zephyr 공존 정책"
+	default NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK
+	help
+	  빠르게 반환하는 loop()가 낮은 priority thread와 idle 실행을 계속
+	  방해하지 않도록 Core가 각 반복 뒤 적용할 scheduler 정책을 선택합니다.
+
+config NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK
+	bool "한 kernel tick sleep"
+	help
+	  각 loop() 반환 뒤 현재 main thread를 한 kernel tick 동안 재웁니다.
+	  Zephyr 공존을 우선하는 기본 정책입니다.
+
+config NUCODE_ARDUINO_LOOP_YIELD
+	bool "같은 priority thread에 yield"
+	help
+	  각 loop() 반환 뒤 k_yield()를 호출합니다. 낮은 priority thread와
+	  idle의 실행은 보장하지 않습니다.
+
+config NUCODE_ARDUINO_LOOP_NONE
+	bool "Core scheduler 개입 없음"
+	help
+	  loop() 반환 뒤 즉시 다음 loop()를 호출합니다. 최대 반복률이 필요한
+	  application이 Zephyr 공존 책임을 직접 관리할 때 사용합니다.
+
+endchoice
+
+endif
+
+endmenu

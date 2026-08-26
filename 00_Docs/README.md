@@ -21,9 +21,12 @@
 1. [개발 방식 비교 및 아키텍처 결정](<./00_사전 리서치/01_개발_방식_비교_및_아키텍처_결정.md>)
 2. [저장소 폴더 구조](<./01_아두이노 코어 설계/01_저장소_폴더_구조.md>)
 3. [구현 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)
-4. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
-5. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
-6. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
+4. [M1 도구 환경과 보드 실기 기준선](<./04_검증 기록/01_M1_도구와_보드_기준선.md>)
+5. [M2 Zephyr module과 runtime 기준선](<./04_검증 기록/02_M2_Zephyr_Module과_Runtime_기준선.md>)
+6. [M3 GPIO·시간·Scheduler 기준선](<./04_검증 기록/03_M3_GPIO_시간과_Scheduler_기준선.md>)
+7. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
+8. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
+9. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
 
 ## 문서 구성
 
@@ -53,15 +56,21 @@
 - [주변장치 API](<./03_펌웨어 설계/03_주변장치_API.md>): Serial, interrupt, I2C, SPI, ADC 및 PWM 확장 순서
 - [테스트와 검증](<./03_펌웨어 설계/04_테스트와_검증.md>): host, Zephyr, Arduino CLI 및 NU54DK HIL 시험
 
+### 04. 검증 기록
+
+- [M1 도구 환경과 보드 실기 기준선](<./04_검증 기록/01_M1_도구와_보드_기준선.md>): 고정 도구 버전, C++ clean build, pyOCD runner 안정화와 실제 LED 실행 증거
+- [M2 Zephyr module과 runtime 기준선](<./04_검증 기록/02_M2_Zephyr_Module과_Runtime_기준선.md>): Core module, C++ runtime 정책, negative build와 `setup()`/`loop()` 실기 증거
+- [M3 GPIO·시간·Scheduler 기준선](<./04_검증 기록/03_M3_GPIO_시간과_Scheduler_기준선.md>): GPIO·시간 API, loop 정책, sample/negative build와 현재 실기 증거 및 미완료 항목
+
 ## 현재 진행 상태
 
 | 단계 | 상태 | 설명 |
 | --- | --- | --- |
 | M0 기반 고정 | 완료 | 저장소 구조와 NU54DK 보드 서브모듈 연결 완료 |
-| M1 도구·보드 실기 기준선 | 대기 | C++ baseline build와 pyOCD 반복 플래시 검증 전 |
-| M2 Zephyr module·Core 골격 | 대기 | `setup()`/`loop()` runtime 구현 전 |
-| M3 west-native Blink | 대기 | GPIO·시간 API 수직 PoC 구현 전 |
-| M4~M11 | 대기 | 각 선행 결정 게이트 통과 후 순차 진행 |
+| M1 도구·보드 실기 기준선 | 진행 중 | 로컬 실기 통과, 보드 runner commit과 gitlink 고정 대기 |
+| M2 Zephyr module·Core 골격 | 진행 중 | 로컬 build·link·실기 통과, Core와 보드 기준 commit 고정 대기 |
+| M3 west-native Blink | 진행 중 — **CONDITIONAL GO** | sample 3종·negative 2종과 Blink/버튼·timing trace 통과, 추가 계측과 자동 시험 대기 |
+| M4~M11 | 대기 | M3 조건부 게이트에 따라 M4 착수 가능, 이후 단계는 각 선행 게이트 뒤 진행 |
 
 상세 상태는 [구현 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)을 단일 기준으로 관리한다.
 

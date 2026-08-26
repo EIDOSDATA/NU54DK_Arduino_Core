@@ -1,0 +1,4 @@
+name: nucode_arduino_core
+build:
+  cmake: zephyr
+  kconfig: zephyr/Kconfig
