@@ -21,6 +21,8 @@ NU54DK에서 Loader 없이 동작하는 Native Full Zephyr 기반 Arduino Core�
 - M3 완료; GPIO RAM trace·외부 계측·실제 PM·외장 J-Link는 합의된 범위에 따라 필수 증거에서 제외
 - 외장 J-Link flash/debug HIL은 M3 필수 게이트가 아니라 M8에서 별도 검증
 - M3 자동 회귀 이미지는 온보드 DAPLink MSD로 플래시하고 COM10에서 Twister 결과를 수집
+- M4 완료, ArduinoCore-API 1.5.2를 정확한 commit과 LF 원본으로 vendor하고 NU54DK target API 계약 build 통과
+- ArduinoCore-API 공통 구현과 hardware backend 연결은 아직 지원 완료가 아니며 M6·M7에서 단계적으로 진행
 
 ## 보드 정의
 
@@ -61,6 +63,7 @@ Boards Manager용 배포 archive에는 고정된 서브모듈 commit의 실제 �
 - [M1 도구 환경과 보드 실기 기준선](./00_Docs/04_검증%20기록/01_M1_도구와_보드_기준선.md)
 - [M2 Zephyr module과 runtime 기준선](./00_Docs/04_검증%20기록/02_M2_Zephyr_Module과_Runtime_기준선.md)
 - [M3 GPIO·시간·Scheduler 기준선](./00_Docs/04_검증%20기록/03_M3_GPIO_시간과_Scheduler_기준선.md)
+- [M4 ArduinoCore-API 계약 기준선](./00_Docs/04_검증%20기록/04_M4_ArduinoCore_API_계약_기준선.md)
 
 ## 작성자
 
@@ -70,4 +73,5 @@ Boards Manager용 배포 archive에는 고정된 서브모듈 commit의 실제 �
 
 NUCODE가 자체 작성한 코드는 [MIT License](LICENSE)를 적용합니다. Zephyr, NCS,
 ArduinoCore-API와 보드 package 등 third-party 구성요소에는 각 원본 라이선스와 고지가
-별도로 적용됩니다.
+별도로 적용됩니다. 저장소에 포함된 ArduinoCore-API의 고정 revision과 라이선스 범위는
+[third-party notices](./third_party/THIRD_PARTY_NOTICES.md)에서 확인할 수 있습니다.

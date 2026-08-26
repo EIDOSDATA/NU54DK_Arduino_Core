@@ -24,9 +24,10 @@
 4. [M1 도구 환경과 보드 실기 기준선](<./04_검증 기록/01_M1_도구와_보드_기준선.md>)
 5. [M2 Zephyr module과 runtime 기준선](<./04_검증 기록/02_M2_Zephyr_Module과_Runtime_기준선.md>)
 6. [M3 GPIO·시간·Scheduler 기준선](<./04_검증 기록/03_M3_GPIO_시간과_Scheduler_기준선.md>)
-7. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
-8. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
-9. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
+7. [M4 ArduinoCore-API 계약 기준선](<./04_검증 기록/04_M4_ArduinoCore_API_계약_기준선.md>)
+8. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
+9. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
+10. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
 
 ## 문서 구성
 
@@ -61,6 +62,7 @@
 - [M1 도구 환경과 보드 실기 기준선](<./04_검증 기록/01_M1_도구와_보드_기준선.md>): 고정 도구 버전, C++ pristine build, CMSIS-DAP V2/pyOCD 기본 경로와 실제 LED 실행 증거
 - [M2 Zephyr module과 runtime 기준선](<./04_검증 기록/02_M2_Zephyr_Module과_Runtime_기준선.md>): Core module, C++ runtime 정책, negative build와 `setup()`/`loop()` 실기 증거
 - [M3 GPIO·시간·Scheduler 기준선](<./04_검증 기록/03_M3_GPIO_시간과_Scheduler_기준선.md>): GPIO·시간 API, loop 정책, sample/negative build와 Twister HIL 완료 증거
+- [M4 ArduinoCore-API 계약 기준선](<./04_검증 기록/04_M4_ArduinoCore_API_계약_기준선.md>): 고정 upstream snapshot, 라이선스 경계와 NU54DK target compile 증거
 
 ## 현재 진행 상태
 
@@ -70,7 +72,8 @@
 | M1 도구·보드 실기 기준선 | **완료** | read-only 보드 package로 C++·Blinky pristine build 통과, 기존 CMSIS-DAP V2/pyOCD 실기 검증 유지 |
 | M2 Zephyr module·Core 골격 | **완료** | clean module·runtime·Core 비활성·C++ 정책 build 통과, 기존 runtime HIL 유지 |
 | M3 west-native GPIO·시간 | **완료** | sample 3종 pristine build, negative와 NU54DK ztest/Twister HIL 9/9 통과 |
-| M4~M11 | 대기 | M3 완료; 이후 단계는 각 선행조건과 검증 결과에 따라 진행 |
+| M4 ArduinoCore-API 계약 | **완료** | 1.5.2 고정 snapshot·라이선스 고지·NU54DK API 계약 pristine build 통과 |
+| M5~M11 | 대기 | 이후 단계는 각 선행조건과 검증 결과에 따라 진행 |
 
 상세 상태는 [구현 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)을 단일 기준으로 관리한다.
 

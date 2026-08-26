@@ -2,12 +2,12 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M3 최소 Runtime/GPIO/시간 구현 — 제한적 NU54DK HIL 통과 |
+| 문서 상태 | M4 ArduinoCore-API 계약 고정 완료; 공통 구현·backend 연결 전 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 Zephyr | Zephyr 4.4.0 |
 | 기준 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
-| API 기준 후보 | ArduinoCore-API 고정 revision — M4에서 확정 |
+| API 기준 | ArduinoCore-API 1.5.2, `cd91833d90b4fe50e428021ba5051e2b7ceafc84` |
 | Core 자체 라이선스 목표 | MIT — third-party component에는 각각의 원 라이선스 적용 |
 
 ---
@@ -16,7 +16,8 @@
 
 이 문서는 NU54DK Arduino Core가 어떤 Arduino API를 어느 수준까지 제공할지 정의한다. API 이름이나 header가 존재한다는 이유만으로 `지원`이라고 선언하지 않는다. 실제 상태, v0.1 목표, 하드웨어 제약 및 검증 증거를 분리하여 관리한다.
 
-현재 저장소에는 M3 최소 Runtime, GPIO와 시간 backend가 존재한다. 그러나 source와 symbol이
+현재 저장소에는 M3 최소 Runtime, GPIO와 시간 backend 및 M4에서 고정한 ArduinoCore-API
+source snapshot이 존재한다. 그러나 source와 symbol이
 존재한다는 사실만으로 `지원`이라고 선언하지 않는다. 아래 표에서 M3 build/HIL 증거가
 있는 제한 범위만 `부분 지원` 또는 `의미 차이`로 표시하고, 구현됐어도 의미·문맥 검증이
 끝나지 않은 API는 `미구현` 상태를 유지한다. v0.1 목표 상태는 완료 보고가 아니다.
@@ -135,15 +136,15 @@ ISR, 동시 호출, input `digitalWrite()`, ownership와 interrupt는 아직 검
 
 | API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
-| `Arduino.h` include | P0 | 부분 지원 | 지원 | M3 Runtime/GPIO/시간 최소 계약만 제공; ArduinoCore-API 통합과 일반 library compile 미검증 |
+| `Arduino.h` include | P0 | 부분 지원 | 지원 | M3 Runtime/GPIO/시간 최소 계약 유지; M4 upstream header는 별도 TU target compile 통과, 생산 header 통합과 일반 library compile은 M6 전 미검증 |
 | `setup()` | P0 | 부분 지원 | 지원 | 전역 constructor 이후 한 번 실행하는 M2/M3 HIL 통과; Arduino CLI 회귀 미검증 |
 | `loop()` | P0 | 의미 차이 | 의미 차이 | Zephyr main thread에서 반복하고 기본적으로 반환 뒤 한 tick sleep; 네 scheduler 단계의 fairness/idle 정량 HIL 통과, Arduino CLI·PM 회귀 미검증 |
 | `yield()` | P0 | 의미 차이 | 의미 차이 | guarded `k_yield()`이며 같은 priority worker는 진행했지만 낮은 priority와 idle은 진행하지 못함; yield 불가능 문맥에서는 no-op |
 | `init()`/`initVariant()` 내부 hook | P0 | 부분 지원 | 부분 지원 | weak no-op `initVariant()`와 override 계약만 구현; 실제 Variant override 없음 |
 | `HIGH`, `LOW`, `INPUT`, `OUTPUT` | P0 | 부분 지원 | 지원 | LED output과 raw HIGH/LOW HIL 통과; 전체 핀/mode 조합 미검증 |
 | `INPUT_PULLUP`, `INPUT_PULLDOWN` | P0 | 부분 지원 | 지원 | 버튼 `INPUT_PULLUP` HIL 통과; pull-down과 전체 핀 조합 미검증 |
-| `LSBFIRST`, `MSBFIRST`, interrupt mode 상수 | P0/P1 | 미구현 | 지원 | `RISING`/`FALLING`/`CHANGE` 값만 존재; interrupt backend와 bit-order 상수 미구현 |
-| `byte`, `word`, `boolean` 등 호환 type | P0 | 미구현 | 지원 | fixed-width type와 overload compile test |
+| `LSBFIRST`, `MSBFIRST`, interrupt mode 상수 | P0/P1 | 미구현 | 지원 | M4 upstream 계약 header compile 통과; 생산 `Arduino.h` 노출과 interrupt backend는 미구현 |
+| `byte`, `word`, `boolean` 등 호환 type | P0 | 미구현 | 지원 | M4 upstream 계약 header와 기본 `pin_size_t` 8-bit ABI compile 통과; 생산 header 통합은 M6 범위 |
 | C++ static object initialization | P0 | 부분 지원 | 지원 | 시험용 전역 constructor 선행 실행 HIL 통과; `Serial`, `Wire`, `SPI` 객체는 미구현 |
 | C++ exception/RTTI | P1 | 미구현 | 의미 차이 | enable 구성의 compile/link만 확인; 실제 throw/RTTI/heap 의미는 미검증 |
 
@@ -190,7 +191,7 @@ ISR, 동시 호출, input `digitalWrite()`, ownership와 interrupt는 아직 검
 
 | API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
-| `String` | P0 | 미구현 | 지원 | ArduinoCore-API source와 upstream test 재사용 후보, heap failure 시험 |
+| `String` | P0 | 미구현 | 지원 | 1.5.2 header 생성자 계약 target compile 통과; source link, 동작과 heap failure 시험은 미실시 |
 | `Print` | P0 | 미구현 | 지원 | 정수/부동소수/진법/부분 write 동작 시험 |
 | `Printable` | P0 | 미구현 | 지원 | custom printable compile/runtime test |
 | `Stream` | P0 | 미구현 | 지원 | timeout, parse, find 및 partial input 시험 |
@@ -201,7 +202,7 @@ ISR, 동시 호출, input `digitalWrite()`, ownership와 interrupt는 아직 검
 
 | API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
-| `HardwareSerial` interface | P0 | 미구현 | 지원 | ArduinoCore-API signature와 Zephyr UART backend 연결 |
+| `HardwareSerial` interface | P0 | 미구현 | 지원 | 1.5.2의 `Stream` 상속·추상 interface target compile 통과; Zephyr UART backend는 M6 범위 |
 | 기본 `Serial` | P0 | 미구현 | 의미 차이 | `DT_CHOSEN(zephyr_console)`의 non-owning wrapper; device init/pinctrl/baud/lifetime은 Zephyr 소유 |
 | `begin()`/`end()` | P0 | 미구현 | 의미 차이 | Arduino buffer/lifecycle만 다루며 Zephyr console device를 재초기화하거나 baud/pinctrl을 소유하지 않음 |
 | `available()`/`read()`/`peek()` | P0 | 미구현 | 지원 | RX buffer overflow, timeout 및 동시 access 시험 |
@@ -288,7 +289,7 @@ Arduino library가 이식성을 유지하려면 Portable Arduino API만 사용�
 
 ---
 
-## 7. ArduinoCore-API 검토 계획
+## 7. ArduinoCore-API 고정 계약
 
 ### 7.1 역할
 
@@ -301,35 +302,44 @@ ArduinoCore-API는 hardware-independent Arduino API 정의와 `String`, `Print`,
 - pyOCD/J-Link upload
 - board package와 Kconfig/Devicetree profile
 
-### 7.2 revision 고정
+### 7.2 고정 revision과 배치
 
-M4에서 다음 정보를 dependency manifest에 기록한다.
+M4에서 다음 계약을 확정했다.
 
-- upstream URL
-- tag와 정확한 commit SHA
-- Arduino API version macro
-- 가져온 파일 목록 또는 dependency 배치 방식
-- local patch 유무와 patch 출처
-- upstream test revision과 실행 결과
-- license 원문 checksum
+- upstream: `https://github.com/arduino/ArduinoCore-API.git`
+- version/tag: `1.5.2`
+- commit: `cd91833d90b4fe50e428021ba5051e2b7ceafc84`
+- `ARDUINO_API_VERSION`: `10502`
+- 배치: `third_party/ArduinoCore-API`
+- 포함: 원본 LF의 `LICENSE`, `README.md`, `api/**` 48개 파일
+- local modification: 없음
+- provenance: `third_party/ArduinoCore-API.provenance.yml`
+- notice: `third_party/THIRD_PARTY_NOTICES.md`
 
 개발 중에도 `master` 또는 최신 branch를 직접 따라가지 않는다. upgrade는 별도 pull request에서 API 차이와 회귀 결과를 검토한다.
 
-### 7.3 통합 선택지
+### 7.3 선택한 통합 방식
 
-| 방식 | 장점 | 주의사항 |
-| --- | --- | --- |
-| Git submodule | 출처와 revision이 분명함 | release archive staging과 사용자 clone 절차 필요 |
-| west module/dependency | NCS workspace와 잘 결합 | Arduino Boards Manager package에 실제 source를 포함하는 별도 단계 필요 |
-| vendored source | 단일 package 배포가 단순함 | upstream 추적, local patch, 라이선스와 source 변경 고지를 엄격히 관리 |
+Boards Manager 단일 package의 설치·배포 단순성을 위해 **고정 vendored source**를 선택했다.
+별도 Git submodule 또는 west dependency로 만들지 않는다. 대신 다음 규칙을 적용한다.
 
-어떤 방식을 선택해도 공개 package에는 빌드에 필요한 실제 source와 해당 license/notice가 포함되어야 한다.
+- upstream 파일은 직접 수정하지 않는다.
+- vendor 경로 전체를 LF로 강제하고, 48개 파일 manifest checksum으로 무결성을 확인한다.
+- Zephyr에는 vendor root만 system include로 추가한다. `api` 자체를 include root로 추가해
+  `api/String.h`가 C library의 `string.h`를 가리는 Windows 경로 충돌을 만들지 않는다.
+- 생산 `Arduino.h`는 M4에서 일괄 교체하지 않는다. upstream `Common.h`와 기존 runtime의
+  linkage·type 계약은 M6에서 backend와 함께 통합한다.
+- snapshot 변경은 version, commit, tree, checksum, notice와 계약 시험을 한 변경에서
+  갱신하는 명시적 review로만 수행한다.
 
 ---
 
 ## 8. 라이선스 주의사항
 
-ArduinoCore-API upstream은 이 문서의 확인 시점에 GNU LGPL 2.1 계열 라이선스로 공개되어 있으며, 여러 source header는 `version 2.1 or later` 문구를 포함한다. 최종 적용 조건은 **M4에서 고정한 revision의 `LICENSE`와 개별 파일 header**를 기준으로 다시 확인한다.
+고정 snapshot의 주 라이선스는 `LGPL-2.1-or-later`이며 `api/Udp.h`와
+`api/deprecated-avr-comp/avr/pgmspace.h`는 MIT 고지를 포함한다. 따라서 component
+license 표현은 `LGPL-2.1-or-later AND MIT`로 기록한다. 원본 `LICENSE`와 각 파일 header를
+그대로 보존했으며 자세한 범위는 third-party notice와 provenance가 단일 원본이다.
 
 NU54DK Arduino Core의 자체 작성 code에 MIT를 적용하더라도 ArduinoCore-API source가 MIT로 바뀌는 것은 아니다.
 

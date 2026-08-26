@@ -16,6 +16,15 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   set(NUCODE_ARDUINO_VARIANT_ROOT
     "${NUCODE_ARDUINO_CORE_ROOT}/variants/nu54dk"
   )
+  set(NUCODE_ARDUINO_API_ROOT
+    "${NUCODE_ARDUINO_CORE_ROOT}/third_party/ArduinoCore-API"
+  )
+
+  if(NOT EXISTS "${NUCODE_ARDUINO_API_ROOT}/api/ArduinoAPI.h")
+    message(FATAL_ERROR
+      "Vendored ArduinoCore-API 1.5.2 is missing; this Core checkout or package is incomplete"
+    )
+  endif()
 
   set(NUCODE_ARDUINO_CORE_SOURCES
     "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/main.cpp"
@@ -41,6 +50,9 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   zephyr_include_directories(
     "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino"
     "${NUCODE_ARDUINO_VARIANT_ROOT}"
+  )
+  zephyr_system_include_directories(
+    "${NUCODE_ARDUINO_API_ROOT}"
   )
 
   find_package(Git QUIET)
@@ -137,6 +149,8 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   file(GLOB_RECURSE NUCODE_CORE_BUILD_INPUTS
     LIST_DIRECTORIES FALSE
     "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/*"
+    "${NUCODE_ARDUINO_CORE_ROOT}/third_party/ArduinoCore-API/*"
+    "${NUCODE_ARDUINO_CORE_ROOT}/third_party/ArduinoCore-API.provenance.yml"
     "${NUCODE_ARDUINO_CORE_ROOT}/variants/nu54dk/*"
     "${NUCODE_ARDUINO_CORE_ROOT}/zephyr/*"
   )
@@ -159,7 +173,7 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
 
   nucode_git_revision(
     "${NUCODE_ARDUINO_CORE_ROOT}" NUCODE_CORE_REVISION TRUE
-    cores variants zephyr
+    cores third_party variants zephyr
   )
   nucode_git_revision(
     "${NUCODE_BOARD_PACKAGE_ROOT}" NUCODE_BOARD_REVISION TRUE
