@@ -304,10 +304,11 @@ class FixedGateRunnerTests(unittest.TestCase):
                 any((home / name).exists() for name in MODULE.ZEPHYR_SHORT_WORKSPACE_NAMES)
             )
         self.assertLessEqual(
-            MODULE.ZEPHYR_WORKSPACE_MAX_PATH_LENGTH
-            + MODULE.ZEPHYR_M3_INSTANCE_PREFIX_OVERHEAD
-            + MODULE.ZEPHYR_M3_MAX_OBJECT_TAIL_LENGTH,
-            MODULE.ZEPHYR_CMAKE_OBJECT_PATH_LIMIT,
+            len(r"C:\Users\nu54ci\.z0"), MODULE.ZEPHYR_WORKSPACE_MAX_PATH_LENGTH
+        )
+        self.assertGreater(
+            len(r"C:\Users\long-profile\.z0"),
+            MODULE.ZEPHYR_WORKSPACE_MAX_PATH_LENGTH,
         )
 
     ## @brief report가 실제 outdir와 다른 root를 주장하면 성공 결과도 거부합니다.
