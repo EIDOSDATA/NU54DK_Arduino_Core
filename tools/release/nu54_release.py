@@ -714,7 +714,6 @@ def fixed_gate_contract(
                         "config",
                         "error",
                         "parallel",
-                        "incremental",
                         "m6",
                         "m7",
                         "m8",

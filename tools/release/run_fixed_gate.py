@@ -35,13 +35,14 @@ METADATA_FILES = (
     "THIRD_PARTY_NOTICES.md",
     "CHECKSUMS.sha256",
 )
+## @brief M11에서 실행할 Arduino CLI 정식 smoke 시나리오입니다.
+## @note `incremental`은 `m9`와 같은 전체 M9 회귀를 가리키는 이전 호환 별칭이므로 중복 실행하지 않습니다.
 SMOKE_TESTS = (
     "blink",
     "library",
     "config",
     "error",
     "parallel",
-    "incremental",
     "m6",
     "m7",
     "m8",

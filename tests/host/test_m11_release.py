@@ -983,7 +983,7 @@ class M11ReleaseTests(unittest.TestCase):
         )
         self.assertEqual(
             arduino["scope"]["scenarios"],
-            ["blink", "library", "config", "error", "parallel", "incremental", "m6", "m7", "m8", "m9", "m11"],
+            ["blink", "library", "config", "error", "parallel", "m6", "m7", "m8", "m9", "m11"],
         )
         self.assertEqual(zephyr["scope"]["test_root"], "tests/zephyr")
         self.assertEqual(hil["scope"]["upload_attempts"], 1)

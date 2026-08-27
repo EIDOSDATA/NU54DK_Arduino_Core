@@ -29,6 +29,24 @@ class FixedGateRunnerTests(unittest.TestCase):
     CORE_REVISION = "1" * 40
     BOARD_REVISION = "2" * 40
 
+    ## @brief M11 smoke 목록이 M9 호환 별칭을 중복 실행하지 않는지 검증합니다.
+    def test_smoke_scope_uses_only_canonical_m9_name(self) -> None:
+        self.assertEqual(
+            MODULE.SMOKE_TESTS,
+            (
+                "blink",
+                "library",
+                "config",
+                "error",
+                "parallel",
+                "m6",
+                "m7",
+                "m8",
+                "m9",
+                "m11",
+            ),
+        )
+
     ## @brief 최소 RC package tree와 외부 expected identity를 생성합니다.
     def make_platform(self, parent: Path) -> tuple[Path, dict[str, str]]:
         root = parent / f"nucode-nu54dk-zephyr-{MODULE.RELEASE_VERSION}"
