@@ -7,6 +7,7 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
 from types import SimpleNamespace
 import tempfile
 import time
@@ -489,6 +490,11 @@ class M11RcHilTests(unittest.TestCase):
                     },
                 ),
             ),
+            mock.patch.object(
+                MODULE,
+                "committed_file_sha256",
+                return_value="d" * 64,
+            ),
         ):
             result = MODULE.main(
                 [
@@ -525,13 +531,57 @@ class M11RcHilTests(unittest.TestCase):
             evidence["sketch"],
             {
                 "repository_relative_path": MODULE.M8_SKETCH_RELATIVE_PATH,
-                "sha256": MODULE.committed_file_sha256(
-                    REPO_ROOT, MODULE.M8_SKETCH_RELATIVE_PATH
-                ),
+                "sha256": "d" * 64,
             },
         )
         self.assertNotIn("serial_port", evidence)
         self.assertNotIn("probe_id", evidence)
+
+    def test_committed_file_hash_ignores_worktree_crlf_conversion(self) -> None:
+        """! @brief LF Git blob을 CRLF 작업 파일과 독립적으로 구분합니다. """
+
+        repository = self.root / "line-ending-repository"
+        repository.mkdir()
+        commands = (
+            ("git", "init", "--quiet"),
+            ("git", "config", "user.name", "NU54 Test"),
+            ("git", "config", "user.email", "nu54-test@example.invalid"),
+            ("git", "config", "core.autocrlf", "false"),
+        )
+        for command in commands:
+            subprocess.run(
+                command,
+                cwd=repository,
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+
+        relative_path = "fixture/m8_upload.ino"
+        fixture = repository / Path(relative_path)
+        fixture.parent.mkdir()
+        committed_bytes = b"void setup() {\n}\nvoid loop() {\n}\n"
+        fixture.write_bytes(committed_bytes)
+        for command in (
+            ("git", "add", "--", relative_path),
+            ("git", "commit", "--quiet", "-m", "fixture"),
+        ):
+            subprocess.run(
+                command,
+                cwd=repository,
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+
+        fixture.write_bytes(committed_bytes.replace(b"\n", b"\r\n"))
+        expected = hashlib.sha256(committed_bytes).hexdigest()
+        self.assertNotEqual(MODULE.file_sha256(fixture), expected)
+        self.assertEqual(
+            MODULE.committed_file_sha256(repository, relative_path), expected
+        )
+        with self.assertRaisesRegex(MODULE.UploadHilFailure, "exact checkout"):
+            MODULE.committed_file_sha256(repository, "fixture/missing.ino")
 
     def test_command_output_is_bounded_and_keeps_upload_pass_tail(self) -> None:
         """! @brief 큰 출력은 disk에 spool하고 마지막 upload PASS 표식은 보존합니다. """
