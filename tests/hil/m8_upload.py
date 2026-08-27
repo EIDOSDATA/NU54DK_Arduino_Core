@@ -28,6 +28,8 @@ if hasattr(sys.stderr, "reconfigure"):
 
 
 FQBN = "nucode:zephyr:nu54dk"
+## @brief Build Adapter가 기록하는 artifact manifest의 현재 schema입니다.
+ARTIFACT_MANIFEST_SCHEMA_VERSION = 2
 READY_TOKEN = b"NUCODE_M8_UPLOAD_READY"
 DAPLINK_VID = 0x0D28
 DAPLINK_PID = 0x0204
@@ -547,7 +549,7 @@ def validate_build_manifest(
     context = manifest.get("context")
     artifacts = manifest.get("artifacts")
     if (
-        manifest.get("schema_version") != 1
+        manifest.get("schema_version") != ARTIFACT_MANIFEST_SCHEMA_VERSION
         or manifest.get("fqbn") != expected_fqbn
         or manifest.get("sysbuild") is not False
         or not isinstance(context, dict)

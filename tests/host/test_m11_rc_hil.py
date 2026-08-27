@@ -174,7 +174,7 @@ class M11RcHilTests(unittest.TestCase):
         manifest_path.write_text(
             json.dumps(
                 {
-                    "schema_version": 1,
+                    "schema_version": MODULE.ARTIFACT_MANIFEST_SCHEMA_VERSION,
                     "fqbn": f"{MODULE.FQBN}:upload_probe=pyocd",
                     "sysbuild": False,
                     "context": {
@@ -310,6 +310,13 @@ class M11RcHilTests(unittest.TestCase):
         manifest_path, hex_path = self.make_build_manifest(build, staged, sketch)
         MODULE.validate_build_manifest(manifest_path, build, staged, sketch, "pyocd")
 
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["schema_version"] = 1
+        manifest_path.write_text(json.dumps(manifest) + "\n", encoding="utf-8")
+        with self.assertRaisesRegex(MODULE.UploadHilFailure, "기본 계약"):
+            MODULE.validate_build_manifest(manifest_path, build, staged, sketch, "pyocd")
+
+        manifest_path, hex_path = self.make_build_manifest(build, staged, sketch)
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         outside = self.root / "outside.hex"
         outside.write_bytes(hex_path.read_bytes())
