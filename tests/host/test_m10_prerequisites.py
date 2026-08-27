@@ -375,6 +375,35 @@ class M10PrerequisiteContractTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, f"{filename}: {result.stdout}")
 
+    @unittest.skipUnless(os.name == "nt", "Windows PowerShell 5.1 계약 시험입니다.")
+    def test_installer_uses_powershell_51_compatible_log_append(self) -> None:
+        """! @brief PS 5.1에서 허용되지 않는 Tee 매개 변수 조합을 차단합니다. """
+
+        installer = (
+            REPOSITORY_ROOT / "tools" / "nu54-prerequisites" / "install-nordic.ps1"
+        ).read_text(encoding="utf-8-sig")
+        self.assertIn(
+            "Add-Content -LiteralPath $script:logPath -Encoding UTF8 -Value $outputLine",
+            installer,
+        )
+        self.assertNotIn("Tee-Object", installer)
+
+        log_path = self.root / "powershell-51-tee.log"
+        escaped_log = str(log_path).replace("'", "''")
+        command = (
+            f"'probe' | ForEach-Object {{ Add-Content -LiteralPath '{escaped_log}' "
+            "-Encoding UTF8 -Value ([string]$_) }"
+        )
+        result = subprocess.run(
+            ["powershell.exe", "-NoProfile", "-NonInteractive", "-Command", command],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertEqual(log_path.read_text(encoding="utf-8-sig").strip(), "probe")
+
     def test_post_install_propagates_powershell_exit_code(self) -> None:
         """! @brief Arduino hook가 설치 실패를 성공으로 숨기지 않습니다. """
 

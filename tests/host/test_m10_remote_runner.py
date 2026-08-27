@@ -221,13 +221,13 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
         ordered_steps = (
             "preflight",
             "update_index",
-            "install_0_0_90",
-            "board_details_0_0_90",
+            "install_initial",
+            "board_details_initial",
             "blink_cold_compile",
             "blink_warm_compile",
             "probe_and_upload",
-            "upgrade_0_0_91",
-            "downgrade_0_0_90",
+            "upgrade_latest",
+            "downgrade_initial",
             "uninstall_preserves_ncs",
             "reinstall_latest",
         )
@@ -258,14 +258,44 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
         """! @brief preview version과 post-install 실행을 암묵적으로 선택하지 않습니다. """
 
         for marker in (
-            "0.0.90",
-            "0.0.91",
+            "0.0.92",
+            "0.0.93",
             "--run-post-install",
+            "post-install-direct-",
+            "@('/d', '/c', 'call', $postInstall)",
             "core', 'uninstall', 'nucode:zephyr",
             "Shared NCS was removed by core uninstall",
             "Shared NCS changed during core uninstall",
         ):
             self.assertIn(marker, self.target_text)
+
+    def test_failed_post_install_can_be_retried_for_an_installed_core(self) -> None:
+        """! @brief CLI가 설치됨으로 남긴 core도 post-install을 직접 재실행합니다. """
+
+        fixture = "nu54-post-install-" + uuid.uuid4().hex
+        body = (
+            f"$root=Join-Path ([IO.Path]::GetTempPath()) '{fixture}';"
+            "New-Item -ItemType Directory -Path $root -Force|Out-Null;"
+            "Set-Content -LiteralPath (Join-Path $root 'post_install.bat') -Value '@exit /b 0';"
+            "$script:InstallTimeoutSeconds=30;$script:directCalls=0;"
+            "function Invoke-Arduino{param($Label,$Arguments,$TimeoutSeconds);return $null};"
+            "function Assert-CoreVersion{param($Version)};"
+            "function Get-PlatformRoot{param($Version);return $root};"
+            "function Invoke-NativeCommand{param($FilePath,$Arguments,$Label,$TimeoutSeconds);"
+            "$script:directCalls++;return [pscustomobject]@{exit_code=0}};"
+            "function Invoke-NordicVerification{param($Version);"
+            "return [pscustomobject]@{pins_sha256='fixture'}};"
+            "function Get-InstalledReleaseIdentity{param($Version);"
+            "return [pscustomobject]@{prerequisites_pins_sha256='fixture'}};"
+            "try{$result=Install-CoreVersion -Version '0.0.92';"
+            "Write-Output ('DIRECT_CALLS='+$script:directCalls);"
+            "Write-Output ('DIRECT_RESULT='+$result.post_install_direct)}"
+            "finally{Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction SilentlyContinue}"
+        )
+        completed = self.invoke_target_functions(("Install-CoreVersion",), body)
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        self.assertIn("DIRECT_CALLS=1", completed.stdout)
+        self.assertIn("DIRECT_RESULT=True", completed.stdout)
 
     def test_probe_identity_and_credentials_are_redacted(self) -> None:
         """! @brief probe UID와 자격 증명 형태를 두 실행기에서 제거합니다. """

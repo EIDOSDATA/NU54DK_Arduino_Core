@@ -66,8 +66,11 @@ function Invoke-NativeChecked {
 
     $global:LASTEXITCODE = 0
     & $Executable @Arguments 2>&1 |
-        Tee-Object -LiteralPath $script:logPath -Append |
-        ForEach-Object { Write-Host $_ }
+        ForEach-Object {
+            $outputLine = [string]$_
+            Add-Content -LiteralPath $script:logPath -Encoding UTF8 -Value $outputLine
+            Write-Host $outputLine
+        }
     $exitCode = $global:LASTEXITCODE
     if ($exitCode -ne 0) {
         throw "명령이 종료 code ${exitCode}로 실패했습니다: $Executable $($Arguments -join ' ')"

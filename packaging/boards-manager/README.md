@@ -4,13 +4,15 @@
 저장소의 `board_package/NU54DK_Zephyr_DTS` gitlink가 가리키는 commit도 함께 펼쳐서
 하나의 Arduino platform ZIP으로 만든다.
 
-지원하는 M10 preview 버전은 `0.0.90`, `0.0.91`이다.
+현재 M10 clean Windows 검증 쌍은 `0.0.92`, `0.0.93`이다. `0.0.90`, `0.0.91`은
+Windows PowerShell 5.1 post-install 호환성 결함이 확인된 폐기 preview이며 공식 index에서
+제외한다.
 
 ```powershell
 python .\packaging\boards-manager\nu54_package.py build `
   --repo-root . `
   --output-dir .\build\boards-manager `
-  --version 0.0.90 `
+  --version 0.0.92 `
   --commit HEAD `
   --update-index
 ```
@@ -20,7 +22,7 @@ python .\packaging\boards-manager\nu54_package.py build `
 ```powershell
 python .\packaging\boards-manager\nu54_package.py index `
   --output-dir .\build\boards-manager `
-  --versions 0.0.90 0.0.91
+  --versions 0.0.92 0.0.93
 ```
 
 검증은 ZIP 경로 안전성, 단일 top-level 디렉터리, timestamp·mode·정렬, manifest 계약,
@@ -29,8 +31,8 @@ python .\packaging\boards-manager\nu54_package.py index `
 
 ```powershell
 python .\packaging\boards-manager\nu54_package.py validate `
-  --archive .\build\boards-manager\nucode-nu54dk-zephyr-0.0.90.zip `
-  --expected-version 0.0.90
+  --archive .\build\boards-manager\nucode-nu54dk-zephyr-0.0.92.zip `
+  --expected-version 0.0.92
 
 python .\packaging\boards-manager\nu54_package.py validate-index `
   --index .\build\boards-manager\package_nucode_nu54dk_preview_index.json `

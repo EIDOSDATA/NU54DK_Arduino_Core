@@ -18,7 +18,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any, Iterable
 
 
-SUPPORTED_VERSIONS = ("0.0.90", "0.0.91")
+SUPPORTED_VERSIONS = ("0.0.90", "0.0.91", "0.0.92", "0.0.93")
 VENDOR = "nucode"
 ARCHITECTURE = "zephyr"
 MAINTAINER = "NUCODE / Quantum"

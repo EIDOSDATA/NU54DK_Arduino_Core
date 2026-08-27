@@ -718,12 +718,23 @@ function Install-CoreVersion {
         ) `
         -TimeoutSeconds $script:InstallTimeoutSeconds | Out-Null
     Assert-CoreVersion -Version $Version
+    $platformRoot = Get-PlatformRoot -Version $Version
+    $postInstall = Join-Path $platformRoot 'post_install.bat'
+    if (-not (Test-Path -LiteralPath $postInstall -PathType Leaf)) {
+        throw "Installed platform post_install.bat is missing for version $Version."
+    }
+    Invoke-NativeCommand `
+        -FilePath (Join-Path $env:SystemRoot 'System32\cmd.exe') `
+        -Arguments @('/d', '/c', 'call', $postInstall) `
+        -Label ("post-install-direct-{0}" -f $Version) `
+        -TimeoutSeconds $script:InstallTimeoutSeconds | Out-Null
     $nordic = Invoke-NordicVerification -Version $Version
     $release = Get-InstalledReleaseIdentity -Version $Version
     if ($release.prerequisites_pins_sha256 -ne $nordic.pins_sha256) {
         throw "Installed release and Nordic verifier pins differ for version $Version."
     }
     return [pscustomobject][ordered]@{
+        post_install_direct = $true
         nordic = $nordic
         release = $release
     }
@@ -793,8 +804,8 @@ $script:Fqbn = [string](Get-ConfigValue -Config $config -Name 'fqbn' -DefaultVal
 if ($script:Fqbn -ne 'nucode:zephyr:nu54dk') {
     throw 'Unexpected FQBN.'
 }
-$script:InitialVersion = [string](Get-ConfigValue -Config $config -Name 'initial_version' -DefaultValue '0.0.90')
-$script:LatestVersion = [string](Get-ConfigValue -Config $config -Name 'latest_version' -DefaultValue '0.0.91')
+$script:InitialVersion = [string](Get-ConfigValue -Config $config -Name 'initial_version' -DefaultValue '0.0.92')
+$script:LatestVersion = [string](Get-ConfigValue -Config $config -Name 'latest_version' -DefaultValue '0.0.93')
 foreach ($version in @($script:InitialVersion, $script:LatestVersion)) {
     if ($version -notmatch '^\d+\.\d+\.\d+$') {
         throw "Invalid core version: $version"
@@ -905,13 +916,13 @@ $script:StepState = @{}
 $script:StepOrder = @(
     'preflight',
     'update_index',
-    'install_0_0_90',
-    'board_details_0_0_90',
+    'install_initial',
+    'board_details_initial',
     'blink_cold_compile',
     'blink_warm_compile',
     'probe_and_upload',
-    'upgrade_0_0_91',
-    'downgrade_0_0_90',
+    'upgrade_latest',
+    'downgrade_initial',
     'uninstall_preserves_ncs',
     'reinstall_latest'
 )
@@ -1027,11 +1038,11 @@ try {
         }
     } | Out-Null
 
-    Invoke-Step -Name 'install_0_0_90' -Action {
+    Invoke-Step -Name 'install_initial' -Action {
         return Install-CoreVersion -Version $script:InitialVersion
     } | Out-Null
 
-    Invoke-Step -Name 'board_details_0_0_90' -Action {
+    Invoke-Step -Name 'board_details_initial' -Action {
         $details = Invoke-Arduino `
             -Label 'board-details-initial' `
             -Arguments @('board', 'details', '--fqbn', $script:Fqbn, '--json') `
@@ -1117,10 +1128,10 @@ try {
         }
     } | Out-Null
 
-    Invoke-Step -Name 'upgrade_0_0_91' -Action {
+    Invoke-Step -Name 'upgrade_latest' -Action {
         return Install-CoreVersion -Version $script:LatestVersion
     } | Out-Null
-    Invoke-Step -Name 'downgrade_0_0_90' -Action {
+    Invoke-Step -Name 'downgrade_initial' -Action {
         return Install-CoreVersion -Version $script:InitialVersion
     } | Out-Null
 

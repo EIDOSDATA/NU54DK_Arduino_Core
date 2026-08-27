@@ -6,7 +6,7 @@ NU54DK Boards Manager preview archive와 index를 생성합니다.
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet('0.0.90', '0.0.91')]
+    [ValidateSet('0.0.90', '0.0.91', '0.0.92', '0.0.93')]
     [string]$Version,
 
     [string]$Commit = 'HEAD',

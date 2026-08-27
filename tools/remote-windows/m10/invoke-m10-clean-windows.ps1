@@ -18,9 +18,9 @@ param(
     [string]$KnownHostsFile = "$env:USERPROFILE\.ssh\known_hosts",
     [string]$IndexUrl = 'https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_preview_index.json',
     [ValidatePattern('^\d+\.\d+\.\d+$')]
-    [string]$InitialVersion = '0.0.90',
+    [string]$InitialVersion = '0.0.92',
     [ValidatePattern('^\d+\.\d+\.\d+$')]
-    [string]$LatestVersion = '0.0.91',
+    [string]$LatestVersion = '0.0.93',
     [string]$Fqbn = 'nucode:zephyr:nu54dk',
     [string]$NcsVersion = 'v3.4.0',
     [ValidatePattern('^[0-9a-f]{10}$')]

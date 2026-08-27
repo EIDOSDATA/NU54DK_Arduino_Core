@@ -194,15 +194,16 @@ class M10PackagingTests(unittest.TestCase):
             PACKAGE.validate_archive(tampered, expected_version="0.0.90")
 
     def test_09_index_contains_both_versions_in_latest_first_order(self) -> None:
-        PACKAGE.build_package(REPO_ROOT, self.output, "0.0.91", self.commit)
-        index_path = PACKAGE.generate_index(self.output, ["0.0.90", "0.0.91"])
+        PACKAGE.build_package(REPO_ROOT, self.output, "0.0.92", self.commit)
+        PACKAGE.build_package(REPO_ROOT, self.output, "0.0.93", self.commit)
+        index_path = PACKAGE.generate_index(self.output, ["0.0.92", "0.0.93"])
         document = PACKAGE.validate_index(index_path, artifact_dir=self.output)
         package = document["packages"][0]
         self.assertEqual(package["name"], "nucode")
         self.assertEqual(package["maintainer"], "NUCODE / Quantum")
         self.assertEqual(package["email"], "EIDOSDATA@users.noreply.github.com")
         self.assertEqual(
-            [platform["version"] for platform in package["platforms"]], ["0.0.91", "0.0.90"]
+            [platform["version"] for platform in package["platforms"]], ["0.0.93", "0.0.92"]
         )
         for platform in package["platforms"]:
             self.assertTrue(platform["url"].startswith(PACKAGE.REPOSITORY_URL + "/releases/download/"))
@@ -218,6 +219,7 @@ class M10PackagingTests(unittest.TestCase):
             PACKAGE.validate_index(broken, artifact_dir=self.output)
 
     def test_11_supported_versions_are_fail_closed(self) -> None:
+        self.assertEqual(PACKAGE.SUPPORTED_VERSIONS[-2:], ("0.0.92", "0.0.93"))
         with self.assertRaises(PACKAGE.PackageError):
             PACKAGE.build_package(REPO_ROOT, self.output, "0.1.0", self.commit)
 
