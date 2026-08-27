@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | 설계·구현 동기화 — M6 조건부 완료 기준 |
+| 문서 상태 | 설계·구현 동기화 — M6 완료 기준 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 RTOS | Zephyr v4.4.0 |
@@ -293,9 +293,9 @@ output latch를 그대로 돌려주는 방식은 물리 단락을 숨길 수 있
 
 | Arduino mode | Zephyr flag | M6 상태 |
 | --- | --- | --- |
-| `RISING` | `GPIO_INT_EDGE_RISING` | 구현, target GPIO emulator PASS |
-| `FALLING` | `GPIO_INT_EDGE_FALLING` | 구현, target GPIO emulator PASS |
-| `CHANGE` | `GPIO_INT_EDGE_BOTH` | 구현, target GPIO emulator PASS |
+| `RISING` | `GPIO_INT_EDGE_RISING` | 구현, target GPIO emulator와 실제 P1.13 해제 PASS |
+| `FALLING` | `GPIO_INT_EDGE_FALLING` | 구현, target GPIO emulator와 실제 P1.13 누름 PASS |
+| `CHANGE` | `GPIO_INT_EDGE_BOTH` | 구현, target GPIO emulator와 실제 P1.13 양 edge PASS |
 | `LOW` | 해당 없음 | 미구현, 요청 거부 |
 | `HIGH` | 해당 없음 | 미구현, 요청 거부 |
 
@@ -333,9 +333,9 @@ slot spinlock을 사용하고, detach는 in-flight callback이 끝난 뒤 slot�
 ztest에서 재등록, parameter callback, detach 후 무호출, invalid pin/mode/null callback과
 `pinMode()` auto-detach를 통과했다.
 
-실제 P1.13 active-low 버튼의 ISR edge는 사용자가 부재하여 아직 누르며 확인하지 못했다.
-누름은 raw `FALLING`, 해제는 raw `RISING`으로 확인할 예정이다. 외부 계측 장비는 이
-잔여 확인의 필수 조건이 아니다.
+실제 P1.13 active-low 버튼의 ISR edge도 단계형 HIL로 확인했다. 누름 raw `FALLING` 1회,
+해제 raw `RISING` 1회와 `CHANGE` 누름·해제 누적 1·2회를 DAPLink sequence 25/COM10에서
+회수했다. 외부 계측 장비는 사용하지 않았다.
 
 ---
 
@@ -552,7 +552,7 @@ Zephyr 기본 의존성은 다음을 사용한다.
 - [x] callback은 Zephyr GPIO ISR에서 직접 실행된다.
 - [x] in-flight count와 slot 정리로 callback 실행 중 detach의 use-after-free를 방지한다.
 - [x] 지원하지 않는 level trigger와 잘못된 mode가 조용히 다른 mode로 바뀌지 않는다.
-- [ ] 실제 P1.13 active-low 버튼에서 누름 FALLING·해제 RISING·양 edge CHANGE를 수동 확인한다.
+- [x] 실제 P1.13 active-low 버튼에서 누름 FALLING·해제 RISING·양 edge CHANGE를 수동 확인한다.
 
 ### 13.3 시간
 
@@ -600,9 +600,9 @@ Zephyr 기본 의존성은 다음을 사용한다.
 
 M3에서는 Blink와 pull-up/Active Low 버튼에 따른 LED 전환을 육안 확인하고
 `runtime_timing` trace와 NU54DK Twister 9/9를 회수했다. M6는 GPIO emulator 기반 edge
-interrupt 2/2와 Arduino CLI InterruptButton build를 통과했다. GPIO RAM trace, 외부
-GPIO/time 계측과 저전력 profile은 사용자 결정으로 필수 증거에서 제외한다. 실제 P1.13
-버튼 ISR edge 수동 확인만 M6 조건으로 남긴다.
+interrupt 2/2와 Arduino CLI InterruptButton build를 통과했고, 실제 P1.13 버튼의
+FALLING/RISING/CHANGE도 sequence 25 물리 HIL로 확인했다. GPIO RAM trace, 외부 GPIO/time
+계측과 저전력 profile은 사용자 결정으로 필수 증거에서 제외한다.
 
 ### 14.4 Negative test
 

@@ -24,9 +24,9 @@ NU54DK에서 Loader 없이 동작하는 Native Full Zephyr 기반 Arduino Core�
 - M4 완료, ArduinoCore-API 1.5.2를 정확한 commit과 LF 원본으로 vendor하고 NU54DK target API 계약 build 통과
 - M5 완료, `nucode:zephyr:nu54dk` FQBN에서 `.ino`와 Arduino library를 Loader 없는 Full Zephyr ELF·HEX·BIN·map으로 빌드
 - M5 staged-copy 자동 회귀 6/6 통과: Blink, compile error, library dependency, config/overlay, parallel 격리, incremental build
-- M6 조건부 완료, ArduinoCore-API `Common`·`String`·`Print`·`Stream`, non-owning UART20 `Serial`과 GPIO edge interrupt 구현
+- M6 완료, ArduinoCore-API `Common`·`String`·`Print`·`Stream`, non-owning UART20 `Serial`과 GPIO edge interrupt 구현
 - M6 NU54DK target ztest 10/10과 COM10 실제 Serial READY·고유 echo HIL 통과
-- M6의 유일한 잔여 조건은 실제 P1.13 active-low 버튼을 눌렀다 놓으며 `FALLING`·`RISING`·`CHANGE` ISR edge를 확인하는 것
+- M6 실제 P1.13 active-low 버튼 HIL 통과: `FALLING`·`RISING` 각각 1회, `CHANGE` 누름·해제 누적 1·2회
 - M7 조건부 완료, NU54DK Twister target 11/11·Arduino CLI 4/4·ADC/PWM/SPI driver HIL 통과
 - M7 통합 staged Builder 회귀 8/8 named group 통과: blink, library, config, error, parallel, incremental, m6, m7
 - M7 잔여 제한은 고정 0x6B IMU의 RX 오류로 미확정인 `WHO_AM_I`와 fixture가 없는 물리 SPI data 경로

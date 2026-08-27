@@ -2,10 +2,10 @@
 
 | 항목 | 값 |
 | --- | --- |
-| 상태 | **조건부 완료** |
+| 상태 | **완료** |
 | 검증일 | 2026-08-27 |
 | 작성자 | Quantum / NUCODE |
-| Core 기준 commit | `8cabfc3` + 본 M6 변경 |
+| Core 기준 commit | M6 구현 `dd405ae6a041`, 물리 HIL 검증 Core `3e0fa7ed29db` |
 | 보드 package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` — 읽기 전용 |
 | NCS / Zephyr | NCS v3.4.0 / Zephyr 4.4.0 |
 | ArduinoCore-API | 1.5.2, `cd91833d90b4fe50e428021ba5051e2b7ceafc84` |
@@ -29,18 +29,19 @@ M6는 M5의 Arduino CLI Full Zephyr 빌드 경로 위에 ArduinoCore-API 공통 
   target ztest를 통과했다.
 - 온보드 DAPLink와 COM10을 이용해 실제 `Serial` READY/echo를 자동 검증했다.
 
-M6의 상태는 **조건부 완료**다. 유일하게 남은 조건은 사용자가 자리를 비운 동안 자동화할
-수 없었던 실제 P1.13 active-low 버튼의 GPIO ISR edge 확인이다. 버튼을 직접 눌렀다 놓으며
-다음을 확인하면 조건이 해소된다.
+M6의 상태는 **완료**다. 자동 시험에 더해 실제 P1.13 active-low 버튼을 직접 눌렀다
+놓으며 다음 GPIO ISR edge를 확인했다.
 
-- 버튼 누름: raw `FALLING`
-- 버튼 해제: raw `RISING`
-- 누름과 해제 모두: raw `CHANGE`
+- 버튼 누름: raw `FALLING`, callback count 1
+- 버튼 해제: raw `RISING`, callback count 1
+- `CHANGE` 누름: callback 누적 count 1
+- `CHANGE` 해제: callback 누적 count 2
 
-이 확인에는 로직 애널라이저나 오실로스코프가 필요하지 않다. `InterruptButton` 예제의
-callback 횟수 또는 버튼에 따른 LED 반응을 사람이 관찰하면 된다. GPIO emulator를 사용한
-target ztest에서는 세 edge와 detach 의미가 이미 통과했으며, 남은 조건은 실제 보드 배선과
-GPIO driver 경로의 물리 확인만을 뜻한다.
+단계형 HIL firmware는 ISR에서 count만 기록하고 thread 문맥에서 35 ms 안정화 후 결과를
+COM10 token으로 출력했다. 이 안정화는 기계식 접점 bounce를 물리 동작 하나로 판정하기
+위한 시험 계층이며 Core의 raw edge 의미를 변경하지 않는다. 로직 애널라이저나
+오실로스코프는 사용하지 않았다. GPIO emulator target ztest의 edge·detach 의미와 실제
+보드 배선·GPIO driver 경로를 모두 확인했으므로 남은 M6 완료 조건은 없다.
 
 ---
 
@@ -140,7 +141,7 @@ NU54DK의 `PIN_BUTTON0`은 P1.13 active-low다. 따라서 Arduino edge 이름을
 | `examples/04.Communication/SerialEcho/SerialEcho.ino` | Arduino CLI용 READY/line echo 예제 |
 | `examples/02.Digital/InterruptButton/InterruptButton.ino` | ISR에서는 flag만 기록하고 loop에서 LED를 갱신하는 예제 |
 | `samples/zephyr/serial_echo/` | 실제 DAP UART Serial HIL image |
-| `samples/zephyr/interrupt_button/` | 실제 P1.13 버튼 수동 edge 확인 image |
+| `samples/zephyr/interrupt_button/` | 실제 P1.13 `CHANGE` interrupt와 LED 반응 예제 |
 | `tests/hil/m6_serial_echo.py` | DAPLink UID·MSD·COM 탐색, flash, READY와 고유 payload echo 자동 판정 |
 | `tests/zephyr/m6_core_api/` | Common/String/Print/Stream, UART emulator와 GPIO emulator target ztest |
 | `tests/zephyr/m6_config_contract/` | UART callback 소유권 충돌 expected-failure |
@@ -226,9 +227,43 @@ M6 변경을 적용한 상태에서 기존 자동 회귀를 다시 실행했다.
 따라서 M6의 공통 API·Serial·interrupt 추가가 기존 GPIO·시간·scheduler 의미 또는
 Arduino CLI Full Zephyr 빌드 격리를 깨뜨리지 않았음을 확인했다.
 
+### 4.6 실제 P1.13 버튼 edge HIL
+
+Core나 읽기 전용 보드 package를 수정하지 않고 Git에서 제외되는 build workspace에 단계형
+HIL app을 구성했다. 버튼은 P1.13 active-low, 상태 표시 LED는 보드 DTS의 P2.9
+active-high `led0`을 그대로 사용했다. image는 검증 당시 clean Core revision과 고정 보드
+package를 입력으로 pristine 283/283 build한 뒤 DAPLink MSD로 기록했다.
+
+| 항목 | 실행 결과 |
+| --- | --- |
+| Core revision | `3e0fa7ed29db8c5bbd0b649f0ecc742282857285` |
+| 보드 package revision | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
+| NCS / Zephyr revision | `99553055607b` / `bf801e4e3d19` |
+| pristine build | **283/283 PASS**, FLASH 40,696 B / RAM 17,512 B |
+| HEX SHA-256 | `87638831F4A731D0710BA971B7D530D00795BE11D4B0EA8AEFD6657521AFEB18` |
+| DAPLink 기록 | sequence 25, 114,688 byte, `SUCCESS`, target 3,295 mV |
+| UART | COM10, 115200 8N1 |
+| `FALLING` | 버튼 누름, callback count 1 |
+| `RISING` | 버튼 해제, callback count 1 |
+| `CHANGE` | 누름 count 1, 해제 후 누적 count 2 |
+| 최종 판정 | **PASS** |
+
+실제 회수한 최종 protocol은 다음과 같다.
+
+~~~text
+NUCODE_M6_BUTTON_PASS:FALLING:COUNT=1
+NUCODE_M6_BUTTON_PASS:RISING:COUNT=1
+NUCODE_M6_BUTTON_PASS:CHANGE_PRESS:COUNT=1
+NUCODE_M6_BUTTON_PASS:CHANGE_RELEASE:COUNT=2
+NUCODE_M6_BUTTON_HIL_PASS:FALLING,RISING,CHANGE
+~~~
+
+일반 flash 경로만 사용했으며 mass erase나 recover는 수행하지 않았다. 시험 전후 상위
+작업 tree와 보드 서브모듈은 clean 상태였고, 상위 gitlink도 변경하지 않았다.
+
 ---
 
-## 5. 조건부 완료의 정확한 의미
+## 5. 완료 판정
 
 | 항목 | 판정 |
 | --- | --- |
@@ -239,11 +274,11 @@ Arduino CLI Full Zephyr 빌드 격리를 깨뜨리지 않았음을 확인했다.
 | `serialEventRun()` symbol과 loop 직후 실행 순서 HIL | 완료 |
 | Arduino CLI staged package의 M6 예제 compile | 완료 |
 | callback conflict expected-failure | 완료 |
-| 실제 P1.13 버튼의 FALLING/RISING/CHANGE ISR edge | **미실행 — 유일한 잔여 조건** |
+| 실제 P1.13 버튼의 FALLING/RISING/CHANGE ISR edge | 완료 — DAPLink sequence 25, COM10 token 확인 |
 
-실제 버튼 edge 미실행은 사용자가 부재한 동안 물리 입력을 만들 수 없었기 때문이다.
-빌드 실패, 알려진 firmware 결함, 보드 package 변경 또는 외부 계측 부재가 원인은 아니다.
-M7의 독립적인 구현·자동 시험을 진행하는 데 이 조건이 보드 source 변경을 요구하지 않는다.
+공통 API, Serial, runtime hook, interrupt 자동 의미 시험과 실제 P1.13 물리 edge 확인을 모두
+통과했다. 보드 package 변경이나 외부 계측 장비 없이 승인된 M6 완료 기준을 충족했으므로
+M6를 **완료**로 판정한다.
 
 ---
 
@@ -259,17 +294,16 @@ M7의 독립적인 구현·자동 시험을 진행하는 데 이 조건이 보�
 
 ---
 
-## 7. 잔여 확인 절차
+## 7. 물리 확인 절차와 해석
 
-사용자가 보드 앞에 있을 때 `interrupt_button` image를 기록하고 다음만 확인한다.
+완료된 단계형 HIL은 다음 순서로 진행했다.
 
-1. 초기 LED 상태를 확인한다.
-2. P1.13 active-low 버튼을 누르고 LED 또는 callback count가 한 번 갱신되는지 확인한다.
-3. 버튼을 놓고 반대 edge가 한 번 갱신되는지 확인한다.
-4. `FALLING`, `RISING`, `CHANGE` mode를 각각 실행해 예상하지 않은 반대 edge callback이
-   없는지 확인한다.
-5. 결과와 사용한 image commit을 이 문서에 추가하고 상태를 `완료`로 변경한다.
+1. 버튼이 해제된 raw `HIGH` 상태에서 `FALLING`을 arm했다.
+2. 버튼을 누른 raw `LOW`와 callback count 1을 확인했다.
+3. 버튼을 누른 상태에서 `RISING`을 arm하고 해제 후 raw `HIGH`와 count 1을 확인했다.
+4. `CHANGE`를 arm해 누름 count 1과 해제 후 누적 count 2를 확인했다.
+5. firmware의 전체 PASS token을 COM10에서 회수했다.
 
-bounce가 있는 실제 버튼에서 `CHANGE` callback이 여러 번 발생할 수 있다. M6는 debounce를
-자동 제공하지 않으므로, 전기적 bounce를 Core interrupt 결함과 혼동하지 않는다. 외부
-신호발생기나 계측기는 이 잔여 확인의 필수 장비가 아니다.
+실제 기계식 버튼은 bounce로 raw callback이 여러 번 발생할 수 있으므로 HIL 판정 계층만
+35 ms 뒤 안정 상태를 확인한다. M6 Core는 debounce를 자동 제공하지 않으며 raw electrical
+edge 의미를 그대로 유지한다. 외부 신호발생기나 계측기는 이번 완료 판정에 사용하지 않았다.

@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M6 Serial 조건부 완료; M7 Wire·SPI·ADC·PWM 조건부 완료 |
+| 문서 상태 | M6 완료; M7 Wire·SPI·ADC·PWM 조건부 완료 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 RTOS | Zephyr v4.4.0 |

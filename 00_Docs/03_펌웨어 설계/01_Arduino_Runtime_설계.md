@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | 설계·구현 동기화 — M6 조건부 완료 기준 |
+| 문서 상태 | 설계·구현 동기화 — M6 완료 기준 |
 | 작성자 | Quantum / NUCODE |
 | 실행 방식 | Loader 없는 Native Full Zephyr 정적 펌웨어 |
 | 기준 SDK | nRF Connect SDK v3.4.0 |

@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M6·M7 조건부 완료 |
+| 문서 상태 | M6 완료, M7 조건부 완료 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 Zephyr | Zephyr 4.4.0 |
@@ -19,9 +19,9 @@
 현재 저장소에는 M3 Runtime·GPIO·시간 backend, M4에서 고정한 ArduinoCore-API source와
 M6에서 생산 image에 연결한 `Common`, `String`, `Print`, `Stream`, `HardwareSerial` 및 GPIO
 edge interrupt backend가 존재한다. M6는 target ztest 10/10, 실제 COM10 Serial READY·echo,
-Arduino CLI staged package build를 통과했다. 다만 실제 P1.13 active-low 버튼의 ISR edge를
-사람이 확인하지 못했으므로 interrupt 항목은 그 검증 한계를 명시한다. v0.1 목표 상태는
-완료 보고가 아니다.
+Arduino CLI staged package build와 실제 P1.13 active-low 버튼의 `FALLING`, `RISING`,
+`CHANGE` HIL을 통과했다. interrupt 항목은 raw electrical edge와 ISR 호출 제약을 계속
+명시한다. v0.1 목표 상태는 완료 보고가 아니다.
 
 M7의 `Wire`, `SPI`, `analogRead()`와 `analogWrite()` production source 및 builder profile은
 NU54DK Twister target 11/11, Arduino CLI M7 4/4와 승인된 NU54DK driver HIL을 통과했다. 다만 고정
@@ -140,8 +140,9 @@ capability와 고정 callback slot을 추가했으며 callback 자체는 Zephyr 
 M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP` 버튼의 raw
 해제 `HIGH`/누름 `LOW`, 버튼-LED 연동을 확인했다. M6는 Arduino CLI에서 Serial/interrupt
 예제를 빌드하고 NU54DK target ztest에서 raw 세 edge, detach, `pinMode()` auto-detach와
-오류 경로를 검증했다. 실제 P1.13 버튼을 눌렀다 놓으며 GPIO ISR edge를 확인하는 작업만
-남아 있다. 외부 로직 애널라이저나 오실로스코프는 이 확인의 필수 조건이 아니다.
+오류 경로를 검증했다. 실제 P1.13 버튼에서도 누름 `FALLING` 1회, 해제 `RISING` 1회와
+`CHANGE` 누름·해제 누적 1·2회를 DAPLink sequence 25/COM10에서 확인했다. 외부 로직
+애널라이저나 오실로스코프는 사용하지 않았다.
 
 ### 5.1 Runtime과 기본 형식
 
@@ -167,7 +168,7 @@ M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP
 | `digitalWrite()` | P0 | 부분 지원 | 지원 | `OUTPUT`으로 구성된 index 0에서 raw write HIL 통과; input pull 전환, ISR, ownership 미구현 |
 | `digitalRead()` | P0 | 부분 지원 | 지원 | LED readback self-check 후 버튼 loop 진입을 육안 확인; 정확한 RAM trace는 미회수, index 0/1 및 thread 문맥으로 제한 |
 | `LED_BUILTIN` | P0 | 부분 지원 | 지원 | index 0, DTS `led0`, input+output; Blink HIL 통과, 정량 timing/voltage 미측정 |
-| `PIN_BUTTON0` | P0 | 부분 지원 | 부분 지원 | index 1, DTS `sw0`, input-only·interrupt; pull-up raw 버튼 HIL 통과, ISR physical edge 수동 확인과 debounce는 남음 |
+| `PIN_BUTTON0` | P0 | 부분 지원 | 부분 지원 | index 1, DTS `sw0`, input-only·interrupt; pull-up raw 버튼과 ISR physical edge HIL 통과, Core debounce는 제공하지 않음 |
 | 전체 `D0...Dn` 논리 pin map | P1 | 미구현 | 부분 지원 | 회로에 노출되고 안전하게 사용할 수 있는 pin만 정의 |
 | `digitalPinToInterrupt()` | P0 | 지원 | 지원 | 유효 index와 `NOT_AN_INTERRUPT`, C++ 인수 1회 평가를 NU54DK target ztest로 검증 |
 | direct port/register access | 제외 | 하드웨어 미지원 | 하드웨어 미지원 | AVR/SAMD register 호환을 제공하지 않음; Zephyr/nrfx 직접 API는 별도 영역 |
@@ -191,9 +192,9 @@ M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP
 
 | API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
-| `attachInterrupt()`/`attachInterruptParam()` | P0 | 의미 차이 | 의미 차이 | 고정 pin slot의 GPIO ISR에서 callback 직접 실행; target GPIO emulator 세 edge PASS, 실제 P1.13 edge 수동 확인 대기 |
+| `attachInterrupt()`/`attachInterruptParam()` | P0 | 의미 차이 | 의미 차이 | 고정 pin slot의 GPIO ISR에서 callback 직접 실행; target GPIO emulator와 실제 P1.13 세 edge PASS |
 | `detachInterrupt()` | P0 | 지원 | 지원 | callback 비활성화·제거와 진행 중 callback 정리, 재등록 및 `pinMode()` auto-detach target test 통과 |
-| `RISING`, `FALLING`, `CHANGE` | P0 | 부분 지원 | 지원 | raw electrical edge로 구현·target test 통과; P1.13 active-low에서 누름=FALLING, 해제=RISING 실물 확인 대기 |
+| `RISING`, `FALLING`, `CHANGE` | P0 | 지원 | 지원 | raw electrical edge로 구현·target test 통과; P1.13 active-low에서 누름=FALLING, 해제=RISING, CHANGE 양 edge 실물 확인 완료 |
 | `LOW`, `HIGH` level interrupt | P1 | 미구현 | 부분 지원 | Zephyr/nRF hardware와 driver가 안정적으로 제공하는 mode만 노출 |
 | `noInterrupts()`/`interrupts()` | P1 | 미구현 | 의미 차이 | system 전체 IRQ 차단을 남용하지 않도록 nesting/context 정책 정의 |
 | ISR 안의 Arduino API 호출 | P0 | 부분 지원 | 부분 지원 | callback은 volatile/atomic flag만 권장; digital GPIO·Serial·sleep·heap/blocking API 금지, Serial ISR 거부 target test 통과 |

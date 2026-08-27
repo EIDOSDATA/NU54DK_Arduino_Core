@@ -554,10 +554,11 @@ M3에서 통과한 범위는 다음과 같다.
 4. `NUM_DIGITAL_PINS`를 invalid pin으로 사용한 호출 전후에 LED 상태가 유지되는
    self-check를 포함했다.
 
-M6는 GPIO emulator로 raw edge ISR 의미를 자동 검증했으며, 실제 P1.13 active-low 버튼의
-FALLING/RISING/CHANGE 수동 확인만 남았다. 외부 logic analyzer/oscilloscope 계측은 사용자
-결정으로 필수 증거에서 제외한다. pull-down, 입력 pin의 `digitalWrite()`, debounce,
-장시간 반복, 동시 호출과 PWM/GPIO ownership은 해당 API 단계에서 별도 검증한다.
+M6는 GPIO emulator로 raw edge ISR 의미를 자동 검증하고, 실제 P1.13 active-low 버튼의
+FALLING/RISING/CHANGE도 DAPLink sequence 25/COM10에서 확인했다. 외부 logic
+analyzer/oscilloscope 계측은 사용자 결정으로 필수 증거에서 제외한다. pull-down, 입력
+pin의 `digitalWrite()`, debounce, 장시간 반복, 동시 호출과 PWM/GPIO ownership은 해당 API
+단계에서 별도 검증한다.
 
 M7 target ztest에서 ADC 2/2와 PWM 2/2가 통과했다. 실제 sequence 17에서는 gain 1/4의
 A0 raw=3176과 PWM duty 0/128/255 driver 호출을 확인했다. 이 결과는 ADC 전압 정확도나 PWM
