@@ -134,18 +134,42 @@ class FixedGateRunnerTests(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertNotEqual(first, changed)
 
-    ## @brief Twister가 고정 네 suite 이외를 생략하거나 추가하면 거부합니다.
-    def test_twister_result_requires_exact_pass_set(self) -> None:
+    ## @brief Twister가 정확한 네 suite의 build-only 성공만 승인하는지 검증합니다.
+    def test_twister_result_requires_exact_build_only_set(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_name:
-            report = Path(temporary_name) / "twister.json"
+            root = Path(temporary_name)
+            report = root / "o" / "twister.json"
+            report.parent.mkdir()
             document = {
-                "environment": {"zephyr_version": "ncs-v3.4.0"},
+                "environment": {
+                    "zephyr_version": "ncs-v3.4.0",
+                    "options": {
+                        "testsuite_root": [
+                            str(root / "p" / "tests" / "zephyr" / directory)
+                            for directory, _scenario in MODULE.ZEPHYR_SUITES
+                        ],
+                        "platform": [MODULE.BOARD_TARGET],
+                        "test": [
+                            scenario for _directory, scenario in MODULE.ZEPHYR_SUITES
+                        ],
+                        "build_only": True,
+                        "detailed_test_id": True,
+                        "outdir": str(root / "o"),
+                    },
+                },
                 "testsuites": [
                     {
                         "name": scenario,
                         "platform": MODULE.BOARD_TARGET,
                         "arch": "arm",
-                        "status": "passed",
+                        "status": "not run",
+                        "testcases": [
+                            {
+                                "identifier": f"{scenario}.contract",
+                                "status": "not run",
+                                "reason": "Test was built only",
+                            }
+                        ],
                     }
                     for _directory, scenario in MODULE.ZEPHYR_SUITES
                 ],
@@ -156,6 +180,223 @@ class FixedGateRunnerTests(unittest.TestCase):
             report.write_text(json.dumps(document), encoding="utf-8")
             with self.assertRaises(MODULE.FixedGateFailure):
                 MODULE.validate_twister_result(report)
+
+    ## @brief 실행된 testcase PASS를 build-only 성공으로 오인하지 않는지 검증합니다.
+    def test_twister_result_rejects_non_build_only_status(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_name:
+            root = Path(temporary_name)
+            report = root / "o" / "twister.json"
+            report.parent.mkdir()
+            document = {
+                "environment": {
+                    "zephyr_version": "ncs-v3.4.0",
+                    "options": {
+                        "testsuite_root": [
+                            str(root / "p" / "tests" / "zephyr" / directory)
+                            for directory, _scenario in MODULE.ZEPHYR_SUITES
+                        ],
+                        "platform": [MODULE.BOARD_TARGET],
+                        "test": [
+                            scenario for _directory, scenario in MODULE.ZEPHYR_SUITES
+                        ],
+                        "build_only": True,
+                        "detailed_test_id": True,
+                        "outdir": str(root / "o"),
+                    },
+                },
+                "testsuites": [
+                    {
+                        "name": scenario,
+                        "platform": MODULE.BOARD_TARGET,
+                        "arch": "arm",
+                        "status": "passed",
+                        "testcases": [
+                            {
+                                "identifier": f"{scenario}.contract",
+                                "status": "passed",
+                            }
+                        ],
+                    }
+                    for _directory, scenario in MODULE.ZEPHYR_SUITES
+                ],
+            }
+            report.write_text(json.dumps(document), encoding="utf-8")
+            with self.assertRaises(MODULE.FixedGateFailure):
+                MODULE.validate_twister_result(report)
+
+    ## @brief Twister 명령이 junction 없이 정확한 네 root와 scenario를 사용하는지 검증합니다.
+    def test_zephyr_command_uses_short_non_junction_contract(self) -> None:
+        root = Path("C:/Users/nu54ci/.z1")
+        test_roots = tuple(
+            root / "p" / "tests" / "zephyr" / directory
+            for directory, _scenario in MODULE.ZEPHYR_SUITES
+        )
+        command = [
+            str(value)
+            for value in MODULE.zephyr_twister_command(
+                python=root / "python.exe",
+                twister=root / "twister",
+                staged=root / "p",
+                test_roots=test_roots,
+                outdir=root / "o",
+            )
+        ]
+        self.assertNotIn("--short-build-path", command)
+        self.assertEqual(command.count("--ninja"), 1)
+        self.assertEqual(command.count("--detailed-test-id"), 1)
+        self.assertEqual(command.count("--testsuite-root"), len(MODULE.ZEPHYR_SUITES))
+        self.assertEqual(command.count("--scenario"), len(MODULE.ZEPHYR_SUITES))
+        roots = [
+            command[index + 1]
+            for index, value in enumerate(command)
+            if value == "--testsuite-root"
+        ]
+        scenarios = [
+            command[index + 1]
+            for index, value in enumerate(command)
+            if value == "--scenario"
+        ]
+        self.assertEqual(roots, [str(path) for path in test_roots])
+        self.assertEqual(
+            scenarios,
+            [scenario for _directory, scenario in MODULE.ZEPHYR_SUITES],
+        )
+
+    ## @brief 기존 slot은 보존하고 자신이 만든 다음 slot만 정리하는지 검증합니다.
+    def test_short_workspace_preserves_existing_slot(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_name:
+            home = Path(temporary_name)
+            existing = home / MODULE.ZEPHYR_SHORT_WORKSPACE_NAMES[0]
+            existing.mkdir()
+            marker = existing / "keep.txt"
+            marker.write_text("keep\n", encoding="utf-8")
+            expected = home / MODULE.ZEPHYR_SHORT_WORKSPACE_NAMES[1]
+            with MODULE.short_zephyr_workspace(home, max_path_length=1024) as workspace:
+                self.assertEqual(workspace, expected)
+                (workspace / "owned.txt").write_text("owned\n", encoding="utf-8")
+            self.assertFalse(expected.exists())
+            self.assertEqual(marker.read_text(encoding="utf-8"), "keep\n")
+
+    ## @brief 모든 짧은 slot이 이미 있으면 어느 것도 재사용하거나 삭제하지 않습니다.
+    def test_short_workspace_rejects_exhausted_slots(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_name:
+            home = Path(temporary_name)
+            markers: list[Path] = []
+            for name in MODULE.ZEPHYR_SHORT_WORKSPACE_NAMES:
+                slot = home / name
+                slot.mkdir()
+                marker = slot / "keep.txt"
+                marker.write_text(name, encoding="utf-8")
+                markers.append(marker)
+            with self.assertRaises(MODULE.FixedGateFailure):
+                with MODULE.short_zephyr_workspace(home, max_path_length=1024):
+                    self.fail("소진된 slot에서 작업공간이 할당되었습니다.")
+            self.assertTrue(all(marker.is_file() for marker in markers))
+
+    ## @brief 긴 profile에서는 junction 없는 Twister를 시작하기 전에 실패하는지 검증합니다.
+    def test_short_workspace_rejects_long_path_budget(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_name:
+            home = Path(temporary_name)
+            with self.assertRaises(MODULE.FixedGateFailure):
+                with MODULE.short_zephyr_workspace(home, max_path_length=8):
+                    self.fail("경로 예산을 초과한 workspace가 할당되었습니다.")
+            self.assertFalse(
+                any((home / name).exists() for name in MODULE.ZEPHYR_SHORT_WORKSPACE_NAMES)
+            )
+
+    ## @brief report가 실제 outdir와 다른 root를 주장하면 성공 결과도 거부합니다.
+    def test_twister_result_binds_report_to_workspace(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_name:
+            root = Path(temporary_name)
+            report = root / "o" / "twister.json"
+            report.parent.mkdir()
+            document = {
+                "environment": {
+                    "zephyr_version": "ncs-v3.4.0",
+                    "options": {
+                        "testsuite_root": [
+                            str(root / "p" / "tests" / "zephyr" / directory)
+                            for directory, _scenario in MODULE.ZEPHYR_SUITES
+                        ],
+                        "platform": [MODULE.BOARD_TARGET],
+                        "test": [
+                            scenario for _directory, scenario in MODULE.ZEPHYR_SUITES
+                        ],
+                        "build_only": True,
+                        "detailed_test_id": True,
+                        "outdir": str(root / "different" / "o"),
+                    },
+                },
+                "testsuites": [
+                    {
+                        "name": scenario,
+                        "platform": MODULE.BOARD_TARGET,
+                        "arch": "arm",
+                        "status": "not run",
+                        "testcases": [
+                            {
+                                "identifier": f"{scenario}.contract",
+                                "status": "not run",
+                                "reason": "Test was built only",
+                            }
+                        ],
+                    }
+                    for _directory, scenario in MODULE.ZEPHYR_SUITES
+                ],
+            }
+            report.write_text(json.dumps(document), encoding="utf-8")
+            with self.assertRaises(MODULE.FixedGateFailure):
+                MODULE.validate_twister_result(report)
+
+    ## @brief 짧은 package 이름과 suite 상대경로 계약을 함께 보존하는지 검증합니다.
+    def test_stage_zephyr_gate_tree_preserves_relative_core_root(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_name:
+            root = Path(temporary_name)
+            platform, _expected = self.make_platform(root)
+            destination = root / "workspace"
+            destination.mkdir()
+            staged, test_roots = MODULE.stage_zephyr_gate_tree(platform, destination)
+            self.assertEqual(staged, destination / "p")
+            self.assertEqual(
+                test_roots,
+                tuple(
+                    destination / "p" / "tests" / "zephyr" / directory
+                    for directory, _scenario in MODULE.ZEPHYR_SUITES
+                ),
+            )
+            self.assertTrue(all((path / "testcase.yaml").is_file() for path in test_roots))
+            self.assertEqual(
+                (test_roots[0] / "../../..").resolve(),
+                staged.resolve(),
+            )
+
+    ## @brief Windows Twister demangler shim이 고정 toolchain byte와 PATH를 쓰는지 검증합니다.
+    def test_zephyr_environment_stages_fixed_demangler(self) -> None:
+        if MODULE.os.name != "nt":
+            self.skipTest("Windows 전용 M11 gate 계약입니다.")
+        with tempfile.TemporaryDirectory() as temporary_name:
+            root = Path(temporary_name)
+            workspace = root / "workspace"
+            workspace.mkdir()
+            tool_bin = root / "toolchain" / "bin"
+            tool_bin.mkdir(parents=True)
+            compiler = tool_bin / "arm-zephyr-eabi-g++.exe"
+            demangler = tool_bin / "arm-zephyr-eabi-c++filt.exe"
+            compiler.write_bytes(b"compiler")
+            demangler.write_bytes(b"demangler")
+            environment = MODULE.zephyr_gate_environment(
+                {
+                    "compiler": compiler,
+                    "environment": {"PATH": "existing-path"},
+                },
+                workspace,
+            )
+            shim = workspace / "x" / "c++filt.exe"
+            self.assertEqual(shim.read_bytes(), b"demangler")
+            self.assertEqual(
+                environment["PATH"].split(MODULE.os.pathsep)[:2],
+                [str(workspace / "x"), str(tool_bin.resolve())],
+            )
 
     ## @brief public CLI가 임의 command tail을 받을 수 없음을 검증합니다.
     def test_parser_rejects_arbitrary_host_command(self) -> None:

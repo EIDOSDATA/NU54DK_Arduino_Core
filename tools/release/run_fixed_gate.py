@@ -4,16 +4,18 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path, PurePosixPath
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
-from typing import Any, Iterable, Sequence
+from typing import Any, Iterable, Iterator, Sequence
 
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -55,6 +57,10 @@ ZEPHYR_SUITES = (
     ("m6_core_api", "nucode.m6.core_api"),
     ("m7_core_api", "nucode.m7.core_api"),
 )
+ZEPHYR_SHORT_WORKSPACE_NAMES = tuple(
+    f".z{suffix}" for suffix in "0123456789abcdefghijklmnopqrstuvwxyz"
+)
+ZEPHYR_WORKSPACE_MAX_PATH_LENGTH = 32
 MAX_JSON_SIZE = 32 * 1024 * 1024
 MAX_PAYLOAD_FILES = 10000
 MAX_PAYLOAD_FILE_SIZE = 32 * 1024 * 1024
@@ -539,22 +545,156 @@ def run_arduino_gate(args: argparse.Namespace) -> None:
     print(json.dumps({"gate": "arduino", "package": identity}, sort_keys=True))
 
 
-## @brief 고정된 네 target suite만 package runtime과 함께 임시 tree에 배치합니다.
-def stage_zephyr_gate_tree(platform_root: Path, destination: Path) -> Path:
-    staged = destination / platform_root.name
+## @brief Windows 장경로를 피할 짧은 전용 작업공간을 안전하게 할당합니다.
+## @param home 시험에서만 지정하는 작업공간 부모입니다.
+## @param max_path_length 시험에서만 완화할 수 있는 workspace 절대경로 상한입니다.
+## @return 호출자가 소유한 동안만 유효한 새 작업공간 경로입니다.
+@contextmanager
+def short_zephyr_workspace(
+    home: Path | None = None,
+    *,
+    max_path_length: int = ZEPHYR_WORKSPACE_MAX_PATH_LENGTH,
+) -> Iterator[Path]:
+    if os.name != "nt" and home is None:
+        with tempfile.TemporaryDirectory(prefix="n54zg-") as temporary_name:
+            yield Path(temporary_name)
+        return
+
+    parent = (home if home is not None else Path.home()).resolve()
+    parent_is_junction = bool(getattr(parent, "is_junction", lambda: False)())
+    if (
+        not parent.is_dir()
+        or parent.parent == parent
+        or parent.is_symlink()
+        or parent_is_junction
+        or re.fullmatch(r"[A-Za-z]:", parent.drive) is None
+    ):
+        raise FixedGateFailure(f"Zephyr 짧은 작업공간 부모가 안전하지 않습니다: {parent}")
+    if len(str(parent / ZEPHYR_SHORT_WORKSPACE_NAMES[0])) > max_path_length:
+        raise FixedGateFailure(
+            "Zephyr 짧은 작업공간도 Windows MAX_PATH 예산을 만족하지 않습니다: "
+            f"parent={parent}, limit={max_path_length}"
+        )
+
+    workspace: Path | None = None
+    for name in ZEPHYR_SHORT_WORKSPACE_NAMES:
+        candidate = parent / name
+        try:
+            candidate.mkdir(mode=0o700)
+        except FileExistsError:
+            continue
+        except OSError as error:
+            raise FixedGateFailure(
+                f"Zephyr 짧은 작업공간을 만들지 못했습니다: {candidate}: {error}"
+            ) from error
+        candidate_is_junction = bool(getattr(candidate, "is_junction", lambda: False)())
+        if (
+            candidate.resolve().parent != parent
+            or not candidate.is_dir()
+            or candidate.is_symlink()
+            or candidate_is_junction
+        ):
+            raise FixedGateFailure(
+                f"생성한 Zephyr 짧은 작업공간이 안전하지 않습니다: {candidate}"
+            )
+        workspace = candidate
+        break
+    if workspace is None:
+        raise FixedGateFailure("사용 가능한 Zephyr 짧은 작업공간 slot이 없습니다.")
+
+    try:
+        yield workspace
+    finally:
+        if workspace.exists():
+            workspace_is_junction = bool(
+                getattr(workspace, "is_junction", lambda: False)()
+            )
+            if (
+                workspace.resolve().parent != parent
+                or not workspace.is_dir()
+                or workspace.is_symlink()
+                or workspace_is_junction
+            ):
+                raise FixedGateFailure(
+                    f"Zephyr 짧은 작업공간 안전 조건이 바뀌어 정리를 거부합니다: {workspace}"
+                )
+            shutil.rmtree(workspace)
+
+
+## @brief 고정된 네 target suite만 package runtime과 함께 짧은 tree에 배치합니다.
+def stage_zephyr_gate_tree(
+    platform_root: Path, destination: Path
+) -> tuple[Path, tuple[Path, ...]]:
+    staged = destination / "p"
     shutil.copytree(platform_root, staged)
     test_root = staged / "tests" / "zephyr"
     test_root.mkdir(parents=True)
     source_root = REPOSITORY / "tests" / "zephyr"
+    staged_test_roots: list[Path] = []
     for directory, _scenario in ZEPHYR_SUITES:
         source = source_root / directory
         if not (source / "testcase.yaml").is_file() or not (source / "CMakeLists.txt").is_file():
             raise FixedGateFailure(f"고정 Zephyr suite가 완전하지 않습니다: {source}")
-        shutil.copytree(source, test_root / directory)
-    return staged
+        destination_root = test_root / directory
+        shutil.copytree(source, destination_root)
+        staged_test_roots.append(destination_root)
+    return staged, tuple(staged_test_roots)
 
 
-## @brief Twister JSON이 정확한 target/suite 집합의 build PASS인지 확인합니다.
+## @brief Twister가 호출하는 GNU demangler를 고정 toolchain에서 짧은 PATH로 제공합니다.
+def zephyr_gate_environment(tools: dict[str, Any], workspace: Path) -> dict[str, str]:
+    environment = dict(tools["environment"])
+    if os.name != "nt":
+        return environment
+    compiler = Path(tools["compiler"]).resolve()
+    demangler = compiler.with_name("arm-zephyr-eabi-c++filt.exe")
+    if not demangler.is_file():
+        raise FixedGateFailure(f"고정 toolchain GNU demangler를 찾지 못했습니다: {demangler}")
+    shim_directory = workspace / "x"
+    shim_directory.mkdir()
+    shutil.copy2(demangler, shim_directory / "c++filt.exe")
+    current_path = environment.get("PATH", "")
+    path_entries = (str(shim_directory), str(compiler.parent), current_path)
+    environment["PATH"] = os.pathsep.join(entry for entry in path_entries if entry)
+    return environment
+
+
+## @brief 고정 Zephyr build-only 범위의 Twister 명령을 구성합니다.
+def zephyr_twister_command(
+    *,
+    python: Path,
+    twister: Path,
+    staged: Path,
+    test_roots: Sequence[Path],
+    outdir: Path,
+) -> list[str | Path]:
+    board_root = staged / "board_package" / "NU54DK_Zephyr_DTS"
+    command: list[str | Path] = [python, twister]
+    for test_root in test_roots:
+        command.extend(("--testsuite-root", test_root))
+    command.extend(
+        (
+            "--platform",
+            BOARD_TARGET,
+            "--board-root",
+            board_root / "boards",
+            "--build-only",
+            "--ninja",
+            "--detailed-test-id",
+            "--outdir",
+            outdir,
+            "--extra-args",
+            f"BOARD_ROOT={board_root.as_posix()}",
+            "--extra-args",
+            f"EXTRA_ZEPHYR_MODULES={staged.as_posix()}",
+        )
+    )
+    for _directory, scenario in ZEPHYR_SUITES:
+        command.extend(("--scenario", scenario))
+    return command
+
+
+## @brief Twister JSON이 정확한 target/suite 집합의 build-only 성공인지 확인합니다.
 def validate_twister_result(report_path: Path) -> None:
     report = strict_json_object(report_path)
     environment = report.get("environment")
@@ -563,7 +703,39 @@ def validate_twister_result(report_path: Path) -> None:
         raise FixedGateFailure("Twister report 구조가 유효하지 않습니다.")
     if environment.get("zephyr_version") != "ncs-v3.4.0":
         raise FixedGateFailure("Twister가 고정 NCS Zephyr version을 사용하지 않았습니다.")
-    expected_names = {scenario for _directory, scenario in ZEPHYR_SUITES}
+    options = environment.get("options")
+    expected_scenarios = [scenario for _directory, scenario in ZEPHYR_SUITES]
+    expected_names = set(expected_scenarios)
+    if not isinstance(options, dict):
+        raise FixedGateFailure("Twister 실행 option 기록이 없습니다.")
+    expected_outdir = report_path.resolve().parent
+    expected_test_roots = [
+        expected_outdir.parent / "p" / "tests" / "zephyr" / directory
+        for directory, _scenario in ZEPHYR_SUITES
+    ]
+    test_roots = options.get("testsuite_root")
+    if not isinstance(test_roots, list) or len(test_roots) != len(ZEPHYR_SUITES):
+        raise FixedGateFailure("Twister testsuite root 개수가 고정 계약과 다릅니다.")
+    normalized_test_roots: list[Path] = []
+    for root in test_roots:
+        if not isinstance(root, str):
+            raise FixedGateFailure("Twister testsuite root가 문자열이 아닙니다.")
+        normalized_test_roots.append(Path(root))
+    if [root.resolve() for root in normalized_test_roots] != [
+        root.resolve() for root in expected_test_roots
+    ]:
+        raise FixedGateFailure("Twister testsuite root가 고정된 짧은 staging tree가 아닙니다.")
+    if (
+        options.get("platform") != [BOARD_TARGET]
+        or options.get("test") != expected_scenarios
+        or options.get("build_only") is not True
+        or options.get("detailed_test_id") is not True
+        or options.get("short_build_path") not in (None, False)
+        or not isinstance(options.get("outdir"), str)
+        or expected_outdir.name != "o"
+        or Path(options["outdir"]).resolve() != expected_outdir
+    ):
+        raise FixedGateFailure("Twister 실행 option이 고정 build-only 계약과 다릅니다.")
     actual_names: set[str] = set()
     for suite in suites:
         if not isinstance(suite, dict):
@@ -575,9 +747,19 @@ def validate_twister_result(report_path: Path) -> None:
         if (
             suite.get("platform") != BOARD_TARGET
             or suite.get("arch") != "arm"
-            or suite.get("status") != "passed"
+            or suite.get("status") != "not run"
         ):
-            raise FixedGateFailure(f"Twister target build가 PASS가 아닙니다: {name}")
+            raise FixedGateFailure(f"Twister target build-only 결과가 성공 상태가 아닙니다: {name}")
+        testcases = suite.get("testcases")
+        if not isinstance(testcases, list) or not testcases:
+            raise FixedGateFailure(f"Twister testcase 결과가 없습니다: {name}")
+        if any(
+            not isinstance(testcase, dict)
+            or testcase.get("status") != "not run"
+            or testcase.get("reason") != "Test was built only"
+            for testcase in testcases
+        ):
+            raise FixedGateFailure(f"Twister testcase가 build-only 성공 상태가 아닙니다: {name}")
     if actual_names != expected_names:
         raise FixedGateFailure(
             f"Twister suite 집합이 고정 계약과 다릅니다: {sorted(actual_names)}"
@@ -595,8 +777,10 @@ def run_zephyr_gate(args: argparse.Namespace) -> None:
     if outdir.exists() or outdir.parent == outdir:
         raise FixedGateFailure("Twister outdir는 아직 존재하지 않는 안전한 하위 경로여야 합니다.")
     outdir.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="n54zg-") as temporary_name:
-        staged = stage_zephyr_gate_tree(args.platform_root.resolve(), Path(temporary_name))
+    with short_zephyr_workspace() as workspace:
+        staged, test_roots = stage_zephyr_gate_tree(
+            args.platform_root.resolve(), workspace
+        )
         builder = load_packaged_builder(staged)
         try:
             tools = builder.tool_environment(staged)
@@ -607,30 +791,22 @@ def run_zephyr_gate(args: argparse.Namespace) -> None:
         twister = Path(tools["zephyr_base"]) / "scripts" / "twister"
         if not python.is_file() or not twister.is_file():
             raise FixedGateFailure("고정 toolchain Python 또는 Twister를 찾지 못했습니다.")
-        test_root = staged / "tests" / "zephyr"
-        board_root = staged / "board_package" / "NU54DK_Zephyr_DTS"
-        command: list[str | Path] = [
-            python,
-            twister,
-            "--testsuite-root",
-            test_root,
-            "--platform",
-            BOARD_TARGET,
-            "--board-root",
-            board_root / "boards",
-            "--build-only",
-            "--short-build-path",
-            "--outdir",
-            outdir,
-            "--extra-args",
-            f"BOARD_ROOT={board_root.as_posix()}",
-            "--extra-args",
-            f"EXTRA_ZEPHYR_MODULES={staged.as_posix()}",
-        ]
-        for _directory, scenario in ZEPHYR_SUITES:
-            command.extend(("--scenario", scenario))
-        run_checked(command, cwd=staged, environment=dict(tools["environment"]))
-    validate_twister_result(outdir / "twister.json")
+        short_outdir = workspace / "o"
+        command = zephyr_twister_command(
+            python=python,
+            twister=twister,
+            staged=staged,
+            test_roots=test_roots,
+            outdir=short_outdir,
+        )
+        run_checked(
+            command,
+            cwd=staged,
+            environment=zephyr_gate_environment(tools, workspace),
+        )
+        validate_twister_result(short_outdir / "twister.json")
+        outdir.mkdir()
+        shutil.copy2(short_outdir / "twister.json", outdir / "twister.json")
     print(json.dumps({"gate": "zephyr", "package": identity}, sort_keys=True))
 
 

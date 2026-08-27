@@ -751,6 +751,16 @@ def fixed_gate_contract(
                     "kind": "zephyr-twister-target-build",
                     "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
                     "test_root": "tests/zephyr",
+                    "scenarios": [
+                        "nucode.m3.runtime",
+                        "nucode.m4.api_contract",
+                        "nucode.m6.core_api",
+                        "nucode.m7.core_api",
+                    ],
+                    "build_only": True,
+                    "result_contract": "built-not-run",
+                    "detailed_test_id": True,
+                    "short_build_path": False,
                     "device_testing": False,
                 },
             }

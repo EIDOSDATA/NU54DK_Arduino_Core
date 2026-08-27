@@ -986,6 +986,19 @@ class M11ReleaseTests(unittest.TestCase):
             ["blink", "library", "config", "error", "parallel", "m6", "m7", "m8", "m9", "m11"],
         )
         self.assertEqual(zephyr["scope"]["test_root"], "tests/zephyr")
+        self.assertEqual(
+            zephyr["scope"]["scenarios"],
+            [
+                "nucode.m3.runtime",
+                "nucode.m4.api_contract",
+                "nucode.m6.core_api",
+                "nucode.m7.core_api",
+            ],
+        )
+        self.assertTrue(zephyr["scope"]["build_only"])
+        self.assertEqual(zephyr["scope"]["result_contract"], "built-not-run")
+        self.assertTrue(zephyr["scope"]["detailed_test_id"])
+        self.assertFalse(zephyr["scope"]["short_build_path"])
         self.assertEqual(hil["scope"]["upload_attempts"], 1)
         self.assertEqual(hil["scope"]["ready_token"], RELEASE.M11_READY_TOKEN)
 
