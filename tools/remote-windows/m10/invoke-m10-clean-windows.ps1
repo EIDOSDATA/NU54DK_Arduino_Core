@@ -115,33 +115,31 @@ function Invoke-LocalNative {
     $commandLine = (@($Arguments | ForEach-Object {
         Convert-ToNativeArgument -Value ([string]$_)
     }) -join ' ')
-    $commandId = [Guid]::NewGuid().ToString('N')
-    $stdoutPath = Join-Path $script:LocalTemporaryRoot ($commandId + '.stdout.txt')
-    $stderrPath = Join-Path $script:LocalTemporaryRoot ($commandId + '.stderr.txt')
     $started = [DateTime]::UtcNow
-    $process = Start-Process `
-        -FilePath $FilePath `
-        -ArgumentList $commandLine `
-        -RedirectStandardOutput $stdoutPath `
-        -RedirectStandardError $stderrPath `
-        -WindowStyle Hidden `
-        -PassThru
+    $startInfo = New-Object System.Diagnostics.ProcessStartInfo
+    $startInfo.FileName = $FilePath
+    $startInfo.Arguments = $commandLine
+    $startInfo.UseShellExecute = $false
+    $startInfo.CreateNoWindow = $true
+    $startInfo.RedirectStandardOutput = $true
+    $startInfo.RedirectStandardError = $true
+    $process = New-Object System.Diagnostics.Process
+    $process.StartInfo = $startInfo
+    if (-not $process.Start()) {
+        $process.Dispose()
+        throw "$Label process를 시작하지 못했습니다."
+    }
+    $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+    $stderrTask = $process.StandardError.ReadToEndAsync()
     $completed = $process.WaitForExit($TimeoutSeconds * 1000)
     if (-not $completed) {
         & "$env:SystemRoot\System32\taskkill.exe" /PID $process.Id /T /F 2>&1 | Out-Null
-        $process.WaitForExit()
-    } else {
-        $process.WaitForExit()
     }
-    $stdout = ''
-    $stderr = ''
-    if (Test-Path -LiteralPath $stdoutPath) {
-        $stdout = [System.IO.File]::ReadAllText($stdoutPath)
-    }
-    if (Test-Path -LiteralPath $stderrPath) {
-        $stderr = [System.IO.File]::ReadAllText($stderrPath)
-    }
-    Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
+    $process.WaitForExit()
+    $stdout = $stdoutTask.GetAwaiter().GetResult()
+    $stderr = $stderrTask.GetAwaiter().GetResult()
+    $exitCode = $process.ExitCode
+    $process.Dispose()
 
     $safeOutput = Protect-LogText -Text (($stdout + [Environment]::NewLine + $stderr).Trim())
     if ($safeOutput) {
@@ -155,11 +153,11 @@ function Invoke-LocalNative {
     if (-not $completed) {
         throw "$Label 작업이 ${TimeoutSeconds}초 후 timeout 되었습니다."
     }
-    if ($AllowedExitCodes -notcontains $process.ExitCode) {
-        throw "$Label 작업이 종료 코드 $($process.ExitCode)로 실패했습니다."
+    if ($AllowedExitCodes -notcontains $exitCode) {
+        throw "$Label 작업이 종료 코드 $exitCode로 실패했습니다."
     }
     return [pscustomobject][ordered]@{
-        exit_code = $process.ExitCode
+        exit_code = $exitCode
         duration_seconds = [Math]::Round(([DateTime]::UtcNow - $started).TotalSeconds, 3)
         stdout = $stdout
         stderr = $stderr

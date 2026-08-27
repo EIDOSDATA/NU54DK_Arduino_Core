@@ -578,6 +578,9 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
             self.assertIn("WaitForExit", text)
             self.assertIn("AllowedExitCodes", text)
             self.assertIn("taskkill.exe", text)
+            self.assertIn("System.Diagnostics.ProcessStartInfo", text)
+            self.assertIn("$exitCode = $process.ExitCode", text)
+            self.assertNotIn("Start-Process", text)
         self.assertIn("evidence bundle", self.local_text)
         self.assertIn("M10 TARGET RUN FAIL", self.target_text)
 

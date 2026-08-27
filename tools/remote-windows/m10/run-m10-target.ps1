@@ -283,38 +283,34 @@ function Invoke-NativeCommand {
     $commandLine = (@($Arguments | ForEach-Object {
         Convert-ToCommandArgument -Value ([string]$_)
     }) -join ' ')
-    $commandId = [Guid]::NewGuid().ToString('N')
-    $stdoutPath = Join-Path $script:TemporaryRoot ($commandId + '.stdout.txt')
-    $stderrPath = Join-Path $script:TemporaryRoot ($commandId + '.stderr.txt')
     $started = [DateTime]::UtcNow
     Add-RunLog -Text ("COMMAND START [{0}] {1}" -f $Label, $FilePath)
 
-    $process = Start-Process `
-        -FilePath $FilePath `
-        -ArgumentList $commandLine `
-        -WorkingDirectory $WorkingDirectory `
-        -RedirectStandardOutput $stdoutPath `
-        -RedirectStandardError $stderrPath `
-        -WindowStyle Hidden `
-        -PassThru
-
+    $startInfo = New-Object System.Diagnostics.ProcessStartInfo
+    $startInfo.FileName = $FilePath
+    $startInfo.Arguments = $commandLine
+    $startInfo.WorkingDirectory = $WorkingDirectory
+    $startInfo.UseShellExecute = $false
+    $startInfo.CreateNoWindow = $true
+    $startInfo.RedirectStandardOutput = $true
+    $startInfo.RedirectStandardError = $true
+    $process = New-Object System.Diagnostics.Process
+    $process.StartInfo = $startInfo
+    if (-not $process.Start()) {
+        $process.Dispose()
+        throw "Process could not be started: $Label"
+    }
+    $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+    $stderrTask = $process.StandardError.ReadToEndAsync()
     $completed = $process.WaitForExit($TimeoutSeconds * 1000)
     if (-not $completed) {
         & "$env:SystemRoot\System32\taskkill.exe" /PID $process.Id /T /F 2>&1 | Out-Null
-        $process.WaitForExit()
-    } else {
-        $process.WaitForExit()
     }
-
-    $stdout = ''
-    $stderr = ''
-    if (Test-Path -LiteralPath $stdoutPath) {
-        $stdout = [System.IO.File]::ReadAllText($stdoutPath)
-    }
-    if (Test-Path -LiteralPath $stderrPath) {
-        $stderr = [System.IO.File]::ReadAllText($stderrPath)
-    }
-    Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
+    $process.WaitForExit()
+    $stdout = $stdoutTask.GetAwaiter().GetResult()
+    $stderr = $stderrTask.GetAwaiter().GetResult()
+    $exitCode = $process.ExitCode
+    $process.Dispose()
 
     $duration = [Math]::Round(([DateTime]::UtcNow - $started).TotalSeconds, 3)
     if ($stdout) {
@@ -327,7 +323,6 @@ function Invoke-NativeCommand {
     if (-not $completed) {
         throw "Command timed out after $TimeoutSeconds seconds: $Label"
     }
-    $exitCode = $process.ExitCode
     if ($AllowedExitCodes -notcontains $exitCode) {
         throw "Command failed with exit code ${exitCode}: $Label"
     }
