@@ -170,6 +170,10 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
 
         self.assertTrue(self.target_bytes)
         self.assertTrue(all(value < 128 for value in self.target_bytes))
+        self.assertIn(
+            "$nonAsciiBytes = @(\n    [IO.File]::ReadAllBytes($targetRunner)",
+            self.local_text,
+        )
 
     def test_public_index_uses_repository_owner(self) -> None:
         """! @brief 기본 index가 공개 EIDOSDATA 저장소를 가리키는지 검증합니다. """

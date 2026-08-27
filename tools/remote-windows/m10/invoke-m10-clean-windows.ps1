@@ -409,7 +409,9 @@ $targetRunner = Join-Path $scriptRoot 'run-m10-target.ps1'
 if (-not (Test-Path -LiteralPath $targetRunner -PathType Leaf)) {
     throw "target runner를 찾지 못했습니다: $targetRunner"
 }
-$nonAsciiBytes = [IO.File]::ReadAllBytes($targetRunner) | Where-Object { $_ -gt 127 }
+$nonAsciiBytes = @(
+    [IO.File]::ReadAllBytes($targetRunner) | Where-Object { $_ -gt 127 }
+)
 if ($nonAsciiBytes.Count -ne 0) {
     throw 'target runner는 전송 안정성을 위해 ASCII여야 합니다.'
 }
