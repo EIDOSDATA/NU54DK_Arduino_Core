@@ -60,7 +60,10 @@ ZEPHYR_SUITES = (
 ZEPHYR_SHORT_WORKSPACE_NAMES = tuple(
     f".z{suffix}" for suffix in "0123456789abcdefghijklmnopqrstuvwxyz"
 )
-ZEPHYR_WORKSPACE_MAX_PATH_LENGTH = 32
+ZEPHYR_CMAKE_OBJECT_PATH_LIMIT = 250
+ZEPHYR_M3_INSTANCE_PREFIX_OVERHEAD = 65
+ZEPHYR_M3_MAX_OBJECT_TAIL_LENGTH = 154
+ZEPHYR_WORKSPACE_MAX_PATH_LENGTH = 30
 MAX_JSON_SIZE = 32 * 1024 * 1024
 MAX_PAYLOAD_FILES = 10000
 MAX_PAYLOAD_FILE_SIZE = 32 * 1024 * 1024
@@ -567,7 +570,10 @@ def short_zephyr_workspace(
         or parent.parent == parent
         or parent.is_symlink()
         or parent_is_junction
-        or re.fullmatch(r"[A-Za-z]:", parent.drive) is None
+        or (
+            os.name == "nt"
+            and re.fullmatch(r"[A-Za-z]:", parent.drive) is None
+        )
     ):
         raise FixedGateFailure(f"Zephyr 짧은 작업공간 부모가 안전하지 않습니다: {parent}")
     if len(str(parent / ZEPHYR_SHORT_WORKSPACE_NAMES[0])) > max_path_length:

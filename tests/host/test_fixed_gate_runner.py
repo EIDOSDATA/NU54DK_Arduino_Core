@@ -303,6 +303,12 @@ class FixedGateRunnerTests(unittest.TestCase):
             self.assertFalse(
                 any((home / name).exists() for name in MODULE.ZEPHYR_SHORT_WORKSPACE_NAMES)
             )
+        self.assertLessEqual(
+            MODULE.ZEPHYR_WORKSPACE_MAX_PATH_LENGTH
+            + MODULE.ZEPHYR_M3_INSTANCE_PREFIX_OVERHEAD
+            + MODULE.ZEPHYR_M3_MAX_OBJECT_TAIL_LENGTH,
+            MODULE.ZEPHYR_CMAKE_OBJECT_PATH_LIMIT,
+        )
 
     ## @brief report가 실제 outdir와 다른 root를 주장하면 성공 결과도 거부합니다.
     def test_twister_result_binds_report_to_workspace(self) -> None:
