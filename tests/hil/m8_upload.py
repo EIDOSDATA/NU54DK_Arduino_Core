@@ -30,6 +30,8 @@ if hasattr(sys.stderr, "reconfigure"):
 FQBN = "nucode:zephyr:nu54dk"
 ## @brief Build Adapter가 기록하는 artifact manifest의 현재 schema입니다.
 ARTIFACT_MANIFEST_SCHEMA_VERSION = 2
+## @brief Build Adapter가 artifact manifest에 포함하는 session context schema입니다.
+SESSION_CONTEXT_SCHEMA_VERSION = 2
 READY_TOKEN = b"NUCODE_M8_UPLOAD_READY"
 DAPLINK_VID = 0x0D28
 DAPLINK_PID = 0x0204
@@ -556,6 +558,12 @@ def validate_build_manifest(
         or not isinstance(artifacts, dict)
     ):
         raise UploadHilFailure("M8 build manifest 기본 계약이 유효하지 않습니다.")
+    if (
+        context.get("schema_version") != SESSION_CONTEXT_SCHEMA_VERSION
+        or context.get("state") != "built"
+        or context.get("fqbn") != expected_fqbn
+    ):
+        raise UploadHilFailure("M8 build context의 schema 또는 완료 상태가 유효하지 않습니다.")
     expected_paths = {
         "build_path": build_path.resolve(),
         "platform_root": platform_root.resolve(),
@@ -569,6 +577,12 @@ def validate_build_manifest(
             or Path(value).resolve() != expected
         ):
             raise UploadHilFailure(f"M8 build context의 {field}가 exact 입력과 다릅니다.")
+    zephyr_build_value = context.get("zephyr_build_dir")
+    if not isinstance(zephyr_build_value, str) or not Path(zephyr_build_value).is_absolute():
+        raise UploadHilFailure("M8 build context의 Zephyr build 경로가 유효하지 않습니다.")
+    zephyr_build = Path(zephyr_build_value).resolve()
+    if zephyr_build.is_symlink() or not zephyr_build.is_dir():
+        raise UploadHilFailure("M8 build context의 Zephyr build directory가 없습니다.")
     hex_record = artifacts.get("hex")
     if not isinstance(hex_record, dict):
         raise UploadHilFailure("M8 build manifest에 HEX artifact가 없습니다.")
@@ -598,12 +612,16 @@ def validate_build_manifest(
         "hex": resolved_hex,
         "hex_sha256": hex_digest,
         "hex_size": hex_size,
+        "zephyr_build": zephyr_build,
     }
 
 
 ## @brief 한 번의 pyOCD upload log가 비파괴 runner와 exact HEX를 사용했는지 검증합니다.
 def validate_pyocd_flash_log(
-    log_path: Path, expected_hex_sha256: str, expected_hex_path: Path
+    log_path: Path,
+    expected_hex_sha256: str,
+    expected_hex_path: Path,
+    expected_zephyr_build: Path,
 ) -> dict[str, Any]:
     if (
         log_path.is_symlink()
@@ -649,7 +667,7 @@ def validate_pyocd_flash_log(
     )
     probe_options = [index for index, token in enumerate(tokens) if token == "--dev-id"]
     build_options = [index for index, token in enumerate(tokens) if token == "-d"]
-    expected_build = log_path.resolve().parent.parent
+    expected_build = expected_zephyr_build.resolve()
     probe_id = probe_lines[0].removeprefix("probe_id=")
     if (
         tokens.count("flash") != 1
@@ -978,7 +996,10 @@ def main(arguments: Sequence[str] | None = None) -> int:
         if release_identity is None or final_uart_evidence is None:
             raise UploadHilFailure("RC HIL release 또는 UART evidence가 완성되지 않았습니다.")
         flash_identity = validate_pyocd_flash_log(
-            build_path / "nu54-zephyr" / "logs" / "flash.log", hex_sha256, hex_path
+            build_path / "nu54-zephyr" / "logs" / "flash.log",
+            hex_sha256,
+            hex_path,
+            build_identity["zephyr_build"],
         )
         summary = {
             "schema_version": 1,

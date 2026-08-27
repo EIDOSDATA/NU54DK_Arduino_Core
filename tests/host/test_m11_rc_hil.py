@@ -168,6 +168,8 @@ class M11RcHilTests(unittest.TestCase):
         """! @brief exact RC build context와 HEX record fixture를 만듭니다. """
 
         build.mkdir(parents=True, exist_ok=True)
+        zephyr_build = self.root / "persistent-cache" / "zephyr-build"
+        zephyr_build.mkdir(parents=True, exist_ok=True)
         hex_path = build / "m8_upload.ino.hex"
         hex_path.write_bytes(b":020000040000FA\n:00000001FF\n")
         manifest_path = build / "m8_upload.ino.nu54-build.json"
@@ -178,9 +180,13 @@ class M11RcHilTests(unittest.TestCase):
                     "fqbn": f"{MODULE.FQBN}:upload_probe=pyocd",
                     "sysbuild": False,
                     "context": {
+                        "schema_version": MODULE.SESSION_CONTEXT_SCHEMA_VERSION,
+                        "state": "built",
+                        "fqbn": f"{MODULE.FQBN}:upload_probe=pyocd",
                         "build_path": build.resolve().as_posix(),
                         "platform_root": staged_platform.resolve().as_posix(),
                         "sketch_root": sketch.resolve().as_posix(),
+                        "zephyr_build_dir": zephyr_build.resolve().as_posix(),
                     },
                     "artifacts": {
                         "hex": {
@@ -336,6 +342,8 @@ class M11RcHilTests(unittest.TestCase):
         digest = "d" * 64
         log = self.root / "nu54-zephyr" / "logs" / "flash.log"
         log.parent.mkdir(parents=True)
+        zephyr_build = self.root / "persistent-cache" / "zephyr-build"
+        zephyr_build.mkdir(parents=True)
         hex_path = self.root / "firmware.hex"
         hex_path.write_bytes(b"hex")
         safe = (
@@ -348,23 +356,23 @@ class M11RcHilTests(unittest.TestCase):
             "mass_erase_requested=false\n"
             "recover_requested=false\n"
             "exit_code=0\n"
-            f"command=west flash -d {(self.root / 'nu54-zephyr').resolve().as_posix()} "
+            f"command=west flash -d {zephyr_build.resolve().as_posix()} "
             "-r pyocd "
             "--no-rebuild --dev-id fixture-probe "
             "--tool-opt=-Osmart_flash=false\n"
         )
         log.write_text(safe, encoding="utf-8")
-        result = MODULE.validate_pyocd_flash_log(log, digest, hex_path)
+        result = MODULE.validate_pyocd_flash_log(log, digest, hex_path, zephyr_build)
         self.assertEqual(result["attempts"], 1)
 
         log.write_text(safe.replace("--no-rebuild", "--no-rebuild --erase"), encoding="utf-8")
         with self.assertRaisesRegex(MODULE.UploadHilFailure, "파괴 option"):
-            MODULE.validate_pyocd_flash_log(log, digest, hex_path)
+            MODULE.validate_pyocd_flash_log(log, digest, hex_path, zephyr_build)
 
         log.write_text(safe, encoding="utf-8")
         with mock.patch.object(MODULE, "MAX_FLASH_LOG_BYTES", len(safe.encode("utf-8")) - 1):
             with self.assertRaisesRegex(MODULE.UploadHilFailure, "허용 크기"):
-                MODULE.validate_pyocd_flash_log(log, digest, hex_path)
+                MODULE.validate_pyocd_flash_log(log, digest, hex_path, zephyr_build)
 
     def test_auto_uart_opens_all_candidates_and_selects_unique_token(self) -> None:
         """! @brief COM3·COM4를 동시에 열고 READY가 있는 하나만 승인합니다. """
@@ -444,6 +452,10 @@ class M11RcHilTests(unittest.TestCase):
                 self.make_build_manifest(build, staged, sketch)
                 return 0, "compile passed", 0.1
             digest = MODULE.file_sha256(build / "m8_upload.ino.hex")
+            manifest = json.loads(
+                (build / "m8_upload.ino.nu54-build.json").read_text(encoding="utf-8")
+            )
+            zephyr_build = Path(manifest["context"]["zephyr_build_dir"])
             flash_log = build / "nu54-zephyr" / "logs" / "flash.log"
             flash_log.parent.mkdir(parents=True, exist_ok=True)
             flash_log.write_text(
@@ -456,7 +468,7 @@ class M11RcHilTests(unittest.TestCase):
                 "mass_erase_requested=false\n"
                 "recover_requested=false\n"
                 "exit_code=0\n"
-                f"command=west flash -d {(build / 'nu54-zephyr').resolve().as_posix()} "
+                f"command=west flash -d {zephyr_build.resolve().as_posix()} "
                 "-r pyocd --no-rebuild --dev-id fixture-probe "
                 "--tool-opt=-Osmart_flash=false\n",
                 encoding="utf-8",
