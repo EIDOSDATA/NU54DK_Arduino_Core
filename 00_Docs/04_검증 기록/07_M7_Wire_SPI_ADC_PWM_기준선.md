@@ -53,9 +53,9 @@ M7 최초 판정 당시 M6는 실제 P1.13 버튼 ISR edge 확인만 남아 있�
 - 임의 GPIO의 PWM 전환, DAC, Servo와 audio
 - BQ25186 제어와 VBAT service
 
-Upload/Flash recipe와 pyOCD/J-Link 선택은 M8 범위이며 현재 **미구현**이다. M7 HIL에서 기존
-DAPLink MSD 시험 경로로 이미지를 기록하더라도 이를 Arduino upload 기능 구현으로 계산하지
-않는다.
+Upload/Flash recipe와 pyOCD/J-Link 선택은 M7 완료 당시 범위 밖이었다. 이후 M8에서 Arduino
+Upload recipe와 pyOCD 기본·J-Link 선택 경로를 완료했다. M7 HIL의 기존 DAPLink MSD 기록은
+M8 Arduino upload 증거로 소급 계산하지 않는다.
 
 ---
 
@@ -401,5 +401,5 @@ SPI00 4 MHz의 40-byte 물리 loopback data까지 일치했으므로 M7의 최�
 - DAPLink flash sequence와 UART port
 - 각 미검증 항목의 원인과 재시험 조건
 
-시험을 실행하지 않았거나 log를 잃은 항목을 PASS로 바꾸지 않는다. M8 구현이 시작되지 않은
-상태도 이 문서에서 계속 명시한다.
+시험을 실행하지 않았거나 log를 잃은 항목을 PASS로 바꾸지 않는다. 후속 M8 상태는 별도의
+M8 기준선에서 관리하며 M7 당시 결과와 섞지 않는다.

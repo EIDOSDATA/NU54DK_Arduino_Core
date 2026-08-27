@@ -30,7 +30,10 @@ NU54DK에서 Loader 없이 동작하는 Native Full Zephyr 기반 Arduino Core�
 - M7 완료, NU54DK Twister target 11/11·Arduino CLI 4/4·I2C/ADC/PWM HIL과 SPI 4 MHz 물리 loopback 통과
 - M7 통합 staged Builder 회귀 8/8 named group 통과: blink, library, config, error, parallel, incremental, m6, m7
 - M7 BQ25186 `MASK_ID(0x0C)=0x41` repeated-start HIL을 100/400 kHz에서 통과하고 SPI00 P2.2→P2.4 40-byte loopback 일치 확인
-- Arduino Upload/Flash recipe와 pyOCD/J-Link 선택은 아직 미구현이며 M8 범위
+- M8 완료, Arduino IDE/CLI 공용 Upload recipe와 pyOCD 기본·J-Link 선택 경로 구현
+- M8 온보드 CMSIS-DAP 자동 선택, Arduino CLI pyOCD upload 10/10 및 최종 COM10 reset 표식 통과
+- M8 Full Zephyr ELF로 pyOCD debugserver와 원본 `.ino` `setup()` source breakpoint 통과
+- M8 통합 staged Builder 회귀 9/9와 M7·M8 host protocol/contract unittest 22/22 통과
 
 ## 보드 정의
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief NU54DK Arduino CLI M5~M7 end-to-end 회귀를 실행합니다. """
+"""! @brief NU54DK Arduino CLI M5~M8 end-to-end 회귀를 실행합니다. """
 
 from __future__ import annotations
 
@@ -489,15 +489,51 @@ def test_m7_examples(cli: Path, config: Path, root: Path, repository: Path) -> N
     test_live_build_record_scope(context, root)
 
 
-## @brief 선택된 M5~M7 smoke test를 격리된 hardware root에서 실행합니다.
+## @brief M8 upload sketch, manifest와 pyOCD/J-Link runner 계약을 compile 단계에서 검증합니다.
+def test_m8_upload_build(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    sketch = repository / "tests" / "arduino-cli" / "m8_upload"
+    build = root / "build-m8-upload"
+    command = compile_command(cli, config, build, sketch)
+    command[-1:-1] = ("--board-options", "upload_probe=pyocd")
+    run(command)
+    context = assert_build(build, "m8_upload.ino")
+    manifest_path = build / "m8_upload.ino.nu54-build.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("sysbuild") is not False:
+        raise SmokeFailure("M8 upload manifest unexpectedly enabled sysbuild")
+    if manifest.get("fqbn") != f"{FQBN}:upload_probe=pyocd":
+        raise SmokeFailure("M8 upload menu selection was not recorded in the manifest")
+    runners = Path(context["zephyr_build_dir"]) / "zephyr" / "runners.yaml"
+    content = runners.read_text(encoding="utf-8")
+    for expected in ("- pyocd", "- jlink", "--target=nrf54l", "--device=nRF54L15_M33"):
+        if expected not in content:
+            raise SmokeFailure(f"M8 runner contract is missing: {expected}")
+
+    platform = Path(context["platform_root"])
+    platform_text = (platform / "platform.txt").read_text(encoding="utf-8")
+    boards_text = (platform / "boards.txt").read_text(encoding="utf-8")
+    builder_text = (
+        platform / "tools" / "nu54-builder" / "src" / "nu54_builder.py"
+    ).read_text(encoding="utf-8")
+    for expected in ("--runner pyocd", "--runner jlink", "nu54-builder"):
+        if expected not in platform_text:
+            raise SmokeFailure(f"M8 upload recipe is missing: {expected}")
+    if "smart_flash=false" not in builder_text:
+        raise SmokeFailure("M8 pyOCD stability option is missing")
+    for expected in ("upload.tool.default=nu54_pyocd", "menu.upload_probe.jlink"):
+        if expected not in boards_text:
+            raise SmokeFailure(f"M8 board upload property is missing: {expected}")
+
+
+## @brief 선택된 M5~M8 smoke test를 격리된 hardware root에서 실행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--cli", type=Path, default=default_cli())
     parser.add_argument(
         "--tests",
         nargs="+",
-        choices=("blink", "library", "config", "error", "parallel", "incremental", "m6", "m7"),
-        default=("blink", "library", "config", "error", "parallel", "incremental", "m6", "m7"),
+        choices=("blink", "library", "config", "error", "parallel", "incremental", "m6", "m7", "m8"),
+        default=("blink", "library", "config", "error", "parallel", "incremental", "m6", "m7", "m8"),
     )
     args = parser.parse_args(arguments)
     repository = Path(__file__).resolve().parents[2]
@@ -520,6 +556,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "incremental": test_incremental,
             "m6": test_m6_examples,
             "m7": test_m7_examples,
+            "m8": test_m8_upload_build,
         }
         for name in args.tests:
             tests[name](cli, config, root, repository)

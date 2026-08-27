@@ -9,3 +9,11 @@ nu54dk.build.sysbuild=false
 nu54dk.build.extra_flags=-DARDUINO_NUCODE_NU54DK
 nu54dk.upload.maximum_size=1560576
 nu54dk.upload.maximum_data_size=262144
+nu54dk.upload.protocol=default
+nu54dk.upload.tool.default=nu54_pyocd
+
+menu.upload_probe=Upload probe
+nu54dk.menu.upload_probe.pyocd=CMSIS-DAP (pyOCD)
+nu54dk.menu.upload_probe.pyocd.upload.tool.default=nu54_pyocd
+nu54dk.menu.upload_probe.jlink=SEGGER J-Link
+nu54dk.menu.upload_probe.jlink.upload.tool.default=nu54_jlink

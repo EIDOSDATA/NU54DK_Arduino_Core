@@ -289,7 +289,8 @@ M6를 **완료**로 판정한다.
 - M6는 서브모듈 내부 파일이나 상위 gitlink를 수정하지 않았다.
 - 물리 pin, UART route와 GPIO flag의 단일 원본은 보드 Devicetree다.
 - M7의 Wire, SPI, ADC와 PWM은 아직 M6 완료 범위가 아니다.
-- M8의 Arduino Upload/Flash recipe, pyOCD/J-Link 선택과 recovery 분리는 아직 미구현이다.
+- M6 완료 당시 M8 기능은 미구현이었으며, 이후 M8에서 Arduino Upload/Flash recipe,
+  pyOCD/J-Link 선택과 recovery 분리를 완료했다.
 - 일반 M6 flash에서 mass erase나 recover를 수행하지 않았다.
 
 ---

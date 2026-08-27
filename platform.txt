@@ -17,6 +17,7 @@ build.extra_flags=
 
 nu54.builder="{runtime.platform.path}/tools/nu54-builder/nu54-builder.cmd"
 nu54.common_args=--platform-root "{runtime.platform.path}" --build-path "{build.path}" --sketch-root "{build.source.path}" --fqbn "{build.fqbn}" --project-name "{build.project_name}" --board "{build.zephyr_board}"
+nu54.upload_args=--platform-root "{runtime.platform.path}" --build-path "{build.path}" --sketch-root "{build.path}" --fqbn "{build.fqbn}" --project-name "{build.project_name}" --board "{build.zephyr_board}"
 
 # 모든 source record가 생성되기 전에는 Zephyr를 configure만 한다.
 recipe.hooks.prebuild.1.pattern={nu54.builder} prepare {nu54.common_args}
@@ -46,6 +47,15 @@ recipe.size.regex.data=^NU54_RAM_USED=([0-9]+)\r?$
 recipe.output.tmp_file={build.project_name}.hex
 recipe.output.save_file={build.project_name}.nu54dk.hex
 
-# M8 전에는 upload/flash recipe를 의도적으로 제공하지 않는다.
+# M8 일반 Upload는 manifest를 검증한 뒤 Zephyr runner를 사용하며 erase/recover를 요청하지 않는다.
+tools.nu54_pyocd.upload.params.verbose=--verbose
+tools.nu54_pyocd.upload.params.quiet=
+tools.nu54_pyocd.upload.pattern={nu54.builder} flash {nu54.upload_args} --manifest "{build.path}/{build.project_name}.nu54-build.json" --runner pyocd {upload.verbose}
+
+tools.nu54_jlink.upload.params.verbose=--verbose
+tools.nu54_jlink.upload.params.quiet=
+tools.nu54_jlink.upload.field.probe_id=J-Link serial number
+tools.nu54_jlink.upload.pattern={nu54.builder} flash {nu54.upload_args} --manifest "{build.path}/{build.project_name}.nu54-build.json" --runner jlink --probe-id "{upload.field.probe_id}" {upload.verbose}
+
 pluggable_discovery.required.0=builtin:serial-discovery
 pluggable_monitor.required.serial=builtin:serial-monitor

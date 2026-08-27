@@ -69,6 +69,7 @@
 - [M5 Arduino CLI Build Adapter 기준선](<./04_검증 기록/05_M5_Arduino_CLI_Build_Adapter_기준선.md>): `.ino`·library discovery에서 Full Zephyr 산출물까지의 Arduino CLI 수직 경로와 자동 회귀 증거
 - [M6 기본 Arduino API, Serial과 인터럽트 기준선](<./04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md>): ArduinoCore-API 공통 구현, 실제 UART Serial HIL, target ztest와 P1.13 물리 edge 완료 증거
 - [M7 Wire·SPI·ADC·PWM 기준선](<./04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md>): M7 공개 API·DTS/Kconfig 계약, 0x6A HIL 안전 경계와 실제·미검증 결과 행렬
+- [M8 업로드와 디버그 기준선](<./04_검증 기록/08_M8_업로드와_디버그_기준선.md>): manifest 검증, Arduino Upload recipe, pyOCD 10회 HIL과 source breakpoint 증거
 
 ## 현재 진행 상태
 
@@ -82,7 +83,8 @@
 | M5 Arduino CLI Build Adapter | **완료** | Full Zephyr 산출물 5종 생성과 staged-copy 자동 회귀 6/6 통과 |
 | M6 기본 Arduino API | **완료** | 공통 API·Serial·interrupt 구현, target ztest 10/10·COM10 Serial HIL·실제 P1.13 `FALLING`/`RISING`/`CHANGE` HIL 통과 |
 | M7 버스·아날로그·PWM API | **완료** | NU54DK Twister target 11/11·전체 Builder 8/8(M7 예제 4/4)·I2C/ADC/PWM HIL·SPI00 4 MHz 40-byte 물리 loopback 통과 |
-| M8~M11 | 대기 | M8 Upload/Flash recipe를 포함한 이후 단계는 아직 미구현이며 선행 단계 결과를 기다림 |
+| M8 업로드와 디버그 | **완료** | manifest·artifact·probe 안전검사, Arduino CLI pyOCD upload 10/10, 최종 UART reset과 `setup()` source breakpoint 통과 |
+| M9~M11 | 대기 | 증분 cache 고도화, Boards Manager 패키징과 v0.1 release 검증 대기 |
 
 상세 상태는 [구현 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)을 단일 기준으로 관리한다.
 

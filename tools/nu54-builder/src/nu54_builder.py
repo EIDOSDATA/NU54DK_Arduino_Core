@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief Arduino build graph를 NCS/Zephyr build로 연결하는 M5 adapter입니다. """
+"""! @brief Arduino build graph와 NU54DK flash 경로를 NCS/Zephyr에 연결합니다. """
 
 from __future__ import annotations
 
@@ -28,6 +28,14 @@ CONTEXT_DIRECTORY = "nu54-zephyr"
 
 class AdapterError(RuntimeError):
     """! @brief 사용자가 수정할 수 있는 Build Adapter 오류입니다. """
+
+
+class ChildCommandError(AdapterError):
+    """! @brief 하위 process의 실패 종료 code를 보존하는 오류입니다. """
+
+    def __init__(self, message: str, return_code: int) -> None:
+        super().__init__(message)
+        self.return_code = return_code
 
 
 ## @brief 경로를 존재 여부와 무관하게 절대 경로로 정규화합니다.
@@ -258,7 +266,10 @@ def run_checked(command: Sequence[str | Path], *, cwd: Path, environment: dict[s
                 sys.stdout.buffer.write(result.stdout)
             if result.stderr:
                 sys.stderr.buffer.write(result.stderr)
-        raise AdapterError(f"명령이 종료 코드 {result.returncode}로 실패했습니다: {shlex.join(normalized)}")
+        raise ChildCommandError(
+            f"명령이 종료 코드 {result.returncode}로 실패했습니다: {shlex.join(normalized)}",
+            result.returncode,
+        )
     return result
 
 
@@ -269,6 +280,17 @@ def file_sha256(path: Path) -> str:
         for block in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+## @brief JSON object를 읽고 손상 또는 잘못된 root type을 거부합니다.
+def load_json_object(path: Path, error_code: str) -> dict[str, Any]:
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise AdapterError(f"[NU54:{error_code}] JSON을 읽지 못했습니다: {path}: {error}") from error
+    if not isinstance(document, dict):
+        raise AdapterError(f"[NU54:{error_code}] JSON root가 object가 아닙니다: {path}")
+    return document
 
 
 ## @brief 설정 입력을 hashing하여 configure context 변경을 추적합니다.
@@ -707,6 +729,347 @@ def link(args: argparse.Namespace) -> None:
         atomic_write_json(paths["build_path"] / f"{args.project_name}.nu54-build.json", manifest)
 
 
+## @brief manifest artifact 한 개의 경로, 크기와 SHA-256을 검증합니다.
+def validate_manifest_artifact(
+    manifest: dict[str, Any], extension: str, build_path: Path
+) -> tuple[Path, str]:
+    artifacts = manifest.get("artifacts")
+    if not isinstance(artifacts, dict) or not isinstance(artifacts.get(extension), dict):
+        raise AdapterError(f"[NU54:E_FLASH_ARTIFACT_MISSING] manifest에 {extension} artifact가 없습니다.")
+    record = artifacts[extension]
+    artifact = canonical_path(str(record.get("path", "")))
+    if not is_within(artifact, build_path):
+        raise AdapterError(
+            f"[NU54:E_FLASH_ARTIFACT_PATH] {extension} artifact가 Arduino build directory 밖에 있습니다: {artifact}"
+        )
+    if not artifact.is_file() or artifact.stat().st_size == 0:
+        raise AdapterError(f"[NU54:E_FLASH_ARTIFACT_MISSING] {extension} artifact가 없습니다: {artifact}")
+    expected_size = record.get("size")
+    expected_hash = record.get("sha256")
+    if not isinstance(expected_size, int) or expected_size != artifact.stat().st_size:
+        raise AdapterError(f"[NU54:E_FLASH_ARTIFACT_HASH] {extension} artifact 크기가 manifest와 다릅니다.")
+    if not isinstance(expected_hash, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_hash):
+        raise AdapterError(f"[NU54:E_FLASH_ARTIFACT_HASH] {extension} SHA-256 기록이 잘못되었습니다.")
+    actual_hash = file_sha256(artifact)
+    if actual_hash != expected_hash:
+        raise AdapterError(f"[NU54:E_FLASH_ARTIFACT_HASH] {extension} artifact SHA-256이 manifest와 다릅니다.")
+    return artifact, actual_hash
+
+
+## @brief M8 upload가 사용할 manifest와 native Zephyr artifact를 검증합니다.
+def validate_flash_manifest(args: argparse.Namespace) -> dict[str, Any]:
+    build_path = canonical_path(args.build_path)
+    manifest_path = canonical_path(args.manifest)
+    expected_manifest = build_path / f"{args.project_name}.nu54-build.json"
+    if path_key(manifest_path) != path_key(expected_manifest):
+        raise AdapterError(
+            f"[NU54:E_FLASH_MANIFEST_PATH] 현재 build의 manifest가 아닙니다: {manifest_path}"
+        )
+    if not manifest_path.is_file():
+        raise AdapterError(f"[NU54:E_FLASH_ARTIFACT_MISSING] build manifest가 없습니다: {manifest_path}")
+    manifest = load_json_object(manifest_path, "E_FLASH_MANIFEST")
+    if manifest.get("schema_version") != 1 or manifest.get("adapter_version") != ADAPTER_VERSION:
+        raise AdapterError("[NU54:E_FLASH_MANIFEST_VERSION] 지원하지 않는 build manifest version입니다.")
+    if manifest.get("fqbn") != args.fqbn or manifest.get("board") != args.board:
+        raise AdapterError("[NU54:E_FLASH_BOARD_MISMATCH] manifest의 FQBN 또는 Zephyr board가 다릅니다.")
+    if manifest.get("sysbuild") is not False:
+        raise AdapterError(
+            "[NU54:E_FLASH_SYSBUILD_UNSUPPORTED] M8 upload는 non-sysbuild zephyr.hex만 지원합니다."
+        )
+
+    context = manifest.get("context")
+    if not isinstance(context, dict):
+        raise AdapterError("[NU54:E_FLASH_CONTEXT] manifest에 build context가 없습니다.")
+    context_pairs = {
+        "fqbn": args.fqbn,
+        "board": args.board,
+        "build_path": build_path.as_posix(),
+        "platform_root": canonical_path(args.platform_root).as_posix(),
+    }
+    for key, expected in context_pairs.items():
+        value = context.get(key)
+        if key.endswith("_path") or key.endswith("_root"):
+            matches = isinstance(value, str) and path_key(value) == path_key(expected)
+        else:
+            matches = value == expected
+        if not matches:
+            raise AdapterError(f"[NU54:E_FLASH_CONTEXT] build context의 {key} 값이 현재 요청과 다릅니다.")
+
+    exported_hex, hex_hash = validate_manifest_artifact(manifest, "hex", build_path)
+    exported_elf, elf_hash = validate_manifest_artifact(manifest, "elf", build_path)
+    zephyr_build = canonical_path(str(context.get("zephyr_build_dir", "")))
+    if not (zephyr_build / "CMakeCache.txt").is_file() or not (zephyr_build / "build.ninja").is_file():
+        raise AdapterError(f"[NU54:E_FLASH_CONTEXT] 유효한 Zephyr build directory가 아닙니다: {zephyr_build}")
+    native_hex = zephyr_build / "zephyr" / "zephyr.hex"
+    native_elf = zephyr_build / "zephyr" / "zephyr.elf"
+    for extension, native, exported_hash in (
+        ("hex", native_hex, hex_hash),
+        ("elf", native_elf, elf_hash),
+    ):
+        if not native.is_file() or native.stat().st_size == 0:
+            raise AdapterError(f"[NU54:E_FLASH_ARTIFACT_MISSING] native {extension} artifact가 없습니다: {native}")
+        if file_sha256(native) != exported_hash:
+            raise AdapterError(
+                f"[NU54:E_FLASH_ARTIFACT_HASH] native {extension}와 export artifact가 다릅니다."
+            )
+    return {
+        "manifest": manifest,
+        "manifest_path": manifest_path,
+        "build_path": build_path,
+        "zephyr_build": zephyr_build,
+        "hex": exported_hex,
+        "elf": exported_elf,
+        "hex_sha256": hex_hash,
+        "elf_sha256": elf_hash,
+    }
+
+
+## @brief Zephyr runners.yaml을 YAML parser로 읽고 선택 runner의 고정 인자를 검증합니다.
+def validate_runner_configuration(zephyr_build: Path, runner: str) -> Path:
+    runners_path = zephyr_build / "zephyr" / "runners.yaml"
+    if not runners_path.is_file():
+        raise AdapterError(f"[NU54:E_RUNNER_UNAVAILABLE] runners.yaml이 없습니다: {runners_path}")
+    try:
+        import yaml
+
+        document = yaml.safe_load(runners_path.read_text(encoding="utf-8"))
+    except Exception as error:
+        raise AdapterError(f"[NU54:E_RUNNER_UNAVAILABLE] runners.yaml을 읽지 못했습니다: {error}") from error
+    if not isinstance(document, dict):
+        raise AdapterError("[NU54:E_RUNNER_UNAVAILABLE] runners.yaml root가 object가 아닙니다.")
+    available = document.get("runners")
+    if not isinstance(available, list) or runner not in available:
+        names = ", ".join(str(value) for value in available) if isinstance(available, list) else "없음"
+        raise AdapterError(
+            f"[NU54:E_RUNNER_UNAVAILABLE] 선택 runner가 build에 없습니다: {runner}; available: {names}"
+        )
+    runner_arguments = document.get("args", {}).get(runner, [])
+    if not isinstance(runner_arguments, list):
+        raise AdapterError(f"[NU54:E_RUNNER_UNAVAILABLE] {runner} runner argument 형식이 잘못되었습니다.")
+    if runner == "pyocd" and "--target=nrf54l" not in runner_arguments:
+        raise AdapterError("[NU54:E_PYOCD_TARGET] pyOCD target이 nrf54l이 아닙니다.")
+    if runner == "jlink" and not {
+        "--device=nRF54L15_M33",
+        "--speed=4000",
+    }.issubset(set(runner_arguments)):
+        raise AdapterError("[NU54:E_RUNNER_JLINK_UNAVAILABLE] J-Link device 또는 speed metadata가 다릅니다.")
+    return runners_path
+
+
+## @brief pyOCD API를 사용해 연결된 CMSIS-DAP probe UID를 열거합니다.
+def discover_pyocd_probe_ids() -> list[str]:
+    try:
+        from pyocd.core.helpers import ConnectHelper
+
+        probes = ConnectHelper.get_all_connected_probes(blocking=False, print_wait_message=False)
+    except Exception as error:
+        raise AdapterError(f"[NU54:E_PROBE_NOT_FOUND] pyOCD probe 열거에 실패했습니다: {error}") from error
+    return sorted(
+        {str(probe.unique_id) for probe in probes if getattr(probe, "unique_id", None)},
+        key=str.casefold,
+    )
+
+
+## @brief 명시값과 발견 목록에서 잘못된 자동 선택 없이 pyOCD probe 하나를 결정합니다.
+def select_pyocd_probe(requested: str | None, discovered: Sequence[str] | None = None) -> str:
+    probe_ids = list(discovered) if discovered is not None else discover_pyocd_probe_ids()
+    requested_id = requested.strip() if requested else ""
+    if requested_id:
+        matches = [value for value in probe_ids if value.casefold() == requested_id.casefold()]
+        if not matches:
+            raise AdapterError(
+                f"[NU54:E_PROBE_NOT_FOUND] 요청한 CMSIS-DAP UID가 없습니다: {requested_id}; "
+                f"detected: {', '.join(probe_ids) or '없음'}"
+            )
+        return matches[0]
+    if not probe_ids:
+        raise AdapterError("[NU54:E_PROBE_NOT_FOUND] 연결된 CMSIS-DAP probe가 없습니다.")
+    if len(probe_ids) != 1:
+        raise AdapterError(
+            "[NU54:E_PROBE_AMBIGUOUS] 여러 CMSIS-DAP probe가 연결되어 UID 지정이 필요합니다: "
+            + ", ".join(probe_ids)
+        )
+    return probe_ids[0]
+
+
+## @brief 설치된 SEGGER J-Link 실행 directory를 찾습니다.
+def discover_jlink_directory(environment: dict[str, str]) -> Path:
+    candidates: list[Path] = []
+    configured = os.environ.get("NUCODE_JLINK_ROOT")
+    if configured:
+        candidates.append(canonical_path(configured))
+    executable = shutil.which("JLink.exe", path=environment.get("PATH"))
+    if executable:
+        candidates.append(canonical_path(executable).parent)
+    for root in (Path("C:/Program Files/SEGGER"), Path("C:/Program Files (x86)/SEGGER")):
+        if root.is_dir():
+            candidates.extend(sorted(root.glob("JLink_*"), reverse=True))
+    visited: set[str] = set()
+    for candidate in candidates:
+        key = path_key(candidate)
+        if key in visited:
+            continue
+        visited.add(key)
+        if (candidate / "JLink.exe").is_file() and (candidate / "JLinkGDBServerCL.exe").is_file():
+            return candidate.resolve()
+    raise AdapterError(
+        "[NU54:E_RUNNER_JLINK_UNAVAILABLE] SEGGER J-Link Software를 찾지 못했습니다. "
+        "NUCODE_JLINK_ROOT를 설정하십시오."
+    )
+
+
+## @brief runner에 필요한 실행 파일과 UTF-8 child process 환경을 구성합니다.
+def flash_environment(tools: dict[str, Any], runner: str) -> dict[str, str]:
+    environment = tools["environment"].copy()
+    environment["PYTHONUTF8"] = "1"
+    environment["PYTHONIOENCODING"] = "utf-8"
+    if runner == "pyocd":
+        pyocd = tools["toolchain_root"] / "opt" / "bin" / "Scripts" / "pyocd.exe"
+        if not pyocd.is_file():
+            raise AdapterError(f"[NU54:E_RUNNER_UNAVAILABLE] pyOCD 실행 파일이 없습니다: {pyocd}")
+    elif runner == "jlink":
+        jlink_directory = discover_jlink_directory(environment)
+        environment["PATH"] = str(jlink_directory) + os.pathsep + environment.get("PATH", "")
+    return environment
+
+
+## @brief 선택 runner와 probe로 erase 없는 west flash 명령을 만듭니다.
+def build_flash_command(
+    tools: dict[str, Any], zephyr_build: Path, runner: str, probe_id: str
+) -> list[str | Path]:
+    command: list[str | Path] = [
+        tools["west"],
+        "-z",
+        tools["zephyr_base"],
+        "flash",
+        "-d",
+        zephyr_build,
+        "-r",
+        runner,
+        "--no-rebuild",
+        "--dev-id",
+        probe_id,
+    ]
+    if runner == "pyocd":
+        command.append("--tool-opt=-Osmart_flash=false")
+    forbidden = {"--erase", "--recover"}
+    if forbidden.intersection(str(value) for value in command):
+        raise AdapterError("[NU54:E_FLASH_UNSAFE_OPTION] 일반 upload에 destructive option이 포함됐습니다.")
+    return command
+
+
+## @brief 동일 probe에 대한 동시에 실행되는 flash process를 직렬화합니다.
+@contextlib.contextmanager
+def probe_lock(probe_id: str, timeout_seconds: float = 120.0) -> Iterator[None]:
+    digest = hashlib.sha256(probe_id.casefold().encode("utf-8")).hexdigest()[:16]
+    lock_path = canonical_path(Path(tempfile.gettempdir()) / "n54" / "probe-locks" / f"{digest}.lock")
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    deadline = time.monotonic() + timeout_seconds
+    descriptor: int | None = None
+    while descriptor is None:
+        try:
+            descriptor = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            os.write(descriptor, f"{os.getpid()}\n".encode("ascii"))
+        except FileExistsError:
+            if time.monotonic() >= deadline:
+                raise AdapterError(f"[NU54:E_PROBE_BUSY] probe lock 대기 시간이 초과되었습니다: {probe_id}")
+            time.sleep(0.05)
+    try:
+        yield
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+        try:
+            lock_path.unlink()
+        except FileNotFoundError:
+            pass
+
+
+## @brief flash child process의 출력과 결과를 console 및 build log에 기록합니다.
+def run_flash_process(
+    command: Sequence[str | Path], *, cwd: Path, environment: dict[str, str], log_path: Path,
+    runner: str, probe_id: str, hex_path: Path, hex_sha256: str
+) -> None:
+    normalized = [str(value) for value in command]
+    started = dt.datetime.now(dt.timezone.utc)
+    result = subprocess.run(
+        normalized,
+        cwd=cwd,
+        env=environment,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        check=False,
+    )
+    output = result.stdout.decode("utf-8", errors="replace")
+    if output:
+        print(output, end="" if output.endswith("\n") else "\n")
+    finished = dt.datetime.now(dt.timezone.utc)
+    lines = [
+        f"started_at_utc={started.isoformat()}",
+        f"finished_at_utc={finished.isoformat()}",
+        f"runner={runner}",
+        f"probe_id={probe_id}",
+        f"hex={hex_path.as_posix()}",
+        f"hex_sha256={hex_sha256}",
+        f"smart_flash={'false' if runner == 'pyocd' else 'runner-default'}",
+        "mass_erase_requested=false",
+        "recover_requested=false",
+        f"exit_code={result.returncode}",
+        "command=" + shlex.join(normalized),
+        "--- child output ---",
+        output.rstrip(),
+        "--- end ---",
+        "",
+    ]
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    with log_path.open("a", encoding="utf-8", newline="\n") as stream:
+        stream.write("\n".join(lines))
+        stream.flush()
+        os.fsync(stream.fileno())
+    if result.returncode != 0:
+        raise ChildCommandError(
+            f"[NU54:E_FLASH_WRITE] flash가 종료 코드 {result.returncode}로 실패했습니다: "
+            + shlex.join(normalized),
+            result.returncode,
+        )
+
+
+## @brief 검증된 Full Zephyr image를 선택 runner로 일반 upload합니다.
+def flash(args: argparse.Namespace) -> None:
+    if args.runner not in {"pyocd", "jlink"}:
+        raise AdapterError(f"[NU54:E_RUNNER_UNAVAILABLE] 지원하지 않는 runner입니다: {args.runner}")
+    inputs = validate_flash_manifest(args)
+    validate_runner_configuration(inputs["zephyr_build"], args.runner)
+    tools = tool_environment()
+    environment = flash_environment(tools, args.runner)
+    if args.runner == "pyocd":
+        probe_id = select_pyocd_probe(args.probe_id)
+    else:
+        probe_id = (args.probe_id or "").strip()
+        if not probe_id:
+            raise AdapterError(
+                "[NU54:E_PROBE_AMBIGUOUS] J-Link upload에는 명시적인 probe serial이 필요합니다."
+            )
+    command = build_flash_command(tools, inputs["zephyr_build"], args.runner, probe_id)
+    print(
+        "NU54_UPLOAD_START "
+        f"runner={args.runner} probe={probe_id} board={args.board} "
+        f"hex_sha256={inputs['hex_sha256']}"
+    )
+    with build_lock(inputs["build_path"]), probe_lock(probe_id):
+        run_flash_process(
+            command,
+            cwd=tools["ncs_root"],
+            environment=environment,
+            log_path=inputs["build_path"] / CONTEXT_DIRECTORY / "logs" / "flash.log",
+            runner=args.runner,
+            probe_id=probe_id,
+            hex_path=inputs["hex"],
+            hex_sha256=inputs["hex_sha256"],
+        )
+    print(f"NU54_UPLOAD_PASS runner={args.runner} probe={probe_id}")
+
+
 ## @brief 이미 export된 artifact가 존재하는지 검증합니다.
 def verify_artifact(args: argparse.Namespace) -> None:
     artifact = canonical_path(args.artifact)
@@ -782,6 +1145,13 @@ def create_parser() -> argparse.ArgumentParser:
 
     size_parser = subparsers.add_parser("size")
     add_common_arguments(size_parser)
+
+    flash_parser = subparsers.add_parser("flash")
+    add_common_arguments(flash_parser)
+    flash_parser.add_argument("--manifest", required=True)
+    flash_parser.add_argument("--runner", choices=("pyocd", "jlink"), required=True)
+    flash_parser.add_argument("--probe-id")
+    flash_parser.add_argument("--verbose", action="store_true")
     return parser
 
 
@@ -806,9 +1176,14 @@ def main(arguments: Sequence[str] | None = None) -> int:
             verify_artifact(args)
         elif args.command == "size":
             print_size(args)
+        elif args.command == "flash":
+            flash(args)
         else:
             parser.error(f"알 수 없는 command입니다: {args.command}")
         return 0
+    except ChildCommandError as error:
+        print(f"nu54-builder: error: {error}", file=sys.stderr)
+        return error.return_code
     except AdapterError as error:
         print(f"nu54-builder: error: {error}", file=sys.stderr)
         return 2
