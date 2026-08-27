@@ -58,7 +58,7 @@ namespace
 	inline constexpr bool same_type<Value, Value> = true;
 
 	/** @brief M7 Wire 시험에 사용하는 고정 target 주소입니다. */
-	constexpr std::uint16_t test_i2c_address = 0x6BU;
+	constexpr std::uint16_t test_i2c_address = 0x5AU;
 
 	/** @brief M7 Wire 시험용 I2C controller emulator입니다. */
 	const struct device *const test_i2c = DEVICE_DT_GET(DT_NODELABEL(m7_i2c));
@@ -284,8 +284,8 @@ ZTEST(m7_wire, test_public_header_and_repeated_start_contract)
 
 	Wire.begin();
 	Wire.beginTransmission(test_i2c_address);
-	zassert_equal(Wire.write(static_cast<std::uint8_t>(0x0FU)), 1U,
-		      "WHO_AM_I register를 TX buffer에 넣지 못했습니다.");
+	zassert_equal(Wire.write(static_cast<std::uint8_t>(0x0CU)), 1U,
+		      "register pointer를 TX buffer에 넣지 못했습니다.");
 	zassert_equal(Wire.endTransmission(false), 0U,
 		      "no-STOP write가 repeated-start 대기로 전환되지 않았습니다.");
 	zassert_true(wireHasPendingRestart(), "repeated-start 대기 상태가 기록되지 않았습니다.");
@@ -298,7 +298,7 @@ ZTEST(m7_wire, test_public_header_and_repeated_start_contract)
 	zassert_equal(i2c_observation.address, test_i2c_address, "I2C target 주소가 다릅니다.");
 	zassert_equal(i2c_observation.message_count, 2, "repeated-start message 수가 다릅니다.");
 	zassert_equal(i2c_observation.lengths[0], 1U, "register write 길이가 다릅니다.");
-	zassert_equal(i2c_observation.bytes[0][0], 0x0FU, "register write 값이 다릅니다.");
+	zassert_equal(i2c_observation.bytes[0][0], 0x0CU, "register pointer 값이 다릅니다.");
 	zassert_equal(i2c_observation.flags[0], I2C_MSG_WRITE,
 		      "첫 message에 STOP 또는 READ가 잘못 포함되었습니다.");
 	zassert_true((i2c_observation.flags[1] & I2C_MSG_RESTART) != 0U,

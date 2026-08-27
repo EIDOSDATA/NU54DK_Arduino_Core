@@ -24,10 +24,10 @@ Arduino CLI staged package build와 실제 P1.13 active-low 버튼의 `FALLING`,
 명시한다. v0.1 목표 상태는 완료 보고가 아니다.
 
 M7의 `Wire`, `SPI`, `analogRead()`와 `analogWrite()` production source 및 builder profile은
-NU54DK Twister target 11/11, Arduino CLI M7 4/4와 승인된 NU54DK driver HIL을 통과했다. 다만 고정
-`0x6B` IMU의 `WHO_AM_I`는 RX 오류로 확인하지 못했고 물리 SPI data 경로는 fixture가 없어
-검증하지 못했다. 따라서 제약이 있는 공개 API는 아래 표에서 `부분 지원` 또는 `의미 차이`로
-표시하고 M7 전체 상태는 `조건부 완료`로 유지한다.
+NU54DK Twister target 11/11, Arduino CLI M7 4/4와 승인된 NU54DK driver HIL을 통과했다.
+BQ25186 I2C repeated-start는 100/400 kHz에서 실기 통과했고 물리 SPI data 경로는 fixture가
+없어 검증하지 못했다. 따라서 제약이 있는 공개 API는 아래 표에서 `부분 지원` 또는
+`의미 차이`로 표시하고 M7 전체 상태는 `조건부 완료`로 유지한다.
 
 관련 문서는 다음과 같다.
 
@@ -229,18 +229,19 @@ M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP
 
 | API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
-| 기본 `Wire` controller | P1 | 부분 지원 | 부분 지원 | I2C22 P1.2/P1.3의 blocking controller; chosen 누락 negative 통과, 다른 Zephyr client는 application 직렬화 필요 |
+| 기본 `Wire` controller | P1 | 부분 지원 | 부분 지원 | I2C22 P1.2/P1.3의 blocking controller; Core overlay의 NFC→GPIO 패드 전환과 chosen 누락 negative 통과, 다른 Zephyr client는 application 직렬화 필요 |
 | `beginTransmission()`/`endTransmission()` | P1 | 부분 지원 | 부분 지원 | 32-byte 고정 TX buffer와 Arduino 상태 번호; `endTransmission(false)`는 단독 전송하지 않고 보류; zero-byte `endTransmission(true)` address probe는 driver에 전달 |
 | `requestFrom()` | P1 | 부분 지원 | 부분 지원 | 32-byte 고정 RX buffer; `requestFrom(..., false)`는 미지원이며 0과 진단을 반환 |
-| repeated-start | P1 | 부분 지원 | 지원 | 같은 주소의 보류 write와 `requestFrom(..., true)` 결합은 ztest 통과; 실제 0x6B WHO_AM_I는 RX 오류로 미확정 |
-| `setClock()` | P1 | 부분 지원 | 부분 지원 | 100 kHz와 400 kHz만 허용하며 target ztest에서 clock·오류 경로 검증 |
+| repeated-start | P1 | 지원 | 지원 | 같은 주소의 보류 write와 `requestFrom(..., true)` 결합 ztest 및 BQ25186 `MASK_ID` 실기 통과 |
+| `setClock()` | P1 | 부분 지원 | 부분 지원 | 100 kHz와 400 kHz만 허용하며 target ztest와 BQ25186 실기에서 두 속도 검증 |
 | target/slave mode | P2 | 미구현 | 미구현 | Zephyr driver capability 검토 후 결정 |
 | `Wire1` 또는 임의 bus instance | P2 | 미구현 | 미구현 | 보드 overlay와 pin conflict 정책 필요 |
 
-M7 IMU HIL image와 host protocol에서는 PMIC 충돌 위험이 있는 address `0x6A`의 probe·pointer
-write·read·write를 모두 금지한다. 주소나 register를 외부 입력으로 받지 않고 `0x6B`의
-`WHO_AM_I(0x0F)`만 시도한다. 범용 `Wire` Core backend 자체는 모든 정상 7-bit 주소를 전달하므로
-전역 address blacklist를 제공하지 않는다.
+M7 I2C HIL image와 host protocol은 주소나 register를 외부 입력으로 받지 않고 온보드
+BQ25186의 `0x6A/0x0C` read-only transaction만 실행한다. register pointer 뒤 STOP을 내지 않고
+repeated-start로 한 byte를 읽으며 `MASK_ID & 0x0F == 0x1`을 판정한다. register data write,
+주소 scan과 fallback은 제공하지 않는다. 범용 `Wire` Core backend 자체는 모든 정상 7-bit
+주소를 전달한다.
 
 현재 `endTransmission()` public status는 TX overflow=1, `-ETIMEDOUT`=5이며 그 밖의
 negative driver errno는 공개 status 4로 변환한다. NACK을 address/data status 2·3으로 나누지 않으며 원래 errno는 비공개
@@ -267,7 +268,7 @@ negative driver errno는 공개 status 4로 변환한다. NACK을 address/data s
 | API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
 | `PIN_A0`/`A0` | P1 | 부분 지원 | 부분 지원 | 논리 index 2, `nucode,arduino-adc` chosen의 P1.12/SAADC channel 5; digital pin이 아님 |
-| `analogRead()` | P1 | 부분 지원 | 부분 지원 | A0 고정 12-bit raw 0..4095와 오류 `-1`; gain 1/4 실제 raw=3176 범위 확인, 전압 정확도 미검증 |
+| `analogRead()` | P1 | 부분 지원 | 부분 지원 | A0 고정 12-bit raw 0..4095와 오류 `-1`; gain 1/4 최종 실기 raw=3140 범위 확인, 전압 정확도 미검증 |
 | `analogReadResolution()` | P1 | 미구현 | 미구현 | vendored ArduinoCore-API 1.5.2에 선언이 없어 M7에서 추가하지 않음 |
 | `analogReference()` | P2 | 의미 차이 | 의미 차이 | `AR_DEFAULT=0`만 허용하고 `AR_INTERNAL`은 같은 값의 설명용 별칭; DTS gain/reference는 runtime 불변 |
 | `PIN_PWM0`/`PIN_PWM_LED` | P1 | 부분 지원 | 부분 지원 | 논리 index 3, `nucode,arduino-pwm` chosen의 P1.10/pwm20 역할; `LED_BUILTIN` P2.9는 PWM이 아님 |

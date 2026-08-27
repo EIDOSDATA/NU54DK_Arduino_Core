@@ -81,7 +81,7 @@
 | M4 ArduinoCore-API 계약 | **완료** | 1.5.2 고정 snapshot·라이선스 고지·NU54DK API 계약 pristine build 통과 |
 | M5 Arduino CLI Build Adapter | **완료** | Full Zephyr 산출물 5종 생성과 staged-copy 자동 회귀 6/6 통과 |
 | M6 기본 Arduino API | **완료** | 공통 API·Serial·interrupt 구현, target ztest 10/10·COM10 Serial HIL·실제 P1.13 `FALLING`/`RISING`/`CHANGE` HIL 통과 |
-| M7 버스·아날로그·PWM API | **조건부 완료** | NU54DK Twister target 11/11·전체 Builder 8/8(M7 예제 4/4)·driver HIL 통과; IMU WHO_AM_I 미확정과 물리 SPI data 경로 미검증 |
+| M7 버스·아날로그·PWM API | **조건부 완료** | NU54DK Twister target 11/11·전체 Builder 8/8(M7 예제 4/4)·I2C/ADC/PWM/SPI driver HIL 통과; 물리 SPI data 경로만 미검증 |
 | M8~M11 | 대기 | M8 Upload/Flash recipe를 포함한 이후 단계는 아직 미구현이며 선행 단계 결과를 기다림 |
 
 상세 상태는 [구현 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)을 단일 기준으로 관리한다.

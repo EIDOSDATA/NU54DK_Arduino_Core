@@ -426,9 +426,9 @@ def test_m7_examples(cli: Path, config: Path, root: Path, repository: Path) -> N
     )
     examples = (
         (
-            "wire-who-am-i",
-            repository / "examples" / "04.Communication" / "WireWhoAmI",
-            "WireWhoAmI.ino",
+            "wire-pmic-id",
+            repository / "examples" / "04.Communication" / "WirePmicId",
+            "WirePmicId.ino",
             "CONFIG_NUCODE_ARDUINO_WIRE",
             "nucode,arduino-wire",
         ),

@@ -1,4 +1,4 @@
-"""! @brief NU54DK M7 Wire와 0x6B LSM6DS3TR-C WHO_AM_I 경로를 안전하게 검증합니다. """
+"""! @brief NU54DK M7 Wire로 온보드 BQ25186 Device ID를 읽기 전용 검증합니다. """
 
 from __future__ import annotations
 
@@ -31,13 +31,14 @@ from m6_serial_echo import (  # noqa: E402
 )
 
 
-IMU_I2C_ADDRESS = 0x6B
-WHO_AM_I_REGISTER = 0x0F
-WHO_AM_I_EXPECTED = 0x6A
+PMIC_I2C_ADDRESS = 0x6A
+MASK_ID_REGISTER = 0x0C
+DEVICE_ID_MASK = 0x0F
+DEVICE_ID_EXPECTED = 0x01
 READY_TOKEN = b"NUCODE_M7_I2C_READY\r\n"
-REQUEST_TOKEN = b"NUCODE_M7_I2C_WHOAMI_RS:6B:0F\r\n"
+REQUEST_TOKEN = b"NUCODE_M7_I2C_PMIC_ID_RS:6A:0C\r\n"
 RESULT_PREFIX = b"NUCODE_M7_I2C_RESULT:"
-RESULT_TOKEN = b"NUCODE_M7_I2C_RESULT:6B:0F:6A:RS\r\n"
+RESULT_TOKEN = b"NUCODE_M7_I2C_RESULT:6A:0C:41:RS\r\n"
 ERROR_PREFIX = b"NUCODE_M7_I2C_ERROR:"
 RESULT_PATTERN = re.compile(
     rb"NUCODE_M7_I2C_RESULT:([0-9A-F]{2}):([0-9A-F]{2}):([0-9A-F]{2}):(RS)"
@@ -45,8 +46,8 @@ RESULT_PATTERN = re.compile(
 
 
 @dataclass(frozen=True)
-class ImuIdentityResult:
-    """! @brief 고정 WHO_AM_I repeated-start 응답을 구조화합니다. """
+class PmicIdentityResult:
+    """! @brief 고정 MASK_ID repeated-start 응답을 구조화합니다. """
 
     address: int
     register: int
@@ -55,12 +56,12 @@ class ImuIdentityResult:
 
 
 def parse_arguments() -> argparse.Namespace:
-    """! @brief 고정 IMU 시험에 필요한 image, probe와 UART 인자만 해석합니다. """
+    """! @brief 고정 PMIC 시험에 필요한 image, probe와 UART 인자만 해석합니다. """
 
     parser = argparse.ArgumentParser(
         description=(
-            "NU54DK M7 image를 기록하고 고정 주소 0x6B의 WHO_AM_I(0x0F)를 "
-            "repeated-start로 읽어 0x6A인지 검증합니다."
+            "NU54DK M7 image를 기록하고 온보드 BQ25186 주소 0x6A의 "
+            "MASK_ID(0x0C)를 repeated-start로 읽어 Device ID가 0x1인지 검증합니다."
         )
     )
     parser.add_argument(
@@ -104,7 +105,7 @@ def parse_arguments() -> argparse.Namespace:
         "--result-timeout",
         type=float,
         default=10.0,
-        help="고정 WHO_AM_I 응답 제한 시간(초)",
+        help="고정 MASK_ID 응답 제한 시간(초)",
     )
     parser.add_argument(
         "--discover-only",
@@ -114,8 +115,8 @@ def parse_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def parse_result_line(line: bytes) -> ImuIdentityResult:
-    """! @brief 한 protocol line이 승인된 0x6B repeated-start 결과인지 엄격히 검증합니다. """
+def parse_result_line(line: bytes) -> PmicIdentityResult:
+    """! @brief 한 protocol line이 승인된 BQ25186 read 결과인지 엄격히 검증합니다. """
 
     normalized = line.rstrip(b"\r\n")
     match = RESULT_PATTERN.fullmatch(normalized)
@@ -127,19 +128,20 @@ def parse_result_line(line: bytes) -> ImuIdentityResult:
     value = int(match.group(3), 16)
     repeated_start = match.group(4) == b"RS"
 
-    if address != IMU_I2C_ADDRESS:
+    if address != PMIC_I2C_ADDRESS:
         raise ValueError(f"승인되지 않은 I2C 주소입니다: 0x{address:02X}")
-    if register != WHO_AM_I_REGISTER:
-        raise ValueError(f"승인되지 않은 IMU register입니다: 0x{register:02X}")
-    if value != WHO_AM_I_EXPECTED:
+    if register != MASK_ID_REGISTER:
+        raise ValueError(f"승인되지 않은 PMIC register입니다: 0x{register:02X}")
+    if (value & DEVICE_ID_MASK) != DEVICE_ID_EXPECTED:
         raise ValueError(
-            "LSM6DS3TR-C WHO_AM_I 불일치: "
-            f"기대=0x{WHO_AM_I_EXPECTED:02X}, 실제=0x{value:02X}"
+            "BQ25186 Device ID 불일치: "
+            f"기대=0x{DEVICE_ID_EXPECTED:X}, 실제=0x{value & DEVICE_ID_MASK:X}, "
+            f"MASK_ID=0x{value:02X}"
         )
     if not repeated_start:
-        raise ValueError("WHO_AM_I 응답에 repeated-start 증거가 없습니다.")
+        raise ValueError("MASK_ID 응답에 repeated-start 증거가 없습니다.")
 
-    return ImuIdentityResult(address, register, value, repeated_start)
+    return PmicIdentityResult(address, register, value, repeated_start)
 
 
 def flash_image(
@@ -163,7 +165,7 @@ def flash_image(
 
 def read_protocol_result(
     serial_port: Any, timeout_seconds: float, initial_data: bytes = b""
-) -> ImuIdentityResult:
+) -> PmicIdentityResult:
     """! @brief UART stream에서 첫 M7 result/error line을 찾아 고정 계약으로 판정합니다. """
 
     if timeout_seconds <= 0:
@@ -201,15 +203,15 @@ def read_protocol_result(
     )
 
 
-def verify_i2c_whoami(
+def verify_i2c_pmic_id(
     serial_module: Any,
     port_name: str,
     baud_rate: int,
     flash_callback: Any,
     ready_timeout: float,
     result_timeout: float,
-) -> tuple[str, str, ImuIdentityResult]:
-    """! @brief flash 뒤 고정 0x6B/0x0F repeated-start protocol 한 가지만 실행합니다. """
+) -> tuple[str, str, PmicIdentityResult]:
+    """! @brief flash 뒤 고정 0x6A/0x0C repeated-start read 한 가지만 실행합니다. """
 
     if baud_rate != DEFAULT_BAUD_RATE:
         raise ValueError(
@@ -246,7 +248,7 @@ def verify_i2c_whoami(
 
 
 def main() -> int:
-    """! @brief 장치 탐색 또는 전체 M7 0x6B WHO_AM_I HIL을 실행합니다. """
+    """! @brief 장치 탐색 또는 전체 M7 BQ25186 Device ID HIL을 실행합니다. """
 
     arguments = parse_arguments()
     board_id = normalize_board_id(arguments.board_id)
@@ -268,7 +270,7 @@ def main() -> int:
         raise ValueError("--result-timeout은 0보다 커야 합니다.")
 
     image = validate_hex_image(arguments.hex_path)
-    sequence, byte_count, result = verify_i2c_whoami(
+    sequence, byte_count, result = verify_i2c_pmic_id(
         serial_module=serial_module,
         port_name=port_name,
         baud_rate=arguments.baud,
@@ -279,7 +281,7 @@ def main() -> int:
         result_timeout=arguments.result_timeout,
     )
     print(
-        "M7 I2C IMU HIL PASS: "
+        "M7 I2C PMIC HIL PASS: "
         f"uid={unique_id}, sequence={sequence}, bytes={byte_count}, port={port_name}, "
         f"address=0x{result.address:02X}, register=0x{result.register:02X}, "
         f"value=0x{result.value:02X}, repeated_start={result.repeated_start}"
@@ -291,5 +293,5 @@ if __name__ == "__main__":
     try:
         sys.exit(main())
     except Exception as error:
-        print(f"M7 I2C IMU HIL FAIL: {error}", file=sys.stderr)
+        print(f"M7 I2C PMIC HIL FAIL: {error}", file=sys.stderr)
         sys.exit(1)

@@ -26,6 +26,11 @@
 	pinctrl-names = "default", "sleep";
 };
 
+/** @brief nRF54L15 NFC 전용 P1.2/P1.3 패드를 Arduino Wire용 GPIO/TWIM으로 전환합니다. */
+&uicr {
+	nfct-pins-as-gpios;
+};
+
 /** @brief nRF54L15이 지원하는 가장 낮은 1/4 gain으로 A0 입력 범위를 설정합니다. */
 &adc {
 	channel@5 {

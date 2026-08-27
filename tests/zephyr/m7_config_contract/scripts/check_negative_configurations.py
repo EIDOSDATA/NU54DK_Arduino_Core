@@ -127,7 +127,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
     cases = (
         NegativeCase(
             name="missing-wire-chosen",
-            sample=core_root / "samples" / "zephyr" / "wire_whoami",
+            sample=core_root / "samples" / "zephyr" / "wire_pmic_id",
             overlay=negative_root / "missing_wire_chosen.overlay",
             expected_diagnostics=(
                 "NUCODE_M7_WIRE_CHOSEN_REQUIRED",

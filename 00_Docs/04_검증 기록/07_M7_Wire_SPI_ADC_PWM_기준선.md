@@ -9,7 +9,7 @@
 | 기준 Zephyr | Zephyr 4.4.0 |
 | 기준 타깃 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | 보드 package | `board_package/NU54DK_Zephyr_DTS`, `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| 검증 상태 | 자동 회귀와 승인된 실기 경로 통과; 실제 IMU 응답과 물리 SPI data 경로는 미확정·미검증 |
+| 검증 상태 | 자동 회귀와 BQ25186 I2C·ADC/PWM/SPI driver 실기 통과; 물리 SPI data 경로 미검증 |
 
 ---
 
@@ -20,8 +20,8 @@
 존재한다는 사실만으로 기능을 지원 또는 완료로 판정하지 않는다.
 
 현재 문서는 구현 명칭과 확정된 target·Arduino CLI·HIL 결과를 기록한 **조건부 완료 기준선**이다.
-실제 `0x6B/0x0F` IMU 읽기는 RX 오류로 값을 확인하지 못했고 물리 SPI data 경로는 fixture가 없어
-검증하지 못했다. 이 두 제한을 숨기지 않는 조건으로 M7을 `조건부 완료`로 판정한다. 실제 명령의
+실제 BQ25186 `MASK_ID` repeated-start는 통과했고 물리 SPI data 경로만 fixture가 없어
+검증하지 못했다. 이 제한을 숨기지 않는 조건으로 M7을 `조건부 완료`로 판정한다. 실제 명령의
 exit code, case 수, 메모리와 NU54DK HIL 결과는 확보된 실행 증거만 기록한다.
 
 M7 최초 판정 당시 M6는 실제 P1.13 버튼 ISR edge 확인만 남아 있었다. 이후 독립적인
@@ -136,9 +136,9 @@ M7 기능 때문에 깨지지 않는다.
 | `tools/nu54-builder/templates/zephyr-app/{prj.conf,app.overlay}` | Arduino 기본 profile의 M7 Kconfig와 chosen/SPI00 활성화 |
 | `tests/zephyr/m7_core_api` | NU54DK target emulator/fake-driver 의미 회귀 |
 | `tests/zephyr/m7_config_contract` | chosen 누락·잘못된 SPI instance·SPI00/uart00 충돌 expected-fail 자동 fixture |
-| `tests/hil/m7_i2c_imu.py` | 고정 0x6B/0x0F 실제 I2C HIL host protocol |
+| `tests/hil/m7_i2c_pmic.py` | 고정 BQ25186 0x6A/0x0C 읽기 전용 I2C HIL host protocol |
 | `examples/03.Analog`, `examples/04.Communication` | Arduino CLI discovery·compile과 사용자 계약 예제 |
-| `samples/zephyr/{wire_whoami,spi_transaction,analog_read_a0,pwm_fade}` | west-native build 및 승인된 실기 경로 |
+| `samples/zephyr/{wire_pmic_id,spi_transaction,analog_read_a0,pwm_fade}` | west-native build 및 승인된 실기 경로 |
 
 Core backend는 `cores/arduino`에서 한 번만 컴파일한다. `libraries/Wire`와 `libraries/SPI`는
 `Arduino.h`를 포함하는 진입점일 뿐 구현 source를 복제하지 않는다. 보드 package에는 위
@@ -187,26 +187,30 @@ beginTransmission(address)
 오류로 처리한다. 마지막 read 뒤 STOP을 생략하는 `requestFrom(..., false)`는 M7에서
 **미지원**이며 0과 `unsupported_no_stop_read` 진단을 반환한다.
 
-### 5.3 HIL에서의 0x6A 완전 접근 금지
+### 5.3 BQ25186 읽기 전용 HIL 안전 경계
 
-NU54DK의 PMIC와 IMU 주소 충돌 위험 때문에 M7의 IMU HIL image·host runner·실행 절차는
-7-bit address `0x6A`에 접근하지 않는다. 다음 동작을 모두 금지한다.
+외장 Qwiic 센서를 분리한 뒤 NU54DK 온보드 BQ25186을 고정 target으로 사용한다. HIL
+image·host runner·실행 절차는 7-bit address `0x6A`의 `MASK_ID(0x0C)` pointer write와
+repeated-start 1-byte read만 실행한다. 반환 byte의 하위 nibble Device ID가 `0x1`인지
+판정하며 상위 interrupt-mask bit는 허용한다.
 
-- address-only probe
-- I2C scan
-- register pointer write
-- read, write와 fallback 재시도
+다음 동작은 하지 않는다.
 
-LSM6DS3TR-C HIL은 오직 address `0x6B`의 `WHO_AM_I` register `0x0F`를
-repeated-start로 1 byte 읽는다. 기대 **반환 값**은 `0x6A`이며, 이 값은 접근 주소가 아니다.
-`0x6B`가 응답하지 않아도 `0x6A`로 재시도하지 않고 실제 I2C HIL을 미검증으로 남긴다.
+- register data write
+- address-only probe와 I2C scan
+- 다른 register 접근
+- 다른 주소 fallback 재시도
 
-범용 Arduino `Wire` 객체 자체는 Sketch가 선택한 모든 정상 7-bit 주소를 전달해야 하므로
-Core backend에 전역 `0x6A` blacklist를 넣지 않는다. 안전 금지는 M7 HIL의 고정 image와 host
-protocol에 적용한다. HIL command line·UART protocol에는 address, register 또는 scan 옵션을
-노출하지 않는다.
+HIL command line·UART protocol에는 address, register 또는 scan 옵션을 노출하지 않는다.
+첫 transaction은 BQ25186 기본 watchdog을 시작할 수 있으므로 고정 ID read를 한 번 수행한 뒤
+종료한다. 범용 Arduino `Wire` 객체 자체에는 주소 blacklist를 두지 않는다.
 
-일반 I2C scanner 예제, 완료 기준과 검증 명령은 M7 문서에서 사용하지 않는다.
+P1.2/P1.3은 nRF54L15 NFC 전용 패드다. 초기 실패에서 두 line이 LOW이고 Zephyr driver가
+`-ETIMEDOUT(-116)`을 반환했다. `nfct`를 disabled로 둔 것만으로는 패드가 GPIO/TWIM으로
+전환되지 않았으며, Core의 Builder·Wire sample overlay에
+`&uicr { nfct-pins-as-gpios; };`를 추가한 뒤 통신이 정상화됐다. 내부 pull-up을 제거한
+상태에서도 통과했으므로 회로의 외부 pull-up 경로가 동작함을 확인했다. 보드 서브모듈은
+수정하지 않았다.
 
 ---
 
@@ -288,21 +292,21 @@ P1.10 PWM 역할을 digital pin으로 추가하지 않으므로 M7에는 GPIO↔
 
 | 시험 | 현재 결과 | 통과 기준 |
 | --- | --- | --- |
-| Wire production pristine build | **PASS** | FLASH 43,912 B, RAM 17,712 B |
+| Wire production pristine build | **PASS** | FLASH 44,628 B, RAM 17,720 B; NFC 패드 전환 overlay 포함 |
 | SPI 4 MHz production pristine build | **PASS** | FLASH 44,372 B, RAM 17,728 B |
 | ADC gain 1/4 production pristine build | **PASS** | FLASH 43,256 B, RAM 17,688 B |
 | PWM production pristine build | **PASS** | FLASH 37,096 B, RAM 17,160 B |
-| M7 Core target build | **PASS** | pristine 310/310, FLASH 100,544 B, RAM 28,376 B |
+| M7 Core target build | **PASS** | pristine 310/310, FLASH 100,548 B, RAM 28,376 B |
 | Wire repeated-start emulator | **PASS** | target ztest Wire suite 4/4에 포함 |
 | Wire zero-byte address probe | **PASS** | `endTransmission(true)`의 0-byte write·STOP과 driver 오류 변환을 target ztest로 검증 |
 | Wire overflow/generic error/clock | **PASS** | overflow와 `-EIO`→4·원본 errno, 100/400 kHz를 Wire 4/4에서 검증 |
-| HIL 0x6A 접근 차단 | **PASS** | host protocol 입력 고정, 실제 실패 뒤에도 0x6A 접근 0회 |
+| BQ25186 HIL 안전 경계 | **PASS** | host protocol을 0x6A/0x0C read-only로 고정; register data write·scan·fallback 없음 |
 | BQ25186 비활성 유지 | **PASS** | 최종 generated Devicetree에서 `status = "disabled"` 확인 |
 | SPI mode·bit order·transfer | **PASS** | target ztest SPI suite 3/3에 포함 |
 | SPI lifecycle/error recovery | **PASS** | target ztest SPI suite 3/3에 포함 |
 | ADC emulator | **PASS** | target ztest ADC suite 2/2, gain 1/4 최종 계약 |
 | PWM fake driver | **PASS** | target ztest PWM suite 2/2 |
-| HIL host protocol unittest | **PASS** | 고정 0x6B IMU 5/5 + peripheral parser 5/5, 합계 10/10 |
+| HIL host protocol unittest | **PASS** | 고정 BQ25186 PMIC 5/5 + peripheral parser 5/5, 합계 10/10 |
 | Arduino CLI M7 smoke | **PASS** | fresh isolated `--tests m7`, exit 0; 4/4 compile/artifact와 전체 Kconfig y/n matrix·chosen·Sketch overlay 원문 병합 |
 | live build record provenance | **PASS** | public header·`library.properties`·DTS binding 독립 mutation마다 `core_source_sha256` 변경, `core_revision` dirty와 복원 확인 |
 | Builder incremental invalidation | **PASS** | `module.yml`과 DTS binding을 순서대로 독립 변경; 같은 workspace, 각각 재configure, pristine configure 누계 1 |
@@ -310,14 +314,14 @@ P1.10 PWM 역할을 digital pin으로 추가하지 않으므로 M7에는 GPIO↔
 | Wire chosen 누락 negative | **PASS** | expected-fail; `NUCODE_M7_WIRE_CHOSEN_REQUIRED` 일치 |
 | non-SPI00 chosen negative | **PASS** | expected-fail; `NUCODE_M7_SPI_CHOSEN_MUST_BE_SPI00` 일치 |
 | SPI00/uart00 충돌 negative | **PASS** | expected-fail; `NUCODE_M7_SPI_UART00_CONFLICT` 또는 Zephyr mutual-exclusion 진단 일치 |
-| NU54DK I2C 0x6B WHO_AM_I | **미확정** | 고정 request는 송신했으나 target이 `NUCODE_M7_I2C_ERROR:RX` 반환 |
-| NU54DK ADC raw | **PASS** | seq17에서 gain 1/4 A0 raw=3176; 0..4095 범위만 검증, 전압 정확도 주장 없음 |
-| NU54DK PWM | **PASS** | seq17에서 driver duty 0/128/255 실행; 실제 파형 주장 없음 |
-| NU54DK SPI 4 MHz driver 경로 | **PASS** | seq17에서 4 MHz/div32 transfer 성공, rx=0x00; loopback/target data 주장 없음 |
+| NU54DK BQ25186 I2C | **PASS** | seq33 100 kHz·seq34/42 400 kHz에서 `MASK_ID(0x0C)=0x41`, Device ID 0x1과 repeated-start 확인 |
+| NU54DK ADC raw | **PASS** | 최종 seq37에서 gain 1/4 A0 raw=3140; 0..4095 범위만 검증, 전압 정확도 주장 없음 |
+| NU54DK PWM | **PASS** | 최종 seq37에서 driver duty 0/128/255 실행; 실제 파형 주장 없음 |
+| NU54DK SPI 4 MHz driver 경로 | **PASS** | 최종 seq37에서 4 MHz/div32 transfer 성공, rx=0x00; loopback/target data 주장 없음 |
 | NU54DK 물리 SPI data 경로 | **미검증** | fixture가 없어 loopback/target data 일치를 주장하지 않음 |
 
 HIL host protocol은 주소나 register를 command-line 또는 UART payload로 임의 변경할 수 없게
-고정한다. 허용 요청은 `0x6B/0x0F` 하나뿐이다.
+고정한다. 허용 요청은 BQ25186 `0x6A/0x0C` 읽기 하나뿐이다.
 
 live build record는 configure fingerprint와 같은 `cores`, `dts`, `libraries`, `third_party`,
 `variants`, `zephyr` 범위를 사용한다. M7 CLI 회귀는 public header, SPI library metadata와 ADC
@@ -330,21 +334,29 @@ DTS binding을 변경한 뒤 다시 한 번 configuration fingerprint가 바뀌�
 누계는 1에서 늘지 않았다.
 
 최종 target ztest image는 gain 1/4, SPI frequency 선검증과 zero-byte address probe 보강 뒤
-pristine 310/310으로 빌드되었고 FLASH 100,544 B, RAM 28,376 B를 사용했다. DAPLink
-sequence 20으로 283,136-byte image를 기록한 뒤 COM10에서 1/1 configuration,
+pristine 310/310으로 빌드되었고 FLASH 100,548 B, RAM 28,376 B를 사용했다. 최초 승인
+sequence 20에서는 283,136-byte image를 기록한 뒤 COM10에서 1/1 configuration,
 Wire 4, SPI 3, ADC 2, PWM 2의 합계 11/11과 `PROJECT EXECUTION SUCCESSFUL`을 확인했다.
+2026-08-27 최종 source 재검증은 DAPLink sequence 41로 같은 283,136-byte image를 기록하고
+pyOCD로 11개 `ztest_unit_test_stats`를 회수했다. 모든 case가 `run=1`, `skip=0`, `fail=0`,
+`pass=1`이었다. 이 실행에서는 DAPLink 재열거 중 일회성 COM10 출력은 회수하지 못했으므로,
+판정은 target RAM의 Zephyr ztest 통계로 독립 확인했다.
 
 negative 구성 3건도 실제 NCS expected-fail build로 판정했다. Wire chosen 누락은
 `NUCODE_M7_WIRE_CHOSEN_REQUIRED`, SPI chosen이 SPI00이 아닌 구성은
 `NUCODE_M7_SPI_CHOSEN_MUST_BE_SPI00`, SPI00과 uart00 동시 활성은
 `NUCODE_M7_SPI_UART00_CONFLICT` 또는 Zephyr peripheral mutual-exclusion 진단을 확인했다.
 
-최종 실제 I2C HIL에서는 production Wire image를 DAPLink sequence 18로 기록했으며
-123,904-byte flash가 성공했다. COM10의
-READY 뒤 고정 `0x6B/0x0F` request도 송신했다. 그러나 target read가
-`NUCODE_M7_I2C_ERROR:RX`로 끝나 `WHO_AM_I=0x6A`를 확인하지 못했다. 실패 뒤 address
-`0x6A` fallback, scan 또는 임의 접근은 전혀 실행하지 않았다. 따라서 물리 IMU 경로는
-미확정이며 이 결과를 emulator repeated-start PASS로 대체하지 않는다.
+초기 실제 I2C HIL은 P1.2/P1.3 NFC 패드가 GPIO/TWIM으로 전환되지 않아 두 line이 LOW였고
+Zephyr driver가 `-ETIMEDOUT(-116)`을 반환했다. Wire Core의 deferred repeated-start는
+`i2c_write_read()` 한 호출로 정상 구성되어 있었으며 문제는 transaction 분할이 아니었다.
+Core 소유 overlay에 `nfct-pins-as-gpios`를 추가한 뒤 내부 pull-up을 제거하고 다시 시험했다.
+
+최종 실제 I2C HIL은 COM10에서 BQ25186 고정 요청만 실행했다. DAPLink sequence 33은
+125,952-byte 100 kHz image, sequence 34는 같은 크기의 400 kHz image를 기록했다. 두 실행 모두
+`NUCODE_M7_I2C_RESULT:6A:0C:41:RS`를 반환해 Device ID 하위 nibble `0x1`과
+repeated-start를 확인했다. 최종 source와 외부 pull-up만 사용한 400 kHz 재검증도 sequence 42에서
+동일하게 PASS했다. register data write, scan 또는 fallback은 실행하지 않았다.
 
 첫 ADC 실기 HIL은 DAPLink sequence 14에서 `ADC_GAIN_1_6` 구성 때문에 Zephyr driver
 `-EINVAL`로 실패했다. 이 실패는 숨기지 않는다. 원인은 nRF54L15가 해당 gain을 지원하지 않는
@@ -352,12 +364,13 @@ READY 뒤 고정 `0x6B/0x0F` request도 송신했다. 그러나 target read가
 같은 sequence 14에서 SPI 1 MHz/div128도 실제 SPI00 prescaler 범위 밖이라 `-EINVAL`로
 실패했다. shipped sample/HIL을 4 MHz/div32로 수정했다.
 
-수정 후 통합 peripheral HIL은 DAPLink sequence 17로 166,400-byte image를 기록하고 COM10에서
-SPI 4 MHz driver 성공(`rx=0x00`), A0 raw=3176, PWM duty 0/128/255 실행을 확인했다. 이후
-`--discover-only`를 실행해 sequence가 17로 유지됨을 확인했으므로 추가 flash는 없었다.
-seq17 runner의 장치 발견·flash/UART marker·peripheral oracle 검사는 9/9 PASS다. 이는 별도로
-실행한 peripheral parser unittest 5/5와 다른 분모다. SPI 결과는 loopback/target data 일치를,
-ADC 결과는 전압 정확도를, PWM 결과는 실제 파형을 증명하지 않는다.
+수정 후 최초 통합 peripheral HIL은 DAPLink sequence 17로 166,400-byte image를 기록하고
+COM10에서 SPI 4 MHz driver 성공(`rx=0x00`), A0 raw=3176, PWM duty 0/128/255 실행을 확인했다.
+최종 source 재검증은 sequence 37로 166,912-byte image를 기록해 SPI 4 MHz
+driver 성공(`rx=0x00`), A0 raw=3140, PWM duty 0/128/255 실행을 다시 확인했다. runner의
+장치 발견·flash/UART marker·peripheral oracle 검사는 9/9 PASS이고, 별도 peripheral parser
+unittest는 5/5다. SPI 결과는 loopback/target data 일치를, ADC 결과는 전압 정확도를, PWM
+결과는 실제 파형을 증명하지 않는다.
 
 ---
 
@@ -368,16 +381,15 @@ M7은 다음 조건을 기준으로 판정했다.
 1. production source와 public header가 target에서 빌드된다.
 2. emulator ztest가 Wire/SPI/ADC/PWM의 positive·negative 의미를 검증한다.
 3. Core overlay와 Kconfig가 Arduino builder 및 기존 west 회귀에서 일관되게 동작한다.
-4. 0x6A에 접근하지 않는 0x6B WHO_AM_I HIL을 안전하게 실행한다.
+4. BQ25186 0x6A/0x0C 읽기 전용 repeated-start HIL을 안전하게 실행한다.
 5. ADC/PWM의 실제 driver 경로와 미검증 범위를 기록한다.
 6. API 지원표, Variant, 주변장치와 시험 문서를 실제 결과와 동기화한다.
 
 production target build와 NU54DK Twister target 11/11, Arduino CLI M7 4/4, 전체 Builder 회귀 8/8,
-host protocol unittest 10/10,
-ADC/PWM/SPI 실제 driver 경로는 통과했다. I2C HIL도 `0x6A` 접근·scan·fallback 없이 안전하게
-종료했다. 그러나 고정 `0x6B` IMU의 `WHO_AM_I`는 RX 오류로 확인하지 못했고 물리 SPI data
-경로는 fixture 부재로 검증하지 못했다. 따라서 M7의 최종 상태는 **조건부 완료**다. 이 두
-제한을 지원표와 검증 문서에 유지하며 별도의 영문 게이트 표기를 붙이지 않는다.
+host protocol unittest 10/10, BQ25186 I2C와 ADC/PWM/SPI 실제 driver 경로는 통과했다.
+물리 SPI data 경로는 fixture 부재로 검증하지 못했다. 따라서 M7의 최종 상태는
+**조건부 완료**다. 이 제한을 지원표와 검증 문서에 유지하며 별도의 영문 게이트 표기를
+붙이지 않는다.
 
 ---
 

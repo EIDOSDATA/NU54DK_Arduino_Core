@@ -25,8 +25,8 @@
 
 M6에서 `Serial`은 구현·target ztest·실제 COM10 HIL까지 완료했다. M7의 `Wire`, `SPI`, ADC와
 PWM production source와 builder profile은 NU54DK Twister target 11/11, Arduino CLI 4/4 및 승인된
-NU54DK driver HIL을 통과했다. 실제 IMU 응답과 물리 SPI data 경로는 확인하지 못했으므로
-확정된 구현 계약과 미검증 경계를 함께 기록하고 M7을 `조건부 완료`로 판정한다.
+NU54DK driver HIL을 통과했다. BQ25186 I2C 응답도 확인했으며 물리 SPI data 경로만
+미검증 경계로 기록하고 M7을 `조건부 완료`로 판정한다.
 
 ---
 
@@ -77,7 +77,7 @@ Core source를 수정하거나 prebuilt profile을 새로 만들 필요가 없�
 | 기본 UART | `zephyr,console`로 선택, 115200 bps | `Serial` 기본 후보 |
 | 두 번째 UART | pinctrl과 속도 정의, 기본 비활성 | `Serial1`은 overlay 없이는 제공하지 않음 |
 | I2C22 | 기본 활성, SDA P1.2/SCL P1.3, 100 kHz | Core chosen `nucode,arduino-wire`; 100/400 kHz controller |
-| BQ25186 | I2C22의 0x6A child node 비활성 | Core가 자동 활성화하지 않으며 M7 IMU HIL은 0x6A에 접근 금지 |
+| BQ25186 | I2C22의 0x6A child node 비활성 | Core가 Zephyr PMIC driver를 자동 활성화하지 않으며 M7 Wire HIL은 `MASK_ID`만 읽기 전용 접근 |
 | SPI00 | P2.1/P2.2/P2.4 pinctrl만 정의, controller 기본 비활성 | Core overlay가 활성화; uart00과 동시 활성 금지 |
 | PWM | pwm20 channel 0의 `pwm_led1` 역할 활성, P1.10 | Core chosen `nucode,arduino-pwm`; 20 ms·8-bit 전용 역할 |
 | ADC | ADC와 channel 5 활성, P1.12 | Core chosen `nucode,arduino-adc`; A0 고정 12-bit raw |
@@ -255,6 +255,11 @@ CMSIS-DAP 인터페이스 MCU가 USB를 처리한다. nRF54L15 target이 USB CDC
 `nucode,arduino-wire` chosen의 I2C22를 사용한다. 현재 NU54DK 보드 정의에는 P1.2 SDA,
 P1.3 SCL의 100 kHz I2C22가 활성화되어 있다.
 
+P1.2/P1.3은 nRF54L15의 NFC 전용 패드이므로 controller 활성화만으로는 충분하지 않다.
+Arduino Builder 기본 overlay와 Wire 실기 sample은 `&uicr { nfct-pins-as-gpios; };`를 설정해
+부팅 초기에 NFCT PADCONFIG를 GPIO/TWIM 모드로 전환한다. 이 Core overlay 보완은 읽기 전용
+보드 package를 수정하지 않는다.
+
 v1 범위:
 
 - controller/master mode
@@ -305,19 +310,20 @@ Zephyr 4.4 nRF TWIM의 단독 no-STOP write 제약 때문에 repeated-start는 d
 구현한다. 보류 중 새 transmission, 다른 address 또는 다른 thread가 개입하면 전송하지 않고
 진단한다. 마지막 read 뒤 STOP을 생략하는 `requestFrom(..., false)`는 지원하지 않으며 0을
 반환한다. TX byte 없이 `endTransmission(true)`를 호출하면 zero-byte write와 STOP을 실제
-driver에 전달해 address-only probe를 수행한다. 이 범용 Core 기능과 달리 M7 IMU HIL에서는
+driver에 전달해 address-only probe를 수행한다. 이 범용 Core 기능과 달리 M7 PMIC HIL에서는
 임의 주소 probe·scan을 허용하지 않는다. logic analyzer는 필수 완료 장비가 아니다.
 
-### 6.5 M7 IMU HIL 안전 경계
+### 6.5 M7 BQ25186 HIL 안전 경계
 
-Qwiic 장치 HIL은 오직 `0x6B`의 `WHO_AM_I` register `0x0F`를 repeated-start로 1 byte
-읽는다. 기대 반환 값은 `0x6A`지만 이는 접근 주소가 아니다. PMIC 충돌 위험 때문에 HIL
-image·host protocol·실행 절차는 address `0x6A`의 probe, register pointer write, read, write와
-fallback을 모두 금지한다. address scan을 완료 기준이나 예제로 사용하지 않는다.
+센서를 분리한 상태에서 온보드 BQ25186을 고정 target으로 사용한다. HIL은 address `0x6A`의
+`MASK_ID(0x0C)` pointer를 no-STOP으로 보낸 뒤 repeated-start로 1 byte를 읽는다. 하위 nibble
+Device ID가 `0x1`인지 확인하며 상위 interrupt-mask bit는 판정에서 제외한다. register data
+write, address scan과 fallback을 실행하지 않는다.
 
 HIL command line과 UART payload는 address·register·expected value·scan을 외부 입력으로
-노출하지 않는다. 범용 `Wire` Core backend는 정상 7-bit address를 모두 전달하므로 이
-HIL 안전 규칙을 전역 address blacklist로 바꾸지 않는다.
+노출하지 않는다. 첫 I2C transaction이 BQ25186의 기본 160초 watchdog을 시작할 수 있으므로
+시험은 ID를 한 번 읽고 종료한다. 기본 watchdog 만료 동작은 R/W register 기본값 복원이며,
+HIL은 PMIC 설정 register를 쓰지 않는다.
 
 ### 6.6 오류 변환
 
@@ -656,7 +662,8 @@ Zephyr dependency 예시는 다음과 같다.
 - [ ] shared Zephyr client가 있을 때 bus lock과 clock 정책이 지켜진다.
 - [x] 최종 generated Devicetree에서 BQ25186이 `status = "disabled"`로 유지된다.
 - [x] Wire가 활성인데 `nucode,arduino-wire` chosen이 없으면 configure/build에서 실패한다.
-- [x] HIL protocol이 `0x6A`에 전혀 접근하지 않고 오직 `0x6B/0x0F`만 허용한다.
+- [x] HIL protocol이 BQ25186 `0x6A/0x0C` 읽기만 허용하고 Device ID 0x1을 실기 확인한다.
+- [x] Core overlay가 P1.2/P1.3 NFC 패드를 GPIO/TWIM으로 전환하며 외부 pull-up만으로 통과한다.
 
 ### 15.3 SPI
 
@@ -711,10 +718,10 @@ Zephyr dependency 예시는 다음과 같다.
 | --- | --- |
 | Serial | **M6 PASS:** DAPLink sequence 7, COM10 boot READY·고유 echo; target ztest에서 RX/TX·overflow·end·ISR 거부 |
 | Console 공유 | Zephyr log와 Sketch 출력의 관측 및 제한 확인 |
-| I2C | **미확정:** seq18 고정 0x6B/0x0F에서 RX 오류; 0x6A 접근·scan·fallback 없음 |
-| SPI | **부분 통과:** seq17 4 MHz driver 호출 PASS, rx=0x00; physical data/loopback 미검증 |
-| ADC | **PASS:** seq17 gain 1/4 A0 raw=3176; raw 범위만 검증, 전압 정확도 주장 없음 |
-| PWM | **PASS:** seq17 P1.10 duty 0/128/255 driver 호출; 외부 파형 주장 없음 |
+| I2C | **PASS:** seq33 100 kHz·seq34/42 400 kHz에서 BQ25186 `0x6A/0x0C=0x41`, Device ID 0x1과 repeated-start 확인 |
+| SPI | **부분 통과:** 최종 seq37 4 MHz driver 호출 PASS, rx=0x00; physical data/loopback 미검증 |
+| ADC | **PASS:** 최종 seq37 gain 1/4 A0 raw=3140; raw 범위만 검증, 전압 정확도 주장 없음 |
+| PWM | **PASS:** 최종 seq37 P1.10 duty 0/128/255 driver 호출; 외부 파형 주장 없음 |
 | Conflict | SPI00/uart00, 잘못된 analog pin과 LED_BUILTIN PWM negative test |
 
 ---

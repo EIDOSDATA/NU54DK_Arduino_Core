@@ -1,4 +1,4 @@
-"""! @brief M7 고정 0x6B WHO_AM_I host protocol을 hardware 없이 회귀 검증합니다. """
+"""! @brief M7 고정 BQ25186 Device ID host protocol을 hardware 없이 회귀 검증합니다. """
 
 from __future__ import annotations
 
@@ -8,8 +8,8 @@ import unittest
 from pathlib import Path
 
 
-MODULE_PATH = Path(__file__).with_name("m7_i2c_imu.py")
-MODULE_SPEC = importlib.util.spec_from_file_location("m7_i2c_imu", MODULE_PATH)
+MODULE_PATH = Path(__file__).with_name("m7_i2c_pmic.py")
+MODULE_SPEC = importlib.util.spec_from_file_location("m7_i2c_pmic", MODULE_PATH)
 if MODULE_SPEC is None or MODULE_SPEC.loader is None:
     raise RuntimeError(f"M7 HIL module을 불러올 수 없습니다: {MODULE_PATH}")
 MODULE = importlib.util.module_from_spec(MODULE_SPEC)
@@ -86,31 +86,32 @@ class FakeSerialModule:
         return self._port
 
 
-class M7I2cImuProtocolTests(unittest.TestCase):
-    """! @brief 고정 주소·register·WHO_AM_I와 host 송신 계약을 검증합니다. """
+class M7I2cPmicProtocolTests(unittest.TestCase):
+    """! @brief 고정 PMIC 주소·MASK_ID와 host 송신 계약을 검증합니다. """
 
     def test_valid_result(self) -> None:
-        """! @brief 승인된 0x6B/0x0F/0x6A repeated-start 결과를 검증합니다. """
+        """! @brief 승인된 0x6A/0x0C BQ25186 repeated-start 결과를 검증합니다. """
 
         result = MODULE.parse_result_line(MODULE.RESULT_TOKEN)
-        self.assertEqual(result.address, 0x6B)
-        self.assertEqual(result.register, 0x0F)
-        self.assertEqual(result.value, 0x6A)
+        self.assertEqual(result.address, 0x6A)
+        self.assertEqual(result.register, 0x0C)
+        self.assertEqual(result.value, 0x41)
+        self.assertEqual(result.value & MODULE.DEVICE_ID_MASK, 0x01)
         self.assertTrue(result.repeated_start)
 
-    def test_rejects_forbidden_0x6a_address(self) -> None:
-        """! @brief HIL fixture가 금지한 0x6A target 주소를 거부하는지 검증합니다. """
+    def test_rejects_non_pmic_address(self) -> None:
+        """! @brief HIL fixture가 BQ25186 이외의 target 주소를 거부하는지 검증합니다. """
 
         with self.assertRaisesRegex(ValueError, "승인되지 않은 I2C 주소"):
-            MODULE.parse_result_line(b"NUCODE_M7_I2C_RESULT:6A:0F:6A:RS\r\n")
+            MODULE.parse_result_line(b"NUCODE_M7_I2C_RESULT:6B:0C:41:RS\r\n")
 
     def test_rejects_wrong_register_value_and_transfer_form(self) -> None:
         """! @brief 잘못된 register, 값과 transfer 형식을 모두 거부하는지 검증합니다. """
 
         invalid_lines = (
-            b"NUCODE_M7_I2C_RESULT:6B:10:6A:RS\r\n",
-            b"NUCODE_M7_I2C_RESULT:6B:0F:6B:RS\r\n",
-            b"NUCODE_M7_I2C_RESULT:6B:0F:6A:STOP\r\n",
+            b"NUCODE_M7_I2C_RESULT:6A:0D:41:RS\r\n",
+            b"NUCODE_M7_I2C_RESULT:6A:0C:42:RS\r\n",
+            b"NUCODE_M7_I2C_RESULT:6A:0C:41:STOP\r\n",
         )
         for line in invalid_lines:
             with self.subTest(line=line), self.assertRaises(ValueError):
@@ -122,7 +123,7 @@ class M7I2cImuProtocolTests(unittest.TestCase):
         fake_port = FakeSerialPort(MODULE.READY_TOKEN + MODULE.RESULT_TOKEN)
         fake_module = FakeSerialModule(fake_port)
 
-        sequence, byte_count, result = MODULE.verify_i2c_whoami(
+        sequence, byte_count, result = MODULE.verify_i2c_pmic_id(
             serial_module=fake_module,
             port_name="COM-FAKE",
             baud_rate=115200,
@@ -135,7 +136,7 @@ class M7I2cImuProtocolTests(unittest.TestCase):
         self.assertEqual(bytes(fake_port.written), MODULE.REQUEST_TOKEN)
         self.assertEqual(sequence, "42")
         self.assertEqual(byte_count, "1234")
-        self.assertEqual(result.address, 0x6B)
+        self.assertEqual(result.address, 0x6A)
 
     def test_cli_surface_has_no_address_register_or_scan_option(self) -> None:
         """! @brief CLI에 임의 주소·register·scan 진입점이 없는지 검증합니다. """
