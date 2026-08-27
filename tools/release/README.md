@@ -153,6 +153,10 @@ checkout한다. 이 clone은 system/global Git config, credential helper와 대�
 - `hil_rc_pyocd.evidence.json`, `.evidence.log`, `.evidence.result.json`
 - endpoint 원문 없이 checksum만 기록한 `orchestrator.json`과 정제된 `orchestrator.log`
 
+세 gate evidence와 companion log/result 7개는 byte를 다시 확인한 뒤 `ReleaseRoot`에도 자동으로
+복사한다. 같은 이름의 파일이 이미 있으면 덮어쓰지 않고 실패하므로 새 RC attempt directory를
+사용한다. `orchestrator.json`과 `orchestrator.log`는 원격 run 디렉터리에만 보존한다.
+
 원격 실행이 실패해도 생성된 부분 evidence 회수는 시도하지만 PASS로 승격하지 않는다. 새
 실행은 항상 새 run ID와 원격 directory를 사용하며 기존 원격 checkout이나 결과를 삭제·재사용하지
 않는다.
@@ -184,6 +188,11 @@ runner의 비동기 Task 반환값 누출로 Arduino CLI identity preflight에�
 동일 runtime payload의 safe preview로 검증하며 RC ZIP을 clean PC에 직접 설치한 것으로
 과장하지 않는다. exact RC ZIP 자체는 Arduino compile gate와 별도 1회 pyOCD+UART HIL에서
 직접 검증한다. 최종 manifest는 두 범위를 구분해 기록한다.
+
+importer는 입력한 두 raw JSON을 M11 output에 byte-for-byte 동결한다. M11 finalize 전에는
+원본을 삭제하거나 수정하지 않는다. raw M10 JSON은 로컬 보존용이며 공개 GitHub Release
+asset으로 올리지 않는다. 공개물에는 정제된 요약, gate evidence manifest와 checksum만
+포함한다.
 
 ## 4. 문서 동결 evidence
 

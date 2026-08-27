@@ -223,3 +223,30 @@ orchestrator의 상태·checksum도 교차 검증했다.
 진단 run과 폐기 preview는 결함 발견 이력으로만 남기며 PASS로 승격하지 않는다. M10의 기술
 완료 조건은 충족했으며 M11 release candidate 검증을 시작할 수 있다. stable `v0.1.0` 공개는
 M11의 전체 기술 gate와 프로젝트 소유자의 최종 승인 전까지 계속 HOLD한다.
+
+---
+
+## 10. M11 handoff
+
+M11 importer가 사용하는 고정 입력은 다음과 같다.
+
+| 항목 | 값 |
+| --- | --- |
+| preview source revision | `5d965f83a6b8ce385d5014dfcae9b24e2fb0c1a1` |
+| runtime payload SHA-256 | `3d2bcd74d60d74ae3424a0efa0eadbec07e2db7995c5c8b4992acb8ac11314e2` |
+| target evidence | `build/m10/remote/m10-20260828-045655/evidence.json` |
+| orchestrator evidence | `build/m10/remote/m10-20260828-045655/orchestrator.json` |
+| target evidence SHA-256 | `2f7a7231ab35200cc6d214c2629f0afe76bf27795aa52ee82e7ccaca8cdb47c7` |
+| orchestrator SHA-256 | `fbcd1b4bb9ec013fc3984215a01e5aea281d804abe9f0816d4656ac95d1d792c` |
+
+~~~powershell
+python tools/release/nu54_release.py import-m10 `
+  --plan build/m11/<RC_RUN>/m11-rc-plan.json `
+  --target-evidence build/m10/remote/m10-20260828-045655/evidence.json `
+  --orchestrator build/m10/remote/m10-20260828-045655/orchestrator.json `
+  --output-dir build/m11/<RC_RUN>
+~~~
+
+두 raw JSON은 importer가 M11 output에 byte-for-byte 동결하므로 M11 finalize 전까지 삭제하지
+않는다. raw 파일은 로컬 실행 증거이며 공개 Release asset에는 포함하지 않는다. 공개물에는
+식별정보를 제거한 요약, 필수 gate evidence manifest와 위 checksum만 사용한다.

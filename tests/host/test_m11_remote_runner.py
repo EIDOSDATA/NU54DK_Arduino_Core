@@ -6,6 +6,7 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 import unittest
@@ -117,6 +118,7 @@ class M11RemoteRunnerContractTests(unittest.TestCase):
             "-c credential.helper= -c core.longpaths=true clone --no-checkout",
             "clone --no-checkout",
             "checkout --detach $coreRevision",
+            "-c core.longpaths=true -C $repositoryRoot checkout --detach",
             "submodule update --init --recursive",
             "status --porcelain=v1 --untracked-files=all --ignore-submodules=none",
             "Remote repository is not the exact clean RC commit",
@@ -265,6 +267,15 @@ class M11RemoteRunnerContractTests(unittest.TestCase):
         self.assertIn("} finally {\n    foreach ($fileName", self.text)
         self.assertIn("local-validate-remote-evidence", self.text)
         self.assertIn("validate_gate_evidence", self.text)
+        self.assertIn("NU54_M11_REMOTE_RESULTS_IMPORTED", self.text)
+        self.assertIn(
+            "ReleaseRoot에 같은 M11 remote result가 이미 존재합니다",
+            self.text,
+        )
+        self.assertIn(
+            "ReleaseRoot로 가져온 M11 remote result byte가 다릅니다",
+            self.text,
+        )
 
     def test_09_timeout_and_output_capture_are_bounded(self) -> None:
         """! @brief 장시간 gate도 disk spool, timeout과 process-tree 종료를 사용합니다. """
@@ -278,9 +289,30 @@ class M11RemoteRunnerContractTests(unittest.TestCase):
             "[void]$stdoutTask.GetAwaiter().GetResult()",
             "[void]$stderrTask.GetAwaiter().GetResult()",
             "$minimumSshTimeout",
-            "종료 코드 $exitCode로 실패",
+            "종료 코드 ${exitCode}로 실패",
         ):
             self.assertIn(marker, self.text)
+
+        unsafe_interpolation = re.compile(
+            r"\$[A-Za-z_][A-Za-z0-9_]*[가-힣]"
+        )
+        self.assertIsNone(unsafe_interpolation.search(self.text))
+
+    def test_09b_remote_gate_uses_uploaded_ascii_launcher(self) -> None:
+        """! @brief 긴 remote command를 SSH command line에 직접 넣지 않습니다. """
+
+        for marker in (
+            "$runRoot = '__RUN_ROOT__'",
+            "Replace('__RUN_ROOT__', $remoteRunWindows)",
+            "Remote M11 gate launcher는 Windows PowerShell 5.1 호환 ASCII",
+            "$localGateScript = Join-Path $script:LocalTemporaryRoot 'run-m11-gates.ps1'",
+            "$remoteGateScriptWindows = \"$remoteRunWindows\\run-m11-gates.ps1\"",
+            "'upload-m11-gate-launcher'",
+            "'-File'",
+            "$remoteGateScriptWindows",
+        ):
+            self.assertIn(marker, self.text)
+        self.assertNotIn("$encodedGates", self.text)
 
     def test_10_credentials_device_and_endpoint_are_redacted(self) -> None:
         """! @brief endpoint, token, probe UID와 COM port 원문을 제거합니다. """

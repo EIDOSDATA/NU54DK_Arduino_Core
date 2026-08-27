@@ -328,7 +328,7 @@ function Invoke-LocalNative {
         throw "$Label 작업이 ${TimeoutSeconds}초 후 timeout 되었습니다."
     }
     if ($AllowedExitCodes -notcontains $exitCode) {
-        throw "$Label 작업이 종료 코드 $exitCode로 실패했습니다."
+        throw "$Label 작업이 종료 코드 ${exitCode}로 실패했습니다."
     }
     return [pscustomobject][ordered]@{
         exit_code = $exitCode
@@ -676,6 +676,7 @@ foreach ($sourcePath in @($bundle.files)) {
 $remoteGateTemplate = @'
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+$runRoot = '__RUN_ROOT__'
 $repositoryUrl = '__REPOSITORY_URL__'
 $repositoryRoot = '__REPOSITORY_ROOT__'
 $releaseRoot = '__RELEASE_ROOT__'
@@ -693,12 +694,12 @@ $env:GIT_TERMINAL_PROMPT = '0'
 $env:PATH = (Split-Path -Parent $git) + [IO.Path]::PathSeparator + $env:PATH
 & $git -c credential.helper= -c core.longpaths=true clone --no-checkout $repositoryUrl $repositoryRoot
 if ($LASTEXITCODE -ne 0) { throw 'Public repository clone failed.' }
-& $git -C $repositoryRoot checkout --detach $coreRevision
+& $git -c core.longpaths=true -C $repositoryRoot checkout --detach $coreRevision
 if ($LASTEXITCODE -ne 0) { throw 'Exact RC commit checkout failed.' }
 & $git -C $repositoryRoot -c core.longpaths=true submodule update --init --recursive
 if ($LASTEXITCODE -ne 0) { throw 'Exact board submodule checkout failed.' }
-$head = (& $git -C $repositoryRoot rev-parse HEAD).Trim()
-$status = (& $git -C $repositoryRoot status --porcelain=v1 --untracked-files=all --ignore-submodules=none) -join "`n"
+$head = (& $git -c core.longpaths=true -C $repositoryRoot rev-parse HEAD).Trim()
+$status = (& $git -c core.longpaths=true -C $repositoryRoot status --porcelain=v1 --untracked-files=all --ignore-submodules=none) -join "`n"
 if ($LASTEXITCODE -ne 0 -or $head -ne $coreRevision -or $status) {
     throw 'Remote repository is not the exact clean RC commit.'
 }
@@ -755,6 +756,7 @@ foreach ($gate in $gates) {
 'NU54_M11_REMOTE_GATES=passed'
 '@
 $remoteGateCommand = $remoteGateTemplate.Replace('__REPOSITORY_URL__', $script:RepositoryUrl).
+    Replace('__RUN_ROOT__', $remoteRunWindows).
     Replace('__REPOSITORY_ROOT__', $remoteRepositoryWindows).
     Replace('__RELEASE_ROOT__', $remoteReleaseWindows).
     Replace('__CORE_REVISION__', [string]$script:Plan.core_revision).
@@ -764,7 +766,21 @@ $remoteGateCommand = $remoteGateTemplate.Replace('__REPOSITORY_URL__', $script:R
     Replace('__ZEPHYR_TIMEOUT__', [string]$ZephyrGateTimeoutSeconds).
     Replace('__HIL_TIMEOUT__', [string]$HilGateTimeoutSeconds).
     Replace('__SERIAL_PORT__', $SerialPort)
-$encodedGates = Convert-ToEncodedPowerShellCommand -Command $remoteGateCommand
+if ($remoteGateCommand -match '[^\x00-\x7F]') {
+    throw 'Remote M11 gate launcher는 Windows PowerShell 5.1 호환 ASCII여야 합니다.'
+}
+$localGateScript = Join-Path $script:LocalTemporaryRoot 'run-m11-gates.ps1'
+$remoteGateScriptWindows = "$remoteRunWindows\run-m11-gates.ps1"
+$remoteGateScriptScp = $remoteGateScriptWindows -replace '\\', '/'
+Write-Utf8WithoutBom -Path $localGateScript -Text ($remoteGateCommand + [Environment]::NewLine)
+Invoke-LocalNative `
+    -FilePath $scpCommand `
+    -Arguments ($scpOptions + @(
+        $localGateScript,
+        ("{0}:{1}" -f $script:SshTarget, $remoteGateScriptScp)
+    )) `
+    -Label 'upload-m11-gate-launcher' `
+    -TimeoutSeconds 300 | Out-Null
 $remoteFailure = $null
 $downloadFailures = New-Object Collections.Generic.List[string]
 try {
@@ -777,8 +793,8 @@ try {
             '-NonInteractive',
             '-ExecutionPolicy',
             'Bypass',
-            '-EncodedCommand',
-            $encodedGates
+            '-File',
+            $remoteGateScriptWindows
         )) `
         -Label 'remote-m11-fixed-gates' `
         -TimeoutSeconds $SshTimeoutSeconds | Out-Null
@@ -859,6 +875,26 @@ foreach ($gateId in $script:RemoteGateIds) {
     }
     $gateRecords.Add([pscustomobject]$record)
 }
+
+foreach ($fileName in $script:ExpectedResultFiles) {
+    $sourcePath = Join-Path $localRunRoot $fileName
+    $destinationPath = Join-Path $releaseRootPath $fileName
+    Assert-RegularFile -Path $sourcePath -Label "M11 remote result $fileName"
+    if (Test-Path -LiteralPath $destinationPath) {
+        throw "ReleaseRoot에 같은 M11 remote result가 이미 존재합니다: $fileName"
+    }
+}
+foreach ($fileName in $script:ExpectedResultFiles) {
+    $sourcePath = Join-Path $localRunRoot $fileName
+    $destinationPath = Join-Path $releaseRootPath $fileName
+    Copy-Item -LiteralPath $sourcePath -Destination $destinationPath
+    Assert-RegularFile -Path $destinationPath -Label "imported M11 remote result $fileName"
+    if ((Get-Item -LiteralPath $sourcePath).Length -ne (Get-Item -LiteralPath $destinationPath).Length -or
+        (Get-FileSha256 -Path $sourcePath) -ne (Get-FileSha256 -Path $destinationPath)) {
+        throw "ReleaseRoot로 가져온 M11 remote result byte가 다릅니다: $fileName"
+    }
+}
 Write-OrchestratorResult -Status passed -GateRecords @($gateRecords)
 Remove-Item -LiteralPath $script:LocalTemporaryRoot -Recurse -Force -ErrorAction SilentlyContinue
 Write-Host "NU54_M11_REMOTE_RUN=passed:$localRunRoot"
+Write-Host "NU54_M11_REMOTE_RESULTS_IMPORTED=$releaseRootPath"

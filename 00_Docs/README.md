@@ -101,7 +101,7 @@
 | M8 업로드와 디버그 | **완료** | manifest·artifact·probe 안전검사, Arduino CLI pyOCD upload 10/10, 최종 UART reset과 `setup()` source breakpoint 통과 |
 | M9 증분 빌드·캐시·재현성 | **완료** | persistent tree와 canonical key, host 43/43, library·parallel·M9 Arduino CLI 회귀 및 실측 기준선 통과 |
 | M10 Boards Manager 패키징 | **완료** | 공개 preview `0.0.96`→`0.0.97`, clean Windows 11/11 단계와 pyOCD upload 10/10 통과 |
-| M11 v0.1 릴리스 후보 | **진행 중** | 고정 RC artifact의 전체 회귀·증거 bundle과 prerelease 준비 |
+| M11 v0.1 릴리스 후보 | **진행 중** | 고정 RC artifact의 전체 회귀·증거 bundle과 Draft Release 입력 준비 |
 
 상세 상태는 [구현 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)을 단일 기준으로 관리한다.
 
