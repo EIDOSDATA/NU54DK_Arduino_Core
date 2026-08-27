@@ -28,6 +28,7 @@ if hasattr(sys.stderr, "reconfigure"):
 
 
 FQBN = "nucode:zephyr:nu54dk"
+M8_SKETCH_RELATIVE_PATH = "tests/arduino-cli/m8_upload/m8_upload.ino"
 ## @brief Build Adapter가 기록하는 artifact manifest의 현재 schema입니다.
 ARTIFACT_MANIFEST_SCHEMA_VERSION = 2
 ## @brief Build Adapter가 artifact manifest에 포함하는 session context schema입니다.
@@ -53,6 +54,23 @@ PROCESS_TERMINATION_GRACE_SECONDS = 5
 
 class UploadHilFailure(RuntimeError):
     """! @brief M8 실제 upload 계약 위반을 나타냅니다. """
+
+
+## @brief exact checkout의 Git blob byte를 line-ending 변환 없이 SHA-256으로 고정합니다.
+def committed_file_sha256(repository: Path, relative_path: str) -> str:
+    relative = ensure_safe_relative_path(relative_path)
+    try:
+        result = subprocess.run(
+            ("git", "-C", str(repository.resolve()), "show", f"HEAD:{relative}"),
+            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    except OSError as error:
+        raise UploadHilFailure(f"M8 fixture Git blob을 읽지 못했습니다: {error}") from error
+    if result.returncode != 0 or not result.stdout:
+        raise UploadHilFailure("M8 fixture Git blob이 exact checkout에 없습니다.")
+    return hashlib.sha256(result.stdout).hexdigest()
 
 
 ## @brief Arduino IDE에 포함된 CLI 기본 경로를 반환합니다.
@@ -878,8 +896,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
         raise UploadHilFailure("J-Link HIL에는 --probe-id serial이 필요합니다.")
     repository = args.repository.resolve()
     cli = args.cli.resolve()
-    sketch = repository / "tests" / "arduino-cli" / "m8_upload"
-    sketch_file = sketch / "m8_upload.ino"
+    sketch_file = repository / Path(PurePosixPath(M8_SKETCH_RELATIVE_PATH))
+    sketch = sketch_file.parent
     if (
         not cli.is_file()
         or not sketch_file.is_file()
@@ -1012,8 +1030,10 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "staged_byte_exact": True,
             },
             "sketch": {
-                "repository_relative_path": "tests/arduino-cli/m8_upload/m8_upload.ino",
-                "sha256": file_sha256(sketch_file),
+                "repository_relative_path": M8_SKETCH_RELATIVE_PATH,
+                "sha256": committed_file_sha256(
+                    repository, M8_SKETCH_RELATIVE_PATH
+                ),
             },
             "arduino_cli": {"sha256": file_sha256(cli)},
             "build": {

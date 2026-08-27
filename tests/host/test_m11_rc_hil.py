@@ -521,6 +521,15 @@ class M11RcHilTests(unittest.TestCase):
         )
         self.assertEqual(evidence["upload"]["attempts"], 1)
         self.assertEqual(evidence["uart"]["candidate_count"], 2)
+        self.assertEqual(
+            evidence["sketch"],
+            {
+                "repository_relative_path": MODULE.M8_SKETCH_RELATIVE_PATH,
+                "sha256": MODULE.committed_file_sha256(
+                    REPO_ROOT, MODULE.M8_SKETCH_RELATIVE_PATH
+                ),
+            },
+        )
         self.assertNotIn("serial_port", evidence)
         self.assertNotIn("probe_id", evidence)
 
