@@ -2,12 +2,12 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | 진행 중 — 원격 clean Windows 수명주기 실행 완료 후 판정 |
+| 문서 상태 | **완료** — 원격 clean Windows 수명주기 11/11 통과 |
 | 작성자 | Quantum / NUCODE |
 | 검증일 | 2026-08-28 |
-| 패키지 기준 Core | Windows-safe `0.0.96`/`0.0.97`을 생성할 exact commit에서 확정 |
+| 패키지 기준 Core | `5d965f83a6b8ce385d5014dfcae9b24e2fb0c1a1` |
 | 보드 package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| 검증 run | 진단 실패 `m10-20260828-022627`; `0.0.94`/`0.0.95` preflight 실패; `0.0.96`/`0.0.97` 최종 run 대기 |
+| 검증 run | `m10-20260828-045655`, 최종 상태 `passed` |
 | Board FQBN | `nucode:zephyr:nu54dk` |
 
 ---
@@ -45,13 +45,14 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 
 | 항목 | 값 |
 | --- | --- |
-| index SHA-256 | `0.0.96`/`0.0.97` 공개 뒤 확정 |
+| index SHA-256 | `b3593c2cd555b83f2af3d4c2c6b9f01569d507c8967f87a713291850158461f1` |
 | 최초 설치·downgrade | `0.0.96` |
-| `0.0.96` ZIP SHA-256 | 공개 뒤 확정 |
-| `0.0.96` ZIP size | 공개 뒤 확정 |
+| `0.0.96` ZIP SHA-256 | `5b595a142834fee87272b6a48017e6a6c6767dcef38b932000c4effaf1eed296` |
+| `0.0.96` ZIP size | `759,743 bytes` |
 | upgrade·최종 reinstall | `0.0.97` |
-| `0.0.97` ZIP SHA-256 | 공개 뒤 확정 |
-| `0.0.97` ZIP size | 공개 뒤 확정 |
+| `0.0.97` ZIP SHA-256 | `699e9f05e818fee87a0c0ca390eb32cc3c6e3e19a1a8cdba0dccfb02cb49890f` |
+| `0.0.97` ZIP size | `759,743 bytes` |
+| 공통 runtime payload SHA-256 | `3d2bcd74d60d74ae3424a0efa0eadbec07e2db7995c5c8b4992acb8ac11314e2` |
 
 두 ZIP은 각각 공개 GitHub prerelease의 immutable asset이다. 원격 실행기는 index의 URL,
 size와 SHA-256뿐 아니라 ZIP 내부 `release-manifest.json`의 Core·board·NCS·Zephyr·Toolchain
@@ -131,24 +132,26 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass `
 
 ## 5. 단계별 결과
 
-다음 표는 `evidence.json`의 완료된 단계와 시간을 반영해 원격 실행 종료 후 확정한다.
+다음 표는 최종 `evidence.json`의 결과와 시간을 반영한다.
 
 | 단계 | 결과 | 핵심 증거 |
 | --- | --- | --- |
-| preflight | 대기 | Arduino CLI byte 고정과 빈 NCS/prerequisite 상태 확인 |
-| public index update | 대기 | 공개 index와 두 archive identity 일치 |
-| `0.0.96` 최초 설치 | 대기 | Nordic 공식 download와 exact pin 검증 |
-| board details | 대기 | `nucode:zephyr:nu54dk` discovery |
-| Blink cold compile | 대기 | Full Zephyr ELF/HEX와 build manifest |
-| Blink warm compile | 대기 | 같은 build path의 증분 재빌드 |
-| CMSIS-DAP/pyOCD Upload | 대기 | probe 1개와 일반 Upload 10회 성공 |
-| `0.0.97` upgrade | 대기 | 설치 version과 manifest 재검증 |
-| `0.0.96` downgrade | 대기 | 설치 version과 manifest 재검증 |
-| Core uninstall | 대기 | 공유 NCS와 `ready.json` byte 보존 |
-| `0.0.97` reinstall | 대기 | prerequisite 재사용과 Blink 재빌드 |
+| preflight | **PASS**, 0.174 s | Arduino CLI version·commit·실행 파일 byte 일치, NCS·prerequisite·ready marker가 모두 없는 기준선 확인 |
+| public index update | **PASS**, 4.092 s | 공개 index와 두 archive의 URL·size·SHA-256·provenance 일치 |
+| `0.0.96` 최초 설치 | **PASS**, 2,058.160 s | Nordic 공식 배포에서 NCS v3.4.0과 Toolchain `dcbdc366a1` 설치, exact revision 검증 |
+| board details | **PASS**, 0.250 s | `nucode:zephyr:nu54dk` discovery |
+| Blink cold compile | **PASS**, 111.991 s | HEX `7e4f228442cca87424df10db60bde67eb74f2be1913df6bb8fc0bb52e4847a0b` |
+| Blink warm compile | **PASS**, 5.975 s | 같은 build path 재빌드, cold와 동일한 HEX |
+| CMSIS-DAP/pyOCD Upload | **PASS**, 72.979 s | probe 1개를 다시 확인하고 일반 Upload 10/10 성공 |
+| `0.0.97` upgrade | **PASS**, 6.568 s | 설치 version, package manifest와 Nordic pin 재검증 |
+| `0.0.96` downgrade | **PASS**, 6.136 s | 설치 version, package manifest와 Nordic pin 재검증 |
+| Core uninstall | **PASS**, 1.046 s | Core 제거 후 공유 NCS와 `ready.json` 보존 |
+| `0.0.97` reinstall | **PASS**, 75.228 s | prerequisite 재사용, 68.945 s Blink 재빌드와 동일 HEX 확인 |
 
-최종 PASS/FAIL, 단계별 duration, firmware artifact hash와 설치 용량은 원격 실행 종료 후 이
-절에 추가한다. 실행 중이라는 이유로 아직 수행하지 않은 단계를 PASS로 기록하지 않는다.
+전체 run은 2026-08-27 19:57:04 UTC부터 20:37:11 UTC까지 약 40분 7초가 걸렸다. NCS와
+Toolchain은 Core ZIP에 포함하지 않고 Nordic 공식 배포에서 받았다. 최종 hash-bound
+evidence는 prerequisite identity와 revision을 기록하지만 다운로드 byte와 설치 후 디스크
+사용량은 수집하지 않았으므로 이 문서에 용량 수치를 게시하지 않는다.
 
 ---
 
@@ -163,6 +166,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass `
 | `0.0.92` | post-install 재개 중 log 처리 실패 | PowerShell 5.1의 `Tee-Object` parameter 모호성 | `Add-Content` 기반 명시 기록으로 교체 |
 | `0.0.93` | 최초 Full Zephyr compile 실패 | UTF-8 no-BOM BAT/CMD의 한글 주석 오해석과 긴 cache 경로의 MAX_PATH 초과 | launcher ASCII·strict CRLF, 기본 cache `%LOCALAPPDATA%\NU54\c` 적용 |
 | `0.0.94`, `0.0.95` | Arduino CLI identity preflight 실패 | PowerShell 5.1에서 stdout/stderr Task의 `GetResult()` 반환값이 success stream에 섞여 native command 결과가 배열로 변환됨 | 반환값을 `[void]`로 억제하고 StrictMode 단일 결과 회귀 추가; 후속 `0.0.96`/`0.0.97`로 재검증 |
+| 최종 run 첫 upload 호출 | 1·2회 성공 후 3회차 `Timeout reading from probe` | CMSIS-DAP의 일시적 read timeout | 같은 run ID의 fail-closed resume로 probe 1개를 재확인하고 최종 upload 단계 10/10을 새 증거로 확정 |
 | 공통 복구 | 실패 후 Arduino CLI가 Core를 installed로 남김 | CLI 재호출이 post-install을 건너뜀 | 설치된 `post_install.bat` 직접 재시도와 검증 추가 |
 
 수정 후 host 자동 시험은 marker 손상, 설치 중단, timeout, 잘못된 archive/index, resume
@@ -186,6 +190,14 @@ build/m10/remote/<windows-safe-run-id>/
 저장소에는 개인정보와 장치 UID를 제거한 이 요약, 공개 artifact checksum과 raw evidence의
 SHA-256만 기록한다. 대용량 NCS/Toolchain과 build tree도 Git에 포함하지 않는다.
 
+최종 run의 증거 무결성 값은 다음과 같다.
+
+| 파일 | SHA-256 |
+| --- | --- |
+| `evidence.json` | `2f7a7231ab35200cc6d214c2629f0afe76bf27795aa52ee82e7ccaca8cdb47c7` |
+| `orchestrator.json` | `fbcd1b4bb9ec013fc3984215a01e5aea281d804abe9f0816d4656ac95d1d792c` |
+| target runner | `25e29fd2aec19c4129a5431fc1e368ca314145946b6e7c3e327d6d3529076473` |
+
 ---
 
 ## 8. 라이선스와 공개 경계
@@ -203,9 +215,11 @@ M11의 전체 release regression 이후 프로젝트 소유자의 라이선스 �
 
 ## 9. 완료 판정
 
-**진행 중.** 진단 run `m10-20260828-022627`은 Nordic prerequisite 최초 설치와 exact pin
-검증까지 통과했지만 첫 Full Zephyr compile에서 launcher 인코딩·MAX_PATH 결함을 찾아
-실패로 종료했다. 후속 `0.0.94`/`0.0.95` 실행도 PowerShell 5.1 runner의 명령 결과 누출로
-Arduino CLI identity preflight에서 실패했다. 해당 결과들을 PASS로 승격하지 않는다.
-runner 수정이 포함된 `0.0.96`→`0.0.97`을 NCS와 prerequisite가 다시 없는 상태에서 실행하고
-raw evidence를 교차 검증한 뒤 M10 완료 여부를 확정한다.
+**완료 — 2026-08-28.** `m10-20260828-045655`에서 clean baseline, 공개 artifact identity,
+Nordic prerequisite 최초 설치, cold/warm Full Zephyr build, 온보드 CMSIS-DAP V2/pyOCD Upload
+10/10과 Core upgrade·downgrade·uninstall·reinstall을 모두 통과했다. 최종 evidence와
+orchestrator의 상태·checksum도 교차 검증했다.
+
+진단 run과 폐기 preview는 결함 발견 이력으로만 남기며 PASS로 승격하지 않는다. M10의 기술
+완료 조건은 충족했으며 M11 release candidate 검증을 시작할 수 있다. stable `v0.1.0` 공개는
+M11의 전체 기술 gate와 프로젝트 소유자의 최종 승인 전까지 계속 HOLD한다.

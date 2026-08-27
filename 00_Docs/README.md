@@ -30,11 +30,12 @@
 10. [M7 Wire·SPI·ADC·PWM 기준선](<./04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md>)
 11. [M8 업로드와 디버그 기준선](<./04_검증 기록/08_M8_업로드와_디버그_기준선.md>)
 12. [M9 증분 빌드·캐시와 재현성 기준선](<./04_검증 기록/09_M9_증분_빌드_캐시와_재현성_기준선.md>)
-13. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
-14. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
-15. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
-16. [Boards Manager 설치와 패키징](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
-17. [v0.1.0-rc.1 릴리스 노트](<./05_릴리스/03_v0.1.0_rc1_릴리스_노트.md>)
+13. [M10 Boards Manager와 clean Windows 기준선](<./04_검증 기록/10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md>)
+14. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
+15. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
+16. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
+17. [Boards Manager 설치와 패키징](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
+18. [v0.1.0-rc.1 릴리스 노트](<./05_릴리스/03_v0.1.0_rc1_릴리스_노트.md>)
 
 ## 문서 구성
 
@@ -76,6 +77,7 @@
 - [M7 Wire·SPI·ADC·PWM 기준선](<./04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md>): M7 공개 API·DTS/Kconfig 계약, 0x6A HIL 안전 경계와 실제·미검증 결과 행렬
 - [M8 업로드와 디버그 기준선](<./04_검증 기록/08_M8_업로드와_디버그_기준선.md>): manifest 검증, Arduino Upload recipe, pyOCD 10회 HIL과 source breakpoint 증거
 - [M9 증분 빌드·캐시와 재현성 기준선](<./04_검증 기록/09_M9_증분_빌드_캐시와_재현성_기준선.md>): persistent cache key, ccache, lock/LRU와 cold/warm/손상 복구 실측 증거
+- [M10 Boards Manager와 clean Windows 기준선](<./04_검증 기록/10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md>): 공개 preview의 clean Windows 최초 설치, build/upload와 전체 수명주기 완료 증거
 
 ### 05. 릴리스
 
@@ -98,7 +100,8 @@
 | M7 버스·아날로그·PWM API | **완료** | NU54DK Twister target 11/11·전체 Builder 8/8(M7 예제 4/4)·I2C/ADC/PWM HIL·SPI00 4 MHz 40-byte 물리 loopback 통과 |
 | M8 업로드와 디버그 | **완료** | manifest·artifact·probe 안전검사, Arduino CLI pyOCD upload 10/10, 최종 UART reset과 `setup()` source breakpoint 통과 |
 | M9 증분 빌드·캐시·재현성 | **완료** | persistent tree와 canonical key, host 43/43, library·parallel·M9 Arduino CLI 회귀 및 실측 기준선 통과 |
-| M10~M11 | 대기 | Boards Manager clean Windows 패키징과 v0.1 release 검증 대기 |
+| M10 Boards Manager 패키징 | **완료** | 공개 preview `0.0.96`→`0.0.97`, clean Windows 11/11 단계와 pyOCD upload 10/10 통과 |
+| M11 v0.1 릴리스 후보 | **진행 중** | 고정 RC artifact의 전체 회귀·증거 bundle과 prerelease 준비 |
 
 상세 상태는 [구현 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)을 단일 기준으로 관리한다.
 

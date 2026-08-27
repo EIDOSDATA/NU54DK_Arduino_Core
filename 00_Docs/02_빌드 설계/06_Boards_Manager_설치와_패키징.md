@@ -2,12 +2,12 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M10 설치·패키징 계약 확정 — clean Windows 실기 판정은 별도 검증 기록에서 관리 |
+| 문서 상태 | M10 설치·패키징 계약 및 clean Windows 실기 검증 완료 |
 | 작성자 | Quantum / NUCODE |
 | 초기 지원 운영체제 | Windows 10/11 x64 |
 | Arduino package | `nucode:zephyr` |
 | Board FQBN | `nucode:zephyr:nu54dk` |
-| 현재 검증 preview | `0.0.96`, `0.0.97` — clean Windows 최종 실행 대기 |
+| 현재 검증 preview | `0.0.96`, `0.0.97` — clean Windows 최종 run 통과 |
 | 펌웨어 구조 | Loader/LLEXT 없는 Native Full Zephyr image |
 
 ---

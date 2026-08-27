@@ -36,6 +36,9 @@ NU54DK에서 Loader 없이 동작하는 Native Full Zephyr 기반 Arduino Core�
 - M8 통합 staged Builder 회귀 9/9와 M7·M8 host protocol/contract unittest 22/22 통과
 - M9 완료, Arduino 임시 경로와 분리된 persistent Zephyr cache, canonical key, 전용 ccache와 안전한 lock/LRU 구현
 - M9 host 계약 43/43과 Arduino CLI library·parallel·cache 회귀 통과: no-change compiler 0회, Sketch 수정 3.57초, 손상 tree 복구 확인
+- M10 완료, 공개 preview `0.0.96`→`0.0.97`을 별도 clean Windows PC에서 최초 설치하고 package 수명주기 11/11 통과
+- M10 NCS v3.4.0/Toolchain exact-pin 설치, cold/warm Blink build, 온보드 CMSIS-DAP V2/pyOCD upload 10/10 통과
+- M11 진행 중, 고정 `v0.1.0-rc.1` artifact의 전체 회귀와 공개 prerelease 증거 bundle 준비
 
 ## 보드 정의
 
