@@ -119,6 +119,44 @@ safe preview의 내구 반복 증거로 별도 유지한다.
 변경되면 PASS evidence가 생성되지 않는다. log는 자격 증명과 긴 장치 ID 후보를 제거한 뒤
 별도 SHA-256으로 evidence에 묶는다.
 
+### M10 대상 PC에서 원격 gate 자동 실행
+
+M10이 PASS한 Windows 대상에 NCS/Toolchain과 `ready.json`이 남아 있으면 세 package/HIL
+gate를 한 명령으로 실행할 수 있다. RC plan의 `core_revision`은 먼저 공개 저장소에 push되어
+대상이 credential 없이 exact commit과 보드 submodule을 clone할 수 있어야 한다.
+
+```powershell
+$ReleaseRoot = "build/m11/0.1.0-rc.1"
+
+powershell.exe -NoProfile -ExecutionPolicy Bypass `
+  -File tools/release/invoke-m11-rc-windows.ps1 `
+  -ReleaseRoot $ReleaseRoot `
+  -TargetHost "192.168.1.10" `
+  -RemoteUser "nu54ci" `
+  -IdentityFile "$env:USERPROFILE/.ssh/nu54dk_m10_ed25519" `
+  -KnownHostsFile "$env:USERPROFILE/.ssh/known_hosts"
+```
+
+원격 실행기는 `StrictHostKeyChecking=yes`, `IdentitiesOnly=yes`와 고정 private key를 사용하고,
+`known_hosts`에 대상 key가 없으면 연결 전에 실패한다. plan의 전체 artifact byte를 로컬과
+원격에서 각각 검증하고, 공개 `EIDOSDATA/NU54DK_Arduino_Core`의 exact detached commit만
+checkout한다. 이 clone은 system/global Git config, credential helper와 대화형 인증을
+비활성화하므로 공개 저장소 접근에 저장된 자격 증명을 사용하지 않는다. 대상의
+`%LOCALAPPDATA%` 아래 M10 `ready.json`과 Toolchain bundle
+`dcbdc366a1`의 Python/Git, SHA-256이 고정된 Arduino CLI만 사용한다.
+
+결과는 기본적으로 `build/m11/remote/<RUN_ID>`에 기록한다. 다음 파일은 모두 있어야 하며,
+하나라도 누락되거나 remote command가 timeout/non-zero로 끝나면 실행 전체가 실패한다.
+
+- `arduino_cli_fixed_package.evidence.json`과 `.evidence.log`
+- `zephyr_regression.evidence.json`과 `.evidence.log`
+- `hil_rc_pyocd.evidence.json`, `.evidence.log`, `.evidence.result.json`
+- endpoint 원문 없이 checksum만 기록한 `orchestrator.json`과 정제된 `orchestrator.log`
+
+원격 실행이 실패해도 생성된 부분 evidence 회수는 시도하지만 PASS로 승격하지 않는다. 새
+실행은 항상 새 run ID와 원격 directory를 사용하며 기존 원격 checkout이나 결과를 삭제·재사용하지
+않는다.
+
 ## 3. clean Windows와 pyOCD 증거 가져오기
 
 M10 원격 runner를 Windows-safe preview `0.0.96`→`0.0.97`로 실행한 결과의
