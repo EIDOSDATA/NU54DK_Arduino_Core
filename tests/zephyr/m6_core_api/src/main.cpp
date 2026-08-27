@@ -110,6 +110,29 @@ namespace
 		size_t written_ = 0U;
 	};
 
+	/** @brief Printable 객체가 Print에 위임하는 byte 수와 호출 횟수를 기록합니다. */
+	class PrintableToken final : public Printable
+	{
+	public:
+		/** @brief 고정 문자열과 숫자를 전달받은 Print 구현에 기록합니다. */
+		size_t printTo(Print &output) const override
+		{
+			++invocation_count_;
+			size_t written = output.print("NU54:");
+			written += output.print(42U, HEX);
+			return written;
+		}
+
+		/** @brief printTo가 호출된 누적 횟수를 반환합니다. */
+		unsigned int invocationCount() const noexcept
+		{
+			return invocation_count_;
+		}
+
+	private:
+		mutable unsigned int invocation_count_ = 0U;
+	};
+
 	/** @brief Stream 입력과 출력을 고정 배열로 모사합니다. */
 	class MemoryStream final : public Stream
 	{
@@ -296,6 +319,26 @@ ZTEST(m6_common, test_print_and_stream_contract)
 	const unsigned long timeout_elapsed = millis() - timeout_start;
 	zassert_true(timeout_elapsed >= 2U, "Stream timeout이 요청한 시간보다 일찍 끝났습니다.");
 	zassert_true(timeout_elapsed < 100U, "Stream timeout이 비정상적으로 오래 걸렸습니다.");
+}
+
+ZTEST(m6_common, test_printable_dispatch_and_count_contract)
+{
+	PrintableToken token;
+	CapturePrint printed;
+	zassert_equal(printed.print(token), 7U,
+		      "Print::print가 Printable의 기록 byte 수를 반환하지 않았습니다.");
+	zassert_equal(strcmp(printed.data(), "NU54:2A"), 0,
+		      "Printable이 Print 구현에 기대한 내용을 기록하지 않았습니다.");
+	zassert_equal(token.invocationCount(), 1U,
+		      "Print::print가 Printable::printTo를 한 번만 호출하지 않았습니다.");
+
+	CapturePrint line;
+	zassert_equal(line.println(token), 9U,
+		      "Print::println이 Printable 출력과 CRLF byte 수를 합산하지 않았습니다.");
+	zassert_equal(strcmp(line.data(), "NU54:2A\r\n"), 0,
+		      "Print::println이 Printable 출력 뒤 CRLF를 추가하지 않았습니다.");
+	zassert_equal(token.invocationCount(), 2U,
+		      "Print::println의 Printable dispatch 횟수가 다릅니다.");
 }
 
 ZTEST(m6_serial, test_begin_tx_and_non_destructive_rebegin)

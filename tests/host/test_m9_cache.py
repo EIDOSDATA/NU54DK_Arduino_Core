@@ -104,6 +104,14 @@ class M9CacheContractTests(unittest.TestCase):
             else:
                 os.environ["NUCODE_BUILD_CACHE_ROOT"] = previous
 
+    def test_default_cache_root_keeps_windows_object_path_short(self) -> None:
+        """! @brief 기본 cache root가 긴 nRF Security object 경로를 위한 짧은 suffix를 씁니다. """
+
+        local_data = self.root / "local-data"
+        with mock.patch.dict(os.environ, {"LOCALAPPDATA": str(local_data)}):
+            os.environ.pop("NUCODE_BUILD_CACHE_ROOT", None)
+            self.assertEqual(MODULE.build_cache_root(), local_data / "NU54" / "c")
+
     def test_tree_content_hash_detects_content_and_path(self) -> None:
         """! @brief dirty Core 내용과 상대 경로 변경이 fingerprint에 반영됩니다. """
 

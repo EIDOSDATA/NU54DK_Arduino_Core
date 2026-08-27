@@ -298,7 +298,7 @@ def local_cache_root(value: str | Path) -> Path:
     return root
 
 
-## @brief M9 영구 build cache root를 환경 또는 사용자 local data에서 계산합니다.
+## @brief M9 영구 build cache root를 환경 또는 짧은 사용자 local data 경로에서 계산합니다.
 def build_cache_root() -> Path:
     configured = os.environ.get("NUCODE_BUILD_CACHE_ROOT")
     if configured:
@@ -308,7 +308,9 @@ def build_cache_root() -> Path:
         base = canonical_path(local_data)
     else:
         base = canonical_path(Path.home() / ".cache")
-    return local_cache_root(base / "NUCODE" / "NU54DK_Arduino_Core" / "build-cache")
+    ## @note nRF Security의 긴 object 이름이 Windows MAX_PATH를 넘지 않도록 build 전용
+    ##       기본 경로는 짧게 유지하고 설치 상태와 log는 기존 NUCODE 경로를 사용합니다.
+    return local_cache_root(base / "NU54" / "c")
 
 
 ## @brief 정수형 환경 설정을 유효한 양수로 읽습니다.
@@ -1338,6 +1340,38 @@ def dependency_arguments(arguments: Sequence[str]) -> list[str]:
     return forwarded
 
 
+## @brief Arduino prototype 전처리에서 직접 Zephyr header를 보류해야 하는지 확인합니다.
+def has_direct_zephyr_include(source: Path) -> bool:
+    try:
+        content = source.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as error:
+        raise AdapterError(f"Zephyr include 탐색용 source를 읽지 못했습니다: {error}") from error
+    return re.search(
+        r'^\s*#\s*include\s*[<\"]zephyr/', content, re.MULTILINE
+    ) is not None
+
+
+## @brief 직접 Zephyr include만 같은 줄 수의 Doxygen 주석으로 치환한 임시 source를 만듭니다.
+def stage_prototype_source(source: Path, temporary_root: Path) -> Path:
+    try:
+        content = source.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as error:
+        raise AdapterError(f"Zephyr include 보류용 source를 읽지 못했습니다: {error}") from error
+    pattern = re.compile(
+        r'^(?P<indent>\s*)#\s*include\s*[<\"]zephyr/[^>\"]*[>\"].*$',
+        re.MULTILINE,
+    )
+    staged_content, replacements = pattern.subn(
+        r'\g<indent>/** @brief Arduino prototype 단계에서는 Zephyr header 해석을 최종 컴파일까지 보류합니다. */',
+        content,
+    )
+    if replacements == 0:
+        return source
+    staged = temporary_root / source.name
+    atomic_write_text(staged, staged_content)
+    return staged
+
+
 ## @brief NCS compiler를 전처리기로 호출하여 Arduino discovery 출력을 만듭니다.
 def preprocess(args: argparse.Namespace, passthrough: Sequence[str]) -> None:
     context = load_context(args)
@@ -1373,9 +1407,19 @@ def preprocess(args: argparse.Namespace, passthrough: Sequence[str]) -> None:
         return
     if not args.output:
         raise AdapterError("macros 전처리에는 --output이 필요합니다.")
-    command.extend(dependencies)
-    command.extend(("-E", "-CC", source))
-    result = run_checked(command, cwd=canonical_path(context["sketch_root"]), environment=tools["environment"], capture=True)
+    with tempfile.TemporaryDirectory(prefix="n54-pp-") as temporary:
+        prototype_source = source
+        if has_direct_zephyr_include(source):
+            prototype_source = stage_prototype_source(source, Path(temporary))
+            command.extend(("-iquote", source.parent))
+        command.extend(dependencies)
+        command.extend(("-E", "-CC", prototype_source))
+        result = run_checked(
+            command,
+            cwd=canonical_path(context["sketch_root"]),
+            environment=tools["environment"],
+            capture=True,
+        )
     if args.output.casefold() not in {"nul", "/dev/null"}:
         atomic_write_bytes(canonical_path(args.output), result.stdout)
 

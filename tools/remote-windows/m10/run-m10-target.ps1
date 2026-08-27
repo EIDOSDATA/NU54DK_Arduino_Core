@@ -200,62 +200,59 @@ function Get-PyOcdProbeCount {
         [string]$Text
     )
 
-    $withoutAnsi = [regex]::Replace(
-        $Text,
-        ([string][char]27 + '\[[0-?]*[ -/]*[@-~]'),
-        ''
-    )
-    $lines = @(
-        $withoutAnsi -split "`r?`n" |
-            ForEach-Object { $_.TrimEnd() } |
-            Where-Object { $_.Trim().Length -gt 0 }
-    )
-    if ($lines.Count -eq 0) {
-        return 0
+    $normalized = $Text.Trim()
+    if ($normalized -notmatch '^[0-9]+$') {
+        throw 'pyOCD API probe count is not one unsigned integer.'
     }
-    if ($lines.Count -eq 1 -and
-        $lines[0].Trim() -eq 'No available debug probes are connected') {
-        return 0
+    return [int]$normalized
+}
+
+function Read-BoundedTextTail {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path,
+        [Parameter(Mandatory = $true)]
+        [Text.Encoding]$Encoding,
+        [int]$MaximumBytes = 1048576
+    )
+
+    if ($MaximumBytes -lt 1) {
+        throw 'Output tail limit must be at least one byte.'
     }
-    if (@($lines | Where-Object {
-        $_ -match '(?i)no available debug probes'
-    }).Count -gt 0) {
-        throw 'Ambiguous pyOCD output mixed a no-probe message with other text.'
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        return ''
     }
 
-    $headerCount = @($lines | Where-Object {
-        $_ -match '^\|\s*#\s+Probe/Board\s+Unique ID\s+Target\s*\|$'
-    }).Count
-    if ($headerCount -ne 1) {
-        throw 'Unrecognized pyOCD probe table header.'
-    }
-
-    $indexes = New-Object System.Collections.Generic.List[int]
-    $probeRowSeen = $false
-    foreach ($line in $lines) {
-        if ($line -match '^\+-+\+$' -or
-            $line -match '^\|\s*#\s+Probe/Board\s+Unique ID\s+Target\s*\|$') {
-            continue
+    $stream = [IO.FileStream]::new(
+        $Path,
+        [IO.FileMode]::Open,
+        [IO.FileAccess]::Read,
+        [IO.FileShare]::ReadWrite
+    )
+    try {
+        $offset = [int64]0
+        if ($stream.Length -gt $MaximumBytes) {
+            $offset = $stream.Length - [int64]$MaximumBytes
         }
-        if ($line -match '^\| (\d+)\s{2,}\S.*\|$') {
-            $indexes.Add([int]$Matches[1])
-            $probeRowSeen = $true
-            continue
+        [void]$stream.Seek($offset, [IO.SeekOrigin]::Begin)
+        $count = [int]($stream.Length - $offset)
+        $bytes = [byte[]]::new($count)
+        $read = 0
+        while ($read -lt $count) {
+            $current = $stream.Read($bytes, $read, $count - $read)
+            if ($current -eq 0) {
+                break
+            }
+            $read += $current
         }
-        if ($probeRowSeen -and $line -match '^\|\s{2,}.*\|$') {
-            continue
-        }
-        throw 'Unrecognized or ambiguous pyOCD probe table row.'
+        $text = $Encoding.GetString($bytes, 0, $read)
+    } finally {
+        $stream.Dispose()
     }
-    if ($indexes.Count -eq 0) {
-        throw 'pyOCD emitted a table without a recognizable probe row.'
+    if ($offset -gt 0) {
+        return "[output truncated to last $MaximumBytes bytes]`r`n$text"
     }
-    for ($index = 0; $index -lt $indexes.Count; $index++) {
-        if ($indexes[$index] -ne $index) {
-            throw 'pyOCD probe indexes are not unique and contiguous.'
-        }
-    }
-    return $indexes.Count
+    return $text
 }
 
 function Invoke-NativeCommand {
@@ -283,6 +280,9 @@ function Invoke-NativeCommand {
     $commandLine = (@($Arguments | ForEach-Object {
         Convert-ToCommandArgument -Value ([string]$_)
     }) -join ' ')
+    $commandId = [Guid]::NewGuid().ToString('N')
+    $stdoutPath = Join-Path $script:TemporaryRoot ($commandId + '.stdout.log')
+    $stderrPath = Join-Path $script:TemporaryRoot ($commandId + '.stderr.log')
     $started = [DateTime]::UtcNow
     Add-RunLog -Text ("COMMAND START [{0}] {1}" -f $Label, $FilePath)
 
@@ -294,23 +294,61 @@ function Invoke-NativeCommand {
     $startInfo.CreateNoWindow = $true
     $startInfo.RedirectStandardOutput = $true
     $startInfo.RedirectStandardError = $true
+    $startInfo.EnvironmentVariables['PYTHONUTF8'] = '1'
+    $startInfo.EnvironmentVariables['PYTHONIOENCODING'] = 'utf-8'
     $process = New-Object System.Diagnostics.Process
     $process.StartInfo = $startInfo
-    if (-not $process.Start()) {
+    $stdoutStream = $null
+    $stderrStream = $null
+    $stdoutTask = $null
+    $stderrTask = $null
+    $completed = $false
+    $exitCode = $null
+    $stdoutEncoding = [Console]::OutputEncoding
+    $stderrEncoding = [Console]::OutputEncoding
+    try {
+        if (-not $process.Start()) {
+            throw "Process could not be started: $Label"
+        }
+        $stdoutEncoding = $process.StandardOutput.CurrentEncoding
+        $stderrEncoding = $process.StandardError.CurrentEncoding
+        $stdoutStream = [IO.FileStream]::new(
+            $stdoutPath,
+            [IO.FileMode]::CreateNew,
+            [IO.FileAccess]::Write,
+            [IO.FileShare]::Read
+        )
+        $stderrStream = [IO.FileStream]::new(
+            $stderrPath,
+            [IO.FileMode]::CreateNew,
+            [IO.FileAccess]::Write,
+            [IO.FileShare]::Read
+        )
+        $stdoutTask = $process.StandardOutput.BaseStream.CopyToAsync($stdoutStream)
+        $stderrTask = $process.StandardError.BaseStream.CopyToAsync($stderrStream)
+        $completed = $process.WaitForExit($TimeoutSeconds * 1000)
+        if (-not $completed) {
+            & "$env:SystemRoot\System32\taskkill.exe" /PID $process.Id /T /F 2>&1 | Out-Null
+        }
+        $process.WaitForExit()
+        $stdoutTask.GetAwaiter().GetResult()
+        $stderrTask.GetAwaiter().GetResult()
+        $stdoutStream.Flush($true)
+        $stderrStream.Flush($true)
+        $exitCode = $process.ExitCode
+    } finally {
+        if ($stdoutStream) {
+            $stdoutStream.Dispose()
+        }
+        if ($stderrStream) {
+            $stderrStream.Dispose()
+        }
         $process.Dispose()
-        throw "Process could not be started: $Label"
     }
-    $stdoutTask = $process.StandardOutput.ReadToEndAsync()
-    $stderrTask = $process.StandardError.ReadToEndAsync()
-    $completed = $process.WaitForExit($TimeoutSeconds * 1000)
-    if (-not $completed) {
-        & "$env:SystemRoot\System32\taskkill.exe" /PID $process.Id /T /F 2>&1 | Out-Null
-    }
-    $process.WaitForExit()
-    $stdout = $stdoutTask.GetAwaiter().GetResult()
-    $stderr = $stderrTask.GetAwaiter().GetResult()
-    $exitCode = $process.ExitCode
-    $process.Dispose()
+
+    $stdout = Read-BoundedTextTail -Path $stdoutPath -Encoding $stdoutEncoding
+    $stderr = Read-BoundedTextTail -Path $stderrPath -Encoding $stderrEncoding
+    Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
 
     $duration = [Math]::Round(([DateTime]::UtcNow - $started).TotalSeconds, 3)
     if ($stdout) {
@@ -536,6 +574,13 @@ function Get-InstalledReleaseIdentity {
     if ([string]$manifest.core_revision -ne [string]$expectedArchive.core_revision) {
         throw "Installed release core revision does not match the prevalidated archive for version $Version."
     }
+    if ([string]$manifest.board_revision -ne [string]$expectedArchive.board_revision) {
+        throw "Installed release board revision does not match the prevalidated archive for version $Version."
+    }
+    if ([string]$manifest.runtime_payload_sha256 -notmatch '^[0-9a-f]{64}$' -or
+        [string]$manifest.runtime_payload_sha256 -ne [string]$expectedArchive.runtime_payload_sha256) {
+        throw "Installed release runtime payload fingerprint does not match the prevalidated archive for version $Version."
+    }
     if ([string]$manifest.archive_file_name -ne [string]$expectedArchive.file_name) {
         throw "Installed release archive name does not match the index for version $Version."
     }
@@ -558,6 +603,7 @@ function Get-InstalledReleaseIdentity {
         version = $Version
         core_revision = [string]$manifest.core_revision
         board_revision = [string]$manifest.board_revision
+        runtime_payload_sha256 = [string]$manifest.runtime_payload_sha256
         release_manifest_sha256 = $releaseManifestSha256
         archive_file_name = [string]$expectedArchive.file_name
         archive_sha256 = [string]$expectedArchive.sha256
@@ -804,8 +850,8 @@ $script:Fqbn = [string](Get-ConfigValue -Config $config -Name 'fqbn' -DefaultVal
 if ($script:Fqbn -ne 'nucode:zephyr:nu54dk') {
     throw 'Unexpected FQBN.'
 }
-$script:InitialVersion = [string](Get-ConfigValue -Config $config -Name 'initial_version' -DefaultValue '0.0.92')
-$script:LatestVersion = [string](Get-ConfigValue -Config $config -Name 'latest_version' -DefaultValue '0.0.93')
+$script:InitialVersion = [string](Get-ConfigValue -Config $config -Name 'initial_version' -DefaultValue '0.0.94')
+$script:LatestVersion = [string](Get-ConfigValue -Config $config -Name 'latest_version' -DefaultValue '0.0.95')
 foreach ($version in @($script:InitialVersion, $script:LatestVersion)) {
     if ($version -notmatch '^\d+\.\d+\.\d+$') {
         throw "Invalid core version: $version"
@@ -845,6 +891,8 @@ foreach ($version in @($script:InitialVersion, $script:LatestVersion)) {
         [string]$archiveProperty.Value.sha256 -notmatch '^[0-9a-f]{64}$' -or
         [string]$archiveProperty.Value.size -notmatch '^[1-9][0-9]*$' -or
         [string]$archiveProperty.Value.core_revision -notmatch '^[0-9a-f]{40}$' -or
+        [string]$archiveProperty.Value.board_revision -notmatch '^[0-9a-f]{40}$' -or
+        [string]$archiveProperty.Value.runtime_payload_sha256 -notmatch '^[0-9a-f]{64}$' -or
         [string]$archiveProperty.Value.release_manifest_sha256 -notmatch '^[0-9a-f]{64}$') {
         throw "Invalid archive identity for version $version."
     }
@@ -1071,14 +1119,15 @@ try {
             throw "Nordic ready state is missing: $verifyJson"
         }
         $ready = Get-Content -LiteralPath $verifyJson -Raw -Encoding UTF8 | ConvertFrom-Json
-        $pyocdPath = Join-Path ([string]$ready.toolchain_root) 'opt\bin\Scripts\pyocd.exe'
+        $pythonPath = Join-Path ([string]$ready.toolchain_root) 'opt\bin\python.exe'
+        $probeCountScript = 'from pyocd.core.helpers import ConnectHelper; print(len(ConnectHelper.get_all_connected_probes(blocking=False, print_wait_message=False)))'
         $probeList = Invoke-NativeCommand `
-            -FilePath $pyocdPath `
-            -Arguments @('list', '--probes', '--no-header') `
-            -Label 'pyocd-list' `
+            -FilePath $pythonPath `
+            -Arguments @('-c', $probeCountScript) `
+            -Label 'pyocd-api-probe-count' `
             -TimeoutSeconds 120
         if ($probeList.stderr.Trim()) {
-            throw 'pyOCD probe listing returned unexpected stderr output.'
+            throw 'pyOCD API probe count returned unexpected stderr output.'
         }
         $probeCount = Get-PyOcdProbeCount -Text $probeList.stdout
         if ($probeCount -eq 0) {
@@ -1110,21 +1159,25 @@ try {
             }
             throw $error
         }
-        Invoke-Arduino `
-            -Label 'blink-pyocd-upload' `
-            -Arguments @(
-                'upload',
-                '--fqbn',
-                $script:Fqbn,
-                '--input-dir',
-                $coldBuildPath,
-                $script:SketchRoot
-            ) `
-            -TimeoutSeconds 600 | Out-Null
+        $uploadAttempts = 10
+        for ($attempt = 1; $attempt -le $uploadAttempts; $attempt++) {
+            Invoke-Arduino `
+                -Label ("blink-pyocd-upload-{0:D2}" -f $attempt) `
+                -Arguments @(
+                    'upload',
+                    '--fqbn',
+                    $script:Fqbn,
+                    '--input-dir',
+                    $coldBuildPath,
+                    $script:SketchRoot
+                ) `
+                -TimeoutSeconds 600 | Out-Null
+        }
         return [pscustomobject][ordered]@{
             attached = $true
             probe_count = $probeCount
             upload = 'passed'
+            upload_attempts = $uploadAttempts
         }
     } | Out-Null
 

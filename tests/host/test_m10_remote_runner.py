@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import base64
 import json
 from pathlib import Path
 import subprocess
@@ -31,7 +30,7 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
     def invoke_probe_parser(self, output: str) -> subprocess.CompletedProcess[str]:
         """! @brief target의 실제 probe parser 함수만 분리해 sample output에 실행합니다. """
 
-        encoded_output = base64.b64encode(output.encode("utf-8")).decode("ascii")
+        encoded_output = output.replace("'", "''")
         escaped_path = str(TARGET_RUNNER).replace("'", "''")
         command = (
             "$tokens=$null;$errors=$null;"
@@ -41,8 +40,7 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
             "$node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and "
             "$node.Name -eq 'Get-PyOcdProbeCount'},$true);"
             "Invoke-Expression $function.Extent.Text;"
-            "$text=[Text.Encoding]::UTF8.GetString("
-            f"[Convert]::FromBase64String('{encoded_output}'));"
+            f"$text='{encoded_output}';"
             "try{$count=Get-PyOcdProbeCount -Text $text;Write-Output \"COUNT=$count\"}"
             "catch{[Console]::Error.WriteLine($_.Exception.Message);exit 2}"
         )
@@ -100,10 +98,12 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
             timeout=30,
         )
 
-    def target_function_command(self, names: tuple[str, ...], body: str) -> str:
-        """! @brief 지정 target 함수 AST와 시험 본문을 하나의 PowerShell command로 만듭니다. """
+    def script_function_command(
+        self, script: Path, names: tuple[str, ...], body: str
+    ) -> str:
+        """! @brief 지정 script 함수 AST와 시험 본문을 하나의 PowerShell command로 만듭니다. """
 
-        escaped_path = str(TARGET_RUNNER).replace("'", "''")
+        escaped_path = str(script).replace("'", "''")
         quoted_names = ",".join(f"'{name}'" for name in names)
         return (
             "$tokens=$null;$errors=$null;"
@@ -117,12 +117,17 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
             + body
         )
 
-    def invoke_target_functions(
-        self, names: tuple[str, ...], body: str
-    ) -> subprocess.CompletedProcess[str]:
-        """! @brief 지정 target 함수 AST만 로드해 독립적인 runtime 계약을 실행합니다. """
+    def target_function_command(self, names: tuple[str, ...], body: str) -> str:
+        """! @brief 지정 target 함수 AST와 시험 본문을 하나의 PowerShell command로 만듭니다. """
 
-        command = self.target_function_command(names, body)
+        return self.script_function_command(TARGET_RUNNER, names, body)
+
+    def invoke_script_functions(
+        self, script: Path, names: tuple[str, ...], body: str
+    ) -> subprocess.CompletedProcess[str]:
+        """! @brief 지정 script 함수 AST만 로드해 독립적인 runtime 계약을 실행합니다. """
+
+        command = self.script_function_command(script, names, body)
         return subprocess.run(
             [
                 "powershell.exe",
@@ -136,6 +141,13 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
             text=True,
             timeout=30,
         )
+
+    def invoke_target_functions(
+        self, names: tuple[str, ...], body: str
+    ) -> subprocess.CompletedProcess[str]:
+        """! @brief 지정 target 함수 AST만 로드해 독립적인 runtime 계약을 실행합니다. """
+
+        return self.invoke_script_functions(TARGET_RUNNER, names, body)
 
     def test_powershell_51_parser_accepts_both_scripts(self) -> None:
         """! @brief Windows PowerShell parser가 두 파일을 오류 없이 해석합니다. """
@@ -258,8 +270,8 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
         """! @brief preview version과 post-install 실행을 암묵적으로 선택하지 않습니다. """
 
         for marker in (
-            "0.0.92",
-            "0.0.93",
+            "0.0.94",
+            "0.0.95",
             "--run-post-install",
             "post-install-direct-",
             "@('/d', '/c', 'call', $postInstall)",
@@ -287,7 +299,7 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
             "return [pscustomobject]@{pins_sha256='fixture'}};"
             "function Get-InstalledReleaseIdentity{param($Version);"
             "return [pscustomobject]@{prerequisites_pins_sha256='fixture'}};"
-            "try{$result=Install-CoreVersion -Version '0.0.92';"
+            "try{$result=Install-CoreVersion -Version '0.0.94';"
             "Write-Output ('DIRECT_CALLS='+$script:directCalls);"
             "Write-Output ('DIRECT_RESULT='+$result.post_install_direct)}"
             "finally{Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction SilentlyContinue}"
@@ -322,58 +334,24 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
         ):
             self.assertIn(marker, self.target_text)
 
-    def test_probe_table_parser_counts_zero_one_and_multiple(self) -> None:
-        """! @brief 빈 목록과 실제 pyOCD table의 probe row 수를 정확히 계산합니다. """
+    def test_pyocd_api_probe_count_accepts_only_one_integer(self) -> None:
+        """! @brief pyOCD API의 비식별 count 한 개만 안전하게 해석합니다. """
 
-        no_probe_message = "No available debug probes are connected\r\n"
-        single_probe = (
-            "+--------------------------------------+\r\n"
-            "| #   Probe/Board   Unique ID   Target |\r\n"
-            "+--------------------------------------+\r\n"
-            "| \x1b[35m0\x1b[0m   CMSIS-DAP     REDACTED    n/a    |\r\n"
-            "+--------------------------------------+\r\n"
-        )
-        two_probes = (
-            "+--------------------------------------+\n"
-            "| #   Probe/Board   Unique ID   Target |\n"
-            "+--------------------------------------+\n"
-            "| 0   CMSIS-DAP     REDACTED-A  n/a    |\n"
-            "|     123 Vendor    NU54DK             |\n"
-            "|                                      |\n"
-            "| 1   J-Link        REDACTED-B  n/a    |\n"
-            "+--------------------------------------+\n"
-        )
-        for sample, expected in (
-            ("", 0),
-            ("\r\n", 0),
-            (no_probe_message, 0),
-            (single_probe, 1),
-            (two_probes, 2),
-        ):
+        for sample, expected in (("0\r\n", 0), ("1\n", 1), ("2", 2)):
             with self.subTest(expected=expected):
                 result = self.invoke_probe_parser(sample)
                 self.assertEqual(result.returncode, 0, result.stderr)
                 self.assertIn(f"COUNT={expected}", result.stdout)
 
-    def test_probe_table_parser_rejects_ambiguous_output(self) -> None:
-        """! @brief header 누락, 혼합 메시지와 비연속 index를 fail-closed 처리합니다. """
+    def test_pyocd_api_probe_count_rejects_ambiguous_output(self) -> None:
+        """! @brief 빈 값, 음수와 부가 출력이 섞인 count를 fail-closed 처리합니다. """
 
         ambiguous_samples = (
+            "",
+            "-1\n",
             "warning only\n",
-            "No available debug probes are connected\nwarning\n",
-            (
-                "+--------------------------------------+\n"
-                "| #   Probe/Board   Unique ID   Target |\n"
-                "+--------------------------------------+\n"
-            ),
-            (
-                "+--------------------------------------+\n"
-                "| #   Probe/Board   Unique ID   Target |\n"
-                "+--------------------------------------+\n"
-                "| 0   CMSIS-DAP     REDACTED-A  n/a    |\n"
-                "| 2   J-Link        REDACTED-B  n/a    |\n"
-                "+--------------------------------------+\n"
-            ),
+            "1\nwarning\n",
+            "1 2\n",
         )
         for sample in ambiguous_samples:
             with self.subTest(sample=sample[:30]):
@@ -388,6 +366,18 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
             "blocked-ambiguous-probe",
             "no explicit probe was selected",
             "Exception.Data.Contains('nu54_result')",
+        ):
+            self.assertIn(marker, self.target_text)
+
+    def test_pyocd_api_count_uses_utf8_and_ten_uploads(self) -> None:
+        """! @brief 한국어 Windows에서도 probe 열거와 RC 10회 HIL이 재현되는지 고정합니다. """
+
+        for marker in (
+            "$startInfo.EnvironmentVariables['PYTHONUTF8'] = '1'",
+            "$startInfo.EnvironmentVariables['PYTHONIOENCODING'] = 'utf-8'",
+            "from pyocd.core.helpers import ConnectHelper",
+            "$uploadAttempts = 10",
+            "upload_attempts = $uploadAttempts",
         ):
             self.assertIn(marker, self.target_text)
 
@@ -613,6 +603,98 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
             self.assertNotIn("Start-Process", text)
         self.assertIn("evidence bundle", self.local_text)
         self.assertIn("M10 TARGET RUN FAIL", self.target_text)
+
+    def test_native_output_is_disk_spooled_and_tail_bounded(self) -> None:
+        """! @brief 장시간 native 출력은 file로 흘리고 제한된 tail만 메모리에 반환합니다. """
+
+        for text in (self.local_text, self.target_text):
+            self.assertNotIn("ReadToEndAsync", text)
+            self.assertIn("BaseStream.CopyToAsync", text)
+            self.assertIn("function Read-BoundedTextTail", text)
+            self.assertIn("MaximumBytes = 1048576", text)
+            self.assertIn(".stdout.log", text)
+            self.assertIn(".stderr.log", text)
+            self.assertIn("Remove-Item -LiteralPath $stdoutPath, $stderrPath", text)
+
+        fixture = "nu54-output-spool-" + uuid.uuid4().hex
+        body = (
+            f"$root=Join-Path ([IO.Path]::GetTempPath()) '{fixture}';"
+            "New-Item -ItemType Directory -Path $root -Force|Out-Null;"
+            "$script:TemporaryRoot=$root;$script:RunRoot=$root;"
+            "$script:RunLogPath=Join-Path $root 'runner.log';"
+            "$powerShell=Join-Path $env:SystemRoot 'System32\\WindowsPowerShell\\v1.0\\powershell.exe';"
+            "function Add-RunLog{param($Text)};"
+            "$payload=\"[Console]::Out.Write(('A' * 2097152) + 'OUT-END');"
+            "[Console]::Error.Write(('B' * 2097152) + 'ERR-END')\";"
+            "try{$result=Invoke-NativeCommand -FilePath $powerShell "
+            "-Arguments @('-NoProfile','-NonInteractive','-Command',$payload) "
+            "-Label 'bounded-output' -TimeoutSeconds 30;"
+            "$summary=[ordered]@{stdout_length=$result.stdout.Length;"
+            "stderr_length=$result.stderr.Length;"
+            "stdout_truncated=$result.stdout.StartsWith('[output truncated');"
+            "stderr_truncated=$result.stderr.StartsWith('[output truncated');"
+            "stdout_ended=$result.stdout.EndsWith('OUT-END');"
+            "stderr_ended=$result.stderr.EndsWith('ERR-END');"
+            "temporary_count=@(Get-ChildItem -LiteralPath $root -File).Count};"
+            "$summary|ConvertTo-Json -Compress}"
+            "finally{Remove-Item -LiteralPath $root -Recurse -Force}"
+        )
+        completed = self.invoke_target_functions(
+            (
+                "Convert-ToCommandArgument",
+                "Protect-Text",
+                "Add-RunLog",
+                "Read-BoundedTextTail",
+                "Invoke-NativeCommand",
+            ),
+            body,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        summary = json.loads(completed.stdout)
+        self.assertLessEqual(summary["stdout_length"], 1048700)
+        self.assertLessEqual(summary["stderr_length"], 1048700)
+        self.assertTrue(summary["stdout_truncated"])
+        self.assertTrue(summary["stderr_truncated"])
+        self.assertTrue(summary["stdout_ended"])
+        self.assertTrue(summary["stderr_ended"])
+        self.assertEqual(summary["temporary_count"], 0)
+
+        local_fixture = "nu54-local-output-spool-" + uuid.uuid4().hex
+        local_body = (
+            f"$root=Join-Path ([IO.Path]::GetTempPath()) '{local_fixture}';"
+            "New-Item -ItemType Directory -Path $root -Force|Out-Null;"
+            "$script:LocalTemporaryRoot=$root;"
+            "$script:LocalLogPath=Join-Path $root 'orchestrator.log';"
+            "[IO.File]::WriteAllText($script:LocalLogPath,'');"
+            "$powerShell=Join-Path $env:SystemRoot 'System32\\WindowsPowerShell\\v1.0\\powershell.exe';"
+            "$payload=\"[Console]::Out.Write(('C' * 2097152) + 'LOCAL-END')\";"
+            "try{$result=Invoke-LocalNative -FilePath $powerShell "
+            "-Arguments @('-NoProfile','-NonInteractive','-Command',$payload) "
+            "-Label 'bounded-local-output' -TimeoutSeconds 30 6>$null;"
+            "$summary=[ordered]@{stdout_length=$result.stdout.Length;"
+            "stdout_truncated=$result.stdout.StartsWith('[output truncated');"
+            "stdout_ended=$result.stdout.EndsWith('LOCAL-END');"
+            "temporary_count=@(Get-ChildItem -LiteralPath $root -File|"
+            "Where-Object{$_.Name -ne 'orchestrator.log'}).Count};"
+            "$summary|ConvertTo-Json -Compress}"
+            "finally{Remove-Item -LiteralPath $root -Recurse -Force}"
+        )
+        local_completed = self.invoke_script_functions(
+            LOCAL_RUNNER,
+            (
+                "Convert-ToNativeArgument",
+                "Protect-LogText",
+                "Read-BoundedTextTail",
+                "Invoke-LocalNative",
+            ),
+            local_body,
+        )
+        self.assertEqual(local_completed.returncode, 0, local_completed.stderr)
+        local_summary = json.loads(local_completed.stdout)
+        self.assertLessEqual(local_summary["stdout_length"], 1048700)
+        self.assertTrue(local_summary["stdout_truncated"])
+        self.assertTrue(local_summary["stdout_ended"])
+        self.assertEqual(local_summary["temporary_count"], 0)
 
 
 if __name__ == "__main__":

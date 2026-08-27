@@ -18,9 +18,9 @@ param(
     [string]$KnownHostsFile = "$env:USERPROFILE\.ssh\known_hosts",
     [string]$IndexUrl = 'https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_preview_index.json',
     [ValidatePattern('^\d+\.\d+\.\d+$')]
-    [string]$InitialVersion = '0.0.92',
+    [string]$InitialVersion = '0.0.94',
     [ValidatePattern('^\d+\.\d+\.\d+$')]
-    [string]$LatestVersion = '0.0.93',
+    [string]$LatestVersion = '0.0.95',
     [string]$Fqbn = 'nucode:zephyr:nu54dk',
     [string]$NcsVersion = 'v3.4.0',
     [ValidatePattern('^[0-9a-f]{10}$')]
@@ -99,6 +99,55 @@ function Convert-ToNativeArgument {
     return '"' + $escaped + '"'
 }
 
+## @brief 임시 출력 파일의 마지막 부분만 메모리로 읽습니다.
+function Read-BoundedTextTail {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path,
+        [Parameter(Mandatory = $true)]
+        [Text.Encoding]$Encoding,
+        [int]$MaximumBytes = 1048576
+    )
+
+    if ($MaximumBytes -lt 1) {
+        throw '출력 tail 제한은 1 byte 이상이어야 합니다.'
+    }
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        return ''
+    }
+
+    $stream = [IO.FileStream]::new(
+        $Path,
+        [IO.FileMode]::Open,
+        [IO.FileAccess]::Read,
+        [IO.FileShare]::ReadWrite
+    )
+    try {
+        $offset = [int64]0
+        if ($stream.Length -gt $MaximumBytes) {
+            $offset = $stream.Length - [int64]$MaximumBytes
+        }
+        [void]$stream.Seek($offset, [IO.SeekOrigin]::Begin)
+        $count = [int]($stream.Length - $offset)
+        $bytes = [byte[]]::new($count)
+        $read = 0
+        while ($read -lt $count) {
+            $current = $stream.Read($bytes, $read, $count - $read)
+            if ($current -eq 0) {
+                break
+            }
+            $read += $current
+        }
+        $text = $Encoding.GetString($bytes, 0, $read)
+    } finally {
+        $stream.Dispose()
+    }
+    if ($offset -gt 0) {
+        return "[output truncated to last $MaximumBytes bytes]`r`n$text"
+    }
+    return $text
+}
+
 ## @brief timeout과 종료 코드 allowlist를 적용해 local native command를 실행합니다.
 function Invoke-LocalNative {
     param(
@@ -116,6 +165,9 @@ function Invoke-LocalNative {
         Convert-ToNativeArgument -Value ([string]$_)
     }) -join ' ')
     $started = [DateTime]::UtcNow
+    $commandId = [Guid]::NewGuid().ToString('N')
+    $stdoutPath = Join-Path $script:LocalTemporaryRoot ($commandId + '.stdout.log')
+    $stderrPath = Join-Path $script:LocalTemporaryRoot ($commandId + '.stderr.log')
     $startInfo = New-Object System.Diagnostics.ProcessStartInfo
     $startInfo.FileName = $FilePath
     $startInfo.Arguments = $commandLine
@@ -125,21 +177,57 @@ function Invoke-LocalNative {
     $startInfo.RedirectStandardError = $true
     $process = New-Object System.Diagnostics.Process
     $process.StartInfo = $startInfo
-    if (-not $process.Start()) {
+    $stdoutStream = $null
+    $stderrStream = $null
+    $stdoutTask = $null
+    $stderrTask = $null
+    $completed = $false
+    $exitCode = $null
+    $stdoutEncoding = [Console]::OutputEncoding
+    $stderrEncoding = [Console]::OutputEncoding
+    try {
+        if (-not $process.Start()) {
+            throw "$Label process를 시작하지 못했습니다."
+        }
+        $stdoutEncoding = $process.StandardOutput.CurrentEncoding
+        $stderrEncoding = $process.StandardError.CurrentEncoding
+        $stdoutStream = [IO.FileStream]::new(
+            $stdoutPath,
+            [IO.FileMode]::CreateNew,
+            [IO.FileAccess]::Write,
+            [IO.FileShare]::Read
+        )
+        $stderrStream = [IO.FileStream]::new(
+            $stderrPath,
+            [IO.FileMode]::CreateNew,
+            [IO.FileAccess]::Write,
+            [IO.FileShare]::Read
+        )
+        $stdoutTask = $process.StandardOutput.BaseStream.CopyToAsync($stdoutStream)
+        $stderrTask = $process.StandardError.BaseStream.CopyToAsync($stderrStream)
+        $completed = $process.WaitForExit($TimeoutSeconds * 1000)
+        if (-not $completed) {
+            & "$env:SystemRoot\System32\taskkill.exe" /PID $process.Id /T /F 2>&1 | Out-Null
+        }
+        $process.WaitForExit()
+        $stdoutTask.GetAwaiter().GetResult()
+        $stderrTask.GetAwaiter().GetResult()
+        $stdoutStream.Flush($true)
+        $stderrStream.Flush($true)
+        $exitCode = $process.ExitCode
+    } finally {
+        if ($stdoutStream) {
+            $stdoutStream.Dispose()
+        }
+        if ($stderrStream) {
+            $stderrStream.Dispose()
+        }
         $process.Dispose()
-        throw "$Label process를 시작하지 못했습니다."
     }
-    $stdoutTask = $process.StandardOutput.ReadToEndAsync()
-    $stderrTask = $process.StandardError.ReadToEndAsync()
-    $completed = $process.WaitForExit($TimeoutSeconds * 1000)
-    if (-not $completed) {
-        & "$env:SystemRoot\System32\taskkill.exe" /PID $process.Id /T /F 2>&1 | Out-Null
-    }
-    $process.WaitForExit()
-    $stdout = $stdoutTask.GetAwaiter().GetResult()
-    $stderr = $stderrTask.GetAwaiter().GetResult()
-    $exitCode = $process.ExitCode
-    $process.Dispose()
+
+    $stdout = Read-BoundedTextTail -Path $stdoutPath -Encoding $stdoutEncoding
+    $stderr = Read-BoundedTextTail -Path $stderrPath -Encoding $stderrEncoding
+    Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
 
     $safeOutput = Protect-LogText -Text (($stdout + [Environment]::NewLine + $stderr).Trim())
     if ($safeOutput) {
@@ -345,11 +433,15 @@ function Get-PublicArchiveIdentity {
     if ($manifest.schema_version -ne 1 -or
         $manifest.version -ne $Version -or
         $manifest.archive_file_name -ne [string]$Record.file_name -or
-        [string]$manifest.core_revision -notmatch '^[0-9a-f]{40}$') {
+        [string]$manifest.core_revision -notmatch '^[0-9a-f]{40}$' -or
+        [string]$manifest.board_revision -notmatch '^[0-9a-f]{40}$' -or
+        [string]$manifest.runtime_payload_sha256 -notmatch '^[0-9a-f]{64}$') {
         throw "$Version archive release manifest identity가 올바르지 않습니다."
     }
     return [pscustomobject][ordered]@{
         core_revision = [string]$manifest.core_revision
+        board_revision = [string]$manifest.board_revision
+        runtime_payload_sha256 = [string]$manifest.runtime_payload_sha256
         release_manifest_sha256 = Get-ByteSha256 -Bytes ([Text.Encoding]::UTF8.GetBytes($manifestText))
     }
 }
@@ -436,6 +528,8 @@ foreach ($version in @($InitialVersion, $LatestVersion)) {
         -Version $version `
         -TemporaryRoot $script:LocalTemporaryRoot
     $indexIdentity.archives[$version]['core_revision'] = $releaseIdentity.core_revision
+    $indexIdentity.archives[$version]['board_revision'] = $releaseIdentity.board_revision
+    $indexIdentity.archives[$version]['runtime_payload_sha256'] = $releaseIdentity.runtime_payload_sha256
     $indexIdentity.archives[$version]['release_manifest_sha256'] = $releaseIdentity.release_manifest_sha256
 }
 $localIndexSnapshot = Join-Path $localRunRoot 'package-index.snapshot.json'

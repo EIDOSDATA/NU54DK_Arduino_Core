@@ -1,7 +1,6 @@
 @echo off
 setlocal EnableExtensions
 
-rem @brief Arduino Boards Manager 설치 뒤 Nordic 개발 환경을 사용자 영역에 준비합니다.
 set "NU54_INSTALLER=%~dp0tools\nu54-prerequisites\install-nordic.ps1"
 set "NU54_PLATFORM_ROOT=%~dp0."
 

@@ -33,6 +33,8 @@
 13. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
 14. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
 15. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
+16. [Boards Manager 설치와 패키징](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
+17. [v0.1.0-rc.1 릴리스 노트](<./05_릴리스/03_v0.1.0_rc1_릴리스_노트.md>)
 
 ## 문서 구성
 
@@ -54,6 +56,7 @@
 - [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>): `.ino` 전처리, library discovery 및 platform recipe 연결
 - [빌드 캐시와 산출물](<./02_빌드 설계/04_빌드_캐시와_산출물.md>): 증분 빌드, cache key 및 ELF/HEX 관리
 - [업로드와 디버그](<./02_빌드 설계/05_업로드와_디버그.md>): pyOCD/J-Link runner, probe 선택 및 복구 정책
+- [Boards Manager 설치와 패키징](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>): 공개 preview index, 사용자 영역 Nordic prerequisite, 재현 가능한 package와 clean Windows 수명주기 계약
 
 ### 03. 펌웨어 설계
 
@@ -73,6 +76,13 @@
 - [M7 Wire·SPI·ADC·PWM 기준선](<./04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md>): M7 공개 API·DTS/Kconfig 계약, 0x6A HIL 안전 경계와 실제·미검증 결과 행렬
 - [M8 업로드와 디버그 기준선](<./04_검증 기록/08_M8_업로드와_디버그_기준선.md>): manifest 검증, Arduino Upload recipe, pyOCD 10회 HIL과 source breakpoint 증거
 - [M9 증분 빌드·캐시와 재현성 기준선](<./04_검증 기록/09_M9_증분_빌드_캐시와_재현성_기준선.md>): persistent cache key, ccache, lock/LRU와 cold/warm/손상 복구 실측 증거
+
+### 05. 릴리스
+
+- [v0.1.0-rc.1 마이그레이션 안내](<./05_릴리스/01_v0.1.0_rc1_마이그레이션.md>)
+- [v0.1.0-rc.1 문제 해결](<./05_릴리스/02_v0.1.0_rc1_문제해결.md>)
+- [v0.1.0-rc.1 릴리스 노트](<./05_릴리스/03_v0.1.0_rc1_릴리스_노트.md>)
+- [v0.1.0-rc.1 알려진 제약](<./05_릴리스/04_v0.1.0_rc1_알려진_제약.md>)
 
 ## 현재 진행 상태
 

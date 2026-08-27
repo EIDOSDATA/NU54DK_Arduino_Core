@@ -44,11 +44,34 @@ def run(command: Sequence[str | Path], *, expect_success: bool = True) -> tuple[
     return result.returncode, result.stdout
 
 
-## @brief repository를 임시 Arduino hardware package로 복사합니다.
+## @brief 임시 source snapshot을 독립 Git repository로 초기화합니다.
+def initialize_snapshot_repository(root: Path, label: str) -> None:
+    git = shutil.which("git")
+    if git is None:
+        raise SmokeFailure("source snapshot regression requires git")
+    run((git, "init", root))
+    run((git, "-C", root, "add", "--all"))
+    run(
+        (
+            git,
+            "-C",
+            root,
+            "-c",
+            "user.name=NUCODE Smoke",
+            "-c",
+            "user.email=smoke@nucode.invalid",
+            "commit",
+            "-m",
+            f"{label} 회귀 snapshot",
+        )
+    )
+
+
+## @brief source repository를 임시 Arduino hardware 개발 checkout으로 복사합니다.
 def stage_platform(repository: Path, user_root: Path) -> Path:
     platform = user_root / "hardware" / "nucode" / "zephyr"
     platform.mkdir(parents=True)
-    for name in ("boards.txt", "platform.txt", "LICENSE"):
+    for name in (".gitattributes", "boards.txt", "platform.txt", "post_install.bat", "LICENSE"):
         shutil.copy2(repository / name, platform / name)
     for name in (
         "board_package",
@@ -65,6 +88,30 @@ def stage_platform(repository: Path, user_root: Path) -> Path:
             platform / name,
             ignore=shutil.ignore_patterns(".git", "__pycache__", "*.pyc"),
         )
+    initialize_snapshot_repository(
+        platform / "board_package" / "NU54DK_Zephyr_DTS", "NU54DK board"
+    )
+    initialize_snapshot_repository(platform, "NU54DK Arduino Core")
+    return platform
+
+
+## @brief 추출한 배포 package를 byte 변경 없이 임시 Arduino hardware로 복사합니다.
+def stage_packaged_platform(package_root: Path, user_root: Path) -> Path:
+    package_root = package_root.resolve()
+    if not (package_root / "release-manifest.json").is_file():
+        raise SmokeFailure(
+            f"extracted package root has no release-manifest.json: {package_root}"
+        )
+    if (package_root / ".git").exists():
+        raise SmokeFailure(f"--platform-root requires a Git-less package: {package_root}")
+
+    platform = user_root / "hardware" / "nucode" / "zephyr"
+    platform.parent.mkdir(parents=True)
+    shutil.copytree(
+        package_root,
+        platform,
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+    )
     return platform
 
 
@@ -379,6 +426,78 @@ def test_blink(cli: Path, config: Path, root: Path, repository: Path) -> None:
         raise SmokeFailure("Arduino prototype generation was not preserved")
 
 
+## @brief 여러 INO 탭의 결합, prototype 생성과 최종 Full Zephyr link를 검증합니다.
+def test_multi_tab(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    sketch = repository / "tests" / "arduino-cli" / "multi_tab"
+    build = root / "build-m11-multi-tab"
+    run(compile_command(cli, config, build, sketch))
+    context = assert_build(build, "multi_tab.ino")
+
+    generated = build / "sketch" / "multi_tab.ino.cpp"
+    content = generated.read_text(encoding="utf-8")
+    required_markers = (
+        "multiTabResult = combineTabValues(20U);",
+        "unsigned int tabBaseValue(void)",
+        "unsigned int combineTabValues(unsigned int value)",
+    )
+    for marker in required_markers:
+        if marker not in content:
+            raise SmokeFailure(f"multi-tab generated source omitted marker: {marker}")
+
+    prototype = content.find("unsigned int combineTabValues(unsigned int value);")
+    call = content.find("multiTabResult = combineTabValues(20U);")
+    definition = content.find("unsigned int combineTabValues(unsigned int value)\n{")
+    if prototype < 0 or call < 0 or definition < 0 or not (prototype < call < definition):
+        raise SmokeFailure("secondary INO tab prototype/order contract was not preserved")
+
+    sources = (Path(context["app_dir"]) / "sources.cmake").read_text(encoding="utf-8")
+    if "multi_tab.ino.cpp" not in sources:
+        raise SmokeFailure("multi-tab generated translation unit was not linked into Zephyr")
+
+
+## @brief Arduino 공개 API와 직접 Zephyr API를 함께 쓰는 sketch를 검증합니다.
+def test_zephyr_coexist(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    sketch = repository / "tests" / "arduino-cli" / "zephyr_coexist"
+    build = root / "build-m11-zephyr-coexist"
+    run(compile_command(cli, config, build, sketch))
+    context = assert_build(build, "zephyr_coexist.ino")
+
+    generated = (build / "sketch" / "zephyr_coexist.ino.cpp").read_text(
+        encoding="utf-8"
+    )
+    for marker in (
+        "#include <Arduino.h>",
+        "#include <zephyr/kernel.h>",
+        "k_uptime_get()",
+        "k_sleep(K_MSEC(1))",
+        "digitalWrite(LED_BUILTIN",
+        "unsigned int zephyrMixedValue(unsigned int value);",
+        "zephyrMixedValue(41U)",
+    ):
+        if marker not in generated:
+            raise SmokeFailure(f"Arduino/Zephyr coexist generated source omitted marker: {marker}")
+
+    prototype = generated.find("unsigned int zephyrMixedValue(unsigned int value);")
+    call = generated.find("zephyrMixedValue(41U)")
+    definition = generated.find(
+        "NU54_M11_VALUE_TYPE zephyrMixedValue(NU54_M11_VALUE_TYPE value)"
+    )
+    if prototype < 0 or call < 0 or definition < 0 or not (prototype < call < definition):
+        raise SmokeFailure("Zephyr coexist macro prototype/order contract was not preserved")
+
+    configuration = (
+        Path(context["zephyr_build_dir"]) / "zephyr" / ".config"
+    ).read_text(encoding="utf-8")
+    if "CONFIG_NUCODE_ARDUINO_CORE=y" not in configuration:
+        raise SmokeFailure("Arduino/Zephyr coexist sketch disabled the Arduino Core")
+
+
+## @brief M11의 sketch 입력·Zephyr 공존 회귀 fixture를 순서대로 실행합니다.
+def test_m11_fixtures(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    test_multi_tab(cli, config, root, repository)
+    test_zephyr_coexist(cli, config, root, repository)
+
+
 ## @brief 직접 library와 depends library source가 manifest에 들어가는지 검증합니다.
 def test_local_library(cli: Path, config: Path, root: Path, repository: Path) -> None:
     fixture = repository / "tests" / "arduino-cli"
@@ -676,6 +795,8 @@ def test_incremental(cli: Path, config: Path, root: Path, repository: Path) -> N
     platform = root / "user" / "hardware" / "nucode" / "zephyr"
     module_manifest = platform / "zephyr" / "module.yml"
     binding = platform / "dts" / "bindings" / "misc" / "nucode,arduino-adc-input.yaml"
+    module_manifest_bytes = module_manifest.read_bytes()
+    binding_bytes = binding.read_bytes()
     module_manifest.write_text(
         module_manifest.read_text(encoding="utf-8")
         + "\n# 모듈 지문 변경 검증용 표식입니다.\n",
@@ -737,6 +858,8 @@ def test_incremental(cli: Path, config: Path, root: Path, repository: Path) -> N
         + "\n",
         encoding="utf-8",
     )
+    module_manifest.write_bytes(module_manifest_bytes)
+    binding.write_bytes(binding_bytes)
 
 
 ## @brief M6 Serial과 GPIO interrupt 공개 예제를 Arduino CLI로 끝까지 빌드합니다.
@@ -870,10 +993,38 @@ def main(arguments: Sequence[str] | None = None) -> int:
     parser.add_argument("--cli", type=Path, default=default_cli())
     parser.add_argument("--evidence", type=Path)
     parser.add_argument(
+        "--platform-root",
+        type=Path,
+        help="검증할 ZIP에서 직접 추출한 Git-less Arduino platform root",
+    )
+    parser.add_argument(
         "--tests",
         nargs="+",
-        choices=("blink", "library", "config", "error", "parallel", "incremental", "m6", "m7", "m8", "m9"),
-        default=("blink", "library", "config", "error", "parallel", "m6", "m7", "m8", "m9"),
+        choices=(
+            "blink",
+            "library",
+            "config",
+            "error",
+            "parallel",
+            "incremental",
+            "m6",
+            "m7",
+            "m8",
+            "m9",
+            "m11",
+        ),
+        default=(
+            "blink",
+            "library",
+            "config",
+            "error",
+            "parallel",
+            "m6",
+            "m7",
+            "m8",
+            "m9",
+            "m11",
+        ),
     )
     args = parser.parse_args(arguments)
     repository = Path(__file__).resolve().parents[2]
@@ -887,7 +1038,10 @@ def main(arguments: Sequence[str] | None = None) -> int:
         os.environ["NUCODE_BUILD_CACHE_ROOT"] = str(root / "cache")
         user_root = root / "user"
         try:
-            stage_platform(repository, user_root)
+            if args.platform_root is None:
+                stage_platform(repository, user_root)
+            else:
+                stage_packaged_platform(args.platform_root, user_root)
             config = root / "arduino-cli.yaml"
             write_cli_config(config, user_root)
             tests = {
@@ -901,6 +1055,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m7": test_m7_examples,
                 "m8": test_m8_upload_build,
                 "m9": test_incremental,
+                "m11": test_m11_fixtures,
             }
             for name in args.tests:
                 tests[name](cli, config, root, repository)

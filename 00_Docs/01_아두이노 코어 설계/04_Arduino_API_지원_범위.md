@@ -205,7 +205,7 @@ M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP
 | --- | --- | --- | --- | --- |
 | `String` | P0 | 부분 지원 | 지원 | 1.5.2 source 생산 link, 연결·16진·실수 변환과 8192-byte libc arena 경계/실패 보존 target test 통과 |
 | `Print` | P0 | 지원 | 지원 | 문자열·16진·CRLF 출력과 partial write 오류 target test 통과 |
-| `Printable` | P0 | 미구현 | 지원 | custom printable compile/runtime test |
+| `Printable` | P0 | 지원 | 지원 | custom `printTo()` dispatch, byte 수 합산과 `println()` CRLF 의미를 NU54DK target ztest로 검증 |
 | `Stream` | P0 | 지원 | 지원 | 정수·실수 parsing, `find()`와 timeout target test 통과 |
 | `F()`/`__FlashStringHelper` | P1 | 미구현 | 의미 차이 | nRF54의 통합 address space에서 AVR flash 절약 의미가 동일하지 않음 |
 | `PROGMEM`, `PSTR` | 제외 | 하드웨어 미지원 | 하드웨어 미지원 | AVR Harvard memory model을 모사하지 않음; compile shim 여부는 별도 호환 정책 |

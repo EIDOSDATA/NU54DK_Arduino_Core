@@ -3,6 +3,7 @@
 
 # Windows command launcher는 LF-only에서 cmd.exe가 줄을 잘못 해석하므로 CRLF를 고정합니다.
 *.cmd text eol=crlf
+*.bat text eol=crlf
 
 # ArduinoCore-API 원본은 플랫폼 checkout 설정과 무관하게 LF를 유지합니다.
 third_party/ArduinoCore-API/** text eol=lf

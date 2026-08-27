@@ -82,6 +82,10 @@ Boards Manager용 배포 archive에는 고정된 서브모듈 commit의 실제 �
 - [M7 Wire·SPI·ADC·PWM 기준선](./00_Docs/04_검증%20기록/07_M7_Wire_SPI_ADC_PWM_기준선.md)
 - [M8 업로드와 디버그 기준선](./00_Docs/04_검증%20기록/08_M8_업로드와_디버그_기준선.md)
 - [M9 증분 빌드·캐시와 재현성 기준선](./00_Docs/04_검증%20기록/09_M9_증분_빌드_캐시와_재현성_기준선.md)
+- [Boards Manager 설치와 패키징](./00_Docs/02_빌드%20설계/06_Boards_Manager_설치와_패키징.md)
+- [M10 Boards Manager와 clean Windows 기준선](./00_Docs/04_검증%20기록/10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md)
+- [v0.1.0-rc.1 릴리스 노트](./00_Docs/05_릴리스/03_v0.1.0_rc1_릴리스_노트.md)
+- [v0.1.0-rc.1 알려진 제약](./00_Docs/05_릴리스/04_v0.1.0_rc1_알려진_제약.md)
 
 ## 작성자
 

@@ -18,7 +18,12 @@ from pathlib import Path, PurePosixPath
 from typing import Any, Iterable
 
 
-SUPPORTED_VERSIONS = ("0.0.90", "0.0.91", "0.0.92", "0.0.93")
+LEGACY_PREVIEW_VERSIONS = ("0.0.90", "0.0.91", "0.0.92", "0.0.93")
+SAFE_PREVIEW_VERSIONS = ("0.0.94", "0.0.95")
+SUPPORTED_VERSIONS = LEGACY_PREVIEW_VERSIONS + SAFE_PREVIEW_VERSIONS
+RELEASE_CANDIDATE_VERSIONS = ("0.1.0-rc.1",)
+PACKAGE_VERSIONS = SUPPORTED_VERSIONS + RELEASE_CANDIDATE_VERSIONS
+WINDOWS_SAFE_VERSIONS = SAFE_PREVIEW_VERSIONS + RELEASE_CANDIDATE_VERSIONS
 VENDOR = "nucode"
 ARCHITECTURE = "zephyr"
 MAINTAINER = "NUCODE / Quantum"
@@ -26,6 +31,7 @@ CONTACT_EMAIL = "EIDOSDATA@users.noreply.github.com"
 REPOSITORY_URL = "https://github.com/EIDOSDATA/NU54DK_Arduino_Core"
 BOARD_REPOSITORY_URL = "https://github.com/Nucode01/NU54DK_Zephyr_DTS"
 INDEX_FILENAME = "package_nucode_nu54dk_preview_index.json"
+RC_INDEX_FILENAME = "package_nucode_nu54dk_rc_index.json"
 NCS_VERSION = "v3.4.0"
 NCS_REVISION = "99553055607b2e9885fbc80ccd11fa9da81c2df0"
 ZEPHYR_VERSION = "4.4.0"
@@ -233,6 +239,58 @@ def rewrite_platform_version(data: bytes, version: str) -> bytes:
     return "".join(lines).encode("utf-8")
 
 
+## @brief cmd.exe가 안정적으로 해석하도록 Windows command script를 CRLF로 고정합니다.
+def rewrite_windows_command_line_endings(data: bytes, path: str) -> bytes:
+    try:
+        text = data.decode("ascii")
+    except UnicodeDecodeError as error:
+        raise PackageError(f"Windows command script가 ASCII-only가 아닙니다: {path}") from error
+    normalized = text.replace("\r\n", "\n").replace("\r", "\n")
+    return normalized.replace("\n", "\r\n").encode("ascii")
+
+
+## @brief package version만 다른 archive의 실행 payload를 같은 byte identity로 정규화합니다.
+def normalize_runtime_payload_bytes(path: str, data: bytes) -> bytes:
+    if path != "platform.txt":
+        return data
+    try:
+        text = data.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise PackageError("platform.txt가 UTF-8이 아닙니다.") from error
+    lines = text.splitlines(keepends=True)
+    matches = [index for index, line in enumerate(lines) if line.startswith("version=")]
+    if len(matches) != 1:
+        raise PackageError("platform.txt에는 version= 항목이 정확히 하나 있어야 합니다.")
+    index = matches[0]
+    ending = "\r\n" if lines[index].endswith("\r\n") else "\n" if lines[index].endswith("\n") else ""
+    lines[index] = f"version=@NU54_PACKAGE_VERSION@{ending}"
+    return "".join(lines).encode("utf-8")
+
+
+## @brief 실제 설치 payload의 version 독립 SHA-256 fingerprint를 계산합니다.
+def runtime_payload_sha256(files: Iterable[tuple[str, bytes, int]]) -> str:
+    records: list[dict[str, Any]] = []
+    for path, data, mode in sorted(files, key=lambda item: item[0].encode("utf-8")):
+        normalized = normalize_runtime_payload_bytes(path, data)
+        records.append(
+            {
+                "mode": f"{mode:04o}",
+                "path": path,
+                "sha256": sha256_bytes(normalized),
+                "size": len(normalized),
+            }
+        )
+    return sha256_bytes(
+        canonical_json(
+            {
+                "normalization": "platform-version-sentinel-v1",
+                "records": records,
+                "schema_version": 1,
+            }
+        )
+    )
+
+
 ## @brief 상위 commit과 gitlink commit을 깨끗한 패키지 입력으로 materialize합니다.
 def collect_source_files(repo_root: Path, commit: str, version: str) -> tuple[list[SourceFile], str]:
     board_path = "board_package/NU54DK_Zephyr_DTS"
@@ -253,6 +311,12 @@ def collect_source_files(repo_root: Path, commit: str, version: str) -> tuple[li
         if path == "platform.txt":
             data = rewrite_platform_version(data, version)
             transformation = "platform-version"
+        elif (
+            version in WINDOWS_SAFE_VERSIONS
+            and PurePosixPath(path).suffix.casefold() in {".bat", ".cmd"}
+        ):
+            data = rewrite_windows_command_line_endings(data, path)
+            transformation = "windows-crlf"
         files.append(
             SourceFile(
                 path=path,
@@ -713,9 +777,31 @@ def archive_filename(version: str) -> str:
     return f"nucode-nu54dk-zephyr-{version}.zip"
 
 
-## @brief prerelease tag 이름을 고정합니다.
+## @brief 패키지 버전의 배포 채널을 fail-closed 방식으로 판별합니다.
+def release_channel(version: str) -> str:
+    if version in SUPPORTED_VERSIONS:
+        return "preview"
+    if version in RELEASE_CANDIDATE_VERSIONS:
+        return "release-candidate"
+    raise PackageError(f"지원하지 않는 패키지 버전입니다: {version}")
+
+
+## @brief Arduino package version을 최신 순으로 정렬할 key를 만듭니다.
+def version_sort_key(version: str) -> tuple[int, int, int, int, int]:
+    match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)(?:-rc\.(\d+))?", version)
+    if not match or version not in PACKAGE_VERSIONS:
+        raise PackageError(f"지원하지 않는 패키지 버전입니다: {version}")
+    major, minor, patch, rc = match.groups()
+    ## @note 같은 기본 버전에서는 stable이 RC보다 최신이지만 stable은 현재 허용 목록에 없습니다.
+    return (int(major), int(minor), int(patch), 1 if rc is None else 0, int(rc or 0))
+
+
+## @brief preview와 release candidate의 tag 이름을 서로 분리해 고정합니다.
 def release_tag(version: str) -> str:
-    return f"m10-preview-{version}"
+    channel = release_channel(version)
+    if channel == "preview":
+        return f"m10-preview-{version}"
+    return f"v{version}"
 
 
 ## @brief 공개 GitHub prerelease asset URL을 만듭니다.
@@ -749,7 +835,7 @@ def build_release_manifest(
     )
     if pins is None:
         raise PackageError("prerequisite pin 파일이 패키지 입력에 없습니다.")
-    return {
+    manifest = {
         "schema_version": 1,
         "package_name": "NUCODE NU54DK Zephyr Boards",
         "vendor": VENDOR,
@@ -769,13 +855,22 @@ def build_release_manifest(
         "zephyr_revision": ZEPHYR_REVISION,
         "toolchain_bundle_id": TOOLCHAIN_BUNDLE_ID,
         "prerequisites_pins_sha256": sha256_bytes(pins.data),
-        "source_policy": "exact-commit-plus-declared-platform-version-rewrite",
+        "source_policy": (
+            "exact-commit-plus-declared-platform-version-and-windows-crlf-rewrites"
+            if version in WINDOWS_SAFE_VERSIONS
+            else "exact-commit-plus-declared-platform-version-rewrite"
+        ),
         "generated_metadata": list(METADATA_FILES),
         "file_count": len(entries),
         "total_size": sum(entry["size"] for entry in entries),
         "files": entries,
         "file_hashes": file_hashes,
     }
+    if version in WINDOWS_SAFE_VERSIONS:
+        manifest["runtime_payload_sha256"] = runtime_payload_sha256(
+            (item.path, item.data, item.mode) for item in files
+        )
+    return manifest
 
 
 ## @brief ZIP 내부 checksum 목록을 생성합니다.
@@ -826,8 +921,8 @@ def write_external_checksums(paths: list[Path], destination: Path) -> None:
 
 ## @brief 지정 commit에서 Boards Manager archive와 provenance sidecar를 만듭니다.
 def build_package(repo_root: Path, output_dir: Path, version: str, revision: str) -> dict[str, Path]:
-    if version not in SUPPORTED_VERSIONS:
-        raise PackageError(f"지원하는 preview version이 아닙니다: {version}")
+    if version not in PACKAGE_VERSIONS:
+        raise PackageError(f"지원하는 package version이 아닙니다: {version}")
     repo_root = repo_root.resolve()
     output_dir = output_dir.resolve()
     commit = resolve_commit(repo_root, revision)
@@ -957,7 +1052,9 @@ def validate_archive(
         if not isinstance(manifest, dict) or manifest.get("schema_version") != 1:
             raise PackageError("release-manifest schema_version이 1이 아닙니다.")
         version = manifest.get("version")
-        if version not in SUPPORTED_VERSIONS or (expected_version and version != expected_version):
+        if version not in PACKAGE_VERSIONS or (
+            expected_version is not None and version != expected_version
+        ):
             raise PackageError(f"release-manifest version이 예상과 다릅니다: {version}")
         expected_root = f"nucode-nu54dk-zephyr-{version}"
         if roots != {expected_root} or manifest.get("archive_root") != expected_root:
@@ -974,11 +1071,13 @@ def validate_archive(
             "toolchain_bundle_id": re.escape(TOOLCHAIN_BUNDLE_ID),
             "prerequisites_pins_sha256": r"[0-9a-f]{64}",
         }
+        if version in WINDOWS_SAFE_VERSIONS:
+            required_manifest_fields["runtime_payload_sha256"] = r"[0-9a-f]{64}"
         for field, pattern in required_manifest_fields.items():
             value = manifest.get(field)
             if not isinstance(value, str) or not re.fullmatch(pattern, value):
                 raise PackageError(f"release-manifest {field}가 유효하지 않습니다: {value!r}")
-        if expected_commit and manifest["core_revision"] != expected_commit:
+        if expected_commit is not None and manifest["core_revision"] != expected_commit:
             raise PackageError("release-manifest core_revision이 예상 commit과 다릅니다.")
         fixed_values = {
             "vendor": VENDOR,
@@ -989,6 +1088,11 @@ def validate_archive(
             "zephyr_version": ZEPHYR_VERSION,
             "release_tag": release_tag(version),
             "release_url": release_asset_url(version, archive_filename(version)),
+            "source_policy": (
+                "exact-commit-plus-declared-platform-version-and-windows-crlf-rewrites"
+                if version in WINDOWS_SAFE_VERSIONS
+                else "exact-commit-plus-declared-platform-version-rewrite"
+            ),
         }
         for field, expected in fixed_values.items():
             if manifest.get(field) != expected:
@@ -1006,8 +1110,10 @@ def validate_archive(
         file_hashes = manifest.get("file_hashes")
         if not isinstance(file_hashes, dict) or list(file_hashes) != payload_paths:
             raise PackageError("release-manifest file_hashes가 ZIP payload와 다릅니다.")
+        records_by_path: dict[str, dict[str, Any]] = {}
         for record in records:
             path = record["path"]
+            records_by_path[path] = record
             data = relative_data[path]
             digest = sha256_bytes(data)
             mode = stat.S_IMODE((relative_infos[path].external_attr >> 16) & 0xFFFF)
@@ -1019,6 +1125,34 @@ def validate_archive(
                 raise PackageError(f"release-manifest origin이 유효하지 않습니다: {path}")
             if not re.fullmatch(r"[0-9a-f]{40}", str(record.get("git_object", ""))):
                 raise PackageError(f"release-manifest git_object가 유효하지 않습니다: {path}")
+        if version in WINDOWS_SAFE_VERSIONS:
+            payload_fingerprint = runtime_payload_sha256(
+                (
+                    path,
+                    relative_data[path],
+                    stat.S_IMODE((relative_infos[path].external_attr >> 16) & 0xFFFF),
+                )
+                for path in payload_paths
+            )
+            if manifest.get("runtime_payload_sha256") != payload_fingerprint:
+                raise PackageError("release-manifest runtime payload fingerprint가 ZIP byte와 다릅니다.")
+            windows_scripts = sorted(
+                path
+                for path in payload_paths
+                if PurePosixPath(path).suffix.casefold() in {".bat", ".cmd"}
+            )
+            required_windows_scripts = {
+                "post_install.bat",
+                "tools/nu54-builder/nu54-builder.cmd",
+            }
+            if not required_windows_scripts.issubset(windows_scripts):
+                raise PackageError("Windows-safe package에 필수 launcher가 없습니다.")
+            for path in windows_scripts:
+                data = relative_data[path]
+                if data != rewrite_windows_command_line_endings(data, path):
+                    raise PackageError(f"Windows-safe command script가 strict CRLF가 아닙니다: {path}")
+                if records_by_path[path].get("transformation") != "windows-crlf":
+                    raise PackageError(f"Windows-safe command script 변환 provenance가 없습니다: {path}")
         pins_path = "tools/nu54-prerequisites/pins.json"
         if manifest["prerequisites_pins_sha256"] != sha256_bytes(relative_data[pins_path]):
             raise PackageError("release-manifest와 prerequisite pins checksum이 다릅니다.")
@@ -1204,9 +1338,12 @@ def validate_archive(
 ## @brief 로컬 archive들을 읽어 공식 Arduino package index를 생성합니다.
 def generate_index(output_dir: Path, versions: list[str], destination: Path | None = None) -> Path:
     output_dir = output_dir.resolve()
-    normalized_versions = sorted(set(versions), key=lambda value: tuple(map(int, value.split("."))), reverse=True)
-    if not normalized_versions or any(version not in SUPPORTED_VERSIONS for version in normalized_versions):
-        raise PackageError("index에는 지원하는 preview version을 하나 이상 지정해야 합니다.")
+    if not versions or any(version not in PACKAGE_VERSIONS for version in versions):
+        raise PackageError("index에는 지원하는 package version을 하나 이상 지정해야 합니다.")
+    channels = {release_channel(version) for version in versions}
+    if len(channels) != 1:
+        raise PackageError("preview와 release candidate는 하나의 index에 혼합할 수 없습니다.")
+    normalized_versions = sorted(set(versions), key=version_sort_key, reverse=True)
     platforms: list[dict[str, Any]] = []
     for version in normalized_versions:
         archive_path = output_dir / archive_filename(version)
@@ -1239,7 +1376,10 @@ def generate_index(output_dir: Path, versions: list[str], destination: Path | No
             }
         ]
     }
-    path = destination.resolve() if destination else output_dir / INDEX_FILENAME
+    default_name = (
+        RC_INDEX_FILENAME if channels == {"release-candidate"} else INDEX_FILENAME
+    )
+    path = destination.resolve() if destination else output_dir / default_name
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(canonical_json(document))
     validate_index(path, artifact_dir=output_dir)
@@ -1265,7 +1405,7 @@ def validate_index(index_path: Path, *, artifact_dir: Path | None = None) -> dic
         if package.get(field) != expected:
             raise PackageError(f"package index identity {field}가 고정값과 다릅니다.")
     if package.get("tools") != []:
-        raise PackageError("preview package index는 NCS/toolchain을 재배포하는 tools 항목을 포함하지 않습니다.")
+        raise PackageError("package index는 NCS/toolchain을 재배포하는 tools 항목을 포함하지 않습니다.")
     platforms = package.get("platforms")
     if not isinstance(platforms, list) or not platforms:
         raise PackageError("package index platforms가 비어 있습니다.")
@@ -1274,7 +1414,7 @@ def validate_index(index_path: Path, *, artifact_dir: Path | None = None) -> dic
         if not isinstance(platform, dict):
             raise PackageError("package index platform record가 object가 아닙니다.")
         version = platform.get("version")
-        if version not in SUPPORTED_VERSIONS or version in versions:
+        if version not in PACKAGE_VERSIONS or version in versions:
             raise PackageError(f"package index version이 유효하지 않습니다: {version}")
         versions.append(version)
         filename = archive_filename(version)
@@ -1303,7 +1443,10 @@ def validate_index(index_path: Path, *, artifact_dir: Path | None = None) -> dic
                 raise PackageError(f"package index와 archive checksum이 다릅니다: {version}")
             if size != str(archive_path.stat().st_size):
                 raise PackageError(f"package index와 archive size가 다릅니다: {version}")
-    expected_order = sorted(versions, key=lambda value: tuple(map(int, value.split("."))), reverse=True)
+    channels = {release_channel(version) for version in versions}
+    if len(channels) != 1:
+        raise PackageError("preview와 release candidate가 하나의 index에 혼합되었습니다.")
+    expected_order = sorted(versions, key=version_sort_key, reverse=True)
     if versions != expected_order:
         raise PackageError("package index version은 최신 순서여야 합니다.")
     return document
@@ -1317,18 +1460,18 @@ def build_parser() -> argparse.ArgumentParser:
     build = subparsers.add_parser("build", help="exact Git commit에서 재현 가능한 package를 생성합니다.")
     build.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[2])
     build.add_argument("--output-dir", type=Path, required=True)
-    build.add_argument("--version", choices=SUPPORTED_VERSIONS, required=True)
+    build.add_argument("--version", choices=PACKAGE_VERSIONS, required=True)
     build.add_argument("--commit", default="HEAD")
     build.add_argument("--update-index", action="store_true")
 
     validate = subparsers.add_parser("validate", help="package archive를 엄격하게 검증합니다.")
     validate.add_argument("--archive", type=Path, required=True)
-    validate.add_argument("--expected-version", choices=SUPPORTED_VERSIONS)
+    validate.add_argument("--expected-version", choices=PACKAGE_VERSIONS)
     validate.add_argument("--expected-commit")
 
     index = subparsers.add_parser("index", help="로컬 archive로 package index를 생성합니다.")
     index.add_argument("--output-dir", type=Path, required=True)
-    index.add_argument("--versions", nargs="+", choices=SUPPORTED_VERSIONS, required=True)
+    index.add_argument("--versions", nargs="+", choices=PACKAGE_VERSIONS, required=True)
     index.add_argument("--output", type=Path)
 
     validate_index_parser = subparsers.add_parser("validate-index", help="package index를 검증합니다.")
@@ -1346,10 +1489,12 @@ def main(argv: list[str] | None = None) -> int:
                 arguments.repo_root, arguments.output_dir, arguments.version, arguments.commit
             )
             if arguments.update_index:
+                requested_channel = release_channel(arguments.version)
                 available = [
                     version
-                    for version in SUPPORTED_VERSIONS
-                    if (arguments.output_dir / archive_filename(version)).is_file()
+                    for version in PACKAGE_VERSIONS
+                    if release_channel(version) == requested_channel
+                    and (arguments.output_dir / archive_filename(version)).is_file()
                 ]
                 paths["index"] = generate_index(arguments.output_dir, available)
             for name, path in paths.items():

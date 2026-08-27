@@ -50,6 +50,7 @@ class M10PackagingTests(unittest.TestCase):
         self.assertEqual(manifest["zephyr_revision"], PACKAGE.ZEPHYR_REVISION)
         self.assertEqual(manifest["toolchain_bundle_id"], "dcbdc366a1")
         self.assertRegex(manifest["prerequisites_pins_sha256"], r"^[0-9a-f]{64}$")
+        self.assertNotIn("runtime_payload_sha256", manifest)
 
     def test_02_archive_is_byte_reproducible(self) -> None:
         repeated = PACKAGE.build_package(REPO_ROOT, self.repeat, "0.0.90", self.commit)
@@ -68,6 +69,24 @@ class M10PackagingTests(unittest.TestCase):
         self.assertFalse(any("tools/remote-windows" in name for name in names))
         self.assertTrue(any("board_package/NU54DK_Zephyr_DTS/boards/" in name for name in names))
         self.assertFalse(any("board_package/NU54DK_Zephyr_DTS/00_Docs/" in name for name in names))
+
+    def test_03b_windows_command_scripts_use_strict_crlf(self) -> None:
+        """! @brief RC command script 변환의 ASCII·CRLF 계약을 검증합니다. """
+        expected_scripts = (
+            "post_install.bat",
+            "tools/nu54-builder/nu54-builder.cmd",
+        )
+        for script in expected_scripts:
+            data = PACKAGE.rewrite_windows_command_line_endings(
+                (REPO_ROOT / script).read_bytes(), script
+            )
+            self.assertTrue(data.isascii(), f"non-ASCII launcher bytes: {script}")
+            self.assertIn(b"\r\n", data)
+            self.assertNotIn(b"\n", data.replace(b"\r\n", b""))
+        with self.assertRaises(PACKAGE.PackageError):
+            PACKAGE.rewrite_windows_command_line_endings(
+                "한글 주석\n".encode("utf-8"), "unsafe.cmd"
+            )
 
     def test_04_platform_is_exact_commit_content_except_version(self) -> None:
         original = subprocess.check_output(
@@ -219,9 +238,35 @@ class M10PackagingTests(unittest.TestCase):
             PACKAGE.validate_index(broken, artifact_dir=self.output)
 
     def test_11_supported_versions_are_fail_closed(self) -> None:
-        self.assertEqual(PACKAGE.SUPPORTED_VERSIONS[-2:], ("0.0.92", "0.0.93"))
+        self.assertEqual(PACKAGE.LEGACY_PREVIEW_VERSIONS[-2:], ("0.0.92", "0.0.93"))
+        self.assertEqual(PACKAGE.SAFE_PREVIEW_VERSIONS, ("0.0.94", "0.0.95"))
+        self.assertEqual(PACKAGE.SUPPORTED_VERSIONS[-2:], ("0.0.94", "0.0.95"))
         with self.assertRaises(PACKAGE.PackageError):
             PACKAGE.build_package(REPO_ROOT, self.output, "0.1.0", self.commit)
+
+    def test_12_runtime_payload_fingerprint_ignores_only_platform_version(self) -> None:
+        """! @brief 버전 문자열만 다른 동일 payload와 실제 byte 변경을 구분합니다. """
+
+        first = (
+            ("platform.txt", b"name=NU54DK\nversion=0.0.94\n", 0o644),
+            ("cores/arduino/Arduino.h", b"payload\n", 0o644),
+        )
+        second = (
+            ("platform.txt", b"name=NU54DK\nversion=0.1.0-rc.1\n", 0o644),
+            ("cores/arduino/Arduino.h", b"payload\n", 0o644),
+        )
+        changed = (
+            ("platform.txt", b"name=NU54DK\nversion=0.1.0-rc.1\n", 0o644),
+            ("cores/arduino/Arduino.h", b"payload changed\n", 0o644),
+        )
+        self.assertEqual(
+            PACKAGE.runtime_payload_sha256(first),
+            PACKAGE.runtime_payload_sha256(second),
+        )
+        self.assertNotEqual(
+            PACKAGE.runtime_payload_sha256(first),
+            PACKAGE.runtime_payload_sha256(changed),
+        )
 
 
 if __name__ == "__main__":
