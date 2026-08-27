@@ -11,6 +11,11 @@ if defined NUCODE_PYTHON if exist "%NUCODE_PYTHON%" set "NU54_PYTHON=%NUCODE_PYT
 rem 일반 Arduino IDE 프로세스에서도 동작하도록 설치된 NCS bundle을 찾는다.
 if not defined NU54_PYTHON if defined NUCODE_TOOLCHAIN_ROOT if exist "%NUCODE_TOOLCHAIN_ROOT%\opt\bin\python.exe" set "NU54_PYTHON=%NUCODE_TOOLCHAIN_ROOT%\opt\bin\python.exe"
 
+rem M10 Boards Manager가 표준 사용자 profile 아래 설치한 고정 bundle을 우선 찾는다.
+if not defined NU54_PYTHON if defined USERPROFILE if exist "%USERPROFILE%\ncs\toolchains\dcbdc366a1\opt\bin\python.exe" set "NU54_PYTHON=%USERPROFILE%\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
+
+if defined USERPROFILE for /d %%D in ("%USERPROFILE%\ncs\toolchains\*") do if not defined NU54_PYTHON if exist "%%~fD\opt\bin\python.exe" set "NU54_PYTHON=%%~fD\opt\bin\python.exe"
+
 for /d %%D in (C:\ncs\toolchains\*) do if not defined NU54_PYTHON if exist "%%~fD\opt\bin\python.exe" set "NU54_PYTHON=%%~fD\opt\bin\python.exe"
 
 if not defined NU54_PYTHON if exist "%LocalAppData%\Python\bin\python.exe" set "NU54_PYTHON=%LocalAppData%\Python\bin\python.exe"

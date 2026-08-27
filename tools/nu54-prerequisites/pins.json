@@ -1,0 +1,21 @@
+{
+  "ncs": {
+    "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "version": "v3.4.0"
+  },
+  "nrfutil": {
+    "sha256": "1d291d8a9d6bb5bec18454f8d95064aed7f62e8997ec1c4511f13bdf1124c037",
+    "url": "https://files.nordicsemi.com/artifactory/swtools/external/nrfutil/executables/x86_64-pc-windows-msvc/nrfutil.exe",
+    "version": "8.2.1"
+  },
+  "schema_version": 1,
+  "sdk_manager": {
+    "version": "1.16.1"
+  },
+  "toolchain": {
+    "bundle_id": "dcbdc366a1"
+  },
+  "zephyr": {
+    "revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  }
+}

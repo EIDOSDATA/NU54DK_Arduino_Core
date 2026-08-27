@@ -22,8 +22,14 @@ from typing import Any, Iterator, Sequence
 import uuid
 
 
-ADAPTER_VERSION = "0.1.0-dev.m9"
+ADAPTER_VERSION = "0.1.0-dev.m10"
 NCS_VERSION = "v3.4.0"
+NCS_REVISION = "99553055607b2e9885fbc80ccd11fa9da81c2df0"
+ZEPHYR_REVISION = "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+TOOLCHAIN_BUNDLE_ID = "dcbdc366a1"
+NRFUTIL_VERSION = "8.2.1"
+NRFUTIL_SHA256 = "1d291d8a9d6bb5bec18454f8d95064aed7f62e8997ec1c4511f13bdf1124c037"
+SDK_MANAGER_VERSION = "1.16.1"
 DEFAULT_BOARD = "nrf54l15dk/nrf54l15/cpuapp/nu54dk"
 CONTEXT_DIRECTORY = "nu54-zephyr"
 CACHE_SCHEMA_VERSION = 1
@@ -368,13 +374,33 @@ def paths_from_context(paths: dict[str, Path], context: dict[str, Any]) -> dict[
     return add_workspace_paths(paths, workspace)
 
 
+## @brief 요청 platform root가 exact Git checkout인지 확인합니다.
+def is_development_checkout(platform_root: Path) -> bool:
+    if not (platform_root / ".git").exists():
+        return False
+    try:
+        top = subprocess.run(
+            ["git", "-C", str(platform_root), "rev-parse", "--show-toplevel"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            check=False,
+            text=True,
+        )
+    except OSError:
+        return True
+    return top.returncode == 0 and path_key(top.stdout.strip()) == path_key(platform_root)
+
+
 ## @brief 고정 버전의 NCS root를 환경 또는 기본 설치 위치에서 찾습니다.
-def discover_ncs_root() -> Path:
+def discover_ncs_root(*, prefer_user_profile: bool = False) -> Path:
     configured = os.environ.get("NUCODE_NCS_ROOT")
     candidates: list[Path] = []
     if configured:
         candidates.append(canonical_path(configured))
-    candidates.extend((Path("C:/ncs/v3.4.0"), Path.home() / "ncs" / "v3.4.0"))
+    default_candidates = (Path("C:/ncs/v3.4.0"), Path.home() / "ncs" / "v3.4.0")
+    if prefer_user_profile:
+        default_candidates = tuple(reversed(default_candidates))
+    candidates.extend(default_candidates)
     for candidate in candidates:
         if (candidate / "zephyr" / "CMakeLists.txt").is_file() and (candidate / "nrf" / "west.yml").is_file():
             return candidate.resolve()
@@ -402,8 +428,21 @@ def configured_bundle_id(ncs_root: Path) -> str | None:
     return None
 
 
-## @brief NCS v3.4.0에 대응하는 environment.json bundle을 찾습니다.
-def discover_toolchain_root(ncs_root: Path) -> Path:
+## @brief 개발 환경 discovery 또는 배포 package의 exact Toolchain bundle을 찾습니다.
+def discover_toolchain_root(ncs_root: Path, *, exact_required: bool = False) -> Path:
+    toolchains_root = ncs_root.parent / "toolchains"
+    if exact_required:
+        pinned = toolchains_root / TOOLCHAIN_BUNDLE_ID
+        if (
+            (pinned / "environment.json").is_file()
+            and (pinned / "opt" / "bin" / "python.exe").is_file()
+        ):
+            return pinned.resolve()
+        raise AdapterError(
+            "Boards Manager package에 필요한 고정 NCS Toolchain bundle을 찾을 수 없습니다: "
+            f"{pinned}"
+        )
+
     configured = os.environ.get("NUCODE_TOOLCHAIN_ROOT")
     candidates: list[Path] = []
     if configured:
@@ -411,7 +450,7 @@ def discover_toolchain_root(ncs_root: Path) -> Path:
     bundle = configured_bundle_id(ncs_root)
     if bundle:
         candidates.append(ncs_root.parent / "toolchains" / bundle)
-    toolchains_root = ncs_root.parent / "toolchains"
+    candidates.append(toolchains_root / TOOLCHAIN_BUNDLE_ID)
     if toolchains_root.is_dir():
         candidates.extend(sorted(path for path in toolchains_root.iterdir() if path.is_dir()))
     visited: set[str] = set()
@@ -455,14 +494,157 @@ def apply_toolchain_environment(toolchain_root: Path) -> dict[str, str]:
     return environment
 
 
+## @brief release manifest를 엄격한 JSON object로 읽습니다.
+def release_manifest(platform_root: Path) -> dict[str, Any]:
+    manifest_path = platform_root / "release-manifest.json"
+    if not manifest_path.is_file():
+        raise AdapterError(
+            "[NU54:E_PACKAGE_MANIFEST] Git-less package에 release-manifest.json이 없습니다."
+        )
+    document = load_json_object(manifest_path, "E_PACKAGE_MANIFEST")
+    if document.get("schema_version") != 1:
+        raise AdapterError("[NU54:E_PACKAGE_MANIFEST] 지원하지 않는 release manifest입니다.")
+    return document
+
+
+## @brief M10 사용자별 prerequisite state directory를 계산합니다.
+def prerequisite_state_root() -> Path:
+    configured = os.environ.get("NUCODE_PREREQUISITE_STATE_ROOT")
+    if configured:
+        return canonical_path(configured)
+    local_data = os.environ.get("LOCALAPPDATA")
+    if not local_data:
+        raise AdapterError("[NU54:E_PREREQUISITE_STATE] LOCALAPPDATA 환경 변수가 없습니다.")
+    return canonical_path(
+        Path(local_data) / "NUCODE" / "NU54DK_Arduino_Core" / "prerequisites"
+    )
+
+
+## @brief 배포 package의 pin과 완료 marker를 현재 Nordic 설치와 대조합니다.
+def validate_packaged_prerequisites(
+    platform_root: Path, ncs_root: Path, toolchain_root: Path
+) -> None:
+    package_manifest = release_manifest(platform_root)
+    pins_path = platform_root / "tools" / "nu54-prerequisites" / "pins.json"
+    pins = load_json_object(pins_path, "E_PREREQUISITE_PINS")
+    ready_path = prerequisite_state_root() / "ready.json"
+    ready = load_json_object(ready_path, "E_PREREQUISITE_READY")
+    pins_hash = file_sha256(pins_path)
+
+    if pins.get("schema_version") != 1:
+        raise AdapterError("[NU54:E_PREREQUISITE_PINS] 지원하지 않는 pin schema입니다.")
+    ## @brief 중첩 pin 값이 object/string 계약을 만족할 때만 반환합니다.
+    def pin_value(section: str, field: str) -> Any:
+        section_value = pins.get(section)
+        return section_value.get(field) if isinstance(section_value, dict) else None
+
+    expected_values = {
+        "ncs_version": pin_value("ncs", "version"),
+        "ncs_revision": pin_value("ncs", "revision"),
+        "zephyr_revision": pin_value("zephyr", "revision"),
+        "toolchain_bundle_id": pin_value("toolchain", "bundle_id"),
+        "nrfutil_version": pin_value("nrfutil", "version"),
+        "nrfutil_sha256": pin_value("nrfutil", "sha256"),
+        "sdk_manager_version": pin_value("sdk_manager", "version"),
+    }
+    if expected_values != {
+        "ncs_version": NCS_VERSION,
+        "ncs_revision": NCS_REVISION,
+        "zephyr_revision": ZEPHYR_REVISION,
+        "toolchain_bundle_id": TOOLCHAIN_BUNDLE_ID,
+        "nrfutil_version": NRFUTIL_VERSION,
+        "nrfutil_sha256": NRFUTIL_SHA256,
+        "sdk_manager_version": SDK_MANAGER_VERSION,
+    }:
+        raise AdapterError("[NU54:E_PREREQUISITE_PINS] Build Adapter와 pin 계약이 다릅니다.")
+    for field in ("ncs_revision", "zephyr_revision", "toolchain_bundle_id"):
+        if package_manifest.get(field) != expected_values[field]:
+            raise AdapterError(
+                f"[NU54:E_PACKAGE_MANIFEST] release manifest의 {field} 값이 pin과 다릅니다."
+            )
+    if package_manifest.get("prerequisites_pins_sha256") != pins_hash:
+        raise AdapterError(
+            "[NU54:E_PACKAGE_MANIFEST] release manifest의 prerequisite pin hash가 다릅니다."
+        )
+
+    if ready.get("schema_version") != 1 or ready.get("status") != "ready":
+        raise AdapterError(
+            "[NU54:E_PREREQUISITE_READY] 설치 완료 marker가 없거나 상태가 잘못되었습니다. "
+            "post_install.bat을 다시 실행하십시오."
+        )
+    ready_expected = {
+        "pins_sha256": pins_hash,
+        "ncs_version": NCS_VERSION,
+        "ncs_revision": NCS_REVISION,
+        "zephyr_revision": ZEPHYR_REVISION,
+        "toolchain_bundle_id": TOOLCHAIN_BUNDLE_ID,
+        "nrfutil_version": NRFUTIL_VERSION,
+        "nrfutil_sha256": NRFUTIL_SHA256,
+        "sdk_manager_version": SDK_MANAGER_VERSION,
+    }
+    for field, expected in ready_expected.items():
+        if ready.get(field) != expected:
+            raise AdapterError(
+                f"[NU54:E_PREREQUISITE_READY] 완료 marker의 {field} 값이 다릅니다."
+            )
+    marker_ncs_root = ready.get("ncs_root")
+    marker_toolchain_root = ready.get("toolchain_root")
+    marker_nrfutil = ready.get("nrfutil_path")
+    local_data = os.environ.get("LOCALAPPDATA")
+    if not local_data:
+        raise AdapterError("[NU54:E_PREREQUISITE_STATE] LOCALAPPDATA 환경 변수가 없습니다.")
+    expected_nrfutil = canonical_path(
+        Path(local_data) / "NUCODE" / "NU54DK_Arduino_Core" / "tools" / "nrfutil.exe"
+    )
+    if (
+        not isinstance(marker_ncs_root, str)
+        or path_key(marker_ncs_root) != path_key(ncs_root.parent)
+        or not isinstance(marker_toolchain_root, str)
+        or path_key(marker_toolchain_root) != path_key(toolchain_root)
+        or not isinstance(marker_nrfutil, str)
+        or path_key(marker_nrfutil) != path_key(expected_nrfutil)
+    ):
+        raise AdapterError(
+            "[NU54:E_PREREQUISITE_READY] 완료 marker와 발견한 Nordic 설치 경로가 다릅니다."
+        )
+    if toolchain_root.name != TOOLCHAIN_BUNDLE_ID:
+        raise AdapterError("[NU54:E_PREREQUISITE_TOOLCHAIN] 고정 Toolchain bundle이 아닙니다.")
+    bundled_git = toolchain_root / "bin" / "git.exe"
+    if not bundled_git.is_file():
+        raise AdapterError(
+            "[NU54:E_PREREQUISITE_TOOLCHAIN] Toolchain bundle의 Git 실행 파일이 없습니다."
+        )
+    toolchain_manifest = load_json_object(
+        toolchain_root / "manifest.json", "E_PREREQUISITE_TOOLCHAIN"
+    )
+    if toolchain_manifest.get("bundle_id") != TOOLCHAIN_BUNDLE_ID:
+        raise AdapterError(
+            "[NU54:E_PREREQUISITE_TOOLCHAIN] Toolchain manifest bundle_id가 pin과 다릅니다."
+        )
+    if not expected_nrfutil.is_file() or file_sha256(expected_nrfutil) != NRFUTIL_SHA256:
+        raise AdapterError("[NU54:E_PREREQUISITE_NRFUTIL] nRF Util byte hash가 pin과 다릅니다.")
+    if exact_git_revision(ncs_root / "nrf", git_executable=bundled_git) != NCS_REVISION:
+        raise AdapterError("[NU54:E_PREREQUISITE_NCS] NCS revision이 고정 pin과 다릅니다.")
+    if exact_git_revision(
+        ncs_root / "zephyr", git_executable=bundled_git
+    ) != ZEPHYR_REVISION:
+        raise AdapterError("[NU54:E_PREREQUISITE_ZEPHYR] Zephyr revision이 고정 pin과 다릅니다.")
+
+
 ## @brief west와 compiler에 필요한 실행 환경 및 절대 경로를 구성합니다.
-def tool_environment() -> dict[str, Any]:
-    ncs_root = discover_ncs_root()
-    toolchain_root = discover_toolchain_root(ncs_root)
+def tool_environment(platform_root: Path | None = None) -> dict[str, Any]:
+    packaged = platform_root is not None and not is_development_checkout(platform_root)
+    if packaged:
+        release_manifest(platform_root)
+    ncs_root = discover_ncs_root(prefer_user_profile=packaged)
+    toolchain_root = discover_toolchain_root(ncs_root, exact_required=packaged)
+    if packaged and platform_root is not None:
+        validate_packaged_prerequisites(platform_root, ncs_root, toolchain_root)
     environment = apply_toolchain_environment(toolchain_root)
     zephyr_base = ncs_root / "zephyr"
     environment["ZEPHYR_BASE"] = str(zephyr_base)
     west = toolchain_root / "opt" / "bin" / "Scripts" / "west.exe"
+    git = toolchain_root / "bin" / "git.exe"
     compiler = (
         toolchain_root
         / "opt"
@@ -474,7 +656,7 @@ def tool_environment() -> dict[str, Any]:
     )
     size_tool = compiler.with_name("arm-zephyr-eabi-size.exe")
     ccache = toolchain_root / "opt" / "bin" / ("ccache.exe" if os.name == "nt" else "ccache")
-    for executable in (west, compiler, size_tool):
+    for executable in (west, git, compiler, size_tool):
         if not executable.is_file():
             raise AdapterError(f"NCS toolchain 실행 파일이 없습니다: {executable}")
     ccache_root = build_cache_root() / "compiler-cache"
@@ -491,6 +673,7 @@ def tool_environment() -> dict[str, Any]:
         "zephyr_base": zephyr_base,
         "environment": environment,
         "west": west,
+        "git": git,
         "compiler": compiler,
         "size": size_tool,
         "ccache": ccache if ccache.is_file() else None,
@@ -568,30 +751,57 @@ def tree_content_sha256(root: Path, relative_inputs: Sequence[str | Path]) -> st
     return f"sha256:{digest.hexdigest()}"
 
 
-## @brief 요청 root 자체의 Git revision만 읽고 상위 저장소 오인식을 차단합니다.
-def exact_git_revision(root: Path) -> str:
+## @brief 요청 root 자체의 Git revision 또는 검증된 archive revision을 읽습니다.
+def exact_git_revision(
+    root: Path,
+    fallback_platform_root: Path | None = None,
+    fallback_field: str | None = None,
+    *,
+    git_executable: str | Path = "git",
+) -> str:
     try:
         top = subprocess.run(
-            ["git", "-C", str(root), "rev-parse", "--show-toplevel"],
+            [str(git_executable), "-C", str(root), "rev-parse", "--show-toplevel"],
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
             check=False,
             text=True,
         )
-        if top.returncode != 0 or path_key(top.stdout.strip()) != path_key(root):
-            return "unknown"
-        revision = subprocess.run(
-            ["git", "-C", str(root), "rev-parse", "HEAD"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
-            check=False,
-            text=True,
-        )
-        if revision.returncode == 0 and re.fullmatch(r"[0-9a-fA-F]{40}", revision.stdout.strip()):
-            return revision.stdout.strip().lower()
+        if top.returncode == 0 and path_key(top.stdout.strip()) == path_key(root):
+            revision = subprocess.run(
+                [str(git_executable), "-C", str(root), "rev-parse", "HEAD"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.DEVNULL,
+                check=False,
+                text=True,
+            )
+            if revision.returncode == 0 and re.fullmatch(
+                r"[0-9a-fA-F]{40}", revision.stdout.strip()
+            ):
+                return revision.stdout.strip().lower()
     except OSError:
         pass
+    if fallback_platform_root is not None and fallback_field is not None:
+        document = release_manifest(fallback_platform_root)
+        fallback = document.get(fallback_field)
+        if isinstance(fallback, str) and re.fullmatch(r"[0-9a-fA-F]{40}", fallback):
+            return fallback.lower()
+        raise AdapterError(
+            f"[NU54:E_PACKAGE_MANIFEST] {fallback_field} revision이 없거나 잘못되었습니다."
+        )
     return "unknown"
+
+
+## @brief 개발 checkout은 Git을, 배포 archive는 release manifest revision을 사용합니다.
+def git_or_release_revision(root: Path, platform_root: Path, field: str) -> str:
+    revision = exact_git_revision(root)
+    if revision != "unknown":
+        return revision
+    document = release_manifest(platform_root)
+    fallback = document.get(field)
+    if isinstance(fallback, str) and re.fullmatch(r"[0-9a-fA-F]{40}", fallback):
+        return fallback.lower()
+    raise AdapterError(f"[NU54:E_PACKAGE_MANIFEST] {field} revision이 없거나 잘못되었습니다.")
 
 
 ## @brief compiler의 version 첫 줄을 build identity로 읽습니다.
@@ -621,6 +831,8 @@ def cache_input_manifest(
     ncs_root = tools["ncs_root"]
     toolchain_root = tools["toolchain_root"]
     platform_inputs = (
+        "release-manifest.json",
+        "post_install.bat",
         "platform.txt",
         "boards.txt",
         "programmers.txt",
@@ -631,11 +843,16 @@ def cache_input_manifest(
         "third_party/ArduinoCore-API",
         "tools/nu54-builder/src",
         "tools/nu54-builder/templates",
+        "tools/nu54-prerequisites",
     )
     board_inputs = ("boards/nucode/nu54dk",)
     nrf_root = ncs_root / "nrf"
     zephyr_root = ncs_root / "zephyr"
     toolchain_manifest = toolchain_root / "manifest.json"
+    bundled_git = tools.get("git")
+    revision_arguments: dict[str, str | Path] = {}
+    if isinstance(bundled_git, Path) and bundled_git.is_file():
+        revision_arguments["git_executable"] = bundled_git
     return {
         "schema_version": CACHE_SCHEMA_VERSION,
         "adapter": {
@@ -655,15 +872,21 @@ def cache_input_manifest(
         },
         "board_package": {
             "root": board_root.resolve().as_posix(),
-            "revision": exact_git_revision(board_root),
+            "revision": git_or_release_revision(
+                board_root, platform_root, "board_revision"
+            ),
             "content": tree_content_sha256(board_root, board_inputs),
         },
         "ncs": {
             "declared_version": NCS_VERSION,
             "root": ncs_root.as_posix(),
-            "nrf_revision": exact_git_revision(nrf_root),
+            "nrf_revision": exact_git_revision(
+                nrf_root, **revision_arguments
+            ),
             "nrf_west_yml": optional_file_sha256(nrf_root / "west.yml"),
-            "zephyr_revision": exact_git_revision(zephyr_root),
+            "zephyr_revision": exact_git_revision(
+                zephyr_root, **revision_arguments
+            ),
             "zephyr_version_file": optional_file_sha256(zephyr_root / "VERSION"),
         },
         "toolchain": {
@@ -901,7 +1124,7 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
             "M9 build cache를 platform/board fingerprint 내부에 둘 수 없습니다: "
             f"{cache_root}"
         )
-    tools = tool_environment()
+    tools = tool_environment(platform_root)
     input_manifest = cache_input_manifest(session_paths, args, tools)
     cache_key = cache_key_for_manifest(input_manifest)
     workspace = cache_workspace(cache_key, root=cache_root)
@@ -1118,7 +1341,7 @@ def dependency_arguments(arguments: Sequence[str]) -> list[str]:
 ## @brief NCS compiler를 전처리기로 호출하여 Arduino discovery 출력을 만듭니다.
 def preprocess(args: argparse.Namespace, passthrough: Sequence[str]) -> None:
     context = load_context(args)
-    tools = tool_environment()
+    tools = tool_environment(canonical_path(context["platform_root"]))
     source = canonical_path(args.source)
     if not source.is_file():
         raise AdapterError(f"전처리할 source가 없습니다: {source}")
@@ -1850,7 +2073,7 @@ def publish_artifact_generation(
 ## @brief source manifest를 갱신하고 Full Zephyr image를 build/export합니다.
 def link(args: argparse.Namespace) -> None:
     session_paths = adapter_paths(args)
-    tools = tool_environment()
+    tools = tool_environment(canonical_path(args.platform_root))
     output_manifest = session_paths["build_path"] / f"{args.project_name}.nu54-build.json"
 
     with build_lock(session_paths["state_root"], operation="link-session"):
@@ -2415,7 +2638,7 @@ def validate_flash_tool_identity(context: dict[str, Any], tools: dict[str, Any])
 def flash(args: argparse.Namespace) -> None:
     if args.runner not in {"pyocd", "jlink"}:
         raise AdapterError(f"[NU54:E_RUNNER_UNAVAILABLE] 지원하지 않는 runner입니다: {args.runner}")
-    tools = tool_environment()
+    tools = tool_environment(canonical_path(args.platform_root))
     environment = flash_environment(tools, args.runner)
     session_paths = adapter_paths(args)
     with build_lock(session_paths["state_root"], operation="flash-session"):
@@ -2490,7 +2713,7 @@ def verify_artifact(args: argparse.Namespace) -> None:
 ## @brief Arduino IDE가 parsing할 수 있는 FLASH/RAM 사용량을 출력합니다.
 def print_size(args: argparse.Namespace) -> None:
     context = load_context(args, create=False)
-    tools = tool_environment()
+    tools = tool_environment(canonical_path(args.platform_root))
     elf = canonical_path(args.build_path) / f"{args.project_name}.elf"
     result = run_checked(
         [context["size_tool"], elf],

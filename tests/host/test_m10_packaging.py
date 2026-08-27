@@ -1,0 +1,226 @@
+#!/usr/bin/env python3
+"""! @brief M10 Boards Manager 재현 패키지 계약을 검증합니다. """
+
+from __future__ import annotations
+
+import importlib.util
+import json
+import subprocess
+import sys
+import tempfile
+import unittest
+import zipfile
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+MODULE_PATH = REPO_ROOT / "packaging" / "boards-manager" / "nu54_package.py"
+SPEC = importlib.util.spec_from_file_location("nu54_package", MODULE_PATH)
+assert SPEC and SPEC.loader
+PACKAGE = importlib.util.module_from_spec(SPEC)
+sys.modules[SPEC.name] = PACKAGE
+SPEC.loader.exec_module(PACKAGE)
+
+
+class M10PackagingTests(unittest.TestCase):
+    """! @brief 실제 Git commit을 이용해 생성·변조·index 계약을 시험합니다. """
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.commit = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, text=True
+        ).strip()
+        cls.temporary = tempfile.TemporaryDirectory(prefix="nu54-m10-package-")
+        cls.output = Path(cls.temporary.name) / "out"
+        cls.repeat = Path(cls.temporary.name) / "repeat"
+        cls.artifacts_90 = PACKAGE.build_package(REPO_ROOT, cls.output, "0.0.90", cls.commit)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.temporary.cleanup()
+
+    def test_01_manifest_contract_and_exact_git_revisions(self) -> None:
+        manifest = PACKAGE.validate_archive(
+            self.artifacts_90["archive"], expected_version="0.0.90", expected_commit=self.commit
+        )
+        self.assertEqual(manifest["schema_version"], 1)
+        self.assertEqual(manifest["core_revision"], self.commit)
+        self.assertRegex(manifest["board_revision"], r"^[0-9a-f]{40}$")
+        self.assertEqual(manifest["ncs_revision"], PACKAGE.NCS_REVISION)
+        self.assertEqual(manifest["zephyr_revision"], PACKAGE.ZEPHYR_REVISION)
+        self.assertEqual(manifest["toolchain_bundle_id"], "dcbdc366a1")
+        self.assertRegex(manifest["prerequisites_pins_sha256"], r"^[0-9a-f]{64}$")
+
+    def test_02_archive_is_byte_reproducible(self) -> None:
+        repeated = PACKAGE.build_package(REPO_ROOT, self.repeat, "0.0.90", self.commit)
+        self.assertEqual(self.artifacts_90["archive"].read_bytes(), repeated["archive"].read_bytes())
+        self.assertEqual(self.artifacts_90["manifest"].read_bytes(), repeated["manifest"].read_bytes())
+        self.assertEqual(self.artifacts_90["sbom"].read_bytes(), repeated["sbom"].read_bytes())
+
+    def test_03_archive_has_one_root_and_excludes_development_inputs(self) -> None:
+        with zipfile.ZipFile(self.artifacts_90["archive"], "r") as archive:
+            names = archive.namelist()
+        roots = {name.split("/", 1)[0] for name in names}
+        self.assertEqual(roots, {"nucode-nu54dk-zephyr-0.0.90"})
+        forbidden = ("/00_Docs/", "/tests/", "/samples/", "/packaging/", "/build/", ".pdf", "/.git/")
+        for name in names:
+            self.assertFalse(any(token in name for token in forbidden), name)
+        self.assertFalse(any("tools/remote-windows" in name for name in names))
+        self.assertTrue(any("board_package/NU54DK_Zephyr_DTS/boards/" in name for name in names))
+        self.assertFalse(any("board_package/NU54DK_Zephyr_DTS/00_Docs/" in name for name in names))
+
+    def test_04_platform_is_exact_commit_content_except_version(self) -> None:
+        original = subprocess.check_output(
+            ["git", "show", f"{self.commit}:platform.txt"], cwd=REPO_ROOT
+        ).decode("utf-8")
+        root = "nucode-nu54dk-zephyr-0.0.90"
+        with zipfile.ZipFile(self.artifacts_90["archive"], "r") as archive:
+            packaged = archive.read(f"{root}/platform.txt").decode("utf-8")
+        original_without_version = "\n".join(
+            line for line in original.splitlines() if not line.startswith("version=")
+        )
+        packaged_without_version = "\n".join(
+            line for line in packaged.splitlines() if not line.startswith("version=")
+        )
+        self.assertEqual(original_without_version, packaged_without_version)
+        self.assertIn("version=0.0.90", packaged.splitlines())
+
+    def test_05_sbom_license_and_checksum_sidecars_are_present(self) -> None:
+        root = "nucode-nu54dk-zephyr-0.0.90"
+        with zipfile.ZipFile(self.artifacts_90["archive"], "r") as archive:
+            sbom = json.loads(archive.read(f"{root}/sbom.spdx.json"))
+            inventory = json.loads(archive.read(f"{root}/license-inventory.json"))
+            checksums = archive.read(f"{root}/CHECKSUMS.sha256").decode("utf-8")
+        self.assertEqual(sbom["spdxVersion"], "SPDX-2.3")
+        self.assertGreater(len(sbom["files"]), 20)
+        self.assertEqual(inventory["legal_review_status"], "required-before-final-public-release")
+        self.assertEqual(len(inventory["components"]), 4)
+        self.assertIn("release-manifest.json", checksums)
+        for path in self.artifacts_90.values():
+            self.assertTrue(path.is_file(), path)
+
+    def test_06_board_license_scopes_are_split_and_noticed(self) -> None:
+        root = "nucode-nu54dk-zephyr-0.0.90"
+        with zipfile.ZipFile(self.artifacts_90["archive"], "r") as archive:
+            inventory = json.loads(archive.read(f"{root}/license-inventory.json"))
+            sbom = json.loads(archive.read(f"{root}/sbom.spdx.json"))
+            notices = archive.read(f"{root}/THIRD_PARTY_NOTICES.md").decode("utf-8")
+        components = {item["name"]: item for item in inventory["components"]}
+        self.assertEqual(components["NU54DK Zephyr DTS repository"]["license_expression"], "MIT")
+        derived = components["NU54DK Zephyr derived board definition"]
+        self.assertEqual(derived["license_expression"], "Apache-2.0")
+        self.assertEqual(
+            derived["scope"], ["board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/**"]
+        )
+        license_files = {item["path"]: item for item in inventory["license_files"]}
+        self.assertEqual(
+            license_files["board_package/NU54DK_Zephyr_DTS/LICENSE"]["license_expression"], "MIT"
+        )
+        self.assertEqual(
+            license_files["board_package/NU54DK_Zephyr_DTS/LICENSES/Apache-2.0.txt"][
+                "license_expression"
+            ],
+            "Apache-2.0",
+        )
+        self.assertIn(
+            "board_package/NU54DK_Zephyr_DTS/NOTICE",
+            {item["path"] for item in inventory["notice_files"]},
+        )
+        spdx_files = {
+            item["fileName"].removeprefix("./"): item for item in sbom["files"]
+        }
+        self.assertEqual(
+            spdx_files["board_package/NU54DK_Zephyr_DTS/LICENSE"]["licenseConcluded"], "MIT"
+        )
+        derived_files = [
+            item
+            for path, item in spdx_files.items()
+            if path.startswith("board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/")
+        ]
+        self.assertTrue(derived_files)
+        self.assertTrue(all(item["licenseConcluded"] == "Apache-2.0" for item in derived_files))
+        self.assertIn("MIT AND Apache-2.0", notices)
+
+    def test_07_external_prerequisites_are_not_marked_as_redistributed(self) -> None:
+        root = "nucode-nu54dk-zephyr-0.0.90"
+        with zipfile.ZipFile(self.artifacts_90["archive"], "r") as archive:
+            inventory = json.loads(archive.read(f"{root}/license-inventory.json"))
+            sbom = json.loads(archive.read(f"{root}/sbom.spdx.json"))
+        prerequisites = {item["name"]: item for item in inventory["external_prerequisites"]}
+        self.assertEqual(
+            set(prerequisites),
+            {
+                "nRF Util",
+                "nRF Util sdk-manager",
+                "nRF Connect SDK",
+                "Zephyr",
+                "nRF Connect SDK Toolchain",
+                "pyOCD",
+                "SEGGER J-Link Software",
+            },
+        )
+        self.assertTrue(
+            all(item["distribution"] == "external-not-redistributed" for item in prerequisites.values())
+        )
+        self.assertTrue(all(item["license_expression"] == "NOASSERTION" for item in prerequisites.values()))
+        self.assertEqual(prerequisites["nRF Util"]["version"], "8.2.1")
+        self.assertRegex(prerequisites["nRF Util"]["sha256"], r"^[0-9a-f]{64}$")
+        self.assertEqual(prerequisites["nRF Util sdk-manager"]["version"], "1.16.1")
+        self.assertEqual(prerequisites["nRF Connect SDK"]["revision"], PACKAGE.NCS_REVISION)
+        self.assertEqual(prerequisites["Zephyr"]["revision"], PACKAGE.ZEPHYR_REVISION)
+        self.assertEqual(prerequisites["nRF Connect SDK Toolchain"]["bundle_id"], "dcbdc366a1")
+        self.assertEqual(prerequisites["pyOCD"]["version"], "0.45.1")
+        self.assertFalse(prerequisites["SEGGER J-Link Software"]["required"])
+        external_spdx = [package for package in sbom["packages"] if package["name"] in prerequisites]
+        self.assertEqual(len(external_spdx), 7)
+        self.assertTrue(all(package["licenseDeclared"] == "NOASSERTION" for package in external_spdx))
+        self.assertTrue(all("external-not-redistributed" in package["comment"] for package in external_spdx))
+        relationships = {item["relationshipType"] for item in sbom["relationships"]}
+        self.assertIn("DEPENDS_ON", relationships)
+        self.assertIn("OPTIONAL_DEPENDENCY_OF", relationships)
+
+    def test_08_validator_rejects_tampered_payload(self) -> None:
+        source = self.artifacts_90["archive"]
+        tampered = Path(self.temporary.name) / source.name
+        with zipfile.ZipFile(source, "r") as original, zipfile.ZipFile(
+            tampered, "w", compression=zipfile.ZIP_DEFLATED
+        ) as output:
+            for info in original.infolist():
+                data = original.read(info)
+                if info.filename.endswith("/platform.txt"):
+                    data = data.replace(b"version=0.0.90", b"version=0.0.91")
+                output.writestr(info, data)
+        with self.assertRaises(PACKAGE.PackageError):
+            PACKAGE.validate_archive(tampered, expected_version="0.0.90")
+
+    def test_09_index_contains_both_versions_in_latest_first_order(self) -> None:
+        PACKAGE.build_package(REPO_ROOT, self.output, "0.0.91", self.commit)
+        index_path = PACKAGE.generate_index(self.output, ["0.0.90", "0.0.91"])
+        document = PACKAGE.validate_index(index_path, artifact_dir=self.output)
+        package = document["packages"][0]
+        self.assertEqual(package["name"], "nucode")
+        self.assertEqual(package["maintainer"], "NUCODE / Quantum")
+        self.assertEqual(package["email"], "EIDOSDATA@users.noreply.github.com")
+        self.assertEqual(
+            [platform["version"] for platform in package["platforms"]], ["0.0.91", "0.0.90"]
+        )
+        for platform in package["platforms"]:
+            self.assertTrue(platform["url"].startswith(PACKAGE.REPOSITORY_URL + "/releases/download/"))
+            self.assertEqual(platform["toolsDependencies"], [])
+
+    def test_10_index_validator_rejects_wrong_public_identity(self) -> None:
+        index_path = self.output / PACKAGE.INDEX_FILENAME
+        document = json.loads(index_path.read_text(encoding="utf-8"))
+        document["packages"][0]["websiteURL"] = "https://github.com/Nucode01/NU54DK_Arduino_Core"
+        broken = Path(self.temporary.name) / "broken-index.json"
+        broken.write_text(json.dumps(document), encoding="utf-8")
+        with self.assertRaises(PACKAGE.PackageError):
+            PACKAGE.validate_index(broken, artifact_dir=self.output)
+
+    def test_11_supported_versions_are_fail_closed(self) -> None:
+        with self.assertRaises(PACKAGE.PackageError):
+            PACKAGE.build_package(REPO_ROOT, self.output, "0.1.0", self.commit)
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)

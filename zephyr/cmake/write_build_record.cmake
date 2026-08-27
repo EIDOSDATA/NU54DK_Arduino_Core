@@ -65,6 +65,23 @@ function(nucode_git_revision directory output_variable check_dirty)
   set(${output_variable} "${revision}" PARENT_SCOPE)
 endfunction()
 
+# @brief Git metadata가 없는 배포 archive에서 고정 revision을 읽습니다.
+function(nucode_release_manifest_revision field output_variable)
+  set(revision "unknown")
+  set(manifest "${NUCODE_CORE_ROOT}/release-manifest.json")
+  if(EXISTS "${manifest}")
+    file(READ "${manifest}" manifest_content)
+    string(JSON manifest_revision ERROR_VARIABLE manifest_error
+      GET "${manifest_content}" "${field}"
+    )
+    if("${manifest_error}" STREQUAL "NOTFOUND" AND
+       "${manifest_revision}" MATCHES "^[0-9a-fA-F]{40}$")
+      string(TOLOWER "${manifest_revision}" revision)
+    endif()
+  endif()
+  set(${output_variable} "${revision}" PARENT_SCOPE)
+endfunction()
+
 function(nucode_files_digest base_directory output_variable)
   set(digest_input "")
 
@@ -124,6 +141,12 @@ nucode_git_revision(
 )
 nucode_git_revision("${NUCODE_NRF_DIR}" ncs_revision FALSE)
 nucode_git_revision("${NUCODE_ZEPHYR_BASE}" zephyr_revision FALSE)
+if("${core_revision}" STREQUAL "unknown")
+  nucode_release_manifest_revision(core_revision core_revision)
+endif()
+if("${board_revision}" STREQUAL "unknown")
+  nucode_release_manifest_revision(board_revision board_revision)
+endif()
 nucode_files_digest("${NUCODE_CORE_ROOT}" core_source_sha256 ${core_inputs})
 nucode_files_digest(
   "${NUCODE_APPLICATION_SOURCE_DIR}" application_source_sha256

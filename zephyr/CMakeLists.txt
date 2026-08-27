@@ -129,13 +129,34 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
 
     if(GIT_FOUND AND EXISTS "${directory}")
       execute_process(
-        COMMAND "${GIT_EXECUTABLE}" rev-parse --short=12 HEAD
+        COMMAND "${GIT_EXECUTABLE}" rev-parse --show-toplevel
         WORKING_DIRECTORY "${directory}"
-        RESULT_VARIABLE git_result
-        OUTPUT_VARIABLE git_output
+        RESULT_VARIABLE git_root_result
+        OUTPUT_VARIABLE git_root_output
         ERROR_QUIET
         OUTPUT_STRIP_TRAILING_WHITESPACE
       )
+      file(REAL_PATH "${directory}" requested_root)
+      file(TO_CMAKE_PATH "${requested_root}" requested_root)
+      file(TO_CMAKE_PATH "${git_root_output}" git_root_output)
+      if(WIN32)
+        string(TOLOWER "${requested_root}" requested_root)
+        string(TOLOWER "${git_root_output}" git_root_output)
+      endif()
+
+      if(git_root_result EQUAL 0 AND
+         "${git_root_output}" STREQUAL "${requested_root}")
+        execute_process(
+          COMMAND "${GIT_EXECUTABLE}" rev-parse --short=12 HEAD
+          WORKING_DIRECTORY "${directory}"
+          RESULT_VARIABLE git_result
+          OUTPUT_VARIABLE git_output
+          ERROR_QUIET
+          OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+      else()
+        set(git_result 1)
+      endif()
 
       if(git_result EQUAL 0 AND NOT "${git_output}" STREQUAL "")
         set(revision "${git_output}")
@@ -166,6 +187,23 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
       endif()
     endif()
 
+    set(${output_variable} "${revision}" PARENT_SCOPE)
+  endfunction()
+
+  # @brief Git metadata가 없는 배포 archive에서 고정 revision을 읽습니다.
+  function(nucode_release_manifest_revision field output_variable)
+    set(revision "unknown")
+    set(manifest "${NUCODE_ARDUINO_CORE_ROOT}/release-manifest.json")
+    if(EXISTS "${manifest}")
+      file(READ "${manifest}" manifest_content)
+      string(JSON manifest_revision ERROR_VARIABLE manifest_error
+        GET "${manifest_content}" "${field}"
+      )
+      if("${manifest_error}" STREQUAL "NOTFOUND" AND
+         "${manifest_revision}" MATCHES "^[0-9a-fA-F]{40}$")
+        string(TOLOWER "${manifest_revision}" revision)
+      endif()
+    endif()
     set(${output_variable} "${revision}" PARENT_SCOPE)
   endfunction()
 
@@ -250,6 +288,12 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   )
   nucode_git_revision("${NRF_DIR}" NUCODE_NCS_REVISION FALSE)
   nucode_git_revision("${ZEPHYR_BASE}" NUCODE_ZEPHYR_REVISION FALSE)
+  if("${NUCODE_CORE_REVISION}" STREQUAL "unknown")
+    nucode_release_manifest_revision(core_revision NUCODE_CORE_REVISION)
+  endif()
+  if("${NUCODE_BOARD_REVISION}" STREQUAL "unknown")
+    nucode_release_manifest_revision(board_revision NUCODE_BOARD_REVISION)
+  endif()
 
   nucode_files_digest(
     "${NUCODE_ARDUINO_CORE_ROOT}" NUCODE_CORE_SOURCE_SHA256
