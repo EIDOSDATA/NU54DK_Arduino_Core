@@ -27,7 +27,10 @@
 inline constexpr pin_size_t A0 = static_cast<pin_size_t>(PIN_A0);
 #else
 /** @brief C source에서 사용하는 Arduino 호환 A0 이름입니다. */
-enum { A0 = PIN_A0 };
+enum
+{
+	A0 = PIN_A0
+};
 #endif
 
 /** @brief board pwm_led1/P1.10 chosen에 대응하는 analogWrite 역할입니다. */
@@ -70,8 +73,8 @@ enum { A0 = PIN_A0 };
 [[nodiscard]] constexpr pin_size_t digitalPinToInterrupt(pin_size_t pin) noexcept
 {
 	return (pin < static_cast<pin_size_t>(NUM_DIGITAL_PINS))
-		       ? pin
-		       : static_cast<pin_size_t>(NOT_AN_INTERRUPT);
+			   ? pin
+			   : static_cast<pin_size_t>(NOT_AN_INTERRUPT);
 }
 
 #else

@@ -7,6 +7,6 @@
 
 namespace
 {
-/** @brief translation unit이 비지 않도록 유지하는 내부 상수입니다. */
-[[maybe_unused]] constexpr unsigned int kNu54AdapterBootstrap = 0x54U;
+    /** @brief translation unit이 비지 않도록 유지하는 내부 상수입니다. */
+    [[maybe_unused]] constexpr unsigned int kNu54AdapterBootstrap = 0x54U;
 }

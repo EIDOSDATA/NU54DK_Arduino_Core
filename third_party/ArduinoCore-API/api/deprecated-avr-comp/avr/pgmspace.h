@@ -30,8 +30,8 @@
 #include <inttypes.h>
 
 #define PROGMEM
-#define __ATTR_PROGMEM__ 
-#define PGM_P  const char *
+#define __ATTR_PROGMEM__
+#define PGM_P const char *
 #define PGM_VOID_P const void *
 #define PSTR(str) (str)
 
@@ -49,8 +49,8 @@ typedef uint32_t prog_uint32_t;
 typedef int64_t prog_int64_t;
 typedef uint64_t prog_uint64_t;
 
-typedef const void* int_farptr_t;
-typedef const void* uint_farptr_t;
+typedef const void *int_farptr_t;
+typedef const void *uint_farptr_t;
 
 #define memchr_P(s, c, n) memchr((s), (c), (n))
 #define memcmp_P(s1, s2, n) memcmp((s1), (s2), (n))

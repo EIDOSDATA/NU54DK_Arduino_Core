@@ -22,27 +22,27 @@
 #include <inttypes.h>
 #include "Stream.h"
 
-namespace arduino {
-
-class HardwareI2C : public Stream
+namespace arduino
 {
-  public:
-    virtual void begin() = 0;
-    virtual void begin(uint8_t address) = 0;
-    virtual void end() = 0;
 
-    virtual void setClock(uint32_t freq) = 0;
-  
-    virtual void beginTransmission(uint8_t address) = 0;
-    virtual uint8_t endTransmission(bool stopBit) = 0;
-    virtual uint8_t endTransmission(void) = 0;
+    class HardwareI2C : public Stream
+    {
+    public:
+        virtual void begin() = 0;
+        virtual void begin(uint8_t address) = 0;
+        virtual void end() = 0;
 
-    virtual size_t requestFrom(uint8_t address, size_t len, bool stopBit) = 0;
-    virtual size_t requestFrom(uint8_t address, size_t len) = 0;
+        virtual void setClock(uint32_t freq) = 0;
 
-    virtual void onReceive(void(*)(int)) = 0;
-    virtual void onRequest(void(*)(void)) = 0;
-};
+        virtual void beginTransmission(uint8_t address) = 0;
+        virtual uint8_t endTransmission(bool stopBit) = 0;
+        virtual uint8_t endTransmission(void) = 0;
+
+        virtual size_t requestFrom(uint8_t address, size_t len, bool stopBit) = 0;
+        virtual size_t requestFrom(uint8_t address, size_t len) = 0;
+
+        virtual void onReceive(void (*)(int)) = 0;
+        virtual void onRequest(void (*)(void)) = 0;
+    };
 
 }
-

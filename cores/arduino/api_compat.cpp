@@ -50,7 +50,7 @@ namespace
         {
             const auto digit = static_cast<unsigned int>(value % static_cast<UnsignedValue>(radix));
             reversed[length++] = static_cast<char>((digit < 10U) ? ('0' + digit)
-                                                                    : ('a' + digit - 10U));
+                                                                 : ('a' + digit - 10U));
             value /= static_cast<UnsignedValue>(radix);
         } while (value != 0U);
 

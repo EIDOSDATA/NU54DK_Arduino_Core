@@ -155,7 +155,7 @@ namespace
 	 * @return v0.1 controller 계약과 맞으면 true입니다.
 	 */
 	[[nodiscard]] bool buildSpiConfiguration(const arduino::SPISettings &settings,
-										  struct spi_config &configuration) noexcept
+											 struct spi_config &configuration) noexcept
 	{
 		if (settings.getBusMode() != arduino::SPI_CONTROLLER)
 		{
@@ -184,7 +184,7 @@ namespace
 		configuration = {};
 		configuration.frequency = settings.getClockFreq();
 		configuration.operation = SPI_OP_MODE_MASTER | SPI_WORD_SET(8) | mode_flags |
-			((settings.getBitOrder() == LSBFIRST) ? SPI_TRANSFER_LSB : SPI_TRANSFER_MSB);
+								  ((settings.getBitOrder() == LSBFIRST) ? SPI_TRANSFER_LSB : SPI_TRANSFER_MSB);
 		configuration.slave = 0U;
 		configuration.cs = {};
 		configuration.word_delay = 0U;
@@ -281,7 +281,7 @@ namespace
 			spi_transaction_owner = nullptr;
 			spi_started = false;
 			recordSpiError(discarded_transaction ? SpiError::transaction_already_active
-												  : SpiError::none);
+												 : SpiError::none);
 			static_cast<void>(k_mutex_unlock(&spi_mutex));
 		}
 
@@ -403,7 +403,7 @@ namespace
 				(active_configuration == nullptr))
 			{
 				recordSpiError(spi_started ? SpiError::transaction_not_active
-										 : SpiError::not_started);
+										   : SpiError::not_started);
 				static_cast<void>(k_mutex_unlock(&spi_mutex));
 				return 0U;
 			}
@@ -434,10 +434,10 @@ namespace
 			}
 
 			const std::uint16_t result = (active_bit_order == LSBFIRST)
-										 ? static_cast<std::uint16_t>(receive[0] |
-																	 (receive[1] << 8U))
-										 : static_cast<std::uint16_t>((receive[0] << 8U) |
-																	 receive[1]);
+											 ? static_cast<std::uint16_t>(receive[0] |
+																		  (receive[1] << 8U))
+											 : static_cast<std::uint16_t>((receive[0] << 8U) |
+																		  receive[1]);
 			static_cast<void>(k_mutex_unlock(&spi_mutex));
 			return result;
 		}
@@ -461,7 +461,7 @@ namespace
 				(active_configuration == nullptr))
 			{
 				recordSpiError(spi_started ? SpiError::transaction_not_active
-										 : SpiError::not_started);
+										   : SpiError::not_started);
 				static_cast<void>(k_mutex_unlock(&spi_mutex));
 				return;
 			}
@@ -481,7 +481,7 @@ namespace
 			{
 				const std::size_t remaining = count - offset;
 				const std::size_t chunk = (remaining < chunk_capacity) ? remaining
-																	  : chunk_capacity;
+																	   : chunk_capacity;
 				for (std::size_t index = 0U; index < chunk; ++index)
 				{
 					transmit[index] = bytes[offset + index];

@@ -227,7 +227,7 @@ namespace
 		{
 			ARG_UNUSED(address);
 			recordWireError(k_is_in_isr() ? WireError::invalid_context
-										 : WireError::unsupported_peripheral_mode);
+										  : WireError::unsupported_peripheral_mode);
 		}
 
 		/** @brief Core 상태만 닫고 Zephyr가 소유한 I2C 장치는 유지합니다. */
@@ -252,7 +252,7 @@ namespace
 			clearReceiveBuffer();
 			wire_started = false;
 			recordWireError(discarded_restart ? WireError::pending_restart_conflict
-												  : WireError::none);
+											  : WireError::none);
 			static_cast<void>(k_mutex_unlock(&wire_mutex));
 		}
 
@@ -493,7 +493,7 @@ namespace
 				}
 
 				result = i2c_write_read(wire_device, address, tx_buffer, tx_length,
-									rx_buffer, length);
+										rx_buffer, length);
 				clearTransmitState();
 			}
 			else
@@ -568,7 +568,7 @@ namespace
 			{
 				recordWireError(WireError::invalid_context);
 				return 0;
-		}
+			}
 			static_cast<void>(k_mutex_lock(&wire_mutex, K_FOREVER));
 			int result = 0;
 			if (!wire_started)
@@ -578,8 +578,8 @@ namespace
 			else if (atomic_get(&wire_pending_restart) != 0)
 			{
 				recordWireError((wire_transaction_owner == k_current_get())
-								? WireError::pending_restart_conflict
-								: WireError::transaction_owner_mismatch);
+									? WireError::pending_restart_conflict
+									: WireError::transaction_owner_mismatch);
 			}
 			else if (!transmission_active)
 			{
@@ -608,8 +608,8 @@ namespace
 			}
 			static_cast<void>(k_mutex_lock(&wire_mutex, K_FOREVER));
 			const int count = wire_started
-							  ? static_cast<int>(rx_length - rx_position)
-							  : 0;
+								  ? static_cast<int>(rx_length - rx_position)
+								  : 0;
 			recordWireError(wire_started ? WireError::none : WireError::not_started);
 			static_cast<void>(k_mutex_unlock(&wire_mutex));
 			return count;
@@ -695,7 +695,7 @@ namespace
 		{
 			ARG_UNUSED(callback);
 			recordWireError(k_is_in_isr() ? WireError::invalid_context
-										 : WireError::unsupported_peripheral_mode);
+										  : WireError::unsupported_peripheral_mode);
 		}
 
 		/** @brief peripheral 요청 callback은 지원하지 않습니다. */
@@ -703,7 +703,7 @@ namespace
 		{
 			ARG_UNUSED(callback);
 			recordWireError(k_is_in_isr() ? WireError::invalid_context
-										 : WireError::unsupported_peripheral_mode);
+										  : WireError::unsupported_peripheral_mode);
 		}
 	};
 

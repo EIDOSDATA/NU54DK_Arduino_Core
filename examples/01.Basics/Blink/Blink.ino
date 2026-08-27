@@ -6,16 +6,16 @@
 /** @brief 내장 LED를 출력으로 초기화합니다. */
 void setup()
 {
-  pinMode(LED_BUILTIN, OUTPUT);
+    pinMode(LED_BUILTIN, OUTPUT);
 }
 
 /** @brief 내장 LED의 논리 상태를 반복해서 전환합니다. */
 void loop()
 {
-  writeBuiltinLed(true);
-  delay(250);
-  writeBuiltinLed(false);
-  delay(250);
+    writeBuiltinLed(true);
+    delay(250);
+    writeBuiltinLed(false);
+    delay(250);
 }
 
 /**
@@ -24,5 +24,5 @@ void loop()
  */
 void writeBuiltinLed(bool high)
 {
-  digitalWrite(LED_BUILTIN, high ? HIGH : LOW);
+    digitalWrite(LED_BUILTIN, high ? HIGH : LOW);
 }

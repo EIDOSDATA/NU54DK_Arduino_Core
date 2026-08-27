@@ -89,7 +89,7 @@ namespace
 	 * @param pins 발생한 핀 mask입니다.
 	 */
 	void gpioInterruptHandler(const struct device *port, struct gpio_callback *callback,
-						  gpio_port_pins_t pins)
+							  gpio_port_pins_t pins)
 	{
 		ARG_UNUSED(port);
 		ARG_UNUSED(pins);
@@ -143,9 +143,9 @@ namespace
 		if (slot.registered)
 		{
 			result = gpio_pin_interrupt_configure(description.gpio.port, description.gpio.pin,
-									  GPIO_INT_DISABLE);
+												  GPIO_INT_DISABLE);
 			const int remove_result = gpio_remove_callback(description.gpio.port,
-											   &slot.gpio_callback);
+														   &slot.gpio_callback);
 			if ((result == 0) && (remove_result < 0))
 			{
 				result = remove_result;
@@ -177,7 +177,7 @@ namespace
 	 * @param mode 감지할 raw electrical edge입니다.
 	 */
 	void attachInterruptImpl(pin_size_t interrupt_number, voidFuncPtr simple_callback,
-						 voidFuncPtrParam parameter_callback, void *parameter, PinStatus mode)
+							 voidFuncPtrParam parameter_callback, void *parameter, PinStatus mode)
 	{
 		if (k_is_in_isr())
 		{
@@ -235,7 +235,7 @@ namespace
 		}
 
 		gpio_init_callback(&slot.gpio_callback, gpioInterruptHandler,
-					   static_cast<gpio_port_pins_t>(BIT(description->gpio.pin)));
+						   static_cast<gpio_port_pins_t>(BIT(description->gpio.pin)));
 		int result = gpio_add_callback(description->gpio.port, &slot.gpio_callback);
 		if (result < 0)
 		{
@@ -254,7 +254,7 @@ namespace
 		k_spin_unlock(&slot.lock, key);
 
 		result = gpio_pin_interrupt_configure(description->gpio.port, description->gpio.pin,
-									  flags);
+											  flags);
 		if (result < 0)
 		{
 			static_cast<void>(removeSlot(*description, slot));

@@ -35,37 +35,37 @@
 namespace arduino
 {
 
-/**************************************************************************************
- * CLASS DECLARATION
- **************************************************************************************/
+    /**************************************************************************************
+     * CLASS DECLARATION
+     **************************************************************************************/
 
-class CanMsgRingbuffer
-{
-public:
-  static size_t constexpr RING_BUFFER_SIZE = 32U;
+    class CanMsgRingbuffer
+    {
+    public:
+        static size_t constexpr RING_BUFFER_SIZE = 32U;
 
-  CanMsgRingbuffer();
+        CanMsgRingbuffer();
 
-  inline bool isFull() const { return (_num_elems == RING_BUFFER_SIZE); }
-  void enqueue(CanMsg const & msg);
+        inline bool isFull() const { return (_num_elems == RING_BUFFER_SIZE); }
+        void enqueue(CanMsg const &msg);
 
-  inline bool isEmpty() const { return (_num_elems == 0); }
-  CanMsg dequeue();
+        inline bool isEmpty() const { return (_num_elems == 0); }
+        CanMsg dequeue();
 
-  inline size_t available() const { return _num_elems; }
+        inline size_t available() const { return _num_elems; }
 
-private:
-  CanMsg _buf[RING_BUFFER_SIZE];
-  volatile size_t _head;
-  volatile size_t _tail;
-  volatile size_t _num_elems;
+    private:
+        CanMsg _buf[RING_BUFFER_SIZE];
+        volatile size_t _head;
+        volatile size_t _tail;
+        volatile size_t _num_elems;
 
-  inline size_t next(size_t const idx) const { return ((idx + 1) % RING_BUFFER_SIZE); }
-};
+        inline size_t next(size_t const idx) const { return ((idx + 1) % RING_BUFFER_SIZE); }
+    };
 
-/**************************************************************************************
- * NAMESPACE
- **************************************************************************************/
+    /**************************************************************************************
+     * NAMESPACE
+     **************************************************************************************/
 
 } /* arduino */
 

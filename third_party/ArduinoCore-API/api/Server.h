@@ -21,11 +21,13 @@
 
 #include "Print.h"
 
-namespace arduino {
+namespace arduino
+{
 
-class Server : public Print {
-  public:
-    virtual void begin() = 0;
-};
+    class Server : public Print
+    {
+    public:
+        virtual void begin() = 0;
+    };
 
 }
