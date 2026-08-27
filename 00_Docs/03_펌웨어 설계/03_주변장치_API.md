@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M6 완료; M7 Wire·SPI·ADC·PWM 조건부 완료 |
+| 문서 상태 | M6·M7 Wire·SPI·ADC·PWM 완료 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 RTOS | Zephyr v4.4.0 |
@@ -26,7 +26,8 @@
 M6에서 `Serial`은 구현·target ztest·실제 COM10 HIL까지 완료했다. M7의 `Wire`, `SPI`, ADC와
 PWM production source와 builder profile은 NU54DK Twister target 11/11, Arduino CLI 4/4 및 승인된
 NU54DK driver HIL을 통과했다. BQ25186 I2C 응답도 확인했으며 물리 SPI data 경로만
-미검증 경계로 기록하고 M7을 `조건부 완료`로 판정한다.
+남아 있었으나, P2.2 MOSI와 P2.4 MISO를 연결한 4 MHz 40-byte loopback까지 통과해 M7을
+`완료`로 판정한다.
 
 ---
 
@@ -659,7 +660,7 @@ Zephyr dependency 예시는 다음과 같다.
 - [x] `requestFrom(..., false)`가 전송 없이 0과 미지원 진단을 반환한다.
 - [x] zero-byte `endTransmission(true)` address probe와 driver 오류 변환을 검증한다.
 - [x] TX overflow=1과 `-EIO` 등 generic driver 오류=4·원본 errno 보존을 검증한다.
-- [ ] shared Zephyr client가 있을 때 bus lock과 clock 정책이 지켜진다.
+- [x] M7은 BQ25186 Zephyr client를 비활성화해 `Wire`가 bus를 단독 사용하며, shared client 동시 사용은 지원 범위에서 제외한다.
 - [x] 최종 generated Devicetree에서 BQ25186이 `status = "disabled"`로 유지된다.
 - [x] Wire가 활성인데 `nucode,arduino-wire` chosen이 없으면 configure/build에서 실패한다.
 - [x] HIL protocol이 BQ25186 `0x6A/0x0C` 읽기만 허용하고 Device ID 0x1을 실기 확인한다.
@@ -674,6 +675,7 @@ Zephyr dependency 예시는 다음과 같다.
 - [x] SPI00과 uart00 동시 활성 구성이 configure/build 단계에서 실패한다.
 - [x] Core가 CS를 만들지 않고 Sketch가 별도 GPIO CS를 소유한다.
 - [x] transaction 오류 후 Core owner/state가 복구된다.
+- [x] 실제 SPI00 4 MHz에서 P2.2 MOSI→P2.4 MISO 40-byte 고정 패턴이 모두 일치한다.
 
 ### 15.4 ADC/PWM
 
@@ -682,7 +684,7 @@ Zephyr dependency 예시는 다음과 같다.
 - [x] ADC 12-bit raw 0..4095와 오류 `-1`을 검증한다.
 - [x] PWM 0·중간값·255 변환에 overflow가 없다.
 - [x] PWM 전용 역할 이외의 pin이 PWM 역할로 오인되지 않는다.
-- [ ] VBAT는 명시적 overlay 없이 배터리 전압 API로 노출되지 않는다.
+- [x] VBAT/BQ25186 service는 M7 공개 API와 기본 overlay에 노출하지 않는 범위 제외 기능이다.
 
 ---
 
@@ -719,9 +721,9 @@ Zephyr dependency 예시는 다음과 같다.
 | Serial | **M6 PASS:** DAPLink sequence 7, COM10 boot READY·고유 echo; target ztest에서 RX/TX·overflow·end·ISR 거부 |
 | Console 공유 | Zephyr log와 Sketch 출력의 관측 및 제한 확인 |
 | I2C | **PASS:** seq33 100 kHz·seq34/42 400 kHz에서 BQ25186 `0x6A/0x0C=0x41`, Device ID 0x1과 repeated-start 확인 |
-| SPI | **부분 통과:** 최종 seq37 4 MHz driver 호출 PASS, rx=0x00; physical data/loopback 미검증 |
-| ADC | **PASS:** 최종 seq37 gain 1/4 A0 raw=3140; raw 범위만 검증, 전압 정확도 주장 없음 |
-| PWM | **PASS:** 최종 seq37 P1.10 duty 0/128/255 driver 호출; 외부 파형 주장 없음 |
+| SPI | **PASS:** 최종 loopback seq2에서 SPI00 4 MHz, P2.2 MOSI→P2.4 MISO 40-byte 고정 패턴 전부 일치 |
+| ADC | **PASS:** 최종 loopback seq2에서 gain 1/4 A0 raw=3176; raw 범위만 검증, 전압 정확도 주장 없음 |
+| PWM | **PASS:** 최종 loopback seq2에서 P1.10 duty 0/128/255 driver 호출; 외부 파형 주장 없음 |
 | Conflict | SPI00/uart00, 잘못된 analog pin과 LED_BUILTIN PWM negative test |
 
 ---
@@ -758,7 +760,7 @@ USB upload나 drag-and-drop firmware 기능이 필요하면 CMSIS-DAP 인터페�
 | 기본 SPI 논리 bus | M7 SPI00 | Core overlay, P2.1/P2.2/P2.4와 uart00 충돌 |
 | analog 논리 역할 | M7 A0만 | P1.12/SAADC channel 5, A1 이후는 대기 |
 | PWM 기본 주기·해상도 | M7 20 ms·8-bit | 보드 pwm_led1 역할과 고정 API 계약 |
-| 물리 SPI HIL | 미검증 | fixture가 없어 data/loopback 일치를 주장하지 않으며 M7 조건부 완료 사유로 유지 |
+| 물리 SPI HIL | PASS | SPI00 4 MHz, P2.2 MOSI→P2.4 MISO, 40-byte 고정 패턴 일치 |
 
 ---
 

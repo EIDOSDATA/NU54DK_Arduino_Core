@@ -18,20 +18,21 @@ MODULE_SPEC.loader.exec_module(MODULE)
 
 
 class M7PeripheralHilParserTests(unittest.TestCase):
-    """! @brief SPI, ADC와 PWM driver token의 승인 및 거부 경계를 검증합니다. """
+    """! @brief SPI loopback, ADC와 PWM token의 승인 및 거부 경계를 검증합니다. """
 
     def test_accepts_fixed_driver_contract(self) -> None:
         """! @brief 정해진 4 MHz SPI, 12-bit ADC와 PWM token을 승인하는지 검증합니다. """
 
         transcript = (
             b"NUCODE_M7_PERIPHERAL_HIL_READY\r\n"
-            b"NUCODE_M7_SPI_DRIVER:PASS:frequency=4000000:rx=0x7F\r\n"
+            b"NUCODE_M7_SPI_LOOPBACK:PASS:frequency=4000000:bytes=40:"
+            b"pattern=MUL37_ADD5A\r\n"
             b"NUCODE_M7_ADC_DRIVER:PASS:raw=2048\r\n"
             b"NUCODE_M7_PWM_DRIVER:PASS:duty=0,128,255\r\n"
             b"NUCODE_M7_PERIPHERAL_HIL_PASS\r\n"
         )
         result = MODULE.parse_transcript(transcript)
-        self.assertEqual(result.spi_received, 0x7F)
+        self.assertEqual(result.spi_byte_count, 40)
         self.assertEqual(result.adc_raw, 2048)
 
     def test_rejects_wrong_spi_frequency(self) -> None:
@@ -39,12 +40,27 @@ class M7PeripheralHilParserTests(unittest.TestCase):
 
         transcript = (
             b"NUCODE_M7_PERIPHERAL_HIL_READY\n"
-            b"NUCODE_M7_SPI_DRIVER:PASS:frequency=1000000:rx=0x00\n"
+            b"NUCODE_M7_SPI_LOOPBACK:PASS:frequency=1000000:bytes=40:"
+            b"pattern=MUL37_ADD5A\n"
             b"NUCODE_M7_ADC_DRIVER:PASS:raw=0\n"
             b"NUCODE_M7_PWM_DRIVER:PASS:duty=0,128,255\n"
             b"NUCODE_M7_PERIPHERAL_HIL_PASS\n"
         )
-        with self.assertRaisesRegex(ValueError, "4 MHz SPI"):
+        with self.assertRaisesRegex(ValueError, "4 MHz SPI loopback"):
+            MODULE.parse_transcript(transcript)
+
+    def test_rejects_wrong_spi_loopback_byte_count(self) -> None:
+        """! @brief 내부 SPI chunk 경계를 넘지 않는 축소 결과를 거부합니다. """
+
+        transcript = (
+            b"NUCODE_M7_PERIPHERAL_HIL_READY\n"
+            b"NUCODE_M7_SPI_LOOPBACK:PASS:frequency=4000000:bytes=32:"
+            b"pattern=MUL37_ADD5A\n"
+            b"NUCODE_M7_ADC_DRIVER:PASS:raw=2048\n"
+            b"NUCODE_M7_PWM_DRIVER:PASS:duty=0,128,255\n"
+            b"NUCODE_M7_PERIPHERAL_HIL_PASS\n"
+        )
+        with self.assertRaisesRegex(ValueError, "byte 수"):
             MODULE.parse_transcript(transcript)
 
     def test_rejects_adc_out_of_range(self) -> None:
@@ -52,7 +68,8 @@ class M7PeripheralHilParserTests(unittest.TestCase):
 
         transcript = (
             b"NUCODE_M7_PERIPHERAL_HIL_READY\n"
-            b"NUCODE_M7_SPI_DRIVER:PASS:frequency=4000000:rx=0x00\n"
+            b"NUCODE_M7_SPI_LOOPBACK:PASS:frequency=4000000:bytes=40:"
+            b"pattern=MUL37_ADD5A\n"
             b"NUCODE_M7_ADC_DRIVER:PASS:raw=4096\n"
             b"NUCODE_M7_PWM_DRIVER:PASS:duty=0,128,255\n"
             b"NUCODE_M7_PERIPHERAL_HIL_PASS\n"
@@ -74,6 +91,16 @@ class M7PeripheralHilParserTests(unittest.TestCase):
             b"NUCODE_M7_PERIPHERAL_HIL_PASS\r\n"
         )
         with self.assertRaisesRegex(RuntimeError, "driver 실패"):
+            MODULE.parse_transcript(transcript)
+
+    def test_rejects_loopback_failure_even_with_final_pass(self) -> None:
+        """! @brief data 불일치를 잘못된 최종 PASS와 무관하게 거부합니다. """
+
+        transcript = (
+            b"NUCODE_M7_SPI_LOOPBACK:FAIL:index=3:expected=0xC9:actual=0x00\r\n"
+            b"NUCODE_M7_PERIPHERAL_HIL_PASS\r\n"
+        )
+        with self.assertRaisesRegex(RuntimeError, "loopback 불일치"):
             MODULE.parse_transcript(transcript)
 
 

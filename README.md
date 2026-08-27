@@ -27,9 +27,9 @@ NU54DK에서 Loader 없이 동작하는 Native Full Zephyr 기반 Arduino Core�
 - M6 완료, ArduinoCore-API `Common`·`String`·`Print`·`Stream`, non-owning UART20 `Serial`과 GPIO edge interrupt 구현
 - M6 NU54DK target ztest 10/10과 COM10 실제 Serial READY·고유 echo HIL 통과
 - M6 실제 P1.13 active-low 버튼 HIL 통과: `FALLING`·`RISING` 각각 1회, `CHANGE` 누름·해제 누적 1·2회
-- M7 조건부 완료, NU54DK Twister target 11/11·Arduino CLI 4/4·I2C/ADC/PWM/SPI driver HIL 통과
+- M7 완료, NU54DK Twister target 11/11·Arduino CLI 4/4·I2C/ADC/PWM HIL과 SPI 4 MHz 물리 loopback 통과
 - M7 통합 staged Builder 회귀 8/8 named group 통과: blink, library, config, error, parallel, incremental, m6, m7
-- M7 BQ25186 `MASK_ID(0x0C)=0x41` repeated-start HIL을 100/400 kHz에서 통과; 잔여 제한은 fixture가 없는 물리 SPI data 경로
+- M7 BQ25186 `MASK_ID(0x0C)=0x41` repeated-start HIL을 100/400 kHz에서 통과하고 SPI00 P2.2→P2.4 40-byte loopback 일치 확인
 - Arduino Upload/Flash recipe와 pyOCD/J-Link 선택은 아직 미구현이며 M8 범위
 
 ## 보드 정의

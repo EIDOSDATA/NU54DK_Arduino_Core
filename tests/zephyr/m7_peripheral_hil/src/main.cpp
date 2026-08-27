@@ -1,8 +1,8 @@
 /**
  * @file main.cpp
- * @brief M7 실제 SPI, ADC와 PWM driver 호출 성공 여부를 UART token으로 보고합니다.
+ * @brief M7 실제 SPI loopback, ADC와 PWM driver 검증 결과를 UART token으로 보고합니다.
  *
- * @note 이 시험은 SPI loopback data, ADC 전압 정확도 또는 PWM 외부 파형을 검증하지 않습니다.
+ * @note 이 시험은 ADC 전압 정확도 또는 PWM 외부 파형을 검증하지 않습니다.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -10,6 +10,7 @@
 #include <Arduino.h>
 #include <SPI.h>
 
+#include <cstddef>
 #include <cstdint>
 
 #include "internal/AnalogBackend.h"
@@ -23,6 +24,20 @@ namespace
 	using nucode::arduino::internal::lastSpiDriverError;
 	using nucode::arduino::internal::lastSpiError;
 	using nucode::arduino::internal::SpiError;
+
+	/** @brief 실제 SPI buffer chunk 경계를 통과할 loopback byte 수입니다. */
+	constexpr std::size_t spi_loopback_byte_count = 40U;
+
+	/**
+	 * @brief loopback 위치마다 재현 가능한 고정 시험 byte를 생성합니다.
+	 *
+	 * @param index 0부터 시작하는 buffer 위치입니다.
+	 * @return 해당 위치에서 송신하고 다시 수신해야 하는 byte입니다.
+	 */
+	constexpr std::uint8_t spiPatternByte(std::size_t index)
+	{
+		return static_cast<std::uint8_t>((index * 37U) + 0x5AU);
+	}
 
 	/** @brief SPI driver 실패 상태와 원본 Zephyr 오류를 UART에 기록합니다. */
 	void reportSpiFailure(void)
@@ -44,12 +59,18 @@ namespace
 	}
 
 	/**
-	 * @brief CS 없는 실제 spi00에서 4 MHz 한 byte driver transaction을 실행합니다.
+	 * @brief CS 없는 실제 spi00에서 4 MHz, 40-byte 물리 loopback을 실행합니다.
 	 *
-	 * @return Zephyr SPI driver가 모든 단계에서 성공하면 true입니다.
+	 * @return driver가 성공하고 모든 수신 byte가 송신 byte와 같으면 true입니다.
 	 */
-	bool testSpiDriver(void)
+	bool testSpiLoopback(void)
 	{
+		std::uint8_t frame[spi_loopback_byte_count] = {};
+		for (std::size_t index = 0U; index < spi_loopback_byte_count; ++index)
+		{
+			frame[index] = spiPatternByte(index);
+		}
+
 		SPI.begin();
 		if (lastSpiError() != SpiError::none)
 		{
@@ -64,7 +85,7 @@ namespace
 			return false;
 		}
 
-		const std::uint8_t received = SPI.transfer(static_cast<std::uint8_t>(0xA5U));
+		SPI.transfer(frame, sizeof(frame));
 		if (lastSpiError() != SpiError::none)
 		{
 			reportSpiFailure();
@@ -79,8 +100,23 @@ namespace
 			return false;
 		}
 
-		Serial.print("NUCODE_M7_SPI_DRIVER:PASS:frequency=4000000:rx=0x");
-		Serial.println(received, HEX);
+		for (std::size_t index = 0U; index < spi_loopback_byte_count; ++index)
+		{
+			const std::uint8_t expected = spiPatternByte(index);
+			if (frame[index] != expected)
+			{
+				Serial.print("NUCODE_M7_SPI_LOOPBACK:FAIL:index=");
+				Serial.print(static_cast<unsigned int>(index));
+				Serial.print(":expected=0x");
+				Serial.print(expected, HEX);
+				Serial.print(":actual=0x");
+				Serial.println(frame[index], HEX);
+				return false;
+			}
+		}
+
+		Serial.println(
+			"NUCODE_M7_SPI_LOOPBACK:PASS:frequency=4000000:bytes=40:pattern=MUL37_ADD5A");
 		return true;
 	}
 
@@ -139,7 +175,7 @@ void setup(void)
 	Serial.begin(115200U);
 	Serial.println("NUCODE_M7_PERIPHERAL_HIL_READY");
 
-	const bool spi_ok = testSpiDriver();
+	const bool spi_ok = testSpiLoopback();
 	const bool adc_ok = testAdcDriver();
 	const bool pwm_ok = testPwmDriver();
 	Serial.println((spi_ok && adc_ok && pwm_ok)

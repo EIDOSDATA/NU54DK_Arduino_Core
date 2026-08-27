@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief NU54DK M7 실제 SPI, ADC와 PWM driver HIL을 DAPLink/UART로 자동 검증합니다. """
+"""! @brief NU54DK M7 실제 SPI loopback, ADC와 PWM HIL을 DAPLink/UART로 자동 검증합니다. """
 
 from __future__ import annotations
 
@@ -35,9 +35,11 @@ READY_TOKEN = b"NUCODE_M7_PERIPHERAL_HIL_READY"
 FINAL_PASS_TOKEN = b"NUCODE_M7_PERIPHERAL_HIL_PASS"
 FINAL_FAIL_TOKEN = b"NUCODE_M7_PERIPHERAL_HIL_FAIL"
 DRIVER_FAIL_MARKER = b"_DRIVER:FAIL:"
+SPI_LOOPBACK_FAIL_TOKEN = b"NUCODE_M7_SPI_LOOPBACK:FAIL:"
 PWM_PASS_TOKEN = b"NUCODE_M7_PWM_DRIVER:PASS:duty=0,128,255"
 SPI_PATTERN = re.compile(
-    rb"^NUCODE_M7_SPI_DRIVER:PASS:frequency=4000000:rx=0x([0-9A-Fa-f]+)$",
+    rb"^NUCODE_M7_SPI_LOOPBACK:PASS:frequency=4000000:bytes=([0-9]+):"
+    rb"pattern=MUL37_ADD5A$",
     re.MULTILINE,
 )
 ADC_PATTERN = re.compile(
@@ -50,7 +52,7 @@ ADC_PATTERN = re.compile(
 class PeripheralHilResult:
     """! @brief 실제 driver HIL transcript에서 승인된 관찰값을 구조화합니다. """
 
-    spi_received: int
+    spi_byte_count: int
     adc_raw: int
 
 
@@ -59,7 +61,7 @@ def parse_arguments() -> argparse.Namespace:
 
     parser = argparse.ArgumentParser(
         description=(
-            "NU54DK M7 image를 DAPLink MSD로 기록하고 실제 SPI 4 MHz driver 호출, "
+            "NU54DK M7 image를 DAPLink MSD로 기록하고 실제 SPI 4 MHz loopback, "
             "A0 raw read와 PWM 0/128/255 driver 호출 token을 검증합니다."
         )
     )
@@ -116,16 +118,18 @@ def parse_transcript(transcript: bytes) -> PeripheralHilResult:
         raise RuntimeError("target이 M7 주변장치 driver HIL 실패를 보고했습니다.")
     if DRIVER_FAIL_MARKER in normalized:
         raise RuntimeError("target이 하나 이상의 M7 driver 실패를 보고했습니다.")
+    if SPI_LOOPBACK_FAIL_TOKEN in normalized:
+        raise RuntimeError("target이 M7 SPI 물리 loopback 불일치를 보고했습니다.")
     for required in (READY_TOKEN, PWM_PASS_TOKEN, FINAL_PASS_TOKEN):
         if required not in normalized:
             raise ValueError(f"필수 M7 HIL token이 없습니다: {required!r}")
 
     spi_match = SPI_PATTERN.search(normalized)
     if spi_match is None:
-        raise ValueError("4 MHz SPI driver 성공 token이 없습니다.")
-    spi_received = int(spi_match.group(1), 16)
-    if spi_received > 0xFF:
-        raise ValueError(f"SPI 수신 byte 범위를 벗어났습니다: {spi_received}")
+        raise ValueError("4 MHz SPI loopback 성공 token이 없습니다.")
+    spi_byte_count = int(spi_match.group(1), 10)
+    if spi_byte_count != 40:
+        raise ValueError(f"SPI loopback byte 수가 다릅니다: {spi_byte_count}")
 
     adc_match = ADC_PATTERN.search(normalized)
     if adc_match is None:
@@ -134,7 +138,7 @@ def parse_transcript(transcript: bytes) -> PeripheralHilResult:
     if not 0 <= adc_raw <= 4095:
         raise ValueError(f"A0 12-bit raw 범위를 벗어났습니다: {adc_raw}")
 
-    return PeripheralHilResult(spi_received=spi_received, adc_raw=adc_raw)
+    return PeripheralHilResult(spi_byte_count=spi_byte_count, adc_raw=adc_raw)
 
 
 def flash_image(
@@ -242,13 +246,13 @@ def main() -> int:
         result_timeout=arguments.result_timeout,
     )
     print(
-        "M7 peripheral driver HIL PASS: "
+        "M7 peripheral HIL PASS: "
         f"uid={unique_id}, sequence={sequence}, bytes={byte_count}, port={port_name}, "
-        f"spi_frequency=4000000, spi_rx=0x{result.spi_received:02X}, "
+        f"spi_frequency=4000000, spi_loopback_bytes={result.spi_byte_count}, "
         f"adc_raw={result.adc_raw}, pwm_duty=0,128,255"
     )
     print(
-        "범위: driver 호출 성공만 검증했으며 SPI loopback, ADC 전압 정확도와 "
+        "범위: SPI MOSI/MISO 40-byte data 일치를 검증했으며 ADC 전압 정확도와 "
         "PWM 외부 파형은 검증하지 않았습니다."
     )
     return 0

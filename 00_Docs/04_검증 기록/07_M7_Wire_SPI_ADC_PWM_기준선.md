@@ -2,14 +2,14 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 상태 | **조건부 완료** |
+| 상태 | **완료** |
 | 작성자 | Quantum / NUCODE |
 | 라이선스 | MIT |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 Zephyr | Zephyr 4.4.0 |
 | 기준 타깃 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | 보드 package | `board_package/NU54DK_Zephyr_DTS`, `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| 검증 상태 | 자동 회귀와 BQ25186 I2C·ADC/PWM/SPI driver 실기 통과; 물리 SPI data 경로 미검증 |
+| 검증 상태 | 자동 회귀, BQ25186 I2C·ADC/PWM HIL과 SPI00 4 MHz 40-byte 물리 loopback 통과 |
 
 ---
 
@@ -19,14 +19,14 @@
 구현 계약, 하드웨어 안전 경계와 검증 결과를 한곳에 보관한다. 소스나 시험 코드가
 존재한다는 사실만으로 기능을 지원 또는 완료로 판정하지 않는다.
 
-현재 문서는 구현 명칭과 확정된 target·Arduino CLI·HIL 결과를 기록한 **조건부 완료 기준선**이다.
-실제 BQ25186 `MASK_ID` repeated-start는 통과했고 물리 SPI data 경로만 fixture가 없어
-검증하지 못했다. 이 제한을 숨기지 않는 조건으로 M7을 `조건부 완료`로 판정한다. 실제 명령의
-exit code, case 수, 메모리와 NU54DK HIL 결과는 확보된 실행 증거만 기록한다.
+현재 문서는 구현 명칭과 확정된 target·Arduino CLI·HIL 결과를 기록한 **완료 기준선**이다.
+실제 BQ25186 `MASK_ID` repeated-start와 P2.2 MOSI→P2.4 MISO의 SPI00 4 MHz 40-byte
+loopback이 모두 통과했다. 실제 명령의 exit code, case 수, 메모리와 NU54DK HIL 결과는 확보된
+실행 증거만 기록한다.
 
 M7 최초 판정 당시 M6는 실제 P1.13 버튼 ISR edge 확인만 남아 있었다. 이후 독립적인
 단계형 물리 HIL에서 `FALLING`, `RISING`, `CHANGE`를 확인해 M6는 **완료**로 변경했다.
-이 후속 결과는 M7의 IMU·SPI 잔여 조건이나 M7 상태를 변경하지 않는다.
+이후 M7도 I2C와 SPI 물리 HIL을 완료해 잔여 조건을 해소했다.
 
 ---
 
@@ -247,9 +247,8 @@ near-divisor가 통과할 수 있고 실제 SCK는 128 MHz/prescaler로 양자�
 진단에 보존한다. shipped sample/HIL 기본값은 정확한 div32의 4 MHz로 바꾸었고 sequence 17에서
 수정 image를 재시험했다.
 
-실제 SPI device 또는 MOSI↔MISO loopback fixture가 없으면 emulator semantic 시험까지만
-완료하고 물리 SPI HIL은 미검증으로 기록한다. 외부 로직 애널라이저와 오실로스코프는 완료
-조건이 아니다.
+P2.2 MOSI와 P2.4 MISO를 직접 연결한 실제 SPI00 4 MHz loopback은 40-byte 고정 패턴으로
+검증한다. 외부 로직 애널라이저와 오실로스코프는 완료 조건이 아니다.
 
 ---
 
@@ -306,7 +305,7 @@ P1.10 PWM 역할을 digital pin으로 추가하지 않으므로 M7에는 GPIO↔
 | SPI lifecycle/error recovery | **PASS** | target ztest SPI suite 3/3에 포함 |
 | ADC emulator | **PASS** | target ztest ADC suite 2/2, gain 1/4 최종 계약 |
 | PWM fake driver | **PASS** | target ztest PWM suite 2/2 |
-| HIL host protocol unittest | **PASS** | 고정 BQ25186 PMIC 5/5 + peripheral parser 5/5, 합계 10/10 |
+| HIL host protocol unittest | **PASS** | 고정 BQ25186 PMIC 5/5 + loopback 강화 peripheral parser 7/7, 합계 12/12 |
 | Arduino CLI M7 smoke | **PASS** | fresh isolated `--tests m7`, exit 0; 4/4 compile/artifact와 전체 Kconfig y/n matrix·chosen·Sketch overlay 원문 병합 |
 | live build record provenance | **PASS** | public header·`library.properties`·DTS binding 독립 mutation마다 `core_source_sha256` 변경, `core_revision` dirty와 복원 확인 |
 | Builder incremental invalidation | **PASS** | `module.yml`과 DTS binding을 순서대로 독립 변경; 같은 workspace, 각각 재configure, pristine configure 누계 1 |
@@ -315,10 +314,10 @@ P1.10 PWM 역할을 digital pin으로 추가하지 않으므로 M7에는 GPIO↔
 | non-SPI00 chosen negative | **PASS** | expected-fail; `NUCODE_M7_SPI_CHOSEN_MUST_BE_SPI00` 일치 |
 | SPI00/uart00 충돌 negative | **PASS** | expected-fail; `NUCODE_M7_SPI_UART00_CONFLICT` 또는 Zephyr mutual-exclusion 진단 일치 |
 | NU54DK BQ25186 I2C | **PASS** | seq33 100 kHz·seq34/42 400 kHz에서 `MASK_ID(0x0C)=0x41`, Device ID 0x1과 repeated-start 확인 |
-| NU54DK ADC raw | **PASS** | 최종 seq37에서 gain 1/4 A0 raw=3140; 0..4095 범위만 검증, 전압 정확도 주장 없음 |
-| NU54DK PWM | **PASS** | 최종 seq37에서 driver duty 0/128/255 실행; 실제 파형 주장 없음 |
-| NU54DK SPI 4 MHz driver 경로 | **PASS** | 최종 seq37에서 4 MHz/div32 transfer 성공, rx=0x00; loopback/target data 주장 없음 |
-| NU54DK 물리 SPI data 경로 | **미검증** | fixture가 없어 loopback/target data 일치를 주장하지 않음 |
+| NU54DK ADC raw | **PASS** | 최종 loopback seq2에서 gain 1/4 A0 raw=3176; 0..4095 범위만 검증, 전압 정확도 주장 없음 |
+| NU54DK PWM | **PASS** | 최종 loopback seq2에서 driver duty 0/128/255 실행; 실제 파형 주장 없음 |
+| NU54DK SPI 4 MHz driver 경로 | **PASS** | 최종 loopback seq2에서 4 MHz/div32 40-byte transfer 성공 |
+| NU54DK 물리 SPI data 경로 | **PASS** | P2.2 MOSI→P2.4 MISO, 40-byte `MUL37_ADD5A` 고정 패턴 전부 일치 |
 
 HIL host protocol은 주소나 register를 command-line 또는 UART payload로 임의 변경할 수 없게
 고정한다. 허용 요청은 BQ25186 `0x6A/0x0C` 읽기 하나뿐이다.
@@ -366,11 +365,11 @@ repeated-start를 확인했다. 최종 source와 외부 pull-up만 사용한 400
 
 수정 후 최초 통합 peripheral HIL은 DAPLink sequence 17로 166,400-byte image를 기록하고
 COM10에서 SPI 4 MHz driver 성공(`rx=0x00`), A0 raw=3176, PWM duty 0/128/255 실행을 확인했다.
-최종 source 재검증은 sequence 37로 166,912-byte image를 기록해 SPI 4 MHz
-driver 성공(`rx=0x00`), A0 raw=3140, PWM duty 0/128/255 실행을 다시 확인했다. runner의
-장치 발견·flash/UART marker·peripheral oracle 검사는 9/9 PASS이고, 별도 peripheral parser
-unittest는 5/5다. SPI 결과는 loopback/target data 일치를, ADC 결과는 전압 정확도를, PWM
-결과는 실제 파형을 증명하지 않는다.
+sequence 37에서는 166,912-byte image를 기록해 SPI 4 MHz driver 성공(`rx=0x00`), A0 raw=3140,
+PWM duty 0/128/255 실행을 다시 확인했다. P2.2와 P2.4를 직접 연결한 최종 sequence 2에서는
+167,424-byte image로 SPI00 4 MHz의 40-byte `MUL37_ADD5A` 패턴이 전부 일치했고 A0 raw=3176,
+PWM duty 0/128/255도 다시 통과했다. 강화된 peripheral parser unittest는 7/7 PASS다. 이 결과는
+ADC 전압 정확도와 PWM 실제 파형을 증명하지 않는다.
 
 ---
 
@@ -386,10 +385,8 @@ M7은 다음 조건을 기준으로 판정했다.
 6. API 지원표, Variant, 주변장치와 시험 문서를 실제 결과와 동기화한다.
 
 production target build와 NU54DK Twister target 11/11, Arduino CLI M7 4/4, 전체 Builder 회귀 8/8,
-host protocol unittest 10/10, BQ25186 I2C와 ADC/PWM/SPI 실제 driver 경로는 통과했다.
-물리 SPI data 경로는 fixture 부재로 검증하지 못했다. 따라서 M7의 최종 상태는
-**조건부 완료**다. 이 제한을 지원표와 검증 문서에 유지하며 별도의 영문 게이트 표기를
-붙이지 않는다.
+host protocol unittest 12/12, BQ25186 I2C와 ADC/PWM 실제 driver 경로를 통과했다. 마지막으로
+SPI00 4 MHz의 40-byte 물리 loopback data까지 일치했으므로 M7의 최종 상태는 **완료**다.
 
 ---
 

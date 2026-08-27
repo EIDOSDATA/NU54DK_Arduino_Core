@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M3 digital Variant 완료, M7 A0·PWM 역할 조건부 완료 |
+| 문서 상태 | M3 digital Variant와 M7 A0·PWM 역할 완료 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 RTOS | Zephyr v4.4.0 |
@@ -560,8 +560,8 @@ analyzer/oscilloscope 계측은 사용자 결정으로 필수 증거에서 제�
 pin의 `digitalWrite()`, debounce, 장시간 반복, 동시 호출과 PWM/GPIO ownership은 해당 API
 단계에서 별도 검증한다.
 
-M7 target ztest에서 ADC 2/2와 PWM 2/2가 통과했다. 최종 실제 sequence 37에서는 gain 1/4의
-A0 raw=3140과 PWM duty 0/128/255 driver 호출을 확인했다. 이 결과는 ADC 전압 정확도나 PWM
+M7 target ztest에서 ADC 2/2와 PWM 2/2가 통과했다. 최종 실제 loopback sequence 2에서는 gain 1/4의
+A0 raw=3176과 PWM duty 0/128/255 driver 호출을 확인했다. 이 결과는 ADC 전압 정확도나 PWM
 외부 파형을 증명하지 않으며 logic analyzer/oscilloscope와 정밀 전압 계측은 M7 필수 증거가
 아니다.
 

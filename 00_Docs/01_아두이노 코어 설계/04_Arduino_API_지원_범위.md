@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M6 완료, M7 조건부 완료 |
+| 문서 상태 | M6·M7 완료 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 Zephyr | Zephyr 4.4.0 |
@@ -25,9 +25,9 @@ Arduino CLI staged package build와 실제 P1.13 active-low 버튼의 `FALLING`,
 
 M7의 `Wire`, `SPI`, `analogRead()`와 `analogWrite()` production source 및 builder profile은
 NU54DK Twister target 11/11, Arduino CLI M7 4/4와 승인된 NU54DK driver HIL을 통과했다.
-BQ25186 I2C repeated-start는 100/400 kHz에서 실기 통과했고 물리 SPI data 경로는 fixture가
-없어 검증하지 못했다. 따라서 제약이 있는 공개 API는 아래 표에서 `부분 지원` 또는
-`의미 차이`로 표시하고 M7 전체 상태는 `조건부 완료`로 유지한다.
+BQ25186 I2C repeated-start는 100/400 kHz에서 실기 통과했고 SPI00은 4 MHz에서 P2.2 MOSI와
+P2.4 MISO 사이의 40-byte 물리 loopback이 전부 일치했다. 제약이 있는 공개 API는 아래 표에서
+계속 `부분 지원` 또는 `의미 차이`로 표시하지만 M7 단계 자체는 **완료**다.
 
 관련 문서는 다음과 같다.
 
@@ -251,24 +251,24 @@ negative driver errno는 공개 status 4로 변환한다. NACK을 address/data s
 
 | API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
-| 기본 `SPI` controller | P1 | 부분 지원 | 부분 지원 | `SPIClass`/`SPISettings`, 전역 `SPIClass &SPI`; Core overlay와 production compile check가 SPI00 P2.1/P2.2/P2.4를 강제, 물리 data 경로 미검증 |
+| 기본 `SPI` controller | P1 | 부분 지원 | 부분 지원 | `SPIClass`/`SPISettings`, 전역 `SPIClass &SPI`; Core overlay와 production compile check가 SPI00 P2.1/P2.2/P2.4를 강제, 4 MHz 물리 loopback 통과 |
 | `begin()`/`end()` | P1 | 부분 지원 | 부분 지원 | Devicetree compile-time 활성화 필요; non-SPI00 chosen과 SPI00/uart00 동시 활성 expected-fail 진단 통과 |
 | `beginTransaction()`/`endTransaction()` | P1 | 부분 지원 | 부분 지원 | nrfx runtime prescaler predicate 선검증과 Core caller owner/state; Zephyr bus-wide lock 없음, 다른 client 공존은 application 직렬화 필요 |
-| `transfer()`/buffer transfer | P1 | 부분 지원 | 지원 | 8-bit, 16-bit와 in-place buffer full-duplex 의미는 ztest 통과; 실제 driver 4 MHz 호출 통과, data 일치 미검증 |
+| `transfer()`/buffer transfer | P1 | 부분 지원 | 지원 | 8-bit, 16-bit와 in-place buffer full-duplex 의미는 ztest 통과; 실제 SPI00 4 MHz에서 40-byte data 일치 확인 |
 | SPI modes 0~3 | P1 | 부분 지원 | 지원 | config 변환 target ztest 통과; 외부 로직 계측은 완료 조건이 아님 |
 | LSBFIRST | P1 | 부분 지원 | 부분 지원 | Zephyr word-order 설정 변환 target ztest 통과 |
 | automatic chip select | P1 | 의미 차이 | 의미 차이 | Core는 CS를 만들거나 추정하지 않으며 Sketch가 별도 digital GPIO로 직접 제어 |
 | 다중 SPI bus | P2 | 미구현 | 미구현 | 추가 instance와 pin mapping 결정 후 지원 |
 
-실제 SPI device 또는 MOSI↔MISO fixture가 없으면 물리 SPI는 미검증으로 남는다. emulator와
-나머지 승인된 실기 경로가 통과하더라도 그 경우 M7 전체 판정은 `조건부 완료`가 될 수 있다.
+P2.2 MOSI와 P2.4 MISO를 직접 연결한 실제 SPI00 4 MHz loopback에서 40-byte 고정 패턴이
+전부 일치했다. 센서, 자동 chip-select 또는 외부 로직 계측을 이 결과로 주장하지 않는다.
 
 ### 5.9 Analog와 PWM
 
 | API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
 | `PIN_A0`/`A0` | P1 | 부분 지원 | 부분 지원 | 논리 index 2, `nucode,arduino-adc` chosen의 P1.12/SAADC channel 5; digital pin이 아님 |
-| `analogRead()` | P1 | 부분 지원 | 부분 지원 | A0 고정 12-bit raw 0..4095와 오류 `-1`; gain 1/4 최종 실기 raw=3140 범위 확인, 전압 정확도 미검증 |
+| `analogRead()` | P1 | 부분 지원 | 부분 지원 | A0 고정 12-bit raw 0..4095와 오류 `-1`; gain 1/4 최종 실기 raw=3176 범위 확인, 전압 정확도 미검증 |
 | `analogReadResolution()` | P1 | 미구현 | 미구현 | vendored ArduinoCore-API 1.5.2에 선언이 없어 M7에서 추가하지 않음 |
 | `analogReference()` | P2 | 의미 차이 | 의미 차이 | `AR_DEFAULT=0`만 허용하고 `AR_INTERNAL`은 같은 값의 설명용 별칭; DTS gain/reference는 runtime 불변 |
 | `PIN_PWM0`/`PIN_PWM_LED` | P1 | 부분 지원 | 부분 지원 | 논리 index 3, `nucode,arduino-pwm` chosen의 P1.10/pwm20 역할; `LED_BUILTIN` P2.9는 PWM이 아님 |
