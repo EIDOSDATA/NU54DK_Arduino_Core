@@ -210,8 +210,8 @@ function Invoke-LocalNative {
             & "$env:SystemRoot\System32\taskkill.exe" /PID $process.Id /T /F 2>&1 | Out-Null
         }
         $process.WaitForExit()
-        $stdoutTask.GetAwaiter().GetResult()
-        $stderrTask.GetAwaiter().GetResult()
+        [void]$stdoutTask.GetAwaiter().GetResult()
+        [void]$stderrTask.GetAwaiter().GetResult()
         $stdoutStream.Flush($true)
         $stderrStream.Flush($true)
         $exitCode = $process.ExitCode

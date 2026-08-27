@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import base64
 import json
 from pathlib import Path
 import subprocess
@@ -615,6 +616,8 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
             self.assertIn(".stdout.log", text)
             self.assertIn(".stderr.log", text)
             self.assertIn("Remove-Item -LiteralPath $stdoutPath, $stderrPath", text)
+            self.assertIn("[void]$stdoutTask.GetAwaiter().GetResult()", text)
+            self.assertIn("[void]$stderrTask.GetAwaiter().GetResult()", text)
 
         fixture = "nu54-output-spool-" + uuid.uuid4().hex
         body = (
@@ -695,6 +698,96 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
         self.assertTrue(local_summary["stdout_truncated"])
         self.assertTrue(local_summary["stdout_ended"])
         self.assertEqual(local_summary["temporary_count"], 0)
+
+    def test_native_command_returns_one_object_under_strict_mode(self) -> None:
+        """! @brief PS 5.1 Task 결과가 success stream에 섞여 JSON 결과를 배열로 만들지 않습니다. """
+
+        fixture = "nu54-native-result-" + uuid.uuid4().hex
+        json_text = json.dumps(
+            {
+                "Application": "arduino-cli",
+                "VersionString": "1.5.2-rc.1",
+                "Commit": "fef6e48df",
+            },
+            separators=(",", ":"),
+        )
+        encoded_json = base64.b64encode(json_text.encode("utf-8")).decode("ascii")
+        body = (
+            "Set-StrictMode -Version Latest;"
+            f"$root=Join-Path ([IO.Path]::GetTempPath()) '{fixture}';"
+            "New-Item -ItemType Directory -Path $root -Force|Out-Null;"
+            "$script:TemporaryRoot=$root;$script:RunRoot=$root;"
+            "$script:RunLogPath=Join-Path $root 'runner.log';"
+            "$powerShell=Join-Path $env:SystemRoot "
+            "'System32\\WindowsPowerShell\\v1.0\\powershell.exe';"
+            "$payload=\"[Console]::Out.Write([Text.Encoding]::UTF8.GetString(\""
+            f"+\"[Convert]::FromBase64String('{encoded_json}')))\";"
+            "try{$result=@(Invoke-NativeCommand -FilePath $powerShell "
+            "-Arguments @('-NoProfile','-NonInteractive','-Command',$payload) "
+            "-Label 'strict-json' -TimeoutSeconds 30 6>$null);"
+            "if($result.Count -ne 1){throw ('unexpected-result-count='+$result.Count)};"
+            "$identity=$result[0].stdout|ConvertFrom-Json;"
+            "$summary=[ordered]@{count=$result.Count;exit_code=$result[0].exit_code;"
+            "application=$identity.Application;version=$identity.VersionString};"
+            "$summary|ConvertTo-Json -Compress}"
+            "finally{Remove-Item -LiteralPath $root -Recurse -Force}"
+        )
+        completed = self.invoke_target_functions(
+            (
+                "Convert-ToCommandArgument",
+                "Protect-Text",
+                "Add-RunLog",
+                "Read-BoundedTextTail",
+                "Invoke-NativeCommand",
+            ),
+            body,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        summary = json.loads(completed.stdout)
+        self.assertEqual(
+            summary,
+            {
+                "count": 1,
+                "exit_code": 0,
+                "application": "arduino-cli",
+                "version": "1.5.2-rc.1",
+            },
+        )
+
+        local_fixture = "nu54-local-result-" + uuid.uuid4().hex
+        local_body = (
+            "Set-StrictMode -Version Latest;"
+            f"$root=Join-Path ([IO.Path]::GetTempPath()) '{local_fixture}';"
+            "New-Item -ItemType Directory -Path $root -Force|Out-Null;"
+            "$script:LocalTemporaryRoot=$root;"
+            "$script:LocalLogPath=Join-Path $root 'orchestrator.log';"
+            "[IO.File]::WriteAllText($script:LocalLogPath,'');"
+            "$powerShell=Join-Path $env:SystemRoot "
+            "'System32\\WindowsPowerShell\\v1.0\\powershell.exe';"
+            "$payload=\"[Console]::Out.Write([Text.Encoding]::UTF8.GetString(\""
+            f"+\"[Convert]::FromBase64String('{encoded_json}')))\";"
+            "try{$result=@(Invoke-LocalNative -FilePath $powerShell "
+            "-Arguments @('-NoProfile','-NonInteractive','-Command',$payload) "
+            "-Label 'strict-json' -TimeoutSeconds 30 6>$null);"
+            "if($result.Count -ne 1){throw ('unexpected-result-count='+$result.Count)};"
+            "$identity=$result[0].stdout|ConvertFrom-Json;"
+            "$summary=[ordered]@{count=$result.Count;exit_code=$result[0].exit_code;"
+            "application=$identity.Application;version=$identity.VersionString};"
+            "$summary|ConvertTo-Json -Compress}"
+            "finally{Remove-Item -LiteralPath $root -Recurse -Force}"
+        )
+        local_completed = self.invoke_script_functions(
+            LOCAL_RUNNER,
+            (
+                "Convert-ToNativeArgument",
+                "Protect-LogText",
+                "Read-BoundedTextTail",
+                "Invoke-LocalNative",
+            ),
+            local_body,
+        )
+        self.assertEqual(local_completed.returncode, 0, local_completed.stderr)
+        self.assertEqual(json.loads(local_completed.stdout), summary)
 
 
 if __name__ == "__main__":
