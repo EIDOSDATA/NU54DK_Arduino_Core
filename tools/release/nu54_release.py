@@ -64,8 +64,8 @@ PROCESS_TERMINATION_GRACE_SECONDS = 5
 ARDUINO_CLI_VERSION = "1.5.2-rc.1"
 ARDUINO_CLI_COMMIT = "fef6e48df"
 ARDUINO_CLI_SHA256 = "ba1890afcfc08524f76191b5cc801b0779cb25e81a5e6693eb0e26b50a3f3538"
-M10_SAFE_INITIAL_VERSION = "0.0.94"
-M10_SAFE_LATEST_VERSION = "0.0.95"
+M10_SAFE_INITIAL_VERSION = "0.0.96"
+M10_SAFE_LATEST_VERSION = "0.0.97"
 M10_PREVIEW_INDEX_URL = (
     "https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/"
     "main/package_nucode_nu54dk_preview_index.json"
@@ -78,7 +78,11 @@ M11_PYOCD_UPLOAD_ATTEMPTS = 10
 M11_RC_PYOCD_UPLOAD_ATTEMPTS = 1
 M11_READY_TOKEN = "NUCODE_M8_UPLOAD_READY"
 M10_FOLLOWUP_ALLOWED_PREFIXES = (".github/", "00_Docs/", "tests/", "tools/release/")
-M10_FOLLOWUP_ALLOWED_FILES = ("README.md", "packaging/boards-manager/README.md")
+M10_FOLLOWUP_ALLOWED_FILES = (
+    "README.md",
+    "package_nucode_nu54dk_preview_index.json",
+    "packaging/boards-manager/README.md",
+)
 
 
 class ReleaseError(RuntimeError):
@@ -1751,7 +1755,7 @@ def finalize_evidence(
             {
                 "id": "M11-RC-CLEAN-WINDOWS-INHERITS-SAFE-PREVIEW",
                 "severity": "documented-limitation",
-                "description": "clean Windows 설치 lifecycle과 pyOCD 10회 내구 반복은 동일 runtime payload의 0.0.94/0.0.95에서 검증함. exact RC ZIP은 별도 1회 pyOCD+UART HIL 및 고정 package compile gate로 검증하지만 clean PC lifecycle 전체를 재실행한 것은 아님",
+                "description": "clean Windows 설치 lifecycle과 pyOCD 10회 내구 반복은 동일 runtime payload의 0.0.96/0.0.97에서 검증함. exact RC ZIP은 별도 1회 pyOCD+UART HIL 및 고정 package compile gate로 검증하지만 clean PC lifecycle 전체를 재실행한 것은 아님",
             }
         ],
         "generated_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),

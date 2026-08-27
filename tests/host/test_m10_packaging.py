@@ -239,16 +239,63 @@ class M10PackagingTests(unittest.TestCase):
 
     def test_11_supported_versions_are_fail_closed(self) -> None:
         self.assertEqual(PACKAGE.LEGACY_PREVIEW_VERSIONS[-2:], ("0.0.92", "0.0.93"))
-        self.assertEqual(PACKAGE.SAFE_PREVIEW_VERSIONS, ("0.0.94", "0.0.95"))
-        self.assertEqual(PACKAGE.SUPPORTED_VERSIONS[-2:], ("0.0.94", "0.0.95"))
+        self.assertEqual(PACKAGE.FAILED_M10_PREVIEW_VERSIONS, ("0.0.94", "0.0.95"))
+        self.assertEqual(PACKAGE.SAFE_PREVIEW_VERSIONS, ("0.0.96", "0.0.97"))
+        self.assertEqual(PACKAGE.SUPPORTED_VERSIONS[-2:], ("0.0.96", "0.0.97"))
+        self.assertTrue(
+            set(PACKAGE.FAILED_M10_PREVIEW_VERSIONS).issubset(
+                PACKAGE.WINDOWS_SAFE_VERSIONS
+            )
+        )
+        for version in PACKAGE.FAILED_M10_PREVIEW_VERSIONS:
+            self.assertEqual(PACKAGE.release_tag(version), f"m10-preview-{version}")
+            self.assertIn(
+                f"/releases/download/m10-preview-{version}/",
+                PACKAGE.release_asset_url(version, PACKAGE.archive_filename(version)),
+            )
+        preview_wrapper = (
+            REPO_ROOT / "packaging" / "boards-manager" / "build-preview.ps1"
+        ).read_text(encoding="utf-8")
+        self.assertIn("[ValidateSet('0.0.96', '0.0.97')]", preview_wrapper)
+        self.assertNotIn("'0.0.94'", preview_wrapper)
+        self.assertNotIn("'0.0.95'", preview_wrapper)
         with self.assertRaises(PACKAGE.PackageError):
             PACKAGE.build_package(REPO_ROOT, self.output, "0.1.0", self.commit)
+
+    def test_11b_current_safe_pair_has_one_runtime_payload(self) -> None:
+        """! @brief 새 immutable preview 두 개가 같은 source와 runtime payload를 사용합니다. """
+
+        safe_output = Path(self.temporary.name) / "current-safe"
+        manifests = []
+        for version in PACKAGE.SAFE_PREVIEW_VERSIONS:
+            paths = PACKAGE.build_package(
+                REPO_ROOT, safe_output, version, self.commit
+            )
+            manifests.append(
+                PACKAGE.validate_archive(
+                    paths["archive"],
+                    expected_version=version,
+                    expected_commit=self.commit,
+                )
+            )
+        self.assertEqual(
+            {manifest["core_revision"] for manifest in manifests}, {self.commit}
+        )
+        self.assertEqual(
+            len({manifest["runtime_payload_sha256"] for manifest in manifests}), 1
+        )
+        self.assertTrue(
+            all(
+                "windows-crlf-rewrites" in manifest["source_policy"]
+                for manifest in manifests
+            )
+        )
 
     def test_12_runtime_payload_fingerprint_ignores_only_platform_version(self) -> None:
         """! @brief 버전 문자열만 다른 동일 payload와 실제 byte 변경을 구분합니다. """
 
         first = (
-            ("platform.txt", b"name=NU54DK\nversion=0.0.94\n", 0o644),
+            ("platform.txt", b"name=NU54DK\nversion=0.0.96\n", 0o644),
             ("cores/arduino/Arduino.h", b"payload\n", 0o644),
         )
         second = (

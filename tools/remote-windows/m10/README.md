@@ -10,13 +10,17 @@
 - 개발 PC `known_hosts`에 사용자가 확인한 대상 host key 등록
 - 대상 Arduino CLI: `C:\Program Files\Arduino CLI\arduino-cli.exe`
 - 대상 Arduino CLI exact identity: `1.5.2-rc.1`, commit `fef6e48df`, 고정 executable SHA-256
-- `package_nucode_nu54dk_preview_index.json`과 `0.0.94`, `0.0.95` archive가 공개 URL에서 다운로드 가능
+- `package_nucode_nu54dk_preview_index.json`과 `0.0.96`, `0.0.97` archive가 공개 URL에서 다운로드 가능
 - 기본 승인 실행에는 NU54DK CMSIS-DAP probe 연결 필수
 - 최초 실행 전 `%USERPROFILE%\ncs`와
   `%LOCALAPPDATA%\NUCODE\NU54DK_Arduino_Core\prerequisites`가 없는 clean 상태
 
 private key, GitHub token, probe UID는 대상 설정 파일과 evidence에 저장하지 않는다.
 SSH는 `BatchMode`, `IdentitiesOnly`, `StrictHostKeyChecking`으로 실행한다.
+
+`0.0.94`와 `0.0.95`는 PowerShell 5.1 runner 수정 전에 공개된 immutable preview다.
+비동기 Task 반환값이 native command 결과에 섞여 Arduino CLI identity preflight에서
+실패했으므로 현재 실행, resume 또는 최종 PASS 증거에 사용하지 않는다.
 
 ## 새 실행
 
@@ -74,16 +78,16 @@ core uninstall 성공 직후 checkpoint 기록 전에 중단된 경우에는 다
 2. 개발 PC에서 공개 index와 고정 EIDOSDATA release archive를 사전 다운로드해
    filename, URL, size, SHA-256, release manifest와 core revision 고정
 3. 대상에서 공개 package index 갱신 후 사전 snapshot SHA-256과 재검증
-4. `nucode:zephyr@0.0.94` 설치와 `post_install.bat` 실행
+4. `nucode:zephyr@0.0.96` 설치와 `post_install.bat` 실행
 5. 설치된 platform의 release manifest byte/core revision과 사전 검증 archive identity 비교
 6. 설치된 platform의 `verify-nordic.ps1 -Json` 명시 실행
 7. board details 확인
 8. Blink cold/warm compile
 9. pyOCD probe 확인 및 Upload 10회(기본 필수, 조사 실행만 명시적 생략 허용)
-10. `0.0.95` upgrade
-11. `0.0.94` downgrade
+10. `0.0.97` upgrade
+11. `0.0.96` downgrade
 12. core uninstall 뒤 공유 NCS와 prerequisite state 보존 확인
-13. 최신 `0.0.95` reinstall, Nordic 재검증 및 Blink compile
+13. 최신 `0.0.97` reinstall, Nordic 재검증 및 Blink compile
 
 대상 디렉터리는 `%USERPROFILE%\NU54CI\M10\runs\<run-id>`이다. Arduino data,
 downloads, sketchbook과 build를 실행별로 분리한다. Nordic SDK/toolchain은

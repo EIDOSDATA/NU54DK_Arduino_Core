@@ -271,8 +271,8 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
         """! @brief preview version과 post-install 실행을 암묵적으로 선택하지 않습니다. """
 
         for marker in (
-            "0.0.94",
-            "0.0.95",
+            "0.0.96",
+            "0.0.97",
             "--run-post-install",
             "post-install-direct-",
             "@('/d', '/c', 'call', $postInstall)",
@@ -281,6 +281,9 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
             "Shared NCS changed during core uninstall",
         ):
             self.assertIn(marker, self.target_text)
+        for obsolete in ("0.0.94", "0.0.95"):
+            self.assertNotIn(obsolete, self.target_text)
+            self.assertNotIn(obsolete, self.local_text)
 
     def test_failed_post_install_can_be_retried_for_an_installed_core(self) -> None:
         """! @brief CLI가 설치됨으로 남긴 core도 post-install을 직접 재실행합니다. """
@@ -300,7 +303,7 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
             "return [pscustomobject]@{pins_sha256='fixture'}};"
             "function Get-InstalledReleaseIdentity{param($Version);"
             "return [pscustomobject]@{prerequisites_pins_sha256='fixture'}};"
-            "try{$result=Install-CoreVersion -Version '0.0.94';"
+            "try{$result=Install-CoreVersion -Version '0.0.96';"
             "Write-Output ('DIRECT_CALLS='+$script:directCalls);"
             "Write-Output ('DIRECT_RESULT='+$result.post_install_direct)}"
             "finally{Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction SilentlyContinue}"

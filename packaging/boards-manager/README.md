@@ -4,15 +4,18 @@
 저장소의 `board_package/NU54DK_Zephyr_DTS` gitlink가 가리키는 commit도 함께 펼쳐서
 하나의 Arduino platform ZIP으로 만든다.
 
-현재 M10 clean Windows 검증 쌍은 Windows-safe preview `0.0.94`, `0.0.95`다.
+현재 M10 clean Windows 검증 쌍은 Windows-safe preview `0.0.96`, `0.0.97`이다.
 `0.0.90`~`0.0.93`은 Windows PowerShell 5.1, BAT/CMD 인코딩 또는 긴 build 경로 결함이
 확인된 실패 이력이며 공식 index에서 제외한다.
+`0.0.94`와 `0.0.95`는 PowerShell 5.1 runner의 비동기 Task 반환값이 success stream에
+섞여 Arduino CLI identity preflight에서 실패한 immutable 이력이다. 이미 공개된 asset은
+덮어쓰지 않으며 현재 M10 검증과 M11 증거 기준에서는 제외한다.
 
 ```powershell
 python .\packaging\boards-manager\nu54_package.py build `
   --repo-root . `
   --output-dir .\build\boards-manager `
-  --version 0.0.94 `
+  --version 0.0.96 `
   --commit HEAD `
   --update-index
 ```
@@ -22,7 +25,7 @@ python .\packaging\boards-manager\nu54_package.py build `
 ```powershell
 python .\packaging\boards-manager\nu54_package.py index `
   --output-dir .\build\boards-manager `
-  --versions 0.0.94 0.0.95
+  --versions 0.0.96 0.0.97
 ```
 
 검증은 ZIP 경로 안전성, 단일 top-level 디렉터리, timestamp·mode·정렬, manifest 계약,
@@ -31,8 +34,8 @@ python .\packaging\boards-manager\nu54_package.py index `
 
 ```powershell
 python .\packaging\boards-manager\nu54_package.py validate `
-  --archive .\build\boards-manager\nucode-nu54dk-zephyr-0.0.94.zip `
-  --expected-version 0.0.94
+  --archive .\build\boards-manager\nucode-nu54dk-zephyr-0.0.96.zip `
+  --expected-version 0.0.96
 
 python .\packaging\boards-manager\nu54_package.py validate-index `
   --index .\build\boards-manager\package_nucode_nu54dk_preview_index.json `

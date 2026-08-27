@@ -850,8 +850,8 @@ $script:Fqbn = [string](Get-ConfigValue -Config $config -Name 'fqbn' -DefaultVal
 if ($script:Fqbn -ne 'nucode:zephyr:nu54dk') {
     throw 'Unexpected FQBN.'
 }
-$script:InitialVersion = [string](Get-ConfigValue -Config $config -Name 'initial_version' -DefaultValue '0.0.94')
-$script:LatestVersion = [string](Get-ConfigValue -Config $config -Name 'latest_version' -DefaultValue '0.0.95')
+$script:InitialVersion = [string](Get-ConfigValue -Config $config -Name 'initial_version' -DefaultValue '0.0.96')
+$script:LatestVersion = [string](Get-ConfigValue -Config $config -Name 'latest_version' -DefaultValue '0.0.97')
 foreach ($version in @($script:InitialVersion, $script:LatestVersion)) {
     if ($version -notmatch '^\d+\.\d+\.\d+$') {
         throw "Invalid core version: $version"

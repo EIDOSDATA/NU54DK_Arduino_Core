@@ -121,13 +121,14 @@ safe preview의 내구 반복 증거로 별도 유지한다.
 
 ## 3. clean Windows와 pyOCD 증거 가져오기
 
-M10 원격 runner를 Windows-safe preview `0.0.94`→`0.0.95`로 실행한 결과의
+M10 원격 runner를 Windows-safe preview `0.0.96`→`0.0.97`로 실행한 결과의
 `evidence.json`과 `orchestrator.json`을 가져온다. importer는 NCS가 없던 최초 상태,
 전체 install/upgrade/downgrade/uninstall/reinstall lifecycle, 단일 CMSIS-DAP probe의
 pyOCD upload 10회와 두 preview archive/index checksum을 확인한다. 두 preview는 같은 Core와
 보드 revision 및 version 독립 `runtime_payload_sha256`을 가져야 한다. preview commit은 RC
-commit의 ancestor여야 하며 그 사이에는 동결한 문서·시험·release automation 경로 변경만
-허용한다. package runtime source 또는 M10 runner가 바뀌면 import를 거부한다.
+commit의 ancestor여야 하며 그 사이에는 동결한 문서·시험·release automation 경로와 공개
+preview index snapshot 변경만 허용한다. index byte는 M10 evidence의 SHA-256으로 별도
+고정한다. package runtime source 또는 M10 runner가 바뀌면 import를 거부한다.
 
 ```powershell
 & $Python tools/release/nu54_release.py import-m10 `
@@ -139,7 +140,9 @@ commit의 ancestor여야 하며 그 사이에는 동결한 문서·시험·relea
 
 이 명령은 같은 원본 증거에 묶인 `clean_windows.evidence.json`과
 `hil_pyocd.evidence.json`을 만든다. UTF-8 no-BOM BAT/CMD launcher 결함이 확인된
-`0.0.90`~`0.0.93` 증거는 M11에서 인정하지 않는다. clean Windows lifecycle과 pyOCD는
+`0.0.90`~`0.0.93` 증거는 M11에서 인정하지 않는다. `0.0.94`와 `0.0.95`도 PowerShell 5.1
+runner의 비동기 Task 반환값 누출로 Arduino CLI identity preflight에서 실패한 immutable
+이력이므로 가져오지 않는다. clean Windows lifecycle과 pyOCD는
 동일 runtime payload의 safe preview로 검증하며 RC ZIP을 clean PC에 직접 설치한 것으로
 과장하지 않는다. exact RC ZIP 자체는 Arduino compile gate와 별도 1회 pyOCD+UART HIL에서
 직접 검증한다. 최종 manifest는 두 범위를 구분해 기록한다.

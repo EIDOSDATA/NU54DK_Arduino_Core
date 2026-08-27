@@ -105,7 +105,7 @@ class FixedGateRunnerTests(unittest.TestCase):
     ## @brief version만 다른 platform.txt가 같은 runtime fingerprint를 갖는지 검증합니다.
     def test_runtime_fingerprint_normalizes_only_platform_version(self) -> None:
         first = MODULE.runtime_payload_sha256(
-            (("platform.txt", b"name=N\nversion=0.0.95\n", 0o644),)
+            (("platform.txt", b"name=N\nversion=0.0.97\n", 0o644),)
         )
         second = MODULE.runtime_payload_sha256(
             (("platform.txt", b"name=N\nversion=0.1.0-rc.1\n", 0o644),)

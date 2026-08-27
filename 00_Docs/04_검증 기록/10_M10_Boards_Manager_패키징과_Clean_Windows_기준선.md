@@ -5,9 +5,9 @@
 | 문서 상태 | 진행 중 — 원격 clean Windows 수명주기 실행 완료 후 판정 |
 | 작성자 | Quantum / NUCODE |
 | 검증일 | 2026-08-28 |
-| 패키지 기준 Core | Windows-safe `0.0.94`/`0.0.95`를 생성할 exact commit에서 확정 |
+| 패키지 기준 Core | Windows-safe `0.0.96`/`0.0.97`을 생성할 exact commit에서 확정 |
 | 보드 package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| 검증 run | 진단 실패 `m10-20260828-022627`; Windows-safe 최종 run 대기 |
+| 검증 run | 진단 실패 `m10-20260828-022627`; `0.0.94`/`0.0.95` preflight 실패; `0.0.96`/`0.0.97` 최종 run 대기 |
 | Board FQBN | `nucode:zephyr:nu54dk` |
 
 ---
@@ -45,22 +45,23 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 
 | 항목 | 값 |
 | --- | --- |
-| index SHA-256 | `0.0.94`/`0.0.95` 공개 뒤 확정 |
-| 최초 설치·downgrade | `0.0.94` |
-| `0.0.94` ZIP SHA-256 | 공개 뒤 확정 |
-| `0.0.94` ZIP size | 공개 뒤 확정 |
-| upgrade·최종 reinstall | `0.0.95` |
-| `0.0.95` ZIP SHA-256 | 공개 뒤 확정 |
-| `0.0.95` ZIP size | 공개 뒤 확정 |
+| index SHA-256 | `0.0.96`/`0.0.97` 공개 뒤 확정 |
+| 최초 설치·downgrade | `0.0.96` |
+| `0.0.96` ZIP SHA-256 | 공개 뒤 확정 |
+| `0.0.96` ZIP size | 공개 뒤 확정 |
+| upgrade·최종 reinstall | `0.0.97` |
+| `0.0.97` ZIP SHA-256 | 공개 뒤 확정 |
+| `0.0.97` ZIP size | 공개 뒤 확정 |
 
 두 ZIP은 각각 공개 GitHub prerelease의 immutable asset이다. 원격 실행기는 index의 URL,
 size와 SHA-256뿐 아니라 ZIP 내부 `release-manifest.json`의 Core·board·NCS·Zephyr·Toolchain
 identity를 설치 전에 고정한다.
 
 `0.0.90`~`0.0.93`은 PowerShell 5.1, launcher 인코딩 또는 Windows build 경로 결함이
-확인돼 공식 index에서 제외한다. 이미 공개된 자산은 같은 tag에서 덮어쓰지 않고 실패
-이력으로 보존한다. 최종 승인에는 Windows-safe launcher와 짧은 cache root를 포함한
-`0.0.94`→`0.0.95` 수명주기만 사용한다.
+확인돼 공식 index에서 제외한다. `0.0.94`와 `0.0.95`는 PowerShell 5.1 runner의 비동기
+Task 반환값이 success stream에 섞여 Arduino CLI identity preflight에서 실패했다. 이미
+공개된 자산은 같은 tag에서 덮어쓰지 않고 immutable 실패 이력으로 보존한다. 최종 승인에는
+반환값 누출 수정까지 포함한 `0.0.96`→`0.0.97` 수명주기만 사용한다.
 
 ### 2.2 Nordic prerequisite
 
@@ -136,15 +137,15 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass `
 | --- | --- | --- |
 | preflight | 대기 | Arduino CLI byte 고정과 빈 NCS/prerequisite 상태 확인 |
 | public index update | 대기 | 공개 index와 두 archive identity 일치 |
-| `0.0.94` 최초 설치 | 대기 | Nordic 공식 download와 exact pin 검증 |
+| `0.0.96` 최초 설치 | 대기 | Nordic 공식 download와 exact pin 검증 |
 | board details | 대기 | `nucode:zephyr:nu54dk` discovery |
 | Blink cold compile | 대기 | Full Zephyr ELF/HEX와 build manifest |
 | Blink warm compile | 대기 | 같은 build path의 증분 재빌드 |
 | CMSIS-DAP/pyOCD Upload | 대기 | probe 1개와 일반 Upload 10회 성공 |
-| `0.0.95` upgrade | 대기 | 설치 version과 manifest 재검증 |
-| `0.0.94` downgrade | 대기 | 설치 version과 manifest 재검증 |
+| `0.0.97` upgrade | 대기 | 설치 version과 manifest 재검증 |
+| `0.0.96` downgrade | 대기 | 설치 version과 manifest 재검증 |
 | Core uninstall | 대기 | 공유 NCS와 `ready.json` byte 보존 |
-| `0.0.95` reinstall | 대기 | prerequisite 재사용과 Blink 재빌드 |
+| `0.0.97` reinstall | 대기 | prerequisite 재사용과 Blink 재빌드 |
 
 최종 PASS/FAIL, 단계별 duration, firmware artifact hash와 설치 용량은 원격 실행 종료 후 이
 절에 추가한다. 실행 중이라는 이유로 아직 수행하지 않은 단계를 PASS로 기록하지 않는다.
@@ -161,6 +162,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass `
 | `0.0.91` | prerequisite child process 결과 회수 실패 | Windows PowerShell 5.1의 `Start-Process.ExitCode` 신뢰 문제 | `ProcessStartInfo` 기반 timeout·exit 수집으로 교체 |
 | `0.0.92` | post-install 재개 중 log 처리 실패 | PowerShell 5.1의 `Tee-Object` parameter 모호성 | `Add-Content` 기반 명시 기록으로 교체 |
 | `0.0.93` | 최초 Full Zephyr compile 실패 | UTF-8 no-BOM BAT/CMD의 한글 주석 오해석과 긴 cache 경로의 MAX_PATH 초과 | launcher ASCII·strict CRLF, 기본 cache `%LOCALAPPDATA%\NU54\c` 적용 |
+| `0.0.94`, `0.0.95` | Arduino CLI identity preflight 실패 | PowerShell 5.1에서 stdout/stderr Task의 `GetResult()` 반환값이 success stream에 섞여 native command 결과가 배열로 변환됨 | 반환값을 `[void]`로 억제하고 StrictMode 단일 결과 회귀 추가; 후속 `0.0.96`/`0.0.97`로 재검증 |
 | 공통 복구 | 실패 후 Arduino CLI가 Core를 installed로 남김 | CLI 재호출이 post-install을 건너뜀 | 설치된 `post_install.bat` 직접 재시도와 검증 추가 |
 
 수정 후 host 자동 시험은 marker 손상, 설치 중단, timeout, 잘못된 archive/index, resume
@@ -203,6 +205,7 @@ M11의 전체 release regression 이후 프로젝트 소유자의 라이선스 �
 
 **진행 중.** 진단 run `m10-20260828-022627`은 Nordic prerequisite 최초 설치와 exact pin
 검증까지 통과했지만 첫 Full Zephyr compile에서 launcher 인코딩·MAX_PATH 결함을 찾아
-실패로 종료했다. 해당 결과를 PASS로 승격하지 않는다. 수정한 `0.0.94`→`0.0.95`를
-NCS와 prerequisite가 다시 없는 상태에서 실행하고 raw evidence를 교차 검증한 뒤 M10
-완료 여부를 확정한다.
+실패로 종료했다. 후속 `0.0.94`/`0.0.95` 실행도 PowerShell 5.1 runner의 명령 결과 누출로
+Arduino CLI identity preflight에서 실패했다. 해당 결과들을 PASS로 승격하지 않는다.
+runner 수정이 포함된 `0.0.96`→`0.0.97`을 NCS와 prerequisite가 다시 없는 상태에서 실행하고
+raw evidence를 교차 검증한 뒤 M10 완료 여부를 확정한다.

@@ -7,7 +7,7 @@
 | 초기 지원 운영체제 | Windows 10/11 x64 |
 | Arduino package | `nucode:zephyr` |
 | Board FQBN | `nucode:zephyr:nu54dk` |
-| 현재 검증 preview | `0.0.94`, `0.0.95` — clean Windows 최종 실행 대기 |
+| 현재 검증 preview | `0.0.96`, `0.0.97` — clean Windows 최종 실행 대기 |
 | 펌웨어 구조 | Loader/LLEXT 없는 Native Full Zephyr image |
 
 ---
@@ -133,7 +133,7 @@ Upload 검증에는 NU54DK의 온보드 CMSIS-DAP V2가 연결돼 있어야 한�
 1. Arduino IDE에서 `File > Preferences`를 연다.
 2. `Additional boards manager URLs`에 공식 preview index URL을 추가한다.
 3. `Tools > Board > Boards Manager`를 열고 `NUCODE NU54DK Zephyr Boards`를 찾는다.
-4. 현재 최신 검증 대상인 `0.0.95`를 선택해 설치한다.
+4. 현재 최신 검증 대상인 `0.0.97`을 선택해 설치한다.
 5. post-install script 실행 확인이 나타나면 승인하고 Nordic prerequisite 설치가 끝날 때까지
    기다린다. 첫 설치는 NCS와 Toolchain download 때문에 오래 걸릴 수 있다.
 6. `Tools > Board`에서 `NU54DK (nRF54L15, Zephyr)`를 선택한다.
@@ -143,7 +143,7 @@ IDE 또는 설치 환경이 post-install을 실행하지 않았거나 설치가 
 다음 파일을 일반 사용자 권한으로 다시 실행한다.
 
 ~~~text
-%LOCALAPPDATA%\Arduino15\packages\nucode\hardware\zephyr\0.0.95\post_install.bat
+%LOCALAPPDATA%\Arduino15\packages\nucode\hardware\zephyr\0.0.97\post_install.bat
 ~~~
 
 Arduino data directory를 변경했다면 위 경로의 `%LOCALAPPDATA%\Arduino15` 대신 실제 Arduino
@@ -160,7 +160,7 @@ $IndexUrl = 'https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/mai
 
 arduino-cli config add board_manager.additional_urls $IndexUrl
 arduino-cli core update-index
-arduino-cli core install nucode:zephyr@0.0.95 --run-post-install
+arduino-cli core install nucode:zephyr@0.0.97 --run-post-install
 arduino-cli board details --fqbn nucode:zephyr:nu54dk
 ~~~
 
@@ -171,13 +171,13 @@ arduino-cli board details --fqbn nucode:zephyr:nu54dk
 기본 Arduino data directory를 사용한다면 다음과 같다.
 
 ~~~powershell
-& "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.0.95\post_install.bat"
+& "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.0.97\post_install.bat"
 ~~~
 
 설치 검증은 platform root를 지정해 실행한다.
 
 ~~~powershell
-$PlatformRoot = "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.0.95"
+$PlatformRoot = "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.0.97"
 
 powershell.exe -NoProfile -ExecutionPolicy Bypass `
   -File "$PlatformRoot\tools\nu54-prerequisites\verify-nordic.ps1" `
@@ -314,26 +314,31 @@ M10의 clean Windows package lifecycle 검증 쌍은 다음과 같다.
 
 | version | 용도 |
 | --- | --- |
-| `0.0.94` | 최초 설치와 downgrade 기준 |
-| `0.0.95` | upgrade 및 최종 reinstall 기준 |
+| `0.0.96` | 최초 설치와 downgrade 기준 |
+| `0.0.97` | upgrade 및 최종 reinstall 기준 |
 
 검증 순서는 다음과 같이 고정한다.
 
 1. package가 없고 prerequisite가 없는 clean Windows baseline 확인
-2. `0.0.94` 설치와 post-install 실행
+2. `0.0.96` 설치와 post-install 실행
 3. 고정 prerequisite 검증
 4. board details 확인
 5. Blink cold build와 같은 build path의 warm build
 6. 단일 CMSIS-DAP V2 확인과 pyOCD Upload 10회
-7. `0.0.95` upgrade
-8. `0.0.94` downgrade
+7. `0.0.97` upgrade
+8. `0.0.96` downgrade
 9. Core uninstall 후 공유 NCS/Toolchain 및 `ready.json` 보존 확인
-10. `0.0.95` reinstall, prerequisite 재검증과 Blink build
+10. `0.0.97` reinstall, prerequisite 재검증과 Blink build
 
 `0.0.90`~`0.0.93`은 Windows PowerShell 5.1 호환성, BAT/CMD 인코딩 또는 Windows build
 경로 길이 결함이 확인돼 폐기한 preview다. 네 version은 공식 preview index에서 제외하며 신규 설치, downgrade 또는 회귀
 기준으로 사용하지 않는다. 이미 공개된 artifact를 같은 tag에서 덮어쓰지 않고 후속 version으로
 수정한 것은 release asset의 불변성을 보존하기 위해서다.
+
+`0.0.94`와 `0.0.95`도 PowerShell 5.1 runner의 비동기 Task 반환값이 success stream에
+섞여 Arduino CLI identity preflight에서 실패했다. 공개된 두 preview는 immutable 실패
+이력으로 보존하며 현재 lifecycle이나 M11 계승 증거에 사용하지 않는다. 반환값 누출을
+억제한 runner를 포함하는 새 검증 쌍이 `0.0.96`과 `0.0.97`이다.
 
 ---
 
@@ -347,7 +352,7 @@ Arduino platform ZIP을 만든다.
 python .\packaging\boards-manager\nu54_package.py build `
   --repo-root . `
   --output-dir .\build\boards-manager `
-  --version 0.0.95 `
+  --version 0.0.97 `
   --commit HEAD `
   --update-index
 ~~~
@@ -365,8 +370,8 @@ Archive 검증 예시는 다음과 같다.
 
 ~~~powershell
 python .\packaging\boards-manager\nu54_package.py validate `
-  --archive .\build\boards-manager\nucode-nu54dk-zephyr-0.0.95.zip `
-  --expected-version 0.0.95
+  --archive .\build\boards-manager\nucode-nu54dk-zephyr-0.0.97.zip `
+  --expected-version 0.0.97
 
 python .\packaging\boards-manager\nu54_package.py validate-index `
   --index .\build\boards-manager\package_nucode_nu54dk_preview_index.json `
@@ -453,12 +458,12 @@ M10 완료 여부는 이 설계 문서가 아니라 별도의 clean Windows 검�
 
 - 공개 index와 두 prerelease archive의 URL·size·SHA-256 일치
 - 완전히 분리된 Windows 사용자 환경의 초기 상태
-- `0.0.94` 최초 설치와 Nordic exact-pin 검증
+- `0.0.96` 최초 설치와 Nordic exact-pin 검증
 - Blink cold/warm build 결과
 - 실제 NU54DK CMSIS-DAP V2/pyOCD Upload 10회 결과
-- `0.0.95` upgrade, `0.0.94` downgrade
+- `0.0.97` upgrade, `0.0.96` downgrade
 - uninstall 후 공유 prerequisite 보존
-- `0.0.95` reinstall와 최종 build 결과
+- `0.0.97` reinstall와 최종 build 결과
 - 비밀 값과 probe UID를 제거한 evidence와 log
 
 probe 없이 실행한 조사 모드나 `-AllowMissingProbe` 결과는 최종 HIL PASS 근거가 될 수 없다.

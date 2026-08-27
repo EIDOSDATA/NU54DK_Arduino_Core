@@ -457,7 +457,7 @@ class M11ReleaseTests(unittest.TestCase):
             plan["validation_scope"]["boards_manager_backend"][
                 "m10_safe_preview_lifecycle"
             ],
-            ["0.0.94", "0.0.95"],
+            ["0.0.96", "0.0.97"],
         )
         self.assertFalse(plan["validation_scope"]["arduino_ide_gui"]["validated"])
         self.assertFalse(
@@ -868,7 +868,11 @@ class M11ReleaseTests(unittest.TestCase):
             mock.patch.object(
                 RELEASE,
                 "git_output",
-                return_value="00_Docs/05_릴리스/릴리스.md\0tests/host/test_release.py\0",
+                return_value=(
+                    "00_Docs/05_릴리스/릴리스.md\0"
+                    "package_nucode_nu54dk_preview_index.json\0"
+                    "tests/host/test_release.py\0"
+                ),
             ),
         ):
             changed = RELEASE.validate_m10_followup_changes(
@@ -876,7 +880,11 @@ class M11ReleaseTests(unittest.TestCase):
             )
         self.assertEqual(
             changed,
-            ["00_Docs/05_릴리스/릴리스.md", "tests/host/test_release.py"],
+            [
+                "00_Docs/05_릴리스/릴리스.md",
+                "package_nucode_nu54dk_preview_index.json",
+                "tests/host/test_release.py",
+            ],
         )
 
         with (
