@@ -1,0 +1,54 @@
+{
+  "packages": [
+    {
+      "email": "EIDOSDATA@users.noreply.github.com",
+      "help": {
+        "online": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues"
+      },
+      "maintainer": "NUCODE / Quantum",
+      "name": "nucode",
+      "platforms": [
+        {
+          "architecture": "zephyr",
+          "archiveFileName": "nucode-nu54dk-zephyr-0.0.91.zip",
+          "boards": [
+            {
+              "name": "NU54DK (nRF54L15, Zephyr)"
+            }
+          ],
+          "category": "Contributed",
+          "checksum": "SHA-256:fc79cac3c195666d5040425c21f9b559fd6ebc17c4056e1300c82b0bda1c9a40",
+          "help": {
+            "online": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/tree/m10-preview-0.0.91"
+          },
+          "name": "NUCODE NU54DK Zephyr Boards",
+          "size": "757832",
+          "toolsDependencies": [],
+          "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.91/nucode-nu54dk-zephyr-0.0.91.zip",
+          "version": "0.0.91"
+        },
+        {
+          "architecture": "zephyr",
+          "archiveFileName": "nucode-nu54dk-zephyr-0.0.90.zip",
+          "boards": [
+            {
+              "name": "NU54DK (nRF54L15, Zephyr)"
+            }
+          ],
+          "category": "Contributed",
+          "checksum": "SHA-256:b08dee3e742f9e1133aabd2fd0069d02580ec2ca38e379c88d4dddd3cd9e490b",
+          "help": {
+            "online": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/tree/m10-preview-0.0.90"
+          },
+          "name": "NUCODE NU54DK Zephyr Boards",
+          "size": "757832",
+          "toolsDependencies": [],
+          "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.90/nucode-nu54dk-zephyr-0.0.90.zip",
+          "version": "0.0.90"
+        }
+      ],
+      "tools": [],
+      "websiteURL": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core"
+    }
+  ]
+}
