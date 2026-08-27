@@ -13,17 +13,45 @@ from pathlib import Path
 import re
 import shlex
 import shutil
+import socket
 import subprocess
 import sys
 import tempfile
 import time
 from typing import Any, Iterator, Sequence
+import uuid
 
 
-ADAPTER_VERSION = "0.1.0-dev"
+ADAPTER_VERSION = "0.1.0-dev.m9"
 NCS_VERSION = "v3.4.0"
 DEFAULT_BOARD = "nrf54l15dk/nrf54l15/cpuapp/nu54dk"
 CONTEXT_DIRECTORY = "nu54-zephyr"
+CACHE_SCHEMA_VERSION = 1
+SESSION_CONTEXT_SCHEMA_VERSION = 2
+ARTIFACT_MANIFEST_SCHEMA_VERSION = 2
+SOURCE_RECORD_SCHEMA_VERSION = 2
+DEFAULT_BUILD_CACHE_MAX_BYTES = 12 * 1024 * 1024 * 1024
+DEFAULT_BUILD_CACHE_MAX_ENTRIES = 8
+DEFAULT_CCACHE_MAX_SIZE = "2G"
+DEFAULT_BUILD_LOCK_TIMEOUT_SECONDS = 900.0
+BUILD_ENVIRONMENT_OVERRIDE_KEYS = (
+    "CFLAGS",
+    "CXXFLAGS",
+    "CPPFLAGS",
+    "LDFLAGS",
+    "CONF_FILE",
+    "EXTRA_CONF_FILE",
+    "OVERLAY_CONFIG",
+    "DTC_OVERLAY_FILE",
+    "BOARD_ROOT",
+    "EXTRA_ZEPHYR_MODULES",
+    "CMAKE_PREFIX_PATH",
+    "CMAKE_GENERATOR",
+    "CMAKE_TOOLCHAIN_FILE",
+    "ZEPHYR_BASE",
+    "WEST_CONFIG",
+    "WEST_TOPDIR",
+)
 
 
 class AdapterError(RuntimeError):
@@ -36,6 +64,10 @@ class ChildCommandError(AdapterError):
     def __init__(self, message: str, return_code: int) -> None:
         super().__init__(message)
         self.return_code = return_code
+
+
+class CacheBusyError(AdapterError):
+    """! @brief 사용 중인 cache entry의 삭제를 안전하게 건너뛰기 위한 오류입니다. """
 
 
 ## @brief 경로를 존재 여부와 무관하게 절대 경로로 정규화합니다.
@@ -87,30 +119,204 @@ def atomic_write_json(path: Path, value: Any) -> bool:
     return atomic_write_text(path, json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n")
 
 
-## @brief 다른 adapter process와 build directory 갱신을 직렬화합니다.
-@contextlib.contextmanager
-def build_lock(build_path: Path, timeout_seconds: float = 120.0) -> Iterator[None]:
-    lock_path = build_path / CONTEXT_DIRECTORY / ".adapter.lock"
-    lock_path.parent.mkdir(parents=True, exist_ok=True)
-    deadline = time.monotonic() + timeout_seconds
-    descriptor: int | None = None
-    while descriptor is None:
+## @brief process가 현재 host에서 생존 중인지 보수적으로 판정합니다.
+def process_is_alive(process_id: int) -> bool:
+    if process_id <= 0:
+        return False
+    if os.name == "nt":
         try:
-            descriptor = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-            os.write(descriptor, f"{os.getpid()}\n".encode("ascii"))
-        except FileExistsError:
-            if time.monotonic() >= deadline:
-                raise AdapterError(f"build lock 대기 시간이 초과되었습니다: {lock_path}")
-            time.sleep(0.05)
+            import ctypes
+
+            process_query_limited_information = 0x1000
+            handle = ctypes.windll.kernel32.OpenProcess(
+                process_query_limited_information, False, process_id
+            )
+            if handle:
+                ctypes.windll.kernel32.CloseHandle(handle)
+                return True
+            return ctypes.get_last_error() == 5
+        except (AttributeError, OSError):
+            return True
     try:
+        os.kill(process_id, 0)
+    except ProcessLookupError:
+        return False
+    except (PermissionError, OSError):
+        return True
+    return True
+
+
+## @brief lock JSON을 읽고 손상된 경우 빈 object를 반환합니다.
+def read_lock_document(lock_path: Path) -> dict[str, Any]:
+    try:
+        document = json.loads(lock_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return document if isinstance(document, dict) else {}
+
+
+## @brief lock root에 대응하는 운영체제 lock 식별자를 생성합니다.
+def operating_system_lock_identity(
+    lock_root: Path, logical_identity: str | None = None
+) -> str:
+    seed = logical_identity if logical_identity is not None else path_key(lock_root)
+    digest = hashlib.sha256(seed.encode("utf-8")).hexdigest()
+    return f"NUCODE_NU54_{digest}"
+
+
+## @brief 운영체제가 crash 시 자동 회수하는 process 간 lock을 획득합니다.
+@contextlib.contextmanager
+def operating_system_lock(
+    lock_root: Path,
+    timeout_seconds: float,
+    logical_identity: str | None = None,
+) -> Iterator[None]:
+    deadline = time.monotonic() + max(timeout_seconds, 0.0)
+    identity = operating_system_lock_identity(lock_root, logical_identity)
+    if os.name == "nt":
+        import ctypes
+        from ctypes import wintypes
+
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        kernel32.CreateMutexW.argtypes = (ctypes.c_void_p, wintypes.BOOL, wintypes.LPCWSTR)
+        kernel32.CreateMutexW.restype = wintypes.HANDLE
+        kernel32.WaitForSingleObject.argtypes = (wintypes.HANDLE, wintypes.DWORD)
+        kernel32.WaitForSingleObject.restype = wintypes.DWORD
+        kernel32.ReleaseMutex.argtypes = (wintypes.HANDLE,)
+        kernel32.ReleaseMutex.restype = wintypes.BOOL
+        kernel32.CloseHandle.argtypes = (wintypes.HANDLE,)
+        kernel32.CloseHandle.restype = wintypes.BOOL
+
+        handle = kernel32.CreateMutexW(None, False, f"Global\\{identity}")
+        if not handle:
+            raise AdapterError(
+                f"Windows mutex를 만들지 못했습니다: error={ctypes.get_last_error()}"
+            )
+        wait_object_0 = 0x00000000
+        wait_abandoned = 0x00000080
+        wait_timeout = 0x00000102
+        wait_failed = 0xFFFFFFFF
+        acquired = False
+        try:
+            while not acquired:
+                remaining = max(0.0, deadline - time.monotonic())
+                wait_milliseconds = min(50, max(0, int(remaining * 1000)))
+                result = kernel32.WaitForSingleObject(handle, wait_milliseconds)
+                if result in {wait_object_0, wait_abandoned}:
+                    acquired = True
+                    break
+                if result == wait_failed:
+                    raise AdapterError(
+                        f"Windows mutex 대기에 실패했습니다: error={ctypes.get_last_error()}"
+                    )
+                if result != wait_timeout:
+                    raise AdapterError(f"Windows mutex가 알 수 없는 상태를 반환했습니다: {result}")
+                if time.monotonic() >= deadline:
+                    raise TimeoutError
+            yield
+        finally:
+            if acquired:
+                kernel32.ReleaseMutex(handle)
+            kernel32.CloseHandle(handle)
+        return
+
+    import fcntl
+
+    lock_directory = canonical_path(Path(tempfile.gettempdir()) / "n54" / "adapter-locks")
+    lock_directory.mkdir(parents=True, exist_ok=True)
+    descriptor = os.open(lock_directory / f"{identity}.lock", os.O_CREAT | os.O_RDWR, 0o600)
+    acquired = False
+    try:
+        while not acquired:
+            try:
+                fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                acquired = True
+            except BlockingIOError:
+                if time.monotonic() >= deadline:
+                    raise TimeoutError
+                time.sleep(0.05)
         yield
     finally:
-        if descriptor is not None:
-            os.close(descriptor)
-        try:
-            lock_path.unlink()
-        except FileNotFoundError:
-            pass
+        if acquired:
+            fcntl.flock(descriptor, fcntl.LOCK_UN)
+        os.close(descriptor)
+
+
+## @brief 다른 adapter process와 cache 또는 session 갱신을 직렬화합니다.
+@contextlib.contextmanager
+def build_lock(
+    lock_root: Path,
+    *,
+    operation: str = "build",
+    timeout_seconds: float = DEFAULT_BUILD_LOCK_TIMEOUT_SECONDS,
+    logical_identity: str | None = None,
+) -> Iterator[None]:
+    lock_root = canonical_path(lock_root)
+    lock_path = lock_root / ".adapter.lock"
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    host_name = socket.gethostname()
+    token = uuid.uuid4().hex
+    lock_document = {
+        "schema_version": 1,
+        "pid": os.getpid(),
+        "host": host_name,
+        "operation": operation,
+        "token": token,
+        "created_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+    }
+    try:
+        with operating_system_lock(lock_root, timeout_seconds, logical_identity):
+            atomic_write_json(lock_path, lock_document)
+            try:
+                yield
+            finally:
+                owner = read_lock_document(lock_path)
+                if owner.get("token") == token:
+                    try:
+                        lock_path.unlink()
+                    except FileNotFoundError:
+                        pass
+    except TimeoutError as error:
+        owner = read_lock_document(lock_path)
+        detail = json.dumps(owner, ensure_ascii=False, sort_keys=True) if owner else "unknown"
+        raise AdapterError(
+            f"build lock 대기 시간이 초과되었습니다: {lock_path}; owner={detail}"
+        ) from error
+
+
+## @brief cache root가 단일 host의 local filesystem인지 검증합니다.
+def local_cache_root(value: str | Path) -> Path:
+    root = canonical_path(value)
+    if os.name == "nt" and str(root).startswith(("\\\\", "//")):
+        raise AdapterError("M9 build cache는 UNC/network 경로를 지원하지 않습니다.")
+    return root
+
+
+## @brief M9 영구 build cache root를 환경 또는 사용자 local data에서 계산합니다.
+def build_cache_root() -> Path:
+    configured = os.environ.get("NUCODE_BUILD_CACHE_ROOT")
+    if configured:
+        return local_cache_root(configured)
+    local_data = os.environ.get("LOCALAPPDATA")
+    if local_data:
+        base = canonical_path(local_data)
+    else:
+        base = canonical_path(Path.home() / ".cache")
+    return local_cache_root(base / "NUCODE" / "NU54DK_Arduino_Core" / "build-cache")
+
+
+## @brief 정수형 환경 설정을 유효한 양수로 읽습니다.
+def positive_environment_integer(name: str, default: int) -> int:
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    try:
+        parsed = int(value)
+    except ValueError as error:
+        raise AdapterError(f"{name}은 양의 정수여야 합니다: {value}") from error
+    if parsed <= 0:
+        raise AdapterError(f"{name}은 양의 정수여야 합니다: {value}")
+    return parsed
 
 
 ## @brief common argument에서 adapter의 고정 directory를 계산합니다.
@@ -118,19 +324,48 @@ def adapter_paths(args: argparse.Namespace) -> dict[str, Path]:
     platform_root = canonical_path(args.platform_root)
     build_path = canonical_path(args.build_path)
     state_root = build_path / CONTEXT_DIRECTORY
-    workspace_key = hashlib.sha256(path_key(build_path).encode("utf-8")).hexdigest()[:16]
-    short_workspace = canonical_path(Path(tempfile.gettempdir()) / "n54" / workspace_key)
     return {
         "platform_root": platform_root,
         "build_path": build_path,
         "sketch_root": canonical_path(args.sketch_root),
         "state_root": state_root,
         "context": state_root / "context.json",
-        "workspace": short_workspace,
-        "app": short_workspace / "app",
-        "zephyr_build": short_workspace / "build",
         "records": state_root / "records",
     }
+
+
+## @brief cache workspace 경로를 adapter path 집합에 결합합니다.
+def add_workspace_paths(paths: dict[str, Path], workspace: Path) -> dict[str, Path]:
+    combined = dict(paths)
+    combined.update(
+        {
+            "workspace": canonical_path(workspace),
+            "app": canonical_path(workspace) / "app",
+            "zephyr_build": canonical_path(workspace) / "build",
+        }
+    )
+    return combined
+
+
+## @brief 저장된 context의 cache workspace를 검증하고 path 집합에 결합합니다.
+def paths_from_context(paths: dict[str, Path], context: dict[str, Any]) -> dict[str, Path]:
+    workspace_value = context.get("cache_dir") or context.get("workspace")
+    if not isinstance(workspace_value, str) or not workspace_value:
+        raise AdapterError("build context에 M9 cache directory가 없습니다. 다시 compile하십시오.")
+    cache_key = context.get("cache_key")
+    cache_root_value = context.get("cache_root")
+    if not isinstance(cache_key, str) or not re.fullmatch(r"[0-9a-f]{64}", cache_key):
+        raise AdapterError("build context의 M9 cache key가 잘못되었습니다. 다시 compile하십시오.")
+    if not isinstance(cache_root_value, str) or not cache_root_value:
+        raise AdapterError("build context에 M9 cache root가 없습니다. 다시 compile하십시오.")
+    workspace = canonical_path(workspace_value)
+    cache_root = local_cache_root(cache_root_value)
+    expected = cache_workspace(cache_key, root=cache_root)
+    if path_key(workspace) != path_key(expected):
+        raise AdapterError(
+            f"build context의 cache directory가 key/root 계약과 다릅니다: {workspace}"
+        )
+    return add_workspace_paths(paths, workspace)
 
 
 ## @brief 고정 버전의 NCS root를 환경 또는 기본 설치 위치에서 찾습니다.
@@ -195,6 +430,9 @@ def discover_toolchain_root(ncs_root: Path) -> Path:
 ## @brief Toolchain Manager environment.json을 현재 child process 환경에 적용합니다.
 def apply_toolchain_environment(toolchain_root: Path) -> dict[str, str]:
     environment = os.environ.copy()
+    # 사용자의 shell flag가 canonical cache key 밖에서 build를 바꾸지 못하게 합니다.
+    for key in BUILD_ENVIRONMENT_OVERRIDE_KEYS:
+        environment.pop(key, None)
     document_path = toolchain_root / "environment.json"
     try:
         document = json.loads(document_path.read_text(encoding="utf-8-sig"))
@@ -235,9 +473,18 @@ def tool_environment() -> dict[str, Any]:
         / "arm-zephyr-eabi-g++.exe"
     )
     size_tool = compiler.with_name("arm-zephyr-eabi-size.exe")
+    ccache = toolchain_root / "opt" / "bin" / ("ccache.exe" if os.name == "nt" else "ccache")
     for executable in (west, compiler, size_tool):
         if not executable.is_file():
             raise AdapterError(f"NCS toolchain 실행 파일이 없습니다: {executable}")
+    ccache_root = build_cache_root() / "compiler-cache"
+    if ccache.is_file():
+        ccache_root.mkdir(parents=True, exist_ok=True)
+        environment["CCACHE_DIR"] = str(ccache_root)
+        environment["CCACHE_MAXSIZE"] = os.environ.get(
+            "NUCODE_CCACHE_MAX_SIZE", DEFAULT_CCACHE_MAX_SIZE
+        )
+        environment["CCACHE_COMPILERCHECK"] = "content"
     return {
         "ncs_root": ncs_root,
         "toolchain_root": toolchain_root,
@@ -246,6 +493,8 @@ def tool_environment() -> dict[str, Any]:
         "west": west,
         "compiler": compiler,
         "size": size_tool,
+        "ccache": ccache if ccache.is_file() else None,
+        "ccache_root": ccache_root,
     }
 
 
@@ -282,6 +531,243 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+## @brief 파일이 없을 때도 결정적인 SHA-256 표기를 반환합니다.
+def optional_file_sha256(path: Path) -> str:
+    return f"sha256:{file_sha256(path)}" if path.is_file() else "missing"
+
+
+## @brief directory tree의 상대 경로와 내용을 결정적으로 hashing합니다.
+def tree_content_sha256(root: Path, relative_inputs: Sequence[str | Path]) -> str:
+    digest = hashlib.sha256()
+    for relative_input in relative_inputs:
+        candidate = root / relative_input
+        if candidate.is_file():
+            files = [candidate]
+        elif candidate.is_dir():
+            files = sorted(
+                (
+                    path
+                    for path in candidate.rglob("*")
+                    if path.is_file()
+                    and ".git" not in path.relative_to(root).parts
+                    and "__pycache__" not in path.relative_to(root).parts
+                ),
+                key=lambda path: path.relative_to(root).as_posix().casefold(),
+            )
+        else:
+            digest.update(f"missing:{Path(relative_input).as_posix()}\0".encode("utf-8"))
+            continue
+        for path in files:
+            relative = path.relative_to(root).as_posix()
+            digest.update(relative.encode("utf-8"))
+            digest.update(b"\0")
+            with path.open("rb") as stream:
+                for block in iter(lambda: stream.read(1024 * 1024), b""):
+                    digest.update(block)
+            digest.update(b"\0")
+    return f"sha256:{digest.hexdigest()}"
+
+
+## @brief 요청 root 자체의 Git revision만 읽고 상위 저장소 오인식을 차단합니다.
+def exact_git_revision(root: Path) -> str:
+    try:
+        top = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "--show-toplevel"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            check=False,
+            text=True,
+        )
+        if top.returncode != 0 or path_key(top.stdout.strip()) != path_key(root):
+            return "unknown"
+        revision = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "HEAD"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            check=False,
+            text=True,
+        )
+        if revision.returncode == 0 and re.fullmatch(r"[0-9a-fA-F]{40}", revision.stdout.strip()):
+            return revision.stdout.strip().lower()
+    except OSError:
+        pass
+    return "unknown"
+
+
+## @brief compiler의 version 첫 줄을 build identity로 읽습니다.
+def compiler_version(compiler: Path, environment: dict[str, str]) -> str:
+    try:
+        result = subprocess.run(
+            [str(compiler), "--version"],
+            env=environment,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            check=False,
+            text=True,
+        )
+    except OSError:
+        return "unknown"
+    if result.returncode != 0 or not result.stdout:
+        return "unknown"
+    return result.stdout.splitlines()[0].strip()
+
+
+## @brief M9 cache key에 사용할 canonical input manifest를 생성합니다.
+def cache_input_manifest(
+    paths: dict[str, Path], args: argparse.Namespace, tools: dict[str, Any]
+) -> dict[str, Any]:
+    platform_root = paths["platform_root"]
+    board_root = platform_root / "board_package" / "NU54DK_Zephyr_DTS"
+    ncs_root = tools["ncs_root"]
+    toolchain_root = tools["toolchain_root"]
+    platform_inputs = (
+        "platform.txt",
+        "boards.txt",
+        "programmers.txt",
+        "cores",
+        "variants",
+        "dts",
+        "zephyr",
+        "third_party/ArduinoCore-API",
+        "tools/nu54-builder/src",
+        "tools/nu54-builder/templates",
+    )
+    board_inputs = ("boards/nucode/nu54dk",)
+    nrf_root = ncs_root / "nrf"
+    zephyr_root = ncs_root / "zephyr"
+    toolchain_manifest = toolchain_root / "manifest.json"
+    return {
+        "schema_version": CACHE_SCHEMA_VERSION,
+        "adapter": {
+            "version": ADAPTER_VERSION,
+            "platform_root": platform_root.as_posix(),
+            "platform_content": tree_content_sha256(platform_root, platform_inputs),
+        },
+        "target": {
+            "fqbn": args.fqbn,
+            "board": args.board,
+            "sysbuild": False,
+        },
+        "sketch": {
+            "root": paths["sketch_root"].as_posix(),
+            "prj_conf": optional_file_sha256(paths["sketch_root"] / "prj.conf"),
+            "app_overlay": optional_file_sha256(paths["sketch_root"] / "app.overlay"),
+        },
+        "board_package": {
+            "root": board_root.resolve().as_posix(),
+            "revision": exact_git_revision(board_root),
+            "content": tree_content_sha256(board_root, board_inputs),
+        },
+        "ncs": {
+            "declared_version": NCS_VERSION,
+            "root": ncs_root.as_posix(),
+            "nrf_revision": exact_git_revision(nrf_root),
+            "nrf_west_yml": optional_file_sha256(nrf_root / "west.yml"),
+            "zephyr_revision": exact_git_revision(zephyr_root),
+            "zephyr_version_file": optional_file_sha256(zephyr_root / "VERSION"),
+        },
+        "toolchain": {
+            "root": toolchain_root.as_posix(),
+            "bundle_id": toolchain_root.name,
+            "environment": optional_file_sha256(toolchain_root / "environment.json"),
+            "manifest": optional_file_sha256(toolchain_manifest),
+            "compiler": compiler_version(tools["compiler"], tools["environment"]),
+        },
+    }
+
+
+## @brief canonical input manifest에서 전체 SHA-256 cache key를 계산합니다.
+def cache_key_for_manifest(manifest: dict[str, Any]) -> str:
+    encoded = json.dumps(
+        manifest, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+## @brief cache key의 persistent workspace path를 계산합니다.
+def cache_workspace(cache_key: str, *, root: Path | None = None) -> Path:
+    if not re.fullmatch(r"[0-9a-f]{64}", cache_key):
+        raise AdapterError(f"잘못된 cache key입니다: {cache_key}")
+    directory_key = cache_key[:32]
+    cache_root = local_cache_root(root or build_cache_root())
+    return cache_root / f"v{CACHE_SCHEMA_VERSION}" / directory_key[:2] / directory_key
+
+
+## @brief cache access 시각과 크기 계산용 metadata를 갱신합니다.
+def touch_cache_access(workspace: Path, cache_key: str) -> None:
+    atomic_write_json(
+        workspace / "access.json",
+        {
+            "schema_version": CACHE_SCHEMA_VERSION,
+            "cache_key": cache_key,
+            "last_accessed_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+        },
+    )
+
+
+## @brief cache state를 원자적으로 전이하고 기존 누적값을 보존합니다.
+def transition_cache_state(workspace: Path, cache_key: str, state: str, **updates: Any) -> dict[str, Any]:
+    state_path = workspace / "state.json"
+    previous: dict[str, Any] = {}
+    if state_path.is_file():
+        try:
+            previous = load_json_object(state_path, "E_CACHE_STATE")
+        except AdapterError:
+            previous = {}
+    now = dt.datetime.now(dt.timezone.utc).isoformat()
+    document = dict(previous)
+    if state == "ready":
+        document.pop("failure", None)
+        document.pop("failed_at_utc", None)
+    elif state == "failed":
+        updates.setdefault("failed_at_utc", now)
+    document.update(updates)
+    document.update(
+        {
+            "schema_version": CACHE_SCHEMA_VERSION,
+            "cache_key": cache_key,
+            "state": state,
+            "updated_at_utc": now,
+        }
+    )
+    document.setdefault("created_at_utc", now)
+    atomic_write_json(state_path, document)
+    touch_cache_access(workspace, cache_key)
+    return document
+
+
+## @brief ccache의 machine-readable 통계를 dictionary로 읽습니다.
+def read_ccache_stats(tools: dict[str, Any]) -> dict[str, int]:
+    ccache = tools.get("ccache")
+    if not isinstance(ccache, Path) or not ccache.is_file():
+        return {}
+    try:
+        result = subprocess.run(
+            [str(ccache), "--print-stats"],
+            env=tools["environment"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            check=False,
+            text=True,
+        )
+    except OSError:
+        return {}
+    if result.returncode != 0:
+        return {}
+    statistics: dict[str, int] = {}
+    for line in result.stdout.splitlines():
+        fields = line.split("\t", 1)
+        if len(fields) == 2 and fields[1].strip().isdigit():
+            statistics[fields[0].strip()] = int(fields[1].strip())
+    return statistics
+
+
+## @brief 두 ccache snapshot의 증가량만 반환합니다.
+def ccache_delta(before: dict[str, int], after: dict[str, int]) -> dict[str, int]:
+    keys = set(before) | set(after)
+    return {key: after.get(key, 0) - before.get(key, 0) for key in sorted(keys)}
+
+
 ## @brief JSON object를 읽고 손상 또는 잘못된 root type을 거부합니다.
 def load_json_object(path: Path, error_code: str) -> dict[str, Any]:
     try:
@@ -293,35 +779,51 @@ def load_json_object(path: Path, error_code: str) -> dict[str, Any]:
     return document
 
 
-## @brief 설정 입력을 hashing하여 configure context 변경을 추적합니다.
-def configuration_fingerprint(platform_root: Path, sketch_root: Path, board: str) -> str:
-    digest = hashlib.sha256()
-    digest.update(ADAPTER_VERSION.encode("utf-8"))
-    digest.update(board.encode("utf-8"))
-    inputs = [
-        platform_root / "platform.txt",
-        platform_root / "tools" / "nu54-builder" / "src" / "nu54_builder.py",
-        platform_root / "tools" / "nu54-builder" / "templates" / "zephyr-app" / "CMakeLists.txt",
-        platform_root / "tools" / "nu54-builder" / "templates" / "zephyr-app" / "prj.conf",
-        platform_root / "tools" / "nu54-builder" / "templates" / "zephyr-app" / "app.overlay",
-        platform_root / "tools" / "nu54-builder" / "templates" / "zephyr-app" / "src" / "bootstrap.cpp",
-        platform_root / "zephyr" / "module.yml",
-        sketch_root / "prj.conf",
-        sketch_root / "app.overlay",
+## @brief west configure command를 cache 정책에 맞게 생성합니다.
+def configure_command(
+    paths: dict[str, Path],
+    args: argparse.Namespace,
+    tools: dict[str, Any],
+    board_root: Path,
+    *,
+    pristine: bool,
+) -> list[str | Path]:
+    command: list[str | Path] = [
+        tools["west"],
+        "-z",
+        tools["zephyr_base"],
+        "build",
+        "--cmake-only",
+        "--no-sysbuild",
     ]
-    bindings_root = platform_root / "dts" / "bindings"
-    if bindings_root.is_dir():
-        inputs.extend(
-            sorted(
-                (path for path in bindings_root.rglob("*") if path.is_file()),
-                key=path_key,
+    if pristine:
+        command.append("--pristine=always")
+    command.extend(
+        [
+            "-b",
+            args.board,
+            "-d",
+            paths["zephyr_build"],
+            paths["app"],
+            "--",
+            "-UCONFIG_*",
+            f"-DBOARD_ROOT={board_root.as_posix()}",
+            f"-DEXTRA_ZEPHYR_MODULES={paths['platform_root'].as_posix()}",
+            "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+        ]
+    )
+    ccache = tools.get("ccache")
+    if isinstance(ccache, Path) and ccache.is_file():
+        command.extend(
+            (
+                f"-DCMAKE_C_COMPILER_LAUNCHER={ccache.as_posix()}",
+                f"-DCMAKE_CXX_COMPILER_LAUNCHER={ccache.as_posix()}",
             )
         )
-    for source in inputs:
-        digest.update(path_key(source).encode("utf-8"))
-        if source.is_file():
-            digest.update(source.read_bytes())
-    return f"sha256:{digest.hexdigest()}"
+    overlay = paths["app"] / "app.overlay"
+    if overlay.is_file():
+        command.append(f"-DDTC_OVERLAY_FILE={overlay.as_posix()}")
+    return command
 
 
 ## @brief Zephyr application template과 사용자 config/overlay를 materialize합니다.
@@ -361,86 +863,204 @@ def materialize_application(paths: dict[str, Path]) -> None:
         atomic_write_text(generated_overlay, base_overlay)
 
 
+## @brief cache key 변경 시 이전 placeholder와 source record만 안전하게 무효화합니다.
+def invalidate_source_records(paths: dict[str, Path]) -> None:
+    records_root = paths["records"]
+    if not records_root.is_dir():
+        return
+    for record_file in records_root.glob("*.json"):
+        try:
+            record = load_json_object(record_file, "E_SOURCE_RECORD")
+        except AdapterError:
+            record = {}
+        object_value = record.get("object")
+        if isinstance(object_value, str):
+            object_path = canonical_path(object_value)
+            if is_within(object_path, paths["build_path"]):
+                for candidate in (object_path, object_path.with_suffix(".d")):
+                    try:
+                        candidate.unlink()
+                    except FileNotFoundError:
+                        pass
+        try:
+            record_file.unlink()
+        except FileNotFoundError:
+            pass
+
+
 ## @brief 현재 고정 입력으로 Zephyr configure-only를 수행하고 context를 기록합니다.
 def prepare(args: argparse.Namespace) -> dict[str, Any]:
-    paths = adapter_paths(args)
-    platform_root = paths["platform_root"]
+    session_paths = adapter_paths(args)
+    platform_root = session_paths["platform_root"]
     board_root = platform_root / "board_package" / "NU54DK_Zephyr_DTS"
     if not (board_root / "boards" / "nucode" / "nu54dk" / "board.yml").is_file():
         raise AdapterError(f"NU54DK board package를 찾을 수 없습니다: {board_root}")
-    tools = tool_environment()
-    paths["build_path"].mkdir(parents=True, exist_ok=True)
-
-    with build_lock(paths["build_path"]):
-        materialize_application(paths)
-        previous: dict[str, Any] = {}
-        if paths["context"].is_file():
-            try:
-                previous = json.loads(paths["context"].read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
-                previous = {}
-        cache_exists = (paths["zephyr_build"] / "CMakeCache.txt").is_file()
-        build_graph_exists = (paths["zephyr_build"] / "build.ninja").is_file()
-        first_configure = not cache_exists or not build_graph_exists
-        fingerprint = configuration_fingerprint(platform_root, paths["sketch_root"], args.board)
-        configuration_changed = (
-            previous.get("configuration_fingerprint") != fingerprint
-            or previous.get("board") != args.board
-            or previous.get("fqbn") != args.fqbn
-            or previous.get("platform_root") != platform_root.as_posix()
+    cache_root = build_cache_root()
+    if cache_root == platform_root or is_within(cache_root, platform_root):
+        raise AdapterError(
+            "M9 build cache를 platform/board fingerprint 내부에 둘 수 없습니다: "
+            f"{cache_root}"
         )
-        command: list[str | Path] = [
-            tools["west"],
-            "-z",
-            tools["zephyr_base"],
-            "build",
-            "--cmake-only",
-            "--no-sysbuild",
-            "-b",
-            args.board,
-            "-d",
-            paths["zephyr_build"],
-            paths["app"],
-            "--",
-            "-UCONFIG_*",
-            f"-DBOARD_ROOT={board_root.as_posix()}",
-            f"-DEXTRA_ZEPHYR_MODULES={platform_root.as_posix()}",
-            "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
-        ]
-        if cache_exists and not build_graph_exists:
-            command.insert(command.index("-b"), "--pristine=always")
-        overlay = paths["app"] / "app.overlay"
-        if overlay.is_file():
-            command.append(f"-DDTC_OVERLAY_FILE={overlay.as_posix()}")
-        if first_configure or configuration_changed:
-            run_checked(command, cwd=tools["ncs_root"], environment=tools["environment"])
-        context = {
-            "schema_version": 1,
-            "adapter_version": ADAPTER_VERSION,
-            "state": "configured",
-            "fqbn": args.fqbn,
-            "board": args.board,
-            "sysbuild": False,
-            "ncs_version": NCS_VERSION,
-            "zephyr_version": "4.4.0",
-            "platform_root": platform_root.as_posix(),
-            "board_root": board_root.resolve().as_posix(),
-            "sketch_root": paths["sketch_root"].as_posix(),
-            "build_path": paths["build_path"].as_posix(),
-            "app_dir": paths["app"].as_posix(),
-            "zephyr_build_dir": paths["zephyr_build"].as_posix(),
-            "ncs_root": tools["ncs_root"].as_posix(),
-            "toolchain_root": tools["toolchain_root"].as_posix(),
-            "cxx_compiler": tools["compiler"].as_posix(),
-            "size_tool": tools["size"].as_posix(),
-            "configuration_fingerprint": fingerprint,
-            "configure_mode": "cmake-only",
-            "configure_skipped": not (first_configure or configuration_changed),
-            "pristine_configure_count": int(previous.get("pristine_configure_count", 0)) + (1 if first_configure else 0),
-            "updated_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
-        }
-        atomic_write_json(paths["context"], context)
-        return context
+    tools = tool_environment()
+    input_manifest = cache_input_manifest(session_paths, args, tools)
+    cache_key = cache_key_for_manifest(input_manifest)
+    workspace = cache_workspace(cache_key, root=cache_root)
+    paths = add_workspace_paths(session_paths, workspace)
+    paths["build_path"].mkdir(parents=True, exist_ok=True)
+    paths["state_root"].mkdir(parents=True, exist_ok=True)
+
+    with build_lock(paths["state_root"], operation="prepare-session"):
+        # Arduino의 library 선택과 include graph는 cache key와 독립적으로 바뀔 수 있습니다.
+        # Placeholder만 매번 지워 graph를 다시 수집하고 실제 compile은 Ninja가 증분 판정합니다.
+        invalidate_source_records(paths)
+        workspace.mkdir(parents=True, exist_ok=True)
+        with build_lock(workspace, operation="prepare-cache"):
+            input_path = workspace / "input-manifest.json"
+            stored_input: dict[str, Any] | None = None
+            if input_path.is_file():
+                try:
+                    stored_input = load_json_object(input_path, "E_CACHE_INPUT")
+                except AdapterError:
+                    stored_input = None
+            if (
+                stored_input is not None
+                and cache_key_for_manifest(stored_input) != cache_key
+            ):
+                raise AdapterError(
+                    "[NU54:E_CACHE_KEY_COLLISION] 축약 cache directory의 전체 SHA-256이 다릅니다."
+                )
+            state_path = workspace / "state.json"
+            state_document: dict[str, Any] | None = None
+            if state_path.is_file():
+                try:
+                    state_document = load_json_object(state_path, "E_CACHE_STATE")
+                except AdapterError:
+                    state_document = None
+            stored_state_key = (state_document or {}).get("cache_key")
+            if (
+                isinstance(stored_state_key, str)
+                and re.fullmatch(r"[0-9a-f]{64}", stored_state_key)
+                and stored_state_key != cache_key
+            ):
+                raise AdapterError(
+                    "[NU54:E_CACHE_KEY_COLLISION] 축약 cache directory의 state SHA-256이 다릅니다."
+                )
+
+            # 전체 key 충돌 여부를 확인한 뒤에만 persistent tree를 변경합니다.
+            materialize_application(paths)
+
+            cache_exists = (paths["zephyr_build"] / "CMakeCache.txt").is_file()
+            build_graph_exists = (paths["zephyr_build"] / "build.ninja").is_file()
+            input_matches = stored_input == input_manifest
+            state_matches = bool(
+                state_document
+                and state_document.get("schema_version") == CACHE_SCHEMA_VERSION
+                and state_document.get("cache_key") == cache_key
+                and state_document.get("state") == "ready"
+                and state_document.get("first_configure_complete") is True
+                and state_document.get("last_build_result") in {"not-built", "success"}
+            )
+            configure_required = not (
+                cache_exists and build_graph_exists and input_matches and state_matches
+            )
+            if not cache_exists and not build_graph_exists and stored_input is None:
+                configure_reason = "new-cache"
+            elif not input_matches:
+                configure_reason = "input-manifest-recovery"
+            elif not state_matches:
+                configure_reason = "state-recovery"
+            else:
+                configure_reason = "build-graph-recovery"
+
+            atomic_write_json(input_path, input_manifest)
+            configure_seconds = 0.0
+            pristine_count = int((state_document or {}).get("pristine_configure_count", 0))
+            recovery_count = int((state_document or {}).get("recovery_count", 0))
+            if configure_required:
+                transition_cache_state(
+                    workspace,
+                    cache_key,
+                    "configuring",
+                    configure_reason=configure_reason,
+                    first_configure_complete=False,
+                )
+                started = time.perf_counter()
+                try:
+                    run_checked(
+                        configure_command(
+                            paths, args, tools, board_root.resolve(), pristine=True
+                        ),
+                        cwd=tools["ncs_root"],
+                        environment=tools["environment"],
+                    )
+                except Exception as error:
+                    transition_cache_state(
+                        workspace,
+                        cache_key,
+                        "failed",
+                        last_build_result="configure-failed",
+                        failure=str(error),
+                    )
+                    raise
+                configure_seconds = time.perf_counter() - started
+                pristine_count += 1
+                if configure_reason != "new-cache":
+                    recovery_count += 1
+
+            transition_cache_state(
+                workspace,
+                cache_key,
+                "ready",
+                first_configure_complete=True,
+                last_build_result=(
+                    "not-built"
+                    if configure_required
+                    else (state_document or {}).get("last_build_result", "not-built")
+                ),
+                configure_reason=configure_reason if configure_required else "cache-hit",
+                configure_duration_seconds=round(configure_seconds, 6),
+                pristine_configure_count=pristine_count,
+                recovery_count=recovery_count,
+            )
+            context = {
+                "schema_version": SESSION_CONTEXT_SCHEMA_VERSION,
+                "adapter_version": ADAPTER_VERSION,
+                "state": "configured",
+                "fqbn": args.fqbn,
+                "board": args.board,
+                "sysbuild": False,
+                "ncs_version": NCS_VERSION,
+                "zephyr_version": "4.4.0",
+                "platform_root": platform_root.as_posix(),
+                "board_root": board_root.resolve().as_posix(),
+                "sketch_root": paths["sketch_root"].as_posix(),
+                "build_path": paths["build_path"].as_posix(),
+                "cache_schema_version": CACHE_SCHEMA_VERSION,
+                "cache_key": cache_key,
+                "cache_root": cache_root.as_posix(),
+                "cache_dir": workspace.as_posix(),
+                "input_manifest": input_path.as_posix(),
+                "app_dir": paths["app"].as_posix(),
+                "zephyr_build_dir": paths["zephyr_build"].as_posix(),
+                "ncs_root": tools["ncs_root"].as_posix(),
+                "toolchain_root": tools["toolchain_root"].as_posix(),
+                "toolchain_bundle_id": tools["toolchain_root"].name,
+                "cxx_compiler": tools["compiler"].as_posix(),
+                "size_tool": tools["size"].as_posix(),
+                "ccache": tools["ccache"].as_posix() if tools.get("ccache") else None,
+                "ccache_dir": tools["ccache_root"].as_posix(),
+                "configuration_fingerprint": f"sha256:{cache_key}",
+                "configure_mode": "cmake-only",
+                "configure_reason": configure_reason if configure_required else "cache-hit",
+                "configure_duration_seconds": round(configure_seconds, 6),
+                "configure_skipped": not configure_required,
+                "cache_reused": not configure_required,
+                "pristine_configure_count": pristine_count,
+                "recovery_count": recovery_count,
+                "updated_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+            }
+            atomic_write_json(paths["context"], context)
+            return context
 
 
 ## @brief context가 없으면 preprocessor 단계에서도 안전하게 최초 configure를 수행합니다.
@@ -522,7 +1142,7 @@ def preprocess(args: argparse.Namespace, passthrough: Sequence[str]) -> None:
     ]
     for include in include_dirs:
         command.extend(("-I", include))
-    command.extend(dependency_arguments(passthrough))
+    dependencies = dependency_arguments(passthrough)
     if args.mode == "includes":
         command.extend(("-M", "-MG", "-MP", source))
         result = run_checked(command, cwd=canonical_path(context["sketch_root"]), environment=tools["environment"], capture=True)
@@ -530,6 +1150,7 @@ def preprocess(args: argparse.Namespace, passthrough: Sequence[str]) -> None:
         return
     if not args.output:
         raise AdapterError("macros 전처리에는 --output이 필요합니다.")
+    command.extend(dependencies)
     command.extend(("-E", "-CC", source))
     result = run_checked(command, cwd=canonical_path(context["sketch_root"]), environment=tools["environment"], capture=True)
     if args.output.casefold() not in {"nul", "/dev/null"}:
@@ -550,16 +1171,19 @@ def record_source(args: argparse.Namespace, passthrough: Sequence[str]) -> None:
     object_path = canonical_path(args.object)
     if not source.is_file():
         raise AdapterError(f"기록할 source가 없습니다: {source}")
+    if not is_within(object_path, paths["build_path"]):
+        raise AdapterError(f"object가 Arduino build directory 밖에 있습니다: {object_path}")
     include_dirs = parse_include_arguments(passthrough)
     include_dirs.append(source.parent)
     unique = {path_key(path): path for path in include_dirs}
     record = {
-        "schema_version": 1,
+        "schema_version": SOURCE_RECORD_SCHEMA_VERSION,
         "source": source.as_posix(),
         "object": object_path.as_posix(),
         "language": args.language,
         "include_dirs": [path.as_posix() for path in unique.values()],
         "platform_root": context["platform_root"],
+        "cache_key": context["cache_key"],
     }
     atomic_write_json(record_path(paths["records"], object_path), record)
     atomic_write_bytes(object_path, b"")
@@ -586,24 +1210,383 @@ def is_within(path: Path, directory: Path) -> bool:
         return False
 
 
-## @brief link recipe object 목록에 대응하는 sketch/library record를 읽습니다.
-def records_for_objects(paths: dict[str, Path], objects: Sequence[str]) -> list[dict[str, Any]]:
+## @brief directory가 사용하는 전체 byte 수를 계산합니다.
+def directory_size(path: Path) -> int:
+    total = 0
+    if not path.is_dir():
+        return total
+    for candidate in path.rglob("*"):
+        try:
+            if candidate.is_file():
+                total += candidate.stat().st_size
+        except OSError:
+            continue
+    return total
+
+
+## @brief cache entry의 운영체제 lock이 현재 다른 worker에 점유됐는지 확인합니다.
+def cache_entry_is_locked(entry: Path) -> bool:
+    try:
+        with operating_system_lock(entry, 0.0):
+            return False
+    except TimeoutError:
+        return True
+
+
+## @brief 현재 schema namespace의 canonical build cache entry를 나열합니다.
+def cache_entries(root: Path | None = None) -> list[dict[str, Any]]:
+    cache_root = local_cache_root(root or build_cache_root())
+    namespace = cache_root / f"v{CACHE_SCHEMA_VERSION}"
+    entries: list[dict[str, Any]] = []
+    if not namespace.is_dir():
+        return entries
+    for shard in sorted(namespace.iterdir(), key=lambda path: path.name):
+        if not shard.is_dir() or not re.fullmatch(r"[0-9a-f]{2}", shard.name):
+            continue
+        for entry in sorted(shard.iterdir(), key=lambda path: path.name):
+            if (
+                not entry.is_dir()
+                or not re.fullmatch(r"[0-9a-f]{32}", entry.name)
+                or entry.name[:2] != shard.name
+                or not is_within(entry, namespace)
+            ):
+                continue
+            access_document: dict[str, Any] = {}
+            access_path = entry / "access.json"
+            if access_path.is_file():
+                try:
+                    access_document = load_json_object(access_path, "E_CACHE_ACCESS")
+                except AdapterError:
+                    access_document = {}
+            state_document: dict[str, Any] = {}
+            state_path = entry / "state.json"
+            if state_path.is_file():
+                try:
+                    state_document = load_json_object(state_path, "E_CACHE_STATE")
+                except AdapterError:
+                    state_document = {}
+            try:
+                fallback_access = entry.stat().st_mtime
+            except OSError:
+                fallback_access = 0.0
+            access_text = access_document.get("last_accessed_at_utc")
+            try:
+                access_timestamp = (
+                    dt.datetime.fromisoformat(str(access_text)).timestamp()
+                    if access_text
+                    else fallback_access
+                )
+            except ValueError:
+                access_timestamp = fallback_access
+            full_key = state_document.get("cache_key")
+            valid_key = isinstance(full_key, str) and bool(
+                re.fullmatch(r"[0-9a-f]{64}", full_key)
+            )
+            valid_key = bool(valid_key and str(full_key).startswith(entry.name))
+            entries.append(
+                {
+                    "key": full_key if valid_key else None,
+                    "directory_key": entry.name,
+                    "valid": valid_key,
+                    "path": entry,
+                    "size": directory_size(entry),
+                    "last_access_timestamp": access_timestamp,
+                    "last_accessed_at_utc": access_text,
+                    "state": state_document.get("state", "unknown"),
+                    "locked": cache_entry_is_locked(entry),
+                    "pinned": (entry / ".pin").exists(),
+                }
+            )
+    return entries
+
+
+## @brief 검증된 canonical entry를 운영체제 lock 안에서 재귀 삭제합니다.
+def remove_cache_entry_path(
+    entry: Path,
+    *,
+    namespace: Path,
+    expected_key: str | None,
+    lock_timeout: float,
+    operation: str,
+) -> int:
+    namespace = canonical_path(namespace)
+    resolved_entry = canonical_path(entry)
+    try:
+        relative = resolved_entry.relative_to(namespace)
+    except ValueError as error:
+        raise AdapterError(f"cache root 밖의 경로는 삭제할 수 없습니다: {resolved_entry}") from error
+    if (
+        len(relative.parts) != 2
+        or not re.fullmatch(r"[0-9a-f]{2}", relative.parts[0])
+        or not re.fullmatch(r"[0-9a-f]{32}", relative.parts[1])
+        or relative.parts[1][:2] != relative.parts[0]
+    ):
+        raise AdapterError(f"canonical cache entry가 아닌 경로는 삭제할 수 없습니다: {resolved_entry}")
+    try:
+        with operating_system_lock(resolved_entry, lock_timeout):
+            if not resolved_entry.exists():
+                return 0
+            if (resolved_entry / ".pin").exists():
+                raise AdapterError(f"고정된 cache entry는 삭제할 수 없습니다: {resolved_entry.name}")
+            if expected_key is not None:
+                state_path = resolved_entry / "state.json"
+                if not state_path.is_file():
+                    raise AdapterError(
+                        f"state가 없는 cache entry는 key로 삭제할 수 없습니다: {expected_key}"
+                    )
+                state_document = load_json_object(state_path, "E_CACHE_STATE")
+                if state_document.get("cache_key") != expected_key:
+                    raise AdapterError(
+                        "[NU54:E_CACHE_KEY_COLLISION] 삭제 요청과 cache state의 전체 SHA-256이 다릅니다."
+                    )
+            size = directory_size(resolved_entry)
+            shutil.rmtree(resolved_entry)
+    except TimeoutError as error:
+        raise CacheBusyError(
+            f"[NU54:E_CACHE_BUSY] 활성 worker가 사용 중인 cache entry입니다: {resolved_entry.name}"
+        ) from error
+    try:
+        resolved_entry.parent.rmdir()
+    except OSError:
+        pass
+    return size
+
+
+## @brief 검증된 cache entry 하나를 maintenance 및 entry lock 안에서 삭제합니다.
+def remove_cache_entry(
+    cache_key: str,
+    *,
+    root: Path | None = None,
+    lock_timeout: float = 0.05,
+) -> int:
+    if not re.fullmatch(r"[0-9a-f]{64}", cache_key):
+        raise AdapterError(f"cache key 형식이 잘못되었습니다: {cache_key}")
+    cache_root = local_cache_root(root or build_cache_root())
+    namespace = cache_root / f"v{CACHE_SCHEMA_VERSION}"
+    entry = cache_workspace(cache_key, root=cache_root)
+    with build_lock(cache_root / ".maintenance", operation="cache-remove"):
+        return remove_cache_entry_path(
+            entry,
+            namespace=namespace,
+            expected_key=cache_key,
+            lock_timeout=lock_timeout,
+            operation="cache-remove",
+        )
+
+
+## @brief quota와 LRU 정책에 따라 비활성 build cache를 안전하게 정리합니다.
+def prune_build_cache(
+    *,
+    current_key: str | None = None,
+    root: Path | None = None,
+    max_bytes: int | None = None,
+    max_entries: int | None = None,
+) -> dict[str, Any]:
+    configured_max_bytes = max_bytes or positive_environment_integer(
+        "NUCODE_BUILD_CACHE_MAX_BYTES", DEFAULT_BUILD_CACHE_MAX_BYTES
+    )
+    configured_max_entries = max_entries or positive_environment_integer(
+        "NUCODE_BUILD_CACHE_MAX_ENTRIES", DEFAULT_BUILD_CACHE_MAX_ENTRIES
+    )
+    cache_root = local_cache_root(root or build_cache_root())
+    namespace = cache_root / f"v{CACHE_SCHEMA_VERSION}"
+    removed: list[dict[str, Any]] = []
+    skipped: list[dict[str, Any]] = []
+    with build_lock(cache_root / ".maintenance", operation="cache-prune"):
+        entries = cache_entries(cache_root)
+        total_size = sum(int(entry["size"]) for entry in entries)
+        candidates = sorted(entries, key=lambda entry: float(entry["last_access_timestamp"]))
+        remaining_count = len(entries)
+        for entry in candidates:
+            if total_size <= configured_max_bytes and remaining_count <= configured_max_entries:
+                break
+            if entry["key"] == current_key or entry["pinned"]:
+                continue
+            try:
+                removed_size = remove_cache_entry_path(
+                    entry["path"],
+                    namespace=namespace,
+                    expected_key=str(entry["key"]) if entry["valid"] else None,
+                    lock_timeout=0.0,
+                    operation="cache-prune",
+                )
+            except AdapterError as error:
+                skipped.append({"directory_key": entry["directory_key"], "reason": str(error)})
+                continue
+            removed.append(
+                {
+                    "key": entry["key"],
+                    "directory_key": entry["directory_key"],
+                    "bytes": removed_size,
+                }
+            )
+            total_size -= removed_size
+            remaining_count -= 1
+    return {
+        "schema_version": 1,
+        "max_bytes": configured_max_bytes,
+        "max_entries": configured_max_entries,
+        "remaining_bytes": total_size,
+        "remaining_entries": remaining_count,
+        "removed": removed,
+        "skipped": skipped,
+        "quota_satisfied": (
+            total_size <= configured_max_bytes and remaining_count <= configured_max_entries
+        ),
+    }
+
+
+## @brief ccache 자체 동시성 제어를 사용해 compiler cache 내용만 비웁니다.
+def clear_compiler_cache(cache_root: Path) -> int:
+    compiler_cache = cache_root / "compiler-cache"
+    if not compiler_cache.exists():
+        return 0
+    if not is_within(compiler_cache, cache_root) or compiler_cache == cache_root:
+        raise AdapterError(f"compiler cache 경로가 잘못되었습니다: {compiler_cache}")
+    removed_bytes = directory_size(compiler_cache)
+    tools = tool_environment()
+    ccache = tools.get("ccache")
+    if not isinstance(ccache, Path) or not ccache.is_file():
+        raise AdapterError("compiler cache를 안전하게 비울 ccache 실행 파일이 없습니다.")
+    environment = tools["environment"].copy()
+    environment["CCACHE_DIR"] = str(compiler_cache)
+    run_checked([ccache, "--clear"], cwd=cache_root, environment=environment)
+    return removed_bytes
+
+
+## @brief 비활성 build cache 전체와 선택한 compiler cache를 안전하게 비웁니다.
+def clear_build_cache(cache_root: Path, *, include_compiler: bool) -> dict[str, Any]:
+    cache_root = local_cache_root(cache_root)
+    namespace = cache_root / f"v{CACHE_SCHEMA_VERSION}"
+    removed: list[dict[str, Any]] = []
+    skipped: list[dict[str, Any]] = []
+    with build_lock(cache_root / ".maintenance", operation="cache-clear"):
+        for entry in cache_entries(cache_root):
+            if entry["pinned"]:
+                skipped.append({"directory_key": entry["directory_key"], "reason": "pinned"})
+                continue
+            try:
+                removed_size = remove_cache_entry_path(
+                    entry["path"],
+                    namespace=namespace,
+                    expected_key=str(entry["key"]) if entry["valid"] else None,
+                    lock_timeout=0.0,
+                    operation="cache-clear",
+                )
+            except AdapterError as error:
+                skipped.append({"directory_key": entry["directory_key"], "reason": str(error)})
+                continue
+            removed.append(
+                {
+                    "key": entry["key"],
+                    "directory_key": entry["directory_key"],
+                    "bytes": removed_size,
+                }
+            )
+        compiler_removed = clear_compiler_cache(cache_root) if include_compiler else 0
+    return {
+        "removed": removed,
+        "skipped": skipped,
+        "compiler_cache_removed_bytes": compiler_removed,
+    }
+
+
+## @brief cache 관리 CLI 작업을 수행합니다.
+def manage_cache(args: argparse.Namespace) -> None:
+    root = local_cache_root(args.cache_root) if args.cache_root else build_cache_root()
+    action = args.cache_action
+    try:
+        if action == "list":
+            result: Any = [
+                {key: value.as_posix() if isinstance(value, Path) else value for key, value in entry.items()}
+                for entry in cache_entries(root)
+            ]
+        elif action == "inspect":
+            matching = [entry for entry in cache_entries(root) if entry["key"] == args.key]
+            if not matching:
+                raise AdapterError(f"cache entry를 찾을 수 없습니다: {args.key}")
+            entry = matching[0]
+            result = {
+                key: value.as_posix() if isinstance(value, Path) else value
+                for key, value in entry.items()
+            }
+            for filename in ("input-manifest.json", "state.json", "access.json"):
+                document_path = entry["path"] / filename
+                if document_path.is_file():
+                    result[filename] = load_json_object(document_path, "E_CACHE_METADATA")
+        elif action == "prune":
+            result = prune_build_cache(root=root)
+        elif action == "remove":
+            result = {"key": args.key, "removed_bytes": remove_cache_entry(args.key, root=root)}
+        elif action == "clear":
+            result = clear_build_cache(root, include_compiler=args.include_compiler)
+        else:
+            raise AdapterError(f"알 수 없는 cache action입니다: {action}")
+    except OSError as error:
+        raise AdapterError(f"cache {action} 작업 중 filesystem 오류가 발생했습니다: {error}") from error
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+
+
+## @brief 현재 Arduino session이 가리키는 build tree만 제거합니다.
+def clean_build(args: argparse.Namespace) -> None:
+    paths = adapter_paths(args)
+    with build_lock(paths["state_root"], operation="clean-session"):
+        context = load_context(args, create=False)
+        cache_key = context.get("cache_key")
+        if not isinstance(cache_key, str):
+            raise AdapterError("현재 session에 cache key가 없습니다.")
+        contextual_paths = paths_from_context(paths, context)
+        cache_root = local_cache_root(str(context["cache_root"]))
+        removed_bytes = remove_cache_entry(cache_key, root=cache_root)
+        if contextual_paths["workspace"].exists():
+            raise AdapterError("현재 session의 cache tree 삭제가 완료되지 않았습니다.")
+        for path in (
+            paths["context"],
+            paths["build_path"] / f"{args.project_name}.nu54-build.json",
+        ):
+            try:
+                path.unlink()
+            except FileNotFoundError:
+                pass
+    print(json.dumps({"cache_key": cache_key, "removed_bytes": removed_bytes}, sort_keys=True))
+
+
+## @brief link recipe object 목록에 대응하는 검증된 sketch/library record를 읽습니다.
+def records_for_objects(
+    paths: dict[str, Path], objects: Sequence[str], context: dict[str, Any]
+) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     missing: list[str] = []
     for object_name in objects:
         if not object_name:
             continue
         object_path = canonical_path(object_name)
+        if not is_within(object_path, paths["build_path"]):
+            raise AdapterError(f"object가 Arduino build directory 밖에 있습니다: {object_path}")
         record_file = record_path(paths["records"], object_path)
         if not record_file.is_file():
             if object_path.suffix.lower() in {".a", ".ar"}:
                 raise AdapterError(f"M5는 precompiled Arduino library를 지원하지 않습니다: {object_path}")
             missing.append(object_path.as_posix())
             continue
-        try:
-            records.append(json.loads(record_file.read_text(encoding="utf-8")))
-        except (OSError, json.JSONDecodeError) as error:
-            raise AdapterError(f"source record가 손상되었습니다: {record_file}: {error}") from error
+        record = load_json_object(record_file, "E_SOURCE_RECORD")
+        include_dirs = record.get("include_dirs")
+        if (
+            record.get("schema_version") != SOURCE_RECORD_SCHEMA_VERSION
+            or record.get("language") not in {"c", "cxx", "asm"}
+            or not isinstance(record.get("source"), str)
+            or not isinstance(record.get("object"), str)
+            or path_key(record["object"]) != path_key(object_path)
+            or not isinstance(include_dirs, list)
+            or not all(isinstance(value, str) for value in include_dirs)
+            or path_key(str(record.get("platform_root", "")))
+            != path_key(paths["platform_root"])
+            or record.get("cache_key") != context.get("cache_key")
+        ):
+            raise AdapterError(
+                f"[NU54:E_SOURCE_RECORD_STALE] source record가 현재 build context와 다릅니다: {record_file}"
+            )
+        records.append(record)
     if missing:
         raise AdapterError("object에 대응하는 source record가 없습니다: " + ", ".join(missing))
     return records
@@ -614,44 +1597,108 @@ def cmake_quote(path: Path) -> str:
     return path.as_posix().replace("\\", "/").replace("\"", "\\\"").replace(";", "\\;")
 
 
-## @brief source record를 결정적인 sources.cmake manifest로 변환합니다.
-def write_source_manifest(paths: dict[str, Path], records: Sequence[dict[str, Any]]) -> tuple[list[Path], bool]:
+## @brief Arduino 임시 build path와 무관한 source logical identity를 생성합니다.
+def source_logical_identity(source: Path, paths: dict[str, Path]) -> str:
+    if is_within(source, paths["build_path"]):
+        try:
+            relative = source.resolve().relative_to(paths["build_path"].resolve()).as_posix()
+        except ValueError:
+            relative = source.name
+        return f"arduino-generated:{relative}"
+    if is_within(source, paths["sketch_root"]):
+        relative = source.resolve().relative_to(paths["sketch_root"].resolve()).as_posix()
+        return f"sketch:{relative}"
+    if is_within(source, paths["platform_root"]):
+        relative = source.resolve().relative_to(paths["platform_root"].resolve()).as_posix()
+        return f"platform:{relative}"
+    return f"external:{path_key(source)}"
+
+
+## @brief source record를 결정적인 sources.cmake와 provenance로 변환합니다.
+def write_source_manifest(
+    paths: dict[str, Path], records: Sequence[dict[str, Any]]
+) -> tuple[list[Path], dict[str, Any], bool]:
     core_root = paths["platform_root"] / "cores"
     variant_root = paths["platform_root"] / "variants"
-    sources: dict[str, Path] = {}
-    includes: dict[str, Path] = {}
+    sources: list[Path] = []
+    source_keys: set[str] = set()
+    includes: list[Path] = []
+    include_keys: set[str] = set()
+
+    def add_include(include: Path) -> None:
+        key = path_key(include)
+        if key not in include_keys and include.is_dir() and not is_within(include, paths["build_path"]):
+            include_keys.add(key)
+            includes.append(include)
+
+    # Arduino의 sketch-local header 우선권을 보존합니다.
+    add_include(paths["sketch_root"])
     for record in records:
         source = canonical_path(record["source"])
         if is_within(source, core_root) or is_within(source, variant_root):
             continue
         if not source.is_file():
             raise AdapterError(f"Arduino source가 사라졌습니다: {source}")
-        sources[path_key(source)] = source
-        if not is_within(source.parent, paths["build_path"]):
-            includes[path_key(source.parent)] = source.parent
+        source_key = path_key(source)
+        if source_key not in source_keys:
+            source_keys.add(source_key)
+            sources.append(source)
         for value in record.get("include_dirs", []):
-            include = canonical_path(value)
-            if include.is_dir() and not is_within(include, paths["build_path"]):
-                includes[path_key(include)] = include
-    ordered_sources = [sources[key] for key in sorted(sources)]
-    mirrored_sources: list[Path] = []
+            add_include(canonical_path(value))
+        if not is_within(source.parent, paths["build_path"]):
+            add_include(source.parent)
+
+    compiled_sources: list[Path] = []
+    source_inputs: list[dict[str, str]] = []
     mirror_root = paths["app"] / "generated-sources"
-    for source in ordered_sources:
-        digest = hashlib.sha256(path_key(source).encode("utf-8")).hexdigest()[:12]
-        safe_name = re.sub(r"[^A-Za-z0-9_.-]", "_", source.name)
-        mirror = mirror_root / f"{digest}_{safe_name}"
-        atomic_write_bytes_if_changed(mirror, source.read_bytes())
-        mirrored_sources.append(mirror)
-        includes[path_key(mirror.parent)] = mirror.parent
-    ordered_includes = [includes[key] for key in sorted(includes)]
+    mirror_owners: dict[str, str] = {}
+    for source in sources:
+        logical_identity = source_logical_identity(source, paths)
+        compiled_source = source
+        if is_within(source, paths["build_path"]):
+            relative = source.resolve().relative_to(paths["build_path"].resolve())
+            mirror = canonical_path(mirror_root / relative)
+            if not is_within(mirror, mirror_root):
+                raise AdapterError(f"[NU54:E_SOURCE_MIRROR_PATH] mirror 경로가 잘못되었습니다: {mirror}")
+            mirror_key = path_key(mirror)
+            previous_owner = mirror_owners.get(mirror_key)
+            if previous_owner is not None and previous_owner != logical_identity:
+                raise AdapterError(
+                    "[NU54:E_SOURCE_MIRROR_COLLISION] 서로 다른 source가 같은 mirror를 사용합니다: "
+                    f"{previous_owner}, {logical_identity}"
+                )
+            mirror_owners[mirror_key] = logical_identity
+            atomic_write_bytes_if_changed(mirror, source.read_bytes())
+            compiled_source = mirror
+            add_include(mirror.parent)
+        compiled_sources.append(compiled_source)
+        source_inputs.append(
+            {
+                "logical_identity": logical_identity,
+                "source_path": source.as_posix(),
+                "compiled_path": compiled_source.as_posix(),
+                "sha256": file_sha256(source),
+            }
+        )
+
     lines = ["# nu54-builder가 원자적으로 생성한 source manifest입니다.", "set(NUCODE_ARDUINO_SKETCH_SOURCES"]
-    lines.extend(f'  "{cmake_quote(path)}"' for path in mirrored_sources)
+    lines.extend(f'  "{cmake_quote(path)}"' for path in compiled_sources)
     lines.append(")")
     lines.append("set(NUCODE_ARDUINO_INCLUDE_DIRS")
-    lines.extend(f'  "{cmake_quote(path)}"' for path in ordered_includes)
+    lines.extend(f'  "{cmake_quote(path)}"' for path in includes)
     lines.extend((")", ""))
     changed = atomic_write_text(paths["app"] / "sources.cmake", "\n".join(lines))
-    return ordered_sources, changed
+    provenance = {
+        "sources": source_inputs,
+        "include_roots": [
+            {
+                "path": include.as_posix(),
+                "content_sha256": tree_content_sha256(include, (".",)),
+            }
+            for include in includes
+        ],
+    }
+    return sources, provenance, changed
 
 
 ## @brief Zephyr artifact를 Arduino build path로 원자적으로 복사합니다.
@@ -661,72 +1708,334 @@ def copy_artifact(source: Path, destination: Path) -> None:
     atomic_write_bytes(destination, source.read_bytes())
 
 
-## @brief source manifest를 갱신하고 Full Zephyr image를 build/export합니다.
-def link(args: argparse.Namespace) -> None:
-    paths = adapter_paths(args)
-    context = load_context(args, create=False)
-    tools = tool_environment()
-    with build_lock(paths["build_path"]):
-        records = records_for_objects(paths, args.objects)
-        sources, manifest_changed = write_source_manifest(paths, records)
-        if not sources:
-            raise AdapterError("최종 Zephyr build에 전달할 sketch/library source가 없습니다.")
-        configure_command: list[str | Path] = [
-            tools["west"],
-            "-z",
-            tools["zephyr_base"],
-            "build",
-            "--cmake-only",
-            "--no-sysbuild",
-            "-b",
-            args.board,
-            "-d",
-            paths["zephyr_build"],
-            paths["app"],
-            "--",
-            "-UCONFIG_*",
-            f"-DBOARD_ROOT={context['board_root']}",
-            f"-DEXTRA_ZEPHYR_MODULES={context['platform_root']}",
-            "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
-        ]
-        overlay = paths["app"] / "app.overlay"
-        if overlay.is_file():
-            configure_command.append(f"-DDTC_OVERLAY_FILE={overlay.as_posix()}")
-        if manifest_changed:
-            run_checked(configure_command, cwd=tools["ncs_root"], environment=tools["environment"])
-        run_checked(
-            [tools["west"], "-z", tools["zephyr_base"], "build", "-d", paths["zephyr_build"]],
-            cwd=tools["ncs_root"],
-            environment=tools["environment"],
-        )
-        zephyr_output = paths["zephyr_build"] / "zephyr"
-        artifacts = {
-            "elf": zephyr_output / "zephyr.elf",
-            "hex": zephyr_output / "zephyr.hex",
-            "bin": zephyr_output / "zephyr.bin",
-            "map": zephyr_output / "zephyr.map",
-        }
-        exported: dict[str, Any] = {}
+## @brief 모든 artifact를 staging한 뒤 한 generation으로 export하고 실패 시 복원합니다.
+def export_artifacts_transactionally(
+    artifacts: dict[str, Path], build_path: Path, project_name: str
+) -> dict[str, Any]:
+    staging_parent = build_path / CONTEXT_DIRECTORY / "artifact-staging"
+    staging_parent.mkdir(parents=True, exist_ok=True)
+    staging = Path(tempfile.mkdtemp(prefix="generation-", dir=staging_parent))
+    backup = staging / "backup"
+    backup.mkdir()
+    staged: dict[str, Path] = {}
+    destinations: dict[str, Path] = {}
+    exported: dict[str, Any] = {}
+    committed: list[str] = []
+    preserve_staging = False
+    try:
         for extension, source in artifacts.items():
-            destination = paths["build_path"] / f"{args.project_name}.{extension}"
-            copy_artifact(source, destination)
+            staged_path = staging / f"new.{extension}"
+            copy_artifact(source, staged_path)
+            staged[extension] = staged_path
+            destination = build_path / f"{project_name}.{extension}"
+            destinations[extension] = destination
             exported[extension] = {
                 "path": destination.as_posix(),
-                "sha256": file_sha256(destination),
-                "size": destination.stat().st_size,
+                "sha256": file_sha256(staged_path),
+                "size": staged_path.stat().st_size,
             }
-        manifest = {
-            "schema_version": 1,
-            "adapter_version": ADAPTER_VERSION,
-            "fqbn": args.fqbn,
-            "board": args.board,
-            "sysbuild": False,
-            "context": context,
-            "sources": [path.as_posix() for path in sources],
-            "artifacts": exported,
-            "built_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
-        }
-        atomic_write_json(paths["build_path"] / f"{args.project_name}.nu54-build.json", manifest)
+        for extension, destination in destinations.items():
+            if destination.is_file():
+                shutil.copy2(destination, backup / extension)
+        try:
+            for extension in artifacts:
+                destination = destinations[extension]
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                os.replace(staged[extension], destination)
+                committed.append(extension)
+            for extension, destination in destinations.items():
+                record = exported[extension]
+                if (
+                    not destination.is_file()
+                    or destination.stat().st_size != record["size"]
+                    or file_sha256(destination) != record["sha256"]
+                ):
+                    raise AdapterError(
+                        f"[NU54:E_EXPORT_INTEGRITY] export artifact 검증에 실패했습니다: {destination}"
+                    )
+        except BaseException as original_error:
+            try:
+                for extension, destination in destinations.items():
+                    old_artifact = backup / extension
+                    if old_artifact.is_file():
+                        os.replace(old_artifact, destination)
+                    elif extension in committed:
+                        try:
+                            destination.unlink()
+                        except FileNotFoundError:
+                            pass
+            except BaseException as rollback_error:
+                preserve_staging = True
+                raise AdapterError(
+                    "[NU54:E_EXPORT_ROLLBACK] artifact 복구에 실패했습니다. "
+                    f"수동 복구 directory: {staging}; 원인: {rollback_error}"
+                ) from original_error
+            raise
+        return exported
+    finally:
+        if not preserve_staging:
+            shutil.rmtree(staging, ignore_errors=True)
+
+
+## @brief artifact와 공개 manifest를 metadata commit 끝까지 하나의 rollback 범위로 묶습니다.
+@contextlib.contextmanager
+def publish_artifact_generation(
+    artifacts: dict[str, Path],
+    build_path: Path,
+    project_name: str,
+    manifest_path: Path,
+    context_path: Path,
+    rollback_context: dict[str, Any] | None,
+) -> Iterator[dict[str, Any]]:
+    transaction_root = build_path / CONTEXT_DIRECTORY / "publish-transactions"
+    transaction_root.mkdir(parents=True, exist_ok=True)
+    backup = Path(tempfile.mkdtemp(prefix="generation-", dir=transaction_root))
+    preserve_backup = False
+    destinations = {
+        extension: build_path / f"{project_name}.{extension}"
+        for extension in artifacts
+    }
+    existed: dict[str, bool] = {}
+    try:
+        for extension, destination in destinations.items():
+            existed[extension] = destination.is_file()
+            if existed[extension]:
+                shutil.copy2(destination, backup / extension)
+        manifest_existed = manifest_path.is_file()
+        if manifest_existed:
+            shutil.copy2(manifest_path, backup / "manifest.json")
+        context_bytes = context_path.read_bytes() if context_path.is_file() else None
+        exported = export_artifacts_transactionally(artifacts, build_path, project_name)
+        try:
+            yield exported
+        except BaseException as original_error:
+            try:
+                for extension, destination in destinations.items():
+                    previous = backup / extension
+                    if existed[extension]:
+                        os.replace(previous, destination)
+                    else:
+                        try:
+                            destination.unlink()
+                        except FileNotFoundError:
+                            pass
+                if rollback_context is not None:
+                    atomic_write_json(context_path, rollback_context)
+                elif context_bytes is not None:
+                    atomic_write_bytes(context_path, context_bytes)
+                else:
+                    try:
+                        context_path.unlink()
+                    except FileNotFoundError:
+                        pass
+                if manifest_existed:
+                    os.replace(backup / "manifest.json", manifest_path)
+                else:
+                    try:
+                        manifest_path.unlink()
+                    except FileNotFoundError:
+                        pass
+            except BaseException as rollback_error:
+                preserve_backup = True
+                raise AdapterError(
+                    "[NU54:E_EXPORT_ROLLBACK] 공개 generation 복구에 실패했습니다. "
+                    f"수동 복구 directory: {backup}; 원인: {rollback_error}"
+                ) from original_error
+            raise
+    finally:
+        if not preserve_backup:
+            shutil.rmtree(backup, ignore_errors=True)
+
+
+## @brief source manifest를 갱신하고 Full Zephyr image를 build/export합니다.
+def link(args: argparse.Namespace) -> None:
+    session_paths = adapter_paths(args)
+    tools = tool_environment()
+    output_manifest = session_paths["build_path"] / f"{args.project_name}.nu54-build.json"
+
+    with build_lock(session_paths["state_root"], operation="link-session"):
+        context = load_context(args, create=False)
+        rollback_context: dict[str, Any] | None = None
+        if output_manifest.is_file():
+            try:
+                previous_manifest = load_json_object(output_manifest, "E_ARTIFACT_MANIFEST")
+                previous_context = previous_manifest.get("context")
+                if isinstance(previous_context, dict):
+                    rollback_context = previous_context
+            except AdapterError:
+                rollback_context = None
+        paths = paths_from_context(session_paths, context)
+        current_input = cache_input_manifest(session_paths, args, tools)
+        cache_key = cache_key_for_manifest(current_input)
+        if context.get("cache_key") != cache_key:
+            raise AdapterError(
+                "[NU54:E_CACHE_CONTEXT_STALE] prepare 이후 build 입력이 변경되었습니다. 다시 compile하십시오."
+            )
+        with build_lock(paths["workspace"], operation="link-cache"):
+            state_document = load_json_object(paths["workspace"] / "state.json", "E_CACHE_STATE")
+            if (
+                state_document.get("schema_version") != CACHE_SCHEMA_VERSION
+                or state_document.get("cache_key") != cache_key
+                or state_document.get("state") != "ready"
+                or state_document.get("first_configure_complete") is not True
+            ):
+                raise AdapterError("[NU54:E_CACHE_STATE] build cache가 ready 상태가 아닙니다.")
+            stored_input = load_json_object(
+                paths["workspace"] / "input-manifest.json", "E_CACHE_INPUT"
+            )
+            if stored_input != current_input:
+                raise AdapterError("[NU54:E_CACHE_CONTEXT_STALE] cache input manifest가 변경되었습니다.")
+            transition_cache_state(
+                paths["workspace"], cache_key, "building", last_build_result="running"
+            )
+            try:
+                records = records_for_objects(paths, args.objects, context)
+                sources, source_provenance, manifest_changed = write_source_manifest(
+                    paths, records
+                )
+                if not sources:
+                    raise AdapterError(
+                        "최종 Zephyr build에 전달할 sketch/library source가 없습니다."
+                    )
+            except Exception as error:
+                transition_cache_state(
+                    paths["workspace"],
+                    cache_key,
+                    "failed",
+                    last_build_result="source-graph-failed",
+                    failure=str(error),
+                )
+                raise
+
+            ccache_before = read_ccache_stats(tools)
+            configure_seconds = 0.0
+            build_started = time.perf_counter()
+            try:
+                if manifest_changed:
+                    configure_started = time.perf_counter()
+                    run_checked(
+                        configure_command(
+                            paths,
+                            args,
+                            tools,
+                            canonical_path(context["board_root"]),
+                            pristine=False,
+                        ),
+                        cwd=tools["ncs_root"],
+                        environment=tools["environment"],
+                    )
+                    configure_seconds = time.perf_counter() - configure_started
+                run_checked(
+                    [
+                        tools["west"],
+                        "-z",
+                        tools["zephyr_base"],
+                        "build",
+                        "-d",
+                        paths["zephyr_build"],
+                    ],
+                    cwd=tools["ncs_root"],
+                    environment=tools["environment"],
+                )
+            except Exception as error:
+                transition_cache_state(
+                    paths["workspace"],
+                    cache_key,
+                    "failed",
+                    last_build_result="build-failed",
+                    failure=str(error),
+                )
+                raise
+            build_seconds = time.perf_counter() - build_started
+            try:
+                ccache_after = read_ccache_stats(tools)
+                zephyr_output = paths["zephyr_build"] / "zephyr"
+                artifacts = {
+                    "elf": zephyr_output / "zephyr.elf",
+                    "hex": zephyr_output / "zephyr.hex",
+                    "bin": zephyr_output / "zephyr.bin",
+                    "map": zephyr_output / "zephyr.map",
+                }
+                with publish_artifact_generation(
+                    artifacts,
+                    paths["build_path"],
+                    args.project_name,
+                    output_manifest,
+                    paths["context"],
+                    rollback_context,
+                ) as exported:
+                    build_record = paths["zephyr_build"] / "nucode_arduino_core_build.yml"
+                    if not build_record.is_file():
+                        raise AdapterError(
+                            f"[NU54:E_BUILD_RECORD] live build record가 없습니다: {build_record}"
+                        )
+                    source_provenance["live_build_record"] = {
+                        "path": build_record.as_posix(),
+                        "sha256": file_sha256(build_record),
+                    }
+                    context.update(
+                        {
+                            "state": "built",
+                            "source_manifest_changed": manifest_changed,
+                            "link_configure_duration_seconds": round(configure_seconds, 6),
+                            "build_duration_seconds": round(build_seconds, 6),
+                            "ccache_stats_before": ccache_before,
+                            "ccache_stats_after": ccache_after,
+                            "ccache_stats_delta": ccache_delta(ccache_before, ccache_after),
+                            "updated_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+                        }
+                    )
+                    atomic_write_json(paths["context"], context)
+                    manifest = {
+                    "schema_version": ARTIFACT_MANIFEST_SCHEMA_VERSION,
+                    "adapter_version": ADAPTER_VERSION,
+                    "fqbn": args.fqbn,
+                    "board": args.board,
+                    "sysbuild": False,
+                    "cache": {
+                        "schema_version": CACHE_SCHEMA_VERSION,
+                        "key": cache_key,
+                        "input_manifest": current_input,
+                        "cache_dir": paths["workspace"].as_posix(),
+                        "source_manifest_sha256": optional_file_sha256(
+                            paths["app"] / "sources.cmake"
+                        ),
+                    },
+                    "metrics": {
+                        "configure_seconds": round(configure_seconds, 6),
+                        "build_seconds": round(build_seconds, 6),
+                        "ccache_delta": ccache_delta(ccache_before, ccache_after),
+                    },
+                    "context": context,
+                    "sources": [path.as_posix() for path in sources],
+                    "source_inputs": source_provenance,
+                    "artifacts": exported,
+                    "built_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+                    }
+                    # Artifact와 context가 모두 완성된 뒤 manifest를 마지막으로 공개합니다.
+                    atomic_write_json(output_manifest, manifest)
+                    transition_cache_state(
+                        paths["workspace"],
+                        cache_key,
+                        "ready",
+                        first_configure_complete=True,
+                        last_build_result="success",
+                        last_artifact_manifest=output_manifest.as_posix(),
+                        last_build_duration_seconds=round(build_seconds, 6),
+                    )
+            except Exception as error:
+                transition_cache_state(
+                    paths["workspace"],
+                    cache_key,
+                    "failed",
+                    last_build_result="export-failed",
+                    failure=str(error),
+                )
+                raise
+    try:
+        prune_build_cache(current_key=cache_key)
+    except (AdapterError, OSError) as error:
+        print(f"nu54-builder: warning: cache prune를 건너뜁니다: {error}", file=sys.stderr)
 
 
 ## @brief manifest artifact 한 개의 경로, 크기와 SHA-256을 검증합니다.
@@ -768,7 +2077,10 @@ def validate_flash_manifest(args: argparse.Namespace) -> dict[str, Any]:
     if not manifest_path.is_file():
         raise AdapterError(f"[NU54:E_FLASH_ARTIFACT_MISSING] build manifest가 없습니다: {manifest_path}")
     manifest = load_json_object(manifest_path, "E_FLASH_MANIFEST")
-    if manifest.get("schema_version") != 1 or manifest.get("adapter_version") != ADAPTER_VERSION:
+    if (
+        manifest.get("schema_version") != ARTIFACT_MANIFEST_SCHEMA_VERSION
+        or manifest.get("adapter_version") != ADAPTER_VERSION
+    ):
         raise AdapterError("[NU54:E_FLASH_MANIFEST_VERSION] 지원하지 않는 build manifest version입니다.")
     if manifest.get("fqbn") != args.fqbn or manifest.get("board") != args.board:
         raise AdapterError("[NU54:E_FLASH_BOARD_MISMATCH] manifest의 FQBN 또는 Zephyr board가 다릅니다.")
@@ -780,6 +2092,10 @@ def validate_flash_manifest(args: argparse.Namespace) -> dict[str, Any]:
     context = manifest.get("context")
     if not isinstance(context, dict):
         raise AdapterError("[NU54:E_FLASH_CONTEXT] manifest에 build context가 없습니다.")
+    if context.get("schema_version") != SESSION_CONTEXT_SCHEMA_VERSION:
+        raise AdapterError("[NU54:E_FLASH_CONTEXT] 지원하지 않는 session context version입니다.")
+    if context.get("state") != "built":
+        raise AdapterError("[NU54:E_FLASH_CONTEXT] 마지막으로 완료된 build context가 아닙니다.")
     context_pairs = {
         "fqbn": args.fqbn,
         "board": args.board,
@@ -795,9 +2111,41 @@ def validate_flash_manifest(args: argparse.Namespace) -> dict[str, Any]:
         if not matches:
             raise AdapterError(f"[NU54:E_FLASH_CONTEXT] build context의 {key} 값이 현재 요청과 다릅니다.")
 
+    cache = manifest.get("cache")
+    if not isinstance(cache, dict) or cache.get("schema_version") != CACHE_SCHEMA_VERSION:
+        raise AdapterError("[NU54:E_FLASH_CACHE] manifest의 M9 cache metadata가 잘못되었습니다.")
+    cache_key = cache.get("key")
+    input_manifest = cache.get("input_manifest")
+    if (
+        not isinstance(cache_key, str)
+        or not re.fullmatch(r"[0-9a-f]{64}", cache_key)
+        or not isinstance(input_manifest, dict)
+        or cache_key_for_manifest(input_manifest) != cache_key
+        or context.get("cache_key") != cache_key
+    ):
+        raise AdapterError("[NU54:E_FLASH_CACHE] cache key 또는 input manifest가 일치하지 않습니다.")
+    contextual_paths = paths_from_context(adapter_paths(args), context)
+    if path_key(str(cache.get("cache_dir", ""))) != path_key(contextual_paths["workspace"]):
+        raise AdapterError("[NU54:E_FLASH_CACHE] artifact와 context의 cache directory가 다릅니다.")
+    stored_input = load_json_object(
+        contextual_paths["workspace"] / "input-manifest.json", "E_FLASH_CACHE"
+    )
+    state_document = load_json_object(
+        contextual_paths["workspace"] / "state.json", "E_FLASH_CACHE"
+    )
+    if stored_input != input_manifest or (
+        state_document.get("schema_version") != CACHE_SCHEMA_VERSION
+        or state_document.get("cache_key") != cache_key
+        or state_document.get("state") != "ready"
+        or state_document.get("last_build_result") != "success"
+    ):
+        raise AdapterError("[NU54:E_FLASH_CACHE] 현재 cache generation이 build manifest와 다릅니다.")
+
     exported_hex, hex_hash = validate_manifest_artifact(manifest, "hex", build_path)
     exported_elf, elf_hash = validate_manifest_artifact(manifest, "elf", build_path)
     zephyr_build = canonical_path(str(context.get("zephyr_build_dir", "")))
+    if path_key(zephyr_build) != path_key(contextual_paths["zephyr_build"]):
+        raise AdapterError("[NU54:E_FLASH_CONTEXT] Zephyr build directory가 cache context와 다릅니다.")
     if not (zephyr_build / "CMakeCache.txt").is_file() or not (zephyr_build / "build.ninja").is_file():
         raise AdapterError(f"[NU54:E_FLASH_CONTEXT] 유효한 Zephyr build directory가 아닙니다: {zephyr_build}")
     native_hex = zephyr_build / "zephyr" / "zephyr.hex"
@@ -846,6 +2194,20 @@ def validate_runner_configuration(zephyr_build: Path, runner: str) -> Path:
     runner_arguments = document.get("args", {}).get(runner, [])
     if not isinstance(runner_arguments, list):
         raise AdapterError(f"[NU54:E_RUNNER_UNAVAILABLE] {runner} runner argument 형식이 잘못되었습니다.")
+    normalized_arguments = [str(value).casefold() for value in runner_arguments]
+    unsafe_runner_arguments = [
+        value
+        for value in normalized_arguments
+        if value in {"--erase", "--recover", "-e"}
+        or value.startswith(("--erase=", "--recover="))
+        or "mass-erase" in value
+        or "chip-erase" in value
+    ]
+    if unsafe_runner_arguments:
+        raise AdapterError(
+            "[NU54:E_FLASH_UNSAFE_OPTION] runners.yaml에 destructive option이 있습니다: "
+            + ", ".join(unsafe_runner_arguments)
+        )
     if runner == "pyocd" and "--target=nrf54l" not in runner_arguments:
         raise AdapterError("[NU54:E_PYOCD_TARGET] pyOCD target이 nrf54l이 아닙니다.")
     if runner == "jlink" and not {
@@ -962,27 +2324,23 @@ def build_flash_command(
 @contextlib.contextmanager
 def probe_lock(probe_id: str, timeout_seconds: float = 120.0) -> Iterator[None]:
     digest = hashlib.sha256(probe_id.casefold().encode("utf-8")).hexdigest()[:16]
-    lock_path = canonical_path(Path(tempfile.gettempdir()) / "n54" / "probe-locks" / f"{digest}.lock")
-    lock_path.parent.mkdir(parents=True, exist_ok=True)
-    deadline = time.monotonic() + timeout_seconds
-    descriptor: int | None = None
-    while descriptor is None:
-        try:
-            descriptor = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-            os.write(descriptor, f"{os.getpid()}\n".encode("ascii"))
-        except FileExistsError:
-            if time.monotonic() >= deadline:
-                raise AdapterError(f"[NU54:E_PROBE_BUSY] probe lock 대기 시간이 초과되었습니다: {probe_id}")
-            time.sleep(0.05)
+    lock_root = canonical_path(
+        Path(tempfile.gettempdir()) / "n54" / "probe-locks" / digest
+    )
     try:
-        yield
-    finally:
-        if descriptor is not None:
-            os.close(descriptor)
-        try:
-            lock_path.unlink()
-        except FileNotFoundError:
-            pass
+        with build_lock(
+            lock_root,
+            operation=f"flash-probe:{probe_id}",
+            timeout_seconds=timeout_seconds,
+            logical_identity=f"probe:{probe_id.casefold()}",
+        ):
+            yield
+    except AdapterError as error:
+        if "대기 시간이 초과" in str(error):
+            raise AdapterError(
+                f"[NU54:E_PROBE_BUSY] probe lock 대기 시간이 초과되었습니다: {probe_id}"
+            ) from error
+        raise
 
 
 ## @brief flash child process의 출력과 결과를 console 및 build log에 기록합니다.
@@ -1034,47 +2392,99 @@ def run_flash_process(
         )
 
 
+## @brief build context와 현재 NCS/toolchain identity가 같은지 확인합니다.
+def validate_flash_tool_identity(context: dict[str, Any], tools: dict[str, Any]) -> None:
+    expected_paths = {
+        "ncs_root": tools["ncs_root"],
+        "toolchain_root": tools["toolchain_root"],
+        "cxx_compiler": tools["compiler"],
+    }
+    for key, current in expected_paths.items():
+        stored = context.get(key)
+        if not isinstance(stored, str) or path_key(stored) != path_key(current):
+            raise AdapterError(
+                f"[NU54:E_FLASH_TOOLCHAIN_MISMATCH] build context의 {key}가 현재 환경과 다릅니다."
+            )
+    if context.get("toolchain_bundle_id") != tools["toolchain_root"].name:
+        raise AdapterError(
+            "[NU54:E_FLASH_TOOLCHAIN_MISMATCH] build와 현재 toolchain bundle이 다릅니다."
+        )
+
+
 ## @brief 검증된 Full Zephyr image를 선택 runner로 일반 upload합니다.
 def flash(args: argparse.Namespace) -> None:
     if args.runner not in {"pyocd", "jlink"}:
         raise AdapterError(f"[NU54:E_RUNNER_UNAVAILABLE] 지원하지 않는 runner입니다: {args.runner}")
-    inputs = validate_flash_manifest(args)
-    validate_runner_configuration(inputs["zephyr_build"], args.runner)
     tools = tool_environment()
     environment = flash_environment(tools, args.runner)
-    if args.runner == "pyocd":
-        probe_id = select_pyocd_probe(args.probe_id)
-    else:
-        probe_id = (args.probe_id or "").strip()
-        if not probe_id:
-            raise AdapterError(
-                "[NU54:E_PROBE_AMBIGUOUS] J-Link upload에는 명시적인 probe serial이 필요합니다."
+    session_paths = adapter_paths(args)
+    with build_lock(session_paths["state_root"], operation="flash-session"):
+        session_context = load_context(args, create=False)
+        contextual_paths = paths_from_context(session_paths, session_context)
+        with build_lock(contextual_paths["workspace"], operation="flash-cache"):
+            validate_flash_tool_identity(session_context, tools)
+            inputs = validate_flash_manifest(args)
+            if inputs["manifest"].get("context") != session_context:
+                raise AdapterError(
+                    "[NU54:E_FLASH_CONTEXT] session context가 artifact manifest와 다릅니다."
+                )
+            validate_runner_configuration(inputs["zephyr_build"], args.runner)
+            if args.runner == "pyocd":
+                probe_id = select_pyocd_probe(args.probe_id)
+            else:
+                probe_id = (args.probe_id or "").strip()
+                if not probe_id:
+                    raise AdapterError(
+                        "[NU54:E_PROBE_AMBIGUOUS] J-Link upload에는 명시적인 probe serial이 필요합니다."
+                    )
+            command = build_flash_command(
+                tools, inputs["zephyr_build"], args.runner, probe_id
             )
-    command = build_flash_command(tools, inputs["zephyr_build"], args.runner, probe_id)
-    print(
-        "NU54_UPLOAD_START "
-        f"runner={args.runner} probe={probe_id} board={args.board} "
-        f"hex_sha256={inputs['hex_sha256']}"
-    )
-    with build_lock(inputs["build_path"]), probe_lock(probe_id):
-        run_flash_process(
-            command,
-            cwd=tools["ncs_root"],
-            environment=environment,
-            log_path=inputs["build_path"] / CONTEXT_DIRECTORY / "logs" / "flash.log",
-            runner=args.runner,
-            probe_id=probe_id,
-            hex_path=inputs["hex"],
-            hex_sha256=inputs["hex_sha256"],
-        )
-    print(f"NU54_UPLOAD_PASS runner={args.runner} probe={probe_id}")
+            print(
+                "NU54_UPLOAD_START "
+                f"runner={args.runner} probe={probe_id} board={args.board} "
+                f"hex_sha256={inputs['hex_sha256']}"
+            )
+            with probe_lock(probe_id):
+                run_flash_process(
+                    command,
+                    cwd=tools["ncs_root"],
+                    environment=environment,
+                    log_path=inputs["build_path"] / CONTEXT_DIRECTORY / "logs" / "flash.log",
+                    runner=args.runner,
+                    probe_id=probe_id,
+                    hex_path=inputs["hex"],
+                    hex_sha256=inputs["hex_sha256"],
+                )
+            print(f"NU54_UPLOAD_PASS runner={args.runner} probe={probe_id}")
 
 
-## @brief 이미 export된 artifact가 존재하는지 검증합니다.
+## @brief cache tree와 독립적으로 export artifact의 manifest 무결성을 검증합니다.
 def verify_artifact(args: argparse.Namespace) -> None:
     artifact = canonical_path(args.artifact)
-    if not artifact.is_file() or artifact.stat().st_size == 0:
-        raise AdapterError(f"export artifact가 없거나 비어 있습니다: {artifact}")
+    build_path = canonical_path(args.build_path)
+    manifest_path = build_path / f"{args.project_name}.nu54-build.json"
+    manifest = load_json_object(manifest_path, "E_ARTIFACT_MANIFEST")
+    if (
+        manifest.get("schema_version") != ARTIFACT_MANIFEST_SCHEMA_VERSION
+        or manifest.get("adapter_version") != ADAPTER_VERSION
+        or manifest.get("fqbn") != args.fqbn
+        or manifest.get("board") != args.board
+    ):
+        raise AdapterError("export artifact manifest의 version 또는 target이 다릅니다.")
+    artifacts = manifest.get("artifacts")
+    if not isinstance(artifacts, dict):
+        raise AdapterError("export artifact manifest에 artifact 목록이 없습니다.")
+    matching = [
+        extension
+        for extension, record in artifacts.items()
+        if isinstance(record, dict)
+        and isinstance(record.get("path"), str)
+        and path_key(record["path"]) == path_key(artifact)
+    ]
+    if len(matching) != 1:
+        raise AdapterError(f"요청 artifact가 현재 build manifest에 없습니다: {artifact}")
+    validate_manifest_artifact(manifest, matching[0], build_path)
 
 
 ## @brief Arduino IDE가 parsing할 수 있는 FLASH/RAM 사용량을 출력합니다.
@@ -1152,7 +2562,55 @@ def create_parser() -> argparse.ArgumentParser:
     flash_parser.add_argument("--runner", choices=("pyocd", "jlink"), required=True)
     flash_parser.add_argument("--probe-id")
     flash_parser.add_argument("--verbose", action="store_true")
+
+    clean_parser = subparsers.add_parser("clean-build")
+    add_common_arguments(clean_parser)
+
+    cache_parser = subparsers.add_parser("cache")
+    cache_parser.add_argument(
+        "cache_action", choices=("list", "inspect", "prune", "remove", "clear")
+    )
+    cache_parser.add_argument("key", nargs="?")
+    cache_parser.add_argument("--cache-root")
+    cache_parser.add_argument("--include-compiler", action="store_true")
     return parser
+
+
+## @brief Arduino recipe가 의도적으로 전달하는 제한된 추가 인자만 허용합니다.
+def validate_passthrough(command: str, values: Sequence[str]) -> None:
+    if not values:
+        return
+    if command in {"preprocess", "record"}:
+        index = 0
+        while index < len(values):
+            value = values[index]
+            if value == "-I":
+                if index + 1 >= len(values) or values[index + 1].startswith("-"):
+                    raise AdapterError("-I 뒤에 include directory가 필요합니다.")
+                index += 2
+                continue
+            if value.startswith("-I") and len(value) > 2:
+                index += 1
+                continue
+            if command == "preprocess" and value in {"-MMD", "-MD", "-MP"}:
+                index += 1
+                continue
+            if command == "preprocess" and value in {"-MF", "-MT", "-MQ"}:
+                if index + 1 >= len(values) or values[index + 1].startswith("-"):
+                    raise AdapterError(f"{value} 뒤에 dependency 값이 필요합니다.")
+                index += 2
+                continue
+            if command == "preprocess" and value.startswith(("-D", "-U")) and len(value) > 2:
+                index += 1
+                continue
+            raise AdapterError(f"허용되지 않은 {command} 추가 인자입니다: {value}")
+        return
+    if command == "link":
+        for value in values:
+            if value.startswith("-") or Path(value).suffix.casefold() not in {".o", ".obj"}:
+                raise AdapterError(f"허용되지 않은 link object 인자입니다: {value}")
+        return
+    raise AdapterError(f"{command} command는 추가 인자를 허용하지 않습니다: {' '.join(values)}")
 
 
 ## @brief subcommand를 실행하고 안정적인 종료 code를 반환합니다.
@@ -1160,6 +2618,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
     parser = create_parser()
     args, passthrough = parser.parse_known_args(arguments)
     try:
+        validate_passthrough(args.command, passthrough)
         if args.command == "prepare":
             prepare(args)
         elif args.command == "preprocess":
@@ -1178,6 +2637,12 @@ def main(arguments: Sequence[str] | None = None) -> int:
             print_size(args)
         elif args.command == "flash":
             flash(args)
+        elif args.command == "clean-build":
+            clean_build(args)
+        elif args.command == "cache":
+            if args.cache_action in {"inspect", "remove"} and not args.key:
+                parser.error(f"cache {args.cache_action}에는 key가 필요합니다")
+            manage_cache(args)
         else:
             parser.error(f"알 수 없는 command입니다: {args.command}")
         return 0

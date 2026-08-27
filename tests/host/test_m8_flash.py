@@ -35,7 +35,11 @@ class M8FlashContractTests(unittest.TestCase):
         self.root = Path(self.temporary.name)
         self.platform = self.root / "platform"
         self.build = self.root / "arduino-build"
-        self.zephyr_build = self.root / "zephyr-build"
+        self.cache_root = self.root / "cache"
+        self.input_manifest = {"schema_version": MODULE.CACHE_SCHEMA_VERSION, "fixture": "m8"}
+        self.cache_key = MODULE.cache_key_for_manifest(self.input_manifest)
+        self.workspace = MODULE.cache_workspace(self.cache_key, root=self.cache_root)
+        self.zephyr_build = self.workspace / "build"
         self.platform.mkdir()
         self.build.mkdir()
         (self.zephyr_build / "zephyr").mkdir(parents=True)
@@ -67,18 +71,46 @@ class M8FlashContractTests(unittest.TestCase):
             encoding="utf-8",
         )
         self.manifest_path = self.build / "Blink.ino.nu54-build.json"
+        (self.workspace / "input-manifest.json").write_text(
+            json.dumps(self.input_manifest, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        (self.workspace / "state.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": MODULE.CACHE_SCHEMA_VERSION,
+                    "cache_key": self.cache_key,
+                    "state": "ready",
+                    "first_configure_complete": True,
+                    "last_build_result": "success",
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
         self.manifest = {
-            "schema_version": 1,
+            "schema_version": MODULE.ARTIFACT_MANIFEST_SCHEMA_VERSION,
             "adapter_version": MODULE.ADAPTER_VERSION,
             "fqbn": "nucode:zephyr:nu54dk",
             "board": MODULE.DEFAULT_BOARD,
             "sysbuild": False,
             "context": {
+                "schema_version": MODULE.SESSION_CONTEXT_SCHEMA_VERSION,
+                "adapter_version": MODULE.ADAPTER_VERSION,
+                "state": "built",
                 "fqbn": "nucode:zephyr:nu54dk",
                 "board": MODULE.DEFAULT_BOARD,
                 "build_path": self.build.as_posix(),
                 "platform_root": self.platform.as_posix(),
+                "cache_root": self.cache_root.as_posix(),
+                "cache_key": self.cache_key,
+                "cache_dir": self.workspace.as_posix(),
                 "zephyr_build_dir": self.zephyr_build.as_posix(),
+            },
+            "cache": {
+                "schema_version": MODULE.CACHE_SCHEMA_VERSION,
+                "key": self.cache_key,
+                "input_manifest": self.input_manifest,
+                "cache_dir": self.workspace.as_posix(),
             },
             "artifacts": {
                 "hex": self.artifact_record(self.exported_hex),
@@ -170,6 +202,19 @@ class M8FlashContractTests(unittest.TestCase):
 
         with self.assertRaisesRegex(MODULE.AdapterError, "E_RUNNER_UNAVAILABLE"):
             MODULE.validate_runner_configuration(self.zephyr_build, "openocd")
+
+    def test_rejects_destructive_runner_metadata(self) -> None:
+        """! @brief runners.yaml에 숨은 erase/recover option도 일반 upload에서 거부합니다. """
+
+        runners = self.zephyr_build / "zephyr" / "runners.yaml"
+        runners.write_text(
+            runners.read_text(encoding="utf-8").replace(
+                "    - --target=nrf54l\n", "    - --target=nrf54l\n    - --erase\n"
+            ),
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_FLASH_UNSAFE_OPTION"):
+            MODULE.validate_runner_configuration(self.zephyr_build, "pyocd")
 
     def test_selects_one_or_explicit_pyocd_probe(self) -> None:
         """! @brief 단일 probe 자동 선택과 명시 UID 선택을 검증합니다. """

@@ -34,6 +34,8 @@ NU54DK에서 Loader 없이 동작하는 Native Full Zephyr 기반 Arduino Core�
 - M8 온보드 CMSIS-DAP 자동 선택, Arduino CLI pyOCD upload 10/10 및 최종 COM10 reset 표식 통과
 - M8 Full Zephyr ELF로 pyOCD debugserver와 원본 `.ino` `setup()` source breakpoint 통과
 - M8 통합 staged Builder 회귀 9/9와 M7·M8 host protocol/contract unittest 22/22 통과
+- M9 완료, Arduino 임시 경로와 분리된 persistent Zephyr cache, canonical key, 전용 ccache와 안전한 lock/LRU 구현
+- M9 host 계약 43/43과 Arduino CLI library·parallel·cache 회귀 통과: no-change compiler 0회, Sketch 수정 3.57초, 손상 tree 복구 확인
 
 ## 보드 정의
 
@@ -78,6 +80,8 @@ Boards Manager용 배포 archive에는 고정된 서브모듈 commit의 실제 �
 - [M5 Arduino CLI Build Adapter 기준선](./00_Docs/04_검증%20기록/05_M5_Arduino_CLI_Build_Adapter_기준선.md)
 - [M6 기본 Arduino API, Serial과 인터럽트 기준선](./00_Docs/04_검증%20기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md)
 - [M7 Wire·SPI·ADC·PWM 기준선](./00_Docs/04_검증%20기록/07_M7_Wire_SPI_ADC_PWM_기준선.md)
+- [M8 업로드와 디버그 기준선](./00_Docs/04_검증%20기록/08_M8_업로드와_디버그_기준선.md)
+- [M9 증분 빌드·캐시와 재현성 기준선](./00_Docs/04_검증%20기록/09_M9_증분_빌드_캐시와_재현성_기준선.md)
 
 ## 작성자
 

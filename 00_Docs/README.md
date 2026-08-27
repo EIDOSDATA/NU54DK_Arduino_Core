@@ -28,9 +28,11 @@
 8. [M5 Arduino CLI Build Adapter 기준선](<./04_검증 기록/05_M5_Arduino_CLI_Build_Adapter_기준선.md>)
 9. [M6 기본 Arduino API, Serial과 인터럽트 기준선](<./04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md>)
 10. [M7 Wire·SPI·ADC·PWM 기준선](<./04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md>)
-11. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
-12. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
-13. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
+11. [M8 업로드와 디버그 기준선](<./04_검증 기록/08_M8_업로드와_디버그_기준선.md>)
+12. [M9 증분 빌드·캐시와 재현성 기준선](<./04_검증 기록/09_M9_증분_빌드_캐시와_재현성_기준선.md>)
+13. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
+14. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
+15. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
 
 ## 문서 구성
 
@@ -70,6 +72,7 @@
 - [M6 기본 Arduino API, Serial과 인터럽트 기준선](<./04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md>): ArduinoCore-API 공통 구현, 실제 UART Serial HIL, target ztest와 P1.13 물리 edge 완료 증거
 - [M7 Wire·SPI·ADC·PWM 기준선](<./04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md>): M7 공개 API·DTS/Kconfig 계약, 0x6A HIL 안전 경계와 실제·미검증 결과 행렬
 - [M8 업로드와 디버그 기준선](<./04_검증 기록/08_M8_업로드와_디버그_기준선.md>): manifest 검증, Arduino Upload recipe, pyOCD 10회 HIL과 source breakpoint 증거
+- [M9 증분 빌드·캐시와 재현성 기준선](<./04_검증 기록/09_M9_증분_빌드_캐시와_재현성_기준선.md>): persistent cache key, ccache, lock/LRU와 cold/warm/손상 복구 실측 증거
 
 ## 현재 진행 상태
 
@@ -84,7 +87,8 @@
 | M6 기본 Arduino API | **완료** | 공통 API·Serial·interrupt 구현, target ztest 10/10·COM10 Serial HIL·실제 P1.13 `FALLING`/`RISING`/`CHANGE` HIL 통과 |
 | M7 버스·아날로그·PWM API | **완료** | NU54DK Twister target 11/11·전체 Builder 8/8(M7 예제 4/4)·I2C/ADC/PWM HIL·SPI00 4 MHz 40-byte 물리 loopback 통과 |
 | M8 업로드와 디버그 | **완료** | manifest·artifact·probe 안전검사, Arduino CLI pyOCD upload 10/10, 최종 UART reset과 `setup()` source breakpoint 통과 |
-| M9~M11 | 대기 | 증분 cache 고도화, Boards Manager 패키징과 v0.1 release 검증 대기 |
+| M9 증분 빌드·캐시·재현성 | **완료** | persistent tree와 canonical key, host 43/43, library·parallel·M9 Arduino CLI 회귀 및 실측 기준선 통과 |
+| M10~M11 | 대기 | Boards Manager clean Windows 패키징과 v0.1 release 검증 대기 |
 
 상세 상태는 [구현 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)을 단일 기준으로 관리한다.
 

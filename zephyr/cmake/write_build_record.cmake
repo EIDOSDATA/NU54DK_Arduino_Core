@@ -5,13 +5,33 @@ function(nucode_git_revision directory output_variable check_dirty)
 
   if(EXISTS "${NUCODE_GIT_EXECUTABLE}" AND EXISTS "${directory}")
     execute_process(
-      COMMAND "${NUCODE_GIT_EXECUTABLE}" rev-parse --short=12 HEAD
+      COMMAND "${NUCODE_GIT_EXECUTABLE}" rev-parse --show-toplevel
       WORKING_DIRECTORY "${directory}"
-      RESULT_VARIABLE git_result
-      OUTPUT_VARIABLE git_output
+      RESULT_VARIABLE git_root_result
+      OUTPUT_VARIABLE git_root_output
       ERROR_QUIET
       OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+    file(REAL_PATH "${directory}" requested_root)
+    file(TO_CMAKE_PATH "${requested_root}" requested_root)
+    file(TO_CMAKE_PATH "${git_root_output}" git_root_output)
+    if(WIN32)
+      string(TOLOWER "${requested_root}" requested_root)
+      string(TOLOWER "${git_root_output}" git_root_output)
+    endif()
+
+    if(git_root_result EQUAL 0 AND "${git_root_output}" STREQUAL "${requested_root}")
+      execute_process(
+        COMMAND "${NUCODE_GIT_EXECUTABLE}" rev-parse --short=12 HEAD
+        WORKING_DIRECTORY "${directory}"
+        RESULT_VARIABLE git_result
+        OUTPUT_VARIABLE git_output
+        ERROR_QUIET
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+      )
+    else()
+      set(git_result 1)
+    endif()
 
     if(git_result EQUAL 0 AND NOT "${git_output}" STREQUAL "")
       set(revision "${git_output}")

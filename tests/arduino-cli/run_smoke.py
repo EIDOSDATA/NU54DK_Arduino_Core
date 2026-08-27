@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""! @brief NU54DK Arduino CLI M5~M8 end-to-end 회귀를 실행합니다. """
+"""! @brief NU54DK Arduino CLI M5~M9 end-to-end 회귀를 실행합니다. """
 
 from __future__ import annotations
 
 import argparse
 from concurrent.futures import ThreadPoolExecutor
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -98,11 +99,113 @@ def assert_build(build_path: Path, project_name: str) -> dict:
     context = json.loads(context_path.read_text(encoding="utf-8"))
     if context.get("sysbuild") is not False:
         raise SmokeFailure("smoke build unexpectedly enabled sysbuild")
+    cache_key = context.get("cache_key")
+    cache_dir = Path(str(context.get("cache_dir", "")))
+    if not isinstance(cache_key, str) or not re.fullmatch(r"[0-9a-f]{64}", cache_key):
+        raise SmokeFailure("build context has no full M9 cache key")
+    if not cache_dir.is_dir():
+        raise SmokeFailure(f"persistent cache directory is missing: {cache_dir}")
+    for metadata in ("input-manifest.json", "state.json", "access.json"):
+        if not (cache_dir / metadata).is_file():
+            raise SmokeFailure(f"cache metadata is missing: {cache_dir / metadata}")
     for extension in ("elf", "hex", "bin", "map", "nu54-build.json"):
         artifact = build_path / f"{project_name}.{extension}"
         if not artifact.is_file() or artifact.stat().st_size == 0:
             raise SmokeFailure(f"missing artifact: {artifact}")
+    manifest_path = build_path / f"{project_name}.nu54-build.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("cache", {}).get("key") != cache_key:
+        raise SmokeFailure("artifact manifest cache key does not match the session context")
+    input_manifest = json.loads((cache_dir / "input-manifest.json").read_text(encoding="utf-8"))
+    canonical_input = json.dumps(
+        input_manifest, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+    if hashlib.sha256(canonical_input).hexdigest() != cache_key:
+        raise SmokeFailure("cache input manifest does not reproduce the session cache key")
+    for extension in ("elf", "hex", "bin", "map"):
+        artifact = build_path / f"{project_name}.{extension}"
+        record = manifest.get("artifacts", {}).get(extension, {})
+        digest = hashlib.sha256(artifact.read_bytes()).hexdigest()
+        if record.get("path") != artifact.resolve().as_posix():
+            raise SmokeFailure(f"artifact manifest path mismatch: {artifact}")
+        if record.get("size") != artifact.stat().st_size or record.get("sha256") != digest:
+            raise SmokeFailure(f"artifact manifest integrity mismatch: {artifact}")
+    source_inputs = manifest.get("source_inputs")
+    if not isinstance(source_inputs, dict) or not isinstance(source_inputs.get("sources"), list):
+        raise SmokeFailure("artifact manifest has no M9 source provenance")
+    for record in source_inputs["sources"]:
+        if not isinstance(record, dict):
+            raise SmokeFailure("artifact source provenance record is not an object")
+        source = Path(str(record.get("source_path", "")))
+        compiled = Path(str(record.get("compiled_path", "")))
+        if not source.is_file() or not compiled.is_file():
+            raise SmokeFailure(f"artifact source provenance path is missing: {record}")
+        if hashlib.sha256(source.read_bytes()).hexdigest() != record.get("sha256"):
+            raise SmokeFailure(f"artifact source provenance hash mismatch: {source}")
+    build_record = source_inputs.get("live_build_record")
+    if not isinstance(build_record, dict):
+        raise SmokeFailure("artifact manifest has no live build record provenance")
+    build_record_path = Path(str(build_record.get("path", "")))
+    if (
+        not build_record_path.is_file()
+        or hashlib.sha256(build_record_path.read_bytes()).hexdigest()
+        != build_record.get("sha256")
+    ):
+        raise SmokeFailure("live build record provenance hash mismatch")
     return context
+
+
+## @brief Arduino build manifest에 기록된 artifact SHA-256을 읽습니다.
+def artifact_hash(build_path: Path, project_name: str, extension: str = "elf") -> str:
+    manifest = json.loads(
+        (build_path / f"{project_name}.nu54-build.json").read_text(encoding="utf-8")
+    )
+    value = manifest.get("artifacts", {}).get(extension, {}).get("sha256")
+    if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value):
+        raise SmokeFailure(f"artifact hash is missing: {project_name}.{extension}")
+    return value
+
+
+## @brief 현재 artifact manifest의 source provenance 한 건을 원본 경로로 찾습니다.
+def source_provenance(build_path: Path, project_name: str, source: Path) -> dict:
+    manifest = json.loads(
+        (build_path / f"{project_name}.nu54-build.json").read_text(encoding="utf-8")
+    )
+    matches = [
+        record
+        for record in manifest.get("source_inputs", {}).get("sources", [])
+        if isinstance(record, dict)
+        and Path(str(record.get("source_path", ""))).resolve() == source.resolve()
+    ]
+    if len(matches) != 1:
+        raise SmokeFailure(f"source provenance is not unique: {source}: {matches}")
+    return matches[0]
+
+
+## @brief M9 context에서 공개 가능한 성능·cache 증거 field만 추출합니다.
+def m9_snapshot(label: str, context: dict) -> dict:
+    cache_dir = Path(context["cache_dir"])
+    cache_bytes = sum(
+        path.stat().st_size
+        for path in cache_dir.rglob("*")
+        if path.is_file()
+    )
+    fields = (
+        "cache_key",
+        "cache_dir",
+        "configure_reason",
+        "configure_skipped",
+        "pristine_configure_count",
+        "recovery_count",
+        "source_manifest_changed",
+        "configure_duration_seconds",
+        "link_configure_duration_seconds",
+        "build_duration_seconds",
+        "ccache_stats_delta",
+    )
+    snapshot = {"label": label, "cache_bytes": cache_bytes}
+    snapshot.update({field: context.get(field) for field in fields})
+    return snapshot
 
 
 ## @brief materialized Kconfig에서 boolean symbol의 최종 값을 읽습니다.
@@ -279,13 +382,104 @@ def test_blink(cli: Path, config: Path, root: Path, repository: Path) -> None:
 ## @brief 직접 library와 depends library source가 manifest에 들어가는지 검증합니다.
 def test_local_library(cli: Path, config: Path, root: Path, repository: Path) -> None:
     fixture = repository / "tests" / "arduino-cli"
+    staged_fixture = root / "m9-library-fixture"
+    sketch = staged_fixture / "local_library"
+    libraries = root / "user" / "libraries"
+    shutil.copytree(fixture / "local_library", sketch)
+    shutil.copytree(fixture / "libraries", libraries)
+    library_header = libraries / "LocalAccumulator" / "src" / "LocalAccumulator.h"
+    library_source = libraries / "LocalAccumulator" / "src" / "LocalAccumulator.cpp"
     build = root / "build-library"
-    run(compile_command(cli, config, build, fixture / "local_library", fixture / "libraries"))
+    command = compile_command(cli, config, build, sketch)
+    run(command)
     context = assert_build(build, "local_library.ino")
+    baseline_elf = artifact_hash(build, "local_library.ino")
     sources = (Path(context["app_dir"]) / "sources.cmake").read_text(encoding="utf-8")
     for expected in ("local_library.ino.cpp", "LocalAccumulator.cpp", "LeafValue.cpp"):
         if expected not in sources:
             raise SmokeFailure(f"source manifest omitted {expected}")
+    library_header.write_text(
+        library_header.read_text(encoding="utf-8").replace(
+            "int localAccumulate(int value);",
+            "#define LOCAL_ACCUMULATOR_BIAS 0\n\nint localAccumulate(int value);",
+        ),
+        encoding="utf-8",
+    )
+    library_source.write_text(
+        library_source.read_text(encoding="utf-8").replace(
+            "return value + leafValue();",
+            "return value + leafValue() + LOCAL_ACCUMULATOR_BIAS + 1;",
+        ),
+        encoding="utf-8",
+    )
+    run(command)
+    edited = assert_build(build, "local_library.ino")
+    if edited["cache_key"] != context["cache_key"]:
+        raise SmokeFailure("library source body edit changed the M9 cache key")
+    if edited["zephyr_build_dir"] != context["zephyr_build_dir"]:
+        raise SmokeFailure("library source body edit changed the Zephyr build tree")
+    if edited.get("pristine_configure_count") != 1:
+        raise SmokeFailure("library source edit repeated a pristine configure")
+    if artifact_hash(build, "local_library.ino") == baseline_elf:
+        raise SmokeFailure("library source edit was not reflected in the final ELF")
+    if int(edited.get("ccache_stats_delta", {}).get("cache_miss", 0)) < 1:
+        raise SmokeFailure("library source edit did not compile a changed source")
+    edited_source_record = source_provenance(
+        build, "local_library.ino", library_source
+    )
+    if Path(edited_source_record["compiled_path"]).resolve() != library_source.resolve():
+        raise SmokeFailure("external library source did not retain its private-header directory")
+    if edited_source_record["sha256"] != hashlib.sha256(library_source.read_bytes()).hexdigest():
+        raise SmokeFailure("edited library source hash was not recorded in provenance")
+
+    source_edited_elf = artifact_hash(build, "local_library.ino")
+    library_header.write_text(
+        library_header.read_text(encoding="utf-8").replace(
+            "#define LOCAL_ACCUMULATOR_BIAS 0", "#define LOCAL_ACCUMULATOR_BIAS 2"
+        ),
+        encoding="utf-8",
+    )
+    run(command)
+    header_edited = assert_build(build, "local_library.ino")
+    if header_edited["cache_key"] != context["cache_key"]:
+        raise SmokeFailure("library header edit changed the M9 cache key")
+    if header_edited["zephyr_build_dir"] != context["zephyr_build_dir"]:
+        raise SmokeFailure("library header edit changed the Zephyr build tree")
+    if header_edited.get("pristine_configure_count") != 1:
+        raise SmokeFailure("library header edit repeated a pristine configure")
+    if artifact_hash(build, "local_library.ino") == source_edited_elf:
+        raise SmokeFailure("library header edit was not reflected in the final ELF")
+    if int(header_edited.get("ccache_stats_delta", {}).get("cache_miss", 0)) < 1:
+        raise SmokeFailure("library header dependency edit did not rebuild a source")
+
+    # 같은 Arduino object 이름에서 library root만 바뀌어도 이전 record를 재사용하지 않아야 합니다.
+    alternate_libraries = staged_fixture / "alternate-libraries"
+    shutil.copytree(libraries, alternate_libraries)
+    retired_libraries = staged_fixture / "retired-libraries"
+    libraries.rename(retired_libraries)
+    alternate_source = (
+        alternate_libraries / "LocalAccumulator" / "src" / "LocalAccumulator.cpp"
+    )
+    alternate_source.write_text(
+        alternate_source.read_text(encoding="utf-8").replace(
+            "LOCAL_ACCUMULATOR_BIAS + 1;", "LOCAL_ACCUMULATOR_BIAS + 3;"
+        ),
+        encoding="utf-8",
+    )
+    previous_elf = artifact_hash(build, "local_library.ino")
+    run(compile_command(cli, config, build, sketch, alternate_libraries))
+    switched = assert_build(build, "local_library.ino")
+    if switched["cache_key"] != context["cache_key"]:
+        raise SmokeFailure("library search root switch changed the M9 cache key")
+    if switched["zephyr_build_dir"] != context["zephyr_build_dir"]:
+        raise SmokeFailure("library search root switch changed the Zephyr build tree")
+    if artifact_hash(build, "local_library.ino") == previous_elf:
+        raise SmokeFailure("library search root switch reused a stale source record")
+    switched_record = source_provenance(
+        build, "local_library.ino", alternate_source
+    )
+    if Path(switched_record["compiled_path"]).resolve() != alternate_source.resolve():
+        raise SmokeFailure("library search root switch retained the previous source path")
 
 
 ## @brief sketch config와 overlay가 최종 Zephyr 출력에 반영되는지 검증합니다.
@@ -345,8 +539,9 @@ def test_parallel(cli: Path, config: Path, root: Path, repository: Path) -> None
         raise SmokeFailure("parallel builds shared a Zephyr workspace")
 
 
-## @brief sketch와 DTS module 입력 변경 때 같은 tree를 안전하게 재구성하는지 검증합니다.
+## @brief M9 cache hit, source edit, key invalidation과 손상 복구를 실제 build로 검증합니다.
 def test_incremental(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    evidence: list[dict] = []
     source = (repository / "examples" / "01.Basics" / "Blink" / "Blink.ino").read_text(encoding="utf-8")
     sketch = root / "sketches" / "Incremental"
     sketch.mkdir(parents=True)
@@ -356,13 +551,127 @@ def test_incremental(cli: Path, config: Path, root: Path, repository: Path) -> N
     command = compile_command(cli, config, build, sketch)
     run(command)
     first = assert_build(build, "Incremental.ino")
+    cold_elf = artifact_hash(build, "Incremental.ino")
+    evidence.append(m9_snapshot("cold", first))
+    if first.get("configure_skipped") is not False:
+        raise SmokeFailure("cold build unexpectedly skipped the first configure")
+    if first.get("pristine_configure_count") != 1:
+        raise SmokeFailure("cold build did not run exactly one pristine configure")
+
+    run(command)
+    unchanged = assert_build(build, "Incremental.ino")
+    if artifact_hash(build, "Incremental.ino") != cold_elf:
+        raise SmokeFailure("no-change build changed the final ELF")
+    evidence.append(m9_snapshot("no-change", unchanged))
+    if unchanged["cache_key"] != first["cache_key"]:
+        raise SmokeFailure("no-change build changed the M9 cache key")
+    if unchanged["zephyr_build_dir"] != first["zephyr_build_dir"]:
+        raise SmokeFailure("no-change build changed the persistent Zephyr tree")
+    if unchanged.get("configure_skipped") is not True:
+        raise SmokeFailure("no-change build repeated prepare configure")
+    if unchanged.get("source_manifest_changed") is not False:
+        raise SmokeFailure("no-change build rewrote sources.cmake")
+    ccache_delta = unchanged.get("ccache_stats_delta", {})
+    for required_stat in ("cache_miss", "direct_cache_hit", "preprocessed_cache_hit"):
+        if required_stat not in ccache_delta:
+            raise SmokeFailure(f"no-change build has no ccache statistic: {required_stat}")
+    compile_activity = sum(
+        int(ccache_delta.get(key, 0))
+        for key in ("cache_miss", "direct_cache_hit", "preprocessed_cache_hit")
+    )
+    if compile_activity != 0:
+        raise SmokeFailure(f"no-change build invoked compiler through ccache: {ccache_delta}")
+
     ino.write_text(source.replace("delay(250);", "delay(251);", 1), encoding="utf-8")
     run(command)
     second = assert_build(build, "Incremental.ino")
-    if first["zephyr_build_dir"] != second["zephyr_build_dir"]:
+    edited_elf = artifact_hash(build, "Incremental.ino")
+    evidence.append(m9_snapshot("sketch-edit", second))
+    if unchanged["cache_key"] != second["cache_key"]:
+        raise SmokeFailure("Sketch body edit changed the M9 cache key")
+    if unchanged["zephyr_build_dir"] != second["zephyr_build_dir"]:
         raise SmokeFailure("incremental compile changed the Zephyr workspace")
     if second.get("pristine_configure_count") != 1:
         raise SmokeFailure("incremental compile repeated a pristine configure")
+    if edited_elf == cold_elf:
+        raise SmokeFailure("Sketch source edit was not reflected in the final ELF")
+    if int(second.get("ccache_stats_delta", {}).get("cache_miss", 0)) < 1:
+        raise SmokeFailure("Sketch source edit did not compile a changed source")
+    generated_sketch = build / "sketch" / "Incremental.ino.cpp"
+    sketch_record = source_provenance(build, "Incremental.ino", generated_sketch)
+    mirror = Path(sketch_record["compiled_path"])
+    if (
+        sketch_record.get("logical_identity")
+        != "arduino-generated:sketch/Incremental.ino.cpp"
+        or not mirror.is_file()
+        or "delay(251);" not in mirror.read_text(encoding="utf-8")
+        or sketch_record.get("sha256")
+        != hashlib.sha256(generated_sketch.read_bytes()).hexdigest()
+    ):
+        raise SmokeFailure("edited Sketch source was not materialized in the cache mirror")
+
+    alternate_build = root / "build-incremental-alternate"
+    run(compile_command(cli, config, alternate_build, sketch))
+    alternate = assert_build(alternate_build, "Incremental.ino")
+    evidence.append(m9_snapshot("alternate-build-path", alternate))
+    if alternate["cache_key"] != second["cache_key"]:
+        raise SmokeFailure("Arduino build path leaked into the M9 cache key")
+    if alternate["zephyr_build_dir"] != second["zephyr_build_dir"]:
+        raise SmokeFailure("same Sketch in another build path did not reuse the cache tree")
+    if artifact_hash(alternate_build, "Incremental.ino") != edited_elf:
+        raise SmokeFailure("alternate Arduino build path exported a different ELF")
+
+    parallel_builds = (
+        root / "build-incremental-parallel-a",
+        root / "build-incremental-parallel-b",
+    )
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        futures = [
+            executor.submit(run, compile_command(cli, config, parallel_build, sketch))
+            for parallel_build in parallel_builds
+        ]
+        for future in futures:
+            future.result()
+    for index, parallel_build in enumerate(parallel_builds, start=1):
+        parallel_context = assert_build(parallel_build, "Incremental.ino")
+        evidence.append(m9_snapshot(f"parallel-same-key-{index}", parallel_context))
+        if parallel_context["cache_key"] != second["cache_key"]:
+            raise SmokeFailure("same-key parallel build selected a different cache key")
+        if parallel_context["zephyr_build_dir"] != second["zephyr_build_dir"]:
+            raise SmokeFailure("same-key parallel build did not serialize one cache tree")
+
+    (sketch / "prj.conf").write_text("CONFIG_THREAD_NAME=y\n", encoding="utf-8")
+    run(command)
+    configured = assert_build(build, "Incremental.ino")
+    evidence.append(m9_snapshot("prj-conf-edit", configured))
+    if configured["cache_key"] == second["cache_key"]:
+        raise SmokeFailure("prj.conf edit did not select a new cache key")
+    if configured["zephyr_build_dir"] == second["zephyr_build_dir"]:
+        raise SmokeFailure("prj.conf edit reused an incompatible Zephyr tree")
+    if configured.get("pristine_configure_count") != 1:
+        raise SmokeFailure("new prj.conf key did not start with one pristine configure")
+    configured_output = (
+        Path(configured["zephyr_build_dir"]) / "zephyr" / ".config"
+    ).read_text(encoding="utf-8")
+    if "CONFIG_THREAD_NAME=y" not in configured_output:
+        raise SmokeFailure("M9 prj.conf key did not materialize its Kconfig marker")
+
+    (sketch / "app.overlay").write_text(
+        "/ { nucode-m9-fixture { compatible = \"nucode,m9-fixture\"; }; };\n",
+        encoding="utf-8",
+    )
+    run(command)
+    overlaid = assert_build(build, "Incremental.ino")
+    evidence.append(m9_snapshot("overlay-edit", overlaid))
+    if overlaid["cache_key"] == configured["cache_key"]:
+        raise SmokeFailure("app.overlay edit did not select a new cache key")
+    if overlaid.get("pristine_configure_count") != 1:
+        raise SmokeFailure("new overlay key did not start with one pristine configure")
+    overlaid_output = (
+        Path(overlaid["zephyr_build_dir"]) / "zephyr" / "zephyr.dts"
+    ).read_text(encoding="utf-8")
+    if "nucode-m9-fixture" not in overlaid_output:
+        raise SmokeFailure("M9 overlay key did not materialize its devicetree marker")
 
     platform = root / "user" / "hardware" / "nucode" / "zephyr"
     module_manifest = platform / "zephyr" / "module.yml"
@@ -374,14 +683,15 @@ def test_incremental(cli: Path, config: Path, root: Path, repository: Path) -> N
     )
     run(command)
     third = assert_build(build, "Incremental.ino")
-    if third["zephyr_build_dir"] != second["zephyr_build_dir"]:
-        raise SmokeFailure("module.yml fingerprint update changed the Zephyr workspace")
-    if third.get("configuration_fingerprint") == second.get("configuration_fingerprint"):
-        raise SmokeFailure("module.yml 변경이 fingerprint에 반영되지 않았습니다")
+    evidence.append(m9_snapshot("module-edit", third))
+    if third["zephyr_build_dir"] == overlaid["zephyr_build_dir"]:
+        raise SmokeFailure("module.yml 변경이 새 Zephyr tree를 선택하지 않았습니다")
+    if third.get("cache_key") == overlaid.get("cache_key"):
+        raise SmokeFailure("module.yml 변경이 cache key에 반영되지 않았습니다")
     if third.get("configure_skipped") is not False:
         raise SmokeFailure("module.yml 변경 뒤 configure가 생략되었습니다")
     if third.get("pristine_configure_count") != 1:
-        raise SmokeFailure("module.yml fingerprint update repeated a pristine configure")
+        raise SmokeFailure("module.yml 새 key의 pristine configure 횟수가 잘못되었습니다")
 
     binding.write_text(
         binding.read_text(encoding="utf-8")
@@ -390,14 +700,43 @@ def test_incremental(cli: Path, config: Path, root: Path, repository: Path) -> N
     )
     run(command)
     fourth = assert_build(build, "Incremental.ino")
-    if fourth["zephyr_build_dir"] != third["zephyr_build_dir"]:
-        raise SmokeFailure("DTS binding fingerprint update changed the Zephyr workspace")
-    if fourth.get("configuration_fingerprint") == third.get("configuration_fingerprint"):
-        raise SmokeFailure("DTS binding 변경이 fingerprint에 반영되지 않았습니다")
+    evidence.append(m9_snapshot("dts-binding-edit", fourth))
+    if fourth["zephyr_build_dir"] == third["zephyr_build_dir"]:
+        raise SmokeFailure("DTS binding 변경이 새 Zephyr tree를 선택하지 않았습니다")
+    if fourth.get("cache_key") == third.get("cache_key"):
+        raise SmokeFailure("DTS binding 변경이 cache key에 반영되지 않았습니다")
     if fourth.get("configure_skipped") is not False:
         raise SmokeFailure("DTS binding 변경 뒤 configure가 생략되었습니다")
     if fourth.get("pristine_configure_count") != 1:
-        raise SmokeFailure("DTS binding fingerprint update repeated a pristine configure")
+        raise SmokeFailure("DTS binding 새 key의 pristine configure 횟수가 잘못되었습니다")
+
+    build_graph = Path(fourth["zephyr_build_dir"]) / "build.ninja"
+    build_graph.unlink()
+    run(command)
+    recovered = assert_build(build, "Incremental.ino")
+    evidence.append(m9_snapshot("build-graph-recovery", recovered))
+    if recovered["cache_key"] != fourth["cache_key"]:
+        raise SmokeFailure("build graph recovery changed the valid cache key")
+    if recovered.get("configure_reason") != "build-graph-recovery":
+        raise SmokeFailure("missing build.ninja recovery reason was not recorded")
+    if recovered.get("recovery_count") != 1:
+        raise SmokeFailure("build graph recovery count was not recorded")
+    if recovered.get("pristine_configure_count") != 2:
+        raise SmokeFailure("build graph recovery did not run one explicit pristine configure")
+    (root / "m9-evidence.json").write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "fqbn": FQBN,
+                "scenarios": evidence,
+            },
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
 
 
 ## @brief M6 Serial과 GPIO interrupt 공개 예제를 Arduino CLI로 끝까지 빌드합니다.
@@ -525,15 +864,16 @@ def test_m8_upload_build(cli: Path, config: Path, root: Path, repository: Path) 
             raise SmokeFailure(f"M8 board upload property is missing: {expected}")
 
 
-## @brief 선택된 M5~M8 smoke test를 격리된 hardware root에서 실행합니다.
+## @brief 선택된 M5~M9 smoke test를 격리된 hardware와 cache root에서 실행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--cli", type=Path, default=default_cli())
+    parser.add_argument("--evidence", type=Path)
     parser.add_argument(
         "--tests",
         nargs="+",
-        choices=("blink", "library", "config", "error", "parallel", "incremental", "m6", "m7", "m8"),
-        default=("blink", "library", "config", "error", "parallel", "incremental", "m6", "m7", "m8"),
+        choices=("blink", "library", "config", "error", "parallel", "incremental", "m6", "m7", "m8", "m9"),
+        default=("blink", "library", "config", "error", "parallel", "m6", "m7", "m8", "m9"),
     )
     args = parser.parse_args(arguments)
     repository = Path(__file__).resolve().parents[2]
@@ -543,24 +883,38 @@ def main(arguments: Sequence[str] | None = None) -> int:
 
     with tempfile.TemporaryDirectory(prefix="n54m5-") as temporary_name:
         root = Path(temporary_name)
+        previous_cache_root = os.environ.get("NUCODE_BUILD_CACHE_ROOT")
+        os.environ["NUCODE_BUILD_CACHE_ROOT"] = str(root / "cache")
         user_root = root / "user"
-        stage_platform(repository, user_root)
-        config = root / "arduino-cli.yaml"
-        write_cli_config(config, user_root)
-        tests = {
-            "blink": test_blink,
-            "library": test_local_library,
-            "config": test_config_overlay,
-            "error": test_compile_error,
-            "parallel": test_parallel,
-            "incremental": test_incremental,
-            "m6": test_m6_examples,
-            "m7": test_m7_examples,
-            "m8": test_m8_upload_build,
-        }
-        for name in args.tests:
-            tests[name](cli, config, root, repository)
-            print(f"PASS: {name}")
+        try:
+            stage_platform(repository, user_root)
+            config = root / "arduino-cli.yaml"
+            write_cli_config(config, user_root)
+            tests = {
+                "blink": test_blink,
+                "library": test_local_library,
+                "config": test_config_overlay,
+                "error": test_compile_error,
+                "parallel": test_parallel,
+                "incremental": test_incremental,
+                "m6": test_m6_examples,
+                "m7": test_m7_examples,
+                "m8": test_m8_upload_build,
+                "m9": test_incremental,
+            }
+            for name in args.tests:
+                tests[name](cli, config, root, repository)
+                print(f"PASS: {name}")
+            m9_evidence = root / "m9-evidence.json"
+            if args.evidence and m9_evidence.is_file():
+                evidence_path = args.evidence.resolve()
+                evidence_path.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(m9_evidence, evidence_path)
+        finally:
+            if previous_cache_root is None:
+                os.environ.pop("NUCODE_BUILD_CACHE_ROOT", None)
+            else:
+                os.environ["NUCODE_BUILD_CACHE_ROOT"] = previous_cache_root
     return 0
 
 

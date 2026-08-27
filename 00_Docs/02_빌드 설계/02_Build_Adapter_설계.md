@@ -597,7 +597,8 @@ Arduino build system은 `cores/<core>` 아래의 source를 자동으로 컴파�
 - payload archive는 임시 파일에 생성 후 replace한다.
 - 같은 cache key의 link는 직렬화한다.
 - 다른 sketch/cache key는 병렬 build 가능해야 한다.
-- stale lock은 PID, host 및 timestamp를 확인한 뒤만 회수한다.
+- Windows named mutex 또는 POSIX `flock`을 lock 권위로 사용하고 process 종료 시 운영체제의
+  자동 회수에 맡긴다. PID·host·timestamp JSON은 진단 정보로만 사용한다.
 
 ---
 
