@@ -557,6 +557,16 @@ class M10PrerequisiteContractTests(unittest.TestCase):
         self.assertIn(user_bundle, launcher)
         self.assertLess(launcher.index(user_bundle), launcher.index("C:\\ncs\\toolchains\\*"))
 
+    def test_builder_launcher_isolates_embedded_python_runtime(self) -> None:
+        """! @brief 외부 Python 환경이 NCS Toolchain 표준 library를 오염시키지 못하게 합니다. """
+
+        launcher = (
+            REPOSITORY_ROOT / "tools" / "nu54-builder" / "nu54-builder.cmd"
+        ).read_text(encoding="ascii")
+        self.assertIn('set "PYTHONHOME="', launcher)
+        self.assertIn('set "PYTHONPATH="', launcher)
+        self.assertIn('set "PYTHONNOUSERSITE=1"', launcher)
+
 
 if __name__ == "__main__":
     unittest.main()

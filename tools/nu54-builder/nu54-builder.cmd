@@ -2,6 +2,9 @@
 chcp 65001 >nul
 setlocal
 set "PYTHONUTF8=1"
+set "PYTHONHOME="
+set "PYTHONPATH="
+set "PYTHONNOUSERSITE=1"
 
 set "NU54_PYTHON="
 
