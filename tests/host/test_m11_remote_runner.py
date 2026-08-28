@@ -369,6 +369,83 @@ class M11RemoteRunnerContractTests(unittest.TestCase):
             self.assertIn(marker, self.text)
         self.assertNotIn("Remove-Item -LiteralPath $remoteRun", self.text)
 
+    def test_13_gate_records_use_powershell_51_object_array(self) -> None:
+        """! @brief generic list array 변환의 PowerShell 5.1 binder 오류를 차단합니다. """
+
+        for marker in (
+            "[object[]]$gateRecords = @()",
+            "$gateRecords += [pscustomobject]$record",
+            "Write-OrchestratorResult -Status passed -GateRecords $gateRecords",
+        ):
+            self.assertIn(marker, self.text)
+        self.assertNotIn("New-Object Collections.Generic.List[object]", self.text)
+        self.assertNotIn("-GateRecords @($gateRecords)", self.text)
+
+        with tempfile.TemporaryDirectory(prefix="nu54-m11-orchestrator-") as temporary:
+            root = Path(temporary)
+            identity = root / "identity"
+            known_hosts = root / "known_hosts"
+            output = root / "orchestrator.json"
+            identity.write_bytes(b"private-key-fixture\n")
+            known_hosts.write_bytes(b"host-key-fixture\n")
+            escaped_identity = str(identity).replace("'", "''")
+            escaped_known_hosts = str(known_hosts).replace("'", "''")
+            escaped_output = str(output).replace("'", "''")
+            body = (
+                "$script:CurrentRunId='m11-fixture';"
+                "$script:Plan=[pscustomobject]@{version='0.1.0-rc.1';"
+                "core_revision='1111111111111111111111111111111111111111';"
+                "board_revision='2222222222222222222222222222222222222222';"
+                "runtime_payload_sha256=('3'*64)};"
+                "$script:PlanSha256=('4'*64);"
+                "$script:SshTarget='nu54ci@example.invalid';"
+                "$script:RepositoryUrl='https://example.invalid/repository.git';"
+                "$script:SensitiveLogValues=@();"
+                "$Port=22;"
+                f"$IdentityFile='{escaped_identity}';"
+                f"$KnownHostsFile='{escaped_known_hosts}';"
+                f"$script:OrchestratorResultPath='{escaped_output}';"
+                "[object[]]$records=@();"
+                "$records += [pscustomobject]@{gate_id='arduino';status='passed'};"
+                "$records += [pscustomobject]@{gate_id='zephyr';status='passed'};"
+                "Write-OrchestratorResult -Status passed -GateRecords $records"
+            )
+            completed = self.invoke_functions(
+                (
+                    "Write-Utf8WithoutBom",
+                    "Get-ByteSha256",
+                    "Get-FileSha256",
+                    "Protect-LogText",
+                    "Write-OrchestratorResult",
+                ),
+                body,
+            )
+            self.assertEqual(completed.returncode, 0, completed.stderr)
+            result = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(result["status"], "passed")
+            self.assertEqual(
+                [record["gate_id"] for record in result["gates"]],
+                ["arduino", "zephyr"],
+            )
+
+    def test_14_post_processing_failure_records_failed_receipt(self) -> None:
+        """! @brief 로컬 검증·복사·마감 실패도 fail-closed receipt로 남깁니다. """
+
+        post_processing = self.text[self.text.index("[object[]]$gateRecords = @()") :]
+        for marker in (
+            "try {\n$evidencePaths = @(",
+            "$postProcessingFailure = Protect-LogText -Text $_.Exception.Message",
+            "-Status failed `",
+            "-Failure $postProcessingFailure `",
+            "-GateRecords $gateRecords",
+            "throw $postProcessingFailure",
+        ):
+            self.assertIn(marker, post_processing)
+        self.assertLess(
+            post_processing.index("throw $postProcessingFailure"),
+            post_processing.index("NU54_M11_REMOTE_RUN=passed"),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

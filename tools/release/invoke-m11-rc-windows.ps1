@@ -831,6 +831,8 @@ if ($remoteFailure -or $downloadFailures.Count -ne 0) {
     throw $failure
 }
 
+[object[]]$gateRecords = @()
+try {
 $evidencePaths = @(
     Join-Path $localRunRoot 'arduino_cli_fixed_package.evidence.json'
     Join-Path $localRunRoot 'zephyr_regression.evidence.json'
@@ -856,7 +858,6 @@ Invoke-LocalNative `
     -Label 'local-validate-remote-evidence' `
     -TimeoutSeconds 600 | Out-Null
 
-$gateRecords = New-Object Collections.Generic.List[object]
 foreach ($gateId in $script:RemoteGateIds) {
     $evidencePath = Join-Path $localRunRoot ($gateId + '.evidence.json')
     $logPath = Join-Path $localRunRoot ($gateId + '.evidence.log')
@@ -873,7 +874,7 @@ foreach ($gateId in $script:RemoteGateIds) {
         $record['result_file'] = [IO.Path]::GetFileName($resultPath)
         $record['result_sha256'] = Get-FileSha256 -Path $resultPath
     }
-    $gateRecords.Add([pscustomobject]$record)
+    $gateRecords += [pscustomobject]$record
 }
 
 foreach ($fileName in $script:ExpectedResultFiles) {
@@ -894,7 +895,20 @@ foreach ($fileName in $script:ExpectedResultFiles) {
         throw "ReleaseRoot로 가져온 M11 remote result byte가 다릅니다: $fileName"
     }
 }
-Write-OrchestratorResult -Status passed -GateRecords @($gateRecords)
+Write-OrchestratorResult -Status passed -GateRecords $gateRecords
+} catch {
+    $postProcessingFailure = Protect-LogText -Text $_.Exception.Message
+    try {
+        Write-OrchestratorResult `
+            -Status failed `
+            -Failure $postProcessingFailure `
+            -GateRecords $gateRecords
+    } catch {
+        $receiptFailure = Protect-LogText -Text $_.Exception.Message
+        $postProcessingFailure = $postProcessingFailure + '; failed receipt: ' + $receiptFailure
+    }
+    throw $postProcessingFailure
+}
 Remove-Item -LiteralPath $script:LocalTemporaryRoot -Recurse -Force -ErrorAction SilentlyContinue
 Write-Host "NU54_M11_REMOTE_RUN=passed:$localRunRoot"
 Write-Host "NU54_M11_REMOTE_RESULTS_IMPORTED=$releaseRootPath"
