@@ -1,0 +1,39 @@
+{
+  "arduino_cli": {
+    "version": "1.5.1"
+  },
+  "board": {
+    "repository": "https://github.com/Nucode01/NU54DK_Zephyr_DTS",
+    "revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3"
+  },
+  "linux_toolchain_container": {
+    "digest": "sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace",
+    "distribution": "external-not-redistributed",
+    "image": "ghcr.io/nrfconnect/sdk-nrf-toolchain",
+    "license_expression": "NOASSERTION",
+    "platform": "linux/amd64",
+    "provenance": {
+      "dockerfile": "https://github.com/nrfconnect/sdk-nrf/blob/v3.4.0/scripts/docker/Dockerfile",
+      "package": "https://github.com/nrfconnect/sdk-nrf/pkgs/container/sdk-nrf-toolchain/949615715?tag=v3.4.0"
+    },
+    "tag": "v3.4.0",
+    "toolchain_id": "fbf7391cab"
+  },
+  "ncs": {
+    "license_expression": "LicenseRef-Nordic-5-Clause",
+    "repository": "https://github.com/nrfconnect/sdk-nrf",
+    "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "tag": "v3.4.0"
+  },
+  "schema_version": 1,
+  "windows_toolchain": {
+    "bundle_id": "dcbdc366a1",
+    "distribution": "external-not-redistributed",
+    "license_expression": "NOASSERTION"
+  },
+  "zephyr": {
+    "repository": "https://github.com/nrfconnect/sdk-zephyr",
+    "revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "version": "4.4.0"
+  }
+}

@@ -1,0 +1,137 @@
+#!/usr/bin/env python3
+"""! @brief M12 workflow와 재현 build lock의 fail-closed 계약을 검증합니다. """
+
+from __future__ import annotations
+
+import importlib.util
+import json
+from pathlib import Path
+import re
+import unittest
+
+
+REPOSITORY = Path(__file__).resolve().parents[2]
+LOCK_SCRIPT = REPOSITORY / "tools" / "ci" / "verify_ci_lock.py"
+SPEC = importlib.util.spec_from_file_location("nu54_m12_lock_test", LOCK_SCRIPT)
+assert SPEC and SPEC.loader
+LOCK_MODULE = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(LOCK_MODULE)
+
+
+class M12CiContractTests(unittest.TestCase):
+    """! @brief GitHub-hosted software와 self-hosted HIL 경계를 검사합니다. """
+
+    ## @brief 매 시험에서 canonical lock을 읽습니다.
+    def setUp(self) -> None:
+        self.lock = LOCK_MODULE.strict_json_object(LOCK_MODULE.LOCK_PATH)
+
+    ## @brief 기존 package·prerequisite·gitlink와 lock이 같은지 검증합니다.
+    def test_lock_matches_repository_contract(self) -> None:
+        LOCK_MODULE.validate_lock(self.lock)
+
+    ## @brief cache key가 exact revision·toolchain·digest를 모두 포함하는지 검증합니다.
+    def test_cache_keys_include_exact_identity(self) -> None:
+        keys = LOCK_MODULE.cache_keys(self.lock)
+        linux = keys["linux_cache_key"]
+        windows = keys["windows_cache_key"]
+        self.assertIn(self.lock["ncs"]["revision"], linux)
+        self.assertIn(self.lock["zephyr"]["revision"], linux)
+        self.assertIn(self.lock["linux_toolchain_container"]["toolchain_id"], linux)
+        self.assertIn(
+            self.lock["linux_toolchain_container"]["digest"].removeprefix("sha256:"),
+            linux,
+        )
+        self.assertIn(self.lock["ncs"]["revision"], windows)
+        self.assertIn(self.lock["zephyr"]["revision"], windows)
+        self.assertIn(self.lock["windows_toolchain"]["bundle_id"], windows)
+
+    ## @brief PR software workflow가 네 공개 gate를 자동 실행하는지 검증합니다.
+    def test_pull_request_workflow_has_required_gates(self) -> None:
+        path = REPOSITORY / ".github" / "workflows" / "m12-software-gates.yml"
+        text = path.read_text(encoding="utf-8")
+        self.assertRegex(text, r"(?m)^\s*pull_request:\s*$")
+        for job in ("contract", "host", "documents", "package", "example-discovery"):
+            self.assertRegex(text, rf"(?m)^  {re.escape(job)}:\s*$")
+        self.assertNotIn("pull_request_target", text)
+
+    ## @brief PowerShell runtime 계약이 있는 host suite가 Windows에서 실행되는지 검증합니다.
+    def test_host_gate_uses_windows_runner(self) -> None:
+        path = REPOSITORY / ".github" / "workflows" / "m12-software-gates.yml"
+        text = path.read_text(encoding="utf-8")
+        host = text.split("\n  host:\n", 1)[1].split("\n  documents:\n", 1)[0]
+        self.assertIn("runs-on: windows-2025", host)
+
+    ## @brief Linux build가 공식 image tag가 아닌 digest를 사용하는지 검증합니다.
+    def test_reproducible_build_uses_digest_and_exact_cache(self) -> None:
+        path = REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
+        text = path.read_text(encoding="utf-8")
+        expected_image = (
+            f"{self.lock['linux_toolchain_container']['image']}@"
+            f"{self.lock['linux_toolchain_container']['digest']}"
+        )
+        self.assertIn(expected_image, text)
+        self.assertNotIn(
+            f"{self.lock['linux_toolchain_container']['image']}:v3.4.0", text
+        )
+        self.assertIn("steps.lock.outputs.linux_cache_key", text)
+        self.assertIn("steps.lock.outputs.windows_cache_key", text)
+        self.assertIn("defaults:\n      run:\n        shell: bash", text)
+        self.assertNotIn("ACCEPT_JLINK_LICENSE", text)
+
+    ## @brief HIL workflow가 PR에서 실행되지 않고 secret·장치 lock을 요구하는지 검증합니다.
+    def test_hil_is_manual_self_hosted_and_locked(self) -> None:
+        path = REPOSITORY / ".github" / "workflows" / "m12-nu54dk-hil.yml"
+        text = path.read_text(encoding="utf-8")
+        self.assertRegex(text, r"(?m)^\s*workflow_dispatch:\s*$")
+        self.assertNotIn("pull_request:", text)
+        self.assertNotIn("push:", text)
+        self.assertIn("[self-hosted, Windows, X64, nu54dk-hil]", text)
+        self.assertIn("concurrency:", text)
+        self.assertIn("secrets.NU54DK_HIL_AUTHORIZATION", text)
+
+    ## @brief 모든 외부 action이 mutable tag가 아닌 40자리 commit으로 고정됐는지 검증합니다.
+    def test_actions_are_pinned_to_commits(self) -> None:
+        workflows = (REPOSITORY / ".github" / "workflows").glob("m12-*.yml")
+        uses: list[str] = []
+        for workflow in workflows:
+            uses.extend(
+                re.findall(r"(?m)^\s*-?\s*uses:\s*([^\s]+)\s*$", workflow.read_text(encoding="utf-8"))
+            )
+        self.assertTrue(uses)
+        for reference in uses:
+            self.assertRegex(reference, r"^[^@]+@[0-9a-f]{40}$", reference)
+
+    ## @brief 표준 library example 일곱 개가 canonical 위치에만 있는지 검증합니다.
+    def test_example_discovery_inputs_are_canonical(self) -> None:
+        expected = (
+            "libraries/NUCODE_NU54DK/examples/Blink/Blink.ino",
+            "libraries/NUCODE_NU54DK/examples/InterruptButton/InterruptButton.ino",
+            "libraries/NUCODE_NU54DK/examples/AnalogReadA0/AnalogReadA0.ino",
+            "libraries/NUCODE_NU54DK/examples/PWMFade/PWMFade.ino",
+            "libraries/NUCODE_NU54DK/examples/SerialEcho/SerialEcho.ino",
+            "libraries/SPI/examples/SPITransaction/SPITransaction.ino",
+            "libraries/Wire/examples/WirePmicId/WirePmicId.ino",
+        )
+        for relative in expected:
+            self.assertTrue((REPOSITORY / relative).is_file(), relative)
+        legacy_root = REPOSITORY / "examples"
+        self.assertFalse(legacy_root.exists() and any(legacy_root.rglob("*.ino")))
+
+    ## @brief 대표 Twister build가 공유 compiler cache에 의존하지 않는지 검증합니다.
+    def test_zephyr_build_disables_ccache(self) -> None:
+        source = (REPOSITORY / "tools" / "ci" / "run_zephyr_build.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('"USE_CCACHE=0"', source)
+
+    ## @brief Windows build가 MAX_PATH 위험을 실행 전에 차단하는지 검증합니다.
+    def test_zephyr_build_requires_short_windows_outdir(self) -> None:
+        source = (REPOSITORY / "tools" / "ci" / "run_zephyr_build.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("WINDOWS_OUTDIR_MAX_LENGTH", source)
+        self.assertIn("validate_outdir_path(outdir)", source)
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)

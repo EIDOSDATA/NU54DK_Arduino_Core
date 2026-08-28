@@ -1,0 +1,120 @@
+name: M12 Reproducible Builds
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  group: m12-build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  zephyr-build:
+    name: Zephyr Twister in pinned Nordic container
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/nrfconnect/sdk-nrf-toolchain@sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace
+    defaults:
+      run:
+        shell: bash
+    env:
+      NCS_CI_WORKSPACE: ${{ runner.temp }}/ncs-v3.4.0
+      M12_EVIDENCE: ${{ runner.temp }}/m12-evidence
+    steps:
+      - name: Checkout exact source and board package
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: Verify lock and derive cache key
+        id: lock
+        run: python3 tools/ci/verify_ci_lock.py --github-output
+      - name: Restore exact west workspace
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ env.NCS_CI_WORKSPACE }}
+          key: ${{ steps.lock.outputs.linux_cache_key }}
+      - name: Prepare exact NCS source workspace
+        run: >-
+          python3 tools/ci/prepare_ncs_workspace.py
+          --workspace "$NCS_CI_WORKSPACE"
+          --evidence "$M12_EVIDENCE/ncs-identity.json"
+      - name: Build representative Zephyr suites
+        run: >-
+          python3 tools/ci/run_zephyr_build.py
+          --workspace "$NCS_CI_WORKSPACE"
+          --outdir "$M12_EVIDENCE/twister"
+      - name: Upload software build evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: m12-zephyr-build-${{ github.sha }}
+          path: ${{ env.M12_EVIDENCE }}
+          if-no-files-found: error
+          retention-days: 14
+
+  arduino-build:
+    name: Arduino compile with pinned Windows prerequisites
+    runs-on: windows-2025
+    env:
+      NUCODE_NCS_ROOT: ${{ github.workspace }}\..\ncs\v3.4.0
+      NUCODE_TOOLCHAIN_ROOT: ${{ github.workspace }}\..\ncs\toolchains\dcbdc366a1
+      NUCODE_PREREQUISITE_STATE_ROOT: ${{ github.workspace }}\..\nu54-prerequisites
+      M12_EVIDENCE: ${{ github.workspace }}\..\m12-evidence
+    steps:
+      - name: Checkout exact source and board package
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: Set up Python 3.12.11
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.11
+      - name: Set up Arduino CLI 1.5.1
+        uses: arduino/setup-arduino-cli@81d310742121c928ea9c8bbd407b4217b432ae02
+        with:
+          version: 1.5.1
+      - name: Verify lock and derive cache key
+        id: lock
+        run: python tools/ci/verify_ci_lock.py --github-output
+      - name: Restore exact Windows NCS and toolchain
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: |
+            ${{ github.workspace }}\..\ncs
+            ${{ github.workspace }}\..\nu54-prerequisites
+            ~\AppData\Local\NUCODE\NU54DK_Arduino_Core
+          key: ${{ steps.lock.outputs.windows_cache_key }}
+      - name: Install or verify exact Nordic prerequisites
+        shell: powershell
+        run: >-
+          powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass
+          -File .\tools\nu54-prerequisites\install-nordic.ps1
+          -PlatformRoot .
+          -NcsRoot "${{ github.workspace }}\..\ncs"
+      - name: Verify installed source revisions
+        run: python tools/ci/verify_ci_lock.py --workspace "${{ github.workspace }}\..\ncs\v3.4.0"
+      - name: Compile representative Arduino examples
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Path $env:M12_EVIDENCE -Force | Out-Null
+          $cli = (Get-Command arduino-cli.exe).Source
+          & $cli version 2>&1 | Tee-Object -FilePath (Join-Path $env:M12_EVIDENCE 'arduino-cli-version.txt')
+          python .\tests\arduino-cli\run_smoke.py --cli $cli --tests blink m6 m7 examples 2>&1 |
+            Tee-Object -FilePath (Join-Path $env:M12_EVIDENCE 'arduino-build.log')
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Upload Arduino build evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: m12-arduino-build-${{ github.sha }}
+          path: ${{ env.M12_EVIDENCE }}
+          if-no-files-found: error
+          retention-days: 14
