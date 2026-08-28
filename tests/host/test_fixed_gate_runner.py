@@ -300,7 +300,8 @@ class FixedGateRunnerTests(unittest.TestCase):
             marker.write_text("keep\n", encoding="utf-8")
             expected = home / MODULE.ZEPHYR_SHORT_WORKSPACE_NAMES[1]
             with MODULE.short_zephyr_workspace(home, max_path_length=1024) as workspace:
-                self.assertEqual(workspace, expected)
+                # Windows CI에서는 동일한 경로가 8.3 별칭과 긴 이름으로 표현될 수 있습니다.
+                self.assertTrue(workspace.samefile(expected))
                 (workspace / "owned.txt").write_text("owned\n", encoding="utf-8")
             self.assertFalse(expected.exists())
             self.assertEqual(marker.read_text(encoding="utf-8"), "keep\n")

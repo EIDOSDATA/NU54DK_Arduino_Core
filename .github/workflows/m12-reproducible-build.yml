@@ -25,7 +25,7 @@ jobs:
         shell: bash
     env:
       NCS_CI_WORKSPACE: ${{ github.workspace }}/../ncs-v3.4.0
-      M12_EVIDENCE: ${{ github.workspace }}/../m12-evidence
+      M12_EVIDENCE: ${{ github.workspace }}/m12-evidence
     steps:
       - name: Checkout exact source and board package
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -66,7 +66,7 @@ jobs:
       NUCODE_NCS_ROOT: ${{ github.workspace }}\..\ncs\v3.4.0
       NUCODE_TOOLCHAIN_ROOT: ${{ github.workspace }}\..\ncs\toolchains\dcbdc366a1
       NUCODE_PREREQUISITE_STATE_ROOT: ${{ github.workspace }}\..\nu54-prerequisites
-      M12_EVIDENCE: ${{ github.workspace }}\..\m12-evidence
+      M12_EVIDENCE: ${{ github.workspace }}\m12-evidence
     steps:
       - name: Checkout exact source and board package
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1

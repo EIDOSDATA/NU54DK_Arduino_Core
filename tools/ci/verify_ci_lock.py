@@ -148,14 +148,26 @@ def validate_lock(lock: dict[str, Any]) -> None:
             raise LockFailure(f"{name}이 M12 lock과 다릅니다.")
 
     gitlink = subprocess.run(
-        ("git", "-C", str(REPOSITORY), "ls-tree", "HEAD", "board_package/NU54DK_Zephyr_DTS"),
+        (
+            "git",
+            "-c",
+            f"safe.directory={REPOSITORY}",
+            "-C",
+            str(REPOSITORY),
+            "ls-tree",
+            "HEAD",
+            "board_package/NU54DK_Zephyr_DTS",
+        ),
         check=False,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
     )
     match = re.search(r"\b([0-9a-f]{40})\tboard_package/NU54DK_Zephyr_DTS$", gitlink.stdout)
-    if gitlink.returncode != 0 or match is None or match.group(1) != board["revision"]:
+    if gitlink.returncode != 0:
+        detail = gitlink.stderr.strip() or "git ls-tree가 세부 오류를 반환하지 않았습니다."
+        raise LockFailure(f"부모 저장소의 board gitlink를 읽지 못했습니다: {detail}")
+    if match is None or match.group(1) != board["revision"]:
         raise LockFailure("부모 저장소의 board gitlink가 M12 lock과 다릅니다.")
 
 

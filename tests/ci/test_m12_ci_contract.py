@@ -107,6 +107,20 @@ class M12CiContractTests(unittest.TestCase):
             text = workflow.read_text(encoding="utf-8")
             self.assertNotIn("${{ runner.temp }}", text, workflow.name)
 
+    ## @brief artifact 경로에는 GitHub uploader가 거부하는 상위 경로 이동을 허용하지 않습니다.
+    def test_artifact_paths_stay_inside_workspace(self) -> None:
+        for workflow in (REPOSITORY / ".github" / "workflows").glob("m12-*.yml"):
+            text = workflow.read_text(encoding="utf-8")
+            for variable in ("M12_EVIDENCE", "HIL_EVIDENCE"):
+                for value in re.findall(rf"(?m)^\s*{variable}:\s*(.+?)\s*$", text):
+                    self.assertNotIn("/../", value, workflow.name)
+                    self.assertNotIn("\\..\\", value, workflow.name)
+
+    ## @brief container checkout에서도 gitlink 검증이 저장소 단위 safe.directory를 지정합니다.
+    def test_gitlink_check_scopes_safe_directory(self) -> None:
+        source = LOCK_SCRIPT.read_text(encoding="utf-8")
+        self.assertIn('f"safe.directory={REPOSITORY}"', source)
+
     ## @brief Windows 2025에도 binary가 존재하는 exact Python을 사용합니다.
     def test_workflows_pin_available_python(self) -> None:
         for workflow in (REPOSITORY / ".github" / "workflows").glob("m12-*.yml"):
