@@ -82,7 +82,7 @@ index의 package identity는 다음과 같다.
 | 외부 tool dependency | 없음 — NCS/Toolchain은 `post_install.bat`이 별도 설치 |
 
 이 URL은 `main`에 게시한 최신 정식 version을 가리키는 장기 사용자 endpoint다. 각 Release에는
-같은 이름의 immutable index snapshot을 함께 첨부해 해당 version의 checksum 증거를 보존한다.
+같은 이름의 checksum 고정 index snapshot을 함께 첨부해 해당 version의 증거를 보존한다.
 
 ---
 
