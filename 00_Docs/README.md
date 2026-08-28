@@ -33,13 +33,14 @@
 13. [M10 Boards Manager와 clean Windows 기준선](<./04_검증 기록/10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md>)
 14. [M11 v0.1.0-rc.1 릴리스 후보 기준선(역사적 검증 기록)](<./04_검증 기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md>)
 15. [M11 v0.1.0-rc.2 공개 후 수동 검증 기록](<./04_검증 기록/12_M11_v0.1.0_rc2_공개_후_수동_검증.md>)
-16. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
-17. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
-18. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
-19. [Boards Manager 설치와 패키징](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
-20. [v0.1.0-rc.1 배포 중단 기록](<./05_릴리스/00_v0.1.0_rc1_배포_중단_기록.md>)
-21. [v0.1.0-rc.2 릴리스 노트](<./05_릴리스/07_v0.1.0_rc2_릴리스_노트.md>)
-22. [v0.1.0 릴리스 노트](<./05_릴리스/11_v0.1.0_릴리스_노트.md>)
+16. [v0.1.0 정식 릴리스 공개 기록](<./04_검증 기록/13_v0.1.0_정식_릴리스_공개_기록.md>)
+17. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
+18. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
+19. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
+20. [Boards Manager 설치와 패키징](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
+21. [v0.1.0-rc.1 배포 중단 기록](<./05_릴리스/00_v0.1.0_rc1_배포_중단_기록.md>)
+22. [v0.1.0-rc.2 릴리스 노트](<./05_릴리스/07_v0.1.0_rc2_릴리스_노트.md>)
+23. [v0.1.0 릴리스 노트](<./05_릴리스/11_v0.1.0_릴리스_노트.md>)
 
 ## 문서 구성
 
@@ -84,6 +85,7 @@
 - [M10 Boards Manager와 clean Windows 기준선](<./04_검증 기록/10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md>): 공개 preview의 clean Windows 최초 설치, build/upload와 전체 수명주기 완료 증거
 - [M11 v0.1.0-rc.1 릴리스 후보 기준선](<./04_검증 기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md>): 회수 전 exact RC 필수 gate 8/8, M10 retained-prerequisite 원격 회귀와 pyOCD+UART HIL을 보존한 역사적 증거
 - [M11 v0.1.0-rc.2 공개 후 수동 검증 기록](<./04_검증 기록/12_M11_v0.1.0_rc2_공개_후_수동_검증.md>): clean Windows Arduino IDE 2.3.10 설치·compile·실제 NU54DK upload·실행의 프로젝트 소유자 수동 검증과 증거 경계
+- [v0.1.0 정식 릴리스 공개 기록](<./04_검증 기록/13_v0.1.0_정식_릴리스_공개_기록.md>): exact commit, 재현 가능한 stable package, 공개 자산 checksum과 runtime 동등성 증거
 
 ### 05. 릴리스
 

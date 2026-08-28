@@ -495,6 +495,7 @@ probe 없이 실행한 조사 모드나 `-AllowMissingProbe` 결과는 최종 HI
 - [빌드 캐시와 산출물](<./04_빌드_캐시와_산출물.md>)
 - [업로드와 디버그](<./05_업로드와_디버그.md>)
 - [M9 증분 빌드·캐시와 재현성 기준선](<../04_검증 기록/09_M9_증분_빌드_캐시와_재현성_기준선.md>)
+- [v0.1.0 정식 릴리스 공개 기록](<../04_검증 기록/13_v0.1.0_정식_릴리스_공개_기록.md>)
 - `packaging/boards-manager/nu54_package.py`
 - `tools/nu54-prerequisites/install-nordic.ps1`
 - `tools/nu54-prerequisites/verify-nordic.ps1`

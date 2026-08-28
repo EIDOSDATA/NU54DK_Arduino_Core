@@ -237,6 +237,19 @@ class M10PackagingTests(unittest.TestCase):
         with self.assertRaises(PACKAGE.PackageError):
             PACKAGE.validate_index(broken, artifact_dir=self.output)
 
+    def test_10a_checked_in_stable_index_has_current_public_identity(self) -> None:
+        """! @brief 장기 사용자 endpoint의 stable index identity를 검증합니다. """
+
+        index = REPO_ROOT / PACKAGE.STABLE_INDEX_FILENAME
+        document = PACKAGE.validate_index(index)
+        platform = document["packages"][0]["platforms"][0]
+        self.assertEqual(platform["version"], "0.1.0")
+        self.assertEqual(platform["archiveFileName"], PACKAGE.archive_filename("0.1.0"))
+        self.assertEqual(
+            platform["url"],
+            PACKAGE.release_asset_url("0.1.0", PACKAGE.archive_filename("0.1.0")),
+        )
+
     def test_11_supported_versions_are_fail_closed(self) -> None:
         self.assertEqual(PACKAGE.LEGACY_PREVIEW_VERSIONS[-2:], ("0.0.92", "0.0.93"))
         self.assertEqual(PACKAGE.FAILED_M10_PREVIEW_VERSIONS, ("0.0.94", "0.0.95"))
