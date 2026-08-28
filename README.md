@@ -39,8 +39,20 @@ NU54DK에서 Loader 없이 동작하는 Native Full Zephyr 기반 Arduino Core�
 - M10 완료, 공개 preview `0.0.96`→`0.0.97`을 별도 clean Windows PC에서 최초 설치하고 package 수명주기 11/11 통과
 - M10 NCS v3.4.0/Toolchain exact-pin 설치, cold/warm Blink build, 온보드 CMSIS-DAP V2/pyOCD upload 10/10 통과
 - M11 기술 완료, exact `v0.1.0-rc.1` artifact의 필수 gate 8/8 통과와 evidence manifest `ready-for-human-approval`
-- `v0.1.0-rc.1` tag와 GitHub prerelease는 아직 게시하지 않았으며 프로젝트 소유자 승인 대기
+- [`v0.1.0-rc.1` GitHub Prerelease](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.1.0-rc.1) 공개 완료
+- 공개 RC index를 Arduino IDE bundled backend 1.5.1의 격리 환경에서 수집하고 `nucode:zephyr` `0.1.0-rc.1` 검색 확인
 - stable `v0.1.0`, 최종 법률 검토, tag·GitHub Release·stable index 공개는 프로젝트 소유자 승인 대기
+
+## Arduino IDE 설치 — v0.1.0-rc.1
+
+Arduino IDE의 **Additional Boards Manager URLs**에 다음 주소를 추가합니다.
+
+```text
+https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0-rc.1/package_nucode_nu54dk_rc_index.json
+```
+
+Boards Manager에서 `NUCODE NU54DK Zephyr Boards`를 검색해 설치합니다. 이 버전은 정식
+`v0.1.0`이 아닌 Release Candidate이며 공식 검증 범위는 Windows 10/11 x64입니다.
 
 ## 보드 정의
 
