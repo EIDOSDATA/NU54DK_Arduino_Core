@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | 설계·구현 동기화 — M6 완료 기준 |
+| 문서 상태 | v0.1.0 정식 구현·M6 검증 동기화; M13 빌드 프로필 정책 반영 |
 | 작성자 | Quantum / NUCODE |
 | 실행 방식 | Loader 없는 Native Full Zephyr 정적 펌웨어 |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
@@ -56,7 +56,7 @@ Sketch source
 - Loader와 Sketch 사이의 별도 ABI 계약
 - Sketch 전용 runtime partition
 
-SoC Boot ROM, 선택적인 MCUboot, sysbuild 보조 image 또는 디버그 프로브 firmware는 LLEXT Loader와 다른 계층이다. 향후 필요에 따라 추가할 수 있지만 v0 Runtime의 필수 요소는 아니다.
+SoC Boot ROM, 선택적인 MCUboot, sysbuild 보조 image 또는 디버그 프로브 firmware는 LLEXT Loader와 다른 계층이다. 향후 필요에 따라 추가할 수 있지만 v0.1.0 Runtime의 필수 요소는 아니다.
 
 ---
 
@@ -67,8 +67,8 @@ Runtime 구성의 원본은 다음과 같이 나눈다.
 | 정보 | 단일 원본 |
 | --- | --- |
 | 보드의 물리 장치와 pinctrl | `board_package/NU54DK_Zephyr_DTS` |
-| kernel과 driver 선택 | application `prj.conf` 및 Kconfig |
-| Sketch별 장치 추가·변경 | application overlay |
+| kernel과 driver 선택 | v0.1.0 application `prj.conf` 및 Kconfig; M13 이후 검증된 build profile |
+| Sketch별 장치 추가·변경 | v0.1.0 application overlay; M13 이후 profile이 선택한 overlay |
 | Arduino 실행 규칙 | `cores/arduino/main.cpp`와 Runtime 내부 코드 |
 | Arduino 논리 핀 순서 | `variants/nu54dk` |
 | 빌드 orchestration | west-native 명령과 향후 Build Adapter |
@@ -290,9 +290,15 @@ Sketch는 다음을 소유한다.
 - 사용자 application logic
 - Sketch가 요청한 peripheral의 begin/end lifecycle
 - 추가 Zephyr thread와 synchronization object
-- project-specific `prj.conf`와 overlay
+- v0.1.0의 project-specific `prj.conf`와 overlay 또는 M13 이후 선택한 검증 profile
 
 Sketch가 Zephyr API를 직접 포함하고 사용하는 것을 금지하지 않는다. 이것이 Loader 없는 Full Zephyr 방식을 선택한 이유 중 하나다.
+
+일반 Arduino 사용자는 M13 profile 도입 이후 `prj.conf`나 Devicetree overlay를 직접
+편집하지 않는다. Arduino IDE의 보드 옵션에서 검증된 profile을 선택하면 Build Adapter가
+해당 Kconfig와 overlay를 적용한다. 반면 고급 사용자를 위한 expert escape hatch는 유지하며,
+사용자 conf·overlay와 Zephyr/NCS 공개 API를 명시적으로 전달할 수 있게 한다. expert 구성은
+기본 profile의 지원 범위를 자동 상속하지 않고 별도 build·HIL 증거로 판정한다.
 
 ---
 
@@ -378,9 +384,10 @@ C++20 clean build도 통과했다. 최종 Arduino library 호환성 시험에서
 - ArduinoCore-API `String`용 common libc malloc arena 기본 8192 byte
 - static initialization은 허용하되 device 사용은 `main()` 이후로 제한
 
-Exception 또는 full C++ standard library가 필요한 Sketch는 project `prj.conf`에서
-명시적으로 활성화할 수 있다. M2에서 full libstdc++ + exception + RTTI clean link를
-통과했으며, Flash/RAM 비용은 각 빌드 report로 확인한다.
+Exception 또는 full C++ standard library가 필요한 일반 Sketch는 M13 이후 해당 기능을
+포함한 검증 profile을 선택한다. 고급 사용자는 expert escape hatch의 project `prj.conf`에서
+직접 활성화할 수 있다. M2에서 full libstdc++ + exception + RTTI clean link를 통과했으며,
+Flash/RAM 비용은 각 build report로 확인한다.
 
 ### 9.3 정적 객체
 

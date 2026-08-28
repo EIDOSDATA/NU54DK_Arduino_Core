@@ -9,7 +9,7 @@ param(
     [ValidateSet('0.1.0')]
     [string]$Version,
 
-    [string]$Commit = 'HEAD',
+    [string]$Commit = 'v0.1.0',
 
     [string]$OutputDirectory = (Join-Path $PSScriptRoot 'out'),
 

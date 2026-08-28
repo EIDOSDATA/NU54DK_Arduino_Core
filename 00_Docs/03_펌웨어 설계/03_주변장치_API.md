@@ -2,13 +2,13 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M6·M7 Wire·SPI·ADC·PWM 완료 |
+| 문서 상태 | v0.1.0 정식 구현·M6/M7 주변장치 검증 동기화; M13 프로필 정책 반영 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 RTOS | Zephyr v4.4.0 |
 | 기준 타깃 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | 보드 정의 원본 | `board_package/NU54DK_Zephyr_DTS` |
-| v1 Serial 결정 | `zephyr,console` UART의 non-owning wrapper |
+| v0.1.0 Serial 결정 | `zephyr,console` UART의 non-owning wrapper |
 
 ---
 
@@ -59,13 +59,18 @@ Variant는 다음 논리 연결만 소유한다.
 
 ### 2.3 Sketch별 변경
 
-사용자가 baud, bus speed, peripheral node 또는 pin route를 바꾸려면 다음 구성 계층을 사용한다.
+v0.1.0에서 사용자가 baud, bus speed, peripheral node 또는 pin route를 바꾸려면 다음 구성 계층을 사용한다.
 
 - `prj.conf`
 - application overlay
 - 필요 시 Zephyr snippet
 
-Core source를 수정하거나 prebuilt profile을 새로 만들 필요가 없어야 한다. 이것이 Full Zephyr 정적 빌드의 핵심 자유도다.
+M13 이후 일반 Arduino 사용자는 이 파일들을 직접 편집하지 않고 Arduino IDE에서 검증된
+profile을 선택한다. Build Adapter가 profile의 Kconfig, overlay와 충돌 규칙을 적용한다.
+Core source를 수정하거나 개인 prebuilt archive를 만들 필요가 없어야 한다. 고급 사용자는
+expert escape hatch를 통해 사용자 `prj.conf`, overlay와 Zephyr snippet을 계속 전달할 수
+있지만, 해당 조합은 기본 profile과 별도로 검증하고 지원 상태를 기록한다. 이것이 Full
+Zephyr 정적 빌드의 사용성과 자유도를 함께 유지하는 기준이다.
 
 ---
 
@@ -145,9 +150,9 @@ Peripheral별 adapter는 다음 공통 규칙을 제공한다.
 
 ## 5. Serial과 UART 설계
 
-### 5.1 v1 소유권 결정
+### 5.1 v0.1.0 소유권 결정
 
-v1의 `Serial`은 `DT_CHOSEN(zephyr_console)`이 가리키는 UART에 연결하는 **non-owning wrapper**로 정의한다.
+v0.1.0의 `Serial`은 `DT_CHOSEN(zephyr_console)`이 가리키는 UART에 연결하는 **non-owning wrapper**로 정의한다.
 
 소유권은 다음과 같다.
 
@@ -171,7 +176,7 @@ v1의 `Serial`은 `DT_CHOSEN(zephyr_console)`이 가리키는 UART에 연결하�
 
 현재 보드 Devicetree의 기본 console baud는 115200 bps다.
 
-v1 정책은 다음과 같다.
+v0.1.0 정책은 다음과 같다.
 
 1. `Serial.begin(115200)`은 이미 구성된 UART에 attach한다.
 2. 다른 baud를 요청하면 console이 활성인 상태에서 UART를 묵시적으로 재구성하지 않는다.
@@ -187,14 +192,14 @@ Arduino `begin()`은 `void`라 오류를 직접 반환하지 않는다. `operato
 
 같은 UART의 역할을 다음과 같이 구분한다.
 
-| 소비자 | TX | RX | v1 정책 |
+| 소비자 | TX | RX | v0.1.0 정책 |
 | --- | --- | --- | --- |
 | Zephyr console | 사용 | 일반적으로 직접 소비하지 않음 | 유지 |
 | Zephyr logging | backend 설정 시 사용 | 사용 안 함 | 개발 build에서 허용 |
 | Zephyr shell | 사용 | 소비 | 기본 Arduino 구성에서는 비활성 |
 | Arduino `Serial` | 사용 | 소비 | 활성 |
 
-RX는 두 소비자가 동시에 가져가면 byte ownership이 불명확해진다. 따라서 `Serial`과 같은 UART에서 Zephyr shell을 동시에 활성화하는 구성은 v1 지원 대상에서 제외한다. 필요하면 별도 UART나 RTT backend를 사용한다.
+RX는 두 소비자가 동시에 가져가면 byte ownership이 불명확해진다. 따라서 `Serial`과 같은 UART에서 Zephyr shell을 동시에 활성화하는 구성은 v0.1.0 지원 대상에서 제외한다. 필요하면 별도 UART나 RTT backend를 사용한다.
 
 TX는 물리적으로 공유할 수 있지만 message가 byte 단위로 섞이지 않도록 Arduino 내부 TX lock을 사용한다. 이 lock은 Zephyr console 전체와 공유되지 않으므로 log line과 Sketch 출력의 완전한 원자성을 보장하지 않는다. release profile에서는 불필요한 logging을 끄는 것을 기본으로 한다.
 
@@ -236,7 +241,7 @@ CMSIS-DAP 인터페이스 MCU가 USB를 처리한다. nRF54L15 target이 USB CDC
 
 ### 5.6 `Serial1`
 
-현재 두 번째 UART는 기본 비활성이다. 따라서 v1 기본 Variant에서 동작하는 `Serial1`을 있다고 가정하지 않는다.
+현재 두 번째 UART는 기본 비활성이다. 따라서 v0.1.0 기본 Variant에서 동작하는 `Serial1`을 있다고 가정하지 않는다.
 
 `Serial1`을 공개하려면 다음 조건이 필요하다.
 
@@ -261,7 +266,7 @@ Arduino Builder 기본 overlay와 Wire 실기 sample은 `&uicr { nfct-pins-as-gp
 부팅 초기에 NFCT PADCONFIG를 GPIO/TWIM 모드로 전환한다. 이 Core overlay 보완은 읽기 전용
 보드 package를 수정하지 않는다.
 
-v1 범위:
+v0.1.0 범위:
 
 - controller/master mode
 - `begin()`
@@ -360,7 +365,7 @@ chosen이 SPI00이 아닌 구성도 compile-time에 거부한다. fake driver를
 
 ### 7.2 API 범위
 
-v1 목표:
+v0.1.0 목표:
 
 - `SPI.begin()`과 `SPI.end()`
 - `beginTransaction(SPISettings)`
@@ -414,7 +419,7 @@ Sketch CS 해제 + endTransaction()
         ↓ Core owner/state 정리
 ~~~
 
-v1 SPI API는 thread 문맥 전용이다. ISR transfer를 지원한다고 표시하지 않는다.
+v0.1.0 SPI API는 thread 문맥 전용이다. ISR transfer를 지원한다고 표시하지 않는다.
 
 ---
 
@@ -507,7 +512,7 @@ UART, SPI, I2C, debug 또는 다른 Zephyr device가 소유한 pin을 `analogWri
 
 ## 10. Radio, Bluetooth 및 NCS 기능
 
-NU54DK 보드 정의에는 radio와 IEEE 802.15.4 자원이 활성화되어 있다. 그러나 v1 기본 Arduino Core가 임의의 추상 `Radio` 객체를 만드는 것은 범위에 넣지 않는다.
+NU54DK 보드 정의에는 radio와 IEEE 802.15.4 자원이 활성화되어 있다. 그러나 v0.1.0 기본 Arduino Core가 임의의 추상 `Radio` 객체를 만드는 것은 범위에 넣지 않는다.
 
 초기 정책:
 
@@ -522,7 +527,7 @@ NU54DK 보드 정의에는 radio와 IEEE 802.15.4 자원이 활성화되어 있�
 
 ## 11. USB 정책
 
-nRF54L15 target MCU에는 native USB peripheral이 없다. 따라서 다음 Arduino target API는 NU54DK v1 Core에서 제공하지 않는다.
+nRF54L15 target MCU에는 native USB peripheral이 없다. 따라서 다음 Arduino target API는 NU54DK v0.1.0 Core에서 제공하지 않는다.
 
 - `SerialUSB`
 - target USB CDC ACM
@@ -730,7 +735,7 @@ Zephyr dependency 예시는 다음과 같다.
 
 ## 17. 범위 제외
 
-v1 주변장치 API에서 다음은 제외한다.
+v0.1.0 주변장치 API에서 다음은 제외한다.
 
 - target native USB CDC/HID/MSC
 - `SerialUSB`
@@ -756,7 +761,7 @@ USB upload나 drag-and-drop firmware 기능이 필요하면 CMSIS-DAP 인터페�
 | 다른 console baud/config 처리 | M6 거부 | 실제 설정은 읽기만 하고 Zephyr 소유 UART를 재구성하지 않음 |
 | `Serial1` 공개 | 대기 | overlay와 physical route |
 | I2C buffer 크기 | M7 `32` byte | Kconfig 16..512 범위의 고정 TX/RX buffer |
-| I2C target mode | v1 제외 | 실제 사용 사례 |
+| I2C target mode | v0.1.0 제외 | 실제 사용 사례 |
 | 기본 SPI 논리 bus | M7 SPI00 | Core overlay, P2.1/P2.2/P2.4와 uart00 충돌 |
 | analog 논리 역할 | M7 A0만 | P1.12/SAADC channel 5, A1 이후는 대기 |
 | PWM 기본 주기·해상도 | M7 20 ms·8-bit | 보드 pwm_led1 역할과 고정 API 계약 |

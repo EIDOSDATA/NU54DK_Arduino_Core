@@ -16,7 +16,7 @@ from unittest import mock
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-MODULE_PATH = REPO_ROOT / "tests" / "hil" / "m8_upload.py"
+MODULE_PATH = REPO_ROOT / "tests" / "hil" / "nu54dk" / "m8_upload.py"
 SPEC = importlib.util.spec_from_file_location("nu54_m11_rc_hil", MODULE_PATH)
 assert SPEC and SPEC.loader
 MODULE = importlib.util.module_from_spec(SPEC)

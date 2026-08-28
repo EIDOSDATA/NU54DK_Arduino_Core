@@ -3,6 +3,7 @@
 | 항목 | 값 |
 | --- | --- |
 | 상태 | **완료** |
+| 기록 성격 | **v0.1.0 역사적 완료 기준선** — 검증 결과는 동결하고, 이동한 예제·HIL 파일은 현행 경로로 표기 |
 | 검증일 | 2026-08-27 |
 | 작성자 | Quantum / NUCODE |
 | Core 기준 commit | M6 구현 `dd405ae6a041`, 물리 HIL 검증 Core `3e0fa7ed29db` |
@@ -138,11 +139,11 @@ NU54DK의 `PIN_BUTTON0`은 P1.13 active-low다. 따라서 Arduino edge 이름을
 
 | 경로 | 목적 |
 | --- | --- |
-| `examples/04.Communication/SerialEcho/SerialEcho.ino` | Arduino CLI용 READY/line echo 예제 |
-| `examples/02.Digital/InterruptButton/InterruptButton.ino` | ISR에서는 flag만 기록하고 loop에서 LED를 갱신하는 예제 |
+| `libraries/NUCODE_NU54DK/examples/SerialEcho/SerialEcho.ino` | Arduino CLI용 READY/line echo 예제이자 Arduino IDE 표준 예제 메뉴 배포 경로 |
+| `libraries/NUCODE_NU54DK/examples/InterruptButton/InterruptButton.ino` | ISR에서는 flag만 기록하고 loop에서 LED를 갱신하는 Arduino IDE 표준 예제 |
 | `samples/zephyr/serial_echo/` | 실제 DAP UART Serial HIL image |
 | `samples/zephyr/interrupt_button/` | 실제 P1.13 `CHANGE` interrupt와 LED 반응 예제 |
-| `tests/hil/m6_serial_echo.py` | DAPLink UID·MSD·COM 탐색, flash, READY와 고유 payload echo 자동 판정 |
+| `tests/hil/nu54dk/m6_serial_echo.py` | DAPLink UID·MSD·COM 탐색, flash, READY와 고유 payload echo 자동 판정 |
 | `tests/zephyr/m6_core_api/` | Common/String/Print/Stream, UART emulator와 GPIO emulator target ztest |
 | `tests/zephyr/m6_config_contract/` | UART callback 소유권 충돌 expected-failure |
 | `tests/arduino-cli/run_smoke.py` | staged package에서 M6 예제 compile 회귀 |
@@ -168,7 +169,8 @@ Flash recipe는 M8 범위이므로 이 단계의 CLI 명령은 compile까지만 
 
 ### 4.2 실제 Serial HIL
 
-`tests/hil/m6_serial_echo.py`가 다음 전체 경로를 자동 수행했다.
+현재 `tests/hil/nu54dk/m6_serial_echo.py`에 보관된 HIL 실행기가 다음 전체 경로를 자동
+수행했다. 파일 이동은 시험 결과를 다시 생성하거나 기존 PASS를 변경하지 않는다.
 
 1. UID가 `54153603000528402aae46c5e8e3712a`인 NU54DK DAPLink MSD 식별
 2. target과 UID가 일치하는 COM10 선택

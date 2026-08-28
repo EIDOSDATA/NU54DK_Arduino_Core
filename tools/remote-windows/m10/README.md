@@ -1,11 +1,15 @@
 # M10 clean Windows 원격 검증기
 
+> **역사적·동결된 v0.1 검증 절차:** 이 문서는 `0.0.96`→`0.0.97` preview와 `v0.1.0`
+> 릴리스 판단에 사용한 M10 수명주기 시험을 보존한다. 차기 릴리스는 버전·index·도구
+> identity를 새로 고정한 별도 실행 계획을 사용한다.
+
 이 디렉터리의 실행기는 공개 Boards Manager 패키지를 별도 Windows PC에서 검증한다.
 대상 PC에는 저장소를 clone하지 않으며, 실행 스크립트와 JSON 설정만 SSH로 전송한다.
 
 ## 실행 전 조건
 
-- 대상: `nu54ci@192.168.1.10`
+- 대상: `nu54ci@<CLEAN_WINDOWS_HOST>`
 - 개발 PC private key: `%USERPROFILE%\.ssh\nu54dk_m10_ed25519`
 - 개발 PC `known_hosts`에 사용자가 확인한 대상 host key 등록
 - 대상 Arduino CLI: `C:\Program Files\Arduino CLI\arduino-cli.exe`

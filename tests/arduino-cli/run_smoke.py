@@ -20,6 +20,11 @@ from typing import Sequence
 FQBN = "nucode:zephyr:nu54dk"
 
 
+## @brief NU54DK 보드 공통 예제 라이브러리의 저장소 경로를 반환합니다.
+def board_examples(repository: Path) -> Path:
+    return repository / "libraries" / "NUCODE_NU54DK" / "examples"
+
+
 class SmokeFailure(RuntimeError):
     """! @brief smoke test 계약 위반을 나타냅니다. """
 
@@ -428,7 +433,7 @@ def test_blink(cli: Path, config: Path, root: Path, repository: Path) -> None:
     if FQBN not in listing:
         raise SmokeFailure("NU54DK FQBN was not discovered")
     build = root / "공백 경로" / "build-blink"
-    run(compile_command(cli, config, build, repository / "examples" / "01.Basics" / "Blink"))
+    run(compile_command(cli, config, build, board_examples(repository) / "Blink"))
     assert_build(build, "Blink.ino")
     generated = (build / "sketch" / "Blink.ino.cpp").read_text(encoding="utf-8")
     prototype = generated.find("void writeBuiltinLed(bool high);")
@@ -649,7 +654,7 @@ def test_compile_error(cli: Path, config: Path, root: Path, repository: Path) ->
 
 ## @brief 두 sketch의 동시 build directory와 workspace가 서로 다른지 검증합니다.
 def test_parallel(cli: Path, config: Path, root: Path, repository: Path) -> None:
-    source = (repository / "examples" / "01.Basics" / "Blink" / "Blink.ino").read_text(encoding="utf-8")
+    source = (board_examples(repository) / "Blink" / "Blink.ino").read_text(encoding="utf-8")
     sketches: list[Path] = []
     for name in ("ParallelA", "ParallelB"):
         sketch = root / "sketches" / name
@@ -672,7 +677,7 @@ def test_parallel(cli: Path, config: Path, root: Path, repository: Path) -> None
 ## @brief M9 cache hit, source edit, key invalidation과 손상 복구를 실제 build로 검증합니다.
 def test_incremental(cli: Path, config: Path, root: Path, repository: Path) -> None:
     evidence: list[dict] = []
-    source = (repository / "examples" / "01.Basics" / "Blink" / "Blink.ino").read_text(encoding="utf-8")
+    source = (board_examples(repository) / "Blink" / "Blink.ino").read_text(encoding="utf-8")
     sketch = root / "sketches" / "Incremental"
     sketch.mkdir(parents=True)
     ino = sketch / "Incremental.ino"
@@ -876,10 +881,10 @@ def test_incremental(cli: Path, config: Path, root: Path, repository: Path) -> N
 ## @brief M6 Serial과 GPIO interrupt 공개 예제를 Arduino CLI로 끝까지 빌드합니다.
 def test_m6_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
     examples = (
-        ("serial-echo", repository / "examples" / "04.Communication" / "SerialEcho", "SerialEcho.ino"),
+        ("serial-echo", board_examples(repository) / "SerialEcho", "SerialEcho.ino"),
         (
             "interrupt-button",
-            repository / "examples" / "02.Digital" / "InterruptButton",
+            board_examples(repository) / "InterruptButton",
             "InterruptButton.ino",
         ),
     )
@@ -900,28 +905,28 @@ def test_m7_examples(cli: Path, config: Path, root: Path, repository: Path) -> N
     examples = (
         (
             "wire-pmic-id",
-            repository / "examples" / "04.Communication" / "WirePmicId",
+            repository / "libraries" / "Wire" / "examples" / "WirePmicId",
             "WirePmicId.ino",
             "CONFIG_NUCODE_ARDUINO_WIRE",
             "nucode,arduino-wire",
         ),
         (
             "spi-transaction",
-            repository / "examples" / "04.Communication" / "SPITransaction",
+            repository / "libraries" / "SPI" / "examples" / "SPITransaction",
             "SPITransaction.ino",
             "CONFIG_NUCODE_ARDUINO_SPI",
             "nucode,arduino-spi",
         ),
         (
             "analog-read-a0",
-            repository / "examples" / "03.Analog" / "AnalogReadA0",
+            board_examples(repository) / "AnalogReadA0",
             "AnalogReadA0.ino",
             "CONFIG_NUCODE_ARDUINO_ADC",
             "nucode,arduino-adc",
         ),
         (
             "pwm-fade",
-            repository / "examples" / "03.Analog" / "PWMFade",
+            board_examples(repository) / "PWMFade",
             "PWMFade.ino",
             "CONFIG_NUCODE_ARDUINO_PWM",
             "nucode,arduino-pwm",
@@ -960,6 +965,42 @@ def test_m7_examples(cli: Path, config: Path, root: Path, repository: Path) -> N
             raise SmokeFailure(f"M7 example devicetree contract was not merged: {sketch}")
 
     test_live_build_record_scope(context, root)
+
+
+## @brief platform library 예제가 Arduino IDE용 목록에 나타나는지 검증합니다.
+def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    del root, repository
+    _, output = run(
+        (cli, "lib", "examples", "--fqbn", FQBN, "--config-file", config, "--json")
+    )
+    document = json.loads(output)
+    records = document.get("examples")
+    if not isinstance(records, list):
+        raise SmokeFailure("Arduino CLI example listing has no examples array")
+
+    expected = {
+        "NUCODE NU54DK": {"Blink", "InterruptButton", "AnalogReadA0", "PWMFade", "SerialEcho"},
+        "SPI": {"SPITransaction"},
+        "Wire": {"WirePmicId"},
+    }
+    discovered: dict[str, str] = {}
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        library = record.get("library")
+        if not isinstance(library, dict):
+            continue
+        discovered[str(library.get("name", ""))] = json.dumps(
+            record.get("examples", []), ensure_ascii=False
+        )
+
+    for library, sketches in expected.items():
+        listing = discovered.get(library, "")
+        missing = sorted(sketch for sketch in sketches if sketch not in listing)
+        if missing:
+            raise SmokeFailure(
+                f"{library} examples are not discoverable: {', '.join(missing)}"
+            )
 
 
 ## @brief M8 upload sketch, manifest와 pyOCD/J-Link runner 계약을 compile 단계에서 검증합니다.
@@ -1023,6 +1064,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "m8",
             "m9",
             "m11",
+            "examples",
         ),
         default=(
             "blink",
@@ -1035,6 +1077,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "m8",
             "m9",
             "m11",
+            "examples",
         ),
     )
     args = parser.parse_args(arguments)
@@ -1072,6 +1115,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m8": test_m8_upload_build,
                 "m9": test_incremental,
                 "m11": test_m11_fixtures,
+                "examples": test_example_discovery,
             }
             for name in args.tests:
                 tests[name](cli, config, root, repository)

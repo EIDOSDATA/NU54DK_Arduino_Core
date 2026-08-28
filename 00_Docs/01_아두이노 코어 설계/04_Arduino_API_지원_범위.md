@@ -14,14 +14,14 @@
 
 ## 1. 문서 목적
 
-이 문서는 NU54DK Arduino Core가 어떤 Arduino API를 어느 수준까지 제공할지 정의한다. API 이름이나 header가 존재한다는 이유만으로 `지원`이라고 선언하지 않는다. 실제 상태, v0.1 목표, 하드웨어 제약 및 검증 증거를 분리하여 관리한다.
+이 문서는 NU54DK Arduino Core가 어떤 Arduino API를 어느 수준까지 제공할지 정의한다. API 이름이나 header가 존재한다는 이유만으로 `지원`이라고 선언하지 않는다. 실제 상태, v0.1.0 목표, 하드웨어 제약 및 검증 증거를 분리하여 관리한다.
 
 현재 저장소에는 M3 Runtime·GPIO·시간 backend, M4에서 고정한 ArduinoCore-API source와
 M6에서 생산 image에 연결한 `Common`, `String`, `Print`, `Stream`, `HardwareSerial` 및 GPIO
 edge interrupt backend가 존재한다. M6는 target ztest 10/10, 실제 COM10 Serial READY·echo,
 Arduino CLI staged package build와 실제 P1.13 active-low 버튼의 `FALLING`, `RISING`,
 `CHANGE` HIL을 통과했다. interrupt 항목은 raw electrical edge와 ISR 호출 제약을 계속
-명시한다. v0.1 목표 상태는 완료 보고가 아니다.
+명시한다. v0.1.0 목표 상태는 당시 계획을 보존한 것이며 현재 완료 보고와 구분한다.
 
 M7의 `Wire`, `SPI`, `analogRead()`와 `analogWrite()` production source 및 builder profile은
 NU54DK Twister target 11/11, Arduino CLI M7 4/4와 승인된 NU54DK driver HIL을 통과했다.
@@ -64,19 +64,19 @@ P2.4 MISO 사이의 40-byte 물리 loopback이 전부 일치했다. 제약이 �
 
 | 우선순위 | 의미 | 릴리스 관계 |
 | --- | --- | --- |
-| P0 | Core 사용과 기본 Sketch 실행에 필수 | v0.1 공개 후보의 필수 완료 항목 |
-| P1 | 일반적인 센서·통신·아날로그 Sketch에 필요한 핵심 기능 | v0.1 목표. 부분 지원이나 의미 차이는 허용하되 미구현이면 release note에 명시하고 공개 범위를 재결정 |
-| P2 | 유용하지만 초기 수직 경로를 막지 않는 기능 | v0.1 이후 순차 구현 |
+| P0 | Core 사용과 기본 Sketch 실행에 필수 | v0.1.0 공개 후보의 필수 완료 항목 |
+| P1 | 일반적인 센서·통신·아날로그 Sketch에 필요한 핵심 기능 | v0.1.0 목표. 부분 지원이나 의미 차이는 허용하되 미구현이면 release note에 명시하고 공개 범위를 재결정 |
+| P2 | 유용하지만 초기 수직 경로를 막지 않는 기능 | v0.1.0 이후 순차 구현 |
 | P3 | 별도 subsystem, 대규모 library 또는 제품 정책이 필요한 기능 | 별도 설계 승인 후 구현 |
 | 제외 | 현재 하드웨어·아키텍처와 맞지 않거나 호환을 약속하지 않음 | 구현 계획 없음 또는 대체 API 안내 |
 
 ---
 
-## 4. v0.1 지원 범위
+## 4. v0.1.0 지원 범위
 
-### 4.1 v0.1 필수 범위
+### 4.1 v0.1.0 필수 범위
 
-v0.1에서 반드시 끝까지 검증할 P0 범위는 다음과 같다.
+v0.1.0에서 반드시 끝까지 검증할 P0 범위는 다음과 같다.
 
 - `Arduino.h`의 기본 정수형, 상수 및 utility
 - `setup()`과 `loop()` runtime
@@ -89,9 +89,9 @@ v0.1에서 반드시 끝까지 검증할 P0 범위는 다음과 같다.
 
 P0는 단순 Blink 한 개가 아니라 각 API의 signature, edge case, scheduler 공존 및 실기 결과를 포함한다.
 
-### 4.2 v0.1 목표 범위
+### 4.2 v0.1.0 목표 범위
 
-P1은 v0.1에서 구현을 목표로 하지만 하드웨어 특성상 `부분 지원`이나 `의미 차이`가 될 수 있다.
+P1은 v0.1.0에서 구현을 목표로 했지만 하드웨어 특성상 `부분 지원`이나 `의미 차이`가 될 수 있다.
 
 - `Wire`/I2C22
 - `SPI`/SPI00
@@ -101,9 +101,9 @@ P1은 v0.1에서 구현을 목표로 하지만 하드웨어 특성상 `부분 �
 - `noInterrupts()`와 `interrupts()`의 Zephyr-safe 의미
 - 대표 범용 Arduino library compile corpus
 
-v0.1 release gate에서 P1이 미구현으로 남으면 기능명을 조용히 노출하지 않는다. `Arduino.h` 또는 전역 객체는 존재하지만 항상 실패하는 형태보다, compile-time diagnostic과 정확한 지원표를 우선한다.
+v0.1.0 release gate에서 P1이 미구현으로 남으면 기능명을 조용히 노출하지 않는다. `Arduino.h` 또는 전역 객체는 존재하지만 항상 실패하는 형태보다, compile-time diagnostic과 정확한 지원표를 우선한다.
 
-### 4.3 v0.1 제외 범위
+### 4.3 v0.1.0 제외 범위
 
 - LLEXT Loader와 runtime Sketch loading
 - bootloader, MCUboot, UF2 및 OTA
@@ -120,7 +120,7 @@ v0.1 release gate에서 P1이 미구현으로 남으면 기능명을 조용히 �
 
 ## 5. API별 지원 계획
 
-표의 `현재 상태`는 이 문서 작성 시점의 구현 증거를 나타낸다. `v0.1 목표`는 완료 후 기대 상태다. 목표 상태가 `의미 차이` 또는 `부분 지원`이면 차이를 없애겠다는 뜻이 아니라 정확히 문서화하고 시험하겠다는 뜻이다.
+표의 `현재 상태`는 이 문서 작성 시점의 구현 증거를 나타낸다. `v0.1.0 목표`는 당시 완료 후 기대 상태다. 목표 상태가 `의미 차이` 또는 `부분 지원`이면 차이를 없애겠다는 뜻이 아니라 정확히 문서화하고 시험하겠다는 뜻이다.
 
 ### 5.0 M3·M6 검증 경계
 
@@ -146,7 +146,7 @@ M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP
 
 ### 5.1 Runtime과 기본 형식
 
-| API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
+| API/영역 | 우선순위 | 현재 상태 | v0.1.0 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
 | `Arduino.h` include | P0 | 지원 | 지원 | M6에서 `ArduinoAPI.h` 기반 생산 header 통합, C/C++ target 계약과 Arduino CLI M6 예제 build 통과 |
 | `setup()` | P0 | 부분 지원 | 지원 | 전역 constructor 이후 한 번 실행하는 M2/M3 HIL과 M5 Arduino CLI compile/link 통과 |
@@ -162,7 +162,7 @@ M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP
 
 ### 5.2 Digital I/O
 
-| API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
+| API/영역 | 우선순위 | 현재 상태 | v0.1.0 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
 | `pinMode()` | P0 | 부분 지원 | 지원 | index 0/1에서 capability가 허용하는 input/pull/output만 thread에서 구현; open-drain, ISR, ownership 미구현 |
 | `digitalWrite()` | P0 | 부분 지원 | 지원 | `OUTPUT`으로 구성된 index 0에서 raw write HIL 통과; input pull 전환, ISR, ownership 미구현 |
@@ -175,7 +175,7 @@ M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP
 
 ### 5.3 시간과 utility
 
-| API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
+| API/영역 | 우선순위 | 현재 상태 | v0.1.0 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
 | `millis()` | P0 | 부분 지원 | 지원 | uptime backend, `delay(20)`의 20 ms 경과와 timer ISR 반복 읽기 HIL 통과; 실제 wrap·PM 장기 연속성 미검증 |
 | `micros()` | P0 | 부분 지원 | 부분 지원 | GRTC startup offset을 뺀 64-bit cycle backend와 timer ISR 반복 읽기 HIL 통과; 외부 resolution·실제 wrap·PM 미검증 |
@@ -190,7 +190,7 @@ M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP
 
 ### 5.4 Interrupt
 
-| API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
+| API/영역 | 우선순위 | 현재 상태 | v0.1.0 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
 | `attachInterrupt()`/`attachInterruptParam()` | P0 | 의미 차이 | 의미 차이 | 고정 pin slot의 GPIO ISR에서 callback 직접 실행; target GPIO emulator와 실제 P1.13 세 edge PASS |
 | `detachInterrupt()` | P0 | 지원 | 지원 | callback 비활성화·제거와 진행 중 callback 정리, 재등록 및 `pinMode()` auto-detach target test 통과 |
@@ -201,7 +201,7 @@ M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP
 
 ### 5.5 String, Print와 Stream
 
-| API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
+| API/영역 | 우선순위 | 현재 상태 | v0.1.0 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
 | `String` | P0 | 부분 지원 | 지원 | 1.5.2 source 생산 link, 연결·16진·실수 변환과 8192-byte libc arena 경계/실패 보존 target test 통과 |
 | `Print` | P0 | 지원 | 지원 | 문자열·16진·CRLF 출력과 partial write 오류 target test 통과 |
@@ -212,7 +212,7 @@ M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP
 
 ### 5.6 Serial
 
-| API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
+| API/영역 | 우선순위 | 현재 상태 | v0.1.0 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
 | `HardwareSerial` interface | P0 | 지원 | 지원 | 1.5.2 `Stream` interface의 Zephyr UART backend, target ztest와 실제 COM10 echo HIL 통과 |
 | 기본 `Serial` | P0 | 의미 차이 | 의미 차이 | `DT_CHOSEN(zephyr_console)` non-owning wrapper; UART20 115200 8N1 READY·고유 echo HIL 통과 |
@@ -220,14 +220,14 @@ M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP
 | `available()`/`read()`/`peek()` | P0 | 지원 | 지원 | 128-byte IRQ RX queue, peek/read와 실제 line echo 통과 |
 | `write()`/`availableForWrite()` | P0 | 부분 지원 | 부분 지원 | mutex로 직렬화한 polling TX, write 1 byte 공간 보고, ISR 거부; COM10 실제 TX PASS |
 | `flush()` | P0 | 의미 차이 | 의미 차이 | polling TX 호출 완료를 보장하고 RX는 버리지 않음 |
-| 동일 UART의 Zephyr shell RX 병행 | 제외 | 미구현 | 미구현 | v1에서 Arduino Serial RX와 동시에 사용하지 않음 |
+| 동일 UART의 Zephyr shell RX 병행 | 제외 | 미구현 | 미구현 | v0.1.0에서 Arduino Serial RX와 동시에 사용하지 않음 |
 | Serial config `SERIAL_8N1` 등 | P1 | 부분 지원 | 부분 지원 | M6는 115200 `SERIAL_8N1`만 허용; 다른 요청은 UART 재구성 없이 명시적으로 거부 |
 | `Serial1`/uart30 | P2 | 미구현 | 미구현 | solder bridge와 선택 pinctrl 확인 후 별도 지원 |
 | `SerialUSB`/USB CDC | 제외 | 하드웨어 미지원 | 하드웨어 미지원 | nRF54L15 target에 native USB peripheral 경로가 없음 |
 
 ### 5.7 I2C/Wire
 
-| API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
+| API/영역 | 우선순위 | 현재 상태 | v0.1.0 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
 | 기본 `Wire` controller | P1 | 부분 지원 | 부분 지원 | I2C22 P1.2/P1.3의 blocking controller; Core overlay의 NFC→GPIO 패드 전환과 chosen 누락 negative 통과, 다른 Zephyr client는 application 직렬화 필요 |
 | `beginTransmission()`/`endTransmission()` | P1 | 부분 지원 | 부분 지원 | 32-byte 고정 TX buffer와 Arduino 상태 번호; `endTransmission(false)`는 단독 전송하지 않고 보류; zero-byte `endTransmission(true)` address probe는 driver에 전달 |
@@ -249,7 +249,7 @@ negative driver errno는 공개 status 4로 변환한다. NACK을 address/data s
 
 ### 5.8 SPI
 
-| API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
+| API/영역 | 우선순위 | 현재 상태 | v0.1.0 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
 | 기본 `SPI` controller | P1 | 부분 지원 | 부분 지원 | `SPIClass`/`SPISettings`, 전역 `SPIClass &SPI`; Core overlay와 production compile check가 SPI00 P2.1/P2.2/P2.4를 강제, 4 MHz 물리 loopback 통과 |
 | `begin()`/`end()` | P1 | 부분 지원 | 부분 지원 | Devicetree compile-time 활성화 필요; non-SPI00 chosen과 SPI00/uart00 동시 활성 expected-fail 진단 통과 |
@@ -265,7 +265,7 @@ P2.2 MOSI와 P2.4 MISO를 직접 연결한 실제 SPI00 4 MHz loopback에서 40-
 
 ### 5.9 Analog와 PWM
 
-| API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
+| API/영역 | 우선순위 | 현재 상태 | v0.1.0 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
 | `PIN_A0`/`A0` | P1 | 부분 지원 | 부분 지원 | 논리 index 2, `nucode,arduino-adc` chosen의 P1.12/SAADC channel 5; digital pin이 아님 |
 | `analogRead()` | P1 | 부분 지원 | 부분 지원 | A0 고정 12-bit raw 0..4095와 오류 `-1`; gain 1/4 최종 실기 raw=3176 범위 확인, 전압 정확도 미검증 |
@@ -283,7 +283,7 @@ nRF54L15와 NU54DK 전기 사양을 따른다.
 
 ### 5.10 Tone, Servo와 storage
 
-| API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
+| API/영역 | 우선순위 | 현재 상태 | v0.1.0 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
 | `tone()`/`noTone()` | P2 | 미구현 | 미구현 | PWM/timer 자원 예약과 충돌 정책 필요 |
 | Servo library | P2 | 미구현 | 미구현 | PWM channel 수, period와 pin conflict 검증 필요 |
@@ -293,7 +293,7 @@ nRF54L15와 NU54DK 전기 사양을 따른다.
 
 ### 5.11 USB, network와 wireless
 
-| API/영역 | 우선순위 | 현재 상태 | v0.1 목표 | 설계·검증 메모 |
+| API/영역 | 우선순위 | 현재 상태 | v0.1.0 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
 | `PluggableUSB`, `USBAPI` backend | 제외 | 하드웨어 미지원 | 하드웨어 미지원 | ArduinoCore-API header 포함 여부와 실제 backend 지원을 구분 |
 | `Keyboard`, `Mouse` | 제외 | 하드웨어 미지원 | 하드웨어 미지원 | target native USB device 경로 없음 |
@@ -400,7 +400,7 @@ API를 `지원`으로 바꾸려면 다음을 모두 통과해야 한다.
 3. **Semantic:** 정상, 경계값, timeout, 오류 및 반복 호출 결과가 정의와 일치한다.
 4. **Context:** thread와 ISR에서 허용된 호출이 문서대로 동작하고 금지된 호출은 진단된다.
 5. **Zephyr 공존:** 다른 Zephyr thread, logger 또는 같은 subsystem 사용자와의 소유권이 정의된다.
-6. **Configuration:** `prj.conf`와 overlay 변경이 정확히 반영되고 잘못된 profile은 build에서 실패한다.
+6. **Configuration:** v0.1.0의 `prj.conf`/overlay 또는 M13 검증 profile 변경이 정확히 반영되고 잘못된 profile은 build에서 실패한다.
 7. **Hardware:** NU54DK 실기 또는 적절한 계측 fixture에서 검증한다.
 8. **Regression:** 고정 test가 CI 또는 HIL 절차에 등록되고 결과를 보관한다.
 9. **Documentation:** pin, timing, buffer, resource 및 hardware 제한을 예제와 reference에 기록한다.
@@ -444,7 +444,7 @@ Arduino library는 다음 등급으로 별도 관리한다.
 | L2 | architecture conditional 지원 | `ARDUINO_ARCH_*` 분기와 일부 extension 필요 |
 | L3 | 다른 MCU register 또는 SDK에 직접 의존 | AVR register, ESP-IDF, mbed 전용 API 등 |
 
-v0.1은 L0과 선정한 L1 library의 호환성을 목표로 한다. L2는 library별 patch 없이 동작한 경우만 기록하며, L3는 일반 호환 대상으로 선언하지 않는다.
+v0.1.0은 L0과 선정한 L1 library의 호환성을 목표로 했다. L2는 library별 patch 없이 동작한 경우만 기록하며, L3는 일반 호환 대상으로 선언하지 않는다.
 
 호환성 표에는 다음을 기록한다.
 
@@ -453,9 +453,14 @@ v0.1은 L0과 선정한 L1 library의 호환성을 목표로 한다. L2는 libra
 - 사용 API
 - compile 결과
 - HIL 결과
-- 필요한 `prj.conf`/overlay
+- 필요한 M13 profile 또는 expert `prj.conf`/overlay
 - known issue와 workaround
 - 검증 Core/NCS/board revision
+
+M13 profile 도입 이후 일반 Arduino 사용자는 `prj.conf`와 overlay를 직접 편집하지 않는다.
+Arduino IDE에서 검증된 profile을 선택하면 Build Adapter가 필요한 Kconfig와 Devicetree
+구성을 적용한다. 직접 Zephyr/NCS API 또는 사용자 conf·overlay를 쓰는 expert escape hatch는
+유지하되, 해당 조합은 기본 profile 지원과 구분하여 위 호환성 표와 시험 증거에 기록한다.
 
 ---
 

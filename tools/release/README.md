@@ -1,5 +1,9 @@
 # M11 release candidate 자동화
 
+> **역사적·동결된 v0.1 릴리스 절차:** 이 문서는 `v0.1.0-rc.2`와 최종 `v0.1.0`
+> 공개에 사용한 M11 자동화 계약을 보존한다. 명령, 버전, preview와 evidence 수치를 차기
+> 릴리스에 그대로 재사용하지 않는다. v0.2.0은 새 버전 허용 목록과 gate를 별도로 검토한다.
+
 `nu54_release.py`는 `v0.1.0` 공개 직전까지 필요한 RC artifact와 검증 evidence를
 로컬에서 준비한다. 이 도구는 Git tag 생성, push, GitHub Release 생성 및 stable 공개를
 수행하지 않는다. 모든 기술 gate가 통과해도 결과는 `ready-for-human-approval`이며,
@@ -90,6 +94,8 @@ Host 전체 회귀:
 
 exact RC ZIP의 pyOCD 1회 flash와 UART `NUCODE_M8_UPLOAD_READY` 확인:
 
+이 gate가 호출하는 현행 NU54DK HIL 실행기 경로는 `tests/hil/nu54dk/m8_upload.py`다.
+
 ```powershell
 & $Python tools/release/nu54_release.py run-gate `
   --repo-root . `
@@ -131,7 +137,7 @@ $ReleaseRoot = "build/m11/0.1.0-rc.2"
 powershell.exe -NoProfile -ExecutionPolicy Bypass `
   -File tools/release/invoke-m11-rc-windows.ps1 `
   -ReleaseRoot $ReleaseRoot `
-  -TargetHost "192.168.1.10" `
+  -TargetHost "<CLEAN_WINDOWS_HOST>" `
   -RemoteUser "nu54ci" `
   -IdentityFile "$env:USERPROFILE/.ssh/nu54dk_m10_ed25519" `
   -KnownHostsFile "$env:USERPROFILE/.ssh/known_hosts"

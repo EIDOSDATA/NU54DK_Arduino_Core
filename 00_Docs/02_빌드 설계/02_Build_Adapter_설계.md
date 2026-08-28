@@ -1,12 +1,14 @@
-# NU54DK Build Adapter 설계
+# NU54DK Build Adapter 설계 — v0.1.0 기준선 / v0.2.0 확장
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M5 build 경로 구현·실증 완료 — upload는 M8 예정 |
+| 문서 상태 | `v0.1.0` build·upload·Boards Manager 실증 완료 — `v0.2.0` M13 profile UX 예정 |
+| 현재 정식 버전 | `v0.1.0` |
+| 다음 목표 버전 | `v0.2.0` |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 Zephyr | Zephyr 4.4.0 |
-| 대상 호스트 | Windows 우선, 이후 Linux/macOS |
+| 대상 호스트 | `v0.1.0`: Windows 10/11 x64 / `v0.2.0`: CI·지원 범위 확장 검토 |
 | 최종 이미지 | Loader 없는 Native Full Zephyr 정적 이미지 |
 
 ---
@@ -42,7 +44,8 @@ Loader, LLEXT, EDK, export symbol table 및 별도 sketch partition은 사용하
 ### 2.1 포함 범위
 
 - NCS/Zephyr 환경 진단
-- sketch별 `prj.conf`와 `app.overlay` 입력 처리
+- 패키지 기본 구성과 고급 sketch별 `prj.conf`/`app.overlay` 입력 처리
+- `v0.2.0` M13의 profile·feature resolver가 생성한 resolved config 입력 처리
 - `BOARD_ROOT` 및 `EXTRA_ZEPHYR_MODULES` 고정
 - prebuild 단계의 Zephyr configure
 - Arduino library discovery용 전처리
@@ -195,8 +198,8 @@ nu54-builder doctor
 
 1. 입력 경로 canonicalization
 2. NCS v3.4.0 환경 탐색 및 검증
-3. sketch의 선택적 `prj.conf`와 `app.overlay` 탐색
-4. Adapter 기본 config와 sketch config의 결정적 병합 순서 확정
+3. 패키지 기본 config와 sketch의 고급 선택 `prj.conf`/`app.overlay` 탐색
+4. Adapter 기본 config와 sketch config의 결정적 병합 순서 확정; M13 이후는 resolved profile·feature fragment도 포함
 5. cache key 계산
 6. build lock 획득
 7. 최초 build라면 placeholder payload archive 생성
@@ -407,10 +410,15 @@ west flash -d <zephyr-build> -r <runner>
 
 Adapter는 `{build.source.path}`에서 다음 선택 파일을 찾는다.
 
+`v0.1.0`의 일반 Build/Upload는 아래 sidecar가 없어도 패키지 기본 구성으로 동작한다.
+직접 `prj.conf`/`app.overlay`를 두는 방식은 고급 Zephyr 확장과 `v0.1.0` 검증 예제의
+역사적 입력이다. `v0.2.0` M13은 일반 기능 선택을 Arduino Tools 메뉴와
+profile·feature resolver로 이동하며, sidecar를 일반 사용자에게 필수로 요구하지 않는다.
+
 | 파일 | 의미 | 없을 때 |
 | --- | --- | --- |
-| `prj.conf` | sketch 전용 Kconfig fragment | platform 기본 config만 사용 |
-| `app.overlay` | sketch 전용 Devicetree overlay | board DTS 그대로 사용 |
+| `prj.conf` | 고급 sketch 전용 Kconfig fragment | platform/profile 기본 config만 사용 |
+| `app.overlay` | 고급 sketch 전용 Devicetree overlay | board DTS와 profile 기본 overlay 사용 |
 | `boards/<target>.overlay` | 향후 복수 보드 overlay | 첫 버전에서는 지원하지 않음 |
 | `sysbuild.conf` | sysbuild 입력 | 첫 버전에서는 오류 또는 무시가 아닌 명시적 비지원 |
 
@@ -419,7 +427,8 @@ Adapter는 `{build.source.path}`에서 다음 선택 파일을 찾는다.
 ~~~text
 Core 기본 prj.conf
   → NU54DK variant 기본 fragment
-  → sketch/prj.conf
+  → M13 resolved profile/feature fragment      # v0.2.0 이후
+  → sketch/prj.conf                            # 고급 선택
 ~~~
 
 Devicetree는 다음 순서를 사용한다.
@@ -427,7 +436,8 @@ Devicetree는 다음 순서를 사용한다.
 ~~~text
 NU54DK board DTS
   → Core 기본 overlay가 있을 때
-  → sketch/app.overlay
+  → M13 resolved profile/feature overlay       # v0.2.0 이후
+  → sketch/app.overlay                        # 고급 선택
 ~~~
 
 ### 6.2 `context.json`
@@ -437,7 +447,7 @@ NU54DK board DTS
 ~~~json
 {
   "schema_version": 1,
-  "adapter_version": "0.1.0-dev",
+  "adapter_version": "<platform-version>",
   "state": "configured",
   "fqbn": "nucode:zephyr:nu54dk",
   "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
@@ -666,7 +676,11 @@ Build Adapter v0의 전체 설계 기준은 다음과 같다. M5는 1~11의 buil
 
 ---
 
-## 12. 검증 체크리스트
+## 12. 검증 체크리스트 — 역사적 설계 수락 기준
+
+아래 체크박스는 M5 설계 당시의 수락 기준을 보존한다. 현재 완료 판정은
+`v0.1.0` 릴리스와 M5~M11 검증 기록이 소유하므로, 아래의 미체크 표기를
+현재 미완료 상태로 해석하지 않는다.
 
 ### 12.1 명령과 context
 

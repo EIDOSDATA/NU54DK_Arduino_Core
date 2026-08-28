@@ -3,6 +3,7 @@
 | 항목 | 값 |
 | --- | --- |
 | 상태 | 완료 |
+| 기록 성격 | **v0.1.0 역사적 완료 기준선** — 검증 수치와 당시 단계 경계는 동결하고, 저장소 재구성으로 이동한 파일 경로만 현행 위치로 표기 |
 | 검증일 | 2026-08-27 |
 | 작성자 | Quantum / NUCODE |
 | Core 기준 commit | `ba154305e3b0` + 본 M5 변경 |
@@ -93,7 +94,7 @@ recipe는 원자적인 source record를 만들고, `recipe.c.combine`이 실제�
 | `tools/nu54-builder/nu54-builder.cmd` | 일반 Arduino IDE process에서 NCS Python을 찾는 Windows launcher |
 | `tools/nu54-builder/src/nu54_builder.py` | 표준 라이브러리만 사용하는 Build Adapter |
 | `tools/nu54-builder/templates/zephyr-app/` | configure-only와 final build가 공유하는 Zephyr app |
-| `examples/01.Basics/Blink/Blink.ino` | prototype을 포함한 Arduino CLI 수직 예제 |
+| `libraries/NUCODE_NU54DK/examples/Blink/Blink.ino` | prototype을 포함한 Arduino CLI 수직 예제이자 Arduino IDE 표준 예제 메뉴 배포 경로 |
 | `tests/arduino-cli/run_smoke.py` | M5 CLI 자동 회귀 runner |
 | `tests/arduino-cli/libraries/` | 직접 library와 `depends` library fixture |
 | `tests/arduino-cli/config_overlay/` | Sketch별 Kconfig/Devicetree fixture |
@@ -222,9 +223,10 @@ Blink 기준 실제 Full Zephyr memory region은 FLASH 30,728 B, RAM 6,856 B였�
 
 ---
 
-## 9. 현재 제한과 후속 경계
+## 9. M5 완료 당시 제한과 후속 경계
 
-M5 PoC에 포함하지 않은 항목은 다음과 같다.
+다음 목록은 **M5 완료 시점의 역사적 단계 경계**다. 이후 단계에서 해결된 항목이 있더라도
+M5 자체의 검증 범위를 소급해서 넓히지 않는다.
 
 - Arduino IDE 2.x GUI의 Verify 버튼 직접 조작 회귀
 - Upload/Flash와 pyOCD/J-Link 선택
@@ -236,6 +238,6 @@ M5 PoC에 포함하지 않은 항목은 다음과 같다.
 - sysbuild/multi-image, MCUboot, DFU, OTA
 - 일반 Arduino library corpus 호환성
 
-M6는 이 build 경로 위에서 ArduinoCore-API 공통 구현, `String`, `Print`, `Stream`, 기본
-`Serial`과 GPIO interrupt를 연결한다. M8 전에는 `platform.txt`에 upload recipe를 추가하거나
-자동 mass erase/recover를 실행하지 않는다.
+후속 M6는 이 build 경로 위에서 ArduinoCore-API 공통 구현, `String`, `Print`, `Stream`, 기본
+`Serial`과 GPIO interrupt를 연결했고, M8은 Upload recipe를 별도 검증했다. M5 당시에는
+`platform.txt`에 upload recipe를 추가하지 않았고 자동 mass erase/recover도 실행하지 않았다.

@@ -526,7 +526,7 @@ def run_arduino_gate(args: argparse.Namespace) -> None:
     identity = validate_platform_from_arguments(args)
     validate_repository_fixtures(
         identity["core_revision"],
-        ("examples", "tests/arduino-cli", "tools/release/run_fixed_gate.py"),
+        ("libraries/NUCODE_NU54DK/examples", "tests/arduino-cli", "tools/release/run_fixed_gate.py"),
     )
     cli = validate_arduino_cli(args.arduino_cli)
     smoke = REPOSITORY / "tests" / "arduino-cli" / "run_smoke.py"

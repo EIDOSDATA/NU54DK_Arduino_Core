@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | 설계·구현 동기화 — M6 완료 기준 |
+| 문서 상태 | v0.1.0 정식 구현·M6 GPIO/시간 검증 동기화; M13 프로필 정책 반영 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 RTOS | Zephyr v4.4.0 |
@@ -259,7 +259,10 @@ M3는 이 전환을 구현하지 않는다. input pin의 `digitalWrite()`는 `wr
 PWM, UART, SPI 또는 I2C가 소유한 pin에 `digitalWrite()`를 호출해 peripheral pinctrl을
 자동 해제하지 않는다. M3에는 ownership registry와 충돌 진단도 없다. 현재 두 논리 핀은
 M3 sample의 GPIO 용도만 검증했으며, 향후 전체 핀맵에서는 application overlay 또는
-명시적인 peripheral lifecycle과 ownership 검사가 필요하다.
+명시적인 peripheral lifecycle과 ownership 검사가 필요하다. M13 이후 일반 사용자는
+검증된 보드 profile로 핀 역할을 선택하고 overlay를 직접 편집하지 않는다. 임의 핀 route가
+필요한 고급 사용자는 expert escape hatch로 overlay를 전달하되 충돌 검증 책임과 지원 상태를
+기본 profile과 분리한다.
 
 ---
 
@@ -416,7 +419,7 @@ Scheduler 지연 때문에 실제 복귀 시간이 요청값보다 길 수 있�
 - 긴 대기는 전력과 latency를 악화하므로 `delay()` 사용을 권고한다.
 - interrupt가 실행되면 실제 지연은 길어질 수 있다.
 - Zephyr power management가 busy-wait용 clock을 정지시키는 구성에서는 동작하지 않을 수 있으므로 실제 PM profile마다 검증한다.
-- ISR 사용은 v1 공개 계약에서 금지하며 M3 구현은 안전한 no-op로 반환한다.
+- ISR 사용은 v0.1.0 공개 계약에서 금지하며 M3 구현은 안전한 no-op로 반환한다.
 
 M3 내부 계측에서 1,000 us 요청은 1,026 us였다. 최소 유효 값, 여러 구간의 오차와
 외부 logic analyzer 기준은 아직 측정하지 않았다.

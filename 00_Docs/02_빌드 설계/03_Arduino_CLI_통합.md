@@ -1,8 +1,10 @@
-# Arduino CLI 및 IDE 통합 설계
+# Arduino CLI 및 IDE 통합 설계 — v0.1.0 기준선 / v0.2.0 확장
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M5 Arduino CLI compile 실증 완료 — IDE GUI/upload는 후속 단계 |
+| 문서 상태 | `v0.1.0` Arduino CLI·IDE Build/Upload·clean Windows 실증 완료 |
+| 현재 정식 버전 | `v0.1.0` |
+| 다음 목표 버전 | `v0.2.0` — M13 예제 노출·구성 profile UX |
 | 작성자 | Quantum / NUCODE |
 | 대상 | Arduino CLI 및 Arduino IDE 2.x |
 | 제안 FQBN | `nucode:zephyr:nu54dk` |
@@ -26,10 +28,10 @@
 
 내부에서는 Arduino가 최종 firmware를 직접 링크하지 않는다. Arduino는 `.ino` 전처리와 library dependency resolution을 수행하고, Build Adapter가 그 결과를 NCS/Zephyr 전체 빌드에 연결한다.
 
-M5에서 `boards.txt`, `platform.txt`와 Build Adapter를 실제 구현하고 Arduino CLI 1.5.1
-verbose build로 property와 hook 시점을 검증했다. `.ino`/library에서 Full Zephyr
-ELF·HEX·BIN까지의 compile 경로는 완료됐고, Arduino IDE 2.x GUI와 Upload/Flash 경로는 각각
-후속 GUI 회귀와 M8 범위다.
+M5에서 `boards.txt`, `platform.txt`와 Build Adapter를 구현했고 M8에서 Upload/Flash를
+실증했다. M10~M11에서 Boards Manager를 통한 clean Windows Arduino IDE 2.3.10
+설치·compile·NU54DK upload·실행을 검증한 뒤 `v0.1.0`을 정식 공개했다.
+현재 후속 과제는 `v0.2.0` M13의 표준 library 예제 노출과 zero-config profile UX다.
 
 ---
 
@@ -131,7 +133,8 @@ Arduino CLI의 일반 build는 개념적으로 다음 순서로 진행된다.
 따라서 prebuild에서 전체 `west build`를 완료하는 설계는 사용하지 않는다. prebuild의 책임은 다음으로 제한한다.
 
 - 환경 진단
-- sketch별 Kconfig/overlay 확인
+- 패키지 기본 Kconfig/overlay와 고급 sketch sidecar 확인
+- M13 이후 selected profile/feature의 resolved fragment 확인
 - Zephyr configure-only 실행
 - generated header와 compile flags 생성
 - 이후 recipe가 읽을 context 작성
@@ -184,14 +187,18 @@ recipe.c.combine
 
 ### 5.2 사용자 sketch 입력
 
+일반 사용자의 표준 sketch는 `.ino`만으로 빌드된다.
+
 ~~~text
 Blink/
-├─ Blink.ino
-├─ prj.conf            # 선택적 Zephyr Kconfig fragment
-└─ app.overlay         # 선택적 Devicetree overlay
+└─ Blink.ino
 ~~~
 
-`.ino`, 일반 sketch `.c/.cpp/.S`, Arduino library source는 Arduino CLI가 탐색한다. `prj.conf`와 `app.overlay`는 Build Adapter가 `{build.source.path}`에서 읽는다.
+`.ino`, 일반 sketch `.c/.cpp/.S`, Arduino library source는 Arduino CLI가 탐색한다. 고급
+Zephyr 사용자는 sketch root에 `prj.conf`/`app.overlay`를 선택적으로 둘 수 있지만,
+이는 일반 Arduino 사용자의 필수 작업이 아니다. `v0.2.0` M13은 표준 예제의
+구성 선택을 profile·feature resolver와 Tools 메뉴로 소유하고, 직접 sidecar는 고급
+escape hatch로 유지한다.
 
 ### 5.3 출력
 
@@ -396,7 +403,7 @@ arduino-cli board details --fqbn 'nucode:zephyr:nu54dk'
 
 ~~~powershell
 $RepoRoot = (Resolve-Path '.').Path
-$SketchDir = Join-Path $RepoRoot 'examples\01.Basics\Blink'
+$SketchDir = Join-Path $RepoRoot 'libraries\NUCODE_NU54DK\examples\Blink'
 $ArduinoBuild = Join-Path $RepoRoot 'build\arduino-cli\Blink'
 
 arduino-cli compile `
@@ -536,8 +543,10 @@ Adapter child process의 실제 exit code를 Arduino CLI에 반환한다. 실패
 
 ## 13. 완료 기준
 
-Arduino CLI 통합 v0의 전체 build/upload 기준은 다음과 같다. M5는 compile, source graph와
-artifact 항목을 검증한다. Upload/Flash와 IDE GUI 항목은 M8 및 package 단계의 후속 기준이다.
+Arduino CLI 통합 v0의 아래 수락 기준은 M5/M8 구현과 M10~M11 clean Windows
+검증을 거쳐 `v0.1.0`에서 완료됐다. 항목의 M5/M8 표기는 당시 단계별 소유권을
+보존하는 역사 기록이다. M13은 실행 가능한 예제를 `libraries/*/examples`에 노출하고
+일반 사용자의 구성 profile UX를 소유한다.
 
 1. `nucode:zephyr:nu54dk`가 board 목록과 IDE에 표시된다.
 2. 표준 Blink `.ino`가 prototype 처리와 함께 compile된다.
@@ -545,7 +554,7 @@ artifact 항목을 검증한다. Upload/Flash와 IDE GUI 항목은 M8 및 packag
 4. prebuild가 configure-only 역할만 수행한다.
 5. `recipe.c.combine`에서 west 최종 link가 한 번 실행된다.
 6. final ELF/HEX가 Native Full Zephyr image다.
-7. sketch별 `prj.conf`와 `app.overlay`가 반영된다.
+7. 패키지 기본 구성이 자동 반영되고, 고급 sketch의 `prj.conf`/`app.overlay`도 반영된다.
 8. **M8 범위:** pyOCD 선택으로 Upload 버튼이 erase 없이 성공한다.
 9. **M8 범위:** J-Link 선택은 runner 등록 후 성공하고, 미등록 시 명확히 실패한다.
 10. Windows의 공백/한글 경로에서 compile된다.
@@ -554,7 +563,10 @@ artifact 항목을 검증한다. Upload/Flash와 IDE GUI 항목은 M8 및 packag
 
 ---
 
-## 14. 검증 체크리스트
+## 14. 검증 체크리스트 — 역사적 설계 수락 기준
+
+아래 미체크 표기는 문서 초안의 검증 항목을 보존한 것이며 현재 릴리스 상태표가
+아니다. `v0.1.0` 완료 판정은 M5~M11 검증 및 정식 릴리스 기록을 따른다.
 
 ### 14.1 platform metadata
 

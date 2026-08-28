@@ -69,6 +69,18 @@ class M10PackagingTests(unittest.TestCase):
         self.assertFalse(any("tools/remote-windows" in name for name in names))
         self.assertTrue(any("board_package/NU54DK_Zephyr_DTS/boards/" in name for name in names))
         self.assertFalse(any("board_package/NU54DK_Zephyr_DTS/00_Docs/" in name for name in names))
+        root = "nucode-nu54dk-zephyr-0.0.90"
+        expected_examples = {
+            f"{root}/libraries/NUCODE_NU54DK/examples/Blink/Blink.ino",
+            f"{root}/libraries/NUCODE_NU54DK/examples/InterruptButton/InterruptButton.ino",
+            f"{root}/libraries/NUCODE_NU54DK/examples/AnalogReadA0/AnalogReadA0.ino",
+            f"{root}/libraries/NUCODE_NU54DK/examples/PWMFade/PWMFade.ino",
+            f"{root}/libraries/NUCODE_NU54DK/examples/SerialEcho/SerialEcho.ino",
+            f"{root}/libraries/SPI/examples/SPITransaction/SPITransaction.ino",
+            f"{root}/libraries/Wire/examples/WirePmicId/WirePmicId.ino",
+        }
+        self.assertTrue(expected_examples.issubset(set(names)))
+        self.assertFalse(any(name.startswith(f"{root}/examples/") for name in names))
 
     def test_03b_windows_command_scripts_use_strict_crlf(self) -> None:
         """! @brief RC command script 변환의 ASCII·CRLF 계약을 검증합니다. """
@@ -280,21 +292,10 @@ class M10PackagingTests(unittest.TestCase):
     def test_11a_stable_package_has_approved_identity_and_own_index(self) -> None:
         """! @brief 승인된 stable 버전이 RC와 분리된 공개 identity를 갖는지 검증합니다. """
 
-        stable_output = Path(self.temporary.name) / "stable"
-        paths = PACKAGE.build_package(REPO_ROOT, stable_output, "0.1.0", self.commit)
-        manifest = PACKAGE.validate_archive(
-            paths["archive"], expected_version="0.1.0", expected_commit=self.commit
-        )
-        index = PACKAGE.generate_index(stable_output, ["0.1.0"])
-        document = PACKAGE.validate_index(index, artifact_dir=stable_output)
-        rc_paths = PACKAGE.build_package(
-            REPO_ROOT, stable_output / "rc-reference", "0.1.0-rc.2", self.commit
-        )
-        rc_manifest = PACKAGE.validate_archive(
-            rc_paths["archive"],
-            expected_version="0.1.0-rc.2",
-            expected_commit=self.commit,
-        )
+        stable_commit = PACKAGE.STABLE_RELEASE_COMMITS["0.1.0"]
+        self.assertRegex(stable_commit, r"^[0-9a-f]{40}$")
+        index = REPO_ROOT / PACKAGE.STABLE_INDEX_FILENAME
+        document = PACKAGE.validate_index(index)
         self.assertEqual(PACKAGE.release_channel("0.1.0"), "stable")
         self.assertEqual(PACKAGE.release_tag("0.1.0"), "v0.1.0")
         self.assertEqual(index.name, PACKAGE.STABLE_INDEX_FILENAME)
@@ -304,31 +305,26 @@ class M10PackagingTests(unittest.TestCase):
             "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/"
             "v0.1.0/nucode-nu54dk-zephyr-0.1.0.zip",
         )
-        self.assertIn("/releases/download/v0.1.0/", manifest["release_url"])
         self.assertEqual(
-            manifest["runtime_payload_sha256"],
-            rc_manifest["runtime_payload_sha256"],
-        )
-        root = "nucode-nu54dk-zephyr-0.1.0"
-        with zipfile.ZipFile(paths["archive"], "r") as archive:
-            inventory = json.loads(
-                archive.read(f"{root}/license-inventory.json").decode("utf-8")
-            )
-        self.assertEqual(
-            inventory["legal_review_status"],
+            PACKAGE.legal_review_status("0.1.0"),
             "project-owner-approved-for-final-public-release",
-        )
-        self.assertTrue(
-            all(
-                item["legal_review_status"]
-                == "project-owner-approved-for-final-public-release"
-                for item in inventory["external_prerequisites"]
-            )
         )
         stable_wrapper = (
             REPO_ROOT / "packaging" / "boards-manager" / "build-stable.ps1"
         ).read_text(encoding="utf-8")
         self.assertIn("[ValidateSet('0.1.0')]", stable_wrapper)
+        self.assertIn("[string]$Commit = 'v0.1.0'", stable_wrapper)
+
+    def test_11aa_stable_package_rejects_a_different_commit(self) -> None:
+        """! @brief 공개 stable 이름으로 다른 source byte를 생성하지 못하게 합니다. """
+
+        with self.assertRaises(PACKAGE.PackageError):
+            PACKAGE.build_package(
+                REPO_ROOT,
+                Path(self.temporary.name) / "forbidden-stable",
+                "0.1.0",
+                PACKAGE.STABLE_RELEASE_COMMITS["0.1.0"],
+            )
 
     def test_11b_current_safe_pair_has_one_runtime_payload(self) -> None:
         """! @brief 새 immutable preview 두 개가 같은 source와 runtime payload를 사용합니다. """

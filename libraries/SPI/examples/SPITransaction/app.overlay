@@ -1,0 +1,15 @@
+/** @brief SPI를 NU54DK P2.1/P2.2/P2.4 spi00 pinctrl에 연결합니다.
+ * SPDX-License-Identifier: MIT
+ */
+/ {
+	chosen {
+		nucode,arduino-spi = &spi00;
+	};
+};
+
+&spi00 {
+	status = "okay";
+	pinctrl-0 = <&spi00_default>;
+	pinctrl-1 = <&spi00_sleep>;
+	pinctrl-names = "default", "sleep";
+};

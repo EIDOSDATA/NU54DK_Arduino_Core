@@ -3,6 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 상태 | **완료** |
+| 기록 성격 | **v0.1.0 역사적 완료 기준선** — 검증 결과는 동결하고, 이동한 예제·HIL 파일은 현행 경로로 표기 |
 | 작성자 | Quantum / NUCODE |
 | 라이선스 | MIT |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
@@ -136,8 +137,8 @@ M7 기능 때문에 깨지지 않는다.
 | `tools/nu54-builder/templates/zephyr-app/{prj.conf,app.overlay}` | Arduino 기본 profile의 M7 Kconfig와 chosen/SPI00 활성화 |
 | `tests/zephyr/m7_core_api` | NU54DK target emulator/fake-driver 의미 회귀 |
 | `tests/zephyr/m7_config_contract` | chosen 누락·잘못된 SPI instance·SPI00/uart00 충돌 expected-fail 자동 fixture |
-| `tests/hil/m7_i2c_pmic.py` | 고정 BQ25186 0x6A/0x0C 읽기 전용 I2C HIL host protocol |
-| `examples/03.Analog`, `examples/04.Communication` | Arduino CLI discovery·compile과 사용자 계약 예제 |
+| `tests/hil/nu54dk/m7_i2c_pmic.py`, `tests/hil/nu54dk/m7_peripheral_hil.py` | 고정 BQ25186 I2C와 SPI·ADC·PWM NU54DK HIL host protocol |
+| `libraries/NUCODE_NU54DK/examples/{AnalogReadA0,PWMFade}`, `libraries/{Wire,SPI}/examples/` | Arduino IDE 표준 예제 메뉴, Arduino CLI discovery·compile과 사용자 계약 예제 |
 | `samples/zephyr/{wire_pmic_id,spi_transaction,analog_read_a0,pwm_fade}` | west-native build 및 승인된 실기 경로 |
 
 Core backend는 `cores/arduino`에서 한 번만 컴파일한다. `libraries/Wire`와 `libraries/SPI`는
@@ -286,7 +287,7 @@ P1.10 PWM 역할을 digital pin으로 추가하지 않으므로 M7에는 GPIO↔
 
 ## 8. 검증 행렬
 
-현재 결과는 확보한 최종 실행 증거를 기준으로 한다. 실제 장치나 fixture가 없어 입증하지 못한
+아래 결과는 M7에서 확보한 최종 실행 증거를 기준으로 하는 역사적 기준선이다. 실제 장치나 fixture가 없어 입증하지 못한
 범위는 `미확정` 또는 `미검증`으로 구분한다.
 
 | 시험 | 현재 결과 | 통과 기준 |

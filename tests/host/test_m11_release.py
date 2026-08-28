@@ -194,7 +194,7 @@ class M11ReleaseTests(unittest.TestCase):
         hil_result = RELEASE.validate_rc_hil_result(result_path, self.plan)
         command = [
             sys.executable,
-            "tests/hil/m8_upload.py",
+            "tests/hil/nu54dk/m8_upload.py",
             "--expected-core-revision",
             self.plan["core_revision"],
             "--expected-runtime-payload-sha256",
@@ -438,14 +438,16 @@ class M11ReleaseTests(unittest.TestCase):
                 self.assertNotIn(b"\n", data.replace(b"\r\n", b""), path)
                 self.assertEqual(records[path].get("transformation"), "windows-crlf")
 
-    def test_02_stable_package_is_allowed_but_rc_tool_and_mixed_channels_fail(self) -> None:
-        stable = RELEASE.PACKAGE.build_package(
-            REPO_ROOT, self.root / "stable", "0.1.0", self.commit
-        )
-        manifest = RELEASE.PACKAGE.validate_archive(
-            stable["archive"], expected_version="0.1.0", expected_commit=self.commit
-        )
-        self.assertEqual(manifest["release_tag"], "v0.1.0")
+    def test_02_published_stable_rebuild_and_mixed_channels_fail(self) -> None:
+        """! @brief 개발 HEAD에서 공개 stable을 덮어쓰지 못하고 채널 혼합도 거부합니다. """
+
+        with self.assertRaises(RELEASE.PACKAGE.PackageError):
+            RELEASE.PACKAGE.build_package(
+                REPO_ROOT,
+                self.root / "stable",
+                "0.1.0",
+                RELEASE.PACKAGE.STABLE_RELEASE_COMMITS["0.1.0"],
+            )
         with self.assertRaises(RELEASE.ReleaseError):
             RELEASE.prepare_rc(REPO_ROOT, self.root / "stable", "0.1.0", self.commit)
         with self.assertRaises(RELEASE.PACKAGE.PackageError):

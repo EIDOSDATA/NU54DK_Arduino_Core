@@ -30,6 +30,10 @@ SUPPORTED_VERSIONS = (
 )
 RELEASE_CANDIDATE_VERSIONS = ("0.1.0-rc.2",)
 STABLE_VERSIONS = ("0.1.0",)
+## @brief 이미 공개한 stable archive가 다른 source로 재생성되는 것을 막는 commit 계약입니다.
+STABLE_RELEASE_COMMITS = {
+    "0.1.0": "5dbc5e37270e477d21f578dd877f4b5226b44a0d",
+}
 PACKAGE_VERSIONS = SUPPORTED_VERSIONS + RELEASE_CANDIDATE_VERSIONS + STABLE_VERSIONS
 WINDOWS_SAFE_VERSIONS = (
     FAILED_M10_PREVIEW_VERSIONS
@@ -232,7 +236,7 @@ def include_core_path(path: str) -> bool:
             "post_install.sh",
         }
     root = pure.parts[0]
-    if root in {"cores", "dts", "examples", "libraries", "third_party", "variants", "zephyr"}:
+    if root in {"cores", "dts", "libraries", "third_party", "variants", "zephyr"}:
         return True
     if root == "tools":
         return len(pure.parts) >= 2 and pure.parts[1] in {"nu54-builder", "nu54-prerequisites"}
@@ -959,6 +963,14 @@ def build_package(repo_root: Path, output_dir: Path, version: str, revision: str
     repo_root = repo_root.resolve()
     output_dir = output_dir.resolve()
     commit = resolve_commit(repo_root, revision)
+    stable_commit = STABLE_RELEASE_COMMITS.get(version)
+    if stable_commit is not None:
+        tooling_commit = resolve_commit(repo_root, "HEAD")
+        if commit != stable_commit or tooling_commit != stable_commit:
+            raise PackageError(
+                f"공개 stable {version}은 source와 패키징 도구를 모두 고정 commit "
+                f"{stable_commit}에서 실행해야 합니다: source={commit}, tooling={tooling_commit}"
+            )
     created = commit_timestamp(repo_root, commit)
     source_files, board_revision = collect_source_files(repo_root, commit, version)
     release_manifest = build_release_manifest(source_files, version, commit, board_revision)

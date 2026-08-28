@@ -1,0 +1,20 @@
+/** @brief A0를 board SAADC channel 5/P1.12 io-channel로 선택합니다.
+ * SPDX-License-Identifier: MIT
+ */
+/ {
+	chosen {
+		nucode,arduino-adc = &nucode_arduino_adc_input;
+	};
+
+	nucode_arduino_adc_input: arduino-adc-input {
+		compatible = "nucode,arduino-adc-input";
+		io-channels = <&adc 5>;
+	};
+};
+
+/** @brief nRF54L15이 지원하는 가장 낮은 1/4 gain으로 A0 입력 범위를 설정합니다. */
+&adc {
+	channel@5 {
+		zephyr,gain = "ADC_GAIN_1_4";
+	};
+};
