@@ -3,16 +3,18 @@
 ## 1. 목적과 현재 판정
 
 M12는 GitHub-hosted software 검증, exact NCS 기반 재현 build와 self-hosted NU54DK HIL을
-분리하는 단계다. 2026-08-29 현재 구현과 로컬 검증 결과는 다음과 같다.
+분리하는 단계다. 2026-08-29 기준 최종 결과는 다음과 같다.
 
 - CI lock과 workflow 계약: **PASS**
 - host/document/package/example-discovery 로컬 gate: **PASS**
 - NCS v3.4.0 대표 Twister build-only 4개: **PASS**
-- GitHub Actions 원격 최초 실행: **미실행**
+- GitHub-hosted software gate 5개: **5/5 PASS**
+- Linux/Windows 재현 build: **2/2 PASS**
 - self-hosted NU54DK HIL workflow: **미실행**
 
-따라서 로컬 M12 기준선은 통과했지만, GitHub commit에서 workflow가 실제 실행되기 전까지
-M12 전체 완료로 판정하지 않는다.
+물리 HIL은 수동 self-hosted workflow로 분리된 장치 gate이며 GitHub-hosted software 결과로
+추정하지 않는다. 자동 trigger, runner label, 승인 secret와 장치 concurrency 경계까지 고정했으므로
+M12의 CI/CD 및 재현 build 기반은 **완료**로 판정한다.
 
 ---
 
@@ -20,7 +22,7 @@ M12 전체 완료로 판정하지 않는다.
 
 | 항목 | 기준 |
 | --- | --- |
-| 저장소 기준 commit | `d85d681`에서 시작한 M12 작업 tree |
+| 저장소 기준 commit | `0f66017` (`fix(ci): NCS 내장 Python을 격리 실행`) |
 | 운영체제 | Windows x64 |
 | Python | GitHub Actions `3.12.10`; 로컬 기본 Python과 NCS toolchain Python |
 | NCS | v3.4.0, `99553055607b2e9885fbc80ccd11fa9da81c2df0` |
@@ -143,27 +145,45 @@ Twister 최종 결과는 4개 선택, 4개 build-only 완료, failed 0, error 0,
 
 ---
 
-## 6. 아직 실행하지 않은 항목
+## 6. GitHub Actions 원격 결과
 
-| 항목 | 상태 | 완료에 필요한 사건 |
+| Workflow / job | Run | 결과 |
 | --- | --- | --- |
-| GitHub PR software gate | 미실행 | workflow가 포함된 commit push 후 PR 또는 수동 실행 |
-| GitHub main Linux Twister | 미실행 | main 반영 후 workflow 성공 |
-| GitHub Windows Arduino build | 미실행 | main 반영 후 prerequisite 설치와 compile 성공 |
-| Self-hosted NU54DK HIL | 미실행 | 승인된 runner, secret와 장치로 수동 실행 |
+| Software Gates — contract, host, documents, package, example-discovery | [33191659417](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33191659417) | **5/5 PASS** |
+| Reproducible Builds — pinned Nordic Linux container | [33191659394](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33191659394) | **PASS** |
+| Reproducible Builds — pinned Windows prerequisites | [33191659394](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33191659394) | **PASS** |
+| Self-hosted NU54DK HIL | 수동 workflow | **미실행** |
 
-미실행 결과를 PASS로 기록하지 않는다. GitHub-hosted runner는 NU54DK가 없으므로 physical HIL
-결과도 추정하지 않는다.
+Linux job은 `M12_ZEPHYR_BUILD_PASS=4`를 기록했고 evidence artifact `9694314540`의 upload
+SHA-256은 `acace7728c6b8d38fd4840d16726989dc00b2928ccc13372b71588601da1c776`다.
+Windows job은 `blink`, `m6`, `m7`, `examples` 네 gate를 통과했고 artifact `9694592854`의
+upload SHA-256은 `7d7b67925b27b1a581a50e1b44eea889c47d93d7ed270fb926f27ce2f4c87fb7`다.
+
+첫 Windows 원격 시도 [33190658940](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33190658940)은
+GitHub Actions Python `3.12.10` 환경에서 NCS Python `3.12.4`의 `ctypes` 표준 library와 extension이
+섞여 실패했다. `nu54-builder.cmd`가 NCS 내장 Python executable directory를 PATH 앞에 두고
+`-I` 격리 mode로 Builder를 실행하도록 수정했다. 오염시킨 `PATH`/`PYTHONHOME`/`PYTHONPATH`
+로컬 회귀와 위 clean Windows 원격 compile이 모두 통과해 수정 근거를 닫았다.
+
+GitHub-hosted runner는 NU54DK가 없으므로 physical HIL 결과를 추정하지 않는다. HIL은 보드가
+연결된 승인 self-hosted runner에서 필요할 때 별도로 실행한다.
+
+GitHub는 고정 commit의 `arduino/setup-arduino-cli`가 선언한 Node 20 대신 Node 24 runtime을
+강제 적용한다는 비차단 annotation을 남겼다. Action source와 설치되는 Arduino CLI `1.5.1`은
+계속 고정·검증하지만 GitHub-hosted runner의 관리형 Node runtime 자체는 저장소가 고정하지
+못하는 외부 실행 환경으로 기록한다.
 
 ---
 
-## 7. 완료 판정 절차
+## 7. 완료 판정
 
-1. M12 변경을 commit하고 GitHub에 push한다.
-2. `M12 Software Gates`의 다섯 job이 성공하는지 확인한다.
-3. `M12 Reproducible Builds`의 Linux와 Windows job이 성공하는지 확인한다.
+1. `0f66017` 기준 `M12 Software Gates`의 다섯 job이 성공했다.
+2. 같은 commit의 `M12 Reproducible Builds` Linux와 Windows job이 성공했다.
+3. exact lock, cache 재검증, 실패 log와 evidence 보존 계약이 원격에서 실행됐다.
 4. self-hosted HIL은 장치 사용 시 수동 실행하고 software 결과와 별도로 기록한다.
-5. 공용 roadmap과 상태 표는 위 원격 결과를 확인한 뒤 갱신한다.
+
+따라서 M12는 완료다. HIL 미실행을 PASS로 바꾸지 않았으며, 물리 장치가 필요한 후속
+마일스톤의 완료 근거로 재사용하지 않는다.
 
 Release tag나 공개 asset을 만드는 자동 job은 M12에 포함하지 않았다. 최종 공개는 계속 사람의
 승인을 요구한다.

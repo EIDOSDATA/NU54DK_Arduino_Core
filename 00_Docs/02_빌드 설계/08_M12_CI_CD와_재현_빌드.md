@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-CI-001 |
-| 문서 개정 | 1.0 |
-| 문서 상태 | 구현 기준선 — GitHub Actions 최초 실행 대기 |
+| 문서 개정 | 1.1 |
+| 문서 상태 | 구현·원격 재현 기준선 완료 |
 | 적용 제품 버전 | `v0.2.0` 이후 |
 | 작성자 | Quantum / NUCODE |
 | 기준 NCS | nRF Connect SDK `v3.4.0` |
@@ -63,6 +63,10 @@ GitHub-hosted Windows에서 실행한다. 나머지 네 software job은 Ubuntu�
   M3, M4, M6, M7 Twister suite를 build-only로 빌드한다.
 - Windows: 공개 prerequisite installer로 exact NCS와 toolchain을 설치 또는 검증한 뒤 Arduino
   CLI `1.5.1`로 Blink, M6, M7 및 표준 예제를 compile한다.
+
+Windows Build Adapter는 GitHub Actions가 설치한 Python과 Nordic toolchain Python이 섞이지
+않도록 NCS 내장 Python을 `-I`로 실행하고 `PYTHONHOME`, `PYTHONPATH` 및 사용자 site package를
+격리한다. 이 경계는 clean runner의 PATH 순서에 의존하지 않는다.
 
 Nordic container는 NCS source archive가 아니라 toolchain 환경이다. 따라서 container 실행만으로
 NCS가 준비됐다고 간주하지 않고 `west init`, exact manifest fetch와 `west update --narrow`를
@@ -170,9 +174,13 @@ C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe `
 - workflow가 실행되지 않았으면 `미실행`이며 PASS로 기록하지 않는다.
 - release version, tag와 공개 asset은 CI가 자동 생성하지 않는다.
 
-M12 완료 판정은 local 구현 존재만으로 내리지 않는다. GitHub에 반영한 commit에서 software
-gate와 main 재현 build가 성공하고, HIL 경계가 저장소 정책과 일치하는지 확인한 뒤 상태 문서에
-반영한다.
+M12 완료 판정은 local 구현 존재만으로 내리지 않는다. 기준 commit `0f66017`에서
+[Software Gates 33191659417](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33191659417)의
+5개 job과
+[Reproducible Builds 33191659394](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33191659394)의
+Linux/Windows 2개 job이 모두 PASS했다. HIL workflow는 장치가 있는 self-hosted runner에서만
+수동 실행하는 경계까지 검증했으며, 이번 software infrastructure 완료 판정에 물리 HIL PASS를
+대입하지 않았다.
 
 ---
 
@@ -190,6 +198,6 @@ gate와 main 재현 build가 성공하고, HIL 경계가 저장소 정책과 일
 
 ## 8. 관련 문서
 
-- [M12 로컬 검증 기준선](<../04_검증 기록/14_M12_CI_CD_기준선.md>)
+- [M12 검증 기준선](<../04_검증 기록/14_M12_CI_CD_기준선.md>)
 - [테스트와 검증 정책](../03_펌웨어%20설계/04_테스트와_검증.md)
 - [Boards Manager 설치와 패키징](./06_Boards_Manager_설치와_패키징.md)
