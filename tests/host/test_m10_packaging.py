@@ -242,6 +242,8 @@ class M10PackagingTests(unittest.TestCase):
         self.assertEqual(PACKAGE.FAILED_M10_PREVIEW_VERSIONS, ("0.0.94", "0.0.95"))
         self.assertEqual(PACKAGE.SAFE_PREVIEW_VERSIONS, ("0.0.96", "0.0.97"))
         self.assertEqual(PACKAGE.SUPPORTED_VERSIONS[-2:], ("0.0.96", "0.0.97"))
+        self.assertEqual(PACKAGE.RELEASE_CANDIDATE_VERSIONS, ("0.1.0-rc.2",))
+        self.assertEqual(PACKAGE.STABLE_VERSIONS, ("0.1.0",))
         self.assertTrue(
             set(PACKAGE.FAILED_M10_PREVIEW_VERSIONS).issubset(
                 PACKAGE.WINDOWS_SAFE_VERSIONS
@@ -260,7 +262,60 @@ class M10PackagingTests(unittest.TestCase):
         self.assertNotIn("'0.0.94'", preview_wrapper)
         self.assertNotIn("'0.0.95'", preview_wrapper)
         with self.assertRaises(PACKAGE.PackageError):
-            PACKAGE.build_package(REPO_ROOT, self.output, "0.1.0", self.commit)
+            PACKAGE.build_package(REPO_ROOT, self.output, "0.1.1", self.commit)
+
+    def test_11a_stable_package_has_approved_identity_and_own_index(self) -> None:
+        """! @brief 승인된 stable 버전이 RC와 분리된 공개 identity를 갖는지 검증합니다. """
+
+        stable_output = Path(self.temporary.name) / "stable"
+        paths = PACKAGE.build_package(REPO_ROOT, stable_output, "0.1.0", self.commit)
+        manifest = PACKAGE.validate_archive(
+            paths["archive"], expected_version="0.1.0", expected_commit=self.commit
+        )
+        index = PACKAGE.generate_index(stable_output, ["0.1.0"])
+        document = PACKAGE.validate_index(index, artifact_dir=stable_output)
+        rc_paths = PACKAGE.build_package(
+            REPO_ROOT, stable_output / "rc-reference", "0.1.0-rc.2", self.commit
+        )
+        rc_manifest = PACKAGE.validate_archive(
+            rc_paths["archive"],
+            expected_version="0.1.0-rc.2",
+            expected_commit=self.commit,
+        )
+        self.assertEqual(PACKAGE.release_channel("0.1.0"), "stable")
+        self.assertEqual(PACKAGE.release_tag("0.1.0"), "v0.1.0")
+        self.assertEqual(index.name, PACKAGE.STABLE_INDEX_FILENAME)
+        self.assertEqual(document["packages"][0]["platforms"][0]["version"], "0.1.0")
+        self.assertEqual(
+            document["packages"][0]["platforms"][0]["url"],
+            "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/"
+            "v0.1.0/nucode-nu54dk-zephyr-0.1.0.zip",
+        )
+        self.assertIn("/releases/download/v0.1.0/", manifest["release_url"])
+        self.assertEqual(
+            manifest["runtime_payload_sha256"],
+            rc_manifest["runtime_payload_sha256"],
+        )
+        root = "nucode-nu54dk-zephyr-0.1.0"
+        with zipfile.ZipFile(paths["archive"], "r") as archive:
+            inventory = json.loads(
+                archive.read(f"{root}/license-inventory.json").decode("utf-8")
+            )
+        self.assertEqual(
+            inventory["legal_review_status"],
+            "project-owner-approved-for-final-public-release",
+        )
+        self.assertTrue(
+            all(
+                item["legal_review_status"]
+                == "project-owner-approved-for-final-public-release"
+                for item in inventory["external_prerequisites"]
+            )
+        )
+        stable_wrapper = (
+            REPO_ROOT / "packaging" / "boards-manager" / "build-stable.ps1"
+        ).read_text(encoding="utf-8")
+        self.assertIn("[ValidateSet('0.1.0')]", stable_wrapper)
 
     def test_11b_current_safe_pair_has_one_runtime_payload(self) -> None:
         """! @brief 새 immutable preview 두 개가 같은 source와 runtime payload를 사용합니다. """

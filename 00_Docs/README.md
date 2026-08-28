@@ -32,12 +32,14 @@
 12. [M9 증분 빌드·캐시와 재현성 기준선](<./04_검증 기록/09_M9_증분_빌드_캐시와_재현성_기준선.md>)
 13. [M10 Boards Manager와 clean Windows 기준선](<./04_검증 기록/10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md>)
 14. [M11 v0.1.0-rc.1 릴리스 후보 기준선(역사적 검증 기록)](<./04_검증 기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md>)
-15. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
-16. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
-17. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
-18. [Boards Manager 설치와 패키징](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
-19. [v0.1.0-rc.1 배포 중단 기록](<./05_릴리스/00_v0.1.0_rc1_배포_중단_기록.md>)
-20. [v0.1.0-rc.2 릴리스 노트](<./05_릴리스/07_v0.1.0_rc2_릴리스_노트.md>)
+15. [M11 v0.1.0-rc.2 공개 후 수동 검증 기록](<./04_검증 기록/12_M11_v0.1.0_rc2_공개_후_수동_검증.md>)
+16. [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
+17. [Build Adapter 설계](<./02_빌드 설계/02_Build_Adapter_설계.md>)
+18. [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
+19. [Boards Manager 설치와 패키징](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
+20. [v0.1.0-rc.1 배포 중단 기록](<./05_릴리스/00_v0.1.0_rc1_배포_중단_기록.md>)
+21. [v0.1.0-rc.2 릴리스 노트](<./05_릴리스/07_v0.1.0_rc2_릴리스_노트.md>)
+22. [v0.1.0 릴리스 노트](<./05_릴리스/11_v0.1.0_릴리스_노트.md>)
 
 ## 문서 구성
 
@@ -59,7 +61,7 @@
 - [Arduino CLI 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>): `.ino` 전처리, library discovery 및 platform recipe 연결
 - [빌드 캐시와 산출물](<./02_빌드 설계/04_빌드_캐시와_산출물.md>): 증분 빌드, cache key 및 ELF/HEX 관리
 - [업로드와 디버그](<./02_빌드 설계/05_업로드와_디버그.md>): pyOCD/J-Link runner, probe 선택 및 복구 정책
-- [Boards Manager 설치와 패키징](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>): 공개 preview index, 사용자 영역 Nordic prerequisite, 재현 가능한 package와 clean Windows 수명주기 계약
+- [Boards Manager 설치와 패키징](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>): stable index, 사용자 영역 Nordic prerequisite, 재현 가능한 package와 clean Windows 수명주기 계약
 
 ### 03. 펌웨어 설계
 
@@ -81,6 +83,7 @@
 - [M9 증분 빌드·캐시와 재현성 기준선](<./04_검증 기록/09_M9_증분_빌드_캐시와_재현성_기준선.md>): persistent cache key, ccache, lock/LRU와 cold/warm/손상 복구 실측 증거
 - [M10 Boards Manager와 clean Windows 기준선](<./04_검증 기록/10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md>): 공개 preview의 clean Windows 최초 설치, build/upload와 전체 수명주기 완료 증거
 - [M11 v0.1.0-rc.1 릴리스 후보 기준선](<./04_검증 기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md>): 회수 전 exact RC 필수 gate 8/8, M10 retained-prerequisite 원격 회귀와 pyOCD+UART HIL을 보존한 역사적 증거
+- [M11 v0.1.0-rc.2 공개 후 수동 검증 기록](<./04_검증 기록/12_M11_v0.1.0_rc2_공개_후_수동_검증.md>): clean Windows Arduino IDE 2.3.10 설치·compile·실제 NU54DK upload·실행의 프로젝트 소유자 수동 검증과 증거 경계
 
 ### 05. 릴리스
 
@@ -93,6 +96,10 @@
 - [v0.1.0-rc.2 문제 해결](<./05_릴리스/06_v0.1.0_rc2_문제해결.md>)
 - [v0.1.0-rc.2 릴리스 노트](<./05_릴리스/07_v0.1.0_rc2_릴리스_노트.md>)
 - [v0.1.0-rc.2 알려진 제약](<./05_릴리스/08_v0.1.0_rc2_알려진_제약.md>)
+- [v0.1.0 마이그레이션 안내](<./05_릴리스/09_v0.1.0_마이그레이션.md>)
+- [v0.1.0 문제 해결](<./05_릴리스/10_v0.1.0_문제해결.md>)
+- [v0.1.0 릴리스 노트](<./05_릴리스/11_v0.1.0_릴리스_노트.md>)
+- [v0.1.0 알려진 제약](<./05_릴리스/12_v0.1.0_알려진_제약.md>)
 
 ## 현재 진행 상태
 
@@ -109,7 +116,7 @@
 | M8 업로드와 디버그 | **완료** | manifest·artifact·probe 안전검사, Arduino CLI pyOCD upload 10/10, 최종 UART reset과 `setup()` source breakpoint 통과 |
 | M9 증분 빌드·캐시·재현성 | **완료** | persistent tree와 canonical key, host 43/43, library·parallel·M9 Arduino CLI 회귀 및 실측 기준선 통과 |
 | M10 Boards Manager 패키징 | **완료** | 공개 preview `0.0.96`→`0.0.97`, clean Windows 11/11 단계와 pyOCD upload 10/10 통과 |
-| M11 v0.1 릴리스 후보 | **RC 교정 중** | `v0.1.0-rc.1`의 exact gate 8/8 기록은 보존하되 Arduino IDE post-install gRPC UTF-8 결함으로 배포를 중단하고 `v0.1.0-rc.2` 재검증·공개 준비 중 |
+| M11 v0.1 릴리스 후보 | **완료** | rc.1 exact gate 8/8과 rc.2 후속 수동 검증 기록을 보존하고 `v0.1.0` stable package·index·Release 공개 |
 
 상세 상태는 [구현 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)을 단일 기준으로 관리한다.
 

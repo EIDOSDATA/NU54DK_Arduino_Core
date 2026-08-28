@@ -43,22 +43,23 @@ NU54DK에서 Loader 없이 동작하는 Native Full Zephyr 기반 Arduino Core�
 - 이 결함은 설치가 실제로 완료된 뒤 Arduino IDE가 `Failed to install platform`을 표시할 수도 있으므로 화면 오류만으로 설치 결과를 판정하지 않음
 - Windows console과 PowerShell 출력 인코딩을 UTF-8로 고정한 `v0.1.0-rc.2` Prerelease 공개 완료
 - `v0.1.0-rc.2` 공개 index·ZIP으로 Arduino IDE 2.3.10 backend gRPC 설치 완료 응답과 Core·보드 열거 통과
-- `v0.1.0-rc.2` package integrity·host·Arduino fixed-package·Zephyr·문서 gate PASS; 장치가 필요한 exact RC HIL과 clean Windows 재실행은 미수행 상태로 공개 기록
-- stable `v0.1.0`과 stable index 공개는 별도 출시 판정 전까지 보류
+- `v0.1.0-rc.2` package integrity·host·Arduino fixed-package·Zephyr·문서 gate 5/5 PASS
+- 공개 후 별도 clean Windows의 Arduino IDE 2.3.10에서 설치·보드 선택·Sketch compile과 실제 NU54DK upload·실행 수동 검증 PASS
+- M11 완료, `v0.1.0` 정식 Release와 stable Boards Manager 채널 공개
 
-## Arduino IDE 설치 — v0.1.0-rc.2
+## Arduino IDE 설치 — v0.1.0
 
-> **공개 완료:** 아래 주소의 `v0.1.0-rc.2` GitHub Prerelease와 공개 자산 checksum을
-> 검증했습니다. 삭제된 회수 버전 `v0.1.0-rc.1`은 사용하지 마십시오.
+> **정식 버전:** `v0.1.0`은 Windows 10/11 x64용 첫 stable Release입니다.
+> 회수된 `v0.1.0-rc.1`은 사용하지 마십시오.
 
 Arduino IDE의 **Additional Boards Manager URLs**에 다음 주소를 추가합니다.
 
 ```text
-https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0-rc.2/package_nucode_nu54dk_rc_index.json
+https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-Boards Manager에서 `NUCODE NU54DK Zephyr Boards`를 검색해 설치합니다. 이 버전은 정식
-`v0.1.0`이 아닌 Release Candidate이며 공식 검증 범위는 Windows 10/11 x64입니다.
+Boards Manager에서 `NUCODE NU54DK Zephyr Boards`를 검색하고 `0.1.0`을 설치합니다. 공식
+검증 범위는 Windows 10/11 x64입니다.
 
 ## 보드 정의
 
@@ -108,11 +109,16 @@ Boards Manager용 배포 archive에는 고정된 서브모듈 commit의 실제 �
 - [Boards Manager 설치와 패키징](./00_Docs/02_빌드%20설계/06_Boards_Manager_설치와_패키징.md)
 - [M10 Boards Manager와 clean Windows 기준선](./00_Docs/04_검증%20기록/10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md)
 - [M11 v0.1.0-rc.1 릴리스 후보 기준선(역사적 검증 기록)](./00_Docs/04_검증%20기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md)
+- [M11 v0.1.0-rc.2 공개 후 수동 검증 기록](./00_Docs/04_검증%20기록/12_M11_v0.1.0_rc2_공개_후_수동_검증.md)
 - [v0.1.0-rc.1 배포 중단 기록](./00_Docs/05_릴리스/00_v0.1.0_rc1_배포_중단_기록.md)
 - [v0.1.0-rc.2 마이그레이션 안내](./00_Docs/05_릴리스/05_v0.1.0_rc2_마이그레이션.md)
 - [v0.1.0-rc.2 문제 해결](./00_Docs/05_릴리스/06_v0.1.0_rc2_문제해결.md)
 - [v0.1.0-rc.2 릴리스 노트](./00_Docs/05_릴리스/07_v0.1.0_rc2_릴리스_노트.md)
 - [v0.1.0-rc.2 알려진 제약](./00_Docs/05_릴리스/08_v0.1.0_rc2_알려진_제약.md)
+- [v0.1.0 마이그레이션 안내](./00_Docs/05_릴리스/09_v0.1.0_마이그레이션.md)
+- [v0.1.0 문제 해결](./00_Docs/05_릴리스/10_v0.1.0_문제해결.md)
+- [v0.1.0 릴리스 노트](./00_Docs/05_릴리스/11_v0.1.0_릴리스_노트.md)
+- [v0.1.0 알려진 제약](./00_Docs/05_릴리스/12_v0.1.0_알려진_제약.md)
 
 ## 작성자
 

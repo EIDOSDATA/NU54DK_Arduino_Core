@@ -438,14 +438,23 @@ class M11ReleaseTests(unittest.TestCase):
                 self.assertNotIn(b"\n", data.replace(b"\r\n", b""), path)
                 self.assertEqual(records[path].get("transformation"), "windows-crlf")
 
-    def test_02_stable_and_mixed_channels_are_fail_closed(self) -> None:
-        with self.assertRaises(RELEASE.PACKAGE.PackageError):
-            RELEASE.PACKAGE.build_package(REPO_ROOT, self.root / "stable", "0.1.0", self.commit)
+    def test_02_stable_package_is_allowed_but_rc_tool_and_mixed_channels_fail(self) -> None:
+        stable = RELEASE.PACKAGE.build_package(
+            REPO_ROOT, self.root / "stable", "0.1.0", self.commit
+        )
+        manifest = RELEASE.PACKAGE.validate_archive(
+            stable["archive"], expected_version="0.1.0", expected_commit=self.commit
+        )
+        self.assertEqual(manifest["release_tag"], "v0.1.0")
         with self.assertRaises(RELEASE.ReleaseError):
             RELEASE.prepare_rc(REPO_ROOT, self.root / "stable", "0.1.0", self.commit)
         with self.assertRaises(RELEASE.PACKAGE.PackageError):
             RELEASE.PACKAGE.generate_index(
                 self.artifact_root, ["0.0.93", "0.1.0-rc.2"]
+            )
+        with self.assertRaises(RELEASE.PACKAGE.PackageError):
+            RELEASE.PACKAGE.generate_index(
+                self.root / "stable", ["0.1.0-rc.2", "0.1.0"]
             )
 
     def test_03_plan_binds_all_artifacts_and_human_boundary(self) -> None:

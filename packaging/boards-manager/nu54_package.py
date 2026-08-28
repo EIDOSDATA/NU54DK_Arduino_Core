@@ -29,11 +29,13 @@ SUPPORTED_VERSIONS = (
     + SAFE_PREVIEW_VERSIONS
 )
 RELEASE_CANDIDATE_VERSIONS = ("0.1.0-rc.2",)
-PACKAGE_VERSIONS = SUPPORTED_VERSIONS + RELEASE_CANDIDATE_VERSIONS
+STABLE_VERSIONS = ("0.1.0",)
+PACKAGE_VERSIONS = SUPPORTED_VERSIONS + RELEASE_CANDIDATE_VERSIONS + STABLE_VERSIONS
 WINDOWS_SAFE_VERSIONS = (
     FAILED_M10_PREVIEW_VERSIONS
     + SAFE_PREVIEW_VERSIONS
     + RELEASE_CANDIDATE_VERSIONS
+    + STABLE_VERSIONS
 )
 VENDOR = "nucode"
 ARCHITECTURE = "zephyr"
@@ -43,6 +45,11 @@ REPOSITORY_URL = "https://github.com/EIDOSDATA/NU54DK_Arduino_Core"
 BOARD_REPOSITORY_URL = "https://github.com/Nucode01/NU54DK_Zephyr_DTS"
 INDEX_FILENAME = "package_nucode_nu54dk_preview_index.json"
 RC_INDEX_FILENAME = "package_nucode_nu54dk_rc_index.json"
+STABLE_INDEX_FILENAME = "package_nucode_nu54dk_index.json"
+LEGAL_REVIEW_REQUIRED = "required-before-final-public-release"
+STABLE_LEGAL_REVIEW_STATUSES = {
+    "0.1.0": "project-owner-approved-for-final-public-release",
+}
 NCS_VERSION = "v3.4.0"
 NCS_REVISION = "99553055607b2e9885fbc80ccd11fa9da81c2df0"
 ZEPHYR_VERSION = "4.4.0"
@@ -62,6 +69,17 @@ METADATA_FILES = (
 
 class PackageError(RuntimeError):
     """! @brief 안전하게 계속할 수 없는 패키징 오류입니다. """
+
+
+## @brief 패키지 버전에 대응하는 프로젝트 법률 검토 상태를 반환합니다.
+def legal_review_status(version: str) -> str:
+    if version in SUPPORTED_VERSIONS or version in RELEASE_CANDIDATE_VERSIONS:
+        return LEGAL_REVIEW_REQUIRED
+    if version in STABLE_VERSIONS:
+        status = STABLE_LEGAL_REVIEW_STATUSES.get(version)
+        if status:
+            return status
+    raise PackageError(f"법률 검토 상태가 승인되지 않은 패키지 버전입니다: {version}")
 
 
 @dataclass(frozen=True)
@@ -404,7 +422,9 @@ def declared_spdx_identifiers(files: Iterable[SourceFile]) -> dict[str, list[str
 
 
 ## @brief 패키지에 고정된 외부 설치 구성요소를 재배포와 구분해 기록합니다.
-def build_external_prerequisites(files: list[SourceFile]) -> list[dict[str, Any]]:
+def build_external_prerequisites(
+    files: list[SourceFile], version: str
+) -> list[dict[str, Any]]:
     pins_file = next(
         (item for item in files if item.path == "tools/nu54-prerequisites/pins.json"), None
     )
@@ -449,7 +469,7 @@ def build_external_prerequisites(files: list[SourceFile]) -> list[dict[str, Any]
     common = {
         "distribution": "external-not-redistributed",
         "license_expression": "NOASSERTION",
-        "legal_review_status": "required-before-final-public-release",
+        "legal_review_status": legal_review_status(version),
     }
     return [
         {
@@ -546,7 +566,7 @@ def build_license_inventory(
         )
     inventory = {
         "schema_version": 1,
-        "legal_review_status": "required-before-final-public-release",
+        "legal_review_status": legal_review_status(version),
         "notice": "이 기계적 목록은 법률 자문 또는 최종 재배포 승인을 대신하지 않습니다.",
         "components": [
             {
@@ -580,7 +600,7 @@ def build_license_inventory(
         ],
         "license_files": license_files,
         "notice_files": [],
-        "external_prerequisites": build_external_prerequisites(files),
+        "external_prerequisites": build_external_prerequisites(files, version),
         "declared_spdx_identifiers": declared_spdx_identifiers(files),
     }
     notice_specs = (
@@ -794,6 +814,8 @@ def release_channel(version: str) -> str:
         return "preview"
     if version in RELEASE_CANDIDATE_VERSIONS:
         return "release-candidate"
+    if version in STABLE_VERSIONS:
+        return "stable"
     raise PackageError(f"지원하지 않는 패키지 버전입니다: {version}")
 
 
@@ -803,11 +825,11 @@ def version_sort_key(version: str) -> tuple[int, int, int, int, int]:
     if not match or version not in PACKAGE_VERSIONS:
         raise PackageError(f"지원하지 않는 패키지 버전입니다: {version}")
     major, minor, patch, rc = match.groups()
-    ## @note 같은 기본 버전에서는 stable이 RC보다 최신이지만 stable은 현재 허용 목록에 없습니다.
+    ## @note 같은 기본 버전에서는 stable을 RC보다 최신으로 정렬합니다.
     return (int(major), int(minor), int(patch), 1 if rc is None else 0, int(rc or 0))
 
 
-## @brief preview와 release candidate의 tag 이름을 서로 분리해 고정합니다.
+## @brief preview와 공개 버전의 tag 이름을 서로 분리해 고정합니다.
 def release_tag(version: str) -> str:
     channel = release_channel(version)
     if channel == "preview":
@@ -815,7 +837,7 @@ def release_tag(version: str) -> str:
     return f"v{version}"
 
 
-## @brief 공개 GitHub prerelease asset URL을 만듭니다.
+## @brief 공개 GitHub Release asset URL을 만듭니다.
 def release_asset_url(version: str, filename: str) -> str:
     return f"{REPOSITORY_URL}/releases/download/{release_tag(version)}/{filename}"
 
@@ -941,7 +963,7 @@ def build_package(repo_root: Path, output_dir: Path, version: str, revision: str
     source_files, board_revision = collect_source_files(repo_root, commit, version)
     release_manifest = build_release_manifest(source_files, version, commit, board_revision)
     license_inventory = build_license_inventory(source_files, version, board_revision)
-    external_prerequisites = build_external_prerequisites(source_files)
+    external_prerequisites = build_external_prerequisites(source_files, version)
     spdx = build_spdx(source_files, version, commit, created, external_prerequisites)
 
     archive_files: dict[str, tuple[bytes, int]] = {
@@ -1255,8 +1277,8 @@ def validate_archive(
         )
         if not isinstance(inventory, dict) or inventory.get("schema_version") != 1:
             raise PackageError("license inventory schema가 유효하지 않습니다.")
-        if inventory.get("legal_review_status") != "required-before-final-public-release":
-            raise PackageError("license inventory가 법률 검토 필요 상태를 보존하지 않습니다.")
+        if inventory.get("legal_review_status") != legal_review_status(version):
+            raise PackageError("license inventory의 프로젝트 법률 검토 상태가 버전 계약과 다릅니다.")
         license_files = inventory.get("license_files")
         if not isinstance(license_files, list) or not license_files:
             raise PackageError("license inventory에 라이선스 원문이 없습니다.")
@@ -1311,7 +1333,8 @@ def validate_archive(
                     origin="core",
                     git_object="0" * 40,
                 )
-            ]
+            ],
+            version,
         )
         if inventory.get("external_prerequisites") != expected_external:
             raise PackageError("외부 전제조건 inventory가 pins 및 고정 계약과 다릅니다.")
@@ -1353,7 +1376,7 @@ def generate_index(output_dir: Path, versions: list[str], destination: Path | No
         raise PackageError("index에는 지원하는 package version을 하나 이상 지정해야 합니다.")
     channels = {release_channel(version) for version in versions}
     if len(channels) != 1:
-        raise PackageError("preview와 release candidate는 하나의 index에 혼합할 수 없습니다.")
+        raise PackageError("서로 다른 배포 채널은 하나의 index에 혼합할 수 없습니다.")
     normalized_versions = sorted(set(versions), key=version_sort_key, reverse=True)
     platforms: list[dict[str, Any]] = []
     for version in normalized_versions:
@@ -1387,9 +1410,12 @@ def generate_index(output_dir: Path, versions: list[str], destination: Path | No
             }
         ]
     }
-    default_name = (
-        RC_INDEX_FILENAME if channels == {"release-candidate"} else INDEX_FILENAME
-    )
+    channel = next(iter(channels))
+    default_name = {
+        "preview": INDEX_FILENAME,
+        "release-candidate": RC_INDEX_FILENAME,
+        "stable": STABLE_INDEX_FILENAME,
+    }[channel]
     path = destination.resolve() if destination else output_dir / default_name
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(canonical_json(document))
@@ -1456,7 +1482,7 @@ def validate_index(index_path: Path, *, artifact_dir: Path | None = None) -> dic
                 raise PackageError(f"package index와 archive size가 다릅니다: {version}")
     channels = {release_channel(version) for version in versions}
     if len(channels) != 1:
-        raise PackageError("preview와 release candidate가 하나의 index에 혼합되었습니다.")
+        raise PackageError("서로 다른 배포 채널이 하나의 index에 혼합되었습니다.")
     expected_order = sorted(versions, key=version_sort_key, reverse=True)
     if versions != expected_order:
         raise PackageError("package index version은 최신 순서여야 합니다.")

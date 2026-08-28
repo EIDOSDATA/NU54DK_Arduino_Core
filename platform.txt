@@ -1,5 +1,5 @@
 name=NUCODE NU54DK Zephyr Boards
-version=0.1.0-dev
+version=0.1.0
 
 # M5에서는 Arduino compiler recipe를 source graph 수집기로 사용한다.
 compiler.warning_flags=-Wall

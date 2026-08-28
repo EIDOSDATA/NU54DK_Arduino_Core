@@ -2,12 +2,12 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M10 설치·패키징 계약 및 clean Windows 실기 검증 완료 |
+| 문서 상태 | M10 검증 완료, v0.1.0 stable Boards Manager 배포 계약 공개 |
 | 작성자 | Quantum / NUCODE |
 | 초기 지원 운영체제 | Windows 10/11 x64 |
 | Arduino package | `nucode:zephyr` |
 | Board FQBN | `nucode:zephyr:nu54dk` |
-| 현재 검증 preview | `0.0.96`, `0.0.97` — clean Windows 최종 run 통과 |
+| 현재 정식 버전 | `0.1.0` |
 | 펌웨어 구조 | Loader/LLEXT 없는 Native Full Zephyr image |
 
 ---
@@ -37,11 +37,11 @@ PASS/FAIL, 실행 시각, 로그와 측정값은 M10 검증 기록에서만 확�
 ## 2. 전체 구조
 
 ~~~text
-공개 package index
-  package_nucode_nu54dk_preview_index.json
+공개 stable package index
+  package_nucode_nu54dk_index.json
             │
             ▼
-GitHub prerelease의 Core ZIP
+GitHub Release의 Core ZIP
   Core + NU54DK board definition + 설치/검증 script
             │
             ├── post_install.bat
@@ -62,12 +62,12 @@ Core ZIP이나 package index의 `tools` 항목에 포함하지 않는다.
 
 ---
 
-## 3. 공식 preview index
+## 3. 공식 stable index
 
-Arduino IDE와 Arduino CLI에서 사용하는 공식 preview index URL은 다음과 같다.
+Arduino IDE와 Arduino CLI에서 사용하는 고정 stable index URL은 다음과 같다.
 
 ~~~text
-https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_preview_index.json
+https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ~~~
 
 index의 package identity는 다음과 같다.
@@ -78,11 +78,11 @@ index의 package identity는 다음과 같다.
 | architecture | `zephyr` |
 | Core identity | `nucode:zephyr` |
 | Board FQBN | `nucode:zephyr:nu54dk` |
-| archive 제공 위치 | `EIDOSDATA/NU54DK_Arduino_Core` GitHub prerelease asset |
+| archive 제공 위치 | `EIDOSDATA/NU54DK_Arduino_Core` GitHub Release asset |
 | 외부 tool dependency | 없음 — NCS/Toolchain은 `post_install.bat`이 별도 설치 |
 
-이 URL은 preview용이다. 최종 stable release 전에는 버전과 공개 상태가 바뀔 수 있으므로
-제품이나 교육 자료에서 영구 stable URL로 간주하지 않는다.
+이 URL은 `main`에 게시한 최신 정식 version을 가리키는 장기 사용자 endpoint다. 각 Release에는
+같은 이름의 immutable index snapshot을 함께 첨부해 해당 version의 checksum 증거를 보존한다.
 
 ---
 
@@ -131,9 +131,9 @@ Upload 검증에는 NU54DK의 온보드 CMSIS-DAP V2가 연결돼 있어야 한�
 ## 6. Arduino IDE 설치
 
 1. Arduino IDE에서 `File > Preferences`를 연다.
-2. `Additional boards manager URLs`에 공식 preview index URL을 추가한다.
+2. `Additional boards manager URLs`에 공식 stable index URL을 추가한다.
 3. `Tools > Board > Boards Manager`를 열고 `NUCODE NU54DK Zephyr Boards`를 찾는다.
-4. 현재 최신 검증 대상인 `0.0.97`을 선택해 설치한다.
+4. 정식 버전 `0.1.0`을 선택해 설치한다.
 5. post-install script 실행 확인이 나타나면 승인하고 Nordic prerequisite 설치가 끝날 때까지
    기다린다. 첫 설치는 NCS와 Toolchain download 때문에 오래 걸릴 수 있다.
 6. `Tools > Board`에서 `NU54DK (nRF54L15, Zephyr)`를 선택한다.
@@ -143,7 +143,7 @@ IDE 또는 설치 환경이 post-install을 실행하지 않았거나 설치가 
 다음 파일을 일반 사용자 권한으로 다시 실행한다.
 
 ~~~text
-%LOCALAPPDATA%\Arduino15\packages\nucode\hardware\zephyr\0.0.97\post_install.bat
+%LOCALAPPDATA%\Arduino15\packages\nucode\hardware\zephyr\0.1.0\post_install.bat
 ~~~
 
 Arduino data directory를 변경했다면 위 경로의 `%LOCALAPPDATA%\Arduino15` 대신 실제 Arduino
@@ -173,11 +173,11 @@ Arduino IDE 2.x는 platform 설치 script의 출력과 완료 결과를 backend 
 PowerShell에서 다음 명령을 실행한다.
 
 ~~~powershell
-$IndexUrl = 'https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_preview_index.json'
+$IndexUrl = 'https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json'
 
 arduino-cli config add board_manager.additional_urls $IndexUrl
 arduino-cli core update-index
-arduino-cli core install nucode:zephyr@0.0.97 --run-post-install
+arduino-cli core install nucode:zephyr@0.1.0 --run-post-install
 arduino-cli board details --fqbn nucode:zephyr:nu54dk
 ~~~
 
@@ -188,13 +188,13 @@ arduino-cli board details --fqbn nucode:zephyr:nu54dk
 기본 Arduino data directory를 사용한다면 다음과 같다.
 
 ~~~powershell
-& "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.0.97\post_install.bat"
+& "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.1.0\post_install.bat"
 ~~~
 
 설치 검증은 platform root를 지정해 실행한다.
 
 ~~~powershell
-$PlatformRoot = "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.0.97"
+$PlatformRoot = "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.1.0"
 
 powershell.exe -NoProfile -ExecutionPolicy Bypass `
   -File "$PlatformRoot\tools\nu54-prerequisites\verify-nordic.ps1" `
@@ -369,7 +369,7 @@ Arduino platform ZIP을 만든다.
 python .\packaging\boards-manager\nu54_package.py build `
   --repo-root . `
   --output-dir .\build\boards-manager `
-  --version 0.0.97 `
+  --version 0.1.0 `
   --commit HEAD `
   --update-index
 ~~~
@@ -387,19 +387,20 @@ Archive 검증 예시는 다음과 같다.
 
 ~~~powershell
 python .\packaging\boards-manager\nu54_package.py validate `
-  --archive .\build\boards-manager\nucode-nu54dk-zephyr-0.0.97.zip `
-  --expected-version 0.0.97
+  --archive .\build\boards-manager\nucode-nu54dk-zephyr-0.1.0.zip `
+  --expected-version 0.1.0
 
 python .\packaging\boards-manager\nu54_package.py validate-index `
-  --index .\build\boards-manager\package_nucode_nu54dk_preview_index.json `
+  --index .\build\boards-manager\package_nucode_nu54dk_index.json `
   --artifact-dir .\build\boards-manager
 ~~~
 
 ---
 
-## 14. 공개 prerelease artifact
+## 14. 공개 stable artifact
 
-각 preview는 `m10-preview-<version>` Git tag와 GitHub prerelease에 다음 파일을 제공한다.
+정식판은 `v<version>` Git tag와 일반 GitHub Release에 다음 파일을 제공한다. M10 preview와
+M11 RC asset은 각 역사적 tag와 Prerelease에서 변경하지 않고 보존한다.
 
 | artifact | 내용 |
 | --- | --- |
@@ -441,8 +442,8 @@ license inventory와 SPDX SBOM은 기술적인 목록과 provenance를 제공하
 binary를 재배포하지 않는다.
 
 외부 prerequisite의 종합 license는 확인되지 않은 내용을 추정하지 않고 inventory에서
-`NOASSERTION`으로 유지한다. 최종 공개 stable release 전에 담당자가 Nordic/SEGGER 조건과
-프로젝트 고지의 적절성을 별도로 검토해야 한다.
+`NOASSERTION`으로 유지한다. 이는 외부 binary를 Core ZIP에 재배포하지 않는다는 기술 경계다.
+프로젝트 소유자는 v0.1.0 공개에 필요한 라이선스·고지 검토를 완료하고 정식 공개를 승인했다.
 
 ---
 
@@ -461,10 +462,11 @@ binary를 재배포하지 않는다.
 - 각 license 의무를 모두 충족했다는 법률적 결론
 - Nordic와 SEGGER 배포 조건에 대한 법률 자문
 - 상표, 특허 또는 수출 통제 판단
-- stable `v0.1.0` 공개 승인
+- 후속 stable version의 공개 승인
 
-따라서 preview package의 기술 검증이 성공하더라도 최종 stable release는 라이선스 검토와
-프로젝트 소유자의 명시적 공개 승인 전까지 HOLD한다.
+`v0.1.0`은 프로젝트 소유자가 라이선스 판단, 알려진 제약과 정식 공개를 승인했다. package의
+`legal_review_status`는 이 version에 한해 `project-owner-approved-for-final-public-release`로
+고정한다. 이 기록은 법률 자문을 대신하지 않으며 후속 release는 별도 검토와 승인을 요구한다.
 
 ---
 
