@@ -24,10 +24,10 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
-      - name: Set up Python 3.12.11
+      - name: Set up Python 3.12.10
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
-          python-version: 3.12.11
+          python-version: 3.12.10
       - name: Verify CI lock and workflow boundaries
         run: python tools/ci/run_m12_gate.py contract
 
@@ -40,10 +40,10 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
-      - name: Set up Python 3.12.11
+      - name: Set up Python 3.12.10
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
-          python-version: 3.12.11
+          python-version: 3.12.10
       - name: Run host unit tests
         run: python tools/ci/run_m12_gate.py host
 
@@ -56,10 +56,10 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
-      - name: Set up Python 3.12.11
+      - name: Set up Python 3.12.10
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
-          python-version: 3.12.11
+          python-version: 3.12.10
       - name: Check tracked Markdown
         run: python tools/ci/run_m12_gate.py docs
 
@@ -72,10 +72,10 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
-      - name: Set up Python 3.12.11
+      - name: Set up Python 3.12.10
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
-          python-version: 3.12.11
+          python-version: 3.12.10
       - name: Build and validate reproducible packages
         run: python tools/ci/run_m12_gate.py package
 
@@ -88,10 +88,10 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
-      - name: Set up Python 3.12.11
+      - name: Set up Python 3.12.10
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
-          python-version: 3.12.11
+          python-version: 3.12.10
       - name: Set up Arduino CLI 1.5.1
         uses: arduino/setup-arduino-cli@81d310742121c928ea9c8bbd407b4217b432ae02
         with:

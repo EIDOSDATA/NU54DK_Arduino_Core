@@ -94,6 +94,7 @@ Canonical 입력은 [`ncs-3.4.0.lock.json`](../../tools/ci/ncs-3.4.0.lock.json)�
 | NU54DK board package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | Linux toolchain ID | `fbf7391cab` |
 | Windows toolchain bundle | `dcbdc366a1` |
+| GitHub Actions Python | `3.12.10` |
 | Arduino CLI | `1.5.1` |
 | Container platform | `linux/amd64` |
 | Container digest | `sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace` |

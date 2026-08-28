@@ -22,7 +22,7 @@ M12 전체 완료로 판정하지 않는다.
 | --- | --- |
 | 저장소 기준 commit | `d85d681`에서 시작한 M12 작업 tree |
 | 운영체제 | Windows x64 |
-| Python | 로컬 기본 Python과 NCS toolchain Python |
+| Python | GitHub Actions `3.12.10`; 로컬 기본 Python과 NCS toolchain Python |
 | NCS | v3.4.0, `99553055607b2e9885fbc80ccd11fa9da81c2df0` |
 | Zephyr | 4.4.0, `bf801e4e3d19e1ffa76164346480cb7734dd2800` |
 | Windows toolchain | `dcbdc366a1` |

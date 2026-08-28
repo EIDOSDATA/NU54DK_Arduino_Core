@@ -107,6 +107,14 @@ class M12CiContractTests(unittest.TestCase):
             text = workflow.read_text(encoding="utf-8")
             self.assertNotIn("${{ runner.temp }}", text, workflow.name)
 
+    ## @brief Windows 2025에도 binary가 존재하는 exact Python을 사용합니다.
+    def test_workflows_pin_available_python(self) -> None:
+        for workflow in (REPOSITORY / ".github" / "workflows").glob("m12-*.yml"):
+            text = workflow.read_text(encoding="utf-8")
+            if "actions/setup-python@" in text:
+                self.assertIn("python-version: 3.12.10", text, workflow.name)
+                self.assertNotIn("python-version: 3.12.11", text, workflow.name)
+
     ## @brief 표준 library example 일곱 개가 canonical 위치에만 있는지 검증합니다.
     def test_example_discovery_inputs_are_canonical(self) -> None:
         expected = (
