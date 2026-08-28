@@ -52,24 +52,24 @@ def prepare_workspace(workspace: Path, lock: dict[str, Any]) -> None:
     workspace = workspace.resolve()
     workspace.parent.mkdir(parents=True, exist_ok=True)
     nrf = workspace / "nrf"
-    if not (workspace / ".west").is_dir():
+    initialize_west = not (workspace / ".west").is_dir()
+    if initialize_west:
         if workspace.exists() and any(workspace.iterdir()):
             raise WorkspaceFailure(f".west 없이 비어 있지 않은 workspace를 거부합니다: {workspace}")
+        run_checked(("git", "init", nrf))
         run_checked(
-            (
-                "west",
-                "init",
-                "-m",
-                lock["ncs"]["repository"],
-                "--mr",
-                lock["ncs"]["revision"],
-                workspace,
-            )
+            ("git", "remote", "add", "origin", lock["ncs"]["repository"]),
+            cwd=nrf,
         )
     if not (nrf / ".git").exists():
         raise WorkspaceFailure(f"NCS manifest repository가 없습니다: {nrf}")
-    run_checked(("git", "fetch", "origin", lock["ncs"]["revision"], "--depth=1"), cwd=nrf)
+    run_checked(
+        ("git", "fetch", "--no-tags", "--depth=1", "origin", lock["ncs"]["revision"]),
+        cwd=nrf,
+    )
     run_checked(("git", "checkout", "--detach", lock["ncs"]["revision"]), cwd=nrf)
+    if initialize_west:
+        run_checked(("west", "init", "-l", nrf), cwd=workspace)
     run_checked(("west", "update", "--narrow"), cwd=workspace)
     LOCK_MODULE.validate_workspace(workspace, lock)
     toolchain_id = run_checked((nrf / "scripts" / "print_toolchain_checksum.sh",), cwd=nrf)

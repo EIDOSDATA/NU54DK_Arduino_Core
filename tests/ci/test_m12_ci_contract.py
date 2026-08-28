@@ -60,6 +60,18 @@ class M12CiContractTests(unittest.TestCase):
         text = path.read_text(encoding="utf-8")
         host = text.split("\n  host:\n", 1)[1].split("\n  documents:\n", 1)[0]
         self.assertIn("runs-on: windows-2025", host)
+        self.assertIn("--only-binary=:all: --require-hashes", host)
+        self.assertIn("tools/ci/requirements-host.txt", host)
+
+    ## @brief host 전용 YAML parser wheel의 버전과 Windows x64 byte hash를 고정합니다.
+    def test_host_requirements_are_exact_and_hashed(self) -> None:
+        requirements = (REPOSITORY / "tools" / "ci" / "requirements-host.txt").read_text(
+            encoding="utf-8"
+        )
+        self.assertRegex(
+            requirements.strip(),
+            r"^PyYAML==6\.0\.3 --hash=sha256:[0-9a-f]{64}$",
+        )
 
     ## @brief Linux build가 공식 image tag가 아닌 digest를 사용하는지 검증합니다.
     def test_reproducible_build_uses_digest_and_exact_cache(self) -> None:

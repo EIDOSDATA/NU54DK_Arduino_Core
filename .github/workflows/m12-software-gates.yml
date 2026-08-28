@@ -44,6 +44,11 @@ jobs:
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: 3.12.10
+      - name: Install exact host test dependencies
+        run: >-
+          python -m pip install --disable-pip-version-check --no-deps
+          --only-binary=:all: --require-hashes
+          -r tools/ci/requirements-host.txt
       - name: Run host unit tests
         run: python tools/ci/run_m12_gate.py host
 
