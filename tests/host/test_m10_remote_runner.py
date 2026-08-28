@@ -178,6 +178,11 @@ class M10RemoteRunnerContractTests(unittest.TestCase):
                 )
                 self.assertEqual(completed.returncode, 0, completed.stderr)
 
+    def test_local_runner_has_windows_powershell_utf8_signature(self) -> None:
+        """! @brief 한글 실행기를 영문 Windows PowerShell 5.1도 UTF-8로 읽게 합니다. """
+
+        self.assertTrue(LOCAL_RUNNER.read_bytes().startswith(b"\xef\xbb\xbf"))
+
     def test_target_runner_is_ascii_only(self) -> None:
         """! @brief 대상 PC 전송 파일에 code page 의존 문자가 없음을 검증합니다. """
 

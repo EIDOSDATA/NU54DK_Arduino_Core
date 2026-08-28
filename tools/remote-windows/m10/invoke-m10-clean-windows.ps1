@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
 M10 clean Windows Boards Manager 검증을 SSH로 자동 실행합니다.
 
