@@ -22,6 +22,15 @@ MODULE = importlib.util.module_from_spec(SPECIFICATION)
 sys.modules[SPECIFICATION.name] = MODULE
 SPECIFICATION.loader.exec_module(MODULE)
 
+SMOKE_MODULE_PATH = REPOSITORY / "tests" / "arduino-cli" / "run_smoke.py"
+SMOKE_SPECIFICATION = importlib.util.spec_from_file_location(
+    "nu54_test_arduino_smoke", SMOKE_MODULE_PATH
+)
+assert SMOKE_SPECIFICATION is not None and SMOKE_SPECIFICATION.loader is not None
+SMOKE_MODULE = importlib.util.module_from_spec(SMOKE_SPECIFICATION)
+sys.modules[SMOKE_SPECIFICATION.name] = SMOKE_MODULE
+SMOKE_SPECIFICATION.loader.exec_module(SMOKE_MODULE)
+
 
 class FixedGateRunnerTests(unittest.TestCase):
     """! @brief package identity와 exact scope의 음성 경계를 검증합니다. """
@@ -46,6 +55,25 @@ class FixedGateRunnerTests(unittest.TestCase):
                 "m11",
             ),
         )
+
+    ## @brief 전역 Arduino15의 기존 Core가 exact RC package 시험을 가리지 못하게 합니다.
+    def test_smoke_cli_config_isolates_data_downloads_and_user(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_name:
+            root = Path(temporary_name)
+            config = root / "arduino-cli.yaml"
+            SMOKE_MODULE.write_cli_config(
+                config,
+                root / "user",
+                root / "data",
+                root / "downloads",
+            )
+            text = config.read_text(encoding="utf-8")
+            self.assertIn(f"  data: {(root / 'data').as_posix()}\n", text)
+            self.assertIn(
+                f"  downloads: {(root / 'downloads').as_posix()}\n", text
+            )
+            self.assertIn(f"  user: {(root / 'user').as_posix()}\n", text)
+            self.assertNotIn("Arduino15", text)
 
     ## @brief 최소 RC package tree와 외부 expected identity를 생성합니다.
     def make_platform(self, parent: Path) -> tuple[Path, dict[str, str]]:

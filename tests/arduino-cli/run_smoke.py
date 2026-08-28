@@ -115,9 +115,20 @@ def stage_packaged_platform(package_root: Path, user_root: Path) -> Path:
     return platform
 
 
-## @brief Arduino CLI가 사용할 격리 config file을 생성합니다.
-def write_cli_config(path: Path, user_root: Path) -> None:
-    path.write_text(f"directories:\n  user: {user_root.as_posix()}\n", encoding="utf-8")
+## @brief Arduino CLI가 사용할 data·download·user 경로를 모두 격리합니다.
+def write_cli_config(
+    path: Path,
+    user_root: Path,
+    data_root: Path,
+    downloads_root: Path,
+) -> None:
+    path.write_text(
+        "directories:\n"
+        f"  data: {data_root.as_posix()}\n"
+        f"  downloads: {downloads_root.as_posix()}\n"
+        f"  user: {user_root.as_posix()}\n",
+        encoding="utf-8",
+    )
 
 
 ## @brief 공통 compile command를 만듭니다.
@@ -1043,7 +1054,12 @@ def main(arguments: Sequence[str] | None = None) -> int:
             else:
                 stage_packaged_platform(args.platform_root, user_root)
             config = root / "arduino-cli.yaml"
-            write_cli_config(config, user_root)
+            write_cli_config(
+                config,
+                user_root,
+                root / "data",
+                root / "downloads",
+            )
             tests = {
                 "blink": test_blink,
                 "library": test_local_library,
