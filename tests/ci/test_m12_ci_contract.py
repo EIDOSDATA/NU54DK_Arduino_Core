@@ -135,6 +135,18 @@ class M12CiContractTests(unittest.TestCase):
         self.assertIn("$commandExitCode = $LASTEXITCODE", text)
         self.assertIn("arduino-build.log", text)
 
+    ## @brief 양쪽 재현 build cache 경로가 상위 경로 이동 없이 정규화됐는지 검증합니다.
+    def test_reproducible_cache_paths_are_normalized(self) -> None:
+        path = REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
+        text = path.read_text(encoding="utf-8")
+        linux_job, windows_job = text.split("\n  arduino-build:\n", 1)
+        self.assertIn("NCS_CI_WORKSPACE: /tmp/nu54dk-ncs-v3.4.0", linux_job)
+        self.assertNotIn("/../", linux_job)
+        self.assertIn("NUCODE_NCS_INSTALL_ROOT: D:\\ncs", windows_job)
+        self.assertIn("${{ env.NUCODE_NCS_INSTALL_ROOT }}", windows_job)
+        self.assertIn("${{ env.NUCODE_PREREQUISITE_STATE_ROOT }}", windows_job)
+        self.assertNotIn("\\..\\", windows_job)
+
     ## @brief HIL workflow가 PR에서 실행되지 않고 secret·장치 lock을 요구하는지 검증합니다.
     def test_hil_is_manual_self_hosted_and_locked(self) -> None:
         path = REPOSITORY / ".github" / "workflows" / "m12-nu54dk-hil.yml"

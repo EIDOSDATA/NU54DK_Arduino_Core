@@ -24,7 +24,7 @@ jobs:
       run:
         shell: bash
     env:
-      NCS_CI_WORKSPACE: ${{ github.workspace }}/../ncs-v3.4.0
+      NCS_CI_WORKSPACE: /tmp/nu54dk-ncs-v3.4.0
       M12_EVIDENCE: ${{ github.workspace }}/m12-evidence
     steps:
       - name: Checkout exact source and board package
@@ -68,9 +68,10 @@ jobs:
     name: Arduino compile with pinned Windows prerequisites
     runs-on: windows-2025
     env:
-      NUCODE_NCS_ROOT: ${{ github.workspace }}\..\ncs\v3.4.0
-      NUCODE_TOOLCHAIN_ROOT: ${{ github.workspace }}\..\ncs\toolchains\dcbdc366a1
-      NUCODE_PREREQUISITE_STATE_ROOT: ${{ github.workspace }}\..\nu54-prerequisites
+      NUCODE_NCS_INSTALL_ROOT: D:\ncs
+      NUCODE_NCS_ROOT: D:\ncs\v3.4.0
+      NUCODE_TOOLCHAIN_ROOT: D:\ncs\toolchains\dcbdc366a1
+      NUCODE_PREREQUISITE_STATE_ROOT: D:\nu54-prerequisites
       M12_EVIDENCE: ${{ github.workspace }}\m12-evidence
       NUCODE_CI_TEMP: D:\t
     steps:
@@ -94,8 +95,8 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: |
-            ${{ github.workspace }}\..\ncs
-            ${{ github.workspace }}\..\nu54-prerequisites
+            ${{ env.NUCODE_NCS_INSTALL_ROOT }}
+            ${{ env.NUCODE_PREREQUISITE_STATE_ROOT }}
             ~\AppData\Local\NUCODE\NU54DK_Arduino_Core
           key: ${{ steps.lock.outputs.windows_cache_key }}
       - name: Install or verify exact Nordic prerequisites
@@ -104,9 +105,9 @@ jobs:
           powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass
           -File .\tools\nu54-prerequisites\install-nordic.ps1
           -PlatformRoot .
-          -NcsRoot "${{ github.workspace }}\..\ncs"
+          -NcsRoot "$env:NUCODE_NCS_INSTALL_ROOT"
       - name: Verify installed source revisions
-        run: python tools/ci/verify_ci_lock.py --workspace "${{ github.workspace }}\..\ncs\v3.4.0"
+        run: python tools/ci/verify_ci_lock.py --workspace "$env:NUCODE_NCS_ROOT"
       - name: Compile representative Arduino examples
         shell: powershell
         run: |
