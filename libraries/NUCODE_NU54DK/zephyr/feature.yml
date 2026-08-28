@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "id": "nucode.board",
+  "requires": ["gpio", "serial", "adc", "pwm"],
+  "conf": [],
+  "overlays": [],
+  "conflicts": [],
+  "compatible_profiles": ["standard"]
+}

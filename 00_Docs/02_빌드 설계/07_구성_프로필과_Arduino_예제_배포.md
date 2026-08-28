@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-PROFILE-001 |
-| 문서 개정 | 1.0 |
-| 문서 상태 | 설계 승인 — M13 구현 예정 |
+| 문서 개정 | 1.1 |
+| 문서 상태 | 구현 기준선 — M13 완료 |
 | 적용 제품 버전 | `v0.2.0` 이후 |
 | 작성자 | Quantum / NUCODE |
 | 관련 결정 | [ADR-0002](../00_사전%20리서치/02_Arduino_구성_프로필과_예제_노출_결정.md) |
@@ -21,7 +21,7 @@
 
 ---
 
-## 2. 현재 상태와 과도기
+## 2. 현재 구현 상태
 
 현재 main의 예제 단일 원본은 표준 platform library 경로로 이동했다.
 
@@ -31,25 +31,23 @@ libraries/SPI/examples/SPITransaction
 libraries/Wire/examples/WirePmicId
 ```
 
-M7 주변장치 예제는 아직 기존 Build Adapter가 읽는 `prj.conf`와 `app.overlay`를 예제 폴더에
-포함한다. 사용자가 내용을 편집할 필요는 없지만 M13 profile resolver가 완성될 때까지는
-파일을 제거하지 않는다.
+공개 예제 7개에는 `prj.conf`와 `app.overlay`가 없다. 기본 `standard` profile이 GPIO,
+Serial, Wire, SPI, ADC와 PWM의 검증된 설정을 제공하므로 일반 사용자는 `.ino`만 열어
+compile/upload한다. Sketch sidecar는 공개 예제가 아닌 전문가용 마지막 override로만 남는다.
 
 공개된 `v0.1.0` archive는 변경하지 않는다. 예제 경로 교정은 다음 배포 버전에 적용한다.
 
 ---
 
-## 3. 목표 디렉터리
+## 3. 디렉터리 계약
 
 ```text
 variants/nu54dk/profiles/
-├─ minimal/
+├─ standard/
 │  ├─ profile.json
 │  ├─ prj.conf
 │  └─ app.overlay
-├─ standard/
-├─ ble/
-└─ <검증된-profile>/
+└─ <향후 검증된-profile>/
 
 libraries/<NUCODE-library>/
 ├─ library.properties
@@ -66,9 +64,9 @@ libraries/<NUCODE-library>/
 
 ---
 
-## 4. Profile schema 초안
+## 4. Profile schema v1
 
-`profile.json`은 최소 다음 정보를 가진다.
+`profile.json` schema v1은 다음 필드를 정확히 가진다.
 
 ```json
 {
@@ -76,6 +74,7 @@ libraries/<NUCODE-library>/
   "id": "standard",
   "display_name": "Standard peripherals",
   "board": "nucode:zephyr:nu54dk",
+  "zephyr_board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
   "ncs_version": "v3.4.0",
   "conf": "prj.conf",
   "overlay": "app.overlay",
@@ -95,39 +94,41 @@ libraries/<NUCODE-library>/
 
 ---
 
-## 5. Feature manifest schema 초안
+## 5. Feature manifest schema v1
 
-```yaml
-schema_version: 1
-id: nucode.ble
-requires:
-  - bluetooth
-conf:
-  - Kconfig.conf
-overlays:
-  - app.overlay
-conflicts:
-  - radio.ieee802154.only
-compatible_profiles:
-  - ble
+```json
+{
+  "schema_version": 1,
+  "id": "nucode.ble",
+  "requires": ["bluetooth"],
+  "conf": ["Kconfig.conf"],
+  "overlays": ["app.overlay"],
+  "conflicts": ["radio.ieee802154.only"],
+  "compatible_profiles": ["ble"]
+}
 ```
 
-manifest는 선언 데이터다. command, script, environment mutation 또는 임의 CMake 코드를
-포함할 수 없다. 외부 library가 manifest를 설치했다고 자동 신뢰하지 않으며 초기 버전은
-package에 포함된 NUCODE library만 허용한다.
+`feature.yml`이라는 파일명을 사용하지만 schema v1 문법은 중복 key를 검출할 수 있는 UTF-8
+JSON으로 고정한다. 일반 YAML 문법은 허용하지 않는다. manifest는 선언 데이터이며 command,
+script, environment mutation 또는 임의 CMake 코드를 포함할 수 없다. 외부 library가 manifest를
+설치했다고 자동 신뢰하지 않으며 초기 버전은 package에 포함된 NUCODE library만 허용한다.
 
 ---
 
 ## 6. Build Adapter 처리 순서
 
-1. FQBN과 `boards.txt` menu option을 정규화한다.
-2. board와 선택 profile의 identity를 검증한다.
-3. Arduino CLI가 발견한 실제 library source root를 수집한다.
-4. 허용된 library의 `zephyr/feature.yml`을 읽고 dependency graph를 정렬한다.
-5. duplicate feature, conflict, peripheral ownership과 radio 조합을 검사한다.
-6. platform → profile → feature → expert override 순서로 생성 app에 병합한다.
-7. 최종 입력 목록과 hash를 `context.json`, build manifest와 diagnostic에 쓴다.
-8. 변경된 구성은 M9 cache key를 바꾸고 pristine configure를 정확히 한 번 수행한다.
+1. FQBN과 `boards.txt`의 profile option을 정규화한다.
+2. Arduino library 탐색 전에 board/profile identity를 검증하고 provisional cache를 구성한다.
+3. Arduino CLI가 생성한 source/include record에서 실제 선택된 bundled library를 수집한다.
+4. 허용목록의 `zephyr/feature.yml`만 읽고 profile 요구 기능과 충돌을 검사한다.
+5. platform → profile → 선택 feature → expert override 순서로 최종 app에 병합한다.
+6. profile 및 선택 feature manifest/fragment hash로 최종 M9 cache key를 계산한다.
+7. key가 바뀌면 context와 source record를 최종 workspace로 이관하고 pristine configure한다.
+8. 최종 입력 목록과 hash를 `context.json`과 build manifest에 기록한다.
+
+Arduino의 library 탐색은 Zephyr configure보다 늦게 끝나므로 feature library를 사용하는 최초
+build는 provisional profile configure와 최종 feature configure의 두 단계가 될 수 있다. 각 cache
+identity에서는 pristine configure를 한 번만 수행하며, 같은 최종 identity는 재사용한다.
 
 include 문자열만 보고 기능을 추측하지 않는다. source record에 실제로 선택된 library와
 manifest가 연결되어야 한다.
@@ -139,12 +140,11 @@ manifest가 연결되어야 한다.
 Tools 메뉴는 사용자가 이해할 수 있는 결과 중심 이름을 사용한다.
 
 ```text
-Tools → Feature set
-  Standard
-  Bluetooth LE
-  Low power sensor
-  Advanced/custom
+Tools → Feature set → Standard peripherals
 ```
+
+Bluetooth LE나 저전력 profile은 해당 마일스톤의 기능·충돌·HIL 검증이 끝난 뒤에만 메뉴에
+추가한다. 존재하지 않는 선택지를 먼저 노출하지 않는다.
 
 각 항목은 독립 boolean 모음이 아니라 검증된 profile ID 하나를 선택한다. 선택하지 않은
 세부 기능은 library manifest가 additive하게 요청할 수 있지만 profile이 금지한 충돌은
@@ -222,7 +222,8 @@ arduino-cli lib examples `
 - 루트 `examples/` 부재
 - `library.properties` architecture 호환
 - 설치 후 CLI example listing
-- clean Windows Arduino IDE 메뉴 smoke test
+- Arduino CLI 1.5.1의 IDE backend와 동일한 example listing 검증
+- clean Windows Arduino IDE 시각적 메뉴 smoke는 M18 release gate에서 재확인
 
 ---
 
@@ -243,12 +244,15 @@ arduino-cli lib examples `
 
 ## 12. M13 완료 체크리스트
 
-- [ ] profile schema와 resolver 구현
-- [ ] `boards.txt` curated menu 구현
-- [ ] library feature manifest resolver 구현
-- [ ] profile/feature/override hash를 cache와 evidence에 연결
-- [ ] M7 예제의 sidecar를 내부 설정으로 이전
-- [ ] 7개 예제 CLI 열거와 compile 자동화
-- [ ] Arduino IDE 메뉴 수동 smoke test
-- [ ] conflict/unknown schema/path traversal negative test
-- [ ] 사용자 가이드에서 raw Zephyr 설정을 기본 절차에서 제거
+- [x] profile schema와 resolver 구현
+- [x] `boards.txt` curated menu 구현
+- [x] library feature manifest resolver 구현
+- [x] profile/feature/override hash를 cache와 evidence에 연결
+- [x] M7 예제의 sidecar를 내부 설정으로 이전
+- [x] 7개 예제 CLI 열거와 compile 자동화
+- [x] Arduino IDE가 사용하는 CLI example listing에서 library별 정확한 예제 집합 검증
+- [x] conflict/unknown schema/path traversal negative test
+- [x] 사용자 가이드에서 raw Zephyr 설정을 기본 절차에서 제거
+
+Arduino IDE의 실제 메뉴 렌더링을 사람이 다시 보는 항목은 기능 구현 판정과 분리해 M18 clean
+Windows release gate에서 수행한다.

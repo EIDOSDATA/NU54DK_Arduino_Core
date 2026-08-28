@@ -16,8 +16,8 @@ compiler.libraries.ldflags=
 build.extra_flags=
 
 nu54.builder="{runtime.platform.path}/tools/nu54-builder/nu54-builder.cmd"
-nu54.common_args=--platform-root "{runtime.platform.path}" --build-path "{build.path}" --sketch-root "{build.source.path}" --fqbn "{build.fqbn}" --project-name "{build.project_name}" --board "{build.zephyr_board}"
-nu54.upload_args=--platform-root "{runtime.platform.path}" --build-path "{build.path}" --sketch-root "{build.path}" --fqbn "{build.fqbn}" --project-name "{build.project_name}" --board "{build.zephyr_board}"
+nu54.common_args=--platform-root "{runtime.platform.path}" --build-path "{build.path}" --sketch-root "{build.source.path}" --fqbn "{build.fqbn}" --project-name "{build.project_name}" --board "{build.zephyr_board}" --profile "{build.nu54_profile}"
+nu54.upload_args=--platform-root "{runtime.platform.path}" --build-path "{build.path}" --sketch-root "{build.path}" --fqbn "{build.fqbn}" --project-name "{build.project_name}" --board "{build.zephyr_board}" --profile "{build.nu54_profile}"
 
 # 모든 source record가 생성되기 전에는 Zephyr를 configure만 한다.
 recipe.hooks.prebuild.1.pattern={nu54.builder} prepare {nu54.common_args}

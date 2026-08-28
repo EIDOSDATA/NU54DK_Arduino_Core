@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "id": "nucode.spi",
+  "requires": ["spi"],
+  "conf": [],
+  "overlays": [],
+  "conflicts": [],
+  "compatible_profiles": ["standard"]
+}

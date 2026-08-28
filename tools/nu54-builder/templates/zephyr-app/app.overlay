@@ -1,39 +1,8 @@
 /**
  * @file app.overlay
- * @brief NU54DK Arduino Builder의 M7 peripheral 기본 역할을 선택합니다.
+ * @brief NU54DK Arduino Builder의 최소 platform overlay입니다.
  *
  * SPDX-License-Identifier: MIT
  */
 
-/ {
-	chosen {
-		nucode,arduino-wire = &i2c22;
-		nucode,arduino-spi = &spi00;
-		nucode,arduino-adc = &nucode_arduino_adc_input;
-		nucode,arduino-pwm = &pwm_led1;
-	};
-
-	nucode_arduino_adc_input: arduino-adc-input {
-		compatible = "nucode,arduino-adc-input";
-		io-channels = <&adc 5>;
-	};
-};
-
-&spi00 {
-	status = "okay";
-	pinctrl-0 = <&spi00_default>;
-	pinctrl-1 = <&spi00_sleep>;
-	pinctrl-names = "default", "sleep";
-};
-
-/** @brief nRF54L15 NFC 전용 P1.2/P1.3 패드를 Arduino Wire용 GPIO/TWIM으로 전환합니다. */
-&uicr {
-	nfct-pins-as-gpios;
-};
-
-/** @brief nRF54L15이 지원하는 가장 낮은 1/4 gain으로 A0 입력 범위를 설정합니다. */
-&adc {
-	channel@5 {
-		zephyr,gain = "ADC_GAIN_1_4";
-	};
-};
+/** @note 주변장치 역할은 선택한 구성 profile overlay에서 제공합니다. */

@@ -9,7 +9,7 @@ import datetime as dt
 import hashlib
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import re
 import shlex
 import shutil
@@ -31,6 +31,10 @@ NRFUTIL_VERSION = "8.2.1"
 NRFUTIL_SHA256 = "1d291d8a9d6bb5bec18454f8d95064aed7f62e8997ec1c4511f13bdf1124c037"
 SDK_MANAGER_VERSION = "1.16.1"
 DEFAULT_BOARD = "nrf54l15dk/nrf54l15/cpuapp/nu54dk"
+DEFAULT_PROFILE = "standard"
+PROFILE_SCHEMA_VERSION = 1
+FEATURE_SCHEMA_VERSION = 1
+FEATURE_ALLOWLIST = {"NUCODE_NU54DK": "nucode.board", "Wire": "nucode.wire", "SPI": "nucode.spi"}
 CONTEXT_DIRECTORY = "nu54-zephyr"
 CACHE_SCHEMA_VERSION = 1
 SESSION_CONTEXT_SCHEMA_VERSION = 2
@@ -62,6 +66,10 @@ BUILD_ENVIRONMENT_OVERRIDE_KEYS = (
 
 class AdapterError(RuntimeError):
     """! @brief 사용자가 수정할 수 있는 Build Adapter 오류입니다. """
+
+
+class DuplicateJsonKeyError(ValueError):
+    """! @brief strict JSON 문서에서 발견한 중복 key를 보존하는 오류입니다. """
 
 
 class ChildCommandError(AdapterError):
@@ -340,6 +348,126 @@ def adapter_paths(args: argparse.Namespace) -> dict[str, Path]:
         "context": state_root / "context.json",
         "records": state_root / "records",
     }
+
+
+## @brief 중복 key를 거부하는 JSON object hook입니다.
+def strict_json_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    document: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in document:
+            raise DuplicateJsonKeyError(f"중복 JSON key입니다: {key}")
+        document[key] = value
+    return document
+
+
+## @brief root를 벗어나지 않는 선언형 상대 경로만 허용합니다.
+def declared_path(root: Path, value: str, error_code: str) -> Path:
+    if not isinstance(value, str) or not value or Path(value).is_absolute() or PureWindowsPath(value).is_absolute() or value.startswith(("\\\\", "//")):
+        raise AdapterError(f"[NU54:{error_code}] 상대 경로가 아닙니다: {value}")
+    candidate = canonical_path(root / value)
+    if not is_within(candidate, root):
+        raise AdapterError(f"[NU54:{error_code}] 경로가 root를 벗어납니다: {value}")
+    return candidate
+
+
+## @brief 선택한 NU54DK 구성 profile과 실제 build target을 엄격히 검증하여 읽습니다.
+def load_configuration_profile(
+    platform_root: Path,
+    profile_id: str,
+    *,
+    fqbn: str = "nucode:zephyr:nu54dk",
+    zephyr_board: str = DEFAULT_BOARD,
+) -> dict[str, Any]:
+    if not re.fullmatch(r"[a-z0-9][a-z0-9_-]*", profile_id):
+        raise AdapterError(f"[NU54:E_PROFILE_ID] 잘못된 profile ID입니다: {profile_id}")
+    root = platform_root / "variants" / "nu54dk" / "profiles" / profile_id
+    path = root / "profile.json"
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=strict_json_object)
+    except DuplicateJsonKeyError as error:
+        raise AdapterError(f"[NU54:E_PROFILE_SCHEMA] {error}") from error
+    except (OSError, json.JSONDecodeError) as error:
+        raise AdapterError(f"[NU54:E_PROFILE_SCHEMA] profile을 읽지 못했습니다: {path}: {error}") from error
+    allowed = {"schema_version", "id", "display_name", "board", "zephyr_board", "ncs_version", "conf", "overlay", "features", "conflicts", "requires_hil"}
+    if not isinstance(document, dict) or set(document) != allowed or document.get("schema_version") != PROFILE_SCHEMA_VERSION:
+        raise AdapterError("[NU54:E_PROFILE_SCHEMA] profile field/schema가 올바르지 않습니다.")
+    for field in ("id", "display_name", "board", "zephyr_board", "ncs_version", "conf", "overlay"):
+        if not isinstance(document.get(field), str):
+            raise AdapterError(f"[NU54:E_PROFILE_SCHEMA] {field}는 문자열이어야 합니다.")
+    fqbn_parts = fqbn.split(":") if isinstance(fqbn, str) else []
+    fqbn_board = ":".join(fqbn_parts[:3]) if len(fqbn_parts) >= 3 else ""
+    if (
+        document.get("id") != profile_id
+        or document.get("board") != fqbn_board
+        or document.get("zephyr_board") != zephyr_board
+        or document.get("ncs_version") != NCS_VERSION
+    ):
+        raise AdapterError("[NU54:E_PROFILE_TARGET] profile target 계약이 현재 build와 다릅니다.")
+    for field in ("features", "conflicts", "requires_hil"):
+        if not isinstance(document[field], list) or not all(isinstance(item, str) for item in document[field]):
+            raise AdapterError(f"[NU54:E_PROFILE_SCHEMA] {field}는 문자열 배열이어야 합니다.")
+    conf = declared_path(root, document["conf"], "E_PROFILE_PATH")
+    overlay = declared_path(root, document["overlay"], "E_PROFILE_PATH")
+    if not conf.is_file() or not overlay.is_file():
+        raise AdapterError("[NU54:E_PROFILE_PATH] profile fragment가 없습니다.")
+    return {**document, "root": root, "path": path, "conf_path": conf, "overlay_path": overlay}
+
+
+## @brief bundled library의 선언형 feature manifest만 allowlist로 읽습니다.
+def load_library_feature(platform_root: Path, library_name: str) -> dict[str, Any] | None:
+    expected_id = FEATURE_ALLOWLIST.get(library_name)
+    if expected_id is None:
+        return None
+    root = platform_root / "libraries" / library_name / "zephyr"
+    path = root / "feature.yml"
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=strict_json_object)
+    except DuplicateJsonKeyError as error:
+        raise AdapterError(f"[NU54:E_FEATURE_SCHEMA] {error}") from error
+    except (OSError, json.JSONDecodeError) as error:
+        raise AdapterError(f"[NU54:E_FEATURE_SCHEMA] feature manifest를 읽지 못했습니다: {path}: {error}") from error
+    allowed = {"schema_version", "id", "requires", "conf", "overlays", "conflicts", "compatible_profiles"}
+    if not isinstance(document, dict) or set(document) != allowed or document.get("schema_version") != FEATURE_SCHEMA_VERSION or document.get("id") != expected_id:
+        raise AdapterError(f"[NU54:E_FEATURE_SCHEMA] allowlist feature 계약이 잘못되었습니다: {library_name}")
+    for field in ("requires", "conf", "overlays", "conflicts", "compatible_profiles"):
+        if not isinstance(document[field], list) or not all(isinstance(item, str) for item in document[field]):
+            raise AdapterError(f"[NU54:E_FEATURE_SCHEMA] {field}는 문자열 배열이어야 합니다.")
+    for field in ("conf", "overlays"):
+        for value in document[field]:
+            if not declared_path(root, value, "E_FEATURE_PATH").is_file():
+                raise AdapterError(f"[NU54:E_FEATURE_PATH] feature fragment가 없습니다: {value}")
+    return {**document, "root": root, "path": path}
+
+
+## @brief 선택된 bundled library feature의 profile 적합성과 충돌을 판정합니다.
+def resolve_library_features(
+    platform_root: Path, profile: dict[str, Any], library_names: Sequence[str]
+) -> list[dict[str, Any]]:
+    resolved: list[dict[str, Any]] = []
+    profile_features = set(profile["features"])
+    conflict_owners = {
+        resource: f"profile:{profile['id']}" for resource in profile["conflicts"]
+    }
+    for library_name in sorted(set(library_names), key=str.casefold):
+        feature = load_library_feature(platform_root, library_name)
+        if feature is None:
+            continue
+        if profile["id"] not in feature["compatible_profiles"]:
+            raise AdapterError(f"[NU54:E_FEATURE_PROFILE] {feature['id']}는 {profile['id']} profile과 호환되지 않습니다.")
+        missing = sorted(set(feature["requires"]) - profile_features)
+        conflicts = sorted(set(feature["conflicts"]) & conflict_owners.keys())
+        if missing:
+            raise AdapterError(f"[NU54:E_FEATURE_REQUIREMENT] {feature['id']} 요구 기능이 없습니다: {missing}")
+        if conflicts:
+            detail = ", ".join(
+                f"{resource} ({conflict_owners[resource]} <-> {feature['id']})"
+                for resource in conflicts
+            )
+            raise AdapterError(f"[NU54:E_FEATURE_CONFLICT] 충돌 자원: {detail}")
+        for resource in feature["conflicts"]:
+            conflict_owners[resource] = feature["id"]
+        resolved.append(feature)
+    return resolved
 
 
 ## @brief cache workspace 경로를 adapter path 집합에 결합합니다.
@@ -826,7 +954,8 @@ def compiler_version(compiler: Path, environment: dict[str, str]) -> str:
 
 ## @brief M9 cache key에 사용할 canonical input manifest를 생성합니다.
 def cache_input_manifest(
-    paths: dict[str, Path], args: argparse.Namespace, tools: dict[str, Any]
+    paths: dict[str, Path], args: argparse.Namespace, tools: dict[str, Any],
+    selected_library_names: Sequence[str] = (),
 ) -> dict[str, Any]:
     platform_root = paths["platform_root"]
     board_root = platform_root / "board_package" / "NU54DK_Zephyr_DTS"
@@ -855,7 +984,20 @@ def cache_input_manifest(
     revision_arguments: dict[str, str | Path] = {}
     if isinstance(bundled_git, Path) and bundled_git.is_file():
         revision_arguments["git_executable"] = bundled_git
-    return {
+    profile_id = getattr(args, "profile", DEFAULT_PROFILE)
+    profile_path = platform_root / "variants" / "nu54dk" / "profiles" / profile_id / "profile.json"
+    profile = (
+        load_configuration_profile(
+            platform_root,
+            profile_id,
+            fqbn=args.fqbn,
+            zephyr_board=args.board,
+        )
+        if profile_path.is_file()
+        else None
+    )
+    features = resolve_library_features(platform_root, profile, selected_library_names) if profile is not None else []
+    manifest = {
         "schema_version": CACHE_SCHEMA_VERSION,
         "adapter": {
             "version": ADAPTER_VERSION,
@@ -866,6 +1008,7 @@ def cache_input_manifest(
             "fqbn": args.fqbn,
             "board": args.board,
             "sysbuild": False,
+            "profile": profile_id,
         },
         "sketch": {
             "root": paths["sketch_root"].as_posix(),
@@ -899,6 +1042,14 @@ def cache_input_manifest(
             "compiler": compiler_version(tools["compiler"], tools["environment"]),
         },
     }
+    if profile is not None:
+        manifest["configuration"] = {
+            "profile": {"id": profile["id"], "manifest": optional_file_sha256(profile["path"]), "conf": optional_file_sha256(profile["conf_path"]), "overlay": optional_file_sha256(profile["overlay_path"])},
+            "selected_features": [{"id": item["id"], "manifest": optional_file_sha256(item["path"]), "conf": [optional_file_sha256(declared_path(item["root"], value, "E_FEATURE_PATH")) for value in item["conf"]], "overlays": [optional_file_sha256(declared_path(item["root"], value, "E_FEATURE_PATH")) for value in item["overlays"]]} for item in features],
+        }
+    elif hasattr(args, "profile"):
+        raise AdapterError(f"[NU54:E_PROFILE_SCHEMA] profile을 찾을 수 없습니다: {profile_path}")
+    return manifest
 
 
 ## @brief canonical input manifest에서 전체 SHA-256 cache key를 계산합니다.
@@ -1052,7 +1203,10 @@ def configure_command(
 
 
 ## @brief Zephyr application template과 사용자 config/overlay를 materialize합니다.
-def materialize_application(paths: dict[str, Path]) -> None:
+def materialize_application(
+    paths: dict[str, Path], args: argparse.Namespace,
+    selected_library_names: Sequence[str] = (),
+) -> None:
     platform_root = paths["platform_root"]
     sketch_root = paths["sketch_root"]
     app_root = paths["app"]
@@ -1067,7 +1221,18 @@ def materialize_application(paths: dict[str, Path]) -> None:
     if not sources.exists():
         atomic_write_bytes(sources, (template / "sources.cmake").read_bytes())
 
+    profile = load_configuration_profile(
+        platform_root,
+        getattr(args, "profile", DEFAULT_PROFILE),
+        fqbn=args.fqbn,
+        zephyr_board=args.board,
+    )
+    features = resolve_library_features(platform_root, profile, selected_library_names)
     base_config = (template / "prj.conf").read_text(encoding="utf-8").rstrip() + "\n"
+    base_config += "\n# Selected profile: " + profile["id"] + "\n" + profile["conf_path"].read_text(encoding="utf-8").rstrip() + "\n"
+    for feature in features:
+        for relative in feature["conf"]:
+            base_config += "\n# Library feature: " + feature["id"] + "\n" + declared_path(feature["root"], relative, "E_FEATURE_PATH").read_text(encoding="utf-8").rstrip() + "\n"
     sketch_config = sketch_root / "prj.conf"
     if sketch_config.is_file():
         base_config += "\n# Sketch prj.conf\n" + sketch_config.read_text(encoding="utf-8").rstrip() + "\n"
@@ -1075,6 +1240,10 @@ def materialize_application(paths: dict[str, Path]) -> None:
 
     generated_overlay = app_root / "app.overlay"
     base_overlay = (template / "app.overlay").read_text(encoding="utf-8").rstrip() + "\n"
+    base_overlay += "\n/** @brief 선택한 구성 profile의 overlay입니다. */\n" + profile["overlay_path"].read_text(encoding="utf-8").rstrip() + "\n"
+    for feature in features:
+        for relative in feature["overlays"]:
+            base_overlay += "\n/** @brief 허용된 bundled library feature overlay입니다. */\n" + declared_path(feature["root"], relative, "E_FEATURE_PATH").read_text(encoding="utf-8").rstrip() + "\n"
     sketch_overlay = sketch_root / "app.overlay"
     if sketch_overlay.is_file():
         combined_overlay = (
@@ -1172,7 +1341,7 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
                 )
 
             # 전체 key 충돌 여부를 확인한 뒤에만 persistent tree를 변경합니다.
-            materialize_application(paths)
+            materialize_application(paths, args)
 
             cache_exists = (paths["zephyr_build"] / "CMakeCache.txt").is_file()
             build_graph_exists = (paths["zephyr_build"] / "build.ninja").is_file()
@@ -1253,6 +1422,7 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
                 "state": "configured",
                 "fqbn": args.fqbn,
                 "board": args.board,
+                "profile": getattr(args, "profile", DEFAULT_PROFILE),
                 "sysbuild": False,
                 "ncs_version": NCS_VERSION,
                 "zephyr_version": "4.4.0",
@@ -1859,6 +2029,93 @@ def records_for_objects(
     return records
 
 
+## @brief source record에서 실제 선택된 bundled Arduino library 이름만 수집합니다.
+def selected_bundled_libraries(
+    paths: dict[str, Path], records: Sequence[dict[str, Any]]
+) -> list[str]:
+    libraries_root = paths["platform_root"] / "libraries"
+    selected: set[str] = set()
+    for record in records:
+        candidates = [canonical_path(record["source"])]
+        candidates.extend(canonical_path(value) for value in record.get("include_dirs", []) if isinstance(value, str))
+        for candidate in candidates:
+            if not is_within(candidate, libraries_root):
+                continue
+            try:
+                relative = candidate.relative_to(libraries_root)
+            except ValueError:
+                continue
+            if relative.parts and relative.parts[0] in FEATURE_ALLOWLIST:
+                selected.add(relative.parts[0])
+    return sorted(selected, key=str.casefold)
+
+
+## @brief 최종 feature cache key로 source record와 context를 원자적으로 이관합니다.
+def migrate_feature_workspace(
+    session_paths: dict[str, Path], args: argparse.Namespace, tools: dict[str, Any],
+    context: dict[str, Any], records: Sequence[dict[str, Any]],
+    selected_libraries: Sequence[str], input_manifest: dict[str, Any],
+) -> tuple[dict[str, Path], dict[str, Any], str]:
+    cache_key = cache_key_for_manifest(input_manifest)
+    if context.get("cache_key") == cache_key:
+        context.update({
+            "selected_libraries": list(selected_libraries),
+            "selected_features": input_manifest.get("configuration", {}).get("selected_features", []),
+        })
+        atomic_write_json(session_paths["context"], context)
+        return paths_from_context(session_paths, context), context, cache_key
+    cache_root = local_cache_root(str(context["cache_root"]))
+    workspace = cache_workspace(cache_key, root=cache_root)
+    paths = add_workspace_paths(session_paths, workspace)
+    board_root = canonical_path(context["board_root"])
+    workspace.mkdir(parents=True, exist_ok=True)
+    with build_lock(workspace, operation="feature-cache-migration"):
+        input_path = workspace / "input-manifest.json"
+        stored = load_json_object(input_path, "E_CACHE_INPUT") if input_path.is_file() else None
+        state = load_json_object(workspace / "state.json", "E_CACHE_STATE") if (workspace / "state.json").is_file() else None
+        if stored is not None and cache_key_for_manifest(stored) != cache_key:
+            raise AdapterError("[NU54:E_CACHE_KEY_COLLISION] feature cache directory의 전체 SHA-256이 다릅니다.")
+        stored_state_key = (state or {}).get("cache_key")
+        if isinstance(stored_state_key, str) and re.fullmatch(r"[0-9a-f]{64}", stored_state_key) and stored_state_key != cache_key:
+            raise AdapterError("[NU54:E_CACHE_KEY_COLLISION] feature cache state의 전체 SHA-256이 다릅니다.")
+        reusable = bool(stored == input_manifest and state and state.get("cache_key") == cache_key and state.get("state") == "ready" and state.get("first_configure_complete") is True and (paths["zephyr_build"] / "CMakeCache.txt").is_file() and (paths["zephyr_build"] / "build.ninja").is_file())
+        materialize_application(paths, args, selected_libraries)
+        atomic_write_json(input_path, input_manifest)
+        configure_seconds = 0.0
+        if not reusable:
+            transition_cache_state(workspace, cache_key, "configuring", first_configure_complete=False, configure_reason="selected-features")
+            started = time.perf_counter()
+            try:
+                run_checked(configure_command(paths, args, tools, board_root, pristine=True), cwd=tools["ncs_root"], environment=tools["environment"])
+            except Exception as error:
+                transition_cache_state(workspace, cache_key, "failed", first_configure_complete=False, last_build_result="configure-failed", failure=str(error))
+                raise
+            configure_seconds = time.perf_counter() - started
+            transition_cache_state(workspace, cache_key, "ready", first_configure_complete=True, last_build_result="not-built", configure_reason="selected-features", configure_duration_seconds=round(configure_seconds, 6), pristine_configure_count=int((state or {}).get("pristine_configure_count", 0)) + 1)
+    old_key = str(context["cache_key"])
+    context.update({
+        "cache_key": cache_key,
+        "cache_dir": workspace.as_posix(),
+        "input_manifest": (workspace / "input-manifest.json").as_posix(),
+        "app_dir": paths["app"].as_posix(),
+        "zephyr_build_dir": paths["zephyr_build"].as_posix(),
+        "configuration_fingerprint": f"sha256:{cache_key}",
+        "selected_libraries": list(selected_libraries),
+        "selected_features": input_manifest.get("configuration", {}).get("selected_features", []),
+        "provisional_cache_key": old_key,
+        "configure_reason": "feature-cache-hit" if reusable else "selected-features",
+        "configure_duration_seconds": round(configure_seconds, 6),
+        "configure_skipped": reusable,
+        "cache_reused": reusable,
+        "pristine_configure_count": int((state or {}).get("pristine_configure_count", 0)) + (0 if reusable else 1),
+    })
+    atomic_write_json(session_paths["context"], context)
+    for record in records:
+        record["cache_key"] = cache_key
+        atomic_write_json(record_path(session_paths["records"], canonical_path(record["object"])), record)
+    return paths, context, cache_key
+
+
 ## @brief CMake string literal에 사용할 path를 escape합니다.
 def cmake_quote(path: Path) -> str:
     return path.as_posix().replace("\\", "/").replace("\"", "\\\"").replace(";", "\\;")
@@ -2131,13 +2388,13 @@ def link(args: argparse.Namespace) -> None:
                     rollback_context = previous_context
             except AdapterError:
                 rollback_context = None
-        paths = paths_from_context(session_paths, context)
-        current_input = cache_input_manifest(session_paths, args, tools)
-        cache_key = cache_key_for_manifest(current_input)
-        if context.get("cache_key") != cache_key:
-            raise AdapterError(
-                "[NU54:E_CACHE_CONTEXT_STALE] prepare 이후 build 입력이 변경되었습니다. 다시 compile하십시오."
-            )
+        provisional_paths = paths_from_context(session_paths, context)
+        records = records_for_objects(provisional_paths, args.objects, context)
+        selected_libraries = selected_bundled_libraries(session_paths, records)
+        current_input = cache_input_manifest(session_paths, args, tools, selected_libraries)
+        paths, context, cache_key = migrate_feature_workspace(
+            session_paths, args, tools, context, records, selected_libraries, current_input
+        )
         with build_lock(paths["workspace"], operation="link-cache"):
             state_document = load_json_object(paths["workspace"] / "state.json", "E_CACHE_STATE")
             if (
@@ -2156,7 +2413,6 @@ def link(args: argparse.Namespace) -> None:
                 paths["workspace"], cache_key, "building", last_build_result="running"
             )
             try:
-                records = records_for_objects(paths, args.objects, context)
                 sources, source_provenance, manifest_changed = write_source_manifest(
                     paths, records
                 )
@@ -2782,6 +3038,7 @@ def add_common_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--fqbn", required=True)
     parser.add_argument("--project-name", required=True)
     parser.add_argument("--board", default=DEFAULT_BOARD)
+    parser.add_argument("--profile", default=DEFAULT_PROFILE)
 
 
 ## @brief Build Adapter command line parser를 구성합니다.

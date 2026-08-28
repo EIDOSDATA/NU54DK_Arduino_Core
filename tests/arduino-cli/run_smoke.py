@@ -894,7 +894,7 @@ def test_m6_examples(cli: Path, config: Path, root: Path, repository: Path) -> N
         assert_build(build, project_name)
 
 
-## @brief M7 주변장치 공개 예제와 sketch별 Zephyr 설정 병합을 검증합니다.
+## @brief M7 주변장치 공개 예제와 M13 표준 profile 병합을 검증합니다.
 def test_m7_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
     peripheral_symbols = (
         "CONFIG_NUCODE_ARDUINO_WIRE",
@@ -933,36 +933,49 @@ def test_m7_examples(cli: Path, config: Path, root: Path, repository: Path) -> N
         ),
     )
     for build_name, sketch, project_name, enabled_symbol, devicetree_marker in examples:
-        if (
-            not (sketch / project_name).is_file()
-            or not (sketch / "prj.conf").is_file()
-            or not (sketch / "app.overlay").is_file()
-        ):
+        if not (sketch / project_name).is_file():
             raise SmokeFailure(f"incomplete M7 example: {sketch}")
+        if (sketch / "prj.conf").exists() or (sketch / "app.overlay").exists():
+            raise SmokeFailure(f"M13 public example contains a Zephyr sidecar: {sketch}")
         build = root / f"build-m7-{build_name}"
         run(compile_command(cli, config, build, sketch))
         context = assert_build(build, project_name)
+        if context.get("profile") != "standard":
+            raise SmokeFailure(f"M7 example did not use the standard profile: {sketch}")
         zephyr = Path(context["zephyr_build_dir"]) / "zephyr"
         configuration = (zephyr / ".config").read_text(encoding="utf-8")
         for symbol in peripheral_symbols:
-            expected = symbol == enabled_symbol
-            if read_kconfig_boolean(configuration, symbol) is not expected:
-                expected_value = "y" if expected else "n"
+            if not read_kconfig_boolean(configuration, symbol):
                 raise SmokeFailure(
-                    f"M7 example Kconfig matrix mismatch: {sketch}: "
-                    f"{symbol} expected {expected_value}"
+                    f"M13 standard profile omitted an M7 symbol: {sketch}: {symbol}"
                 )
 
         materialized_overlay = (
             Path(context["app_dir"]) / "app.overlay"
         ).read_text(encoding="utf-8")
-        sketch_overlay = (sketch / "app.overlay").read_text(encoding="utf-8").rstrip()
-        if sketch_overlay not in materialized_overlay:
-            raise SmokeFailure(f"M7 example app.overlay source was not merged: {sketch}")
+        profile_overlay = (
+            repository / "variants" / "nu54dk" / "profiles" / "standard" / "app.overlay"
+        ).read_text(encoding="utf-8").rstrip()
+        if profile_overlay not in materialized_overlay:
+            raise SmokeFailure(f"M13 standard profile overlay was not merged: {sketch}")
 
         devicetree = (zephyr / "zephyr.dts").read_text(encoding="utf-8")
         if devicetree_marker not in devicetree:
             raise SmokeFailure(f"M7 example devicetree contract was not merged: {sketch}")
+
+        selected_features = {
+            item.get("id")
+            for item in context.get("selected_features", [])
+            if isinstance(item, dict)
+        }
+        expected_feature = {
+            "CONFIG_NUCODE_ARDUINO_WIRE": "nucode.wire",
+            "CONFIG_NUCODE_ARDUINO_SPI": "nucode.spi",
+        }.get(enabled_symbol)
+        if expected_feature is not None and expected_feature not in selected_features:
+            raise SmokeFailure(
+                f"M13 selected library feature was not recorded: {sketch}: {expected_feature}"
+            )
 
     test_live_build_record_scope(context, root)
 
@@ -983,23 +996,28 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
         "SPI": {"SPITransaction"},
         "Wire": {"WirePmicId"},
     }
-    discovered: dict[str, str] = {}
+    discovered: dict[str, set[str]] = {}
     for record in records:
         if not isinstance(record, dict):
             continue
         library = record.get("library")
         if not isinstance(library, dict):
             continue
-        discovered[str(library.get("name", ""))] = json.dumps(
-            record.get("examples", []), ensure_ascii=False
-        )
+        example_paths = record.get("examples", [])
+        if not isinstance(example_paths, list) or not all(
+            isinstance(path, str) for path in example_paths
+        ):
+            raise SmokeFailure("Arduino CLI example listing has an invalid examples field")
+        discovered[str(library.get("name", ""))] = {
+            Path(path).name for path in example_paths
+        }
 
     for library, sketches in expected.items():
-        listing = discovered.get(library, "")
-        missing = sorted(sketch for sketch in sketches if sketch not in listing)
-        if missing:
+        listing = discovered.get(library, set())
+        if listing != sketches:
             raise SmokeFailure(
-                f"{library} examples are not discoverable: {', '.join(missing)}"
+                f"{library} example set mismatch: "
+                f"expected={sorted(sketches)}, actual={sorted(listing)}"
             )
 
 
