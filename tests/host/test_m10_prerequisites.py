@@ -375,6 +375,27 @@ class M10PrerequisiteContractTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, f"{filename}: {result.stdout}")
 
+    def test_powershell_scripts_do_not_depend_on_hash_module_autoload(self) -> None:
+        """! @brief clean PowerShell에서 SHA-256 cmdlet 자동 로드에 의존하지 않습니다. """
+
+        for filename in ("install-nordic.ps1", "verify-nordic.ps1"):
+            script = (
+                REPOSITORY_ROOT / "tools" / "nu54-prerequisites" / filename
+            ).read_text(encoding="utf-8-sig")
+            self.assertNotIn("Get-FileHash", script, filename)
+            self.assertIn("[Security.Cryptography.SHA256]::Create()", script, filename)
+
+    def test_verify_script_initializes_utf8_before_runtime_setup(self) -> None:
+        """! @brief 검증 subprocess도 첫 출력 전에 UTF-8 출력을 고정합니다. """
+
+        verifier = (
+            REPOSITORY_ROOT / "tools" / "nu54-prerequisites" / "verify-nordic.ps1"
+        ).read_text(encoding="utf-8-sig")
+        self.assertLess(
+            verifier.index("[Console]::OutputEncoding = $utf8NoBom"),
+            verifier.index("Set-StrictMode -Version Latest"),
+        )
+
     @unittest.skipUnless(os.name == "nt", "Windows PowerShell 5.1 계약 시험입니다.")
     def test_installer_uses_powershell_51_compatible_log_append(self) -> None:
         """! @brief PS 5.1에서 허용되지 않는 Tee 매개 변수 조합을 차단합니다. """

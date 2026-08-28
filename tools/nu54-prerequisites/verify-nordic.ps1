@@ -22,6 +22,11 @@ param(
     [switch]$SkipReadyMarker
 )
 
+$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+[Console]::InputEncoding = $utf8NoBom
+[Console]::OutputEncoding = $utf8NoBom
+$OutputEncoding = $utf8NoBom
+
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
@@ -50,7 +55,14 @@ function Read-JsonDocument {
 function Get-Sha256 {
     param([Parameter(Mandatory)][string]$Path)
 
-    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+    $stream = [IO.File]::OpenRead($Path)
+    $sha256 = [Security.Cryptography.SHA256]::Create()
+    try {
+        return ([BitConverter]::ToString($sha256.ComputeHash($stream))).Replace('-', '').ToLowerInvariant()
+    } finally {
+        $sha256.Dispose()
+        $stream.Dispose()
+    }
 }
 
 ## @brief Toolchain에 포함된 Git으로 요청 repository의 정확한 HEAD를 읽습니다.

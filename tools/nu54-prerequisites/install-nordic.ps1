@@ -44,6 +44,20 @@ function Write-AtomicJson {
     Move-Item -LiteralPath $temporary -Destination $Path -Force
 }
 
+## @brief PowerShell module 자동 로드에 의존하지 않고 SHA-256을 계산합니다.
+function Get-Sha256 {
+    param([Parameter(Mandatory)][string]$Path)
+
+    $stream = [IO.File]::OpenRead($Path)
+    $sha256 = [Security.Cryptography.SHA256]::Create()
+    try {
+        return ([BitConverter]::ToString($sha256.ComputeHash($stream))).Replace('-', '').ToLowerInvariant()
+    } finally {
+        $sha256.Dispose()
+        $stream.Dispose()
+    }
+}
+
 ## @brief 설치 단계와 시각을 재개 가능한 marker에 갱신합니다.
 function Set-InstallPhase {
     param([Parameter(Mandatory)][string]$Phase)
@@ -112,7 +126,7 @@ function Assert-FileHash {
         [Parameter(Mandatory)][string]$Expected
     )
 
-    $actual = (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+    $actual = Get-Sha256 $Path
     if ($actual -ne $Expected.ToLowerInvariant()) {
         throw "SHA-256 불일치: $Path; expected=$Expected actual=$actual. 공식 URL은 unversioned이므로 upstream byte가 변경되었다면 검토 후 pins.json을 명시적으로 갱신하십시오."
     }
@@ -153,7 +167,7 @@ try {
     if ([int]$pins.schema_version -ne 1) {
         throw "지원하지 않는 pin schema입니다: $($pins.schema_version)"
     }
-    $pinsSha256 = (Get-FileHash -LiteralPath $pinsPath -Algorithm SHA256).Hash.ToLowerInvariant()
+    $pinsSha256 = Get-Sha256 $pinsPath
 
     $applicationRoot = Join-Path $env:LOCALAPPDATA 'NUCODE\NU54DK_Arduino_Core'
     $stateRoot = if ($env:NUCODE_PREREQUISITE_STATE_ROOT) {
