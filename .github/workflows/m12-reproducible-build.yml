@@ -24,8 +24,8 @@ jobs:
       run:
         shell: bash
     env:
-      NCS_CI_WORKSPACE: ${{ runner.temp }}/ncs-v3.4.0
-      M12_EVIDENCE: ${{ runner.temp }}/m12-evidence
+      NCS_CI_WORKSPACE: ${{ github.workspace }}/../ncs-v3.4.0
+      M12_EVIDENCE: ${{ github.workspace }}/../m12-evidence
     steps:
       - name: Checkout exact source and board package
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1

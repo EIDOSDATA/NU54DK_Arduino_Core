@@ -101,6 +101,12 @@ class M12CiContractTests(unittest.TestCase):
         for reference in uses:
             self.assertRegex(reference, r"^[^@]+@[0-9a-f]{40}$", reference)
 
+    ## @brief job-level env에서 사용할 수 없는 runner context를 차단합니다.
+    def test_workflows_do_not_use_runner_context_in_job_env(self) -> None:
+        for workflow in (REPOSITORY / ".github" / "workflows").glob("m12-*.yml"):
+            text = workflow.read_text(encoding="utf-8")
+            self.assertNotIn("${{ runner.temp }}", text, workflow.name)
+
     ## @brief 표준 library example 일곱 개가 canonical 위치에만 있는지 검증합니다.
     def test_example_discovery_inputs_are_canonical(self) -> None:
         expected = (

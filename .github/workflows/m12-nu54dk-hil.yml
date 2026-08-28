@@ -27,7 +27,7 @@ jobs:
     timeout-minutes: 90
     env:
       NU54DK_HIL_AUTHORIZATION: ${{ secrets.NU54DK_HIL_AUTHORIZATION }}
-      HIL_EVIDENCE: ${{ runner.temp }}\nu54dk-hil-${{ github.run_id }}
+      HIL_EVIDENCE: ${{ github.workspace }}\..\nu54dk-hil-${{ github.run_id }}
     steps:
       - name: Require repository HIL authorization
         shell: powershell
