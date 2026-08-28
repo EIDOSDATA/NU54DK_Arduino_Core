@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M6·M7·M11 완료, v0.1.0 정식 지원 범위 공개; rc.2 검증 계승, rc.1은 설치 출력 결함으로 회수 |
+| 문서 상태 | v0.1.0 정식 공개 완료; v0.2.0 M14 Core API·Variant 무보드 구현 반영, 신규 pin HIL 대기 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 Zephyr | Zephyr 4.4.0 |
@@ -29,12 +29,24 @@ BQ25186 I2C repeated-start는 100/400 kHz에서 실기 통과했고 SPI00은 4 M
 P2.4 MISO 사이의 40-byte 물리 loopback이 전부 일치했다. 제약이 있는 공개 API는 아래 표에서
 계속 `부분 지원` 또는 `의미 차이`로 표시하지만 M7 단계 자체는 **완료**다.
 
+M14의 무보드 범위에서는 기존에 선언만 존재하던 `random()`/`randomSeed()`를 실제 생산
+source에 연결하고, utility·bit·`F()`와 최소 공개 진단 API를 host compile/link·
+native semantic·target cross-build로 검증했다. 임의 TEMP native executable을 Windows
+Application Control이 차단한 최초 실행은 semantic SKIP으로 기록했고, repository
+고정 staging에서 매번 재compile하도록 고친 시험은 의미 실행까지 3/3 PASS했다.
+DTS `led0..3`/`sw0..3` alias로부터 sparse Variant 계약도 구현하고 host 대조와
+NU54DK production target build-only를 통과했다. 다만 PWM이 소유한 `PIN_LED1`은 digital에서
+명시적으로 거부하며, 신규 LED2/3과 BUTTON1..3의 실기 HIL은 보드 준비 후 남아 있다.
+QEMU actual-runtime gate는 고정 Nordic container workflow에 등록했으나 이 문서 갱신
+시점에서 원격 실행 증적은 아직 확정하지 않았다.
+
 관련 문서는 다음과 같다.
 
 - [구현 로드맵](02_구현_로드맵.md)
 - [테스트와 검증](../03_펌웨어%20설계/04_테스트와_검증.md)
 - [M6 기본 Arduino API, Serial과 인터럽트 기준선](<../04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md>)
 - [M7 Wire·SPI·ADC·PWM 기준선](<../04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md>)
+- [M14 Core API와 Variant 기준선](<../04_검증 기록/16_M14_Core_API와_Variant_기준선.md>)
 
 ---
 
@@ -122,20 +134,27 @@ v0.1.0 release gate에서 P1이 미구현으로 남으면 기능명을 조용히
 
 표의 `현재 상태`는 이 문서 작성 시점의 구현 증거를 나타낸다. `v0.1.0 목표`는 당시 완료 후 기대 상태다. 목표 상태가 `의미 차이` 또는 `부분 지원`이면 차이를 없애겠다는 뜻이 아니라 정확히 문서화하고 시험하겠다는 뜻이다.
 
-### 5.0 M3·M6 검증 경계
+### 5.0 M3·M6 기준선과 M14 Variant 확장 경계
 
-현재 Variant는 다음 두 논리 핀만 제공한다.
+현재 Variant는 일곱 digital-capable 논리 핀과 하나의 PWM-owned LED 역할을 제공한다.
+v0.1 숫자 0..3을 보존하기 위해 A0와 PWM 역할이 digital descriptor 사이의 sparse slot을
+차지한다.
 
 | index | 이름 | Devicetree 원본 | capability |
 | ---: | --- | --- | --- |
-| 0 | `LED_BUILTIN` | `DT_ALIAS(led0)` | digital input + output |
-| 1 | `PIN_BUTTON0` | `DT_ALIAS(sw0)` | digital input only |
+| 0 | `LED_BUILTIN`, `PIN_LED0`, `D0` | `DT_ALIAS(led0)` | input + output + interrupt |
+| 1 | `PIN_BUTTON0`, `D1` | `DT_ALIAS(sw0)` | input + interrupt |
+| 4 | `PIN_LED1` | `DT_ALIAS(led1)` | `PIN_PWM0` 소유, digital 미지원 |
+| 5..6 | `PIN_LED2..3` | `DT_ALIAS(led2..3)` | input + output + interrupt |
+| 7..9 | `PIN_BUTTON1..3` | `DT_ALIAS(sw1..3)` | input + interrupt |
 
-`NUM_DIGITAL_PINS`는 2다. GPIO controller, 실제 pin과 flag는 DTS에서 생성하며 Variant에
-복제하지 않는다. 공개 digital GPIO API는 thread-only이고 ISR에서는 no-op 또는 `LOW`다.
-mode, output latch와 마지막 오류는 private atomic 상태로 관리한다. M6에서 interrupt
-capability와 고정 callback slot을 추가했으며 callback 자체는 Zephyr GPIO ISR에서 직접
-실행한다.
+`NUM_DIGITAL_PINS=10`은 0..9 sparse ID 순회의 상한이고 실제 descriptor 수는
+`NUM_DIGITAL_CAPABLE_PINS=7`이다. `PIN_A0=2`, `PIN_PWM0=3`, `PIN_LED1=4`는 digital
+API에서 `nullptr`/invalid pin으로 거부한다. GPIO controller, 실제 pin과 flag는 DTS에서 생성하며
+Variant에 복제하지 않는다. 공개 digital GPIO API는 thread-only이고 ISR에서는 no-op 또는
+`LOW`다. mode, output latch와 마지막 오류는 private atomic 상태로 관리한다. M6에서
+interrupt capability와 고정 callback slot을 추가했으며 callback 자체는 Zephyr GPIO ISR에서
+직접 실행한다.
 
 M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP` 버튼의 raw
 해제 `HIGH`/누름 `LOW`, 버튼-LED 연동을 확인했다. M6는 Arduino CLI에서 Serial/interrupt
@@ -143,6 +162,15 @@ M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP
 오류 경로를 검증했다. 실제 P1.13 버튼에서도 누름 `FALLING` 1회, 해제 `RISING` 1회와
 `CHANGE` 누름·해제 누적 1·2회를 DAPLink sequence 25/COM10에서 확인했다. 외부 로직
 애널라이저나 오실로스코프는 사용하지 않았다.
+
+M14의 추가 다섯 digital pin과 PWM-owned LED1 예약은 고정 DTS alias 대조, host 계약과
+NU54DK production target build-only를 통과했다. 실제 LED 출력, 버튼 pull/input과 interrupt
+edge HIL은 보드가 준비된 뒤 완료한다.
+
+M14 확장은 DTS alias가 있는 `led0..3`·`sw0..3`으로 제한한다. UART20, I2C22와 SPI00
+pinctrl은 활성 peripheral ownership과 충돌하므로 digital ID로 중복 노출하지 않는다.
+명시적인 connector mapping이 없는 일반 header도 회로의 물리 pin 번호를 Variant에 복사해
+임의 공개하지 않는다.
 
 ### 5.1 Runtime과 기본 형식
 
@@ -158,18 +186,29 @@ M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP
 | `LSBFIRST`, `MSBFIRST`, interrupt mode 상수 | P0/P1 | 부분 지원 | 지원 | 생산 `Arduino.h`에 upstream 상수 노출; edge mode와 SPI mode·bit-order 변환 target ztest 통과 |
 | `byte`, `word`, `boolean` 등 호환 type | P0 | 지원 | 지원 | M6 생산 header의 C/C++ target 계약과 `makeWord()` 회귀 통과 |
 | C++ static object initialization | P0 | 지원 | 지원 | 전역 constructor 순서와 hardware를 constructor에서 켜지 않는 `Serial` 객체가 실제 HIL에서 동작 |
-| C++ exception/RTTI | P1 | 미구현 | 의미 차이 | enable 구성의 compile/link만 확인; 실제 throw/RTTI/heap 의미는 미검증 |
+| C++ exception/RTTI | P1 | 미구현 | 의미 차이 | 기본 profile은 둘 다 비활성; fixed-staging host native semantic과 NCS QEMU cross-build 통과, QEMU·NU54 target runtime 지원 판정은 대기 |
+
+기본 Sketch profile은 `CONFIG_CPP_EXCEPTIONS=n`, `CONFIG_CPP_RTTI=n`을 유지한다. 두 기능은
+Core의 Arduino 호환 필수 계약이 아니라 expert opt-in이다. 사용할 때는
+`CONFIG_REQUIRES_FULL_LIBCPP=y`, `CONFIG_CPP_EXCEPTIONS=y`, `CONFIG_CPP_RTTI=y`와 충분한
+libc heap·thread stack을 함께 설계해야 한다. M14는 repository 고정 staging의 host native
+semantic과 NCS 3.4.0 `qemu_cortex_m3` cross-build를 검증했다. 로컬 Windows에는 QEMU
+실행기가 없어 Zephyr runtime을 실행하지 못했고, 고정 Nordic Linux container의 실시간
+QEMU gate는 원격 증적을 기다린다. NU54DK에서 throw/unwind와 RTTI를 지원으로
+선언하려면 별도 target runtime/HIL과 memory budget 승인이 필요하다.
 
 ### 5.2 Digital I/O
 
 | API/영역 | 우선순위 | 현재 상태 | v0.1.0 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
-| `pinMode()` | P0 | 부분 지원 | 지원 | index 0/1에서 capability가 허용하는 input/pull/output만 thread에서 구현; open-drain, ISR, ownership 미구현 |
-| `digitalWrite()` | P0 | 부분 지원 | 지원 | `OUTPUT`으로 구성된 index 0에서 raw write HIL 통과; input pull 전환, ISR, ownership 미구현 |
-| `digitalRead()` | P0 | 부분 지원 | 지원 | LED readback self-check 후 버튼 loop 진입을 육안 확인; 정확한 RAM trace는 미회수, index 0/1 및 thread 문맥으로 제한 |
+| `pinMode()` | P0 | 부분 지원 | 지원 | 7개 descriptor에서 capability 기반 input/pull/output을 thread에서 구현; 신규 5개 pin HIL, open-drain, ISR, ownership 미검증 |
+| `digitalWrite()` | P0 | 부분 지원 | 지원 | `OUTPUT`으로 구성된 index 0에서 raw write HIL 통과; 추가 LED는 target build-only, input pull 전환·ISR·ownership 미구현 |
+| `digitalRead()` | P0 | 부분 지원 | 지원 | v0.1 LED/button HIL 통과; 추가 LED/버튼은 target build-only, thread 문맥으로 제한 |
 | `LED_BUILTIN` | P0 | 부분 지원 | 지원 | index 0, DTS `led0`, input+output; Blink HIL 통과, 정량 timing/voltage 미측정 |
 | `PIN_BUTTON0` | P0 | 부분 지원 | 부분 지원 | index 1, DTS `sw0`, input-only·interrupt; pull-up raw 버튼과 ISR physical edge HIL 통과, Core debounce는 제공하지 않음 |
-| 전체 `D0...Dn` 논리 pin map | P1 | 미구현 | 부분 지원 | 회로에 노출되고 안전하게 사용할 수 있는 pin만 정의 |
+| `PIN_LED2..3`, `PIN_BUTTON1..3` | P1 | 부분 지원 | 부분 지원 | DTS `led2..3`/`sw1..3`에서 생성; host·target build-only 통과, 신규 pin HIL 대기 |
+| `PIN_LED1` | P1 | 미구현 | 미구현 | DTS `led1` mapping은 검증하지만 P1.10을 `PIN_PWM0`이 소유하므로 명시적 ownership 전환 전 digital descriptor 없음 |
+| 전체 `D0...Dn` 논리 pin map | P1 | 미구현 | 부분 지원 | `D0`/`D1`만 호환 별칭; 일반 connector의 D2 이후는 ownership 승인 전 미정 |
 | `digitalPinToInterrupt()` | P0 | 지원 | 지원 | 유효 index와 `NOT_AN_INTERRUPT`, C++ 인수 1회 평가를 NU54DK target ztest로 검증 |
 | direct port/register access | 제외 | 하드웨어 미지원 | 하드웨어 미지원 | AVR/SAMD register 호환을 제공하지 않음; Zephyr/nrfx 직접 API는 별도 영역 |
 
@@ -181,12 +220,39 @@ M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP
 | `micros()` | P0 | 부분 지원 | 부분 지원 | GRTC startup offset을 뺀 64-bit cycle backend와 timer ISR 반복 읽기 HIL 통과; 외부 resolution·실제 wrap·PM 미검증 |
 | `delay()` | P0 | 의미 차이 | 의미 차이 | 64-bit deadline sleep, 20 ms/20,084 us 내부 계측과 worker 공존 HIL 통과; 긴 `INT32_MAX` chunk와 금지 문맥 진단 미검증 |
 | `delayMicroseconds()` | P0 | 의미 차이 | 의미 차이 | 1초 chunk busy-wait의 1,000 us 요청을 내부에서 1,026 us로 측정; ISR에서는 no-op이며 외부 정확도·긴 chunk 경계 미검증 |
-| `map()` | P1 | 부분 지원 | 지원 | ArduinoCore-API 구현을 생산 link하고 기본 음수 범위 변환 target test 통과; overflow 경계는 추가 회귀 대상 |
-| `constrain()`, `min()`, `max()`, `abs()` | P1 | 미구현 | 지원 | macro/template 충돌 및 type test |
-| `bitRead`, `bitWrite`, `bitSet`, `bitClear` | P1 | 미구현 | 지원 | compile 및 정수 폭 test |
-| `random()`, `randomSeed()` | P1 | 미구현 | 의미 차이 | PRNG 선택과 hardware entropy 사용 여부를 공개 |
+| `map()` | P1 | 부분 지원 | 지원 | ArduinoCore-API의 정수 구현과 정상·음수 범위 변환 검증; 입력 span 0과 signed 중간식 overflow는 지원하지 않음 |
+| `constrain()`, `min()`, `max()`, `abs()` | P1 | 부분 지원 | 지원 | host C++ compile/link·fixed-staging 의미 시험과 NU54 target compile 통과; 아래 부수 효과·signed minimum 경계 적용, target runtime/HIL 대기 |
+| `bitRead`, `bitWrite`, `bitSet`, `bitClear`, `bitToggle`, `bit()` | P1 | 부분 지원 | 지원 | host compile/link·constexpr·fixed-staging 의미 시험과 NU54 target compile 통과; 아래 bit 폭 경계 적용, target runtime/HIL 대기 |
+| `random()`, `randomSeed()` | P1 | 부분 지원 | 의미 차이 | full-period 32-bit LCG·원자적 상태·bias 없는 반열린 범위 구현; host 의미 시험과 NU54/QEMU cross-build 통과, target runtime/HIL 대기, entropy/암호 용도 아님 |
 | `pulseIn()`, `pulseInLong()` | P2 | 미구현 | 미구현 | timeout, scheduler 및 timing 오차 설계 후 추가 |
 | `shiftIn()`, `shiftOut()` | P2 | 미구현 | 미구현 | software timing 기반 reference implementation 검토 |
+
+`constrain(amt, low, high)`는 ArduinoCore-API 1.5.2의 매크로다. 선택 경로에 따라 `amt`를
+최대 세 번 평가하고 `low` 또는 `high`도 조건과 반환식에서 반복 평가할 수 있으므로 `i++`,
+함수 호출, volatile register read 같은 부수 효과 표현식을 전달하지 않는다. `low <= high`인
+정상 범위만 지원하며 역전된 경계의 반환값을 별도 정책으로 보정하지 않는다. C++ `abs()`는
+Core의 함수 template으로 인수를 한 번만 평가하고, `Arduino.h` 뒤의 `<cmath>`와
+`std::abs()`를 가리지 않는다. C 호출부의 호환 매크로는 반복 평가할 수 있다. 두 경로 모두
+signed 정수형 최솟값은 같은 형식의 양수로 나타낼 수 없으므로 지원 입력이 아니다.
+
+`map()`은 입력을 clamp하지 않고 범위 밖 값을 선형 외삽한다. `in_min != in_max`여야 하며
+`(x - in_min) * (out_max - out_min)`을 포함한 모든 `long` 중간식이 target의 signed 32-bit
+범위에 들어와야 한다. 이 조건을 벗어난 divide-by-zero와 signed overflow는 Core가 별도
+포화·오류 값으로 바꾸지 않는다.
+
+bit helper에는 0 이상인 index만 전달한다. `bitRead(value, index)`는 unsigned로 해석한
+`value` 형식의 bit 폭보다 index가 작아야 한다. `bitSet`, `bitClear`, `bitToggle`과
+`bitWrite`는 upstream 구현이 `1UL << index`를 사용하므로 index가 destination 폭과
+`unsigned long` 폭보다 모두 작아야 한다. `bit(index)`도 `unsigned long` 폭이 경계다.
+NU54DK의 32-bit ABI에서는 뒤 다섯 helper의 유효 index가 0~31이며, 64-bit destination을
+전달해도 32 이상 shift를 지원하지 않는다.
+
+`random(howbig)`은 `howbig <= 0`이면 0, `random(howsmall, howbig)`은
+`howsmall >= howbig`이면 `howsmall`을 반환한다. 정상 입력은 상한을 포함하지 않는다.
+`randomSeed(0)`은 현재 수열을 변경하지 않으며 같은 nonzero seed는 같은 수열을 만든다.
+상태 갱신은 Zephyr atomic CAS로 보호하지만 여러 thread의 호출 순서까지 재현 가능하다고
+보장하지 않는다. hardware entropy를 자동으로 섞지 않으므로 security token, key, nonce
+생성에는 사용하지 않는다.
 
 ### 5.4 Interrupt
 
@@ -207,7 +273,7 @@ M3 NU54DK HIL에서는 Arduino API만 사용하는 250 ms Blink와 `INPUT_PULLUP
 | `Print` | P0 | 지원 | 지원 | 문자열·16진·CRLF 출력과 partial write 오류 target test 통과 |
 | `Printable` | P0 | 지원 | 지원 | custom `printTo()` dispatch, byte 수 합산과 `println()` CRLF 의미를 NU54DK target ztest로 검증 |
 | `Stream` | P0 | 지원 | 지원 | 정수·실수 parsing, `find()`와 timeout target test 통과 |
-| `F()`/`__FlashStringHelper` | P1 | 미구현 | 의미 차이 | nRF54의 통합 address space에서 AVR flash 절약 의미가 동일하지 않음 |
+| `F()`/`__FlashStringHelper` | P1 | 의미 차이 | 의미 차이 | `String`/`Print` compile·link와 fixed-staging 출력 의미 시험, 기존 Print target 회귀 확인; nRF54에서는 AVR식 SRAM 절약을 제공하지 않음 |
 | `PROGMEM`, `PSTR` | 제외 | 하드웨어 미지원 | 하드웨어 미지원 | AVR Harvard memory model을 모사하지 않음; compile shim 여부는 별도 호환 정책 |
 
 ### 5.6 Serial
@@ -317,6 +383,14 @@ Full Zephyr 방식의 자유도를 유지하기 위해 사용자는 Sketch에서
 | internal/private API | 내부 Zephyr/NCS symbol | Core에서 가능한 한 사용 금지; 불가피하면 adapter 한 곳에 격리 |
 
 Arduino library가 이식성을 유지하려면 Portable Arduino API만 사용해야 한다. Zephyr/NCS 직접 API를 사용하는 Sketch는 NU54DK Core의 장점이지만 다른 Arduino Core로 그대로 이동할 수 있다고 보장하지 않는다.
+
+M14에서 `<nucode/Diagnostics.h>` 아래에 `Diagnostic`, subsystem/code token,
+`lastDiagnostic()`과 `formatDiagnostic()`을 추가했다. 이 API는 동적 할당이나 logging 없이
+`NU54:<subsystem>:<code>:driver=<n>:detail=<n>` ASCII 문자열을 만드는 순수 공개 값·포맷
+계약이다. GPIO, Serial, Wire, SPI와 Analog backend가 활성화된 build에서는 비공개 마지막
+오류를 공통 code와 driver errno로 읽는 비파괴 projection을 제공한다. Serial RX overflow의
+`detail`에는 누적 drop byte 수를 넣는다. 별도 오류 저장소가 없는 Time, 비활성 backend와
+오류 이력·event queue는 제공하지 않으며 target runtime/HIL 완료로 해석하지 않는다.
 
 ---
 

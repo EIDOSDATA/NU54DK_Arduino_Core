@@ -140,7 +140,7 @@ CI workflow는 별도 구현을 중복하지 않고 다음 script를 호출한�
 | [`verify_ci_lock.py`](../../tools/ci/verify_ci_lock.py) | lock, repository, workspace identity 및 cache key 검증 |
 | [`run_m12_gate.py`](../../tools/ci/run_m12_gate.py) | contract, host, docs, package, examples gate 실행 |
 | [`prepare_ncs_workspace.py`](../../tools/ci/prepare_ncs_workspace.py) | exact NCS west workspace 준비 |
-| [`run_zephyr_build.py`](../../tools/ci/run_zephyr_build.py) | 대표 Twister suite 4개 build-only 및 evidence 생성 |
+| [`run_zephyr_build.py`](../../tools/ci/run_zephyr_build.py) | 대표 Twister target suite build-only 및 evidence 생성(M14 production/HIL 포함) |
 
 대표 로컬 명령은 다음과 같다.
 

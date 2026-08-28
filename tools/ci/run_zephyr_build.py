@@ -27,6 +27,9 @@ SUITES = (
     ("m4_api_contract", "nucode.m4.api_contract"),
     ("m6_core_api", "nucode.m6.core_api"),
     ("m7_core_api", "nucode.m7.core_api"),
+    ("m14_core_contract", "nucode.m14.core_contract"),
+    ("m14_variant_contract", "nucode.m14.variant_contract"),
+    ("m14_pin_hil", "nucode.m14.pin_hil"),
 )
 WINDOWS_OUTDIR_MAX_LENGTH = 32
 
@@ -78,7 +81,7 @@ def validate_report(report_path: Path) -> None:
         raise BuildFailure(f"Twister suite 집합이 다릅니다: {sorted(actual)}")
 
 
-## @brief exact NCS workspace에서 고정된 네 suite만 빌드합니다.
+## @brief exact NCS workspace에서 고정된 target suite만 빌드합니다.
 def run_build(workspace: Path, outdir: Path, lock: dict[str, Any]) -> None:
     LOCK_MODULE.validate_workspace(workspace, lock)
     validate_outdir_path(outdir)
@@ -150,7 +153,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
         encoding="utf-8",
         newline="\n",
     )
-    print("M12_ZEPHYR_BUILD_PASS=4")
+    print(f"M12_ZEPHYR_BUILD_PASS={len(SUITES)}")
     return 0
 
 

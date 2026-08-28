@@ -45,14 +45,33 @@ class M12CiContractTests(unittest.TestCase):
         self.assertIn(self.lock["zephyr"]["revision"], windows)
         self.assertIn(self.lock["windows_toolchain"]["bundle_id"], windows)
 
-    ## @brief PR software workflow가 네 공개 gate를 자동 실행하는지 검증합니다.
+    ## @brief PR software workflow가 필수 공개 gate를 자동 실행하는지 검증합니다.
     def test_pull_request_workflow_has_required_gates(self) -> None:
         path = REPOSITORY / ".github" / "workflows" / "m12-software-gates.yml"
         text = path.read_text(encoding="utf-8")
         self.assertRegex(text, r"(?m)^\s*pull_request:\s*$")
-        for job in ("contract", "host", "documents", "package", "example-discovery"):
+        for job in (
+            "contract",
+            "host",
+            "core-semantic",
+            "documents",
+            "package",
+            "example-discovery",
+        ):
             self.assertRegex(text, rf"(?m)^  {re.escape(job)}:\s*$")
         self.assertNotIn("pull_request_target", text)
+
+    ## @brief M14 native 의미 시험이 실행 가능한 Ubuntu job에서 직접 수행되는지 검증합니다.
+    def test_m14_native_semantic_gate_runs_on_ubuntu(self) -> None:
+        path = REPOSITORY / ".github" / "workflows" / "m12-software-gates.yml"
+        text = path.read_text(encoding="utf-8")
+        job = text.split("\n  core-semantic:\n", 1)[1].split("\n  documents:\n", 1)[0]
+        self.assertIn("runs-on: ubuntu-24.04", job)
+        self.assertIn(
+            "python -m unittest -v tests.host.test_m14_core_contract",
+            job,
+        )
+        self.assertNotIn("continue-on-error", job)
 
     ## @brief PowerShell runtime 계약이 있는 host suite가 Windows에서 실행되는지 검증합니다.
     def test_host_gate_uses_windows_runner(self) -> None:
@@ -89,6 +108,21 @@ class M12CiContractTests(unittest.TestCase):
         self.assertIn("steps.lock.outputs.windows_cache_key", text)
         self.assertIn("defaults:\n      run:\n        shell: bash", text)
         self.assertNotIn("ACCEPT_JLINK_LICENSE", text)
+
+    ## @brief 고정 Nordic container가 M14 QEMU를 실제 실행하고 증적을 업로드하는지 검증합니다.
+    def test_reproducible_build_runs_m14_qemu_runtime_and_uploads_evidence(self) -> None:
+        path = REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
+        text = path.read_text(encoding="utf-8")
+        linux_job = text.split("\n  zephyr-build:\n", 1)[1].split(
+            "\n  arduino-build:\n", 1
+        )[0]
+        command = "python3 tools/ci/run_m14_qemu.py"
+        self.assertIn(command, linux_job)
+        self.assertIn('--workspace "$NCS_CI_WORKSPACE"', linux_job)
+        self.assertIn('--outdir "$M12_EVIDENCE/m14-qemu"', linux_job)
+        self.assertIn("path: ${{ env.M12_EVIDENCE }}", linux_job)
+        self.assertLess(linux_job.index(command), linux_job.index("actions/upload-artifact@"))
+        self.assertNotIn("continue-on-error", linux_job)
 
     ## @brief Windows Arduino 재현 build가 짧은 임시 경로와 실패 log를 보존하는지 검증합니다.
     def test_windows_arduino_build_uses_short_temp_and_preserves_failure_log(self) -> None:
@@ -174,6 +208,22 @@ class M12CiContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn('"USE_CCACHE=0"', source)
+
+    ## @brief 보드 없이 가능한 M14 production target 세 묶음이 원격 build gate에 포함되는지 검사합니다.
+    def test_zephyr_build_includes_m14_production_and_hil_images(self) -> None:
+        path = REPOSITORY / "tools" / "ci" / "run_zephyr_build.py"
+        spec = importlib.util.spec_from_file_location("nu54_m14_build_gate", path)
+        self.assertIsNotNone(spec)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        self.assertTrue(
+            {
+                ("m14_core_contract", "nucode.m14.core_contract"),
+                ("m14_variant_contract", "nucode.m14.variant_contract"),
+                ("m14_pin_hil", "nucode.m14.pin_hil"),
+            }.issubset(set(module.SUITES))
+        )
 
     ## @brief Windows build가 MAX_PATH 위험을 실행 전에 차단하는지 검증합니다.
     def test_zephyr_build_requires_short_windows_outdir(self) -> None:

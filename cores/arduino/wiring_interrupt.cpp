@@ -31,6 +31,14 @@ namespace
 	using nucode::arduino::internal::setGpioBackendError;
 	using nucode::arduino::internal::setGpioBackendSuccess;
 
+#if defined(NUM_PIN_ROLES)
+	/** @brief sparse Variant를 포함한 interrupt slot 개수입니다. */
+	constexpr std::size_t pin_slot_count = NUM_PIN_ROLES;
+#else
+	/** @brief 기존 연속형 시험 Variant의 interrupt slot 개수입니다. */
+	constexpr std::size_t pin_slot_count = NUM_DIGITAL_PINS;
+#endif
+
 	/** @brief callback slot에 저장된 사용자 함수 형식입니다. */
 	enum class CallbackKind : std::uint8_t
 	{
@@ -53,7 +61,7 @@ namespace
 		void *parameter;
 	};
 
-	InterruptSlot interrupt_slots[NUM_DIGITAL_PINS] = {};
+	InterruptSlot interrupt_slots[pin_slot_count] = {};
 	K_MUTEX_DEFINE(interrupt_configuration_mutex);
 
 	/**
@@ -200,7 +208,7 @@ namespace
 
 		const auto logical_pin = static_cast<std::size_t>(interrupt_number);
 		const PinDescription *description = pinDescription(logical_pin);
-		if ((description == nullptr) || (logical_pin >= NUM_DIGITAL_PINS))
+		if ((description == nullptr) || (logical_pin >= pin_slot_count))
 		{
 			setGpioBackendError(GpioError::invalid_pin);
 			return;
@@ -291,7 +299,7 @@ extern "C" void detachInterrupt(pin_size_t interrupt_number)
 
 	const auto logical_pin = static_cast<std::size_t>(interrupt_number);
 	const PinDescription *description = pinDescription(logical_pin);
-	if ((description == nullptr) || (logical_pin >= NUM_DIGITAL_PINS))
+	if ((description == nullptr) || (logical_pin >= pin_slot_count))
 	{
 		setGpioBackendError(GpioError::invalid_pin);
 		return;

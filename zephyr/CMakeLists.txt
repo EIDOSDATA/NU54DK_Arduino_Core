@@ -42,6 +42,8 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
       "${NUCODE_ARDUINO_API_ROOT}/api/Stream.cpp"
       "${NUCODE_ARDUINO_API_ROOT}/api/String.cpp"
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/api_compat.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/diagnostics.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/wiring_random.cpp"
     )
 
     if(CONFIG_COMMON_LIBC_MALLOC_ARENA_SIZE LESS 1)

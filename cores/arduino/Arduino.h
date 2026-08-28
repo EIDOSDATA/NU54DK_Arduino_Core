@@ -11,6 +11,8 @@
 #include <api/ArduinoAPI.h>
 #include <variant.h>
 
+#include "internal/ArduinoUtility.h"
+
 #ifdef __cplusplus
 
 #include <api/HardwareI2C.h>

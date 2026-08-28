@@ -2,13 +2,13 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M3 digital Variant와 M7 A0·PWM 역할 완료 |
+| 문서 상태 | M14 무보드 Variant 확장 완료; 신규 pin 실기 검증 대기 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 RTOS | Zephyr v4.4.0 |
 | 기준 타깃 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | 보드 정의 원본 | `board_package/NU54DK_Zephyr_DTS` |
-| 공개 역할 | digital 2개 + `A0` + `PIN_PWM0`; `NUM_PIN_ROLES=4` |
+| 공개 역할 | digital-capable 7개 + PWM-owned `PIN_LED1` + `A0` + `PIN_PWM0`; sparse ID 범위 10개 |
 
 ---
 
@@ -22,10 +22,12 @@
 - 잘못된 핀 조합과 필수 Devicetree 누락을 가능한 한 빌드 시점에 발견한다.
 - GPIO, ADC, PWM, UART, SPI 및 I2C 구현이 같은 핀 해석 규칙을 사용하도록 한다.
 
-이 문서는 장기 설계와 현재 구현 상태를 함께 관리한다. M3의 digital GPIO 범위는 논리 핀
-2개이며, M7은 별도 논리 역할 `A0`와 `PIN_PWM0`을 추가했다. 두 역할의 target 의미 시험과
-실제 driver 호출은 통과했지만 전체 D/A 핀, 일반 peripheral ownership과 임의 핀 전환은
-여전히 구현 범위가 아니다.
+이 문서는 장기 설계와 현재 구현 상태를 함께 관리한다. M14는 M3의 두 digital GPIO와
+M7의 `A0`·`PIN_PWM0` 숫자를 그대로 보존하면서, 보드 DTS의 `led0..3`·`sw0..3` alias를
+일곱 digital-capable pin과 하나의 PWM-owned 예약 역할로 매핑했다. 신규 descriptor와 sparse ID 거부 경로는
+host 및 NU54DK production target build-only로 검증했으며, 새 LED·버튼의 실제 전기 동작은
+보드가 준비되는 다음 HIL 단계에 남아 있다. 일반 connector GPIO, peripheral ownership과
+임의 pin 전환은 여전히 구현 범위가 아니다.
 
 ---
 
@@ -92,9 +94,10 @@ Variant는 물리 controller와 pin 번호를 직접 소유하지 않는다. 논
 3. 최초 PoC의 `LED_BUILTIN`은 반드시 `DT_ALIAS(led0)`에서 얻는다.
 4. `digitalWrite(HIGH)`와 `digitalRead()`는 Arduino의 전기적 High/Low 의미를 보존하기 위해 raw GPIO 값으로 처리한다.
 5. peripheral 충돌은 Variant가 런타임에 몰래 전환하지 않고, Devicetree overlay와 Kconfig에서 명시적으로 해결한다.
-6. `NUM_DIGITAL_PINS`는 digital descriptor 수 2를 유지하고, A0와 PWM을 포함한 공개 역할 수는
-   `NUM_PIN_ROLES=4`로 별도 표시한다.
-7. `LED_BUILTIN` P2.9는 digital GPIO이며 PWM 역할이 아니다. `analogWrite()`는
+6. v0.1의 `LED_BUILTIN=0`, `PIN_BUTTON0=1`, `PIN_A0=2`, `PIN_PWM0=3` 숫자를 보존한다.
+7. `NUM_DIGITAL_PINS=10`은 sparse digital ID 순회의 상한, `NUM_DIGITAL_CAPABLE_PINS=7`은
+   실제 descriptor 수, `NUM_PIN_ROLES=10`은 전체 공개 역할 범위다.
+8. `LED_BUILTIN` P2.9는 digital GPIO이며 PWM 역할이 아니다. `analogWrite()`는
    `PIN_PWM0`/`PIN_PWM_LED`만 받는다.
 
 ### 3.2 M3 구현 기준선
@@ -104,15 +107,45 @@ Variant는 물리 controller와 pin 번호를 직접 소유하지 않는다. 논
 | 0 | `LED_BUILTIN` | `DT_ALIAS(led0)` | digital input + output |
 | 1 | `PIN_BUTTON0` | `DT_ALIAS(sw0)` | digital input only |
 
-`NUM_DIGITAL_PINS`는 2다. descriptor는 `GPIO_DT_SPEC_GET()`으로 alias의 controller, pin과
-flag를 얻으므로 Variant에 실제 nRF GPIO 번호를 복제하지 않는다. `led0`와 `sw0` alias가
-없거나 활성 GPIO spec을 제공하지 않으면 compile 단계에서 실패한다.
+M3 당시 실제 digital descriptor는 2개였다. M14 이후 이 개수는
+`NUM_DIGITAL_CAPABLE_PINS=7`로 표현하고, `NUM_DIGITAL_PINS=10`은 sparse ID 순회 상한으로
+사용한다. descriptor는 `GPIO_DT_SPEC_GET()`으로 alias의 controller, pin과 flag를 얻으므로
+Variant에 실제 nRF GPIO 번호를 복제하지 않는다. `led0`와 `sw0` alias가 없거나 활성 GPIO
+spec을 제공하지 않으면 compile 단계에서 실패한다.
 
 M3 공개 GPIO API는 thread 문맥에서만 동작한다. ISR 호출은 수행하지 않고 `digitalRead()`는
 `LOW`를 반환한다. pin mode, output latch, 마지막 오류와 driver 오류는 Core 내부 atomic
 상태로 보존하지만 Sketch에 공개하는 진단 API는 아직 없다.
 
-### 3.3 M7 논리 역할 기준선
+### 3.3 M14 digital 확장 기준선
+
+M14는 보드 DTS에 이미 존재하는 표준 alias만 추가로 공개한다. 숫자 2와 3은 기존 A0/PWM
+계약이고 숫자 4의 LED1은 같은 PWM 자원이 소유하므로 digital table의 hole로 남긴다.
+
+| 논리 ID | 공개 이름 | Devicetree 원본 | capability |
+| ---: | --- | --- | --- |
+| 0 | `LED_BUILTIN`, `PIN_LED0`, `D0` | `DT_ALIAS(led0)` | input + output + interrupt |
+| 1 | `PIN_BUTTON0`, `D1` | `DT_ALIAS(sw0)` | input + interrupt |
+| 4 | `PIN_LED1` | `DT_ALIAS(led1)` | PWM-owned 예약; digital 미지원 |
+| 5 | `PIN_LED2` | `DT_ALIAS(led2)` | input + output + interrupt |
+| 6 | `PIN_LED3` | `DT_ALIAS(led3)` | input + output + interrupt |
+| 7 | `PIN_BUTTON1` | `DT_ALIAS(sw1)` | input + interrupt |
+| 8 | `PIN_BUTTON2` | `DT_ALIAS(sw2)` | input + interrupt |
+| 9 | `PIN_BUTTON3` | `DT_ALIAS(sw3)` | input + interrupt |
+
+`variants/nu54dk/digital_pins.inc`는 Arduino 논리 이름, DTS alias와 capability class만
+소유한다. `variant.cpp`가 이 X-macro를 읽어 `GPIO_DT_SPEC_GET(DT_ALIAS(...), gpios)`로
+descriptor를 생성한다. controller, pin 번호와 flag는 고정 보드 DTS에서만 가져온다.
+`tools/variant/verify_nu54dk_pinmap.py`는 같은 목록과 고정 DTS를 대조하고 alias 누락,
+중복 물리 GPIO, v0.1 숫자 변경과 Variant의 물리 pin 복제를 거부한다.
+
+확장 범위는 고정 DTS가 GPIO 역할로 명시한 `led0..3`·`sw0..3`뿐이다. `uart20`, `i2c22`,
+`spi00` pinctrl의 신호는 활성 peripheral이 소유하거나 profile overlay에서 선택하는 자원이므로
+동일 핀을 digital ID로 중복 공개하지 않았다. 보드의 P2/P4 header 전체도 GPIO mapping node가
+없으므로 회로표의 물리 번호를 Core에 다시 적어 넣지 않는다. 향후 일반 connector pin은
+보드 DTS가 명시적인 mapping/ownership 정보를 제공한 뒤 추가한다.
+
+### 3.4 M7 논리 역할 기준선
 
 | 논리 index | 공개 이름 | Devicetree 원본 | M7 계약 |
 | ---: | --- | --- | --- |
@@ -123,21 +156,24 @@ M3 공개 GPIO API는 thread 문맥에서만 동작한다. ISR 호출은 수행�
 상수가 아니다. Core overlay는 ADC용 `nucode,arduino-adc-input` node와 PWM 역할을 chosen으로 선택한다.
 PWM chosen은 보드의 `pwm_led1` node를 가리키며, 이 node는 `pwm-led0` alias의 대상과 같다.
 
-`NUM_DIGITAL_PINS=2`, `NUM_ANALOG_INPUTS=1`, `NUM_ANALOG_OUTPUTS=1`,
-`NUM_PIN_ROLES=4`다. index 2와 3은 `pinMode()`·`digitalRead()`·`digitalWrite()`의 digital
-descriptor 범위가 아니다.
+`NUM_DIGITAL_PINS=10`, `NUM_DIGITAL_CAPABLE_PINS=7`, `NUM_ANALOG_INPUTS=1`,
+`NUM_ANALOG_OUTPUTS=1`, `NUM_PIN_ROLES=10`이다. index 2, 3, 4는 sparse ID 범위 안에 있지만
+digital descriptor가 없으므로 `pinMode()`·`digitalRead()`·`digitalWrite()`가 안전하게
+거부한다. `PIN_LED1=4`와 `PIN_PWM0=3`은 같은 P1.10 역할을 이름별로 설명하지만, 현재
+ownership은 PWM에 고정한다.
 
-### 3.4 결정 대기 항목
+### 3.5 결정 대기 항목
 
 다음 내용은 실제 보드 커넥터의 사용자 표기와 Arduino 호환성 검토 후 확정한다.
 
-- 전체 `D0...Dn` 순서
+- `D2...Dn`으로 일반 connector pin을 추가할 순서
 - `A1...An` 추가 순서
 - `SDA`, `SCL`, `MOSI`, `MISO`, `SCK`, `SS`의 논리 번호
 - NU54DK 전용 connector node의 이름과 binding 방식
 - 현재 A0/PWM 역할 밖의 동일 물리 핀을 digital, ADC 또는 PWM 논리 번호로 중복 노출할지 여부
 
-따라서 최초 PoC 문서나 코드가 임의의 `D0` 전체 테이블을 확정해서는 안 된다.
+따라서 M14의 `D0`/`D1`은 v0.1 역할의 호환 별칭일 뿐이며, 나머지 connector를 임의의
+`D2...Dn` 전체 테이블로 확대 해석해서는 안 된다.
 
 ---
 
@@ -154,9 +190,10 @@ variants/nu54dk/variant.h
 책임은 다음과 같다.
 
 - Arduino Sketch에 노출할 논리 상수 선언
-- `LED_BUILTIN`, `PIN_BUTTON0`, `PIN_A0`/`A0`, `PIN_PWM0`/`PIN_PWM_LED` 선언
-- `NUM_DIGITAL_PINS=2`, `NUM_ANALOG_INPUTS=1`, `NUM_ANALOG_OUTPUTS=1`,
-  `NUM_PIN_ROLES=4` 선언
+- `LED_BUILTIN`, `PIN_LED0..3`, `PIN_BUTTON0..3`, `D0`/`D1` 선언
+- `PIN_A0`/`A0`, `PIN_PWM0`/`PIN_PWM_LED`의 v0.1 숫자 보존
+- `NUM_DIGITAL_PINS=10`, `NUM_DIGITAL_CAPABLE_PINS=7`,
+  `NUM_ANALOG_INPUTS=1`, `NUM_ANALOG_OUTPUTS=1`, `NUM_PIN_ROLES=10` 선언
 - `AR_DEFAULT`와 같은 값의 설명용 별칭 `AR_INTERNAL` 선언
 - Variant descriptor 조회 함수의 내부 선언 연결
 
@@ -177,10 +214,11 @@ variants/nu54dk/variant.cpp
 - 필수 alias와 node에 대한 compile-time assertion 제공
 - Variant 초기화 hook가 필요할 때 최소한의 board-specific 동작 제공
 
-M3 descriptor는 `DT_ALIAS(led0)`와 `DT_ALIAS(sw0)`를 사용한다. LED descriptor에는
-digital input/output capability를, 버튼 descriptor에는 digital input capability만 둔다.
-따라서 버튼을 `OUTPUT`으로 바꾸거나 `digitalWrite()`로 구동하려는 요청은 no-op으로
-거부된다.
+M14 descriptor는 `digital_pins.inc`의 `led0..3`·`sw0..3` alias를 사용한다. LED
+descriptor에는 digital input/output/interrupt capability를, 버튼 descriptor에는 digital
+input/interrupt capability만 둔다. 따라서 버튼을 `OUTPUT`으로 바꾸거나
+`digitalWrite()`로 구동하려는 요청은 no-op으로 거부된다. A0/PWM slot의 조회도
+`nullptr`를 반환한다.
 
 ### 4.3 `pin_description.h`
 
@@ -204,19 +242,24 @@ PinDescription
 
 ### 4.4 보드 패키지
 
-보드 패키지는 다음 alias를 M3에 제공해야 한다.
+보드 패키지는 다음 alias를 M14에 제공해야 한다.
 
 ~~~dts
 / {
     aliases {
         led0 = &led0;
+        led1 = &led1;
+        led2 = &led2;
+        led3 = &led3;
         sw0 = &button0;
+        sw1 = &button1;
+        sw2 = &button2;
+        sw3 = &button3;
     };
 };
 ~~~
 
-위 DTS는 관계를 설명하는 축약 예시이며 실제 label은 보드 패키지가 소유한다. 현재 보드
-정의에서 `led0`는 NU54DK 사용자 LED 1을, `sw0`는 사용자 버튼 1을 가리킨다. Core는 두
+위 DTS는 관계를 설명하는 축약 예시이며 실제 label은 보드 패키지가 소유한다. Core는 여덟
 alias의 실제 GPIO 숫자를 알 필요가 없다.
 
 ### 4.5 Build Adapter
@@ -249,10 +292,12 @@ Zephyr device + GPIO pin
 
 예를 들어 `LED_BUILTIN`이 논리 index 0이라고 하더라도 이것이 `P0.0`을 의미하지 않는다. 그 index의 descriptor가 `DT_ALIAS(led0)`에서 생성된 GPIO를 가리킨다는 뜻이다.
 
-현재 공개한 index 0과 1은 `LED_BUILTIN`과 `PIN_BUTTON0`이라는 digital 역할 이름으로만
-노출한다. index 2와 3은 각각 `A0`와 `PIN_PWM0`이라는 peripheral 역할이며 digital pin 수에
-포함하지 않는다. 이 네 역할을 아직 승인되지 않은 `D0...Dn` 전체 번호표로 확대 해석하지
-않는다.
+현재 digital-capable ID는 0, 1, 5..9다. index 2와 3은 각각 `A0`와 `PIN_PWM0`, index 4는
+PWM-owned `PIN_LED1` 역할이다. `NUM_DIGITAL_PINS=10`은 연속 배열의 descriptor 개수가
+아니라 순회 가능한 sparse ID 상한이다. 실제 digital descriptor 개수는
+`NUM_DIGITAL_CAPABLE_PINS=7`이고,
+각 ID는 `digitalPinIsValid()` 또는 capability 조회로 구분한다. `D0`/`D1` 이외의 D 번호는
+아직 승인되지 않았다.
 
 ### 5.2 `LED_BUILTIN`
 
@@ -281,7 +326,7 @@ debounce, interrupt와 장시간 반복 입력은 이 결과에 포함하지 않
 
 ### 5.4 `PIN_A0`/`A0`
 
-- 논리 index는 2이며 `NUM_DIGITAL_PINS` 범위 밖이다.
+- 논리 index는 2이며 sparse ID 범위 안이지만 digital descriptor는 없다.
 - `nucode,arduino-adc` chosen의 단일 `io-channels` spec을 사용한다.
 - NU54DK 기준 물리 경로는 P1.12/SAADC channel 5다.
 - Core overlay가 보드의 미지원 gain 1/6을 nRF54L15용 `ADC_GAIN_1_4`로 override한다.
@@ -517,7 +562,8 @@ Arduino builder의 기본 profile이 선택한 역할과 함께 `y`로 켠다.
 - [ ] 동일 source로 pristine build와 incremental build 결과가 일치한다.
 - [ ] ISR 거부, 동시 호출과 오류 상태를 자동 회귀 시험으로 고정한다.
 - [ ] input `digitalWrite()`, peripheral ownership와 interrupt 정책을 구현·검증한다.
-- [ ] 전체 D/A 순서를 추가하기 전에 connector 및 중복 mapping 정책이 문서로 승인된다.
+- [x] DTS alias 기반 onboard connector 역할과 sparse ID 중복 정책을 구현·자동 검증한다.
+- [ ] 일반 connector의 `D2...Dn` 순서를 추가하기 전에 ownership 정책을 승인한다.
 
 M7 역할의 확보된 실행 증거는 다음과 같다.
 
@@ -551,8 +597,13 @@ M3에서 통과한 범위는 다음과 같다.
 2. `PIN_BUTTON0`을 `INPUT_PULLUP`으로 설정하고 해제 `HIGH`, 누름 `LOW` raw 의미를
    확인했다.
 3. 버튼을 누르면 LED가 켜지고 해제하면 꺼지는 연동을 확인했다.
-4. `NUM_DIGITAL_PINS`를 invalid pin으로 사용한 호출 전후에 LED 상태가 유지되는
-   self-check를 포함했다.
+4. 당시 `NUM_DIGITAL_PINS=2`를 invalid pin으로 사용한 호출 전후에 LED 상태가 유지되는
+   self-check를 포함했다. M14 이후 범위 밖 sentinel은 `NUM_PIN_ROLES=10`이다.
+
+M14 무보드 검증은 `led0..3`·`sw0..3`의 여덟 DTS alias mapping이 서로 다른 GPIO spec인지,
+그중 일곱 descriptor가 생성되는지, A0/PWM/PWM-owned LED1 slot의 digital 거부와 production
+target link를 확인했다. 신규 `PIN_LED2..3`과 `PIN_BUTTON1..3`의 출력·입력·interrupt 실제
+동작은 보드가 준비된 뒤 HIL로 확인한다.
 
 M6는 GPIO emulator로 raw edge ISR 의미를 자동 검증하고, 실제 P1.13 active-low 버튼의
 FALLING/RISING/CHANGE도 DAPLink sequence 25/COM10에서 확인했다. 외부 logic
@@ -586,7 +637,7 @@ A0 raw=3176과 PWM duty 0/128/255 driver 호출을 확인했다. 이 결과는 A
 - 임의의 nRF 물리 pin 번호를 Arduino pin으로 직접 전달하는 API
 - 솔더브리지 자동 감지
 - overlay 없이 peripheral route를 자동 변경하는 기능
-- 아직 승인되지 않은 전체 D0 및 A1 이후 번호표
+- 아직 승인되지 않은 D2 이후 일반 connector 번호표와 A1 이후 번호표
 - USB pin 또는 USB CDC Variant
 
 nRF54L15 target에는 native USB peripheral이 없다. NU54DK의 USB connector와 CMSIS-DAP 인터페이스 MCU를 target의 Arduino USB pin이나 USB device 기능으로 표현하지 않는다.
@@ -611,17 +662,24 @@ LED_BUILTIN
 PIN_BUTTON0
         = DT_ALIAS(sw0)
 
+PIN_LED2..3 / PIN_BUTTON1..3
+        = DT_ALIAS(led2..3) / DT_ALIAS(sw1..3)
+
+PIN_LED1
+        = DT_ALIAS(led1), PIN_PWM0 ownership으로 digital 미지원
+
 M7 A0
         = nucode,arduino-adc chosen
 
 M7 PWM
         = nucode,arduino-pwm chosen
 
-digital 핀 수 / 전체 역할 수
-        = 2 / 4
+digital ID 상한 / 실제 descriptor 수 / 전체 역할 범위
+        = 10 / 7 / 10
 ~~~
 
 이 분리를 유지하면 보드 회로 변경과 Arduino API 변경을 서로 독립적으로 관리할 수 있으며,
-Full Zephyr 빌드가 제공하는 Devicetree 검증을 그대로 활용할 수 있다. M3 결과는 두 digital
-핀의 기준선이고 M7의 A0/PWM 역할은 승인된 target·실기 범위에서 검증됐다. 네 역할은 전체
-Arduino 핀맵이나 일반 ownership 완료 판정이 아니다.
+Full Zephyr 빌드가 제공하는 Devicetree 검증을 그대로 활용할 수 있다. M3의 두 pin과 M7의
+A0/PWM 숫자 계약은 보존했고, M14는 같은 DTS에서 다섯 digital descriptor를 더 생성한다.
+신규 pin의 무보드 계약은 검증됐지만 실기 HIL과 일반 connector ownership 완료 판정은
+아니다.

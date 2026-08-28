@@ -52,6 +52,22 @@ jobs:
       - name: Run host unit tests
         run: python tools/ci/run_m12_gate.py host
 
+  core-semantic:
+    name: M14 Core native semantic runtime
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact source and board package
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: Set up Python 3.12.10
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Execute M14 native Core semantics
+        run: python -m unittest -v tests.host.test_m14_core_contract
+
   documents:
     name: UTF-8 and local links
     runs-on: ubuntu-24.04

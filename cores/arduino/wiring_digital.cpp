@@ -26,6 +26,14 @@ namespace
 	using nucode::arduino::internal::PinDescription;
 	using nucode::arduino::internal::pinDescription;
 
+#if defined(NUM_PIN_ROLES)
+	/** @brief sparse Variant를 포함한 논리 pin 상태 slot 개수입니다. */
+	constexpr std::size_t pin_slot_count = NUM_PIN_ROLES;
+#else
+	/** @brief 기존 연속형 시험 Variant의 논리 pin 상태 slot 개수입니다. */
+	constexpr std::size_t pin_slot_count = NUM_DIGITAL_PINS;
+#endif
+
 	/**
 	 * @brief Core가 성공적으로 적용한 Arduino pin mode입니다.
 	 */
@@ -47,7 +55,7 @@ namespace
 		atomic_t output_latch;
 	};
 
-	PinRuntimeState pin_runtime_states[NUM_DIGITAL_PINS] = {};
+	PinRuntimeState pin_runtime_states[pin_slot_count] = {};
 	atomic_t last_gpio_error = ATOMIC_INIT(static_cast<atomic_val_t>(GpioError::none));
 	atomic_t last_gpio_driver_error = ATOMIC_INIT(0);
 
@@ -93,7 +101,7 @@ namespace
 	{
 		const auto logical_pin = static_cast<std::size_t>(pin);
 		description = pinDescription(logical_pin);
-		if ((description == nullptr) || (logical_pin >= NUM_DIGITAL_PINS))
+		if ((description == nullptr) || (logical_pin >= pin_slot_count))
 		{
 			recordError(GpioError::invalid_pin);
 			state = nullptr;
@@ -199,7 +207,7 @@ namespace nucode::arduino::internal
 
 	bool isPinConfiguredForInput(std::size_t logical_pin) noexcept
 	{
-		if (logical_pin >= NUM_DIGITAL_PINS)
+		if (logical_pin >= pin_slot_count)
 		{
 			return false;
 		}

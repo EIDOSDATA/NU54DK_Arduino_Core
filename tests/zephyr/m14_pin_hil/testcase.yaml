@@ -1,0 +1,20 @@
+tests:
+  nucode.m14.pin_hil:
+    tags:
+      - nucode
+      - arduino
+      - m14
+      - hil
+      - gpio
+      - interrupt
+    harness: console
+    harness_config:
+      type: multi_line
+      regex:
+        - "NUCODE_M14_PIN_HIL_READY:schema=1:action_timeout_ms=30000"
+        - "NUCODE_M14_PIN_HIL_PASS"
+    sysbuild: false
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk

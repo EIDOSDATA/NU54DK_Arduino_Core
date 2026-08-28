@@ -1,0 +1,15 @@
+tests:
+  nucode.m14.cpp_policy:
+    tags:
+      - nucode
+      - arduino
+      - m14
+      - cpp
+      - exception
+      - rtti
+    harness: ztest
+    sysbuild: false
+    platform_allow:
+      - qemu_cortex_m3
+    integration_platforms:
+      - qemu_cortex_m3
