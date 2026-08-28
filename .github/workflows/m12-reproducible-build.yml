@@ -91,14 +91,11 @@ jobs:
       - name: Verify lock and derive cache key
         id: lock
         run: python tools/ci/verify_ci_lock.py --github-output
-      - name: Restore exact Windows NCS and toolchain
+      - name: Restore Windows Builder cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
-          path: |
-            ${{ env.NUCODE_NCS_INSTALL_ROOT }}
-            ${{ env.NUCODE_PREREQUISITE_STATE_ROOT }}
-            ~\AppData\Local\NUCODE\NU54DK_Arduino_Core
-          key: ${{ steps.lock.outputs.windows_cache_key }}
+          path: ~\AppData\Local\NUCODE\NU54DK_Arduino_Core
+          key: ${{ steps.lock.outputs.windows_cache_key }}-builder-v1
       - name: Install or verify exact Nordic prerequisites
         shell: powershell
         run: >-

@@ -143,9 +143,16 @@ class M12CiContractTests(unittest.TestCase):
         self.assertIn("NCS_CI_WORKSPACE: /tmp/nu54dk-ncs-v3.4.0", linux_job)
         self.assertNotIn("/../", linux_job)
         self.assertIn("NUCODE_NCS_INSTALL_ROOT: D:\\ncs", windows_job)
-        self.assertIn("${{ env.NUCODE_NCS_INSTALL_ROOT }}", windows_job)
-        self.assertIn("${{ env.NUCODE_PREREQUISITE_STATE_ROOT }}", windows_job)
+        self.assertIn('-NcsRoot "$env:NUCODE_NCS_INSTALL_ROOT"', windows_job)
+        self.assertIn('--workspace "$env:NUCODE_NCS_ROOT"', windows_job)
         self.assertNotIn("\\..\\", windows_job)
+        cache_step = windows_job.split(
+            "- name: Restore Windows Builder cache", 1
+        )[1].split("\n      - name:", 1)[0]
+        self.assertIn("~\\AppData\\Local\\NUCODE\\NU54DK_Arduino_Core", cache_step)
+        self.assertIn("steps.lock.outputs.windows_cache_key }}-builder-v1", cache_step)
+        self.assertNotIn("NUCODE_NCS_INSTALL_ROOT", cache_step)
+        self.assertNotIn("NUCODE_PREREQUISITE_STATE_ROOT", cache_step)
 
     ## @brief HIL workflow가 PR에서 실행되지 않고 secret·장치 lock을 요구하는지 검증합니다.
     def test_hil_is_manual_self_hosted_and_locked(self) -> None:
