@@ -566,6 +566,8 @@ class M10PrerequisiteContractTests(unittest.TestCase):
         self.assertIn('set "PYTHONHOME="', launcher)
         self.assertIn('set "PYTHONPATH="', launcher)
         self.assertIn('set "PYTHONNOUSERSITE=1"', launcher)
+        self.assertIn('set "PATH=%NU54_PYTHON_DIR%;%PATH%"', launcher)
+        self.assertIn('"%NU54_PYTHON%" -I ', launcher)
 
 
 if __name__ == "__main__":

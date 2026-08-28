@@ -25,5 +25,8 @@ if not defined NU54_PYTHON (
   exit /b 2
 )
 
-"%NU54_PYTHON%" "%~dp0src\nu54_builder.py" %*
+for %%I in ("%NU54_PYTHON%") do set "NU54_PYTHON_DIR=%%~dpI"
+set "PATH=%NU54_PYTHON_DIR%;%PATH%"
+
+"%NU54_PYTHON%" -I "%~dp0src\nu54_builder.py" %*
 exit /b %errorlevel%
