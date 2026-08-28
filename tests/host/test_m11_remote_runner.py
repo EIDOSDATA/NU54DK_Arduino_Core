@@ -88,6 +88,11 @@ class M11RemoteRunnerContractTests(unittest.TestCase):
         )
         self.assertEqual(completed.returncode, 0, completed.stderr)
 
+    def test_01b_runner_has_windows_powershell_utf8_signature(self) -> None:
+        """! @brief 한글 RC 실행기를 영문 Windows PowerShell 5.1도 UTF-8로 읽게 합니다. """
+
+        self.assertTrue(RUNNER.read_bytes().startswith(b"\xef\xbb\xbf"))
+
     def test_02_ssh_authentication_and_host_key_are_fail_closed(self) -> None:
         """! @brief password fallback과 확인하지 않은 host key를 허용하지 않습니다. """
 
