@@ -90,6 +90,17 @@ class M12CiContractTests(unittest.TestCase):
         self.assertIn("defaults:\n      run:\n        shell: bash", text)
         self.assertNotIn("ACCEPT_JLINK_LICENSE", text)
 
+    ## @brief Windows Arduino 재현 build가 짧은 임시 경로와 실패 log를 보존하는지 검증합니다.
+    def test_windows_arduino_build_uses_short_temp_and_preserves_failure_log(self) -> None:
+        path = REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
+        text = path.read_text(encoding="utf-8")
+        self.assertIn("NUCODE_CI_TEMP: D:\\t", text)
+        self.assertIn("$env:TEMP = $env:NUCODE_CI_TEMP", text)
+        self.assertIn("$env:TMP = $env:NUCODE_CI_TEMP", text)
+        self.assertIn("$ErrorActionPreference = 'Continue'", text)
+        self.assertIn("$commandExitCode = $LASTEXITCODE", text)
+        self.assertIn("arduino-build.log", text)
+
     ## @brief HIL workflow가 PR에서 실행되지 않고 secret·장치 lock을 요구하는지 검증합니다.
     def test_hil_is_manual_self_hosted_and_locked(self) -> None:
         path = REPOSITORY / ".github" / "workflows" / "m12-nu54dk-hil.yml"

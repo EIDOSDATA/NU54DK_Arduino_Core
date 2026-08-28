@@ -67,6 +67,7 @@ jobs:
       NUCODE_TOOLCHAIN_ROOT: ${{ github.workspace }}\..\ncs\toolchains\dcbdc366a1
       NUCODE_PREREQUISITE_STATE_ROOT: ${{ github.workspace }}\..\nu54-prerequisites
       M12_EVIDENCE: ${{ github.workspace }}\m12-evidence
+      NUCODE_CI_TEMP: D:\t
     steps:
       - name: Checkout exact source and board package
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -105,11 +106,18 @@ jobs:
         shell: powershell
         run: |
           New-Item -ItemType Directory -Path $env:M12_EVIDENCE -Force | Out-Null
+          New-Item -ItemType Directory -Path $env:NUCODE_CI_TEMP -Force | Out-Null
+          $env:TEMP = $env:NUCODE_CI_TEMP
+          $env:TMP = $env:NUCODE_CI_TEMP
           $cli = (Get-Command arduino-cli.exe).Source
           & $cli version 2>&1 | Tee-Object -FilePath (Join-Path $env:M12_EVIDENCE 'arduino-cli-version.txt')
+          $previousErrorAction = $ErrorActionPreference
+          $ErrorActionPreference = 'Continue'
           python .\tests\arduino-cli\run_smoke.py --cli $cli --tests blink m6 m7 examples 2>&1 |
             Tee-Object -FilePath (Join-Path $env:M12_EVIDENCE 'arduino-build.log')
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $commandExitCode = $LASTEXITCODE
+          $ErrorActionPreference = $previousErrorAction
+          if ($commandExitCode -ne 0) { exit $commandExitCode }
       - name: Upload Arduino build evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
