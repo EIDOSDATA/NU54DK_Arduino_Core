@@ -215,8 +215,8 @@ class M11RemoteRunnerContractTests(unittest.TestCase):
                 "schema_version": 1,
                 "milestone": "M11",
                 "kind": "release-candidate-plan",
-                "version": "0.1.0-rc.1",
-                "release_tag": "v0.1.0-rc.1",
+                "version": "0.1.0-rc.2",
+                "release_tag": "v0.1.0-rc.2",
                 "source_repository": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core",
                 "core_revision": "1" * 40,
                 "board_revision": "2" * 40,
@@ -230,7 +230,7 @@ class M11RemoteRunnerContractTests(unittest.TestCase):
             escaped_root = str(root).replace("'", "''")
             escaped_plan = str(plan_path).replace("'", "''")
             body = (
-                "$script:ExpectedVersion='0.1.0-rc.1';"
+                "$script:ExpectedVersion='0.1.0-rc.2';"
                 "$script:ExpectedArtifactKeys=@('archive','checksums','index','licenses',"
                 "'manifest','notices','sbom');"
                 f"$result=Get-ReleaseBundle -PlanPath '{escaped_plan}' -Root '{escaped_root}';"
@@ -393,7 +393,7 @@ class M11RemoteRunnerContractTests(unittest.TestCase):
             escaped_output = str(output).replace("'", "''")
             body = (
                 "$script:CurrentRunId='m11-fixture';"
-                "$script:Plan=[pscustomobject]@{version='0.1.0-rc.1';"
+                "$script:Plan=[pscustomobject]@{version='0.1.0-rc.2';"
                 "core_revision='1111111111111111111111111111111111111111';"
                 "board_revision='2222222222222222222222222222222222222222';"
                 "runtime_payload_sha256=('3'*64)};"

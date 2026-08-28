@@ -149,6 +149,23 @@ IDE 또는 설치 환경이 post-install을 실행하지 않았거나 설치가 
 Arduino data directory를 변경했다면 위 경로의 `%LOCALAPPDATA%\Arduino15` 대신 실제 Arduino
 data directory를 사용한다. 같은 script를 다시 실행해도 이미 검증된 prerequisite는 재사용한다.
 
+### 6.1 post-install 출력 인코딩 계약
+
+Arduino IDE 2.x는 platform 설치 script의 출력과 완료 결과를 backend gRPC 문자열로
+전달한다. 따라서 Windows의 활성 code page와 무관하게 다음 계약을 지켜야 한다.
+
+- `post_install.bat`은 PowerShell 실행 전에 console code page를 UTF-8로 고정한다.
+- PowerShell runner는 `[Console]::InputEncoding`, `[Console]::OutputEncoding`과 native
+  command에 사용하는 `$OutputEncoding`을 BOM 없는 UTF-8로 고정한다.
+- stdout/stderr에 기록하는 모든 문자열은 strict UTF-8 decode가 가능해야 한다.
+- host test의 byte 검사와 실제 Arduino IDE bundled backend 설치 완료 응답을 모두
+  검증한다. Arduino CLI direct install 성공이나 IDE의 index 검색만으로 이 gate를 대신하지
+  않는다.
+
+이 계약은 rc.1 공개 뒤 실제 IDE 설치에서 발견한
+`grpc: error while marshalling: string field contains invalid UTF-8` 재발을 막기 위해
+`v0.1.0-rc.2`부터 적용한다. 당시에는 설치가 완료됐지만 IDE가 실패로 표시할 수 있었다.
+
 ---
 
 ## 7. Arduino CLI 설치

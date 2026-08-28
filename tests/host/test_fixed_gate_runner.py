@@ -51,7 +51,7 @@ class FixedGateRunnerTests(unittest.TestCase):
     def make_platform(self, parent: Path) -> tuple[Path, dict[str, str]]:
         root = parent / f"nucode-nu54dk-zephyr-{MODULE.RELEASE_VERSION}"
         root.mkdir()
-        payload = b"name=NUCODE\nversion=0.1.0-rc.1\n"
+        payload = f"name=NUCODE\nversion={MODULE.RELEASE_VERSION}\n".encode("utf-8")
         payload_digest = hashlib.sha256(payload).hexdigest()
         runtime_digest = MODULE.runtime_payload_sha256(
             (("platform.txt", payload, 0o644),)

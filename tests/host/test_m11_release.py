@@ -53,7 +53,7 @@ class M11ReleaseTests(unittest.TestCase):
             ),
         ):
             cls.paths = RELEASE.prepare_rc(
-                REPO_ROOT, cls.artifact_root, "0.1.0-rc.1", cls.commit
+                REPO_ROOT, cls.artifact_root, "0.1.0-rc.2", cls.commit
             )
         cls.plan = RELEASE.validate_plan(cls.paths["plan"])
 
@@ -409,17 +409,17 @@ class M11ReleaseTests(unittest.TestCase):
             )
         manifest = RELEASE.PACKAGE.validate_archive(
             self.paths["archive"],
-            expected_version="0.1.0-rc.1",
+            expected_version="0.1.0-rc.2",
             expected_commit=self.commit,
         )
-        self.assertEqual(manifest["release_tag"], "v0.1.0-rc.1")
+        self.assertEqual(manifest["release_tag"], "v0.1.0-rc.2")
         self.assertEqual(self.paths["index"].name, RELEASE.PACKAGE.RC_INDEX_FILENAME)
         document = RELEASE.PACKAGE.validate_index(
             self.paths["index"], artifact_dir=self.artifact_root
         )
-        self.assertEqual(document["packages"][0]["platforms"][0]["version"], "0.1.0-rc.1")
-        self.assertIn("/releases/download/v0.1.0-rc.1/", manifest["release_url"])
-        root = "nucode-nu54dk-zephyr-0.1.0-rc.1"
+        self.assertEqual(document["packages"][0]["platforms"][0]["version"], "0.1.0-rc.2")
+        self.assertIn("/releases/download/v0.1.0-rc.2/", manifest["release_url"])
+        root = "nucode-nu54dk-zephyr-0.1.0-rc.2"
         with zipfile.ZipFile(self.paths["archive"], "r") as archive:
             packaged_manifest = json.loads(
                 archive.read(f"{root}/release-manifest.json").decode("utf-8")
@@ -445,7 +445,7 @@ class M11ReleaseTests(unittest.TestCase):
             RELEASE.prepare_rc(REPO_ROOT, self.root / "stable", "0.1.0", self.commit)
         with self.assertRaises(RELEASE.PACKAGE.PackageError):
             RELEASE.PACKAGE.generate_index(
-                self.artifact_root, ["0.0.93", "0.1.0-rc.1"]
+                self.artifact_root, ["0.0.93", "0.1.0-rc.2"]
             )
 
     def test_03_plan_binds_all_artifacts_and_human_boundary(self) -> None:
@@ -520,7 +520,7 @@ class M11ReleaseTests(unittest.TestCase):
             "import json, pathlib, sys; "
             "p=pathlib.Path(sys.argv[1]); "
             "m=json.loads((p/'release-manifest.json').read_text(encoding='utf-8')); "
-            "raise SystemExit(0 if m['version']=='0.1.0-rc.1' else 9)"
+            "raise SystemExit(0 if m['version']=='0.1.0-rc.2' else 9)"
         )
         def package_fixture(
             _repo: Path,
@@ -735,7 +735,7 @@ class M11ReleaseTests(unittest.TestCase):
 
         with self.assertRaises(RELEASE.PACKAGE.PackageError):
             RELEASE.PACKAGE.validate_archive(
-                self.paths["archive"], expected_version="0.1.0-rc.1", expected_commit=""
+                self.paths["archive"], expected_version="0.1.0-rc.2", expected_commit=""
             )
         tampered = self.root / "empty-core-plan"
         shutil.copytree(self.artifact_root, tampered)

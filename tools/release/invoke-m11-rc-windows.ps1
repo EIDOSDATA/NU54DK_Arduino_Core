@@ -37,7 +37,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $script:RepositoryUrl = 'https://github.com/EIDOSDATA/NU54DK_Arduino_Core.git'
-$script:ExpectedVersion = '0.1.0-rc.1'
+$script:ExpectedVersion = '0.1.0-rc.2'
 $script:ExpectedToolchainBundleId = 'dcbdc366a1'
 $script:ExpectedNcsVersion = 'v3.4.0'
 $script:ExpectedArduinoCliSha256 = 'ba1890afcfc08524f76191b5cc801b0779cb25e81a5e6693eb0e26b50a3f3538'
@@ -384,7 +384,7 @@ function Get-ReleaseBundle {
         $plan.milestone -ne 'M11' -or
         $plan.kind -ne 'release-candidate-plan' -or
         $plan.version -ne $script:ExpectedVersion -or
-        $plan.release_tag -ne 'v0.1.0-rc.1' -or
+        $plan.release_tag -ne 'v0.1.0-rc.2' -or
         $plan.source_repository -ne 'https://github.com/EIDOSDATA/NU54DK_Arduino_Core' -or
         [string]$plan.core_revision -notmatch '^[0-9a-f]{40}$' -or
         [string]$plan.board_revision -notmatch '^[0-9a-f]{40}$' -or

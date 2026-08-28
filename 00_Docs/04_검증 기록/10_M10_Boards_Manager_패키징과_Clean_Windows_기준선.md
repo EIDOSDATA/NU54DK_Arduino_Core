@@ -12,6 +12,12 @@
 
 ---
 
+> **후속 판정:** 이 기준선은 Arduino CLI `1.5.2-rc.1`을 사용한 clean Windows package
+> 수명주기의 실제 PASS 기록이다. Arduino IDE GUI와 backend gRPC의 긴 `post_install` 완료
+> 응답은 범위에 포함되지 않았다. `v0.1.0-rc.1` 공개 후 그 경로에서 invalid UTF-8 오류가
+> 발견됐으므로 이 결과를 rc.1의 IDE 설치 PASS로 확대 해석하지 않는다. 기존 M10 결과는
+> 변경하지 않고 rc.2에서 누락 경로를 별도 검증한다.
+
 ## 1. 목적
 
 이 문서는 공개 Boards Manager preview package를 보유하지 않은 별도 Windows PC가

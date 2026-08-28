@@ -80,7 +80,7 @@ class M11RcHilTests(unittest.TestCase):
 
         self.temporary = tempfile.TemporaryDirectory(prefix="nu54-m11-rc-hil-")
         self.root = Path(self.temporary.name)
-        self.version = "0.1.0-rc.1"
+        self.version = "0.1.0-rc.2"
         self.core_revision = "a" * 40
         self.board_revision = "b" * 40
         self.runtime_payload_sha256 = ""

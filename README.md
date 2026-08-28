@@ -38,17 +38,22 @@ NU54DK에서 Loader 없이 동작하는 Native Full Zephyr 기반 Arduino Core�
 - M9 host 계약 43/43과 Arduino CLI library·parallel·cache 회귀 통과: no-change compiler 0회, Sketch 수정 3.57초, 손상 tree 복구 확인
 - M10 완료, 공개 preview `0.0.96`→`0.0.97`을 별도 clean Windows PC에서 최초 설치하고 package 수명주기 11/11 통과
 - M10 NCS v3.4.0/Toolchain exact-pin 설치, cold/warm Blink build, 온보드 CMSIS-DAP V2/pyOCD upload 10/10 통과
-- M11 기술 완료, exact `v0.1.0-rc.1` artifact의 필수 gate 8/8 통과와 evidence manifest `ready-for-human-approval`
-- [`v0.1.0-rc.1` GitHub Prerelease](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.1.0-rc.1) 공개 완료
-- 공개 RC index를 Arduino IDE bundled backend 1.5.1의 격리 환경에서 수집하고 `nucode:zephyr` `0.1.0-rc.1` 검색 확인
+- M11에서 exact `v0.1.0-rc.1` artifact의 필수 gate 8/8과 evidence manifest `ready-for-human-approval`을 통과한 기록 보존
+- `v0.1.0-rc.1`은 공개 후 Arduino IDE 2.3.10의 `post_install` 출력에서 UTF-8이 아닌 문자열이 gRPC 응답에 포함될 수 있는 결함을 확인해 배포 중단·회수 대상으로 결정
+- 이 결함은 설치가 실제로 완료된 뒤 Arduino IDE가 `Failed to install platform`을 표시할 수도 있으므로 화면 오류만으로 설치 결과를 판정하지 않음
+- Windows console과 PowerShell 출력 인코딩을 UTF-8로 고정한 `v0.1.0-rc.2`를 새 교정 Release Candidate로 준비 중
 - stable `v0.1.0`, 최종 법률 검토, tag·GitHub Release·stable index 공개는 프로젝트 소유자 승인 대기
 
-## Arduino IDE 설치 — v0.1.0-rc.1
+## Arduino IDE 설치 — v0.1.0-rc.2
+
+> **배포 준비 중:** 아래 주소는 `v0.1.0-rc.2` GitHub Prerelease가 실제 공개되고
+> checksum 검증이 끝난 뒤부터 사용합니다. 회수 대상인 `v0.1.0-rc.1`은 새로 설치하지
+> 마십시오.
 
 Arduino IDE의 **Additional Boards Manager URLs**에 다음 주소를 추가합니다.
 
 ```text
-https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0-rc.1/package_nucode_nu54dk_rc_index.json
+https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0-rc.2/package_nucode_nu54dk_rc_index.json
 ```
 
 Boards Manager에서 `NUCODE NU54DK Zephyr Boards`를 검색해 설치합니다. 이 버전은 정식
@@ -101,9 +106,12 @@ Boards Manager용 배포 archive에는 고정된 서브모듈 commit의 실제 �
 - [M9 증분 빌드·캐시와 재현성 기준선](./00_Docs/04_검증%20기록/09_M9_증분_빌드_캐시와_재현성_기준선.md)
 - [Boards Manager 설치와 패키징](./00_Docs/02_빌드%20설계/06_Boards_Manager_설치와_패키징.md)
 - [M10 Boards Manager와 clean Windows 기준선](./00_Docs/04_검증%20기록/10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md)
-- [M11 v0.1.0-rc.1 릴리스 후보 기준선](./00_Docs/04_검증%20기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md)
-- [v0.1.0-rc.1 릴리스 노트](./00_Docs/05_릴리스/03_v0.1.0_rc1_릴리스_노트.md)
-- [v0.1.0-rc.1 알려진 제약](./00_Docs/05_릴리스/04_v0.1.0_rc1_알려진_제약.md)
+- [M11 v0.1.0-rc.1 릴리스 후보 기준선(역사적 검증 기록)](./00_Docs/04_검증%20기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md)
+- [v0.1.0-rc.1 배포 중단 기록](./00_Docs/05_릴리스/00_v0.1.0_rc1_배포_중단_기록.md)
+- [v0.1.0-rc.2 마이그레이션 안내](./00_Docs/05_릴리스/05_v0.1.0_rc2_마이그레이션.md)
+- [v0.1.0-rc.2 문제 해결](./00_Docs/05_릴리스/06_v0.1.0_rc2_문제해결.md)
+- [v0.1.0-rc.2 릴리스 노트](./00_Docs/05_릴리스/07_v0.1.0_rc2_릴리스_노트.md)
+- [v0.1.0-rc.2 알려진 제약](./00_Docs/05_릴리스/08_v0.1.0_rc2_알려진_제약.md)
 
 ## 작성자
 

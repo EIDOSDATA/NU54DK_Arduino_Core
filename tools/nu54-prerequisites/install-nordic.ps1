@@ -17,6 +17,11 @@ param(
     [string]$NcsRoot
 )
 
+$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+[Console]::InputEncoding = $utf8NoBom
+[Console]::OutputEncoding = $utf8NoBom
+$OutputEncoding = $utf8NoBom
+
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 

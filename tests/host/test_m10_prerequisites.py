@@ -408,6 +408,10 @@ class M10PrerequisiteContractTests(unittest.TestCase):
         """! @brief Arduino hook가 설치 실패를 성공으로 숨기지 않습니다. """
 
         hook = (REPOSITORY_ROOT / "post_install.bat").read_text(encoding="utf-8")
+        self.assertIn("chcp 65001 >nul 2>&1", hook)
+        self.assertLess(
+            hook.index("chcp 65001 >nul 2>&1"), hook.index("powershell.exe")
+        )
         self.assertIn('set "NU54_PLATFORM_ROOT=%~dp0."', hook)
         self.assertIn('-File "%NU54_INSTALLER%" -PlatformRoot "%NU54_PLATFORM_ROOT%"', hook)
         self.assertIn("set \"NU54_RESULT=%ERRORLEVEL%\"", hook)
@@ -447,6 +451,58 @@ class M10PrerequisiteContractTests(unittest.TestCase):
         failure = execute(37)
         self.assertEqual(failure.returncode, 37, failure.stdout)
         self.assertIn(f"ROOT={package_root.resolve()}", failure.stdout)
+
+    @unittest.skipUnless(
+        os.name == "nt", "CMD와 Windows PowerShell UTF-8 통합 시험입니다."
+    )
+    def test_post_install_cmd_emits_strict_utf8_for_korean_output(self) -> None:
+        """! @brief Arduino gRPC에 전달할 한글 출력을 엄격한 UTF-8로 보장합니다. """
+
+        package_root = self.root / "utf8 package root"
+        installer = (
+            package_root / "tools" / "nu54-prerequisites" / "install-nordic.ps1"
+        )
+        installer.parent.mkdir(parents=True)
+        hook = package_root / "post_install.bat"
+        shutil.copy2(REPOSITORY_ROOT / "post_install.bat", hook)
+        installer.write_text(
+            "[CmdletBinding()]\n"
+            "param([string]$PlatformRoot)\n"
+            "Write-Host '[NU54DK] 설치 완료'\n",
+            encoding="utf-8-sig",
+        )
+
+        result = subprocess.run(
+            ["cmd.exe", "/d", "/c", str(hook)],
+            cwd=package_root,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout)
+        decoded = result.stdout.decode("utf-8", errors="strict")
+        self.assertIn("[NU54DK] 설치 완료", decoded)
+
+    def test_installer_sets_utf8_before_any_runtime_output(self) -> None:
+        """! @brief 설치기가 첫 출력 전에 PS 5.1 console과 native pipe를 UTF-8로 고정합니다. """
+
+        installer = (
+            REPOSITORY_ROOT / "tools" / "nu54-prerequisites" / "install-nordic.ps1"
+        ).read_text(encoding="utf-8-sig")
+        contracts = (
+            "$utf8NoBom = New-Object System.Text.UTF8Encoding($false)",
+            "[Console]::InputEncoding = $utf8NoBom",
+            "[Console]::OutputEncoding = $utf8NoBom",
+            "$OutputEncoding = $utf8NoBom",
+        )
+        positions = [installer.index(contract) for contract in contracts]
+        self.assertEqual(positions, sorted(positions))
+        first_output = min(
+            installer.index("Write-Host"),
+            installer.index("Write-Output") if "Write-Output" in installer else len(installer),
+        )
+        self.assertTrue(all(position < first_output for position in positions))
+        self.assertNotIn("[Console]::OutputEncoding = [Text.Encoding]::Default", installer)
 
     def test_installer_is_user_scoped_resumable_and_version_checked(self) -> None:
         """! @brief 설치기는 사용자 경로와 단계 marker만 사용하고 고정 version을 확인합니다. """

@@ -1,5 +1,6 @@
 @echo off
 setlocal EnableExtensions
+chcp 65001 >nul 2>&1
 
 set "NU54_INSTALLER=%~dp0tools\nu54-prerequisites\install-nordic.ps1"
 set "NU54_PLATFORM_ROOT=%~dp0."

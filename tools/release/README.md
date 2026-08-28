@@ -10,7 +10,7 @@ backend이다. Arduino IDE가 같은 package/index backend를 소비하더라도
 독립 자동 검증한 것으로 간주하지 않는다. plan과 최종 manifest는
 `arduino_ide_gui.validated=false` 및 별도 known issue를 항상 기록한다.
 
-현재 명시적으로 허용된 버전은 `0.1.0-rc.1`뿐이다. `0.1.0` stable이나 임의 RC 번호를
+현재 명시적으로 허용된 버전은 `0.1.0-rc.2`뿐이다. `0.1.0` stable이나 임의 RC 번호를
 입력하면 fail-closed로 거부한다. M10 preview index와 RC index도 서로 다른 파일과 tag
 규칙을 사용하므로 기존 공개 preview를 덮어쓰지 않는다.
 
@@ -21,12 +21,12 @@ backend이다. Arduino IDE가 같은 package/index backend를 소비하더라도
 
 ```powershell
 $Python = "python"
-$ReleaseRoot = "build/m11/0.1.0-rc.1"
+$ReleaseRoot = "build/m11/0.1.0-rc.2"
 
 & $Python tools/release/nu54_release.py prepare `
   --repo-root . `
   --output-dir $ReleaseRoot `
-  --version 0.1.0-rc.1 `
+  --version 0.1.0-rc.2 `
   --commit HEAD
 ```
 
@@ -126,7 +126,7 @@ gate를 한 명령으로 실행할 수 있다. RC plan의 `core_revision`은 먼
 대상이 credential 없이 exact commit과 보드 submodule을 clone할 수 있어야 한다.
 
 ```powershell
-$ReleaseRoot = "build/m11/0.1.0-rc.1"
+$ReleaseRoot = "build/m11/0.1.0-rc.2"
 
 powershell.exe -NoProfile -ExecutionPolicy Bypass `
   -File tools/release/invoke-m11-rc-windows.ps1 `
@@ -209,10 +209,10 @@ license 문서를 `record-docs`에 모두 나열한다. 각 파일은 plan의 ex
   --document "license=LICENSE" `
   --document "installation=00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md" `
   --document "api_matrix=00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md" `
-  --document "migration=00_Docs/05_릴리스/01_v0.1.0_rc1_마이그레이션.md" `
-  --document "troubleshooting=00_Docs/05_릴리스/02_v0.1.0_rc1_문제해결.md" `
-  --document "release_notes=00_Docs/05_릴리스/03_v0.1.0_rc1_릴리스_노트.md" `
-  --document "known_issues=00_Docs/05_릴리스/04_v0.1.0_rc1_알려진_제약.md" `
+  --document "migration=00_Docs/05_릴리스/05_v0.1.0_rc2_마이그레이션.md" `
+  --document "troubleshooting=00_Docs/05_릴리스/06_v0.1.0_rc2_문제해결.md" `
+  --document "release_notes=00_Docs/05_릴리스/07_v0.1.0_rc2_릴리스_노트.md" `
+  --document "known_issues=00_Docs/05_릴리스/08_v0.1.0_rc2_알려진_제약.md" `
   --document "third_party_notices=third_party/THIRD_PARTY_NOTICES.md"
 ```
 

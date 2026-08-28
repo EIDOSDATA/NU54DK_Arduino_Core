@@ -25,7 +25,7 @@ if hasattr(sys.stderr, "reconfigure"):
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
-RELEASE_VERSION = "0.1.0-rc.1"
+RELEASE_VERSION = "0.1.0-rc.2"
 ARDUINO_CLI_VERSION = "1.5.2-rc.1"
 ARDUINO_CLI_COMMIT = "fef6e48df"
 ARDUINO_CLI_SHA256 = "ba1890afcfc08524f76191b5cc801b0779cb25e81a5e6693eb0e26b50a3f3538"
