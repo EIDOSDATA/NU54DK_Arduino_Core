@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 2.0 |
+| 문서 체계 개정 | 2.1 |
 | 현재 정식 버전 | `v0.1.0` |
 | 다음 목표 버전 | `v0.2.0` |
-| 최종 갱신일 | 2026-08-28 |
+| 최종 갱신일 | 2026-08-29 |
 | 작성자 | Quantum / NUCODE |
 
 이 디렉터리는 Loader 없이 동작하는 Native Full Zephyr 기반 NU54DK Arduino Core의 결정,
@@ -41,9 +41,9 @@
 | 범위 | 상태 | 설명 |
 | --- | --- | --- |
 | M0~M11 | **완료** | `v0.1.0` build, API, HIL, package와 clean Windows 공개 완료 |
-| M12 | 대기 | CI/CD와 재현 build 환경 |
-| M13 | 대기 | 구성 profile, library feature와 Arduino 예제 UX |
-| M14 | 대기 | Core API와 Variant 부채 정리 |
+| M12 | **완료** | 고정 NCS CI/CD와 Linux/Windows 재현 build |
+| M13 | **완료** | `standard` profile, strict feature resolver와 Arduino 예제 7개 |
+| M14 | **진행 중** | 무보드 Core API·DTS Variant와 로컬·원격 software 검증 완료; 신규 pin HIL 대기 |
 | M15 | 대기 | NU54DK board/system library |
 | M16 | 대기 | basic BLE Arduino library |
 | M17 | 대기 | NCS 기능·예제 coverage 첫 묶음 |
@@ -77,6 +77,7 @@
 - [업로드와 디버그](<./02_빌드 설계/05_업로드와_디버그.md>)
 - [Boards Manager 설치와 패키징](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
 - [구성 프로필과 Arduino 예제 배포](<./02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md>)
+- [M12 CI/CD와 재현 빌드](<./02_빌드 설계/08_M12_CI_CD와_재현_빌드.md>)
 
 ### 03. Firmware 설계
 
@@ -85,7 +86,7 @@
 - [주변장치 API](<./03_펌웨어 설계/03_주변장치_API.md>)
 - [테스트와 검증](<./03_펌웨어 설계/04_테스트와_검증.md>)
 
-### 04. v0.1 검증 기록
+### 04. 검증 기록
 
 - [M1 도구 환경과 보드 기준선](<./04_검증 기록/01_M1_도구와_보드_기준선.md>)
 - [M2 Zephyr module과 runtime 기준선](<./04_검증 기록/02_M2_Zephyr_Module과_Runtime_기준선.md>)
@@ -100,6 +101,9 @@
 - [M11 v0.1.0-rc.1 역사 기록](<./04_검증 기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md>)
 - [M11 v0.1.0-rc.2 공개 후 검증](<./04_검증 기록/12_M11_v0.1.0_rc2_공개_후_수동_검증.md>)
 - [v0.1.0 정식 릴리스 공개 기록](<./04_검증 기록/13_v0.1.0_정식_릴리스_공개_기록.md>)
+- [M12 CI/CD와 재현 build 기준선](<./04_검증 기록/14_M12_CI_CD_기준선.md>)
+- [M13 구성 profile 및 예제 배포 검증](<./04_검증 기록/15_M13_구성_프로필_검증.md>)
+- [M14 Core API와 Variant 기준선](<./04_검증 기록/16_M14_Core_API와_Variant_기준선.md>)
 
 ### 05. 릴리스 문서
 

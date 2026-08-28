@@ -14,18 +14,23 @@ Sketch와 library를 nRF Connect SDK의 build graph 안에 넣어 ELF/HEX/BIN을
 | 항목 | 상태 |
 | --- | --- |
 | 현재 정식 버전 | [`v0.1.0`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.1.0) |
-| 다음 목표 | `v0.2.0` — CI/CD, IDE 예제, 구성 profile, board/system API, basic BLE |
+| 다음 목표 | `v0.2.0` — M12·M13 완료, M14 진행 중; 이후 board/system API, basic BLE와 NCS coverage |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 지원 보드 | NU54DK / nRF54L15 CPUAPP |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 선택 업로드 | 외장 SEGGER J-Link |
 | v0.1 마일스톤 | M0~M11 완료 |
+| v0.2 진행 | M12·M13 완료; M14 무보드 구현과 로컬·원격 software 검증 완료, 신규 pin HIL 대기 |
 
 v0.1.0에서는 Runtime, GPIO, 시간, Serial, GPIO interrupt, Wire/I2C, SPI, ADC, PWM,
 Arduino CLI/IDE build, pyOCD upload/debug, cache와 Boards Manager 설치 경로를 검증했습니다.
 세부 결과는 [제품 로드맵과 구현 마일스톤](<./00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md>)에
 정리되어 있습니다.
+
+현재 `main`에서는 M12 CI/CD와 M13 profile·예제 UX를 완료했습니다. M14는 보드 없이 가능한
+Core API·DTS 기반 Variant 구현과 로컬·원격 software 검증까지 마쳤으며, 보드 연결 후
+`PIN_LED2..3`과 `PIN_BUTTON1..3`의 물리 HIL만 남아 있습니다.
 
 ## Arduino IDE로 설치
 
@@ -128,25 +133,26 @@ Boards Manager package는 예전 archive 구조이므로 IDE 메뉴 노출이 �
 - `v0.1.0` package의 예제 파일은 archive에 있지만 Arduino IDE `파일 → 예제`의 표준 library
   구조가 아니어서 메뉴 노출이 보장되지 않습니다. main에서 구조를 교정했으며 다음 배포에
   포함합니다.
-- 일반 사용자를 위한 구성 profile은 v0.2.0 M13에서 구현합니다. v0.1의 고급 주변장치 예제는
-  내부적으로 `prj.conf`와 `app.overlay`를 사용합니다.
+- `standard` 구성 profile과 strict library feature resolver는 M13에서 구현했지만 공개
+  `v0.1.0` package에는 없습니다. `v0.1.0`의 고급 주변장치 예제는 package 내부
+  `prj.conf`와 `app.overlay`에 의존합니다.
 - BLE, Thread, Matter, OTA/DFU, native USB와 filesystem Arduino wrapper는 v0.1.0에 없습니다.
 - NU54DK의 모든 connector pin이 아직 Arduino 논리 pin으로 공개된 것은 아닙니다.
 
 전체 목록은 [v0.1.0 알려진 제약](<./00_Docs/05_릴리스/12_v0.1.0_알려진_제약.md>)에서 확인할
 수 있습니다.
 
-## 다음 작업
+## v0.2.0 진행 현황과 다음 작업
 
-| 순서 | 마일스톤 | 작업 |
-| ---: | --- | --- |
-| 1 | M12 | GitHub Actions software CI와 self-hosted NU54DK HIL 경계 구축 |
-| 2 | M13 | Arduino IDE 예제 열거, curated profile과 library feature resolver |
-| 3 | M14 | v0.1 API 부채, logical pin과 diagnostic 정리 |
-| 4 | M15 | `NUCODE_NU54DK` board/system library |
-| 5 | M16 | 공식 Zephyr Bluetooth 기반 basic BLE library |
-| 6 | M17 | NCS v3.4.0 기능·예제 coverage 첫 묶음 |
-| 7 | M18 | v0.2.0 RC, clean Windows/HIL과 stable 공개 |
+| 마일스톤 | 상태 | 작업 |
+| --- | --- | --- |
+| [M12](<./00_Docs/04_검증 기록/14_M12_CI_CD_기준선.md>) | **완료** | GitHub Actions software CI와 재현 build, self-hosted NU54DK HIL 경계 구축 |
+| [M13](<./00_Docs/04_검증 기록/15_M13_구성_프로필_검증.md>) | **완료** | Arduino 예제 7개, `standard` profile과 strict library feature resolver |
+| [M14](<./00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md>) | **진행 중** | Core API·DTS Variant의 무보드 구현과 로컬·원격 software 검증 완료; 신규 pin 물리 HIL 대기 |
+| M15 | 대기 | `NUCODE_NU54DK` board/system library |
+| M16 | 대기 | 공식 Zephyr Bluetooth 기반 basic BLE library |
+| M17 | 대기 | NCS v3.4.0 기능·예제 coverage 첫 묶음 |
+| M18 | 대기 | v0.2.0 RC, clean Windows/HIL과 stable 공개 |
 
 자세한 완료 기준은 [v0.2.0 구현 마일스톤](<./00_Docs/01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)과
 [NCS 기능·예제 지원 매트릭스](<./00_Docs/01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)를
@@ -199,6 +205,9 @@ NCS 공개 API를 직접 사용할 수 있습니다.
 - [v0.2.0 구현 마일스톤](<./00_Docs/01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)
 - [Boards Manager 설치와 패키징](<./00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
 - [구성 프로필과 Arduino 예제 배포](<./00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md>)
+- [M12 CI/CD와 재현 build 기준선](<./00_Docs/04_검증 기록/14_M12_CI_CD_기준선.md>)
+- [M13 구성 profile 및 예제 배포 검증](<./00_Docs/04_검증 기록/15_M13_구성_프로필_검증.md>)
+- [M14 Core API와 Variant 기준선](<./00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md>)
 - [v0.1.0 릴리스 노트](<./00_Docs/05_릴리스/11_v0.1.0_릴리스_노트.md>)
 
 ## 작성자와 라이선스

@@ -7,8 +7,8 @@ M12는 GitHub-hosted software 검증, exact NCS 기반 재현 build와 self-host
 
 - CI lock과 workflow 계약: **PASS**
 - host/document/package/example-discovery 로컬 gate: **PASS**
-- NCS v3.4.0 대표 Twister build-only 4개: **PASS**
-- GitHub-hosted software gate 5개: **5/5 PASS**
+- NCS v3.4.0 현재 대표 Twister build-only 7개: **PASS**
+- GitHub-hosted software gate 6개: **6/6 PASS**
 - Linux/Windows 재현 build: **2/2 PASS**
 - self-hosted NU54DK HIL workflow: **미실행**
 
@@ -22,7 +22,8 @@ M12의 CI/CD 및 재현 build 기반은 **완료**로 판정한다.
 
 | 항목 | 기준 |
 | --- | --- |
-| 저장소 기준 commit | `0f66017` (`fix(ci): NCS 내장 Python을 격리 실행`) |
+| 최초 M12 완료 commit | `0f66017` (`fix(ci): NCS 내장 Python을 격리 실행`) |
+| 현재 cache 기준 commit | `2d791cec614e7ee73334983c1dcdc927c179e94d` (`fix(ci): Windows 캐시를 Builder 범위로 축소`) |
 | 운영체제 | Windows x64 |
 | Python | GitHub Actions `3.12.10`; 로컬 기본 Python과 NCS toolchain Python |
 | NCS | v3.4.0, `99553055607b2e9885fbc80ccd11fa9da81c2df0` |
@@ -57,10 +58,17 @@ SHA로 고정했다.
 Linux/Windows toolchain identity와 Arduino CLI version을 고정했다.
 
 - Linux cache key: NCS revision + Zephyr revision + toolchain ID + container digest
-- Windows cache key: NCS revision + Zephyr revision + toolchain bundle
+- Windows Builder cache key: NCS revision + Zephyr revision + toolchain bundle + `builder-v1`
 
 공식 container는 NCS source가 아닌 toolchain이므로 exact source workspace 준비를 별도 단계로
-구현했다.
+구현했다. Linux는 exact source workspace를 cache하고 Windows는 source/context 검증형 Builder
+cache만 보존한다. Windows NCS와 toolchain은 매 run 공식 installer로 준비한 뒤 revision을
+다시 검증한다.
+
+양쪽 전체 NCS를 동시에 cache하면 압축 archive 합계가 11,668,878,529 byte가 되어
+[GitHub 기본 repository cache 한도](https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching#usage-limits-and-eviction-policy)
+10 GB를 넘는다. 최종 구조는 Linux 3,680,507,477 byte와 Windows Builder 9,266,879 byte,
+합계 3,689,774,356 byte만 유지한다. cache 경로에는 `.` 또는 `..` segment를 허용하지 않는다.
 
 ---
 
@@ -130,8 +138,10 @@ C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe `
 | `nucode.m6.core_api` | built, not run |
 | `nucode.m7.core_api` | built, not run |
 
-Twister 최종 결과는 4개 선택, 4개 build-only 완료, failed 0, error 0, warning 0이며
-총 355.59초가 걸렸다. `m12-build-evidence.json`도 생성됐다.
+최초 M12 기준 결과는 4개 선택, 4개 build-only 완료, failed 0, error 0, warning 0이며
+총 355.59초가 걸렸다. `m12-build-evidence.json`도 생성됐다. M14 구현 후 현재 gate에는
+`m14.core_contract`, `m14.variant_contract`, `m14.pin_hil`을 추가했으며 원격에서 7/7
+build-only와 QEMU actual-runtime 3/3을 통과한다.
 
 ### 5.1 Windows 경로 관찰
 
@@ -146,6 +156,8 @@ Twister 최종 결과는 4개 선택, 4개 build-only 완료, failed 0, error 0,
 ---
 
 ## 6. GitHub Actions 원격 결과
+
+### 6.1 최초 M12 완료 증적
 
 | Workflow / job | Run | 결과 |
 | --- | --- | --- |
@@ -173,14 +185,53 @@ GitHub는 고정 commit의 `arduino/setup-arduino-cli`가 선언한 Node 20 대�
 계속 고정·검증하지만 GitHub-hosted runner의 관리형 Node runtime 자체는 저장소가 고정하지
 못하는 외부 실행 환경으로 기록한다.
 
+최초 완료 run의 기능 결과는 유효하지만, 후속 로그 감사에서 Linux와 Windows cache 경로에
+각각 `/../`와 `\..\`가 들어가 post-save를 거부한 사실을 확인했다. 따라서 최초 run을
+cache 저장·복원 증거로 사용하지 않는다.
+
+### 6.2 Cache 경로 수정과 용량 경계
+
+`b454d0072336628e8bfbfbe7b18b76ca1fd1fd0c`에서 cache 입력을 정규 절대경로로 바꿨다.
+[cold run 33199480089](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33199480089)은
+Linux와 Windows 기능 gate를 모두 통과하고 양쪽 cache를 실제 저장했다. 같은 commit의
+[warm run 33201447829](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33201447829)은
+양쪽 exact primary key를 복원한 뒤 NU54DK build 7/7, QEMU 3/3과 Arduino 네 gate를 다시
+통과했다. `Invalid pattern` 경고는 0건이었다.
+
+다만 이 시험의 Linux archive는 3,680,507,477 byte, Windows full-NCS archive는
+7,988,371,052 byte로 기본 quota를 넘었다. 경로 fix 증거는 보존하되 이 구성을 운영
+기준으로 채택하지 않았다. `2d791cec614e7ee73334983c1dcdc927c179e94d`에서 Windows cache를
+9,266,879 byte의 Builder 범위로 축소하고 7.99 GB cache를 삭제했다.
+
+### 6.3 최종 cache 구조의 cold·warm 증적
+
+| 실행 | Linux | Windows | 기능 결과 |
+| --- | --- | --- | --- |
+| [cold run 33202807554](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33202807554) | 기존 exact workspace cache hit | `builder-v1` miss 후 9,266,879 byte 저장 | NU54DK 7/7, QEMU 3/3, Arduino 4/4 PASS |
+| [warm run 33204800541](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33204800541) | exact primary-key hit | exact `builder-v1` primary-key hit | NU54DK 7/7, QEMU 3/3, Arduino 4/4 PASS |
+
+warm Linux [job 98963009158](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33204800541/job/98963009158)은
+`M12_ZEPHYR_BUILD_PASS=7`, `M14_QEMU_RUNTIME_PASS=3`을 출력했다. artifact `9699440219`는
+185,916,849 byte이며 upload SHA-256은
+`23587523d6b5c70cd0535ee8096297caa0abd2474f55d0a4fd764ed8583fa6dd`이다.
+
+warm Windows [job 98963008808](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33204800541/job/98963008808)은
+exact NCS·Zephyr·toolchain revision을 다시 검사하고 `blink`, `m6`, `m7`, `examples`를 모두
+통과했다. artifact `9699643416`은 443 byte이며 upload SHA-256은
+`78fd77a4fbe68d701f5ac8ffb707b6a802780b42decd1b953655509c100cbf0e`이다. Windows job은
+cold 25분 43초에서 warm 15분 59초로 줄었다. cache API에는 Linux `7100805117`과 Windows
+Builder `7102167112` 두 항목만 남아 있으며 구 7.99 GB Windows cache는 재생성되지 않았다.
+
 ---
 
 ## 7. 완료 판정
 
-1. `0f66017` 기준 `M12 Software Gates`의 다섯 job이 성공했다.
-2. 같은 commit의 `M12 Reproducible Builds` Linux와 Windows job이 성공했다.
-3. exact lock, cache 재검증, 실패 log와 evidence 보존 계약이 원격에서 실행됐다.
-4. self-hosted HIL은 장치 사용 시 수동 실행하고 software 결과와 별도로 기록한다.
+1. `0f66017` 기준 최초 `M12 Software Gates` 다섯 job과 Linux/Windows 재현 build가 성공했다.
+2. 현재 `2d791ce` 기준 software job 6/6, NU54DK build 7/7, QEMU 3/3과 Arduino 4/4가 성공했다.
+3. Linux exact workspace와 Windows Builder cache의 cold-save·warm-hit를 각각 확인했다.
+4. 최종 cache 총량은 3,689,774,356 byte이며, quota를 넘긴 7.99 GB Windows full cache를 제거했다.
+5. exact lock, cache 후 revision 재검증, 실패 log와 evidence 보존 계약이 원격에서 실행됐다.
+6. self-hosted HIL은 장치 사용 시 수동 실행하고 software 결과와 별도로 기록한다.
 
 따라서 M12는 완료다. HIL 미실행을 PASS로 바꾸지 않았으며, 물리 장치가 필요한 후속
 마일스톤의 완료 근거로 재사용하지 않는다.

@@ -2,9 +2,10 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 상태 | Core API·DTS 기반 Variant 무보드 구현, host native semantic·NU54/QEMU cross-build 완료; 원격 QEMU runtime 증적과 신규 pin HIL 대기 |
+| 상태 | Core API·DTS 기반 Variant 무보드 구현과 로컬·원격 software/runtime 검증 완료; 신규 pin 물리 HIL 대기 |
 | 기준일 | 2026-08-29 |
-| 기준 Core | `4bbaa6143bf1ea182c32ac5d045858e4ffbcd031`(M13 완료)에서 시작한 M14 작업 tree |
+| 기준 Core | `85b9baff778542fae08b8a265a601fe0f6b9f538` — M14 구현 commit |
+| 시작 기준 | `4bbaa6143bf1ea182c32ac5d045858e4ffbcd031` — M13 완료 commit |
 | 기준 board package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` — 변경 없음 |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 기준 target | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
@@ -24,9 +25,9 @@ M14는 v0.2.0의 Core API 부채와 Variant 기준선을 다룬다. 이 기록�
   sparse Variant로 확장한다.
 - UART/I2C/SPI와 PWM이 소유한 pad를 일반 digital pin으로 중복 노출하지 않는다.
 
-이 기준선은 M14 전체 완료 선언이 아니다. 물리 보드에서 신규 LED2/3과
-BUTTON1..3의 GPIO·pull·interrupt를 검증해야 하며, 원격 QEMU runtime 결과도 실제
-workflow 증적이 생성된 뒤에만 PASS로 기록한다.
+이 기준선은 M14 전체 완료 선언이 아니다. 원격 workflow의 software gate와 QEMU 실제
+runtime은 통과했지만, 물리 보드에서 신규 LED2/3과 BUTTON1..3의 GPIO·pull·interrupt를
+검증해야 한다.
 
 ---
 
@@ -140,11 +141,11 @@ full libstdc++/libc, heap와 thread stack 증가를 제품 memory budget에 반�
 host harness는 throw/catch, stack unwind 소멸자, `dynamic_cast`와 `typeid`를 실제 실행한다.
 임의 TEMP executable은 Windows Application Control이 WinError 4551로 차단했지만,
 repository 고정 staging에서 매번 재compile한 시험은 3/3 PASS했다. 이는 host
-runtime 증거이며 Zephyr target runtime으로 확대하지 않는다. NCS 3.4.0의
+runtime 증거이며 그 자체를 Zephyr target runtime으로 확대하지 않는다. NCS 3.4.0의
 `qemu_cortex_m3` cross-build는 같은 기능과 실제 `random`/Diagnostics source,
 `Arduino.h` 뒤 `<cmath>`를 모두 통과했다. 로컬 Windows에는 `qemu-system-arm`이
-없으므로 QEMU runtime PASS를 주장하지 않으며, 고정 Nordic Linux container의
-원격 runtime gate 결과를 기다린다. NU54DK opt-in runtime/HIL도 아직 완료하지 않았다.
+없지만, 고정 Nordic Linux container의 원격 QEMU actual-runtime gate에서 세 testcase가
+모두 PASS했다. NU54DK 실기 runtime/HIL은 아직 완료하지 않았다.
 
 ---
 
@@ -199,8 +200,7 @@ semantic SKIP 1건**이었다. 임의 TEMP executable이 WinError 4551로 차단
 
 생성 executable에는 utility, `F()` 출력, public random 범위·seed, Diagnostics 포맷과
 backend projection, throw/catch·unwind·RTTI runtime 검사가 모두 들어 있다. 고정 staging
-재실행은 이 검사를 모두 수행했지만, GitHub Ubuntu host job 결과는 별도 원격 증거로
-기록한다.
+재실행과 GitHub Ubuntu의 독립 native semantic job이 모두 이 검사를 통과했다.
 
 ### 6.2 NU54DK production target compile
 
@@ -227,10 +227,10 @@ library에 포함한다. test 본문은 두 `random()` overload와 `randomSeed()
 3. 실제 Zephyr atomic random, Diagnostics, `Arduino.h`/`std::abs()` 공존
 
 NCS 3.4.0 GNU Arm toolchain cross-build는 **1/1 PASS**했다. 로컬 QEMU runner가 없어 세
-test case는 `Test was built only`이며 실행 PASS가 아니다. `run_m14_qemu.py`는
+test case는 `Test was built only`이며 로컬 실행 PASS가 아니다. `run_m14_qemu.py`는
 고정 NCS/Zephyr revision, `qemu-system-arm` identity, exact scenario·3 testcase, `runnable=true`와
 각 PASS를 fail-closed로 검사하고 JSON 증적을 만든다. 고정 digest Nordic container의
-GitHub workflow에 연결했지만 이 문서 기준에서 원격 실행 결과는 아직 대기 중이다.
+GitHub workflow에서 `M14_QEMU_RUNTIME_PASS=3`을 출력하며 세 testcase가 실제 실행 PASS했다.
 
 ### 6.4 Variant/DTS contract
 
@@ -272,6 +272,30 @@ LED 결과는 GPIO output/raw readback이며 사람의 시각적 점등 확인�
 않는다. 보드 연결 후의 실제 flash·UART·버튼 동작과 PASS 증적 생성이 M14의 남은
 완료 경계다.
 
+### 6.6 원격 CI 재현 검증
+
+M14 구현 commit `85b9baff778542fae08b8a265a601fe0f6b9f538`을 GitHub-hosted runner에서
+다시 검증했다.
+
+| Gate | 결과 | 증적 |
+| --- | --- | --- |
+| Software Gates | package, CI contract, M14 native semantic, 문서, Windows host, 예제 discovery 6/6 PASS | [run 33197205997](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33197205997) |
+| Linux / Nordic container | NU54DK target 7/7 build-only, 실패·오류·경고 0건; QEMU actual-runtime 3/3 PASS | [job 98937281996](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33197206098/job/98937281996) |
+| Windows 2025 | `blink`, `m6`, `m7`, `examples` PASS | [job 98937282323](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33197206098/job/98937282323) |
+
+재현 workflow [run 33197206098](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33197206098)은
+Linux와 Windows 2/2 job을 모두 통과했다. Linux log는 `M12_ZEPHYR_BUILD_PASS=7`과
+`M14_QEMU_RUNTIME_PASS=3`을, Windows log는 네 Arduino gate의 `PASS`를 출력했다.
+
+Linux artifact `9696591845`는 185,973,672 byte이며 upload SHA-256은
+`03ccc12cc924e9e96c79d3e25a4d607fdc458b601dd82be3a98d71a82cb84389`이다. Windows
+artifact `9696972495`는 443 byte이며 upload SHA-256은
+`1e5de4602121eca5523b8da80569d45edacbaedaf6d798fca24cdad5524c1af6`이다. Node 20
+action을 Node 24로 강제 실행한다는 annotation이 있었지만 gate 결과에는 영향을 주지 않았다.
+같은 run의 cache post-step에는 `..` 경로 거부 경고가 있었으나 build·runtime 증적과는
+독립적이다. cache 저장·복원 근거로 사용하지 않았고, 후속 `b454d00`과 `2d791ce`에서
+정규 경로 및 quota 이내의 Linux workspace·Windows Builder cache로 수정·검증했다.
+
 ---
 
 ## 7. 판정
@@ -279,10 +303,10 @@ LED 결과는 GPIO output/raw readback이며 사람의 시각적 점등 확인�
 M14의 무보드 Core API와 DTS 기반 Variant 구현은 완료했다. utility, bit helper,
 `F()`, random과 Diagnostics는 host semantic·compile/link와 NU54 target compile을 통과했다.
 `F()`는 nRF54에서 AVR식 SRAM 절약을 제공하지 않는 의미 차이로 남고,
-exception/RTTI는 기본 비활성·expert opt-in 정책을 유지한다. QEMU actual-runtime은
-원격 workflow 증적 전이므로 아직 PASS로 계산하지 않는다.
+exception/RTTI는 기본 비활성·expert opt-in 정책을 유지한다. 고정 Nordic container의
+원격 QEMU actual-runtime과 고정 Windows 환경의 Arduino compile도 통과했다.
 
-M14 전체의 물리 완료 경계는 `PIN_LED2..3`과 `PIN_BUTTON1..3`의 NU54DK HIL이다.
+따라서 M14에서 남은 완료 경계는 `PIN_LED2..3`과 `PIN_BUTTON1..3`의 NU54DK 물리 HIL뿐이다.
 `PIN_LED1`은 `PIN_PWM0` 소유권 때문에 의도적으로 digital 거부하며, UART/I2C/SPI·
 일반 connector pin은 이번 범위에서 공개하지 않는다. 기존 v0.1 HIL은 기존 pin
 회귀로만 사용하고 신규 pin 증거로 확대하지 않는다.

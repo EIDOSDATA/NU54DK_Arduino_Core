@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-CI-001 |
-| 문서 개정 | 1.1 |
+| 문서 개정 | 1.2 |
 | 문서 상태 | 구현·원격 재현 기준선 완료 |
 | 적용 제품 버전 | `v0.2.0` 이후 |
 | 작성자 | Quantum / NUCODE |
@@ -113,6 +113,19 @@ Cache key는 다음 identity를 포함한다.
 
 Cache hit는 다운로드 최적화일 뿐 신뢰 근거가 아니다. 복원 후에도 source revision과 toolchain
 identity를 다시 검사한다.
+
+`actions/cache`에 넘기는 경로에는 `.` 또는 `..` path segment를 사용하지 않는다. Linux
+container는 `/tmp/nu54dk-ncs-v3.4.0`의 exact source workspace를 cache한다. GitHub-hosted
+`windows-2025`에서는 NCS와 toolchain 전체를 cache하지 않고 Arduino Builder의 source/context
+검증형 증분 cache만 보존한다. Windows NCS는 짧은 정규 절대경로 `D:\ncs`에 매번 공식
+installer로 준비하고 exact revision을 다시 검사한다. `D:` 선택은 이미 짧은 Twister 경로
+`D:\t`를 제공하는 현재 hosted runner 계약에 한정하며, 다른 runner로 옮길 때는 그 runner에서
+정규화한 절대경로로 교체한다.
+
+전체 NCS를 양쪽 운영체제에 동시에 cache하면 압축 후에도
+[GitHub의 repository 기본 cache quota](https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching#usage-limits-and-eviction-policy)를
+넘겨 서로를 축출할 수 있다. 따라서 Linux source workspace와 작은 Windows Builder cache로
+경계를 나누며, cache miss·save·restore 여부는 신뢰 근거로 사용하지 않는다.
 
 ---
 
