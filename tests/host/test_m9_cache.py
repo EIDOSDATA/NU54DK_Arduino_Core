@@ -47,6 +47,14 @@ class M9CacheContractTests(unittest.TestCase):
 
         self.temporary.cleanup()
 
+    def assert_same_path(self, actual: Path, expected: Path) -> None:
+        """! @brief Windows 8.3 별칭을 포함해 두 경로가 같은 객체인지 검증합니다. """
+
+        self.assertTrue(
+            actual.samefile(expected),
+            msg=f"서로 다른 파일시스템 경로입니다: {actual} != {expected}",
+        )
+
     def create_entry(
         self, key: str, *, access: str, size: int = 16, pinned: bool = False
     ) -> Path:
@@ -96,8 +104,10 @@ class M9CacheContractTests(unittest.TestCase):
         os.environ["NUCODE_BUILD_CACHE_ROOT"] = str(self.cache_root)
         try:
             key = "ab" + "1" * 62
+            expected = self.cache_root / "v1" / "ab" / key[:32]
+            expected.mkdir(parents=True)
             workspace = MODULE.cache_workspace(key)
-            self.assertEqual(workspace, self.cache_root / "v1" / "ab" / key[:32])
+            self.assert_same_path(workspace, expected)
         finally:
             if previous is None:
                 os.environ.pop("NUCODE_BUILD_CACHE_ROOT", None)
@@ -108,9 +118,11 @@ class M9CacheContractTests(unittest.TestCase):
         """! @brief 기본 cache root가 긴 nRF Security object 경로를 위한 짧은 suffix를 씁니다. """
 
         local_data = self.root / "local-data"
+        expected = local_data / "NU54" / "c"
+        expected.mkdir(parents=True)
         with mock.patch.dict(os.environ, {"LOCALAPPDATA": str(local_data)}):
             os.environ.pop("NUCODE_BUILD_CACHE_ROOT", None)
-            self.assertEqual(MODULE.build_cache_root(), local_data / "NU54" / "c")
+            self.assert_same_path(MODULE.build_cache_root(), expected)
 
     def test_tree_content_hash_detects_content_and_path(self) -> None:
         """! @brief dirty Core 내용과 상대 경로 변경이 fingerprint에 반영됩니다. """
@@ -280,7 +292,9 @@ class M9CacheContractTests(unittest.TestCase):
             records,
         )
         compiled = [Path(item["compiled_path"]) for item in provenance["sources"]]
-        self.assertEqual(sources, [first, second])
+        self.assertEqual(len(sources), 2)
+        for actual, expected in zip(sources, (first, second), strict=True):
+            self.assert_same_path(actual, expected)
         self.assertEqual(len({MODULE.path_key(path) for path in compiled}), 2)
         self.assertEqual(compiled[0].read_bytes(), first.read_bytes())
         self.assertEqual(compiled[1].read_bytes(), second.read_bytes())
@@ -315,9 +329,16 @@ class M9CacheContractTests(unittest.TestCase):
             records,
         )
         compiled = [Path(item["compiled_path"]) for item in provenance["sources"]]
-        self.assertEqual([path.parent for path in compiled], libraries)
+        self.assertEqual(len(compiled), len(libraries))
+        for actual, expected in zip(compiled, libraries, strict=True):
+            self.assert_same_path(actual.parent, expected)
         include_paths = [Path(item["path"]) for item in provenance["include_roots"]]
-        self.assertEqual(include_paths[:3], [sketch, libraries[0], libraries[1]])
+        expected_includes = (sketch, libraries[0], libraries[1])
+        self.assertGreaterEqual(len(include_paths), len(expected_includes))
+        for actual, expected in zip(
+            include_paths[: len(expected_includes)], expected_includes, strict=True
+        ):
+            self.assert_same_path(actual, expected)
 
     def test_parent_build_flags_are_removed_before_toolchain_environment(self) -> None:
         """! @brief shell의 build flag가 canonical key 밖에서 child build를 바꾸지 못합니다. """
