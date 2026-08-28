@@ -192,7 +192,14 @@ class M11ReleaseTests(unittest.TestCase):
         }
         result_path.write_bytes(RELEASE.canonical_json(result))
         hil_result = RELEASE.validate_rc_hil_result(result_path, self.plan)
-        command = [sys.executable, "tests/hil/m8_upload.py", "<fixed-contract>"]
+        command = [
+            sys.executable,
+            "tests/hil/m8_upload.py",
+            "--expected-core-revision",
+            self.plan["core_revision"],
+            "--expected-runtime-payload-sha256",
+            self.plan["runtime_payload_sha256"],
+        ]
         contract: dict[str, object] = {
             "schema_version": 1,
             "gate_id": "hil_rc_pyocd",
@@ -1001,6 +1008,9 @@ class M11ReleaseTests(unittest.TestCase):
         self.assertFalse(zephyr["scope"]["short_build_path"])
         self.assertEqual(hil["scope"]["upload_attempts"], 1)
         self.assertEqual(hil["scope"]["ready_token"], RELEASE.M11_READY_TOKEN)
+        self.assertIn(self.plan["core_revision"], hil["command_template"])
+        self.assertIn(self.plan["runtime_payload_sha256"], hil["command_template"])
+        self.assertIn("{serial_port}", hil["command_template"])
 
     def test_27_rc_hil_result_byte_tamper_is_rejected(self) -> None:
         """! @brief 동결한 HIL result JSON의 사후 변경을 evidence checksum이 차단합니다. """

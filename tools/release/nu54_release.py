@@ -1508,7 +1508,9 @@ def validate_gate_evidence(plan_path: Path, plan: dict[str, Any], evidence_path:
             not isinstance(command, list)
             or not command
             or command != expected_contract["command_template"]
-            or any(not isinstance(value, str) or not value or value != redact_text(value) for value in command)
+            ## @note command template은 repo-owned exact 계약과 동일해야 하며,
+            ##       core revision과 runtime payload SHA-256은 공개 릴리스 식별자입니다.
+            or any(not isinstance(value, str) or not value for value in command)
             or not isinstance(exit_code, int)
             or isinstance(exit_code, bool)
             or not isinstance(timed_out, bool)
