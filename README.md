@@ -38,7 +38,9 @@ NU54DK에서 Loader 없이 동작하는 Native Full Zephyr 기반 Arduino Core�
 - M9 host 계약 43/43과 Arduino CLI library·parallel·cache 회귀 통과: no-change compiler 0회, Sketch 수정 3.57초, 손상 tree 복구 확인
 - M10 완료, 공개 preview `0.0.96`→`0.0.97`을 별도 clean Windows PC에서 최초 설치하고 package 수명주기 11/11 통과
 - M10 NCS v3.4.0/Toolchain exact-pin 설치, cold/warm Blink build, 온보드 CMSIS-DAP V2/pyOCD upload 10/10 통과
-- M11 진행 중, 고정 `v0.1.0-rc.1` artifact의 전체 회귀·증거 bundle과 Draft Release 입력 준비
+- M11 기술 완료, exact `v0.1.0-rc.1` artifact의 필수 gate 8/8 통과와 evidence manifest `ready-for-human-approval`
+- `v0.1.0-rc.1` tag와 GitHub prerelease는 아직 게시하지 않았으며 프로젝트 소유자 승인 대기
+- stable `v0.1.0`, 최종 법률 검토, tag·GitHub Release·stable index 공개는 프로젝트 소유자 승인 대기
 
 ## 보드 정의
 
@@ -87,6 +89,7 @@ Boards Manager용 배포 archive에는 고정된 서브모듈 commit의 실제 �
 - [M9 증분 빌드·캐시와 재현성 기준선](./00_Docs/04_검증%20기록/09_M9_증분_빌드_캐시와_재현성_기준선.md)
 - [Boards Manager 설치와 패키징](./00_Docs/02_빌드%20설계/06_Boards_Manager_설치와_패키징.md)
 - [M10 Boards Manager와 clean Windows 기준선](./00_Docs/04_검증%20기록/10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md)
+- [M11 v0.1.0-rc.1 릴리스 후보 기준선](./00_Docs/04_검증%20기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md)
 - [v0.1.0-rc.1 릴리스 노트](./00_Docs/05_릴리스/03_v0.1.0_rc1_릴리스_노트.md)
 - [v0.1.0-rc.1 알려진 제약](./00_Docs/05_릴리스/04_v0.1.0_rc1_알려진_제약.md)
 
