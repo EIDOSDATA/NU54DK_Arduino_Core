@@ -259,6 +259,69 @@ class M15SystemOffHilTests(unittest.TestCase):
                 )
         self.assertEqual(serial.writes, [])
 
+    def test_eof_and_uart_failure_preserve_partial_transcript(self) -> None:
+        """! @brief 격리 확인 EOF와 후속 UART 단절도 수집 byte를 보존합니다. """
+
+        ready = MODULE.TIMED_READY_TOKEN + b"\r\n"
+        eof_serial = ScriptedSerial([ready])
+
+        def raise_eof(_prompt: str) -> str:
+            raise EOFError("stdin closed")
+
+        with mock.patch.object(MODULE.sys, "stdout", io.StringIO()):
+            with self.assertRaises(MODULE.TranscriptFailure) as caught:
+                MODULE.capture_protocol(
+                    eof_serial,
+                    30.0,
+                    monotonic=StepClock(),
+                    confirm=raise_eof,
+                )
+        self.assertEqual(caught.exception.transcript, ready)
+        self.assertEqual(eof_serial.writes, [])
+
+        class FailingAfterReadySerial(ScriptedSerial):
+            """! @brief READY 처리 뒤 UART RX 단절을 발생시킵니다. """
+
+            @property
+            def in_waiting(self) -> int:
+                if not self.chunks:
+                    raise OSError("UART disconnected")
+                return super().in_waiting
+
+        failed_serial = FailingAfterReadySerial([ready])
+        with mock.patch.object(MODULE.sys, "stdout", io.StringIO()):
+            with self.assertRaises(MODULE.TranscriptFailure) as caught:
+                MODULE.capture_protocol(
+                    failed_serial,
+                    30.0,
+                    monotonic=StepClock(),
+                    confirm=lambda _prompt: "DISABLE_SWD_ONLY",
+                    nonce_factory=lambda count: FIXED_NONCE if count == 16 else "",
+                )
+        self.assertEqual(caught.exception.transcript, ready)
+        self.assertEqual(
+            failed_serial.writes,
+            [f"ARM_TIMED:{FIXED_NONCE}\n".encode("ascii")],
+        )
+
+        class FailingWriteSerial(ScriptedSerial):
+            """! @brief SWD 격리 뒤 UART TX 단절을 발생시킵니다. """
+
+            def write(self, _data: bytes) -> int:
+                raise OSError("UART write failed")
+
+        write_failed_serial = FailingWriteSerial([ready])
+        with mock.patch.object(MODULE.sys, "stdout", io.StringIO()):
+            with self.assertRaises(MODULE.TranscriptFailure) as caught:
+                MODULE.capture_protocol(
+                    write_failed_serial,
+                    30.0,
+                    monotonic=StepClock(),
+                    confirm=lambda _prompt: "DISABLE_SWD_ONLY",
+                    nonce_factory=lambda count: FIXED_NONCE if count == 16 else "",
+                )
+        self.assertEqual(caught.exception.transcript, ready)
+
     def test_wake_timing_is_fail_closed(self) -> None:
         """! @brief 너무 빠르거나 느린 timed wake와 이른 SW0 wake를 거부합니다. """
 
@@ -386,18 +449,51 @@ class M15SystemOffHilTests(unittest.TestCase):
             )
             self.assertNotIn(str(root), encoded)
 
-    def test_existing_evidence_requires_explicit_overwrite(self) -> None:
-        """! @brief 이전 PASS 증적을 자동 덮어쓰지 않는지 확인합니다. """
+    def test_existing_evidence_is_preserved_until_atomic_pass_replace(self) -> None:
+        """! @brief 실패한 재시험이 이전 PASS를 파괴하지 않는지 확인합니다. """
 
         with tempfile.TemporaryDirectory(prefix="nu54-m15-evidence-") as temporary:
             evidence = Path(temporary) / "m15.json"
-            evidence.write_text("{}\n", encoding="utf-8")
+            previous = b'{"status":"previous-pass"}\n'
+            evidence.write_bytes(previous)
             with self.assertRaisesRegex(MODULE.SystemOffHilFailure, "자동 덮어쓰지"):
                 MODULE.prepare_output_paths(str(evidence), False)
             actual, transcript = MODULE.prepare_output_paths(str(evidence), True)
             self.assertEqual(actual, evidence.resolve())
-            self.assertEqual(transcript.name, "m15.transcript.log")
-            self.assertFalse(evidence.exists())
+            self.assertRegex(
+                transcript.name,
+                r"^m15\.attempt-[0-9a-f]{16}\.transcript\.log$",
+            )
+            self.assertEqual(evidence.read_bytes(), previous)
+            self.assertFalse(transcript.exists())
+
+            real_atomic_write = MODULE.atomic_write_bytes
+
+            def fail_evidence_write(path: Path, payload: bytes) -> None:
+                if path == evidence:
+                    raise OSError("evidence replace failed")
+                real_atomic_write(path, payload)
+
+            replacement = {"schema_version": 2, "status": "passed"}
+            with mock.patch.object(
+                MODULE, "atomic_write_bytes", side_effect=fail_evidence_write
+            ), self.assertRaisesRegex(OSError, "replace failed"):
+                MODULE.write_pass_outputs(
+                    evidence,
+                    transcript,
+                    b"new transcript\n",
+                    replacement,
+                )
+            self.assertEqual(evidence.read_bytes(), previous)
+            self.assertEqual(transcript.read_bytes(), b"new transcript\n")
+
+            MODULE.write_pass_outputs(
+                evidence,
+                transcript,
+                b"new transcript\n",
+                replacement,
+            )
+            self.assertEqual(json.loads(evidence.read_text(encoding="utf-8")), replacement)
 
     def test_dirty_imported_helper_or_board_source_is_rejected(self) -> None:
         """! @brief 공용 helper나 board 변경을 실제 flash 전에 거부합니다. """

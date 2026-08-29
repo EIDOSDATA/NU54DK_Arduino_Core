@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import secrets
@@ -203,7 +204,7 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     parser.add_argument(
         "--overwrite-evidence",
         action="store_true",
-        help="기존 evidence와 transcript를 명시적으로 교체",
+        help="새 PASS가 완료된 뒤 기존 evidence를 원자적으로 교체",
     )
     parser.add_argument(
         "--discover-only",
@@ -490,7 +491,13 @@ def _confirm_swd_isolation(confirm: Callable[[str], str]) -> None:
         "차단하고 DISABLE_UART는 연결 상태로 유지하십시오. 완료 후 "
         "DISABLE_SWD_ONLY 입력: "
     )
-    if confirm(prompt).strip() != "DISABLE_SWD_ONLY":
+    try:
+        response = confirm(prompt)
+    except (EOFError, OSError) as error:
+        raise SystemOffHilFailure(
+            f"DISABLE_SWD_ONLY 확인 입력을 읽지 못했습니다: {error}"
+        ) from error
+    if response.strip() != "DISABLE_SWD_ONLY":
         raise SystemOffHilFailure(
             "DISABLE_SWD_ONLY 확인이 없어 flash 뒤 System OFF 시험을 중단했습니다."
         )
@@ -502,7 +509,13 @@ def _confirm_button_released(confirm: Callable[[str], str]) -> None:
         "사용자 SW0(P1.13)이 눌리지 않은 RELEASED 상태인지 확인하십시오. "
         "완료 후 SW0_RELEASED 입력: "
     )
-    if confirm(prompt).strip() != "SW0_RELEASED":
+    try:
+        response = confirm(prompt)
+    except (EOFError, OSError) as error:
+        raise SystemOffHilFailure(
+            f"SW0_RELEASED 확인 입력을 읽지 못했습니다: {error}"
+        ) from error
+    if response.strip() != "SW0_RELEASED":
         raise SystemOffHilFailure(
             "SW0_RELEASED 확인이 없어 button System OFF 시험을 중단했습니다."
         )
@@ -547,8 +560,14 @@ def capture_protocol(
         if now >= deadline:
             break
 
-        waiting = serial_port.in_waiting
-        chunk = serial_port.read(waiting if waiting > 0 else 1)
+        try:
+            waiting = serial_port.in_waiting
+            chunk = serial_port.read(waiting if waiting > 0 else 1)
+        except (OSError, ValueError) as error:
+            raise TranscriptFailure(
+                f"SWD 격리 세션의 UART 수신에 실패했습니다: {error}",
+                bytes(observed),
+            ) from error
         if not chunk:
             continue
         observed.extend(chunk)
@@ -578,8 +597,19 @@ def capture_protocol(
                         "host nonce 생성기가 소문자 32자리 16진수를 반환하지 않았습니다.",
                         bytes(observed),
                     )
-                serial_port.write(f"ARM_TIMED:{nonce}\n".encode("ascii"))
-                serial_port.flush()
+                timed_command = f"ARM_TIMED:{nonce}\n".encode("ascii")
+                try:
+                    written = serial_port.write(timed_command)
+                    if written != len(timed_command):
+                        raise OSError(
+                            f"UART short write: {written}/{len(timed_command)} bytes"
+                        )
+                    serial_port.flush()
+                except (OSError, ValueError) as error:
+                    raise TranscriptFailure(
+                        f"SWD 격리 뒤 timed ARM 전송에 실패했습니다: {error}",
+                        bytes(observed),
+                    ) from error
                 timed_arm_sent = True
                 deadline = monotonic() + timeout_seconds
                 print(
@@ -605,8 +635,20 @@ def capture_protocol(
                     except SystemOffHilFailure as error:
                         raise TranscriptFailure(str(error), bytes(observed)) from error
                     button_confirmed_at_utc = utc_now().isoformat()
-                    serial_port.write(f"ARM_BUTTON:{nonce}\n".encode("ascii"))
-                    serial_port.flush()
+                    button_command = f"ARM_BUTTON:{nonce}\n".encode("ascii")
+                    try:
+                        written = serial_port.write(button_command)
+                        if written != len(button_command):
+                            raise OSError(
+                                "UART short write: "
+                                f"{written}/{len(button_command)} bytes"
+                            )
+                        serial_port.flush()
+                    except (OSError, ValueError) as error:
+                        raise TranscriptFailure(
+                            f"SWD 격리 뒤 button ARM 전송에 실패했습니다: {error}",
+                            bytes(observed),
+                        ) from error
                     button_arm_sent = True
                     deadline = monotonic() + timeout_seconds
                     print("M15 button ARM을 전송했습니다. PRESS NOW를 기다리십시오.")
@@ -703,19 +745,51 @@ def prepare_output_paths(
     evidence = Path(evidence_argument).resolve()
     if evidence.suffix.lower() != ".json":
         raise SystemOffHilFailure("--evidence는 .json 확장자여야 합니다.")
-    transcript = evidence.with_suffix(".transcript.log")
-    for path in (evidence, transcript):
-        if path.exists() and not overwrite:
-            raise SystemOffHilFailure(
-                f"기존 증적을 자동 덮어쓰지 않습니다: {path}; 새 경로 또는 "
-                "--overwrite-evidence를 사용하십시오."
-            )
-        if path.exists() and not path.is_file():
-            raise SystemOffHilFailure(f"증적 경로가 일반 파일이 아닙니다: {path}")
-        if path.exists() and overwrite:
-            path.unlink()
+    if evidence.exists() and not evidence.is_file():
+        raise SystemOffHilFailure(f"증적 경로가 일반 파일이 아닙니다: {evidence}")
+    if evidence.exists() and not overwrite:
+        raise SystemOffHilFailure(
+            f"기존 증적을 자동 덮어쓰지 않습니다: {evidence}; 새 경로 또는 "
+            "--overwrite-evidence를 사용하십시오."
+        )
     evidence.parent.mkdir(parents=True, exist_ok=True)
+
+    while True:
+        attempt_id = secrets.token_hex(8)
+        transcript = evidence.with_name(
+            f"{evidence.stem}.attempt-{attempt_id}.transcript.log"
+        )
+        if not transcript.exists():
+            break
     return evidence, transcript
+
+
+## @brief 임시 파일을 완전히 기록한 뒤 목적 경로를 원자적으로 교체합니다.
+def atomic_write_bytes(path: Path, payload: bytes) -> None:
+    temporary = path.with_name(f".{path.name}.{secrets.token_hex(8)}.tmp")
+    try:
+        with temporary.open("xb") as stream:
+            stream.write(payload)
+            stream.flush()
+            os.fsync(stream.fileno())
+        temporary.replace(path)
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+
+
+## @brief 새 transcript를 먼저 확정하고 PASS evidence를 마지막에 원자 교체합니다.
+def write_pass_outputs(
+    evidence_path: Path,
+    transcript_path: Path,
+    transcript: bytes,
+    evidence: dict[str, Any],
+) -> None:
+    encoded_evidence = (
+        json.dumps(evidence, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    ).encode("utf-8")
+    atomic_write_bytes(transcript_path, transcript)
+    atomic_write_bytes(evidence_path, encoded_evidence)
 
 
 ## @brief PASS를 exact source·image·nonce·수동 fixture·안전 계약과 결합합니다.
@@ -854,16 +928,15 @@ def main(arguments: Sequence[str] | None = None) -> int:
             result_timeout=args.result_timeout,
         )
     except TranscriptFailure as error:
-        transcript_path.write_bytes(error.transcript)
+        atomic_write_bytes(transcript_path, error.transcript)
         raise SystemOffHilFailure(
             f"{error}; 실패 transcript={transcript_path}"
         ) from error
 
     if image.stat().st_size != image_size or file_sha256(image) != image_sha256:
-        transcript_path.write_bytes(capture.transcript)
+        atomic_write_bytes(transcript_path, capture.transcript)
         raise SystemOffHilFailure("수동 시험 중 HEX byte가 변경되어 PASS 증적 생성을 거부했습니다.")
 
-    transcript_path.write_bytes(capture.transcript)
     evidence = build_evidence(
         core_revision=core_revision,
         board_revision=board_revision,
@@ -879,10 +952,11 @@ def main(arguments: Sequence[str] | None = None) -> int:
         result=result,
         build_record=build_record,
     )
-    evidence_path.write_text(
-        json.dumps(evidence, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-        newline="\n",
+    write_pass_outputs(
+        evidence_path,
+        transcript_path,
+        capture.transcript,
+        evidence,
     )
     print(
         "M15 System OFF wake HIL PASS: "
@@ -896,6 +970,12 @@ def main(arguments: Sequence[str] | None = None) -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except (RuntimeError, OSError, ValueError, subprocess.SubprocessError) as error:
+    except (
+        EOFError,
+        RuntimeError,
+        OSError,
+        ValueError,
+        subprocess.SubprocessError,
+    ) as error:
         print(f"M15 System OFF HIL FAIL: {error}", file=sys.stderr)
         raise SystemExit(1) from error

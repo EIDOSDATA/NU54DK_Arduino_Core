@@ -231,8 +231,25 @@ class M15BoardSystemContractTests(unittest.TestCase):
         self.assertIn("NUCODE_M15_SYSTEM_OFF_REQUEST:schema=2:phase=TIMED", target)
         self.assertIn("NUCODE_M15_SYSTEM_OFF_ENTERING:schema=2:phase=BUTTON", target)
         self.assertIn("report.cause != expected", target)
-        self.assertIn('serial_port.write(f"ARM_TIMED:{nonce}\\n"', runner)
-        self.assertIn('serial_port.write(f"ARM_BUTTON:{nonce}\\n"', runner)
+        self.assertEqual(
+            target.count("((report.supported & expected) != expected)"), 2
+        )
+        self.assertNotIn("::strlen(nonce)", target)
+        self.assertIn("return nonce[nonce_length] == '\\0';", target)
+        self.assertIn(
+            'abortPersistedState("BUTTON_COMMAND_TIMEOUT"', target
+        )
+        self.assertIn(
+            'abortPersistedResetState("TIMED_RESET"', target
+        )
+        self.assertIn(
+            'abortPersistedState("UNEXPECTED_BUTTON_READY_REBOOT"', target
+        )
+        self.assertIn('abortPersistedState("STATE_LOAD"', target)
+        self.assertIn('timed_command = f"ARM_TIMED:{nonce}\\n"', runner)
+        self.assertIn("serial_port.write(timed_command)", runner)
+        self.assertIn('button_command = f"ARM_BUTTON:{nonce}\\n"', runner)
+        self.assertIn("serial_port.write(button_command)", runner)
         self.assertIn("--acknowledge-interface-switch", runner)
         self.assertIn("--acknowledge-button-wake", runner)
         self.assertIn("DISABLE_SWD_ONLY", runner)

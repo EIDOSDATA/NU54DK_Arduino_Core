@@ -60,16 +60,22 @@ namespace
 		char nonce[nonce_length + 1U];
 	};
 
-	/** @brief 오류 열거값을 fail-closed protocol에 기록합니다. */
-	void reportFailure(const char *stage, Error error)
+	/** @brief 오류와 이미 캡처한 driver 오류를 fail-closed protocol에 기록합니다. */
+	void reportFailure(const char *stage, Error error, int driver_error)
 	{
 		Serial.print("NUCODE_M15_SYSTEM_OFF_FAIL:stage=");
 		Serial.print(stage);
 		Serial.print(":error=");
 		Serial.print(static_cast<unsigned int>(error));
 		Serial.print(":driver_error=");
-		Serial.println(NU54DK.lastDriverError());
+		Serial.println(driver_error);
 		Serial.flush();
+	}
+
+	/** @brief 현재 BoardSystem driver 오류와 함께 오류를 기록합니다. */
+	void reportFailure(const char *stage, Error error)
+	{
+		reportFailure(stage, error, NU54DK.lastDriverError());
 	}
 
 	/** @brief 기대 reset 원인과 다른 재부팅을 raw 값으로 기록합니다. */
@@ -92,7 +98,7 @@ namespace
 	/** @brief 주어진 문자열이 정확한 소문자 32자리 16진수 nonce인지 검사합니다. */
 	bool validNonce(const char *nonce)
 	{
-		if ((nonce == nullptr) || (::strlen(nonce) != nonce_length))
+		if (nonce == nullptr)
 		{
 			return false;
 		}
@@ -105,7 +111,7 @@ namespace
 				return false;
 			}
 		}
-		return true;
+		return nonce[nonce_length] == '\0';
 	}
 
 	/** @brief settings에서 읽은 상태 레코드가 지원 schema와 단계인지 검사합니다. */
@@ -153,6 +159,42 @@ namespace
 	{
 		const Error error = NU54DK.storageRemove(state_key);
 		return error == Error::not_found ? Error::none : error;
+	}
+
+	/** @brief terminal 실패 전에 영구 상태를 제거해 다음 실행을 복구 가능하게 합니다. */
+	bool removeStateBeforeFailure()
+	{
+		const Error remove_error = removeState();
+		if (remove_error != Error::none)
+		{
+			reportFailure("FAILURE_STATE_REMOVE", remove_error);
+			return false;
+		}
+		return true;
+	}
+
+	/** @brief 원래 driver 오류를 보존하면서 영구 상태를 제거하고 실패를 기록합니다. */
+	void abortPersistedState(const char *stage, Error error)
+	{
+		const int driver_error = NU54DK.lastDriverError();
+		if (!removeStateBeforeFailure())
+		{
+			return;
+		}
+		reportFailure(stage, error, driver_error);
+	}
+
+	/** @brief 영구 상태를 제거한 뒤 reset 원인 불일치를 기록합니다. */
+	void abortPersistedResetState(
+		const char *stage,
+		std::uint32_t expected,
+		const ResetReport &report)
+	{
+		if (!removeStateBeforeFailure())
+		{
+			return;
+		}
+		reportResetFailure(stage, expected, report);
 	}
 
 	/** @brief newline으로 끝난 UART 명령 하나를 제한 시간 안에 읽습니다. */
@@ -231,7 +273,7 @@ namespace
 		const Error state_error = saveState(state);
 		if (state_error != Error::none)
 		{
-			reportFailure("TIMED_STATE_SAVE", state_error);
+			abortPersistedState("TIMED_STATE_SAVE", state_error);
 			return;
 		}
 
@@ -248,11 +290,11 @@ namespace
 		const Error clear_error = NU54DK.clearResetCause();
 		if (clear_error != Error::none)
 		{
-			reportFailure("TIMED_RESET_CLEAR", clear_error);
+			abortPersistedState("TIMED_RESET_CLEAR", clear_error);
 			return;
 		}
 		const Error off_error = NU54DK.enterSystemOffAfter(timed_wake_delay_us);
-		reportFailure("ENTER_SYSTEM_OFF_TIMED", off_error);
+		abortPersistedState("ENTER_SYSTEM_OFF_TIMED", off_error);
 	}
 
 	/** @brief timed wake 성공 뒤 같은 nonce로 SW0 System OFF를 준비합니다. */
@@ -266,13 +308,13 @@ namespace
 		char command[command_capacity] = {};
 		if (!waitForCommand(command, sizeof(command)))
 		{
-			reportFailure("BUTTON_COMMAND_TIMEOUT", Error::invalid_argument);
+			abortPersistedState("BUTTON_COMMAND_TIMEOUT", Error::invalid_argument);
 			return;
 		}
 		const char *nonce = commandNonce(command, "ARM_BUTTON:");
 		if ((nonce == nullptr) || (::strcmp(nonce, state.nonce) != 0))
 		{
-			reportFailure("BUTTON_COMMAND", Error::permission_denied);
+			abortPersistedState("BUTTON_COMMAND", Error::permission_denied);
 			return;
 		}
 
@@ -280,7 +322,7 @@ namespace
 		const Error state_error = saveState(state);
 		if (state_error != Error::none)
 		{
-			reportFailure("BUTTON_STATE_SAVE", state_error);
+			abortPersistedState("BUTTON_STATE_SAVE", state_error);
 			return;
 		}
 
@@ -301,20 +343,21 @@ namespace
 		const Error clear_error = NU54DK.clearResetCause();
 		if (clear_error != Error::none)
 		{
-			reportFailure("BUTTON_RESET_CLEAR", clear_error);
+			abortPersistedState("BUTTON_RESET_CLEAR", clear_error);
 			return;
 		}
 		const Error off_error = NU54DK.enterSystemOffOnButton(WakeButton::sw0);
-		reportFailure("ENTER_SYSTEM_OFF_BUTTON", off_error);
+		abortPersistedState("ENTER_SYSTEM_OFF_BUTTON", off_error);
 	}
 
 	/** @brief CLOCK 원인이 정확한 timed wake만 승인하고 버튼 단계로 전이합니다. */
 	void continueAfterTimedWake(ScenarioState &state, const ResetReport &report)
 	{
 		const std::uint32_t expected = static_cast<std::uint32_t>(ResetCause::clock);
-		if (report.cause != expected)
+		if ((report.cause != expected) ||
+			((report.supported & expected) != expected))
 		{
-			reportResetFailure("TIMED_RESET", expected, report);
+			abortPersistedResetState("TIMED_RESET", expected, report);
 			return;
 		}
 
@@ -322,13 +365,13 @@ namespace
 		const Error state_error = saveState(state);
 		if (state_error != Error::none)
 		{
-			reportFailure("TIMED_PASS_STATE_SAVE", state_error);
+			abortPersistedState("TIMED_PASS_STATE_SAVE", state_error);
 			return;
 		}
 		const Error clear_error = NU54DK.clearResetCause();
 		if (clear_error != Error::none)
 		{
-			reportFailure("TIMED_WAKE_RESET_CLEAR", clear_error);
+			abortPersistedState("TIMED_WAKE_RESET_CLEAR", clear_error);
 			return;
 		}
 
@@ -351,9 +394,10 @@ namespace
 	{
 		const std::uint32_t expected =
 			static_cast<std::uint32_t>(ResetCause::low_power_wake);
-		if (report.cause != expected)
+		if ((report.cause != expected) ||
+			((report.supported & expected) != expected))
 		{
-			reportResetFailure("BUTTON_RESET", expected, report);
+			abortPersistedResetState("BUTTON_RESET", expected, report);
 			return;
 		}
 		const Error remove_error = removeState();
@@ -412,7 +456,7 @@ void setup(void)
 	const Error state_error = loadState(state, state_exists);
 	if (state_error != Error::none)
 	{
-		reportFailure("STATE_LOAD", state_error);
+		abortPersistedState("STATE_LOAD", state_error);
 		return;
 	}
 
@@ -439,10 +483,10 @@ void setup(void)
 		finishAfterButtonWake(state, report);
 		break;
 	case Phase::timed_passed:
-		reportFailure("UNEXPECTED_BUTTON_READY_REBOOT", Error::driver_error);
+		abortPersistedState("UNEXPECTED_BUTTON_READY_REBOOT", Error::driver_error);
 		break;
 	default:
-		reportFailure("STATE_PHASE", Error::driver_error);
+		abortPersistedState("STATE_PHASE", Error::driver_error);
 		break;
 	}
 }
