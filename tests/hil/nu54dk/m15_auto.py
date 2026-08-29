@@ -346,6 +346,97 @@ def flash_image(
     )
 
 
+## @brief exact UID와 attach-only 정책으로 pyOCD session을 만듭니다.
+def create_probe_release_session(board_id: str, connect_helper: Any = None) -> Any:
+    if connect_helper is None:
+        try:
+            from pyocd.core.helpers import ConnectHelper
+        except ImportError as error:
+            raise AutoHilFailure("M15 HIL Python 환경에 pyOCD가 없습니다.") from error
+        connect_helper = ConnectHelper
+    session = connect_helper.session_with_chosen_probe(
+        unique_id=board_id,
+        auto_open=False,
+        options={
+            "target_override": "nrf54l",
+            "connect_mode": "attach",
+            "resume_on_disconnect": True,
+        },
+    )
+    if session is None:
+        raise AutoHilFailure(f"CMSIS-DAP probe를 찾지 못했습니다: {board_id}")
+    return session
+
+
+## @brief SW-DP를 dormant 상태로 전환해 host 없는 동안의 debug 재접속을 막습니다.
+def enter_swd_dormant(probe: Any) -> None:
+    probe.swj_sequence(51, 0xFFFFFFFFFFFFFF)
+    probe.swj_sequence(16, 0xE3BC)
+
+
+## @brief System OFF 전에 DP power, SWD dormant와 CMSIS-DAP 해제를 검증합니다.
+def release_probe_debug_power(board_id: str) -> None:
+    session = create_probe_release_session(board_id)
+    probe = session.probe
+    if str(probe.unique_id).casefold() != board_id.casefold():
+        raise AutoHilFailure(
+            "선택된 CMSIS-DAP probe가 exact UID와 다릅니다: "
+            f"기대={board_id}, 실제={probe.unique_id}"
+        )
+    release = {
+        "dp_called": False,
+        "dp_acknowledged": False,
+        "swd_dormant_completed": False,
+        "dap_called": False,
+        "dap_disconnected": False,
+    }
+    try:
+        session.open()
+        debug_port = session.target.dp
+        original_probe_disconnect = probe.disconnect
+
+        def checked_disconnect() -> None:
+            """! @brief debug power ACK를 내리고 SW-DP를 dormant로 전환합니다. """
+            release["dp_called"] = True
+            release["dp_acknowledged"] = bool(debug_port.power_down_debug())
+            if release["dp_acknowledged"]:
+                enter_swd_dormant(probe)
+                release["swd_dormant_completed"] = True
+
+        def checked_probe_disconnect() -> None:
+            """! @brief CMSIS-DAP DAP_Disconnect가 완료됐는지 보존합니다. """
+            release["dap_called"] = True
+            original_probe_disconnect()
+            release["dap_disconnected"] = True
+
+        debug_port.disconnect = checked_disconnect
+        probe.disconnect = checked_probe_disconnect
+        session.close()
+    finally:
+        if probe.is_open:
+            try:
+                probe.disconnect()
+            finally:
+                probe.close()
+    if not all(release.values()) or probe.is_open:
+        raise AutoHilFailure(
+            "CMSIS-DAP debug/system power request 해제를 검증하지 못했습니다: "
+            f"{release}"
+        )
+
+
+## @brief DAPLink 기록 뒤 target이 명령을 기다리는 동안 probe debug power를 해제합니다.
+def flash_and_release_debug_power(
+    volume: DaplinkVolume,
+    image: Path,
+    timeout_seconds: float,
+    board_id: str,
+) -> tuple[str, str]:
+    flash_result = flash_image(volume, image, timeout_seconds)
+    release_probe_debug_power(board_id)
+    return flash_result
+
+
 ## @brief 한 UART 명령을 CRLF로 끝내 전송합니다.
 def write_command(serial_port: Any, command: bytes) -> None:
     request = command + b"\r\n"
@@ -453,7 +544,7 @@ def _execute_protocol(
 
         while time.monotonic() < deadline:
             line, raw = read_line(serial_port, pending, deadline, raw_capture)
-            sys.stdout.write(raw.decode("utf-8", errors="replace"))
+            sys.stdout.write(raw.decode("utf-8", errors="backslashreplace"))
             sys.stdout.flush()
             stripped = line.strip()
             if not stripped.startswith(PREFIX):
@@ -867,6 +958,7 @@ def build_evidence(
             "pmic_write_executed": False,
             "mass_erase_requested": False,
             "recovery_requested": False,
+            "probe_debug_power_released_and_swd_dormant_before_start": True,
         },
     }
 
@@ -919,7 +1011,9 @@ def main(arguments: Sequence[str] | None = None) -> int:
             port_name=port_name,
             baud_rate=args.baud,
             result_timeout_seconds=args.result_timeout,
-            flash_callback=lambda: flash_image(volume, image, args.flash_timeout),
+            flash_callback=lambda: flash_and_release_debug_power(
+                volume, image, args.flash_timeout, board_id
+            ),
         )
         validate_image_unchanged(image, image_size, image_sha256)
         transcript_path.write_bytes(execution.transcript)

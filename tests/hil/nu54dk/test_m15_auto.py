@@ -343,6 +343,112 @@ class M15AutoHilTests(unittest.TestCase):
             self.assertNotIn("--recover", joined)
         self.assertEqual(reflash[-1], str(image))
 
+    def test_probe_release_session_is_exact_attach_only(self) -> None:
+        """! @brief pyOCD release session이 exact UID와 attach-only 정책을 사용합니다. """
+        expected_session = object()
+
+        class FakeConnectHelper:
+            """! @brief pyOCD session 생성 인자를 보존하는 시험 대역입니다. """
+
+            arguments = None
+
+            @classmethod
+            def session_with_chosen_probe(cls, **kwargs):
+                cls.arguments = kwargs
+                return expected_session
+
+        actual = MODULE.create_probe_release_session(
+            "exact-probe-id", FakeConnectHelper
+        )
+        self.assertIs(actual, expected_session)
+        self.assertEqual(FakeConnectHelper.arguments["unique_id"], "exact-probe-id")
+        self.assertFalse(FakeConnectHelper.arguments["auto_open"])
+        self.assertEqual(
+            FakeConnectHelper.arguments["options"],
+            {
+                "target_override": "nrf54l",
+                "connect_mode": "attach",
+                "resume_on_disconnect": True,
+            },
+        )
+
+    def test_probe_debug_power_release_checks_dp_dap_and_close(self) -> None:
+        """! @brief DP ACK, DAP_Disconnect와 probe close를 모두 확인합니다. """
+
+        class FakeDebugPort:
+            """! @brief DP power-down 결과를 제공하는 시험 대역입니다. """
+
+            power_down_calls = 0
+
+            def disconnect(self) -> None:
+                raise AssertionError("release hook이 설치되지 않았습니다.")
+
+            def power_down_debug(self) -> bool:
+                self.power_down_calls += 1
+                return True
+
+        class FakeProbe:
+            """! @brief SWJ sequence, CMSIS-DAP disconnect와 close를 기록합니다. """
+
+            unique_id = "exact-probe-id"
+            is_open = False
+            disconnect_calls = 0
+            swj_sequences = []
+
+            def disconnect(self) -> None:
+                self.disconnect_calls += 1
+
+            def swj_sequence(self, length: int, bits: int) -> None:
+                self.swj_sequences.append((length, bits))
+
+            def close(self) -> None:
+                self.is_open = False
+
+        class FakeSession:
+            """! @brief pyOCD close 순서를 재현하는 시험 session입니다. """
+
+            def __init__(self) -> None:
+                self.probe = FakeProbe()
+                self.target = type("Target", (), {"dp": FakeDebugPort()})()
+
+            def open(self) -> None:
+                self.probe.is_open = True
+
+            def close(self) -> None:
+                self.target.dp.disconnect()
+                self.probe.disconnect()
+                self.probe.close()
+
+        session = FakeSession()
+        with mock.patch.object(
+            MODULE, "create_probe_release_session", return_value=session
+        ):
+            MODULE.release_probe_debug_power("exact-probe-id")
+        self.assertEqual(session.target.dp.power_down_calls, 1)
+        self.assertEqual(
+            session.probe.swj_sequences,
+            [(51, 0xFFFFFFFFFFFFFF), (16, 0xE3BC)],
+        )
+        self.assertEqual(session.probe.disconnect_calls, 1)
+        self.assertFalse(session.probe.is_open)
+
+    def test_probe_debug_power_release_fails_closed(self) -> None:
+        """! @brief DP power ACK 해제가 실패하면 자동 HIL을 시작하지 않습니다. """
+        session = mock.MagicMock()
+        session.probe.unique_id = "exact-probe-id"
+        session.probe.is_open = False
+        session.target.dp.power_down_debug.return_value = False
+
+        def close_session() -> None:
+            session.target.dp.disconnect()
+            session.probe.disconnect()
+
+        session.close.side_effect = close_session
+        with mock.patch.object(
+            MODULE, "create_probe_release_session", return_value=session
+        ), self.assertRaisesRegex(MODULE.AutoHilFailure, "power request"):
+            MODULE.release_probe_debug_power("exact-probe-id")
+
     def test_recovery_forces_utf8_for_windows_pyocd_output(self) -> None:
         """! @brief CP949 console에서도 pyOCD 진단 문자가 복구를 깨지 않습니다. """
 
@@ -525,6 +631,11 @@ class M15AutoHilTests(unittest.TestCase):
             self.assertEqual(evidence["image"]["sha256"], MODULE.file_sha256(image))
             self.assertEqual(
                 evidence["build_record"]["record_sha256"], "c" * 64
+            )
+            self.assertTrue(
+                evidence["safety"][
+                    "probe_debug_power_released_and_swd_dormant_before_start"
+                ]
             )
 
 

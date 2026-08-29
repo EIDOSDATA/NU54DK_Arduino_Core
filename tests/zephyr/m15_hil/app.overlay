@@ -5,6 +5,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+#include <nucode/nu54dk-lfxo-external-caps.dtsi>
+
 / {
 	chosen {
 		nucode,arduino-wire = &i2c22;

@@ -35,6 +35,7 @@ SUITES = (
     ("m15_wake", "nucode.m15.wake"),
 )
 WINDOWS_OUTDIR_MAX_LENGTH = 32
+M15_DIRECTORIES = ("m15_board", "m15_hil", "m15_wake")
 
 
 class BuildFailure(RuntimeError):
@@ -84,6 +85,36 @@ def validate_report(report_path: Path) -> None:
         raise BuildFailure(f"Twister suite 집합이 다릅니다: {sorted(actual)}")
 
 
+## @brief M15 target의 생성 DTS가 NU54DK 외부 LFXO 커패시터 구성을 사용하는지 검사합니다.
+def validate_m15_lfxo(outdir: Path) -> None:
+    platform_directory = BOARD_TARGET.replace("/", "_")
+    scenario_by_directory = dict(SUITES)
+    for directory in M15_DIRECTORIES:
+        devicetree_path = (
+            outdir
+            / platform_directory
+            / "zephyr_gnu"
+            / scenario_by_directory[directory]
+            / directory
+            / "zephyr"
+            / "zephyr.dts"
+        )
+        if not devicetree_path.is_file():
+            raise BuildFailure(f"M15 생성 devicetree가 없습니다: {devicetree_path}")
+        devicetree = devicetree_path.read_text(encoding="utf-8")
+        marker = "lfxo: lfxo {"
+        start = devicetree.find(marker)
+        end = devicetree.find("\n\t\t};", start)
+        if start < 0 or end < 0:
+            raise BuildFailure(f"M15 LFXO node를 찾지 못했습니다: {directory}")
+        body = devicetree[start:end]
+        if (
+            'load-capacitors = "external";' not in body
+            or "load-capacitance-femtofarad" in body
+        ):
+            raise BuildFailure(f"M15 외부 LFXO 부하 커패시터 계약이 다릅니다: {directory}")
+
+
 ## @brief exact NCS workspace에서 고정된 target suite만 빌드합니다.
 def run_build(workspace: Path, outdir: Path, lock: dict[str, Any]) -> None:
     LOCK_MODULE.validate_workspace(workspace, lock)
@@ -126,6 +157,7 @@ def run_build(workspace: Path, outdir: Path, lock: dict[str, Any]) -> None:
     if result.returncode != 0:
         raise BuildFailure(f"Twister가 종료 코드 {result.returncode}로 실패했습니다.")
     validate_report(outdir / "twister.json")
+    validate_m15_lfxo(outdir)
 
 
 ## @brief 대표 Zephyr build를 실행하고 고정 identity evidence를 기록합니다.

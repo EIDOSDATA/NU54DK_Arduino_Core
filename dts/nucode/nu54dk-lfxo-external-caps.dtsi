@@ -1,0 +1,11 @@
+/**
+ * @file nu54dk-lfxo-external-caps.dtsi
+ * @brief NU54DK에 실장된 외부 LFXO 부하 커패시터 구성을 적용합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+&lfxo {
+	load-capacitors = "external";
+	/delete-property/ load-capacitance-femtofarad;
+};

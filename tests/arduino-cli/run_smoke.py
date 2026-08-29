@@ -154,7 +154,20 @@ def compile_command(cli: Path, config: Path, build_path: Path, sketch: Path, lib
     return command
 
 
-## @brief build context와 Zephyr artifact의 기본 계약을 검증합니다.
+## @brief 생성된 devicetree가 NU54DK 외부 LFXO 부하 커패시터를 사용하는지 검사합니다.
+def assert_external_lfxo(devicetree_path: Path) -> None:
+    devicetree = devicetree_path.read_text(encoding="utf-8")
+    match = re.search(r"\blfxo:\s+lfxo\s*\{(?P<body>.*?)^\s*\};", devicetree, re.DOTALL | re.MULTILINE)
+    if match is None:
+        raise SmokeFailure("generated devicetree has no labeled LFXO node")
+    body = match.group("body")
+    if 'load-capacitors = "external";' not in body:
+        raise SmokeFailure("generated LFXO does not use external load capacitors")
+    if "load-capacitance-femtofarad" in body:
+        raise SmokeFailure("generated LFXO still enables an internal load capacitor")
+
+
+## @brief build context, Zephyr artifact와 NU54DK LFXO의 기본 계약을 검증합니다.
 def assert_build(build_path: Path, project_name: str) -> dict:
     context_path = build_path / "nu54-zephyr" / "context.json"
     if not context_path.is_file():
@@ -166,6 +179,7 @@ def assert_build(build_path: Path, project_name: str) -> dict:
     cache_dir = Path(str(context.get("cache_dir", "")))
     if not isinstance(cache_key, str) or not re.fullmatch(r"[0-9a-f]{64}", cache_key):
         raise SmokeFailure("build context has no full M9 cache key")
+    assert_external_lfxo(Path(context["zephyr_build_dir"]) / "zephyr" / "zephyr.dts")
     if not cache_dir.is_dir():
         raise SmokeFailure(f"persistent cache directory is missing: {cache_dir}")
     for metadata in ("input-manifest.json", "state.json", "access.json"):
