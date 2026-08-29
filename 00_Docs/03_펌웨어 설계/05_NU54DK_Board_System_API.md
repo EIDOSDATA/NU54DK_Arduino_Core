@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-M15-BOARD-SYSTEM-001 |
-| 문서 개정 | 1.1 |
+| 문서 개정 | 1.2 |
 | 문서 상태 | M15 구현·검증 진행 중 — System OFF 결합 HIL NOT RUN |
 | 적용 제품 버전 | `v0.2.0` |
 | 최종 갱신일 | 2026-08-30 |
@@ -133,14 +133,19 @@ M15 자동 HIL image와 runner는 System OFF에 진입하지 않는다. 자동 �
 uptime, GRTC one-shot callback, Settings reset persistence, WDT 정상 동작과 reset 경계다.
 GRTC alarm callback의 성공을 timed System OFF wake 성공으로 확대하지 않는다.
 
+Core `6898f7917348fab3c5cf54eec0756523e2c27d69`의 동일한 공식 CI HEX로 두 NU54DK에서 이
+비-System-OFF scope를 2/2 통과했다. `timed_system_off_wake`와
+`button_system_off_wake`는 두 실행 모두 수행하지 않았다.
+
 System OFF는 공식 CI image를 사용하는 후속 수동 결합 HIL에서 검증한다. Image를 기록하고
 UART를 준비한 뒤 온보드 debug-control 2연 `SW1`의 `DISABLE_SWD` 쪽만 격리 위치로 전환한다.
 `DISABLE_UART` 쪽은 전환하지 않아 UART 연결을 유지한다. 이 debug-control `SW1`은 Arduino
 사용자 버튼 `SW1`/P1.09와 다른 물리 부품이다.
 
 결합 HIL은 GRTC timed wake와 `RESET_CLOCK`을 먼저 확인하고, 이어서 다시 System OFF에 진입해
-사용자 SW0/P1.13 wake와 `LOW_POWER_WAKE`를 확인한다. Active SWD가 만든 `RESET_DEBUG`는 두
-wake source의 PASS로 인정하지 않는다. 2026-08-30 현재 이 결합 HIL은 **NOT RUN**이며 두 단계가
+사용자 SW0/P1.13 wake와 `LOW_POWER_WAKE`를 확인한다. Active SWD가 만든 reset cause `32`
+(`RESET_DEBUG`)는 fixture contamination 진단이며 두 wake source의 PASS로 인정하지 않는다.
+2026-08-30 현재 이 결합 HIL은 **NOT RUN**이며 두 단계가
 모두 통과하기 전에는 M15를 완료로 판정하지 않는다.
 
 ## 9. BQ25186 PMIC 안전 경계
@@ -229,16 +234,16 @@ PMIC write API의 존재나 software semantic test를 전기적 안전성 PASS�
 
 | 경로 | 목적 | 현재 상태 |
 | --- | --- | --- |
-| `BoardInfo` | identity, device ID와 reset report | 구현됨, 최종 자동 결과 반영 전 |
-| `WatchdogBasic` | watchdog begin/feed 정상 경로 | 구현됨, 최종 자동 결과 반영 전 |
-| `CounterAlarm` | GRTC counter와 work-queue callback | 구현됨, 최종 자동 결과 반영 전 |
-| `SettingsStorage` | 내부 partition boot count | 구현됨, 최종 자동 결과 반영 전 |
+| `BoardInfo` | identity, device ID와 reset report | 구현됨, 비-System-OFF 자동 HIL 2/2 PASS |
+| `WatchdogBasic` | watchdog begin/feed 정상 경로 | 구현됨, stop·expiry reset 자동 HIL 2/2 PASS |
+| `CounterAlarm` | GRTC counter와 work-queue callback | 구현됨, callback 자동 HIL 2/2 PASS; timed wake NOT RUN |
+| `SettingsStorage` | 내부 partition boot count | 구현됨, reset persistence 자동 HIL 2/2 PASS |
 | `SystemOffWake` | 명시적 BUTTON/TIMER 명령 | 구현됨, System OFF 결합 HIL NOT RUN |
-| `tests/host/test_m15_board_system_contract.py` | 공개 API·구성·PMIC 안전 경계 | 실행 결과 반영 전 |
-| `tests/zephyr/m15_board` | production target compile/link와 안전한 read 상태 | 실행 결과 반영 전 |
-| `tests/zephyr/m15_hil` | identity·reset·GRTC callback·Settings·WDT 비-System-OFF 자동 HIL image | 실행 결과 반영 전 |
-| `tests/zephyr/m15_wake` | SWD 격리 timed GRTC→사용자 SW0 결합 HIL image | build/HIL 결과 반영 전 |
-| `tests/hil/nu54dk/m15_auto.py` | nonce 기반 비-System-OFF 자동 HIL과 비파괴 복구 | runner 준비, 실기 결과 반영 전 |
+| `tests/host/test_m15_board_system_contract.py` | 공개 API·구성·PMIC 안전 경계 | Software Gates run `33272543102` SUCCESS |
+| `tests/zephyr/m15_board` | production target compile/link와 안전한 read 상태 | 공식 CI build SUCCESS |
+| `tests/zephyr/m15_hil` | identity·reset·GRTC callback·Settings·WDT 비-System-OFF 자동 HIL image | 공식 CI build SUCCESS, 두 보드 HIL 2/2 PASS |
+| `tests/zephyr/m15_wake` | SWD 격리 timed GRTC→사용자 SW0 결합 HIL image | 공식 CI build SUCCESS, 물리 HIL NOT RUN |
+| `tests/hil/nu54dk/m15_auto.py` | nonce 기반 비-System-OFF 자동 HIL과 비파괴 복구 | 두 보드 실기 2/2 PASS |
 | `tests/hil/nu54dk/m15_system_off.py` | timed GRTC와 SW0 wake 결합 protocol·증적 | 준비 중, 물리 HIL NOT RUN |
 
 최종 실행 결과와 exact commit은

@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 2.3 |
+| 문서 체계 개정 | 2.4 |
 | 현재 정식 버전 | `v0.1.0` |
 | 다음 목표 버전 | `v0.2.0` |
 | 최종 갱신일 | 2026-08-30 |
@@ -45,7 +45,7 @@
 | M12 | **완료** | 고정 NCS CI/CD와 Linux/Windows 재현 build |
 | M13 | **완료** | `standard` profile, strict feature resolver와 Arduino 예제 7개 |
 | M14 | **완료** | Core API·DTS Variant, 로컬·원격 software/runtime와 신규 pin 물리 HIL 통과 |
-| M15 | **진행 중** | 비-System-OFF 자동 HIL과 SWD 격리 timed GRTC→사용자 SW0 결합 HIL 준비 중; 결합 HIL NOT RUN |
+| M15 | **진행 중** | 비-System-OFF 자동 HIL 2/2 PASS; SWD 격리 timed GRTC→사용자 SW0 결합 HIL NOT RUN |
 | M16 | 대기 | basic BLE Arduino library |
 | M17 | 대기 | NCS 기능·예제 coverage 첫 묶음 |
 | M18 | 대기 | `v0.2.0` RC와 stable 공개 |

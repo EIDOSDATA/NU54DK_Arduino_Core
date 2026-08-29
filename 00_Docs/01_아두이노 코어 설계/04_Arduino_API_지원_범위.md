@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | API-SUPPORT-001 |
-| 문서 개정 | 2.1 |
+| 문서 개정 | 2.2 |
 | 문서 상태 | v0.1.0 정식 공개·M14 완료; v0.2.0 M15 board/system API 검증 진행 중 |
 | 최종 갱신일 | 2026-08-30 |
 | 작성자 | Quantum / NUCODE |
@@ -27,8 +27,9 @@ Arduino CLI staged package build와 실제 P1.13 active-low 버튼의 `FALLING`,
 명시한다. v0.1.0 목표 상태는 당시 계획을 보존한 것이며 현재 완료 보고와 구분한다.
 
 M14의 Core API와 DTS 기반 Variant는 완료했다. M15는 NU54DK 전용 board/system 확장 API를
-구현·검증하는 단계이며 자동 결과는 최종 반영 전이고 SW0/P1.13 System OFF wake 물리 HIL은
-`NOT RUN`이다. 따라서 아래 M15 표는 구현 상태와 검증 상태를 분리한다.
+구현·검증하는 단계이며 비-System-OFF 자동 HIL은 두 보드에서 2/2 PASS했다. SWD를 격리한
+timed GRTC wake와 사용자 SW0/P1.13 wake 결합 HIL은 모두 `NOT RUN`이다. 따라서 아래 M15
+표는 구현 상태와 검증 상태를 분리한다.
 
 M7의 `Wire`, `SPI`, `analogRead()`와 `analogWrite()` production source 및 builder profile은
 NU54DK Twister target 11/11, Arduino CLI M7 4/4와 승인된 NU54DK driver HIL을 통과했다.
@@ -406,13 +407,13 @@ M14에서 `<nucode/Diagnostics.h>` 아래에 `Diagnostic`, subsystem/code token,
 
 | API/영역 | 구현 상태 | 검증 상태 | 제한 |
 | --- | --- | --- | --- |
-| Board identity | 구현됨 | 최종 자동 결과 반영 전 | DTS/build identity와 raw device ID; UUID 보장 아님 |
-| Reset cause·uptime | 구현됨 | 최종 자동 결과 반영 전 | 지원 mask 밖 reset cause를 합성하지 않음 |
-| Watchdog | 구현됨 | 최종 자동/target 결과 반영 전 | WDT31 실제 driver; stop 미지원 시 오류 반환 |
-| GRTC counter/alarm | 구현됨 | 최종 자동/target 결과 반영 전 | one-shot 1개, 최대 24시간, callback은 system work queue 문맥 |
-| Settings/ZMS storage | 구현됨 | 최종 자동/target 결과 반영 전 | `nucode/`, key 48자, value 256 byte; EEPROM/FS 아님 |
-| GRTC timed System OFF wake | 구현됨 | HIL 결과 반영 전 | 준비 뒤 성공 경로는 반환하지 않음 |
-| SW0~SW3 System OFF wake | 구현됨 | SW0/P1.13 물리 HIL **NOT RUN** | active-low DTS alias 사용 |
+| Board identity | 구현됨 | 자동 HIL 2/2 PASS | DTS/build identity와 raw device ID; UUID 보장 아님 |
+| Reset cause·uptime | 구현됨 | 64-bit uptime 자동 HIL 2/2 PASS | 지원 mask 밖 reset cause를 합성하지 않음 |
+| Watchdog | 구현됨 | stop·expiry reset 자동 HIL 2/2 PASS | WDT31 실제 driver; stop 미지원 시 오류 반환 |
+| GRTC counter/alarm | 구현됨 | callback 자동 HIL 2/2 PASS | one-shot 1개, 최대 24시간, callback은 system work queue 문맥 |
+| Settings/ZMS storage | 구현됨 | reset persistence 자동 HIL 2/2 PASS | `nucode/`, key 48자, value 256 byte; EEPROM/FS 아님 |
+| GRTC timed System OFF wake | 구현됨 | SWD 격리 결합 HIL **NOT RUN** | 준비 뒤 성공 경로는 반환하지 않음; callback PASS와 별개 |
+| SW0~SW3 System OFF wake | 구현됨 | 사용자 SW0/P1.13 결합 HIL **NOT RUN** | active-low DTS alias 사용; timed 단계 뒤 검증 |
 | BQ25186 read | 구현됨 | M15 실제 read 결과 반영 전 | `pmicBegin()`은 ID read-only; DTS node disabled 유지 |
 | BQ25186 write | 구현됨 | software 계약 검증 중, battery electrical HIL **NOT RUN** | 매 boot 명시 승인, 허용 field만 read-modify-write |
 | 배터리 온도 보호 | 미지원 | 해당 없음 | 실제 NTC 입력이 없어 항상 `false` |
