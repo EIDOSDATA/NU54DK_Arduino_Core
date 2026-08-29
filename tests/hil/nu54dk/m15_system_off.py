@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief M15 SW0 System OFF wake를 DAPLink와 UART로 검증합니다. """
+"""! @brief 공식 clean Ubuntu CI M15 artifact의 SW0 System OFF wake를 검증합니다. """
 
 from __future__ import annotations
 
@@ -45,7 +45,7 @@ from m14_pin_hil import (  # noqa: E402
     CORE_SOURCE_SCOPES,
     build_record_value,
     file_sha256,
-    files_digest,
+    git_committed_files_digest,
     git_revision,
     parent_board_revision,
     validate_board_revision,
@@ -155,15 +155,19 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     return parser.parse_args(arguments)
 
 
-## @brief 현재 Core·M15 application·board tree의 build record digest를 계산합니다.
+## @brief 공식 clean Ubuntu CI와 같은 commit blob 기준의 digest를 계산합니다.
 def current_source_digests() -> dict[str, str]:
     board_scope = BOARD_ROOT / "boards" / "nucode" / "nu54dk"
     return {
-        "core_source_sha256": files_digest(REPOSITORY, CORE_SOURCE_SCOPES),
-        "application_source_sha256": files_digest(
-            APPLICATION_SOURCE_ROOT, (APPLICATION_SOURCE_ROOT,)
+        "core_source_sha256": git_committed_files_digest(
+            REPOSITORY, REPOSITORY, CORE_SOURCE_SCOPES
         ),
-        "board_source_sha256": files_digest(BOARD_ROOT, (board_scope,)),
+        "application_source_sha256": git_committed_files_digest(
+            REPOSITORY, APPLICATION_SOURCE_ROOT, (APPLICATION_SOURCE_ROOT,)
+        ),
+        "board_source_sha256": git_committed_files_digest(
+            BOARD_ROOT, BOARD_ROOT, (board_scope,)
+        ),
     }
 
 
@@ -179,6 +183,8 @@ def validate_source_clean() -> None:
         "zephyr",
         "tests/zephyr/m15_wake",
         "tests/hil/nu54dk/m15_system_off.py",
+        "tests/hil/nu54dk/m14_pin_hil.py",
+        "tests/hil/nu54dk/m6_serial_echo.py",
     )
     core = subprocess.run(
         (

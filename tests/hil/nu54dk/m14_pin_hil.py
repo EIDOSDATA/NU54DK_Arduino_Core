@@ -209,6 +209,48 @@ def files_digest(base_directory: Path, scopes: Sequence[Path]) -> str:
     return hashlib.sha256(digest_input.encode("utf-8")).hexdigest()
 
 
+## @brief 공식 clean Ubuntu CI artifact를 소비할 때 HEAD blob byte로 digest합니다.
+def git_committed_files_digest(
+    repository: Path, base_directory: Path, scopes: Sequence[Path]
+) -> str:
+    input_files: list[Path] = []
+    for scope in scopes:
+        if scope.is_file():
+            input_files.append(scope)
+        elif scope.is_dir():
+            input_files.extend(path for path in scope.rglob("*") if path.is_file())
+
+    input_files.sort(key=lambda path: path.as_posix())
+    if not input_files:
+        raise PinHilFailure(f"source digest 입력 파일이 없습니다: {base_directory}")
+
+    digest_lines: list[str] = []
+    for path in input_files:
+        try:
+            repository_relative = path.relative_to(repository).as_posix()
+            digest_relative = path.relative_to(base_directory).as_posix()
+        except ValueError as error:
+            raise PinHilFailure(
+                f"source digest 경로가 repository/base 범위를 벗어났습니다: {path}"
+            ) from error
+        blob = subprocess.run(
+            ("git", "-C", str(repository), "show", f"HEAD:{repository_relative}"),
+            capture_output=True,
+            check=False,
+        )
+        if blob.returncode != 0:
+            diagnostic = blob.stderr.decode("utf-8", errors="replace").strip()
+            raise PinHilFailure(
+                "commit canonical source byte를 읽지 못했습니다: "
+                f"{repository_relative}: {diagnostic}"
+            )
+        digest_lines.append(
+            f"{digest_relative}:{hashlib.sha256(blob.stdout).hexdigest()}\n"
+        )
+
+    return hashlib.sha256("".join(digest_lines).encode("utf-8")).hexdigest()
+
+
 ## @brief 현재 Core·M14 application·board tree의 build record digest를 계산합니다.
 def current_source_digests() -> dict[str, str]:
     return {

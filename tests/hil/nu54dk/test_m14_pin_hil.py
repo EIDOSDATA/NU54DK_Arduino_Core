@@ -91,6 +91,26 @@ class ChunkSerial:
 class M14PinHilTests(unittest.TestCase):
     """! @brief pin identity, 동작 순서, timeout과 증적 경계를 검증합니다. """
 
+    def test_m14_keeps_live_worktree_digest_contract(self) -> None:
+        """! @brief M14 local build 검증이 CI canonical helper로 바뀌지 않게 고정합니다. """
+
+        with mock.patch.object(
+            MODULE, "files_digest", side_effect=("1" * 64, "2" * 64, "3" * 64)
+        ) as live_digest, mock.patch.object(
+            MODULE,
+            "git_committed_files_digest",
+            side_effect=AssertionError("M14는 canonical helper를 사용하면 안 됩니다."),
+        ):
+            self.assertEqual(
+                MODULE.current_source_digests(),
+                {
+                    "core_source_sha256": "1" * 64,
+                    "application_source_sha256": "2" * 64,
+                    "board_source_sha256": "3" * 64,
+                },
+            )
+        self.assertEqual(live_digest.call_count, 3)
+
     def test_accepts_exact_led_button_and_edge_contract(self) -> None:
         """! @brief LED 2개와 버튼 3개의 완전한 protocol만 승인합니다. """
 

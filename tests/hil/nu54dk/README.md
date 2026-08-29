@@ -11,9 +11,11 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m8_upload.py` | manifest를 검증한 pyOCD/J-Link upload 반복 시험 | NU54DK debug probe |
 | `m8_debug.py` | debug server와 Sketch source breakpoint 검증 | pyOCD 또는 J-Link |
 | `m14_pin_hil.py` | 신규 LED output/readback과 버튼 pull·edge 검증 | NU54DK, CMSIS-DAP V2 UART, 사용자 버튼 동작 |
+| `m15_auto.py` | identity·GRTC·Settings·WDT·timed System OFF 자동 검증 | 공식 Ubuntu CI artifact, NU54DK, CMSIS-DAP V2 UART |
 | `m15_system_off.py` | UART ARM 뒤 System OFF와 SW0 wake 검증 | NU54DK, CMSIS-DAP V2 UART, SW0 한 번 누름 |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
+| `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |
 | `test_m15_system_off.py` | M15 ARM·무응답 시간·wake protocol과 증적 경계를 검증 | 없음 |
 
 ## 실행 원칙
@@ -24,6 +26,42 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 - probe UID, COM port와 물리 fixture는 실행 인자로 명시하거나 안전한 자동 탐색 결과가 하나일
   때만 사용합니다.
 - 실기 PASS는 해당 commit, artifact hash와 fixture 조건을 검증 기록에 연결합니다.
+- M15 운영 절차에서는 고정된 NCS Ubuntu container를 사용하는 clean GitHub Actions build
+  artifact만 사용합니다. 로컬 Windows build를 M15 검증 증적으로 대체하지 않습니다.
+
+## M15 공식 CI artifact 계약
+
+`m15_auto.py`와 `m15_system_off.py`의 운영 입력은
+`.github/workflows/m12-reproducible-build.yml`이 exact commit에서 생성한
+`m12-zephyr-build-<40자리 commit>` artifact입니다. artifact를 다운로드한 Windows checkout도
+같은 commit이어야 하며 Core, M15 application, board package와 runner가 사용하는
+`m14_pin_hil.py`, `m6_serial_echo.py`가 모두 clean이어야 합니다. Runner는 revision·source
+digest와 HEX 실행 전후 불변성을 fail-closed로 검사하지만 GitHub run의 서명이나 attestation
+자체를 확인하지는 않으므로 run ID와 artifact 이름은 검증 기록에 별도로 남깁니다.
+
+Ubuntu producer는 checkout의 LF byte로 build record SHA-256을 만듭니다. Windows의 clean Git
+checkout은 같은 commit이어도 CRLF byte를 가질 수 있으므로 M15 consumer만 Git `HEAD` blob의
+canonical byte로 같은 digest를 재계산합니다. 이 처리는 dirty source를 허용하는 우회가 아닙니다.
+runner는 먼저 관련 source와 board submodule의 clean 상태, exact Core·board revision, 고정
+NCS/Zephyr revision과 target을 검증한 뒤 세 source digest가 모두 일치할 때만 flash합니다.
+M14 로컬 build/HIL은 기존대로 실제 working-tree byte를 검증합니다.
+
+비버튼 자동 HIL image는 artifact 안의 다음 경로를 사용합니다.
+
+```powershell
+$CoreRoot = "C:\Users\eidos\GitHub\NU54DK_Arduino_Core"
+$ArtifactRoot = "<다운로드해 압축을 푼 m12-zephyr-build artifact>"
+$Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
+$Commit = git -C $CoreRoot rev-parse HEAD
+$AutoHex = Join-Path $ArtifactRoot `
+  "twister\nrf54l15dk_nrf54l15_cpuapp_nu54dk\zephyr_gnu\nucode.m15.auto_hil\m15_hil\zephyr\zephyr.hex"
+
+& $Python -I "$CoreRoot\tests\hil\nu54dk\m15_auto.py" `
+  --hex $AutoHex `
+  --board-id "<시험할 CMSIS-DAP UID>" `
+  --expected-core-revision $Commit `
+  --evidence "$CoreRoot\build\m15\hil\m15-auto.evidence.json"
+```
 
 ## M14 신규 핀 HIL
 
@@ -96,22 +134,14 @@ System OFF에 진입하지 않으며, runner가 UART `READY`를 확인하고 정
 이 안내 전에 버튼을 누른 결과, 다른 GPIO 또는
 `LOW_POWER_WAKE`가 아닌 reset 원인, 누락·중복 token은 PASS로 인정하지 않습니다.
 
-NCS v3.4.0 Toolchain terminal에서 HIL image를 먼저 빌드합니다.
+버튼 HIL도 같은 공식 CI artifact의 build record와 image를 사용합니다. 로컬에서 image를 다시
+빌드하지 않습니다.
 
 ```powershell
 $CoreRoot = "C:\Users\eidos\GitHub\NU54DK_Arduino_Core"
-$NcsRoot = "C:\ncs\v3.4.0"
-$BoardRoot = "$CoreRoot\board_package\NU54DK_Zephyr_DTS"
-$Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
-$Build = "$env:TEMP\nu54dk-m15-wake"
-
-Push-Location $NcsRoot
-& $Python -I -m west build -p always `
-  -b "nrf54l15dk/nrf54l15/cpuapp/nu54dk" `
-  -d $Build `
-  "$CoreRoot\tests\zephyr\m15_wake" `
-  -- "-DBOARD_ROOT=$BoardRoot" "-DEXTRA_ZEPHYR_MODULES=$CoreRoot"
-Pop-Location
+$ArtifactRoot = "<다운로드해 압축을 푼 m12-zephyr-build artifact>"
+$WakeHex = Join-Path $ArtifactRoot `
+  "twister\nrf54l15dk_nrf54l15_cpuapp_nu54dk\zephyr_gnu\nucode.m15.wake\m15_wake\zephyr\zephyr.hex"
 ```
 
 실제 버튼 시험은 M15 변경을 commit한 exact source에서 다음과 같이 실행합니다. 여러 보드가
@@ -121,7 +151,7 @@ Pop-Location
 ```powershell
 $Commit = git -C $CoreRoot rev-parse HEAD
 & $Python -I "$CoreRoot\tests\hil\nu54dk\m15_system_off.py" `
-  --hex "$Build\zephyr\zephyr.hex" `
+  --hex $WakeHex `
   --board-id "<시험할 CMSIS-DAP UID>" `
   --expected-core-revision $Commit `
   --acknowledge-button-wake `

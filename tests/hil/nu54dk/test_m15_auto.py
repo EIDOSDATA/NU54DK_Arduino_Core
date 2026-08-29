@@ -3,9 +3,11 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import io
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -121,6 +123,80 @@ class FakeSerialModule:
 
 class M15AutoHilTests(unittest.TestCase):
     """! @brief M15 자동 HIL의 parser, 상태 순서와 복구 안전성을 검증합니다. """
+
+    def test_clean_linux_producer_matches_clean_crlf_consumer(self) -> None:
+        """! @brief Ubuntu CI source digest를 clean Windows checkout에서 재현합니다. """
+
+        with tempfile.TemporaryDirectory(prefix="nu54-m15-digest-") as temporary:
+            temporary_root = Path(temporary)
+            origin = temporary_root / "origin"
+            source_root = origin / "source"
+            source_root.mkdir(parents=True)
+            (origin / ".gitattributes").write_text("* text=auto\n", encoding="utf-8")
+            source = source_root / "fixture.cpp"
+            committed = b"first\nsecond\n"
+            source.write_bytes(committed)
+            for command in (
+                ("git", "init", "--quiet"),
+                ("git", "add", "."),
+                (
+                    "git",
+                    "-c",
+                    "user.name=NUCODE Test",
+                    "-c",
+                    "user.email=test@nucode.invalid",
+                    "commit",
+                    "--quiet",
+                    "-m",
+                    "fixture",
+                ),
+            ):
+                subprocess.run(command, cwd=origin, check=True, capture_output=True)
+
+            producer_line = (
+                "fixture.cpp:" + hashlib.sha256(committed).hexdigest() + "\n"
+            )
+            producer_digest = hashlib.sha256(
+                producer_line.encode("utf-8")
+            ).hexdigest()
+            repository = temporary_root / "windows-consumer"
+            subprocess.run(
+                (
+                    "git",
+                    "clone",
+                    "--quiet",
+                    "-c",
+                    "core.autocrlf=true",
+                    str(origin),
+                    str(repository),
+                ),
+                check=True,
+                capture_output=True,
+            )
+            source_root = repository / "source"
+            consumer_bytes = (source_root / "fixture.cpp").read_bytes()
+            self.assertEqual(consumer_bytes, committed.replace(b"\n", b"\r\n"))
+            status = subprocess.run(
+                ("git", "status", "--porcelain=v1", "--", "source"),
+                cwd=repository,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(status.stdout, "")
+            consumer_raw_line = (
+                "fixture.cpp:" + hashlib.sha256(consumer_bytes).hexdigest() + "\n"
+            )
+            self.assertNotEqual(
+                hashlib.sha256(consumer_raw_line.encode("utf-8")).hexdigest(),
+                producer_digest,
+            )
+            self.assertEqual(
+                MODULE.git_committed_files_digest(
+                    repository, source_root, (source_root,)
+                ),
+                producer_digest,
+            )
 
     def test_board_id_is_required(self) -> None:
         """! @brief 실제 probe를 암묵적 기본값으로 선택하지 않습니다. """
@@ -366,8 +442,27 @@ class M15AutoHilTests(unittest.TestCase):
         dirty = MODULE.subprocess.CompletedProcess(
             args=["git"], returncode=0, stdout="?? tests/zephyr/m15_hil/new\n", stderr=""
         )
-        with mock.patch.object(MODULE.subprocess, "run", side_effect=(clean, clean)):
+        with mock.patch.object(
+            MODULE.subprocess, "run", side_effect=(clean, clean)
+        ) as run:
             MODULE.validate_source_clean()
+        core_command = run.call_args_list[0].args[0]
+        self.assertIn("tests/hil/nu54dk/m14_pin_hil.py", core_command)
+        self.assertIn("tests/hil/nu54dk/m6_serial_echo.py", core_command)
+        for helper_path in (
+            "tests/hil/nu54dk/m14_pin_hil.py",
+            "tests/hil/nu54dk/m6_serial_echo.py",
+        ):
+            dirty_helper = MODULE.subprocess.CompletedProcess(
+                args=["git"],
+                returncode=0,
+                stdout=f" M {helper_path}\n",
+                stderr="",
+            )
+            with mock.patch.object(
+                MODULE.subprocess, "run", side_effect=(dirty_helper, clean)
+            ), self.assertRaisesRegex(MODULE.AutoHilFailure, "commit되지 않은"):
+                MODULE.validate_source_clean()
         with mock.patch.object(MODULE.subprocess, "run", side_effect=(dirty, clean)), \
              self.assertRaisesRegex(MODULE.AutoHilFailure, "commit되지 않은"):
             MODULE.validate_source_clean()

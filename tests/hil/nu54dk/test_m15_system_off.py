@@ -254,6 +254,45 @@ class M15SystemOffHilTests(unittest.TestCase):
             self.assertEqual(transcript.name, "m15.transcript.log")
             self.assertFalse(evidence.exists())
 
+    def test_dirty_imported_helper_or_board_source_is_rejected(self) -> None:
+        """! @brief 공용 digest/probe helper 변경을 System OFF 실행 전에 거부합니다. """
+
+        clean = MODULE.subprocess.CompletedProcess(
+            args=["git"], returncode=0, stdout="", stderr=""
+        )
+        with mock.patch.object(
+            MODULE.subprocess, "run", side_effect=(clean, clean)
+        ) as run:
+            MODULE.validate_source_clean()
+        core_command = run.call_args_list[0].args[0]
+        self.assertIn("tests/hil/nu54dk/m14_pin_hil.py", core_command)
+        self.assertIn("tests/hil/nu54dk/m6_serial_echo.py", core_command)
+
+        for helper_path in (
+            "tests/hil/nu54dk/m14_pin_hil.py",
+            "tests/hil/nu54dk/m6_serial_echo.py",
+        ):
+            dirty_helper = MODULE.subprocess.CompletedProcess(
+                args=["git"],
+                returncode=0,
+                stdout=f" M {helper_path}\n",
+                stderr="",
+            )
+            with mock.patch.object(
+                MODULE.subprocess, "run", side_effect=(dirty_helper, clean)
+            ), self.assertRaisesRegex(
+                MODULE.SystemOffHilFailure, "commit되지 않은"
+            ):
+                MODULE.validate_source_clean()
+
+        dirty_board = MODULE.subprocess.CompletedProcess(
+            args=["git"], returncode=0, stdout=" M boards/nucode/nu54dk/board.yml\n", stderr=""
+        )
+        with mock.patch.object(
+            MODULE.subprocess, "run", side_effect=(clean, dirty_board)
+        ), self.assertRaisesRegex(MODULE.SystemOffHilFailure, "submodule"):
+            MODULE.validate_source_clean()
+
 
 if __name__ == "__main__":
     unittest.main()

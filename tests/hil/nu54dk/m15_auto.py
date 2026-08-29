@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief NU54DK M15 비버튼 board/system 기능을 완전 자동 HIL로 검증합니다. """
+"""! @brief 공식 clean Ubuntu CI M15 artifact의 비버튼 기능을 자동 HIL로 검증합니다. """
 
 from __future__ import annotations
 
@@ -40,7 +40,7 @@ from m6_serial_echo import (  # noqa: E402
 from m14_pin_hil import (  # noqa: E402
     CORE_SOURCE_SCOPES,
     build_record_value,
-    files_digest,
+    git_committed_files_digest,
     git_revision,
     validate_board_revision,
 )
@@ -176,15 +176,19 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-## @brief 현재 Core·M15 자동 HIL application·board tree의 digest를 계산합니다.
+## @brief 공식 clean Ubuntu CI와 같은 commit blob 기준의 digest를 계산합니다.
 def current_source_digests() -> dict[str, str]:
     board_scope = BOARD_ROOT / "boards" / "nucode" / "nu54dk"
     return {
-        "core_source_sha256": files_digest(REPOSITORY, CORE_SOURCE_SCOPES),
-        "application_source_sha256": files_digest(
-            APPLICATION_SOURCE_ROOT, (APPLICATION_SOURCE_ROOT,)
+        "core_source_sha256": git_committed_files_digest(
+            REPOSITORY, REPOSITORY, CORE_SOURCE_SCOPES
         ),
-        "board_source_sha256": files_digest(BOARD_ROOT, (board_scope,)),
+        "application_source_sha256": git_committed_files_digest(
+            REPOSITORY, APPLICATION_SOURCE_ROOT, (APPLICATION_SOURCE_ROOT,)
+        ),
+        "board_source_sha256": git_committed_files_digest(
+            BOARD_ROOT, BOARD_ROOT, (board_scope,)
+        ),
     }
 
 
@@ -200,6 +204,8 @@ def validate_source_clean() -> None:
         "zephyr",
         "tests/zephyr/m15_hil",
         "tests/hil/nu54dk/m15_auto.py",
+        "tests/hil/nu54dk/m14_pin_hil.py",
+        "tests/hil/nu54dk/m6_serial_echo.py",
     )
     core = subprocess.run(
         (
