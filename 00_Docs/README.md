@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 2.1 |
+| 문서 체계 개정 | 2.2 |
 | 현재 정식 버전 | `v0.1.0` |
 | 다음 목표 버전 | `v0.2.0` |
-| 최종 갱신일 | 2026-08-29 |
+| 최종 갱신일 | 2026-08-30 |
 | 작성자 | Quantum / NUCODE |
 
 이 디렉터리는 Loader 없이 동작하는 Native Full Zephyr 기반 NU54DK Arduino Core의 결정,
@@ -33,8 +33,9 @@
 4. [제품 로드맵과 구현 마일스톤](<./01_아두이노 코어 설계/02_구현_로드맵.md>)
 5. [v0.2.0 구현 마일스톤](<./01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)
 6. [NCS v3.4.0 기능과 예제 지원 매트릭스](<./01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)
-7. [Boards Manager 설치와 패키징](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
-8. [v0.1.0 릴리스 노트](<./05_릴리스/11_v0.1.0_릴리스_노트.md>)
+7. [NU54DK Board/System API 설계](<./03_펌웨어 설계/05_NU54DK_Board_System_API.md>)
+8. [Boards Manager 설치와 패키징](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
+9. [v0.1.0 릴리스 노트](<./05_릴리스/11_v0.1.0_릴리스_노트.md>)
 
 ## 현재 진행 상태
 
@@ -44,7 +45,7 @@
 | M12 | **완료** | 고정 NCS CI/CD와 Linux/Windows 재현 build |
 | M13 | **완료** | `standard` profile, strict feature resolver와 Arduino 예제 7개 |
 | M14 | **완료** | Core API·DTS Variant, 로컬·원격 software/runtime와 신규 pin 물리 HIL 통과 |
-| M15 | 대기 | 다음 구현 대상인 NU54DK board/system library |
+| M15 | **진행 중** | board/system API·예제·시험 구현 중; 자동 결과 반영과 SW0 System OFF wake 물리 HIL 대기 |
 | M16 | 대기 | basic BLE Arduino library |
 | M17 | 대기 | NCS 기능·예제 coverage 첫 묶음 |
 | M18 | 대기 | `v0.2.0` RC와 stable 공개 |
@@ -85,6 +86,7 @@
 - [GPIO와 시간 API](<./03_펌웨어 설계/02_GPIO와_시간_API.md>)
 - [주변장치 API](<./03_펌웨어 설계/03_주변장치_API.md>)
 - [테스트와 검증](<./03_펌웨어 설계/04_테스트와_검증.md>)
+- [NU54DK Board/System API](<./03_펌웨어 설계/05_NU54DK_Board_System_API.md>)
 
 ### 04. 검증 기록
 
@@ -104,6 +106,7 @@
 - [M12 CI/CD와 재현 build 기준선](<./04_검증 기록/14_M12_CI_CD_기준선.md>)
 - [M13 구성 profile 및 예제 배포 검증](<./04_검증 기록/15_M13_구성_프로필_검증.md>)
 - [M14 Core API와 Variant 기준선](<./04_검증 기록/16_M14_Core_API와_Variant_기준선.md>)
+- [M15 NU54DK Board/System 기준선](<./04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)
 
 ### 05. 릴리스 문서
 

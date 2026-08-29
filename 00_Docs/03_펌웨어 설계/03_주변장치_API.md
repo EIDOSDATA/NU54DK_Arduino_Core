@@ -2,7 +2,10 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | v0.1.0 정식 구현·M6/M7 주변장치 검증 동기화; M13 프로필 정책 반영 |
+| 문서 ID | FW-PERIPHERAL-001 |
+| 문서 개정 | 2.1 |
+| 문서 상태 | v0.1.0 M6/M7 기준선 유지; M15 제한 PMIC adapter 경계 반영 |
+| 최종 갱신일 | 2026-08-30 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 RTOS | Zephyr v4.4.0 |
@@ -348,6 +351,26 @@ Arduino `endTransmission()`의 호환 코드와 Zephyr errno를 연결하되 상
 errno는 공개 status 4로 변환한다. 따라서 NACK도 address/data를 나눠 2 또는 3으로 반환하지 않는다. 원래 errno는
 Core 비공개 진단에 보존한다. target ztest는 overflow와 `-EIO`→4·원본 errno 보존을 검증했으며
 timeout 5와 실제 NACK 세분화는 검증하지 않았다.
+
+### 6.7 M15 BQ25186 board adapter
+
+M7의 read-only HIL 경계와 v0.1.0 범위 제외는 역사 기록으로 유지한다. M15는 별도
+`NUCODE_NU54DK` board/system library에서 BQ25186의 제한된 전원 관리 API를 추가한다.
+
+- BQ25186 DTS child node는 계속 disabled이며 Zephyr charger driver를 자동 시작하지 않는다.
+- `pmicBegin()`은 `MASK_ID`를 읽을 뿐 register를 쓰지 않고 기존 승인도 해제한다.
+- PMIC write는 같은 boot의 RAM에만 유지되는 명시적 승인 뒤에만 허용한다.
+- 공개 raw register API를 제공하지 않고 검토된 field만 reserved bit 보존 read-modify-write로
+  변경한다.
+- 충전 전압·전류·enable, recharge, `SYS_REG`, PMIC register watchdog, shutdown과 ship mode 진입 요청을
+  API로 표현한다.
+- 첫 I2C transaction이 PMIC register watchdog을 시작할 수 있다는 BQ25186 동작은 그대로
+  문서화한다.
+
+배터리가 없는 현재 fixture에서는 충전·재충전·rail·입력 제거 후 shutdown/ship 전기 HIL을 실행하지 않는다.
+이 항목은 `NOT RUN`이며 사용자 검증 책임이다. NU54DK 회로에 실제 NTC 입력이 없으므로
+배터리 온도 보호는 미지원이다. 상세 계약은
+[NU54DK Board/System API 설계](05_NU54DK_Board_System_API.md)를 따른다.
 
 ---
 

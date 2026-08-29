@@ -980,6 +980,76 @@ def test_m7_examples(cli: Path, config: Path, root: Path, repository: Path) -> N
     test_live_build_record_scope(context, root)
 
 
+## @brief M15 board/system 공개 예제와 feature conf·overlay 병합을 검증합니다.
+def test_m15_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    required_symbols = (
+        "CONFIG_HWINFO",
+        "CONFIG_WATCHDOG",
+        "CONFIG_WDT_NRFX",
+        "CONFIG_POWEROFF",
+        "CONFIG_PM_DEVICE",
+        "CONFIG_SETTINGS",
+        "CONFIG_SETTINGS_ZMS",
+        "CONFIG_SETTINGS_ZMS_LOAD_SUBTREE_PATH",
+    )
+    examples = (
+        "BoardInfo",
+        "CounterAlarm",
+        "SettingsStorage",
+        "SystemOffWake",
+        "WatchdogBasic",
+    )
+    for example_name in examples:
+        sketch = board_examples(repository) / example_name
+        project_name = f"{example_name}.ino"
+        if not (sketch / project_name).is_file():
+            raise SmokeFailure(f"incomplete M15 example: {sketch}")
+        if (sketch / "prj.conf").exists() or (sketch / "app.overlay").exists():
+            raise SmokeFailure(f"M15 public example contains a Zephyr sidecar: {sketch}")
+
+        build = root / f"build-m15-{example_name.lower()}"
+        run(compile_command(cli, config, build, sketch))
+        context = assert_build(build, project_name)
+        if context.get("profile") != "standard":
+            raise SmokeFailure(f"M15 example did not use the standard profile: {sketch}")
+        selected_features = {
+            item.get("id")
+            for item in context.get("selected_features", [])
+            if isinstance(item, dict)
+        }
+        if "nucode.board" not in selected_features:
+            raise SmokeFailure(f"M15 board feature was not recorded: {sketch}")
+
+        zephyr = Path(context["zephyr_build_dir"]) / "zephyr"
+        configuration = (zephyr / ".config").read_text(encoding="utf-8")
+        for symbol in required_symbols:
+            if not read_kconfig_boolean(configuration, symbol):
+                raise SmokeFailure(f"M15 feature omitted {symbol}: {sketch}")
+        sources = (Path(context["app_dir"]) / "sources.cmake").read_text(
+            encoding="utf-8"
+        )
+        if "NUCODE_NU54DK.cpp" not in sources:
+            raise SmokeFailure(f"M15 board implementation source was not linked: {sketch}")
+
+        devicetree = (zephyr / "zephyr.dts").read_text(encoding="utf-8")
+        if "nordic,nrf-wdt" not in devicetree:
+            raise SmokeFailure(f"M15 WDT overlay was not merged: {sketch}")
+
+    system_off_source = (
+        board_examples(repository) / "SystemOffWake" / "SystemOffWake.ino"
+    ).read_text(encoding="utf-8")
+    if (
+        'strcmp(command, "BUTTON")' not in system_off_source
+        or 'strcmp(command, "TIMER")' not in system_off_source
+        or "NU54DK.enterSystemOffOnButton(WakeButton::sw0)"
+        not in system_off_source
+        or "NU54DK.enterSystemOffAfter(2000000ULL)" not in system_off_source
+        or "prepareButtonWake" in system_off_source
+        or "prepareTimedWake" in system_off_source
+    ):
+        raise SmokeFailure("SystemOffWake가 명시적 Serial 명령 gate를 유지하지 않습니다")
+
+
 ## @brief platform library 예제가 Arduino IDE용 목록에 나타나는지 검증합니다.
 def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path) -> None:
     del root, repository
@@ -992,7 +1062,18 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
         raise SmokeFailure("Arduino CLI example listing has no examples array")
 
     expected = {
-        "NUCODE NU54DK": {"Blink", "InterruptButton", "AnalogReadA0", "PWMFade", "SerialEcho"},
+        "NUCODE NU54DK": {
+            "Blink",
+            "InterruptButton",
+            "AnalogReadA0",
+            "PWMFade",
+            "SerialEcho",
+            "BoardInfo",
+            "CounterAlarm",
+            "SettingsStorage",
+            "SystemOffWake",
+            "WatchdogBasic",
+        },
         "SPI": {"SPITransaction"},
         "Wire": {"WirePmicId"},
     }
@@ -1082,6 +1163,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "m8",
             "m9",
             "m11",
+            "m15",
             "examples",
         ),
         default=(
@@ -1095,6 +1177,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "m8",
             "m9",
             "m11",
+            "m15",
             "examples",
         ),
     )
@@ -1133,6 +1216,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m8": test_m8_upload_build,
                 "m9": test_incremental,
                 "m11": test_m11_fixtures,
+                "m15": test_m15_examples,
                 "examples": test_example_discovery,
             }
             for name in args.tests:

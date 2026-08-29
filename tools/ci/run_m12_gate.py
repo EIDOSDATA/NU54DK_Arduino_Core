@@ -130,7 +130,7 @@ def run_docs_gate() -> None:
     print(f"[M12] Markdown UTF-8/local-link PASS: {checked} files")
 
 
-## @brief Arduino CLI가 표준 library 예제 일곱 개를 열거하는지 검사합니다.
+## @brief Arduino CLI가 표준 library 예제 전체를 열거하는지 검사합니다.
 def run_examples_gate(cli: Path) -> None:
     run_checked(
         (

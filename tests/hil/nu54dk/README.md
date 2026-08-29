@@ -11,8 +11,10 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m8_upload.py` | manifest를 검증한 pyOCD/J-Link upload 반복 시험 | NU54DK debug probe |
 | `m8_debug.py` | debug server와 Sketch source breakpoint 검증 | pyOCD 또는 J-Link |
 | `m14_pin_hil.py` | 신규 LED output/readback과 버튼 pull·edge 검증 | NU54DK, CMSIS-DAP V2 UART, 사용자 버튼 동작 |
+| `m15_system_off.py` | UART ARM 뒤 System OFF와 SW0 wake 검증 | NU54DK, CMSIS-DAP V2 UART, SW0 한 번 누름 |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
+| `test_m15_system_off.py` | M15 ARM·무응답 시간·wake protocol과 증적 경계를 검증 | 없음 |
 
 ## 실행 원칙
 
@@ -84,6 +86,51 @@ $Commit = git -C $CoreRoot rev-parse HEAD
 화면에 `ACTION`이 출력될 때 지정된 버튼 하나만 누르거나 뗍니다. 모든 핀과 edge가
 통과해야 `status: passed` JSON과 SHA-256으로 결합된 companion transcript가 생성됩니다.
 timeout, target FAIL, 핀 ID·순서 불일치 또는 중복 token은 PASS 증적을 만들지 않습니다.
+
+## M15 System OFF wake HIL 준비
+
+M15 HIL은 `SW0`/P1.13 한 번 누르기만 수동으로 남겨 둡니다. image는 부팅만으로
+System OFF에 진입하지 않으며, runner가 UART `READY`를 확인하고 정확한 `ARM` 명령을 보낸
+뒤에만 원자적 버튼 wake 진입을 요청합니다. `REQUEST`와 `ENTERING`은 진입 완료나 PASS가
+아니며, runner는 `ENTERING` 요청 이후 2초가 지난 다음 `M15 PRESS NOW`를 출력합니다.
+이 안내 전에 버튼을 누른 결과, 다른 GPIO 또는
+`LOW_POWER_WAKE`가 아닌 reset 원인, 누락·중복 token은 PASS로 인정하지 않습니다.
+
+NCS v3.4.0 Toolchain terminal에서 HIL image를 먼저 빌드합니다.
+
+```powershell
+$CoreRoot = "C:\Users\eidos\GitHub\NU54DK_Arduino_Core"
+$NcsRoot = "C:\ncs\v3.4.0"
+$BoardRoot = "$CoreRoot\board_package\NU54DK_Zephyr_DTS"
+$Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
+$Build = "$env:TEMP\nu54dk-m15-wake"
+
+Push-Location $NcsRoot
+& $Python -I -m west build -p always `
+  -b "nrf54l15dk/nrf54l15/cpuapp/nu54dk" `
+  -d $Build `
+  "$CoreRoot\tests\zephyr\m15_wake" `
+  -- "-DBOARD_ROOT=$BoardRoot" "-DEXTRA_ZEPHYR_MODULES=$CoreRoot"
+Pop-Location
+```
+
+실제 버튼 시험은 M15 변경을 commit한 exact source에서 다음과 같이 실행합니다. 여러 보드가
+연결될 수 있으므로 `--board-id`는 필수이며 기본 probe UID로 대체하지 않습니다. 기존 증적은
+`--overwrite-evidence` 없이는 덮어쓰지 않습니다.
+
+```powershell
+$Commit = git -C $CoreRoot rev-parse HEAD
+& $Python -I "$CoreRoot\tests\hil\nu54dk\m15_system_off.py" `
+  --hex "$Build\zephyr\zephyr.hex" `
+  --board-id "<시험할 CMSIS-DAP UID>" `
+  --expected-core-revision $Commit `
+  --acknowledge-button-wake `
+  --evidence "$CoreRoot\build\m15\hil\m15-system-off.evidence.json"
+```
+
+현재 단계에서는 위 runner와 image까지만 준비하며 버튼 결과를 완료로 기록하지 않습니다.
+실기에서 `M15 PRESS NOW` 뒤 SW0을 눌러 최종 `NUCODE_M15_SYSTEM_OFF_PASS`가 나타나고 exact
+image·revision·transcript SHA-256 증적이 생성된 뒤에만 버튼 wake 항목을 완료할 수 있습니다.
 
 구체적인 실행 명령과 이미 검증한 결과는
 [M6 기준선](<../../../00_Docs/04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md>),

@@ -30,6 +30,9 @@ SUITES = (
     ("m14_core_contract", "nucode.m14.core_contract"),
     ("m14_variant_contract", "nucode.m14.variant_contract"),
     ("m14_pin_hil", "nucode.m14.pin_hil"),
+    ("m15_board", "nucode.m15.board"),
+    ("m15_hil", "nucode.m15.auto_hil"),
+    ("m15_wake", "nucode.m15.wake"),
 )
 WINDOWS_OUTDIR_MAX_LENGTH = 32
 

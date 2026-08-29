@@ -1,0 +1,11 @@
+/* SPDX-License-Identifier: MIT */
+
+/ {
+	chosen {
+		nucode,arduino-wire = &i2c22;
+	};
+};
+
+&uicr {
+	nfct-pins-as-gpios;
+};

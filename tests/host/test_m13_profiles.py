@@ -56,10 +56,26 @@ class M13ProfileContractTests(unittest.TestCase):
                 zephyr_board="nrf54l15dk/nrf54l15/cpuflpr",
             )
 
-    def test_seven_examples_have_no_zephyr_sidecars(self) -> None:
-        """! @brief 공개 예제 7개가 ino만으로 탐색 가능한지 확인합니다. """
+    def test_canonical_examples_have_no_zephyr_sidecars(self) -> None:
+        """! @brief 공개 예제 12개가 ino만으로 탐색 가능한지 확인합니다. """
         examples = sorted(ROOT.glob("libraries/*/examples/*/*.ino"))
-        self.assertEqual(len(examples), 7)
+        self.assertEqual(
+            {sketch.parent.name for sketch in examples},
+            {
+                "AnalogReadA0",
+                "Blink",
+                "BoardInfo",
+                "CounterAlarm",
+                "InterruptButton",
+                "PWMFade",
+                "SPITransaction",
+                "SerialEcho",
+                "SettingsStorage",
+                "SystemOffWake",
+                "WatchdogBasic",
+                "WirePmicId",
+            },
+        )
         for sketch in examples:
             self.assertFalse((sketch.parent / "prj.conf").exists())
             self.assertFalse((sketch.parent / "app.overlay").exists())
@@ -238,8 +254,8 @@ class M13ProfileContractTests(unittest.TestCase):
             self.assertEqual(state["state"], "failed")
             self.assertEqual(state["last_build_result"], "configure-failed")
 
-    def test_arduino_cli_discovers_seven_examples_when_installed(self) -> None:
-        """! @brief 설치된 Arduino CLI가 package 예제 7개를 노출하는지 확인합니다. """
+    def test_arduino_cli_discovers_canonical_examples_when_installed(self) -> None:
+        """! @brief 설치된 Arduino CLI가 공개 예제 12개를 노출하는지 확인합니다. """
         if os.environ.get("NUCODE_M13_CLI_DISCOVERY") != "1":
             self.skipTest("M13 package 설치 후 NUCODE_M13_CLI_DISCOVERY=1로 실행합니다.")
         cli = shutil.which("arduino-cli")
@@ -255,7 +271,20 @@ class M13ProfileContractTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         document = json.loads(result.stdout)
         encoded = json.dumps(document)
-        for name in ("Blink", "InterruptButton", "AnalogReadA0", "PWMFade", "SerialEcho", "WirePmicId", "SPITransaction"):
+        for name in (
+            "AnalogReadA0",
+            "Blink",
+            "BoardInfo",
+            "CounterAlarm",
+            "InterruptButton",
+            "PWMFade",
+            "SPITransaction",
+            "SerialEcho",
+            "SettingsStorage",
+            "SystemOffWake",
+            "WatchdogBasic",
+            "WirePmicId",
+        ):
             self.assertIn(name, encoded)
 
 

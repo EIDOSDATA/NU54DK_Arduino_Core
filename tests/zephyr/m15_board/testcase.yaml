@@ -1,0 +1,18 @@
+tests:
+  nucode.m15.board:
+    tags:
+      - nucode
+      - arduino
+      - m15
+      - board
+      - watchdog
+      - grtc
+      - settings
+      - power
+      - pmic
+    harness: ztest
+    sysbuild: false
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk

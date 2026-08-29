@@ -205,7 +205,7 @@ class M12CiContractTests(unittest.TestCase):
                 self.assertIn("python-version: 3.12.10", text, workflow.name)
                 self.assertNotIn("python-version: 3.12.11", text, workflow.name)
 
-    ## @brief 표준 library example 일곱 개가 canonical 위치에만 있는지 검증합니다.
+    ## @brief 표준 library example 열두 개가 canonical 위치에만 있는지 검증합니다.
     def test_example_discovery_inputs_are_canonical(self) -> None:
         expected = (
             "libraries/NUCODE_NU54DK/examples/Blink/Blink.ino",
@@ -213,6 +213,11 @@ class M12CiContractTests(unittest.TestCase):
             "libraries/NUCODE_NU54DK/examples/AnalogReadA0/AnalogReadA0.ino",
             "libraries/NUCODE_NU54DK/examples/PWMFade/PWMFade.ino",
             "libraries/NUCODE_NU54DK/examples/SerialEcho/SerialEcho.ino",
+            "libraries/NUCODE_NU54DK/examples/BoardInfo/BoardInfo.ino",
+            "libraries/NUCODE_NU54DK/examples/CounterAlarm/CounterAlarm.ino",
+            "libraries/NUCODE_NU54DK/examples/SettingsStorage/SettingsStorage.ino",
+            "libraries/NUCODE_NU54DK/examples/SystemOffWake/SystemOffWake.ino",
+            "libraries/NUCODE_NU54DK/examples/WatchdogBasic/WatchdogBasic.ino",
             "libraries/SPI/examples/SPITransaction/SPITransaction.ino",
             "libraries/Wire/examples/WirePmicId/WirePmicId.ino",
         )
@@ -241,6 +246,22 @@ class M12CiContractTests(unittest.TestCase):
                 ("m14_core_contract", "nucode.m14.core_contract"),
                 ("m14_variant_contract", "nucode.m14.variant_contract"),
                 ("m14_pin_hil", "nucode.m14.pin_hil"),
+            }.issubset(set(module.SUITES))
+        )
+
+    ## @brief M15 board/system, 자동 HIL과 수동 wake image가 원격 build gate에 포함되는지 검사합니다.
+    def test_zephyr_build_includes_m15_contract_and_system_off_image(self) -> None:
+        path = REPOSITORY / "tools" / "ci" / "run_zephyr_build.py"
+        spec = importlib.util.spec_from_file_location("nu54_m15_build_gate", path)
+        self.assertIsNotNone(spec)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        self.assertTrue(
+            {
+                ("m15_board", "nucode.m15.board"),
+                ("m15_hil", "nucode.m15.auto_hil"),
+                ("m15_wake", "nucode.m15.wake"),
             }.issubset(set(module.SUITES))
         )
 
