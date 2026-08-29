@@ -14,14 +14,14 @@ Sketch와 library를 nRF Connect SDK의 build graph 안에 넣어 ELF/HEX/BIN을
 | 항목 | 상태 |
 | --- | --- |
 | 현재 정식 버전 | [`v0.1.0`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.1.0) |
-| 다음 목표 | `v0.2.0` — M12~M14 완료, M15 board/system API 구현·검증 진행 중 |
+| 다음 목표 | `v0.2.0` — M12~M14 완료, M15 board/system API·HIL 검증 진행 중 |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 지원 보드 | NU54DK / nRF54L15 CPUAPP |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 선택 업로드 | 외장 SEGGER J-Link |
 | v0.1 마일스톤 | M0~M11 완료 |
-| v0.2 진행 | M12~M14 완료; M15 자동 검증 결과 반영과 SW0 System OFF wake 물리 HIL 대기 |
+| v0.2 진행 | M12~M14 완료; M15 비-System-OFF 자동 HIL과 SWD 격리 System OFF 결합 HIL 준비 중 |
 
 v0.1.0에서는 Runtime, GPIO, 시간, Serial, GPIO interrupt, Wire/I2C, SPI, ADC, PWM,
 Arduino CLI/IDE build, pyOCD upload/debug, cache와 Boards Manager 설치 경로를 검증했습니다.
@@ -31,8 +31,15 @@ Arduino CLI/IDE build, pyOCD upload/debug, cache와 Boards Manager 설치 경로
 현재 `main`에서는 M12 CI/CD, M13 profile·예제 UX와 M14 Core API·DTS 기반 Variant를
 완료했습니다. `PIN_LED2..3` output/readback과 `PIN_BUTTON1..3`의 pull-up raw 상태 및
 `FALLING`/`RISING`/`CHANGE` interrupt도 실제 NU54DK에서 통과했습니다. M15에서는
-`NUCODE_NU54DK` board/system library와 예제·시험을 구현하고 있습니다. 자동 검증 결과는
-아직 최종 반영 전이며 SW0/P1.13 System OFF wake 물리 HIL은 수행하지 않았습니다.
+`NUCODE_NU54DK` board/system library와 예제·시험을 구현하고 있습니다. 자동 HIL은
+System OFF를 제외한 identity·uptime·GRTC callback·Settings·WDT 범위로 한정합니다. System OFF는
+온보드 debug-control 2연 `SW1`에서 `DISABLE_SWD`만 격리하고 UART 연결은 유지한 별도 결합
+HIL에서 timed GRTC wake 다음 사용자 `SW0`/P1.13 wake 순서로 검증합니다. 이 결합 HIL은 아직
+`NOT RUN`이므로 M15는 진행 중입니다.
+
+여기서 debug-control 2연 `SW1`은 Arduino 사용자 버튼 `SW1`/P1.09와 다른 물리 부품입니다.
+System OFF HIL에서는 debug-control `SW1`의 `DISABLE_UART` 쪽을 전환하지 않아 온보드 UART를
+유지합니다.
 
 ## Arduino IDE로 설치
 
@@ -144,7 +151,8 @@ M13의 기존 예제 7개에 M15 board/system 예제 5개를 추가했습니다.
 - `main`의 M15 PMIC write API는 매 boot 명시적 승인을 요구합니다. 배터리 전기 HIL은
   수행하지 않았고 실제 NTC 온도 보호는 지원하지 않으므로, 사용자가 자신의 배터리·전원
   조건에서 직접 검증해야 합니다.
-- M15 SW0/P1.13 System OFF wake 물리 HIL은 아직 `NOT RUN`이며 M15는 완료 상태가 아닙니다.
+- M15의 SWD 격리 timed GRTC wake와 사용자 SW0/P1.13 wake 결합 HIL은 아직 `NOT RUN`이며
+  M15는 완료 상태가 아닙니다.
 
 전체 목록은 [v0.1.0 알려진 제약](<./00_Docs/05_릴리스/12_v0.1.0_알려진_제약.md>)에서 확인할
 수 있습니다.
@@ -156,7 +164,7 @@ M13의 기존 예제 7개에 M15 board/system 예제 5개를 추가했습니다.
 | [M12](<./00_Docs/04_검증 기록/14_M12_CI_CD_기준선.md>) | **완료** | GitHub Actions software CI와 재현 build, self-hosted NU54DK HIL 경계 구축 |
 | [M13](<./00_Docs/04_검증 기록/15_M13_구성_프로필_검증.md>) | **완료** | Arduino 예제 7개, `standard` profile과 strict library feature resolver |
 | [M14](<./00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md>) | **완료** | Core API·DTS Variant, 로컬·원격 software/runtime와 신규 pin 물리 HIL 통과 |
-| [M15](<./00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) | **진행 중** | board/system API·예제·시험 구현 중; 자동 결과 반영과 SW0 System OFF wake 물리 HIL 대기 |
+| [M15](<./00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) | **진행 중** | 비-System-OFF 자동 HIL과 SWD 격리 timed GRTC→사용자 SW0 결합 HIL 준비 중; 결합 HIL NOT RUN |
 | M16 | 대기 | 공식 Zephyr Bluetooth 기반 basic BLE library |
 | M17 | 대기 | NCS v3.4.0 기능·예제 coverage 첫 묶음 |
 | M18 | 대기 | v0.2.0 RC, clean Windows/HIL과 stable 공개 |

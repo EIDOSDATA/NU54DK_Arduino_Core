@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief 공식 clean Ubuntu CI M15 artifact의 비버튼 기능을 자동 HIL로 검증합니다. """
+"""! @brief 공식 clean Ubuntu CI M15 artifact의 wake 제외 기능을 자동 HIL로 검증합니다. """
 
 from __future__ import annotations
 
@@ -49,21 +49,26 @@ from m14_pin_hil import (  # noqa: E402
 PREFIX = b"NUCODE_M15_AUTO_"
 FAIL_PREFIX = b"NUCODE_M15_AUTO_FAIL:"
 FINAL_PREFIX = b"NUCODE_M15_AUTO_FINAL:PASS:nonce="
+SCOPE_TOKEN = (
+    b"NUCODE_M15_AUTO_SCOPE:PASS:identity=1:uptime=1:grtc_callback=1:"
+    b"settings=1:wdt_stop=1:wdt_reset=1:timed_wake=0:button_wake=0"
+)
 START_COMMAND = b"NUCODE_M15_AUTO_COMMAND:START:"
 CONTINUE_COMMAND = b"NUCODE_M15_AUTO_COMMAND:CONTINUE:"
 CLEAR_COMMAND = b"NUCODE_M15_AUTO_COMMAND:CLEAR\r\n"
+PROTOCOL_SCHEMA = 2
+EVIDENCE_SCHEMA = 2
 RESET_SOFTWARE = 1 << 1
 RESET_WATCHDOG = 1 << 4
-RESET_CLOCK = 1 << 11
 MAX_TRANSCRIPT_BYTES = 262144
 DEFAULT_RESULT_TIMEOUT_SECONDS = 90.0
 
 BOOT_PATTERN = re.compile(
-    rb"^NUCODE_M15_AUTO_BOOT:schema=1:stage=([a-z_]+):cause=([0-9]+):"
+    rb"^NUCODE_M15_AUTO_BOOT:schema=2:stage=([a-z_]+):cause=([0-9]+):"
     rb"supported=([0-9]+):uptime_ms=([0-9]+)$"
 )
 STATE_PATTERN = re.compile(
-    rb"^NUCODE_M15_AUTO_STATE:schema=1:stage=([a-z_]+):nonce=([0-9a-f]{32}|none)$"
+    rb"^NUCODE_M15_AUTO_STATE:schema=2:stage=([a-z_]+):nonce=([0-9a-f]{32}|none)$"
 )
 IDENTITY_PATTERN = re.compile(
     rb"^NUCODE_M15_AUTO_IDENTITY:PASS:model=([^\r\n:]+):target=([^\r\n:]+):"
@@ -107,7 +112,6 @@ class AutoHilResult:
     initial_reset_cause: int
     software_reset_cause: int
     watchdog_reset_cause: int
-    timed_wake_reset_cause: int
     uptime_before_ms: int
     uptime_after_ms: int
     grtc_frequency_hz: int
@@ -115,7 +119,6 @@ class AutoHilResult:
     grtc_scheduled_ticks: int
     grtc_after_ticks: int
     watchdog_interval_seconds: float
-    system_off_interval_seconds: float
 
 
 @dataclass(frozen=True)
@@ -127,7 +130,6 @@ class ExecutionResult:
     transcript: bytes
     scenario_transcript: bytes
     watchdog_interval_seconds: float
-    system_off_interval_seconds: float
 
 
 ## @brief CLI 인자를 만들며 board UID를 실제 실행에서 반드시 요구합니다.
@@ -135,7 +137,8 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     parser = argparse.ArgumentParser(
         description=(
             "NU54DK M15 image를 DAPLink로 기록하고 identity, GRTC, Settings/ZMS, "
-            "WDT와 timed System OFF를 자동 검증합니다."
+            "WDT를 자동 검증합니다. timed/button wake는 별도 M15 wake HIL이 "
+            "담당합니다."
         )
     )
     parser.add_argument("--hex", dest="hex_path")
@@ -346,97 +349,6 @@ def flash_image(
     )
 
 
-## @brief exact UID와 attach-only 정책으로 pyOCD session을 만듭니다.
-def create_probe_release_session(board_id: str, connect_helper: Any = None) -> Any:
-    if connect_helper is None:
-        try:
-            from pyocd.core.helpers import ConnectHelper
-        except ImportError as error:
-            raise AutoHilFailure("M15 HIL Python 환경에 pyOCD가 없습니다.") from error
-        connect_helper = ConnectHelper
-    session = connect_helper.session_with_chosen_probe(
-        unique_id=board_id,
-        auto_open=False,
-        options={
-            "target_override": "nrf54l",
-            "connect_mode": "attach",
-            "resume_on_disconnect": True,
-        },
-    )
-    if session is None:
-        raise AutoHilFailure(f"CMSIS-DAP probe를 찾지 못했습니다: {board_id}")
-    return session
-
-
-## @brief SW-DP를 dormant 상태로 전환해 host 없는 동안의 debug 재접속을 막습니다.
-def enter_swd_dormant(probe: Any) -> None:
-    probe.swj_sequence(51, 0xFFFFFFFFFFFFFF)
-    probe.swj_sequence(16, 0xE3BC)
-
-
-## @brief System OFF 전에 DP power, SWD dormant와 CMSIS-DAP 해제를 검증합니다.
-def release_probe_debug_power(board_id: str) -> None:
-    session = create_probe_release_session(board_id)
-    probe = session.probe
-    if str(probe.unique_id).casefold() != board_id.casefold():
-        raise AutoHilFailure(
-            "선택된 CMSIS-DAP probe가 exact UID와 다릅니다: "
-            f"기대={board_id}, 실제={probe.unique_id}"
-        )
-    release = {
-        "dp_called": False,
-        "dp_acknowledged": False,
-        "swd_dormant_completed": False,
-        "dap_called": False,
-        "dap_disconnected": False,
-    }
-    try:
-        session.open()
-        debug_port = session.target.dp
-        original_probe_disconnect = probe.disconnect
-
-        def checked_disconnect() -> None:
-            """! @brief debug power ACK를 내리고 SW-DP를 dormant로 전환합니다. """
-            release["dp_called"] = True
-            release["dp_acknowledged"] = bool(debug_port.power_down_debug())
-            if release["dp_acknowledged"]:
-                enter_swd_dormant(probe)
-                release["swd_dormant_completed"] = True
-
-        def checked_probe_disconnect() -> None:
-            """! @brief CMSIS-DAP DAP_Disconnect가 완료됐는지 보존합니다. """
-            release["dap_called"] = True
-            original_probe_disconnect()
-            release["dap_disconnected"] = True
-
-        debug_port.disconnect = checked_disconnect
-        probe.disconnect = checked_probe_disconnect
-        session.close()
-    finally:
-        if probe.is_open:
-            try:
-                probe.disconnect()
-            finally:
-                probe.close()
-    if not all(release.values()) or probe.is_open:
-        raise AutoHilFailure(
-            "CMSIS-DAP debug/system power request 해제를 검증하지 못했습니다: "
-            f"{release}"
-        )
-
-
-## @brief DAPLink 기록 뒤 target이 명령을 기다리는 동안 probe debug power를 해제합니다.
-def flash_and_release_debug_power(
-    volume: DaplinkVolume,
-    image: Path,
-    timeout_seconds: float,
-    board_id: str,
-) -> tuple[str, str]:
-    flash_result = flash_image(volume, image, timeout_seconds)
-    release_probe_debug_power(board_id)
-    return flash_result
-
-
 ## @brief 한 UART 명령을 CRLF로 끝내 전송합니다.
 def write_command(serial_port: Any, command: bytes) -> None:
     request = command + b"\r\n"
@@ -520,14 +432,11 @@ def _execute_protocol(
         b"soft_reset",
         b"watchdog_arm",
         b"watchdog_wait",
-        b"timed_wake_wait",
     ]
     state_index = 0
     last_boot: bytes | None = None
     watchdog_armed_at: float | None = None
     watchdog_boot_at: float | None = None
-    system_off_entered_at: float | None = None
-    system_off_boot_at: float | None = None
 
     with serial_module.Serial(
         port=port_name,
@@ -559,8 +468,6 @@ def _execute_protocol(
                 now = time.monotonic()
                 if started and stage == b"watchdog_wait":
                     watchdog_boot_at = now
-                if started and stage == b"timed_wake_wait":
-                    system_off_boot_at = now
                 if started:
                     scenario_lines.append(stripped)
                 continue
@@ -596,8 +503,6 @@ def _execute_protocol(
                 scenario_lines.append(stripped)
             if stripped == b"NUCODE_M15_AUTO_WDT:EXPIRY_ARMED:timeout_ms=1500:feeds=1":
                 watchdog_armed_at = time.monotonic()
-            elif stripped == b"NUCODE_M15_AUTO_SYSTEM_OFF:ENTERING":
-                system_off_entered_at = time.monotonic()
             elif stripped == FINAL_PREFIX + nonce:
                 break
         else:
@@ -605,15 +510,9 @@ def _execute_protocol(
 
     if state_index != len(expected_states):
         raise AutoHilFailure("M15 reset 경계 상태가 모두 관찰되지 않았습니다.")
-    if None in (
-        watchdog_armed_at,
-        watchdog_boot_at,
-        system_off_entered_at,
-        system_off_boot_at,
-    ):
-        raise AutoHilFailure("watchdog 또는 System OFF 시간 경계가 누락됐습니다.")
+    if watchdog_armed_at is None or watchdog_boot_at is None:
+        raise AutoHilFailure("watchdog 시간 경계가 누락됐습니다.")
     watchdog_interval = float(watchdog_boot_at - watchdog_armed_at)  # type: ignore[operator]
-    system_off_interval = float(system_off_boot_at - system_off_entered_at)  # type: ignore[operator]
     scenario_transcript = b"\n".join(scenario_lines) + b"\n"
     return ExecutionResult(
         flash_sequence=flash_sequence,
@@ -621,7 +520,6 @@ def _execute_protocol(
         transcript=bytes(raw_capture),
         scenario_transcript=scenario_transcript,
         watchdog_interval_seconds=watchdog_interval,
-        system_off_interval_seconds=system_off_interval,
     )
 
 
@@ -669,7 +567,6 @@ def _consume_reset(
 def parse_transcript(
     transcript: bytes,
     watchdog_interval_seconds: float,
-    system_off_interval_seconds: float,
 ) -> AutoHilResult:
     if FAIL_PREFIX in transcript:
         raise AutoHilFailure("transcript에 target FAIL token이 있습니다.")
@@ -690,7 +587,7 @@ def parse_transcript(
         raise AutoHilFailure("초기 reset cause가 supported mask 밖입니다.")
 
     _, cursor = _match_line(
-        lines, cursor, b"NUCODE_M15_AUTO_STATE:schema=1:stage=idle:nonce=none"
+        lines, cursor, b"NUCODE_M15_AUTO_STATE:schema=2:stage=idle:nonce=none"
     )
     start_pattern = re.compile(rb"^NUCODE_M15_AUTO_START:PASS:nonce=([0-9a-f]{32})$")
     start, cursor = _match_line(lines, cursor, start_pattern)
@@ -731,7 +628,7 @@ def parse_transcript(
     _, cursor = _match_line(
         lines,
         cursor,
-        b"NUCODE_M15_AUTO_STATE:schema=1:stage=soft_reset:nonce=" + nonce,
+        b"NUCODE_M15_AUTO_STATE:schema=2:stage=soft_reset:nonce=" + nonce,
     )
     _, cursor = _match_line(
         lines,
@@ -758,7 +655,7 @@ def parse_transcript(
     _, cursor = _match_line(
         lines,
         cursor,
-        b"NUCODE_M15_AUTO_STATE:schema=1:stage=watchdog_arm:nonce=" + nonce,
+        b"NUCODE_M15_AUTO_STATE:schema=2:stage=watchdog_arm:nonce=" + nonce,
     )
     _, cursor = _match_line(
         lines,
@@ -781,7 +678,7 @@ def parse_transcript(
     _, cursor = _match_line(
         lines,
         cursor,
-        b"NUCODE_M15_AUTO_STATE:schema=1:stage=watchdog_wait:nonce=" + nonce,
+        b"NUCODE_M15_AUTO_STATE:schema=2:stage=watchdog_wait:nonce=" + nonce,
     )
     _, cursor = _match_line(
         lines,
@@ -789,35 +686,7 @@ def parse_transcript(
         b"NUCODE_M15_AUTO_CONTINUE:PASS:stage=watchdog_wait:nonce=" + nonce,
     )
     watchdog_cause, cursor = _consume_reset(lines, cursor, b"watchdog", RESET_WATCHDOG)
-    _, cursor = _match_line(
-        lines,
-        cursor,
-        b"NUCODE_M15_AUTO_SYSTEM_OFF:REQUESTED:duration_us=2000000",
-    )
-    _, cursor = _match_line(lines, cursor, b"NUCODE_M15_AUTO_SYSTEM_OFF:ENTERING")
-
-    boot, cursor = _match_line(lines, cursor, BOOT_PATTERN)
-    assert boot is not None
-    if boot.group(1) != b"timed_wake_wait" or (int(boot.group(2), 10) & RESET_CLOCK) == 0:
-        raise AutoHilFailure("timed System OFF BOOT 원인이 다릅니다.")
-    _, cursor = _match_line(
-        lines,
-        cursor,
-        b"NUCODE_M15_AUTO_STATE:schema=1:stage=timed_wake_wait:nonce=" + nonce,
-    )
-    _, cursor = _match_line(
-        lines,
-        cursor,
-        b"NUCODE_M15_AUTO_CONTINUE:PASS:stage=timed_wake_wait:nonce=" + nonce,
-    )
-    timed_cause, cursor = _consume_reset(lines, cursor, b"timed_wake", RESET_CLOCK)
-    timed_wake_pattern = re.compile(
-        rb"^NUCODE_M15_AUTO_SYSTEM_OFF:WAKE:PASS:duration_us=2000000:cause=([0-9]+)$"
-    )
-    wake, cursor = _match_line(lines, cursor, timed_wake_pattern)
-    assert wake is not None
-    if int(wake.group(1), 10) != timed_cause:
-        raise AutoHilFailure("timed wake token과 reset report가 다릅니다.")
+    _, cursor = _match_line(lines, cursor, SCOPE_TOKEN)
     _, cursor = _match_line(lines, cursor, FINAL_PREFIX + nonce)
     if cursor != len(lines):
         raise AutoHilFailure(f"최종 PASS 뒤 예상하지 않은 protocol token이 있습니다: {lines[cursor:]!r}")
@@ -826,11 +695,6 @@ def parse_transcript(
         raise AutoHilFailure(
             f"watchdog reset 시간이 범위를 벗어났습니다: {watchdog_interval_seconds:.3f}s"
         )
-    if not 1.5 <= system_off_interval_seconds <= 10.0:
-        raise AutoHilFailure(
-            f"timed System OFF wake 시간이 범위를 벗어났습니다: {system_off_interval_seconds:.3f}s"
-        )
-
     return AutoHilResult(
         nonce=nonce.decode("ascii"),
         board_model=model.decode("ascii"),
@@ -840,7 +704,6 @@ def parse_transcript(
         initial_reset_cause=initial_reset,
         software_reset_cause=software_cause,
         watchdog_reset_cause=watchdog_cause,
-        timed_wake_reset_cause=timed_cause,
         uptime_before_ms=uptime_before,
         uptime_after_ms=uptime_after,
         grtc_frequency_hz=frequency,
@@ -848,7 +711,6 @@ def parse_transcript(
         grtc_scheduled_ticks=grtc_scheduled,
         grtc_after_ticks=grtc_after,
         watchdog_interval_seconds=round(watchdog_interval_seconds, 6),
-        system_off_interval_seconds=round(system_off_interval_seconds, 6),
     )
 
 
@@ -920,8 +782,9 @@ def build_evidence(
     build_record: dict[str, str],
 ) -> dict[str, Any]:
     return {
-        "schema_version": 1,
-        "evidence_type": "m15-auto-board-system-hil",
+        "schema_version": EVIDENCE_SCHEMA,
+        "protocol_schema": PROTOCOL_SCHEMA,
+        "evidence_type": "m15-auto-non-wake-board-system-hil",
         "status": "passed",
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "core_revision": core_revision,
@@ -953,12 +816,27 @@ def build_evidence(
             ).hexdigest(),
         },
         "result": asdict(result),
+        "scope": {
+            "passed": [
+                "identity",
+                "uptime_64",
+                "grtc_callback",
+                "settings_zms",
+                "watchdog_stop",
+                "watchdog_expiry_reset",
+            ],
+            "not_executed": [
+                "timed_system_off_wake",
+                "button_system_off_wake",
+            ],
+            "follow_up_gate": "m15-wake",
+        },
         "safety": {
+            "timed_wake_executed": False,
             "button_wake_executed": False,
             "pmic_write_executed": False,
             "mass_erase_requested": False,
             "recovery_requested": False,
-            "probe_debug_power_released_and_swd_dormant_before_start": True,
         },
     }
 
@@ -1011,16 +889,13 @@ def main(arguments: Sequence[str] | None = None) -> int:
             port_name=port_name,
             baud_rate=args.baud,
             result_timeout_seconds=args.result_timeout,
-            flash_callback=lambda: flash_and_release_debug_power(
-                volume, image, args.flash_timeout, board_id
-            ),
+            flash_callback=lambda: flash_image(volume, image, args.flash_timeout),
         )
         validate_image_unchanged(image, image_size, image_sha256)
         transcript_path.write_bytes(execution.transcript)
         result = parse_transcript(
             execution.scenario_transcript,
             execution.watchdog_interval_seconds,
-            execution.system_off_interval_seconds,
         )
         evidence = build_evidence(
             core_revision=core_revision,
@@ -1045,7 +920,6 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "M15 AUTO HIL PASS: "
             f"uid={board_id}, device_id={result.device_id}, "
             f"wdt={result.watchdog_interval_seconds:.3f}s, "
-            f"system_off={result.system_off_interval_seconds:.3f}s, "
             f"evidence={evidence_path}"
         )
         return 0

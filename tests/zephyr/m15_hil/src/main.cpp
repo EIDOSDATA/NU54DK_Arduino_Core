@@ -1,8 +1,9 @@
 /**
  * @file main.cpp
- * @brief M15 비버튼 board/system 기능을 UART 상태 머신으로 자동 검증합니다.
+ * @brief M15 wake 제외 board/system 기능을 UART 상태 머신으로 자동 검증합니다.
  *
- * @note 이 image는 버튼 wake와 BQ25186 쓰기 API를 호출하지 않습니다.
+ * @note 이 image는 timed/button System OFF wake와 BQ25186 쓰기 API를
+ * 호출하지 않습니다.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -26,7 +27,12 @@ namespace
 	using nucode::nu54dk::ResetReport;
 
 	/** @brief UART protocol schema입니다. */
-	constexpr std::uint32_t protocol_schema = 1U;
+	constexpr std::uint32_t protocol_schema = 2U;
+
+	/** @brief 자동 HIL이 실제로 수행한 범위를 고정한 최종 token입니다. */
+	constexpr char scope_pass_token[] =
+		"NUCODE_M15_AUTO_SCOPE:PASS:identity=1:uptime=1:grtc_callback=1:"
+		"settings=1:wdt_stop=1:wdt_reset=1:timed_wake=0:button_wake=0";
 
 	/** @brief 저장 상태의 손상·다른 image 오인을 막는 magic입니다. */
 	constexpr std::uint32_t state_magic = 0x4D313541UL;
@@ -36,9 +42,6 @@ namespace
 
 	/** @brief GRTC alarm의 상대 지연입니다. */
 	constexpr std::uint64_t alarm_delay_us = 200000ULL;
-
-	/** @brief timed System OFF wake의 상대 지연입니다. */
-	constexpr std::uint64_t system_off_delay_us = 2000000ULL;
 
 	/** @brief watchdog stop 생존 시험의 timeout입니다. */
 	constexpr std::uint32_t watchdog_stop_timeout_ms = 2000U;
@@ -64,7 +67,6 @@ namespace
 		soft_reset = 1U,
 		watchdog_arm = 2U,
 		watchdog_wait = 3U,
-		timed_wake_wait = 4U,
 	};
 
 	/** @brief Settings/ZMS에 저장하는 고정 크기 상태 record입니다. */
@@ -115,8 +117,6 @@ namespace
 			return "watchdog_arm";
 		case Stage::watchdog_wait:
 			return "watchdog_wait";
-		case Stage::timed_wake_wait:
-			return "timed_wake_wait";
 		default:
 			return "invalid";
 		}
@@ -207,7 +207,7 @@ namespace
 		const auto raw_stage = static_cast<std::uint32_t>(state.stage);
 		return (state.magic == state_magic) && (state.schema == protocol_schema) &&
 			(raw_stage >= static_cast<std::uint32_t>(Stage::soft_reset)) &&
-			(raw_stage <= static_cast<std::uint32_t>(Stage::timed_wake_wait)) &&
+			(raw_stage <= static_cast<std::uint32_t>(Stage::watchdog_wait)) &&
 			validNonce(state.nonce) && (state.guard == stateGuard(state));
 	}
 
@@ -222,7 +222,9 @@ namespace
 	/** @brief 현재 HIL state와 nonce를 UART로 알립니다. */
 	void reportState(const ScenarioState *state, const char *name)
 	{
-		Serial.print("NUCODE_M15_AUTO_STATE:schema=1:stage=");
+		Serial.print("NUCODE_M15_AUTO_STATE:schema=");
+		Serial.print(static_cast<unsigned long>(protocol_schema));
+		Serial.print(":stage=");
 		Serial.print(name);
 		Serial.print(":nonce=");
 		Serial.println(state == nullptr ? "none" : state->nonce);
@@ -433,26 +435,12 @@ namespace
 		fail("WDT_DID_NOT_RESET", Error::driver_error);
 	}
 
-	/** @brief watchdog reset cause를 확인하고 timed System OFF를 시작합니다. */
-	void beginTimedSystemOff(ScenarioState &state)
+	/** @brief watchdog reset cause와 state 정리를 확인하고 자동 HIL을 완료합니다. */
+	[[noreturn]] void finishWatchdogReset(ScenarioState &state)
 	{
 		requireResetCause(ResetCause::watchdog, "watchdog");
-		saveState(state, Stage::timed_wake_wait);
-		Serial.println("NUCODE_M15_AUTO_SYSTEM_OFF:REQUESTED:duration_us=2000000");
-		Serial.println("NUCODE_M15_AUTO_SYSTEM_OFF:ENTERING");
-		Serial.flush();
-		requireSuccess(
-			NU54DK.enterSystemOffAfter(system_off_delay_us), "SYSTEM_OFF_ENTER");
-		__builtin_unreachable();
-	}
-
-	/** @brief timed GRTC wake의 reset 원인과 settings 정리를 확인합니다. */
-	[[noreturn]] void finishTimedWake(ScenarioState &state)
-	{
-		requireResetCause(ResetCause::clock, "timed_wake");
 		requireSuccess(NU54DK.storageRemove(state_key), "STATE_DELETE_FINAL");
-		Serial.print("NUCODE_M15_AUTO_SYSTEM_OFF:WAKE:PASS:duration_us=2000000:cause=");
-		Serial.println(static_cast<unsigned long>(boot_reset_report.cause));
+		Serial.println(scope_pass_token);
 		Serial.print("NUCODE_M15_AUTO_FINAL:PASS:nonce=");
 		Serial.println(state.nonce);
 		Serial.flush();
@@ -494,7 +482,9 @@ void setup(void)
 		fail("STATE_LOAD", state_result);
 	}
 
-	Serial.print("NUCODE_M15_AUTO_BOOT:schema=1:stage=");
+	Serial.print("NUCODE_M15_AUTO_BOOT:schema=");
+	Serial.print(static_cast<unsigned long>(protocol_schema));
+	Serial.print(":stage=");
 	Serial.print(state_is_valid ? stageName(state.stage) : (state_exists ? "corrupt" : "idle"));
 	Serial.print(":cause=");
 	Serial.print(static_cast<unsigned long>(boot_reset_report.cause));
@@ -555,10 +545,7 @@ void setup(void)
 		armWatchdogExpiry(state);
 		break;
 	case Stage::watchdog_wait:
-		beginTimedSystemOff(state);
-		break;
-	case Stage::timed_wake_wait:
-		finishTimedWake(state);
+		finishWatchdogReset(state);
 		break;
 	default:
 		fail("STATE_DISPATCH", Error::invalid_argument);

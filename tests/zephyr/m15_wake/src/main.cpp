@@ -1,8 +1,9 @@
 /**
  * @file main.cpp
- * @brief M15 System OFF와 SW0(P1.13) wake를 명시적 UART ARM 뒤에 검증합니다.
+ * @brief M15 timed GRTC System OFF와 SW0(P1.13) wake를 한 image에서 검증합니다.
  *
- * @note 이 image는 runner가 `ARM`을 보낼 때까지 전원 상태를 변경하지 않습니다.
+ * @note DAP 연결 제어용 2연 SW1에서 DISABLE_SWD만 차단한 뒤 호스트가
+ *       `ARM_TIMED:<nonce>`를 전송해야 전원 상태를 변경합니다.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -21,17 +22,43 @@ namespace
 	using nucode::nu54dk::ResetReport;
 	using nucode::nu54dk::WakeButton;
 
-	/** @brief 재부팅을 실제 HIL ARM과 결합하는 settings key입니다. */
-	constexpr char armed_key[] = "m15.system-off-armed";
+	/** @brief timed GRTC wake의 상대 지연입니다. */
+	constexpr std::uint64_t timed_wake_delay_us = 2000000ULL;
 
-	/** @brief settings에 저장하는 고정 ARM 표식입니다. */
-	constexpr std::uint32_t armed_magic = 0x4D313541UL;
+	/** @brief 호스트 nonce의 16진수 문자 수입니다. */
+	constexpr std::size_t nonce_length = 32U;
 
-	/** @brief 허용하는 단일 UART 명령의 최대 길이입니다. */
-	constexpr std::size_t command_capacity = 8U;
+	/** @brief 허용하는 UART 명령의 최대 길이입니다. */
+	constexpr std::size_t command_capacity = 64U;
 
-	/** @brief ARM 명령을 기다리는 최대 시간입니다. */
-	constexpr unsigned long command_timeout_ms = 60000UL;
+	/** @brief 사용자가 DAP 격리와 버튼 준비를 완료할 수 있는 명령 대기 시간입니다. */
+	constexpr unsigned long command_timeout_ms = 600000UL;
+
+	/** @brief 재부팅 경계를 실제 HIL 세션에 결합하는 settings key입니다. */
+	constexpr char state_key[] = "m15.system-off-state";
+
+	/** @brief settings 상태 레코드의 magic입니다. */
+	constexpr std::uint32_t state_magic = 0x4D313532UL;
+
+	/** @brief UART와 settings 상태 레코드의 schema입니다. */
+	constexpr std::uint32_t state_schema = 2U;
+
+	/** @brief System OFF 재부팅 경계의 영구 상태입니다. */
+	enum class Phase : std::uint32_t
+	{
+		timed_armed = 1U,
+		timed_passed = 2U,
+		button_armed = 3U,
+	};
+
+	/** @brief 전원 재부팅 뒤에도 검증 세션과 단계를 보존합니다. */
+	struct ScenarioState
+	{
+		std::uint32_t magic;
+		std::uint32_t schema;
+		Phase phase;
+		char nonce[nonce_length + 1U];
+	};
 
 	/** @brief 오류 열거값을 fail-closed protocol에 기록합니다. */
 	void reportFailure(const char *stage, Error error)
@@ -42,84 +69,101 @@ namespace
 		Serial.print(static_cast<unsigned int>(error));
 		Serial.print(":driver_error=");
 		Serial.println(NU54DK.lastDriverError());
+		Serial.flush();
 	}
 
-	/** @brief reset report에 지정 원인 bit가 포함됐는지 반환합니다. */
-	bool hasResetCause(const ResetReport &report, ResetCause cause)
+	/** @brief 기대 reset 원인과 다른 재부팅을 raw 값으로 기록합니다. */
+	void reportResetFailure(
+		const char *stage,
+		std::uint32_t expected,
+		const ResetReport &report)
 	{
-		return (report.cause & static_cast<std::uint32_t>(cause)) != 0U;
+		Serial.print("NUCODE_M15_SYSTEM_OFF_FAIL:stage=");
+		Serial.print(stage);
+		Serial.print(":expected=");
+		Serial.print(static_cast<unsigned long>(expected));
+		Serial.print(":actual=");
+		Serial.print(static_cast<unsigned long>(report.cause));
+		Serial.print(":supported=");
+		Serial.println(static_cast<unsigned long>(report.supported));
+		Serial.flush();
 	}
 
-	/** @brief settings의 ARM 표식이 정확히 존재하는지 확인합니다. */
-	bool readArmedMarker(bool &armed)
+	/** @brief 주어진 문자열이 정확한 소문자 32자리 16진수 nonce인지 검사합니다. */
+	bool validNonce(const char *nonce)
 	{
-		std::uint32_t value = 0U;
+		if ((nonce == nullptr) || (::strlen(nonce) != nonce_length))
+		{
+			return false;
+		}
+		for (std::size_t index = 0U; index < nonce_length; ++index)
+		{
+			const char value = nonce[index];
+			if (!(((value >= '0') && (value <= '9')) ||
+				((value >= 'a') && (value <= 'f'))))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/** @brief settings에서 읽은 상태 레코드가 지원 schema와 단계인지 검사합니다. */
+	bool validState(const ScenarioState &state)
+	{
+		const bool valid_phase =
+			(state.phase == Phase::timed_armed) ||
+			(state.phase == Phase::timed_passed) ||
+			(state.phase == Phase::button_armed);
+		return (state.magic == state_magic) &&
+			(state.schema == state_schema) && valid_phase && validNonce(state.nonce);
+	}
+
+	/** @brief 현재 HIL 상태를 settings에서 정확한 크기로 읽습니다. */
+	Error loadState(ScenarioState &state, bool &exists)
+	{
 		std::size_t actual_length = 0U;
 		const Error error = NU54DK.storageGet(
-			armed_key, &value, sizeof(value), actual_length);
+			state_key, &state, sizeof(state), actual_length);
 		if (error == Error::not_found)
 		{
-			armed = false;
-			return true;
+			exists = false;
+			return Error::none;
 		}
 		if (error != Error::none)
 		{
-			reportFailure("STORAGE_GET", error);
-			return false;
+			return error;
 		}
-		if ((actual_length != sizeof(value)) || (value != armed_magic))
+		exists = true;
+		if ((actual_length != sizeof(state)) || !validState(state))
 		{
-			reportFailure("STORAGE_MARKER", Error::driver_error);
-			return false;
+			return Error::driver_error;
 		}
-		armed = true;
-		return true;
+		return Error::none;
 	}
 
-	/** @brief 이전 시험 표식을 제거하되 없는 key는 정상 상태로 취급합니다. */
-	bool removeArmedMarker(const char *stage)
+	/** @brief 현재 HIL 단계를 영구 settings에 기록합니다. */
+	Error saveState(const ScenarioState &state)
 	{
-		const Error error = NU54DK.storageRemove(armed_key);
-		if ((error != Error::none) && (error != Error::not_found))
-		{
-			reportFailure(stage, error);
-			return false;
-		}
-		return true;
+		return NU54DK.storagePut(state_key, &state, sizeof(state));
 	}
 
-	/** @brief SW0 wake 재부팅이면 최종 PASS를 출력하고 true를 반환합니다. */
-	bool reportWakeIfPresent(const ResetReport &report, bool armed)
+	/** @brief 최종 성공 뒤 HIL 상태를 제거합니다. */
+	Error removeState()
 	{
-		if (!armed || !hasResetCause(report, ResetCause::low_power_wake))
+		const Error error = NU54DK.storageRemove(state_key);
+		return error == Error::not_found ? Error::none : error;
+	}
+
+	/** @brief newline으로 끝난 UART 명령 하나를 제한 시간 안에 읽습니다. */
+	bool waitForCommand(char *command, std::size_t capacity)
+	{
+		if ((command == nullptr) || (capacity < 2U))
 		{
 			return false;
 		}
-		if (!removeArmedMarker("STORAGE_REMOVE_WAKE"))
-		{
-			return true;
-		}
-		const Error clear_error = NU54DK.clearResetCause();
-		if (clear_error != Error::none)
-		{
-			reportFailure("RESET_CLEAR_WAKE", clear_error);
-			return true;
-		}
-		Serial.println(
-			"NUCODE_M15_SYSTEM_OFF_BOOT:schema=1:phase=WAKE:reset=LOW_POWER_WAKE");
-		Serial.println(
-			"NUCODE_M15_SYSTEM_OFF_WAKE:PASS:source=SW0:gpio=P1.13:active=LOW");
-		Serial.println("NUCODE_M15_SYSTEM_OFF_PASS");
-		return true;
-	}
-
-	/** @brief newline으로 끝난 고정 크기 ARM 명령 하나를 제한 시간 안에 읽습니다. */
-	bool waitForArmCommand()
-	{
-		char command[command_capacity] = {};
 		std::size_t length = 0U;
 		const unsigned long started = millis();
-
 		while ((millis() - started) < command_timeout_ms)
 		{
 			while (Serial.available() > 0)
@@ -137,9 +181,9 @@ namespace
 				if (character == '\n')
 				{
 					command[length] = '\0';
-					return ::strcmp(command, "ARM") == 0;
+					return true;
 				}
-				if (length >= (command_capacity - 1U))
+				if (length >= (capacity - 1U))
 				{
 					return false;
 				}
@@ -150,31 +194,200 @@ namespace
 		return false;
 	}
 
-	/** @brief ARM 요청을 기록하고 원자적 SW0 System OFF 진입 API를 호출합니다. */
-	void requestAndEnterSystemOff()
+	/** @brief 고정 명령 prefix 뒤의 nonce를 검증하고 반환합니다. */
+	const char *commandNonce(const char *command, const char *prefix)
 	{
-		Serial.println(
-			"NUCODE_M15_SYSTEM_OFF_REQUEST:command=ARM:wake=SW0:gpio=P1.13:active=LOW");
-		const Error marker_error = NU54DK.storagePut(
-			armed_key, &armed_magic, sizeof(armed_magic));
-		if (marker_error != Error::none)
+		const std::size_t prefix_length = ::strlen(prefix);
+		if ((command == nullptr) ||
+			(::strncmp(command, prefix, prefix_length) != 0))
 		{
-			reportFailure("STORAGE_PUT", marker_error);
+			return nullptr;
+		}
+		const char *nonce = command + prefix_length;
+		return validNonce(nonce) ? nonce : nullptr;
+	}
+
+	/** @brief timed System OFF를 host nonce와 결합해 시작합니다. */
+	void armTimedWake()
+	{
+		char command[command_capacity] = {};
+		if (!waitForCommand(command, sizeof(command)))
+		{
+			reportFailure("TIMED_COMMAND_TIMEOUT", Error::invalid_argument);
+			return;
+		}
+		const char *nonce = commandNonce(command, "ARM_TIMED:");
+		if (nonce == nullptr)
+		{
+			reportFailure("TIMED_COMMAND", Error::invalid_argument);
 			return;
 		}
 
-		Serial.println(
-			"NUCODE_M15_SYSTEM_OFF_ACTION:wake=SW0:expected=PRESS_LOW:host_wait_ms=2000");
-		Serial.println("NUCODE_M15_SYSTEM_OFF_ENTERING:mode=BUTTON_WAKE");
+		ScenarioState state = {};
+		state.magic = state_magic;
+		state.schema = state_schema;
+		state.phase = Phase::timed_armed;
+		::memcpy(state.nonce, nonce, nonce_length + 1U);
+		const Error state_error = saveState(state);
+		if (state_error != Error::none)
+		{
+			reportFailure("TIMED_STATE_SAVE", state_error);
+			return;
+		}
+
+		Serial.print(
+			"NUCODE_M15_SYSTEM_OFF_REQUEST:schema=2:phase=TIMED:nonce=");
+		Serial.print(state.nonce);
+		Serial.println(":duration_us=2000000");
+		Serial.print(
+			"NUCODE_M15_SYSTEM_OFF_ENTERING:schema=2:phase=TIMED:nonce=");
+		Serial.print(state.nonce);
+		Serial.println(":mode=GRTC_WAKE");
 		Serial.flush();
 
+		const Error clear_error = NU54DK.clearResetCause();
+		if (clear_error != Error::none)
+		{
+			reportFailure("TIMED_RESET_CLEAR", clear_error);
+			return;
+		}
+		const Error off_error = NU54DK.enterSystemOffAfter(timed_wake_delay_us);
+		reportFailure("ENTER_SYSTEM_OFF_TIMED", off_error);
+	}
+
+	/** @brief timed wake 성공 뒤 같은 nonce로 SW0 System OFF를 준비합니다. */
+	void armButtonWake(ScenarioState &state)
+	{
+		Serial.print(
+			"NUCODE_M15_SYSTEM_OFF_READY:schema=2:phase=BUTTON:command=ARM_BUTTON:nonce=");
+		Serial.print(state.nonce);
+		Serial.println(":wake=SW0:gpio=P1.13:active=LOW");
+
+		char command[command_capacity] = {};
+		if (!waitForCommand(command, sizeof(command)))
+		{
+			reportFailure("BUTTON_COMMAND_TIMEOUT", Error::invalid_argument);
+			return;
+		}
+		const char *nonce = commandNonce(command, "ARM_BUTTON:");
+		if ((nonce == nullptr) || (::strcmp(nonce, state.nonce) != 0))
+		{
+			reportFailure("BUTTON_COMMAND", Error::permission_denied);
+			return;
+		}
+
+		state.phase = Phase::button_armed;
+		const Error state_error = saveState(state);
+		if (state_error != Error::none)
+		{
+			reportFailure("BUTTON_STATE_SAVE", state_error);
+			return;
+		}
+
+		Serial.print(
+			"NUCODE_M15_SYSTEM_OFF_REQUEST:schema=2:phase=BUTTON:nonce=");
+		Serial.print(state.nonce);
+		Serial.println(":wake=SW0:gpio=P1.13:active=LOW");
+		Serial.print(
+			"NUCODE_M15_SYSTEM_OFF_ACTION:schema=2:phase=BUTTON:nonce=");
+		Serial.print(state.nonce);
+		Serial.println(":expected=PRESS_LOW:host_wait_ms=2000");
+		Serial.print(
+			"NUCODE_M15_SYSTEM_OFF_ENTERING:schema=2:phase=BUTTON:nonce=");
+		Serial.print(state.nonce);
+		Serial.println(":mode=GPIO_WAKE");
+		Serial.flush();
+
+		const Error clear_error = NU54DK.clearResetCause();
+		if (clear_error != Error::none)
+		{
+			reportFailure("BUTTON_RESET_CLEAR", clear_error);
+			return;
+		}
 		const Error off_error = NU54DK.enterSystemOffOnButton(WakeButton::sw0);
-		removeArmedMarker("STORAGE_REMOVE_OFF_FAIL");
 		reportFailure("ENTER_SYSTEM_OFF_BUTTON", off_error);
+	}
+
+	/** @brief CLOCK 원인이 정확한 timed wake만 승인하고 버튼 단계로 전이합니다. */
+	void continueAfterTimedWake(ScenarioState &state, const ResetReport &report)
+	{
+		const std::uint32_t expected = static_cast<std::uint32_t>(ResetCause::clock);
+		if (report.cause != expected)
+		{
+			reportResetFailure("TIMED_RESET", expected, report);
+			return;
+		}
+
+		state.phase = Phase::timed_passed;
+		const Error state_error = saveState(state);
+		if (state_error != Error::none)
+		{
+			reportFailure("TIMED_PASS_STATE_SAVE", state_error);
+			return;
+		}
+		const Error clear_error = NU54DK.clearResetCause();
+		if (clear_error != Error::none)
+		{
+			reportFailure("TIMED_WAKE_RESET_CLEAR", clear_error);
+			return;
+		}
+
+		Serial.print(
+			"NUCODE_M15_SYSTEM_OFF_BOOT:schema=2:phase=TIMED_WAKE:nonce=");
+		Serial.print(state.nonce);
+		Serial.print(":cause=");
+		Serial.print(static_cast<unsigned long>(report.cause));
+		Serial.print(":supported=");
+		Serial.println(static_cast<unsigned long>(report.supported));
+		Serial.print(
+			"NUCODE_M15_SYSTEM_OFF_WAKE:PASS:phase=TIMED:nonce=");
+		Serial.print(state.nonce);
+		Serial.println(":source=GRTC:cause=2048");
+		armButtonWake(state);
+	}
+
+	/** @brief LOW_POWER_WAKE 원인이 정확한 SW0 wake만 최종 승인합니다. */
+	void finishAfterButtonWake(const ScenarioState &state, const ResetReport &report)
+	{
+		const std::uint32_t expected =
+			static_cast<std::uint32_t>(ResetCause::low_power_wake);
+		if (report.cause != expected)
+		{
+			reportResetFailure("BUTTON_RESET", expected, report);
+			return;
+		}
+		const Error remove_error = removeState();
+		if (remove_error != Error::none)
+		{
+			reportFailure("BUTTON_STATE_REMOVE", remove_error);
+			return;
+		}
+		const Error clear_error = NU54DK.clearResetCause();
+		if (clear_error != Error::none)
+		{
+			reportFailure("BUTTON_WAKE_RESET_CLEAR", clear_error);
+			return;
+		}
+
+		Serial.print(
+			"NUCODE_M15_SYSTEM_OFF_BOOT:schema=2:phase=BUTTON_WAKE:nonce=");
+		Serial.print(state.nonce);
+		Serial.print(":cause=");
+		Serial.print(static_cast<unsigned long>(report.cause));
+		Serial.print(":supported=");
+		Serial.println(static_cast<unsigned long>(report.supported));
+		Serial.print(
+			"NUCODE_M15_SYSTEM_OFF_WAKE:PASS:phase=BUTTON:nonce=");
+		Serial.print(state.nonce);
+		Serial.println(":source=SW0:gpio=P1.13:active=LOW:cause=128");
+		Serial.print("NUCODE_M15_SYSTEM_OFF_PASS:schema=2:nonce=");
+		Serial.print(state.nonce);
+		Serial.println(":timed=PASS:button=PASS");
+		Serial.flush();
 	}
 }
 
-/** @brief 안전한 UART ARM gate를 거쳐 단 한 번 System OFF 시험을 수행합니다. */
+/** @brief DAP SWD 격리 뒤 timed GRTC와 SW0 wake를 순서대로 검증합니다. */
 void setup(void)
 {
 	Serial.begin(115200U);
@@ -194,31 +407,44 @@ void setup(void)
 		return;
 	}
 
-	bool armed = false;
-	if (!readArmedMarker(armed) || reportWakeIfPresent(report, armed))
+	ScenarioState state = {};
+	bool state_exists = false;
+	const Error state_error = loadState(state, state_exists);
+	if (state_error != Error::none)
 	{
+		reportFailure("STATE_LOAD", state_error);
 		return;
 	}
 
-	if (armed && !removeArmedMarker("STORAGE_REMOVE_STALE"))
+	if (!state_exists)
 	{
-		return;
-	}
-	const Error clear_error = NU54DK.clearResetCause();
-	if (clear_error != Error::none)
-	{
-		reportFailure("RESET_CLEAR_ARM", clear_error);
+		const Error clear_error = NU54DK.clearResetCause();
+		if (clear_error != Error::none)
+		{
+			reportFailure("IDLE_RESET_CLEAR", clear_error);
+			return;
+		}
+		Serial.println(
+			"NUCODE_M15_SYSTEM_OFF_READY:schema=2:phase=TIMED:command=ARM_TIMED:duration_us=2000000");
+		armTimedWake();
 		return;
 	}
 
-	Serial.println(
-		"NUCODE_M15_SYSTEM_OFF_READY:schema=1:command=ARM:wake=SW0:gpio=P1.13:active=LOW");
-	if (!waitForArmCommand())
+	switch (state.phase)
 	{
-		reportFailure("ARM_COMMAND", Error::invalid_argument);
-		return;
+	case Phase::timed_armed:
+		continueAfterTimedWake(state, report);
+		break;
+	case Phase::button_armed:
+		finishAfterButtonWake(state, report);
+		break;
+	case Phase::timed_passed:
+		reportFailure("UNEXPECTED_BUTTON_READY_REBOOT", Error::driver_error);
+		break;
+	default:
+		reportFailure("STATE_PHASE", Error::driver_error);
+		break;
 	}
-	requestAndEnterSystemOff();
 }
 
 /** @brief 시험 완료 또는 실패 뒤 추가 전원 동작 없이 대기합니다. */

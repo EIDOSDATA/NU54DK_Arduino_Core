@@ -199,7 +199,7 @@ class M15BoardSystemContractTests(unittest.TestCase):
         self.assertNotIn("prepareTimedWake", system_off)
 
     def test_m15_system_off_hil_is_command_gated_and_manual(self) -> None:
-        """! @brief HIL image도 ARM 수신 전에는 wake 준비나 System OFF를 수행하지 않습니다. """
+        """! @brief 결합 HIL이 SWD 격리 뒤 timed와 button ARM을 순서대로 요구합니다. """
 
         target = (
             REPOSITORY / "tests" / "zephyr" / "m15_wake" / "src" / "main.cpp"
@@ -210,20 +210,36 @@ class M15BoardSystemContractTests(unittest.TestCase):
         testcase = (
             REPOSITORY / "tests" / "zephyr" / "m15_wake" / "testcase.yaml"
         ).read_text(encoding="utf-8")
+        timed_body = target.split("void armTimedWake()", 1)[1].split(
+            "void armButtonWake", 1
+        )[0]
+        button_body = target.split("void armButtonWake", 1)[1].split(
+            "void continueAfterTimedWake", 1
+        )[0]
         self.assertLess(
-            target.index("waitForArmCommand()"),
-            target.index("requestAndEnterSystemOff();"),
+            timed_body.index("waitForCommand"),
+            timed_body.index("NU54DK.enterSystemOffAfter"),
         )
+        self.assertLess(
+            button_body.index("waitForCommand"),
+            button_body.index("NU54DK.enterSystemOffOnButton"),
+        )
+        self.assertIn("NU54DK.enterSystemOffAfter(timed_wake_delay_us)", target)
         self.assertIn("NU54DK.enterSystemOffOnButton(WakeButton::sw0)", target)
         self.assertNotIn("prepareButtonWake", target)
-        self.assertIn("NUCODE_M15_SYSTEM_OFF_REQUEST:command=ARM", target)
-        self.assertIn("NUCODE_M15_SYSTEM_OFF_ENTERING:mode=BUTTON_WAKE", target)
-        self.assertNotIn("NUCODE_M15_SYSTEM_OFF_COMMAND:PASS", target)
-        self.assertNotIn("NUCODE_M15_SYSTEM_OFF_PREPARE:PASS", target)
-        self.assertIn('serial_port.write(b"ARM\\n")', runner)
+        self.assertIn("NUCODE_M15_SYSTEM_OFF_READY:schema=2:phase=TIMED", target)
+        self.assertIn("NUCODE_M15_SYSTEM_OFF_REQUEST:schema=2:phase=TIMED", target)
+        self.assertIn("NUCODE_M15_SYSTEM_OFF_ENTERING:schema=2:phase=BUTTON", target)
+        self.assertIn("report.cause != expected", target)
+        self.assertIn('serial_port.write(f"ARM_TIMED:{nonce}\\n"', runner)
+        self.assertIn('serial_port.write(f"ARM_BUTTON:{nonce}\\n"', runner)
+        self.assertIn("--acknowledge-interface-switch", runner)
         self.assertIn("--acknowledge-button-wake", runner)
+        self.assertIn("DISABLE_SWD_ONLY", runner)
+        self.assertIn("SW0_RELEASED", runner)
+        self.assertIn("RESET_DEBUG", runner)
         self.assertRegex(runner, r'parser\.add_argument\(\s*"--board-id",\s*required=True')
-        self.assertIn("MINIMUM_ENTERING_TO_PROMPT_MS = 2000", runner)
+        self.assertIn("MINIMUM_BUTTON_PROMPT_MS = 2000", runner)
         self.assertIn("build_only: true", testcase)
         self.assertNotIn("harness:", testcase)
 

@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-M15-BOARD-SYSTEM-001 |
-| 문서 개정 | 1.0 |
-| 문서 상태 | M15 구현·검증 진행 중 |
+| 문서 개정 | 1.1 |
+| 문서 상태 | M15 구현·검증 진행 중 — System OFF 결합 HIL NOT RUN |
 | 적용 제품 버전 | `v0.2.0` |
 | 최종 갱신일 | 2026-08-30 |
 | 작성자 | Quantum / NUCODE |
@@ -129,9 +129,19 @@ Wake 준비와 System OFF 진입을 별도 공개 호출로 나누지 않는다.
 `SystemOffWake` 예제는 부팅 직후 자동으로 전원을 끄지 않는다. Serial Monitor에서 `BUTTON`
 또는 `TIMER` 명령을 받은 뒤에만 wake source를 준비하고 System OFF에 진입한다.
 
-M15 HIL image도 host가 명시적으로 `ARM`을 보낸 뒤에만 동작한다. SW0/P1.13 버튼 wake용
-image, parser와 증적 형식은 준비했지만 2026-08-30 현재 물리 버튼 wake는 **NOT RUN**이다.
-이 시험이 통과하기 전에는 M15를 완료로 판정하지 않는다.
+M15 자동 HIL image와 runner는 System OFF에 진입하지 않는다. 자동 범위는 board identity와
+uptime, GRTC one-shot callback, Settings reset persistence, WDT 정상 동작과 reset 경계다.
+GRTC alarm callback의 성공을 timed System OFF wake 성공으로 확대하지 않는다.
+
+System OFF는 공식 CI image를 사용하는 후속 수동 결합 HIL에서 검증한다. Image를 기록하고
+UART를 준비한 뒤 온보드 debug-control 2연 `SW1`의 `DISABLE_SWD` 쪽만 격리 위치로 전환한다.
+`DISABLE_UART` 쪽은 전환하지 않아 UART 연결을 유지한다. 이 debug-control `SW1`은 Arduino
+사용자 버튼 `SW1`/P1.09와 다른 물리 부품이다.
+
+결합 HIL은 GRTC timed wake와 `RESET_CLOCK`을 먼저 확인하고, 이어서 다시 System OFF에 진입해
+사용자 SW0/P1.13 wake와 `LOW_POWER_WAKE`를 확인한다. Active SWD가 만든 `RESET_DEBUG`는 두
+wake source의 PASS로 인정하지 않는다. 2026-08-30 현재 이 결합 HIL은 **NOT RUN**이며 두 단계가
+모두 통과하기 전에는 M15를 완료로 판정하지 않는다.
 
 ## 9. BQ25186 PMIC 안전 경계
 
@@ -223,13 +233,13 @@ PMIC write API의 존재나 software semantic test를 전기적 안전성 PASS�
 | `WatchdogBasic` | watchdog begin/feed 정상 경로 | 구현됨, 최종 자동 결과 반영 전 |
 | `CounterAlarm` | GRTC counter와 work-queue callback | 구현됨, 최종 자동 결과 반영 전 |
 | `SettingsStorage` | 내부 partition boot count | 구현됨, 최종 자동 결과 반영 전 |
-| `SystemOffWake` | 명시적 BUTTON/TIMER 명령 | 구현됨, 물리 버튼 wake NOT RUN |
+| `SystemOffWake` | 명시적 BUTTON/TIMER 명령 | 구현됨, System OFF 결합 HIL NOT RUN |
 | `tests/host/test_m15_board_system_contract.py` | 공개 API·구성·PMIC 안전 경계 | 실행 결과 반영 전 |
 | `tests/zephyr/m15_board` | production target compile/link와 안전한 read 상태 | 실행 결과 반영 전 |
-| `tests/zephyr/m15_hil` | identity·reset·GRTC·Settings·WDT·timed System OFF 자동 HIL image | 실행 결과 반영 전 |
-| `tests/zephyr/m15_wake` | ARM-gated System OFF image | build/HIL 결과 반영 전 |
-| `tests/hil/nu54dk/m15_auto.py` | nonce 기반 비버튼 자동 HIL과 비파괴 복구 | runner 준비, 실기 결과 반영 전 |
-| `tests/hil/nu54dk/m15_system_off.py` | SW0 wake protocol과 증적 | parser 준비, 물리 HIL NOT RUN |
+| `tests/zephyr/m15_hil` | identity·reset·GRTC callback·Settings·WDT 비-System-OFF 자동 HIL image | 실행 결과 반영 전 |
+| `tests/zephyr/m15_wake` | SWD 격리 timed GRTC→사용자 SW0 결합 HIL image | build/HIL 결과 반영 전 |
+| `tests/hil/nu54dk/m15_auto.py` | nonce 기반 비-System-OFF 자동 HIL과 비파괴 복구 | runner 준비, 실기 결과 반영 전 |
+| `tests/hil/nu54dk/m15_system_off.py` | timed GRTC와 SW0 wake 결합 protocol·증적 | 준비 중, 물리 HIL NOT RUN |
 
 최종 실행 결과와 exact commit은
 [M15 NU54DK Board/System 기준선](<../04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)에
@@ -241,9 +251,11 @@ M15를 완료하려면 다음 조건이 모두 충족되어야 한다.
 
 - 공개 API와 오류·context negative 시험 통과
 - Arduino 예제 compile/discovery와 production NU54DK target build 통과
-- board identity, software/watchdog reset, uptime, watchdog stop/expiry, GRTC alarm,
-  settings와 timed System OFF의 nonce 기반 자동 HIL 결과 확보
-- System OFF 진입, UART 무응답 구간과 SW0/P1.13 low-power wake를 실제 보드에서 확인
+- board identity, software/watchdog reset, uptime, watchdog stop/expiry, GRTC alarm과
+  settings의 비-System-OFF 자동 HIL 결과 확보
+- debug-control `SW1`에서 `DISABLE_SWD`만 격리하고 UART를 유지한 상태에서 GRTC timed
+  System OFF wake와 `RESET_CLOCK`을 실제 보드에서 확인
+- 같은 결합 HIL에서 사용자 SW0/P1.13 System OFF wake와 `LOW_POWER_WAKE`를 확인
 - PMIC battery electrical HIL은 `NOT RUN`과 사용자 책임으로 계속 명시
 - 실제 NTC 온도 보호를 미지원으로 유지
 

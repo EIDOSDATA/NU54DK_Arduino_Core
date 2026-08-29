@@ -11,12 +11,12 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m8_upload.py` | manifest를 검증한 pyOCD/J-Link upload 반복 시험 | NU54DK debug probe |
 | `m8_debug.py` | debug server와 Sketch source breakpoint 검증 | pyOCD 또는 J-Link |
 | `m14_pin_hil.py` | 신규 LED output/readback과 버튼 pull·edge 검증 | NU54DK, CMSIS-DAP V2 UART, 사용자 버튼 동작 |
-| `m15_auto.py` | identity·GRTC·Settings·WDT·timed System OFF 자동 검증 | 공식 Ubuntu CI artifact, NU54DK, CMSIS-DAP V2 UART |
-| `m15_system_off.py` | UART ARM 뒤 System OFF와 SW0 wake 검증 | NU54DK, CMSIS-DAP V2 UART, SW0 한 번 누름 |
+| `m15_auto.py` | identity·uptime·GRTC callback·Settings·WDT 비-System-OFF 자동 검증 | 공식 Ubuntu CI artifact, NU54DK, CMSIS-DAP V2 UART |
+| `m15_system_off.py` | SWD 격리 뒤 timed GRTC→사용자 SW0 System OFF 결합 검증 | 공식 Ubuntu CI artifact, NU54DK, CMSIS-DAP V2 UART, debug-control SW1, 사용자 SW0 |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
 | `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |
-| `test_m15_system_off.py` | M15 ARM·무응답 시간·wake protocol과 증적 경계를 검증 | 없음 |
+| `test_m15_system_off.py` | M15 timed·button ARM, 무응답 시간과 결합 wake protocol·증적 경계를 검증 | 없음 |
 
 ## 실행 원칙
 
@@ -62,6 +62,10 @@ $AutoHex = Join-Path $ArtifactRoot `
   --expected-core-revision $Commit `
   --evidence "$CoreRoot\build\m15\hil\m15-auto.evidence.json"
 ```
+
+이 자동 HIL은 System OFF에 진입하지 않습니다. Identity와 uptime, GRTC one-shot callback,
+Settings의 reset 전후 유지, WDT feed·stop·expiry 경계까지만 검증합니다. 자동 transcript나
+evidence를 timed GRTC wake 또는 사용자 버튼 wake PASS로 확대하지 않습니다.
 
 ## M14 신규 핀 HIL
 
@@ -125,17 +129,31 @@ $Commit = git -C $CoreRoot rev-parse HEAD
 통과해야 `status: passed` JSON과 SHA-256으로 결합된 companion transcript가 생성됩니다.
 timeout, target FAIL, 핀 ID·순서 불일치 또는 중복 token은 PASS 증적을 만들지 않습니다.
 
-## M15 System OFF wake HIL 준비
+## M15 System OFF 결합 HIL 준비
 
-M15 HIL은 `SW0`/P1.13 한 번 누르기만 수동으로 남겨 둡니다. image는 부팅만으로
-System OFF에 진입하지 않으며, runner가 UART `READY`를 확인하고 정확한 `ARM` 명령을 보낸
-뒤에만 원자적 버튼 wake 진입을 요청합니다. `REQUEST`와 `ENTERING`은 진입 완료나 PASS가
-아니며, runner는 `ENTERING` 요청 이후 2초가 지난 다음 `M15 PRESS NOW`를 출력합니다.
-이 안내 전에 버튼을 누른 결과, 다른 GPIO 또는
-`LOW_POWER_WAKE`가 아닌 reset 원인, 누락·중복 token은 PASS로 인정하지 않습니다.
+System OFF는 자동 HIL과 분리한 단일 수동 session에서 두 단계로 검증합니다.
 
-버튼 HIL도 같은 공식 CI artifact의 build record와 image를 사용합니다. 로컬에서 image를 다시
-빌드하지 않습니다.
+1. GRTC timed wake 뒤 `RESET_CLOCK` 확인
+2. 다시 System OFF에 진입한 뒤 사용자 SW0/P1.13 wake와 `LOW_POWER_WAKE` 확인
+
+두 단계는 같은 공식 CI artifact의 build record와 image를 사용합니다. 로컬에서 image를 다시
+빌드하지 않습니다. Image는 부팅만으로 System OFF에 진입하지 않으며 runner가 UART 상태와
+명시적 준비 token을 확인한 뒤에만 각 단계를 arm합니다.
+
+### Debug-control SW1 설정
+
+NU54DK에는 `DISABLE_SWD`와 `DISABLE_UART`를 함께 가진 온보드 debug-control 2연 `SW1`이
+있습니다. 이 부품은 Arduino 사용자 버튼 `SW1`/P1.09와 **다른 물리 부품**입니다.
+
+1. Image 기록과 UART 준비까지 debug-control `SW1`을 기존 상태로 둡니다.
+2. Runner의 격리 안내가 나오면 `DISABLE_SWD` 쪽만 격리 위치로 전환합니다.
+3. `DISABLE_UART` 쪽은 전환하지 않아 온보드 UART 연결을 유지합니다.
+4. Timed 단계와 button 단계를 모두 마친 뒤 필요한 경우 `DISABLE_SWD`를 원래 위치로
+   복원합니다.
+
+Active SWD 상태에서 나타나는 `RESET_DEBUG`는 GRTC나 GPIO wake가 아닙니다. 이 원인의 즉시
+wake는 결합 HIL PASS 또는 API FAIL로 판정하지 않으며, SWD가 격리되지 않은 실행은 완료 증거로
+사용하지 않습니다.
 
 ```powershell
 $CoreRoot = "C:\Users\eidos\GitHub\NU54DK_Arduino_Core"
@@ -144,7 +162,7 @@ $WakeHex = Join-Path $ArtifactRoot `
   "twister\nrf54l15dk_nrf54l15_cpuapp_nu54dk\zephyr_gnu\nucode.m15.wake\m15_wake\zephyr\zephyr.hex"
 ```
 
-실제 버튼 시험은 M15 변경을 commit한 exact source에서 다음과 같이 실행합니다. 여러 보드가
+실제 결합 시험은 M15 변경을 commit한 exact source에서 다음과 같이 실행합니다. 여러 보드가
 연결될 수 있으므로 `--board-id`는 필수이며 기본 probe UID로 대체하지 않습니다. 기존 증적은
 `--overwrite-evidence` 없이는 덮어쓰지 않습니다.
 
@@ -154,13 +172,21 @@ $Commit = git -C $CoreRoot rev-parse HEAD
   --hex $WakeHex `
   --board-id "<시험할 CMSIS-DAP UID>" `
   --expected-core-revision $Commit `
+  --acknowledge-interface-switch `
   --acknowledge-button-wake `
   --evidence "$CoreRoot\build\m15\hil\m15-system-off.evidence.json"
 ```
 
-현재 단계에서는 위 runner와 image까지만 준비하며 버튼 결과를 완료로 기록하지 않습니다.
-실기에서 `M15 PRESS NOW` 뒤 SW0을 눌러 최종 `NUCODE_M15_SYSTEM_OFF_PASS`가 나타나고 exact
-image·revision·transcript SHA-256 증적이 생성된 뒤에만 버튼 wake 항목을 완료할 수 있습니다.
+Runner는 먼저 timed GRTC 단계의 System OFF 무응답 구간과 `RESET_CLOCK`을 확인해야 합니다.
+`TIMED READY` 안내에서 SWD만 격리한 뒤 `DISABLE_SWD_ONLY`를 입력하고, button 준비 안내에서는
+사용자 SW0가 눌리지 않았음을 확인한 뒤 `SW0_RELEASED`를 입력합니다.
+그 뒤에만 button 단계를 arm하고 `M15 PRESS NOW`를 출력합니다. 이 안내 전에 사용자
+SW0/P1.13을 누른 결과, 다른 GPIO 또는 `LOW_POWER_WAKE`가 아닌 reset 원인, 누락·중복 token은
+PASS로 인정하지 않습니다.
+
+현재 timed GRTC와 사용자 SW0/P1.13 결합 HIL은 모두 **NOT RUN**입니다. 두 단계의 최종 PASS
+token과 exact image·revision·transcript SHA-256 증적이 한 session으로 완결된 뒤에만 M15
+System OFF 항목을 완료할 수 있습니다.
 
 구체적인 실행 명령과 이미 검증한 결과는
 [M6 기준선](<../../../00_Docs/04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md>),

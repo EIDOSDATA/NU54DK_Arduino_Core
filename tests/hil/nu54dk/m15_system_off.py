@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief 공식 clean Ubuntu CI M15 artifact의 SW0 System OFF wake를 검증합니다. """
+"""! @brief M15 timed GRTC와 SW0 System OFF wake를 한 수동 세션에서 검증합니다. """
 
 from __future__ import annotations
 
@@ -10,22 +10,27 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import secrets
 import shutil
 import subprocess
 import sys
 import time
-from typing import Any, Sequence
+from typing import Any, Callable, Sequence
 
 
 HIL_DIRECTORY = Path(__file__).resolve().parent
 REPOSITORY = HIL_DIRECTORY.parents[2]
 BOARD_ROOT = REPOSITORY / "board_package" / "NU54DK_Zephyr_DTS"
 APPLICATION_SOURCE_ROOT = REPOSITORY / "tests" / "zephyr" / "m15_wake"
-BOARD_SUBMODULE_PATH = "board_package/NU54DK_Zephyr_DTS"
-CORE_REVISION_PATTERN = re.compile(r"^[0-9a-f]{40}$")
 MAX_TRANSCRIPT_BYTES = 131072
-MINIMUM_ENTERING_TO_PROMPT_MS = 2000
+MINIMUM_TIMED_WAKE_MS = 1500
+MAXIMUM_TIMED_WAKE_MS = 10000
+MINIMUM_BUTTON_PROMPT_MS = 2000
 DEFAULT_RESULT_TIMEOUT_SECONDS = 240.0
+RESET_LOW_POWER_WAKE = 1 << 7
+RESET_DEBUG = 1 << 5
+RESET_CLOCK = 1 << 11
+NONCE_PATTERN = rb"([0-9a-f]{32})"
 
 if str(HIL_DIRECTORY) not in sys.path:
     sys.path.insert(0, str(HIL_DIRECTORY))
@@ -47,33 +52,72 @@ from m14_pin_hil import (  # noqa: E402
     file_sha256,
     git_committed_files_digest,
     git_revision,
-    parent_board_revision,
     validate_board_revision,
 )
 
 
-READY_TOKEN = (
-    b"NUCODE_M15_SYSTEM_OFF_READY:schema=1:command=ARM:"
-    b"wake=SW0:gpio=P1.13:active=LOW"
-)
-REQUEST_TOKEN = (
-    b"NUCODE_M15_SYSTEM_OFF_REQUEST:command=ARM:"
-    b"wake=SW0:gpio=P1.13:active=LOW"
-)
-ACTION_TOKEN = (
-    b"NUCODE_M15_SYSTEM_OFF_ACTION:wake=SW0:expected=PRESS_LOW:"
-    b"host_wait_ms=2000"
-)
-ENTERING_TOKEN = b"NUCODE_M15_SYSTEM_OFF_ENTERING:mode=BUTTON_WAKE"
-WAKE_BOOT_TOKEN = (
-    b"NUCODE_M15_SYSTEM_OFF_BOOT:schema=1:phase=WAKE:reset=LOW_POWER_WAKE"
-)
-WAKE_TOKEN = (
-    b"NUCODE_M15_SYSTEM_OFF_WAKE:PASS:source=SW0:gpio=P1.13:active=LOW"
-)
-FINAL_PASS_TOKEN = b"NUCODE_M15_SYSTEM_OFF_PASS"
-FINAL_FAIL_TOKEN = b"NUCODE_M15_SYSTEM_OFF_FAIL:"
 PROTOCOL_PREFIX = b"NUCODE_M15_SYSTEM_OFF_"
+FINAL_FAIL_TOKEN = b"NUCODE_M15_SYSTEM_OFF_FAIL:"
+TIMED_READY_TOKEN = (
+    b"NUCODE_M15_SYSTEM_OFF_READY:schema=2:phase=TIMED:"
+    b"command=ARM_TIMED:duration_us=2000000"
+)
+TIMED_REQUEST_PATTERN = re.compile(
+    rb"NUCODE_M15_SYSTEM_OFF_REQUEST:schema=2:phase=TIMED:nonce="
+    + NONCE_PATTERN
+    + rb":duration_us=2000000"
+)
+TIMED_ENTERING_PATTERN = re.compile(
+    rb"NUCODE_M15_SYSTEM_OFF_ENTERING:schema=2:phase=TIMED:nonce="
+    + NONCE_PATTERN
+    + rb":mode=GRTC_WAKE"
+)
+TIMED_BOOT_PATTERN = re.compile(
+    rb"NUCODE_M15_SYSTEM_OFF_BOOT:schema=2:phase=TIMED_WAKE:nonce="
+    + NONCE_PATTERN
+    + rb":cause=([0-9]+):supported=([0-9]+)"
+)
+TIMED_WAKE_PATTERN = re.compile(
+    rb"NUCODE_M15_SYSTEM_OFF_WAKE:PASS:phase=TIMED:nonce="
+    + NONCE_PATTERN
+    + rb":source=GRTC:cause=2048"
+)
+BUTTON_READY_PATTERN = re.compile(
+    rb"NUCODE_M15_SYSTEM_OFF_READY:schema=2:phase=BUTTON:"
+    rb"command=ARM_BUTTON:nonce="
+    + NONCE_PATTERN
+    + rb":wake=SW0:gpio=P1\.13:active=LOW"
+)
+BUTTON_REQUEST_PATTERN = re.compile(
+    rb"NUCODE_M15_SYSTEM_OFF_REQUEST:schema=2:phase=BUTTON:nonce="
+    + NONCE_PATTERN
+    + rb":wake=SW0:gpio=P1\.13:active=LOW"
+)
+BUTTON_ACTION_PATTERN = re.compile(
+    rb"NUCODE_M15_SYSTEM_OFF_ACTION:schema=2:phase=BUTTON:nonce="
+    + NONCE_PATTERN
+    + rb":expected=PRESS_LOW:host_wait_ms=2000"
+)
+BUTTON_ENTERING_PATTERN = re.compile(
+    rb"NUCODE_M15_SYSTEM_OFF_ENTERING:schema=2:phase=BUTTON:nonce="
+    + NONCE_PATTERN
+    + rb":mode=GPIO_WAKE"
+)
+BUTTON_BOOT_PATTERN = re.compile(
+    rb"NUCODE_M15_SYSTEM_OFF_BOOT:schema=2:phase=BUTTON_WAKE:nonce="
+    + NONCE_PATTERN
+    + rb":cause=([0-9]+):supported=([0-9]+)"
+)
+BUTTON_WAKE_PATTERN = re.compile(
+    rb"NUCODE_M15_SYSTEM_OFF_WAKE:PASS:phase=BUTTON:nonce="
+    + NONCE_PATTERN
+    + rb":source=SW0:gpio=P1\.13:active=LOW:cause=128"
+)
+FINAL_PASS_PATTERN = re.compile(
+    rb"NUCODE_M15_SYSTEM_OFF_PASS:schema=2:nonce="
+    + NONCE_PATTERN
+    + rb":timed=PASS:button=PASS"
+)
 
 
 class SystemOffHilFailure(RuntimeError):
@@ -92,28 +136,36 @@ class TranscriptFailure(SystemOffHilFailure):
 
 @dataclass(frozen=True)
 class SystemOffResult:
-    """! @brief System OFF 진입과 SW0 wake 관찰 결과입니다. """
+    """! @brief 두 System OFF wake의 nonce와 reset 원인입니다. """
 
+    nonce: str
+    timed_reset_cause: int
+    timed_supported: int
+    button_reset_cause: int
+    button_supported: int
     wake_source: str = "SW0"
     gpio: str = "P1.13"
     active_level: str = "LOW"
-    reset_cause: str = "LOW_POWER_WAKE"
 
 
 @dataclass(frozen=True)
 class CaptureResult:
-    """! @brief UART 원문과 ENTERING 요청부터 wake까지의 host 계측값입니다. """
+    """! @brief UART 원문, host 시간과 수동 확인 시각입니다. """
 
     transcript: bytes
-    entering_to_wake_ms: int
+    nonce: str
+    timed_entering_to_wake_ms: int
+    button_entering_to_wake_ms: int
+    isolation_confirmed_at_utc: str
+    button_confirmed_at_utc: str
 
 
-## @brief 실제 실행 인자를 생성하고 명시적 장치·수동 동작 승인을 요구합니다.
+## @brief 실행 인자를 생성하고 두 수동 fixture 승인을 명시적으로 요구합니다.
 def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "M15 System OFF image를 정확한 NU54DK에 기록하고 SW0(P1.13) "
-            "wake와 low-power reset cause를 검증합니다."
+            "M15 image를 한 번 기록한 뒤 DAP SWD를 격리하고 timed GRTC와 "
+            "SW0(P1.13) System OFF wake를 검증합니다."
         )
     )
     parser.add_argument("--hex", dest="hex_path")
@@ -130,17 +182,23 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
         "--result-timeout", type=float, default=DEFAULT_RESULT_TIMEOUT_SECONDS
     )
     parser.add_argument(
-        "--evidence",
-        help="PASS JSON evidence 경로(--discover-only가 아니면 필수)",
+        "--evidence", help="PASS JSON evidence 경로(--discover-only가 아니면 필수)"
     )
     parser.add_argument(
-        "--expected-core-revision",
-        help="시험할 checkout의 기대 40자리 Core commit",
+        "--expected-core-revision", help="시험할 checkout의 기대 40자리 Core commit"
+    )
+    parser.add_argument(
+        "--acknowledge-interface-switch",
+        action="store_true",
+        help=(
+            "DAP 연결 제어용 2연 SW1에서 DISABLE_SWD만 차단하고 "
+            "DISABLE_UART는 연결 상태로 둘 준비가 되었음을 명시"
+        ),
     )
     parser.add_argument(
         "--acknowledge-button-wake",
         action="store_true",
-        help="host 안내 뒤 SW0을 한 번 누를 준비가 되었음을 명시",
+        help="host 안내 뒤 사용자 SW0(P1.13)을 한 번 누를 준비가 되었음을 명시",
     )
     parser.add_argument(
         "--overwrite-evidence",
@@ -283,7 +341,7 @@ def validate_build_record(
     return values
 
 
-## @brief M15 HEX를 DAPLink MSD로 기록하고 완료 sequence와 byte 수를 반환합니다.
+## @brief M15 HEX를 DAPLink MSD로 한 번 기록하고 완료 정보를 반환합니다.
 def flash_image(
     volume: DaplinkVolume, image: Path, timeout_seconds: float
 ) -> tuple[str, str]:
@@ -298,54 +356,167 @@ def flash_image(
     )
 
 
-## @brief UART protocol의 정확한 순서와 단일 SW0 wake 결과만 승인합니다.
+## @brief protocol 정규식 하나를 소비하고 nonce를 누적합니다.
+def _take_pattern(
+    lines: list[bytes], cursor: int, pattern: re.Pattern[bytes], nonces: list[str]
+) -> tuple[re.Match[bytes], int]:
+    if cursor >= len(lines):
+        raise SystemOffHilFailure("M15 System OFF protocol line이 중간에 누락되었습니다.")
+    match = pattern.fullmatch(lines[cursor])
+    if match is None:
+        raise SystemOffHilFailure(
+            "M15 System OFF protocol 순서/값이 다릅니다: "
+            f"line={cursor}, actual={lines[cursor]!r}"
+        )
+    nonces.append(match.group(1).decode("ascii"))
+    return match, cursor + 1
+
+
+## @brief reset 원인이 기대 단일 bit이며 supported mask에 포함되는지 검사합니다.
+def _validate_reset_cause(
+    phase: str, cause: int, supported: int, expected: int
+) -> None:
+    if cause & RESET_DEBUG:
+        raise SystemOffHilFailure(
+            f"{phase} wake에 금지된 RESET_DEBUG가 포함되었습니다: cause={cause}"
+        )
+    if cause != expected:
+        raise SystemOffHilFailure(
+            f"{phase} reset 원인이 정확한 단일 기대값이 아닙니다: "
+            f"cause={cause}, expected={expected}"
+        )
+    if cause & ~supported:
+        raise SystemOffHilFailure(
+            f"{phase} reset 원인이 supported mask 밖에 있습니다: "
+            f"cause={cause}, supported={supported}"
+        )
+
+
+## @brief schema 2의 timed GRTC→SW0 전체 순서와 동일 nonce만 승인합니다.
 def parse_transcript(transcript: bytes) -> SystemOffResult:
     normalized = transcript.replace(b"\r", b"")
     if FINAL_FAIL_TOKEN in normalized:
         raise SystemOffHilFailure("target이 M15 System OFF 실패를 보고했습니다.")
-    protocol_lines = [
+    lines = [
         line.strip()
         for line in normalized.split(b"\n")
         if line.strip().startswith(PROTOCOL_PREFIX)
     ]
-    expected = [
-        READY_TOKEN,
-        REQUEST_TOKEN,
-        ACTION_TOKEN,
-        ENTERING_TOKEN,
-        WAKE_BOOT_TOKEN,
-        WAKE_TOKEN,
-        FINAL_PASS_TOKEN,
-    ]
-    if protocol_lines != expected:
+    cursor = 0
+    nonces: list[str] = []
+
+    def take_exact(expected: bytes) -> None:
+        nonlocal cursor
+        if cursor >= len(lines) or lines[cursor] != expected:
+            actual = lines[cursor] if cursor < len(lines) else b"<missing>"
+            raise SystemOffHilFailure(
+                "M15 System OFF protocol 순서/값이 다릅니다: "
+                f"line={cursor}, expected={expected!r}, actual={actual!r}"
+            )
+        cursor += 1
+
+    def take(pattern: re.Pattern[bytes]) -> re.Match[bytes]:
+        nonlocal cursor
+        match, cursor = _take_pattern(lines, cursor, pattern, nonces)
+        return match
+
+    take_exact(TIMED_READY_TOKEN)
+    take(TIMED_REQUEST_PATTERN)
+    take(TIMED_ENTERING_PATTERN)
+    timed_boot = take(TIMED_BOOT_PATTERN)
+    take(TIMED_WAKE_PATTERN)
+    take(BUTTON_READY_PATTERN)
+    take(BUTTON_REQUEST_PATTERN)
+    take(BUTTON_ACTION_PATTERN)
+    take(BUTTON_ENTERING_PATTERN)
+    button_boot = take(BUTTON_BOOT_PATTERN)
+    take(BUTTON_WAKE_PATTERN)
+    take(FINAL_PASS_PATTERN)
+    if cursor != len(lines):
         raise SystemOffHilFailure(
-            "M15 System OFF protocol 순서/값이 다릅니다: "
-            f"expected={expected!r}, actual={protocol_lines!r}"
+            "최종 PASS 뒤 예상하지 않은 M15 protocol line이 있습니다: "
+            f"{lines[cursor:]!r}"
         )
-    return SystemOffResult()
+    if not nonces or len(set(nonces)) != 1:
+        raise SystemOffHilFailure(f"M15 protocol nonce가 단계마다 다릅니다: {nonces!r}")
+
+    timed_cause = int(timed_boot.group(2), 10)
+    timed_supported = int(timed_boot.group(3), 10)
+    button_cause = int(button_boot.group(2), 10)
+    button_supported = int(button_boot.group(3), 10)
+    _validate_reset_cause("TIMED", timed_cause, timed_supported, RESET_CLOCK)
+    _validate_reset_cause(
+        "BUTTON", button_cause, button_supported, RESET_LOW_POWER_WAKE
+    )
+    return SystemOffResult(
+        nonce=nonces[0],
+        timed_reset_cause=timed_cause,
+        timed_supported=timed_supported,
+        button_reset_cause=button_cause,
+        button_supported=button_supported,
+    )
 
 
-## @brief ENTERING 요청부터 wake까지 최소 안내 간격이 지났는지 검사합니다.
-def validate_entering_to_wake_interval(
-    entering_at: float | None, wake_at: float | None
-) -> int:
+## @brief timed ENTERING부터 CLOCK wake까지의 host 관찰 구간을 검사합니다.
+def validate_timed_interval(entering_at: float | None, wake_at: float | None) -> int:
     if entering_at is None or wake_at is None or wake_at < entering_at:
-        raise SystemOffHilFailure("ENTERING 요청과 wake 시각을 모두 관찰하지 못했습니다.")
+        raise SystemOffHilFailure("timed ENTERING과 wake 시각을 모두 관찰하지 못했습니다.")
     elapsed_ms = int(round((wake_at - entering_at) * 1000.0))
-    if elapsed_ms < MINIMUM_ENTERING_TO_PROMPT_MS:
+    if not MINIMUM_TIMED_WAKE_MS <= elapsed_ms <= MAXIMUM_TIMED_WAKE_MS:
         raise SystemOffHilFailure(
-            "SW0을 host의 PRESS NOW 안내보다 먼저 눌렀거나 ENTERING 요청부터 "
-            f"wake까지의 간격이 너무 짧습니다: {elapsed_ms}ms"
+            "timed GRTC wake 구간이 허용 범위 밖입니다: "
+            f"{elapsed_ms}ms, expected={MINIMUM_TIMED_WAKE_MS}..{MAXIMUM_TIMED_WAKE_MS}ms"
         )
     return elapsed_ms
 
 
-## @brief READY 뒤 ARM을 전송하고 System OFF·SW0 wake의 완전한 UART 결과를 수집합니다.
+## @brief BUTTON ENTERING부터 wake까지 PRESS NOW 안전 간격을 검사합니다.
+def validate_button_interval(entering_at: float | None, wake_at: float | None) -> int:
+    if entering_at is None or wake_at is None or wake_at < entering_at:
+        raise SystemOffHilFailure("button ENTERING과 wake 시각을 모두 관찰하지 못했습니다.")
+    elapsed_ms = int(round((wake_at - entering_at) * 1000.0))
+    if elapsed_ms < MINIMUM_BUTTON_PROMPT_MS:
+        raise SystemOffHilFailure(
+            "SW0을 PRESS NOW 안내보다 먼저 눌렀거나 button wake가 너무 빠릅니다: "
+            f"{elapsed_ms}ms"
+        )
+    return elapsed_ms
+
+
+## @brief 사용자가 DAP SWD만 격리했음을 exact 문구로 확인합니다.
+def _confirm_swd_isolation(confirm: Callable[[str], str]) -> None:
+    prompt = (
+        "DAP 연결 제어용 2연 SW1에서 실제 보드 실크를 따라 DISABLE_SWD만 "
+        "차단하고 DISABLE_UART는 연결 상태로 유지하십시오. 완료 후 "
+        "DISABLE_SWD_ONLY 입력: "
+    )
+    if confirm(prompt).strip() != "DISABLE_SWD_ONLY":
+        raise SystemOffHilFailure(
+            "DISABLE_SWD_ONLY 확인이 없어 flash 뒤 System OFF 시험을 중단했습니다."
+        )
+
+
+## @brief 사용자가 wake용 SW0을 놓은 상태인지 exact 문구로 확인합니다.
+def _confirm_button_released(confirm: Callable[[str], str]) -> None:
+    prompt = (
+        "사용자 SW0(P1.13)이 눌리지 않은 RELEASED 상태인지 확인하십시오. "
+        "완료 후 SW0_RELEASED 입력: "
+    )
+    if confirm(prompt).strip() != "SW0_RELEASED":
+        raise SystemOffHilFailure(
+            "SW0_RELEASED 확인이 없어 button System OFF 시험을 중단했습니다."
+        )
+
+
+## @brief flash 뒤 동일 UART session에서 timed wake와 수동 SW0 wake를 수집합니다.
 def capture_protocol(
     serial_port: Any,
     timeout_seconds: float,
     *,
-    monotonic: Any = time.monotonic,
+    monotonic: Callable[[], float] = time.monotonic,
+    confirm: Callable[[str], str] = input,
+    nonce_factory: Callable[[int], str] = secrets.token_hex,
+    utc_now: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
 ) -> CaptureResult:
     if not 30.0 <= timeout_seconds <= 600.0:
         raise SystemOffHilFailure("--result-timeout은 30..600초 범위여야 합니다.")
@@ -353,22 +524,29 @@ def capture_protocol(
     deadline = monotonic() + timeout_seconds
     observed = bytearray()
     processed_lines = 0
-    arm_sent = False
-    prompt_emitted = False
-    entering_at: float | None = None
-    wake_at: float | None = None
+    nonce: str | None = None
+    timed_arm_sent = False
+    button_arm_sent = False
+    button_prompt_emitted = False
+    isolation_confirmed_at_utc: str | None = None
+    button_confirmed_at_utc: str | None = None
+    timed_entering_at: float | None = None
+    timed_wake_at: float | None = None
+    button_entering_at: float | None = None
+    button_wake_at: float | None = None
 
     while True:
         now = monotonic()
         if (
-            entering_at is not None
-            and not prompt_emitted
-            and ((now - entering_at) * 1000.0) >= MINIMUM_ENTERING_TO_PROMPT_MS
+            button_entering_at is not None
+            and not button_prompt_emitted
+            and ((now - button_entering_at) * 1000.0) >= MINIMUM_BUTTON_PROMPT_MS
         ):
-            print("M15 PRESS NOW: NU54DK의 SW0(P1.13)을 한 번 누르십시오.")
-            prompt_emitted = True
+            print("M15 PRESS NOW: 사용자 SW0(P1.13)을 한 번 누르십시오.")
+            button_prompt_emitted = True
         if now >= deadline:
             break
+
         waiting = serial_port.in_waiting
         chunk = serial_port.read(waiting if waiting > 0 else 1)
         if not chunk:
@@ -384,29 +562,93 @@ def capture_protocol(
         complete_lines = bytes(observed).replace(b"\r", b"").split(b"\n")[:-1]
         for line in complete_lines[processed_lines:]:
             token = line.strip()
-            if token == READY_TOKEN and not arm_sent:
-                serial_port.write(b"ARM\n")
+            if token.startswith(FINAL_FAIL_TOKEN):
+                raise TranscriptFailure(
+                    "target이 M15 System OFF 실패를 보고했습니다.", bytes(observed)
+                )
+            if token == TIMED_READY_TOKEN and not timed_arm_sent:
+                try:
+                    _confirm_swd_isolation(confirm)
+                except SystemOffHilFailure as error:
+                    raise TranscriptFailure(str(error), bytes(observed)) from error
+                isolation_confirmed_at_utc = utc_now().isoformat()
+                nonce = nonce_factory(16)
+                if re.fullmatch(r"[0-9a-f]{32}", nonce) is None:
+                    raise TranscriptFailure(
+                        "host nonce 생성기가 소문자 32자리 16진수를 반환하지 않았습니다.",
+                        bytes(observed),
+                    )
+                serial_port.write(f"ARM_TIMED:{nonce}\n".encode("ascii"))
                 serial_port.flush()
-                arm_sent = True
-                print("M15 ARM 명령을 전송했습니다. 아직 SW0을 누르지 마십시오.")
-            elif token == ENTERING_TOKEN and entering_at is None:
-                entering_at = monotonic()
-            elif token == WAKE_BOOT_TOKEN and wake_at is None:
-                wake_at = monotonic()
-            if token == FINAL_PASS_TOKEN or token.startswith(FINAL_FAIL_TOKEN):
+                timed_arm_sent = True
+                deadline = monotonic() + timeout_seconds
+                print(
+                    "M15 timed ARM을 전송했습니다. 이제 debug/flash를 실행하지 마십시오."
+                )
+            elif TIMED_ENTERING_PATTERN.fullmatch(token) is not None:
+                if timed_entering_at is None:
+                    timed_entering_at = monotonic()
+            elif TIMED_BOOT_PATTERN.fullmatch(token) is not None:
+                if timed_wake_at is None:
+                    timed_wake_at = monotonic()
+            elif BUTTON_READY_PATTERN.fullmatch(token) is not None:
+                ready = BUTTON_READY_PATTERN.fullmatch(token)
+                assert ready is not None
+                ready_nonce = ready.group(1).decode("ascii")
+                if nonce is None or ready_nonce != nonce:
+                    raise TranscriptFailure(
+                        "button 단계 nonce가 host nonce와 다릅니다.", bytes(observed)
+                    )
+                if not button_arm_sent:
+                    try:
+                        _confirm_button_released(confirm)
+                    except SystemOffHilFailure as error:
+                        raise TranscriptFailure(str(error), bytes(observed)) from error
+                    button_confirmed_at_utc = utc_now().isoformat()
+                    serial_port.write(f"ARM_BUTTON:{nonce}\n".encode("ascii"))
+                    serial_port.flush()
+                    button_arm_sent = True
+                    deadline = monotonic() + timeout_seconds
+                    print("M15 button ARM을 전송했습니다. PRESS NOW를 기다리십시오.")
+            elif BUTTON_ENTERING_PATTERN.fullmatch(token) is not None:
+                if button_entering_at is None:
+                    button_entering_at = monotonic()
+            elif BUTTON_BOOT_PATTERN.fullmatch(token) is not None:
+                if button_wake_at is None:
+                    button_wake_at = monotonic()
+
+            if FINAL_PASS_PATTERN.fullmatch(token) is not None:
                 transcript = bytes(observed)
                 try:
-                    parse_transcript(transcript)
-                    if not arm_sent or not prompt_emitted:
+                    result = parse_transcript(transcript)
+                    if (
+                        nonce is None
+                        or result.nonce != nonce
+                        or not timed_arm_sent
+                        or not button_arm_sent
+                        or not button_prompt_emitted
+                        or isolation_confirmed_at_utc is None
+                        or button_confirmed_at_utc is None
+                    ):
                         raise SystemOffHilFailure(
-                            "ARM 전송 또는 PRESS NOW 안내 없이 최종 token이 나타났습니다."
+                            "수동 확인, ARM 또는 PRESS NOW 없이 최종 PASS가 나타났습니다."
                         )
-                    entering_to_wake_ms = validate_entering_to_wake_interval(
-                        entering_at, wake_at
+                    timed_ms = validate_timed_interval(
+                        timed_entering_at, timed_wake_at
+                    )
+                    button_ms = validate_button_interval(
+                        button_entering_at, button_wake_at
                     )
                 except SystemOffHilFailure as error:
                     raise TranscriptFailure(str(error), transcript) from error
-                return CaptureResult(transcript, entering_to_wake_ms)
+                return CaptureResult(
+                    transcript=transcript,
+                    nonce=nonce,
+                    timed_entering_to_wake_ms=timed_ms,
+                    button_entering_to_wake_ms=button_ms,
+                    isolation_confirmed_at_utc=isolation_confirmed_at_utc,
+                    button_confirmed_at_utc=button_confirmed_at_utc,
+                )
         processed_lines = len(complete_lines)
 
     transcript = bytes(observed)
@@ -417,13 +659,16 @@ def capture_protocol(
     )
 
 
-## @brief flash부터 UART 명령·수동 SW0 wake까지 하나의 serial session에서 수행합니다.
+## @brief flash를 먼저 한 번 수행한 뒤 SWD 격리 이후에는 UART만 사용합니다.
 def verify_system_off(
     serial_module: Any,
     port_name: str,
     baud_rate: int,
-    flash_callback: Any,
+    flash_callback: Callable[[], tuple[str, str]],
     result_timeout: float,
+    *,
+    confirm: Callable[[str], str] = input,
+    nonce_factory: Callable[[int], str] = secrets.token_hex,
 ) -> tuple[str, str, CaptureResult, SystemOffResult]:
     if baud_rate != DEFAULT_BAUD_RATE:
         raise SystemOffHilFailure(
@@ -440,7 +685,12 @@ def verify_system_off(
     ) as serial_port:
         serial_port.reset_input_buffer()
         sequence, byte_count = flash_callback()
-        capture = capture_protocol(serial_port, result_timeout)
+        capture = capture_protocol(
+            serial_port,
+            result_timeout,
+            confirm=confirm,
+            nonce_factory=nonce_factory,
+        )
     return sequence, byte_count, capture, parse_transcript(capture.transcript)
 
 
@@ -468,7 +718,7 @@ def prepare_output_paths(
     return evidence, transcript
 
 
-## @brief PASS 결과를 source·image·UART byte identity와 결합합니다.
+## @brief PASS를 exact source·image·nonce·수동 fixture·안전 계약과 결합합니다.
 def build_evidence(
     *,
     core_revision: str,
@@ -486,7 +736,7 @@ def build_evidence(
     build_record: dict[str, str],
 ) -> dict[str, Any]:
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "gate": "m15-nu54dk-system-off-wake-hil",
         "status": "passed",
         "completed_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -508,20 +758,42 @@ def build_evidence(
             "sha256": image_sha256,
         },
         "build_record": build_record,
+        "protocol": {"schema": 2, "nonce": result.nonce},
         "manual_fixture": {
             "acknowledged": True,
-            "action": "SW0_PRESS_LOW",
-            "logical_button": "SW0",
+            "switch_reference": "DAP interface two-pole SW1",
+            "disable_swd_isolated": True,
+            "disable_uart_isolated": False,
+            "switch_direction_assumed": False,
+            "isolation_confirmed_at_utc": capture.isolation_confirmed_at_utc,
+            "button_confirmed_at_utc": capture.button_confirmed_at_utc,
+            "wake_button": "SW0",
             "gpio": "P1.13",
-            "host_prompted_after_entering_request": True,
-            "minimum_entering_to_prompt_ms": MINIMUM_ENTERING_TO_PROMPT_MS,
+            "active_level": "LOW",
+        },
+        "safety": {
+            "debug_access_after_isolation": False,
+            "flash_after_isolation": False,
+            "mass_erase": False,
+            "recovery": False,
         },
         "result": {
-            "wake_source": result.wake_source,
-            "gpio": result.gpio,
-            "active_level": result.active_level,
-            "reset_cause": result.reset_cause,
-            "observed_entering_to_wake_ms": capture.entering_to_wake_ms,
+            "timed": {
+                "wake_source": "GRTC",
+                "expected_reset_cause": "RESET_CLOCK",
+                "reset_cause_raw": result.timed_reset_cause,
+                "supported_raw": result.timed_supported,
+                "observed_entering_to_wake_ms": capture.timed_entering_to_wake_ms,
+            },
+            "button": {
+                "wake_source": result.wake_source,
+                "gpio": result.gpio,
+                "active_level": result.active_level,
+                "expected_reset_cause": "RESET_LOW_POWER_WAKE",
+                "reset_cause_raw": result.button_reset_cause,
+                "supported_raw": result.button_supported,
+                "observed_entering_to_wake_ms": capture.button_entering_to_wake_ms,
+            },
         },
         "transcript": {
             "name": transcript_path.name,
@@ -531,7 +803,7 @@ def build_evidence(
     }
 
 
-## @brief 장치 탐색 또는 전체 M15 System OFF HIL과 evidence 생성을 수행합니다.
+## @brief 장치 탐색 또는 한 번의 flash 뒤 전체 M15 수동 HIL을 수행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     args = parse_arguments(arguments)
     board_id = normalize_board_id(args.board_id)
@@ -545,11 +817,17 @@ def main(arguments: Sequence[str] | None = None) -> int:
     if args.discover_only:
         return 0
 
+    if not args.acknowledge_interface_switch:
+        raise SystemOffHilFailure(
+            "실제 시험은 --acknowledge-interface-switch가 필요합니다. DAP 연결 "
+            "제어용 2연 SW1과 사용자 버튼 SW0을 혼동하지 마십시오."
+        )
     if not args.acknowledge_button_wake:
         raise SystemOffHilFailure(
-            "실제 시험은 --acknowledge-button-wake가 필요합니다. runner의 PRESS NOW "
-            "안내가 나온 뒤에만 SW0(P1.13)을 한 번 눌러야 합니다."
+            "실제 시험은 --acknowledge-button-wake가 필요합니다. PRESS NOW 뒤에만 "
+            "사용자 SW0(P1.13)을 한 번 눌러야 합니다."
         )
+
     evidence_path, transcript_path = prepare_output_paths(
         args.evidence, args.overwrite_evidence
     )
@@ -563,8 +841,9 @@ def main(arguments: Sequence[str] | None = None) -> int:
     image_sha256 = file_sha256(image)
 
     print(
-        "M15 System OFF HIL 시작: ARM은 runner가 전송합니다. "
-        "'M15 PRESS NOW'가 나오기 전에는 SW0을 누르지 마십시오."
+        "M15 System OFF HIL 시작: image는 runner가 먼저 한 번만 기록합니다. "
+        "TIMED READY 뒤 안내에 따라 DISABLE_SWD만 차단하며, 그 뒤에는 어떠한 "
+        "debug/flash/recover도 실행하지 않습니다."
     )
     try:
         sequence, byte_count, capture, result = verify_system_off(
@@ -607,8 +886,9 @@ def main(arguments: Sequence[str] | None = None) -> int:
     )
     print(
         "M15 System OFF wake HIL PASS: "
-        f"entering_to_wake_ms={capture.entering_to_wake_ms}, evidence={evidence_path}, "
-        f"transcript={transcript_path}"
+        f"timed_ms={capture.timed_entering_to_wake_ms}, "
+        f"button_ms={capture.button_entering_to_wake_ms}, "
+        f"evidence={evidence_path}, transcript={transcript_path}"
     )
     return 0
 

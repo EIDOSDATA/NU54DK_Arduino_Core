@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief M15 비버튼 자동 HIL runner와 parser의 fail-closed 계약을 검증합니다. """
+"""! @brief M15 wake 제외 자동 HIL runner와 parser의 fail-closed 계약을 검증합니다. """
 
 from __future__ import annotations
 
@@ -28,8 +28,8 @@ NONCE = b"0123456789abcdef0123456789abcdef"
 def valid_transcript() -> bytes:
     return b"\n".join(
         (
-            b"NUCODE_M15_AUTO_BOOT:schema=1:stage=idle:cause=1:supported=4095:uptime_ms=8",
-            b"NUCODE_M15_AUTO_STATE:schema=1:stage=idle:nonce=none",
+            b"NUCODE_M15_AUTO_BOOT:schema=2:stage=idle:cause=1:supported=4095:uptime_ms=8",
+            b"NUCODE_M15_AUTO_STATE:schema=2:stage=idle:nonce=none",
             b"NUCODE_M15_AUTO_START:PASS:nonce=" + NONCE,
             b"NUCODE_M15_AUTO_IDENTITY:PASS:model=NUCODE NU54DK nRF54L15 Application MCU:"
             b"target=nrf54l15dk/nrf54l15/cpuapp/nu54dk:soc=nrf54l15:"
@@ -40,30 +40,23 @@ def valid_transcript() -> bytes:
             b"after=6655:callbacks=1",
             b"NUCODE_M15_AUTO_SETTINGS:SAVED:length=8",
             b"NUCODE_M15_AUTO_TRANSITION:next=soft_reset:method=software",
-            b"NUCODE_M15_AUTO_BOOT:schema=1:stage=soft_reset:cause=2:supported=4095:uptime_ms=7",
-            b"NUCODE_M15_AUTO_STATE:schema=1:stage=soft_reset:nonce=" + NONCE,
+            b"NUCODE_M15_AUTO_BOOT:schema=2:stage=soft_reset:cause=2:supported=4095:uptime_ms=7",
+            b"NUCODE_M15_AUTO_STATE:schema=2:stage=soft_reset:nonce=" + NONCE,
             b"NUCODE_M15_AUTO_CONTINUE:PASS:stage=soft_reset:nonce=" + NONCE,
             b"NUCODE_M15_AUTO_RESET:PASS:phase=software:cause=2:supported=4095",
             b"NUCODE_M15_AUTO_SETTINGS:LOAD_DELETE:PASS:length=8",
             b"NUCODE_M15_AUTO_WDT:STOP:PASS:feeds=3:survival_ms=2300",
             b"NUCODE_M15_AUTO_TRANSITION:next=watchdog_arm:method=software",
-            b"NUCODE_M15_AUTO_BOOT:schema=1:stage=watchdog_arm:cause=2:supported=4095:uptime_ms=6",
-            b"NUCODE_M15_AUTO_STATE:schema=1:stage=watchdog_arm:nonce=" + NONCE,
+            b"NUCODE_M15_AUTO_BOOT:schema=2:stage=watchdog_arm:cause=2:supported=4095:uptime_ms=6",
+            b"NUCODE_M15_AUTO_STATE:schema=2:stage=watchdog_arm:nonce=" + NONCE,
             b"NUCODE_M15_AUTO_CONTINUE:PASS:stage=watchdog_arm:nonce=" + NONCE,
             b"NUCODE_M15_AUTO_RESET:PASS:phase=watchdog_arm_software:cause=2:supported=4095",
             b"NUCODE_M15_AUTO_WDT:EXPIRY_ARMED:timeout_ms=1500:feeds=1",
-            b"NUCODE_M15_AUTO_BOOT:schema=1:stage=watchdog_wait:cause=16:supported=4095:uptime_ms=5",
-            b"NUCODE_M15_AUTO_STATE:schema=1:stage=watchdog_wait:nonce=" + NONCE,
+            b"NUCODE_M15_AUTO_BOOT:schema=2:stage=watchdog_wait:cause=16:supported=4095:uptime_ms=5",
+            b"NUCODE_M15_AUTO_STATE:schema=2:stage=watchdog_wait:nonce=" + NONCE,
             b"NUCODE_M15_AUTO_CONTINUE:PASS:stage=watchdog_wait:nonce=" + NONCE,
             b"NUCODE_M15_AUTO_RESET:PASS:phase=watchdog:cause=16:supported=4095",
-            b"NUCODE_M15_AUTO_SYSTEM_OFF:REQUESTED:duration_us=2000000",
-            b"NUCODE_M15_AUTO_SYSTEM_OFF:ENTERING",
-            b"NUCODE_M15_AUTO_BOOT:schema=1:stage=timed_wake_wait:cause=2048:"
-            b"supported=4095:uptime_ms=4",
-            b"NUCODE_M15_AUTO_STATE:schema=1:stage=timed_wake_wait:nonce=" + NONCE,
-            b"NUCODE_M15_AUTO_CONTINUE:PASS:stage=timed_wake_wait:nonce=" + NONCE,
-            b"NUCODE_M15_AUTO_RESET:PASS:phase=timed_wake:cause=2048:supported=4095",
-            b"NUCODE_M15_AUTO_SYSTEM_OFF:WAKE:PASS:duration_us=2000000:cause=2048",
+            MODULE.SCOPE_TOKEN,
             b"NUCODE_M15_AUTO_FINAL:PASS:nonce=" + NONCE,
         )
     ) + b"\n"
@@ -216,16 +209,16 @@ class M15AutoHilTests(unittest.TestCase):
         )
         self.assertEqual(exact.expected_core_revision, "a" * 40)
 
-    def test_accepts_complete_reset_storage_wdt_and_timed_wake_protocol(self) -> None:
-        """! @brief 모든 자동 단계와 reset cause를 만족한 transcript만 PASS입니다. """
+    def test_accepts_complete_non_wake_protocol(self) -> None:
+        """! @brief wake를 제외한 전체 자동 단계를 만족한 transcript만 PASS입니다. """
 
-        result = MODULE.parse_transcript(valid_transcript(), 1.55, 2.08)
+        result = MODULE.parse_transcript(valid_transcript(), 1.55)
         self.assertEqual(result.nonce, NONCE.decode("ascii"))
         self.assertEqual(result.device_id, "0123456789abcdef")
         self.assertEqual(result.software_reset_cause, MODULE.RESET_SOFTWARE)
         self.assertEqual(result.watchdog_reset_cause, MODULE.RESET_WATCHDOG)
-        self.assertEqual(result.timed_wake_reset_cause, MODULE.RESET_CLOCK)
         self.assertEqual(result.grtc_frequency_hz, 32768)
+        self.assertFalse(hasattr(result, "timed_wake_reset_cause"))
 
     def test_rejects_missing_or_reordered_protocol(self) -> None:
         """! @brief settings delete나 WDT stop 증거가 빠지면 최종 PASS도 거부합니다. """
@@ -234,18 +227,33 @@ class M15AutoHilTests(unittest.TestCase):
             b"NUCODE_M15_AUTO_SETTINGS:LOAD_DELETE:PASS:length=8\n", b""
         )
         with self.assertRaisesRegex(MODULE.AutoHilFailure, "순서|형식"):
-            MODULE.parse_transcript(missing, 1.55, 2.08)
+            MODULE.parse_transcript(missing, 1.55)
 
-    def test_rejects_wrong_reset_cause_and_timing(self) -> None:
-        """! @brief 합성 token이라도 실제 reset bit와 시간 경계를 우회하지 못합니다. """
+        missing_scope = valid_transcript().replace(MODULE.SCOPE_TOKEN + b"\n", b"")
+        with self.assertRaisesRegex(MODULE.AutoHilFailure, "순서|형식"):
+            MODULE.parse_transcript(missing_scope, 1.55)
+
+        legacy_schema = valid_transcript().replace(b"schema=2", b"schema=1")
+        with self.assertRaisesRegex(MODULE.AutoHilFailure, "형식"):
+            MODULE.parse_transcript(legacy_schema, 1.55)
+
+        legacy_wake = valid_transcript().replace(
+            MODULE.SCOPE_TOKEN,
+            b"NUCODE_M15_AUTO_SYSTEM_OFF:REQUESTED:duration_us=2000000",
+        )
+        with self.assertRaisesRegex(MODULE.AutoHilFailure, "순서|형식"):
+            MODULE.parse_transcript(legacy_wake, 1.55)
+
+    def test_rejects_wrong_watchdog_reset_cause_and_timing(self) -> None:
+        """! @brief 합성 token이라도 watchdog reset bit와 시간 경계를 우회하지 못합니다. """
 
         wrong_cause = valid_transcript().replace(
             b"stage=watchdog_wait:cause=16", b"stage=watchdog_wait:cause=2"
         )
         with self.assertRaisesRegex(MODULE.AutoHilFailure, "watchdog reset"):
-            MODULE.parse_transcript(wrong_cause, 1.55, 2.08)
-        with self.assertRaisesRegex(MODULE.AutoHilFailure, "System OFF wake 시간"):
-            MODULE.parse_transcript(valid_transcript(), 1.55, 0.2)
+            MODULE.parse_transcript(wrong_cause, 1.55)
+        with self.assertRaisesRegex(MODULE.AutoHilFailure, "watchdog reset 시간"):
+            MODULE.parse_transcript(valid_transcript(), 0.2)
 
     def test_target_source_excludes_button_and_pmic_mutation(self) -> None:
         """! @brief 자동 image에서 버튼 wake와 PMIC 접근을 정적으로 차단합니다. """
@@ -257,20 +265,26 @@ class M15AutoHilTests(unittest.TestCase):
         self.assertNotIn("pmicBegin", source)
         self.assertNotIn("pmicSet", source)
         self.assertNotIn("pmicEnter", source)
+        self.assertNotIn("enterSystemOffAfter", source)
+        self.assertNotIn("enterSystemOffOnButton", source)
+        self.assertNotIn("NUCODE_M15_AUTO_SYSTEM_OFF", source)
+        self.assertNotIn("timed_wake_wait", source)
+        self.assertIn("protocol_schema = 2U", source)
+        self.assertIn(MODULE.SCOPE_TOKEN.decode("ascii"), source.replace('"\n\t\t"', ""))
 
     def test_target_fail_or_token_after_final_is_rejected(self) -> None:
         """! @brief target FAIL과 최종 token 뒤 위조 성공 line을 허용하지 않습니다. """
 
         with self.assertRaisesRegex(MODULE.AutoHilFailure, "FAIL"):
             MODULE.parse_transcript(
-                valid_transcript() + b"NUCODE_M15_AUTO_FAIL:stage=late\n", 1.55, 2.08
+                valid_transcript() + b"NUCODE_M15_AUTO_FAIL:stage=late\n", 1.55
             )
         with self.assertRaisesRegex(MODULE.AutoHilFailure, "예상하지 않은"):
             MODULE.parse_transcript(
-                valid_transcript() + b"NUCODE_M15_AUTO_CLEAR:PASS\n", 1.55, 2.08
+                valid_transcript() + b"NUCODE_M15_AUTO_CLEAR:PASS\n", 1.55
             )
 
-    def test_runner_sends_start_and_exact_four_continue_commands(self) -> None:
+    def test_runner_sends_start_and_exact_three_continue_commands(self) -> None:
         """! @brief host 상태 머신이 각 재부팅에서 정확히 한 번만 진행을 승인합니다. """
 
         serial = FakeSerialModule(valid_transcript())
@@ -285,7 +299,7 @@ class M15AutoHilTests(unittest.TestCase):
             )
         commands = [line for line in bytes(serial.port.output).split(b"\r\n") if line]
         self.assertEqual(commands[0], MODULE.START_COMMAND + NONCE)
-        self.assertEqual(len(commands), 5)
+        self.assertEqual(len(commands), 4)
         self.assertTrue(all(command.endswith(NONCE) for command in commands))
         self.assertIn(MODULE.FINAL_PREFIX + NONCE, execution.scenario_transcript)
 
@@ -294,7 +308,7 @@ class M15AutoHilTests(unittest.TestCase):
 
         partial = (
             b"boot diagnostic\r\n"
-            b"NUCODE_M15_AUTO_BOOT:schema=1:stage=idle:cause=1:"
+            b"NUCODE_M15_AUTO_BOOT:schema=2:stage=idle:cause=1:"
             b"supported=4095:uptime_ms=8\r\n"
             b"NUCODE_M15_AUTO_FAIL:stage=fixture:error=11:driver_error=-5\r\n"
             b"unprocessed-tail"
@@ -342,112 +356,6 @@ class M15AutoHilTests(unittest.TestCase):
             self.assertNotIn("--erase", joined)
             self.assertNotIn("--recover", joined)
         self.assertEqual(reflash[-1], str(image))
-
-    def test_probe_release_session_is_exact_attach_only(self) -> None:
-        """! @brief pyOCD release session이 exact UID와 attach-only 정책을 사용합니다. """
-        expected_session = object()
-
-        class FakeConnectHelper:
-            """! @brief pyOCD session 생성 인자를 보존하는 시험 대역입니다. """
-
-            arguments = None
-
-            @classmethod
-            def session_with_chosen_probe(cls, **kwargs):
-                cls.arguments = kwargs
-                return expected_session
-
-        actual = MODULE.create_probe_release_session(
-            "exact-probe-id", FakeConnectHelper
-        )
-        self.assertIs(actual, expected_session)
-        self.assertEqual(FakeConnectHelper.arguments["unique_id"], "exact-probe-id")
-        self.assertFalse(FakeConnectHelper.arguments["auto_open"])
-        self.assertEqual(
-            FakeConnectHelper.arguments["options"],
-            {
-                "target_override": "nrf54l",
-                "connect_mode": "attach",
-                "resume_on_disconnect": True,
-            },
-        )
-
-    def test_probe_debug_power_release_checks_dp_dap_and_close(self) -> None:
-        """! @brief DP ACK, DAP_Disconnect와 probe close를 모두 확인합니다. """
-
-        class FakeDebugPort:
-            """! @brief DP power-down 결과를 제공하는 시험 대역입니다. """
-
-            power_down_calls = 0
-
-            def disconnect(self) -> None:
-                raise AssertionError("release hook이 설치되지 않았습니다.")
-
-            def power_down_debug(self) -> bool:
-                self.power_down_calls += 1
-                return True
-
-        class FakeProbe:
-            """! @brief SWJ sequence, CMSIS-DAP disconnect와 close를 기록합니다. """
-
-            unique_id = "exact-probe-id"
-            is_open = False
-            disconnect_calls = 0
-            swj_sequences = []
-
-            def disconnect(self) -> None:
-                self.disconnect_calls += 1
-
-            def swj_sequence(self, length: int, bits: int) -> None:
-                self.swj_sequences.append((length, bits))
-
-            def close(self) -> None:
-                self.is_open = False
-
-        class FakeSession:
-            """! @brief pyOCD close 순서를 재현하는 시험 session입니다. """
-
-            def __init__(self) -> None:
-                self.probe = FakeProbe()
-                self.target = type("Target", (), {"dp": FakeDebugPort()})()
-
-            def open(self) -> None:
-                self.probe.is_open = True
-
-            def close(self) -> None:
-                self.target.dp.disconnect()
-                self.probe.disconnect()
-                self.probe.close()
-
-        session = FakeSession()
-        with mock.patch.object(
-            MODULE, "create_probe_release_session", return_value=session
-        ):
-            MODULE.release_probe_debug_power("exact-probe-id")
-        self.assertEqual(session.target.dp.power_down_calls, 1)
-        self.assertEqual(
-            session.probe.swj_sequences,
-            [(51, 0xFFFFFFFFFFFFFF), (16, 0xE3BC)],
-        )
-        self.assertEqual(session.probe.disconnect_calls, 1)
-        self.assertFalse(session.probe.is_open)
-
-    def test_probe_debug_power_release_fails_closed(self) -> None:
-        """! @brief DP power ACK 해제가 실패하면 자동 HIL을 시작하지 않습니다. """
-        session = mock.MagicMock()
-        session.probe.unique_id = "exact-probe-id"
-        session.probe.is_open = False
-        session.target.dp.power_down_debug.return_value = False
-
-        def close_session() -> None:
-            session.target.dp.disconnect()
-            session.probe.disconnect()
-
-        session.close.side_effect = close_session
-        with mock.patch.object(
-            MODULE, "create_probe_release_session", return_value=session
-        ), self.assertRaisesRegex(MODULE.AutoHilFailure, "power request"):
-            MODULE.release_probe_debug_power("exact-probe-id")
 
     def test_recovery_forces_utf8_for_windows_pyocd_output(self) -> None:
         """! @brief CP949 console에서도 pyOCD 진단 문자가 복구를 깨지 않습니다. """
@@ -604,9 +512,8 @@ class M15AutoHilTests(unittest.TestCase):
                 transcript=transcript,
                 scenario_transcript=transcript,
                 watchdog_interval_seconds=1.55,
-                system_off_interval_seconds=2.08,
             )
-            result = MODULE.parse_transcript(transcript, 1.55, 2.08)
+            result = MODULE.parse_transcript(transcript, 1.55)
             evidence = MODULE.build_evidence(
                 core_revision="a" * 40,
                 board_revision="b" * 40,
@@ -628,15 +535,27 @@ class M15AutoHilTests(unittest.TestCase):
             )
             self.assertEqual(evidence["core_revision"], "a" * 40)
             self.assertEqual(evidence["board_revision"], "b" * 40)
+            self.assertEqual(evidence["schema_version"], 2)
+            self.assertEqual(evidence["protocol_schema"], 2)
+            self.assertEqual(
+                evidence["evidence_type"], "m15-auto-non-wake-board-system-hil"
+            )
             self.assertEqual(evidence["image"]["sha256"], MODULE.file_sha256(image))
             self.assertEqual(
                 evidence["build_record"]["record_sha256"], "c" * 64
             )
-            self.assertTrue(
-                evidence["safety"][
-                    "probe_debug_power_released_and_swd_dormant_before_start"
-                ]
+            self.assertEqual(
+                evidence["scope"]["not_executed"],
+                ["timed_system_off_wake", "button_system_off_wake"],
             )
+            self.assertEqual(evidence["scope"]["follow_up_gate"], "m15-wake")
+            self.assertFalse(evidence["safety"]["timed_wake_executed"])
+            self.assertFalse(evidence["safety"]["button_wake_executed"])
+            self.assertNotIn(
+                "probe_debug_power_released_and_swd_dormant_before_start",
+                evidence["safety"],
+            )
+            self.assertNotIn("system_off_interval_seconds", evidence["result"])
 
 
 if __name__ == "__main__":
