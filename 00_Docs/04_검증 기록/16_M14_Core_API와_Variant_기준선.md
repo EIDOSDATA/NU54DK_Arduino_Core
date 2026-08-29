@@ -2,9 +2,9 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 상태 | Core API·DTS 기반 Variant 무보드 구현과 로컬·원격 software/runtime 검증 완료; 신규 pin 물리 HIL 대기 |
+| 상태 | **완료** — Core API·DTS 기반 Variant, 로컬·원격 software/runtime와 신규 pin 물리 HIL 통과 |
 | 기준일 | 2026-08-29 |
-| 기준 Core | `85b9baff778542fae08b8a265a601fe0f6b9f538` — M14 구현 commit |
+| 기준 Core | `dabcc81198742b28f650eedd9902d8996cf9bd2f` — M14 물리 HIL 대상 commit; 구현 commit `85b9baff778542fae08b8a265a601fe0f6b9f538` |
 | 시작 기준 | `4bbaa6143bf1ea182c32ac5d045858e4ffbcd031` — M13 완료 commit |
 | 기준 board package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` — 변경 없음 |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
@@ -25,9 +25,9 @@ M14는 v0.2.0의 Core API 부채와 Variant 기준선을 다룬다. 이 기록�
   sparse Variant로 확장한다.
 - UART/I2C/SPI와 PWM이 소유한 pad를 일반 digital pin으로 중복 노출하지 않는다.
 
-이 기준선은 M14 전체 완료 선언이 아니다. 원격 workflow의 software gate와 QEMU 실제
-runtime은 통과했지만, 물리 보드에서 신규 LED2/3과 BUTTON1..3의 GPIO·pull·interrupt를
-검증해야 한다.
+원격 workflow의 software gate와 QEMU actual-runtime을 통과한 뒤, 실제 NU54DK에서 신규
+LED2/3과 BUTTON1..3의 GPIO·pull·interrupt까지 검증했다. 이 문서는 해당 증적을 포함한
+M14 완료 기준선이다.
 
 ---
 
@@ -145,11 +145,12 @@ runtime 증거이며 그 자체를 Zephyr target runtime으로 확대하지 않�
 `qemu_cortex_m3` cross-build는 같은 기능과 실제 `random`/Diagnostics source,
 `Arduino.h` 뒤 `<cmath>`를 모두 통과했다. 로컬 Windows에는 `qemu-system-arm`이
 없지만, 고정 Nordic Linux container의 원격 QEMU actual-runtime gate에서 세 testcase가
-모두 PASS했다. NU54DK 실기 runtime/HIL은 아직 완료하지 않았다.
+모두 PASS했다. exception/RTTI의 NU54DK actual-runtime은 expert opt-in 정책의 별도 검증
+대상이며, 이번 M14 신규 pin HIL이나 기본 지원 선언에 포함하지 않는다.
 
 ---
 
-## 5. Variant/DTS 경계와 남은 HIL
+## 5. Variant/DTS 경계와 실기 HIL 결과
 
 board submodule과 DTS는 수정하지 않고 고정 revision을 유지했다. Variant는 물리
 controller/pin/flag를 복제하지 않고 `digital_pins.inc`의 alias/class 목록과 고정 DTS에서
@@ -171,9 +172,9 @@ descriptor를 생성한다. v0.1 공개 번호는 그대로 보존했다.
 UART20, I2C22, SPI00 pinctrl과 명시적 connector mapping이 없는 일반 header pin은
 peripheral ownership이 확정되지 않아 이번 digital map에서 제외했다.
 
-보드 준비 후 남은 HIL은 `PIN_LED2..3`의 output/readback, `PIN_BUTTON1..3`의
-`INPUT_PULLUP` raw HIGH/LOW, `FALLING`/`RISING`/`CHANGE` edge다. `PIN_LED1`은 의도적
-거부 계약이므로 digital HIL 대상이 아니며, 기존 `PIN_PWM0` HIL을 소유권 회귀로 사용한다.
+실제 HIL에서 `PIN_LED2..3`의 output/readback, `PIN_BUTTON1..3`의 `INPUT_PULLUP` raw
+HIGH/LOW와 `FALLING`/`RISING`/`CHANGE` edge를 모두 통과했다. `PIN_LED1`은 의도적 거부
+계약이므로 digital HIL 대상이 아니며, 기존 `PIN_PWM0` HIL을 소유권 회귀로 사용한다.
 
 ---
 
@@ -247,7 +248,7 @@ NU54DK DTS로 descriptor 7개, sparse 거부 slot과 LED/button capability를 3 
 | v0.1 pin 번호 | 0..3 보존 |
 | board submodule | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3`, 수정 없음 |
 
-### 6.5 실기 HIL 준비
+### 6.5 실기 HIL 검증
 
 `tests/zephyr/m14_pin_hil`은 production NU54DK target으로 sysbuild/link했다. 생성 image는
 `PIN_LED2..3`의 LOW/HIGH output과 raw readback, `PIN_BUTTON1..3`의 `INPUT_PULLUP`
@@ -263,50 +264,81 @@ Host runner `tests/hil/nu54dk/m14_pin_hil.py`는 다음 경계를 fail-closed로
 - 기존 증적의 비의도적 덮어쓰기, 누락·중복 protocol, 불완전 FAIL line 차단
 
 Parser·증적 host 시험은 11/11 PASS이고, HIL image의 production target build와
-Twister build-only도 PASS했다. 이 결과는 실행 준비 증거이지 실기 PASS가 아니다.
-M3/M4/M6/M7과 M14 Core·Variant·HIL을 같이 묶은 로컬 NCS v3.4.0 target gate는
-7/7 build-only, failed/error/warning 0건으로 `M12_ZEPHYR_BUILD_PASS=7`을 출력했다.
-HIL build record의 Core, application, board source SHA-256은 Python이 현재 tree에서
-CMake와 같은 알고리즘으로 재계산한 값과 모두 byte-exact 일치했다.
-LED 결과는 GPIO output/raw readback이며 사람의 시각적 점등 확인으로 확대해석하지
-않는다. 보드 연결 후의 실제 flash·UART·버튼 동작과 PASS 증적 생성이 M14의 남은
-완료 경계다.
+Twister build-only도 PASS했다. M3/M4/M6/M7과 M14 Core·Variant·HIL을 같이 묶은 로컬
+NCS v3.4.0 target gate는 7/7 build-only, failed/error/warning 0건으로
+`M12_ZEPHYR_BUILD_PASS=7`을 출력했다.
+
+2026-08-29 22:51:23 KST에 온보드 CMSIS-DAP V2와 UART로 실제 HIL을 실행했다.
+
+| 항목 | 실기 결과 |
+| --- | --- |
+| 최종 상태 | `passed`, `NUCODE_M14_PIN_HIL_PASS` |
+| probe | CMSIS-DAP V2, UID `5415360300052840fcd47678fd7d106d` |
+| UART | COM13, 115200 baud |
+| flash | DAPLink-MSD sequence 1, 120,320 byte, mass erase/recover 없음 |
+| Core | `dabcc81198742b28f650eedd9902d8996cf9bd2f` |
+| board package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3`, checkout clean |
+| NCS / Zephyr | `99553055607b` / `bf801e4e3d19` |
+| HEX | 119,825 byte, SHA-256 `4c7e8bcc65c63f4ef75e3ff4674b0276219098ac902db0c19f48c5ab346cc9d1` |
+| build record | SHA-256 `e495215677adc0eb99b90cd65d6565b9734828e93bde7ce298eda123b45e03bf` |
+| transcript | 3,573 byte, SHA-256 `84ae230f1f148efc2cbd4ece1f8c893e59919fb7e3804be7815f19892473ec61` |
+| evidence JSON | 3,091 byte, SHA-256 `f99e26fcfa267f22b4bb27cb9227702dbdf8701f462bc492ca843550bf044d21` |
+
+| 대상 | 결과 |
+| --- | --- |
+| `PIN_LED2` / ID 5 | LOW readback, HIGH readback, final LOW PASS |
+| `PIN_LED3` / ID 6 | LOW readback, HIGH readback, final LOW PASS |
+| `PIN_BUTTON1` / ID 7 / `sw1` P1.09 | release HIGH, press LOW, FALLING 1, RISING 1, CHANGE 1→2 PASS |
+| `PIN_BUTTON2` / ID 8 / `sw2` P1.08 | release HIGH, press LOW, FALLING 1, RISING 1, CHANGE 3→4 PASS |
+| `PIN_BUTTON3` / ID 9 / `sw3` P0.04 | release HIGH, press LOW, FALLING 1, RISING 1, CHANGE 1→2 PASS |
+| `PIN_LED1` / ID 4 | `PIN_PWM0` 소유이므로 제외; M7 PWM HIL을 회귀 증거로 사용 |
+
+`PIN_BUTTON2`의 CHANGE count 3→4는 기계식 접점 bounce로 복수 edge가 관찰된 결과다.
+계약은 press/release 상태와 각 단계에서 1회 이상의 새 edge를 요구하므로 정상 PASS이며,
+Core debounce를 제공한다는 의미는 아니다. transcript 선두 12 byte에는 reset 직후 UART 부팅
+잡음이 있지만 이후 ASCII protocol, raw-byte SHA-256과 parser 결과는 완결됐다.
+
+Core, application, board source SHA-256은 각각
+`6330d638c6a615b766d8abf075b78da74e75b6b1ac6114bfc1ce78123dc2239b`,
+`1ecaab2d8d3eb6b3b6ee98708085370fd11779da4c6c6ad6568f9a135243c43d`,
+`00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e`로 build record와
+현재 tree의 재계산 결과가 byte-exact 일치했다. LED 증거는 GPIO output/raw readback이며
+사람의 시각적 점등 확인으로 확대해석하지 않는다.
 
 ### 6.6 원격 CI 재현 검증
 
-M14 구현 commit `85b9baff778542fae08b8a265a601fe0f6b9f538`을 GitHub-hosted runner에서
+M14 HIL 대상 Core `dabcc81198742b28f650eedd9902d8996cf9bd2f`를 GitHub-hosted runner에서
 다시 검증했다.
 
 | Gate | 결과 | 증적 |
 | --- | --- | --- |
-| Software Gates | package, CI contract, M14 native semantic, 문서, Windows host, 예제 discovery 6/6 PASS | [run 33197205997](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33197205997) |
-| Linux / Nordic container | NU54DK target 7/7 build-only, 실패·오류·경고 0건; QEMU actual-runtime 3/3 PASS | [job 98937281996](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33197206098/job/98937281996) |
-| Windows 2025 | `blink`, `m6`, `m7`, `examples` PASS | [job 98937282323](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33197206098/job/98937282323) |
+| Software Gates | package, CI contract, M14 native semantic, 문서, Windows host, 예제 discovery 6/6 PASS | [run 33206143770](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33206143770) |
+| Linux / Nordic container | NU54DK target 7/7 build-only, 실패·오류·경고 0건; QEMU actual-runtime 3/3 PASS | [job 98967561334](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33206143704/job/98967561334) |
+| Windows 2025 | `blink`, `m6`, `m7`, `examples` PASS | [job 98967561575](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33206143704/job/98967561575) |
 
-재현 workflow [run 33197206098](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33197206098)은
+재현 workflow [run 33206143704](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33206143704)은
 Linux와 Windows 2/2 job을 모두 통과했다. Linux log는 `M12_ZEPHYR_BUILD_PASS=7`과
 `M14_QEMU_RUNTIME_PASS=3`을, Windows log는 네 Arduino gate의 `PASS`를 출력했다.
 
-Linux artifact `9696591845`는 185,973,672 byte이며 upload SHA-256은
-`03ccc12cc924e9e96c79d3e25a4d607fdc458b601dd82be3a98d71a82cb84389`이다. Windows
-artifact `9696972495`는 443 byte이며 upload SHA-256은
-`1e5de4602121eca5523b8da80569d45edacbaedaf6d798fca24cdad5524c1af6`이다. Node 20
-action을 Node 24로 강제 실행한다는 annotation이 있었지만 gate 결과에는 영향을 주지 않았다.
-같은 run의 cache post-step에는 `..` 경로 거부 경고가 있었으나 build·runtime 증적과는
-독립적이다. cache 저장·복원 근거로 사용하지 않았고, 후속 `b454d00`과 `2d791ce`에서
-정규 경로 및 quota 이내의 Linux workspace·Windows Builder cache로 수정·검증했다.
+Linux artifact `9699934411`은 185,917,218 byte이며 upload SHA-256은
+`2f9c0c52d87674ff0294abfd36053f0f8c8f6512306135d8c82447c5a03ade39`이다. Windows
+artifact `9700213027`은 443 byte이며 upload SHA-256은
+`ae53b44e34ad9bfff197b59e64515bbf418d57830ab3a3a60e8b2e0688ce1259`이다. Linux exact
+workspace와 Windows Builder cache가 모두 exact hit였고, 잘못된 상대 경로 경고는 없었다.
+Node 20 action을 Node 24로 강제 실행한다는 annotation만 있었으며 gate 결과에는 영향을 주지 않았다.
 
 ---
 
 ## 7. 판정
 
-M14의 무보드 Core API와 DTS 기반 Variant 구현은 완료했다. utility, bit helper,
+M14의 Core API와 DTS 기반 Variant 구현 및 필수 HIL을 완료했다. utility, bit helper,
 `F()`, random과 Diagnostics는 host semantic·compile/link와 NU54 target compile을 통과했다.
 `F()`는 nRF54에서 AVR식 SRAM 절약을 제공하지 않는 의미 차이로 남고,
 exception/RTTI는 기본 비활성·expert opt-in 정책을 유지한다. 고정 Nordic container의
 원격 QEMU actual-runtime과 고정 Windows 환경의 Arduino compile도 통과했다.
 
-따라서 M14에서 남은 완료 경계는 `PIN_LED2..3`과 `PIN_BUTTON1..3`의 NU54DK 물리 HIL뿐이다.
-`PIN_LED1`은 `PIN_PWM0` 소유권 때문에 의도적으로 digital 거부하며, UART/I2C/SPI·
-일반 connector pin은 이번 범위에서 공개하지 않는다. 기존 v0.1 HIL은 기존 pin
-회귀로만 사용하고 신규 pin 증거로 확대하지 않는다.
+`PIN_LED2..3` output/readback과 `PIN_BUTTON1..3` pull-up·FALLING/RISING/CHANGE를 실제
+NU54DK에서 통과했으므로 M14 완료 조건을 모두 충족한다. `PIN_LED1`은 `PIN_PWM0` 소유권
+때문에 의도적으로 digital 거부하며, UART/I2C/SPI·일반 connector pin은 이번 범위에서
+공개하지 않는다. exception/RTTI NU54DK actual-runtime, debounce와 일반 pin ownership 같은
+명시적 범위 밖 제한도 그대로 유지한다. 다음 단계는 M15 board/system library다.

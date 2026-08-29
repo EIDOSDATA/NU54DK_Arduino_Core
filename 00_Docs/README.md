@@ -43,8 +43,8 @@
 | M0~M11 | **완료** | `v0.1.0` build, API, HIL, package와 clean Windows 공개 완료 |
 | M12 | **완료** | 고정 NCS CI/CD와 Linux/Windows 재현 build |
 | M13 | **완료** | `standard` profile, strict feature resolver와 Arduino 예제 7개 |
-| M14 | **진행 중** | 무보드 Core API·DTS Variant와 로컬·원격 software 검증 완료; 신규 pin HIL 대기 |
-| M15 | 대기 | NU54DK board/system library |
+| M14 | **완료** | Core API·DTS Variant, 로컬·원격 software/runtime와 신규 pin 물리 HIL 통과 |
+| M15 | 대기 | 다음 구현 대상인 NU54DK board/system library |
 | M16 | 대기 | basic BLE Arduino library |
 | M17 | 대기 | NCS 기능·예제 coverage 첫 묶음 |
 | M18 | 대기 | `v0.2.0` RC와 stable 공개 |

@@ -14,23 +14,24 @@ Sketch와 library를 nRF Connect SDK의 build graph 안에 넣어 ELF/HEX/BIN을
 | 항목 | 상태 |
 | --- | --- |
 | 현재 정식 버전 | [`v0.1.0`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.1.0) |
-| 다음 목표 | `v0.2.0` — M12·M13 완료, M14 진행 중; 이후 board/system API, basic BLE와 NCS coverage |
+| 다음 목표 | `v0.2.0` — M12·M13·M14 완료; 다음은 M15 board/system API, 이후 basic BLE와 NCS coverage |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 지원 보드 | NU54DK / nRF54L15 CPUAPP |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 선택 업로드 | 외장 SEGGER J-Link |
 | v0.1 마일스톤 | M0~M11 완료 |
-| v0.2 진행 | M12·M13 완료; M14 무보드 구현과 로컬·원격 software 검증 완료, 신규 pin HIL 대기 |
+| v0.2 진행 | M12·M13·M14 완료; Core API·DTS Variant와 신규 pin 물리 HIL 통과 |
 
 v0.1.0에서는 Runtime, GPIO, 시간, Serial, GPIO interrupt, Wire/I2C, SPI, ADC, PWM,
 Arduino CLI/IDE build, pyOCD upload/debug, cache와 Boards Manager 설치 경로를 검증했습니다.
 세부 결과는 [제품 로드맵과 구현 마일스톤](<./00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md>)에
 정리되어 있습니다.
 
-현재 `main`에서는 M12 CI/CD와 M13 profile·예제 UX를 완료했습니다. M14는 보드 없이 가능한
-Core API·DTS 기반 Variant 구현과 로컬·원격 software 검증까지 마쳤으며, 보드 연결 후
-`PIN_LED2..3`과 `PIN_BUTTON1..3`의 물리 HIL만 남아 있습니다.
+현재 `main`에서는 M12 CI/CD, M13 profile·예제 UX와 M14 Core API·DTS 기반 Variant를
+완료했습니다. `PIN_LED2..3` output/readback과 `PIN_BUTTON1..3`의 pull-up raw 상태 및
+`FALLING`/`RISING`/`CHANGE` interrupt도 실제 NU54DK에서 통과했습니다. 다음 구현 단계는
+M15 `NUCODE_NU54DK` board/system library입니다.
 
 ## Arduino IDE로 설치
 
@@ -148,8 +149,8 @@ Boards Manager package는 예전 archive 구조이므로 IDE 메뉴 노출이 �
 | --- | --- | --- |
 | [M12](<./00_Docs/04_검증 기록/14_M12_CI_CD_기준선.md>) | **완료** | GitHub Actions software CI와 재현 build, self-hosted NU54DK HIL 경계 구축 |
 | [M13](<./00_Docs/04_검증 기록/15_M13_구성_프로필_검증.md>) | **완료** | Arduino 예제 7개, `standard` profile과 strict library feature resolver |
-| [M14](<./00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md>) | **진행 중** | Core API·DTS Variant의 무보드 구현과 로컬·원격 software 검증 완료; 신규 pin 물리 HIL 대기 |
-| M15 | 대기 | `NUCODE_NU54DK` board/system library |
+| [M14](<./00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md>) | **완료** | Core API·DTS Variant, 로컬·원격 software/runtime와 신규 pin 물리 HIL 통과 |
+| M15 | 대기 | 다음 구현 대상인 `NUCODE_NU54DK` board/system library |
 | M16 | 대기 | 공식 Zephyr Bluetooth 기반 basic BLE library |
 | M17 | 대기 | NCS v3.4.0 기능·예제 coverage 첫 묶음 |
 | M18 | 대기 | v0.2.0 RC, clean Windows/HIL과 stable 공개 |

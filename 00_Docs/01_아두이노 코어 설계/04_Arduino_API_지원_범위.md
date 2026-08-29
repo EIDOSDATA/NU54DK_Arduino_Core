@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | v0.1.0 정식 공개 완료; v0.2.0 M14 Core API·Variant 무보드 구현 반영, 신규 pin HIL 대기 |
+| 문서 상태 | v0.1.0 정식 공개 완료; v0.2.0 M14 Core API·Variant와 신규 pin HIL 완료 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 Zephyr | Zephyr 4.4.0 |
@@ -35,10 +35,10 @@ native semantic·target cross-build로 검증했다. 임의 TEMP native executab
 Application Control이 차단한 최초 실행은 semantic SKIP으로 기록했고, repository
 고정 staging에서 매번 재compile하도록 고친 시험은 의미 실행까지 3/3 PASS했다.
 DTS `led0..3`/`sw0..3` alias로부터 sparse Variant 계약도 구현하고 host 대조와
-NU54DK production target build-only를 통과했다. 다만 PWM이 소유한 `PIN_LED1`은 digital에서
-명시적으로 거부하며, 신규 LED2/3과 BUTTON1..3의 실기 HIL은 보드 준비 후 남아 있다.
-QEMU actual-runtime gate는 고정 Nordic container workflow에 등록했으나 이 문서 갱신
-시점에서 원격 실행 증적은 아직 확정하지 않았다.
+NU54DK production target을 통과했다. PWM이 소유한 `PIN_LED1`은 digital에서 명시적으로
+거부하며, 신규 LED2/3과 BUTTON1..3은 실제 NU54DK에서 output/readback·pull-up raw 상태와
+`FALLING`/`RISING`/`CHANGE` interrupt HIL을 통과했다. QEMU actual-runtime gate도 고정
+Nordic container workflow에서 3/3 PASS했다.
 
 관련 문서는 다음과 같다.
 
@@ -186,27 +186,27 @@ pinctrl은 활성 peripheral ownership과 충돌하므로 digital ID로 중복 �
 | `LSBFIRST`, `MSBFIRST`, interrupt mode 상수 | P0/P1 | 부분 지원 | 지원 | 생산 `Arduino.h`에 upstream 상수 노출; edge mode와 SPI mode·bit-order 변환 target ztest 통과 |
 | `byte`, `word`, `boolean` 등 호환 type | P0 | 지원 | 지원 | M6 생산 header의 C/C++ target 계약과 `makeWord()` 회귀 통과 |
 | C++ static object initialization | P0 | 지원 | 지원 | 전역 constructor 순서와 hardware를 constructor에서 켜지 않는 `Serial` 객체가 실제 HIL에서 동작 |
-| C++ exception/RTTI | P1 | 미구현 | 의미 차이 | 기본 profile은 둘 다 비활성; fixed-staging host native semantic과 NCS QEMU cross-build 통과, QEMU·NU54 target runtime 지원 판정은 대기 |
+| C++ exception/RTTI | P1 | 미구현 | 의미 차이 | 기본 profile은 둘 다 비활성; fixed-staging host native semantic과 NCS QEMU cross-build/actual-runtime 통과, NU54 target runtime 지원은 선언하지 않음 |
 
 기본 Sketch profile은 `CONFIG_CPP_EXCEPTIONS=n`, `CONFIG_CPP_RTTI=n`을 유지한다. 두 기능은
 Core의 Arduino 호환 필수 계약이 아니라 expert opt-in이다. 사용할 때는
 `CONFIG_REQUIRES_FULL_LIBCPP=y`, `CONFIG_CPP_EXCEPTIONS=y`, `CONFIG_CPP_RTTI=y`와 충분한
 libc heap·thread stack을 함께 설계해야 한다. M14는 repository 고정 staging의 host native
 semantic과 NCS 3.4.0 `qemu_cortex_m3` cross-build를 검증했다. 로컬 Windows에는 QEMU
-실행기가 없어 Zephyr runtime을 실행하지 못했고, 고정 Nordic Linux container의 실시간
-QEMU gate는 원격 증적을 기다린다. NU54DK에서 throw/unwind와 RTTI를 지원으로
-선언하려면 별도 target runtime/HIL과 memory budget 승인이 필요하다.
+실행기가 없지만 고정 Nordic Linux container의 QEMU actual-runtime gate는 3/3 PASS했다.
+NU54DK에서 throw/unwind와 RTTI를 지원으로 선언하려면 별도 target runtime/HIL과 memory
+budget 승인이 필요하다.
 
 ### 5.2 Digital I/O
 
 | API/영역 | 우선순위 | 현재 상태 | v0.1.0 목표 | 설계·검증 메모 |
 | --- | --- | --- | --- | --- |
-| `pinMode()` | P0 | 부분 지원 | 지원 | 7개 descriptor에서 capability 기반 input/pull/output을 thread에서 구현; 신규 5개 pin HIL, open-drain, ISR, ownership 미검증 |
-| `digitalWrite()` | P0 | 부분 지원 | 지원 | `OUTPUT`으로 구성된 index 0에서 raw write HIL 통과; 추가 LED는 target build-only, input pull 전환·ISR·ownership 미구현 |
-| `digitalRead()` | P0 | 부분 지원 | 지원 | v0.1 LED/button HIL 통과; 추가 LED/버튼은 target build-only, thread 문맥으로 제한 |
+| `pinMode()` | P0 | 부분 지원 | 지원 | 7개 descriptor에서 capability 기반 input/pull/output을 thread에서 구현하고 신규 LED/button HIL 통과; open-drain·ISR 문맥·일반 ownership 전환 미검증 |
+| `digitalWrite()` | P0 | 부분 지원 | 지원 | `LED_BUILTIN`과 `PIN_LED2..3` raw write/readback HIL 통과; input pull 전환·일반 ownership 전환 미구현 |
+| `digitalRead()` | P0 | 부분 지원 | 지원 | v0.1 LED/button과 M14 신규 LED/button HIL 통과; thread 문맥으로 제한 |
 | `LED_BUILTIN` | P0 | 부분 지원 | 지원 | index 0, DTS `led0`, input+output; Blink HIL 통과, 정량 timing/voltage 미측정 |
 | `PIN_BUTTON0` | P0 | 부분 지원 | 부분 지원 | index 1, DTS `sw0`, input-only·interrupt; pull-up raw 버튼과 ISR physical edge HIL 통과, Core debounce는 제공하지 않음 |
-| `PIN_LED2..3`, `PIN_BUTTON1..3` | P1 | 부분 지원 | 부분 지원 | DTS `led2..3`/`sw1..3`에서 생성; host·target build-only 통과, 신규 pin HIL 대기 |
+| `PIN_LED2..3`, `PIN_BUTTON1..3` | P1 | 부분 지원 | 부분 지원 | DTS `led2..3`/`sw1..3`에서 생성; host·target와 실제 output/readback·pull-up·FALLING/RISING/CHANGE HIL 통과 |
 | `PIN_LED1` | P1 | 미구현 | 미구현 | DTS `led1` mapping은 검증하지만 P1.10을 `PIN_PWM0`이 소유하므로 명시적 ownership 전환 전 digital descriptor 없음 |
 | 전체 `D0...Dn` 논리 pin map | P1 | 미구현 | 부분 지원 | `D0`/`D1`만 호환 별칭; 일반 connector의 D2 이후는 ownership 승인 전 미정 |
 | `digitalPinToInterrupt()` | P0 | 지원 | 지원 | 유효 index와 `NOT_AN_INTERRUPT`, C++ 인수 1회 평가를 NU54DK target ztest로 검증 |

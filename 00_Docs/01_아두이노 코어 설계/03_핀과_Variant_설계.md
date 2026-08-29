@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M14 무보드 Variant 확장 완료; 신규 pin 실기 검증 대기 |
+| 문서 상태 | M14 DTS 기반 Variant 확장과 신규 pin 실기 검증 완료 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 RTOS | Zephyr v4.4.0 |
@@ -25,8 +25,8 @@
 이 문서는 장기 설계와 현재 구현 상태를 함께 관리한다. M14는 M3의 두 digital GPIO와
 M7의 `A0`·`PIN_PWM0` 숫자를 그대로 보존하면서, 보드 DTS의 `led0..3`·`sw0..3` alias를
 일곱 digital-capable pin과 하나의 PWM-owned 예약 역할로 매핑했다. 신규 descriptor와 sparse ID 거부 경로는
-host 및 NU54DK production target build-only로 검증했으며, 새 LED·버튼의 실제 전기 동작은
-보드가 준비되는 다음 HIL 단계에 남아 있다. 일반 connector GPIO, peripheral ownership과
+host 및 NU54DK production target에서 검증했고, 새 LED·버튼의 output/readback·pull-up raw
+상태·interrupt도 실제 NU54DK HIL을 통과했다. 일반 connector GPIO, peripheral ownership과
 임의 pin 전환은 여전히 구현 범위가 아니다.
 
 ---
@@ -600,10 +600,10 @@ M3에서 통과한 범위는 다음과 같다.
 4. 당시 `NUM_DIGITAL_PINS=2`를 invalid pin으로 사용한 호출 전후에 LED 상태가 유지되는
    self-check를 포함했다. M14 이후 범위 밖 sentinel은 `NUM_PIN_ROLES=10`이다.
 
-M14 무보드 검증은 `led0..3`·`sw0..3`의 여덟 DTS alias mapping이 서로 다른 GPIO spec인지,
+M14 검증은 `led0..3`·`sw0..3`의 여덟 DTS alias mapping이 서로 다른 GPIO spec인지,
 그중 일곱 descriptor가 생성되는지, A0/PWM/PWM-owned LED1 slot의 digital 거부와 production
-target link를 확인했다. 신규 `PIN_LED2..3`과 `PIN_BUTTON1..3`의 출력·입력·interrupt 실제
-동작은 보드가 준비된 뒤 HIL로 확인한다.
+target link를 확인했다. 실제 NU54DK에서는 `PIN_LED2..3`의 LOW/HIGH output과 raw readback,
+`PIN_BUTTON1..3`의 release HIGH·press LOW 및 `FALLING`/`RISING`/`CHANGE` interrupt를 통과했다.
 
 M6는 GPIO emulator로 raw edge ISR 의미를 자동 검증하고, 실제 P1.13 active-low 버튼의
 FALLING/RISING/CHANGE도 DAPLink sequence 25/COM10에서 확인했다. 외부 logic

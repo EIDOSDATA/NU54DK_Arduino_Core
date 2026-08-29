@@ -29,6 +29,16 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 확인합니다. `PIN_BUTTON1`, `PIN_BUTTON2`, `PIN_BUTTON3`은 `INPUT_PULLUP`에서 뗀 상태
 HIGH와 누른 상태 LOW를 확인하고 FALLING, RISING, CHANGE ISR을 순서대로 검증합니다.
 
+화면의 Arduino 논리명과 보드의 사용자 버튼 표기는 다음과 같이 대응합니다. 회로도 내부의
+부품 참조번호가 아니라 보드의 `SW0..3` 사용자 표기를 기준으로 조작합니다.
+
+| Arduino 논리명 | DTS alias | 사용자 버튼 | nRF54L15 GPIO |
+| --- | --- | --- | --- |
+| `PIN_BUTTON0` | `sw0` | SW0 | P1.13 — M6에서 검증했으므로 M14 대상 제외 |
+| `PIN_BUTTON1` | `sw1` | SW1 | P1.09 |
+| `PIN_BUTTON2` | `sw2` | SW2 | P1.08 |
+| `PIN_BUTTON3` | `sw3` | SW3 | P0.04 |
+
 `PIN_LED1`은 `PIN_PWM0`과 동일한 물리 자원을 PWM이 소유하므로 이 digital HIL에서는
 제외합니다. 해당 자원의 회귀 근거는 M7 `PIN_PWM0` 0/128/255 driver 시험입니다. 또한
 `PIN_LED2`를 시험하는 동안에는 외부 debug session을 종료해 SWO와의 동시 소유를 피합니다.
@@ -78,4 +88,5 @@ timeout, target FAIL, 핀 ID·순서 불일치 또는 중복 token은 PASS 증�
 구체적인 실행 명령과 이미 검증한 결과는
 [M6 기준선](<../../../00_Docs/04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md>),
 [M7 기준선](<../../../00_Docs/04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md>) 및
-[M8 기준선](<../../../00_Docs/04_검증 기록/08_M8_업로드와_디버그_기준선.md>)을 따릅니다.
+[M8 기준선](<../../../00_Docs/04_검증 기록/08_M8_업로드와_디버그_기준선.md>),
+[M14 기준선](<../../../00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md>)을 따릅니다.
