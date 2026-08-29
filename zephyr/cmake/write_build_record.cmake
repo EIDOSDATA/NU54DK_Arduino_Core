@@ -5,7 +5,9 @@ function(nucode_git_revision directory output_variable check_dirty)
 
   if(EXISTS "${NUCODE_GIT_EXECUTABLE}" AND EXISTS "${directory}")
     execute_process(
-      COMMAND "${NUCODE_GIT_EXECUTABLE}" rev-parse --show-toplevel
+      COMMAND "${NUCODE_GIT_EXECUTABLE}"
+              -c "safe.directory=${directory}"
+              rev-parse --show-toplevel
       WORKING_DIRECTORY "${directory}"
       RESULT_VARIABLE git_root_result
       OUTPUT_VARIABLE git_root_output
@@ -22,7 +24,9 @@ function(nucode_git_revision directory output_variable check_dirty)
 
     if(git_root_result EQUAL 0 AND "${git_root_output}" STREQUAL "${requested_root}")
       execute_process(
-        COMMAND "${NUCODE_GIT_EXECUTABLE}" rev-parse --short=12 HEAD
+        COMMAND "${NUCODE_GIT_EXECUTABLE}"
+                -c "safe.directory=${directory}"
+                rev-parse --short=12 HEAD
         WORKING_DIRECTORY "${directory}"
         RESULT_VARIABLE git_result
         OUTPUT_VARIABLE git_output
@@ -38,13 +42,17 @@ function(nucode_git_revision directory output_variable check_dirty)
 
       if(check_dirty)
         execute_process(
-          COMMAND "${NUCODE_GIT_EXECUTABLE}" diff --quiet HEAD -- ${ARGN}
+          COMMAND "${NUCODE_GIT_EXECUTABLE}"
+                  -c "safe.directory=${directory}"
+                  diff --quiet HEAD -- ${ARGN}
           WORKING_DIRECTORY "${directory}"
           RESULT_VARIABLE git_diff_result
           ERROR_QUIET
         )
         execute_process(
-          COMMAND "${NUCODE_GIT_EXECUTABLE}" ls-files --others
+          COMMAND "${NUCODE_GIT_EXECUTABLE}"
+                  -c "safe.directory=${directory}"
+                  ls-files --others
                   --exclude-standard -- ${ARGN}
           WORKING_DIRECTORY "${directory}"
           RESULT_VARIABLE git_untracked_result

@@ -197,6 +197,17 @@ class M12CiContractTests(unittest.TestCase):
         source = LOCK_SCRIPT.read_text(encoding="utf-8")
         self.assertIn('f"safe.directory={REPOSITORY}"', source)
 
+    ## @brief CMake build record도 조회 대상 저장소 하나만 Git safe.directory로 지정합니다.
+    def test_build_record_scopes_git_safe_directory(self) -> None:
+        for relative in (
+            "zephyr/CMakeLists.txt",
+            "zephyr/cmake/write_build_record.cmake",
+        ):
+            source = (REPOSITORY / relative).read_text(encoding="utf-8")
+            self.assertGreaterEqual(
+                source.count('safe.directory=${directory}'), 4, relative
+            )
+
     ## @brief Windows 2025에도 binary가 존재하는 exact Python을 사용합니다.
     def test_workflows_pin_available_python(self) -> None:
         for workflow in (REPOSITORY / ".github" / "workflows").glob("m12-*.yml"):
