@@ -30,6 +30,10 @@ license inventory, third-party notice와 이 문서의 byte를 별도로 고정�
 - 고정 NCS/Zephyr/board revision을 사용한 host, Zephyr build, package와 문서 gate를 구성했다.
 - cache 입력과 source identity를 확인하고, 실패 log와 evidence를 분리해 보존한다.
 - GitHub Actions와 로컬 runner가 같은 계약을 실행하도록 진입점을 통일했다.
+- Windows에서 NCS와 Builder cache가 서로 다른 drive에 있어도 `west build`가 application
+  volume에서 실행되도록 고정하고, Nordic container의 Git 조회는 대상 저장소별
+  `safe.directory`만 사용한다.
+- 공개 stable index는 Windows checkout에서도 승인된 LF byte와 SHA-256을 유지한다.
 
 ### M13 — Profile과 Arduino 예제 UX
 
