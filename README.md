@@ -14,14 +14,14 @@ Sketch와 library를 nRF Connect SDK의 build graph 안에 넣어 ELF/HEX/BIN을
 | 항목 | 상태 |
 | --- | --- |
 | 현재 정식 버전 | [`v0.1.0`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.1.0) |
-| 다음 목표 | `v0.2.0` — M12~M17 완료, 다음 단계 M18 RC Draft |
+| 다음 목표 | `v0.2.0` — M12~M18 자동 범위 완료, RC Draft 준비 완료 |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 지원 보드 | NU54DK / nRF54L15 CPUAPP |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 선택 업로드 | 외장 SEGGER J-Link |
 | v0.1 마일스톤 | M0~M11 완료 |
-| v0.2 진행 | M12~M17 완료; 다음 단계는 M18 RC 패키징·Draft와 clean Windows 승인 |
+| v0.2 진행 | M12~M18 자동 범위 완료; clean Windows staged ZIP 검증 대기 |
 
 v0.1.0에서는 Runtime, GPIO, 시간, Serial, GPIO interrupt, Wire/I2C, SPI, ADC, PWM,
 Arduino CLI/IDE build, pyOCD upload/debug, cache와 Boards Manager 설치 경로를 검증했습니다.
@@ -195,11 +195,17 @@ M13의 기존 예제 7개에 M15 board/system 예제 5개와 M16 NUS 예제 2개
 | [M15](<./00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) | **완료** | 비-System-OFF 자동 HIL 2/2와 SWD 격리 timed GRTC→사용자 SW0 결합 HIL PASS |
 | [M16](<./00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md>) | **완료** | NUS Peripheral/Central Stream, profile·예제와 두 보드 BLE HIL PASS |
 | [M17](<./00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>) | **완료** | 9개 coverage record, sensor·crypto build와 무선 build feasibility 결과 분류 |
-| M18 | **다음** | v0.2.0 RC 패키지와 Draft Release 준비; clean Windows 검증·stable 승인은 후속 수동 gate |
+| [M18](<./00_Docs/05_릴리스/v0.2.0/README.md>) | **자동 범위 완료** | RC package·untagged Draft 준비 완료; clean Windows staged ZIP 검증 대기 |
 
 자세한 완료 기준은 [v0.2.0 구현 마일스톤](<./00_Docs/01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)과
 [NCS 기능·예제 지원 매트릭스](<./00_Docs/01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)를
 따릅니다.
+
+M18 Draft는 실제 Git tag가 없는 내부 Release object일 수 있습니다. 현재 수동 gate는 exact
+ZIP을 격리된 clean Windows Sketchbook hardware staging에 추출한 IDE 예제 열거·compile·upload이며,
+Boards Manager 설치 완료가 아닙니다. 프로젝트 소유자가 이 결과를 승인해 public RC로 전환한
+뒤 별도 clean Windows에서 Boards Manager 설치·`post_install` end-to-end를 다시 통과하고
+승인해야 `v0.2.0` stable 공개를 검토합니다. 그때까지 정식 버전은 `v0.1.0`입니다.
 
 ## 개발 환경에서 사용
 
@@ -256,6 +262,7 @@ NCS 공개 API를 직접 사용할 수 있습니다.
 - [M16 BLE NUS API 설계](<./00_Docs/03_펌웨어 설계/06_BLE_NUS_API.md>)
 - [M16 BLE NUS 기준선](<./00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md>)
 - [M17 NCS 기능과 예제 Coverage 기준선](<./00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)
+- [v0.2.0 RC Draft 릴리스 문서](<./00_Docs/05_릴리스/v0.2.0/README.md>)
 - [v0.1.0 릴리스 노트](<./00_Docs/05_릴리스/11_v0.1.0_릴리스_노트.md>)
 
 ## 작성자와 라이선스
