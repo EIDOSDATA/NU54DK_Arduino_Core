@@ -18,6 +18,8 @@
   RC2에서 교정하고 공개 설치본 gate를 통과한 runtime을 정식 승격한 버전이다.
 - 공개 RC index를 사용한 Boards Manager 설치와 `post_install`, 14개 예제 compile, 명시 UID
   upload 및 UART READY는 PASS다.
+- 공개 stable index의 격리 Windows 수명주기는 `0.1.0` 설치, `0.2.0` upgrade, Blink clean
+  compile, `0.1.0` downgrade, `0.2.0` 재설치·재compile과 uninstall까지 PASS다.
 - RC2 설치본 NUS Peripheral/Central의 startup과 양방향 고유 payload 원문 연속 수신은 PASS며
   RC1 상태 로그 삽입은 재현되지 않았다.
 - 이번 공개 예제 transparent bridge HIL은 M16의 frame boundary·disconnect/reconnect 전문
@@ -126,5 +128,6 @@ build 실패를 임의 DTS/partition patch로 숨기지 않았으며 board submo
   Boards Manager 설치를 대신하지 않는다.
 - RC2 public Boards Manager 설치본의 PASS 범위는 `post_install`, 14/14 compile, 명시 UID
   upload, UART READY와 NUS 공개 예제 양방향 transparent bridge·로그 회귀다.
-- stable exact ZIP의 runtime payload는 RC2와 byte-equivalent한지 별도로 검증하며, 공개
-  `0.1.0`→`0.2.0` upgrade·downgrade·uninstall 수명주기를 정식 공개 기록에 고정한다.
+- stable exact ZIP의 runtime payload는 RC2와 같은
+  `ec604501b2ba58b622c3490925a79c8ac716bba93f0938840e49c624a16998c8`로 확인했다. 공개
+  `0.1.0`→`0.2.0` upgrade·downgrade·uninstall 수명주기도 정식 공개 기록에 고정했다.

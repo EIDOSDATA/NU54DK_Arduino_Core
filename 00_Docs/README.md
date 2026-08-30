@@ -50,7 +50,7 @@
 | M15 | **완료** | 비-System-OFF 자동 HIL 2/2와 SWD 격리 timed GRTC→사용자 SW0 결합 HIL PASS |
 | M16 | **완료** | NUS Peripheral/Central Stream과 두 보드 BLE HIL PASS |
 | M17 | **완료** | 9개 machine-readable coverage record와 sensor·crypto·무선 feasibility 분류 |
-| M18 | **완료** | RC2 공개 설치본 gate PASS와 프로젝트 소유자의 `v0.2.0` 정식 공개 승인 |
+| M18 | **완료** | RC2 공개 설치본 gate, stable 재현성·공개 수명주기 PASS와 `v0.2.0` 정식 공개 완료 |
 | M19~M22 | **계획** | BLE Core/GAP → 범용 GATT → 보안·BAS/DIS/HID → `v0.3.0` 릴리스 |
 
 M15 완료 기준은 Core `c47239d954c45fd173d8d1393e3ea5c9c86e111a`,

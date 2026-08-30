@@ -2,7 +2,7 @@
 
 > **상태: 정식 릴리스.** RC2 Boards Manager 설치·`post_install`, 설치본 예제 14/14
 > compile, 명시 UID upload, UART READY와 BLE NUS 양방향 transparent bridge 검증을
-> 통과한 동일 runtime payload를 별도 stable package·tag·Release로 승격한다.
+> 통과한 동일 runtime payload를 별도 stable package·tag·Release로 승격했다.
 
 `v0.2.0`은 Loader나 LLEXT 없이 Arduino Sketch, Core와 Zephyr application을 하나의
 정적 ELF/HEX로 만드는 NU54DK 전용 Native Full Zephyr Core의 두 번째 기능 묶음이다. 공식
@@ -35,7 +35,7 @@ Arduino CLI로 compile하고, NU54DK에서 Blink upload, SerialEcho 왕복 및 �
 - `NUSPeripheral` 예제는 `received` event를 같은 `Serial`에 기록하지 않는다. BLE에서 받은
   byte는 Stream 경로로만 출력하고, 광고·연결·ready·해제·오류 상태만 사람이 읽는 로그로 남긴다.
 
-RC1의 tag와 자산은 불변 기록으로 유지하지만 새 설치·검증에는 RC2를 사용한다.
+RC1과 RC2의 tag·자산은 불변 candidate 기록으로 유지하며 신규 설치에는 `v0.2.0` stable을 사용한다.
 
 ## M12~M17 주요 변경
 
@@ -84,7 +84,7 @@ RC1의 tag와 자산은 불변 기록으로 유지하지만 새 설치·검증�
 재연결 경로를 두 NU54DK에서 HIL 검증했다.
 
 지원 범위는 NUS Peripheral/Central 한정이다. 임의 GATT service/characteristic builder,
-GATT read, indication, bonding, SMP, HID와 multiprotocol은 이 RC가 지원하지 않는다.
+GATT read, indication, bonding, SMP, HID와 multiprotocol은 이 버전이 지원하지 않는다.
 
 ### M17 — NCS 기능·예제 coverage
 
@@ -142,7 +142,7 @@ https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.2.0
 
 정식 공개 산출물의 source commit, 크기와 SHA-256, 공개 시각 및 lifecycle 결과는
 [v0.2.0 정식 릴리스 공개 기록](../../04_검증%20기록/21_v0.2.0_정식_릴리스_공개_기록.md)에
-고정한다. RC2의 exact HIL을 stable exact HIL로 이름만 바꾸지 않으며, stable은 RC2와의
+고정했다. RC2의 exact HIL을 stable exact HIL로 이름만 바꾸지 않으며, stable은 RC2와의
 version-independent runtime payload 동등성과 공개 package 수명주기 검증을 함께 근거로 삼는다.
 
 ## 라이선스

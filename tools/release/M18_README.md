@@ -31,13 +31,25 @@ python tools/release/m18_release.py prepare `
 ```
 
 prepare는 같은 commit에서 archive, package metadata와 RC index를 두 번 생성하고 모든
-artifact byte와 SHA-256을 비교한다. root stable index, `STABLE_VERSIONS`와 stable commit map을
-변경하거나 asset 목록에 포함하면 실패한다. 기존 output을 덮어쓰지 않으므로 새 directory를
-사용해야 한다.
+artifact byte와 SHA-256을 비교한다. M18 당시 plan과 evidence에 기록한 stable 경계는
+`v0.1.0` 하나이며, `STABLE_VERSIONS`와 stable commit map도 그 역사적 시점 그대로 고정한다.
+후속 stable 상태를 이 경계에 소급해 기록하거나 stable index를 RC asset 목록에 포함하면
+실패한다. 기존 output을 덮어쓰지 않으므로 새 directory를 사용해야 한다.
 
 네 문서 경로는 command line으로 바꿀 수 없다. repository URL, NCS/Zephyr/toolchain pin,
 `0.1.0-rc.2` + `0.2.0-rc.1` + `0.2.0-rc.2` RC allowlist, RC/stable index 이름과 release asset 이름도
-고정 계약이다. 공개 v0.1 stable root index는 1,125 byte 및 고정 SHA-256으로 보호한다.
+고정 계약이다. 다만 후속 공개로 root stable index가 정상 확장된 사실과 M18 역사 경계를
+구분하기 위해 다음 두 공개 byte identity만 별도 read-only 허용목록으로 인정한다.
+
+- `v0.1.0` latest index: 1,125 byte,
+  `385445512ba6bb842024979e8314f2f953eb15a14e3ce72076b6d475e2e7583d`
+- `v0.2.0` latest index (`0.2.0`, `0.1.0` 순서): 1,877 byte,
+  `5ae7fbe13f71c52950879064685694cf4b062557572f187e81476639724e5344`
+
+root index는 worktree와 exact commit에서 같은 허용 byte여야 한다. 다른 JSON, CRLF 변환,
+한 byte 변경이나 commit/worktree 불일치는 모두 거부한다. 이 허용목록은 현재 main에서 역사적
+회귀 시험을 계속 실행하기 위한 것이며, M18 plan/evidence의 `v0.1.0` stable 경계나 RC1/RC2
+자산을 변경하지 않는다.
 
 ## 2. 로컬 재검증
 

@@ -254,20 +254,27 @@ class M10PackagingTests(unittest.TestCase):
         """! @brief 장기 사용자 endpoint의 stable index identity를 검증합니다. """
 
         index = REPO_ROOT / PACKAGE.STABLE_INDEX_FILENAME
-        self.assertEqual(index.stat().st_size, 1125)
+        self.assertEqual(index.stat().st_size, 1877)
         self.assertEqual(
             hashlib.sha256(index.read_bytes()).hexdigest(),
-            "385445512ba6bb842024979e8314f2f953eb15a14e3ce72076b6d475e2e7583d",
+            "5ae7fbe13f71c52950879064685694cf4b062557572f187e81476639724e5344",
         )
         self.assertNotEqual(PACKAGE.RC_INDEX_FILENAME, PACKAGE.STABLE_INDEX_FILENAME)
         document = PACKAGE.validate_index(index)
-        platform = document["packages"][0]["platforms"][0]
-        self.assertEqual(platform["version"], "0.1.0")
-        self.assertEqual(platform["archiveFileName"], PACKAGE.archive_filename("0.1.0"))
+        platforms = document["packages"][0]["platforms"]
         self.assertEqual(
-            platform["url"],
-            PACKAGE.release_asset_url("0.1.0", PACKAGE.archive_filename("0.1.0")),
+            [platform["version"] for platform in platforms],
+            ["0.2.0", "0.1.0"],
         )
+        for platform, version in zip(platforms, ("0.2.0", "0.1.0"), strict=True):
+            identity = PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES[version]
+            self.assertEqual(platform["archiveFileName"], PACKAGE.archive_filename(version))
+            self.assertEqual(
+                platform["url"],
+                PACKAGE.release_asset_url(version, PACKAGE.archive_filename(version)),
+            )
+            self.assertEqual(platform["checksum"], f"SHA-256:{identity['sha256']}")
+            self.assertEqual(platform["size"], str(identity["size"]))
 
     def test_10aa_stable_index_checkout_is_forced_to_lf(self) -> None:
         """! @brief 공개 stable index의 Git checkout 줄바꿈 계약을 검증합니다. """
@@ -292,7 +299,7 @@ class M10PackagingTests(unittest.TestCase):
         crlf_bytes = stable_bytes.replace(b"\n", b"\r\n")
         self.assertNotEqual(
             hashlib.sha256(crlf_bytes).hexdigest(),
-            "385445512ba6bb842024979e8314f2f953eb15a14e3ce72076b6d475e2e7583d",
+            "5ae7fbe13f71c52950879064685694cf4b062557572f187e81476639724e5344",
         )
 
     def test_11_supported_versions_are_fail_closed(self) -> None:
@@ -328,18 +335,27 @@ class M10PackagingTests(unittest.TestCase):
     def test_11a_stable_package_has_approved_identity_and_own_index(self) -> None:
         """! @brief 승인된 stable 버전이 RC와 분리된 공개 identity를 갖는지 검증합니다. """
 
-        stable_commit = PACKAGE.STABLE_RELEASE_COMMITS["0.1.0"]
-        self.assertRegex(stable_commit, r"^[0-9a-f]{40}$")
+        self.assertEqual(
+            PACKAGE.STABLE_RELEASE_COMMITS,
+            {
+                "0.1.0": "5dbc5e37270e477d21f578dd877f4b5226b44a0d",
+                "0.2.0": "41fc44e452d2b6eef4b46307af6c277499f8d2d5",
+            },
+        )
         index = REPO_ROOT / PACKAGE.STABLE_INDEX_FILENAME
         document = PACKAGE.validate_index(index)
         self.assertEqual(PACKAGE.release_channel("0.1.0"), "stable")
         self.assertEqual(PACKAGE.release_tag("0.1.0"), "v0.1.0")
         self.assertEqual(index.name, PACKAGE.STABLE_INDEX_FILENAME)
-        self.assertEqual(document["packages"][0]["platforms"][0]["version"], "0.1.0")
+        platforms = document["packages"][0]["platforms"]
         self.assertEqual(
-            document["packages"][0]["platforms"][0]["url"],
+            [platform["version"] for platform in platforms],
+            ["0.2.0", "0.1.0"],
+        )
+        self.assertEqual(
+            platforms[0]["url"],
             "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/"
-            "v0.1.0/nucode-nu54dk-zephyr-0.1.0.zip",
+            "v0.2.0/nucode-nu54dk-zephyr-0.2.0.zip",
         )
         self.assertEqual(
             PACKAGE.legal_review_status("0.1.0"),
@@ -366,66 +382,71 @@ class M10PackagingTests(unittest.TestCase):
                 "sha256": "722a46685b97aff42a75fb84db8ea74de75f3c32f59ea58225cd86d5acd141a6",
             },
         )
+        self.assertEqual(
+            PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES["0.2.0"],
+            {
+                "size": 932376,
+                "sha256": "1c2b4dddd6da0c1530f9d32630ec7d5b5285cff28c826a9a95c864226aeaea6e",
+            },
+        )
 
     def test_11aaa_published_stable_index_archive_uses_exact_bytes(self) -> None:
         """! @brief 과거 stable은 최신 source 허용목록 대신 공개 byte identity로 검증합니다. """
 
-        archive = Path(self.temporary.name) / PACKAGE.archive_filename("0.1.0")
-        original = PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES["0.1.0"]
-        published = b"published-stable-archive"
-        archive.write_bytes(published)
-        PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES["0.1.0"] = {
-            "size": len(published),
-            "sha256": hashlib.sha256(published).hexdigest(),
-        }
-        try:
-            PACKAGE.validate_index_archive(archive, "0.1.0")
-            archive.write_bytes(published + b"-tampered")
-            with self.assertRaises(PACKAGE.PackageError):
-                PACKAGE.validate_index_archive(archive, "0.1.0")
-        finally:
-            PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES["0.1.0"] = original
+        for version in PACKAGE.STABLE_VERSIONS:
+            with self.subTest(version=version):
+                archive = Path(self.temporary.name) / PACKAGE.archive_filename(version)
+                original = PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES[version]
+                published = f"published-stable-archive-{version}".encode("ascii")
+                archive.write_bytes(published)
+                PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES[version] = {
+                    "size": len(published),
+                    "sha256": hashlib.sha256(published).hexdigest(),
+                }
+                try:
+                    PACKAGE.validate_index_archive(archive, version)
+                    archive.write_bytes(published + b"-tampered")
+                    with self.assertRaises(PACKAGE.PackageError):
+                        PACKAGE.validate_index_archive(archive, version)
+                finally:
+                    PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES[version] = original
 
-    def test_11ab_v020_stable_runtime_matches_public_rc2(self) -> None:
-        """! @brief v0.2.0 준비 archive의 실행 payload가 공개 RC2와 같은지 검증합니다. """
+    def test_11ab_published_v020_runtime_matches_public_rc2(self) -> None:
+        """! @brief 공개 stable과 RC2의 version-independent runtime payload를 검증합니다. """
 
-        stable_paths = PACKAGE.build_package(
+        stable_files, _ = PACKAGE.collect_source_files(
             REPO_ROOT,
-            Path(self.temporary.name) / "v020-stable-prepublication",
+            PACKAGE.STABLE_RELEASE_COMMITS["0.2.0"],
             "0.2.0",
-            self.commit,
         )
-        rc_paths = PACKAGE.build_package(
+        rc_files, _ = PACKAGE.collect_source_files(
             REPO_ROOT,
-            Path(self.temporary.name) / "v020-rc2-reference",
-            "0.2.0-rc.2",
             "1c5dcecfc0dba2ef25e06963dcba61c63f454db9",
+            "0.2.0-rc.2",
         )
-        stable_manifest = PACKAGE.validate_archive(
-            stable_paths["archive"],
-            expected_version="0.2.0",
-            expected_commit=self.commit,
+        stable_runtime = PACKAGE.runtime_payload_sha256(
+            (item.path, item.data, item.mode) for item in stable_files
         )
-        rc_manifest = PACKAGE.validate_archive(
-            rc_paths["archive"],
-            expected_version="0.2.0-rc.2",
-            expected_commit="1c5dcecfc0dba2ef25e06963dcba61c63f454db9",
+        rc_runtime = PACKAGE.runtime_payload_sha256(
+            (item.path, item.data, item.mode) for item in rc_files
         )
         self.assertEqual(
-            stable_manifest["runtime_payload_sha256"],
-            rc_manifest["runtime_payload_sha256"],
+            stable_runtime,
+            "ec604501b2ba58b622c3490925a79c8ac716bba93f0938840e49c624a16998c8",
         )
+        self.assertEqual(stable_runtime, rc_runtime)
 
     def test_11aa_stable_package_rejects_a_different_commit(self) -> None:
         """! @brief 공개 stable 이름으로 다른 source byte를 생성하지 못하게 합니다. """
 
-        with self.assertRaises(PACKAGE.PackageError):
-            PACKAGE.build_package(
-                REPO_ROOT,
-                Path(self.temporary.name) / "forbidden-stable",
-                "0.1.0",
-                PACKAGE.STABLE_RELEASE_COMMITS["0.1.0"],
-            )
+        for version in PACKAGE.STABLE_VERSIONS:
+            with self.subTest(version=version), self.assertRaises(PACKAGE.PackageError):
+                PACKAGE.build_package(
+                    REPO_ROOT,
+                    Path(self.temporary.name) / f"forbidden-stable-{version}",
+                    version,
+                    "1c5dcecfc0dba2ef25e06963dcba61c63f454db9",
+                )
 
     def test_11b_current_safe_pair_has_one_runtime_payload(self) -> None:
         """! @brief 새 immutable preview 두 개가 같은 source와 runtime payload를 사용합니다. """

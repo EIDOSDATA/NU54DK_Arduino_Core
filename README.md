@@ -21,7 +21,7 @@ Sketch와 library를 nRF Connect SDK의 build graph 안에 넣어 ELF/HEX/BIN을
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 선택 업로드 | 외장 SEGGER J-Link |
 | v0.1 마일스톤 | M0~M11 완료 |
-| v0.2 마일스톤 | M12~M18 완료; `v0.2.0` 정식 공개 승인 |
+| v0.2 마일스톤 | M12~M18 완료; `v0.2.0` 정식 공개 완료 |
 | v0.3 계획 | M19 BLE Core/GAP → M20 범용 GATT → M21 보안·BAS/DIS/HID → M22 릴리스 |
 
 v0.1.0에서는 Runtime, GPIO, 시간, Serial, GPIO interrupt, Wire/I2C, SPI, ADC, PWM,
@@ -32,7 +32,7 @@ Arduino CLI/IDE build, pyOCD upload/debug, cache와 Boards Manager 설치 경로
 공개 [`v0.2.0-rc.1`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.2.0-rc.1)은
 Boards Manager 설치와 14개 예제 compile, Blink upload, SerialEcho 및 두 보드 BLE NUS 실기
 검증에 사용한 불변 기록입니다. 이 검증에서 발견한 다중 CMSIS-DAP 선택과 NUS 수신 로그 간섭을
-RC2에서 교정했으므로 신규 RC 검증에는 RC2를 사용합니다. RC1 tag와 자산은 덮어쓰지 않습니다.
+RC2에서 교정해 후속 candidate 검증에 사용했습니다. RC1 tag와 자산은 덮어쓰지 않습니다.
 
 공개 [`v0.2.0-rc.2`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.2.0-rc.2)는
 격리 Boards Manager 설치와 `post_install`, 설치본 예제 14개 compile, Blink 명시 UID upload,
@@ -217,7 +217,7 @@ M13의 기존 예제 7개에 M15 board/system 예제 5개와 M16 NUS 예제 2개
 | [M15](<./00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) | **완료** | 비-System-OFF 자동 HIL 2/2와 SWD 격리 timed GRTC→사용자 SW0 결합 HIL PASS |
 | [M16](<./00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md>) | **완료** | NUS Peripheral/Central Stream, profile·예제와 두 보드 BLE HIL PASS |
 | [M17](<./00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>) | **완료** | 9개 coverage record, sensor·crypto build와 무선 build feasibility 결과 분류 |
-| [M18](<./00_Docs/05_릴리스/v0.2.0/README.md>) | **완료** | RC2 공개 검증을 거쳐 `v0.2.0` 정식 릴리스 승인 |
+| [M18](<./00_Docs/05_릴리스/v0.2.0/README.md>) | **완료** | RC2 공개 검증과 stable 수명주기를 거쳐 `v0.2.0` 정식 릴리스 공개 |
 
 자세한 완료 기준은 [v0.2.0 구현 마일스톤](<./00_Docs/01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)과
 [NCS 기능·예제 지원 매트릭스](<./00_Docs/01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)를

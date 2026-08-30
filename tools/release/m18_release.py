@@ -35,6 +35,7 @@ EXPECTED_BOARD_REPOSITORY_URL = "https://github.com/Nucode01/NU54DK_Zephyr_DTS"
 EXPECTED_RC_VERSIONS = ("0.1.0-rc.2", "0.2.0-rc.1", VERSION)
 EXPECTED_RC_INDEX_FILENAME = "package_nucode_nu54dk_rc_index.json"
 EXPECTED_STABLE_INDEX_FILENAME = "package_nucode_nu54dk_index.json"
+## @brief M18 당시 evidence와 plan에 기록한 v0.1 stable index byte 계약입니다.
 EXPECTED_STABLE_INDEX_SIZE = 1125
 EXPECTED_STABLE_INDEX_SHA256 = (
     "385445512ba6bb842024979e8314f2f953eb15a14e3ce72076b6d475e2e7583d"
@@ -45,6 +46,17 @@ EXPECTED_STABLE_RELEASE_COMMITS = {
 }
 EXPECTED_STABLE_LEGAL_REVIEW_STATUSES = {
     "0.1.0": "project-owner-approved-for-final-public-release",
+}
+## @brief M18 이후 공개된 stable root index의 exact byte 허용목록입니다.
+PUBLISHED_STABLE_ROOT_INDEX_IDENTITIES = {
+    "0.1.0": (
+        EXPECTED_STABLE_INDEX_SIZE,
+        EXPECTED_STABLE_INDEX_SHA256,
+    ),
+    "0.2.0": (
+        1877,
+        "5ae7fbe13f71c52950879064685694cf4b062557572f187e81476639724e5344",
+    ),
 }
 STABLE_SOURCE_PATHS = (
     EXPECTED_STABLE_INDEX_FILENAME,
@@ -337,27 +349,28 @@ def stable_source_snapshot(repo_root: Path) -> dict[str, str]:
     return result
 
 
-## @brief 공개 v0.1 stable root index가 worktree와 exact commit에서 byte 불변인지 확인합니다.
+## @brief 공개 stable root index가 허용된 exact byte이며 commit과 worktree에서 같은지 확인합니다.
 def assert_stable_root_index(
     runner: Runner, repo_root: Path, commit: str
 ) -> None:
     path = repo_root / EXPECTED_STABLE_INDEX_FILENAME
-    if (
-        not path.is_file()
-        or path.is_symlink()
-        or path.stat().st_size != EXPECTED_STABLE_INDEX_SIZE
-        or file_sha256(path) != EXPECTED_STABLE_INDEX_SHA256
-    ):
-        raise M18Error("공개 v0.1 stable root index byte 계약이 변경되었습니다.")
+    if not path.is_file() or path.is_symlink():
+        raise M18Error("공개 stable root index가 regular file이 아닙니다.")
+    worktree = path.read_bytes()
+    worktree_identity = (len(worktree), hashlib.sha256(worktree).hexdigest())
+    allowed_identities = set(PUBLISHED_STABLE_ROOT_INDEX_IDENTITIES.values())
+    if worktree_identity not in allowed_identities:
+        raise M18Error(
+            "공개 stable root index byte 계약이 exact-byte 허용목록과 다릅니다."
+        )
     committed = git_blob_at_commit(
         runner, repo_root, commit, EXPECTED_STABLE_INDEX_FILENAME
     )
-    if (
-        len(committed) != EXPECTED_STABLE_INDEX_SIZE
-        or hashlib.sha256(committed).hexdigest() != EXPECTED_STABLE_INDEX_SHA256
-        or committed != path.read_bytes()
-    ):
-        raise M18Error("exact commit의 v0.1 stable root index byte 계약이 변경되었습니다.")
+    committed_identity = (len(committed), hashlib.sha256(committed).hexdigest())
+    if committed_identity not in allowed_identities or committed != worktree:
+        raise M18Error(
+            "exact commit과 worktree의 stable root index exact-byte 계약이 다릅니다."
+        )
 
 
 ## @brief release output의 모든 항목이 exact regular-file allowlist인지 확인합니다.

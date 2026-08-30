@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 현재 정식 버전 | **v0.2.0 정식 공개 승인** |
+| 현재 정식 버전 | **v0.2.0 정식 공개 완료** |
 | 다음 개발 버전 | **v0.3.0** |
 | stable index | `package_nucode_nu54dk_index.json` |
 
@@ -22,11 +22,14 @@
 stable index에서 기존 항목의 URL, size와 checksum도 변경하지 않는다. 이후 버전은 새 Release와
 새 버전 항목으로 추가하며, 장기 endpoint에는 최신 버전을 앞에 두고 이전 stable을 함께 보존한다.
 
-## 2. v0.1.0 재현은 감사용으로만 수행한다
+## 2. 공개 stable 재현은 감사용으로만 수행한다
 
-`v0.1.0`을 로컬에서 재현·감사할 필요가 있으면 **source와 패키징 도구를 모두** tag
-`v0.1.0`의 exact commit `5dbc5e37270e477d21f578dd877f4b5226b44a0d`로 맞춘 별도
-worktree에서 실행한다. 현재 `main`의 도구로 과거 source를 다시 포장하는 것도 허용하지 않는다.
+공개 stable을 로컬에서 재현·감사할 필요가 있으면 **source와 패키징 도구를 모두** 해당 tag의
+exact commit으로 맞춘 별도 worktree에서 실행한다. `v0.1.0`은
+`5dbc5e37270e477d21f578dd877f4b5226b44a0d`, `v0.2.0`은
+`41fc44e452d2b6eef4b46307af6c277499f8d2d5`다. 현재 `main`의 도구로 과거 source를 다시
+포장하는 것도 허용하지 않는다. 아래는 `v0.1.0` 감사 예시이며 `v0.2.0`은 tag·버전·경로를
+함께 바꿔 별도 worktree에서 실행한다.
 
 ```powershell
 git worktree add ..\NU54DK_Arduino_Core-v0.1.0-audit v0.1.0
@@ -68,8 +71,11 @@ Release commit에서 별도 archive·checksum·SBOM·license inventory를 생성
 `722a46685b97aff42a75fb84db8ea74de75f3c32f59ea58225cd86d5acd141a6`이 모두 일치할 때만
 통합 stable index에 포함한다.
 
-정식 공개 뒤 `STABLE_RELEASE_COMMITS`에 exact source commit을 추가한다. 이후 현재 `main`의
-도구로 해당 stable을 재포장하지 않고, 감사가 필요하면 tag의 별도 worktree를 사용한다.
+정식 공개 source commit `41fc44e452d2b6eef4b46307af6c277499f8d2d5`와 ZIP의 크기
+`932,376`, SHA-256
+`1c2b4dddd6da0c1530f9d32630ec7d5b5285cff28c826a9a95c864226aeaea6e`를
+`STABLE_RELEASE_COMMITS`와 공개 archive identity에 고정했다. 이후 현재 `main`의 도구로 해당
+stable을 재포장하지 않고, 감사가 필요하면 `v0.2.0` tag의 별도 worktree를 사용한다.
 
 ## 4. M10 preview 이력
 

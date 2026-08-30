@@ -10,6 +10,25 @@
       "platforms": [
         {
           "architecture": "zephyr",
+          "archiveFileName": "nucode-nu54dk-zephyr-0.2.0.zip",
+          "boards": [
+            {
+              "name": "NU54DK (nRF54L15, Zephyr)"
+            }
+          ],
+          "category": "Contributed",
+          "checksum": "SHA-256:1c2b4dddd6da0c1530f9d32630ec7d5b5285cff28c826a9a95c864226aeaea6e",
+          "help": {
+            "online": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/tree/v0.2.0"
+          },
+          "name": "NUCODE NU54DK Zephyr Boards",
+          "size": "932376",
+          "toolsDependencies": [],
+          "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0/nucode-nu54dk-zephyr-0.2.0.zip",
+          "version": "0.2.0"
+        },
+        {
+          "architecture": "zephyr",
           "archiveFileName": "nucode-nu54dk-zephyr-0.1.0.zip",
           "boards": [
             {

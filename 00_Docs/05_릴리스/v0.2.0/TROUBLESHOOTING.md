@@ -24,7 +24,7 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 보이지 않으면 URL이 한 줄로 등록됐는지, GitHub 접근, proxy, TLS inspection과 시스템 시간을
 확인하고 index를 갱신한다. 공개 설치본의 `post_install`, 14/14 compile, 명시 UID upload,
 UART READY와 NUS 양방향 transparent bridge는 승격 전 RC2에서 PASS했고, stable package의
-공개 수명주기와 runtime payload 동등성은 정식 공개 기록에 고정한다.
+공개 수명주기와 runtime payload 동등성도 정식 공개 기록에 고정되어 있다.
 
 ```powershell
 arduino-cli core update-index
@@ -42,7 +42,7 @@ Boards Manager에서 `NUCODE NU54DK Zephyr Boards`의 `0.2.0`을 명시적으로
 
 | 진단 | 의미와 조치 |
 | --- | --- |
-| `E_PREREQUISITE_PINS` | package와 설치 pin 불일치; 같은 RC index에서 package 재설치 |
+| `E_PREREQUISITE_PINS` | package와 설치 pin 불일치; 같은 stable index에서 package 재설치 |
 | `E_PREREQUISITE_READY` | 완료 marker 없음/불일치; prerequisite log 확인 후 설치 재개 |
 | `E_PREREQUISITE_TOOLCHAIN` | 고정 Toolchain 누락 또는 손상 |
 | `E_PREREQUISITE_NRFUTIL` | 고정 도구 byte 검증 실패; 임의 binary로 우회 금지 |

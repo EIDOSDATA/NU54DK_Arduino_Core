@@ -4,8 +4,8 @@
 | --- | --- |
 | 문서 ID | RELEASE-v0.2.0-INDEX-001 |
 | 대상 버전 | `v0.2.0` |
-| 현재 상태 | **정식 공개 승인** |
-| M18 최종 상태 | `stable-release-approved` |
+| 현재 상태 | **정식 공개 완료** |
+| M18 최종 상태 | `stable-release-published` |
 | 현재 정식 버전 | `v0.2.0` |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 지원 보드 | NU54DK / `nucode:zephyr:nu54dk` |
@@ -14,7 +14,7 @@
 `v0.2.0`은 M12부터 M17까지의 구현과 RC1 공개 설치본 검증에서 발견한 수정사항을 묶은 두 번째
 정식 릴리스다. `v0.2.0-rc.2`의 격리 Boards Manager 설치·`post_install`, 설치본 예제 14/14
 compile, Blink 명시 UID upload와 대응 UART READY가 PASS한 뒤 프로젝트 소유자가 알려진 제약과
-정식 공개를 승인했다.
+정식 공개를 승인했으며, 별도 stable package와 Release의 공개 수명주기까지 통과했다.
 
 RC2 설치본의 두 보드 BLE NUS 공개 예제는 startup과 Peripheral↔Central 고유 payload 원문
 연속 수신을 양방향으로 통과했고 RC1 상태 로그 삽입이 재현되지 않았다. 이 transparent bridge
@@ -32,14 +32,16 @@ license inventory와 index를 별도로 가진다.
 | NU54DK board package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | Board repository | `https://github.com/Nucode01/NU54DK_Zephyr_DTS` |
 | Core repository | `https://github.com/EIDOSDATA/NU54DK_Arduino_Core` |
-| Stable tag | `v0.2.0` |
+| Stable source/tag | `41fc44e452d2b6eef4b46307af6c277499f8d2d5` / `v0.2.0` |
 | Stable Release | `https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.2.0` |
+| Release ID / 공개 시각 | `379370208` / `2026-08-30T18:45:46Z` (`2026-08-31 03:45:46 KST`) |
 | RC2 tag/commit | `v0.2.0-rc.2` / `1c5dcecfc0dba2ef25e06963dcba61c63f454db9` — 역사적 검증 원본 |
 | RC index SHA-256 | `fa73f3ba34ecfc84984aa836f423cb0d31a2ce56518fac6c56b99ec8dd70f89b` |
 | RC2 ZIP SHA-256 | `753712094ff2500d8ab4b6184a27b2a0ad44bfece0236bd3788d01cd9c1ad7af` |
 
-정식 공개 뒤 최종 Core commit, asset 수·크기·SHA-256과 stable index 검증값은 별도의 M18
-정식 공개 기록에 append-only로 고정한다. RC2 표의 hash는 stable hash로 재사용하지 않는다.
+최종 Core commit, 7개 asset의 크기·SHA-256, stable index와 Boards Manager 수명주기는
+[M18 정식 공개 기록](<../../04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md>)에
+append-only 사실로 고정했다. RC2 표의 hash는 stable hash로 재사용하지 않는다.
 
 ## 2. 문서 구성
 
@@ -66,7 +68,8 @@ license inventory와 index를 별도로 가진다.
 | RC2 설치본 예제 compile | **14/14 PASS** |
 | RC2 설치본 명시 UID upload·UART READY | **PASS** |
 | RC2 설치본 BLE NUS 양방향 transparent bridge·로그 회귀 | **PASS** |
-| `v0.2.0` stable 공개 | **프로젝트 소유자 승인 완료** |
+| `v0.2.0` stable 공개·latest 지정 | **완료 — Release ID `379370208`** |
+| stable 공개 Boards Manager 수명주기 | **PASS — 설치·upgrade·downgrade·재설치·compile·uninstall** |
 
 Draft와 staged ZIP 절차는 공개 전 검증 경계의 역사로 보존한다. 신규 설치는 root stable
 index를 사용하며 RC index는 과거 candidate 재현에만 사용한다.
@@ -81,7 +84,7 @@ index를 사용하며 RC index는 과거 candidate 재현에만 사용한다.
 - `v0.2.0-rc.2`는 candidate 역사이며 latest로 승격하거나 자산을 교체하지 않는다.
 - RC는 별도 `package_nucode_nu54dk_rc_index.json`을 사용한다.
 - M18 RC 생성과 공개는 `v0.1.0` stable index, stable tag 또는 기존 Release를 수정하지 않았다.
-- RC2 Release 자체를 편집해 stable로 바꾸지 않고 새 `v0.2.0` Release를 만든다.
+- RC2 Release 자체를 편집해 stable로 바꾸지 않고 새 `v0.2.0` Release를 만들었다.
 
 ## 5. 공개 전 Draft/staged 검증 경계
 
@@ -117,3 +120,18 @@ index를 사용하며 RC index는 과거 candidate 재현에만 사용한다.
 외부 Adafruit LSM6DS3TR-C compatibility fixture와 Zephyr/NCS direct-build fixture는 위 14개
 package 사용자 예제에 포함되지 않는다. 이들을 Arduino IDE 예제 메뉴에서 찾지 못하는 것은
 누락이 아니다.
+
+## 7. 정식 stable 공개 검증
+
+| 항목 | 결과 |
+| --- | --- |
+| 정식 ZIP | `932,376` bytes / SHA-256 `1c2b4dddd6da0c1530f9d32630ec7d5b5285cff28c826a9a95c864226aeaea6e` |
+| stable index | `1,877` bytes / SHA-256 `5ae7fbe13f71c52950879064685694cf4b062557572f187e81476639724e5344` |
+| index 버전 순서 | `0.2.0`, `0.1.0` |
+| RC2 runtime 동등성 | `ec604501b2ba58b622c3490925a79c8ac716bba93f0938840e49c624a16998c8` 일치 |
+| 익명 공개 자산 검증 | 7/7 크기·SHA-256 일치 |
+| 격리 Arduino CLI 수명주기 | `0.1.0 → 0.2.0 → 0.1.0 → 0.2.0 → uninstall` PASS |
+| 공개 설치본 Blink | 두 번의 clean compile PASS; Flash `56,396` bytes, RAM `16,769` bytes |
+
+stable exact ZIP에서 RC2의 전체 물리 HIL을 다시 실행하지는 않았다. 정식 승격 근거는 RC2의
+기존 실기 검증, stable runtime payload 동등성, 정식 산출물 재현성과 공개 설치 수명주기다.

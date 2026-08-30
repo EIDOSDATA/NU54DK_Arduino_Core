@@ -468,6 +468,30 @@ class M18ReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(M18.M18Error, "STABLE_VERSIONS"):
             self.prepare(package=package)
 
+    def test_published_stable_root_index_identities_are_exact(self) -> None:
+        """! @brief M18 역사 경계와 현재 공개 root index의 exact byte를 함께 보호합니다. """
+
+        self.assertEqual(
+            M18.PUBLISHED_STABLE_ROOT_INDEX_IDENTITIES,
+            {
+                "0.1.0": (
+                    1125,
+                    "385445512ba6bb842024979e8314f2f953eb15a14e3ce72076b6d475e2e7583d",
+                ),
+                "0.2.0": (
+                    1877,
+                    "5ae7fbe13f71c52950879064685694cf4b062557572f187e81476639724e5344",
+                ),
+            },
+        )
+        current = (REPO_ROOT / M18.EXPECTED_STABLE_INDEX_FILENAME).read_bytes()
+        current_identity = (len(current), hashlib.sha256(current).hexdigest())
+        self.assertEqual(
+            current_identity,
+            M18.PUBLISHED_STABLE_ROOT_INDEX_IDENTITIES["0.2.0"],
+        )
+        M18.assert_stable_root_index(FakeRunner(), REPO_ROOT, CORE_COMMIT)
+
     def test_stable_root_index_crlf_worktree_is_rejected(self) -> None:
         """! @brief Windows CRLF로 변형된 stable index를 M18이 거부하는지 검증합니다. """
 
