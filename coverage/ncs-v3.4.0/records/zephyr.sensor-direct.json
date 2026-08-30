@@ -16,8 +16,10 @@
   },
   "validation": {
     "kind": "ncs-direct-build",
-    "state": "planned",
-    "evidence": []
+    "state": "pass",
+    "evidence": [
+      "00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md"
+    ]
   },
   "notes": [
     "Zephyr sensor API의 direct/build example까지만 제공하며 bundled sensor library는 만들지 않는다."

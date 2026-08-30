@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | API-SUPPORT-001 |
-| 문서 개정 | 2.3 |
-| 문서 상태 | v0.1.0 정식 공개; v0.2.0 M12~M15 완료, M16 basic BLE 준비 |
+| 문서 개정 | 2.4 |
+| 문서 상태 | v0.1.0 정식 공개; v0.2.0 M12~M17 완료, 다음 M18 RC Draft |
 | 최종 갱신일 | 2026-08-30 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
@@ -31,6 +31,12 @@ M14의 Core API와 DTS 기반 Variant를 완료했다. M15의 NU54DK 전용 boar
 통과했다. 결합 HIL은 timed cause `2048`과 SW0/P1.13 cause `128`을 같은 세션에서 확인했다.
 아래 표는 완료된 구현·검증 범위와 의도적으로 제외한 PMIC 전기 HIL을 분리한다.
 
+M16은 범용 BLE API가 아니라 Nordic UART Service의 Peripheral/Central `Stream` 경로를
+부분 지원한다. M17은 API를 추가한 단계가 아니라, 9개 coverage record에서 외부 Arduino
+library compile, Zephyr/NCS direct build와 무선 feasibility를 제품 지원 선언과 분리한 단계다.
+따라서 Adafruit LSM6DS compile이나 OpenThread build 성공을 새로운 Arduino API 지원으로
+확대하지 않는다.
+
 M7의 `Wire`, `SPI`, `analogRead()`와 `analogWrite()` production source 및 builder profile은
 NU54DK Twister target 11/11, Arduino CLI M7 4/4와 승인된 NU54DK driver HIL을 통과했다.
 BQ25186 I2C repeated-start는 100/400 kHz에서 실기 통과했고 SPI00은 4 MHz에서 P2.2 MOSI와
@@ -55,6 +61,8 @@ Nordic container workflow에서 3/3 PASS했다.
 - [M6 기본 Arduino API, Serial과 인터럽트 기준선](<../04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md>)
 - [M7 Wire·SPI·ADC·PWM 기준선](<../04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md>)
 - [M14 Core API와 Variant 기준선](<../04_검증 기록/16_M14_Core_API와_Variant_기준선.md>)
+- [M16 BLE NUS 기준선](<../04_검증 기록/18_M16_BLE_NUS_기준선.md>)
+- [M17 NCS 기능과 예제 Coverage 기준선](<../04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)
 
 ---
 
@@ -373,8 +381,9 @@ nRF54L15와 NU54DK 전기 사양을 따른다.
 | `Keyboard`, `Mouse` | 제외 | 하드웨어 미지원 | 하드웨어 미지원 | target native USB device 경로 없음 |
 | `Client`, `Server`, `UDP` base class | P3 | 미구현 | 미구현 | base interface compile과 실제 transport 구현을 구분 |
 | Wi-Fi/Ethernet | 제외 | 하드웨어 미지원 | 하드웨어 미지원 | 별도 network hardware 없이 기본 Core에서 제공하지 않음 |
-| BLE Arduino API | P3 | 미구현 | 미구현 | NCS Bluetooth 사용 가능성과 Arduino library 호환은 별개 |
-| 802.15.4/Thread/Matter | P3 | 미구현 | 미구현 | Zephyr/NCS 직접 API는 사용할 수 있으나 Arduino wrapper는 별도 프로젝트 |
+| `NUCODE BLE` NUS `Stream` | P2 | 부분 지원 | 미구현 | M16 NUS RX write/TX notify와 Peripheral/Central만 두 보드 HIL PASS; 범용 GATT·보안 API 아님 |
+| 범용 BLE Arduino API·GATT builder | P3 | 미구현 | 미구현 | NCS Bluetooth와 `bt_*` 직접 사용 가능성을 Arduino library 호환으로 확대하지 않음 |
+| 802.15.4/Thread/Matter | P3 | 미구현 | 미구현 | M17은 build feasibility만 기록; 세 항목 모두 v0.2.0에서 deferred·미지원 |
 
 ---
 
@@ -425,6 +434,22 @@ watchdog, shutdown과 ship mode 진입 요청이다. 공개 raw register API는 
 
 상세 계약은 [NU54DK Board/System API 설계](<../03_펌웨어 설계/05_NU54DK_Board_System_API.md>),
 실행 상태는 [M15 기준선](<../04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)을 따른다.
+
+### 6.2 M17 direct/build-only 경계
+
+M17은 아래 경로를 검증했지만 portable Arduino API나 NUCODE wrapper를 새로 선언하지 않는다.
+
+| 항목 | M17 결과 | API 지원 판정 |
+| --- | --- | --- |
+| 외부 Adafruit LSM6DS 4.7.4 LSM6DS3TR-C 호환성 compile fixture | `Wire`/`SPI`를 사용한 Arduino compile PASS | 외부 library build-only; package 사용자 예제가 아니며 runtime/HIL `NOT RUN` |
+| Zephyr sensor direct-build fixture | NU54DK compile/link PASS | direct/build-only; package 사용자 예제가 아니며 sensor wrapper·library 없음 |
+| NCS Crypto RNG | 공식 보드와 NU54DK build PASS | NCS direct/build-only; Arduino crypto wrapper 없음 |
+| IEEE 802.15.4 PHY test | 공식 보드 PASS, NU54DK NVMC symbol 오류 | deferred; v0.2.0 미지원 |
+| OpenThread CLI | 공식 보드와 NU54DK build PASS | deferred; v0.2.0 미지원 |
+| Matter template | 공식 보드 PASS, NU54DK `factory_data_partition` 누락 | deferred; v0.2.0 미지원 |
+
+각 결과의 exact revision과 증거 경계는 [M17 기준선](<../04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)을
+따른다. 특히 compile 성공은 sensor 실기 동작, radio 통신 또는 Matter commissioning PASS가 아니다.
 
 ---
 

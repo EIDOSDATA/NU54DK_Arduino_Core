@@ -14,20 +14,20 @@
 
 - 전체 record: 9
 - 상태: build-only=3, deferred=3, supported=3
-- 검증: pass=3, planned=6
+- 검증: fail=2, pass=7
 
 ## Record
 
 | ID | 영역 | 제공 경로 | 상태 | 검증 | profile |
 | --- | --- | --- | --- | --- | --- |
-| `arduino.adafruit-lsm6ds` | sensor | build-profile-only | build-only | arduino-library-compile:planned | standard |
+| `arduino.adafruit-lsm6ds` | sensor | build-profile-only | build-only | arduino-library-compile:pass | standard |
 | `board.system` | board-system | arduino-wrapper | supported | hil:pass | standard |
-| `nrf.802154-phy-test` | radio-networking | excluded-deferred | deferred | build-feasibility:planned | radio |
+| `nrf.802154-phy-test` | radio-networking | excluded-deferred | deferred | **build-feasibility:fail** | radio |
 | `nrf.ble-nus` | ble | arduino-wrapper | supported | hil:pass | ble |
-| `nrf.crypto-rng` | crypto-random | ncs-direct-example | build-only | ncs-direct-build:planned | standard |
-| `nrf.matter-template` | radio-networking | excluded-deferred | deferred | build-feasibility:planned | radio |
-| `nrf.openthread-cli` | radio-networking | excluded-deferred | deferred | build-feasibility:planned | radio |
-| `zephyr.sensor-direct` | sensor | ncs-direct-example | build-only | ncs-direct-build:planned | standard |
+| `nrf.crypto-rng` | crypto-random | ncs-direct-example | build-only | ncs-direct-build:pass | standard |
+| `nrf.matter-template` | radio-networking | excluded-deferred | deferred | **build-feasibility:fail** | radio |
+| `nrf.openthread-cli` | radio-networking | excluded-deferred | deferred | build-feasibility:pass | radio |
+| `zephyr.sensor-direct` | sensor | ncs-direct-example | build-only | ncs-direct-build:pass | standard |
 | `zephyr.settings-storage` | settings-storage | arduino-wrapper | supported | hil:pass | standard |
 
 Thread/Matter/802.15.4는 v0.2.0에서 build feasibility만 추적하며 정식 지원이 아닙니다.

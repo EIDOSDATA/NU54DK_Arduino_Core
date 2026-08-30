@@ -20,7 +20,7 @@
     {
       "id": "arduino.adafruit-lsm6ds",
       "path": "records/arduino.adafruit-lsm6ds.json",
-      "sha256": "b284a4f4b7ece55d24687a6c3ccefa504bf730152eb9d760c8a9389b5d46f757"
+      "sha256": "ff5b472b79e016e1fb284b2ff3a72c5857a56557073b7783f1524332ba32f2e7"
     },
     {
       "id": "board.system",
@@ -30,32 +30,32 @@
     {
       "id": "nrf.802154-phy-test",
       "path": "records/nrf.802154-phy-test.json",
-      "sha256": "f9fc83d768334a2763cadcf74c13bd43d783f16c7eb34f74c568f5c3659a81db"
+      "sha256": "70757524779f0301ab38e10a369e20a030150cb6c0a1276c5318f9d4feaf3f4d"
     },
     {
       "id": "nrf.ble-nus",
       "path": "records/nrf.ble-nus.json",
-      "sha256": "63fa411d8a6386d3131bd88e5b436d6615e9c6be03f412759319001d08a85a59"
+      "sha256": "1b205fe9388ad4607f965c025663d84617509caeef9458096788242198902c3c"
     },
     {
       "id": "nrf.crypto-rng",
       "path": "records/nrf.crypto-rng.json",
-      "sha256": "9711e8aca35abd8f10f3610de1b75e6f2d496e5429a78165442e248a29787fca"
+      "sha256": "c6a3f318677f84e0f29a244a4304c859b65061c4b19f1fa2bd23289a8a1741cd"
     },
     {
       "id": "nrf.matter-template",
       "path": "records/nrf.matter-template.json",
-      "sha256": "aeea7afb790b0fc32faad648d95ed4b25f32ad102affe6c383b058a19dc2dd96"
+      "sha256": "21cf9f8c8cb7c076ee4e70ac29289534eca58213fa92dcb7f155399f3eb2c09e"
     },
     {
       "id": "nrf.openthread-cli",
       "path": "records/nrf.openthread-cli.json",
-      "sha256": "65d0883a2bf63b400a899c5f0b8d4c946332c258924f2bdce69eaaab7df4dc01"
+      "sha256": "8d490ba4331a02236655950e5905fea1b29acbdeec76f9da67cb6000febf8ee2"
     },
     {
       "id": "zephyr.sensor-direct",
       "path": "records/zephyr.sensor-direct.json",
-      "sha256": "54c1ae9992f49ae8d777e2ac3d33f3e0b6eda9148538be94963b83d1e0dd5741"
+      "sha256": "5ca129739fcb55cc0136778cf00da5cb624d699adaf8b53908cb1b36e215f06f"
     },
     {
       "id": "zephyr.settings-storage",

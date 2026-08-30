@@ -16,8 +16,10 @@
   },
   "validation": {
     "kind": "build-feasibility",
-    "state": "planned",
-    "evidence": []
+    "state": "pass",
+    "evidence": [
+      "00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md"
+    ]
   },
   "notes": [
     "v0.2.0에서는 build feasibility만 확인하며 Arduino 정식 지원으로 선언하지 않는다."

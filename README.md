@@ -14,14 +14,14 @@ Sketch와 library를 nRF Connect SDK의 build graph 안에 넣어 ELF/HEX/BIN을
 | 항목 | 상태 |
 | --- | --- |
 | 현재 정식 버전 | [`v0.1.0`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.1.0) |
-| 다음 목표 | `v0.2.0` — M12~M16 완료, 다음 단계 M17 coverage 첫 묶음 |
+| 다음 목표 | `v0.2.0` — M12~M17 완료, 다음 단계 M18 RC Draft |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 지원 보드 | NU54DK / nRF54L15 CPUAPP |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 선택 업로드 | 외장 SEGGER J-Link |
 | v0.1 마일스톤 | M0~M11 완료 |
-| v0.2 진행 | M12~M16 완료; 다음 단계는 M17 NCS 기능·예제 coverage |
+| v0.2 진행 | M12~M17 완료; 다음 단계는 M18 RC 패키징·Draft와 clean Windows 승인 |
 
 v0.1.0에서는 Runtime, GPIO, 시간, Serial, GPIO interrupt, Wire/I2C, SPI, ADC, PWM,
 Arduino CLI/IDE build, pyOCD upload/debug, cache와 Boards Manager 설치 경로를 검증했습니다.
@@ -52,6 +52,16 @@ Central 예제, `BLE NUS` profile을 포함합니다. 서로 다른 두 NU54DK�
 통과했습니다. M16 지원 범위는 NUS RX write/TX notify이며 동적 GATT, read, indication,
 bonding과 SMP는 포함하지 않습니다. 고급 사용자는 같은 Full Zephyr image에서 `bt_*` API를
 직접 사용할 수 있습니다.
+
+M17은 NCS v3.4.0 기능을 무리하게 모두 Arduino wrapper로 바꾸지 않고, 9개 record를
+`supported`·`build-only`·`deferred`와 wrapper·direct·profile/template 경로로 분류했습니다.
+외부 Adafruit LSM6DS 4.7.4의 LSM6DS3TR-C 호환성 검사용 Sketch와 Zephyr sensor
+direct-build fixture, Crypto RNG는
+NU54DK build를 통과했습니다. OpenThread CLI도 공식 보드와 NU54DK에서 build됐습니다.
+802.15.4 PHY test와 Matter template은 공식 보드 build는 통과했지만 NU54DK 적용 build에서
+각각 NVMC symbol과 `factory_data_partition` 제약이 확인됐습니다. 이 세 무선 항목은 모두
+v0.2.0에서 **미지원**이며 build feasibility 결과만 기록합니다. M17 완료는 이 분류와 증거
+경계를 고정했다는 뜻이지 NCS 전체 기능 지원 선언이 아닙니다.
 
 ## Arduino IDE로 설치
 
@@ -168,6 +178,9 @@ M13의 기존 예제 7개에 M15 board/system 예제 5개와 M16 NUS 예제 2개
   `2062 ms`/cause `2048`, `20406 ms`/cause `128`로 통과했습니다.
 - M16 BLE wrapper는 NUS Peripheral/Central Stream만 지원합니다. 동적 GATT, read, indication,
   bonding, SMP와 multiprotocol은 v0.2 지원 범위 밖입니다.
+- M17 sensor 검증은 외부 Adafruit library compile과 Zephyr direct/build example까지입니다.
+  NUCODE sensor wrapper를 제공하지 않았고 LSM6DS3TR-C 실기 runtime/HIL도 실행하지 않았습니다.
+- Thread, Matter와 IEEE 802.15.4는 M17 build feasibility 대상일 뿐 v0.2.0 지원 기능이 아닙니다.
 
 전체 목록은 [v0.1.0 알려진 제약](<./00_Docs/05_릴리스/12_v0.1.0_알려진_제약.md>)에서 확인할
 수 있습니다.
@@ -181,8 +194,8 @@ M13의 기존 예제 7개에 M15 board/system 예제 5개와 M16 NUS 예제 2개
 | [M14](<./00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md>) | **완료** | Core API·DTS Variant, 로컬·원격 software/runtime와 신규 pin 물리 HIL 통과 |
 | [M15](<./00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) | **완료** | 비-System-OFF 자동 HIL 2/2와 SWD 격리 timed GRTC→사용자 SW0 결합 HIL PASS |
 | [M16](<./00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md>) | **완료** | NUS Peripheral/Central Stream, profile·예제와 두 보드 BLE HIL PASS |
-| M17 | **다음** | NCS v3.4.0 기능·예제 coverage 첫 묶음 |
-| M18 | 대기 | v0.2.0 RC, clean Windows/HIL과 stable 공개 |
+| [M17](<./00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>) | **완료** | 9개 coverage record, sensor·crypto build와 무선 build feasibility 결과 분류 |
+| M18 | **다음** | v0.2.0 RC 패키지와 Draft Release 준비; clean Windows 검증·stable 승인은 후속 수동 gate |
 
 자세한 완료 기준은 [v0.2.0 구현 마일스톤](<./00_Docs/01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)과
 [NCS 기능·예제 지원 매트릭스](<./00_Docs/01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)를
@@ -242,6 +255,7 @@ NCS 공개 API를 직접 사용할 수 있습니다.
 - [M15 NU54DK Board/System 기준선](<./00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)
 - [M16 BLE NUS API 설계](<./00_Docs/03_펌웨어 설계/06_BLE_NUS_API.md>)
 - [M16 BLE NUS 기준선](<./00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md>)
+- [M17 NCS 기능과 예제 Coverage 기준선](<./00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)
 - [v0.1.0 릴리스 노트](<./00_Docs/05_릴리스/11_v0.1.0_릴리스_노트.md>)
 
 ## 작성자와 라이선스

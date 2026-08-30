@@ -16,8 +16,10 @@
   },
   "validation": {
     "kind": "ncs-direct-build",
-    "state": "planned",
-    "evidence": []
+    "state": "pass",
+    "evidence": [
+      "00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md"
+    ]
   },
   "notes": [
     "공식 NCS crypto RNG sample을 NU54DK build-only direct example로 추적하며 HIL은 수행하지 않는다."

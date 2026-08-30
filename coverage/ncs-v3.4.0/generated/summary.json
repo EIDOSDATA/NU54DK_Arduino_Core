@@ -15,8 +15,8 @@
     },
     "total": 9,
     "validation_state": {
-      "pass": 3,
-      "planned": 6
+      "fail": 2,
+      "pass": 7
     }
   },
   "dataset": "ncs-v3.4.0",
@@ -46,7 +46,7 @@
       "status": "build-only",
       "title": "Adafruit LSM6DS external library compile",
       "validation_kind": "arduino-library-compile",
-      "validation_state": "planned"
+      "validation_state": "pass"
     },
     {
       "area": "board-system",
@@ -72,7 +72,7 @@
       "status": "deferred",
       "title": "nRF 802.15.4 PHY test feasibility",
       "validation_kind": "build-feasibility",
-      "validation_state": "planned"
+      "validation_state": "fail"
     },
     {
       "area": "ble",
@@ -98,7 +98,7 @@
       "status": "build-only",
       "title": "nRF crypto RNG sample",
       "validation_kind": "ncs-direct-build",
-      "validation_state": "planned"
+      "validation_state": "pass"
     },
     {
       "area": "radio-networking",
@@ -111,7 +111,7 @@
       "status": "deferred",
       "title": "nRF Matter template feasibility",
       "validation_kind": "build-feasibility",
-      "validation_state": "planned"
+      "validation_state": "fail"
     },
     {
       "area": "radio-networking",
@@ -124,7 +124,7 @@
       "status": "deferred",
       "title": "nRF OpenThread CLI feasibility",
       "validation_kind": "build-feasibility",
-      "validation_state": "planned"
+      "validation_state": "pass"
     },
     {
       "area": "sensor",
@@ -137,7 +137,7 @@
       "status": "build-only",
       "title": "Zephyr sensor direct example",
       "validation_kind": "ncs-direct-build",
-      "validation_state": "planned"
+      "validation_state": "pass"
     },
     {
       "area": "settings-storage",

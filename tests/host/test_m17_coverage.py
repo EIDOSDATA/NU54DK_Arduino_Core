@@ -137,7 +137,7 @@ class M17CoverageTests(unittest.TestCase):
         manifest, records = self.validate_fixture()
         summary = M17.build_summary(manifest, records)
         rendered = M17.render_markdown(summary)
-        self.assertEqual(summary["counts"]["validation_state"]["fail"], 1)
+        self.assertEqual(summary["counts"]["validation_state"]["fail"], 3)
         self.assertIn("**build-feasibility:fail**", rendered)
 
     def test_supported_failure_is_gate_failure(self) -> None:

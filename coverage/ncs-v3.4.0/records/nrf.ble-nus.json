@@ -18,6 +18,7 @@
     "kind": "hil",
     "state": "pass",
     "evidence": [
+      "00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md",
       "tests/host/test_m16_ble_contract.py"
     ]
   },

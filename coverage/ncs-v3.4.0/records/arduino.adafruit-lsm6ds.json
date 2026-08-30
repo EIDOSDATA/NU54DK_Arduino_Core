@@ -16,8 +16,10 @@
   },
   "validation": {
     "kind": "arduino-library-compile",
-    "state": "planned",
-    "evidence": []
+    "state": "pass",
+    "evidence": [
+      "00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md"
+    ]
   },
   "notes": [
     "외부 Arduino library의 direct/build example만 검증하며 NUCODE sensor wrapper는 제공하지 않는다."
