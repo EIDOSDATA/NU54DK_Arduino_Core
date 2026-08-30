@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-M15-BOARD-SYSTEM-001 |
-| 문서 개정 | 1.2 |
-| 문서 상태 | M15 구현·검증 진행 중 — System OFF 결합 HIL NOT RUN |
+| 문서 개정 | 1.3 |
+| 문서 상태 | **M15 완료** — 자동 HIL 2/2와 SWD 격리 System OFF 결합 HIL PASS |
 | 적용 제품 버전 | `v0.2.0` |
 | 최종 갱신일 | 2026-08-30 |
 | 작성자 | Quantum / NUCODE |
@@ -145,8 +145,9 @@ UART를 준비한 뒤 온보드 debug-control 2연 `SW1`의 `DISABLE_SWD` 쪽만
 결합 HIL은 GRTC timed wake와 `RESET_CLOCK`을 먼저 확인하고, 이어서 다시 System OFF에 진입해
 사용자 SW0/P1.13 wake와 `LOW_POWER_WAKE`를 확인한다. Active SWD가 만든 reset cause `32`
 (`RESET_DEBUG`)는 fixture contamination 진단이며 두 wake source의 PASS로 인정하지 않는다.
-2026-08-30 현재 이 결합 HIL은 **NOT RUN**이며 두 단계가
-모두 통과하기 전에는 M15를 완료로 판정하지 않는다.
+Core `c47239d954c45fd173d8d1393e3ea5c9c86e111a`의 공식 CI image로 한 SWD-only 격리
+세션에서 timed wake `2062 ms`/cause `2048`과 SW0 wake `20406 ms`/cause `128`을 순서대로
+통과했다. 따라서 2026-08-30 기준 M15 완료 조건을 충족했다.
 
 ## 9. BQ25186 PMIC 안전 경계
 
@@ -236,15 +237,15 @@ PMIC write API의 존재나 software semantic test를 전기적 안전성 PASS�
 | --- | --- | --- |
 | `BoardInfo` | identity, device ID와 reset report | 구현됨, 비-System-OFF 자동 HIL 2/2 PASS |
 | `WatchdogBasic` | watchdog begin/feed 정상 경로 | 구현됨, stop·expiry reset 자동 HIL 2/2 PASS |
-| `CounterAlarm` | GRTC counter와 work-queue callback | 구현됨, callback 자동 HIL 2/2 PASS; timed wake NOT RUN |
+| `CounterAlarm` | GRTC counter와 work-queue callback | 구현됨, callback 자동 HIL 2/2 PASS; timed System OFF wake PASS |
 | `SettingsStorage` | 내부 partition boot count | 구현됨, reset persistence 자동 HIL 2/2 PASS |
-| `SystemOffWake` | 명시적 BUTTON/TIMER 명령 | 구현됨, System OFF 결합 HIL NOT RUN |
-| `tests/host/test_m15_board_system_contract.py` | 공개 API·구성·PMIC 안전 경계 | Software Gates run `33272543102` SUCCESS |
+| `SystemOffWake` | 명시적 BUTTON/TIMER 명령 | 구현됨, timed GRTC→사용자 SW0 System OFF 결합 HIL PASS |
+| `tests/host/test_m15_board_system_contract.py` | 공개 API·구성·PMIC 안전 경계 | Software Gates run `33295587578` SUCCESS |
 | `tests/zephyr/m15_board` | production target compile/link와 안전한 read 상태 | 공식 CI build SUCCESS |
 | `tests/zephyr/m15_hil` | identity·reset·GRTC callback·Settings·WDT 비-System-OFF 자동 HIL image | 공식 CI build SUCCESS, 두 보드 HIL 2/2 PASS |
-| `tests/zephyr/m15_wake` | SWD 격리 timed GRTC→사용자 SW0 결합 HIL image | 공식 CI build SUCCESS, 물리 HIL NOT RUN |
+| `tests/zephyr/m15_wake` | SWD 격리 timed GRTC→사용자 SW0 결합 HIL image | Reproducible Builds run `33295588535` SUCCESS, 물리 HIL PASS |
 | `tests/hil/nu54dk/m15_auto.py` | nonce 기반 비-System-OFF 자동 HIL과 비파괴 복구 | 두 보드 실기 2/2 PASS |
-| `tests/hil/nu54dk/m15_system_off.py` | timed GRTC와 SW0 wake 결합 protocol·증적 | 준비 중, 물리 HIL NOT RUN |
+| `tests/hil/nu54dk/m15_system_off.py` | timed GRTC와 SW0 wake 결합 protocol·증적 | Core `c47239d954c4`에서 물리 HIL PASS |
 
 최종 실행 결과와 exact commit은
 [M15 NU54DK Board/System 기준선](<../04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)에
@@ -266,3 +267,6 @@ M15를 완료하려면 다음 조건이 모두 충족되어야 한다.
 
 PMIC 전기 HIL은 프로젝트 소유자가 승인한 M15 범위 제외이므로 M15 완료를 차단하지 않는다.
 대신 해당 API는 전기적으로 검증된 완전 지원으로 표시하지 않는다.
+
+Core `c47239d954c45fd173d8d1393e3ea5c9c86e111a`에서 위 비-System-OFF 자동 HIL과
+System OFF 결합 HIL 조건을 모두 충족했다. M15는 **완료**이며 다음 구현 단계는 M16 basic BLE다.

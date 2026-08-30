@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | API-SUPPORT-001 |
-| 문서 개정 | 2.2 |
-| 문서 상태 | v0.1.0 정식 공개·M14 완료; v0.2.0 M15 board/system API 검증 진행 중 |
+| 문서 개정 | 2.3 |
+| 문서 상태 | v0.1.0 정식 공개; v0.2.0 M12~M15 완료, M16 basic BLE 준비 |
 | 최종 갱신일 | 2026-08-30 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
@@ -26,10 +26,10 @@ Arduino CLI staged package build와 실제 P1.13 active-low 버튼의 `FALLING`,
 `CHANGE` HIL을 통과했다. interrupt 항목은 raw electrical edge와 ISR 호출 제약을 계속
 명시한다. v0.1.0 목표 상태는 당시 계획을 보존한 것이며 현재 완료 보고와 구분한다.
 
-M14의 Core API와 DTS 기반 Variant는 완료했다. M15는 NU54DK 전용 board/system 확장 API를
-구현·검증하는 단계이며 비-System-OFF 자동 HIL은 두 보드에서 2/2 PASS했다. SWD를 격리한
-timed GRTC wake와 사용자 SW0/P1.13 wake 결합 HIL은 모두 `NOT RUN`이다. 따라서 아래 M15
-표는 구현 상태와 검증 상태를 분리한다.
+M14의 Core API와 DTS 기반 Variant를 완료했다. M15의 NU54DK 전용 board/system 확장 API도
+비-System-OFF 자동 HIL 두 보드 2/2와 SWD-only 격리 timed GRTC→사용자 SW0 결합 HIL을
+통과했다. 결합 HIL은 timed cause `2048`과 SW0/P1.13 cause `128`을 같은 세션에서 확인했다.
+아래 표는 완료된 구현·검증 범위와 의도적으로 제외한 PMIC 전기 HIL을 분리한다.
 
 M7의 `Wire`, `SPI`, `analogRead()`와 `analogWrite()` production source 및 builder profile은
 NU54DK Twister target 11/11, Arduino CLI M7 4/4와 승인된 NU54DK driver HIL을 통과했다.
@@ -412,10 +412,10 @@ M14에서 `<nucode/Diagnostics.h>` 아래에 `Diagnostic`, subsystem/code token,
 | Watchdog | 구현됨 | stop·expiry reset 자동 HIL 2/2 PASS | WDT31 실제 driver; stop 미지원 시 오류 반환 |
 | GRTC counter/alarm | 구현됨 | callback 자동 HIL 2/2 PASS | one-shot 1개, 최대 24시간, callback은 system work queue 문맥 |
 | Settings/ZMS storage | 구현됨 | reset persistence 자동 HIL 2/2 PASS | `nucode/`, key 48자, value 256 byte; EEPROM/FS 아님 |
-| GRTC timed System OFF wake | 구현됨 | SWD 격리 결합 HIL **NOT RUN** | 준비 뒤 성공 경로는 반환하지 않음; callback PASS와 별개 |
-| SW0~SW3 System OFF wake | 구현됨 | 사용자 SW0/P1.13 결합 HIL **NOT RUN** | active-low DTS alias 사용; timed 단계 뒤 검증 |
+| GRTC timed System OFF wake | 구현됨 | SWD 격리 결합 HIL PASS — `2062 ms`, cause `2048` | 준비 뒤 성공 경로는 반환하지 않음; callback PASS와 별개 |
+| SW0~SW3 System OFF wake | 구현됨 | 사용자 SW0/P1.13 결합 HIL PASS — cause `128` | active-low DTS alias 사용; SW0 대표 검증 |
 | BQ25186 read | 구현됨 | M15 실제 read 결과 반영 전 | `pmicBegin()`은 ID read-only; DTS node disabled 유지 |
-| BQ25186 write | 구현됨 | software 계약 검증 중, battery electrical HIL **NOT RUN** | 매 boot 명시 승인, 허용 field만 read-modify-write |
+| BQ25186 write | 구현됨 | software 계약 PASS, battery electrical HIL **NOT RUN** | 매 boot 명시 승인, 허용 field만 read-modify-write |
 | 배터리 온도 보호 | 미지원 | 해당 없음 | 실제 NTC 입력이 없어 항상 `false` |
 
 PMIC write 범위는 충전 전압·전류, 충전 enable, 재충전 문턱, `SYS_REG`, PMIC register

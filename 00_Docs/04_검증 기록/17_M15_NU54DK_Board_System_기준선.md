@@ -3,20 +3,21 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | VALIDATION-M15-001 |
-| 문서 개정 | 1.1 |
-| 상태 | **진행 중** — 비-System-OFF 자동 HIL 2/2 PASS, SWD 격리 timed GRTC→사용자 SW0 결합 HIL NOT RUN |
+| 문서 개정 | 1.2 |
+| 상태 | **완료** — 비-System-OFF 자동 HIL 2/2와 SWD 격리 timed GRTC→사용자 SW0 결합 HIL PASS |
 | 적용 제품 버전 | `v0.2.0` |
 | 기준일 | 2026-08-30 |
 | 최종 갱신일 | 2026-08-30 |
 | 작성자 | Quantum / NUCODE |
 | 시작 기준 Core | `336e83871635398b0433ebe3bb27fa67cde2c0e6` — M14 완료 commit |
 | 자동 HIL 기준 Core | `6898f7917348fab3c5cf54eec0756523e2c27d69` |
-| 현재 System OFF 준비 Core | `8244e572f526329905fcff6e2a640616e36dc5c0` |
+| System OFF 완료 Core | `c47239d954c45fd173d8d1393e3ea5c9c86e111a` |
 | 기준 board package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` — 변경 없음 |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 기준 target | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | 자동 HIL artifact | GitHub Actions run `33272544277`, artifact `9720630620` |
-| 현재 준비 검증 | Software Gates run `33273425011`, Reproducible Builds run `33273424875` |
+| 완료 검증 | Software Gates run `33295587578`, Reproducible Builds run `33295588535` |
+| System OFF artifact | run `33295588535`, artifact `9727374704` |
 
 ---
 
@@ -36,10 +37,14 @@ expiry reset의 비-System-OFF 자동 HIL을 통과했다.
 이 보강은 Software Gates run `33273425011`과 Reproducible Builds run `33273424875`에서
 모두 성공했으며 자동 HIL의 production API나 `m15_auto` 시험 범위는 변경하지 않았다.
 
-M15 상태는 계속 **진행 중**이다. 자동 HIL은 의도적으로 System OFF에 진입하지 않았으며
-`timed_system_off_wake`와 `button_system_off_wake`는 모두 **NOT RUN**이다. 완료하려면 한 번의
-SWD-only 격리 세션에서 timed GRTC wake의 exact reset cause `2048`과 사용자 SW0/P1.13 wake의
-exact reset cause `128`을 이 순서로 모두 확인해야 한다.
+실제 결합 시험에서 System OFF 직전 `Serial.flush()`가 마지막 LF의 물리 전송을 보장하지 않는
+경계를 발견했다. Core `c47239d954c45fd173d8d1393e3ea5c9c86e111a`는 polling TX의 마지막
+8N1 frame drain, System OFF 직전 50 ms 여유와 CRLF/LF/CR exact record parser를 보강했다.
+Software Gates run `33295587578`과 Reproducible Builds run `33295588535`가 모두 성공했다.
+
+같은 Core의 공식 CI image로 한 SWD-only 격리 세션에서 timed GRTC wake의 exact reset cause
+`2048`과 사용자 SW0/P1.13 wake의 exact reset cause `128`을 순서대로 확인했다. 자동 HIL 2/2와
+이 결합 HIL이 모두 PASS했으므로 M15 상태는 **완료**다.
 
 ## 2. 구현 범위
 
@@ -48,9 +53,9 @@ exact reset cause `128`을 이 순서로 모두 확인해야 한다.
 | Board identity | 모델, target, SoC, NCS/Zephyr/Core, raw device ID | 자동 HIL 2/2 PASS |
 | Reset/uptime | reset cause·지원 mask·clear, 64-bit uptime | 자동 HIL 2/2 PASS |
 | Watchdog | WDT31 begin/feed/지원 시 stop | stop·expiry reset 자동 HIL 2/2 PASS |
-| GRTC | absolute counter, one-shot alarm/cancel, work queue callback | callback 자동 HIL 2/2 PASS; timed System OFF wake NOT RUN |
+| GRTC | absolute counter, one-shot alarm/cancel, work queue callback | callback 자동 HIL 2/2 PASS; timed System OFF wake PASS |
 | Settings/ZMS | `nucode/` key-value put/get/remove | reset persistence 자동 HIL 2/2 PASS |
-| System OFF | SW0~SW3 button wake, GRTC timed wake 준비 | timed GRTC·사용자 SW0 결합 HIL 모두 NOT RUN |
+| System OFF | SW0~SW3 button wake, GRTC timed wake 준비 | timed GRTC·사용자 SW0 결합 HIL PASS |
 | PMIC read | ID/status/충전 설정/SYS regulation/register watchdog | M7 ID read 역사적 PASS; M15 자동 HIL 범위 아님 |
 | PMIC write | 충전 전압·전류·enable·recharge·SYS_REG·watchdog·shutdown/ship 요청 | software 계약 구현, battery electrical HIL NOT RUN |
 | 배터리 온도 | 실제 NTC 없음 | **미지원** |
@@ -67,20 +72,21 @@ exact reset cause `128`을 이 순서로 모두 확인해야 한다.
 
 | 계층 | 자산 | 현재 상태 |
 | --- | --- | --- |
-| Host contract와 parser | GitHub Actions Software Gates run `33273425011` | 현재 준비 Core 전체 workflow SUCCESS |
-| Arduino 예제 discovery | GitHub Actions Software Gates run `33273425011` | 현재 준비 Core SUCCESS |
-| NU54DK target build | `tests/zephyr/m15_board` | 현재 준비 Core 재현 빌드 run `33273424875`의 Zephyr job SUCCESS |
+| Host contract와 parser | GitHub Actions Software Gates run `33295587578` | 완료 Core 전체 workflow SUCCESS |
+| Arduino 예제 discovery | GitHub Actions Software Gates run `33295587578` | 완료 Core SUCCESS |
+| NU54DK target build | `tests/zephyr/m15_board` | 완료 Core 재현 빌드 run `33295588535` SUCCESS |
 | 비-System-OFF 자동 HIL image | `tests/zephyr/m15_hil` | 재현 빌드 성공, 두 보드 HIL 2/2 PASS |
 | 비-System-OFF 자동 HIL runner | `tests/hil/nu54dk/m15_auto.py` | 두 보드 HIL 2/2 PASS |
-| System OFF image | `tests/zephyr/m15_wake` | 현재 준비 Core 재현 build SUCCESS; 물리 wake HIL NOT RUN |
-| System OFF parser·runner | `tests/hil/nu54dk/test_m15_system_off.py`, `m15_system_off.py` | 현재 준비 Core software gate PASS; 물리 wake HIL NOT RUN |
-| Windows Arduino compile | 현재 준비 Core 재현 빌드 run `33273424875` | SUCCESS |
+| System OFF image | `tests/zephyr/m15_wake` | 완료 Core 공식 CI build SUCCESS; 물리 wake HIL PASS |
+| System OFF parser·runner | `tests/hil/nu54dk/test_m15_system_off.py`, `m15_system_off.py` | 완료 Core software gate와 물리 HIL PASS |
+| Windows Arduino compile | 완료 Core 재현 빌드 run `33295588535` | SUCCESS |
 
 GitHub Actions의 상태는 계층별로 기록한다. 자동 HIL image를 만든 Software Gates run
 `33272543102`와 Reproducible Builds run `33272544277`은 모두 `success`다. 이후 준비 보강
 Core의 Software Gates run `33273425011`과 Reproducible Builds run `33273424875`도 Zephyr
-build와 Windows Arduino compile을 포함해 모두 `success`로 완료됐다. 이 CI 성공은
-build·software gate이며 System OFF 물리 wake PASS로 확대하지 않는다.
+build와 Windows Arduino compile을 포함해 모두 `success`로 완료됐다. 최종 Core의 Software
+Gates run `33295587578`과 Reproducible Builds run `33295588535` 역시 모두 `success`다.
+CI 성공과 아래 System OFF 물리 wake 증거는 서로 다른 검증 계층으로 기록한다.
 
 ## 5. PMIC 검증 경계
 
@@ -160,28 +166,29 @@ callback PASS를 timed System OFF wake PASS로 확대하지 않는다. Evidence�
 | 보드 1 | `2b52eb9a8bc61ff801b009fc483bca3efab0ec368081960ac6140934cf44b759` | `8e7d89d2824a9af6e35a6d428d160e1d6008edf9b621db60442a24eb70eed4d5` |
 | 보드 2 | `b67245f7ce7664f8f748e934a9a3cb80d6892aab674decf38fd51af71c3086f1` | `60c24aafeaef939fc91518467bb0e378ad89bb69fc7f0f3ea138f582df87746d` |
 
-## 7. SWD 격리 System OFF 결합 HIL 준비 상태
+## 7. SWD 격리 System OFF 결합 HIL 결과
 
 온보드 DAPLink SWD가 연결된 상태에서 관측한 reset cause `32` (`RESET_DEBUG`)는 fixture
 contamination 진단이다. 이는 timed GRTC 또는 GPIO wake의 PASS도 FAIL도 아니며 M15 완료 증거로
 사용하지 않는다.
 
-후속 HIL은 image 기록과 UART 준비를 끝낸 뒤 한 번의 SWD-only 격리 세션으로 실행한다. NU54DK의
+결합 HIL은 image 기록과 UART 준비를 끝낸 뒤 한 번의 SWD-only 격리 세션으로 실행했다. NU54DK의
 온보드 debug-control 2연 `SW1`에서 `DISABLE_SWD` 쪽만 격리 위치로 전환하고
 `DISABLE_UART` 쪽은 그대로 두어 UART를 유지한다. 이 debug-control `SW1`은 Arduino 사용자
 버튼 `SW1`/P1.09와 이름만 같을 뿐 다른 물리 부품이다. 실제 button wake에는 사용자
 `SW0`/P1.13을 사용한다.
 
-현재 준비 Core `8244e572f526329905fcff6e2a640616e36dc5c0`은 실패나 UART 단절이 발생해도
-partial transcript를 보존하고 다음 재시도를 위해 target 영구 상태를 정리한다. 새 실행은
-고유 transcript를 사용하며 모든 단계가 PASS한 뒤에만 기존 evidence를 원자적으로 교체한다.
+Core `8244e572f526329905fcff6e2a640616e36dc5c0`에서 실패나 UART 단절 시 partial transcript를
+보존하고 target 영구 상태를 정리하도록 만들었다. 완료 Core `c47239d954c45fd173d8d1393e3ea5c9c86e111a`는
+마지막 UART frame drain과 line framing 회귀를 추가했다. 각 실행은 고유 transcript를 사용하며
+모든 단계가 PASS한 뒤에만 evidence를 원자적으로 기록한다.
 
 Runner는 exact CMSIS-DAP UID와 source/build digest 외에 다음 두 승인을 모두 요구한다.
 
 - `--acknowledge-interface-switch`
 - `--acknowledge-button-wake`
 
-예정 protocol은 다음 순서다.
+실제 PASS protocol은 다음 순서로 관측됐다.
 
 ```text
 NUCODE_M15_SYSTEM_OFF_READY:schema=2:phase=TIMED:command=ARM_TIMED:duration_us=2000000
@@ -206,20 +213,47 @@ NUCODE_M15_SYSTEM_OFF_PASS:schema=2:nonce=<nonce>:timed=PASS:button=PASS
 ```
 
 판정은 token 이름만으로 하지 않는다. Timed 단계는 exact reset cause `2048`, button 단계는 exact
-reset cause `128`을 요구한다. 2026-08-30 현재 두 단계 모두 **NOT RUN**이다.
+reset cause `128`을 요구한다. 2026-08-30 실제 실행에서 두 단계 모두 **PASS**했다.
 
-## 8. 남은 증거
+### 7.1 공식 image provenance
 
-- SWD-only 격리 상태의 timed GRTC System OFF 무응답 구간과 exact reset cause `2048`
-- 같은 격리 세션에서 사용자 SW0/P1.13 System OFF 무응답 구간과 exact reset cause `128`
-- 결합 HIL transcript와 evidence SHA-256
+| 항목 | 값 |
+| --- | --- |
+| GitHub Actions run | `33295588535` |
+| Artifact 이름 | `m12-zephyr-build-c47239d954c45fd173d8d1393e3ea5c9c86e111a` |
+| Artifact ID | `9727374704` |
+| Artifact digest | `sha256:bb57f0a56d7ef60fb2fc42a5dc5d1ab7c11d1434d8aa7ae968b0e3346a9f3236` |
+| HEX 크기 | `163446` bytes |
+| HEX SHA-256 | `e2b33da114ea0b7b62042c42eb2a663d3db55ded1a7ca155c308ef8a78e75511` |
+| Core revision | `c47239d954c45fd173d8d1393e3ea5c9c86e111a` |
+| Board revision | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
+
+### 7.2 실기 결과
+
+| 항목 | 결과 |
+| --- | --- |
+| 보드 | CMSIS-DAP V2 UID `5415360300052840fcd47678fd7d106d`, UART `COM13` |
+| Fixture | `DISABLE_SWD`만 격리, `DISABLE_UART` 연결 유지 |
+| Timed wake | `2062 ms`, `RESET_CLOCK`, cause `2048`, supported `2483` |
+| Button wake | 사용자 SW0/P1.13 active-low, `20406 ms`, `LOW_POWER_WAKE`, cause `128`, supported `2483` |
+| 안전 조건 | 격리 뒤 debug/flash 없음, mass erase/recover 없음 |
+| UART 경계 | TIMED·BUTTON `ENTERING` record 모두 `0D 0A`로 완결 |
+
+## 8. 결합 HIL 증거
+
+| 자산 | 경로 | SHA-256 |
+| --- | --- | --- |
+| PASS evidence JSON | `build/m15/hil/m15_system_off_c47239d_board1.json` | `0263e699a617fe8200f50d7ee1a197dc85b28312c54185914a709467fbcdf3f8` |
+| UART transcript | `build/m15/hil/m15_system_off_c47239d_board1.attempt-5ef98f95b9a9a2fe.transcript.log` | `e8963461abe2b9346eef28be7664d48ce21db40529a1a0b3916b7335eaa9642d` |
+
+두 파일은 로컬 `build/` 증적이며 Git 추적 대상이 아니다. 이 문서에는 exact commit, 공식 artifact,
+image와 두 증적의 digest를 기록해 실행 provenance를 고정한다.
 
 ## 9. 완료 조건과 다음 단계
 
-M15 자동 비-System-OFF HIL은 두 보드에서 PASS했다. 남은 차단 gate는 한 번의 SWD-only 격리
-세션에서 timed GRTC wake와 사용자 SW0/P1.13 wake를 순서대로 모두 통과하는 결합 HIL이다.
-버튼 단계만 통과해서는 M15를 완료로 변경하지 않는다.
+M15 자동 비-System-OFF HIL은 두 보드에서 PASS했고, 한 번의 SWD-only 격리 세션에서 timed
+GRTC wake와 사용자 SW0/P1.13 wake를 순서대로 모두 통과했다. M15의 차단 gate는 모두 닫혔다.
 
 PMIC battery electrical HIL은 프로젝트 소유자가 승인한 범위 제외이므로 완료를 차단하지 않는다.
 계속 `NOT RUN`과 사용자 책임으로 표시하며 전기적으로 검증된 완전 지원으로 확대하지 않는다.
-두 System OFF 단계의 PASS 증거가 기록된 뒤에만 이 문서와 M15 상태를 `완료`로 변경한다.
+PMIC 제약을 유지한 상태로 M15를 **완료**로 판정한다. 다음 구현 단계는 M16 basic BLE다.

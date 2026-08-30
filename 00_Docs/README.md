@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 2.4 |
+| 문서 체계 개정 | 2.5 |
 | 현재 정식 버전 | `v0.1.0` |
 | 다음 목표 버전 | `v0.2.0` |
 | 최종 갱신일 | 2026-08-30 |
@@ -45,10 +45,20 @@
 | M12 | **완료** | 고정 NCS CI/CD와 Linux/Windows 재현 build |
 | M13 | **완료** | `standard` profile, strict feature resolver와 Arduino 예제 7개 |
 | M14 | **완료** | Core API·DTS Variant, 로컬·원격 software/runtime와 신규 pin 물리 HIL 통과 |
-| M15 | **진행 중** | 비-System-OFF 자동 HIL 2/2 PASS; SWD 격리 timed GRTC→사용자 SW0 결합 HIL NOT RUN |
-| M16 | 대기 | basic BLE Arduino library |
+| M15 | **완료** | 비-System-OFF 자동 HIL 2/2와 SWD 격리 timed GRTC→사용자 SW0 결합 HIL PASS |
+| M16 | **다음** | basic BLE Arduino library |
 | M17 | 대기 | NCS 기능·예제 coverage 첫 묶음 |
 | M18 | 대기 | `v0.2.0` RC와 stable 공개 |
+
+M15 완료 기준은 Core `c47239d954c45fd173d8d1393e3ea5c9c86e111a`,
+[Software Gates run 33295587578](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33295587578)
+성공과
+[Reproducible Builds run 33295588535](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33295588535)의
+Zephyr job 성공이다. System OFF 결합 HIL은 timed GRTC wake `2062 ms`/cause `2048`과 사용자
+SW0/P1.13 wake `20406 ms`/cause `128`을 통과했다.
+
+PMIC 배터리 전기 HIL은 계속 `NOT RUN`이며 사용자가 자신의 배터리·전원 조건에서 검증할
+책임이 있다. 이 승인된 범위 제외는 M15 완료를 차단하지 않는다. 다음 단계는 M16 basic BLE다.
 
 상세 상태의 단일 원본은
 [제품 로드맵과 구현 마일스톤](<./01_아두이노 코어 설계/02_구현_로드맵.md>)이다.

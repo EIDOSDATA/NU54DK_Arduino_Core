@@ -129,7 +129,7 @@ $Commit = git -C $CoreRoot rev-parse HEAD
 통과해야 `status: passed` JSON과 SHA-256으로 결합된 companion transcript가 생성됩니다.
 timeout, target FAIL, 핀 ID·순서 불일치 또는 중복 token은 PASS 증적을 만들지 않습니다.
 
-## M15 System OFF 결합 HIL 준비
+## M15 System OFF 결합 HIL
 
 System OFF는 자동 HIL과 분리한 단일 수동 session에서 두 단계로 검증합니다.
 
@@ -184,12 +184,15 @@ Runner는 먼저 timed GRTC 단계의 System OFF 무응답 구간과 `RESET_CLOC
 SW0/P1.13을 누른 결과, 다른 GPIO 또는 `LOW_POWER_WAKE`가 아닌 reset 원인, 누락·중복 token은
 PASS로 인정하지 않습니다.
 
-현재 timed GRTC와 사용자 SW0/P1.13 결합 HIL은 모두 **NOT RUN**입니다. 두 단계의 최종 PASS
-token과 exact image·revision·transcript SHA-256 증적이 한 session으로 완결된 뒤에만 M15
-System OFF 항목을 완료할 수 있습니다.
+Core `c47239d954c45fd173d8d1393e3ea5c9c86e111a`의 공식 CI artifact로 한 SWD-only 격리
+세션을 실행했습니다. Timed GRTC wake는 `2062 ms`와 exact cause `2048`, 사용자 SW0/P1.13
+wake는 `20406 ms`와 exact cause `128`로 PASS했습니다. Exact image·revision·transcript
+SHA-256은 [M15 기준선](<../../../00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)에
+기록하며 M15 System OFF 항목은 완료 상태입니다.
 
 구체적인 실행 명령과 이미 검증한 결과는
 [M6 기준선](<../../../00_Docs/04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md>),
 [M7 기준선](<../../../00_Docs/04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md>) 및
 [M8 기준선](<../../../00_Docs/04_검증 기록/08_M8_업로드와_디버그_기준선.md>),
-[M14 기준선](<../../../00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md>)을 따릅니다.
+[M14 기준선](<../../../00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md>) 및
+[M15 기준선](<../../../00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)을 따릅니다.
