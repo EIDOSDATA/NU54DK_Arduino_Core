@@ -14,22 +14,22 @@ Sketch와 library를 nRF Connect SDK의 build graph 안에 넣어 ELF/HEX/BIN을
 | 항목 | 상태 |
 | --- | --- |
 | 현재 정식 버전 | [`v0.1.0`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.1.0) |
-| 다음 목표 | `v0.2.0` — M12~M15 완료, 다음 단계 M16 basic BLE |
+| 다음 목표 | `v0.2.0` — M12~M16 완료, 다음 단계 M17 coverage 첫 묶음 |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 지원 보드 | NU54DK / nRF54L15 CPUAPP |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 선택 업로드 | 외장 SEGGER J-Link |
 | v0.1 마일스톤 | M0~M11 완료 |
-| v0.2 진행 | M12~M15 완료; 다음 단계는 M16 basic BLE |
+| v0.2 진행 | M12~M16 완료; 다음 단계는 M17 NCS 기능·예제 coverage |
 
 v0.1.0에서는 Runtime, GPIO, 시간, Serial, GPIO interrupt, Wire/I2C, SPI, ADC, PWM,
 Arduino CLI/IDE build, pyOCD upload/debug, cache와 Boards Manager 설치 경로를 검증했습니다.
 세부 결과는 [제품 로드맵과 구현 마일스톤](<./00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md>)에
 정리되어 있습니다.
 
-현재 `main`에서는 M12 CI/CD, M13 profile·예제 UX, M14 Core API·DTS 기반 Variant와 M15
-`NUCODE_NU54DK` board/system library를 완료했습니다. `PIN_LED2..3` output/readback과
+현재 `main`에서는 M12 CI/CD, M13 profile·예제 UX, M14 Core API·DTS 기반 Variant, M15
+`NUCODE_NU54DK` board/system library와 M16 BLE NUS를 완료했습니다. `PIN_LED2..3` output/readback과
 `PIN_BUTTON1..3`의 pull-up raw 상태 및 `FALLING`/`RISING`/`CHANGE` interrupt도 실제
 NU54DK에서 통과했습니다. M15 비-System-OFF 자동 HIL은 identity·uptime·GRTC callback·
 Settings·WDT 범위에서 두 보드 2/2 PASS를 유지합니다.
@@ -45,6 +45,13 @@ Zephyr job도 성공했습니다. SWD를 격리한 System OFF 결합 HIL은 time
 여기서 debug-control 2연 `SW1`은 Arduino 사용자 버튼 `SW1`/P1.09와 다른 물리 부품입니다.
 System OFF HIL에서는 debug-control `SW1`의 `DISABLE_UART` 쪽을 전환하지 않아 온보드 UART를
 유지합니다.
+
+M16은 공식 NCS NUS service/client를 `BLESerial` Arduino `Stream`으로 제공하며 Peripheral과
+Central 예제, `BLE NUS` profile을 포함합니다. 서로 다른 두 NU54DK에서 1·20·21·64 byte
+양방향 echo, 명시적 disconnect 뒤 재연결과 `poll()`의 Arduino main-thread callback을
+통과했습니다. M16 지원 범위는 NUS RX write/TX notify이며 동적 GATT, read, indication,
+bonding과 SMP는 포함하지 않습니다. 고급 사용자는 같은 Full Zephyr image에서 `bt_*` API를
+직접 사용할 수 있습니다.
 
 ## Arduino IDE로 설치
 
@@ -116,9 +123,10 @@ void loop()
 | `NUCODE NU54DK` | [Blink](./libraries/NUCODE_NU54DK/examples/Blink), [InterruptButton](./libraries/NUCODE_NU54DK/examples/InterruptButton), [AnalogReadA0](./libraries/NUCODE_NU54DK/examples/AnalogReadA0), [PWMFade](./libraries/NUCODE_NU54DK/examples/PWMFade), [SerialEcho](./libraries/NUCODE_NU54DK/examples/SerialEcho), [BoardInfo](./libraries/NUCODE_NU54DK/examples/BoardInfo), [WatchdogBasic](./libraries/NUCODE_NU54DK/examples/WatchdogBasic), [CounterAlarm](./libraries/NUCODE_NU54DK/examples/CounterAlarm), [SettingsStorage](./libraries/NUCODE_NU54DK/examples/SettingsStorage), [SystemOffWake](./libraries/NUCODE_NU54DK/examples/SystemOffWake) |
 | `Wire` | [WirePmicId](./libraries/Wire/examples/WirePmicId) |
 | `SPI` | [SPITransaction](./libraries/SPI/examples/SPITransaction) |
+| `NUCODE BLE` | [NUSPeripheral](./libraries/NUCODE_BLE/examples/NUSPeripheral), [NUSCentral](./libraries/NUCODE_BLE/examples/NUSCentral) |
 
-M13의 기존 예제 7개에 M15 board/system 예제 5개를 추가했습니다. 전체 12개 예제의
-`arduino-cli lib examples` 열거와 compile gate는 M15 검증에서 통과했습니다. 공개된
+M13의 기존 예제 7개에 M15 board/system 예제 5개와 M16 NUS 예제 2개를 추가했습니다. 전체
+14개 예제의 `arduino-cli lib examples` 열거와 compile gate를 통과했습니다. 공개된
 `v0.1.0` Boards Manager package는 예전 archive 구조이므로 IDE 메뉴 노출이 보장되지 않으며,
 표준 예제 구조는 다음 릴리스에 포함됩니다.
 
@@ -158,6 +166,8 @@ M13의 기존 예제 7개에 M15 board/system 예제 5개를 추가했습니다.
   조건에서 직접 검증해야 합니다. 이 승인된 범위 제외는 M15 완료를 차단하지 않습니다.
 - M15의 SWD 격리 timed GRTC wake와 사용자 SW0/P1.13 wake 결합 HIL은 각각
   `2062 ms`/cause `2048`, `20406 ms`/cause `128`로 통과했습니다.
+- M16 BLE wrapper는 NUS Peripheral/Central Stream만 지원합니다. 동적 GATT, read, indication,
+  bonding, SMP와 multiprotocol은 v0.2 지원 범위 밖입니다.
 
 전체 목록은 [v0.1.0 알려진 제약](<./00_Docs/05_릴리스/12_v0.1.0_알려진_제약.md>)에서 확인할
 수 있습니다.
@@ -170,8 +180,8 @@ M13의 기존 예제 7개에 M15 board/system 예제 5개를 추가했습니다.
 | [M13](<./00_Docs/04_검증 기록/15_M13_구성_프로필_검증.md>) | **완료** | Arduino 예제 7개, `standard` profile과 strict library feature resolver |
 | [M14](<./00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md>) | **완료** | Core API·DTS Variant, 로컬·원격 software/runtime와 신규 pin 물리 HIL 통과 |
 | [M15](<./00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) | **완료** | 비-System-OFF 자동 HIL 2/2와 SWD 격리 timed GRTC→사용자 SW0 결합 HIL PASS |
-| M16 | **다음** | 공식 Zephyr Bluetooth 기반 basic BLE library |
-| M17 | 대기 | NCS v3.4.0 기능·예제 coverage 첫 묶음 |
+| [M16](<./00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md>) | **완료** | NUS Peripheral/Central Stream, profile·예제와 두 보드 BLE HIL PASS |
+| M17 | **다음** | NCS v3.4.0 기능·예제 coverage 첫 묶음 |
 | M18 | 대기 | v0.2.0 RC, clean Windows/HIL과 stable 공개 |
 
 자세한 완료 기준은 [v0.2.0 구현 마일스톤](<./00_Docs/01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)과
@@ -230,6 +240,8 @@ NCS 공개 API를 직접 사용할 수 있습니다.
 - [M14 Core API와 Variant 기준선](<./00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md>)
 - [M15 NU54DK Board/System API 설계](<./00_Docs/03_펌웨어 설계/05_NU54DK_Board_System_API.md>)
 - [M15 NU54DK Board/System 기준선](<./00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)
+- [M16 BLE NUS API 설계](<./00_Docs/03_펌웨어 설계/06_BLE_NUS_API.md>)
+- [M16 BLE NUS 기준선](<./00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md>)
 - [v0.1.0 릴리스 노트](<./00_Docs/05_릴리스/11_v0.1.0_릴리스_노트.md>)
 
 ## 작성자와 라이선스
