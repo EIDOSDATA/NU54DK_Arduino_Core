@@ -68,6 +68,28 @@ class M11ReleaseTests(unittest.TestCase):
         path.parent.mkdir(parents=True, exist_ok=True)
         return path
 
+    def test_00_m11_rejects_the_m18_release_candidate(self) -> None:
+        """! @brief M11 역사적 자동화가 v0.2 RC를 받아들이지 않는지 검증합니다. """
+
+        self.assertEqual(RELEASE.M11_RELEASE_CANDIDATE_VERSIONS, ("0.1.0-rc.2",))
+        with self.assertRaises(RELEASE.ReleaseError):
+            RELEASE.prepare_rc(
+                REPO_ROOT,
+                self.root / "forbidden-m18",
+                "0.2.0-rc.1",
+                self.commit,
+            )
+        with self.assertRaises(SystemExit):
+            RELEASE.build_parser().parse_args(
+                [
+                    "prepare",
+                    "--output-dir",
+                    str(self.root / "forbidden-cli"),
+                    "--version",
+                    "0.2.0-rc.1",
+                ]
+            )
+
     def run_pass_gate(self, gate_id: str, name: str) -> Path:
         """! @brief 빠른 PASS 명령으로 command evidence fixture를 만듭니다. """
 

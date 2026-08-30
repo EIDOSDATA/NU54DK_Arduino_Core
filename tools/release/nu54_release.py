@@ -83,6 +83,8 @@ M10_FOLLOWUP_ALLOWED_FILES = (
     "package_nucode_nu54dk_preview_index.json",
     "packaging/boards-manager/README.md",
 )
+## @brief M11 재현용으로 허용하는 역사적 v0.1 release candidate입니다.
+M11_RELEASE_CANDIDATE_VERSIONS = ("0.1.0-rc.2",)
 
 
 class ReleaseError(RuntimeError):
@@ -281,7 +283,7 @@ def artifact_record(path: Path) -> dict[str, Any]:
 
 ## @brief M11 RC package, RC index와 불변 검증 plan을 생성합니다.
 def prepare_rc(repo_root: Path, output_dir: Path, version: str, revision: str) -> dict[str, Path]:
-    if version not in PACKAGE.RELEASE_CANDIDATE_VERSIONS:
+    if version not in M11_RELEASE_CANDIDATE_VERSIONS:
         raise ReleaseError("M11 도구는 명시적으로 허용된 release candidate만 준비합니다. stable은 금지됩니다.")
     repo_root = repo_root.resolve()
     output_dir = output_dir.resolve()
@@ -419,7 +421,7 @@ def validate_plan(plan_path: Path) -> dict[str, Any]:
         if document.get(field) != expected:
             raise ReleaseError(f"M11 plan {field}가 고정 계약과 다릅니다.")
     version = document.get("version")
-    if version not in PACKAGE.RELEASE_CANDIDATE_VERSIONS:
+    if version not in M11_RELEASE_CANDIDATE_VERSIONS:
         raise ReleaseError("M11 plan version은 허용된 RC여야 하며 stable은 허용하지 않습니다.")
     if document.get("release_tag") != PACKAGE.release_tag(version):
         raise ReleaseError("M11 plan release tag가 RC 계약과 다릅니다.")
@@ -1783,7 +1785,7 @@ def build_parser() -> argparse.ArgumentParser:
     prepare = subparsers.add_parser("prepare", help="깨끗한 exact commit에서 RC artifact와 plan을 만듭니다.")
     prepare.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[2])
     prepare.add_argument("--output-dir", type=Path, required=True)
-    prepare.add_argument("--version", choices=PACKAGE.RELEASE_CANDIDATE_VERSIONS, required=True)
+    prepare.add_argument("--version", choices=M11_RELEASE_CANDIDATE_VERSIONS, required=True)
     prepare.add_argument("--commit", default="HEAD")
 
     validate = subparsers.add_parser("validate-plan", help="RC plan과 모든 artifact byte를 검증합니다.")

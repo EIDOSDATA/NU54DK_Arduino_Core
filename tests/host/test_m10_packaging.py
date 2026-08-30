@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import subprocess
@@ -253,6 +254,12 @@ class M10PackagingTests(unittest.TestCase):
         """! @brief 장기 사용자 endpoint의 stable index identity를 검증합니다. """
 
         index = REPO_ROOT / PACKAGE.STABLE_INDEX_FILENAME
+        self.assertEqual(index.stat().st_size, 1125)
+        self.assertEqual(
+            hashlib.sha256(index.read_bytes()).hexdigest(),
+            "385445512ba6bb842024979e8314f2f953eb15a14e3ce72076b6d475e2e7583d",
+        )
+        self.assertNotEqual(PACKAGE.RC_INDEX_FILENAME, PACKAGE.STABLE_INDEX_FILENAME)
         document = PACKAGE.validate_index(index)
         platform = document["packages"][0]["platforms"][0]
         self.assertEqual(platform["version"], "0.1.0")
@@ -267,7 +274,10 @@ class M10PackagingTests(unittest.TestCase):
         self.assertEqual(PACKAGE.FAILED_M10_PREVIEW_VERSIONS, ("0.0.94", "0.0.95"))
         self.assertEqual(PACKAGE.SAFE_PREVIEW_VERSIONS, ("0.0.96", "0.0.97"))
         self.assertEqual(PACKAGE.SUPPORTED_VERSIONS[-2:], ("0.0.96", "0.0.97"))
-        self.assertEqual(PACKAGE.RELEASE_CANDIDATE_VERSIONS, ("0.1.0-rc.2",))
+        self.assertEqual(
+            PACKAGE.RELEASE_CANDIDATE_VERSIONS,
+            ("0.1.0-rc.2", "0.2.0-rc.1"),
+        )
         self.assertEqual(PACKAGE.STABLE_VERSIONS, ("0.1.0",))
         self.assertTrue(
             set(PACKAGE.FAILED_M10_PREVIEW_VERSIONS).issubset(
