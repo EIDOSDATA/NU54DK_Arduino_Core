@@ -1,8 +1,7 @@
-# NU54DK Arduino Core v0.2.0-rc.1 문제 해결
+# NU54DK Arduino Core v0.2.0-rc.2 문제 해결
 
-> **상태: GitHub Draft 준비 완료 / clean Windows staged ZIP 검증 대기.** Draft는 실제 Git
-> tag가 없는 내부 상태일 수 있으며 일반 공개 Boards Manager channel이 아니다. 최신 정식
-> package가 필요하면 `v0.1.0` stable을 사용한다.
+> **상태: RC2 공개 후보 / 정식 버전 아님.** 최신 정식 package가 필요하면 `v0.1.0`
+> stable을 사용한다.
 
 | 항목 | 값 |
 | --- | --- |
@@ -15,20 +14,16 @@
 | Toolchain | `dcbdc366a1` |
 | Board package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 
-## 1. `v0.2.0-rc.1`이 Boards Manager에 보이지 않음
+## 1. `v0.2.0-rc.2`가 Boards Manager에 보이지 않음
 
-Release가 GitHub **Draft**라면 보이지 않는 것이 정상이다. Draft asset은 공개 download URL로
-제공되지 않으며 아래 RC URL도 public Prerelease 전환 전에는 설치 URL로 사용할 수 없다.
+Release가 아직 GitHub **Draft**라면 보이지 않는 것이 정상이다. Public Prerelease 공개 뒤에는
+아래 RC URL을 설치 URL로 사용한다.
 
 ```text
-https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.1/package_nucode_nu54dk_rc_index.json
+https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/package_nucode_nu54dk_rc_index.json
 ```
 
-Draft 단계에서는 인증된 exact ZIP을 새 Sketchbook의 격리된 `hardware/nucode/zephyr`
-staging에 수동 추출해 board/예제 열거, compile와 upload만 확인한다. `%LOCALAPPDATA%\Arduino15`
-아래에 직접 추출하지 않으며 이를 Boards Manager 설치나 `post_install` PASS라고 기록하지 않는다.
-
-프로젝트 소유자가 staged 결과를 승인하고 public Prerelease 전환과 asset 검증 완료를 알린 뒤에도
+Public Prerelease 전환과 asset 검증 완료 뒤에도
 보이지 않으면 URL이 한 줄로 등록됐는지, GitHub 접근, proxy, TLS inspection과 시스템 시간을
 확인하고 index를 갱신한다. Public RC에서는 별도 clean Windows Boards Manager 설치·`post_install`
 end-to-end를 수행하고, 이 결과가 승인되기 전에는 stable 공개로 진행하지 않는다.
@@ -93,6 +88,18 @@ NUCODE wrapper 지원을 뜻하지 않는다.
 4. CMSIS-DAP가 두 개 이상 연결돼 있으면 대상 외 probe를 분리하거나 명시적 probe ID를 사용한다.
 5. build와 upload가 같은 `nucode:zephyr:nu54dk` target을 사용했는지 확인한다.
 
+probe가 하나뿐이면 기본 `CMSIS-DAP (pyOCD)`를 선택해 입력 없이 자동 선택한다. 여러 probe 중
+하나를 지정하려면 먼저 `CMSIS-DAP with UID (pyOCD)`를 선택하고 Arduino Upload가 요청하는
+`CMSIS-DAP unique ID`에 pyOCD가 열거한 전체 UID를 입력한다. Arduino CLI에서는 compile과
+upload에 같은 board option을 사용하고 다음 두 옵션을 추가한다.
+
+```powershell
+--board-options upload_probe=pyocd_uid `
+--upload-field probe_id=<CMSIS-DAP-UID>
+```
+
+COM 번호나 DAPLink volume 이름을 probe UID 대신 입력하지 않는다.
+
 | 오류 | 조치 |
 | --- | --- |
 | `E_RUNNER_UNAVAILABLE` | package prerequisite와 pyOCD 실행 파일 검증 |
@@ -131,6 +138,8 @@ wrapper다. 장치 관리자의 해당 COM port를 115200 8N1로 열고 다른 S
 - 양쪽 모두 `BLE NUS` Feature set으로 clean compile했는지 확인한다.
 - `BLESerial.poll()`을 loop에서 계속 호출한다.
 - 연결 전에는 `ready()`가 false일 수 있으며 write를 강제하지 않는다.
+- `NUSPeripheral`의 RC2 예제는 수신 byte를 보존하기 위해 `received` event 숫자를 같은
+  `Serial`에 출력하지 않는다. 다른 상태 로그는 계속 표시된다.
 
 이 RC는 임의 GATT builder, bonding/SMP, HID 또는 multiprotocol을 제공하지 않는다. 해당 기능을
 요구하는 library 문제를 NUS 연결 오류로 처리하지 않는다.
@@ -166,7 +175,7 @@ reset 뒤에는 다시 승인해야 한다. 무조건 raw register write로 우�
 Password, GitHub token, 전체 probe UID와 개인 경로를 제거한 뒤 다음을 기록한다.
 
 - Arduino IDE와 bundled Arduino CLI version, Windows version
-- Core version `0.2.0-rc.1` 또는 `0.1.0`
+- Core version `0.2.0-rc.2` 또는 `0.1.0`
 - FQBN과 선택 Feature set/Upload probe
 - NCS `v3.4.0`, Zephyr `4.4.0`, Toolchain `dcbdc366a1` 검증 결과
 - 전체 compile/upload 오류와 처음 실패한 단계

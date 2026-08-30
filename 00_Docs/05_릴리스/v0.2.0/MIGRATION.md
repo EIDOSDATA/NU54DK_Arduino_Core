@@ -1,14 +1,12 @@
-# NU54DK Arduino Core v0.2.0-rc.1 마이그레이션
+# NU54DK Arduino Core v0.2.0-rc.2 마이그레이션
 
-> **배포 상태: GitHub Draft 준비 완료 / clean Windows staged ZIP 검증 대기.** Draft는 실제
-> Git tag가 없는 내부 상태일 수 있다. 일반 사용자는 아직 `v0.2.0-rc.1`을 Boards Manager에서
-> 설치하지 않는다. staged 검증, public RC Boards Manager 검증과 각 프로젝트 소유자 승인이
-> 끝날 때까지 정식 `v0.1.0`을 유지한다.
+> **배포 상태: RC2 공개 후보 / 정식 버전 아님.** RC 전용 index로 설치·시험하며 public RC
+> Boards Manager 검증과 프로젝트 소유자 승인이 끝날 때까지 정식 `v0.1.0`을 유지한다.
 
 | 항목 | 값 |
 | --- | --- |
 | 대상 | `v0.1.0` stable 또는 v0.2 source build 사용자 |
-| 후보 version | `0.2.0-rc.1` |
+| 후보 version | `0.2.0-rc.2` |
 | Board/FQBN | `NU54DK (nRF54L15, Zephyr)` / `nucode:zephyr:nu54dk` |
 | 공식 OS | Windows 10/11 x64 |
 | NCS | `v3.4.0` / `99553055607b2e9885fbc80ccd11fa9da81c2df0` |
@@ -16,7 +14,7 @@
 | Toolchain | `dcbdc366a1` |
 | Board package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 
-## 1. Draft 단계에서 할 일
+## 1. RC 공개 전 검증 담당자가 할 일
 
 GitHub Draft asset은 일반 공개 download URL에서 받을 수 없다. Draft 검증 담당자는 인증된
 계정으로 M18 plan에 기록된 exact ZIP과 sidecar를 내려받고 SHA-256을 확인한 뒤 다음과 같이
@@ -43,20 +41,20 @@ clean Windows의 격리된 Sketchbook hardware staging을 수동으로 만든다
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-## 2. RC가 public Prerelease가 된 뒤 설치
+## 2. Public Prerelease 설치
 
 아래 절차는 프로젝트 소유자가 staged 결과를 승인하고 GitHub UI에서 untagged Draft를
-`v0.2.0-rc.1` **public Prerelease**로 전환해 실제 Git tag와 공개 asset URL을 만든 뒤에만
+`v0.2.0-rc.2` **public Prerelease**로 전환해 실제 Git tag와 공개 asset URL을 만든 뒤에만
 사용한다. Draft 상태에서는 URL이 동작하지 않는 것이 정상이다.
 
 ```text
-https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.1/package_nucode_nu54dk_rc_index.json
+https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/package_nucode_nu54dk_rc_index.json
 ```
 
 1. Arduino IDE, Serial Monitor, debugger와 실행 중인 pyOCD/J-Link process를 닫는다.
 2. Additional Boards Manager URLs에 위 RC 전용 URL을 추가한다.
 3. Boards Manager index를 갱신한다.
-4. `NUCODE NU54DK Zephyr Boards`의 `0.2.0-rc.1`을 명시적으로 선택해 설치한다.
+4. `NUCODE NU54DK Zephyr Boards`의 `0.2.0-rc.2`를 명시적으로 선택해 설치한다.
 5. IDE를 재시작하고 `NU54DK (nRF54L15, Zephyr)`를 선택한다.
 6. Tools의 Feature set을 먼저 `Standard peripherals`로 두고 Blink를 clean compile한다.
 7. 온보드 CMSIS-DAP를 연결하고 Upload probe `CMSIS-DAP (pyOCD)`로 실제 board에 upload한다.
@@ -70,12 +68,27 @@ end-to-end로 다시 확인한다. 프로젝트 소유자가 이 두 번째 결�
 Arduino CLI에서는 public Prerelease 전환 후 다음과 같이 설치한다.
 
 ```powershell
-$RcIndex = 'https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.1/package_nucode_nu54dk_rc_index.json'
+$RcIndex = 'https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/package_nucode_nu54dk_rc_index.json'
 arduino-cli config add board_manager.additional_urls $RcIndex
 arduino-cli core update-index
-arduino-cli core install nucode:zephyr@0.2.0-rc.1 --run-post-install
+arduino-cli core install nucode:zephyr@0.2.0-rc.2 --run-post-install
 arduino-cli board details --fqbn nucode:zephyr:nu54dk
 ```
+
+이미 `0.2.0-rc.1`을 설치했다면 같은 RC 전용 URL을 RC2 URL로 교체하거나 추가한 뒤 index를
+갱신하고 `0.2.0-rc.2`를 명시적으로 설치한다. RC1의 build output은 재사용하지 않고 첫 compile은
+새 build directory에서 수행한다. 여러 CMSIS-DAP가 연결된 Arduino CLI upload는 다음처럼 대상
+UID를 전달한다.
+
+```powershell
+arduino-cli upload --fqbn nucode:zephyr:nu54dk `
+  --build-path <build-path> `
+  --board-options upload_probe=pyocd_uid `
+  --upload-field probe_id=<CMSIS-DAP-UID> `
+  <sketch-path>
+```
+
+같은 `build-path`를 만든 compile에도 `--board-options upload_probe=pyocd_uid`를 사용해야 한다.
 
 `v0.1.0`과 이 RC는 NCS v3.4.0과 Toolchain bundle `dcbdc366a1`을 사용한다. 사용자 영역의 exact
 설치와 완료 marker가 유효하면 installer가 대용량 prerequisite를 재사용할 수 있으므로 먼저
@@ -140,7 +153,7 @@ Core 제거는 Sketch와 사용자 library를 삭제하지 않는다. 공유 NCS
 
 ## 7. Migration 후 확인
 
-- 선택 version이 `0.2.0-rc.1` 또는 의도한 `0.1.0`인지 확인한다.
+- 선택 version이 `0.2.0-rc.2` 또는 의도한 `0.1.0`인지 확인한다.
 - FQBN이 `nucode:zephyr:nu54dk`인지 확인한다.
 - Feature set과 Upload probe를 다시 확인한다.
 - 새 build directory에서 compile한다.

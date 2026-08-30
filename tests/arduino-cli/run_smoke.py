@@ -1165,6 +1165,41 @@ def test_m8_upload_build(cli: Path, config: Path, root: Path, repository: Path) 
         raise SmokeFailure("M8 upload manifest unexpectedly enabled sysbuild")
     if manifest.get("fqbn") != f"{FQBN}:upload_probe=pyocd":
         raise SmokeFailure("M8 upload menu selection was not recorded in the manifest")
+
+    uid_build = root / "build-m8-upload-uid"
+    uid_command = compile_command(cli, config, uid_build, sketch)
+    uid_command[-1:-1] = ("--board-options", "upload_probe=pyocd_uid")
+    run(uid_command)
+    assert_build(uid_build, "m8_upload.ino")
+    uid_manifest = json.loads(
+        (uid_build / "m8_upload.ino.nu54-build.json").read_text(encoding="utf-8")
+    )
+    if uid_manifest.get("fqbn") != f"{FQBN}:upload_probe=pyocd_uid":
+        raise SmokeFailure("M8 explicit UID upload menu was not recorded in the manifest")
+
+    field_value = "NU54_UPLOAD_FIELD_EXPANSION_DO_NOT_MATCH_A_REAL_PROBE"
+    field_command: list[str | Path] = [
+        cli,
+        "upload",
+        "--verbose",
+        "--fqbn",
+        FQBN,
+        "--config-file",
+        config,
+        "--build-path",
+        uid_build,
+        "--board-options",
+        "upload_probe=pyocd_uid",
+        "--upload-field",
+        f"probe_id={field_value}",
+        sketch,
+    ]
+    return_code, field_output = run(field_command, expect_success=False)
+    normalized_field_output = field_output.replace('"', "").replace("'", "")
+    if return_code == 0:
+        raise SmokeFailure("M8 upload-field sentinel unexpectedly selected a real probe")
+    if f"--runner pyocd --probe-id {field_value}" not in normalized_field_output:
+        raise SmokeFailure("Arduino CLI did not expand the explicit UID upload field")
     runners = Path(context["zephyr_build_dir"]) / "zephyr" / "runners.yaml"
     content = runners.read_text(encoding="utf-8")
     for expected in ("- pyocd", "- jlink", "--target=nrf54l", "--device=nRF54L15_M33"):
@@ -1177,12 +1212,27 @@ def test_m8_upload_build(cli: Path, config: Path, root: Path, repository: Path) 
     builder_text = (
         platform / "tools" / "nu54-builder" / "src" / "nu54_builder.py"
     ).read_text(encoding="utf-8")
-    for expected in ("--runner pyocd", "--runner jlink", "nu54-builder"):
+    for expected in (
+        "tools.nu54_pyocd.upload.pattern=",
+        "--runner pyocd {upload.verbose}",
+        "tools.nu54_pyocd_uid.upload.field.probe_id=CMSIS-DAP unique ID",
+        'tools.nu54_pyocd_uid.upload.pattern={nu54.builder}',
+        '--runner pyocd --probe-id "{upload.field.probe_id}"',
+        "--runner jlink",
+        "nu54-builder",
+    ):
         if expected not in platform_text:
             raise SmokeFailure(f"M8 upload recipe is missing: {expected}")
+    if "tools.nu54_pyocd.upload.field." in platform_text:
+        raise SmokeFailure("M8 default pyOCD recipe must not require an upload field")
     if "smart_flash=false" not in builder_text:
         raise SmokeFailure("M8 pyOCD stability option is missing")
-    for expected in ("upload.tool.default=nu54_pyocd", "menu.upload_probe.jlink"):
+    for expected in (
+        "upload.tool.default=nu54_pyocd",
+        "menu.upload_probe.pyocd_uid=CMSIS-DAP with UID (pyOCD)",
+        "menu.upload_probe.pyocd_uid.upload.tool.default=nu54_pyocd_uid",
+        "menu.upload_probe.jlink",
+    ):
         if expected not in boards_text:
             raise SmokeFailure(f"M8 board upload property is missing: {expected}")
 

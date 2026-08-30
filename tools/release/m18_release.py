@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief NU54DK v0.2.0-rc.1 Draft Release를 재현 가능하고 비파괴적으로 준비합니다. """
+"""! @brief NU54DK v0.2.0-rc.2 Draft Release를 재현 가능하고 비파괴적으로 준비합니다. """
 
 from __future__ import annotations
 
@@ -21,8 +21,8 @@ from typing import Any, Callable
 
 SCHEMA_VERSION = 1
 MILESTONE = "M18"
-VERSION = "0.2.0-rc.1"
-TAG = "v0.2.0-rc.1"
+VERSION = "0.2.0-rc.2"
+TAG = "v0.2.0-rc.2"
 EXPECTED_RELEASE_NAME = f"NU54DK Arduino Core {TAG}"
 FINAL_STATE = "awaiting-clean-windows-manual-validation"
 EXPECTED_NEXT_ACTION = (
@@ -32,7 +32,7 @@ PLAN_FILENAME = "m18-draft-plan.json"
 EVIDENCE_FILENAME = f"NU54DK_{VERSION}_EVIDENCE.json"
 EXPECTED_REPOSITORY_URL = "https://github.com/EIDOSDATA/NU54DK_Arduino_Core"
 EXPECTED_BOARD_REPOSITORY_URL = "https://github.com/Nucode01/NU54DK_Zephyr_DTS"
-EXPECTED_RC_VERSIONS = ("0.1.0-rc.2", VERSION)
+EXPECTED_RC_VERSIONS = ("0.1.0-rc.2", "0.2.0-rc.1", VERSION)
 EXPECTED_RC_INDEX_FILENAME = "package_nucode_nu54dk_rc_index.json"
 EXPECTED_STABLE_INDEX_FILENAME = "package_nucode_nu54dk_index.json"
 EXPECTED_STABLE_INDEX_SIZE = 1125
@@ -256,7 +256,7 @@ def assert_package_contract(package: Any) -> None:
     if tuple(package.WINDOWS_SAFE_VERSIONS) != expected_windows_versions:
         raise M18Error("Windows-safe version allowlist가 M18 고정 계약과 다릅니다.")
     if package.release_channel(VERSION) != "release-candidate" or package.release_tag(VERSION) != TAG:
-        raise M18Error("package 모듈의 v0.2.0-rc.1 channel/tag 계약이 잘못되었습니다.")
+        raise M18Error("package 모듈의 v0.2.0-rc.2 channel/tag 계약이 잘못되었습니다.")
     if package.archive_filename(VERSION) != EXPECTED_PACKAGE_ASSET_NAMES["archive"]:
         raise M18Error("M18 archive filename 계약이 잘못되었습니다.")
 
@@ -450,7 +450,7 @@ def expected_asset_names(package: Any) -> set[str]:
     return set(EXPECTED_ASSET_ROLES_BY_NAME)
 
 
-## @brief v0.2.0-rc.1 package와 Draft Release plan을 두 독립 build에서 준비합니다.
+## @brief v0.2.0-rc.2 package와 Draft Release plan을 두 독립 build에서 준비합니다.
 def prepare_release(
     repo_root: Path,
     output_dir: Path,
@@ -1200,7 +1200,7 @@ def verify_draft(
 
 ## @brief stable publish 기능 없이 prepare/validate/publish-draft/verify-draft만 노출합니다.
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="NU54DK M18 v0.2.0-rc.1 Draft Release 도구")
+    parser = argparse.ArgumentParser(description="NU54DK M18 v0.2.0-rc.2 Draft Release 도구")
     subparsers = parser.add_subparsers(dest="command", required=True)
     prepare = subparsers.add_parser("prepare", help="동일 commit에서 RC package를 2회 만들고 plan 생성")
     prepare.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[2])

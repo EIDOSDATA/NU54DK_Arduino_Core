@@ -1,8 +1,8 @@
-# NU54DK Arduino Core v0.2.0-rc.1 알려진 제약
+# NU54DK Arduino Core v0.2.0-rc.2 알려진 제약
 
-> **상태: GitHub Draft 준비 완료 / clean Windows staged ZIP 검증 대기.** Draft는 실제 Git
-> tag가 없는 내부 상태일 수 있다. 이 문서는 API 이름이나 compile 결과를 실제 hardware
-> 지원보다 넓게 해석하지 않기 위한 공개 경계다. 최신 정식 버전은 계속 `v0.1.0`이다.
+> **상태: RC2 공개 후보 / 정식 버전 아님.** 이 문서는 API 이름이나 compile 결과를 실제
+> hardware 지원보다 넓게 해석하지 않기 위한 공개 경계다. 최신 정식 버전은 계속
+> `v0.1.0`이다.
 
 | 항목 | 고정 값 |
 | --- | --- |
@@ -15,17 +15,11 @@
 
 ## 1. Release와 설치 상태
 
-- `v0.2.0-rc.1`은 Draft candidate이며 아직 일반 공개 Boards Manager package가 아니다.
-- Draft의 RC 이름은 예약 metadata이며 실제 Git tag가 생성됐다는 뜻이 아니다.
-- GitHub Draft asset은 인증되지 않은 public download URL에서 받을 수 없다.
-- Draft의 RC index URL을 Arduino IDE에 등록해 일반 사용자 설치가 된다고 안내하지 않는다.
-- Draft 단계 clean Windows 검증은 exact ZIP을 새 Sketchbook의 격리된
-  `hardware/nucode/zephyr` staging에 수동 추출한 뒤 14개 예제 열거, compile와 실제 NU54DK
-  pyOCD upload까지만 확인한다. 이는 Boards Manager 설치·`post_install` end-to-end가 아니다.
-- staged 결과를 프로젝트 소유자가 승인해 public RC로 전환한 뒤 공개 RC index로 별도 clean
-  Windows Boards Manager 설치·`post_install`와 수명주기를 다시 검증한다. 이 결과의 별도
-  승인 전에는 `v0.2.0` stable을 공개하지 않는다.
-- `%LOCALAPPDATA%\Arduino15`에 Draft ZIP을 수동 복사·추출해 Boards Manager 설치를 가장하지 않는다.
+- `v0.2.0-rc.2`는 `v0.2.0-rc.1` 실기 검증에서 발견한 다중 CMSIS-DAP 선택과 NUS 예제
+  로그 간섭을 수정한 후속 candidate다.
+- 공개 RC index를 사용한 Boards Manager 설치와 `post_install`, 14개 예제 compile 및 실제
+  upload를 검증하되, 이 결과의 별도 승인 전에는 `v0.2.0` stable을 공개하지 않는다.
+- RC1과 RC2의 tag·자산은 각각 불변 기록이며 서로 덮어쓰지 않는다.
 - 일반 사용자는 공개 stable `v0.1.0`과 stable index를 계속 사용한다.
 - Windows 이외의 Linux/macOS package 설치는 공식 지원·검증 대상이 아니다.
 - 첫 설치는 고정 NCS와 Toolchain을 받기 때문에 오래 걸리고 많은 디스크 공간이 필요하다.
@@ -82,6 +76,9 @@
   지원하지 않는다.
 - Thread/Matter/802.15.4와 BLE의 multiprotocol coexistence는 지원하지 않는다.
 - 두 NU54DK NUS echo/reconnect HIL 통과를 일반 BLE interoperability 인증으로 확대하지 않는다.
+- RC2의 `NUSPeripheral` 예제는 `received` event를 별도 상태 로그로 출력하지 않는다. 수신 byte와
+  같은 `Serial`을 사용하는 응용은 자신의 진단 로그가 payload에 섞이지 않도록 동일한 원칙을
+  지켜야 한다.
 
 ## 7. Sensor와 Crypto 경계
 
@@ -95,7 +92,7 @@
 
 ## 8. IEEE 802.15.4, OpenThread와 Matter
 
-세 항목은 모두 `deferred`이며 `v0.2.0-rc.1`의 지원 기능이 아니다.
+세 항목은 모두 `deferred`이며 `v0.2.0-rc.2`의 지원 기능이 아니다.
 
 | 항목 | M17 결과 | 지원하지 않는 범위 |
 | --- | --- | --- |
@@ -109,7 +106,10 @@ build 실패를 임의 DTS/partition patch로 숨기지 않았으며 board submo
 ## 9. Upload와 debug 경계
 
 - 기본 Upload는 온보드 CMSIS-DAP V2와 pyOCD다. `nrfutil`은 NU54DK 기본 runner가 아니다.
-- CMSIS-DAP가 여러 개 연결되면 임의 첫 probe를 선택하지 않고 명시적 선택을 요구한다.
+- CMSIS-DAP가 하나면 기본 `CMSIS-DAP (pyOCD)` 경로가 UID 입력 없이 자동 선택한다.
+- CMSIS-DAP가 여러 개 연결되면 임의 첫 probe를 선택하지 않는다. 먼저
+  `CMSIS-DAP with UID (pyOCD)`를 선택한 뒤 Upload의 `CMSIS-DAP unique ID` 필드에 대상 UID를
+  명시해야 한다. 이 값은 COM port가 아니다.
 - 외장 J-Link는 SEGGER J-Link Software, target VTref와 올바른 SWD wiring이 필요한 선택 경로다.
 - J-Link 선택 실패 시 pyOCD로 자동 fallback하지 않는다.
 - 일반 Upload는 mass erase/recover를 자동 실행하지 않는다. 보호 상태 복구와 전체 erase는 별도

@@ -1,6 +1,6 @@
-# M18 v0.2.0-rc.1 Draft Release 자동화
+# M18 v0.2.0-rc.2 Draft Release 자동화
 
-이 도구는 exact clean commit에서 `0.2.0-rc.1` package와 RC index를 두 번 독립 생성해
+이 도구는 exact clean commit에서 `0.2.0-rc.2` package와 RC index를 두 번 독립 생성해
 byte 재현성을 확인하고, GitHub의 **Draft + prerelease metadata**를 가진 내부 Release object와
 asset까지만 만든다. Draft의 `tagName`은 예약할 RC 이름이지만 실제 Git tag ref는 만들지 않아
 untagged 내부 상태일 수 있다. 최종 상태는 항상 `awaiting-clean-windows-manual-validation`이다.
@@ -21,7 +21,7 @@ $Commit = git rev-parse HEAD
 
 python tools/release/m18_release.py prepare `
   --repo-root . `
-  --output-dir build/m18/0.2.0-rc.1 `
+  --output-dir build/m18/0.2.0-rc.2 `
   --commit $Commit
 ```
 
@@ -31,14 +31,14 @@ artifact byte와 SHA-256을 비교한다. root stable index, `STABLE_VERSIONS`�
 사용해야 한다.
 
 네 문서 경로는 command line으로 바꿀 수 없다. repository URL, NCS/Zephyr/toolchain pin,
-`0.1.0-rc.2` + `0.2.0-rc.1` RC allowlist, RC/stable index 이름과 release asset 이름도
+`0.1.0-rc.2` + `0.2.0-rc.1` + `0.2.0-rc.2` RC allowlist, RC/stable index 이름과 release asset 이름도
 고정 계약이다. 공개 v0.1 stable root index는 1,125 byte 및 고정 SHA-256으로 보호한다.
 
 ## 2. 로컬 재검증
 
 ```powershell
 python tools/release/m18_release.py validate `
-  --plan build/m18/0.2.0-rc.1/m18-draft-plan.json
+  --plan build/m18/0.2.0-rc.2/m18-draft-plan.json
 ```
 
 archive/index strict validator, exact Core·board revision, clean worktree, 문서와 SBOM·license·notice,
@@ -52,7 +52,7 @@ asset을 한 번 더 재빌드해 local plan의 byte와 비교하며, 예상 밖
 
 ```powershell
 python tools/release/m18_release.py publish-draft `
-  --plan build/m18/0.2.0-rc.1/m18-draft-plan.json
+  --plan build/m18/0.2.0-rc.2/m18-draft-plan.json
 ```
 
 동일 local/remote tag 또는 Release가 있으면 실패한다. 도구는 `--force`나 `--clobber`를 사용하지
@@ -75,7 +75,7 @@ SHA-256을 먼저 확인한다.
 
 ```powershell
 python tools/release/m18_release.py verify-draft `
-  --plan build/m18/0.2.0-rc.1/m18-draft-plan.json
+  --plan build/m18/0.2.0-rc.2/m18-draft-plan.json
 ```
 
 검증이 통과하면 생성은 끝난 것이다. Draft가 일부 asset만 가진 경우 도구는 fail-closed로 중단하며

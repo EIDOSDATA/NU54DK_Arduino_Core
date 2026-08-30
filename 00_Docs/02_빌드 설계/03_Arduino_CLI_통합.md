@@ -2,9 +2,9 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | `v0.1.0` Arduino CLI·IDE Build/Upload·clean Windows 실증 완료 |
+| 문서 상태 | `v0.1.0` Build/Upload 기준선 완료; `v0.2.0-rc.2` 다중 CMSIS-DAP 선택 경로 반영 |
 | 현재 정식 버전 | `v0.1.0` |
-| 다음 목표 버전 | `v0.2.0` — M13 예제 노출·구성 profile UX |
+| 다음 목표 버전 | `v0.2.0` — RC2 공개 검증 뒤 stable 승격 검토 |
 | 작성자 | Quantum / NUCODE |
 | 대상 | Arduino CLI 및 Arduino IDE 2.x |
 | 제안 FQBN | `nucode:zephyr:nu54dk` |
@@ -31,7 +31,10 @@
 M5에서 `boards.txt`, `platform.txt`와 Build Adapter를 구현했고 M8에서 Upload/Flash를
 실증했다. M10~M11에서 Boards Manager를 통한 clean Windows Arduino IDE 2.3.10
 설치·compile·NU54DK upload·실행을 검증한 뒤 `v0.1.0`을 정식 공개했다.
-현재 후속 과제는 `v0.2.0` M13의 표준 library 예제 노출과 zero-config profile UX다.
+M13 이후에는 표준 library 예제와 zero-config profile UX를 추가했다. 공개
+`v0.2.0-rc.1` 설치본 검증에서 CMSIS-DAP 두 대를 연결한 Arduino Upload가 대상 UID를
+전달할 수 없다는 점을 확인했으며, `v0.2.0-rc.2`는 자동 선택과 명시 UID 선택을 서로 다른
+Upload menu/tool recipe로 분리한다.
 
 ---
 
@@ -219,38 +222,41 @@ Arduino build directory에는 최소 다음 파일이 있어야 한다.
 
 ## 6. `boards.txt` 계약
 
-다음은 설계 예시이며 실제 property 이름은 CLI PoC에서 검증 후 확정한다.
+다음은 `v0.2.0-rc.2`의 실제 `boards.txt` Upload 계약이다. 빌드 profile menu는 생략하고
+Upload와 직접 관련된 property만 표시한다.
 
 ~~~ini
-menu.upload_runner=Upload probe
-
-nu54dk.name=NUCODE NU54DK (nRF54L15, Zephyr)
-nu54dk.build.board=NU54DK_NRF54L15
+nu54dk.name=NU54DK (nRF54L15, Zephyr)
+nu54dk.build.board=NUCODE_NU54DK
 nu54dk.build.core=arduino
 nu54dk.build.variant=nu54dk
 nu54dk.build.zephyr_board=nrf54l15dk/nrf54l15/cpuapp/nu54dk
 nu54dk.build.sysbuild=false
-nu54dk.upload.maximum_size=1462272
-nu54dk.upload.maximum_data_size=192512
-nu54dk.upload.use_1200bps_touch=false
-nu54dk.upload.wait_for_upload_port=false
-nu54dk.upload.native_usb=false
+nu54dk.upload.maximum_size=1560576
+nu54dk.upload.maximum_data_size=262144
+nu54dk.upload.protocol=default
+nu54dk.upload.tool.default=nu54_pyocd
 
-nu54dk.menu.upload_runner.pyocd=CMSIS-DAP (pyOCD)
-nu54dk.menu.upload_runner.pyocd.upload.tool=nu54_pyocd
-nu54dk.menu.upload_runner.pyocd.build.upload_runner=pyocd
-
-nu54dk.menu.upload_runner.jlink=J-Link
-nu54dk.menu.upload_runner.jlink.upload.tool=nu54_jlink
-nu54dk.menu.upload_runner.jlink.build.upload_runner=jlink
+menu.upload_probe=Upload probe
+nu54dk.menu.upload_probe.pyocd=CMSIS-DAP (pyOCD)
+nu54dk.menu.upload_probe.pyocd.upload.tool.default=nu54_pyocd
+nu54dk.menu.upload_probe.pyocd_uid=CMSIS-DAP with UID (pyOCD)
+nu54dk.menu.upload_probe.pyocd_uid.upload.tool.default=nu54_pyocd_uid
+nu54dk.menu.upload_probe.jlink=SEGGER J-Link
+nu54dk.menu.upload_probe.jlink.upload.tool.default=nu54_jlink
 ~~~
 
 주의 사항:
 
 - flash/RAM 최대치는 보드 YAML 숫자를 기계적으로 복사하지 않고 실제 linkable region과 최종 linker configuration에 맞춰 검증한다.
-- 일반 Upload 버튼이 SWD full-image flash를 실행하더라도 Arduino property 이름은 `upload.tool`을 사용할 수 있다.
-- pyOCD가 기본 선택이다.
+- 일반 Upload 버튼이 SWD full-image flash를 실행하더라도 Arduino property 이름은
+  `upload.tool.default`를 사용한다.
+- `CMSIS-DAP (pyOCD)`는 기본값이며 probe가 정확히 하나일 때만 자동 선택한다. 여러 probe가
+  보이면 임의 장치를 고르지 않고 `E_PROBE_AMBIGUOUS`로 실패한다.
+- `CMSIS-DAP with UID (pyOCD)`는 `CMSIS-DAP unique ID` upload field를 필수로 받아
+  `nu54_pyocd_uid` recipe로 전달한다.
 - J-Link 선택은 Zephyr build의 `runners.yaml`에 jlink가 실제 등록된 경우에만 성공해야 한다.
+- `SEGGER J-Link`는 J-Link serial number upload field를 필수로 받는다.
 - J-Link가 불가능한 상황에서 pyOCD로 자동 fallback하지 않는다.
 
 ---
@@ -341,6 +347,25 @@ recipe.output.save_file={build.project_name}.nu54dk.hex
 ~~~
 
 Arduino의 Export Compiled Binary가 전체 Zephyr HEX를 저장하는지 확인한다.
+
+### 7.10 Upload tool recipe
+
+`v0.2.0-rc.2`는 다음 세 recipe를 사용한다. 기본 pyOCD recipe에는 probe field가 없고,
+명시 UID pyOCD와 J-Link recipe에만 필수 field가 있다.
+
+~~~ini
+tools.nu54_pyocd.upload.pattern={nu54.builder} flash {nu54.upload_args} --manifest "{build.path}/{build.project_name}.nu54-build.json" --runner pyocd {upload.verbose}
+
+tools.nu54_pyocd_uid.upload.field.probe_id=CMSIS-DAP unique ID
+tools.nu54_pyocd_uid.upload.pattern={nu54.builder} flash {nu54.upload_args} --manifest "{build.path}/{build.project_name}.nu54-build.json" --runner pyocd --probe-id "{upload.field.probe_id}" {upload.verbose}
+
+tools.nu54_jlink.upload.field.probe_id=J-Link serial number
+tools.nu54_jlink.upload.pattern={nu54.builder} flash {nu54.upload_args} --manifest "{build.path}/{build.project_name}.nu54-build.json" --runner jlink --probe-id "{upload.field.probe_id}" {upload.verbose}
+~~~
+
+Arduino의 upload field는 Build Adapter의 `--probe-id`로 들어간다. Adapter는 manifest와
+runner를 검증하고 자동 결정 또는 명시 검증한 ID를 내부 `west flash --dev-id <ID>`에 전달한다. COM port,
+DAPLink volume 이름과 CMSIS-DAP UID를 서로 대체하지 않는다.
 
 ---
 
@@ -436,29 +461,64 @@ arduino-cli compile `
 
 ### 9.4 upload
 
-pyOCD 기본 선택:
+Upload는 export HEX만 있는 `--input-dir` 경로가 아니라 compile에서 생성한 persistent
+`--build-path`와 manifest를 사용한다. compile과 upload는 같은 Upload probe option을 사용해야
+한다.
+
+probe 한 대를 자동 선택하는 기본 pyOCD 경로:
 
 ~~~powershell
+arduino-cli compile `
+  --fqbn 'nucode:zephyr:nu54dk' `
+  --board-options upload_probe=pyocd `
+  --build-path $ArduinoBuild `
+  $SketchDir
+
 arduino-cli upload `
-  --fqbn 'nucode:zephyr:nu54dk:upload_runner=pyocd' `
-  --input-dir $ArduinoBuild `
+  --fqbn 'nucode:zephyr:nu54dk' `
+  --board-options upload_probe=pyocd `
+  --build-path $ArduinoBuild `
   --verbose `
   $SketchDir
 ~~~
 
-Arduino CLI의 `--input-dir` upload가 persistent Zephyr build directory 없이 export HEX만으로 가능한지는 별도 검증한다. 첫 PoC에서 Adapter가 `west flash -d`를 요구한다면 compile+upload가 같은 context를 공유해야 한다.
-
-J-Link 선택:
+여러 CMSIS-DAP 중 하나를 명시하는 pyOCD 경로:
 
 ~~~powershell
+arduino-cli compile `
+  --fqbn 'nucode:zephyr:nu54dk' `
+  --board-options upload_probe=pyocd_uid `
+  --build-path $ArduinoBuild `
+  $SketchDir
+
 arduino-cli upload `
-  --fqbn 'nucode:zephyr:nu54dk:upload_runner=jlink' `
-  --input-dir $ArduinoBuild `
+  --fqbn 'nucode:zephyr:nu54dk' `
+  --board-options upload_probe=pyocd_uid `
+  --upload-field probe_id=<CMSIS-DAP-UID> `
+  --build-path $ArduinoBuild `
   --verbose `
   $SketchDir
 ~~~
 
-J-Link runner가 미등록된 경우 명시적인 오류로 끝나야 한다.
+J-Link 선택 경로:
+
+~~~powershell
+arduino-cli compile `
+  --fqbn 'nucode:zephyr:nu54dk' `
+  --board-options upload_probe=jlink `
+  --build-path $ArduinoBuild `
+  $SketchDir
+
+arduino-cli upload `
+  --fqbn 'nucode:zephyr:nu54dk' `
+  --board-options upload_probe=jlink `
+  --upload-field probe_id=<JLINK-SERIAL-NUMBER> `
+  --build-path $ArduinoBuild `
+  --verbose `
+  $SketchDir
+~~~
+
+UID/serial field가 비었거나 선택 runner가 등록되지 않았으면 명시적인 오류로 끝나야 한다.
 
 ---
 
@@ -505,7 +565,9 @@ Zephyr 구현이 필요한 `Wire`, `SPI`, `Serial` 관련 library는 platform의
 
 ### 11.2 Upload 버튼
 
-- 선택된 `Upload probe` menu에 따라 pyOCD 또는 J-Link를 사용한다.
+- `CMSIS-DAP (pyOCD)`는 한 probe를 자동 선택하고 여러 probe에서는 안전하게 실패한다.
+- `CMSIS-DAP with UID (pyOCD)`는 전체 CMSIS-DAP UID를 요구한다.
+- `SEGGER J-Link`는 J-Link serial number를 요구한다.
 - full Zephyr HEX 또는 해당 build context를 플래시한다.
 - loader version 검사나 loader update를 하지 않는다.
 - 일반 upload에서 mass erase를 하지 않는다.

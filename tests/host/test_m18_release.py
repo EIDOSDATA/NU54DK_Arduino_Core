@@ -35,7 +35,11 @@ class FakePackage:
 
     PackageError = FakePackageError
     SUPPORTED_VERSIONS = ("0.0.97",)
-    RELEASE_CANDIDATE_VERSIONS = ("0.1.0-rc.2", "0.2.0-rc.1")
+    RELEASE_CANDIDATE_VERSIONS = (
+        "0.1.0-rc.2",
+        "0.2.0-rc.1",
+        "0.2.0-rc.2",
+    )
     STABLE_VERSIONS = ("0.1.0",)
     STABLE_RELEASE_COMMITS = {
         "0.1.0": "5dbc5e37270e477d21f578dd877f4b5226b44a0d",
@@ -491,7 +495,10 @@ class M18ReleaseTests(unittest.TestCase):
         package.NCS_REVISION = "f" * 40
         with self.assertRaisesRegex(M18.M18Error, "NCS_REVISION"):
             self.prepare(package=package)
-        self.assertEqual(original, ("0.1.0-rc.2", "0.2.0-rc.1"))
+        self.assertEqual(
+            original,
+            ("0.1.0-rc.2", "0.2.0-rc.1", "0.2.0-rc.2"),
+        )
 
     def test_asset_tamper_and_extra_file_are_rejected(self) -> None:
         plan_path, package, runner = self.prepare()

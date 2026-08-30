@@ -1,11 +1,9 @@
-# NU54DK Arduino Core v0.2.0-rc.1 릴리스 노트
+# NU54DK Arduino Core v0.2.0-rc.2 릴리스 노트
 
-> **상태: GitHub Draft 준비 완료 / clean Windows staged ZIP 검증 대기.** Draft는 실제 Git
-> tag가 없는 내부 Release object일 수 있다. 이 candidate는 아직 public RC Boards Manager
-> 설치·`post_install` end-to-end를 완료하지 않았으며 정식 `v0.2.0`이 아니다. 단계별 검증과
-> 프로젝트 소유자 승인이 끝날 때까지 최신 정식 버전은 `v0.1.0`이다.
+> **상태: RC2 공개 후보 / 정식 버전 아님.** Public RC Boards Manager 설치·`post_install`
+> end-to-end 검증과 프로젝트 소유자 승인이 끝날 때까지 최신 정식 버전은 `v0.1.0`이다.
 
-`v0.2.0-rc.1`은 Loader나 LLEXT 없이 Arduino Sketch, Core와 Zephyr application을 하나의
+`v0.2.0-rc.2`는 Loader나 LLEXT 없이 Arduino Sketch, Core와 Zephyr application을 하나의
 정적 ELF/HEX로 만드는 NU54DK 전용 Native Full Zephyr Core의 두 번째 기능 묶음이다. 공식
 사용자 환경은 Windows 10/11 x64이며 보드 FQBN은 `nucode:zephyr:nu54dk`다.
 
@@ -19,9 +17,23 @@
 | NU54DK board package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | Core repository | `https://github.com/EIDOSDATA/NU54DK_Arduino_Core` |
 
-최종 Draft plan은 candidate의 exact Core commit, package archive, RC index, checksum, SPDX SBOM,
+최종 release plan은 candidate의 exact Core commit, package archive, RC index, checksum, SPDX SBOM,
 license inventory, third-party notice와 이 문서의 byte를 별도로 고정한다. Remote 검증은 GitHub가
 반환한 Draft ID와 asset allowlist/byte를 확인하며 Draft 이름을 실제 Git tag로 해석하지 않는다.
+
+## RC2 교정 사항
+
+공개 `v0.2.0-rc.1`을 실제 Boards Manager로 설치한 뒤 package 사용자 예제 14개를 전부
+Arduino CLI로 compile하고, NU54DK에서 Blink upload, SerialEcho 왕복 및 두 보드 NUS 양방향
+전송을 실행했다. 이 과정에서 확인한 두 문제를 RC2에서 다음과 같이 교정했다.
+
+- 기본 `CMSIS-DAP (pyOCD)`는 field 없이 단일 probe를 자동 선택한다. 별도
+  `CMSIS-DAP with UID (pyOCD)` 경로는 필수 `CMSIS-DAP unique ID`를 Builder의 `--probe-id`로
+  전달해, 둘 이상 연결된 상태에서도 나머지 보드를 분리하지 않고 안전하게 upload한다.
+- `NUSPeripheral` 예제는 `received` event를 같은 `Serial`에 기록하지 않는다. BLE에서 받은
+  byte는 Stream 경로로만 출력하고, 광고·연결·ready·해제·오류 상태만 사람이 읽는 로그로 남긴다.
+
+RC1의 tag와 자산은 불변 기록으로 유지하지만 새 설치·검증에는 RC2를 사용한다.
 
 ## M12~M17 주요 변경
 
@@ -76,7 +88,7 @@ GATT read, indication, bonding, SMP, HID와 multiprotocol은 이 RC가 지원하
 
 9개 machine-readable record에서 기능을 `supported`, `build-only`, `deferred`로 구분했다.
 
-| 항목 | 실제 결과 | v0.2.0-rc.1 판정 |
+| 항목 | 실제 결과 | v0.2.0-rc.2 판정 |
 | --- | --- | --- |
 | 외부 Adafruit LSM6DS3TR-C compatibility Sketch | Arduino compile/link PASS | build-only; package 미포함, sensor runtime/HIL 미실행 |
 | Zephyr sensor direct-build fixture | NU54DK compile/link PASS | build-only; NUCODE sensor wrapper 없음 |
@@ -137,7 +149,7 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 사용한다. **Draft인 동안에는 이 URL을 설치 절차로 사용하지 않는다.**
 
 ```text
-https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.1/package_nucode_nu54dk_rc_index.json
+https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/package_nucode_nu54dk_rc_index.json
 ```
 
 Public RC 전환 시점에 실제 Git tag와 공개 asset URL이 생긴다. 공개 RC의 Boards Manager

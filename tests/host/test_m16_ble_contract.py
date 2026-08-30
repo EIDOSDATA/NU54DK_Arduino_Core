@@ -16,6 +16,7 @@ SOURCE = LIBRARY / "src" / "NUCODE_BLE.cpp"
 PROPERTIES = LIBRARY / "library.properties"
 FEATURE = LIBRARY / "zephyr" / "feature.yml"
 PROFILE_ROOT = REPOSITORY / "variants" / "nu54dk" / "profiles" / "ble"
+PERIPHERAL_EXAMPLE = LIBRARY / "examples" / "NUSPeripheral" / "NUSPeripheral.ino"
 
 
 def function_body(source: str, function_name: str) -> str:
@@ -123,6 +124,45 @@ class M16BleNusContractTests(unittest.TestCase):
             self.assertTrue((directory / f"{name}.ino").is_file(), name)
             self.assertFalse((directory / "prj.conf").exists(), name)
             self.assertFalse((directory / "app.overlay").exists(), name)
+
+    def test_peripheral_example_keeps_received_data_free_of_event_logs(self) -> None:
+        """! @brief 수신 event 로그가 NUS-Serial 데이터 경로에 섞이지 않도록 고정합니다. """
+
+        source = PERIPHERAL_EXAMPLE.read_text(encoding="utf-8")
+        callback = function_body(source, "onBleEvent")
+        self.assertNotIn("BLE event:", callback)
+
+        received = re.search(
+            r"case\s+nucode::ble::Event::received\s*:\s*"
+            r"(?P<body>.*?)(?=\bcase\s+|\bdefault\s*:|$)",
+            callback,
+            re.DOTALL,
+        )
+        self.assertIsNotNone(received)
+        received_body = received.group("body") if received is not None else ""
+        self.assertIn("break;", received_body)
+        self.assertNotRegex(received_body, r"\bSerial\s*\.")
+
+        for event_name in (
+            "advertising_started",
+            "connected",
+            "ready",
+            "disconnected",
+            "error",
+        ):
+            self.assertIn(f"nucode::ble::Event::{event_name}", callback)
+
+        error = re.search(
+            r"case\s+nucode::ble::Event::error\s*:\s*"
+            r"(?P<body>.*?)(?=\bcase\s+|\bdefault\s*:|$)",
+            callback,
+            re.DOTALL,
+        )
+        self.assertIsNotNone(error)
+        error_body = error.group("body") if error is not None else ""
+        self.assertIn('Serial.println("BLE error")', error_body)
+        self.assertNotIn("lastError", error_body)
+        self.assertNotIn("lastDriverError", error_body)
 
     def test_ble_profile_feature_and_board_menu_are_wired(self) -> None:
         """! @brief ble profile 선택만으로 필요한 NUS feature가 병합되는지 검사합니다. """

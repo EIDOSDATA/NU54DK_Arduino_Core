@@ -302,7 +302,7 @@ class M10PackagingTests(unittest.TestCase):
         self.assertEqual(PACKAGE.SUPPORTED_VERSIONS[-2:], ("0.0.96", "0.0.97"))
         self.assertEqual(
             PACKAGE.RELEASE_CANDIDATE_VERSIONS,
-            ("0.1.0-rc.2", "0.2.0-rc.1"),
+            ("0.1.0-rc.2", "0.2.0-rc.1", "0.2.0-rc.2"),
         )
         self.assertEqual(PACKAGE.STABLE_VERSIONS, ("0.1.0",))
         self.assertTrue(

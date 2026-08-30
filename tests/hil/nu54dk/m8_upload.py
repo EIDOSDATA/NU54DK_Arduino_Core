@@ -56,6 +56,62 @@ class UploadHilFailure(RuntimeError):
     """! @brief M8 실제 upload 계약 위반을 나타냅니다. """
 
 
+## @brief runner와 명시 UID 유무에 맞는 Arduino Upload probe 메뉴 값을 반환합니다.
+def select_upload_probe_option(runner: str, requested_probe_id: str) -> str:
+    if runner == "pyocd" and requested_probe_id:
+        return "pyocd_uid"
+    return runner
+
+
+## @brief 실제 UID를 노출하지 않고 upload 결과의 probe 선택 의미를 기록합니다.
+def probe_selection_summary(
+    upload_probe: str, requested_probe_id: str
+) -> dict[str, str]:
+    explicit = bool(requested_probe_id)
+    return {
+        "probe_id": "redacted" if explicit else "auto-single",
+        "probe_selection_mode": "explicit" if explicit else "auto-single",
+        "upload_probe": upload_probe,
+    }
+
+
+## @brief 복사한 source tree를 상위 저장소와 독립적인 Git snapshot으로 고정합니다.
+def initialize_snapshot_repository(root: Path, label: str) -> None:
+    git = shutil.which("git")
+    if git is None:
+        raise UploadHilFailure("source snapshot 회귀에는 Git이 필요합니다.")
+    (root / ".git").mkdir()
+    commands = (
+        (git, "init", "--quiet"),
+        (git, "add", "--all"),
+        (
+            git,
+            "-c",
+            "user.name=NUCODE HIL",
+            "-c",
+            "user.email=hil@nucode.invalid",
+            "commit",
+            "--quiet",
+            "-m",
+            f"{label} 회귀 snapshot",
+        ),
+    )
+    for command in commands:
+        result = subprocess.run(
+            command,
+            cwd=root,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            encoding="utf-8",
+            errors="replace",
+            check=False,
+        )
+        if result.returncode != 0:
+            raise UploadHilFailure(
+                f"{label} Git snapshot 생성이 실패했습니다: {result.stdout.strip()}"
+            )
+
+
 ## @brief exact checkout의 Git blob byte를 line-ending 변환 없이 SHA-256으로 고정합니다.
 def committed_file_sha256(repository: Path, relative_path: str) -> str:
     relative = ensure_safe_relative_path(relative_path)
@@ -197,6 +253,10 @@ def stage_platform(repository: Path, user_root: Path) -> Path:
             platform / name,
             ignore=shutil.ignore_patterns(".git", "__pycache__", "*.pyc"),
         )
+    initialize_snapshot_repository(
+        platform / "board_package" / "NU54DK_Zephyr_DTS", "NU54DK board"
+    )
+    initialize_snapshot_repository(platform, "NU54DK Arduino Core")
     return platform
 
 
@@ -560,12 +620,12 @@ def validate_build_manifest(
     build_path: Path,
     platform_root: Path,
     sketch_root: Path,
-    runner: str,
+    upload_probe: str,
 ) -> dict[str, Any]:
     if manifest_path.is_symlink():
         raise UploadHilFailure("M8 build manifest symlink는 허용하지 않습니다.")
     manifest = strict_json_object(manifest_path)
-    expected_fqbn = f"{FQBN}:upload_probe={runner}"
+    expected_fqbn = f"{FQBN}:upload_probe={upload_probe}"
     context = manifest.get("context")
     artifacts = manifest.get("artifacts")
     if (
@@ -839,7 +899,7 @@ def collect_ready_evidence(port: str, timeout_seconds: float) -> tuple[bytes, di
 
 ## @brief 실행 인자를 구성합니다.
 def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespace:
-    repository = Path(__file__).resolve().parents[2]
+    repository = Path(__file__).resolve().parents[3]
     parser = argparse.ArgumentParser()
     parser.add_argument("--cli", type=Path, default=default_cli())
     parser.add_argument("--repository", type=Path, default=repository)
@@ -874,6 +934,8 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
 ## @brief Arduino CLI build와 실제 반복 upload HIL을 수행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     args = parse_arguments(arguments)
+    requested_probe_id = (args.probe_id or "").strip()
+    upload_probe = select_upload_probe_option(args.runner, requested_probe_id)
     if args.repetitions < 1:
         raise UploadHilFailure("반복 횟수는 1 이상이어야 합니다.")
     if (
@@ -887,12 +949,12 @@ def main(arguments: Sequence[str] | None = None) -> int:
     if rc_mode and (
         args.runner != "pyocd"
         or args.repetitions != 1
-        or bool((args.probe_id or "").strip())
+        or bool(requested_probe_id)
     ):
         raise UploadHilFailure(
             "RC exact HIL은 probe 자동 단일 선택의 pyOCD upload 정확히 1회만 허용합니다."
         )
-    if args.runner == "jlink" and not (args.probe_id or "").strip():
+    if args.runner == "jlink" and not requested_probe_id:
         raise UploadHilFailure("J-Link HIL에는 --probe-id serial이 필요합니다.")
     repository = args.repository.resolve()
     cli = args.cli.resolve()
@@ -924,7 +986,13 @@ def main(arguments: Sequence[str] | None = None) -> int:
         stage_platform(repository, user_root)
     platform_root = user_root / "hardware" / "nucode" / "zephyr"
     config = run_root / "arduino-cli.yaml"
-    config.write_text(f"directories:\n  user: {user_root.as_posix()}\n", encoding="utf-8")
+    config.write_text(
+        "directories:\n"
+        f"  data: {(run_root / 'data').as_posix()}\n"
+        f"  downloads: {(run_root / 'downloads').as_posix()}\n"
+        f"  user: {user_root.as_posix()}\n",
+        encoding="utf-8",
+    )
 
     compile_command: list[str | Path] = [
         cli,
@@ -936,7 +1004,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
         "--build-path",
         build_path,
         "--board-options",
-        f"upload_probe={args.runner}",
+        f"upload_probe={upload_probe}",
         sketch,
     ]
     return_code, _, compile_seconds = run(
@@ -947,7 +1015,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
 
     manifest_path = build_path / "m8_upload.ino.nu54-build.json"
     build_identity = validate_build_manifest(
-        manifest_path, build_path, platform_root, sketch, args.runner
+        manifest_path, build_path, platform_root, sketch, upload_probe
     )
     hex_path = build_identity["hex"]
     hex_sha256 = build_identity["hex_sha256"]
@@ -966,10 +1034,10 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "--build-path",
             build_path,
             "--board-options",
-            f"upload_probe={args.runner}",
+            f"upload_probe={upload_probe}",
         ]
-        if args.runner == "jlink":
-            upload_command.extend(("--upload-field", f"probe_id={args.probe_id}"))
+        if requested_probe_id:
+            upload_command.extend(("--upload-field", f"probe_id={requested_probe_id}"))
         upload_command.append(sketch)
         print(f"NUCODE_M8_UPLOAD_ATTEMPT:{sequence}/{args.repetitions}")
         return_code, output, upload_seconds = run(
@@ -1037,7 +1105,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             },
             "arduino_cli": {"sha256": file_sha256(cli)},
             "build": {
-                "fqbn": f"{FQBN}:upload_probe=pyocd",
+                "fqbn": f"{FQBN}:upload_probe={upload_probe}",
                 "compile_seconds": round(compile_seconds, 3),
                 "manifest_sha256": build_identity["manifest_sha256"],
                 "hex_file_name": hex_path.name,
@@ -1056,7 +1124,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
         summary = {
             "schema_version": 1,
             "runner": args.runner,
-            "probe_id": args.probe_id if args.runner == "jlink" else "auto-single",
+            **probe_selection_summary(upload_probe, requested_probe_id),
             "serial_port": args.serial_port,
             "repetitions": args.repetitions,
             "compile_seconds": round(compile_seconds, 3),

@@ -21,5 +21,7 @@ nu54dk.menu.feature_set.ble=BLE NUS
 nu54dk.menu.feature_set.ble.build.nu54_profile=ble
 nu54dk.menu.upload_probe.pyocd=CMSIS-DAP (pyOCD)
 nu54dk.menu.upload_probe.pyocd.upload.tool.default=nu54_pyocd
+nu54dk.menu.upload_probe.pyocd_uid=CMSIS-DAP with UID (pyOCD)
+nu54dk.menu.upload_probe.pyocd_uid.upload.tool.default=nu54_pyocd_uid
 nu54dk.menu.upload_probe.jlink=SEGGER J-Link
 nu54dk.menu.upload_probe.jlink.upload.tool.default=nu54_jlink

@@ -36,7 +36,7 @@
 7. [NU54DK Board/System API 설계](<./03_펌웨어 설계/05_NU54DK_Board_System_API.md>)
 8. [Boards Manager 설치와 패키징](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
 9. [v0.1.0 릴리스 노트](<./05_릴리스/11_v0.1.0_릴리스_노트.md>)
-10. [v0.2.0 RC Draft 릴리스 문서](<./05_릴리스/v0.2.0/README.md>)
+10. [v0.2.0 RC 릴리스 문서](<./05_릴리스/v0.2.0/README.md>)
 
 ## 현재 진행 상태
 
@@ -49,7 +49,7 @@
 | M15 | **완료** | 비-System-OFF 자동 HIL 2/2와 SWD 격리 timed GRTC→사용자 SW0 결합 HIL PASS |
 | M16 | **완료** | NUS Peripheral/Central Stream과 두 보드 BLE HIL PASS |
 | M17 | **완료** | 9개 machine-readable coverage record와 sensor·crypto·무선 feasibility 분류 |
-| M18 | **자동 범위 완료** | RC package·untagged Draft 준비 완료; clean Windows staged ZIP 검증 대기 |
+| M18 | **RC2 재검증** | 공개 RC1 실기에서 발견한 두 결함 교정과 RC2 package 준비 |
 
 M15 완료 기준은 Core `c47239d954c45fd173d8d1393e3ea5c9c86e111a`,
 [Software Gates run 33295587578](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33295587578)
@@ -60,14 +60,13 @@ SW0/P1.13 wake `20406 ms`/cause `128`을 통과했다.
 
 PMIC 배터리 전기 HIL은 계속 `NOT RUN`이며 사용자가 자신의 배터리·전원 조건에서 검증할
 책임이 있다. 이 승인된 범위 제외는 M15 완료를 차단하지 않는다. M16 BLE NUS, M17 NCS
-coverage 분류와 M18 RC package/Draft 자동 범위를 완료했다. M17 완료는 NCS 전체 지원이 아니라
+coverage 분류와 M18 RC package 자동 범위를 완료했다. M17 완료는 NCS 전체 지원이 아니라
 실제 build 결과와 `supported`·`build-only`·`deferred` 경계를 고정했다는 뜻이다.
 
-M18 Draft는 실제 Git tag가 없는 내부 상태일 수 있다. 다음 gate는 exact ZIP을 clean Windows의
-격리된 Sketchbook hardware staging에서 IDE 예제 열거·compile·upload하는 수동 검증이다. 이는
-Boards Manager 설치 완료가 아니다. staged 결과 승인 뒤 public RC로 전환하고, 별도 clean
-Windows Boards Manager 설치·`post_install` end-to-end와 프로젝트 소유자 승인을 거친 뒤에만
-stable을 검토한다. 현재 정식 버전은 계속 `v0.1.0`이다.
+공개 RC1은 Boards Manager 설치, 14개 예제 compile, Blink·SerialEcho 및 두 보드 BLE NUS
+실기까지 검증했다. RC2에서는 이 과정에서 발견한 다중 CMSIS-DAP 선택과 NUS 수신 로그 간섭을
+교정하고 같은 공개 설치본 gate를 반복한다. RC2 결과와 프로젝트 소유자 승인을 거친 뒤에만
+stable을 검토하며 현재 정식 버전은 계속 `v0.1.0`이다.
 
 상세 상태의 단일 원본은
 [제품 로드맵과 구현 마일스톤](<./01_아두이노 코어 설계/02_구현_로드맵.md>)이다.
@@ -128,6 +127,7 @@ stable을 검토한다. 현재 정식 버전은 계속 `v0.1.0`이다.
 - [M15 NU54DK Board/System 기준선](<./04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)
 - [M16 BLE NUS 기준선](<./04_검증 기록/18_M16_BLE_NUS_기준선.md>)
 - [M17 NCS 기능과 예제 Coverage 기준선](<./04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)
+- [M18 v0.2.0 RC1 공개 검증과 RC2 교정](<./04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md>)
 
 ### 05. 릴리스 문서
 
@@ -140,7 +140,7 @@ known issues를 보존한다.
 - [v0.1.0 문제 해결](<./05_릴리스/10_v0.1.0_문제해결.md>)
 - [v0.1.0 릴리스 노트](<./05_릴리스/11_v0.1.0_릴리스_노트.md>)
 - [v0.1.0 알려진 제약](<./05_릴리스/12_v0.1.0_알려진_제약.md>)
-- [v0.2.0 RC Draft 릴리스 문서](<./05_릴리스/v0.2.0/README.md>)
+- [v0.2.0 RC 릴리스 문서](<./05_릴리스/v0.2.0/README.md>)
 
 기존 v0.1 파일명은 역사 링크 때문에 유지한다. v0.2부터는 다음처럼 버전별 디렉터리를
 사용한다.

@@ -11,8 +11,30 @@
 void onBleEvent(nucode::ble::Event event, void *context)
 {
   (void)context;
-  Serial.print("BLE event: ");
-  Serial.println(static_cast<unsigned int>(event));
+  switch (event) {
+    case nucode::ble::Event::advertising_started:
+      Serial.println("BLE advertising started");
+      break;
+    case nucode::ble::Event::connected:
+      Serial.println("BLE connected");
+      break;
+    case nucode::ble::Event::ready:
+      Serial.println("BLE NUS ready");
+      break;
+    case nucode::ble::Event::disconnected:
+      Serial.println("BLE disconnected");
+      break;
+    case nucode::ble::Event::error:
+      /** @brief Event queue에 오류 snapshot이 없으므로 오래된 전역 오류값을 출력하지 않습니다. */
+      Serial.println("BLE error");
+      break;
+    case nucode::ble::Event::received:
+      /** @brief 수신 데이터는 아래 Stream 경로에서 원문 그대로 출력합니다. */
+      break;
+    case nucode::ble::Event::scan_started:
+      /** @brief Peripheral 역할에서는 발생하지 않습니다. */
+      break;
+  }
 }
 
 void setup()

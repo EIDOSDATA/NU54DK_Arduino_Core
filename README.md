@@ -2,6 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Stable: v0.1.0](https://img.shields.io/badge/stable-v0.1.0-blue.svg)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.1.0)
+[![RC: v0.2.0-rc.2](https://img.shields.io/badge/RC-v0.2.0--rc.2-orange.svg)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.2.0-rc.2)
 [![NCS: v3.4.0](https://img.shields.io/badge/NCS-v3.4.0-00A9CE.svg)](https://github.com/nrfconnect/sdk-nrf)
 [![Author: Quantum](https://img.shields.io/badge/Author-Quantum%20%40%20NUCODE-blueviolet.svg)](#작성자와-라이선스)
 
@@ -14,19 +15,24 @@ Sketch와 library를 nRF Connect SDK의 build graph 안에 넣어 ELF/HEX/BIN을
 | 항목 | 상태 |
 | --- | --- |
 | 현재 정식 버전 | [`v0.1.0`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.1.0) |
-| 다음 목표 | `v0.2.0` — M12~M18 자동 범위 완료, RC Draft 준비 완료 |
+| 다음 목표 | `v0.2.0` — 공개 RC1 검증 완료, RC2 교정·재검증 진행 |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 지원 보드 | NU54DK / nRF54L15 CPUAPP |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 선택 업로드 | 외장 SEGGER J-Link |
 | v0.1 마일스톤 | M0~M11 완료 |
-| v0.2 진행 | M12~M18 자동 범위 완료; clean Windows staged ZIP 검증 대기 |
+| v0.2 진행 | M12~M18 구현 완료; `v0.2.0-rc.2` 공개 후보 준비 |
 
 v0.1.0에서는 Runtime, GPIO, 시간, Serial, GPIO interrupt, Wire/I2C, SPI, ADC, PWM,
 Arduino CLI/IDE build, pyOCD upload/debug, cache와 Boards Manager 설치 경로를 검증했습니다.
 세부 결과는 [제품 로드맵과 구현 마일스톤](<./00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md>)에
 정리되어 있습니다.
+
+공개 [`v0.2.0-rc.1`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.2.0-rc.1)은
+Boards Manager 설치와 14개 예제 compile, Blink upload, SerialEcho 및 두 보드 BLE NUS 실기
+검증에 사용한 불변 기록입니다. 이 검증에서 발견한 다중 CMSIS-DAP 선택과 NUS 수신 로그 간섭을
+RC2에서 교정했으므로 신규 RC 검증에는 RC2를 사용합니다. RC1 tag와 자산은 덮어쓰지 않습니다.
 
 현재 `main`에서는 M12 CI/CD, M13 profile·예제 UX, M14 Core API·DTS 기반 Variant, M15
 `NUCODE_NU54DK` board/system library와 M16 BLE NUS를 완료했습니다. `PIN_LED2..3` output/readback과
@@ -101,6 +107,16 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 2. `Tools → Upload probe`에서 `CMSIS-DAP (pyOCD)`를 선택합니다.
 3. NU54DK를 USB로 연결합니다.
 4. Sketch를 검증한 뒤 Upload 버튼을 누릅니다.
+
+CMSIS-DAP가 한 대면 기본 `CMSIS-DAP (pyOCD)`를 선택하며 UID 입력 없이 자동 선택됩니다.
+두 대 이상 연결한 경우 `CMSIS-DAP with UID (pyOCD)`를 선택하고 Upload가 요청하는 필드에
+대상 probe의 전체 UID를 입력합니다. UID는 COM 번호나 DAPLink drive 문자가 아닙니다.
+Arduino CLI에서는 compile과 upload에 같은 board option을 사용하고 upload field를 추가합니다.
+
+```powershell
+--board-options upload_probe=pyocd_uid `
+--upload-field probe_id=<CMSIS-DAP-UID>
+```
 
 외장 J-Link를 사용할 때만 `SEGGER J-Link`를 선택합니다. J-Link software는 이 package에
 포함되지 않으므로 SEGGER 공식 설치본이 별도로 필요합니다.
@@ -195,17 +211,16 @@ M13의 기존 예제 7개에 M15 board/system 예제 5개와 M16 NUS 예제 2개
 | [M15](<./00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) | **완료** | 비-System-OFF 자동 HIL 2/2와 SWD 격리 timed GRTC→사용자 SW0 결합 HIL PASS |
 | [M16](<./00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md>) | **완료** | NUS Peripheral/Central Stream, profile·예제와 두 보드 BLE HIL PASS |
 | [M17](<./00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>) | **완료** | 9개 coverage record, sensor·crypto build와 무선 build feasibility 결과 분류 |
-| [M18](<./00_Docs/05_릴리스/v0.2.0/README.md>) | **자동 범위 완료** | RC package·untagged Draft 준비 완료; clean Windows staged ZIP 검증 대기 |
+| [M18](<./00_Docs/05_릴리스/v0.2.0/README.md>) | **RC2 재검증** | 공개 RC1 실기에서 발견한 두 결함을 교정하고 RC2 package 준비 |
 
 자세한 완료 기준은 [v0.2.0 구현 마일스톤](<./00_Docs/01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)과
 [NCS 기능·예제 지원 매트릭스](<./00_Docs/01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)를
 따릅니다.
 
-M18 Draft는 실제 Git tag가 없는 내부 Release object일 수 있습니다. 현재 수동 gate는 exact
-ZIP을 격리된 clean Windows Sketchbook hardware staging에 추출한 IDE 예제 열거·compile·upload이며,
-Boards Manager 설치 완료가 아닙니다. 프로젝트 소유자가 이 결과를 승인해 public RC로 전환한
-뒤 별도 clean Windows에서 Boards Manager 설치·`post_install` end-to-end를 다시 통과하고
-승인해야 `v0.2.0` stable 공개를 검토합니다. 그때까지 정식 버전은 `v0.1.0`입니다.
+공개 RC1은 Boards Manager 설치, 14개 예제 compile와 실제 NU54DK 실행까지 검증했습니다.
+RC2에서는 그 과정에서 발견한 두 결함을 교정하고 같은 공개 package 경로를 다시 검증합니다.
+RC2의 `post_install`, 설치본 compile/upload와 프로젝트 소유자 승인이 끝나야 `v0.2.0` stable
+공개를 검토하며, 그때까지 정식 버전은 `v0.1.0`입니다.
 
 ## 개발 환경에서 사용
 
@@ -262,7 +277,8 @@ NCS 공개 API를 직접 사용할 수 있습니다.
 - [M16 BLE NUS API 설계](<./00_Docs/03_펌웨어 설계/06_BLE_NUS_API.md>)
 - [M16 BLE NUS 기준선](<./00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md>)
 - [M17 NCS 기능과 예제 Coverage 기준선](<./00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)
-- [v0.2.0 RC Draft 릴리스 문서](<./00_Docs/05_릴리스/v0.2.0/README.md>)
+- [M18 v0.2.0 RC1 공개 검증과 RC2 교정](<./00_Docs/04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md>)
+- [v0.2.0 RC 릴리스 문서](<./00_Docs/05_릴리스/v0.2.0/README.md>)
 - [v0.1.0 릴리스 노트](<./00_Docs/05_릴리스/11_v0.1.0_릴리스_노트.md>)
 
 ## 작성자와 라이선스

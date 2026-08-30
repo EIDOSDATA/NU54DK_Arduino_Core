@@ -3,15 +3,16 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | RELEASE-v0.2.0-INDEX-001 |
-| 대상 후보 | `v0.2.0-rc.1` |
-| 현재 상태 | **GitHub Draft 준비 완료 — clean Windows staged ZIP 검증 대기** |
-| M18 최종 상태 | `awaiting-clean-windows-manual-validation` |
+| 대상 후보 | `v0.2.0-rc.2` |
+| 현재 상태 | **RC2 교정 완료 — package·public RC 재검증 진행** |
+| M18 최종 상태 | `rc2-validation-in-progress` |
 | 현재 정식 버전 | `v0.1.0` 유지 |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 지원 보드 | NU54DK / `nucode:zephyr:nu54dk` |
 | 작성자 | Quantum / NUCODE |
 
-`v0.2.0-rc.1`은 M12부터 M17까지의 구현을 처음 묶는 `v0.2.0` release candidate다.
+`v0.2.0-rc.2`는 M12부터 M17까지의 구현과 RC1 공개 설치본 검증에서 발견한 수정사항을 묶는
+`v0.2.0` 후속 release candidate다.
 M18 자동화는 exact clean commit에서 package와 문서를 동결하고 GitHub의 **Draft +
 Prerelease metadata**를 가진 내부 Release object와 asset까지만 준비한다. Draft는 실제 Git tag를
 만들지 않은 untagged 상태일 수 있고, 일반 공개 Release나 정식 `v0.2.0`이 아니다.
@@ -58,9 +59,9 @@ Draft asset allowlist에는 포함하지 않는다.
 | 두 번 독립 package 생성과 byte 비교 | M18 자동 gate |
 | Untagged GitHub Draft object와 asset 생성 | M18 자동화의 마지막 변경 단계; 실제 Git tag 생성 없음 |
 | Remote Draft ID·asset 재다운로드와 SHA-256 확인 | M18 자동 검증 |
-| clean Windows exact ZIP Sketchbook staging·IDE compile/upload | **프로젝트 소유자 staged 검증 대기** |
-| public RC 전환 | **staged 결과 승인 뒤 프로젝트 소유자가 수행** |
-| 공개 RC Boards Manager 설치·`post_install` end-to-end | **public RC 전환 뒤 별도 검증 대기** |
+| RC1 공개 Boards Manager 설치·실기 | **완료 — 교정 항목 2건 발견** |
+| RC2 package·Draft·asset 생성 | **재검증 진행** |
+| RC2 공개 Boards Manager 설치·`post_install` end-to-end | **public RC 전환 뒤 별도 검증 대기** |
 | `v0.2.0` stable 공개 | **별도 사용자 승인 없이는 실행하지 않음** |
 
 GitHub Draft asset은 일반 공개 download URL에서 받을 수 없다. 따라서 Draft 상태의 clean
@@ -73,8 +74,8 @@ URL을 일반 Boards Manager 설치 URL이라고 안내하거나 stable root ind
 ## 4. 공개 경계
 
 - `v0.1.0` tag, Release와 `package_nucode_nu54dk_index.json`은 계속 정식 공개 기준선이다.
-- Draft의 `v0.2.0-rc.1` 이름은 예약 metadata이며 실제 Git tag가 존재한다는 뜻이 아니다.
-- `v0.2.0-rc.1`은 candidate이며 `latest` Release가 아니다.
+- Draft의 `v0.2.0-rc.2` 이름은 예약 metadata이며 실제 Git tag가 존재한다는 뜻이 아니다.
+- `v0.2.0-rc.2`는 candidate이며 `latest` Release가 아니다.
 - RC는 별도 `package_nucode_nu54dk_rc_index.json`을 사용한다.
 - M18 Draft 생성은 `v0.1.0` stable index, stable tag 또는 기존 Release를 수정하지 않는다.
 - Draft를 public Prerelease 또는 stable로 전환하는 작업은 프로젝트 소유자의 별도 승인 사항이다.
@@ -100,7 +101,7 @@ Windows에서 수행한다.
 
 1. 공개 RC index를 Additional Boards Manager URLs에 등록한다.
 2. Core와 candidate prerequisite가 없는 시작 상태를 확인한다.
-3. Arduino IDE/CLI로 `0.2.0-rc.1`을 설치하고 `post_install` 완료 응답을 확인한다.
+3. Arduino IDE/CLI로 `0.2.0-rc.2`를 설치하고 `post_install` 완료 응답을 확인한다.
 4. board/Feature set/14개 예제 열거, standard/BLE compile와 실제 pyOCD upload를 다시 확인한다.
 5. `v0.1.0 → RC` upgrade, RC→`v0.1.0` downgrade, uninstall/reinstall lifecycle을 확인한다.
 6. 알려진 제약, license inventory, SBOM과 결과를 프로젝트 소유자가 검토한다.

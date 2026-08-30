@@ -24,6 +24,17 @@ if MODULE_SPEC is None or MODULE_SPEC.loader is None:
 MODULE = importlib.util.module_from_spec(MODULE_SPEC)
 MODULE_SPEC.loader.exec_module(MODULE)
 
+HIL_MODULE_PATH = (
+    Path(__file__).resolve().parents[1] / "hil" / "nu54dk" / "m8_upload.py"
+)
+HIL_MODULE_SPEC = importlib.util.spec_from_file_location(
+    "nu54_m8_upload_hil", HIL_MODULE_PATH
+)
+if HIL_MODULE_SPEC is None or HIL_MODULE_SPEC.loader is None:
+    raise RuntimeError(f"M8 upload HIL module을 불러올 수 없습니다: {HIL_MODULE_PATH}")
+HIL_MODULE = importlib.util.module_from_spec(HIL_MODULE_SPEC)
+HIL_MODULE_SPEC.loader.exec_module(HIL_MODULE)
+
 
 class M8FlashContractTests(unittest.TestCase):
     """! @brief M8 일반 upload가 artifact와 probe를 안전하게 선택하는지 검증합니다. """
@@ -220,7 +231,36 @@ class M8FlashContractTests(unittest.TestCase):
         """! @brief 단일 probe 자동 선택과 명시 UID 선택을 검증합니다. """
 
         self.assertEqual(MODULE.select_pyocd_probe(None, ["ABC123"]), "ABC123")
+        self.assertEqual(MODULE.select_pyocd_probe("   ", ["ABC123"]), "ABC123")
         self.assertEqual(MODULE.select_pyocd_probe("abc123", ["ABC123"]), "ABC123")
+
+    def test_selects_noninteractive_or_explicit_uid_upload_tool(self) -> None:
+        """! @brief 기본 pyOCD와 명시 UID 전용 메뉴가 분리되는지 검증합니다. """
+
+        self.assertEqual(HIL_MODULE.select_upload_probe_option("pyocd", ""), "pyocd")
+        self.assertEqual(
+            HIL_MODULE.select_upload_probe_option("pyocd", "ABC123"),
+            "pyocd_uid",
+        )
+        self.assertEqual(HIL_MODULE.select_upload_probe_option("jlink", "ABC123"), "jlink")
+
+    def test_redacts_explicit_probe_identity_without_losing_selection_mode(self) -> None:
+        """! @brief 결과 JSON이 UID를 숨기면서 선택 방식과 메뉴를 보존하는지 검증합니다. """
+
+        explicit = HIL_MODULE.probe_selection_summary("pyocd_uid", "ABC123")
+        self.assertEqual(
+            explicit,
+            {
+                "probe_id": "redacted",
+                "probe_selection_mode": "explicit",
+                "upload_probe": "pyocd_uid",
+            },
+        )
+        self.assertNotIn("ABC123", explicit.values())
+        automatic = HIL_MODULE.probe_selection_summary("pyocd", "")
+        self.assertEqual(automatic["probe_id"], "auto-single")
+        self.assertEqual(automatic["probe_selection_mode"], "auto-single")
+        self.assertEqual(automatic["upload_probe"], "pyocd")
 
     def test_rejects_missing_or_ambiguous_pyocd_probe(self) -> None:
         """! @brief probe 없음과 다중 probe 무지정 상태를 구분해 거부합니다. """
