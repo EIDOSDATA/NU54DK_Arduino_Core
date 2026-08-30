@@ -393,9 +393,14 @@ def _validate_reset_cause(
         )
 
 
+## @brief UART의 CRLF, LF와 단독 CR을 동일한 정확한 record 경계로 정규화합니다.
+def _normalize_uart_line_endings(payload: bytes) -> bytes:
+    return payload.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+
+
 ## @brief schema 2의 timed GRTC→SW0 전체 순서와 동일 nonce만 승인합니다.
 def parse_transcript(transcript: bytes) -> SystemOffResult:
-    normalized = transcript.replace(b"\r", b"")
+    normalized = _normalize_uart_line_endings(transcript)
     if FINAL_FAIL_TOKEN in normalized:
         raise SystemOffHilFailure("target이 M15 System OFF 실패를 보고했습니다.")
     lines = [
@@ -578,7 +583,7 @@ def capture_protocol(
                 "M15 UART transcript가 허용 크기를 초과했습니다.", bytes(observed)
             )
 
-        complete_lines = bytes(observed).replace(b"\r", b"").split(b"\n")[:-1]
+        complete_lines = _normalize_uart_line_endings(bytes(observed)).split(b"\n")[:-1]
         for line in complete_lines[processed_lines:]:
             token = line.strip()
             if token.startswith(FINAL_FAIL_TOKEN):

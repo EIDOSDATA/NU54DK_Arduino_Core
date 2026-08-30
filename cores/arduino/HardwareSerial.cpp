@@ -39,6 +39,19 @@ namespace
     constexpr unsigned long configured_baud =
         DT_PROP(NUCODE_ARDUINO_SERIAL_NODE, current_speed);
 
+    /** @brief 8N1 한 frame에 필요한 start/data/stop bit 수입니다. */
+    constexpr std::uint32_t serial_frame_bits = 10U;
+
+    /**
+     * @brief 마지막 polling TX byte가 실제 선로를 떠날 때까지 기다릴 여유입니다.
+     *
+     * nRF UARTE의 interrupt-driven polling 경로는 마지막 byte 전송을 시작한 뒤
+     * 반환할 수 있으므로 두 frame 시간을 확보합니다.
+     */
+    constexpr std::uint32_t serial_flush_guard_us = static_cast<std::uint32_t>(
+        ((2ULL * serial_frame_bits * 1000000ULL) + configured_baud - 1ULL) /
+        configured_baud);
+
     K_MSGQ_DEFINE(serial_rx_queue, sizeof(std::uint8_t),
                   CONFIG_NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE, alignof(std::uint8_t));
     K_MUTEX_DEFINE(serial_lifecycle_mutex);
@@ -309,7 +322,7 @@ namespace
             return value;
         }
 
-        /** @brief blocking TX 호출이 완료될 때까지 기다립니다. */
+        /** @brief 마지막 polling TX byte가 실제 UART 선로를 떠날 때까지 기다립니다. */
         void flush() override
         {
             if (k_is_in_isr())
@@ -324,6 +337,7 @@ namespace
             }
 
             static_cast<void>(k_mutex_lock(&serial_tx_mutex, K_FOREVER));
+            k_busy_wait(serial_flush_guard_us);
             static_cast<void>(k_mutex_unlock(&serial_tx_mutex));
             recordSerialSuccess();
         }

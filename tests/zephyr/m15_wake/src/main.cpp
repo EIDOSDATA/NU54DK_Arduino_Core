@@ -25,6 +25,9 @@ namespace
 	/** @brief timed GRTC wake의 상대 지연입니다. */
 	constexpr std::uint64_t timed_wake_delay_us = 2000000ULL;
 
+	/** @brief System OFF 전에 마지막 UART frame을 확실히 비우는 대기 시간입니다. */
+	constexpr unsigned long system_off_uart_drain_delay_ms = 50UL;
+
 	/** @brief 호스트 nonce의 16진수 문자 수입니다. */
 	constexpr std::size_t nonce_length = 32U;
 
@@ -286,6 +289,7 @@ namespace
 		Serial.print(state.nonce);
 		Serial.println(":mode=GRTC_WAKE");
 		Serial.flush();
+		delay(system_off_uart_drain_delay_ms);
 
 		const Error clear_error = NU54DK.clearResetCause();
 		if (clear_error != Error::none)
@@ -339,6 +343,7 @@ namespace
 		Serial.print(state.nonce);
 		Serial.println(":mode=GPIO_WAKE");
 		Serial.flush();
+		delay(system_off_uart_drain_delay_ms);
 
 		const Error clear_error = NU54DK.clearResetCause();
 		if (clear_error != Error::none)

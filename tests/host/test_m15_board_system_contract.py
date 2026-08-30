@@ -260,6 +260,41 @@ class M15BoardSystemContractTests(unittest.TestCase):
         self.assertIn("build_only: true", testcase)
         self.assertNotIn("harness:", testcase)
 
+        for body, enter_call in (
+            (timed_body, "NU54DK.enterSystemOffAfter"),
+            (button_body, "NU54DK.enterSystemOffOnButton"),
+        ):
+            self.assertLess(
+                body.index("Serial.flush()"),
+                body.index("delay(system_off_uart_drain_delay_ms)"),
+            )
+            self.assertLess(
+                body.index("delay(system_off_uart_drain_delay_ms)"),
+                body.index(enter_call),
+            )
+        self.assertIn("system_off_uart_drain_delay_ms = 50UL", target)
+        self.assertEqual(target.count("delay(system_off_uart_drain_delay_ms)"), 2)
+
+    def test_serial_flush_waits_for_the_final_physical_frame(self) -> None:
+        """! @brief polling TX mutex 안에서 마지막 8N1 frame drain을 보장합니다. """
+
+        source = (REPOSITORY / "cores" / "arduino" / "HardwareSerial.cpp").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("serial_frame_bits = 10U", source)
+        self.assertIn("2ULL * serial_frame_bits * 1000000ULL", source)
+        flush_body = source.split("void flush() override", 1)[1].split(
+            "std::size_t write", 1
+        )[0]
+        self.assertLess(
+            flush_body.index("k_mutex_lock(&serial_tx_mutex"),
+            flush_body.index("k_busy_wait(serial_flush_guard_us)"),
+        )
+        self.assertLess(
+            flush_body.index("k_busy_wait(serial_flush_guard_us)"),
+            flush_body.index("k_mutex_unlock(&serial_tx_mutex)"),
+        )
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

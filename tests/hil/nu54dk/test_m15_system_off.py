@@ -161,6 +161,36 @@ class M15SystemOffHilTests(unittest.TestCase):
         self.assertEqual(result.button_reset_cause, MODULE.RESET_LOW_POWER_WAKE)
         self.assertEqual((result.wake_source, result.gpio), ("SW0", "P1.13"))
 
+    def test_accepts_exact_protocol_records_terminated_by_lone_cr(self) -> None:
+        """! @brief 단독 CR 뒤 boot banner가 와도 payload 전체 일치를 유지합니다. """
+
+        for phase, mode in (("TIMED", "GRTC_WAKE"), ("BUTTON", "GPIO_WAKE")):
+            with self.subTest(phase=phase):
+                entering = (
+                    "NUCODE_M15_SYSTEM_OFF_ENTERING:schema=2:"
+                    f"phase={phase}:nonce={FIXED_NONCE}:mode={mode}"
+                ).encode("ascii")
+                transcript = valid_transcript().replace(
+                    entering + b"\r\n",
+                    entering + b"\r*** Booting nRF Connect SDK...\r\n",
+                )
+                result = MODULE.parse_transcript(transcript)
+                self.assertEqual(result.nonce, FIXED_NONCE)
+
+    def test_rejects_protocol_record_without_any_line_boundary(self) -> None:
+        """! @brief token과 boot banner 사이에 EOL이 없으면 부분 복원하지 않습니다. """
+
+        entering = (
+            "NUCODE_M15_SYSTEM_OFF_ENTERING:schema=2:phase=BUTTON:"
+            f"nonce={FIXED_NONCE}:mode=GPIO_WAKE"
+        ).encode("ascii")
+        transcript = valid_transcript().replace(
+            entering + b"\r\n",
+            entering + b"*** Booting nRF Connect SDK...\r\n",
+        )
+        with self.assertRaisesRegex(MODULE.SystemOffHilFailure, "순서/값"):
+            MODULE.parse_transcript(transcript)
+
     def test_rejects_failure_missing_line_and_trailing_protocol(self) -> None:
         """! @brief FAIL, 누락과 최종 PASS 뒤 추가 protocol을 거부합니다. """
 
@@ -240,6 +270,34 @@ class M15SystemOffHilTests(unittest.TestCase):
         self.assertGreaterEqual(
             capture.timed_entering_to_wake_ms, MODULE.MINIMUM_TIMED_WAKE_MS
         )
+        self.assertGreaterEqual(
+            capture.button_entering_to_wake_ms, MODULE.MINIMUM_BUTTON_PROMPT_MS
+        )
+        self.assertEqual(capture.nonce, FIXED_NONCE)
+
+    def test_capture_handles_lone_cr_and_split_crlf_records(self) -> None:
+        """! @brief live capture가 단독 CR과 chunk 분리 CRLF를 중복 없이 처리합니다. """
+
+        chunks: list[bytes] = []
+        for chunk in successful_chunks():
+            token = chunk.removesuffix(b"\r\n")
+            if MODULE.TIMED_ENTERING_PATTERN.fullmatch(token) is not None:
+                chunks.extend((token + b"\r", b"\n"))
+            elif MODULE.BUTTON_ENTERING_PATTERN.fullmatch(token) is not None:
+                chunks.append(token + b"\r")
+            else:
+                chunks.append(chunk)
+        serial = ScriptedSerial(chunks)
+        confirmations = iter(("DISABLE_SWD_ONLY", "SW0_RELEASED"))
+        with mock.patch.object(MODULE.sys, "stdout", io.StringIO()):
+            capture = MODULE.capture_protocol(
+                serial,
+                30.0,
+                monotonic=StepClock(),
+                confirm=lambda _prompt: next(confirmations),
+                nonce_factory=lambda count: FIXED_NONCE if count == 16 else "",
+                utc_now=lambda: datetime(2026, 8, 30, tzinfo=timezone.utc),
+            )
         self.assertGreaterEqual(
             capture.button_entering_to_wake_ms, MODULE.MINIMUM_BUTTON_PROMPT_MS
         )
