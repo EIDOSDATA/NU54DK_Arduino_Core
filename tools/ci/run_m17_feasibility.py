@@ -9,6 +9,7 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 from typing import Any, Sequence
@@ -44,6 +45,76 @@ SAMPLES = (
 
 class FeasibilityFailure(RuntimeError):
     """! @brief M17 feasibility 계약 실패를 나타냅니다. """
+
+
+## @brief Git 명령의 표준 출력을 반환하고 실패를 M17 계약 오류로 바꿉니다.
+def git_output(path: Path, arguments: Sequence[str], context: str) -> str:
+    try:
+        result = subprocess.run(
+            ("git", "-C", str(path), *arguments),
+            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            encoding="utf-8",
+        )
+    except OSError as error:
+        raise FeasibilityFailure(f"{context} Git 검사를 실행하지 못했습니다: {error}") from error
+    if result.returncode != 0:
+        detail = result.stderr.strip() or "Git이 세부 오류를 반환하지 않았습니다."
+        raise FeasibilityFailure(f"{context} Git 검사에 실패했습니다: {detail}")
+    return result.stdout
+
+
+## @brief build 전에 NCS·Zephyr와 실제 board checkout의 exact 상태를 검증합니다.
+def validate_execution_inputs(workspace: Path, lock: dict[str, Any]) -> dict[str, str]:
+    LOCK_MODULE.validate_workspace(workspace, lock)
+    for source_root, label in (
+        (workspace / "nrf", "NCS workspace"),
+        (workspace / "zephyr", "Zephyr workspace"),
+    ):
+        source_status = git_output(
+            source_root,
+            ("status", "--porcelain", "--untracked-files=all"),
+            label,
+        )
+        if source_status.strip():
+            raise FeasibilityFailure(f"{label}에 미커밋 변경이 있습니다.")
+    board_root = REPOSITORY / "board_package" / "NU54DK_Zephyr_DTS"
+    board_revision = LOCK_MODULE.git_revision(board_root)
+    expected_board_revision = str(lock["board"]["revision"])
+    if board_revision != expected_board_revision:
+        raise FeasibilityFailure(
+            "board checkout revision이 lock과 다릅니다: "
+            f"expected={expected_board_revision}, actual={board_revision}"
+        )
+    board_status = git_output(
+        board_root,
+        ("status", "--porcelain", "--untracked-files=all"),
+        "board checkout",
+    )
+    if board_status.strip():
+        raise FeasibilityFailure("board checkout에 미커밋 변경이 있습니다.")
+    gitlink_output = git_output(
+        REPOSITORY,
+        ("ls-tree", "HEAD", "--", "board_package/NU54DK_Zephyr_DTS"),
+        "부모 저장소 board gitlink",
+    )
+    match = re.fullmatch(
+        r"160000 commit ([0-9a-f]{40})\tboard_package/NU54DK_Zephyr_DTS\r?\n?",
+        gitlink_output,
+    )
+    if match is None or match.group(1) != expected_board_revision:
+        actual = match.group(1) if match else "invalid-or-missing"
+        raise FeasibilityFailure(
+            "부모 저장소 board gitlink가 lock과 다릅니다: "
+            f"expected={expected_board_revision}, actual={actual}"
+        )
+    return {
+        "ncs_revision": str(lock["ncs"]["revision"]),
+        "zephyr_revision": str(lock["zephyr"]["revision"]),
+        "board_revision": board_revision,
+    }
 
 
 ## @brief 파일의 SHA-256을 계산합니다.
@@ -116,10 +187,10 @@ def validate_sample_policy(sample_name: str, policy: dict[str, str]) -> None:
 def execute(workspace: Path, outdir: Path, west: str) -> tuple[dict[str, Any], bool]:
     lock = LOCK_MODULE.strict_json_object(LOCK_PATH)
     LOCK_MODULE.validate_lock(lock)
-    LOCK_MODULE.validate_workspace(workspace, lock)
+    input_identity = validate_execution_inputs(workspace, lock)
 
     records: list[dict[str, Any]] = []
-    controls_passed = True
+    gate_passed = True
     for sample_name, relative_source, policy in SAMPLES:
         validate_sample_policy(sample_name, policy)
         source = workspace / "nrf" / relative_source
@@ -132,7 +203,9 @@ def execute(workspace: Path, outdir: Path, west: str) -> tuple[dict[str, Any], b
             builds[role] = run_build(
                 build_command(west, source, build_dir, board), log_path, workspace
             )
-        controls_passed &= builds["official_control"]["return_code"] == 0
+        gate_passed &= builds["official_control"]["return_code"] == 0
+        if sample_name == "crypto_rng":
+            gate_passed &= builds["nu54dk_applicability"]["return_code"] == 0
         records.append(
             {
                 "sample": sample_name,
@@ -141,6 +214,9 @@ def execute(workspace: Path, outdir: Path, west: str) -> tuple[dict[str, Any], b
                 "builds": builds,
             }
         )
+
+    if validate_execution_inputs(workspace, lock) != input_identity:
+        raise FeasibilityFailure("build 도중 exact 입력 revision이 변경됐습니다.")
 
     evidence = {
         "schema_version": 1,
@@ -151,10 +227,14 @@ def execute(workspace: Path, outdir: Path, west: str) -> tuple[dict[str, Any], b
         "board_package": {"revision": lock["board"]["revision"]},
         "official_board": OFFICIAL_BOARD,
         "applicability_board": NU54DK_BOARD,
-        "control_gate": "pass" if controls_passed else "fail",
+        "gate_contract": {
+            "crypto_rng": ["official_control", "nu54dk_applicability"],
+            "networking": ["official_control"],
+        },
+        "control_gate": "pass" if gate_passed else "fail",
         "samples": records,
     }
-    return evidence, controls_passed
+    return evidence, gate_passed
 
 
 ## @brief CLI 인자를 구성합니다.

@@ -50,6 +50,12 @@ jobs:
           python3 tools/ci/run_zephyr_build.py
           --workspace "$NCS_CI_WORKSPACE"
           --outdir "$M12_EVIDENCE/twister"
+      - name: Record M17 NCS build feasibility
+        run: >-
+          python3 tools/ci/run_m17_feasibility.py
+          --workspace "$NCS_CI_WORKSPACE"
+          --outdir "$M12_EVIDENCE/m17-feasibility"
+          --west west
       - name: Run M14 C++ policy on QEMU
         run: >-
           python3 tools/ci/run_m14_qemu.py
@@ -121,6 +127,21 @@ jobs:
           $commandExitCode = $LASTEXITCODE
           $ErrorActionPreference = $previousErrorAction
           if ($commandExitCode -ne 0) { exit $commandExitCode }
+      - name: Compile pinned M17 external Arduino libraries
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Path $env:M12_EVIDENCE -Force | Out-Null
+          New-Item -ItemType Directory -Path $env:NUCODE_CI_TEMP -Force | Out-Null
+          $env:TEMP = $env:NUCODE_CI_TEMP
+          $env:TMP = $env:NUCODE_CI_TEMP
+          $cli = (Get-Command arduino-cli.exe -ErrorAction Stop).Source
+          python .\tools\ci\run_m17_external_arduino.py `
+            --arduino-cli $cli `
+            --lock .\tools\ci\m17-external-libraries.lock.json `
+            --evidence (Join-Path $env:M12_EVIDENCE 'm17-external-arduino.json') `
+            --log (Join-Path $env:M12_EVIDENCE 'm17-external-arduino.log')
+          $externalExitCode = $LASTEXITCODE
+          if ($externalExitCode -ne 0) { exit $externalExitCode }
       - name: Upload Arduino build evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

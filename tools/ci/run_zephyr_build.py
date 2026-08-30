@@ -4,11 +4,11 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
 import json
 import os
 from pathlib import Path
-import shutil
 import subprocess
 import sys
 from typing import Any, Sequence
@@ -22,7 +22,11 @@ assert SPEC and SPEC.loader
 LOCK_MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(LOCK_MODULE)
 BOARD_TARGET = "nrf54l15dk/nrf54l15/cpuapp/nu54dk"
-## @brief M16 role별 HIL image는 전용 runner가 명시적 role 인자로 빌드·검증하므로 공통 Twister 집합에서 제외합니다.
+M16_APPLICATION = REPOSITORY / "tests" / "zephyr" / "m16_ble_hil"
+M16_ROLE_SUITES = (
+    ("peripheral", "nucode.m16.ble_hil_peripheral"),
+    ("central", "nucode.m16.ble_hil_central"),
+)
 SUITES = (
     ("m3_runtime", "nucode.m3.runtime"),
     ("m4_api_contract", "nucode.m4.api_contract"),
@@ -35,6 +39,8 @@ SUITES = (
     ("m15_hil", "nucode.m15.auto_hil"),
     ("m15_wake", "nucode.m15.wake"),
     ("m16_ble_contract", "nucode.m16.ble_contract"),
+    ("m16_ble_hil", "nucode.m16.ble_hil_peripheral"),
+    ("m16_ble_hil", "nucode.m16.ble_hil_central"),
     ("m17_sensor_direct", "nucode.m17.sensor_direct"),
 )
 WINDOWS_OUTDIR_MAX_LENGTH = 32
@@ -43,6 +49,15 @@ M15_DIRECTORIES = ("m15_board", "m15_hil", "m15_wake")
 
 class BuildFailure(RuntimeError):
     """! @brief 대표 Zephyr build 계약 실패를 나타냅니다. """
+
+
+## @brief 파일 byte의 SHA-256을 계산합니다.
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 ## @brief Windows 도구의 MAX_PATH 영향을 피할 수 있는 짧은 출력 경로인지 검사합니다.
@@ -118,8 +133,113 @@ def validate_m15_lfxo(outdir: Path) -> None:
             raise BuildFailure(f"M15 외부 LFXO 부하 커패시터 계약이 다릅니다: {directory}")
 
 
+## @brief 한 M16 role build가 role·board·source·산출물을 정확히 반영했는지 검사합니다.
+def validate_m16_role_build(build_directory: Path, role: str) -> dict[str, Any]:
+    roles = {entry_role for entry_role, _scenario in M16_ROLE_SUITES}
+    if role not in roles:
+        raise BuildFailure(f"알 수 없는 M16 role입니다: {role}")
+    image_directory = build_directory / "m16_ble_hil"
+    required_files = {
+        "cache": build_directory / "CMakeCache.txt",
+        "commands": image_directory / "compile_commands.json",
+        "build_info": image_directory / "build_info.yml",
+        "record": image_directory / "nucode_arduino_core_build.yml",
+        "hex": image_directory / "zephyr" / "zephyr.hex",
+        "elf": image_directory / "zephyr" / "zephyr.elf",
+    }
+    for label, path in required_files.items():
+        if not path.is_file() or path.stat().st_size <= 0:
+            raise BuildFailure(f"M16 {role} {label} 산출물이 없습니다: {path}")
+
+    cache = required_files["cache"].read_text(encoding="utf-8", errors="strict")
+    role_cache = f"M16_ROLE:UNINITIALIZED={role}"
+    if role_cache not in cache:
+        raise BuildFailure(f"M16 {role} CMake role 전달을 확인하지 못했습니다.")
+
+    build_info = required_files["build_info"].read_text(
+        encoding="utf-8", errors="strict"
+    )
+    normalized_application = M16_APPLICATION.as_posix()
+    if (
+        f"qualifiers: 'nrf54l15/cpuapp/nu54dk'" not in build_info
+        or normalized_application not in build_info.replace("\\", "/")
+    ):
+        raise BuildFailure(f"M16 {role} build identity가 target 계약과 다릅니다.")
+
+    try:
+        commands = json.loads(required_files["commands"].read_text(encoding="utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise BuildFailure(f"M16 {role} compile_commands를 읽지 못했습니다: {error}") from error
+    if not isinstance(commands, list):
+        raise BuildFailure(f"M16 {role} compile_commands가 배열이 아닙니다.")
+    main_commands: list[str] = []
+    for command in commands:
+        if not isinstance(command, dict):
+            raise BuildFailure(f"M16 {role} compile command record가 object가 아닙니다.")
+        source = command.get("file")
+        if not isinstance(source, str) or not source.replace("\\", "/").endswith(
+            "/tests/zephyr/m16_ble_hil/src/main.cpp"
+        ):
+            continue
+        if isinstance(command.get("command"), str):
+            main_commands.append(command["command"])
+        elif isinstance(command.get("arguments"), list) and all(
+            isinstance(argument, str) for argument in command["arguments"]
+        ):
+            main_commands.append(" ".join(command["arguments"]))
+        else:
+            raise BuildFailure(f"M16 {role} main.cpp compile command 형식이 잘못됐습니다.")
+    if len(main_commands) != 1:
+        raise BuildFailure(
+            f"M16 {role} main.cpp compile command 수가 정확히 1이 아닙니다: "
+            f"{len(main_commands)}"
+        )
+    has_central_definition = "-DNUCODE_M16_CENTRAL=1" in main_commands[0]
+    if has_central_definition != (role == "central"):
+        raise BuildFailure(f"M16 {role} role compile definition이 다릅니다.")
+
+    record = required_files["record"].read_text(encoding="utf-8", errors="strict")
+    if (
+        "board: 'nrf54l15dk'" not in record
+        or "board_qualifiers: 'nrf54l15/cpuapp/nu54dk'" not in record
+    ):
+        raise BuildFailure(f"M16 {role} build record target이 다릅니다.")
+    return {
+        "role": role,
+        "status": "build-only-passed",
+        "validation_scope": "image-build-only",
+        "scenario": dict(M16_ROLE_SUITES)[role],
+        "role_compile_definition": (
+            "NUCODE_M16_CENTRAL=1" if role == "central" else "absent"
+        ),
+        "hex_size": required_files["hex"].stat().st_size,
+        "hex_sha256": file_sha256(required_files["hex"]),
+        "elf_size": required_files["elf"].stat().st_size,
+        "elf_sha256": file_sha256(required_files["elf"]),
+        "build_record_sha256": file_sha256(required_files["record"]),
+    }
+
+
+## @brief Twister가 만든 M16 peripheral·central image를 role별로 검증합니다.
+def validate_m16_role_builds(outdir: Path) -> list[dict[str, Any]]:
+    platform_directory = BOARD_TARGET.replace("/", "_")
+    records: list[dict[str, Any]] = []
+    for role, scenario in M16_ROLE_SUITES:
+        scenario_directory = (
+            outdir / platform_directory / "zephyr_gnu" / scenario
+        )
+        records.append(validate_m16_role_build(scenario_directory, role))
+    if records[0]["hex_sha256"] == records[1]["hex_sha256"]:
+        raise BuildFailure(
+            "M16 peripheral과 central HEX가 같아 role 분리를 확인하지 못했습니다."
+        )
+    return records
+
+
 ## @brief exact NCS workspace에서 고정된 target suite만 빌드합니다.
-def run_build(workspace: Path, outdir: Path, lock: dict[str, Any]) -> None:
+def run_build(
+    workspace: Path, outdir: Path, lock: dict[str, Any]
+) -> list[dict[str, Any]]:
     LOCK_MODULE.validate_workspace(workspace, lock)
     validate_outdir_path(outdir)
     if outdir.exists():
@@ -155,12 +275,14 @@ def run_build(workspace: Path, outdir: Path, lock: dict[str, Any]) -> None:
         command.extend(("--scenario", scenario))
     environment = dict(os.environ)
     environment["ZEPHYR_BASE"] = str(workspace / "zephyr")
+    environment["CCACHE_DISABLE"] = "1"
     print(f"[M12-ZEPHYR] exec: {subprocess.list2cmdline([str(item) for item in command])}")
     result = subprocess.run(command, cwd=workspace, env=environment, check=False)
     if result.returncode != 0:
         raise BuildFailure(f"Twister가 종료 코드 {result.returncode}로 실패했습니다.")
     validate_report(outdir / "twister.json")
     validate_m15_lfxo(outdir)
+    return validate_m16_role_builds(outdir)
 
 
 ## @brief 대표 Zephyr build를 실행하고 고정 identity evidence를 기록합니다.
@@ -175,13 +297,14 @@ def main(arguments: Sequence[str] | None = None) -> int:
     workspace = args.workspace.resolve()
     outdir = args.outdir.resolve()
     outdir.parent.mkdir(parents=True, exist_ok=True)
-    run_build(workspace, outdir, lock)
+    m16_role_builds = run_build(workspace, outdir, lock)
     evidence = {
         "schema_version": 1,
         "gate": "m12-zephyr-build-only",
         "status": "passed",
         "board": BOARD_TARGET,
         "scenarios": [scenario for _directory, scenario in SUITES],
+        "m16_role_builds": m16_role_builds,
         "ncs_revision": lock["ncs"]["revision"],
         "zephyr_revision": lock["zephyr"]["revision"],
         "container_digest": lock["linux_toolchain_container"]["digest"],
@@ -191,7 +314,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
         encoding="utf-8",
         newline="\n",
     )
-    print(f"M12_ZEPHYR_BUILD_PASS={len(SUITES)}")
+    print(f"M12_ZEPHYR_BUILD_PASS={len(SUITES)};M16_ROLE_BUILDS=2")
     return 0
 
 

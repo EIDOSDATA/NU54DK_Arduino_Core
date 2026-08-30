@@ -7,6 +7,7 @@ import importlib.util
 import json
 from pathlib import Path
 import re
+import tempfile
 import unittest
 
 
@@ -123,6 +124,49 @@ class M12CiContractTests(unittest.TestCase):
         self.assertIn("path: ${{ env.M12_EVIDENCE }}", linux_job)
         self.assertLess(linux_job.index(command), linux_job.index("actions/upload-artifact@"))
         self.assertNotIn("continue-on-error", linux_job)
+
+    ## @brief 고정 Nordic container가 M17 feasibility를 실행하고 전체 증적을 업로드합니다.
+    def test_reproducible_build_runs_m17_feasibility_in_pinned_container(self) -> None:
+        path = REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
+        text = path.read_text(encoding="utf-8")
+        linux_job = text.split("\n  zephyr-build:\n", 1)[1].split(
+            "\n  arduino-build:\n", 1
+        )[0]
+        command = "python3 tools/ci/run_m17_feasibility.py"
+        self.assertIn(command, linux_job)
+        self.assertIn('--workspace "$NCS_CI_WORKSPACE"', linux_job)
+        self.assertIn('--outdir "$M12_EVIDENCE/m17-feasibility"', linux_job)
+        self.assertIn("--west west", linux_job)
+        self.assertLess(
+            linux_job.index("python3 tools/ci/run_zephyr_build.py"),
+            linux_job.index(command),
+        )
+        self.assertLess(linux_job.index(command), linux_job.index("actions/upload-artifact@"))
+        self.assertNotIn("continue-on-error", linux_job)
+
+    ## @brief Windows job이 smoke 뒤 exact CLI로 고정 외부 library compile gate를 실행합니다.
+    def test_windows_build_runs_m17_external_arduino_after_smoke(self) -> None:
+        path = REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
+        text = path.read_text(encoding="utf-8")
+        windows_job = text.split("\n  arduino-build:\n", 1)[1]
+        command = "python .\\tools\\ci\\run_m17_external_arduino.py"
+        self.assertIn(command, windows_job)
+        self.assertIn("Get-Command arduino-cli.exe -ErrorAction Stop", windows_job)
+        self.assertIn("--arduino-cli $cli", windows_job)
+        self.assertIn(
+            "--lock .\\tools\\ci\\m17-external-libraries.lock.json",
+            windows_job,
+        )
+        self.assertIn("'m17-external-arduino.json'", windows_job)
+        self.assertIn("'m17-external-arduino.log'", windows_job)
+        self.assertIn("$externalExitCode = $LASTEXITCODE", windows_job)
+        self.assertIn(
+            "if ($externalExitCode -ne 0) { exit $externalExitCode }",
+            windows_job,
+        )
+        self.assertLess(windows_job.index("run_smoke.py"), windows_job.index(command))
+        self.assertLess(windows_job.index(command), windows_job.index("actions/upload-artifact@"))
+        self.assertNotIn("continue-on-error", windows_job)
 
     ## @brief Windows Arduino 재현 build가 짧은 임시 경로와 실패 log를 보존하는지 검증합니다.
     def test_windows_arduino_build_uses_short_temp_and_preserves_failure_log(self) -> None:
@@ -275,6 +319,79 @@ class M12CiContractTests(unittest.TestCase):
                 ("m15_wake", "nucode.m15.wake"),
             }.issubset(set(module.SUITES))
         )
+
+    ## @brief M16 HIL role image 두 개가 공통 build gate에서 명시적으로 분리되는지 검사합니다.
+    def test_zephyr_build_has_fail_closed_m16_role_images(self) -> None:
+        path = REPOSITORY / "tools" / "ci" / "run_zephyr_build.py"
+        spec = importlib.util.spec_from_file_location("nu54_m16_build_gate", path)
+        self.assertIsNotNone(spec)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        self.assertEqual(
+            module.M16_ROLE_SUITES,
+            (
+                ("peripheral", "nucode.m16.ble_hil_peripheral"),
+                ("central", "nucode.m16.ble_hil_central"),
+            ),
+        )
+        self.assertTrue(
+            {
+                ("m16_ble_hil", "nucode.m16.ble_hil_peripheral"),
+                ("m16_ble_hil", "nucode.m16.ble_hil_central"),
+            }.issubset(set(module.SUITES))
+        )
+        source = path.read_text(encoding="utf-8")
+        self.assertIn('"m16_role_builds": m16_role_builds', source)
+        self.assertIn('records[0]["hex_sha256"] == records[1]["hex_sha256"]', source)
+        cmake = (
+            REPOSITORY / "tests" / "zephyr" / "m16_ble_hil" / "CMakeLists.txt"
+        ).read_text(encoding="utf-8")
+        self.assertIn("zephyr_get(M16_ROLE)", cmake)
+
+    ## @brief M16 role 검증기가 central compile definition 누락을 fail-closed로 거부합니다.
+    def test_m16_role_validator_rejects_missing_central_definition(self) -> None:
+        path = REPOSITORY / "tools" / "ci" / "run_zephyr_build.py"
+        spec = importlib.util.spec_from_file_location("nu54_m16_role_validator", path)
+        self.assertIsNotNone(spec)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as temporary:
+            build = Path(temporary)
+            image = build / "m16_ble_hil"
+            (image / "zephyr").mkdir(parents=True)
+            (build / "CMakeCache.txt").write_text(
+                "M16_ROLE:UNINITIALIZED=central\n", encoding="utf-8"
+            )
+            (image / "compile_commands.json").write_text(
+                json.dumps(
+                    [
+                        {
+                            "file": str(
+                                module.M16_APPLICATION / "src" / "main.cpp"
+                            ),
+                            "command": "arm-zephyr-eabi-g++ -c main.cpp",
+                        }
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            (image / "build_info.yml").write_text(
+                "source-dir: '"
+                + module.M16_APPLICATION.as_posix()
+                + "'\nqualifiers: 'nrf54l15/cpuapp/nu54dk'\n",
+                encoding="utf-8",
+            )
+            (image / "nucode_arduino_core_build.yml").write_text(
+                "board: 'nrf54l15dk'\n"
+                "board_qualifiers: 'nrf54l15/cpuapp/nu54dk'\n",
+                encoding="utf-8",
+            )
+            (image / "zephyr" / "zephyr.hex").write_bytes(b"hex")
+            (image / "zephyr" / "zephyr.elf").write_bytes(b"elf")
+            with self.assertRaisesRegex(module.BuildFailure, "compile definition"):
+                module.validate_m16_role_build(build, "central")
 
     ## @brief Windows build가 MAX_PATH 위험을 실행 전에 차단하는지 검증합니다.
     def test_zephyr_build_requires_short_windows_outdir(self) -> None:

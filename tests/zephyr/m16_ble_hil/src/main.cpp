@@ -67,7 +67,8 @@ void fail(const char *reason)
     protocol_failed = true;
 }
 
-/** @brief 동일 nonce로 재현 가능한 payload를 만듭니다. */
+#ifdef NUCODE_M16_CENTRAL
+/** @brief Central role에서 동일 nonce로 재현 가능한 payload를 만듭니다. */
 void makePayload(uint8_t marker, uint8_t *buffer, size_t length)
 {
     if (buffer == nullptr || length == 0U)
@@ -80,6 +81,7 @@ void makePayload(uint8_t marker, uint8_t *buffer, size_t length)
         buffer[index] = static_cast<uint8_t>(nonce[(index - 1U) % nonce_length]);
     }
 }
+#endif
 
 /** @brief BLE event callback이 setup/loop와 같은 Arduino main thread인지 검증합니다. */
 void onBleEvent(nucode::ble::Event event, void *context)

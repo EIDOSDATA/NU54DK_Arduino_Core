@@ -95,12 +95,118 @@ class M17FeasibilityTests(unittest.TestCase):
             workspace = Path(workspace_name)
             for _name, relative, _policy in MODULE.SAMPLES:
                 (workspace / "nrf" / relative).mkdir(parents=True)
-            with mock.patch.object(MODULE.LOCK_MODULE, "strict_json_object", return_value=lock), mock.patch.object(MODULE.LOCK_MODULE, "validate_lock"), mock.patch.object(MODULE.LOCK_MODULE, "validate_workspace"), mock.patch.object(MODULE, "run_build", side_effect=lambda *_args: next(outcomes)):
+            identity = {
+                "ncs_revision": "a" * 40,
+                "zephyr_revision": "b" * 40,
+                "board_revision": "c" * 40,
+            }
+            with mock.patch.object(MODULE.LOCK_MODULE, "strict_json_object", return_value=lock), mock.patch.object(MODULE.LOCK_MODULE, "validate_lock"), mock.patch.object(MODULE, "validate_execution_inputs", return_value=identity), mock.patch.object(MODULE, "run_build", side_effect=lambda *_args: next(outcomes)):
                 evidence, passed = MODULE.execute(workspace, workspace / "out", "west")
         self.assertFalse(passed)
         self.assertEqual(evidence["control_gate"], "fail")
         self.assertEqual(len(evidence["samples"]), 4)
         self.assertEqual(evidence["samples"][1]["builds"]["nu54dk_applicability"]["return_code"], 1)
+
+    def test_crypto_nu54dk_failure_is_gate_failure(self) -> None:
+        """! @brief crypto RNG는 official과 NU54DK가 모두 성공해야 gate를 통과합니다. """
+        outcomes = iter(
+            [
+                {"return_code": 0}, {"return_code": 1},
+                {"return_code": 0}, {"return_code": 1},
+                {"return_code": 0}, {"return_code": 1},
+                {"return_code": 0}, {"return_code": 1},
+            ]
+        )
+        evidence, passed = self.execute_with_outcomes(outcomes)
+        self.assertFalse(passed)
+        self.assertEqual(evidence["control_gate"], "fail")
+
+    def test_network_nu54dk_failure_is_recorded_but_not_gate_failure(self) -> None:
+        """! @brief deferred networking은 official만 gate이며 NU54DK 실패는 evidence에 보존합니다. """
+        outcomes = iter(
+            [
+                {"return_code": 0}, {"return_code": 0},
+                {"return_code": 0}, {"return_code": 1},
+                {"return_code": 0}, {"return_code": 1},
+                {"return_code": 0}, {"return_code": 1},
+            ]
+        )
+        evidence, passed = self.execute_with_outcomes(outcomes)
+        self.assertTrue(passed)
+        self.assertEqual(evidence["control_gate"], "pass")
+        self.assertEqual(
+            evidence["gate_contract"]["networking"], ["official_control"]
+        )
+        self.assertTrue(
+            all(
+                record["builds"]["nu54dk_applicability"]["return_code"] == 1
+                for record in evidence["samples"][1:]
+            )
+        )
+
+    def execute_with_outcomes(self, outcomes) -> tuple[dict, bool]:
+        """! @brief 고정 입력에서 build 결과 배열을 실행하는 fixture입니다. """
+        lock = {
+            "ncs": {"tag": "v3.4.0", "revision": "a" * 40},
+            "zephyr": {"revision": "b" * 40},
+            "board": {"revision": "c" * 40},
+        }
+        identity = {
+            "ncs_revision": "a" * 40,
+            "zephyr_revision": "b" * 40,
+            "board_revision": "c" * 40,
+        }
+        with tempfile.TemporaryDirectory(prefix="nu54-m17-workspace-") as workspace_name:
+            workspace = Path(workspace_name)
+            for _name, relative, _policy in MODULE.SAMPLES:
+                (workspace / "nrf" / relative).mkdir(parents=True)
+            with mock.patch.object(MODULE.LOCK_MODULE, "strict_json_object", return_value=lock), mock.patch.object(MODULE.LOCK_MODULE, "validate_lock"), mock.patch.object(MODULE, "validate_execution_inputs", return_value=identity), mock.patch.object(MODULE, "run_build", side_effect=lambda *_args: next(outcomes)):
+                return MODULE.execute(workspace, workspace / "out", "west")
+
+    def test_execution_inputs_reject_dirty_board(self) -> None:
+        """! @brief exact revision이어도 board checkout이 dirty이면 build 전에 거부합니다. """
+        lock = {
+            "ncs": {"revision": "a" * 40},
+            "zephyr": {"revision": "b" * 40},
+            "board": {"revision": "c" * 40},
+        }
+        gitlink = (
+            f"160000 commit {'c' * 40}\tboard_package/NU54DK_Zephyr_DTS\n"
+        )
+        with mock.patch.object(MODULE.LOCK_MODULE, "validate_workspace"), mock.patch.object(MODULE.LOCK_MODULE, "git_revision", return_value="c" * 40), mock.patch.object(MODULE, "git_output", side_effect=["", "", " M dirty.txt\n", gitlink]):
+            with self.assertRaisesRegex(MODULE.FeasibilityFailure, "미커밋 변경"):
+                MODULE.validate_execution_inputs(Path("workspace"), lock)
+
+    def test_execution_inputs_reject_board_revision_or_gitlink_mismatch(self) -> None:
+        """! @brief 실제 checkout과 부모 gitlink가 lock revision에서 벗어나면 거부합니다. """
+        lock = {
+            "ncs": {"revision": "a" * 40},
+            "zephyr": {"revision": "b" * 40},
+            "board": {"revision": "c" * 40},
+        }
+        with mock.patch.object(MODULE.LOCK_MODULE, "validate_workspace"), mock.patch.object(MODULE.LOCK_MODULE, "git_revision", return_value="d" * 40), mock.patch.object(MODULE, "git_output", side_effect=["", ""]):
+            with self.assertRaisesRegex(MODULE.FeasibilityFailure, "checkout revision"):
+                MODULE.validate_execution_inputs(Path("workspace"), lock)
+        wrong_gitlink = (
+            f"160000 commit {'d' * 40}\tboard_package/NU54DK_Zephyr_DTS\n"
+        )
+        with mock.patch.object(MODULE.LOCK_MODULE, "validate_workspace"), mock.patch.object(MODULE.LOCK_MODULE, "git_revision", return_value="c" * 40), mock.patch.object(MODULE, "git_output", side_effect=["", "", "", wrong_gitlink]):
+            with self.assertRaisesRegex(MODULE.FeasibilityFailure, "gitlink"):
+                MODULE.validate_execution_inputs(Path("workspace"), lock)
+
+    def test_execution_inputs_reject_dirty_ncs_or_zephyr_workspace(self) -> None:
+        """! @brief revision이 같아도 NCS·Zephyr source 변경은 exact workspace가 아닙니다. """
+        lock = {
+            "ncs": {"revision": "a" * 40},
+            "zephyr": {"revision": "b" * 40},
+            "board": {"revision": "c" * 40},
+        }
+        with mock.patch.object(MODULE.LOCK_MODULE, "validate_workspace"), mock.patch.object(MODULE, "git_output", side_effect=[" M sample.c\n"]):
+            with self.assertRaisesRegex(MODULE.FeasibilityFailure, "NCS workspace"):
+                MODULE.validate_execution_inputs(Path("workspace"), lock)
+        with mock.patch.object(MODULE.LOCK_MODULE, "validate_workspace"), mock.patch.object(MODULE, "git_output", side_effect=["", "?? local.patch\n"]):
+            with self.assertRaisesRegex(MODULE.FeasibilityFailure, "Zephyr workspace"):
+                MODULE.validate_execution_inputs(Path("workspace"), lock)
 
 
 if __name__ == "__main__":

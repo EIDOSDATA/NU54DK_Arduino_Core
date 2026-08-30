@@ -136,10 +136,32 @@ def _safe_relative_path(value: Any, context: str) -> str:
     path_text = _require_string(value, context)
     if "\\" in path_text:
         raise CoverageError(f"{context}는 forward slash만 사용해야 합니다: {path_text}")
+    if re.match(r"^[A-Za-z]:", path_text) or path_text.startswith("//"):
+        raise CoverageError(f"{context}에 Windows drive 또는 UNC 경로를 허용하지 않습니다: {path_text}")
+    raw_parts = path_text.split("/")
+    if any(part in {"", ".", ".."} for part in raw_parts):
+        raise CoverageError(f"{context}에 안전하지 않은 상대 경로가 있습니다: {path_text}")
     candidate = PurePosixPath(path_text)
-    if candidate.is_absolute() or any(part in {"", ".", ".."} for part in candidate.parts):
+    if (
+        candidate.is_absolute()
+        or any(part in {"", ".", ".."} for part in candidate.parts)
+        or any(":" in part for part in candidate.parts)
+    ):
         raise CoverageError(f"{context}에 안전하지 않은 상대 경로가 있습니다: {path_text}")
     return candidate.as_posix()
+
+
+## @brief 상대 경로의 실제 resolve 결과가 지정 root 안에 있는지 검증합니다.
+def _resolve_contained(root: Path, relative_path: str, context: str) -> Path:
+    root = root.resolve()
+    target = (root / PurePosixPath(relative_path)).resolve()
+    try:
+        target.relative_to(root)
+    except ValueError as error:
+        raise CoverageError(f"{context}의 실제 경로가 허용 root 밖입니다: {relative_path}") from error
+    if target == root:
+        raise CoverageError(f"{context}가 허용 root 자체를 가리킬 수 없습니다.")
+    return target
 
 
 ## @brief 파일 byte의 SHA-256을 계산합니다.
@@ -295,7 +317,13 @@ def validate_dataset(
     verify_board_checkout: bool = True,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     repo_root = repo_root.resolve()
+    explicit_dataset_root = dataset_root is not None
     dataset_root = (dataset_root or repo_root / "coverage" / DATASET_NAME).resolve()
+    if not explicit_dataset_root:
+        try:
+            dataset_root.relative_to(repo_root)
+        except ValueError as error:
+            raise CoverageError("coverage dataset의 실제 경로가 저장소 밖입니다.") from error
     manifest_path = dataset_root / "manifest.json"
     manifest = strict_load_json(manifest_path)
     _require_exact_fields(manifest, MANIFEST_FIELDS, "manifest")
@@ -341,7 +369,9 @@ def validate_dataset(
         declared_hash = _require_string(entry["sha256"], f"manifest.records[{index}].sha256")
         if not SHA256_RE.fullmatch(declared_hash):
             raise CoverageError(f"record SHA-256 형식이 잘못되었습니다: {record_id}")
-        record_path = dataset_root / PurePosixPath(relative_path)
+        record_path = _resolve_contained(
+            dataset_root, relative_path, f"manifest.records[{index}].path"
+        )
         if not record_path.is_file():
             raise CoverageError(f"record 파일이 없습니다: {relative_path}")
         actual_hash = _file_sha256(record_path)
@@ -352,7 +382,10 @@ def validate_dataset(
         record = strict_load_json(record_path)
         _validate_record(record, record_id, expected_pins)
         for evidence_path in record["validation"]["evidence"]:
-            if not (repo_root / PurePosixPath(evidence_path)).is_file():
+            resolved_evidence = _resolve_contained(
+                repo_root, evidence_path, f"{record_id}.validation.evidence"
+            )
+            if not resolved_evidence.is_file():
                 raise CoverageError(f"{record_id} evidence 파일이 없습니다: {evidence_path}")
         records.append(record)
         normalized_entries.append((record_id, relative_path))

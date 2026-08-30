@@ -7,7 +7,6 @@ tests:
       - bluetooth
       - hil
     build_only: true
-    sysbuild: false
     extra_args:
       - M16_ROLE=peripheral
     platform_allow:
@@ -22,7 +21,6 @@ tests:
       - bluetooth
       - hil
     build_only: true
-    sysbuild: false
     extra_args:
       - M16_ROLE=central
     platform_allow:

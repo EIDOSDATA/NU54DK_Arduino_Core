@@ -176,6 +176,40 @@ class M17CoverageTests(unittest.TestCase):
         with self.assertRaisesRegex(M17.CoverageError, "안전하지 않은 상대 경로"):
             self.validate_fixture()
 
+    def test_windows_drive_paths_are_rejected(self) -> None:
+        """! @brief C:/·D:/와 drive-relative 경로를 상대 경로로 해석하지 않습니다. """
+        for value in ("C:/escape.json", "D:/escape.json", "C:escape.json"):
+            with self.subTest(value=value):
+                with self.assertRaisesRegex(M17.CoverageError, "Windows drive"):
+                    M17._safe_relative_path(value, "fixture.path")
+
+    def test_resolved_path_outside_root_is_rejected(self) -> None:
+        """! @brief symlink 등으로 resolve 결과가 root 밖이면 fail-closed로 거부합니다. """
+        root = Path(self.temporary.name) / "contained"
+        root.mkdir()
+        outside = Path(self.temporary.name) / "outside.json"
+        outside.write_text("{}\n", encoding="utf-8")
+        link = root / "link.json"
+        try:
+            link.symlink_to(outside)
+        except OSError:
+            with self.assertRaisesRegex(M17.CoverageError, "허용 root 밖"):
+                M17._resolve_contained(root, "../outside.json", "fixture.path")
+        else:
+            with self.assertRaisesRegex(M17.CoverageError, "허용 root 밖"):
+                M17._resolve_contained(root, "link.json", "fixture.path")
+
+    def test_evidence_drive_path_is_rejected(self) -> None:
+        """! @brief evidence에도 Windows absolute·drive-relative 경로를 허용하지 않습니다. """
+        self.mutate_record(
+            "nrf.openthread-cli",
+            lambda record: record["validation"].update(
+                {"state": "fail", "evidence": ["C:/outside/evidence.md"]}
+            ),
+        )
+        with self.assertRaisesRegex(M17.CoverageError, "Windows drive"):
+            self.validate_fixture()
+
     def test_manifest_revision_mismatch_is_rejected(self) -> None:
         path = self.dataset_root / "manifest.json"
         manifest = json.loads(path.read_text(encoding="utf-8"))
