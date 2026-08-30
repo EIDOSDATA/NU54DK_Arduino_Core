@@ -43,7 +43,7 @@ from m14_pin_hil import (  # noqa: E402
     CORE_SOURCE_SCOPES,
     build_record_value,
     file_sha256,
-    git_committed_files_digest,
+    files_digest,
     git_revision,
     validate_board_revision,
 )
@@ -246,19 +246,15 @@ def validate_source_clean() -> None:
         )
 
 
-## @brief 공식 clean build record와 같은 commit blob 기준 source digest를 계산합니다.
+## @brief CMake build record와 같은 checkout byte 기준 source digest를 계산합니다.
 def current_source_digests() -> dict[str, str]:
     board_scope = BOARD_ROOT / "boards" / "nucode" / "nu54dk"
     return {
-        "core_source_sha256": git_committed_files_digest(
-            REPOSITORY, REPOSITORY, CORE_SOURCE_SCOPES
+        "core_source_sha256": files_digest(REPOSITORY, CORE_SOURCE_SCOPES),
+        "application_source_sha256": files_digest(
+            APPLICATION_SOURCE_ROOT, (APPLICATION_SOURCE_ROOT,)
         ),
-        "application_source_sha256": git_committed_files_digest(
-            REPOSITORY, APPLICATION_SOURCE_ROOT, (APPLICATION_SOURCE_ROOT,)
-        ),
-        "board_source_sha256": git_committed_files_digest(
-            BOARD_ROOT, BOARD_ROOT, (board_scope,)
-        ),
+        "board_source_sha256": files_digest(BOARD_ROOT, (board_scope,)),
     }
 
 
