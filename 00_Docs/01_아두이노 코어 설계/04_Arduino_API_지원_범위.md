@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | API-SUPPORT-001 |
-| 문서 개정 | 2.5 |
-| 문서 상태 | v0.1.0 정식 공개; v0.2.0 M12~M17 완료, M18 RC2 공개 설치본 gate PASS |
+| 문서 개정 | 3.0 |
+| 문서 상태 | `v0.2.0` 정식 공개 범위 확정; `v0.3.0` M19~M22 BLE 확장 계획 반영 |
 | 최종 갱신일 | 2026-08-31 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
@@ -37,6 +37,11 @@ library compile, Zephyr/NCS direct build와 무선 feasibility를 제품 지원 
 따라서 Adafruit LSM6DS compile이나 OpenThread build 성공을 새로운 Arduino API 지원으로
 확대하지 않는다.
 
+M18을 완료하고 `v0.2.0`을 정식 공개했다. 다음 제품선 `v0.3.0`은 M19 BLE Core/GAP, M20
+범용 GATT, M21 보안·표준 profile과 M22 릴리스로 진행한다. 이 계획은 구현 상태를 바꾸지
+않는다. 각 API는 해당 마일스톤의 compile·semantic·HIL 증거가 병합된 뒤에만 `미구현`에서
+상향한다.
+
 M7의 `Wire`, `SPI`, `analogRead()`와 `analogWrite()` production source 및 builder profile은
 NU54DK Twister target 11/11, Arduino CLI M7 4/4와 승인된 NU54DK driver HIL을 통과했다.
 BQ25186 I2C repeated-start는 100/400 kHz에서 실기 통과했고 SPI00은 4 MHz에서 P2.2 MOSI와
@@ -63,6 +68,7 @@ Nordic container workflow에서 3/3 PASS했다.
 - [M14 Core API와 Variant 기준선](<../04_검증 기록/16_M14_Core_API와_Variant_기준선.md>)
 - [M16 BLE NUS 기준선](<../04_검증 기록/18_M16_BLE_NUS_기준선.md>)
 - [M17 NCS 기능과 예제 Coverage 기준선](<../04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)
+- [v0.3.0 구현 마일스톤](07_v0.3.0_구현_마일스톤.md)
 
 ---
 
@@ -382,8 +388,10 @@ nRF54L15와 NU54DK 전기 사양을 따른다.
 | `Client`, `Server`, `UDP` base class | P3 | 미구현 | 미구현 | base interface compile과 실제 transport 구현을 구분 |
 | Wi-Fi/Ethernet | 제외 | 하드웨어 미지원 | 하드웨어 미지원 | 별도 network hardware 없이 기본 Core에서 제공하지 않음 |
 | `NUCODE BLE` NUS `Stream` | P2 | 부분 지원 | 미구현 | M16 NUS RX write/TX notify와 Peripheral/Central만 두 보드 HIL PASS; 범용 GATT·보안 API 아님 |
-| 범용 BLE Arduino API·GATT builder | P3 | 미구현 | 미구현 | NCS Bluetooth와 `bt_*` 직접 사용 가능성을 Arduino library 호환으로 확대하지 않음 |
-| 802.15.4/Thread/Matter | P3 | 미구현 | 미구현 | M17은 build feasibility만 기록; 세 항목 모두 v0.2.0에서 deferred·미지원 |
+| BLE Core/GAP | P2 | 미구현 | 미구현 | M19: device lifecycle, 이름, 광고 payload·주기, scan filter와 connection 설정 |
+| 범용 BLE Arduino API·GATT builder | P3 | 미구현 | 미구현 | M20: service/characteristic, 16/128-bit UUID, read/write/notify/indicate와 generic client; 실행 중 임의 schema 변경 제외 |
+| BLE security·BAS/DIS/HID | P3 | 미구현 | 미구현 | M21: pairing, bonding, SMP, passkey와 표준 profile; OS/스마트폰 수동 호환성 확인 포함 |
+| 802.15.4/Thread/Matter | P3 | 미구현 | 미구현 | M17은 build feasibility만 기록; v0.5 M27~M30과 v0.6 M31~M34 계획, 현재 미지원 |
 
 ---
 
@@ -450,6 +458,26 @@ M17은 아래 경로를 검증했지만 portable Arduino API나 NUCODE wrapper�
 
 각 결과의 exact revision과 증거 경계는 [M17 기준선](<../04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)을
 따른다. 특히 compile 성공은 sensor 실기 동작, radio 통신 또는 Matter commissioning PASS가 아니다.
+
+### 6.3 v0.3 BLE 확장 경계
+
+M19~M22는 `libraries/NUCODE_BLE/`를 확장하되 M16 NUS API와 기존 Sketch 호환성을 유지한다.
+
+| 단계 | 공개 목표 | 완료 전 상태 | 완료에 필요한 핵심 증거 |
+| --- | --- | --- | --- |
+| M19 | `BLEDevice`, advertising, scanner와 connection lifecycle | 미구현 | host/target 계약, 두 보드 advertise·scan·connect·disconnect/reconnect HIL, NUS 회귀 |
+| M20 | `BLEService`, `BLECharacteristic`와 generic GATT client | 미구현 | read/write/write-no-response/notify/indicate·CCC, 길이 경계와 reconnect 두 보드 HIL |
+| M21 | pairing·bonding·passkey/SMP, BAS, DIS와 BLE HID | 미구현 | bond persistence·삭제, 보안 실패 negative, BAS/DIS 자동 검증과 OS/스마트폰 HID 수동 확인 |
+| M22 | `v0.3.0` package와 공개 | 미구현 | 전체 예제, clean Windows lifecycle, BLE compatibility matrix와 RC/stable gate |
+
+GATT schema는 Bluetooth stack을 시작하기 전에 선언·등록하는 흐름을 기본 계약으로 한다.
+Bluetooth stack callback은 내부 상태와 bounded event queue만 갱신하고 사용자 callback은
+`poll()`을 거쳐 Arduino main-thread에서 실행한다. callback 문맥에서 사용자 code 직접 실행,
+무제한 동적 할당, 시작 후 service schema 변경과 자동 multiprotocol 공존은 지원 목표가 아니다.
+
+BLE Mesh, Channel Sounding와 ISO는 `v0.3.0`에서 계속 `미구현`이다. BLE HID는 target native USB
+HID와 관계없는 BLE GATT profile이며, NU54DK의 native USB 부재를 우회하는 USB 지원으로
+표시하지 않는다.
 
 ---
 

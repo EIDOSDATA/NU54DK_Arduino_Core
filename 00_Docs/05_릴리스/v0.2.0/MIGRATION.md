@@ -1,12 +1,12 @@
-# NU54DK Arduino Core v0.2.0-rc.2 마이그레이션
+# NU54DK Arduino Core v0.2.0 마이그레이션
 
-> **배포 상태: RC2 Public Prerelease / 정식 버전 아님.** RC 전용 index로 설치·시험하며
-> 프로젝트 소유자의 stable 승인 전까지 정식 `v0.1.0`을 유지한다.
+> **배포 상태: v0.2.0 정식 릴리스.** stable index에서 `0.2.0`을 설치한다. RC1·RC2 전용
+> index는 검증 이력이며 신규 설치에 사용하지 않는다.
 
 | 항목 | 값 |
 | --- | --- |
-| 대상 | `v0.1.0` stable 또는 v0.2 source build 사용자 |
-| 후보 version | `0.2.0-rc.2` |
+| 대상 | `v0.1.0`, `v0.2.0-rc.1`, `v0.2.0-rc.2` 또는 v0.2 source build 사용자 |
+| 도착 version | `0.2.0` |
 | Board/FQBN | `NU54DK (nRF54L15, Zephyr)` / `nucode:zephyr:nu54dk` |
 | 공식 OS | Windows 10/11 x64 |
 | NCS | `v3.4.0` / `99553055607b2e9885fbc80ccd11fa9da81c2df0` |
@@ -14,74 +14,39 @@
 | Toolchain | `dcbdc366a1` |
 | Board package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 
-## 1. RC 공개 전 검증 담당자가 할 일
+## 1. Stable index로 전환
 
-이 절은 RC2 공개 전 Draft/staged 검증 절차를 보존한 것이다. 현재 RC2는 이미 Public
-Prerelease이므로 일반 설치는 2절의 RC 전용 index를 사용한다.
-
-GitHub Draft asset은 일반 공개 download URL에서 받을 수 없다. Draft 검증 담당자는 인증된
-계정으로 M18 plan에 기록된 exact ZIP과 sidecar를 내려받고 SHA-256을 확인한 뒤 다음과 같이
-clean Windows의 격리된 Sketchbook hardware staging을 수동으로 만든다. 이 저장소에는 아직
-별도 자동 staging script가 없다고 전제한다.
-
-1. 기존 NU54DK Core와 분리된 Windows 사용자와 새 Arduino Sketchbook directory를 준비한다.
-2. exact ZIP의 단일 top-level platform 내용을 새 Sketchbook의
-   `hardware/nucode/zephyr` 아래에 추출한다.
-3. Arduino IDE에서 staged platform의 board, 두 Feature set과 package 사용자 예제 14개를 열거한다.
-4. Blink, 대표 Board/System 예제와 BLE NUS 역할 예제를 compile한다.
-5. 온보드 CMSIS-DAP V2/pyOCD로 실제 NU54DK upload와 실행을 확인한다.
-6. 결과를 `staged ZIP` 검증으로 기록하고 Boards Manager 설치 완료라고 표시하지 않는다.
-
-- Draft RC index URL을 일반 Arduino IDE의 Additional Boards Manager URLs로 배포하지 않는다.
-- index 안의 URL을 임의 local 경로로 고쳐서 원본 candidate 검증이라고 기록하지 않는다.
-- package ZIP을 `%LOCALAPPDATA%\Arduino15` 아래에 수동으로 풀어 설치 완료를 가장하지 않는다.
-- staged 결과는 exact candidate asset, Arduino IDE/CLI version과 실제 NU54DK upload 여부를
-  함께 기록한다. `post_install` callback과 Boards Manager lifecycle은 이 단계의 검증 대상이 아니다.
-
-일반 사용자는 다음 stable index와 `0.1.0`을 계속 사용한다.
+Arduino IDE의 **Additional Boards Manager URLs**에 다음 주소를 한 줄로 등록한다.
 
 ```text
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-## 2. Public Prerelease 설치
+RC 전용 URL을 등록했던 사용자는 stable URL을 추가한 뒤 `v0.2.0-rc.1` 또는
+`v0.2.0-rc.2` URL을 제거한다. 기존 stable URL을 쓰던 `v0.1.0` 사용자는 URL을 바꿀 필요가
+없다. RC tag와 자산은 삭제하지 않지만 신규 설치 경로로 권장하지 않는다.
 
-`v0.2.0-rc.2`는 실제 Git tag와 공개 asset을 가진 **Public Prerelease**다. 다음 RC 전용
-index로 설치한다.
-
-```text
-https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/package_nucode_nu54dk_rc_index.json
-```
+## 2. `0.2.0` 설치와 기본 확인
 
 1. Arduino IDE, Serial Monitor, debugger와 실행 중인 pyOCD/J-Link process를 닫는다.
-2. Additional Boards Manager URLs에 위 RC 전용 URL을 추가한다.
-3. Boards Manager index를 갱신한다.
-4. `NUCODE NU54DK Zephyr Boards`의 `0.2.0-rc.2`를 명시적으로 선택해 설치한다.
-5. IDE를 재시작하고 `NU54DK (nRF54L15, Zephyr)`를 선택한다.
-6. Tools의 Feature set을 먼저 `Standard peripherals`로 두고 Blink를 clean compile한다.
-7. 온보드 CMSIS-DAP를 연결하고 Upload probe `CMSIS-DAP (pyOCD)`로 실제 board에 upload한다.
-8. BLE를 시험할 때만 Feature set을 `BLE NUS`로 바꾸고 NUS 예제를 clean compile한다.
+2. Additional Boards Manager URLs에 stable index를 등록하고 index를 갱신한다.
+3. `NUCODE NU54DK Zephyr Boards`의 `0.2.0`을 명시적으로 선택해 설치한다.
+4. IDE를 재시작하고 `NU54DK (nRF54L15, Zephyr)`를 선택한다.
+5. Tools의 Feature set을 `Standard peripherals`로 두고 Blink를 clean compile·upload한다.
+6. BLE를 시험할 때만 Feature set을 `BLE NUS`로 바꾸고 NUS 예제를 clean compile한다.
 
-현재 공개 설치본은 격리 Boards Manager `post_install`, package 사용자 예제 14/14 compile,
-명시 UID pyOCD upload, UART READY와 NUS Peripheral↔Central 고유 payload 원문 연속 수신을
-PASS했다. RC1 상태 로그 삽입도 재현되지 않았다. 이 공개 예제 transparent bridge HIL은 M16의
-frame boundary·disconnect/reconnect 전문 HIL과 별개다. 프로젝트 소유자의 별도 승인 전에는
-`v0.2.0` stable을 공개하지 않는다.
-
-Arduino CLI에서는 public Prerelease 전환 후 다음과 같이 설치한다.
+Arduino CLI에서는 다음과 같이 설치한다.
 
 ```powershell
-$RcIndex = 'https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/package_nucode_nu54dk_rc_index.json'
-arduino-cli config add board_manager.additional_urls $RcIndex
+$StableIndex = 'https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json'
+arduino-cli config add board_manager.additional_urls $StableIndex
 arduino-cli core update-index
-arduino-cli core install nucode:zephyr@0.2.0-rc.2 --run-post-install
+arduino-cli core install nucode:zephyr@0.2.0 --run-post-install
 arduino-cli board details --fqbn nucode:zephyr:nu54dk
 ```
 
-이미 `0.2.0-rc.1`을 설치했다면 같은 RC 전용 URL을 RC2 URL로 교체하거나 추가한 뒤 index를
-갱신하고 `0.2.0-rc.2`를 명시적으로 설치한다. RC1의 build output은 재사용하지 않고 첫 compile은
-새 build directory에서 수행한다. 여러 CMSIS-DAP가 연결된 Arduino CLI upload는 다음처럼 대상
-UID를 전달한다.
+이전 버전의 build output은 재사용하지 않고 첫 compile은 새 build directory에서 수행한다.
+여러 CMSIS-DAP가 연결된 Arduino CLI upload는 다음처럼 대상 UID를 전달한다.
 
 ```powershell
 arduino-cli upload --fqbn nucode:zephyr:nu54dk `
@@ -93,7 +58,7 @@ arduino-cli upload --fqbn nucode:zephyr:nu54dk `
 
 같은 `build-path`를 만든 compile에도 `--board-options upload_probe=pyocd_uid`를 사용해야 한다.
 
-`v0.1.0`과 이 RC는 NCS v3.4.0과 Toolchain bundle `dcbdc366a1`을 사용한다. 사용자 영역의 exact
+`v0.1.0`, RC2와 `v0.2.0`은 NCS v3.4.0과 Toolchain bundle `dcbdc366a1`을 사용한다. 사용자 영역의 exact
 설치와 완료 marker가 유효하면 installer가 대용량 prerequisite를 재사용할 수 있으므로 먼저
 NCS/Toolchain directory를 삭제하지 않는다.
 
@@ -112,12 +77,12 @@ Boards Manager archive에 exact NU54DK board package가 포함되므로 별도 G
 package board file을 덮어쓰지 않는다.
 
 `BLESerial`을 사용하는 Sketch는 `BLE NUS`를 선택해야 한다. 하나의 image에서 Peripheral과
-Central을 동시에 시작하지 않는다. 범용 GATT나 보안 API를 기대하는 기존 BLE library는 이
-RC의 NUS wrapper로 자동 변환되지 않는다.
+Central을 동시에 시작하지 않는다. 범용 GATT나 보안 API를 기대하는 기존 BLE library는
+v0.2.0의 NUS wrapper로 자동 변환되지 않는다.
 
 ## 4. 사용자 예제와 내부 fixture 구분
 
-이 RC의 Arduino IDE 사용자 예제는 14개다.
+v0.2.0의 Arduino IDE 사용자 예제는 14개다.
 
 - NUCODE NU54DK 10개: `Blink`, `SerialEcho`, `InterruptButton`, `AnalogReadA0`, `PWMFade`,
   `BoardInfo`, `WatchdogBasic`, `CounterAlarm`, `SettingsStorage`, `SystemOffWake`
@@ -130,12 +95,12 @@ upstream source와 개별 Zephyr/NCS 구성을 이해해야 하며, Core가 runt
 
 ## 5. `v0.1.0`으로 downgrade
 
-RC에서 문제가 발생하면 공개 stable `0.1.0`으로 돌아갈 수 있다.
+v0.2.0에서 문제가 발생하면 같은 stable index의 `0.1.0`으로 돌아갈 수 있다.
 
 1. Arduino IDE, Serial Monitor와 모든 probe process를 닫는다.
 2. stable index가 Additional Boards Manager URLs에 등록돼 있는지 확인한다.
 3. Boards Manager에서 `0.1.0`을 명시적으로 설치한다.
-4. RC 전용 URL이 더 이상 필요 없으면 Additional Boards Manager URLs에서 제거한다.
+4. 과거 RC 전용 URL이 남아 있고 더 이상 필요 없으면 Additional Boards Manager URLs에서 제거한다.
 5. IDE를 재시작하고 build output을 새로 만든 뒤 Blink를 compile/upload한다.
 
 `v0.1.0`에는 M15 Board/System과 M16 BLE NUS API가 없으므로 `<NUCODE_NU54DK.h>`,
@@ -156,7 +121,7 @@ Core 제거는 Sketch와 사용자 library를 삭제하지 않는다. 공유 NCS
 
 ## 7. Migration 후 확인
 
-- 선택 version이 `0.2.0-rc.2` 또는 의도한 `0.1.0`인지 확인한다.
+- 선택 version이 `0.2.0` 또는 의도한 `0.1.0`인지 확인한다.
 - FQBN이 `nucode:zephyr:nu54dk`인지 확인한다.
 - Feature set과 Upload probe를 다시 확인한다.
 - 새 build directory에서 compile한다.

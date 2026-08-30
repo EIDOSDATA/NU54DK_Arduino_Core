@@ -33,7 +33,7 @@ RELEASE_CANDIDATE_VERSIONS = (
     "0.2.0-rc.1",
     "0.2.0-rc.2",
 )
-STABLE_VERSIONS = ("0.1.0",)
+STABLE_VERSIONS = ("0.1.0", "0.2.0")
 ## @brief 이미 공개한 stable archive가 다른 source로 재생성되는 것을 막는 commit 계약입니다.
 STABLE_RELEASE_COMMITS = {
     "0.1.0": "5dbc5e37270e477d21f578dd877f4b5226b44a0d",
@@ -57,6 +57,7 @@ STABLE_INDEX_FILENAME = "package_nucode_nu54dk_index.json"
 LEGAL_REVIEW_REQUIRED = "required-before-final-public-release"
 STABLE_LEGAL_REVIEW_STATUSES = {
     "0.1.0": "project-owner-approved-for-final-public-release",
+    "0.2.0": "project-owner-approved-for-final-public-release",
 }
 NCS_VERSION = "v3.4.0"
 NCS_REVISION = "99553055607b2e9885fbc80ccd11fa9da81c2df0"

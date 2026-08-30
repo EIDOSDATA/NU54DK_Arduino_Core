@@ -1,10 +1,10 @@
-# Arduino CLI 및 IDE 통합 설계 — v0.1.0 기준선 / v0.2.0 확장
+# Arduino CLI 및 IDE 통합 설계 — v0.1.0 기준선 / v0.2.0 정식
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | `v0.1.0` Build/Upload 기준선 완료; `v0.2.0-rc.2` 다중 CMSIS-DAP 선택 경로 반영 |
-| 현재 정식 버전 | `v0.1.0` |
-| 다음 목표 버전 | `v0.2.0` — RC2 공개 검증 뒤 stable 승격 검토 |
+| 문서 상태 | `v0.2.0` Build/Upload·다중 CMSIS-DAP 선택·Boards Manager 정식 경로 반영 |
+| 현재 정식 버전 | `v0.2.0` |
+| 다음 목표 버전 | `v0.3.0` |
 | 작성자 | Quantum / NUCODE |
 | 대상 | Arduino CLI 및 Arduino IDE 2.x |
 | 제안 FQBN | `nucode:zephyr:nu54dk` |

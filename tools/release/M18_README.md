@@ -1,5 +1,10 @@
 # M18 v0.2.0-rc.2 Draft Release 자동화
 
+> **역사적 RC 자동화:** 이 문서는 RC2 Draft 생성·검증에 사용한 절차를 고정한다. RC 전용
+> 도구는 stable 공개를 의도적으로 수행하지 않는다. 후속 `v0.2.0`은 별도 stable package,
+> tag와 Release로 승격하며 현재 설치·공개 상태는
+> [`v0.2.0` 릴리스 문서](../../00_Docs/05_릴리스/v0.2.0/README.md)를 따른다.
+
 이 도구는 exact clean commit에서 `0.2.0-rc.2` package와 RC index를 두 번 독립 생성해
 byte 재현성을 확인하고, GitHub의 **Draft + prerelease metadata**를 가진 내부 Release object와
 asset까지만 만든다. Draft의 `tagName`은 예약할 RC 이름이지만 실제 Git tag ref는 만들지 않아

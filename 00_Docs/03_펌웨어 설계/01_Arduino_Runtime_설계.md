@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | v0.1.0 정식 구현·M6 검증 동기화; M13 빌드 프로필 정책 반영 |
+| 문서 상태 | v0.2.0 정식 구현; M6 runtime 기준선과 M13 빌드 프로필 정책 반영 |
 | 작성자 | Quantum / NUCODE |
 | 실행 방식 | Loader 없는 Native Full Zephyr 정적 펌웨어 |
 | 기준 SDK | nRF Connect SDK v3.4.0 |

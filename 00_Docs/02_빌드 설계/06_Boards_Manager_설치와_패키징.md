@@ -2,12 +2,12 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | M10 검증 완료, v0.1.0 stable Boards Manager 배포 계약 공개 |
+| 문서 상태 | M10 기준선과 M18 검증 완료, v0.2.0 stable Boards Manager 배포 계약 공개 |
 | 작성자 | Quantum / NUCODE |
 | 초기 지원 운영체제 | Windows 10/11 x64 |
 | Arduino package | `nucode:zephyr` |
 | Board FQBN | `nucode:zephyr:nu54dk` |
-| 현재 정식 버전 | `0.1.0` |
+| 현재 정식 버전 | `0.2.0` (`0.1.0` downgrade 보존) |
 | 펌웨어 구조 | Loader/LLEXT 없는 Native Full Zephyr image |
 
 ---

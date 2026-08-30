@@ -1,7 +1,6 @@
-# NU54DK Arduino Core v0.2.0-rc.2 문제 해결
+# NU54DK Arduino Core v0.2.0 문제 해결
 
-> **상태: RC2 Public Prerelease / 정식 버전 아님.** 최신 정식 package가 필요하면 `v0.1.0`
-> stable을 사용한다.
+> **상태: v0.2.0 정식 릴리스.** 아래 stable index에서 `0.2.0`을 설치한다.
 
 | 항목 | 값 |
 | --- | --- |
@@ -14,28 +13,26 @@
 | Toolchain | `dcbdc366a1` |
 | Board package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 
-## 1. `v0.2.0-rc.2`가 Boards Manager에 보이지 않음
+## 1. `v0.2.0`이 Boards Manager에 보이지 않음
 
-RC2는 Public Prerelease로 공개돼 있다. 아래 RC URL을 설치 URL로 사용한다.
+Additional Boards Manager URLs에 다음 stable index를 등록한다.
 
 ```text
-https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/package_nucode_nu54dk_rc_index.json
+https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
 보이지 않으면 URL이 한 줄로 등록됐는지, GitHub 접근, proxy, TLS inspection과 시스템 시간을
 확인하고 index를 갱신한다. 공개 설치본의 `post_install`, 14/14 compile, 명시 UID upload,
-UART READY와 NUS 양방향 transparent bridge는 PASS다. stable은 계속 `v0.1.0`이다.
+UART READY와 NUS 양방향 transparent bridge는 승격 전 RC2에서 PASS했고, stable package의
+공개 수명주기와 runtime payload 동등성은 정식 공개 기록에 고정한다.
 
 ```powershell
 arduino-cli core update-index
 arduino-cli core search nucode
 ```
 
-정식 `v0.1.0`은 다음 stable index로 설치한다.
-
-```text
-https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
-```
+Boards Manager에서 `NUCODE NU54DK Zephyr Boards`의 `0.2.0`을 명시적으로 선택한다.
+`0.1.0`도 같은 index에 downgrade용으로 남아 있다.
 
 ## 2. 설치가 오래 걸리거나 prerequisite 검증에 실패함
 
@@ -70,7 +67,7 @@ platform version을 보존한다. 임의 인코딩 변환이나 package ZIP 수�
 
 ## 4. 예상한 Arduino 예제가 보이지 않음
 
-이 RC가 배포하는 사용자 예제는 NUCODE NU54DK 10개, Wire/SPI 2개와 NUCODE BLE 2개로 총
+이 릴리스가 배포하는 사용자 예제는 NUCODE NU54DK 10개, Wire/SPI 2개와 NUCODE BLE 2개로 총
 14개다. Arduino IDE를 재시작하고 `파일 → 예제`의 platform bundled library를 확인한다.
 
 Adafruit LSM6DS3TR-C compatibility Sketch와 Zephyr/NCS sensor·crypto·radio fixture는 내부
@@ -139,7 +136,7 @@ wrapper다. 장치 관리자의 해당 COM port를 115200 8N1로 열고 다른 S
 - `NUSPeripheral`의 RC2 예제는 수신 byte를 보존하기 위해 `received` event 숫자를 같은
   `Serial`에 출력하지 않는다. 다른 상태 로그는 계속 표시된다.
 
-이 RC는 임의 GATT builder, bonding/SMP, HID 또는 multiprotocol을 제공하지 않는다. 해당 기능을
+이 릴리스는 임의 GATT builder, bonding/SMP, HID 또는 multiprotocol을 제공하지 않는다. 해당 기능을
 요구하는 library 문제를 NUS 연결 오류로 처리하지 않는다.
 
 ## 9. System OFF wake가 debug 연결에서 다르게 동작함
@@ -173,7 +170,7 @@ reset 뒤에는 다시 승인해야 한다. 무조건 raw register write로 우�
 Password, GitHub token, 전체 probe UID와 개인 경로를 제거한 뒤 다음을 기록한다.
 
 - Arduino IDE와 bundled Arduino CLI version, Windows version
-- Core version `0.2.0-rc.2` 또는 `0.1.0`
+- Core version `0.2.0` 또는 `0.1.0`
 - FQBN과 선택 Feature set/Upload probe
 - NCS `v3.4.0`, Zephyr `4.4.0`, Toolchain `dcbdc366a1` 검증 결과
 - 전체 compile/upload 오류와 처음 실패한 단계

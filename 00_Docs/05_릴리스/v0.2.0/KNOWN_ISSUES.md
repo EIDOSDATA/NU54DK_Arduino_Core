@@ -1,8 +1,7 @@
-# NU54DK Arduino Core v0.2.0-rc.2 알려진 제약
+# NU54DK Arduino Core v0.2.0 알려진 제약
 
-> **상태: RC2 Public Prerelease / 정식 버전 아님.** 이 문서는 API 이름이나 compile 결과를 실제
-> hardware 지원보다 넓게 해석하지 않기 위한 공개 경계다. 최신 정식 버전은 계속
-> `v0.1.0`이다.
+> **상태: v0.2.0 정식 릴리스.** 이 문서는 API 이름이나 compile 결과를 실제 hardware
+> 지원보다 넓게 해석하지 않기 위한 공개 경계다.
 
 | 항목 | 고정 값 |
 | --- | --- |
@@ -15,16 +14,16 @@
 
 ## 1. Release와 설치 상태
 
-- `v0.2.0-rc.2`는 `v0.2.0-rc.1` 실기 검증에서 발견한 다중 CMSIS-DAP 선택과 NUS 예제
-  로그 간섭을 수정한 후속 candidate다.
+- `v0.2.0`은 RC1 실기 검증에서 발견한 다중 CMSIS-DAP 선택과 NUS 예제 로그 간섭을
+  RC2에서 교정하고 공개 설치본 gate를 통과한 runtime을 정식 승격한 버전이다.
 - 공개 RC index를 사용한 Boards Manager 설치와 `post_install`, 14개 예제 compile, 명시 UID
   upload 및 UART READY는 PASS다.
 - RC2 설치본 NUS Peripheral/Central의 startup과 양방향 고유 payload 원문 연속 수신은 PASS며
   RC1 상태 로그 삽입은 재현되지 않았다.
 - 이번 공개 예제 transparent bridge HIL은 M16의 frame boundary·disconnect/reconnect 전문
   HIL 전체를 다시 실행한 결과가 아니다.
-- RC1과 RC2의 tag·자산은 각각 불변 기록이며 서로 덮어쓰지 않는다.
-- 일반 사용자는 공개 stable `v0.1.0`과 stable index를 계속 사용한다.
+- RC1과 RC2의 tag·자산은 각각 불변 기록이며 stable 자산으로 덮어쓰지 않는다.
+- 일반 사용자는 stable index의 `v0.2.0`을 사용한다. `v0.1.0`은 downgrade용으로 함께 보존한다.
 - Windows 이외의 Linux/macOS package 설치는 공식 지원·검증 대상이 아니다.
 - 첫 설치는 고정 NCS와 Toolchain을 받기 때문에 오래 걸리고 많은 디스크 공간이 필요하다.
 - offline 설치, 인증 proxy와 기업 TLS inspection 환경은 공식 검증하지 않았다.
@@ -69,7 +68,7 @@
   요청을 구성할 수 있지만 실제 배터리 전기 HIL은 수행하지 않았다.
 - 충전 완료·재충전, 입력 전원 제거 후 ship/shutdown, 배터리 chemistry/용량과 NTC 온도 보호는
   사용자의 실제 회로·배터리 조건에서 검증해야 한다.
-- `hasBatteryTemperatureProtection()`은 `false`이며 이 RC는 실제 배터리 온도 보호를 지원하지 않는다.
+- `hasBatteryTemperatureProtection()`은 `false`이며 이 릴리스는 실제 배터리 온도 보호를 지원하지 않는다.
 - PMIC semantic test나 register readback을 배터리 안전성·충전 인증으로 해석하면 안 된다.
 
 ## 6. BLE NUS 경계
@@ -96,7 +95,7 @@
 
 ## 8. IEEE 802.15.4, OpenThread와 Matter
 
-세 항목은 모두 `deferred`이며 `v0.2.0-rc.2`의 지원 기능이 아니다.
+세 항목은 모두 `deferred`이며 `v0.2.0`의 지원 기능이 아니다.
 
 | 항목 | M17 결과 | 지원하지 않는 범위 |
 | --- | --- | --- |
@@ -123,7 +122,9 @@ build 실패를 임의 DTS/partition patch로 숨기지 않았으며 board submo
 
 - M12~M17의 완료는 각 단계에서 선언한 software/build/HIL 범위에만 적용된다.
 - package example compile은 실제 sensor, PMIC, radio 또는 저전력 HIL을 대신하지 않는다.
-- M18 remote Draft ID와 asset SHA-256 검증은 clean Windows staged 실행 또는 public RC
+- M18 remote Draft ID와 asset SHA-256 검증은 clean Windows staged 실행 또는 public
   Boards Manager 설치를 대신하지 않는다.
 - RC2 public Boards Manager 설치본의 PASS 범위는 `post_install`, 14/14 compile, 명시 UID
   upload, UART READY와 NUS 공개 예제 양방향 transparent bridge·로그 회귀다.
+- stable exact ZIP의 runtime payload는 RC2와 byte-equivalent한지 별도로 검증하며, 공개
+  `0.1.0`→`0.2.0` upgrade·downgrade·uninstall 수명주기를 정식 공개 기록에 고정한다.

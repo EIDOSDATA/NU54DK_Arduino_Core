@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 2.8 |
-| 현재 정식 버전 | `v0.1.0` |
-| 다음 목표 버전 | `v0.2.0` |
+| 문서 체계 개정 | 3.0 |
+| 현재 정식 버전 | `v0.2.0` |
+| 다음 목표 버전 | `v0.3.0` |
 | 최종 갱신일 | 2026-08-31 |
 | 작성자 | Quantum / NUCODE |
 
@@ -33,10 +33,11 @@
 4. [제품 로드맵과 구현 마일스톤](<./01_아두이노 코어 설계/02_구현_로드맵.md>)
 5. [v0.2.0 구현 마일스톤](<./01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)
 6. [NCS v3.4.0 기능과 예제 지원 매트릭스](<./01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)
-7. [NU54DK Board/System API 설계](<./03_펌웨어 설계/05_NU54DK_Board_System_API.md>)
-8. [Boards Manager 설치와 패키징](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
-9. [v0.1.0 릴리스 노트](<./05_릴리스/11_v0.1.0_릴리스_노트.md>)
-10. [v0.2.0 RC 릴리스 문서](<./05_릴리스/v0.2.0/README.md>)
+7. [v0.3.0 구현 마일스톤](<./01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)
+8. [NU54DK Board/System API 설계](<./03_펌웨어 설계/05_NU54DK_Board_System_API.md>)
+9. [BLE NUS API 설계](<./03_펌웨어 설계/06_BLE_NUS_API.md>)
+10. [Boards Manager 설치와 패키징](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
+11. [v0.2.0 정식 릴리스 문서](<./05_릴리스/v0.2.0/README.md>)
 
 ## 현재 진행 상태
 
@@ -49,7 +50,8 @@
 | M15 | **완료** | 비-System-OFF 자동 HIL 2/2와 SWD 격리 timed GRTC→사용자 SW0 결합 HIL PASS |
 | M16 | **완료** | NUS Peripheral/Central Stream과 두 보드 BLE HIL PASS |
 | M17 | **완료** | 9개 machine-readable coverage record와 sensor·crypto·무선 feasibility 분류 |
-| M18 | **RC2 공개 검증 완료** | 설치·14/14 compile·명시 UID upload·UART READY·설치본 NUS 양방향 원문 전달 PASS |
+| M18 | **완료** | RC2 공개 설치본 gate PASS와 프로젝트 소유자의 `v0.2.0` 정식 공개 승인 |
+| M19~M22 | **계획** | BLE Core/GAP → 범용 GATT → 보안·BAS/DIS/HID → `v0.3.0` 릴리스 |
 
 M15 완료 기준은 Core `c47239d954c45fd173d8d1393e3ea5c9c86e111a`,
 [Software Gates run 33295587578](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33295587578)
@@ -60,14 +62,14 @@ SW0/P1.13 wake `20406 ms`/cause `128`을 통과했다.
 
 PMIC 배터리 전기 HIL은 계속 `NOT RUN`이며 사용자가 자신의 배터리·전원 조건에서 검증할
 책임이 있다. 이 승인된 범위 제외는 M15 완료를 차단하지 않는다. M16 BLE NUS, M17 NCS
-coverage 분류와 M18 RC package 자동 범위를 완료했다. M17 완료는 NCS 전체 지원이 아니라
+coverage 분류와 M18 정식 릴리스 범위를 완료했다. M17 완료는 NCS 전체 지원이 아니라
 실제 build 결과와 `supported`·`build-only`·`deferred` 경계를 고정했다는 뜻이다.
 
 공개 RC2는 격리 Boards Manager `post_install`, 설치본 예제 14/14 compile, Blink 명시 UID
 upload, 대응 UART READY와 두 보드 NUS Peripheral↔Central 고유 payload 원문 연속 수신을
 통과했다. 이 공개 예제 transparent bridge HIL은 M16의 frame boundary·disconnect/reconnect
-전문 HIL과 범위를 구분한다. 프로젝트 소유자의 stable 승인 전까지 현재 정식 버전과 GitHub
-`latest`는 계속 `v0.1.0`이다.
+전문 HIL과 범위를 구분한다. 이 검증과 알려진 제약은 프로젝트 소유자가 승인했으며 동일
+runtime payload가 `v0.2.0` stable로 승격됐다.
 
 상세 상태의 단일 원본은
 [제품 로드맵과 구현 마일스톤](<./01_아두이노 코어 설계/02_구현_로드맵.md>)이다.
@@ -87,6 +89,7 @@ upload, 대응 UART READY와 두 보드 NUS Peripheral↔Central 고유 payload 
 - [Arduino API 지원 범위](<./01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)
 - [v0.2.0 구현 마일스톤](<./01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)
 - [NCS v3.4.0 기능과 예제 지원 매트릭스](<./01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)
+- [v0.3.0 구현 마일스톤](<./01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)
 
 ### 02. 빌드 설계
 
@@ -106,6 +109,7 @@ upload, 대응 UART READY와 두 보드 NUS Peripheral↔Central 고유 payload 
 - [주변장치 API](<./03_펌웨어 설계/03_주변장치_API.md>)
 - [테스트와 검증](<./03_펌웨어 설계/04_테스트와_검증.md>)
 - [NU54DK Board/System API](<./03_펌웨어 설계/05_NU54DK_Board_System_API.md>)
+- [BLE NUS API](<./03_펌웨어 설계/06_BLE_NUS_API.md>)
 
 ### 04. 검증 기록
 
@@ -129,6 +133,7 @@ upload, 대응 UART READY와 두 보드 NUS Peripheral↔Central 고유 payload 
 - [M16 BLE NUS 기준선](<./04_검증 기록/18_M16_BLE_NUS_기준선.md>)
 - [M17 NCS 기능과 예제 Coverage 기준선](<./04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)
 - [M18 v0.2.0 RC1 공개 검증, RC2 교정과 공개 검증](<./04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md>)
+- [v0.2.0 정식 릴리스 공개 기록](<./04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md>)
 
 ### 05. 릴리스 문서
 
@@ -141,7 +146,7 @@ known issues를 보존한다.
 - [v0.1.0 문제 해결](<./05_릴리스/10_v0.1.0_문제해결.md>)
 - [v0.1.0 릴리스 노트](<./05_릴리스/11_v0.1.0_릴리스_노트.md>)
 - [v0.1.0 알려진 제약](<./05_릴리스/12_v0.1.0_알려진_제약.md>)
-- [v0.2.0 RC 릴리스 문서](<./05_릴리스/v0.2.0/README.md>)
+- [v0.2.0 정식 릴리스 문서](<./05_릴리스/v0.2.0/README.md>)
 
 기존 v0.1 파일명은 역사 링크 때문에 유지한다. v0.2부터는 다음처럼 버전별 디렉터리를
 사용한다.
@@ -157,8 +162,8 @@ known issues를 보존한다.
 
 ## 문서 제목과 버전 규칙
 
-- 제품 버전: `v0.1.0`, `v0.2.0`; package metadata만 앞의 `v`를 생략한다.
-- 마일스톤: `M0`~`M18`; 제품 버전과 독립된 연속 번호다.
+- 제품 버전: `v0.1.0`, `v0.2.0`, `v0.3.0`; package metadata만 앞의 `v`를 생략한다.
+- 마일스톤: 현재 구현 완료 `M0`~`M18`, 확정 계획 `M19`~`M22`; 제품 버전과 독립된 연속 번호다.
 - 문서 개정: `1.0`, `2.0`; 제품 SemVer와 혼용하지 않는다.
 - 활성 설계 문서는 가능하면 `문서 ID`, `문서 개정`, `적용 제품 버전`, `최종 갱신일`을 둔다.
 - 검증·릴리스 기록은 실행 commit, 날짜와 exact 제품 version을 유지한다.

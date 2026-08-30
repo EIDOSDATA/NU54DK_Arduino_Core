@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | v0.1.0 정식 구현·M6 GPIO/시간 검증 동기화; M13 프로필 정책 반영 |
+| 문서 상태 | v0.2.0 정식 구현; M6 GPIO/시간 검증과 M13 프로필 정책 반영 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 RTOS | Zephyr v4.4.0 |

@@ -4,7 +4,7 @@
 | --- | --- |
 | 문서 ID | FW-PERIPHERAL-001 |
 | 문서 개정 | 2.1 |
-| 문서 상태 | v0.1.0 M6/M7 기준선 유지; M15 제한 PMIC adapter 경계 반영 |
+| 문서 상태 | v0.2.0 정식 구현; M6/M7 기준선과 M15 제한 PMIC adapter 경계 반영 |
 | 최종 갱신일 | 2026-08-30 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |

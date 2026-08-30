@@ -304,7 +304,7 @@ class M10PackagingTests(unittest.TestCase):
             PACKAGE.RELEASE_CANDIDATE_VERSIONS,
             ("0.1.0-rc.2", "0.2.0-rc.1", "0.2.0-rc.2"),
         )
-        self.assertEqual(PACKAGE.STABLE_VERSIONS, ("0.1.0",))
+        self.assertEqual(PACKAGE.STABLE_VERSIONS, ("0.1.0", "0.2.0"))
         self.assertTrue(
             set(PACKAGE.FAILED_M10_PREVIEW_VERSIONS).issubset(
                 PACKAGE.WINDOWS_SAFE_VERSIONS
@@ -348,8 +348,47 @@ class M10PackagingTests(unittest.TestCase):
         stable_wrapper = (
             REPO_ROOT / "packaging" / "boards-manager" / "build-stable.ps1"
         ).read_text(encoding="utf-8")
-        self.assertIn("[ValidateSet('0.1.0')]", stable_wrapper)
-        self.assertIn("[string]$Commit = 'v0.1.0'", stable_wrapper)
+        self.assertIn("[ValidateSet('0.1.0', '0.2.0')]", stable_wrapper)
+        self.assertIn('$Commit = "v$Version"', stable_wrapper)
+        self.assertIn("nucode-nu54dk-zephyr-0.1.0.zip", stable_wrapper)
+        self.assertIn("@('0.2.0', '0.1.0')", stable_wrapper)
+        self.assertNotIn("--update-index", stable_wrapper)
+        self.assertEqual(
+            PACKAGE.legal_review_status("0.2.0"),
+            "project-owner-approved-for-final-public-release",
+        )
+        self.assertEqual(PACKAGE.release_channel("0.2.0"), "stable")
+        self.assertEqual(PACKAGE.release_tag("0.2.0"), "v0.2.0")
+
+    def test_11ab_v020_stable_runtime_matches_public_rc2(self) -> None:
+        """! @brief v0.2.0 준비 archive의 실행 payload가 공개 RC2와 같은지 검증합니다. """
+
+        stable_paths = PACKAGE.build_package(
+            REPO_ROOT,
+            Path(self.temporary.name) / "v020-stable-prepublication",
+            "0.2.0",
+            self.commit,
+        )
+        rc_paths = PACKAGE.build_package(
+            REPO_ROOT,
+            Path(self.temporary.name) / "v020-rc2-reference",
+            "0.2.0-rc.2",
+            "1c5dcecfc0dba2ef25e06963dcba61c63f454db9",
+        )
+        stable_manifest = PACKAGE.validate_archive(
+            stable_paths["archive"],
+            expected_version="0.2.0",
+            expected_commit=self.commit,
+        )
+        rc_manifest = PACKAGE.validate_archive(
+            rc_paths["archive"],
+            expected_version="0.2.0-rc.2",
+            expected_commit="1c5dcecfc0dba2ef25e06963dcba61c63f454db9",
+        )
+        self.assertEqual(
+            stable_manifest["runtime_payload_sha256"],
+            rc_manifest["runtime_payload_sha256"],
+        )
 
     def test_11aa_stable_package_rejects_a_different_commit(self) -> None:
         """! @brief 공개 stable 이름으로 다른 source byte를 생성하지 못하게 합니다. """

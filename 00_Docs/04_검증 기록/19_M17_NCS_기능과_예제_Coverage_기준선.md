@@ -185,9 +185,14 @@ python tools/ci/run_zephyr_build.py --help
 
 ---
 
-## 8. 다음 단계
+## 8. 당시 다음 단계와 후속 완료
 
 M17 이후 단계는 M18이다. 자동화는 `v0.2.0-rc.1` package, checksum, SBOM, license inventory와
 GitHub Draft Release까지 준비한다. Draft는 stable 공개가 아니다. 프로젝트 소유자가 clean
 Windows Arduino IDE 설치·예제 열거·compile·NU54DK upload를 확인하고 알려진 제약과 공개를
 승인하기 전에는 `v0.2.0` stable을 공개하지 않는다.
+
+위 문단은 M17 완료 시점의 단계 경계다. 이후 RC1 결함 교정, RC2 공개 설치본 gate와 정식
+승인을 거쳐 M18을 완료했다. 현재 결과와 다음 단계는
+[v0.2.0 마일스톤](../01_아두이노%20코어%20설계/05_v0.2.0_구현_마일스톤.md)과
+[제품 로드맵](../01_아두이노%20코어%20설계/02_구현_로드맵.md)을 따른다.

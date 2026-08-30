@@ -1,10 +1,10 @@
-# NU54DK Arduino Core v0.2.0-rc.2 릴리스 노트
+# NU54DK Arduino Core v0.2.0 릴리스 노트
 
-> **상태: RC2 Public Prerelease / 정식 버전 아님.** Boards Manager 설치·`post_install`,
-> 설치본 예제 14/14 compile, 명시 UID upload, UART READY와 BLE NUS 양방향 transparent
-> bridge는 PASS다. 최신 정식 버전은 계속 `v0.1.0`이다.
+> **상태: 정식 릴리스.** RC2 Boards Manager 설치·`post_install`, 설치본 예제 14/14
+> compile, 명시 UID upload, UART READY와 BLE NUS 양방향 transparent bridge 검증을
+> 통과한 동일 runtime payload를 별도 stable package·tag·Release로 승격한다.
 
-`v0.2.0-rc.2`는 Loader나 LLEXT 없이 Arduino Sketch, Core와 Zephyr application을 하나의
+`v0.2.0`은 Loader나 LLEXT 없이 Arduino Sketch, Core와 Zephyr application을 하나의
 정적 ELF/HEX로 만드는 NU54DK 전용 Native Full Zephyr Core의 두 번째 기능 묶음이다. 공식
 사용자 환경은 Windows 10/11 x64이며 보드 FQBN은 `nucode:zephyr:nu54dk`다.
 
@@ -18,7 +18,8 @@
 | NU54DK board package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | Core repository | `https://github.com/EIDOSDATA/NU54DK_Arduino_Core` |
 
-공개 RC2는 tag commit `1c5dcecfc0dba2ef25e06963dcba61c63f454db9`와 12개 asset을 가진다.
+아래 값은 승격 근거인 공개 RC2의 불변 이력이다. RC2는 tag commit
+`1c5dcecfc0dba2ef25e06963dcba61c63f454db9`와 12개 asset을 가진다.
 RC index SHA-256은 `fa73f3ba34ecfc84984aa836f423cb0d31a2ce56518fac6c56b99ec8dd70f89b`,
 ZIP SHA-256은 `753712094ff2500d8ab4b6184a27b2a0ad44bfece0236bd3788d01cd9c1ad7af`다.
 
@@ -89,7 +90,7 @@ GATT read, indication, bonding, SMP, HID와 multiprotocol은 이 RC가 지원하
 
 9개 machine-readable record에서 기능을 `supported`, `build-only`, `deferred`로 구분했다.
 
-| 항목 | 실제 결과 | v0.2.0-rc.2 판정 |
+| 항목 | 실제 결과 | v0.2.0 판정 |
 | --- | --- | --- |
 | 외부 Adafruit LSM6DS3TR-C compatibility Sketch | Arduino compile/link PASS | build-only; package 미포함, sensor runtime/HIL 미실행 |
 | Zephyr sensor direct-build fixture | NU54DK compile/link PASS | build-only; NUCODE sensor wrapper 없음 |
@@ -131,21 +132,18 @@ HIL은 위 M16의 frame boundary·disconnect/reconnect 전문 HIL을 재실행�
 
 ## 설치·공개 상태
 
-RC2는 다음 Release와 RC 전용 index로 공개됐다.
-
-```text
-https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.2.0-rc.2
-https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/package_nucode_nu54dk_rc_index.json
-```
-
-RC2는 Public Prerelease이며 GitHub `latest`가 아니다. 일반 stable은 다음 index의 `0.1.0`이다.
+정식 `v0.2.0`은 다음 stable index와 GitHub Release를 사용한다. stable index는 최신순으로
+`0.2.0`, `0.1.0`을 함께 제공하며 RC1·RC2 index와 자산은 검증 이력으로 보존한다.
 
 ```text
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
+https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.2.0
 ```
 
-upgrade·downgrade·uninstall lifecycle 확인과 프로젝트 소유자 승인 전에는 `v0.2.0` stable을
-공개하지 않는다.
+정식 공개 산출물의 source commit, 크기와 SHA-256, 공개 시각 및 lifecycle 결과는
+[v0.2.0 정식 릴리스 공개 기록](../../04_검증%20기록/21_v0.2.0_정식_릴리스_공개_기록.md)에
+고정한다. RC2의 exact HIL을 stable exact HIL로 이름만 바꾸지 않으며, stable은 RC2와의
+version-independent runtime payload 동등성과 공개 package 수명주기 검증을 함께 근거로 삼는다.
 
 ## 라이선스
 

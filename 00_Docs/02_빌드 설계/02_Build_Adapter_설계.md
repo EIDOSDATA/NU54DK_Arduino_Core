@@ -1,14 +1,14 @@
-# NU54DK Build Adapter 설계 — v0.1.0 기준선 / v0.2.0 확장
+# NU54DK Build Adapter 설계 — v0.1.0 기준선 / v0.2.0 정식
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | `v0.1.0` build·upload·Boards Manager 실증 완료 — `v0.2.0` M13 profile UX 예정 |
-| 현재 정식 버전 | `v0.1.0` |
-| 다음 목표 버전 | `v0.2.0` |
+| 문서 상태 | `v0.1.0` 기준선과 `v0.2.0` profile·package·upload 구현 및 정식 공개 완료 |
+| 현재 정식 버전 | `v0.2.0` |
+| 다음 목표 버전 | `v0.3.0` |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 |
 | 기준 Zephyr | Zephyr 4.4.0 |
-| 대상 호스트 | `v0.1.0`: Windows 10/11 x64 / `v0.2.0`: CI·지원 범위 확장 검토 |
+| 대상 호스트 | Windows 10/11 x64 공식 지원; Linux container는 CI build 환경 |
 | 최종 이미지 | Loader 없는 Native Full Zephyr 정적 이미지 |
 
 ---

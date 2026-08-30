@@ -1,8 +1,7 @@
 # NU54DK Arduino Core
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Stable: v0.1.0](https://img.shields.io/badge/stable-v0.1.0-blue.svg)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.1.0)
-[![RC: v0.2.0-rc.2](https://img.shields.io/badge/RC-v0.2.0--rc.2-orange.svg)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.2.0-rc.2)
+[![Stable: v0.2.0](https://img.shields.io/badge/stable-v0.2.0-blue.svg)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.2.0)
 [![NCS: v3.4.0](https://img.shields.io/badge/NCS-v3.4.0-00A9CE.svg)](https://github.com/nrfconnect/sdk-nrf)
 [![Author: Quantum](https://img.shields.io/badge/Author-Quantum%20%40%20NUCODE-blueviolet.svg)](#작성자와-라이선스)
 
@@ -14,15 +13,16 @@ Sketch와 library를 nRF Connect SDK의 build graph 안에 넣어 ELF/HEX/BIN을
 
 | 항목 | 상태 |
 | --- | --- |
-| 현재 정식 버전 | [`v0.1.0`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.1.0) |
-| 다음 목표 | `v0.2.0` — 공개 RC2 설치본 검증 완료 범위 고정, stable 승인 준비 |
+| 현재 정식 버전 | [`v0.2.0`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.2.0) |
+| 다음 목표 | `v0.3.0` — 범용 BLE GAP/GATT·보안·표준 프로파일 |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 지원 보드 | NU54DK / nRF54L15 CPUAPP |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 선택 업로드 | 외장 SEGGER J-Link |
 | v0.1 마일스톤 | M0~M11 완료 |
-| v0.2 진행 | M12~M18 구현 완료; `v0.2.0-rc.2` 공개·설치·compile·명시 UID upload PASS |
+| v0.2 마일스톤 | M12~M18 완료; `v0.2.0` 정식 공개 승인 |
+| v0.3 계획 | M19 BLE Core/GAP → M20 범용 GATT → M21 보안·BAS/DIS/HID → M22 릴리스 |
 
 v0.1.0에서는 Runtime, GPIO, 시간, Serial, GPIO interrupt, Wire/I2C, SPI, ADC, PWM,
 Arduino CLI/IDE build, pyOCD upload/debug, cache와 Boards Manager 설치 경로를 검증했습니다.
@@ -38,8 +38,9 @@ RC2에서 교정했으므로 신규 RC 검증에는 RC2를 사용합니다. RC1 
 격리 Boards Manager 설치와 `post_install`, 설치본 예제 14개 compile, Blink 명시 UID upload,
 대응 UART의 `NUCODE_M8_UPLOAD_READY`와 두 보드 BLE NUS 양방향 원문 전달까지 통과했습니다.
 이번 공개 예제 HIL은 transparent bridge와 RC1 상태 로그 재삽입 방지 범위이며, 기존 M16의
-frame boundary·disconnect/reconnect 전문 HIL을 다시 실행한 것은 아닙니다. 최신 정식 버전과
-GitHub `latest`는 계속 `v0.1.0`입니다.
+frame boundary·disconnect/reconnect 전문 HIL을 다시 실행한 것은 아닙니다. 프로젝트 소유자는
+이 검증 결과와 알려진 제약을 승인하고 동일 runtime payload를 `v0.2.0` 정식 버전으로 승격했습니다.
+RC1과 RC2의 tag·자산은 변경하지 않는 역사적 검증 기록입니다.
 
 현재 `main`에서는 M12 CI/CD, M13 profile·예제 UX, M14 Core API·DTS 기반 Variant, M15
 `NUCODE_NU54DK` board/system library와 M16 BLE NUS를 완료했습니다. `PIN_LED2..3` output/readback과
@@ -96,18 +97,11 @@ Arduino IDE에서 `File → Preferences → Additional Boards Manager URLs`에 �
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-공개 RC2 검증에 참여할 때만 다음 RC 전용 index를 추가하고 Boards Manager에서
-`0.2.0-rc.2`를 명시적으로 선택합니다. 이 URL은 stable index를 대체하지 않습니다.
-
-```text
-https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/package_nucode_nu54dk_rc_index.json
-```
-
 ### 2. Core 설치
 
 1. `Tools → Board → Boards Manager`를 엽니다.
 2. `NUCODE NU54DK Zephyr Boards`를 검색합니다.
-3. 버전 `0.1.0`을 설치합니다.
+3. 버전 `0.2.0`을 설치합니다.
 4. post-install 실행 확인이 나오면 승인합니다.
 5. NCS v3.4.0과 Toolchain 설치가 끝날 때까지 기다립니다.
 
@@ -156,7 +150,7 @@ void loop()
 
 ## 예제
 
-현재 `main`의 예제는 Arduino 표준 platform library 구조로 정리되어 있습니다.
+정식 `v0.2.0`의 예제는 Arduino 표준 platform library 구조로 정리되어 있습니다.
 
 | Arduino 예제 메뉴 | 포함 예제 |
 | --- | --- |
@@ -166,11 +160,10 @@ void loop()
 | `NUCODE BLE` | [NUSPeripheral](./libraries/NUCODE_BLE/examples/NUSPeripheral), [NUSCentral](./libraries/NUCODE_BLE/examples/NUSCentral) |
 
 M13의 기존 예제 7개에 M15 board/system 예제 5개와 M16 NUS 예제 2개를 추가했습니다. 전체
-14개 예제의 `arduino-cli lib examples` 열거와 compile gate를 통과했습니다. 공개된
-`v0.1.0` Boards Manager package는 예전 archive 구조이므로 IDE 메뉴 노출이 보장되지 않으며,
-표준 예제 구조는 다음 릴리스에 포함됩니다.
+14개 예제의 `arduino-cli lib examples` 열거와 compile gate를 통과했고 정식 package에
+포함됩니다.
 
-## v0.1.0 지원 범위
+## v0.2.0 지원 범위
 
 | 영역 | 상태 | 주요 범위 |
 | --- | --- | --- |
@@ -184,6 +177,9 @@ M13의 기존 예제 7개에 M15 board/system 예제 5개와 M16 NUS 예제 2개
 | ADC | 부분 지원 | `A0`/P1.12, 고정 12-bit raw |
 | PWM | 부분 지원 | `PIN_PWM0`/P1.10, 고정 20 ms·8-bit |
 | Upload/debug | 지원 | pyOCD 기본, J-Link 선택 경로 |
+| Board/System | 부분 지원 | identity, WDT, GRTC, Settings, System OFF, 제한 PMIC API |
+| BLE | 부분 지원 | NUS Peripheral/Central `Stream`; 범용 GATT·보안은 v0.3 계획 |
+| 구성·예제 | 지원 | `standard`/`ble` profile과 Arduino IDE 예제 14개 |
 
 정확한 API별 상태와 의미 차이는
 [Arduino API 지원 범위](<./00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)를
@@ -193,13 +189,9 @@ M13의 기존 예제 7개에 M15 board/system 예제 5개와 M16 NUS 예제 2개
 
 - 공식 사용자 환경은 현재 Windows 10/11 x64입니다.
 - NCS/Toolchain은 Core ZIP에 재배포하지 않고 Nordic 공식 배포에서 별도로 설치합니다.
-- `v0.1.0` package의 예제 파일은 archive에 있지만 Arduino IDE `파일 → 예제`의 표준 library
-  구조가 아니어서 메뉴 노출이 보장되지 않습니다. main에서 구조를 교정했으며 다음 배포에
-  포함합니다.
-- `standard` 구성 profile과 strict library feature resolver는 M13에서 구현했지만 공개
-  `v0.1.0` package에는 없습니다. `v0.1.0`의 고급 주변장치 예제는 package 내부
-  `prj.conf`와 `app.overlay`에 의존합니다.
-- BLE, Thread, Matter, OTA/DFU, native USB와 filesystem Arduino wrapper는 v0.1.0에 없습니다.
+- `standard`와 `BLE NUS` 구성 profile만 정식 지원합니다. 임의 Kconfig 조합은 전문가용
+  project override이며 제품 지원 조합으로 자동 승격되지 않습니다.
+- Thread, Matter, OTA/DFU, native USB와 filesystem Arduino wrapper는 v0.2.0에 없습니다.
 - NU54DK의 모든 connector pin이 아직 Arduino 논리 pin으로 공개된 것은 아닙니다.
 - `main`의 M15 PMIC write API는 매 boot 명시적 승인을 요구합니다. 배터리 전기 HIL은
   `NOT RUN`이고 실제 NTC 온도 보호는 지원하지 않으므로, 사용자가 자신의 배터리·전원
@@ -212,10 +204,10 @@ M13의 기존 예제 7개에 M15 board/system 예제 5개와 M16 NUS 예제 2개
   NUCODE sensor wrapper를 제공하지 않았고 LSM6DS3TR-C 실기 runtime/HIL도 실행하지 않았습니다.
 - Thread, Matter와 IEEE 802.15.4는 M17 build feasibility 대상일 뿐 v0.2.0 지원 기능이 아닙니다.
 
-전체 목록은 [v0.1.0 알려진 제약](<./00_Docs/05_릴리스/12_v0.1.0_알려진_제약.md>)에서 확인할
+전체 목록은 [v0.2.0 알려진 제약](<./00_Docs/05_릴리스/v0.2.0/KNOWN_ISSUES.md>)에서 확인할
 수 있습니다.
 
-## v0.2.0 진행 현황과 다음 작업
+## 완료된 v0.2.0과 다음 v0.3.0
 
 | 마일스톤 | 상태 | 작업 |
 | --- | --- | --- |
@@ -225,15 +217,15 @@ M13의 기존 예제 7개에 M15 board/system 예제 5개와 M16 NUS 예제 2개
 | [M15](<./00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) | **완료** | 비-System-OFF 자동 HIL 2/2와 SWD 격리 timed GRTC→사용자 SW0 결합 HIL PASS |
 | [M16](<./00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md>) | **완료** | NUS Peripheral/Central Stream, profile·예제와 두 보드 BLE HIL PASS |
 | [M17](<./00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>) | **완료** | 9개 coverage record, sensor·crypto build와 무선 build feasibility 결과 분류 |
-| [M18](<./00_Docs/05_릴리스/v0.2.0/README.md>) | **RC2 공개 검증 완료** | 설치·14/14 compile·명시 UID upload·UART READY·설치본 NUS 양방향 원문 전달 PASS |
+| [M18](<./00_Docs/05_릴리스/v0.2.0/README.md>) | **완료** | RC2 공개 검증을 거쳐 `v0.2.0` 정식 릴리스 승인 |
 
 자세한 완료 기준은 [v0.2.0 구현 마일스톤](<./00_Docs/01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)과
 [NCS 기능·예제 지원 매트릭스](<./00_Docs/01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)를
 따릅니다.
 
-공개 RC2는 격리 Boards Manager `post_install`, 설치본 예제 14/14 compile, Blink 명시 UID
-upload, UART READY와 설치본 NUS Peripheral↔Central 고유 payload의 원문 연속 수신까지
-검증했습니다. 프로젝트 소유자의 stable 승인 전까지 정식 버전은 `v0.1.0`입니다.
+다음 개발 순서는 M19 BLE Core/GAP, M20 범용 GATT server/client, M21 SMP·bonding과
+BAS/DIS/HID, M22 `v0.3.0` 검증·릴리스입니다. 사용자는 `prj.conf`나 overlay를 직접 편집하지
+않고 Tools의 검증된 profile과 Arduino library API를 사용하도록 유지합니다.
 
 ## 개발 환경에서 사용
 
@@ -280,6 +272,7 @@ NCS 공개 API를 직접 사용할 수 있습니다.
 - [저장소 구조와 소유권](<./00_Docs/01_아두이노 코어 설계/01_저장소_폴더_구조.md>)
 - [제품 로드맵과 구현 마일스톤](<./00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md>)
 - [v0.2.0 구현 마일스톤](<./00_Docs/01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)
+- [v0.3.0 구현 마일스톤](<./00_Docs/01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)
 - [Boards Manager 설치와 패키징](<./00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
 - [구성 프로필과 Arduino 예제 배포](<./00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md>)
 - [M12 CI/CD와 재현 build 기준선](<./00_Docs/04_검증 기록/14_M12_CI_CD_기준선.md>)
@@ -291,7 +284,8 @@ NCS 공개 API를 직접 사용할 수 있습니다.
 - [M16 BLE NUS 기준선](<./00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md>)
 - [M17 NCS 기능과 예제 Coverage 기준선](<./00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)
 - [M18 v0.2.0 RC1 공개 검증과 RC2 교정](<./00_Docs/04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md>)
-- [v0.2.0 RC 릴리스 문서](<./00_Docs/05_릴리스/v0.2.0/README.md>)
+- [v0.2.0 정식 릴리스 공개 기록](<./00_Docs/04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md>)
+- [v0.2.0 정식 릴리스 문서](<./00_Docs/05_릴리스/v0.2.0/README.md>)
 - [v0.1.0 릴리스 노트](<./00_Docs/05_릴리스/11_v0.1.0_릴리스_노트.md>)
 
 ## 작성자와 라이선스
