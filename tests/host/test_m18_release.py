@@ -621,7 +621,7 @@ class M18ReleaseTests(unittest.TestCase):
             Path,
             "is_symlink",
             autospec=True,
-            side_effect=lambda path: path == target or original_is_symlink(path),
+            side_effect=lambda path: path.name == target.name or original_is_symlink(path),
         ):
             with self.assertRaisesRegex(M18.M18Error, "regular file"):
                 M18.validate_plan(plan_path, package=package, runner=runner)
