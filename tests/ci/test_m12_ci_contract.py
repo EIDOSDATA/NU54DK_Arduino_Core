@@ -241,6 +241,14 @@ class M12CiContractTests(unittest.TestCase):
         source = LOCK_SCRIPT.read_text(encoding="utf-8")
         self.assertIn('f"safe.directory={REPOSITORY}"', source)
 
+    ## @brief M17 feasibility의 모든 Git 조회도 전역 변경 없이 대상 저장소만 신뢰합니다.
+    def test_m17_feasibility_scopes_git_safe_directory(self) -> None:
+        source = (
+            REPOSITORY / "tools" / "ci" / "run_m17_feasibility.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn('f"safe.directory={repository}"', source)
+        self.assertNotIn('"config", "--global"', source)
+
     ## @brief CMake build record도 조회 대상 저장소 하나만 Git safe.directory로 지정합니다.
     def test_build_record_scopes_git_safe_directory(self) -> None:
         for relative in (

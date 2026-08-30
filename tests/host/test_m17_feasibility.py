@@ -21,6 +21,39 @@ SPEC.loader.exec_module(MODULE)
 class M17FeasibilityTests(unittest.TestCase):
     """! @brief official control과 NU54DK applicability 기록을 검증합니다. """
 
+    @mock.patch.object(MODULE.subprocess, "run")
+    def test_git_output_scopes_safe_directory_to_repository(
+        self, run: mock.Mock
+    ) -> None:
+        """! @brief 공백 경로도 전역 변경 없이 해당 저장소만 신뢰합니다. """
+        run.return_value = mock.Mock(returncode=0, stdout="", stderr="")
+        with tempfile.TemporaryDirectory(prefix="nu54 m17 git ") as name:
+            repository = Path(name) / "repository with spaces"
+            repository.mkdir()
+            MODULE.git_output(repository, ("status", "--porcelain"), "fixture")
+
+        command = run.call_args.args[0]
+        resolved = repository.resolve()
+        self.assertEqual(
+            command,
+            (
+                "git",
+                "-c",
+                f"safe.directory={resolved}",
+                "-C",
+                str(resolved),
+                "status",
+                "--porcelain",
+            ),
+        )
+        self.assertNotIn("--global", command)
+
+    @mock.patch.object(MODULE, "git_output", return_value="not-a-revision\n")
+    def test_git_revision_rejects_malformed_output(self, _git_output: mock.Mock) -> None:
+        """! @brief Git 성공 코드여도 40자리 SHA가 아니면 exact 입력을 거부합니다. """
+        with self.assertRaisesRegex(MODULE.FeasibilityFailure, "revision 형식"):
+            MODULE.git_revision(Path("repository"), "fixture")
+
     def test_build_command_is_fixed_sysbuild(self) -> None:
         """! @brief 명령이 고정 board와 sysbuild 및 저장소 BOARD_ROOT를 사용합니다. """
         command = MODULE.build_command(
@@ -173,7 +206,18 @@ class M17FeasibilityTests(unittest.TestCase):
         gitlink = (
             f"160000 commit {'c' * 40}\tboard_package/NU54DK_Zephyr_DTS\n"
         )
-        with mock.patch.object(MODULE.LOCK_MODULE, "validate_workspace"), mock.patch.object(MODULE.LOCK_MODULE, "git_revision", return_value="c" * 40), mock.patch.object(MODULE, "git_output", side_effect=["", "", " M dirty.txt\n", gitlink]):
+        with mock.patch.object(
+            MODULE,
+            "git_output",
+            side_effect=[
+                "a" * 40,
+                "",
+                "b" * 40,
+                "",
+                "c" * 40,
+                " M dirty.txt\n",
+            ],
+        ):
             with self.assertRaisesRegex(MODULE.FeasibilityFailure, "미커밋 변경"):
                 MODULE.validate_execution_inputs(Path("workspace"), lock)
 
@@ -184,13 +228,29 @@ class M17FeasibilityTests(unittest.TestCase):
             "zephyr": {"revision": "b" * 40},
             "board": {"revision": "c" * 40},
         }
-        with mock.patch.object(MODULE.LOCK_MODULE, "validate_workspace"), mock.patch.object(MODULE.LOCK_MODULE, "git_revision", return_value="d" * 40), mock.patch.object(MODULE, "git_output", side_effect=["", ""]):
+        with mock.patch.object(
+            MODULE,
+            "git_output",
+            side_effect=["a" * 40, "", "b" * 40, "", "d" * 40],
+        ):
             with self.assertRaisesRegex(MODULE.FeasibilityFailure, "checkout revision"):
                 MODULE.validate_execution_inputs(Path("workspace"), lock)
         wrong_gitlink = (
             f"160000 commit {'d' * 40}\tboard_package/NU54DK_Zephyr_DTS\n"
         )
-        with mock.patch.object(MODULE.LOCK_MODULE, "validate_workspace"), mock.patch.object(MODULE.LOCK_MODULE, "git_revision", return_value="c" * 40), mock.patch.object(MODULE, "git_output", side_effect=["", "", "", wrong_gitlink]):
+        with mock.patch.object(
+            MODULE,
+            "git_output",
+            side_effect=[
+                "a" * 40,
+                "",
+                "b" * 40,
+                "",
+                "c" * 40,
+                "",
+                wrong_gitlink,
+            ],
+        ):
             with self.assertRaisesRegex(MODULE.FeasibilityFailure, "gitlink"):
                 MODULE.validate_execution_inputs(Path("workspace"), lock)
 
@@ -201,10 +261,16 @@ class M17FeasibilityTests(unittest.TestCase):
             "zephyr": {"revision": "b" * 40},
             "board": {"revision": "c" * 40},
         }
-        with mock.patch.object(MODULE.LOCK_MODULE, "validate_workspace"), mock.patch.object(MODULE, "git_output", side_effect=[" M sample.c\n"]):
+        with mock.patch.object(
+            MODULE, "git_output", side_effect=["a" * 40, " M sample.c\n"]
+        ):
             with self.assertRaisesRegex(MODULE.FeasibilityFailure, "NCS workspace"):
                 MODULE.validate_execution_inputs(Path("workspace"), lock)
-        with mock.patch.object(MODULE.LOCK_MODULE, "validate_workspace"), mock.patch.object(MODULE, "git_output", side_effect=["", "?? local.patch\n"]):
+        with mock.patch.object(
+            MODULE,
+            "git_output",
+            side_effect=["a" * 40, "", "b" * 40, "?? local.patch\n"],
+        ):
             with self.assertRaisesRegex(MODULE.FeasibilityFailure, "Zephyr workspace"):
                 MODULE.validate_execution_inputs(Path("workspace"), lock)
 

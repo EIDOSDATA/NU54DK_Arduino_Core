@@ -49,9 +49,17 @@ class FeasibilityFailure(RuntimeError):
 
 ## @brief Git 명령의 표준 출력을 반환하고 실패를 M17 계약 오류로 바꿉니다.
 def git_output(path: Path, arguments: Sequence[str], context: str) -> str:
+    repository = path.resolve()
     try:
         result = subprocess.run(
-            ("git", "-C", str(path), *arguments),
+            (
+                "git",
+                "-c",
+                f"safe.directory={repository}",
+                "-C",
+                str(repository),
+                *arguments,
+            ),
             check=False,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -66,13 +74,30 @@ def git_output(path: Path, arguments: Sequence[str], context: str) -> str:
     return result.stdout
 
 
+## @brief 저장소 단위 safe.directory를 사용해 exact HEAD revision을 반환합니다.
+def git_revision(path: Path, context: str) -> str:
+    revision = git_output(path, ("rev-parse", "HEAD"), context).strip().lower()
+    if not re.fullmatch(r"[0-9a-f]{40}", revision):
+        raise FeasibilityFailure(f"{context} Git revision 형식이 잘못됐습니다: {revision}")
+    return revision
+
+
 ## @brief build 전에 NCS·Zephyr와 실제 board checkout의 exact 상태를 검증합니다.
 def validate_execution_inputs(workspace: Path, lock: dict[str, Any]) -> dict[str, str]:
-    LOCK_MODULE.validate_workspace(workspace, lock)
-    for source_root, label in (
-        (workspace / "nrf", "NCS workspace"),
-        (workspace / "zephyr", "Zephyr workspace"),
+    for source_root, expected_revision, label in (
+        (workspace / "nrf", str(lock["ncs"]["revision"]), "NCS workspace"),
+        (
+            workspace / "zephyr",
+            str(lock["zephyr"]["revision"]),
+            "Zephyr workspace",
+        ),
     ):
+        source_revision = git_revision(source_root, label)
+        if source_revision != expected_revision:
+            raise FeasibilityFailure(
+                f"{label} revision이 lock과 다릅니다: "
+                f"expected={expected_revision}, actual={source_revision}"
+            )
         source_status = git_output(
             source_root,
             ("status", "--porcelain", "--untracked-files=all"),
@@ -81,7 +106,7 @@ def validate_execution_inputs(workspace: Path, lock: dict[str, Any]) -> dict[str
         if source_status.strip():
             raise FeasibilityFailure(f"{label}에 미커밋 변경이 있습니다.")
     board_root = REPOSITORY / "board_package" / "NU54DK_Zephyr_DTS"
-    board_revision = LOCK_MODULE.git_revision(board_root)
+    board_revision = git_revision(board_root, "board checkout")
     expected_board_revision = str(lock["board"]["revision"])
     if board_revision != expected_board_revision:
         raise FeasibilityFailure(

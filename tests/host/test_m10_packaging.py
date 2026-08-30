@@ -269,6 +269,32 @@ class M10PackagingTests(unittest.TestCase):
             PACKAGE.release_asset_url("0.1.0", PACKAGE.archive_filename("0.1.0")),
         )
 
+    def test_10aa_stable_index_checkout_is_forced_to_lf(self) -> None:
+        """! @brief 공개 stable index의 Git checkout 줄바꿈 계약을 검증합니다. """
+
+        relative = PACKAGE.STABLE_INDEX_FILENAME
+        attributes = subprocess.check_output(
+            ["git", "check-attr", "text", "eol", "--", relative],
+            cwd=REPO_ROOT,
+            text=True,
+        ).splitlines()
+        self.assertEqual(
+            attributes,
+            [
+                f"{relative}: text: set",
+                f"{relative}: eol: lf",
+            ],
+        )
+
+        stable_bytes = (REPO_ROOT / relative).read_bytes()
+        self.assertIn(b"\n", stable_bytes)
+        self.assertNotIn(b"\r\n", stable_bytes)
+        crlf_bytes = stable_bytes.replace(b"\n", b"\r\n")
+        self.assertNotEqual(
+            hashlib.sha256(crlf_bytes).hexdigest(),
+            "385445512ba6bb842024979e8314f2f953eb15a14e3ce72076b6d475e2e7583d",
+        )
+
     def test_11_supported_versions_are_fail_closed(self) -> None:
         self.assertEqual(PACKAGE.LEGACY_PREVIEW_VERSIONS[-2:], ("0.0.92", "0.0.93"))
         self.assertEqual(PACKAGE.FAILED_M10_PREVIEW_VERSIONS, ("0.0.94", "0.0.95"))

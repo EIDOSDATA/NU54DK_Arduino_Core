@@ -464,6 +464,21 @@ class M18ReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(M18.M18Error, "STABLE_VERSIONS"):
             self.prepare(package=package)
 
+    def test_stable_root_index_crlf_worktree_is_rejected(self) -> None:
+        """! @brief Windows CRLF로 변형된 stable index를 M18이 거부하는지 검증합니다. """
+
+        source_root = Path(self.temporary.name) / "crlf-source"
+        source_root.mkdir()
+        canonical = (REPO_ROOT / M18.EXPECTED_STABLE_INDEX_FILENAME).read_bytes()
+        self.assertIn(b"\n", canonical)
+        self.assertNotIn(b"\r\n", canonical)
+        (source_root / M18.EXPECTED_STABLE_INDEX_FILENAME).write_bytes(
+            canonical.replace(b"\n", b"\r\n")
+        )
+
+        with self.assertRaisesRegex(M18.M18Error, "stable root index byte 계약"):
+            M18.assert_stable_root_index(FakeRunner(), source_root, CORE_COMMIT)
+
     def test_package_contract_is_read_only_and_rejects_rc_or_pin_mutation(self) -> None:
         package = FakePackage()
         original = package.RELEASE_CANDIDATE_VERSIONS

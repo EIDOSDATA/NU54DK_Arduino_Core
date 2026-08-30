@@ -10,3 +10,6 @@ third_party/ArduinoCore-API/** text eol=lf
 
 # Coverage 원장과 생성 요약은 Git에 저장되는 LF 바이트를 기준으로 고정합니다.
 coverage/ncs-v3.4.0/** text eol=lf
+
+# 공개 stable index는 Windows checkout에서도 승인된 SHA-256의 LF 바이트를 유지합니다.
+/package_nucode_nu54dk_index.json text eol=lf
