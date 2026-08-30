@@ -15,14 +15,14 @@ Sketch와 library를 nRF Connect SDK의 build graph 안에 넣어 ELF/HEX/BIN을
 | 항목 | 상태 |
 | --- | --- |
 | 현재 정식 버전 | [`v0.1.0`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.1.0) |
-| 다음 목표 | `v0.2.0` — 공개 RC1 검증 완료, RC2 교정·재검증 진행 |
+| 다음 목표 | `v0.2.0` — 공개 RC2 설치본 검증 완료 범위 고정, stable 승인 준비 |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 지원 보드 | NU54DK / nRF54L15 CPUAPP |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 선택 업로드 | 외장 SEGGER J-Link |
 | v0.1 마일스톤 | M0~M11 완료 |
-| v0.2 진행 | M12~M18 구현 완료; `v0.2.0-rc.2` 공개 후보 준비 |
+| v0.2 진행 | M12~M18 구현 완료; `v0.2.0-rc.2` 공개·설치·compile·명시 UID upload PASS |
 
 v0.1.0에서는 Runtime, GPIO, 시간, Serial, GPIO interrupt, Wire/I2C, SPI, ADC, PWM,
 Arduino CLI/IDE build, pyOCD upload/debug, cache와 Boards Manager 설치 경로를 검증했습니다.
@@ -33,6 +33,13 @@ Arduino CLI/IDE build, pyOCD upload/debug, cache와 Boards Manager 설치 경로
 Boards Manager 설치와 14개 예제 compile, Blink upload, SerialEcho 및 두 보드 BLE NUS 실기
 검증에 사용한 불변 기록입니다. 이 검증에서 발견한 다중 CMSIS-DAP 선택과 NUS 수신 로그 간섭을
 RC2에서 교정했으므로 신규 RC 검증에는 RC2를 사용합니다. RC1 tag와 자산은 덮어쓰지 않습니다.
+
+공개 [`v0.2.0-rc.2`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.2.0-rc.2)는
+격리 Boards Manager 설치와 `post_install`, 설치본 예제 14개 compile, Blink 명시 UID upload,
+대응 UART의 `NUCODE_M8_UPLOAD_READY`와 두 보드 BLE NUS 양방향 원문 전달까지 통과했습니다.
+이번 공개 예제 HIL은 transparent bridge와 RC1 상태 로그 재삽입 방지 범위이며, 기존 M16의
+frame boundary·disconnect/reconnect 전문 HIL을 다시 실행한 것은 아닙니다. 최신 정식 버전과
+GitHub `latest`는 계속 `v0.1.0`입니다.
 
 현재 `main`에서는 M12 CI/CD, M13 profile·예제 UX, M14 Core API·DTS 기반 Variant, M15
 `NUCODE_NU54DK` board/system library와 M16 BLE NUS를 완료했습니다. `PIN_LED2..3` output/readback과
@@ -87,6 +94,13 @@ Arduino IDE에서 `File → Preferences → Additional Boards Manager URLs`에 �
 
 ```text
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
+```
+
+공개 RC2 검증에 참여할 때만 다음 RC 전용 index를 추가하고 Boards Manager에서
+`0.2.0-rc.2`를 명시적으로 선택합니다. 이 URL은 stable index를 대체하지 않습니다.
+
+```text
+https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/package_nucode_nu54dk_rc_index.json
 ```
 
 ### 2. Core 설치
@@ -211,16 +225,15 @@ M13의 기존 예제 7개에 M15 board/system 예제 5개와 M16 NUS 예제 2개
 | [M15](<./00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) | **완료** | 비-System-OFF 자동 HIL 2/2와 SWD 격리 timed GRTC→사용자 SW0 결합 HIL PASS |
 | [M16](<./00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md>) | **완료** | NUS Peripheral/Central Stream, profile·예제와 두 보드 BLE HIL PASS |
 | [M17](<./00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>) | **완료** | 9개 coverage record, sensor·crypto build와 무선 build feasibility 결과 분류 |
-| [M18](<./00_Docs/05_릴리스/v0.2.0/README.md>) | **RC2 재검증** | 공개 RC1 실기에서 발견한 두 결함을 교정하고 RC2 package 준비 |
+| [M18](<./00_Docs/05_릴리스/v0.2.0/README.md>) | **RC2 공개 검증 완료** | 설치·14/14 compile·명시 UID upload·UART READY·설치본 NUS 양방향 원문 전달 PASS |
 
 자세한 완료 기준은 [v0.2.0 구현 마일스톤](<./00_Docs/01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)과
 [NCS 기능·예제 지원 매트릭스](<./00_Docs/01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)를
 따릅니다.
 
-공개 RC1은 Boards Manager 설치, 14개 예제 compile와 실제 NU54DK 실행까지 검증했습니다.
-RC2에서는 그 과정에서 발견한 두 결함을 교정하고 같은 공개 package 경로를 다시 검증합니다.
-RC2의 `post_install`, 설치본 compile/upload와 프로젝트 소유자 승인이 끝나야 `v0.2.0` stable
-공개를 검토하며, 그때까지 정식 버전은 `v0.1.0`입니다.
+공개 RC2는 격리 Boards Manager `post_install`, 설치본 예제 14/14 compile, Blink 명시 UID
+upload, UART READY와 설치본 NUS Peripheral↔Central 고유 payload의 원문 연속 수신까지
+검증했습니다. 프로젝트 소유자의 stable 승인 전까지 정식 버전은 `v0.1.0`입니다.
 
 ## 개발 환경에서 사용
 

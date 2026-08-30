@@ -1,7 +1,8 @@
 # NU54DK Arduino Core v0.2.0-rc.2 릴리스 노트
 
-> **상태: RC2 공개 후보 / 정식 버전 아님.** Public RC Boards Manager 설치·`post_install`
-> end-to-end 검증과 프로젝트 소유자 승인이 끝날 때까지 최신 정식 버전은 `v0.1.0`이다.
+> **상태: RC2 Public Prerelease / 정식 버전 아님.** Boards Manager 설치·`post_install`,
+> 설치본 예제 14/14 compile, 명시 UID upload, UART READY와 BLE NUS 양방향 transparent
+> bridge는 PASS다. 최신 정식 버전은 계속 `v0.1.0`이다.
 
 `v0.2.0-rc.2`는 Loader나 LLEXT 없이 Arduino Sketch, Core와 Zephyr application을 하나의
 정적 ELF/HEX로 만드는 NU54DK 전용 Native Full Zephyr Core의 두 번째 기능 묶음이다. 공식
@@ -17,9 +18,9 @@
 | NU54DK board package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | Core repository | `https://github.com/EIDOSDATA/NU54DK_Arduino_Core` |
 
-최종 release plan은 candidate의 exact Core commit, package archive, RC index, checksum, SPDX SBOM,
-license inventory, third-party notice와 이 문서의 byte를 별도로 고정한다. Remote 검증은 GitHub가
-반환한 Draft ID와 asset allowlist/byte를 확인하며 Draft 이름을 실제 Git tag로 해석하지 않는다.
+공개 RC2는 tag commit `1c5dcecfc0dba2ef25e06963dcba61c63f454db9`와 12개 asset을 가진다.
+RC index SHA-256은 `fa73f3ba34ecfc84984aa836f423cb0d31a2ce56518fac6c56b99ec8dd70f89b`,
+ZIP SHA-256은 `753712094ff2500d8ab4b6184a27b2a0ad44bfece0236bd3788d01cd9c1ad7af`다.
 
 ## RC2 교정 사항
 
@@ -120,41 +121,31 @@ M12~M17의 host, target build와 필요한 HIL은 각 마일스톤 기준선에 
 M17은 coverage host 21/21, 전체 M17 host 47/47, generic Zephyr regression 14/14를 통과했다.
 M16 NUS는 서로 다른 두 NU54DK에서 양방향 payload와 재연결 HIL을 통과했다.
 
-아직 완료되지 않은 M18 수동 gate는 두 단계다.
+RC2 공개 설치본은 격리 Boards Manager 설치와 `post_install`, package 사용자 예제 14/14
+compile, `CMSIS-DAP with UID (pyOCD)` Blink upload와 대응 UART의
+`NUCODE_M8_UPLOAD_READY`를 통과했다. 실제 UID는 공개 기록에 남기지 않았다.
 
-1. Draft exact ZIP을 별도 clean Windows의 새 Sketchbook `hardware/nucode/zephyr` staging에
-   수동 추출하고 package 사용자 예제 열거, 대표 `standard`/`ble` compile, 온보드
-   CMSIS-DAP V2/pyOCD 실제 NU54DK upload와 실행을 확인한다. 이 결과는 Boards Manager 설치나
-   `post_install` PASS가 아니다.
-2. 프로젝트 소유자가 staged 결과를 승인해 Draft를 public RC로 전환한 뒤, 다시 clean
-   Windows에서 공개 RC index를 통한 Boards Manager 설치·`post_install`, 예제/compile/upload와
-   upgrade/downgrade/uninstall lifecycle을 검증한다. 이 결과를 다시 승인한 뒤에만 stable을
-   검토한다.
-
-Draft ID와 asset SHA-256 재검증만으로 위 두 수동 gate를 PASS로 표시하지 않는다.
+RC2 설치본 NUS Peripheral/Central은 startup `BLE NUS ready`와 양방향 고유 payload 원문 연속
+수신을 통과했고 RC1의 수신 상태 로그 삽입은 재현되지 않았다. 이 공개 예제 transparent bridge
+HIL은 위 M16의 frame boundary·disconnect/reconnect 전문 HIL을 재실행한 것이 아니다.
 
 ## 설치·공개 상태
 
-Draft asset은 일반 공개 URL에서 받을 수 없으므로 현재 일반 사용자가 Boards Manager에 등록할
-RC URL은 없다. 공개 검증 담당자는 인증된 계정으로 exact ZIP과 sidecar를 받아 새 Sketchbook의
-격리된 hardware staging에 수동 추출해 시험한다. `%LOCALAPPDATA%\Arduino15`를 직접 수정하지
-않으며 이 staged 시험을 Boards Manager 설치 완료로 기록하지 않는다. 일반 사용자는 다음
-stable index와 `0.1.0`을 계속 사용한다.
+RC2는 다음 Release와 RC 전용 index로 공개됐다.
+
+```text
+https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.2.0-rc.2
+https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/package_nucode_nu54dk_rc_index.json
+```
+
+RC2는 Public Prerelease이며 GitHub `latest`가 아니다. 일반 stable은 다음 index의 `0.1.0`이다.
 
 ```text
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-프로젝트 소유자가 이후 RC를 public Prerelease로 전환하면 RC 전용 index는 다음 고정 경로를
-사용한다. **Draft인 동안에는 이 URL을 설치 절차로 사용하지 않는다.**
-
-```text
-https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/package_nucode_nu54dk_rc_index.json
-```
-
-Public RC 전환 시점에 실제 Git tag와 공개 asset URL이 생긴다. 공개 RC의 Boards Manager
-end-to-end가 별도 clean Windows에서 통과하고 프로젝트 소유자가 승인하기 전에는
-`v0.2.0` stable을 공개하지 않는다.
+upgrade·downgrade·uninstall lifecycle 확인과 프로젝트 소유자 승인 전에는 `v0.2.0` stable을
+공개하지 않는다.
 
 ## 라이선스
 

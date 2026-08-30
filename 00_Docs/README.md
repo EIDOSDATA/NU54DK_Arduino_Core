@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 2.7 |
+| 문서 체계 개정 | 2.8 |
 | 현재 정식 버전 | `v0.1.0` |
 | 다음 목표 버전 | `v0.2.0` |
-| 최종 갱신일 | 2026-08-30 |
+| 최종 갱신일 | 2026-08-31 |
 | 작성자 | Quantum / NUCODE |
 
 이 디렉터리는 Loader 없이 동작하는 Native Full Zephyr 기반 NU54DK Arduino Core의 결정,
@@ -49,7 +49,7 @@
 | M15 | **완료** | 비-System-OFF 자동 HIL 2/2와 SWD 격리 timed GRTC→사용자 SW0 결합 HIL PASS |
 | M16 | **완료** | NUS Peripheral/Central Stream과 두 보드 BLE HIL PASS |
 | M17 | **완료** | 9개 machine-readable coverage record와 sensor·crypto·무선 feasibility 분류 |
-| M18 | **RC2 재검증** | 공개 RC1 실기에서 발견한 두 결함 교정과 RC2 package 준비 |
+| M18 | **RC2 공개 검증 완료** | 설치·14/14 compile·명시 UID upload·UART READY·설치본 NUS 양방향 원문 전달 PASS |
 
 M15 완료 기준은 Core `c47239d954c45fd173d8d1393e3ea5c9c86e111a`,
 [Software Gates run 33295587578](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33295587578)
@@ -63,10 +63,11 @@ PMIC 배터리 전기 HIL은 계속 `NOT RUN`이며 사용자가 자신의 배�
 coverage 분류와 M18 RC package 자동 범위를 완료했다. M17 완료는 NCS 전체 지원이 아니라
 실제 build 결과와 `supported`·`build-only`·`deferred` 경계를 고정했다는 뜻이다.
 
-공개 RC1은 Boards Manager 설치, 14개 예제 compile, Blink·SerialEcho 및 두 보드 BLE NUS
-실기까지 검증했다. RC2에서는 이 과정에서 발견한 다중 CMSIS-DAP 선택과 NUS 수신 로그 간섭을
-교정하고 같은 공개 설치본 gate를 반복한다. RC2 결과와 프로젝트 소유자 승인을 거친 뒤에만
-stable을 검토하며 현재 정식 버전은 계속 `v0.1.0`이다.
+공개 RC2는 격리 Boards Manager `post_install`, 설치본 예제 14/14 compile, Blink 명시 UID
+upload, 대응 UART READY와 두 보드 NUS Peripheral↔Central 고유 payload 원문 연속 수신을
+통과했다. 이 공개 예제 transparent bridge HIL은 M16의 frame boundary·disconnect/reconnect
+전문 HIL과 범위를 구분한다. 프로젝트 소유자의 stable 승인 전까지 현재 정식 버전과 GitHub
+`latest`는 계속 `v0.1.0`이다.
 
 상세 상태의 단일 원본은
 [제품 로드맵과 구현 마일스톤](<./01_아두이노 코어 설계/02_구현_로드맵.md>)이다.
@@ -127,7 +128,7 @@ stable을 검토하며 현재 정식 버전은 계속 `v0.1.0`이다.
 - [M15 NU54DK Board/System 기준선](<./04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)
 - [M16 BLE NUS 기준선](<./04_검증 기록/18_M16_BLE_NUS_기준선.md>)
 - [M17 NCS 기능과 예제 Coverage 기준선](<./04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)
-- [M18 v0.2.0 RC1 공개 검증과 RC2 교정](<./04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md>)
+- [M18 v0.2.0 RC1 공개 검증, RC2 교정과 공개 검증](<./04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md>)
 
 ### 05. 릴리스 문서
 

@@ -1,7 +1,7 @@
 # NU54DK Arduino Core v0.2.0-rc.2 마이그레이션
 
-> **배포 상태: RC2 공개 후보 / 정식 버전 아님.** RC 전용 index로 설치·시험하며 public RC
-> Boards Manager 검증과 프로젝트 소유자 승인이 끝날 때까지 정식 `v0.1.0`을 유지한다.
+> **배포 상태: RC2 Public Prerelease / 정식 버전 아님.** RC 전용 index로 설치·시험하며
+> 프로젝트 소유자의 stable 승인 전까지 정식 `v0.1.0`을 유지한다.
 
 | 항목 | 값 |
 | --- | --- |
@@ -15,6 +15,9 @@
 | Board package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 
 ## 1. RC 공개 전 검증 담당자가 할 일
+
+이 절은 RC2 공개 전 Draft/staged 검증 절차를 보존한 것이다. 현재 RC2는 이미 Public
+Prerelease이므로 일반 설치는 2절의 RC 전용 index를 사용한다.
 
 GitHub Draft asset은 일반 공개 download URL에서 받을 수 없다. Draft 검증 담당자는 인증된
 계정으로 M18 plan에 기록된 exact ZIP과 sidecar를 내려받고 SHA-256을 확인한 뒤 다음과 같이
@@ -43,9 +46,8 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 
 ## 2. Public Prerelease 설치
 
-아래 절차는 프로젝트 소유자가 staged 결과를 승인하고 GitHub UI에서 untagged Draft를
-`v0.2.0-rc.2` **public Prerelease**로 전환해 실제 Git tag와 공개 asset URL을 만든 뒤에만
-사용한다. Draft 상태에서는 URL이 동작하지 않는 것이 정상이다.
+`v0.2.0-rc.2`는 실제 Git tag와 공개 asset을 가진 **Public Prerelease**다. 다음 RC 전용
+index로 설치한다.
 
 ```text
 https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/package_nucode_nu54dk_rc_index.json
@@ -60,9 +62,10 @@ https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/p
 7. 온보드 CMSIS-DAP를 연결하고 Upload probe `CMSIS-DAP (pyOCD)`로 실제 board에 upload한다.
 8. BLE를 시험할 때만 Feature set을 `BLE NUS`로 바꾸고 NUS 예제를 clean compile한다.
 
-이 public RC 단계에서는 별도 clean Windows에서 Boards Manager 설치 완료 응답, `post_install`,
-14개 예제 열거, standard/BLE compile, 실제 pyOCD upload와 upgrade/downgrade/uninstall lifecycle을
-end-to-end로 다시 확인한다. 프로젝트 소유자가 이 두 번째 결과를 승인하기 전에는
+현재 공개 설치본은 격리 Boards Manager `post_install`, package 사용자 예제 14/14 compile,
+명시 UID pyOCD upload, UART READY와 NUS Peripheral↔Central 고유 payload 원문 연속 수신을
+PASS했다. RC1 상태 로그 삽입도 재현되지 않았다. 이 공개 예제 transparent bridge HIL은 M16의
+frame boundary·disconnect/reconnect 전문 HIL과 별개다. 프로젝트 소유자의 별도 승인 전에는
 `v0.2.0` stable을 공개하지 않는다.
 
 Arduino CLI에서는 public Prerelease 전환 후 다음과 같이 설치한다.

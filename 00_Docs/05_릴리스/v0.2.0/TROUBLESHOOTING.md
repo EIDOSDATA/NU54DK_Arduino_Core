@@ -1,6 +1,6 @@
 # NU54DK Arduino Core v0.2.0-rc.2 문제 해결
 
-> **상태: RC2 공개 후보 / 정식 버전 아님.** 최신 정식 package가 필요하면 `v0.1.0`
+> **상태: RC2 Public Prerelease / 정식 버전 아님.** 최신 정식 package가 필요하면 `v0.1.0`
 > stable을 사용한다.
 
 | 항목 | 값 |
@@ -16,17 +16,15 @@
 
 ## 1. `v0.2.0-rc.2`가 Boards Manager에 보이지 않음
 
-Release가 아직 GitHub **Draft**라면 보이지 않는 것이 정상이다. Public Prerelease 공개 뒤에는
-아래 RC URL을 설치 URL로 사용한다.
+RC2는 Public Prerelease로 공개돼 있다. 아래 RC URL을 설치 URL로 사용한다.
 
 ```text
 https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/package_nucode_nu54dk_rc_index.json
 ```
 
-Public Prerelease 전환과 asset 검증 완료 뒤에도
 보이지 않으면 URL이 한 줄로 등록됐는지, GitHub 접근, proxy, TLS inspection과 시스템 시간을
-확인하고 index를 갱신한다. Public RC에서는 별도 clean Windows Boards Manager 설치·`post_install`
-end-to-end를 수행하고, 이 결과가 승인되기 전에는 stable 공개로 진행하지 않는다.
+확인하고 index를 갱신한다. 공개 설치본의 `post_install`, 14/14 compile, 명시 UID upload,
+UART READY와 NUS 양방향 transparent bridge는 PASS다. stable은 계속 `v0.1.0`이다.
 
 ```powershell
 arduino-cli core update-index
