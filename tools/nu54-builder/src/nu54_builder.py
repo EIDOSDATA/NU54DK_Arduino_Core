@@ -1207,6 +1207,18 @@ def configure_command(
     return command
 
 
+## @brief west build가 application과 build directory의 volume에서 실행될 작업 directory를 반환합니다.
+def west_build_working_directory(paths: dict[str, Path]) -> Path:
+    app_root = paths["app"]
+    build_root = paths["zephyr_build"]
+    if app_root.drive.casefold() != build_root.drive.casefold():
+        raise AdapterError(
+            "[NU54:E_BUILD_VOLUME] application과 Zephyr build directory가 서로 다른 volume에 있습니다: "
+            f"{app_root} != {build_root}"
+        )
+    return app_root
+
+
 ## @brief Zephyr application template과 사용자 config/overlay를 materialize합니다.
 def materialize_application(
     paths: dict[str, Path], args: argparse.Namespace,
@@ -1389,7 +1401,7 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
                         configure_command(
                             paths, args, tools, board_root.resolve(), pristine=True
                         ),
-                        cwd=tools["ncs_root"],
+                        cwd=west_build_working_directory(paths),
                         environment=tools["environment"],
                     )
                 except Exception as error:
@@ -2091,7 +2103,11 @@ def migrate_feature_workspace(
             transition_cache_state(workspace, cache_key, "configuring", first_configure_complete=False, configure_reason="selected-features")
             started = time.perf_counter()
             try:
-                run_checked(configure_command(paths, args, tools, board_root, pristine=True), cwd=tools["ncs_root"], environment=tools["environment"])
+                run_checked(
+                    configure_command(paths, args, tools, board_root, pristine=True),
+                    cwd=west_build_working_directory(paths),
+                    environment=tools["environment"],
+                )
             except Exception as error:
                 transition_cache_state(workspace, cache_key, "failed", first_configure_complete=False, last_build_result="configure-failed", failure=str(error))
                 raise
@@ -2449,7 +2465,7 @@ def link(args: argparse.Namespace) -> None:
                             canonical_path(context["board_root"]),
                             pristine=False,
                         ),
-                        cwd=tools["ncs_root"],
+                        cwd=west_build_working_directory(paths),
                         environment=tools["environment"],
                     )
                     configure_seconds = time.perf_counter() - configure_started
@@ -2462,7 +2478,7 @@ def link(args: argparse.Namespace) -> None:
                         "-d",
                         paths["zephyr_build"],
                     ],
-                    cwd=tools["ncs_root"],
+                    cwd=west_build_working_directory(paths),
                     environment=tools["environment"],
                 )
             except Exception as error:

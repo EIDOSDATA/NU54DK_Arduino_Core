@@ -9,7 +9,7 @@ import importlib.util
 import io
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import tempfile
 import unittest
 from unittest import mock
@@ -228,6 +228,43 @@ class M9SafetyContractTests(unittest.TestCase):
             "environment": {},
         }
         return args, workspace, cache_key, tools
+
+    def test_west_build_working_directory_rejects_split_cache_volumes(self) -> None:
+        """! @brief application과 build가 서로 다른 Windows volume이면 명시적으로 거부합니다. """
+
+        paths = {
+            "app": PureWindowsPath("C:/nu54-cache/app"),
+            "zephyr_build": PureWindowsPath("D:/nu54-cache/build"),
+        }
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_BUILD_VOLUME"):
+            MODULE.west_build_working_directory(paths)
+
+    def test_prepare_configure_uses_application_volume_across_windows_drives(self) -> None:
+        """! @brief NCS와 cache drive가 달라도 configure의 cwd는 application 쪽을 사용합니다. """
+
+        args, workspace, _, tools = self.prepare_fixture()
+        tools["ncs_root"] = Path("D:/ncs/v3.4.0")
+        with (
+            mock.patch.object(MODULE, "tool_environment", return_value=tools),
+            mock.patch.object(
+                MODULE,
+                "cache_input_manifest",
+                return_value={
+                    "schema_version": MODULE.CACHE_SCHEMA_VERSION,
+                    "fixture": "recovery",
+                },
+            ),
+            mock.patch.object(MODULE, "materialize_application"),
+            mock.patch.object(MODULE, "configure_command", return_value=["configure"]),
+            mock.patch.object(MODULE, "run_checked") as run_checked,
+        ):
+            MODULE.prepare(args)
+        run_checked.assert_called_once()
+        self.assertEqual(run_checked.call_args.kwargs["cwd"], workspace / "app")
+        self.assertNotEqual(
+            PureWindowsPath(str(run_checked.call_args.kwargs["cwd"])).drive.casefold(),
+            PureWindowsPath(str(tools["ncs_root"])).drive.casefold(),
+        )
 
     def test_configure_failed_tree_recovers_once_then_becomes_cache_hit(self) -> None:
         """! @brief 실패 cache는 pristine 1회 복구 후 configure-failed를 유지하지 않습니다. """
