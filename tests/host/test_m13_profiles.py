@@ -33,7 +33,7 @@ class M13ProfileContractTests(unittest.TestCase):
         self.assertIsNone(MODULE.load_library_feature(ROOT, "ThirdParty"))
         self.assertEqual(
             {MODULE.load_library_feature(ROOT, name)["id"] for name in MODULE.FEATURE_ALLOWLIST},
-            {"nucode.board", "nucode.wire", "nucode.spi"},
+            {"nucode.ble.nus", "nucode.board", "nucode.wire", "nucode.spi"},
         )
         resolved = MODULE.resolve_library_features(ROOT, profile, ["Wire", "SPI", "ThirdParty"])
         self.assertEqual([item["id"] for item in resolved], ["nucode.spi", "nucode.wire"])
@@ -57,7 +57,7 @@ class M13ProfileContractTests(unittest.TestCase):
             )
 
     def test_canonical_examples_have_no_zephyr_sidecars(self) -> None:
-        """! @brief 공개 예제 12개가 ino만으로 탐색 가능한지 확인합니다. """
+        """! @brief 공개 예제 14개가 ino만으로 탐색 가능한지 확인합니다. """
         examples = sorted(ROOT.glob("libraries/*/examples/*/*.ino"))
         self.assertEqual(
             {sketch.parent.name for sketch in examples},
@@ -74,6 +74,8 @@ class M13ProfileContractTests(unittest.TestCase):
                 "SystemOffWake",
                 "WatchdogBasic",
                 "WirePmicId",
+                "NUSCentral",
+                "NUSPeripheral",
             },
         )
         for sketch in examples:
@@ -255,7 +257,7 @@ class M13ProfileContractTests(unittest.TestCase):
             self.assertEqual(state["last_build_result"], "configure-failed")
 
     def test_arduino_cli_discovers_canonical_examples_when_installed(self) -> None:
-        """! @brief 설치된 Arduino CLI가 공개 예제 12개를 노출하는지 확인합니다. """
+        """! @brief 설치된 Arduino CLI가 공개 예제 14개를 노출하는지 확인합니다. """
         if os.environ.get("NUCODE_M13_CLI_DISCOVERY") != "1":
             self.skipTest("M13 package 설치 후 NUCODE_M13_CLI_DISCOVERY=1로 실행합니다.")
         cli = shutil.which("arduino-cli")
@@ -284,6 +286,8 @@ class M13ProfileContractTests(unittest.TestCase):
             "SystemOffWake",
             "WatchdogBasic",
             "WirePmicId",
+            "NUSCentral",
+            "NUSPeripheral",
         ):
             self.assertIn(name, encoded)
 

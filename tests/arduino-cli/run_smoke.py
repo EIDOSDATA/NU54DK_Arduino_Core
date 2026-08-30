@@ -1064,6 +1064,40 @@ def test_m15_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
         raise SmokeFailure("SystemOffWake가 명시적 Serial 명령 gate를 유지하지 않습니다")
 
 
+## @brief M16 NUS Peripheral/Central 예제를 BLE profile로 끝까지 빌드합니다.
+def test_m16_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    library = repository / "libraries" / "NUCODE_BLE"
+    for example_name in ("NUSPeripheral", "NUSCentral"):
+        sketch = library / "examples" / example_name
+        project_name = f"{example_name}.ino"
+        if not (sketch / project_name).is_file():
+            raise SmokeFailure(f"incomplete M16 example: {sketch}")
+        build = root / f"build-m16-{example_name.casefold()}"
+        command = list(compile_command(cli, config, build, sketch))
+        command[-1:-1] = ("--board-options", "feature_set=ble")
+        run(command)
+        context = assert_build(build, project_name)
+        if context.get("profile") != "ble":
+            raise SmokeFailure(f"M16 example did not use BLE profile: {sketch}")
+        selected_features = {
+            item.get("id")
+            for item in context.get("selected_features", [])
+            if isinstance(item, dict)
+        }
+        if "nucode.ble.nus" not in selected_features:
+            raise SmokeFailure(f"M16 NUS feature was not selected: {sketch}")
+        configuration = (
+            Path(context["zephyr_build_dir"]) / "zephyr" / ".config"
+        ).read_text(encoding="utf-8")
+        for symbol in (
+            "CONFIG_BT_NUS",
+            "CONFIG_BT_NUS_CLIENT",
+            "CONFIG_NUCODE_BLE_NUS",
+        ):
+            if not read_kconfig_boolean(configuration, symbol):
+                raise SmokeFailure(f"M16 BLE symbol is disabled: {symbol}")
+
+
 ## @brief platform library 예제가 Arduino IDE용 목록에 나타나는지 검증합니다.
 def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path) -> None:
     del root, repository
@@ -1090,6 +1124,7 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
         },
         "SPI": {"SPITransaction"},
         "Wire": {"WirePmicId"},
+        "NUCODE BLE": {"NUSCentral", "NUSPeripheral"},
     }
     discovered: dict[str, set[str]] = {}
     for record in records:
@@ -1178,6 +1213,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "m9",
             "m11",
             "m15",
+            "m16",
             "examples",
         ),
         default=(
@@ -1192,6 +1228,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "m9",
             "m11",
             "m15",
+            "m16",
             "examples",
         ),
     )
@@ -1231,6 +1268,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m9": test_incremental,
                 "m11": test_m11_fixtures,
                 "m15": test_m15_examples,
+                "m16": test_m16_examples,
                 "examples": test_example_discovery,
             }
             for name in args.tests:

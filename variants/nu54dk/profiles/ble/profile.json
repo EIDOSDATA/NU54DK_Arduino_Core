@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "id": "ble",
+  "display_name": "BLE NUS",
+  "board": "nucode:zephyr:nu54dk",
+  "zephyr_board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "ncs_version": "v3.4.0",
+  "conf": "prj.conf",
+  "overlay": "app.overlay",
+  "features": ["gpio", "serial", "wire", "spi", "adc", "pwm", "ble"],
+  "conflicts": [],
+  "requires_hil": ["wire", "spi", "adc", "pwm", "ble"]
+}

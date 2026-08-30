@@ -5,5 +5,5 @@
   "conf": [],
   "overlays": [],
   "conflicts": [],
-  "compatible_profiles": ["standard"]
+  "compatible_profiles": ["standard", "ble"]
 }

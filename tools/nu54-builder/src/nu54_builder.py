@@ -34,7 +34,12 @@ DEFAULT_BOARD = "nrf54l15dk/nrf54l15/cpuapp/nu54dk"
 DEFAULT_PROFILE = "standard"
 PROFILE_SCHEMA_VERSION = 1
 FEATURE_SCHEMA_VERSION = 1
-FEATURE_ALLOWLIST = {"NUCODE_NU54DK": "nucode.board", "Wire": "nucode.wire", "SPI": "nucode.spi"}
+FEATURE_ALLOWLIST = {
+    "NUCODE_BLE": "nucode.ble.nus",
+    "NUCODE_NU54DK": "nucode.board",
+    "Wire": "nucode.wire",
+    "SPI": "nucode.spi",
+}
 CONTEXT_DIRECTORY = "nu54-zephyr"
 CACHE_SCHEMA_VERSION = 1
 SESSION_CONTEXT_SCHEMA_VERSION = 2
@@ -1510,29 +1515,29 @@ def dependency_arguments(arguments: Sequence[str]) -> list[str]:
     return forwarded
 
 
-## @brief Arduino prototype 전처리에서 직접 Zephyr header를 보류해야 하는지 확인합니다.
+## @brief Arduino prototype 전처리에서 직접 Zephyr/NCS header를 보류할지 확인합니다.
 def has_direct_zephyr_include(source: Path) -> bool:
     try:
         content = source.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError) as error:
-        raise AdapterError(f"Zephyr include 탐색용 source를 읽지 못했습니다: {error}") from error
+        raise AdapterError(f"Zephyr/NCS include 탐색용 source를 읽지 못했습니다: {error}") from error
     return re.search(
-        r'^\s*#\s*include\s*[<\"]zephyr/', content, re.MULTILINE
+        r'^\s*#\s*include\s*[<\"](?:zephyr|bluetooth)/', content, re.MULTILINE
     ) is not None
 
 
-## @brief 직접 Zephyr include만 같은 줄 수의 Doxygen 주석으로 치환한 임시 source를 만듭니다.
+## @brief 직접 Zephyr/NCS include만 같은 줄 수의 Doxygen 주석으로 치환합니다.
 def stage_prototype_source(source: Path, temporary_root: Path) -> Path:
     try:
         content = source.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError) as error:
-        raise AdapterError(f"Zephyr include 보류용 source를 읽지 못했습니다: {error}") from error
+        raise AdapterError(f"Zephyr/NCS include 보류용 source를 읽지 못했습니다: {error}") from error
     pattern = re.compile(
-        r'^(?P<indent>\s*)#\s*include\s*[<\"]zephyr/[^>\"]*[>\"].*$',
+        r'^(?P<indent>\s*)#\s*include\s*[<\"](?:zephyr|bluetooth)/[^>\"]*[>\"].*$',
         re.MULTILINE,
     )
     staged_content, replacements = pattern.subn(
-        r'\g<indent>/** @brief Arduino prototype 단계에서는 Zephyr header 해석을 최종 컴파일까지 보류합니다. */',
+        r'\g<indent>/** @brief Arduino prototype 단계에서는 Zephyr/NCS header 해석을 최종 컴파일까지 보류합니다. */',
         content,
     )
     if replacements == 0:

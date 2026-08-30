@@ -127,6 +127,31 @@ config NUCODE_ARDUINO_PWM
 	  nucode,arduino-pwm chosen 역할의 DTS 주기를 유지하면서 8-bit
 	  0..255 duty를 PIN_PWM0에 출력합니다.
 
+config NUCODE_BLE_NUS
+	bool "NUCODE BLE Nordic UART Service 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	depends on BT
+	help
+	  공식 NCS NUS service/client를 하나의 Arduino Stream으로 노출합니다.
+	  callback 데이터는 고정 queue를 거쳐 Sketch의 poll 문맥에서 전달됩니다.
+
+config NUCODE_BLE_RX_BUFFER_SIZE
+	int "NUCODE BLE NUS RX queue byte 수"
+	default 512
+	range 64 2048
+	depends on NUCODE_BLE_NUS
+	help
+	  NCS callback에서 수신 byte를 복사할 고정 queue 크기입니다.
+
+config NUCODE_BLE_EVENT_QUEUE_SIZE
+	int "NUCODE BLE event queue 항목 수"
+	default 16
+	range 4 64
+	depends on NUCODE_BLE_NUS
+	help
+	  poll에서 사용자 callback으로 전달할 고정 event queue 크기입니다.
+
 choice NUCODE_ARDUINO_LOOP_POLICY
 	prompt "Sketch loop 반환 후 Zephyr 공존 정책"
 	default NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK

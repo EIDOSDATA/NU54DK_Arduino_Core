@@ -33,6 +33,9 @@ SUITES = (
     ("m15_board", "nucode.m15.board"),
     ("m15_hil", "nucode.m15.auto_hil"),
     ("m15_wake", "nucode.m15.wake"),
+    ("m16_ble_contract", "nucode.m16.ble_contract"),
+    ("m16_ble_hil", "nucode.m16.ble_hil_peripheral"),
+    ("m16_ble_hil", "nucode.m16.ble_hil_central"),
 )
 WINDOWS_OUTDIR_MAX_LENGTH = 32
 M15_DIRECTORIES = ("m15_board", "m15_hil", "m15_wake")
