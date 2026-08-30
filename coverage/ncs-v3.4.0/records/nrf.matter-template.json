@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "nrf.matter-template",
+  "title": "nRF Matter template feasibility",
+  "area": "radio-networking",
+  "route": "excluded-deferred",
+  "status": "deferred",
+  "profile": "radio",
+  "hardware": "nu54dk",
+  "source": {
+    "type": "ncs",
+    "repository": "https://github.com/nrfconnect/sdk-nrf",
+    "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "path": "samples/matter/template",
+    "license": "LicenseRef-Nordic-5-Clause"
+  },
+  "validation": {
+    "kind": "build-feasibility",
+    "state": "planned",
+    "evidence": []
+  },
+  "notes": [
+    "v0.2.0에서는 build feasibility만 확인하며 Arduino 정식 지원으로 선언하지 않는다."
+  ]
+}

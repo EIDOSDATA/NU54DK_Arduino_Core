@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "zephyr.sensor-direct",
+  "title": "Zephyr sensor direct example",
+  "area": "sensor",
+  "route": "ncs-direct-example",
+  "status": "build-only",
+  "profile": "standard",
+  "hardware": "external-optional",
+  "source": {
+    "type": "zephyr",
+    "repository": "https://github.com/nrfconnect/sdk-zephyr",
+    "revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "path": "samples/sensor/accel_polling",
+    "license": "Apache-2.0"
+  },
+  "validation": {
+    "kind": "ncs-direct-build",
+    "state": "planned",
+    "evidence": []
+  },
+  "notes": [
+    "Zephyr sensor API의 direct/build example까지만 제공하며 bundled sensor library는 만들지 않는다."
+  ]
+}

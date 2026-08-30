@@ -12,6 +12,11 @@ project(nucode_arduino_sketch)
 
 # 최초 configure-only에서도 Zephyr app target이 유효하도록 항상 bootstrap을 둔다.
 target_sources(app PRIVATE src/bootstrap.cpp)
+target_compile_definitions(app PRIVATE
+  ARDUINO=10607
+  ARDUINO_ARCH_ZEPHYR
+  ARDUINO_NUCODE_NU54DK
+)
 
 # Build Adapter가 원자적으로 갱신하며, 실제 sketch/library source는 Zephyr가 컴파일한다.
 include("${CMAKE_CURRENT_SOURCE_DIR}/sources.cmake")

@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "dataset": "ncs-v3.4.0",
+  "description": "NU54DK Arduino Core M17 selected NCS v3.4.0 coverage ledger",
+  "pins": {
+    "ncs": {
+      "repository": "https://github.com/nrfconnect/sdk-nrf",
+      "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0"
+    },
+    "zephyr": {
+      "repository": "https://github.com/nrfconnect/sdk-zephyr",
+      "revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+    },
+    "board": {
+      "repository": "https://github.com/Nucode01/NU54DK_Zephyr_DTS",
+      "revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3"
+    }
+  },
+  "records": [
+    {
+      "id": "arduino.adafruit-lsm6ds",
+      "path": "records/arduino.adafruit-lsm6ds.json",
+      "sha256": "b284a4f4b7ece55d24687a6c3ccefa504bf730152eb9d760c8a9389b5d46f757"
+    },
+    {
+      "id": "board.system",
+      "path": "records/board.system.json",
+      "sha256": "5aed4a701365d58e75010ad13e782b19c61f99a7f04028e0167c92aa0bfc051a"
+    },
+    {
+      "id": "nrf.802154-phy-test",
+      "path": "records/nrf.802154-phy-test.json",
+      "sha256": "f9fc83d768334a2763cadcf74c13bd43d783f16c7eb34f74c568f5c3659a81db"
+    },
+    {
+      "id": "nrf.ble-nus",
+      "path": "records/nrf.ble-nus.json",
+      "sha256": "63fa411d8a6386d3131bd88e5b436d6615e9c6be03f412759319001d08a85a59"
+    },
+    {
+      "id": "nrf.crypto-rng",
+      "path": "records/nrf.crypto-rng.json",
+      "sha256": "9711e8aca35abd8f10f3610de1b75e6f2d496e5429a78165442e248a29787fca"
+    },
+    {
+      "id": "nrf.matter-template",
+      "path": "records/nrf.matter-template.json",
+      "sha256": "aeea7afb790b0fc32faad648d95ed4b25f32ad102affe6c383b058a19dc2dd96"
+    },
+    {
+      "id": "nrf.openthread-cli",
+      "path": "records/nrf.openthread-cli.json",
+      "sha256": "65d0883a2bf63b400a899c5f0b8d4c946332c258924f2bdce69eaaab7df4dc01"
+    },
+    {
+      "id": "zephyr.sensor-direct",
+      "path": "records/zephyr.sensor-direct.json",
+      "sha256": "54c1ae9992f49ae8d777e2ac3d33f3e0b6eda9148538be94963b83d1e0dd5741"
+    },
+    {
+      "id": "zephyr.settings-storage",
+      "path": "records/zephyr.settings-storage.json",
+      "sha256": "11d27eee7b85d2fcaa6f8670fd78d1f2a4bdbbaacaa52235297be46590424799"
+    }
+  ]
+}

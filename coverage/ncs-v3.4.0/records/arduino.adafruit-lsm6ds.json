@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "arduino.adafruit-lsm6ds",
+  "title": "Adafruit LSM6DS external library compile",
+  "area": "sensor",
+  "route": "build-profile-only",
+  "status": "build-only",
+  "profile": "standard",
+  "hardware": "external-optional",
+  "source": {
+    "type": "external",
+    "repository": "https://github.com/adafruit/Adafruit_LSM6DS",
+    "revision": "379a5204c0bad71264c3d635de84d0f9679ab784",
+    "path": "examples/adafruit_lsm6ds3trc_test/adafruit_lsm6ds3trc_test.ino",
+    "license": "BSD-3-Clause"
+  },
+  "validation": {
+    "kind": "arduino-library-compile",
+    "state": "planned",
+    "evidence": []
+  },
+  "notes": [
+    "외부 Arduino library의 direct/build example만 검증하며 NUCODE sensor wrapper는 제공하지 않는다."
+  ]
+}

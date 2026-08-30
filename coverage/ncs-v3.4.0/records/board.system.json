@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "id": "board.system",
+  "title": "NU54DK board and system service baseline",
+  "area": "board-system",
+  "route": "arduino-wrapper",
+  "status": "supported",
+  "profile": "standard",
+  "hardware": "nu54dk",
+  "source": {
+    "type": "board",
+    "repository": "https://github.com/Nucode01/NU54DK_Zephyr_DTS",
+    "revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "path": "boards/nucode/nu54dk/nu54dk_common.dtsi",
+    "license": "MIT"
+  },
+  "validation": {
+    "kind": "hil",
+    "state": "pass",
+    "evidence": [
+      "00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md"
+    ]
+  },
+  "notes": [
+    "GPIO와 버스 및 board-system API의 기존 실기 기준선을 coverage 분모에 포함한다."
+  ]
+}

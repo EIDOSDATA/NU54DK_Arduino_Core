@@ -1,0 +1,8 @@
+tests:
+  nucode.m17.sensor_direct:
+    build_only: true
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    tags:
+      - m17
+      - sensor

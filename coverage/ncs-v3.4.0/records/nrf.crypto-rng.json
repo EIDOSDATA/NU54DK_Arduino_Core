@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "nrf.crypto-rng",
+  "title": "nRF crypto RNG sample",
+  "area": "crypto-random",
+  "route": "ncs-direct-example",
+  "status": "build-only",
+  "profile": "standard",
+  "hardware": "none",
+  "source": {
+    "type": "ncs",
+    "repository": "https://github.com/nrfconnect/sdk-nrf",
+    "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "path": "samples/crypto/rng",
+    "license": "LicenseRef-Nordic-5-Clause"
+  },
+  "validation": {
+    "kind": "ncs-direct-build",
+    "state": "planned",
+    "evidence": []
+  },
+  "notes": [
+    "공식 NCS crypto RNG sample을 NU54DK build-only direct example로 추적하며 HIL은 수행하지 않는다."
+  ]
+}

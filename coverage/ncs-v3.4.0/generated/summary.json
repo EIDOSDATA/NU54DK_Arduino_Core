@@ -1,0 +1,157 @@
+{
+  "counts": {
+    "area": {
+      "ble": 1,
+      "board-system": 1,
+      "crypto-random": 1,
+      "radio-networking": 3,
+      "sensor": 2,
+      "settings-storage": 1
+    },
+    "status": {
+      "build-only": 3,
+      "deferred": 3,
+      "supported": 3
+    },
+    "total": 9,
+    "validation_state": {
+      "pass": 3,
+      "planned": 6
+    }
+  },
+  "dataset": "ncs-v3.4.0",
+  "pins": {
+    "board": {
+      "repository": "https://github.com/Nucode01/NU54DK_Zephyr_DTS",
+      "revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3"
+    },
+    "ncs": {
+      "repository": "https://github.com/nrfconnect/sdk-nrf",
+      "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0"
+    },
+    "zephyr": {
+      "repository": "https://github.com/nrfconnect/sdk-zephyr",
+      "revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+    }
+  },
+  "records": [
+    {
+      "area": "sensor",
+      "hardware": "external-optional",
+      "id": "arduino.adafruit-lsm6ds",
+      "profile": "standard",
+      "route": "build-profile-only",
+      "source_revision": "379a5204c0bad71264c3d635de84d0f9679ab784",
+      "source_type": "external",
+      "status": "build-only",
+      "title": "Adafruit LSM6DS external library compile",
+      "validation_kind": "arduino-library-compile",
+      "validation_state": "planned"
+    },
+    {
+      "area": "board-system",
+      "hardware": "nu54dk",
+      "id": "board.system",
+      "profile": "standard",
+      "route": "arduino-wrapper",
+      "source_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "source_type": "board",
+      "status": "supported",
+      "title": "NU54DK board and system service baseline",
+      "validation_kind": "hil",
+      "validation_state": "pass"
+    },
+    {
+      "area": "radio-networking",
+      "hardware": "nu54dk",
+      "id": "nrf.802154-phy-test",
+      "profile": "radio",
+      "route": "excluded-deferred",
+      "source_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+      "source_type": "ncs",
+      "status": "deferred",
+      "title": "nRF 802.15.4 PHY test feasibility",
+      "validation_kind": "build-feasibility",
+      "validation_state": "planned"
+    },
+    {
+      "area": "ble",
+      "hardware": "nu54dk",
+      "id": "nrf.ble-nus",
+      "profile": "ble",
+      "route": "arduino-wrapper",
+      "source_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+      "source_type": "ncs",
+      "status": "supported",
+      "title": "Nordic UART Service peripheral and central",
+      "validation_kind": "hil",
+      "validation_state": "pass"
+    },
+    {
+      "area": "crypto-random",
+      "hardware": "none",
+      "id": "nrf.crypto-rng",
+      "profile": "standard",
+      "route": "ncs-direct-example",
+      "source_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+      "source_type": "ncs",
+      "status": "build-only",
+      "title": "nRF crypto RNG sample",
+      "validation_kind": "ncs-direct-build",
+      "validation_state": "planned"
+    },
+    {
+      "area": "radio-networking",
+      "hardware": "nu54dk",
+      "id": "nrf.matter-template",
+      "profile": "radio",
+      "route": "excluded-deferred",
+      "source_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+      "source_type": "ncs",
+      "status": "deferred",
+      "title": "nRF Matter template feasibility",
+      "validation_kind": "build-feasibility",
+      "validation_state": "planned"
+    },
+    {
+      "area": "radio-networking",
+      "hardware": "nu54dk",
+      "id": "nrf.openthread-cli",
+      "profile": "radio",
+      "route": "excluded-deferred",
+      "source_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+      "source_type": "ncs",
+      "status": "deferred",
+      "title": "nRF OpenThread CLI feasibility",
+      "validation_kind": "build-feasibility",
+      "validation_state": "planned"
+    },
+    {
+      "area": "sensor",
+      "hardware": "external-optional",
+      "id": "zephyr.sensor-direct",
+      "profile": "standard",
+      "route": "ncs-direct-example",
+      "source_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+      "source_type": "zephyr",
+      "status": "build-only",
+      "title": "Zephyr sensor direct example",
+      "validation_kind": "ncs-direct-build",
+      "validation_state": "planned"
+    },
+    {
+      "area": "settings-storage",
+      "hardware": "none",
+      "id": "zephyr.settings-storage",
+      "profile": "standard",
+      "route": "arduino-wrapper",
+      "source_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+      "source_type": "zephyr",
+      "status": "supported",
+      "title": "Zephyr settings and storage direct API",
+      "validation_kind": "hil",
+      "validation_state": "pass"
+    }
+  ],
+  "schema_version": 1
+}

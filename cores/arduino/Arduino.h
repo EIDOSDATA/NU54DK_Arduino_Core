@@ -62,6 +62,12 @@ using arduino::Stream;
 /** @brief ArduinoCore-API의 Printable 형식을 전역 호환 이름으로 노출합니다. */
 using arduino::Printable;
 
+/** @brief 정수 상태 값을 허용하는 기존 Arduino digitalWrite 호환 overload입니다. */
+using arduino::digitalWrite;
+
+/** @brief 정수 mode 값을 허용하는 기존 Arduino pinMode 호환 overload입니다. */
+using arduino::pinMode;
+
 /**
  * @brief Zephyr console UART를 빌려 사용하는 기본 Arduino Serial입니다.
  *

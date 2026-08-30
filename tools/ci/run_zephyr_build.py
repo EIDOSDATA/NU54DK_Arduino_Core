@@ -22,6 +22,7 @@ assert SPEC and SPEC.loader
 LOCK_MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(LOCK_MODULE)
 BOARD_TARGET = "nrf54l15dk/nrf54l15/cpuapp/nu54dk"
+## @brief M16 role별 HIL image는 전용 runner가 명시적 role 인자로 빌드·검증하므로 공통 Twister 집합에서 제외합니다.
 SUITES = (
     ("m3_runtime", "nucode.m3.runtime"),
     ("m4_api_contract", "nucode.m4.api_contract"),
@@ -34,8 +35,7 @@ SUITES = (
     ("m15_hil", "nucode.m15.auto_hil"),
     ("m15_wake", "nucode.m15.wake"),
     ("m16_ble_contract", "nucode.m16.ble_contract"),
-    ("m16_ble_hil", "nucode.m16.ble_hil_peripheral"),
-    ("m16_ble_hil", "nucode.m16.ble_hil_central"),
+    ("m17_sensor_direct", "nucode.m17.sensor_direct"),
 )
 WINDOWS_OUTDIR_MAX_LENGTH = 32
 M15_DIRECTORIES = ("m15_board", "m15_hil", "m15_wake")
