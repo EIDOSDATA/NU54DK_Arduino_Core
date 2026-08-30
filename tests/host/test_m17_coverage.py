@@ -7,6 +7,7 @@ import shutil
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -32,7 +33,7 @@ def refresh_record_hash(dataset_root: Path, record_id: str) -> None:
     manifest_path = dataset_root / "manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     record_path = dataset_root / "records" / f"{record_id}.json"
-    digest = hashlib.sha256(record_path.read_bytes()).hexdigest()
+    digest = M17._record_sha256(record_path)
     for entry in manifest["records"]:
         if entry["id"] == record_id:
             entry["sha256"] = digest
@@ -71,6 +72,23 @@ class M17CoverageTests(unittest.TestCase):
         self.assertEqual(manifest["dataset"], "ncs-v3.4.0")
         self.assertEqual(len(records), 9)
         M17.render_outputs(REPO_ROOT, check=True)
+
+    def test_generated_outputs_accept_git_crlf_checkout(self) -> None:
+        """! @brief 생성 요약의 Git CRLF checkout을 LF 원본과 동일하게 검증합니다. """
+        repository = Path(self.temporary.name) / "render-repository"
+        dataset_root = repository / "coverage" / "ncs-v3.4.0"
+        shutil.copytree(self.dataset_root, dataset_root)
+        generated = dataset_root / "generated"
+        for path in generated.iterdir():
+            content = path.read_bytes().replace(b"\r\n", b"\n")
+            path.write_bytes(content.replace(b"\n", b"\r\n"))
+        manifest, records = M17.validate_dataset(
+            REPO_ROOT,
+            dataset_root,
+            verify_board_checkout=False,
+        )
+        with mock.patch.object(M17, "validate_dataset", return_value=(manifest, records)):
+            M17.render_outputs(repository, check=True)
 
     def test_duplicate_json_key_is_rejected(self) -> None:
         path = Path(self.temporary.name) / "duplicate.json"
@@ -230,6 +248,31 @@ class M17CoverageTests(unittest.TestCase):
         path = self.dataset_root / "records" / "nrf.crypto-rng.json"
         path.write_bytes(path.read_bytes() + b" ")
         with self.assertRaisesRegex(M17.CoverageError, "SHA-256 mismatch"):
+            self.validate_fixture()
+
+    def test_manifest_record_hash_accepts_git_crlf_checkout(self) -> None:
+        """! @brief Git text 변환으로 생긴 CRLF가 LF 기준 record hash를 바꾸지 않습니다. """
+        path = self.dataset_root / "records" / "arduino.adafruit-lsm6ds.json"
+        lf_content = path.read_bytes().replace(b"\r\n", b"\n")
+        path.write_bytes(lf_content.replace(b"\n", b"\r\n"))
+        _, records = self.validate_fixture()
+        self.assertIn("arduino.adafruit-lsm6ds", {record["id"] for record in records})
+
+    def test_manifest_record_hash_rejects_content_change_with_crlf(self) -> None:
+        """! @brief CRLF checkout에서도 실제 record 내용 변경은 SHA mismatch로 거부합니다. """
+        path = self.dataset_root / "records" / "arduino.adafruit-lsm6ds.json"
+        lf_content = path.read_bytes().replace(b"\r\n", b"\n")
+        changed = lf_content.replace(b"external library compile", b"external library changed", 1)
+        path.write_bytes(changed.replace(b"\n", b"\r\n"))
+        with self.assertRaisesRegex(M17.CoverageError, "SHA-256 mismatch"):
+            self.validate_fixture()
+
+    def test_manifest_record_hash_rejects_bare_cr(self) -> None:
+        """! @brief Git의 CRLF 변환이 아닌 단독 CR은 모호한 입력으로 거부합니다. """
+        path = self.dataset_root / "records" / "arduino.adafruit-lsm6ds.json"
+        content = path.read_bytes().replace(b"\r\n", b"\n")
+        path.write_bytes(content.replace(b"\n", b"\r", 1))
+        with self.assertRaisesRegex(M17.CoverageError, "단독 CR"):
             self.validate_fixture()
 
     def test_sensor_wrapper_is_rejected(self) -> None:

@@ -126,7 +126,7 @@ class M15BoardSystemContractTests(unittest.TestCase):
         self.assertIn("wire", document["requires"])
         self.assertEqual(document["conf"], ["board-system.conf"])
         self.assertEqual(document["overlays"], ["board-system.overlay"])
-        self.assertEqual(document["compatible_profiles"], ["standard"])
+        self.assertEqual(document["compatible_profiles"], ["standard", "ble"])
 
         configuration = (LIBRARY / "zephyr" / "board-system.conf").read_text(
             encoding="utf-8"

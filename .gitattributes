@@ -7,3 +7,6 @@
 
 # ArduinoCore-API 원본은 플랫폼 checkout 설정과 무관하게 LF를 유지합니다.
 third_party/ArduinoCore-API/** text eol=lf
+
+# Coverage 원장과 생성 요약은 Git에 저장되는 LF 바이트를 기준으로 고정합니다.
+coverage/ncs-v3.4.0/** text eol=lf

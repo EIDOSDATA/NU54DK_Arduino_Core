@@ -164,13 +164,22 @@ def _resolve_contained(root: Path, relative_path: str, context: str) -> Path:
     return target
 
 
-## @brief 파일 byte의 SHA-256을 계산합니다.
-def _file_sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+## @brief Git text checkout과 무관하도록 CRLF를 LF로 정규화합니다.
+def _normalize_lf_bytes(content: bytes, context: str) -> bytes:
+    canonical = content.replace(b"\r\n", b"\n")
+    if b"\r" in canonical:
+        raise CoverageError(f"{context}에 단독 CR 줄바꿈을 허용하지 않습니다.")
+    return canonical
+
+
+## @brief Git text checkout과 무관한 LF 기준 record SHA-256을 계산합니다.
+def _record_sha256(path: Path) -> str:
+    try:
+        content = path.read_bytes()
+    except OSError as error:
+        raise CoverageError(f"record 파일을 읽지 못했습니다: {path}: {error}") from error
+    canonical = _normalize_lf_bytes(content, f"record 파일 {path}")
+    return hashlib.sha256(canonical).hexdigest()
 
 
 ## @brief lock file에서 M17이 사용하는 exact pin만 추출합니다.
@@ -374,7 +383,7 @@ def validate_dataset(
         )
         if not record_path.is_file():
             raise CoverageError(f"record 파일이 없습니다: {relative_path}")
-        actual_hash = _file_sha256(record_path)
+        actual_hash = _record_sha256(record_path)
         if actual_hash != declared_hash:
             raise CoverageError(
                 f"record SHA-256 mismatch: {record_id}: expected={declared_hash}, actual={actual_hash}"
@@ -518,6 +527,7 @@ def render_outputs(repo_root: Path, *, check: bool = False) -> None:
                 actual = path.read_bytes()
             except OSError as error:
                 raise CoverageError(f"생성 파일을 읽지 못했습니다: {path}: {error}") from error
+            actual = _normalize_lf_bytes(actual, f"생성 파일 {path}")
             if actual != expected:
                 raise CoverageError(f"생성 파일이 stale 상태입니다: {path}")
         else:
