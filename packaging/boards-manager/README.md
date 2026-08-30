@@ -63,6 +63,11 @@ Release commit에서 별도 archive·checksum·SBOM·license inventory를 생성
 `0.2.0`과 불변 `0.1.0` 항목을 최신순으로 함께 기록한다. 준비 중인 HEAD 산출물을 이전 버전으로
 표시하거나 기존 Release에 업로드하지 않는다.
 
+과거 `0.1.0` ZIP은 당시 source 허용목록으로 생성된 공개 자산이므로 최신 source 허용목록으로
+재해석하지 않는다. 공개 크기 `760,412`와 SHA-256
+`722a46685b97aff42a75fb84db8ea74de75f3c32f59ea58225cd86d5acd141a6`이 모두 일치할 때만
+통합 stable index에 포함한다.
+
 정식 공개 뒤 `STABLE_RELEASE_COMMITS`에 exact source commit을 추가한다. 이후 현재 `main`의
 도구로 해당 stable을 재포장하지 않고, 감사가 필요하면 tag의 별도 worktree를 사용한다.
 

@@ -38,6 +38,13 @@ STABLE_VERSIONS = ("0.1.0", "0.2.0")
 STABLE_RELEASE_COMMITS = {
     "0.1.0": "5dbc5e37270e477d21f578dd877f4b5226b44a0d",
 }
+## @brief 과거 패키지를 최신 허용목록으로 재해석하지 않고 공개 byte 그대로 검증합니다.
+PUBLISHED_STABLE_ARCHIVE_IDENTITIES = {
+    "0.1.0": {
+        "size": 760412,
+        "sha256": "722a46685b97aff42a75fb84db8ea74de75f3c32f59ea58225cd86d5acd141a6",
+    },
+}
 PACKAGE_VERSIONS = SUPPORTED_VERSIONS + RELEASE_CANDIDATE_VERSIONS + STABLE_VERSIONS
 WINDOWS_SAFE_VERSIONS = (
     FAILED_M10_PREVIEW_VERSIONS
@@ -1386,6 +1393,19 @@ def validate_archive(
         return manifest
 
 
+## @brief index에 넣을 archive를 현재 계약 또는 공개된 불변 byte 계약으로 검증합니다.
+def validate_index_archive(archive_path: Path, version: str) -> None:
+    identity = PUBLISHED_STABLE_ARCHIVE_IDENTITIES.get(version)
+    if identity is None:
+        validate_archive(archive_path, expected_version=version)
+        return
+    if not archive_path.is_file():
+        raise PackageError(f"공개 stable archive가 없습니다: {archive_path}")
+    data = archive_path.read_bytes()
+    if len(data) != identity["size"] or sha256_bytes(data) != identity["sha256"]:
+        raise PackageError(f"공개 stable archive의 불변 byte identity가 다릅니다: {version}")
+
+
 ## @brief 로컬 archive들을 읽어 공식 Arduino package index를 생성합니다.
 def generate_index(output_dir: Path, versions: list[str], destination: Path | None = None) -> Path:
     output_dir = output_dir.resolve()
@@ -1398,7 +1418,7 @@ def generate_index(output_dir: Path, versions: list[str], destination: Path | No
     platforms: list[dict[str, Any]] = []
     for version in normalized_versions:
         archive_path = output_dir / archive_filename(version)
-        validate_archive(archive_path, expected_version=version)
+        validate_index_archive(archive_path, version)
         platforms.append(
             {
                 "name": "NUCODE NU54DK Zephyr Boards",
@@ -1492,7 +1512,7 @@ def validate_index(index_path: Path, *, artifact_dir: Path | None = None) -> dic
             raise PackageError("package index size가 10진 문자열이 아닙니다.")
         if artifact_dir:
             archive_path = artifact_dir.resolve() / filename
-            validate_archive(archive_path, expected_version=version)
+            validate_index_archive(archive_path, version)
             if checksum != f"SHA-256:{sha256_bytes(archive_path.read_bytes())}":
                 raise PackageError(f"package index와 archive checksum이 다릅니다: {version}")
             if size != str(archive_path.stat().st_size):

@@ -359,6 +359,32 @@ class M10PackagingTests(unittest.TestCase):
         )
         self.assertEqual(PACKAGE.release_channel("0.2.0"), "stable")
         self.assertEqual(PACKAGE.release_tag("0.2.0"), "v0.2.0")
+        self.assertEqual(
+            PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES["0.1.0"],
+            {
+                "size": 760412,
+                "sha256": "722a46685b97aff42a75fb84db8ea74de75f3c32f59ea58225cd86d5acd141a6",
+            },
+        )
+
+    def test_11aaa_published_stable_index_archive_uses_exact_bytes(self) -> None:
+        """! @brief 과거 stable은 최신 source 허용목록 대신 공개 byte identity로 검증합니다. """
+
+        archive = Path(self.temporary.name) / PACKAGE.archive_filename("0.1.0")
+        original = PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES["0.1.0"]
+        published = b"published-stable-archive"
+        archive.write_bytes(published)
+        PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES["0.1.0"] = {
+            "size": len(published),
+            "sha256": hashlib.sha256(published).hexdigest(),
+        }
+        try:
+            PACKAGE.validate_index_archive(archive, "0.1.0")
+            archive.write_bytes(published + b"-tampered")
+            with self.assertRaises(PACKAGE.PackageError):
+                PACKAGE.validate_index_archive(archive, "0.1.0")
+        finally:
+            PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES["0.1.0"] = original
 
     def test_11ab_v020_stable_runtime_matches_public_rc2(self) -> None:
         """! @brief v0.2.0 준비 archive의 실행 payload가 공개 RC2와 같은지 검증합니다. """
