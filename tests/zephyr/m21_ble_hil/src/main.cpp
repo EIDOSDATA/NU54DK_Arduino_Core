@@ -39,6 +39,10 @@ constexpr std::uint16_t rf_nonce_binding_bits = 128U;
 constexpr std::size_t command_capacity = 80U;
 constexpr std::uint8_t expected_battery_read = 73U;
 constexpr std::uint8_t notified_battery = 72U;
+/** @brief 연결 성립 transient 뒤 controller를 정착시키는 재시도 간격입니다. */
+constexpr std::int64_t link_retry_delay_ms = 500;
+/** @brief 한 phase에서 허용하는 연결 성립 재시도 횟수입니다. */
+constexpr std::uint8_t maximum_link_retries = 3U;
 
 /** @brief 현재 HIL 연결이 검증하는 bond 수명주기 단계입니다. */
 enum class RunMode : std::uint8_t
@@ -63,6 +67,9 @@ bool bond_verified_seen = false;
 bool old_key_pairing_requested = false;
 bool old_key_reconnect_failed = false;
 bool old_key_probe_connected = false;
+bool link_retry_pending = false;
+std::int64_t link_retry_due_ms = 0;
+std::uint8_t link_retry_count = 0U;
 std::uint32_t pairing_event_count = 0U;
 RunMode run_mode = RunMode::fresh;
 
@@ -81,6 +88,18 @@ void fail(const char *reason)
         Serial.println(reason == nullptr ? "unknown" : reason);
     }
     protocol_failed = true;
+}
+
+/** @brief callback 밖 main loop에서 bounded 연결 복구를 시작하도록 예약합니다. */
+void scheduleLinkRetry()
+{
+    if (link_retry_count >= maximum_link_retries)
+    {
+        fail("link-retry-exhausted");
+        return;
+    }
+    link_retry_pending = true;
+    link_retry_due_ms = k_uptime_get() + link_retry_delay_ms;
 }
 
 /** @brief nonce가 정확한 소문자 32자리 hex인지 검사합니다. */
@@ -972,6 +991,44 @@ void drivePeripheralProfile()
 
 #endif
 
+/** @brief 예약된 연결 복구 한 번을 main loop에서 role별 GAP 동작으로 실행합니다. */
+bool driveLinkRetry()
+{
+    if (!link_retry_pending || k_uptime_get() < link_retry_due_ms)
+    {
+        return false;
+    }
+    link_retry_pending = false;
+    if (BLEConnection.connected())
+    {
+        return true;
+    }
+    ++link_retry_count;
+#ifdef NUCODE_M21_CENTRAL
+    const bool started = BLEScan.running() || BLEScan.start(true);
+#else
+    const bool started = BLEAdvertising.running() || BLEAdvertising.start();
+#endif
+    if (!started)
+    {
+        fail("link-retry-start");
+        return true;
+    }
+    Serial.print("NUCODE_M21_LINK:RETRY:role=");
+#ifdef NUCODE_M21_CENTRAL
+    Serial.print("central");
+#else
+    Serial.print("peripheral");
+#endif
+    Serial.print(":attempt=");
+    Serial.print(link_retry_count);
+    Serial.print(":phase=");
+    Serial.print(modeName());
+    Serial.print(":nonce=");
+    Serial.println(nonce);
+    return true;
+}
+
 /** @brief 새 pairing 거부와 peer의 먼저 끊기 경합을 둘 다 안전한 거부로 처리합니다. */
 void rejectProbePairing(bool rejected, const char *reason)
 {
@@ -1080,6 +1137,8 @@ void onGapEvent(nucode::ble::BLEEvent event, void *context)
     if (event == nucode::ble::BLEEvent::connected)
     {
         secured = false;
+        link_retry_pending = false;
+        link_retry_due_ms = 0;
         if (run_mode == RunMode::erased_probe)
         {
             old_key_probe_connected = true;
@@ -1143,6 +1202,19 @@ void onGapEvent(nucode::ble::BLEEvent event, void *context)
             Serial.println(nonce);
             phase_reported = true;
         }
+        else if (run_mode != RunMode::erased_probe && protocol_started &&
+                 !protocol_failed && !phase_reported && !erase_in_progress)
+        {
+            if (!connection_was_secured && pairing_event_count == 0U &&
+                !persistence_pending_seen && !bond_verified_seen)
+            {
+                scheduleLinkRetry();
+            }
+            else
+            {
+                fail("link-disconnected");
+            }
+        }
     }
     else if (event == nucode::ble::BLEEvent::error && !erase_in_progress &&
              run_mode != RunMode::erased_probe)
@@ -1163,6 +1235,9 @@ void resetPhaseState(RunMode requested_mode)
     old_key_pairing_requested = false;
     old_key_reconnect_failed = false;
     old_key_probe_connected = false;
+    link_retry_pending = false;
+    link_retry_due_ms = 0;
+    link_retry_count = 0U;
     run_mode = requested_mode;
 #ifdef NUCODE_M21_CENTRAL
     invalidateCentralGattState();
@@ -1430,6 +1505,10 @@ void loop()
     BLEDevice.poll();
     BLESecurity.poll();
     if (!protocol_started || protocol_failed)
+    {
+        return;
+    }
+    if (driveLinkRetry())
     {
         return;
     }

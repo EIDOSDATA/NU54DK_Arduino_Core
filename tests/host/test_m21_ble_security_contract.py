@@ -458,6 +458,44 @@ class M21BleSecurityContractTests(unittest.TestCase):
         )
         self.assertIn("key_down_passed && key_release_passed", report)
 
+    def test_hil_bounds_pre_security_link_recovery_in_main_loop(self) -> None:
+        """! @brief 연결 성립 transient만 phase당 세 번까지 callback 밖에서 복구합니다. """
+
+        source = HIL_SOURCE.read_text(encoding="utf-8")
+        scheduler = source[source.index("void scheduleLinkRetry") :]
+        scheduler = scheduler[: scheduler.index("/** @brief nonce")]
+        driver = source[source.index("bool driveLinkRetry") :]
+        driver = driver[: driver.index("/** @brief 새 pairing")]
+        gap = source[source.index("void onGapEvent") :]
+        gap = gap[: gap.index("void resetPhaseState")]
+        reset = source[source.index("void resetPhaseState") :]
+        reset = reset[: reset.index("void startProtocol")]
+        loop = source[source.index("void loop()") :]
+
+        self.assertIn("link_retry_delay_ms = 500", source)
+        self.assertIn("maximum_link_retries = 3U", source)
+        self.assertIn("link_retry_count >= maximum_link_retries", scheduler)
+        self.assertIn('fail("link-retry-exhausted")', scheduler)
+        self.assertIn("run_mode != RunMode::erased_probe", gap)
+        self.assertIn("!connection_was_secured", gap)
+        self.assertIn("pairing_event_count == 0U", gap)
+        self.assertIn("scheduleLinkRetry()", gap)
+        self.assertNotIn("BLEScan.start", gap)
+        self.assertNotIn("BLEAdvertising.start", gap)
+        self.assertIn("BLEScan.running() || BLEScan.start(true)", driver)
+        self.assertIn("BLEAdvertising.running() || BLEAdvertising.start()", driver)
+        self.assertIn("link_retry_count = 0U", reset)
+        self.assertLess(loop.index("BLEDevice.poll()"), loop.index("BLESecurity.poll()"))
+        self.assertLess(
+            loop.index("BLESecurity.poll()"),
+            loop.index("if (!protocol_started || protocol_failed)"),
+        )
+        self.assertLess(
+            loop.index("if (!protocol_started || protocol_failed)"),
+            loop.index("driveLinkRetry()"),
+        )
+        self.assertLess(loop.index("driveLinkRetry()"), loop.index("driveCentralProfile()"))
+
     def test_hil_invalidates_stale_gatt_callbacks_on_disconnect_and_reset(self) -> None:
         """! @brief 이전 연결 callback이 새 phase 완료 flag를 오염하지 못하게 세대를 무효화합니다. """
 
