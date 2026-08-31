@@ -121,6 +121,49 @@ def endpoint(board_id: str, drive: str, port: str) -> object:
 class M21BleSecurityHilTests(unittest.TestCase):
     """! @brief nonce, 네 phase, 표준 profile와 manual 경계를 검증합니다. """
 
+    def test_uart_console_rendering_is_ascii_safe(self) -> None:
+        """! @brief UTF-8로 해석 가능한 UART 잡음도 Windows code page와 무관하게 출력합니다. """
+
+        rendered = MODULE.printable_uart_line(b"boot:\xd7\xb7:\xff")
+        self.assertTrue(rendered.isascii())
+        self.assertEqual(rendered, r"boot:\xd7\xb7:\xff")
+
+    def test_phase_transitions_have_bounded_security_settle_windows(self) -> None:
+        """! @brief bond 저장·재부팅 준비·SMP 거부 뒤에 제한된 전환 유예를 강제합니다. """
+
+        source = MODULE_PATH.read_text(encoding="utf-8")
+        self.assertEqual(MODULE.BOND_PERSISTENCE_SETTLE_SECONDS, 1.0)
+        self.assertEqual(MODULE.STACK_READY_SETTLE_SECONDS, 0.5)
+        self.assertEqual(MODULE.SMP_REJECTION_SETTLE_SECONDS, 1.0)
+        self.assertEqual(
+            source.count("settle_security_transition(STACK_READY_SETTLE_SECONDS)"),
+            3,
+        )
+        self.assertIn(
+            "settle_security_transition(BOND_PERSISTENCE_SETTLE_SECONDS)", source
+        )
+        self.assertEqual(
+            source.count(
+                "settle_security_transition(BOND_PERSISTENCE_SETTLE_SECONDS)"
+            ),
+            3,
+        )
+        self.assertIn(
+            "settle_security_transition(SMP_REJECTION_SETTLE_SECONDS)", source
+        )
+        clear_phase = source[source.index('send_command(port, "CLEAR", nonce)') :]
+        clear_phase = clear_phase[: clear_phase.index("phase_predicate =")]
+        erase_phase = source[source.index('send_command(port, "ERASE", nonce)') :]
+        erase_phase = erase_phase[: erase_phase.index('command="PROBE"')]
+        self.assertIn(
+            "settle_security_transition(BOND_PERSISTENCE_SETTLE_SECONDS)",
+            clear_phase,
+        )
+        self.assertIn(
+            "settle_security_transition(BOND_PERSISTENCE_SETTLE_SECONDS)",
+            erase_phase,
+        )
+
     def test_accepts_pair_restore_erase_repair_and_profiles(self) -> None:
         """! @brief exact 중앙·주변장치 transcript를 승인합니다. """
 
@@ -214,6 +257,14 @@ class M21BleSecurityHilTests(unittest.TestCase):
             enforce_protocol=False,
         )
         self.assertEqual(ready, b"NUCODE_M21_READY:role=central:bond_count=0")
+
+        pending = bytearray(b"partial-old-token")
+        capture = bytearray(stale)
+        MODULE.reset_protocol_capture(pending, capture)
+        self.assertEqual(pending, bytearray())
+        self.assertEqual(capture, bytearray())
+        runner = MODULE_PATH.read_text(encoding="utf-8")
+        self.assertEqual(runner.count("reset_protocol_capture("), 3)
 
         with self.assertRaisesRegex(MODULE.M21HilFailure, "stale"):
             MODULE.wait_token(

@@ -397,12 +397,31 @@ namespace
     void queueSecurityChangedIfNew(struct bt_conn *connection,
                                    bt_security_t level) noexcept
     {
-        const atomic_val_t published = atomic_get(&published_level_value);
-        atomic_set(&published_level_value, static_cast<atomic_val_t>(level));
+        const atomic_val_t published = atomic_set(
+            &published_level_value, static_cast<atomic_val_t>(level));
         if (published != static_cast<atomic_val_t>(level))
         {
             queueEvent(makeEvent(SecurityEvent::security_changed, connection));
         }
+    }
+
+    /** @brief 실제 link가 요구 level을 충족하면 bond와 event snapshot을 즉시 동기화합니다. */
+    bool synchronizeSatisfiedSecurity(struct bt_conn *connection,
+                                      bt_security_t required_level) noexcept
+    {
+        if (connection == nullptr)
+        {
+            return false;
+        }
+        const bt_security_t level = bt_conn_get_security(connection);
+        if (level < required_level)
+        {
+            return false;
+        }
+        atomic_set(&current_level_value, static_cast<atomic_val_t>(level));
+        verifySecureBond(connection, level);
+        queueSecurityChangedIfNew(connection, level);
+        return true;
     }
 
     /** @brief active connection에 호출자 수명 동안 reference를 얻습니다. */
@@ -958,8 +977,20 @@ namespace nucode::ble
             recordSecurityError(SecurityError::not_connected, -ENOTCONN);
             return false;
         }
-        const int result = bt_conn_set_security(
-            connection, static_cast<bt_security_t>(security_config.minimum_level));
+        const bt_security_t required_level =
+            static_cast<bt_security_t>(security_config.minimum_level);
+        if (synchronizeSatisfiedSecurity(connection, required_level))
+        {
+            bt_conn_unref(connection);
+            recordSecurityError(SecurityError::none);
+            return true;
+        }
+        const int result = bt_conn_set_security(connection, required_level);
+        if (result >= 0)
+        {
+            static_cast<void>(
+                synchronizeSatisfiedSecurity(connection, required_level));
+        }
         bt_conn_unref(connection);
         if (result < 0)
         {

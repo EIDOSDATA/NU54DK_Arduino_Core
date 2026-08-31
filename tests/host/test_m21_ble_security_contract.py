@@ -185,8 +185,28 @@ class M21BleSecurityContractTests(unittest.TestCase):
 
         deduplicator = source[source.index("void queueSecurityChangedIfNew") :]
         deduplicator = deduplicator[: deduplicator.index("\n    }", 1) + 6]
-        self.assertIn("atomic_get(&published_level_value)", deduplicator)
+        self.assertIn("published = atomic_set(", deduplicator)
+        self.assertNotIn("atomic_get(&published_level_value)", deduplicator)
         self.assertIn("published != static_cast<atomic_val_t>(level)", deduplicator)
+
+    def test_security_request_synchronizes_an_already_secured_link(self) -> None:
+        """! @brief 보안 요청 전·후에 이미 충족된 link를 event와 bond 상태에 동기화합니다. """
+
+        source = SOURCE.read_text(encoding="utf-8")
+        synchronizer = source[source.index("bool synchronizeSatisfiedSecurity") :]
+        synchronizer = synchronizer[: synchronizer.index("\n    }", 1) + 6]
+        request = source[source.index("bool SecurityManager::requestSecurity") :]
+        request = request[: request.index("bool SecurityManager::acceptPairing")]
+
+        self.assertIn("bt_conn_get_security(connection)", synchronizer)
+        self.assertIn("level < required_level", synchronizer)
+        self.assertIn("verifySecureBond(connection, level)", synchronizer)
+        self.assertIn("queueSecurityChangedIfNew(connection, level)", synchronizer)
+        self.assertGreaterEqual(request.count("synchronizeSatisfiedSecurity("), 2)
+        self.assertLess(
+            request.index("synchronizeSatisfiedSecurity(connection, required_level)"),
+            request.index("bt_conn_set_security(connection, required_level)"),
+        )
 
     def test_feature_enables_smp_settings_bas_dis_and_encrypted_hids(self) -> None:
         """! @brief 별도 feature가 표준 profile dependency를 완전하게 선언하는지 검사합니다. """
@@ -319,6 +339,150 @@ class M21BleSecurityContractTests(unittest.TestCase):
         self.assertIn("BT_ATT_ERR_INSUFFICIENT_ENCRYPTION", source)
         self.assertIn('fail("secure-gatt-not-denied")', source)
         self.assertIn("BLESecurity.requestSecurity()", source)
+
+    def test_hil_continues_when_security_was_satisfied_before_event_poll(self) -> None:
+        """! @brief 보안 event와 GAP/read 상태기의 교차 순서에도 profile 검증을 재개합니다. """
+
+        source = HIL_SOURCE.read_text(encoding="utf-8")
+        helper = source[source.index("void continueCentralProfileIfSecured") :]
+        helper = helper[: helper.index("/** @brief 단일 remote read")]
+        pre_security = source[source.index("void finishPreSecurityRead") :]
+        pre_security = pre_security[: pre_security.index("void reportCentralPhase")]
+        gap = source[source.index("void onGapEvent") :]
+        gap = gap[: gap.index("void resetPhaseState")]
+
+        self.assertIn("BLESecurity.currentLevel()", helper)
+        self.assertIn("SecurityLevel::encrypted", helper)
+        self.assertIn("security_request_pending", helper)
+        self.assertIn("secured = true", helper)
+        self.assertIn("!secured_profile_started && !discovery_active", helper)
+        self.assertIn("beginDiscovery(false)", helper)
+        self.assertNotIn("continueCentralProfileIfSecured()", pre_security)
+        self.assertNotIn("BLESecurity.requestSecurity()", pre_security)
+        self.assertIn("security_request_pending = true", pre_security)
+        self.assertIn("security_request_due_ms = k_uptime_get()", pre_security)
+        drive = source[source.index("void driveCentralProfile") :]
+        drive = drive[: drive.index("#endif", 1)]
+        self.assertIn("continueCentralProfileIfSecured()", drive)
+
+    def test_hil_defers_non_fresh_security_request_to_main_loop(self) -> None:
+        """! @brief 연결 직후 요청을 미루고 이미 진행 중인 SMP는 bounded 간격으로 재확인합니다. """
+
+        source = HIL_SOURCE.read_text(encoding="utf-8")
+        gap = source[source.index("void onGapEvent") :]
+        gap = gap[: gap.index("void resetPhaseState")]
+        drive = source[source.index("void driveCentralProfile") :]
+        drive = drive[: drive.index("/** @brief 광고 payload")]
+
+        self.assertIn("security_request_delay_ms = 500", source)
+        self.assertIn("security_request_retry_ms = 100", source)
+        self.assertIn("security_request_timeout_ms = 30000", source)
+        self.assertIn("security_request_pending = true", gap)
+        self.assertIn("k_uptime_get() + security_request_delay_ms", gap)
+        self.assertNotIn("BLESecurity.requestSecurity()", gap)
+        self.assertIn("security_request_pending", drive)
+        self.assertIn("k_uptime_get() >= security_request_due_ms", drive)
+        self.assertIn("BLESecurity.requestSecurity()", drive)
+        self.assertLess(
+            drive.index("BLESecurity.requestSecurity()"),
+            drive.index("continueCentralProfileIfSecured()"),
+        )
+        self.assertRegex(
+            drive,
+            r"if\s*\(!BLESecurity\.requestSecurity\(\)\)\s*\{\s*"
+            r"[\s\S]*?BLESecurity\.lastError\(\)\s*==\s*"
+            r"nucode::ble::SecurityError::busy\)\s*\{\s*"
+            r"if\s*\(k_uptime_get\(\)\s*>=\s*security_request_deadline_ms\)"
+            r"\s*\{\s*fail\(\"security-timeout\"\);\s*return;\s*\}\s*"
+            r"security_request_pending\s*=\s*true;\s*"
+            r"security_request_due_ms\s*=\s*"
+            r"k_uptime_get\(\)\s*\+\s*security_request_retry_ms;\s*return;\s*\}\s*"
+            r"fail\(\"security-request\"\);\s*return;\s*\}\s*return;\s*\}\s*"
+            r"continueCentralProfileIfSecured\(\);",
+        )
+
+    def test_hil_serializes_all_gatt_transitions_by_main_loop(self) -> None:
+        """! @brief discovery·read·subscribe 전이를 one-shot main-loop 작업으로 직렬화합니다. """
+
+        source = HIL_SOURCE.read_text(encoding="utf-8")
+        starter = source[source.index("bool startPendingGattAction") :]
+        starter = starter[: starter.index("void driveCentralProfile")]
+        drive = source[source.index("void driveCentralProfile") :]
+        drive = drive[: drive.index("/** @brief 광고 payload")]
+        advance = source[source.index("void advanceNormalRead") :]
+        advance = advance[: advance.index("void finishPreSecurityRead")]
+        reset = source[source.index("void resetPhaseState") :]
+        reset = reset[: reset.index("void startProtocol")]
+
+        self.assertIn("startPendingGattAction()", drive)
+        self.assertIn("pending_gatt_action = CentralGattAction::none", starter)
+        for action in (
+            "read_pre_security",
+            "read_battery",
+            "read_manufacturer",
+            "read_model",
+            "read_serial",
+            "read_report_map",
+            "subscribe_battery",
+            "subscribe_report",
+        ):
+            self.assertIn(f"CentralGattAction::{action}", starter)
+        self.assertNotIn("beginRead(", advance)
+        self.assertIn("CentralGattAction::read_manufacturer", advance)
+        self.assertIn("CentralGattAction::subscribe_battery", advance)
+        self.assertRegex(
+            drive,
+            r"if\s*\(atomic_cas\(&discovery_complete, 1, 0\)\)"
+            r"[\s\S]*?pending_gatt_action = discovery_for_pre_security"
+            r"[\s\S]*?return;",
+        )
+        self.assertIn("CentralGattAction::subscribe_report", drive)
+        self.assertIn("pending_gatt_action = CentralGattAction::none", reset)
+
+    def test_hil_repeats_profile_notifications_after_server_ccc_restore(self) -> None:
+        """! @brief client 구독 재등록 전 송신 성공 race에도 profile 값을 반복 전달합니다. """
+
+        source = HIL_SOURCE.read_text(encoding="utf-8")
+        peripheral = source[source.index("void drivePeripheralProfile") :]
+        peripheral = peripheral[: peripheral.index("void onSecurityEvent")]
+        report = source[source.index("std::uint8_t onReportNotification") :]
+        report = report[: report.index("void onBatterySubscribed")]
+
+        first_guard = peripheral[: peripheral.index("if (!key_down_sent)")]
+        self.assertNotIn("phase_reported", first_guard)
+        self.assertIn("next_profile_send_ms = k_uptime_get() + 500", peripheral)
+        self.assertRegex(
+            peripheral,
+            r"if\s*\(phase_reported\)\s*\{\s*return;\s*\}\s*"
+            r"if\s*\(!phaseBondReady\(\)\)",
+        )
+        self.assertIn("key_down_passed && key_release_passed", report)
+
+    def test_hil_invalidates_stale_gatt_callbacks_on_disconnect_and_reset(self) -> None:
+        """! @brief 이전 연결 callback이 새 phase 완료 flag를 오염하지 못하게 세대를 무효화합니다. """
+
+        source = HIL_SOURCE.read_text(encoding="utf-8")
+        invalidator = source[source.index("void invalidateCentralGattState") :]
+        invalidator = invalidator[: invalidator.index("/** @brief 한 원격 characteristic")]
+        gap = source[source.index("void onGapEvent") :]
+        gap = gap[: gap.index("void resetPhaseState")]
+        reset = source[source.index("void resetPhaseState") :]
+        reset = reset[: reset.index("void startProtocol")]
+
+        self.assertIn("++gatt_phase_generation", invalidator)
+        for completion in (
+            "discovery_complete",
+            "read_complete",
+            "battery_subscription_complete",
+            "report_subscription_complete",
+        ):
+            self.assertIn(f"atomic_set(&{completion}, 0)", invalidator)
+        self.assertGreaterEqual(
+            source.count("!= gatt_phase_generation"),
+            6,
+        )
+        self.assertIn("invalidateCentralGattState()", gap)
+        self.assertIn("invalidateCentralGattState()", reset)
 
     def test_erased_probe_rejects_every_interactive_pairing_path(self) -> None:
         """! @brief 이전 key 거부 단계에서 Just Works와 passkey 재 pairing을 모두 거부합니다. """

@@ -56,6 +56,9 @@ MAX_TRANSCRIPT_BYTES = 524288
 DEFAULT_RESULT_TIMEOUT_SECONDS = 360.0
 EVIDENCE_SCHEMA = 3
 RF_NONCE_BINDING_BITS = 128
+BOND_PERSISTENCE_SETTLE_SECONDS = 1.0
+STACK_READY_SETTLE_SECONDS = 0.5
+SMP_REJECTION_SETTLE_SECONDS = 1.0
 
 
 class M21HilFailure(RuntimeError):
@@ -71,6 +74,13 @@ class M21ExecutionFailure(M21HilFailure):
         super().__init__(message)
         self.peripheral_transcript = peripheral
         self.central_transcript = central
+
+
+## @brief bond 저장과 SMP 종료 callback이 다음 phase 전에 끝날 시간을 제한적으로 보장합니다.
+def settle_security_transition(delay_seconds: float) -> None:
+    """! @brief 지정된 짧은 phase 전환 유예만 적용합니다. """
+
+    time.sleep(delay_seconds)
 
 
 @dataclass(frozen=True)
@@ -332,6 +342,21 @@ def read_line(
     raise TimeoutError("M21 UART token 대기 시간이 끝났습니다.")
 
 
+## @brief 임의 UART byte를 Windows console에서도 안전한 ASCII escape 문자열로 만듭니다.
+def printable_uart_line(line: bytes) -> str:
+    """! @brief UTF-8처럼 보이는 잡음도 현재 console code page와 무관하게 보존합니다. """
+
+    return line.decode("ascii", errors="backslashreplace")
+
+
+## @brief flash 뒤 첫 READY 이전의 이전 firmware byte와 미완성 줄을 버립니다.
+def reset_protocol_capture(pending: bytearray, capture: bytearray) -> None:
+    """! @brief 현재 image가 READY를 낸 시점부터 exact transcript를 새로 수집합니다. """
+
+    pending.clear()
+    capture.clear()
+
+
 ## @brief 현재 nonce의 원하는 protocol line이 나올 때까지 fail-closed 대기합니다.
 def wait_token(
     serial_port: Any,
@@ -347,7 +372,7 @@ def wait_token(
     while True:
         line = read_line(serial_port, pending, capture, deadline)
         if line:
-            print(f"[{role}] {line.decode('utf-8', errors='backslashreplace')}")
+            print(f"[{role}] {printable_uart_line(line)}")
         if enforce_protocol:
             if line.startswith(FAIL_PREFIX):
                 raise M21HilFailure(f"{role} target 실패: {line!r}")
@@ -508,6 +533,8 @@ def execute_pair(
                 ready("central"),
                 enforce_protocol=False,
             )
+            reset_protocol_capture(peripheral_pending, peripheral_capture)
+            reset_protocol_capture(central_pending, central_capture)
 
             for port in (peripheral_serial, central_serial):
                 send_command(port, "CLEAR", nonce)
@@ -523,6 +550,7 @@ def execute_pair(
                 lambda line: line.startswith(b"NUCODE_M21_PERIPHERAL:CLEAR:REQUESTED:"),
                 lambda line: line.startswith(b"NUCODE_M21_CENTRAL:CLEAR:REQUESTED:"),
             )
+            settle_security_transition(BOND_PERSISTENCE_SETTLE_SECONDS)
 
             for port in (peripheral_serial, central_serial):
                 send_command(port, "REBOOT", nonce)
@@ -538,6 +566,7 @@ def execute_pair(
                 lambda line: line == b"NUCODE_M21_READY:role=peripheral:bond_count=0",
                 lambda line: line == b"NUCODE_M21_READY:role=central:bond_count=0",
             )
+            settle_security_transition(STACK_READY_SETTLE_SECONDS)
 
             phase_predicate = lambda role, phase: lambda line: line.startswith(
                 f"NUCODE_M21_{role.upper()}:PHASE:PASS:phase={phase}:".encode("ascii")
@@ -563,6 +592,7 @@ def execute_pair(
                 phase_predicate("peripheral", "first"),
                 phase_predicate("central", "first"),
             )
+            settle_security_transition(BOND_PERSISTENCE_SETTLE_SECONDS)
 
             for port in (peripheral_serial, central_serial):
                 send_command(port, "REBOOT", nonce)
@@ -578,6 +608,7 @@ def execute_pair(
                 ready("peripheral"),
                 ready("central"),
             )
+            settle_security_transition(STACK_READY_SETTLE_SECONDS)
             start_phase(
                 peripheral_serial,
                 central_serial,
@@ -614,6 +645,7 @@ def execute_pair(
                 lambda line: line.startswith(b"NUCODE_M21_PERIPHERAL:ERASE:REQUESTED:"),
                 lambda line: line.startswith(b"NUCODE_M21_CENTRAL:ERASE:REQUESTED:"),
             )
+            settle_security_transition(BOND_PERSISTENCE_SETTLE_SECONDS)
             for port in (peripheral_serial, central_serial):
                 send_command(port, "REBOOT", nonce)
             wait_pair_tokens(
@@ -628,6 +660,7 @@ def execute_pair(
                 lambda line: line == b"NUCODE_M21_READY:role=peripheral:bond_count=0",
                 lambda line: line == b"NUCODE_M21_READY:role=central:bond_count=0",
             )
+            settle_security_transition(STACK_READY_SETTLE_SECONDS)
             start_phase(
                 peripheral_serial,
                 central_serial,
@@ -654,6 +687,7 @@ def execute_pair(
                     b"NUCODE_M21_CENTRAL:OLD_KEY:RECONNECT:REJECTED:bond_count=0:"
                 ),
             )
+            settle_security_transition(SMP_REJECTION_SETTLE_SECONDS)
             start_phase(
                 peripheral_serial,
                 central_serial,

@@ -193,6 +193,20 @@ enum class ReadTarget : std::uint8_t
     complete,
 };
 
+/** @brief callback 완료 뒤 다음 main-loop 회차에서 시작할 GATT 작업입니다. */
+enum class CentralGattAction : std::uint8_t
+{
+    none,
+    read_pre_security,
+    read_battery,
+    read_manufacturer,
+    read_model,
+    read_serial,
+    read_report_map,
+    subscribe_battery,
+    subscribe_report,
+};
+
 RemoteHandles handles = {};
 struct bt_gatt_discover_params discover_parameters = {};
 struct bt_gatt_discover_params battery_ccc_discovery = {};
@@ -207,6 +221,8 @@ std::uint8_t read_att_error = 0U;
 bool discovery_for_pre_security = false;
 bool discovery_active = false;
 bool read_active = false;
+CentralGattAction pending_gatt_action = CentralGattAction::none;
+bool secured_profile_started = false;
 bool subscriptions_started = false;
 bool report_subscription_started = false;
 bool battery_read_passed = false;
@@ -220,6 +236,38 @@ atomic_t read_complete = ATOMIC_INIT(0);
 atomic_t battery_subscription_complete = ATOMIC_INIT(0);
 atomic_t report_subscription_complete = ATOMIC_INIT(0);
 atomic_t subscription_error = ATOMIC_INIT(0);
+/** @brief 연결 callback과 SMP 요청 사이에 둘 bounded 정착 시간입니다. */
+constexpr std::int64_t security_request_delay_ms = 500;
+/** @brief 이미 진행 중인 SMP가 끝날 때까지 보안 요청을 다시 확인하는 간격입니다. */
+constexpr std::int64_t security_request_retry_ms = 100;
+/** @brief SMP busy가 영구 정지로 바뀌지 않도록 제한하는 전체 요청 시간입니다. */
+constexpr std::int64_t security_request_timeout_ms = 30000;
+bool security_request_pending = false;
+std::int64_t security_request_due_ms = 0;
+std::int64_t security_request_deadline_ms = 0;
+std::uint32_t gatt_phase_generation = 1U;
+std::uint32_t discovery_generation = 0U;
+std::uint32_t read_generation = 0U;
+std::uint32_t battery_subscription_generation = 0U;
+std::uint32_t report_subscription_generation = 0U;
+
+/** @brief 연결 종료나 phase 전환 때 이전 GATT callback과 완료 flag를 무효화합니다. */
+void invalidateCentralGattState()
+{
+    ++gatt_phase_generation;
+    discovery_active = false;
+    read_active = false;
+    secured_profile_started = false;
+    pending_gatt_action = CentralGattAction::none;
+    security_request_pending = false;
+    security_request_due_ms = 0;
+    security_request_deadline_ms = 0;
+    atomic_set(&discovery_complete, 0);
+    atomic_set(&read_complete, 0);
+    atomic_set(&battery_subscription_complete, 0);
+    atomic_set(&report_subscription_complete, 0);
+    atomic_set(&subscription_error, 0);
+}
 
 /** @brief 한 원격 characteristic declaration을 handle 표에 반영합니다. */
 void captureCharacteristic(const struct bt_gatt_chrc *characteristic)
@@ -261,6 +309,10 @@ std::uint8_t onDiscovery(struct bt_conn *connection,
                          struct bt_gatt_discover_params *parameters)
 {
     ARG_UNUSED(connection);
+    if (discovery_generation != gatt_phase_generation)
+    {
+        return BT_GATT_ITER_STOP;
+    }
     if (attribute == nullptr)
     {
         ::memset(parameters, 0, sizeof(*parameters));
@@ -289,6 +341,7 @@ void beginDiscovery(bool pre_security)
     discover_parameters.end_handle = BT_ATT_LAST_ATTRIBUTE_HANDLE;
     discover_parameters.type = BT_GATT_DISCOVER_CHARACTERISTIC;
     discovery_for_pre_security = pre_security;
+    discovery_generation = gatt_phase_generation;
     discovery_active = true;
     atomic_set(&discovery_complete, 0);
     const int result = bt_gatt_discover(connection, &discover_parameters);
@@ -300,12 +353,34 @@ void beginDiscovery(bool pre_security)
     }
 }
 
+/** @brief 이미 충족된 보안 상태를 놓쳐도 중앙 profile 검증을 한 번 이어갑니다. */
+void continueCentralProfileIfSecured()
+{
+    if (security_request_pending || run_mode == RunMode::erased_probe ||
+        !BLEConnection.connected() ||
+        BLESecurity.currentLevel() < nucode::ble::SecurityLevel::encrypted)
+    {
+        return;
+    }
+    secured = true;
+    if (!secured_profile_started && !discovery_active && !read_active &&
+        read_target != ReadTarget::pre_security_report_map)
+    {
+        secured_profile_started = true;
+        beginDiscovery(false);
+    }
+}
+
 /** @brief 단일 remote read의 chunk와 ATT 오류를 bounded buffer에 모읍니다. */
 std::uint8_t onRead(struct bt_conn *connection, std::uint8_t error,
                     struct bt_gatt_read_params *parameters,
                     const void *data, std::uint16_t length)
 {
     ARG_UNUSED(connection);
+    if (read_generation != gatt_phase_generation)
+    {
+        return BT_GATT_ITER_STOP;
+    }
     if (error != 0U)
     {
         read_att_error = error;
@@ -355,6 +430,7 @@ void beginRead(ReadTarget target, std::uint16_t handle)
     read_parameters.handle_count = 1U;
     read_parameters.single.handle = handle;
     read_parameters.single.offset = 0U;
+    read_generation = gatt_phase_generation;
     read_active = true;
     atomic_set(&read_complete, 0);
     const int result = bt_gatt_read(connection, &read_parameters);
@@ -384,6 +460,10 @@ std::uint8_t onBatteryNotification(struct bt_conn *connection,
 {
     ARG_UNUSED(connection);
     ARG_UNUSED(parameters);
+    if (battery_subscription_generation != gatt_phase_generation)
+    {
+        return BT_GATT_ITER_STOP;
+    }
     if (data != nullptr && length == 1U &&
         *static_cast<const std::uint8_t *>(data) == notified_battery)
     {
@@ -399,11 +479,19 @@ std::uint8_t onReportNotification(struct bt_conn *connection,
 {
     ARG_UNUSED(connection);
     ARG_UNUSED(parameters);
+    if (report_subscription_generation != gatt_phase_generation)
+    {
+        return BT_GATT_ITER_STOP;
+    }
     if (data == nullptr || length != sizeof(nucode::ble::KeyboardReport))
     {
         return BT_GATT_ITER_CONTINUE;
     }
     const auto *bytes = static_cast<const std::uint8_t *>(data);
+    if (key_down_passed && key_release_passed)
+    {
+        return BT_GATT_ITER_CONTINUE;
+    }
     if (!key_down_passed)
     {
         bool valid = bytes[0] == 0U && bytes[1] == 0U && bytes[2] == 0x04U;
@@ -431,6 +519,10 @@ void onBatterySubscribed(struct bt_conn *connection, std::uint8_t error,
 {
     ARG_UNUSED(connection);
     ARG_UNUSED(parameters);
+    if (battery_subscription_generation != gatt_phase_generation)
+    {
+        return;
+    }
     atomic_set(&subscription_error, error);
     atomic_set(&battery_subscription_complete, 1);
 }
@@ -441,6 +533,10 @@ void onReportSubscribed(struct bt_conn *connection, std::uint8_t error,
 {
     ARG_UNUSED(connection);
     ARG_UNUSED(parameters);
+    if (report_subscription_generation != gatt_phase_generation)
+    {
+        return;
+    }
     atomic_set(&subscription_error, error);
     atomic_set(&report_subscription_complete, 1);
 }
@@ -470,6 +566,7 @@ void beginSubscriptions()
     battery_subscription.min_security = BT_SECURITY_L2;
     atomic_set_bit(battery_subscription.flags,
                    BT_GATT_SUBSCRIBE_FLAG_VOLATILE);
+    battery_subscription_generation = gatt_phase_generation;
     subscriptions_started = true;
     atomic_set(&battery_subscription_complete, 0);
     const int result = bt_gatt_subscribe(connection, &battery_subscription);
@@ -505,6 +602,7 @@ void beginReportSubscription()
     report_subscription.min_security = BT_SECURITY_L2;
     atomic_set_bit(report_subscription.flags,
                    BT_GATT_SUBSCRIBE_FLAG_VOLATILE);
+    report_subscription_generation = gatt_phase_generation;
     report_subscription_started = true;
     atomic_set(&report_subscription_complete, 0);
     const int result = bt_gatt_subscribe(connection, &report_subscription);
@@ -528,7 +626,7 @@ void advanceNormalRead()
             return;
         }
         battery_read_passed = true;
-        beginRead(ReadTarget::manufacturer, handles.manufacturer);
+        pending_gatt_action = CentralGattAction::read_manufacturer;
         break;
     case ReadTarget::manufacturer:
         if (read_att_error != 0U || !equalsGattString("NUCODE"))
@@ -536,7 +634,7 @@ void advanceNormalRead()
             fail("dis-manufacturer");
             return;
         }
-        beginRead(ReadTarget::model, handles.model);
+        pending_gatt_action = CentralGattAction::read_model;
         break;
     case ReadTarget::model:
         if (read_att_error != 0U || !equalsGattString("NU54DK-M21"))
@@ -544,7 +642,7 @@ void advanceNormalRead()
             fail("dis-model");
             return;
         }
-        beginRead(ReadTarget::serial, handles.serial);
+        pending_gatt_action = CentralGattAction::read_serial;
         break;
     case ReadTarget::serial:
         if (read_att_error != 0U || !equalsGattString("M21-HIL"))
@@ -553,7 +651,7 @@ void advanceNormalRead()
             return;
         }
         dis_passed = true;
-        beginRead(ReadTarget::report_map, handles.report_map);
+        pending_gatt_action = CentralGattAction::read_report_map;
         break;
     case ReadTarget::report_map:
         if (read_att_error != 0U || read_length < 8U ||
@@ -565,7 +663,7 @@ void advanceNormalRead()
         }
         map_passed = true;
         read_target = ReadTarget::complete;
-        beginSubscriptions();
+        pending_gatt_action = CentralGattAction::subscribe_battery;
         break;
     default:
         fail("read-state");
@@ -585,10 +683,11 @@ void finishPreSecurityRead()
     Serial.print("NUCODE_M21_CENTRAL:SECURE_GATT:DENIED:nonce=");
     Serial.println(nonce);
     read_target = ReadTarget::complete;
-    if (!BLESecurity.requestSecurity())
-    {
-        fail("security-request");
-    }
+    security_request_pending = true;
+    security_request_due_ms = k_uptime_get();
+    security_request_deadline_ms =
+        k_uptime_get() + security_request_timeout_ms;
+    return;
 }
 
 /** @brief 중앙 profile 검증이 끝나면 phase별 exact PASS token을 기록합니다. */
@@ -633,9 +732,77 @@ void reportCentralPhase()
     phase_reported = true;
 }
 
+/** @brief 예약된 GATT 작업 하나만 시작해 callback 전이를 main-loop 회차별로 분리합니다. */
+bool startPendingGattAction()
+{
+    const CentralGattAction action = pending_gatt_action;
+    if (action == CentralGattAction::none)
+    {
+        return false;
+    }
+    pending_gatt_action = CentralGattAction::none;
+    switch (action)
+    {
+    case CentralGattAction::read_pre_security:
+        beginRead(ReadTarget::pre_security_report_map, handles.report_map);
+        break;
+    case CentralGattAction::read_battery:
+        beginRead(ReadTarget::battery, handles.battery);
+        break;
+    case CentralGattAction::read_manufacturer:
+        beginRead(ReadTarget::manufacturer, handles.manufacturer);
+        break;
+    case CentralGattAction::read_model:
+        beginRead(ReadTarget::model, handles.model);
+        break;
+    case CentralGattAction::read_serial:
+        beginRead(ReadTarget::serial, handles.serial);
+        break;
+    case CentralGattAction::read_report_map:
+        beginRead(ReadTarget::report_map, handles.report_map);
+        break;
+    case CentralGattAction::subscribe_battery:
+        beginSubscriptions();
+        break;
+    case CentralGattAction::subscribe_report:
+        beginReportSubscription();
+        break;
+    case CentralGattAction::none:
+        break;
+    }
+    return true;
+}
+
 /** @brief 중앙 discovery/read/subscription 상태기를 Arduino main 문맥에서 진행합니다. */
 void driveCentralProfile()
 {
+    if (security_request_pending && k_uptime_get() >= security_request_due_ms)
+    {
+        security_request_pending = false;
+        if (!BLESecurity.requestSecurity())
+        {
+            if (BLESecurity.lastError() == nucode::ble::SecurityError::busy)
+            {
+                if (k_uptime_get() >= security_request_deadline_ms)
+                {
+                    fail("security-timeout");
+                    return;
+                }
+                security_request_pending = true;
+                security_request_due_ms =
+                    k_uptime_get() + security_request_retry_ms;
+                return;
+            }
+            fail("security-request");
+            return;
+        }
+        return;
+    }
+    continueCentralProfileIfSecured();
+    if (startPendingGattAction())
+    {
+        return;
+    }
     if (atomic_cas(&discovery_complete, 1, 0))
     {
         if (handles.battery == 0U || handles.manufacturer == 0U ||
@@ -645,14 +812,10 @@ void driveCentralProfile()
             fail("profile-handles");
             return;
         }
-        if (discovery_for_pre_security)
-        {
-            beginRead(ReadTarget::pre_security_report_map, handles.report_map);
-        }
-        else
-        {
-            beginRead(ReadTarget::battery, handles.battery);
-        }
+        pending_gatt_action = discovery_for_pre_security
+                                  ? CentralGattAction::read_pre_security
+                                  : CentralGattAction::read_battery;
+        return;
     }
     if (atomic_cas(&read_complete, 1, 0))
     {
@@ -664,6 +827,7 @@ void driveCentralProfile()
         {
             advanceNormalRead();
         }
+        return;
     }
     if (atomic_cas(&battery_subscription_complete, 1, 0))
     {
@@ -672,12 +836,15 @@ void driveCentralProfile()
             fail("bas-subscribe-response");
             return;
         }
-        beginReportSubscription();
+        pending_gatt_action = CentralGattAction::subscribe_report;
+        return;
     }
-    if (atomic_cas(&report_subscription_complete, 1, 0) &&
-        atomic_get(&subscription_error) != 0)
+    if (atomic_cas(&report_subscription_complete, 1, 0))
     {
-        fail("hid-subscribe-response");
+        if (atomic_get(&subscription_error) != 0)
+        {
+            fail("hid-subscribe-response");
+        }
         return;
     }
     reportCentralPhase();
@@ -737,7 +904,7 @@ std::uint8_t battery_value = expected_battery_read;
 /** @brief 구독이 완료될 때까지 BAS와 HID report를 bounded 간격으로 재시도합니다. */
 void drivePeripheralProfile()
 {
-    if (!secured || phase_reported || k_uptime_get() < next_profile_send_ms)
+    if (!secured || k_uptime_get() < next_profile_send_ms)
     {
         return;
     }
@@ -768,6 +935,10 @@ void drivePeripheralProfile()
     key_down_sent = false;
     next_profile_send_ms = k_uptime_get() + 500;
 
+    if (phase_reported)
+    {
+        return;
+    }
     if (!phaseBondReady())
     {
         return;
@@ -874,11 +1045,7 @@ void onSecurityEvent(const nucode::ble::SecurityEventRecord &event, void *contex
             }
             secured = true;
 #ifdef NUCODE_M21_CENTRAL
-            if (!discovery_active && !read_active &&
-                read_target != ReadTarget::pre_security_report_map)
-            {
-                beginDiscovery(false);
-            }
+            continueCentralProfileIfSecured();
 #else
             next_profile_send_ms = k_uptime_get() + 2000;
 #endif
@@ -932,14 +1099,21 @@ void onGapEvent(nucode::ble::BLEEvent event, void *context)
         {
             beginDiscovery(true);
         }
-        else if (!BLESecurity.requestSecurity())
+        else
         {
-            fail("security-request");
+            security_request_pending = true;
+            security_request_due_ms =
+                k_uptime_get() + security_request_delay_ms;
+            security_request_deadline_ms =
+                k_uptime_get() + security_request_timeout_ms;
         }
 #endif
     }
     else if (event == nucode::ble::BLEEvent::disconnected)
     {
+#ifdef NUCODE_M21_CENTRAL
+        invalidateCentralGattState();
+#endif
         const bool connection_was_secured = secured;
         secured = false;
         Serial.print("NUCODE_M21_EVENT:DISCONNECTED:role=");
@@ -991,10 +1165,16 @@ void resetPhaseState(RunMode requested_mode)
     old_key_probe_connected = false;
     run_mode = requested_mode;
 #ifdef NUCODE_M21_CENTRAL
+    invalidateCentralGattState();
     handles = {};
     read_target = ReadTarget::complete;
     discovery_active = false;
     read_active = false;
+    pending_gatt_action = CentralGattAction::none;
+    secured_profile_started = false;
+    security_request_pending = false;
+    security_request_due_ms = 0;
+    security_request_deadline_ms = 0;
     subscriptions_started = false;
     report_subscription_started = false;
     battery_read_passed = false;
