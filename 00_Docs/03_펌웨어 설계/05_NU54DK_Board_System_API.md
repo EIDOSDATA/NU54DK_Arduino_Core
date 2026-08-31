@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-M15-BOARD-SYSTEM-001 |
-| 문서 개정 | 1.6 |
+| 문서 개정 | 1.7 |
 | 문서 상태 | `v0.2.0` 정식 계약 |
 | 적용 제품 버전 | `v0.2.0` |
-| 최종 갱신일 | 2026-08-31 |
+| 최종 갱신일 | 2026-09-01 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 기준 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
@@ -257,8 +257,8 @@ PMIC write API의 존재나 software semantic test를 전기적 안전성 PASS�
 - 실제 NTC 온도 보호를 미지원으로 유지
 
 PMIC 전기 HIL은 승인된 범위 제외이며 해당 API를 전기적으로 검증된 완전 지원으로 표시하지
-않는다. `v0.3.0`의 AC-01·M19·M20 자동 검증은 완료됐다. M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기 상태이며, Board/System 계약은 이 BLE
-단계들의 변경 대상이 아니다. 저장소 facade를 다루는 미착수 AC-03에서는 `nucode/`
+않는다. `v0.3.0`의 AC-01 자동 검증과 M19·M20·M21 구현·검증은 완료됐으며 Board/System 계약은
+이 BLE 단계들의 변경 대상이 아니다. 저장소 facade를 다루는 미착수 AC-03에서는 `nucode/`
 namespace, BLE bond와 고정 partition 소유권을 깨지 않는 회귀 증거를 요구한다. 현재 개발 상태와
 검증 링크는 [v0.3.0 마일스톤](<../01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)에서
 관리한다.

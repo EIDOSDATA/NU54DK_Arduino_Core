@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 4.1 |
+| 문서 체계 개정 | 4.2 |
 | 현재 정식 버전 | `v0.2.0` |
 | 다음 목표 버전 | `v0.3.0` |
-| 최종 갱신일 | 2026-08-31 |
+| 최종 갱신일 | 2026-09-01 |
 | 작성자 | Quantum / NUCODE |
 
 이 디렉터리는 Loader 없이 동작하는 Native Full Zephyr 기반 NU54DK Arduino Core의
@@ -50,7 +50,7 @@
 | AC-03 | **대기** | Storage facade와 대표 library 호환성; AC-02 완료 후 착수 |
 | M19 | **자동 검증 완료** | BLE Core/GAP exact-commit 두 보드 RF HIL PASS |
 | M20 | **자동 검증 완료** | 범용 GATT exact-commit 두 보드 RF HIL PASS |
-| M21 | **진행 중** | M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기; Core `065d4f5` exact 두 보드 HIL·host 38/38 PASS |
+| M21 | **완료** | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS; host 39/39 |
 | M22 | **대기** | AC-01~AC-03과 M19~M21을 통합한 `v0.3.0` package·RC/stable gate |
 | M23~M34 | **장기 계획** | storage/security/DFU, radio/OpenThread, Matter 제품선 |
 
@@ -111,10 +111,11 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - [BLE NUS API](<./03_펌웨어 설계/06_BLE_NUS_API.md>)
 - [BLE Core/GAP API](<./03_펌웨어 설계/07_BLE_Core_GAP_API.md>)
 - [BLE 범용 GATT API](<./03_펌웨어 설계/08_BLE_범용_GATT_API.md>)
+- [BLE 보안과 표준 Profile API](<./03_펌웨어 설계/09_BLE_보안과_표준_Profile_API.md>)
 
 ### 04. 검증 기록
 
-M1~M18과 정식 공개 증거, `v0.3.0` AC-01·M19~M21의 진행 중 증거는
+M1~M18과 정식 공개 증거, `v0.3.0` AC-01·M19~M21의 구현·검증 증거는
 [검증 기록 안내](<./04_검증 기록/README.md>)에서 찾는다. 이 디렉터리의 문서는 당시 revision과
 결과를 보존하는 역사 기록이다.
 

@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-API-001 |
-| 문서 개정 | 4.3 |
+| 문서 개정 | 4.4 |
 | 문서 상태 | `v0.2.0` 정식 공개 범위 + `v0.3.0` 개발 상태 |
-| 최종 갱신일 | 2026-08-31 |
-| 개발 상태 | AC-01·M19·M20 자동 검증 완료 / M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기 / AC-02·AC-03·M22 미착수 |
+| 최종 갱신일 | 2026-09-01 |
+| 개발 상태 | AC-01 자동 검증 완료 / M19·M20·M21 완료 / AC-02·AC-03·M22 미착수 |
 
 ## 1. 목적
 
@@ -215,9 +215,9 @@ M19 BLE Core/GAP과 M20 범용 GATT는 `NUCODE_BLE`에 구현됐고 각각 exact
 연결 lifecycle과 custom GATT server/client read/write/notify/indicate 범위가 개발 기준선이다.
 
 Pairing·bonding·SMP, BAS/DIS와 HID는 공통 stack lifecycle을 복제하지 않는 별도
-`NUCODE_BLE_Security` library가 소유한다. M21의 Core `065d4f5` exact 두 보드 HIL과 host 38/38은
-PASS했다. M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인
-대기 상태이므로 M21과 `v0.3.0` 전체를 완료나 정식 지원으로 표시하지 않는다.
+`NUCODE_BLE_Security` library가 소유한다. M21의 Core `065d4f5` exact 두 보드 RF HIL과
+`d1902b1` Windows 11 pairing·HID 입력·bond 복원, host 39/39은 PASS했다. M21 개발 작업은
+완료했지만 `v0.3.0` 전체는 AC-02·AC-03과 M22 전에는 정식 지원으로 표시하지 않는다.
 
 ## 9. Zephyr/NCS 직접 사용과 build-only 경계
 
@@ -261,8 +261,8 @@ native USB, DAC, AVR Harvard memory와 Wi-Fi는 NU54DK/nRF54L15 hardware에서 �
   library matrix — 미착수
 - M19: 범용 BLE Core/GAP — 자동 검증 완료
 - M20: 범용 GATT — 자동 검증 완료
-- M21: 별도 security library의 pairing·bonding·표준 profile·HID — 진행 중; 자동 검증 완료,
-  Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기
+- M21: 별도 security library의 pairing·bonding·표준 profile·HID — 완료; exact RF HIL과
+  Windows 11 실제 HID·bond 복원 PASS
 - M22: 통합 package·RC/stable gate — 미착수
 
 계획이 현재 `v0.2.0` 지원 판정을 바꾸지는 않는다. 각 항목은 자동 계약, target build,
@@ -283,6 +283,7 @@ native USB, DAC, AVR Harvard memory와 Wi-Fi는 NU54DK/nRF54L15 hardware에서 �
 - [M19 BLE Core/GAP 검증](<../04_검증 기록/23_M19_BLE_Core_GAP_검증.md>)
 - [M20 범용 GATT 검증](<../04_검증 기록/24_M20_범용_GATT_검증.md>)
 - [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)
+- [BLE 보안과 표준 Profile API](<../03_펌웨어 설계/09_BLE_보안과_표준_Profile_API.md>)
 
 지원 상태를 올리려면 production source, host/target 계약, Arduino package compile과 필요한 HIL을
 함께 갱신하고 해당 검증 기록을 추가해야 한다.

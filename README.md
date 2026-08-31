@@ -19,8 +19,8 @@ Sketch와 Arduino library를 nRF Connect SDK build graph에 통합해 ELF·HEX·
 | 사용자 환경 | Windows 10/11 x64, Arduino IDE 2.x |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 정식 완료 범위 | M0~M18 / `v0.2.0` 정식 공개 |
-| `v0.3.0` 개발 상태 | AC-01·M19·M20 자동 HIL PASS / M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기 |
-| 다음 작업 | M21 OS HID 수동 확인, 이후 AC-02·AC-03과 M22 |
+| `v0.3.0` 개발 상태 | AC-01 자동 HIL PASS / M19·M20·M21 완료 — Windows 11 SecureKeyboard pairing·입력·bond 복원 PASS |
+| 다음 작업 | AC-02 주변장치 호환성 → AC-03 Storage·library 호환성 → M22 통합 릴리스 |
 
 ## 빠른 시작
 
@@ -205,7 +205,7 @@ RC2 실기 결과, 같은 runtime payload와 stable 공개 설치 수명주기�
 | `v0.3.0` | AC-02~AC-03 | 미착수 | 주변장치·timing output, Storage facade와 대표 library 호환성 |
 | `v0.3.0` | M19 | **자동 검증 완료** | BLE Core/GAP 두 보드 advertise·scan·연결·재연결 HIL PASS |
 | `v0.3.0` | M20 | **자동 검증 완료** | 범용 GATT 두 보드 read/write/notify/indicate HIL PASS |
-| `v0.3.0` | M21 | 진행 중 | 자동 검증 완료 — Core `065d4f5` exact 두 보드 HIL PASS, host 38/38; Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기 |
+| `v0.3.0` | M21 | **완료** | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS |
 | `v0.3.0` | M22 | 대기 | AC-01~03과 M19~21을 통합한 package·RC/stable gate |
 | `v0.4.0` | M23~M26 | 계획 | Storage·Crypto, MCUboot·DFU, TF-M·복구 |
 | `v0.5.0` | M27~M30 | 계획 | Radio Profile, IEEE 802.15.4·ESB, OpenThread |
@@ -259,6 +259,8 @@ git submodule update --init --recursive
 - [Boards Manager 설치와 패키징](<./00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
 - [Arduino 구성 Profile과 예제 배포](<./00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md>)
 - [Arduino API 지원 범위](<./00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)
+- [BLE 보안과 표준 Profile API](<./00_Docs/03_펌웨어 설계/09_BLE_보안과_표준_Profile_API.md>)
+- [M21 BLE 보안·Windows HID 검증](<./00_Docs/04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)
 - [전체 구현 로드맵](<./00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md>)
 - [v0.2.0 릴리스 문서](<./00_Docs/05_릴리스/v0.2.0/README.md>)
 - [v0.2.0 알려진 제약](<./00_Docs/05_릴리스/v0.2.0/KNOWN_ISSUES.md>)

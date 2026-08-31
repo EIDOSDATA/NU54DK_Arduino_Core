@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 성격 | 실행 당시의 revision, 환경, 명령과 결과를 보존하는 역사 증거 |
-| 완료 범위 | M1~M18, `v0.1.0`과 `v0.2.0` 정식 공개 / AC-01·M19·M20 자동 검증 완료 |
-| 진행 범위 | M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기 |
+| 완료 범위 | M1~M18, `v0.1.0`과 `v0.2.0` 정식 공개 / AC-01 자동 검증 / M19·M20·M21 구현·검증 |
+| 진행 범위 | 다음 AC-02·AC-03·M22 |
 | 현재 정식 버전 | `v0.2.0` |
-| 최종 갱신일 | 2026-08-31 |
+| 최종 갱신일 | 2026-09-01 |
 
 이 디렉터리는 **현재 사용법이나 다음 작업을 설명하는 곳이 아니다.** 각 기록의 `다음 단계`,
 `HOLD`, `미실행`과 `NOT RUN`은 그 문서를 작성한 시점의 경계를 뜻한다. 현재 상태는
@@ -51,7 +51,7 @@
 | AC-01 | connector GPIO, open-drain, level IRQ, pulse/shift와 안전한 callback mask의 exact-commit HIL PASS | [AC-01 기록](22_AC-01_GPIO_호환성_검증.md) |
 | M19 | BLE Core/GAP 두 보드 RF HIL PASS; 첫 자동 PHY 요청 실패와 교정 이력 보존 | [M19 기록](23_M19_BLE_Core_GAP_검증.md) |
 | M20 | 범용 GATT server/client 두 보드 RF HIL PASS | [M20 기록](24_M20_범용_GATT_검증.md) |
-| M21 | Core `065d4f5` exact 두 보드 HIL PASS, host 38/38; Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기 | [M21 기록](25_M21_BLE_보안과_표준_Profile_검증.md) |
+| M21 | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS; host 39/39 | [M21 기록](25_M21_BLE_보안과_표준_Profile_검증.md) |
 
 ## 기록 해석 규칙
 

@@ -3,38 +3,41 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | VALIDATION-M21-001 |
-| 문서 개정 | 1.0 |
-| 상태 | **M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기** |
-| 최종 갱신일 | 2026-08-31 |
+| 문서 개정 | 1.1 |
+| 상태 | **M21 완료 — 자동 RF HIL과 Windows 11 실제 HID 검증 PASS** |
+| 최종 갱신일 | 2026-09-01 |
 | 대상 | `v0.3.0` M21 |
 | 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
 
-## 1. 목적과 최종 자동 판정
+## 1. 목적과 최종 판정
 
 M21은 `NUCODE_BLE` 공통 lifecycle 위에 pairing·bond 관리와 Battery Service(BAS),
 Device Information Service(DIS), 암호화된 HID keyboard를 추가한다. 이 기록은 source/host 계약,
-production target build, 두 NU54DK 사이의 RF protocol HIL과 실제 Windows·스마트폰 입력 확인을
+production target build, 두 NU54DK 사이의 RF protocol HIL과 실제 Windows 입력 확인을
 서로 다른 판정 계층으로 분리한다.
 
 | 계층 | 결과 |
 | --- | --- |
-| 공개 API·보안·negative M21 host 계약 | **PASS, 38/38** |
-| 전체 host 회귀 | **407 total — 405 PASS, 2 skipped** |
+| 공개 API·보안·negative M21 host 계약 | **PASS, 39/39** |
+| 전체 host 회귀 | **408 total — 406 PASS, 2 skipped** |
 | CI contract 회귀 | **PASS, 33/33** |
-| Markdown UTF-8·로컬 링크 검사 | **PASS, 82 files** |
+| Markdown UTF-8·로컬 링크 검사 | **PASS, 83 files** |
 | Arduino CLI SecureKeyboard·예제 탐색 | **PASS** |
+| exact-commit Arduino SecureKeyboard build·upload | **PASS**, Flash 260,692 B / RAM 69,436 B |
 | NU54DK production contract image | **PASS**, Flash 159,696 B / RAM 41,672 B |
 | NU54DK board/system + BLE security 통합 image | **PASS**, Flash 174,724 B / RAM 42,444 B |
 | NU54DK HIL Central role image | **PASS**, Flash 236,792 B / RAM 54,840 B |
 | NU54DK HIL Peripheral role image | **PASS**, Flash 236,388 B / RAM 54,840 B |
 | exact-commit 두 보드 RF HIL | **PASS**, evidence schema 3 |
-| Windows·스마트폰 실제 HID pairing·문자 입력 | **NOT RUN — 수동 확인 대기** |
+| Windows 11 실제 HID pairing·문자 입력·bond 재연결 | **PASS** |
+| 스마트폰 HID 호환성 | **NOT RUN — M21 완료 필수 조건 아님** |
 
 자동 검증 범위는 exact clean commit에서 만든 pristine image와 서로 다른 NU54DK 두 대를 사용해
-완료했다. 자동 RF HIL은 암호화된 GATT/HID protocol을 검증하지만 운영체제 UI에서 실제 키보드로
-pairing하고 문자를 입력하는 동작까지 대신하지 않는다. 따라서 M21 전체 상태는 완료가 아니라
-**자동 검증 완료, 수동 OS HID 확인 대기**다.
+완료했다. 자동 RF HIL은 암호화된 GATT/HID protocol을 검증하고, 별도의 Windows 11 수동 검증은
+운영체제 pairing UI, 실제 키보드 입력과 재부팅 뒤 bond 복원을 확인했다. 자동·수동 완료 조건을
+모두 충족했으므로 M21은 **완료**다. 다만 `v0.3.0` stable 지원 선언은 AC-02·AC-03과 M22 통합
+gate 뒤에만 수행한다.
 
 ## 2. exact revision과 실행 환경
 
@@ -50,6 +53,11 @@ pairing하고 문자를 입력하는 동작까지 대신하지 않는다. 따라
 | Mass erase 요청 | `false` |
 | Factory reset 실행 | `false` |
 
+위 `065d4f5` 자동 RF HIL 기준선에서는 M21 host **38/38**, 전체 host **407개 중 405 PASS,
+2 skipped**, Markdown UTF-8·로컬 링크 **82/82 files PASS**였다. 이 수치는 당시 자동 evidence의
+revision과 함께 보존한다. `d1902b1` IO capability 교정 뒤 최신 software 회귀 수치는 5.1절과
+Windows 수동 결과는 8절에 별도로 기록한다.
+
 두 role의 pristine build record는 모두 Core/Board revision을 위 값으로 고정했고 SHA-256은 다음과
 같다.
 
@@ -64,6 +72,7 @@ pairing하고 문자를 입력하는 동작까지 대신하지 않는다. 따라
 `NUCODE_BLE.h`를 포함해 다음 기능을 제공한다.
 
 - `SecurityManager`: L2/L3/L4 보안 요청, Just Works·passkey 응답, 취소·timeout, bond 열람·개별 삭제·전체 삭제
+- `SecurityIoCapability`: 실제 화면·숫자 입력·확인 버튼 조합에 맞춘 SMP IO capability 선택
 - `BatteryService`: BAS level read와 notification
 - `DeviceInformationService`: runtime manufacturer/model/serial과 revision 정보
 - `HidKeyboard`: 표준 keyboard report map, 8-byte input report, press/release
@@ -105,6 +114,24 @@ compile/link했다.
 한다. M21 기본값인 `SecurityLevel::encrypted`는 암호화와 bond 저장을 보장하지만 MITM 인증을
 보장한다고 확대 해석하지 않는다.
 
+`SecurityConfig::io_capability`은 장치가 실제 제공하는 사용자 입출력보다 강하게 설정하지 않는다.
+Core는 다음 callback 조합만 Zephyr에 등록하므로 OS가 존재하지 않는 화면이나 숫자 입력을 요구하지
+않는다.
+
+| `SecurityIoCapability` | 공개하는 SMP 사용자 입출력 | 일반 pairing 경로 |
+| --- | --- | --- |
+| `no_input_output` | 화면·숫자 입력 없음 | Just Works; L2 암호화 가능, MITM 인증 없음 |
+| `display_only` | passkey 표시 | 상대 장치의 passkey 입력 |
+| `keyboard_only` | passkey 입력 | 로컬 숫자 입력 |
+| `display_yes_no` | passkey 표시 + 일치 확인 | Numeric Comparison |
+| `keyboard_display` | 표시·입력·일치 확인 | 협상된 passkey/Numeric Comparison |
+
+NU54DK `SecureKeyboard` 예제는 숫자 화면과 키패드가 없고 SW0 확인만 제공하므로
+`no_input_output`을 명시한다. 이 구성에서 `pairing_requested`를 받은 뒤 SW0이
+`acceptPairing(true)`를 호출하는 경로가 유효하다. `display_yes_no` 또는 `keyboard_display`가 만든
+`passkey_confirmation_requested`에는 실제 화면의 6자리 값을 사람이 비교한 뒤
+`confirmPasskey()`로 응답해야 하며, 화면 없는 장치가 이를 흉내 내서는 안 된다.
+
 ## 5. 자동 검증
 
 ### 5.1 Host·CI·문서 회귀
@@ -118,14 +145,15 @@ python -m unittest `
   tests.host.test_m21_ble_security_hil -v
 ```
 
-최종 revision에서 M21 **38/38 PASS**를 확인했다. 주요 negative 경계는 stack 중복 초기화·별도
+최종 revision에서 M21 **39/39 PASS**를 확인했다. 주요 negative 경계는 stack 중복 초기화·별도
 connection callback 금지, 평문 HIDS 전송 금지, 고정 passkey와 secret 로그 금지, 같은 boot의
 false verified bond 금지, 삭제 요청 뒤 reboot 전 상태를 삭제 완료로 오판하는 경우, stale
 nonce·target FAIL·restore 단계 재-pair·profile token 누락, 128-bit RF nonce binding 누락·축소를
-거부하는 것이다.
+거부하는 것이다. 실제 IO capability와 등록 callback의 exact 조합, 잘못된 enum 값 거부와 화면 없는
+SecureKeyboard의 `no_input_output` 선택도 회귀 계약에 포함한다.
 
-전체 host 회귀는 **407개 중 405 PASS, 2 skipped**, CI contract는 **33/33 PASS**, Markdown
-UTF-8·로컬 링크 검사는 **82/82 files PASS**였다. Arduino library discovery 단계에서는 공개 헤더만 노출하고 Zephyr 내부
+전체 host 회귀는 **408개 중 406 PASS, 2 skipped**, CI contract는 **33/33 PASS**, Markdown
+UTF-8·로컬 링크 검사는 **83/83 files PASS**였다. Arduino library discovery 단계에서는 공개 헤더만 노출하고 Zephyr 내부
 구현은 제외한다. 실제 Arduino CLI에서 `SecureKeyboard` compile과 전체 예제 탐색을 실행해
 `PASS: m21`, `PASS: examples`를 확인했다. `NUCODE_BLE_Security`는 공통 BLE lifecycle에 의존하므로
 `nucode.ble.nus`와 함께 선택되는 정상 조합을 충돌로 처리하지 않으며, 최종 feature profile은
@@ -299,7 +327,76 @@ Evidence coverage와 안전 경계는 다음과 같다.
 raw transcript는 같은 디렉터리에 생성되며, evidence가 기록한 SHA-256으로 exact 실행 자산을
 상호 확인한다.
 
-## 8. 공용 builder 통합
+자동 evidence의 `windows_or_smartphone_hid_input=false`와
+`manual_os_hid_confirmation_pending=true`는 해당 자동 실행 시점의 역사 기록이므로 수정하거나
+덮어쓰지 않는다. 다음 절의 별도 수동 결과가 OS HID 완료 증거를 보완한다.
+
+## 8. Windows 11 실제 HID 수동 검증
+
+### 8.1 환경과 exact image
+
+| 항목 | 값 |
+| --- | --- |
+| 실행일 | 2026-09-01 |
+| Core revision | `d1902b16804a27b77b153eeb9d11a10e088a59ae` |
+| Board package revision | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
+| Arduino FQBN | `nucode:zephyr:nu54dk:feature_set=ble,upload_probe=pyocd_uid` |
+| Board | DAPLink `5415360300052840fcd47678fd7d106d`, `COM13` |
+| 운영체제 | Windows 11 Pro 25H2 x64, build `26200.9168` |
+| Bluetooth adapter | Intel Wireless Bluetooth, driver `23.140.0.5` |
+| NCS / Zephyr | NCS `v3.4.0` / Zephyr `4.4.0` |
+| Arduino build | Flash 260,692 B / RAM 69,436 B |
+| HEX SHA-256 | `acd87094e6fb8be64810c91cc14e3d0a83ad214359b83d833b068f5394720b70` |
+| Mass erase / recover / factory reset | 사용하지 않음 |
+
+Arduino CLI의 새 build path에서 build record의 Core revision `d1902b16804a`, Board revision
+`fe65f2f0880b`, BLE profile과 `nucode.ble.security` feature를 확인한 뒤 같은 manifest를 pyOCD로
+업로드했다. 최초 SWD attach의 `No ACK`는 100 kHz under-reset hardware reset으로 target 연결만
+복구했고, 이후 일반 sector erase upload를 성공시켰다. mass erase와 recover는 실행하지 않았다.
+
+### 8.2 발견한 Windows pairing 결함과 수정
+
+수정 전 Core는 passkey display·entry·confirm callback을 모두 등록해 Zephyr가 NU54DK를
+`KeyboardDisplay`로 판단하게 했다. Windows는 이를 근거로 6자리 Numeric Comparison을 선택했지만,
+화면 없는 `SecureKeyboard` 예제의 SW0은 Just Works용 `acceptPairing()`만 호출했다. Numeric
+Comparison pending에는 `confirmPasskey()` 응답이 필요하므로 Windows가 기다리던 응답은 소비되지
+않았고 30초 뒤 pairing이 만료됐다.
+
+`d1902b1`은 실제 하드웨어에 따라 passkey callback을 선택하는 `SecurityIoCapability`를 추가하고,
+SecureKeyboard를 `no_input_output`으로 설정했다. 그 결과 Zephyr는 NoInputNoOutput을 광고하고
+Windows는 Numeric Comparison이 아닌 Just Works를 선택한다. 이 경로는 암호화와 bonding을
+제공하지만 MITM 인증은 제공하지 않는다.
+
+### 8.3 실행 결과
+
+1. Windows에서 기존 실패한 `NU54-Secure-HID` 항목을 제거했다.
+2. `장치 추가 → Bluetooth → NU54-Secure-HID`를 선택했다.
+3. 6자리 PIN/Numeric Comparison 화면 없이 보드가 SW0 승인 요청을 출력했다.
+4. SW0을 한 번 누르자 Windows가 HID keyboard 연결 완료를 표시했다.
+5. 메모장에 초점을 두고 SW0을 눌렀을 때 소문자 `a`가 실제 입력됐다.
+6. pyOCD hardware reset 뒤 새 pairing 없이 저장 key로 암호화 재연결했다.
+7. 재연결 뒤 SW0을 다시 눌렀을 때 소문자 `a`가 계속 입력됐다.
+
+pairing과 최초 bond 상태의 UART 결과는 다음과 같다.
+
+```text
+BLE pairing confirmation requested; press SW0
+BLE pairing completed
+BLE bond pending reboot verification
+```
+
+재부팅 뒤 UART 결과는 다음과 같다.
+
+```text
+BLE restored bond candidate awaiting encrypted reconnect
+BLE bond restored and verified after reboot
+```
+
+운영체제 UI 연결, 실제 HID 입력과 재부팅 뒤 bond 복원이 모두 PASS했으므로 M21의 수동 완료 조건을
+충족했다. 스마트폰 호환성은 이번 실행에서 확인하지 않았으며 Windows 또는 스마트폰 중 하나의
+실제 OS HID 확인이라는 M21 gate에는 영향을 주지 않는다.
+
+## 9. 공용 builder 통합
 
 새 library feature는 `nucode.ble.security`이며 공용 builder의 `FEATURE_ALLOWLIST`에 다음 mapping을
 등록한다.
@@ -311,13 +408,11 @@ raw transcript는 같은 디렉터리에 생성되며, evidence가 기록한 SHA
 별도 공용 Kconfig 추가는 필요하지 않다. BLE core queue와 stack/settings lifecycle은 M19/M20 공용
 구현이 소유하고 M21 feature conf는 보안·표준 profile symbol만 소유한다.
 
-## 9. 남은 완료 조건
+## 10. 최종 판정과 다음 단계
 
-자동 검증 조건은 모두 충족했다. 남은 조건은 다음 한 가지다.
+두 보드 RF HIL은 암호화된 GATT HID report map, CCC와 report payload의 protocol을 검증했고,
+Windows 11 수동 검증은 운영체제 pairing UI·HID host stack·실제 키 입력과 bond 재연결을 확인했다.
+따라서 M21은 **완료**다.
 
-1. Windows 또는 스마트폰에서 NU54DK를 실제 HID keyboard로 pairing하고 실제 문자가 입력되는지 수동 확인한다.
-
-두 보드 RF HIL PASS는 암호화된 GATT HID report map, CCC와 report payload의 protocol 검증이다.
-운영체제 pairing UI·HID host stack·실제 키 입력을 자동 PASS에 포함하지 않는다. 수동 확인 전까지
-상태는 **M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기**로
-유지한다.
+`v0.3.0` 전체는 아직 정식 지원이 아니다. 다음 순서는 AC-02 주변장치 호환성, AC-03
+Storage·대표 library 호환성, M22 통합 package·clean Windows·RC/stable gate다.

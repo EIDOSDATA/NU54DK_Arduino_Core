@@ -134,8 +134,11 @@ HIL workflow가 존재하거나 queue에 들어갔다는 사실은 PASS가 아�
 기록이 있어야 실기 판정에 사용할 수 있다. `v0.3.0` 개발 검증은 AC-01 exact commit
 `ac10ba3b253bd6bf76bcf73aa2c79278304908a4`, M19/M20 exact commit
 `0103a8434ac205a953c981385ae26a2a64aeeccc`, M21 exact commit
-`065d4f573618aca5da1e715915622e987208b775`의 HIL PASS를 각각 검증 기록에 고정한다. M21 host
-38/38도 PASS했다. M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기 상태다.
+`065d4f573618aca5da1e715915622e987208b775`의 HIL PASS를 각각 검증 기록에 고정한다. M21의
+후속 `d1902b16804a27b77b153eeb9d11a10e088a59ae`는 Windows 11 실제 HID pairing·문자 입력과
+재부팅 bond 복원을 통과했고 host 39/39도 PASS했다. 자동 RF evidence와 Windows 수동 evidence는
+서로 소급 변경하지 않고 별도 판정 계층으로 보존한다. M21은 완료됐으며 M22 stable gate는
+AC-02·AC-03 완료 뒤에만 시작한다.
 
 ---
 

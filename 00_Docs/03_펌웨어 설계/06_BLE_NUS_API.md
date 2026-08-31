@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-M16-BLE-NUS-001 |
-| 문서 개정 | 1.2 |
+| 문서 개정 | 1.3 |
 | 문서 상태 | `v0.2.0` 정식 NUS 계약 / `v0.3.0` 회귀 경계 |
 | 적용 제품 버전 | `v0.2.0` 정식 / `v0.3.0` 개발 |
-| 최종 갱신일 | 2026-08-31 |
+| 최종 갱신일 | 2026-09-01 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 기준 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
@@ -202,11 +202,13 @@ SMP는 이 완료 범위에 포함되지 않는다.
 기존 NUS API, feature ID와 build bundle parity를 유지한다. M19/M20 exact HIL은 GAP/GATT 검증이며
 M16 NUS 두 보드 RF HIL을 재실행한 증거로 확대하지 않는다. Pairing·bonding·BAS/DIS·HID는 공통 lifecycle을
 재사용하는 별도 `NUCODE_BLE_Security` library의 M21 범위다. Core `065d4f5` exact 두 보드 HIL과
-M21 host 38/38은 PASS했다. M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기 상태다.
+후속 `d1902b1` Windows 11 실제 HID·bond 복원, M21 host 39/39은 PASS했다. M21 개발 작업은
+완료했지만 M22 전에는 전체 `v0.3.0` 정식 지원으로 표시하지 않는다.
 
 - [M19 BLE Core/GAP 검증](<../04_검증 기록/23_M19_BLE_Core_GAP_검증.md>)
 - [M20 범용 GATT 검증](<../04_검증 기록/24_M20_범용_GATT_검증.md>)
 - [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)
+- [BLE 보안과 표준 Profile API](09_BLE_보안과_표준_Profile_API.md)
 
 후속 구현 결과를 정식 `v0.2.0` NUS 지원 범위에 소급 적용하지 않으며, M22 이전에는 전체
 `v0.3.0` 정식 지원으로 표시하지 않는다.
