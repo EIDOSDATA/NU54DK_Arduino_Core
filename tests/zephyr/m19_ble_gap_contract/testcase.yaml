@@ -1,0 +1,14 @@
+tests:
+  nucode.m19.ble_gap_contract:
+    tags:
+      - nucode
+      - arduino
+      - m19
+      - bluetooth
+      - gap
+    build_only: true
+    sysbuild: false
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk

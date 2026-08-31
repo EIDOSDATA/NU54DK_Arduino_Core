@@ -42,6 +42,14 @@ SUITES = (
     ("m16_ble_hil", "nucode.m16.ble_hil_peripheral"),
     ("m16_ble_hil", "nucode.m16.ble_hil_central"),
     ("m17_sensor_direct", "nucode.m17.sensor_direct"),
+    ("m19_ble_gap_contract", "nucode.m19.ble_gap_contract"),
+    ("m19_ble_gap_hil", "nucode.m19.ble_gap_hil_peripheral"),
+    ("m19_ble_gap_hil", "nucode.m19.ble_gap_hil_central"),
+    ("m20_ble_gatt_contract", "nucode.m20.ble_gatt_contract"),
+    ("m20_ble_gatt_hil", "nucode.m20.ble_gatt_hil_peripheral"),
+    ("m20_ble_gatt_hil", "nucode.m20.ble_gatt_hil_central"),
+    ("ac01_contract", "nucode.ac01.contract"),
+    ("ac01_hil", "nucode.ac01.gpio_hil"),
 )
 WINDOWS_OUTDIR_MAX_LENGTH = 32
 M15_DIRECTORIES = ("m15_board", "m15_hil", "m15_wake")

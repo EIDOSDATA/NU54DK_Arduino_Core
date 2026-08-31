@@ -1064,38 +1064,87 @@ def test_m15_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
         raise SmokeFailure("SystemOffWake가 명시적 Serial 명령 gate를 유지하지 않습니다")
 
 
-## @brief M16 NUS Peripheral/Central 예제를 BLE profile로 끝까지 빌드합니다.
+## @brief M16~M20 BLE NUS/Core/GATT 예제를 BLE profile로 끝까지 빌드합니다.
 def test_m16_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
     library = repository / "libraries" / "NUCODE_BLE"
-    for example_name in ("NUSPeripheral", "NUSCentral"):
+    examples = (
+        "NUSPeripheral",
+        "NUSCentral",
+        "GAPPeripheral",
+        "GAPCentral",
+        "CustomGattPeripheral",
+        "CustomGattCentral",
+    )
+    for example_name in examples:
         sketch = library / "examples" / example_name
         project_name = f"{example_name}.ino"
         if not (sketch / project_name).is_file():
-            raise SmokeFailure(f"incomplete M16 example: {sketch}")
-        build = root / f"build-m16-{example_name.casefold()}"
+            raise SmokeFailure(f"incomplete BLE example: {sketch}")
+        build = root / f"build-ble-{example_name.casefold()}"
         command = list(compile_command(cli, config, build, sketch))
         command[-1:-1] = ("--board-options", "feature_set=ble")
         run(command)
         context = assert_build(build, project_name)
         if context.get("profile") != "ble":
-            raise SmokeFailure(f"M16 example did not use BLE profile: {sketch}")
+            raise SmokeFailure(f"BLE example did not use BLE profile: {sketch}")
         selected_features = {
             item.get("id")
             for item in context.get("selected_features", [])
             if isinstance(item, dict)
         }
         if "nucode.ble.nus" not in selected_features:
-            raise SmokeFailure(f"M16 NUS feature was not selected: {sketch}")
+            raise SmokeFailure(f"BLE feature was not selected: {sketch}")
         configuration = (
             Path(context["zephyr_build_dir"]) / "zephyr" / ".config"
         ).read_text(encoding="utf-8")
-        for symbol in (
-            "CONFIG_BT_NUS",
-            "CONFIG_BT_NUS_CLIENT",
-            "CONFIG_NUCODE_BLE_NUS",
-        ):
+        required_symbols = ["CONFIG_NUCODE_BLE_CORE", "CONFIG_NUCODE_BLE_GATT"]
+        if example_name.startswith("NUS"):
+            required_symbols.extend(
+                ("CONFIG_BT_NUS", "CONFIG_BT_NUS_CLIENT", "CONFIG_NUCODE_BLE_NUS")
+            )
+        for symbol in required_symbols:
             if not read_kconfig_boolean(configuration, symbol):
-                raise SmokeFailure(f"M16 BLE symbol is disabled: {symbol}")
+                raise SmokeFailure(f"BLE symbol is disabled: {example_name}: {symbol}")
+
+
+## @brief M21 SecureKeyboard 예제를 BLE security feature로 끝까지 빌드합니다.
+def test_m21_example(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    security_sketch = (
+        repository
+        / "libraries"
+        / "NUCODE_BLE_Security"
+        / "examples"
+        / "SecureKeyboard"
+    )
+    if not (security_sketch / "SecureKeyboard.ino").is_file():
+        raise SmokeFailure(f"incomplete BLE security example: {security_sketch}")
+    security_build = root / "build-ble-securekeyboard"
+    security_command = list(compile_command(cli, config, security_build, security_sketch))
+    security_command[-1:-1] = ("--board-options", "feature_set=ble")
+    run(security_command)
+    security_context = assert_build(security_build, "SecureKeyboard.ino")
+    if security_context.get("profile") != "ble":
+        raise SmokeFailure(
+            f"BLE security example did not use BLE profile: {security_sketch}"
+        )
+    security_features = {
+        item.get("id")
+        for item in security_context.get("selected_features", [])
+        if isinstance(item, dict)
+    }
+    if "nucode.ble.security" not in security_features:
+        raise SmokeFailure(f"BLE security feature was not selected: {security_sketch}")
+    security_configuration = (
+        Path(security_context["zephyr_build_dir"]) / "zephyr" / ".config"
+    ).read_text(encoding="utf-8")
+    for symbol in (
+        "CONFIG_BT_SMP",
+        "CONFIG_SETTINGS_ZMS",
+        "CONFIG_BT_HIDS",
+        "CONFIG_BT_HIDS_DEFAULT_PERM_RW_ENCRYPT",
+    ):
+        if not read_kconfig_boolean(security_configuration, symbol):
+            raise SmokeFailure(f"BLE security symbol is disabled: {symbol}")
 
 
 ## @brief platform library 예제가 Arduino IDE용 목록에 나타나는지 검증합니다.
@@ -1124,7 +1173,15 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
         },
         "SPI": {"SPITransaction"},
         "Wire": {"WirePmicId"},
-        "NUCODE BLE": {"NUSCentral", "NUSPeripheral"},
+        "NUCODE BLE": {
+            "CustomGattCentral",
+            "CustomGattPeripheral",
+            "GAPCentral",
+            "GAPPeripheral",
+            "NUSCentral",
+            "NUSPeripheral",
+        },
+        "NUCODE BLE Security": {"SecureKeyboard"},
     }
     discovered: dict[str, set[str]] = {}
     for record in records:
@@ -1264,6 +1321,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "m11",
             "m15",
             "m16",
+            "m21",
             "examples",
         ),
         default=(
@@ -1279,6 +1337,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "m11",
             "m15",
             "m16",
+            "m21",
             "examples",
         ),
     )
@@ -1319,6 +1378,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m11": test_m11_fixtures,
                 "m15": test_m15_examples,
                 "m16": test_m16_examples,
+                "m21": test_m21_example,
                 "examples": test_example_discovery,
             }
             for name in args.tests:

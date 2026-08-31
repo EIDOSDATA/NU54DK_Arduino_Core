@@ -25,6 +25,17 @@ namespace nucode::arduino::internal
 		digital_input = 1U << 0U,
 		digital_output = 1U << 1U,
 		interrupt = 1U << 2U,
+		open_drain = 1U << 3U,
+	};
+
+	/**
+	 * @brief 공개 논리 핀의 고정 자원 소유권을 구분합니다.
+	 */
+	enum class PinOwnership : std::uint8_t
+	{
+		board_led = 0U,
+		board_button,
+		connector_gpio,
 	};
 
 	/**
@@ -57,13 +68,14 @@ namespace nucode::arduino::internal
 	/**
 	 * @brief 하나의 Arduino 논리 핀에 대응하는 immutable 설명자입니다.
 	 *
-	 * 실제 GPIO controller, pin 번호와 Devicetree flag는 보드 Devicetree에서
-	 * 생성하며 Core 또는 Variant가 물리 값을 별도로 하드코딩하지 않습니다.
+	 * 실제 GPIO controller, pin 번호와 Devicetree flag는 최종 보드·profile
+	 * Devicetree에서 생성하며 C++ Core 또는 Variant가 물리 값을 복제하지 않습니다.
 	 */
 	struct PinDescription
 	{
 		gpio_dt_spec gpio;
 		PinCapability capabilities;
+		PinOwnership ownership;
 	};
 
 	/**
@@ -84,6 +96,9 @@ namespace nucode::arduino::internal
 		null_callback,
 		invalid_interrupt_mode,
 		interrupt_not_configured,
+		ownership_conflict,
+		nesting_overflow,
+		interrupt_restore_without_disable,
 		driver_error,
 	};
 
@@ -142,6 +157,14 @@ namespace nucode::arduino::internal
 	 * @return INPUT 계열 mode가 적용되었으면 true입니다.
 	 */
 	[[nodiscard]] bool isPinConfiguredForInput(std::size_t logical_pin) noexcept;
+
+	/**
+	 * @brief 논리 핀이 Arduino output mode로 설정되었는지 확인합니다.
+	 *
+	 * @param logical_pin 확인할 Arduino 논리 핀입니다.
+	 * @return push-pull 또는 open-drain output mode이면 true입니다.
+	 */
+	[[nodiscard]] bool isPinConfiguredForOutput(std::size_t logical_pin) noexcept;
 
 }
 

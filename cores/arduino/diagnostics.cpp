@@ -66,7 +66,12 @@ namespace nucode::arduino
 			case internal::GpioError::pin_not_configured:
 			case internal::GpioError::wrong_mode:
 			case internal::GpioError::interrupt_not_configured:
+			case internal::GpioError::interrupt_restore_without_disable:
 				return DiagnosticCode::not_started;
+			case internal::GpioError::ownership_conflict:
+				return DiagnosticCode::ownership_conflict;
+			case internal::GpioError::nesting_overflow:
+				return DiagnosticCode::overflow;
 			case internal::GpioError::driver_error:
 				return DiagnosticCode::driver_error;
 			default:

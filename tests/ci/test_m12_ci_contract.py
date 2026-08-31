@@ -312,6 +312,21 @@ class M12CiContractTests(unittest.TestCase):
             }.issubset(set(module.SUITES))
         )
 
+    ## @brief AC-01 production contract와 자동 loopback HIL image가 원격 build gate에 포함되는지 검사합니다.
+    def test_zephyr_build_includes_ac01_contract_and_hil_image(self) -> None:
+        path = REPOSITORY / "tools" / "ci" / "run_zephyr_build.py"
+        spec = importlib.util.spec_from_file_location("nu54_ac01_build_gate", path)
+        self.assertIsNotNone(spec)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        self.assertTrue(
+            {
+                ("ac01_contract", "nucode.ac01.contract"),
+                ("ac01_hil", "nucode.ac01.gpio_hil"),
+            }.issubset(set(module.SUITES))
+        )
+
     ## @brief M15 board/system, 자동 HIL과 수동 wake image가 원격 build gate에 포함되는지 검사합니다.
     def test_zephyr_build_includes_m15_contract_and_system_off_image(self) -> None:
         path = REPOSITORY / "tools" / "ci" / "run_zephyr_build.py"

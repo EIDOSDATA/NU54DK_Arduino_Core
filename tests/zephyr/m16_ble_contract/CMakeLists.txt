@@ -9,6 +9,7 @@ get_filename_component(NUCODE_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE
 target_sources(app PRIVATE
   src/main.cpp
   "${NUCODE_ROOT}/libraries/NUCODE_BLE/src/NUCODE_BLE.cpp"
+  "${NUCODE_ROOT}/libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp"
 )
 target_include_directories(app PRIVATE
   "${NUCODE_ROOT}/libraries/NUCODE_BLE/src"

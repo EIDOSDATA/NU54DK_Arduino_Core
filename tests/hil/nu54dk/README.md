@@ -13,10 +13,19 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m14_pin_hil.py` | 신규 LED output/readback과 버튼 pull·edge 검증 | NU54DK, CMSIS-DAP V2 UART, 사용자 버튼 동작 |
 | `m15_auto.py` | identity·uptime·GRTC callback·Settings·WDT 비-System-OFF 자동 검증 | 공식 Ubuntu CI artifact, NU54DK, CMSIS-DAP V2 UART |
 | `m15_system_off.py` | SWD 격리 뒤 timed GRTC→사용자 SW0 System OFF 결합 검증 | 공식 Ubuntu CI artifact, NU54DK, CMSIS-DAP V2 UART, debug-control SW1, 사용자 SW0 |
+| `ac01_gpio_hil.py` | P2 loopback GPIO·pulse·shift와 SW0 자기구동 level IRQ·callback mask 자동 검증 | NU54DK 한 대, 같은 보드 P2.5↔P2.6 점퍼 한 가닥, CMSIS-DAP V2 UART |
+| `m19_ble_gap.py` | GAP UUID/manufacturer filter·연결·재연결 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
+| `m20_ble_gatt.py` | 범용 GATT read/write/notify/indicate·재발견 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
+| `m21_ble_security.py` | pairing·bond 복원/삭제/repair와 BAS/DIS/HID protocol 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
+| `ble_pair_hil_common.py` | M19~M21 exact image·두 UID·UART·evidence 공통 경계 | 직접 실행하지 않음 |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
 | `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |
 | `test_m15_system_off.py` | M15 timed·button ARM, 무응답 시간과 결합 wake protocol·증적 경계를 검증 | 없음 |
+| `test_ac01_gpio_hil.py` | AC-01 exact token 순서·범위·fixture·실패 경계를 검증 | 없음 |
+| `../../host/test_m19_ble_gap_hil.py` | M19 pair protocol의 stale/reorder/FAIL 거부 경계를 검증 | 없음 |
+| `../../host/test_m20_ble_gatt_hil.py` | M20 pair protocol의 stale/누락/reorder/FAIL 거부 경계를 검증 | 없음 |
+| `../../host/test_m21_ble_security_hil.py` | M21 persistence·old-key·RF nonce binding·profile parser 경계를 검증 | 없음 |
 
 ## 실행 원칙
 
@@ -128,6 +137,75 @@ $Commit = git -C $CoreRoot rev-parse HEAD
 화면에 `ACTION`이 출력될 때 지정된 버튼 하나만 누르거나 뗍니다. 모든 핀과 edge가
 통과해야 `status: passed` JSON과 SHA-256으로 결합된 companion transcript가 생성됩니다.
 timeout, target FAIL, 핀 ID·순서 불일치 또는 중복 token은 PASS 증적을 만들지 않습니다.
+
+## AC-01 P2.5↔P2.6 GPIO loopback HIL
+
+같은 NU54DK의 `PIN_GPIO0/P2.5`와 `PIN_GPIO1/P2.6`을 점퍼 한 가닥으로 연결합니다. 두 번째
+보드와 외부 pull-up은 사용하지 않습니다. `OUTPUT_OPENDRAIN` release는 P2.6의
+`INPUT_PULLUP`으로 확인합니다. P2에는 CPUAPP GPIOTE가 없으므로 두 connector pin은 interrupt를
+지원하지 않습니다. Level IRQ와 callback mask는 SW0 P1.13을 input-connected open-drain으로
+자기구동해 실제 GPIOTE20 event를 만들며, 시험 중 SW0를 누르면 안 됩니다. Runner는 다음 항목을
+사용자 동작 없이 한 번에 검사합니다.
+
+- open-drain LOW와 high-Z release
+- level LOW/HIGH의 hold one-shot과 deassert 뒤 재무장
+- `pulseIn()`, `pulseInLong()` 폭 범위와 timeout `0`
+- `shiftOut()` 최종 bit와 `shiftIn()` 고정 LOW/HIGH byte
+- 중첩 `noInterrupts()` 중 callback 억제, Zephyr heartbeat 진행, held level의 마지막 복원
+
+두 보드가 연결된 환경에서 잘못된 target을 기록하지 않도록 `--board-id`를 필수로 받습니다.
+Runner는 Core 관련 source, AC-01 application과 board submodule이 commit된 clean 상태인지 확인하고,
+HEX 옆 build record의 Core·board revision, NCS/Zephyr revision과 세 source SHA-256이 현재 checkout과
+exact 일치할 때만 flash합니다.
+
+```powershell
+$CoreRoot = "C:\Users\eidos\GitHub\NU54DK_Arduino_Core"
+$NcsRoot = "C:\ncs\v3.4.0"
+$BoardRoot = "$CoreRoot\board_package\NU54DK_Zephyr_DTS"
+$Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
+$Build = "$env:TEMP\nu54dk-ac01-gpio-hil"
+
+Push-Location $NcsRoot
+& $Python -I -m west build -p always `
+  -b "nrf54l15dk/nrf54l15/cpuapp/nu54dk" `
+  -d $Build `
+  "$CoreRoot\tests\zephyr\ac01_hil" `
+  -- "-DBOARD_ROOT=$BoardRoot" "-DZEPHYR_EXTRA_MODULES=$CoreRoot"
+Pop-Location
+
+$Commit = git -C $CoreRoot rev-parse HEAD
+& $Python -I "$CoreRoot\tests\hil\nu54dk\ac01_gpio_hil.py" `
+  --hex "$Build\ac01_hil\zephyr\zephyr.hex" `
+  --board-id "<시험할 CMSIS-DAP UID>" `
+  --expected-core-revision $Commit `
+  --acknowledge-loopback `
+  --evidence "$CoreRoot\build\ac01\hil\ac01-gpio.evidence.json"
+```
+
+기존 evidence와 transcript는 `--overwrite-evidence` 없이는 덮어쓰지 않습니다. 이 HIL은
+외부 저항, 두 보드 간 통신, logic analyzer나 오실로스코프 정확도 측정을 요구하지 않습니다.
+
+## M19/M20/M21 두 보드 BLE HIL
+
+M19~M21은 RF로 통신하므로 P2.5↔P2.6 점퍼와 외부 저항을 사용하지 않습니다. 보드 두 대를
+각각 USB에 연결해 전원, DAPLink flash와 UART를 확보합니다. Runner는 peripheral/central
+DAPLink UID를 필수로 받아 UID·MSD·UART가 모두 다른지 확인하고, clean exact commit과 두 role
+build record·HEX SHA-256을 검증한 뒤에만 flash합니다.
+
+- M19: advertise, UUID/manufacturer filter, connect/disconnect/readvertise/reconnect
+- M20: discovery, cached read, 두 write mode, notify/indicate, handle invalidation,
+  reconnect 뒤 rediscovery/resubscribe
+- M21: pairing, reboot 뒤 bond 복원, 삭제 뒤 old-key 재연결 거부와 repair,
+  encrypted BAS/DIS/HID protocol
+
+각 runner는 같은 nonce가 결합된 양쪽 FINAL token을 모두 확인해야 JSON PASS를 생성합니다.
+M21은 128-bit nonce 전체를 Peripheral manufacturer data로 광고하고 Central이 이를 exact-match한
+뒤에만 연결하므로 이름이 같은 stale 장치를 peer로 오인하지 않습니다.
+한쪽 timeout/FAIL, stale nonce, token 누락·재배치, 같은 role HEX 또는 callback 문맥 오류는 PASS로
+축소하지 않습니다. Build와 실행 명령, role image 경로는
+[M19 검증 기록](<../../../00_Docs/04_검증 기록/23_M19_BLE_Core_GAP_검증.md>)과
+[M20 검증 기록](<../../../00_Docs/04_검증 기록/24_M20_범용_GATT_검증.md>),
+[M21 검증 기록](<../../../00_Docs/04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)을 따릅니다.
 
 ## M15 System OFF 결합 HIL
 

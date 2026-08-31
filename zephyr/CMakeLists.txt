@@ -56,6 +56,7 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   if(CONFIG_NUCODE_ARDUINO_GPIO)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/wiring_digital.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/wiring_pulse_shift.cpp"
       "${NUCODE_ARDUINO_VARIANT_ROOT}/variant.cpp"
     )
 

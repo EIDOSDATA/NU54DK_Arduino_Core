@@ -44,6 +44,7 @@ namespace
 		input_pullup,
 		input_pulldown,
 		output,
+		output_open_drain,
 	};
 
 	/**
@@ -219,6 +220,19 @@ namespace nucode::arduino::internal
 			   (mode == RuntimePinMode::input_pulldown);
 	}
 
+	bool isPinConfiguredForOutput(std::size_t logical_pin) noexcept
+	{
+		if (logical_pin >= pin_slot_count)
+		{
+			return false;
+		}
+
+		const auto mode = static_cast<RuntimePinMode>(
+			atomic_get(&pin_runtime_states[logical_pin].mode));
+		return (mode == RuntimePinMode::output) ||
+			   (mode == RuntimePinMode::output_open_drain);
+	}
+
 }
 
 void pinMode(pin_size_t pin, PinMode mode)
@@ -290,6 +304,24 @@ void pinMode(pin_size_t pin, PinMode mode)
 		}
 		runtime_mode = RuntimePinMode::output;
 	}
+	else if (mode == OUTPUT_OPENDRAIN)
+	{
+		if (!hasPinCapability(description->capabilities, PinCapability::digital_output) ||
+			!hasPinCapability(description->capabilities, PinCapability::open_drain))
+		{
+			recordError(GpioError::unsupported_capability);
+			return;
+		}
+
+		flags |= (atomic_get(&state->output_latch) != 0)
+				 ? (GPIO_OUTPUT_HIGH | GPIO_OPEN_DRAIN)
+				 : (GPIO_OUTPUT_LOW | GPIO_OPEN_DRAIN);
+		if (hasPinCapability(description->capabilities, PinCapability::digital_input))
+		{
+			flags |= GPIO_INPUT;
+		}
+		runtime_mode = RuntimePinMode::output_open_drain;
+	}
 	else
 	{
 		recordError(GpioError::invalid_mode);
@@ -341,7 +373,9 @@ void digitalWrite(pin_size_t pin, PinStatus value)
 		return;
 	}
 
-	if (atomic_get(&state->mode) != static_cast<atomic_val_t>(RuntimePinMode::output))
+	const auto runtime_mode = static_cast<RuntimePinMode>(atomic_get(&state->mode));
+	if ((runtime_mode != RuntimePinMode::output) &&
+		(runtime_mode != RuntimePinMode::output_open_drain))
 	{
 		recordError(GpioError::wrong_mode);
 		return;

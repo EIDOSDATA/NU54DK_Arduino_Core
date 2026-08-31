@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-PIN-001 |
-| 문서 개정 | 3.0 |
-| 문서 상태 | `v0.2.0` 정식 계약 |
+| 문서 개정 | 3.1 |
+| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-01 구현 계약 |
 | 최종 갱신일 | 2026-08-31 |
 | 대상 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 
@@ -14,7 +14,7 @@
 물리 GPIO 번호, pinctrl과 전기적 특성은 보드 패키지가 소유하며 Variant는 공개 이름, sparse
 논리 ID와 기능만 소유한다.
 
-`v0.2.0`의 핵심은 다음 두 수치를 구분하는 것이다.
+`v0.2.0` 기본 범위의 핵심은 다음 두 수치를 구분하는 것이다.
 
 - `NUM_DIGITAL_PINS == 10`: `0..9`로 순회할 수 있는 공개 논리 ID 범위
 - `NUM_DIGITAL_CAPABLE_PINS == 7`: 실제 digital GPIO descriptor를 가진 ID 개수
@@ -23,22 +23,27 @@
 따라서 `pin < NUM_DIGITAL_PINS`만으로 `pinMode()`, `digitalRead()` 또는 interrupt 사용 가능성을
 판정하면 안 된다.
 
+`v0.3.0`의 `standard`와 `ble` profile은 Core 소유 connector DTS를 합성해 `PIN_GPIO0/D10`
+(P2.5)과 `PIN_GPIO1/D11`(P2.6)을 추가한다. 이때 공개 범위는 12, 실제 digital descriptor는
+9가 된다. Connector DTS가 없는 expert/legacy build는 기존 10/7 계약을 그대로 유지한다.
+
 ## 2. 단일 원본과 책임
 
 | 정보 | 단일 원본 |
 | --- | --- |
-| GPIO controller, 실제 pin, flag, pinctrl | `board_package/NU54DK_Zephyr_DTS` |
+| 보드 기본 GPIO controller, 실제 pin, flag, pinctrl | `board_package/NU54DK_Zephyr_DTS` |
+| Arduino profile 전용 connector GPIO 역할 | `dts/nucode/nu54dk-arduino-connectors.dtsi` |
 | Arduino 이름과 논리 ID | `variants/nu54dk/variant.h` |
 | DTS alias와 digital capability 연결 | `variants/nu54dk/digital_pins.inc` |
 | immutable GPIO descriptor 생성 | `variants/nu54dk/variant.cpp` |
 | 공통 descriptor·오류 형식 | `cores/arduino/internal/pin_description.h` |
 | GPIO·시간·interrupt 동작 | `cores/arduino/wiring_*.cpp` |
 
-Core와 Variant에는 `P1.x`, `P2.x` 같은 물리 pin 번호를 보드 원본으로 복제하지 않는다.
-Variant는 `DT_ALIAS()`와 `DT_CHOSEN()`을 소비하며, 필수 alias가 없거나 비활성이면 build에서
-실패한다.
+Variant C++에는 `P1.x`, `P2.x` 같은 물리 pin 번호를 복제하지 않는다. Board 기본 역할은 보드
+패키지가, Arduino에서만 활성화하는 P2.5/P2.6 connector 역할은 Core profile DTS가 소유한다.
+Variant는 두 원본을 합성한 `DT_ALIAS()`와 `DT_CHOSEN()`만 소비한다.
 
-## 3. `v0.2.0` sparse 논리 핀 모델
+## 3. sparse 논리 핀 모델
 
 | ID | 공개 이름 | DTS 역할 | digital descriptor | 현재 기능 |
 | ---: | --- | --- | --- | --- |
@@ -52,20 +57,30 @@ Variant는 `DT_ALIAS()`와 `DT_CHOSEN()`을 소비하며, 필수 alias가 없거
 | 7 | `PIN_BUTTON1` | `sw1` | 있음 | input, interrupt |
 | 8 | `PIN_BUTTON2` | `sw2` | 있음 | input, interrupt |
 | 9 | `PIN_BUTTON3` | `sw3` | 있음 | input, interrupt |
+| 10 | `PIN_GPIO0`, `D10` | `nucode-gpio0` | profile에서 있음 | input, output, open-drain, interrupt |
+| 11 | `PIN_GPIO1`, `D11` | `nucode-gpio1` | profile에서 있음 | input, output, open-drain, interrupt |
 
 공개 상수는 다음 불변식을 유지한다.
 
 ```text
+standard/ble profile:
+NUM_DIGITAL_PINS          = 12
+NUM_DIGITAL_CAPABLE_PINS  = 9
+NUM_PIN_ROLES             = 12
+
+connector DTS 없는 expert/legacy build:
 NUM_DIGITAL_PINS          = 10
 NUM_DIGITAL_CAPABLE_PINS  = 7
 NUM_PIN_ROLES             = 10
+
 NUM_ANALOG_INPUTS         = 1
 NUM_ANALOG_OUTPUTS        = 1
 ```
 
-`digitalPinIsValid(pin)`은 ID `0, 1, 5, 6, 7, 8, 9`에만 참을 반환한다.
-`digitalPinToInterrupt(pin)`은 이 일곱 ID에는 같은 값을, 나머지에는 `NOT_AN_INTERRUPT`를
-반환한다. 내부 `pinDescriptionCount()`도 논리 범위 10이 아니라 descriptor 개수 7을 반환한다.
+Profile에서는 `digitalPinIsValid(pin)`이 ID `0, 1, 5, 6, 7, 8, 9, 10, 11`에 참을 반환한다.
+Connector DTS가 없으면 기존 일곱 ID만 유효하다. `digitalPinToInterrupt()`는 유효한 digital
+ID에는 같은 값을, 나머지에는 `NOT_AN_INTERRUPT`를 반환한다. 내부
+`pinDescriptionCount()`는 각각 descriptor 개수 9 또는 7을 반환한다.
 
 ## 4. Variant 구현 계약
 
@@ -78,8 +93,8 @@ NUM_ANALOG_OUTPUTS        = 1
 
 ### 4.2 `digital_pins.inc`
 
-X-macro 입력으로 `led0..3`, `sw0..3`과 공개 ID의 관계를 선언한다. `pwm_owned` 항목은 DTS
-mapping을 build에서 검증하지만 digital descriptor는 만들지 않는다.
+X-macro 입력으로 `led0..3`, `sw0..3`, 조건부 `nucode-gpio0..1`과 공개 ID의 관계를 선언한다.
+`pwm_owned` 항목은 DTS mapping을 build에서 검증하지만 digital descriptor는 만들지 않는다.
 
 ### 4.3 `variant.cpp`
 
@@ -93,12 +108,12 @@ mapping을 build에서 검증하지만 digital descriptor는 만들지 않는다
 
 | 항목 | 계약 |
 | --- | --- |
-| `pinMode()` | digital descriptor와 capability를 확인한 뒤 `INPUT`, `INPUT_PULLUP`, `INPUT_PULLDOWN`, `OUTPUT`을 적용 |
-| `digitalWrite()` | output capability가 있고 `OUTPUT`으로 구성된 핀에서만 raw `HIGH`/`LOW` 기록 |
+| `pinMode()` | capability 확인 뒤 `INPUT`, pull 입력, `OUTPUT` 또는 connector의 `OUTPUT_OPENDRAIN` 적용 |
+| `digitalWrite()` | output capability와 push-pull/open-drain output 상태가 있는 핀에 raw `HIGH`/`LOW` 기록 |
 | `digitalRead()` | 실제 electrical level을 raw `HIGH`/`LOW`로 반환 |
 | LED polarity | GPIO flag는 DTS가 소유하지만 `digitalWrite(HIGH)`는 raw high 의미를 유지 |
 | 버튼 | Core debounce나 active-low 논리 반전을 제공하지 않음 |
-| interrupt | `RISING`, `FALLING`, `CHANGE`의 raw electrical edge만 지원 |
+| interrupt | GPIOTE가 있는 P0/P1 역할에서 raw edge와 one-shot/rearm level 지원; P2 connector는 미지원 |
 
 `PIN_A0`, `PIN_PWM0`, `PIN_LED1`에는 digital descriptor가 없으므로 digital API가
 `invalid_pin`으로 거부한다. 이 sparse 거부는 의도된 계약이다.
@@ -107,10 +122,14 @@ mapping을 build에서 검증하지만 digital descriptor는 만들지 않는다
 
 - `PIN_A0`는 ADC backend가 소유한다.
 - `PIN_PWM0`과 `PIN_LED1`은 같은 PWM 자원을 설명하며 동시에 별도 digital GPIO로 소유하지 않는다.
+- `PIN_GPIO0`과 `PIN_GPIO1`은 `connector_gpio` ownership으로 고정하며 다른 peripheral 역할로
+  자동 전환하지 않는다.
+- nRF54L15 CPUAPP의 GPIOTE20/30은 P1/P0에만 연결된다. 따라서 P2.5/P2.6 connector에는
+  `interrupt` capability가 없고 `digitalPinToInterrupt()`는 `NOT_AN_INTERRUPT`를 반환한다.
 - UART, I2C와 SPI pinctrl 신호는 활성 peripheral이 소유하므로 connector 번호처럼 임의의 `Dn`으로
   중복 노출하지 않는다.
-- 일반 connector용 `D2...Dn`은 보드 패키지의 명시적 역할과 ownership 정책이 추가되기 전에는
-  제공하지 않는다. 현재 `D0`, `D1`은 기존 호환 별칭이다.
+- 전체 header를 연속 `Dn`으로 추정하지 않는다. 승인된 connector 역할은 `D10`, `D11` 두 개만
+  제공하며 `D0`, `D1`은 기존 호환 별칭이다.
 
 ## 7. 오류와 공개 진단
 
@@ -137,6 +156,10 @@ token을 사용한다. `formatDiagnostic()`의 한 줄 형식은
 - Interrupt callback은 GPIO ISR 문맥에서 실행되므로 blocking API, heap, mutex와 일반 logging을
   호출하지 않는다.
 - Callback은 atomic flag나 queue로 데이터를 넘기고 긴 처리는 thread에서 수행한다.
+- `noInterrupts()`/`interrupts()`는 호출 thread가 소유하는 중첩 계약으로 **Arduino GPIO
+  callback 전달만** mask한다. Zephyr kernel tick, BLE, UART와 다른 driver IRQ는 중지하지 않는다.
+- 마지막 `interrupts()`가 복원될 때 이미 assert된 level은 raw 상태 확인과 재무장을 거쳐 한 번
+  전달한다. 짝이 없는 복원과 다른 thread의 복원은 진단 오류로 거부한다.
 
 ## 9. 검증과 증거
 
@@ -147,15 +170,18 @@ token을 사용한다. `formatDiagnostic()`의 한 줄 형식은
 - [M6 기본 Arduino API·Serial·interrupt 기준선](<../04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md>)
 - [M7 Wire·SPI·ADC·PWM 기준선](<../04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md>)
 - [M14 Core API와 Variant 기준선](<../04_검증 기록/16_M14_Core_API와_Variant_기준선.md>)
+- [AC-01 GPIO 호환성 검증 절차와 구현 기록](<../04_검증 기록/22_AC-01_GPIO_호환성_검증.md>)
 
 M14의 신규 LED/button 출력·입력·edge HIL은 완료 상태다. 향후 alias나 ownership을 바꾸면
 M14 계약과 동일한 host, target, HIL 계층을 다시 통과해야 한다.
 
+AC-01 source/host 계약과 production target/HIL image build는 통과했다. SW0 P1.13 자기구동의 실제
+GPIOTE level/mask HIL도 통과했다. P2.5↔P2.6 GPIO loopback은 preflight에서 선을 감지하지 못했으므로
+점퍼 위치를 재확인한 뒤 exact-commit runner PASS를 기록한다.
+
 ## 10. 명시적 범위 밖
 
-- 모든 connector를 연속 `D0...Dn`으로 노출하는 범용 pin map
+- 승인되지 않은 모든 connector를 연속 `D0...Dn`으로 노출하는 범용 pin map
 - `PIN_LED1`의 runtime digital/PWM ownership 전환
-- `OUTPUT_OPENDRAIN`
-- level-triggered `LOW`/`HIGH` interrupt
-- `noInterrupts()`/`interrupts()`의 전역 IRQ 호환층
+- Zephyr kernel과 모든 driver IRQ를 실제로 정지하는 전역 IRQ 호환층
 - AVR/SAMD식 direct port/register API

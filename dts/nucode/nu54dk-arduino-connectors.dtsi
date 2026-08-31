@@ -1,0 +1,27 @@
+/**
+ * @file nu54dk-arduino-connectors.dtsi
+ * @brief NU54DK Arduino profile이 소유하는 안전한 connector GPIO 역할을 정의합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+/ {
+	nucode_arduino_connector_gpios {
+		compatible = "nucode,arduino-connector-gpios";
+
+		connector_gpio0: connector_gpio_0 {
+			gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
+			label = "NU54DK Arduino connector GPIO 0";
+		};
+
+		connector_gpio1: connector_gpio_1 {
+			gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+			label = "NU54DK Arduino connector GPIO 1";
+		};
+	};
+
+	aliases {
+		nucode-gpio0 = &connector_gpio0;
+		nucode-gpio1 = &connector_gpio1;
+	};
+};

@@ -43,6 +43,15 @@
 | M18 RC | RC1 공개 검증과 RC2 교정 | [M18 RC 기록](20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md) |
 | Stable | `v0.2.0` 정식 공개와 공개 수명주기 | [v0.2.0 공개 기록](21_v0.2.0_정식_릴리스_공개_기록.md) |
 
+## v0.3.0 개발 — Arduino Compatibility
+
+| 작업 | 현재 결과 | 기록 |
+| --- | --- | --- |
+| AC-01 | connector GPIO, open-drain, level IRQ, pulse/shift와 안전한 callback mask 구현·target build; exact-commit HIL 대기 | [AC-01 기록](22_AC-01_GPIO_호환성_검증.md) |
+| M19 | 고정 자원 BLE Core/GAP API와 두 role image 구현·target build; exact-commit 두 보드 RF HIL 대기 | [M19 기록](23_M19_BLE_Core_GAP_검증.md) |
+| M20 | 범용 GATT server/client와 두 role image 구현·target build; exact-commit 두 보드 RF HIL 대기 | [M20 기록](24_M20_범용_GATT_검증.md) |
+| M21 | pairing·bond 복원/삭제·재-pair, BAS/DIS와 encrypted HID protocol 구현·target build; exact-commit 두 보드 RF HIL·OS 입력 확인 대기 | [M21 기록](25_M21_BLE_보안과_표준_Profile_검증.md) |
+
 ## 기록 해석 규칙
 
 1. 정확한 commit, checksum, 장치 UID, COM port와 수치는 해당 기록을 우선한다.

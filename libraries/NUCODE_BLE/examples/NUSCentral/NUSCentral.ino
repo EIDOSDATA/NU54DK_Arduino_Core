@@ -9,20 +9,22 @@
 
 void setup()
 {
-  Serial.begin(115200);
-  if (!BLESerial.beginCentral() || !BLESerial.scanForNus("NU54-NUS")) {
-    Serial.println("BLE NUS Central start failed");
-  }
+    Serial.begin(115200);
+    if (!BLESerial.beginCentral() || !BLESerial.scanForNus("NU54-NUS"))
+    {
+        Serial.println("BLE NUS Central start failed");
+    }
 }
 
 void loop()
 {
-  BLESerial.poll();
-  while (BLESerial.available() > 0) {
-    Serial.write(static_cast<uint8_t>(BLESerial.read()));
-  }
-  while (Serial.available() > 0 && BLESerial.ready()) {
-    BLESerial.write(static_cast<uint8_t>(Serial.read()));
-  }
+    BLESerial.poll();
+    while (BLESerial.available() > 0)
+    {
+        Serial.write(static_cast<uint8_t>(BLESerial.read()));
+    }
+    while (Serial.available() > 0 && BLESerial.ready())
+    {
+        BLESerial.write(static_cast<uint8_t>(Serial.read()));
+    }
 }
-

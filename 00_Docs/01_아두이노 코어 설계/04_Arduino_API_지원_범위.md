@@ -3,16 +3,16 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-API-001 |
-| 문서 개정 | 4.1 |
-| 문서 상태 | `v0.2.0` 정식 공개 범위 |
+| 문서 개정 | 4.2 |
+| 문서 상태 | `v0.2.0` 정식 공개 범위 + `v0.3.0` 개발 상태 |
 | 최종 갱신일 | 2026-08-31 |
 | 다음 확장 | `v0.3.0` AC-01~AC-03 Arduino Compatibility / M19~M21 BLE |
 
 ## 1. 목적
 
-이 문서는 설치된 `v0.2.0` package가 약속하는 Arduino API와 NU54DK 확장 API의 경계를
-정의한다. 실행 횟수, 메모리 크기, UART transcript와 commit 같은 증거는 `04_검증 기록`이
-소유하며 이 문서에는 현재 계약과 결과 링크만 둔다.
+이 문서는 설치된 `v0.2.0` package가 약속하는 Arduino API와 다음 `v0.3.0` working tree의
+구현 상태를 구분한다. 실행 횟수, 메모리 크기, UART transcript와 commit 같은 증거는
+`04_검증 기록`이 소유하며 이 문서에는 현재 계약과 결과 링크만 둔다.
 
 Arduino 호환 header에 이름이 존재하는 것, target에서 compile되는 것, 실제 hardware에서
 지원되는 것은 서로 다른 판정이다. 특히 Zephyr/NCS sample의 build 성공을 Arduino wrapper의
@@ -88,6 +88,23 @@ Vendored ArduinoCore-API가 type/header를 제공한다는 사실만으로 produ
 예약 역할이며 digital descriptor가 없다. 자세한 계약은
 [핀과 Variant 설계](./03_핀과_Variant_설계.md)를 따른다.
 
+### 4.1 `v0.3.0` AC-01 working tree
+
+아래 항목은 source 구현, host 계약과 NU54DK production target build를 통과했다. 정식 `지원`
+선언은 P2.5↔P2.6 loopback HIL과 릴리스 gate가 끝난 뒤 적용한다. Level IRQ는 P2 connector가 아니라
+GPIOTE가 있는 P0/P1 역할에만 적용하며 SW0 P1.13 자기구동 실기는 통과했다.
+
+| API/영역 | 개발 상태 | AC-01 계약 |
+| --- | --- | --- |
+| `PIN_GPIO0/D10`, `PIN_GPIO1/D11` | 구현·target build | P2.5/P2.6 input/output/open-drain; GPIOTE가 없어 interrupt는 `NOT_AN_INTERRUPT` |
+| `OUTPUT_OPENDRAIN` | 구현·target build | connector 두 핀만 허용; `HIGH`는 high-Z release, pull-up은 fixture/회로 책임 |
+| level `LOW`/`HIGH` interrupt | 구현·target·SW0 HIL | GPIOTE P0/P1에서 hold one-shot, deassert 뒤 1 ms work polling 재무장 |
+| `noInterrupts()`/`interrupts()` | 구현·target build | 같은 thread의 중첩 계약; Arduino GPIO callback만 mask하고 system/BLE/driver IRQ는 유지 |
+
+Mask 중 assert된 level은 마지막 복원 뒤 raw 상태를 다시 확인해 재무장한다. 짝이 없는
+`interrupts()`, 다른 thread의 복원, 중첩 overflow는 hardware를 임의 변경하지 않고 공개 GPIO
+진단으로 보고한다.
+
 ## 5. 시간과 utility
 
 | API/영역 | `v0.2.0` 상태 | 계약 |
@@ -101,6 +118,19 @@ Vendored ArduinoCore-API가 type/header를 제공한다는 사실만으로 produ
 | bit helper | 지원 | target의 32-bit `unsigned long` 범위에서 동작 |
 | `random()`, `randomSeed()` | 지원 | Arduino 용도의 비암호 PRNG; entropy, key, nonce 생성에는 사용 금지 |
 | `pulseIn*`, `shiftIn`, `shiftOut` | 미구현 | timing·timeout 계약이 없음 |
+
+### 5.1 `v0.3.0` AC-01 pulse/shift working tree
+
+| API | 개발 상태 | AC-01 계약 |
+| --- | --- | --- |
+| `pulseIn()` | 구현·target build | thread 전용 busy polling, 64-bit cycle deadline, timeout은 `0` 반환 |
+| `pulseInLong()` | 구현·target build | 같은 deadline에 주기적 `k_yield()`를 추가한 cooperative polling |
+| `shiftOut()` | 구현·target build | 구성된 output data/clock, `MSBFIRST`/`LSBFIRST`, 8-bit GPIO clock |
+| `shiftIn()` | 구현·target build | 구성된 input data/output clock, 두 bit order의 8-bit GPIO sampling |
+
+Pulse 폭의 외부 계측 정확도, 고속 shift 성능과 bus protocol 대체 사용은 보증하지 않는다.
+AC-01 HIL은 P2.5↔P2.6 한 가닥 loopback으로 timeout, 짧은/긴 pulse 범위, shift 최종 상태·고정
+low/high 수신을 검증한다.
 
 ## 6. Serial, Wire, SPI, ADC와 PWM
 
@@ -189,7 +219,7 @@ Full Zephyr 구조이므로 expert Sketch는 공개 Zephyr/NCS API를 직접 사
 외부 sensor library compile, crypto sample build, 802.15.4/OpenThread/Matter feasibility 결과는
 이 경계를 넘어 지원으로 해석하지 않는다.
 
-## 10. 명시적 미지원 범위
+## 10. `v0.2.0` 정식 package의 명시적 미지원 범위
 
 - `pulseIn()`, `pulseInLong()`, `shiftIn()`, `shiftOut()`
 - `tone()`, `noTone()`, Servo
@@ -227,6 +257,7 @@ DAC, AVR Harvard memory와 Wi-Fi는 NU54DK/nRF54L15 hardware에서 동일한 방
 - [M16 BLE NUS 기준선](<../04_검증 기록/18_M16_BLE_NUS_기준선.md>)
 - [M17 NCS 기능과 예제 Coverage 기준선](<../04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)
 - [v0.2.0 정식 릴리스 공개 기록](<../04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md>)
+- [AC-01 GPIO 호환성 검증](<../04_검증 기록/22_AC-01_GPIO_호환성_검증.md>)
 
 지원 상태를 올리려면 production source, host/target 계약, Arduino package compile과 필요한 HIL을
 함께 갱신하고 해당 검증 기록을 추가해야 한다.

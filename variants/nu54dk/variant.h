@@ -10,6 +10,21 @@
 
 #include <api/Common.h>
 
+#if defined(CONFIG_NUCODE_ARDUINO_CONNECTOR_GPIO)
+#include <zephyr/devicetree.h>
+#if DT_NODE_HAS_STATUS_OKAY(DT_ALIAS(nucode_gpio0)) && \
+	DT_NODE_HAS_STATUS_OKAY(DT_ALIAS(nucode_gpio1))
+/** @brief 현재 profile이 두 connector GPIO alias를 모두 제공하는지 나타냅니다. */
+#define NUCODE_NU54DK_HAS_CONNECTOR_GPIO 1
+#else
+/** @brief connector alias가 없는 expert build에서는 추가 GPIO를 노출하지 않습니다. */
+#define NUCODE_NU54DK_HAS_CONNECTOR_GPIO 0
+#endif
+#else
+/** @brief connector GPIO 기능이 비활성화된 build에서는 추가 GPIO를 노출하지 않습니다. */
+#define NUCODE_NU54DK_HAS_CONNECTOR_GPIO 0
+#endif
+
 /** @brief 보드 Devicetree의 led0 alias에 대응하는 Arduino 논리 핀입니다. */
 #define LED_BUILTIN 0U
 
@@ -68,6 +83,18 @@ enum
 /** @brief 보드 Devicetree의 sw3 alias에 대응하는 digital 논리 핀입니다. */
 #define PIN_BUTTON3 9U
 
+/** @brief Arduino profile의 nucode-gpio0 alias에 대응하는 connector GPIO입니다. */
+#define PIN_GPIO0 10U
+
+/** @brief PIN_GPIO0의 Arduino digital 번호 별칭입니다. */
+#define D10 PIN_GPIO0
+
+/** @brief Arduino profile의 nucode-gpio1 alias에 대응하는 connector GPIO입니다. */
+#define PIN_GPIO1 11U
+
+/** @brief PIN_GPIO1의 Arduino digital 번호 별칭입니다. */
+#define D11 PIN_GPIO1
+
 /**
  * @brief digital API가 검사하는 sparse 논리 ID 범위의 상한입니다.
  *
@@ -75,10 +102,18 @@ enum
  * PWM-owned PIN_LED1은 digital descriptor가 없는 예약 역할이므로
  * digitalPinIsValid()로 구분합니다.
  */
+#if NUCODE_NU54DK_HAS_CONNECTOR_GPIO
+#define NUM_DIGITAL_PINS 12U
+#else
 #define NUM_DIGITAL_PINS 10U
+#endif
 
 /** @brief 실제 digital GPIO descriptor를 제공하는 논리 핀 개수입니다. */
+#if NUCODE_NU54DK_HAS_CONNECTOR_GPIO
+#define NUM_DIGITAL_CAPABLE_PINS 9U
+#else
 #define NUM_DIGITAL_CAPABLE_PINS 7U
+#endif
 
 /** @brief NU54DK Variant가 제공하는 analog 입력 역할 개수입니다. */
 #define NUM_ANALOG_INPUTS 1U
@@ -93,7 +128,11 @@ enum
  * PWM-owned PIN_LED1은 digital descriptor를 갖지 않으며 실제 descriptor 수는
  * NUM_DIGITAL_CAPABLE_PINS입니다.
  */
+#if NUCODE_NU54DK_HAS_CONNECTOR_GPIO
+#define NUM_PIN_ROLES 12U
+#else
 #define NUM_PIN_ROLES 10U
+#endif
 
 /** @brief Core overlay의 ADC_GAIN_1_4/ADC_REF_INTERNAL 설정을 사용하는 기본 mode입니다. */
 #define AR_DEFAULT 0U
@@ -122,7 +161,12 @@ enum
 	return ((pin >= static_cast<pin_size_t>(LED_BUILTIN)) &&
 			(pin <= static_cast<pin_size_t>(PIN_BUTTON0))) ||
 		   ((pin >= static_cast<pin_size_t>(PIN_LED2)) &&
-			(pin <= static_cast<pin_size_t>(PIN_BUTTON3)));
+			(pin <= static_cast<pin_size_t>(PIN_BUTTON3)))
+#if NUCODE_NU54DK_HAS_CONNECTOR_GPIO
+		   || ((pin >= static_cast<pin_size_t>(PIN_GPIO0)) &&
+			   (pin <= static_cast<pin_size_t>(PIN_GPIO1)))
+#endif
+		;
 }
 
 /**
@@ -133,7 +177,14 @@ enum
  */
 [[nodiscard]] constexpr pin_size_t digitalPinToInterrupt(pin_size_t pin) noexcept
 {
-	return digitalPinIsValid(pin)
+	const bool connector_without_gpiote =
+#if NUCODE_NU54DK_HAS_CONNECTOR_GPIO
+		(pin >= static_cast<pin_size_t>(PIN_GPIO0)) &&
+		(pin <= static_cast<pin_size_t>(PIN_GPIO1));
+#else
+		false;
+#endif
+	return digitalPinIsValid(pin) && !connector_without_gpiote
 			   ? pin
 			   : static_cast<pin_size_t>(NOT_AN_INTERRUPT);
 }
@@ -149,7 +200,11 @@ enum
 static inline int digitalPinIsValid(pin_size_t pin)
 {
 	return ((pin >= (pin_size_t)LED_BUILTIN) && (pin <= (pin_size_t)PIN_BUTTON0)) ||
-		   ((pin >= (pin_size_t)PIN_LED2) && (pin <= (pin_size_t)PIN_BUTTON3));
+		   ((pin >= (pin_size_t)PIN_LED2) && (pin <= (pin_size_t)PIN_BUTTON3))
+#if NUCODE_NU54DK_HAS_CONNECTOR_GPIO
+		   || ((pin >= (pin_size_t)PIN_GPIO0) && (pin <= (pin_size_t)PIN_GPIO1))
+#endif
+		;
 }
 
 /**
@@ -160,7 +215,14 @@ static inline int digitalPinIsValid(pin_size_t pin)
  */
 static inline pin_size_t digitalPinToInterrupt(pin_size_t pin)
 {
-	return digitalPinIsValid(pin) ? pin : (pin_size_t)NOT_AN_INTERRUPT;
+	int connector_without_gpiote = 0;
+#if NUCODE_NU54DK_HAS_CONNECTOR_GPIO
+	connector_without_gpiote =
+		(pin >= (pin_size_t)PIN_GPIO0) && (pin <= (pin_size_t)PIN_GPIO1);
+#endif
+	return digitalPinIsValid(pin) && !connector_without_gpiote
+			   ? pin
+			   : (pin_size_t)NOT_AN_INTERRUPT;
 }
 
 #endif

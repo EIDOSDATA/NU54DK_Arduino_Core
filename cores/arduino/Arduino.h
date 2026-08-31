@@ -14,6 +14,28 @@
 #include "internal/ArduinoUtility.h"
 
 #ifdef __cplusplus
+extern "C"
+{
+#endif
+
+/**
+ * @brief Arduino가 소유한 GPIO callback 전달을 중첩 안전하게 일시 중지합니다.
+ *
+ * Zephyr kernel, BLE, system timer와 다른 driver IRQ는 중지하지 않습니다. 첫 호출
+ * thread만 같은 thread에서 중첩 호출과 복원을 수행할 수 있습니다.
+ */
+void noInterrupts(void);
+
+/**
+ * @brief 같은 thread의 마지막 noInterrupts()와 짝을 이루어 GPIO callback을 복원합니다.
+ */
+void interrupts(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
 
 #include <api/HardwareI2C.h>
 #include <api/HardwareSPI.h>

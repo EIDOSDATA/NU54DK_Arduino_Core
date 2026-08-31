@@ -41,16 +41,29 @@ namespace nucode::arduino::internal
 		constexpr PinCapability button_capabilities =
 			PinCapability::digital_input | PinCapability::interrupt;
 
+		/** @brief connector GPIO에 허용하는 Arduino capability입니다. */
+		constexpr PinCapability connector_capabilities =
+			PinCapability::digital_input | PinCapability::digital_output |
+			PinCapability::open_drain;
+
 #define NUCODE_NU54DK_CAPABILITIES_led led_capabilities
 #define NUCODE_NU54DK_CAPABILITIES_button button_capabilities
+#define NUCODE_NU54DK_CAPABILITIES_connector connector_capabilities
 #define NUCODE_NU54DK_DESCRIPTOR_led(logical_pin, alias_name)    \
 	{static_cast<pin_size_t>(logical_pin),                         \
 	 {GPIO_DT_SPEC_GET(DT_ALIAS(alias_name), gpios),               \
-	  NUCODE_NU54DK_CAPABILITIES_led}},
+	  NUCODE_NU54DK_CAPABILITIES_led,                              \
+	  PinOwnership::board_led}},
 #define NUCODE_NU54DK_DESCRIPTOR_button(logical_pin, alias_name) \
 	{static_cast<pin_size_t>(logical_pin),                         \
 	 {GPIO_DT_SPEC_GET(DT_ALIAS(alias_name), gpios),               \
-	  NUCODE_NU54DK_CAPABILITIES_button}},
+	  NUCODE_NU54DK_CAPABILITIES_button,                           \
+	  PinOwnership::board_button}},
+#define NUCODE_NU54DK_DESCRIPTOR_connector(logical_pin, alias_name) \
+	{static_cast<pin_size_t>(logical_pin),                            \
+	 {GPIO_DT_SPEC_GET(DT_ALIAS(alias_name), gpios),                  \
+	  NUCODE_NU54DK_CAPABILITIES_connector,                           \
+	  PinOwnership::connector_gpio}},
 #define NUCODE_NU54DK_DESCRIPTOR_pwm_owned(logical_pin, alias_name)
 #define NUCODE_NU54DK_SELECT_DESCRIPTOR(logical_pin, alias_name, pin_class) \
 	NUCODE_NU54DK_DESCRIPTOR_##pin_class(logical_pin, alias_name)
@@ -73,8 +86,10 @@ namespace nucode::arduino::internal
 
 #undef NUCODE_NU54DK_SELECT_DESCRIPTOR
 #undef NUCODE_NU54DK_DESCRIPTOR_pwm_owned
+#undef NUCODE_NU54DK_DESCRIPTOR_connector
 #undef NUCODE_NU54DK_DESCRIPTOR_button
 #undef NUCODE_NU54DK_DESCRIPTOR_led
+#undef NUCODE_NU54DK_CAPABILITIES_connector
 #undef NUCODE_NU54DK_CAPABILITIES_button
 #undef NUCODE_NU54DK_CAPABILITIES_led
 

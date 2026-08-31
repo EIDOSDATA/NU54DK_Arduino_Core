@@ -3,6 +3,8 @@
  * @brief BLE와 표준 NU54DK Arduino 주변장치 역할을 함께 선택합니다.
  * SPDX-License-Identifier: MIT
  */
+#include <nucode/nu54dk-arduino-connectors.dtsi>
+
 / {
 	chosen {
 		nucode,arduino-wire = &i2c22;
