@@ -1174,14 +1174,6 @@ void setup()
         fail("security-begin");
         return;
     }
-    const nucode::ble::DeviceInformation information = {
-        "NUCODE", "NU54DK-M21", "M21-HIL", "0.3.0", "NU54DK", "0.3.0"};
-    if (!BLEDeviceInformation.configure(information) ||
-        !BLEBattery.setLevel(expected_battery_read))
-    {
-        fail("standard-profile-init");
-        return;
-    }
 #ifndef NUCODE_M21_CENTRAL
     if (!BLEKeyboard.begin())
     {
@@ -1199,6 +1191,18 @@ void setup()
             ))
     {
         fail("device-begin");
+        return;
+    }
+    const nucode::ble::DeviceInformation information = {
+        "NUCODE", "NU54DK-M21", "M21-HIL", "0.3.0", "NU54DK", "0.3.0"};
+    if (!BLEDeviceInformation.configure(information))
+    {
+        fail("dis-config");
+        return;
+    }
+    if (!BLEBattery.setLevel(expected_battery_read))
+    {
+        fail("battery-init");
         return;
     }
 #ifdef NUCODE_M21_CENTRAL

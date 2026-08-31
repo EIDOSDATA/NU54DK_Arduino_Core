@@ -21,6 +21,7 @@ COMMON_INTERNAL = (
 )
 BOARD_CONF = REPOSITORY / "libraries" / "NUCODE_NU54DK" / "zephyr" / "board-system.conf"
 COMBINED_CONTRACT = REPOSITORY / "tests" / "zephyr" / "m21_ble_board_contract"
+HIL_SOURCE = REPOSITORY / "tests" / "zephyr" / "m21_ble_hil" / "src" / "main.cpp"
 
 
 class M21BleSecurityContractTests(unittest.TestCase):
@@ -226,6 +227,24 @@ class M21BleSecurityContractTests(unittest.TestCase):
         self.assertIn("BLEKeyboard.releaseAll", example)
         self.assertNotIn("Windows PASS", example)
         self.assertNotIn("smartphone PASS", example)
+
+    def test_hil_initializes_runtime_profiles_after_stack_enable(self) -> None:
+        """! @brief HIDS는 stack 전에 등록하고 DIS·BAS runtime 값은 stack 뒤에 설정합니다. """
+
+        source = HIL_SOURCE.read_text(encoding="utf-8")
+        security_begin = source.index("BLESecurity.begin(security)")
+        hids_begin = source.index("BLEKeyboard.begin()")
+        device_begin = source.index("BLEDevice.begin(")
+        dis_configure = source.index("BLEDeviceInformation.configure(information)")
+        battery_level = source.index("BLEBattery.setLevel(expected_battery_read)", dis_configure)
+
+        self.assertLess(security_begin, hids_begin)
+        self.assertLess(hids_begin, device_begin)
+        self.assertLess(device_begin, dis_configure)
+        self.assertLess(dis_configure, battery_level)
+        self.assertIn('fail("dis-config")', source)
+        self.assertIn('fail("battery-init")', source)
+        self.assertNotIn('fail("standard-profile-init")', source)
 
 
 if __name__ == "__main__":

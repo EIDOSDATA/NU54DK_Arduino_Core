@@ -75,6 +75,22 @@ void passToken(const char *token)
     Serial.println(nonce);
 }
 
+#ifdef NUCODE_M19_CENTRAL
+/** @brief link 요청 실패 단계와 portable/driver 오류를 nonce에 결합해 기록합니다. */
+void failLinkRequest(const char *step)
+{
+    Serial.print("NUCODE_M19_CENTRAL:LINK_REQUEST:FAIL:step=");
+    Serial.print(step);
+    Serial.print(":error=");
+    Serial.print(static_cast<unsigned int>(BLEDevice.lastError()));
+    Serial.print(":driver=");
+    Serial.print(BLEDevice.lastDriverError());
+    Serial.print(":nonce=");
+    Serial.println(nonce);
+    fail("link-request");
+}
+#endif
+
 /** @brief callback이 Arduino main thread에서 실행됐는지 누적 검사합니다. */
 void checkCallbackContext()
 {
@@ -199,12 +215,24 @@ void onBleEvent(nucode::ble::BLEEvent event, void *context)
             Serial.println(nonce);
 #ifdef NUCODE_M19_CENTRAL
             std::int8_t tx_power = 0;
-            if (!BLEConnection.requestMtu() ||
-                !BLEConnection.requestPhy(true, false) ||
-                !BLEConnection.requestParameters(24U, 40U, 0U, 400U) ||
-                !BLEConnection.txPower(tx_power))
+            if (!BLEConnection.requestMtu())
             {
-                fail("link-request");
+                failLinkRequest("mtu");
+                return;
+            }
+            if (!BLEConnection.requestPhy(true, false))
+            {
+                failLinkRequest("phy");
+                return;
+            }
+            if (!BLEConnection.requestParameters(24U, 40U, 0U, 400U))
+            {
+                failLinkRequest("parameters");
+                return;
+            }
+            if (!BLEConnection.txPower(tx_power))
+            {
+                failLinkRequest("tx-power");
                 return;
             }
             passToken("NUCODE_M19_CENTRAL:TX_POWER:PASS");

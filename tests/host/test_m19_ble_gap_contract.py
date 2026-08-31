@@ -217,6 +217,26 @@ class M19BleGapContractTests(unittest.TestCase):
             self.assertFalse((example.parent / "prj.conf").exists())
             self.assertFalse((example.parent / "app.overlay").exists())
 
+    def test_user_phy_control_disables_zephyr_auto_update(self) -> None:
+        """! @brief 공개 PHY 요청과 HIL이 Zephyr 자동 PHY 절차와 경쟁하지 않도록 고정합니다. """
+
+        configurations = {
+            "제품 feature": LIBRARY / "zephyr" / "ble-nus.conf",
+            "M19 HIL": (
+                REPOSITORY
+                / "tests"
+                / "zephyr"
+                / "m19_ble_gap_hil"
+                / "prj.conf"
+            ),
+        }
+        for name, path in configurations.items():
+            with self.subTest(configuration=name):
+                text = path.read_text(encoding="utf-8")
+                self.assertIn("CONFIG_BT_USER_PHY_UPDATE=y", text)
+                self.assertIn("CONFIG_BT_AUTO_PHY_CENTRAL_NONE=y", text)
+                self.assertNotIn("CONFIG_BT_AUTO_PHY_CENTRAL_2M=y", text)
+
     def test_legacy_tx_power_and_shutdown_generation_are_enforced(self) -> None:
         """! @brief TPC 비활성 target과 end-during-connect 경계를 정적으로 고정합니다. """
 
@@ -242,6 +262,15 @@ class M19BleGapContractTests(unittest.TestCase):
             / "main.cpp"
         ).read_text(encoding="utf-8")
         self.assertIn("BLEConnection.txPower(tx_power)", hil)
+        for step in ("mtu", "phy", "parameters", "tx-power"):
+            self.assertIn(f'failLinkRequest("{step}")', hil, step)
+        for token in (
+            "NUCODE_M19_CENTRAL:LINK_REQUEST:FAIL:step=",
+            '":error="',
+            '":driver="',
+            '":nonce="',
+        ):
+            self.assertIn(token, hil, token)
         self.assertIn("service_uuid = nucode::ble::BLEUuid(canonical)", hil)
         self.assertIn("nonce_binding_length = 6U", hil)
         self.assertIn("uuid16_field[maximum_ad_field_data]", source)
