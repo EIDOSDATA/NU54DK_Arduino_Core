@@ -11,6 +11,7 @@ target_sources(app PRIVATE
   src/main.cpp
   src/test_variant.cpp
   ${NUCODE_CORE_ROOT}/cores/arduino/wiring_digital.cpp
+  ${NUCODE_CORE_ROOT}/cores/arduino/internal/io_resource_manager.cpp
   ${NUCODE_CORE_ROOT}/cores/arduino/wiring_time.cpp
   ${NUCODE_CORE_ROOT}/cores/arduino/internal/runtime_scheduler.cpp
   ${NUCODE_CORE_ROOT}/cores/arduino/internal/time_backend_nrf54.cpp
@@ -27,4 +28,5 @@ target_include_directories(app SYSTEM PRIVATE
 
 target_compile_definitions(app PRIVATE
   CONFIG_NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK=1
+  CONFIG_NUCODE_ARDUINO_IO_RESOURCE_SLOTS=48
 )

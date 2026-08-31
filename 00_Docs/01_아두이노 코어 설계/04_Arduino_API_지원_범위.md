@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-API-001 |
-| 문서 개정 | 4.4 |
+| 문서 개정 | 4.5 |
 | 문서 상태 | `v0.2.0` 정식 공개 범위 + `v0.3.0` 개발 상태 |
 | 최종 갱신일 | 2026-09-01 |
-| 개발 상태 | AC-01 자동 검증 완료 / M19·M20·M21 완료 / AC-02·AC-03·M22 미착수 |
+| 개발 상태 | AC-01·AC-02A 자동 검증 완료 / M19·M20·M21 완료 / AC-02B·AC-03·M22 대기 |
 
 ## 1. 목적
 
@@ -108,6 +108,22 @@ Level IRQ는 P2 connector가 아니라 GPIOTE가 있는 P0/P1 역할에만 적�
 Mask 중 assert된 level은 마지막 복원 뒤 raw 상태를 다시 확인해 재무장한다. 짝이 없는
 `interrupts()`, 다른 thread의 복원, 중첩 overflow는 hardware를 임의 변경하지 않고 공개 GPIO
 진단으로 보고한다.
+
+### 4.2 `v0.3.0` AC-02A 핀 소유권 기준선
+
+AC-02A는 Arduino 공개 API를 추가하지 않고 내부 고정 슬롯 manager를 `pinMode()`와
+`digitalRead()`/`digitalWrite()`에 연결했다. `pinMode()`는 pad를 reserve한 뒤 driver 성공 시
+commit하고 실패 시 rollback한다. Read/write는 active GPIO owner가 아닌 pad를
+`ownership-conflict`로 거부한다. UART20·I2C22·PWM20의 고정 pinctrl pad는 부팅 registry가
+peripheral owner로 등록하므로 GPIO가 이를 덮어쓰지 않는다.
+
+또한 DTS controller를 기준으로 GPIOTE capability를 계산한다. P2의 `PIN_LED0`, `PIN_LED2`,
+`PIN_GPIO0/D10`, `PIN_GPIO1/D11`은 digital input/output이 가능해도 interrupt는
+`NOT_AN_INTERRUPT`다. 이 변경은 현재 개발 트리의 정정이며 정식 `v0.2.0` 지원표를 소급 변경하지
+않는다.
+
+Runtime pinctrl·PM lifecycle과 Wire/SPI/Serial/ADC/PWM 실제 handover·공개 API·HIL은 AC-02B
+완료 전까지 지원으로 표시하지 않는다.
 
 ## 5. 시간과 utility
 
@@ -256,7 +272,7 @@ native USB, DAC, AVR Harvard memory와 Wi-Fi는 NU54DK/nRF54L15 hardware에서 �
 - AC-01: 승인된 connector GPIO, open-drain, level interrupt, pulse/shift와 전역 IRQ 안전성 gate —
   자동 검증 완료
 - AC-02: `Serial1`, Wire/SPI 확장, ADC/PWM resolution·frequency, `tone()`/Servo와 자원 소유권 —
-  미착수
+  AC-02A 내부 소유권 기준선 자동 검증 완료, AC-02B 공개 기능·handover·HIL 대기
 - AC-03: 기존 Settings/ZMS/RRAM 위의 EEPROM·internal filesystem facade와 고정된 대표 제3자
   library matrix — 미착수
 - M19: 범용 BLE Core/GAP — 자동 검증 완료
@@ -280,6 +296,7 @@ native USB, DAC, AVR Harvard memory와 Wi-Fi는 NU54DK/nRF54L15 hardware에서 �
 - [M17 NCS 기능과 예제 Coverage 기준선](<../04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)
 - [v0.2.0 정식 릴리스 공개 기록](<../04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md>)
 - [AC-01 GPIO 호환성 검증](<../04_검증 기록/22_AC-01_GPIO_호환성_검증.md>)
+- [AC-02A 핀과 주변장치 소유권 기준선](<../04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md>)
 - [M19 BLE Core/GAP 검증](<../04_검증 기록/23_M19_BLE_Core_GAP_검증.md>)
 - [M20 범용 GATT 검증](<../04_검증 기록/24_M20_범용_GATT_검증.md>)
 - [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)

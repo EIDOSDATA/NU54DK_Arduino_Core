@@ -32,8 +32,11 @@ namespace
 				  "connector GPIO의 Arduino digital 별칭이 다릅니다.");
 	static_assert(digitalPinToInterrupt(PIN_GPIO0) == NOT_AN_INTERRUPT &&
 				  digitalPinToInterrupt(PIN_GPIO1) == NOT_AN_INTERRUPT &&
+				  digitalPinToInterrupt(LED_BUILTIN) == NOT_AN_INTERRUPT &&
+				  digitalPinToInterrupt(PIN_LED2) == NOT_AN_INTERRUPT &&
+				  digitalPinToInterrupt(PIN_LED3) == PIN_LED3 &&
 				  digitalPinToInterrupt(PIN_BUTTON0) == PIN_BUTTON0,
-				  "P2 connector는 IRQ에서 제외하고 GPIOTE button은 유지해야 합니다.");
+				  "GPIO2는 IRQ에서 제외하고 GPIOTE pin은 유지해야 합니다.");
 }
 
 ZTEST(ac01_contract, test_connector_descriptors_are_alias_owned_and_open_drain_capable)
@@ -56,6 +59,22 @@ ZTEST(ac01_contract, test_connector_descriptors_are_alias_owned_and_open_drain_c
 				  "GPIOTE가 없는 P2 connector에 interrupt capability를 노출했습니다.");
 	zassert_true(hasPinCapability(gpio0->capabilities, PinCapability::open_drain),
 				 "connector open-drain capability가 없습니다.");
+}
+
+ZTEST(ac01_contract, test_gpio2_leds_do_not_expose_interrupt_capability)
+{
+	const auto *const led0 = pinDescription(LED_BUILTIN);
+	const auto *const led2 = pinDescription(PIN_LED2);
+	const auto *const led3 = pinDescription(PIN_LED3);
+	zassert_not_null(led0, "LED0 descriptor가 없습니다.");
+	zassert_not_null(led2, "LED2 descriptor가 없습니다.");
+	zassert_not_null(led3, "LED3 descriptor가 없습니다.");
+	zassert_false(hasPinCapability(led0->capabilities, PinCapability::interrupt),
+				  "GPIO2 LED0에 interrupt capability를 노출했습니다.");
+	zassert_false(hasPinCapability(led2->capabilities, PinCapability::interrupt),
+				  "GPIO2 LED2에 interrupt capability를 노출했습니다.");
+	zassert_true(hasPinCapability(led3->capabilities, PinCapability::interrupt),
+				 "GPIO1 LED3의 interrupt capability가 없습니다.");
 }
 
 ZTEST(ac01_contract, test_open_drain_is_limited_to_connector_gpio)

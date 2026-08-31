@@ -10,8 +10,12 @@
 
 #include <api/Common.h>
 
-#if defined(CONFIG_NUCODE_ARDUINO_CONNECTOR_GPIO)
+#if defined(__ZEPHYR__)
 #include <zephyr/devicetree.h>
+#include <zephyr/devicetree/gpio.h>
+#endif
+
+#if defined(CONFIG_NUCODE_ARDUINO_CONNECTOR_GPIO)
 #if DT_NODE_HAS_STATUS_OKAY(DT_ALIAS(nucode_gpio0)) && \
 	DT_NODE_HAS_STATUS_OKAY(DT_ALIAS(nucode_gpio1))
 /** @brief 현재 profile이 두 connector GPIO alias를 모두 제공하는지 나타냅니다. */
@@ -148,6 +152,38 @@ enum
 /** @brief 유효하지 않은 Arduino interrupt 번호입니다. */
 #define NOT_AN_INTERRUPT 0xFFU
 
+/**
+ * @brief 논리 핀의 실제 GPIO controller가 interrupt를 제공하는지 판정합니다.
+ *
+ * NU54DK의 GPIO2에는 GPIOTE가 없으므로 P2.x는 digital I/O로만 사용할 수
+ * 있습니다. Zephyr 시험 overlay가 alias를 gpio-emul로 옮기면 실제 controller를
+ * 기준으로 다시 판정합니다.
+ */
+#if defined(__ZEPHYR__)
+#define NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(alias_name) \
+	(!DT_SAME_NODE(DT_GPIO_CTLR(DT_ALIAS(alias_name), gpios), DT_NODELABEL(gpio2)))
+#define NUCODE_NU54DK_PIN_INTERRUPT_CAPABLE(pin_value)                              \
+	((((pin_value) == (pin_size_t)LED_BUILTIN) &&                                    \
+	  NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(led0)) ||                                \
+	 (((pin_value) == (pin_size_t)PIN_BUTTON0) &&                                    \
+	  NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(sw0)) ||                                 \
+	 (((pin_value) == (pin_size_t)PIN_LED2) &&                                       \
+	  NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(led2)) ||                                \
+	 (((pin_value) == (pin_size_t)PIN_LED3) &&                                       \
+	  NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(led3)) ||                                \
+	 (((pin_value) == (pin_size_t)PIN_BUTTON1) &&                                    \
+	  NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(sw1)) ||                                 \
+	 (((pin_value) == (pin_size_t)PIN_BUTTON2) &&                                    \
+	  NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(sw2)) ||                                 \
+	 (((pin_value) == (pin_size_t)PIN_BUTTON3) &&                                    \
+	  NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(sw3)))
+#else
+#define NUCODE_NU54DK_PIN_INTERRUPT_CAPABLE(pin_value) \
+	(digitalPinIsValid(pin_value) &&                         \
+	 ((pin_value) != (pin_size_t)LED_BUILTIN) &&             \
+	 ((pin_value) != (pin_size_t)PIN_LED2))
+#endif
+
 #ifdef __cplusplus
 
 /**
@@ -177,14 +213,7 @@ enum
  */
 [[nodiscard]] constexpr pin_size_t digitalPinToInterrupt(pin_size_t pin) noexcept
 {
-	const bool connector_without_gpiote =
-#if NUCODE_NU54DK_HAS_CONNECTOR_GPIO
-		(pin >= static_cast<pin_size_t>(PIN_GPIO0)) &&
-		(pin <= static_cast<pin_size_t>(PIN_GPIO1));
-#else
-		false;
-#endif
-	return digitalPinIsValid(pin) && !connector_without_gpiote
+	return digitalPinIsValid(pin) && NUCODE_NU54DK_PIN_INTERRUPT_CAPABLE(pin)
 			   ? pin
 			   : static_cast<pin_size_t>(NOT_AN_INTERRUPT);
 }
@@ -215,12 +244,7 @@ static inline int digitalPinIsValid(pin_size_t pin)
  */
 static inline pin_size_t digitalPinToInterrupt(pin_size_t pin)
 {
-	int connector_without_gpiote = 0;
-#if NUCODE_NU54DK_HAS_CONNECTOR_GPIO
-	connector_without_gpiote =
-		(pin >= (pin_size_t)PIN_GPIO0) && (pin <= (pin_size_t)PIN_GPIO1);
-#endif
-	return digitalPinIsValid(pin) && !connector_without_gpiote
+	return digitalPinIsValid(pin) && NUCODE_NU54DK_PIN_INTERRUPT_CAPABLE(pin)
 			   ? pin
 			   : (pin_size_t)NOT_AN_INTERRUPT;
 }

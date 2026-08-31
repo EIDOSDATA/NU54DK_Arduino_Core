@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-PIN-001 |
-| 문서 개정 | 3.2 |
-| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-01 자동 검증 완료 |
-| 최종 갱신일 | 2026-08-31 |
+| 문서 개정 | 3.3 |
+| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-01·AC-02A 자동 검증 완료 |
+| 최종 갱신일 | 2026-09-01 |
 | 대상 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 
 ## 1. 목적
@@ -36,7 +36,9 @@
 | Arduino 이름과 논리 ID | `variants/nu54dk/variant.h` |
 | DTS alias와 digital capability 연결 | `variants/nu54dk/digital_pins.inc` |
 | immutable GPIO descriptor 생성 | `variants/nu54dk/variant.cpp` |
+| 부팅 고정 pinctrl 자원 registry | `variants/nu54dk/io_resource_registry.cpp` |
 | 공통 descriptor·오류 형식 | `cores/arduino/internal/pin_description.h` |
+| 동적 핀·주변장치 소유권 상태 | `cores/arduino/internal/IoResourceManager.h` |
 | GPIO·시간·interrupt 동작 | `cores/arduino/wiring_*.cpp` |
 
 Variant C++에는 `P1.x`, `P2.x` 같은 물리 pin 번호를 복제하지 않는다. Board 기본 역할은 보드
@@ -47,12 +49,12 @@ Variant는 두 원본을 합성한 `DT_ALIAS()`와 `DT_CHOSEN()`만 소비한다
 
 | ID | 공개 이름 | DTS 역할 | digital descriptor | 현재 기능 |
 | ---: | --- | --- | --- | --- |
-| 0 | `LED_BUILTIN`, `PIN_LED0`, `D0` | `led0` | 있음 | input, output, interrupt |
+| 0 | `LED_BUILTIN`, `PIN_LED0`, `D0` | `led0` | 있음 | input, output; P2이므로 interrupt 없음 |
 | 1 | `PIN_BUTTON0`, `D1` | `sw0` | 있음 | input, interrupt |
 | 2 | `PIN_A0`, `A0` | `nucode,arduino-adc` | 없음 | ADC 전용 |
 | 3 | `PIN_PWM0`, `PIN_PWM_LED` | `nucode,arduino-pwm` | 없음 | PWM 전용 |
 | 4 | `PIN_LED1` | `led1` | 없음 | `PIN_PWM0`과 같은 자원의 PWM-owned 역할 |
-| 5 | `PIN_LED2` | `led2` | 있음 | input, output, interrupt |
+| 5 | `PIN_LED2` | `led2` | 있음 | input, output; P2이므로 interrupt 없음 |
 | 6 | `PIN_LED3` | `led3` | 있음 | input, output, interrupt |
 | 7 | `PIN_BUTTON1` | `sw1` | 있음 | input, interrupt |
 | 8 | `PIN_BUTTON2` | `sw2` | 있음 | input, interrupt |
@@ -78,10 +80,10 @@ NUM_ANALOG_OUTPUTS        = 1
 ```
 
 Profile에서는 `digitalPinIsValid(pin)`이 ID `0, 1, 5, 6, 7, 8, 9, 10, 11`에 참을 반환한다.
-Connector DTS가 없으면 기존 일곱 ID만 유효하다. `digitalPinToInterrupt()`는 interrupt
-capability가 있는 P0/P1 digital ID에는 같은 값을 반환하지만, P2 connector ID 10/11과 예약·범위
-밖 ID에는 `NOT_AN_INTERRUPT`를 반환한다. 내부 `pinDescriptionCount()`는 각각 descriptor 개수
-9 또는 7을 반환한다.
+Connector DTS가 없으면 기존 일곱 ID만 유효하다. `digitalPinToInterrupt()`는 DTS GPIO controller가
+P0/P1이고 interrupt capability가 있는 digital ID에는 같은 값을 반환한다. P2의 `PIN_LED0`,
+`PIN_LED2`, connector ID 10/11과 예약·범위 밖 ID에는 `NOT_AN_INTERRUPT`를 반환한다. 내부
+`pinDescriptionCount()`는 각각 descriptor 개수 9 또는 7을 반환한다.
 
 ## 4. Variant 구현 계약
 
@@ -102,6 +104,8 @@ X-macro 입력으로 `led0..3`, `sw0..3`, 조건부 `nucode-gpio0..1`과 공개 
 - DTS에서 `gpio_dt_spec`을 생성한다.
 - LED와 버튼에 서로 다른 capability를 부여한다.
 - sparse ID와 descriptor를 함께 저장해 배열 index와 논리 ID를 혼동하지 않는다.
+- DTS GPIO controller가 P0/P1일 때만 interrupt capability를 합성하고 GPIOTE가 없는 P2에는
+  LED 역할을 포함해 interrupt를 부여하지 않는다.
 - lookup 범위를 벗어나거나 예약 역할이면 `nullptr`을 반환한다.
 - heap, runtime pin 번호 복제와 가변 mapping을 사용하지 않는다.
 
@@ -119,18 +123,47 @@ X-macro 입력으로 `led0..3`, `sw0..3`, 조건부 `nucode-gpio0..1`과 공개 
 `PIN_A0`, `PIN_PWM0`, `PIN_LED1`에는 digital descriptor가 없으므로 digital API가
 `invalid_pin`으로 거부한다. 이 sparse 거부는 의도된 계약이다.
 
-## 6. Peripheral ownership과 충돌
+## 6. 정적 역할과 동적 소유권
+
+Variant의 capability는 어떤 기능이 가능한지를 설명하는 정적 metadata다. 현재 누가 pad나
+peripheral block을 사용 중인지는 AC-02A의 내부 `IoResourceManager`가 별도로 관리한다. 둘을
+합쳐서 해석하거나 Variant 배열을 runtime 상태 저장소로 사용하지 않는다.
+
+관리자는 heap을 사용하지 않는 고정 슬롯 표이며 다음 계약을 가진다.
+
+- 자원은 `kind + domain + index`로 식별한다. GPIO는 controller device와 controller 내부 pin을
+  결합하므로 서로 다른 Arduino 별칭이 같은 pad를 가리키면 같은 자원으로 충돌한다.
+- owner는 `gpio`, `adc`, `pwm`, `wire`, `spi`, `serial`, `system`과 instance로 식별한다.
+- 최대 8개 자원을 한 lease에서 `reserve → commit`하거나 driver 실패 시 `rollback`한다. 확정한
+  lease는 내부 `release`가 가능하고 batch 전체가 원자적으로 성공하거나 실패한다.
+- 64-bit generation과 manager epoch로 복사되거나 오래된 lease가 새 소유권을 변경하지 못하게 한다.
+- ISR에서는 조회·소유권 변경을 거부하고 heap·문자열 logging을 사용하지 않는다.
+
+부팅 registry는 DTS의 UART20·I2C22·PWM20 pin과 해당 peripheral block을 각각 `serial`, `wire`,
+`pwm`의 고정 active owner로 등록한다. SPI00은 DTS에서 활성화된 경우에만 같은 방식으로 등록한다.
+이 registry는 실제 driver나 pinctrl 상태를 바꾸지 않는다.
+
+`pinMode()`는 GPIO 자원을 먼저 reserve하고 driver 구성이 성공하면 commit한다. Driver 실패 시
+rollback하며 `digitalRead()`와 `digitalWrite()`는 해당 pad의 active GPIO ownership을 확인한다.
+다른 고정 owner의 pad에는 `ownership-conflict`를 기록하고 hardware를 변경하지 않는다.
+
+### 6.1 현재 고정 역할과 제한
 
 - `PIN_A0`는 ADC backend가 소유한다.
 - `PIN_PWM0`과 `PIN_LED1`은 같은 PWM 자원을 설명하며 동시에 별도 digital GPIO로 소유하지 않는다.
 - `PIN_GPIO0`과 `PIN_GPIO1`은 `connector_gpio` ownership으로 고정하며 다른 peripheral 역할로
   자동 전환하지 않는다.
-- nRF54L15 CPUAPP의 GPIOTE20/30은 P1/P0에만 연결된다. 따라서 P2.5/P2.6 connector에는
-  `interrupt` capability가 없고 `digitalPinToInterrupt()`는 `NOT_AN_INTERRUPT`를 반환한다.
+- nRF54L15 CPUAPP의 GPIOTE20/30은 P1/P0에만 연결된다. 따라서 P2의 LED0·LED2와 P2.5/P2.6
+  connector에는 `interrupt` capability가 없고 `digitalPinToInterrupt()`는 `NOT_AN_INTERRUPT`를
+  반환한다.
 - UART, I2C와 SPI pinctrl 신호는 활성 peripheral이 소유하므로 connector 번호처럼 임의의 `Dn`으로
   중복 노출하지 않는다.
 - 전체 header를 연속 `Dn`으로 추정하지 않는다. 승인된 connector 역할은 `D10`, `D11` 두 개만
   제공하며 `D0`, `D1`은 기존 호환 별칭이다.
+
+AC-02A는 충돌을 검출하는 내부 기반까지만 완료했다. runtime pinctrl·PM lifecycle, GPIO와
+Wire/SPI/Serial/ADC/PWM 사이의 실제 handover, 공개 pin remap/claim API와 그 HIL은 AC-02B에서
+완료한다. 따라서 소유권 manager의 존재를 아직 임의 핀 peripheral 전환 지원으로 해석하면 안 된다.
 
 ## 7. 오류와 공개 진단
 
@@ -172,6 +205,7 @@ token을 사용한다. `formatDiagnostic()`의 한 줄 형식은
 - [M7 Wire·SPI·ADC·PWM 기준선](<../04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md>)
 - [M14 Core API와 Variant 기준선](<../04_검증 기록/16_M14_Core_API와_Variant_기준선.md>)
 - [AC-01 GPIO 호환성 검증 절차와 구현 기록](<../04_검증 기록/22_AC-01_GPIO_호환성_검증.md>)
+- [AC-02A 핀과 주변장치 소유권 기준선](<../04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md>)
 
 M14의 신규 LED/button 출력·입력·edge HIL은 완료 상태다. 향후 alias나 ownership을 바꾸면
 M14 계약과 동일한 host, target, HIL 계층을 다시 통과해야 한다.

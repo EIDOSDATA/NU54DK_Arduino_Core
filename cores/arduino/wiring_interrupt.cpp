@@ -27,11 +27,13 @@ namespace
 	using nucode::arduino::internal::GpioError;
 	using nucode::arduino::internal::hasPinCapability;
 	using nucode::arduino::internal::isPinConfiguredForInput;
+	using nucode::arduino::internal::lockGpioTransition;
 	using nucode::arduino::internal::PinCapability;
 	using nucode::arduino::internal::PinDescription;
 	using nucode::arduino::internal::pinDescription;
 	using nucode::arduino::internal::setGpioBackendError;
 	using nucode::arduino::internal::setGpioBackendSuccess;
+	using nucode::arduino::internal::unlockGpioTransition;
 
 #if defined(NUM_PIN_ROLES)
 	/** @brief sparse Variant를 포함한 interrupt slot 개수입니다. */
@@ -86,6 +88,26 @@ namespace
 
 	/** @brief level trigger가 해제되었는지 다시 확인하는 기본 간격입니다. */
 	constexpr k_timeout_t level_rearm_interval = K_MSEC(1);
+
+	/** @brief GPIO mode와 interrupt 구성의 공통 전환 잠금을 scope로 관리합니다. */
+	class GpioTransitionGuard
+	{
+	public:
+		/** @brief 공통 GPIO 전환 잠금을 획득합니다. */
+		GpioTransitionGuard() noexcept
+		{
+			lockGpioTransition();
+		}
+
+		/** @brief 공통 GPIO 전환 잠금을 반환합니다. */
+		~GpioTransitionGuard()
+		{
+			unlockGpioTransition();
+		}
+
+		GpioTransitionGuard(const GpioTransitionGuard &) = delete;
+		GpioTransitionGuard &operator=(const GpioTransitionGuard &) = delete;
+	};
 
 	/**
 	 * @brief Arduino mode를 Zephyr raw electrical interrupt flag로 변환합니다.
@@ -445,6 +467,7 @@ namespace
 			setGpioBackendError(GpioError::invalid_context);
 			return;
 		}
+		GpioTransitionGuard transition_guard;
 
 		gpio_flags_t flags = 0U;
 		TriggerKind trigger_kind = TriggerKind::edge;
@@ -608,6 +631,23 @@ namespace
 
 }
 
+namespace nucode::arduino::internal
+{
+	int detachInterruptForPinTransition(std::size_t logical_pin) noexcept
+	{
+		const PinDescription *const description = pinDescription(logical_pin);
+		if ((description == nullptr) || (logical_pin >= pin_slot_count))
+		{
+			return -EINVAL;
+		}
+
+		static_cast<void>(k_mutex_lock(&interrupt_configuration_mutex, K_FOREVER));
+		const int result = removeSlot(*description, interrupt_slots[logical_pin]);
+		static_cast<void>(k_mutex_unlock(&interrupt_configuration_mutex));
+		return result;
+	}
+}
+
 extern "C" void attachInterrupt(pin_size_t interrupt_number, voidFuncPtr callback,
 								PinStatus mode)
 {
@@ -627,6 +667,7 @@ extern "C" void detachInterrupt(pin_size_t interrupt_number)
 		setGpioBackendError(GpioError::invalid_context);
 		return;
 	}
+	GpioTransitionGuard transition_guard;
 
 	const auto logical_pin = static_cast<std::size_t>(interrupt_number);
 	const PinDescription *description = pinDescription(logical_pin);
@@ -636,8 +677,8 @@ extern "C" void detachInterrupt(pin_size_t interrupt_number)
 		return;
 	}
 
-	static_cast<void>(k_mutex_lock(&interrupt_configuration_mutex, K_FOREVER));
-	const int result = removeSlot(*description, interrupt_slots[logical_pin]);
+	const int result =
+		nucode::arduino::internal::detachInterruptForPinTransition(logical_pin);
 	if (result < 0)
 	{
 		setGpioBackendError(GpioError::driver_error, result);
@@ -646,7 +687,6 @@ extern "C" void detachInterrupt(pin_size_t interrupt_number)
 	{
 		setGpioBackendSuccess();
 	}
-	static_cast<void>(k_mutex_unlock(&interrupt_configuration_mutex));
 }
 
 extern "C" void noInterrupts(void)
@@ -656,6 +696,7 @@ extern "C" void noInterrupts(void)
 		setGpioBackendError(GpioError::invalid_context);
 		return;
 	}
+	GpioTransitionGuard transition_guard;
 
 	const k_tid_t caller = k_current_get();
 	static_cast<void>(k_mutex_lock(&interrupt_configuration_mutex, K_FOREVER));
@@ -794,6 +835,7 @@ extern "C" void interrupts(void)
 		setGpioBackendError(GpioError::invalid_context);
 		return;
 	}
+	GpioTransitionGuard transition_guard;
 
 	const k_tid_t caller = k_current_get();
 	static_cast<void>(k_mutex_lock(&interrupt_configuration_mutex, K_FOREVER));

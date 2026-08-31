@@ -32,14 +32,13 @@ namespace nucode::arduino::internal
 			PinDescription description;
 		};
 
-		/** @brief LED alias에 허용하는 Arduino GPIO capability입니다. */
+		/** @brief LED alias의 controller 독립 digital capability입니다. */
 		constexpr PinCapability led_capabilities =
-			PinCapability::digital_input | PinCapability::digital_output |
-			PinCapability::interrupt;
+			PinCapability::digital_input | PinCapability::digital_output;
 
-		/** @brief 버튼 alias에 허용하는 Arduino GPIO capability입니다. */
+		/** @brief 버튼 alias의 controller 독립 digital capability입니다. */
 		constexpr PinCapability button_capabilities =
-			PinCapability::digital_input | PinCapability::interrupt;
+			PinCapability::digital_input;
 
 		/** @brief connector GPIO에 허용하는 Arduino capability입니다. */
 		constexpr PinCapability connector_capabilities =
@@ -49,15 +48,20 @@ namespace nucode::arduino::internal
 #define NUCODE_NU54DK_CAPABILITIES_led led_capabilities
 #define NUCODE_NU54DK_CAPABILITIES_button button_capabilities
 #define NUCODE_NU54DK_CAPABILITIES_connector connector_capabilities
+#define NUCODE_NU54DK_INTERRUPT_CAPABILITY(alias_name)                           \
+	(NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(alias_name) ? PinCapability::interrupt \
+													 : PinCapability::none)
 #define NUCODE_NU54DK_DESCRIPTOR_led(logical_pin, alias_name)    \
 	{static_cast<pin_size_t>(logical_pin),                         \
 	 {GPIO_DT_SPEC_GET(DT_ALIAS(alias_name), gpios),               \
-	  NUCODE_NU54DK_CAPABILITIES_led,                              \
+	  NUCODE_NU54DK_CAPABILITIES_led |                             \
+		  NUCODE_NU54DK_INTERRUPT_CAPABILITY(alias_name),           \
 	  PinOwnership::board_led}},
 #define NUCODE_NU54DK_DESCRIPTOR_button(logical_pin, alias_name) \
 	{static_cast<pin_size_t>(logical_pin),                         \
 	 {GPIO_DT_SPEC_GET(DT_ALIAS(alias_name), gpios),               \
-	  NUCODE_NU54DK_CAPABILITIES_button,                           \
+	  NUCODE_NU54DK_CAPABILITIES_button |                          \
+		  NUCODE_NU54DK_INTERRUPT_CAPABILITY(alias_name),           \
 	  PinOwnership::board_button}},
 #define NUCODE_NU54DK_DESCRIPTOR_connector(logical_pin, alias_name) \
 	{static_cast<pin_size_t>(logical_pin),                            \
@@ -89,6 +93,7 @@ namespace nucode::arduino::internal
 #undef NUCODE_NU54DK_DESCRIPTOR_connector
 #undef NUCODE_NU54DK_DESCRIPTOR_button
 #undef NUCODE_NU54DK_DESCRIPTOR_led
+#undef NUCODE_NU54DK_INTERRUPT_CAPABILITY
 #undef NUCODE_NU54DK_CAPABILITIES_connector
 #undef NUCODE_NU54DK_CAPABILITIES_button
 #undef NUCODE_NU54DK_CAPABILITIES_led

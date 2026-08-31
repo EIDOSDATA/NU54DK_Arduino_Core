@@ -98,14 +98,10 @@ class AC01ContractTests(unittest.TestCase):
         )
         self.assertIn("PinCapability::open_drain", source)
         self.assertIn("PinOwnership::connector_gpio", source)
-        connector_capabilities = re.search(
-            r"constexpr PinCapability connector_capabilities\s*=\s*(.*?);",
-            source,
-            re.DOTALL,
-        )
-        self.assertIsNotNone(connector_capabilities)
-        self.assertNotIn("PinCapability::interrupt", connector_capabilities.group(1))
-        self.assertIn("connector_without_gpiote", header)
+        self.assertIn("NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE", header)
+        self.assertIn("DT_GPIO_CTLR(DT_ALIAS(alias_name), gpios)", header)
+        self.assertIn("DT_NODELABEL(gpio2)", header)
+        self.assertIn("NUCODE_NU54DK_INTERRUPT_CAPABILITY", source)
 
     def test_safe_interrupt_and_timing_apis_have_real_backends(self) -> None:
         arduino = (REPOSITORY_ROOT / "cores" / "arduino" / "Arduino.h").read_text(
@@ -113,6 +109,9 @@ class AC01ContractTests(unittest.TestCase):
         )
         interrupts = (
             REPOSITORY_ROOT / "cores" / "arduino" / "wiring_interrupt.cpp"
+        ).read_text(encoding="utf-8")
+        digital = (
+            REPOSITORY_ROOT / "cores" / "arduino" / "wiring_digital.cpp"
         ).read_text(encoding="utf-8")
         pulse_shift = (
             REPOSITORY_ROOT / "cores" / "arduino" / "wiring_pulse_shift.cpp"
@@ -133,8 +132,26 @@ class AC01ContractTests(unittest.TestCase):
         )
         self.assertNotIn("irq_lock(", interrupts)
         self.assertNotIn("irq_disable(", interrupts)
+        attach_start = interrupts.index("void attachInterruptImpl(")
+        attach_mode_check = interrupts.index(
+            "isPinConfiguredForInput(logical_pin)", attach_start
+        )
+        attach_transition_lock = interrupts.index(
+            "GpioTransitionGuard transition_guard;", attach_start
+        )
+        self.assertLess(attach_transition_lock, attach_mode_check)
+        self.assertIn("detachInterruptForPinTransition", digital)
+        self.assertIn("RuntimePinMode::unconfigured", digital)
         self.assertIn('extern "C" unsigned long pulseIn(', pulse_shift)
         self.assertIn('extern "C" unsigned long pulseInLong(', pulse_shift)
+        pulse_measure = pulse_shift.index("unsigned long measurePulse(")
+        pulse_mode_check = pulse_shift.index("inputDescription(pin)", pulse_measure)
+        pulse_transition_lock = pulse_shift.index(
+            "PulseTransitionGuard transition_guard;", pulse_measure
+        )
+        pulse_isr_check = pulse_shift.index("if (k_is_in_isr())", pulse_measure)
+        self.assertLess(pulse_isr_check, pulse_transition_lock)
+        self.assertLess(pulse_transition_lock, pulse_mode_check)
         self.assertIn('extern "C" void shiftOut(', pulse_shift)
         self.assertIn('extern "C" std::uint8_t shiftIn(', pulse_shift)
         self.assertIn("k_cycle_get_64()", pulse_shift)

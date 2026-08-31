@@ -97,6 +97,7 @@ namespace nucode::arduino::internal
 		invalid_interrupt_mode,
 		interrupt_not_configured,
 		ownership_conflict,
+		resource_exhausted,
 		nesting_overflow,
 		interrupt_restore_without_disable,
 		driver_error,
@@ -149,6 +150,20 @@ namespace nucode::arduino::internal
 
 	/** @brief GPIO backend 구현에서 성공 상태를 기록합니다. */
 	void setGpioBackendSuccess() noexcept;
+
+	/** @brief GPIO mode와 interrupt 구성을 아우르는 공통 전환 잠금을 획득합니다. */
+	void lockGpioTransition() noexcept;
+
+	/** @brief 현재 thread가 획득한 공통 GPIO 전환 잠금을 반환합니다. */
+	void unlockGpioTransition() noexcept;
+
+	/**
+	 * @brief 공통 전환 잠금 안에서 한 핀의 interrupt 상태를 제거합니다.
+	 *
+	 * @param logical_pin 제거할 Arduino 논리 핀입니다.
+	 * @return 성공하면 0, descriptor 또는 GPIO driver 오류이면 음수입니다.
+	 */
+	[[nodiscard]] int detachInterruptForPinTransition(std::size_t logical_pin) noexcept;
 
 	/**
 	 * @brief 논리 핀이 Arduino input mode로 설정되었는지 확인합니다.

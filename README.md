@@ -19,8 +19,8 @@ Sketch와 Arduino library를 nRF Connect SDK build graph에 통합해 ELF·HEX·
 | 사용자 환경 | Windows 10/11 x64, Arduino IDE 2.x |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 정식 완료 범위 | M0~M18 / `v0.2.0` 정식 공개 |
-| `v0.3.0` 개발 상태 | AC-01 자동 HIL PASS / M19·M20·M21 완료 — Windows 11 SecureKeyboard pairing·입력·bond 복원 PASS |
-| 다음 작업 | AC-02 주변장치 호환성 → AC-03 Storage·library 호환성 → M22 통합 릴리스 |
+| `v0.3.0` 개발 상태 | AC-01 자동 HIL PASS / AC-02A 핀·주변장치 소유권 기준선 PASS / M19·M20·M21 완료 |
+| 다음 작업 | AC-02B runtime pinctrl·주변장치 handover → AC-03 Storage·library 호환성 → M22 통합 릴리스 |
 
 ## 빠른 시작
 
@@ -202,7 +202,9 @@ RC2 실기 결과, 같은 runtime payload와 stable 공개 설치 수명주기�
 | `v0.1.0` | M0~M11 | 완료 | Core 기반, 기본 API, 주변장치, 업로드·패키징 |
 | `v0.2.0` | M12~M18 | 완료 | CI/CD, Profile·예제, Board/System, BLE NUS, 정식 공개 |
 | `v0.3.0` | AC-01 | **자동 검증 완료** | Core·GPIO·시간 Arduino Compatibility exact-commit HIL PASS |
-| `v0.3.0` | AC-02~AC-03 | 미착수 | 주변장치·timing output, Storage facade와 대표 library 호환성 |
+| `v0.3.0` | AC-02A | **자동 검증 완료** | 동적 할당 없는 내부 핀·주변장치 소유권 manager, 부팅 고정 자원 registry와 GPIO 충돌 gate |
+| `v0.3.0` | AC-02B | 진행 대기 | runtime pinctrl·PM lifecycle, Wire/SPI/Serial/ADC/PWM 실제 handover·공개 API·HIL |
+| `v0.3.0` | AC-03 | 대기 | Storage facade와 대표 library 호환성 |
 | `v0.3.0` | M19 | **자동 검증 완료** | BLE Core/GAP 두 보드 advertise·scan·연결·재연결 HIL PASS |
 | `v0.3.0` | M20 | **자동 검증 완료** | 범용 GATT 두 보드 read/write/notify/indicate HIL PASS |
 | `v0.3.0` | M21 | **완료** | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS |

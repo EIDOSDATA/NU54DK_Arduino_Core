@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 4.2 |
+| 문서 체계 개정 | 4.3 |
 | 현재 정식 버전 | `v0.2.0` |
 | 다음 목표 버전 | `v0.3.0` |
 | 최종 갱신일 | 2026-09-01 |
@@ -46,7 +46,7 @@
 | M0~M11 | **완료** | `v0.1.0` Core, build/upload, package와 clean Windows 기준선 |
 | M12~M18 | **완료** | CI/CD, profile, Core/Variant, Board/System, BLE NUS, NCS coverage와 `v0.2.0` 공개 |
 | AC-01 | **자동 검증 완료** | Core·GPIO·시간 Arduino Compatibility exact-commit HIL PASS |
-| AC-02 | **계획 — 미착수** | 주변장치·timing output 호환성; AC-01 완료 기준선에서 착수 가능 |
+| AC-02 | **진행 중 — AC-02A 자동 검증 완료** | 내부 핀·주변장치 소유권 manager와 부팅 고정 자원 registry 완료; AC-02B runtime handover·공개 API·HIL 대기 |
 | AC-03 | **대기** | Storage facade와 대표 library 호환성; AC-02 완료 후 착수 |
 | M19 | **자동 검증 완료** | BLE Core/GAP exact-commit 두 보드 RF HIL PASS |
 | M20 | **자동 검증 완료** | 범용 GATT exact-commit 두 보드 RF HIL PASS |
@@ -54,6 +54,8 @@
 | M22 | **대기** | AC-01~AC-03과 M19~M21을 통합한 `v0.3.0` package·RC/stable gate |
 | M23~M34 | **장기 계획** | storage/security/DFU, radio/OpenThread, Matter 제품선 |
 
+AC-02A의 구현·시험 경계는
+[핀과 주변장치 소유권 기준선](<./04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md>)에 보존한다.
 정확한 단계 상태의 단일 원본은
 [제품 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)이다. `v0.2.0`의 공개 범위와
 제약은 [v0.2.0 릴리스 문서](<./05_릴리스/v0.2.0/README.md>)를 따른다.

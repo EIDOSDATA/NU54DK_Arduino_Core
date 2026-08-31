@@ -53,6 +53,13 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
     endif()
   endif()
 
+  if(CONFIG_NUCODE_ARDUINO_IO_OWNERSHIP)
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/io_resource_manager.cpp"
+      "${NUCODE_ARDUINO_VARIANT_ROOT}/io_resource_registry.cpp"
+    )
+  endif()
+
   if(CONFIG_NUCODE_ARDUINO_GPIO)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/wiring_digital.cpp"

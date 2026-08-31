@@ -51,6 +51,19 @@ class M14VariantContractTests(unittest.TestCase):
              for pin in evidence["reserved_pins"]],
             [("PIN_LED1", 4, "led1", "PIN_PWM0")],
         )
+        capabilities = {
+            pin["logical_name"]: pin["capabilities"] for pin in evidence["pins"]
+        }
+        self.assertEqual(
+            capabilities["LED_BUILTIN"], ["digital-input", "digital-output"]
+        )
+        self.assertEqual(
+            capabilities["PIN_LED2"], ["digital-input", "digital-output"]
+        )
+        self.assertEqual(
+            capabilities["PIN_LED3"],
+            ["digital-input", "digital-output", "interrupt"],
+        )
         physical = {
             (pin["gpio_controller"], pin["gpio_pin"])
             for pin in [*evidence["pins"], *evidence["reserved_pins"]]
@@ -118,6 +131,8 @@ static_assert(D0 == LED_BUILTIN && D1 == PIN_BUTTON0);
 static_assert(digitalPinToInterrupt(PIN_A0) == NOT_AN_INTERRUPT);
 static_assert(digitalPinToInterrupt(PIN_PWM0) == NOT_AN_INTERRUPT);
 static_assert(digitalPinToInterrupt(PIN_LED1) == NOT_AN_INTERRUPT);
+static_assert(digitalPinToInterrupt(LED_BUILTIN) == NOT_AN_INTERRUPT);
+static_assert(digitalPinToInterrupt(PIN_LED2) == NOT_AN_INTERRUPT);
 static_assert(digitalPinToInterrupt(PIN_LED3) == PIN_LED3);
 int main() { return 0; }
 """.strip()

@@ -182,7 +182,7 @@ def verify_pinmap(repository_root: Path, board_root: Path) -> dict[str, Any]:
     evidence_pins: list[dict[str, Any]] = []
     reserved_pins: list[dict[str, Any]] = []
     capability_by_kind = {
-        "led": ["digital-input", "digital-output", "interrupt"],
+        "led": ["digital-input", "digital-output"],
         "button": ["digital-input", "interrupt"],
         "pwm_owned": [],
     }
@@ -205,6 +205,9 @@ def verify_pinmap(repository_root: Path, board_root: Path) -> dict[str, Any]:
         if physical_id in physical_ids:
             raise PinMapContractError(f"둘 이상의 digital 논리 pin이 같은 GPIO를 사용합니다: {physical_id}")
         physical_ids.add(physical_id)
+        capabilities = list(capability_by_kind[kind])
+        if kind == "led" and physical["controller"] != "gpio2":
+            capabilities.append("interrupt")
         pin_evidence = {
             "logical_name": logical,
             "logical_id": logical_id,
@@ -213,7 +216,7 @@ def verify_pinmap(repository_root: Path, board_root: Path) -> dict[str, Any]:
             "gpio_controller": physical["controller"],
             "gpio_pin": physical["pin"],
             "gpio_flags": physical["flags"],
-            "capabilities": capability_by_kind[kind],
+            "capabilities": capabilities,
         }
         if kind == "pwm_owned":
             pin_evidence["owner"] = "PIN_PWM0"

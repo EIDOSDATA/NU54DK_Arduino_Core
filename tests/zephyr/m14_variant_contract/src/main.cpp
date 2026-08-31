@@ -30,10 +30,13 @@ namespace
 		PinCapability capabilities;
 	};
 
-	/** @brief LED pin의 공개 digital capability입니다. */
+	/** @brief GPIOTE가 없는 GPIO2 LED의 digital capability입니다. */
 	constexpr PinCapability led_capabilities =
-		PinCapability::digital_input | PinCapability::digital_output |
-		PinCapability::interrupt;
+		PinCapability::digital_input | PinCapability::digital_output;
+
+	/** @brief GPIOTE controller에 연결된 LED의 digital capability입니다. */
+	constexpr PinCapability interrupt_led_capabilities =
+		led_capabilities | PinCapability::interrupt;
 
 	/** @brief 버튼 pin의 공개 digital capability입니다. */
 	constexpr PinCapability button_capabilities =
@@ -44,7 +47,7 @@ namespace
 		{LED_BUILTIN, GPIO_DT_SPEC_GET(DT_ALIAS(led0), gpios), led_capabilities},
 		{PIN_BUTTON0, GPIO_DT_SPEC_GET(DT_ALIAS(sw0), gpios), button_capabilities},
 		{PIN_LED2, GPIO_DT_SPEC_GET(DT_ALIAS(led2), gpios), led_capabilities},
-		{PIN_LED3, GPIO_DT_SPEC_GET(DT_ALIAS(led3), gpios), led_capabilities},
+		{PIN_LED3, GPIO_DT_SPEC_GET(DT_ALIAS(led3), gpios), interrupt_led_capabilities},
 		{PIN_BUTTON1, GPIO_DT_SPEC_GET(DT_ALIAS(sw1), gpios), button_capabilities},
 		{PIN_BUTTON2, GPIO_DT_SPEC_GET(DT_ALIAS(sw2), gpios), button_capabilities},
 		{PIN_BUTTON3, GPIO_DT_SPEC_GET(DT_ALIAS(sw3), gpios), button_capabilities},
@@ -60,8 +63,11 @@ namespace
 				  "v0.1 digital 역할의 D0/D1 별칭이 달라졌습니다.");
 	static_assert(digitalPinToInterrupt(PIN_A0) == NOT_AN_INTERRUPT &&
 				  digitalPinToInterrupt(PIN_PWM0) == NOT_AN_INTERRUPT &&
-				  digitalPinToInterrupt(PIN_LED1) == NOT_AN_INTERRUPT,
-				  "A0, PWM과 PWM-owned LED를 digital interrupt로 노출하면 안 됩니다.");
+				  digitalPinToInterrupt(PIN_LED1) == NOT_AN_INTERRUPT &&
+				  digitalPinToInterrupt(LED_BUILTIN) == NOT_AN_INTERRUPT &&
+				  digitalPinToInterrupt(PIN_LED2) == NOT_AN_INTERRUPT &&
+				  digitalPinToInterrupt(PIN_LED3) == PIN_LED3,
+				  "예약 역할과 GPIO2 LED를 digital interrupt로 노출하면 안 됩니다.");
 
 	/**
 	 * @brief 실제 descriptor와 DTS에서 생성한 기대 GPIO를 비교합니다.

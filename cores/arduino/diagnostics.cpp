@@ -70,6 +70,7 @@ namespace nucode::arduino
 				return DiagnosticCode::not_started;
 			case internal::GpioError::ownership_conflict:
 				return DiagnosticCode::ownership_conflict;
+			case internal::GpioError::resource_exhausted:
 			case internal::GpioError::nesting_overflow:
 				return DiagnosticCode::overflow;
 			case internal::GpioError::driver_error:

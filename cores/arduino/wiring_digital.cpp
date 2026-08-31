@@ -15,13 +15,22 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "internal/IoResourceManager.h"
 #include "internal/pin_description.h"
 
 namespace
 {
 
 	using nucode::arduino::internal::GpioError;
+	using nucode::arduino::internal::gpioIoResource;
 	using nucode::arduino::internal::hasPinCapability;
+	using nucode::arduino::internal::IoAcquirePolicy;
+	using nucode::arduino::internal::IoOwnerKind;
+	using nucode::arduino::internal::IoResourceLease;
+	using nucode::arduino::internal::IoResourceOwner;
+	using nucode::arduino::internal::IoResourceResult;
+	using nucode::arduino::internal::IoResourceSnapshot;
+	using nucode::arduino::internal::IoResourceState;
 	using nucode::arduino::internal::PinCapability;
 	using nucode::arduino::internal::PinDescription;
 	using nucode::arduino::internal::pinDescription;
@@ -54,8 +63,10 @@ namespace
 	{
 		atomic_t mode;
 		atomic_t output_latch;
+		IoResourceLease ownership_lease;
 	};
 
+	K_MUTEX_DEFINE(gpio_transition_mutex);
 	PinRuntimeState pin_runtime_states[pin_slot_count] = {};
 	atomic_t last_gpio_error = ATOMIC_INIT(static_cast<atomic_val_t>(GpioError::none));
 	atomic_t last_gpio_driver_error = ATOMIC_INIT(0);
@@ -68,6 +79,27 @@ namespace
 	 * read/write는 raw API를 사용하므로 전기적 HIGH/LOW가 반전되지 않습니다.
 	 */
 	constexpr gpio_dt_flags_t supported_dt_flags = GPIO_ACTIVE_LOW | GPIO_PULL_UP | GPIO_PULL_DOWN;
+	constexpr IoResourceOwner gpio_owner{IoOwnerKind::gpio, 0U};
+
+	/** @brief GPIO mode 전환과 read/write를 직렬화하는 scope lock입니다. */
+	class GpioTransitionGuard
+	{
+	public:
+		/** @brief GPIO 전환 mutex를 획득합니다. */
+		GpioTransitionGuard() noexcept
+		{
+			nucode::arduino::internal::lockGpioTransition();
+		}
+
+		/** @brief GPIO 전환 mutex를 반환합니다. */
+		~GpioTransitionGuard()
+		{
+			nucode::arduino::internal::unlockGpioTransition();
+		}
+
+		GpioTransitionGuard(const GpioTransitionGuard &) = delete;
+		GpioTransitionGuard &operator=(const GpioTransitionGuard &) = delete;
+	};
 
 	/**
 	 * @brief 오류 번호를 driver 세부값보다 나중에 기록합니다.
@@ -87,6 +119,46 @@ namespace
 	void recordSuccess() noexcept
 	{
 		recordError(GpioError::none);
+	}
+
+	/** @brief 소유권 관리자 오류를 GPIO 진단 값으로 변환합니다. */
+	void recordOwnershipError(IoResourceResult result) noexcept
+	{
+		switch (result)
+		{
+		case IoResourceResult::invalid_context:
+			recordError(GpioError::invalid_context);
+			break;
+		case IoResourceResult::capacity_exhausted:
+			recordError(GpioError::resource_exhausted);
+			break;
+		case IoResourceResult::conflict:
+		case IoResourceResult::stale_lease:
+		case IoResourceResult::wrong_phase:
+			recordError(GpioError::ownership_conflict);
+			break;
+		case IoResourceResult::invalid_argument:
+			recordError(GpioError::invalid_pin);
+			break;
+		case IoResourceResult::success:
+		default:
+			recordError(GpioError::ownership_conflict);
+			break;
+		}
+	}
+
+	/** @brief descriptor의 물리 pad를 현재 GPIO backend가 소유하는지 확인합니다. */
+	[[nodiscard]] bool isOwnedByGpio(const PinDescription &description) noexcept
+	{
+		IoResourceSnapshot snapshot{};
+		if (nucode::arduino::internal::ioResourceSnapshot(
+				gpioIoResource(description.gpio), snapshot) != IoResourceResult::success)
+		{
+			return false;
+		}
+		return (snapshot.state == IoResourceState::active) &&
+			   (snapshot.owner.kind == gpio_owner.kind) &&
+			   (snapshot.owner.instance == gpio_owner.instance);
 	}
 
 	/**
@@ -180,6 +252,15 @@ namespace
 
 namespace nucode::arduino::internal
 {
+	void lockGpioTransition() noexcept
+	{
+		static_cast<void>(k_mutex_lock(&gpio_transition_mutex, K_FOREVER));
+	}
+
+	void unlockGpioTransition() noexcept
+	{
+		static_cast<void>(k_mutex_unlock(&gpio_transition_mutex));
+	}
 
 	GpioError lastGpioError() noexcept
 	{
@@ -208,7 +289,9 @@ namespace nucode::arduino::internal
 
 	bool isPinConfiguredForInput(std::size_t logical_pin) noexcept
 	{
-		if (logical_pin >= pin_slot_count)
+		const PinDescription *const description = pinDescription(logical_pin);
+		if ((logical_pin >= pin_slot_count) || (description == nullptr) ||
+			!isOwnedByGpio(*description))
 		{
 			return false;
 		}
@@ -222,7 +305,9 @@ namespace nucode::arduino::internal
 
 	bool isPinConfiguredForOutput(std::size_t logical_pin) noexcept
 	{
-		if (logical_pin >= pin_slot_count)
+		const PinDescription *const description = pinDescription(logical_pin);
+		if ((logical_pin >= pin_slot_count) || (description == nullptr) ||
+			!isOwnedByGpio(*description))
 		{
 			return false;
 		}
@@ -241,6 +326,7 @@ void pinMode(pin_size_t pin, PinMode mode)
 	{
 		return;
 	}
+	GpioTransitionGuard transition_guard;
 
 	const PinDescription *description = nullptr;
 	PinRuntimeState *state = nullptr;
@@ -328,19 +414,53 @@ void pinMode(pin_size_t pin, PinMode mode)
 		return;
 	}
 
+	const auto resource = gpioIoResource(description->gpio);
+	IoResourceLease ownership_lease{};
+	const IoResourceResult reserve_result = nucode::arduino::internal::reserveIoResources(
+		gpio_owner, &resource, 1U, IoAcquirePolicy::exclusive, ownership_lease);
+	if (reserve_result != IoResourceResult::success)
+	{
+		recordOwnershipError(reserve_result);
+		return;
+	}
+
 #if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
 	/**
 	 * 핀 재설정과 동시에 남은 edge callback이 새 mode에서 실행되는 것을
 	 * 방지하기 위해 등록된 callback을 먼저 해제합니다.
 	 */
-	detachInterrupt(pin);
+	const int detach_result =
+		nucode::arduino::internal::detachInterruptForPinTransition(
+			static_cast<std::size_t>(pin));
+	if (detach_result < 0)
+	{
+		(void)nucode::arduino::internal::rollbackIoResources(ownership_lease);
+		atomic_set(&state->mode, static_cast<atomic_val_t>(RuntimePinMode::unconfigured));
+		recordError(GpioError::driver_error, detach_result);
+		return;
+	}
 #endif
 
 	const int result = gpio_pin_configure(description->gpio.port, description->gpio.pin, flags);
 	if (result < 0)
 	{
+		(void)nucode::arduino::internal::rollbackIoResources(ownership_lease);
+		atomic_set(&state->mode, static_cast<atomic_val_t>(RuntimePinMode::unconfigured));
 		recordError(GpioError::driver_error, result);
 		return;
+	}
+
+	const bool newly_owned = ownership_lease.entries[0].changed;
+	const IoResourceResult commit_result =
+		nucode::arduino::internal::commitIoResources(ownership_lease);
+	if (commit_result != IoResourceResult::success)
+	{
+		recordOwnershipError(commit_result);
+		return;
+	}
+	if (newly_owned)
+	{
+		state->ownership_lease = ownership_lease;
 	}
 
 	atomic_set(&state->mode, static_cast<atomic_val_t>(runtime_mode));
@@ -353,6 +473,7 @@ void digitalWrite(pin_size_t pin, PinStatus value)
 	{
 		return;
 	}
+	GpioTransitionGuard transition_guard;
 
 	if ((value != LOW) && (value != HIGH))
 	{
@@ -370,6 +491,11 @@ void digitalWrite(pin_size_t pin, PinStatus value)
 	if (!hasPinCapability(description->capabilities, PinCapability::digital_output))
 	{
 		recordError(GpioError::unsupported_capability);
+		return;
+	}
+	if (!isOwnedByGpio(*description))
+	{
+		recordError(GpioError::ownership_conflict);
 		return;
 	}
 
@@ -405,6 +531,7 @@ PinStatus digitalRead(pin_size_t pin)
 	{
 		return LOW;
 	}
+	GpioTransitionGuard transition_guard;
 
 	const PinDescription *description = nullptr;
 	PinRuntimeState *state = nullptr;
@@ -416,6 +543,11 @@ PinStatus digitalRead(pin_size_t pin)
 	if (!hasPinCapability(description->capabilities, PinCapability::digital_input))
 	{
 		recordError(GpioError::unsupported_capability);
+		return LOW;
+	}
+	if (!isOwnedByGpio(*description))
+	{
+		recordError(GpioError::ownership_conflict);
 		return LOW;
 	}
 

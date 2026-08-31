@@ -23,14 +23,36 @@ namespace
 	using nucode::arduino::internal::isPinConfiguredForInput;
 	using nucode::arduino::internal::isPinConfiguredForOutput;
 	using nucode::arduino::internal::lastGpioError;
+	using nucode::arduino::internal::lockGpioTransition;
 	using nucode::arduino::internal::PinCapability;
 	using nucode::arduino::internal::PinDescription;
 	using nucode::arduino::internal::pinDescription;
 	using nucode::arduino::internal::setGpioBackendError;
 	using nucode::arduino::internal::setGpioBackendSuccess;
+	using nucode::arduino::internal::unlockGpioTransition;
 
 	/** @brief pulseInLong()이 같은 우선순위 thread에 양보하는 polling 간격입니다. */
 	constexpr std::uint32_t long_pulse_yield_interval = 64U;
+
+	/** @brief pulse 측정 동안 GPIO mode와 ownership 전환을 막는 scope 잠금입니다. */
+	class PulseTransitionGuard
+	{
+	public:
+		/** @brief 공통 GPIO 전환 잠금을 획득합니다. */
+		PulseTransitionGuard() noexcept
+		{
+			lockGpioTransition();
+		}
+
+		/** @brief 공통 GPIO 전환 잠금을 반환합니다. */
+		~PulseTransitionGuard()
+		{
+			unlockGpioTransition();
+		}
+
+		PulseTransitionGuard(const PulseTransitionGuard &) = delete;
+		PulseTransitionGuard &operator=(const PulseTransitionGuard &) = delete;
+	};
 
 	/**
 	 * @brief pulse 측정에 사용할 input descriptor를 검증합니다.
@@ -114,6 +136,12 @@ namespace
 			setGpioBackendError(GpioError::invalid_value);
 			return 0UL;
 		}
+		if (k_is_in_isr())
+		{
+			setGpioBackendError(GpioError::invalid_context);
+			return 0UL;
+		}
+		PulseTransitionGuard transition_guard;
 
 		const PinDescription *const description = inputDescription(pin);
 		if (description == nullptr)

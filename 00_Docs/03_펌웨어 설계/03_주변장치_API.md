@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-PERIPHERAL-001 |
-| 문서 개정 | 3.0 |
-| 문서 상태 | `v0.2.0` 정식 계약 |
-| 최종 갱신일 | 2026-08-31 |
+| 문서 개정 | 3.1 |
+| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-02A 내부 소유권 기준선 |
+| 최종 갱신일 | 2026-09-01 |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
 ## 1. 목적
@@ -21,6 +21,8 @@ commit은 `04_검증 기록`으로 이동하고 여기에는 제품 동작만 �
 | UART/I2C/SPI/ADC/PWM 장치와 pinctrl | `board_package/NU54DK_Zephyr_DTS` |
 | Arduino object·backend | `cores/arduino` |
 | Arduino 논리 역할 | `variants/nu54dk` |
+| runtime owner/resource 상태 | `cores/arduino/internal/IoResourceManager.h` |
+| 부팅 고정 자원 registry | `variants/nu54dk/io_resource_registry.cpp` |
 | 일반 사용자 subsystem 선택 | `standard`/`ble` profile과 library feature manifest |
 | Sketch별 custom 구성 | expert `prj.conf`/overlay |
 
@@ -41,11 +43,35 @@ Production backend는 Devicetree chosen, alias와 profile overlay를 소비한�
 `NUM_DIGITAL_PINS=10` 범위 안에 A0/PWM 역할이 있어도 digital GPIO로 사용하지 않는다. 실제
 digital-capable descriptor는 7개다.
 
+### 3.1 AC-02A 내부 소유권 기준선
+
+AC-02A는 공개 주변장치 객체를 늘리기 전에 pad와 peripheral block의 충돌을 fail-closed로 검출하는
+공통 기반을 추가했다.
+
+| 항목 | 현재 내부 계약 |
+| --- | --- |
+| 저장 구조 | heap 없는 고정 슬롯, 설정 가능한 최대 slot 수 |
+| 자원 key | GPIO `controller + pin`, 또는 `serial/pwm/adc/power` block의 domain·instance |
+| owner | `gpio`, `adc`, `pwm`, `wire`, `spi`, `serial`, `system` + instance |
+| 전환 | 최대 8개 자원의 원자적 `reserve/commit/rollback/release` lease |
+| 수명 보호 | 64-bit generation과 manager epoch로 stale lease 거부 |
+| 문맥 | thread 전용 변경·조회; ISR 요청은 `invalid_context`로 거부 |
+| 부팅 고정 owner | UART20·I2C22·PWM20, 그리고 DTS에서 활성화된 경우 SPI00의 pad와 block |
+
+Registry는 DTS pinctrl을 읽어 현재 사용 중인 고정 자원을 `active`로 표시할 뿐 driver나 pinctrl을
+재구성하지 않는다. 따라서 AC-02A는 기존 `Serial`, `Wire`, `SPI`, ADC/PWM 동작을 바꾸지 않고
+GPIO가 같은 pad를 덮어쓰지 못하게 하는 기반이다.
+
+실제 runtime pinctrl·PM lifecycle, 각 `begin()`/`end()`와 manager의 acquire/release 연결,
+Wire/SPI/Serial/ADC/PWM 사이 handover, 공개 claim/remap API와 물리 HIL은 AC-02B에 남아 있다.
+
 ## 4. 공통 lifecycle과 문맥
 
 - 전역 object constructor는 hardware를 활성화하지 않는다.
 - 실제 device 사용은 `begin()` 또는 첫 명시적 작업 뒤에 시작한다.
 - `end()`는 wrapper가 소유한 queue, callback과 transaction 상태만 정리한다.
+- AC-02A의 부팅 고정 owner lease는 `end()`가 해제하지 않는다. Peripheral lifecycle과 소유권
+  handover의 결합은 AC-02B 범위다.
 - Zephyr device, pinctrl 또는 다른 client의 상태를 임의로 되돌리지 않는다.
 - Peripheral I/O와 lifecycle은 thread 문맥 전용이다.
 - ISR 호출은 `invalid_context`와 안전한 실패로 거부한다.
@@ -175,6 +201,7 @@ Nominal reference/gain을 pin의 절대최대 정격이나 측정 정확도로 �
 
 | 설정 | 기본 profile 의미 |
 | --- | --- |
+| `CONFIG_NUCODE_ARDUINO_IO_OWNERSHIP` | 고정 슬롯 소유권 manager와 NU54DK 부팅 registry |
 | `CONFIG_NUCODE_ARDUINO_SERIAL` | chosen console `Serial` |
 | `CONFIG_NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE` | Serial RX 고정 queue |
 | `CONFIG_NUCODE_ARDUINO_WIRE` | chosen I2C `Wire` |
@@ -201,6 +228,7 @@ Arduino IDE feature set을 선택하고 raw conf/overlay는 expert escape hatch�
 - [M14 Core API와 Variant 기준선](<../04_검증 기록/16_M14_Core_API와_Variant_기준선.md>)
 - [M15 NU54DK Board/System 기준선](<../04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)
 - [M16 BLE NUS 기준선](<../04_검증 기록/18_M16_BLE_NUS_기준선.md>)
+- [AC-02A 핀과 주변장치 소유권 기준선](<../04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md>)
 
 현재 Serial, Wire, SPI, ADC/PWM production 경로와 관련 HIL은 완료됐다. Exact transaction 수,
 frequency, payload, raw 측정값과 commit은 위 검증 문서가 소유한다.
