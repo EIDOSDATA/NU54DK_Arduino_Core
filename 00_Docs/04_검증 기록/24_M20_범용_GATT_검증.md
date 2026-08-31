@@ -8,11 +8,12 @@
 | NU54DK target contract build | PASS |
 | Peripheral role image build | PASS |
 | Central role image build | PASS |
-| 두 보드 RF GATT HIL | **NOT RUN — exact commit 뒤 실행 필요** |
+| 두 보드 RF GATT HIL | **PASS — exact commit `0103a8434ac205a953c981385ae26a2a64aeeccc`** |
 | 외부 배선 | 없음 — 각 보드 USB만 사용 |
 
-2026-08-31 dirty 개발 checkout에서 구현과 build-only 검증을 완료했습니다. Compile/link 성공은
-실제 ATT/GATT 교환 증거가 아니므로 physical HIL을 별도 NOT RUN으로 유지합니다.
+2026-08-31 dirty 개발 checkout에서 구현과 build-only 검증을 먼저 완료한 뒤 clean exact commit의
+두 보드 RF HIL을 실행했습니다. Compile/link 결과와 실제 ATT/GATT 교환 증거는 아래에서 분리해
+보존합니다.
 
 ## 구현 범위
 
@@ -98,4 +99,25 @@ Arduino main thread에서 실행돼야 FINAL PASS가 생성됩니다.
 128-bit challenge가 exact 일치해야 `NONCE_CHALLENGE:PASS`가 기록되므로 동일 UUID를 광고하는
 stale/병렬 peripheral과 각각 연결된 두 transcript를 하나의 pair PASS로 잘못 결합하지 않습니다.
 
-Exact JSON evidence와 두 raw transcript가 생기기 전까지 M20 physical HIL 상태는 NOT RUN입니다.
+Exact JSON evidence와 두 raw transcript는 최종 실행에서 생성됐습니다.
+
+## 최종 exact-commit HIL 결과
+
+| 항목 | Peripheral | Central |
+| --- | --- | --- |
+| Core revision | `0103a8434ac205a953c981385ae26a2a64aeeccc` | 동일 |
+| Board revision | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` | 동일 |
+| Probe/UART | `5415360300052840d9e1e32cc887aaf1` / `COM14` | `5415360300052840fcd47678fd7d106d` / `COM13` |
+| Image SHA-256 | `d317a81aef8ace0d5c40d97deeb4cd664174daa337ae78ed81ac87e7f25fdcb8` | `a89a40cedc054b81848ab28eb4def9f95d53d1426f202d4dce313b34b06aa475` |
+| Transcript SHA-256 | `af405398240ee1f50245e8e092bde543293ebeb1606da462383bbb539f071d62` | `fed256ad2c475a4a86adff93f333a40da87d7babb2985a002e7344e19ef33026` |
+| 연결·discovery round | 연결 1, 2 | 연결·discovery 1, 2 |
+| 결과 | WR·WC·indication confirmation·callback PASS | nonce read·WR·WC·notify·indicate·invalidation·재구독 PASS |
+
+완료 시각은 `2026-08-31T11:18:20.412989+00:00`이다. 128-bit cached-read challenge, 두 write
+mode, notification subscribe/unsubscribe, indication confirmation, disconnect handle 무효화와
+reconnect 뒤 rediscovery/resubscribe가 모두 PASS했다. Callback은 양 역할 모두 Arduino main-thread에서
+실행됐으며 추가 배선, mass erase와 PMIC write는 사용하지 않았다.
+
+동일 구현은 앞선 `ac10ba3b253bd6bf76bcf73aa2c79278304908a4` exact 실행에서도 PASS했다. M19 PHY
+교정 뒤 공통 BLE source가 바뀐 `0103a843`에서 다시 pristine build·HIL해 최종 기준을 새 commit으로
+갱신했다.

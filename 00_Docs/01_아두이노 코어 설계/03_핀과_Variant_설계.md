@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-PIN-001 |
-| 문서 개정 | 3.1 |
-| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-01 구현 계약 |
+| 문서 개정 | 3.2 |
+| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-01 자동 검증 완료 |
 | 최종 갱신일 | 2026-08-31 |
 | 대상 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 
@@ -57,8 +57,8 @@ Variant는 두 원본을 합성한 `DT_ALIAS()`와 `DT_CHOSEN()`만 소비한다
 | 7 | `PIN_BUTTON1` | `sw1` | 있음 | input, interrupt |
 | 8 | `PIN_BUTTON2` | `sw2` | 있음 | input, interrupt |
 | 9 | `PIN_BUTTON3` | `sw3` | 있음 | input, interrupt |
-| 10 | `PIN_GPIO0`, `D10` | `nucode-gpio0` | profile에서 있음 | input, output, open-drain, interrupt |
-| 11 | `PIN_GPIO1`, `D11` | `nucode-gpio1` | profile에서 있음 | input, output, open-drain, interrupt |
+| 10 | `PIN_GPIO0`, `D10` | `nucode-gpio0` | profile에서 있음 | input, output, open-drain |
+| 11 | `PIN_GPIO1`, `D11` | `nucode-gpio1` | profile에서 있음 | input, output, open-drain |
 
 공개 상수는 다음 불변식을 유지한다.
 
@@ -78,9 +78,10 @@ NUM_ANALOG_OUTPUTS        = 1
 ```
 
 Profile에서는 `digitalPinIsValid(pin)`이 ID `0, 1, 5, 6, 7, 8, 9, 10, 11`에 참을 반환한다.
-Connector DTS가 없으면 기존 일곱 ID만 유효하다. `digitalPinToInterrupt()`는 유효한 digital
-ID에는 같은 값을, 나머지에는 `NOT_AN_INTERRUPT`를 반환한다. 내부
-`pinDescriptionCount()`는 각각 descriptor 개수 9 또는 7을 반환한다.
+Connector DTS가 없으면 기존 일곱 ID만 유효하다. `digitalPinToInterrupt()`는 interrupt
+capability가 있는 P0/P1 digital ID에는 같은 값을 반환하지만, P2 connector ID 10/11과 예약·범위
+밖 ID에는 `NOT_AN_INTERRUPT`를 반환한다. 내부 `pinDescriptionCount()`는 각각 descriptor 개수
+9 또는 7을 반환한다.
 
 ## 4. Variant 구현 계약
 
@@ -164,7 +165,7 @@ token을 사용한다. `formatDiagnostic()`의 한 줄 형식은
 ## 9. 검증과 증거
 
 현재 계약은 source/host 검사, NU54DK target build와 실제 신규 pin HIL을 완료했다. 이 설계
-문서에는 실행별 pin 번호, 횟수, 로그와 commit을 복제하지 않는다.
+문서에는 실행별 pin 번호, 횟수와 로그를 복제하지 않는다.
 
 - [M3 GPIO·시간·Scheduler 기준선](<../04_검증 기록/03_M3_GPIO_시간과_Scheduler_기준선.md>)
 - [M6 기본 Arduino API·Serial·interrupt 기준선](<../04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md>)
@@ -175,9 +176,9 @@ token을 사용한다. `formatDiagnostic()`의 한 줄 형식은
 M14의 신규 LED/button 출력·입력·edge HIL은 완료 상태다. 향후 alias나 ownership을 바꾸면
 M14 계약과 동일한 host, target, HIL 계층을 다시 통과해야 한다.
 
-AC-01 source/host 계약과 production target/HIL image build는 통과했다. SW0 P1.13 자기구동의 실제
-GPIOTE level/mask HIL도 통과했다. P2.5↔P2.6 GPIO loopback은 preflight에서 선을 감지하지 못했으므로
-점퍼 위치를 재확인한 뒤 exact-commit runner PASS를 기록한다.
+AC-01은 exact commit `ac10ba3b253bd6bf76bcf73aa2c79278304908a4`에서 P2.5↔P2.6 GPIO
+loopback/open-drain/pulse HIL과 SW0 P1.13 GPIOTE level/mask HIL을 모두 통과했다. P2.5/P2.6은
+digital GPIO로 검증됐지만 interrupt capability는 없으며, 이 차이를 지원 범위로 확대하지 않는다.
 
 ## 10. 명시적 범위 밖
 

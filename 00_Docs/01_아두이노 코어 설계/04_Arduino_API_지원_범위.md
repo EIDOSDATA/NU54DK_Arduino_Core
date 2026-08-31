@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-API-001 |
-| 문서 개정 | 4.2 |
+| 문서 개정 | 4.3 |
 | 문서 상태 | `v0.2.0` 정식 공개 범위 + `v0.3.0` 개발 상태 |
 | 최종 갱신일 | 2026-08-31 |
-| 다음 확장 | `v0.3.0` AC-01~AC-03 Arduino Compatibility / M19~M21 BLE |
+| 개발 상태 | AC-01·M19·M20 자동 검증 완료 / M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기 / AC-02·AC-03·M22 미착수 |
 
 ## 1. 목적
 
@@ -47,6 +47,10 @@ runtime 지원으로 확대하지 않는다.
 
 따라서 `부분 지원`은 Core 전체가 불안정하다는 뜻이 아니라, 특정 API 행에서 보증하는 pin, mode,
 bus instance 또는 검증 범위가 Arduino 생태계 전체보다 좁다는 뜻이다.
+
+현재 `v0.3.0` 개발 트리는 public library 5개와 예제 19개를 가지며 Arduino CLI 19/19 compile을
+통과했다. 이는 개발 트리의 compile 기준선이며, 정식 `v0.2.0` archive의 library 4개·예제 14개
+기록이나 아직 끝나지 않은 `v0.3.0` runtime 지원 판정을 바꾸지 않는다.
 
 ## 3. Runtime과 공통 API
 
@@ -90,16 +94,16 @@ Vendored ArduinoCore-API가 type/header를 제공한다는 사실만으로 produ
 
 ### 4.1 `v0.3.0` AC-01 working tree
 
-아래 항목은 source 구현, host 계약과 NU54DK production target build를 통과했다. 정식 `지원`
-선언은 P2.5↔P2.6 loopback HIL과 릴리스 gate가 끝난 뒤 적용한다. Level IRQ는 P2 connector가 아니라
-GPIOTE가 있는 P0/P1 역할에만 적용하며 SW0 P1.13 자기구동 실기는 통과했다.
+아래 항목은 source 구현, host 계약, NU54DK production target build와 exact-commit HIL을 통과했다.
+이는 `v0.3.0` 개발 지원 기준선이며 M22 package·릴리스 gate 전에는 정식 stable 지원 선언이 아니다.
+Level IRQ는 P2 connector가 아니라 GPIOTE가 있는 P0/P1 역할에만 적용한다.
 
 | API/영역 | 개발 상태 | AC-01 계약 |
 | --- | --- | --- |
-| `PIN_GPIO0/D10`, `PIN_GPIO1/D11` | 구현·target build | P2.5/P2.6 input/output/open-drain; GPIOTE가 없어 interrupt는 `NOT_AN_INTERRUPT` |
-| `OUTPUT_OPENDRAIN` | 구현·target build | connector 두 핀만 허용; `HIGH`는 high-Z release, pull-up은 fixture/회로 책임 |
-| level `LOW`/`HIGH` interrupt | 구현·target·SW0 HIL | GPIOTE P0/P1에서 hold one-shot, deassert 뒤 1 ms work polling 재무장 |
-| `noInterrupts()`/`interrupts()` | 구현·target build | 같은 thread의 중첩 계약; Arduino GPIO callback만 mask하고 system/BLE/driver IRQ는 유지 |
+| `PIN_GPIO0/D10`, `PIN_GPIO1/D11` | 자동 검증 완료 | P2.5/P2.6 input/output/open-drain; GPIOTE가 없어 interrupt는 `NOT_AN_INTERRUPT` |
+| `OUTPUT_OPENDRAIN` | 자동 검증 완료 | connector 두 핀만 허용; `HIGH`는 high-Z release, pull-up은 fixture/회로 책임 |
+| level `LOW`/`HIGH` interrupt | 자동 검증 완료 | GPIOTE P0/P1에서 hold one-shot, deassert 뒤 1 ms work polling 재무장 |
+| `noInterrupts()`/`interrupts()` | 자동 검증 완료 | 같은 thread의 중첩 계약; Arduino GPIO callback만 mask하고 system/BLE/driver IRQ는 유지 |
 
 Mask 중 assert된 level은 마지막 복원 뒤 raw 상태를 다시 확인해 재무장한다. 짝이 없는
 `interrupts()`, 다른 thread의 복원, 중첩 overflow는 hardware를 임의 변경하지 않고 공개 GPIO
@@ -123,14 +127,14 @@ Mask 중 assert된 level은 마지막 복원 뒤 raw 상태를 다시 확인해 
 
 | API | 개발 상태 | AC-01 계약 |
 | --- | --- | --- |
-| `pulseIn()` | 구현·target build | thread 전용 busy polling, 64-bit cycle deadline, timeout은 `0` 반환 |
-| `pulseInLong()` | 구현·target build | 같은 deadline에 주기적 `k_yield()`를 추가한 cooperative polling |
-| `shiftOut()` | 구현·target build | 구성된 output data/clock, `MSBFIRST`/`LSBFIRST`, 8-bit GPIO clock |
-| `shiftIn()` | 구현·target build | 구성된 input data/output clock, 두 bit order의 8-bit GPIO sampling |
+| `pulseIn()` | 자동 검증 완료 | thread 전용 busy polling, 64-bit cycle deadline, timeout은 `0` 반환 |
+| `pulseInLong()` | 자동 검증 완료 | 같은 deadline에 주기적 `k_yield()`를 추가한 cooperative polling |
+| `shiftOut()` | 자동 검증 완료 | 구성된 output data/clock, `MSBFIRST`/`LSBFIRST`, 8-bit GPIO clock |
+| `shiftIn()` | 자동 검증 완료 | 구성된 input data/output clock, 두 bit order의 8-bit GPIO sampling |
 
 Pulse 폭의 외부 계측 정확도, 고속 shift 성능과 bus protocol 대체 사용은 보증하지 않는다.
-AC-01 HIL은 P2.5↔P2.6 한 가닥 loopback으로 timeout, 짧은/긴 pulse 범위, shift 최종 상태·고정
-low/high 수신을 검증한다.
+AC-01 exact commit `ac10ba3b253bd6bf76bcf73aa2c79278304908a4`의 HIL은 P2.5↔P2.6 한
+가닥 loopback으로 timeout, 짧은/긴 pulse 범위, shift 최종 상태·고정 low/high 수신을 검증했다.
 
 ## 6. Serial, Wire, SPI, ADC와 PWM
 
@@ -201,8 +205,19 @@ Board/System software 계약과 System OFF wake는 검증됐다. PMIC write API�
 광고·exact-name scan, 연결, RX write, TX notification, 재광고·재검색과 `poll()` event가
 `v0.2.0`의 지원 범위다.
 
-범용 GAP/GATT builder, GATT read/indication, pairing·bonding·SMP와 HID는 미구현이다. 다음
-구현 단계는 M19 BLE Core/GAP이며, 계획이 현재 지원 판정을 바꾸지 않는다.
+범용 GAP/GATT builder, GATT read/indication, pairing·bonding·SMP와 HID는 **정식 `v0.2.0`
+package에서는 미구현**이다. 이 역사적 경계는 아래 `v0.3.0` 개발 결과를 소급 적용해 바꾸지 않는다.
+
+### 8.3 `v0.3.0` BLE 개발 트리
+
+M19 BLE Core/GAP과 M20 범용 GATT는 `NUCODE_BLE`에 구현됐고 각각 exact commit
+`0103a8434ac205a953c981385ae26a2a64aeeccc`의 두 보드 RF HIL을 통과했다. GAP 광고·검색·단일
+연결 lifecycle과 custom GATT server/client read/write/notify/indicate 범위가 개발 기준선이다.
+
+Pairing·bonding·SMP, BAS/DIS와 HID는 공통 stack lifecycle을 복제하지 않는 별도
+`NUCODE_BLE_Security` library가 소유한다. M21의 Core `065d4f5` exact 두 보드 HIL과 host 38/38은
+PASS했다. M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인
+대기 상태이므로 M21과 `v0.3.0` 전체를 완료나 정식 지원으로 표시하지 않는다.
 
 ## 9. Zephyr/NCS 직접 사용과 build-only 경계
 
@@ -232,16 +247,23 @@ Full Zephyr 구조이므로 expert Sketch는 공개 Zephyr/NCS API를 직접 사
 - AVR/SAMD direct register/port API
 
 이 가운데 pulse/shift, tone/Servo, open-drain, 추가 connector pin·bus와 EEPROM facade는 기술적으로
-구현할 수 있지만, 현재는 resource ownership·오류 의미·예제·HIL 계약이 없다. 반대로 native USB,
-DAC, AVR Harvard memory와 Wi-Fi는 NU54DK/nRF54L15 hardware에서 동일한 방식으로 제공할 수 없다.
+구현할 수 있지만, 정식 `v0.2.0`에는 resource ownership·오류 의미·예제·HIL 계약이 없다. 반대로
+native USB, DAC, AVR Harvard memory와 Wi-Fi는 NU54DK/nRF54L15 hardware에서 동일한 방식으로
+제공할 수 없다.
 
 `v0.3.0`은 이 가운데 구현 가능한 호환성을 BLE 작업선과 병렬로 다음과 같이 다룬다.
 
-- AC-01: 승인된 connector GPIO, open-drain, level interrupt, pulse/shift와 전역 IRQ 안전성 gate
-- AC-02: `Serial1`, Wire/SPI 확장, ADC/PWM resolution·frequency, `tone()`/Servo와 자원 소유권
+- AC-01: 승인된 connector GPIO, open-drain, level interrupt, pulse/shift와 전역 IRQ 안전성 gate —
+  자동 검증 완료
+- AC-02: `Serial1`, Wire/SPI 확장, ADC/PWM resolution·frequency, `tone()`/Servo와 자원 소유권 —
+  미착수
 - AC-03: 기존 Settings/ZMS/RRAM 위의 EEPROM·internal filesystem facade와 고정된 대표 제3자
-  library matrix
-- M19~M21: 범용 BLE GAP/GATT, security와 표준 profile
+  library matrix — 미착수
+- M19: 범용 BLE Core/GAP — 자동 검증 완료
+- M20: 범용 GATT — 자동 검증 완료
+- M21: 별도 security library의 pairing·bonding·표준 profile·HID — 진행 중; 자동 검증 완료,
+  Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기
+- M22: 통합 package·RC/stable gate — 미착수
 
 계획이 현재 `v0.2.0` 지원 판정을 바꾸지는 않는다. 각 항목은 자동 계약, target build,
 필요한 HIL과 예제를 통과해야만 지원으로 승격한다. 물리 경로나 driver 의미를 확정할 수
@@ -258,6 +280,9 @@ DAC, AVR Harvard memory와 Wi-Fi는 NU54DK/nRF54L15 hardware에서 동일한 방
 - [M17 NCS 기능과 예제 Coverage 기준선](<../04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)
 - [v0.2.0 정식 릴리스 공개 기록](<../04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md>)
 - [AC-01 GPIO 호환성 검증](<../04_검증 기록/22_AC-01_GPIO_호환성_검증.md>)
+- [M19 BLE Core/GAP 검증](<../04_검증 기록/23_M19_BLE_Core_GAP_검증.md>)
+- [M20 범용 GATT 검증](<../04_검증 기록/24_M20_범용_GATT_검증.md>)
+- [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)
 
 지원 상태를 올리려면 production source, host/target 계약, Arduino package compile과 필요한 HIL을
 함께 갱신하고 해당 검증 기록을 추가해야 한다.

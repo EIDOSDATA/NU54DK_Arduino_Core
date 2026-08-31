@@ -24,10 +24,15 @@ artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI
 | `core-semantic` | M14 Core C++ native semantic runtime |
 | `documents` | tracked Markdown UTF-8과 local link |
 | `package` | Boards Manager package 2회 재현성과 strict validation |
-| `example-discovery` | Arduino CLI `1.5.1`에서 배포 대상 소스 트리를 임시 platform으로 설치해 예제 14개 열거 |
+| `example-discovery` | Arduino CLI `1.5.1`에서 현재 소스 트리를 임시 platform으로 설치해 예제 19개 열거 |
 
 Checkout은 submodule을 recursive로 받고 full history를 사용한다. Workflow permission은
 `contents: read`이며 같은 ref의 중복 실행은 취소한다.
+
+M12와 정식 `v0.2.0`의 역사적 기준은 public library 4개·예제 14개다. 현재 `v0.3.0` 개발 트리는
+`NUCODE_BLE_Security`를 포함한 library 5개·예제 19개이며, 별도 Arduino CLI 개발 검증에서
+19/19 compile을 통과했다. 현재 discovery gate의 19개 기대값을 과거 `v0.2.0` artifact 기록에
+소급 적용하지 않는다.
 
 로컬 진입점은 다음과 같다.
 
@@ -126,7 +131,11 @@ upload와 UART READY를 실행한다. Hardware evidence는 30일 보존한다. P
 배선과 runner 보안은 운영자가 관리한다.
 
 HIL workflow가 존재하거나 queue에 들어갔다는 사실은 PASS가 아니다. 완료 artifact와 검증
-기록이 있어야 실기 판정에 사용할 수 있다.
+기록이 있어야 실기 판정에 사용할 수 있다. `v0.3.0` 개발 검증은 AC-01 exact commit
+`ac10ba3b253bd6bf76bcf73aa2c79278304908a4`, M19/M20 exact commit
+`0103a8434ac205a953c981385ae26a2a64aeeccc`, M21 exact commit
+`065d4f573618aca5da1e715915622e987208b775`의 HIL PASS를 각각 검증 기록에 고정한다. M21 host
+38/38도 PASS했다. M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기 상태다.
 
 ---
 
@@ -158,3 +167,7 @@ latest 지정은 자동으로 수행하지 않는다. 공개에는 별도 사람
 - [M17 NCS 기능과 예제 coverage 기준선](<../04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)
 - [M18 공개 검증과 RC2 교정](<../04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md>)
 - [v0.2.0 정식 릴리스 공개 기록](<../04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md>)
+- [AC-01 GPIO 호환성 검증](<../04_검증 기록/22_AC-01_GPIO_호환성_검증.md>)
+- [M19 BLE Core/GAP 검증](<../04_검증 기록/23_M19_BLE_Core_GAP_검증.md>)
+- [M20 범용 GATT 검증](<../04_검증 기록/24_M20_범용_GATT_검증.md>)
+- [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)

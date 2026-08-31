@@ -5,6 +5,10 @@
 M20은 M19 Core/GAP 위에 vendor service를 만들고 사용하는 범용 GATT API를 제공합니다. NUS처럼
 고정 profile wrapper가 아니라 UUID, property, permission과 bounded value를 sketch가 선언합니다.
 
+이 API는 정식 `v0.2.0` package에는 없으며 `v0.3.0` 개발 트리에서 추가됐습니다. Exact-commit
+두 보드 RF PASS는 [M20 범용 GATT 검증](<../04_검증 기록/24_M20_범용_GATT_검증.md>)이 소유하며
+M22 전에는 stable 지원으로 소급 표시하지 않습니다.
+
 ## Server schema
 
 ```cpp

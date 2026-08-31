@@ -3,35 +3,62 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | VALIDATION-M21-001 |
-| 문서 개정 | 0.4 |
-| 상태 | persistence·HIDS lifecycle·128-bit RF peer binding 구현 완료, host·target 재검증 및 exact-commit 두 보드 RF HIL 대기 |
+| 문서 개정 | 1.0 |
+| 상태 | **M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기** |
 | 최종 갱신일 | 2026-08-31 |
 | 대상 | `v0.3.0` M21 |
 | 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
 
-## 1. 목적과 현재 판정
+## 1. 목적과 최종 자동 판정
 
 M21은 `NUCODE_BLE` 공통 lifecycle 위에 pairing·bond 관리와 Battery Service(BAS),
 Device Information Service(DIS), 암호화된 HID keyboard를 추가한다. 이 기록은 source/host 계약,
 production target build, 두 NU54DK 사이의 RF protocol HIL과 실제 Windows·스마트폰 입력 확인을
 서로 다른 판정 계층으로 분리한다.
 
-| 계층 | 현재 결과 |
+| 계층 | 결과 |
 | --- | --- |
-| 공개 API·보안·negative host 계약 | PASS, 22 tests |
-| Arduino CLI SecureKeyboard·예제 탐색 | PASS |
-| NU54DK production contract image | PASS, Flash 159,488 B / RAM 41,672 B |
-| NU54DK board/system + BLE security 통합 image | PASS, Flash 174,724 B / RAM 42,444 B |
-| NU54DK HIL Central role image | PASS, Flash 235,080 B / RAM 54,736 B |
-| NU54DK HIL Peripheral role image | PASS, Flash 235,520 B / RAM 54,832 B |
-| exact-commit 두 보드 RF HIL | NOT RUN — 전체 변경 commit과 pristine rebuild 뒤 실행 |
-| Windows·스마트폰 실제 HID 문자 입력 | NOT RUN — 수동 확인 항목 |
+| 공개 API·보안·negative M21 host 계약 | **PASS, 38/38** |
+| 전체 host 회귀 | **407 total — 405 PASS, 2 skipped** |
+| CI contract 회귀 | **PASS, 33/33** |
+| Markdown UTF-8·로컬 링크 검사 | **PASS, 82 files** |
+| Arduino CLI SecureKeyboard·예제 탐색 | **PASS** |
+| NU54DK production contract image | **PASS**, Flash 159,696 B / RAM 41,672 B |
+| NU54DK board/system + BLE security 통합 image | **PASS**, Flash 174,724 B / RAM 42,444 B |
+| NU54DK HIL Central role image | **PASS**, Flash 236,792 B / RAM 54,840 B |
+| NU54DK HIL Peripheral role image | **PASS**, Flash 236,388 B / RAM 54,840 B |
+| exact-commit 두 보드 RF HIL | **PASS**, evidence schema 3 |
+| Windows·스마트폰 실제 HID pairing·문자 입력 | **NOT RUN — 수동 확인 대기** |
 
-현재 build는 dirty working tree의 통합 가능성을 확인한 결과다. 실제 RF PASS와 증적은 runner가
-요구하는 exact clean commit, role별 build record와 서로 다른 두 보드를 만족한 실행에서만 만든다.
+자동 검증 범위는 exact clean commit에서 만든 pristine image와 서로 다른 NU54DK 두 대를 사용해
+완료했다. 자동 RF HIL은 암호화된 GATT/HID protocol을 검증하지만 운영체제 UI에서 실제 키보드로
+pairing하고 문자를 입력하는 동작까지 대신하지 않는다. 따라서 M21 전체 상태는 완료가 아니라
+**자동 검증 완료, 수동 OS HID 확인 대기**다.
 
-## 2. 구현 범위와 lifecycle ownership
+## 2. exact revision과 실행 환경
+
+| 항목 | 값 |
+| --- | --- |
+| Core revision | `065d4f573618aca5da1e715915622e987208b775` |
+| Board package revision | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
+| Evidence 생성 UTC | `2026-08-31T14:09:16.017248Z` |
+| Evidence 상태 | `schema_version=3`, `status=passed` |
+| 실행 nonce | `4fc3a7fd39b216a27c3f4ac1c640aaa5` |
+| Central | DAPLink `5415360300052840fcd47678fd7d106d`, `COM13` |
+| Peripheral | DAPLink `5415360300052840d9e1e32cc887aaf1`, `COM14` |
+| Mass erase 요청 | `false` |
+| Factory reset 실행 | `false` |
+
+두 role의 pristine build record는 모두 Core/Board revision을 위 값으로 고정했고 SHA-256은 다음과
+같다.
+
+| Role | Build record SHA-256 |
+| --- | --- |
+| Central | `c8ee555649d35607b1835836f46db485879035aad4138fc4ab2d63a8f2fb2930` |
+| Peripheral | `c8ee555649d35607b1835836f46db485879035aad4138fc4ab2d63a8f2fb2930` |
+
+## 3. 구현 범위와 lifecycle ownership
 
 공개 헤더 `libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.h`는 Zephyr type을 노출하지 않고
 `NUCODE_BLE.h`를 포함해 다음 기능을 제공한다.
@@ -63,7 +90,7 @@ Protocol Mode callback은 peer별 boot/report mode를 저장하며 boot mode에�
 `bt_hids_boot_kb_inp_rep_send()`, report mode에서는 `bt_hids_inp_rep_send()`를 사용한다. Keyboard
 descriptor의 논리 최대값 `0x65`를 넘는 usage는 전송 전에 거부한다.
 
-## 3. 보안 구성 경계
+## 4. 보안 구성 경계
 
 `libraries/NUCODE_BLE_Security/zephyr/ble-security.conf`는 SMP, bond, Settings/ZMS, BAS, runtime DIS와
 encrypted HIDS를 활성화한다. 최대 bond 수는 4개다. nRF54L15 RRAM에서 board/system feature와 함께
@@ -78,9 +105,11 @@ compile/link했다.
 한다. M21 기본값인 `SecurityLevel::encrypted`는 암호화와 bond 저장을 보장하지만 MITM 인증을
 보장한다고 확대 해석하지 않는다.
 
-## 4. 자동 검증
+## 5. 자동 검증
 
-Host contract와 parser/negative test는 다음 명령으로 실행했다.
+### 5.1 Host·CI·문서 회귀
+
+M21 Host contract와 parser/negative test는 다음 명령으로 실행한다.
 
 ```powershell
 python -m unittest `
@@ -89,15 +118,20 @@ python -m unittest `
   tests.host.test_m21_ble_security_hil -v
 ```
 
-22/22 PASS를 확인했다. 주요 negative 경계는 stack 중복 초기화·별도 connection callback 금지,
-평문 HIDS 전송 금지, 고정 passkey와 secret 로그 금지, 같은 boot의 false verified bond 금지,
-삭제 요청 뒤 reboot 전 상태를 삭제 완료로 오판하는 경우, stale nonce·target FAIL·restore 단계
-재-pair·profile token 누락, 128-bit RF nonce binding 누락·축소를 거부하는 것이다.
+최종 revision에서 M21 **38/38 PASS**를 확인했다. 주요 negative 경계는 stack 중복 초기화·별도
+connection callback 금지, 평문 HIDS 전송 금지, 고정 passkey와 secret 로그 금지, 같은 boot의
+false verified bond 금지, 삭제 요청 뒤 reboot 전 상태를 삭제 완료로 오판하는 경우, stale
+nonce·target FAIL·restore 단계 재-pair·profile token 누락, 128-bit RF nonce binding 누락·축소를
+거부하는 것이다.
 
-Arduino library discovery 단계에서는 공개 헤더만 노출하고 Zephyr 내부 구현은 제외한다. 실제
-Arduino CLI에서 `SecureKeyboard` compile과 전체 예제 탐색을 실행해 `PASS: m21`, `PASS: examples`를
-확인했다. `NUCODE_BLE_Security`는 공통 BLE lifecycle에 의존하므로 `nucode.ble.nus`와 함께 선택되는
-정상 조합을 충돌로 처리하지 않으며, 최종 feature profile은 `ble`로 제한한다.
+전체 host 회귀는 **407개 중 405 PASS, 2 skipped**, CI contract는 **33/33 PASS**, Markdown
+UTF-8·로컬 링크 검사는 **82/82 files PASS**였다. Arduino library discovery 단계에서는 공개 헤더만 노출하고 Zephyr 내부
+구현은 제외한다. 실제 Arduino CLI에서 `SecureKeyboard` compile과 전체 예제 탐색을 실행해
+`PASS: m21`, `PASS: examples`를 확인했다. `NUCODE_BLE_Security`는 공통 BLE lifecycle에 의존하므로
+`nucode.ble.nus`와 함께 선택되는 정상 조합을 충돌로 처리하지 않으며, 최종 feature profile은
+`ble`로 제한한다.
+
+### 5.2 Pristine target build
 
 NCS toolchain 환경에서 production contract와 두 role image를 다음과 같이 build한다.
 
@@ -128,10 +162,19 @@ $env:PATH = "$Toolchain;$Toolchain\mingw64\bin;$Toolchain\bin;" +
   -- "-DBOARD_ROOT=$BoardRoot" "-DEXTRA_ZEPHYR_MODULES=$CoreRoot" "-DM21_ROLE=peripheral"
 ```
 
+최종 pristine build의 사용량은 다음과 같다.
+
+| Image | Flash | RAM |
+| --- | ---: | ---: |
+| Production contract | 159,696 B | 41,672 B |
+| Board/system + BLE security contract | 174,724 B | 42,444 B |
+| Central HIL | 236,792 B | 54,840 B |
+| Peripheral HIL | 236,388 B | 54,840 B |
+
 관찰된 NCS HIDS 헤더의 deprecated attribute warning은 upstream header의 C++ 진단이며 M21 source
 compile/link 오류가 아니다.
 
-## 5. 두 보드 RF HIL
+## 6. 두 보드 RF HIL 절차
 
 `tests/zephyr/m21_ble_hil`은 같은 source에서 Central과 Peripheral role별 HEX를 만든다. 추가 신호
 배선은 없으며 각 NU54DK의 DAPLink USB와 BLE RF link만 사용한다. Runner
@@ -152,8 +195,16 @@ role별 image SHA-256이 동일하면 실행을 거부한다.
 Runner는 실행마다 128-bit nonce를 만든다. Peripheral은 그 전체 128 bit를 binary manufacturer data로
 광고하고 Central은 connectable advertising payload에서 company ID와 16-byte nonce를 exact-match한
 뒤에만 주소 연결을 시작한다. 같은 이름의 stale image나 주변 M21 장치는 nonce가 일치하지 않으면
-무시한다. UART transcript에 nonce를 붙이는 것만으로 RF peer binding을 주장하지 않는다. Runner는
-다음 UART 명령만 사용한다.
+무시한다. UART transcript에 nonce를 붙이는 것만으로 RF peer binding을 주장하지 않는다.
+
+Peripheral의 advertising 시작 또는 Central의 연결 시도가 보안·pairing·bond 진행 전에 끊기는 경우,
+callback에서는 재시도를 직접 실행하지 않고 main-loop action만 예약한다. Main loop는 **500 ms** 뒤
+scan/advertising을 다시 시작하며, 이 bounded recovery는 **phase당 최대 3회**만 허용한다. 보안이나
+pairing, persistence가 시작된 이후의 disconnect는 재시도하지 않고 fail-closed 처리한다. 공개 GAP
+callback이 raw HCI disconnect reason을 보존하지 않으므로 이 복구를 특정 HCI reason에 대한 처리라고
+단정하지 않는다.
+
+Runner는 다음 UART 명령만 사용한다.
 
 ```text
 NUCODE_M21_CLEAR:<32자리 소문자 hex nonce>
@@ -164,7 +215,7 @@ NUCODE_M21_PROBE:<32자리 소문자 hex nonce>
 NUCODE_M21_REPAIR:<32자리 소문자 hex nonce>
 ```
 
-최종 commit에서 pristine role image를 다시 만든 뒤 다음 명령으로 실행한다.
+exact revision의 pristine role image는 다음 형태로 실행했다.
 
 ```powershell
 $Commit = git -C $CoreRoot rev-parse HEAD
@@ -175,13 +226,13 @@ $Evidence = "$CoreRoot\build\m21\hil\m21-ble-security-$($Commit.Substring(0,7)).
 python "$CoreRoot\tests\hil\nu54dk\m21_ble_security.py" `
   --peripheral-hex $PeripheralHex `
   --central-hex $CentralHex `
-  --peripheral-board-id "<Peripheral DAPLink UID>" `
-  --central-board-id "<Central DAPLink UID>" `
+  --peripheral-board-id "5415360300052840d9e1e32cc887aaf1" `
+  --central-board-id "5415360300052840fcd47678fd7d106d" `
   --expected-core-revision $Commit `
   --evidence $Evidence
 ```
 
-기대 final token은 두 역할 모두 다음 payload와 해당 실행 nonce를 가진다.
+두 역할의 기대 final token은 실행 nonce와 다음 payload를 가진다.
 
 ```text
 NUCODE_M21_<CENTRAL|PERIPHERAL>:FINAL:PASS:pairing=PASS:bond_restore=PASS:erase_reboot=PASS:old_key_reconnect=REJECTED:repair=PASS:bas=PASS:dis=PASS:hid_protocol=PASS:nonce=<nonce>
@@ -193,19 +244,46 @@ GATT negative, BAS/DIS/HID token 순서와 각 phase의 `rf_nonce_binding_bits=1
 실행 token, 누락·변조 token, 축소된 RF nonce binding, target FAIL과 서로 다른 실행 nonce를
 fail-closed로 거부한다.
 
-## 6. Evidence와 수동 확인 경계
+## 7. exact RF HIL 결과와 Evidence
 
-PASS 때 `--evidence` 경로와 같은 디렉터리에 다음 세 로컬 파일을 신규 생성한다.
+Evidence 경로는 다음과 같다.
 
-| 자산 | 경로 형식 |
+`build/m21/hil/m21-ble-security-065d4f5.json`
+
+| 로컬 자산 | 경로 |
 | --- | --- |
-| PASS evidence JSON | `build/m21/hil/m21-ble-security-<commit7>.json` |
-| Peripheral raw UART | `build/m21/hil/m21-ble-security-<commit7>.peripheral.transcript.log` |
-| Central raw UART | `build/m21/hil/m21-ble-security-<commit7>.central.transcript.log` |
+| PASS evidence JSON | `build/m21/hil/m21-ble-security-065d4f5.json` |
+| Central raw UART | `build/m21/hil/m21-ble-security-065d4f5.central.transcript.log` |
+| Peripheral raw UART | `build/m21/hil/m21-ble-security-065d4f5.peripheral.transcript.log` |
 
-기존 파일은 `--overwrite-evidence`를 명시하지 않으면 덮어쓰지 않는다. Evidence는 exact Core/board
-revision, 두 장치 식별자, role별 image와 raw transcript SHA-256, pairing/bond/profile 결과와 다음
-coverage 경계를 기록한다.
+| 검증 항목 | Central | Peripheral |
+| --- | --- | --- |
+| Final | PASS | PASS |
+| Phase | `first`, `restore`, `erased_probe`, `repair` | 동일 |
+| Pairing events | `1 / 0 / 1` | `1 / 0 / 1` |
+| Bond counts | `1 / 1 / 0 / 1` | `1 / 1 / 0 / 1` |
+| Bond states | `persistence_pending / verified / none / persistence_pending` | 동일 |
+| RF nonce binding | 128 bit | 128 bit |
+| Old key reconnect | REJECTED | REJECTED |
+| Erase + warm reboot | PASS | PASS |
+| Repair pairing | PASS | PASS |
+
+BAS read/notification, DIS read, 보안 전 encrypted GATT negative, encrypted HID report protocol은 모두
+PASS였다. Restore phase의 pairing event는 0이므로 새 pairing이 아니라 저장된 key 복원임을
+확인했다. 삭제 뒤 bond count는 0이고 old key는 거부됐으며, 명시적 repair pairing 뒤 전체 profile
+protocol을 다시 확인했다.
+
+### 7.1 Image와 transcript 무결성
+
+| 자산 | SHA-256 | Flash sequence |
+| --- | --- | ---: |
+| Central `zephyr.hex` | `b148b8914b8a542068cbe5d77434e1246032e59d87acbaf157997a2082a4e6e2` | 57 |
+| Peripheral `zephyr.hex` | `9de308dee13e1132b91c8c5af1d6b4ea90579e455cedded8b5a955dac06da55e` | 64 |
+| Central raw UART transcript | `7bf15a33d536977953e7d7822e57d61fbeec9a50246d740590e928afe256e16a` | — |
+| Peripheral raw UART transcript | `acb8d2ca7178d6357bf3af8037fa99f0c6d64ffabe547dd9eb642e45c5d1ea35` | — |
+| Evidence JSON | `6ec9a9783a19d49c8abe73a210c0371786725451c8a7daa86d9ec2d6178fdc69` | — |
+
+Evidence coverage와 안전 경계는 다음과 같다.
 
 - `hid_report_protocol=true`
 - `bond_persistence_pending_not_verified_same_boot=true`
@@ -214,13 +292,14 @@ coverage 경계를 기록한다.
 - `rf_nonce_binding_bits=128`
 - `windows_or_smartphone_hid_input=false`
 - `manual_os_hid_confirmation_pending=true`
-- `mass_erase_requested=false`, `factory_reset_executed=false`
+- `mass_erase_requested=false`
+- `factory_reset_executed=false`
 
-따라서 두 보드 HIL PASS는 암호화된 GATT HID report map, CCC와 report payload의 protocol 검증이다.
-Windows 또는 스마트폰에 실제 키보드로 연결해 문자가 입력되는지 확인하는 UI/OS 검증은 자동 PASS에
-포함하지 않으며 별도 수동 증적이 필요하다.
+기존 evidence 파일은 `--overwrite-evidence`를 명시하지 않으면 덮어쓰지 않는다. PASS JSON과 양쪽
+raw transcript는 같은 디렉터리에 생성되며, evidence가 기록한 SHA-256으로 exact 실행 자산을
+상호 확인한다.
 
-## 7. 공용 builder 통합
+## 8. 공용 builder 통합
 
 새 library feature는 `nucode.ble.security`이며 공용 builder의 `FEATURE_ALLOWLIST`에 다음 mapping을
 등록한다.
@@ -232,12 +311,13 @@ Windows 또는 스마트폰에 실제 키보드로 연결해 문자가 입력되
 별도 공용 Kconfig 추가는 필요하지 않다. BLE core queue와 stack/settings lifecycle은 M19/M20 공용
 구현이 소유하고 M21 feature conf는 보안·표준 profile symbol만 소유한다.
 
-## 8. 남은 완료 조건
+## 9. 남은 완료 조건
 
-1. M19/M20/M21과 병렬 변경을 하나의 exact commit에 포함한다.
-2. 그 commit에서 contract와 두 role image를 pristine rebuild한다.
-3. 서로 다른 NU54DK 두 대에서 RF HIL runner를 실행한다.
-4. PASS JSON과 양쪽 raw transcript의 revision·SHA-256을 이 기록에 추가한다.
-5. Windows 또는 스마트폰에서 실제 HID 문자 입력을 수동 확인하고 자동 protocol PASS와 별도로 기록한다.
+자동 검증 조건은 모두 충족했다. 남은 조건은 다음 한 가지다.
 
-현재 host·target build 결과를 RF 또는 OS HID 실기 PASS로 확대하지 않는다.
+1. Windows 또는 스마트폰에서 NU54DK를 실제 HID keyboard로 pairing하고 실제 문자가 입력되는지 수동 확인한다.
+
+두 보드 RF HIL PASS는 암호화된 GATT HID report map, CCC와 report payload의 protocol 검증이다.
+운영체제 pairing UI·HID host stack·실제 키 입력을 자동 PASS에 포함하지 않는다. 수동 확인 전까지
+상태는 **M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기**로
+유지한다.

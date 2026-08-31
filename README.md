@@ -18,8 +18,9 @@ Sketch와 Arduino library를 nRF Connect SDK build graph에 통합해 ELF·HEX·
 | SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 사용자 환경 | Windows 10/11 x64, Arduino IDE 2.x |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
-| 현재 완료 범위 | M0~M18 / `v0.2.0` 정식 공개 |
-| 다음 작업 | AC-01 Core·GPIO·시간 Compatibility와 M19 BLE Core/GAP 병렬 착수 |
+| 정식 완료 범위 | M0~M18 / `v0.2.0` 정식 공개 |
+| `v0.3.0` 개발 상태 | AC-01·M19·M20 자동 HIL PASS / M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기 |
+| 다음 작업 | M21 OS HID 수동 확인, 이후 AC-02·AC-03과 M22 |
 
 ## 빠른 시작
 
@@ -124,6 +125,11 @@ Arduino CLI에서 명시적 CMSIS-DAP UID를 사용할 때는 compile과 upload�
 14개 예제는 릴리스 source와 공개 RC2 Boards Manager 설치본에서 14/14 compile gate를
 통과했습니다.
 
+현재 `main`의 `v0.3.0` 개발 트리는 GAP 2개, 범용 GATT 2개와 SecureKeyboard를 더한
+**5개 library, 19개 예제**를 포함하며 Arduino CLI에서 19/19 compile을 통과했습니다. 이는 아직
+공개 stable package의 예제 수를 19개로 변경했다는 뜻이 아닙니다. 설치된 `v0.2.0` package는
+위의 14개를 제공합니다.
+
 ## v0.2.0 지원 범위
 
 | 영역 | 상태 | 공개 범위 |
@@ -195,10 +201,11 @@ RC2 실기 결과, 같은 runtime payload와 stable 공개 설치 수명주기�
 | --- | --- | --- | --- |
 | `v0.1.0` | M0~M11 | 완료 | Core 기반, 기본 API, 주변장치, 업로드·패키징 |
 | `v0.2.0` | M12~M18 | 완료 | CI/CD, Profile·예제, Board/System, BLE NUS, 정식 공개 |
-| `v0.3.0` | AC-01 | **다음 작업** | Core·GPIO·시간 Arduino Compatibility 기준선 |
-| `v0.3.0` | AC-02~AC-03 | 대기 | 주변장치·timing output, Storage facade와 대표 library 호환성 |
-| `v0.3.0` | M19 | **다음 작업** | BLE Core/GAP, Advertising, Scan, 연결 수명주기 |
-| `v0.3.0` | M20~M21 | 대기 | 범용 GATT, BLE 보안·표준 Profile |
+| `v0.3.0` | AC-01 | **자동 검증 완료** | Core·GPIO·시간 Arduino Compatibility exact-commit HIL PASS |
+| `v0.3.0` | AC-02~AC-03 | 미착수 | 주변장치·timing output, Storage facade와 대표 library 호환성 |
+| `v0.3.0` | M19 | **자동 검증 완료** | BLE Core/GAP 두 보드 advertise·scan·연결·재연결 HIL PASS |
+| `v0.3.0` | M20 | **자동 검증 완료** | 범용 GATT 두 보드 read/write/notify/indicate HIL PASS |
+| `v0.3.0` | M21 | 진행 중 | 자동 검증 완료 — Core `065d4f5` exact 두 보드 HIL PASS, host 38/38; Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기 |
 | `v0.3.0` | M22 | 대기 | AC-01~03과 M19~21을 통합한 package·RC/stable gate |
 | `v0.4.0` | M23~M26 | 계획 | Storage·Crypto, MCUboot·DFU, TF-M·복구 |
 | `v0.5.0` | M27~M30 | 계획 | Radio Profile, IEEE 802.15.4·ESB, OpenThread |

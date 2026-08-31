@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | VER-AC01-GPIO-001 |
-| 문서 개정 | 0.2 |
-| 상태 | 구현·host·production target build 완료, 물리 loopback 재확인 뒤 exact-commit HIL 대기 |
+| 문서 개정 | 0.3 |
+| 상태 | 구현·host·production target build와 exact-commit 물리 HIL PASS |
 | 최종 갱신일 | 2026-08-31 |
 | 대상 | `v0.3.0` AC-01 |
 | 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
@@ -24,12 +24,11 @@ production target build와 P2.5↔P2.6 GPIO HIL, SW0 실제 GPIOTE HIL의 경계
 | NU54DK production contract build | PASS |
 | NU54DK AC-01 HIL image build | PASS |
 | SW0 P1.13 level IRQ·callback mask 실기 | PASS — open-drain 자기구동, 수동 버튼 조작 없음 |
-| P2.5↔P2.6 exact-commit 실기 | BLOCKED — 연결된 선이 두 UID 모두에서 LOW로 관찰되지 않아 fixture 재확인 필요 |
+| P2.5↔P2.6 exact-commit 실기 | PASS — open-drain·pulse·shift·scheduler와 SW0 level/mask 통합 검증 |
 | 정식 `v0.3.0` 지원 선언 | 아직 아님 |
 
-Dirty working tree에서 만든 image의 flash 성공을 최종 증적으로 사용하지 않는다. Runner가 요구하는
-Core·application·board source digest와 exact commit을 만족하려면 먼저 전체 변경을 commit하고 같은
-source에서 pristine build해야 한다.
+최종 증거는 clean exact commit에서 pristine build한 image와 runner가 결합한 JSON·UART transcript다.
+아래 preflight 실패는 fixture 진단 이력으로 유지하며 최종 PASS를 대체하지 않는다.
 
 ## 2. connector 역할과 ownership
 
@@ -195,12 +194,28 @@ SW0 자기구동 전용 preflight에서는 다음 항목이 실제 보드에서 
 발견했다. Mask된 level ISR이 hardware trigger를 즉시 disable하고 최종 복원에서 one-shot으로
 재무장하도록 Core를 수정한 뒤 위 실기 결과를 얻었다.
 
-## 6. 남은 완료 조건
+### 5.2 exact-commit 최종 HIL
 
-1. 전체 AC-01과 병렬 작업을 한 commit에 포함한다.
-2. 해당 exact commit에서 AC-01 HIL image를 pristine rebuild한다.
-3. 한 보드 내부의 P2.5↔P2.6 점퍼 위치를 재확인한 뒤 runner를 실행한다.
-4. 최종 PASS transcript/evidence의 revision, UID, SHA-256과 측정값을 이 기록에 추가한다.
-5. 그 뒤 roadmap/API 상태를 AC-01 완료로 승격한다.
+점퍼 위치를 같은 보드의 P2.5↔P2.6으로 바로잡은 뒤 exact commit에서 pristine build와 자동 runner를
+실행해 PASS했다.
 
-현재 source·host·target build 결과를 실기 PASS로 확대하지 않는다.
+| 항목 | 최종 값 |
+| --- | --- |
+| Core revision | `ac10ba3b253bd6bf76bcf73aa2c79278304908a4` |
+| Board revision | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
+| 완료 시각 | `2026-08-31T10:29:09.489187+00:00` |
+| Probe/UART | CMSIS-DAP V2 `5415360300052840fcd47678fd7d106d`, `COM13` |
+| Image SHA-256 | `c4537e956de0af14950fc95ff2a7b068a0a61adfcf1752e2f5cdd9f5419e53d2` |
+| Transcript SHA-256 | `4113e897efafa17c8db5f548138f7e08e30c2792e57bb43a3df610cfad982f4f` |
+| 측정값 | short pulse `1554 us`, long pulse `20048 us`, heartbeat delta `10` |
+| 안전 경계 | 한 보드, 내부 pull-up, 수동 버튼 조작 없음, mass erase/recover 없음 |
+
+이 실행은 P2.5 open-drain LOW/release, P2.6 내부 pull-up readback, short/long pulse와 timeout,
+shift 최종 상태, SW0 P1.13 LOW/HIGH one-shot·rearm 및 nested callback mask를 하나의 exact evidence로
+결합했다.
+
+## 6. 완료 판정
+
+AC-01의 source/host·target build와 요구한 물리 HIL은 모두 통과했다. 이 판정은 `v0.3.0` 개발
+마일스톤의 자동 검증 완료이며, 공개 stable package 지원 선언은 AC-02·AC-03과 M21을 포함한 M22
+릴리스 gate 뒤에만 수행한다. 외부 pull-up 상승시간·부하 전기 HIL은 승인된 비차단 제외로 유지한다.

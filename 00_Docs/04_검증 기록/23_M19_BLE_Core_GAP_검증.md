@@ -8,12 +8,13 @@
 | NU54DK target contract build | PASS |
 | Peripheral role image build | PASS |
 | Central role image build | PASS |
-| 두 보드 RF HIL | **NOT RUN — exact commit 뒤 실행 필요** |
+| 두 보드 RF HIL | **PASS — exact commit `0103a8434ac205a953c981385ae26a2a64aeeccc`** |
 | 외부 배선 | 없음 — 각 보드 USB만 사용 |
 
-2026-08-31 dirty 개발 checkout에서 구현과 build-only 검증을 완료했습니다. 이 기록의 target
-PASS는 compile/link 결과이며 실제 RF 연결 PASS로 확대하지 않습니다. 두 보드 HIL runner는
-exact commit, clean source와 build record가 일치할 때만 flash/evidence 생성을 허용합니다.
+2026-08-31 dirty 개발 checkout에서 구현과 build-only 검증을 먼저 완료한 뒤 clean exact commit의
+두 보드 HIL을 실행했습니다. 첫 `ac10ba3` 실행에서 연결 뒤 link request 오류를 발견했고, 원인을
+교정한 `0103a843`에서 advertise·scan·connect·disconnect·explicit reconnect와 callback 문맥까지
+PASS했습니다. Build-only 결과와 실제 RF PASS는 아래에서 구분해 보존합니다.
 
 ## 구현 범위
 
@@ -47,6 +48,16 @@ HIL parser는 정상 transcript뿐 아니라 짧거나 stale인 nonce, token 재
 - disconnect, peripheral readvertise, central explicit reconnect
 - 두 번째 실제 connect/disconnect
 - 모든 공개 callback의 Arduino main-thread 실행
+
+## 첫 exact 실행에서 발견한 오류와 교정
+
+`ac10ba3b253bd6bf76bcf73aa2c79278304908a4`의 첫 두 보드 실행은 UUID/manufacturer filter와
+첫 연결까지 성공했지만 Central이 `NUCODE_M19_FAIL:role=central:reason=link-request`를 출력했습니다.
+자동 PHY 요청이 peer/controller가 지원하는 PHY를 확인하지 않고 수행된 것이 원인이었습니다.
+
+`0103a8434ac205a953c981385ae26a2a64aeeccc`에서는 연결이 보고한 local/remote PHY capability에서
+실제로 사용할 수 있는 PHY만 요청하도록 고쳤습니다. 이 실패 transcript는 수정 뒤 PASS로
+덮어쓰지 않고 회귀 원인으로 보존합니다.
 
 ## Exact-commit role image build
 
@@ -96,7 +107,23 @@ $Commit = git -C $CoreRoot rev-parse HEAD
 ```
 
 Runner는 두 UID·MSD·UART가 모두 다른지, Core/board exact revision과 clean source인지, 두 HEX의
-build record와 source digest가 일치하는지, role image SHA-256이 서로 다른지 확인합니다. 이 gate를
-통과한 실제 JSON과 companion transcript가 생기기 전까지 M19 RF HIL 상태는 NOT RUN입니다.
+build record와 source digest가 일치하는지, role image SHA-256이 서로 다른지 확인합니다. 최종
+실행은 이 gate를 통과해 `m19-ble-gap-0103a84.json`과 양쪽 companion transcript를 생성했습니다.
 Service UUID exact filter가 UART nonce 전체 128 bit를 over-air로 결합하므로 prefix가 같은 주변
 보드만으로 false PASS가 만들어지지 않습니다.
+
+## 최종 exact-commit HIL 결과
+
+| 항목 | Peripheral | Central |
+| --- | --- | --- |
+| Core revision | `0103a8434ac205a953c981385ae26a2a64aeeccc` | 동일 |
+| Board revision | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` | 동일 |
+| Probe/UART | `5415360300052840d9e1e32cc887aaf1` / `COM14` | `5415360300052840fcd47678fd7d106d` / `COM13` |
+| Image SHA-256 | `22f2b5917bfb18d84d0abcfc2f901d4c960b5fbc7a49b03a1051a77adfe18883` | `66ed78694dd7a23cf12aea0ce1a533f05fd9d205552a06b1bed3f916695a221b` |
+| Transcript SHA-256 | `2254eeab43bdf03e8994b8c064c93423e11a4f5d6b820812930be4636c25f578` | `de6cfd27a997c6ffe9faadfe35cc70eab0a2274d239bb02f9411df4e5bf05232` |
+| 연결 round | 1, 2 | 1, 2 |
+| 결과 | callback main-thread·readvertise PASS | filter·explicit reconnect·link requests PASS |
+
+완료 시각은 `2026-08-31T11:21:53.309840+00:00`이며, RF binding nonce는 전체 128 bit다. ATT MTU,
+PHY, connection parameter와 TX power 요청을 포함했고 양쪽 disconnect 2회와 explicit reconnect가
+PASS했다. 추가 GPIO 배선, mass erase와 PMIC write는 사용하지 않았다.

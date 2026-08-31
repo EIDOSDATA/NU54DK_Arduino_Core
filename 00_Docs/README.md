@@ -45,10 +45,12 @@
 | --- | --- | --- |
 | M0~M11 | **완료** | `v0.1.0` Core, build/upload, package와 clean Windows 기준선 |
 | M12~M18 | **완료** | CI/CD, profile, Core/Variant, Board/System, BLE NUS, NCS coverage와 `v0.2.0` 공개 |
-| AC-01 | **계획 — 착수 전** | Core·GPIO·시간 Arduino Compatibility 기준선; M19와 병렬 착수 가능 |
-| AC-02~AC-03 | **대기** | 주변장치·timing output, Storage facade와 대표 library 호환성; AC 선행 단계 완료 후 착수 |
-| M19 | **계획 — 착수 전** | BLE Core/GAP, advertising, scanning과 connection lifecycle; AC-01과 병렬 착수 가능 |
-| M20~M21 | **대기** | 범용 GATT, 보안·표준 profile; BLE 선행 단계 완료 후 착수 |
+| AC-01 | **자동 검증 완료** | Core·GPIO·시간 Arduino Compatibility exact-commit HIL PASS |
+| AC-02 | **계획 — 미착수** | 주변장치·timing output 호환성; AC-01 완료 기준선에서 착수 가능 |
+| AC-03 | **대기** | Storage facade와 대표 library 호환성; AC-02 완료 후 착수 |
+| M19 | **자동 검증 완료** | BLE Core/GAP exact-commit 두 보드 RF HIL PASS |
+| M20 | **자동 검증 완료** | 범용 GATT exact-commit 두 보드 RF HIL PASS |
+| M21 | **진행 중** | M21 진행 중 — 자동 검증 완료, Windows/스마트폰 OS HID pairing·실제 키 입력 수동 확인 대기; Core `065d4f5` exact 두 보드 HIL·host 38/38 PASS |
 | M22 | **대기** | AC-01~AC-03과 M19~M21을 통합한 `v0.3.0` package·RC/stable gate |
 | M23~M34 | **장기 계획** | storage/security/DFU, radio/OpenThread, Matter 제품선 |
 
@@ -107,11 +109,14 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - [시험 전략](<./03_펌웨어 설계/04_테스트와_검증.md>)
 - [NU54DK Board/System API](<./03_펌웨어 설계/05_NU54DK_Board_System_API.md>)
 - [BLE NUS API](<./03_펌웨어 설계/06_BLE_NUS_API.md>)
+- [BLE Core/GAP API](<./03_펌웨어 설계/07_BLE_Core_GAP_API.md>)
+- [BLE 범용 GATT API](<./03_펌웨어 설계/08_BLE_범용_GATT_API.md>)
 
 ### 04. 검증 기록
 
-M1~M18과 정식 공개 증거는 [검증 기록 안내](<./04_검증 기록/README.md>)에서 찾는다. 이
-디렉터리의 문서는 당시 revision과 결과를 보존하는 역사 기록이다.
+M1~M18과 정식 공개 증거, `v0.3.0` AC-01·M19~M21의 진행 중 증거는
+[검증 기록 안내](<./04_검증 기록/README.md>)에서 찾는다. 이 디렉터리의 문서는 당시 revision과
+결과를 보존하는 역사 기록이다.
 
 ### 05. 릴리스 문서
 

@@ -6,6 +6,10 @@ M19는 NUS에 종속되지 않는 Arduino 친화 BLE lifecycle과 GAP API를 제
 Zephyr type을 노출하지 않으며, 동적 할당 없이 단일 연결과 31-byte legacy advertising을
 명시적으로 지원합니다.
 
+이 API는 정식 `v0.2.0` package에는 없으며 `v0.3.0` 개발 트리에서 추가됐습니다. Exact-commit
+두 보드 RF PASS는 [M19 BLE Core/GAP 검증](<../04_검증 기록/23_M19_BLE_Core_GAP_검증.md>)이
+소유하며 M22 전에는 stable 지원으로 소급 표시하지 않습니다.
+
 | 객체 | 책임 | 고정 경계 |
 | --- | --- | --- |
 | `BLEDevice` | stack 1회 초기화, 이름, main-thread event dispatch | image당 1개 |
