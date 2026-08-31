@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-M15-BOARD-SYSTEM-001 |
-| 문서 개정 | 1.3 |
-| 문서 상태 | **M15 완료** — 자동 HIL 2/2와 SWD 격리 System OFF 결합 HIL PASS |
+| 문서 개정 | 1.5 |
+| 문서 상태 | `v0.2.0` 정식 계약 |
 | 적용 제품 버전 | `v0.2.0` |
-| 최종 갱신일 | 2026-08-30 |
+| 최종 갱신일 | 2026-08-31 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 기준 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
@@ -15,7 +15,7 @@
 
 ## 1. 목적과 범위
 
-M15는 NU54DK에 종속된 board identity, reset, watchdog, GRTC, 내부 settings 저장소,
+`v0.2.0`은 NU54DK에 종속된 board identity, reset, watchdog, GRTC, 내부 settings 저장소,
 System OFF와 BQ25186 전원 관리 기능을 `NUCODE_NU54DK` Arduino library 안에 캡슐화한다.
 일반 사용자는 `prj.conf`나 Devicetree overlay를 직접 편집하지 않고 `<NUCODE_NU54DK.h>`와
 전역 객체 `NU54DK`를 사용한다.
@@ -40,7 +40,8 @@ NU54DK DTS와 standard profile
 
 - `board-system.conf`: HWINFO, watchdog, poweroff, PM device, flash, ZMS와 settings
 - `board-system.overlay`: DTS alias `watchdog0`가 가리키는 `wdt31` 활성화
-- `wire` feature 의존성: BQ25186 접근에 기존 Arduino `Wire` backend 사용
+- feature 의존성 `gpio`, `serial`, `wire`, `adc`, `pwm`: Board/System 예제와 공개 facade가 사용하는
+  표준 backend를 함께 활성화하며, BQ25186 접근은 기존 Arduino `Wire` backend를 사용
 
 BQ25186 Devicetree child node는 계속 `status = "disabled"`다. Zephyr charger driver를
 자동 활성화하거나 초기화 시점의 register write를 유발하지 않는다.
@@ -56,9 +57,11 @@ NU54DK.boardModel();
 ```
 
 모든 실패 가능한 호출은 `nucode::nu54dk::Error`를 반환한다. `lastError()`는 마지막 안정
-오류 분류를, `lastDriverError()`는 원래 Zephyr 또는 I2C 오류 번호를 보존한다. ISR에서
-mutex, I2C, settings 또는 전원 상태를 변경하는 API를 호출하면 `invalid_context`로 거부한다.
-하드웨어나 driver가 지원하지 않는 동작을 software fallback 성공으로 바꾸지 않는다.
+오류 분류를 보존한다. `lastDriverError()`는 일반 Zephyr driver 오류를 보존하지만,
+`pmicReadRegister()`와 `pmicWriteRegister()`의 Wire 실패는 세부 I2C 오류를 그대로 노출하지 않고
+`-EIO`로 축약한다. ISR에서 mutex, I2C, settings 또는 전원 상태를 변경하는 API를 호출하면
+`invalid_context`로 거부한다. 하드웨어나 driver가 지원하지 않는 동작을 software fallback
+성공으로 바꾸지 않는다.
 
 ## 4. Board identity, reset과 uptime
 
@@ -67,7 +70,8 @@ mutex, I2C, settings 또는 전원 상태를 변경하는 API를 호출하면 `i
 | `boardModel()` | NU54DK board package와 일치하도록 Core가 고정한 모델 문자열 |
 | `boardTarget()` | build에 사용한 Zephyr board target |
 | `socName()` | build의 SoC 이름 |
-| `ncsVersion()` / `zephyrVersion()` / `coreVersion()` | 고정 compatibility identity |
+| `ncsVersion()` / `zephyrVersion()` | 고정 compatibility identity |
+| `coreVersion()` | Core source의 identity. 현재 stable package metadata는 `0.2.0`이지만 구현 반환값은 `0.2.0-dev`로 남아 있어 배포 버전의 단일 기준으로 사용하지 않음 |
 | `deviceId()` | `hwinfo_get_device_id()`의 raw 값을 16진 문자열로 복사 |
 | `resetReport()` | reset cause와 하드웨어 지원 mask를 함께 반환 |
 | `clearResetCause()` | 누적 reset cause latch 제거 |
@@ -113,7 +117,9 @@ Arduino API가 같더라도 adapter를 다시 검토하고 target 검증을 수�
 | 손상 처리 | 자동 erase를 강제하는 `SETTINGS_ZMS_FORCE_MOUNT` 사용 안 함 |
 
 이 API는 EEPROM byte 주소 호환층이나 일반 filesystem이 아니다. Flash wear, 전원 차단 시점과
-제품별 데이터 migration은 Sketch가 별도로 설계해야 한다.
+제품별 데이터 migration은 Sketch가 별도로 설계해야 한다. `v0.3.0` AC-03은 이
+Settings/ZMS 기준선과 공존하는 제한된 EEPROM/FS facade를 계획하지만, 원자적 commit,
+partition 소유권, reset/power-cycle 복구와 migration gate를 통과하기 전에는 현재 지원이 아니다.
 
 ## 8. System OFF와 wake
 
@@ -129,25 +135,13 @@ Wake 준비와 System OFF 진입을 별도 공개 호출로 나누지 않는다.
 `SystemOffWake` 예제는 부팅 직후 자동으로 전원을 끄지 않는다. Serial Monitor에서 `BUTTON`
 또는 `TIMER` 명령을 받은 뒤에만 wake source를 준비하고 System OFF에 진입한다.
 
-M15 자동 HIL image와 runner는 System OFF에 진입하지 않는다. 자동 범위는 board identity와
-uptime, GRTC one-shot callback, Settings reset persistence, WDT 정상 동작과 reset 경계다.
-GRTC alarm callback의 성공을 timed System OFF wake 성공으로 확대하지 않는다.
+자동 HIL과 System OFF 결합 HIL은 역할을 분리한다. System OFF 검증은 image 기록과 UART 준비를
+마친 뒤 온보드 debug-control switch의 `DISABLE_SWD` 쪽만 격리하고 UART는 유지한다. 이 switch는
+Arduino 사용자 버튼과 다른 부품이다. GRTC timed wake와 사용자 버튼 wake는 모두 검증 완료했다.
 
-Core `6898f7917348fab3c5cf54eec0756523e2c27d69`의 동일한 공식 CI HEX로 두 NU54DK에서 이
-비-System-OFF scope를 2/2 통과했다. `timed_system_off_wake`와
-`button_system_off_wake`는 두 실행 모두 수행하지 않았다.
-
-System OFF는 공식 CI image를 사용하는 후속 수동 결합 HIL에서 검증한다. Image를 기록하고
-UART를 준비한 뒤 온보드 debug-control 2연 `SW1`의 `DISABLE_SWD` 쪽만 격리 위치로 전환한다.
-`DISABLE_UART` 쪽은 전환하지 않아 UART 연결을 유지한다. 이 debug-control `SW1`은 Arduino
-사용자 버튼 `SW1`/P1.09와 다른 물리 부품이다.
-
-결합 HIL은 GRTC timed wake와 `RESET_CLOCK`을 먼저 확인하고, 이어서 다시 System OFF에 진입해
-사용자 SW0/P1.13 wake와 `LOW_POWER_WAKE`를 확인한다. Active SWD가 만든 reset cause `32`
-(`RESET_DEBUG`)는 fixture contamination 진단이며 두 wake source의 PASS로 인정하지 않는다.
-Core `c47239d954c45fd173d8d1393e3ea5c9c86e111a`의 공식 CI image로 한 SWD-only 격리
-세션에서 timed wake `2062 ms`/cause `2048`과 SW0 wake `20406 ms`/cause `128`을 순서대로
-통과했다. 따라서 2026-08-30 기준 M15 완료 조건을 충족했다.
+Exact image, reset cause, 시간, transcript와 commit은
+[M15 NU54DK Board/System 기준선](<../04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)만
+소유한다. GRTC alarm callback 성공을 System OFF wake 성공으로 확대하지 않는다.
 
 ## 9. BQ25186 PMIC 안전 경계
 
@@ -231,29 +225,26 @@ NU54DK 회로에는 이 API가 사용할 실제 배터리 NTC 입력이 없으�
 `hasBatteryTemperatureProtection()`은 항상 `false`다. 실제 배터리 온도 보호는 미지원이다.
 PMIC write API의 존재나 software semantic test를 전기적 안전성 PASS로 해석하면 안 된다.
 
-## 10. 예제와 검증 계층
+## 10. 예제와 검증
 
-| 경로 | 목적 | 현재 상태 |
-| --- | --- | --- |
-| `BoardInfo` | identity, device ID와 reset report | 구현됨, 비-System-OFF 자동 HIL 2/2 PASS |
-| `WatchdogBasic` | watchdog begin/feed 정상 경로 | 구현됨, stop·expiry reset 자동 HIL 2/2 PASS |
-| `CounterAlarm` | GRTC counter와 work-queue callback | 구현됨, callback 자동 HIL 2/2 PASS; timed System OFF wake PASS |
-| `SettingsStorage` | 내부 partition boot count | 구현됨, reset persistence 자동 HIL 2/2 PASS |
-| `SystemOffWake` | 명시적 BUTTON/TIMER 명령 | 구현됨, timed GRTC→사용자 SW0 System OFF 결합 HIL PASS |
-| `tests/host/test_m15_board_system_contract.py` | 공개 API·구성·PMIC 안전 경계 | Software Gates run `33295587578` SUCCESS |
-| `tests/zephyr/m15_board` | production target compile/link와 안전한 read 상태 | 공식 CI build SUCCESS |
-| `tests/zephyr/m15_hil` | identity·reset·GRTC callback·Settings·WDT 비-System-OFF 자동 HIL image | 공식 CI build SUCCESS, 두 보드 HIL 2/2 PASS |
-| `tests/zephyr/m15_wake` | SWD 격리 timed GRTC→사용자 SW0 결합 HIL image | Reproducible Builds run `33295588535` SUCCESS, 물리 HIL PASS |
-| `tests/hil/nu54dk/m15_auto.py` | nonce 기반 비-System-OFF 자동 HIL과 비파괴 복구 | 두 보드 실기 2/2 PASS |
-| `tests/hil/nu54dk/m15_system_off.py` | timed GRTC와 SW0 wake 결합 protocol·증적 | Core `c47239d954c4`에서 물리 HIL PASS |
+| 경로 | 목적 |
+| --- | --- |
+| `BoardInfo` | identity, device ID와 reset report |
+| `WatchdogBasic` | watchdog begin/feed 정상 경로 |
+| `CounterAlarm` | GRTC counter와 work-queue callback |
+| `SettingsStorage` | 내부 partition boot count |
+| `SystemOffWake` | 명시적 BUTTON/TIMER System OFF 진입 |
+| `tests/host/test_m15_board_system_contract.py` | 공개 API·구성·PMIC 안전 경계 |
+| `tests/zephyr/m15_board`, `tests/zephyr/m15_hil`, `tests/zephyr/m15_wake` | production build, 일반 HIL과 System OFF image |
+| `tests/hil/nu54dk/m15_auto.py`, `tests/hil/nu54dk/m15_system_off.py` | 실제 보드 protocol과 evidence 생성 |
 
 최종 실행 결과와 exact commit은
 [M15 NU54DK Board/System 기준선](<../04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)에
 기록한다.
 
-## 11. M15 완료 경계
+## 11. 현재 완료 경계
 
-M15를 완료하려면 다음 조건이 모두 충족되어야 한다.
+`v0.2.0`은 다음 범위를 완료했다.
 
 - 공개 API와 오류·context negative 시험 통과
 - Arduino 예제 compile/discovery와 production NU54DK target build 통과
@@ -265,8 +256,7 @@ M15를 완료하려면 다음 조건이 모두 충족되어야 한다.
 - PMIC battery electrical HIL은 `NOT RUN`과 사용자 책임으로 계속 명시
 - 실제 NTC 온도 보호를 미지원으로 유지
 
-PMIC 전기 HIL은 프로젝트 소유자가 승인한 M15 범위 제외이므로 M15 완료를 차단하지 않는다.
-대신 해당 API는 전기적으로 검증된 완전 지원으로 표시하지 않는다.
-
-Core `c47239d954c45fd173d8d1393e3ea5c9c86e111a`에서 위 비-System-OFF 자동 HIL과
-System OFF 결합 HIL 조건을 모두 충족했다. M15는 **완료**이며 다음 구현 단계는 M16 basic BLE다.
+PMIC 전기 HIL은 승인된 범위 제외이며 해당 API를 전기적으로 검증된 완전 지원으로 표시하지
+않는다. 다음 제품 구현은 AC-01 Arduino Compatibility와 M19 BLE Core/GAP을 병렬로 착수한다.
+현 Board/System 계약은 두 첫 단계의 변경 대상이 아니며, 저장소 facade를 다루는 AC-03에서도
+`nucode/` namespace, BLE bond와 고정 partition 소유권을 깨지 않는 회귀 증거를 요구한다.

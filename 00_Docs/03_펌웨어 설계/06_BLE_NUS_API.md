@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-M16-BLE-NUS-001 |
-| 문서 개정 | 1.0 |
-| 문서 상태 | **M16 완료** — Peripheral/Central Stream과 두 보드 HIL PASS |
+| 문서 개정 | 1.1 |
+| 문서 상태 | `v0.2.0` 정식 NUS 계약 |
 | 적용 제품 버전 | `v0.2.0` |
-| 최종 갱신일 | 2026-08-30 |
+| 최종 갱신일 | 2026-08-31 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 기준 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
@@ -15,7 +15,7 @@
 
 ## 1. 목적과 지원 범위
 
-M16은 NCS의 Nordic UART Service(NUS)를 Arduino `Stream` 형태로 제공한다. 일반 사용자는
+`v0.2.0`은 NCS의 Nordic UART Service(NUS)를 Arduino `Stream` 형태로 제공한다. 일반 사용자는
 `prj.conf`나 overlay를 직접 편집하지 않고 Arduino IDE에서 `BLE NUS` feature set을 선택한 뒤
 `<NUCODE_BLE.h>`와 전역 객체 `BLESerial`을 사용한다.
 
@@ -31,7 +31,7 @@ M16은 NCS의 Nordic UART Service(NUS)를 Arduino `Stream` 형태로 제공한�
 - 연결 해제 뒤 Peripheral 재광고와 Central 재검색
 - `poll()`에서만 전달되는 사용자 event callback
 
-M16은 임의 GATT service/characteristic 생성, GATT read, indication, bonding, SMP와 HID를
+현재 구현은 임의 GATT service/characteristic 생성, GATT read, indication, bonding, SMP와 HID를
 Arduino wrapper로 제공하지 않는다. 이 기능들은 `v0.2.0` 지원 범위 밖이다. 고급 사용자는 같은
 Full Zephyr image에서 Zephyr/NCS 공개 `bt_*` API를 직접 사용할 수 있으며, 이를 M16 wrapper가
 가로막지 않는다.
@@ -94,12 +94,14 @@ Build Adapter는 Arduino source discovery에서 `<NUCODE_BLE.h>`를 찾고 featu
 | `beginCentral()` | Bluetooth/NUS client를 준비하고 Central 역할 선택 |
 | `scanForNus(exact_name)` | exact local name을 active scan하고 NUS peer에 자동 연결 |
 | `disconnect()` | 현재 연결을 비동기로 종료; 자동 재광고/재검색은 유지 |
-| `end()` | 광고·검색·자동 재시작을 중단하고 현재 연결 종료 |
+| `end()` | 광고·검색·자동 재시작을 중단하고 active connection의 종료를 요청 |
 
 한 image의 전역 `BLESerial`은 한 시점에 Peripheral 또는 Central 역할 하나만 가진다. 역할을
 중복 시작하거나 잘못된 역할의 API를 호출하면 명시적 오류로 실패한다. Bluetooth stack과 NUS
 module은 image 수명 동안 한 번만 초기화하며 `end()`는 radio 동작과 role lifecycle을 끝내지만
-Zephyr Bluetooth stack 자체를 unload하지 않는다.
+Zephyr Bluetooth stack 자체를 unload하지 않는다. Scan callback에서 만든 `pending_connection`은
+현재 `end()`가 취소하지 않으므로 연결 시도 중 호출하면 종료 뒤 연결이 성립할 수 있다. 완전한
+비동기 연결 취소까지 보장하는 API로 해석하지 않는다.
 
 ### 4.2 상태와 event
 
@@ -108,7 +110,7 @@ Zephyr Bluetooth stack 자체를 unload하지 않는다.
 | `poll()` | 연결 후보 처리, 재광고·재검색과 queued event callback 전달 |
 | `connected()` | BLE link 연결 상태 |
 | `ready()` | NUS write/notification 경로가 실제 전송 가능한 상태 |
-| `onEvent(callback, context)` | Arduino main 문맥에서 호출할 event callback 등록 |
+| `onEvent(callback, context)` | `poll()`을 호출한 non-ISR thread 문맥에서 전달할 event callback 등록 |
 | `mtu()` | 현재 연결의 최대 NUS payload; 미연결 시 0 |
 | `droppedRxBytes()` | 고정 RX queue overflow로 버린 누적 byte 수 |
 | `lastError()` | 안정적인 공개 오류 분류 |
@@ -156,29 +158,23 @@ characteristic write를 사용하고, notification은 RX queue로 전달한다.
 
 공개 오류는 `none`, `invalid_argument`, `invalid_context`, `already_started`, `not_started`,
 `wrong_role`, `not_connected`, `not_ready`, `busy`, `rx_overflow`, `event_overflow`, `timeout`,
-`driver_error`로 구분한다. NCS 오류를 임의의 성공값으로 바꾸지 않으며 원래 정수 오류를
-`lastDriverError()`에 보존한다.
+`driver_error`로 구분한다. 일반 driver 실패는 가능한 범위에서 원래 정수 오류를
+`lastDriverError()`에 보존한다. 다만 `end()`는 advertising/scan 중단과 disconnect의 개별 반환값을
+공개 오류로 모두 전달하지 않으므로, 모든 NCS 오류가 보존된다고 보장하지 않는다.
 
-Lifecycle과 TX는 각각 Zephyr mutex로 직렬화한다. Connection reference와 scan 후보는 spinlock,
-상태는 atomic으로 보호한다. 다만 사용자 event callback과 callback context의 수명은 Sketch가
+대부분의 lifecycle 변경과 TX는 각각 Zephyr mutex로 직렬화한다. 현재 `end()`는 lifecycle mutex를
+잡지 않는다. Connection reference와 scan 후보는 spinlock, 상태는 atomic으로 보호한다. 다만
+사용자 event callback과 callback context의 수명은 Sketch가
 소유하며, callback 안에서 긴 blocking 동작을 실행하면 `poll()`과 Arduino `loop()` 진행도 함께
 지연된다.
 
 ## 8. 검증된 동작
 
-Core `3b47b86d10219acf96e9b0f5662242e543cf06ef`과 board package
-`fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3`에서 다음을 검증했다.
+공개 API/profile/feature 계약, 두 Arduino 예제, production target build와 서로 다른 두 NU54DK의
+Peripheral/Central 연결·양방향 data·명시적 disconnect 뒤 재연결을 검증했다. 사용자 event
+callback도 `poll()`을 호출한 Arduino 문맥에서 실행되는 것을 확인했다.
 
-- 공개 API, profile, feature와 fixed queue host contract 5/5 PASS
-- 두 보드 HIL parser·evidence contract를 포함한 M16 host 회귀 총 14/14 PASS
-- `NUSPeripheral`, `NUSCentral` Arduino example discovery/compile PASS
-- production NUS contract target compile/link PASS
-- 서로 다른 두 NU54DK에서 Peripheral/Central 연결과 양방향 echo PASS
-- 1, 20, 21, 64 byte frame과 재연결 뒤 21 byte frame PASS
-- 한 번의 명시적 disconnect 뒤 두 번째 연결 PASS
-- 두 역할 모두 user callback의 Arduino main-thread 문맥 PASS
-
-Exact image, build record, UART transcript와 evidence digest는
+Exact payload, 반복 횟수, image, build record, UART transcript와 evidence digest는
 [M16 BLE NUS 기준선](<../04_검증 기록/18_M16_BLE_NUS_기준선.md>)에 기록한다.
 
 ## 9. 명시적 비지원 범위
@@ -195,9 +191,12 @@ Exact image, build record, UART transcript와 evidence digest는
 필요한 고급 기능은 Zephyr/NCS `bt_*` API를 직접 사용하거나 후속 검증된 profile/library를
 선택한다. M16 NUS HIL 한 건을 위 기능 전체의 지원 증거로 확대하지 않는다.
 
-## 10. M16 완료 경계
+## 10. 현재 완료 경계와 다음 단계
 
-M16은 NUS Peripheral/Central Stream, 두 Arduino 예제, `ble` profile과 strict feature resolver,
-host/target build 계약 및 두 보드 HIL을 모두 확보했다. 동적 GATT, read, indication, bonding과
-SMP를 제외한 이 범위에서 **완료**다. 다음 구현 단계는 M17 NCS v3.4.0 기능·예제 coverage 첫
-묶음이다.
+`v0.2.0`은 NUS Peripheral/Central Stream, 두 Arduino 예제, `ble` profile, strict feature
+resolver, host/target 계약과 두 보드 HIL을 완료했다. 동적 GATT, read, indication, bonding과
+SMP는 이 완료 범위에 포함되지 않는다.
+
+다음 구현 단계는 M19 BLE Core/GAP이다. Device lifecycle, advertising payload/interval, scan
+filter와 일반 connection 제어는 M19 증거를 확보하기 전까지 미구현이다. M19는 기존 NUS API와
+두 보드 regression을 유지해야 하며, GATT와 security는 이후 별도 단계에서 검증한다.

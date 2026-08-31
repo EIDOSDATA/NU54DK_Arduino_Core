@@ -19,7 +19,7 @@ Sketch와 Arduino library를 nRF Connect SDK build graph에 통합해 ELF·HEX·
 | 사용자 환경 | Windows 10/11 x64, Arduino IDE 2.x |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 현재 완료 범위 | M0~M18 / `v0.2.0` 정식 공개 |
-| 다음 작업 | M19 BLE Core/GAP부터 시작하는 `v0.3.0` |
+| 다음 작업 | AC-01 Core·GPIO·시간 Compatibility와 M19 BLE Core/GAP 병렬 착수 |
 
 ## 빠른 시작
 
@@ -195,8 +195,11 @@ RC2 실기 결과, 같은 runtime payload와 stable 공개 설치 수명주기�
 | --- | --- | --- | --- |
 | `v0.1.0` | M0~M11 | 완료 | Core 기반, 기본 API, 주변장치, 업로드·패키징 |
 | `v0.2.0` | M12~M18 | 완료 | CI/CD, Profile·예제, Board/System, BLE NUS, 정식 공개 |
+| `v0.3.0` | AC-01 | **다음 작업** | Core·GPIO·시간 Arduino Compatibility 기준선 |
+| `v0.3.0` | AC-02~AC-03 | 대기 | 주변장치·timing output, Storage facade와 대표 library 호환성 |
 | `v0.3.0` | M19 | **다음 작업** | BLE Core/GAP, Advertising, Scan, 연결 수명주기 |
-| `v0.3.0` | M20~M22 | 대기 | 범용 GATT, BLE 보안·표준 Profile, 릴리스 |
+| `v0.3.0` | M20~M21 | 대기 | 범용 GATT, BLE 보안·표준 Profile |
+| `v0.3.0` | M22 | 대기 | AC-01~03과 M19~21을 통합한 package·RC/stable gate |
 | `v0.4.0` | M23~M26 | 계획 | Storage·Crypto, MCUboot·DFU, TF-M·복구 |
 | `v0.5.0` | M27~M30 | 계획 | Radio Profile, IEEE 802.15.4·ESB, OpenThread |
 | `v0.6.0` | M31~M34 | 계획 | Matter 기반, Application Template, Commissioning HIL |

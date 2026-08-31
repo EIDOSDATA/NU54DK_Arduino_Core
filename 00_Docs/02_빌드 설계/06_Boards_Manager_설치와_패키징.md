@@ -1,502 +1,170 @@
-# Boards Manager 설치와 패키징 설계
+# Boards Manager 설치와 패키징 — stable v0.2.0
 
-| 항목 | 내용 |
+| 항목 | 값 |
 | --- | --- |
-| 문서 상태 | M10 기준선과 M18 검증 완료, v0.2.0 stable Boards Manager 배포 계약 공개 |
-| 작성자 | Quantum / NUCODE |
-| 초기 지원 운영체제 | Windows 10/11 x64 |
-| Arduino package | `nucode:zephyr` |
-| Board FQBN | `nucode:zephyr:nu54dk` |
-| 현재 정식 버전 | `0.2.0` (`0.1.0` downgrade 보존) |
-| 펌웨어 구조 | Loader/LLEXT 없는 Native Full Zephyr image |
+| package | `nucode:zephyr` |
+| board FQBN | `nucode:zephyr:nu54dk` |
+| 현재 stable | `0.2.0` |
+| 보존한 downgrade 버전 | `0.1.0` |
+| 초기 지원 OS | Windows 10/11 x64 |
+
+신규 사용자는 stable `0.2.0`을 설치한다. `0.1.0`과 과거 RC 문서는 downgrade·감사 증거로
+남아 있지만 현재 설치 안내가 아니다. 정확한 공개 자산, checksum과 수명주기 결과는
+[v0.2.0 정식 릴리스 공개 기록](<../04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md>)에서
+관리한다.
 
 ---
 
-## 1. 목적
+## 1. Stable index
 
-이 문서는 NU54DK Arduino Core를 공개 Arduino Boards Manager package로 배포하고,
-처음 사용하는 Windows PC에서 Nordic 개발 환경을 사용자 영역에 설치하는 계약을 정의한다.
-
-핵심 목표는 다음과 같다.
-
-- Arduino IDE의 Boards Manager URL 한 개로 NU54DK Core를 찾고 설치
-- Arduino CLI에서도 같은 공개 index와 같은 package를 사용
-- Core ZIP과 Nordic SDK/Toolchain의 배포 경계를 분리
-- NCS, Zephyr, Toolchain 및 설치 완료 상태를 정확한 version과 revision으로 검증
-- 중단된 대용량 설치를 같은 명령으로 재개
-- 온보드 CMSIS-DAP V2와 pyOCD로 Full Zephyr image를 직접 Upload
-- 고정 Git commit에서 재현 가능한 archive, checksum, SBOM과 license inventory 생성
-- preview upgrade/downgrade/uninstall/reinstall 수명주기 검증
-
-이 문서는 설치와 패키징의 **설계 및 사용 방법**을 설명한다. 실제 clean Windows PC의
-PASS/FAIL, 실행 시각, 로그와 측정값은 M10 검증 기록에서만 확정한다. 따라서 이 문서가
-존재한다는 사실만으로 M10 완료를 의미하지 않는다.
-
----
-
-## 2. 전체 구조
-
-~~~text
-공개 stable package index
-  package_nucode_nu54dk_index.json
-            │
-            ▼
-GitHub Release의 Core ZIP
-  Core + NU54DK board definition + 설치/검증 script
-            │
-            ├── post_install.bat
-            │       │
-            │       ▼
-            │   Nordic 공식 nRF Util / sdk-manager
-            │       │
-            │       ├── %USERPROFILE%\ncs\v3.4.0
-            │       └── %USERPROFILE%\ncs\toolchains\dcbdc366a1
-            │
-            ▼
-Arduino compile → Full Zephyr ELF/HEX → CMSIS-DAP V2/pyOCD Upload
-~~~
-
-Boards Manager ZIP에는 Arduino Core, Build Adapter, NU54DK board definition과 prerequisite
-설치 script만 들어 있다. Nordic가 배포하는 NCS, Zephyr, Toolchain, nRF Util과 pyOCD binary는
-Core ZIP이나 package index의 `tools` 항목에 포함하지 않는다.
-
----
-
-## 3. 공식 stable index
-
-Arduino IDE와 Arduino CLI에서 사용하는 고정 stable index URL은 다음과 같다.
+Arduino IDE와 Arduino CLI의 일반 update channel은 다음 URL이다.
 
 ~~~text
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ~~~
 
-index의 package identity는 다음과 같다.
+현재 index는 최신순으로 `0.2.0`, `0.1.0`을 제공한다. 특정 버전을 재현해야 하면 해당 GitHub
+Release의 불변 index snapshot을 사용한다. RC 전용 index와 preview index는 신규 설치에 쓰지
+않는다.
 
-| 항목 | 값 |
-| --- | --- |
-| package name | `nucode` |
-| architecture | `zephyr` |
-| Core identity | `nucode:zephyr` |
-| Board FQBN | `nucode:zephyr:nu54dk` |
-| archive 제공 위치 | `EIDOSDATA/NU54DK_Arduino_Core` GitHub Release asset |
-| 외부 tool dependency | 없음 — NCS/Toolchain은 `post_install.bat`이 별도 설치 |
-
-이 URL은 `main`에 게시한 최신 정식 version을 가리키는 장기 사용자 endpoint다. 각 Release에는
-같은 이름의 checksum 고정 index snapshot을 함께 첨부해 해당 version의 증거를 보존한다.
+Index의 `tools`와 platform의 `toolsDependencies`는 비어 있다. Nordic NCS/Toolchain은 Core
+ZIP에 넣지 않고 설치 후 `post_install.bat`이 Nordic 공식 배포 경로에서 준비한다.
 
 ---
 
-## 4. 고정 prerequisite
+## 2. 고정 prerequisite
 
-현재 package는 다음 identity를 정확히 요구한다.
+현재 package가 검증하는 identity는 다음과 같다.
 
 | 구성 요소 | 고정 값 |
 | --- | --- |
 | nRF Util | `8.2.1` |
 | nRF Util SHA-256 | `1d291d8a9d6bb5bec18454f8d95064aed7f62e8997ec1c4511f13bdf1124c037` |
-| sdk-manager command | `1.16.1` |
-| nRF Connect SDK | `v3.4.0` |
-| NCS `sdk-nrf` revision | `99553055607b2e9885fbc80ccd11fa9da81c2df0` |
-| Zephyr | `4.4.0` |
-| Zephyr revision | `bf801e4e3d19e1ffa76164346480cb7734dd2800` |
-| Nordic Toolchain bundle | `dcbdc366a1` |
-| Toolchain 내 pyOCD | Nordic bundle 포함; 별도 binary 재배포·독립 version pin 없음 |
+| `sdk-manager` command | `1.16.1` |
+| nRF Connect SDK | `v3.4.0` / `99553055607b2e9885fbc80ccd11fa9da81c2df0` |
+| Zephyr | `4.4.0` / `bf801e4e3d19e1ffa76164346480cb7734dd2800` |
+| Windows Toolchain bundle | `dcbdc366a1` |
 
-단일 원본은 package의 `tools/nu54-prerequisites/pins.json`과
-`nrfutil-requirements.json`이다. release manifest, 완료 marker와 Build Adapter는 이 pin을
-교차 검증하며 하나라도 다르면 build를 시작하지 않는다.
+단일 원본은
+[`pins.json`](../../tools/nu54-prerequisites/pins.json)과
+[`nrfutil-requirements.json`](../../tools/nu54-prerequisites/nrfutil-requirements.json)이다.
+설치기는 version 문자열이 없는 nRF Util URL에서 받은 byte도 위 SHA-256과 다르면 거부한다.
 
-nRF Util 공식 download URL은 version 문자열이 없는 URL이다. 설치기는 내려받은 실행 파일의
-SHA-256이 위 pin과 다르면 새 byte를 자동 신뢰하지 않고 중단한다. upstream 파일이 바뀐 경우
-개발자가 새 binary를 검토하고, pin과 package version을 함께 갱신해야 한다.
-
----
-
-## 5. 설치 전 조건
-
-- Windows 10/11 x64 사용자 계정
-- Arduino IDE 2.x 또는 Arduino CLI
-- GitHub와 Nordic download server에 접근 가능한 인터넷 연결
-- NCS와 Toolchain을 저장할 충분한 여유 공간
-- build와 Upload를 실행할 때 NU54DK 및 data 통신 가능한 USB cable
-
-관리자 권한, 시스템 PATH 변경과 별도 nRF Connect for VS Code 설치는 package 계약에 포함되지
-않는다. prerequisite는 현재 사용자 profile에 설치한다.
-
-보드가 없어도 package download와 Nordic prerequisite 설치까지는 가능하다. 실제 pyOCD
-Upload 검증에는 NU54DK의 온보드 CMSIS-DAP V2가 연결돼 있어야 한다.
+기본 설치 위치는 `%USERPROFILE%\ncs\v3.4.0`과
+`%USERPROFILE%\ncs\toolchains\dcbdc366a1`이다. 관리자 권한이나 시스템 PATH 변경은 요구하지
+않는다. 같은 exact NCS/Toolchain은 Core version 간 공유하며 Core 제거 시 자동 삭제하지
+않는다.
 
 ---
 
-## 6. Arduino IDE 설치
+## 3. Arduino IDE 설치
 
-1. Arduino IDE에서 `File > Preferences`를 연다.
-2. `Additional boards manager URLs`에 공식 stable index URL을 추가한다.
-3. `Tools > Board > Boards Manager`를 열고 `NUCODE NU54DK Zephyr Boards`를 찾는다.
-4. 정식 버전 `0.1.0`을 선택해 설치한다.
-5. post-install script 실행 확인이 나타나면 승인하고 Nordic prerequisite 설치가 끝날 때까지
-   기다린다. 첫 설치는 NCS와 Toolchain download 때문에 오래 걸릴 수 있다.
-6. `Tools > Board`에서 `NU54DK (nRF54L15, Zephyr)`를 선택한다.
-7. 기본 Upload probe가 `CMSIS-DAP (pyOCD)`인지 확인한다.
+1. Arduino IDE 2.x의 Additional Boards Manager URLs에 stable index를 추가한다.
+2. Boards Manager에서 `NUCODE NU54DK Zephyr Boards`를 찾는다.
+3. 버전 `0.2.0`을 명시적으로 선택해 설치한다.
+4. 설치 후 `NU54DK (nRF54L15, Zephyr)` 보드를 선택한다.
 
-IDE 또는 설치 환경이 post-install을 실행하지 않았거나 설치가 중단됐다면 설치된 platform의
-다음 파일을 일반 사용자 권한으로 다시 실행한다.
+설치된 platform과 재실행 가능한 post-install 경로는 다음과 같다.
 
 ~~~text
-%LOCALAPPDATA%\Arduino15\packages\nucode\hardware\zephyr\0.1.0\post_install.bat
+%LOCALAPPDATA%\Arduino15\packages\nucode\hardware\zephyr\0.2.0
+%LOCALAPPDATA%\Arduino15\packages\nucode\hardware\zephyr\0.2.0\post_install.bat
 ~~~
 
-Arduino data directory를 변경했다면 위 경로의 `%LOCALAPPDATA%\Arduino15` 대신 실제 Arduino
-data directory를 사용한다. 같은 script를 다시 실행해도 이미 검증된 prerequisite는 재사용한다.
-
-### 6.1 post-install 출력 인코딩 계약
-
-Arduino IDE 2.x는 platform 설치 script의 출력과 완료 결과를 backend gRPC 문자열로
-전달한다. 따라서 Windows의 활성 code page와 무관하게 다음 계약을 지켜야 한다.
-
-- `post_install.bat`은 PowerShell 실행 전에 console code page를 UTF-8로 고정한다.
-- PowerShell runner는 `[Console]::InputEncoding`, `[Console]::OutputEncoding`과 native
-  command에 사용하는 `$OutputEncoding`을 BOM 없는 UTF-8로 고정한다.
-- stdout/stderr에 기록하는 모든 문자열은 strict UTF-8 decode가 가능해야 한다.
-- host test의 byte 검사와 실제 Arduino IDE bundled backend 설치 완료 응답을 모두
-  검증한다. Arduino CLI direct install 성공이나 IDE의 index 검색만으로 이 gate를 대신하지
-  않는다.
-
-이 계약은 rc.1 공개 뒤 실제 IDE 설치에서 발견한
-`grpc: error while marshalling: string field contains invalid UTF-8` 재발을 막기 위해
-`v0.1.0-rc.2`부터 적용한다. 당시에는 설치가 완료됐지만 IDE가 실패로 표시할 수 있었다.
+중단된 prerequisite 설치는 같은 `post_install.bat`을 일반 사용자 권한으로 다시 실행해
+재개한다. 완료 marker와 pin이 일치하지 않으면 Build Adapter는 build 전에 실패한다.
 
 ---
 
-## 7. Arduino CLI 설치
-
-PowerShell에서 다음 명령을 실행한다.
+## 4. Arduino CLI 설치와 확인
 
 ~~~powershell
-$IndexUrl = 'https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json'
+$StableIndex = 'https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json'
 
-arduino-cli config add board_manager.additional_urls $IndexUrl
-arduino-cli core update-index
-arduino-cli core install nucode:zephyr@0.1.0 --run-post-install
-arduino-cli board details --fqbn nucode:zephyr:nu54dk
+arduino-cli core update-index --additional-urls $StableIndex
+arduino-cli core install nucode:zephyr@0.2.0 --run-post-install `
+  --additional-urls $StableIndex
+arduino-cli core list
+arduino-cli board listall nucode:zephyr
 ~~~
 
-`--run-post-install`은 Nordic prerequisite 설치를 허용하기 위해 명시한다. 자동 실행 여부와
-무관하게 설치기가 멱등인지 확인하거나 중단 설치를 재개하려면 설치된 platform의
-`post_install.bat`을 한 번 더 직접 실행할 수 있다.
-
-기본 Arduino data directory를 사용한다면 다음과 같다.
+설치 확인이 필요하면 platform의 검증 script를 실행한다.
 
 ~~~powershell
-& "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.1.0\post_install.bat"
+$PlatformRoot = "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.2.0"
+& "$PlatformRoot\tools\nu54-prerequisites\verify-nordic.ps1" -PlatformRoot $PlatformRoot
 ~~~
 
-설치 검증은 platform root를 지정해 실행한다.
+기본 compile/upload 예시는 다음과 같다.
 
 ~~~powershell
-$PlatformRoot = "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.1.0"
+$BuildPath = Join-Path $PWD 'build\blink'
+$Sketch = "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.2.0\libraries\NUCODE_NU54DK\examples\Blink"
 
-powershell.exe -NoProfile -ExecutionPolicy Bypass `
-  -File "$PlatformRoot\tools\nu54-prerequisites\verify-nordic.ps1" `
-  -PlatformRoot $PlatformRoot `
-  -Json
+arduino-cli compile --fqbn nucode:zephyr:nu54dk --build-path $BuildPath $Sketch
+arduino-cli upload --fqbn nucode:zephyr:nu54dk --build-path $BuildPath $Sketch
 ~~~
 
-성공 결과의 `status`는 `ready`여야 하며 NCS/Zephyr revision, Toolchain bundle, nRF Util
-version·hash와 완료 marker가 모두 package pin과 일치해야 한다.
+upload에는 compile과 같은 build path가 필요하다. 여러 probe, BLE profile과 J-Link 선택은
+[Arduino CLI 통합](03_Arduino_CLI_통합.md)과
+[업로드와 디버그](05_업로드와_디버그.md)를 따른다.
 
 ---
 
-## 8. 사용자 영역 설치 경로
+## 5. Package 생성 계약
 
-설치기는 관리자 권한이나 PATH 변경 없이 다음 경로를 사용한다.
-
-| 경로 | 용도 |
-| --- | --- |
-| `%USERPROFILE%\ncs\v3.4.0` | NCS v3.4.0 workspace |
-| `%USERPROFILE%\ncs\toolchains\dcbdc366a1` | 고정 Nordic Toolchain bundle |
-| `%LOCALAPPDATA%\NUCODE\NU54DK_Arduino_Core\tools\nrfutil.exe` | SHA-256으로 고정한 nRF Util |
-| `%LOCALAPPDATA%\NUCODE\NU54DK_Arduino_Core\nrfutil` | nRF Util command state |
-| `%LOCALAPPDATA%\NUCODE\NU54DK_Arduino_Core\prerequisites\ready.json` | 검증 완료 marker |
-| `%LOCALAPPDATA%\NUCODE\NU54DK_Arduino_Core\logs` | prerequisite 설치 log |
-
-Core를 upgrade하거나 uninstall해도 공유 NCS와 Toolchain을 자동 삭제하지 않는다. 여러 Core
-version에서 같은 고정 prerequisite를 재사용하기 위한 의도적인 정책이다. 디스크 정리가
-필요하면 설치된 Core가 더 이상 이 경로를 사용하지 않는지 확인한 뒤 사용자가 별도로 관리한다.
-
----
-
-## 9. Build와 pyOCD Upload
-
-Arduino CLI의 기본 수직 경로는 다음과 같다.
-
-~~~powershell
-$Sketch = 'C:\path\to\Blink'
-$Build = 'C:\path\to\build\Blink'
-
-arduino-cli compile `
-  --fqbn nucode:zephyr:nu54dk `
-  --build-path $Build `
-  --export-binaries `
-  $Sketch
-
-arduino-cli upload `
-  --fqbn nucode:zephyr:nu54dk `
-  --input-dir $Build `
-  $Sketch
-~~~
-
-기본 runner는 Toolchain에 포함된 pyOCD와 NU54DK 온보드 CMSIS-DAP V2다. Upload는 Loader나
-LLEXT image가 아니라 build한 Full Zephyr HEX를 SWD로 직접 기록하고 target을 reset한다.
-
-안전 정책은 다음과 같다.
-
-- 일반 Upload에서 mass erase와 recover를 요청하지 않는다.
-- 연결된 CMSIS-DAP가 없으면 실패한다.
-- CMSIS-DAP가 둘 이상이면 임의의 probe를 선택하지 않고 실패한다.
-- artifact manifest, board, Full Zephyr HEX/ELF hash가 다르면 flash하지 않는다.
-- pyOCD 기본 Upload는 `smart_flash=false`로 동일 page 비교의 USB timeout을 회피한다.
-
-외장 J-Link는 선택 경로다. IDE에서 J-Link를 선택할 때는 probe serial을 명시해야 하며,
-초기 Boards Manager clean Windows 기준선의 기본 HIL 경로는 CMSIS-DAP V2/pyOCD다.
-
----
-
-## 10. 설치 중단과 재개
-
-설치 상태는 다음 marker로 관리한다.
-
-| marker | 의미 |
-| --- | --- |
-| `installing.json` | 현재 설치 단계가 실행 중 |
-| `incomplete.json` | 실패 또는 중단된 단계와 오류·log 경로 |
-| `ready.json` | 모든 byte와 revision을 검증한 완료 상태 |
-
-설치가 중단되면 `post_install.bat`을 같은 사용자 계정에서 다시 실행한다. 설치기는
-`sdk-manager`의 멱등 설치 명령을 다시 호출하고, 이미 올바르게 설치된 데이터는 재사용한다.
-동시에 두 설치 process가 실행되면 사용자 영역 mutex가 두 번째 실행을 기다리게 하며 timeout
-후에는 실패한다.
-
-`ready.json`이 있어도 그대로 신뢰하지 않는다. installer와 Build Adapter는 pin SHA-256,
-NCS/Zephyr Git revision, Toolchain manifest bundle, nRF Util byte와 version을 재검증한다.
-
----
-
-## 11. 문제 해결
-
-### 11.1 nRF Util SHA-256 불일치
-
-공식 unversioned URL의 byte가 pin과 달라진 상태다. 보안 검증을 우회하거나 임의 hash로
-바꾸지 않는다. 개발자가 새 nRF Util을 별도로 검증하고 새 preview version과 함께 pin을
-갱신할 때까지 설치를 중단한다.
-
-### 11.2 `incomplete.json`이 남아 있음
-
-`%LOCALAPPDATA%\NUCODE\NU54DK_Arduino_Core\logs`의 최신 log와 `incomplete.json`의
-`phase`, `error`를 확인한 뒤 같은 `post_install.bat`을 다시 실행한다. 단순히 marker만
-삭제하면 실제 설치가 완전해지지 않는다.
-
-### 11.3 Build Adapter가 prerequisite 불일치를 보고함
-
-다음 검증기를 먼저 실행한다.
-
-~~~powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass `
-  -File '<platform-root>\tools\nu54-prerequisites\verify-nordic.ps1' `
-  -PlatformRoot '<platform-root>' `
-  -Json
-~~~
-
-실패 항목이 pin, release manifest, ready marker 중 어느 경계인지 확인한다. 서로 다른 preview의
-script나 marker를 섞지 않는다.
-
-### 11.4 pyOCD probe가 없음
-
-- NU54DK의 CMSIS-DAP USB port와 data cable 연결을 확인한다.
-- 장치 관리자에서 CMSIS-DAP 장치가 인식되는지 확인한다.
-- `ready.json`의 `toolchain_root` 아래
-  `opt\bin\Scripts\pyocd.exe list --probes --no-header`를 실행한다.
-- probe가 둘 이상이면 하나만 연결한 뒤 다시 Upload한다.
-
-### 11.5 Core 재설치 후 NCS를 다시 내려받음
-
-같은 사용자 계정과 기본 `%USERPROFILE%\ncs`를 사용했는지 확인한다. `ready.json`, package의
-`pins.json` 또는 실제 NCS/Toolchain identity가 다르면 안전상 재사용하지 않는다.
-
----
-
-## 12. Preview version 수명주기
-
-M10의 clean Windows package lifecycle 검증 쌍은 다음과 같다.
-
-| version | 용도 |
-| --- | --- |
-| `0.0.96` | 최초 설치와 downgrade 기준 |
-| `0.0.97` | upgrade 및 최종 reinstall 기준 |
-
-검증 순서는 다음과 같이 고정한다.
-
-1. package가 없고 prerequisite가 없는 clean Windows baseline 확인
-2. `0.0.96` 설치와 post-install 실행
-3. 고정 prerequisite 검증
-4. board details 확인
-5. Blink cold build와 같은 build path의 warm build
-6. 단일 CMSIS-DAP V2 확인과 pyOCD Upload 10회
-7. `0.0.97` upgrade
-8. `0.0.96` downgrade
-9. Core uninstall 후 공유 NCS/Toolchain 및 `ready.json` 보존 확인
-10. `0.0.97` reinstall, prerequisite 재검증과 Blink build
-
-`0.0.90`~`0.0.93`은 Windows PowerShell 5.1 호환성, BAT/CMD 인코딩 또는 Windows build
-경로 길이 결함이 확인돼 폐기한 preview다. 네 version은 공식 preview index에서 제외하며 신규 설치, downgrade 또는 회귀
-기준으로 사용하지 않는다. 이미 공개된 artifact를 같은 tag에서 덮어쓰지 않고 후속 version으로
-수정한 것은 release asset의 불변성을 보존하기 위해서다.
-
-`0.0.94`와 `0.0.95`도 PowerShell 5.1 runner의 비동기 Task 반환값이 success stream에
-섞여 Arduino CLI identity preflight에서 실패했다. 공개된 두 preview는 immutable 실패
-이력으로 보존하며 현재 lifecycle이나 M11 계승 증거에 사용하지 않는다. 반환값 누출을
-억제한 runner를 포함하는 새 검증 쌍이 `0.0.96`과 `0.0.97`이다.
-
----
-
-## 13. Package 생성 계약
-
-패키징 도구는 작업 트리의 임의 byte가 아니라 지정한 Git commit만 입력으로 사용한다.
-상위 저장소가 기록한 `board_package/NU54DK_Zephyr_DTS` gitlink revision도 정확히 펼쳐 하나의
-Arduino platform ZIP을 만든다.
+재현 가능한 ZIP과 metadata 생성기는
+[`nu54_package.py`](../../packaging/boards-manager/nu54_package.py)다. exact commit의 깨끗한
+source에서 다음처럼 실행한다.
 
 ~~~powershell
 python .\packaging\boards-manager\nu54_package.py build `
   --repo-root . `
   --output-dir .\build\boards-manager `
-  --version 0.1.0 `
-  --commit HEAD `
-  --update-index
-~~~
+  --version 0.2.0 `
+  --commit <exact-git-commit>
 
-동일한 commit, version과 입력으로 다시 만들면 다음 특성이 같아야 한다.
-
-- archive 내부 단일 top-level directory
-- 고정 timestamp와 file mode
-- UTF-8 byte 순서로 정렬한 entry
-- ZIP STORE 방식
-- 전체 archive SHA-256과 size
-- release manifest와 내부 `CHECKSUMS.sha256`
-
-Archive 검증 예시는 다음과 같다.
-
-~~~powershell
 python .\packaging\boards-manager\nu54_package.py validate `
-  --archive .\build\boards-manager\nucode-nu54dk-zephyr-0.1.0.zip `
-  --expected-version 0.1.0
-
-python .\packaging\boards-manager\nu54_package.py validate-index `
-  --index .\build\boards-manager\package_nucode_nu54dk_index.json `
-  --artifact-dir .\build\boards-manager
+  --archive .\build\boards-manager\nucode-nu54dk-zephyr-0.2.0.zip `
+  --expected-version 0.2.0 `
+  --expected-commit <exact-git-commit>
 ~~~
 
----
+Package gate는 archive root, 허용 파일, executable metadata, `platform.txt` version, board
+submodule revision, checksum, SBOM과 license inventory를 검증한다. Index 생성은 같은 배포
+channel의 이미 검증한 archive만 대상으로 하며 최신 version 순서를 강제한다.
 
-## 14. 공개 stable artifact
-
-정식판은 `v<version>` Git tag와 일반 GitHub Release에 다음 파일을 제공한다. M10 preview와
-M11 RC asset은 각 역사적 tag와 Prerelease에서 변경하지 않고 보존한다.
-
-| artifact | 내용 |
-| --- | --- |
-| `nucode-nu54dk-zephyr-<version>.zip` | Boards Manager가 설치하는 platform archive |
-| `*.release-manifest.json` | Core/board/NCS/Zephyr/Toolchain identity와 file provenance |
-| `*.spdx.json` | SPDX 2.3 SBOM |
-| `*.license-inventory.json` | 포함·외부 구성 요소의 license inventory |
-| `*.THIRD_PARTY_NOTICES.md` | 제3자 고지와 재배포 경계 |
-| `*.CHECKSUMS.sha256` | archive와 sidecar의 SHA-256 목록 |
-
-package index는 ZIP의 공개 release URL, 정확한 byte size와 SHA-256을 기록한다. 설치 전후
-검증에서는 mutable한 raw index만 신뢰하지 않고 release archive와 manifest identity를 함께
-고정한다.
-
-Archive 내부 보드 파일의 license 범위는 다음처럼 분리한다.
-
-- Core 저장소와 board package 최상위 저작물: 해당 저장소가 선언한 MIT 범위
-- `boards/nucode/nu54dk/**`의 Zephyr 파생 board 정의: Apache-2.0 범위와 NOTICE
-
-license inventory와 SPDX SBOM은 기술적인 목록과 provenance를 제공하지만 법률 자문이나
-최종 라이선스 판단을 대신하지 않는다.
+공개 자산을 덮어쓰거나 기존 tag를 이동하지 않는다. Release candidate와 stable은 별도 index,
+tag, archive와 승인 기록을 가진다. 도구가 만든 package는 자동으로 공개하지 않으며 사람의
+릴리스 승인 뒤 별도 절차로 게시한다.
 
 ---
 
-## 15. Nordic 구성 요소 비재배포 정책
+## 6. 설치 수명주기와 지원 경계
 
-다음 구성 요소는 NU54DK Core release asset에 포함하지 않는다.
+현재 stable 공개 검증의 수명주기는 다음 순서다.
 
-- nRF Util
-- sdk-manager command package
-- nRF Connect SDK
-- Zephyr source tree
-- Nordic Toolchain bundle
-- Toolchain에 포함된 pyOCD
-- 선택적으로 사용하는 SEGGER J-Link software
+~~~text
+0.1.0 설치 → 0.2.0 upgrade → 0.1.0 downgrade
+→ 0.2.0 재설치 → uninstall
+~~~
 
-`post_install.bat`은 Nordic 공식 배포 경로를 통해 이들을 설치하고 package pin과 실제 byte를
-검증한다. package index의 `tools`와 `toolsDependencies`도 비어 있어 Arduino package로 Nordic
-binary를 재배포하지 않는다.
+정확한 실행 증거는 설계 문서에 복제하지 않는다. 과거 preview/RC의 설치 문제와 hash는
+[M10 기준선](<../04_검증 기록/10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md>),
+현재 stable 수명주기는
+[v0.2.0 공개 기록](<../04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md>)을 따른다.
 
-외부 prerequisite의 종합 license는 확인되지 않은 내용을 추정하지 않고 inventory에서
-`NOASSERTION`으로 유지한다. 이는 외부 binary를 Core ZIP에 재배포하지 않는다는 기술 경계다.
-프로젝트 소유자는 v0.1.0 공개에 필요한 라이선스·고지 검토를 완료하고 정식 공개를 승인했다.
+Core ZIP은 Nordic NCS, Zephyr, Toolchain, nRF Util 또는 pyOCD binary를 재배포하지 않는다.
+각 외부 구성 요소의 이용 조건과 최종 공개 승인은 package의 license inventory와 release
+기록에서 관리한다. 이 문서는 법률 판단을 대신하지 않는다.
 
 ---
 
-## 16. 법률 및 최종 공개 경계
+## 7. 문제 해결과 릴리스 문서
 
-자동화가 수행할 수 있는 범위는 다음과 같다.
-
-- archive 내용과 출처 목록 생성
-- SPDX 2.3 SBOM 생성
-- license identifier와 원문 inventory 생성
-- checksum, manifest와 NOTICE 생성·검증
-- Nordic binary가 ZIP/index에 포함되지 않았는지 검증
-
-자동화가 최종 판단할 수 없는 범위는 다음과 같다.
-
-- 각 license 의무를 모두 충족했다는 법률적 결론
-- Nordic와 SEGGER 배포 조건에 대한 법률 자문
-- 상표, 특허 또는 수출 통제 판단
-- 후속 stable version의 공개 승인
-
-`v0.1.0`은 프로젝트 소유자가 라이선스 판단, 알려진 제약과 정식 공개를 승인했다. package의
-`legal_review_status`는 이 version에 한해 `project-owner-approved-for-final-public-release`로
-고정한다. 이 기록은 법률 자문을 대신하지 않으며 후속 release는 별도 검토와 승인을 요구한다.
-
----
-
-## 17. M10 완료 판정과 문서 경계
-
-M10 완료 여부는 이 설계 문서가 아니라 별도의 clean Windows 검증 기록으로 판정한다. 최소
-증거는 다음을 포함해야 한다.
-
-- 공개 index와 두 prerelease archive의 URL·size·SHA-256 일치
-- 완전히 분리된 Windows 사용자 환경의 초기 상태
-- `0.0.96` 최초 설치와 Nordic exact-pin 검증
-- Blink cold/warm build 결과
-- 실제 NU54DK CMSIS-DAP V2/pyOCD Upload 10회 결과
-- `0.0.97` upgrade, `0.0.96` downgrade
-- uninstall 후 공유 prerequisite 보존
-- `0.0.97` reinstall와 최종 build 결과
-- 비밀 값과 probe UID를 제거한 evidence와 log
-
-probe 없이 실행한 조사 모드나 `-AllowMissingProbe` 결과는 최종 HIL PASS 근거가 될 수 없다.
-
----
-
-## 18. 관련 문서와 구현
-
-- [Arduino CLI 통합](<./03_Arduino_CLI_통합.md>)
-- [빌드 캐시와 산출물](<./04_빌드_캐시와_산출물.md>)
-- [업로드와 디버그](<./05_업로드와_디버그.md>)
-- [M9 증분 빌드·캐시와 재현성 기준선](<../04_검증 기록/09_M9_증분_빌드_캐시와_재현성_기준선.md>)
-- [v0.1.0 정식 릴리스 공개 기록](<../04_검증 기록/13_v0.1.0_정식_릴리스_공개_기록.md>)
-- `packaging/boards-manager/nu54_package.py`
-- `tools/nu54-prerequisites/install-nordic.ps1`
-- `tools/nu54-prerequisites/verify-nordic.ps1`
-- `tools/remote-windows/m10/invoke-m10-clean-windows.ps1`
+- [v0.2.0 릴리스 문서](<../05_릴리스/v0.2.0/README.md>)
+- [v0.2.0 마이그레이션](<../05_릴리스/v0.2.0/MIGRATION.md>)
+- [v0.2.0 문제 해결](<../05_릴리스/v0.2.0/TROUBLESHOOTING.md>)
+- [v0.2.0 알려진 제약](<../05_릴리스/v0.2.0/KNOWN_ISSUES.md>)
+- [M18 RC 공개 검증과 교정](<../04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md>)
+- [v0.2.0 정식 릴리스 공개 기록](<../04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md>)
