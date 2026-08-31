@@ -34,6 +34,7 @@ class M21BleSecurityContractTests(unittest.TestCase):
         text = HEADER.read_text(encoding="utf-8")
         for token in (
             "enum class SecurityLevel",
+            "enum class SecurityIoCapability",
             "enum class BondState",
             "enum class SecurityEvent",
             "bond_persistence_pending",
@@ -141,6 +142,87 @@ class M21BleSecurityContractTests(unittest.TestCase):
         example = EXAMPLE.read_text(encoding="utf-8")
         self.assertNotRegex(example, r"Serial\.(?:print|println)\s*\([^\n]*(?:passkey|key material)")
         self.assertNotIn("record.passkey", example)
+
+    def test_auth_callbacks_match_the_configured_io_capability(self) -> None:
+        """! @brief 실제 장치 입출력보다 강한 SMP capability를 광고하지 않습니다. """
+
+        header = HEADER.read_text(encoding="utf-8")
+        source = SOURCE.read_text(encoding="utf-8")
+        example = EXAMPLE.read_text(encoding="utf-8")
+
+        for capability in (
+            "no_input_output",
+            "display_only",
+            "keyboard_only",
+            "display_yes_no",
+            "keyboard_display",
+        ):
+            self.assertIn(capability, header)
+
+        prepare = source[source.index("void prepareAuthenticationCallbacks") :]
+        prepare = prepare[: prepare.index("bool releaseActiveConnection")]
+        self.assertIn("SecurityIoCapability capability", prepare)
+        self.assertIn("authentication_callbacks.pairing_accept = pairingAccept", prepare)
+        self.assertIn("authentication_callbacks.pairing_confirm = pairingConfirm", prepare)
+        self.assertIn("case SecurityIoCapability::no_input_output:", prepare)
+        self.assertIn("case SecurityIoCapability::display_yes_no:", prepare)
+        self.assertIn("case SecurityIoCapability::keyboard_display:", prepare)
+        self.assertIn("authentication_callbacks.passkey_display = passkeyDisplay", prepare)
+        self.assertIn("authentication_callbacks.passkey_entry = passkeyEntry", prepare)
+        self.assertIn("authentication_callbacks.passkey_confirm = passkeyConfirm", prepare)
+
+        no_io = prepare.split("case SecurityIoCapability::no_input_output:", 1)[1]
+        no_io = no_io.split("case SecurityIoCapability::display_only:", 1)[0]
+        self.assertNotIn("authentication_callbacks.passkey_", no_io)
+
+        display_only = prepare.split(
+            "case SecurityIoCapability::display_only:", 1
+        )[1]
+        display_only = display_only.split(
+            "case SecurityIoCapability::keyboard_only:", 1
+        )[0]
+        self.assertIn("authentication_callbacks.passkey_display", display_only)
+        self.assertNotIn("authentication_callbacks.passkey_entry", display_only)
+        self.assertNotIn("authentication_callbacks.passkey_confirm", display_only)
+
+        keyboard_only = prepare.split(
+            "case SecurityIoCapability::keyboard_only:", 1
+        )[1]
+        keyboard_only = keyboard_only.split(
+            "case SecurityIoCapability::display_yes_no:", 1
+        )[0]
+        self.assertNotIn("authentication_callbacks.passkey_display", keyboard_only)
+        self.assertIn("authentication_callbacks.passkey_entry", keyboard_only)
+        self.assertNotIn("authentication_callbacks.passkey_confirm", keyboard_only)
+
+        display_yes_no = prepare.split(
+            "case SecurityIoCapability::display_yes_no:", 1
+        )[1]
+        display_yes_no = display_yes_no.split(
+            "case SecurityIoCapability::keyboard_display:", 1
+        )[0]
+        self.assertIn("authentication_callbacks.passkey_display", display_yes_no)
+        self.assertIn("authentication_callbacks.passkey_confirm", display_yes_no)
+        self.assertNotIn("authentication_callbacks.passkey_entry", display_yes_no)
+
+        keyboard_display = prepare.split(
+            "case SecurityIoCapability::keyboard_display:", 1
+        )[1]
+        keyboard_display = keyboard_display.split("authentication_info_callbacks = {}", 1)[0]
+        self.assertIn("authentication_callbacks.passkey_display", keyboard_display)
+        self.assertIn("authentication_callbacks.passkey_entry", keyboard_display)
+        self.assertIn("authentication_callbacks.passkey_confirm", keyboard_display)
+
+        self.assertIn(
+            "SecurityIoCapability::no_input_output",
+            example,
+        )
+        self.assertNotIn("BLESecurity.confirmPasskey", example)
+        self.assertRegex(
+            example,
+            r"SecurityEvent::pairing_cancelled:[\s\S]*?"
+            r"pairing_confirmation_pending = false;",
+        )
 
     def test_bond_is_verified_only_after_reboot_key_restore(self) -> None:
         """! @brief 같은 boot의 메모리 목록을 persistence 성공으로 오판하지 않습니다. """

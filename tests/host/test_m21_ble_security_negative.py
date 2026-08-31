@@ -31,6 +31,7 @@ class M21BleSecurityNegativeTests(unittest.TestCase):
         self.assertIn("level < static_cast<unsigned int>(SecurityLevel::encrypted)", begin)
         self.assertIn("config.response_timeout_ms < 1000U", begin)
         self.assertIn("config.response_timeout_ms > 300000U", begin)
+        self.assertIn("SecurityIoCapability::keyboard_display", begin)
         self.assertIn("SecurityError::invalid_argument", begin)
 
     def test_rejects_hid_before_encryption_or_subscription(self) -> None:

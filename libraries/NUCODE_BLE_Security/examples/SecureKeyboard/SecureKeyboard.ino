@@ -40,6 +40,7 @@ namespace
         case nucode::ble::SecurityEvent::all_bonds_removal_requested:
             Serial.println("BLE bond removal request accepted; verify after reboot");
             break;
+        case nucode::ble::SecurityEvent::pairing_cancelled:
         case nucode::ble::SecurityEvent::pairing_failed:
         case nucode::ble::SecurityEvent::timeout:
         case nucode::ble::SecurityEvent::error:
@@ -77,6 +78,8 @@ void setup()
     security.minimum_level = nucode::ble::SecurityLevel::encrypted;
     security.bonding = true;
     security.response_timeout_ms = 30000U;
+    security.io_capability =
+        nucode::ble::SecurityIoCapability::no_input_output;
     BLESecurity.onEvent(onSecurityEvent);
     require(BLESecurity.begin(security), "security");
     require(BLEKeyboard.begin(), "hid");

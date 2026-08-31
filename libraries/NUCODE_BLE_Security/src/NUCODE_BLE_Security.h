@@ -25,6 +25,21 @@ namespace nucode::ble
         secure_connections = 4,
     };
 
+    /** @brief 로컬 장치가 실제로 제공하는 SMP 사용자 입출력 능력입니다. */
+    enum class SecurityIoCapability : std::uint8_t
+    {
+        /** 화면과 숫자 입력 장치가 없으며 Just Works만 사용할 수 있습니다. */
+        no_input_output,
+        /** passkey를 표시할 수 있지만 사용자가 숫자를 입력할 수 없습니다. */
+        display_only,
+        /** 사용자가 passkey를 입력할 수 있지만 값을 표시할 수 없습니다. */
+        keyboard_only,
+        /** passkey 표시와 일치 여부 확인 버튼을 제공합니다. */
+        display_yes_no,
+        /** passkey 표시·입력·일치 여부 확인을 모두 제공합니다. */
+        keyboard_display,
+    };
+
     /** @brief 현재 연결에서 관찰한 bond 수명주기 상태입니다. */
     enum class BondState : std::uint8_t
     {
@@ -106,6 +121,7 @@ namespace nucode::ble
         SecurityLevel minimum_level = SecurityLevel::encrypted;
         bool bonding = true;
         std::uint32_t response_timeout_ms = 30000U;
+        SecurityIoCapability io_capability = SecurityIoCapability::keyboard_display;
     };
 
     /**

@@ -38,6 +38,7 @@ namespace
     using nucode::ble::SecurityEvent;
     using nucode::ble::SecurityEventCallback;
     using nucode::ble::SecurityEventRecord;
+    using nucode::ble::SecurityIoCapability;
     using nucode::ble::SecurityLevel;
 
     /** @brief 사용자 응답을 기다리는 SMP 요청 종류입니다. */
@@ -709,16 +710,34 @@ namespace
         }
     }
 
-    /** @brief public API가 참조하는 auth callback storage를 구성합니다. */
-    void prepareAuthenticationCallbacks() noexcept
+    /** @brief 실제 SMP 사용자 입출력 능력만 auth callback으로 공개합니다. */
+    void prepareAuthenticationCallbacks(SecurityIoCapability capability) noexcept
     {
         authentication_callbacks = {};
         authentication_callbacks.pairing_accept = pairingAccept;
-        authentication_callbacks.passkey_display = passkeyDisplay;
-        authentication_callbacks.passkey_entry = passkeyEntry;
-        authentication_callbacks.passkey_confirm = passkeyConfirm;
         authentication_callbacks.cancel = authenticationCancelled;
         authentication_callbacks.pairing_confirm = pairingConfirm;
+
+        switch (capability)
+        {
+        case SecurityIoCapability::no_input_output:
+            break;
+        case SecurityIoCapability::display_only:
+            authentication_callbacks.passkey_display = passkeyDisplay;
+            break;
+        case SecurityIoCapability::keyboard_only:
+            authentication_callbacks.passkey_entry = passkeyEntry;
+            break;
+        case SecurityIoCapability::display_yes_no:
+            authentication_callbacks.passkey_display = passkeyDisplay;
+            authentication_callbacks.passkey_confirm = passkeyConfirm;
+            break;
+        case SecurityIoCapability::keyboard_display:
+            authentication_callbacks.passkey_display = passkeyDisplay;
+            authentication_callbacks.passkey_entry = passkeyEntry;
+            authentication_callbacks.passkey_confirm = passkeyConfirm;
+            break;
+        }
 
         authentication_info_callbacks = {};
         authentication_info_callbacks.pairing_complete = pairingComplete;
@@ -898,8 +917,12 @@ namespace nucode::ble
             return false;
         }
         const unsigned int level = static_cast<unsigned int>(config.minimum_level);
+        const unsigned int io_capability =
+            static_cast<unsigned int>(config.io_capability);
         if (level < static_cast<unsigned int>(SecurityLevel::encrypted) ||
             level > static_cast<unsigned int>(SecurityLevel::secure_connections) ||
+            io_capability >
+                static_cast<unsigned int>(SecurityIoCapability::keyboard_display) ||
             config.response_timeout_ms < 1000U || config.response_timeout_ms > 300000U)
         {
             recordSecurityError(SecurityError::invalid_argument, -EINVAL);
@@ -919,7 +942,7 @@ namespace nucode::ble
         atomic_set(&startup_bond_snapshot_ready, 0);
         atomic_set(&paired_value, 0);
         setBondLifecycle(nullptr, BondState::none, false);
-        prepareAuthenticationCallbacks();
+        prepareAuthenticationCallbacks(config.io_capability);
         int result = bt_conn_auth_cb_register(&authentication_callbacks);
         if (result == 0)
         {
