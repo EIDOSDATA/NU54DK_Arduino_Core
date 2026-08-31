@@ -341,18 +341,22 @@ def wait_token(
     capture: bytearray,
     deadline: float,
     predicate: Callable[[bytes], bool],
+    enforce_protocol: bool = True,
 ) -> bytes:
     expected_suffix = f":nonce={nonce}".encode("ascii")
     while True:
         line = read_line(serial_port, pending, capture, deadline)
         if line:
             print(f"[{role}] {line.decode('utf-8', errors='backslashreplace')}")
-        if line.startswith(FAIL_PREFIX):
-            raise M21HilFailure(f"{role} target 실패: {line!r}")
-        if line.startswith(PROTOCOL_PREFIX) and b":nonce=" in line and not line.endswith(
-            expected_suffix
-        ):
-            raise M21HilFailure(f"{role} stale nonce token입니다: {line!r}")
+        if enforce_protocol:
+            if line.startswith(FAIL_PREFIX):
+                raise M21HilFailure(f"{role} target 실패: {line!r}")
+            if (
+                line.startswith(PROTOCOL_PREFIX)
+                and b":nonce=" in line
+                and not line.endswith(expected_suffix)
+            ):
+                raise M21HilFailure(f"{role} stale nonce token입니다: {line!r}")
         if predicate(line):
             return line
 
@@ -378,6 +382,7 @@ def wait_pair_tokens(
     deadline: float,
     peripheral_predicate: Callable[[bytes], bool],
     central_predicate: Callable[[bytes], bool],
+    enforce_protocol: bool = True,
 ) -> None:
     with ThreadPoolExecutor(max_workers=2) as executor:
         futures = (
@@ -390,6 +395,7 @@ def wait_pair_tokens(
                 peripheral_capture,
                 deadline,
                 peripheral_predicate,
+                enforce_protocol,
             ),
             executor.submit(
                 wait_token,
@@ -400,6 +406,7 @@ def wait_pair_tokens(
                 central_capture,
                 deadline,
                 central_predicate,
+                enforce_protocol,
             ),
         )
         for future in futures:
@@ -499,6 +506,7 @@ def execute_pair(
                 deadline,
                 ready("peripheral"),
                 ready("central"),
+                enforce_protocol=False,
             )
 
             for port in (peripheral_serial, central_serial):

@@ -174,13 +174,11 @@ const char *phaseBondStateName()
 struct RemoteHandles
 {
     std::uint16_t battery = 0U;
-    std::uint16_t battery_ccc = 0U;
     std::uint16_t manufacturer = 0U;
     std::uint16_t model = 0U;
     std::uint16_t serial = 0U;
     std::uint16_t report_map = 0U;
     std::uint16_t report = 0U;
-    std::uint16_t report_ccc = 0U;
 };
 
 /** @brief discovery 이후 읽을 표준 characteristic 종류입니다. */
@@ -195,17 +193,10 @@ enum class ReadTarget : std::uint8_t
     complete,
 };
 
-/** @brief CCC descriptor를 가장 최근 characteristic에 연결하는 종류입니다. */
-enum class CharacteristicKind : std::uint8_t
-{
-    other,
-    battery,
-    report,
-};
-
 RemoteHandles handles = {};
-CharacteristicKind last_characteristic = CharacteristicKind::other;
 struct bt_gatt_discover_params discover_parameters = {};
+struct bt_gatt_discover_params battery_ccc_discovery = {};
+struct bt_gatt_discover_params report_ccc_discovery = {};
 struct bt_gatt_read_params read_parameters = {};
 struct bt_gatt_subscribe_params battery_subscription = {};
 struct bt_gatt_subscribe_params report_subscription = {};
@@ -233,7 +224,6 @@ atomic_t subscription_error = ATOMIC_INIT(0);
 /** @brief 한 원격 characteristic declaration을 handle 표에 반영합니다. */
 void captureCharacteristic(const struct bt_gatt_chrc *characteristic)
 {
-    last_characteristic = CharacteristicKind::other;
     if (characteristic == nullptr || characteristic->uuid == nullptr)
     {
         return;
@@ -241,7 +231,6 @@ void captureCharacteristic(const struct bt_gatt_chrc *characteristic)
     if (bt_uuid_cmp(characteristic->uuid, BT_UUID_BAS_BATTERY_LEVEL) == 0)
     {
         handles.battery = characteristic->value_handle;
-        last_characteristic = CharacteristicKind::battery;
     }
     else if (bt_uuid_cmp(characteristic->uuid, BT_UUID_DIS_MANUFACTURER_NAME) == 0)
     {
@@ -259,10 +248,10 @@ void captureCharacteristic(const struct bt_gatt_chrc *characteristic)
     {
         handles.report_map = characteristic->value_handle;
     }
-    else if (bt_uuid_cmp(characteristic->uuid, BT_UUID_HIDS_REPORT) == 0)
+    else if (bt_uuid_cmp(characteristic->uuid, BT_UUID_HIDS_REPORT) == 0 &&
+             (characteristic->properties & BT_GATT_CHRC_NOTIFY) != 0U)
     {
         handles.report = characteristic->value_handle;
-        last_characteristic = CharacteristicKind::report;
     }
 }
 
@@ -279,22 +268,8 @@ std::uint8_t onDiscovery(struct bt_conn *connection,
         atomic_set(&discovery_complete, 1);
         return BT_GATT_ITER_STOP;
     }
-    if (bt_uuid_cmp(attribute->uuid, BT_UUID_GATT_CHRC) == 0)
-    {
-        captureCharacteristic(
-            static_cast<const struct bt_gatt_chrc *>(attribute->user_data));
-    }
-    else if (bt_uuid_cmp(attribute->uuid, BT_UUID_GATT_CCC) == 0)
-    {
-        if (last_characteristic == CharacteristicKind::battery)
-        {
-            handles.battery_ccc = attribute->handle;
-        }
-        else if (last_characteristic == CharacteristicKind::report)
-        {
-            handles.report_ccc = attribute->handle;
-        }
-    }
+    captureCharacteristic(
+        static_cast<const struct bt_gatt_chrc *>(attribute->user_data));
     return BT_GATT_ITER_CONTINUE;
 }
 
@@ -308,12 +283,11 @@ void beginDiscovery(bool pre_security)
         return;
     }
     handles = {};
-    last_characteristic = CharacteristicKind::other;
     discover_parameters = {};
     discover_parameters.func = onDiscovery;
     discover_parameters.start_handle = BT_ATT_FIRST_ATTRIBUTE_HANDLE;
     discover_parameters.end_handle = BT_ATT_LAST_ATTRIBUTE_HANDLE;
-    discover_parameters.type = BT_GATT_DISCOVER_ATTRIBUTE;
+    discover_parameters.type = BT_GATT_DISCOVER_CHARACTERISTIC;
     discovery_for_pre_security = pre_security;
     discovery_active = true;
     atomic_set(&discovery_complete, 0);
@@ -475,7 +449,7 @@ void onReportSubscribed(struct bt_conn *connection, std::uint8_t error,
 void beginSubscriptions()
 {
     struct bt_conn *connection = nucode::ble::internal::referenceConnection();
-    if (connection == nullptr || handles.battery_ccc == 0U)
+    if (connection == nullptr || handles.battery == 0U)
     {
         if (connection != nullptr)
         {
@@ -485,10 +459,13 @@ void beginSubscriptions()
         return;
     }
     battery_subscription = {};
+    battery_ccc_discovery = {};
     battery_subscription.notify = onBatteryNotification;
     battery_subscription.subscribe = onBatterySubscribed;
     battery_subscription.value_handle = handles.battery;
-    battery_subscription.ccc_handle = handles.battery_ccc;
+    battery_subscription.ccc_handle = BT_GATT_AUTO_DISCOVER_CCC_HANDLE;
+    battery_subscription.end_handle = BT_ATT_LAST_ATTRIBUTE_HANDLE;
+    battery_subscription.disc_params = &battery_ccc_discovery;
     battery_subscription.value = BT_GATT_CCC_NOTIFY;
     battery_subscription.min_security = BT_SECURITY_L2;
     atomic_set_bit(battery_subscription.flags,
@@ -507,7 +484,7 @@ void beginSubscriptions()
 void beginReportSubscription()
 {
     struct bt_conn *connection = nucode::ble::internal::referenceConnection();
-    if (connection == nullptr || handles.report_ccc == 0U)
+    if (connection == nullptr || handles.report == 0U)
     {
         if (connection != nullptr)
         {
@@ -517,10 +494,13 @@ void beginReportSubscription()
         return;
     }
     report_subscription = {};
+    report_ccc_discovery = {};
     report_subscription.notify = onReportNotification;
     report_subscription.subscribe = onReportSubscribed;
     report_subscription.value_handle = handles.report;
-    report_subscription.ccc_handle = handles.report_ccc;
+    report_subscription.ccc_handle = BT_GATT_AUTO_DISCOVER_CCC_HANDLE;
+    report_subscription.end_handle = BT_ATT_LAST_ATTRIBUTE_HANDLE;
+    report_subscription.disc_params = &report_ccc_discovery;
     report_subscription.value = BT_GATT_CCC_NOTIFY;
     report_subscription.min_security = BT_SECURITY_L2;
     atomic_set_bit(report_subscription.flags,
@@ -821,6 +801,21 @@ void drivePeripheralProfile()
 
 #endif
 
+/** @brief 새 pairing 거부와 peer의 먼저 끊기 경합을 둘 다 안전한 거부로 처리합니다. */
+void rejectProbePairing(bool rejected, const char *reason)
+{
+    old_key_pairing_requested = true;
+    bool disconnect_requested = true;
+    if (BLEConnection.connected())
+    {
+        disconnect_requested = BLEConnection.disconnect();
+    }
+    if (!rejected && !disconnect_requested)
+    {
+        fail(reason);
+    }
+}
+
 /** @brief pairing 요청을 main thread에서 명시적으로 승인하고 event를 집계합니다. */
 void onSecurityEvent(const nucode::ble::SecurityEventRecord &event, void *context)
 {
@@ -830,12 +825,8 @@ void onSecurityEvent(const nucode::ble::SecurityEventRecord &event, void *contex
     case nucode::ble::SecurityEvent::pairing_requested:
         if (run_mode == RunMode::erased_probe)
         {
-            old_key_pairing_requested = true;
-            if (!BLESecurity.acceptPairing(false))
-            {
-                fail("old-key-pairing-reject");
-            }
-            static_cast<void>(BLEConnection.disconnect());
+            rejectProbePairing(BLESecurity.acceptPairing(false),
+                               "old-key-pairing-reject");
         }
         else if (!BLESecurity.acceptPairing(true))
         {
@@ -843,9 +834,25 @@ void onSecurityEvent(const nucode::ble::SecurityEventRecord &event, void *contex
         }
         break;
     case nucode::ble::SecurityEvent::passkey_confirmation_requested:
-        if (!BLESecurity.confirmPasskey(true))
+        if (run_mode == RunMode::erased_probe)
+        {
+            rejectProbePairing(BLESecurity.confirmPasskey(false),
+                               "old-key-passkey-reject");
+        }
+        else if (!BLESecurity.confirmPasskey(true))
         {
             fail("passkey-confirm");
+        }
+        break;
+    case nucode::ble::SecurityEvent::passkey_input_requested:
+        if (run_mode == RunMode::erased_probe)
+        {
+            rejectProbePairing(BLESecurity.cancelPairing(),
+                               "old-key-passkey-cancel");
+        }
+        else
+        {
+            fail("unexpected-passkey-input");
         }
         break;
     case nucode::ble::SecurityEvent::paired:
@@ -1048,10 +1055,19 @@ void eraseBonds(bool initial_clear)
 {
     erase_in_progress = true;
 #ifdef NUCODE_M21_CENTRAL
-    static_cast<void>(BLEScan.stop());
-    static_cast<void>(BLEConnection.disconnect());
+    if (BLEScan.running())
+    {
+        static_cast<void>(BLEScan.stop());
+    }
+    if (BLEConnection.connected())
+    {
+        static_cast<void>(BLEConnection.disconnect());
+    }
 #else
-    static_cast<void>(BLEAdvertising.stop());
+    if (BLEAdvertising.running())
+    {
+        static_cast<void>(BLEAdvertising.stop());
+    }
 #endif
     if (!BLESecurity.eraseAllBonds())
     {

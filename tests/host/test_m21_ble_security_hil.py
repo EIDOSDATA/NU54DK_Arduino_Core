@@ -180,6 +180,52 @@ class M21BleSecurityHilTests(unittest.TestCase):
         with self.assertRaisesRegex(MODULE.M21HilFailure, "누락"):
             MODULE.parse_role_transcript(repaired_restore, "central", NONCE)
 
+    def test_boot_ready_ignores_preflash_protocol_but_runtime_rejects_it(self) -> None:
+        """! @brief flash 중 남은 이전 firmware token은 READY 전만 무시합니다. """
+
+        class FakeSerial:
+            """! @brief wait_token에 고정 UART byte열을 제공하는 최소 대역입니다. """
+
+            def __init__(self, payload: bytes) -> None:
+                self.payload = bytearray(payload)
+
+            @property
+            def in_waiting(self) -> int:
+                return len(self.payload)
+
+            def read(self, length: int) -> bytes:
+                chunk = bytes(self.payload[:length])
+                del self.payload[:length]
+                return chunk
+
+        stale = (
+            f"NUCODE_M21_EVENT:DISCONNECTED:role=central:nonce={STALE}\r\n"
+            "NUCODE_M21_FAIL:role=central:reason=old-image\r\n"
+            "NUCODE_M21_READY:role=central:bond_count=0\r\n"
+        ).encode("ascii")
+        ready = MODULE.wait_token(
+            FakeSerial(stale),
+            "central",
+            NONCE,
+            bytearray(),
+            bytearray(),
+            MODULE.time.monotonic() + 1.0,
+            lambda line: line == b"NUCODE_M21_READY:role=central:bond_count=0",
+            enforce_protocol=False,
+        )
+        self.assertEqual(ready, b"NUCODE_M21_READY:role=central:bond_count=0")
+
+        with self.assertRaisesRegex(MODULE.M21HilFailure, "stale"):
+            MODULE.wait_token(
+                FakeSerial(stale),
+                "central",
+                NONCE,
+                bytearray(),
+                bytearray(),
+                MODULE.time.monotonic() + 1.0,
+                lambda line: False,
+            )
+
     def test_rejects_missing_or_short_rf_nonce_binding(self) -> None:
         """! @brief 128-bit RF peer binding 누락·축소를 모두 거부합니다. """
 

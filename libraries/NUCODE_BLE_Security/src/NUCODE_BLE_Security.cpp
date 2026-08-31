@@ -88,6 +88,7 @@ namespace
     atomic_t bond_state_value = ATOMIC_INIT(static_cast<atomic_val_t>(BondState::none));
     atomic_t startup_bond_snapshot_ready = ATOMIC_INIT(0);
     atomic_t current_level_value = ATOMIC_INIT(static_cast<atomic_val_t>(SecurityLevel::none));
+    atomic_t published_level_value = ATOMIC_INIT(0);
     atomic_t security_error_value = ATOMIC_INIT(static_cast<atomic_val_t>(SecurityError::none));
     atomic_t security_driver_error_value = ATOMIC_INIT(0);
     atomic_t hid_initialized = ATOMIC_INIT(0);
@@ -367,6 +368,40 @@ namespace
         if (k_msgq_put(&security_event_queue, &record, K_NO_WAIT) != 0)
         {
             recordSecurityError(SecurityError::busy, -ENOBUFS);
+        }
+    }
+
+    /** @brief L2 이상으로 확인된 저장 bond 후보를 검증 완료 상태로 승격합니다. */
+    void verifySecureBond(struct bt_conn *connection, bt_security_t level) noexcept
+    {
+        if (connection == nullptr || level < BT_SECURITY_L2)
+        {
+            return;
+        }
+        const bt_addr_le_t *const peer = bt_conn_get_dst(connection);
+        if (bondLifecycleMatches(peer) &&
+            currentBondState() == BondState::restored_candidate)
+        {
+            setBondLifecycle(peer, BondState::verified, false);
+            atomic_set(&paired_value, 1);
+            queueEvent(makePeerEvent(SecurityEvent::bond_verified, peer,
+                                     BondState::verified));
+        }
+        else if (currentBondState() != BondState::removal_requested)
+        {
+            atomic_set(&paired_value, 1);
+        }
+    }
+
+    /** @brief 같은 연결 수준의 중복 callback을 제거해 security_changed를 한 번만 전달합니다. */
+    void queueSecurityChangedIfNew(struct bt_conn *connection,
+                                   bt_security_t level) noexcept
+    {
+        const atomic_val_t published = atomic_get(&published_level_value);
+        atomic_set(&published_level_value, static_cast<atomic_val_t>(level));
+        if (published != static_cast<atomic_val_t>(level))
+        {
+            queueEvent(makeEvent(SecurityEvent::security_changed, connection));
         }
     }
 
@@ -1435,8 +1470,9 @@ namespace nucode::ble
             {
                 return;
             }
-            atomic_set(&current_level_value,
-                       static_cast<atomic_val_t>(bt_conn_get_security(connection)));
+            const bt_security_t level = bt_conn_get_security(connection);
+            atomic_set(&current_level_value, static_cast<atomic_val_t>(level));
+            atomic_set(&published_level_value, 0);
             atomic_set(&paired_value, 0);
             captureStartupBonds();
             const bt_addr_le_t *const peer = bt_conn_get_dst(connection);
@@ -1449,6 +1485,11 @@ namespace nucode::ble
             else
             {
                 setBondLifecycle(nullptr, BondState::none, false);
+            }
+            verifySecureBond(connection, level);
+            if (level >= BT_SECURITY_L2)
+            {
+                queueSecurityChangedIfNew(connection, level);
             }
             if (atomic_get(&hid_initialized) != 0)
             {
@@ -1489,6 +1530,7 @@ namespace nucode::ble
                 atomic_set(&paired_value, 0);
                 atomic_set(&current_level_value,
                            static_cast<atomic_val_t>(SecurityLevel::none));
+                atomic_set(&published_level_value, 0);
             }
         }
 
@@ -1523,21 +1565,8 @@ namespace nucode::ble
                 return;
             }
             atomic_set(&current_level_value, static_cast<atomic_val_t>(level));
-            const bt_addr_le_t *const peer = bt_conn_get_dst(connection);
-            if (level >= BT_SECURITY_L2 && bondLifecycleMatches(peer) &&
-                currentBondState() == BondState::restored_candidate)
-            {
-                setBondLifecycle(peer, BondState::verified, false);
-                atomic_set(&paired_value, 1);
-                queueEvent(makePeerEvent(SecurityEvent::bond_verified, peer,
-                                         BondState::verified));
-            }
-            else if (level >= BT_SECURITY_L2 &&
-                     currentBondState() != BondState::removal_requested)
-            {
-                atomic_set(&paired_value, 1);
-            }
-            queueEvent(makeEvent(SecurityEvent::security_changed, connection));
+            verifySecureBond(connection, level);
+            queueSecurityChangedIfNew(connection, level);
         }
 
     }

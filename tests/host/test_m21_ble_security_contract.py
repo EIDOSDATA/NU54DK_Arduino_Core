@@ -22,6 +22,7 @@ COMMON_INTERNAL = (
 BOARD_CONF = REPOSITORY / "libraries" / "NUCODE_NU54DK" / "zephyr" / "board-system.conf"
 COMBINED_CONTRACT = REPOSITORY / "tests" / "zephyr" / "m21_ble_board_contract"
 HIL_SOURCE = REPOSITORY / "tests" / "zephyr" / "m21_ble_hil" / "src" / "main.cpp"
+HIL_CONF = REPOSITORY / "tests" / "zephyr" / "m21_ble_hil" / "prj.conf"
 
 
 class M21BleSecurityContractTests(unittest.TestCase):
@@ -167,6 +168,26 @@ class M21BleSecurityContractTests(unittest.TestCase):
         self.assertIn("실제 영속 삭제 완료를 뜻하지 않습니다", header)
         self.assertNotIn("factoryReset", HEADER.read_text(encoding="utf-8"))
 
+    def test_already_encrypted_restore_is_verified_without_duplicate_event(self) -> None:
+        """! @brief connected 시점에 이미 L2인 bond 복원 race를 즉시 검증합니다. """
+
+        source = SOURCE.read_text(encoding="utf-8")
+        connected = source[source.index("void securityConnected") :]
+        connected = connected[: connected.index("void securityDisconnected")]
+        changed = source[source.index("void securityChanged") :]
+        changed = changed[: changed.index("\n        }\n\n    }", 1)]
+
+        self.assertIn("const bt_security_t level = bt_conn_get_security(connection)", connected)
+        self.assertIn("verifySecureBond(connection, level)", connected)
+        self.assertIn("queueSecurityChangedIfNew(connection, level)", connected)
+        self.assertIn("verifySecureBond(connection, level)", changed)
+        self.assertIn("queueSecurityChangedIfNew(connection, level)", changed)
+
+        deduplicator = source[source.index("void queueSecurityChangedIfNew") :]
+        deduplicator = deduplicator[: deduplicator.index("\n    }", 1) + 6]
+        self.assertIn("atomic_get(&published_level_value)", deduplicator)
+        self.assertIn("published != static_cast<atomic_val_t>(level)", deduplicator)
+
     def test_feature_enables_smp_settings_bas_dis_and_encrypted_hids(self) -> None:
         """! @brief 별도 feature가 표준 profile dependency를 완전하게 선언하는지 검사합니다. """
 
@@ -245,6 +266,76 @@ class M21BleSecurityContractTests(unittest.TestCase):
         self.assertIn('fail("dis-config")', source)
         self.assertIn('fail("battery-init")', source)
         self.assertNotIn('fail("standard-profile-init")', source)
+
+    def test_hil_clear_stops_only_active_gap_operations(self) -> None:
+        """! @brief 초기 CLEAR가 유휴 GAP 객체의 오류 event를 만들지 않도록 고정합니다. """
+
+        source = HIL_SOURCE.read_text(encoding="utf-8")
+        erase = source[source.index("void eraseBonds") :]
+        erase = erase[: erase.index("void executeCommand")]
+
+        self.assertRegex(
+            erase,
+            r"if\s*\(BLEScan\.running\(\)\)\s*\{\s*"
+            r"static_cast<void>\(BLEScan\.stop\(\)\);\s*\}",
+        )
+        self.assertRegex(
+            erase,
+            r"if\s*\(BLEConnection\.connected\(\)\)\s*\{\s*"
+            r"static_cast<void>\(BLEConnection\.disconnect\(\)\);\s*\}",
+        )
+        self.assertRegex(
+            erase,
+            r"if\s*\(BLEAdvertising\.running\(\)\)\s*\{\s*"
+            r"static_cast<void>\(BLEAdvertising\.stop\(\)\);\s*\}",
+        )
+
+    def test_hil_uses_typed_characteristic_and_auto_ccc_discovery(self) -> None:
+        """! @brief 원격 characteristic 값과 CCC를 유효한 Zephyr discovery 방식으로 찾습니다. """
+
+        source = HIL_SOURCE.read_text(encoding="utf-8")
+        self.assertIn(
+            "discover_parameters.type = BT_GATT_DISCOVER_CHARACTERISTIC", source
+        )
+        self.assertNotIn("BT_GATT_DISCOVER_ATTRIBUTE", source)
+        self.assertIn(
+            "battery_subscription.ccc_handle = BT_GATT_AUTO_DISCOVER_CCC_HANDLE",
+            source,
+        )
+        self.assertIn(
+            "report_subscription.ccc_handle = BT_GATT_AUTO_DISCOVER_CCC_HANDLE",
+            source,
+        )
+        self.assertIn("battery_subscription.disc_params = &battery_ccc_discovery", source)
+        self.assertIn("report_subscription.disc_params = &report_ccc_discovery", source)
+        self.assertIn("characteristic->properties & BT_GATT_CHRC_NOTIFY", source)
+
+    def test_hil_observes_encrypted_read_denial_before_security_request(self) -> None:
+        """! @brief ATT 자동 보안 재시도를 끄고 평문 HIDS read 거부를 직접 검증합니다. """
+
+        conf = HIL_CONF.read_text(encoding="utf-8")
+        source = HIL_SOURCE.read_text(encoding="utf-8")
+        self.assertIn("CONFIG_BT_ATT_RETRY_ON_SEC_ERR=n", conf)
+        self.assertIn("BT_ATT_ERR_INSUFFICIENT_ENCRYPTION", source)
+        self.assertIn('fail("secure-gatt-not-denied")', source)
+        self.assertIn("BLESecurity.requestSecurity()", source)
+
+    def test_erased_probe_rejects_every_interactive_pairing_path(self) -> None:
+        """! @brief 이전 key 거부 단계에서 Just Works와 passkey 재 pairing을 모두 거부합니다. """
+
+        source = HIL_SOURCE.read_text(encoding="utf-8")
+        handler = source[source.index("void onSecurityEvent") :]
+        handler = handler[: handler.index("void onGapEvent")]
+
+        self.assertIn("BLESecurity.acceptPairing(false)", handler)
+        self.assertIn("BLESecurity.confirmPasskey(false)", handler)
+        self.assertIn("BLESecurity.cancelPairing()", handler)
+        self.assertGreaterEqual(handler.count("rejectProbePairing("), 3)
+        rejector = source[source.index("void rejectProbePairing") :]
+        rejector = rejector[: rejector.index("void onSecurityEvent")]
+        self.assertIn("old_key_pairing_requested = true", rejector)
+        self.assertIn("if (BLEConnection.connected())", rejector)
+        self.assertIn("if (!rejected && !disconnect_requested)", rejector)
 
 
 if __name__ == "__main__":
