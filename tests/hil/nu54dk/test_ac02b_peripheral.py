@@ -230,7 +230,7 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
     def test_auxiliary_ignores_only_non_protocol_startup_noise(self) -> None:
         """! @brief x.1 UARTE 기동 잡음은 보존하되 S1 계약에는 포함하지 않습니다. """
 
-        noisy = b"\xff\xcb\xb7\xeb\x84\n\xff\n" + valid_auxiliary_transcript()
+        noisy = b"\xff\xcb\xb7\xeb\x84" + valid_auxiliary_transcript()
         result = MODULE.parse_auxiliary_transcript(noisy, NONCE)
         self.assertEqual(result.cycles, (0, 1))
 

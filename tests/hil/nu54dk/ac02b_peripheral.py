@@ -493,11 +493,12 @@ def parse_peer_transcript(transcript: bytes, nonce: str) -> PeerResult:
 ## @brief DUT x.1 보조 VCOM의 두 protocol frame이 nonce·cycle exact인지 검증합니다.
 def parse_auxiliary_transcript(transcript: bytes, nonce: str) -> AuxiliaryResult:
     nonce = build_nonce(nonce)
-    lines = [
-        line.rstrip(b"\r")
-        for line in transcript.split(b"\n")
-        if line.rstrip(b"\r").startswith(b"S1:")
-    ]
+    lines: list[bytes] = []
+    for raw_line in transcript.split(b"\n"):
+        line = raw_line.rstrip(b"\r")
+        marker = line.find(b"S1:")
+        if marker >= 0:
+            lines.append(line[marker:])
     expected = [f"S1:{nonce}:{cycle}".encode("ascii") for cycle in range(2)]
     if lines != expected:
         raise Ac02bHilFailure(
@@ -591,7 +592,9 @@ def echo_auxiliary_frames(
             )
             ## @details UARTE 활성화 순간의 CMSIS-DAP VCOM 전이 잡음은 raw
             ## transcript에 보존하고 S1 protocol frame만 동기화에 사용합니다.
-            if observed.startswith(b"S1:"):
+            marker = observed.find(b"S1:")
+            if marker >= 0:
+                observed = observed[marker:]
                 break
         if observed != expected:
             raise Ac02bHilFailure(
