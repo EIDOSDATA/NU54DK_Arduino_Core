@@ -21,7 +21,7 @@ SPEC.loader.exec_module(MODULE)
 
 
 class M22ReleaseTests(unittest.TestCase):
-    """! @brief allowlist·재현 build·필수 gate·publication 부재를 시험합니다. """
+    """! @brief allowlist·stable 불변·필수 gate·공개 RC 순서를 시험합니다. """
 
     def setUp(self) -> None:
         """! @brief 임시 plan/evidence 공간을 만듭니다. """
@@ -40,6 +40,23 @@ class M22ReleaseTests(unittest.TestCase):
         MODULE.assert_package_contract()
         self.assertEqual(MODULE.EXPECTED_RC_VERSIONS[-1], MODULE.VERSION)
         self.assertEqual(MODULE.VERSION, "0.3.0-rc.1")
+        self.assertEqual(len(MODULE.EXPECTED_ARTIFACT_NAMES), 7)
+        self.assertEqual(set(MODULE.EXPECTED_ARTIFACT_NAMES), set(MODULE.PACKAGE_ROLES))
+
+    def test_stable_index_is_exact_and_tamper_is_rejected(self) -> None:
+        """! @brief RC1 준비가 기존 stable index 한 byte 변경도 거부합니다. """
+
+        stable = (REPOSITORY / MODULE.STABLE_INDEX_PATH).read_bytes()
+        commit = "a" * 40
+
+        def runner(argv: tuple[str, ...], _cwd: Path) -> bytes:
+            self.assertEqual(argv, ("git", "show", f"{commit}:{MODULE.STABLE_INDEX_PATH}"))
+            return stable
+
+        MODULE.assert_stable_index_unchanged(REPOSITORY, commit, runner)
+        with mock.patch.object(MODULE, "EXPECTED_STABLE_INDEX_SHA256", "0" * 64):
+            with self.assertRaisesRegex(MODULE.M22ReleaseFailure, "stable index"):
+                MODULE.assert_stable_index_unchanged(REPOSITORY, commit, runner)
 
     def test_two_builds_must_be_byte_identical(self) -> None:
         """! @brief 독립 build 중 한 byte라도 다르면 prepare가 진행되지 않습니다. """
@@ -76,6 +93,10 @@ class M22ReleaseTests(unittest.TestCase):
         plan_value = {
             "target_commit": "a" * 40,
             "board_revision": "b" * 40,
+            "artifacts": {
+                "index": {"sha256": "c" * 64},
+                "archive": {"sha256": "d" * 64, "size": 123},
+            },
             "runners": {
                 "tools/release/run_m22_fixed_gate.py": {
                     "sha256": MODULE.file_sha256(
@@ -119,6 +140,14 @@ class M22ReleaseTests(unittest.TestCase):
                 "release_version": MODULE.VERSION,
                 "cleanup": {"status": "passed", "external_evidence_preserved": True},
                 "isolation": {"existing_path_leakage": False, "probe_id_recorded": False},
+                "public_index": {
+                    "url": (
+                        f"{MODULE.REPOSITORY_URL}/releases/download/{MODULE.TAG}/"
+                        f"{MODULE.EXPECTED_ARTIFACT_NAMES['index']}"
+                    ),
+                    "sha256": plan_value["artifacts"]["index"]["sha256"],
+                },
+                "archive": plan_value["artifacts"]["archive"],
                 "installed_release": {
                     "core_revision": plan_value["target_commit"],
                     "board_revision": plan_value["board_revision"],
@@ -127,13 +156,29 @@ class M22ReleaseTests(unittest.TestCase):
             encoding="utf-8",
         )
         with mock.patch.object(MODULE, "validate_plan", return_value=plan_value):
+            with self.assertRaisesRegex(MODULE.M22ReleaseFailure, "public URL/cleanup"):
+                MODULE.finalize_evidence(
+                    plan, [*evidences, clean], self.root / "unsafe-cleanup.json"
+                )
+        clean_value = json.loads(clean.read_text(encoding="utf-8"))
+        clean_value["cleanup"].update({
+            "exact_run_leaf_removed": True,
+            "reparse_scan_passed": True,
+            "marker_verified": True,
+        })
+        clean.write_text(json.dumps(clean_value) + "\n", encoding="utf-8")
+        with mock.patch.object(MODULE, "validate_plan", return_value=plan_value):
             with self.assertRaisesRegex(MODULE.M22ReleaseFailure, "완성되지"):
                 MODULE.finalize_evidence(plan, evidences, self.root / "incomplete.json")
             final = MODULE.finalize_evidence(
                 plan, [*evidences, clean], self.root / "final.json"
             )
-        self.assertEqual(final["state"], "rc1-validated-ready-for-owner-publication")
-        self.assertFalse(final["publication_performed"])
+        self.assertEqual(final["state"], "public-rc1-validated")
+        self.assertEqual(final["publication"], {
+            "performed_by_this_tool": False,
+            "public_prerelease_required_before_cleanroom": True,
+            "public_index_observed_by_cleanroom": True,
+        })
 
 
 if __name__ == "__main__":

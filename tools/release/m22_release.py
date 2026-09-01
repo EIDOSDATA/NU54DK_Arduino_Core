@@ -30,10 +30,15 @@ VERSION = "0.3.0-rc.1"
 TAG = f"v{VERSION}"
 REPOSITORY_URL = "https://github.com/EIDOSDATA/NU54DK_Arduino_Core"
 BOARD_PATH = "board_package/NU54DK_Zephyr_DTS"
+STABLE_INDEX_PATH = "package_nucode_nu54dk_index.json"
 PLAN_FILENAME = "m22-rc1-plan.json"
 FINAL_FILENAME = "m22-rc1-final-evidence.json"
 EXPECTED_RC_VERSIONS = ("0.1.0-rc.2", "0.2.0-rc.1", "0.2.0-rc.2", VERSION)
 EXPECTED_STABLE_VERSIONS = ("0.1.0", "0.2.0")
+EXPECTED_STABLE_INDEX_SIZE = 1877
+EXPECTED_STABLE_INDEX_SHA256 = (
+    "5ae7fbe13f71c52950879064685694cf4b062557572f187e81476639724e5344"
+)
 EXPECTED_PINS = {
     "NCS_VERSION": "v3.4.0",
     "NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
@@ -186,6 +191,27 @@ def assert_clean_source(repo_root: Path, commit: str, runner: Runner = run_exter
     return board_revision
 
 
+## @brief 기존 stable Boards Manager index가 exact commit과 worktree에서 불변인지 확인합니다.
+def assert_stable_index_unchanged(
+    repo_root: Path, commit: str, runner: Runner = run_external
+) -> None:
+    path = repo_root / STABLE_INDEX_PATH
+    if (
+        not path.is_file()
+        or path.is_symlink()
+        or path.stat().st_size != EXPECTED_STABLE_INDEX_SIZE
+        or file_sha256(path) != EXPECTED_STABLE_INDEX_SHA256
+    ):
+        raise M22ReleaseFailure("stable index worktree byte 계약이 변경되었습니다.")
+    committed = runner(("git", "show", f"{commit}:{STABLE_INDEX_PATH}"), repo_root)
+    if (
+        len(committed) != EXPECTED_STABLE_INDEX_SIZE
+        or hashlib.sha256(committed).hexdigest() != EXPECTED_STABLE_INDEX_SHA256
+        or committed != path.read_bytes()
+    ):
+        raise M22ReleaseFailure("stable index exact commit byte 계약이 변경되었습니다.")
+
+
 ## @brief 출력이 저장소 밖 또는 gitignored build 아래의 비어 있는 경로인지 확인합니다.
 def assert_safe_output(repo_root: Path, output_dir: Path) -> None:
     repo_root = repo_root.resolve()
@@ -249,6 +275,7 @@ def prepare_release(
     assert_safe_output(repo_root, output_dir)
     assert_package_contract(package)
     board_revision = assert_clean_source(repo_root, commit, runner)
+    assert_stable_index_unchanged(repo_root, commit, runner)
     if output_dir.exists() and any(output_dir.iterdir()):
         raise M22ReleaseFailure("M22 output은 새 경로 또는 빈 directory여야 합니다.")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -281,10 +308,18 @@ def prepare_release(
         "runners": runner_records,
         "required_gates": list(REQUIRED_GATES),
         "publication": {
-            "github_release_created": False,
+            "github_release_created_by_this_tool": False,
             "github_release_supported_by_this_tool": False,
-            "push_performed": False,
-            "next_action": "고정 gate와 공개 prerelease URL clean-room 검증 완료 뒤 프로젝트 소유자 승인",
+            "push_performed_by_this_tool": False,
+            "public_prerelease_required_before_cleanroom": True,
+            "ordered_flow": [
+                "prepare",
+                "fixed-gates",
+                "external-public-prerelease",
+                "public-url-cleanroom",
+                "finalize",
+            ],
+            "next_action": "고정 gate 완료 뒤 외부 절차로 공개 prerelease를 만든 다음 public URL clean-room과 finalize 실행",
         },
         "state": "artifacts-prepared-awaiting-gates",
     }
@@ -338,6 +373,7 @@ def validate_plan(
     if not isinstance(commit, str):
         raise M22ReleaseFailure("plan target commit이 없습니다.")
     board = assert_clean_source(Path(__file__).resolve().parents[2], commit, runner)
+    assert_stable_index_unchanged(Path(__file__).resolve().parents[2], commit, runner)
     if plan.get("board_revision") != board:
         raise M22ReleaseFailure("plan board revision이 source와 다릅니다.")
     if plan.get("created_at_utc") != package.commit_timestamp(
@@ -385,12 +421,18 @@ def validate_plan(
     if (
         not isinstance(publication, dict)
         or set(publication) != {
-            "github_release_created", "github_release_supported_by_this_tool",
-            "push_performed", "next_action",
+            "github_release_created_by_this_tool", "github_release_supported_by_this_tool",
+            "push_performed_by_this_tool", "public_prerelease_required_before_cleanroom",
+            "ordered_flow", "next_action",
         }
-        or publication.get("github_release_created") is not False
+        or publication.get("github_release_created_by_this_tool") is not False
         or publication.get("github_release_supported_by_this_tool") is not False
-        or publication.get("push_performed") is not False
+        or publication.get("push_performed_by_this_tool") is not False
+        or publication.get("public_prerelease_required_before_cleanroom") is not True
+        or publication.get("ordered_flow") != [
+            "prepare", "fixed-gates", "external-public-prerelease",
+            "public-url-cleanroom", "finalize",
+        ]
         or not isinstance(publication.get("next_action"), str)
         or not publication["next_action"].strip()
     ):
@@ -501,15 +543,33 @@ def finalize_evidence(
             gate = "cleanroom"
             cleanup = evidence.get("cleanup", {})
             isolation = evidence.get("isolation", {})
+            public_index = evidence.get("public_index", {})
+            archive = evidence.get("archive", {})
             if (
                 cleanup.get("status") != "passed"
+                or cleanup.get("exact_run_leaf_removed") is not True
                 or cleanup.get("external_evidence_preserved") is not True
+                or cleanup.get("reparse_scan_passed") is not True
+                or cleanup.get("marker_verified") is not True
                 or isolation.get("existing_path_leakage") is not False
                 or isolation.get("probe_id_recorded") is not False
+                or public_index != {
+                    "url": (
+                        f"{REPOSITORY_URL}/releases/download/{TAG}/"
+                        f"{EXPECTED_ARTIFACT_NAMES['index']}"
+                    ),
+                    "sha256": plan["artifacts"]["index"]["sha256"],
+                }
+                or archive != {
+                    "sha256": plan["artifacts"]["archive"]["sha256"],
+                    "size": plan["artifacts"]["archive"]["size"],
+                }
                 or evidence.get("installed_release", {}).get("core_revision") != plan["target_commit"]
                 or evidence.get("installed_release", {}).get("board_revision") != plan["board_revision"]
             ):
-                raise M22ReleaseFailure("clean-room cleanup/isolation evidence가 완성되지 않았습니다.")
+                raise M22ReleaseFailure(
+                    "clean-room public URL/cleanup/isolation evidence가 완성되지 않았습니다."
+                )
         else:
             raise M22ReleaseFailure("M22 evidence type이 allowlist 밖입니다.")
         if gate in gates:
@@ -534,8 +594,12 @@ def finalize_evidence(
         "board_revision": plan["board_revision"],
         "plan_sha256": file_sha256(plan_path),
         "gates": gates,
-        "publication_performed": False,
-        "state": "rc1-validated-ready-for-owner-publication",
+        "publication": {
+            "performed_by_this_tool": False,
+            "public_prerelease_required_before_cleanroom": True,
+            "public_index_observed_by_cleanroom": True,
+        },
+        "state": "public-rc1-validated",
         "completed_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
     }
     write_json(output.resolve(), final)
