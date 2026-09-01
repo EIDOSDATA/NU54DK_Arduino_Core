@@ -6,7 +6,7 @@
 | 문서 개정 | 4.8 |
 | 문서 상태 | `v0.2.0` 정식 공개 범위 + `v0.3.0` 개발 상태 |
 | 최종 갱신일 | 2026-09-01 |
-| 개발 상태 | AC-01~AC-03·M19~M21 완료 / M22 RC1 준비 진행 |
+| 개발 상태 | AC-01~AC-03·M19~M21 완료 / M22 RC2 교정 검증 진행 |
 
 ## 1. 목적
 
@@ -48,7 +48,7 @@ runtime 지원으로 확대하지 않는다.
 따라서 `부분 지원`은 Core 전체가 불안정하다는 뜻이 아니라, 특정 API 행에서 보증하는 pin, mode,
 bus instance 또는 검증 범위가 Arduino 생태계 전체보다 좁다는 뜻이다.
 
-현재 `v0.3.0-rc.1` 후보는 public library 8개와 예제 29개를 가진다. Standard 22개와 BLE
+현재 `v0.3.0-rc.2` 후보는 public library 8개와 예제 29개를 가진다. Standard 22개와 BLE
 7개를 M22 package 목록으로 고정한다. 새 EEPROM과 LittleFS 예제는 AC-03 검증 대상이다. 이 수치는
 정식 `v0.2.0` archive의 library 4개·예제 14개 기록이나 아직 끝나지 않은 `v0.3.0` runtime 지원
 판정을 바꾸지 않는다.
@@ -320,7 +320,7 @@ native USB, DAC, AVR Harvard memory와 Wi-Fi는 NU54DK/nRF54L15 hardware에서 �
 - M20: 범용 GATT — 자동 검증 완료
 - M21: 별도 security library의 pairing·bonding·표준 profile·HID — 완료; exact RF HIL과
   Windows 11 실제 HID·bond 복원 PASS
-- M22: 8개 library·29개 예제 package, 동일 PC clean-room과 RC/stable gate — RC1 준비 진행
+- M22: 8개 library·29개 예제 package, 동일 PC clean-room과 RC/stable gate — RC2 교정 검증 진행
 
 계획이 현재 `v0.2.0` 지원 판정을 바꾸지는 않는다. 각 항목은 자동 계약, target build,
 필요한 HIL과 예제를 통과해야만 지원으로 승격한다. 물리 경로나 driver 의미를 확정할 수

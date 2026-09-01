@@ -1,4 +1,8 @@
-# M22 v0.3.0-rc.1 릴리스 자동화
+# M22 v0.3.0-rc.2 릴리스 자동화
+
+`v0.3.0-rc.1`은 공개 뒤 clean-room 실행기가 Nordic installer 소유 leaf를 먼저
+생성하는 결함으로 formal 검증을 중단한 불변 후보입니다. RC1 tag와 7개 자산은
+교체하지 않으며, RC2는 그 실행기만 교정해 전체 gate를 새 plan으로 다시 수행합니다.
 
 이 문서는 `tools/release/m22_release.py`와 `m22_cleanroom.py`의 실행 경계와 순서를
 고정한다. 두 도구는 Git tag 생성, push 또는 GitHub Release 생성을 직접 수행하지
@@ -11,7 +15,7 @@ M22는 아래 순서를 바꾸지 않는다.
 1. 최종 clean commit을 push한다.
 2. `prepare`로 같은 commit에서 두 번 재현 build하고 `validate`한다.
 3. `host`, `package-examples`, `rc-upload` fixed gate를 통과한다.
-4. exact commit으로 annotated tag `v0.3.0-rc.1`을 만들고 push한다.
+4. exact commit으로 annotated tag `v0.3.0-rc.2`를 만들고 push한다.
 5. 아래 7개 파일만 포함한 **공개 prerelease**를 만든다.
 6. 공개 URL을 사용해 `run-cleanroom`을 실행한다.
 7. 네 gate evidence를 `finalize`로 결합한다.
@@ -25,15 +29,15 @@ M22 Python 도구 자체가 GitHub 공개 작업을 수행하지 않았다는 �
 
 공개 prerelease에는 다음 7개 파일만 올린다.
 
-- `nucode-nu54dk-zephyr-0.3.0-rc.1.zip`
-- `nucode-nu54dk-zephyr-0.3.0-rc.1.CHECKSUMS.sha256`
-- `nucode-nu54dk-zephyr-0.3.0-rc.1.license-inventory.json`
-- `nucode-nu54dk-zephyr-0.3.0-rc.1.release-manifest.json`
-- `nucode-nu54dk-zephyr-0.3.0-rc.1.THIRD_PARTY_NOTICES.md`
-- `nucode-nu54dk-zephyr-0.3.0-rc.1.spdx.json`
+- `nucode-nu54dk-zephyr-0.3.0-rc.2.zip`
+- `nucode-nu54dk-zephyr-0.3.0-rc.2.CHECKSUMS.sha256`
+- `nucode-nu54dk-zephyr-0.3.0-rc.2.license-inventory.json`
+- `nucode-nu54dk-zephyr-0.3.0-rc.2.release-manifest.json`
+- `nucode-nu54dk-zephyr-0.3.0-rc.2.THIRD_PARTY_NOTICES.md`
+- `nucode-nu54dk-zephyr-0.3.0-rc.2.spdx.json`
 - `package_nucode_nu54dk_rc_index.json`
 
-로컬 `m22-rc1-plan.json`, gate evidence, log와 final evidence는 Release asset으로
+로컬 `m22-rc2-plan.json`, gate evidence, log와 final evidence는 Release asset으로
 올리지 않는다. stable index `package_nucode_nu54dk_index.json`도 RC asset이 아니다.
 M22는 이 stable index가 1,877 byte이고 SHA-256이
 `5ae7fbe13f71c52950879064685694cf4b062557572f187e81476639724e5344`인지를
@@ -51,6 +55,6 @@ Arduino, NCS, toolchain, cache 경로를 그 leaf 아래로 격리한다.
 - `finalize`는 exact leaf 삭제, 외부 evidence 보존, reparse 검사, marker 검사와
   공개 RC index/archive identity가 모두 evidence에 기록되어야만 통과한다.
 
-최종 상태 `public-rc1-validated`는 공개 prerelease의 Boards Manager 설치,
+최종 상태 `public-rc2-validated`는 공개 prerelease의 Boards Manager 설치,
 29개 설치본 예제 build, exact UID 업로드, downgrade/upgrade, uninstall/reinstall 및
 cleanup까지 완료되었다는 뜻이다.

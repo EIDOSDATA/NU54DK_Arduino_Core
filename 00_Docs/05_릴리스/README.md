@@ -10,24 +10,24 @@
 신규 설치와 현재 사용법은 **`v0.2.0` 문서**를 사용한다. `v0.1.0`, RC1과 RC2 문서는
 당시 artifact와 migration 경계를 보존하는 역사 자료이며 최신 설치 안내가 아니다.
 
-`v0.3.0-rc.1`은 별도 RC index로 공개 검증하는 다음 버전 후보다. Stable `v0.2.0`과 stable
-index를 바꾸지 않으며 생산용 최신 버전으로 표시하지 않는다.
+`v0.3.0-rc.2`는 RC1 clean-room 실행기 결함을 교정해 별도 RC index로 재검증하는 다음 버전
+후보다. Stable `v0.2.0`과 stable index를 바꾸지 않으며 생산용 최신 버전으로 표시하지 않는다.
 
-## 현재 시험 후보 — v0.3.0-rc.1
+## 현재 시험 후보 — v0.3.0-rc.2
 
 | 목적 | 문서 |
 | --- | --- |
-| 후보 범위와 공개 경계 | [RC1 문서](v0.3.0-rc.1/README.md) |
-| 추가·변경된 기능 | [RC1 Release notes](v0.3.0-rc.1/RELEASE_NOTES.md) |
-| GitHub·Arduino IDE 설치와 시험 | [RC1 Testing](v0.3.0-rc.1/TESTING.md) |
-| Stable에서 이동·복귀 | [RC1 Migration](v0.3.0-rc.1/MIGRATION.md) |
-| 미확정·제외 범위 | [RC1 Known issues](v0.3.0-rc.1/KNOWN_ISSUES.md) |
-| 설치·build·storage·BLE 진단 | [RC1 Troubleshooting](v0.3.0-rc.1/TROUBLESHOOTING.md) |
+| 후보 범위와 공개 경계 | [RC2 문서](v0.3.0-rc.2/README.md) |
+| 추가·변경된 기능 | [RC2 Release notes](v0.3.0-rc.2/RELEASE_NOTES.md) |
+| GitHub·Arduino IDE 설치와 시험 | [RC2 Testing](v0.3.0-rc.2/TESTING.md) |
+| Stable에서 이동·복귀 | [RC2 Migration](v0.3.0-rc.2/MIGRATION.md) |
+| 미확정·제외 범위 | [RC2 Known issues](v0.3.0-rc.2/KNOWN_ISSUES.md) |
+| 설치·build·storage·BLE 진단 | [RC2 Troubleshooting](v0.3.0-rc.2/TROUBLESHOOTING.md) |
 
 RC index는 Public Prerelease 공개 뒤 다음 URL에서 사용한다.
 
 ```text
-https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.1/package_nucode_nu54dk_rc_index.json
+https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.2/package_nucode_nu54dk_rc_index.json
 ```
 
 ## 현재 정식 버전 — v0.2.0

@@ -29,7 +29,7 @@ artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI
 Checkout은 submodule을 recursive로 받고 full history를 사용한다. Workflow permission은
 `contents: read`이며 같은 ref의 중복 실행은 취소한다.
 
-M12와 정식 `v0.2.0`의 역사적 기준은 public library 4개·예제 14개다. 현재 `v0.3.0-rc.1`
+M12와 정식 `v0.2.0`의 역사적 기준은 public library 4개·예제 14개다. 현재 `v0.3.0-rc.2`
 후보는 EEPROM/LittleFS까지 포함한 library 8개·예제 29개다. `Standard peripherals` 22개와
 BLE 7개를 M22 package lock과 installed-package gate로 모두 compile한다. 현재 29개 기대값을
 과거 `v0.2.0` artifact 기록에 소급 적용하지 않는다.

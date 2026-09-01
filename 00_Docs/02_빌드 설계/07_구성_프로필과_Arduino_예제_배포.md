@@ -130,7 +130,7 @@ Sketch root의 `prj.conf`와 `app.overlay`는 전문가용 마지막 override로
 앞의 12개 예제는 `standard` profile에서, NUS 2개는 `ble` profile에서 compile한다. 예제는
 각 library가 source, 설정 요구사항, 문서와 검증을 함께 소유한다.
 
-### 5.1 v0.3.0-rc.1 후보 29개
+### 5.1 v0.3.0-rc.2 후보 29개
 
 | Library | 예제 |
 | --- | --- |
@@ -158,7 +158,7 @@ Wire target/callback/no-STOP, `Wire1`, `SPI1`은 profile을 선택해도 활성�
 ## 6. 배포와 자동 검증
 
 정식 `v0.2.0` Boards Manager ZIP은 profile 두 개, feature manifest 네 개와 예제 14개를
-포함한다. 현재 `v0.3.0-rc.1` source/package 후보는 feature manifest 여덟 개와 예제 29개를 같은 상대
+포함한다. 현재 `v0.3.0-rc.2` source/package 후보는 feature manifest 여덟 개와 예제 29개를 같은 상대
 경로로 보존해야 한다. Arduino IDE/CLI가 설치된 Core에서 library별 예제를 같은 이름으로 열거해야 한다.
 
 자동 gate는 다음을 검사한다.

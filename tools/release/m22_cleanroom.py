@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief 동일 Windows PC에서 M22 RC1을 경로 격리해 수명주기 검증합니다. """
+"""! @brief 동일 Windows PC에서 M22 RC2를 경로 격리해 수명주기 검증합니다. """
 
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ if hasattr(sys.stderr, "reconfigure"):
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
-VERSION = "0.3.0-rc.1"
+VERSION = "0.3.0-rc.2"
 PREVIOUS_VERSION = "0.2.0"
 FQBN = "nucode:zephyr:nu54dk"
 TAG = f"v{VERSION}"
@@ -45,9 +45,17 @@ ARDUINO_CLI_COMMIT = "01f3d4f2b"
 ARDUINO_CLI_SHA256 = "65daefba1423010575d0874275734cb4a917faf5293609f01e9db6ed1c1c7e79"
 RUN_ID_RE = re.compile(r"^m22-[0-9]{8}T[0-9]{6}Z-[0-9a-f]{8}$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
 MAX_JSON_BYTES = 32 * 1024 * 1024
 MAX_LOG_BYTES = 32 * 1024 * 1024
 MARKER_NAME = ".nu54-m22-cleanroom.json"
+CLEANROOM_RUNNER_PATH = "tools/release/m22_cleanroom.py"
+LAYOUT_KEYS = {
+    "root", "profile", "local", "roaming", "temp", "data", "downloads",
+    "sketchbook", "build", "cache", "logs", "bin", "ncs_base", "ncs",
+    "toolchain", "state",
+}
+SCAFFOLD_KEYS = LAYOUT_KEYS - {"ncs", "toolchain"}
 
 
 class CleanroomFailure(RuntimeError):
@@ -154,6 +162,18 @@ def layout(run_root: Path) -> dict[str, Path]:
         "toolchain": profile / "ncs" / "toolchains" / "dcbdc366a1",
         "state": local / "NUCODE" / "NU54DK_Arduino_Core" / "prerequisites",
     }
+
+
+## @brief clean-room 실행에 필요한 상위·작업 directory만 미리 생성합니다.
+def prepare_layout(paths: dict[str, Path]) -> None:
+    """! @brief Nordic 설치 대상 leaf는 설치기가 직접 생성하도록 비워 둡니다. """
+
+    if set(paths) != LAYOUT_KEYS:
+        raise CleanroomFailure("clean-room layout key allowlist가 변경되었습니다.")
+    for name in sorted(SCAFFOLD_KEYS):
+        paths[name].mkdir(parents=True, exist_ok=True)
+    if paths["ncs"].exists() or paths["toolchain"].exists():
+        raise CleanroomFailure("Nordic installer 소유 leaf가 설치 전에 존재합니다.")
 
 
 ## @brief 원래 PC 경로를 상속하지 않는 최소 Windows child 환경을 만듭니다.
@@ -399,7 +419,7 @@ def validate_rc_index(
             if isinstance(platform, dict) and platform.get("version") == VERSION:
                 matches.append(platform)
     if len(matches) != 1:
-        raise CleanroomFailure("공개 RC index에 exact 0.3.0-rc.1 platform이 하나가 아닙니다.")
+        raise CleanroomFailure("공개 RC index에 exact 0.3.0-rc.2 platform이 하나가 아닙니다.")
     platform = matches[0]
     expected_url = (
         f"https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/{TAG}/"
@@ -596,6 +616,36 @@ def validate_flash_log(
     }
 
 
+## @brief clean-room runner byte를 release commit과 plan에 결합합니다.
+def validate_runner_binding(
+    *,
+    runner_revision: str,
+    core_revision: str,
+    runner_sha256: str,
+    plan_sha256: str,
+    runner_path: Path | None = None,
+) -> dict[str, str]:
+    """! @brief 실행 중인 runner 자체가 plan에 기록된 byte인지 fail-closed로 확인합니다. """
+
+    path = Path(__file__).resolve() if runner_path is None else runner_path.resolve()
+    if (
+        not COMMIT_RE.fullmatch(runner_revision)
+        or runner_revision != core_revision
+        or not SHA256_RE.fullmatch(runner_sha256)
+        or not SHA256_RE.fullmatch(plan_sha256)
+        or not path.is_file()
+        or path.is_symlink()
+        or file_sha256(path) != runner_sha256
+    ):
+        raise CleanroomFailure("clean-room runner revision/hash/plan 결합이 잘못되었습니다.")
+    return {
+        "repository_relative_path": CLEANROOM_RUNNER_PATH,
+        "revision": runner_revision,
+        "sha256": runner_sha256,
+        "plan_sha256": plan_sha256,
+    }
+
+
 ## @brief same-PC clean-room의 설치·29예제·업로드·down/up/uninstall/reinstall을 실행합니다.
 def run_cleanroom(args: argparse.Namespace) -> dict[str, Any]:
     if os.name != "nt":
@@ -611,6 +661,12 @@ def run_cleanroom(args: argparse.Namespace) -> dict[str, Any]:
         raise CleanroomFailure("release source/runtime/manifest identity 형식이 잘못되었습니다.")
     if args.archive_size < 1 or not args.probe_id.strip():
         raise CleanroomFailure("archive size 또는 exact probe UID가 없습니다.")
+    runner_identity = validate_runner_binding(
+        runner_revision=args.runner_revision,
+        core_revision=args.core_revision,
+        runner_sha256=args.runner_sha256,
+        plan_sha256=args.plan_sha256,
+    )
     named_parent = args.parent.absolute()
     if named_parent.exists() and is_reparse(named_parent):
         raise CleanroomFailure("clean-room의 명명 parent에 reparse point를 허용하지 않습니다.")
@@ -640,8 +696,7 @@ def run_cleanroom(args: argparse.Namespace) -> dict[str, Any]:
     inherited = dict(os.environ)
     forbidden = forbidden_roots(inherited, run_root)
     anchors_before = leakage_anchors(forbidden)
-    for path in paths.values():
-        path.mkdir(parents=True, exist_ok=True)
+    prepare_layout(paths)
     token = secrets.token_hex(32)
     environment = isolated_environment(run_root, inherited)
     private_log = paths["logs"] / "cleanroom.log"
@@ -903,6 +958,7 @@ def run_cleanroom(args: argparse.Namespace) -> dict[str, Any]:
                 "commit": ARDUINO_CLI_COMMIT,
                 "sha256": ARDUINO_CLI_SHA256,
             },
+            "runner": runner_identity,
             "isolation": {
                 "all_mutable_roots_under_run_leaf": True,
                 "existing_path_leakage": False if status == "passed" else None,
@@ -961,6 +1017,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--board-revision", required=True)
     parser.add_argument("--runtime-payload-sha256", required=True)
     parser.add_argument("--release-manifest-sha256", required=True)
+    parser.add_argument("--runner-revision", required=True)
+    parser.add_argument("--runner-sha256", required=True)
+    parser.add_argument("--plan-sha256", required=True)
     parser.add_argument("--probe-id", required=True)
     parser.add_argument("--parent", type=Path, default=Path(r"C:\NU54CI\M22"))
     parser.add_argument("--run-id")

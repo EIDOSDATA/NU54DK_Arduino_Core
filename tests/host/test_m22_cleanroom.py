@@ -80,6 +80,54 @@ class M22CleanroomTests(unittest.TestCase):
         self.assertNotIn("secret", environment["PATH"].casefold())
         self.assertNotIn(r"C:\ncs".casefold(), environment["PATH"].casefold())
 
+    def test_layout_does_not_precreate_nordic_install_leaves(self) -> None:
+        """! @brief Nordic SDK와 Toolchain 설치 대상 leaf를 미리 만들지 않습니다. """
+
+        run = self.parent / "layout-fixture"
+        paths = MODULE.layout(run)
+        MODULE.prepare_layout(paths)
+        self.assertTrue(paths["ncs_base"].is_dir())
+        self.assertTrue(paths["state"].is_dir())
+        self.assertFalse(paths["ncs"].exists())
+        self.assertFalse(paths["toolchain"].exists())
+        paths["unexpected"] = run / "unexpected"
+        with self.assertRaisesRegex(MODULE.CleanroomFailure, "allowlist"):
+            MODULE.prepare_layout(paths)
+
+    def test_runner_binding_requires_exact_release_commit_and_bytes(self) -> None:
+        """! @brief clean-room runner가 exact plan commit과 byte에 묶이는지 확인합니다. """
+
+        runner = self.base / "runner.py"
+        runner.write_text("fixture\n", encoding="utf-8")
+        revision = "a" * 40
+        value = MODULE.validate_runner_binding(
+            runner_revision=revision,
+            core_revision=revision,
+            runner_sha256=MODULE.file_sha256(runner),
+            plan_sha256="b" * 64,
+            runner_path=runner,
+        )
+        self.assertEqual(value["revision"], revision)
+        with self.assertRaisesRegex(MODULE.CleanroomFailure, "runner"):
+            MODULE.validate_runner_binding(
+                runner_revision="c" * 40,
+                core_revision=revision,
+                runner_sha256=MODULE.file_sha256(runner),
+                plan_sha256="b" * 64,
+                runner_path=runner,
+            )
+
+    def test_layout_rejects_preexisting_nordic_install_leaf(self) -> None:
+        """! @brief Nordic 설치 대상 leaf가 먼저 생기면 즉시 중단합니다. """
+
+        for name in ("ncs", "toolchain"):
+            with self.subTest(name=name):
+                run = self.parent / f"preexisting-{name}"
+                paths = MODULE.layout(run)
+                paths[name].mkdir(parents=True)
+                with self.assertRaisesRegex(MODULE.CleanroomFailure, "installer"):
+                    MODULE.prepare_layout(paths)
+
     def test_rc_index_requires_exact_public_asset_identity(self) -> None:
         """! @brief 공개 RC URL/hash/size가 plan과 다르면 설치 전에 차단합니다. """
 

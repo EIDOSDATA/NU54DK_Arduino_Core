@@ -4,7 +4,7 @@
 | --- | --- |
 | 문서 성격 | 실행 당시의 revision, 환경, 명령과 결과를 보존하는 역사 증거 |
 | 완료 범위 | M1~M18, `v0.1.0`과 `v0.2.0` 정식 공개 / AC-01~AC-03 / M19·M20·M21 구현·검증 |
-| 진행 범위 | M22 `v0.3.0-rc.1` package·public prerelease·clean-room |
+| 진행 범위 | M22 `v0.3.0-rc.2` package·public prerelease·clean-room 교정 검증 |
 | 현재 정식 버전 | `v0.2.0` |
 | 최종 갱신일 | 2026-09-01 |
 
@@ -55,7 +55,8 @@
 | AC-02A | 고정 슬롯 핀·주변장치 소유권 manager, 부팅 registry와 GPIO 충돌 gate; target ztest 8/8 PASS | [AC-02A 기록](26_AC-02A_핀과_주변장치_소유권_기준선.md) |
 | AC-02B | exact `0b7f892`의 3-wire fixture에서 Serial1·BQ25186 Wire·local SPI·ADC→PWM handover 실기 PASS | [AC-02B 기록](27_AC-02B_Peripheral_Analog_runtime_기준선.md) |
 | AC-03 | exact `0b7f892`의 두 보드에서 EEPROM/LittleFS 영속성·손상 거부·복구·정리 PASS | [AC-03 기록](28_AC-03_Storage와_Library_호환성_기준선.md) |
-| M22 RC1 | 8개 library·29개 예제 package, 동일 PC 격리 clean-room과 public RC1 gate 진행 | [M22 기록](29_M22_v0.3.0_rc1_통합_릴리스_기준선.md) |
+| M22 RC1 | fixed gate PASS 뒤 tagged clean-room 실행기 결함으로 formal 검증 중단; tag·자산 불변 보존 | [RC1 기록](29_M22_v0.3.0_rc1_통합_릴리스_기준선.md) |
+| M22 RC2 | installer 소유 leaf 선생성 결함 교정, 새 plan·4 gate·public clean-room 진행 | [RC2 기록](30_M22_v0.3.0_rc2_통합_릴리스_기준선.md) |
 
 ## 기록 해석 규칙
 

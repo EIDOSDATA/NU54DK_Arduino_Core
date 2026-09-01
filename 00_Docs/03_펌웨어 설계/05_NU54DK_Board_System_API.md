@@ -117,7 +117,7 @@ Arduino API가 같더라도 adapter를 다시 검토하고 target 검증을 수�
 | 손상 처리 | 자동 erase를 강제하는 `SETTINGS_ZMS_FORCE_MOUNT` 사용 안 함 |
 
 이 API는 EEPROM byte 주소 호환층이나 일반 filesystem이 아니다. Flash wear, 전원 차단 시점과
-제품별 데이터 migration은 Sketch가 별도로 설계해야 한다. `v0.3.0-rc.1` 후보의 AC-03은 같은
+제품별 데이터 migration은 Sketch가 별도로 설계해야 한다. `v0.3.0-rc.2` 후보의 AC-03은 같은
 Settings/ZMS에 독립 `arduino/eeprom` record를 두는 1024-byte EEPROM facade와 별도
 `0x16c000..0x174000` 32 KiB LittleFS를 구현했다. 두 facade의 API·파괴적 복구·검증 경계는
 [Arduino Storage API](./10_Arduino_Storage_API.md)가 소유하며, RC 검증 결과를 stable `v0.2.0`

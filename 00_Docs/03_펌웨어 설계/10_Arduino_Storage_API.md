@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-STORAGE-001 |
-| 적용 후보 | `v0.3.0-rc.1` |
+| 적용 후보 | `v0.3.0-rc.2` |
 | 현재 정식 버전 | `v0.2.0` — 아래 API를 정식 지원으로 소급하지 않음 |
 | 구현 | `EEPROM`, `LittleFS` bundled library |
 | 검증 상태 | AC-03 host/target/package와 exact 두 보드 영속성·복구 HIL PASS |
@@ -109,7 +109,7 @@ Sketch에서 `<EEPROM.h>` 또는 `<LittleFS.h>`를 include하면 Build Adapter�
 | EEPROM | `EEPROMPersistence` | `Standard peripherals` |
 | LittleFS | `LittleFSPersistence` | `Standard peripherals` |
 
-두 예제는 `v0.3.0-rc.1` 후보의 29개 설치 예제에 포함된다. BLE profile에서도 build 입력은
+두 예제는 `v0.3.0-rc.2` 후보의 29개 설치 예제에 포함된다. BLE profile에서도 build 입력은
 호환되지만, 예제 메뉴의 기본 사용 안내는 storage 동작만 분리해 보는 `Standard peripherals`다.
 
 ## 6. 실패 진단

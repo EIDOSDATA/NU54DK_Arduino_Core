@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief M22 RC1 release 수명주기의 고정 계약을 검증합니다. """
+"""! @brief M22 RC2 release 수명주기의 고정 계약을 검증합니다. """
 
 from __future__ import annotations
 
@@ -35,16 +35,16 @@ class M22ReleaseTests(unittest.TestCase):
         self.temporary.cleanup()
 
     def test_package_contract_contains_only_exact_new_rc(self) -> None:
-        """! @brief 0.3.0-rc.1이 과거 RC/stable 계약 뒤에 정확히 추가됩니다. """
+        """! @brief 0.3.0-rc.2가 과거 RC/stable 계약 뒤에 정확히 추가됩니다. """
 
         MODULE.assert_package_contract()
         self.assertEqual(MODULE.EXPECTED_RC_VERSIONS[-1], MODULE.VERSION)
-        self.assertEqual(MODULE.VERSION, "0.3.0-rc.1")
+        self.assertEqual(MODULE.VERSION, "0.3.0-rc.2")
         self.assertEqual(len(MODULE.EXPECTED_ARTIFACT_NAMES), 7)
         self.assertEqual(set(MODULE.EXPECTED_ARTIFACT_NAMES), set(MODULE.PACKAGE_ROLES))
 
     def test_stable_index_is_exact_and_tamper_is_rejected(self) -> None:
-        """! @brief RC1 준비가 기존 stable index 한 byte 변경도 거부합니다. """
+        """! @brief RC2 준비가 기존 stable index 한 byte 변경도 거부합니다. """
 
         stable = (REPOSITORY / MODULE.STABLE_INDEX_PATH).read_bytes()
         commit = "a" * 40
@@ -86,7 +86,7 @@ class M22ReleaseTests(unittest.TestCase):
             self.assertIn(command, help_text)
 
     def test_finalize_requires_exact_four_passed_gates(self) -> None:
-        """! @brief host/examples/upload/clean-room 모두 있어야 RC1 ready가 됩니다. """
+        """! @brief host/examples/upload/clean-room 모두 있어야 RC2 ready가 됩니다. """
 
         plan = self.root / "plan.json"
         plan.write_text("{}\n", encoding="utf-8")
@@ -105,7 +105,13 @@ class M22ReleaseTests(unittest.TestCase):
                     "size": (
                         REPOSITORY / "tools" / "release" / "run_m22_fixed_gate.py"
                     ).stat().st_size,
-                }
+                },
+                MODULE.CLEANROOM_RUNNER_PATH: {
+                    "sha256": MODULE.file_sha256(
+                        REPOSITORY / MODULE.CLEANROOM_RUNNER_PATH
+                    ),
+                    "size": (REPOSITORY / MODULE.CLEANROOM_RUNNER_PATH).stat().st_size,
+                },
             },
         }
         evidences: list[Path] = []
@@ -148,6 +154,12 @@ class M22ReleaseTests(unittest.TestCase):
                     "sha256": plan_value["artifacts"]["index"]["sha256"],
                 },
                 "archive": plan_value["artifacts"]["archive"],
+                "runner": {
+                    "repository_relative_path": MODULE.CLEANROOM_RUNNER_PATH,
+                    "revision": plan_value["target_commit"],
+                    "sha256": plan_value["runners"][MODULE.CLEANROOM_RUNNER_PATH]["sha256"],
+                    "plan_sha256": MODULE.file_sha256(plan),
+                },
                 "installed_release": {
                     "core_revision": plan_value["target_commit"],
                     "board_revision": plan_value["board_revision"],
@@ -173,7 +185,7 @@ class M22ReleaseTests(unittest.TestCase):
             final = MODULE.finalize_evidence(
                 plan, [*evidences, clean], self.root / "final.json"
             )
-        self.assertEqual(final["state"], "public-rc1-validated")
+        self.assertEqual(final["state"], "public-rc2-validated")
         self.assertEqual(final["publication"], {
             "performed_by_this_tool": False,
             "public_prerelease_required_before_cleanroom": True,
