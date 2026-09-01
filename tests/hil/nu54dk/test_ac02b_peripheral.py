@@ -393,7 +393,7 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
         self.assertNotIn("nordic,nrf-twis", overlay)
 
     def test_shared_fixture_line_is_adc_then_pwm_fail_closed(self) -> None:
-        """! @brief P2.5 한 선의 output→capture 전환과 callback 수명을 고정합니다. """
+        """! @brief P2.5 한 선의 output→polling capture 전환을 고정합니다. """
 
         peer_source = (
             MODULE.REPOSITORY
@@ -426,12 +426,12 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
         arm_body = peer_source.split(
             "[[nodiscard]] bool armCapture(unsigned int duty_percent)", maxsplit=1
         )[1].split("[[nodiscard]] bool validateCapture", maxsplit=1)[0]
-        add_callback = peer_source.index("gpio_add_callback")
-        remove_callback = peer_source.index("gpio_remove_callback")
         self.assertIn("GPIO_OUTPUT_LOW", initialize_body)
         self.assertIn("GPIO_INPUT", arm_body)
-        self.assertIn("gpio_add_callback", arm_body)
-        self.assertLess(add_callback, remove_callback)
+        self.assertIn("k_uptime_get() + 30", peer_source)
+        self.assertIn("gpio_pin_get_raw(fixture_gpio, fixture_pin)", peer_source)
+        self.assertNotIn("gpio_pin_interrupt_configure", peer_source)
+        self.assertNotIn("gpio_add_callback", peer_source)
         self.assertIn("constexpr gpio_pin_t fixture_pin = 5U;", peer_source)
         self.assertNotIn("pwm_capture_pin", peer_source)
         adc = dut_source.index("if (!testAdc(low, high))")

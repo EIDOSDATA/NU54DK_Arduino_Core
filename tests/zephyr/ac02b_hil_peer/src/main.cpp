@@ -4,7 +4,7 @@
  *
  * @details Wire는 DUT의 온보드 BQ25186에서 읽기 전용으로 검증하므로 peer의
  * I2C controller와 target은 모두 비활성화합니다. peer는 P2.5 한 선을 먼저
- * ADC drive로 사용한 뒤 PWM edge capture 입력으로 전환합니다. uart30도 devicetree에서 비활성화하여
+ * ADC drive로 사용한 뒤 PWM polling 입력으로 전환합니다. uart30도 devicetree에서 비활성화하여
  * 기존 P0 교차선이 남아 있어도 peer가 P0.0/P0.1을 구동하지 않습니다.
  *
  * SPDX-License-Identifier: MIT
@@ -88,15 +88,6 @@ namespace
 	bool adc_high_seen = false;
 	bool pwm_reported = false;
 	bool adc_reported = false;
-
-	/** @brief GPIO edge capture callback입니다. */
-	struct gpio_callback capture_callback;
-
-	/** @brief callback이 GPIO driver에 등록되었는지 나타냅니다. */
-	bool capture_callback_registered = false;
-
-	/** @brief ISR과 main이 공유하는 PWM 측정값을 보호합니다. */
-	struct k_spinlock capture_lock;
 
 	/** @brief 현재 PWM edge 측정 누적값입니다. */
 	std::uint64_t previous_rising_cycle = 0U;
@@ -213,43 +204,10 @@ namespace
 									: "00000000000000000000000000000000");
 	}
 
-	/** @brief P2.5 양 edge에서 period와 high 시간을 hardware cycle로 누적합니다. */
-	void captureEdge(const struct device *port, struct gpio_callback *,
-					 gpio_port_pins_t)
-	{
-		const int level = gpio_pin_get_raw(port, fixture_pin);
-		if (level < 0)
-		{
-			return;
-		}
-		const std::uint64_t now = k_cycle_get_64();
-		const k_spinlock_key_t key = k_spin_lock(&capture_lock);
-		if (level != 0)
-		{
-			if (previous_rising_cycle != 0U)
-			{
-				period_cycle_sum += now - previous_rising_cycle;
-				++period_count;
-			}
-			previous_rising_cycle = now;
-		}
-		else if (previous_rising_cycle != 0U)
-		{
-			high_cycle_sum += now - previous_rising_cycle;
-			++high_count;
-		}
-		k_spin_unlock(&capture_lock, key);
-	}
-
-	/** @brief PWM capture 누적값을 초기화하고 양 edge IRQ를 무장합니다. */
+	/** @brief PWM capture 누적값을 초기화하고 P2.5를 high-Z 입력으로 전환합니다. */
 	[[nodiscard]] bool armCapture(unsigned int duty_percent)
 	{
 		if ((duty_percent != 25U) && (duty_percent != 75U))
-		{
-			return false;
-		}
-		if (gpio_pin_interrupt_configure(fixture_gpio, fixture_pin,
-									 GPIO_INT_DISABLE) < 0)
 		{
 			return false;
 		}
@@ -257,39 +215,57 @@ namespace
 		{
 			return false;
 		}
-		if (!capture_callback_registered)
-		{
-			gpio_init_callback(&capture_callback, captureEdge, BIT(fixture_pin));
-			if (gpio_add_callback(fixture_gpio, &capture_callback) < 0)
-			{
-				return false;
-			}
-			capture_callback_registered = true;
-		}
-		const k_spinlock_key_t key = k_spin_lock(&capture_lock);
 		previous_rising_cycle = 0U;
 		period_cycle_sum = 0U;
 		high_cycle_sum = 0U;
 		period_count = 0U;
 		high_count = 0U;
 		armed_duty_percent = duty_percent;
-		k_spin_unlock(&capture_lock, key);
-		return gpio_pin_interrupt_configure(fixture_gpio, fixture_pin,
-										GPIO_INT_EDGE_BOTH) == 0;
+		return true;
 	}
 
-	/** @brief 누적 edge에서 1 kHz와 요청 duty 허용 범위를 판정합니다. */
+	/** @brief P2에 GPIOTE가 없으므로 bounded polling으로 1 kHz duty를 측정합니다. */
 	[[nodiscard]] bool validateCapture(unsigned int expected_duty)
 	{
-		static_cast<void>(gpio_pin_interrupt_configure(
-			fixture_gpio, fixture_pin, GPIO_INT_DISABLE));
-		const k_spinlock_key_t key = k_spin_lock(&capture_lock);
+		int previous_level = gpio_pin_get_raw(fixture_gpio, fixture_pin);
+		if (previous_level < 0)
+		{
+			return false;
+		}
+		const std::int64_t deadline = k_uptime_get() + 30;
+		while (k_uptime_get() < deadline)
+		{
+			const int level = gpio_pin_get_raw(fixture_gpio, fixture_pin);
+			if (level < 0)
+			{
+				return false;
+			}
+			if (level == previous_level)
+			{
+				continue;
+			}
+			const std::uint64_t now = k_cycle_get_64();
+			if (level != 0)
+			{
+				if (previous_rising_cycle != 0U)
+				{
+					period_cycle_sum += now - previous_rising_cycle;
+					++period_count;
+				}
+				previous_rising_cycle = now;
+			}
+			else if (previous_rising_cycle != 0U)
+			{
+				high_cycle_sum += now - previous_rising_cycle;
+				++high_count;
+			}
+			previous_level = level;
+		}
 		const std::uint64_t periods = period_cycle_sum;
 		const std::uint64_t highs = high_cycle_sum;
 		const std::uint32_t periods_observed = period_count;
 		const std::uint32_t highs_observed = high_count;
 		const unsigned int armed = armed_duty_percent;
-		k_spin_unlock(&capture_lock, key);
 		if ((armed != expected_duty) || (periods_observed < 8U) ||
 			(highs_observed < 8U) || (periods == 0U))
 		{
@@ -398,13 +374,6 @@ namespace
 			const bool complete = pwm_reported && adc_reported;
 			if (complete)
 			{
-				static_cast<void>(gpio_pin_interrupt_configure(
-					fixture_gpio, fixture_pin, GPIO_INT_DISABLE));
-				if (capture_callback_registered)
-				{
-					static_cast<void>(gpio_remove_callback(fixture_gpio, &capture_callback));
-					capture_callback_registered = false;
-				}
 				reportRelayResponse(relay_responses[step]);
 				printk("NUCODE_AC02B_PEER:FINAL:PASS:nonce=%s\n", active_nonce);
 				finished = true;
@@ -418,7 +387,7 @@ namespace
 		return success;
 	}
 
-	/** @brief P2.5를 ADC LOW drive로 시작하고 PWM callback은 전환 시 등록합니다. */
+	/** @brief P2.5를 ADC LOW drive로 시작하고 PWM 단계에서 polling input으로 전환합니다. */
 	[[nodiscard]] bool initializePeer(void)
 	{
 		if (!device_is_ready(console_uart) || !device_is_ready(fixture_gpio))

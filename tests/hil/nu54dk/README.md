@@ -214,8 +214,9 @@ Serial1은 Board A CMSIS-DAP의 x.1 보조 VCOM을 host가 exact echo하므로 �
 round에서 exact `0x41`을 요구합니다. PMIC data register는 쓰지 않습니다. 보드 간 I2C
 배선과 외부 pull-up도 필요하지 않습니다. 첫 I2C transaction으로 BQ25186 기본 watchdog이
 시작될 수 있습니다. peer P2.5는 ADC 단계에서는 push-pull output이며, 마지막 ADC LOW 응답
-후 interrupt callback을 등록한 input으로 전환됩니다. DUT는 그 응답 뒤 P1.12의 ADC ownership을
-PWM20으로 넘기므로 두 보드가 동시에 선을 구동하지 않습니다.
+후 high-Z input으로 전환됩니다. P2에는 CPUAPP GPIOTE가 없으므로 PWM edge는 bounded polling으로
+측정합니다. DUT는 그 응답 뒤 P1.12의 ADC ownership을 PWM20으로 넘기므로 두 보드가 동시에
+선을 구동하지 않습니다.
 
 배선 전에는 두 role image와 host parser까지만 준비합니다. NCS v3.4.0 Toolchain terminal에서
 다음 두 production target을 각각 pristine build합니다.
@@ -277,7 +278,7 @@ $PeerHex = "$PeerBuild\ac02b_hil_peer\zephyr\zephyr.hex"
 
 host는 같은 128-bit nonce를 먼저 peer에 주입해 ADC/PWM fixture를 arm한 뒤 DUT를 시작합니다.
 Serial1 end/rebegin 두 cycle, BQ25186 Wire 100/400 kHz repeated-start 두 cycle, SPI
-interrupt mask와 4 MHz loopback, ADC 외부 LOW/HIGH 뒤 동일 선의 PWM 외부 edge capture가 양쪽 exact token
+interrupt mask와 4 MHz loopback, ADC 외부 LOW/HIGH 뒤 동일 선의 PWM 외부 polling 측정이 양쪽 exact token
 순서로 모두 끝나야만 `status: passed` evidence를 만듭니다. timeout, stale nonce, role image
 오배치, 한쪽 FAIL, token 누락·재배치 또는 ADC 범위 불일치는 PASS로 축소하지 않습니다.
 
