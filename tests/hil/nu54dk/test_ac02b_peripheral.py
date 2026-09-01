@@ -398,6 +398,32 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
         self.assertIn("echo=host-vcom-x.1", source)
         self.assertNotIn("sendPeerLine", source)
 
+    def test_dut_wire_failure_is_stage_specific(self) -> None:
+        """! @brief Wire 물리 실패가 route·restart·read 단계로 구분되게 고정합니다. """
+
+        source = (
+            MODULE.REPOSITORY
+            / "tests"
+            / "zephyr"
+            / "ac02b_hil_dut"
+            / "src"
+            / "main.cpp"
+        ).read_text(encoding="utf-8")
+        for stage in (
+            "wire-set-pins",
+            "wire-begin",
+            "wire-active-route",
+            "wire-clock",
+            "wire-write",
+            "wire-pending-restart",
+            "wire-request",
+            "wire-read",
+            "wire-final-state",
+            "wire-end",
+        ):
+            self.assertIn(stage, source)
+        self.assertIn("reportFailure(wire_failure_stage)", source)
+
 
 if __name__ == "__main__":
     unittest.main()

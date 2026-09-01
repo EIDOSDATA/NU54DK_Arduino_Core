@@ -57,6 +57,9 @@ namespace
 	/** @brief Serial1 실패의 가장 구체적인 단계를 보존합니다. */
 	const char *serial1_failure_stage = "serial1-unknown";
 
+	/** @brief Wire 실패의 가장 구체적인 단계를 보존합니다. */
+	const char *wire_failure_stage = "wire-unknown";
+
 	/** @brief SPI interrupt mask fixture용 callback입니다. 실제 edge는 만들지 않습니다. */
 	void spiMaskFixtureCallback(void)
 	{
@@ -272,20 +275,24 @@ namespace
 		Wire.setClock(clock_hz);
 		if (nucode::arduino::internal::lastWireError() != WireError::none)
 		{
+			wire_failure_stage = "wire-clock";
 			return false;
 		}
 		Wire.beginTransmission(i2c_target_address);
 		if (Wire.write(payload, sizeof(payload)) != sizeof(payload))
 		{
+			wire_failure_stage = "wire-write";
 			return false;
 		}
 		if ((Wire.endTransmission(false) != 0U) ||
 			!nucode::arduino::internal::wireHasPendingRestart())
 		{
+			wire_failure_stage = "wire-pending-restart";
 			return false;
 		}
 		if (Wire.requestFrom(i2c_target_address, sizeof(payload), true) != sizeof(payload))
 		{
+			wire_failure_stage = "wire-request";
 			return false;
 		}
 		for (std::size_t index = 0U; index < sizeof(payload); ++index)
@@ -293,11 +300,17 @@ namespace
 			if ((Wire.available() <= 0) ||
 				(Wire.read() != static_cast<int>(payload[index] ^ 0xA5U)))
 			{
+				wire_failure_stage = "wire-read";
 				return false;
 			}
 		}
-		return (Wire.available() == 0) &&
-			   (nucode::arduino::internal::lastWireError() == WireError::none);
+		const bool complete = (Wire.available() == 0) &&
+			(nucode::arduino::internal::lastWireError() == WireError::none);
+		if (!complete)
+		{
+			wire_failure_stage = "wire-final-state";
+		}
+		return complete;
 	}
 
 	/** @brief Wire route, active remap 거부, 100/400 kHz와 end/rebegin을 검증합니다. */
@@ -310,12 +323,23 @@ namespace
 		{
 			if (!Wire.setPins(PIN_P1_02, PIN_P1_03))
 			{
+				wire_failure_stage = "wire-set-pins";
 				return false;
 			}
 			Wire.begin();
-			if ((nucode::arduino::internal::lastWireError() != WireError::none) ||
-				Wire.setPins(PIN_P1_02, PIN_P1_03) ||
-				!wireRound(clocks[cycle], payload))
+			if (nucode::arduino::internal::lastWireError() != WireError::none)
+			{
+				wire_failure_stage = "wire-begin";
+				Wire.end();
+				return false;
+			}
+			if (Wire.setPins(PIN_P1_02, PIN_P1_03))
+			{
+				wire_failure_stage = "wire-active-route";
+				Wire.end();
+				return false;
+			}
+			if (!wireRound(clocks[cycle], payload))
 			{
 				Wire.end();
 				return false;
@@ -323,6 +347,7 @@ namespace
 			Wire.end();
 			if (nucode::arduino::internal::lastWireError() != WireError::none)
 			{
+				wire_failure_stage = "wire-end";
 				return false;
 			}
 		}
@@ -481,7 +506,7 @@ namespace
 		}
 		if (!testWire())
 		{
-			reportFailure("wire");
+			reportFailure(wire_failure_stage);
 			return false;
 		}
 		if (!testSpi())
