@@ -490,13 +490,13 @@ def parse_peer_transcript(transcript: bytes, nonce: str) -> PeerResult:
     return PeerResult(nonce, 0x52, 32, (25, 75), (0, 1), "disabled-high-z")
 
 
-## @brief DUT x.1 보조 VCOM의 두 frame이 nonce·cycle exact인지 검증합니다.
+## @brief DUT x.1 보조 VCOM의 두 protocol frame이 nonce·cycle exact인지 검증합니다.
 def parse_auxiliary_transcript(transcript: bytes, nonce: str) -> AuxiliaryResult:
     nonce = build_nonce(nonce)
     lines = [
         line.rstrip(b"\r")
         for line in transcript.split(b"\n")
-        if line.rstrip(b"\r")
+        if line.rstrip(b"\r").startswith(b"S1:")
     ]
     expected = [f"S1:{nonce}:{cycle}".encode("ascii") for cycle in range(2)]
     if lines != expected:
@@ -569,7 +569,7 @@ def write_exact(serial_port: Any, payload: bytes, stage: str) -> None:
         raise Ac02bHilFailure(f"{stage} UART write가 일부만 기록됐습니다.")
 
 
-## @brief DUT auxiliary x.1의 두 frame만 순서대로 exact echo합니다.
+## @brief DUT auxiliary x.1의 두 protocol frame만 순서대로 exact echo합니다.
 def echo_auxiliary_frames(
     serial_port: Any,
     nonce: str,
@@ -580,14 +580,19 @@ def echo_auxiliary_frames(
     stop_event: threading.Event,
 ) -> None:
     for cycle in range(2):
-        observed = read_line(
-            serial_port,
-            pending,
-            capture,
-            deadline,
-            stop_event=stop_event,
-        )
         expected = f"S1:{nonce}:{cycle}".encode("ascii")
+        while True:
+            observed = read_line(
+                serial_port,
+                pending,
+                capture,
+                deadline,
+                stop_event=stop_event,
+            )
+            ## @details UARTE 활성화 순간의 CMSIS-DAP VCOM 전이 잡음은 raw
+            ## transcript에 보존하고 S1 protocol frame만 동기화에 사용합니다.
+            if observed.startswith(b"S1:"):
+                break
         if observed != expected:
             raise Ac02bHilFailure(
                 f"DUT auxiliary x.1 frame 순서/nonce 불일치: {observed!r}"
