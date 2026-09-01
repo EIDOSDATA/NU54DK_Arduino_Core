@@ -57,16 +57,16 @@ def valid_dut_transcript() -> bytes:
             f"NUCODE_AC02B_RELAY:REQUEST:{command}:nonce={NONCE}".encode(
                 "ascii"
             )
-            for command, _ in MODULE.RELAY_STEPS[:4]
+            for command, _ in MODULE.RELAY_STEPS[:3]
         ),
-        b"NUCODE_AC02B_DUT:PWM:PASS:frequency=1000:duty=25,75" + suffix,
+        b"NUCODE_AC02B_DUT:ADC:PASS:bits=12:low=64:high=3900" + suffix,
         *tuple(
             f"NUCODE_AC02B_RELAY:REQUEST:{command}:nonce={NONCE}".encode(
                 "ascii"
             )
-            for command, _ in MODULE.RELAY_STEPS[4:7]
+            for command, _ in MODULE.RELAY_STEPS[3:7]
         ),
-        b"NUCODE_AC02B_DUT:ADC:PASS:bits=12:low=64:high=3900" + suffix,
+        b"NUCODE_AC02B_DUT:PWM:PASS:frequency=1000:duty=25,75" + suffix,
         f"NUCODE_AC02B_RELAY:REQUEST:DONE:nonce={NONCE}".encode("ascii"),
         b"NUCODE_AC02B_DUT:FINAL:PASS" + suffix,
     )
@@ -89,14 +89,14 @@ def valid_peer_transcript() -> bytes:
                 "ascii"
             )
         )
-        if index == 3:
+        if index == 1:
+            lines.append(
+                b"NUCODE_AC02B_PEER:ADC:PASS:levels=0,1" + suffix
+            )
+        if index == 6:
             lines.append(
                 b"NUCODE_AC02B_PEER:PWM:PASS:frequency=1000:duty=25,75"
                 + suffix
-            )
-        if index == 5:
-            lines.append(
-                b"NUCODE_AC02B_PEER:ADC:PASS:levels=0,1" + suffix
             )
     lines.append(b"NUCODE_AC02B_PEER:FINAL:PASS" + suffix)
     return b"boot\n" + b"\n".join(lines) + b"\n"
@@ -391,6 +391,54 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
         self.assertNotIn("CONFIG_I2C", configuration)
         self.assertEqual(overlay.count('status = "disabled";'), 4)
         self.assertNotIn("nordic,nrf-twis", overlay)
+
+    def test_shared_fixture_line_is_adc_then_pwm_fail_closed(self) -> None:
+        """! @brief P2.5 한 선의 output→capture 전환과 callback 수명을 고정합니다. """
+
+        peer_source = (
+            MODULE.REPOSITORY
+            / "tests"
+            / "zephyr"
+            / "ac02b_hil_peer"
+            / "src"
+            / "main.cpp"
+        ).read_text(encoding="utf-8")
+        dut_source = (
+            MODULE.REPOSITORY
+            / "tests"
+            / "zephyr"
+            / "ac02b_hil_dut"
+            / "src"
+            / "main.cpp"
+        ).read_text(encoding="utf-8")
+        self.assertEqual(MODULE.EVIDENCE_SCHEMA, 4)
+        self.assertEqual(
+            tuple(command for command, _ in MODULE.RELAY_STEPS[:3]),
+            ("ADC:LOW", "ADC:HIGH", "ADC:LOW"),
+        )
+        self.assertEqual(
+            tuple(command for command, _ in MODULE.RELAY_STEPS[3:7]),
+            ("PWM:ARM:25", "PWM:CHECK:25", "PWM:ARM:75", "PWM:CHECK:75"),
+        )
+        initialize_body = peer_source.split(
+            "[[nodiscard]] bool initializePeer(void)", maxsplit=1
+        )[1]
+        arm_body = peer_source.split(
+            "[[nodiscard]] bool armCapture(unsigned int duty_percent)", maxsplit=1
+        )[1].split("[[nodiscard]] bool validateCapture", maxsplit=1)[0]
+        add_callback = peer_source.index("gpio_add_callback")
+        remove_callback = peer_source.index("gpio_remove_callback")
+        self.assertIn("GPIO_OUTPUT_LOW", initialize_body)
+        self.assertIn("GPIO_INPUT", arm_body)
+        self.assertIn("gpio_add_callback", arm_body)
+        self.assertLess(add_callback, remove_callback)
+        self.assertIn("constexpr gpio_pin_t fixture_pin = 5U;", peer_source)
+        self.assertNotIn("pwm_capture_pin", peer_source)
+        adc = dut_source.index("if (!testAdc(low, high))")
+        pwm = dut_source.index("if (!testPwm())")
+        self.assertLess(adc, pwm)
+        self.assertIn("analogWriteFrequency(PIN_P1_12, 1000U)", dut_source)
+        self.assertNotIn("analogWriteFrequency(PIN_P1_10", dut_source)
 
     def test_dut_serial1_failure_is_stage_specific(self) -> None:
         """! @brief Serial1 물리 실패가 route·echo·lifecycle 단계로 구분되게 고정합니다. """

@@ -105,6 +105,15 @@ class M14VariantContractTests(unittest.TestCase):
             if pin["policy"] in {"input-only", "system-reserved"}:
                 self.assertNotIn("digital-output", pin["capabilities"])
 
+        a0 = pins[("gpio1", 12)]
+        self.assertEqual(a0["policy"], "transferable")
+        self.assertEqual(a0["ownership"], "adc")
+        self.assertTrue(
+            {"digital-input", "digital-output", "interrupt", "open-drain", "analog-input", "pwm-output"}
+            <= set(a0["capabilities"])
+        )
+        self.assertTrue({"adc", "pwm20"} <= set(a0["routes"]))
+
     def test_verifier_writes_machine_readable_evidence(self) -> None:
         with tempfile.TemporaryDirectory(prefix="nu54-m14-variant-") as temporary:
             output = Path(temporary) / "variant-evidence.json"

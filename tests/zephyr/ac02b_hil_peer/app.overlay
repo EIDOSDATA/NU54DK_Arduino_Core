@@ -1,6 +1,6 @@
 /**
  * @file app.overlay
- * @brief AC-02B peer의 I2C를 격리하고 capture GPIO만 사용합니다.
+ * @brief AC-02B peer의 I2C를 격리하고 P2.5 시간 다중 GPIO만 사용합니다.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -23,7 +23,7 @@
 	status = "disabled";
 };
 
-/** @brief peer는 PWM을 출력하지 않고 P1.14 GPIO edge만 capture합니다. */
+/** @brief peer는 PWM을 출력하지 않고 P2.5 GPIO edge만 capture합니다. */
 &pwm20 {
 	status = "disabled";
 };

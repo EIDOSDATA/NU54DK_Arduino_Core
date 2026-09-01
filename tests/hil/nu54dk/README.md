@@ -194,7 +194,8 @@ $Commit = git -C $CoreRoot rev-parse HEAD
 
 AC-02B는 Board A를 Arduino Core DUT, Board B를 direct Zephyr peer로 사용합니다. DUT는 공개
 production API인 `Serial1.setPins()`, `Wire.setPins()`, `SPI.setPins()`,
-`analogWriteFrequency()`, `analogWrite()`와 `analogRead()`를 직접 호출합니다. Wire는 Board A의
+`analogWriteFrequency()`, `analogWrite()`와 `analogRead()`를 직접 호출합니다. P1.12/A0는
+먼저 ADC 입력으로 읽은 뒤 같은 run에서 transferable PWM20 출력으로 넘깁니다. Wire는 Board A의
 온보드 BQ25186 `MASK_ID`를 읽기 전용으로 검증하고 peer의 I2C controller와 target은 모두
 비활성화합니다. 따라서 현재 미지원인 Wire target/Wire1을 PASS로 확대하지 않습니다.
 
@@ -204,17 +205,17 @@ production API인 `Serial1.setPins()`, `Wire.setPins()`, `SPI.setPins()`,
 | 번호 | Board A(DUT) | 방향 | Board B(peer) | 검증 |
 | --- | --- | --- | --- | --- |
 | 1 | GND | ↔ | GND | 공통 기준 전압 |
-| 2 | P1.10 / PWM20 | → | P1.14 / GPIO capture | 1 kHz 25%·75% edge capture |
-| 3 | P1.12 / A0 | ← | P2.5 / GPIO output | 12-bit ADC LOW·HIGH |
-| 4 | P2.2 / SPI00 MOSI | ↔ 같은 Board A의 P2.4 / SPI00 MISO | 해당 없음 | 4 MHz 40-byte local loopback |
+| 2 | P1.12 / A0 | ↔ | P2.5 / GPIO | peer ADC LOW·HIGH drive 후 DUT 1 kHz 25%·75% PWM capture |
+| 3 | P2.2 / SPI00 MOSI | ↔ 같은 Board A의 P2.4 / SPI00 MISO | 해당 없음 | 4 MHz 40-byte local loopback |
 
 Serial1은 Board A CMSIS-DAP의 x.1 보조 VCOM을 host가 exact echo하므로 보드 간 P0 배선이
 필요하지 않습니다. Wire는 Board A 내부 P1.2/P1.3 bus의 BQ25186 주소 `0x6A`, register
 `0x0C`를 100/400 kHz에서 no-STOP pointer write와 repeated-start 1-byte read로 읽고, 각
 round에서 exact `0x41`을 요구합니다. PMIC data register는 쓰지 않습니다. 보드 간 I2C
 배선과 외부 pull-up도 필요하지 않습니다. 첫 I2C transaction으로 BQ25186 기본 watchdog이
-시작될 수 있습니다. DUT P1.10은 Board A의 LED1에도 연결되어 있으므로 PWM 단계에서 LED
-밝기가 바뀔 수 있습니다.
+시작될 수 있습니다. peer P2.5는 ADC 단계에서는 push-pull output이며, 마지막 ADC LOW 응답
+후 interrupt callback을 등록한 input으로 전환됩니다. DUT는 그 응답 뒤 P1.12의 ADC ownership을
+PWM20으로 넘기므로 두 보드가 동시에 선을 구동하지 않습니다.
 
 배선 전에는 두 role image와 host parser까지만 준비합니다. NCS v3.4.0 Toolchain terminal에서
 다음 두 production target을 각각 pristine build합니다.
@@ -262,7 +263,7 @@ $PeerHex = "$PeerBuild\ac02b_hil_peer\zephyr\zephyr.hex"
   --expected-core-revision $Commit
 ```
 
-점퍼 4개와 두 보드 USB를 확인한 마지막 단계에서만 다음 실제 실행을 허용합니다.
+점퍼 3개와 두 보드 USB를 확인한 마지막 단계에서만 다음 실제 실행을 허용합니다.
 
 ```powershell
 & $Python -I "$CoreRoot\tests\hil\nu54dk\ac02b_peripheral.py" `
@@ -274,9 +275,9 @@ $PeerHex = "$PeerBuild\ac02b_hil_peer\zephyr\zephyr.hex"
   --evidence "$CoreRoot\build\ac02b\hil\ac02b-peripheral.evidence.json"
 ```
 
-host는 같은 128-bit nonce를 먼저 peer에 주입해 PWM/ADC fixture를 arm한 뒤 DUT를 시작합니다.
+host는 같은 128-bit nonce를 먼저 peer에 주입해 ADC/PWM fixture를 arm한 뒤 DUT를 시작합니다.
 Serial1 end/rebegin 두 cycle, BQ25186 Wire 100/400 kHz repeated-start 두 cycle, SPI
-interrupt mask와 4 MHz loopback, PWM 외부 edge capture, ADC 외부 LOW/HIGH가 양쪽 exact token
+interrupt mask와 4 MHz loopback, ADC 외부 LOW/HIGH 뒤 동일 선의 PWM 외부 edge capture가 양쪽 exact token
 순서로 모두 끝나야만 `status: passed` evidence를 만듭니다. timeout, stale nonce, role image
 오배치, 한쪽 FAIL, token 누락·재배치 또는 ADC 범위 불일치는 PASS로 축소하지 않습니다.
 

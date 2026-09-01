@@ -59,20 +59,20 @@ from m6_serial_echo import (  # noqa: E402
 MILESTONE = "AC02B"
 DUT_APPLICATION = REPOSITORY / "tests" / "zephyr" / "ac02b_hil_dut"
 PEER_APPLICATION = REPOSITORY / "tests" / "zephyr" / "ac02b_hil_peer"
-EVIDENCE_SCHEMA = 3
+EVIDENCE_SCHEMA = 4
 WIRING_REQUIRED_EXIT_CODE = 3
 CONSOLE_INTERFACE = 3
 AUXILIARY_INTERFACE = 1
 PORT_REDISCOVERY_TIMEOUT_SECONDS = 15.0
 
 RELAY_STEPS = (
+    ("ADC:LOW", "ADC:LOW:OK"),
+    ("ADC:HIGH", "ADC:HIGH:OK"),
+    ("ADC:LOW", "ADC:LOW:OK"),
     ("PWM:ARM:25", "PWM:ARM:25:OK"),
     ("PWM:CHECK:25", "PWM:25:PASS"),
     ("PWM:ARM:75", "PWM:ARM:75:OK"),
     ("PWM:CHECK:75", "PWM:75:PASS"),
-    ("ADC:LOW", "ADC:LOW:OK"),
-    ("ADC:HIGH", "ADC:HIGH:OK"),
-    ("ADC:LOW", "ADC:LOW:OK"),
     ("DONE", "DONE:PASS"),
 )
 
@@ -395,20 +395,7 @@ def parse_dut_transcript(transcript: bytes, nonce: str) -> DutResult:
     cursor = 0
     for expected in expected_prefix:
         cursor = take_exact(lines, cursor, expected)
-    for command, _ in RELAY_STEPS[:4]:
-        cursor = take_exact(
-            lines,
-            cursor,
-            f"NUCODE_AC02B_RELAY:REQUEST:{command}:nonce={nonce}".encode(
-                "ascii"
-            ),
-        )
-    cursor = take_exact(
-        lines,
-        cursor,
-        b"NUCODE_AC02B_DUT:PWM:PASS:frequency=1000:duty=25,75" + suffix,
-    )
-    for command, _ in RELAY_STEPS[4:7]:
+    for command, _ in RELAY_STEPS[:3]:
         cursor = take_exact(
             lines,
             cursor,
@@ -431,6 +418,19 @@ def parse_dut_transcript(transcript: bytes, nonce: str) -> DutResult:
     if not (0 <= low <= 384 and 2500 <= high <= 4095 and (high - low) >= 2200):
         raise Ac02bHilFailure(f"DUT ADC LOW/HIGH 범위가 다릅니다: low={low}, high={high}")
     cursor += 1
+    for command, _ in RELAY_STEPS[3:7]:
+        cursor = take_exact(
+            lines,
+            cursor,
+            f"NUCODE_AC02B_RELAY:REQUEST:{command}:nonce={nonce}".encode(
+                "ascii"
+            ),
+        )
+    cursor = take_exact(
+        lines,
+        cursor,
+        b"NUCODE_AC02B_DUT:PWM:PASS:frequency=1000:duty=25,75" + suffix,
+    )
     cursor = take_exact(
         lines,
         cursor,
@@ -483,18 +483,18 @@ def parse_peer_transcript(transcript: bytes, nonce: str) -> PeerResult:
                 "ascii"
             ),
         )
-        if index == 3:
+        if index == 1:
+            cursor = take_exact(
+                lines,
+                cursor,
+                b"NUCODE_AC02B_PEER:ADC:PASS:levels=0,1" + suffix,
+            )
+        if index == 6:
             cursor = take_exact(
                 lines,
                 cursor,
                 b"NUCODE_AC02B_PEER:PWM:PASS:frequency=1000:duty=25,75"
                 + suffix,
-            )
-        if index == 5:
-            cursor = take_exact(
-                lines,
-                cursor,
-                b"NUCODE_AC02B_PEER:ADC:PASS:levels=0,1" + suffix,
             )
     cursor = take_exact(
         lines, cursor, b"NUCODE_AC02B_PEER:FINAL:PASS" + suffix
@@ -908,9 +908,8 @@ def save_failure_transcripts(
 def print_required_wiring() -> None:
     print("AC-02B WIRING_REQUIRED: 다음 연결을 모두 확인한 뒤 다시 실행하십시오.")
     print("  1. Board A(DUT) GND   <-> Board B(peer) GND")
-    print("  2. Board A P1.10 PWM  ->  Board B P1.14 capture")
-    print("  3. Board B P2.5 GPIO  ->  Board A P1.12/A0")
-    print("  4. Board A P2.2 MOSI  <-> Board A P2.4 MISO (같은 보드 loopback)")
+    print("  2. Board B P2.5 GPIO  <-> Board A P1.12/A0 (ADC drive 후 PWM capture)")
+    print("  3. Board A P2.2 MOSI  <-> Board A P2.4 MISO (같은 보드 loopback)")
     print("Board A Serial1은 같은 UID의 x.1 보조 VCOM을 host가 exact echo합니다.")
     print("기존 P0.0/P0.1 교차선은 남아 있어도 되며 peer uart30은 disabled/high-Z입니다.")
     print("보드 간 I2C 배선과 외부 pull-up은 사용하지 않으며 peer I2C는 disabled입니다.")
@@ -1125,12 +1124,15 @@ def main(arguments: Sequence[str] | None = None) -> int:
                     "end-rebegin",
                 ],
                 "spi00": ["exact-pins", "4MHz-loopback", "interrupt-mask"],
-                "pwm20": ["1kHz", "25-percent", "75-percent", "external-edge-capture"],
-                "adc_ain5": ["external-low", "external-high", "12-bit"],
+                "pwm20": ["p1.12-transfer", "1kHz", "25-percent", "75-percent", "external-edge-capture"],
+                "adc_ain5": ["p1.12", "external-low", "external-high", "12-bit", "adc-before-pwm"],
             },
             "fixture": {
                 "wiring_acknowledged": True,
-                "required_wire_count_including_ground": 4,
+                "required_wire_count_including_ground": 3,
+                "shared_fixture_line": (
+                    "peer-p2.5<->dut-p1.12-adc-drive-then-pwm-capture"
+                ),
                 "peer_uart30": "disabled-high-z",
                 "peer_i2c": "disabled-unused",
                 "legacy_p0_cross_wires_required": False,

@@ -150,10 +150,10 @@
 		};
 		arduino_p1_12: pin-p1-12 {
 			gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;
-			nucode,capability-mask = <(NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_INTERRUPT | NUCODE_PIN_CAP_ANALOG)>;
-			nucode,policy = <NUCODE_PIN_POLICY_INPUT_ONLY>;
+			nucode,capability-mask = <(NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_OUTPUT | NUCODE_PIN_CAP_INTERRUPT | NUCODE_PIN_CAP_OPEN_DRAIN | NUCODE_PIN_CAP_ANALOG | NUCODE_PIN_CAP_PWM)>;
+			nucode,policy = <NUCODE_PIN_POLICY_TRANSFERABLE>;
 			nucode,ownership = <NUCODE_PIN_OWNER_ADC>;
-			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_ADC | NUCODE_PIN_ROUTE_PMIC)>;
+			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_ADC | NUCODE_PIN_ROUTE_PWM20 | NUCODE_PIN_ROUTE_PMIC)>;
 			nucode,analog-channel = <5>;
 		};
 		arduino_p1_13: pin-p1-13 {

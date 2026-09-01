@@ -426,11 +426,11 @@ namespace
 		return true;
 	}
 
-	/** @brief peer edge capture를 이용해 P1.10의 1 kHz 25/75% PWM을 검증합니다. */
+	/** @brief ADC 사용을 마친 P1.12를 PWM20으로 넘겨 1 kHz 25/75%를 검증합니다. */
 	[[nodiscard]] bool testPwm(void)
 	{
 		analogWriteResolution(8U);
-		if (!analogWriteFrequency(PIN_P1_10, 1000U))
+		if (!analogWriteFrequency(PIN_P1_12, 1000U))
 		{
 			return false;
 		}
@@ -445,7 +445,7 @@ namespace
 			{
 				return false;
 			}
-			analogWrite(PIN_P1_10, values[index]);
+			analogWrite(PIN_P1_12, values[index]);
 			if (nucode::arduino::internal::lastAnalogError() != AnalogError::none)
 			{
 				return false;
@@ -456,7 +456,7 @@ namespace
 				return false;
 			}
 		}
-		analogWrite(PIN_P1_10, 0);
+		analogWrite(PIN_P1_12, 0);
 		Serial.print("NUCODE_AC02B_DUT:PWM:PASS:frequency=1000:duty=25,75");
 		finishToken();
 		return true;
@@ -522,11 +522,6 @@ namespace
 			reportFailure("spi");
 			return false;
 		}
-		if (!testPwm())
-		{
-			reportFailure("pwm");
-			return false;
-		}
 		int low = -1;
 		int high = -1;
 		if (!testAdc(low, high))
@@ -539,6 +534,11 @@ namespace
 		Serial.print(":high=");
 		Serial.print(high);
 		finishToken();
+		if (!testPwm())
+		{
+			reportFailure("pwm");
+			return false;
+		}
 
 		if (!requestHostRelay("DONE", "DONE:PASS"))
 		{

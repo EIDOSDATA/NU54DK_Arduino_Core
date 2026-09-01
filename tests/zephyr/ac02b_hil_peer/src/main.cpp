@@ -3,8 +3,8 @@
  * @brief AC-02B DUT와 물리 연결되는 direct Zephyr peer를 구현합니다.
  *
  * @details Wire는 DUT의 온보드 BQ25186에서 읽기 전용으로 검증하므로 peer의
- * I2C controller와 target은 모두 비활성화합니다. peer는 PWM capture와 ADC
- * drive 명령만 host console에서 받습니다. uart30도 devicetree에서 비활성화하여
+ * I2C controller와 target은 모두 비활성화합니다. peer는 P2.5 한 선을 먼저
+ * ADC drive로 사용한 뒤 PWM edge capture 입력으로 전환합니다. uart30도 devicetree에서 비활성화하여
  * 기존 P0 교차선이 남아 있어도 peer가 P0.0/P0.1을 구동하지 않습니다.
  *
  * SPDX-License-Identifier: MIT
@@ -35,21 +35,18 @@ namespace
 	/** @brief bounded UART line 크기입니다. */
 	constexpr std::size_t line_capacity = 160U;
 
-	/** @brief DUT P1.10 PWM이 연결되는 peer input입니다. */
-	constexpr gpio_pin_t pwm_capture_pin = 14U;
-
-	/** @brief DUT P1.12 ADC를 구동하는 peer output입니다. */
-	constexpr gpio_pin_t adc_drive_pin = 5U;
+	/** @brief DUT P1.12와 연결해 ADC drive와 PWM capture를 시간 다중화하는 P2.5입니다. */
+	constexpr gpio_pin_t fixture_pin = 5U;
 
 	/** @brief host relay가 따라야 하는 고정 명령 순서입니다. */
 	constexpr const char *relay_commands[]{
-		"PWM:ARM:25", "PWM:CHECK:25", "PWM:ARM:75", "PWM:CHECK:75",
-		"ADC:LOW", "ADC:HIGH", "ADC:LOW", "DONE"};
+		"ADC:LOW", "ADC:HIGH", "ADC:LOW",
+		"PWM:ARM:25", "PWM:CHECK:25", "PWM:ARM:75", "PWM:CHECK:75", "DONE"};
 
 	/** @brief 각 relay 명령의 exact 응답입니다. */
 	constexpr const char *relay_responses[]{
-		"PWM:ARM:25:OK", "PWM:25:PASS", "PWM:ARM:75:OK", "PWM:75:PASS",
-		"ADC:LOW:OK", "ADC:HIGH:OK", "ADC:LOW:OK", "DONE:PASS"};
+		"ADC:LOW:OK", "ADC:HIGH:OK", "ADC:LOW:OK",
+		"PWM:ARM:25:OK", "PWM:25:PASS", "PWM:ARM:75:OK", "PWM:75:PASS", "DONE:PASS"};
 
 	/** @brief peer P0 UART가 build에서 활성화되지 않았음을 보장합니다. */
 	static_assert(!DT_NODE_HAS_STATUS(DT_NODELABEL(uart30), okay),
@@ -62,11 +59,8 @@ namespace
 	/** @brief DAPLink host console UART입니다. */
 	const struct device *const console_uart = DEVICE_DT_GET(DT_CHOSEN(zephyr_console));
 
-	/** @brief PWM capture port입니다. */
-	const struct device *const capture_gpio = DEVICE_DT_GET(DT_NODELABEL(gpio1));
-
-	/** @brief ADC drive port입니다. */
-	const struct device *const drive_gpio = DEVICE_DT_GET(DT_NODELABEL(gpio2));
+	/** @brief 시간 다중 fixture port입니다. */
+	const struct device *const fixture_gpio = DEVICE_DT_GET(DT_NODELABEL(gpio2));
 
 	/** @brief 현재 run과 결합한 nonce입니다. */
 	char active_nonce[nonce_length + 1U]{};
@@ -97,6 +91,9 @@ namespace
 
 	/** @brief GPIO edge capture callback입니다. */
 	struct gpio_callback capture_callback;
+
+	/** @brief callback이 GPIO driver에 등록되었는지 나타냅니다. */
+	bool capture_callback_registered = false;
 
 	/** @brief ISR과 main이 공유하는 PWM 측정값을 보호합니다. */
 	struct k_spinlock capture_lock;
@@ -216,11 +213,11 @@ namespace
 									: "00000000000000000000000000000000");
 	}
 
-	/** @brief P1.14 양 edge에서 period와 high 시간을 hardware cycle로 누적합니다. */
+	/** @brief P2.5 양 edge에서 period와 high 시간을 hardware cycle로 누적합니다. */
 	void captureEdge(const struct device *port, struct gpio_callback *,
 					 gpio_port_pins_t)
 	{
-		const int level = gpio_pin_get_raw(port, pwm_capture_pin);
+		const int level = gpio_pin_get_raw(port, fixture_pin);
 		if (level < 0)
 		{
 			return;
@@ -251,10 +248,23 @@ namespace
 		{
 			return false;
 		}
-		if (gpio_pin_interrupt_configure(capture_gpio, pwm_capture_pin,
+		if (gpio_pin_interrupt_configure(fixture_gpio, fixture_pin,
 									 GPIO_INT_DISABLE) < 0)
 		{
 			return false;
+		}
+		if (gpio_pin_configure(fixture_gpio, fixture_pin, GPIO_INPUT) < 0)
+		{
+			return false;
+		}
+		if (!capture_callback_registered)
+		{
+			gpio_init_callback(&capture_callback, captureEdge, BIT(fixture_pin));
+			if (gpio_add_callback(fixture_gpio, &capture_callback) < 0)
+			{
+				return false;
+			}
+			capture_callback_registered = true;
 		}
 		const k_spinlock_key_t key = k_spin_lock(&capture_lock);
 		previous_rising_cycle = 0U;
@@ -264,7 +274,7 @@ namespace
 		high_count = 0U;
 		armed_duty_percent = duty_percent;
 		k_spin_unlock(&capture_lock, key);
-		return gpio_pin_interrupt_configure(capture_gpio, pwm_capture_pin,
+		return gpio_pin_interrupt_configure(fixture_gpio, fixture_pin,
 										GPIO_INT_EDGE_BOTH) == 0;
 	}
 
@@ -272,7 +282,7 @@ namespace
 	[[nodiscard]] bool validateCapture(unsigned int expected_duty)
 	{
 		static_cast<void>(gpio_pin_interrupt_configure(
-			capture_gpio, pwm_capture_pin, GPIO_INT_DISABLE));
+			fixture_gpio, fixture_pin, GPIO_INT_DISABLE));
 		const k_spinlock_key_t key = k_spin_lock(&capture_lock);
 		const std::uint64_t periods = period_cycle_sum;
 		const std::uint64_t highs = high_cycle_sum;
@@ -310,9 +320,9 @@ namespace
 	/** @brief 현재 순서의 PWM relay 명령을 실행합니다. */
 	[[nodiscard]] bool handlePwmRelay(std::size_t step)
 	{
-		if ((step == 0U) || (step == 2U))
+		if ((step == 3U) || (step == 5U))
 		{
-			const unsigned int duty = (step == 0U) ? 25U : 75U;
+			const unsigned int duty = (step == 3U) ? 25U : 75U;
 			if (!armCapture(duty))
 			{
 				return false;
@@ -320,7 +330,7 @@ namespace
 			reportRelayResponse(relay_responses[step]);
 			return true;
 		}
-		const unsigned int duty = (step == 1U) ? 25U : 75U;
+		const unsigned int duty = (step == 4U) ? 25U : 75U;
 		if (!validateCapture(duty))
 		{
 			return false;
@@ -339,8 +349,8 @@ namespace
 	/** @brief 현재 순서의 ADC relay 명령을 실행합니다. */
 	[[nodiscard]] bool handleAdcRelay(std::size_t step)
 	{
-		const bool high = step == 5U;
-		if (gpio_pin_set_raw(drive_gpio, adc_drive_pin, high ? 1 : 0) < 0)
+		const bool high = step == 1U;
+		if (gpio_pin_set_raw(fixture_gpio, fixture_pin, high ? 1 : 0) < 0)
 		{
 			return false;
 		}
@@ -375,20 +385,26 @@ namespace
 
 		const std::size_t step = relay_step;
 		bool success = false;
-		if (step < 4U)
+		if (step < 3U)
 		{
-			success = handlePwmRelay(step);
+			success = handleAdcRelay(step);
 		}
 		else if (step < 7U)
 		{
-			success = handleAdcRelay(step);
+			success = handlePwmRelay(step);
 		}
 		else
 		{
 			const bool complete = pwm_reported && adc_reported;
 			if (complete)
 			{
-				static_cast<void>(gpio_pin_set_raw(drive_gpio, adc_drive_pin, 0));
+				static_cast<void>(gpio_pin_interrupt_configure(
+					fixture_gpio, fixture_pin, GPIO_INT_DISABLE));
+				if (capture_callback_registered)
+				{
+					static_cast<void>(gpio_remove_callback(fixture_gpio, &capture_callback));
+					capture_callback_registered = false;
+				}
 				reportRelayResponse(relay_responses[step]);
 				printk("NUCODE_AC02B_PEER:FINAL:PASS:nonce=%s\n", active_nonce);
 				finished = true;
@@ -402,24 +418,14 @@ namespace
 		return success;
 	}
 
-	/** @brief PWM capture와 ADC drive를 host start 뒤에만 활성화합니다. */
+	/** @brief P2.5를 ADC LOW drive로 시작하고 PWM callback은 전환 시 등록합니다. */
 	[[nodiscard]] bool initializePeer(void)
 	{
-		if (!device_is_ready(console_uart) || !device_is_ready(capture_gpio) ||
-			!device_is_ready(drive_gpio))
+		if (!device_is_ready(console_uart) || !device_is_ready(fixture_gpio))
 		{
 			return false;
 		}
-		if (gpio_pin_configure(capture_gpio, pwm_capture_pin, GPIO_INPUT) < 0)
-		{
-			return false;
-		}
-		gpio_init_callback(&capture_callback, captureEdge, BIT(pwm_capture_pin));
-		if (gpio_add_callback(capture_gpio, &capture_callback) < 0)
-		{
-			return false;
-		}
-		if (gpio_pin_configure(drive_gpio, adc_drive_pin, GPIO_OUTPUT_LOW) < 0)
+		if (gpio_pin_configure(fixture_gpio, fixture_pin, GPIO_OUTPUT_LOW) < 0)
 		{
 			return false;
 		}
