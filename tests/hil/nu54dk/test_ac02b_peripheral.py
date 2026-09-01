@@ -5,9 +5,11 @@ from __future__ import annotations
 
 from contextlib import redirect_stdout
 import importlib.util
+import inspect
 import io
 from pathlib import Path
 import sys
+from types import SimpleNamespace
 import unittest
 from unittest import mock
 
@@ -23,18 +25,48 @@ MODULE_SPEC.loader.exec_module(MODULE)
 NONCE = "0123456789abcdef0123456789abcdef"
 
 
+## @brief pySerial ListPortInfo 대역을 생성합니다.
+def fake_port(device: str, uid: str, interface_index: int) -> SimpleNamespace:
+    return SimpleNamespace(
+        device=device,
+        serial_number=uid,
+        location=f"1-2.3:x.{interface_index}",
+        hwid=(
+            f"USB VID:PID=0D28:0204 SER={uid} "
+            f"LOCATION=1-2.3:x.{interface_index}"
+        ),
+        vid=MODULE.DAPLINK_VID,
+        pid=MODULE.DAPLINK_PID,
+    )
+
+
 ## @brief exact DUT 성공 transcript를 생성합니다.
 def valid_dut_transcript() -> bytes:
     suffix = f":nonce={NONCE}".encode("ascii")
     lines = (
-        b"NUCODE_AC02B_READY:role=dut",
-        b"NUCODE_AC02B_DUT:SERIAL1:PASS:baud=115200:cycles=2:bytes=64" + suffix,
+        b"NUCODE_AC02B_DUT:ARMED:PASS:control=console:serial1=aux-vcom-x.1"
+        + suffix,
+        b"NUCODE_AC02B_DUT:SERIAL1:PASS:baud=115200:cycles=2:echo=host-vcom-x.1"
+        + suffix,
         b"NUCODE_AC02B_DUT:WIRE:PASS:address=0x52:clocks=100000,400000:bytes=32:restart=2"
         + suffix,
         b"NUCODE_AC02B_DUT:SPI:PASS:frequency=4000000:bytes=40:interrupt-mask=1"
         + suffix,
+        *tuple(
+            f"NUCODE_AC02B_RELAY:REQUEST:{command}:nonce={NONCE}".encode(
+                "ascii"
+            )
+            for command, _ in MODULE.RELAY_STEPS[:4]
+        ),
         b"NUCODE_AC02B_DUT:PWM:PASS:frequency=1000:duty=25,75" + suffix,
+        *tuple(
+            f"NUCODE_AC02B_RELAY:REQUEST:{command}:nonce={NONCE}".encode(
+                "ascii"
+            )
+            for command, _ in MODULE.RELAY_STEPS[4:7]
+        ),
         b"NUCODE_AC02B_DUT:ADC:PASS:bits=12:low=64:high=3900" + suffix,
+        f"NUCODE_AC02B_RELAY:REQUEST:DONE:nonce={NONCE}".encode("ascii"),
         b"NUCODE_AC02B_DUT:FINAL:PASS" + suffix,
     )
     return b"boot\r\n" + b"\r\n".join(lines) + b"\r\n"
@@ -43,17 +75,58 @@ def valid_dut_transcript() -> bytes:
 ## @brief exact peer 성공 transcript를 생성합니다.
 def valid_peer_transcript() -> bytes:
     suffix = f":nonce={NONCE}".encode("ascii")
-    lines = (
-        b"NUCODE_AC02B_READY:role=peer",
-        b"NUCODE_AC02B_PEER:ARMED:PASS:address=0x52" + suffix,
-        b"NUCODE_AC02B_PEER:SERIAL1:PASS:baud=115200:cycles=2:bytes=64" + suffix,
+    lines = [
+        b"NUCODE_AC02B_PEER:ARMED:PASS:address=0x52:control=host-console"
+        + suffix,
+        b"NUCODE_AC02B_PEER:UART30:PASS:status=disabled:pins=high-z" + suffix,
         b"NUCODE_AC02B_PEER:WIRE:PASS:address=0x52:clocks=100000,400000:bytes=32"
         + suffix,
-        b"NUCODE_AC02B_PEER:PWM:PASS:frequency=1000:duty=25,75" + suffix,
-        b"NUCODE_AC02B_PEER:ADC:PASS:levels=0,1" + suffix,
-        b"NUCODE_AC02B_PEER:FINAL:PASS" + suffix,
-    )
+    ]
+    for index, (_, response) in enumerate(MODULE.RELAY_STEPS):
+        lines.append(
+            f"NUCODE_AC02B_RELAY:RESPONSE:{response}:nonce={NONCE}".encode(
+                "ascii"
+            )
+        )
+        if index == 3:
+            lines.append(
+                b"NUCODE_AC02B_PEER:PWM:PASS:frequency=1000:duty=25,75"
+                + suffix
+            )
+        if index == 5:
+            lines.append(
+                b"NUCODE_AC02B_PEER:ADC:PASS:levels=0,1" + suffix
+            )
+    lines.append(b"NUCODE_AC02B_PEER:FINAL:PASS" + suffix)
     return b"boot\n" + b"\n".join(lines) + b"\n"
+
+
+## @brief exact DUT auxiliary VCOM transcript를 생성합니다.
+def valid_auxiliary_transcript() -> bytes:
+    return (
+        f"S1:{NONCE}:0\r\nS1:{NONCE}:1\r\n".encode("ascii")
+    )
+
+
+## @brief exact host relay audit transcript를 생성합니다.
+def valid_relay_transcript() -> bytes:
+    lines: list[str] = []
+    for cycle in range(2):
+        lines.extend(
+            (f"AUX:RX:S1:{NONCE}:{cycle}", f"AUX:TX:E1:{NONCE}:{cycle}")
+        )
+    for command, response in MODULE.RELAY_STEPS:
+        request = f"NUCODE_AC02B_RELAY:REQUEST:{command}:nonce={NONCE}"
+        reply = f"NUCODE_AC02B_RELAY:RESPONSE:{response}:nonce={NONCE}"
+        lines.extend(
+            (
+                f"DUT:RX:{request}",
+                f"PEER:TX:{request}",
+                f"PEER:RX:{reply}",
+                f"DUT:TX:{reply}",
+            )
+        )
+    return ("\n".join(lines) + "\n").encode("ascii")
 
 
 class Ac02bPeripheralParserTests(unittest.TestCase):
@@ -64,11 +137,18 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
 
         dut = MODULE.parse_dut_transcript(valid_dut_transcript(), NONCE)
         peer = MODULE.parse_peer_transcript(valid_peer_transcript(), NONCE)
+        auxiliary = MODULE.parse_auxiliary_transcript(
+            valid_auxiliary_transcript(), NONCE
+        )
+        relay = MODULE.parse_relay_transcript(valid_relay_transcript(), NONCE)
         self.assertEqual(dut.adc_low, 64)
         self.assertEqual(dut.adc_high, 3900)
         self.assertEqual(dut.wire_clocks, (100000, 400000))
         self.assertEqual(peer.target_address, 0x52)
         self.assertEqual(peer.wire_bytes, 32)
+        self.assertEqual(peer.uart30_state, "disabled-high-z")
+        self.assertEqual(auxiliary.cycles, (0, 1))
+        self.assertEqual(relay.commands, len(MODULE.RELAY_STEPS))
 
     def test_rejects_stale_nonce_and_target_fail(self) -> None:
         """! @brief stale nonce 또는 FAIL이 다른 PASS와 섞여도 거부합니다. """
@@ -128,6 +208,62 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
         with self.assertRaisesRegex(MODULE.Ac02bHilFailure, "ADC LOW/HIGH"):
             MODULE.parse_dut_transcript(low_too_high, NONCE)
 
+    def test_auxiliary_and_relay_are_nonce_order_fail_closed(self) -> None:
+        """! @brief x.1 frame와 host relay의 stale·재배치·추가 line을 거부합니다. """
+
+        reordered_aux = valid_auxiliary_transcript().replace(
+            b":0\r\nS1:", b":1\r\nS1:", 1
+        )
+        with self.assertRaisesRegex(MODULE.Ac02bHilFailure, "순서/nonce"):
+            MODULE.parse_auxiliary_transcript(reordered_aux, NONCE)
+
+        stale_relay = valid_relay_transcript().replace(
+            NONCE.encode("ascii"), b"f" * 32, 1
+        )
+        with self.assertRaisesRegex(MODULE.Ac02bHilFailure, "relay"):
+            MODULE.parse_relay_transcript(stale_relay, NONCE)
+
+        extra_aux = valid_auxiliary_transcript() + b"S1:unexpected:2\r\n"
+        with self.assertRaises(MODULE.Ac02bHilFailure):
+            MODULE.parse_auxiliary_transcript(extra_aux, NONCE)
+
+    def test_selects_exact_uid_x1_and_x3_only(self) -> None:
+        """! @brief 같은 UID의 console x.3과 auxiliary x.1을 혼동하지 않습니다. """
+
+        uid = "a" * 32
+        other_uid = "b" * 32
+        ports = SimpleNamespace(
+            comports=lambda: [
+                fake_port("COM10", uid, 1),
+                fake_port("COM11", uid, 3),
+                fake_port("COM12", other_uid, 1),
+                fake_port("COM13", other_uid, 3),
+            ]
+        )
+        self.assertEqual(
+            MODULE.find_uid_interface_port(uid, 1, "auto", ports), "COM10"
+        )
+        self.assertEqual(
+            MODULE.find_uid_interface_port(uid, 3, "auto", ports), "COM11"
+        )
+        with self.assertRaisesRegex(MODULE.Ac02bHilFailure, "interface=x.1"):
+            MODULE.find_uid_interface_port(uid, 1, "COM11", ports)
+        with self.assertRaisesRegex(MODULE.Ac02bHilFailure, "UID/interface"):
+            MODULE.find_uid_interface_port(uid, 1, "COM12", ports)
+
+    def test_runtime_ports_are_rediscovered_after_both_flashes(self) -> None:
+        """! @brief execute가 flash 뒤 exact UID COM을 재탐색한 후에만 엽니다. """
+
+        source = inspect.getsource(MODULE.execute_ac02b)
+        peer_flash = source.index('MILESTONE, "peer"')
+        dut_flash = source.index('MILESTONE, "dut"')
+        rediscover = source.index("rediscover_runtime_ports(")
+        serial_open = source.index("serial_module.Serial(")
+        self.assertLess(peer_flash, rediscover)
+        self.assertLess(dut_flash, rediscover)
+        self.assertLess(rediscover, serial_open)
+        self.assertIn("runtime_ports.dut_auxiliary", source)
+
     def test_requires_two_distinct_board_ids(self) -> None:
         """! @brief DUT와 peer UID 인자를 생략할 수 없게 고정합니다. """
 
@@ -138,6 +274,7 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
         )
         self.assertFalse(arguments.acknowledge_wiring)
         self.assertEqual(arguments.dut_port, "auto")
+        self.assertEqual(arguments.dut_aux_port, "auto")
         self.assertEqual(arguments.peer_port, "auto")
 
     def test_rejects_shared_uid_msd_or_com_identity(self) -> None:
@@ -172,6 +309,7 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
         fake_preflight = (
             mock.sentinel.dut_endpoint,
             mock.sentinel.peer_endpoint,
+            "COM43",
             Path("dut.hex"),
             Path("peer.hex"),
             "0" * 40,
@@ -205,20 +343,24 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
             self.assertIn("build_only: true", metadata)
             self.assertNotIn("harness: console", metadata)
 
-    def test_peer_host_console_uses_interrupt_rx(self) -> None:
-        """! @brief DAPLink host 입력이 검증된 interrupt RX 경로를 사용하게 고정합니다. """
+    def test_peer_uses_console_only_and_uart30_is_high_z(self) -> None:
+        """! @brief peer P0 UART를 disabled하고 host console RX만 사용하게 고정합니다. """
 
         peer_root = MODULE.REPOSITORY / "tests" / "zephyr" / "ac02b_hil_peer"
         configuration = (peer_root / "prj.conf").read_text(encoding="utf-8")
         source = (peer_root / "src" / "main.cpp").read_text(encoding="utf-8")
+        overlay = (peer_root / "app.overlay").read_text(encoding="utf-8")
         self.assertIn("CONFIG_UART_INTERRUPT_DRIVEN=y", configuration)
         self.assertIn("uart_irq_callback_user_data_set", source)
         self.assertIn("startUartRx(console_uart, console_rx_context)", source)
-        self.assertIn("startUartRx(peer_uart, peer_rx_context)", source)
         self.assertIn("readQueuedLine(console_rx_context, command", source)
-        self.assertIn("readQueuedLine(peer_rx_context, line", source)
-        self.assertNotIn("readUartLine(console_uart, command", source)
-        self.assertNotIn("readUartLine(peer_uart, line", source)
+        self.assertNotIn("peer_uart", source)
+        self.assertNotIn("peer_rx_queue", source)
+        self.assertNotIn("DEVICE_DT_GET(DT_NODELABEL(uart30))", source)
+        self.assertIn("!DT_NODE_HAS_STATUS(DT_NODELABEL(uart30), okay)", source)
+        self.assertIn('&uart30 {', overlay)
+        self.assertIn('status = "disabled";', overlay)
+        self.assertIn("/delete-property/ pinctrl-0;", overlay)
 
     def test_dut_serial1_failure_is_stage_specific(self) -> None:
         """! @brief Serial1 물리 실패가 route·echo·lifecycle 단계로 구분되게 고정합니다. """
@@ -239,10 +381,11 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
             "serial1-echo",
             "serial1-end",
             "serial1-restage",
-            "serial1-final-begin",
         ):
             self.assertIn(stage, source)
         self.assertIn("reportFailure(serial1_failure_stage)", source)
+        self.assertIn("echo=host-vcom-x.1", source)
+        self.assertNotIn("sendPeerLine", source)
 
 
 if __name__ == "__main__":

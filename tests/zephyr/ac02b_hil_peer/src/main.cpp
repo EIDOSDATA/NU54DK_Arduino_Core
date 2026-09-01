@@ -3,8 +3,9 @@
  * @brief AC-02B DUT와 물리 연결되는 direct Zephyr peer를 구현합니다.
  *
  * @details Arduino Wire target이 지원되지 않으므로 serial21을 TWIS target으로
- * 전환합니다. uart30 echo, P1.14 edge capture와 P2.5 ADC 구동도 이 peer가 맡습니다.
- * host가 nonce를 주입하기 전에는 READY만 출력하며 PASS를 생성하지 않습니다.
+ * 전환합니다. PWM capture와 ADC drive 명령은 host console에서만 받습니다.
+ * uart30은 devicetree에서 비활성화하여 기존 P0 교차선이 남아 있어도 peer가
+ * P0.0/P0.1을 구동하지 않습니다.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -34,7 +35,7 @@ namespace
 	constexpr std::size_t nonce_length = 32U;
 
 	/** @brief bounded UART line 크기입니다. */
-	constexpr std::size_t line_capacity = 96U;
+	constexpr std::size_t line_capacity = 160U;
 
 	/** @brief PMIC 0x6A와 겹치지 않는 AC-02B target 주소입니다. */
 	constexpr std::uint16_t i2c_target_address = 0x52U;
@@ -45,11 +46,22 @@ namespace
 	/** @brief DUT P1.12 ADC를 구동하는 peer output입니다. */
 	constexpr gpio_pin_t adc_drive_pin = 5U;
 
-	/** @brief host console UART입니다. */
-	const struct device *const console_uart = DEVICE_DT_GET(DT_CHOSEN(zephyr_console));
+	/** @brief host relay가 따라야 하는 고정 명령 순서입니다. */
+	constexpr const char *relay_commands[]{
+		"PWM:ARM:25", "PWM:CHECK:25", "PWM:ARM:75", "PWM:CHECK:75",
+		"ADC:LOW", "ADC:HIGH", "ADC:LOW", "DONE"};
 
-	/** @brief DUT와 교차 연결되는 uart30입니다. */
-	const struct device *const peer_uart = DEVICE_DT_GET(DT_NODELABEL(uart30));
+	/** @brief 각 relay 명령의 exact 응답입니다. */
+	constexpr const char *relay_responses[]{
+		"PWM:ARM:25:OK", "PWM:25:PASS", "PWM:ARM:75:OK", "PWM:75:PASS",
+		"ADC:LOW:OK", "ADC:HIGH:OK", "ADC:LOW:OK", "DONE:PASS"};
+
+	/** @brief peer P0 UART가 build에서 활성화되지 않았음을 보장합니다. */
+	static_assert(!DT_NODE_HAS_STATUS(DT_NODELABEL(uart30), okay),
+				  "AC-02B peer uart30은 반드시 disabled여야 합니다.");
+
+	/** @brief DAPLink host console UART입니다. */
+	const struct device *const console_uart = DEVICE_DT_GET(DT_CHOSEN(zephyr_console));
 
 	/** @brief P1.2/P1.3을 사용하는 direct TWIS21 target입니다. */
 	const struct device *const target_i2c = DEVICE_DT_GET(DT_NODELABEL(i2c21));
@@ -64,11 +76,7 @@ namespace
 	char active_nonce[nonce_length + 1U]{};
 
 	/** @brief DAPLink host RX byte를 보존하는 고정 queue입니다. */
-	K_MSGQ_DEFINE(console_rx_queue, sizeof(std::uint8_t), 128U,
-			  alignof(std::uint8_t));
-
-	/** @brief DUT Serial1 RX byte를 보존하는 고정 queue입니다. */
-	K_MSGQ_DEFINE(peer_rx_queue, sizeof(std::uint8_t), 128U,
+	K_MSGQ_DEFINE(console_rx_queue, sizeof(std::uint8_t), 256U,
 			  alignof(std::uint8_t));
 
 	/** @brief IRQ UART 한 채널의 queue와 overflow 상태입니다. */
@@ -80,9 +88,6 @@ namespace
 
 	/** @brief DAPLink console RX 상태입니다. */
 	UartRxContext console_rx_context{&console_rx_queue, ATOMIC_INIT(0)};
-
-	/** @brief DUT Serial1 peer RX 상태입니다. */
-	UartRxContext peer_rx_context{&peer_rx_queue, ATOMIC_INIT(0)};
 
 	/** @brief nonce에서 파생한 I2C expected write입니다. */
 	std::uint8_t expected_i2c_payload[16]{};
@@ -96,13 +101,14 @@ namespace
 	/** @brief I2C 길이·payload 불일치를 보존하는 fail-closed 표식입니다. */
 	atomic_t i2c_invalid = ATOMIC_INIT(0);
 
+	/** @brief host relay에서 다음에 받아야 하는 명령 index입니다. */
+	std::size_t relay_step = 0U;
+
 	/** @brief peer protocol 단계 관찰값입니다. */
-	unsigned int serial_cycle_count = 0U;
 	unsigned int pwm_pass_count = 0U;
 	bool adc_low_seen = false;
 	bool adc_high_seen = false;
 	bool wire_reported = false;
-	bool serial_reported = false;
 	bool pwm_reported = false;
 	bool adc_reported = false;
 
@@ -170,26 +176,11 @@ namespace
 		}
 	}
 
-	/** @brief polling UART에 ASCII line을 기록합니다. */
-	void writeUartLine(const struct device *uart, const char *line)
-	{
-		for (const char *cursor = line; *cursor != '\0'; ++cursor)
-		{
-			uart_poll_out(uart, static_cast<unsigned char>(*cursor));
-		}
-		uart_poll_out(uart, '\r');
-		uart_poll_out(uart, '\n');
-	}
-
-	/** @brief UART IRQ byte를 해당 채널의 고정 queue로 옮깁니다. */
+	/** @brief UART IRQ byte를 console 고정 queue로 옮깁니다. */
 	void uartRxHandler(const struct device *uart, void *user_data)
 	{
 		auto *const context = static_cast<UartRxContext *>(user_data);
-		if (context == nullptr)
-		{
-			return;
-		}
-		if (uart_irq_update(uart) == 0)
+		if ((context == nullptr) || (uart_irq_update(uart) == 0))
 		{
 			return;
 		}
@@ -211,15 +202,13 @@ namespace
 		}
 	}
 
-	/** @brief 지정 UART 입력을 interrupt 기반으로 시작합니다. */
+	/** @brief console UART 입력을 interrupt 기반으로 시작합니다. */
 	[[nodiscard]] bool startUartRx(const struct device *uart,
 								   UartRxContext &context)
 	{
 		k_msgq_purge(context.queue);
 		atomic_clear(&context.overflow);
-		const int result = uart_irq_callback_user_data_set(
-			uart, uartRxHandler, &context);
-		if (result < 0)
+		if (uart_irq_callback_user_data_set(uart, uartRxHandler, &context) < 0)
 		{
 			return false;
 		}
@@ -229,7 +218,7 @@ namespace
 
 	/** @brief interrupt queue에서 bounded UART 한 줄을 읽습니다. */
 	[[nodiscard]] bool readQueuedLine(UartRxContext &context, char *output,
-								 std::size_t capacity, std::int64_t timeout_ms)
+									 std::size_t capacity, std::int64_t timeout_ms)
 	{
 		if ((output == nullptr) || (capacity < 2U))
 		{
@@ -267,7 +256,7 @@ namespace
 	{
 		printk("NUCODE_AC02B_FAIL:role=peer:stage=%s:nonce=%s\n", stage,
 			   validNonce(active_nonce) ? active_nonce
-										: "00000000000000000000000000000000");
+									: "00000000000000000000000000000000");
 	}
 
 	/** @brief TWIS가 받은 buffer를 nonce와 exact 비교합니다. */
@@ -280,8 +269,7 @@ namespace
 			atomic_set(&i2c_invalid, 1);
 			return;
 		}
-		const atomic_val_t count = atomic_inc(&i2c_valid_write_count) + 1;
-		if (count > 2)
+		if ((atomic_inc(&i2c_valid_write_count) + 1) > 2)
 		{
 			atomic_set(&i2c_invalid, 1);
 		}
@@ -303,7 +291,8 @@ namespace
 	}
 
 	/** @brief P1.14 양 edge에서 period와 high 시간을 hardware cycle로 누적합니다. */
-	void captureEdge(const struct device *port, struct gpio_callback *, gpio_port_pins_t)
+	void captureEdge(const struct device *port, struct gpio_callback *,
+					 gpio_port_pins_t)
 	{
 		const int level = gpio_pin_get_raw(port, pwm_capture_pin);
 		if (level < 0)
@@ -337,7 +326,7 @@ namespace
 			return false;
 		}
 		if (gpio_pin_interrupt_configure(capture_gpio, pwm_capture_pin,
-										 GPIO_INT_DISABLE) < 0)
+									 GPIO_INT_DISABLE) < 0)
 		{
 			return false;
 		}
@@ -350,7 +339,7 @@ namespace
 		armed_duty_percent = duty_percent;
 		k_spin_unlock(&capture_lock, key);
 		return gpio_pin_interrupt_configure(capture_gpio, pwm_capture_pin,
-											GPIO_INT_EDGE_BOTH) == 0;
+										GPIO_INT_EDGE_BOTH) == 0;
 	}
 
 	/** @brief 누적 edge에서 1 kHz와 요청 duty 허용 범위를 판정합니다. */
@@ -380,10 +369,9 @@ namespace
 		const std::uint64_t frequency_hz = 1000000ULL / period_us;
 		const std::uint64_t duty_percent =
 			(average_high_cycles * 100ULL) / average_period_cycles;
-		const std::uint64_t duty_min = expected_duty - 8U;
-		const std::uint64_t duty_max = expected_duty + 8U;
 		return (frequency_hz >= 850U) && (frequency_hz <= 1150U) &&
-			   (duty_percent >= duty_min) && (duty_percent <= duty_max);
+			   (duty_percent >= (expected_duty - 8U)) &&
+			   (duty_percent <= (expected_duty + 8U));
 	}
 
 	/** @brief Wire 두 round가 끝났으면 peer exact token을 한 번 출력합니다. */
@@ -398,105 +386,116 @@ namespace
 		}
 	}
 
-	/** @brief DUT Serial1 frame를 nonce와 cycle에 결합해 echo합니다. */
-	[[nodiscard]] bool handleSerialFrame(const char *line)
+	/** @brief host relay에 nonce가 결합된 exact 응답을 출력합니다. */
+	void reportRelayResponse(const char *response)
 	{
-		char expected[line_capacity]{};
-		const int count = snprintf(expected, sizeof(expected), "S1:%s:%u",
-								   active_nonce, serial_cycle_count);
-		if ((count <= 0) || (strcmp(line, expected) != 0))
-		{
-			return false;
-		}
-		char response[line_capacity]{};
-		static_cast<void>(snprintf(response, sizeof(response), "E1:%s:%u",
-								   active_nonce, serial_cycle_count));
-		writeUartLine(peer_uart, response);
-		++serial_cycle_count;
-		if ((serial_cycle_count == 2U) && !serial_reported)
-		{
-			printk("NUCODE_AC02B_PEER:SERIAL1:PASS:baud=115200:cycles=2:bytes=64:nonce=%s\n",
-				   active_nonce);
-			serial_reported = true;
-		}
-		return true;
+		printk("NUCODE_AC02B_RELAY:RESPONSE:%s:nonce=%s\n", response,
+			   active_nonce);
 	}
 
-	/** @brief PWM control command를 실행하고 DUT에 exact 응답을 보냅니다. */
-	[[nodiscard]] bool handlePwmCommand(const char *line)
+	/** @brief 현재 순서의 PWM relay 명령을 실행합니다. */
+	[[nodiscard]] bool handlePwmRelay(std::size_t step)
 	{
-		if ((strcmp(line, "PWM:ARM:25") == 0) ||
-			(strcmp(line, "PWM:ARM:75") == 0))
+		if ((step == 0U) || (step == 2U))
 		{
-			const unsigned int duty = (line[8] == '2') ? 25U : 75U;
+			const unsigned int duty = (step == 0U) ? 25U : 75U;
 			if (!armCapture(duty))
 			{
 				return false;
 			}
-			writeUartLine(peer_uart,
-						  duty == 25U ? "PWM:ARM:25:OK" : "PWM:ARM:75:OK");
+			reportRelayResponse(relay_responses[step]);
 			return true;
 		}
-		if ((strcmp(line, "PWM:CHECK:25") == 0) ||
-			(strcmp(line, "PWM:CHECK:75") == 0))
-		{
-			const unsigned int duty = (line[10] == '2') ? 25U : 75U;
-			if (!validateCapture(duty))
-			{
-				return false;
-			}
-			writeUartLine(peer_uart, duty == 25U ? "PWM:25:PASS" : "PWM:75:PASS");
-			++pwm_pass_count;
-			if ((pwm_pass_count == 2U) && !pwm_reported)
-			{
-				printk("NUCODE_AC02B_PEER:PWM:PASS:frequency=1000:duty=25,75:nonce=%s\n",
-					   active_nonce);
-				pwm_reported = true;
-			}
-			return true;
-		}
-		return false;
-	}
-
-	/** @brief ADC LOW/HIGH drive command를 실행합니다. */
-	[[nodiscard]] bool handleAdcCommand(const char *line)
-	{
-		if (strcmp(line, "ADC:LOW") == 0)
-		{
-			if (gpio_pin_set_raw(drive_gpio, adc_drive_pin, 0) < 0)
-			{
-				return false;
-			}
-			adc_low_seen = true;
-			writeUartLine(peer_uart, "ADC:LOW:OK");
-		}
-		else if (strcmp(line, "ADC:HIGH") == 0)
-		{
-			if (gpio_pin_set_raw(drive_gpio, adc_drive_pin, 1) < 0)
-			{
-				return false;
-			}
-			adc_high_seen = true;
-			writeUartLine(peer_uart, "ADC:HIGH:OK");
-		}
-		else
+		const unsigned int duty = (step == 1U) ? 25U : 75U;
+		if (!validateCapture(duty))
 		{
 			return false;
 		}
+		reportRelayResponse(relay_responses[step]);
+		++pwm_pass_count;
+		if ((pwm_pass_count == 2U) && !pwm_reported)
+		{
+			printk("NUCODE_AC02B_PEER:PWM:PASS:frequency=1000:duty=25,75:nonce=%s\n",
+				   active_nonce);
+			pwm_reported = true;
+		}
+		return true;
+	}
+
+	/** @brief 현재 순서의 ADC relay 명령을 실행합니다. */
+	[[nodiscard]] bool handleAdcRelay(std::size_t step)
+	{
+		const bool high = step == 5U;
+		if (gpio_pin_set_raw(drive_gpio, adc_drive_pin, high ? 1 : 0) < 0)
+		{
+			return false;
+		}
+		adc_low_seen = adc_low_seen || !high;
+		adc_high_seen = adc_high_seen || high;
+		reportRelayResponse(relay_responses[step]);
 		if (adc_low_seen && adc_high_seen && !adc_reported)
 		{
-			printk("NUCODE_AC02B_PEER:ADC:PASS:levels=0,1:nonce=%s\n", active_nonce);
+			printk("NUCODE_AC02B_PEER:ADC:PASS:levels=0,1:nonce=%s\n",
+				   active_nonce);
 			adc_reported = true;
 		}
 		return true;
 	}
 
-	/** @brief physical peer 장치와 callback을 host start 뒤에만 활성화합니다. */
+	/** @brief host console의 nonce·순서 결합 relay 명령 하나를 처리합니다. */
+	[[nodiscard]] bool handleRelayLine(const char *line, bool &finished)
+	{
+		if (relay_step >= (sizeof(relay_commands) / sizeof(relay_commands[0])))
+		{
+			return false;
+		}
+		char expected[line_capacity]{};
+		const int count = snprintf(expected, sizeof(expected),
+			"NUCODE_AC02B_RELAY:REQUEST:%s:nonce=%s",
+			relay_commands[relay_step], active_nonce);
+		if ((count <= 0) || (static_cast<std::size_t>(count) >= sizeof(expected)) ||
+			(strcmp(line, expected) != 0))
+		{
+			return false;
+		}
+
+		reportWireIfReady();
+		const std::size_t step = relay_step;
+		bool success = false;
+		if (step < 4U)
+		{
+			success = handlePwmRelay(step);
+		}
+		else if (step < 7U)
+		{
+			success = handleAdcRelay(step);
+		}
+		else
+		{
+			const bool complete = wire_reported && pwm_reported && adc_reported &&
+							  (atomic_get(&i2c_invalid) == 0) &&
+							  (atomic_get(&i2c_valid_write_count) == 2);
+			if (complete)
+			{
+				static_cast<void>(gpio_pin_set_raw(drive_gpio, adc_drive_pin, 0));
+				reportRelayResponse(relay_responses[step]);
+				printk("NUCODE_AC02B_PEER:FINAL:PASS:nonce=%s\n", active_nonce);
+				finished = true;
+				success = true;
+			}
+		}
+		if (success)
+		{
+			++relay_step;
+		}
+		return success;
+	}
+
+	/** @brief 물리 peer 장치와 callback을 host start 뒤에만 활성화합니다. */
 	[[nodiscard]] bool initializePeer(void)
 	{
-		if (!device_is_ready(console_uart) || !device_is_ready(peer_uart) ||
-			!device_is_ready(target_i2c) || !device_is_ready(capture_gpio) ||
-			!device_is_ready(drive_gpio))
+		if (!device_is_ready(console_uart) || !device_is_ready(target_i2c) ||
+			!device_is_ready(capture_gpio) || !device_is_ready(drive_gpio))
 		{
 			return false;
 		}
@@ -513,56 +512,19 @@ namespace
 		{
 			return false;
 		}
-
 		target_callbacks.buf_write_received = targetBufferWriteReceived;
 		target_callbacks.buf_read_requested = targetBufferReadRequested;
 		target_configuration.address = i2c_target_address;
 		target_configuration.callbacks = &target_callbacks;
 		return i2c_target_register(target_i2c, &target_configuration) == 0;
 	}
-
-	/** @brief DUT command 하나를 처리하고 모든 단계의 fail-closed 상태를 유지합니다. */
-	[[nodiscard]] bool handlePeerLine(const char *line, bool &finished)
-	{
-		reportWireIfReady();
-		if (strncmp(line, "S1:", 3U) == 0)
-		{
-			return handleSerialFrame(line);
-		}
-		if (strncmp(line, "PWM:", 4U) == 0)
-		{
-			return handlePwmCommand(line);
-		}
-		if (strncmp(line, "ADC:", 4U) == 0)
-		{
-			return handleAdcCommand(line);
-		}
-		if (strcmp(line, "DONE") == 0)
-		{
-			reportWireIfReady();
-			const bool complete = serial_reported && wire_reported && pwm_reported &&
-								  adc_reported && (atomic_get(&i2c_invalid) == 0) &&
-								  (atomic_get(&i2c_valid_write_count) == 2);
-			if (!complete)
-			{
-				return false;
-			}
-			static_cast<void>(gpio_pin_set_raw(drive_gpio, adc_drive_pin, 0));
-			writeUartLine(peer_uart, "DONE:PASS");
-			printk("NUCODE_AC02B_PEER:FINAL:PASS:nonce=%s\n", active_nonce);
-			finished = true;
-			return true;
-		}
-		return false;
-	}
 }
 
-/** @brief host nonce를 받고 direct Zephyr peer를 단발 실행합니다. */
+/** @brief host nonce를 받고 console relay 기반 direct Zephyr peer를 단발 실행합니다. */
 int main(void)
 {
-	if (!device_is_ready(console_uart) || !device_is_ready(peer_uart) ||
-		!startUartRx(console_uart, console_rx_context) ||
-		!startUartRx(peer_uart, peer_rx_context))
+	if (!device_is_ready(console_uart) ||
+		!startUartRx(console_uart, console_rx_context))
 	{
 		return 1;
 	}
@@ -596,26 +558,29 @@ int main(void)
 		reportFailure("initialize");
 		return 1;
 	}
-	printk("NUCODE_AC02B_PEER:ARMED:PASS:address=0x52:nonce=%s\n", active_nonce);
+	printk("NUCODE_AC02B_PEER:ARMED:PASS:address=0x52:control=host-console:nonce=%s\n",
+		   active_nonce);
+	printk("NUCODE_AC02B_PEER:UART30:PASS:status=disabled:pins=high-z:nonce=%s\n",
+		   active_nonce);
 
 	bool finished = false;
 	while (!finished)
 	{
 		reportWireIfReady();
 		char line[line_capacity]{};
-		if (!readQueuedLine(peer_rx_context, line, sizeof(line), 200))
+		if (!readQueuedLine(console_rx_context, line, sizeof(line), 200))
 		{
 			if ((atomic_get(&i2c_invalid) != 0) ||
-				(atomic_get(&peer_rx_context.overflow) != 0))
+				(atomic_get(&console_rx_context.overflow) != 0))
 			{
-				reportFailure("wire-payload");
+				reportFailure("console-or-wire");
 				return 1;
 			}
 			continue;
 		}
-		if (!handlePeerLine(line, finished))
+		if (!handleRelayLine(line, finished))
 		{
-			reportFailure("peer-command");
+			reportFailure("relay-command-order");
 			return 1;
 		}
 	}

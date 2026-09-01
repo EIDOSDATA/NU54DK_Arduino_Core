@@ -37,7 +37,7 @@ namespace
 	constexpr std::size_t nonce_length = 32U;
 
 	/** @brief 한 UART protocol line의 최대 길이입니다. */
-	constexpr std::size_t line_capacity = 96U;
+	constexpr std::size_t line_capacity = 160U;
 
 	/** @brief 모든 peer 응답의 제한 시간입니다. */
 	constexpr unsigned long response_timeout_ms = 5000UL;
@@ -165,22 +165,45 @@ namespace
 		Serial.println(active_nonce);
 	}
 
-	/** @brief Serial1 peer로 control line을 전송합니다. */
-	void sendPeerLine(const char *line)
+	/**
+	 * @brief host에게 peer console relay를 요청하고 nonce 결합 응답을 검증합니다.
+	 *
+	 * @details PWM·ADC·DONE 제어는 Serial1 또는 peer uart30으로 보내지 않습니다.
+	 * DUT console로 요청한 뒤 host가 peer console에 전달한 exact 응답만 받습니다.
+	 */
+	[[nodiscard]] bool requestHostRelay(const char *command,
+									 const char *response)
 	{
-		Serial1.println(line);
-		Serial1.flush();
+		if ((command == nullptr) || (response == nullptr))
+		{
+			return false;
+		}
+		Serial.print("NUCODE_AC02B_RELAY:REQUEST:");
+		Serial.print(command);
+		Serial.print(":nonce=");
+		Serial.println(active_nonce);
+		Serial.flush();
+
+		char expected[line_capacity]{};
+		const int expected_count = snprintf(
+			expected, sizeof(expected), "NUCODE_AC02B_RELAY:RESPONSE:%s:nonce=%s",
+			response, active_nonce);
+		char observed[line_capacity]{};
+		return (expected_count > 0) &&
+			   (static_cast<std::size_t>(expected_count) < sizeof(expected)) &&
+			   readLine(Serial, observed, sizeof(observed), response_timeout_ms) &&
+			   (strcmp(observed, expected) == 0);
 	}
 
-	/** @brief Serial1 peer 응답이 exact line인지 확인합니다. */
-	[[nodiscard]] bool expectPeerLine(const char *expected)
+	/** @brief DUT 보조 VCOM에서 host가 보낸 exact Serial1 echo를 확인합니다. */
+	[[nodiscard]] bool expectAuxiliaryEcho(const char *expected)
 	{
 		char observed[line_capacity]{};
 		return readLine(Serial1, observed, sizeof(observed), response_timeout_ms) &&
 			   (strcmp(observed, expected) == 0);
 	}
 
-	/** @brief uart30의 active route 거부와 end/rebegin 두 cycle echo를 검증합니다. */
+	/** @brief 보조 VCOM의 active route 거부와 end/rebegin 두 cycle echo를 검증합니다. */
 	[[nodiscard]] bool testSerial1(void)
 	{
 		if (!Serial1.setPins(PIN_P0_01, PIN_P0_00))
@@ -219,7 +242,7 @@ namespace
 												"E1:%s:%u", active_nonce, cycle);
 			if ((expected_count <= 0) ||
 				(static_cast<std::size_t>(expected_count) >= sizeof(expected)) ||
-				!expectPeerLine(expected))
+				!expectAuxiliaryEcho(expected))
 			{
 				serial1_failure_stage = "serial1-echo";
 				return false;
@@ -237,13 +260,7 @@ namespace
 			}
 		}
 
-		Serial1.begin(115200U, SERIAL_8N1);
-		if (!Serial1)
-		{
-			serial1_failure_stage = "serial1-final-begin";
-			return false;
-		}
-		Serial.print("NUCODE_AC02B_DUT:SERIAL1:PASS:baud=115200:cycles=2:bytes=64");
+		Serial.print("NUCODE_AC02B_DUT:SERIAL1:PASS:baud=115200:cycles=2:echo=host-vcom-x.1");
 		finishToken();
 		return true;
 	}
@@ -391,8 +408,7 @@ namespace
 		constexpr const char *pass_replies[]{"PWM:25:PASS", "PWM:75:PASS"};
 		for (std::size_t index = 0U; index < 2U; ++index)
 		{
-			sendPeerLine(arm_commands[index]);
-			if (!expectPeerLine(armed_replies[index]))
+			if (!requestHostRelay(arm_commands[index], armed_replies[index]))
 			{
 				return false;
 			}
@@ -402,8 +418,7 @@ namespace
 				return false;
 			}
 			delay(40U);
-			sendPeerLine(check_commands[index]);
-			if (!expectPeerLine(pass_replies[index]))
+			if (!requestHostRelay(check_commands[index], pass_replies[index]))
 			{
 				return false;
 			}
@@ -436,22 +451,19 @@ namespace
 	[[nodiscard]] bool testAdc(int &low, int &high)
 	{
 		analogReadResolution(12U);
-		sendPeerLine("ADC:LOW");
-		if (!expectPeerLine("ADC:LOW:OK"))
+		if (!requestHostRelay("ADC:LOW", "ADC:LOW:OK"))
 		{
 			return false;
 		}
 		delay(10U);
 		low = averageAdc();
-		sendPeerLine("ADC:HIGH");
-		if (!expectPeerLine("ADC:HIGH:OK"))
+		if (!requestHostRelay("ADC:HIGH", "ADC:HIGH:OK"))
 		{
 			return false;
 		}
 		delay(10U);
 		high = averageAdc();
-		sendPeerLine("ADC:LOW");
-		if (!expectPeerLine("ADC:LOW:OK"))
+		if (!requestHostRelay("ADC:LOW", "ADC:LOW:OK"))
 		{
 			return false;
 		}
@@ -495,13 +507,11 @@ namespace
 		Serial.print(high);
 		finishToken();
 
-		sendPeerLine("DONE");
-		if (!expectPeerLine("DONE:PASS"))
+		if (!requestHostRelay("DONE", "DONE:PASS"))
 		{
 			reportFailure("peer-final");
 			return false;
 		}
-		Serial1.end();
 		Serial.print("NUCODE_AC02B_DUT:FINAL:PASS");
 		finishToken();
 		return true;
@@ -537,5 +547,7 @@ void loop(void)
 	}
 	memcpy(active_nonce, command + sizeof(prefix) - 1U, nonce_length + 1U);
 	execution_finished = true;
+	Serial.print("NUCODE_AC02B_DUT:ARMED:PASS:control=console:serial1=aux-vcom-x.1");
+	finishToken();
 	static_cast<void>(runHil());
 }

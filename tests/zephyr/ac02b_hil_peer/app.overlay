@@ -1,6 +1,6 @@
 /**
  * @file app.overlay
- * @brief AC-02B peer의 uart30, TWIS21 target과 capture GPIO를 구성합니다.
+ * @brief AC-02B peer의 TWIS21 target과 capture GPIO를 구성합니다.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -23,8 +23,12 @@
 	};
 };
 
+/** @brief 기존 P0 교차선이 남아 있어도 peer가 P0.0/P0.1을 구동하지 않게 합니다. */
 &uart30 {
-	status = "okay";
+	/delete-property/ pinctrl-0;
+	/delete-property/ pinctrl-1;
+	/delete-property/ pinctrl-names;
+	status = "disabled";
 };
 
 /** @brief Arduino Wire target 미지원 대신 독립 serial21을 TWIS target으로 사용합니다. */
