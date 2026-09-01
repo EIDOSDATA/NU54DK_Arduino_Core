@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-PERIPHERAL-001 |
-| 문서 개정 | 3.2 |
-| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-02B 자동 구현·host/target build PASS, 물리 HIL 배선 대기 |
+| 문서 개정 | 3.4 |
+| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-02B exact-commit HIL 완료 |
 | 최종 갱신일 | 2026-09-01 |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
@@ -64,8 +64,8 @@ Registry는 DTS pinctrl을 읽어 UART20 console을 `active`로 표시하며 GPI
 
 AC-02B는 `PinHandover`와 `RuntimePeripheralRoute`를 연결해 기존 GPIO mode/latch/interrupt를
 snapshot하고, peripheral pinctrl default/sleep 상태와 runtime PM을 적용한 뒤 종료 시 복원한다.
-전환 실패는 rollback하거나 복구 불능 latch로 fail-closed한다. 이 코드는 host/target build를
-통과했지만 물리 HIL은 배선 대기이므로 AC-02B 완료로 판정하지 않는다.
+전환 실패는 rollback하거나 복구 불능 latch로 fail-closed한다. 이 코드는 host/target build와
+exact commit `0b7f89283cd82a68a7f3f0910f4fc59b8dd01bfb`의 3-wire 물리 HIL을 통과했다.
 
 ## 4. 공통 lifecycle과 문맥
 
@@ -134,8 +134,10 @@ NACK과 driver 오류는 Arduino 상태 값으로 변환하되 원래 errno를 �
 유효하다. 다른 Zephyr I2C client와 bus-wide lock을 공유하지 않으므로 여러 client는 application이
 transaction을 직렬화해야 한다. Stock NCS v3.4 controller backend 경계에 따라 target/slave
 `begin(address)`, `onReceive()`/`onRequest()`, read `requestFrom(..., false)`와 `Wire1`은
-capability에 포함하지 않고 fail-closed한다. HIL peer의 direct Zephyr TWIS21 target은 fixture이며
-가짜 Arduino target 지원이 아니다.
+capability에 포함하지 않고 fail-closed한다. Cross-board P1.2/P1.3 continuity 불연속을 확인했기
+때문에 HIL은 peer TWIS를 사용하지 않는다. DUT 온보드 BQ25186 `0x6A`의 read-only register
+`0x0C == 0x41`을 100/400 kHz repeated-start와 end/rebegin으로 검증한다. 이는 Arduino target
+지원 또는 임의 PMIC write를 뜻하지 않는다.
 
 ### 6.2 BQ25186 사용 경계
 
@@ -182,7 +184,7 @@ controller 의미를 합성하지 않고 unsupported, `SPI1`과 automatic chip-s
 | --- | --- | --- |
 | AIN0/A1~AIN3/A4 | P1.4~P1.7 | UART20 console/system 소유, 읽기 거부 |
 | AIN4/A5 | P1.11 | PMIC/system 입력 소유, 읽기 거부 |
-| AIN5/A0 | P1.12 | 공개 A0, 읽기 지원 |
+| AIN5/A0 | P1.12 | 공개 A0; GPIO input/output/open-drain·interrupt와 ADC/PWM 사이 transferable |
 | AIN6/A6 | P1.13 | 읽기 지원; SW0와 pull 회로의 부하를 사용자가 고려 |
 | AIN7/A7 | P1.14 | 읽기 지원; LED3 회로의 부하를 사용자가 고려 |
 
@@ -258,9 +260,10 @@ Arduino IDE feature set을 선택하고 raw conf/overlay는 expert escape hatch�
 - [AC-02A 핀과 주변장치 소유권 기준선](<../04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md>)
 - [AC-02B Peripheral/Analog runtime 기준선](<../04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>)
 
-정식 `v0.2.0`의 기존 Serial/Wire/SPI/ADC/PWM 수직 경로 HIL은 완료됐다. AC-02B 개발 경로는
-자동 구현·host/target build PASS이며 물리 HIL 배선 대기다. Exact transaction 수, frequency,
-payload, raw 측정값과 commit은 검증 문서가 소유한다.
+정식 `v0.2.0`의 기존 Serial/Wire/SPI/ADC/PWM 수직 경로 HIL은 완료됐다. AC-02B 개발 경로도
+exact 3-wire fixture에서 Serial1, BQ25186 Wire, local SPI, ADC raw 0/3757과 A0 PWM
+25%·75% polling capture를 통과했다. Exact transaction 수, frequency, payload, raw 측정값과
+commit은 검증 문서가 소유한다.
 
 ## 14. 명시적 범위 밖
 

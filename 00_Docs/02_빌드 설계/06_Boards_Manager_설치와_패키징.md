@@ -1,10 +1,11 @@
-# Boards Manager 설치와 패키징 — stable v0.2.0
+# Boards Manager 설치와 패키징 — stable v0.2.0 / RC v0.3.0-rc.1
 
 | 항목 | 값 |
 | --- | --- |
 | package | `nucode:zephyr` |
 | board FQBN | `nucode:zephyr:nu54dk` |
 | 현재 stable | `0.2.0` |
+| 현재 시험 후보 | `0.3.0-rc.1` — 별도 RC index |
 | 보존한 downgrade 버전 | `0.1.0` |
 | 초기 지원 OS | Windows 10/11 x64 |
 
@@ -26,6 +27,13 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 현재 index는 최신순으로 `0.2.0`, `0.1.0`을 제공한다. 특정 버전을 재현해야 하면 해당 GitHub
 Release의 불변 index snapshot을 사용한다. RC 전용 index와 preview index는 신규 설치에 쓰지
 않는다.
+
+`v0.3.0-rc.1`을 명시적으로 시험할 때만 다음 별도 index를 추가한다. RC 공개가 stable index의
+version 순서나 byte를 바꾸지 않는다.
+
+~~~text
+https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.1/package_nucode_nu54dk_rc_index.json
+~~~
 
 Index의 `tools`와 platform의 `toolsDependencies`는 비어 있다. Nordic NCS/Toolchain은 Core
 ZIP에 넣지 않고 설치 후 `post_install.bat`이 Nordic 공식 배포 경로에서 준비한다.
@@ -138,6 +146,10 @@ channel의 이미 검증한 archive만 대상으로 하며 최신 version 순서
 tag, archive와 승인 기록을 가진다. 도구가 만든 package는 자동으로 공개하지 않으며 사람의
 릴리스 승인 뒤 별도 절차로 게시한다.
 
+M22 RC1은 두 독립 build의 byte를 대조하고 7개 asset만 공개한다. Public URL에서 package를 다시
+받아 동일 PC 격리 clean-room에 설치한 뒤 8개 library·29개 예제를 compile하고 지정 UID Upload를
+검증한다. Stable `v0.2.0` index는 전후 SHA-256 불변을 별도 gate로 확인한다.
+
 ---
 
 ## 6. 설치 수명주기와 지원 경계
@@ -168,3 +180,5 @@ Core ZIP은 Nordic NCS, Zephyr, Toolchain, nRF Util 또는 pyOCD binary를 재�
 - [v0.2.0 알려진 제약](<../05_릴리스/v0.2.0/KNOWN_ISSUES.md>)
 - [M18 RC 공개 검증과 교정](<../04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md>)
 - [v0.2.0 정식 릴리스 공개 기록](<../04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md>)
+- [v0.3.0-rc.1 설치와 시험](<../05_릴리스/v0.3.0-rc.1/TESTING.md>)
+- [M22 v0.3.0-rc.1 기준선](<../04_검증 기록/29_M22_v0.3.0_rc1_통합_릴리스_기준선.md>)

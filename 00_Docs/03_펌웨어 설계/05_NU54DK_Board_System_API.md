@@ -117,9 +117,11 @@ Arduino API가 같더라도 adapter를 다시 검토하고 target 검증을 수�
 | 손상 처리 | 자동 erase를 강제하는 `SETTINGS_ZMS_FORCE_MOUNT` 사용 안 함 |
 
 이 API는 EEPROM byte 주소 호환층이나 일반 filesystem이 아니다. Flash wear, 전원 차단 시점과
-제품별 데이터 migration은 Sketch가 별도로 설계해야 한다. `v0.3.0` AC-03은 이
-Settings/ZMS 기준선과 공존하는 제한된 EEPROM/FS facade를 계획하지만, 원자적 commit,
-partition 소유권, reset/power-cycle 복구와 migration gate를 통과하기 전에는 현재 지원이 아니다.
+제품별 데이터 migration은 Sketch가 별도로 설계해야 한다. `v0.3.0-rc.1` 후보의 AC-03은 같은
+Settings/ZMS에 독립 `arduino/eeprom` record를 두는 1024-byte EEPROM facade와 별도
+`0x16c000..0x174000` 32 KiB LittleFS를 구현했다. 두 facade의 API·파괴적 복구·검증 경계는
+[Arduino Storage API](./10_Arduino_Storage_API.md)가 소유하며, RC 검증 결과를 stable `v0.2.0`
+지원으로 소급하지 않는다.
 
 ## 8. System OFF와 wake
 
@@ -258,7 +260,7 @@ PMIC write API의 존재나 software semantic test를 전기적 안전성 PASS�
 
 PMIC 전기 HIL은 승인된 범위 제외이며 해당 API를 전기적으로 검증된 완전 지원으로 표시하지
 않는다. `v0.3.0`의 AC-01 자동 검증과 M19·M20·M21 구현·검증은 완료됐으며 Board/System 계약은
-이 BLE 단계들의 변경 대상이 아니다. 저장소 facade를 다루는 미착수 AC-03에서는 `nucode/`
-namespace, BLE bond와 고정 partition 소유권을 깨지 않는 회귀 증거를 요구한다. 현재 개발 상태와
+이 BLE 단계들의 변경 대상이 아니다. 완료된 AC-03 storage facade는 `nucode/` namespace,
+BLE bond와 고정 partition 소유권을 깨지 않는 회귀 증거를 제공한다. 현재 개발 상태와
 검증 링크는 [v0.3.0 마일스톤](<../01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)에서
 관리한다.

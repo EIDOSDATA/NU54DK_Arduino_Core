@@ -4,29 +4,35 @@
 | --- | --- |
 | 기록 ID | VALIDATION-AC02B-001 |
 | 대상 | `v0.3.0` AC-02B |
-| 판정 | **자동 구현·host/target build PASS, 물리 HIL 배선 대기** |
+| 판정 | **완료 — 초기 cross-board I2C fixture FAIL 분리 / exact 3-wire 물리 HIL PASS** |
 | 검증일 | 2026-09-01 |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 기준 보드 | NU54DK / `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | 기준 board package | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| 기준 source | `731312c1dbec3c19a6073dddab7ad2c25d3b5a97` |
-| 남은 gate | 두 NU54DK의 8선 fixture exact-commit HIL / M22 전체 27개 clean package compile |
+| 자동 기준 source | `731312c1dbec3c19a6073dddab7ad2c25d3b5a97` |
+| 최종 검증 source | `0b7f89283cd82a68a7f3f0910f4fc59b8dd01bfb` |
+| Evidence | `build/ac02b/hil/ac02b-0b7f89283cd8-3wire.evidence.json` |
+| Evidence SHA-256 | `04BE0189656EA2E9FEED95DE1F9167C33CA76C717917D2DFAB3FE67E14F3BA13` |
+| 후속 gate | M22 전체 29개 clean package compile·Upload·public clean-room |
 
 ## 1. 판정 요약
 
 AC-02B는 AC-02A의 소유권 manager 위에 runtime pinctrl·PM lifecycle과 공개 Peripheral/Analog
-API를 구현했다. Host 계약 시험과 NU54DK production target build는 통과했다. 두 역할의 실제
-HIL image와 fail-closed runner도 준비했지만, 아직 8개 배선을 연결해 target protocol을 실행하지
-않았다.
+API를 구현했다. Host 계약 시험과 NU54DK production target build는 통과했다. 초기 peer TWIS
+fixture를 실제 연결해 진단한 결과 DUT Wire는 `-EIO`, peer TWIS event는 0이었다. Open-drain
+continuity에서 peer P1.2 low일 때 DUT P1.2가 high였고 P1.3도 같은 불연속을 보여, 이를 controller
+API 실패로 판정하지 않고 cross-board fixture 경로 실패로 분리했다.
 
-따라서 현재 판정은 다음과 같이 제한한다.
+초기 실패 경로를 폐기하고 exact 3-wire fixture로 다시 검증했다. 최종 판정은 다음과 같다.
 
 - production source 구현: 완료
 - AC-02B host 계약: PASS
 - AC-02B target·역할 image build/link: PASS
-- 물리 Serial1/Wire/SPI/PWM/ADC HIL: **대기, PASS 아님**
-- AC-02B 전체 완료: **아님**
-- AC-02 전체 완료 및 `v0.3.0` stable 지원 선언: **아님**
+- 초기 cross-board TWIS Wire fixture: **FAIL — 전기 continuity 불연속으로 폐기**
+- 교정 물리 Serial1/Wire/SPI/PWM/ADC HIL: **PASS**
+- AC-02B 전체 완료: **완료**
+- AC-02 전체 완료: **완료**
+- `v0.3.0` stable 지원 선언: **아님 — M22 RC/stable gate 대기**
 
 `build-only`, parser PASS 또는 준비된 HIL token을 실제 전기·통신 PASS로 확대하지 않는다.
 
@@ -76,8 +82,10 @@ stage하고, `begin/end/rebegin`, 100 kHz·400 kHz와 고정 TX/RX buffer를 제
 - 두 번째 Arduino controller 객체 `Wire1`
 - 다른 Zephyr client까지 포함하는 bus-wide arbitration
 
-HIL peer가 사용하는 주소 `0x52`의 TWIS21은 DUT의 `Wire` controller를 검증하기 위한 direct
-Zephyr fixture다. Arduino Wire target 지원을 가장하는 객체가 아니다.
+초기 HIL은 peer TWIS21 address `0x52`를 사용했지만 cross-board P1.2/P1.3 continuity 불연속으로
+폐기했다. 교정 HIL은 DUT 온보드 BQ25186 `0x6A`의 register `0x0C == 0x41`을 read-only
+100/400 kHz repeated-start와 end/rebegin으로 검증한다. Arduino Wire target 지원 또는 PMIC
+write를 가장하지 않는다.
 
 ### 2.4 SPI
 
@@ -103,7 +111,7 @@ suspend/restore한다. SPI peripheral 자체 interrupt를 뜻하는 `attachInter
 | AIN2 | `A3`, `PIN_AIN2` | P1.6 / UART20 RTS | system-reserved, `analogRead()` 거부 |
 | AIN3 | `A4`, `PIN_AIN3` | P1.7 / UART20 CTS | system-reserved, `analogRead()` 거부 |
 | AIN4 | `A5`, `PIN_AIN4` | P1.11 / PMIC·system 입력 | system-reserved, `analogRead()` 거부 |
-| AIN5 | `A0`, `PIN_AIN5` | P1.12 / 공개 A0 | 지원 대상 |
+| AIN5 | `A0`, `PIN_AIN5` | P1.12 / 공개 A0 | input/output/open-drain·interrupt와 ADC/PWM 사이 transferable |
 | AIN6 | `A6`, `PIN_AIN6` | P1.13 / SW0 | 읽기 가능하지만 버튼·pull 회로의 전기적 부하를 포함 |
 | AIN7 | `A7`, `PIN_AIN7` | P1.14 / LED3 | 읽기 가능하지만 LED 회로의 전기적 부하를 포함 |
 
@@ -139,7 +147,7 @@ NU54DK GPIO에서 공급하지 않으며 signal과 공통 GND 외의 전원 설�
 | --- | --- | --- |
 | `tests/host/test_ac02b_b2_contract.py` | 6/6 PASS | 공개 concrete type, route matrix, lifecycle와 미지원 기능 fail-closed |
 | `tests/host/test_ac02b_analog_contract.py` | 7/7 PASS | ADC/PWM 계산, allocator, tone/Servo, fail-closed 복구와 예제 구조 |
-| `tests/hil/nu54dk/test_ac02b_peripheral.py` | 8/8 PASS | nonce·순서·FAIL·ADC 범위·UID/MSD/COM·WIRING_REQUIRED gate |
+| `tests/hil/nu54dk/test_ac02b_peripheral.py` | 18/18 PASS | schema 3, PMIC read-only token, peer I2C 비활성, nonce·순서·FAIL·ADC·UID/MSD/COM·WIRING_REQUIRED gate |
 | 전체 host fixed gate | 425 total / 423 PASS / 2 skipped | AC-02B를 포함한 전체 host 회귀, 실패 0 |
 | CI contract | 34/34 PASS | Windows 짧은 outdir, workflow와 고정 도구 계약 |
 
@@ -151,17 +159,23 @@ Host parser PASS는 target 전기 동작을 뜻하지 않는다.
 | --- | --- | --- |
 | `tests/zephyr/ac02b_b2_contract` | PASS | Serial1/Wire/SPI production route와 PM lifecycle compile/link; FLASH 95,576 B/RAM 46,408 B |
 | `tests/zephyr/ac02b_analog_contract` | PASS | ADC/PWM/tone/Servo target 계약 compile/link; FLASH 98,560 B/RAM 44,960 B |
-| `tests/zephyr/ac02b_hil_dut` | PASS | Arduino production API를 직접 호출하는 DUT image; FLASH 80,188 B/RAM 49,280 B |
-| `tests/zephyr/ac02b_hil_peer` | PASS | direct Zephyr uart30/TWIS21/GPIO peer image; FLASH 40,312 B/RAM 19,424 B |
+| `tests/zephyr/ac02b_hil_dut` | PASS | 교정 PMIC Wire를 포함해 Arduino production API를 호출; FLASH 80,932 B/RAM 49,288 B |
+| `tests/zephyr/ac02b_hil_peer` | PASS | PWM capture·ADC drive peer; FLASH 39,572 B/RAM 19,632 B, 최종 `.config`에서 `CONFIG_I2C is not set` |
 | 전체 고정 target gate | 27/27 PASS | failed 0, error 0, filtered 0, warning 0 |
 
 표의 크기는 최종 안전 회귀 시점의 contract build 관찰값이며 릴리스 용량 보증이 아니다. 전체
 고정 target gate는 `C:\t\h`의 짧은 Windows outdir에서 실행했다. 두 HIL role의 Twister metadata는
 `build_only: true`이므로 `READY` 한 줄로 물리 PASS를 만들지 않는다.
 
+교정 fixture 구현 뒤 host 18/18과 DUT/peer pristine build가 PASS했다. 최종 exact Core commit은
+`0b7f89283cd82a68a7f3f0910f4fc59b8dd01bfb`이며, 아래 별도 physical evidence로 자동/build 결과와
+실기 결과를 구분한다.
+
 ## 4. Arduino 예제 기준선
 
-현재 source tree에는 public library 6개와 Arduino 예제 27개가 있다.
+이 자동 기준선을 만들 당시 source tree에는 public library 6개와 Arduino 예제 27개가 있었다.
+후속 AC-03이 EEPROM/LittleFS를 추가한 현재 RC 후보는 library 8개·예제 29개이며, 그 통합
+compile 결과는 M22 기록이 소유한다.
 
 | Library | 예제 |
 | --- | --- |
@@ -178,39 +192,53 @@ snapshot에서 신규 예제 8/8 Arduino CLI compile과 설치 예제 discovery 
 19개와 신규 8개를 합친 27개 전체 clean package compile PASS를 뜻하지 않으며, 해당 통합 gate는
 M22에서 다시 고정한다.
 
-## 5. 물리 HIL 대기 fixture
+## 5. 물리 HIL fixture 교정
 
-Board A는 Arduino Core DUT, Board B는 direct Zephyr peer다. 두 보드 전원을 끈 뒤 다음 8가닥을
-연결한다.
+### 5.1 폐기한 초기 fixture와 관찰 결과
+
+초기 설계는 inter-board UART 2선, I2C 2선, GND, PWM, ADC와 local SPI를 합친 8가닥이었다.
+실제 진단에서 DUT `Wire.requestFrom()`은 driver `-EIO`, peer TWIS event count는 0이었다. Peer가
+P1.2 또는 P1.3을 low로 구동해도 DUT의 같은 pin은 high로 남아 cross-board open-drain continuity가
+성립하지 않았다. 따라서 peer TWIS `0x52` 경로는 폐기하며 이 실패를 Wire API FAIL로 확대하지 않는다.
+
+### 5.2 최종 3-wire fixture
+
+Board A는 Arduino Core DUT, Board B는 ADC drive/PWM polling peer다. Serial1은 Board A의
+CMSIS-DAP auxiliary VCOM으로 확인하고 Wire는 Board A 온보드 BQ25186을 사용한다. 물리 연결은
+다음 3가닥이다.
 
 | 번호 | Board A(DUT) | 방향 | Board B(peer) | 목적 |
 | --- | --- | --- | --- | --- |
 | 1 | GND | ↔ | GND | 공통 기준 전압 |
-| 2 | P0.0 / Serial1 TX | → | P0.1 / uart30 RX | Serial1 A→B |
-| 3 | P0.1 / Serial1 RX | ← | P0.0 / uart30 TX | Serial1 B→A |
-| 4 | P1.2 / Wire SDA | ↔ | P1.2 / TWIS21 SDA | I2C data |
-| 5 | P1.3 / Wire SCL | ↔ | P1.3 / TWIS21 SCL | I2C clock |
-| 6 | P1.10 / PWM20 | → | P1.14 / GPIO capture | 1 kHz, 25%·75% capture |
-| 7 | P1.12 / A0 | ← | P2.5 / GPIO output | ADC LOW·HIGH |
-| 8 | P2.2 / SPI00 MOSI | ↔ 같은 Board A의 P2.4 / SPI00 MISO | 해당 없음 | 4 MHz local loopback |
+| 2 | P1.12 / A0 | ↔ | P2.5 / GPIO drive·polling input | ADC LOW·HIGH 뒤 A0 PWM20 25%·75% capture |
+| 3 | P2.2 / SPI00 MOSI | ↔ 같은 Board A의 P2.4 / SPI00 MISO | 해당 없음 | 4 MHz local loopback |
 
-두 보드 기본 회로의 I2C pull-up을 사용하므로 별도 외부 저항은 요구하지 않는다. 시험 target은
-`0x52`이며 BQ25186 주소 `0x6A`에는 접근하지 않는다. 두 보드 USB, 서로 다른 CMSIS-DAP UID·MSD·COM과
-role별 exact HEX를 함께 사용한다.
+Cross-board I2C와 외부 pull-up은 사용하지 않는다. Wire 시험은 DUT 온보드 BQ25186 address
+`0x6A`, register `0x0C`의 expected value `0x41`을 read-only로 확인한다. 100 kHz와 400 kHz에서
+repeated-start, end/rebegin을 실행하며 register write나 bus scan은 하지 않는다. 두 보드 USB,
+서로 다른 CMSIS-DAP UID·MSD·COM과 role별 exact HEX를 함께 사용한다.
 
 Runner는 배선 승인 전 preflight까지만 수행하고 종료 코드 3의 `WIRING_REQUIRED`로 멈춘다.
 `--acknowledge-wiring` 뒤에도 nonce, exact role image/build record, Core·board revision, source digest,
 flash 전후 SHA-256과 양쪽 token 전체가 일치해야만 evidence를 기록한다.
 
-## 6. 남은 완료 gate
+## 6. 최종 물리 결과
 
-1. 위 8가닥과 두 보드 identity를 확인한다.
-2. clean exact commit에서 DUT·peer를 다시 pristine build한다.
-3. `ac02b_peripheral.py`를 실행해 Serial1 end/rebegin, Wire 100/400 kHz repeated-start, SPI
-   transaction/interrupt mask, PWM external edge와 ADC external LOW/HIGH를 검증한다.
-4. DUT·peer transcript와 JSON evidence를 보존한다.
-5. 기존 AC-01, M7, M14, M16과 BLE profile 회귀 및 27개 package example compile을 실행한다.
-6. 제약을 API matrix에 고정한 뒤에만 AC-02B와 AC-02 완료 여부를 판정한다.
+| 항목 | 결과 |
+| --- | --- |
+| Exact Core / board | `0b7f89283cd82a68a7f3f0910f4fc59b8dd01bfb` / `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
+| Serial1 | auxiliary VCOM end/rebegin·송수신 PASS |
+| Wire | BQ25186 read-only 100/400 kHz repeated-start·end/rebegin PASS |
+| SPI | DUT P2.2↔P2.4 local loopback PASS |
+| ADC | 공유 P1.12에서 raw LOW=0, HIGH=3757 PASS |
+| PWM | ADC 종료 뒤 같은 A0/P1.12를 PWM20으로 전환, peer P2.5 polling 25%·75% PASS |
+| Evidence | `build/ac02b/hil/ac02b-0b7f89283cd8-3wire.evidence.json` |
+| SHA-256 | `04BE0189656EA2E9FEED95DE1F9167C33CA76C717917D2DFAB3FE67E14F3BA13` |
+
+P2에는 CPUAPP GPIOTE가 없으므로 peer PWM 측정은 GPIO interrupt가 아닌 bounded polling을 사용한다.
+이 PASS는 승인한 route와 3-wire fixture의 기능 검증이며 ADC 절대 전압 정확도, PWM 계측기 등급 또는
+미지원 bus instance를 지원한다는 뜻은 아니다. 남은 통합 작업은 M22의 29개 설치 예제, 지정 UID
+Upload와 public clean-room gate다.
 
 ## 7. 관련 문서
 

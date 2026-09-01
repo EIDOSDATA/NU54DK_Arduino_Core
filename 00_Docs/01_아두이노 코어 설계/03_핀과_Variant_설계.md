@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-PIN-001 |
-| 문서 개정 | 4.0 |
-| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-02B 자동 구현·host/target build PASS, 물리 HIL 배선 대기 |
+| 문서 개정 | 4.1 |
+| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-02B exact-commit HIL 완료 |
 | 최종 갱신일 | 2026-09-01 |
 | 대상 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 
@@ -50,7 +50,7 @@ Devicetree node를 소비한다.
 | ---: | --- | --- | --- |
 | 0 | `LED_BUILTIN`, `PIN_LED0`, `D0` | P2.9 | input/output, interrupt 없음 |
 | 1 | `PIN_BUTTON0`, `D1`, `A6` | P1.13 | input/interrupt/AIN6, 버튼 회로 부하 |
-| 2 | `PIN_A0`, `A0` | P1.12 | input/interrupt/AIN5 |
+| 2 | `PIN_A0`, `A0` | P1.12 | input/output/interrupt/open-drain/AIN5/PWM, transferable |
 | 3 | `PIN_PWM0`, `PIN_PWM_LED` | P1.10 | input/output/interrupt/open-drain/PWM, transferable |
 | 4 | `PIN_LED1` | P1.10 | ID 3으로 정규화되는 legacy alias |
 | 5 | `PIN_LED2` | P2.7 | input/output, interrupt 없음 |
@@ -131,8 +131,8 @@ ID 4 legacy alias는 별도 descriptor를 만들지 않고 ID 3으로 정규화�
 | 버튼 | Core debounce나 active-low 논리 반전을 제공하지 않음 |
 | interrupt | GPIOTE가 있는 P0/P1 역할에서 raw edge와 one-shot/rearm level 지원; 모든 P2 pin은 미지원 |
 
-`PIN_A0`는 digital input, `PIN_PWM0`/`PIN_LED1`은 같은 P1.10 canonical pad의 digital/PWM
-handover를 지원한다. 버튼·system input은 output을 거부하고 P2.10과 UART20 system-reserved pad는
+`PIN_A0`는 digital input/output/open-drain과 ADC/PWM handover를, `PIN_PWM0`/`PIN_LED1`은 같은
+P1.10 canonical pad의 digital/PWM handover를 지원한다. 버튼·system input은 output을 거부하고 P2.10과 UART20 system-reserved pad는
 일반 digital API가 강제로 탈취하지 않는다.
 
 ## 6. 정적 역할과 동적 소유권
@@ -175,9 +175,9 @@ peripheral owner로 전환한다. `end()`는 driver와 runtime PM을 정리하�
 - 전체 header를 연속 `Dn`으로 추정하지 않는다. Physical 이름은 `PIN_Px_yy`, 기존 Arduino 별칭은
   `D0`, `D1`, `D10`, `D11`, `A0..A7`처럼 명시적으로 제공한다.
 
-Runtime pinctrl·PM lifecycle과 GPIO↔Serial1/Wire/SPI/ADC/PWM handover는 구현됐고 host/target build를
-통과했다. 현재 남은 gate는 exact 8-wire physical HIL이다. 따라서 SoC matrix 밖의 임의 peripheral
-전환이나 AC-02B 전체 완료를 주장하지 않는다.
+Runtime pinctrl·PM lifecycle과 GPIO↔Serial1/Wire/SPI/ADC/PWM handover는 구현됐고 exact commit
+`0b7f89283cd82a68a7f3f0910f4fc59b8dd01bfb`의 3-wire physical HIL을 통과했다. 이 결과는 승인된
+route의 AC-02B 완료이며 SoC matrix 밖의 임의 peripheral 전환까지 지원한다는 뜻은 아니다.
 
 ## 7. 오류와 공개 진단
 
@@ -211,8 +211,10 @@ token을 사용한다. `formatDiagnostic()`의 한 줄 형식은
 
 ## 9. 검증과 증거
 
-현재 canonical mapping은 source/host 검사와 NU54DK target build를 통과했다. AC-01 GPIO HIL은
-완료됐고 AC-02B 주변장치 handover의 exact 8-wire HIL은 배선 대기다. 이 설계 문서에는 실행별
+현재 canonical mapping은 source/host 검사와 NU54DK target build를 통과했다. AC-01 GPIO HIL과
+AC-02B 주변장치 handover의 exact 3-wire HIL도 완료됐다. Wire는 DUT 온보드 BQ25186 read-only
+경로를 사용하며 cross-board P1.2/P1.3은 continuity 불연속으로 fixture에서 제외한다. 공유
+P2.5↔P1.12 선은 ADC 구동 뒤 A0/P1.12 PWM polling capture에 재사용한다. 이 설계 문서에는 실행별
 횟수와 로그를 복제하지 않는다.
 
 - [M3 GPIO·시간·Scheduler 기준선](<../04_검증 기록/03_M3_GPIO_시간과_Scheduler_기준선.md>)

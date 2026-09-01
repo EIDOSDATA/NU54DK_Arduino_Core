@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-API-001 |
-| 문서 개정 | 4.6 |
+| 문서 개정 | 4.8 |
 | 문서 상태 | `v0.2.0` 정식 공개 범위 + `v0.3.0` 개발 상태 |
 | 최종 갱신일 | 2026-09-01 |
-| 개발 상태 | AC-01·AC-02A 자동 검증 완료 / AC-02B 자동 구현·host/target build PASS, 물리 HIL 배선 대기 / M19·M20·M21 완료 |
+| 개발 상태 | AC-01~AC-03·M19~M21 완료 / M22 RC1 준비 진행 |
 
 ## 1. 목적
 
@@ -48,11 +48,10 @@ runtime 지원으로 확대하지 않는다.
 따라서 `부분 지원`은 Core 전체가 불안정하다는 뜻이 아니라, 특정 API 행에서 보증하는 pin, mode,
 bus instance 또는 검증 범위가 Arduino 생태계 전체보다 좁다는 뜻이다.
 
-현재 `v0.3.0` 개발 트리는 public library 6개와 예제 27개를 가진다. 이 가운데 기존 19개는
-Arduino CLI 19/19 compile 기준선을 통과했고 AC-02B가 8개를 새로 추가했다. 새 예제도 고정 source
-snapshot에서 8/8 compile을 통과했고 설치 예제 discovery는 27/27이다. 다만 27개 전체의 clean
-package compile과 물리 HIL은 M22 전까지 남아 있다. 이는 정식 `v0.2.0` archive의 library 4개·예제
-14개 기록이나 아직 끝나지 않은 `v0.3.0` runtime 지원 판정을 바꾸지 않는다.
+현재 `v0.3.0-rc.1` 후보는 public library 8개와 예제 29개를 가진다. Standard 22개와 BLE
+7개를 M22 package 목록으로 고정한다. 새 EEPROM과 LittleFS 예제는 AC-03 검증 대상이다. 이 수치는
+정식 `v0.2.0` archive의 library 4개·예제 14개 기록이나 아직 끝나지 않은 `v0.3.0` runtime 지원
+판정을 바꾸지 않는다.
 
 ## 3. Runtime과 공통 API
 
@@ -126,8 +125,8 @@ pinctrl, runtime PM과 GPIO ownership을 원자적으로 전환한다.
 않는다.
 
 Runtime pinctrl·PM lifecycle과 Wire/SPI/Serial/ADC/PWM 실제 handover·공개 API는 AC-02B
-working tree에 구현됐다. Host 계약과 NU54DK target build는 PASS했지만 물리 HIL은 배선 대기이므로
-AC-02B 완료 또는 정식 지원으로 표시하지 않는다.
+working tree에 구현됐다. Host 계약, NU54DK target build와 exact commit `0b7f89283cd82a68a7f3f0910f4fc59b8dd01bfb`의
+3-wire 물리 HIL을 통과했으므로 AC-02B는 완료다. 다만 M22 전에는 정식 stable 지원으로 표시하지 않는다.
 
 ## 5. 시간과 utility
 
@@ -208,13 +207,16 @@ ADC의 물리 경계는 다음과 같다.
 | --- | --- | --- |
 | `AIN0/A1`~`AIN3/A4` | P1.4~P1.7 | UART20 console/system 소유라 `analogRead()` 거부 |
 | `AIN4/A5` | P1.11 | PMIC/system 입력 소유라 거부 |
-| `AIN5/A0` | P1.12 | 공개 A0, 지원 |
+| `AIN5/A0` | P1.12 | 공개 A0; digital input/output/open-drain·interrupt와 ADC/PWM 사이 transferable |
 | `AIN6/A6` | P1.13 | 읽기 지원; SW0와 pull 회로가 측정값에 부하를 줌 |
 | `AIN7/A7` | P1.14 | 읽기 지원; LED3 회로가 측정값에 부하를 줌 |
 
 `P2`에는 CPUAPP GPIOTE가 없으므로 SPI 전용 핀과 P2 connector GPIO를 포함한 모든 P2 핀은
-`digitalPinToInterrupt()`에서 `NOT_AN_INTERRUPT`다. 현재 상태는 **자동 구현·host/target build
-PASS, 물리 HIL 배선 대기**이며 물리 PASS 또는 AC-02B 완료를 뜻하지 않는다.
+`digitalPinToInterrupt()`에서 `NOT_AN_INTERRUPT`다. Cross-board I2C continuity 불연속을 분리한
+뒤 exact HIL은 DUT 온보드 BQ25186 read-only repeated-start, DUT local SPI loopback과 공유
+peer P2.5↔DUT P1.12 선을 사용한다. Peer가 ADC LOW/HIGH를 구동한 뒤 DUT가 같은 A0를 PWM20으로
+전환하고 peer가 bounded polling으로 25%·75% duty를 포착했다. Serial1, Wire, SPI, ADC raw
+0/3757과 PWM 25%/75%가 모두 PASS했다.
 
 ## 7. 공개 진단 API
 
@@ -272,7 +274,7 @@ M19 BLE Core/GAP과 M20 범용 GATT는 `NUCODE_BLE`에 구현됐고 각각 exact
 Pairing·bonding·SMP, BAS/DIS와 HID는 공통 stack lifecycle을 복제하지 않는 별도
 `NUCODE_BLE_Security` library가 소유한다. M21의 Core `065d4f5` exact 두 보드 RF HIL과
 `d1902b1` Windows 11 pairing·HID 입력·bond 복원, host 39/39은 PASS했다. M21 개발 작업은
-완료했지만 `v0.3.0` 전체는 AC-02·AC-03과 M22 전에는 정식 지원으로 표시하지 않는다.
+완료했다. AC-02·AC-03도 완료됐지만 `v0.3.0` 전체는 M22 전에는 정식 지원으로 표시하지 않는다.
 
 ## 9. Zephyr/NCS 직접 사용과 build-only 경계
 
@@ -311,14 +313,14 @@ native USB, DAC, AVR Harvard memory와 Wi-Fi는 NU54DK/nRF54L15 hardware에서 �
 - AC-01: 승인된 connector GPIO, open-drain, level interrupt, pulse/shift와 전역 IRQ 안전성 gate —
   자동 검증 완료
 - AC-02: `Serial1`, Wire/SPI 확장, ADC/PWM resolution·frequency, `tone()`/Servo와 자원 소유권 —
-  AC-02A 자동 검증 완료, AC-02B 자동 구현·host/target build PASS, 물리 HIL 배선 대기
+  AC-02A 자동 검증과 AC-02B exact 3-wire HIL 완료
 - AC-03: 기존 Settings/ZMS/RRAM 위의 EEPROM·internal filesystem facade와 고정된 대표 제3자
-  library matrix — 미착수
+  library matrix — 1024 B EEPROM·32 KiB LittleFS 구현과 exact 두 보드 HIL 완료
 - M19: 범용 BLE Core/GAP — 자동 검증 완료
 - M20: 범용 GATT — 자동 검증 완료
 - M21: 별도 security library의 pairing·bonding·표준 profile·HID — 완료; exact RF HIL과
   Windows 11 실제 HID·bond 복원 PASS
-- M22: 통합 package·RC/stable gate — 미착수
+- M22: 8개 library·29개 예제 package, 동일 PC clean-room과 RC/stable gate — RC1 준비 진행
 
 계획이 현재 `v0.2.0` 지원 판정을 바꾸지는 않는다. 각 항목은 자동 계약, target build,
 필요한 HIL과 예제를 통과해야만 지원으로 승격한다. 물리 경로나 driver 의미를 확정할 수
@@ -337,6 +339,8 @@ native USB, DAC, AVR Harvard memory와 Wi-Fi는 NU54DK/nRF54L15 hardware에서 �
 - [AC-01 GPIO 호환성 검증](<../04_검증 기록/22_AC-01_GPIO_호환성_검증.md>)
 - [AC-02A 핀과 주변장치 소유권 기준선](<../04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md>)
 - [AC-02B Peripheral/Analog runtime 기준선](<../04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>)
+- [Arduino Storage API](<../03_펌웨어 설계/10_Arduino_Storage_API.md>)
+- [AC-03 Storage와 Library 호환성 기준선](<../04_검증 기록/28_AC-03_Storage와_Library_호환성_기준선.md>)
 - [M19 BLE Core/GAP 검증](<../04_검증 기록/23_M19_BLE_Core_GAP_검증.md>)
 - [M20 범용 GATT 검증](<../04_검증 기록/24_M20_범용_GATT_검증.md>)
 - [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)

@@ -19,8 +19,9 @@ Sketch와 Arduino library를 nRF Connect SDK build graph에 통합해 ELF·HEX·
 | 사용자 환경 | Windows 10/11 x64, Arduino IDE 2.x |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 정식 완료 범위 | M0~M18 / `v0.2.0` 정식 공개 |
-| `v0.3.0` 개발 상태 | AC-01·AC-02A 자동 검증 완료 / AC-02B 자동 구현·host/target build PASS, 물리 HIL 배선 대기 / M19·M20·M21 완료 |
-| 다음 작업 | AC-02B 두 보드 8선 HIL → AC-03 Storage·library 호환성 → M22 통합 릴리스 |
+| `v0.3.0` RC 상태 | AC-02B Peripheral/Analog와 AC-03 Storage exact-commit 두 보드 HIL PASS / M22 RC 공개 검증 준비 중 |
+| RC 후보 | `v0.3.0-rc.1` — 별도 RC index로 공개·검증하며 stable index는 변경하지 않음 |
+| 다음 작업 | M22 package·29개 설치 예제·지정 UID Upload → public RC1 → 동일 PC 격리 clean-room 검증 |
 
 ## 빠른 시작
 
@@ -125,7 +126,8 @@ Arduino CLI에서 명시적 CMSIS-DAP UID를 사용할 때는 compile과 upload�
 14개 예제는 릴리스 source와 공개 RC2 Boards Manager 설치본에서 14/14 compile gate를
 통과했습니다.
 
-현재 `main`의 `v0.3.0` 개발 트리는 **6개 library, 27개 예제**를 포함합니다.
+현재 `main`의 `v0.3.0-rc.1` 후보 트리는 **8개 library, 29개 예제**를 포함합니다.
+`Standard peripherals` profile은 22개, BLE profile은 7개입니다.
 
 | 개발 Library | 예제 |
 | --- | --- |
@@ -135,13 +137,12 @@ Arduino CLI에서 명시적 CMSIS-DAP UID를 사용할 때는 compile과 upload�
 | `Servo` | Sweep |
 | `NUCODE BLE` | CustomGattCentral, CustomGattPeripheral, GAPCentral, GAPPeripheral, NUSCentral, NUSPeripheral |
 | `NUCODE BLE Security` | SecureKeyboard |
+| `EEPROM` | EEPROMPersistence |
+| `LittleFS` | LittleFSPersistence |
 
-기존 19개는 Arduino CLI 19/19 compile을 통과했습니다. AC-02B에서 추가된 AnalogChannels,
-AnalogResolution, DynamicPWM, Serial1RuntimePins, SPI00RuntimePins, ToneOutput, WireRuntimePins와
-Servo/Sweep는 고정 source snapshot에서 Arduino CLI compile 8/8을 통과했고, 설치 예제 discovery도
-27/27을 통과했습니다. 기존 19개와 신규 8개를 합친 27개 전체 clean package compile은 M22에서
-다시 고정합니다. 이는 공개 stable package의 예제 수를 바꾼다는 뜻이 아닙니다. 설치된 `v0.2.0`
-package는 계속 위의 14개를 제공합니다.
+AC-03에서 `EEPROMPersistence`와 `LittleFSPersistence`를 추가했습니다. M22는 29개 설치 예제를
+고정 목록으로 열거하고 clean package에서 전부 compile합니다. 이 개발 수치는 공개 stable package의
+예제 수를 바꾼다는 뜻이 아닙니다. 설치된 `v0.2.0` package는 계속 위의 14개를 제공합니다.
 
 ## v0.2.0 지원 범위
 
@@ -165,9 +166,11 @@ Wire repeated-start는 같은 주소에 대한 `endTransmission(false)` 뒤
 `requestFrom(..., true)` 조합만 지원합니다. `requestFrom(..., false)`, Wire target/slave,
 Wire1과 자동 bus arbitration은 현재 범위 밖입니다.
 
-`v0.3.0` working tree에는 `Serial1`/uart30, 종료 상태 `Wire.setPins()`·`SPI.setPins()`,
-AIN5~AIN7, ADC/PWM resolution·frequency, `tone()`과 Servo runtime이 구현되어 host/target build를
-통과했습니다. 다만 두 NU54DK의 8선 물리 HIL 전이므로 AC-02B 또는 AC-02 완료로 선언하지 않습니다.
+`v0.3.0-rc.1` 후보에는 `Serial1`/uart30, 종료 상태 `Wire.setPins()`·`SPI.setPins()`,
+AIN5~AIN7, ADC/PWM resolution·frequency, `tone()`과 Servo runtime이 구현되어 있습니다.
+EEPROM은 1024-byte RAM mirror와 명시적 `commit()`, LittleFS는 전용 32 KiB partition의
+비파괴 mount와 명시적 format을 제공합니다. AC-02B와 AC-03은 exact commit
+`0b7f89283cd82a68a7f3f0910f4fc59b8dd01bfb`에서 두 보드 실기 HIL을 통과했습니다.
 기본 `Serial`은 계속 Zephyr console을 빌리는 115200 8N1 non-owning wrapper이며, Wire target,
 `requestFrom(..., false)`, `Wire1`, `SPI1`과 SPI peripheral `attachInterrupt()`는 미지원입니다.
 
@@ -181,13 +184,15 @@ AIN5~AIN7, ADC/PWM resolution·frequency, `tone()`과 Servo runtime이 구현되
 - NCS/Toolchain은 Core ZIP에 재배포하지 않고 Nordic 공식 배포에서 설치합니다.
 - 정식 기능 구성은 `Standard peripherals`와 `BLE NUS`입니다. 임의 Kconfig·overlay 조합은
   전문가용 경로이며 Arduino 호환이나 제품 지원을 보장하지 않습니다.
-- Serial1, native USB, OTA/DFU와 Arduino filesystem wrapper는 지원하지 않습니다.
+- native USB, OTA/DFU와 외부 filesystem은 지원하지 않습니다. `v0.3.0-rc.1` 후보의
+  `Serial1`, EEPROM과 내부 LittleFS는 RC 검증 범위이며 stable `v0.2.0` 지원으로 소급하지 않습니다.
 - BLE는 NUS RX write/TX notify 기반 byte Stream만 지원합니다. 범용 GATT, read, indication,
   bonding, SMP, HID와 multiprotocol은 `v0.2.0` 범위 밖입니다.
 - Thread, Matter와 IEEE 802.15.4는 M17 build feasibility 기록만 있으며 `v0.2.0` 정식 지원
   기능이 아닙니다.
-- 모든 connector pin을 Arduino 논리 pin으로 공개한 것은 아닙니다. `PIN_LED1`은 PWM 소유
-  출력이므로 일반 Digital GPIO 목록에 포함하지 않습니다.
+- 모든 connector pin을 Arduino 논리 pin으로 공개한 것은 아닙니다. Stable `v0.2.0`에서는
+  `PIN_LED1`을 PWM 소유 출력으로 취급했습니다. `v0.3.0-rc.1` 후보에서는 이 alias를
+  `PIN_PWM0`/P1.10으로 정규화해 Digital GPIO와 PWM 사이에서 전환하지만 동시 소유는 거부합니다.
 - 32-bit 시간 rollover, 긴 delay 경계와 저전력 전후 시간 연속성은 제품 보증 범위가 아닙니다.
 - GPIO interrupt callback은 ISR에서 실행됩니다. callback 안에서 blocking, heap 할당,
   `Serial`, `delay()`를 사용하지 마십시오.
@@ -222,12 +227,12 @@ RC2 실기 결과, 같은 runtime payload와 stable 공개 설치 수명주기�
 | `v0.2.0` | M12~M18 | 완료 | CI/CD, Profile·예제, Board/System, BLE NUS, 정식 공개 |
 | `v0.3.0` | AC-01 | **자동 검증 완료** | Core·GPIO·시간 Arduino Compatibility exact-commit HIL PASS |
 | `v0.3.0` | AC-02A | **자동 검증 완료** | 동적 할당 없는 내부 핀·주변장치 소유권 manager, 부팅 고정 자원 registry와 GPIO 충돌 gate |
-| `v0.3.0` | AC-02B | **자동 구현·host/target build PASS, 물리 HIL 배선 대기** | runtime pinctrl·PM lifecycle, Serial1/Wire/SPI/ADC/PWM handover·공개 API; 두 보드 8선 HIL 전에는 완료 아님 |
-| `v0.3.0` | AC-03 | 대기 | Storage facade와 대표 library 호환성 |
+| `v0.3.0` | AC-02B | **완료** | exact `0b7f892` 두 보드 HIL에서 Serial1, BQ25186 Wire, SPI, ADC와 PWM handover PASS |
+| `v0.3.0` | AC-03 | **완료** | exact `0b7f892` 두 보드 HIL에서 EEPROM/LittleFS 영속성·손상 거부·복구·정리 PASS |
 | `v0.3.0` | M19 | **자동 검증 완료** | BLE Core/GAP 두 보드 advertise·scan·연결·재연결 HIL PASS |
 | `v0.3.0` | M20 | **자동 검증 완료** | 범용 GATT 두 보드 read/write/notify/indicate HIL PASS |
 | `v0.3.0` | M21 | **완료** | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS |
-| `v0.3.0` | M22 | 대기 | AC-01~03과 M19~21을 통합한 package·RC/stable gate |
+| `v0.3.0` | M22 | **RC1 준비 진행** | 8개 library·29개 예제 package, 동일 PC 격리 clean-room과 `v0.3.0-rc.1` gate |
 | `v0.4.0` | M23~M26 | 계획 | Storage·Crypto, MCUboot·DFU, TF-M·복구 |
 | `v0.5.0` | M27~M30 | 계획 | Radio Profile, IEEE 802.15.4·ESB, OpenThread |
 | `v0.6.0` | M31~M34 | 계획 | Matter 기반, Application Template, Commissioning HIL |
@@ -283,6 +288,8 @@ git submodule update --init --recursive
 - [BLE 보안과 표준 Profile API](<./00_Docs/03_펌웨어 설계/09_BLE_보안과_표준_Profile_API.md>)
 - [M21 BLE 보안·Windows HID 검증](<./00_Docs/04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)
 - [AC-02B Peripheral/Analog runtime 기준선](<./00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>)
+- [Arduino Storage API](<./00_Docs/03_펌웨어 설계/10_Arduino_Storage_API.md>)
+- [v0.3.0-rc.1 설치·시험 안내](<./00_Docs/05_릴리스/v0.3.0-rc.1/TESTING.md>)
 - [전체 구현 로드맵](<./00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md>)
 - [v0.2.0 릴리스 문서](<./00_Docs/05_릴리스/v0.2.0/README.md>)
 - [v0.2.0 알려진 제약](<./00_Docs/05_릴리스/v0.2.0/KNOWN_ISSUES.md>)

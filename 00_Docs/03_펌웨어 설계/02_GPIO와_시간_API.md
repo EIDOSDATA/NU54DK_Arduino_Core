@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-GPIO-TIME-001 |
-| 문서 개정 | 4.0 |
-| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-02B GPIO handover 자동 구현·host/target build PASS, 물리 HIL 배선 대기 |
+| 문서 개정 | 4.1 |
+| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-02B GPIO handover exact HIL 완료 |
 | 최종 갱신일 | 2026-09-01 |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
@@ -47,7 +47,8 @@ NUM_ANALOG_OUTPUTS        = 1
 P0.0~P0.3과 P1.0~P1.1은 각각 DAP UART와 LFXO opt-in 정책에 따라 digital capability가 4개와
 2개씩 추가된다. System-reserved, input-only와 transferable pin은 이름 존재 여부가 아니라 DTS
 metadata의 capability, policy, route와 현재 runtime owner를 함께 검사한다. A0/P1.12는 digital
-input과 ADC, P1.10은 digital output과 PWM을 같은 canonical pad에서 안전하게 전환한다.
+input/output/open-drain·interrupt와 ADC/PWM 사이를, P1.10은 digital output과 PWM 사이를 같은
+canonical pad에서 안전하게 전환한다.
 
 P2 pad는 capability가 허용하는 input/output/open-drain GPIO로 사용할 수 있지만 CPUAPP GPIOTE
 경로가 없다. 따라서 P2의 `digitalPinToInterrupt()`는 항상 `NOT_AN_INTERRUPT`를 반환한다.
