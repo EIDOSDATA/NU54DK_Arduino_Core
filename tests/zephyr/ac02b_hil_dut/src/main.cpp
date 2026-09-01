@@ -60,6 +60,12 @@ namespace
 	/** @brief Wire 실패의 가장 구체적인 단계를 보존합니다. */
 	const char *wire_failure_stage = "wire-unknown";
 
+	/** @brief Wire 종료 전에 보존한 backend 오류 분류입니다. */
+	WireError wire_failure_error = WireError::none;
+
+	/** @brief Wire 종료 전에 보존한 Zephyr I2C 오류 번호입니다. */
+	int wire_failure_driver_error = 0;
+
 	/** @brief SPI interrupt mask fixture용 callback입니다. 실제 edge는 만들지 않습니다. */
 	void spiMaskFixtureCallback(void)
 	{
@@ -156,6 +162,13 @@ namespace
 	{
 		Serial.print("NUCODE_AC02B_FAIL:role=dut:stage=");
 		Serial.print(stage);
+		if ((stage != nullptr) && (strncmp(stage, "wire-", 5U) == 0))
+		{
+			Serial.print(":wire-error=");
+			Serial.print(static_cast<unsigned int>(wire_failure_error));
+			Serial.print(":driver=");
+			Serial.print(wire_failure_driver_error);
+		}
 		Serial.print(":nonce=");
 		Serial.println(validNonce(active_nonce) ? active_nonce
 												: "00000000000000000000000000000000");
@@ -293,6 +306,9 @@ namespace
 		if (Wire.requestFrom(i2c_target_address, sizeof(payload), true) != sizeof(payload))
 		{
 			wire_failure_stage = "wire-request";
+			wire_failure_error = nucode::arduino::internal::lastWireError();
+			wire_failure_driver_error =
+				nucode::arduino::internal::lastWireDriverError();
 			return false;
 		}
 		for (std::size_t index = 0U; index < sizeof(payload); ++index)

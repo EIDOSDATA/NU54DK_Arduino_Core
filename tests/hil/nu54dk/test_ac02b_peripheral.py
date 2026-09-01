@@ -417,6 +417,25 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
         self.assertIn("echo=host-vcom-x.1", source)
         self.assertNotIn("sendPeerLine", source)
 
+    def test_dut_preserves_wire_driver_error_before_end(self) -> None:
+        """! @brief Wire.end()가 진단을 지우기 전에 backend 오류를 보존하게 고정합니다. """
+
+        source = (
+            MODULE.REPOSITORY
+            / "tests"
+            / "zephyr"
+            / "ac02b_hil_dut"
+            / "src"
+            / "main.cpp"
+        ).read_text(encoding="utf-8")
+        request_failure = source.split(
+            'wire_failure_stage = "wire-request";', maxsplit=1
+        )[1].split("return false;", maxsplit=1)[0]
+        self.assertIn("lastWireError()", request_failure)
+        self.assertIn("lastWireDriverError()", request_failure)
+        self.assertIn('Serial.print(":wire-error=");', source)
+        self.assertIn('Serial.print(":driver=");', source)
+
     def test_dut_wire_failure_is_stage_specific(self) -> None:
         """! @brief Wire 물리 실패가 route·restart·read 단계로 구분되게 고정합니다. """
 
