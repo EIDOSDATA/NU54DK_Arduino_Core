@@ -5,6 +5,9 @@
  * SPDX-License-Identifier: MIT
  */
 
+#include <nucode/nu54dk-arduino-connectors.dtsi>
+#include <nucode/nu54dk-arduino-pins.dtsi>
+
 / {
 	chosen {
 		nucode,arduino-spi = &spi00;
@@ -23,6 +26,11 @@
 	pinctrl-0 = <&spi00_default>;
 	pinctrl-1 = <&spi00_sleep>;
 	pinctrl-names = "default", "sleep";
+};
+
+/** @brief 이 SPI 전용 HIL에서 드라이버를 빌드하지 않는 보드 기본 I2C 장치를 비활성화합니다. */
+&i2c22 {
+	status = "disabled";
 };
 
 &adc {

@@ -110,6 +110,12 @@ class M12CiContractTests(unittest.TestCase):
         self.assertIn("defaults:\n      run:\n        shell: bash", text)
         self.assertNotIn("ACCEPT_JLINK_LICENSE", text)
 
+    ## @brief v0.3.0 RC tag가 대표 target과 Arduino build workflow를 자동 실행하는지 검증합니다.
+    def test_reproducible_build_runs_for_v030_rc_tags(self) -> None:
+        path = REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
+        text = path.read_text(encoding="utf-8")
+        self.assertIn('      - "v0.3.0-rc.*"', text)
+
     ## @brief 고정 Nordic container가 M14 QEMU를 실제 실행하고 증적을 업로드하는지 검증합니다.
     def test_reproducible_build_runs_m14_qemu_runtime_and_uploads_evidence(self) -> None:
         path = REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
@@ -167,6 +173,16 @@ class M12CiContractTests(unittest.TestCase):
         self.assertLess(windows_job.index("run_smoke.py"), windows_job.index(command))
         self.assertLess(windows_job.index(command), windows_job.index("actions/upload-artifact@"))
         self.assertNotIn("continue-on-error", windows_job)
+
+    ## @brief Windows Arduino build가 AC-03 EEPROM·LittleFS smoke를 생략하지 않는지 검증합니다.
+    def test_windows_arduino_build_includes_ac03_storage_smoke(self) -> None:
+        path = REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
+        text = path.read_text(encoding="utf-8")
+        windows_job = text.split("\n  arduino-build:\n", 1)[1]
+        self.assertIn(
+            "--tests blink m6 m7 ac02b ac03 examples",
+            windows_job,
+        )
 
     ## @brief Windows Arduino 재현 build가 짧은 임시 경로와 실패 log를 보존하는지 검증합니다.
     def test_windows_arduino_build_uses_short_temp_and_preserves_failure_log(self) -> None:
@@ -271,6 +287,8 @@ class M12CiContractTests(unittest.TestCase):
     ## @brief 표준 주변장치·아날로그 library example이 canonical 위치에만 있는지 검증합니다.
     def test_example_discovery_inputs_are_canonical(self) -> None:
         expected = (
+            "libraries/EEPROM/examples/EEPROMPersistence/EEPROMPersistence.ino",
+            "libraries/LittleFS/examples/LittleFSPersistence/LittleFSPersistence.ino",
             "libraries/NUCODE_NU54DK/examples/Blink/Blink.ino",
             "libraries/NUCODE_NU54DK/examples/InterruptButton/InterruptButton.ino",
             "libraries/NUCODE_NU54DK/examples/AnalogReadA0/AnalogReadA0.ino",
@@ -296,6 +314,14 @@ class M12CiContractTests(unittest.TestCase):
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
         legacy_root = REPOSITORY / "examples"
         self.assertFalse(legacy_root.exists() and any(legacy_root.rglob("*.ino")))
+
+    ## @brief Windows host gate가 AC-03 HIL protocol runner의 unit 계약도 실행하는지 검증합니다.
+    def test_host_gate_runs_ac03_hil_runner_unit_contract(self) -> None:
+        source = (REPOSITORY / "tools" / "ci" / "run_m12_gate.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('REPOSITORY / "tests" / "hil" / "nu54dk"', source)
+        self.assertIn('"test_ac03_storage.py"', source)
 
     ## @brief 대표 Twister build가 공유 compiler cache에 의존하지 않는지 검증합니다.
     def test_zephyr_build_disables_ccache(self) -> None:
@@ -350,6 +376,21 @@ class M12CiContractTests(unittest.TestCase):
                 ("ac02b_analog_contract", "nucode.ac02b.analog_contract"),
                 ("ac02b_hil_dut", "nucode.ac02b.hil_dut"),
                 ("ac02b_hil_peer", "nucode.ac02b.hil_peer"),
+            }.issubset(set(module.SUITES))
+        )
+
+    ## @brief AC-03 storage contract와 reset persistence HIL image를 build gate에 포함합니다.
+    def test_zephyr_build_includes_ac03_contract_and_hil_image(self) -> None:
+        path = REPOSITORY / "tools" / "ci" / "run_zephyr_build.py"
+        spec = importlib.util.spec_from_file_location("nu54_ac03_build_gate", path)
+        self.assertIsNotNone(spec)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        self.assertTrue(
+            {
+                ("ac03_storage_contract", "nucode.ac03.storage_contract"),
+                ("ac03_hil", "nucode.ac03.storage_hil"),
             }.issubset(set(module.SUITES))
         )
 

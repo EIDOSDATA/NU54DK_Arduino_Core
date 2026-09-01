@@ -55,6 +55,8 @@ SUITES = (
     ("ac02b_analog_contract", "nucode.ac02b.analog_contract"),
     ("ac02b_hil_dut", "nucode.ac02b.hil_dut"),
     ("ac02b_hil_peer", "nucode.ac02b.hil_peer"),
+    ("ac03_storage_contract", "nucode.ac03.storage_contract"),
+    ("ac03_hil", "nucode.ac03.storage_hil"),
 )
 WINDOWS_OUTDIR_MAX_LENGTH = 8
 M15_DIRECTORIES = ("m15_board", "m15_hil", "m15_wake")

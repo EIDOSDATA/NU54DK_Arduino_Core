@@ -49,7 +49,7 @@ def run_unittest(directory: Path, pattern: str) -> None:
     )
 
 
-## @brief package 전용 suite를 제외한 host unit suite를 실행합니다.
+## @brief package 전용 suite를 제외한 host와 AC-03 HIL runner unit suite를 실행합니다.
 def run_host_gate() -> None:
     test_root = REPOSITORY / "tests" / "host"
     files = sorted(test_root.glob("test_*.py"))
@@ -58,6 +58,10 @@ def run_host_gate() -> None:
         raise GateFailure("실행할 host unit test가 없습니다.")
     for path in selected:
         run_unittest(test_root, path.name)
+    run_unittest(
+        REPOSITORY / "tests" / "hil" / "nu54dk",
+        "test_ac03_storage.py",
+    )
 
 
 ## @brief 재현 package 생성·검증 suite만 별도로 실행합니다.
