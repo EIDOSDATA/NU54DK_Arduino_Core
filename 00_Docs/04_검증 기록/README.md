@@ -4,7 +4,7 @@
 | --- | --- |
 | 문서 성격 | 실행 당시의 revision, 환경, 명령과 결과를 보존하는 역사 증거 |
 | 완료 범위 | M1~M18, `v0.1.0`과 `v0.2.0` 정식 공개 / AC-01·AC-02A 자동 검증 / M19·M20·M21 구현·검증 |
-| 진행 범위 | 다음 AC-02B·AC-03·M22 |
+| 진행 범위 | AC-02B 자동 구현·host/target build PASS, 물리 HIL 배선 대기 / 다음 AC-03·M22 |
 | 현재 정식 버전 | `v0.2.0` |
 | 최종 갱신일 | 2026-09-01 |
 
@@ -53,6 +53,7 @@
 | M20 | 범용 GATT server/client 두 보드 RF HIL PASS | [M20 기록](24_M20_범용_GATT_검증.md) |
 | M21 | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS; host 39/39 | [M21 기록](25_M21_BLE_보안과_표준_Profile_검증.md) |
 | AC-02A | 고정 슬롯 핀·주변장치 소유권 manager, 부팅 registry와 GPIO 충돌 gate; target ztest 8/8 PASS | [AC-02A 기록](26_AC-02A_핀과_주변장치_소유권_기준선.md) |
+| AC-02B | Runtime Peripheral/Analog 구현과 host/target build PASS; 두 보드 8선 물리 HIL은 배선 대기 | [AC-02B 기록](27_AC-02B_Peripheral_Analog_runtime_기준선.md) |
 
 ## 기록 해석 규칙
 

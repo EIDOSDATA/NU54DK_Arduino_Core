@@ -149,9 +149,11 @@ build-only와 QEMU actual-runtime 3/3을 통과한다.
 `MAX_PATH`를 넘어 archive 입력 파일을 찾지 못했다. 이는 Core source나 API 결함이 아니라
 실행 환경 경로 문제다.
 
-같은 source와 toolchain을 `C:\t\m12-b` 짧은 outdir에서 다시 실행해 4/4 PASS를 확인했다.
-회귀 방지를 위해 Windows에서는 32자 이하 outdir만 허용하도록 실행 script가 build 전에
-검사한다.
+같은 source와 toolchain을 짧은 outdir에서 다시 실행해 4/4 PASS를 확인했다. 이후 AC-02B 전체
+target gate에서 실제 archive 입력 object 경로가 261자에 도달하는 사례를 재현했다. 회귀 방지를
+위해 현재 실행 script는 Windows에서 `C:\t\m12`처럼 **절대경로 전체가 8자 이하**인 outdir만 build
+전에 허용한다. 이는 병렬 archive 경합 우회가 아니라 Windows legacy `MAX_PATH` 위험을 입력 단계에서
+차단하는 계약이다.
 
 ---
 

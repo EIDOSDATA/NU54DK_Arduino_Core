@@ -14,6 +14,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m15_auto.py` | identity·uptime·GRTC callback·Settings·WDT 비-System-OFF 자동 검증 | 공식 Ubuntu CI artifact, NU54DK, CMSIS-DAP V2 UART |
 | `m15_system_off.py` | SWD 격리 뒤 timed GRTC→사용자 SW0 System OFF 결합 검증 | 공식 Ubuntu CI artifact, NU54DK, CMSIS-DAP V2 UART, debug-control SW1, 사용자 SW0 |
 | `ac01_gpio_hil.py` | P2 loopback GPIO·pulse·shift와 SW0 자기구동 level IRQ·callback mask 자동 검증 | NU54DK 한 대, 같은 보드 P2.5↔P2.6 점퍼 한 가닥, CMSIS-DAP V2 UART |
+| `ac02b_peripheral.py` | 동적 Serial1·Wire·SPI·PWM·ADC pair HIL과 exact 증적 생성 | NU54DK 두 대, 아래 8개 점퍼, 각 보드 USB/DAPLink UART |
 | `m19_ble_gap.py` | GAP UUID/manufacturer filter·연결·재연결 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
 | `m20_ble_gatt.py` | 범용 GATT read/write/notify/indicate·재발견 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
 | `m21_ble_security.py` | pairing·bond 복원/삭제/repair와 BAS/DIS/HID protocol 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
@@ -23,6 +24,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |
 | `test_m15_system_off.py` | M15 timed·button ARM, 무응답 시간과 결합 wake protocol·증적 경계를 검증 | 없음 |
 | `test_ac01_gpio_hil.py` | AC-01 exact token 순서·범위·fixture·실패 경계를 검증 | 없음 |
+| `test_ac02b_peripheral.py` | AC-02B nonce·순서·ADC 범위와 WIRING_REQUIRED gate를 검증 | 없음 |
 | `../../host/test_m19_ble_gap_hil.py` | M19 pair protocol의 stale/reorder/FAIL 거부 경계를 검증 | 없음 |
 | `../../host/test_m20_ble_gatt_hil.py` | M20 pair protocol의 stale/누락/reorder/FAIL 거부 경계를 검증 | 없음 |
 | `../../host/test_m21_ble_security_hil.py` | M21 persistence·old-key·RF nonce binding·profile parser 경계를 검증 | 없음 |
@@ -58,7 +60,8 @@ M14 로컬 build/HIL은 기존대로 실제 working-tree byte를 검증합니다
 비버튼 자동 HIL image는 artifact 안의 다음 경로를 사용합니다.
 
 ```powershell
-$CoreRoot = "C:\Users\eidos\GitHub\NU54DK_Arduino_Core"
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
 $ArtifactRoot = "<다운로드해 압축을 푼 m12-zephyr-build artifact>"
 $Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
 $Commit = git -C $CoreRoot rev-parse HEAD
@@ -101,7 +104,8 @@ build-only를 실행합니다. 일반 PowerShell이라면 먼저 nRF Connect ext
 고정 Toolchain 환경을 적용해야 합니다.
 
 ```powershell
-$CoreRoot = "C:\Users\eidos\GitHub\NU54DK_Arduino_Core"
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
 $NcsRoot = "C:\ncs\v3.4.0"
 $BoardRoot = "$CoreRoot\board_package\NU54DK_Zephyr_DTS"
 $Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
@@ -159,7 +163,8 @@ HEX 옆 build record의 Core·board revision, NCS/Zephyr revision과 세 source 
 exact 일치할 때만 flash합니다.
 
 ```powershell
-$CoreRoot = "C:\Users\eidos\GitHub\NU54DK_Arduino_Core"
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
 $NcsRoot = "C:\ncs\v3.4.0"
 $BoardRoot = "$CoreRoot\board_package\NU54DK_Zephyr_DTS"
 $Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
@@ -184,6 +189,97 @@ $Commit = git -C $CoreRoot rev-parse HEAD
 
 기존 evidence와 transcript는 `--overwrite-evidence` 없이는 덮어쓰지 않습니다. 이 HIL은
 외부 저항, 두 보드 간 통신, logic analyzer나 오실로스코프 정확도 측정을 요구하지 않습니다.
+
+## AC-02B 동적 주변장치 pair HIL
+
+AC-02B는 Board A를 Arduino Core DUT, Board B를 direct Zephyr peer로 사용합니다. DUT는 공개
+production API인 `Serial1.setPins()`, `Wire.setPins()`, `SPI.setPins()`,
+`analogWriteFrequency()`, `analogWrite()`와 `analogRead()`를 직접 호출합니다. peer는 Arduino
+Wire target을 가장하지 않고 별도 serial21을 `nordic,nrf-twis` target으로 전환합니다. 따라서
+현재 미지원인 Wire target/Wire1을 PASS로 확대하지 않습니다.
+
+두 보드의 전원을 끈 상태에서 다음 점퍼를 모두 연결합니다. Board A의 SPI loopback 한 가닥을
+제외한 나머지는 두 보드 사이 연결입니다.
+
+| 번호 | Board A(DUT) | 방향 | Board B(peer) | 검증 |
+| --- | --- | --- | --- | --- |
+| 1 | GND | ↔ | GND | 공통 기준 전압 |
+| 2 | P0.0 / Serial1 TX | → | P0.1 / uart30 RX | Serial1 A→B |
+| 3 | P0.1 / Serial1 RX | ← | P0.0 / uart30 TX | Serial1 B→A |
+| 4 | P1.2 / Wire SDA | ↔ | P1.2 / TWIS21 SDA | I2C data |
+| 5 | P1.3 / Wire SCL | ↔ | P1.3 / TWIS21 SCL | I2C clock |
+| 6 | P1.10 / PWM20 | → | P1.14 / GPIO capture | 1 kHz 25%·75% edge capture |
+| 7 | P1.12 / A0 | ← | P2.5 / GPIO output | 12-bit ADC LOW·HIGH |
+| 8 | P2.2 / SPI00 MOSI | ↔ 같은 Board A의 P2.4 / SPI00 MISO | 해당 없음 | 4 MHz 40-byte local loopback |
+
+외부 I2C pull-up은 요구하지 않습니다. 두 보드의 기본 회로 pull-up을 사용하며 시험 target
+주소는 `0x52`입니다. BQ25186 PMIC 주소 `0x6A`에는 접근하지 않으므로 두 보드 PMIC가 같은
+bus에 있어도 이 시험의 요청 대상이 아닙니다. DUT P1.10은 Board A의 LED1에도 연결되어
+있으므로 PWM 단계에서 LED 밝기가 바뀔 수 있습니다.
+
+배선 전에는 두 role image와 host parser까지만 준비합니다. NCS v3.4.0 Toolchain terminal에서
+다음 두 production target을 각각 pristine build합니다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
+$NcsRoot = "C:\ncs\v3.4.0"
+$BoardRoot = "$CoreRoot\board_package\NU54DK_Zephyr_DTS"
+$Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
+$DutBuild = "$env:TEMP\nu54dk-ac02b-hil-dut"
+$PeerBuild = "$env:TEMP\nu54dk-ac02b-hil-peer"
+
+Push-Location $NcsRoot
+& $Python -I -m west build -p always `
+  -b "nrf54l15dk/nrf54l15/cpuapp/nu54dk" `
+  -d $DutBuild `
+  "$CoreRoot\tests\zephyr\ac02b_hil_dut" `
+  -- "-DBOARD_ROOT=$BoardRoot" "-DZEPHYR_EXTRA_MODULES=$CoreRoot"
+& $Python -I -m west build -p always `
+  -b "nrf54l15dk/nrf54l15/cpuapp/nu54dk" `
+  -d $PeerBuild `
+  "$CoreRoot\tests\zephyr\ac02b_hil_peer" `
+  -- "-DBOARD_ROOT=$BoardRoot" "-DZEPHYR_EXTRA_MODULES=$CoreRoot"
+Pop-Location
+
+& $Python -I "$CoreRoot\tests\hil\nu54dk\test_ac02b_peripheral.py" -v
+```
+
+Runner에는 서로 다른 두 CMSIS-DAP UID가 필수입니다. 각 UID에서 DAPLink MSD와 COM을 함께
+찾아 서로 다른 UID·MSD·COM인지 확인하고, role별 build record, Core·board revision, source
+digest와 HEX SHA-256을 flash 전후에 exact 검증합니다. 아래 첫 실행처럼
+`--acknowledge-wiring`을 생략하면 image와 장치 preflight 뒤 `WIRING_REQUIRED`와 종료 코드 3을
+반환하며 **flash, start command, PASS evidence를 수행하지 않습니다**.
+
+```powershell
+$Commit = git -C $CoreRoot rev-parse HEAD
+$DutHex = "$DutBuild\ac02b_hil_dut\zephyr\zephyr.hex"
+$PeerHex = "$PeerBuild\ac02b_hil_peer\zephyr\zephyr.hex"
+
+& $Python -I "$CoreRoot\tests\hil\nu54dk\ac02b_peripheral.py" `
+  --dut-hex $DutHex --peer-hex $PeerHex `
+  --dut-board-id "<Board A CMSIS-DAP UID>" `
+  --peer-board-id "<Board B CMSIS-DAP UID>" `
+  --expected-core-revision $Commit
+```
+
+점퍼 8개와 두 보드 USB를 확인한 마지막 단계에서만 다음 실제 실행을 허용합니다.
+
+```powershell
+& $Python -I "$CoreRoot\tests\hil\nu54dk\ac02b_peripheral.py" `
+  --dut-hex $DutHex --peer-hex $PeerHex `
+  --dut-board-id "<Board A CMSIS-DAP UID>" `
+  --peer-board-id "<Board B CMSIS-DAP UID>" `
+  --expected-core-revision $Commit `
+  --acknowledge-wiring `
+  --evidence "$CoreRoot\build\ac02b\hil\ac02b-peripheral.evidence.json"
+```
+
+host는 같은 128-bit nonce를 먼저 peer에 주입해 TWIS target과 capture를 arm한 뒤 DUT를
+시작합니다. Serial1 end/rebegin 두 cycle, Wire 100/400 kHz repeated-start 두 cycle, SPI
+interrupt mask와 4 MHz loopback, PWM 외부 edge capture, ADC 외부 LOW/HIGH가 양쪽 exact token
+순서로 모두 끝나야만 `status: passed` evidence를 만듭니다. timeout, stale nonce, role image
+오배치, 한쪽 FAIL, token 누락·재배치 또는 ADC 범위 불일치는 PASS로 축소하지 않습니다.
 
 ## M19/M20/M21 두 보드 BLE HIL
 
@@ -234,7 +330,8 @@ wake는 결합 HIL PASS 또는 API FAIL로 판정하지 않으며, SWD가 격리
 사용하지 않습니다.
 
 ```powershell
-$CoreRoot = "C:\Users\eidos\GitHub\NU54DK_Arduino_Core"
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
 $ArtifactRoot = "<다운로드해 압축을 푼 m12-zephyr-build artifact>"
 $WakeHex = Join-Path $ArtifactRoot `
   "twister\nrf54l15dk_nrf54l15_cpuapp_nu54dk\zephyr_gnu\nucode.m15.wake\m15_wake\zephyr\zephyr.hex"

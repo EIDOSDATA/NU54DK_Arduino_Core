@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-API-001 |
-| 문서 개정 | 4.5 |
+| 문서 개정 | 4.6 |
 | 문서 상태 | `v0.2.0` 정식 공개 범위 + `v0.3.0` 개발 상태 |
 | 최종 갱신일 | 2026-09-01 |
-| 개발 상태 | AC-01·AC-02A 자동 검증 완료 / M19·M20·M21 완료 / AC-02B·AC-03·M22 대기 |
+| 개발 상태 | AC-01·AC-02A 자동 검증 완료 / AC-02B 자동 구현·host/target build PASS, 물리 HIL 배선 대기 / M19·M20·M21 완료 |
 
 ## 1. 목적
 
@@ -48,9 +48,11 @@ runtime 지원으로 확대하지 않는다.
 따라서 `부분 지원`은 Core 전체가 불안정하다는 뜻이 아니라, 특정 API 행에서 보증하는 pin, mode,
 bus instance 또는 검증 범위가 Arduino 생태계 전체보다 좁다는 뜻이다.
 
-현재 `v0.3.0` 개발 트리는 public library 5개와 예제 19개를 가지며 Arduino CLI 19/19 compile을
-통과했다. 이는 개발 트리의 compile 기준선이며, 정식 `v0.2.0` archive의 library 4개·예제 14개
-기록이나 아직 끝나지 않은 `v0.3.0` runtime 지원 판정을 바꾸지 않는다.
+현재 `v0.3.0` 개발 트리는 public library 6개와 예제 27개를 가진다. 이 가운데 기존 19개는
+Arduino CLI 19/19 compile 기준선을 통과했고 AC-02B가 8개를 새로 추가했다. 새 예제도 고정 source
+snapshot에서 8/8 compile을 통과했고 설치 예제 discovery는 27/27이다. 다만 27개 전체의 clean
+package compile과 물리 HIL은 M22 전까지 남아 있다. 이는 정식 `v0.2.0` archive의 library 4개·예제
+14개 기록이나 아직 끝나지 않은 `v0.3.0` runtime 지원 판정을 바꾸지 않는다.
 
 ## 3. Runtime과 공통 API
 
@@ -114,16 +116,18 @@ Mask 중 assert된 level은 마지막 복원 뒤 raw 상태를 다시 확인해 
 AC-02A는 Arduino 공개 API를 추가하지 않고 내부 고정 슬롯 manager를 `pinMode()`와
 `digitalRead()`/`digitalWrite()`에 연결했다. `pinMode()`는 pad를 reserve한 뒤 driver 성공 시
 commit하고 실패 시 rollback한다. Read/write는 active GPIO owner가 아닌 pad를
-`ownership-conflict`로 거부한다. UART20·I2C22·PWM20의 고정 pinctrl pad는 부팅 registry가
-peripheral owner로 등록하므로 GPIO가 이를 덮어쓰지 않는다.
+`ownership-conflict`로 거부한다. 현재 부팅 registry는 console UART20만 고정 소유한다.
+UART30·I2C22·SPI00·PWM20/21/22는 AC-02B runtime route가 `begin()`/`end()`와 함께
+pinctrl, runtime PM과 GPIO ownership을 원자적으로 전환한다.
 
 또한 DTS controller를 기준으로 GPIOTE capability를 계산한다. P2의 `PIN_LED0`, `PIN_LED2`,
 `PIN_GPIO0/D10`, `PIN_GPIO1/D11`은 digital input/output이 가능해도 interrupt는
 `NOT_AN_INTERRUPT`다. 이 변경은 현재 개발 트리의 정정이며 정식 `v0.2.0` 지원표를 소급 변경하지
 않는다.
 
-Runtime pinctrl·PM lifecycle과 Wire/SPI/Serial/ADC/PWM 실제 handover·공개 API·HIL은 AC-02B
-완료 전까지 지원으로 표시하지 않는다.
+Runtime pinctrl·PM lifecycle과 Wire/SPI/Serial/ADC/PWM 실제 handover·공개 API는 AC-02B
+working tree에 구현됐다. Host 계약과 NU54DK target build는 PASS했지만 물리 HIL은 배선 대기이므로
+AC-02B 완료 또는 정식 지원으로 표시하지 않는다.
 
 ## 5. 시간과 utility
 
@@ -176,6 +180,41 @@ AC-01 exact commit `ac10ba3b253bd6bf76bcf73aa2c79278304908a4`의 HIL은 P2.5↔P
 
 `Wire`, `SPI`, ADC와 PWM은 `standard`와 `ble` profile에서 제공된다. Peripheral pinctrl과
 chosen 장치는 Devicetree가 소유하고, Sketch가 임의 pin 번호로 bus를 재배치하지 않는다.
+
+### 6.1 `v0.3.0` AC-02B working tree
+
+아래 표는 정식 `v0.2.0` 계약을 바꾸지 않는 개발 기준선이다. 공통 `RuntimePeripheralRoute`와
+GPIO handover가 pinctrl default/sleep, runtime PM, pad·block lease와 기존 GPIO 상태 복원을
+관리한다. `setPins()`는 종료 상태에서만 다음 `begin()` route를 stage한다.
+
+| API/영역 | 개발 상태 | AC-02B 계약 |
+| --- | --- | --- |
+| 기본 `Serial` | 기존 의미 유지 | chosen console를 빌려 쓰는 115200 8N1 non-owning wrapper; baud·pin·hardware를 재구성하지 않으며 TX는 polling |
+| `Serial1` | 자동 구현·target build PASS | UART30, 기본 RX P0.1/TX P0.0, 종료 상태 `setPins(rx, tx)`, `begin/end/rebegin`, 고정 IRQ RX queue와 polling TX |
+| `Wire` | 자동 구현·target build PASS | I2C22 controller, 기본 SDA P1.2/SCL P1.3, 같은 P1 open-drain route, 종료 상태 `setPins()`, 100/400 kHz, 고정 buffer |
+| Wire repeated-start | 자동 구현·target build PASS | 같은 thread·같은 주소의 `endTransmission(false)` 뒤 `requestFrom(..., true)`만 지원 |
+| Wire target/callback/no-STOP | 명시적 미지원 | target `begin(address)`, `onReceive/onRequest`, read `requestFrom(..., false)`, `Wire1`과 bus-wide arbitration은 제공하지 않음 |
+| `SPI` | 자동 구현·target build PASS | SPI00의 전용 SCK P2.1/MOSI P2.2/MISO P2.4만 허용; lifecycle, mutex transaction, mode·bit order·buffer transfer |
+| SPI interrupt/instance | 부분 구현 | `usingInterrupt()`/`notUsingInterrupt()`는 등록된 Arduino GPIO callback만 transaction 동안 mask; `attachInterrupt()`/`detachInterrupt()`와 `SPI1`은 fail-closed 미지원 |
+| `analogReadResolution()` | 자동 구현·target build PASS | 8/10/12/14-bit 결과 범위와 scaling |
+| AIN0~AIN7 이름 | 부분 구현 | 모든 이름과 channel은 존재하지만 system/console/PMIC 소유 핀은 읽기 거부; 공개 A0/AIN5, A6/AIN6, A7/AIN7만 전기 부하를 고려해 사용 |
+| `analogWriteResolution()`/`analogWriteFrequency()` | 자동 구현·target build PASS | 1~16-bit duty; PWM20 최대 4 channel은 period를 공유하며 충돌 주파수는 거부 |
+| `tone()`/`noTone()` | 자동 구현·target build PASS | PWM21 전용 1 channel, duration과 ownership 복구 |
+| `Servo` | 자동 구현·target build PASS | 별도 library, PWM22 전용 최대 4 channel, 20 ms frame; signal과 GND만 보드에 연결하고 motor 전원은 외부 적합 전원 사용 |
+
+ADC의 물리 경계는 다음과 같다.
+
+| Arduino 이름 | 물리 핀 | 개발 계약 |
+| --- | --- | --- |
+| `AIN0/A1`~`AIN3/A4` | P1.4~P1.7 | UART20 console/system 소유라 `analogRead()` 거부 |
+| `AIN4/A5` | P1.11 | PMIC/system 입력 소유라 거부 |
+| `AIN5/A0` | P1.12 | 공개 A0, 지원 |
+| `AIN6/A6` | P1.13 | 읽기 지원; SW0와 pull 회로가 측정값에 부하를 줌 |
+| `AIN7/A7` | P1.14 | 읽기 지원; LED3 회로가 측정값에 부하를 줌 |
+
+`P2`에는 CPUAPP GPIOTE가 없으므로 SPI 전용 핀과 P2 connector GPIO를 포함한 모든 P2 핀은
+`digitalPinToInterrupt()`에서 `NOT_AN_INTERRUPT`다. 현재 상태는 **자동 구현·host/target build
+PASS, 물리 HIL 배선 대기**이며 물리 PASS 또는 AC-02B 완료를 뜻하지 않는다.
 
 ## 7. 공개 진단 API
 
@@ -272,7 +311,7 @@ native USB, DAC, AVR Harvard memory와 Wi-Fi는 NU54DK/nRF54L15 hardware에서 �
 - AC-01: 승인된 connector GPIO, open-drain, level interrupt, pulse/shift와 전역 IRQ 안전성 gate —
   자동 검증 완료
 - AC-02: `Serial1`, Wire/SPI 확장, ADC/PWM resolution·frequency, `tone()`/Servo와 자원 소유권 —
-  AC-02A 내부 소유권 기준선 자동 검증 완료, AC-02B 공개 기능·handover·HIL 대기
+  AC-02A 자동 검증 완료, AC-02B 자동 구현·host/target build PASS, 물리 HIL 배선 대기
 - AC-03: 기존 Settings/ZMS/RRAM 위의 EEPROM·internal filesystem facade와 고정된 대표 제3자
   library matrix — 미착수
 - M19: 범용 BLE Core/GAP — 자동 검증 완료
@@ -297,6 +336,7 @@ native USB, DAC, AVR Harvard memory와 Wi-Fi는 NU54DK/nRF54L15 hardware에서 �
 - [v0.2.0 정식 릴리스 공개 기록](<../04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md>)
 - [AC-01 GPIO 호환성 검증](<../04_검증 기록/22_AC-01_GPIO_호환성_검증.md>)
 - [AC-02A 핀과 주변장치 소유권 기준선](<../04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md>)
+- [AC-02B Peripheral/Analog runtime 기준선](<../04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>)
 - [M19 BLE Core/GAP 검증](<../04_검증 기록/23_M19_BLE_Core_GAP_검증.md>)
 - [M20 범용 GATT 검증](<../04_검증 기록/24_M20_범용_GATT_검증.md>)
 - [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)

@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 4.3 |
+| 문서 체계 개정 | 4.4 |
 | 현재 정식 버전 | `v0.2.0` |
 | 다음 목표 버전 | `v0.3.0` |
 | 최종 갱신일 | 2026-09-01 |
@@ -46,7 +46,7 @@
 | M0~M11 | **완료** | `v0.1.0` Core, build/upload, package와 clean Windows 기준선 |
 | M12~M18 | **완료** | CI/CD, profile, Core/Variant, Board/System, BLE NUS, NCS coverage와 `v0.2.0` 공개 |
 | AC-01 | **자동 검증 완료** | Core·GPIO·시간 Arduino Compatibility exact-commit HIL PASS |
-| AC-02 | **진행 중 — AC-02A 자동 검증 완료** | 내부 핀·주변장치 소유권 manager와 부팅 고정 자원 registry 완료; AC-02B runtime handover·공개 API·HIL 대기 |
+| AC-02 | **진행 중 — AC-02B 물리 HIL 대기** | AC-02A 소유권 기반과 AC-02B Peripheral/Analog 구현·host/target build PASS; 두 보드 8선 HIL 전에는 완료 아님 |
 | AC-03 | **대기** | Storage facade와 대표 library 호환성; AC-02 완료 후 착수 |
 | M19 | **자동 검증 완료** | BLE Core/GAP exact-commit 두 보드 RF HIL PASS |
 | M20 | **자동 검증 완료** | 범용 GATT exact-commit 두 보드 RF HIL PASS |
@@ -56,6 +56,8 @@
 
 AC-02A의 구현·시험 경계는
 [핀과 주변장치 소유권 기준선](<./04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md>)에 보존한다.
+AC-02B의 자동 구현 범위와 남은 물리 gate는
+[Peripheral/Analog runtime 기준선](<./04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>)에 보존한다.
 정확한 단계 상태의 단일 원본은
 [제품 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)이다. `v0.2.0`의 공개 범위와
 제약은 [v0.2.0 릴리스 문서](<./05_릴리스/v0.2.0/README.md>)를 따른다.
@@ -117,7 +119,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 
 ### 04. 검증 기록
 
-M1~M18과 정식 공개 증거, `v0.3.0` AC-01·M19~M21의 구현·검증 증거는
+M1~M18과 정식 공개 증거, `v0.3.0` AC-01·AC-02A·AC-02B·M19~M21의 구현·검증 증거는
 [검증 기록 안내](<./04_검증 기록/README.md>)에서 찾는다. 이 디렉터리의 문서는 당시 revision과
 결과를 보존하는 역사 기록이다.
 

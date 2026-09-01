@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-PERIPHERAL-001 |
-| 문서 개정 | 3.1 |
-| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-02A 내부 소유권 기준선 |
+| 문서 개정 | 3.2 |
+| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-02B 자동 구현·host/target build PASS, 물리 HIL 배선 대기 |
 | 최종 갱신일 | 2026-09-01 |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
@@ -22,7 +22,8 @@ commit은 `04_검증 기록`으로 이동하고 여기에는 제품 동작만 �
 | Arduino object·backend | `cores/arduino` |
 | Arduino 논리 역할 | `variants/nu54dk` |
 | runtime owner/resource 상태 | `cores/arduino/internal/IoResourceManager.h` |
-| 부팅 고정 자원 registry | `variants/nu54dk/io_resource_registry.cpp` |
+| runtime pinctrl/PM route | `cores/arduino/internal/RuntimePeripheralRoute.*`, `variants/nu54dk/peripheral_routes.*` |
+| 부팅 고정 자원 registry | `variants/nu54dk/io_resource_registry.cpp` — UART20 console만 고정 |
 | 일반 사용자 subsystem 선택 | `standard`/`ble` profile과 library feature manifest |
 | Sketch별 custom 구성 | expert `prj.conf`/overlay |
 
@@ -31,17 +32,16 @@ Production backend는 Devicetree chosen, alias와 profile overlay를 소비한�
 
 ## 3. 현재 자원과 ownership
 
-| 공개 객체/역할 | Devicetree source | 현재 ownership |
+| 공개 객체/역할 | Devicetree source | `v0.3.0` 개발 ownership |
 | --- | --- | --- |
 | `Serial` | `DT_CHOSEN(zephyr_console)` | 기존 console UART의 non-owning wrapper |
-| `Wire` | `nucode,arduino-wire` | blocking I2C controller; 다른 client와의 직렬화는 application 책임 |
-| `SPI` | `nucode,arduino-spi` | SPI controller; chip-select는 Sketch 책임 |
-| `A0`/`PIN_A0` | `nucode,arduino-adc` | ADC 전용 sparse ID 2 |
-| `PIN_PWM0`/`PIN_PWM_LED` | `nucode,arduino-pwm` | PWM 전용 sparse ID 3 |
-| `PIN_LED1` | `led1` | PWM-owned sparse ID 4, digital descriptor 없음 |
-
-`NUM_DIGITAL_PINS=10` 범위 안에 A0/PWM 역할이 있어도 digital GPIO로 사용하지 않는다. 실제
-digital-capable descriptor는 7개다.
+| `Serial1` | UART30 runtime node | `begin/end`가 P0 RX/TX pad·UART30 block과 runtime PM을 소유 |
+| `Wire` | `nucode,arduino-wire` = I2C22 | `begin/end`가 같은 P1 SDA/SCL pad와 I2C22 block을 소유 |
+| `SPI` | `nucode,arduino-spi` = SPI00 | `begin/end`가 전용 P2.1/P2.2/P2.4와 SPI00 block을 소유; CS는 Sketch 책임 |
+| `AIN0..7`, `A0..A7` | `nucode,arduino-adc` | SAADC channel metadata는 모두 존재하되 system owner와 전기 부하를 보존 |
+| `analogWrite()` | PWM20 | 최대 4 channel과 한 shared period |
+| `tone()` | PWM21 | 한 channel 전용 |
+| `Servo` | PWM22 | 최대 4 channel, 20 ms frame |
 
 ### 3.1 AC-02A 내부 소유권 기준선
 
@@ -56,23 +56,26 @@ AC-02A는 공개 주변장치 객체를 늘리기 전에 pad와 peripheral block
 | 전환 | 최대 8개 자원의 원자적 `reserve/commit/rollback/release` lease |
 | 수명 보호 | 64-bit generation과 manager epoch로 stale lease 거부 |
 | 문맥 | thread 전용 변경·조회; ISR 요청은 `invalid_context`로 거부 |
-| 부팅 고정 owner | UART20·I2C22·PWM20, 그리고 DTS에서 활성화된 경우 SPI00의 pad와 block |
+| 부팅 고정 owner | UART20 console의 pad와 block만 고정 |
 
-Registry는 DTS pinctrl을 읽어 현재 사용 중인 고정 자원을 `active`로 표시할 뿐 driver나 pinctrl을
-재구성하지 않는다. 따라서 AC-02A는 기존 `Serial`, `Wire`, `SPI`, ADC/PWM 동작을 바꾸지 않고
-GPIO가 같은 pad를 덮어쓰지 못하게 하는 기반이다.
+Registry는 DTS pinctrl을 읽어 UART20 console을 `active`로 표시하며 GPIO가 이를 덮어쓰지 못하게
+한다. I2C22, SPI00, UART30과 PWM20/21/22는 부팅 고정 owner가 아니라 AC-02B runtime lifecycle이
+동적으로 소유한다.
 
-실제 runtime pinctrl·PM lifecycle, 각 `begin()`/`end()`와 manager의 acquire/release 연결,
-Wire/SPI/Serial/ADC/PWM 사이 handover, 공개 claim/remap API와 물리 HIL은 AC-02B에 남아 있다.
+AC-02B는 `PinHandover`와 `RuntimePeripheralRoute`를 연결해 기존 GPIO mode/latch/interrupt를
+snapshot하고, peripheral pinctrl default/sleep 상태와 runtime PM을 적용한 뒤 종료 시 복원한다.
+전환 실패는 rollback하거나 복구 불능 latch로 fail-closed한다. 이 코드는 host/target build를
+통과했지만 물리 HIL은 배선 대기이므로 AC-02B 완료로 판정하지 않는다.
 
 ## 4. 공통 lifecycle과 문맥
 
 - 전역 object constructor는 hardware를 활성화하지 않는다.
 - 실제 device 사용은 `begin()` 또는 첫 명시적 작업 뒤에 시작한다.
-- `end()`는 wrapper가 소유한 queue, callback과 transaction 상태만 정리한다.
-- AC-02A의 부팅 고정 owner lease는 `end()`가 해제하지 않는다. Peripheral lifecycle과 소유권
-  handover의 결합은 AC-02B 범위다.
-- Zephyr device, pinctrl 또는 다른 client의 상태를 임의로 되돌리지 않는다.
+- `setPins()`는 종료 상태에서 다음 `begin()` route만 stage한다. 실행 중 변경은 거부한다.
+- `begin()`은 route 검증, GPIO handover, dynamic pinctrl과 runtime PM을 하나의 lifecycle로 묶는다.
+- `end()`는 driver를 중지하고 route를 deactivate한 뒤 이전 GPIO 상태 또는 free 상태를 복원한다.
+- 실패 중간 상태는 rollback하며 복원 자체가 실패하면 fatal latch로 다음 재사용을 거부한다.
+- 다른 Zephyr client의 bus-wide synchronization까지 제공하지 않는다.
 - Peripheral I/O와 lifecycle은 thread 문맥 전용이다.
 - ISR 호출은 `invalid_context`와 안전한 실패로 거부한다.
 - Driver의 negative errno는 subsystem 내부 상태에 보존하고 공개 진단으로 projection한다.
@@ -82,8 +85,8 @@ Wire/SPI/Serial/ADC/PWM 사이 handover, 공개 claim/remap API와 물리 HIL은
 ### 5.1 소유권
 
 기본 `Serial`은 DAP UART로 연결된 chosen console device를 사용한다. Core가 baud, parity,
-pinctrl과 console ownership을 독점하지 않는다. `begin()`은 실제 UART 설정이 지원 계약과 맞는지
-확인하고 Core RX queue/callback을 시작한다. `end()`는 Core RX lifecycle만 중지한다.
+pinctrl과 console ownership을 독점하지 않는다. 현재 production 계약은 console의 115200 8N1을
+검증해 빌리고, `begin()`/`end()`가 Core RX lifecycle만 시작·중지하는 것이다.
 
 ### 5.2 공개 동작
 
@@ -99,8 +102,11 @@ pinctrl과 console ownership을 독점하지 않는다. `begin()`은 실제 UART
 RX queue가 가득 차면 새 byte를 버리고 overflow 진단을 기록한다. TX는 ISR에서 허용하지 않는다.
 동일 UART의 Arduino RX와 Zephyr shell RX를 동시에 활성화하는 구성을 지원하지 않는다.
 
-`Serial1`과 임의 UART mapping은 제공하지 않는다. `SerialUSB`도 nRF54L15 target에 native USB
-device 경로가 없어 제공하지 않는다.
+`Serial1`은 UART30을 독립 소유한다. 기본 RX는 P0.1, TX는 P0.0이며 종료 상태에서
+`Serial1.setPins(rx, tx)`로 기술 route가 있는 P0 핀을 다음 `begin()`에 배치할 수 있다. P0의
+`conditional_dap_uart` 정책은 일반 GPIO 노출과 UART30 route를 구분한다. `begin/end/rebegin`,
+고정 IRQ RX queue와 polling TX를 제공하며 bounded TX queue 확장은 구현하지 않는다.
+`SerialUSB`는 nRF54L15 target에 native USB device 경로가 없어 제공하지 않는다.
 
 ## 6. `Wire`
 
@@ -111,7 +117,8 @@ device 경로가 없어 제공하지 않는다.
 
 | API | 계약 |
 | --- | --- |
-| `begin()` | chosen I2C device readiness 확인 |
+| `setPins(sda, scl)` | 종료 상태에서 같은 P1의 open-drain I2C22 route를 stage |
+| `begin()`/`end()` | I2C22 route·runtime PM·ownership 활성/복원 |
 | `beginTransmission()` | address와 새 TX transaction 준비 |
 | `write()` | TX buffer에 추가; overflow는 명시적 오류 |
 | `endTransmission(true)` | write 또는 zero-byte address probe 실행 |
@@ -123,8 +130,12 @@ device 경로가 없어 제공하지 않는다.
 NACK과 driver 오류는 Arduino 상태 값으로 변환하되 원래 errno를 보존한다. Address/data NACK을
 항상 서로 다른 상태로 판별할 수 있다고 보증하지 않는다.
 
-다른 Zephyr I2C client와 bus-wide lock을 공유하지 않는다. 여러 client가 같은 bus를 쓰면
-application이 transaction을 직렬화해야 한다. Target/slave mode와 `Wire1`은 미지원이다.
+보류 repeated-start는 같은 thread, 같은 address와 바로 이어지는 `requestFrom(..., true)`에만
+유효하다. 다른 Zephyr I2C client와 bus-wide lock을 공유하지 않으므로 여러 client는 application이
+transaction을 직렬화해야 한다. Stock NCS v3.4 controller backend 경계에 따라 target/slave
+`begin(address)`, `onReceive()`/`onRequest()`, read `requestFrom(..., false)`와 `Wire1`은
+capability에 포함하지 않고 fail-closed한다. HIL peer의 direct Zephyr TWIS21 target은 fixture이며
+가짜 Arduino target 지원이 아니다.
 
 ### 6.2 BQ25186 사용 경계
 
@@ -143,40 +154,54 @@ scan, register write와 fallback을 추가하지 않는다. PMIC write 안전 �
 
 | API | 계약 |
 | --- | --- |
-| `begin()`/`end()` | chosen device readiness와 Core state 관리 |
+| `setPins(sck, miso, mosi)` | 종료 상태에서 SPI00 전용 route를 검증·stage |
+| `begin()`/`end()` | SPI00 route·runtime PM·ownership 활성/복원 |
 | `beginTransaction(settings)` | 지원 frequency, mode와 bit order 검증; Core caller ownership 획득 |
 | `transfer(byte/word/buffer)` | active transaction에서 full-duplex 전송 |
 | `endTransaction()` | Core ownership과 transaction 상태 해제 |
+| `usingInterrupt()`/`notUsingInterrupt()` | 등록된 Arduino GPIO callback만 transaction 동안 mask/restore |
 
 Core mutex는 Arduino `SPI` caller끼리만 직렬화한다. Zephyr bus-wide lock이나 다른 driver client의
 동기화를 제공하지 않는다. Sketch 소유 CS를 오류 복구 과정에서 임의 변경하지 않는다.
 
-SPI00과 같은 hardware instance를 공유하는 `uart00`을 동시에 활성화하는 구성, chosen 누락과
-다른 SPI instance 선택은 configure/build에서 명시적으로 실패시킨다. 다중 SPI bus는 미지원이다.
+SPI00 signal route는 SoC 전용 matrix에 따라 SCK P2.1, MOSI P2.2, MISO P2.4로 정확히 고정된다.
+따라서 `setPins()`가 존재해도 임의 GPIO remap을 뜻하지 않는다. SPI00과 같은 hardware instance를
+공유하는 `uart00`을 동시에 활성화하는 구성, chosen 누락과 다른 SPI instance 선택은
+configure/build에서 명시적으로 실패시킨다. `attachInterrupt()`/`detachInterrupt()`는 SPIM
+controller 의미를 합성하지 않고 unsupported, `SPI1`과 automatic chip-select도 미지원이다.
 
 ## 8. ADC와 `analogRead()`
 
-- 지원 pin은 sparse ID 2의 `PIN_A0`/`A0` 하나다.
-- A0에는 digital descriptor가 없다.
-- `analogRead(A0)`는 fixed Devicetree ADC channel을 읽어 12-bit raw `0..4095`를 반환한다.
+- `AIN0..7`과 `A0..A7` 이름은 SAADC channel 0..7에 일대일 대응한다.
+- `analogReadResolution()`은 8/10/12/14 bit만 허용하며 결과 범위를 software scaling한다.
 - 오류는 `-1`과 Analog subsystem 진단으로 보고한다.
 - `analogReference()`는 `AR_DEFAULT`와 같은 의미의 `AR_INTERNAL`만 허용한다.
 - Reference/gain/channel은 Devicetree 계약이며 runtime에서 바꾸지 않는다.
-- `analogReadResolution()`은 제공하지 않는다.
+
+| Channel/Arduino 이름 | 물리 핀 | 소유권·전기 경계 |
+| --- | --- | --- |
+| AIN0/A1~AIN3/A4 | P1.4~P1.7 | UART20 console/system 소유, 읽기 거부 |
+| AIN4/A5 | P1.11 | PMIC/system 입력 소유, 읽기 거부 |
+| AIN5/A0 | P1.12 | 공개 A0, 읽기 지원 |
+| AIN6/A6 | P1.13 | 읽기 지원; SW0와 pull 회로의 부하를 사용자가 고려 |
+| AIN7/A7 | P1.14 | 읽기 지원; LED3 회로의 부하를 사용자가 고려 |
 
 Nominal reference/gain을 pin의 절대최대 정격이나 측정 정확도로 해석하지 않는다. 전기적 입력
 범위는 nRF54L15와 NU54DK hardware 사양을 따른다.
 
 ## 9. PWM과 `analogWrite()`
 
-- 지원 역할은 sparse ID 3의 `PIN_PWM0`/`PIN_PWM_LED` 하나다.
-- `PIN_LED1` ID 4는 같은 physical resource를 설명하는 PWM-owned alias이며 digital descriptor가
-  없다.
-- `analogWrite()`는 고정 8-bit input `0..255`를 **20 ms로 고정한 period**의 pulse width로 변환한다.
-  backend period가 정확히 20 ms가 아니면 요청을 거부한다.
-- 지원 역할 이외의 pin은 ownership 오류로 거부한다.
-- `analogWriteResolution()`과 runtime frequency setter는 제공하지 않는다.
+- `analogWriteResolution()`은 1~16 bit를 허용한다.
+- `analogWriteFrequency(pin, hz)`는 다음 `analogWrite()`에서 사용할 period를 설정한다.
+- PWM20은 P1의 `digital_output + pwm_output` capability 핀을 최대 4 channel까지 사용한다.
+- 같은 PWM20 block의 active channel은 period를 공유하므로 다른 frequency 요청은 명확히 거부한다.
+- `tone()`/`noTone()`은 PWM21 한 channel을 독립 사용한다.
+- `Servo` library는 PWM22 최대 4 channel과 20 ms frame을 사용해 analogWrite/tone과 block을 분리한다.
+- GPIO↔PWM 전환은 route 전체를 재구성하고 실패 시 이전 active channel 집합을 복원한다.
 - PWM을 true DAC 출력으로 표현하지 않는다.
+
+Servo signal과 공통 GND만 NU54DK에 연결한다. Servo motor 전원을 GPIO 또는 보드 3.3 V에서
+공급하지 말고 부하에 적합한 외부 전원을 사용한다.
 
 ## 10. 공개 진단
 
@@ -203,12 +228,14 @@ Nominal reference/gain을 pin의 절대최대 정격이나 측정 정확도로 �
 | --- | --- |
 | `CONFIG_NUCODE_ARDUINO_IO_OWNERSHIP` | 고정 슬롯 소유권 manager와 NU54DK 부팅 registry |
 | `CONFIG_NUCODE_ARDUINO_SERIAL` | chosen console `Serial` |
+| `CONFIG_NUCODE_ARDUINO_SERIAL1` | UART30 runtime `Serial1` |
 | `CONFIG_NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE` | Serial RX 고정 queue |
 | `CONFIG_NUCODE_ARDUINO_WIRE` | chosen I2C `Wire` |
 | `CONFIG_NUCODE_ARDUINO_WIRE_BUFFER_SIZE` | Wire TX/RX buffer |
 | `CONFIG_NUCODE_ARDUINO_SPI` | chosen SPI controller |
-| `CONFIG_NUCODE_ARDUINO_ADC` | A0 backend |
-| `CONFIG_NUCODE_ARDUINO_PWM` | PIN_PWM0 backend |
+| `CONFIG_NUCODE_ARDUINO_ADC` | AIN0~AIN7 metadata와 SAADC backend |
+| `CONFIG_NUCODE_ARDUINO_PWM` | PWM20 analogWrite와 PWM21 tone runtime backend |
+| `CONFIG_NUCODE_ARDUINO_SERVO` | Servo library용 PWM22 backend |
 
 Module 자체의 최소 Kconfig와 Arduino `standard`/`ble` profile 기본값은 구분한다. 일반 사용자는
 Arduino IDE feature set을 선택하고 raw conf/overlay는 expert escape hatch로만 사용한다.
@@ -229,15 +256,18 @@ Arduino IDE feature set을 선택하고 raw conf/overlay는 expert escape hatch�
 - [M15 NU54DK Board/System 기준선](<../04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)
 - [M16 BLE NUS 기준선](<../04_검증 기록/18_M16_BLE_NUS_기준선.md>)
 - [AC-02A 핀과 주변장치 소유권 기준선](<../04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md>)
+- [AC-02B Peripheral/Analog runtime 기준선](<../04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>)
 
-현재 Serial, Wire, SPI, ADC/PWM production 경로와 관련 HIL은 완료됐다. Exact transaction 수,
-frequency, payload, raw 측정값과 commit은 위 검증 문서가 소유한다.
+정식 `v0.2.0`의 기존 Serial/Wire/SPI/ADC/PWM 수직 경로 HIL은 완료됐다. AC-02B 개발 경로는
+자동 구현·host/target build PASS이며 물리 HIL 배선 대기다. Exact transaction 수, frequency,
+payload, raw 측정값과 commit은 검증 문서가 소유한다.
 
 ## 14. 명시적 범위 밖
 
-- `Serial1`, 임의 UART와 runtime pin remap
-- I2C target/slave, `Wire1`
-- 다중 SPI bus와 Core 소유 automatic chip-select
-- ADC channel 확장, resolution setter와 정확도 보증
-- PWM pin 확장, runtime frequency/resolution setter와 DAC
+- 기본 console `Serial`의 baud·pin·hardware runtime 재구성 또는 bounded TX queue
+- I2C target/slave·callback, read no-STOP `requestFrom(..., false)`, `Wire1`과 bus-wide arbitration
+- `SPI1`, SPI peripheral `attachInterrupt()`/`detachInterrupt()`와 Core 소유 automatic chip-select
+- system-reserved AIN0~AIN4의 강제 claim, analog 절대 정확도 보증과 runtime reference/gain 변경
+- PWM block의 channel별 서로 다른 period와 DAC
 - peripheral I/O의 ISR-safe 호환층
+- P2 GPIO interrupt — CPUAPP GPIOTE 경로가 없어 `NOT_AN_INTERRUPT`

@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-GPIO-TIME-001 |
-| 문서 개정 | 3.2 |
-| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-01·AC-02A 자동 검증 완료 |
+| 문서 개정 | 4.0 |
+| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-02B GPIO handover 자동 구현·host/target build PASS, 물리 HIL 배선 대기 |
 | 최종 갱신일 | 2026-09-01 |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
@@ -28,25 +28,29 @@
 
 Core는 물리 pin 번호, timer instance와 DTS flag를 별도 원본으로 복제하지 않는다.
 
-## 3. Sparse digital 핀 계약
+## 3. Canonical digital 핀 계약
 
-`NUM_DIGITAL_PINS=10`은 공개 ID `0..9`의 범위이고 실제 digital descriptor는 7개다.
+정식 `v0.2.0` package의 10/7 sparse-pin 계약은 역사적 공개 계약으로 유지한다. 현재
+`v0.3.0` 개발 트리는 module/header의 31개 physical pad를 32개 안정된 논리 역할로 표현한다.
+`PIN_LED1` ID 4는 P1.10의 canonical ID `PIN_PWM0`으로 정규화되므로 논리 역할 수와 실제 pad
+수가 하나 다르다.
 
 ```text
-digital-capable: 0, 1, 5, 6, 7, 8, 9
-reserved roles:  2(A0), 3(PWM0), 4(PWM-owned LED1)
+NUM_PIN_ROLES             = 32
+NUM_DIGITAL_PINS          = 32
+NUM_PHYSICAL_PINS         = 31
+NUM_DIGITAL_CAPABLE_PINS  = 20  # 기본 standard/ble profile의 canonical pad 수
+NUM_ANALOG_INPUTS         = 8
+NUM_ANALOG_OUTPUTS        = 1
 ```
 
-모든 digital API는 단순 범위 검사 뒤 descriptor와 capability를 다시 확인한다. ID 2, 3, 4는
-범위 안이지만 digital API 대상으로 사용할 수 없다.
+P0.0~P0.3과 P1.0~P1.1은 각각 DAP UART와 LFXO opt-in 정책에 따라 digital capability가 4개와
+2개씩 추가된다. System-reserved, input-only와 transferable pin은 이름 존재 여부가 아니라 DTS
+metadata의 capability, policy, route와 현재 runtime owner를 함께 검사한다. A0/P1.12는 digital
+input과 ADC, P1.10은 digital output과 PWM을 같은 canonical pad에서 안전하게 전환한다.
 
-`v0.3.0`의 `standard`/`ble` profile은 P2.5 `PIN_GPIO0/D10`과 P2.6 `PIN_GPIO1/D11`을 더해
-`NUM_DIGITAL_PINS=12`, descriptor 9개를 사용한다. 두 connector 핀은 input/output/open-drain만
-지원하고 GPIOTE interrupt capability는 없다. 따라서 `digitalPinIsValid()`는 참이지만
-`digitalPinToInterrupt()`는 `NOT_AN_INTERRUPT`를 반환한다.
-
-같은 controller 제한은 P2의 기본 LED 역할에도 적용된다. `PIN_LED0`과 `PIN_LED2`는 digital
-input/output이지만 interrupt 핀이 아니며, P0/P1 역할만 GPIOTE interrupt capability를 가진다.
+P2 pad는 capability가 허용하는 input/output/open-drain GPIO로 사용할 수 있지만 CPUAPP GPIOTE
+경로가 없다. 따라서 P2의 `digitalPinToInterrupt()`는 항상 `NOT_AN_INTERRUPT`를 반환한다.
 
 ## 4. GPIO 값과 mode
 
@@ -60,7 +64,7 @@ Arduino `HIGH`와 `LOW`는 raw electrical level이다. LED의 DTS active flag가
 | `INPUT_PULLUP` | input + pull-up | 동일 |
 | `INPUT_PULLDOWN` | input + pull-down | 동일 |
 | `OUTPUT` | 마지막 output latch를 초기값으로 사용해 output 구성 | 동일 |
-| `OUTPUT_OPENDRAIN` | 미지원, hardware 변경 없이 오류 기록 | P2.5/P2.6 connector에서 지원; `HIGH`는 high-Z release |
+| `OUTPUT_OPENDRAIN` | 미지원, hardware 변경 없이 오류 기록 | output과 open-drain capability를 모두 가진 공개 pin에서 지원; `HIGH`는 high-Z release |
 
 버튼 역할은 input/interrupt capability만 가지므로 output mode를 거부한다. LED 역할은
 input/output capability를 가지며, 그중 DTS controller가 P0/P1인 역할만 interrupt를 가진다.
@@ -86,7 +90,8 @@ input/output capability를 가지며, 그중 DTS controller가 P0/P1인 역할�
 - 잘못된 값, 미구성 pin과 ownership 불일치는 no-op과 진단으로 처리한다.
 - 성공 경로는 heap과 문자열 logging을 사용하지 않는다. 상태 전환은 고정 슬롯 manager와
   GPIO 전환 mutex로 직렬화한다.
-- 현재 pad가 active GPIO owner인지 확인하며 다른 peripheral의 고정 owner를 덮어쓰지 않는다.
+- 현재 pad가 active GPIO owner인지 확인하며 dynamic peripheral 또는 system owner가 가진 pad를
+  덮어쓰지 않는다.
 
 ### 5.3 `digitalRead()`
 
@@ -202,7 +207,9 @@ Time backend에는 별도 마지막 오류 저장소가 없다. 따라서
 | `CONFIG_NUCODE_ARDUINO_IO_OWNERSHIP` | 고정 슬롯 I/O 소유권 manager와 부팅 자원 registry |
 | `CONFIG_NUCODE_ARDUINO_INTERRUPTS` | raw edge interrupt backend |
 | `CONFIG_NUCODE_ARDUINO_TIME` | Arduino 시간 API |
-| `CONFIG_NUCODE_ARDUINO_CONNECTOR_GPIO` | profile의 P2.5/P2.6 connector descriptor |
+| `CONFIG_NUCODE_ARDUINO_CONNECTOR_GPIO` | v0.2.x prj.conf 호환 표식; 현재 canonical map의 P2.5/P2.6 descriptor는 이 값과 관계없이 항상 존재 |
+| `CONFIG_NUCODE_ARDUINO_DAP_UART_GPIO_PINS` | DAP UART 조립 경계를 승인하고 P0.0~P0.3 일반 GPIO capability 활성화 |
+| `CONFIG_NUCODE_ARDUINO_LFXO_GPIO_PINS` | LFXO 조립 경계를 승인하고 P1.0~P1.1 일반 GPIO/PWM capability 활성화 |
 | Runtime loop choice | `loop()` 뒤 sleep/yield/none 정책 |
 
 별도 physical pin이나 timer 번호를 Kconfig로 다시 입력하지 않는다.
@@ -214,6 +221,7 @@ Time backend에는 별도 마지막 오류 저장소가 없다. 따라서
 - [M14 Core API와 Variant 기준선](<../04_검증 기록/16_M14_Core_API와_Variant_기준선.md>)
 - [AC-01 GPIO 호환성 검증](<../04_검증 기록/22_AC-01_GPIO_호환성_검증.md>)
 - [AC-02A 핀과 주변장치 소유권 기준선](<../04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md>)
+- [AC-02B Peripheral/Analog runtime 기준선](<../04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>)
 
 M14의 추가 LED/button output/readback, pull-up과 edge HIL은 완료됐다. 실행별 횟수, 시간 수치,
 trace와 commit은 위 검증 문서가 소유한다.
