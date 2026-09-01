@@ -78,6 +78,14 @@ def path_key(value: str | Path) -> str:
     return str(value).replace("\\", "/").rstrip("/").casefold()
 
 
+## @brief Windows 8.3 별칭까지 해소한 절대 경로 비교 key를 반환합니다.
+def resolved_path_key(value: str | Path) -> str:
+    path = Path(value)
+    if not path.is_absolute():
+        return ""
+    return path_key(path.resolve())
+
+
 ## @brief child command를 shell 없이 실행하고 bounded UTF-8 출력을 반환합니다.
 def run_command(
     argv: Sequence[str | Path], *, timeout_seconds: int
@@ -178,9 +186,10 @@ def parse_installed_examples(
                 and library.get("container_platform") == f"nucode:zephyr@{version}"
                 and isinstance(install_dir, str)
                 and (
-                    path_key(install_dir) == path_key(resolved_platform / "libraries")
-                    or path_key(install_dir).startswith(
-                        path_key(resolved_platform / "libraries") + "/"
+                    resolved_path_key(install_dir)
+                    == resolved_path_key(resolved_platform / "libraries")
+                    or resolved_path_key(install_dir).startswith(
+                        resolved_path_key(resolved_platform / "libraries") + "/"
                     )
                 )
             )
@@ -199,7 +208,7 @@ def parse_installed_examples(
         expected_library_root = (
             resolved_platform / "libraries" / relevant[0]["library_directory"]
         ).resolve()
-        if path_key(install_dir) != path_key(expected_library_root):
+        if resolved_path_key(install_dir) != resolved_path_key(expected_library_root):
             raise PackageExamplesFailure(f"설치 library 경로가 package 밖입니다: {library_name}")
         for value in paths:
             if not isinstance(value, str):
@@ -275,7 +284,10 @@ def validate_build_manifest(
     }
     for field, expected in expected_paths.items():
         actual = context.get(field)
-        if not isinstance(actual, str) or path_key(actual) != path_key(expected):
+        if (
+            not isinstance(actual, str)
+            or resolved_path_key(actual) != resolved_path_key(expected)
+        ):
             raise PackageExamplesFailure(f"build context의 {field}가 격리 경로와 다릅니다.")
     if context.get("profile") != example["profile"] or context.get("state") != "built":
         raise PackageExamplesFailure("build context의 profile 또는 상태가 다릅니다.")
