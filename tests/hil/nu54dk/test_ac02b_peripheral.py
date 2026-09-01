@@ -213,9 +213,12 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
         source = (peer_root / "src" / "main.cpp").read_text(encoding="utf-8")
         self.assertIn("CONFIG_UART_INTERRUPT_DRIVEN=y", configuration)
         self.assertIn("uart_irq_callback_user_data_set", source)
-        self.assertIn("uart_irq_rx_enable(console_uart)", source)
-        self.assertIn("readConsoleLine(command", source)
+        self.assertIn("startUartRx(console_uart, console_rx_context)", source)
+        self.assertIn("startUartRx(peer_uart, peer_rx_context)", source)
+        self.assertIn("readQueuedLine(console_rx_context, command", source)
+        self.assertIn("readQueuedLine(peer_rx_context, line", source)
         self.assertNotIn("readUartLine(console_uart, command", source)
+        self.assertNotIn("readUartLine(peer_uart, line", source)
 
 
 if __name__ == "__main__":
