@@ -6,6 +6,7 @@
 #include <nucode/nu54dk-arduino-connectors.dtsi>
 #include <nucode/nu54dk-arduino-pins.dtsi>
 #include <nucode/nu54dk-arduino-runtime.dtsi>
+#include <nucode/nu54dk-arduino-storage.dtsi>
 
 /** @brief NFC 전용 P1.2/P1.3 패드를 Wire용 GPIO/TWIM으로 전환합니다. */
 &uicr { nfct-pins-as-gpios; };

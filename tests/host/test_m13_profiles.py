@@ -29,7 +29,7 @@ class M13ProfileContractTests(unittest.TestCase):
     def test_standard_profile_and_allowlist(self) -> None:
         """! @brief 표준 profile과 bundled feature manifest를 검증합니다. """
         profile = MODULE.load_configuration_profile(ROOT, "standard")
-        self.assertEqual(profile["features"], ["gpio", "serial", "wire", "spi", "adc", "pwm"])
+        self.assertEqual(profile["features"], ["gpio", "serial", "wire", "spi", "adc", "pwm", "storage"])
         self.assertIsNone(MODULE.load_library_feature(ROOT, "ThirdParty"))
         self.assertEqual(
             {MODULE.load_library_feature(ROOT, name)["id"] for name in MODULE.FEATURE_ALLOWLIST},
@@ -40,6 +40,8 @@ class M13ProfileContractTests(unittest.TestCase):
                 "nucode.wire",
                 "nucode.spi",
                 "nucode.servo",
+                "nucode.eeprom",
+                "nucode.littlefs",
             },
         )
         resolved = MODULE.resolve_library_features(ROOT, profile, ["Wire", "SPI", "ThirdParty"])
@@ -89,6 +91,8 @@ class M13ProfileContractTests(unittest.TestCase):
                 "WireRuntimePins",
                 "ToneOutput",
                 "Sweep",
+                "EEPROMPersistence",
+                "LittleFSPersistence",
                 "NUSCentral",
                 "NUSPeripheral",
                 "GAPCentral",

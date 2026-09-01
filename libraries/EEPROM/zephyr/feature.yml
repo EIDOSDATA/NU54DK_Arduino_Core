@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "id": "nucode.eeprom",
+  "requires": ["storage"],
+  "conf": ["eeprom.conf"],
+  "overlays": [],
+  "conflicts": [],
+  "compatible_profiles": ["standard", "ble"]
+}

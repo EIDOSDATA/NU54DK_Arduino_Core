@@ -1063,6 +1063,75 @@ def test_ac02b_examples(cli: Path, config: Path, root: Path, repository: Path) -
             )
 
 
+## @brief AC-03 EEPROM·LittleFS 예제와 두 profile의 고정 partition을 빌드합니다.
+def test_ac03_storage_examples(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    examples = (
+        (
+            "eeprom-standard",
+            repository / "libraries" / "EEPROM" / "examples" / "EEPROMPersistence",
+            "EEPROMPersistence.ino",
+            "standard",
+            "nucode.eeprom",
+            ("CONFIG_SETTINGS_ZMS",),
+        ),
+        (
+            "littlefs-standard",
+            repository / "libraries" / "LittleFS" / "examples" / "LittleFSPersistence",
+            "LittleFSPersistence.ino",
+            "standard",
+            "nucode.littlefs",
+            ("CONFIG_FILE_SYSTEM_LITTLEFS", "CONFIG_FILE_SYSTEM_MKFS"),
+        ),
+        (
+            "littlefs-ble",
+            repository / "libraries" / "LittleFS" / "examples" / "LittleFSPersistence",
+            "LittleFSPersistence.ino",
+            "ble",
+            "nucode.littlefs",
+            ("CONFIG_FILE_SYSTEM_LITTLEFS", "CONFIG_FILE_SYSTEM_MKFS"),
+        ),
+    )
+    for build_name, sketch, project_name, profile, feature, symbols in examples:
+        if not (sketch / project_name).is_file():
+            raise SmokeFailure(f"incomplete AC-03 example: {sketch}")
+        build = root / f"build-ac03-{build_name}"
+        command = list(compile_command(cli, config, build, sketch))
+        if profile == "ble":
+            command[-1:-1] = ("--board-options", "feature_set=ble")
+        run(command)
+        context = assert_build(build, project_name)
+        if context.get("profile") != profile:
+            raise SmokeFailure(
+                f"AC-03 example profile mismatch: {sketch}: {context.get('profile')}"
+            )
+        selected_features = {
+            item.get("id")
+            for item in context.get("selected_features", [])
+            if isinstance(item, dict)
+        }
+        if feature not in selected_features:
+            raise SmokeFailure(f"AC-03 feature was not selected: {sketch}: {feature}")
+        zephyr = Path(context["zephyr_build_dir"]) / "zephyr"
+        configuration = (zephyr / ".config").read_text(encoding="utf-8")
+        for symbol in symbols:
+            if not read_kconfig_boolean(configuration, symbol):
+                raise SmokeFailure(f"AC-03 symbol is disabled: {build_name}: {symbol}")
+        devicetree = (zephyr / "zephyr.dts").read_text(encoding="utf-8")
+        expected_partitions = (
+            ('label = "image-0";', "reg = < 0x10000 0xae000 >;"),
+            ('label = "image-1";', "reg = < 0xbe000 0xae000 >;"),
+            ('label = "arduino-fs";', "reg = < 0x16c000 0x8000 >;"),
+            ('label = "storage";', "reg = < 0x174000 0x9000 >;"),
+        )
+        for label, region in expected_partitions:
+            if label not in devicetree or region not in devicetree:
+                raise SmokeFailure(
+                    f"AC-03 fixed partition missing: {build_name}: {label}: {region}"
+                )
+
+
 ## @brief M15 board/system 공개 예제와 feature conf·overlay 병합을 검증합니다.
 def test_m15_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
     required_symbols = (
@@ -1248,6 +1317,8 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "WatchdogBasic",
         },
         "Servo": {"Sweep"},
+        "EEPROM": {"EEPROMPersistence"},
+        "LittleFS": {"LittleFSPersistence"},
         "SPI": {"SPITransaction"},
         "Wire": {"WirePmicId"},
         "NUCODE BLE": {
@@ -1400,6 +1471,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "m16",
             "m21",
             "ac02b",
+            "ac03",
             "examples",
         ),
         default=(
@@ -1417,6 +1489,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "m16",
             "m21",
             "ac02b",
+            "ac03",
             "examples",
         ),
     )
@@ -1459,6 +1532,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m16": test_m16_examples,
                 "m21": test_m21_example,
                 "ac02b": test_ac02b_examples,
+                "ac03": test_ac03_storage_examples,
                 "examples": test_example_discovery,
             }
             for name in args.tests:

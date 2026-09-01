@@ -7,7 +7,7 @@
   "ncs_version": "v3.4.0",
   "conf": "prj.conf",
   "overlay": "app.overlay",
-  "features": ["gpio", "serial", "wire", "spi", "adc", "pwm"],
+  "features": ["gpio", "serial", "wire", "spi", "adc", "pwm", "storage"],
   "conflicts": [],
-  "requires_hil": ["wire", "spi", "adc", "pwm"]
+  "requires_hil": ["wire", "spi", "adc", "pwm", "storage"]
 }

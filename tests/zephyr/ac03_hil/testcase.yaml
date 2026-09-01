@@ -1,0 +1,14 @@
+tests:
+  nucode.ac03.storage_hil:
+    tags:
+      - nucode
+      - arduino
+      - ac03
+      - hil
+      - eeprom
+      - littlefs
+    build_only: true
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk

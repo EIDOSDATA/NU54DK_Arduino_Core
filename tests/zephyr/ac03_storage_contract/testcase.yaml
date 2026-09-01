@@ -1,0 +1,15 @@
+tests:
+  nucode.ac03.storage_contract:
+    tags:
+      - nucode
+      - arduino
+      - ac03
+      - eeprom
+      - littlefs
+      - storage
+    harness: ztest
+    sysbuild: false
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk

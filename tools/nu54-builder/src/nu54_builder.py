@@ -41,6 +41,8 @@ FEATURE_ALLOWLIST = {
     "Wire": "nucode.wire",
     "SPI": "nucode.spi",
     "Servo": "nucode.servo",
+    "EEPROM": "nucode.eeprom",
+    "LittleFS": "nucode.littlefs",
 }
 CONTEXT_DIRECTORY = "nu54-zephyr"
 CACHE_SCHEMA_VERSION = 1
@@ -531,14 +533,22 @@ def is_development_checkout(platform_root: Path) -> bool:
 ## @brief 고정 버전의 NCS root를 환경 또는 기본 설치 위치에서 찾습니다.
 def discover_ncs_root(*, prefer_user_profile: bool = False) -> Path:
     configured = os.environ.get("NUCODE_NCS_ROOT")
-    candidates: list[Path] = []
-    if configured:
-        candidates.append(canonical_path(configured))
+    if configured is not None:
+        if not configured.strip():
+            raise AdapterError("명시한 NUCODE_NCS_ROOT 값이 비어 있습니다.")
+        candidate = canonical_path(configured)
+        if (candidate / "zephyr" / "CMakeLists.txt").is_file() and (
+            candidate / "nrf" / "west.yml"
+        ).is_file():
+            return candidate.resolve()
+        raise AdapterError(
+            "명시한 NUCODE_NCS_ROOT에 nRF Connect SDK v3.4.0이 없습니다: "
+            f"{candidate}"
+        )
     default_candidates = (Path("C:/ncs/v3.4.0"), Path.home() / "ncs" / "v3.4.0")
     if prefer_user_profile:
         default_candidates = tuple(reversed(default_candidates))
-    candidates.extend(default_candidates)
-    for candidate in candidates:
+    for candidate in default_candidates:
         if (candidate / "zephyr" / "CMakeLists.txt").is_file() and (candidate / "nrf" / "west.yml").is_file():
             return candidate.resolve()
     raise AdapterError(
