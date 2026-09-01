@@ -6,6 +6,7 @@ from __future__ import annotations
 import importlib.util
 import json
 from pathlib import Path
+import stat
 import tempfile
 import unittest
 
@@ -166,6 +167,35 @@ class M22CleanroomTests(unittest.TestCase):
         self.assertFalse(self.run.exists())
         self.assertTrue(sibling.is_dir())
         self.assertTrue(self.evidence.is_file())
+
+    def test_cleanup_removes_windows_readonly_file_inside_exact_leaf(self) -> None:
+        """! @brief 격리 NCS Git object와 같은 Windows 읽기 전용 파일도 안전하게 제거합니다. """
+
+        readonly = self.run / "objects" / "pack" / "fixture.pack"
+        readonly.parent.mkdir(parents=True)
+        readonly.write_bytes(b"fixture\n")
+        readonly.chmod(stat.S_IREAD)
+        self.marker()
+        MODULE.safe_cleanup_run(self.parent, self.run, self.run_id, self.token, self.evidence)
+        self.assertFalse(self.run.exists())
+        self.assertTrue(self.evidence.is_file())
+
+    def test_readonly_retry_rejects_path_outside_exact_leaf(self) -> None:
+        """! @brief 읽기 전용 복구 callback이 exact run leaf 밖 경로를 거부합니다. """
+
+        outside = self.base / "outside-readonly.txt"
+        outside.write_text("fixture\n", encoding="utf-8")
+        outside.chmod(stat.S_IREAD)
+        try:
+            with self.assertRaisesRegex(MODULE.CleanroomFailure, "밖"):
+                MODULE.retry_readonly_cleanup(
+                    lambda _path: None,
+                    str(outside),
+                    PermissionError("fixture"),
+                    self.run,
+                )
+        finally:
+            outside.chmod(stat.S_IWRITE)
 
     def test_cleanup_rejects_parent_wrong_token_and_changed_evidence(self) -> None:
         """! @brief broad target, token mismatch, evidence 변경을 모두 fail-closed 처리합니다. """

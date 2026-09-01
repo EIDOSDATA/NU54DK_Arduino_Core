@@ -371,6 +371,32 @@ def assert_tree_has_no_reparse(root: Path) -> None:
                 pending.append(path)
 
 
+## @brief exact run leaf 내부의 Windows 읽기 전용 항목만 쓰기 가능으로 바꾸고 삭제를 재시도합니다.
+def retry_readonly_cleanup(
+    function: Any,
+    path: str,
+    error: BaseException,
+    run_root: Path,
+) -> None:
+    candidate = Path(path).absolute()
+    absolute_root = run_root.absolute()
+    if candidate != absolute_root and not candidate.is_relative_to(absolute_root):
+        raise CleanroomFailure("cleanup 재시도 대상이 exact run leaf 밖입니다.") from error
+    if not isinstance(error, PermissionError):
+        raise error
+    if is_reparse(candidate):
+        raise CleanroomFailure("cleanup 재시도 대상에 reparse point가 있습니다.") from error
+    info = candidate.lstat()
+    readonly_attribute = getattr(stat, "FILE_ATTRIBUTE_READONLY", 0)
+    if not readonly_attribute or not info.st_file_attributes & readonly_attribute:
+        raise error
+    try:
+        os.chmod(candidate, info.st_mode | stat.S_IWRITE)
+        function(path)
+    except OSError as retry_error:
+        raise retry_error from error
+
+
 ## @brief 검증된 exact run leaf 하나만 삭제합니다.
 def safe_cleanup_run(
     parent: Path,
@@ -382,9 +408,16 @@ def safe_cleanup_run(
     validate_cleanup_target(parent, run_root, run_id, token, evidence_path)
     assert_tree_has_no_reparse(run_root)
     try:
-        shutil.rmtree(run_root)
+        shutil.rmtree(
+            run_root,
+            onexc=lambda function, path, error: retry_readonly_cleanup(
+                function, path, error, run_root
+            ),
+        )
     except OSError as error:
-        raise CleanroomFailure("검증된 run leaf를 삭제하지 못했습니다.") from error
+        raise CleanroomFailure(
+            f"검증된 run leaf를 삭제하지 못했습니다: {error}"
+        ) from error
     if run_root.exists():
         raise CleanroomFailure("검증된 run leaf cleanup이 완료되지 않았습니다.")
 
