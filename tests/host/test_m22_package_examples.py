@@ -109,8 +109,12 @@ class M22PackageExamplesTests(unittest.TestCase):
             self.listing, self.lock, self.platform
         )
         self.assertEqual(len(discovered), 29)
+        platform_key = MODULE.resolved_path_key(self.platform)
         self.assertTrue(
-            all(path.is_relative_to(self.platform) for path in discovered.values())
+            all(
+                MODULE.resolved_path_key(path).startswith(platform_key + "/")
+                for path in discovered.values()
+            )
         )
 
     def test_discovery_rejects_source_checkout_substitution(self) -> None:

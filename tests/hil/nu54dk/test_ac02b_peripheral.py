@@ -417,6 +417,27 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
         self.assertIn("echo=host-vcom-x.1", source)
         self.assertNotIn("sendPeerLine", source)
 
+    def test_dut_spi_configures_interrupt_input_before_attach(self) -> None:
+        """! @brief SPI mask 시험이 구성되지 않은 GPIO interrupt를 사용하지 않게 고정합니다. """
+
+        source = (
+            MODULE.REPOSITORY
+            / "tests"
+            / "zephyr"
+            / "ac02b_hil_dut"
+            / "src"
+            / "main.cpp"
+        ).read_text(encoding="utf-8")
+        configure = source.index("pinMode(PIN_BUTTON0, INPUT_PULLUP);")
+        attach = source.index(
+            "attachInterrupt(digitalPinToInterrupt(PIN_BUTTON0),"
+        )
+        self.assertLess(configure, attach)
+        self.assertIn(
+            "lastGpioError() != GpioError::none",
+            source[configure:attach],
+        )
+
     def test_dut_preserves_wire_driver_error_before_end(self) -> None:
         """! @brief Wire.end()가 진단을 지우기 전에 backend 오류를 보존하게 고정합니다. """
 

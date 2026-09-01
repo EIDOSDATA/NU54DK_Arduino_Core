@@ -362,6 +362,11 @@ namespace
 	/** @brief local MOSI↔MISO loopback과 GPIO interrupt mask transaction을 검증합니다. */
 	[[nodiscard]] bool testSpi(void)
 	{
+		pinMode(PIN_BUTTON0, INPUT_PULLUP);
+		if (nucode::arduino::internal::lastGpioError() != GpioError::none)
+		{
+			return false;
+		}
 		attachInterrupt(digitalPinToInterrupt(PIN_BUTTON0), spiMaskFixtureCallback, CHANGE);
 		if (nucode::arduino::internal::lastGpioError() != GpioError::none)
 		{
