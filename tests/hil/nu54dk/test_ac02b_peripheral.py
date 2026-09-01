@@ -438,6 +438,25 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
             source[configure:attach],
         )
 
+    def test_dut_enables_every_runtime_pwm_backend_block(self) -> None:
+        """! @brief PWM runtime backend의 세 block이 모두 설치 가능하도록 fixture를 고정합니다. """
+
+        overlay = (
+            MODULE.REPOSITORY
+            / "tests"
+            / "zephyr"
+            / "ac02b_hil_dut"
+            / "app.overlay"
+        ).read_text(encoding="utf-8")
+        for instance in ("pwm20", "pwm21", "pwm22"):
+            self.assertIn(f"&{instance} {{", overlay)
+            block = overlay.split(f"&{instance} {{", maxsplit=1)[1].split(
+                "};", maxsplit=1
+            )[0]
+            self.assertIn('status = "okay";', block)
+        self.assertIn("ac02b_pwm21_default", overlay)
+        self.assertIn("ac02b_pwm22_default", overlay)
+
     def test_dut_preserves_wire_driver_error_before_end(self) -> None:
         """! @brief Wire.end()가 진단을 지우기 전에 backend 오류를 보존하게 고정합니다. """
 
