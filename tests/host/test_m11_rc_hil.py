@@ -164,7 +164,11 @@ class M11RcHilTests(unittest.TestCase):
         )
 
     def make_build_manifest(
-        self, build: Path, staged_platform: Path, sketch: Path
+        self,
+        build: Path,
+        staged_platform: Path,
+        sketch: Path,
+        upload_probe: str = "pyocd",
     ) -> tuple[Path, Path]:
         """! @brief exact RC build context와 HEX record fixture를 만듭니다. """
 
@@ -178,12 +182,12 @@ class M11RcHilTests(unittest.TestCase):
             json.dumps(
                 {
                     "schema_version": MODULE.ARTIFACT_MANIFEST_SCHEMA_VERSION,
-                    "fqbn": f"{MODULE.FQBN}:upload_probe=pyocd",
+                    "fqbn": f"{MODULE.FQBN}:upload_probe={upload_probe}",
                     "sysbuild": False,
                     "context": {
                         "schema_version": MODULE.SESSION_CONTEXT_SCHEMA_VERSION,
                         "state": "built",
-                        "fqbn": f"{MODULE.FQBN}:upload_probe=pyocd",
+                        "fqbn": f"{MODULE.FQBN}:upload_probe={upload_probe}",
                         "build_path": build.resolve().as_posix(),
                         "platform_root": staged_platform.resolve().as_posix(),
                         "sketch_root": sketch.resolve().as_posix(),
@@ -439,6 +443,7 @@ class M11RcHilTests(unittest.TestCase):
         cli.write_bytes(b"arduino-cli-fixture")
         workspace = self.root / "workspace"
         calls: list[str] = []
+        commands: list[list[str]] = []
 
         def fake_run(
             command: list[Path | str], *, timeout_seconds: int
@@ -446,11 +451,18 @@ class M11RcHilTests(unittest.TestCase):
             self.assertGreater(timeout_seconds, 0)
             operation = str(command[1])
             calls.append(operation)
+            commands.append([str(value) for value in command])
             build = Path(command[command.index("--build-path") + 1])
             sketch = Path(command[-1])
             staged = build.parent / "user" / "hardware" / "nucode" / "zephyr"
             if operation == "compile":
-                self.make_build_manifest(build, staged, sketch)
+                board_options = str(command[command.index("--board-options") + 1])
+                self.make_build_manifest(
+                    build,
+                    staged,
+                    sketch,
+                    board_options.removeprefix("upload_probe="),
+                )
                 return 0, "compile passed", 0.1
             digest = MODULE.file_sha256(build / "m8_upload.ino.hex")
             manifest = json.loads(
@@ -512,6 +524,8 @@ class M11RcHilTests(unittest.TestCase):
                     self.core_revision,
                     "--expected-runtime-payload-sha256",
                     self.runtime_payload_sha256,
+                    "--probe-id",
+                    "fixture-probe",
                 ]
             )
         self.assertEqual(result, 0)
@@ -526,6 +540,18 @@ class M11RcHilTests(unittest.TestCase):
             self.runtime_payload_sha256,
         )
         self.assertEqual(evidence["upload"]["attempts"], 1)
+        self.assertEqual(
+            evidence["upload"]["probe_selection"],
+            {
+                "probe_id": "redacted",
+                "probe_selection_mode": "explicit",
+                "upload_probe": "pyocd_uid",
+            },
+        )
+        self.assertIn("upload_probe=pyocd_uid", commands[0])
+        self.assertIn("--upload-field", commands[1])
+        self.assertIn("probe_id=fixture-probe", commands[1])
+        self.assertNotIn("fixture-probe", json.dumps(evidence))
         self.assertEqual(evidence["uart"]["candidate_count"], 2)
         self.assertEqual(
             evidence["sketch"],

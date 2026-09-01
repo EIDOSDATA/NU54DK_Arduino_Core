@@ -269,6 +269,57 @@ class M10PrerequisiteContractTests(unittest.TestCase):
             with self.assertRaisesRegex(MODULE.AdapterError, "고정 NCS Toolchain bundle"):
                 MODULE.discover_toolchain_root(alternate_ncs, exact_required=True)
 
+    def test_explicit_ncs_root_is_authoritative(self) -> None:
+        """! @brief 명시한 NCS root만 선택하고 기본 설치 후보를 조회하지 않습니다. """
+
+        explicit = self.root / "isolated" / MODULE.NCS_VERSION
+        (explicit / "zephyr").mkdir(parents=True)
+        (explicit / "nrf").mkdir()
+        (explicit / "zephyr" / "CMakeLists.txt").write_text(
+            "# fixture\n", encoding="utf-8"
+        )
+        (explicit / "nrf" / "west.yml").write_text(
+            "manifest: fixture\n", encoding="utf-8"
+        )
+
+        with mock.patch.dict(
+            os.environ, {"NUCODE_NCS_ROOT": str(explicit)}, clear=False
+        ):
+            self.assertEqual(
+                MODULE.discover_ncs_root(prefer_user_profile=True), explicit.resolve()
+            )
+
+    def test_invalid_explicit_ncs_root_does_not_fall_back(self) -> None:
+        """! @brief 격리 NCS가 없을 때 기존 사용자·C 드라이브 설치로 새지 않습니다. """
+
+        missing = self.root / "missing" / MODULE.NCS_VERSION
+        fallback_home = self.root / "fallback-home"
+        fallback = fallback_home / "ncs" / MODULE.NCS_VERSION
+        (fallback / "zephyr").mkdir(parents=True)
+        (fallback / "nrf").mkdir()
+        (fallback / "zephyr" / "CMakeLists.txt").write_text(
+            "# fixture\n", encoding="utf-8"
+        )
+        (fallback / "nrf" / "west.yml").write_text(
+            "manifest: fixture\n", encoding="utf-8"
+        )
+
+        with (
+            mock.patch.dict(
+                os.environ, {"NUCODE_NCS_ROOT": str(missing)}, clear=False
+            ),
+            mock.patch.object(MODULE.Path, "home", return_value=fallback_home),
+        ):
+            with self.assertRaisesRegex(MODULE.AdapterError, "명시한 NUCODE_NCS_ROOT"):
+                MODULE.discover_ncs_root(prefer_user_profile=True)
+
+    def test_empty_explicit_ncs_root_does_not_fall_back(self) -> None:
+        """! @brief 환경 변수를 빈 값으로 명시해도 기존 NCS를 선택하지 않습니다. """
+
+        with mock.patch.dict(os.environ, {"NUCODE_NCS_ROOT": ""}, clear=False):
+            with self.assertRaisesRegex(MODULE.AdapterError, "값이 비어"):
+                MODULE.discover_ncs_root(prefer_user_profile=True)
+
     def test_toolchain_manifest_bundle_id_is_verified(self) -> None:
         """! @brief directory 이름과 내부 Nordic bundle metadata가 모두 pin과 같아야 합니다. """
 

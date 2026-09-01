@@ -949,10 +949,9 @@ def main(arguments: Sequence[str] | None = None) -> int:
     if rc_mode and (
         args.runner != "pyocd"
         or args.repetitions != 1
-        or bool(requested_probe_id)
     ):
         raise UploadHilFailure(
-            "RC exact HIL은 probe 자동 단일 선택의 pyOCD upload 정확히 1회만 허용합니다."
+            "RC exact HIL은 pyOCD upload 정확히 1회만 허용합니다."
         )
     if args.runner == "jlink" and not requested_probe_id:
         raise UploadHilFailure("J-Link HIL에는 --probe-id serial이 필요합니다.")
@@ -1114,6 +1113,9 @@ def main(arguments: Sequence[str] | None = None) -> int:
             },
             "upload": {
                 **flash_identity,
+                "probe_selection": probe_selection_summary(
+                    upload_probe, requested_probe_id
+                ),
                 "upload_seconds": upload_results[0]["upload_seconds"],
                 "hex_unchanged_after_upload": True,
             },
