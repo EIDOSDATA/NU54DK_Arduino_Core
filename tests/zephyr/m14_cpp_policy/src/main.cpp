@@ -107,8 +107,7 @@ ZTEST(m14_cpp_policy, test_dynamic_cast_and_typeid)
 	auto *cast_result = dynamic_cast<RttiDerived *>(base);
 	zassert_not_null(cast_result, "유효한 RTTI downcast에 실패했습니다.");
 	zassert_equal(cast_result->value, 54, "RTTI downcast 객체의 값이 다릅니다.");
-	zassert_true(typeid(*base) == typeid(RttiDerived),
-			 "typeid가 실제 파생 형식을 식별하지 못했습니다.");
+	zassert_true(typeid(*base) == typeid(RttiDerived), "typeid가 실제 파생 형식을 식별하지 못했습니다.");
 }
 
 ZTEST(m14_cpp_policy, test_random_and_diagnostics_on_zephyr)
@@ -119,14 +118,13 @@ ZTEST(m14_cpp_policy, test_random_and_diagnostics_on_zephyr)
 	{
 		value = random(-50L, 75L);
 		zassert_true((value >= -50L) && (value < 75L),
-				 "random이 요청한 반열린 범위를 벗어났습니다.");
+					 "random이 요청한 반열린 범위를 벗어났습니다.");
 	}
 
 	randomSeed(0x12345678UL);
 	for (const auto expected : first_sequence)
 	{
-		zassert_equal(random(-50L, 75L), expected,
-				  "같은 seed가 같은 random 수열을 만들지 못했습니다.");
+		zassert_equal(random(-50L, 75L), expected, "같은 seed가 같은 random 수열을 만들지 못했습니다.");
 	}
 
 	const nucode::arduino::Diagnostic diagnostic{
@@ -139,9 +137,9 @@ ZTEST(m14_cpp_policy, test_random_and_diagnostics_on_zephyr)
 	const auto required = nucode::arduino::formatDiagnostic(
 		diagnostic, buffer, sizeof(buffer));
 	zassert_equal(required, std::strlen("NU54:wire:driver-error:driver=-5:detail=17"),
-			  "진단 포맷 필요 길이가 다릅니다.");
+				  "진단 포맷 필요 길이가 다릅니다.");
 	zassert_equal(std::strcmp(buffer, "NU54:wire:driver-error:driver=-5:detail=17"), 0,
-			  "Zephyr target 진단 포맷 결과가 다릅니다.");
+				  "Zephyr target 진단 포맷 결과가 다릅니다.");
 
 	int absolute_argument = -7;
 	zassert_equal(abs(absolute_argument++), 7, "Arduino abs 결과가 다릅니다.");

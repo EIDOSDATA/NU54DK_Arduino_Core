@@ -291,6 +291,7 @@ namespace nucode::arduino::internal
 			entry.resource = resources[index];
 			entry.previous_owner = selected_new[index] ? IoResourceOwner{} : slot.owner;
 			entry.previous_state = selected_new[index] ? IoResourceState::free : slot.state;
+			entry.previous_generation = selected_new[index] ? 0U : slot.generation;
 			entry.changed = selected_new[index] || !sameOwner(slot.owner, owner) ||
 							(slot.state != IoResourceState::active);
 
@@ -309,6 +310,88 @@ namespace nucode::arduino::internal
 			entry.generation = slot.generation;
 		}
 
+		k_mutex_unlock(&io_resource_mutex);
+		return IoResourceResult::success;
+	}
+
+	IoResourceResult transferIoResources(IoResourceOwner expected_owner,
+										IoResourceOwner new_owner,
+										const IoResourceId *resources,
+										std::size_t count,
+										IoResourceLease &lease,
+										IoResourceSnapshot *conflict) noexcept
+	{
+		if (!isThreadContext())
+		{
+			return IoResourceResult::invalid_context;
+		}
+		if ((resources == nullptr) || (count == 0U) ||
+			(count > io_resource_lease_capacity) ||
+			(expected_owner.kind == IoOwnerKind::none) ||
+			(new_owner.kind == IoOwnerKind::none) ||
+			sameOwner(expected_owner, new_owner))
+		{
+			return IoResourceResult::invalid_argument;
+		}
+		if ((lease.phase == IoLeasePhase::reserved) ||
+			(lease.phase == IoLeasePhase::committed))
+		{
+			return IoResourceResult::wrong_phase;
+		}
+
+		for (std::size_t index = 0U; index < count; ++index)
+		{
+			if (!validResource(resources[index]))
+			{
+				return IoResourceResult::invalid_argument;
+			}
+			for (std::size_t prior = 0U; prior < index; ++prior)
+			{
+				if (sameResource(resources[index], resources[prior]))
+				{
+					return IoResourceResult::invalid_argument;
+				}
+			}
+		}
+
+		k_mutex_lock(&io_resource_mutex, K_FOREVER);
+		ResourceSlot *selected[io_resource_lease_capacity]{};
+		for (std::size_t index = 0U; index < count; ++index)
+		{
+			ResourceSlot *const slot = findSlot(resources[index]);
+			if ((slot == nullptr) || (slot->state != IoResourceState::active) ||
+				!sameOwner(slot->owner, expected_owner) ||
+				(slot->reservation_token != 0U))
+			{
+				if (conflict != nullptr)
+				{
+					fillSnapshot(slot, *conflict);
+				}
+				k_mutex_unlock(&io_resource_mutex);
+				return IoResourceResult::conflict;
+			}
+			selected[index] = slot;
+		}
+
+		lease = {};
+		lease.owner = new_owner;
+		lease.phase = IoLeasePhase::reserved;
+		lease.manager_epoch = manager_epoch;
+		lease.count = count;
+		for (std::size_t index = 0U; index < count; ++index)
+		{
+			ResourceSlot &slot = *selected[index];
+			auto &entry = lease.entries[index];
+			entry.resource = resources[index];
+			entry.previous_owner = slot.owner;
+			entry.previous_state = slot.state;
+			entry.previous_generation = slot.generation;
+			entry.changed = true;
+			slot.owner = new_owner;
+			slot.state = IoResourceState::reserved;
+			slot.generation = allocateGeneration();
+			entry.generation = slot.generation;
+		}
 		k_mutex_unlock(&io_resource_mutex);
 		return IoResourceResult::success;
 	}
@@ -394,7 +477,9 @@ namespace nucode::arduino::internal
 			{
 				slot->owner = entry.previous_owner;
 				slot->state = entry.previous_state;
-				slot->generation = allocateGeneration();
+				slot->generation = entry.previous_generation != 0U
+								   ? entry.previous_generation
+								   : allocateGeneration();
 			}
 		}
 		lease.phase = IoLeasePhase::rolled_back;

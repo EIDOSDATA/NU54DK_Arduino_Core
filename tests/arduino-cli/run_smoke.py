@@ -994,6 +994,75 @@ def test_m7_examples(cli: Path, config: Path, root: Path, repository: Path) -> N
     test_live_build_record_scope(context, root)
 
 
+## @brief AC-02B 동적 주변장치·아날로그 공개 예제를 표준 profile로 빌드합니다.
+def test_ac02b_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    required_symbols = (
+        "CONFIG_NUCODE_ARDUINO_SERIAL1",
+        "CONFIG_NUCODE_ARDUINO_WIRE",
+        "CONFIG_NUCODE_ARDUINO_SPI",
+        "CONFIG_NUCODE_ARDUINO_ADC",
+        "CONFIG_NUCODE_ARDUINO_PWM",
+    )
+    examples = tuple(
+        (
+            name,
+            board_examples(repository) / name,
+            f"{name}.ino",
+            {
+                "SPI00RuntimePins": "nucode.spi",
+                "WireRuntimePins": "nucode.wire",
+            }.get(name),
+        )
+        for name in (
+            "AnalogChannels",
+            "AnalogResolution",
+            "DynamicPWM",
+            "Serial1RuntimePins",
+            "SPI00RuntimePins",
+            "ToneOutput",
+            "WireRuntimePins",
+        )
+    ) + (
+        (
+            "ServoSweep",
+            repository / "libraries" / "Servo" / "examples" / "Sweep",
+            "Sweep.ino",
+            "nucode.servo",
+        ),
+    )
+
+    for build_name, sketch, project_name, expected_feature in examples:
+        if not (sketch / project_name).is_file():
+            raise SmokeFailure(f"incomplete AC-02B example: {sketch}")
+        if (sketch / "prj.conf").exists() or (sketch / "app.overlay").exists():
+            raise SmokeFailure(f"AC-02B public example contains a Zephyr sidecar: {sketch}")
+
+        build = root / f"build-ac02b-{build_name.lower()}"
+        run(compile_command(cli, config, build, sketch))
+        context = assert_build(build, project_name)
+        if context.get("profile") != "standard":
+            raise SmokeFailure(f"AC-02B example did not use the standard profile: {sketch}")
+
+        configuration = (
+            Path(context["zephyr_build_dir"]) / "zephyr" / ".config"
+        ).read_text(encoding="utf-8")
+        for symbol in required_symbols:
+            if not read_kconfig_boolean(configuration, symbol):
+                raise SmokeFailure(
+                    f"AC-02B standard profile omitted a symbol: {sketch}: {symbol}"
+                )
+
+        selected_features = {
+            item.get("id")
+            for item in context.get("selected_features", [])
+            if isinstance(item, dict)
+        }
+        if expected_feature is not None and expected_feature not in selected_features:
+            raise SmokeFailure(
+                f"AC-02B library feature was not selected: {sketch}: {expected_feature}"
+            )
+
+
 ## @brief M15 board/system 공개 예제와 feature conf·overlay 병합을 검증합니다.
 def test_m15_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
     required_symbols = (
@@ -1163,14 +1232,22 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "Blink",
             "InterruptButton",
             "AnalogReadA0",
+            "AnalogChannels",
+            "AnalogResolution",
             "PWMFade",
+            "DynamicPWM",
+            "Serial1RuntimePins",
             "SerialEcho",
+            "SPI00RuntimePins",
+            "ToneOutput",
+            "WireRuntimePins",
             "BoardInfo",
             "CounterAlarm",
             "SettingsStorage",
             "SystemOffWake",
             "WatchdogBasic",
         },
+        "Servo": {"Sweep"},
         "SPI": {"SPITransaction"},
         "Wire": {"WirePmicId"},
         "NUCODE BLE": {
@@ -1322,6 +1399,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "m15",
             "m16",
             "m21",
+            "ac02b",
             "examples",
         ),
         default=(
@@ -1338,6 +1416,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "m15",
             "m16",
             "m21",
+            "ac02b",
             "examples",
         ),
     )
@@ -1379,6 +1458,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m15": test_m15_examples,
                 "m16": test_m16_examples,
                 "m21": test_m21_example,
+                "ac02b": test_ac02b_examples,
                 "examples": test_example_discovery,
             }
             for name in args.tests:

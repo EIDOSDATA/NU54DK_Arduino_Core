@@ -268,14 +268,21 @@ class M12CiContractTests(unittest.TestCase):
                 self.assertIn("python-version: 3.12.10", text, workflow.name)
                 self.assertNotIn("python-version: 3.12.11", text, workflow.name)
 
-    ## @brief 표준 library example 열두 개가 canonical 위치에만 있는지 검증합니다.
+    ## @brief 표준 주변장치·아날로그 library example이 canonical 위치에만 있는지 검증합니다.
     def test_example_discovery_inputs_are_canonical(self) -> None:
         expected = (
             "libraries/NUCODE_NU54DK/examples/Blink/Blink.ino",
             "libraries/NUCODE_NU54DK/examples/InterruptButton/InterruptButton.ino",
             "libraries/NUCODE_NU54DK/examples/AnalogReadA0/AnalogReadA0.ino",
+            "libraries/NUCODE_NU54DK/examples/AnalogChannels/AnalogChannels.ino",
+            "libraries/NUCODE_NU54DK/examples/AnalogResolution/AnalogResolution.ino",
             "libraries/NUCODE_NU54DK/examples/PWMFade/PWMFade.ino",
+            "libraries/NUCODE_NU54DK/examples/DynamicPWM/DynamicPWM.ino",
+            "libraries/NUCODE_NU54DK/examples/Serial1RuntimePins/Serial1RuntimePins.ino",
             "libraries/NUCODE_NU54DK/examples/SerialEcho/SerialEcho.ino",
+            "libraries/NUCODE_NU54DK/examples/SPI00RuntimePins/SPI00RuntimePins.ino",
+            "libraries/NUCODE_NU54DK/examples/ToneOutput/ToneOutput.ino",
+            "libraries/NUCODE_NU54DK/examples/WireRuntimePins/WireRuntimePins.ino",
             "libraries/NUCODE_NU54DK/examples/BoardInfo/BoardInfo.ino",
             "libraries/NUCODE_NU54DK/examples/CounterAlarm/CounterAlarm.ino",
             "libraries/NUCODE_NU54DK/examples/SettingsStorage/SettingsStorage.ino",
@@ -283,6 +290,7 @@ class M12CiContractTests(unittest.TestCase):
             "libraries/NUCODE_NU54DK/examples/WatchdogBasic/WatchdogBasic.ino",
             "libraries/SPI/examples/SPITransaction/SPITransaction.ino",
             "libraries/Wire/examples/WirePmicId/WirePmicId.ino",
+            "libraries/Servo/examples/Sweep/Sweep.ino",
         )
         for relative in expected:
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
@@ -324,6 +332,24 @@ class M12CiContractTests(unittest.TestCase):
             {
                 ("ac01_contract", "nucode.ac01.contract"),
                 ("ac01_hil", "nucode.ac01.gpio_hil"),
+            }.issubset(set(module.SUITES))
+        )
+
+    ## @brief AC-02A/B ownership·주변장치·아날로그 계약과 두 HIL image를 build gate에 포함합니다.
+    def test_zephyr_build_includes_ac02_contracts_and_hil_images(self) -> None:
+        path = REPOSITORY / "tools" / "ci" / "run_zephyr_build.py"
+        spec = importlib.util.spec_from_file_location("nu54_ac02_build_gate", path)
+        self.assertIsNotNone(spec)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        self.assertTrue(
+            {
+                ("ac02a_ownership_contract", "nucode.ac02a.ownership_contract"),
+                ("ac02b_b2_contract", "nucode.ac02b.b2_contract"),
+                ("ac02b_analog_contract", "nucode.ac02b.analog_contract"),
+                ("ac02b_hil_dut", "nucode.ac02b.hil_dut"),
+                ("ac02b_hil_peer", "nucode.ac02b.hil_peer"),
             }.issubset(set(module.SUITES))
         )
 
@@ -418,9 +444,14 @@ class M12CiContractTests(unittest.TestCase):
 
     ## @brief Windows build가 MAX_PATH 위험을 실행 전에 차단하는지 검증합니다.
     def test_zephyr_build_requires_short_windows_outdir(self) -> None:
-        source = (REPOSITORY / "tools" / "ci" / "run_zephyr_build.py").read_text(
-            encoding="utf-8"
-        )
+        path = REPOSITORY / "tools" / "ci" / "run_zephyr_build.py"
+        spec = importlib.util.spec_from_file_location("nu54_short_outdir", path)
+        self.assertIsNotNone(spec)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        source = path.read_text(encoding="utf-8")
+        self.assertLessEqual(module.WINDOWS_OUTDIR_MAX_LENGTH, 8)
         self.assertIn("WINDOWS_OUTDIR_MAX_LENGTH", source)
         self.assertIn("validate_outdir_path(outdir)", source)
 

@@ -6,6 +6,7 @@
  */
 
 #include <Arduino.h>
+#include <NUCODEPeripheral.h>
 
 #include <zephyr/device.h>
 #include <zephyr/devicetree.h>
@@ -18,6 +19,8 @@
 #include <errno.h>
 
 #include "internal/WireBackend.h"
+#include "internal/RuntimePeripheralRoute.h"
+#include <peripheral_routes.h>
 
 #if !DT_HAS_CHOSEN(nucode_arduino_wire)
 #error "NUCODE_M7_WIRE_CHOSEN_REQUIRED: Wire에는 app overlay의 nucode,arduino-wire chosen I2C controller가 필요합니다."
@@ -45,6 +48,12 @@ namespace
 
 	/** @brief 보드 DTS가 선택한 Wire controller입니다. */
 	const struct device *const wire_device = DEVICE_DT_GET(NUCODE_ARDUINO_WIRE_NODE);
+	const nucode::arduino::internal::PeripheralRouteBinding wire_binding =
+		nucode::arduino::internal::wireRouteBinding();
+	nucode::arduino::internal::RuntimePeripheralRoute wire_route(
+		wire_binding.device, wire_binding.pinctrl_config, wire_binding.owner,
+		wire_binding.block_kind, wire_binding.block_index);
+	bool wire_route_staged = false;
 
 	/** @brief 보드 DTS가 선언한 초기 I2C 속도입니다. */
 	constexpr std::uint32_t devicetree_clock_hz =
@@ -185,9 +194,53 @@ namespace
 	}
 
 	/** @brief ArduinoCore-API HardwareI2C의 NU54DK controller 구현입니다. */
-	class ZephyrWire final : public arduino::HardwareI2C
+	class ZephyrWire final : public nucode::arduino::Nu54TwoWire
 	{
 	public:
+		/** @brief 종료 상태에서 다음 begin()의 TWIM22 SDA/SCL route를 선택합니다. */
+		bool setPins(pin_size_t sda_pin, pin_size_t scl_pin) noexcept override
+		{
+			if (k_is_in_isr())
+			{
+				recordWireError(WireError::invalid_context);
+				return false;
+			}
+			static_cast<void>(k_mutex_lock(&wire_mutex, K_FOREVER));
+			if (wire_started)
+			{
+				recordWireError(WireError::route_busy);
+				static_cast<void>(k_mutex_unlock(&wire_mutex));
+				return false;
+			}
+			const pin_size_t pins[]{sda_pin, scl_pin};
+			const nucode::arduino::internal::PeripheralSignal signals[]{
+				nucode::arduino::internal::PeripheralSignal::i2c_sda,
+				nucode::arduino::internal::PeripheralSignal::i2c_scl,
+			};
+			nucode::arduino::internal::PeripheralRouteConfiguration configuration{};
+			const auto result = nucode::arduino::internal::buildPeripheralRoute(
+				nucode::arduino::internal::PinRoute::i2c22, pins, signals, 2U,
+				configuration);
+			const bool staged =
+				(result == nucode::arduino::internal::PeripheralRouteBuildError::none) &&
+				wire_route.stage(configuration);
+			if (staged)
+			{
+				wire_route_staged = true;
+			}
+			recordWireError(staged ? WireError::none : WireError::invalid_pin_route,
+							staged ? 0 : static_cast<int>(result));
+			static_cast<void>(k_mutex_unlock(&wire_mutex));
+			return staged;
+		}
+
+		/** @brief controller와 종료 상태 pin remap capability를 반환합니다. */
+		nucode::arduino::PeripheralCapability capabilities() const noexcept override
+		{
+			return nucode::arduino::PeripheralCapability::controller |
+				   nucode::arduino::PeripheralCapability::pin_remap;
+		}
+
 		/** @brief DTS 속도로 controller lifecycle을 시작합니다. */
 		void begin() override
 		{
@@ -198,9 +251,33 @@ namespace
 			}
 
 			static_cast<void>(k_mutex_lock(&wire_mutex, K_FOREVER));
+			if (!wire_binding.available)
+			{
+				recordWireError(WireError::route_error);
+				static_cast<void>(k_mutex_unlock(&wire_mutex));
+				return;
+			}
+			if (!wire_started && !wire_route_staged)
+			{
+				nucode::arduino::internal::PeripheralRouteConfiguration route{};
+				wire_route_staged =
+					nucode::arduino::internal::defaultWireRoute(route) ==
+						nucode::arduino::internal::PeripheralRouteBuildError::none &&
+					wire_route.stage(route);
+			}
+			if (!wire_started && (!wire_route_staged || !wire_route.activate()))
+			{
+				recordWireError(WireError::route_error, wire_route.lastDriverError());
+				static_cast<void>(k_mutex_unlock(&wire_mutex));
+				return;
+			}
 			if (!device_is_ready(wire_device))
 			{
 				recordWireError(WireError::device_not_ready);
+				if (!wire_started)
+				{
+					static_cast<void>(wire_route.deactivate());
+				}
 				static_cast<void>(k_mutex_unlock(&wire_mutex));
 				return;
 			}
@@ -210,6 +287,10 @@ namespace
 				clearTransmitState();
 				clearReceiveBuffer();
 				wire_started = configureWireClock(devicetree_clock_hz);
+				if (!wire_started)
+				{
+					static_cast<void>(wire_route.deactivate());
+				}
 			}
 			else
 			{
@@ -250,9 +331,21 @@ namespace
 			const bool discarded_restart = atomic_get(&wire_pending_restart) != 0;
 			clearTransmitState();
 			clearReceiveBuffer();
-			wire_started = false;
-			recordWireError(discarded_restart ? WireError::pending_restart_conflict
-											  : WireError::none);
+			const bool was_started = wire_started;
+			const bool route_present =
+				was_started || wire_route.active() || wire_route.faulted();
+			const bool route_ok = !route_present || wire_route.deactivate();
+			/** @brief 복구 가능한 route 해제 실패는 end() 재시도를 위해 active 상태를 보존합니다. */
+			wire_started = !route_ok && wire_route.active();
+			if (!route_ok)
+			{
+				recordWireError(WireError::route_error, wire_route.lastDriverError());
+			}
+			else
+			{
+				recordWireError(discarded_restart ? WireError::pending_restart_conflict
+												  : WireError::none);
+			}
 			static_cast<void>(k_mutex_unlock(&wire_mutex));
 		}
 

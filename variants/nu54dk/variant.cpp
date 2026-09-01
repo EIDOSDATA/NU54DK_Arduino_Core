@@ -1,6 +1,6 @@
 /**
  * @file variant.cpp
- * @brief NU54DK Devicetree alias에서 Arduino 논리 핀 설명자를 생성합니다.
+ * @brief Core-owned Devicetree에서 NU54DK canonical 핀 설명자를 생성합니다.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -11,115 +11,119 @@
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/sys/util.h>
 
+#include <nucode/nu54dk-arduino-pin-metadata.h>
+
+#include <cstddef>
+#include <cstdint>
+
 #include "internal/pin_description.h"
 
-#define NUCODE_NU54DK_DIGITAL_PIN(logical_pin, alias_name, pin_class)                     \
-	static_assert(DT_NODE_HAS_STATUS_OKAY(DT_ALIAS(alias_name)),                          \
-				  "NU54DK Arduino Variant의 필수 GPIO alias가 활성화되어야 합니다."); \
-	static_assert(DT_NODE_HAS_PROP(DT_ALIAS(alias_name), gpios),                          \
-				  "NU54DK Arduino Variant의 필수 alias에는 gpios가 필요합니다.");
+static_assert(DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(nucode_arduino_pin_map)),
+			  "NU54DK Arduino Core-owned 31핀 DTS map이 필요합니다.");
+
+#define NUCODE_NU54DK_PHYSICAL_PIN(logical_pin, node_label)                      \
+	static_assert(DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(node_label)),             \
+				  "NU54DK Arduino pin map child가 활성화되어야 합니다.");        \
+	static_assert(DT_NODE_HAS_PROP(DT_NODELABEL(node_label), gpios),             \
+				  "NU54DK Arduino pin map child에는 gpios가 필요합니다.");       \
+	static_assert(!((DT_PROP(DT_NODELABEL(node_label), nucode_route_mask) &      \
+					 NUCODE_PIN_ROUTE_PORT2) != 0 &&                             \
+					(DT_PROP(DT_NODELABEL(node_label), nucode_capability_mask) & \
+					 NUCODE_PIN_CAP_INTERRUPT) != 0),                            \
+				  "GPIO2에는 GPIOTE interrupt capability를 부여할 수 없습니다.");
 #include "digital_pins.inc"
-#undef NUCODE_NU54DK_DIGITAL_PIN
+#undef NUCODE_NU54DK_PHYSICAL_PIN
 
 namespace nucode::arduino::internal
 {
 	namespace
 	{
-		/** @brief 하나의 sparse 논리 ID와 실제 GPIO descriptor를 결합합니다. */
+		/** @brief canonical ID와 실제 설명자를 결합합니다. */
 		struct LogicalPinDescription
 		{
-			pin_size_t logical_pin;
+			std::size_t logical_pin;
 			PinDescription description;
 		};
 
-		/** @brief LED alias의 controller 독립 digital capability입니다. */
-		constexpr PinCapability led_capabilities =
-			PinCapability::digital_input | PinCapability::digital_output;
+		/** @brief 조건부 조립 핀의 digital capability를 profile 승인 전 제거합니다. */
+		[[nodiscard]] constexpr PinCapability enabledCapabilities(
+			std::uint32_t raw_capabilities, PinPolicy policy) noexcept
+		{
+			if ((policy == PinPolicy::conditional_lfxo) &&
+				(NUCODE_NU54DK_HAS_LFXO_GPIO_PINS == 0))
+			{
+				return PinCapability::none;
+			}
+			if ((policy == PinPolicy::conditional_dap_uart) &&
+				(NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS == 0))
+			{
+				return PinCapability::none;
+			}
+			return static_cast<PinCapability>(raw_capabilities);
+		}
 
-		/** @brief 버튼 alias의 controller 독립 digital capability입니다. */
-		constexpr PinCapability button_capabilities =
-			PinCapability::digital_input;
+		static_assert(static_cast<std::uint8_t>(PinPolicy::normal) ==
+					  NUCODE_PIN_POLICY_NORMAL);
+		static_assert(static_cast<std::uint8_t>(PinPolicy::system_reserved) ==
+					  NUCODE_PIN_POLICY_SYSTEM_RESERVED);
+		static_assert(static_cast<std::uint8_t>(PinOwnership::conditional) ==
+					  NUCODE_PIN_OWNER_CONDITIONAL);
+		static_assert(static_cast<std::uint32_t>(PinRoute::port2) ==
+					  NUCODE_PIN_ROUTE_PORT2);
 
-		/** @brief connector GPIO에 허용하는 Arduino capability입니다. */
-		constexpr PinCapability connector_capabilities =
-			PinCapability::digital_input | PinCapability::digital_output |
-			PinCapability::open_drain;
-
-#define NUCODE_NU54DK_CAPABILITIES_led led_capabilities
-#define NUCODE_NU54DK_CAPABILITIES_button button_capabilities
-#define NUCODE_NU54DK_CAPABILITIES_connector connector_capabilities
-#define NUCODE_NU54DK_INTERRUPT_CAPABILITY(alias_name)                           \
-	(NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(alias_name) ? PinCapability::interrupt \
-													 : PinCapability::none)
-#define NUCODE_NU54DK_DESCRIPTOR_led(logical_pin, alias_name)    \
-	{static_cast<pin_size_t>(logical_pin),                         \
-	 {GPIO_DT_SPEC_GET(DT_ALIAS(alias_name), gpios),               \
-	  NUCODE_NU54DK_CAPABILITIES_led |                             \
-		  NUCODE_NU54DK_INTERRUPT_CAPABILITY(alias_name),           \
-	  PinOwnership::board_led}},
-#define NUCODE_NU54DK_DESCRIPTOR_button(logical_pin, alias_name) \
-	{static_cast<pin_size_t>(logical_pin),                         \
-	 {GPIO_DT_SPEC_GET(DT_ALIAS(alias_name), gpios),               \
-	  NUCODE_NU54DK_CAPABILITIES_button |                          \
-		  NUCODE_NU54DK_INTERRUPT_CAPABILITY(alias_name),           \
-	  PinOwnership::board_button}},
-#define NUCODE_NU54DK_DESCRIPTOR_connector(logical_pin, alias_name) \
-	{static_cast<pin_size_t>(logical_pin),                            \
-	 {GPIO_DT_SPEC_GET(DT_ALIAS(alias_name), gpios),                  \
-	  NUCODE_NU54DK_CAPABILITIES_connector,                           \
-	  PinOwnership::connector_gpio}},
-#define NUCODE_NU54DK_DESCRIPTOR_pwm_owned(logical_pin, alias_name)
-#define NUCODE_NU54DK_SELECT_DESCRIPTOR(logical_pin, alias_name, pin_class) \
-	NUCODE_NU54DK_DESCRIPTOR_##pin_class(logical_pin, alias_name)
-
-		/**
-		 * @brief DTS alias와 sparse Arduino 논리 ID로 생성한 immutable 설명자입니다.
-		 */
 		const LogicalPinDescription pin_descriptions[] = {
-#define NUCODE_NU54DK_DIGITAL_PIN(logical_pin, alias_name, pin_class) \
-	NUCODE_NU54DK_SELECT_DESCRIPTOR(logical_pin, alias_name, pin_class)
+#define NUCODE_NU54DK_PHYSICAL_PIN(logical_pin, node_label)                           \
+	{static_cast<std::size_t>(logical_pin),                                           \
+	 {static_cast<std::size_t>(logical_pin),                                          \
+	  GPIO_DT_SPEC_GET(DT_NODELABEL(node_label), gpios),                              \
+	  enabledCapabilities(                                                            \
+		  DT_PROP(DT_NODELABEL(node_label), nucode_capability_mask),                  \
+		  static_cast<PinPolicy>(DT_PROP(DT_NODELABEL(node_label), nucode_policy))),  \
+	  static_cast<PinOwnership>(DT_PROP(DT_NODELABEL(node_label), nucode_ownership)), \
+	  static_cast<PinPolicy>(DT_PROP(DT_NODELABEL(node_label), nucode_policy)),       \
+	  static_cast<PinRoute>(DT_PROP(DT_NODELABEL(node_label), nucode_route_mask)),    \
+	  static_cast<std::int8_t>(DT_PROP_OR(DT_NODELABEL(node_label),                   \
+										  nucode_analog_channel, -1))}},
 #include "digital_pins.inc"
-#undef NUCODE_NU54DK_DIGITAL_PIN
+#undef NUCODE_NU54DK_PHYSICAL_PIN
 		};
 
-		static_assert(ARRAY_SIZE(pin_descriptions) == NUM_DIGITAL_CAPABLE_PINS,
-					  "공개 논리 핀 개수와 NU54DK 설명자 개수가 일치해야 합니다.");
-		static_assert(PIN_A0 < NUM_PIN_ROLES && PIN_PWM0 < NUM_PIN_ROLES &&
-					  PIN_BUTTON3 < NUM_PIN_ROLES,
-					  "모든 공개 논리 ID가 NUM_PIN_ROLES 범위 안에 있어야 합니다.");
+		static_assert(ARRAY_SIZE(pin_descriptions) == NUM_PHYSICAL_PINS,
+					  "NU54DK 실제 pad 수와 canonical descriptor 수가 다릅니다.");
+		static_assert(PIN_LED1 < NUM_PIN_ROLES && PIN_P2_10 < NUM_PIN_ROLES,
+					  "공개 logical ID가 NUM_PIN_ROLES 범위 안에 있어야 합니다.");
+	}
 
-#undef NUCODE_NU54DK_SELECT_DESCRIPTOR
-#undef NUCODE_NU54DK_DESCRIPTOR_pwm_owned
-#undef NUCODE_NU54DK_DESCRIPTOR_connector
-#undef NUCODE_NU54DK_DESCRIPTOR_button
-#undef NUCODE_NU54DK_DESCRIPTOR_led
-#undef NUCODE_NU54DK_INTERRUPT_CAPABILITY
-#undef NUCODE_NU54DK_CAPABILITIES_connector
-#undef NUCODE_NU54DK_CAPABILITIES_button
-#undef NUCODE_NU54DK_CAPABILITIES_led
-
+	std::size_t canonicalPinId(std::size_t logical_pin) noexcept
+	{
+		if (logical_pin >= NUM_PIN_ROLES)
+		{
+			return static_cast<std::size_t>(-1);
+		}
+		return logical_pin == static_cast<std::size_t>(PIN_LED1)
+				   ? static_cast<std::size_t>(PIN_PWM0)
+				   : logical_pin;
 	}
 
 	const PinDescription *pinDescription(std::size_t logical_pin) noexcept
 	{
-		if (logical_pin >= NUM_PIN_ROLES)
+		const std::size_t canonical = canonicalPinId(logical_pin);
+		if (canonical == static_cast<std::size_t>(-1))
 		{
 			return nullptr;
 		}
-
 		for (const auto &entry : pin_descriptions)
 		{
-			if (logical_pin == static_cast<std::size_t>(entry.logical_pin))
+			if (entry.logical_pin == canonical)
 			{
 				return &entry.description;
 			}
 		}
-
 		return nullptr;
 	}
+
 	std::size_t pinDescriptionCount() noexcept
 	{
 		return ARRAY_SIZE(pin_descriptions);
 	}
-
 }

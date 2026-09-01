@@ -102,3 +102,4 @@
 		};
 	};
 };
+#include <nucode/nu54dk-arduino-pins.dtsi>

@@ -22,11 +22,6 @@ namespace nucode::arduino::internal
 	namespace
 	{
 		IoResourceLease uart20_lease{};
-		IoResourceLease i2c22_lease{};
-		IoResourceLease pwm20_lease{};
-#if DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(spi00))
-		IoResourceLease spi00_lease{};
-#endif
 		IoResourceResult registry_result = IoResourceResult::success;
 #if !defined(CONFIG_ZTEST)
 		bool registry_initialized = false;
@@ -101,15 +96,10 @@ namespace nucode::arduino::internal
 			}
 		}
 
-		/** @brief 등록 transaction 전체를 역순으로 해제합니다. */
+		/** @brief 부팅 고정 UART20 등록 transaction을 해제합니다. */
 		[[nodiscard]] IoResourceResult unwindRegisteredResources() noexcept
 		{
 			IoResourceResult first_error = IoResourceResult::success;
-#if DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(spi00))
-			unwindFixedLease(spi00_lease, first_error);
-#endif
-			unwindFixedLease(pwm20_lease, first_error);
-			unwindFixedLease(i2c22_lease, first_error);
 			unwindFixedLease(uart20_lease, first_error);
 			return first_error;
 		}
@@ -139,11 +129,6 @@ namespace nucode::arduino::internal
 	{
 #if defined(CONFIG_ZTEST)
 		uart20_lease = {};
-		i2c22_lease = {};
-		pwm20_lease = {};
-#if DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(spi00))
-		spi00_lease = {};
-#endif
 #else
 		if (registry_initialized)
 		{
@@ -171,51 +156,13 @@ namespace nucode::arduino::internal
 			return failRegistryInitialization(result);
 		}
 
-		const IoResourceId i2c22_resources[] = {
-			pselResource(DT_PROP_BY_IDX(DT_CHILD(DT_NODELABEL(i2c22_default), group1),
-										psels, 0)),
-			pselResource(DT_PROP_BY_IDX(DT_CHILD(DT_NODELABEL(i2c22_default), group1),
-										psels, 1)),
-			peripheralIoResource(IoResourceKind::serial_block, 22U),
-		};
-		result = registerFixedResources(
-			{IoOwnerKind::wire, 22U}, i2c22_resources,
-			sizeof(i2c22_resources) / sizeof(i2c22_resources[0]), i2c22_lease);
-		if (result != IoResourceResult::success)
-		{
-			return failRegistryInitialization(result);
-		}
-
-		const IoResourceId pwm20_resources[] = {
-			pselResource(DT_PROP_BY_IDX(DT_CHILD(DT_NODELABEL(pwm20_default), group1),
-										psels, 0)),
-			peripheralIoResource(IoResourceKind::pwm_block, 20U),
-		};
-		result = registerFixedResources(
-			{IoOwnerKind::pwm, 20U}, pwm20_resources,
-			sizeof(pwm20_resources) / sizeof(pwm20_resources[0]), pwm20_lease);
-		if (result != IoResourceResult::success)
-		{
-			return failRegistryInitialization(result);
-		}
-
-#if DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(spi00))
-		const IoResourceId spi00_resources[] = {
-			pselResource(DT_PROP_BY_IDX(DT_CHILD(DT_NODELABEL(spi00_default), group1),
-										psels, 0)),
-			pselResource(DT_PROP_BY_IDX(DT_CHILD(DT_NODELABEL(spi00_default), group1),
-										psels, 1)),
-			pselResource(DT_PROP_BY_IDX(DT_CHILD(DT_NODELABEL(spi00_default), group1),
-										psels, 2)),
-			peripheralIoResource(IoResourceKind::serial_block, 0U),
-		};
-		result = registerFixedResources(
-			{IoOwnerKind::spi, 0U}, spi00_resources,
-			sizeof(spi00_resources) / sizeof(spi00_resources[0]), spi00_lease);
-#endif
-		return result == IoResourceResult::success
-				   ? result
-				   : failRegistryInitialization(result);
+		/**
+		 * Wire22, PWM20/21/22와 SPI00은 Arduino begin()/end() 수명주기에서
+		 * route와 block을 동적으로 획득합니다. 부팅 시 pad를 고정하면 GPIO에서
+		 * 주변장치로 넘기는 2단계 handover가 시작되기 전에 충돌하므로 등록하지
+		 * 않습니다. 콘솔 UART20만 실제 부팅 고정 소유자로 유지합니다.
+		 */
+		return result;
 	}
 
 	IoResourceResult nu54dkIoResourceRegistryResult() noexcept

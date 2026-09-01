@@ -31,4 +31,3 @@ int main()
     static_cast<void>(BLESerial.lastDriverError());
     return 0;
 }
-

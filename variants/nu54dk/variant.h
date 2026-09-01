@@ -1,6 +1,6 @@
 /**
  * @file variant.h
- * @brief NU54DK의 Arduino 논리 핀 상수를 정의합니다.
+ * @brief NU54DK의 Arduino 논리 핀과 canonical 물리 핀 상수를 정의합니다.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -8,244 +8,243 @@
 #ifndef NUCODE_ARDUINO_VARIANTS_NU54DK_VARIANT_H_
 #define NUCODE_ARDUINO_VARIANTS_NU54DK_VARIANT_H_
 
-#include <api/Common.h>
-
 #if defined(__ZEPHYR__)
 #include <zephyr/devicetree.h>
-#include <zephyr/devicetree/gpio.h>
 #endif
 
-#if defined(CONFIG_NUCODE_ARDUINO_CONNECTOR_GPIO)
+#include <api/Common.h>
+
+#if defined(__ZEPHYR__) && defined(CONFIG_NUCODE_ARDUINO_CONNECTOR_GPIO)
 #if DT_NODE_HAS_STATUS_OKAY(DT_ALIAS(nucode_gpio0)) && \
 	DT_NODE_HAS_STATUS_OKAY(DT_ALIAS(nucode_gpio1))
-/** @brief 현재 profile이 두 connector GPIO alias를 모두 제공하는지 나타냅니다. */
 #define NUCODE_NU54DK_HAS_CONNECTOR_GPIO 1
 #else
-/** @brief connector alias가 없는 expert build에서는 추가 GPIO를 노출하지 않습니다. */
 #define NUCODE_NU54DK_HAS_CONNECTOR_GPIO 0
 #endif
 #else
-/** @brief connector GPIO 기능이 비활성화된 build에서는 추가 GPIO를 노출하지 않습니다. */
 #define NUCODE_NU54DK_HAS_CONNECTOR_GPIO 0
 #endif
 
-/** @brief 보드 Devicetree의 led0 alias에 대응하는 Arduino 논리 핀입니다. */
+#if defined(CONFIG_NUCODE_ARDUINO_DAP_UART_GPIO_PINS)
+#define NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS 1
+#else
+#define NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS 0
+#endif
+
+#if defined(CONFIG_NUCODE_ARDUINO_LFXO_GPIO_PINS)
+#define NUCODE_NU54DK_HAS_LFXO_GPIO_PINS 1
+#else
+#define NUCODE_NU54DK_HAS_LFXO_GPIO_PINS 0
+#endif
+
+/** @brief v0.1~v0.2 공개 ID는 값을 변경하지 않습니다. */
 #define LED_BUILTIN 0U
-
-/** @brief LED_BUILTIN과 같은 v0.1 호환 digital 별칭입니다. */
 #define D0 LED_BUILTIN
-
-/** @brief LED_BUILTIN과 같은 명시적 LED 번호 별칭입니다. */
 #define PIN_LED0 LED_BUILTIN
-
-/** @brief 보드 Devicetree의 sw0 alias에 대응하는 NU54DK 시험용 논리 핀입니다. */
 #define PIN_BUTTON0 1U
-
-/** @brief PIN_BUTTON0과 같은 v0.1 호환 digital 별칭입니다. */
 #define D1 PIN_BUTTON0
-
-/** @brief board SAADC channel 5/P1.12에 대응하는 analog 입력 역할입니다. */
 #define PIN_A0 2U
+#define PIN_PWM0 3U
+#define PIN_PWM_LED PIN_PWM0
+/** @brief legacy ID 4이며 내부에서 P1.10의 canonical ID 3으로 정규화됩니다. */
+#define PIN_LED1 4U
+#define PIN_LED2 5U
+#define PIN_LED3 6U
+#define PIN_BUTTON1 7U
+#define PIN_BUTTON2 8U
+#define PIN_BUTTON3 9U
+#define PIN_GPIO0 10U
+#define D10 PIN_GPIO0
+#define PIN_GPIO1 11U
+#define D11 PIN_GPIO1
+
+/** @brief 나머지 실제 module/header pad에는 기존 ID 뒤의 안정된 canonical ID를 부여합니다. */
+#define PIN_P0_00 12U
+#define PIN_P0_01 13U
+#define PIN_P0_02 14U
+#define PIN_P0_03 15U
+#define PIN_P1_00 16U
+#define PIN_P1_01 17U
+#define PIN_P1_02 18U
+#define PIN_P1_03 19U
+#define PIN_P1_04 20U
+#define PIN_P1_05 21U
+#define PIN_P1_06 22U
+#define PIN_P1_07 23U
+#define PIN_P1_11 24U
+#define PIN_P2_00 25U
+#define PIN_P2_01 26U
+#define PIN_P2_02 27U
+#define PIN_P2_03 28U
+#define PIN_P2_04 29U
+#define PIN_P2_08 30U
+#define PIN_P2_10 31U
+
+/** @brief nRF54L15 SAADC AIN0~AIN7의 실제 pad 별칭입니다. */
+#define PIN_AIN0 PIN_P1_04
+#define PIN_AIN1 PIN_P1_05
+#define PIN_AIN2 PIN_P1_06
+#define PIN_AIN3 PIN_P1_07
+#define PIN_AIN4 PIN_P1_11
+#define PIN_AIN5 PIN_A0
+#define PIN_AIN6 PIN_BUTTON0
+#define PIN_AIN7 PIN_LED3
+
+/** @brief 기존 역할과 같은 pad의 물리 이름은 같은 canonical ID를 사용합니다. */
+#define PIN_P0_04 PIN_BUTTON3
+#define PIN_P1_08 PIN_BUTTON2
+#define PIN_P1_09 PIN_BUTTON1
+#define PIN_P1_10 PIN_PWM0
+#define PIN_P1_12 PIN_A0
+#define PIN_P1_13 PIN_BUTTON0
+#define PIN_P1_14 PIN_LED3
+#define PIN_P2_05 PIN_GPIO0
+#define PIN_P2_06 PIN_GPIO1
+#define PIN_P2_07 PIN_LED2
+#define PIN_P2_09 LED_BUILTIN
 
 #ifdef __cplusplus
-/** @brief Nordic register field와 충돌하지 않는 C++ Arduino A0 상수입니다. */
+/** @brief Arduino 호환 A0 상수입니다. */
 inline constexpr pin_size_t A0 = static_cast<pin_size_t>(PIN_A0);
+inline constexpr pin_size_t A1 = static_cast<pin_size_t>(PIN_AIN0);
+inline constexpr pin_size_t A2 = static_cast<pin_size_t>(PIN_AIN1);
+inline constexpr pin_size_t A3 = static_cast<pin_size_t>(PIN_AIN2);
+inline constexpr pin_size_t A4 = static_cast<pin_size_t>(PIN_AIN3);
+inline constexpr pin_size_t A5 = static_cast<pin_size_t>(PIN_AIN4);
+inline constexpr pin_size_t A6 = static_cast<pin_size_t>(PIN_AIN6);
+inline constexpr pin_size_t A7 = static_cast<pin_size_t>(PIN_AIN7);
 #else
-/** @brief C source에서 사용하는 Arduino 호환 A0 이름입니다. */
 enum
 {
-	A0 = PIN_A0
+	A0 = PIN_A0,
+	A1 = PIN_AIN0,
+	A2 = PIN_AIN1,
+	A3 = PIN_AIN2,
+	A4 = PIN_AIN3,
+	A5 = PIN_AIN4,
+	A6 = PIN_AIN6,
+	A7 = PIN_AIN7
 };
 #endif
 
-/** @brief board pwm_led1/P1.10 chosen에 대응하는 analogWrite 역할입니다. */
-#define PIN_PWM0 3U
-
-/** @brief 회로상의 PWM LED 역할을 설명하는 PIN_PWM0 별칭입니다. */
-#define PIN_PWM_LED PIN_PWM0
-
-/**
- * @brief 보드 Devicetree의 led1 alias에 대응하지만 PWM ownership으로 예약된 역할입니다.
- *
- * PIN_PWM0과 같은 물리 자원이므로 명시적 ownership 전환을 구현하기 전에는 digital
- * descriptor를 제공하지 않습니다.
- */
-#define PIN_LED1 4U
-
-/** @brief 보드 Devicetree의 led2 alias에 대응하는 digital 논리 핀입니다. */
-#define PIN_LED2 5U
-
-/** @brief 보드 Devicetree의 led3 alias에 대응하는 digital 논리 핀입니다. */
-#define PIN_LED3 6U
-
-/** @brief 보드 Devicetree의 sw1 alias에 대응하는 digital 논리 핀입니다. */
-#define PIN_BUTTON1 7U
-
-/** @brief 보드 Devicetree의 sw2 alias에 대응하는 digital 논리 핀입니다. */
-#define PIN_BUTTON2 8U
-
-/** @brief 보드 Devicetree의 sw3 alias에 대응하는 digital 논리 핀입니다. */
-#define PIN_BUTTON3 9U
-
-/** @brief Arduino profile의 nucode-gpio0 alias에 대응하는 connector GPIO입니다. */
-#define PIN_GPIO0 10U
-
-/** @brief PIN_GPIO0의 Arduino digital 번호 별칭입니다. */
-#define D10 PIN_GPIO0
-
-/** @brief Arduino profile의 nucode-gpio1 alias에 대응하는 connector GPIO입니다. */
-#define PIN_GPIO1 11U
-
-/** @brief PIN_GPIO1의 Arduino digital 번호 별칭입니다. */
-#define D11 PIN_GPIO1
-
-/**
- * @brief digital API가 검사하는 sparse 논리 ID 범위의 상한입니다.
- *
- * 0부터 NUM_DIGITAL_PINS - 1까지 순회할 수 있지만 PIN_A0, PIN_PWM0과
- * PWM-owned PIN_LED1은 digital descriptor가 없는 예약 역할이므로
- * digitalPinIsValid()로 구분합니다.
- */
-#if NUCODE_NU54DK_HAS_CONNECTOR_GPIO
-#define NUM_DIGITAL_PINS 12U
-#else
-#define NUM_DIGITAL_PINS 10U
-#endif
-
-/** @brief 실제 digital GPIO descriptor를 제공하는 논리 핀 개수입니다. */
-#if NUCODE_NU54DK_HAS_CONNECTOR_GPIO
-#define NUM_DIGITAL_CAPABLE_PINS 9U
-#else
-#define NUM_DIGITAL_CAPABLE_PINS 7U
-#endif
-
-/** @brief NU54DK Variant가 제공하는 analog 입력 역할 개수입니다. */
-#define NUM_ANALOG_INPUTS 1U
-
-/** @brief NU54DK Variant가 제공하는 PWM 출력 역할 개수입니다. */
+#define NUM_PIN_ROLES 32U
+#define NUM_DIGITAL_PINS NUM_PIN_ROLES
+#define NUM_PHYSICAL_PINS 31U
+#define NUM_DIGITAL_CAPABLE_PINS                         \
+	(20U + (4U * NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS) + \
+	 (2U * NUCODE_NU54DK_HAS_LFXO_GPIO_PINS))
+#define NUM_ANALOG_INPUTS 8U
 #define NUM_ANALOG_OUTPUTS 1U
 
-/**
- * @brief sparse digital ID, analog 입력과 PWM을 모두 포함한 논리 ID 범위입니다.
- *
- * 유효한 논리 ID는 0부터 NUM_PIN_ROLES - 1까지입니다. PIN_A0, PIN_PWM0과
- * PWM-owned PIN_LED1은 digital descriptor를 갖지 않으며 실제 descriptor 수는
- * NUM_DIGITAL_CAPABLE_PINS입니다.
- */
-#if NUCODE_NU54DK_HAS_CONNECTOR_GPIO
-#define NUM_PIN_ROLES 12U
-#else
-#define NUM_PIN_ROLES 10U
-#endif
-
-/** @brief Core overlay의 ADC_GAIN_1_4/ADC_REF_INTERNAL 설정을 사용하는 기본 mode입니다. */
 #define AR_DEFAULT 0U
-
-/** @brief NU54DK의 고정 internal reference를 설명하는 AR_DEFAULT 별칭입니다. */
 #define AR_INTERNAL AR_DEFAULT
-
 #ifndef DEFAULT
-/** @brief 일반 Arduino Sketch의 analogReference(DEFAULT) 호환 이름입니다. */
 #define DEFAULT AR_DEFAULT
 #endif
 
-/** @brief 유효하지 않은 Arduino interrupt 번호입니다. */
 #define NOT_AN_INTERRUPT 0xFFU
-
-/**
- * @brief 논리 핀의 실제 GPIO controller가 interrupt를 제공하는지 판정합니다.
- *
- * NU54DK의 GPIO2에는 GPIOTE가 없으므로 P2.x는 digital I/O로만 사용할 수
- * 있습니다. Zephyr 시험 overlay가 alias를 gpio-emul로 옮기면 실제 controller를
- * 기준으로 다시 판정합니다.
- */
-#if defined(__ZEPHYR__)
-#define NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(alias_name) \
-	(!DT_SAME_NODE(DT_GPIO_CTLR(DT_ALIAS(alias_name), gpios), DT_NODELABEL(gpio2)))
-#define NUCODE_NU54DK_PIN_INTERRUPT_CAPABLE(pin_value)                              \
-	((((pin_value) == (pin_size_t)LED_BUILTIN) &&                                    \
-	  NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(led0)) ||                                \
-	 (((pin_value) == (pin_size_t)PIN_BUTTON0) &&                                    \
-	  NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(sw0)) ||                                 \
-	 (((pin_value) == (pin_size_t)PIN_LED2) &&                                       \
-	  NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(led2)) ||                                \
-	 (((pin_value) == (pin_size_t)PIN_LED3) &&                                       \
-	  NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(led3)) ||                                \
-	 (((pin_value) == (pin_size_t)PIN_BUTTON1) &&                                    \
-	  NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(sw1)) ||                                 \
-	 (((pin_value) == (pin_size_t)PIN_BUTTON2) &&                                    \
-	  NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(sw2)) ||                                 \
-	 (((pin_value) == (pin_size_t)PIN_BUTTON3) &&                                    \
-	  NUCODE_NU54DK_ALIAS_INTERRUPT_CAPABLE(sw3)))
-#else
-#define NUCODE_NU54DK_PIN_INTERRUPT_CAPABLE(pin_value) \
-	(digitalPinIsValid(pin_value) &&                         \
-	 ((pin_value) != (pin_size_t)LED_BUILTIN) &&             \
-	 ((pin_value) != (pin_size_t)PIN_LED2))
-#endif
 
 #ifdef __cplusplus
 
-/**
- * @brief 논리 ID가 digital GPIO descriptor를 갖는지 확인합니다.
- *
- * @param pin 확인할 Arduino 논리 ID입니다.
- * @return digital GPIO이면 true입니다.
- */
-[[nodiscard]] constexpr bool digitalPinIsValid(pin_size_t pin) noexcept
+/** @brief legacy logical ID를 canonical 물리 ID로 정규화합니다. */
+[[nodiscard]] constexpr pin_size_t canonicalDigitalPin(pin_size_t pin) noexcept
 {
-	return ((pin >= static_cast<pin_size_t>(LED_BUILTIN)) &&
-			(pin <= static_cast<pin_size_t>(PIN_BUTTON0))) ||
-		   ((pin >= static_cast<pin_size_t>(PIN_LED2)) &&
-			(pin <= static_cast<pin_size_t>(PIN_BUTTON3)))
-#if NUCODE_NU54DK_HAS_CONNECTOR_GPIO
-		   || ((pin >= static_cast<pin_size_t>(PIN_GPIO0)) &&
-			   (pin <= static_cast<pin_size_t>(PIN_GPIO1)))
-#endif
-		;
+	return pin == static_cast<pin_size_t>(PIN_LED1)
+			   ? static_cast<pin_size_t>(PIN_PWM0)
+			   : pin;
 }
 
-/**
- * @brief Arduino 논리 핀을 interrupt 번호로 안전하게 변환합니다.
- *
- * @param pin 변환할 Arduino 논리 핀입니다.
- * @return 유효하면 같은 번호, 범위를 벗어나면 NOT_AN_INTERRUPT입니다.
- */
+/** @brief 논리 ID가 현재 profile에서 digital GPIO 기능을 제공하는지 확인합니다. */
+[[nodiscard]] constexpr bool digitalPinIsValid(pin_size_t pin) noexcept
+{
+	const pin_size_t canonical = canonicalDigitalPin(pin);
+	const bool always_available =
+		(canonical <= static_cast<pin_size_t>(PIN_GPIO1)) ||
+		((canonical >= static_cast<pin_size_t>(PIN_P1_02)) &&
+		 (canonical <= static_cast<pin_size_t>(PIN_P1_03))) ||
+		(canonical == static_cast<pin_size_t>(PIN_P1_11)) ||
+		((canonical >= static_cast<pin_size_t>(PIN_P2_00)) &&
+		 (canonical <= static_cast<pin_size_t>(PIN_P2_08)));
+	const bool dap_uart_available = NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS &&
+									(canonical >= static_cast<pin_size_t>(PIN_P0_00)) &&
+									(canonical <= static_cast<pin_size_t>(PIN_P0_03));
+	const bool lfxo_available = NUCODE_NU54DK_HAS_LFXO_GPIO_PINS &&
+								(canonical >= static_cast<pin_size_t>(PIN_P1_00)) &&
+								(canonical <= static_cast<pin_size_t>(PIN_P1_01));
+	return always_available || dap_uart_available || lfxo_available;
+}
+
+/** @brief P0/P1 GPIOTE 가능 핀만 canonical interrupt 번호로 변환합니다. */
 [[nodiscard]] constexpr pin_size_t digitalPinToInterrupt(pin_size_t pin) noexcept
 {
-	return digitalPinIsValid(pin) && NUCODE_NU54DK_PIN_INTERRUPT_CAPABLE(pin)
-			   ? pin
+	const pin_size_t canonical = canonicalDigitalPin(pin);
+	const bool port0 =
+		(canonical == static_cast<pin_size_t>(PIN_P0_04)) ||
+		(NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS &&
+		 (canonical >= static_cast<pin_size_t>(PIN_P0_00)) &&
+		 (canonical <= static_cast<pin_size_t>(PIN_P0_03)));
+	const bool port1 =
+		(canonical == static_cast<pin_size_t>(PIN_P1_08)) ||
+		(canonical == static_cast<pin_size_t>(PIN_P1_09)) ||
+		(canonical == static_cast<pin_size_t>(PIN_P1_10)) ||
+		(canonical == static_cast<pin_size_t>(PIN_P1_12)) ||
+		(canonical == static_cast<pin_size_t>(PIN_P1_13)) ||
+		(canonical == static_cast<pin_size_t>(PIN_P1_14)) ||
+		((canonical >= static_cast<pin_size_t>(PIN_P1_02)) &&
+		 (canonical <= static_cast<pin_size_t>(PIN_P1_11))) ||
+		(NUCODE_NU54DK_HAS_LFXO_GPIO_PINS &&
+		 (canonical >= static_cast<pin_size_t>(PIN_P1_00)) &&
+		 (canonical <= static_cast<pin_size_t>(PIN_P1_01)));
+	return digitalPinIsValid(canonical) && (port0 || port1)
+			   ? canonical
 			   : static_cast<pin_size_t>(NOT_AN_INTERRUPT);
 }
 
 #else
 
-/**
- * @brief C 호출부에서 논리 ID가 digital GPIO인지 확인합니다.
- *
- * @param pin 확인할 Arduino 논리 ID입니다.
- * @return digital GPIO이면 1, 아니면 0입니다.
- */
-static inline int digitalPinIsValid(pin_size_t pin)
+static inline pin_size_t canonicalDigitalPin(pin_size_t pin)
 {
-	return ((pin >= (pin_size_t)LED_BUILTIN) && (pin <= (pin_size_t)PIN_BUTTON0)) ||
-		   ((pin >= (pin_size_t)PIN_LED2) && (pin <= (pin_size_t)PIN_BUTTON3))
-#if NUCODE_NU54DK_HAS_CONNECTOR_GPIO
-		   || ((pin >= (pin_size_t)PIN_GPIO0) && (pin <= (pin_size_t)PIN_GPIO1))
-#endif
-		;
+	return pin == (pin_size_t)PIN_LED1 ? (pin_size_t)PIN_PWM0 : pin;
 }
 
-/**
- * @brief C 호출부에서 Arduino 논리 핀을 interrupt 번호로 안전하게 변환합니다.
- *
- * @param pin 변환할 Arduino 논리 핀입니다.
- * @return 유효하면 같은 번호, 범위를 벗어나면 NOT_AN_INTERRUPT입니다.
- */
+static inline int digitalPinIsValid(pin_size_t pin)
+{
+	const pin_size_t canonical = canonicalDigitalPin(pin);
+	return (canonical <= (pin_size_t)PIN_GPIO1) ||
+		   ((canonical >= (pin_size_t)PIN_P1_02) &&
+			(canonical <= (pin_size_t)PIN_P1_03)) ||
+		   (canonical == (pin_size_t)PIN_P1_11) ||
+		   ((canonical >= (pin_size_t)PIN_P2_00) &&
+			(canonical <= (pin_size_t)PIN_P2_08)) ||
+		   (NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS &&
+			(canonical >= (pin_size_t)PIN_P0_00) &&
+			(canonical <= (pin_size_t)PIN_P0_03)) ||
+		   (NUCODE_NU54DK_HAS_LFXO_GPIO_PINS &&
+			(canonical >= (pin_size_t)PIN_P1_00) &&
+			(canonical <= (pin_size_t)PIN_P1_01));
+}
+
 static inline pin_size_t digitalPinToInterrupt(pin_size_t pin)
 {
-	return digitalPinIsValid(pin) && NUCODE_NU54DK_PIN_INTERRUPT_CAPABLE(pin)
-			   ? pin
+	const pin_size_t canonical = canonicalDigitalPin(pin);
+	const int port0 = (canonical == (pin_size_t)PIN_P0_04) ||
+					  (NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS &&
+					   (canonical >= (pin_size_t)PIN_P0_00) &&
+					   (canonical <= (pin_size_t)PIN_P0_03));
+	const int port1 =
+		(canonical == (pin_size_t)PIN_P1_08) ||
+		(canonical == (pin_size_t)PIN_P1_09) ||
+		(canonical == (pin_size_t)PIN_P1_10) ||
+		(canonical == (pin_size_t)PIN_P1_12) ||
+		(canonical == (pin_size_t)PIN_P1_13) ||
+		(canonical == (pin_size_t)PIN_P1_14) ||
+		((canonical >= (pin_size_t)PIN_P1_02) &&
+		 (canonical <= (pin_size_t)PIN_P1_11)) ||
+		(NUCODE_NU54DK_HAS_LFXO_GPIO_PINS &&
+		 (canonical >= (pin_size_t)PIN_P1_00) &&
+		 (canonical <= (pin_size_t)PIN_P1_01));
+	return digitalPinIsValid(canonical) && (port0 || port1)
+			   ? canonical
 			   : (pin_size_t)NOT_AN_INTERRUPT;
 }
 

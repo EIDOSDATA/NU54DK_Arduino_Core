@@ -19,13 +19,59 @@ namespace nucode::arduino::internal
 	/**
 	 * @brief Arduino 논리 핀이 지원하는 최소 GPIO 기능입니다.
 	 */
-	enum class PinCapability : std::uint8_t
+	enum class PinCapability : std::uint32_t
 	{
 		none = 0U,
 		digital_input = 1U << 0U,
 		digital_output = 1U << 1U,
 		interrupt = 1U << 2U,
 		open_drain = 1U << 3U,
+		analog_input = 1U << 4U,
+		pwm_output = 1U << 5U,
+		wakeup = 1U << 6U,
+	};
+
+	/**
+	 * @brief NU54DK 회로와 현재 profile이 핀 접근에 적용하는 안전 정책입니다.
+	 */
+	enum class PinPolicy : std::uint8_t
+	{
+		normal = 0U,
+		input_only,
+		transferable_peripheral,
+		conditional_lfxo,
+		conditional_dap_uart,
+		system_reserved,
+	};
+
+	/**
+	 * @brief 물리 패드가 연결된 보드·SoC route를 나타내는 비트 마스크입니다.
+	 *
+	 * @details 이 값은 모든 주변장치를 모든 GPIO에 배치할 수 있다는 의미가 아닙니다.
+	 * 주변장치 backend는 instance별 port와 signal route를 추가로 검증해야 합니다.
+	 */
+	enum class PinRoute : std::uint32_t
+	{
+		none = 0U,
+		gpio = 1U << 0U,
+		gpiote = 1U << 1U,
+		adc = 1U << 2U,
+		lfxo = 1U << 3U,
+		nfct = 1U << 4U,
+		uart20_console = 1U << 5U,
+		uart30 = 1U << 6U,
+		i2c22 = 1U << 7U,
+		spi00 = 1U << 8U,
+		pwm20 = 1U << 9U,
+		pmic = 1U << 10U,
+		board_led = 1U << 11U,
+		board_button = 1U << 12U,
+		header = 1U << 13U,
+		port0 = 1U << 14U,
+		port1 = 1U << 15U,
+		port2 = 1U << 16U,
+		pwm21 = 1U << 17U,
+		pwm22 = 1U << 18U,
 	};
 
 	/**
@@ -36,6 +82,13 @@ namespace nucode::arduino::internal
 		board_led = 0U,
 		board_button,
 		connector_gpio,
+		wire,
+		spi,
+		pwm,
+		adc,
+		serial,
+		system,
+		conditional,
 	};
 
 	/**
@@ -47,8 +100,8 @@ namespace nucode::arduino::internal
 	 */
 	[[nodiscard]] constexpr PinCapability operator|(PinCapability lhs, PinCapability rhs) noexcept
 	{
-		return static_cast<PinCapability>(static_cast<std::uint8_t>(lhs) |
-										  static_cast<std::uint8_t>(rhs));
+		return static_cast<PinCapability>(static_cast<std::uint32_t>(lhs) |
+										  static_cast<std::uint32_t>(rhs));
 	}
 
 	/**
@@ -61,8 +114,23 @@ namespace nucode::arduino::internal
 	[[nodiscard]] constexpr bool hasPinCapability(PinCapability capabilities,
 												  PinCapability requested) noexcept
 	{
-		return (static_cast<std::uint8_t>(capabilities) & static_cast<std::uint8_t>(requested)) !=
+		return (static_cast<std::uint32_t>(capabilities) &
+				static_cast<std::uint32_t>(requested)) !=
 			   0U;
+	}
+
+	/** @brief 두 route 기능을 하나의 비트 마스크로 결합합니다. */
+	[[nodiscard]] constexpr PinRoute operator|(PinRoute lhs, PinRoute rhs) noexcept
+	{
+		return static_cast<PinRoute>(static_cast<std::uint32_t>(lhs) |
+								 static_cast<std::uint32_t>(rhs));
+	}
+
+	/** @brief 핀 route 비트 마스크에 요청 route가 포함되는지 확인합니다. */
+	[[nodiscard]] constexpr bool hasPinRoute(PinRoute routes, PinRoute requested) noexcept
+	{
+		return (static_cast<std::uint32_t>(routes) &
+				static_cast<std::uint32_t>(requested)) != 0U;
 	}
 
 	/**
@@ -73,10 +141,22 @@ namespace nucode::arduino::internal
 	 */
 	struct PinDescription
 	{
+		std::size_t canonical_pin;
 		gpio_dt_spec gpio;
 		PinCapability capabilities;
 		PinOwnership ownership;
+		PinPolicy policy;
+		PinRoute routes;
+		std::int8_t analog_channel;
 	};
+
+	/**
+	 * @brief 공개 논리 ID를 한 물리 패드의 canonical ID로 정규화합니다.
+	 *
+	 * @param logical_pin Variant가 정의한 공개 논리 ID입니다.
+	 * @return 유효하면 canonical ID, 유효하지 않으면 SIZE_MAX입니다.
+	 */
+	[[nodiscard]] std::size_t canonicalPinId(std::size_t logical_pin) noexcept;
 
 	/**
 	 * @brief GPIO 공개 API에서 발생한 마지막 내부 오류입니다.
@@ -180,6 +260,14 @@ namespace nucode::arduino::internal
 	 * @return push-pull 또는 open-drain output mode이면 true입니다.
 	 */
 	[[nodiscard]] bool isPinConfiguredForOutput(std::size_t logical_pin) noexcept;
+
+	/**
+	 * @brief 복구 불가능한 GPIO 전환 오류로 핀 사용이 차단되었는지 확인합니다.
+	 *
+	 * @param logical_pin 확인할 Arduino 논리 핀입니다.
+	 * @return 재부팅 전까지 GPIO와 interrupt 사용을 거부해야 하면 true입니다.
+	 */
+	[[nodiscard]] bool isGpioPinHandoverFaulted(std::size_t logical_pin) noexcept;
 
 }
 

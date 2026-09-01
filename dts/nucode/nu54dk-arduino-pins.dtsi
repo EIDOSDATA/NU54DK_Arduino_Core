@@ -1,0 +1,260 @@
+/**
+ * @file nu54dk-arduino-pins.dtsi
+ * @brief NU54DK module/header의 31개 실제 GPIO pad와 안전 정책을 정의합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <nucode/nu54dk-arduino-pin-metadata.h>
+
+#define NUCODE_GPIO_CAPS (NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_OUTPUT | \
+	NUCODE_PIN_CAP_OPEN_DRAIN)
+#define NUCODE_IRQ_GPIO_CAPS (NUCODE_GPIO_CAPS | NUCODE_PIN_CAP_INTERRUPT)
+#define NUCODE_P0_ROUTES (NUCODE_PIN_ROUTE_GPIO | NUCODE_PIN_ROUTE_GPIOTE | \
+	NUCODE_PIN_ROUTE_HEADER | NUCODE_PIN_ROUTE_PORT0 | NUCODE_PIN_ROUTE_UART30)
+#define NUCODE_P1_ROUTES (NUCODE_PIN_ROUTE_GPIO | NUCODE_PIN_ROUTE_GPIOTE | \
+	NUCODE_PIN_ROUTE_HEADER | NUCODE_PIN_ROUTE_PORT1 | NUCODE_PIN_ROUTE_I2C22 | \
+	NUCODE_PIN_ROUTE_PWM20 | NUCODE_PIN_ROUTE_PWM21 | NUCODE_PIN_ROUTE_PWM22)
+#define NUCODE_P2_ROUTES (NUCODE_PIN_ROUTE_GPIO | NUCODE_PIN_ROUTE_HEADER | \
+	NUCODE_PIN_ROUTE_PORT2)
+
+/ {
+	nucode_arduino_pin_map: arduino-pin-map {
+		compatible = "nucode,arduino-pin-map";
+
+		arduino_p0_00: pin-p0-00 {
+			gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <NUCODE_IRQ_GPIO_CAPS>;
+			nucode,policy = <NUCODE_PIN_POLICY_CONDITIONAL_DAP_UART>;
+			nucode,ownership = <NUCODE_PIN_OWNER_CONDITIONAL>;
+			nucode,route-mask = <(NUCODE_P0_ROUTES | NUCODE_PIN_ROUTE_UART30)>;
+		};
+		arduino_p0_01: pin-p0-01 {
+			gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <NUCODE_IRQ_GPIO_CAPS>;
+			nucode,policy = <NUCODE_PIN_POLICY_CONDITIONAL_DAP_UART>;
+			nucode,ownership = <NUCODE_PIN_OWNER_CONDITIONAL>;
+			nucode,route-mask = <(NUCODE_P0_ROUTES | NUCODE_PIN_ROUTE_UART30)>;
+		};
+		arduino_p0_02: pin-p0-02 {
+			gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <NUCODE_IRQ_GPIO_CAPS>;
+			nucode,policy = <NUCODE_PIN_POLICY_CONDITIONAL_DAP_UART>;
+			nucode,ownership = <NUCODE_PIN_OWNER_CONDITIONAL>;
+			nucode,route-mask = <(NUCODE_P0_ROUTES | NUCODE_PIN_ROUTE_UART30)>;
+		};
+		arduino_p0_03: pin-p0-03 {
+			gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <NUCODE_IRQ_GPIO_CAPS>;
+			nucode,policy = <NUCODE_PIN_POLICY_CONDITIONAL_DAP_UART>;
+			nucode,ownership = <NUCODE_PIN_OWNER_CONDITIONAL>;
+			nucode,route-mask = <(NUCODE_P0_ROUTES | NUCODE_PIN_ROUTE_UART30)>;
+		};
+		arduino_p0_04: pin-p0-04 {
+			gpios = <&gpio0 4 GPIO_ACTIVE_LOW>;
+			nucode,capability-mask = <(NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_INTERRUPT)>;
+			nucode,policy = <NUCODE_PIN_POLICY_INPUT_ONLY>;
+			nucode,ownership = <NUCODE_PIN_OWNER_BOARD_BUTTON>;
+			nucode,route-mask = <(NUCODE_P0_ROUTES | NUCODE_PIN_ROUTE_BOARD_BUTTON)>;
+		};
+
+		arduino_p1_00: pin-p1-00 {
+			gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <(NUCODE_IRQ_GPIO_CAPS | NUCODE_PIN_CAP_PWM)>;
+			nucode,policy = <NUCODE_PIN_POLICY_CONDITIONAL_LFXO>;
+			nucode,ownership = <NUCODE_PIN_OWNER_CONDITIONAL>;
+			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_LFXO)>;
+		};
+		arduino_p1_01: pin-p1-01 {
+			gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <(NUCODE_IRQ_GPIO_CAPS | NUCODE_PIN_CAP_PWM)>;
+			nucode,policy = <NUCODE_PIN_POLICY_CONDITIONAL_LFXO>;
+			nucode,ownership = <NUCODE_PIN_OWNER_CONDITIONAL>;
+			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_LFXO)>;
+		};
+		arduino_p1_02: pin-p1-02 {
+			gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <(NUCODE_IRQ_GPIO_CAPS | NUCODE_PIN_CAP_PWM)>;
+			nucode,policy = <NUCODE_PIN_POLICY_TRANSFERABLE>;
+			nucode,ownership = <NUCODE_PIN_OWNER_WIRE>;
+			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_NFCT | NUCODE_PIN_ROUTE_I2C22)>;
+		};
+		arduino_p1_03: pin-p1-03 {
+			gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <(NUCODE_IRQ_GPIO_CAPS | NUCODE_PIN_CAP_PWM)>;
+			nucode,policy = <NUCODE_PIN_POLICY_TRANSFERABLE>;
+			nucode,ownership = <NUCODE_PIN_OWNER_WIRE>;
+			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_NFCT | NUCODE_PIN_ROUTE_I2C22)>;
+		};
+		arduino_p1_04: pin-p1-04 {
+			gpios = <&gpio1 4 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <NUCODE_PIN_CAP_ANALOG>;
+			nucode,policy = <NUCODE_PIN_POLICY_SYSTEM_RESERVED>;
+			nucode,ownership = <NUCODE_PIN_OWNER_SERIAL>;
+			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_ADC | NUCODE_PIN_ROUTE_UART20_CONSOLE)>;
+			nucode,analog-channel = <0>;
+		};
+		arduino_p1_05: pin-p1-05 {
+			gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <NUCODE_PIN_CAP_ANALOG>;
+			nucode,policy = <NUCODE_PIN_POLICY_SYSTEM_RESERVED>;
+			nucode,ownership = <NUCODE_PIN_OWNER_SERIAL>;
+			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_ADC | NUCODE_PIN_ROUTE_UART20_CONSOLE)>;
+			nucode,analog-channel = <1>;
+		};
+		arduino_p1_06: pin-p1-06 {
+			gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <NUCODE_PIN_CAP_ANALOG>;
+			nucode,policy = <NUCODE_PIN_POLICY_SYSTEM_RESERVED>;
+			nucode,ownership = <NUCODE_PIN_OWNER_SERIAL>;
+			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_ADC | NUCODE_PIN_ROUTE_UART20_CONSOLE)>;
+			nucode,analog-channel = <2>;
+		};
+		arduino_p1_07: pin-p1-07 {
+			gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <NUCODE_PIN_CAP_ANALOG>;
+			nucode,policy = <NUCODE_PIN_POLICY_SYSTEM_RESERVED>;
+			nucode,ownership = <NUCODE_PIN_OWNER_SERIAL>;
+			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_ADC | NUCODE_PIN_ROUTE_UART20_CONSOLE)>;
+			nucode,analog-channel = <3>;
+		};
+		arduino_p1_08: pin-p1-08 {
+			gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
+			nucode,capability-mask = <(NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_INTERRUPT)>;
+			nucode,policy = <NUCODE_PIN_POLICY_INPUT_ONLY>;
+			nucode,ownership = <NUCODE_PIN_OWNER_BOARD_BUTTON>;
+			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_BOARD_BUTTON)>;
+		};
+		arduino_p1_09: pin-p1-09 {
+			gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
+			nucode,capability-mask = <(NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_INTERRUPT)>;
+			nucode,policy = <NUCODE_PIN_POLICY_INPUT_ONLY>;
+			nucode,ownership = <NUCODE_PIN_OWNER_BOARD_BUTTON>;
+			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_BOARD_BUTTON)>;
+		};
+		arduino_p1_10: pin-p1-10 {
+			gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <(NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_OUTPUT | NUCODE_PIN_CAP_INTERRUPT | NUCODE_PIN_CAP_OPEN_DRAIN | NUCODE_PIN_CAP_PWM)>;
+			nucode,policy = <NUCODE_PIN_POLICY_TRANSFERABLE>;
+			nucode,ownership = <NUCODE_PIN_OWNER_PWM>;
+			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_PWM20 | NUCODE_PIN_ROUTE_BOARD_LED)>;
+		};
+		arduino_p1_11: pin-p1-11 {
+			gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
+			nucode,capability-mask = <(NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_INTERRUPT | NUCODE_PIN_CAP_ANALOG)>;
+			nucode,policy = <NUCODE_PIN_POLICY_INPUT_ONLY>;
+			nucode,ownership = <NUCODE_PIN_OWNER_SYSTEM>;
+			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_ADC | NUCODE_PIN_ROUTE_PMIC)>;
+			nucode,analog-channel = <4>;
+		};
+		arduino_p1_12: pin-p1-12 {
+			gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <(NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_INTERRUPT | NUCODE_PIN_CAP_ANALOG)>;
+			nucode,policy = <NUCODE_PIN_POLICY_INPUT_ONLY>;
+			nucode,ownership = <NUCODE_PIN_OWNER_ADC>;
+			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_ADC | NUCODE_PIN_ROUTE_PMIC)>;
+			nucode,analog-channel = <5>;
+		};
+		arduino_p1_13: pin-p1-13 {
+			gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
+			nucode,capability-mask = <(NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_INTERRUPT | NUCODE_PIN_CAP_ANALOG)>;
+			nucode,policy = <NUCODE_PIN_POLICY_INPUT_ONLY>;
+			nucode,ownership = <NUCODE_PIN_OWNER_BOARD_BUTTON>;
+			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_ADC | NUCODE_PIN_ROUTE_BOARD_BUTTON)>;
+			nucode,analog-channel = <6>;
+		};
+		arduino_p1_14: pin-p1-14 {
+			gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <(NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_OUTPUT | NUCODE_PIN_CAP_INTERRUPT | NUCODE_PIN_CAP_OPEN_DRAIN | NUCODE_PIN_CAP_ANALOG | NUCODE_PIN_CAP_PWM)>;
+			nucode,policy = <NUCODE_PIN_POLICY_NORMAL>;
+			nucode,ownership = <NUCODE_PIN_OWNER_BOARD_LED>;
+			nucode,route-mask = <(NUCODE_P1_ROUTES | NUCODE_PIN_ROUTE_ADC | NUCODE_PIN_ROUTE_BOARD_LED)>;
+			nucode,analog-channel = <7>;
+		};
+
+		arduino_p2_00: pin-p2-00 {
+			gpios = <&gpio2 0 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <NUCODE_GPIO_CAPS>;
+			nucode,policy = <NUCODE_PIN_POLICY_NORMAL>;
+			nucode,ownership = <NUCODE_PIN_OWNER_CONNECTOR_GPIO>;
+			nucode,route-mask = <NUCODE_P2_ROUTES>;
+		};
+		arduino_p2_01: pin-p2-01 {
+			gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <NUCODE_GPIO_CAPS>;
+			nucode,policy = <NUCODE_PIN_POLICY_TRANSFERABLE>;
+			nucode,ownership = <NUCODE_PIN_OWNER_SPI>;
+			nucode,route-mask = <(NUCODE_P2_ROUTES | NUCODE_PIN_ROUTE_SPI00)>;
+		};
+		arduino_p2_02: pin-p2-02 {
+			gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <NUCODE_GPIO_CAPS>;
+			nucode,policy = <NUCODE_PIN_POLICY_TRANSFERABLE>;
+			nucode,ownership = <NUCODE_PIN_OWNER_SPI>;
+			nucode,route-mask = <(NUCODE_P2_ROUTES | NUCODE_PIN_ROUTE_SPI00)>;
+		};
+		arduino_p2_03: pin-p2-03 {
+			gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <NUCODE_GPIO_CAPS>;
+			nucode,policy = <NUCODE_PIN_POLICY_NORMAL>;
+			nucode,ownership = <NUCODE_PIN_OWNER_CONNECTOR_GPIO>;
+			nucode,route-mask = <NUCODE_P2_ROUTES>;
+		};
+		arduino_p2_04: pin-p2-04 {
+			gpios = <&gpio2 4 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <NUCODE_GPIO_CAPS>;
+			nucode,policy = <NUCODE_PIN_POLICY_TRANSFERABLE>;
+			nucode,ownership = <NUCODE_PIN_OWNER_SPI>;
+			nucode,route-mask = <(NUCODE_P2_ROUTES | NUCODE_PIN_ROUTE_SPI00)>;
+		};
+		arduino_p2_05: pin-p2-05 {
+			gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <NUCODE_GPIO_CAPS>;
+			nucode,policy = <NUCODE_PIN_POLICY_NORMAL>;
+			nucode,ownership = <NUCODE_PIN_OWNER_CONNECTOR_GPIO>;
+			nucode,route-mask = <NUCODE_P2_ROUTES>;
+		};
+		arduino_p2_06: pin-p2-06 {
+			gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <NUCODE_GPIO_CAPS>;
+			nucode,policy = <NUCODE_PIN_POLICY_NORMAL>;
+			nucode,ownership = <NUCODE_PIN_OWNER_CONNECTOR_GPIO>;
+			nucode,route-mask = <NUCODE_P2_ROUTES>;
+		};
+		arduino_p2_07: pin-p2-07 {
+			gpios = <&gpio2 7 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <(NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_OUTPUT)>;
+			nucode,policy = <NUCODE_PIN_POLICY_NORMAL>;
+			nucode,ownership = <NUCODE_PIN_OWNER_BOARD_LED>;
+			nucode,route-mask = <(NUCODE_P2_ROUTES | NUCODE_PIN_ROUTE_BOARD_LED)>;
+		};
+		arduino_p2_08: pin-p2-08 {
+			gpios = <&gpio2 8 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <NUCODE_PIN_CAP_INPUT>;
+			nucode,policy = <NUCODE_PIN_POLICY_INPUT_ONLY>;
+			nucode,ownership = <NUCODE_PIN_OWNER_SYSTEM>;
+			nucode,route-mask = <(NUCODE_P2_ROUTES | NUCODE_PIN_ROUTE_PMIC)>;
+		};
+		arduino_p2_09: pin-p2-09 {
+			gpios = <&gpio2 9 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <(NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_OUTPUT)>;
+			nucode,policy = <NUCODE_PIN_POLICY_NORMAL>;
+			nucode,ownership = <NUCODE_PIN_OWNER_BOARD_LED>;
+			nucode,route-mask = <(NUCODE_P2_ROUTES | NUCODE_PIN_ROUTE_BOARD_LED)>;
+		};
+		arduino_p2_10: pin-p2-10 {
+			gpios = <&gpio2 10 GPIO_ACTIVE_HIGH>;
+			nucode,capability-mask = <0>;
+			nucode,policy = <NUCODE_PIN_POLICY_SYSTEM_RESERVED>;
+			nucode,ownership = <NUCODE_PIN_OWNER_SYSTEM>;
+			nucode,route-mask = <(NUCODE_P2_ROUTES | NUCODE_PIN_ROUTE_PMIC)>;
+		};
+	};
+};
+
+#undef NUCODE_P2_ROUTES
+#undef NUCODE_P1_ROUTES
+#undef NUCODE_P0_ROUTES
+#undef NUCODE_IRQ_GPIO_CAPS
+#undef NUCODE_GPIO_CAPS

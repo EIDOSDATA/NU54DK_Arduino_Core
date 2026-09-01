@@ -22,8 +22,8 @@
 namespace
 {
 
-	using nucode::arduino::internal::GpioError;
 	using nucode::arduino::internal::elapsedTime32;
+	using nucode::arduino::internal::GpioError;
 	using nucode::arduino::internal::kMaximumBusyWaitChunkMicroseconds;
 	using nucode::arduino::internal::kMaximumSleepChunkMilliseconds;
 	using nucode::arduino::internal::lastGpioDriverError;
@@ -76,8 +76,8 @@ namespace
 	{
 		const int current_priority = k_thread_priority_get(k_current_get());
 		return k_thread_create(&worker_thread, worker_stack, K_THREAD_STACK_SIZEOF(worker_stack),
-						   fairnessWorker, nullptr, nullptr, nullptr, current_priority + 1, 0,
-						   K_NO_WAIT);
+							   fairnessWorker, nullptr, nullptr, nullptr, current_priority + 1, 0,
+							   K_NO_WAIT);
 	}
 
 }
@@ -89,7 +89,7 @@ ZTEST(m3_time, test_32bit_rollover_difference)
 
 	static_assert(elapsedTime32(start, current) == 0x30U);
 	zassert_equal(elapsedTime32(start, current), 48U,
-			  "32비트 rollover 경과 계산이 잘못되었습니다.");
+				  "32비트 rollover 경과 계산이 잘못되었습니다.");
 }
 
 ZTEST(m3_time, test_long_delay_chunk_boundaries)
@@ -101,9 +101,9 @@ ZTEST(m3_time, test_long_delay_chunk_boundaries)
 	const std::int32_t final_chunk = nextSleepChunkMilliseconds(remaining - second_chunk);
 
 	zassert_equal(first_chunk, kMaximumSleepChunkMilliseconds,
-			  "첫 sleep 단위가 INT32_MAX로 제한되지 않았습니다.");
+				  "첫 sleep 단위가 INT32_MAX로 제한되지 않았습니다.");
 	zassert_equal(second_chunk, kMaximumSleepChunkMilliseconds,
-			  "두 번째 sleep 단위가 INT32_MAX가 아닙니다.");
+				  "두 번째 sleep 단위가 INT32_MAX가 아닙니다.");
 	zassert_equal(final_chunk, 1, "UINT32_MAX 밀리초의 마지막 단위가 1이 아닙니다.");
 	zassert_equal(nextSleepChunkMilliseconds(0), 0, "완료된 sleep이 0을 반환하지 않습니다.");
 	zassert_equal(nextSleepChunkMilliseconds(-1), 0, "지난 deadline이 0을 반환하지 않습니다.");
@@ -119,7 +119,7 @@ ZTEST(m3_time, test_busy_wait_chunk_boundaries)
 	{
 		const std::uint32_t chunk = nextBusyWaitChunkMicroseconds(remaining);
 		zassert_true(chunk <= kMaximumBusyWaitChunkMicroseconds,
-				 "busy-wait 단위가 1초 제한을 초과했습니다.");
+					 "busy-wait 단위가 1초 제한을 초과했습니다.");
 		remaining -= chunk;
 		++chunk_count;
 	}
@@ -137,7 +137,7 @@ ZTEST(m3_scheduler, test_default_post_loop_allows_lower_priority_worker)
 	runtimePostLoop();
 
 	zassert_equal(k_sem_take(&worker_finished, K_MSEC(100)), 0,
-			  "한 tick sleep 중 낮은 우선순위 worker가 실행되지 않았습니다.");
+				  "한 tick sleep 중 낮은 우선순위 worker가 실행되지 않았습니다.");
 	zassert_equal(atomic_get(&worker_runs), 1, "worker 실행 횟수가 1이 아닙니다.");
 	k_thread_abort(worker);
 }
@@ -149,7 +149,7 @@ ZTEST(m3_scheduler, test_post_loop_creates_idle_eligible_interval)
 	const std::int64_t after = k_uptime_ticks();
 
 	zassert_true(after > before,
-			 "기본 post-loop 정책이 한 tick 이상 현재 thread를 block하지 않았습니다.");
+				 "기본 post-loop 정책이 한 tick 이상 현재 thread를 block하지 않았습니다.");
 }
 
 ZTEST(m3_scheduler, test_delay_allows_equal_priority_worker)
@@ -157,15 +157,15 @@ ZTEST(m3_scheduler, test_delay_allows_equal_priority_worker)
 	prepareWorker();
 	const int current_priority = k_thread_priority_get(k_current_get());
 	k_tid_t worker = k_thread_create(&worker_thread, worker_stack,
-								   K_THREAD_STACK_SIZEOF(worker_stack), fairnessWorker, nullptr,
-								   nullptr, nullptr, current_priority, 0, K_NO_WAIT);
+									 K_THREAD_STACK_SIZEOF(worker_stack), fairnessWorker, nullptr,
+									 nullptr, nullptr, current_priority, 0, K_NO_WAIT);
 	zassert_not_null(worker, "delay 공정성 시험 worker를 생성하지 못했습니다.");
 
 	k_sem_give(&worker_started);
 	delay(2U);
 
 	zassert_equal(k_sem_take(&worker_finished, K_MSEC(100)), 0,
-			  "delay 중 같은 우선순위 worker가 실행되지 않았습니다.");
+				  "delay 중 같은 우선순위 worker가 실행되지 않았습니다.");
 	zassert_equal(atomic_get(&worker_runs), 1, "delay worker 실행 횟수가 1이 아닙니다.");
 	k_thread_abort(worker);
 }
@@ -200,25 +200,25 @@ ZTEST(m3_gpio, test_gpio_argument_and_state_errors)
 
 	pinMode(PIN_INPUT_ONLY, OUTPUT);
 	zassert_equal(lastGpioError(), GpioError::unsupported_capability,
-			  "입력 전용 핀의 출력 오류가 다릅니다.");
+				  "입력 전용 핀의 출력 오류가 다릅니다.");
 
 	pinMode(LED_BUILTIN, INPUT);
 	digitalWrite(LED_BUILTIN, HIGH);
 	zassert_equal(lastGpioError(), GpioError::wrong_mode, "입력 mode의 출력 오류가 다릅니다.");
 
 	zassert_equal(digitalRead(PIN_UNCONFIGURED_INPUT), LOW,
-			  "미설정 입력은 안전하게 LOW를 반환해야 합니다.");
+				  "미설정 입력은 안전하게 LOW를 반환해야 합니다.");
 	zassert_equal(lastGpioError(), GpioError::pin_not_configured,
-			  "미설정 입력 오류가 다릅니다.");
+				  "미설정 입력 오류가 다릅니다.");
 }
 
 ZTEST(m3_gpio, test_gpio_devicetree_flag_error)
 {
 	pinMode(PIN_UNSUPPORTED_FLAGS, OUTPUT);
 	zassert_equal(lastGpioError(), GpioError::unsupported_devicetree_flags,
-			  "지원하지 않는 Devicetree flag 오류가 다릅니다.");
+				  "지원하지 않는 Devicetree flag 오류가 다릅니다.");
 	zassert_equal(lastGpioDriverError(), 0,
-			  "Core가 거부한 Devicetree flag에 driver 오류를 잘못 기록했습니다.");
+				  "Core가 거부한 Devicetree flag에 driver 오류를 잘못 기록했습니다.");
 }
 
 ZTEST_SUITE(m3_time, nullptr, nullptr, nullptr, nullptr, nullptr);

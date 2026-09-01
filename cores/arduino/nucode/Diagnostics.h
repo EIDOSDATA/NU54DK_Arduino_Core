@@ -24,6 +24,7 @@ namespace nucode::arduino
 		wire,
 		spi,
 		analog,
+		serial1,
 	};
 
 	/** @brief 하위 시스템에 독립적인 최소 공개 진단 분류입니다. */
@@ -74,8 +75,8 @@ namespace nucode::arduino
 	/**
 	 * @brief 선택한 backend의 마지막 내부 오류를 공개 진단 값으로 투영합니다.
 	 *
-	 * 조회는 기존 backend 상태를 지우지 않습니다. 활성화된 GPIO, Serial, Wire,
-	 * SPI와 Analog backend는 원자적으로 보관한 마지막 오류를 읽습니다. 별도 오류
+	 * 조회는 기존 backend 상태를 지우지 않습니다. 활성화된 GPIO, Serial, Serial1,
+	 * Wire, SPI와 Analog backend는 원자적으로 보관한 마지막 오류를 읽습니다. 별도 오류
 	 * 저장소가 없는 Core/Time 또는 build에서 비활성화된 backend는 각각 `none` 또는
 	 * `unsupported`를 반환합니다.
 	 *
@@ -101,8 +102,8 @@ namespace nucode::arduino
 	 * @return NUL 문자를 제외한 전체 필요 길이입니다.
 	 */
 	[[nodiscard]] std::size_t formatDiagnostic(const Diagnostic &diagnostic,
-										  char *buffer,
-										  std::size_t capacity) noexcept;
+											   char *buffer,
+											   std::size_t capacity) noexcept;
 
 }
 

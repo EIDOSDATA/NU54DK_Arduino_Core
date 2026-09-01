@@ -148,9 +148,9 @@ namespace
 
 		const gpio_flags_t initial = released_high ? GPIO_OUTPUT_HIGH : GPIO_OUTPUT_LOW;
 		const int result = gpio_pin_configure(description->gpio.port,
-									 description->gpio.pin,
-									 GPIO_INPUT | GPIO_OUTPUT | GPIO_OPEN_DRAIN |
-										 GPIO_PULL_UP | initial);
+											  description->gpio.pin,
+											  GPIO_INPUT | GPIO_OUTPUT | GPIO_OPEN_DRAIN |
+												  GPIO_PULL_UP | initial);
 		if (result < 0)
 		{
 			nucode::arduino::internal::setGpioBackendError(GpioError::driver_error, result);
@@ -170,8 +170,8 @@ namespace
 			return false;
 		}
 		const int result = gpio_pin_set_raw(description->gpio.port,
-									  description->gpio.pin,
-									  (value == HIGH) ? 1 : 0);
+											description->gpio.pin,
+											(value == HIGH) ? 1 : 0);
 		if (result < 0)
 		{
 			nucode::arduino::internal::setGpioBackendError(GpioError::driver_error, result);
@@ -258,8 +258,8 @@ namespace
 			{
 				const int deasserted_value = (mode_ == HIGH) ? 0 : 1;
 				release_result = gpio_pin_set_raw(description->gpio.port,
-											  description->gpio.pin,
-											  deasserted_value);
+												  description->gpio.pin,
+												  deasserted_value);
 			}
 
 			while (mask_depth_ > 0U)
@@ -465,8 +465,8 @@ namespace
 			0,
 			K_NO_WAIT));
 		const unsigned long measured = use_long_api
-			? pulseInLong(PIN_GPIO1, HIGH, 100000UL)
-			: pulseIn(PIN_GPIO1, HIGH, 30000UL);
+										   ? pulseInLong(PIN_GPIO1, HIGH, 100000UL)
+										   : pulseIn(PIN_GPIO1, HIGH, 30000UL);
 		static_cast<void>(k_thread_join(&pulse_thread_data, K_MSEC(250)));
 		return measured;
 	}

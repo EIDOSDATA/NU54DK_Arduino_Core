@@ -53,6 +53,8 @@ class FixedGateRunnerTests(unittest.TestCase):
                 "m8",
                 "m9",
                 "m11",
+                "ac02b",
+                "examples",
             ),
         )
 

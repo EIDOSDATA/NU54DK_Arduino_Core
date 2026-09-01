@@ -122,7 +122,7 @@ jobs:
           & $cli version 2>&1 | Tee-Object -FilePath (Join-Path $env:M12_EVIDENCE 'arduino-cli-version.txt')
           $previousErrorAction = $ErrorActionPreference
           $ErrorActionPreference = 'Continue'
-          python .\tests\arduino-cli\run_smoke.py --cli $cli --tests blink m6 m7 examples 2>&1 |
+          python .\tests\arduino-cli\run_smoke.py --cli $cli --tests blink m6 m7 ac02b examples 2>&1 |
             Tee-Object -FilePath (Join-Path $env:M12_EVIDENCE 'arduino-build.log')
           $commandExitCode = $LASTEXITCODE
           $ErrorActionPreference = $previousErrorAction

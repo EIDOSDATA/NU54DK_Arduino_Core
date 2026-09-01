@@ -19,13 +19,18 @@
 
 #include "internal/IoResourceManager.h"
 #include "internal/Nu54dkIoResources.h"
+#include "internal/PinHandover.h"
 #include "internal/pin_description.h"
 
 namespace
 {
+	using nucode::arduino::internal::beginGpioPinHandover;
+	using nucode::arduino::internal::canonicalPinId;
+	using nucode::arduino::internal::commitGpioPinHandover;
 	using nucode::arduino::internal::commitIoResources;
 	using nucode::arduino::internal::GpioError;
 	using nucode::arduino::internal::gpioIoResource;
+	using nucode::arduino::internal::GpioPinHandover;
 	using nucode::arduino::internal::initializeNu54dkIoResources;
 	using nucode::arduino::internal::IoAcquirePolicy;
 	using nucode::arduino::internal::IoOwnerKind;
@@ -40,10 +45,15 @@ namespace
 	using nucode::arduino::internal::lastGpioError;
 	using nucode::arduino::internal::peripheralIoResource;
 	using nucode::arduino::internal::pinDescription;
+	using nucode::arduino::internal::PinHandoverResult;
 	using nucode::arduino::internal::releaseIoResources;
+	using nucode::arduino::internal::releasePeripheralPinHandover;
 	using nucode::arduino::internal::reserveIoResources;
 	using nucode::arduino::internal::resetIoResourceManagerForTest;
+	using nucode::arduino::internal::restoreGpioAfterPeripheral;
+	using nucode::arduino::internal::rollbackGpioPinHandover;
 	using nucode::arduino::internal::rollbackIoResources;
+	using nucode::arduino::internal::transferIoResources;
 
 	std::uint8_t test_domain_a;
 	std::uint8_t test_domain_b;
@@ -310,7 +320,71 @@ ZTEST(ac02a_ownership_contract, test_reserve_is_rejected_from_isr)
 				  "ISR에서 ownership reserve를 허용했습니다.");
 }
 
-ZTEST(ac02a_ownership_contract, test_nu54dk_boot_resources_are_active_and_immutable_to_gpio)
+ZTEST(ac02a_ownership_contract, test_expected_owner_transfer_rolls_back_generation_exactly)
+{
+	resetIoResourceManagerForTest();
+	const IoResourceId resource = testPin(&test_domain_a, 10U);
+	IoResourceLease gpio_lease{};
+	zassert_equal(claim({IoOwnerKind::gpio, 0U}, resource, gpio_lease),
+				  IoResourceResult::success, "GPIO 선행 claim이 실패했습니다.");
+
+	IoResourceLease transfer{};
+	zassert_equal(transferIoResources({IoOwnerKind::gpio, 0U},
+									  {IoOwnerKind::pwm, 20U}, &resource, 1U, transfer),
+				  IoResourceResult::success, "expected-owner transfer 예약이 실패했습니다.");
+	zassert_equal(rollbackIoResources(transfer), IoResourceResult::success,
+				  "expected-owner transfer rollback이 실패했습니다.");
+	expectActiveOwner(resource, IoOwnerKind::gpio, 0U);
+	zassert_equal(releaseIoResources(gpio_lease), IoResourceResult::success,
+				  "rollback 뒤 원래 GPIO lease 세대가 복구되지 않았습니다.");
+}
+
+ZTEST(ac02a_ownership_contract, test_expected_owner_transfer_commit_invalidates_old_lease)
+{
+	resetIoResourceManagerForTest();
+	const IoResourceId resource = testPin(&test_domain_a, 11U);
+	IoResourceLease gpio_lease{};
+	zassert_equal(claim({IoOwnerKind::gpio, 0U}, resource, gpio_lease),
+				  IoResourceResult::success, "GPIO 선행 claim이 실패했습니다.");
+
+	IoResourceLease transfer{};
+	zassert_equal(transferIoResources({IoOwnerKind::gpio, 0U},
+									  {IoOwnerKind::spi, 0U}, &resource, 1U, transfer),
+				  IoResourceResult::success, "GPIO에서 SPI로 transfer가 실패했습니다.");
+	zassert_equal(commitIoResources(transfer), IoResourceResult::success,
+				  "GPIO에서 SPI로 transfer commit이 실패했습니다.");
+	expectActiveOwner(resource, IoOwnerKind::spi, 0U);
+	zassert_equal(releaseIoResources(gpio_lease), IoResourceResult::stale_lease,
+				  "이전 owner lease가 새 owner를 해제했습니다.");
+	zassert_equal(releaseIoResources(transfer), IoResourceResult::success,
+				  "새 owner lease 반환이 실패했습니다.");
+}
+
+ZTEST(ac02a_ownership_contract, test_expected_owner_transfer_rejects_mismatch_atomically)
+{
+	resetIoResourceManagerForTest();
+	const IoResourceId first = testPin(&test_domain_a, 12U);
+	const IoResourceId second = testPin(&test_domain_b, 13U);
+	IoResourceLease first_lease{};
+	IoResourceLease second_lease{};
+	zassert_equal(claim({IoOwnerKind::gpio, 0U}, first, first_lease),
+				  IoResourceResult::success, "첫 GPIO claim이 실패했습니다.");
+	zassert_equal(claim({IoOwnerKind::wire, 22U}, second, second_lease),
+				  IoResourceResult::success, "둘째 Wire claim이 실패했습니다.");
+	const IoResourceId resources[] = {first, second};
+	IoResourceLease rejected{};
+	IoResourceSnapshot conflict{};
+	zassert_equal(transferIoResources({IoOwnerKind::gpio, 0U},
+									  {IoOwnerKind::pwm, 20U}, resources, 2U,
+									  rejected, &conflict),
+				  IoResourceResult::conflict, "expected owner가 다른 batch를 허용했습니다.");
+	zassert_equal(conflict.owner.kind, IoOwnerKind::wire,
+				  "transfer 충돌 owner 진단이 다릅니다.");
+	expectActiveOwner(first, IoOwnerKind::gpio, 0U);
+	expectActiveOwner(second, IoOwnerKind::wire, 22U);
+}
+
+ZTEST(ac02a_ownership_contract, test_only_uart20_is_boot_fixed_and_dynamic_routes_start_free)
 {
 	resetIoResourceManagerForTest();
 	const IoResourceId uart_tx = pselResource(
@@ -321,15 +395,17 @@ ZTEST(ac02a_ownership_contract, test_nu54dk_boot_resources_are_active_and_immuta
 		DT_PROP_BY_IDX(DT_CHILD(DT_NODELABEL(pwm20_default), group1), psels, 0));
 
 	IoResourceLease blocker{};
-	zassert_equal(claim({IoOwnerKind::gpio, 0U}, wire_sda, blocker),
+	zassert_equal(claim({IoOwnerKind::gpio, 0U}, uart_tx, blocker),
 				  IoResourceResult::success, "registry 충돌 준비가 실패했습니다.");
 	zassert_equal(initializeNu54dkIoResources(), IoResourceResult::conflict,
-				  "부분 registry 초기화의 충돌을 보고하지 않았습니다.");
+				  "UART20 고정 registry 충돌을 보고하지 않았습니다.");
 	IoResourceSnapshot uart_after_failure{};
 	zassert_equal(ioResourceSnapshot(uart_tx, uart_after_failure),
 				  IoResourceResult::success, "registry 실패 뒤 UART 조회가 실패했습니다.");
-	zassert_equal(uart_after_failure.state, IoResourceState::free,
-				  "registry 실패가 앞서 등록한 UART 자원을 남겼습니다.");
+	zassert_equal(uart_after_failure.state, IoResourceState::active,
+				  "registry 실패가 선행 충돌 owner 상태를 훼손했습니다.");
+	zassert_equal(uart_after_failure.owner.kind, IoOwnerKind::gpio,
+				  "registry 실패가 선행 충돌 owner를 바꿨습니다.");
 	zassert_equal(releaseIoResources(blocker), IoResourceResult::success,
 				  "registry 충돌 준비 자원 반환이 실패했습니다.");
 
@@ -337,15 +413,123 @@ ZTEST(ac02a_ownership_contract, test_nu54dk_boot_resources_are_active_and_immuta
 				  "NU54DK 고정 자원 registry 초기화가 실패했습니다.");
 
 	expectActiveOwner(uart_tx, IoOwnerKind::serial, 20U);
-	expectActiveOwner(wire_sda, IoOwnerKind::wire, 22U);
-	expectActiveOwner(pwm_output, IoOwnerKind::pwm, 20U);
 	expectActiveOwner(peripheralIoResource(IoResourceKind::serial_block, 20U),
 					  IoOwnerKind::serial, 20U);
+	IoResourceSnapshot wire_snapshot{};
+	IoResourceSnapshot pwm_snapshot{};
+	zassert_equal(ioResourceSnapshot(wire_sda, wire_snapshot), IoResourceResult::success,
+				  "Wire22 pad 조회가 실패했습니다.");
+	zassert_equal(ioResourceSnapshot(pwm_output, pwm_snapshot), IoResourceResult::success,
+				  "PWM20 pad 조회가 실패했습니다.");
+	zassert_equal(wire_snapshot.state, IoResourceState::free,
+				  "Wire22 동적 route를 부팅 시 고정했습니다.");
+	zassert_equal(pwm_snapshot.state, IoResourceState::free,
+				  "PWM20 동적 route를 부팅 시 고정했습니다.");
 
 	IoResourceLease gpio_attempt{};
 	zassert_equal(reserveIoResources({IoOwnerKind::gpio, 0U}, &uart_tx, 1U,
 									 IoAcquirePolicy::exclusive, gpio_attempt),
 				  IoResourceResult::conflict, "console TX를 GPIO가 선점했습니다.");
+}
+
+ZTEST(ac02a_ownership_contract, test_legacy_alias_is_canonicalized_for_gpio_and_handover)
+{
+	resetIoResourceManagerForTest();
+	zassert_equal(canonicalPinId(PIN_LED1), static_cast<std::size_t>(PIN_PWM0),
+				  "legacy ID 4가 canonical ID 3으로 정규화되지 않았습니다.");
+	zassert_equal(pinDescription(PIN_LED1), pinDescription(PIN_PWM0),
+				  "legacy와 canonical descriptor 주소가 다릅니다.");
+
+	pinMode(PIN_LED1, OUTPUT);
+	zassert_equal(lastGpioError(), GpioError::none,
+				  "legacy alias를 통한 GPIO 설정이 실패했습니다.");
+	const auto *const description = pinDescription(PIN_PWM0);
+	zassert_not_null(description, "P1.10 descriptor가 없습니다.");
+	expectActiveOwner(gpioIoResource(description->gpio), IoOwnerKind::gpio, 0U);
+
+	GpioPinHandover handover{};
+	zassert_equal(beginGpioPinHandover(PIN_LED1, {IoOwnerKind::pwm, 20U}, handover),
+				  PinHandoverResult::success, "legacy alias handover begin이 실패했습니다.");
+	zassert_equal(handover.canonical_pin, static_cast<std::size_t>(PIN_PWM0),
+				  "handover가 legacy slot을 별도 물리 핀으로 취급했습니다.");
+	zassert_equal(rollbackGpioPinHandover(handover), PinHandoverResult::success,
+				  "legacy alias handover rollback이 실패했습니다.");
+	expectActiveOwner(gpioIoResource(description->gpio), IoOwnerKind::gpio, 0U);
+}
+
+ZTEST(ac02a_ownership_contract, test_committed_handover_restores_previous_gpio_state)
+{
+	resetIoResourceManagerForTest();
+	pinMode(PIN_GPIO0, OUTPUT);
+	digitalWrite(PIN_GPIO0, HIGH);
+	zassert_equal(lastGpioError(), GpioError::none, "GPIO 사전 상태 설정이 실패했습니다.");
+
+	GpioPinHandover handover{};
+	zassert_equal(beginGpioPinHandover(PIN_GPIO0, {IoOwnerKind::spi, 0U}, handover),
+				  PinHandoverResult::success, "GPIO→SPI handover begin이 실패했습니다.");
+	zassert_equal(commitGpioPinHandover(handover), PinHandoverResult::success,
+				  "GPIO→SPI handover commit이 실패했습니다.");
+	expectActiveOwner(gpioIoResource(pinDescription(PIN_GPIO0)->gpio),
+					  IoOwnerKind::spi, 0U);
+	digitalWrite(PIN_GPIO0, LOW);
+	zassert_equal(lastGpioError(), GpioError::ownership_conflict,
+				  "주변장치 소유 중 digitalWrite를 허용했습니다.");
+	zassert_equal(restoreGpioAfterPeripheral(handover), PinHandoverResult::success,
+				  "주변장치 종료 뒤 GPIO 상태 복원이 실패했습니다.");
+	expectActiveOwner(gpioIoResource(pinDescription(PIN_GPIO0)->gpio),
+					  IoOwnerKind::gpio, 0U);
+	digitalWrite(PIN_GPIO0, LOW);
+	zassert_equal(lastGpioError(), GpioError::none,
+				  "복원된 GPIO output 상태를 사용하지 못했습니다.");
+}
+
+ZTEST(ac02a_ownership_contract, test_nested_two_pin_handover_is_recursive_and_exact_once)
+{
+	resetIoResourceManagerForTest();
+	pinMode(PIN_GPIO0, OUTPUT);
+	pinMode(PIN_GPIO1, INPUT_PULLUP);
+	GpioPinHandover first{};
+	GpioPinHandover second{};
+	zassert_equal(beginGpioPinHandover(PIN_GPIO0, {IoOwnerKind::wire, 22U}, first),
+				  PinHandoverResult::success, "첫 중첩 handover begin이 실패했습니다.");
+	zassert_equal(beginGpioPinHandover(PIN_GPIO1, {IoOwnerKind::wire, 22U}, second),
+				  PinHandoverResult::success,
+				  "같은 thread의 재귀 handover mutex 획득이 실패했습니다.");
+	zassert_equal(rollbackGpioPinHandover(second), PinHandoverResult::success,
+				  "둘째 handover rollback이 실패했습니다.");
+	zassert_equal(rollbackGpioPinHandover(first), PinHandoverResult::success,
+				  "첫 handover rollback이 실패했습니다.");
+	zassert_equal(rollbackGpioPinHandover(first), PinHandoverResult::wrong_phase,
+				  "동일 handover의 이중 rollback을 허용했습니다.");
+	zassert_true(nucode::arduino::internal::isPinConfiguredForOutput(PIN_GPIO0),
+				 "첫 GPIO output 상태가 복원되지 않았습니다.");
+	zassert_true(nucode::arduino::internal::isPinConfiguredForInput(PIN_GPIO1),
+				 "둘째 GPIO input 상태가 복원되지 않았습니다.");
+}
+
+ZTEST(ac02a_ownership_contract, test_free_pin_handover_release_and_reserved_policy_fail_closed)
+{
+	resetIoResourceManagerForTest();
+	GpioPinHandover free_handover{};
+	zassert_equal(beginGpioPinHandover(PIN_P2_00, {IoOwnerKind::spi, 0U}, free_handover),
+				  PinHandoverResult::success, "free pad handover begin이 실패했습니다.");
+	zassert_equal(commitGpioPinHandover(free_handover), PinHandoverResult::success,
+				  "free pad handover commit이 실패했습니다.");
+	zassert_equal(releasePeripheralPinHandover(free_handover), PinHandoverResult::success,
+				  "free pad 주변장치 release가 실패했습니다.");
+	IoResourceSnapshot snapshot{};
+	zassert_equal(ioResourceSnapshot(gpioIoResource(pinDescription(PIN_P2_00)->gpio), snapshot),
+				  IoResourceResult::success, "free pad 반환 조회가 실패했습니다.");
+	zassert_equal(snapshot.state, IoResourceState::free,
+				  "주변장치 종료 뒤 원래 free pad가 해제되지 않았습니다.");
+
+	GpioPinHandover reserved{};
+	zassert_equal(beginGpioPinHandover(PIN_P1_04, {IoOwnerKind::adc, 0U}, reserved),
+				  PinHandoverResult::unsupported,
+				  "UART20 system-reserved AIN0를 동적 handover했습니다.");
+	pinMode(PIN_BUTTON1, OUTPUT);
+	zassert_equal(lastGpioError(), GpioError::unsupported_capability,
+				  "input-only 버튼을 output으로 구성했습니다.");
 }
 
 ZTEST(ac02a_ownership_contract, test_pin_mode_claims_pad_and_reports_conflicting_owner)

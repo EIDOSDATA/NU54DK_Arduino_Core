@@ -26,12 +26,11 @@ namespace nucode::arduino::internal
 
 		/** @brief 각 오류 경로를 독립적으로 확인하는 논리 핀 설명자입니다. */
 		const PinDescription pin_descriptions[] = {
-			{{test_gpio, 0U, 0U}, PinCapability::digital_input | PinCapability::digital_output},
-			{{test_gpio, 1U, 0U}, PinCapability::digital_input},
-			{{test_gpio, 2U, 0U}, PinCapability::digital_output},
-			{{test_gpio, 3U, 0U}, PinCapability::digital_input},
-			{{test_gpio, 4U, GPIO_OPEN_DRAIN},
-			 PinCapability::digital_input | PinCapability::digital_output},
+			{0U, {test_gpio, 0U, 0U}, PinCapability::digital_input | PinCapability::digital_output, PinOwnership::connector_gpio, PinPolicy::normal, PinRoute::gpio, -1},
+			{1U, {test_gpio, 1U, 0U}, PinCapability::digital_input, PinOwnership::connector_gpio, PinPolicy::input_only, PinRoute::gpio, -1},
+			{2U, {test_gpio, 2U, 0U}, PinCapability::digital_output, PinOwnership::connector_gpio, PinPolicy::normal, PinRoute::gpio, -1},
+			{3U, {test_gpio, 3U, 0U}, PinCapability::digital_input, PinOwnership::connector_gpio, PinPolicy::normal, PinRoute::gpio, -1},
+			{4U, {test_gpio, 4U, GPIO_OPEN_DRAIN}, PinCapability::digital_input | PinCapability::digital_output, PinOwnership::connector_gpio, PinPolicy::normal, PinRoute::gpio, -1},
 		};
 
 		static_assert(ARRAY_SIZE(pin_descriptions) == NUM_DIGITAL_PINS,
@@ -47,6 +46,11 @@ namespace nucode::arduino::internal
 		}
 
 		return &pin_descriptions[logical_pin];
+	}
+
+	std::size_t canonicalPinId(std::size_t logical_pin) noexcept
+	{
+		return logical_pin < ARRAY_SIZE(pin_descriptions) ? logical_pin : SIZE_MAX;
 	}
 
 	std::size_t pinDescriptionCount() noexcept

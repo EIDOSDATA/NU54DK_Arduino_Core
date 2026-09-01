@@ -4,27 +4,9 @@
  * SPDX-License-Identifier: MIT
  */
 #include <nucode/nu54dk-arduino-connectors.dtsi>
+#include <nucode/nu54dk-arduino-pins.dtsi>
+#include <nucode/nu54dk-arduino-runtime.dtsi>
 
-/ {
-	chosen {
-		nucode,arduino-wire = &i2c22;
-		nucode,arduino-spi = &spi00;
-		nucode,arduino-adc = &nucode_arduino_adc_input;
-		nucode,arduino-pwm = &pwm_led1;
-	};
-	nucode_arduino_adc_input: arduino-adc-input {
-		compatible = "nucode,arduino-adc-input";
-		io-channels = <&adc 5>;
-	};
-};
-&spi00 {
-	status = "okay";
-	pinctrl-0 = <&spi00_default>;
-	pinctrl-1 = <&spi00_sleep>;
-	pinctrl-names = "default", "sleep";
-};
 /** @brief NFC 전용 P1.2/P1.3 패드를 Wire용 GPIO/TWIM으로 전환합니다. */
 &uicr { nfct-pins-as-gpios; };
-/** @brief A0 입력을 nRF54L15의 1/4 gain으로 설정합니다. */
-&adc { channel@5 { zephyr,gain = "ADC_GAIN_1_4"; }; };
 

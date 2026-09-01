@@ -253,7 +253,7 @@ namespace
 			.flow_ctrl = UART_CFG_FLOW_CTRL_NONE,
 		};
 		zassert_ok(uart_configure(test_uart, &config),
-			   "UART emulator의 Zephyr 소유 설정 적용에 실패했습니다.");
+				   "UART emulator의 Zephyr 소유 설정 적용에 실패했습니다.");
 	}
 
 }
@@ -268,7 +268,7 @@ ZTEST(m6_common, test_c_and_cpp_common_contract)
 	zassert_equal(digitalPinToInterrupt(pin++), 0U, "유효한 interrupt 매핑이 다릅니다.");
 	zassert_equal(pin, 1U, "C++ interrupt 매핑이 인수를 두 번 평가했습니다.");
 	zassert_equal(digitalPinToInterrupt(NUM_DIGITAL_PINS), NOT_AN_INTERRUPT,
-		      "범위 밖 interrupt가 거부되지 않았습니다.");
+				  "범위 밖 interrupt가 거부되지 않았습니다.");
 }
 
 ZTEST(m6_common, test_string_construction_and_conversion)
@@ -287,7 +287,7 @@ ZTEST(m6_common, test_string_construction_and_conversion)
 	zassert_true(bounded.reserve(1024U), "String의 정상 heap 예약에 실패했습니다.");
 	zassert_false(bounded.reserve(16384U), "String이 구성한 heap 경계를 넘어 예약했습니다.");
 	zassert_equal(strcmp(bounded.c_str(), "stable"), 0,
-		      "실패한 String 예약이 기존 내용을 손상했습니다.");
+				  "실패한 String 예약이 기존 내용을 손상했습니다.");
 }
 
 ZTEST(m6_common, test_print_and_stream_contract)
@@ -300,7 +300,7 @@ ZTEST(m6_common, test_print_and_stream_contract)
 	PartialPrint partial(3U);
 	const uint8_t partial_input[] = {'A', 'B', 'C', 'D', 'E'};
 	zassert_equal(partial.write(partial_input, sizeof(partial_input)), 3U,
-		      "Print가 부분 write 지점에서 멈추지 않았습니다.");
+				  "Print가 부분 write 지점에서 멈추지 않았습니다.");
 	zassert_not_equal(partial.getWriteError(), 0, "Print 부분 write 오류가 기록되지 않았습니다.");
 
 	MemoryStream stream("noise:-123,45.5!");
@@ -326,26 +326,26 @@ ZTEST(m6_common, test_printable_dispatch_and_count_contract)
 	PrintableToken token;
 	CapturePrint printed;
 	zassert_equal(printed.print(token), 7U,
-		      "Print::print가 Printable의 기록 byte 수를 반환하지 않았습니다.");
+				  "Print::print가 Printable의 기록 byte 수를 반환하지 않았습니다.");
 	zassert_equal(strcmp(printed.data(), "NU54:2A"), 0,
-		      "Printable이 Print 구현에 기대한 내용을 기록하지 않았습니다.");
+				  "Printable이 Print 구현에 기대한 내용을 기록하지 않았습니다.");
 	zassert_equal(token.invocationCount(), 1U,
-		      "Print::print가 Printable::printTo를 한 번만 호출하지 않았습니다.");
+				  "Print::print가 Printable::printTo를 한 번만 호출하지 않았습니다.");
 
 	CapturePrint line;
 	zassert_equal(line.println(token), 9U,
-		      "Print::println이 Printable 출력과 CRLF byte 수를 합산하지 않았습니다.");
+				  "Print::println이 Printable 출력과 CRLF byte 수를 합산하지 않았습니다.");
 	zassert_equal(strcmp(line.data(), "NU54:2A\r\n"), 0,
-		      "Print::println이 Printable 출력 뒤 CRLF를 추가하지 않았습니다.");
+				  "Print::println이 Printable 출력 뒤 CRLF를 추가하지 않았습니다.");
 	zassert_equal(token.invocationCount(), 2U,
-		      "Print::println의 Printable dispatch 횟수가 다릅니다.");
+				  "Print::println의 Printable dispatch 횟수가 다릅니다.");
 }
 
 ZTEST(m6_serial, test_begin_tx_and_non_destructive_rebegin)
 {
 	Serial.begin(9600U);
 	zassert_equal(lastSerialError(), SerialError::unsupported_config,
-		      "DTS와 다른 속도가 거부되지 않았습니다.");
+				  "DTS와 다른 속도가 거부되지 않았습니다.");
 	zassert_false(static_cast<bool>(Serial), "잘못된 begin 뒤 Serial이 시작되었습니다.");
 
 	Serial.begin(115200U, SERIAL_8N1);
@@ -355,16 +355,16 @@ ZTEST(m6_serial, test_begin_tx_and_non_destructive_rebegin)
 
 	uint8_t transmitted[16] = {};
 	const size_t transmitted_size = uart_emul_get_tx_data(test_uart, transmitted,
-							      sizeof(transmitted));
+														  sizeof(transmitted));
 	zassert_equal(transmitted_size, 7U, "Serial TX 길이가 다릅니다.");
 	zassert_mem_equal(transmitted, "M6 OK\r\n", 7U, "Serial TX 내용이 다릅니다.");
 
 	Serial.begin(9600U);
 	zassert_equal(lastSerialError(), SerialError::unsupported_config,
-		      "재-begin 오류가 기록되지 않았습니다.");
+				  "재-begin 오류가 기록되지 않았습니다.");
 	zassert_true(static_cast<bool>(Serial), "잘못된 재-begin이 기존 세션을 중단했습니다.");
 	zassert_equal(Serial.write(static_cast<uint8_t>('!')), 1U,
-		      "재-begin 오류 뒤 기존 TX 세션이 유지되지 않았습니다.");
+				  "재-begin 오류 뒤 기존 TX 세션이 유지되지 않았습니다.");
 }
 
 ZTEST(m6_serial, test_rx_peek_read_and_overflow)
@@ -372,7 +372,7 @@ ZTEST(m6_serial, test_rx_peek_read_and_overflow)
 	Serial.begin(115200U);
 	const uint8_t received[] = {'A', 'B', 'C'};
 	zassert_equal(uart_emul_put_rx_data(test_uart, received, sizeof(received)), sizeof(received),
-		      "UART RX 주입에 실패했습니다.");
+				  "UART RX 주입에 실패했습니다.");
 	zassert_true(waitForSerialBytes(3), "Serial RX queue가 채워지지 않았습니다.");
 	zassert_equal(Serial.peek(), 'A', "Serial.peek 결과가 다릅니다.");
 	zassert_equal(Serial.read(), 'A', "Serial.read 첫 byte가 다릅니다.");
@@ -385,7 +385,7 @@ ZTEST(m6_serial, test_rx_peek_read_and_overflow)
 		overflow_data[index] = static_cast<uint8_t>(index);
 	}
 	zassert_equal(uart_emul_put_rx_data(test_uart, overflow_data, sizeof(overflow_data)),
-		      sizeof(overflow_data), "overflow RX 주입에 실패했습니다.");
+				  sizeof(overflow_data), "overflow RX 주입에 실패했습니다.");
 	zassert_true(waitForSerialBytes(128), "고정 Serial RX queue가 채워지지 않았습니다.");
 	zassert_equal(Serial.available(), 128, "Serial RX queue 경계가 다릅니다.");
 	zassert_equal(serialDroppedRxBytes(), 32U, "overflow drop 누적값이 다릅니다.");
@@ -397,38 +397,39 @@ ZTEST(m6_serial, test_started_end_stops_session_and_purges_rx)
 	Serial.begin(115200U);
 	const uint8_t received[] = {'E', 'N', 'D'};
 	zassert_equal(uart_emul_put_rx_data(test_uart, received, sizeof(received)), sizeof(received),
-		      "end 시험용 UART RX 주입에 실패했습니다.");
+				  "end 시험용 UART RX 주입에 실패했습니다.");
 	zassert_true(waitForSerialBytes(3), "end 시험 전에 Serial RX queue가 채워지지 않았습니다.");
 
 	Serial.end();
 	zassert_false(static_cast<bool>(Serial), "end 뒤 Serial 세션이 계속 활성 상태입니다.");
 	zassert_equal(Serial.available(), 0, "end 뒤 RX queue가 비워지지 않았습니다.");
 	zassert_equal(lastSerialError(), SerialError::not_started,
-		      "end 뒤 접근이 미시작 상태로 진단되지 않았습니다.");
+				  "end 뒤 접근이 미시작 상태로 진단되지 않았습니다.");
 }
 
 ZTEST(m6_serial, test_end_without_session_preserves_existing_callback)
 {
 	atomic_clear(&sentinel_uart_irq_count);
 	zassert_ok(uart_irq_callback_user_data_set(test_uart, sentinelUartCallback, nullptr),
-		   "시험 UART callback 등록에 실패했습니다.");
+			   "시험 UART callback 등록에 실패했습니다.");
 	uart_irq_rx_enable(test_uart);
 
 	Serial.end();
 	const uint8_t received = 'S';
 	zassert_equal(uart_emul_put_rx_data(test_uart, &received, 1U), 1U,
-		      "sentinel RX 주입에 실패했습니다.");
+				  "sentinel RX 주입에 실패했습니다.");
 	for (int attempt = 0; (attempt < 100) &&
-				     (atomic_get(&sentinel_uart_irq_count) == 0); ++attempt)
+						  (atomic_get(&sentinel_uart_irq_count) == 0);
+		 ++attempt)
 	{
 		k_sleep(K_MSEC(1));
 	}
 	zassert_true(atomic_get(&sentinel_uart_irq_count) >= 1,
-		      "미시작 end가 기존 UART callback을 제거했습니다.");
+				 "미시작 end가 기존 UART callback을 제거했습니다.");
 
 	uart_irq_rx_disable(test_uart);
 	zassert_ok(uart_irq_callback_user_data_set(test_uart, nullptr, nullptr),
-		   "시험 UART callback 해제에 실패했습니다.");
+			   "시험 UART callback 해제에 실패했습니다.");
 }
 
 ZTEST(m6_serial, test_isr_restriction)
@@ -438,7 +439,7 @@ ZTEST(m6_serial, test_isr_restriction)
 	irq_offload(serialWriteFromIsr, nullptr);
 	zassert_equal(isr_serial_write_result, 0U, "ISR Serial.write가 거부되지 않았습니다.");
 	zassert_equal(lastSerialError(), SerialError::invalid_context,
-		      "ISR 문맥 오류가 기록되지 않았습니다.");
+				  "ISR 문맥 오류가 기록되지 않았습니다.");
 }
 
 ZTEST(m6_interrupt, test_raw_edges_parameter_and_detach)
@@ -462,46 +463,45 @@ ZTEST(m6_interrupt, test_raw_edges_parameter_and_detach)
 	zassert_equal(atomic_get(&simple_interrupt_count), 2, "raw RISING callback 횟수가 다릅니다.");
 
 	attachInterruptParam(digitalPinToInterrupt(PIN_BUTTON0), parameterInterruptCallback,
-			     CHANGE, &parameter_interrupt_count);
+						 CHANGE, &parameter_interrupt_count);
 	zassert_ok(gpio_emul_input_set(test_gpio, 1U, 0), "CHANGE 하강 입력에 실패했습니다.");
 	zassert_ok(gpio_emul_input_set(test_gpio, 1U, 1), "CHANGE 상승 입력에 실패했습니다.");
 	zassert_equal(atomic_get(&parameter_interrupt_count), 2,
-		      "매개변수 CHANGE callback 횟수가 다릅니다.");
+				  "매개변수 CHANGE callback 횟수가 다릅니다.");
 
 	detachInterrupt(digitalPinToInterrupt(PIN_BUTTON0));
 	zassert_ok(gpio_emul_input_set(test_gpio, 1U, 0), "detach 후 입력 주입에 실패했습니다.");
 	zassert_equal(atomic_get(&parameter_interrupt_count), 2,
-		      "detach 후 callback이 실행되었습니다.");
+				  "detach 후 callback이 실행되었습니다.");
 }
 
 ZTEST(m6_interrupt, test_validation_and_pinmode_auto_detach)
 {
 	attachInterrupt(NOT_AN_INTERRUPT, simpleInterruptCallback, RISING);
 	zassert_equal(lastGpioError(), GpioError::invalid_pin,
-		      "범위 밖 interrupt 번호가 거부되지 않았습니다.");
+				  "범위 밖 interrupt 번호가 거부되지 않았습니다.");
 	detachInterrupt(NOT_AN_INTERRUPT);
 	zassert_equal(lastGpioError(), GpioError::invalid_pin,
-		      "범위 밖 detach 번호가 거부되지 않았습니다.");
+				  "범위 밖 detach 번호가 거부되지 않았습니다.");
 
 	attachInterrupt(digitalPinToInterrupt(LED_BUILTIN), simpleInterruptCallback, RISING);
 	zassert_equal(lastGpioError(), GpioError::interrupt_not_configured,
-		      "미설정 input interrupt가 거부되지 않았습니다.");
+				  "미설정 input interrupt가 거부되지 않았습니다.");
 
 	pinMode(LED_BUILTIN, INPUT_PULLUP);
 	attachInterrupt(digitalPinToInterrupt(LED_BUILTIN), nullptr, RISING);
 	zassert_equal(lastGpioError(), GpioError::null_callback,
-		      "null callback이 거부되지 않았습니다.");
+				  "null callback이 거부되지 않았습니다.");
 	attachInterrupt(digitalPinToInterrupt(LED_BUILTIN), simpleInterruptCallback, HIGH);
 	zassert_equal(lastGpioError(), GpioError::invalid_interrupt_mode,
-		      "미지원 interrupt mode가 거부되지 않았습니다.");
+				  "미지원 interrupt mode가 거부되지 않았습니다.");
 
 	atomic_clear(&simple_interrupt_count);
 	zassert_ok(gpio_emul_input_set(test_gpio, 0U, 0), "초기 LOW 설정에 실패했습니다.");
 	attachInterrupt(digitalPinToInterrupt(LED_BUILTIN), simpleInterruptCallback, RISING);
 	pinMode(LED_BUILTIN, INPUT_PULLUP);
 	zassert_ok(gpio_emul_input_set(test_gpio, 0U, 1), "pinMode 후 RISING 입력에 실패했습니다.");
-	zassert_equal(atomic_get(&simple_interrupt_count), 0,
-		      "pinMode 변경 뒤 이전 callback이 남았습니다.");
+	zassert_equal(atomic_get(&simple_interrupt_count), 0, "pinMode 변경 뒤 이전 callback이 남았습니다.");
 }
 
 ZTEST_SUITE(m6_common, nullptr, nullptr, nullptr, nullptr, nullptr);

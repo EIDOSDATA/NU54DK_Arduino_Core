@@ -16,11 +16,16 @@
 #include <cstdint>
 
 #include "internal/IoResourceManager.h"
+#include "internal/PinHandover.h"
 #include "internal/pin_description.h"
+#if defined(CONFIG_NUCODE_ARDUINO_PWM)
+#include "internal/PwmRuntime.h"
+#endif
 
 namespace
 {
 
+	using nucode::arduino::internal::canonicalPinId;
 	using nucode::arduino::internal::GpioError;
 	using nucode::arduino::internal::gpioIoResource;
 	using nucode::arduino::internal::hasPinCapability;
@@ -64,6 +69,11 @@ namespace
 		atomic_t mode;
 		atomic_t output_latch;
 		IoResourceLease ownership_lease;
+#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+		nucode::arduino::internal::PinInterruptHandoverState interrupt_recovery;
+		bool interrupt_recovery_pending{false};
+#endif
+		atomic_t handover_faulted;
 	};
 
 	K_MUTEX_DEFINE(gpio_transition_mutex);
@@ -121,6 +131,66 @@ namespace
 		recordError(GpioError::none);
 	}
 
+#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+	/** @brief pinMode 실패 뒤 보존한 interrupt snapshot 복원을 재시도합니다. */
+	[[nodiscard]] int recoverPendingPinInterrupt(PinRuntimeState &state) noexcept
+	{
+		if (!state.interrupt_recovery_pending)
+		{
+			return 0;
+		}
+		const int result = nucode::arduino::internal::rollbackInterruptForPinHandover(
+			state.interrupt_recovery);
+		if (result == 0)
+		{
+			state.interrupt_recovery_pending = false;
+		}
+		return result;
+	}
+#endif
+
+#if defined(CONFIG_NUCODE_ARDUINO_PWM)
+	/** @brief pinMode rollback용 출력값을 보존하고 analogWrite route를 중지합니다. */
+	[[nodiscard]] bool suspendAnalogWriteForGpio(
+		pin_size_t pin,
+		nucode::arduino::internal::PwmRuntimeSuspendedOutput &snapshot) noexcept
+	{
+		const std::size_t canonical_pin = canonicalPinId(pin);
+		if (canonical_pin >= pin_slot_count)
+		{
+			return true;
+		}
+
+		const auto result = nucode::arduino::internal::pwmRuntimeSuspend(
+			nucode::arduino::internal::PwmRuntimeClient::analog_write,
+			static_cast<pin_size_t>(canonical_pin), snapshot);
+		if ((result != nucode::arduino::internal::PwmRuntimeResult::success) &&
+			(result != nucode::arduino::internal::PwmRuntimeResult::not_active))
+		{
+			recordError(GpioError::driver_error,
+						nucode::arduino::internal::lastPwmRuntimeDriverError());
+			return false;
+		}
+		return true;
+	}
+
+	/** @brief 실패한 pinMode 뒤 보존한 analogWrite 출력을 복원합니다. */
+	void resumeAnalogWriteAfterGpioFailure(
+		nucode::arduino::internal::PwmRuntimeSuspendedOutput &snapshot) noexcept
+	{
+		if (!snapshot.valid)
+		{
+			return;
+		}
+		if (nucode::arduino::internal::pwmRuntimeResume(snapshot) !=
+			nucode::arduino::internal::PwmRuntimeResult::success)
+		{
+			recordError(GpioError::driver_error,
+						nucode::arduino::internal::lastPwmRuntimeDriverError());
+		}
+	}
+#endif
+
 	/** @brief 소유권 관리자 오류를 GPIO 진단 값으로 변환합니다. */
 	void recordOwnershipError(IoResourceResult result) noexcept
 	{
@@ -172,17 +242,75 @@ namespace
 	[[nodiscard]] bool lookupPin(pin_size_t pin, const PinDescription *&description,
 								 PinRuntimeState *&state) noexcept
 	{
-		const auto logical_pin = static_cast<std::size_t>(pin);
-		description = pinDescription(logical_pin);
-		if ((description == nullptr) || (logical_pin >= pin_slot_count))
+		const auto requested_pin = static_cast<std::size_t>(pin);
+		description = pinDescription(requested_pin);
+		const auto canonical_pin = canonicalPinId(requested_pin);
+		if ((description == nullptr) || (canonical_pin >= pin_slot_count))
 		{
 			recordError(GpioError::invalid_pin);
 			state = nullptr;
 			return false;
 		}
 
-		state = &pin_runtime_states[logical_pin];
+		state = &pin_runtime_states[canonical_pin];
 		return true;
+	}
+
+	/** @brief runtime flag 복원 helper가 사용하는 polarity 조회 전방 선언입니다. */
+	[[nodiscard]] gpio_flags_t polarityFlag(const PinDescription &description) noexcept;
+
+	/** @brief 저장한 runtime mode를 Zephyr GPIO configure flag로 복원합니다. */
+	[[nodiscard]] gpio_flags_t runtimeModeFlags(const PinDescription &description,
+												RuntimePinMode mode,
+												bool output_latch) noexcept
+	{
+		gpio_flags_t flags = polarityFlag(description);
+		switch (mode)
+		{
+		case RuntimePinMode::input:
+			return flags | GPIO_INPUT;
+		case RuntimePinMode::input_pullup:
+			return flags | GPIO_INPUT | GPIO_PULL_UP;
+		case RuntimePinMode::input_pulldown:
+			return flags | GPIO_INPUT | GPIO_PULL_DOWN;
+		case RuntimePinMode::output:
+			flags |= output_latch ? GPIO_OUTPUT_HIGH : GPIO_OUTPUT_LOW;
+			return hasPinCapability(description.capabilities, PinCapability::digital_input)
+					   ? flags | GPIO_INPUT
+					   : flags;
+		case RuntimePinMode::output_open_drain:
+			flags |= output_latch ? GPIO_OUTPUT_HIGH : GPIO_OUTPUT_LOW;
+			flags |= GPIO_OPEN_DRAIN;
+			return hasPinCapability(description.capabilities, PinCapability::digital_input)
+					   ? flags | GPIO_INPUT
+					   : flags;
+		case RuntimePinMode::unconfigured:
+		default:
+			return GPIO_DISCONNECTED;
+		}
+	}
+
+	/** @brief ownership manager 결과를 핀 handover 결과로 변환합니다. */
+	[[nodiscard]] nucode::arduino::internal::PinHandoverResult handoverResult(
+		IoResourceResult result) noexcept
+	{
+		using nucode::arduino::internal::PinHandoverResult;
+		switch (result)
+		{
+		case IoResourceResult::success:
+			return PinHandoverResult::success;
+		case IoResourceResult::invalid_context:
+			return PinHandoverResult::invalid_context;
+		case IoResourceResult::invalid_argument:
+			return PinHandoverResult::invalid_argument;
+		case IoResourceResult::wrong_phase:
+			return PinHandoverResult::wrong_phase;
+		case IoResourceResult::conflict:
+		case IoResourceResult::capacity_exhausted:
+		case IoResourceResult::stale_lease:
+		default:
+			return PinHandoverResult::ownership_conflict;
+		}
 	}
 
 	/**
@@ -248,6 +376,54 @@ namespace
 		return description.gpio.dt_flags & GPIO_ACTIVE_LOW;
 	}
 
+	/** @brief PWM를 중지하기 전에 pinMode 요청의 불변 조건을 모두 검증합니다. */
+	[[nodiscard]] bool preflightPinMode(pin_size_t pin, PinMode mode) noexcept
+	{
+		const PinDescription *const description = pinDescription(pin);
+		const std::size_t canonical_pin = canonicalPinId(pin);
+		if (description == nullptr || canonical_pin >= pin_slot_count)
+		{
+			recordError(GpioError::invalid_pin);
+			return false;
+		}
+		if (!checkDeviceReady(*description) || !checkDevicetreeFlags(*description))
+		{
+			return false;
+		}
+
+		if (mode == INPUT || mode == INPUT_PULLUP || mode == INPUT_PULLDOWN)
+		{
+			if (!hasPinCapability(description->capabilities, PinCapability::digital_input))
+			{
+				recordError(GpioError::unsupported_capability);
+				return false;
+			}
+			return true;
+		}
+		if (mode == OUTPUT)
+		{
+			if (!hasPinCapability(description->capabilities, PinCapability::digital_output))
+			{
+				recordError(GpioError::unsupported_capability);
+				return false;
+			}
+			return true;
+		}
+		if (mode == OUTPUT_OPENDRAIN)
+		{
+			if (!hasPinCapability(description->capabilities, PinCapability::digital_output) ||
+				!hasPinCapability(description->capabilities, PinCapability::open_drain))
+			{
+				recordError(GpioError::unsupported_capability);
+				return false;
+			}
+			return true;
+		}
+
+		recordError(GpioError::invalid_mode);
+		return false;
+	}
+
 }
 
 namespace nucode::arduino::internal
@@ -290,14 +466,16 @@ namespace nucode::arduino::internal
 	bool isPinConfiguredForInput(std::size_t logical_pin) noexcept
 	{
 		const PinDescription *const description = pinDescription(logical_pin);
-		if ((logical_pin >= pin_slot_count) || (description == nullptr) ||
+		const std::size_t canonical_pin = canonicalPinId(logical_pin);
+		if ((canonical_pin >= pin_slot_count) || (description == nullptr) ||
+			(atomic_get(&pin_runtime_states[canonical_pin].handover_faulted) != 0) ||
 			!isOwnedByGpio(*description))
 		{
 			return false;
 		}
 
 		const auto mode = static_cast<RuntimePinMode>(
-			atomic_get(&pin_runtime_states[logical_pin].mode));
+			atomic_get(&pin_runtime_states[canonical_pin].mode));
 		return (mode == RuntimePinMode::input) ||
 			   (mode == RuntimePinMode::input_pullup) ||
 			   (mode == RuntimePinMode::input_pulldown);
@@ -306,16 +484,408 @@ namespace nucode::arduino::internal
 	bool isPinConfiguredForOutput(std::size_t logical_pin) noexcept
 	{
 		const PinDescription *const description = pinDescription(logical_pin);
-		if ((logical_pin >= pin_slot_count) || (description == nullptr) ||
+		const std::size_t canonical_pin = canonicalPinId(logical_pin);
+		if ((canonical_pin >= pin_slot_count) || (description == nullptr) ||
+			(atomic_get(&pin_runtime_states[canonical_pin].handover_faulted) != 0) ||
 			!isOwnedByGpio(*description))
 		{
 			return false;
 		}
 
 		const auto mode = static_cast<RuntimePinMode>(
-			atomic_get(&pin_runtime_states[logical_pin].mode));
+			atomic_get(&pin_runtime_states[canonical_pin].mode));
 		return (mode == RuntimePinMode::output) ||
 			   (mode == RuntimePinMode::output_open_drain);
+	}
+
+	bool isGpioPinHandoverFaulted(std::size_t logical_pin) noexcept
+	{
+		const std::size_t canonical_pin = canonicalPinId(logical_pin);
+		return canonical_pin >= pin_slot_count ||
+			   atomic_get(&pin_runtime_states[canonical_pin].handover_faulted) != 0;
+	}
+
+	PinHandoverResult beginGpioPinHandover(std::size_t logical_pin,
+										   IoResourceOwner target_owner,
+										   GpioPinHandover &handover) noexcept
+	{
+		if (k_is_in_isr())
+		{
+			return PinHandoverResult::invalid_context;
+		}
+		if ((target_owner.kind == IoOwnerKind::none) ||
+			(handover.phase == PinHandoverPhase::prepared) ||
+			(handover.phase == PinHandoverPhase::committed) ||
+			(handover.phase == PinHandoverPhase::faulted))
+		{
+			return PinHandoverResult::invalid_argument;
+		}
+
+		lockGpioTransition();
+		handover = {};
+		handover.lock_held = true;
+		handover.requested_pin = logical_pin;
+		handover.canonical_pin = canonicalPinId(logical_pin);
+		handover.target_owner = target_owner;
+		const PinDescription *const description = pinDescription(logical_pin);
+		if ((description == nullptr) || (handover.canonical_pin >= pin_slot_count))
+		{
+			unlockGpioTransition();
+			handover.lock_held = false;
+			return PinHandoverResult::invalid_pin;
+		}
+		if (description->policy == PinPolicy::system_reserved)
+		{
+			unlockGpioTransition();
+			handover.lock_held = false;
+			return PinHandoverResult::unsupported;
+		}
+		if (!gpio_is_ready_dt(&description->gpio))
+		{
+			unlockGpioTransition();
+			handover.lock_held = false;
+			return PinHandoverResult::device_not_ready;
+		}
+
+		PinRuntimeState &runtime = pin_runtime_states[handover.canonical_pin];
+		if (atomic_get(&runtime.handover_faulted) != 0
+#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+			|| runtime.interrupt_recovery_pending
+#endif
+		)
+		{
+			unlockGpioTransition();
+			handover.lock_held = false;
+			return PinHandoverResult::driver_error;
+		}
+		handover.previous_mode = static_cast<std::uint8_t>(atomic_get(&runtime.mode));
+		handover.previous_output_latch = atomic_get(&runtime.output_latch) != 0;
+		const IoResourceId resource = gpioIoResource(description->gpio);
+		IoResourceSnapshot snapshot{};
+		const IoResourceResult snapshot_result = ioResourceSnapshot(resource, snapshot);
+		if (snapshot_result != IoResourceResult::success)
+		{
+			unlockGpioTransition();
+			handover.lock_held = false;
+			return handoverResult(snapshot_result);
+		}
+
+		IoResourceResult reserve_result = IoResourceResult::conflict;
+		if (snapshot.state == IoResourceState::free)
+		{
+			reserve_result = reserveIoResources(target_owner, &resource, 1U,
+												IoAcquirePolicy::exclusive,
+												handover.ownership_lease);
+		}
+		else if ((snapshot.state == IoResourceState::active) &&
+				 (snapshot.owner.kind == gpio_owner.kind) &&
+				 (snapshot.owner.instance == gpio_owner.instance))
+		{
+			handover.previous_gpio_owned = true;
+			reserve_result = transferIoResources(gpio_owner, target_owner, &resource, 1U,
+												 handover.ownership_lease);
+		}
+		if (reserve_result != IoResourceResult::success)
+		{
+			unlockGpioTransition();
+			handover.lock_held = false;
+			return handoverResult(reserve_result);
+		}
+
+#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+		const int interrupt_result = suspendInterruptForPinHandover(
+			handover.canonical_pin, handover.interrupt);
+		if (interrupt_result < 0)
+		{
+			const int interrupt_rollback =
+				rollbackInterruptForPinHandover(handover.interrupt);
+			const IoResourceResult ownership_rollback =
+				rollbackIoResources(handover.ownership_lease);
+			const bool cleanup_failed = interrupt_rollback < 0 ||
+										ownership_rollback != IoResourceResult::success;
+			handover.phase = cleanup_failed ? PinHandoverPhase::faulted
+											: PinHandoverPhase::rolled_back;
+			atomic_set(&runtime.handover_faulted, cleanup_failed ? 1 : 0);
+			unlockGpioTransition();
+			handover.lock_held = false;
+			return ownership_rollback != IoResourceResult::success
+					   ? handoverResult(ownership_rollback)
+					   : PinHandoverResult::driver_error;
+		}
+#endif
+
+		const auto previous_mode = static_cast<RuntimePinMode>(handover.previous_mode);
+		if (handover.previous_gpio_owned &&
+			(previous_mode != RuntimePinMode::unconfigured))
+		{
+			const int disconnect_result = gpio_pin_configure(
+				description->gpio.port, description->gpio.pin, GPIO_DISCONNECTED);
+			if (disconnect_result < 0)
+			{
+#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+				const int interrupt_rollback =
+					rollbackInterruptForPinHandover(handover.interrupt);
+#else
+				const int interrupt_rollback = 0;
+#endif
+				const IoResourceResult ownership_rollback =
+					rollbackIoResources(handover.ownership_lease);
+				const bool cleanup_failed = interrupt_rollback < 0 ||
+											ownership_rollback != IoResourceResult::success;
+				handover.phase = cleanup_failed ? PinHandoverPhase::faulted
+												: PinHandoverPhase::rolled_back;
+				atomic_set(&runtime.handover_faulted, cleanup_failed ? 1 : 0);
+				unlockGpioTransition();
+				handover.lock_held = false;
+				return ownership_rollback != IoResourceResult::success
+						   ? handoverResult(ownership_rollback)
+						   : PinHandoverResult::driver_error;
+			}
+		}
+		handover.phase = PinHandoverPhase::prepared;
+		return PinHandoverResult::success;
+	}
+
+	PinHandoverResult rollbackGpioPinHandover(GpioPinHandover &handover) noexcept
+	{
+		if (handover.phase != PinHandoverPhase::prepared || !handover.lock_held)
+		{
+			return PinHandoverResult::wrong_phase;
+		}
+		const PinDescription *const description = pinDescription(handover.canonical_pin);
+		if (description == nullptr)
+		{
+			unlockGpioTransition();
+			handover.lock_held = false;
+			return PinHandoverResult::invalid_pin;
+		}
+
+		int driver_result = 0;
+		const auto previous_mode = static_cast<RuntimePinMode>(handover.previous_mode);
+		if (handover.previous_gpio_owned &&
+			(previous_mode != RuntimePinMode::unconfigured))
+		{
+			driver_result = gpio_pin_configure(
+				description->gpio.port, description->gpio.pin,
+				runtimeModeFlags(*description, previous_mode,
+								 handover.previous_output_latch));
+		}
+		const IoResourceResult ownership_result = rollbackIoResources(
+			handover.ownership_lease);
+#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+		const int interrupt_result = rollbackInterruptForPinHandover(handover.interrupt);
+		if ((driver_result == 0) && (interrupt_result < 0))
+		{
+			driver_result = interrupt_result;
+		}
+#endif
+		handover.phase =
+			(ownership_result == IoResourceResult::success && driver_result >= 0)
+				? PinHandoverPhase::rolled_back
+				: PinHandoverPhase::faulted;
+		if (handover.phase == PinHandoverPhase::faulted &&
+			handover.canonical_pin < pin_slot_count)
+		{
+			atomic_set(&pin_runtime_states[handover.canonical_pin].handover_faulted, 1);
+		}
+		unlockGpioTransition();
+		handover.lock_held = false;
+		if (ownership_result != IoResourceResult::success)
+		{
+			return handoverResult(ownership_result);
+		}
+		return driver_result < 0 ? PinHandoverResult::driver_error
+								 : PinHandoverResult::success;
+	}
+
+	PinHandoverResult commitGpioPinHandover(GpioPinHandover &handover) noexcept
+	{
+		if (handover.phase != PinHandoverPhase::prepared || !handover.lock_held)
+		{
+			return PinHandoverResult::wrong_phase;
+		}
+		const IoResourceResult result = commitIoResources(handover.ownership_lease);
+		if (result != IoResourceResult::success)
+		{
+			const PinHandoverResult rollback_result = rollbackGpioPinHandover(handover);
+			return rollback_result == PinHandoverResult::success
+					   ? handoverResult(result)
+					   : rollback_result;
+		}
+		PinRuntimeState &runtime = pin_runtime_states[handover.canonical_pin];
+		atomic_set(&runtime.mode, static_cast<atomic_val_t>(RuntimePinMode::unconfigured));
+		runtime.ownership_lease = {};
+		handover.phase = PinHandoverPhase::committed;
+		unlockGpioTransition();
+		handover.lock_held = false;
+		return PinHandoverResult::success;
+	}
+
+	PinHandoverResult abandonGpioPinHandoverFailClosed(
+		GpioPinHandover &handover) noexcept
+	{
+		if (handover.phase != PinHandoverPhase::prepared || !handover.lock_held ||
+			handover.canonical_pin >= pin_slot_count)
+		{
+			return PinHandoverResult::wrong_phase;
+		}
+		PinRuntimeState &runtime = pin_runtime_states[handover.canonical_pin];
+		atomic_set(&runtime.handover_faulted, 1);
+		handover.phase = PinHandoverPhase::faulted;
+		handover.lock_held = false;
+		unlockGpioTransition();
+		return PinHandoverResult::success;
+	}
+
+	PinHandoverResult restoreGpioAfterPeripheral(GpioPinHandover &handover) noexcept
+	{
+		if (k_is_in_isr())
+		{
+			return PinHandoverResult::invalid_context;
+		}
+		if (handover.phase != PinHandoverPhase::committed)
+		{
+			return PinHandoverResult::wrong_phase;
+		}
+		lockGpioTransition();
+		const PinDescription *const description = pinDescription(handover.canonical_pin);
+		if (description == nullptr)
+		{
+			unlockGpioTransition();
+			return PinHandoverResult::invalid_pin;
+		}
+
+		if (!handover.previous_gpio_owned)
+		{
+			const IoResourceResult release_result = releaseIoResources(
+				handover.ownership_lease);
+#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+			const int interrupt_result = release_result == IoResourceResult::success
+											 ? commitInterruptForPinHandover(handover.interrupt)
+											 : 0;
+#else
+			const int interrupt_result = 0;
+#endif
+			if (release_result == IoResourceResult::success && interrupt_result >= 0)
+			{
+				handover.phase = PinHandoverPhase::rolled_back;
+			}
+			else if (release_result != IoResourceResult::success || interrupt_result < 0)
+			{
+				handover.phase = PinHandoverPhase::faulted;
+				atomic_set(&pin_runtime_states[handover.canonical_pin].handover_faulted, 1);
+			}
+			unlockGpioTransition();
+			return release_result != IoResourceResult::success
+					   ? handoverResult(release_result)
+					   : (interrupt_result < 0 ? PinHandoverResult::driver_error
+											   : PinHandoverResult::success);
+		}
+
+		const IoResourceId resource = gpioIoResource(description->gpio);
+		IoResourceLease restore_lease{};
+		const IoResourceResult reserve_result = transferIoResources(
+			handover.target_owner, gpio_owner, &resource, 1U, restore_lease);
+		if (reserve_result != IoResourceResult::success)
+		{
+			unlockGpioTransition();
+			return handoverResult(reserve_result);
+		}
+
+		const auto previous_mode = static_cast<RuntimePinMode>(handover.previous_mode);
+		int driver_result = 0;
+		if (previous_mode != RuntimePinMode::unconfigured)
+		{
+			driver_result = gpio_pin_configure(
+				description->gpio.port, description->gpio.pin,
+				runtimeModeFlags(*description, previous_mode,
+								 handover.previous_output_latch));
+		}
+#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+		if (driver_result == 0)
+		{
+			driver_result = rollbackInterruptForPinHandover(handover.interrupt);
+		}
+#endif
+		if (driver_result < 0)
+		{
+			const int disconnect_result = gpio_pin_configure(
+				description->gpio.port, description->gpio.pin, GPIO_DISCONNECTED);
+			const IoResourceResult rollback_result = rollbackIoResources(restore_lease);
+			if (disconnect_result < 0 || rollback_result != IoResourceResult::success)
+			{
+				atomic_set(&pin_runtime_states[handover.canonical_pin].handover_faulted, 1);
+				handover.phase = PinHandoverPhase::faulted;
+			}
+			unlockGpioTransition();
+			return PinHandoverResult::driver_error;
+		}
+
+		const IoResourceResult commit_result = commitIoResources(restore_lease);
+		if (commit_result != IoResourceResult::success)
+		{
+#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+			/** ownership 확정 실패 시 이미 복원한 callback을 다시 정지해
+			 * 다음 restore 재시도에 사용할 snapshot을 보존합니다. */
+			const int interrupt_suspend_result = suspendInterruptForPinHandover(
+				handover.canonical_pin, handover.interrupt);
+#else
+			const int interrupt_suspend_result = 0;
+#endif
+			const int disconnect_result = gpio_pin_configure(
+				description->gpio.port, description->gpio.pin, GPIO_DISCONNECTED);
+			const IoResourceResult rollback_result = rollbackIoResources(restore_lease);
+			if (interrupt_suspend_result < 0 || disconnect_result < 0 ||
+				rollback_result != IoResourceResult::success)
+			{
+				atomic_set(&pin_runtime_states[handover.canonical_pin].handover_faulted, 1);
+				handover.phase = PinHandoverPhase::faulted;
+			}
+			unlockGpioTransition();
+			return handoverResult(commit_result);
+		}
+		PinRuntimeState &runtime = pin_runtime_states[handover.canonical_pin];
+		runtime.ownership_lease = restore_lease;
+		atomic_set(&runtime.mode, static_cast<atomic_val_t>(previous_mode));
+		atomic_set(&runtime.output_latch, handover.previous_output_latch ? 1 : 0);
+		handover.phase = PinHandoverPhase::rolled_back;
+		unlockGpioTransition();
+		return PinHandoverResult::success;
+	}
+
+	PinHandoverResult releasePeripheralPinHandover(GpioPinHandover &handover) noexcept
+	{
+		if (k_is_in_isr())
+		{
+			return PinHandoverResult::invalid_context;
+		}
+		if (handover.phase != PinHandoverPhase::committed)
+		{
+			return PinHandoverResult::wrong_phase;
+		}
+		lockGpioTransition();
+		const IoResourceResult release_result = releaseIoResources(
+			handover.ownership_lease);
+		if (release_result != IoResourceResult::success)
+		{
+			unlockGpioTransition();
+			return handoverResult(release_result);
+		}
+#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+		const int interrupt_result = commitInterruptForPinHandover(handover.interrupt);
+#else
+		const int interrupt_result = 0;
+#endif
+		handover.phase = interrupt_result < 0 ? PinHandoverPhase::faulted
+											  : PinHandoverPhase::rolled_back;
+		if (handover.phase == PinHandoverPhase::faulted &&
+			handover.canonical_pin < pin_slot_count)
+		{
+			atomic_set(&pin_runtime_states[handover.canonical_pin].handover_faulted, 1);
+		}
+		unlockGpioTransition();
+		return interrupt_result < 0 ? PinHandoverResult::driver_error
+									: PinHandoverResult::success;
 	}
 
 }
@@ -326,145 +896,221 @@ void pinMode(pin_size_t pin, PinMode mode)
 	{
 		return;
 	}
-	GpioTransitionGuard transition_guard;
-
-	const PinDescription *description = nullptr;
-	PinRuntimeState *state = nullptr;
-	if (!lookupPin(pin, description, state))
+	if (!preflightPinMode(pin, mode))
 	{
 		return;
 	}
-
-	if (!checkDeviceReady(*description) || !checkDevicetreeFlags(*description))
+#if defined(CONFIG_NUCODE_ARDUINO_PWM)
+	/** @brief PWM allocator와 GPIO 전환 mutex의 잠금 순서를 일정하게 유지합니다. */
+	nucode::arduino::internal::PwmRuntimeSuspendedOutput suspended_pwm{};
+	if (!suspendAnalogWriteForGpio(pin, suspended_pwm))
 	{
-		return;
-	}
-
-	gpio_flags_t flags = polarityFlag(*description);
-	RuntimePinMode runtime_mode = RuntimePinMode::unconfigured;
-
-	if (mode == INPUT)
-	{
-		if (!hasPinCapability(description->capabilities, PinCapability::digital_input))
-		{
-			recordError(GpioError::unsupported_capability);
-			return;
-		}
-		flags |= GPIO_INPUT;
-		runtime_mode = RuntimePinMode::input;
-	}
-	else if (mode == INPUT_PULLUP)
-	{
-		if (!hasPinCapability(description->capabilities, PinCapability::digital_input))
-		{
-			recordError(GpioError::unsupported_capability);
-			return;
-		}
-		flags |= GPIO_INPUT | GPIO_PULL_UP;
-		runtime_mode = RuntimePinMode::input_pullup;
-	}
-	else if (mode == INPUT_PULLDOWN)
-	{
-		if (!hasPinCapability(description->capabilities, PinCapability::digital_input))
-		{
-			recordError(GpioError::unsupported_capability);
-			return;
-		}
-		flags |= GPIO_INPUT | GPIO_PULL_DOWN;
-		runtime_mode = RuntimePinMode::input_pulldown;
-	}
-	else if (mode == OUTPUT)
-	{
-		if (!hasPinCapability(description->capabilities, PinCapability::digital_output))
-		{
-			recordError(GpioError::unsupported_capability);
-			return;
-		}
-
-		flags |= (atomic_get(&state->output_latch) != 0) ? GPIO_OUTPUT_HIGH
-														 : GPIO_OUTPUT_LOW;
-
-		if (hasPinCapability(description->capabilities, PinCapability::digital_input))
-		{
-			flags |= GPIO_INPUT;
-		}
-		runtime_mode = RuntimePinMode::output;
-	}
-	else if (mode == OUTPUT_OPENDRAIN)
-	{
-		if (!hasPinCapability(description->capabilities, PinCapability::digital_output) ||
-			!hasPinCapability(description->capabilities, PinCapability::open_drain))
-		{
-			recordError(GpioError::unsupported_capability);
-			return;
-		}
-
-		flags |= (atomic_get(&state->output_latch) != 0)
-				 ? (GPIO_OUTPUT_HIGH | GPIO_OPEN_DRAIN)
-				 : (GPIO_OUTPUT_LOW | GPIO_OPEN_DRAIN);
-		if (hasPinCapability(description->capabilities, PinCapability::digital_input))
-		{
-			flags |= GPIO_INPUT;
-		}
-		runtime_mode = RuntimePinMode::output_open_drain;
-	}
-	else
-	{
-		recordError(GpioError::invalid_mode);
-		return;
-	}
-
-	const auto resource = gpioIoResource(description->gpio);
-	IoResourceLease ownership_lease{};
-	const IoResourceResult reserve_result = nucode::arduino::internal::reserveIoResources(
-		gpio_owner, &resource, 1U, IoAcquirePolicy::exclusive, ownership_lease);
-	if (reserve_result != IoResourceResult::success)
-	{
-		recordOwnershipError(reserve_result);
-		return;
-	}
-
-#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
-	/**
-	 * 핀 재설정과 동시에 남은 edge callback이 새 mode에서 실행되는 것을
-	 * 방지하기 위해 등록된 callback을 먼저 해제합니다.
-	 */
-	const int detach_result =
-		nucode::arduino::internal::detachInterruptForPinTransition(
-			static_cast<std::size_t>(pin));
-	if (detach_result < 0)
-	{
-		(void)nucode::arduino::internal::rollbackIoResources(ownership_lease);
-		atomic_set(&state->mode, static_cast<atomic_val_t>(RuntimePinMode::unconfigured));
-		recordError(GpioError::driver_error, detach_result);
 		return;
 	}
 #endif
-
-	const int result = gpio_pin_configure(description->gpio.port, description->gpio.pin, flags);
-	if (result < 0)
+	bool transition_recoverable = true;
+	const bool configured = [&]() noexcept -> bool
 	{
-		(void)nucode::arduino::internal::rollbackIoResources(ownership_lease);
-		atomic_set(&state->mode, static_cast<atomic_val_t>(RuntimePinMode::unconfigured));
-		recordError(GpioError::driver_error, result);
-		return;
-	}
+		GpioTransitionGuard transition_guard;
 
-	const bool newly_owned = ownership_lease.entries[0].changed;
-	const IoResourceResult commit_result =
-		nucode::arduino::internal::commitIoResources(ownership_lease);
-	if (commit_result != IoResourceResult::success)
-	{
-		recordOwnershipError(commit_result);
-		return;
-	}
-	if (newly_owned)
-	{
-		state->ownership_lease = ownership_lease;
-	}
+		const PinDescription *description = nullptr;
+		PinRuntimeState *state = nullptr;
+		if (!lookupPin(pin, description, state) || !checkDeviceReady(*description) ||
+			!checkDevicetreeFlags(*description))
+		{
+			return false;
+		}
+		if (atomic_get(&state->handover_faulted) != 0)
+		{
+			transition_recoverable = false;
+			recordError(GpioError::ownership_conflict);
+			return false;
+		}
+#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+		const int pending_recovery = recoverPendingPinInterrupt(*state);
+		if (pending_recovery < 0)
+		{
+			transition_recoverable = false;
+			recordError(GpioError::driver_error, pending_recovery);
+			return false;
+		}
+#endif
 
-	atomic_set(&state->mode, static_cast<atomic_val_t>(runtime_mode));
-	recordSuccess();
+		const RuntimePinMode previous_mode =
+			static_cast<RuntimePinMode>(atomic_get(&state->mode));
+		const bool previous_latch = atomic_get(&state->output_latch) != 0;
+		gpio_flags_t flags = polarityFlag(*description);
+		RuntimePinMode runtime_mode = RuntimePinMode::unconfigured;
+
+		if (mode == INPUT)
+		{
+			flags |= GPIO_INPUT;
+			runtime_mode = RuntimePinMode::input;
+		}
+		else if (mode == INPUT_PULLUP)
+		{
+			flags |= GPIO_INPUT | GPIO_PULL_UP;
+			runtime_mode = RuntimePinMode::input_pullup;
+		}
+		else if (mode == INPUT_PULLDOWN)
+		{
+			flags |= GPIO_INPUT | GPIO_PULL_DOWN;
+			runtime_mode = RuntimePinMode::input_pulldown;
+		}
+		else if (mode == OUTPUT)
+		{
+			flags |= previous_latch ? GPIO_OUTPUT_HIGH : GPIO_OUTPUT_LOW;
+			if (hasPinCapability(description->capabilities, PinCapability::digital_input))
+			{
+				flags |= GPIO_INPUT;
+			}
+			runtime_mode = RuntimePinMode::output;
+		}
+		else
+		{
+			flags |= previous_latch ? (GPIO_OUTPUT_HIGH | GPIO_OPEN_DRAIN)
+									: (GPIO_OUTPUT_LOW | GPIO_OPEN_DRAIN);
+			if (hasPinCapability(description->capabilities, PinCapability::digital_input))
+			{
+				flags |= GPIO_INPUT;
+			}
+			runtime_mode = RuntimePinMode::output_open_drain;
+		}
+
+		const auto resource = gpioIoResource(description->gpio);
+		IoResourceLease ownership_lease{};
+		const IoResourceResult reserve_result =
+			nucode::arduino::internal::reserveIoResources(
+				gpio_owner, &resource, 1U, IoAcquirePolicy::exclusive, ownership_lease);
+		if (reserve_result != IoResourceResult::success)
+		{
+			recordOwnershipError(reserve_result);
+			return false;
+		}
+
+#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+		/**
+		 * 핀 재설정 중 callback 실행만 정지하고, 모든 GPIO 전환이 성공한 뒤
+		 * snapshot을 폐기합니다. 중간 실패에서는 같은 snapshot으로 복원합니다.
+		 */
+		state->interrupt_recovery = {};
+		const int suspend_result =
+			nucode::arduino::internal::suspendInterruptForPinHandover(
+				static_cast<std::size_t>(pin), state->interrupt_recovery);
+		state->interrupt_recovery_pending = state->interrupt_recovery.registered;
+		if (suspend_result < 0)
+		{
+			const int interrupt_rollback = recoverPendingPinInterrupt(*state);
+			const IoResourceResult ownership_rollback =
+				nucode::arduino::internal::rollbackIoResources(ownership_lease);
+			transition_recoverable = interrupt_rollback >= 0 &&
+									 ownership_rollback == IoResourceResult::success;
+			if (ownership_rollback != IoResourceResult::success)
+			{
+				atomic_set(&state->handover_faulted, 1);
+			}
+			recordError(GpioError::driver_error,
+						interrupt_rollback < 0 ? interrupt_rollback : suspend_result);
+			return false;
+		}
+#endif
+
+		const int result =
+			gpio_pin_configure(description->gpio.port, description->gpio.pin, flags);
+		if (result < 0)
+		{
+			const IoResourceResult ownership_rollback =
+				nucode::arduino::internal::rollbackIoResources(ownership_lease);
+#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+			const int interrupt_rollback = recoverPendingPinInterrupt(*state);
+#else
+			const int interrupt_rollback = 0;
+#endif
+			transition_recoverable = interrupt_rollback >= 0 &&
+									 ownership_rollback == IoResourceResult::success;
+			if (ownership_rollback != IoResourceResult::success)
+			{
+				atomic_set(&state->handover_faulted, 1);
+			}
+			recordError(GpioError::driver_error,
+						interrupt_rollback < 0 ? interrupt_rollback : result);
+			return false;
+		}
+
+		const bool newly_owned = ownership_lease.entries[0].changed;
+		const IoResourceResult commit_result =
+			nucode::arduino::internal::commitIoResources(ownership_lease);
+		if (commit_result != IoResourceResult::success)
+		{
+			const int restore_result = gpio_pin_configure(
+				description->gpio.port, description->gpio.pin,
+				runtimeModeFlags(*description, previous_mode, previous_latch));
+			const IoResourceResult ownership_rollback =
+				nucode::arduino::internal::rollbackIoResources(ownership_lease);
+#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+			const int interrupt_rollback = recoverPendingPinInterrupt(*state);
+#else
+			const int interrupt_rollback = 0;
+#endif
+			transition_recoverable = restore_result >= 0 && interrupt_rollback >= 0 &&
+									 ownership_rollback == IoResourceResult::success;
+			if (restore_result < 0 || ownership_rollback != IoResourceResult::success)
+			{
+				atomic_set(&state->handover_faulted, 1);
+			}
+			if (restore_result < 0 || interrupt_rollback < 0)
+			{
+				recordError(GpioError::driver_error,
+							interrupt_rollback < 0 ? interrupt_rollback : restore_result);
+			}
+			else
+			{
+				recordOwnershipError(commit_result);
+			}
+			return false;
+		}
+
+#if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
+		const int interrupt_commit =
+			nucode::arduino::internal::commitInterruptForPinHandover(
+				state->interrupt_recovery);
+		if (interrupt_commit < 0)
+		{
+			const int interrupt_rollback = recoverPendingPinInterrupt(*state);
+			const int restore_result = gpio_pin_configure(
+				description->gpio.port, description->gpio.pin,
+				runtimeModeFlags(*description, previous_mode, previous_latch));
+			transition_recoverable =
+				interrupt_rollback >= 0 && restore_result >= 0;
+			if (restore_result < 0)
+			{
+				atomic_set(&state->handover_faulted, 1);
+			}
+			recordError(GpioError::driver_error,
+						interrupt_rollback < 0 ? interrupt_rollback : interrupt_commit);
+			return false;
+		}
+		state->interrupt_recovery_pending = false;
+#endif
+		if (newly_owned)
+		{
+			state->ownership_lease = ownership_lease;
+		}
+
+		atomic_set(&state->mode, static_cast<atomic_val_t>(runtime_mode));
+		recordSuccess();
+		return true;
+	}();
+
+#if defined(CONFIG_NUCODE_ARDUINO_PWM)
+	if (!configured && transition_recoverable)
+	{
+		resumeAnalogWriteAfterGpioFailure(suspended_pwm);
+	}
+#else
+	static_cast<void>(configured);
+	static_cast<void>(transition_recoverable);
+#endif
 }
 
 void digitalWrite(pin_size_t pin, PinStatus value)
@@ -485,6 +1131,11 @@ void digitalWrite(pin_size_t pin, PinStatus value)
 	PinRuntimeState *state = nullptr;
 	if (!lookupPin(pin, description, state))
 	{
+		return;
+	}
+	if (atomic_get(&state->handover_faulted) != 0)
+	{
+		recordError(GpioError::ownership_conflict);
 		return;
 	}
 
@@ -537,6 +1188,11 @@ PinStatus digitalRead(pin_size_t pin)
 	PinRuntimeState *state = nullptr;
 	if (!lookupPin(pin, description, state))
 	{
+		return LOW;
+	}
+	if (atomic_get(&state->handover_faulted) != 0)
+	{
+		recordError(GpioError::ownership_conflict);
 		return LOW;
 	}
 

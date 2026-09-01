@@ -9,6 +9,7 @@
 #include <variant.h>
 
 #include <zephyr/drivers/gpio.h>
+#include <zephyr/init.h>
 #include <zephyr/kernel.h>
 #include <zephyr/spinlock.h>
 #include <zephyr/sys/atomic.h>
@@ -16,16 +17,23 @@
 
 #include <limits.h>
 #include <errno.h>
+#include <string.h>
 #include <cstddef>
 #include <cstdint>
 
 #include "internal/pin_description.h"
+#include "internal/PinHandover.h"
+#if defined(CONFIG_NUCODE_ARDUINO_SPI)
+#include "internal/SpiInterruptMask.h"
+#endif
 
 namespace
 {
 
+	using nucode::arduino::internal::canonicalPinId;
 	using nucode::arduino::internal::GpioError;
 	using nucode::arduino::internal::hasPinCapability;
+	using nucode::arduino::internal::isGpioPinHandoverFaulted;
 	using nucode::arduino::internal::isPinConfiguredForInput;
 	using nucode::arduino::internal::lockGpioTransition;
 	using nucode::arduino::internal::PinCapability;
@@ -118,7 +126,7 @@ namespace
 	 * @return 지원하는 mode이면 true입니다.
 	 */
 	[[nodiscard]] bool interruptFlags(PinStatus mode, gpio_flags_t &flags,
-									 TriggerKind &trigger_kind) noexcept
+									  TriggerKind &trigger_kind) noexcept
 	{
 		switch (mode)
 		{
@@ -172,9 +180,9 @@ namespace
 
 		const k_spinlock_key_t key = k_spin_lock(&slot.lock);
 		const bool eligible = slot.registered && slot.active && !slot.suspended &&
-						  (slot.trigger_kind != TriggerKind::edge) &&
-						  (atomic_get(&slot.level_latched) == 0) &&
-						  (atomic_get(&callback_mask_depth) == 0);
+							  (slot.trigger_kind != TriggerKind::edge) &&
+							  (atomic_get(&slot.level_latched) == 0) &&
+							  (atomic_get(&callback_mask_depth) == 0);
 		if (eligible)
 		{
 			logical_pin = slot.logical_pin;
@@ -205,9 +213,9 @@ namespace
 
 		const k_spinlock_key_t recheck_key = k_spin_lock(&slot.lock);
 		const bool still_eligible = slot.registered && slot.active && !slot.suspended &&
-								(slot.trigger_kind == trigger_kind) &&
-								(atomic_get(&slot.level_latched) == 0) &&
-								(atomic_get(&callback_mask_depth) == 0);
+									(slot.trigger_kind == trigger_kind) &&
+									(atomic_get(&slot.level_latched) == 0) &&
+									(atomic_get(&callback_mask_depth) == 0);
 		k_spin_unlock(&slot.lock, recheck_key);
 		if (!still_eligible)
 		{
@@ -215,15 +223,15 @@ namespace
 		}
 
 		int result = gpio_pin_interrupt_configure(description->gpio.port,
-											 description->gpio.pin,
-											 GPIO_INT_DISABLE);
+												  description->gpio.pin,
+												  GPIO_INT_DISABLE);
 		if (result < 0)
 		{
 			return result;
 		}
 		result = gpio_pin_interrupt_configure(description->gpio.port,
-										 description->gpio.pin,
-										 trigger_flags);
+											  description->gpio.pin,
+											  trigger_flags);
 		return result;
 	}
 
@@ -273,14 +281,14 @@ namespace
 		if (isLevelAsserted(trigger_kind, raw_value))
 		{
 			static_cast<void>(k_work_reschedule(&slot->level_rearm_work,
-										 level_rearm_interval));
+												level_rearm_interval));
 			return;
 		}
 
 		const k_spinlock_key_t recheck_key = k_spin_lock(&slot->lock);
 		const bool still_eligible = slot->registered && slot->active && !slot->suspended &&
-								(atomic_get(&slot->generation) == generation) &&
-								(atomic_get(&callback_mask_depth) == 0);
+									(atomic_get(&slot->generation) == generation) &&
+									(atomic_get(&callback_mask_depth) == 0);
 		if (still_eligible)
 		{
 			atomic_set(&slot->level_latched, 0);
@@ -292,8 +300,8 @@ namespace
 		}
 
 		const int result = gpio_pin_interrupt_configure(description->gpio.port,
-												 description->gpio.pin,
-												 trigger_flags);
+														description->gpio.pin,
+														trigger_flags);
 		if (result < 0)
 		{
 			setGpioBackendError(GpioError::driver_error, result);
@@ -308,8 +316,8 @@ namespace
 		if (became_stale)
 		{
 			static_cast<void>(gpio_pin_interrupt_configure(description->gpio.port,
-													 description->gpio.pin,
-													 GPIO_INT_DISABLE));
+														   description->gpio.pin,
+														   GPIO_INT_DISABLE));
 		}
 	}
 
@@ -336,7 +344,7 @@ namespace
 			logical_pin = slot->logical_pin;
 			const bool level_delivery = trigger_kind != TriggerKind::edge;
 			const bool callback_masked = slot->suspended ||
-									 (atomic_get(&callback_mask_depth) != 0);
+										 (atomic_get(&callback_mask_depth) != 0);
 			suppress_asserted_level = level_delivery && callback_masked;
 			if (!callback_masked &&
 				(!level_delivery || atomic_cas(&slot->level_latched, 0, 1)))
@@ -360,8 +368,8 @@ namespace
 			if (description != nullptr)
 			{
 				const int result = gpio_pin_interrupt_configure(description->gpio.port,
-												 description->gpio.pin,
-												 GPIO_INT_DISABLE);
+																description->gpio.pin,
+																GPIO_INT_DISABLE);
 				if (result < 0)
 				{
 					setGpioBackendError(GpioError::driver_error, result);
@@ -381,8 +389,8 @@ namespace
 			if (description != nullptr)
 			{
 				const int result = gpio_pin_interrupt_configure(description->gpio.port,
-														 description->gpio.pin,
-														 GPIO_INT_DISABLE);
+																description->gpio.pin,
+																GPIO_INT_DISABLE);
 				if (result < 0)
 				{
 					setGpioBackendError(GpioError::driver_error, result);
@@ -404,7 +412,7 @@ namespace
 		if (trigger_kind != TriggerKind::edge)
 		{
 			static_cast<void>(k_work_reschedule(&slot->level_rearm_work,
-										 level_rearm_interval));
+												level_rearm_interval));
 		}
 	}
 
@@ -412,6 +420,10 @@ namespace
 	int removeSlot(const PinDescription &description, InterruptSlot &slot) noexcept
 	{
 		const k_spinlock_key_t key = k_spin_lock(&slot.lock);
+		const bool was_registered = slot.registered;
+		const bool was_active = slot.active;
+		const bool was_suspended = slot.suspended;
+		const gpio_flags_t trigger_flags = slot.trigger_flags;
 		slot.active = false;
 		slot.suspended = true;
 		atomic_inc(&slot.generation);
@@ -423,17 +435,34 @@ namespace
 			static_cast<void>(k_work_cancel_delayable_sync(&slot.level_rearm_work, &sync));
 		}
 
-		int result = 0;
-		if (slot.registered)
+		if (was_registered)
 		{
-			result = gpio_pin_interrupt_configure(description.gpio.port,
-												  description.gpio.pin,
-												  GPIO_INT_DISABLE);
-			const int remove_result = gpio_remove_callback(description.gpio.port,
-												   &slot.gpio_callback);
-			if ((result == 0) && (remove_result < 0))
+			const int disable_result = gpio_pin_interrupt_configure(description.gpio.port,
+																	description.gpio.pin,
+																	GPIO_INT_DISABLE);
+			if (disable_result < 0)
 			{
-				result = remove_result;
+				const k_spinlock_key_t restore_key = k_spin_lock(&slot.lock);
+				slot.active = was_active;
+				slot.suspended = was_suspended;
+				k_spin_unlock(&slot.lock, restore_key);
+				return disable_result;
+			}
+			const int remove_result = gpio_remove_callback(description.gpio.port,
+														   &slot.gpio_callback);
+			if (remove_result < 0)
+			{
+				int restore_result = 0;
+				if (was_active && !was_suspended)
+				{
+					restore_result = gpio_pin_interrupt_configure(
+						description.gpio.port, description.gpio.pin, trigger_flags);
+				}
+				const k_spinlock_key_t restore_key = k_spin_lock(&slot.lock);
+				slot.active = restore_result == 0 ? was_active : false;
+				slot.suspended = restore_result == 0 ? was_suspended : true;
+				k_spin_unlock(&slot.lock, restore_key);
+				return restore_result < 0 ? restore_result : remove_result;
 			}
 		}
 
@@ -455,7 +484,7 @@ namespace
 		slot.parameter = nullptr;
 		atomic_set(&slot.level_latched, 0);
 		k_spin_unlock(&slot.lock, clear_key);
-		return result;
+		return 0;
 	}
 
 	/** @brief 공통 검증 뒤 사용자 callback을 GPIO trigger에 등록합니다. */
@@ -483,8 +512,9 @@ namespace
 			return;
 		}
 
-		const auto logical_pin = static_cast<std::size_t>(interrupt_number);
-		const PinDescription *description = pinDescription(logical_pin);
+		const auto requested_pin = static_cast<std::size_t>(interrupt_number);
+		const auto logical_pin = canonicalPinId(requested_pin);
+		const PinDescription *description = pinDescription(requested_pin);
 		if ((description == nullptr) || (logical_pin >= pin_slot_count))
 		{
 			setGpioBackendError(GpioError::invalid_pin);
@@ -494,6 +524,11 @@ namespace
 		if (!hasPinCapability(description->capabilities, PinCapability::interrupt))
 		{
 			setGpioBackendError(GpioError::unsupported_capability);
+			return;
+		}
+		if (isGpioPinHandoverFaulted(logical_pin))
+		{
+			setGpioBackendError(GpioError::ownership_conflict);
 			return;
 		}
 
@@ -611,8 +646,8 @@ namespace
 			if (description != nullptr)
 			{
 				const int result = gpio_pin_interrupt_configure(description->gpio.port,
-												 description->gpio.pin,
-												 GPIO_INT_DISABLE);
+																description->gpio.pin,
+																GPIO_INT_DISABLE);
 				if ((first_error == 0) && (result < 0))
 				{
 					first_error = result;
@@ -635,17 +670,225 @@ namespace nucode::arduino::internal
 {
 	int detachInterruptForPinTransition(std::size_t logical_pin) noexcept
 	{
-		const PinDescription *const description = pinDescription(logical_pin);
-		if ((description == nullptr) || (logical_pin >= pin_slot_count))
+		const std::size_t canonical_pin = canonicalPinId(logical_pin);
+		const PinDescription *const description = pinDescription(canonical_pin);
+		if ((description == nullptr) || (canonical_pin >= pin_slot_count))
+		{
+			return -EINVAL;
+		}
+		static_cast<void>(k_mutex_lock(&interrupt_configuration_mutex, K_FOREVER));
+		const int result = removeSlot(*description, interrupt_slots[canonical_pin]);
+		static_cast<void>(k_mutex_unlock(&interrupt_configuration_mutex));
+		return result;
+	}
+
+	int suspendInterruptForPinHandover(std::size_t logical_pin,
+									   PinInterruptHandoverState &state) noexcept
+	{
+		const std::size_t canonical_pin = canonicalPinId(logical_pin);
+		const PinDescription *const description = pinDescription(canonical_pin);
+		if ((description == nullptr) || (canonical_pin >= pin_slot_count))
+		{
+			return -EINVAL;
+		}
+		if (isGpioPinHandoverFaulted(canonical_pin))
+		{
+			return -EIO;
+		}
+
+		static_cast<void>(k_mutex_lock(&interrupt_configuration_mutex, K_FOREVER));
+		InterruptSlot &slot = interrupt_slots[canonical_pin];
+		const k_spinlock_key_t key = k_spin_lock(&slot.lock);
+		state = {};
+		state.canonical_pin = canonical_pin;
+		state.registered = slot.registered;
+		state.was_active = slot.active;
+		state.was_suspended = slot.suspended;
+		if (slot.registered)
+		{
+			slot.active = false;
+			slot.suspended = true;
+			atomic_inc(&slot.generation);
+		}
+		k_spin_unlock(&slot.lock, key);
+
+		if (!state.registered)
+		{
+			static_cast<void>(k_mutex_unlock(&interrupt_configuration_mutex));
+			return 0;
+		}
+		if (slot.work_initialized)
+		{
+			struct k_work_sync sync;
+			static_cast<void>(k_work_cancel_delayable_sync(&slot.level_rearm_work, &sync));
+		}
+		const int result = gpio_pin_interrupt_configure(
+			description->gpio.port, description->gpio.pin, GPIO_INT_DISABLE);
+		while (atomic_get(&slot.in_flight) != 0)
+		{
+			k_yield();
+		}
+		static_cast<void>(k_mutex_unlock(&interrupt_configuration_mutex));
+		return result;
+	}
+
+	int commitInterruptForPinHandover(PinInterruptHandoverState &state) noexcept
+	{
+		if (!state.registered)
+		{
+			return 0;
+		}
+		const std::size_t canonical_pin = canonicalPinId(state.canonical_pin);
+		const PinDescription *const description = pinDescription(canonical_pin);
+		if ((description == nullptr) || (canonical_pin >= pin_slot_count))
+		{
+			return -EINVAL;
+		}
+		static_cast<void>(k_mutex_lock(&interrupt_configuration_mutex, K_FOREVER));
+		const int result = removeSlot(*description, interrupt_slots[canonical_pin]);
+		static_cast<void>(k_mutex_unlock(&interrupt_configuration_mutex));
+		if (result == 0)
+		{
+			state.registered = false;
+		}
+		return result;
+	}
+
+	int rollbackInterruptForPinHandover(PinInterruptHandoverState &state) noexcept
+	{
+		if (!state.registered)
+		{
+			return 0;
+		}
+		const std::size_t canonical_pin = canonicalPinId(state.canonical_pin);
+		const PinDescription *const description = pinDescription(canonical_pin);
+		if ((description == nullptr) || (canonical_pin >= pin_slot_count))
 		{
 			return -EINVAL;
 		}
 
 		static_cast<void>(k_mutex_lock(&interrupt_configuration_mutex, K_FOREVER));
-		const int result = removeSlot(*description, interrupt_slots[logical_pin]);
+		InterruptSlot &slot = interrupt_slots[canonical_pin];
+		const k_spinlock_key_t key = k_spin_lock(&slot.lock);
+		if (!slot.registered)
+		{
+			k_spin_unlock(&slot.lock, key);
+			static_cast<void>(k_mutex_unlock(&interrupt_configuration_mutex));
+			return -ESTALE;
+		}
+		const gpio_flags_t trigger_flags = slot.trigger_flags;
+		slot.active = state.was_active;
+		slot.suspended = state.was_suspended;
+		atomic_set(&slot.level_latched, 0);
+		atomic_inc(&slot.generation);
+		k_spin_unlock(&slot.lock, key);
+
+		int result = 0;
+		if (state.was_active && !state.was_suspended)
+		{
+			result = gpio_pin_interrupt_configure(description->gpio.port,
+												  description->gpio.pin, trigger_flags);
+		}
+		if (result < 0)
+		{
+			const k_spinlock_key_t fail_key = k_spin_lock(&slot.lock);
+			slot.active = false;
+			slot.suspended = true;
+			k_spin_unlock(&slot.lock, fail_key);
+		}
+		else
+		{
+			state.registered = false;
+		}
 		static_cast<void>(k_mutex_unlock(&interrupt_configuration_mutex));
 		return result;
 	}
+
+#if defined(CONFIG_NUCODE_ARDUINO_SPI)
+	namespace
+	{
+		static_assert(sizeof(PinInterruptHandoverState) <=
+						  sizeof(SpiInterruptMaskToken::words),
+					  "SPI interrupt token이 GPIO interrupt snapshot보다 작습니다.");
+
+		/** @brief Arduino interrupt 번호가 실제 GPIOTE 가능 핀인지 확인합니다. */
+		[[nodiscard]] bool validSpiInterrupt(int interrupt_number) noexcept
+		{
+			if (interrupt_number < 0)
+			{
+				return false;
+			}
+			const std::size_t canonical_pin =
+				canonicalPinId(static_cast<std::size_t>(interrupt_number));
+			const PinDescription *const description = pinDescription(canonical_pin);
+			return (description != nullptr) &&
+				   !isGpioPinHandoverFaulted(canonical_pin) &&
+				   hasPinCapability(description->capabilities, PinCapability::interrupt);
+		}
+
+		/** @brief SPI transaction 동안 지정한 GPIO interrupt 하나만 정지합니다. */
+		[[nodiscard]] int suspendSpiInterrupt(
+			int interrupt_number, SpiInterruptMaskToken &token) noexcept
+		{
+			if (!validSpiInterrupt(interrupt_number) || token.active)
+			{
+				return -EINVAL;
+			}
+
+			PinInterruptHandoverState state{};
+			lockGpioTransition();
+			const int result = suspendInterruptForPinHandover(
+				static_cast<std::size_t>(interrupt_number), state);
+			if (result < 0)
+			{
+				const int rollback_result = rollbackInterruptForPinHandover(state);
+				if (rollback_result < 0)
+				{
+					memset(token.words, 0, sizeof(token.words));
+					memcpy(token.words, &state, sizeof(state));
+					token.active = true;
+				}
+				unlockGpioTransition();
+				return rollback_result < 0 ? rollback_result : result;
+			}
+			unlockGpioTransition();
+
+			memset(token.words, 0, sizeof(token.words));
+			memcpy(token.words, &state, sizeof(state));
+			return 0;
+		}
+
+		/** @brief SPI transaction 종료 뒤 정지했던 GPIO interrupt를 복원합니다. */
+		[[nodiscard]] int restoreSpiInterrupt(SpiInterruptMaskToken &token) noexcept
+		{
+			PinInterruptHandoverState state{};
+			memcpy(&state, token.words, sizeof(state));
+
+			lockGpioTransition();
+			const int result = rollbackInterruptForPinHandover(state);
+			unlockGpioTransition();
+			if (result == 0)
+			{
+				memset(token.words, 0, sizeof(token.words));
+			}
+			return result;
+		}
+
+		/** @brief SPI backend에 선택적 GPIO interrupt adapter를 등록합니다. */
+		int initializeSpiInterruptMaskAdapter() noexcept
+		{
+			const SpiInterruptMaskAdapter adapter{
+				validSpiInterrupt,
+				suspendSpiInterrupt,
+				restoreSpiInterrupt,
+			};
+			return registerSpiInterruptMaskAdapter(adapter) ? 0 : -EALREADY;
+		}
+
+		SYS_INIT(initializeSpiInterruptMaskAdapter, APPLICATION,
+				 CONFIG_APPLICATION_INIT_PRIORITY);
+	}
+#endif
 }
 
 extern "C" void attachInterrupt(pin_size_t interrupt_number, voidFuncPtr callback,
@@ -669,8 +912,9 @@ extern "C" void detachInterrupt(pin_size_t interrupt_number)
 	}
 	GpioTransitionGuard transition_guard;
 
-	const auto logical_pin = static_cast<std::size_t>(interrupt_number);
-	const PinDescription *description = pinDescription(logical_pin);
+	const auto requested_pin = static_cast<std::size_t>(interrupt_number);
+	const auto logical_pin = canonicalPinId(requested_pin);
+	const PinDescription *description = pinDescription(requested_pin);
 	if ((description == nullptr) || (logical_pin >= pin_slot_count))
 	{
 		setGpioBackendError(GpioError::invalid_pin);
@@ -750,8 +994,8 @@ extern "C" void noInterrupts(void)
 		if (description != nullptr)
 		{
 			const int result = gpio_pin_interrupt_configure(description->gpio.port,
-													  description->gpio.pin,
-													  GPIO_INT_DISABLE);
+															description->gpio.pin,
+															GPIO_INT_DISABLE);
 			if ((first_error == 0) && (result < 0))
 			{
 				first_error = result;
@@ -781,8 +1025,8 @@ extern "C" void noInterrupts(void)
 			if (should_restore && (description != nullptr))
 			{
 				const int result = gpio_pin_interrupt_configure(description->gpio.port,
-												 description->gpio.pin,
-												 trigger_flags);
+																description->gpio.pin,
+																trigger_flags);
 				if ((rollback_error == 0) && (result < 0))
 				{
 					rollback_error = result;
@@ -877,8 +1121,8 @@ extern "C" void interrupts(void)
 		if (should_restore && (description != nullptr))
 		{
 			const int result = gpio_pin_interrupt_configure(description->gpio.port,
-													  description->gpio.pin,
-													  trigger_flags);
+															description->gpio.pin,
+															trigger_flags);
 			if ((first_error == 0) && (result < 0))
 			{
 				first_error = result;
@@ -898,8 +1142,8 @@ extern "C" void interrupts(void)
 			if (should_disable && (description != nullptr))
 			{
 				static_cast<void>(gpio_pin_interrupt_configure(description->gpio.port,
-														 description->gpio.pin,
-														 GPIO_INT_DISABLE));
+															   description->gpio.pin,
+															   GPIO_INT_DISABLE));
 			}
 		}
 		setGpioBackendError(GpioError::driver_error, first_error);

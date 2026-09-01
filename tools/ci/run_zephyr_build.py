@@ -50,8 +50,13 @@ SUITES = (
     ("m20_ble_gatt_hil", "nucode.m20.ble_gatt_hil_central"),
     ("ac01_contract", "nucode.ac01.contract"),
     ("ac01_hil", "nucode.ac01.gpio_hil"),
+    ("ac02a_ownership_contract", "nucode.ac02a.ownership_contract"),
+    ("ac02b_b2_contract", "nucode.ac02b.b2_contract"),
+    ("ac02b_analog_contract", "nucode.ac02b.analog_contract"),
+    ("ac02b_hil_dut", "nucode.ac02b.hil_dut"),
+    ("ac02b_hil_peer", "nucode.ac02b.hil_peer"),
 )
-WINDOWS_OUTDIR_MAX_LENGTH = 32
+WINDOWS_OUTDIR_MAX_LENGTH = 8
 M15_DIRECTORIES = ("m15_board", "m15_hil", "m15_wake")
 
 

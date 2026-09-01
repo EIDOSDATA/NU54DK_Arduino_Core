@@ -15,3 +15,4 @@
 &uicr {
 	nfct-pins-as-gpios;
 };
+#include <nucode/nu54dk-arduino-pins.dtsi>

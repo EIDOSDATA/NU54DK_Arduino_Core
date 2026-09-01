@@ -18,24 +18,25 @@ namespace
 	using nucode::arduino::internal::hasPinCapability;
 	using nucode::arduino::internal::lastGpioError;
 	using nucode::arduino::internal::PinCapability;
-	using nucode::arduino::internal::PinOwnership;
 	using nucode::arduino::internal::pinDescription;
+	using nucode::arduino::internal::PinOwnership;
 
 	static_assert(NUCODE_NU54DK_HAS_CONNECTOR_GPIO == 1,
 				  "AC-01 target에는 connector alias 두 개가 필요합니다.");
 	static_assert(PIN_GPIO0 == 10U && PIN_GPIO1 == 11U,
 				  "기존 v0.2.0 논리 ID 뒤에 connector GPIO를 추가해야 합니다.");
-	static_assert(NUM_DIGITAL_PINS == 12U && NUM_DIGITAL_CAPABLE_PINS == 9U &&
-				  NUM_PIN_ROLES == 12U,
+	static_assert(NUM_DIGITAL_PINS == 32U && NUM_DIGITAL_CAPABLE_PINS == 20U &&
+					  NUM_PIN_ROLES == 32U && NUM_PHYSICAL_PINS == 31U,
 				  "AC-01 profile의 공개 pin 범위와 descriptor 수가 다릅니다.");
 	static_assert(D10 == PIN_GPIO0 && D11 == PIN_GPIO1,
 				  "connector GPIO의 Arduino digital 별칭이 다릅니다.");
 	static_assert(digitalPinToInterrupt(PIN_GPIO0) == NOT_AN_INTERRUPT &&
-				  digitalPinToInterrupt(PIN_GPIO1) == NOT_AN_INTERRUPT &&
-				  digitalPinToInterrupt(LED_BUILTIN) == NOT_AN_INTERRUPT &&
-				  digitalPinToInterrupt(PIN_LED2) == NOT_AN_INTERRUPT &&
-				  digitalPinToInterrupt(PIN_LED3) == PIN_LED3 &&
-				  digitalPinToInterrupt(PIN_BUTTON0) == PIN_BUTTON0,
+					  digitalPinToInterrupt(PIN_GPIO1) == NOT_AN_INTERRUPT &&
+					  digitalPinToInterrupt(LED_BUILTIN) == NOT_AN_INTERRUPT &&
+					  digitalPinToInterrupt(PIN_LED2) == NOT_AN_INTERRUPT &&
+					  digitalPinToInterrupt(PIN_LED1) == PIN_PWM0 &&
+					  digitalPinToInterrupt(PIN_LED3) == PIN_LED3 &&
+					  digitalPinToInterrupt(PIN_BUTTON0) == PIN_BUTTON0,
 				  "GPIO2는 IRQ에서 제외하고 GPIOTE pin은 유지해야 합니다.");
 }
 

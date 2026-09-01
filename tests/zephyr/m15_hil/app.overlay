@@ -16,3 +16,4 @@
 &wdt31 {
 	status = "okay";
 };
+#include <nucode/nu54dk-arduino-pins.dtsi>

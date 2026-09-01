@@ -57,7 +57,14 @@ namespace
 
 	/** @brief save/load/delete 시험에 사용하는 고정 payload입니다. */
 	constexpr std::uint8_t expected_payload[] = {
-		0x4EU, 0x55U, 0x43U, 0x4FU, 0x44U, 0x45U, 0x15U, 0xA5U,
+		0x4EU,
+		0x55U,
+		0x43U,
+		0x4FU,
+		0x44U,
+		0x45U,
+		0x15U,
+		0xA5U,
 	};
 
 	/** @brief 재부팅 경계에서 이어 갈 자동 HIL 단계입니다. */
@@ -95,7 +102,7 @@ namespace
 	std::uint32_t stateGuard(const ScenarioState &state)
 	{
 		std::uint32_t guard = state.magic ^ state.schema ^
-			static_cast<std::uint32_t>(state.stage) ^ 0xA55A15A5UL;
+							  static_cast<std::uint32_t>(state.stage) ^ 0xA55A15A5UL;
 		for (std::size_t index = 0U; index < nonce_length; ++index)
 		{
 			guard = (guard << 5U) | (guard >> 27U);
@@ -206,9 +213,9 @@ namespace
 	{
 		const auto raw_stage = static_cast<std::uint32_t>(state.stage);
 		return (state.magic == state_magic) && (state.schema == protocol_schema) &&
-			(raw_stage >= static_cast<std::uint32_t>(Stage::soft_reset)) &&
-			(raw_stage <= static_cast<std::uint32_t>(Stage::watchdog_wait)) &&
-			validNonce(state.nonce) && (state.guard == stateGuard(state));
+			   (raw_stage >= static_cast<std::uint32_t>(Stage::soft_reset)) &&
+			   (raw_stage <= static_cast<std::uint32_t>(Stage::watchdog_wait)) &&
+			   validNonce(state.nonce) && (state.guard == stateGuard(state));
 	}
 
 	/** @brief 다음 단계를 원자적 settings value 하나로 저장합니다. */
@@ -492,8 +499,7 @@ void setup(void)
 	Serial.print(static_cast<unsigned long>(boot_reset_report.supported));
 	Serial.print(":uptime_ms=");
 	Serial.println(static_cast<unsigned long long>(NU54DK.uptimeMilliseconds()));
-	reportState(state_is_valid ? &state : nullptr, state_is_valid ? stageName(state.stage) :
-		(state_exists ? "corrupt" : "idle"));
+	reportState(state_is_valid ? &state : nullptr, state_is_valid ? stageName(state.stage) : (state_exists ? "corrupt" : "idle"));
 
 	char command[96] = {};
 	if (!readCommand(command, sizeof(command)))

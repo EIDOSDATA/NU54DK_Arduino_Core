@@ -40,6 +40,7 @@ FEATURE_ALLOWLIST = {
     "NUCODE_NU54DK": "nucode.board",
     "Wire": "nucode.wire",
     "SPI": "nucode.spi",
+    "Servo": "nucode.servo",
 }
 CONTEXT_DIRECTORY = "nu54-zephyr"
 CACHE_SCHEMA_VERSION = 1

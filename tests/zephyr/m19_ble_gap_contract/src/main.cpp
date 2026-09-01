@@ -38,7 +38,7 @@ int main()
     const nucode::ble::BLEUuid uuid32 = nucode::ble::BLEUuid::from32(0x12345678U);
     const nucode::ble::BLEUuid uuid128("12345678-1234-5678-1234-56789abcdef0");
     const nucode::ble::BLEAddress address("C0:12:34:56:78:9A",
-                                           nucode::ble::BLEAddress::Type::random_address);
+                                          nucode::ble::BLEAddress::Type::random_address);
 
     BLEDevice.onEvent(onBleEvent, const_cast<std::uint8_t *>(&event));
     BLEScan.onResult(onScanResult, const_cast<std::int8_t *>(&rssi));

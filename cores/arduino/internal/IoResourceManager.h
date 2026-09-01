@@ -106,6 +106,7 @@ namespace nucode::arduino::internal
 		IoResourceId resource{};
 		IoResourceOwner previous_owner{};
 		IoResourceState previous_state{IoResourceState::free};
+		std::uint64_t previous_generation{0U};
 		std::uint64_t generation{0U};
 		bool changed{false};
 	};
@@ -173,6 +174,18 @@ namespace nucode::arduino::internal
 	[[nodiscard]] IoResourceResult reserveIoResources(
 		IoResourceOwner owner, const IoResourceId *resources, std::size_t count,
 		IoAcquirePolicy policy, IoResourceLease &lease,
+		IoResourceSnapshot *conflict = nullptr) noexcept;
+
+	/**
+	 * @brief 예상한 active owner의 자원을 새 owner에게 원자적으로 전환 예약합니다.
+	 *
+	 * @details driver와 pinctrl을 변경하기 전 호출하고 성공하면 기존 owner 상태를 lease에
+	 * 보존합니다. commit하면 새 owner가 active가 되며 rollback하면 기존 generation까지
+	 * 복구되어 이전 owner의 committed lease가 다시 유효해집니다.
+	 */
+	[[nodiscard]] IoResourceResult transferIoResources(
+		IoResourceOwner expected_owner, IoResourceOwner new_owner,
+		const IoResourceId *resources, std::size_t count, IoResourceLease &lease,
 		IoResourceSnapshot *conflict = nullptr) noexcept;
 
 	/** @brief 예약한 자원 변경을 활성 상태로 확정합니다. */

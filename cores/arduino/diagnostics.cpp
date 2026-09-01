@@ -85,8 +85,8 @@ namespace nucode::arduino
 		{
 			const auto code = gpioCode(internal::lastGpioError());
 			const int driver_error = code == DiagnosticCode::driver_error
-								 ? internal::lastGpioDriverError()
-								 : 0;
+										 ? internal::lastGpioDriverError()
+										 : 0;
 			return {DiagnosticSubsystem::gpio, code, driver_error, 0U};
 		}
 #endif
@@ -111,24 +111,52 @@ namespace nucode::arduino
 				return DiagnosticCode::driver_error;
 			case internal::SerialError::rx_overflow:
 				return DiagnosticCode::overflow;
+			case internal::SerialError::invalid_pin_route:
+				return DiagnosticCode::invalid_pin;
+			case internal::SerialError::route_busy:
+				return DiagnosticCode::ownership_conflict;
+			case internal::SerialError::route_error:
+				return DiagnosticCode::driver_error;
 			default:
 				return DiagnosticCode::unsupported;
 			}
 		}
 
-		/** @brief 현재 Serial backend 상태를 공개 진단 값으로 투영합니다. */
-		[[nodiscard]] Diagnostic serialDiagnostic() noexcept
+		/** @brief 한 Serial instance의 비공개 상태를 공개 진단 값으로 투영합니다. */
+		[[nodiscard]] Diagnostic serialDiagnostic(
+			DiagnosticSubsystem subsystem, internal::SerialError error,
+			int backend_error, std::uint32_t dropped_bytes) noexcept
 		{
-			const auto error = internal::lastSerialError();
 			const auto code = serialCode(error);
 			const int driver_error = code == DiagnosticCode::driver_error
-								 ? internal::lastSerialDriverError()
-								 : 0;
+										 ? backend_error
+										 : 0;
 			const std::uint32_t detail = error == internal::SerialError::rx_overflow
-									 ? internal::serialDroppedRxBytes()
-									 : 0U;
-			return {DiagnosticSubsystem::serial, code, driver_error, detail};
+											 ? dropped_bytes
+											 : (error == internal::SerialError::invalid_pin_route &&
+														backend_error > 0
+													? static_cast<std::uint32_t>(backend_error)
+													: 0U);
+			return {subsystem, code, driver_error, detail};
 		}
+
+		/** @brief 현재 기본 Serial 상태를 공개 진단 값으로 투영합니다. */
+		[[nodiscard]] Diagnostic serialDiagnostic() noexcept
+		{
+			return serialDiagnostic(
+				DiagnosticSubsystem::serial, internal::lastSerialError(),
+				internal::lastSerialDriverError(), internal::serialDroppedRxBytes());
+		}
+
+#if defined(CONFIG_NUCODE_ARDUINO_SERIAL1)
+		/** @brief 현재 독립 Serial1 상태를 공개 진단 값으로 투영합니다. */
+		[[nodiscard]] Diagnostic serial1Diagnostic() noexcept
+		{
+			return serialDiagnostic(
+				DiagnosticSubsystem::serial1, internal::lastSerial1Error(),
+				internal::lastSerial1DriverError(), internal::serial1DroppedRxBytes());
+		}
+#endif
 #endif
 
 #if defined(CONFIG_NUCODE_ARDUINO_WIRE)
@@ -159,6 +187,11 @@ namespace nucode::arduino
 			case internal::WireError::tx_buffer_overflow:
 			case internal::WireError::rx_buffer_overflow:
 				return DiagnosticCode::overflow;
+			case internal::WireError::invalid_pin_route:
+				return DiagnosticCode::invalid_pin;
+			case internal::WireError::route_busy:
+				return DiagnosticCode::ownership_conflict;
+			case internal::WireError::route_error:
 			case internal::WireError::driver_error:
 				return DiagnosticCode::driver_error;
 			default:
@@ -169,11 +202,17 @@ namespace nucode::arduino
 		/** @brief 현재 Wire backend 상태를 공개 진단 값으로 투영합니다. */
 		[[nodiscard]] Diagnostic wireDiagnostic() noexcept
 		{
-			const auto code = wireCode(internal::lastWireError());
+			const auto error = internal::lastWireError();
+			const auto backend_error = internal::lastWireDriverError();
+			const auto code = wireCode(error);
 			const int driver_error = code == DiagnosticCode::driver_error
-								 ? internal::lastWireDriverError()
-								 : 0;
-			return {DiagnosticSubsystem::wire, code, driver_error, 0U};
+										 ? backend_error
+										 : 0;
+			const std::uint32_t detail =
+				error == internal::WireError::invalid_pin_route && backend_error > 0
+					? static_cast<std::uint32_t>(backend_error)
+					: 0U;
+			return {DiagnosticSubsystem::wire, code, driver_error, detail};
 		}
 #endif
 
@@ -203,6 +242,12 @@ namespace nucode::arduino
 			case internal::SpiError::unsupported_bus_mode:
 			case internal::SpiError::unsupported_operation:
 				return DiagnosticCode::unsupported;
+			case internal::SpiError::invalid_pin_route:
+				return DiagnosticCode::invalid_pin;
+			case internal::SpiError::route_busy:
+				return DiagnosticCode::ownership_conflict;
+			case internal::SpiError::route_error:
+			case internal::SpiError::interrupt_mask_error:
 			case internal::SpiError::driver_error:
 				return DiagnosticCode::driver_error;
 			default:
@@ -213,11 +258,17 @@ namespace nucode::arduino
 		/** @brief 현재 SPI backend 상태를 공개 진단 값으로 투영합니다. */
 		[[nodiscard]] Diagnostic spiDiagnostic() noexcept
 		{
-			const auto code = spiCode(internal::lastSpiError());
+			const auto error = internal::lastSpiError();
+			const auto backend_error = internal::lastSpiDriverError();
+			const auto code = spiCode(error);
 			const int driver_error = code == DiagnosticCode::driver_error
-								 ? internal::lastSpiDriverError()
-								 : 0;
-			return {DiagnosticSubsystem::spi, code, driver_error, 0U};
+										 ? backend_error
+										 : 0;
+			const std::uint32_t detail =
+				error == internal::SpiError::invalid_pin_route && backend_error > 0
+					? static_cast<std::uint32_t>(backend_error)
+					: 0U;
+			return {DiagnosticSubsystem::spi, code, driver_error, detail};
 		}
 #endif
 
@@ -252,8 +303,8 @@ namespace nucode::arduino
 		{
 			const auto code = analogCode(internal::lastAnalogError());
 			const int driver_error = code == DiagnosticCode::driver_error
-								 ? internal::lastAnalogDriverError()
-								 : 0;
+										 ? internal::lastAnalogDriverError()
+										 : 0;
 			return {DiagnosticSubsystem::analog, code, driver_error, 0U};
 		}
 #endif
@@ -278,6 +329,8 @@ namespace nucode::arduino
 			return "spi";
 		case DiagnosticSubsystem::analog:
 			return "analog";
+		case DiagnosticSubsystem::serial1:
+			return "serial1";
 		default:
 			return "unknown";
 		}
@@ -332,6 +385,12 @@ namespace nucode::arduino
 #else
 			return unsupportedDiagnostic(subsystem);
 #endif
+		case DiagnosticSubsystem::serial1:
+#if defined(CONFIG_NUCODE_ARDUINO_SERIAL1)
+			return serial1Diagnostic();
+#else
+			return unsupportedDiagnostic(subsystem);
+#endif
 		case DiagnosticSubsystem::wire:
 #if defined(CONFIG_NUCODE_ARDUINO_WIRE)
 			return wireDiagnostic();
@@ -365,12 +424,12 @@ namespace nucode::arduino
 		}
 
 		const int required = ::snprintf(buffer,
-									   capacity,
-									   "NU54:%s:%s:driver=%d:detail=%lu",
-									   diagnosticSubsystemToken(diagnostic.subsystem),
-									   diagnosticCodeToken(diagnostic.code),
-									   diagnostic.driver_error,
-									   static_cast<unsigned long>(diagnostic.detail));
+										capacity,
+										"NU54:%s:%s:driver=%d:detail=%lu",
+										diagnosticSubsystemToken(diagnostic.subsystem),
+										diagnosticCodeToken(diagnostic.code),
+										diagnostic.driver_error,
+										static_cast<unsigned long>(diagnostic.detail));
 		return required < 0 ? 0U : static_cast<std::size_t>(required);
 	}
 

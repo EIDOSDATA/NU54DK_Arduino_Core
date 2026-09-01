@@ -5,3 +5,4 @@
  */
 
 #include <nucode/nu54dk-arduino-connectors.dtsi>
+#include <nucode/nu54dk-arduino-pins.dtsi>

@@ -16,6 +16,137 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 
 class M14CoreContractTests(unittest.TestCase):
+    def test_disabled_peripheral_stubs_compile_link_and_fail_closed(self) -> None:
+        compiler = self._find_cxx_compiler()
+
+        with self._host_build_directory() as temporary_root:
+            harness = temporary_root / "disabled_peripheral_stubs.cpp"
+            harness.write_text(
+                r'''
+#include <NUCODEPeripheral.h>
+
+#include <cstdint>
+
+extern "C" void analogReadResolution(std::uint8_t);
+extern "C" void analogWriteResolution(std::uint8_t);
+extern "C" bool analogWriteFrequency(pin_size_t, std::uint32_t);
+
+namespace arduino
+{
+std::size_t Print::write(const std::uint8_t *buffer, std::size_t size)
+{
+    std::size_t written = 0U;
+    while (written < size && write(buffer[written]) == 1U)
+    {
+        ++written;
+    }
+    return written;
+}
+}
+
+extern "C" int disabled_stub_test_main()
+{
+    if (Wire.setPins(0U, 1U) ||
+        Wire.capabilities() != nucode::arduino::PeripheralCapability::none)
+    {
+        return 1;
+    }
+    Wire.begin();
+    Wire.beginTransmission(0x52U);
+    if (Wire.write(static_cast<std::uint8_t>(0xA5U)) != 0U ||
+        Wire.endTransmission() != 4U || Wire.requestFrom(0x52U, 1U) != 0U)
+    {
+        return 2;
+    }
+
+    if (SPI.setPins(0U, 1U, 2U) ||
+        SPI.capabilities() != nucode::arduino::PeripheralCapability::none)
+    {
+        return 3;
+    }
+    SPI.begin();
+    SPI.beginTransaction(arduino::SPISettings());
+    if (SPI.transfer(static_cast<std::uint8_t>(0xA5U)) != 0U)
+    {
+        return 4;
+    }
+    SPI.endTransaction();
+    SPI.end();
+
+    analogReadResolution(12U);
+    if (analogRead(0U) != -1)
+    {
+        return 5;
+    }
+    analogWriteResolution(8U);
+    if (analogWriteFrequency(0U, 1000U))
+    {
+        return 6;
+    }
+    analogWrite(0U, 127);
+    tone(0U, 1000U, 1UL);
+    noTone(0U);
+    return 0;
+}
+'''.strip()
+                + "\n",
+                encoding="utf-8",
+            )
+            executable = temporary_root / (
+                "disabled_peripheral_stubs.exe"
+                if os.name == "nt"
+                else "disabled_peripheral_stubs"
+            )
+            launcher = temporary_root / "disabled_peripheral_launcher.cpp"
+            launcher.write_text(
+                'extern "C" int disabled_stub_test_main();\n'
+                "int main() { return disabled_stub_test_main(); }\n",
+                encoding="utf-8",
+            )
+            command = [
+                compiler,
+                "-std=c++1z",
+                "-DHOST",
+                f"-I{REPOSITORY_ROOT / 'cores' / 'arduino'}",
+                f"-I{REPOSITORY_ROOT / 'third_party' / 'ArduinoCore-API'}",
+                str(launcher),
+                str(harness),
+                str(REPOSITORY_ROOT / "cores" / "arduino" / "peripheral_stubs.cpp"),
+                "-o",
+                str(executable),
+            ]
+            compile_result = subprocess.run(
+                command, capture_output=True, text=True, check=False
+            )
+            self.assertEqual(
+                compile_result.returncode,
+                0,
+                msg=(
+                    "disabled peripheral C++ compile/link failed:\n"
+                    f"{compile_result.stdout}\n{compile_result.stderr}"
+                ),
+            )
+            try:
+                run_result = subprocess.run(
+                    [str(executable)], capture_output=True, text=True, check=False
+                )
+            except OSError as error:
+                if os.name == "nt" and getattr(error, "winerror", None) == 4551:
+                    self.skipTest(
+                        "Windows Application Control이 생성 native executable 실행을 "
+                        "차단했습니다. compile/link 계약은 PASS이며, 실제 Zephyr 의미 "
+                        "시험은 tests/zephyr/m14_core_contract가 담당합니다."
+                    )
+                raise
+            self.assertEqual(
+                run_result.returncode,
+                0,
+                msg=(
+                    "disabled peripheral semantic test failed:\n"
+                    f"{run_result.stdout}\n{run_result.stderr}"
+                ),
+            )
+
     def test_core_utility_random_f_and_diagnostics_compile_link(self) -> None:
         compiler = self._find_cxx_compiler()
 
@@ -166,6 +297,9 @@ int host_gpio_driver_error = 0;
 SerialError host_serial_error = SerialError::none;
 int host_serial_driver_error = 0;
 std::uint32_t host_serial_dropped_bytes = 0U;
+SerialError host_serial1_error = SerialError::none;
+int host_serial1_driver_error = 0;
+std::uint32_t host_serial1_dropped_bytes = 0U;
 WireError host_wire_error = WireError::none;
 int host_wire_driver_error = 0;
 SpiError host_spi_error = SpiError::none;
@@ -178,6 +312,9 @@ int host_analog_driver_error = 0;
  SerialError lastSerialError() noexcept { return host_serial_error; }
  int lastSerialDriverError() noexcept { return host_serial_driver_error; }
  std::uint32_t serialDroppedRxBytes() noexcept { return host_serial_dropped_bytes; }
+ SerialError lastSerial1Error() noexcept { return host_serial1_error; }
+ int lastSerial1DriverError() noexcept { return host_serial1_driver_error; }
+ std::uint32_t serial1DroppedRxBytes() noexcept { return host_serial1_dropped_bytes; }
  WireError lastWireError() noexcept { return host_wire_error; }
  int lastWireDriverError() noexcept { return host_wire_driver_error; }
  SpiError lastSpiError() noexcept { return host_spi_error; }
@@ -329,18 +466,33 @@ extern "C" int m14_test_main()
          return 16;
      }
 
-     internal::host_wire_error = internal::WireError::transaction_owner_mismatch;
-     const Diagnostic wire_diagnostic = lastDiagnostic(DiagnosticSubsystem::wire);
-     if (wire_diagnostic.code != DiagnosticCode::ownership_conflict)
+     internal::host_serial1_error = internal::SerialError::invalid_pin_route;
+     internal::host_serial1_driver_error = 3;
+     const Diagnostic serial1_diagnostic = lastDiagnostic(DiagnosticSubsystem::serial1);
+     if (serial1_diagnostic.subsystem != DiagnosticSubsystem::serial1 ||
+         serial1_diagnostic.code != DiagnosticCode::invalid_pin ||
+         serial1_diagnostic.driver_error != 0 || serial1_diagnostic.detail != 3U ||
+         std::strcmp(diagnosticSubsystemToken(DiagnosticSubsystem::serial1), "serial1") != 0)
      {
          return 17;
      }
 
-     internal::host_spi_error = internal::SpiError::invalid_frequency;
-     const Diagnostic spi_diagnostic = lastDiagnostic(DiagnosticSubsystem::spi);
-     if (spi_diagnostic.code != DiagnosticCode::invalid_argument)
+     internal::host_wire_error = internal::WireError::invalid_pin_route;
+     internal::host_wire_driver_error = 5;
+     const Diagnostic wire_diagnostic = lastDiagnostic(DiagnosticSubsystem::wire);
+     if (wire_diagnostic.code != DiagnosticCode::invalid_pin ||
+         wire_diagnostic.driver_error != 0 || wire_diagnostic.detail != 5U)
      {
          return 18;
+     }
+
+     internal::host_spi_error = internal::SpiError::interrupt_mask_error;
+     internal::host_spi_driver_error = -5;
+     const Diagnostic spi_diagnostic = lastDiagnostic(DiagnosticSubsystem::spi);
+     if (spi_diagnostic.code != DiagnosticCode::driver_error ||
+         spi_diagnostic.driver_error != -5 || spi_diagnostic.detail != 0U)
+     {
+         return 19;
      }
 
      internal::host_analog_error = internal::AnalogError::unsupported_reference;
@@ -349,7 +501,7 @@ extern "C" int m14_test_main()
          lastDiagnostic(DiagnosticSubsystem::core).code != DiagnosticCode::none ||
          lastDiagnostic(DiagnosticSubsystem::time).code != DiagnosticCode::unsupported)
      {
-         return 19;
+         return 20;
      }
 
     int destruction_count = 0;
@@ -366,7 +518,7 @@ extern "C" int m14_test_main()
     }
      if (caught_value != 54 || destruction_count != 1)
      {
-         return 20;
+         return 21;
     }
 
     HostRttiDerived derived;
@@ -374,7 +526,7 @@ extern "C" int m14_test_main()
     if (dynamic_cast<HostRttiDerived *>(base) == nullptr ||
         typeid(*base) != typeid(HostRttiDerived))
      {
-         return 21;
+         return 22;
     }
 
     return 0;
@@ -399,6 +551,7 @@ extern "C" int m14_test_main()
                  "-DHOST",
                  "-DCONFIG_NUCODE_ARDUINO_GPIO=1",
                  "-DCONFIG_NUCODE_ARDUINO_SERIAL=1",
+                 "-DCONFIG_NUCODE_ARDUINO_SERIAL1=1",
                  "-DCONFIG_NUCODE_ARDUINO_WIRE=1",
                  "-DCONFIG_NUCODE_ARDUINO_SPI=1",
                  "-DCONFIG_NUCODE_ARDUINO_ADC=1",
@@ -452,6 +605,31 @@ extern "C" int m14_test_main()
         )
         self.assertIn('cores/arduino/wiring_random.cpp"', cmake_source)
         self.assertIn('cores/arduino/diagnostics.cpp"', cmake_source)
+        self.assertIn('cores/arduino/peripheral_stubs.cpp"', cmake_source)
+
+    def test_peripheral_config_matrix_has_real_link_targets(self) -> None:
+        symbols = (
+            "CONFIG_NUCODE_ARDUINO_WIRE",
+            "CONFIG_NUCODE_ARDUINO_SPI",
+            "CONFIG_NUCODE_ARDUINO_ADC",
+            "CONFIG_NUCODE_ARDUINO_PWM",
+        )
+        expected_matrix = {
+            "m14_core_contract": (False, False, False, False),
+            "ac02b_b2_contract": (True, True, False, False),
+            "ac02b_analog_contract": (False, False, True, True),
+            "ac02b_hil_dut": (True, True, True, True),
+        }
+        for application, expected in expected_matrix.items():
+            configuration = (
+                REPOSITORY_ROOT / "tests" / "zephyr" / application / "prj.conf"
+            ).read_text(encoding="utf-8")
+            observed = tuple(f"{symbol}=y" in configuration for symbol in symbols)
+            self.assertEqual(
+                observed,
+                expected,
+                msg=f"AC-02B config/link matrix drifted: {application}",
+            )
 
     @staticmethod
     @contextmanager

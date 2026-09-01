@@ -51,4 +51,57 @@ ZTEST(m14_core_contract, test_random_and_diagnostics_use_production_module)
 				  "production 진단 포맷 결과가 다릅니다.");
 }
 
+ZTEST(m14_core_contract, test_disabled_peripheral_api_links_and_fails_closed)
+{
+	zassert_false(Wire.setPins(0U, 1U),
+				  "비활성 Wire stub가 pin route를 허용했습니다.");
+	Wire.begin();
+	Wire.beginTransmission(0x52U);
+	zassert_equal(Wire.write(0xA5U), 0U,
+				  "비활성 Wire stub가 byte를 수락했습니다.");
+	zassert_equal(Wire.endTransmission(), 4U,
+				  "비활성 Wire stub가 성공 상태를 반환했습니다.");
+	zassert_equal(Wire.requestFrom(0x52U, 1U), 0U,
+				  "비활성 Wire stub가 수신 byte를 만들었습니다.");
+	Wire.end();
+
+	zassert_false(SPI.setPins(0U, 1U, 2U),
+				  "비활성 SPI stub가 pin route를 허용했습니다.");
+	SPI.begin();
+	SPI.beginTransaction(SPISettings(4000000U, MSBFIRST, SPI_MODE0));
+	zassert_equal(SPI.transfer(0xA5U), 0U,
+				  "비활성 SPI stub가 성공처럼 보이는 수신값을 반환했습니다.");
+	SPI.endTransaction();
+	SPI.end();
+
+	analogReadResolution(12U);
+	zassert_equal(analogRead(0U), -1,
+				  "비활성 ADC stub가 유효한 sample을 반환했습니다.");
+	analogWriteResolution(8U);
+	zassert_false(analogWriteFrequency(0U, 1000U),
+				  "비활성 PWM stub가 주파수 설정을 허용했습니다.");
+	analogWrite(0U, 127);
+	tone(0U, 1000U, 1UL);
+	noTone(0U);
+
+	zassert_equal(
+		nucode::arduino::lastDiagnostic(
+			nucode::arduino::DiagnosticSubsystem::wire)
+			.code,
+		nucode::arduino::DiagnosticCode::unsupported,
+		"비활성 Wire 공개 진단이 unsupported가 아닙니다.");
+	zassert_equal(
+		nucode::arduino::lastDiagnostic(
+			nucode::arduino::DiagnosticSubsystem::spi)
+			.code,
+		nucode::arduino::DiagnosticCode::unsupported,
+		"비활성 SPI 공개 진단이 unsupported가 아닙니다.");
+	zassert_equal(
+		nucode::arduino::lastDiagnostic(
+			nucode::arduino::DiagnosticSubsystem::analog)
+			.code,
+		nucode::arduino::DiagnosticCode::unsupported,
+		"비활성 Analog 공개 진단이 unsupported가 아닙니다.");
+}
+
 ZTEST_SUITE(m14_core_contract, nullptr, nullptr, nullptr, nullptr, nullptr);

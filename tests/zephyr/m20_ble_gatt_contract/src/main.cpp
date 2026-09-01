@@ -10,8 +10,7 @@
 #include <cstdint>
 
 const nucode::ble::BLEUuid service_uuid("12345678-1234-5678-1234-56789abcdef0");
-const nucode::ble::BLEUuid characteristic_uuid(
-    "12345678-1234-5678-1234-56789abcdef1");
+const nucode::ble::BLEUuid characteristic_uuid("12345678-1234-5678-1234-56789abcdef1");
 nucode::ble::BLEService service(service_uuid);
 nucode::ble::BLECharacteristic characteristic(
     characteristic_uuid,

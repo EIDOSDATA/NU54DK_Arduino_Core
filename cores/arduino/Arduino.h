@@ -8,8 +8,8 @@
 #ifndef NUCODE_ARDUINO_CORE_ARDUINO_H_
 #define NUCODE_ARDUINO_CORE_ARDUINO_H_
 
-#include <api/ArduinoAPI.h>
 #include <variant.h>
+#include <api/ArduinoAPI.h>
 
 #include "internal/ArduinoUtility.h"
 
@@ -18,18 +18,33 @@ extern "C"
 {
 #endif
 
-/**
- * @brief Arduino가 소유한 GPIO callback 전달을 중첩 안전하게 일시 중지합니다.
- *
- * Zephyr kernel, BLE, system timer와 다른 driver IRQ는 중지하지 않습니다. 첫 호출
- * thread만 같은 thread에서 중첩 호출과 복원을 수행할 수 있습니다.
- */
-void noInterrupts(void);
+    /**
+     * @brief Arduino가 소유한 GPIO callback 전달을 중첩 안전하게 일시 중지합니다.
+     *
+     * Zephyr kernel, BLE, system timer와 다른 driver IRQ는 중지하지 않습니다. 첫 호출
+     * thread만 같은 thread에서 중첩 호출과 복원을 수행할 수 있습니다.
+     */
+    void noInterrupts(void);
 
-/**
- * @brief 같은 thread의 마지막 noInterrupts()와 짝을 이루어 GPIO callback을 복원합니다.
- */
-void interrupts(void);
+    /**
+     * @brief 같은 thread의 마지막 noInterrupts()와 짝을 이루어 GPIO callback을 복원합니다.
+     */
+    void interrupts(void);
+
+    /** @brief SAADC가 반환할 해상도를 8/10/12/14 bit 중 하나로 선택합니다. */
+    void analogReadResolution(uint8_t bits);
+
+    /** @brief analogWrite() 입력값의 해상도를 1~16 bit로 선택합니다. */
+    void analogWriteResolution(uint8_t bits);
+
+#ifdef __cplusplus
+    /**
+     * @brief 지정 PWM 핀의 주파수를 변경합니다.
+     *
+     * @return 핀과 주파수가 유효하고 기존 PWM 출력과 충돌하지 않으면 true입니다.
+     */
+    bool analogWriteFrequency(pin_size_t pin, uint32_t frequency_hz);
+#endif
 
 #ifdef __cplusplus
 }
@@ -41,20 +56,22 @@ void interrupts(void);
 #include <api/HardwareSPI.h>
 #include <api/HardwareSerial.h>
 
+#include "NUCODEPeripheral.h"
+
 /** @brief ArduinoCore-API의 HardwareSerial 형식을 전역 호환 이름으로 노출합니다. */
 using arduino::HardwareSerial;
 
 /** @brief ArduinoCore-API의 HardwareI2C 형식을 전역 호환 이름으로 노출합니다. */
 using arduino::HardwareI2C;
 
-/** @brief Arduino Wire 관례에 맞춘 HardwareI2C 호환 이름입니다. */
-using TwoWire = arduino::HardwareI2C;
+/** @brief 기존 Wire API와 NU54DK runtime 핀 선택을 함께 제공하는 형식입니다. */
+using TwoWire = nucode::arduino::Nu54TwoWire;
 
 /** @brief ArduinoCore-API의 HardwareSPI 형식을 전역 호환 이름으로 노출합니다. */
 using arduino::HardwareSPI;
 
-/** @brief ArduinoCore-API의 SPIClass 호환 이름을 전역으로 노출합니다. */
-using arduino::SPIClass;
+/** @brief 기존 SPI API와 NU54DK runtime 핀 선택을 함께 제공하는 형식입니다. */
+using SPIClass = nucode::arduino::Nu54SPIClass;
 
 /** @brief ArduinoCore-API의 SPISettings 형식을 전역으로 노출합니다. */
 using arduino::SPISettings;
@@ -97,15 +114,7 @@ using arduino::pinMode;
  */
 extern HardwareSerial &Serial;
 
-/** @brief app overlay가 선택한 NU54DK Qwiic I2C controller입니다. */
-extern TwoWire &Wire;
-
-/**
- * @brief app overlay가 선택한 CS 없는 NU54DK SPI controller입니다.
- *
- * 외부 target의 CS는 Sketch가 별도의 확정된 GPIO 역할로 직접 관리해야 합니다.
- */
-extern SPIClass &SPI;
+/** @brief Wire, SPI와 Serial1의 concrete extern은 NUCODEPeripheral.h가 단일 소유합니다. */
 
 #endif
 

@@ -28,6 +28,10 @@ namespace nucode::arduino::internal
 		invalid_data_mode,
 		unsupported_bus_mode,
 		unsupported_operation,
+		invalid_pin_route,
+		route_busy,
+		route_error,
+		interrupt_mask_error,
 		invalid_buffer,
 		driver_error,
 	};

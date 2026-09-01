@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief M14 NU54DK Variant와 고정 DTS 단일 원본 계약을 검증합니다. """
+"""! @brief M14 NU54DK Core-owned 31핀 Variant 계약을 검증합니다. """
 
 from __future__ import annotations
 
@@ -23,52 +23,87 @@ SPEC.loader.exec_module(VERIFIER)
 
 
 class M14VariantContractTests(unittest.TestCase):
-    def test_fixed_board_dts_maps_eight_aliases_and_generates_seven_descriptors(self) -> None:
-        board_root = REPOSITORY_ROOT / "board_package" / "NU54DK_Zephyr_DTS"
-        evidence = VERIFIER.verify_pinmap(REPOSITORY_ROOT, board_root)
+    ## @brief Zephyr C min/max가 Arduino C macro보다 먼저 확정되도록 include 순서를 고정합니다.
+    def test_zephyr_c_header_avoids_min_max_macro_redefinition(self) -> None:
+        variant = (
+            REPOSITORY_ROOT / "variants" / "nu54dk" / "variant.h"
+        ).read_text(encoding="utf-8")
+        arduino = (
+            REPOSITORY_ROOT / "cores" / "arduino" / "Arduino.h"
+        ).read_text(encoding="utf-8")
+        self.assertLess(
+            variant.index("#include <zephyr/devicetree.h>"),
+            variant.index("#include <api/Common.h>"),
+        )
+        self.assertLess(
+            arduino.index("#include <variant.h>"),
+            arduino.index("#include <api/ArduinoAPI.h>"),
+        )
+
+    def test_core_dts_maps_all_31_pads_with_legacy_alias_compatibility(self) -> None:
+        evidence = VERIFIER.verify_pinmap(
+            REPOSITORY_ROOT,
+            REPOSITORY_ROOT / "board_package" / "NU54DK_Zephyr_DTS",
+        )
 
         self.assertEqual(evidence["status"], "passed")
-        self.assertEqual(evidence["digital_pin_count"], 7)
-        self.assertEqual(evidence["mapped_pin_count"], 8)
-        self.assertEqual(evidence["digital_pin_id_limit"], 10)
-        self.assertEqual(evidence["pin_role_span"], 10)
-        self.assertEqual(evidence["reserved_non_digital_ids"], [2, 3, 4])
+        self.assertEqual(evidence["schema_version"], 2)
+        self.assertEqual(evidence["physical_pin_count"], 31)
+        self.assertEqual(evidence["mapped_pin_count"], 31)
+        self.assertEqual(evidence["digital_pin_id_limit"], 32)
+        self.assertEqual(evidence["pin_role_span"], 32)
+        self.assertEqual(evidence["digital_capable_default"], 20)
+        self.assertEqual(evidence["conditional_gpio_pin_count"], 6)
+        self.assertEqual(evidence["analog_input_count"], 8)
         self.assertEqual(
-            [(pin["logical_name"], pin["logical_id"], pin["dts_alias"])
-             for pin in evidence["pins"]],
-            [
-                ("LED_BUILTIN", 0, "led0"),
-                ("PIN_BUTTON0", 1, "sw0"),
-                ("PIN_LED2", 5, "led2"),
-                ("PIN_LED3", 6, "led3"),
-                ("PIN_BUTTON1", 7, "sw1"),
-                ("PIN_BUTTON2", 8, "sw2"),
-                ("PIN_BUTTON3", 9, "sw3"),
-            ],
+            evidence["legacy_aliases"],
+            [{
+                "logical_name": "PIN_LED1",
+                "logical_id": 4,
+                "canonical_name": "PIN_PWM0",
+                "canonical_id": 3,
+            }],
         )
+        self.assertEqual(len(evidence["pins"]), 31)
         self.assertEqual(
-            [(pin["logical_name"], pin["logical_id"], pin["dts_alias"], pin["owner"])
-             for pin in evidence["reserved_pins"]],
-            [("PIN_LED1", 4, "led1", "PIN_PWM0")],
-        )
-        capabilities = {
-            pin["logical_name"]: pin["capabilities"] for pin in evidence["pins"]
-        }
-        self.assertEqual(
-            capabilities["LED_BUILTIN"], ["digital-input", "digital-output"]
-        )
-        self.assertEqual(
-            capabilities["PIN_LED2"], ["digital-input", "digital-output"]
-        )
-        self.assertEqual(
-            capabilities["PIN_LED3"],
-            ["digital-input", "digital-output", "interrupt"],
+            {pin["logical_id"] for pin in evidence["pins"]},
+            set(range(32)) - {4},
         )
         physical = {
             (pin["gpio_controller"], pin["gpio_pin"])
-            for pin in [*evidence["pins"], *evidence["reserved_pins"]]
+            for pin in evidence["pins"]
         }
-        self.assertEqual(len(physical), 8)
+        self.assertEqual(
+            physical,
+            {
+                *(("gpio0", pin) for pin in range(5)),
+                *(("gpio1", pin) for pin in range(15)),
+                *(("gpio2", pin) for pin in range(11)),
+            },
+        )
+
+    def test_route_matrix_and_fail_closed_policies_are_visible_in_evidence(self) -> None:
+        evidence = VERIFIER.verify_pinmap(REPOSITORY_ROOT, Path("unused"))
+        pins = {
+            (pin["gpio_controller"], pin["gpio_pin"]): pin
+            for pin in evidence["pins"]
+        }
+        for pin in range(5):
+            self.assertIn("uart30", pins[("gpio0", pin)]["routes"])
+        for pin in range(15):
+            self.assertIn("i2c22", pins[("gpio1", pin)]["routes"])
+            self.assertIn("pwm20", pins[("gpio1", pin)]["routes"])
+            self.assertIn("pwm21", pins[("gpio1", pin)]["routes"])
+            self.assertIn("pwm22", pins[("gpio1", pin)]["routes"])
+        spi_pads = {
+            physical for physical, pin in pins.items() if "spi00" in pin["routes"]
+        }
+        self.assertEqual(spi_pads, {("gpio2", 1), ("gpio2", 2), ("gpio2", 4)})
+        for pin in range(11):
+            self.assertNotIn("interrupt", pins[("gpio2", pin)]["capabilities"])
+        for pin in pins.values():
+            if pin["policy"] in {"input-only", "system-reserved"}:
+                self.assertNotIn("digital-output", pin["capabilities"])
 
     def test_verifier_writes_machine_readable_evidence(self) -> None:
         with tempfile.TemporaryDirectory(prefix="nu54-m14-variant-") as temporary:
@@ -77,33 +112,24 @@ class M14VariantContractTests(unittest.TestCase):
                 self.assertEqual(VERIFIER.main(["--output", str(output)]), 0)
             evidence = json.loads(output.read_text(encoding="utf-8"))
             self.assertEqual(evidence["gate"], "m14-nu54dk-variant-contract")
-            self.assertEqual(len(evidence["pins"]), evidence["digital_pin_count"])
+            self.assertEqual(len(evidence["pins"]), evidence["physical_pin_count"])
 
-    def test_duplicate_dts_alias_target_is_rejected(self) -> None:
-        source = (
-            REPOSITORY_ROOT
-            / "board_package"
-            / "NU54DK_Zephyr_DTS"
-            / "boards"
-            / "nucode"
-            / "nu54dk"
-            / "nu54dk_common.dtsi"
-        ).read_text(encoding="utf-8")
-        tampered = source.replace("sw3 = &button3;", "sw3 = &button2;")
-        self.assertNotEqual(source, tampered)
-
+    def test_duplicate_physical_pad_in_core_dts_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory(prefix="nu54-m14-dts-negative-") as temporary:
-            board_root = Path(temporary)
-            common = board_root / "boards" / "nucode" / "nu54dk" / "nu54dk_common.dtsi"
-            common.parent.mkdir(parents=True)
-            common.write_text(tampered, encoding="utf-8")
-            with self.assertRaisesRegex(
-                VERIFIER.PinMapContractError,
-                "둘 이상의 digital 논리 pin이 같은 GPIO",
-            ):
-                VERIFIER.verify_pinmap(REPOSITORY_ROOT, board_root)
+            temporary_root = Path(temporary) / "repository"
+            self._copy_verifier_inputs(temporary_root)
+            dts_path = temporary_root / "dts" / "nucode" / "nu54dk-arduino-pins.dtsi"
+            source = dts_path.read_text(encoding="utf-8")
+            tampered = source.replace(
+                "gpios = <&gpio2 10 GPIO_ACTIVE_HIGH>;",
+                "gpios = <&gpio2 9 GPIO_ACTIVE_HIGH>;",
+            )
+            self.assertNotEqual(source, tampered)
+            dts_path.write_text(tampered, encoding="utf-8")
+            with self.assertRaisesRegex(VERIFIER.PinMapContractError, "31개 pad 집합"):
+                VERIFIER.verify_pinmap(temporary_root, Path("unused"))
 
-    def test_public_constants_compile_without_changing_v01_pin_values(self) -> None:
+    def test_public_constants_compile_without_changing_legacy_values(self) -> None:
         cxx = self._find_compiler(("g++", "clang++", "c++"))
         language_probe = subprocess.run(
             [cxx, "-std=c++17", "-x", "c++", "-fsyntax-only", "-"],
@@ -124,16 +150,20 @@ static_assert(PIN_BUTTON0 == 1U);
 static_assert(PIN_A0 == 2U);
 static_assert(PIN_PWM0 == 3U);
 static_assert(PIN_LED1 == 4U && PIN_BUTTON3 == 9U);
-static_assert(NUM_DIGITAL_PINS == 10U);
-static_assert(NUM_DIGITAL_CAPABLE_PINS == 7U);
-static_assert(NUM_PIN_ROLES == 10U);
-static_assert(D0 == LED_BUILTIN && D1 == PIN_BUTTON0);
-static_assert(digitalPinToInterrupt(PIN_A0) == NOT_AN_INTERRUPT);
-static_assert(digitalPinToInterrupt(PIN_PWM0) == NOT_AN_INTERRUPT);
-static_assert(digitalPinToInterrupt(PIN_LED1) == NOT_AN_INTERRUPT);
+static_assert(PIN_GPIO0 == 10U && PIN_GPIO1 == 11U);
+static_assert(NUM_DIGITAL_PINS == 32U);
+static_assert(NUM_DIGITAL_CAPABLE_PINS == 20U);
+static_assert(NUM_PIN_ROLES == 32U);
+static_assert(NUM_PHYSICAL_PINS == 31U);
+static_assert(NUM_ANALOG_INPUTS == 8U);
+static_assert(PIN_AIN0 == PIN_P1_04 && PIN_AIN7 == PIN_LED3);
+static_assert(A0 == PIN_A0 && A1 == PIN_AIN0 && A7 == PIN_AIN7);
+static_assert(canonicalDigitalPin(PIN_LED1) == PIN_PWM0);
+static_assert(digitalPinToInterrupt(PIN_A0) == PIN_A0);
+static_assert(digitalPinToInterrupt(PIN_PWM0) == PIN_PWM0);
+static_assert(digitalPinToInterrupt(PIN_LED1) == PIN_PWM0);
 static_assert(digitalPinToInterrupt(LED_BUILTIN) == NOT_AN_INTERRUPT);
-static_assert(digitalPinToInterrupt(PIN_LED2) == NOT_AN_INTERRUPT);
-static_assert(digitalPinToInterrupt(PIN_LED3) == PIN_LED3);
+static_assert(digitalPinToInterrupt(PIN_GPIO0) == NOT_AN_INTERRUPT);
 int main() { return 0; }
 """.strip()
                 + "\n",
@@ -157,6 +187,20 @@ int main() { return 0; }
                 0,
                 msg=f"Variant C++ contract failed:\n{result.stdout}\n{result.stderr}",
             )
+
+    @staticmethod
+    def _copy_verifier_inputs(destination: Path) -> None:
+        relative_paths = (
+            Path("variants/nu54dk/digital_pins.inc"),
+            Path("variants/nu54dk/variant.h"),
+            Path("variants/nu54dk/variant.cpp"),
+            Path("dts/nucode/nu54dk-arduino-pin-metadata.h"),
+            Path("dts/nucode/nu54dk-arduino-pins.dtsi"),
+        )
+        for relative in relative_paths:
+            target = destination / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(REPOSITORY_ROOT / relative, target)
 
     @staticmethod
     def _find_compiler(candidates: tuple[str, ...]) -> str:

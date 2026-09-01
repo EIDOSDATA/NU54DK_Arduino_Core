@@ -43,6 +43,7 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
       "${NUCODE_ARDUINO_API_ROOT}/api/String.cpp"
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/api_compat.cpp"
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/diagnostics.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/peripheral_stubs.cpp"
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/wiring_random.cpp"
     )
 
@@ -82,6 +83,12 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   endif()
 
   if(CONFIG_NUCODE_ARDUINO_SERIAL)
+    if(NOT CONFIG_SERIAL_SUPPORT_INTERRUPT)
+      message(FATAL_ERROR
+        "Arduino Serial RX requires CONFIG_SERIAL_SUPPORT_INTERRUPT from the selected UART driver"
+      )
+    endif()
+
     foreach(conflict_symbol IN ITEMS
       SHELL_BACKEND_SERIAL
       CONSOLE_HANDLER
@@ -104,6 +111,16 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
     )
   endif()
 
+  if(CONFIG_NUCODE_ARDUINO_SERIAL1 OR
+     CONFIG_NUCODE_ARDUINO_WIRE OR
+     CONFIG_NUCODE_ARDUINO_SPI OR
+     CONFIG_NUCODE_ARDUINO_PWM)
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/RuntimePeripheralRoute.cpp"
+      "${NUCODE_ARDUINO_VARIANT_ROOT}/peripheral_routes.cpp"
+    )
+  endif()
+
   if(CONFIG_NUCODE_ARDUINO_WIRE)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/Wire.cpp"
@@ -122,10 +139,18 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
     )
   endif()
 
+  if(CONFIG_NUCODE_ARDUINO_PWM)
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/PwmRuntime.cpp"
+      "${NUCODE_ARDUINO_VARIANT_ROOT}/pwm_runtime_routes.cpp"
+    )
+  endif()
+
   zephyr_library_named(nucode_arduino_core)
   zephyr_library_sources(${NUCODE_ARDUINO_CORE_SOURCES})
   zephyr_include_directories(
     "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino"
+    "${NUCODE_ARDUINO_CORE_ROOT}/dts"
     "${NUCODE_ARDUINO_VARIANT_ROOT}"
   )
   zephyr_system_include_directories(

@@ -46,3 +46,4 @@
 		tx-fifo-size = <256>;
 	};
 };
+#include <nucode/nu54dk-arduino-pins.dtsi>

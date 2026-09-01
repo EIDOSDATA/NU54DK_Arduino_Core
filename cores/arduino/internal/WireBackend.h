@@ -30,6 +30,9 @@ namespace nucode::arduino::internal
 		pending_restart_conflict,
 		pending_restart_address_mismatch,
 		unsupported_no_stop_read,
+		invalid_pin_route,
+		route_busy,
+		route_error,
 		driver_error,
 	};
 

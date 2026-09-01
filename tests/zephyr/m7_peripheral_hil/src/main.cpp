@@ -179,8 +179,8 @@ void setup(void)
 	const bool adc_ok = testAdcDriver();
 	const bool pwm_ok = testPwmDriver();
 	Serial.println((spi_ok && adc_ok && pwm_ok)
-		? "NUCODE_M7_PERIPHERAL_HIL_PASS"
-		: "NUCODE_M7_PERIPHERAL_HIL_FAIL");
+					   ? "NUCODE_M7_PERIPHERAL_HIL_PASS"
+					   : "NUCODE_M7_PERIPHERAL_HIL_FAIL");
 }
 
 /** @brief 단발성 driver 시험 뒤 추가 주변장치 접근 없이 대기합니다. */

@@ -24,12 +24,14 @@ static int read_acceleration(void)
 	struct sensor_value acceleration[3];
 	int result;
 
-	if ((accelerometer == NULL) || !device_is_ready(accelerometer)) {
+	if ((accelerometer == NULL) || !device_is_ready(accelerometer))
+	{
 		return -ENODEV;
 	}
 
 	result = sensor_sample_fetch(accelerometer);
-	if (result != 0) {
+	if (result != 0)
+	{
 		return result;
 	}
 

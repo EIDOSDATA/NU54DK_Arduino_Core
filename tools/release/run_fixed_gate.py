@@ -50,12 +50,19 @@ SMOKE_TESTS = (
     "m8",
     "m9",
     "m11",
+    "ac02b",
+    "examples",
 )
 ZEPHYR_SUITES = (
     ("m3_runtime", "nucode.m3.runtime"),
     ("m4_api_contract", "nucode.m4.api_contract"),
     ("m6_core_api", "nucode.m6.core_api"),
     ("m7_core_api", "nucode.m7.core_api"),
+    ("ac02a_ownership_contract", "nucode.ac02a.ownership_contract"),
+    ("ac02b_b2_contract", "nucode.ac02b.b2_contract"),
+    ("ac02b_analog_contract", "nucode.ac02b.analog_contract"),
+    ("ac02b_hil_dut", "nucode.ac02b.hil_dut"),
+    ("ac02b_hil_peer", "nucode.ac02b.hil_peer"),
 )
 ZEPHYR_SHORT_WORKSPACE_NAMES = tuple(
     f".z{suffix}" for suffix in "0123456789abcdefghijklmnopqrstuvwxyz"

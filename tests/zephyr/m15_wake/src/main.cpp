@@ -109,7 +109,7 @@ namespace
 		{
 			const char value = nonce[index];
 			if (!(((value >= '0') && (value <= '9')) ||
-				((value >= 'a') && (value <= 'f'))))
+				  ((value >= 'a') && (value <= 'f'))))
 			{
 				return false;
 			}
@@ -125,7 +125,7 @@ namespace
 			(state.phase == Phase::timed_passed) ||
 			(state.phase == Phase::button_armed);
 		return (state.magic == state_magic) &&
-			(state.schema == state_schema) && valid_phase && validNonce(state.nonce);
+			   (state.schema == state_schema) && valid_phase && validNonce(state.nonce);
 	}
 
 	/** @brief 현재 HIL 상태를 settings에서 정확한 크기로 읽습니다. */

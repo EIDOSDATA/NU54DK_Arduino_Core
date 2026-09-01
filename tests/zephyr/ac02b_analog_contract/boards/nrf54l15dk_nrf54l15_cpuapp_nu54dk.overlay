@@ -1,0 +1,111 @@
+/**
+ * @file nrf54l15dk_nrf54l15_cpuapp_nu54dk.overlay
+ * @brief AC-02B 다중 ADC와 PWM allocator를 emulator/fake 장치로 검증합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <zephyr/dt-bindings/adc/adc.h>
+
+/ {
+	chosen {
+		nucode,arduino-adc = &ac02b_adc_inputs;
+	};
+
+	ac02b_adc: adc {
+		compatible = "zephyr,adc-emul";
+		status = "okay";
+		#io-channel-cells = <1>;
+		nchannels = <8>;
+		ref-internal-mv = <600>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		channel@0 {
+			reg = <0>;
+			zephyr,gain = "ADC_GAIN_1_4";
+			zephyr,reference = "ADC_REF_INTERNAL";
+			zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+			zephyr,resolution = <12>;
+		};
+		channel@1 {
+			reg = <1>;
+			zephyr,gain = "ADC_GAIN_1_4";
+			zephyr,reference = "ADC_REF_INTERNAL";
+			zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+			zephyr,resolution = <12>;
+		};
+		channel@2 {
+			reg = <2>;
+			zephyr,gain = "ADC_GAIN_1_4";
+			zephyr,reference = "ADC_REF_INTERNAL";
+			zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+			zephyr,resolution = <12>;
+		};
+		channel@3 {
+			reg = <3>;
+			zephyr,gain = "ADC_GAIN_1_4";
+			zephyr,reference = "ADC_REF_INTERNAL";
+			zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+			zephyr,resolution = <12>;
+		};
+		channel@4 {
+			reg = <4>;
+			zephyr,gain = "ADC_GAIN_1_4";
+			zephyr,reference = "ADC_REF_INTERNAL";
+			zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+			zephyr,resolution = <12>;
+		};
+		channel@5 {
+			reg = <5>;
+			zephyr,gain = "ADC_GAIN_1_4";
+			zephyr,reference = "ADC_REF_INTERNAL";
+			zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+			zephyr,resolution = <12>;
+		};
+		channel@6 {
+			reg = <6>;
+			zephyr,gain = "ADC_GAIN_1_4";
+			zephyr,reference = "ADC_REF_INTERNAL";
+			zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+			zephyr,resolution = <12>;
+		};
+		channel@7 {
+			reg = <7>;
+			zephyr,gain = "ADC_GAIN_1_4";
+			zephyr,reference = "ADC_REF_INTERNAL";
+			zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+			zephyr,resolution = <12>;
+		};
+	};
+
+	ac02b_adc_inputs: arduino-adc-inputs {
+		compatible = "nucode,arduino-adc-input";
+		io-channels = <&ac02b_adc 0>, <&ac02b_adc 1>, <&ac02b_adc 2>,
+			<&ac02b_adc 3>, <&ac02b_adc 4>, <&ac02b_adc 5>,
+			<&ac02b_adc 6>, <&ac02b_adc 7>;
+	};
+
+	ac02b_pwm20: pwm-20 {
+		compatible = "zephyr,fake-pwm";
+		status = "okay";
+		#pwm-cells = <2>;
+		frequency = <1000000>;
+	};
+
+	ac02b_pwm21: pwm-21 {
+		compatible = "zephyr,fake-pwm";
+		status = "okay";
+		#pwm-cells = <2>;
+		frequency = <1000000>;
+	};
+
+	ac02b_pwm22: pwm-22 {
+		compatible = "zephyr,fake-pwm";
+		status = "okay";
+		#pwm-cells = <2>;
+		frequency = <1000000>;
+	};
+};
+
+#include <nucode/nu54dk-arduino-pins.dtsi>

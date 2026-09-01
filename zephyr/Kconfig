@@ -61,13 +61,31 @@ config NUCODE_ARDUINO_GPIO
 	  보드·Arduino profile Devicetree가 소유합니다.
 
 config NUCODE_ARDUINO_CONNECTOR_GPIO
-	bool "NU54DK Arduino connector GPIO 역할 활성화"
+	bool "기존 NU54DK connector GPIO 구성과의 호환 표식"
 	default y
 	depends on NUCODE_ARDUINO_GPIO
 	help
-	  profile overlay가 nucode-gpio0과 nucode-gpio1 alias를 제공하면
-	  P2.5와 P2.6 connector 역할을 Arduino digital pin으로 노출합니다.
-	  활성 peripheral의 pinctrl과 겹치는 임의의 GPIO는 추가하지 않습니다.
+	  v0.2.x profile과 prj.conf 호환을 위해 이름을 유지합니다. 현재 canonical
+	  pin map은 이 값과 관계없이 P2.5와 P2.6을 Arduino digital pin으로
+	  노출합니다. 새 profile에서 두 핀을 숨기는 feature gate로 사용하지 마십시오.
+
+config NUCODE_ARDUINO_DAP_UART_GPIO_PINS
+	bool "SB5~SB8 DAP UART 조건부 P0.0~P0.3 GPIO 허용"
+	default n
+	depends on NUCODE_ARDUINO_GPIO
+	help
+	  NU54DK 회로의 SB5~SB8과 DAP level shifter/UART 연결 상태를 사용자가
+	  확인한 전용 profile에서만 P0.0~P0.3의 일반 digital GPIO capability를
+	  허용합니다. 비활성 상태에서도 Serial1/UART30 route metadata는 유지됩니다.
+
+config NUCODE_ARDUINO_LFXO_GPIO_PINS
+	bool "SB18~SB21 LFXO 조건부 P1.0/P1.1 GPIO 허용"
+	default n
+	depends on NUCODE_ARDUINO_GPIO
+	help
+	  SB18~SB21이 LFXO가 아니라 GPIO 조립 상태임을 사용자가 확인한 전용
+	  profile에서만 P1.0/P1.1의 digital GPIO capability를 허용합니다.
+	  기본 standard/ble profile은 fail-closed로 두 핀을 거부합니다.
 
 config NUCODE_ARDUINO_INTERRUPTS
 	bool "Arduino GPIO edge interrupt API 활성화"
@@ -94,13 +112,27 @@ config NUCODE_ARDUINO_SERIAL
 	default y
 	depends on NUCODE_ARDUINO_API
 	depends on SERIAL
-	depends on SERIAL_SUPPORT_INTERRUPT
 	select UART_INTERRUPT_DRIVEN
 	select UART_USE_RUNTIME_CONFIGURE
 	help
 	  zephyr,console chosen UART의 실제 설정을 읽어 검증하되 재설정하지
 	  않고 빌려 사용합니다. TX는 polling, RX는 interrupt와 고정 message
 	  queue를 사용합니다.
+
+config NUCODE_ARDUINO_SERIAL1
+	bool "uart30 기반 독립 Arduino Serial1 활성화"
+	default n
+	depends on NUCODE_ARDUINO_SERIAL
+	select NUCODE_ARDUINO_GPIO
+	select PM_DEVICE
+	select PM_DEVICE_RUNTIME
+	select PINCTRL
+	select PINCTRL_DYNAMIC
+	select PINCTRL_KEEP_SLEEP_STATE
+	help
+	  uart30의 RX/TX를 P0의 지원 핀으로 실행 중 재배치하는 Serial1을
+	  제공합니다. begin()/end()가 runtime PM, pinctrl과 GPIO ownership을
+	  함께 전환하며, 기본 console Serial만 필요한 구성에서는 끌 수 있습니다.
 
 config NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE
 	int "Arduino Serial RX queue byte 수"
@@ -116,6 +148,12 @@ config NUCODE_ARDUINO_WIRE
 	default n
 	depends on NUCODE_ARDUINO_API
 	select I2C
+	select NUCODE_ARDUINO_GPIO
+	select PM_DEVICE
+	select PM_DEVICE_RUNTIME
+	select PINCTRL
+	select PINCTRL_DYNAMIC
+	select PINCTRL_KEEP_SLEEP_STATE
 	help
 	  nucode,arduino-wire chosen controller를 ArduinoCore-API HardwareI2C로
 	  노출합니다. controller mode, 100/400 kHz와 고정 TX/RX buffer만
@@ -135,27 +173,51 @@ config NUCODE_ARDUINO_SPI
 	default n
 	depends on NUCODE_ARDUINO_API
 	select SPI
+	select NUCODE_ARDUINO_GPIO
+	select PM_DEVICE
+	select PM_DEVICE_RUNTIME
+	select PINCTRL
+	select PINCTRL_DYNAMIC
+	select PINCTRL_KEEP_SLEEP_STATE
 	help
 	  nucode,arduino-spi chosen controller를 CS 없는 HardwareSPI로
 	  노출합니다. 외부 target의 CS 역할은 Sketch가 직접 소유합니다.
 
 config NUCODE_ARDUINO_ADC
-	bool "Arduino A0 ADC 활성화"
+	bool "Arduino AIN0~AIN7 ADC 활성화"
 	default n
 	depends on NUCODE_ARDUINO_API
 	select ADC
+	select NUCODE_ARDUINO_GPIO
 	help
-	  nucode,arduino-adc chosen io-channel을 PIN_A0/A0으로 노출합니다.
-	  NU54DK 계약은 SAADC channel 5의 12-bit raw 값 0..4095입니다.
+	  nucode,arduino-adc chosen io-channel을 AIN0~AIN7과 A0~A7에
+	  연결합니다. 시스템 전용 핀은 metadata와 channel이 존재하더라도
+	  ownership 충돌을 반환하며 임의로 빼앗지 않습니다.
 
 config NUCODE_ARDUINO_PWM
-	bool "Arduino PIN_PWM0 analogWrite 활성화"
+	bool "Arduino 동적 PWM·tone backend 활성화"
 	default n
 	depends on NUCODE_ARDUINO_API
 	select PWM
+	select NUCODE_ARDUINO_GPIO
+	select PM_DEVICE
+	select PM_DEVICE_RUNTIME
+	select PINCTRL
+	select PINCTRL_DYNAMIC
+	select PINCTRL_KEEP_SLEEP_STATE
 	help
-	  nucode,arduino-pwm chosen 역할의 DTS 주기를 유지하면서 8-bit
-	  0..255 duty를 PIN_PWM0에 출력합니다.
+	  PWM20은 analogWrite(), PWM21은 tone(), PWM22는 Servo가 독립적으로
+	  사용합니다. 지원 P1 출력 핀의 route와 GPIO ownership을 실행 중
+	  안전하게 전환하고, 실패하면 이전 상태를 복원합니다.
+
+config NUCODE_ARDUINO_SERVO
+	bool "Arduino Servo library용 PWM22 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	select NUCODE_ARDUINO_PWM
+	help
+	  Servo library가 PWM22의 네 channel을 사용하는 고정 메모리 backend를
+	  활성화합니다. 이 옵션은 Servo library의 feature 설정이 선택합니다.
 
 config NUCODE_BLE_NUS
 	bool "NUCODE BLE Nordic UART Service 활성화"

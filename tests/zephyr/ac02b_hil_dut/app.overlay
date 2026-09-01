@@ -1,0 +1,55 @@
+/**
+ * @file app.overlay
+ * @brief AC-02B DUT의 동적 Serial1, Wire, SPI, ADC와 PWM route를 선택합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <nucode/nu54dk-arduino-connectors.dtsi>
+#include <nucode/nu54dk-arduino-pins.dtsi>
+
+/ {
+	chosen {
+		nucode,arduino-wire = &i2c22;
+		nucode,arduino-spi = &spi00;
+		nucode,arduino-adc = &ac02b_hil_adc_input;
+		nucode,arduino-pwm = &pwm_led1;
+	};
+
+	ac02b_hil_adc_input: arduino-adc-input {
+		compatible = "nucode,arduino-adc-input";
+		io-channels = <&adc 5>;
+	};
+};
+
+&uart30 {
+	status = "okay";
+	zephyr,pm-device-runtime-auto;
+};
+
+&i2c22 {
+	status = "okay";
+	zephyr,pm-device-runtime-auto;
+};
+
+&spi00 {
+	status = "okay";
+	pinctrl-0 = <&spi00_default>;
+	pinctrl-1 = <&spi00_sleep>;
+	pinctrl-names = "default", "sleep";
+	zephyr,pm-device-runtime-auto;
+};
+
+&pwm20 {
+	zephyr,pm-device-runtime-auto;
+};
+
+/** @brief NFC 전용 P1.2/P1.3을 TWIM22 route로 전환합니다. */
+&uicr { nfct-pins-as-gpios; };
+
+/** @brief P1.12/AIN5를 12-bit ADC 시험 입력으로 사용합니다. */
+&adc {
+	channel@5 {
+		zephyr,gain = "ADC_GAIN_1_4";
+	};
+};

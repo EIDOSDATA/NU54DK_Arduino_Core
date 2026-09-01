@@ -23,6 +23,9 @@ namespace nucode::arduino::internal
         not_started,
         driver_error,
         rx_overflow,
+        invalid_pin_route,
+        route_busy,
+        route_error,
     };
 
     /** @brief 마지막 Serial 상태를 반환합니다. */
@@ -36,6 +39,20 @@ namespace nucode::arduino::internal
 
     /** @brief Serial 오류와 RX drop 누적값을 초기화합니다. */
     void clearSerialDiagnostics() noexcept;
+
+#if !defined(__ZEPHYR__) || defined(CONFIG_NUCODE_ARDUINO_SERIAL1)
+    /** @brief Serial1에서 마지막으로 관측한 상태입니다. */
+    [[nodiscard]] SerialError lastSerial1Error() noexcept;
+
+    /** @brief Serial1의 마지막 Zephyr 또는 route 오류 번호입니다. */
+    [[nodiscard]] int lastSerial1DriverError() noexcept;
+
+    /** @brief Serial1 RX queue overflow 누적값을 반환합니다. */
+    [[nodiscard]] std::uint32_t serial1DroppedRxBytes() noexcept;
+
+    /** @brief Serial1 진단과 RX drop 누적값을 초기화합니다. */
+    void clearSerial1Diagnostics() noexcept;
+#endif
 
 }
 

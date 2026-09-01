@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief NU54DK DTS 단일 원본과 Arduino digital pin 계약을 검증합니다. """
+"""! @brief NU54DK Core-owned 31핀 DTS와 Arduino canonical pin 계약을 검증합니다. """
 
 from __future__ import annotations
 
@@ -13,34 +13,31 @@ from typing import Any, Sequence
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_BOARD_ROOT = REPOSITORY_ROOT / "board_package" / "NU54DK_Zephyr_DTS"
-PIN_LIST = REPOSITORY_ROOT / "variants" / "nu54dk" / "digital_pins.inc"
-VARIANT_HEADER = REPOSITORY_ROOT / "variants" / "nu54dk" / "variant.h"
-VARIANT_SOURCE = REPOSITORY_ROOT / "variants" / "nu54dk" / "variant.cpp"
 
 PIN_ENTRY_PATTERN = re.compile(
-    r"^\s*NUCODE_NU54DK_DIGITAL_PIN\(\s*"
+    r"^\s*NUCODE_NU54DK_PHYSICAL_PIN\(\s*"
     r"(?P<logical>[A-Z][A-Z0-9_]*)\s*,\s*"
-    r"(?P<alias>(?:led|sw)\d+)\s*,\s*"
-    r"(?P<kind>led|button|pwm_owned)\s*\)\s*$",
+    r"(?P<label>arduino_p[012]_\d{2})\s*\)\s*$",
     re.MULTILINE,
 )
-NUMERIC_DEFINE_PATTERN = re.compile(
-    r"^\s*#define\s+(?P<name>[A-Z][A-Z0-9_]*)\s+"
-    r"(?P<value>(?:0x[0-9a-fA-F]+|\d+))U?\s*$",
+DEFINE_PATTERN = re.compile(
+    r"^[ \t]*#define[ \t]+(?P<name>[A-Z][A-Z0-9_]*)[ \t]+"
+    r"(?P<value>[^\r\n#]+?)[ \t]*$",
     re.MULTILINE,
 )
-ALIAS_BLOCK_PATTERN = re.compile(r"\baliases\s*\{(?P<body>.*?)\};", re.DOTALL)
-ALIAS_PATTERN = re.compile(r"\b(?P<alias>[a-z][a-z0-9-]*)\s*=\s*&(?P<label>[A-Za-z_]\w*)\s*;")
-GPIO_NODE_PATTERN = re.compile(
-    r"\b(?P<label>[A-Za-z_]\w*)\s*:\s*[^{};]+\{"
-    r"(?P<body>[^{}]*?\bgpios\s*=\s*<(?P<spec>[^>]+)>;[^{}]*?)\};",
+PIN_NODE_PATTERN = re.compile(
+    r"\b(?P<label>arduino_p[012]_\d{2})\s*:\s*[^{};]+\{"
+    r"(?P<body>[^{}]*?)\};",
     re.DOTALL,
 )
-GPIO_SPEC_PATTERN = re.compile(
-    r"^\s*&(?P<controller>[A-Za-z_]\w*)\s+"
-    r"(?P<pin>0x[0-9a-fA-F]+|\d+)\s+(?P<flags>.+?)\s*$",
-    re.DOTALL,
+GPIO_PATTERN = re.compile(
+    r"\bgpios\s*=\s*<&(?P<controller>gpio[012])\s+"
+    r"(?P<pin>0x[0-9a-fA-F]+|\d+)\s+(?P<flags>[^>]+)>\s*;"
 )
+PROPERTY_PATTERN = re.compile(
+    r"\b(?P<name>nucode,[a-z-]+)\s*=\s*<(?P<value>[^>]+)>\s*;"
+)
+TOKEN_PATTERN = re.compile(r"\b[A-Z][A-Z0-9_]*\b")
 
 
 class PinMapContractError(RuntimeError):
@@ -55,197 +52,300 @@ def read_text(path: Path) -> str:
         raise PinMapContractError(f"파일을 읽지 못했습니다: {path}: {error}") from error
 
 
-## @brief variant.h의 직접 숫자 상수를 읽습니다.
-def parse_numeric_defines(source: str) -> dict[str, int]:
-    values = {
-        match.group("name"): int(match.group("value"), 0)
-        for match in NUMERIC_DEFINE_PATTERN.finditer(source)
-    }
-    required = {
-        "LED_BUILTIN",
-        "PIN_BUTTON0",
-        "PIN_A0",
-        "PIN_PWM0",
-        "PIN_LED1",
-        "PIN_LED2",
-        "PIN_LED3",
-        "PIN_BUTTON1",
-        "PIN_BUTTON2",
-        "PIN_BUTTON3",
-        "NUM_DIGITAL_PINS",
-        "NUM_DIGITAL_CAPABLE_PINS",
-        "NUM_PIN_ROLES",
-    }
-    missing = sorted(required - values.keys())
-    if missing:
-        raise PinMapContractError(f"variant.h 숫자 상수가 누락되었습니다: {missing}")
-    return values
+## @brief C 전처리기의 줄 연속 표기를 한 논리 줄로 결합합니다.
+def join_continued_lines(source: str) -> str:
+    return re.sub(r"\\\r?\n", " ", source)
 
 
-## @brief X-macro pin 목록을 순서대로 읽습니다.
+## @brief 단순 object-like #define 식을 수집합니다.
+def parse_defines(*sources: str) -> dict[str, str]:
+    definitions: dict[str, str] = {}
+    for source in sources:
+        for match in DEFINE_PATTERN.finditer(join_continued_lines(source)):
+            value = match.group("value").split("//", 1)[0].strip()
+            if value:
+                definitions[match.group("name")] = value
+    return definitions
+
+
+## @brief 정수 전처리기 식을 제한된 연산만 허용해 계산합니다.
+def evaluate(expression: str, definitions: dict[str, str], stack: tuple[str, ...] = ()) -> int:
+    expanded = expression.strip()
+    expanded = re.sub(
+        r"\b(?P<number>(?:0x[0-9a-fA-F]+|\d+))[uUlL]+\b",
+        lambda match: match.group("number"),
+        expanded,
+    )
+
+    def replace_token(match: re.Match[str]) -> str:
+        token = match.group(0)
+        if token not in definitions:
+            raise PinMapContractError(f"정수 식에서 알 수 없는 macro입니다: {token}")
+        if token in stack:
+            raise PinMapContractError(f"순환 macro 정의입니다: {' -> '.join((*stack, token))}")
+        return str(evaluate(definitions[token], definitions, (*stack, token)))
+
+    expanded = TOKEN_PATTERN.sub(replace_token, expanded)
+    if not re.fullmatch(r"[0-9a-fA-FxX()<>|&+\-*/~\s]+", expanded):
+        raise PinMapContractError(f"허용하지 않은 정수 식입니다: {expression}")
+    try:
+        return int(eval(expanded, {"__builtins__": {}}, {}))
+    except (SyntaxError, TypeError, ValueError, ZeroDivisionError) as error:
+        raise PinMapContractError(f"정수 식을 계산하지 못했습니다: {expression}") from error
+
+
+## @brief X-macro의 canonical 논리 ID와 DTS label을 읽습니다.
 def parse_pin_entries(source: str) -> list[dict[str, str]]:
     entries = [match.groupdict() for match in PIN_ENTRY_PATTERN.finditer(source)]
     if not entries:
-        raise PinMapContractError("digital_pins.inc에 공개 digital pin이 없습니다.")
+        raise PinMapContractError("digital_pins.inc에 canonical physical pin이 없습니다.")
     return entries
 
 
-## @brief common DTS에서 alias와 GPIO spec을 읽습니다.
-def parse_board_dts(source: str) -> tuple[dict[str, str], dict[str, dict[str, Any]]]:
-    alias_match = ALIAS_BLOCK_PATTERN.search(source)
-    if alias_match is None:
-        raise PinMapContractError("NU54DK common DTS에 aliases node가 없습니다.")
-    aliases = {
-        match.group("alias"): match.group("label")
-        for match in ALIAS_PATTERN.finditer(alias_match.group("body"))
-    }
-
+## @brief Core-owned DTS child의 GPIO와 metadata 식을 읽습니다.
+def parse_pin_nodes(source: str, definitions: dict[str, str]) -> dict[str, dict[str, Any]]:
     nodes: dict[str, dict[str, Any]] = {}
-    for node_match in GPIO_NODE_PATTERN.finditer(source):
-        spec_match = GPIO_SPEC_PATTERN.match(node_match.group("spec"))
-        if spec_match is None:
-            continue
-        label = node_match.group("label")
-        nodes[label] = {
-            "controller": spec_match.group("controller"),
-            "pin": int(spec_match.group("pin"), 0),
-            "flags": " ".join(spec_match.group("flags").split()),
+    for match in PIN_NODE_PATTERN.finditer(source):
+        label = match.group("label")
+        body = match.group("body")
+        gpio_match = GPIO_PATTERN.search(body)
+        if gpio_match is None:
+            raise PinMapContractError(f"pin map child에 gpios가 없습니다: {label}")
+        properties = {
+            item.group("name"): item.group("value").strip()
+            for item in PROPERTY_PATTERN.finditer(body)
         }
-    return aliases, nodes
+        required = {
+            "nucode,capability-mask",
+            "nucode,policy",
+            "nucode,ownership",
+            "nucode,route-mask",
+        }
+        missing = sorted(required - properties.keys())
+        if missing:
+            raise PinMapContractError(f"pin metadata가 누락되었습니다: {label}: {missing}")
+        nodes[label] = {
+            "controller": gpio_match.group("controller"),
+            "pin": int(gpio_match.group("pin"), 0),
+            "flags": " ".join(gpio_match.group("flags").split()),
+            "capabilities": evaluate(properties["nucode,capability-mask"], definitions),
+            "policy": evaluate(properties["nucode,policy"], definitions),
+            "ownership": evaluate(properties["nucode,ownership"], definitions),
+            "routes": evaluate(properties["nucode,route-mask"], definitions),
+            "analog_channel": (
+                evaluate(properties["nucode,analog-channel"], definitions)
+                if "nucode,analog-channel" in properties
+                else -1
+            ),
+        }
+    if not nodes:
+        raise PinMapContractError("Core-owned DTS에 pin child가 없습니다.")
+    return nodes
 
 
-## @brief Variant가 물리 GPIO 값을 별도 원본으로 기록하지 않았는지 검사합니다.
-def validate_no_physical_pin_copy(pin_list: str, variant_source: str) -> None:
-    combined = f"{pin_list}\n{variant_source}"
-    forbidden_patterns = (
-        r"\bP[012]\.\d+\b",
-        r"<&gpio[012]\s+\d+",
-        r"\{\s*&gpio[012]\s*,\s*\d+",
-    )
-    for pattern in forbidden_patterns:
-        if re.search(pattern, combined):
-            raise PinMapContractError(
-                "Variant 실행 원본에 물리 GPIO controller/pin 값이 복제되었습니다."
-            )
-    if '#include "digital_pins.inc"' not in variant_source:
-        raise PinMapContractError("variant.cpp가 고정 digital pin X-macro를 사용하지 않습니다.")
-    if "GPIO_DT_SPEC_GET(DT_ALIAS(alias_name), gpios)" not in variant_source:
-        raise PinMapContractError("variant.cpp가 DTS alias에서 gpio_dt_spec을 생성하지 않습니다.")
+## @brief 비트 마스크를 evidence용 이름 배열로 변환합니다.
+def mask_names(mask: int, ordered: tuple[tuple[int, str], ...]) -> list[str]:
+    return [name for bit, name in ordered if mask & bit]
 
 
-## @brief 실제 고정 DTS와 논리 pin/capability 계약을 검증하고 evidence를 생성합니다.
+## @brief Core-owned DTS, Variant, legacy 호환성과 fail-closed 정책을 검증합니다.
 def verify_pinmap(repository_root: Path, board_root: Path) -> dict[str, Any]:
+    del board_root  # Board submodule은 pin metadata 원본이 아니며 수정·파싱하지 않습니다.
     pin_list_path = repository_root / "variants" / "nu54dk" / "digital_pins.inc"
     header_path = repository_root / "variants" / "nu54dk" / "variant.h"
     source_path = repository_root / "variants" / "nu54dk" / "variant.cpp"
-    board_dts_path = (
-        board_root
-        / "boards"
-        / "nucode"
-        / "nu54dk"
-        / "nu54dk_common.dtsi"
-    )
+    metadata_path = repository_root / "dts" / "nucode" / "nu54dk-arduino-pin-metadata.h"
+    dts_path = repository_root / "dts" / "nucode" / "nu54dk-arduino-pins.dtsi"
 
     pin_list_source = read_text(pin_list_path)
     header_source = read_text(header_path)
     variant_source = read_text(source_path)
-    board_source = read_text(board_dts_path)
-
-    values = parse_numeric_defines(header_source)
+    metadata_source = read_text(metadata_path)
+    dts_source = read_text(dts_path)
+    definitions = parse_defines(metadata_source, dts_source, header_source)
     entries = parse_pin_entries(pin_list_source)
-    aliases, nodes = parse_board_dts(board_source)
-    validate_no_physical_pin_copy(pin_list_source, variant_source)
+    nodes = parse_pin_nodes(dts_source, definitions)
 
-    legacy_values = {
+    required_constants = {
         "LED_BUILTIN": 0,
         "PIN_BUTTON0": 1,
         "PIN_A0": 2,
         "PIN_PWM0": 3,
+        "PIN_LED1": 4,
+        "PIN_LED2": 5,
+        "PIN_LED3": 6,
+        "PIN_BUTTON1": 7,
+        "PIN_BUTTON2": 8,
+        "PIN_BUTTON3": 9,
+        "PIN_GPIO0": 10,
+        "PIN_GPIO1": 11,
+        "NUM_PIN_ROLES": 32,
+        "NUM_PHYSICAL_PINS": 31,
+        "NUM_ANALOG_INPUTS": 8,
     }
-    for name, expected in legacy_values.items():
+    values = {name: evaluate(name, definitions) for name in required_constants}
+    for name, expected in required_constants.items():
         if values[name] != expected:
             raise PinMapContractError(
-                f"v0.1 공개 pin 값이 변경되었습니다: {name}={values[name]}, expected={expected}"
+                f"공개 pin/개수 값이 변경되었습니다: {name}={values[name]}, expected={expected}"
             )
+    if evaluate("NUM_DIGITAL_PINS", definitions) != 32:
+        raise PinMapContractError("NUM_DIGITAL_PINS가 legacy alias span 32와 다릅니다.")
+    if not re.search(r"#define\s+NUM_DIGITAL_CAPABLE_PINS\s+\\?\s*\(20U\s*\+", header_source):
+        raise PinMapContractError("기본 digital-capable 실제 pad 수 20 계약이 없습니다.")
 
-    logical_names = [entry["logical"] for entry in entries]
-    alias_names = [entry["alias"] for entry in entries]
-    if len(set(logical_names)) != len(logical_names):
-        raise PinMapContractError("공개 digital 논리 이름이 중복되었습니다.")
-    if len(set(alias_names)) != len(alias_names):
-        raise PinMapContractError("공개 digital DTS alias가 중복되었습니다.")
-    if values["NUM_DIGITAL_PINS"] != values["NUM_PIN_ROLES"]:
-        raise PinMapContractError("digital sparse ID 상한과 전체 논리 역할 범위가 다릅니다.")
+    if len(entries) != 31 or len(nodes) != 31:
+        raise PinMapContractError(
+            f"31개 실제 pad가 아닙니다: xmacro={len(entries)}, dts={len(nodes)}"
+        )
+    if len({entry["label"] for entry in entries}) != len(entries):
+        raise PinMapContractError("X-macro DTS label이 중복되었습니다.")
+    if set(nodes) != {entry["label"] for entry in entries}:
+        raise PinMapContractError("X-macro와 Core-owned DTS child 집합이 다릅니다.")
 
-    logical_ids: list[int] = []
-    physical_ids: set[tuple[str, int]] = set()
-    evidence_pins: list[dict[str, Any]] = []
-    reserved_pins: list[dict[str, Any]] = []
-    capability_by_kind = {
-        "led": ["digital-input", "digital-output"],
-        "button": ["digital-input", "interrupt"],
-        "pwm_owned": [],
+    expected_physical = {
+        *(('gpio0', pin) for pin in range(0, 5)),
+        *(('gpio1', pin) for pin in range(0, 15)),
+        *(('gpio2', pin) for pin in range(0, 11)),
     }
-    for entry in entries:
-        logical = entry["logical"]
-        alias = entry["alias"]
-        kind = entry["kind"]
-        if logical not in values:
-            raise PinMapContractError(f"variant.h에 논리 pin 상수가 없습니다: {logical}")
-        logical_id = values[logical]
-        if logical_id >= values["NUM_PIN_ROLES"]:
-            raise PinMapContractError(f"논리 pin이 NUM_PIN_ROLES 범위를 벗어났습니다: {logical}")
-        if alias not in aliases:
-            raise PinMapContractError(f"고정 DTS에 alias가 없습니다: {alias}")
-        label = aliases[alias]
-        if label not in nodes:
-            raise PinMapContractError(f"DTS alias 대상에 gpios가 없습니다: {alias} -> {label}")
-        physical = nodes[label]
-        physical_id = (str(physical["controller"]), int(physical["pin"]))
-        if physical_id in physical_ids:
-            raise PinMapContractError(f"둘 이상의 digital 논리 pin이 같은 GPIO를 사용합니다: {physical_id}")
-        physical_ids.add(physical_id)
-        capabilities = list(capability_by_kind[kind])
-        if kind == "led" and physical["controller"] != "gpio2":
-            capabilities.append("interrupt")
-        pin_evidence = {
-            "logical_name": logical,
-            "logical_id": logical_id,
-            "dts_alias": alias,
-            "dts_label": label,
-            "gpio_controller": physical["controller"],
-            "gpio_pin": physical["pin"],
-            "gpio_flags": physical["flags"],
-            "capabilities": capabilities,
-        }
-        if kind == "pwm_owned":
-            pin_evidence["owner"] = "PIN_PWM0"
-            reserved_pins.append(pin_evidence)
-        else:
-            logical_ids.append(logical_id)
-            evidence_pins.append(pin_evidence)
+    actual_physical = {(node["controller"], node["pin"]) for node in nodes.values()}
+    if actual_physical != expected_physical:
+        missing = sorted(expected_physical - actual_physical)
+        extra = sorted(actual_physical - expected_physical)
+        raise PinMapContractError(f"31개 pad 집합이 다릅니다: missing={missing}, extra={extra}")
 
-    if len(set(logical_ids)) != len(logical_ids):
-        raise PinMapContractError("둘 이상의 digital 이름이 같은 논리 ID를 사용합니다.")
-    if values["NUM_DIGITAL_CAPABLE_PINS"] != len(evidence_pins):
-        raise PinMapContractError("NUM_DIGITAL_CAPABLE_PINS와 실제 descriptor 수가 다릅니다.")
-    reserved_ids = {values["PIN_A0"], values["PIN_PWM0"], values["PIN_LED1"]}
-    if reserved_ids.intersection(logical_ids):
-        raise PinMapContractError("A0/PWM/PWM-owned LED slot에 digital descriptor를 등록했습니다.")
+    logical_ids = [evaluate(entry["logical"], definitions) for entry in entries]
+    expected_ids = set(range(32)) - {4}
+    if set(logical_ids) != expected_ids or len(set(logical_ids)) != 31:
+        raise PinMapContractError("canonical ID는 0~31에서 legacy ID 4만 제외해야 합니다.")
+    if "PIN_LED1" in {entry["logical"] for entry in entries}:
+        raise PinMapContractError("legacy ID 4를 별도 물리 descriptor로 생성했습니다.")
+    if "logical_pin == static_cast<std::size_t>(PIN_LED1)" not in variant_source or \
+            "static_cast<std::size_t>(PIN_PWM0)" not in variant_source:
+        raise PinMapContractError("variant.cpp에 legacy ID 4→canonical ID 3 정규화가 없습니다.")
+    if "GPIO_DT_SPEC_GET(DT_NODELABEL(node_label), gpios)" not in variant_source:
+        raise PinMapContractError("variant.cpp가 Core-owned DTS node에서 gpio_dt_spec을 생성하지 않습니다.")
+    if '#include "digital_pins.inc"' not in variant_source:
+        raise PinMapContractError("variant.cpp가 canonical X-macro를 사용하지 않습니다.")
+
+    cap_bits = (
+        (evaluate("NUCODE_PIN_CAP_INPUT", definitions), "digital-input"),
+        (evaluate("NUCODE_PIN_CAP_OUTPUT", definitions), "digital-output"),
+        (evaluate("NUCODE_PIN_CAP_INTERRUPT", definitions), "interrupt"),
+        (evaluate("NUCODE_PIN_CAP_OPEN_DRAIN", definitions), "open-drain"),
+        (evaluate("NUCODE_PIN_CAP_ANALOG", definitions), "analog-input"),
+        (evaluate("NUCODE_PIN_CAP_PWM", definitions), "pwm-output"),
+        (evaluate("NUCODE_PIN_CAP_WAKEUP", definitions), "wakeup"),
+    )
+    route_bits = tuple(
+        (evaluate(macro, definitions), name)
+        for macro, name in (
+            ("NUCODE_PIN_ROUTE_GPIO", "gpio"),
+            ("NUCODE_PIN_ROUTE_GPIOTE", "gpiote"),
+            ("NUCODE_PIN_ROUTE_ADC", "adc"),
+            ("NUCODE_PIN_ROUTE_LFXO", "lfxo"),
+            ("NUCODE_PIN_ROUTE_NFCT", "nfct"),
+            ("NUCODE_PIN_ROUTE_UART20_CONSOLE", "uart20-console"),
+            ("NUCODE_PIN_ROUTE_UART30", "uart30"),
+            ("NUCODE_PIN_ROUTE_I2C22", "i2c22"),
+            ("NUCODE_PIN_ROUTE_SPI00", "spi00"),
+            ("NUCODE_PIN_ROUTE_PWM20", "pwm20"),
+            ("NUCODE_PIN_ROUTE_PWM21", "pwm21"),
+            ("NUCODE_PIN_ROUTE_PWM22", "pwm22"),
+            ("NUCODE_PIN_ROUTE_PORT0", "port0"),
+            ("NUCODE_PIN_ROUTE_PORT1", "port1"),
+            ("NUCODE_PIN_ROUTE_PORT2", "port2"),
+        )
+    )
+    policy_names = {
+        evaluate("NUCODE_PIN_POLICY_NORMAL", definitions): "normal",
+        evaluate("NUCODE_PIN_POLICY_INPUT_ONLY", definitions): "input-only",
+        evaluate("NUCODE_PIN_POLICY_TRANSFERABLE", definitions): "transferable",
+        evaluate("NUCODE_PIN_POLICY_CONDITIONAL_LFXO", definitions): "conditional-lfxo",
+        evaluate("NUCODE_PIN_POLICY_CONDITIONAL_DAP_UART", definitions): "conditional-dap-uart",
+        evaluate("NUCODE_PIN_POLICY_SYSTEM_RESERVED", definitions): "system-reserved",
+    }
+    ownership_names = {
+        evaluate(macro, definitions): name
+        for macro, name in (
+            ("NUCODE_PIN_OWNER_BOARD_LED", "board-led"),
+            ("NUCODE_PIN_OWNER_BOARD_BUTTON", "board-button"),
+            ("NUCODE_PIN_OWNER_CONNECTOR_GPIO", "connector-gpio"),
+            ("NUCODE_PIN_OWNER_WIRE", "wire"),
+            ("NUCODE_PIN_OWNER_SPI", "spi"),
+            ("NUCODE_PIN_OWNER_PWM", "pwm"),
+            ("NUCODE_PIN_OWNER_ADC", "adc"),
+            ("NUCODE_PIN_OWNER_SERIAL", "serial"),
+            ("NUCODE_PIN_OWNER_SYSTEM", "system"),
+            ("NUCODE_PIN_OWNER_CONDITIONAL", "conditional"),
+        )
+    }
+
+    interrupt_bit = evaluate("NUCODE_PIN_CAP_INTERRUPT", definitions)
+    output_bit = evaluate("NUCODE_PIN_CAP_OUTPUT", definitions)
+    gpiote_bit = evaluate("NUCODE_PIN_ROUTE_GPIOTE", definitions)
+    uart30_bit = evaluate("NUCODE_PIN_ROUTE_UART30", definitions)
+    i2c22_bit = evaluate("NUCODE_PIN_ROUTE_I2C22", definitions)
+    spi00_bit = evaluate("NUCODE_PIN_ROUTE_SPI00", definitions)
+    pwm_bits = sum(evaluate(name, definitions) for name in (
+        "NUCODE_PIN_ROUTE_PWM20", "NUCODE_PIN_ROUTE_PWM21", "NUCODE_PIN_ROUTE_PWM22"
+    ))
+    input_only = evaluate("NUCODE_PIN_POLICY_INPUT_ONLY", definitions)
+    system_reserved = evaluate("NUCODE_PIN_POLICY_SYSTEM_RESERVED", definitions)
+
+    for label, node in nodes.items():
+        controller = node["controller"]
+        if controller == "gpio2" and ((node["capabilities"] & interrupt_bit) or
+                                      (node["routes"] & gpiote_bit)):
+            raise PinMapContractError(f"P2 interrupt는 fail-closed여야 합니다: {label}")
+        if node["policy"] in (input_only, system_reserved) and \
+                (node["capabilities"] & output_bit):
+            raise PinMapContractError(f"input-only/system-reserved에 output이 있습니다: {label}")
+        if controller == "gpio0" and not (node["routes"] & uart30_bit):
+            raise PinMapContractError(f"P0 전체에 UARTE30 기술 route가 필요합니다: {label}")
+        if controller == "gpio1" and \
+                ((node["routes"] & i2c22_bit) == 0 or (node["routes"] & pwm_bits) != pwm_bits):
+            raise PinMapContractError(f"P1 전체 기술 route matrix가 누락되었습니다: {label}")
+        has_spi = bool(node["routes"] & spi00_bit)
+        should_have_spi = (controller, node["pin"]) in {
+            ("gpio2", 1), ("gpio2", 2), ("gpio2", 4)
+        }
+        if has_spi != should_have_spi:
+            raise PinMapContractError(f"SPIM00 dedicated route가 다릅니다: {label}")
+
+    evidence_pins: list[dict[str, Any]] = []
+    for entry in entries:
+        node = nodes[entry["label"]]
+        evidence_pins.append({
+            "logical_name": entry["logical"],
+            "logical_id": evaluate(entry["logical"], definitions),
+            "dts_label": entry["label"],
+            "gpio_controller": node["controller"],
+            "gpio_pin": node["pin"],
+            "gpio_flags": node["flags"],
+            "capabilities": mask_names(node["capabilities"], cap_bits),
+            "policy": policy_names[node["policy"]],
+            "ownership": ownership_names[node["ownership"]],
+            "routes": mask_names(node["routes"], route_bits),
+            "analog_channel": node["analog_channel"],
+        })
 
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "gate": "m14-nu54dk-variant-contract",
         "status": "passed",
         "board_target": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
-        "dts_source": board_dts_path.relative_to(board_root).as_posix(),
-        "digital_pin_count": len(evidence_pins),
-        "mapped_pin_count": len(entries),
-        "digital_pin_id_limit": values["NUM_DIGITAL_PINS"],
-        "pin_role_span": values["NUM_PIN_ROLES"],
-        "reserved_non_digital_ids": sorted(reserved_ids),
-        "reserved_pins": reserved_pins,
-        "pins": evidence_pins,
+        "dts_source": dts_path.relative_to(repository_root).as_posix(),
+        "physical_pin_count": 31,
+        "mapped_pin_count": 31,
+        "digital_pin_id_limit": 32,
+        "pin_role_span": 32,
+        "digital_capable_default": 20,
+        "conditional_gpio_pin_count": 6,
+        "legacy_aliases": [{"logical_name": "PIN_LED1", "logical_id": 4,
+                            "canonical_name": "PIN_PWM0", "canonical_id": 3}],
+        "analog_input_count": 8,
+        "pins": sorted(evidence_pins, key=lambda pin: pin["logical_id"]),
     }
 
 
@@ -262,9 +362,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
     if args.output is not None:
         output = args.output.resolve()
         output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(encoded, encoding="utf-8", newline="\n")
+        output.write_text(encoded, encoding="utf-8")
     print(encoded, end="")
-    print("M14_VARIANT_CONTRACT_PASS=8")
     return 0
 
 
@@ -272,5 +371,5 @@ if __name__ == "__main__":
     try:
         raise SystemExit(main())
     except PinMapContractError as error:
-        print(f"M14_VARIANT_CONTRACT_FAIL: {error}", file=sys.stderr)
+        print(f"NU54DK pin map contract failed: {error}", file=sys.stderr)
         raise SystemExit(1) from error

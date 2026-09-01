@@ -114,9 +114,9 @@ namespace
 	 * @return 전체 deadline에 도달했으면 true입니다.
 	 */
 	[[nodiscard]] bool pollDeadline(std::uint64_t started_cycles,
-								std::uint64_t timeout_cycles,
-								bool cooperative,
-								std::uint32_t &polls) noexcept
+									std::uint64_t timeout_cycles,
+									bool cooperative,
+									std::uint32_t &polls) noexcept
 	{
 		++polls;
 		if (cooperative && ((polls % long_pulse_yield_interval) == 0U) && k_can_yield())
@@ -128,7 +128,7 @@ namespace
 
 	/** @brief pulseIn()과 pulseInLong()의 공통 64-bit deadline 구현입니다. */
 	[[nodiscard]] unsigned long measurePulse(pin_size_t pin, std::uint8_t state,
-										 unsigned long timeout, bool cooperative) noexcept
+											 unsigned long timeout, bool cooperative) noexcept
 	{
 		if ((state != static_cast<std::uint8_t>(LOW)) &&
 			(state != static_cast<std::uint8_t>(HIGH)))
@@ -212,8 +212,8 @@ namespace
 		const std::uint64_t elapsed_microseconds = k_cyc_to_us_floor64(elapsed_cycles);
 		setGpioBackendSuccess();
 		return static_cast<unsigned long>((elapsed_microseconds == 0U)
-										  ? 1U
-										  : elapsed_microseconds);
+											  ? 1U
+											  : elapsed_microseconds);
 	}
 
 	/** @brief shift API의 output pin을 변경 전에 검증합니다. */
@@ -257,13 +257,13 @@ extern "C" unsigned long pulseIn(pin_size_t pin, std::uint8_t state, unsigned lo
 }
 
 extern "C" unsigned long pulseInLong(pin_size_t pin, std::uint8_t state,
-										unsigned long timeout)
+									 unsigned long timeout)
 {
 	return measurePulse(pin, state, timeout, true);
 }
 
 extern "C" void shiftOut(pin_size_t data_pin, pin_size_t clock_pin, BitOrder bit_order,
-							 std::uint8_t value)
+						 std::uint8_t value)
 {
 	if (k_is_in_isr())
 	{
@@ -306,7 +306,7 @@ extern "C" void shiftOut(pin_size_t data_pin, pin_size_t clock_pin, BitOrder bit
 }
 
 extern "C" std::uint8_t shiftIn(pin_size_t data_pin, pin_size_t clock_pin,
-								 BitOrder bit_order)
+								BitOrder bit_order)
 {
 	if (k_is_in_isr())
 	{
