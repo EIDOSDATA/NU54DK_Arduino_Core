@@ -1,7 +1,7 @@
 # NU54DK Arduino Core v0.3.0-rc.2 문제 해결
 
-> **현재 RC2는 공개 전입니다.** Public Prerelease 발표 전의 URL 404 또는 Boards Manager
-> 미노출은 결함이 아닙니다. 현재 정식 사용자는 stable `v0.2.0` 문서를 따르십시오.
+> `v0.3.0-rc.2`는 Public Prerelease로 공개돼 있습니다. Production stable은 계속
+> `v0.2.0`이므로 RC2 시험과 정식 사용 channel을 구분하십시오.
 
 | 항목 | 값 |
 | --- | --- |
@@ -12,7 +12,7 @@
 
 ## 1. RC2가 Boards Manager에 보이지 않음
 
-RC2 공개 뒤 다음 per-tag URL이 정확히 등록됐는지 확인합니다.
+다음 per-tag URL이 정확히 등록됐는지 확인합니다.
 
 ```text
 https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.2/package_nucode_nu54dk_rc_index.json
@@ -21,7 +21,8 @@ https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.2/p
 - GitHub Release가 `Pre-release`로 공개됐는지 확인합니다.
 - RC1 URL만 등록돼 있다면 제거하고 RC2 URL로 교체합니다.
 - Boards Manager index를 새로 고친 뒤 Arduino IDE를 다시 시작합니다.
-- Stable URL만 등록하면 공개 전 RC version이 보이지 않는 것이 정상입니다.
+- Stable URL만 등록하면 RC version이 보이지 않는 것이 정상입니다. RC2 per-tag URL을 별도로
+  추가해야 합니다.
 
 ## 2. 설치가 오래 걸리거나 실패함
 

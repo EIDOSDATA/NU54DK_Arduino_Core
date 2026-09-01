@@ -5,12 +5,12 @@
 ## 1. RC와 검증 상태
 
 - 현재 stable은 `v0.2.0`입니다. `v0.3.0-rc.2`는 production stable이 아닙니다.
-- RC2는 아직 공개되지 않았고 exact Core commit, tag, 자산과 final evidence가 미확정입니다.
+- RC2는 Public Prerelease로 공개됐고 exact Core commit, tag, 자산과 final evidence를 고정했습니다.
 - RC1의 local fixed gate PASS를 RC2 PASS로 상속하지 않습니다.
 - RC1 public clean-room 실패는 tagged release harness가 Nordic 설치 leaf를 먼저 만든 문제입니다.
   일반 Arduino package의 firmware/API 결함으로 판정된 것은 아닙니다.
-- RC2 설치, 29개 예제 compile, Upload와 public clean-room은 M22 RC2 evidence가 생긴 뒤에만
-  PASS로 판정합니다.
+- RC2 설치, 29개 예제 compile, 실제 pyOCD Upload와 public clean-room lifecycle·cleanup을
+  M22 RC2 evidence로 PASS 판정했습니다.
 
 ## 2. Firmware와 Upload
 
@@ -64,11 +64,11 @@
 
 ## 7. 설치와 Release 경계
 
-- RC2 index URL과 자산은 Public Prerelease 전에는 404일 수 있습니다.
+- RC2 index URL과 7개 자산은 Public Prerelease에 공개돼 있습니다.
 - 첫 Nordic prerequisite 설치는 크고 오래 걸릴 수 있습니다.
 - Core uninstall은 공유 NCS와 Toolchain을 자동 삭제하지 않습니다.
 - RC1 tag와 자산은 RC2로 덮어쓰지 않으며, RC2도 공개 뒤 immutable artifact로 취급합니다.
-- Stable index는 계속 `v0.2.0`과 `v0.1.0`만 제공하며 RC2 공개 준비 때문에 변경하지 않습니다.
+- Stable index는 계속 `v0.2.0`과 `v0.1.0`만 제공하며 RC2 공개·검증 과정에서 변경하지 않았습니다.
 
 ## 8. 장기 기능
 

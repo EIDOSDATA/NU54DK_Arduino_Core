@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 4.5 |
+| 문서 체계 개정 | 4.6 |
 | 현재 정식 버전 | `v0.2.0` |
 | 다음 목표 버전 | `v0.3.0` |
-| 최종 갱신일 | 2026-09-01 |
+| 최종 갱신일 | 2026-09-02 |
 | 작성자 | Quantum / NUCODE |
 
 이 디렉터리는 Loader 없이 동작하는 Native Full Zephyr 기반 NU54DK Arduino Core의
@@ -51,7 +51,7 @@
 | M19 | **자동 검증 완료** | BLE Core/GAP exact-commit 두 보드 RF HIL PASS |
 | M20 | **자동 검증 완료** | 범용 GATT exact-commit 두 보드 RF HIL PASS |
 | M21 | **완료** | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS; host 39/39 |
-| M22 | **RC2 교정 검증 진행** | RC1 clean-room 실행기 결함을 교정하고 29개 예제·격리 설치를 새 `v0.3.0-rc.2` plan으로 재검증 |
+| M22 | **RC2 공개 검증 완료 — v0.3.0 stable 승격 대기** | 29개 설치 예제·실제 pyOCD Upload·공개 URL clean-room lifecycle와 cleanup PASS |
 | M23~M34 | **장기 계획** | storage/security/DFU, radio/OpenThread, Matter 제품선 |
 
 AC-02A의 구현·시험 경계는
@@ -131,7 +131,7 @@ M1~M18과 정식 공개 증거, `v0.3.0` AC-01~AC-03·M19~M22의 구현·검증 
 
 ### 05. 릴리스 문서
 
-현재 `v0.2.0`, 시험 중인 `v0.3.0-rc.2`와 보존된 `v0.1.0`/RC 문서는
+현재 stable `v0.2.0`, 공개 검증을 완료한 `v0.3.0-rc.2`와 보존된 `v0.1.0`/RC 문서는
 [릴리스 문서 안내](<./05_릴리스/README.md>)에서 구분한다.
 
 ## 6. 단일 원본 규칙

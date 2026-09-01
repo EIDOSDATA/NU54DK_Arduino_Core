@@ -5,13 +5,15 @@
 | 현재 정식 버전 | `v0.2.0` |
 | 설치 channel | Stable Boards Manager index |
 | 공식 사용자 OS | Windows 10/11 x64 |
-| 최종 갱신일 | 2026-09-01 |
+| 최종 갱신일 | 2026-09-02 |
 
-신규 설치와 현재 사용법은 **`v0.2.0` 문서**를 사용한다. `v0.1.0`, RC1과 RC2 문서는
-당시 artifact와 migration 경계를 보존하는 역사 자료이며 최신 설치 안내가 아니다.
+신규 production 설치와 현재 정식 사용법은 **`v0.2.0` 문서**를 사용한다. 공개 검증된
+`v0.3.0-rc.2`는 시험용 문서이며, 그보다 오래된 `v0.1.0`과 RC 문서는 당시 artifact와
+migration 경계를 보존하는 역사 자료다.
 
-`v0.3.0-rc.2`는 RC1 clean-room 실행기 결함을 교정해 별도 RC index로 재검증하는 다음 버전
-후보다. Stable `v0.2.0`과 stable index를 바꾸지 않으며 생산용 최신 버전으로 표시하지 않는다.
+`v0.3.0-rc.2`는 RC1 clean-room 실행기 결함을 교정해 별도 RC index로 공개 검증을 완료한 다음
+버전 후보다. Stable `v0.2.0`과 stable index는 바뀌지 않았으며 생산용 최신 버전으로 표시하지
+않는다.
 
 ## 현재 시험 후보 — v0.3.0-rc.2
 
@@ -21,10 +23,10 @@
 | 추가·변경된 기능 | [RC2 Release notes](v0.3.0-rc.2/RELEASE_NOTES.md) |
 | GitHub·Arduino IDE 설치와 시험 | [RC2 Testing](v0.3.0-rc.2/TESTING.md) |
 | Stable에서 이동·복귀 | [RC2 Migration](v0.3.0-rc.2/MIGRATION.md) |
-| 미확정·제외 범위 | [RC2 Known issues](v0.3.0-rc.2/KNOWN_ISSUES.md) |
+| 알려진 제약·제외 범위 | [RC2 Known issues](v0.3.0-rc.2/KNOWN_ISSUES.md) |
 | 설치·build·storage·BLE 진단 | [RC2 Troubleshooting](v0.3.0-rc.2/TROUBLESHOOTING.md) |
 
-RC index는 Public Prerelease 공개 뒤 다음 URL에서 사용한다.
+RC index는 다음 Public Prerelease 고정 URL에서 사용한다.
 
 ```text
 https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.2/package_nucode_nu54dk_rc_index.json

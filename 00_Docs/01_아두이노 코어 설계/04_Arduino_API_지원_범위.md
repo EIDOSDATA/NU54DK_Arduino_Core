@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-API-001 |
-| 문서 개정 | 4.8 |
+| 문서 개정 | 4.9 |
 | 문서 상태 | `v0.2.0` 정식 공개 범위 + `v0.3.0` 개발 상태 |
-| 최종 갱신일 | 2026-09-01 |
-| 개발 상태 | AC-01~AC-03·M19~M21 완료 / M22 RC2 교정 검증 진행 |
+| 최종 갱신일 | 2026-09-02 |
+| 개발 상태 | **RC2 공개 검증 완료 — v0.3.0 stable 승격 대기** |
 
 ## 1. 목적
 
@@ -48,10 +48,10 @@ runtime 지원으로 확대하지 않는다.
 따라서 `부분 지원`은 Core 전체가 불안정하다는 뜻이 아니라, 특정 API 행에서 보증하는 pin, mode,
 bus instance 또는 검증 범위가 Arduino 생태계 전체보다 좁다는 뜻이다.
 
-현재 `v0.3.0-rc.2` 후보는 public library 8개와 예제 29개를 가진다. Standard 22개와 BLE
-7개를 M22 package 목록으로 고정한다. 새 EEPROM과 LittleFS 예제는 AC-03 검증 대상이다. 이 수치는
-정식 `v0.2.0` archive의 library 4개·예제 14개 기록이나 아직 끝나지 않은 `v0.3.0` runtime 지원
-판정을 바꾸지 않는다.
+공개 검증된 `v0.3.0-rc.2`는 public library 8개와 예제 29개를 가진다. Standard 22개와 BLE
+7개를 M22 package 목록으로 고정해 설치본 compile을 통과했다. 새 EEPROM과 LittleFS 예제는
+AC-03 검증 대상이다. 이 수치는 정식 `v0.2.0` archive의 library 4개·예제 14개 기록을 바꾸지
+않으며, RC2 검증 완료를 `v0.3.0` stable 지원으로 확대하지 않는다.
 
 ## 3. Runtime과 공통 API
 
@@ -126,7 +126,8 @@ pinctrl, runtime PM과 GPIO ownership을 원자적으로 전환한다.
 
 Runtime pinctrl·PM lifecycle과 Wire/SPI/Serial/ADC/PWM 실제 handover·공개 API는 AC-02B
 working tree에 구현됐다. Host 계약, NU54DK target build와 exact commit `0b7f89283cd82a68a7f3f0910f4fc59b8dd01bfb`의
-3-wire 물리 HIL을 통과했으므로 AC-02B는 완료다. 다만 M22 전에는 정식 stable 지원으로 표시하지 않는다.
+3-wire 물리 HIL을 통과했으므로 AC-02B는 완료다. 다만 `v0.3.0` stable 승격 전에는 정식 stable
+지원으로 표시하지 않는다.
 
 ## 5. 시간과 utility
 
@@ -274,7 +275,8 @@ M19 BLE Core/GAP과 M20 범용 GATT는 `NUCODE_BLE`에 구현됐고 각각 exact
 Pairing·bonding·SMP, BAS/DIS와 HID는 공통 stack lifecycle을 복제하지 않는 별도
 `NUCODE_BLE_Security` library가 소유한다. M21의 Core `065d4f5` exact 두 보드 RF HIL과
 `d1902b1` Windows 11 pairing·HID 입력·bond 복원, host 39/39은 PASS했다. M21 개발 작업은
-완료했다. AC-02·AC-03도 완료됐지만 `v0.3.0` 전체는 M22 전에는 정식 지원으로 표시하지 않는다.
+완료했다. AC-02·AC-03과 M22 RC2 공개 검증도 완료됐지만 `v0.3.0` 전체는 stable 승격 전에는
+정식 지원으로 표시하지 않는다.
 
 ## 9. Zephyr/NCS 직접 사용과 build-only 경계
 
@@ -320,7 +322,8 @@ native USB, DAC, AVR Harvard memory와 Wi-Fi는 NU54DK/nRF54L15 hardware에서 �
 - M20: 범용 GATT — 자동 검증 완료
 - M21: 별도 security library의 pairing·bonding·표준 profile·HID — 완료; exact RF HIL과
   Windows 11 실제 HID·bond 복원 PASS
-- M22: 8개 library·29개 예제 package, 동일 PC clean-room과 RC/stable gate — RC2 교정 검증 진행
+- M22: 8개 library·29개 예제 package, 실제 Upload와 동일 PC public clean-room — RC2 공개 검증
+  완료, `v0.3.0` stable 승격 대기
 
 계획이 현재 `v0.2.0` 지원 판정을 바꾸지는 않는다. 각 항목은 자동 계약, target build,
 필요한 HIL과 예제를 통과해야만 지원으로 승격한다. 물리 경로나 driver 의미를 확정할 수

@@ -19,9 +19,9 @@ Sketch와 Arduino library를 nRF Connect SDK build graph에 통합해 ELF·HEX·
 | 사용자 환경 | Windows 10/11 x64, Arduino IDE 2.x |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 정식 완료 범위 | M0~M18 / `v0.2.0` 정식 공개 |
-| `v0.3.0` RC 상태 | RC1 자산 공개·고정 gate PASS 뒤 clean-room 실행기 결함으로 formal 검증 중단 / RC2 교정 검증 진행 |
-| RC 후보 | `v0.3.0-rc.2` — RC1 자산은 불변 보존하고 별도 RC index로 다시 검증 |
-| 다음 작업 | RC2 package·29개 설치 예제·지정 UID Upload → public RC2 → 동일 PC 격리 clean-room 검증 |
+| `v0.3.0` RC 상태 | **RC2 공개 검증 완료 — v0.3.0 stable 승격 대기** |
+| RC 후보 | [`v0.3.0-rc.2`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.3.0-rc.2) — 별도 RC index로 공개된 검증 완료 prerelease |
+| 다음 작업 | RC2 사용자 결과·알려진 제약 검토 → 별도 stable package/lifecycle → `v0.3.0` 승격 승인 |
 
 ## 빠른 시작
 
@@ -123,10 +123,10 @@ Arduino CLI에서 명시적 CMSIS-DAP UID를 사용할 때는 compile과 upload�
 | [`SPI`](./libraries/SPI/examples) | `Standard peripherals` | SPITransaction |
 | [`NUCODE BLE`](./libraries/NUCODE_BLE/examples) | `BLE NUS` | NUSPeripheral, NUSCentral |
 
-14개 예제는 릴리스 source와 공개 RC2 Boards Manager 설치본에서 14/14 compile gate를
+14개 예제는 `v0.2.0` 릴리스 source와 공개 `v0.2.0-rc.2` Boards Manager 설치본에서 14/14 compile gate를
 통과했습니다.
 
-현재 `main`의 `v0.3.0-rc.2` 후보 트리는 **8개 library, 29개 예제**를 포함합니다.
+공개 검증된 `v0.3.0-rc.2`는 **8개 library, 29개 예제**를 포함합니다.
 `Standard peripherals` profile은 22개, BLE profile은 7개입니다.
 
 | 개발 Library | 예제 |
@@ -141,7 +141,7 @@ Arduino CLI에서 명시적 CMSIS-DAP UID를 사용할 때는 compile과 upload�
 | `LittleFS` | LittleFSPersistence |
 
 AC-03에서 `EEPROMPersistence`와 `LittleFSPersistence`를 추가했습니다. M22는 29개 설치 예제를
-고정 목록으로 열거하고 clean package에서 전부 compile합니다. 이 개발 수치는 공개 stable package의
+고정 목록으로 열거하고 clean package와 public clean-room에서 전부 compile했습니다. 이 RC 수치는 공개 stable package의
 예제 수를 바꾼다는 뜻이 아닙니다. 설치된 `v0.2.0` package는 계속 위의 14개를 제공합니다.
 
 ## v0.2.0 지원 범위
@@ -166,7 +166,7 @@ Wire repeated-start는 같은 주소에 대한 `endTransmission(false)` 뒤
 `requestFrom(..., true)` 조합만 지원합니다. `requestFrom(..., false)`, Wire target/slave,
 Wire1과 자동 bus arbitration은 현재 범위 밖입니다.
 
-`v0.3.0-rc.2` 후보에는 `Serial1`/uart30, 종료 상태 `Wire.setPins()`·`SPI.setPins()`,
+`v0.3.0-rc.2`에는 `Serial1`/uart30, 종료 상태 `Wire.setPins()`·`SPI.setPins()`,
 AIN5~AIN7, ADC/PWM resolution·frequency, `tone()`과 Servo runtime이 구현되어 있습니다.
 EEPROM은 1024-byte RAM mirror와 명시적 `commit()`, LittleFS는 전용 32 KiB partition의
 비파괴 mount와 명시적 format을 제공합니다. AC-02B와 AC-03은 exact commit
@@ -208,16 +208,16 @@ EEPROM은 1024-byte RAM mirror와 명시적 `commit()`, LittleFS는 전용 32 Ki
 `v0.2.0`은 다음 검증을 완료한 정식 릴리스입니다.
 
 - Windows Boards Manager 설치, `0.1.0 ↔ 0.2.0` upgrade/downgrade와 uninstall
-- 공개 RC2 설치본의 Arduino 예제 14/14 compile 및 pyOCD Upload 경로
-- RC2 이전 기준선의 GPIO·시간·Serial·Interrupt·I2C·SPI·ADC·PWM 실기/회귀 검증
-- 기존 M16 및 RC2 기준선의 두 NU54DK BLE NUS Peripheral/Central 양방향 통신
+- 공개 `v0.2.0-rc.2` 설치본의 Arduino 예제 14/14 compile 및 pyOCD Upload 경로
+- `v0.2.0-rc.2` 이전 기준선의 GPIO·시간·Serial·Interrupt·I2C·SPI·ADC·PWM 실기/회귀 검증
+- 기존 M16 및 `v0.2.0-rc.2` 기준선의 두 NU54DK BLE NUS Peripheral/Central 양방향 통신
 - Windows Arduino와 고정 Nordic 컨테이너 재현 빌드
 
 RC 후보의 실기 결과, stable runtime 동등성 및 정식 공개 경계는
 [v0.2.0 정식 릴리스 공개 기록](<./00_Docs/04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md>)에
 보존합니다. RC tag와 자산은 역사적 검증 자료이며 신규 설치에는 stable `v0.2.0`을 사용합니다.
-Stable exact ZIP에서 RC2의 모든 물리 HIL을 다시 실행한 것은 아닙니다. Stable 승격 근거는
-RC2 실기 결과, 같은 runtime payload와 stable 공개 설치 수명주기입니다.
+Stable exact ZIP에서 `v0.2.0-rc.2`의 모든 물리 HIL을 다시 실행한 것은 아닙니다. Stable 승격
+근거는 `v0.2.0-rc.2` 실기 결과, 같은 runtime payload와 stable 공개 설치 수명주기입니다.
 
 ## 로드맵
 
@@ -232,7 +232,7 @@ RC2 실기 결과, 같은 runtime payload와 stable 공개 설치 수명주기�
 | `v0.3.0` | M19 | **자동 검증 완료** | BLE Core/GAP 두 보드 advertise·scan·연결·재연결 HIL PASS |
 | `v0.3.0` | M20 | **자동 검증 완료** | 범용 GATT 두 보드 read/write/notify/indicate HIL PASS |
 | `v0.3.0` | M21 | **완료** | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS |
-| `v0.3.0` | M22 | **RC2 교정 검증 진행** | RC1 clean-room 실행기 결함 교정, 8개 library·29개 예제 package와 `v0.3.0-rc.2` 전체 gate |
+| `v0.3.0` | M22 | **RC2 공개 검증 완료 — v0.3.0 stable 승격 대기** | 8개 library·29개 예제, 실제 Upload, public clean-room lifecycle·cleanup PASS |
 | `v0.4.0` | M23~M26 | 계획 | Storage·Crypto, MCUboot·DFU, TF-M·복구 |
 | `v0.5.0` | M27~M30 | 계획 | Radio Profile, IEEE 802.15.4·ESB, OpenThread |
 | `v0.6.0` | M31~M34 | 계획 | Matter 기반, Application Template, Commissioning HIL |

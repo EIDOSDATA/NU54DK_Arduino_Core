@@ -28,7 +28,7 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 Release의 불변 index snapshot을 사용한다. RC 전용 index와 preview index는 신규 설치에 쓰지
 않는다.
 
-`v0.3.0-rc.2`를 명시적으로 시험할 때만 다음 별도 index를 추가한다. RC 공개가 stable index의
+공개 검증된 `v0.3.0-rc.2`를 명시적으로 시험할 때만 다음 별도 index를 추가한다. RC 공개가 stable index의
 version 순서나 byte를 바꾸지 않는다.
 
 ~~~text
@@ -146,9 +146,10 @@ channel의 이미 검증한 archive만 대상으로 하며 최신 version 순서
 tag, archive와 승인 기록을 가진다. 도구가 만든 package는 자동으로 공개하지 않으며 사람의
 릴리스 승인 뒤 별도 절차로 게시한다.
 
-M22 RC2는 RC1 clean-room 실행기 결함을 교정하고 두 독립 build의 byte를 대조해 7개 asset만 공개한다. Public URL에서 package를 다시
-받아 동일 PC 격리 clean-room에 설치한 뒤 8개 library·29개 예제를 compile하고 지정 UID Upload를
-검증한다. Stable `v0.2.0` index는 전후 SHA-256 불변을 별도 gate로 확인한다.
+M22 RC2는 RC1 clean-room 실행기 결함을 교정하고 두 독립 build의 byte를 대조해 7개 asset만
+공개했다. Public URL에서 package를 다시 받아 동일 PC 격리 clean-room에 설치한 뒤 8개
+library·29개 예제 compile, 지정 UID Upload, downgrade/upgrade, uninstall/reinstall과 exact run
+leaf cleanup을 통과했다. Stable `v0.2.0` index는 전후 크기·SHA-256·Git blob이 불변이다.
 
 ---
 

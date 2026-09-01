@@ -1,12 +1,11 @@
 # GitHub v0.3.0-rc.2 설치와 시험
 
-> **현재 RC2는 공개 전입니다.** 아래 URL의 404와 Boards Manager에서 version이 보이지 않는
-> 상태는 공개 전에는 정상입니다. 소유자가 Public Prerelease를 알리기 전에는 설치 시험을
-> 시작하지 마십시오.
+> `v0.3.0-rc.2`는 공개 검증을 완료한 Public Prerelease입니다. Production stable은 계속
+> `v0.2.0`이므로 RC2를 시험할 때만 아래 per-tag index를 명시적으로 추가하십시오.
 
 ## 1. GitHub RC 자산 확인
 
-공개 뒤 다음 고정 URL을 사용합니다.
+다음 고정 URL을 사용합니다.
 
 | 목적 | URL |
 | --- | --- |
@@ -32,12 +31,19 @@ Get-FileHash .\nucode-nu54dk-zephyr-0.3.0-rc.2.zip -Algorithm SHA256
 Get-Content .\nucode-nu54dk-zephyr-0.3.0-rc.2.CHECKSUMS.sha256
 ```
 
-실제 SHA-256은 공개 Release 자산과 M22 RC2 검증 기록을 기준으로 합니다. 이 문서에는 예상
-hash를 미리 적지 않습니다.
+Core ZIP의 예상 SHA-256은 다음과 같습니다.
+
+```text
+b52e39c7aa9e550624a556487cb7b6e537f551c4fbd833e7a61cf28aa91e15f6
+```
+
+`Get-FileHash` 결과가 다르면 설치하지 말고 파일을 다시 내려받으십시오. 전체 자산의 크기와
+SHA-256은 [M22 RC2 검증 기록](<../../04_검증 기록/30_M22_v0.3.0_rc2_통합_릴리스_기준선.md>)을
+기준으로 합니다.
 
 ## 2. Arduino IDE에 RC2 index 추가
 
-1. Arduino IDE 2.x를 엽니다. 기준 검증 version은 공개 gate에서 확정합니다.
+1. Arduino IDE 2.x를 엽니다. 공개 검증 기준 version은 2.3.10입니다.
 2. `File → Preferences`를 엽니다.
 3. RC1 per-tag URL을 등록했다면 제거하고 아래 RC2 URL로 교체합니다.
 
@@ -136,6 +142,5 @@ Issue 또는 시험 기록에는 다음을 남깁니다.
 - Storage 시험이면 reset 횟수와 기존 데이터 삭제 승인 여부
 - BLE/주변장치 시험이면 board 수, wiring, peer 역할과 전원 조건
 
-RC2가 공개된 뒤 문제는 [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues)에
-보고할 수 있습니다. Stable로 복귀하려면 [Migration](./MIGRATION.md)의 downgrade 절차를
-따릅니다.
+문제는 [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues)에 보고할 수
+있습니다. Stable로 복귀하려면 [Migration](./MIGRATION.md)의 downgrade 절차를 따릅니다.

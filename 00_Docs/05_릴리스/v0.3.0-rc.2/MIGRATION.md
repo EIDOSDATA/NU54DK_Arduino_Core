@@ -1,19 +1,19 @@
 # NU54DK Arduino Core v0.3.0-rc.2 마이그레이션
 
-> **현재 RC2는 공개 전입니다.** Public Prerelease가 확인되기 전에는 아래 RC2 URL로
-> 전환하지 마십시오. 현재 정식 설치 channel은 계속 stable `v0.2.0`입니다.
+> `v0.3.0-rc.2`는 공개 검증을 완료한 Public Prerelease입니다. 시험용으로만 아래 RC2 URL을
+> 추가하십시오. 현재 정식 설치 channel은 계속 stable `v0.2.0`입니다.
 
 ## 1. 이동 전 원칙
 
 - RC2는 production stable이 아닌 시험 후보입니다.
 - Stable index와 RC2 per-tag index는 별도 URL입니다.
-- RC1 per-tag index는 RC2를 자동으로 제공하지 않으므로 RC2 공개 뒤 URL을 교체해야 합니다.
+- RC1 per-tag index는 RC2를 자동으로 제공하지 않으므로 RC2 URL로 교체해야 합니다.
 - Core 제거 또는 version 변경을 이유로 공유 NCS와 Toolchain directory를 수동 삭제하지 않습니다.
 - EEPROM, Settings/ZMS와 LittleFS의 중요한 데이터는 먼저 별도로 백업합니다.
 
 ## 2. RC2 index 추가
 
-RC2 공개 뒤 Arduino IDE의 `File → Preferences → Additional Boards Manager URLs`에 다음 URL을
+Arduino IDE의 `File → Preferences → Additional Boards Manager URLs`에 다음 URL을
 추가합니다.
 
 ```text
@@ -32,7 +32,7 @@ RC1을 시험했다면 RC1 URL을 제거하고 RC2 URL만 남깁니다.
 ## 3. Stable v0.2.0에서 RC2로 이동
 
 1. 중요한 Sketch와 storage 데이터를 백업합니다.
-2. RC2 Public Prerelease와 정확히 7개 자산이 공개됐는지 확인합니다.
+2. [RC2 Public Prerelease](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.3.0-rc.2)와 정확히 7개 자산이 공개됐는지 확인합니다.
 3. RC2 index를 Additional Boards Manager URLs에 추가합니다.
 4. Boards Manager에서 `NUCODE NU54DK Zephyr Boards`를 찾습니다.
 5. Version `0.3.0-rc.2`를 명시적으로 선택해 설치합니다.
@@ -46,7 +46,7 @@ RC2의 RRAM application/storage layout은 stable `v0.2.0`과 다를 수 있습�
 ## 4. RC1에서 RC2로 이동
 
 RC1의 package 설치가 정상이어도 RC1 public clean-room final evidence는 완성되지 않았습니다.
-RC2 공개 뒤 다음 순서로 이동합니다.
+다음 순서로 이동합니다.
 
 1. Additional Boards Manager URLs에서 RC1 per-tag index URL을 제거합니다.
 2. RC2 per-tag index URL을 추가합니다.
