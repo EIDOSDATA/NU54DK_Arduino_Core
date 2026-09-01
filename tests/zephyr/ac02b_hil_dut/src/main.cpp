@@ -42,8 +42,14 @@ namespace
 	/** @brief 모든 peer 응답의 제한 시간입니다. */
 	constexpr unsigned long response_timeout_ms = 5000UL;
 
-	/** @brief I2C target 시험 주소입니다. 보드 PMIC의 0x6A와 겹치지 않습니다. */
-	constexpr std::uint8_t i2c_target_address = 0x52U;
+	/** @brief NU54DK 온보드 BQ25186의 고정 7-bit 주소입니다. */
+	constexpr std::uint8_t pmic_address = 0x6AU;
+
+	/** @brief BQ25186의 읽기 전용 식별 register입니다. */
+	constexpr std::uint8_t pmic_mask_id_register = 0x0CU;
+
+	/** @brief NU54DK에 실장된 BQ25186 MASK_ID의 exact 기대값입니다. */
+	constexpr std::uint8_t pmic_mask_id_expected = 0x41U;
 
 	/** @brief SPI chunk 경계를 넘기는 loopback byte 수입니다. */
 	constexpr std::size_t spi_byte_count = 40U;
@@ -93,24 +99,6 @@ namespace
 			}
 		}
 		return true;
-	}
-
-	/** @brief hex 문자 하나를 4-bit 값으로 변환합니다. */
-	[[nodiscard]] std::uint8_t hexNibble(char value)
-	{
-		return static_cast<std::uint8_t>(
-			(value <= '9') ? value - '0' : value - 'a' + 10);
-	}
-
-	/** @brief nonce를 I2C payload 16 byte로 변환합니다. */
-	void noncePayload(std::uint8_t (&payload)[16])
-	{
-		for (std::size_t index = 0U; index < sizeof(payload); ++index)
-		{
-			payload[index] = static_cast<std::uint8_t>(
-				(hexNibble(active_nonce[index * 2U]) << 4U) |
-				hexNibble(active_nonce[(index * 2U) + 1U]));
-		}
 	}
 
 	/**
@@ -281,9 +269,8 @@ namespace
 		return true;
 	}
 
-	/** @brief 한 Wire clock에서 no-STOP write와 repeated-start read를 검증합니다. */
-	[[nodiscard]] bool wireRound(std::uint32_t clock_hz,
-								 const std::uint8_t (&payload)[16])
+	/** @brief 한 Wire clock에서 BQ25186 MASK_ID repeated-start read를 검증합니다. */
+	[[nodiscard]] bool wireRound(std::uint32_t clock_hz)
 	{
 		Wire.setClock(clock_hz);
 		if (nucode::arduino::internal::lastWireError() != WireError::none)
@@ -291,10 +278,10 @@ namespace
 			wire_failure_stage = "wire-clock";
 			return false;
 		}
-		Wire.beginTransmission(i2c_target_address);
-		if (Wire.write(payload, sizeof(payload)) != sizeof(payload))
+		Wire.beginTransmission(pmic_address);
+		if (Wire.write(pmic_mask_id_register) != 1U)
 		{
-			wire_failure_stage = "wire-write";
+			wire_failure_stage = "wire-register-write";
 			return false;
 		}
 		if ((Wire.endTransmission(false) != 0U) ||
@@ -303,7 +290,7 @@ namespace
 			wire_failure_stage = "wire-pending-restart";
 			return false;
 		}
-		if (Wire.requestFrom(i2c_target_address, sizeof(payload), true) != sizeof(payload))
+		if (Wire.requestFrom(pmic_address, 1U, true) != 1U)
 		{
 			wire_failure_stage = "wire-request";
 			wire_failure_error = nucode::arduino::internal::lastWireError();
@@ -311,14 +298,16 @@ namespace
 				nucode::arduino::internal::lastWireDriverError();
 			return false;
 		}
-		for (std::size_t index = 0U; index < sizeof(payload); ++index)
+		if (Wire.available() != 1)
 		{
-			if ((Wire.available() <= 0) ||
-				(Wire.read() != static_cast<int>(payload[index] ^ 0xA5U)))
-			{
-				wire_failure_stage = "wire-read";
-				return false;
-			}
+			wire_failure_stage = "wire-read-count";
+			return false;
+		}
+		const int mask_id = Wire.read();
+		if (mask_id != static_cast<int>(pmic_mask_id_expected))
+		{
+			wire_failure_stage = "wire-mask-id";
+			return false;
 		}
 		const bool complete = (Wire.available() == 0) &&
 			(nucode::arduino::internal::lastWireError() == WireError::none);
@@ -332,8 +321,6 @@ namespace
 	/** @brief Wire route, active remap 거부, 100/400 kHz와 end/rebegin을 검증합니다. */
 	[[nodiscard]] bool testWire(void)
 	{
-		std::uint8_t payload[16]{};
-		noncePayload(payload);
 		constexpr std::uint32_t clocks[]{100000U, 400000U};
 		for (std::size_t cycle = 0U; cycle < 2U; ++cycle)
 		{
@@ -349,13 +336,13 @@ namespace
 				Wire.end();
 				return false;
 			}
-			if (Wire.setPins(PIN_P1_02, PIN_P1_03))
+			if (Wire.setPins(PIN_P1_10, PIN_P1_14))
 			{
 				wire_failure_stage = "wire-active-route";
 				Wire.end();
 				return false;
 			}
-			if (!wireRound(clocks[cycle], payload))
+			if (!wireRound(clocks[cycle]))
 			{
 				Wire.end();
 				return false;
@@ -367,7 +354,7 @@ namespace
 				return false;
 			}
 		}
-		Serial.print("NUCODE_AC02B_DUT:WIRE:PASS:address=0x52:clocks=100000,400000:bytes=32:restart=2");
+		Serial.print("NUCODE_AC02B_DUT:WIRE:PASS:address=0x6A:register=0x0C:value=0x41:clocks=100000,400000:reads=2:restart=2:read-only=1");
 		finishToken();
 		return true;
 	}

@@ -59,7 +59,7 @@ from m6_serial_echo import (  # noqa: E402
 MILESTONE = "AC02B"
 DUT_APPLICATION = REPOSITORY / "tests" / "zephyr" / "ac02b_hil_dut"
 PEER_APPLICATION = REPOSITORY / "tests" / "zephyr" / "ac02b_hil_peer"
-EVIDENCE_SCHEMA = 2
+EVIDENCE_SCHEMA = 3
 WIRING_REQUIRED_EXIT_CODE = 3
 CONSOLE_INTERFACE = 3
 AUXILIARY_INTERFACE = 1
@@ -125,7 +125,11 @@ class DutResult:
 
     nonce: str
     serial_cycles: int
+    wire_address: int
+    wire_register: int
+    wire_value: int
     wire_clocks: tuple[int, int]
+    wire_reads: int
     spi_bytes: int
     pwm_duties: tuple[int, int]
     adc_low: int
@@ -137,11 +141,10 @@ class PeerResult:
     """! @brief direct Zephyr peer parser가 승인한 결과입니다. """
 
     nonce: str
-    target_address: int
-    wire_bytes: int
     pwm_duties: tuple[int, int]
     adc_levels: tuple[int, int]
     uart30_state: str
+    i2c_state: str
 
 
 @dataclass(frozen=True)
@@ -190,7 +193,7 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     parser.add_argument(
         "--acknowledge-wiring",
         action="store_true",
-        help="GND 포함 6가닥 fixture와 peer uart30 비활성 구조를 확인했음을 승인",
+        help="GND 포함 4가닥 fixture와 peer UART/I2C 비활성 구조를 확인했음을 승인",
     )
     parser.add_argument("--discover-only", action="store_true")
     return parser.parse_args(arguments)
@@ -383,7 +386,8 @@ def parse_dut_transcript(transcript: bytes, nonce: str) -> DutResult:
         + suffix,
         b"NUCODE_AC02B_DUT:SERIAL1:PASS:baud=115200:cycles=2:echo=host-vcom-x.1"
         + suffix,
-        b"NUCODE_AC02B_DUT:WIRE:PASS:address=0x52:clocks=100000,400000:bytes=32:restart=2"
+        b"NUCODE_AC02B_DUT:WIRE:PASS:address=0x6A:register=0x0C:value=0x41:"
+        b"clocks=100000,400000:reads=2:restart=2:read-only=1"
         + suffix,
         b"NUCODE_AC02B_DUT:SPI:PASS:frequency=4000000:bytes=40:interrupt-mask=1"
         + suffix,
@@ -439,7 +443,19 @@ def parse_dut_transcript(transcript: bytes, nonce: str) -> DutResult:
         raise Ac02bHilFailure(
             f"DUT FINAL 뒤 예상 밖 token이 있습니다: {lines[cursor:]!r}"
         )
-    return DutResult(nonce, 2, (100000, 400000), 40, (25, 75), low, high)
+    return DutResult(
+        nonce,
+        2,
+        0x6A,
+        0x0C,
+        0x41,
+        (100000, 400000),
+        2,
+        40,
+        (25, 75),
+        low,
+        high,
+    )
 
 
 ## @brief peer protocol을 exact 순서로 검증합니다.
@@ -450,10 +466,10 @@ def parse_peer_transcript(transcript: bytes, nonce: str) -> PeerResult:
     if lines and lines[0] == b"NUCODE_AC02B_READY:role=peer":
         lines = lines[1:]
     expected = (
-        b"NUCODE_AC02B_PEER:ARMED:PASS:address=0x52:control=host-console"
+        b"NUCODE_AC02B_PEER:ARMED:PASS:control=host-console:i2c=disabled-unneeded"
         + suffix,
         b"NUCODE_AC02B_PEER:UART30:PASS:status=disabled:pins=high-z" + suffix,
-        b"NUCODE_AC02B_PEER:WIRE:PASS:address=0x52:clocks=100000,400000:bytes=32"
+        b"NUCODE_AC02B_PEER:I2C:UNUSED:status=disabled:target=none"
         + suffix,
     )
     cursor = 0
@@ -487,7 +503,9 @@ def parse_peer_transcript(transcript: bytes, nonce: str) -> PeerResult:
         raise Ac02bHilFailure(
             f"peer FINAL 뒤 예상 밖 token이 있습니다: {lines[cursor:]!r}"
         )
-    return PeerResult(nonce, 0x52, 32, (25, 75), (0, 1), "disabled-high-z")
+    return PeerResult(
+        nonce, (25, 75), (0, 1), "disabled-high-z", "disabled-unused"
+    )
 
 
 ## @brief DUT x.1 보조 VCOM의 두 protocol frame이 nonce·cycle exact인지 검증합니다.
@@ -546,7 +564,7 @@ def wait_peer_armed(
     deadline: float,
 ) -> None:
     expected = (
-        "NUCODE_AC02B_PEER:ARMED:PASS:address=0x52:control=host-console:"
+        "NUCODE_AC02B_PEER:ARMED:PASS:control=host-console:i2c=disabled-unneeded:"
         f"nonce={nonce}"
     ).encode("ascii")
     prefix = b"NUCODE_AC02B_"
@@ -890,14 +908,13 @@ def save_failure_transcripts(
 def print_required_wiring() -> None:
     print("AC-02B WIRING_REQUIRED: 다음 연결을 모두 확인한 뒤 다시 실행하십시오.")
     print("  1. Board A(DUT) GND   <-> Board B(peer) GND")
-    print("  2. Board A P1.2 SDA   <-> Board B P1.2 SDA")
-    print("  3. Board A P1.3 SCL   <-> Board B P1.3 SCL")
-    print("  4. Board A P1.10 PWM  ->  Board B P1.14 capture")
-    print("  5. Board B P2.5 GPIO  ->  Board A P1.12/A0")
-    print("  6. Board A P2.2 MOSI  <-> Board A P2.4 MISO (같은 보드 loopback)")
+    print("  2. Board A P1.10 PWM  ->  Board B P1.14 capture")
+    print("  3. Board B P2.5 GPIO  ->  Board A P1.12/A0")
+    print("  4. Board A P2.2 MOSI  <-> Board A P2.4 MISO (같은 보드 loopback)")
     print("Board A Serial1은 같은 UID의 x.1 보조 VCOM을 host가 exact echo합니다.")
     print("기존 P0.0/P0.1 교차선은 남아 있어도 되며 peer uart30은 disabled/high-Z입니다.")
-    print("외부 I2C pull-up은 요구하지 않으며 0x6A PMIC에는 접근하지 않습니다.")
+    print("보드 간 I2C 배선과 외부 pull-up은 사용하지 않으며 peer I2C는 disabled입니다.")
+    print("Wire는 Board A 온보드 BQ25186 0x6A/0x0C를 읽기 전용으로 검증합니다.")
 
 
 ## @brief 두 role identity와 image/build record를 flash 전에 검증합니다.
@@ -1097,20 +1114,32 @@ def main(arguments: Sequence[str] | None = None) -> int:
                     "end-rebegin",
                     "host-exact-echo",
                 ],
-                "wire_twim22_twis21": ["100k", "400k", "repeated-start", "end-rebegin"],
+                "wire_twim22_bq25186": [
+                    "setPins",
+                    "active-remap-reject",
+                    "100k",
+                    "400k",
+                    "no-stop-register-pointer",
+                    "repeated-start",
+                    "exact-mask-id-0x41",
+                    "end-rebegin",
+                ],
                 "spi00": ["exact-pins", "4MHz-loopback", "interrupt-mask"],
                 "pwm20": ["1kHz", "25-percent", "75-percent", "external-edge-capture"],
                 "adc_ain5": ["external-low", "external-high", "12-bit"],
             },
             "fixture": {
                 "wiring_acknowledged": True,
-                "required_wire_count_including_ground": 6,
+                "required_wire_count_including_ground": 4,
                 "peer_uart30": "disabled-high-z",
+                "peer_i2c": "disabled-unused",
                 "legacy_p0_cross_wires_required": False,
+                "cross_board_i2c_required": False,
                 "peer_auxiliary_vcom_opened": False,
                 "control_transport": "host-console-relay",
                 "external_pullup_required": False,
-                "pmic_address_accessed": False,
+                "pmic_address_accessed": True,
+                "pmic_access": "read-only-mask-id-0x0c-exact-0x41",
                 "mass_erase_requested": False,
             },
         }

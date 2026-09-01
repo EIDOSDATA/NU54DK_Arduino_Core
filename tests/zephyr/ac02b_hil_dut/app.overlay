@@ -44,7 +44,7 @@
 	zephyr,pm-device-runtime-auto;
 };
 
-/** @brief NFC 전용 P1.2/P1.3을 TWIM22 route로 전환합니다. */
+/** @brief NFC 전용 P1.2/P1.3을 온보드 BQ25186용 TWIM22 route로 전환합니다. */
 &uicr { nfct-pins-as-gpios; };
 
 /** @brief P1.12/AIN5를 12-bit ADC 시험 입력으로 사용합니다. */

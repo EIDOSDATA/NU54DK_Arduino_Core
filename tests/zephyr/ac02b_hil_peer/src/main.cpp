@@ -2,10 +2,10 @@
  * @file main.cpp
  * @brief AC-02B DUT와 물리 연결되는 direct Zephyr peer를 구현합니다.
  *
- * @details Arduino Wire target이 지원되지 않으므로 serial21을 TWIS target으로
- * 전환합니다. PWM capture와 ADC drive 명령은 host console에서만 받습니다.
- * uart30은 devicetree에서 비활성화하여 기존 P0 교차선이 남아 있어도 peer가
- * P0.0/P0.1을 구동하지 않습니다.
+ * @details Wire는 DUT의 온보드 BQ25186에서 읽기 전용으로 검증하므로 peer의
+ * I2C controller와 target은 모두 비활성화합니다. peer는 PWM capture와 ADC
+ * drive 명령만 host console에서 받습니다. uart30도 devicetree에서 비활성화하여
+ * 기존 P0 교차선이 남아 있어도 peer가 P0.0/P0.1을 구동하지 않습니다.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -13,14 +13,12 @@
 #include <zephyr/device.h>
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/gpio.h>
-#include <zephyr/drivers/i2c.h>
 #include <zephyr/drivers/uart.h>
 #include <zephyr/kernel.h>
 #include <zephyr/sys/atomic.h>
 #include <zephyr/sys/printk.h>
 #include <zephyr/sys/time_units.h>
 
-#include <errno.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -36,9 +34,6 @@ namespace
 
 	/** @brief bounded UART line 크기입니다. */
 	constexpr std::size_t line_capacity = 160U;
-
-	/** @brief PMIC 0x6A와 겹치지 않는 AC-02B target 주소입니다. */
-	constexpr std::uint16_t i2c_target_address = 0x52U;
 
 	/** @brief DUT P1.10 PWM이 연결되는 peer input입니다. */
 	constexpr gpio_pin_t pwm_capture_pin = 14U;
@@ -59,12 +54,13 @@ namespace
 	/** @brief peer P0 UART가 build에서 활성화되지 않았음을 보장합니다. */
 	static_assert(!DT_NODE_HAS_STATUS(DT_NODELABEL(uart30), okay),
 				  "AC-02B peer uart30은 반드시 disabled여야 합니다.");
+	static_assert(!DT_NODE_HAS_STATUS(DT_NODELABEL(i2c21), okay),
+				  "AC-02B peer i2c21은 반드시 disabled여야 합니다.");
+	static_assert(!DT_NODE_HAS_STATUS(DT_NODELABEL(i2c22), okay),
+				  "AC-02B peer i2c22는 반드시 disabled여야 합니다.");
 
 	/** @brief DAPLink host console UART입니다. */
 	const struct device *const console_uart = DEVICE_DT_GET(DT_CHOSEN(zephyr_console));
-
-	/** @brief P1.2/P1.3을 사용하는 direct TWIS21 target입니다. */
-	const struct device *const target_i2c = DEVICE_DT_GET(DT_NODELABEL(i2c21));
 
 	/** @brief PWM capture port입니다. */
 	const struct device *const capture_gpio = DEVICE_DT_GET(DT_NODELABEL(gpio1));
@@ -89,18 +85,6 @@ namespace
 	/** @brief DAPLink console RX 상태입니다. */
 	UartRxContext console_rx_context{&console_rx_queue, ATOMIC_INIT(0)};
 
-	/** @brief nonce에서 파생한 I2C expected write입니다. */
-	std::uint8_t expected_i2c_payload[16]{};
-
-	/** @brief TWIS read request에 제공할 변환 응답입니다. */
-	std::uint8_t i2c_response_payload[16]{};
-
-	/** @brief 유효한 repeated-start write 횟수입니다. */
-	atomic_t i2c_valid_write_count = ATOMIC_INIT(0);
-
-	/** @brief I2C 길이·payload 불일치를 보존하는 fail-closed 표식입니다. */
-	atomic_t i2c_invalid = ATOMIC_INIT(0);
-
 	/** @brief host relay에서 다음에 받아야 하는 명령 index입니다. */
 	std::size_t relay_step = 0U;
 
@@ -108,7 +92,6 @@ namespace
 	unsigned int pwm_pass_count = 0U;
 	bool adc_low_seen = false;
 	bool adc_high_seen = false;
-	bool wire_reported = false;
 	bool pwm_reported = false;
 	bool adc_reported = false;
 
@@ -125,12 +108,6 @@ namespace
 	std::uint32_t period_count = 0U;
 	std::uint32_t high_count = 0U;
 	unsigned int armed_duty_percent = 0U;
-
-	/** @brief I2C target callback table입니다. */
-	struct i2c_target_callbacks target_callbacks{};
-
-	/** @brief I2C target 등록 정보입니다. */
-	struct i2c_target_config target_configuration{};
 
 	/** @brief 문자가 소문자 hex인지 확인합니다. */
 	[[nodiscard]] bool isLowerHex(char value)
@@ -154,26 +131,6 @@ namespace
 			}
 		}
 		return true;
-	}
-
-	/** @brief hex 문자 하나를 4-bit 값으로 변환합니다. */
-	[[nodiscard]] std::uint8_t hexNibble(char value)
-	{
-		return static_cast<std::uint8_t>(
-			(value <= '9') ? value - '0' : value - 'a' + 10);
-	}
-
-	/** @brief 현재 nonce에서 I2C expected write를 생성합니다. */
-	void prepareI2cPayload(void)
-	{
-		for (std::size_t index = 0U; index < sizeof(expected_i2c_payload); ++index)
-		{
-			expected_i2c_payload[index] = static_cast<std::uint8_t>(
-				(hexNibble(active_nonce[index * 2U]) << 4U) |
-				hexNibble(active_nonce[(index * 2U) + 1U]));
-			i2c_response_payload[index] =
-				static_cast<std::uint8_t>(expected_i2c_payload[index] ^ 0xA5U);
-		}
 	}
 
 	/** @brief UART IRQ byte를 console 고정 queue로 옮깁니다. */
@@ -257,43 +214,6 @@ namespace
 		printk("NUCODE_AC02B_FAIL:role=peer:stage=%s:nonce=%s\n", stage,
 			   validNonce(active_nonce) ? active_nonce
 									: "00000000000000000000000000000000");
-	}
-
-	/** @brief TWIS가 받은 buffer를 nonce와 exact 비교합니다. */
-	void targetBufferWriteReceived(struct i2c_target_config *, std::uint8_t *data,
-								   std::uint32_t size)
-	{
-		if ((data == nullptr) || (size != sizeof(expected_i2c_payload)) ||
-			(memcmp(data, expected_i2c_payload, sizeof(expected_i2c_payload)) != 0))
-		{
-			atomic_set(&i2c_invalid, 1);
-			return;
-		}
-		if ((atomic_inc(&i2c_valid_write_count) + 1) > 2)
-		{
-			atomic_set(&i2c_invalid, 1);
-		}
-	}
-
-	/**
-	 * @brief TWIS repeated-start read에 nonce 변환 buffer를 제공합니다.
-	 *
-	 * Nordic TWIS는 write 뒤 STOP 없이 read로 전환할 때 READ_REQ를
-	 * WRITE_DONE보다 먼저 전달할 수 있습니다. 응답은 host nonce로 미리
-	 * 계산되어 있으므로 여기서는 read buffer를 즉시 제공하고, 실제 write의
-	 * 길이와 payload는 targetBufferWriteReceived() 및 최종 판정에서 검증합니다.
-	 */
-	int targetBufferReadRequested(struct i2c_target_config *, std::uint8_t **data,
-								  std::uint32_t *size)
-	{
-		if ((data == nullptr) || (size == nullptr) ||
-			(atomic_get(&i2c_invalid) != 0))
-		{
-			return -EIO;
-		}
-		*data = i2c_response_payload;
-		*size = sizeof(i2c_response_payload);
-		return 0;
 	}
 
 	/** @brief P1.14 양 edge에서 period와 high 시간을 hardware cycle로 누적합니다. */
@@ -380,18 +300,6 @@ namespace
 			   (duty_percent <= (expected_duty + 8U));
 	}
 
-	/** @brief Wire 두 round가 끝났으면 peer exact token을 한 번 출력합니다. */
-	void reportWireIfReady(void)
-	{
-		if (!wire_reported && (atomic_get(&i2c_invalid) == 0) &&
-			(atomic_get(&i2c_valid_write_count) == 2))
-		{
-			printk("NUCODE_AC02B_PEER:WIRE:PASS:address=0x52:clocks=100000,400000:bytes=32:nonce=%s\n",
-				   active_nonce);
-			wire_reported = true;
-		}
-	}
-
 	/** @brief host relay에 nonce가 결합된 exact 응답을 출력합니다. */
 	void reportRelayResponse(const char *response)
 	{
@@ -465,7 +373,6 @@ namespace
 			return false;
 		}
 
-		reportWireIfReady();
 		const std::size_t step = relay_step;
 		bool success = false;
 		if (step < 4U)
@@ -478,9 +385,7 @@ namespace
 		}
 		else
 		{
-			const bool complete = wire_reported && pwm_reported && adc_reported &&
-							  (atomic_get(&i2c_invalid) == 0) &&
-							  (atomic_get(&i2c_valid_write_count) == 2);
+			const bool complete = pwm_reported && adc_reported;
 			if (complete)
 			{
 				static_cast<void>(gpio_pin_set_raw(drive_gpio, adc_drive_pin, 0));
@@ -497,11 +402,11 @@ namespace
 		return success;
 	}
 
-	/** @brief 물리 peer 장치와 callback을 host start 뒤에만 활성화합니다. */
+	/** @brief PWM capture와 ADC drive를 host start 뒤에만 활성화합니다. */
 	[[nodiscard]] bool initializePeer(void)
 	{
-		if (!device_is_ready(console_uart) || !device_is_ready(target_i2c) ||
-			!device_is_ready(capture_gpio) || !device_is_ready(drive_gpio))
+		if (!device_is_ready(console_uart) || !device_is_ready(capture_gpio) ||
+			!device_is_ready(drive_gpio))
 		{
 			return false;
 		}
@@ -518,11 +423,7 @@ namespace
 		{
 			return false;
 		}
-		target_callbacks.buf_write_received = targetBufferWriteReceived;
-		target_callbacks.buf_read_requested = targetBufferReadRequested;
-		target_configuration.address = i2c_target_address;
-		target_configuration.callbacks = &target_callbacks;
-		return i2c_target_register(target_i2c, &target_configuration) == 0;
+		return true;
 	}
 }
 
@@ -558,28 +459,27 @@ int main(void)
 		}
 	}
 
-	prepareI2cPayload();
 	if (!initializePeer())
 	{
 		reportFailure("initialize");
 		return 1;
 	}
-	printk("NUCODE_AC02B_PEER:ARMED:PASS:address=0x52:control=host-console:nonce=%s\n",
+	printk("NUCODE_AC02B_PEER:ARMED:PASS:control=host-console:i2c=disabled-unneeded:nonce=%s\n",
 		   active_nonce);
 	printk("NUCODE_AC02B_PEER:UART30:PASS:status=disabled:pins=high-z:nonce=%s\n",
+		   active_nonce);
+	printk("NUCODE_AC02B_PEER:I2C:UNUSED:status=disabled:target=none:nonce=%s\n",
 		   active_nonce);
 
 	bool finished = false;
 	while (!finished)
 	{
-		reportWireIfReady();
 		char line[line_capacity]{};
 		if (!readQueuedLine(console_rx_context, line, sizeof(line), 200))
 		{
-			if ((atomic_get(&i2c_invalid) != 0) ||
-				(atomic_get(&console_rx_context.overflow) != 0))
+			if (atomic_get(&console_rx_context.overflow) != 0)
 			{
-				reportFailure("console-or-wire");
+				reportFailure("console-rx-overflow");
 				return 1;
 			}
 			continue;

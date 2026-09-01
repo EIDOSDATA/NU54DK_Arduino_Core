@@ -48,7 +48,8 @@ def valid_dut_transcript() -> bytes:
         + suffix,
         b"NUCODE_AC02B_DUT:SERIAL1:PASS:baud=115200:cycles=2:echo=host-vcom-x.1"
         + suffix,
-        b"NUCODE_AC02B_DUT:WIRE:PASS:address=0x52:clocks=100000,400000:bytes=32:restart=2"
+        b"NUCODE_AC02B_DUT:WIRE:PASS:address=0x6A:register=0x0C:value=0x41:"
+        b"clocks=100000,400000:reads=2:restart=2:read-only=1"
         + suffix,
         b"NUCODE_AC02B_DUT:SPI:PASS:frequency=4000000:bytes=40:interrupt-mask=1"
         + suffix,
@@ -76,10 +77,10 @@ def valid_dut_transcript() -> bytes:
 def valid_peer_transcript() -> bytes:
     suffix = f":nonce={NONCE}".encode("ascii")
     lines = [
-        b"NUCODE_AC02B_PEER:ARMED:PASS:address=0x52:control=host-console"
+        b"NUCODE_AC02B_PEER:ARMED:PASS:control=host-console:i2c=disabled-unneeded"
         + suffix,
         b"NUCODE_AC02B_PEER:UART30:PASS:status=disabled:pins=high-z" + suffix,
-        b"NUCODE_AC02B_PEER:WIRE:PASS:address=0x52:clocks=100000,400000:bytes=32"
+        b"NUCODE_AC02B_PEER:I2C:UNUSED:status=disabled:target=none"
         + suffix,
     ]
     for index, (_, response) in enumerate(MODULE.RELAY_STEPS):
@@ -143,10 +144,13 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
         relay = MODULE.parse_relay_transcript(valid_relay_transcript(), NONCE)
         self.assertEqual(dut.adc_low, 64)
         self.assertEqual(dut.adc_high, 3900)
+        self.assertEqual(dut.wire_address, 0x6A)
+        self.assertEqual(dut.wire_register, 0x0C)
+        self.assertEqual(dut.wire_value, 0x41)
         self.assertEqual(dut.wire_clocks, (100000, 400000))
-        self.assertEqual(peer.target_address, 0x52)
-        self.assertEqual(peer.wire_bytes, 32)
+        self.assertEqual(dut.wire_reads, 2)
         self.assertEqual(peer.uart30_state, "disabled-high-z")
+        self.assertEqual(peer.i2c_state, "disabled-unused")
         self.assertEqual(auxiliary.cycles, (0, 1))
         self.assertEqual(relay.commands, len(MODULE.RELAY_STEPS))
 
@@ -160,7 +164,7 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
             MODULE.parse_dut_transcript(stale, NONCE)
 
         failed = valid_peer_transcript() + (
-            f"NUCODE_AC02B_FAIL:role=peer:stage=wire:nonce={NONCE}\n".encode(
+            f"NUCODE_AC02B_FAIL:role=peer:stage=i2c-unexpected:nonce={NONCE}\n".encode(
                 "ascii"
             )
         )
@@ -373,24 +377,20 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
         self.assertIn('status = "disabled";', overlay)
         self.assertIn("/delete-property/ pinctrl-0;", overlay)
 
-    def test_peer_prepares_twis_read_before_write_done(self) -> None:
-        """! @brief repeated-start의 READ_REQ/WRITE_DONE 순서에 의존하지 않게 고정합니다. """
+    def test_peer_disables_and_does_not_use_i2c(self) -> None:
+        """! @brief peer가 I2C controller·target을 빌드하거나 구동하지 않게 고정합니다. """
 
-        source = (
-            MODULE.REPOSITORY
-            / "tests"
-            / "zephyr"
-            / "ac02b_hil_peer"
-            / "src"
-            / "main.cpp"
-        ).read_text(encoding="utf-8")
-        callback = source.split("int targetBufferReadRequested", maxsplit=1)[1].split(
-            "/** @brief P1.14", maxsplit=1
-        )[0]
-        self.assertIn("*data = i2c_response_payload;", callback)
-        self.assertIn("*size = sizeof(i2c_response_payload);", callback)
-        self.assertNotIn("i2c_valid_write_count", callback)
-        self.assertIn("targetBufferWriteReceived() 및 최종 판정에서 검증", source)
+        peer_root = MODULE.REPOSITORY / "tests" / "zephyr" / "ac02b_hil_peer"
+        source = (peer_root / "src" / "main.cpp").read_text(encoding="utf-8")
+        overlay = (peer_root / "app.overlay").read_text(encoding="utf-8")
+        configuration = (peer_root / "prj.conf").read_text(encoding="utf-8")
+        self.assertIn("!DT_NODE_HAS_STATUS(DT_NODELABEL(i2c21), okay)", source)
+        self.assertIn("!DT_NODE_HAS_STATUS(DT_NODELABEL(i2c22), okay)", source)
+        self.assertNotIn("i2c_target_register", source)
+        self.assertNotIn("targetBuffer", source)
+        self.assertNotIn("CONFIG_I2C", configuration)
+        self.assertEqual(overlay.count('status = "disabled";'), 4)
+        self.assertNotIn("nordic,nrf-twis", overlay)
 
     def test_dut_serial1_failure_is_stage_specific(self) -> None:
         """! @brief Serial1 물리 실패가 route·echo·lifecycle 단계로 구분되게 고정합니다. """
@@ -436,6 +436,42 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
         self.assertIn('Serial.print(":wire-error=");', source)
         self.assertIn('Serial.print(":driver=");', source)
 
+    def test_dut_wire_is_exact_read_only_bq25186_contract(self) -> None:
+        """! @brief Wire HIL이 BQ25186 MASK_ID만 읽고 exact 0x41을 요구하게 고정합니다. """
+
+        source = (
+            MODULE.REPOSITORY
+            / "tests"
+            / "zephyr"
+            / "ac02b_hil_dut"
+            / "src"
+            / "main.cpp"
+        ).read_text(encoding="utf-8")
+        self.assertIn("constexpr std::uint8_t pmic_address = 0x6AU;", source)
+        self.assertIn(
+            "constexpr std::uint8_t pmic_mask_id_register = 0x0CU;", source
+        )
+        self.assertIn(
+            "constexpr std::uint8_t pmic_mask_id_expected = 0x41U;", source
+        )
+        self.assertIn("Wire.beginTransmission(pmic_address);", source)
+        self.assertIn("Wire.setPins(PIN_P1_02, PIN_P1_03)", source)
+        self.assertIn("Wire.setPins(PIN_P1_10, PIN_P1_14)", source)
+        self.assertEqual(source.count("Wire.write("), 1)
+        self.assertIn("Wire.write(pmic_mask_id_register)", source)
+        self.assertIn("Wire.endTransmission(false)", source)
+        self.assertIn("Wire.requestFrom(pmic_address, 1U, true)", source)
+        self.assertIn("mask_id != static_cast<int>(pmic_mask_id_expected)", source)
+
+        for expected, invalid_value in (
+            (b"address=0x6A", b"address=0x52"),
+            (b"register=0x0C", b"register=0x0D"),
+            (b"value=0x41", b"value=0x01"),
+        ):
+            invalid = valid_dut_transcript().replace(expected, invalid_value, 1)
+            with self.assertRaises(MODULE.BlePairHilFailure):
+                MODULE.parse_dut_transcript(invalid, NONCE)
+
     def test_dut_wire_failure_is_stage_specific(self) -> None:
         """! @brief Wire 물리 실패가 route·restart·read 단계로 구분되게 고정합니다. """
 
@@ -452,10 +488,11 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
             "wire-begin",
             "wire-active-route",
             "wire-clock",
-            "wire-write",
+            "wire-register-write",
             "wire-pending-restart",
             "wire-request",
-            "wire-read",
+            "wire-read-count",
+            "wire-mask-id",
             "wire-final-state",
             "wire-end",
         ):

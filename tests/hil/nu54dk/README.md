@@ -14,7 +14,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m15_auto.py` | identity·uptime·GRTC callback·Settings·WDT 비-System-OFF 자동 검증 | 공식 Ubuntu CI artifact, NU54DK, CMSIS-DAP V2 UART |
 | `m15_system_off.py` | SWD 격리 뒤 timed GRTC→사용자 SW0 System OFF 결합 검증 | 공식 Ubuntu CI artifact, NU54DK, CMSIS-DAP V2 UART, debug-control SW1, 사용자 SW0 |
 | `ac01_gpio_hil.py` | P2 loopback GPIO·pulse·shift와 SW0 자기구동 level IRQ·callback mask 자동 검증 | NU54DK 한 대, 같은 보드 P2.5↔P2.6 점퍼 한 가닥, CMSIS-DAP V2 UART |
-| `ac02b_peripheral.py` | 동적 Serial1·Wire·SPI·PWM·ADC pair HIL과 exact 증적 생성 | NU54DK 두 대, 아래 8개 점퍼, 각 보드 USB/DAPLink UART |
+| `ac02b_peripheral.py` | 동적 Serial1·Wire·SPI·PWM·ADC pair HIL과 exact 증적 생성 | NU54DK 두 대, 아래 4개 점퍼, 각 보드 USB/DAPLink UART |
 | `m19_ble_gap.py` | GAP UUID/manufacturer filter·연결·재연결 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
 | `m20_ble_gatt.py` | 범용 GATT read/write/notify/indicate·재발견 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
 | `m21_ble_security.py` | pairing·bond 복원/삭제/repair와 BAS/DIS/HID protocol 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
@@ -194,9 +194,9 @@ $Commit = git -C $CoreRoot rev-parse HEAD
 
 AC-02B는 Board A를 Arduino Core DUT, Board B를 direct Zephyr peer로 사용합니다. DUT는 공개
 production API인 `Serial1.setPins()`, `Wire.setPins()`, `SPI.setPins()`,
-`analogWriteFrequency()`, `analogWrite()`와 `analogRead()`를 직접 호출합니다. peer는 Arduino
-Wire target을 가장하지 않고 별도 serial21을 `nordic,nrf-twis` target으로 전환합니다. 따라서
-현재 미지원인 Wire target/Wire1을 PASS로 확대하지 않습니다.
+`analogWriteFrequency()`, `analogWrite()`와 `analogRead()`를 직접 호출합니다. Wire는 Board A의
+온보드 BQ25186 `MASK_ID`를 읽기 전용으로 검증하고 peer의 I2C controller와 target은 모두
+비활성화합니다. 따라서 현재 미지원인 Wire target/Wire1을 PASS로 확대하지 않습니다.
 
 두 보드의 전원을 끈 상태에서 다음 점퍼를 모두 연결합니다. Board A의 SPI loopback 한 가닥을
 제외한 나머지는 두 보드 사이 연결입니다.
@@ -204,18 +204,17 @@ Wire target을 가장하지 않고 별도 serial21을 `nordic,nrf-twis` target�
 | 번호 | Board A(DUT) | 방향 | Board B(peer) | 검증 |
 | --- | --- | --- | --- | --- |
 | 1 | GND | ↔ | GND | 공통 기준 전압 |
-| 2 | P0.0 / Serial1 TX | → | P0.1 / uart30 RX | Serial1 A→B |
-| 3 | P0.1 / Serial1 RX | ← | P0.0 / uart30 TX | Serial1 B→A |
-| 4 | P1.2 / Wire SDA | ↔ | P1.2 / TWIS21 SDA | I2C data |
-| 5 | P1.3 / Wire SCL | ↔ | P1.3 / TWIS21 SCL | I2C clock |
-| 6 | P1.10 / PWM20 | → | P1.14 / GPIO capture | 1 kHz 25%·75% edge capture |
-| 7 | P1.12 / A0 | ← | P2.5 / GPIO output | 12-bit ADC LOW·HIGH |
-| 8 | P2.2 / SPI00 MOSI | ↔ 같은 Board A의 P2.4 / SPI00 MISO | 해당 없음 | 4 MHz 40-byte local loopback |
+| 2 | P1.10 / PWM20 | → | P1.14 / GPIO capture | 1 kHz 25%·75% edge capture |
+| 3 | P1.12 / A0 | ← | P2.5 / GPIO output | 12-bit ADC LOW·HIGH |
+| 4 | P2.2 / SPI00 MOSI | ↔ 같은 Board A의 P2.4 / SPI00 MISO | 해당 없음 | 4 MHz 40-byte local loopback |
 
-외부 I2C pull-up은 요구하지 않습니다. 두 보드의 기본 회로 pull-up을 사용하며 시험 target
-주소는 `0x52`입니다. BQ25186 PMIC 주소 `0x6A`에는 접근하지 않으므로 두 보드 PMIC가 같은
-bus에 있어도 이 시험의 요청 대상이 아닙니다. DUT P1.10은 Board A의 LED1에도 연결되어
-있으므로 PWM 단계에서 LED 밝기가 바뀔 수 있습니다.
+Serial1은 Board A CMSIS-DAP의 x.1 보조 VCOM을 host가 exact echo하므로 보드 간 P0 배선이
+필요하지 않습니다. Wire는 Board A 내부 P1.2/P1.3 bus의 BQ25186 주소 `0x6A`, register
+`0x0C`를 100/400 kHz에서 no-STOP pointer write와 repeated-start 1-byte read로 읽고, 각
+round에서 exact `0x41`을 요구합니다. PMIC data register는 쓰지 않습니다. 보드 간 I2C
+배선과 외부 pull-up도 필요하지 않습니다. 첫 I2C transaction으로 BQ25186 기본 watchdog이
+시작될 수 있습니다. DUT P1.10은 Board A의 LED1에도 연결되어 있으므로 PWM 단계에서 LED
+밝기가 바뀔 수 있습니다.
 
 배선 전에는 두 role image와 host parser까지만 준비합니다. NCS v3.4.0 Toolchain terminal에서
 다음 두 production target을 각각 pristine build합니다.
@@ -263,7 +262,7 @@ $PeerHex = "$PeerBuild\ac02b_hil_peer\zephyr\zephyr.hex"
   --expected-core-revision $Commit
 ```
 
-점퍼 8개와 두 보드 USB를 확인한 마지막 단계에서만 다음 실제 실행을 허용합니다.
+점퍼 4개와 두 보드 USB를 확인한 마지막 단계에서만 다음 실제 실행을 허용합니다.
 
 ```powershell
 & $Python -I "$CoreRoot\tests\hil\nu54dk\ac02b_peripheral.py" `
@@ -275,8 +274,8 @@ $PeerHex = "$PeerBuild\ac02b_hil_peer\zephyr\zephyr.hex"
   --evidence "$CoreRoot\build\ac02b\hil\ac02b-peripheral.evidence.json"
 ```
 
-host는 같은 128-bit nonce를 먼저 peer에 주입해 TWIS target과 capture를 arm한 뒤 DUT를
-시작합니다. Serial1 end/rebegin 두 cycle, Wire 100/400 kHz repeated-start 두 cycle, SPI
+host는 같은 128-bit nonce를 먼저 peer에 주입해 PWM/ADC fixture를 arm한 뒤 DUT를 시작합니다.
+Serial1 end/rebegin 두 cycle, BQ25186 Wire 100/400 kHz repeated-start 두 cycle, SPI
 interrupt mask와 4 MHz loopback, PWM 외부 edge capture, ADC 외부 LOW/HIGH가 양쪽 exact token
 순서로 모두 끝나야만 `status: passed` evidence를 만듭니다. timeout, stale nonce, role image
 오배치, 한쪽 FAIL, token 누락·재배치 또는 ADC 범위 불일치는 PASS로 축소하지 않습니다.
