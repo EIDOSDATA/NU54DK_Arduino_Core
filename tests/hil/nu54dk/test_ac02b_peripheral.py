@@ -373,6 +373,25 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
         self.assertIn('status = "disabled";', overlay)
         self.assertIn("/delete-property/ pinctrl-0;", overlay)
 
+    def test_peer_prepares_twis_read_before_write_done(self) -> None:
+        """! @brief repeated-start의 READ_REQ/WRITE_DONE 순서에 의존하지 않게 고정합니다. """
+
+        source = (
+            MODULE.REPOSITORY
+            / "tests"
+            / "zephyr"
+            / "ac02b_hil_peer"
+            / "src"
+            / "main.cpp"
+        ).read_text(encoding="utf-8")
+        callback = source.split("int targetBufferReadRequested", maxsplit=1)[1].split(
+            "/** @brief P1.14", maxsplit=1
+        )[0]
+        self.assertIn("*data = i2c_response_payload;", callback)
+        self.assertIn("*size = sizeof(i2c_response_payload);", callback)
+        self.assertNotIn("i2c_valid_write_count", callback)
+        self.assertIn("targetBufferWriteReceived() 및 최종 판정에서 검증", source)
+
     def test_dut_serial1_failure_is_stage_specific(self) -> None:
         """! @brief Serial1 물리 실패가 route·echo·lifecycle 단계로 구분되게 고정합니다. """
 

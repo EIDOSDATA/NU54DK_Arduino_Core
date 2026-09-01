@@ -275,13 +275,19 @@ namespace
 		}
 	}
 
-	/** @brief TWIS repeated-start read에 nonce 변환 buffer를 제공합니다. */
+	/**
+	 * @brief TWIS repeated-start read에 nonce 변환 buffer를 제공합니다.
+	 *
+	 * Nordic TWIS는 write 뒤 STOP 없이 read로 전환할 때 READ_REQ를
+	 * WRITE_DONE보다 먼저 전달할 수 있습니다. 응답은 host nonce로 미리
+	 * 계산되어 있으므로 여기서는 read buffer를 즉시 제공하고, 실제 write의
+	 * 길이와 payload는 targetBufferWriteReceived() 및 최종 판정에서 검증합니다.
+	 */
 	int targetBufferReadRequested(struct i2c_target_config *, std::uint8_t **data,
 								  std::uint32_t *size)
 	{
 		if ((data == nullptr) || (size == nullptr) ||
-			(atomic_get(&i2c_invalid) != 0) ||
-			(atomic_get(&i2c_valid_write_count) == 0))
+			(atomic_get(&i2c_invalid) != 0))
 		{
 			return -EIO;
 		}
