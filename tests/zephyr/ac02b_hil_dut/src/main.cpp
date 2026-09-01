@@ -54,6 +54,9 @@ namespace
 	/** @brief 단발 실행이 끝났는지 나타냅니다. */
 	bool execution_finished = false;
 
+	/** @brief Serial1 실패의 가장 구체적인 단계를 보존합니다. */
+	const char *serial1_failure_stage = "serial1-unknown";
+
 	/** @brief SPI interrupt mask fixture용 callback입니다. 실제 edge는 만들지 않습니다. */
 	void spiMaskFixtureCallback(void)
 	{
@@ -182,6 +185,7 @@ namespace
 	{
 		if (!Serial1.setPins(PIN_P0_01, PIN_P0_00))
 		{
+			serial1_failure_stage = "serial1-set-pins";
 			return false;
 		}
 		for (unsigned int cycle = 0U; cycle < 2U; ++cycle)
@@ -190,10 +194,12 @@ namespace
 			if (!Serial1 ||
 				(nucode::arduino::internal::lastSerial1Error() != SerialError::none))
 			{
+				serial1_failure_stage = "serial1-begin";
 				return false;
 			}
 			if (Serial1.setPins(PIN_P0_01, PIN_P0_00))
 			{
+				serial1_failure_stage = "serial1-active-route";
 				return false;
 			}
 
@@ -202,6 +208,7 @@ namespace
 									   active_nonce, cycle);
 			if ((count <= 0) || (static_cast<std::size_t>(count) >= sizeof(frame)))
 			{
+				serial1_failure_stage = "serial1-frame";
 				return false;
 			}
 			Serial1.println(frame);
@@ -214,15 +221,18 @@ namespace
 				(static_cast<std::size_t>(expected_count) >= sizeof(expected)) ||
 				!expectPeerLine(expected))
 			{
+				serial1_failure_stage = "serial1-echo";
 				return false;
 			}
 			Serial1.end();
 			if (nucode::arduino::internal::lastSerial1Error() != SerialError::none)
 			{
+				serial1_failure_stage = "serial1-end";
 				return false;
 			}
 			if ((cycle + 1U) < 2U && !Serial1.setPins(PIN_P0_01, PIN_P0_00))
 			{
+				serial1_failure_stage = "serial1-restage";
 				return false;
 			}
 		}
@@ -230,6 +240,7 @@ namespace
 		Serial1.begin(115200U, SERIAL_8N1);
 		if (!Serial1)
 		{
+			serial1_failure_stage = "serial1-final-begin";
 			return false;
 		}
 		Serial.print("NUCODE_AC02B_DUT:SERIAL1:PASS:baud=115200:cycles=2:bytes=64");
@@ -453,7 +464,7 @@ namespace
 	{
 		if (!testSerial1())
 		{
-			reportFailure("serial1");
+			reportFailure(serial1_failure_stage);
 			return false;
 		}
 		if (!testWire())

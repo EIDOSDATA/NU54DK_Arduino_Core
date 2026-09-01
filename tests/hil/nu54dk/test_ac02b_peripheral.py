@@ -220,6 +220,30 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
         self.assertNotIn("readUartLine(console_uart, command", source)
         self.assertNotIn("readUartLine(peer_uart, line", source)
 
+    def test_dut_serial1_failure_is_stage_specific(self) -> None:
+        """! @brief Serial1 물리 실패가 route·echo·lifecycle 단계로 구분되게 고정합니다. """
+
+        source = (
+            MODULE.REPOSITORY
+            / "tests"
+            / "zephyr"
+            / "ac02b_hil_dut"
+            / "src"
+            / "main.cpp"
+        ).read_text(encoding="utf-8")
+        for stage in (
+            "serial1-set-pins",
+            "serial1-begin",
+            "serial1-active-route",
+            "serial1-frame",
+            "serial1-echo",
+            "serial1-end",
+            "serial1-restage",
+            "serial1-final-begin",
+        ):
+            self.assertIn(stage, source)
+        self.assertIn("reportFailure(serial1_failure_stage)", source)
+
 
 if __name__ == "__main__":
     unittest.main()
