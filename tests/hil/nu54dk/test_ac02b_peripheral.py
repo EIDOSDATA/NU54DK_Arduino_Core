@@ -205,6 +205,18 @@ class Ac02bPeripheralParserTests(unittest.TestCase):
             self.assertIn("build_only: true", metadata)
             self.assertNotIn("harness: console", metadata)
 
+    def test_peer_host_console_uses_interrupt_rx(self) -> None:
+        """! @brief DAPLink host 입력이 검증된 interrupt RX 경로를 사용하게 고정합니다. """
+
+        peer_root = MODULE.REPOSITORY / "tests" / "zephyr" / "ac02b_hil_peer"
+        configuration = (peer_root / "prj.conf").read_text(encoding="utf-8")
+        source = (peer_root / "src" / "main.cpp").read_text(encoding="utf-8")
+        self.assertIn("CONFIG_UART_INTERRUPT_DRIVEN=y", configuration)
+        self.assertIn("uart_irq_callback_user_data_set", source)
+        self.assertIn("uart_irq_rx_enable(console_uart)", source)
+        self.assertIn("readConsoleLine(command", source)
+        self.assertNotIn("readUartLine(console_uart, command", source)
+
 
 if __name__ == "__main__":
     unittest.main()

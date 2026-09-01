@@ -63,6 +63,13 @@ namespace
 	/** @brief 현재 run과 결합한 nonce입니다. */
 	char active_nonce[nonce_length + 1U]{};
 
+	/** @brief DAPLink host RX byte를 보존하는 고정 queue입니다. */
+	K_MSGQ_DEFINE(host_rx_queue, sizeof(std::uint8_t), 128U,
+			  alignof(std::uint8_t));
+
+	/** @brief host RX queue overflow를 fail-closed로 보존합니다. */
+	atomic_t host_rx_overflow = ATOMIC_INIT(0);
+
 	/** @brief nonce에서 파생한 I2C expected write입니다. */
 	std::uint8_t expected_i2c_payload[16]{};
 
@@ -158,6 +165,81 @@ namespace
 		}
 		uart_poll_out(uart, '\r');
 		uart_poll_out(uart, '\n');
+	}
+
+	/** @brief console UART IRQ byte를 host RX queue로 옮깁니다. */
+	void consoleRxHandler(const struct device *uart, void *)
+	{
+		if (uart_irq_update(uart) == 0)
+		{
+			return;
+		}
+		while (uart_irq_rx_ready(uart) != 0)
+		{
+			std::uint8_t bytes[16]{};
+			const int received = uart_fifo_read(uart, bytes, sizeof(bytes));
+			if (received <= 0)
+			{
+				break;
+			}
+			for (int index = 0; index < received; ++index)
+			{
+				if (k_msgq_put(&host_rx_queue, &bytes[index], K_NO_WAIT) != 0)
+				{
+					atomic_set(&host_rx_overflow, 1);
+				}
+			}
+		}
+	}
+
+	/** @brief DAPLink host 입력을 interrupt 기반으로 시작합니다. */
+	[[nodiscard]] bool startConsoleRx(void)
+	{
+		k_msgq_purge(&host_rx_queue);
+		atomic_clear(&host_rx_overflow);
+		const int result = uart_irq_callback_user_data_set(
+			console_uart, consoleRxHandler, nullptr);
+		if (result < 0)
+		{
+			return false;
+		}
+		uart_irq_rx_enable(console_uart);
+		return true;
+	}
+
+	/** @brief interrupt queue에서 bounded host command 한 줄을 읽습니다. */
+	[[nodiscard]] bool readConsoleLine(char *output, std::size_t capacity,
+								  std::int64_t timeout_ms)
+	{
+		if ((output == nullptr) || (capacity < 2U))
+		{
+			return false;
+		}
+		const std::int64_t deadline = k_uptime_get() + timeout_ms;
+		std::size_t length = 0U;
+		while (k_uptime_get() < deadline)
+		{
+			std::uint8_t value = 0U;
+			if (k_msgq_get(&host_rx_queue, &value, K_MSEC(10)) != 0)
+			{
+				continue;
+			}
+			if (value == '\r')
+			{
+				continue;
+			}
+			if (value == '\n')
+			{
+				output[length] = '\0';
+				return length > 0U;
+			}
+			if ((length + 1U) >= capacity)
+			{
+				return false;
+			}
+			output[length++] = static_cast<char>(value);
+		}
+		return false;
 	}
 
 	/** @brief polling UART에서 bounded line을 읽습니다. */
@@ -494,7 +576,7 @@ namespace
 /** @brief host nonce를 받고 direct Zephyr peer를 단발 실행합니다. */
 int main(void)
 {
-	if (!device_is_ready(console_uart))
+	if (!device_is_ready(console_uart) || !startConsoleRx())
 	{
 		return 1;
 	}
@@ -503,8 +585,13 @@ int main(void)
 	char command[line_capacity]{};
 	while (true)
 	{
-		if (!readUartLine(console_uart, command, sizeof(command), 1000))
+		if (!readConsoleLine(command, sizeof(command), 1000))
 		{
+			if (atomic_get(&host_rx_overflow) != 0)
+			{
+				reportFailure("host-rx-overflow");
+				return 1;
+			}
 			continue;
 		}
 		constexpr char prefix[] = "NUCODE_AC02B_START:";
