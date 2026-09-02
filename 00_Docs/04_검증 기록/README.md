@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 성격 | 실행 당시의 revision, 환경, 명령과 결과를 보존하는 역사 증거 |
-| 완료 범위 | M1~M18, `v0.1.0`과 `v0.2.0` 정식 공개 / AC-01~AC-03 / M19~M21 / M22 RC2 공개 검증 |
-| 진행 범위 | `v0.3.0` stable 승격 대기 |
+| 완료 범위 | M1~M18, `v0.1.0`과 `v0.2.0` 정식 공개 / AC-01~AC-03 / M19~M21 / M22 RC3 고정 gate·29/29 설치본 compile |
+| 진행 범위 | `v0.3.0` stable package·공개 수명주기 인계 |
 | 현재 정식 버전 | `v0.2.0` |
 | 최종 갱신일 | 2026-09-02 |
 
@@ -57,6 +57,7 @@
 | AC-03 | exact `0b7f892`의 두 보드에서 EEPROM/LittleFS 영속성·손상 거부·복구·정리 PASS | [AC-03 기록](28_AC-03_Storage와_Library_호환성_기준선.md) |
 | M22 RC1 | fixed gate PASS 뒤 tagged clean-room 실행기 결함으로 formal 검증 중단; tag·자산 불변 보존 | [RC1 기록](29_M22_v0.3.0_rc1_통합_릴리스_기준선.md) |
 | M22 RC2 | 새 plan·4 gate, 29개 설치 예제·실제 Upload·public clean-room lifecycle와 cleanup PASS | [RC2 기록](30_M22_v0.3.0_rc2_통합_릴리스_기준선.md) |
+| M22 RC3 | 1,456 KiB memory contract, fixed gate·29/29 compile와 실제 Upload PASS; 사용자 reset 중단을 기록하고 stable lifecycle로 인계 | [RC3 검증·인계 기록](31_M22_v0.3.0_rc3_검증과_stable_인계.md) |
 
 ## 기록 해석 규칙
 

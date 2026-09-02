@@ -318,7 +318,7 @@ class M10PackagingTests(unittest.TestCase):
                 "0.3.0-rc.3",
             ),
         )
-        self.assertEqual(PACKAGE.STABLE_VERSIONS, ("0.1.0", "0.2.0"))
+        self.assertEqual(PACKAGE.STABLE_VERSIONS, ("0.1.0", "0.2.0", "0.3.0"))
         self.assertTrue(
             set(PACKAGE.FAILED_M10_PREVIEW_VERSIONS).issubset(
                 PACKAGE.WINDOWS_SAFE_VERSIONS
@@ -371,10 +371,11 @@ class M10PackagingTests(unittest.TestCase):
         stable_wrapper = (
             REPO_ROOT / "packaging" / "boards-manager" / "build-stable.ps1"
         ).read_text(encoding="utf-8")
-        self.assertIn("[ValidateSet('0.1.0', '0.2.0')]", stable_wrapper)
+        self.assertIn("[ValidateSet('0.1.0', '0.2.0', '0.3.0')]", stable_wrapper)
         self.assertIn('$Commit = "v$Version"', stable_wrapper)
         self.assertIn("nucode-nu54dk-zephyr-0.1.0.zip", stable_wrapper)
         self.assertIn("@('0.2.0', '0.1.0')", stable_wrapper)
+        self.assertIn("@('0.3.0', '0.2.0', '0.1.0')", stable_wrapper)
         self.assertNotIn("--update-index", stable_wrapper)
         self.assertEqual(
             PACKAGE.legal_review_status("0.2.0"),
@@ -382,6 +383,14 @@ class M10PackagingTests(unittest.TestCase):
         )
         self.assertEqual(PACKAGE.release_channel("0.2.0"), "stable")
         self.assertEqual(PACKAGE.release_tag("0.2.0"), "v0.2.0")
+        self.assertEqual(
+            PACKAGE.legal_review_status("0.3.0"),
+            "project-owner-approved-for-final-public-release",
+        )
+        self.assertEqual(PACKAGE.release_channel("0.3.0"), "stable")
+        self.assertEqual(PACKAGE.release_tag("0.3.0"), "v0.3.0")
+        self.assertNotIn("0.3.0", PACKAGE.STABLE_RELEASE_COMMITS)
+        self.assertNotIn("0.3.0", PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES)
         self.assertEqual(
             PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES["0.1.0"],
             {
@@ -400,7 +409,7 @@ class M10PackagingTests(unittest.TestCase):
     def test_11aaa_published_stable_index_archive_uses_exact_bytes(self) -> None:
         """! @brief 과거 stable은 최신 source 허용목록 대신 공개 byte identity로 검증합니다. """
 
-        for version in PACKAGE.STABLE_VERSIONS:
+        for version in PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES:
             with self.subTest(version=version):
                 archive = Path(self.temporary.name) / PACKAGE.archive_filename(version)
                 original = PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES[version]
@@ -446,7 +455,7 @@ class M10PackagingTests(unittest.TestCase):
     def test_11aa_stable_package_rejects_a_different_commit(self) -> None:
         """! @brief 공개 stable 이름으로 다른 source byte를 생성하지 못하게 합니다. """
 
-        for version in PACKAGE.STABLE_VERSIONS:
+        for version in PACKAGE.STABLE_RELEASE_COMMITS:
             with self.subTest(version=version), self.assertRaises(PACKAGE.PackageError):
                 PACKAGE.build_package(
                     REPO_ROOT,

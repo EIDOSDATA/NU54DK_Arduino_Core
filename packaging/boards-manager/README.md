@@ -1,9 +1,9 @@
-# NU54DK Boards Manager 패키징 — v0.2.0 stable
+# NU54DK Boards Manager 패키징 — v0.3.0 stable 공개 전 준비
 
 | 항목 | 내용 |
 | --- | --- |
 | 현재 정식 버전 | **v0.2.0 정식 공개 완료** |
-| 다음 개발 버전 | **v0.3.0** |
+| 다음 개발 버전 | **v0.3.0 stable 공개 전 인계** |
 | stable index | `package_nucode_nu54dk_index.json` |
 
 이 디렉터리의 도구는 작업 트리가 아니라 지정한 Git commit만 입력으로 사용한다. 상위
@@ -14,6 +14,10 @@
 
 공개된 `v0.1.0`과 `v0.2.0` ZIP, 부속 자산, Release와 stable index 항목은 **덮어쓰거나
 다시 만들지 않는다**. 공개 뒤 같은 버전 이름으로 다른 source를 포장하는 조합은 금지한다.
+
+`0.3.0`은 stable 패키지 생성 허용목록과 법률 승인 상태만 준비했다. 공개 commit·archive
+identity는 아직 고정하지 않았고 root stable index도 변경하지 않았다. 다른 Windows PC에서
+검증을 마친 뒤 exact public identity를 후속 commit에 기록한다.
 
 ```text
 --version <이미 공개한 stable> --commit <다른 commit>

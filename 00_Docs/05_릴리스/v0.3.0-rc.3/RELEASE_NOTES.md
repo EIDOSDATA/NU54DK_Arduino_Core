@@ -2,6 +2,11 @@
 
 > **Release Candidate 문서입니다.** 현재 production stable은 `v0.2.0`입니다.
 
+RC3 고정 host/package/Upload gate와 공개 설치본 29/29 compile은 통과했습니다. 공개 clean-room의
+Upload 단계는 사용자 reset 개입으로 중단됐고 같은 설치본의 즉시 재Upload는 성공했습니다.
+프로젝트 소유자는 전체 RC3 재실행을 면제하고 `v0.3.0` stable 공개 전 인계로 수용했습니다.
+세부 경계는 M22 RC3 검증 기록을 따릅니다.
+
 ## RC3 교정 목적
 
 RC1과 RC2는 향후 MCUboot/DFU를 예상해 boot 영역과 696 KiB application slot 두 개를

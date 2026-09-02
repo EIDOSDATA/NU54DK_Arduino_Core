@@ -8,7 +8,7 @@
 | 현재 정식 버전 | `v0.2.0` |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 지원 보드 | NU54DK / `nucode:zephyr:nu54dk` |
-| 현재 상태 | RC3 package·공개 검증 대상 |
+| 현재 상태 | 공개 검증 수용 / `v0.3.0` stable 인계 기준 |
 | 작성자 | Quantum / NUCODE |
 
 `v0.3.0-rc.3`는 RC2에서 발견한 RRAM 표시와 실제 linker 경계의 불일치를 교정하는 후보입니다.
@@ -38,8 +38,9 @@ dual-slot은 실제 update·rollback 기능과 함께 `v0.4.0` M24의 검증된 
 | Loader | 사용하지 않음 — Sketch를 포함한 전체 Zephyr image |
 | Upload 기본 경로 | 온보드 CMSIS-DAP V2 + pyOCD |
 
-RC3 exact Core commit, board package gitlink, tag, archive와 evidence는 공개 검증 뒤
-M22 RC3 검증 기록에 고정합니다. RC1·RC2 tag와 자산은 변경하거나 RC3 byte로 덮어쓰지 않습니다.
+RC3 exact Core commit, board package gitlink, tag, archive와 evidence는
+[M22 RC3 검증·stable 인계 기록](<../../04_검증 기록/31_M22_v0.3.0_rc3_검증과_stable_인계.md>)에
+고정했습니다. RC1·RC2 tag와 자산은 변경하거나 RC3 byte로 덮어쓰지 않습니다.
 
 ## RC3 기본 RRAM 계약
 

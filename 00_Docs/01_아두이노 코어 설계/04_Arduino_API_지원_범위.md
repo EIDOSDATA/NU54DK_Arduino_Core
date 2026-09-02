@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-API-001 |
-| 문서 개정 | 4.9 |
+| 문서 개정 | 5.0 |
 | 문서 상태 | `v0.2.0` 정식 공개 범위 + `v0.3.0` 개발 상태 |
 | 최종 갱신일 | 2026-09-02 |
-| 개발 상태 | **RC3 memory-contract 교정·공개 검증 준비** |
+| 개발 상태 | **RC3 수용 / v0.3.0 stable 공개 전 인계** |
 
 ## 1. 목적
 
@@ -49,10 +49,10 @@ runtime 지원으로 확대하지 않는다.
 bus instance 또는 검증 범위가 Arduino 생태계 전체보다 좁다는 뜻이다.
 
 `v0.3.0-rc.3` 후보는 public library 8개와 예제 29개를 가진다. Standard 22개와 BLE
-7개를 M22 package 목록으로 고정하며, RC2 설치본은 이 목록의 compile을 통과했다. 새 RC3는
-같은 API·예제 목록과 loaderless memory contract를 다시 검증한다. 이 수치는 정식 `v0.2.0`
+7개를 M22 package 목록으로 고정하며, RC3 공개 설치본은 이 목록의 29/29 compile을 통과했다.
+같은 API·예제 목록과 loaderless memory contract를 stable 사전 공개 source로 인계한다. 이 수치는 정식 `v0.2.0`
 archive의 library 4개·예제 14개 기록을 바꾸지
-않으며, RC2 검증 완료를 `v0.3.0` stable 지원으로 확대하지 않는다.
+않으며, `v0.3.0` tag·Release·stable index 공개 전에는 stable 지원으로 확대하지 않는다.
 
 ## 3. Runtime과 공통 API
 

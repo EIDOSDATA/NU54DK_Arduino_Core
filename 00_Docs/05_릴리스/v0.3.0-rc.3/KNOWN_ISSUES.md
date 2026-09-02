@@ -6,7 +6,8 @@
 
 - 현재 stable은 `v0.2.0`입니다. `v0.3.0-rc.3`는 production stable이 아닙니다.
 - RC1과 RC2의 tag·자산은 역사적으로 고정돼 있으며 RC3 byte로 교체하지 않습니다.
-- RC3의 PASS 범위는 새 exact source와 공개 archive를 대상으로 다시 확정해야 합니다.
+- RC3의 고정 gate와 공개 설치본 29/29 compile은 통과했습니다. clean-room Upload 중 사용자
+  reset으로 자동 lifecycle tail은 미실행이며 stable 공개 전 별도 lifecycle에서 판정합니다.
 - RC3 검증 완료도 자동으로 `v0.3.0` stable 공개를 뜻하지 않습니다.
 
 ## 2. Firmware, memory와 Upload

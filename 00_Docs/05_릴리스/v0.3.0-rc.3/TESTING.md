@@ -1,7 +1,7 @@
 # GitHub v0.3.0-rc.3 설치와 시험
 
-> `v0.3.0-rc.3`는 production stable이 아닌 Release Candidate입니다. RC3가 Public
-> Prerelease로 공개된 뒤 아래 per-tag index를 사용하십시오.
+> `v0.3.0-rc.3`는 production stable이 아닌 공개 Release Candidate입니다. 아래 불변
+> per-tag index를 사용하십시오.
 
 ## 1. GitHub RC 자산 확인
 

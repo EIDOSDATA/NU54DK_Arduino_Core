@@ -19,9 +19,9 @@ Sketch와 Arduino library를 nRF Connect SDK build graph에 통합해 ELF·HEX·
 | 사용자 환경 | Windows 10/11 x64, Arduino IDE 2.x |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 정식 완료 범위 | M0~M18 / `v0.2.0` 정식 공개 |
-| `v0.3.0` RC 상태 | **RC3 memory-contract 교정·공개 검증 준비** |
+| `v0.3.0` 상태 | **RC3 수용 완료 / stable 공개 전 인계 준비** |
 | RC 후보 | [`v0.3.0-rc.3`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.3.0-rc.3) — loaderless application과 실제 linker 범위를 일치시킨 교정 후보 |
-| 다음 작업 | RC3 package·공개 clean-room 검증 → 사용자 확인 → 별도 stable lifecycle → `v0.3.0` 승격 승인 |
+| 다음 작업 | 다른 Windows PC에서 stable package·수명주기 검증 → `v0.3.0` tag·Release·stable index 공개 |
 
 ## 빠른 시작
 
@@ -141,7 +141,7 @@ Arduino CLI에서 명시적 CMSIS-DAP UID를 사용할 때는 compile과 upload�
 | `LittleFS` | LittleFSPersistence |
 
 AC-03에서 `EEPROMPersistence`와 `LittleFSPersistence`를 추가했습니다. M22는 29개 설치 예제를
-고정 목록으로 열거하고 clean package와 public clean-room에서 전부 compile했습니다. 이 RC 수치는 공개 stable package의
+고정 목록으로 열거하고 clean package와 RC3 공개 clean-room에서 전부 compile했습니다. 이 RC 수치는 공개 stable package의
 예제 수를 바꾼다는 뜻이 아닙니다. 설치된 `v0.2.0` package는 계속 위의 14개를 제공합니다.
 
 ## v0.2.0 지원 범위

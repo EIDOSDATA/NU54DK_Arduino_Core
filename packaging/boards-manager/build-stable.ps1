@@ -6,7 +6,7 @@ NU54DK Boards Manager 정식 archive와 stable index를 생성합니다.
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet('0.1.0', '0.2.0')]
+    [ValidateSet('0.1.0', '0.2.0', '0.3.0')]
     [string]$Version,
 
     [string]$Commit = '',
@@ -35,12 +35,20 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 $IndexArguments = @($Version)
-if ($Version -eq '0.2.0') {
+if ($Version -in @('0.2.0', '0.3.0')) {
     $PriorArchive = Join-Path $OutputDirectory 'nucode-nu54dk-zephyr-0.1.0.zip'
     if (-not (Test-Path -LiteralPath $PriorArchive -PathType Leaf)) {
-        throw "v0.2.0 stable index에는 불변 v0.1.0 archive가 필요합니다: $PriorArchive"
+        throw "v$Version stable index에는 불변 v0.1.0 archive가 필요합니다: $PriorArchive"
     }
     $IndexArguments = @('0.2.0', '0.1.0')
+}
+
+if ($Version -eq '0.3.0') {
+    $PriorArchive = Join-Path $OutputDirectory 'nucode-nu54dk-zephyr-0.2.0.zip'
+    if (-not (Test-Path -LiteralPath $PriorArchive -PathType Leaf)) {
+        throw "v0.3.0 stable index에는 불변 v0.2.0 archive가 필요합니다: $PriorArchive"
+    }
+    $IndexArguments = @('0.3.0', '0.2.0', '0.1.0')
 }
 
 & $Python $Builder index `

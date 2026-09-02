@@ -7,8 +7,9 @@
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 최종 갱신일 | 2026-09-02 |
 
-신규 production 설치와 현재 정식 사용법은 **`v0.2.0` 문서**를 사용한다. 현재 시험 후보는
-loaderless memory contract를 교정한 `v0.3.0-rc.3`다. 공개 검증된 RC2와 그보다 오래된
+신규 production 설치와 현재 정식 사용법은 **`v0.2.0` 문서**를 사용한다. 다음 stable source는
+loaderless memory contract를 교정한 `v0.3.0-rc.3`를 수용해 `0.3.0` 공개 전 상태로 준비했다.
+공개 검증된 RC2와 그보다 오래된
 `v0.1.0`/RC 문서는 당시 artifact와 migration 경계를 보존하는 역사 자료다.
 
 RC3는 RC2의 boot 예약·696 KiB dual-slot 표시와 실제 loaderless linker 경계 불일치를 새
@@ -26,11 +27,16 @@ Settings/ZMS의 끝단 주소는 유지한다. Stable `v0.2.0`과 stable index�
 | 알려진 제약·제외 범위 | [RC3 Known issues](v0.3.0-rc.3/KNOWN_ISSUES.md) |
 | 설치·build·memory·storage·BLE 진단 | [RC3 Troubleshooting](v0.3.0-rc.3/TROUBLESHOOTING.md) |
 
-RC3가 Public Prerelease로 공개된 뒤 다음 고정 URL을 사용한다.
+RC3 시험에는 다음 고정 URL을 사용한다.
 
 ```text
 https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.3/package_nucode_nu54dk_rc_index.json
 ```
+
+## v0.3.0 stable 공개 전 인계
+
+`v0.3.0` tag·Release·stable index는 아직 공개하지 않았다. 다른 Windows PC에서 수행할 stable
+package·수명주기 검증과 공개 순서는 [v0.3.0 인계 문서](v0.3.0/README.md)를 따른다.
 
 ### 보존된 v0.3.0-rc.2
 
