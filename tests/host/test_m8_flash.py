@@ -281,8 +281,10 @@ class M8FlashContractTests(unittest.TestCase):
             tools, self.zephyr_build, "pyocd", "ABC123"
         )]
         self.assertIn("--no-rebuild", command)
+        self.assertIn("--dt-flash=n", command)
         self.assertIn("--tool-opt=-Osmart_flash=false", command)
-        self.assertEqual(command[-3:-1], ["--dev-id", "ABC123"])
+        probe_index = command.index("--dev-id")
+        self.assertEqual(command[probe_index : probe_index + 2], ["--dev-id", "ABC123"])
         self.assertNotIn("--erase", command)
         self.assertNotIn("--recover", command)
 

@@ -719,6 +719,7 @@ def validate_pyocd_flash_log(
         "runner=pyocd",
         f"hex={expected_hex_path.resolve().as_posix()}",
         f"hex_sha256={expected_hex_sha256}",
+        "dt_flash=false",
         "smart_flash=false",
         "mass_erase_requested=false",
         "recover_requested=false",
@@ -751,6 +752,7 @@ def validate_pyocd_flash_log(
         tokens.count("flash") != 1
         or runner_pairs != 1
         or tokens.count("--no-rebuild") != 1
+        or tokens.count("--dt-flash=n") != 1
         or tokens.count("--tool-opt=-Osmart_flash=false") != 1
         or len(probe_options) != 1
         or probe_options[0] + 1 >= len(tokens)
@@ -764,6 +766,7 @@ def validate_pyocd_flash_log(
     return {
         "runner": "pyocd",
         "attempts": 1,
+        "dt_flash": False,
         "smart_flash": False,
         "mass_erase_requested": False,
         "recover_requested": False,

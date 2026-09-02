@@ -69,6 +69,8 @@ RC3의 정상 maximum Sketch size는 `1490944` byte입니다. 712,704 byte는 RC
 - Probe가 둘 이상이면 `CMSIS-DAP with UID (pyOCD)`와 정확한 UID를 사용합니다.
 - Compile과 Upload에 같은 Board, Feature set과 probe 설정을 사용합니다.
 - 다른 프로그램이 CMSIS-DAP 또는 VCOM을 점유하지 않는지 확인합니다.
+- `KeyError: 'CONFIG_FLASH_LOAD_OFFSET'`가 보이면 설치 version이 RC3인지 확인합니다. RC3의
+  pyOCD upload는 절대 주소 HEX를 사용하고 Devicetree offset 재계산을 비활성화합니다.
 - 일반 실패 뒤 mass erase 또는 recover를 자동 복구 절차로 사용하지 않습니다.
 
 ## 7. Serial 또는 Serial1 출력이 없음

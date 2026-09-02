@@ -357,6 +357,7 @@ class M11RcHilTests(unittest.TestCase):
             "probe_id=fixture-probe\n"
             f"hex={hex_path.resolve().as_posix()}\n"
             f"hex_sha256={digest}\n"
+            "dt_flash=false\n"
             "smart_flash=false\n"
             "mass_erase_requested=false\n"
             "recover_requested=false\n"
@@ -364,7 +365,7 @@ class M11RcHilTests(unittest.TestCase):
             f"command=west flash -d {zephyr_build.resolve().as_posix()} "
             "-r pyocd "
             "--no-rebuild --dev-id fixture-probe "
-            "--tool-opt=-Osmart_flash=false\n"
+            "--dt-flash=n --tool-opt=-Osmart_flash=false\n"
         )
         log.write_text(safe, encoding="utf-8")
         result = MODULE.validate_pyocd_flash_log(log, digest, hex_path, zephyr_build)
@@ -477,13 +478,14 @@ class M11RcHilTests(unittest.TestCase):
                 "probe_id=fixture-probe\n"
                 f"hex={(build / 'm8_upload.ino.hex').resolve().as_posix()}\n"
                 f"hex_sha256={digest}\n"
+                "dt_flash=false\n"
                 "smart_flash=false\n"
                 "mass_erase_requested=false\n"
                 "recover_requested=false\n"
                 "exit_code=0\n"
                 f"command=west flash -d {zephyr_build.resolve().as_posix()} "
                 "-r pyocd --no-rebuild --dev-id fixture-probe "
-                "--tool-opt=-Osmart_flash=false\n",
+                "--dt-flash=n --tool-opt=-Osmart_flash=false\n",
                 encoding="utf-8",
             )
             return 0, "NU54_UPLOAD_PASS runner=pyocd probe=redacted", 0.2

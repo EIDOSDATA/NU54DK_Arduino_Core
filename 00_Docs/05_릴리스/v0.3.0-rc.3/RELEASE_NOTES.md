@@ -16,6 +16,8 @@ RC3는 이 불일치를 다음처럼 교정합니다.
 - 사용하지 않는 boot reservation과 slot 1을 기본 layout에서 제거
 - `CONFIG_USE_DT_CODE_PARTITION=y`로 Devicetree code partition을 linker 경계에 연결
 - Build Adapter가 generated DTS와 linker map의 origin/size 불일치를 fail-closed로 거부
+- 시작 주소가 0인 mapped partition에서도 pyOCD가 존재하지 않는 legacy
+  `CONFIG_FLASH_LOAD_OFFSET`을 조회하지 않도록 absolute-address HEX upload 경로를 고정
 - Arduino maximum Sketch size를 `1490944` byte로 일치
 
 공개 RC1/RC2 tag, archive와 당시 문서는 변경하지 않습니다. 이 변경은 같은 RC2 자산을

@@ -262,7 +262,8 @@ class M22CleanroomTests(unittest.TestCase):
         hex_path.write_bytes(b":00000001FF\n")
         log = self.run / "flash.log"
         command = (
-            f"west flash -r pyocd --no-rebuild --tool-opt=-Osmart_flash=false "
+            f"west flash -r pyocd --no-rebuild --dt-flash=n "
+            f"--tool-opt=-Osmart_flash=false "
             f"--dev-id {uid} -d build"
         )
         log.write_text(
@@ -271,6 +272,7 @@ class M22CleanroomTests(unittest.TestCase):
                 f"probe_id={uid}",
                 f"hex={hex_path.resolve().as_posix()}",
                 f"hex_sha256={MODULE.file_sha256(hex_path)}",
+                "dt_flash=false",
                 "smart_flash=false",
                 "mass_erase_requested=false",
                 "recover_requested=false",
