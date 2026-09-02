@@ -1,0 +1,7 @@
+/* M5 fixture marker: 최종 zephyr.dts에서 이 node와 값을 확인한다. */
+/ {
+  nucode_m5_fixture: nucode-m5-fixture {
+    fixture-value = <54>;
+    status = "okay";
+  };
+};

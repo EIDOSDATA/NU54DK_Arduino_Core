@@ -1,0 +1,40 @@
+/**
+ * @file app.overlay
+ * @brief M7 driver HIL을 NU54DK의 실제 SPI, A0와 PWM 역할에 연결합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <nucode/nu54dk-arduino-connectors.dtsi>
+#include <nucode/nu54dk-arduino-pins.dtsi>
+
+/ {
+	chosen {
+		nucode,arduino-spi = &spi00;
+		nucode,arduino-adc = &m7_hil_adc_input;
+		nucode,arduino-pwm = &pwm_led1;
+	};
+
+	m7_hil_adc_input: arduino-adc-input {
+		compatible = "nucode,arduino-adc-input";
+		io-channels = <&adc 5>;
+	};
+};
+
+&spi00 {
+	status = "okay";
+	pinctrl-0 = <&spi00_default>;
+	pinctrl-1 = <&spi00_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+/** @brief 이 SPI 전용 HIL에서 드라이버를 빌드하지 않는 보드 기본 I2C 장치를 비활성화합니다. */
+&i2c22 {
+	status = "disabled";
+};
+
+&adc {
+	channel@5 {
+		zephyr,gain = "ADC_GAIN_1_4";
+	};
+};

@@ -1,0 +1,27 @@
+nu54dk.name=NU54DK (nRF54L15, Zephyr)
+nu54dk.build.board=NUCODE_NU54DK
+nu54dk.build.core=arduino
+nu54dk.build.variant=nu54dk
+nu54dk.build.mcu=nrf54l15
+nu54dk.build.f_cpu=128000000L
+nu54dk.build.zephyr_board=nrf54l15dk/nrf54l15/cpuapp/nu54dk
+nu54dk.build.sysbuild=false
+nu54dk.build.nu54_profile=standard
+nu54dk.build.extra_flags=-DARDUINO_NUCODE_NU54DK
+nu54dk.upload.maximum_size=1490944
+nu54dk.upload.maximum_data_size=262144
+nu54dk.upload.protocol=default
+nu54dk.upload.tool.default=nu54_pyocd
+
+menu.upload_probe=Upload probe
+menu.feature_set=Feature set
+nu54dk.menu.feature_set.standard=Standard peripherals
+nu54dk.menu.feature_set.standard.build.nu54_profile=standard
+nu54dk.menu.feature_set.ble=BLE NUS
+nu54dk.menu.feature_set.ble.build.nu54_profile=ble
+nu54dk.menu.upload_probe.pyocd=CMSIS-DAP (pyOCD)
+nu54dk.menu.upload_probe.pyocd.upload.tool.default=nu54_pyocd
+nu54dk.menu.upload_probe.pyocd_uid=CMSIS-DAP with UID (pyOCD)
+nu54dk.menu.upload_probe.pyocd_uid.upload.tool.default=nu54_pyocd_uid
+nu54dk.menu.upload_probe.jlink=SEGGER J-Link
+nu54dk.menu.upload_probe.jlink.upload.tool.default=nu54_jlink

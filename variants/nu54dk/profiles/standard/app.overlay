@@ -1,0 +1,12 @@
+/**
+ * @file app.overlay
+ * @brief NU54DK 표준 Arduino 주변장치 역할을 선택합니다.
+ * SPDX-License-Identifier: MIT
+ */
+#include <nucode/nu54dk-arduino-connectors.dtsi>
+#include <nucode/nu54dk-arduino-pins.dtsi>
+#include <nucode/nu54dk-arduino-runtime.dtsi>
+#include <nucode/nu54dk-arduino-storage.dtsi>
+
+/** @brief NFC 전용 P1.2/P1.3 패드를 Wire용 GPIO/TWIM으로 전환합니다. */
+&uicr { nfct-pins-as-gpios; };

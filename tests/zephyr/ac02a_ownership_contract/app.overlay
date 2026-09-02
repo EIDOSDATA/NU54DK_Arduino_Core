@@ -1,0 +1,2 @@
+/** @brief AC-02A/B ownership 시험용 canonical pin map입니다. */
+#include <nucode/nu54dk-arduino-pins.dtsi>

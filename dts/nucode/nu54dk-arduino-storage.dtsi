@@ -1,0 +1,34 @@
+/**
+ * @file nu54dk-arduino-storage.dtsi
+ * @brief NU54DK Arduino Core의 loaderless image 및 사용자 저장소 분할을 정의합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+&cpuapp_rram {
+	/delete-node/ partitions;
+
+	partitions {
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		/** @brief bootloader 없이 reset vector부터 저장소 직전까지 사용하는 기본 image입니다. */
+		slot0_partition: partition@0 {
+			compatible = "zephyr,mapped-partition";
+			label = "image-0";
+			reg = <0x000000 0x16c000>;
+		};
+
+		arduino_fs_partition: partition@16c000 {
+			compatible = "zephyr,mapped-partition";
+			label = "arduino-fs";
+			reg = <0x16c000 0x008000>;
+		};
+
+		storage_partition: partition@174000 {
+			compatible = "zephyr,mapped-partition";
+			label = "storage";
+			reg = <0x174000 0x009000>;
+		};
+	};
+};

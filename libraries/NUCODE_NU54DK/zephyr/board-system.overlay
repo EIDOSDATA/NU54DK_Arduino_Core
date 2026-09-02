@@ -1,0 +1,10 @@
+/**
+ * @file board-system.overlay
+ * @brief NU54DK board/system API가 소유하는 WDT31만 활성화합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+&wdt31 {
+	status = "okay";
+};

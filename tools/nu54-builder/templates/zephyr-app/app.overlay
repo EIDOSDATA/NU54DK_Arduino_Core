@@ -1,0 +1,10 @@
+/**
+ * @file app.overlay
+ * @brief NU54DK Arduino Builder의 최소 platform overlay입니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <nucode/nu54dk-lfxo-external-caps.dtsi>
+
+/** @note 주변장치 역할은 선택한 구성 profile overlay에서 제공합니다. */

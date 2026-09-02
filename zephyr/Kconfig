@@ -1,0 +1,336 @@
+menu "NUCODE Arduino Core"
+
+config NUCODE_ARDUINO_CORE
+	bool "NUCODE Arduino Core 런타임 활성화"
+	depends on CPP
+	depends on STD_CPP_VERSION >= 201703
+	help
+	  Loader 없이 하나의 Zephyr 애플리케이션 이미지에 Arduino 호환
+	  setup()/loop() 런타임을 링크합니다. 이 옵션은 기본적으로 비활성화되며,
+	  애플리케이션이 C++17 이상의 표준을 명시해야 합니다.
+
+	  setup()/loop() 런타임 자체는 동적 메모리를 할당하지 않습니다.
+	  ArduinoCore-API String을 활성화하면 별도로 제한된 common libc malloc
+	  arena를 사용합니다. 그 밖의 힙 크기는 최종 애플리케이션의 Kconfig가
+	  소유합니다. 예외와 RTTI의 기본 검증값은 비활성이지만 Core가
+	  구조적으로 금지하지 않습니다.
+
+if NUCODE_ARDUINO_CORE
+
+config NUCODE_ARDUINO_RUNTIME
+	bool "Arduino setup()/loop() 런타임 활성화"
+	default y
+	help
+	  Zephyr main entry에서 init(), initVariant(), setup()과 loop()를
+	  실행합니다. Core 구성요소를 ztest에서 독립 검증할 때만 비활성화합니다.
+
+config NUCODE_ARDUINO_API
+	bool "ArduinoCore-API 공통 구현 활성화"
+	default y
+	select COMMON_LIBC_MALLOC
+	select REQUIRES_FLOAT_PRINTF
+	help
+	  ArduinoCore-API 1.5.2의 Common, String, Print와 Stream 구현을
+	  Core image에 연결합니다. String은 libc malloc arena를 사용합니다.
+
+config NUCODE_ARDUINO_IO_OWNERSHIP
+	bool "물리 I/O 자원 소유권 관리자 활성화"
+	default y
+	help
+	  GPIO pad와 SERIAL/PWM/ADC 하드웨어 블록을 정규화된 키로 관리합니다.
+	  여러 자원을 reserve/commit/rollback하는 동안 충돌과 stale lease를
+	  검사하며 동적 메모리를 사용하지 않습니다. AC-02A에서는 현재 보드의
+	  고정 pinctrl 자원과 GPIO 획득 계약만 관리합니다.
+
+config NUCODE_ARDUINO_IO_RESOURCE_SLOTS
+	int "물리 I/O 자원 table slot 수"
+	default 48
+	range 16 128
+	depends on NUCODE_ARDUINO_IO_OWNERSHIP
+	help
+	  동시에 추적할 물리 pin과 peripheral block의 최대 개수입니다.
+
+config NUCODE_ARDUINO_GPIO
+	bool "Arduino digital GPIO API 활성화"
+	default y
+	select GPIO
+	select NUCODE_ARDUINO_IO_OWNERSHIP
+	help
+	  Variant의 Devicetree descriptor를 통해 pinMode(), digitalWrite()와
+	  digitalRead()를 제공합니다. 물리 GPIO controller와 pin 번호는 최종
+	  보드·Arduino profile Devicetree가 소유합니다.
+
+config NUCODE_ARDUINO_CONNECTOR_GPIO
+	bool "기존 NU54DK connector GPIO 구성과의 호환 표식"
+	default y
+	depends on NUCODE_ARDUINO_GPIO
+	help
+	  v0.2.x profile과 prj.conf 호환을 위해 이름을 유지합니다. 현재 canonical
+	  pin map은 이 값과 관계없이 P2.5와 P2.6을 Arduino digital pin으로
+	  노출합니다. 새 profile에서 두 핀을 숨기는 feature gate로 사용하지 마십시오.
+
+config NUCODE_ARDUINO_DAP_UART_GPIO_PINS
+	bool "SB5~SB8 DAP UART 조건부 P0.0~P0.3 GPIO 허용"
+	default n
+	depends on NUCODE_ARDUINO_GPIO
+	help
+	  NU54DK 회로의 SB5~SB8과 DAP level shifter/UART 연결 상태를 사용자가
+	  확인한 전용 profile에서만 P0.0~P0.3의 일반 digital GPIO capability를
+	  허용합니다. 비활성 상태에서도 Serial1/UART30 route metadata는 유지됩니다.
+
+config NUCODE_ARDUINO_LFXO_GPIO_PINS
+	bool "SB18~SB21 LFXO 조건부 P1.0/P1.1 GPIO 허용"
+	default n
+	depends on NUCODE_ARDUINO_GPIO
+	help
+	  SB18~SB21이 LFXO가 아니라 GPIO 조립 상태임을 사용자가 확인한 전용
+	  profile에서만 P1.0/P1.1의 digital GPIO capability를 허용합니다.
+	  기본 standard/ble profile은 fail-closed로 두 핀을 거부합니다.
+
+config NUCODE_ARDUINO_INTERRUPTS
+	bool "Arduino GPIO edge interrupt API 활성화"
+	default y
+	depends on NUCODE_ARDUINO_GPIO
+	help
+	  Variant가 interrupt capability를 부여한 input 핀에 RISING,
+	  FALLING, CHANGE와 one-shot/rearm 방식의 LOW/HIGH level callback을
+	  제공합니다. noInterrupts()/interrupts()는 Arduino GPIO callback만
+	  중첩 안전하게 mask하며 다른 Zephyr IRQ를 중지하지 않습니다.
+	  Callback은 GPIO ISR에서 직접 실행되므로 blocking API를 호출할 수
+	  없습니다.
+
+config NUCODE_ARDUINO_TIME
+	bool "Arduino 시간 API 활성화"
+	default y
+	depends on TIMER_HAS_64BIT_CYCLE_COUNTER
+	help
+	  Zephyr uptime과 64-bit hardware cycle counter를 사용해 millis(),
+	  micros(), delay(), delayMicroseconds()와 yield()를 제공합니다.
+
+config NUCODE_ARDUINO_SERIAL
+	bool "Zephyr console 기반 Arduino Serial 활성화"
+	default y
+	depends on NUCODE_ARDUINO_API
+	depends on SERIAL
+	select UART_INTERRUPT_DRIVEN
+	select UART_USE_RUNTIME_CONFIGURE
+	help
+	  zephyr,console chosen UART의 실제 설정을 읽어 검증하되 재설정하지
+	  않고 빌려 사용합니다. TX는 polling, RX는 interrupt와 고정 message
+	  queue를 사용합니다.
+
+config NUCODE_ARDUINO_SERIAL1
+	bool "uart30 기반 독립 Arduino Serial1 활성화"
+	default n
+	depends on NUCODE_ARDUINO_SERIAL
+	select NUCODE_ARDUINO_GPIO
+	select PM_DEVICE
+	select PM_DEVICE_RUNTIME
+	select PINCTRL
+	select PINCTRL_DYNAMIC
+	select PINCTRL_KEEP_SLEEP_STATE
+	help
+	  uart30의 RX/TX를 P0의 지원 핀으로 실행 중 재배치하는 Serial1을
+	  제공합니다. begin()/end()가 runtime PM, pinctrl과 GPIO ownership을
+	  함께 전환하며, 기본 console Serial만 필요한 구성에서는 끌 수 있습니다.
+
+config NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE
+	int "Arduino Serial RX queue byte 수"
+	default 128
+	range 16 1024
+	depends on NUCODE_ARDUINO_SERIAL
+	help
+	  queue가 가득 차면 새 RX byte를 버리고 내부 drop counter를
+	  증가시킵니다.
+
+config NUCODE_ARDUINO_WIRE
+	bool "Arduino Wire I2C controller 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	select I2C
+	select NUCODE_ARDUINO_GPIO
+	select PM_DEVICE
+	select PM_DEVICE_RUNTIME
+	select PINCTRL
+	select PINCTRL_DYNAMIC
+	select PINCTRL_KEEP_SLEEP_STATE
+	help
+	  nucode,arduino-wire chosen controller를 ArduinoCore-API HardwareI2C로
+	  노출합니다. controller mode, 100/400 kHz와 고정 TX/RX buffer만
+	  지원합니다.
+
+config NUCODE_ARDUINO_WIRE_BUFFER_SIZE
+	int "Arduino Wire TX/RX buffer byte 수"
+	default 32
+	range 16 512
+	depends on NUCODE_ARDUINO_WIRE
+	help
+	  TX와 RX에 각각 할당하는 고정 buffer 크기입니다. 동적 메모리는
+	  사용하지 않습니다.
+
+config NUCODE_ARDUINO_SPI
+	bool "Arduino SPI controller 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	select SPI
+	select NUCODE_ARDUINO_GPIO
+	select PM_DEVICE
+	select PM_DEVICE_RUNTIME
+	select PINCTRL
+	select PINCTRL_DYNAMIC
+	select PINCTRL_KEEP_SLEEP_STATE
+	help
+	  nucode,arduino-spi chosen controller를 CS 없는 HardwareSPI로
+	  노출합니다. 외부 target의 CS 역할은 Sketch가 직접 소유합니다.
+
+config NUCODE_ARDUINO_ADC
+	bool "Arduino AIN0~AIN7 ADC 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	select ADC
+	select NUCODE_ARDUINO_GPIO
+	help
+	  nucode,arduino-adc chosen io-channel을 AIN0~AIN7과 A0~A7에
+	  연결합니다. 시스템 전용 핀은 metadata와 channel이 존재하더라도
+	  ownership 충돌을 반환하며 임의로 빼앗지 않습니다.
+
+config NUCODE_ARDUINO_PWM
+	bool "Arduino 동적 PWM·tone backend 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	select PWM
+	select NUCODE_ARDUINO_GPIO
+	select PM_DEVICE
+	select PM_DEVICE_RUNTIME
+	select PINCTRL
+	select PINCTRL_DYNAMIC
+	select PINCTRL_KEEP_SLEEP_STATE
+	help
+	  PWM20은 analogWrite(), PWM21은 tone(), PWM22는 Servo가 독립적으로
+	  사용합니다. 지원 P1 출력 핀의 route와 GPIO ownership을 실행 중
+	  안전하게 전환하고, 실패하면 이전 상태를 복원합니다.
+
+config NUCODE_ARDUINO_SERVO
+	bool "Arduino Servo library용 PWM22 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	select NUCODE_ARDUINO_PWM
+	help
+	  Servo library가 PWM22의 네 channel을 사용하는 고정 메모리 backend를
+	  활성화합니다. 이 옵션은 Servo library의 feature 설정이 선택합니다.
+
+config NUCODE_BLE_NUS
+	bool "NUCODE BLE Nordic UART Service 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	depends on BT
+	help
+	  공식 NCS NUS service/client를 하나의 Arduino Stream으로 노출합니다.
+	  callback 데이터는 고정 queue를 거쳐 Sketch의 poll 문맥에서 전달됩니다.
+
+config NUCODE_BLE_CORE
+	bool "NUCODE BLE Core/GAP 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	depends on BT
+	help
+	  Bluetooth once-init, local name, legacy advertising, bounded scan과
+	  단일 connection lifecycle을 Arduino main-thread event로 노출합니다.
+
+config NUCODE_BLE_CORE_EVENT_QUEUE_SIZE
+	int "NUCODE BLE Core/GAP event queue 항목 수"
+	default 24
+	range 4 64
+	depends on NUCODE_BLE_CORE
+	help
+	  Bluetooth callback에서 BLEDevice.poll()로 전달할 작은 GAP event
+	  record의 고정 개수입니다.
+
+config NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE
+	int "NUCODE BLE scan result queue 항목 수"
+	default 8
+	range 2 32
+	depends on NUCODE_BLE_CORE
+	help
+	  callback 밖 수명을 보장하는 31-byte bounded scan 결과 개수입니다.
+
+config NUCODE_BLE_GATT
+	bool "NUCODE 범용 GATT server/client 활성화"
+	default n
+	depends on NUCODE_BLE_CORE
+	depends on BT_GATT_CLIENT
+	depends on BT_GATT_DYNAMIC_DB
+	help
+	  Bluetooth 시작 전 고정 schema 등록, cached server value와 한 번에
+	  하나의 bounded generic client operation을 제공합니다.
+
+config NUCODE_BLE_GATT_MAX_SERVICES
+	int "NUCODE GATT service 최대 수"
+	default 4
+	range 1 8
+	depends on NUCODE_BLE_GATT
+
+config NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE
+	int "service별 characteristic 최대 수"
+	default 8
+	range 1 8
+	depends on NUCODE_BLE_GATT
+
+config NUCODE_BLE_GATT_EVENT_QUEUE_SIZE
+	int "NUCODE GATT callback event queue 항목 수"
+	default 8
+	range 4 32
+	depends on NUCODE_BLE_GATT
+	help
+	  server write·CCC·전송 완료와 client payload를 최대 244 byte까지
+	  복사해 BLEDevice.poll()로 전달하는 고정 record 개수입니다.
+
+config NUCODE_BLE_RX_BUFFER_SIZE
+	int "NUCODE BLE NUS RX queue byte 수"
+	default 512
+	range 64 2048
+	depends on NUCODE_BLE_NUS
+	help
+	  NCS callback에서 수신 byte를 복사할 고정 queue 크기입니다.
+
+config NUCODE_BLE_EVENT_QUEUE_SIZE
+	int "NUCODE BLE event queue 항목 수"
+	default 16
+	range 4 64
+	depends on NUCODE_BLE_NUS
+	help
+	  poll에서 사용자 callback으로 전달할 고정 event queue 크기입니다.
+
+choice NUCODE_ARDUINO_LOOP_POLICY
+	prompt "Sketch loop 반환 후 Zephyr 공존 정책"
+	default NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK
+	help
+	  빠르게 반환하는 loop()가 낮은 priority thread와 idle 실행을 계속
+	  방해하지 않도록 Core가 각 반복 뒤 적용할 scheduler 정책을 선택합니다.
+
+config NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK
+	bool "한 kernel tick sleep"
+	help
+	  각 loop() 반환 뒤 현재 main thread를 한 kernel tick 동안 재웁니다.
+	  Zephyr 공존을 우선하는 기본 정책입니다.
+
+config NUCODE_ARDUINO_LOOP_YIELD
+	bool "같은 priority thread에 yield"
+	help
+	  각 loop() 반환 뒤 k_yield()를 호출합니다. 낮은 priority thread와
+	  idle의 실행은 보장하지 않습니다.
+
+config NUCODE_ARDUINO_LOOP_NONE
+	bool "Core scheduler 개입 없음"
+	help
+	  loop() 반환 뒤 즉시 다음 loop()를 호출합니다. 최대 반복률이 필요한
+	  application이 Zephyr 공존 책임을 직접 관리할 때 사용합니다.
+
+endchoice
+
+endif
+
+config COMMON_LIBC_MALLOC_ARENA_SIZE
+	default 8192 if NUCODE_ARDUINO_API
+
+endmenu

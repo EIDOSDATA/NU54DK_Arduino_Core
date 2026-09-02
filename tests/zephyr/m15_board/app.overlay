@@ -1,0 +1,18 @@
+/* SPDX-License-Identifier: MIT */
+
+#include <nucode/nu54dk-lfxo-external-caps.dtsi>
+
+/ {
+	chosen {
+		nucode,arduino-wire = &i2c22;
+	};
+};
+
+&wdt31 {
+	status = "okay";
+};
+
+&uicr {
+	nfct-pins-as-gpios;
+};
+#include <nucode/nu54dk-arduino-pins.dtsi>

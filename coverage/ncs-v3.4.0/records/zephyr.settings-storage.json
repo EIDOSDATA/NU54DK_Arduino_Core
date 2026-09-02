@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "id": "zephyr.settings-storage",
+  "title": "Zephyr settings and storage direct API",
+  "area": "settings-storage",
+  "route": "arduino-wrapper",
+  "status": "supported",
+  "profile": "standard",
+  "hardware": "none",
+  "source": {
+    "type": "zephyr",
+    "repository": "https://github.com/nrfconnect/sdk-zephyr",
+    "revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "path": "samples/subsys/settings",
+    "license": "Apache-2.0"
+  },
+  "validation": {
+    "kind": "hil",
+    "state": "pass",
+    "evidence": [
+      "00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md"
+    ]
+  },
+  "notes": [
+    "M15 SettingsStorage wrapper와 reset persistence HIL 통과 결과를 지원 근거로 사용한다."
+  ]
+}

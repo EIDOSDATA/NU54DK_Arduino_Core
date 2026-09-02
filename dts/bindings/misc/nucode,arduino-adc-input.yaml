@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: MIT
+
+description: NU54DK Arduino analog 입력 역할 보관 노드
+
+compatible: "nucode,arduino-adc-input"
+
+include: base.yaml
+
+properties:
+  io-channels:
+    type: phandle-array
+    required: true
+    description: Arduino analog 입력 역할에 연결할 ADC channel

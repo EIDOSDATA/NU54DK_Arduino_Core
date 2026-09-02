@@ -1,0 +1,41 @@
+component:
+  name: ArduinoCore-API
+  version: 1.5.2
+  upstream: https://github.com/arduino/ArduinoCore-API.git
+  commit: cd91833d90b4fe50e428021ba5051e2b7ceafc84
+  tag: 1.5.2
+  api_version: 10502
+
+vendor:
+  path: third_party/ArduinoCore-API
+  included_paths:
+    - LICENSE
+    - README.md
+    - api/**
+  file_count: 48
+  line_endings: LF
+  local_modifications: none
+  update_policy: explicit-review-only
+
+upstream_trees:
+  repository: e3ee9af96182bc45187a579f8b4c5050e59ccc2d
+  api: e1223bd76ddcb72801f3a6509e4bcb5ca311294c
+
+checksums:
+  algorithm: SHA-256
+  license: 5749785c8bdefafcb5d798270ed0a967036fe2ca63dcedade1627565dfef81d2
+  readme: 2d9812d0e1ee222c73ba39ff959bb5e933b60c7b7b5b85b0ccc5d1ada97fd7a5
+  api_arduino_api_h: 421b66ccbbf038cef50df9860f7da13a6b4e92358b0550e52202b0aaabfc84ec
+  vendored_file_manifest: 2536845d333cbd9fb84cbb16cb5d80c8cd9cf2eaa4918f95902f9e34050d4e1e
+  vendored_file_manifest_format: "UTF-8 bytewise sorted forward-slash path:sha256 records, LF, trailing LF"
+
+license:
+  expression: LGPL-2.1-or-later AND MIT
+  LGPL-2.1-or-later:
+    scope: api files except the separately listed MIT compatibility headers
+  MIT:
+    files:
+      - api/Udp.h
+      - api/deprecated-avr-comp/avr/pgmspace.h
+  source: third_party/ArduinoCore-API/LICENSE
+  notice: third_party/THIRD_PARTY_NOTICES.md

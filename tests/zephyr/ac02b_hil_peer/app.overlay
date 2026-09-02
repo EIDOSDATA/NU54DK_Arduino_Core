@@ -1,0 +1,29 @@
+/**
+ * @file app.overlay
+ * @brief AC-02B peer의 I2C를 격리하고 P2.5 시간 다중 GPIO만 사용합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+/** @brief 기존 P0 교차선이 남아 있어도 peer가 P0.0/P0.1을 구동하지 않게 합니다. */
+&uart30 {
+	/delete-property/ pinctrl-0;
+	/delete-property/ pinctrl-1;
+	/delete-property/ pinctrl-names;
+	status = "disabled";
+};
+
+/** @brief peer의 I2C target을 완전히 비활성화합니다. */
+&i2c21 {
+	status = "disabled";
+};
+
+/** @brief peer의 I2C controller도 비활성화하여 P1.2/P1.3을 구동하지 않습니다. */
+&i2c22 {
+	status = "disabled";
+};
+
+/** @brief peer는 PWM을 출력하지 않고 P2.5 GPIO edge만 capture합니다. */
+&pwm20 {
+	status = "disabled";
+};

@@ -1,0 +1,15 @@
+tests:
+  nucode.m16.ble_contract:
+    tags:
+      - nucode
+      - arduino
+      - m16
+      - bluetooth
+      - nus
+    build_only: true
+    sysbuild: false
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+

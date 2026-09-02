@@ -1,0 +1,29 @@
+tests:
+  nucode.m20.ble_gatt_hil_peripheral:
+    tags:
+      - nucode
+      - arduino
+      - m20
+      - bluetooth
+      - hil
+    build_only: true
+    extra_args:
+      - M20_ROLE=peripheral
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+  nucode.m20.ble_gatt_hil_central:
+    tags:
+      - nucode
+      - arduino
+      - m20
+      - bluetooth
+      - hil
+    build_only: true
+    extra_args:
+      - M20_ROLE=central
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk

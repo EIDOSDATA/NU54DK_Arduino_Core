@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "id": "nucode.ble.security",
+  "requires": ["ble"],
+  "conf": ["ble-security.conf"],
+  "overlays": [],
+  "conflicts": [],
+  "compatible_profiles": ["ble"]
+}

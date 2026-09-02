@@ -1,0 +1,13 @@
+/*
+ * SPDX-License-Identifier: MIT
+ */
+
+/ {
+	test_gpio: test_gpio {
+		compatible = "zephyr,gpio-emul";
+		status = "okay";
+		gpio-controller;
+		#gpio-cells = <2>;
+		ngpios = <8>;
+	};
+};

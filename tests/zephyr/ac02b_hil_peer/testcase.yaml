@@ -1,0 +1,11 @@
+tests:
+  nucode.ac02b.hil_peer:
+    tags:
+      - zephyr
+      - hil
+      - ac02b
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    build_only: true

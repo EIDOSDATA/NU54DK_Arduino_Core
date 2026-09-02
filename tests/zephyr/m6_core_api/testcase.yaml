@@ -1,0 +1,15 @@
+tests:
+  nucode.m6.core_api:
+    tags:
+      - nucode
+      - arduino
+      - m6
+      - api
+      - serial
+      - interrupt
+    harness: ztest
+    sysbuild: false
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk

@@ -1,0 +1,38 @@
+# SPDX-License-Identifier: MIT
+
+description: NU54DK Arduino canonical physical pin map
+
+compatible: "nucode,arduino-pin-map"
+
+include: base.yaml
+
+child-binding:
+  properties:
+    gpios:
+      type: phandle-array
+      required: true
+      description: Canonical Arduino physical GPIO pad
+
+    nucode,capability-mask:
+      type: int
+      required: true
+      description: Electrical and Arduino API capability bit mask
+
+    nucode,policy:
+      type: int
+      required: true
+      description: Fail-closed board access policy
+
+    nucode,ownership:
+      type: int
+      required: true
+      description: Boot-time board role owner
+
+    nucode,route-mask:
+      type: int
+      required: true
+      description: Board and SoC route metadata bit mask
+
+    nucode,analog-channel:
+      type: int
+      description: SAADC AIN channel number when physically available

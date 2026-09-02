@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "id": "nucode.servo",
+  "requires": [],
+  "conf": ["servo.conf"],
+  "overlays": [],
+  "conflicts": [],
+  "compatible_profiles": ["standard", "ble"]
+}

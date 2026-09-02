@@ -1,0 +1,29 @@
+tests:
+  nucode.m19.ble_gap_hil_peripheral:
+    tags:
+      - nucode
+      - arduino
+      - m19
+      - bluetooth
+      - hil
+    build_only: true
+    extra_args:
+      - M19_ROLE=peripheral
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+  nucode.m19.ble_gap_hil_central:
+    tags:
+      - nucode
+      - arduino
+      - m19
+      - bluetooth
+      - hil
+    build_only: true
+    extra_args:
+      - M19_ROLE=central
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk

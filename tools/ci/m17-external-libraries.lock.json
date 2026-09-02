@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "libraries": [
+    {
+      "name": "Adafruit LSM6DS",
+      "directory": "Adafruit_LSM6DS",
+      "version": "4.7.4",
+      "tag": "4.7.4",
+      "commit": "379a5204c0bad71264c3d635de84d0f9679ab784",
+      "license": "BSD-3-Clause",
+      "url": "https://github.com/adafruit/Adafruit_LSM6DS/archive/refs/tags/4.7.4.zip",
+      "sha256": "098107002a2ff47fe2f4c4bc79f398f42a47bee253eebe3395924887557486a9"
+    },
+    {
+      "name": "Adafruit BusIO",
+      "directory": "Adafruit_BusIO",
+      "version": "1.17.4",
+      "tag": "1.17.4",
+      "commit": "3b8364267c3ee6e16bad91bc2101aefbd5b5915f",
+      "license": "MIT",
+      "url": "https://github.com/adafruit/Adafruit_BusIO/archive/refs/tags/1.17.4.zip",
+      "sha256": "e29b45a03874be4c054b04421073675efef5a950b2577b363cff8f17e90db26c"
+    },
+    {
+      "name": "Adafruit Unified Sensor",
+      "directory": "Adafruit_Unified_Sensor",
+      "version": "1.1.15",
+      "tag": "1.1.15",
+      "commit": "0a9127a1e886ff1adb4c1b6f5958b24108d55aa6",
+      "license": "Apache-2.0",
+      "url": "https://github.com/adafruit/Adafruit_Sensor/archive/refs/tags/1.1.15.zip",
+      "sha256": "95556ec61cd92df3e15c450d8febed64284d0b5416ce3ac0891fab326130b3c7"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+tests:
+  nucode.ac02b.analog_contract:
+    tags:
+      - nucode
+      - arduino
+      - ac02b
+      - adc
+      - pwm
+      - tone
+      - servo
+    harness: ztest
+    sysbuild: false
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
