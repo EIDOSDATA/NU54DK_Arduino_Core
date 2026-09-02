@@ -31,6 +31,6 @@
     {"example": "WirePmicId", "library": "Wire", "library_directory": "Wire", "profile": "standard"}
   ],
   "fqbn": "nucode:zephyr:nu54dk",
-  "release_version": "0.3.0-rc.2",
+  "release_version": "0.3.0-rc.3",
   "schema_version": 1
 }

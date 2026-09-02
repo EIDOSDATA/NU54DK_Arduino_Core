@@ -1286,6 +1286,115 @@ def materialize_application(
         atomic_write_text(generated_overlay, base_overlay)
 
 
+## @brief 생성된 devicetree에서 이름을 가진 mapped partition의 주소와 크기를 반환합니다.
+def generated_mapped_partition(
+    devicetree: str, label: str, *, required: bool = True
+) -> tuple[int, int] | None:
+    node = re.search(
+        rf"^\s*{re.escape(label)}:\s+partition@[0-9a-fA-F]+\s*\{{(?P<body>.*?)^\s*\}};",
+        devicetree,
+        re.MULTILINE | re.DOTALL,
+    )
+    if node is None:
+        if required:
+            raise AdapterError(
+                f"[NU54:E_MEMORY_LAYOUT] generated devicetree에 {label} partition이 없습니다."
+            )
+        return None
+    body = node.group("body")
+    if not re.search(r'compatible\s*=\s*"zephyr,mapped-partition"\s*;', body):
+        raise AdapterError(
+            f"[NU54:E_MEMORY_LAYOUT] {label}이 zephyr,mapped-partition이 아닙니다."
+        )
+    region = re.search(
+        r"reg\s*=\s*<\s*(0x[0-9a-fA-F]+)\s+(0x[0-9a-fA-F]+)\s*>\s*;",
+        body,
+    )
+    if region is None:
+        raise AdapterError(
+            f"[NU54:E_MEMORY_LAYOUT] {label} partition의 reg 영역을 해석할 수 없습니다."
+        )
+    address, size = (int(value, 16) for value in region.groups())
+    if size <= 0:
+        raise AdapterError(f"[NU54:E_MEMORY_LAYOUT] {label} partition 크기가 0입니다.")
+    return address, size
+
+
+## @brief 선택한 code partition과 실제 linker FLASH 영역이 같은지 fail-closed로 검증합니다.
+def validate_linked_code_partition(zephyr_output: Path) -> dict[str, int | str]:
+    configuration_path = zephyr_output / ".config"
+    devicetree_path = zephyr_output / "zephyr.dts"
+    map_path = zephyr_output / "zephyr.map"
+    for required in (configuration_path, devicetree_path, map_path):
+        if not required.is_file():
+            raise AdapterError(
+                f"[NU54:E_MEMORY_LAYOUT] linker memory 검증 입력이 없습니다: {required}"
+            )
+
+    configuration = configuration_path.read_text(encoding="utf-8")
+    for symbol in ("CONFIG_USE_DT_CODE_PARTITION", "CONFIG_FLASH_USES_MAPPED_PARTITION"):
+        if not re.search(rf"^{re.escape(symbol)}=y\s*$", configuration, re.MULTILINE):
+            raise AdapterError(
+                f"[NU54:E_MEMORY_LAYOUT] {symbol}=y가 아니므로 linker 경계를 보장할 수 없습니다."
+            )
+
+    devicetree = devicetree_path.read_text(encoding="utf-8")
+    chosen = re.search(
+        r"zephyr,code-partition\s*=\s*&([A-Za-z_][A-Za-z0-9_]*)\s*;",
+        devicetree,
+    )
+    if chosen is None:
+        raise AdapterError(
+            "[NU54:E_MEMORY_LAYOUT] /chosen/zephyr,code-partition을 해석할 수 없습니다."
+        )
+    code_label = chosen.group(1)
+    code_region = generated_mapped_partition(devicetree, code_label)
+    assert code_region is not None
+    code_start, code_size = code_region
+    code_end = code_start + code_size
+
+    reserved_regions: list[tuple[str, int, int]] = []
+    for label in ("arduino_fs_partition", "storage_partition"):
+        region = generated_mapped_partition(devicetree, label, required=False)
+        if region is not None:
+            start, size = region
+            reserved_regions.append((label, start, start + size))
+    for label, start, end in reserved_regions:
+        if max(code_start, start) < min(code_end, end):
+            raise AdapterError(
+                f"[NU54:E_MEMORY_LAYOUT] code partition이 {label}과 겹칩됩니다: "
+                f"0x{code_start:x}..0x{code_end:x} / 0x{start:x}..0x{end:x}"
+            )
+    ordered_reserved = sorted(reserved_regions, key=lambda item: item[1])
+    for previous, current in zip(ordered_reserved, ordered_reserved[1:]):
+        if previous[2] > current[1]:
+            raise AdapterError(
+                f"[NU54:E_MEMORY_LAYOUT] {previous[0]}와 {current[0]} 저장소가 겹칩됩니다."
+            )
+
+    memory_map = map_path.read_text(encoding="utf-8")
+    flash = re.search(
+        r"^FLASH\s+(0x[0-9a-fA-F]+)\s+(0x[0-9a-fA-F]+)\s+\S+\s*$",
+        memory_map,
+        re.MULTILINE,
+    )
+    if flash is None:
+        raise AdapterError("[NU54:E_MEMORY_LAYOUT] linker map의 FLASH 영역을 해석할 수 없습니다.")
+    linker_start, linker_size = (int(value, 16) for value in flash.groups())
+    if (linker_start, linker_size) != code_region:
+        raise AdapterError(
+            "[NU54:E_MEMORY_LAYOUT] linker FLASH 영역과 devicetree code partition이 다릅니다: "
+            f"linker=0x{linker_start:x}+0x{linker_size:x}, "
+            f"devicetree=0x{code_start:x}+0x{code_size:x}"
+        )
+    return {
+        "code_partition": code_label,
+        "flash_origin": code_start,
+        "flash_size": code_size,
+        "flash_end": code_end,
+    }
+
+
 ## @brief cache key 변경 시 이전 placeholder와 source record만 안전하게 무효화합니다.
 def invalidate_source_records(paths: dict[str, Path]) -> None:
     records_root = paths["records"]
@@ -2493,6 +2602,9 @@ def link(args: argparse.Namespace) -> None:
                     cwd=west_build_working_directory(paths),
                     environment=tools["environment"],
                 )
+                memory_layout = validate_linked_code_partition(
+                    paths["zephyr_build"] / "zephyr"
+                )
             except Exception as error:
                 transition_cache_state(
                     paths["workspace"],
@@ -2538,6 +2650,7 @@ def link(args: argparse.Namespace) -> None:
                             "ccache_stats_before": ccache_before,
                             "ccache_stats_after": ccache_after,
                             "ccache_stats_delta": ccache_delta(ccache_before, ccache_after),
+                            "memory_layout": memory_layout,
                             "updated_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
                         }
                     )

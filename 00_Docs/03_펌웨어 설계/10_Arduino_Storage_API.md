@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-STORAGE-001 |
-| 적용 후보 | `v0.3.0-rc.2` |
+| 적용 후보 | `v0.3.0-rc.3` |
 | 현재 정식 버전 | `v0.2.0` — 아래 API를 정식 지원으로 소급하지 않음 |
 | 구현 | `EEPROM`, `LittleFS` bundled library |
 | 검증 상태 | AC-03 host/target/package와 exact 두 보드 영속성·복구 HIL PASS |
@@ -21,20 +21,52 @@ AC-03은 NU54DK의 내부 RRAM을 Arduino 사용자가 익숙한 `EEPROM`과 `Li
 - 외부 QSPI flash, SD, secure storage, 암호화와 power-fail 보증은 이 계약에 포함하지 않는다.
 - API 이름이나 compile 성공을 임의 제3자 library 전체 호환으로 확대하지 않는다.
 
-## 2. 고정 RRAM layout
+## 2. 기본 RRAM layout
 
 | 영역 | 시작 | 끝(미포함) | 크기 | 역할 |
 | --- | ---: | ---: | ---: | --- |
-| MCUboot 예약 | `0x000000` | `0x00f800` | 62 KiB | 향후 boot 기반과 정렬 여유 |
-| `slot0_partition` | `0x010000` | `0x0be000` | 696 KiB | 현재 application image |
-| `slot1_partition` | `0x0be000` | `0x16c000` | 696 KiB | 대체 image 영역 |
+| `slot0_partition` | `0x000000` | `0x16c000` | 1,490,944 byte / 1,456 KiB | Loaderless 단일 application image |
 | `arduino_fs_partition` | `0x16c000` | `0x174000` | 32 KiB | Arduino LittleFS 전용 |
 | `storage_partition` | `0x174000` | `0x17d000` | 36 KiB | Settings/ZMS와 EEPROM record |
 
-Arduino upload의 최대 Sketch image 크기는 `712704` byte(696 KiB)다. Partition 단일 원본은
-`dts/nucode/nu54dk-arduino-storage.dtsi`, Arduino size 표시는 `boards.txt`다. 이 경계를
-바꾸면 EEPROM/LittleFS, Settings, 향후 boot/DFU migration과 package validation을 함께
-재검증해야 한다.
+기본 구성은 CPUAPP RRAM 1,524 KiB 가운데 영구 저장소 68 KiB만 끝에 남기고, 나머지
+1,490,944 byte(1,456 KiB)를 하나의 application에 제공한다. Loader와 MCUboot를 포함하지 않는
+현재 실행 구조에서는 사용하지 않는 boot reservation이나 대체 image slot을 기본값으로 미리
+확보하지 않는다.
+
+Arduino upload의 최대 Sketch image 크기는 `1490944` byte다. Partition 단일 원본은
+`dts/nucode/nu54dk-arduino-storage.dtsi`, Arduino size 표시는 `boards.txt`다. Devicetree의
+`zephyr,code-partition`, Zephyr linker의 FLASH origin/length와 Arduino 최대 크기가 같은 경계를
+가리켜야 하며, package gate는 application section이 `0x16c000`을 침범하지 않는지 검사한다.
+
+### 2.1 RC2에서 바뀐 이유
+
+공개 `v0.3.0-rc.1`과 `v0.3.0-rc.2`는 향후 MCUboot/DFU를 예상해 boot 62 KiB와 application
+slot 두 개를 선언하고 최대 Sketch 크기를 712,704 byte로 표시했다. 그러나 두 RC에는 실제
+MCUboot, update 또는 rollback 경로가 없었고, application linker도 그 논리 slot 경계를 사용하지
+않았다. 따라서 RC3는 loaderless 실행 계약과 실제 link 경계를 일치시키고, 사용하지 않는 두 번째
+slot을 기본 구성에서 제거한다. 공개된 RC1/RC2 문서와 자산은 당시 계약을 보존하며 수정하지 않는다.
+
+LittleFS와 Settings/ZMS의 시작 주소는 RC2와 동일하게 유지한다. RC3로 이동해도 일반 Upload가
+mass erase를 하지 않는 한 이 주소의 데이터는 그대로 남을 수 있지만, 중요한 데이터는 version
+변경 전에 백업하고 application이 schema와 복구 정책을 확인해야 한다.
+
+### 2.2 고급 메모리 layout 계획
+
+RC3가 정식 제공하는 layout은 위 loaderless 단일 application 하나다. Sketch의 전문가용
+`prj.conf`와 `app.overlay` 합성 경로가 있다는 사실만으로 임의 partition을 지원한다고 선언하지
+않는다. 메모리 경계를 바꾸려면 다음 항목이 하나의 선택 단위로 움직여야 한다.
+
+1. Fixed partition의 주소와 크기
+2. `zephyr,code-partition`과 linker가 실제 사용하는 FLASH 범위
+3. Arduino IDE/CLI의 maximum Sketch size
+4. LittleFS, Settings/ZMS와 update image의 겹침 검사
+5. Upgrade/downgrade, 복구와 package 시험 matrix
+
+`v0.4.0` M24에서 검증된 **고급 Memory layout 선택**을 설계한다. 기본 loaderless layout은 계속
+유지하고, MCUboot/DFU와 signed update·rollback이 실제로 포함된 profile에서만 boot 영역과
+dual-slot layout을 노출한다. Arduino Tools에는 임의 숫자 입력 대신 검증된 preset을 제공하고,
+전문가 overlay는 같은 정적 검사와 linker assertion을 통과할 때만 지원 대상으로 인정한다.
 
 ## 3. EEPROM 계약
 
@@ -109,7 +141,7 @@ Sketch에서 `<EEPROM.h>` 또는 `<LittleFS.h>`를 include하면 Build Adapter�
 | EEPROM | `EEPROMPersistence` | `Standard peripherals` |
 | LittleFS | `LittleFSPersistence` | `Standard peripherals` |
 
-두 예제는 `v0.3.0-rc.2` 후보의 29개 설치 예제에 포함된다. BLE profile에서도 build 입력은
+두 예제는 `v0.3.0-rc.3` 후보의 29개 설치 예제에 포함된다. BLE profile에서도 build 입력은
 호환되지만, 예제 메뉴의 기본 사용 안내는 storage 동작만 분리해 보는 `Standard peripherals`다.
 
 ## 6. 실패 진단
@@ -148,5 +180,6 @@ exact image·commit·board identity가 없으면 실행하지 않는다. 실제 
 - 암호화 filesystem, secure storage와 PSA protected storage
 - directory iterator와 모든 ESP/Adafruit FS 확장 함수의 완전 호환
 - 파일 system 전체의 transaction/power-fail 원자성 보증
-- 임의 partition 변경 또는 사용자 overlay를 통한 저장 layout 교체
+- RC3에서 임의 partition 크기를 입력하거나 사용자 overlay만으로 저장 layout을 교체하는 구성
+- MCUboot/DFU dual-slot과 update/rollback — `v0.4.0` M24의 검증된 고급 layout 범위
 - 제품 수명 기준의 wear/endurance 보증

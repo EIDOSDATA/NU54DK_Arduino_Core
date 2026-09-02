@@ -17,14 +17,13 @@ static_assert(__is_base_of(Stream, File),
 			  "File은 Arduino Stream이어야 합니다.");
 static_assert(__is_constructible(File, const File &),
 			  "대표 Arduino 라이브러리를 위해 File 참조 복사가 필요합니다.");
-static_assert(DT_REG_ADDR(DT_NODELABEL(slot0_partition)) == 0x10000,
-			  "slot0 시작 주소가 다릅니다.");
-static_assert(DT_REG_SIZE(DT_NODELABEL(slot0_partition)) == 0xae000,
-			  "slot0 크기가 696 KiB가 아닙니다.");
-static_assert(DT_REG_ADDR(DT_NODELABEL(slot1_partition)) == 0xbe000,
-			  "slot1 시작 주소가 다릅니다.");
-static_assert(DT_REG_SIZE(DT_NODELABEL(slot1_partition)) == 0xae000,
-			  "slot1 크기가 696 KiB가 아닙니다.");
+static_assert(DT_REG_ADDR(DT_NODELABEL(slot0_partition)) == 0x0,
+			  "loaderless image가 reset vector에서 시작하지 않습니다.");
+static_assert(DT_REG_SIZE(DT_NODELABEL(slot0_partition)) == 0x16c000,
+			  "loaderless image 크기가 1456 KiB가 아닙니다.");
+static_assert(DT_SAME_NODE(DT_CHOSEN(zephyr_code_partition),
+					  DT_NODELABEL(slot0_partition)),
+			  "Zephyr code partition이 loaderless image와 다릅니다.");
 static_assert(DT_REG_ADDR(DT_NODELABEL(arduino_fs_partition)) == 0x16c000,
 			  "LittleFS 시작 주소가 다릅니다.");
 static_assert(DT_REG_SIZE(DT_NODELABEL(arduino_fs_partition)) == 0x8000,

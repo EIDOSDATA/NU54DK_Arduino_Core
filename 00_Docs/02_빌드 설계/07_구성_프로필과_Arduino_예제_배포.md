@@ -116,6 +116,17 @@ Sketch root의 `prj.conf`와 `app.overlay`는 전문가용 마지막 override로
 예제는 이 sidecar에 의존하지 않으며 profile/library 내부 설정만으로 compile해야 한다.
 임의 snippet, module 또는 CMake 주입은 공개 override 계약이 아니다.
 
+### 4.1 메모리 layout의 별도 선택 축
+
+RC3의 `standard`와 `ble` profile은 모두 같은 loaderless 기본 layout을 사용한다. Application은
+`0x000000..0x16c000`의 1,490,944 byte(1,456 KiB), LittleFS와 Settings/ZMS는 RRAM 끝의
+32 KiB와 36 KiB다. Feature set 선택은 메모리 layout을 암묵적으로 바꾸지 않는다.
+
+MCUboot/DFU dual-slot은 `v0.4.0` M24의 고급 선택 layout이다. 향후 제공할 때에는
+`Tools → Memory layout`의 검증된 preset이 profile과 독립된 명시적 입력이 되고, fixed partition,
+linker 경계, Arduino maximum size와 cache identity가 함께 바뀌어야 한다. RC3에서는 임의 숫자나
+Sketch `app.overlay` 하나만으로 partition을 바꾸는 구성을 정식 지원하지 않는다.
+
 ---
 
 ## 5. v0.2.0 사용자 예제 14개
@@ -130,7 +141,7 @@ Sketch root의 `prj.conf`와 `app.overlay`는 전문가용 마지막 override로
 앞의 12개 예제는 `standard` profile에서, NUS 2개는 `ble` profile에서 compile한다. 예제는
 각 library가 source, 설정 요구사항, 문서와 검증을 함께 소유한다.
 
-### 5.1 v0.3.0-rc.2 후보 29개
+### 5.1 v0.3.0-rc.3 후보 29개
 
 | Library | 예제 |
 | --- | --- |
@@ -158,7 +169,7 @@ Wire target/callback/no-STOP, `Wire1`, `SPI1`은 profile을 선택해도 활성�
 ## 6. 배포와 자동 검증
 
 정식 `v0.2.0` Boards Manager ZIP은 profile 두 개, feature manifest 네 개와 예제 14개를
-포함한다. 현재 `v0.3.0-rc.2` source/package 후보는 feature manifest 여덟 개와 예제 29개를 같은 상대
+포함한다. 현재 `v0.3.0-rc.3` source/package 후보는 feature manifest 여덟 개와 예제 29개를 같은 상대
 경로로 보존해야 한다. Arduino IDE/CLI가 설치된 Core에서 library별 예제를 같은 이름으로 열거해야 한다.
 
 자동 gate는 다음을 검사한다.

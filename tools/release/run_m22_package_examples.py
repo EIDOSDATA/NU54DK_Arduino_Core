@@ -23,7 +23,7 @@ if hasattr(sys.stderr, "reconfigure"):
 
 
 FQBN = "nucode:zephyr:nu54dk"
-VERSION = "0.3.0-rc.2"
+VERSION = "0.3.0-rc.3"
 EXPECTED_EXAMPLE_COUNT = 29
 LOCK_PATH = Path(__file__).with_name("m22-package-examples.lock.json")
 MAX_OUTPUT_BYTES = 32 * 1024 * 1024

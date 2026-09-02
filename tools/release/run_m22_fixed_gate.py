@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief M22 RC2에서 허용한 고정 검증 명령만 실행합니다. """
+"""! @brief M22 RC3에서 허용한 고정 검증 명령만 실행합니다. """
 
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ if hasattr(sys.stderr, "reconfigure"):
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
-VERSION = "0.3.0-rc.2"
+VERSION = "0.3.0-rc.3"
 FQBN = "nucode:zephyr:nu54dk"
 ARDUINO_CLI_SHA256 = "65daefba1423010575d0874275734cb4a917faf5293609f01e9db6ed1c1c7e79"
 MAX_LOG_BYTES = 32 * 1024 * 1024
@@ -235,7 +235,7 @@ def run_gate(args: argparse.Namespace) -> dict[str, Any]:
 
 ## @brief 임의 child argv를 노출하지 않는 고정 parser를 구성합니다.
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="M22 RC2 고정 검증 gate")
+    parser = argparse.ArgumentParser(description="M22 RC3 고정 검증 gate")
     parser.add_argument("gate", choices=GATE_IDS)
     parser.add_argument("--evidence", type=Path, required=True)
     parser.add_argument("--log", type=Path, required=True)

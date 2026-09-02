@@ -1063,7 +1063,7 @@ def test_ac02b_examples(cli: Path, config: Path, root: Path, repository: Path) -
             )
 
 
-## @brief AC-03 EEPROM·LittleFS 예제와 두 profile의 고정 partition을 빌드합니다.
+## @brief AC-03 EEPROM·LittleFS 예제와 두 profile의 loaderless partition을 빌드합니다.
 def test_ac03_storage_examples(
     cli: Path, config: Path, root: Path, repository: Path
 ) -> None:
@@ -1115,13 +1115,20 @@ def test_ac03_storage_examples(
             raise SmokeFailure(f"AC-03 feature was not selected: {sketch}: {feature}")
         zephyr = Path(context["zephyr_build_dir"]) / "zephyr"
         configuration = (zephyr / ".config").read_text(encoding="utf-8")
+        for linker_symbol in (
+            "CONFIG_USE_DT_CODE_PARTITION",
+            "CONFIG_FLASH_USES_MAPPED_PARTITION",
+        ):
+            if not read_kconfig_boolean(configuration, linker_symbol):
+                raise SmokeFailure(
+                    f"AC-03 linker partition symbol is disabled: {build_name}: {linker_symbol}"
+                )
         for symbol in symbols:
             if not read_kconfig_boolean(configuration, symbol):
                 raise SmokeFailure(f"AC-03 symbol is disabled: {build_name}: {symbol}")
         devicetree = (zephyr / "zephyr.dts").read_text(encoding="utf-8")
         expected_partitions = (
-            ('label = "image-0";', "reg = < 0x10000 0xae000 >;"),
-            ('label = "image-1";', "reg = < 0xbe000 0xae000 >;"),
+            ('label = "image-0";', "reg = < 0x0 0x16c000 >;"),
             ('label = "arduino-fs";', "reg = < 0x16c000 0x8000 >;"),
             ('label = "storage";', "reg = < 0x174000 0x9000 >;"),
         )
@@ -1130,6 +1137,15 @@ def test_ac03_storage_examples(
                 raise SmokeFailure(
                     f"AC-03 fixed partition missing: {build_name}: {label}: {region}"
                 )
+        memory_map = (zephyr / "zephyr.map").read_text(encoding="utf-8")
+        if not re.search(
+            r"^FLASH\s+0x0+\s+0x0*16c000\s+xr\s*$",
+            memory_map,
+            re.MULTILINE,
+        ):
+            raise SmokeFailure(
+                f"AC-03 linker FLASH region is not the loaderless image: {build_name}"
+            )
 
 
 ## @brief M15 board/system 공개 예제와 feature conf·overlay 병합을 검증합니다.

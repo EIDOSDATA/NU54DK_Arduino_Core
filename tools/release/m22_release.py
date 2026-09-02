@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief NU54DK v0.3.0-rc.2 산출물과 검증 수명주기를 fail-closed로 관리합니다. """
+"""! @brief NU54DK v0.3.0-rc.3 산출물과 검증 수명주기를 fail-closed로 관리합니다. """
 
 from __future__ import annotations
 
@@ -26,15 +26,16 @@ if hasattr(sys.stderr, "reconfigure"):
 
 SCHEMA_VERSION = 1
 MILESTONE = "M22"
-VERSION = "0.3.0-rc.2"
+VERSION = "0.3.0-rc.3"
 TAG = f"v{VERSION}"
 REPOSITORY_URL = "https://github.com/EIDOSDATA/NU54DK_Arduino_Core"
 BOARD_PATH = "board_package/NU54DK_Zephyr_DTS"
 STABLE_INDEX_PATH = "package_nucode_nu54dk_index.json"
-PLAN_FILENAME = "m22-rc2-plan.json"
-FINAL_FILENAME = "m22-rc2-final-evidence.json"
+PLAN_FILENAME = "m22-rc3-plan.json"
+FINAL_FILENAME = "m22-rc3-final-evidence.json"
 EXPECTED_RC_VERSIONS = (
-    "0.1.0-rc.2", "0.2.0-rc.1", "0.2.0-rc.2", "0.3.0-rc.1", VERSION,
+    "0.1.0-rc.2", "0.2.0-rc.1", "0.2.0-rc.2", "0.3.0-rc.1",
+    "0.3.0-rc.2", VERSION,
 )
 EXPECTED_STABLE_VERSIONS = ("0.1.0", "0.2.0")
 EXPECTED_STABLE_INDEX_SIZE = 1877
@@ -74,7 +75,7 @@ MAX_JSON_BYTES = 32 * 1024 * 1024
 
 
 class M22ReleaseFailure(RuntimeError):
-    """! @brief M22 RC2 identity 또는 gate를 보장할 수 없는 오류입니다. """
+    """! @brief M22 RC3 identity 또는 gate를 보장할 수 없는 오류입니다. """
 
 
 ## @brief 같은 저장소의 Boards Manager package 모듈을 읽습니다.
@@ -150,7 +151,7 @@ def assert_package_contract(package: Any = PACKAGE) -> None:
         or package.release_tag(VERSION) != TAG
         or package.RC_INDEX_FILENAME != "package_nucode_nu54dk_rc_index.json"
     ):
-        raise M22ReleaseFailure("0.3.0-rc.2 channel/tag/index 계약이 잘못되었습니다.")
+        raise M22ReleaseFailure("0.3.0-rc.3 channel/tag/index 계약이 잘못되었습니다.")
 
 
 ## @brief 외부 명령을 shell 없이 실행하고 stdout byte를 반환합니다.
@@ -267,7 +268,7 @@ def compare_builds(first: dict[str, Path], second: dict[str, Path]) -> dict[str,
     return records
 
 
-## @brief exact clean commit에서 RC2 package를 두 번 만들어 plan을 기록합니다.
+## @brief exact clean commit에서 RC3 package를 두 번 만들어 plan을 기록합니다.
 def prepare_release(
     repo_root: Path,
     output_dir: Path,
@@ -304,7 +305,7 @@ def prepare_release(
     plan = {
         "schema_version": SCHEMA_VERSION,
         "milestone": MILESTONE,
-        "kind": "rc2-local-validation-plan",
+        "kind": "rc3-local-validation-plan",
         "version": VERSION,
         "release_tag": TAG,
         "repository": REPOSITORY_URL,
@@ -367,7 +368,7 @@ def validate_plan(
     fixed = {
         "schema_version": SCHEMA_VERSION,
         "milestone": MILESTONE,
-        "kind": "rc2-local-validation-plan",
+        "kind": "rc3-local-validation-plan",
         "version": VERSION,
         "release_tag": TAG,
         "repository": REPOSITORY_URL,
@@ -518,7 +519,7 @@ def invoke_cleanroom(args: argparse.Namespace, plan_path: Path, plan: dict[str, 
         raise M22ReleaseFailure("M22 same-PC clean-room이 실패했습니다.")
 
 
-## @brief 네 필수 evidence를 exact plan에 결합하고 RC2 준비 상태를 결정합니다.
+## @brief 네 필수 evidence를 exact plan에 결합하고 RC3 준비 상태를 결정합니다.
 def finalize_evidence(
     plan_path: Path, evidence_paths: Sequence[Path], output: Path
 ) -> dict[str, Any]:
@@ -607,7 +608,7 @@ def finalize_evidence(
     final = {
         "schema_version": 1,
         "milestone": MILESTONE,
-        "evidence_type": "rc2-final",
+        "evidence_type": "rc3-final",
         "status": "passed",
         "release_version": VERSION,
         "release_tag": TAG,
@@ -620,7 +621,7 @@ def finalize_evidence(
             "public_prerelease_required_before_cleanroom": True,
             "public_index_observed_by_cleanroom": True,
         },
-        "state": "public-rc2-validated",
+        "state": "public-rc3-validated",
         "completed_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
     }
     write_json(output.resolve(), final)
@@ -629,7 +630,7 @@ def finalize_evidence(
 
 ## @brief prepare/validate/gate/clean-room/finalize만 노출하는 parser입니다.
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="M22 v0.3.0-rc.2 local release lifecycle")
+    parser = argparse.ArgumentParser(description="M22 v0.3.0-rc.3 local release lifecycle")
     commands = parser.add_subparsers(dest="command", required=True)
     prepare = commands.add_parser("prepare")
     prepare.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[2])
@@ -663,7 +664,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(path)
         elif args.command == "validate":
             validate_plan(args.plan)
-            print("M22_RC2_PLAN_VALID")
+            print("M22_RC3_PLAN_VALID")
         elif args.command == "run-gate":
             if not args.gate_args or args.gate_args[0] not in {"host", "package-examples", "rc-upload"}:
                 raise M22ReleaseFailure("run-gate는 고정 gate ID로 시작해야 합니다.")
@@ -672,7 +673,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             invoke_cleanroom(args, args.plan, validate_plan(args.plan))
         elif args.command == "finalize":
             finalize_evidence(args.plan, args.evidence, args.output)
-            print("M22_RC2_VALIDATED_READY")
+            print("M22_RC3_VALIDATED_READY")
         return 0
     except (M22ReleaseFailure, PACKAGE.PackageError) as error:
         print(f"M22_RELEASE_FAIL: {error}", file=sys.stderr)

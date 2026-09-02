@@ -126,6 +126,11 @@ NU54_FLASH_USED=<bytes>
 NU54_RAM_USED=<bytes>
 ```
 
+RC3의 Arduino maximum Sketch size는 loaderless application partition과 같은 `1490944` byte다.
+IDE가 표시하는 백분율은 위 FLASH used를 이 값으로 나눈 결과다. 이 숫자는 UI 장식이 아니라
+Devicetree `zephyr,code-partition`과 linker에 적용된 `0x000000..0x16c000` 범위와 일치해야
+한다. 세 값이 어긋나면 package/release gate가 실패해야 한다.
+
 ## 5. 입력과 출력
 
 주요 Arduino property는 다음과 같다.

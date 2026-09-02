@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief 동일 Windows PC에서 M22 RC2를 경로 격리해 수명주기 검증합니다. """
+"""! @brief 동일 Windows PC에서 M22 RC3를 경로 격리해 수명주기 검증합니다. """
 
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ if hasattr(sys.stderr, "reconfigure"):
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
-VERSION = "0.3.0-rc.2"
+VERSION = "0.3.0-rc.3"
 PREVIOUS_VERSION = "0.2.0"
 FQBN = "nucode:zephyr:nu54dk"
 TAG = f"v{VERSION}"
@@ -452,7 +452,7 @@ def validate_rc_index(
             if isinstance(platform, dict) and platform.get("version") == VERSION:
                 matches.append(platform)
     if len(matches) != 1:
-        raise CleanroomFailure("공개 RC index에 exact 0.3.0-rc.2 platform이 하나가 아닙니다.")
+        raise CleanroomFailure("공개 RC index에 exact 0.3.0-rc.3 platform이 하나가 아닙니다.")
     platform = matches[0]
     expected_url = (
         f"https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/{TAG}/"

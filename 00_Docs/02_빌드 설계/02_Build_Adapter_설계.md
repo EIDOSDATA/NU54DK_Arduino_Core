@@ -192,6 +192,13 @@ Feature는 Arduino source/include record에서 실제로 선택된 bundled libra
 외부 library가 임의 `feature.yml`을 설치했다고 신뢰하지 않는다. profile, manifest와 fragment
 내용은 최종 cache identity와 artifact provenance에 포함한다.
 
+RC3의 기본 메모리 계약은 loaderless 단일 application 1,490,944 byte와 끝단 영구 저장소
+68 KiB다. Adapter와 release gate는 Devicetree code partition, linker FLASH 범위와
+`boards.txt` maximum size가 모두 `0x000000..0x16c000`을 가리키는지 확인해야 한다. 전문가
+`app.overlay`가 마지막에 병합되더라도 이 경계를 조용히 우회하거나 Arduino size 표시만 바꾸는
+구성은 지원하지 않는다. MCUboot/DFU dual-slot과 검증된 memory-layout 선택은 `v0.4.0` M24에서
+cache·package identity에 포함할 별도 입력으로 추가한다.
+
 ## 5. 경로와 상태
 
 Arduino session 상태는 다음 위치에 둔다.

@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 4.6 |
+| 문서 체계 개정 | 4.7 |
 | 현재 정식 버전 | `v0.2.0` |
 | 다음 목표 버전 | `v0.3.0` |
 | 최종 갱신일 | 2026-09-02 |
@@ -51,8 +51,8 @@
 | M19 | **자동 검증 완료** | BLE Core/GAP exact-commit 두 보드 RF HIL PASS |
 | M20 | **자동 검증 완료** | 범용 GATT exact-commit 두 보드 RF HIL PASS |
 | M21 | **완료** | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS; host 39/39 |
-| M22 | **RC2 공개 검증 완료 — v0.3.0 stable 승격 대기** | 29개 설치 예제·실제 pyOCD Upload·공개 URL clean-room lifecycle와 cleanup PASS |
-| M23~M34 | **장기 계획** | storage/security/DFU, radio/OpenThread, Matter 제품선 |
+| M22 | **RC3 memory-contract 교정·공개 검증 준비** | Loaderless 1,456 KiB application 경계와 29개 설치 예제·Upload·clean-room 재검증 |
+| M23~M34 | **장기 계획** | storage/security, 고급 Memory layout·DFU, radio/OpenThread, Matter 제품선 |
 
 AC-02A의 구현·시험 경계는
 [핀과 주변장치 소유권 기준선](<./04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md>)에 보존한다.
@@ -61,7 +61,8 @@ AC-02B의 구현 범위와 exact 물리 증거는
 Storage 설계와 RC 준비 경계는 [Arduino Storage API](<./03_펌웨어 설계/10_Arduino_Storage_API.md>),
 [AC-03 기록](<./04_검증 기록/28_AC-03_Storage와_Library_호환성_기준선.md>) 및
 [M22 RC1 기록](<./04_검증 기록/29_M22_v0.3.0_rc1_통합_릴리스_기준선.md>)과
-[M22 RC2 기록](<./04_검증 기록/30_M22_v0.3.0_rc2_통합_릴리스_기준선.md>)에서 관리한다.
+[M22 RC2 기록](<./04_검증 기록/30_M22_v0.3.0_rc2_통합_릴리스_기준선.md>)에서 역사적 공개 결과를
+보존하고, RC3 memory-contract와 새 실행 결과는 RC3 릴리스·검증 문서에서 별도로 관리한다.
 정확한 단계 상태의 단일 원본은
 [제품 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)이다. `v0.2.0`의 공개 범위와
 제약은 [v0.2.0 릴리스 문서](<./05_릴리스/v0.2.0/README.md>)를 따른다.
@@ -78,7 +79,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - 현재 공개 API: [Arduino API 지원 범위](<./01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)
 - 설치·package 구조: [Boards Manager 설계](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
 - 현재 사용자 문서: [v0.2.0 릴리스 문서](<./05_릴리스/v0.2.0/README.md>)
-- RC 시험 절차: [v0.3.0-rc.2 Testing](<./05_릴리스/v0.3.0-rc.2/TESTING.md>)
+- RC 시험 절차: [v0.3.0-rc.3 Testing](<./05_릴리스/v0.3.0-rc.3/TESTING.md>)
 - 실제 시험 증거: [검증 기록 안내](<./04_검증 기록/README.md>)
 - 다음 버전 범위: [v0.3.0 구현 마일스톤](<./01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)
 
@@ -131,7 +132,7 @@ M1~M18과 정식 공개 증거, `v0.3.0` AC-01~AC-03·M19~M22의 구현·검증 
 
 ### 05. 릴리스 문서
 
-현재 stable `v0.2.0`, 공개 검증을 완료한 `v0.3.0-rc.2`와 보존된 `v0.1.0`/RC 문서는
+현재 stable `v0.2.0`, 새 `v0.3.0-rc.3` 후보와 보존된 `v0.1.0`/RC 문서는
 [릴리스 문서 안내](<./05_릴리스/README.md>)에서 구분한다.
 
 ## 6. 단일 원본 규칙

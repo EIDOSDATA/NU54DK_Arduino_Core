@@ -7,30 +7,42 @@
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 최종 갱신일 | 2026-09-02 |
 
-신규 production 설치와 현재 정식 사용법은 **`v0.2.0` 문서**를 사용한다. 공개 검증된
-`v0.3.0-rc.2`는 시험용 문서이며, 그보다 오래된 `v0.1.0`과 RC 문서는 당시 artifact와
-migration 경계를 보존하는 역사 자료다.
+신규 production 설치와 현재 정식 사용법은 **`v0.2.0` 문서**를 사용한다. 현재 시험 후보는
+loaderless memory contract를 교정한 `v0.3.0-rc.3`다. 공개 검증된 RC2와 그보다 오래된
+`v0.1.0`/RC 문서는 당시 artifact와 migration 경계를 보존하는 역사 자료다.
 
-`v0.3.0-rc.2`는 RC1 clean-room 실행기 결함을 교정해 별도 RC index로 공개 검증을 완료한 다음
-버전 후보다. Stable `v0.2.0`과 stable index는 바뀌지 않았으며 생산용 최신 버전으로 표시하지
-않는다.
+RC3는 RC2의 boot 예약·696 KiB dual-slot 표시와 실제 loaderless linker 경계 불일치를 새
+identity로 교정한다. Application은 `0x000000..0x16c000` 1,490,944 byte를 사용하며 LittleFS와
+Settings/ZMS의 끝단 주소는 유지한다. Stable `v0.2.0`과 stable index는 RC 준비 중 바꾸지 않는다.
 
-## 현재 시험 후보 — v0.3.0-rc.2
+## 현재 시험 후보 — v0.3.0-rc.3
 
 | 목적 | 문서 |
 | --- | --- |
-| 후보 범위와 공개 경계 | [RC2 문서](v0.3.0-rc.2/README.md) |
-| 추가·변경된 기능 | [RC2 Release notes](v0.3.0-rc.2/RELEASE_NOTES.md) |
-| GitHub·Arduino IDE 설치와 시험 | [RC2 Testing](v0.3.0-rc.2/TESTING.md) |
-| Stable에서 이동·복귀 | [RC2 Migration](v0.3.0-rc.2/MIGRATION.md) |
-| 알려진 제약·제외 범위 | [RC2 Known issues](v0.3.0-rc.2/KNOWN_ISSUES.md) |
-| 설치·build·storage·BLE 진단 | [RC2 Troubleshooting](v0.3.0-rc.2/TROUBLESHOOTING.md) |
+| 후보 범위와 공개 경계 | [RC3 문서](v0.3.0-rc.3/README.md) |
+| 추가·변경된 기능 | [RC3 Release notes](v0.3.0-rc.3/RELEASE_NOTES.md) |
+| GitHub·Arduino IDE 설치와 시험 | [RC3 Testing](v0.3.0-rc.3/TESTING.md) |
+| Stable에서 이동·복귀 | [RC3 Migration](v0.3.0-rc.3/MIGRATION.md) |
+| 알려진 제약·제외 범위 | [RC3 Known issues](v0.3.0-rc.3/KNOWN_ISSUES.md) |
+| 설치·build·memory·storage·BLE 진단 | [RC3 Troubleshooting](v0.3.0-rc.3/TROUBLESHOOTING.md) |
 
-RC index는 다음 Public Prerelease 고정 URL에서 사용한다.
+RC3가 Public Prerelease로 공개된 뒤 다음 고정 URL을 사용한다.
 
 ```text
-https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.2/package_nucode_nu54dk_rc_index.json
+https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.3/package_nucode_nu54dk_rc_index.json
 ```
+
+### 보존된 v0.3.0-rc.2
+
+RC2는 RC1 clean-room 실행기 결함을 교정하고 공개 설치 수명주기를 통과한 후보였다. RC3에서
+memory contract를 바꾸더라도 RC2 tag·archive·문서는 수정하지 않는다.
+
+- [RC2 문서](v0.3.0-rc.2/README.md)
+- [RC2 Release notes](v0.3.0-rc.2/RELEASE_NOTES.md)
+- [RC2 Testing](v0.3.0-rc.2/TESTING.md)
+- [RC2 Migration](v0.3.0-rc.2/MIGRATION.md)
+- [RC2 Known issues](v0.3.0-rc.2/KNOWN_ISSUES.md)
+- [RC2 Troubleshooting](v0.3.0-rc.2/TROUBLESHOOTING.md)
 
 ## 현재 정식 버전 — v0.2.0
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief M22 RC2 release 수명주기의 고정 계약을 검증합니다. """
+"""! @brief M22 RC3 release 수명주기의 고정 계약을 검증합니다. """
 
 from __future__ import annotations
 
@@ -35,16 +35,16 @@ class M22ReleaseTests(unittest.TestCase):
         self.temporary.cleanup()
 
     def test_package_contract_contains_only_exact_new_rc(self) -> None:
-        """! @brief 0.3.0-rc.2가 과거 RC/stable 계약 뒤에 정확히 추가됩니다. """
+        """! @brief 0.3.0-rc.3이 과거 RC/stable 계약 뒤에 정확히 추가됩니다. """
 
         MODULE.assert_package_contract()
         self.assertEqual(MODULE.EXPECTED_RC_VERSIONS[-1], MODULE.VERSION)
-        self.assertEqual(MODULE.VERSION, "0.3.0-rc.2")
+        self.assertEqual(MODULE.VERSION, "0.3.0-rc.3")
         self.assertEqual(len(MODULE.EXPECTED_ARTIFACT_NAMES), 7)
         self.assertEqual(set(MODULE.EXPECTED_ARTIFACT_NAMES), set(MODULE.PACKAGE_ROLES))
 
     def test_stable_index_is_exact_and_tamper_is_rejected(self) -> None:
-        """! @brief RC2 준비가 기존 stable index 한 byte 변경도 거부합니다. """
+        """! @brief RC3 준비가 기존 stable index 한 byte 변경도 거부합니다. """
 
         stable = (REPOSITORY / MODULE.STABLE_INDEX_PATH).read_bytes()
         commit = "a" * 40
@@ -86,7 +86,7 @@ class M22ReleaseTests(unittest.TestCase):
             self.assertIn(command, help_text)
 
     def test_finalize_requires_exact_four_passed_gates(self) -> None:
-        """! @brief host/examples/upload/clean-room 모두 있어야 RC2 ready가 됩니다. """
+        """! @brief host/examples/upload/clean-room 모두 있어야 RC3 ready가 됩니다. """
 
         plan = self.root / "plan.json"
         plan.write_text("{}\n", encoding="utf-8")
@@ -185,7 +185,7 @@ class M22ReleaseTests(unittest.TestCase):
             final = MODULE.finalize_evidence(
                 plan, [*evidences, clean], self.root / "final.json"
             )
-        self.assertEqual(final["state"], "public-rc2-validated")
+        self.assertEqual(final["state"], "public-rc3-validated")
         self.assertEqual(final["publication"], {
             "performed_by_this_tool": False,
             "public_prerelease_required_before_cleanroom": True,

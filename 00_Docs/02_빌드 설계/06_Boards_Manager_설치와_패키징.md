@@ -1,4 +1,4 @@
-# Boards Manager 설치와 패키징 — stable v0.2.0 / RC v0.3.0-rc.2
+# Boards Manager 설치와 패키징 — stable v0.2.0 / RC v0.3.0-rc.3
 
 | 항목 | 값 |
 | --- | --- |
@@ -28,11 +28,11 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 Release의 불변 index snapshot을 사용한다. RC 전용 index와 preview index는 신규 설치에 쓰지
 않는다.
 
-공개 검증된 `v0.3.0-rc.2`를 명시적으로 시험할 때만 다음 별도 index를 추가한다. RC 공개가 stable index의
-version 순서나 byte를 바꾸지 않는다.
+`v0.3.0-rc.3`가 Public Prerelease로 공개된 뒤 이를 명시적으로 시험할 때만 다음 별도 index를
+추가한다. RC 공개가 stable index의 version 순서나 byte를 바꾸지 않는다.
 
 ~~~text
-https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.2/package_nucode_nu54dk_rc_index.json
+https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.3/package_nucode_nu54dk_rc_index.json
 ~~~
 
 Index의 `tools`와 platform의 `toolsDependencies`는 비어 있다. Nordic NCS/Toolchain은 Core
@@ -151,6 +151,10 @@ M22 RC2는 RC1 clean-room 실행기 결함을 교정하고 두 독립 build의 b
 library·29개 예제 compile, 지정 UID Upload, downgrade/upgrade, uninstall/reinstall과 exact run
 leaf cleanup을 통과했다. Stable `v0.2.0` index는 전후 크기·SHA-256·Git blob이 불변이다.
 
+RC3는 RC2 자산을 수정하지 않고 loaderless 1,456 KiB application 경계를 새 exact source와
+archive에 적용한다. 동일한 7개 자산, 29개 설치 예제, 지정 UID Upload와 public clean-room
+lifecycle을 새 per-tag RC index로 다시 통과해야 한다.
+
 ---
 
 ## 6. 설치 수명주기와 지원 경계
@@ -181,6 +185,6 @@ Core ZIP은 Nordic NCS, Zephyr, Toolchain, nRF Util 또는 pyOCD binary를 재�
 - [v0.2.0 알려진 제약](<../05_릴리스/v0.2.0/KNOWN_ISSUES.md>)
 - [M18 RC 공개 검증과 교정](<../04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md>)
 - [v0.2.0 정식 릴리스 공개 기록](<../04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md>)
-- [v0.3.0-rc.2 설치와 시험](<../05_릴리스/v0.3.0-rc.2/TESTING.md>)
+- [v0.3.0-rc.3 설치와 시험](<../05_릴리스/v0.3.0-rc.3/TESTING.md>)
 - [M22 v0.3.0-rc.1 중단 기록](<../04_검증 기록/29_M22_v0.3.0_rc1_통합_릴리스_기준선.md>)
 - [M22 v0.3.0-rc.2 기준선](<../04_검증 기록/30_M22_v0.3.0_rc2_통합_릴리스_기준선.md>)

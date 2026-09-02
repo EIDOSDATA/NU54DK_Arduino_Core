@@ -34,6 +34,7 @@ RELEASE_CANDIDATE_VERSIONS = (
     "0.2.0-rc.2",
     "0.3.0-rc.1",
     "0.3.0-rc.2",
+    "0.3.0-rc.3",
 )
 STABLE_VERSIONS = ("0.1.0", "0.2.0")
 ## @brief 이미 공개한 stable archive가 다른 source로 재생성되는 것을 막는 commit 계약입니다.

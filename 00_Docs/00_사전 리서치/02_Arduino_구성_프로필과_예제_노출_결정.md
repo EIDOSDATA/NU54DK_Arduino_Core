@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | ADR-0002 |
-| 문서 개정 | 2.0 |
+| 문서 개정 | 2.1 |
 | 문서 상태 | **Accepted** |
 | 결정일 | 2026-08-28 |
 | 적용 범위 | `v0.2.0` 이후 구성 UX와 Arduino 예제 소유권 |
@@ -87,6 +87,18 @@ declarative field만 읽고 임의 shell command를 실행하지 않으며, prof
 Tools 메뉴에 제공한다. 일반 third-party library에 NUCODE metadata가 없으면 표준 Arduino
 library로 취급하고 header 이름만 보고 Zephyr 기능을 추측하지 않는다.
 
+### 메모리 layout 선택
+
+Loaderless 제품선의 기본값은 **단일 application이 영구 저장소를 제외한 RRAM 전체를 사용하는
+layout**이다. 향후 boot/update 기능을 사용하지 않는 사용자에게 MCUboot 예약과 두 번째 image
+slot 비용을 기본으로 부과하지 않는다.
+
+MCUboot/DFU, signed update와 rollback이 필요한 사용자는 `v0.4.0` M24에서 제공할 검증된 고급
+Memory layout을 명시적으로 선택한다. 이 선택은 단순 Devicetree 조각이 아니라 code partition,
+linker 최대 범위, Arduino maximum size, storage 주소와 migration 정책을 묶은 profile 계약이다.
+Tools 메뉴에는 임의 byte 입력보다 시험한 preset만 제공한다. 전문가 `app.overlay`도 같은 충돌
+검사와 linker assertion을 통과할 때만 지원 조합으로 인정한다.
+
 ---
 
 ## 4. 충돌과 신뢰 경계
@@ -96,6 +108,8 @@ library로 취급하고 header 이름만 보고 Zephyr 기능을 추측하지 �
 - 같은 hardware instance를 둘 이상의 peripheral이 요구함
 - 서로 양립하지 않는 radio/controller profile을 함께 선택함
 - 같은 `chosen` 역할이나 pin을 상충하는 소비자가 요구함
+- application, update slot, LittleFS와 Settings partition이 겹치거나 RRAM 끝을 벗어남
+- Devicetree code partition, linker FLASH 범위와 Arduino maximum size가 서로 다름
 - 고정 NCS/Zephyr에 없는 module, symbol 또는 binding을 요구함
 
 가능하면 Zephyr configure 전에 실패하고 요청한 profile·feature, 충돌 resource, 구성 출처와
@@ -171,3 +185,4 @@ Profile, feature 또는 공개 예제를 바꿀 때 다음을 확인한다.
 | 2026-08-28 | Accepted | Curated profile, library feature와 전문가 override 계층 채택 |
 | 2026-08-28 | Accepted | Arduino 예제를 platform library 경로의 단일 원본으로 결정 |
 | 2026-08-31 | Refined | 구현 목록과 미래형 설명을 제거하고 결정 중심으로 축약 |
+| 2026-09-02 | Refined | Loaderless 단일 application을 기본값으로, MCUboot/DFU dual-slot을 검증된 고급 layout으로 분리 |

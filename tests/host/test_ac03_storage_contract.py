@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief AC-03 고정 partition, EEPROM, LittleFS 공개 계약을 검증합니다. """
+"""! @brief AC-03 loaderless partition, EEPROM, LittleFS 공개 계약을 검증합니다. """
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ import importlib.util
 import json
 from pathlib import Path
 import re
+import tempfile
 import unittest
 
 
@@ -22,14 +23,12 @@ class AC03StorageContractTests(unittest.TestCase):
     """! @brief AC-03 production 입력의 fail-closed 정적 계약입니다. """
 
     def test_partition_is_common_exact_and_non_overlapping(self) -> None:
-        """! @brief 두 profile이 같은 exact flash 분할을 포함하는지 검증합니다. """
+        """! @brief 두 profile이 같은 loaderless flash 분할과 linker 설정을 포함하는지 검증합니다. """
 
         partition = ROOT / "dts" / "nucode" / "nu54dk-arduino-storage.dtsi"
         source = partition.read_text(encoding="utf-8")
         expected = {
-            "boot_partition": (0x000000, 0x00F800),
-            "slot0_partition": (0x010000, 0x0AE000),
-            "slot1_partition": (0x0BE000, 0x0AE000),
+            "slot0_partition": (0x000000, 0x16C000),
             "arduino_fs_partition": (0x16C000, 0x008000),
             "storage_partition": (0x174000, 0x009000),
         }
@@ -45,17 +44,23 @@ class AC03StorageContractTests(unittest.TestCase):
         ordered = sorted(actual.values())
         for previous, current in zip(ordered, ordered[1:]):
             self.assertLessEqual(previous[0] + previous[1], current[0])
-        self.assertEqual(actual["slot0_partition"][1] // 1024, 696)
-        self.assertEqual(actual["slot1_partition"][1] // 1024, 696)
+        self.assertEqual(actual["slot0_partition"], (0, 1456 * 1024))
         self.assertEqual(actual["arduino_fs_partition"][0] + actual["arduino_fs_partition"][1], 0x174000)
         self.assertEqual(actual["storage_partition"], (0x174000, 0x9000))
+        self.assertEqual(actual["storage_partition"][0] + actual["storage_partition"][1], 1524 * 1024)
+        self.assertNotIn("boot_partition", source)
+        self.assertNotIn("slot1_partition", source)
         boards = (ROOT / "boards.txt").read_text(encoding="utf-8")
-        self.assertIn("nu54dk.upload.maximum_size=712704", boards)
+        self.assertIn("nu54dk.upload.maximum_size=1490944", boards)
 
         include = "#include <nucode/nu54dk-arduino-storage.dtsi>"
         for profile in ("standard", "ble"):
             profile_root = ROOT / "variants" / "nu54dk" / "profiles" / profile
             self.assertIn(include, (profile_root / "app.overlay").read_text(encoding="utf-8"))
+            self.assertIn(
+                "CONFIG_USE_DT_CODE_PARTITION=y",
+                (profile_root / "prj.conf").read_text(encoding="utf-8"),
+            )
             document = json.loads((profile_root / "profile.json").read_text(encoding="utf-8"))
             self.assertIn("storage", document["features"])
             self.assertIn("storage", document["requires_hil"])
@@ -71,6 +76,63 @@ class AC03StorageContractTests(unittest.TestCase):
         for feature in resolved:
             self.assertEqual(feature["requires"], ["storage"])
             self.assertEqual(feature["compatible_profiles"], ["standard", "ble"])
+
+    def test_builder_validates_the_effective_linker_partition(self) -> None:
+        """! @brief generated DTS와 linker map의 일치를 산출물 공개 전에 검증합니다. """
+
+        with tempfile.TemporaryDirectory(prefix="nu54-ac03-layout-") as temporary:
+            zephyr = Path(temporary)
+            (zephyr / ".config").write_text(
+                "CONFIG_USE_DT_CODE_PARTITION=y\n"
+                "CONFIG_FLASH_USES_MAPPED_PARTITION=y\n",
+                encoding="utf-8",
+            )
+            (zephyr / "zephyr.dts").write_text(
+                """
+/ {
+    chosen { zephyr,code-partition = &slot0_partition; };
+    slot0_partition: partition@0 {
+        compatible = "zephyr,mapped-partition";
+        label = "image-0";
+        reg = < 0x0 0x16c000 >;
+    };
+    arduino_fs_partition: partition@16c000 {
+        compatible = "zephyr,mapped-partition";
+        label = "arduino-fs";
+        reg = < 0x16c000 0x8000 >;
+    };
+    storage_partition: partition@174000 {
+        compatible = "zephyr,mapped-partition";
+        label = "storage";
+        reg = < 0x174000 0x9000 >;
+    };
+};
+""".lstrip(),
+                encoding="utf-8",
+            )
+            (zephyr / "zephyr.map").write_text(
+                "Memory Configuration\n\n"
+                "Name             Origin             Length             Attributes\n"
+                "FLASH            0x0000000000000000 0x000000000016c000 xr\n",
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                BUILDER.validate_linked_code_partition(zephyr),
+                {
+                    "code_partition": "slot0_partition",
+                    "flash_origin": 0,
+                    "flash_size": 0x16C000,
+                    "flash_end": 0x16C000,
+                },
+            )
+
+            (zephyr / "zephyr.map").write_text(
+                "FLASH 0x0000000000000000 0x000000000017d000 xr\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(BUILDER.AdapterError, "E_MEMORY_LAYOUT"):
+                BUILDER.validate_linked_code_partition(zephyr)
 
     def test_eeprom_record_and_explicit_commit_contract(self) -> None:
         """! @brief EEPROM의 mirror, CRC, bounds, 명시적 commit 계약을 검증합니다. """
