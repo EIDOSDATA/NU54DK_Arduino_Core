@@ -260,7 +260,9 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 - 상태: **작업 1 완료** — 5개 block·23개 personality, 핀 bank, singleton/고급 API 경계,
   DMA lifecycle과 관련 errata를 [M24 Serial Fabric 계약](10_M24_Serial_Fabric_경로와_API_계약.md)에
-  고정하고 CI drift 검사를 연결했다. Driver, 새 공개 header와 신규 HIL 상태는 아직 승격하지 않았다.
+  고정하고 CI drift 검사를 연결했다. 실행 결과는
+  [M24 작업 1 검증 기록](<../04_검증 기록/34_M24_Serial_Fabric_경로와_API_계약_기준선.md>)에 보존한다.
+  Driver, 새 공개 header와 신규 HIL 상태는 아직 승격하지 않았다.
 
 - UARTE00/20/21/22/30, SPIM/SPIS00/20/21/22/30, TWIM/TWIS20/21/22/30을 구현한다.
 - Arduino 호환 singleton과 고급 instance factory/direct handle의 책임을 분리한다.
