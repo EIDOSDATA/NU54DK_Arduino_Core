@@ -1,0 +1,25 @@
+tests:
+  nucode.m24.uarte20_hil:
+    tags: [nucode, arduino, m24, uarte, hil]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    build_only: true
+    extra_configs:
+      - CONFIG_NUCODE_M24_UARTE_HIL_INSTANCE=20
+  nucode.m24.uarte21_hil:
+    tags: [nucode, arduino, m24, uarte, hil]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    build_only: true
+    extra_configs:
+      - CONFIG_NUCODE_M24_UARTE_HIL_INSTANCE=21
+  nucode.m24.uarte22_hil:
+    tags: [nucode, arduino, m24, uarte, hil]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    build_only: true
+    extra_configs:
+      - CONFIG_NUCODE_M24_UARTE_HIL_INSTANCE=22
+  nucode.m24.uarte30_hil:
+    tags: [nucode, arduino, m24, uarte, hil]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    build_only: true
+    extra_configs:
+      - CONFIG_NUCODE_M24_UARTE_HIL_INSTANCE=30

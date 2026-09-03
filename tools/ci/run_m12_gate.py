@@ -62,6 +62,11 @@ def run_host_gate() -> None:
         REPOSITORY / "tests" / "hil" / "nu54dk",
         "test_ac03_storage.py",
     )
+    run_unittest(
+        REPOSITORY / "tests" / "hil" / "nu54dk",
+        "test_m24_uarte_onboard.py",
+        "test_m24_twim_onboard.py",
+    )
 
 
 ## @brief 재현 package 생성·검증 suite만 별도로 실행합니다.
@@ -153,12 +158,18 @@ def run_contract_gate() -> None:
     run_unittest(REPOSITORY / "tests" / "ci", "test_*.py")
 
 
-## @brief M23 peripheral manifest, generated matrix와 public API 계약을 검사합니다.
+## @brief M23 inventory와 M24 serial-fabric route/API 계약을 검사합니다.
 def run_inventory_gate() -> None:
     run_checked(
         (
             sys.executable,
             REPOSITORY / "tools" / "peripheral" / "verify_m23_inventory.py",
+        )
+    )
+    run_checked(
+        (
+            sys.executable,
+            REPOSITORY / "tools" / "peripheral" / "verify_m24_serial_contract.py",
         )
     )
 

@@ -112,6 +112,43 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
     )
   endif()
 
+  if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC)
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/SerialFabric.cpp"
+      "${NUCODE_ARDUINO_VARIANT_ROOT}/serial_fabric_routes.cpp"
+    )
+  endif()
+
+  if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_UARTE)
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/UarteFabric.cpp"
+    )
+  endif()
+
+  if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIM)
+    zephyr_library_sources(
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/SpimFabric.cpp"
+    )
+  endif()
+
+  if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIS)
+    zephyr_library_sources(
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/SpisFabric.cpp"
+    )
+  endif()
+
+  if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIM)
+    zephyr_library_sources(
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/TwimFabric.cpp"
+    )
+  endif()
+
+  if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIS)
+    zephyr_library_sources(
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/TwisFabric.cpp"
+    )
+  endif()
+
   if(CONFIG_NUCODE_ARDUINO_SERIAL1 OR
      CONFIG_NUCODE_ARDUINO_WIRE OR
      CONFIG_NUCODE_ARDUINO_SPI OR

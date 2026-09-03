@@ -1,0 +1,5 @@
+tests:
+  nucode.m24.spi:
+    tags: [nucode, arduino, m24, spi, spim, spis]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    build_only: true

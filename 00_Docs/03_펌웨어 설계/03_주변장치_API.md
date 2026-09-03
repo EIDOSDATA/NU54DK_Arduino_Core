@@ -257,6 +257,11 @@ M23 identity 진단은 별도 안정 형식
 semantic/HIL/concurrent/DMA 축을 이어 붙인다. 이 출력은 현재 기능의 마지막 오류가 아니라
 manifest에 고정된 capability·검증 snapshot이다.
 
+M24 작업 1은 [Serial Fabric 경로와 API 계약](<../01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md>)에
+5개 공유 block과 23개 UARTE/SPIM/SPIS/TWIM/TWIS identity의 핀 bank, 기존 singleton 불변 조건,
+향후 allocation-free typed handle과 DMA 수명주기를 고정했다. 이 계약은 아직 새 공개 header나
+driver 지원을 뜻하지 않으며 manifest의 미구현 상태는 그대로 유지한다.
+
 ## 11. 설정과 profile
 
 | 설정 | 기본 profile 의미 |

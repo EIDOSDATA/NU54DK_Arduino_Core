@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 1.1 |
-| 문서 상태 | M23 완료 / M24 이후 승인 계획 기준선 |
+| 문서 개정 | 1.3 |
+| 문서 상태 | M23 완료 / M24 작업 1~2 완료·작업 3 착수 대기 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.3.0` stable / commit `bae0957d2425e4418199a2a3a018bf8e9a0dc356` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
@@ -258,11 +258,32 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 ### M24 — Serial fabric 전 인스턴스와 DMA
 
+- 상태: **작업 1~5 source/build/semantic 완료, 작업 6 물리 HIL 대기** — 5개 block·23개 personality, 핀 bank, singleton/고급 API 경계,
+  DMA lifecycle과 관련 errata를 [M24 Serial Fabric 계약](10_M24_Serial_Fabric_경로와_API_계약.md)에
+  고정하고 CI drift 검사를 연결했다. 회로도 재검토로 단독 HIL primary 자원 6개와 무배선 자동화
+  후보 7개·외부 fixture 필요 16개도 계약에 추가했다. 실행 결과는
+  [M24 작업 1 검증 기록](<../04_검증 기록/34_M24_Serial_Fabric_경로와_API_계약_기준선.md>)에 보존한다.
+  작업 2에서는 allocation-free typed handle, 원자적 route/DMA lease와 bounded handover backend를
+  구현하고 target semantic build를 통과했다. 결과는
+  [M24 작업 2 검증 기록](<../04_검증 기록/35_M24_Serial_Fabric_공통_backend_기준선.md>)에 보존한다.
+  작업 3~5에서 UARTE 5개, SPIM/SPIS 각 5개, TWIM/TWIS 각 4개의 direct nrfx adapter와
+  sync/async·double-buffer API가 target build를 통과했다. 온보드 UARTE 4개와 TWIM 3개의
+  image/runner도 준비했으나 현재 probe SWD `No ACK` 때문에 새 물리 PASS는 기록하지 않았다.
+
 - UARTE00/20/21/22/30, SPIM/SPIS00/20/21/22/30, TWIM/TWIS20/21/22/30을 구현한다.
 - Arduino 호환 singleton과 고급 instance factory/direct handle의 책임을 분리한다.
 - UARTE async ring, SPI·I2C sync/async, target/peripheral double buffer와 공통 DMA 수명주기를 제공한다.
 - 완료 gate: 각 personality 단독 HIL, 같은 block 충돌 negative·반복 handover, 다른 block 최대 동시
   HIL, timeout/cancel/error/System OFF 복구, throughput·CPU·전력 측정.
+
+| 작업 | 범위 | 상태 |
+| --- | --- | --- |
+| 1 | Route/API/errata, 단독 HIL primary 자원 계약과 자동 drift 검사 | **완료** |
+| 2 | 공통 backend, typed handle, personality handover | **완료** |
+| 3 | UARTE 5개와 async RX/TX DMA | **source/build/semantic 완료 · 물리 HIL 대기** |
+| 4 | SPIM/SPIS 각 5개와 sync/async·double buffer | **source/build/semantic 완료 · 외부 fixture HIL 대기** |
+| 5 | TWIM/TWIS 각 4개와 repeated-start·target double buffer | **source/build/semantic 완료 · 물리 HIL 대기** |
+| 6 | 7개 온보드 자동 + 16개 fixture 단독 HIL, 충돌·최대동시·복구, 성능·전력 기록 | **온보드 runner 준비 · 실행/fixture 대기** |
 
 ### M25 — Analog·timing·audio·event 전 인스턴스
 
@@ -272,6 +293,8 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 - TIMER00/10/20~24, GPIOTE20/30, EGU10/20, DPPIC00/10/20/30,
   PPIB00/01/10/11/20/21/22/30과 GRTC 고급 경로를 제공한다.
 - PDM20/21, I2S20과 QDEC20/21의 streaming/double-buffer API와 fixture를 추가한다.
+- LED·button·VBAT monitor와 내부 event 경로는 보드 자체 자동 runner에 우선 배치한다. SAADC 정확도,
+  PWM jitter·주파수, PDM/I2S/QDEC 실제 신호는 승인된 source/sink와 계측 fixture를 사용한다.
 - 완료 gate: 전 instance 단독·동시 HIL, DMA overflow/underrun, timing jitter, long-run soak.
 
 ### M26 — 나머지 SoC 기능과 board 경계
@@ -279,6 +302,8 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 - COMP/LPCOMP, TEMP, WDT30/31, NFCT, power/clock/cache, CRACEN/KMU/RNG/TAMPC와 VPR/sQSPI를
   재고 조사하고 wrapper/direct/profile/비적용 경계를 확정한다.
 - raw RADIO는 BLE controller와 동시 소유하지 못하게 하고 다음 radio 제품선의 profile 기반을 만든다.
+- TEMP·내부 event·WDT semantic처럼 외부 신호가 불필요한 항목은 자동화하고, NFCT·RF·전원 특성처럼
+  보드 경계 밖의 peer·안테나·계측이 필요한 항목은 별도 physical gate로 남긴다.
 - 완료 gate: 모든 silicon instance가 `supported`, `partial`, `silicon-only`, `board-unroutable`,
   `not-applicable` 중 하나와 근거를 가지며 `unknown`이 남지 않음.
 

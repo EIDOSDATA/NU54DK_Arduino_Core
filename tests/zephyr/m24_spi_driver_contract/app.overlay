@@ -1,0 +1,34 @@
+/** @brief Direct nrfx SPI adapters가 serial block IRQ를 단독 소유합니다. */
+#include <nucode/nu54dk-arduino-pins.dtsi>
+
+/ {
+    chosen {
+        /delete-property/ zephyr,console;
+        /delete-property/ zephyr,shell-uart;
+        /delete-property/ zephyr,uart-mcumgr;
+        /delete-property/ zephyr,bt-mon-uart;
+        /delete-property/ zephyr,bt-c2h-uart;
+    };
+};
+
+&uart20 {
+    status = "disabled";
+};
+
+&uart30 {
+    status = "disabled";
+};
+
+/*
+ * nRF54 serial blocks expose the SPIM/SPIS personalities through the same
+ * register window.  Keep the node disabled so Zephyr does not claim it, but
+ * advertise one SPIS-compatible instance so nrfx SPIS can be selected for the
+ * direct-register Serial Fabric profile.
+ */
+&spi22 {
+    compatible = "nordic,nrf-spis";
+    /delete-property/ rx-delay-supported;
+    /delete-property/ rx-delay;
+    def-char = <0xff>;
+    status = "disabled";
+};

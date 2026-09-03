@@ -88,6 +88,38 @@ class M12CiContractTests(unittest.TestCase):
         self.assertLess(linux_job.index(command), linux_job.index("run_zephyr_build.py"))
         self.assertNotIn("continue-on-error", linux_job)
 
+    ## @brief M24 serial-fabric 계약도 software와 exact NCS build 양쪽에서 fail-closed입니다.
+    def test_m24_serial_contract_gates_routes_and_exact_dts_sources(self) -> None:
+        software = (
+            REPOSITORY / ".github" / "workflows" / "m12-software-gates.yml"
+        ).read_text(encoding="utf-8")
+        job = software.split("\n  peripheral-inventory:\n", 1)[1].split(
+            "\n  host:\n", 1
+        )[0]
+        self.assertIn("M24 serial-fabric contract", job)
+        self.assertIn("python tools/ci/run_m12_gate.py inventory", job)
+        self.assertNotIn("continue-on-error", job)
+
+        gate = (REPOSITORY / "tools" / "ci" / "run_m12_gate.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('"verify_m24_serial_contract.py"', gate)
+
+        reproducible = (
+            REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
+        ).read_text(encoding="utf-8")
+        linux_job = reproducible.split("\n  zephyr-build:\n", 1)[1].split(
+            "\n  arduino-build:\n", 1
+        )[0]
+        m23 = "python3 tools/peripheral/verify_m23_inventory.py"
+        m24 = "python3 tools/peripheral/verify_m24_serial_contract.py"
+        build = "python3 tools/ci/run_zephyr_build.py"
+        self.assertIn(m24, linux_job)
+        self.assertIn('--ncs-root "$NCS_CI_WORKSPACE"', linux_job)
+        self.assertLess(linux_job.index(m23), linux_job.index(m24))
+        self.assertLess(linux_job.index(m24), linux_job.index(build))
+        self.assertNotIn("continue-on-error", linux_job)
+
     ## @brief M14 native 의미 시험이 실행 가능한 Ubuntu job에서 직접 수행되는지 검증합니다.
     def test_m14_native_semantic_gate_runs_on_ubuntu(self) -> None:
         path = REPOSITORY / ".github" / "workflows" / "m12-software-gates.yml"
@@ -200,15 +232,22 @@ class M12CiContractTests(unittest.TestCase):
         self.assertLess(windows_job.index(command), windows_job.index("actions/upload-artifact@"))
         self.assertNotIn("continue-on-error", windows_job)
 
-    ## @brief Windows Arduino build가 AC-03 EEPROM·LittleFS smoke를 생략하지 않는지 검증합니다.
-    def test_windows_arduino_build_includes_ac03_storage_smoke(self) -> None:
+    ## @brief 재현 build가 릴리스 도입 기능군별 독립 matrix와 증적을 사용합니다.
+    def test_reproducible_build_uses_release_era_parallel_matrix(self) -> None:
         path = REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
         text = path.read_text(encoding="utf-8")
-        windows_job = text.split("\n  arduino-build:\n", 1)[1]
+        linux_job, windows_job = text.split("\n  arduino-build:\n", 1)
+        self.assertIn("group: [v0.1.0, v0.2.0, v0.3.0, v0.4.0]", linux_job)
         self.assertIn(
-            "--tests blink m6 m7 ac02b ac03 examples",
+            "group: [v0.1.0, v0.2.0, v0.3.0-ble, v0.3.0-compat]",
             windows_job,
         )
+        self.assertEqual(text.count("fail-fast: false"), 2)
+        self.assertIn('--group "${{ matrix.group }}"', linux_job)
+        self.assertIn("--group '${{ matrix.group }}'", windows_job)
+        self.assertIn("m12-zephyr-${{ matrix.group }}-${{ github.sha }}", linux_job)
+        self.assertIn("m12-arduino-${{ matrix.group }}-${{ github.sha }}", windows_job)
+        self.assertIn("if: matrix.group == 'v0.2.0'", windows_job)
 
     ## @brief Windows Arduino 재현 build가 짧은 임시 경로와 실패 log를 보존하는지 검증합니다.
     def test_windows_arduino_build_uses_short_temp_and_preserves_failure_log(self) -> None:
@@ -348,6 +387,8 @@ class M12CiContractTests(unittest.TestCase):
         )
         self.assertIn('REPOSITORY / "tests" / "hil" / "nu54dk"', source)
         self.assertIn('"test_ac03_storage.py"', source)
+        self.assertIn('"test_m24_uarte_onboard.py"', source)
+        self.assertIn('"test_m24_twim_onboard.py"', source)
 
     ## @brief 대표 Twister build가 공유 compiler cache에 의존하지 않는지 검증합니다.
     def test_zephyr_build_disables_ccache(self) -> None:
@@ -383,6 +424,46 @@ class M12CiContractTests(unittest.TestCase):
         self.assertIn(
             ("m23_inventory_contract", "nucode.m23.inventory_contract"),
             module.SUITES,
+        )
+
+    ## @brief M24 공통 serial-fabric semantic target이 v0.4 build에서 빠지지 않습니다.
+    def test_zephyr_build_includes_m24_serial_fabric_contract(self) -> None:
+        path = REPOSITORY / "tools" / "ci" / "run_zephyr_build.py"
+        spec = importlib.util.spec_from_file_location("nu54_m24_build_gate", path)
+        self.assertIsNotNone(spec)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        self.assertIn(
+            ("m24_serial_fabric_contract", "nucode.m24.fabric"),
+            module.SUITE_GROUPS["v0.4.0"],
+        )
+        self.assertIn(
+            ("m24_uarte_driver_contract", "nucode.m24.uarte"),
+            module.SUITE_GROUPS["v0.4.0"],
+        )
+        self.assertIn(
+            ("m24_spi_driver_contract", "nucode.m24.spi"),
+            module.SUITE_GROUPS["v0.4.0"],
+        )
+        self.assertIn(
+            ("m24_twi_driver_contract", "nucode.m24.twi"),
+            module.SUITE_GROUPS["v0.4.0"],
+        )
+        self.assertTrue(
+            {
+                ("m24_uarte_onboard_hil", "nucode.m24.uarte20_hil"),
+                ("m24_uarte_onboard_hil", "nucode.m24.uarte21_hil"),
+                ("m24_uarte_onboard_hil", "nucode.m24.uarte22_hil"),
+                ("m24_uarte_onboard_hil", "nucode.m24.uarte30_hil"),
+            }.issubset(set(module.SUITE_GROUPS["v0.4.0"]))
+        )
+        self.assertTrue(
+            {
+                ("m24_twim_onboard_hil", "nucode.m24.twim20_hil"),
+                ("m24_twim_onboard_hil", "nucode.m24.twim21_hil"),
+                ("m24_twim_onboard_hil", "nucode.m24.twim22_hil"),
+            }.issubset(set(module.SUITE_GROUPS["v0.4.0"]))
         )
 
     ## @brief AC-01 production contract와 자동 loopback HIL image가 원격 build gate에 포함되는지 검사합니다.

@@ -1,0 +1,8 @@
+mainmenu "M24 TWIM onboard HIL"
+
+source "Kconfig.zephyr"
+
+config NUCODE_M24_TWIM_HIL_INSTANCE
+	int "TWIM instance under test"
+	default 20
+	range 20 22
