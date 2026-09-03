@@ -231,9 +231,11 @@ asset과 stable index 항목은 재현성, 감사와 downgrade를 위해 삭제�
 | `v0.1.0` | 역사적·비지원 | Core, 기본 API, build/upload와 package |
 | `v0.2.0` | 역사적·비지원 | CI/CD, profile·예제, Board/System과 BLE NUS |
 | `v0.3.0` | **현재 stable** | Arduino compatibility, 동적 peripheral/analog, BLE GAP/GATT/security/profile, storage |
-| `v0.4.0` | 계획 | Storage/Crypto 확장, 고급 memory layout, MCUboot/DFU, TF-M와 복구 |
-| `v0.5.0` | 계획 | Radio profile, IEEE 802.15.4, ESB와 OpenThread |
-| `v0.6.0` | 계획 | Matter 기반, application template와 commissioning HIL |
+| `v0.4.0` | 계획 | 전 peripheral instance, EasyDMA·동시성, analog/timing/audio parity |
+| `v0.5.0` | 계획 | Bluetooth LE 확장·ISO/LE Audio·Direction Finding·Channel Sounding·Mesh |
+| `v0.6.0` | 계획 | Storage/Crypto, TF-M, 고급 memory layout와 secure update/recovery |
+| `v0.7.0` | 계획 | Radio profile, IEEE 802.15.4, ESB와 OpenThread |
+| `v0.8.0` | 계획 | Matter 기반, application template와 commissioning HIL |
 
 ## 동작 구조
 
@@ -272,6 +274,7 @@ git submodule status
 - [Arduino API 지원 범위](<./00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)
 - [Boards Manager 설치와 package](<./00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
 - [제품 로드맵](<./00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md>)
+- [전 인스턴스·DMA·BLE 경쟁 기준](<./00_Docs/01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)
 - [검증 기록](<./00_Docs/04_검증 기록/README.md>)
 - [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues)
 

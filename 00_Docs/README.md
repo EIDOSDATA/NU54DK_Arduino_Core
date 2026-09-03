@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 5.0 |
+| 문서 체계 개정 | 6.0 |
 | 현재 정식 버전 | `v0.3.0` |
 | 다음 목표 버전 | `v0.4.0` |
 | 최종 갱신일 | 2026-09-03 |
@@ -52,7 +52,9 @@
 | M20 | **자동 검증 완료** | 범용 GATT exact-commit 두 보드 RF HIL PASS |
 | M21 | **완료** | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS; host 39/39 |
 | M22 | **완료** | Loaderless 1,456 KiB 경계, stable 재현 build, 29/29 설치본 compile, NU54DK Upload와 `v0.3.0` 정식 공개 |
-| M23~M34 | **장기 계획** | storage/security, 고급 Memory layout·DFU, radio/OpenThread, Matter 제품선 |
+| M23~M27 | **계획** | 전 peripheral instance·EasyDMA·동시성 경쟁 parity와 `v0.4.0` |
+| M28~M33 | **계획** | Bluetooth LE 전 기능군·Mesh·Channel Sounding과 `v0.5.0` |
+| M34~M45 | **장기 계획** | security/update, radio/OpenThread와 Matter 제품선 |
 
 AC-02A의 구현·시험 경계는
 [핀과 주변장치 소유권 기준선](<./04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md>)에 보존한다.
@@ -79,6 +81,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - 구조를 선택한 이유: [ADR-0001](<./00_사전 리서치/01_개발_방식_비교_및_아키텍처_결정.md>)
 - 일반 사용자의 구성 UX: [ADR-0002](<./00_사전 리서치/02_Arduino_구성_프로필과_예제_노출_결정.md>)
 - 현재와 다음 단계: [제품 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)
+- 전 instance·DMA·BLE 경쟁 격차와 완료 조건: [경쟁 기준과 마일스톤](<./01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)
 - 현재 공개 API: [Arduino API 지원 범위](<./01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)
 - 설치·package 구조: [Boards Manager 설계](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
 - 현재 사용자 문서: [v0.3.0 릴리스 문서](<./05_릴리스/v0.3.0/README.md>)
@@ -102,6 +105,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - [v0.2.0 구현 마일스톤](<./01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)
 - [NCS v3.4.0 기능·예제 지원 매트릭스](<./01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)
 - [v0.3.0 구현 마일스톤](<./01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)
+- [전 인스턴스·DMA·BLE 경쟁 기준과 마일스톤](<./01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)
 
 ### 02. 빌드 설계
 
