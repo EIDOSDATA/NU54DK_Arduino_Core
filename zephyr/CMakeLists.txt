@@ -137,6 +137,18 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
     )
   endif()
 
+  if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIM)
+    zephyr_library_sources(
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/TwimFabric.cpp"
+    )
+  endif()
+
+  if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIS)
+    zephyr_library_sources(
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/TwisFabric.cpp"
+    )
+  endif()
+
   if(CONFIG_NUCODE_ARDUINO_SERIAL1 OR
      CONFIG_NUCODE_ARDUINO_WIRE OR
      CONFIG_NUCODE_ARDUINO_SPI OR

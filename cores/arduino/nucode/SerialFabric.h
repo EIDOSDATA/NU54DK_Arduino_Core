@@ -164,6 +164,52 @@ struct SpiFabricEvent {
   std::uint32_t error_code{0U};
 };
 
+/** @brief TWIM controller bus speed입니다. */
+enum class TwiFabricFrequency : std::uint32_t {
+  standard = 100000U,
+  fast = 400000U,
+  fast_plus = 1000000U,
+};
+
+/** @brief TWIM controller 설정입니다. */
+struct TwimConfiguration {
+  TwiFabricFrequency frequency{TwiFabricFrequency::standard};
+};
+
+/** @brief TWIS target 주소와 pin pull 설정입니다. */
+struct TwisConfiguration {
+  std::uint8_t primary_address{0x42U};
+  std::uint8_t secondary_address{0U};
+  bool internal_pullups{false};
+};
+
+/** @brief TWI EasyDMA event 종류입니다. */
+enum class TwiFabricEventType : std::uint8_t {
+  transfer_complete = 0U,
+  address_nack,
+  data_nack,
+  overrun,
+  bus_error,
+  read_request,
+  read_complete,
+  write_request,
+  write_complete,
+  buffer_needed,
+  transfer_cancelled,
+  error,
+};
+
+/** @brief TWIM/TWIS 비동기 완료와 오류 정보입니다. */
+struct TwiFabricEvent {
+  TwiFabricEventType type{TwiFabricEventType::error};
+  std::uint8_t address{0U};
+  const void *tx_buffer{nullptr};
+  void *rx_buffer{nullptr};
+  std::size_t tx_transferred{0U};
+  std::size_t rx_transferred{0U};
+  std::uint32_t error_code{0U};
+};
+
 /** @brief 한 signal과 Arduino canonical pin을 연결합니다. */
 struct SerialSignalPin {
   SerialSignal signal{SerialSignal::invalid};
@@ -283,12 +329,45 @@ private:
 
 class TwimHandle final : public SerialFabricHandle {
   friend class SerialFabric;
+
+public:
+  [[nodiscard]] SerialFabricResult
+  configure(const TwimConfiguration &configuration) noexcept;
+  [[nodiscard]] SerialFabricResult transferAsync(std::uint8_t address,
+                                                 const void *tx_buffer,
+                                                 std::size_t tx_size,
+                                                 void *rx_buffer,
+                                                 std::size_t rx_size) noexcept;
+  [[nodiscard]] SerialFabricResult
+  transfer(std::uint8_t address, const void *tx_buffer, std::size_t tx_size,
+           void *rx_buffer, std::size_t rx_size,
+           std::uint32_t timeout_us = 100000U) noexcept;
+  [[nodiscard]] SerialFabricResult cancelTransfer() noexcept;
+  [[nodiscard]] SerialFabricResult recoverBus() noexcept;
+  [[nodiscard]] bool takeEvent(TwiFabricEvent &event) noexcept;
+  [[nodiscard]] DmaBufferState bufferState(const void *buffer) const noexcept;
+
+private:
   constexpr TwimHandle(std::uint8_t instance, std::uint8_t index) noexcept
       : SerialFabricHandle(SerialPersonality::twim, instance, index) {}
 };
 
 class TwisHandle final : public SerialFabricHandle {
   friend class SerialFabric;
+
+public:
+  [[nodiscard]] SerialFabricResult
+  configure(const TwisConfiguration &configuration) noexcept;
+  [[nodiscard]] SerialFabricResult
+  queueBuffers(const void *tx_buffer, std::size_t tx_size, void *rx_buffer,
+               std::size_t rx_size, const void *next_tx_buffer = nullptr,
+               std::size_t next_tx_size = 0U, void *next_rx_buffer = nullptr,
+               std::size_t next_rx_size = 0U) noexcept;
+  [[nodiscard]] SerialFabricResult cancelBuffers() noexcept;
+  [[nodiscard]] bool takeEvent(TwiFabricEvent &event) noexcept;
+  [[nodiscard]] DmaBufferState bufferState(const void *buffer) const noexcept;
+
+private:
   constexpr TwisHandle(std::uint8_t instance, std::uint8_t index) noexcept
       : SerialFabricHandle(SerialPersonality::twis, instance, index) {}
 };

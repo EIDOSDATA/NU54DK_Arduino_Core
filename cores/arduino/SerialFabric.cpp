@@ -55,14 +55,27 @@ SerialFabricDriverAdapter adapters[handle_count]{};
 bool adapter_registered[handle_count]{};
 BlockContext blocks[block_count]{};
 
+#if defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_UARTE) ||                      \
+    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIM) ||                       \
+    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIS) ||                       \
+    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIM) ||                       \
+    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIS)
+#if defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_UARTE) ||                      \
+    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIM) ||                       \
+    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIS)
 void irq00(const void *) { internal::dispatchSerialFabricIrq(0U); }
+#endif
 void irq20(const void *) { internal::dispatchSerialFabricIrq(20U); }
 void irq21(const void *) { internal::dispatchSerialFabricIrq(21U); }
 void irq22(const void *) { internal::dispatchSerialFabricIrq(22U); }
 void irq30(const void *) { internal::dispatchSerialFabricIrq(30U); }
 
 int connectFabricIrqs() {
+#if defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_UARTE) ||                      \
+    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIM) ||                       \
+    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIS)
   IRQ_CONNECT(SERIAL00_IRQn, IRQ_PRIO_LOWEST, irq00, nullptr, 0);
+#endif
   IRQ_CONNECT(SERIAL20_IRQn, IRQ_PRIO_LOWEST, irq20, nullptr, 0);
   IRQ_CONNECT(SERIAL21_IRQn, IRQ_PRIO_LOWEST, irq21, nullptr, 0);
   IRQ_CONNECT(SERIAL22_IRQn, IRQ_PRIO_LOWEST, irq22, nullptr, 0);
@@ -71,6 +84,7 @@ int connectFabricIrqs() {
 }
 
 SYS_INIT(connectFabricIrqs, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
+#endif
 
 [[nodiscard]] constexpr int blockIndex(std::uint8_t instance) noexcept {
   switch (instance) {

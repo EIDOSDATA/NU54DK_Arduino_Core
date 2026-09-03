@@ -200,6 +200,35 @@ config NUCODE_ARDUINO_SERIAL_FABRIC_SPIS
 	  buffer를 Serial Fabric에 등록합니다. ISR은 고정 event queue와 DMA
 	  buffer 전환만 수행하며 application callback은 실행하지 않습니다.
 
+config NUCODE_ARDUINO_SERIAL_FABRIC_TWIM
+	bool "M24 TWIM 전 instance 직접 EasyDMA adapter 활성화"
+	default n
+	depends on NUCODE_ARDUINO_SERIAL_FABRIC
+	depends on !NUCODE_ARDUINO_SERIAL
+	depends on !NUCODE_ARDUINO_WIRE
+	depends on !NUCODE_ARDUINO_SPI
+	depends on !UART_CONSOLE
+	select NRFX_TWIM
+	help
+	  TWIM20/21/22/30의 동기·비동기 EasyDMA와 write-read repeated-start를
+	  Serial Fabric에 등록합니다. transfer timeout은 STOP을 요청하되 clock
+	  stretching 중 정지가 증명되지 않으면 공통 backend가 block fault를
+	  latch하여 unsafe 재사용을 차단합니다.
+
+config NUCODE_ARDUINO_SERIAL_FABRIC_TWIS
+	bool "M24 TWIS 전 instance 직접 EasyDMA adapter 활성화"
+	default n
+	depends on NUCODE_ARDUINO_SERIAL_FABRIC
+	depends on !NUCODE_ARDUINO_SERIAL
+	depends on !NUCODE_ARDUINO_WIRE
+	depends on !NUCODE_ARDUINO_SPI
+	depends on !UART_CONSOLE
+	select NRFX_TWIS
+	help
+	  TWIS20/21/22/30의 두 주소 target mode와 방향별 두 개의 미리 준비한
+	  EasyDMA buffer를 Serial Fabric에 등록합니다. ISR은 driver buffer
+	  준비와 고정 event queue 갱신만 수행합니다.
+
 config NUCODE_ARDUINO_WIRE
 	bool "Arduino Wire I2C controller 활성화"
 	default n

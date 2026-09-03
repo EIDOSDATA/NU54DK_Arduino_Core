@@ -140,10 +140,12 @@ electricalProfileAllowed(SerialPersonality personality, SerialRouteClass route,
                ? profile == SerialElectricalProfile::dap_uart_bridge
                : profile == SerialElectricalProfile::dap_uart_disabled;
   }
-  if ((personality == SerialPersonality::twim) ||
-      (personality == SerialPersonality::twis)) {
+  if (personality == SerialPersonality::twim) {
     return (profile == SerialElectricalProfile::pmic_read_only) ||
            (profile == SerialElectricalProfile::connector_fixture);
+  }
+  if (personality == SerialPersonality::twis) {
+    return profile == SerialElectricalProfile::connector_fixture;
   }
   return (profile == SerialElectricalProfile::dap_uart_bridge) ||
          (profile == SerialElectricalProfile::dap_uart_disabled) ||
