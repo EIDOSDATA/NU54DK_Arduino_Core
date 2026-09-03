@@ -1,0 +1,25 @@
+/** @brief UARTE30 결과 채널과 PMIC TWIM이 nrfx IRQ를 단독 소유합니다. */
+#include <nucode/nu54dk-arduino-pins.dtsi>
+
+/ {
+    chosen {
+        /delete-property/ zephyr,console;
+        /delete-property/ zephyr,shell-uart;
+        /delete-property/ zephyr,uart-mcumgr;
+        /delete-property/ zephyr,bt-mon-uart;
+        /delete-property/ zephyr,bt-c2h-uart;
+    };
+};
+
+&uart20 {
+    status = "disabled";
+};
+
+&uart30 {
+    status = "disabled";
+};
+
+/* NFC 전용 P1.2/P1.3을 온보드 BQ25186 I2C route로 전환합니다. */
+&uicr {
+    nfct-pins-as-gpios;
+};
