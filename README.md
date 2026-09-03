@@ -101,25 +101,71 @@ NU54DK를 연결한 뒤 `Verify`, `Upload` 순서로 실행합니다. 온보드 
 
 ## 지원 범위
 
-| 영역 | 상태 | `v0.3.0` 범위 |
+상태값은 다음 세 가지로만 구분합니다. `지원`은 `v0.3.0`이 선언한 범위를 구현·검증했다는
+뜻이고, `부분 지원`은 해당 Arduino API군의 일부 instance나 mode만 제공한다는 뜻입니다.
+`미지원`은 공개 API·예제·runtime 검증이 없는 범위입니다.
+
+| 영역 | 상태 | 요약 |
 | --- | --- | --- |
 | Runtime | 지원 | `setup()`, 반복 `loop()`, C++ 전역 객체 |
-| Digital GPIO | 지원된 핀 범위 | Variant capability에 등록된 connector/LED/button, open-drain 포함 |
-| Time | 지원·의미 차이 | `millis()`, `micros()`, delay, `yield()`, pulse API |
-| GPIO Interrupt | 지원된 핀·모드 | RISING/FALLING/CHANGE 및 GPIOTE 가능 핀의 LOW/HIGH |
-| Serial | 지원·의미 차이 | DAP UART `Serial`, 승인된 UART30 route의 `Serial1` |
-| Wire/I2C | 부분 지원 | I2C22 controller, 100/400 kHz, 제한 repeated-start와 runtime pins |
-| SPI | 부분 지원 | SPI00 controller, mode 0~3, Sketch 소유 CS와 runtime pins |
-| ADC | 지원된 채널 범위 | 공개 AIN 채널, raw code와 resolution 변환 |
-| PWM/Tone/Servo | 지원된 채널 범위 | 동적 resolution/frequency, `tone()`과 bundled Servo |
-| Storage | 지원된 용량 범위 | EEPROM 1,024 byte, 내부 LittleFS 32 KiB |
-| BLE | 정의된 profile 범위 지원 | NUS, GAP, GATT, SMP/bonding, BAS/DIS, HID keyboard |
-| Board/System | 지원·전기 제약 | identity, WDT, GRTC, Settings, System OFF, 제한 PMIC API |
+| Digital GPIO | 지원 | Connector, LED, button과 open-drain GPIO |
+| Time | 지원 | `millis()`, `micros()`, delay, `yield()`와 pulse API |
+| GPIO Interrupt | 지원 | Edge·level interrupt와 Arduino callback |
+| Serial | 지원 | DAP UART `Serial`과 UART30 기반 `Serial1` |
+| Wire/I2C | 부분 지원 | I2C22 master controller와 runtime pin route |
+| SPI | 부분 지원 | SPI00 controller와 runtime pin route |
+| ADC | 지원 | 공개 analog input 채널과 resolution 변환 |
+| PWM/Tone/Servo | 지원 | 동적 PWM, `tone()`과 bundled Servo |
+| Storage | 지원 | EEPROM facade와 내부 LittleFS |
+| BLE | 지원 | NUS, GAP/GATT, security와 표준 profile |
+| Board/System | 지원 | Board identity, WDT, GRTC, Settings와 System OFF |
 | Upload/Debug | 지원 | pyOCD 기본, 외장 J-Link 선택 경로 |
 
-Wire target/slave, `requestFrom(..., false)`, `Wire1`, `SPI1`, SPI peripheral mode와 native USB는
-지원하지 않습니다. `noInterrupts()`는 Arduino GPIO callback을 막으며 모든 Zephyr system IRQ를
-전역 차단하지 않습니다. 전체 함수별 의미는
+<details>
+<summary>Core, GPIO, Time과 Serial 세부 범위</summary>
+
+- Digital GPIO와 interrupt는 Variant capability에 등록된 connector·LED·button pin을 사용합니다.
+- Level interrupt의 `LOW`/`HIGH`는 GPIOTE가 가능한 pin에서 지원합니다.
+- `noInterrupts()`는 Arduino GPIO callback을 막지만 모든 Zephyr system IRQ를 전역 차단하지 않습니다.
+- `Serial`은 DAP UART이며 native USB CDC가 아닙니다. `Serial1`은 승인된 UART30 pin route를
+  사용합니다.
+
+</details>
+
+<details>
+<summary>Wire, SPI, Analog와 Storage 세부 범위</summary>
+
+- Wire는 I2C22 master, 100/400 kHz와 runtime pin 변경을 지원합니다. Target/slave,
+  `requestFrom(..., false)`와 `Wire1`은 지원하지 않습니다.
+- SPI는 SPI00, mode 0~3, Sketch 소유 chip-select와 runtime pin 변경을 지원합니다. `SPI1`과
+  peripheral mode는 지원하지 않습니다.
+- ADC는 공개 AIN 채널의 raw code와 resolution 변환을 제공합니다.
+- PWM, tone과 Servo는 pin·period·hardware ownership 충돌이 없을 때 동적으로 할당됩니다.
+- EEPROM facade는 1,024 byte, 내부 LittleFS partition은 32 KiB입니다.
+
+</details>
+
+<details>
+<summary>BLE 세부 범위</summary>
+
+- 지원: NUS Peripheral/Central, GAP Peripheral/Central, 범용 GATT, SMP pairing·bonding,
+  BAS, DIS와 HID keyboard
+- 미지원: BLE Mesh, ISO, Channel Sounding과 검증되지 않은 multiprotocol
+
+</details>
+
+<details>
+<summary>Board/System과 Upload/Debug 세부 범위</summary>
+
+- Board/System은 board identity, watchdog, GRTC, Settings/ZMS와 System OFF를 제공합니다.
+- PMIC API는 승인된 register·field만 다루며 write는 매 boot 명시적으로 승인해야 합니다.
+- CMSIS-DAP/pyOCD가 기본 Upload 경로입니다. 외장 J-Link는 별도 SEGGER Software, VTref와
+  올바른 SWD 배선이 필요합니다.
+- 일반 Upload는 mass erase나 recover를 자동 실행하지 않습니다.
+
+</details>
+
+전체 함수별 의미와 pin·mode·오류 계약은
 [Arduino API 지원 범위](<./00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)를 기준으로 합니다.
 
 ## 메모리 구조
