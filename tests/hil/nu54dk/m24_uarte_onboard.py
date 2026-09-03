@@ -141,6 +141,8 @@ def pyocd_command(pyocd: Path, probe_id: str, image: Path) -> list[str]:
         "nrf54l",
         "--uid",
         probe_id,
+        "--frequency",
+        "1m",
         str(image),
     ]
 
@@ -195,14 +197,37 @@ def choose_unique_response(
     return matches[0]
 
 
+def ready_frame(instance: int) -> bytes:
+    return bytes(0xA0 ^ instance ^ index for index in range(PACKET_SIZE))
+
+
+def collect_exact_frame(
+    streams: dict[str, Any], expected: bytes, timeout_seconds: float
+) -> tuple[str, dict[str, bytes]]:
+    transcripts = {device: bytearray() for device in streams}
+    deadline = time.monotonic() + timeout_seconds
+    while time.monotonic() < deadline:
+        for device, stream in streams.items():
+            waiting = int(getattr(stream, "in_waiting", 0))
+            if waiting:
+                transcripts[device].extend(stream.read(waiting))
+        if any(len(data) >= len(expected) for data in transcripts.values()):
+            time.sleep(0.1)
+            for device, stream in streams.items():
+                waiting = int(getattr(stream, "in_waiting", 0))
+                if waiting:
+                    transcripts[device].extend(stream.read(waiting))
+            break
+        time.sleep(0.01)
+    frozen = {device: bytes(data) for device, data in transcripts.items()}
+    return choose_unique_response(frozen, expected), frozen
+
+
 def exercise_instance(
     streams: dict[str, Any], payload: bytes, timeout_seconds: float
 ) -> tuple[str, dict[str, bytes]]:
     if len(payload) != PACKET_SIZE or timeout_seconds <= 0:
         raise UarteHilFailure("invalid UARTE packet size or timeout.")
-    for stream in streams.values():
-        stream.reset_input_buffer()
-        stream.reset_output_buffer()
     for stream in streams.values():
         if stream.write(payload) != len(payload):
             raise UarteHilFailure("VCOM accepted only part of the test packet.")
@@ -290,14 +315,26 @@ def main(arguments: Sequence[str] | None = None) -> int:
             )
         for sequence, instance in enumerate(INSTANCES, start=1):
             image = images[instance]
+            for stream in streams.values():
+                stream.reset_input_buffer()
+                stream.reset_output_buffer()
             flash = flash_image(args.pyocd, args.probe_id, image["path"], args.flash_timeout)
-            time.sleep(args.settle_seconds)
+            ready_port, ready_transcripts = collect_exact_frame(
+                streams, ready_frame(instance), args.settle_seconds + args.response_timeout
+            )
+            for stream in streams.values():
+                stream.reset_input_buffer()
+                stream.reset_output_buffer()
             payload = hashlib.sha256(
                 f"M24-UARTE-{instance}-{commit}".encode("ascii")
             ).digest()
             selected, transcripts = exercise_instance(
                 streams, payload, args.response_timeout
             )
+            if selected != ready_port:
+                raise UarteHilFailure(
+                    "UARTE READY and data response used different VCOM ports."
+                )
             results.append(
                 {
                     "sequence": sequence,
@@ -315,6 +352,11 @@ def main(arguments: Sequence[str] | None = None) -> int:
                     "payload_sha256": hashlib.sha256(payload).hexdigest(),
                     "response_sha256": hashlib.sha256(payload[::-1]).hexdigest(),
                     "selected_vcom_index": port_names.index(selected),
+                    "ready_sha256": hashlib.sha256(ready_frame(instance)).hexdigest(),
+                    "ready_received_sizes": {
+                        str(port_names.index(device)): len(data)
+                        for device, data in ready_transcripts.items()
+                    },
                     "received_sizes": {
                         str(port_names.index(device)): len(data)
                         for device, data in transcripts.items()

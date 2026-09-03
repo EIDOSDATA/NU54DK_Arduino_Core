@@ -50,12 +50,18 @@ class M24UarteOnboardTests(unittest.TestCase):
                 "nrf54l",
                 "--uid",
                 "probe",
+                "--frequency",
+                "1m",
                 "image.hex",
             ],
         )
         joined = " ".join(command).casefold()
         self.assertNotIn("recover", joined)
         self.assertNotIn("mass", joined)
+
+    def test_ready_frame_is_fixed_per_instance(self) -> None:
+        self.assertEqual(len(MODULE.ready_frame(20)), MODULE.PACKET_SIZE)
+        self.assertNotEqual(MODULE.ready_frame(20), MODULE.ready_frame(21))
 
 
 if __name__ == "__main__":

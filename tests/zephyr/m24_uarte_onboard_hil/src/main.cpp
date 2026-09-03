@@ -38,6 +38,31 @@ bool startReceive(UarteHandle &handle) {
   const auto result = handle.receiveAsync(receive_buffer, packet_size);
   return result == SerialFabricResult::success;
 }
+
+void sendReady(UarteHandle &handle) {
+  for (std::size_t index = 0U; index < packet_size; ++index)
+    transmit_buffer[index] =
+        static_cast<std::uint8_t>(0xA0U ^ instance ^ index);
+  if (handle.transmitAsync(transmit_buffer, packet_size) !=
+      SerialFabricResult::success) {
+    halt();
+  }
+  while (true) {
+    UarteEvent event{};
+    if (!handle.takeEvent(event)) {
+      k_sleep(K_MSEC(1));
+      continue;
+    }
+    if (event.type == UarteEventType::tx_complete &&
+        event.buffer == transmit_buffer && event.transferred == packet_size) {
+      return;
+    }
+    if (event.type == UarteEventType::error ||
+        event.type == UarteEventType::tx_cancelled) {
+      halt();
+    }
+  }
+}
 } // namespace
 
 int main() {
@@ -62,10 +87,12 @@ int main() {
       1U,
   };
   if (handle->stage(configuration) != SerialFabricResult::success ||
-      handle->activate() != SerialFabricResult::success ||
-      !startReceive(*handle)) {
+      handle->activate() != SerialFabricResult::success) {
     halt();
   }
+  sendReady(*handle);
+  if (!startReceive(*handle))
+    halt();
 
   while (true) {
     UarteEvent event{};
