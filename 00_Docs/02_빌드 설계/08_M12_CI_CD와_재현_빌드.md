@@ -105,6 +105,10 @@ Arduino runtime 정식 지원을 뜻하지 않는다.
 각 예제 시작 직전에 `SMOKE_TEST_START=<group>/<test>`를 출력한다. 따라서 실패 log의 마지막 start
 표식과 error를 보면 어느 그룹의 어느 예제에서 실패했는지 바로 알 수 있다.
 
+격리된 Arduino data 디렉터리의 첫 compile은 Arduino index와 `ctags`·discovery builtin을
+bootstrap할 수 있다. `Download failed`, builtin/ctags 부재처럼 이 단계로 특정할 수 있는 일시적
+오류만 최대 3회 시도한다. 일반 compiler·linker·계약 실패는 즉시 실패하며 재시도로 숨기지 않는다.
+
 Windows의 `%LOCALAPPDATA%\NUCODE\NU54DK_Arduino_Core` cache는 prerequisite 상태와 도구 경로를
 재사용하는 CI 속도 최적화일 뿐 gate의 source가 아니다. Build Adapter의
 `%LOCALAPPDATA%\NU54\c` cache를 보존하는 계약도 아니다. 이 cache가 없어도 exact prerequisite와

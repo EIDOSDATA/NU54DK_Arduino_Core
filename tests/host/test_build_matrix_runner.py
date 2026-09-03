@@ -5,9 +5,11 @@ from __future__ import annotations
 
 import importlib.util
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
@@ -115,6 +117,34 @@ class BuildMatrixRunnerTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertIn('environment["PYTHONUNBUFFERED"] = "1"', source)
         self.assertIn("env=environment", source)
+
+    ## @brief 일시적 Arduino CLI builtin bootstrap 실패만 제한 재시도합니다.
+    @mock.patch.object(ARDUINO.time, "sleep")
+    @mock.patch.object(ARDUINO.subprocess, "run")
+    def test_arduino_compile_retries_only_bootstrap_failure(
+        self, run: mock.Mock, sleep: mock.Mock
+    ) -> None:
+        run.side_effect = (
+            subprocess.CompletedProcess(
+                args=(), returncode=1, stdout="Download failed: temporary network error"
+            ),
+            subprocess.CompletedProcess(args=(), returncode=0, stdout="compiled"),
+        )
+        code, output = ARDUINO.run(("arduino-cli", "compile", "Blink"))
+        self.assertEqual((code, output), (0, "compiled"))
+        self.assertEqual(run.call_count, 2)
+        sleep.assert_called_once_with(2)
+
+        run.reset_mock()
+        run.side_effect = None
+        sleep.reset_mock()
+        run.return_value = subprocess.CompletedProcess(
+            args=(), returncode=1, stdout="source.cpp: error: bad API"
+        )
+        with self.assertRaises(ARDUINO.SmokeFailure):
+            ARDUINO.run(("arduino-cli", "compile", "Broken"))
+        self.assertEqual(run.call_count, 1)
+        sleep.assert_not_called()
 
 
 if __name__ == "__main__":

@@ -14,6 +14,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from typing import Sequence
 
 
@@ -51,6 +52,14 @@ ARDUINO_MATRIX_GROUPS = {
     "v0.3.0-compat": ("ac02b", "ac03", "examples"),
 }
 ARDUINO_SELECTIONS = {**ARDUINO_GROUPS, **ARDUINO_MATRIX_GROUPS}
+CLI_BOOTSTRAP_RETRY_MARKERS = (
+    "Download failed:",
+    "runtime.tools.ctags.path",
+    "discovery builtin:",
+    "library_index.json: The system cannot find",
+    "package_index.json: The system cannot find",
+)
+CLI_BOOTSTRAP_ATTEMPTS = 3
 
 
 ## @brief NU54DK 보드 공통 예제 라이브러리의 저장소 경로를 반환합니다.
@@ -69,17 +78,35 @@ def default_cli() -> Path:
 
 ## @brief 실행 결과를 합친 UTF-8 text로 반환합니다.
 def run(command: Sequence[str | Path], *, expect_success: bool = True) -> tuple[int, str]:
-    result = subprocess.run(
-        [str(value) for value in command],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        encoding="utf-8",
-        errors="replace",
-        check=False,
-    )
-    if expect_success and result.returncode != 0:
-        raise SmokeFailure(f"command failed ({result.returncode}): {' '.join(map(str, command))}\n{result.stdout}")
-    return result.returncode, result.stdout
+    values = [str(value) for value in command]
+    is_compile = len(values) > 1 and values[1] == "compile"
+    attempts = CLI_BOOTSTRAP_ATTEMPTS if expect_success and is_compile else 1
+    for attempt in range(1, attempts + 1):
+        result = subprocess.run(
+            values,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            encoding="utf-8",
+            errors="replace",
+            check=False,
+        )
+        if result.returncode == 0 or not expect_success:
+            return result.returncode, result.stdout
+        retryable = any(
+            marker in result.stdout for marker in CLI_BOOTSTRAP_RETRY_MARKERS
+        )
+        if not retryable or attempt == attempts:
+            raise SmokeFailure(
+                f"command failed ({result.returncode}): {' '.join(values)}\n{result.stdout}"
+            )
+        delay = attempt * 2
+        print(
+            f"ARDUINO_CLI_BOOTSTRAP_RETRY={attempt}/{attempts - 1};"
+            f"DELAY_SECONDS={delay}",
+            flush=True,
+        )
+        time.sleep(delay)
+    raise AssertionError("unreachable Arduino CLI retry state")
 
 
 ## @brief 임시 source snapshot을 독립 Git repository로 초기화합니다.
