@@ -1,0 +1,8 @@
+mainmenu "M24 UARTE onboard HIL"
+
+source "Kconfig.zephyr"
+
+config NUCODE_M24_UARTE_HIL_INSTANCE
+	int "UARTE instance exercised by this image"
+	range 20 30
+	default 20
