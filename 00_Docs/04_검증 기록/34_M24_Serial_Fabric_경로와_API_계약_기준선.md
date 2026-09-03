@@ -5,7 +5,8 @@
 | 문서 ID | VERIFY-M24-SERIAL-FABRIC-001 |
 | 기록일 | 2026-09-03 |
 | 제품선 | `v0.4.0` M24 작업 1 |
-| Core 구현 commit | `bf5d129603d8c7da8060f8ee7ba04af641f6f6f2` |
+| Core 구현 commit | `aff666411a3d80bcf1008c74ff4f4a989d9dd351` |
+| 최초 계약 commit | `bf5d129603d8c7da8060f8ee7ba04af641f6f6f2` |
 | Board gitlink | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | 판정 | **M24 작업 1 PASS / 작업 2 착수 가능** |
 | 작성자 | Quantum / NUCODE |
@@ -74,7 +75,7 @@ Engineering B errata 7(UARTE), 8·21(SPIM), 54(SPIS), 105(TWIM)를 구현과 시
 | Gate | 결과 |
 | --- | --- |
 | `python tools/peripheral/verify_m24_serial_contract.py --write --ncs-root C:\ncs\v3.4.0` | PASS, 5 block / 23 identity / 23 profile |
-| `python -m unittest -v tests.host.test_m24_serial_contract` | 8/8 PASS |
+| `python -m unittest -v tests.host.test_m24_serial_contract` | 9/9 PASS |
 | `python tools/ci/run_m12_gate.py inventory` | M23 75 identity + M24 계약 PASS |
 | `python tools/ci/run_m12_gate.py contract` | 41/41 PASS |
 | `python tools/ci/run_m12_gate.py host` | PASS |
@@ -87,10 +88,19 @@ Engineering B errata 7(UARTE), 8·21(SPIM), 54(SPIS), 105(TWIM)를 구현과 시
 
 검증기는 exact NCS v3.4.0/Zephyr 4.4.0 DTS source hash와 node base/IRQ, Board pinctrl와
 회로도 source hash, 23개 profile 전수, 미승인 route, singleton·alias, manifest 미승격 상태와
-생성 문서 일치를 fail-closed로 검사한다.
+생성 문서 일치를 fail-closed로 검사한다. 텍스트 source는 checkout OS에 무관한 LF 정규화
+SHA-256, PDF는 raw byte SHA-256을 사용한다.
 
 검증 환경은 Host CPython `3.14.7`, Nordic Toolchain Python `3.12.4`, WinLibs POSIX UCRT GCC
 `16.1.0`이다.
+
+### 6.1 원격 CI 교정 이력
+
+최초 계약이 포함된 `d5bc5f0`의 Software Gates #87에서는 Windows checkout의 CRLF 바이트로
+기록한 DTS hash가 Ubuntu checkout의 LF 바이트와 달라 inventory job이 실패했다. 다른 6개
+software job은 통과했다. `aff6664`에서 source별 `raw`/`lf-normalized` hash mode를 명시하고
+checkout EOL 불변 host test를 추가했다. 이 실패는 peripheral 계약이나 driver 결함이 아니라
+근거 파일의 교차 OS byte canonicalization 결함이며, 기록에서 삭제하지 않는다.
 
 ## 7. CI fail-closed 연결
 
