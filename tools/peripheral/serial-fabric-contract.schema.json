@@ -1,0 +1,274 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/tools/peripheral/serial-fabric-contract.schema.json",
+  "title": "NU54DK M24 serial fabric route and API contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "identity",
+    "sources",
+    "stable_surface",
+    "advanced_api",
+    "pin_banks",
+    "blocks",
+    "approved_profiles",
+    "lifecycle",
+    "errata",
+    "completion_gates"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["soc", "ncs_version", "ncs_revision", "zephyr_version", "zephyr_revision", "board", "board_revision"],
+      "properties": {
+        "soc": { "const": "nRF54L15" },
+        "ncs_version": { "const": "v3.4.0" },
+        "ncs_revision": { "$ref": "#/$defs/revision" },
+        "zephyr_version": { "const": "4.4.0" },
+        "zephyr_revision": { "$ref": "#/$defs/revision" },
+        "board": { "const": "nrf54l15dk/nrf54l15/cpuapp/nu54dk" },
+        "board_revision": { "$ref": "#/$defs/revision" }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "path", "url", "sha256"],
+        "properties": {
+          "id": { "$ref": "#/$defs/token" },
+          "kind": { "enum": ["local", "official", "competitor"] },
+          "path": { "type": ["string", "null"] },
+          "url": { "type": ["string", "null"] },
+          "sha256": { "anyOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] }
+        }
+      }
+    },
+    "stable_surface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["singletons", "forbidden_aliases"],
+      "properties": {
+        "singletons": {
+          "type": "array",
+          "minItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "identity", "compatibility"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "identity": { "$ref": "#/$defs/token" },
+              "compatibility": { "const": "immutable" }
+            }
+          }
+        },
+        "forbidden_aliases": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "advanced_api": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "header", "namespace", "factory", "allocation", "identity_selector", "selectors", "rules"],
+      "properties": {
+        "status": { "const": "contract-only-not-public" },
+        "header": { "const": "nucode/SerialFabric.h" },
+        "namespace": { "const": "nucode::arduino" },
+        "factory": { "const": "serialFabric()" },
+        "allocation": { "const": "static-opaque-handles" },
+        "identity_selector": { "const": "kind-and-instance" },
+        "selectors": {
+          "type": "array",
+          "minItems": 5,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "return_type", "instances"],
+            "properties": {
+              "name": { "enum": ["uarte", "spim", "spis", "twim", "twis"] },
+              "return_type": { "type": "string", "pattern": "^[A-Z][A-Za-z]+Handle$" },
+              "instances": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": { "type": "integer", "enum": [0, 20, 21, 22, 30] }
+              }
+            }
+          }
+        },
+        "rules": {
+          "type": "array",
+          "minItems": 8,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonempty" }
+        }
+      }
+    },
+    "pin_banks": {
+      "type": "array",
+      "minItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "port", "silicon_status", "board_status", "allowed_blocks", "signal_sets", "preconditions", "blocked_pins"],
+        "properties": {
+          "id": { "$ref": "#/$defs/token" },
+          "port": { "type": "integer", "minimum": 0, "maximum": 2 },
+          "silicon_status": { "const": "verified" },
+          "board_status": { "enum": ["approved", "conditional", "not-approved"] },
+          "allowed_blocks": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "integer", "enum": [0, 20, 21, 22, 30] }
+          },
+          "signal_sets": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": { "type": "string", "pattern": "^P[0-2]\\.[0-9]{1,2}$" }
+            }
+          },
+          "preconditions": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "$ref": "#/$defs/nonempty" }
+          },
+          "blocked_pins": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["pin", "reason"],
+              "properties": {
+                "pin": { "type": "string", "pattern": "^P[0-2]\\.[0-9]{1,2}$" },
+                "reason": { "$ref": "#/$defs/nonempty" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "blocks": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "instance", "nonsecure_base", "irq", "personalities", "route_classes", "current_identity", "activation_state"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^serial(00|20|21|22|30)$" },
+          "instance": { "type": "integer", "enum": [0, 20, 21, 22, 30] },
+          "nonsecure_base": { "type": "string", "pattern": "^0x[0-9a-f]{8}$" },
+          "irq": { "type": "integer", "minimum": 0 },
+          "personalities": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 5,
+            "uniqueItems": true,
+            "items": { "$ref": "#/$defs/token" }
+          },
+          "route_classes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/token" }
+            }
+          },
+          "current_identity": { "type": ["string", "null"] },
+          "activation_state": { "enum": ["current-public", "unassigned"] }
+        }
+      }
+    },
+    "approved_profiles": {
+      "type": "array",
+      "minItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "identity", "route_class", "pins", "preconditions", "status"],
+        "properties": {
+          "id": { "$ref": "#/$defs/token" },
+          "identity": { "$ref": "#/$defs/token" },
+          "route_class": { "$ref": "#/$defs/token" },
+          "pins": {
+            "type": "object",
+            "minProperties": 2,
+            "additionalProperties": { "type": "string", "pattern": "^P[0-2]\\.[0-9]{1,2}$" }
+          },
+          "preconditions": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "$ref": "#/$defs/nonempty" }
+          },
+          "status": { "enum": ["current-verified", "planned-hil"] }
+        }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["activation_order", "deactivation_order", "dma_buffer_states", "callback_context", "timeout_policy"],
+      "properties": {
+        "activation_order": { "$ref": "#/$defs/string_array" },
+        "deactivation_order": { "$ref": "#/$defs/string_array" },
+        "dma_buffer_states": {
+          "type": "array",
+          "minItems": 4,
+          "uniqueItems": true,
+          "items": { "enum": ["application-owned", "queued", "dma-owned", "completed", "cancelled", "error"] }
+        },
+        "callback_context": { "const": "bounded-isr-event-deferred-to-thread" },
+        "timeout_policy": { "const": "bounded-stop-then-fail-closed-reset-required" }
+      }
+    },
+    "errata": {
+      "type": "array",
+      "minItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "peripheral", "obligation"],
+        "properties": {
+          "id": { "type": "integer", "minimum": 1 },
+          "peripheral": { "enum": ["uarte", "spim", "spis", "twim"] },
+          "obligation": { "$ref": "#/$defs/nonempty" }
+        }
+      }
+    },
+    "completion_gates": { "$ref": "#/$defs/string_array" }
+  },
+  "$defs": {
+    "revision": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "token": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "nonempty": { "type": "string", "minLength": 1 },
+    "string_array": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/nonempty" }
+    }
+  }
+}

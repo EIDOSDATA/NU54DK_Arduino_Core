@@ -32,7 +32,7 @@ jobs:
         run: python tools/ci/run_m12_gate.py contract
 
   peripheral-inventory:
-    name: M23 peripheral inventory and generated API
+    name: M23 inventory and M24 serial-fabric contract
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout exact source and board package
@@ -44,7 +44,7 @@ jobs:
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: 3.12.10
-      - name: Verify exhaustive manifest and generated artifacts
+      - name: Verify exhaustive manifest, route and API contracts
         run: python tools/ci/run_m12_gate.py inventory
 
   host:

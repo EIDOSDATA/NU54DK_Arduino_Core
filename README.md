@@ -281,6 +281,7 @@ git submodule status
 - [Boards Manager 설치와 package](<./00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
 - [제품 로드맵](<./00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md>)
 - [전 인스턴스·DMA·BLE 경쟁 기준](<./00_Docs/01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)
+- [M24 Serial Fabric 경로와 API 계약](<./00_Docs/01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md>)
 - [M23 Peripheral instance matrix](<./00_Docs/01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)
 - [검증 기록](<./00_Docs/04_검증 기록/README.md>)
 - [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues)

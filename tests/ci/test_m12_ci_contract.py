@@ -88,6 +88,38 @@ class M12CiContractTests(unittest.TestCase):
         self.assertLess(linux_job.index(command), linux_job.index("run_zephyr_build.py"))
         self.assertNotIn("continue-on-error", linux_job)
 
+    ## @brief M24 serial-fabric 계약도 software와 exact NCS build 양쪽에서 fail-closed입니다.
+    def test_m24_serial_contract_gates_routes_and_exact_dts_sources(self) -> None:
+        software = (
+            REPOSITORY / ".github" / "workflows" / "m12-software-gates.yml"
+        ).read_text(encoding="utf-8")
+        job = software.split("\n  peripheral-inventory:\n", 1)[1].split(
+            "\n  host:\n", 1
+        )[0]
+        self.assertIn("M24 serial-fabric contract", job)
+        self.assertIn("python tools/ci/run_m12_gate.py inventory", job)
+        self.assertNotIn("continue-on-error", job)
+
+        gate = (REPOSITORY / "tools" / "ci" / "run_m12_gate.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('"verify_m24_serial_contract.py"', gate)
+
+        reproducible = (
+            REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
+        ).read_text(encoding="utf-8")
+        linux_job = reproducible.split("\n  zephyr-build:\n", 1)[1].split(
+            "\n  arduino-build:\n", 1
+        )[0]
+        m23 = "python3 tools/peripheral/verify_m23_inventory.py"
+        m24 = "python3 tools/peripheral/verify_m24_serial_contract.py"
+        build = "python3 tools/ci/run_zephyr_build.py"
+        self.assertIn(m24, linux_job)
+        self.assertIn('--ncs-root "$NCS_CI_WORKSPACE"', linux_job)
+        self.assertLess(linux_job.index(m23), linux_job.index(m24))
+        self.assertLess(linux_job.index(m24), linux_job.index(build))
+        self.assertNotIn("continue-on-error", linux_job)
+
     ## @brief M14 native 의미 시험이 실행 가능한 Ubuntu job에서 직접 수행되는지 검증합니다.
     def test_m14_native_semantic_gate_runs_on_ubuntu(self) -> None:
         path = REPOSITORY / ".github" / "workflows" / "m12-software-gates.yml"

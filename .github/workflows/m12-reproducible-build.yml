@@ -51,6 +51,10 @@ jobs:
         run: >-
           python3 tools/peripheral/verify_m23_inventory.py
           --ncs-root "$NCS_CI_WORKSPACE"
+      - name: Verify M24 serial-fabric contract against exact NCS Devicetree
+        run: >-
+          python3 tools/peripheral/verify_m24_serial_contract.py
+          --ncs-root "$NCS_CI_WORKSPACE"
       - name: Build representative Zephyr suites
         run: >-
           python3 tools/ci/run_zephyr_build.py

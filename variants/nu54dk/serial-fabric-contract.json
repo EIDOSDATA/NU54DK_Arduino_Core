@@ -1,0 +1,532 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "soc": "nRF54L15",
+    "ncs_version": "v3.4.0",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_version": "4.4.0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3"
+  },
+  "sources": [
+    {
+      "id": "board-schematic",
+      "kind": "local",
+      "path": "board_package/NU54DK_Zephyr_DTS/NU54-DK Schematic.pdf",
+      "url": null,
+      "sha256": "7e959be6d8db5d31c55366bd118093727062588770772b226117dd3826798466"
+    },
+    {
+      "id": "board-pinctrl",
+      "kind": "local",
+      "path": "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk-pinctrl.dtsi",
+      "url": null,
+      "sha256": "55509a6cb3ac50c0be3a320a71f0675a45a5048a442e0a709cb48a3b9c8841dc"
+    },
+    {
+      "id": "board-common-dts",
+      "kind": "local",
+      "path": "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk_cpuapp_common.dtsi",
+      "url": null,
+      "sha256": "0f6291d22eb7fed882a0b57b6d0fbd3126ce687dc4a785d707b2c748c3086a0f"
+    },
+    {
+      "id": "variant-pin-policy",
+      "kind": "local",
+      "path": "dts/nucode/nu54dk-arduino-pins.dtsi",
+      "url": null,
+      "sha256": "b8a5b38497f5545c43f88d351a2cd3607fedbf48a4b30ccec3721d2e0eebd446"
+    },
+    {
+      "id": "runtime-dts",
+      "kind": "local",
+      "path": "dts/nucode/nu54dk-arduino-runtime.dtsi",
+      "url": null,
+      "sha256": "2d57f9951bee0d8b4c4811bdd3734fe09fe183ec6c80b852b58da9c5c452f85f"
+    },
+    {
+      "id": "nordic-uarte",
+      "kind": "official",
+      "path": null,
+      "url": "https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/uarte.html-topic",
+      "sha256": null
+    },
+    {
+      "id": "nordic-spim",
+      "kind": "official",
+      "path": null,
+      "url": "https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/spim.html-topic",
+      "sha256": null
+    },
+    {
+      "id": "nordic-spis",
+      "kind": "official",
+      "path": null,
+      "url": "https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/spis.html-topic",
+      "sha256": null
+    },
+    {
+      "id": "nordic-twim",
+      "kind": "official",
+      "path": null,
+      "url": "https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/twim.html-topic",
+      "sha256": null
+    },
+    {
+      "id": "nordic-twis",
+      "kind": "official",
+      "path": null,
+      "url": "https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/twis.html-topic",
+      "sha256": null
+    },
+    {
+      "id": "nordic-dedicated-pins",
+      "kind": "official",
+      "path": null,
+      "url": "https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/chapters/pin.html-dedicated_pins",
+      "sha256": null
+    },
+    {
+      "id": "nordic-csp47-pins",
+      "kind": "official",
+      "path": null,
+      "url": "https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/chapters/pin.html-csp47",
+      "sha256": null
+    },
+    {
+      "id": "nordic-errata-engineering-b",
+      "kind": "official",
+      "path": null,
+      "url": "https://docs.nordicsemi.com/r/bundle/errata_nrf54l15_engb/page/ERR/nrf54l15/EngineeringB/latest/err_l15_new.html",
+      "sha256": null
+    },
+    {
+      "id": "competitor-v1-0-17",
+      "kind": "competitor",
+      "path": null,
+      "url": "https://github.com/lolren/nrf54-arduino-core/tree/a6bb99879aa14cbff362a5478d5f1189848b4200",
+      "sha256": null
+    }
+  ],
+  "stable_surface": {
+    "singletons": [
+      { "name": "Serial", "identity": "uarte20", "compatibility": "immutable" },
+      { "name": "Serial1", "identity": "uarte30", "compatibility": "immutable" },
+      { "name": "Wire", "identity": "twim22", "compatibility": "immutable" },
+      { "name": "SPI", "identity": "spim00", "compatibility": "immutable" }
+    ],
+    "forbidden_aliases": ["Serial2", "SPI_HS", "Wire1"]
+  },
+  "advanced_api": {
+    "status": "contract-only-not-public",
+    "header": "nucode/SerialFabric.h",
+    "namespace": "nucode::arduino",
+    "factory": "serialFabric()",
+    "allocation": "static-opaque-handles",
+    "identity_selector": "kind-and-instance",
+    "selectors": [
+      { "name": "uarte", "return_type": "UarteHandle", "instances": [0, 20, 21, 22, 30] },
+      { "name": "spim", "return_type": "SpimHandle", "instances": [0, 20, 21, 22, 30] },
+      { "name": "spis", "return_type": "SpisHandle", "instances": [0, 20, 21, 22, 30] },
+      { "name": "twim", "return_type": "TwimHandle", "instances": [20, 21, 22, 30] },
+      { "name": "twis", "return_type": "TwisHandle", "instances": [20, 21, 22, 30] }
+    ],
+    "rules": [
+      "Raw register base addresses are never accepted by the public factory.",
+      "A selector names exactly one silicon personality identity; aliases never count as another resource.",
+      "Handles are static opaque views and constructors do not enable hardware or allocate memory.",
+      "Route changes are staged only while inactive and are rejected while active or cancelling.",
+      "Activation reserves the shared serial block, pins, IRQ and every DMA memory range atomically.",
+      "A second personality or handle on the same serial block fails with ownership-conflict.",
+      "Different serial blocks may run together only when pin and DMA leases are disjoint.",
+      "Unsupported instance, route, profile or electrical policy fails before any register or pin change.",
+      "Standard Arduino singleton behavior and identity remain unchanged when the advanced API is enabled.",
+      "The advanced header is not public and remains absent from releases until source, build, semantic and required HIL gates pass."
+    ]
+  },
+  "pin_banks": [
+    {
+      "id": "p2-dedicated20",
+      "port": 2,
+      "silicon_status": "verified",
+      "board_status": "approved",
+      "allowed_blocks": [0, 20],
+      "signal_sets": {
+        "uarte": { "rxd": "P2.0", "txd": "P2.2", "cts": "P2.4", "rts": "P2.5" },
+        "spim": { "dcx": "P2.0", "sck": "P2.1", "mosi": "P2.2", "miso": "P2.4", "csn": "P2.5" },
+        "spis": { "sck": "P2.1", "miso": "P2.2", "mosi": "P2.4", "csn": "P2.5" }
+      },
+      "preconditions": [
+        "SPIM00 at 32 MHz uses the required E0/E1 extra-high-drive configuration.",
+        "Block 20 cross-domain use enters and leaves constant-latency power mode with the lease.",
+        "Pins already owned by block 00 or block 20 make the route fail before activation."
+      ],
+      "blocked_pins": []
+    },
+    {
+      "id": "p2-dedicated21",
+      "port": 2,
+      "silicon_status": "verified",
+      "board_status": "not-approved",
+      "allowed_blocks": [0, 21],
+      "signal_sets": {
+        "uarte": { "rxd": "P2.7", "txd": "P2.8", "cts": "P2.9", "rts": "P2.10" },
+        "spim": { "dcx": "P2.7", "sck": "P2.6", "mosi": "P2.8", "miso": "P2.9", "csn": "P2.10" },
+        "spis": { "sck": "P2.6", "miso": "P2.8", "mosi": "P2.9", "csn": "P2.10" }
+      },
+      "preconditions": [
+        "The standard board profile rejects this bank; no public route may silently select it.",
+        "A future board-rework profile requires a separate electrical review and HIL approval."
+      ],
+      "blocked_pins": [
+        { "pin": "P2.7", "reason": "LED3 and MOD_SWO board nets" },
+        { "pin": "P2.8", "reason": "PMIC_PG board net" },
+        { "pin": "P2.9", "reason": "LED1 board net" },
+        { "pin": "P2.10", "reason": "PMIC_CE system-owned board net" }
+      ]
+    },
+    {
+      "id": "p1-flexible",
+      "port": 1,
+      "silicon_status": "verified",
+      "board_status": "conditional",
+      "allowed_blocks": [20, 21, 22],
+      "signal_sets": {},
+      "preconditions": [
+        "P1.4 through P1.7 require the console profile to be disabled and the DAP UART path disconnected.",
+        "P1.2 and P1.3 remain a pulled-up module and PMIC I2C bus and are approved only for TWI personalities.",
+        "P1.0 and P1.1 remain wired to the LFXO and are excluded from serial routes without board rework.",
+        "P1.8, P1.9, P1.11 and P1.13 are input-only board signals and cannot satisfy output signals.",
+        "P1.10, P1.12 and P1.14 are transferable but their LED or VBAT monitor electrical load is part of HIL."
+      ],
+      "blocked_pins": [
+        { "pin": "P1.0", "reason": "LFXO crystal net" },
+        { "pin": "P1.1", "reason": "LFXO crystal net" },
+        { "pin": "P1.8", "reason": "SW3 input-only board net" },
+        { "pin": "P1.9", "reason": "SW2 input-only board net" },
+        { "pin": "P1.11", "reason": "PMIC_INT input-only board net" },
+        { "pin": "P1.13", "reason": "SW1 input-only board net" }
+      ]
+    },
+    {
+      "id": "p0-flexible",
+      "port": 0,
+      "silicon_status": "verified",
+      "board_status": "conditional",
+      "allowed_blocks": [30],
+      "signal_sets": {
+        "uarte": { "txd": "P0.0", "rxd": "P0.1", "rts": "P0.2", "cts": "P0.3" }
+      },
+      "preconditions": [
+        "The current UARTE30 profile may use the switched DAP virtual COM path.",
+        "SPIM, SPIS, TWIM, TWIS and connector-directed UARTE require the DAP UART switch to be disabled before activation.",
+        "P0.4 is SW4 input-only and is excluded from every serial route."
+      ],
+      "blocked_pins": [
+        { "pin": "P0.4", "reason": "SW4 input-only board net" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "id": "serial00",
+      "instance": 0,
+      "nonsecure_base": "0x4004a000",
+      "irq": 74,
+      "personalities": ["uarte00", "spim00", "spis00"],
+      "route_classes": {
+        "uarte": ["p2-dedicated20", "p2-dedicated21"],
+        "spim": ["p2-dedicated20", "p2-dedicated21"],
+        "spis": ["p2-dedicated20", "p2-dedicated21"]
+      },
+      "current_identity": "spim00",
+      "activation_state": "current-public"
+    },
+    {
+      "id": "serial20",
+      "instance": 20,
+      "nonsecure_base": "0x400c6000",
+      "irq": 198,
+      "personalities": ["uarte20", "spim20", "spis20", "twim20", "twis20"],
+      "route_classes": {
+        "uarte": ["p1-flexible", "p2-dedicated20"],
+        "spim": ["p1-flexible", "p2-dedicated20"],
+        "spis": ["p1-flexible", "p2-dedicated20"],
+        "twim": ["p1-flexible"],
+        "twis": ["p1-flexible"]
+      },
+      "current_identity": "uarte20",
+      "activation_state": "current-public"
+    },
+    {
+      "id": "serial21",
+      "instance": 21,
+      "nonsecure_base": "0x400c7000",
+      "irq": 199,
+      "personalities": ["uarte21", "spim21", "spis21", "twim21", "twis21"],
+      "route_classes": {
+        "uarte": ["p1-flexible", "p2-dedicated21"],
+        "spim": ["p1-flexible", "p2-dedicated21"],
+        "spis": ["p1-flexible", "p2-dedicated21"],
+        "twim": ["p1-flexible"],
+        "twis": ["p1-flexible"]
+      },
+      "current_identity": null,
+      "activation_state": "unassigned"
+    },
+    {
+      "id": "serial22",
+      "instance": 22,
+      "nonsecure_base": "0x400c8000",
+      "irq": 200,
+      "personalities": ["uarte22", "spim22", "spis22", "twim22", "twis22"],
+      "route_classes": {
+        "uarte": ["p1-flexible"],
+        "spim": ["p1-flexible"],
+        "spis": ["p1-flexible"],
+        "twim": ["p1-flexible"],
+        "twis": ["p1-flexible"]
+      },
+      "current_identity": "twim22",
+      "activation_state": "current-public"
+    },
+    {
+      "id": "serial30",
+      "instance": 30,
+      "nonsecure_base": "0x40104000",
+      "irq": 260,
+      "personalities": ["uarte30", "spim30", "spis30", "twim30", "twis30"],
+      "route_classes": {
+        "uarte": ["p0-flexible"],
+        "spim": ["p0-flexible"],
+        "spis": ["p0-flexible"],
+        "twim": ["p0-flexible"],
+        "twis": ["p0-flexible"]
+      },
+      "current_identity": "uarte30",
+      "activation_state": "current-public"
+    }
+  ],
+  "approved_profiles": [
+    {
+      "id": "current-uarte20-console",
+      "identity": "uarte20",
+      "route_class": "p1-flexible",
+      "pins": { "txd": "P1.4", "rxd": "P1.5", "rts": "P1.6", "cts": "P1.7" },
+      "preconditions": ["The system console remains the owner and the advanced handle is non-owning."],
+      "status": "current-verified"
+    },
+    {
+      "id": "current-uarte30-dap",
+      "identity": "uarte30",
+      "route_class": "p0-flexible",
+      "pins": { "txd": "P0.0", "rxd": "P0.1", "rts": "P0.2", "cts": "P0.3" },
+      "preconditions": ["The DAP UART switch is enabled for virtual COM use."],
+      "status": "current-verified"
+    },
+    {
+      "id": "current-spim00",
+      "identity": "spim00",
+      "route_class": "p2-dedicated20",
+      "pins": { "sck": "P2.1", "mosi": "P2.2", "miso": "P2.4" },
+      "preconditions": ["Chip select remains sketch-owned."],
+      "status": "current-verified"
+    },
+    {
+      "id": "current-twim22",
+      "identity": "twim22",
+      "route_class": "p1-flexible",
+      "pins": { "sda": "P1.2", "scl": "P1.3" },
+      "preconditions": ["The onboard pull-ups and PMIC bus electrical contract remain active."],
+      "status": "current-verified"
+    },
+    {
+      "id": "m24-uarte00",
+      "identity": "uarte00",
+      "route_class": "p2-dedicated20",
+      "pins": { "rxd": "P2.0", "txd": "P2.2", "cts": "P2.4", "rts": "P2.5" },
+      "preconditions": ["serial00 and all listed pins are free."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-spis00",
+      "identity": "spis00",
+      "route_class": "p2-dedicated20",
+      "pins": { "sck": "P2.1", "miso": "P2.2", "mosi": "P2.4", "csn": "P2.5" },
+      "preconditions": ["serial00 and all listed pins are free."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-spim20",
+      "identity": "spim20",
+      "route_class": "p2-dedicated20",
+      "pins": { "sck": "P2.1", "mosi": "P2.2", "miso": "P2.4", "csn": "P2.5" },
+      "preconditions": ["The console is disabled.", "Constant-latency power mode is leased.", "serial00 is inactive."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-spis20",
+      "identity": "spis20",
+      "route_class": "p2-dedicated20",
+      "pins": { "sck": "P2.1", "miso": "P2.2", "mosi": "P2.4", "csn": "P2.5" },
+      "preconditions": ["The console is disabled.", "Constant-latency power mode is leased.", "serial00 is inactive."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-twim20",
+      "identity": "twim20",
+      "route_class": "p1-flexible",
+      "pins": { "sda": "P1.2", "scl": "P1.3" },
+      "preconditions": ["The console is disabled.", "serial22 is inactive."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-twis20",
+      "identity": "twis20",
+      "route_class": "p1-flexible",
+      "pins": { "sda": "P1.2", "scl": "P1.3" },
+      "preconditions": ["The console is disabled.", "serial22 is inactive."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-uarte21",
+      "identity": "uarte21",
+      "route_class": "p1-flexible",
+      "pins": { "txd": "P1.10", "rxd": "P1.14" },
+      "preconditions": ["LED2 and LED4 are transferred to the serial owner."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-spim21",
+      "identity": "spim21",
+      "route_class": "p1-flexible",
+      "pins": { "sck": "P1.10", "mosi": "P1.12", "miso": "P1.14" },
+      "preconditions": ["Chip select remains sketch-owned.", "LED and VBAT monitor loading is included in HIL."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-spis21",
+      "identity": "spis21",
+      "route_class": "p1-flexible",
+      "pins": { "sck": "P1.4", "mosi": "P1.5", "miso": "P1.6", "csn": "P1.7" },
+      "preconditions": ["The console is disabled.", "The DAP UART switch is disabled."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-twim21",
+      "identity": "twim21",
+      "route_class": "p1-flexible",
+      "pins": { "sda": "P1.2", "scl": "P1.3" },
+      "preconditions": ["serial22 is inactive."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-twis21",
+      "identity": "twis21",
+      "route_class": "p1-flexible",
+      "pins": { "sda": "P1.2", "scl": "P1.3" },
+      "preconditions": ["serial22 is inactive."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-uarte22",
+      "identity": "uarte22",
+      "route_class": "p1-flexible",
+      "pins": { "txd": "P1.10", "rxd": "P1.14" },
+      "preconditions": ["Wire is inactive.", "LED2 and LED4 are transferred to the serial owner."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-spim22",
+      "identity": "spim22",
+      "route_class": "p1-flexible",
+      "pins": { "sck": "P1.10", "mosi": "P1.12", "miso": "P1.14" },
+      "preconditions": ["Wire is inactive.", "Chip select remains sketch-owned."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-spis22",
+      "identity": "spis22",
+      "route_class": "p1-flexible",
+      "pins": { "sck": "P1.4", "mosi": "P1.5", "miso": "P1.6", "csn": "P1.7" },
+      "preconditions": ["Wire and the console are disabled.", "The DAP UART switch is disabled."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-twis22",
+      "identity": "twis22",
+      "route_class": "p1-flexible",
+      "pins": { "sda": "P1.2", "scl": "P1.3" },
+      "preconditions": ["Wire controller mode is inactive."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-spim30",
+      "identity": "spim30",
+      "route_class": "p0-flexible",
+      "pins": { "sck": "P0.0", "mosi": "P0.1", "miso": "P0.2" },
+      "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled.", "Chip select remains sketch-owned."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-spis30",
+      "identity": "spis30",
+      "route_class": "p0-flexible",
+      "pins": { "sck": "P0.0", "mosi": "P0.1", "miso": "P0.2", "csn": "P0.3" },
+      "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-twim30",
+      "identity": "twim30",
+      "route_class": "p0-flexible",
+      "pins": { "sda": "P0.0", "scl": "P0.1" },
+      "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled.", "External pull-ups are fitted by the fixture."],
+      "status": "planned-hil"
+    },
+    {
+      "id": "m24-twis30",
+      "identity": "twis30",
+      "route_class": "p0-flexible",
+      "pins": { "sda": "P0.0", "scl": "P0.1" },
+      "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled.", "External pull-ups are fitted by the fixture."],
+      "status": "planned-hil"
+    }
+  ],
+  "lifecycle": {
+    "activation_order": [
+      "Validate identity, profile, pin direction and electrical policy without changing hardware.",
+      "Reserve serial block, pins, IRQ, power requirement and every DMA memory range in one lease.",
+      "Snapshot GPIO state and transfer pins to the selected route.",
+      "Apply runtime power and pinctrl, clear stale events and initialize the selected personality.",
+      "Commit the lease and only then publish the active state."
+    ],
+    "deactivation_order": [
+      "Reject new work and request a bounded cancel or stop.",
+      "Wait for the documented terminal event and prove DMA no longer owns application memory.",
+      "Disable shortcuts, publish-subscribe links, interrupts and the peripheral personality.",
+      "Disconnect PSEL, release power mode, restore GPIO state and release the complete lease.",
+      "Latch fail-closed if bounded shutdown or restoration cannot be proven."
+    ],
+    "dma_buffer_states": ["application-owned", "queued", "dma-owned", "completed", "cancelled", "error"],
+    "callback_context": "bounded-isr-event-deferred-to-thread",
+    "timeout_policy": "bounded-stop-then-fail-closed-reset-required"
+  },
+  "errata": [
+    { "id": 7, "peripheral": "uarte", "obligation": "RX flush and empty FIFO accounting must not trust a stale RXD.AMOUNT value." },
+    { "id": 8, "peripheral": "spim", "obligation": "MOSI corruption conditions and the pinned nrfx workaround state are covered by targeted transfer tests." },
+    { "id": 21, "peripheral": "spim", "obligation": "The final MOSI transition condition is recorded and checked with a logic analyzer where applicable." },
+    { "id": 54, "peripheral": "spis", "obligation": "SDO receives a known idle state so the erratum cannot leave it floating." },
+    { "id": 105, "peripheral": "twim", "obligation": "Cancellation never disables TWIM during clock stretching; an unprovable stop requires reset before reuse." }
+  ],
+  "completion_gates": [
+    "Every one of the 23 personality identities has a build, semantic and standalone HIL result.",
+    "Every same-block personality pair fails atomically while one personality owns the block.",
+    "Begin-end and cross-personality handover repeat without stale pins, events, IRQs, DMA or power leases.",
+    "A five-block maximum-concurrency topology runs with disjoint pins and DMA buffers.",
+    "Timeout, cancel, bus error, overflow, underrun and System OFF recovery are verified.",
+    "Throughput, CPU load, latency, data loss and power are recorded for synchronous and asynchronous paths.",
+    "No planned profile or contract-only API is described as public support before all required states pass."
+  ]
+}

@@ -118,6 +118,7 @@
 - Schema: [`tools/peripheral/peripheral-manifest.schema.json`](../../tools/peripheral/peripheral-manifest.schema.json)
 - 검증·생성기: [`tools/peripheral/verify_m23_inventory.py`](../../tools/peripheral/verify_m23_inventory.py)
 - Runtime table: [`cores/arduino/generated/PeripheralInventory.inc`](../../cores/arduino/generated/PeripheralInventory.inc)
+- M24 serial-fabric route/API 계약: [`10_M24_Serial_Fabric_경로와_API_계약.md`](10_M24_Serial_Fabric_경로와_API_계약.md)
 
 검증기는 identity 누락, public object 중복 alias, 공유 block 오류, evidence 파일 누락과 생성물 drift를 거부한다.
 `--ncs-root`를 주면 exact NCS DTS checksum과 node label까지 대조한다.
