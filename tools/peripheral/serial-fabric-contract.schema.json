@@ -12,13 +12,14 @@
     "advanced_api",
     "pin_banks",
     "blocks",
+    "test_resources",
     "approved_profiles",
     "lifecycle",
     "errata",
     "completion_gates"
   ],
   "properties": {
-    "schema_version": { "const": 1 },
+    "schema_version": { "const": 2 },
     "identity": {
       "type": "object",
       "additionalProperties": false,
@@ -200,6 +201,37 @@
         }
       }
     },
+    "test_resources": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "location", "execution_class", "board_nets", "identities", "automation_scope", "preconditions"],
+        "properties": {
+          "id": { "$ref": "#/$defs/token" },
+          "kind": { "enum": ["host-uart-bridge", "onboard-i2c-target", "header-fixture"] },
+          "location": { "enum": ["onboard", "connector"] },
+          "execution_class": { "enum": ["onboard-automatic", "external-fixture"] },
+          "board_nets": {
+            "type": "array",
+            "minItems": 2,
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^P[0-2]\\.[0-9]{1,2}$" }
+          },
+          "identities": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "$ref": "#/$defs/token" }
+          },
+          "automation_scope": { "$ref": "#/$defs/string_array" },
+          "preconditions": { "$ref": "#/$defs/string_array" }
+        }
+      }
+    },
     "approved_profiles": {
       "type": "array",
       "minItems": 4,
@@ -207,7 +239,7 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "identity", "route_class", "pins", "preconditions", "status"],
+        "required": ["id", "identity", "route_class", "pins", "test_resource", "execution_class", "preconditions", "status"],
         "properties": {
           "id": { "$ref": "#/$defs/token" },
           "identity": { "$ref": "#/$defs/token" },
@@ -217,6 +249,8 @@
             "minProperties": 2,
             "additionalProperties": { "type": "string", "pattern": "^P[0-2]\\.[0-9]{1,2}$" }
           },
+          "test_resource": { "$ref": "#/$defs/token" },
+          "execution_class": { "enum": ["onboard-automatic", "external-fixture"] },
           "preconditions": {
             "type": "array",
             "uniqueItems": true,

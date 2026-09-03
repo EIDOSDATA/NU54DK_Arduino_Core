@@ -16,7 +16,9 @@
 M24 작업 1은 nRF54L15의 5개 serial block과 23개 UARTE/SPIM/SPIS/TWIM/TWIS
 personality를 실제 register base, IRQ, 공유 관계와 pin route에 연결했다. 기존 Arduino singleton의
 identity, 향후 고급 API 형태, DMA buffer 수명주기와 errata 의무를 machine-readable 계약으로
-고정하고 local·CI drift 검사를 연결했다.
+고정하고 local·CI drift 검사를 연결했다. NU54DK 회로도 9쪽도 다시 대조해 단독 HIL의 primary
+시험 자원을 6개로 고정하고, USB·온보드 회로만 쓰는 7개 identity와 외부 fixture가 필요한 16개를
+분리했다.
 
 이 판정은 **경로와 API 계약만 완료**됐다는 뜻이다. 새 driver, `<nucode/SerialFabric.h>`, async
 DMA, 신규 personality와 신규 HIL은 아직 구현하거나 공개하지 않았다. M23 manifest의 미구현
@@ -42,12 +44,32 @@ identity는 계속 `absent`/`none`/`not_run`이며 `v0.3.0` 공개 지원 범위
 | --- | --- | --- | --- |
 | `p2-dedicated20` | 승인 | 00, 20 | Nordic dedicated pin bank이며 NU54DK header에서 사용 가능 |
 | `p2-dedicated21` | 미승인 | 00, 21 | P2.7~P2.10이 LED3/MOD_SWO, PMIC_PG, LED1, PMIC_CE에 연결됨 |
-| `p1-flexible` | 조건부 | 20, 21, 22 | console, DAP UART, LED, VBAT monitor, PMIC I2C 소유권을 route별로 인계해야 함 |
-| `p0-flexible` | 조건부 | 30 | `Serial1`을 종료하고 보드 DAP UART switch를 꺼야 함 |
+| `p1-flexible` | 조건부 | 20, 21, 22 | P1 DAP UART는 UARTE20/21/22가 한 번에 하나씩 사용할 수 있고, non-UARTE는 DAP switch를 끈 뒤 소유권을 인계해야 함 |
+| `p0-flexible` | 조건부 | 30 | UARTE30은 DAP switch를 유지하고, non-UARTE는 `Serial1` 종료와 switch 해제가 필요함 |
 
 P2 dedicated21 bank는 실리콘에서 제공되더라도 기본 NU54DK에서 자동 선택하지 않는다. 별도 보드
 개조 profile을 만들려면 전기 검토와 독립 HIL 승인이 새로 필요하다. TWIM/TWIS30 시험 fixture에는
 외부 pull-up이 필요하다.
+
+### 3.1 단독 HIL primary 자원
+
+여기서 `onboard-automatic`은 구현 또는 HIL 완료 상태가 아니라, 해당 driver가 준비된 뒤 USB와
+온보드 회로만으로 물리 data path를 자동 실행할 수 있다는 분류다. 한 identity의 단독 HIL에 쓸
+primary 자원을 나타내며, 최대 동시성 topology에서는 충돌을 피하기 위해 별도 connector route를
+사용할 수 있다.
+
+| 자원 | 실행 분류 | 단독 HIL primary identity | 용도와 조건 |
+| --- | --- | --- | --- |
+| P1 DAP VCOM | **onboard-automatic** | UARTE20/21/22 | 한 번에 하나만 P1.4~P1.7을 소유; 나머지 DAP VCOM으로 제어·결과 기록 |
+| P0 DAP VCOM | **onboard-automatic** | UARTE30 | P0.0~P0.3 DAP switch 유지; P1 VCOM으로 제어·결과 기록 |
+| BQ25186 PMIC I2C | **onboard-automatic** | TWIM20/21/22 | P1.2/P1.3, 주소 `0x6A`, 온보드 pull-up; 자동 시험은 read-only |
+| P2 header | **external-fixture** | UARTE00, SPIM/SPIS00/20 | loopback 또는 peer endpoint 필요; 미승인 P2 dedicated21은 사용 금지 |
+| P1 header | **external-fixture** | SPIM/SPIS21/22, TWIS20/21/22 | TWIS controller, loopback/peer와 route별 switch·부하 관리 필요 |
+| P0 header | **external-fixture** | SPIM/SPIS30, TWIM/TWIS30 | loopback/peer 필요; I2C는 외부 pull-up 필요 |
+
+따라서 23개 전부의 build, activation, ownership-conflict와 fail-closed semantic은 fixture 없이
+자동화할 수 있다. 실제 단독 data-path HIL은 7개가 무배선 자동화 후보이고 16개에는 외부 fixture가
+필요하다. 이 분류를 이유로 M23 manifest의 `not_run` 상태를 바꾸지 않는다.
 
 ## 4. 공개 API 경계
 
@@ -74,8 +96,8 @@ Engineering B errata 7(UARTE), 8·21(SPIM), 54(SPIS), 105(TWIM)를 구현과 시
 
 | Gate | 결과 |
 | --- | --- |
-| `python tools/peripheral/verify_m24_serial_contract.py --write --ncs-root C:\ncs\v3.4.0` | PASS, 5 block / 23 identity / 23 profile |
-| `python -m unittest -v tests.host.test_m24_serial_contract` | 9/9 PASS |
+| `python tools/peripheral/verify_m24_serial_contract.py --write --ncs-root C:\ncs\v3.4.0` | PASS, 5 block / 23 identity / 23 profile / onboard 7 / fixture 16 |
+| `python -m unittest -v tests.host.test_m24_serial_contract` | 10/10 PASS |
 | `python tools/ci/run_m12_gate.py inventory` | M23 75 identity + M24 계약 PASS |
 | `python tools/ci/run_m12_gate.py contract` | 41/41 PASS |
 | `python tools/ci/run_m12_gate.py host` | PASS |
@@ -84,7 +106,7 @@ Engineering B errata 7(UARTE), 8·21(SPIM), 54(SPIS), 105(TWIM)를 구현과 시
 | M24 JSON 2개 `python -m json.tool` | PASS |
 | M24 verifier와 host test `python -m py_compile` | PASS |
 | 신규 driver target build | **NOT RUN — 작업 1에는 firmware source 변경 없음** |
-| 신규 personality NU54DK HIL | **NOT RUN — 작업 2~6 구현 전** |
+| 신규 personality NU54DK HIL | **NOT RUN — 작업 2~5 구현 및 물리 시험 전** |
 
 검증기는 exact NCS v3.4.0/Zephyr 4.4.0 DTS source hash와 node base/IRQ, Board pinctrl와
 회로도 source hash, 23개 profile 전수, 미승인 route, singleton·alias, manifest 미승격 상태와
@@ -112,5 +134,6 @@ checkout EOL 불변 host test를 추가했다. 이 실패는 peripheral 계약�
 ## 8. 다음 단계
 
 M24 작업 2에서 공통 serial-fabric backend, allocation-free typed handle과 같은 block의 안전한
-personality handover를 구현한다. 이 단계에서도 신규 공개 지원을 선언하지 않으며, 이후 UARTE,
-SPIM/SPIS, TWIM/TWIS 구현과 작업 6의 NU54DK HIL까지 순차적으로 상태를 승격한다.
+personality handover를 구현한다. 이어 작업 3~5의 driver와 자동 runner를 준비하고, 작업 6에서는
+먼저 무배선 7개를 실행한 뒤 외부 fixture 16개와 최대 동시성·성능·전력 시험을 수행한다. 이 모든
+물리 증거가 생기기 전에는 신규 공개 지원이나 HIL 상태를 승격하지 않는다.

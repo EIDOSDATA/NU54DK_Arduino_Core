@@ -41,7 +41,7 @@ class M24SerialContractTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
         self.assertIn(
-            "M24_SERIAL_CONTRACT_PASS=blocks:5;identities:23;profiles:23",
+            "M24_SERIAL_CONTRACT_PASS=blocks:5;identities:23;profiles:23;onboard:7;fixture:16",
             result.stdout,
         )
 
@@ -82,6 +82,52 @@ class M24SerialContractTests(unittest.TestCase):
             item for item in mutated["approved_profiles"] if item["identity"] != "spis30"
         ]
         with self.assertRaisesRegex(MODULE.ContractFailure, "exactly one HIL route profile"):
+            MODULE.validate_contract(mutated)
+
+    def test_onboard_resources_partition_profiles_and_keep_fixture_boundary(self) -> None:
+        resources = {
+            item["id"]: item for item in self.contract["test_resources"]
+        }
+        onboard = {
+            identity
+            for item in resources.values()
+            if item["execution_class"] == "onboard-automatic"
+            for identity in item["identities"]
+        }
+        self.assertEqual(
+            onboard,
+            {
+                "uarte20",
+                "uarte21",
+                "uarte22",
+                "uarte30",
+                "twim20",
+                "twim21",
+                "twim22",
+            },
+        )
+        profiles = {
+            item["identity"]: item for item in self.contract["approved_profiles"]
+        }
+        for identity in ("uarte21", "uarte22"):
+            self.assertEqual(profiles[identity]["test_resource"], "dap-vcom-p1")
+            self.assertEqual(
+                profiles[identity]["pins"],
+                {"txd": "P1.4", "rxd": "P1.5", "rts": "P1.6", "cts": "P1.7"},
+            )
+        for identity in ("twim20", "twim21", "twim22"):
+            self.assertEqual(
+                profiles[identity]["test_resource"], "pmic-bq25186-i2c"
+            )
+
+        mutated = copy.deepcopy(self.contract)
+        resource = next(
+            item for item in mutated["test_resources"] if item["id"] == "dap-vcom-p1"
+        )
+        resource["identities"].remove("uarte22")
+        with self.assertRaisesRegex(
+            MODULE.ContractFailure, "board test resource identity/class drifted"
+        ):
             MODULE.validate_contract(mutated)
 
     def test_unsafe_pin_profile_is_rejected(self) -> None:

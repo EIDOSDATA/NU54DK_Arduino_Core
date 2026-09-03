@@ -102,6 +102,44 @@ EXPECTED_CURRENT_PROFILES = {
     "spim00": {"sck": "P2.1", "mosi": "P2.2", "miso": "P2.4"},
     "twim22": {"sda": "P1.2", "scl": "P1.3"},
 }
+EXPECTED_TEST_RESOURCES = {
+    "dap-vcom-p1": (
+        "host-uart-bridge",
+        "onboard",
+        "onboard-automatic",
+        {"uarte20", "uarte21", "uarte22"},
+    ),
+    "dap-vcom-p0": (
+        "host-uart-bridge",
+        "onboard",
+        "onboard-automatic",
+        {"uarte30"},
+    ),
+    "pmic-bq25186-i2c": (
+        "onboard-i2c-target",
+        "onboard",
+        "onboard-automatic",
+        {"twim20", "twim21", "twim22"},
+    ),
+    "p2-header-fixture": (
+        "header-fixture",
+        "connector",
+        "external-fixture",
+        {"uarte00", "spim00", "spis00", "spim20", "spis20"},
+    ),
+    "p1-header-fixture": (
+        "header-fixture",
+        "connector",
+        "external-fixture",
+        {"spim21", "spis21", "twis20", "twis21", "spim22", "spis22", "twis22"},
+    ),
+    "p0-header-fixture": (
+        "header-fixture",
+        "connector",
+        "external-fixture",
+        {"spim30", "spis30", "twim30", "twis30"},
+    ),
+}
 REQUIRED_SIGNALS = {
     "uarte": {"txd", "rxd"},
     "spim": {"sck", "mosi", "miso"},
@@ -182,12 +220,14 @@ def validate_schema_contract(schema: dict[str, Any]) -> None:
     required = set(schema.get("required", []))
     expected = {
         "schema_version", "identity", "sources", "stable_surface", "advanced_api",
-        "pin_banks", "blocks", "approved_profiles", "lifecycle", "errata",
+        "pin_banks", "blocks", "test_resources", "approved_profiles", "lifecycle", "errata",
         "completion_gates",
     }
     if required != expected:
         raise ContractFailure("schema required fields drifted from validator")
     properties = schema.get("properties", {})
+    if properties.get("schema_version", {}).get("const") != 2:
+        raise ContractFailure("schema version must describe onboard HIL resources")
     if properties.get("advanced_api", {}).get("properties", {}).get("status", {}).get("const") != "contract-only-not-public":
         raise ContractFailure("schema must keep the advanced API contract-only")
 
@@ -383,8 +423,77 @@ def validate_blocks(contract: dict[str, Any], banks: dict[str, dict[str, Any]]) 
     return all_identities
 
 
+def validate_test_resources(
+    contract: dict[str, Any], identities: set[str]
+) -> dict[str, dict[str, Any]]:
+    resources = _unique_by(contract["test_resources"], "id", "test resources")
+    if set(resources) != set(EXPECTED_TEST_RESOURCES):
+        raise ContractFailure("board test resource set drifted")
+    covered: set[str] = set()
+    for identifier, (kind, location, execution_class, expected_identities) in (
+        EXPECTED_TEST_RESOURCES.items()
+    ):
+        resource = resources[identifier]
+        _expect_keys(
+            resource,
+            {
+                "id",
+                "kind",
+                "location",
+                "execution_class",
+                "board_nets",
+                "identities",
+                "automation_scope",
+                "preconditions",
+            },
+            f"test resource {identifier}",
+        )
+        observed_identities = set(resource["identities"])
+        if (
+            resource["kind"] != kind
+            or resource["location"] != location
+            or resource["execution_class"] != execution_class
+            or observed_identities != expected_identities
+        ):
+            raise ContractFailure(f"board test resource identity/class drifted: {identifier}")
+        if covered & observed_identities:
+            raise ContractFailure(f"board test resources overlap: {identifier}")
+        covered.update(observed_identities)
+        nets = resource["board_nets"]
+        if not isinstance(nets, list) or len(nets) < 2 or len(set(nets)) != len(nets):
+            raise ContractFailure(f"board test resource nets are incomplete: {identifier}")
+        if any(not re.fullmatch(r"P[0-2]\.[0-9]{1,2}", pin) for pin in nets):
+            raise ContractFailure(f"board test resource has an invalid net: {identifier}")
+        for field in ("automation_scope", "preconditions"):
+            values = resource[field]
+            if not isinstance(values, list) or not values or len(set(values)) != len(values):
+                raise ContractFailure(f"board test resource {field} is incomplete: {identifier}")
+    if covered != identities:
+        raise ContractFailure("board test resources do not partition all 23 personalities")
+    automatic = {
+        identity
+        for resource in resources.values()
+        if resource["execution_class"] == "onboard-automatic"
+        for identity in resource["identities"]
+    }
+    if automatic != {
+        "uarte20",
+        "uarte21",
+        "uarte22",
+        "uarte30",
+        "twim20",
+        "twim21",
+        "twim22",
+    }:
+        raise ContractFailure(f"onboard automatic identity set drifted: {automatic}")
+    return resources
+
+
 def validate_profiles(
-    contract: dict[str, Any], banks: dict[str, dict[str, Any]], identities: set[str]
+    contract: dict[str, Any],
+    banks: dict[str, dict[str, Any]],
+    identities: set[str],
+    resources: dict[str, dict[str, Any]],
 ) -> None:
     profiles = _unique_by(contract["approved_profiles"], "id", "approved profiles")
     coverage = Counter(item.get("identity") for item in profiles.values())
@@ -396,11 +505,25 @@ def validate_profiles(
     for identifier, profile in profiles.items():
         _expect_keys(
             profile,
-            {"id", "identity", "route_class", "pins", "preconditions", "status"},
+            {
+                "id",
+                "identity",
+                "route_class",
+                "pins",
+                "test_resource",
+                "execution_class",
+                "preconditions",
+                "status",
+            },
             f"profile {identifier}",
         )
         personality = profile["identity"]
         kind = _kind(personality)
+        resource = resources.get(profile["test_resource"])
+        if resource is None or personality not in resource["identities"]:
+            raise ContractFailure(f"profile {identifier} selects an unrelated test resource")
+        if profile["execution_class"] != resource["execution_class"]:
+            raise ContractFailure(f"profile {identifier} execution class differs from its resource")
         bank = banks.get(profile["route_class"])
         if bank is None:
             raise ContractFailure(f"profile {identifier} uses an unknown route class")
@@ -429,12 +552,16 @@ def validate_profiles(
             forbidden = {"P1.0", "P1.1", "P1.8", "P1.9", "P1.11", "P1.13"}
             if forbidden & set(pins.values()):
                 raise ContractFailure(f"profile {identifier} uses a blocked P1 pin")
-            if (
-                {"P1.4", "P1.5", "P1.6", "P1.7"} & set(pins.values())
-                and profile["status"] != "current-verified"
-            ):
+            if {"P1.4", "P1.5", "P1.6", "P1.7"} & set(pins.values()):
                 joined = " ".join(profile["preconditions"]).lower()
-                if "console" not in joined or "dap uart switch" not in joined:
+                if kind == "uarte":
+                    if (
+                        "dap uart switch" not in joined
+                        or "enabled" not in joined
+                        or (personality != "uarte20" and "console" not in joined)
+                    ):
+                        raise ContractFailure(f"profile {identifier} omits DAP UART handover")
+                elif "console" not in joined or "dap uart switch" not in joined or "disabled" not in joined:
                     raise ContractFailure(f"profile {identifier} omits console/DAP isolation")
         if profile["route_class"] == "p0-flexible" and personality != "uarte30":
             joined = " ".join(profile["preconditions"]).lower()
@@ -536,17 +663,18 @@ def validate_repository_routes() -> None:
 def validate_contract(contract: dict[str, Any]) -> set[str]:
     _expect_keys(
         contract,
-        {"schema_version", "identity", "sources", "stable_surface", "advanced_api", "pin_banks", "blocks", "approved_profiles", "lifecycle", "errata", "completion_gates"},
+        {"schema_version", "identity", "sources", "stable_surface", "advanced_api", "pin_banks", "blocks", "test_resources", "approved_profiles", "lifecycle", "errata", "completion_gates"},
         "contract",
     )
-    if contract["schema_version"] != 1:
+    if contract["schema_version"] != 2:
         raise ContractFailure("unsupported serial-fabric contract schema_version")
     validate_identity(contract["identity"])
     validate_sources(contract["sources"])
     validate_surface(contract)
     banks = validate_pin_banks(contract)
     identities = validate_blocks(contract, banks)
-    validate_profiles(contract, banks, identities)
+    resources = validate_test_resources(contract, identities)
+    validate_profiles(contract, banks, identities, resources)
     validate_lifecycle_and_errata(contract)
     validate_manifest_alignment(contract, identities)
     validate_repository_routes()
@@ -613,7 +741,7 @@ def render_document(contract: dict[str, Any]) -> str:
         "| 제품선 | `v0.4.0` / M24 |",
         f"| SoC / SDK | `{identity['soc']}` / `{identity['ncs_version']}` / Zephyr `{identity['zephyr_version']}` |",
         f"| Board | `{identity['board']}` / `{identity['board_revision']}` |",
-        "| 상태 | 작업 1 완료 — route/API/negative contract 고정, driver·HIL 미착수 |",
+        "| 상태 | 작업 1 완료 — route/API/negative contract와 보드 자체 시험 자원 고정, driver·HIL 미착수 |",
         "| 갱신일 | 2026-09-03 |",
         "",
         "## 1. 이번 작업의 경계",
@@ -707,22 +835,59 @@ def render_document(contract: dict[str, Any]) -> str:
             "사용한다. P0의 non-UARTE 경로는 점퍼가 아니라 보드의 DAP UART switch를 끈 상태가 필요하다.",
             "TWIM/TWIS30 fixture에는 외부 pull-up이 필요하다.",
             "",
-            "## 5. 단독 HIL 기준 route",
+            "## 5. 보드 자체 시험 자원",
+            "",
+            "회로도 9쪽 전수를 다시 대조해 USB와 온보드 회로만으로 자동화할 수 있는 단독 데이터 경로와",
+            "외부 fixture가 필요한 경로를 분리했다. `onboard-automatic`은 구현 완료를 뜻하지 않으며,",
+            "M24 작업 2~5 이후 물리 HIL을 자동 실행할 수 있다는 시험 자원 판정이다.",
+            "",
+            "| 자원 | 위치 / 실행 | 단독 HIL의 primary identity | 보드 net | 자동화 범위 | 선행조건 |",
+            "| --- | --- | --- | --- | --- | --- |",
+        ]
+    )
+    for resource in contract["test_resources"]:
+        identities = ", ".join(f"`{item}`" for item in resource["identities"])
+        nets = ", ".join(resource["board_nets"])
+        scope = ", ".join(resource["automation_scope"])
+        lines.append(
+            f"| `{resource['id']}` | {resource['location']} / **{resource['execution_class']}** | "
+            f"{identities} | {nets} | {scope} | {_conditions(resource['preconditions'])} |"
+        )
+    automatic_count = sum(
+        len(resource["identities"])
+        for resource in contract["test_resources"]
+        if resource["execution_class"] == "onboard-automatic"
+    )
+    fixture_count = (
+        len({item for block in contract["blocks"] for item in block["personalities"]})
+        - automatic_count
+    )
+    lines.extend(
+        [
+            "",
+            f"23개 identity 중 {automatic_count}개는 USB와 온보드 회로만으로 단독 data-path HIL을 자동화할 수 있고,",
+            f"나머지 {fixture_count}개는 외부 loopback, controller/target 또는 pull-up fixture가 필요하다.",
+            "모든 23개 identity의 build, activation, ownership-conflict와 fail-closed semantic 검사는",
+            "fixture 없이 자동화한다. P1 DAP UART를 시험할 때 P0 DAP UART를 제어·결과 채널로 사용하고",
+            "반대로 UARTE30을 시험할 때는 UARTE20을 제어·결과 채널로 사용한다.",
+            "",
+            "## 6. 단독 HIL 기준 route",
             "",
             "`current-verified`는 기존 v0.3.0 증거가 있는 route이고 `planned-hil`은 M24 구현 뒤 시험할",
             "고정 fixture route다. 계획 route는 지원 선언이 아니다.",
             "",
-            "| Identity | Route | 핀 | 상태 | 선행조건 |",
-            "| --- | --- | --- | --- | --- |",
+            "| Identity | Route | 핀 | 실행 분류 / 자원 | 상태 | 선행조건 |",
+            "| --- | --- | --- | --- | --- | --- |",
         ]
     )
     for profile in contract["approved_profiles"]:
         lines.append(
             f"| `{profile['identity']}` | `{profile['route_class']}` | {_pins(profile)} | "
+            f"**{profile['execution_class']}** / `{profile['test_resource']}` | "
             f"**{profile['status']}** | {_conditions(profile['preconditions'])} |"
         )
 
-    lines.extend(["", "## 6. DMA와 lifecycle", "", "### 활성화", ""])
+    lines.extend(["", "## 7. DMA와 lifecycle", "", "### 활성화", ""])
     lines.extend(f"{index}. {item}" for index, item in enumerate(contract["lifecycle"]["activation_order"], 1))
     lines.extend(["", "### 종료·취소", ""])
     lines.extend(f"{index}. {item}" for index, item in enumerate(contract["lifecycle"]["deactivation_order"], 1))
@@ -735,7 +900,7 @@ def render_document(contract: dict[str, Any]) -> str:
             "Bounded stop으로 DMA 정지를 증명하지 못하면 해당 block을 fail-closed로 latch하고 reset 전",
             "재사용을 금지한다.",
             "",
-            "## 7. M24에 적용할 errata",
+            "## 8. M24에 적용할 errata",
             "",
             "| ID | Peripheral | 구현·시험 의무 |",
             "| --- | --- | --- |",
@@ -744,27 +909,29 @@ def render_document(contract: dict[str, Any]) -> str:
     for item in contract["errata"]:
         lines.append(f"| {item['id']} | {item['peripheral'].upper()} | {item['obligation']} |")
 
-    lines.extend(["", "## 8. M24 완료 gate", ""])
+    lines.extend(["", "## 9. M24 완료 gate", ""])
     lines.extend(f"- {item}" for item in contract["completion_gates"])
     lines.extend(
         [
             "",
             "최대 동시성은 이름 개수가 아니라 충돌 없는 실제 topology로 판정한다. 기준 topology는",
             "`SPIM00 + UARTE20 console + UARTE21(P1.10/P1.14) + TWIM22 + UARTE30`의 다섯 block이다.",
+            "UARTE21 단독 시험은 P1 DAP UART를 재사용하지만 이 최대 동시 topology에서는",
+            "UARTE20과 핀이 겹치지 않는 P1.10/P1.14 connector fixture route를 사용한다.",
             "각 handle의 DMA buffer는 겹치지 않아야 하며 LED/PMIC/DAP 전기 상태도 함께 기록한다.",
             "",
-            "## 9. 단일 원본과 검사",
+            "## 10. 단일 원본과 검사",
             "",
             "- Contract: [`variants/nu54dk/serial-fabric-contract.json`](../../variants/nu54dk/serial-fabric-contract.json)",
             "- Schema: [`tools/peripheral/serial-fabric-contract.schema.json`](../../tools/peripheral/serial-fabric-contract.schema.json)",
             "- 검증·생성기: [`tools/peripheral/verify_m24_serial_contract.py`](../../tools/peripheral/verify_m24_serial_contract.py)",
             "- M23 inventory: [`variants/nu54dk/peripheral-manifest.json`](../../variants/nu54dk/peripheral-manifest.json)",
             "",
-            "검증기는 exact block/base/IRQ/personality, 23개 HIL route, P2 dedicated pin map, 보드 source",
+            "검증기는 exact block/base/IRQ/personality, 6개 보드 시험 자원, 23개 HIL route, P2 dedicated pin map, 보드 source",
             "checksum, stable singleton, 가짜 alias, lifecycle·errata, manifest의 미승격 상태와 생성 문서 drift를",
             "검사한다. `--ncs-root`를 주면 고정 NCS DTS의 checksum, node base와 IRQ도 대조한다.",
             "",
-            "## 10. 근거",
+            "## 11. 근거",
             "",
         ]
     )
@@ -811,7 +978,16 @@ def run(arguments: Sequence[str] | None = None) -> int:
     if args.ncs_root is not None:
         validate_ncs_dts(contract, args.ncs_root)
     _check_or_write(DOCUMENT_PATH, render_document(contract), args.write)
-    print(f"M24_SERIAL_CONTRACT_PASS=blocks:{len(contract['blocks'])};identities:{len(identities)};profiles:{len(contract['approved_profiles'])}")
+    automatic = sum(
+        len(resource["identities"])
+        for resource in contract["test_resources"]
+        if resource["execution_class"] == "onboard-automatic"
+    )
+    print(
+        f"M24_SERIAL_CONTRACT_PASS=blocks:{len(contract['blocks'])};"
+        f"identities:{len(identities)};profiles:{len(contract['approved_profiles'])};"
+        f"onboard:{automatic};fixture:{len(identities) - automatic}"
+    )
     return 0
 
 

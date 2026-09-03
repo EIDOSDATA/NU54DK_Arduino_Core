@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "identity": {
     "soc": "nRF54L15",
     "ncs_version": "v3.4.0",
@@ -208,7 +208,8 @@
       "allowed_blocks": [20, 21, 22],
       "signal_sets": {},
       "preconditions": [
-        "P1.4 through P1.7 require the console profile to be disabled and the DAP UART path disconnected.",
+        "P1.4 through P1.7 are connected to a switched DAP UART; UARTE20, UARTE21 and UARTE22 may use that host path one at a time after the previous owner stops.",
+        "Non-UARTE use of P1.4 through P1.7 requires the console profile and the DAP UART switch to be disabled.",
         "P1.2 and P1.3 remain a pulled-up module and PMIC I2C bus and are approved only for TWI personalities.",
         "P1.0 and P1.1 remain wired to the LFXO and are excluded from serial routes without board rework.",
         "P1.8, P1.9, P1.11 and P1.13 are input-only board signals and cannot satisfy output signals.",
@@ -322,13 +323,98 @@
       "activation_state": "current-public"
     }
   ],
+  "test_resources": [
+    {
+      "id": "dap-vcom-p1",
+      "kind": "host-uart-bridge",
+      "location": "onboard",
+      "execution_class": "onboard-automatic",
+      "board_nets": ["P1.4", "P1.5", "P1.6", "P1.7"],
+      "identities": ["uarte20", "uarte21", "uarte22"],
+      "automation_scope": ["host-tx-rx", "async-dma", "timeout-cancel", "throughput"],
+      "preconditions": [
+        "Exactly one of UARTE20, UARTE21 and UARTE22 owns the P1 DAP UART pins at a time.",
+        "The DAP UART switch remains enabled and the host binds the correct virtual COM port.",
+        "UARTE30 on the independent P0 DAP UART records orchestration results when the uart20 console is stopped."
+      ]
+    },
+    {
+      "id": "dap-vcom-p0",
+      "kind": "host-uart-bridge",
+      "location": "onboard",
+      "execution_class": "onboard-automatic",
+      "board_nets": ["P0.0", "P0.1", "P0.2", "P0.3"],
+      "identities": ["uarte30"],
+      "automation_scope": ["host-tx-rx", "async-dma", "timeout-cancel", "throughput"],
+      "preconditions": [
+        "The DAP UART switch remains enabled and the host binds the correct virtual COM port.",
+        "UARTE20 on the independent P1 DAP UART records orchestration results."
+      ]
+    },
+    {
+      "id": "pmic-bq25186-i2c",
+      "kind": "onboard-i2c-target",
+      "location": "onboard",
+      "execution_class": "onboard-automatic",
+      "board_nets": ["P1.2", "P1.3"],
+      "identities": ["twim20", "twim21", "twim22"],
+      "automation_scope": ["read-only-transaction", "repeated-start", "nack", "sync-async-dma"],
+      "preconditions": [
+        "Exactly one TWIM personality owns P1.2 and P1.3 at a time.",
+        "The onboard 2.1 kOhm pull-ups and BQ25186 address 0x6a remain connected.",
+        "Automatic HIL is read-only unless PMIC writes are separately authorized for that boot."
+      ]
+    },
+    {
+      "id": "p2-header-fixture",
+      "kind": "header-fixture",
+      "location": "connector",
+      "execution_class": "external-fixture",
+      "board_nets": ["P2.0", "P2.1", "P2.2", "P2.4", "P2.5"],
+      "identities": ["uarte00", "spim00", "spis00", "spim20", "spis20"],
+      "automation_scope": ["fixture-data-path", "sync-async-dma", "error-injection"],
+      "preconditions": [
+        "A loopback or peer endpoint is connected to the exposed P2 header nets.",
+        "The fixture never selects the stock-board-prohibited P2 dedicated21 bank."
+      ]
+    },
+    {
+      "id": "p1-header-fixture",
+      "kind": "header-fixture",
+      "location": "connector",
+      "execution_class": "external-fixture",
+      "board_nets": ["P1.2", "P1.3", "P1.4", "P1.5", "P1.6", "P1.7", "P1.10", "P1.12", "P1.14"],
+      "identities": ["spim21", "spis21", "twis20", "twis21", "spim22", "spis22", "twis22"],
+      "automation_scope": ["fixture-data-path", "sync-async-dma", "target-double-buffer", "error-injection"],
+      "preconditions": [
+        "The DAP UART switch is disabled before a non-UARTE fixture owns P1.4 through P1.7.",
+        "An external controller is required for TWIS data-path HIL even though the PMIC bus pull-ups are onboard.",
+        "LED and VBAT monitor loading remains part of the electrical result where those nets are selected."
+      ]
+    },
+    {
+      "id": "p0-header-fixture",
+      "kind": "header-fixture",
+      "location": "connector",
+      "execution_class": "external-fixture",
+      "board_nets": ["P0.0", "P0.1", "P0.2", "P0.3"],
+      "identities": ["spim30", "spis30", "twim30", "twis30"],
+      "automation_scope": ["fixture-data-path", "sync-async-dma", "target-double-buffer", "error-injection"],
+      "preconditions": [
+        "Serial1 is inactive and the DAP UART switch is disabled.",
+        "TWIM30 and TWIS30 fixtures provide external pull-ups."
+      ]
+    }
+  ],
   "approved_profiles": [
     {
       "id": "current-uarte20-console",
       "identity": "uarte20",
       "route_class": "p1-flexible",
       "pins": { "txd": "P1.4", "rxd": "P1.5", "rts": "P1.6", "cts": "P1.7" },
-      "preconditions": ["The system console remains the owner and the advanced handle is non-owning."],
+      "test_resource": "dap-vcom-p1",
+      "execution_class": "onboard-automatic",
+      "preconditions": ["The system console remains the owner and the advanced handle is non-owning.", "The DAP UART switch is enabled and the host binds the P1 virtual COM port."],
       "status": "current-verified"
     },
     {
@@ -336,6 +422,8 @@
       "identity": "uarte30",
       "route_class": "p0-flexible",
       "pins": { "txd": "P0.0", "rxd": "P0.1", "rts": "P0.2", "cts": "P0.3" },
+      "test_resource": "dap-vcom-p0",
+      "execution_class": "onboard-automatic",
       "preconditions": ["The DAP UART switch is enabled for virtual COM use."],
       "status": "current-verified"
     },
@@ -344,6 +432,8 @@
       "identity": "spim00",
       "route_class": "p2-dedicated20",
       "pins": { "sck": "P2.1", "mosi": "P2.2", "miso": "P2.4" },
+      "test_resource": "p2-header-fixture",
+      "execution_class": "external-fixture",
       "preconditions": ["Chip select remains sketch-owned."],
       "status": "current-verified"
     },
@@ -352,7 +442,9 @@
       "identity": "twim22",
       "route_class": "p1-flexible",
       "pins": { "sda": "P1.2", "scl": "P1.3" },
-      "preconditions": ["The onboard pull-ups and PMIC bus electrical contract remain active."],
+      "test_resource": "pmic-bq25186-i2c",
+      "execution_class": "onboard-automatic",
+      "preconditions": ["The onboard pull-ups and PMIC bus electrical contract remain active.", "Automatic HIL reads the BQ25186 at address 0x6a without changing PMIC state."],
       "status": "current-verified"
     },
     {
@@ -360,6 +452,8 @@
       "identity": "uarte00",
       "route_class": "p2-dedicated20",
       "pins": { "rxd": "P2.0", "txd": "P2.2", "cts": "P2.4", "rts": "P2.5" },
+      "test_resource": "p2-header-fixture",
+      "execution_class": "external-fixture",
       "preconditions": ["serial00 and all listed pins are free."],
       "status": "planned-hil"
     },
@@ -368,6 +462,8 @@
       "identity": "spis00",
       "route_class": "p2-dedicated20",
       "pins": { "sck": "P2.1", "miso": "P2.2", "mosi": "P2.4", "csn": "P2.5" },
+      "test_resource": "p2-header-fixture",
+      "execution_class": "external-fixture",
       "preconditions": ["serial00 and all listed pins are free."],
       "status": "planned-hil"
     },
@@ -376,6 +472,8 @@
       "identity": "spim20",
       "route_class": "p2-dedicated20",
       "pins": { "sck": "P2.1", "mosi": "P2.2", "miso": "P2.4", "csn": "P2.5" },
+      "test_resource": "p2-header-fixture",
+      "execution_class": "external-fixture",
       "preconditions": ["The console is disabled.", "Constant-latency power mode is leased.", "serial00 is inactive."],
       "status": "planned-hil"
     },
@@ -384,6 +482,8 @@
       "identity": "spis20",
       "route_class": "p2-dedicated20",
       "pins": { "sck": "P2.1", "miso": "P2.2", "mosi": "P2.4", "csn": "P2.5" },
+      "test_resource": "p2-header-fixture",
+      "execution_class": "external-fixture",
       "preconditions": ["The console is disabled.", "Constant-latency power mode is leased.", "serial00 is inactive."],
       "status": "planned-hil"
     },
@@ -392,7 +492,9 @@
       "identity": "twim20",
       "route_class": "p1-flexible",
       "pins": { "sda": "P1.2", "scl": "P1.3" },
-      "preconditions": ["The console is disabled.", "serial22 is inactive."],
+      "test_resource": "pmic-bq25186-i2c",
+      "execution_class": "onboard-automatic",
+      "preconditions": ["The console is disabled.", "serial22 is inactive.", "Automatic HIL reads the onboard BQ25186 at address 0x6a without changing PMIC state."],
       "status": "planned-hil"
     },
     {
@@ -400,6 +502,8 @@
       "identity": "twis20",
       "route_class": "p1-flexible",
       "pins": { "sda": "P1.2", "scl": "P1.3" },
+      "test_resource": "p1-header-fixture",
+      "execution_class": "external-fixture",
       "preconditions": ["The console is disabled.", "serial22 is inactive."],
       "status": "planned-hil"
     },
@@ -407,8 +511,10 @@
       "id": "m24-uarte21",
       "identity": "uarte21",
       "route_class": "p1-flexible",
-      "pins": { "txd": "P1.10", "rxd": "P1.14" },
-      "preconditions": ["LED2 and LED4 are transferred to the serial owner."],
+      "pins": { "txd": "P1.4", "rxd": "P1.5", "rts": "P1.6", "cts": "P1.7" },
+      "test_resource": "dap-vcom-p1",
+      "execution_class": "onboard-automatic",
+      "preconditions": ["The uart20 console and every other P1 DAP UART owner are inactive.", "The DAP UART switch is enabled and the host binds the P1 virtual COM port.", "UARTE30 reports orchestration results through the independent P0 DAP UART."],
       "status": "planned-hil"
     },
     {
@@ -416,6 +522,8 @@
       "identity": "spim21",
       "route_class": "p1-flexible",
       "pins": { "sck": "P1.10", "mosi": "P1.12", "miso": "P1.14" },
+      "test_resource": "p1-header-fixture",
+      "execution_class": "external-fixture",
       "preconditions": ["Chip select remains sketch-owned.", "LED and VBAT monitor loading is included in HIL."],
       "status": "planned-hil"
     },
@@ -424,6 +532,8 @@
       "identity": "spis21",
       "route_class": "p1-flexible",
       "pins": { "sck": "P1.4", "mosi": "P1.5", "miso": "P1.6", "csn": "P1.7" },
+      "test_resource": "p1-header-fixture",
+      "execution_class": "external-fixture",
       "preconditions": ["The console is disabled.", "The DAP UART switch is disabled."],
       "status": "planned-hil"
     },
@@ -432,7 +542,9 @@
       "identity": "twim21",
       "route_class": "p1-flexible",
       "pins": { "sda": "P1.2", "scl": "P1.3" },
-      "preconditions": ["serial22 is inactive."],
+      "test_resource": "pmic-bq25186-i2c",
+      "execution_class": "onboard-automatic",
+      "preconditions": ["serial22 is inactive.", "Automatic HIL reads the onboard BQ25186 at address 0x6a without changing PMIC state."],
       "status": "planned-hil"
     },
     {
@@ -440,6 +552,8 @@
       "identity": "twis21",
       "route_class": "p1-flexible",
       "pins": { "sda": "P1.2", "scl": "P1.3" },
+      "test_resource": "p1-header-fixture",
+      "execution_class": "external-fixture",
       "preconditions": ["serial22 is inactive."],
       "status": "planned-hil"
     },
@@ -447,8 +561,10 @@
       "id": "m24-uarte22",
       "identity": "uarte22",
       "route_class": "p1-flexible",
-      "pins": { "txd": "P1.10", "rxd": "P1.14" },
-      "preconditions": ["Wire is inactive.", "LED2 and LED4 are transferred to the serial owner."],
+      "pins": { "txd": "P1.4", "rxd": "P1.5", "rts": "P1.6", "cts": "P1.7" },
+      "test_resource": "dap-vcom-p1",
+      "execution_class": "onboard-automatic",
+      "preconditions": ["The uart20 console, Wire and every other P1 DAP UART owner are inactive.", "The DAP UART switch is enabled and the host binds the P1 virtual COM port.", "UARTE30 reports orchestration results through the independent P0 DAP UART."],
       "status": "planned-hil"
     },
     {
@@ -456,6 +572,8 @@
       "identity": "spim22",
       "route_class": "p1-flexible",
       "pins": { "sck": "P1.10", "mosi": "P1.12", "miso": "P1.14" },
+      "test_resource": "p1-header-fixture",
+      "execution_class": "external-fixture",
       "preconditions": ["Wire is inactive.", "Chip select remains sketch-owned."],
       "status": "planned-hil"
     },
@@ -464,6 +582,8 @@
       "identity": "spis22",
       "route_class": "p1-flexible",
       "pins": { "sck": "P1.4", "mosi": "P1.5", "miso": "P1.6", "csn": "P1.7" },
+      "test_resource": "p1-header-fixture",
+      "execution_class": "external-fixture",
       "preconditions": ["Wire and the console are disabled.", "The DAP UART switch is disabled."],
       "status": "planned-hil"
     },
@@ -472,6 +592,8 @@
       "identity": "twis22",
       "route_class": "p1-flexible",
       "pins": { "sda": "P1.2", "scl": "P1.3" },
+      "test_resource": "p1-header-fixture",
+      "execution_class": "external-fixture",
       "preconditions": ["Wire controller mode is inactive."],
       "status": "planned-hil"
     },
@@ -480,6 +602,8 @@
       "identity": "spim30",
       "route_class": "p0-flexible",
       "pins": { "sck": "P0.0", "mosi": "P0.1", "miso": "P0.2" },
+      "test_resource": "p0-header-fixture",
+      "execution_class": "external-fixture",
       "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled.", "Chip select remains sketch-owned."],
       "status": "planned-hil"
     },
@@ -488,6 +612,8 @@
       "identity": "spis30",
       "route_class": "p0-flexible",
       "pins": { "sck": "P0.0", "mosi": "P0.1", "miso": "P0.2", "csn": "P0.3" },
+      "test_resource": "p0-header-fixture",
+      "execution_class": "external-fixture",
       "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled."],
       "status": "planned-hil"
     },
@@ -496,6 +622,8 @@
       "identity": "twim30",
       "route_class": "p0-flexible",
       "pins": { "sda": "P0.0", "scl": "P0.1" },
+      "test_resource": "p0-header-fixture",
+      "execution_class": "external-fixture",
       "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled.", "External pull-ups are fitted by the fixture."],
       "status": "planned-hil"
     },
@@ -504,6 +632,8 @@
       "identity": "twis30",
       "route_class": "p0-flexible",
       "pins": { "sda": "P0.0", "scl": "P0.1" },
+      "test_resource": "p0-header-fixture",
+      "execution_class": "external-fixture",
       "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled.", "External pull-ups are fitted by the fixture."],
       "status": "planned-hil"
     }
