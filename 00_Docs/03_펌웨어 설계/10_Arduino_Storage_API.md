@@ -3,11 +3,12 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-STORAGE-001 |
-| 적용 후보 | `v0.3.0-rc.3` |
-| 현재 정식 버전 | `v0.2.0` — 아래 API를 정식 지원으로 소급하지 않음 |
+| 문서 개정 | 1.1 |
+| 적용 버전 | `v0.3.0` stable |
+| 현재 정식 버전 | `v0.3.0` |
 | 구현 | `EEPROM`, `LittleFS` bundled library |
 | 검증 상태 | AC-03 host/target/package와 exact 두 보드 영속성·복구 HIL PASS |
-| 최종 갱신일 | 2026-09-01 |
+| 최종 갱신일 | 2026-09-03 |
 
 ## 1. 목적과 지원 경계
 
@@ -63,7 +64,7 @@ RC3가 정식 제공하는 layout은 위 loaderless 단일 application 하나다
 4. LittleFS, Settings/ZMS와 update image의 겹침 검사
 5. Upgrade/downgrade, 복구와 package 시험 matrix
 
-`v0.4.0` M24에서 검증된 **고급 Memory layout 선택**을 설계한다. 기본 loaderless layout은 계속
+`v0.6.0` M36에서 검증된 **고급 Memory layout 선택**을 설계한다. 기본 loaderless layout은 계속
 유지하고, MCUboot/DFU와 signed update·rollback이 실제로 포함된 profile에서만 boot 영역과
 dual-slot layout을 노출한다. Arduino Tools에는 임의 숫자 입력 대신 검증된 preset을 제공하고,
 전문가 overlay는 같은 정적 검사와 linker assertion을 통과할 때만 지원 대상으로 인정한다.
@@ -141,7 +142,7 @@ Sketch에서 `<EEPROM.h>` 또는 `<LittleFS.h>`를 include하면 Build Adapter�
 | EEPROM | `EEPROMPersistence` | `Standard peripherals` |
 | LittleFS | `LittleFSPersistence` | `Standard peripherals` |
 
-두 예제는 `v0.3.0-rc.3` 후보의 29개 설치 예제에 포함된다. BLE profile에서도 build 입력은
+두 예제는 `v0.3.0` stable의 29개 설치 예제에 포함된다. BLE profile에서도 build 입력은
 호환되지만, 예제 메뉴의 기본 사용 안내는 storage 동작만 분리해 보는 `Standard peripherals`다.
 
 ## 6. 실패 진단
@@ -165,10 +166,10 @@ AC-03은 다음 결과를 서로 구분한다.
 2. Target contract: 실제 NU54DK target용 EEPROM/LittleFS build와 negative semantic
 3. Arduino package: `standard`와 `ble` profile에서 두 예제 compile
 4. 두 보드 HIL: 각 보드에서 seed → reset 영속성 → EEPROM 손상 거부 → 명시적 복구 → 최종 정리
-5. M22 clean-room: 공개 RC index로 설치한 package의 29개 예제 compile과 실제 upload
+5. M22 clean-room: stable index로 설치한 package의 29개 예제 compile과 실제 upload
 
 1~4는 exact commit `0b7f89283cd82a68a7f3f0910f4fc59b8dd01bfb`에서 완료됐다. 두 보드 모두
-reset 3회와 최종 cleanup을 통과했으며 5는 M22 public RC gate다.
+reset 3회와 최종 cleanup을 통과했으며 5는 M22 stable gate에서 완료됐다.
 
 HIL은 EEPROM mirror와 AC-03 전용 LittleFS 시험 파일을 변경하는 파괴적 시험이다. 명시적 승인과
 exact image·commit·board identity가 없으면 실행하지 않는다. 실제 PASS revision과 evidence는
@@ -181,5 +182,5 @@ exact image·commit·board identity가 없으면 실행하지 않는다. 실제 
 - directory iterator와 모든 ESP/Adafruit FS 확장 함수의 완전 호환
 - 파일 system 전체의 transaction/power-fail 원자성 보증
 - RC3에서 임의 partition 크기를 입력하거나 사용자 overlay만으로 저장 layout을 교체하는 구성
-- MCUboot/DFU dual-slot과 update/rollback — `v0.4.0` M24의 검증된 고급 layout 범위
+- MCUboot/DFU dual-slot과 update/rollback — `v0.6.0` M36의 검증된 고급 layout 범위
 - 제품 수명 기준의 wear/endurance 보증

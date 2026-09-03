@@ -13,7 +13,7 @@
 `v0.1.0-rc.1`은 Arduino IDE가 `post_install` 완료 출력을 gRPC로 전달할 때 invalid UTF-8
 오류를 표시할 수 있어 배포를 중단했다. 관찰된 재현에서는 platform과 prerequisite 설치가
 끝났지만 IDE가 실패로 표시했다. 자세한 원인과 증거 경계는
-[v0.1.0-rc.1 배포 중단 기록](./00_v0.1.0_rc1_배포_중단_기록.md)에 있다.
+[v0.1.0-rc.1 배포 중단 기록](../v0.1.0-rc.1/WITHDRAWAL.md)에 있다.
 
 `v0.1.0-rc.2`는 Windows console과 PowerShell/native command 출력 인코딩을 UTF-8로
 고정한다. rc.1 package를 같은 tag나 ZIP에서 덮어쓰지 않고 별도 version과 checksum으로
@@ -64,7 +64,7 @@ rc.1 설치 중 Nordic prerequisite가 이미 정상 완료됐다면
 - `Serial`은 target native USB CDC가 아니라 DAP UART 기반 Zephyr console wrapper다.
 
 API 범위와 핀 의미는
-[Arduino API 지원 범위](<../01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)를 따른다.
+[Arduino API 지원 범위](<../../01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)를 따른다.
 
 ## 6. 되돌리기와 제거
 

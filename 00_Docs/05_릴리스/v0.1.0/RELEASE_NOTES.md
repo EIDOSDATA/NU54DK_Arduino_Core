@@ -49,7 +49,7 @@ firmware runtime, NU54DK DTS, pin mapping과 Upload 구현은 rc.2 이후 변경
 | GitHub Release | [v0.1.0](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.1.0), Draft 아님·Prerelease 아님 |
 
 전체 자산과 검증 경계는
-[정식 릴리스 공개 기록](<../04_검증 기록/13_v0.1.0_정식_릴리스_공개_기록.md>)에 있다.
+[정식 릴리스 공개 기록](<../../04_검증 기록/13_v0.1.0_정식_릴리스_공개_기록.md>)에 있다.
 
 ## 설치
 
@@ -57,7 +57,7 @@ firmware runtime, NU54DK DTS, pin mapping과 Upload 구현은 rc.2 이후 변경
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-자세한 절차는 [마이그레이션 안내](./09_v0.1.0_마이그레이션.md)를 따른다.
+자세한 절차는 [마이그레이션 안내](MIGRATION.md)를 따른다.
 
 ## 라이선스와 공개 승인
 

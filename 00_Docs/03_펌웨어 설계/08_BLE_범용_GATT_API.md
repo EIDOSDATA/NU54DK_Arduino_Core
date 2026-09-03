@@ -1,13 +1,23 @@
 # BLE 범용 GATT server/client API 설계
 
+| 항목 | 내용 |
+| --- | --- |
+| 문서 ID | FW-BLE-GATT-001 |
+| 문서 개정 | 1.1 |
+| 문서 상태 | `v0.3.0` 정식 계약 |
+| 적용 제품 버전 | `v0.3.0` stable |
+| 최종 갱신일 | 2026-09-03 |
+| 대상 library | `NUCODE_BLE` |
+| 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
+
 ## 목적과 범위
 
 M20은 M19 Core/GAP 위에 vendor service를 만들고 사용하는 범용 GATT API를 제공합니다. NUS처럼
 고정 profile wrapper가 아니라 UUID, property, permission과 bounded value를 sketch가 선언합니다.
 
-이 API는 정식 `v0.2.0` package에는 없으며 `v0.3.0` 개발 트리에서 추가됐습니다. Exact-commit
-두 보드 RF PASS는 [M20 범용 GATT 검증](<../04_검증 기록/24_M20_범용_GATT_검증.md>)이 소유하며
-M22 전에는 stable 지원으로 소급 표시하지 않습니다.
+이 API는 `v0.3.0`에서 정식 지원합니다. Exact-commit 두 보드 RF PASS는
+[M20 범용 GATT 검증](<../04_검증 기록/24_M20_범용_GATT_검증.md>), stable package 승격은
+[v0.3.0 정식 공개 기록](<../04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)이 소유합니다.
 
 ## Server schema
 

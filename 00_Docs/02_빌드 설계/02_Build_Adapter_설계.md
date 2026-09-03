@@ -1,10 +1,10 @@
-# NU54DK Build Adapter 설계 — v0.2.0
+# NU54DK Build Adapter 설계 — v0.3.0
 
 | 항목 | 내용 |
 | --- | --- |
 | 문서 상태 | **현재 구현 계약** |
-| 현재 정식 버전 | `v0.2.0` |
-| 다음 목표 버전 | `v0.3.0` |
+| 현재 정식 버전 | `v0.3.0` |
+| 다음 목표 버전 | `v0.4.0` |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 공식 호스트 | Windows 10/11 x64 |
 | 최종 이미지 | Loader/LLEXT 없는 단일 Full Zephyr 이미지 |
@@ -196,7 +196,7 @@ RC3의 기본 메모리 계약은 loaderless 단일 application 1,490,944 byte�
 68 KiB다. Adapter와 release gate는 Devicetree code partition, linker FLASH 범위와
 `boards.txt` maximum size가 모두 `0x000000..0x16c000`을 가리키는지 확인해야 한다. 전문가
 `app.overlay`가 마지막에 병합되더라도 이 경계를 조용히 우회하거나 Arduino size 표시만 바꾸는
-구성은 지원하지 않는다. MCUboot/DFU dual-slot과 검증된 memory-layout 선택은 `v0.4.0` M24에서
+구성은 지원하지 않는다. MCUboot/DFU dual-slot과 검증된 memory-layout 선택은 `v0.6.0` M36에서
 cache·package identity에 포함할 별도 입력으로 추가한다.
 
 ## 5. 경로와 상태

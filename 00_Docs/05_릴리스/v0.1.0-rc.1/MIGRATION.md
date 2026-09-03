@@ -3,7 +3,7 @@
 > **배포 중단:** `v0.1.0-rc.1`은 Arduino IDE의 `post_install` 완료 응답에서
 > `grpc: ... string field contains invalid UTF-8`가 발생할 수 있어 회수 대상으로 결정했다.
 > 설치 자체는 완료됐을 수 있지만 이 버전을 새로 설치하지 말고 `v0.1.0-rc.2`가 공개되면
-> 업그레이드한다. 자세한 내용은 [배포 중단 기록](./00_v0.1.0_rc1_배포_중단_기록.md)을
+> 업그레이드한다. 자세한 내용은 [배포 중단 기록](WITHDRAWAL.md)을
 > 따른다. 아래 내용은 당시 artifact의 역사적 안내로 보존한다.
 
 | 항목 | 내용 |
@@ -68,7 +68,7 @@ package index와 별도 GitHub prerelease를 사용하며 preview archive를 덮
   선언하지 않는다.
 
 정확한 상태와 의미 차이는
-[Arduino API 지원 범위](<../01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)를 따른다.
+[Arduino API 지원 범위](<../../01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)를 따른다.
 
 ## 5. 되돌리기
 

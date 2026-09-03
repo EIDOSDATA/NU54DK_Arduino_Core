@@ -1,9 +1,9 @@
-# CI/CD와 재현 빌드 — M12~M17 현재 계약
+# CI/CD와 재현 빌드 — v0.3.0 stable 이후 현재 계약
 
 | 계층 | 실행 환경 | 목적 |
 | --- | --- | --- |
-| Software gates | GitHub-hosted Ubuntu/Windows | 계약, unit, 문서, package, 예제 discovery |
-| Reproducible builds | 고정 Nordic container + Windows | Zephyr/Arduino/M14/M17 build gate |
+| Software gates | GitHub-hosted Ubuntu/Windows | 계약, M23 inventory, unit, 문서, package, 예제 discovery |
+| Reproducible builds | 고정 Nordic container + Windows | exact DTS, Zephyr/Arduino/M14/M17/M23 build gate |
 | NU54DK HIL | 승인된 self-hosted Windows runner | pyOCD upload와 UART 실기 |
 
 CI는 지원 범위를 증명하는 gate이지 Release를 자동 승인하는 시스템이 아니다. 정확한 run ID,
@@ -20,6 +20,7 @@ artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI
 | Job | 현재 검사 |
 | --- | --- |
 | `contract` | lock file, workflow trigger/권한, pin과 board submodule 경계 |
+| `peripheral-inventory` | M23 schema·75개 identity 누락·가짜 alias·source·generated table/matrix 일치 |
 | `host` | Python host unit와 Windows PowerShell 계약 |
 | `core-semantic` | M14 Core C++ native semantic runtime |
 | `documents` | tracked Markdown UTF-8과 local link |
@@ -29,9 +30,14 @@ artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI
 Checkout은 submodule을 recursive로 받고 full history를 사용한다. Workflow permission은
 `contents: read`이며 같은 ref의 중복 실행은 취소한다.
 
-M12와 정식 `v0.2.0`의 역사적 기준은 public library 4개·예제 14개다. 현재 `v0.3.0-rc.3`
-후보는 EEPROM/LittleFS까지 포함한 library 8개·예제 29개다. `Standard peripherals` 22개와
-BLE 7개를 M22 package lock과 installed-package gate로 모두 compile한다. 현재 29개 기대값을
+M23 inventory gate는 외부 JSON Schema package 없이 strict JSON과 고정 schema 계약을 검사한다.
+Linux reproducible-build job은 exact NCS workspace를 준비한 직후 manifest에 고정한 두 SoC DTS의
+SHA-256과 node label을 확인한다. 따라서 generated 산출물 drift, instance 누락, 공개 객체 alias,
+NCS DTS 변경은 target build 전에 fail-closed한다.
+
+M12와 정식 `v0.2.0`의 역사적 기준은 public library 4개·예제 14개다. 정식 `v0.3.0`은
+EEPROM/LittleFS까지 포함한 library 8개·예제 29개다. `Standard peripherals` 22개와
+BLE 7개를 M22 package lock과 installed-package gate로 모두 compile했다. 현재 29개 기대값을
 과거 `v0.2.0` artifact 기록에 소급 적용하지 않는다.
 
 로컬 진입점은 다음과 같다.
@@ -137,14 +143,14 @@ upload와 UART READY를 실행한다. Hardware evidence는 30일 보존한다. P
 배선과 runner 보안은 운영자가 관리한다.
 
 HIL workflow가 존재하거나 queue에 들어갔다는 사실은 PASS가 아니다. 완료 artifact와 검증
-기록이 있어야 실기 판정에 사용할 수 있다. `v0.3.0` 개발 검증은 AC-01 exact commit
+기록이 있어야 실기 판정에 사용할 수 있다. `v0.3.0` 검증은 AC-01 exact commit
 `ac10ba3b253bd6bf76bcf73aa2c79278304908a4`, M19/M20 exact commit
 `0103a8434ac205a953c981385ae26a2a64aeeccc`, M21 exact commit
 `065d4f573618aca5da1e715915622e987208b775`의 HIL PASS를 각각 검증 기록에 고정한다. M21의
 후속 `d1902b16804a27b77b153eeb9d11a10e088a59ae`는 Windows 11 실제 HID pairing·문자 입력과
 재부팅 bond 복원을 통과했고 host 39/39도 PASS했다. 자동 RF evidence와 Windows 수동 evidence는
 서로 소급 변경하지 않고 별도 판정 계층으로 보존한다. M21과 AC-02·AC-03은 완료됐으며 M22는
-이 증거를 package·public prerelease·clean-room gate에 연결한다.
+이 증거를 stable package·public lifecycle gate에 연결해 완료했다.
 
 AC-02B의 `ac02b_hil_dut`와 `ac02b_hil_peer`는 Linux/Windows 재현 build에서 **build-only**다.
 `tests/hil/nu54dk/ac02b_peripheral.py`의 물리 실행은 두 probe UID, 두 COM port, exact image hash,
@@ -180,6 +186,7 @@ latest 지정은 자동으로 수행하지 않는다. 공개에는 별도 사람
 - [`verify_ci_lock.py`](../../tools/ci/verify_ci_lock.py)
 - [`prepare_ncs_workspace.py`](../../tools/ci/prepare_ncs_workspace.py)
 - [`run_zephyr_build.py`](../../tools/ci/run_zephyr_build.py)
+- [`verify_m23_inventory.py`](../../tools/peripheral/verify_m23_inventory.py)
 - [`run_m14_qemu.py`](../../tools/ci/run_m14_qemu.py)
 - [`run_m17_feasibility.py`](../../tools/ci/run_m17_feasibility.py)
 - [`run_m17_external_arduino.py`](../../tools/ci/run_m17_external_arduino.py)
@@ -192,3 +199,4 @@ latest 지정은 자동으로 수행하지 않는다. 공개에는 별도 사람
 - [M20 범용 GATT 검증](<../04_검증 기록/24_M20_범용_GATT_검증.md>)
 - [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)
 - [AC-02B Peripheral/Analog runtime 기준선](<../04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>)
+- [M23 Peripheral inventory와 공통 소유권 기준선](<../04_검증 기록/33_M23_Peripheral_Inventory와_공통_소유권_기준선.md>)

@@ -13,6 +13,8 @@
 #include <api/HardwareSPI.h>
 #include <api/HardwareSerial.h>
 
+#include "nucode/PeripheralInventory.h"
+
 #include <cstdint>
 
 namespace nucode::arduino

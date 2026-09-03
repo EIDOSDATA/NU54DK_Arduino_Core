@@ -1,4 +1,4 @@
-# Arduino CLI 및 IDE 통합 설계 — v0.2.0
+# Arduino CLI 및 IDE 통합 설계 — v0.3.0
 
 | 항목 | 내용 |
 | --- | --- |

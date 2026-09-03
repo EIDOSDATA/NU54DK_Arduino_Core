@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 4.8 |
-| 현재 정식 버전 | `v0.2.0` |
-| 다음 목표 버전 | `v0.3.0` |
-| 최종 갱신일 | 2026-09-02 |
+| 문서 체계 개정 | 6.3 |
+| 현재 정식 버전 | `v0.3.0` |
+| 다음 목표 버전 | `v0.4.0` |
+| 최종 갱신일 | 2026-09-03 |
 | 작성자 | Quantum / NUCODE |
 
 이 디렉터리는 Loader 없이 동작하는 Native Full Zephyr 기반 NU54DK Arduino Core의
@@ -51,8 +51,11 @@
 | M19 | **자동 검증 완료** | BLE Core/GAP exact-commit 두 보드 RF HIL PASS |
 | M20 | **자동 검증 완료** | 범용 GATT exact-commit 두 보드 RF HIL PASS |
 | M21 | **완료** | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS; host 39/39 |
-| M22 | **RC3 수용 / stable 공개 전 인계** | Loaderless 1,456 KiB 경계, 고정 gate와 29/29 공개 설치본 compile 완료; stable 수명주기는 다른 PC에서 수행 |
-| M23~M34 | **장기 계획** | storage/security, 고급 Memory layout·DFU, radio/OpenThread, Matter 제품선 |
+| M22 | **완료** | Loaderless 1,456 KiB 경계, stable 재현 build, 29/29 설치본 compile, NU54DK Upload와 `v0.3.0` 정식 공개 |
+| M23 | **완료** | 75개 peripheral identity manifest·생성 matrix·공개 조회 API와 공통 block/channel/DMA 소유권 |
+| M24~M27 | **계획** | 전 peripheral instance·EasyDMA·동시성 경쟁 parity와 `v0.4.0` |
+| M28~M33 | **계획** | Bluetooth LE 전 기능군·Mesh·Channel Sounding과 `v0.5.0` |
+| M34~M45 | **장기 계획** | security/update, radio/OpenThread와 Matter 제품선 |
 
 AC-02A의 구현·시험 경계는
 [핀과 주변장치 소유권 기준선](<./04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md>)에 보존한다.
@@ -62,11 +65,13 @@ Storage 설계와 RC 준비 경계는 [Arduino Storage API](<./03_펌웨어 설�
 [AC-03 기록](<./04_검증 기록/28_AC-03_Storage와_Library_호환성_기준선.md>) 및
 [M22 RC1 기록](<./04_검증 기록/29_M22_v0.3.0_rc1_통합_릴리스_기준선.md>)과
 [M22 RC2 기록](<./04_검증 기록/30_M22_v0.3.0_rc2_통합_릴리스_기준선.md>)에서 역사적 공개 결과를
-보존한다. RC3 memory-contract, 사용자 reset으로 중단된 clean-room과 stable 인계 경계는
+보존한다. RC3 memory-contract와 당시 clean-room 인계 경계는
 [M22 RC3 검증·인계 기록](<./04_검증 기록/31_M22_v0.3.0_rc3_검증과_stable_인계.md>)에서 관리한다.
+정식 stable의 재현 build, 설치 수명주기와 공개 identity는
+[v0.3.0 정식 공개 기록](<./04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)에 고정한다.
 정확한 단계 상태의 단일 원본은
 [제품 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)이다. `v0.2.0`의 공개 범위와
-제약은 [v0.2.0 릴리스 문서](<./05_릴리스/v0.2.0/README.md>)를 따른다.
+제약은 역사 문서로 보존하며 현재 사용법은 [v0.3.0 릴리스 문서](<./05_릴리스/v0.3.0/README.md>)를 따른다.
 
 여기서 `완료`는 해당 버전에 선언한 제품 범위를 구현·검증했다는 뜻이다. 모든 Arduino 보드의
 API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환 폭은
@@ -77,12 +82,15 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - 구조를 선택한 이유: [ADR-0001](<./00_사전 리서치/01_개발_방식_비교_및_아키텍처_결정.md>)
 - 일반 사용자의 구성 UX: [ADR-0002](<./00_사전 리서치/02_Arduino_구성_프로필과_예제_노출_결정.md>)
 - 현재와 다음 단계: [제품 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)
+- 전 instance·DMA·BLE 경쟁 격차와 완료 조건: [경쟁 기준과 마일스톤](<./01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)
+- M23의 현재 instance별 상태: [Peripheral instance matrix](<./01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)
 - 현재 공개 API: [Arduino API 지원 범위](<./01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)
+- Windows source 개발환경: [Windows 개발환경 설정](<./02_빌드 설계/09_Windows_개발환경_설정.md>)
 - 설치·package 구조: [Boards Manager 설계](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
-- 현재 사용자 문서: [v0.2.0 릴리스 문서](<./05_릴리스/v0.2.0/README.md>)
-- RC 시험 절차: [v0.3.0-rc.3 Testing](<./05_릴리스/v0.3.0-rc.3/TESTING.md>)
+- 현재 사용자 문서: [v0.3.0 릴리스 문서](<./05_릴리스/v0.3.0/README.md>)
+- 설치·시험 절차: [v0.3.0 Testing](<./05_릴리스/v0.3.0/TESTING.md>)
 - 실제 시험 증거: [검증 기록 안내](<./04_검증 기록/README.md>)
-- 다음 버전 범위: [v0.3.0 구현 마일스톤](<./01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)
+- 완료된 버전 범위: [v0.3.0 구현 마일스톤](<./01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)
 
 ## 5. 문서 구성
 
@@ -100,6 +108,8 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - [v0.2.0 구현 마일스톤](<./01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)
 - [NCS v3.4.0 기능·예제 지원 매트릭스](<./01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)
 - [v0.3.0 구현 마일스톤](<./01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)
+- [전 인스턴스·DMA·BLE 경쟁 기준과 마일스톤](<./01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)
+- [M23 Peripheral instance matrix](<./01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)
 
 ### 02. 빌드 설계
 
@@ -111,6 +121,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - [Boards Manager 설치와 package](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
 - [구성 profile과 Arduino 예제](<./02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md>)
 - [CI/CD와 재현 build](<./02_빌드 설계/08_M12_CI_CD와_재현_빌드.md>)
+- [Windows 개발환경 설정](<./02_빌드 설계/09_Windows_개발환경_설정.md>)
 
 ### 03. Firmware 설계
 
@@ -127,14 +138,16 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 
 ### 04. 검증 기록
 
-M1~M18과 정식 공개 증거, `v0.3.0` AC-01~AC-03·M19~M22의 구현·검증 증거는
+M1~M23과 정식 공개 증거, `v0.3.0` AC-01~AC-03·M19~M22 및 `v0.4.0` M23의 구현·검증 증거는
 [검증 기록 안내](<./04_검증 기록/README.md>)에서 찾는다. 이 디렉터리의 문서는 당시 revision과
 결과를 보존하는 역사 기록이다.
 
 ### 05. 릴리스 문서
 
-현재 stable `v0.2.0`, 새 `v0.3.0-rc.3` 후보와 보존된 `v0.1.0`/RC 문서는
+현재 stable `v0.3.0`과 보존된 `v0.1.0`/`v0.2.0`/RC 문서는
 [릴리스 문서 안내](<./05_릴리스/README.md>)에서 구분한다.
+릴리스 문서는 `<version>/README.md`를 진입점으로 삼고 같은 역할은 영문 표준 파일명으로
+통일한다. 공개가 끝난 이전 버전의 기능·측정값은 고치지 않고 경로와 색인만 관리한다.
 
 ## 6. 단일 원본 규칙
 

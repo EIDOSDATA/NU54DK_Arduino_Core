@@ -62,7 +62,7 @@ Core commit `bb7a4eace689af707ea429a1911e4cb98da97329`과 board package gitlink
 ## RC1과 RC2의 관계
 
 RC1의 tag와 공개 자산은 변경하거나 RC2 byte로 덮어쓰지 않습니다. RC1의 local fixed gate와
-public clean-room 실패는 [RC1 clean-room 검증 중단 기록](<../13_v0.3.0_rc1_cleanroom_검증_중단_기록.md>)에
+public clean-room 실패는 [RC1 clean-room 검증 중단 기록](../v0.3.0-rc.1/CLEANROOM_ABORT.md)에
 보존합니다.
 
 RC2는 다음 항목을 새 identity로 다시 실행해 모두 통과했습니다.

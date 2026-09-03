@@ -254,19 +254,19 @@ class M10PackagingTests(unittest.TestCase):
         """! @brief 장기 사용자 endpoint의 stable index identity를 검증합니다. """
 
         index = REPO_ROOT / PACKAGE.STABLE_INDEX_FILENAME
-        self.assertEqual(index.stat().st_size, 1877)
+        self.assertEqual(index.stat().st_size, 2630)
         self.assertEqual(
             hashlib.sha256(index.read_bytes()).hexdigest(),
-            "5ae7fbe13f71c52950879064685694cf4b062557572f187e81476639724e5344",
+            "14fe2eb10b4dd77a219d48060c32c21bdd97370f6d6f8be699d9118f8973e007",
         )
         self.assertNotEqual(PACKAGE.RC_INDEX_FILENAME, PACKAGE.STABLE_INDEX_FILENAME)
         document = PACKAGE.validate_index(index)
         platforms = document["packages"][0]["platforms"]
         self.assertEqual(
             [platform["version"] for platform in platforms],
-            ["0.2.0", "0.1.0"],
+            ["0.3.0", "0.2.0", "0.1.0"],
         )
-        for platform, version in zip(platforms, ("0.2.0", "0.1.0"), strict=True):
+        for platform, version in zip(platforms, ("0.3.0", "0.2.0", "0.1.0"), strict=True):
             identity = PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES[version]
             self.assertEqual(platform["archiveFileName"], PACKAGE.archive_filename(version))
             self.assertEqual(
@@ -299,7 +299,7 @@ class M10PackagingTests(unittest.TestCase):
         crlf_bytes = stable_bytes.replace(b"\n", b"\r\n")
         self.assertNotEqual(
             hashlib.sha256(crlf_bytes).hexdigest(),
-            "5ae7fbe13f71c52950879064685694cf4b062557572f187e81476639724e5344",
+            "14fe2eb10b4dd77a219d48060c32c21bdd97370f6d6f8be699d9118f8973e007",
         )
 
     def test_11_supported_versions_are_fail_closed(self) -> None:
@@ -347,6 +347,7 @@ class M10PackagingTests(unittest.TestCase):
             {
                 "0.1.0": "5dbc5e37270e477d21f578dd877f4b5226b44a0d",
                 "0.2.0": "41fc44e452d2b6eef4b46307af6c277499f8d2d5",
+                "0.3.0": "94ee3fec29ba9f86835b6cb3d96ab13ce2cf8c11",
             },
         )
         index = REPO_ROOT / PACKAGE.STABLE_INDEX_FILENAME
@@ -357,12 +358,12 @@ class M10PackagingTests(unittest.TestCase):
         platforms = document["packages"][0]["platforms"]
         self.assertEqual(
             [platform["version"] for platform in platforms],
-            ["0.2.0", "0.1.0"],
+            ["0.3.0", "0.2.0", "0.1.0"],
         )
         self.assertEqual(
             platforms[0]["url"],
             "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/"
-            "v0.2.0/nucode-nu54dk-zephyr-0.2.0.zip",
+            "v0.3.0/nucode-nu54dk-zephyr-0.3.0.zip",
         )
         self.assertEqual(
             PACKAGE.legal_review_status("0.1.0"),
@@ -389,8 +390,17 @@ class M10PackagingTests(unittest.TestCase):
         )
         self.assertEqual(PACKAGE.release_channel("0.3.0"), "stable")
         self.assertEqual(PACKAGE.release_tag("0.3.0"), "v0.3.0")
-        self.assertNotIn("0.3.0", PACKAGE.STABLE_RELEASE_COMMITS)
-        self.assertNotIn("0.3.0", PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES)
+        self.assertEqual(
+            PACKAGE.STABLE_RELEASE_COMMITS["0.3.0"],
+            "94ee3fec29ba9f86835b6cb3d96ab13ce2cf8c11",
+        )
+        self.assertEqual(
+            PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES["0.3.0"],
+            {
+                "size": 1660169,
+                "sha256": "138740bcf6c458992fdb5c8eb81d6110d28b0baee18c68f5d8cb050e2e0e1ecc",
+            },
+        )
         self.assertEqual(
             PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES["0.1.0"],
             {

@@ -37,10 +37,12 @@ config NUCODE_ARDUINO_IO_OWNERSHIP
 	bool "물리 I/O 자원 소유권 관리자 활성화"
 	default y
 	help
-	  GPIO pad와 SERIAL/PWM/ADC 하드웨어 블록을 정규화된 키로 관리합니다.
+	  GPIO pad, peripheral block, GPIOTE/DPPI/timer channel과 DMA RAM range를
+	  정규화된 키로 관리합니다.
 	  여러 자원을 reserve/commit/rollback하는 동안 충돌과 stale lease를
 	  검사하며 동적 메모리를 사용하지 않습니다. AC-02A에서는 현재 보드의
-	  고정 pinctrl 자원과 GPIO 획득 계약만 관리합니다.
+	  고정 pinctrl 자원과 GPIO 획득 계약을 포함하며 M23 이후 async driver가
+	  같은 transaction에서 block·pin·event·buffer를 함께 예약할 수 있습니다.
 
 config NUCODE_ARDUINO_IO_RESOURCE_SLOTS
 	int "물리 I/O 자원 table slot 수"

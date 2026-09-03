@@ -93,7 +93,7 @@ Loaderless 제품선의 기본값은 **단일 application이 영구 저장소를
 layout**이다. 향후 boot/update 기능을 사용하지 않는 사용자에게 MCUboot 예약과 두 번째 image
 slot 비용을 기본으로 부과하지 않는다.
 
-MCUboot/DFU, signed update와 rollback이 필요한 사용자는 `v0.4.0` M24에서 제공할 검증된 고급
+MCUboot/DFU, signed update와 rollback이 필요한 사용자는 `v0.6.0` M36에서 제공할 검증된 고급
 Memory layout을 명시적으로 선택한다. 이 선택은 단순 Devicetree 조각이 아니라 code partition,
 linker 최대 범위, Arduino maximum size, storage 주소와 migration 정책을 묶은 profile 계약이다.
 Tools 메뉴에는 임의 byte 입력보다 시험한 preset만 제공한다. 전문가 `app.overlay`도 같은 충돌

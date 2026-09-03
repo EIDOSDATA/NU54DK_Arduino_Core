@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/tools/peripheral/peripheral-manifest.schema.json",
+  "title": "NU54DK peripheral inventory manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "identity", "instances"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "soc",
+        "ncs_version",
+        "ncs_revision",
+        "zephyr_version",
+        "zephyr_revision",
+        "board",
+        "board_revision",
+        "soc_dts_sources"
+      ],
+      "properties": {
+        "soc": { "const": "nRF54L15" },
+        "ncs_version": { "const": "v3.4.0" },
+        "ncs_revision": { "$ref": "#/$defs/revision" },
+        "zephyr_version": { "const": "4.4.0" },
+        "zephyr_revision": { "$ref": "#/$defs/revision" },
+        "board": { "const": "nrf54l15dk/nrf54l15/cpuapp/nu54dk" },
+        "board_revision": { "$ref": "#/$defs/revision" },
+        "soc_dts_sources": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "sha256"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1 },
+              "sha256": { "$ref": "#/$defs/sha256" }
+            }
+          }
+        }
+      }
+    },
+    "instances": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/instance" }
+    }
+  },
+  "$defs": {
+    "revision": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "instance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "instance",
+        "sharing_group",
+        "dt_node",
+        "route",
+        "owner",
+        "public_object",
+        "public_api",
+        "driver",
+        "dma",
+        "states",
+        "milestone",
+        "evidence"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "kind": {
+          "enum": [
+            "uarte", "spim", "spis", "twim", "twis", "gpio", "gpiote",
+            "egu", "dppic", "ppib", "timer", "grtc", "saadc", "pwm",
+            "pdm", "i2s", "qdec", "comp", "lpcomp", "temp", "wdt",
+            "nfct", "radio", "cracen", "kmu", "rng", "tampc", "power",
+            "clock", "cache", "vpr", "sqspi"
+          ]
+        },
+        "instance": { "type": "integer", "minimum": 0, "maximum": 255 },
+        "sharing_group": { "type": ["string", "null"] },
+        "dt_node": { "type": ["string", "null"] },
+        "route": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "token"],
+          "properties": {
+            "state": {
+              "enum": ["not_required", "candidate", "partial", "verified", "unroutable"]
+            },
+            "token": { "type": "string", "minLength": 1 }
+          }
+        },
+        "owner": {
+          "enum": [
+            "gpio", "gpiote", "serial", "wire", "spi", "timer", "pwm",
+            "adc", "dppi", "pdm", "i2s", "qdec", "comparator", "radio",
+            "security", "system", "application"
+          ]
+        },
+        "public_object": { "type": ["string", "null"] },
+        "public_api": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "driver": { "type": "string", "minLength": 1 },
+        "dma": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["hardware", "driver_managed", "public_mode", "max_count_bits"],
+          "properties": {
+            "hardware": { "type": "boolean" },
+            "driver_managed": { "type": "boolean" },
+            "public_mode": {
+              "enum": ["none", "synchronous", "asynchronous", "continuous", "double_buffered"]
+            },
+            "max_count_bits": { "type": ["integer", "null"], "minimum": 1, "maximum": 32 }
+          }
+        },
+        "states": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "silicon", "source", "exposure", "build", "semantic", "hil", "concurrent_hil"
+          ],
+          "properties": {
+            "silicon": { "enum": ["not_applicable", "not_run", "partial", "pass"] },
+            "source": { "enum": ["absent", "internal", "partial", "implemented"] },
+            "exposure": { "enum": ["none", "internal", "public"] },
+            "build": { "enum": ["not_applicable", "not_run", "partial", "pass"] },
+            "semantic": { "enum": ["not_applicable", "not_run", "partial", "pass"] },
+            "hil": { "enum": ["not_applicable", "not_run", "partial", "pass"] },
+            "concurrent_hil": { "enum": ["not_applicable", "not_run", "partial", "pass"] }
+          }
+        },
+        "milestone": { "type": "string", "pattern": "^M(24|25|26)$" },
+        "evidence": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

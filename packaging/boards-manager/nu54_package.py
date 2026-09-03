@@ -41,6 +41,7 @@ STABLE_VERSIONS = ("0.1.0", "0.2.0", "0.3.0")
 STABLE_RELEASE_COMMITS = {
     "0.1.0": "5dbc5e37270e477d21f578dd877f4b5226b44a0d",
     "0.2.0": "41fc44e452d2b6eef4b46307af6c277499f8d2d5",
+    "0.3.0": "94ee3fec29ba9f86835b6cb3d96ab13ce2cf8c11",
 }
 ## @brief 과거 패키지를 최신 허용목록으로 재해석하지 않고 공개 byte 그대로 검증합니다.
 PUBLISHED_STABLE_ARCHIVE_IDENTITIES = {
@@ -51,6 +52,10 @@ PUBLISHED_STABLE_ARCHIVE_IDENTITIES = {
     "0.2.0": {
         "size": 932376,
         "sha256": "1c2b4dddd6da0c1530f9d32630ec7d5b5285cff28c826a9a95c864226aeaea6e",
+    },
+    "0.3.0": {
+        "size": 1660169,
+        "sha256": "138740bcf6c458992fdb5c8eb81d6110d28b0baee18c68f5d8cb050e2e0e1ecc",
     },
 }
 PACKAGE_VERSIONS = SUPPORTED_VERSIONS + RELEASE_CANDIDATE_VERSIONS + STABLE_VERSIONS
