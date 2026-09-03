@@ -351,4 +351,18 @@ SerialFabricResult validateNu54dkSerialFabricRoute(
   route.electrical_profile = configuration.electrical_profile;
   return SerialFabricResult::success;
 }
+
+SerialFabricResult nu54dkSerialFabricPsel(pin_size_t pin,
+                                          std::uint32_t &psel) noexcept {
+  const PinDescription *const description = pinDescription(pin);
+  if ((description == nullptr) || !device_is_ready(description->gpio.port)) {
+    return SerialFabricResult::unsupported_route;
+  }
+  const int port = gpioPort(description->gpio.port);
+  if ((port < 0) || (port > 2) || (description->gpio.pin > 31U)) {
+    return SerialFabricResult::unsupported_route;
+  }
+  psel = (static_cast<std::uint32_t>(port) << 5U) | description->gpio.pin;
+  return SerialFabricResult::success;
+}
 } // namespace nucode::arduino::internal

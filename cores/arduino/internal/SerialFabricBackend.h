@@ -41,6 +41,7 @@ struct SerialFabricDriverAdapter {
   bool (*stopped)(std::uint8_t instance) noexcept;
   SerialFabricResult (*deactivate)(std::uint8_t instance,
                                    int &driver_error) noexcept;
+  void (*handle_irq)(std::uint8_t instance) noexcept;
 };
 
 /** @brief 한 personality adapter를 등록합니다. 재등록은 거부합니다. */
@@ -48,6 +49,13 @@ struct SerialFabricDriverAdapter {
 registerSerialFabricAdapter(SerialPersonality personality,
                             std::uint8_t instance,
                             const SerialFabricDriverAdapter &adapter) noexcept;
+
+/** @brief 현재 handle이 active인지 driver operation 전에 확인합니다. */
+[[nodiscard]] bool isSerialFabricHandleActive(SerialPersonality personality,
+                                              std::uint8_t instance) noexcept;
+
+/** @brief block IRQ trampoline에서 현재 active personality로 전달합니다. */
+void dispatchSerialFabricIrq(std::uint8_t instance) noexcept;
 
 #if defined(CONFIG_ZTEST)
 /** @brief ztest 격리를 위해 fabric 상태와 adapter table을 초기화합니다. */

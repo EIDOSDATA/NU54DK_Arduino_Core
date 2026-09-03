@@ -70,8 +70,11 @@ SerialFabricResult fakeDeactivate(std::uint8_t instance,
   return SerialFabricResult::success;
 }
 
-const SerialFabricDriverAdapter fake_adapter{
-    fakeValidate, fakeActivate, fakeRequestStop, fakeStopped, fakeDeactivate};
+void fakeHandleIrq(std::uint8_t) noexcept {}
+
+const SerialFabricDriverAdapter fake_adapter{fakeValidate,    fakeActivate,
+                                             fakeRequestStop, fakeStopped,
+                                             fakeDeactivate,  fakeHandleIrq};
 
 const SerialSignalPin uarte00_pins[] = {
     {SerialSignal::txd, PIN_P2_02},

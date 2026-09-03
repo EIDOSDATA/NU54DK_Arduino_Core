@@ -21,6 +21,10 @@ namespace nucode::arduino::internal {
     const SerialFabricConfiguration &configuration, ValidatedSerialRoute &route,
     IoResourceId *resources, std::size_t resource_capacity,
     std::size_t &resource_count) noexcept;
+
+/** @brief canonical Arduino pin을 nrfx PSEL pin number로 변환합니다. */
+[[nodiscard]] SerialFabricResult
+nu54dkSerialFabricPsel(pin_size_t pin, std::uint32_t &psel) noexcept;
 } // namespace nucode::arduino::internal
 
 #endif

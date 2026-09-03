@@ -13,6 +13,7 @@
 #include "serial_fabric_routes.h"
 
 #include <zephyr/kernel.h>
+#include <zephyr/sys/atomic.h>
 
 #include <cstddef>
 #include <cstdint>
@@ -43,6 +44,8 @@ struct HandleContext {
 
 struct BlockContext {
   bool faulted{false};
+  atomic_ptr_t active_adapter{nullptr};
+  std::uint8_t active_instance{0U};
 };
 
 K_MUTEX_DEFINE(fabric_mutex);
@@ -253,10 +256,14 @@ SerialFabricResult SerialFabricHandle::activate() noexcept {
   }
 
   context.state = SerialFabricState::activating;
+  blocks[block].active_instance = instance_;
+  atomic_ptr_set(&blocks[block].active_adapter,
+                 const_cast<SerialFabricDriverAdapter *>(context.adapter));
   int driver_error = 0;
   SerialFabricResult result =
       context.adapter->activate(instance_, context.route, driver_error);
   if (result != SerialFabricResult::success) {
+    atomic_ptr_clear(&blocks[block].active_adapter);
     const IoResourceResult rollback_result =
         internal::rollbackIoResources(context.lease);
     context.lease = {};
@@ -281,6 +288,7 @@ SerialFabricResult SerialFabricHandle::activate() noexcept {
         context.adapter->deactivate(instance_, cleanup_error);
     const IoResourceResult rollback_result =
         internal::rollbackIoResources(context.lease);
+    atomic_ptr_clear(&blocks[block].active_adapter);
     if ((cleanup_result != SerialFabricResult::success) ||
         (rollback_result != IoResourceResult::success)) {
       latchFault(context, block, SerialFabricResult::release_failed,
@@ -351,6 +359,7 @@ SerialFabricHandle::deactivate(std::uint32_t timeout_us) noexcept {
     k_mutex_unlock(&fabric_mutex);
     return result;
   }
+  atomic_ptr_clear(&blocks[block].active_adapter);
   const IoResourceResult release_result =
       internal::releaseIoResources(context.lease);
   if (release_result != IoResourceResult::success) {
@@ -418,7 +427,8 @@ registerSerialFabricAdapter(SerialPersonality personality,
   const int index = handleIndex(personality, instance);
   if ((index < 0) || (adapter.validate == nullptr) ||
       (adapter.activate == nullptr) || (adapter.request_stop == nullptr) ||
-      (adapter.stopped == nullptr) || (adapter.deactivate == nullptr)) {
+      (adapter.stopped == nullptr) || (adapter.deactivate == nullptr) ||
+      (adapter.handle_irq == nullptr)) {
     return index < 0 ? SerialFabricResult::unsupported_instance
                      : SerialFabricResult::invalid_argument;
   }
@@ -433,6 +443,27 @@ registerSerialFabricAdapter(SerialPersonality personality,
   contexts[index].adapter = &adapters[index];
   k_mutex_unlock(&fabric_mutex);
   return SerialFabricResult::success;
+}
+
+bool isSerialFabricHandleActive(SerialPersonality personality,
+                                std::uint8_t instance) noexcept {
+  const int index = handleIndex(personality, instance);
+  if (index < 0)
+    return false;
+  k_mutex_lock(&fabric_mutex, K_FOREVER);
+  const bool active = contexts[index].state == SerialFabricState::active;
+  k_mutex_unlock(&fabric_mutex);
+  return active;
+}
+
+void dispatchSerialFabricIrq(std::uint8_t instance) noexcept {
+  const int block = blockIndex(instance);
+  if (block < 0)
+    return;
+  auto *const adapter = static_cast<SerialFabricDriverAdapter *>(
+      atomic_ptr_get(&blocks[block].active_adapter));
+  if (adapter != nullptr)
+    adapter->handle_irq(blocks[block].active_instance);
 }
 
 #if defined(CONFIG_ZTEST)

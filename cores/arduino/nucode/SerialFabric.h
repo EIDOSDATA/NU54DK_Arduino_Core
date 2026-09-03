@@ -92,6 +92,37 @@ enum class SerialFabricResult : std::uint8_t {
   faulted,
 };
 
+/** @brief UARTE parity 선택입니다. */
+enum class UarteParity : std::uint8_t {
+  none = 0U,
+  even,
+};
+
+/** @brief UARTE async event 종류입니다. ISR 밖에서 poll합니다. */
+enum class UarteEventType : std::uint8_t {
+  tx_complete = 0U,
+  tx_cancelled,
+  rx_complete,
+  rx_cancelled,
+  rx_buffer_needed,
+  error,
+};
+
+/** @brief UARTE 설정입니다. 기본값은 115200 8N1, flow control off입니다. */
+struct UarteConfiguration {
+  std::uint32_t baud_rate{115200U};
+  UarteParity parity{UarteParity::none};
+  bool hardware_flow_control{false};
+};
+
+/** @brief 완료 queue에서 읽는 UARTE async event입니다. */
+struct UarteEvent {
+  UarteEventType type{UarteEventType::error};
+  const void *buffer{nullptr};
+  std::size_t transferred{0U};
+  std::uint32_t error_mask{0U};
+};
+
 /** @brief 한 signal과 Arduino canonical pin을 연결합니다. */
 struct SerialSignalPin {
   SerialSignal signal{SerialSignal::invalid};
@@ -147,6 +178,22 @@ private:
 
 class UarteHandle final : public SerialFabricHandle {
   friend class SerialFabric;
+
+public:
+  [[nodiscard]] SerialFabricResult
+  configure(const UarteConfiguration &configuration) noexcept;
+  [[nodiscard]] SerialFabricResult transmitAsync(const void *buffer,
+                                                 std::size_t size) noexcept;
+  [[nodiscard]] SerialFabricResult
+  receiveAsync(void *first_buffer, std::size_t first_size,
+               void *second_buffer = nullptr,
+               std::size_t second_size = 0U) noexcept;
+  [[nodiscard]] SerialFabricResult cancelTransmit() noexcept;
+  [[nodiscard]] SerialFabricResult cancelReceive() noexcept;
+  [[nodiscard]] bool takeEvent(UarteEvent &event) noexcept;
+  [[nodiscard]] DmaBufferState bufferState(const void *buffer) const noexcept;
+
+private:
   constexpr UarteHandle(std::uint8_t instance, std::uint8_t index) noexcept
       : SerialFabricHandle(SerialPersonality::uarte, instance, index) {}
 };
