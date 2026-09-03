@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 1.2 |
-| 문서 상태 | M23 완료 / M24 작업 1 완료·작업 2 착수 대기 |
+| 문서 개정 | 1.3 |
+| 문서 상태 | M23 완료 / M24 작업 1~2 완료·작업 3 착수 대기 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.3.0` stable / commit `bae0957d2425e4418199a2a3a018bf8e9a0dc356` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
@@ -258,12 +258,15 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 ### M24 — Serial fabric 전 인스턴스와 DMA
 
-- 상태: **작업 1 완료** — 5개 block·23개 personality, 핀 bank, singleton/고급 API 경계,
+- 상태: **작업 1~2 완료** — 5개 block·23개 personality, 핀 bank, singleton/고급 API 경계,
   DMA lifecycle과 관련 errata를 [M24 Serial Fabric 계약](10_M24_Serial_Fabric_경로와_API_계약.md)에
   고정하고 CI drift 검사를 연결했다. 회로도 재검토로 단독 HIL primary 자원 6개와 무배선 자동화
   후보 7개·외부 fixture 필요 16개도 계약에 추가했다. 실행 결과는
   [M24 작업 1 검증 기록](<../04_검증 기록/34_M24_Serial_Fabric_경로와_API_계약_기준선.md>)에 보존한다.
-  Driver, 새 공개 header와 신규 HIL 상태는 아직 승격하지 않았다.
+  작업 2에서는 allocation-free typed handle, 원자적 route/DMA lease와 bounded handover backend를
+  구현하고 target semantic build를 통과했다. 결과는
+  [M24 작업 2 검증 기록](<../04_검증 기록/35_M24_Serial_Fabric_공통_backend_기준선.md>)에 보존한다.
+  Personality driver와 신규 HIL 상태는 아직 승격하지 않았다.
 
 - UARTE00/20/21/22/30, SPIM/SPIS00/20/21/22/30, TWIM/TWIS20/21/22/30을 구현한다.
 - Arduino 호환 singleton과 고급 instance factory/direct handle의 책임을 분리한다.
@@ -274,7 +277,7 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 | 작업 | 범위 | 상태 |
 | --- | --- | --- |
 | 1 | Route/API/errata, 단독 HIL primary 자원 계약과 자동 drift 검사 | **완료** |
-| 2 | 공통 backend, typed handle, personality handover | 대기 |
+| 2 | 공통 backend, typed handle, personality handover | **완료** |
 | 3 | UARTE 5개와 async RX/TX DMA | 대기 |
 | 4 | SPIM/SPIS 각 5개와 sync/async·double buffer | 대기 |
 | 5 | TWIM/TWIS 각 4개와 repeated-start·target double buffer | 대기 |

@@ -85,7 +85,7 @@
       "additionalProperties": false,
       "required": ["status", "header", "namespace", "factory", "allocation", "identity_selector", "selectors", "rules"],
       "properties": {
-        "status": { "const": "contract-only-not-public" },
+        "status": { "const": "candidate-source-not-released" },
         "header": { "const": "nucode/SerialFabric.h" },
         "namespace": { "const": "nucode::arduino" },
         "factory": { "const": "serialFabric()" },

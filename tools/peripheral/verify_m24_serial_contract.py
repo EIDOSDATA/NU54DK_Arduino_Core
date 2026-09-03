@@ -24,6 +24,9 @@ DOCUMENT_PATH = (
     / "01_아두이노 코어 설계"
     / "10_M24_Serial_Fabric_경로와_API_계약.md"
 )
+PUBLIC_HEADER_PATH = REPOSITORY / "cores" / "arduino" / "nucode" / "SerialFabric.h"
+BACKEND_SOURCE_PATH = REPOSITORY / "cores" / "arduino" / "SerialFabric.cpp"
+ROUTE_SOURCE_PATH = REPOSITORY / "variants" / "nu54dk" / "serial_fabric_routes.cpp"
 
 EXPECTED_BLOCKS = {
     "serial00": (0, "0x4004a000", 74, {"uarte00", "spim00", "spis00"}),
@@ -228,8 +231,8 @@ def validate_schema_contract(schema: dict[str, Any]) -> None:
     properties = schema.get("properties", {})
     if properties.get("schema_version", {}).get("const") != 2:
         raise ContractFailure("schema version must describe onboard HIL resources")
-    if properties.get("advanced_api", {}).get("properties", {}).get("status", {}).get("const") != "contract-only-not-public":
-        raise ContractFailure("schema must keep the advanced API contract-only")
+    if properties.get("advanced_api", {}).get("properties", {}).get("status", {}).get("const") != "candidate-source-not-released":
+        raise ContractFailure("schema must keep the advanced API source candidate unreleased")
 
 
 def validate_identity(identity: dict[str, Any]) -> None:
@@ -319,7 +322,7 @@ def validate_surface(contract: dict[str, Any]) -> None:
         "advanced_api",
     )
     expected_scalars = {
-        "status": "contract-only-not-public",
+        "status": "candidate-source-not-released",
         "header": "nucode/SerialFabric.h",
         "namespace": "nucode::arduino",
         "factory": "serialFabric()",
@@ -340,9 +343,25 @@ def validate_surface(contract: dict[str, Any]) -> None:
     if not isinstance(rules, list) or len(rules) < 8 or len(set(rules)) != len(rules):
         raise ContractFailure("advanced API rules must be unique and exhaustive")
     joined = " ".join(rules).lower()
-    for token in ("raw register", "same serial block", "dma", "singleton", "not public"):
+    for token in ("raw register", "same serial block", "dma", "singleton", "source candidate"):
         if token not in joined:
             raise ContractFailure(f"advanced API rules omit {token!r}")
+
+    required_sources = (PUBLIC_HEADER_PATH, BACKEND_SOURCE_PATH, ROUTE_SOURCE_PATH)
+    missing = [path.relative_to(REPOSITORY).as_posix() for path in required_sources if not path.is_file()]
+    if missing:
+        raise ContractFailure(f"advanced API candidate source is missing: {missing}")
+    header = PUBLIC_HEADER_PATH.read_text(encoding="utf-8")
+    backend = BACKEND_SOURCE_PATH.read_text(encoding="utf-8")
+    route = ROUTE_SOURCE_PATH.read_text(encoding="utf-8")
+    for token in ("class SerialFabric", "class UarteHandle", "class SpimHandle", "class SpisHandle", "class TwimHandle", "class TwisHandle"):
+        if token not in header:
+            raise ContractFailure(f"advanced API header omits {token!r}")
+    for token in ("reserveIoResources", "commitIoResources", "rollbackIoResources", "releaseIoResources", "registerSerialFabricAdapter"):
+        if token not in backend:
+            raise ContractFailure(f"serial fabric backend omits {token!r}")
+    if "validateNu54dkSerialFabricRoute" not in route:
+        raise ContractFailure("NU54DK serial route validator is missing")
 
 
 def validate_pin_banks(contract: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -730,10 +749,10 @@ def _conditions(items: list[str]) -> str:
 def render_document(contract: dict[str, Any]) -> str:
     identity = contract["identity"]
     lines = [
-        "# M24 작업 1 — Serial Fabric 경로와 API 계약",
+        "# M24 작업 1~2 — Serial Fabric 경로와 공통 backend",
         "",
         "> 이 파일은 `variants/nu54dk/serial-fabric-contract.json`에서 자동 생성합니다. 직접 수정하지 마세요.",
-        "> 현재 판정은 **경로/API 계약 완료**이며, `planned-hil`과 고급 API는 아직 공개 지원이 아닙니다.",
+        "> 현재 판정은 **공통 backend와 semantic build 완료**이며, personality driver와 `planned-hil`은 아직 공개 지원이 아닙니다.",
         "",
         "| 항목 | 값 |",
         "| --- | --- |",
@@ -741,19 +760,21 @@ def render_document(contract: dict[str, Any]) -> str:
         "| 제품선 | `v0.4.0` / M24 |",
         f"| SoC / SDK | `{identity['soc']}` / `{identity['ncs_version']}` / Zephyr `{identity['zephyr_version']}` |",
         f"| Board | `{identity['board']}` / `{identity['board_revision']}` |",
-        "| 상태 | 작업 1 완료 — route/API/negative contract와 보드 자체 시험 자원 고정, driver·HIL 미착수 |",
+        "| 상태 | 작업 1~2 완료 — route/API 계약과 공통 handover backend 구현, personality driver·HIL 미착수 |",
         "| 갱신일 | 2026-09-03 |",
         "",
         "## 1. 이번 작업의 경계",
         "",
         "이 계약은 23개 serial personality의 실제 identity, 공유 block, 허용 pin bank, 현재 route,",
-        "고급 선택 API의 형태와 DMA 수명주기를 고정한다. 새 header나 객체를 아직 배포하지 않으며",
-        "manifest의 미구현 identity도 `absent`/`not-run`으로 유지한다.",
+        "고급 선택 API와 DMA 수명주기를 고정한다. 작업 2에서 allocation-free typed handle, 원자적",
+        "route/DMA lease, bounded stop과 fail-closed handover를 source candidate로 구현했다. Kconfig는",
+        "기본 off이고 personality driver가 아직 없으므로 배포 지원은 아니며 manifest의 미구현",
+        "identity도 `absent`/`not-run`으로 유지한다.",
         "",
         "M24의 후속 순서는 다음과 같다.",
         "",
         "1. **작업 1(완료):** route/API/errata 계약과 자동 drift 검사",
-        "2. **작업 2:** 공통 serial-fabric backend, typed handle과 personality handover",
+        "2. **작업 2(완료):** 공통 serial-fabric backend, typed handle과 personality handover",
         "3. **작업 3:** UARTE 5개와 async RX/TX DMA",
         "4. **작업 4:** SPIM/SPIS 각 5개와 sync/async·double buffer",
         "5. **작업 5:** TWIM/TWIS 각 4개와 repeated-start·target double buffer",
@@ -839,7 +860,7 @@ def render_document(contract: dict[str, Any]) -> str:
             "",
             "회로도 9쪽 전수를 다시 대조해 USB와 온보드 회로만으로 자동화할 수 있는 단독 데이터 경로와",
             "외부 fixture가 필요한 경로를 분리했다. `onboard-automatic`은 구현 완료를 뜻하지 않으며,",
-            "M24 작업 2~5 이후 물리 HIL을 자동 실행할 수 있다는 시험 자원 판정이다.",
+            "M24 작업 3~5 이후 물리 HIL을 자동 실행할 수 있다는 시험 자원 판정이다.",
             "",
             "| 자원 | 위치 / 실행 | 단독 HIL의 primary identity | 보드 net | 자동화 범위 | 선행조건 |",
             "| --- | --- | --- | --- | --- | --- |",

@@ -177,6 +177,12 @@ class M24SerialContractTests(unittest.TestCase):
             for axis in ("build", "semantic", "hil", "concurrent_hil"):
                 self.assertEqual(states[axis], "not_run", f"{identity}.{axis}")
 
+    def test_candidate_header_and_handover_sources_are_required(self) -> None:
+        MODULE.validate_surface(self.contract)
+        self.assertTrue(MODULE.PUBLIC_HEADER_PATH.is_file())
+        self.assertTrue(MODULE.BACKEND_SOURCE_PATH.is_file())
+        self.assertTrue(MODULE.ROUTE_SOURCE_PATH.is_file())
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

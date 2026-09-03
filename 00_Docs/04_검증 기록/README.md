@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 성격 | 실행 당시의 revision, 환경, 명령과 결과를 보존하는 역사 증거 |
-| 완료 범위 | M1~M23, M24 작업 1, `v0.1.0`·`v0.2.0`·`v0.3.0` 정식 공개 |
-| 진행 범위 | `v0.4.0` M24 작업 2 착수 대기 |
+| 완료 범위 | M1~M23, M24 작업 1~2, `v0.1.0`·`v0.2.0`·`v0.3.0` 정식 공개 |
+| 진행 범위 | `v0.4.0` M24 작업 3 착수 대기 |
 | 현재 정식 버전 | `v0.3.0` |
 | 최종 갱신일 | 2026-09-03 |
 
@@ -66,6 +66,7 @@
 | --- | --- | --- |
 | M23 | 75개 identity manifest·생성 matrix·공개 조회 API, 같은 block 상호배타와 block/channel/DMA 원자적 lease PASS | [M23 기록](33_M23_Peripheral_Inventory와_공통_소유권_기준선.md) |
 | M24 작업 1 | 5개 serial block·23개 personality의 route/API/DMA/errata 계약과 exact DTS·문서 drift gate PASS | [M24 작업 1 기록](34_M24_Serial_Fabric_경로와_API_계약_기준선.md) |
+| M24 작업 2 | Allocation-free typed handle, 원자적 route/DMA lease, bounded handover와 target semantic build PASS | [M24 작업 2 기록](35_M24_Serial_Fabric_공통_backend_기준선.md) |
 
 ## 기록 해석 규칙
 

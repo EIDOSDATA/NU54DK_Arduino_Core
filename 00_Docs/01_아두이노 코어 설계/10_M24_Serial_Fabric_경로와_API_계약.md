@@ -1,7 +1,7 @@
-# M24 작업 1 — Serial Fabric 경로와 API 계약
+# M24 작업 1~2 — Serial Fabric 경로와 공통 backend
 
 > 이 파일은 `variants/nu54dk/serial-fabric-contract.json`에서 자동 생성합니다. 직접 수정하지 마세요.
-> 현재 판정은 **경로/API 계약 완료**이며, `planned-hil`과 고급 API는 아직 공개 지원이 아닙니다.
+> 현재 판정은 **공통 backend와 semantic build 완료**이며, personality driver와 `planned-hil`은 아직 공개 지원이 아닙니다.
 
 | 항목 | 값 |
 | --- | --- |
@@ -9,19 +9,21 @@
 | 제품선 | `v0.4.0` / M24 |
 | SoC / SDK | `nRF54L15` / `v3.4.0` / Zephyr `4.4.0` |
 | Board | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` / `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| 상태 | 작업 1 완료 — route/API/negative contract와 보드 자체 시험 자원 고정, driver·HIL 미착수 |
+| 상태 | 작업 1~2 완료 — route/API 계약과 공통 handover backend 구현, personality driver·HIL 미착수 |
 | 갱신일 | 2026-09-03 |
 
 ## 1. 이번 작업의 경계
 
 이 계약은 23개 serial personality의 실제 identity, 공유 block, 허용 pin bank, 현재 route,
-고급 선택 API의 형태와 DMA 수명주기를 고정한다. 새 header나 객체를 아직 배포하지 않으며
-manifest의 미구현 identity도 `absent`/`not-run`으로 유지한다.
+고급 선택 API와 DMA 수명주기를 고정한다. 작업 2에서 allocation-free typed handle, 원자적
+route/DMA lease, bounded stop과 fail-closed handover를 source candidate로 구현했다. Kconfig는
+기본 off이고 personality driver가 아직 없으므로 배포 지원은 아니며 manifest의 미구현
+identity도 `absent`/`not-run`으로 유지한다.
 
 M24의 후속 순서는 다음과 같다.
 
 1. **작업 1(완료):** route/API/errata 계약과 자동 drift 검사
-2. **작업 2:** 공통 serial-fabric backend, typed handle과 personality handover
+2. **작업 2(완료):** 공통 serial-fabric backend, typed handle과 personality handover
 3. **작업 3:** UARTE 5개와 async RX/TX DMA
 4. **작업 4:** SPIM/SPIS 각 5개와 sync/async·double buffer
 5. **작업 5:** TWIM/TWIS 각 4개와 repeated-start·target double buffer
@@ -63,7 +65,7 @@ allocation 없는 typed handle로 제공한다. Raw base address는 받지 않�
 - Different serial blocks may run together only when pin and DMA leases are disjoint.
 - Unsupported instance, route, profile or electrical policy fails before any register or pin change.
 - Standard Arduino singleton behavior and identity remain unchanged when the advanced API is enabled.
-- The advanced header is not public and remains absent from releases until source, build, semantic and required HIL gates pass.
+- The advanced header exists only as a Kconfig-disabled source candidate and remains absent from stable releases until driver, build, semantic and required HIL gates pass.
 
 ## 3. 물리 block과 가능한 personality
 
@@ -95,7 +97,7 @@ TWIM/TWIS30 fixture에는 외부 pull-up이 필요하다.
 
 회로도 9쪽 전수를 다시 대조해 USB와 온보드 회로만으로 자동화할 수 있는 단독 데이터 경로와
 외부 fixture가 필요한 경로를 분리했다. `onboard-automatic`은 구현 완료를 뜻하지 않으며,
-M24 작업 2~5 이후 물리 HIL을 자동 실행할 수 있다는 시험 자원 판정이다.
+M24 작업 3~5 이후 물리 HIL을 자동 실행할 수 있다는 시험 자원 판정이다.
 
 | 자원 | 위치 / 실행 | 단독 HIL의 primary identity | 보드 net | 자동화 범위 | 선행조건 |
 | --- | --- | --- | --- | --- | --- |

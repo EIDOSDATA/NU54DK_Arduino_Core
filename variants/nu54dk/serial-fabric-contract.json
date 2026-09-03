@@ -133,7 +133,7 @@
     "forbidden_aliases": ["Serial2", "SPI_HS", "Wire1"]
   },
   "advanced_api": {
-    "status": "contract-only-not-public",
+    "status": "candidate-source-not-released",
     "header": "nucode/SerialFabric.h",
     "namespace": "nucode::arduino",
     "factory": "serialFabric()",
@@ -156,7 +156,7 @@
       "Different serial blocks may run together only when pin and DMA leases are disjoint.",
       "Unsupported instance, route, profile or electrical policy fails before any register or pin change.",
       "Standard Arduino singleton behavior and identity remain unchanged when the advanced API is enabled.",
-      "The advanced header is not public and remains absent from releases until source, build, semantic and required HIL gates pass."
+      "The advanced header exists only as a Kconfig-disabled source candidate and remains absent from stable releases until driver, build, semantic and required HIL gates pass."
     ]
   },
   "pin_banks": [
