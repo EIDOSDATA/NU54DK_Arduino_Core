@@ -67,6 +67,7 @@ SUITE_GROUPS = {
         ("m23_inventory_contract", "nucode.m23.inventory_contract"),
         ("m24_serial_fabric_contract", "nucode.m24.fabric"),
         ("m24_uarte_driver_contract", "nucode.m24.uarte"),
+        ("m24_spi_driver_contract", "nucode.m24.spi"),
         ("m24_uarte_onboard_hil", "nucode.m24.uarte20_hil"),
         ("m24_uarte_onboard_hil", "nucode.m24.uarte21_hil"),
         ("m24_uarte_onboard_hil", "nucode.m24.uarte22_hil"),

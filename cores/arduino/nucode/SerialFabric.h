@@ -123,6 +123,47 @@ struct UarteEvent {
   std::uint32_t error_mask{0U};
 };
 
+/** @brief SPI clock phase/polarity mode입니다. */
+enum class SpiFabricMode : std::uint8_t {
+  mode0 = 0U,
+  mode1,
+  mode2,
+  mode3,
+};
+
+/** @brief SPI wire bit order입니다. */
+enum class SpiFabricBitOrder : std::uint8_t {
+  msb_first = 0U,
+  lsb_first,
+};
+
+/** @brief SPIM/SPIS 공통 설정입니다. SPIS에서는 frequency를 무시합니다. */
+struct SpiFabricConfiguration {
+  std::uint32_t frequency{4000000U};
+  SpiFabricMode mode{SpiFabricMode::mode0};
+  SpiFabricBitOrder bit_order{SpiFabricBitOrder::msb_first};
+  std::uint8_t overrun_character{0xFFU};
+};
+
+/** @brief SPI EasyDMA 완료 queue의 event 종류입니다. */
+enum class SpiFabricEventType : std::uint8_t {
+  transfer_complete = 0U,
+  transfer_cancelled,
+  buffers_armed,
+  buffer_needed,
+  error,
+};
+
+/** @brief SPI controller/peripheral의 비동기 완료 정보입니다. */
+struct SpiFabricEvent {
+  SpiFabricEventType type{SpiFabricEventType::error};
+  const void *tx_buffer{nullptr};
+  void *rx_buffer{nullptr};
+  std::size_t tx_transferred{0U};
+  std::size_t rx_transferred{0U};
+  std::uint32_t error_code{0U};
+};
+
 /** @brief 한 signal과 Arduino canonical pin을 연결합니다. */
 struct SerialSignalPin {
   SerialSignal signal{SerialSignal::invalid};
@@ -200,12 +241,42 @@ private:
 
 class SpimHandle final : public SerialFabricHandle {
   friend class SerialFabric;
+
+public:
+  [[nodiscard]] SerialFabricResult
+  configure(const SpiFabricConfiguration &configuration) noexcept;
+  [[nodiscard]] SerialFabricResult transferAsync(const void *tx_buffer,
+                                                 std::size_t tx_size,
+                                                 void *rx_buffer,
+                                                 std::size_t rx_size) noexcept;
+  [[nodiscard]] SerialFabricResult
+  transfer(const void *tx_buffer, std::size_t tx_size, void *rx_buffer,
+           std::size_t rx_size, std::uint32_t timeout_us = 100000U) noexcept;
+  [[nodiscard]] SerialFabricResult cancelTransfer() noexcept;
+  [[nodiscard]] bool takeEvent(SpiFabricEvent &event) noexcept;
+  [[nodiscard]] DmaBufferState bufferState(const void *buffer) const noexcept;
+
+private:
   constexpr SpimHandle(std::uint8_t instance, std::uint8_t index) noexcept
       : SerialFabricHandle(SerialPersonality::spim, instance, index) {}
 };
 
 class SpisHandle final : public SerialFabricHandle {
   friend class SerialFabric;
+
+public:
+  [[nodiscard]] SerialFabricResult
+  configure(const SpiFabricConfiguration &configuration) noexcept;
+  [[nodiscard]] SerialFabricResult
+  queueBuffers(const void *tx_buffer, std::size_t tx_size, void *rx_buffer,
+               std::size_t rx_size, const void *next_tx_buffer = nullptr,
+               std::size_t next_tx_size = 0U, void *next_rx_buffer = nullptr,
+               std::size_t next_rx_size = 0U) noexcept;
+  [[nodiscard]] SerialFabricResult cancelBuffers() noexcept;
+  [[nodiscard]] bool takeEvent(SpiFabricEvent &event) noexcept;
+  [[nodiscard]] DmaBufferState bufferState(const void *buffer) const noexcept;
+
+private:
   constexpr SpisHandle(std::uint8_t instance, std::uint8_t index) noexcept
       : SerialFabricHandle(SerialPersonality::spis, instance, index) {}
 };

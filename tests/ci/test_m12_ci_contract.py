@@ -441,6 +441,10 @@ class M12CiContractTests(unittest.TestCase):
             ("m24_uarte_driver_contract", "nucode.m24.uarte"),
             module.SUITE_GROUPS["v0.4.0"],
         )
+        self.assertIn(
+            ("m24_spi_driver_contract", "nucode.m24.spi"),
+            module.SUITE_GROUPS["v0.4.0"],
+        )
         self.assertTrue(
             {
                 ("m24_uarte_onboard_hil", "nucode.m24.uarte20_hil"),

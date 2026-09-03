@@ -125,6 +125,18 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
     )
   endif()
 
+  if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIM)
+    zephyr_library_sources(
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/SpimFabric.cpp"
+    )
+  endif()
+
+  if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIS)
+    zephyr_library_sources(
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/SpisFabric.cpp"
+    )
+  endif()
+
   if(CONFIG_NUCODE_ARDUINO_SERIAL1 OR
      CONFIG_NUCODE_ARDUINO_WIRE OR
      CONFIG_NUCODE_ARDUINO_SPI OR

@@ -390,18 +390,7 @@ const SerialFabricDriverAdapter adapter{validateAdapter,    activateAdapter,
                                         requestStopAdapter, stoppedAdapter,
                                         deactivateAdapter,  handleIrq};
 
-void irq00(const void *) { internal::dispatchSerialFabricIrq(0U); }
-void irq20(const void *) { internal::dispatchSerialFabricIrq(20U); }
-void irq21(const void *) { internal::dispatchSerialFabricIrq(21U); }
-void irq22(const void *) { internal::dispatchSerialFabricIrq(22U); }
-void irq30(const void *) { internal::dispatchSerialFabricIrq(30U); }
-
 int registerAdapters() {
-  IRQ_CONNECT(SERIAL00_IRQn, IRQ_PRIO_LOWEST, irq00, nullptr, 0);
-  IRQ_CONNECT(SERIAL20_IRQn, IRQ_PRIO_LOWEST, irq20, nullptr, 0);
-  IRQ_CONNECT(SERIAL21_IRQn, IRQ_PRIO_LOWEST, irq21, nullptr, 0);
-  IRQ_CONNECT(SERIAL22_IRQn, IRQ_PRIO_LOWEST, irq22, nullptr, 0);
-  IRQ_CONNECT(SERIAL30_IRQn, IRQ_PRIO_LOWEST, irq30, nullptr, 0);
   const std::uint8_t instances[] = {0U, 20U, 21U, 22U, 30U};
   for (const std::uint8_t instance : instances) {
     if (internal::registerSerialFabricAdapter(SerialPersonality::uarte,
