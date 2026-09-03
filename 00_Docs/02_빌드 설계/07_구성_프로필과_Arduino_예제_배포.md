@@ -121,7 +121,7 @@ Sketch root의 `prj.conf`와 `app.overlay`는 전문가용 마지막 override로
 `0x000000..0x16c000`의 1,490,944 byte(1,456 KiB), LittleFS와 Settings/ZMS는 RRAM 끝의
 32 KiB와 36 KiB다. Feature set 선택은 메모리 layout을 암묵적으로 바꾸지 않는다.
 
-MCUboot/DFU dual-slot은 `v0.4.0` M24의 고급 선택 layout이다. 향후 제공할 때에는
+MCUboot/DFU dual-slot은 `v0.6.0` M36의 고급 선택 layout이다. 향후 제공할 때에는
 `Tools → Memory layout`의 검증된 preset이 profile과 독립된 명시적 입력이 되고, fixed partition,
 linker 경계, Arduino maximum size와 cache identity가 함께 바뀌어야 한다. `v0.3.0`에서는 임의 숫자나
 Sketch `app.overlay` 하나만으로 partition을 바꾸는 구성을 정식 지원하지 않는다.

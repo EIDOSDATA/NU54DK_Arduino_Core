@@ -70,13 +70,13 @@ DTS, pin mapping과 Upload 구현은 동일하다.
 이 결과는 프로젝트 소유자의 수동 acceptance다. rc.2 공개 시점에 생성하지 않은 strict M11
 evidence manifest를 소급 생성하거나 자동 gate 8/8로 표현하지 않는다. 자동 5/5와 수동
 clean Windows·실기 결과의 상세 경계는
-[M11 rc.2 공개 후 수동 검증 기록](<../04_검증 기록/12_M11_v0.1.0_rc2_공개_후_수동_검증.md>)에
+[M11 rc.2 공개 후 수동 검증 기록](<../../04_검증 기록/12_M11_v0.1.0_rc2_공개_후_수동_검증.md>)에
 보관한다. 이 후속 검증으로 M11을 완료하고 `v0.1.0`을 후속 정식판으로 확정했다. 정식판은
-[v0.1.0 릴리스 노트](./11_v0.1.0_릴리스_노트.md)의 별도 stable ZIP·index·tag·Release를
+[v0.1.0 릴리스 노트](../v0.1.0/RELEASE_NOTES.md)의 별도 stable ZIP·index·tag·Release를
 사용한다. rc.2 Prerelease와 자산은 역사적 검증 기록으로 변경하지 않는다.
 
 기존 rc.1 M11 gate 8/8은
-[역사적 기준선](<../04_검증 기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md>)에 보존한다.
+[역사적 기준선](<../../04_검증 기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md>)에 보존한다.
 rc.2 공개 판정은 새 artifact의 gate 결과만 사용한다.
 
 ## 업데이트 주의사항
@@ -84,7 +84,7 @@ rc.2 공개 판정은 새 artifact의 gate 결과만 사용한다.
 회수된 rc.1에서 rc.2로 이동할 때 NCS/Toolchain 디렉터리를 먼저 삭제하지 않는다. exact pin과
 완료 marker가 일치하면 공유 prerequisite를 재사용할 수 있다. Arduino build output은 새
 version에서 다시 생성한다. 자세한 절차는
-[rc.2 마이그레이션 안내](./05_v0.1.0_rc2_마이그레이션.md)를 따른다.
+[rc.2 마이그레이션 안내](MIGRATION.md)를 따른다.
 
 ## 감사와 라이선스
 

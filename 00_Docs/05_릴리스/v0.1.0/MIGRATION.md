@@ -47,5 +47,5 @@ arduino-cli core install nucode:zephyr@0.1.0 --run-post-install
 arduino-cli board details --fqbn nucode:zephyr:nu54dk
 ```
 
-설치 후 [v0.1.0 알려진 제약](./12_v0.1.0_알려진_제약.md)과
-[문제 해결](./10_v0.1.0_문제해결.md)을 확인한다.
+설치 후 [v0.1.0 알려진 제약](KNOWN_ISSUES.md)과
+[문제 해결](TROUBLESHOOTING.md)을 확인한다.

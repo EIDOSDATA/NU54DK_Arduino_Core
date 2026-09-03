@@ -4,7 +4,7 @@
 > UTF-8 문자열로 직렬화되지 않는 결함을 확인했다. 관찰된 재현에서는 설치가 실제 완료됐지만
 > IDE가 설치 실패를 표시했다. `v0.1.0-rc.1`은 배포 중단·회수하며 아래 검증 결과는 당시
 > artifact의 역사적 증거로만 보존한다. 자세한 내용은
-> [배포 중단 기록](./00_v0.1.0_rc1_배포_중단_기록.md)을 따른다.
+> [배포 중단 기록](WITHDRAWAL.md)을 따른다.
 
 `v0.1.0-rc.1`은 Loader 없이 Sketch와 Zephyr를 하나의 정적 firmware로 만드는 NU54DK 전용
 첫 release candidate다. 정식 `v0.1.0`이 아니다. 프로젝트 소유자가 RC의 공개 정보,
@@ -13,7 +13,7 @@
 현재 기술 판정은 **M9·M10·M11 완료**, exact RC 필수 gate **8/8 PASS**와
 `ready-for-human-approval`이다. 검증 source는
 `4a4b1ece622b155ff7300a46bca304df9adfc797`이며, 세부 identity와 evidence checksum은
-[M11 릴리스 후보 기준선](<../04_검증 기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md>)에 고정했다.
+[M11 릴리스 후보 기준선](<../../04_검증 기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md>)에 고정했다.
 승인 후 [`v0.1.0-rc.1` GitHub Prerelease](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.1.0-rc.1)를
 게시하고 9개 asset의 GitHub digest와 재다운로드 SHA-256을 검증했다.
 
@@ -74,8 +74,8 @@ preflight에서 실패한 immutable 이력이다. 두 preview의 증거는 M11�
 
 preview에서 RC로 이동할 때 기존 build output을 재사용하지 않는다. 공유 Nordic prerequisite는
 정확한 pin이 맞으면 재사용하지만 다른 NCS/Toolchain을 자동 선택하지 않는다. 자세한 절차는
-[마이그레이션 안내](./01_v0.1.0_rc1_마이그레이션.md)와
-[Boards Manager 설치 설계](<../02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)를 따른다.
+[마이그레이션 안내](MIGRATION.md)와
+[Boards Manager 설치 설계](<../../02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)를 따른다.
 
 ## 감사와 라이선스
 

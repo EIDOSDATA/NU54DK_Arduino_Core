@@ -4,7 +4,7 @@
 > `grpc: ... string field contains invalid UTF-8`가 발생할 수 있어 회수 대상으로 결정했다.
 > 설치 자체는 완료됐을 수 있다. 이 문서는 당시 artifact의 역사적 문제 해결 기록이며 새
 > 설치에는 사용하지 않는다. 자세한 내용은
-> [배포 중단 기록](./00_v0.1.0_rc1_배포_중단_기록.md)을 따른다.
+> [배포 중단 기록](WITHDRAWAL.md)을 따른다.
 
 | 항목 | 내용 |
 | --- | --- |
@@ -69,7 +69,7 @@ M9의 기본 cache는 긴 Nordic object path를 피하기 위해 `%LOCALAPPDATA%
 
 동일 입력에서 cache 이상이 의심되면 Core 전체나 NCS를 먼저 삭제하지 말고 Build Adapter의
 cache diagnostic과 단일 cache entry 정리 절차를 사용한다. 자세한 내용은
-[빌드 캐시와 산출물](<../02_빌드 설계/04_빌드_캐시와_산출물.md>)을 따른다.
+[빌드 캐시와 산출물](<../../02_빌드 설계/04_빌드_캐시와_산출물.md>)을 따른다.
 
 ## 4. NU54DK 또는 CMSIS-DAP가 보이지 않음
 

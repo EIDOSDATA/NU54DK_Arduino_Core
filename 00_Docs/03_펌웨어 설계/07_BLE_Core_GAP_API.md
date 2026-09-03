@@ -1,5 +1,15 @@
 # BLE Core/GAP API 설계
 
+| 항목 | 내용 |
+| --- | --- |
+| 문서 ID | FW-BLE-GAP-001 |
+| 문서 개정 | 1.1 |
+| 문서 상태 | `v0.3.0` 정식 계약 |
+| 적용 제품 버전 | `v0.3.0` stable |
+| 최종 갱신일 | 2026-09-03 |
+| 대상 library | `NUCODE_BLE` |
+| 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
+
 ## 목적과 범위
 
 M19는 NUS에 종속되지 않는 Arduino 친화 BLE lifecycle과 GAP API를 제공합니다. 공개 헤더는

@@ -51,4 +51,4 @@
 - multi-board 및 임의 NCS/Zephyr version 선택
 
 전체 API 상태는
-[Arduino API 지원 범위](<../01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)를 따른다.
+[Arduino API 지원 범위](<../../01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)를 따른다.

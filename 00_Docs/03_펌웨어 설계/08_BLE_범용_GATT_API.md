@@ -1,5 +1,15 @@
 # BLE 범용 GATT server/client API 설계
 
+| 항목 | 내용 |
+| --- | --- |
+| 문서 ID | FW-BLE-GATT-001 |
+| 문서 개정 | 1.1 |
+| 문서 상태 | `v0.3.0` 정식 계약 |
+| 적용 제품 버전 | `v0.3.0` stable |
+| 최종 갱신일 | 2026-09-03 |
+| 대상 library | `NUCODE_BLE` |
+| 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
+
 ## 목적과 범위
 
 M20은 M19 Core/GAP 위에 vendor service를 만들고 사용하는 범용 GATT API를 제공합니다. NUS처럼

@@ -2,6 +2,8 @@
 
 | 항목 | 내용 |
 | --- | --- |
+| 문서 ID | RELEASE-INDEX-001 |
+| 문서 개정 | 2.0 |
 | 현재 정식 버전 | `v0.3.0` |
 | 설치 channel | Stable Boards Manager index |
 | 공식 사용자 OS | Windows 10/11 x64 |
@@ -43,10 +45,11 @@ downgrade를 위해 공개 tag·Release asset과 stable index 항목을 삭제�
 
 ### v0.1.0
 
-- [Migration](09_v0.1.0_마이그레이션.md)
-- [Troubleshooting](10_v0.1.0_문제해결.md)
-- [Release notes](11_v0.1.0_릴리스_노트.md)
-- [Known issues](12_v0.1.0_알려진_제약.md)
+- [릴리스 개요](v0.1.0/README.md)
+- [Release notes](v0.1.0/RELEASE_NOTES.md)
+- [Migration](v0.1.0/MIGRATION.md)
+- [Troubleshooting](v0.1.0/TROUBLESHOOTING.md)
+- [Known issues](v0.1.0/KNOWN_ISSUES.md)
 
 ## 보존된 v0.3.0 Release Candidate
 
@@ -57,13 +60,13 @@ RC1~RC3는 stable 설치 channel이 아닙니다. 당시 공개 자산과 기록
 | --- | --- | --- |
 | `v0.3.0-rc.3` | Stable runtime 동등성 기준 | [RC3 문서](v0.3.0-rc.3/README.md) |
 | `v0.3.0-rc.2` | 공개 lifecycle 통과, 이후 memory 계약 교정 | [RC2 문서](v0.3.0-rc.2/README.md) |
-| `v0.3.0-rc.1` | Clean-room 실행기 결함으로 중단 | [RC1 문서](v0.3.0-rc.1/README.md) |
+| `v0.3.0-rc.1` | Clean-room 실행기 결함으로 중단 | [RC1 문서](v0.3.0-rc.1/README.md), [중단 기록](v0.3.0-rc.1/CLEANROOM_ABORT.md) |
 
 ## 그 밖의 역사적 RC
 
 - `v0.2.0-rc.1`/`rc.2`: [M18 기록](<../04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md>)
-- `v0.1.0-rc.2`: [Migration](05_v0.1.0_rc2_마이그레이션.md), [Troubleshooting](06_v0.1.0_rc2_문제해결.md), [Release notes](07_v0.1.0_rc2_릴리스_노트.md), [Known issues](08_v0.1.0_rc2_알려진_제약.md)
-- `v0.1.0-rc.1`: [배포 중단 기록](00_v0.1.0_rc1_배포_중단_기록.md)
+- `v0.1.0-rc.2`: [역사 문서](v0.1.0-rc.2/README.md)
+- `v0.1.0-rc.1`: [역사 문서](v0.1.0-rc.1/README.md), [배포 중단 기록](v0.1.0-rc.1/WITHDRAWAL.md)
 
 ## 문서와 자산 보존 규칙
 

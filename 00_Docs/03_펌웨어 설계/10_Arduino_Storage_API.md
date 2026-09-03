@@ -3,6 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-STORAGE-001 |
+| 문서 개정 | 1.1 |
 | 적용 버전 | `v0.3.0` stable |
 | 현재 정식 버전 | `v0.3.0` |
 | 구현 | `EEPROM`, `LittleFS` bundled library |
@@ -63,7 +64,7 @@ RC3가 정식 제공하는 layout은 위 loaderless 단일 application 하나다
 4. LittleFS, Settings/ZMS와 update image의 겹침 검사
 5. Upgrade/downgrade, 복구와 package 시험 matrix
 
-`v0.4.0` M24에서 검증된 **고급 Memory layout 선택**을 설계한다. 기본 loaderless layout은 계속
+`v0.6.0` M36에서 검증된 **고급 Memory layout 선택**을 설계한다. 기본 loaderless layout은 계속
 유지하고, MCUboot/DFU와 signed update·rollback이 실제로 포함된 profile에서만 boot 영역과
 dual-slot layout을 노출한다. Arduino Tools에는 임의 숫자 입력 대신 검증된 preset을 제공하고,
 전문가 overlay는 같은 정적 검사와 linker assertion을 통과할 때만 지원 대상으로 인정한다.
@@ -181,5 +182,5 @@ exact image·commit·board identity가 없으면 실행하지 않는다. 실제 
 - directory iterator와 모든 ESP/Adafruit FS 확장 함수의 완전 호환
 - 파일 system 전체의 transaction/power-fail 원자성 보증
 - RC3에서 임의 partition 크기를 입력하거나 사용자 overlay만으로 저장 layout을 교체하는 구성
-- MCUboot/DFU dual-slot과 update/rollback — `v0.4.0` M24의 검증된 고급 layout 범위
+- MCUboot/DFU dual-slot과 update/rollback — `v0.6.0` M36의 검증된 고급 layout 범위
 - 제품 수명 기준의 wear/endurance 보증
