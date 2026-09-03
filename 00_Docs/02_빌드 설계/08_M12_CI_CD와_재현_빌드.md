@@ -1,9 +1,9 @@
-# CI/CD와 재현 빌드 — v0.3.0 현재 계약
+# CI/CD와 재현 빌드 — v0.3.0 stable 이후 현재 계약
 
 | 계층 | 실행 환경 | 목적 |
 | --- | --- | --- |
-| Software gates | GitHub-hosted Ubuntu/Windows | 계약, unit, 문서, package, 예제 discovery |
-| Reproducible builds | 고정 Nordic container + Windows | Zephyr/Arduino/M14/M17 build gate |
+| Software gates | GitHub-hosted Ubuntu/Windows | 계약, M23 inventory, unit, 문서, package, 예제 discovery |
+| Reproducible builds | 고정 Nordic container + Windows | exact DTS, Zephyr/Arduino/M14/M17/M23 build gate |
 | NU54DK HIL | 승인된 self-hosted Windows runner | pyOCD upload와 UART 실기 |
 
 CI는 지원 범위를 증명하는 gate이지 Release를 자동 승인하는 시스템이 아니다. 정확한 run ID,
@@ -20,6 +20,7 @@ artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI
 | Job | 현재 검사 |
 | --- | --- |
 | `contract` | lock file, workflow trigger/권한, pin과 board submodule 경계 |
+| `peripheral-inventory` | M23 schema·75개 identity 누락·가짜 alias·source·generated table/matrix 일치 |
 | `host` | Python host unit와 Windows PowerShell 계약 |
 | `core-semantic` | M14 Core C++ native semantic runtime |
 | `documents` | tracked Markdown UTF-8과 local link |
@@ -28,6 +29,11 @@ artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI
 
 Checkout은 submodule을 recursive로 받고 full history를 사용한다. Workflow permission은
 `contents: read`이며 같은 ref의 중복 실행은 취소한다.
+
+M23 inventory gate는 외부 JSON Schema package 없이 strict JSON과 고정 schema 계약을 검사한다.
+Linux reproducible-build job은 exact NCS workspace를 준비한 직후 manifest에 고정한 두 SoC DTS의
+SHA-256과 node label을 확인한다. 따라서 generated 산출물 drift, instance 누락, 공개 객체 alias,
+NCS DTS 변경은 target build 전에 fail-closed한다.
 
 M12와 정식 `v0.2.0`의 역사적 기준은 public library 4개·예제 14개다. 정식 `v0.3.0`은
 EEPROM/LittleFS까지 포함한 library 8개·예제 29개다. `Standard peripherals` 22개와
@@ -180,6 +186,7 @@ latest 지정은 자동으로 수행하지 않는다. 공개에는 별도 사람
 - [`verify_ci_lock.py`](../../tools/ci/verify_ci_lock.py)
 - [`prepare_ncs_workspace.py`](../../tools/ci/prepare_ncs_workspace.py)
 - [`run_zephyr_build.py`](../../tools/ci/run_zephyr_build.py)
+- [`verify_m23_inventory.py`](../../tools/peripheral/verify_m23_inventory.py)
 - [`run_m14_qemu.py`](../../tools/ci/run_m14_qemu.py)
 - [`run_m17_feasibility.py`](../../tools/ci/run_m17_feasibility.py)
 - [`run_m17_external_arduino.py`](../../tools/ci/run_m17_external_arduino.py)
@@ -192,3 +199,4 @@ latest 지정은 자동으로 수행하지 않는다. 공개에는 별도 사람
 - [M20 범용 GATT 검증](<../04_검증 기록/24_M20_범용_GATT_검증.md>)
 - [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)
 - [AC-02B Peripheral/Analog runtime 기준선](<../04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>)
+- [M23 Peripheral inventory와 공통 소유권 기준선](<../04_검증 기록/33_M23_Peripheral_Inventory와_공통_소유권_기준선.md>)

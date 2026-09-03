@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 1.0 |
-| 문서 상태 | M23 이후 승인 계획 기준선 |
+| 문서 개정 | 1.1 |
+| 문서 상태 | M23 완료 / M24 이후 승인 계획 기준선 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.3.0` stable / commit `bae0957d2425e4418199a2a3a018bf8e9a0dc356` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
@@ -243,6 +243,9 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 ### M23 — 경쟁 inventory와 공통 계약
 
+- 상태: **완료** — 75개 identity schema/manifest, generated runtime·문서 matrix, 공개 identity API와
+  block/channel/DMA 공통 lease를 고정했다.
+
 - SoC instance, board route, owner, public object, driver, DMA, build, semantic, HIL 상태를 담는
   machine-readable manifest를 만든다.
 - 각 객체의 실제 hardware identity를 조회할 capability API와 진단 형식을 고정한다.
@@ -250,6 +253,8 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
   하나의 계약으로 확장한다.
 - `Serial2 = Serial1`과 같은 독립성을 가장하는 alias를 금지한다.
 - 완료 gate: schema test, 전 instance 누락 검사, generated matrix와 source/DTS 불일치 fail-closed.
+  실행 결과는 [M23 검증 기록](<../04_검증 기록/33_M23_Peripheral_Inventory와_공통_소유권_기준선.md>)과
+  [generated matrix](09_M23_Peripheral_인스턴스_매트릭스.md)에 보존한다.
 
 ### M24 — Serial fabric 전 인스턴스와 DMA
 
@@ -264,7 +269,8 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 - SAADC 8채널 scan/differential/internal/calibration/oversampling/continuous DMA를 제공한다.
 - PWM20/21/22의 12 hardware channel allocator와 sequence/DPPI/DMA를 `analogWrite`, `tone`, Servo와
   충돌 없이 통합한다.
-- TIMER00/10/20~24, GPIOTE20/30, EGU10/20, DPPIC00/10/20/30과 GRTC 고급 경로를 제공한다.
+- TIMER00/10/20~24, GPIOTE20/30, EGU10/20, DPPIC00/10/20/30,
+  PPIB00/01/10/11/20/21/22/30과 GRTC 고급 경로를 제공한다.
 - PDM20/21, I2S20과 QDEC20/21의 streaming/double-buffer API와 fixture를 추가한다.
 - 완료 gate: 전 instance 단독·동시 HIL, DMA overflow/underrun, timing jitter, long-run soak.
 

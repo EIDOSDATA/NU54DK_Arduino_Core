@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 성격 | 실행 당시의 revision, 환경, 명령과 결과를 보존하는 역사 증거 |
-| 완료 범위 | M1~M22, `v0.1.0`·`v0.2.0`·`v0.3.0` 정식 공개 |
-| 진행 범위 | `v0.4.0` 계획 전환 |
+| 완료 범위 | M1~M23, `v0.1.0`·`v0.2.0`·`v0.3.0` 정식 공개 |
+| 진행 범위 | `v0.4.0` M24 착수 대기 |
 | 현재 정식 버전 | `v0.3.0` |
 | 최종 갱신일 | 2026-09-03 |
 
@@ -59,6 +59,12 @@
 | M22 RC2 | 새 plan·4 gate, 29개 설치 예제·실제 Upload·public clean-room lifecycle와 cleanup PASS | [RC2 기록](30_M22_v0.3.0_rc2_통합_릴리스_기준선.md) |
 | M22 RC3 | 1,456 KiB memory contract, fixed gate·29/29 compile와 실제 Upload PASS; 사용자 reset 중단을 기록하고 stable lifecycle로 인계 | [RC3 검증·인계 기록](31_M22_v0.3.0_rc3_검증과_stable_인계.md) |
 | M22 Stable | 독립 package 재현, RC3 runtime 동등성, 설치 lifecycle·29/29 compile·NU54DK Upload와 정식 공개 PASS | [v0.3.0 정식 공개 기록](32_M22_v0.3.0_정식_릴리스_공개_기록.md) |
+
+## v0.4.0 개발 — Peripheral Parity
+
+| 작업 | 현재 결과 | 기록 |
+| --- | --- | --- |
+| M23 | 75개 identity manifest·생성 matrix·공개 조회 API, 같은 block 상호배타와 block/channel/DMA 원자적 lease PASS | [M23 기록](33_M23_Peripheral_Inventory와_공통_소유권_기준선.md) |
 
 ## 기록 해석 규칙
 

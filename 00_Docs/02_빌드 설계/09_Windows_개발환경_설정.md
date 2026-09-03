@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-WINDOWS-DEV-001 |
-| 문서 개정 | 1.0 |
+| 문서 개정 | 1.1 |
 | 문서 상태 | 현재 source 개발 기준 |
 | 적용 제품 버전 | `v0.3.0` stable 이후 `main` |
 | 지원 host | Windows 10/11 x64 |
@@ -255,6 +255,7 @@ $ArduinoCli = (Get-Command arduino-cli.exe -ErrorAction Stop).Source
 
 & $Python .\tools\ci\run_m12_gate.py docs
 & $Python .\tools\ci\run_m12_gate.py contract
+& $Python .\tools\ci\run_m12_gate.py inventory
 & $Python .\tools\ci\run_m12_gate.py host
 & $Python .\tools\ci\run_m12_gate.py package
 & $Python .\tools\ci\run_m12_gate.py examples --arduino-cli $ArduinoCli
@@ -264,6 +265,15 @@ $ArduinoCli = (Get-Command arduino-cli.exe -ErrorAction Stop).Source
 있으면 전체 host 환경이 준비된 것으로 보지 않는다. Windows Application Control이 임시 native
 실행 파일만 차단한 경우에는 시험 출력의 명시적 skip 사유와 target Zephyr 시험 결과를 함께
 판정한다.
+
+고정 NCS 설치본까지 포함해 M23 manifest의 DTS identity를 확인할 때는 다음 명령을 추가한다.
+
+```powershell
+& $Python .\tools\peripheral\verify_m23_inventory.py --ncs-root $NcsRoot
+```
+
+성공 표식은 `M23_INVENTORY_PASS=instances:75`다. Manifest를 의도적으로 바꾼 경우에만 먼저
+`--write`로 C++ table과 Markdown matrix를 다시 생성하고, 생성 diff를 함께 검토한다.
 
 Source 전체 Arduino compile은 고정 Nordic 설치가 끝난 뒤 다음처럼 격리된 임시 Arduino
 hardware 경로에서 실행할 수 있다. 이 시험은 시간이 오래 걸리며 실제 build를 수행한다.

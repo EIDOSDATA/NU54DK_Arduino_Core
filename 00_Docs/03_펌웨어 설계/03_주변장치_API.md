@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-PERIPHERAL-001 |
-| 문서 개정 | 4.0 |
-| 문서 상태 | `v0.3.0` 정식 계약 |
+| 문서 개정 | 4.1 |
+| 문서 상태 | `v0.3.0` 정식 계약 + M23 개발 기준선 |
 | 최종 갱신일 | 2026-09-03 |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
@@ -21,6 +21,7 @@ commit은 `04_검증 기록`으로 이동하고 여기에는 제품 동작만 �
 | UART/I2C/SPI/ADC/PWM 장치와 pinctrl | `board_package/NU54DK_Zephyr_DTS` |
 | Arduino object·backend | `cores/arduino` |
 | Arduino 논리 역할 | `variants/nu54dk` |
+| 전 instance identity·검증 상태 | `variants/nu54dk/peripheral-manifest.json` |
 | runtime owner/resource 상태 | `cores/arduino/internal/IoResourceManager.h` |
 | runtime pinctrl/PM route | `cores/arduino/internal/RuntimePeripheralRoute.*`, `variants/nu54dk/peripheral_routes.*` |
 | 부팅 고정 자원 registry | `variants/nu54dk/io_resource_registry.cpp` — UART20 console만 고정 |
@@ -43,7 +44,7 @@ Production backend는 Devicetree chosen, alias와 profile overlay를 소비한�
 | `tone()` | PWM21 | 한 channel 전용 |
 | `Servo` | PWM22 | 최대 4 channel, 20 ms frame |
 
-### 3.1 AC-02A 내부 소유권 기준선
+### 3.1 공통 소유권 기준선
 
 AC-02A는 공개 주변장치 객체를 늘리기 전에 pad와 peripheral block의 충돌을 fail-closed로 검출하는
 공통 기반을 추가했다.
@@ -51,9 +52,9 @@ AC-02A는 공개 주변장치 객체를 늘리기 전에 pad와 peripheral block
 | 항목 | 현재 내부 계약 |
 | --- | --- |
 | 저장 구조 | heap 없는 고정 슬롯, 설정 가능한 최대 slot 수 |
-| 자원 key | GPIO `controller + pin`, 또는 `serial/pwm/adc/power` block의 domain·instance |
-| owner | `gpio`, `adc`, `pwm`, `wire`, `spi`, `serial`, `system` + instance |
-| 전환 | 최대 8개 자원의 원자적 `reserve/commit/rollback/release` lease |
+| 자원 key | GPIO `controller + pin`, peripheral block·channel의 domain+instance, DMA RAM byte range |
+| owner | 기존 GPIO·ADC·PWM·Wire·SPI·Serial·System과 M23 timer/event/audio/radio/security owner |
+| 전환 | 최대 16개 자원의 원자적 `reserve/commit/rollback/release` lease |
 | 수명 보호 | 64-bit generation과 manager epoch로 stale lease 거부 |
 | 문맥 | thread 전용 변경·조회; ISR 요청은 `invalid_context`로 거부 |
 | 부팅 고정 owner | UART20 console의 pad와 block만 고정 |
@@ -66,6 +67,33 @@ AC-02B는 `PinHandover`와 `RuntimePeripheralRoute`를 연결해 기존 GPIO mod
 snapshot하고, peripheral pinctrl default/sleep 상태와 runtime PM을 적용한 뒤 종료 시 복원한다.
 전환 실패는 rollback하거나 복구 불능 latch로 fail-closed한다. 이 코드는 host/target build와
 exact commit `0b7f89283cd82a68a7f3f0910f4fc59b8dd01bfb`의 3-wire 물리 HIL을 통과했다.
+
+M23은 이 manager에 GPIOTE channel, DPPI channel/group, timer channel, interrupt line,
+clock domain과 DMA RAM range를 추가했다. 같은 serial instance의 UARTE·SPIM/SPIS·TWIM/TWIS는
+하나의 `serial_block` key를 공유해 동시에 예약할 수 없다. 서로 다른 block은 pin·event·timer와
+서로 겹치지 않는 DMA buffer까지 한 lease에 담아 함께 사용할 수 있다. DMA range는 byte 단위로
+겹치면 owner가 같더라도 별도 lease를 허용하지 않으며, null·0 byte·비정규 offset은
+`invalid_argument`로 거부한다. 이는 M24 이후 async driver가 사용할 공통 안전 계약이며, 그
+driver나 전 instance HIL이 이미 완료됐다는 뜻은 아니다.
+
+### 3.2 M23 instance inventory와 공개 identity
+
+[`peripheral-manifest.json`](../../variants/nu54dk/peripheral-manifest.json)은 경쟁 범위의 75개
+hardware identity에 대해 silicon, board route, Core source, 공개 노출, build, semantic, HIL,
+concurrent HIL을 독립적으로 기록한다. 생성기는 manifest에서
+[`PeripheralInventory.inc`](../../cores/arduino/generated/PeripheralInventory.inc)와
+[사람이 읽는 matrix](<../01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)를 만든다.
+
+Sketch와 진단 도구는 `<nucode/PeripheralInventory.h>`의 다음 allocation-free API를 쓸 수 있다.
+
+- `peripheralInventorySize()` / `peripheralInventoryAt()`
+- `findPeripheral(kind, instance)`
+- `findPeripheralByObject("Serial1")`
+- `formatPeripheralIdentity()`
+
+현재 공개 객체 identity는 `Serial=UARTE20`, `Serial1=UARTE30`, `Wire=TWIM22`, `SPI=SPIM00`으로
+고정한다. `Serial2` 같은 가짜 독립 alias는 만들지 않는다. Inventory의 `candidate`, `absent`,
+`not-run`은 계획 또는 미검증 상태이며 지원 선언이 아니다.
 
 ## 4. 공통 lifecycle과 문맥
 
@@ -224,6 +252,11 @@ Servo signal과 공통 GND만 NU54DK에 연결한다. Servo motor 전원을 GPIO
 진단 조회는 상태를 지우지 않으며 error history가 아니다. Release build에서도 범위와 ownership
 검사를 제거하지 않는다. ISR에서는 문자열 format이나 log를 만들지 않는다.
 
+M23 identity 진단은 별도 안정 형식
+`NU54:PERIPHERAL:<id>:kind=...:instance=...:block=...`을 사용하며 route/source/exposure/build/
+semantic/HIL/concurrent/DMA 축을 이어 붙인다. 이 출력은 현재 기능의 마지막 오류가 아니라
+manifest에 고정된 capability·검증 snapshot이다.
+
 ## 11. 설정과 profile
 
 | 설정 | 기본 profile 의미 |
@@ -259,6 +292,7 @@ Arduino IDE feature set을 선택하고 raw conf/overlay는 expert escape hatch�
 - [M16 BLE NUS 기준선](<../04_검증 기록/18_M16_BLE_NUS_기준선.md>)
 - [AC-02A 핀과 주변장치 소유권 기준선](<../04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md>)
 - [AC-02B Peripheral/Analog runtime 기준선](<../04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>)
+- [M23 Peripheral inventory와 공통 소유권 기준선](<../04_검증 기록/33_M23_Peripheral_Inventory와_공통_소유권_기준선.md>)
 
 정식 `v0.2.0`의 기존 Serial/Wire/SPI/ADC/PWM 수직 경로 HIL은 완료됐다. AC-02B 개발 경로도
 exact 3-wire fixture에서 Serial1, BQ25186 Wire, local SPI, ADC raw 0/3757과 A0 PWM

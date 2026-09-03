@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 6.2 |
+| 문서 체계 개정 | 6.3 |
 | 현재 정식 버전 | `v0.3.0` |
 | 다음 목표 버전 | `v0.4.0` |
 | 최종 갱신일 | 2026-09-03 |
@@ -52,7 +52,8 @@
 | M20 | **자동 검증 완료** | 범용 GATT exact-commit 두 보드 RF HIL PASS |
 | M21 | **완료** | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS; host 39/39 |
 | M22 | **완료** | Loaderless 1,456 KiB 경계, stable 재현 build, 29/29 설치본 compile, NU54DK Upload와 `v0.3.0` 정식 공개 |
-| M23~M27 | **계획** | 전 peripheral instance·EasyDMA·동시성 경쟁 parity와 `v0.4.0` |
+| M23 | **완료** | 75개 peripheral identity manifest·생성 matrix·공개 조회 API와 공통 block/channel/DMA 소유권 |
+| M24~M27 | **계획** | 전 peripheral instance·EasyDMA·동시성 경쟁 parity와 `v0.4.0` |
 | M28~M33 | **계획** | Bluetooth LE 전 기능군·Mesh·Channel Sounding과 `v0.5.0` |
 | M34~M45 | **장기 계획** | security/update, radio/OpenThread와 Matter 제품선 |
 
@@ -82,6 +83,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - 일반 사용자의 구성 UX: [ADR-0002](<./00_사전 리서치/02_Arduino_구성_프로필과_예제_노출_결정.md>)
 - 현재와 다음 단계: [제품 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)
 - 전 instance·DMA·BLE 경쟁 격차와 완료 조건: [경쟁 기준과 마일스톤](<./01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)
+- M23의 현재 instance별 상태: [Peripheral instance matrix](<./01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)
 - 현재 공개 API: [Arduino API 지원 범위](<./01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)
 - Windows source 개발환경: [Windows 개발환경 설정](<./02_빌드 설계/09_Windows_개발환경_설정.md>)
 - 설치·package 구조: [Boards Manager 설계](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
@@ -107,6 +109,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - [NCS v3.4.0 기능·예제 지원 매트릭스](<./01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)
 - [v0.3.0 구현 마일스톤](<./01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)
 - [전 인스턴스·DMA·BLE 경쟁 기준과 마일스톤](<./01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)
+- [M23 Peripheral instance matrix](<./01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)
 
 ### 02. 빌드 설계
 
@@ -135,7 +138,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 
 ### 04. 검증 기록
 
-M1~M18과 정식 공개 증거, `v0.3.0` AC-01~AC-03·M19~M22의 구현·검증 증거는
+M1~M23과 정식 공개 증거, `v0.3.0` AC-01~AC-03·M19~M22 및 `v0.4.0` M23의 구현·검증 증거는
 [검증 기록 안내](<./04_검증 기록/README.md>)에서 찾는다. 이 디렉터리의 문서는 당시 revision과
 결과를 보존하는 역사 기록이다.
 
