@@ -255,6 +255,11 @@ CMSIS-DAP V2 + pyOCD 또는 외장 J-Link
 
 ## 저장소 복제
 
+Source 수정, host gate, Nordic Toolchain과 실물 HIL까지 준비하려면
+[Windows 개발환경 설정](<./00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>)을 먼저
+확인하십시오. 일반 Arduino 사용자의 Boards Manager 설치에는 Git, MinGW 또는 별도 Python이
+필요하지 않습니다.
+
 ```powershell
 git clone --recurse-submodules https://github.com/EIDOSDATA/NU54DK_Arduino_Core.git
 cd NU54DK_Arduino_Core
@@ -272,6 +277,7 @@ git submodule status
 - [v0.3.0 마이그레이션](<./00_Docs/05_릴리스/v0.3.0/MIGRATION.md>)
 - [v0.3.0 문제 해결](<./00_Docs/05_릴리스/v0.3.0/TROUBLESHOOTING.md>)
 - [Arduino API 지원 범위](<./00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)
+- [Windows 개발환경 설정](<./00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>)
 - [Boards Manager 설치와 package](<./00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
 - [제품 로드맵](<./00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md>)
 - [전 인스턴스·DMA·BLE 경쟁 기준](<./00_Docs/01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)

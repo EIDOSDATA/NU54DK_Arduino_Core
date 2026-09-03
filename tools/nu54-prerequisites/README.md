@@ -1,5 +1,9 @@
 # Nordic prerequisite 설치 계약
 
+새 Windows PC에서 Git, Python, MinGW-w64, Arduino CLI와 실물 보드까지 준비하는 전체 절차는
+[Windows 개발환경 설정](<../../00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>)을 따른다.
+이 문서는 그중 Nordic prerequisite 설치기의 exact-pin 계약만 설명한다.
+
 `post_install.bat`은 관리자 권한과 PATH 변경 없이 다음 고정 환경을 설치한다.
 
 - `%USERPROFILE%\ncs\v3.4.0`
