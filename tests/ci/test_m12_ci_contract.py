@@ -387,6 +387,7 @@ class M12CiContractTests(unittest.TestCase):
         )
         self.assertIn('REPOSITORY / "tests" / "hil" / "nu54dk"', source)
         self.assertIn('"test_ac03_storage.py"', source)
+        self.assertIn('"test_m24_uarte_onboard.py"', source)
 
     ## @brief 대표 Twister build가 공유 compiler cache에 의존하지 않는지 검증합니다.
     def test_zephyr_build_disables_ccache(self) -> None:
