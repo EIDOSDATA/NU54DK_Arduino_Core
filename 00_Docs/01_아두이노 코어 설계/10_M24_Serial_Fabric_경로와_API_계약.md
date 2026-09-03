@@ -182,11 +182,11 @@ checksum, stable singleton, 가짜 alias, lifecycle·errata, manifest의 미승�
 
 ## 10. 근거
 
-- [board-schematic](../../board_package/NU54DK_Zephyr_DTS/NU54-DK%20Schematic.pdf) — SHA-256 `7e959be6d8db5d31c55366bd118093727062588770772b226117dd3826798466`
-- [board-pinctrl](../../board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk-pinctrl.dtsi) — SHA-256 `55509a6cb3ac50c0be3a320a71f0675a45a5048a442e0a709cb48a3b9c8841dc`
-- [board-common-dts](../../board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk_cpuapp_common.dtsi) — SHA-256 `0f6291d22eb7fed882a0b57b6d0fbd3126ce687dc4a785d707b2c748c3086a0f`
-- [variant-pin-policy](../../dts/nucode/nu54dk-arduino-pins.dtsi) — SHA-256 `b8a5b38497f5545c43f88d351a2cd3607fedbf48a4b30ccec3721d2e0eebd446`
-- [runtime-dts](../../dts/nucode/nu54dk-arduino-runtime.dtsi) — SHA-256 `2d57f9951bee0d8b4c4811bdd3734fe09fe183ec6c80b852b58da9c5c452f85f`
+- [board-schematic](../../board_package/NU54DK_Zephyr_DTS/NU54-DK%20Schematic.pdf) — SHA-256 `7e959be6d8db5d31c55366bd118093727062588770772b226117dd3826798466` (`raw`)
+- [board-pinctrl](../../board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk-pinctrl.dtsi) — SHA-256 `5ec7648319b0941753486e6895f2615c4a9728cd5256b0a27086a793cffc48e7` (`lf-normalized`)
+- [board-common-dts](../../board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk_cpuapp_common.dtsi) — SHA-256 `bfb90dd8dad909a3e30d57043aa03b1aa9d4b1d7cf064430af1b542b6743c9c2` (`lf-normalized`)
+- [variant-pin-policy](../../dts/nucode/nu54dk-arduino-pins.dtsi) — SHA-256 `2f2b6add061b0c9c51c75e7790784155110ce5e9c88ababdd0fbd807a2b29a35` (`lf-normalized`)
+- [runtime-dts](../../dts/nucode/nu54dk-arduino-runtime.dtsi) — SHA-256 `77fc0a2e9cb99cb630f82950b3b7bbfceee57c68023dd0cf19ee5f9c92d9620e` (`lf-normalized`)
 - [nordic-uarte](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/uarte.html-topic)
 - [nordic-spim](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/spim.html-topic)
 - [nordic-spis](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/spis.html-topic)

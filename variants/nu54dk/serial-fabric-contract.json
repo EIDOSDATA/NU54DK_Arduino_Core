@@ -15,98 +15,112 @@
       "kind": "local",
       "path": "board_package/NU54DK_Zephyr_DTS/NU54-DK Schematic.pdf",
       "url": null,
-      "sha256": "7e959be6d8db5d31c55366bd118093727062588770772b226117dd3826798466"
+      "sha256": "7e959be6d8db5d31c55366bd118093727062588770772b226117dd3826798466",
+      "hash_mode": "raw"
     },
     {
       "id": "board-pinctrl",
       "kind": "local",
       "path": "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk-pinctrl.dtsi",
       "url": null,
-      "sha256": "55509a6cb3ac50c0be3a320a71f0675a45a5048a442e0a709cb48a3b9c8841dc"
+      "sha256": "5ec7648319b0941753486e6895f2615c4a9728cd5256b0a27086a793cffc48e7",
+      "hash_mode": "lf-normalized"
     },
     {
       "id": "board-common-dts",
       "kind": "local",
       "path": "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk_cpuapp_common.dtsi",
       "url": null,
-      "sha256": "0f6291d22eb7fed882a0b57b6d0fbd3126ce687dc4a785d707b2c748c3086a0f"
+      "sha256": "bfb90dd8dad909a3e30d57043aa03b1aa9d4b1d7cf064430af1b542b6743c9c2",
+      "hash_mode": "lf-normalized"
     },
     {
       "id": "variant-pin-policy",
       "kind": "local",
       "path": "dts/nucode/nu54dk-arduino-pins.dtsi",
       "url": null,
-      "sha256": "b8a5b38497f5545c43f88d351a2cd3607fedbf48a4b30ccec3721d2e0eebd446"
+      "sha256": "2f2b6add061b0c9c51c75e7790784155110ce5e9c88ababdd0fbd807a2b29a35",
+      "hash_mode": "lf-normalized"
     },
     {
       "id": "runtime-dts",
       "kind": "local",
       "path": "dts/nucode/nu54dk-arduino-runtime.dtsi",
       "url": null,
-      "sha256": "2d57f9951bee0d8b4c4811bdd3734fe09fe183ec6c80b852b58da9c5c452f85f"
+      "sha256": "77fc0a2e9cb99cb630f82950b3b7bbfceee57c68023dd0cf19ee5f9c92d9620e",
+      "hash_mode": "lf-normalized"
     },
     {
       "id": "nordic-uarte",
       "kind": "official",
       "path": null,
       "url": "https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/uarte.html-topic",
-      "sha256": null
+      "sha256": null,
+      "hash_mode": "none"
     },
     {
       "id": "nordic-spim",
       "kind": "official",
       "path": null,
       "url": "https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/spim.html-topic",
-      "sha256": null
+      "sha256": null,
+      "hash_mode": "none"
     },
     {
       "id": "nordic-spis",
       "kind": "official",
       "path": null,
       "url": "https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/spis.html-topic",
-      "sha256": null
+      "sha256": null,
+      "hash_mode": "none"
     },
     {
       "id": "nordic-twim",
       "kind": "official",
       "path": null,
       "url": "https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/twim.html-topic",
-      "sha256": null
+      "sha256": null,
+      "hash_mode": "none"
     },
     {
       "id": "nordic-twis",
       "kind": "official",
       "path": null,
       "url": "https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/twis.html-topic",
-      "sha256": null
+      "sha256": null,
+      "hash_mode": "none"
     },
     {
       "id": "nordic-dedicated-pins",
       "kind": "official",
       "path": null,
       "url": "https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/chapters/pin.html-dedicated_pins",
-      "sha256": null
+      "sha256": null,
+      "hash_mode": "none"
     },
     {
       "id": "nordic-csp47-pins",
       "kind": "official",
       "path": null,
       "url": "https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/chapters/pin.html-csp47",
-      "sha256": null
+      "sha256": null,
+      "hash_mode": "none"
     },
     {
       "id": "nordic-errata-engineering-b",
       "kind": "official",
       "path": null,
       "url": "https://docs.nordicsemi.com/r/bundle/errata_nrf54l15_engb/page/ERR/nrf54l15/EngineeringB/latest/err_l15_new.html",
-      "sha256": null
+      "sha256": null,
+      "hash_mode": "none"
     },
     {
       "id": "competitor-v1-0-17",
       "kind": "competitor",
       "path": null,
       "url": "https://github.com/lolren/nrf54-arduino-core/tree/a6bb99879aa14cbff362a5478d5f1189848b4200",
-      "sha256": null
+      "sha256": null,
+      "hash_mode": "none"
     }
   ],
   "stable_surface": {

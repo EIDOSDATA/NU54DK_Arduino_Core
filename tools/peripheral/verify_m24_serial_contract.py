@@ -164,6 +164,16 @@ def _unique_by(items: list[dict[str, Any]], key: str, context: str) -> dict[Any,
     return result
 
 
+def canonical_source_payload(payload: bytes, hash_mode: str) -> bytes:
+    if hash_mode == "raw":
+        return payload
+    if hash_mode == "lf-normalized":
+        if b"\x00" in payload:
+            raise ContractFailure("LF-normalized source contains binary NUL data")
+        return payload.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    raise ContractFailure(f"unsupported local source hash mode: {hash_mode!r}")
+
+
 def validate_schema_contract(schema: dict[str, Any]) -> None:
     if schema.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
         raise ContractFailure("schema must use JSON Schema draft 2020-12")
@@ -216,20 +226,29 @@ def validate_sources(sources: list[dict[str, Any]]) -> None:
             f"extra={sorted(set(lookup) - required)}"
         )
     for identifier, source in lookup.items():
-        _expect_keys(source, {"id", "kind", "path", "url", "sha256"}, f"source {identifier}")
+        _expect_keys(
+            source,
+            {"id", "kind", "path", "url", "sha256", "hash_mode"},
+            f"source {identifier}",
+        )
         if source["kind"] == "local":
             if not isinstance(source["path"], str) or source["url"] is not None:
                 raise ContractFailure(f"local source {identifier} must use only a repository path")
             path = (REPOSITORY / source["path"]).resolve()
             if not path.is_relative_to(REPOSITORY.resolve()) or not path.is_file():
                 raise ContractFailure(f"local source is missing or outside repository: {source['path']}")
-            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            payload = canonical_source_payload(path.read_bytes(), source["hash_mode"])
+            digest = hashlib.sha256(payload).hexdigest()
             if digest != source["sha256"]:
                 raise ContractFailure(
                     f"local source checksum mismatch for {source['path']}: {digest} != {source['sha256']}"
                 )
         else:
-            if source["path"] is not None or source["sha256"] is not None:
+            if (
+                source["path"] is not None
+                or source["sha256"] is not None
+                or source["hash_mode"] != "none"
+            ):
                 raise ContractFailure(f"external source {identifier} must not pretend to be locally pinned")
             url = source["url"]
             if not isinstance(url, str) or not url.startswith("https://"):
@@ -752,7 +771,10 @@ def render_document(contract: dict[str, Any]) -> str:
     for source in contract["sources"]:
         if source["kind"] == "local":
             target = "../../" + source["path"].replace(" ", "%20")
-            lines.append(f"- [{source['id']}]({target}) — SHA-256 `{source['sha256']}`")
+            lines.append(
+                f"- [{source['id']}]({target}) — SHA-256 `{source['sha256']}` "
+                f"(`{source['hash_mode']}`)"
+            )
         else:
             lines.append(f"- [{source['id']}]({source['url']})")
     lines.append("")

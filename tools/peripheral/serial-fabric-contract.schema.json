@@ -40,13 +40,14 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "kind", "path", "url", "sha256"],
+        "required": ["id", "kind", "path", "url", "sha256", "hash_mode"],
         "properties": {
           "id": { "$ref": "#/$defs/token" },
           "kind": { "enum": ["local", "official", "competitor"] },
           "path": { "type": ["string", "null"] },
           "url": { "type": ["string", "null"] },
-          "sha256": { "anyOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] }
+          "sha256": { "anyOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] },
+          "hash_mode": { "enum": ["raw", "lf-normalized", "none"] }
         }
       }
     },

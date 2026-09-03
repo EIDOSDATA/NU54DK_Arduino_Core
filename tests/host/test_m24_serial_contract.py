@@ -108,6 +108,15 @@ class M24SerialContractTests(unittest.TestCase):
         with self.assertRaisesRegex(MODULE.ContractFailure, "checksum mismatch"):
             MODULE.validate_sources(mutated)
 
+    def test_text_source_hash_is_checkout_eol_invariant(self) -> None:
+        lf = b"first\nsecond\n"
+        crlf = b"first\r\nsecond\r\n"
+        cr = b"first\rsecond\r"
+        self.assertEqual(MODULE.canonical_source_payload(lf, "lf-normalized"), lf)
+        self.assertEqual(MODULE.canonical_source_payload(crlf, "lf-normalized"), lf)
+        self.assertEqual(MODULE.canonical_source_payload(cr, "lf-normalized"), lf)
+        self.assertNotEqual(MODULE.canonical_source_payload(crlf, "raw"), lf)
+
     def test_contract_only_api_does_not_promote_manifest_support(self) -> None:
         manifest = MODULE.strict_json_object(MODULE.MANIFEST_PATH)
         m24 = {item["id"]: item for item in manifest["instances"] if item["milestone"] == "M24"}
