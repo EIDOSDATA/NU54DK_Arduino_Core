@@ -42,6 +42,13 @@ EXPECTED_STABLE_INDEX_SIZE = 1877
 EXPECTED_STABLE_INDEX_SHA256 = (
     "5ae7fbe13f71c52950879064685694cf4b062557572f187e81476639724e5344"
 )
+PUBLISHED_STABLE_ROOT_INDEX_IDENTITIES = {
+    "0.2.0": (EXPECTED_STABLE_INDEX_SIZE, EXPECTED_STABLE_INDEX_SHA256),
+    "0.3.0": (
+        2630,
+        "14fe2eb10b4dd77a219d48060c32c21bdd97370f6d6f8be699d9118f8973e007",
+    ),
+}
 EXPECTED_PINS = {
     "NCS_VERSION": "v3.4.0",
     "NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
@@ -205,19 +212,15 @@ def assert_stable_index_unchanged(
     repo_root: Path, commit: str, runner: Runner = run_external
 ) -> None:
     path = repo_root / STABLE_INDEX_PATH
-    if (
-        not path.is_file()
-        or path.is_symlink()
-        or path.stat().st_size != EXPECTED_STABLE_INDEX_SIZE
-        or file_sha256(path) != EXPECTED_STABLE_INDEX_SHA256
-    ):
+    if not path.is_file() or path.is_symlink():
+        raise M22ReleaseFailure("stable index worktree byte 계약이 변경되었습니다.")
+    worktree_identity = (path.stat().st_size, file_sha256(path))
+    allowed_identities = set(PUBLISHED_STABLE_ROOT_INDEX_IDENTITIES.values())
+    if worktree_identity not in allowed_identities:
         raise M22ReleaseFailure("stable index worktree byte 계약이 변경되었습니다.")
     committed = runner(("git", "show", f"{commit}:{STABLE_INDEX_PATH}"), repo_root)
-    if (
-        len(committed) != EXPECTED_STABLE_INDEX_SIZE
-        or hashlib.sha256(committed).hexdigest() != EXPECTED_STABLE_INDEX_SHA256
-        or committed != path.read_bytes()
-    ):
+    committed_identity = (len(committed), hashlib.sha256(committed).hexdigest())
+    if committed_identity not in allowed_identities or committed != path.read_bytes():
         raise M22ReleaseFailure("stable index exact commit byte 계약이 변경되었습니다.")
 
 

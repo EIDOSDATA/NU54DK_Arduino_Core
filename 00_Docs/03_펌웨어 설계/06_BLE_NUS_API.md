@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-M16-BLE-NUS-001 |
-| 문서 개정 | 1.3 |
-| 문서 상태 | `v0.2.0` 정식 NUS 계약 / `v0.3.0` 회귀 경계 |
-| 적용 제품 버전 | `v0.2.0` 정식 / `v0.3.0` 개발 |
-| 최종 갱신일 | 2026-09-01 |
+| 문서 개정 | 2.0 |
+| 문서 상태 | `v0.3.0` 정식 NUS 계약 |
+| 적용 제품 버전 | `v0.3.0` stable |
+| 최종 갱신일 | 2026-09-03 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 기준 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
@@ -34,7 +34,7 @@
 정식 `v0.2.0` 구현은 임의 GATT service/characteristic 생성, GATT read, indication, bonding,
 SMP와 HID를 Arduino wrapper로 제공하지 않는다. 고급 사용자는 같은 Full Zephyr image에서
 Zephyr/NCS 공개 `bt_*` API를 직접 사용할 수 있으며, 이를 M16 wrapper가 가로막지 않는다.
-`v0.3.0` 개발 트리의 후속 BLE API는 아래 10절에서 별도로 구분한다.
+`v0.3.0`에서 추가된 후속 BLE API는 아래 10절에서 별도로 구분한다.
 
 ## 2. 구성과 소유권
 
@@ -197,18 +197,18 @@ Exact payload, 반복 횟수, image, build record, UART transcript와 evidence d
 resolver, host/target 계약과 두 보드 HIL을 완료했다. 동적 GATT, read, indication, bonding과
 SMP는 이 완료 범위에 포함되지 않는다.
 
-`v0.3.0` 개발 트리에서는 M19 BLE Core/GAP과 M20 범용 GATT가 exact commit
+`v0.3.0`에서는 M19 BLE Core/GAP과 M20 범용 GATT가 exact commit
 `0103a8434ac205a953c981385ae26a2a64aeeccc`의 두 보드 HIL을 통과했다. 두 단계의 host/target 계약은
 기존 NUS API, feature ID와 build bundle parity를 유지한다. M19/M20 exact HIL은 GAP/GATT 검증이며
 M16 NUS 두 보드 RF HIL을 재실행한 증거로 확대하지 않는다. Pairing·bonding·BAS/DIS·HID는 공통 lifecycle을
 재사용하는 별도 `NUCODE_BLE_Security` library의 M21 범위다. Core `065d4f5` exact 두 보드 HIL과
 후속 `d1902b1` Windows 11 실제 HID·bond 복원, M21 host 39/39은 PASS했다. M21 개발 작업은
-완료했지만 M22 전에는 전체 `v0.3.0` 정식 지원으로 표시하지 않는다.
+완료했고 M22 stable gate 뒤 전체 `v0.3.0` 정식 지원 범위로 승격했다.
 
 - [M19 BLE Core/GAP 검증](<../04_검증 기록/23_M19_BLE_Core_GAP_검증.md>)
 - [M20 범용 GATT 검증](<../04_검증 기록/24_M20_범용_GATT_검증.md>)
 - [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)
 - [BLE 보안과 표준 Profile API](09_BLE_보안과_표준_Profile_API.md)
 
-후속 구현 결과를 정식 `v0.2.0` NUS 지원 범위에 소급 적용하지 않으며, M22 이전에는 전체
-`v0.3.0` 정식 지원으로 표시하지 않는다.
+후속 구현 결과를 정식 `v0.2.0` NUS 지원 범위에 소급 적용하지 않는다. `v0.3.0`은 M22 stable
+gate를 통과한 범위만 정식 지원한다.

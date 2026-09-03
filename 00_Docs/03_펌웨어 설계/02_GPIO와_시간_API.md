@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-GPIO-TIME-001 |
-| 문서 개정 | 4.1 |
-| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-02B GPIO handover exact HIL 완료 |
-| 최종 갱신일 | 2026-09-01 |
+| 문서 개정 | 5.0 |
+| 문서 상태 | `v0.3.0` 정식 계약 |
+| 최종 갱신일 | 2026-09-03 |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
 ## 1. 목적
@@ -30,8 +30,8 @@ Core는 물리 pin 번호, timer instance와 DTS flag를 별도 원본으로 복
 
 ## 3. Canonical digital 핀 계약
 
-정식 `v0.2.0` package의 10/7 sparse-pin 계약은 역사적 공개 계약으로 유지한다. 현재
-`v0.3.0` 개발 트리는 module/header의 31개 physical pad를 32개 안정된 논리 역할로 표현한다.
+정식 `v0.2.0` package의 10/7 sparse-pin 계약은 역사적 공개 계약으로 유지한다. `v0.3.0`
+stable은 module/header의 31개 physical pad를 32개 안정된 논리 역할로 표현한다.
 `PIN_LED1` ID 4는 P1.10의 canonical ID `PIN_PWM0`으로 정규화되므로 논리 역할 수와 실제 pad
 수가 하나 다르다.
 
@@ -59,7 +59,7 @@ Arduino `HIGH`와 `LOW`는 raw electrical level이다. LED의 DTS active flag가
 `digitalWrite(HIGH)`를 “LED 켜기” 의미로 반전하지 않는다. Sketch는 board 역할의 polarity를
 알고 값을 선택해야 한다.
 
-| Arduino mode | `v0.2.0` 정식 | `v0.3.0` 개발 트리 |
+| Arduino mode | `v0.2.0` 역사 계약 | `v0.3.0` stable |
 | --- | --- | --- |
 | `INPUT` | input 구성 | 동일 |
 | `INPUT_PULLUP` | input + pull-up | 동일 |
@@ -108,10 +108,10 @@ input/output capability를 가지며, 그중 DTS controller가 P0/P1인 역할�
 | --- | --- |
 | 등록 | `attachInterrupt()` 또는 `attachInterruptParam()` |
 | 해제 | `detachInterrupt()` |
-| mode | raw `RISING`, `FALLING`, `CHANGE`; v0.3 개발 트리는 GPIOTE P0/P1에서 `LOW`, `HIGH` 추가 |
+| mode | raw `RISING`, `FALLING`, `CHANGE`; v0.3.0은 GPIOTE P0/P1에서 `LOW`, `HIGH` 추가 |
 | slot | digital 논리 ID별 고정 slot |
 | callback 문맥 | Zephyr GPIO ISR |
-| level interrupt | `v0.2.0` 미지원; v0.3은 hold one-shot 후 deassert·work polling 재무장 |
+| level interrupt | `v0.2.0` 미지원; v0.3.0은 hold one-shot 후 deassert·work polling 재무장 |
 
 등록 전에 input-capable descriptor, mode, callback과 device readiness를 검사한다. Callback을
 바꾸거나 해제할 때 진행 중 ISR과 slot 상태를 안전하게 정리한다. `pinMode()`로 GPIO 구성을

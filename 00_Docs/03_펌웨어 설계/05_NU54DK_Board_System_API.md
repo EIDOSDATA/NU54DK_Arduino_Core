@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-M15-BOARD-SYSTEM-001 |
-| 문서 개정 | 1.7 |
-| 문서 상태 | `v0.2.0` 정식 계약 |
-| 적용 제품 버전 | `v0.2.0` |
-| 최종 갱신일 | 2026-09-01 |
+| 문서 개정 | 2.0 |
+| 문서 상태 | `v0.3.0` 정식 계약 |
+| 적용 제품 버전 | `v0.3.0` |
+| 최종 갱신일 | 2026-09-03 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 기준 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
@@ -71,7 +71,7 @@ NU54DK.boardModel();
 | `boardTarget()` | build에 사용한 Zephyr board target |
 | `socName()` | build의 SoC 이름 |
 | `ncsVersion()` / `zephyrVersion()` | 고정 compatibility identity |
-| `coreVersion()` | Core source의 identity. 현재 stable package metadata는 `0.2.0`이지만 구현 반환값은 `0.2.0-dev`로 남아 있어 배포 버전의 단일 기준으로 사용하지 않음 |
+| `coreVersion()` | 구현은 역사적 문자열 `0.2.0-dev`를 반환하므로 배포 identity로 사용하지 않음; 설치 version과 release manifest를 기준으로 확인 |
 | `deviceId()` | `hwinfo_get_device_id()`의 raw 값을 16진 문자열로 복사 |
 | `resetReport()` | reset cause와 하드웨어 지원 mask를 함께 반환 |
 | `clearResetCause()` | 누적 reset cause latch 제거 |
@@ -117,7 +117,7 @@ Arduino API가 같더라도 adapter를 다시 검토하고 target 검증을 수�
 | 손상 처리 | 자동 erase를 강제하는 `SETTINGS_ZMS_FORCE_MOUNT` 사용 안 함 |
 
 이 API는 EEPROM byte 주소 호환층이나 일반 filesystem이 아니다. Flash wear, 전원 차단 시점과
-제품별 데이터 migration은 Sketch가 별도로 설계해야 한다. `v0.3.0-rc.3` 후보의 AC-03은 같은
+제품별 데이터 migration은 Sketch가 별도로 설계해야 한다. `v0.3.0`의 AC-03은 같은
 Settings/ZMS에 독립 `arduino/eeprom` record를 두는 1024-byte EEPROM facade와 별도
 `0x16c000..0x174000` 32 KiB LittleFS를 구현했다. 두 facade의 API·파괴적 복구·검증 경계는
 [Arduino Storage API](./10_Arduino_Storage_API.md)가 소유하며, RC 검증 결과를 stable `v0.2.0`

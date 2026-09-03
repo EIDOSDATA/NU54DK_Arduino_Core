@@ -3,15 +3,15 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 성격 | 실행 당시의 revision, 환경, 명령과 결과를 보존하는 역사 증거 |
-| 완료 범위 | M1~M18, `v0.1.0`과 `v0.2.0` 정식 공개 / AC-01~AC-03 / M19~M21 / M22 RC3 고정 gate·29/29 설치본 compile |
-| 진행 범위 | `v0.3.0` stable package·공개 수명주기 인계 |
-| 현재 정식 버전 | `v0.2.0` |
-| 최종 갱신일 | 2026-09-02 |
+| 완료 범위 | M1~M22, `v0.1.0`·`v0.2.0`·`v0.3.0` 정식 공개 |
+| 진행 범위 | `v0.4.0` 계획 전환 |
+| 현재 정식 버전 | `v0.3.0` |
+| 최종 갱신일 | 2026-09-03 |
 
 이 디렉터리는 **현재 사용법이나 다음 작업을 설명하는 곳이 아니다.** 각 기록의 `다음 단계`,
 `HOLD`, `미실행`과 `NOT RUN`은 그 문서를 작성한 시점의 경계를 뜻한다. 현재 상태는
 [Master roadmap](<../01_아두이노 코어 설계/02_구현_로드맵.md>), 현재 사용자 절차는
-[v0.2.0 릴리스 문서](<../05_릴리스/v0.2.0/README.md>)를 따른다.
+[v0.3.0 릴리스 문서](<../05_릴리스/v0.3.0/README.md>)를 따른다.
 
 ## v0.1.0 기반 — M1~M11
 
@@ -44,7 +44,7 @@
 | M18 RC | RC1 공개 검증과 RC2 교정 | [M18 RC 기록](20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md) |
 | Stable | `v0.2.0` 정식 공개와 공개 수명주기 | [v0.2.0 공개 기록](21_v0.2.0_정식_릴리스_공개_기록.md) |
 
-## v0.3.0 개발 — Arduino Compatibility와 BLE
+## v0.3.0 — Arduino Compatibility, BLE와 정식 공개
 
 | 작업 | 현재 결과 | 기록 |
 | --- | --- | --- |
@@ -58,6 +58,7 @@
 | M22 RC1 | fixed gate PASS 뒤 tagged clean-room 실행기 결함으로 formal 검증 중단; tag·자산 불변 보존 | [RC1 기록](29_M22_v0.3.0_rc1_통합_릴리스_기준선.md) |
 | M22 RC2 | 새 plan·4 gate, 29개 설치 예제·실제 Upload·public clean-room lifecycle와 cleanup PASS | [RC2 기록](30_M22_v0.3.0_rc2_통합_릴리스_기준선.md) |
 | M22 RC3 | 1,456 KiB memory contract, fixed gate·29/29 compile와 실제 Upload PASS; 사용자 reset 중단을 기록하고 stable lifecycle로 인계 | [RC3 검증·인계 기록](31_M22_v0.3.0_rc3_검증과_stable_인계.md) |
+| M22 Stable | 독립 package 재현, RC3 runtime 동등성, 설치 lifecycle·29/29 compile·NU54DK Upload와 정식 공개 PASS | [v0.3.0 정식 공개 기록](32_M22_v0.3.0_정식_릴리스_공개_기록.md) |
 
 ## 기록 해석 규칙
 

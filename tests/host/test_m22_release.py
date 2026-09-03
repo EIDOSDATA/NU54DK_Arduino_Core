@@ -54,7 +54,7 @@ class M22ReleaseTests(unittest.TestCase):
             return stable
 
         MODULE.assert_stable_index_unchanged(REPOSITORY, commit, runner)
-        with mock.patch.object(MODULE, "EXPECTED_STABLE_INDEX_SHA256", "0" * 64):
+        with mock.patch.object(MODULE, "PUBLISHED_STABLE_ROOT_INDEX_IDENTITIES", {}):
             with self.assertRaisesRegex(MODULE.M22ReleaseFailure, "stable index"):
                 MODULE.assert_stable_index_unchanged(REPOSITORY, commit, runner)
 

@@ -1,10 +1,10 @@
-# NU54DK Build Adapter 설계 — v0.2.0
+# NU54DK Build Adapter 설계 — v0.3.0
 
 | 항목 | 내용 |
 | --- | --- |
 | 문서 상태 | **현재 구현 계약** |
-| 현재 정식 버전 | `v0.2.0` |
-| 다음 목표 버전 | `v0.3.0` |
+| 현재 정식 버전 | `v0.3.0` |
+| 다음 목표 버전 | `v0.4.0` |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 공식 호스트 | Windows 10/11 x64 |
 | 최종 이미지 | Loader/LLEXT 없는 단일 Full Zephyr 이미지 |

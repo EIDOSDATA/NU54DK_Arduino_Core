@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-PIN-001 |
-| 문서 개정 | 4.1 |
-| 문서 상태 | `v0.2.0` 정식 계약 + `v0.3.0` AC-02B exact-commit HIL 완료 |
-| 최종 갱신일 | 2026-09-01 |
+| 문서 개정 | 5.0 |
+| 문서 상태 | `v0.3.0` 정식 계약 |
+| 최종 갱신일 | 2026-09-03 |
 | 대상 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 
 ## 1. 목적
@@ -15,8 +15,8 @@
 자원을 Arduino용 capability·policy·route metadata로 투영하고 Variant는 공개 이름과 안정된 논리
 ID를 제공한다.
 
-정식 `v0.2.0` package의 10/7 sparse-pin 계약은 역사적 공개 계약으로 유지한다. 현재 `v0.3.0`
-개발 트리는 기존 `0..11` ID를 보존하면서 module/header의 나머지 물리 pad에 canonical ID
+정식 `v0.2.0` package의 10/7 sparse-pin 계약은 역사적 공개 계약으로 유지한다. `v0.3.0`
+stable은 기존 `0..11` ID를 보존하면서 module/header의 나머지 물리 pad에 canonical ID
 `12..31`을 부여한다. 기본 `standard`/`ble` profile의 불변식은 32개 논리 역할, 31개 실제 pad,
 20개 digital-capable canonical pad와 8개 analog channel이다. ID 4 `PIN_LED1`은 P1.10의 ID 3
 `PIN_PWM0`으로 정규화되므로 논리 역할 수와 실제 pad 수가 하나 다르다.

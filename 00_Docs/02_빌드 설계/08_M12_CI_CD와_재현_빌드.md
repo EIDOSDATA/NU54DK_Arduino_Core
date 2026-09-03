@@ -1,4 +1,4 @@
-# CI/CD와 재현 빌드 — M12~M17 현재 계약
+# CI/CD와 재현 빌드 — v0.3.0 현재 계약
 
 | 계층 | 실행 환경 | 목적 |
 | --- | --- | --- |
@@ -29,9 +29,9 @@ artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI
 Checkout은 submodule을 recursive로 받고 full history를 사용한다. Workflow permission은
 `contents: read`이며 같은 ref의 중복 실행은 취소한다.
 
-M12와 정식 `v0.2.0`의 역사적 기준은 public library 4개·예제 14개다. 현재 `v0.3.0-rc.3`
-후보는 EEPROM/LittleFS까지 포함한 library 8개·예제 29개다. `Standard peripherals` 22개와
-BLE 7개를 M22 package lock과 installed-package gate로 모두 compile한다. 현재 29개 기대값을
+M12와 정식 `v0.2.0`의 역사적 기준은 public library 4개·예제 14개다. 정식 `v0.3.0`은
+EEPROM/LittleFS까지 포함한 library 8개·예제 29개다. `Standard peripherals` 22개와
+BLE 7개를 M22 package lock과 installed-package gate로 모두 compile했다. 현재 29개 기대값을
 과거 `v0.2.0` artifact 기록에 소급 적용하지 않는다.
 
 로컬 진입점은 다음과 같다.
@@ -137,14 +137,14 @@ upload와 UART READY를 실행한다. Hardware evidence는 30일 보존한다. P
 배선과 runner 보안은 운영자가 관리한다.
 
 HIL workflow가 존재하거나 queue에 들어갔다는 사실은 PASS가 아니다. 완료 artifact와 검증
-기록이 있어야 실기 판정에 사용할 수 있다. `v0.3.0` 개발 검증은 AC-01 exact commit
+기록이 있어야 실기 판정에 사용할 수 있다. `v0.3.0` 검증은 AC-01 exact commit
 `ac10ba3b253bd6bf76bcf73aa2c79278304908a4`, M19/M20 exact commit
 `0103a8434ac205a953c981385ae26a2a64aeeccc`, M21 exact commit
 `065d4f573618aca5da1e715915622e987208b775`의 HIL PASS를 각각 검증 기록에 고정한다. M21의
 후속 `d1902b16804a27b77b153eeb9d11a10e088a59ae`는 Windows 11 실제 HID pairing·문자 입력과
 재부팅 bond 복원을 통과했고 host 39/39도 PASS했다. 자동 RF evidence와 Windows 수동 evidence는
 서로 소급 변경하지 않고 별도 판정 계층으로 보존한다. M21과 AC-02·AC-03은 완료됐으며 M22는
-이 증거를 package·public prerelease·clean-room gate에 연결한다.
+이 증거를 stable package·public lifecycle gate에 연결해 완료했다.
 
 AC-02B의 `ac02b_hil_dut`와 `ac02b_hil_peer`는 Linux/Windows 재현 build에서 **build-only**다.
 `tests/hil/nu54dk/ac02b_peripheral.py`의 물리 실행은 두 probe UID, 두 COM port, exact image hash,
