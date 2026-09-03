@@ -18,6 +18,39 @@ from typing import Sequence
 
 
 FQBN = "nucode:zephyr:nu54dk"
+ARDUINO_TESTS = (
+    "blink",
+    "library",
+    "config",
+    "error",
+    "parallel",
+    "incremental",
+    "m6",
+    "m7",
+    "m8",
+    "m9",
+    "m11",
+    "m15",
+    "m16",
+    "m19m20",
+    "m21",
+    "ac02b",
+    "ac03",
+    "examples",
+)
+DEFAULT_TESTS = tuple(test for test in ARDUINO_TESTS if test != "incremental")
+ARDUINO_GROUPS = {
+    "v0.1.0": ("blink", "m6", "m7"),
+    "v0.2.0": ("m15", "m16"),
+    "v0.3.0": ("m19m20", "m21", "ac02b", "ac03", "examples"),
+}
+ARDUINO_MATRIX_GROUPS = {
+    "v0.1.0": ARDUINO_GROUPS["v0.1.0"],
+    "v0.2.0": ARDUINO_GROUPS["v0.2.0"],
+    "v0.3.0-ble": ("m19m20", "m21"),
+    "v0.3.0-compat": ("ac02b", "ac03", "examples"),
+}
+ARDUINO_SELECTIONS = {**ARDUINO_GROUPS, **ARDUINO_MATRIX_GROUPS}
 
 
 ## @brief NU54DK 보드 공통 예제 라이브러리의 저장소 경로를 반환합니다.
@@ -1218,17 +1251,15 @@ def test_m15_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
         raise SmokeFailure("SystemOffWake가 명시적 Serial 명령 gate를 유지하지 않습니다")
 
 
-## @brief M16~M20 BLE NUS/Core/GATT 예제를 BLE profile로 끝까지 빌드합니다.
-def test_m16_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
+## @brief 선택한 BLE NUS/Core/GATT 예제를 BLE profile로 끝까지 빌드합니다.
+def test_ble_examples(
+    cli: Path,
+    config: Path,
+    root: Path,
+    repository: Path,
+    examples: Sequence[str],
+) -> None:
     library = repository / "libraries" / "NUCODE_BLE"
-    examples = (
-        "NUSPeripheral",
-        "NUSCentral",
-        "GAPPeripheral",
-        "GAPCentral",
-        "CustomGattPeripheral",
-        "CustomGattCentral",
-    )
     for example_name in examples:
         sketch = library / "examples" / example_name
         project_name = f"{example_name}.ino"
@@ -1259,6 +1290,30 @@ def test_m16_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
         for symbol in required_symbols:
             if not read_kconfig_boolean(configuration, symbol):
                 raise SmokeFailure(f"BLE symbol is disabled: {example_name}: {symbol}")
+
+
+## @brief v0.2.0에서 도입한 M16 NUS 예제만 빌드합니다.
+def test_m16_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    test_ble_examples(
+        cli,
+        config,
+        root,
+        repository,
+        ("NUSPeripheral", "NUSCentral"),
+    )
+
+
+## @brief v0.3.0에서 도입한 M19 GAP·M20 GATT 예제만 빌드합니다.
+def test_m19_m20_examples(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    test_ble_examples(
+        cli,
+        config,
+        root,
+        repository,
+        ("GAPPeripheral", "GAPCentral", "CustomGattPeripheral", "CustomGattCentral"),
+    )
 
 
 ## @brief M21 SecureKeyboard 예제를 BLE security feature로 끝까지 빌드합니다.
@@ -1468,46 +1523,16 @@ def main(arguments: Sequence[str] | None = None) -> int:
         type=Path,
         help="검증할 ZIP에서 직접 추출한 Git-less Arduino platform root",
     )
-    parser.add_argument(
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument(
         "--tests",
         nargs="+",
-        choices=(
-            "blink",
-            "library",
-            "config",
-            "error",
-            "parallel",
-            "incremental",
-            "m6",
-            "m7",
-            "m8",
-            "m9",
-            "m11",
-            "m15",
-            "m16",
-            "m21",
-            "ac02b",
-            "ac03",
-            "examples",
-        ),
-        default=(
-            "blink",
-            "library",
-            "config",
-            "error",
-            "parallel",
-            "m6",
-            "m7",
-            "m8",
-            "m9",
-            "m11",
-            "m15",
-            "m16",
-            "m21",
-            "ac02b",
-            "ac03",
-            "examples",
-        ),
+        choices=ARDUINO_TESTS,
+    )
+    selection.add_argument(
+        "--group",
+        choices=tuple(ARDUINO_SELECTIONS),
+        help="현재 source에서 검증할 릴리스 도입 기능군",
     )
     args = parser.parse_args(arguments)
     repository = Path(__file__).resolve().parents[2]
@@ -1546,14 +1571,30 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m11": test_m11_fixtures,
                 "m15": test_m15_examples,
                 "m16": test_m16_examples,
+                "m19m20": test_m19_m20_examples,
                 "m21": test_m21_example,
                 "ac02b": test_ac02b_examples,
                 "ac03": test_ac03_storage_examples,
                 "examples": test_example_discovery,
             }
-            for name in args.tests:
-                tests[name](cli, config, root, repository)
-                print(f"PASS: {name}")
+            selected_tests = (
+                ARDUINO_SELECTIONS[args.group]
+                if args.group is not None
+                else (tuple(args.tests) if args.tests is not None else DEFAULT_TESTS)
+            )
+            selected_group = args.group or "custom"
+            for name in selected_tests:
+                print(f"SMOKE_TEST_START={selected_group}/{name}", flush=True)
+                try:
+                    tests[name](cli, config, root, repository)
+                except SmokeFailure as error:
+                    raise SmokeFailure(f"{selected_group}/{name}: {error}") from error
+                print(f"PASS: {name}", flush=True)
+            print(
+                f"ARDUINO_SMOKE_GROUP_PASS={selected_group};"
+                f"TESTS={len(selected_tests)}",
+                flush=True,
+            )
             m9_evidence = root / "m9-evidence.json"
             if args.evidence and m9_evidence.is_file():
                 evidence_path = args.evidence.resolve()

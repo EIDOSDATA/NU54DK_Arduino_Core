@@ -18,8 +18,12 @@ concurrency:
 
 jobs:
   zephyr-build:
-    name: Zephyr Twister in pinned Nordic container
+    name: Zephyr ${{ matrix.group }} in pinned Nordic container
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [v0.1.0, v0.2.0, v0.3.0, v0.4.0]
     container:
       image: ghcr.io/nrfconnect/sdk-nrf-toolchain@sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace
     defaults:
@@ -27,7 +31,7 @@ jobs:
         shell: bash
     env:
       NCS_CI_WORKSPACE: /tmp/nu54dk-ncs-v3.4.0
-      M12_EVIDENCE: ${{ github.workspace }}/m12-evidence
+      M12_EVIDENCE: ${{ github.workspace }}/m12-evidence/${{ matrix.group }}
     steps:
       - name: Checkout exact source and board package
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -48,25 +52,30 @@ jobs:
           --workspace "$NCS_CI_WORKSPACE"
           --evidence "$M12_EVIDENCE/ncs-identity.json"
       - name: Verify M23 inventory against exact NCS Devicetree
+        if: matrix.group == 'v0.4.0'
         run: >-
           python3 tools/peripheral/verify_m23_inventory.py
           --ncs-root "$NCS_CI_WORKSPACE"
       - name: Verify M24 serial-fabric contract against exact NCS Devicetree
+        if: matrix.group == 'v0.4.0'
         run: >-
           python3 tools/peripheral/verify_m24_serial_contract.py
           --ncs-root "$NCS_CI_WORKSPACE"
-      - name: Build representative Zephyr suites
+      - name: Build ${{ matrix.group }} Zephyr suites
         run: >-
           python3 tools/ci/run_zephyr_build.py
           --workspace "$NCS_CI_WORKSPACE"
           --outdir "$M12_EVIDENCE/twister"
+          --group "${{ matrix.group }}"
       - name: Record M17 NCS build feasibility
+        if: matrix.group == 'v0.2.0'
         run: >-
           python3 tools/ci/run_m17_feasibility.py
           --workspace "$NCS_CI_WORKSPACE"
           --outdir "$M12_EVIDENCE/m17-feasibility"
           --west west
       - name: Run M14 C++ policy on QEMU
+        if: matrix.group == 'v0.2.0'
         run: >-
           python3 tools/ci/run_m14_qemu.py
           --workspace "$NCS_CI_WORKSPACE"
@@ -75,20 +84,24 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: m12-zephyr-build-${{ github.sha }}
+          name: m12-zephyr-${{ matrix.group }}-${{ github.sha }}
           path: ${{ env.M12_EVIDENCE }}
           if-no-files-found: warn
           retention-days: 14
 
   arduino-build:
-    name: Arduino compile with pinned Windows prerequisites
+    name: Arduino ${{ matrix.group }} with pinned Windows prerequisites
     runs-on: windows-2025
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [v0.1.0, v0.2.0, v0.3.0-ble, v0.3.0-compat]
     env:
       NUCODE_NCS_INSTALL_ROOT: D:\ncs
       NUCODE_NCS_ROOT: D:\ncs\v3.4.0
       NUCODE_TOOLCHAIN_ROOT: D:\ncs\toolchains\dcbdc366a1
       NUCODE_PREREQUISITE_STATE_ROOT: D:\nu54-prerequisites
-      M12_EVIDENCE: ${{ github.workspace }}\m12-evidence
+      M12_EVIDENCE: ${{ github.workspace }}\m12-evidence\${{ matrix.group }}
       NUCODE_CI_TEMP: D:\t
     steps:
       - name: Checkout exact source and board package
@@ -121,7 +134,7 @@ jobs:
           -NcsRoot "$env:NUCODE_NCS_INSTALL_ROOT"
       - name: Verify installed source revisions
         run: python tools/ci/verify_ci_lock.py --workspace "$env:NUCODE_NCS_ROOT"
-      - name: Compile representative Arduino examples
+      - name: Compile ${{ matrix.group }} Arduino examples
         shell: powershell
         run: |
           New-Item -ItemType Directory -Path $env:M12_EVIDENCE -Force | Out-Null
@@ -132,12 +145,13 @@ jobs:
           & $cli version 2>&1 | Tee-Object -FilePath (Join-Path $env:M12_EVIDENCE 'arduino-cli-version.txt')
           $previousErrorAction = $ErrorActionPreference
           $ErrorActionPreference = 'Continue'
-          python .\tests\arduino-cli\run_smoke.py --cli $cli --tests blink m6 m7 ac02b ac03 examples 2>&1 |
+          python .\tests\arduino-cli\run_smoke.py --cli $cli --group '${{ matrix.group }}' 2>&1 |
             Tee-Object -FilePath (Join-Path $env:M12_EVIDENCE 'arduino-build.log')
           $commandExitCode = $LASTEXITCODE
           $ErrorActionPreference = $previousErrorAction
           if ($commandExitCode -ne 0) { exit $commandExitCode }
       - name: Compile pinned M17 external Arduino libraries
+        if: matrix.group == 'v0.2.0'
         shell: powershell
         run: |
           New-Item -ItemType Directory -Path $env:M12_EVIDENCE -Force | Out-Null
@@ -156,7 +170,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: m12-arduino-build-${{ github.sha }}
+          name: m12-arduino-${{ matrix.group }}-${{ github.sha }}
           path: ${{ env.M12_EVIDENCE }}
           if-no-files-found: warn
           retention-days: 14

@@ -27,38 +27,47 @@ M16_ROLE_SUITES = (
     ("peripheral", "nucode.m16.ble_hil_peripheral"),
     ("central", "nucode.m16.ble_hil_central"),
 )
-SUITES = (
-    ("m3_runtime", "nucode.m3.runtime"),
-    ("m4_api_contract", "nucode.m4.api_contract"),
-    ("m6_core_api", "nucode.m6.core_api"),
-    ("m7_core_api", "nucode.m7.core_api"),
-    ("m14_core_contract", "nucode.m14.core_contract"),
-    ("m14_variant_contract", "nucode.m14.variant_contract"),
-    ("m14_pin_hil", "nucode.m14.pin_hil"),
-    ("m15_board", "nucode.m15.board"),
-    ("m15_hil", "nucode.m15.auto_hil"),
-    ("m15_wake", "nucode.m15.wake"),
-    ("m16_ble_contract", "nucode.m16.ble_contract"),
-    ("m16_ble_hil", "nucode.m16.ble_hil_peripheral"),
-    ("m16_ble_hil", "nucode.m16.ble_hil_central"),
-    ("m17_sensor_direct", "nucode.m17.sensor_direct"),
-    ("m19_ble_gap_contract", "nucode.m19.ble_gap_contract"),
-    ("m19_ble_gap_hil", "nucode.m19.ble_gap_hil_peripheral"),
-    ("m19_ble_gap_hil", "nucode.m19.ble_gap_hil_central"),
-    ("m20_ble_gatt_contract", "nucode.m20.ble_gatt_contract"),
-    ("m20_ble_gatt_hil", "nucode.m20.ble_gatt_hil_peripheral"),
-    ("m20_ble_gatt_hil", "nucode.m20.ble_gatt_hil_central"),
-    ("ac01_contract", "nucode.ac01.contract"),
-    ("ac01_hil", "nucode.ac01.gpio_hil"),
-    ("ac02a_ownership_contract", "nucode.ac02a.ownership_contract"),
-    ("ac02b_b2_contract", "nucode.ac02b.b2_contract"),
-    ("ac02b_analog_contract", "nucode.ac02b.analog_contract"),
-    ("ac02b_hil_dut", "nucode.ac02b.hil_dut"),
-    ("ac02b_hil_peer", "nucode.ac02b.hil_peer"),
-    ("ac03_storage_contract", "nucode.ac03.storage_contract"),
-    ("ac03_hil", "nucode.ac03.storage_hil"),
-    ("m23_inventory_contract", "nucode.m23.inventory_contract"),
-)
+SUITE_GROUPS = {
+    "v0.1.0": (
+        ("m3_runtime", "nucode.m3.runtime"),
+        ("m4_api_contract", "nucode.m4.api_contract"),
+        ("m6_core_api", "nucode.m6.core_api"),
+        ("m7_core_api", "nucode.m7.core_api"),
+    ),
+    "v0.2.0": (
+        ("m14_core_contract", "nucode.m14.core_contract"),
+        ("m14_variant_contract", "nucode.m14.variant_contract"),
+        ("m14_pin_hil", "nucode.m14.pin_hil"),
+        ("m15_board", "nucode.m15.board"),
+        ("m15_hil", "nucode.m15.auto_hil"),
+        ("m15_wake", "nucode.m15.wake"),
+        ("m16_ble_contract", "nucode.m16.ble_contract"),
+        ("m16_ble_hil", "nucode.m16.ble_hil_peripheral"),
+        ("m16_ble_hil", "nucode.m16.ble_hil_central"),
+        ("m17_sensor_direct", "nucode.m17.sensor_direct"),
+    ),
+    "v0.3.0": (
+        ("m19_ble_gap_contract", "nucode.m19.ble_gap_contract"),
+        ("m19_ble_gap_hil", "nucode.m19.ble_gap_hil_peripheral"),
+        ("m19_ble_gap_hil", "nucode.m19.ble_gap_hil_central"),
+        ("m20_ble_gatt_contract", "nucode.m20.ble_gatt_contract"),
+        ("m20_ble_gatt_hil", "nucode.m20.ble_gatt_hil_peripheral"),
+        ("m20_ble_gatt_hil", "nucode.m20.ble_gatt_hil_central"),
+        ("ac01_contract", "nucode.ac01.contract"),
+        ("ac01_hil", "nucode.ac01.gpio_hil"),
+        ("ac02a_ownership_contract", "nucode.ac02a.ownership_contract"),
+        ("ac02b_b2_contract", "nucode.ac02b.b2_contract"),
+        ("ac02b_analog_contract", "nucode.ac02b.analog_contract"),
+        ("ac02b_hil_dut", "nucode.ac02b.hil_dut"),
+        ("ac02b_hil_peer", "nucode.ac02b.hil_peer"),
+        ("ac03_storage_contract", "nucode.ac03.storage_contract"),
+        ("ac03_hil", "nucode.ac03.storage_hil"),
+    ),
+    "v0.4.0": (
+        ("m23_inventory_contract", "nucode.m23.inventory_contract"),
+    ),
+}
+SUITES = tuple(suite for group in SUITE_GROUPS.values() for suite in group)
 WINDOWS_OUTDIR_MAX_LENGTH = 8
 M15_DIRECTORIES = ("m15_board", "m15_hil", "m15_wake")
 
@@ -87,7 +96,9 @@ def validate_outdir_path(outdir: Path) -> None:
 
 
 ## @brief Twister 결과가 정확한 build-only suite 집합인지 검사합니다.
-def validate_report(report_path: Path) -> None:
+def validate_report(
+    report_path: Path, suites_to_validate: Sequence[tuple[str, str]] = SUITES
+) -> None:
     try:
         report = json.loads(report_path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
@@ -95,7 +106,7 @@ def validate_report(report_path: Path) -> None:
     suites = report.get("testsuites")
     if not isinstance(suites, list):
         raise BuildFailure("Twister testsuites가 배열이 아닙니다.")
-    expected = {scenario for _directory, scenario in SUITES}
+    expected = {scenario for _directory, scenario in suites_to_validate}
     actual: set[str] = set()
     for suite in suites:
         if not isinstance(suite, dict):
@@ -119,11 +130,37 @@ def validate_report(report_path: Path) -> None:
         raise BuildFailure(f"Twister suite 집합이 다릅니다: {sorted(actual)}")
 
 
+## @brief 실패한 Twister suite와 사유를 한 줄 진단으로 요약합니다.
+def failure_summary(report_path: Path) -> str:
+    try:
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+        return f"twister.json unavailable ({error})"
+    suites = report.get("testsuites")
+    if not isinstance(suites, list):
+        return "twister.json testsuites is not an array"
+    failures: list[str] = []
+    for suite in suites:
+        if not isinstance(suite, dict):
+            continue
+        status = str(suite.get("status", "unknown"))
+        if status == "not run":
+            continue
+        name = str(suite.get("name", "unknown-suite"))
+        reason = str(suite.get("reason", "no reason"))
+        failures.append(f"{name}: {status} ({reason})")
+    return "; ".join(failures[:8]) or "failed suite was not recorded"
+
+
 ## @brief M15 target의 생성 DTS가 NU54DK 외부 LFXO 커패시터 구성을 사용하는지 검사합니다.
-def validate_m15_lfxo(outdir: Path) -> None:
+def validate_m15_lfxo(
+    outdir: Path, suites_to_validate: Sequence[tuple[str, str]] = SUITES
+) -> None:
     platform_directory = BOARD_TARGET.replace("/", "_")
-    scenario_by_directory = dict(SUITES)
+    scenario_by_directory = dict(suites_to_validate)
     for directory in M15_DIRECTORIES:
+        if directory not in scenario_by_directory:
+            continue
         devicetree_path = (
             outdir
             / platform_directory
@@ -237,10 +274,22 @@ def validate_m16_role_build(build_directory: Path, role: str) -> dict[str, Any]:
 
 
 ## @brief Twister가 만든 M16 peripheral·central image를 role별로 검증합니다.
-def validate_m16_role_builds(outdir: Path) -> list[dict[str, Any]]:
+def validate_m16_role_builds(
+    outdir: Path, suites_to_validate: Sequence[tuple[str, str]] = SUITES
+) -> list[dict[str, Any]]:
+    selected_scenarios = {scenario for _directory, scenario in suites_to_validate}
+    selected_roles = tuple(
+        (role, scenario)
+        for role, scenario in M16_ROLE_SUITES
+        if scenario in selected_scenarios
+    )
+    if not selected_roles:
+        return []
+    if selected_roles != M16_ROLE_SUITES:
+        raise BuildFailure("M16 peripheral·central role은 같은 build 그룹에 있어야 합니다.")
     platform_directory = BOARD_TARGET.replace("/", "_")
     records: list[dict[str, Any]] = []
-    for role, scenario in M16_ROLE_SUITES:
+    for role, scenario in selected_roles:
         scenario_directory = (
             outdir / platform_directory / "zephyr_gnu" / scenario
         )
@@ -254,7 +303,11 @@ def validate_m16_role_builds(outdir: Path) -> list[dict[str, Any]]:
 
 ## @brief exact NCS workspace에서 고정된 target suite만 빌드합니다.
 def run_build(
-    workspace: Path, outdir: Path, lock: dict[str, Any]
+    workspace: Path,
+    outdir: Path,
+    lock: dict[str, Any],
+    suites_to_build: Sequence[tuple[str, str]] = SUITES,
+    jobs: int = 2,
 ) -> list[dict[str, Any]]:
     LOCK_MODULE.validate_workspace(workspace, lock)
     validate_outdir_path(outdir)
@@ -264,7 +317,7 @@ def run_build(
     if LOCK_MODULE.git_revision(board_root) != lock["board"]["revision"]:
         raise BuildFailure("checkout된 board submodule이 M12 lock과 다릅니다.")
     command: list[str | Path] = [sys.executable, workspace / "zephyr" / "scripts" / "twister"]
-    for directory, _scenario in SUITES:
+    for directory, _scenario in suites_to_build:
         command.extend(("--testsuite-root", REPOSITORY / "tests" / "zephyr" / directory))
     command.extend(
         (
@@ -276,7 +329,7 @@ def run_build(
             "--ninja",
             "--detailed-test-id",
             "--jobs",
-            "2",
+            str(jobs),
             "--outdir",
             outdir,
             "--extra-args",
@@ -287,7 +340,7 @@ def run_build(
             "USE_CCACHE=0",
         )
     )
-    for _directory, scenario in SUITES:
+    for _directory, scenario in suites_to_build:
         command.extend(("--scenario", scenario))
     environment = dict(os.environ)
     environment["ZEPHYR_BASE"] = str(workspace / "zephyr")
@@ -295,10 +348,13 @@ def run_build(
     print(f"[M12-ZEPHYR] exec: {subprocess.list2cmdline([str(item) for item in command])}")
     result = subprocess.run(command, cwd=workspace, env=environment, check=False)
     if result.returncode != 0:
-        raise BuildFailure(f"Twister가 종료 코드 {result.returncode}로 실패했습니다.")
-    validate_report(outdir / "twister.json")
-    validate_m15_lfxo(outdir)
-    return validate_m16_role_builds(outdir)
+        summary = failure_summary(outdir / "twister.json")
+        raise BuildFailure(
+            f"Twister가 종료 코드 {result.returncode}로 실패했습니다. 실패 위치: {summary}"
+        )
+    validate_report(outdir / "twister.json", suites_to_build)
+    validate_m15_lfxo(outdir, suites_to_build)
+    return validate_m16_role_builds(outdir, suites_to_build)
 
 
 ## @brief 대표 Zephyr build를 실행하고 고정 identity evidence를 기록합니다.
@@ -307,19 +363,31 @@ def main(arguments: Sequence[str] | None = None) -> int:
     parser.add_argument("--workspace", type=Path, required=True)
     parser.add_argument("--outdir", type=Path, required=True)
     parser.add_argument("--lock", type=Path, default=SCRIPT_ROOT / "ncs-3.4.0.lock.json")
+    parser.add_argument(
+        "--group",
+        choices=("all", *SUITE_GROUPS),
+        default="all",
+        help="현재 source에서 검증할 릴리스 도입 기능군",
+    )
+    parser.add_argument("--jobs", type=int, choices=range(1, 9), default=2)
     args = parser.parse_args(arguments)
     lock = LOCK_MODULE.strict_json_object(args.lock.resolve())
     LOCK_MODULE.validate_lock(lock)
     workspace = args.workspace.resolve()
     outdir = args.outdir.resolve()
     outdir.parent.mkdir(parents=True, exist_ok=True)
-    m16_role_builds = run_build(workspace, outdir, lock)
+    selected_suites = SUITES if args.group == "all" else SUITE_GROUPS[args.group]
+    m16_role_builds = run_build(
+        workspace, outdir, lock, selected_suites, args.jobs
+    )
     evidence = {
-        "schema_version": 1,
+        "schema_version": 2,
         "gate": "m12-zephyr-build-only",
         "status": "passed",
+        "group": args.group,
+        "jobs": args.jobs,
         "board": BOARD_TARGET,
-        "scenarios": [scenario for _directory, scenario in SUITES],
+        "scenarios": [scenario for _directory, scenario in selected_suites],
         "m16_role_builds": m16_role_builds,
         "ncs_revision": lock["ncs"]["revision"],
         "zephyr_revision": lock["zephyr"]["revision"],
@@ -330,7 +398,10 @@ def main(arguments: Sequence[str] | None = None) -> int:
         encoding="utf-8",
         newline="\n",
     )
-    print(f"M12_ZEPHYR_BUILD_PASS={len(SUITES)};M16_ROLE_BUILDS=2")
+    print(
+        f"M12_ZEPHYR_BUILD_PASS={len(selected_suites)};"
+        f"GROUP={args.group};M16_ROLE_BUILDS={len(m16_role_builds)}"
+    )
     return 0
 
 

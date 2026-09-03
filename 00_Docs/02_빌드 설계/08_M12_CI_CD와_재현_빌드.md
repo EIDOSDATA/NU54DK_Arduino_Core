@@ -3,7 +3,7 @@
 | 계층 | 실행 환경 | 목적 |
 | --- | --- | --- |
 | Software gates | GitHub-hosted Ubuntu/Windows | 계약, M23 inventory, unit, 문서, package, 예제 discovery |
-| Reproducible builds | 고정 Nordic container + Windows | exact DTS, Zephyr/Arduino/M14/M17/M23 build gate |
+| Reproducible builds | 고정 Nordic container + Windows | 릴리스 도입 기능군별 병렬 Zephyr/Arduino/M14/M17/M23 build gate |
 | NU54DK HIL | 승인된 self-hosted Windows runner | pyOCD upload와 UART 실기 |
 
 CI는 지원 범위를 증명하는 gate이지 Release를 자동 승인하는 시스템이 아니다. 정확한 run ID,
@@ -55,17 +55,31 @@ python tools/ci/run_m12_gate.py examples --arduino-cli <exact-path>
 ## 2. 재현 Build workflow
 
 [`m12-reproducible-build.yml`](../../.github/workflows/m12-reproducible-build.yml)은 `main` push와
-수동 실행에서 Linux와 Windows build를 분리한다.
+수동 실행에서 Linux와 Windows build를 분리하고, 다시 릴리스 도입 기능군별 matrix job으로
+병렬화한다. 여기서 `v0.1.0`·`v0.2.0`·`v0.3.0`은 **과거 tag checkout을 다시 만드는 뜻이
+아니다.** 현재 `main` source가 각 버전에서 도입한 계약을 계속 만족하는지 검사하는 회귀 그룹명이다.
+과거 tag 자체의 ZIP·index 재현은 각 버전의 append-only 릴리스 기록과 고정 자산으로 별도 판정한다.
 
 ### 2.1 Linux / pinned Nordic container
 
 1. `ncs-3.4.0.lock.json`과 workflow pin을 검증한다.
 2. exact west workspace를 준비하고 cache key를 lock에서 계산한다.
-3. `run_zephyr_build.py`로 대표 Zephyr/Twister build-only suite를 실행한다. AC-02A ownership,
-   AC-02B B2/Analog contract·HIL image, AC-03 storage contract·HIL image도 이 목록에 포함한다.
-4. `run_m17_feasibility.py`로 NCS 기능의 official control과 NU54DK 적용 가능성을 기록한다.
-5. `run_m14_qemu.py`로 Core C++ policy를 QEMU에서 실행한다.
-6. 결과를 14일 보존 artifact로 게시한다.
+3. `run_zephyr_build.py --group <버전>`으로 아래 build-only suite를 네 job에서 동시에 실행한다.
+4. `v0.2.0` job에서만 `run_m17_feasibility.py`와 `run_m14_qemu.py`를 실행한다.
+5. `v0.4.0` job에서만 exact NCS DTS에 대한 M23 inventory와 M24 serial-fabric 계약을 검사한다.
+6. 그룹별 결과를 서로 다른 14일 보존 artifact로 게시한다.
+
+| Group | 시나리오 수 | 현재 source에서 확인하는 도입 범위 |
+| --- | ---: | --- |
+| `v0.1.0` | 4 | M3 runtime, M4 API contract, M6·M7 Core API |
+| `v0.2.0` | 10 | M14 Core/variant, M15 Board/System, M16 BLE NUS, M17 direct sensor |
+| `v0.3.0` | 15 | M19 GAP, M20 GATT, AC-01 GPIO, AC-02 peripheral/analog, AC-03 storage |
+| `v0.4.0` | 1 | 현재 개발 중인 M23 inventory production image |
+
+전체 30개 시나리오는 중복·누락 없이 위 네 그룹에 정확히 한 번만 속한다. Matrix의
+`fail-fast: false` 때문에 한 그룹이 실패해도 나머지 그룹은 끝까지 실행되어 영향 범위를 한 번에
+알 수 있다. 각 `twister.json`과 `m12-build-evidence.json`은 group 이름, 실제 시나리오와 내부
+병렬도(`--jobs`)를 기록한다. Twister 실패 메시지는 실패한 scenario·status·reason을 요약한다.
 
 M17의 Thread/Matter/IEEE 802.15.4 feasibility PASS는 build 적용 가능성 기록이며 v0.2.0의
 Arduino runtime 정식 지원을 뜻하지 않는다.
@@ -74,9 +88,22 @@ Arduino runtime 정식 지원을 뜻하지 않는다.
 
 1. Python `3.12.10`, Arduino CLI `1.5.1`과 고정 Nordic prerequisite를 준비한다.
 2. 설치된 NCS/Zephyr/board revision을 lock과 대조한다.
-3. `tests/arduino-cli/run_smoke.py`의 `blink`, `m6`, `m7`, `ac02b`, `ac03`, `examples` suite를 실행한다.
-4. `run_m17_external_arduino.py`로 고정한 외부 Arduino library를 격리 설치·compile한다.
-5. Wire/SPI feature provenance를 확인하고 결과를 14일 보존 artifact로 게시한다.
+3. `tests/arduino-cli/run_smoke.py --group <버전>`을 아래 세 Windows job에서 동시에 실행한다.
+4. `v0.2.0` job에서만 `run_m17_external_arduino.py`로 고정 외부 library를 격리 compile한다.
+5. 그룹별 전체 log와 결과를 서로 다른 14일 보존 artifact로 게시한다.
+
+| Group | Arduino smoke | 목적 |
+| --- | --- | --- |
+| `v0.1.0` | `blink`, `m6`, `m7` | 기본 Core·Serial·interrupt 회귀 |
+| `v0.2.0` | `m15`, `m16` | Board/System과 BLE NUS 예제 회귀 |
+| `v0.3.0-ble` | `m19m20`, `m21` | GAP/GATT와 BLE security/profile 회귀 |
+| `v0.3.0-compat` | `ac02b`, `ac03`, `examples` | Peripheral/analog, storage와 catalog 회귀 |
+
+`v0.3.0-ble`와 `v0.3.0-compat`는 하나의 `v0.3.0` 릴리스 도입 범위를 wall time 때문에 둘로
+나눈 하위 job이다. `run_smoke.py --group v0.3.0`은 두 하위 범위를 합쳐 로컬에서 한 번에 실행한다.
+
+각 예제 시작 직전에 `SMOKE_TEST_START=<group>/<test>`를 출력한다. 따라서 실패 log의 마지막 start
+표식과 error를 보면 어느 그룹의 어느 예제에서 실패했는지 바로 알 수 있다.
 
 Windows의 `%LOCALAPPDATA%\NUCODE\NU54DK_Arduino_Core` cache는 prerequisite 상태와 도구 경로를
 재사용하는 CI 속도 최적화일 뿐 gate의 source가 아니다. Build Adapter의
@@ -87,6 +114,35 @@ Windows Twister는 nRF Security/Cracen의 깊은 object 경로가 legacy `MAX_PA
 `C:\t\m12`처럼 **절대경로 전체가 8자 이하**인 outdir를 사용한다. 실행 script가 이 조건을 build
 전에 검사한다. 이는 toolchain archive 입력 경로의 제약이며 source 오류나 병렬 build 경합을
 의미하지 않는다.
+
+### 2.3 로컬 병렬 실행과 실패 요약
+
+[`run_build_matrix.py`](../../tools/ci/run_build_matrix.py)는 같은 분할을 로컬에서도 자동 실행한다.
+각 group은 완전히 다른 Twister outdir 또는 Arduino 임시 hardware/cache를 사용한다. 기본 동시
+실행 수는 2다. 메모리가 충분한 PC만 `--max-workers 3` 또는 `4`로 올린다. 한 build 내부의
+`--jobs`와 외부 `--max-workers`를 동시에 과도하게 높이면 RAM·disk I/O 경합으로 오히려 느려질
+수 있다.
+
+먼저 실제 실행 없이 명령과 출력 경로를 확인한다.
+
+```powershell
+& $NcsPython .\tools\ci\run_build_matrix.py `
+  --runner zephyr --workspace $NcsRoot --out-root C:\t `
+  --evidence-dir .\artifacts\zephyr-matrix --plan
+
+& $Python .\tools\ci\run_build_matrix.py `
+  --runner arduino --arduino-cli $ArduinoCli `
+  --evidence-dir .\artifacts\arduino-matrix --plan
+```
+
+`--plan`을 제거하면 실행한다. Evidence 디렉터리는 시작 전에 없어야 하며 기존 결과를 덮어쓰지
+않는다. 성공·실패와 wall time은 `matrix-summary.json`에 group별로 기록되고, 실패한 작업은 마지막
+40개 log line도 함께 기록한다. 개별 전체 출력은 `<runner>-<group>.log`에 남는다. 특정 그룹만
+다시 볼 때는 `--groups v0.3.0`처럼 제한한다.
+
+GitHub matrix는 전용 runner를 그룹별로 확보할 수 있어 wall time을 가장 긴 그룹 하나의 시간에
+가깝게 줄인다. 로컬 PC에서는 CPU·RAM·SSD를 공유하므로 같은 비율로 단축된다고 보장하지 않는다.
+빠른 원인 격리는 `--groups` 재실행을 사용하고, 최종 판정은 CI의 모든 matrix job PASS로 한다.
 
 ---
 
@@ -186,6 +242,7 @@ latest 지정은 자동으로 수행하지 않는다. 공개에는 별도 사람
 - [`verify_ci_lock.py`](../../tools/ci/verify_ci_lock.py)
 - [`prepare_ncs_workspace.py`](../../tools/ci/prepare_ncs_workspace.py)
 - [`run_zephyr_build.py`](../../tools/ci/run_zephyr_build.py)
+- [`run_build_matrix.py`](../../tools/ci/run_build_matrix.py)
 - [`verify_m23_inventory.py`](../../tools/peripheral/verify_m23_inventory.py)
 - [`run_m14_qemu.py`](../../tools/ci/run_m14_qemu.py)
 - [`run_m17_feasibility.py`](../../tools/ci/run_m17_feasibility.py)

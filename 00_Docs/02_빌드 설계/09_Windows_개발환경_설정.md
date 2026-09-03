@@ -284,6 +284,45 @@ hardware 경로에서 실행할 수 있다. 이 시험은 시간이 오래 걸�
   --tests blink library config error parallel incremental m6 m7 m8 m9 m11 m15 m16 m21 ac02b ac03 examples
 ```
 
+릴리스에서 도입한 기능군별로 원인을 빠르게 나누려면 `--tests` 대신 `--group`을 쓴다.
+
+```powershell
+& $Python .\tests\arduino-cli\run_smoke.py --cli $ArduinoCli --group v0.1.0
+& $Python .\tests\arduino-cli\run_smoke.py --cli $ArduinoCli --group v0.2.0
+& $Python .\tests\arduino-cli\run_smoke.py --cli $ArduinoCli --group v0.3.0
+```
+
+세 명령을 자동 병렬 실행하고 그룹별 log와 실패 요약 JSON을 남기려면 다음처럼 실행한다.
+Evidence 경로는 실행 전에 없어야 한다.
+
+```powershell
+& $Python .\tools\ci\run_build_matrix.py `
+  --runner arduino `
+  --arduino-cli $ArduinoCli `
+  --evidence-dir .\artifacts\arduino-matrix `
+  --max-workers 2
+```
+
+자동 matrix에서는 긴 `v0.3.0`을 `v0.3.0-ble`과 `v0.3.0-compat` 두 하위 작업으로 더 나눠
+총 네 작업을 배치한다. 수동 `--group v0.3.0` 명령의 검사 합집합과 정확히 같다.
+
+Exact NCS Zephyr 그룹도 같은 방식으로 실행할 수 있다. Windows에서는 모든 Twister outdir가
+8자 이하가 되도록 `--out-root C:\t`를 사용하고, Nordic Toolchain Python으로 runner를 시작한다.
+
+```powershell
+& $NcsPython .\tools\ci\run_build_matrix.py `
+  --runner zephyr `
+  --workspace $NcsRoot `
+  --out-root C:\t `
+  --evidence-dir .\artifacts\zephyr-matrix `
+  --max-workers 2 `
+  --jobs 2
+```
+
+이는 현재 `main`의 기능을 도입 릴리스별로 묶은 회귀 시험이다. 과거 `v0.1.0`·`v0.2.0` tag
+checkout이나 당시 공개 ZIP을 다시 build하는 절차는 아니다. 자세한 범위와 CI matrix는
+[CI/CD와 재현 build](./08_M12_CI_CD와_재현_빌드.md)를 따른다.
+
 정식 설치본의 build/upload 수명주기를 확인하려면 source staging 시험으로 대체하지 말고
 [v0.3.0 설치와 시험](../05_릴리스/v0.3.0/TESTING.md)의 stable Boards Manager 절차를 사용한다.
 

@@ -1,6 +1,7 @@
 # 빌드 및 임시 출력
 /build/
 /out/
+/artifacts/
 /.cache/
 /.venv/
 
