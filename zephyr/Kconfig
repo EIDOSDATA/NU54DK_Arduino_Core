@@ -145,6 +145,18 @@ config NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE
 	  queue가 가득 차면 새 RX byte를 버리고 내부 drop counter를
 	  증가시킵니다.
 
+config NUCODE_ARDUINO_SERIAL_FABRIC
+	bool "M24 Serial Fabric 후보 API 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	depends on NUCODE_ARDUINO_IO_OWNERSHIP
+	depends on NUCODE_ARDUINO_GPIO
+	help
+	  UARTE, SPIM/SPIS, TWIM/TWIS가 공유하는 5개 serial block의
+	  allocation-free typed handle, 원자적 route/DMA lease와 bounded
+	  personality handover 상태기계를 연결합니다. v0.4.0 물리 gate 전에는
+	  후보 API이며 stable singleton identity를 변경하지 않습니다.
+
 config NUCODE_ARDUINO_WIRE
 	bool "Arduino Wire I2C controller 활성화"
 	default n

@@ -39,11 +39,11 @@ ARDUINO = load_module(
 class BuildMatrixRunnerTests(unittest.TestCase):
     """! @brief 릴리스 기능군 범위·명령·진단 경계를 검증합니다. """
 
-    ## @brief Zephyr 30개 시나리오가 중복·누락 없이 4/10/15/1로 분리됩니다.
+    ## @brief Zephyr 31개 시나리오가 중복·누락 없이 4/10/15/2로 분리됩니다.
     def test_zephyr_groups_partition_every_suite_once(self) -> None:
         self.assertEqual(
             {name: len(suites) for name, suites in ZEPHYR.SUITE_GROUPS.items()},
-            {"v0.1.0": 4, "v0.2.0": 10, "v0.3.0": 15, "v0.4.0": 1},
+            {"v0.1.0": 4, "v0.2.0": 10, "v0.3.0": 15, "v0.4.0": 2},
         )
         flattened = tuple(
             suite for suites in ZEPHYR.SUITE_GROUPS.values() for suite in suites

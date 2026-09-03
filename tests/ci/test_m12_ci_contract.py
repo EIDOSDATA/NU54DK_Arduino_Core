@@ -424,6 +424,19 @@ class M12CiContractTests(unittest.TestCase):
             module.SUITES,
         )
 
+    ## @brief M24 공통 serial-fabric semantic target이 v0.4 build에서 빠지지 않습니다.
+    def test_zephyr_build_includes_m24_serial_fabric_contract(self) -> None:
+        path = REPOSITORY / "tools" / "ci" / "run_zephyr_build.py"
+        spec = importlib.util.spec_from_file_location("nu54_m24_build_gate", path)
+        self.assertIsNotNone(spec)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        self.assertIn(
+            ("m24_serial_fabric_contract", "nucode.m24.fabric"),
+            module.SUITE_GROUPS["v0.4.0"],
+        )
+
     ## @brief AC-01 production contract와 자동 loopback HIL image가 원격 build gate에 포함되는지 검사합니다.
     def test_zephyr_build_includes_ac01_contract_and_hil_image(self) -> None:
         path = REPOSITORY / "tools" / "ci" / "run_zephyr_build.py"
