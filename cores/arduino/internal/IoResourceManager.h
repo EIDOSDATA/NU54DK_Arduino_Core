@@ -24,6 +24,13 @@ namespace nucode::arduino::internal
 		pwm_block,
 		adc_block,
 		power_domain,
+		gpiote_channel,
+		dppi_channel,
+		dppi_group,
+		timer_channel,
+		dma_memory,
+		interrupt_line,
+		clock_domain,
 	};
 
 	/**
@@ -38,6 +45,7 @@ namespace nucode::arduino::internal
 		IoResourceKind kind{IoResourceKind::invalid};
 		const void *domain{nullptr};
 		std::uint16_t index{0U};
+		std::uint32_t span{1U};
 	};
 
 	/** @brief 물리 자원을 사용하는 Core 하위 시스템입니다. */
@@ -51,6 +59,16 @@ namespace nucode::arduino::internal
 		spi,
 		serial,
 		system,
+		timer,
+		gpiote,
+		dppi,
+		pdm,
+		i2s,
+		qdec,
+		comparator,
+		radio,
+		security,
+		application,
 	};
 
 	/** @brief 하위 시스템 종류와 instance를 결합한 소유자 식별자입니다. */
@@ -88,7 +106,7 @@ namespace nucode::arduino::internal
 	};
 
 	/** @brief 하나의 트랜잭션에서 원자적으로 관리할 수 있는 최대 자원 수입니다. */
-	inline constexpr std::size_t io_resource_lease_capacity = 8U;
+	inline constexpr std::size_t io_resource_lease_capacity = 16U;
 
 	/** @brief reserve/commit/rollback/release 수명주기를 구분합니다. */
 	enum class IoLeasePhase : std::uint8_t
@@ -154,10 +172,24 @@ namespace nucode::arduino::internal
 	 * @return 정규화된 물리 자원 키입니다.
 	 */
 	[[nodiscard]] constexpr IoResourceId peripheralIoResource(IoResourceKind kind,
-													 std::uint16_t index,
-													 const void *domain = nullptr) noexcept
+															  std::uint16_t index,
+															  const void *domain = nullptr) noexcept
 	{
-		return {kind, domain, index};
+		return {kind, domain, index, 1U};
+	}
+
+	/**
+	 * @brief 비동기 DMA가 접근하는 RAM byte range를 소유권 키로 만듭니다.
+	 *
+	 * manager는 겹치는 두 range를 같은 exclusive 자원으로 취급합니다. 같은 owner라도
+	 * 경계가 다른 겹친 range를 중복 예약할 수 없으므로 부분 buffer lease가 전체 buffer
+	 * lease를 실수로 해제하지 않습니다. address가 nullptr이거나 byte_count가 0이면
+	 * reserve 단계에서 invalid_argument가 됩니다.
+	 */
+	[[nodiscard]] constexpr IoResourceId dmaMemoryIoResource(
+		const void *address, std::uint32_t byte_count) noexcept
+	{
+		return {IoResourceKind::dma_memory, address, 0U, byte_count};
 	}
 
 	/**
@@ -205,7 +237,7 @@ namespace nucode::arduino::internal
 	 * @return 조회 결과입니다.
 	 */
 	[[nodiscard]] IoResourceResult ioResourceSnapshot(const IoResourceId &resource,
-												   IoResourceSnapshot &snapshot) noexcept;
+													  IoResourceSnapshot &snapshot) noexcept;
 
 #if defined(CONFIG_ZTEST)
 	/** @brief ztest 격리용으로 모든 소유권 상태와 lease 세대를 초기화합니다. */

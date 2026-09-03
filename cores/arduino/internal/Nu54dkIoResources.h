@@ -15,8 +15,9 @@ namespace nucode::arduino::internal
 	/**
 	 * @brief 활성 NU54DK Devicetree가 부팅 시 적용하는 고정 자원을 등록합니다.
 	 *
-	 * UART20, I2C22, PWM20과 활성화된 SPI00의 pinctrl pad 및 peripheral
-	 * block을 active owner로 기록합니다. 실제 driver나 pinctrl 상태는 바꾸지
+	 * 현재 boot-fixed owner인 UART20의 pinctrl pad와 serial block을 active
+	 * owner로 기록합니다. Wire22, SPI00과 PWM20~22는 각 begin()/end()
+	 * 수명주기에서 동적으로 획득합니다. 실제 driver나 pinctrl 상태는 바꾸지
 	 * 않습니다.
 	 *
 	 * @return 모든 고정 자원을 등록하면 success, 충돌하면 해당 오류입니다.

@@ -153,14 +153,28 @@ def run_contract_gate() -> None:
     run_unittest(REPOSITORY / "tests" / "ci", "test_*.py")
 
 
+## @brief M23 peripheral manifest, generated matrix와 public API 계약을 검사합니다.
+def run_inventory_gate() -> None:
+    run_checked(
+        (
+            sys.executable,
+            REPOSITORY / "tools" / "peripheral" / "verify_m23_inventory.py",
+        )
+    )
+
+
 ## @brief 선택한 software gate만 실행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("gate", choices=("contract", "host", "docs", "package", "examples"))
+    parser.add_argument(
+        "gate", choices=("contract", "inventory", "host", "docs", "package", "examples")
+    )
     parser.add_argument("--arduino-cli", type=Path)
     args = parser.parse_args(arguments)
     if args.gate == "contract":
         run_contract_gate()
+    elif args.gate == "inventory":
+        run_inventory_gate()
     elif args.gate == "host":
         run_host_gate()
     elif args.gate == "docs":

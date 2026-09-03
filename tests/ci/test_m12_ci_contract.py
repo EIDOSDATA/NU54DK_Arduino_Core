@@ -53,6 +53,7 @@ class M12CiContractTests(unittest.TestCase):
         self.assertRegex(text, r"(?m)^\s*pull_request:\s*$")
         for job in (
             "contract",
+            "peripheral-inventory",
             "host",
             "core-semantic",
             "documents",
@@ -61,6 +62,31 @@ class M12CiContractTests(unittest.TestCase):
         ):
             self.assertRegex(text, rf"(?m)^  {re.escape(job)}:\s*$")
         self.assertNotIn("pull_request_target", text)
+
+    ## @brief M23 manifest가 software CI와 exact NCS build CI 양쪽에서 fail-closed인지 검사합니다.
+    def test_m23_inventory_gates_generated_and_exact_dts_sources(self) -> None:
+        software = (
+            REPOSITORY / ".github" / "workflows" / "m12-software-gates.yml"
+        ).read_text(encoding="utf-8")
+        job = software.split("\n  peripheral-inventory:\n", 1)[1].split(
+            "\n  host:\n", 1
+        )[0]
+        self.assertIn("runs-on: ubuntu-24.04", job)
+        self.assertIn("python tools/ci/run_m12_gate.py inventory", job)
+        self.assertNotIn("continue-on-error", job)
+
+        reproducible = (
+            REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
+        ).read_text(encoding="utf-8")
+        linux_job = reproducible.split("\n  zephyr-build:\n", 1)[1].split(
+            "\n  arduino-build:\n", 1
+        )[0]
+        command = "python3 tools/peripheral/verify_m23_inventory.py"
+        self.assertIn(command, linux_job)
+        self.assertIn('--ncs-root "$NCS_CI_WORKSPACE"', linux_job)
+        self.assertLess(linux_job.index("prepare_ncs_workspace.py"), linux_job.index(command))
+        self.assertLess(linux_job.index(command), linux_job.index("run_zephyr_build.py"))
+        self.assertNotIn("continue-on-error", linux_job)
 
     ## @brief M14 native 의미 시험이 실행 가능한 Ubuntu job에서 직접 수행되는지 검증합니다.
     def test_m14_native_semantic_gate_runs_on_ubuntu(self) -> None:
@@ -344,6 +370,19 @@ class M12CiContractTests(unittest.TestCase):
                 ("m14_variant_contract", "nucode.m14.variant_contract"),
                 ("m14_pin_hil", "nucode.m14.pin_hil"),
             }.issubset(set(module.SUITES))
+        )
+
+    ## @brief M23 identity와 공통 ownership target 계약이 대표 build에서 빠지지 않습니다.
+    def test_zephyr_build_includes_m23_inventory_contract(self) -> None:
+        path = REPOSITORY / "tools" / "ci" / "run_zephyr_build.py"
+        spec = importlib.util.spec_from_file_location("nu54_m23_build_gate", path)
+        self.assertIsNotNone(spec)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        self.assertIn(
+            ("m23_inventory_contract", "nucode.m23.inventory_contract"),
+            module.SUITES,
         )
 
     ## @brief AC-01 production contract와 자동 loopback HIL image가 원격 build gate에 포함되는지 검사합니다.

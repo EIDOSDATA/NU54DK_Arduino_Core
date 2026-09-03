@@ -1,0 +1,562 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "soc": "nRF54L15",
+    "ncs_version": "v3.4.0",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_version": "4.4.0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "soc_dts_sources": [
+      {
+        "path": "zephyr/dts/vendor/nordic/nrf54l_05_10_15.dtsi",
+        "sha256": "f8a9385898adc53a39b653dc2df4d913589ed034060558adedb2d3a745c7a2fb"
+      },
+      {
+        "path": "zephyr/dts/vendor/nordic/nrf54l15.dtsi",
+        "sha256": "f24c1fc5f65356ebc95627b28014cfb662c81d5a8e6544cafb268a73f17ea5e7"
+      }
+    ]
+  },
+  "instances": [
+    {
+      "id": "uarte00", "kind": "uarte", "instance": 0, "sharing_group": "serial00", "dt_node": "uart00",
+      "route": { "state": "candidate", "token": "header-p2" }, "owner": "serial", "public_object": null,
+      "public_api": [], "driver": "zephyr-uart-nrfx-uarte", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+    {
+      "id": "uarte20", "kind": "uarte", "instance": 20, "sharing_group": "serial20", "dt_node": "uart20",
+      "route": { "state": "verified", "token": "console-p1.4-p1.7" }, "owner": "system", "public_object": "Serial",
+      "public_api": ["HardwareSerial"], "driver": "zephyr-uart-nrfx-uarte", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/HardwareSerial.cpp", "variants/nu54dk/io_resource_registry.cpp", "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk-pinctrl.dtsi", "00_Docs/04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md"]
+    },
+    {
+      "id": "uarte21", "kind": "uarte", "instance": 21, "sharing_group": "serial21", "dt_node": "uart21",
+      "route": { "state": "candidate", "token": "header-p1" }, "owner": "serial", "public_object": null,
+      "public_api": [], "driver": "zephyr-uart-nrfx-uarte", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+    {
+      "id": "uarte22", "kind": "uarte", "instance": 22, "sharing_group": "serial22", "dt_node": "uart22",
+      "route": { "state": "candidate", "token": "header-p1" }, "owner": "serial", "public_object": null,
+      "public_api": [], "driver": "zephyr-uart-nrfx-uarte", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+    {
+      "id": "uarte30", "kind": "uarte", "instance": 30, "sharing_group": "serial30", "dt_node": "uart30",
+      "route": { "state": "verified", "token": "dap-vcom-p0.0-p0.3" }, "owner": "serial", "public_object": "Serial1",
+      "public_api": ["Nu54HardwareSerial"], "driver": "zephyr-uart-nrfx-uarte", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "partial" },
+      "milestone": "M24", "evidence": ["cores/arduino/HardwareSerial.cpp", "variants/nu54dk/peripheral_routes.cpp", "dts/nucode/nu54dk-arduino-runtime.dtsi", "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md"]
+    },
+
+    {
+      "id": "spim00", "kind": "spim", "instance": 0, "sharing_group": "serial00", "dt_node": "spi00",
+      "route": { "state": "verified", "token": "header-p2.1-p2.4" }, "owner": "spi", "public_object": "SPI",
+      "public_api": ["SPIClass"], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "synchronous", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "partial" },
+      "milestone": "M24", "evidence": ["cores/arduino/SPI.cpp", "variants/nu54dk/peripheral_routes.cpp", "dts/nucode/nu54dk-arduino-runtime.dtsi", "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md"]
+    },
+    {
+      "id": "spim20", "kind": "spim", "instance": 20, "sharing_group": "serial20", "dt_node": "spi20",
+      "route": { "state": "candidate", "token": "header-p1-console-conflict" }, "owner": "spi", "public_object": null,
+      "public_api": [], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+    {
+      "id": "spim21", "kind": "spim", "instance": 21, "sharing_group": "serial21", "dt_node": "spi21",
+      "route": { "state": "candidate", "token": "header-p1" }, "owner": "spi", "public_object": null,
+      "public_api": [], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+    {
+      "id": "spim22", "kind": "spim", "instance": 22, "sharing_group": "serial22", "dt_node": "spi22",
+      "route": { "state": "candidate", "token": "header-p1-wire-conflict" }, "owner": "spi", "public_object": null,
+      "public_api": [], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+    {
+      "id": "spim30", "kind": "spim", "instance": 30, "sharing_group": "serial30", "dt_node": "spi30",
+      "route": { "state": "candidate", "token": "header-p0-dap-conflict" }, "owner": "spi", "public_object": null,
+      "public_api": [], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+
+    {
+      "id": "spis00", "kind": "spis", "instance": 0, "sharing_group": "serial00", "dt_node": "spi00",
+      "route": { "state": "candidate", "token": "header-p2" }, "owner": "spi", "public_object": null,
+      "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+    {
+      "id": "spis20", "kind": "spis", "instance": 20, "sharing_group": "serial20", "dt_node": "spi20",
+      "route": { "state": "candidate", "token": "header-p1-console-conflict" }, "owner": "spi", "public_object": null,
+      "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+    {
+      "id": "spis21", "kind": "spis", "instance": 21, "sharing_group": "serial21", "dt_node": "spi21",
+      "route": { "state": "candidate", "token": "header-p1" }, "owner": "spi", "public_object": null,
+      "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+    {
+      "id": "spis22", "kind": "spis", "instance": 22, "sharing_group": "serial22", "dt_node": "spi22",
+      "route": { "state": "candidate", "token": "header-p1-wire-conflict" }, "owner": "spi", "public_object": null,
+      "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+    {
+      "id": "spis30", "kind": "spis", "instance": 30, "sharing_group": "serial30", "dt_node": "spi30",
+      "route": { "state": "candidate", "token": "header-p0-dap-conflict" }, "owner": "spi", "public_object": null,
+      "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+
+    {
+      "id": "twim20", "kind": "twim", "instance": 20, "sharing_group": "serial20", "dt_node": "i2c20",
+      "route": { "state": "candidate", "token": "header-p1-console-conflict" }, "owner": "wire", "public_object": null,
+      "public_api": [], "driver": "zephyr-i2c-nrfx-twim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+    {
+      "id": "twim21", "kind": "twim", "instance": 21, "sharing_group": "serial21", "dt_node": "i2c21",
+      "route": { "state": "candidate", "token": "header-p1" }, "owner": "wire", "public_object": null,
+      "public_api": [], "driver": "zephyr-i2c-nrfx-twim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+    {
+      "id": "twim22", "kind": "twim", "instance": 22, "sharing_group": "serial22", "dt_node": "i2c22",
+      "route": { "state": "verified", "token": "header-p1.2-p1.3" }, "owner": "wire", "public_object": "Wire",
+      "public_api": ["TwoWire"], "driver": "zephyr-i2c-nrfx-twim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "synchronous", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "partial" },
+      "milestone": "M24", "evidence": ["cores/arduino/Wire.cpp", "variants/nu54dk/peripheral_routes.cpp", "dts/nucode/nu54dk-arduino-runtime.dtsi", "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md"]
+    },
+    {
+      "id": "twim30", "kind": "twim", "instance": 30, "sharing_group": "serial30", "dt_node": "i2c30",
+      "route": { "state": "candidate", "token": "header-p0-dap-conflict" }, "owner": "wire", "public_object": null,
+      "public_api": [], "driver": "zephyr-i2c-nrfx-twim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+
+    {
+      "id": "twis20", "kind": "twis", "instance": 20, "sharing_group": "serial20", "dt_node": "i2c20",
+      "route": { "state": "candidate", "token": "header-p1-console-conflict" }, "owner": "wire", "public_object": null,
+      "public_api": [], "driver": "nrfx-twis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+    {
+      "id": "twis21", "kind": "twis", "instance": 21, "sharing_group": "serial21", "dt_node": "i2c21",
+      "route": { "state": "candidate", "token": "header-p1" }, "owner": "wire", "public_object": null,
+      "public_api": [], "driver": "nrfx-twis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+    {
+      "id": "twis22", "kind": "twis", "instance": 22, "sharing_group": "serial22", "dt_node": "i2c22",
+      "route": { "state": "candidate", "token": "header-p1-wire-route" }, "owner": "wire", "public_object": null,
+      "public_api": [], "driver": "nrfx-twis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+    {
+      "id": "twis30", "kind": "twis", "instance": 30, "sharing_group": "serial30", "dt_node": "i2c30",
+      "route": { "state": "candidate", "token": "header-p0-dap-conflict" }, "owner": "wire", "public_object": null,
+      "public_api": [], "driver": "nrfx-twis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": []
+    },
+
+    {
+      "id": "gpio0", "kind": "gpio", "instance": 0, "sharing_group": null, "dt_node": "gpio0",
+      "route": { "state": "verified", "token": "header-p0-conditional-dap" }, "owner": "gpio", "public_object": null,
+      "public_api": ["pinMode", "digitalRead", "digitalWrite"], "driver": "zephyr-gpio-nrfx", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "partial", "concurrent_hil": "partial" },
+      "milestone": "M25", "evidence": ["cores/arduino/wiring_digital.cpp", "dts/nucode/nu54dk-arduino-pins.dtsi", "00_Docs/04_검증 기록/22_AC-01_GPIO_호환성_검증.md"]
+    },
+    {
+      "id": "gpio1", "kind": "gpio", "instance": 1, "sharing_group": null, "dt_node": "gpio1",
+      "route": { "state": "verified", "token": "header-p1-mixed-policy" }, "owner": "gpio", "public_object": null,
+      "public_api": ["pinMode", "digitalRead", "digitalWrite"], "driver": "zephyr-gpio-nrfx", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "partial", "concurrent_hil": "partial" },
+      "milestone": "M25", "evidence": ["cores/arduino/wiring_digital.cpp", "dts/nucode/nu54dk-arduino-pins.dtsi", "00_Docs/04_검증 기록/22_AC-01_GPIO_호환성_검증.md"]
+    },
+    {
+      "id": "gpio2", "kind": "gpio", "instance": 2, "sharing_group": null, "dt_node": "gpio2",
+      "route": { "state": "verified", "token": "header-p2-mixed-policy" }, "owner": "gpio", "public_object": null,
+      "public_api": ["pinMode", "digitalRead", "digitalWrite"], "driver": "zephyr-gpio-nrfx", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "partial", "concurrent_hil": "partial" },
+      "milestone": "M25", "evidence": ["cores/arduino/wiring_digital.cpp", "dts/nucode/nu54dk-arduino-pins.dtsi", "00_Docs/04_검증 기록/22_AC-01_GPIO_호환성_검증.md"]
+    },
+    {
+      "id": "gpiote20", "kind": "gpiote", "instance": 20, "sharing_group": null, "dt_node": "gpiote20",
+      "route": { "state": "verified", "token": "gpio1-events" }, "owner": "gpiote", "public_object": null,
+      "public_api": ["attachInterrupt"], "driver": "zephyr-gpio-nrfx", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "internal", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "partial", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/wiring_interrupt.cpp", "dts/nucode/nu54dk-arduino-pins.dtsi", "00_Docs/04_검증 기록/22_AC-01_GPIO_호환성_검증.md"]
+    },
+    {
+      "id": "gpiote30", "kind": "gpiote", "instance": 30, "sharing_group": null, "dt_node": "gpiote30",
+      "route": { "state": "verified", "token": "gpio0-events" }, "owner": "gpiote", "public_object": null,
+      "public_api": ["attachInterrupt"], "driver": "zephyr-gpio-nrfx", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "internal", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "partial", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/wiring_interrupt.cpp", "dts/nucode/nu54dk-arduino-pins.dtsi", "00_Docs/04_검증 기록/22_AC-01_GPIO_호환성_검증.md"]
+    },
+
+    {
+      "id": "egu10", "kind": "egu", "instance": 10, "sharing_group": null, "dt_node": "egu10",
+      "route": { "state": "not_required", "token": "internal-event" }, "owner": "application", "public_object": null,
+      "public_api": [], "driver": "nrfx-egu", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "egu20", "kind": "egu", "instance": 20, "sharing_group": null, "dt_node": "egu20",
+      "route": { "state": "not_required", "token": "internal-event" }, "owner": "application", "public_object": null,
+      "public_api": [], "driver": "nrfx-egu", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+
+    {
+      "id": "dppic00", "kind": "dppic", "instance": 0, "sharing_group": null, "dt_node": "dppic00",
+      "route": { "state": "not_required", "token": "domain-00" }, "owner": "dppi", "public_object": null,
+      "public_api": [], "driver": "nrfx-dppi", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "dppic10", "kind": "dppic", "instance": 10, "sharing_group": null, "dt_node": "dppic10",
+      "route": { "state": "not_required", "token": "domain-10" }, "owner": "dppi", "public_object": null,
+      "public_api": [], "driver": "nrfx-dppi", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "dppic20", "kind": "dppic", "instance": 20, "sharing_group": null, "dt_node": "dppic20",
+      "route": { "state": "not_required", "token": "domain-20" }, "owner": "dppi", "public_object": null,
+      "public_api": [], "driver": "nrfx-dppi", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "dppic30", "kind": "dppic", "instance": 30, "sharing_group": null, "dt_node": "dppic30",
+      "route": { "state": "not_required", "token": "domain-30" }, "owner": "dppi", "public_object": null,
+      "public_api": [], "driver": "nrfx-dppi", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+
+    {
+      "id": "ppib00", "kind": "ppib", "instance": 0, "sharing_group": null, "dt_node": "ppib00",
+      "route": { "state": "not_required", "token": "domain-00-bridge" }, "owner": "dppi", "public_object": null,
+      "public_api": [], "driver": "nrfx-ppib", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "ppib01", "kind": "ppib", "instance": 1, "sharing_group": null, "dt_node": "ppib01",
+      "route": { "state": "not_required", "token": "domain-00-bridge" }, "owner": "dppi", "public_object": null,
+      "public_api": [], "driver": "nrfx-ppib", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "ppib10", "kind": "ppib", "instance": 10, "sharing_group": null, "dt_node": "ppib10",
+      "route": { "state": "not_required", "token": "domain-10-bridge" }, "owner": "dppi", "public_object": null,
+      "public_api": [], "driver": "nrfx-ppib", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "ppib11", "kind": "ppib", "instance": 11, "sharing_group": null, "dt_node": "ppib11",
+      "route": { "state": "not_required", "token": "domain-10-bridge" }, "owner": "dppi", "public_object": null,
+      "public_api": [], "driver": "nrfx-ppib", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "ppib20", "kind": "ppib", "instance": 20, "sharing_group": null, "dt_node": "ppib20",
+      "route": { "state": "not_required", "token": "domain-20-bridge" }, "owner": "dppi", "public_object": null,
+      "public_api": [], "driver": "nrfx-ppib", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "ppib21", "kind": "ppib", "instance": 21, "sharing_group": null, "dt_node": "ppib21",
+      "route": { "state": "not_required", "token": "domain-20-bridge" }, "owner": "dppi", "public_object": null,
+      "public_api": [], "driver": "nrfx-ppib", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "ppib22", "kind": "ppib", "instance": 22, "sharing_group": null, "dt_node": "ppib22",
+      "route": { "state": "not_required", "token": "domain-20-bridge" }, "owner": "dppi", "public_object": null,
+      "public_api": [], "driver": "nrfx-ppib", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "ppib30", "kind": "ppib", "instance": 30, "sharing_group": null, "dt_node": "ppib30",
+      "route": { "state": "not_required", "token": "domain-30-bridge" }, "owner": "dppi", "public_object": null,
+      "public_api": [], "driver": "nrfx-ppib", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+
+    {
+      "id": "timer00", "kind": "timer", "instance": 0, "sharing_group": null, "dt_node": "timer00",
+      "route": { "state": "not_required", "token": "domain-00" }, "owner": "timer", "public_object": null,
+      "public_api": [], "driver": "nrfx-timer", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "timer10", "kind": "timer", "instance": 10, "sharing_group": null, "dt_node": "timer10",
+      "route": { "state": "not_required", "token": "domain-10" }, "owner": "timer", "public_object": null,
+      "public_api": [], "driver": "nrfx-timer", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "timer20", "kind": "timer", "instance": 20, "sharing_group": null, "dt_node": "timer20",
+      "route": { "state": "not_required", "token": "domain-20" }, "owner": "timer", "public_object": null,
+      "public_api": [], "driver": "nrfx-timer", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "timer21", "kind": "timer", "instance": 21, "sharing_group": null, "dt_node": "timer21",
+      "route": { "state": "not_required", "token": "domain-20" }, "owner": "timer", "public_object": null,
+      "public_api": [], "driver": "nrfx-timer", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "timer22", "kind": "timer", "instance": 22, "sharing_group": null, "dt_node": "timer22",
+      "route": { "state": "not_required", "token": "domain-20" }, "owner": "timer", "public_object": null,
+      "public_api": [], "driver": "nrfx-timer", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "timer23", "kind": "timer", "instance": 23, "sharing_group": null, "dt_node": "timer23",
+      "route": { "state": "not_required", "token": "domain-20" }, "owner": "timer", "public_object": null,
+      "public_api": [], "driver": "nrfx-timer", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "timer24", "kind": "timer", "instance": 24, "sharing_group": null, "dt_node": "timer24",
+      "route": { "state": "not_required", "token": "domain-20" }, "owner": "timer", "public_object": null,
+      "public_api": [], "driver": "nrfx-timer", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "grtc", "kind": "grtc", "instance": 0, "sharing_group": null, "dt_node": "grtc",
+      "route": { "state": "not_required", "token": "system-counter" }, "owner": "system", "public_object": null,
+      "public_api": ["millis", "micros", "BoardSystem.counter", "BoardSystem.alarm"], "driver": "nrfx-grtc+zephyr-counter", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "partial", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/internal/time_backend_nrf54.cpp", "libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp", "00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md"]
+    },
+
+    {
+      "id": "saadc", "kind": "saadc", "instance": 0, "sharing_group": null, "dt_node": "adc",
+      "route": { "state": "partial", "token": "ain0-ain7-policy-limited" }, "owner": "adc", "public_object": null,
+      "public_api": ["analogRead"], "driver": "zephyr-adc-nrfx-saadc", "dma": { "hardware": true, "driver_managed": true, "public_mode": "synchronous", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "partial", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "partial" },
+      "milestone": "M25", "evidence": ["cores/arduino/wiring_analog.cpp", "dts/nucode/nu54dk-arduino-runtime.dtsi", "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md"]
+    },
+    {
+      "id": "pwm20", "kind": "pwm", "instance": 20, "sharing_group": null, "dt_node": "pwm20",
+      "route": { "state": "verified", "token": "header-p1-runtime" }, "owner": "pwm", "public_object": null,
+      "public_api": ["analogWrite"], "driver": "zephyr-pwm-nrfx", "dma": { "hardware": true, "driver_managed": true, "public_mode": "synchronous", "max_count_bits": 15 },
+      "states": { "silicon": "pass", "source": "partial", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "partial" },
+      "milestone": "M25", "evidence": ["cores/arduino/internal/PwmRuntime.cpp", "variants/nu54dk/pwm_runtime_routes.cpp", "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md"]
+    },
+    {
+      "id": "pwm21", "kind": "pwm", "instance": 21, "sharing_group": null, "dt_node": "pwm21",
+      "route": { "state": "verified", "token": "header-p1-runtime" }, "owner": "pwm", "public_object": null,
+      "public_api": ["tone", "noTone"], "driver": "zephyr-pwm-nrfx", "dma": { "hardware": true, "driver_managed": true, "public_mode": "synchronous", "max_count_bits": 15 },
+      "states": { "silicon": "pass", "source": "partial", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/internal/PwmRuntime.cpp", "variants/nu54dk/pwm_runtime_routes.cpp", "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md"]
+    },
+    {
+      "id": "pwm22", "kind": "pwm", "instance": 22, "sharing_group": null, "dt_node": "pwm22",
+      "route": { "state": "verified", "token": "header-p1-runtime" }, "owner": "pwm", "public_object": null,
+      "public_api": ["Servo"], "driver": "zephyr-pwm-nrfx", "dma": { "hardware": true, "driver_managed": true, "public_mode": "synchronous", "max_count_bits": 15 },
+      "states": { "silicon": "pass", "source": "partial", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/internal/PwmRuntime.cpp", "variants/nu54dk/pwm_runtime_routes.cpp", "libraries/Servo/src/Servo.cpp", "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md"]
+    },
+
+    {
+      "id": "pdm20", "kind": "pdm", "instance": 20, "sharing_group": null, "dt_node": "pdm20",
+      "route": { "state": "candidate", "token": "header-p1" }, "owner": "pdm", "public_object": null,
+      "public_api": [], "driver": "nrfx-pdm", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "pdm21", "kind": "pdm", "instance": 21, "sharing_group": null, "dt_node": "pdm21",
+      "route": { "state": "candidate", "token": "header-p1" }, "owner": "pdm", "public_object": null,
+      "public_api": [], "driver": "nrfx-pdm", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "i2s20", "kind": "i2s", "instance": 20, "sharing_group": null, "dt_node": "i2s20",
+      "route": { "state": "candidate", "token": "header-p1" }, "owner": "i2s", "public_object": null,
+      "public_api": [], "driver": "zephyr-i2s-nrfx", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "qdec20", "kind": "qdec", "instance": 20, "sharing_group": null, "dt_node": "qdec20",
+      "route": { "state": "candidate", "token": "header-p1" }, "owner": "qdec", "public_object": null,
+      "public_api": [], "driver": "nrfx-qdec", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+    {
+      "id": "qdec21", "kind": "qdec", "instance": 21, "sharing_group": null, "dt_node": "qdec21",
+      "route": { "state": "candidate", "token": "header-p1" }, "owner": "qdec", "public_object": null,
+      "public_api": [], "driver": "nrfx-qdec", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": []
+    },
+
+    {
+      "id": "comp", "kind": "comp", "instance": 0, "sharing_group": "comparator106", "dt_node": "comp",
+      "route": { "state": "candidate", "token": "analog-input-policy" }, "owner": "comparator", "public_object": null,
+      "public_api": [], "driver": "nrfx-comp", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": []
+    },
+    {
+      "id": "lpcomp", "kind": "lpcomp", "instance": 0, "sharing_group": "comparator106", "dt_node": "comp",
+      "route": { "state": "candidate", "token": "analog-input-policy" }, "owner": "comparator", "public_object": null,
+      "public_api": [], "driver": "nrfx-lpcomp", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": []
+    },
+    {
+      "id": "temp", "kind": "temp", "instance": 0, "sharing_group": null, "dt_node": "temp",
+      "route": { "state": "not_required", "token": "on-chip" }, "owner": "system", "public_object": null,
+      "public_api": [], "driver": "zephyr-sensor-nrf-temp", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": []
+    },
+    {
+      "id": "wdt30", "kind": "wdt", "instance": 30, "sharing_group": null, "dt_node": "wdt30",
+      "route": { "state": "not_required", "token": "secure-domain" }, "owner": "system", "public_object": null,
+      "public_api": [], "driver": "zephyr-watchdog-nrfx", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": []
+    },
+    {
+      "id": "wdt31", "kind": "wdt", "instance": 31, "sharing_group": null, "dt_node": "wdt31",
+      "route": { "state": "not_required", "token": "application-domain" }, "owner": "system", "public_object": null,
+      "public_api": ["BoardSystem.watchdog"], "driver": "zephyr-watchdog-nrfx", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "partial", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": ["libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp", "libraries/NUCODE_NU54DK/zephyr/board-system.overlay", "00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md"]
+    },
+    {
+      "id": "nfct", "kind": "nfct", "instance": 0, "sharing_group": null, "dt_node": "nfct",
+      "route": { "state": "candidate", "token": "p1.2-p1.3-wire-conflict" }, "owner": "application", "public_object": null,
+      "public_api": [], "driver": "nrfx-nfct", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 9 },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": ["board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk_cpuapp_common.dtsi"]
+    },
+    {
+      "id": "radio", "kind": "radio", "instance": 0, "sharing_group": null, "dt_node": "radio",
+      "route": { "state": "not_required", "token": "on-chip-antenna-network" }, "owner": "radio", "public_object": null,
+      "public_api": ["NUCODE_BLE"], "driver": "nordic-sdc+zephyr-bluetooth", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "partial", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": ["libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp", "00_Docs/04_검증 기록/23_M19_BLE_Core_GAP_검증.md"]
+    },
+
+    {
+      "id": "cracen", "kind": "cracen", "instance": 0, "sharing_group": "security", "dt_node": null,
+      "route": { "state": "not_required", "token": "secure-system" }, "owner": "security", "public_object": null,
+      "public_api": [], "driver": "nrf-security-psa-cracen", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "internal", "exposure": "internal", "build": "partial", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": ["coverage/ncs-v3.4.0/records/nrf.crypto-rng.json"]
+    },
+    {
+      "id": "kmu", "kind": "kmu", "instance": 0, "sharing_group": "security", "dt_node": null,
+      "route": { "state": "not_required", "token": "secure-system" }, "owner": "security", "public_object": null,
+      "public_api": [], "driver": "nrf-security-kmu", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": []
+    },
+    {
+      "id": "rng", "kind": "rng", "instance": 0, "sharing_group": "security", "dt_node": null,
+      "route": { "state": "not_required", "token": "secure-system" }, "owner": "security", "public_object": null,
+      "public_api": [], "driver": "nrf-security-psa-rng", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "internal", "exposure": "internal", "build": "partial", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": ["coverage/ncs-v3.4.0/records/nrf.crypto-rng.json"]
+    },
+    {
+      "id": "tampc", "kind": "tampc", "instance": 0, "sharing_group": "security", "dt_node": null,
+      "route": { "state": "not_required", "token": "secure-system" }, "owner": "security", "public_object": null,
+      "public_api": [], "driver": "nrfx-tampc", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": []
+    },
+    {
+      "id": "power", "kind": "power", "instance": 0, "sharing_group": "system", "dt_node": "power",
+      "route": { "state": "not_required", "token": "soc-system" }, "owner": "system", "public_object": null,
+      "public_api": ["BoardSystem.systemOff"], "driver": "zephyr-pm+nrf-power", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "internal", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": ["libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp", "00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md"]
+    },
+    {
+      "id": "clock", "kind": "clock", "instance": 0, "sharing_group": "system", "dt_node": "clock",
+      "route": { "state": "not_required", "token": "soc-system" }, "owner": "system", "public_object": null,
+      "public_api": [], "driver": "zephyr-clock-control-nrf", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "internal", "exposure": "internal", "build": "pass", "semantic": "partial", "hil": "partial", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": ["board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk_cpuapp_common.dtsi", "00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md"]
+    },
+    {
+      "id": "cache", "kind": "cache", "instance": 0, "sharing_group": "system", "dt_node": null,
+      "route": { "state": "not_required", "token": "cpuapp-system" }, "owner": "system", "public_object": null,
+      "public_api": [], "driver": "zephyr-cache-management", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "internal", "exposure": "internal", "build": "pass", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": ["zephyr/CMakeLists.txt"]
+    },
+    {
+      "id": "vpr", "kind": "vpr", "instance": 0, "sharing_group": null, "dt_node": "cpuflpr_vpr",
+      "route": { "state": "not_required", "token": "cpuflpr" }, "owner": "application", "public_object": null,
+      "public_api": [], "driver": "zephyr-vpr-coprocessor", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": []
+    },
+    {
+      "id": "sqspi", "kind": "sqspi", "instance": 0, "sharing_group": null, "dt_node": null,
+      "route": { "state": "candidate", "token": "vpr-softperipheral-board-audit" }, "owner": "application", "public_object": null,
+      "public_api": [], "driver": "nrf-vpr-sqspi", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": []
+    }
+  ]
+}

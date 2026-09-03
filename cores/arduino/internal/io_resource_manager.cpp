@@ -37,12 +37,35 @@ namespace nucode::arduino::internal
 												  const IoResourceId &rhs) noexcept
 		{
 			return (lhs.kind == rhs.kind) && (lhs.domain == rhs.domain) &&
-				   (lhs.index == rhs.index);
+				   (lhs.index == rhs.index) && (lhs.span == rhs.span);
+		}
+
+		/** @brief 두 DMA RAM range가 byte 단위로 겹치는지 검사합니다. */
+		[[nodiscard]] bool overlappingDmaMemory(const IoResourceId &lhs,
+												const IoResourceId &rhs) noexcept
+		{
+			if ((lhs.kind != IoResourceKind::dma_memory) ||
+				(rhs.kind != IoResourceKind::dma_memory))
+			{
+				return false;
+			}
+			const auto lhs_begin = reinterpret_cast<std::uintptr_t>(lhs.domain);
+			const auto rhs_begin = reinterpret_cast<std::uintptr_t>(rhs.domain);
+			const auto lhs_end = lhs_begin + lhs.span;
+			const auto rhs_end = rhs_begin + rhs.span;
+			return (lhs_begin < rhs_end) && (rhs_begin < lhs_end);
+		}
+
+		/** @brief exact key 또는 겹치는 DMA range가 exclusive 충돌인지 검사합니다. */
+		[[nodiscard]] bool resourcesConflict(const IoResourceId &lhs,
+											 const IoResourceId &rhs) noexcept
+		{
+			return sameResource(lhs, rhs) || overlappingDmaMemory(lhs, rhs);
 		}
 
 		/** @brief 두 소유자 식별자가 같은지 확인합니다. */
 		[[nodiscard]] constexpr bool sameOwner(const IoResourceOwner &lhs,
-											 const IoResourceOwner &rhs) noexcept
+											   const IoResourceOwner &rhs) noexcept
 		{
 			return (lhs.kind == rhs.kind) && (lhs.instance == rhs.instance);
 		}
@@ -55,7 +78,24 @@ namespace nucode::arduino::internal
 				return false;
 			}
 
-			return (resource.kind != IoResourceKind::gpio_pin) || (resource.domain != nullptr);
+			if (resource.span == 0U)
+			{
+				return false;
+			}
+			if ((resource.kind == IoResourceKind::gpio_pin) && (resource.domain == nullptr))
+			{
+				return false;
+			}
+			if (resource.kind == IoResourceKind::dma_memory)
+			{
+				if ((resource.domain == nullptr) || (resource.index != 0U))
+				{
+					return false;
+				}
+				const auto begin = reinterpret_cast<std::uintptr_t>(resource.domain);
+				return begin <= (UINTPTR_MAX - resource.span);
+			}
+			return resource.span == 1U;
 		}
 
 		/** @brief 0을 예약값으로 남기면서 다음 변경 세대를 생성합니다. */
@@ -82,16 +122,30 @@ namespace nucode::arduino::internal
 			return nullptr;
 		}
 
+		/** @brief table에서 요청과 겹치지만 exact key는 아닌 slot을 찾습니다. */
+		[[nodiscard]] ResourceSlot *findConflictingSlot(
+			const IoResourceId &resource) noexcept
+		{
+			for (auto &slot : resource_slots)
+			{
+				if (slot.occupied && resourcesConflict(slot.resource, resource))
+				{
+					return &slot;
+				}
+			}
+			return nullptr;
+		}
+
 		/** @brief table에서 같은 물리 자원의 const slot을 찾습니다. */
 		[[nodiscard]] const ResourceSlot *findSlot(const IoResourceId &resource,
-													   int) noexcept
+												   int) noexcept
 		{
 			return findSlot(resource);
 		}
 
 		/** @brief 이번 batch가 아직 선택하지 않은 빈 slot을 찾습니다. */
 		[[nodiscard]] ResourceSlot *findEmptySlot(ResourceSlot *const *selected,
-													 std::size_t selected_count) noexcept
+												  std::size_t selected_count) noexcept
 		{
 			for (auto &slot : resource_slots)
 			{
@@ -204,9 +258,9 @@ namespace nucode::arduino::internal
 	}
 
 	IoResourceResult reserveIoResources(IoResourceOwner owner,
-										 const IoResourceId *resources, std::size_t count,
-										 IoAcquirePolicy policy, IoResourceLease &lease,
-										 IoResourceSnapshot *conflict) noexcept
+										const IoResourceId *resources, std::size_t count,
+										IoAcquirePolicy policy, IoResourceLease &lease,
+										IoResourceSnapshot *conflict) noexcept
 	{
 		if (!isThreadContext())
 		{
@@ -232,7 +286,7 @@ namespace nucode::arduino::internal
 			}
 			for (std::size_t prior = 0U; prior < index; ++prior)
 			{
-				if (sameResource(resources[index], resources[prior]))
+				if (resourcesConflict(resources[index], resources[prior]))
 				{
 					return IoResourceResult::invalid_argument;
 				}
@@ -248,6 +302,16 @@ namespace nucode::arduino::internal
 			ResourceSlot *slot = findSlot(resources[index]);
 			if (slot == nullptr)
 			{
+				ResourceSlot *const conflicting = findConflictingSlot(resources[index]);
+				if (conflicting != nullptr)
+				{
+					if (conflict != nullptr)
+					{
+						fillSnapshot(conflicting, *conflict);
+					}
+					k_mutex_unlock(&io_resource_mutex);
+					return IoResourceResult::conflict;
+				}
 				slot = findEmptySlot(selected, index);
 				if (slot == nullptr)
 				{
@@ -315,11 +379,11 @@ namespace nucode::arduino::internal
 	}
 
 	IoResourceResult transferIoResources(IoResourceOwner expected_owner,
-										IoResourceOwner new_owner,
-										const IoResourceId *resources,
-										std::size_t count,
-										IoResourceLease &lease,
-										IoResourceSnapshot *conflict) noexcept
+										 IoResourceOwner new_owner,
+										 const IoResourceId *resources,
+										 std::size_t count,
+										 IoResourceLease &lease,
+										 IoResourceSnapshot *conflict) noexcept
 	{
 		if (!isThreadContext())
 		{
@@ -347,7 +411,7 @@ namespace nucode::arduino::internal
 			}
 			for (std::size_t prior = 0U; prior < index; ++prior)
 			{
-				if (sameResource(resources[index], resources[prior]))
+				if (resourcesConflict(resources[index], resources[prior]))
 				{
 					return IoResourceResult::invalid_argument;
 				}
@@ -478,8 +542,8 @@ namespace nucode::arduino::internal
 				slot->owner = entry.previous_owner;
 				slot->state = entry.previous_state;
 				slot->generation = entry.previous_generation != 0U
-								   ? entry.previous_generation
-								   : allocateGeneration();
+									   ? entry.previous_generation
+									   : allocateGeneration();
 			}
 		}
 		lease.phase = IoLeasePhase::rolled_back;
@@ -530,7 +594,7 @@ namespace nucode::arduino::internal
 	}
 
 	IoResourceResult ioResourceSnapshot(const IoResourceId &resource,
-											 IoResourceSnapshot &snapshot) noexcept
+										IoResourceSnapshot &snapshot) noexcept
 	{
 		if (!isThreadContext())
 		{
@@ -542,7 +606,12 @@ namespace nucode::arduino::internal
 		}
 
 		k_mutex_lock(&io_resource_mutex, K_FOREVER);
-		fillSnapshot(findSlot(resource), snapshot);
+		ResourceSlot *slot = findSlot(resource);
+		if (slot == nullptr)
+		{
+			slot = findConflictingSlot(resource);
+		}
+		fillSnapshot(slot, snapshot);
 		k_mutex_unlock(&io_resource_mutex);
 		return IoResourceResult::success;
 	}
