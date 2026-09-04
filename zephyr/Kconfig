@@ -229,6 +229,25 @@ config NUCODE_ARDUINO_SERIAL_FABRIC_TWIS
 	  EasyDMA buffer를 Serial Fabric에 등록합니다. ISR은 driver buffer
 	  준비와 고정 event queue 갱신만 수행합니다.
 
+config NUCODE_ARDUINO_ANALOG_FABRIC
+	bool "M25 SAADC scan·PWM sequence EasyDMA 후보 API 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	depends on NUCODE_ARDUINO_IO_OWNERSHIP
+	depends on NUCODE_ARDUINO_GPIO
+	depends on !NUCODE_ARDUINO_ADC
+	depends on !NUCODE_ARDUINO_PWM
+	depends on !ADC
+	depends on !PWM
+	select NRFX_SAADC
+	select NRFX_PWM
+	help
+	  SAADC의 8채널 scan·differential·내부 입력·oversampling·calibration과
+	  double-buffer EasyDMA, PWM20/21/22의 각 4채널 sequence·trigger task를
+	  allocation-free typed handle로 제공합니다. 기존 analogRead/analogWrite
+	  driver와 IRQ를 동시에 소유하지 않으며 v0.4.0 물리 gate 전에는 후보
+	  API로만 빌드합니다.
+
 config NUCODE_ARDUINO_WIRE
 	bool "Arduino Wire I2C controller 활성화"
 	default n

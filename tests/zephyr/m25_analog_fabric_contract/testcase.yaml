@@ -1,0 +1,5 @@
+tests:
+  nucode.m25.analog:
+    tags: [nucode, arduino, m25, saadc, pwm, dma]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    build_only: true
