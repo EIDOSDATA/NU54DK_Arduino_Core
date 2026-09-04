@@ -3,7 +3,7 @@
 #include <nucode/SerialFabric.h>
 #include <variant.h>
 #include <cstddef>
-#include <cstring>
+#include <string.h>
 namespace {
 using namespace nucode::arduino;
 constexpr unsigned capacity = 1024, guard = 16;
@@ -36,9 +36,9 @@ std::uint32_t start(const std::uint32_t *args, std::uint32_t *out, std::uint32_t
     bytes = args[2]; buffers = args[3]; seed = args[4];
     complete = tx_complete = error = seen = 0;
     for (auto &buffer : receive) {
-        std::memset(buffer.before,0xa5,guard);
-        std::memset(buffer.data,0xcc,capacity);
-        std::memset(buffer.after,0x5a,guard);
+        memset(buffer.before,0xa5,guard);
+        memset(buffer.data,0xcc,capacity);
+        memset(buffer.after,0x5a,guard);
     }
     for (unsigned i = 0; i < bytes * buffers; ++i) transmit[i] = pattern(seed ^ 0x5aU,i);
     const SerialSignal signals[] = {SerialSignal::txd,SerialSignal::rxd,SerialSignal::rts,SerialSignal::cts};
