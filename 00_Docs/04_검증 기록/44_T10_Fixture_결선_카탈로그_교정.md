@@ -65,19 +65,12 @@ preflight 단계에서 거부한다. Confirmation과 evidence에도 같은 hash�
 회로도 hash, revision 2 connector map과 SWD/P2.6~P2.10 위험 물리 핀 미사용을 검사한다.
 수정 중 관련 Host 29개와 M12 Host 전체, Markdown UTF-8/local-link gate가 통과했다.
 
-교정 변경을 `c74e9fa4f12e6d45699eae69f7656bdb4eb898bd`로 clean 고정한 뒤 `C:/v43`에서
-role 1 DUT와 role 2 peer를 다시 build했다. 2/2가 64.80초에 build-only PASS했고 실패·오류·
-경고는 없었다. 새 preflight는 catalog revision 2, catalog SHA-256
-`2407320d98cbd0cfa61a36044cb16b522abd0b8f821e9fb07c3ea8cdc23bee4c`, DUT HEX SHA-256
-`101b381b447c278311baab66ff02b72cd1f90f2118153990b017921cddc94994`, peer HEX SHA-256
-`a85991fcede07c34f322bede89206104e75d3142b428594c1d3d3025dbcd1a62`를 출력했다.
-`external_wiring_executed=false`이며 probe 접근·flash·reset·외부 출력은 수행하지 않았다.
-
 ## 4. 현재 판정과 다음 행동
 
 - Revision 1 확인서와 두 FAIL은 역사 증거로 보존하며 PASS로 바꾸지 않는다.
 - T08의 잘못된 결선표 완료 판정은 revision 2 교정·검사로 대체한다.
-- T10과 T11은 여전히 미완료다. Revision 2 exact role image build는 완료했으며, 전원 분리 상태에서
-  Fixture 101을 새 표대로 재결선해야 한다.
+- T10과 T11은 여전히 미완료다. Revision 2 source를 clean commit으로 고정하고 exact role image를
+  다시 build한 뒤, 전원 분리 상태에서 Fixture 101을 새 표대로 재결선해야 한다.
 - 새 확인은 `D:` 보드 A/DUT와 `E:` 보드 B/peer, catalog revision 2, 새 source/HEX hash에
   다시 묶는다. 옛 확인서의 boolean이나 시각은 재사용하지 않는다.
+

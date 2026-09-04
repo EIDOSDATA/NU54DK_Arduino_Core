@@ -50,8 +50,8 @@ TODO의 체크만으로 그 원본들의 상태를 바꾸지 않는다. 이 문�
 | 필드 | 현재 값 |
 | --- | --- |
 | 이번에 끝낸 일 | T01~T09 준비 뒤 T10 첫 실행에서 catalog r1의 물리 connector 번호 오류를 발견했다. 회로도 9페이지 기준으로 15개 fixture 전수를 r2로 교정하고 PDF hash·위험 핀 gate·문서·Host 검사를 보강했다. 실패 두 건과 안전 disarm 증거는 44번에 보존 |
-| 진행 중인 T 항목 | T10 미완료. Catalog r1 실행은 첫 UART byte 수신 0으로 FAIL했고 physical PASS가 없다. R2 교정 commit `c74e9fa`의 exact pair image 2/2 build와 preflight는 완료, 새 결선 확인 대기 |
-| 다음 구체적 행동 | `D:` 보드 A/DUT와 `E:` 보드 B/peer를 Fixture 101 r2 표대로 전원 분리 상태에서 재결선하도록 안내하고, 완료 뒤 새 confirmation으로 실행한다 |
+| 진행 중인 T 항목 | T10 미완료. Catalog r1 실행은 첫 UART byte 수신 0으로 FAIL했고 physical PASS가 없다. R2 교정 source의 clean image 재빌드와 새 결선 확인이 필요 |
+| 다음 구체적 행동 | 교정 변경을 commit하고 exact DUT/peer image를 다시 build한 뒤, `D:` 보드 A/DUT와 `E:` 보드 B/peer를 Fixture 101 r2 표대로 전원 분리 상태에서 재결선하도록 안내한다 |
 | 다음 작업에 필요한 사용자 행동 | 두 USB를 분리하고 기존 r1 점퍼를 r2 핀으로 옮긴 뒤 완료를 확인한다. 새 confirmation 전에는 USB 재연결·시험 실행을 하지 않는다 |
 | 외부 결선 상태 | Fixture 101 r1은 잘못된 물리 핀에 연결되어 두 번 FAIL. 양쪽 disarm 성공 뒤 USB 분리 요청. 새 r2 결선은 아직 확인되지 않음 |
 | 작업 checkout 분리 | 사용자 정렬과 병행할 때 충돌을 막기 위해 `C:/nb/s04`, branch `codex/v04-prep-20260905`에서 격리했다. T01~T09 구현 `696defb`와 증거 `661fad9`를 원본 `main`에 fast-forward해 push했으므로 제품 이력은 다시 `main` 하나로 통합됐다. 임시 worktree/branch는 보존 데이터 확인 뒤 정리 가능 |
@@ -59,7 +59,7 @@ TODO의 체크만으로 그 원본들의 상태를 바꾸지 않는다. 이 문�
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; T09 무배선 PASS만 추가됐으며 외부 결선·RC·최종 공개 승인 없음 |
 | 알려진 문제 | Catalog r1의 물리 connector 번호가 회로도보다 한 칸 어긋나 있었고 P0.1 표기는 실제 SWDCLK까지 가리켰다. r2로 전수 교정했으며 새 실기 전까지 T10 HOLD. 과거 COM 이탈 원인은 미확정이고 peer P0 DAP CTS 납땜 진단은 별도 유지 |
 | 이 TODO 작성 작업의 실행 중 시험 | clean `696defb`의 M12 Host 전체 PASS. contract45·inventory·docs143 PASS, `C:/r45` v0.4.0 full group 20/20 PASS. `C:/r48` exact pair role 2/2 build PASS 뒤 두 UID에서 primitives 904건 PASS. 외부 HIL은 `NOT RUN` |
-| 로컬 임시 build·evidence | 영구 [T09 evidence](<./04_검증 기록/evidence/696defb/pair-primitives-696defb.json>)와 journal 보존. `C:/v42` catalog r1과 `C:/v43` catalog r2/commit `c74e9fa` pair build가 각각 2/2 PASS. T10 r1 두 FAIL·journal·확인서는 [44번 evidence](<./04_검증 기록/evidence/8ebf3cc>)에 보존 |
+| 로컬 임시 build·evidence | 영구 [T09 evidence](<./04_검증 기록/evidence/696defb/pair-primitives-696defb.json>)와 journal 보존. `C:/v42`에서 catalog r1 source의 pair 2/2 build PASS. T10 두 FAIL·journal·확인서는 [44번 evidence](<./04_검증 기록/evidence/8ebf3cc>)에 보존. Catalog r2 exact build는 commit 뒤 새 경로 필요 |
 | 최종 정렬 gate | clang-format 22.1.8로 직접 관리 C/C++/ino 227개 write·dry-run PASS. 한국어 Doxygen 동작 주석, Allman/4칸/중괄호 필수 적용. SPDX·namespace 표식만 기계적 예외. clean Host 전체·v0.4 full20·T09 exact HIL 회귀 PASS. 최종 증거·문서는 이 기록 commit에 포함 |
 | CI 확인 | push된 `661fad9`의 [Software Gates](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811058) success(1분35초), [Reproducible Builds](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811030) Arduino 4/4·Zephyr 4/4 success(26분43초, artifact 8개). 마지막 기록 전용 commit은 코드·시험 artifact를 바꾸지 않는다 |
 | 문서 작업 검증 | 문서143개 UTF-8·내부 링크 PASS, inventory/serial/system/release 계약 PASS. M27 16개/미해결8개 유지. M12 Host 전체를 clean `696defb`에서 재실행해 PASS |
