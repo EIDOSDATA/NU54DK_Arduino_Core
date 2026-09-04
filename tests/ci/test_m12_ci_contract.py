@@ -135,6 +135,27 @@ class M12CiContractTests(unittest.TestCase):
         self.assertLess(workflow.index(m24), workflow.index(m26))
         self.assertLess(workflow.index(m26), workflow.index(build))
 
+    def test_m27_release_contract_is_checked_before_v04_build(self) -> None:
+        gate = (REPOSITORY / "tools" / "ci" / "run_m12_gate.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('"m27_release.py"', gate)
+        workflow = (
+            REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
+        ).read_text(encoding="utf-8")
+        contract = "python3 tools/release/m27_release.py contract"
+        build = "python3 tools/ci/run_zephyr_build.py"
+        self.assertIn(contract, workflow)
+        self.assertLess(workflow.index(contract), workflow.index(build))
+        self.assertIn('      - "v0.4.0-rc.*"', workflow)
+        self.assertNotIn("continue-on-error", workflow)
+
+    def test_host_gate_runs_m26_onboard_runner_unit_contract(self) -> None:
+        gate = (REPOSITORY / "tools" / "ci" / "run_m12_gate.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('"test_m26_onboard.py"', gate)
+
     ## @brief M14 native 의미 시험이 실행 가능한 Ubuntu job에서 직접 수행되는지 검증합니다.
     def test_m14_native_semantic_gate_runs_on_ubuntu(self) -> None:
         path = REPOSITORY / ".github" / "workflows" / "m12-software-gates.yml"

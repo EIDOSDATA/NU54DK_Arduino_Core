@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 6.4 |
+| 문서 체계 개정 | 6.5 |
 | 현재 정식 버전 | `v0.3.0` |
 | 다음 목표 버전 | `v0.4.0` |
-| 최종 갱신일 | 2026-09-03 |
+| 최종 갱신일 | 2026-09-04 |
 | 작성자 | Quantum / NUCODE |
 
 이 디렉터리는 Loader 없이 동작하는 Native Full Zephyr 기반 NU54DK Arduino Core의
@@ -53,7 +53,7 @@
 | M21 | **완료** | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS; host 39/39 |
 | M22 | **완료** | Loaderless 1,456 KiB 경계, stable 재현 build, 29/29 설치본 compile, NU54DK Upload와 `v0.3.0` 정식 공개 |
 | M23 | **완료** | 75개 peripheral identity manifest·생성 matrix·공개 조회 API와 공통 block/channel/DMA 소유권 |
-| M24~M27 | **진행 중** | M24 작업 1~2 완료(온보드 자동 7·fixture 16 분류, 공통 handover backend), 전 peripheral instance·EasyDMA·동시성 parity와 `v0.4.0` |
+| M24~M27 | **진행 중** | M24·M25 source/build와 온보드 runner 준비, M26 16개 기능 판정 완료, physical gate와 M27 release 준비 대기 |
 | M28~M33 | **계획** | Bluetooth LE 전 기능군·Mesh·Channel Sounding과 `v0.5.0` |
 | M34~M45 | **장기 계획** | security/update, radio/OpenThread와 Matter 제품선 |
 
@@ -85,6 +85,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - 전 instance·DMA·BLE 경쟁 격차와 완료 조건: [경쟁 기준과 마일스톤](<./01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)
 - M24 serial block·핀 bank·고급 API·공통 handover backend·온보드/fixture HIL 경계: [Serial Fabric 경로와 공통 backend](<./01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md>)
 - M23의 현재 instance별 상태: [Peripheral instance matrix](<./01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)
+- M26 system/security/저수준 기능 판정: [System Peripheral 지원 경계](<./01_아두이노 코어 설계/11_M26_System_Peripheral_지원_경계.md>)
 - 현재 공개 API: [Arduino API 지원 범위](<./01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)
 - Windows source 개발환경: [Windows 개발환경 설정](<./02_빌드 설계/09_Windows_개발환경_설정.md>)
 - 설치·package 구조: [Boards Manager 설계](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
@@ -111,6 +112,8 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - [v0.3.0 구현 마일스톤](<./01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)
 - [전 인스턴스·DMA·BLE 경쟁 기준과 마일스톤](<./01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)
 - [M23 Peripheral instance matrix](<./01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)
+- [M24 Serial Fabric 경로와 API 계약](<./01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md>)
+- [M26 System Peripheral 지원 경계](<./01_아두이노 코어 설계/11_M26_System_Peripheral_지원_경계.md>)
 
 ### 02. 빌드 설계
 
@@ -139,7 +142,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 
 ### 04. 검증 기록
 
-M1~M23과 정식 공개 증거, `v0.3.0` AC-01~AC-03·M19~M22 및 `v0.4.0` M23·M24 작업 1~2의 구현·검증 증거는
+M1~M23과 정식 공개 증거, `v0.3.0` AC-01~AC-03·M19~M22 및 `v0.4.0` M23~M26의 구현·검증 증거는
 [검증 기록 안내](<./04_검증 기록/README.md>)에서 찾는다. 이 디렉터리의 문서는 당시 revision과
 결과를 보존하는 역사 기록이다.
 

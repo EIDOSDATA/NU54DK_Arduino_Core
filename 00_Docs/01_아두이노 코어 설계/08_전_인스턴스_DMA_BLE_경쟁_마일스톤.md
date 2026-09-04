@@ -3,12 +3,12 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 1.3 |
-| 문서 상태 | M23 완료 / M24 작업 1~2 완료·작업 3 착수 대기 |
+| 문서 개정 | 1.4 |
+| 문서 상태 | M23·M26 완료 / M24·M25 source·build와 runner 완료, physical gate 대기 / M27 준비 중 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.3.0` stable / commit `bae0957d2425e4418199a2a3a018bf8e9a0dc356` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
-| 최종 갱신일 | 2026-09-03 |
+| 최종 갱신일 | 2026-09-04 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 nRF54L15 주변장치의 **모든 실제 인스턴스**, EasyDMA 경로와 Bluetooth LE 기능군을
@@ -287,6 +287,10 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 ### M25 — Analog·timing·audio·event 전 인스턴스
 
+- 상태: **source/build/semantic 완료, physical HIL 대기** — SAADC·PWM, timer/event,
+  PDM·I2S·QDEC 후보와 배선 없는 내부 VDD·event runner가 준비됐다. 구현과 남은 fixture 경계는
+  [M25 검증 기록](<../04_검증 기록/37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md>)을 따른다.
+
 - SAADC 8채널 scan/differential/internal/calibration/oversampling/continuous DMA를 제공한다.
 - PWM20/21/22의 12 hardware channel allocator와 sequence/DPPI/DMA를 `analogWrite`, `tone`, Servo와
   충돌 없이 통합한다.
@@ -299,6 +303,12 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 ### M26 — 나머지 SoC 기능과 board 경계
 
+- 상태: **전수 판정 완료, TEMP·WDT30 physical HIL 대기** — 16개 기능에 지원 경계를 부여해
+  `unknown`을 0으로 만들고 strict ledger·생성 문서·CI gate를 연결했다. TEMP·WDT30/31 후보와
+  무배선 TEMP·WDT30 reset runner를 준비했다. 세부 판정은
+  [M26 지원 경계](11_M26_System_Peripheral_지원_경계.md)와
+  [M26 검증 기록](<../04_검증 기록/38_M26_System_Peripheral_판정과_온보드_HIL_준비.md>)을 따른다.
+
 - COMP/LPCOMP, TEMP, WDT30/31, NFCT, power/clock/cache, CRACEN/KMU/RNG/TAMPC와 VPR/sQSPI를
   재고 조사하고 wrapper/direct/profile/비적용 경계를 확정한다.
 - raw RADIO는 BLE controller와 동시 소유하지 못하게 하고 다음 radio 제품선의 profile 기반을 만든다.
@@ -308,6 +318,10 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
   `not-applicable` 중 하나와 근거를 가지며 `unknown`이 남지 않음.
 
 ### M27 — `v0.4.0` Peripheral Parity 릴리스
+
+- 상태: **준비 중 / 공개 HOLD** — package·SBOM·checksum·index 재현성과 release readiness를
+  자동화하되, M24~M26의 필수 physical evidence가 채워지기 전에는 tag·GitHub Release·stable
+  index를 만들거나 공개하지 않는다.
 
 - M23~M26 manifest, examples, HIL, package install과 clean-environment 재현 build를 통합한다.
 - 비교 Core의 공개 예제와 동일 use case를 독립 시험으로 실행하고 부족한 항목은 known limitation에

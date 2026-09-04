@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "milestone": "M27",
+  "candidate_version": "0.4.0-rc.1",
+  "stable_version": "0.4.0",
+  "publication_policy": "no-tag-release-or-index-publication-until-every-required-gate-passes",
+  "gates": [
+    {
+      "id": "m23_inventory",
+      "kind": "automated",
+      "required": true,
+      "state": "passed",
+      "evidence": ["00_Docs/04_검증 기록/33_M23_Peripheral_Inventory와_공통_소유권_기준선.md"]
+    },
+    {
+      "id": "m24_serial_source_build",
+      "kind": "automated",
+      "required": true,
+      "state": "passed",
+      "evidence": ["00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+    },
+    {
+      "id": "m24_onboard_hil",
+      "kind": "physical",
+      "required": true,
+      "state": "hold",
+      "reason": "probe SWD No ACK; UARTE and TWIM onboard runners are ready"
+    },
+    {
+      "id": "m24_fixture_hil",
+      "kind": "physical",
+      "required": true,
+      "state": "hold",
+      "reason": "external serial loopback/peer fixture and measurement equipment are required"
+    },
+    {
+      "id": "m25_source_build",
+      "kind": "automated",
+      "required": true,
+      "state": "passed",
+      "evidence": ["00_Docs/04_검증 기록/37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md"]
+    },
+    {
+      "id": "m25_onboard_hil",
+      "kind": "physical",
+      "required": true,
+      "state": "hold",
+      "reason": "probe SWD No ACK; internal VDD and event-path runner is ready"
+    },
+    {
+      "id": "m25_fixture_hil",
+      "kind": "physical",
+      "required": true,
+      "state": "hold",
+      "reason": "SAADC/PWM/audio/QDEC signal, timing, concurrency and soak fixtures are required"
+    },
+    {
+      "id": "m26_inventory",
+      "kind": "automated",
+      "required": true,
+      "state": "passed",
+      "evidence": ["00_Docs/04_검증 기록/38_M26_System_Peripheral_판정과_온보드_HIL_준비.md"]
+    },
+    {
+      "id": "m26_onboard_hil",
+      "kind": "physical",
+      "required": true,
+      "state": "hold",
+      "reason": "probe SWD No ACK; TEMP and WDT30 reset runner is ready"
+    },
+    {
+      "id": "host_regression",
+      "kind": "automated",
+      "required": true,
+      "state": "pending",
+      "reason": "must run again against the frozen RC commit"
+    },
+    {
+      "id": "documentation",
+      "kind": "automated",
+      "required": true,
+      "state": "pending",
+      "reason": "must run again against the frozen RC commit"
+    },
+    {
+      "id": "zephyr_repro_build",
+      "kind": "automated",
+      "required": true,
+      "state": "pending",
+      "reason": "full v0.4.0 group must run against the frozen RC commit"
+    },
+    {
+      "id": "package_reproducibility",
+      "kind": "automated",
+      "required": true,
+      "state": "pending",
+      "reason": "two isolated 0.4.0-rc.1 package builds must be byte-identical"
+    },
+    {
+      "id": "boards_manager_lifecycle",
+      "kind": "physical",
+      "required": true,
+      "state": "hold",
+      "reason": "isolated install, all examples, upload, uninstall and version transition are required"
+    },
+    {
+      "id": "legacy_assets_immutable",
+      "kind": "automated",
+      "required": true,
+      "state": "passed",
+      "evidence": ["00_Docs/05_릴리스/README.md"]
+    },
+    {
+      "id": "project_owner_approval",
+      "kind": "human",
+      "required": true,
+      "state": "hold",
+      "reason": "stable publication requires explicit project-owner approval after every technical gate"
+    }
+  ]
+}
