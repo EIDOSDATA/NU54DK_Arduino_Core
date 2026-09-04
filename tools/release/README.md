@@ -8,6 +8,7 @@ allowlist와 명령을 현재 릴리스에 재사용하지 않고, 대상 버전
 | `v0.1.0` / M11 | [M11_README.md](M11_README.md) | `nu54_release.py` | 역사적·동결 |
 | `v0.2.0` / M18 | [M18_README.md](M18_README.md) | `m18_release.py` | 역사적·동결 |
 | `v0.3.0` / M22 | [M22_README.md](M22_README.md) | `m22_release.py`, `m22_cleanroom.py` | 역사적·동결 |
+| `v0.4.0` / M27 | [M27_README.md](M27_README.md) | `m27_release.py` | RC 준비 중·공개 HOLD |
 
 공통 원칙은 다음과 같습니다.
 

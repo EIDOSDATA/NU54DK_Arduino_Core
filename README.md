@@ -177,7 +177,7 @@ NU54DK를 연결한 뒤 `Verify`, `Upload` 순서로 실행합니다. 온보드 
 | Settings/ZMS | `0x174000..0x17d000` | 36 KiB |
 
 Arduino maximum Sketch size, Devicetree code partition과 Zephyr linker가 같은 경계를 사용합니다.
-MCUboot/DFU dual-slot과 signed update/rollback은 `v0.4.0` 계획 범위입니다.
+MCUboot/DFU dual-slot과 signed update/rollback은 `v0.6.0` Security/Update 제품선의 계획 범위입니다.
 
 ## 업로드 Probe 선택
 
@@ -231,11 +231,15 @@ asset과 stable index 항목은 재현성, 감사와 downgrade를 위해 삭제�
 | `v0.1.0` | 역사적·비지원 | Core, 기본 API, build/upload와 package |
 | `v0.2.0` | 역사적·비지원 | CI/CD, profile·예제, Board/System과 BLE NUS |
 | `v0.3.0` | **현재 stable** | Arduino compatibility, 동적 peripheral/analog, BLE GAP/GATT/security/profile, storage |
-| `v0.4.0` | M23 완료·M24 진행 중 | 75개 identity 기준선과 Serial Fabric 공통 backend 위에 전 peripheral instance, EasyDMA·동시성, analog/timing/audio parity 구현 |
+| `v0.4.0` | 개발 중 | Peripheral 확장: 온보드 기본 시험 PASS, 외부 fixture·최종 release gate 대기 |
 | `v0.5.0` | 계획 | Bluetooth LE 확장·ISO/LE Audio·Direction Finding·Channel Sounding·Mesh |
 | `v0.6.0` | 계획 | Storage/Crypto, TF-M, 고급 memory layout와 secure update/recovery |
 | `v0.7.0` | 계획 | Radio profile, IEEE 802.15.4, ESB와 OpenThread |
 | `v0.8.0` | 계획 | Matter 기반, application template와 commissioning HIL |
+
+`v0.4.0` 후보는 UART 4개·PMIC I2C 3개, 내부 ADC·event, TEMP·WDT30의
+[온보드 시험](<./00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)을
+통과했습니다. 전체 instance의 외부 신호·정확도·동시성 검증과 정식 공개는 아직 완료되지 않았습니다.
 
 ## 동작 구조
 

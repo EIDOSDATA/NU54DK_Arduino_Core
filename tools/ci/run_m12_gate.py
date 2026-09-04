@@ -74,6 +74,10 @@ def run_host_gate() -> None:
         REPOSITORY / "tests" / "hil" / "nu54dk",
         "test_m25_onboard.py",
     )
+    run_unittest(
+        REPOSITORY / "tests" / "hil" / "nu54dk",
+        "test_m26_onboard.py",
+    )
 
 
 ## @brief 재현 package 생성·검증 suite만 별도로 실행합니다.
@@ -183,6 +187,13 @@ def run_inventory_gate() -> None:
         (
             sys.executable,
             REPOSITORY / "tools" / "peripheral" / "verify_m26_system_contract.py",
+        )
+    )
+    run_checked(
+        (
+            sys.executable,
+            REPOSITORY / "tools" / "release" / "m27_release.py",
+            "contract",
         )
     )
 

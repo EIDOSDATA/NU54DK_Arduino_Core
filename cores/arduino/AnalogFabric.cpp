@@ -15,12 +15,14 @@
 #include <hal/nrf_gpio.h>
 #include <hal/nrf_pwm.h>
 #include <hal/nrf_saadc.h>
+#include <haly/nrfy_saadc.h>
 #include <nrfx_pwm.h>
 #include <nrfx_saadc.h>
 #include <zephyr/device.h>
 #include <zephyr/devicetree.h>
 #include <zephyr/irq.h>
 #include <zephyr/kernel.h>
+#include <zephyr/sys/atomic.h>
 #include <zephyr/sys/util.h>
 
 #include <cstddef>
@@ -76,6 +78,7 @@ namespace nucode::arduino
             AnalogFabricState state{AnalogFabricState::inactive};
             AnalogFabricResult last_result{AnalogFabricResult::success};
             int last_driver_error{0};
+            atomic_t sample_ready{0};
         };
 
         struct PwmContext
@@ -439,6 +442,7 @@ namespace nucode::arduino
             switch (event->type)
             {
             case NRFX_SAADC_EVT_READY:
+                atomic_set(&saadc_context.sample_ready, 1);
                 translated.type = SaadcEventType::ready;
                 break;
             case NRFX_SAADC_EVT_DONE:
@@ -453,6 +457,7 @@ namespace nucode::arduino
                 translated.type = SaadcEventType::calibration_complete;
                 break;
             case NRFX_SAADC_EVT_FINISHED:
+                atomic_clear(&saadc_context.sample_ready);
                 translated.type = SaadcEventType::finished;
                 break;
             case NRFX_SAADC_EVT_LIMIT:
@@ -674,6 +679,7 @@ namespace nucode::arduino
             return result;
         }
 
+        atomic_clear(&context.sample_ready);
         int driver_error = nrfx_saadc_init(IRQ_PRIO_LOWEST);
         if (driver_error == 0)
         {
@@ -804,16 +810,21 @@ namespace nucode::arduino
             return AnalogFabricResult::invalid_context;
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         auto &context = saadc_context;
-        if (context.state != AnalogFabricState::active)
+        const unsigned int irq_key = irq_lock();
+        if (context.state != AnalogFabricState::active ||
+            context.interval_us != 0U || atomic_get(&context.sample_ready) == 0)
         {
+            irq_unlock(irq_key);
             record(context, AnalogFabricResult::wrong_state);
             k_mutex_unlock(&analog_fabric_mutex);
             return AnalogFabricResult::wrong_state;
         }
-        const int error = nrfx_saadc_mode_trigger();
-        const auto result = error == 0 ? AnalogFabricResult::success
-                                       : AnalogFabricResult::driver_error;
-        record(context, result, error);
+        // Advanced non-blocking mode_trigger() only arms the buffer. Once
+        // READY, manual conversion requires SAMPLE, not a second START.
+        nrfy_saadc_sample_start(NRF_SAADC, nullptr);
+        irq_unlock(irq_key);
+        const auto result = AnalogFabricResult::success;
+        record(context, result);
         k_mutex_unlock(&analog_fabric_mutex);
         return result;
     }
@@ -854,23 +865,38 @@ namespace nucode::arduino
             return AnalogFabricResult::invalid_context;
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         auto &context = saadc_context;
-        if (context.state != AnalogFabricState::active)
+        if (context.state != AnalogFabricState::active &&
+            context.state != AnalogFabricState::stopping)
         {
             record(context, AnalogFabricResult::wrong_state);
             k_mutex_unlock(&analog_fabric_mutex);
             return AnalogFabricResult::wrong_state;
         }
         context.state = AnalogFabricState::stopping;
-        nrfx_saadc_abort();
+        atomic_clear(&context.sample_ready);
+        // nrfx consumes STOPPED in its IRQ and disables SAADC on FINISHED.
+        // A completed one-shot is already stopped; do not wait for a stale bit.
+        if (nrf_saadc_enable_check(NRF_SAADC))
+            nrfx_saadc_abort();
         std::uint32_t waited = 0U;
-        while (nrf_saadc_event_check(NRF_SAADC, NRF_SAADC_EVENT_STOPPED) == false &&
+        while (nrf_saadc_enable_check(NRF_SAADC) &&
+               !nrf_saadc_event_check(NRF_SAADC, NRF_SAADC_EVENT_STOPPED) &&
                waited < timeout_us)
         {
             k_busy_wait(10U);
             waited += 10U;
         }
         const bool stopped =
+            !nrf_saadc_enable_check(NRF_SAADC) ||
             nrf_saadc_event_check(NRF_SAADC, NRF_SAADC_EVENT_STOPPED);
+        if (!stopped)
+        {
+            // Keep both the peripheral and DMA leases until STOP is proven.
+            // The caller may retry stop(); configure()/start() remain blocked.
+            record(context, AnalogFabricResult::stop_timeout, -ETIMEDOUT);
+            k_mutex_unlock(&analog_fabric_mutex);
+            return AnalogFabricResult::stop_timeout;
+        }
         nrfx_saadc_uninit();
         IoResourceResult release_result = internal::releaseIoResources(context.lease);
         context.lease = {};
@@ -884,11 +910,6 @@ namespace nucode::arduino
         {
             context.state = AnalogFabricState::faulted;
             record(context, AnalogFabricResult::release_failed);
-        }
-        else if (!stopped && timeout_us != 0U)
-        {
-            context.state = AnalogFabricState::faulted;
-            record(context, AnalogFabricResult::stop_timeout, -ETIMEDOUT);
         }
         else
         {

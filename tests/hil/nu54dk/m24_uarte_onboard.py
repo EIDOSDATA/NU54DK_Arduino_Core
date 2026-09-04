@@ -137,6 +137,14 @@ def pyocd_command(pyocd: Path, probe_id: str, image: Path) -> list[str]:
     return [
         str(pyocd),
         "load",
+        "--no-config",
+        "--no-reset",
+        "-O",
+        "resume_on_disconnect=false",
+        "-O",
+        "auto_unlock=false",
+        "--erase",
+        "sector",
         "--target",
         "nrf54l",
         "--uid",
@@ -185,9 +193,10 @@ def choose_unique_response(
     matches = [device for device, data in transcripts.items() if data == expected]
     if len(matches) != 1:
         sizes = {device: len(data) for device, data in transcripts.items()}
+        previews = {device: data[:64].hex() for device, data in transcripts.items()}
         raise UarteHilFailure(
-            "exactly one VCOM must return the reversed packet: "
-            f"matches={len(matches)}, received_sizes={sizes}"
+            "exactly one VCOM must return the expected packet: "
+            f"matches={len(matches)}, received_sizes={sizes}, preview_hex={previews}"
         )
     for device, data in transcripts.items():
         if device != matches[0] and data:
@@ -319,6 +328,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 stream.reset_input_buffer()
                 stream.reset_output_buffer()
             flash = flash_image(args.pyocd, args.probe_id, image["path"], args.flash_timeout)
+            from onboard_start import reset_halted_start
+            flash["controlled_start"] = reset_halted_start(streams, args.probe_id)
             ready_port, ready_transcripts = collect_exact_frame(
                 streams, ready_frame(instance), args.settle_seconds + args.response_timeout
             )

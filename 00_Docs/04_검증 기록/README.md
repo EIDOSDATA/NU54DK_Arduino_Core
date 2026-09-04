@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 성격 | 실행 당시의 revision, 환경, 명령과 결과를 보존하는 역사 증거 |
-| 완료 범위 | M1~M23, M24 작업 1~2, `v0.1.0`·`v0.2.0`·`v0.3.0` 정식 공개 |
-| 진행 범위 | `v0.4.0` M24 작업 3 착수 대기 |
+| 완료 범위 | M1~M23, M26 판정, `v0.1.0`·`v0.2.0`·`v0.3.0` 정식 공개 |
+| 진행 범위 | `v0.4.0` M24~M25 physical gate와 M27 release 준비 |
 | 현재 정식 버전 | `v0.3.0` |
-| 최종 갱신일 | 2026-09-03 |
+| 최종 갱신일 | 2026-09-04 |
 
 이 디렉터리는 **현재 사용법이나 다음 작업을 설명하는 곳이 아니다.** 각 기록의 `다음 단계`,
 `HOLD`, `미실행`과 `NOT RUN`은 그 문서를 작성한 시점의 경계를 뜻한다. 현재 상태는
@@ -67,6 +67,12 @@
 | M23 | 75개 identity manifest·생성 matrix·공개 조회 API, 같은 block 상호배타와 block/channel/DMA 원자적 lease PASS | [M23 기록](33_M23_Peripheral_Inventory와_공통_소유권_기준선.md) |
 | M24 작업 1 | 5개 serial block·23개 personality의 route/API/DMA/errata 계약과 exact DTS·문서 drift gate PASS | [M24 작업 1 기록](34_M24_Serial_Fabric_경로와_API_계약_기준선.md) |
 | M24 작업 2 | Allocation-free typed handle, 원자적 route/DMA lease, bounded handover와 target semantic build PASS | [M24 작업 2 기록](35_M24_Serial_Fabric_공통_backend_기준선.md) |
+| M24 작업 3~6 | 23개 direct adapter source/build PASS, 온보드 runner 준비; SWD `No ACK`와 외부 fixture gate HOLD | [M24 adapter·HIL 기록](36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md) |
+| M25 | Analog·event·stream 전 instance 후보 source/build PASS, 온보드 runner 준비; physical gate HOLD | [M25 기록](37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md) |
+| M26 | System 기능 16개 전수 판정·unknown 0, TEMP·WDT30 runner 준비; physical gate HOLD | [M26 기록](38_M26_System_Peripheral_판정과_온보드_HIL_준비.md) |
+| M27 | 비공개 RC 이중 package 재현·설치본 29/29 compile PASS; physical·공개 gate HOLD | [M27 자동 준비·HOLD 기록](39_M27_v0.4.0_rc1_자동_준비와_HOLD.md) |
+| 온보드 재개 | 새 18/18 build·M26 flash/readback 확인; READY 누락·reset 경계 잡음·USB 이탈로 formal HIL HOLD | [온보드 재개·진단 기록](40_M24_M26_온보드_재개와_USB_UART_진단.md) |
+| 온보드 교정·재검증 | `51c1986` 18/18 build, UART 4개·TWIM 3개·내부 VDD/event·TEMP/WDT30 formal PASS; 외부 fixture·최종 release HOLD | [교정·실기 재검증](41_M24_M26_온보드_protocol_교정과_실기_재검증.md) |
 
 ## 기록 해석 규칙
 

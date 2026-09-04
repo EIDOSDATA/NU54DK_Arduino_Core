@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "milestone": "M24",
+  "evidence_type": "onboard-twim-bq25186-read-only",
+  "status": "passed",
+  "core_revision": "51c1986242b60ac99df643ee4291946aa83b9986",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "probe_id_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "vcom_candidate_count": 2,
+  "baud_rate": 115200,
+  "pmic_address": 106,
+  "register": 12,
+  "expected_value": 65,
+  "write_operations": 0,
+  "instances": [
+    {
+      "sequence": 1,
+      "instance": 20,
+      "image_sha256": "6b0a6d44c01afb6450046cfb6c37756a167e4282f981398db729374529a063a0",
+      "image_size": 226540,
+      "build_record_sha256": "9c7806239e5b47d42af426b4ce363cf976ccef2f6f499af3e46fe63d5d4c20aa",
+      "application_source_sha256": "79159aee15bbc47ecb1b803a05d08c1bcb8e6eb06432726f1963ea8c77718ea8",
+      "core_source_sha256": "bd4f0e391bf1a64d540a1845a13242a822dc3481c71d0eab6d0835e341a681df",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "seconds": 8.922,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "d8e5efca5acdaf9e6affff8052a8cc889354858f00c8e643cf3d266059d2f5af",
+        "controlled_start": {
+          "method": "reset-halt-drain-resume",
+          "cpuid": "0x411fd210",
+          "auto_unlock": false,
+          "mass_erase_requested": false
+        }
+      },
+      "selected_vcom_index": 1,
+      "ready_received_sizes": {
+        "0": 0,
+        "1": 32
+      },
+      "result_received_sizes": {
+        "0": 0,
+        "1": 32
+      },
+      "address": 106,
+      "register": 12,
+      "value": 65,
+      "status": "passed"
+    },
+    {
+      "sequence": 2,
+      "instance": 21,
+      "image_sha256": "fb29b62d5afabcea0e0c693b86148c1302576634396361fe131239d4c21dd8d9",
+      "image_size": 226540,
+      "build_record_sha256": "9c7806239e5b47d42af426b4ce363cf976ccef2f6f499af3e46fe63d5d4c20aa",
+      "application_source_sha256": "79159aee15bbc47ecb1b803a05d08c1bcb8e6eb06432726f1963ea8c77718ea8",
+      "core_source_sha256": "bd4f0e391bf1a64d540a1845a13242a822dc3481c71d0eab6d0835e341a681df",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "seconds": 7.984,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "b0791c7eb309f49c8db2387afae806ba31af64805ebce4c56d244a47d1599650",
+        "controlled_start": {
+          "method": "reset-halt-drain-resume",
+          "cpuid": "0x411fd210",
+          "auto_unlock": false,
+          "mass_erase_requested": false
+        }
+      },
+      "selected_vcom_index": 1,
+      "ready_received_sizes": {
+        "0": 0,
+        "1": 32
+      },
+      "result_received_sizes": {
+        "0": 0,
+        "1": 32
+      },
+      "address": 106,
+      "register": 12,
+      "value": 65,
+      "status": "passed"
+    },
+    {
+      "sequence": 3,
+      "instance": 22,
+      "image_sha256": "78a96ccaafe47eb2b19ed3225ecdc2a09af0bbe9350c52e90e8c3708fc714d9a",
+      "image_size": 226540,
+      "build_record_sha256": "9c7806239e5b47d42af426b4ce363cf976ccef2f6f499af3e46fe63d5d4c20aa",
+      "application_source_sha256": "79159aee15bbc47ecb1b803a05d08c1bcb8e6eb06432726f1963ea8c77718ea8",
+      "core_source_sha256": "bd4f0e391bf1a64d540a1845a13242a822dc3481c71d0eab6d0835e341a681df",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "seconds": 7.828,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "51395d52ec941d99b3bcc181ecc49e37c47f797b10374e53de9f87f39d1f0949",
+        "controlled_start": {
+          "method": "reset-halt-drain-resume",
+          "cpuid": "0x411fd210",
+          "auto_unlock": false,
+          "mass_erase_requested": false
+        }
+      },
+      "selected_vcom_index": 1,
+      "ready_received_sizes": {
+        "0": 0,
+        "1": 32
+      },
+      "result_received_sizes": {
+        "0": 0,
+        "1": 32
+      },
+      "address": 106,
+      "register": 12,
+      "value": 65,
+      "status": "passed"
+    }
+  ],
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "completed_at_utc": "2026-09-04T10:52:24.052759+00:00"
+}

@@ -137,6 +137,14 @@ namespace nucode::arduino::internal
 		registry_initialized = true;
 #endif
 
+		// A disabled console does not own pins or serial20. Direct Fabric
+		// profiles intentionally disable uart20 before leasing that block.
+		if (!DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(uart20)) ||
+			!IS_ENABLED(CONFIG_SERIAL))
+		{
+			return IoResourceResult::success;
+		}
+
 		const IoResourceId uart20_resources[] = {
 			pselResource(DT_PROP_BY_IDX(DT_CHILD(DT_NODELABEL(uart20_default), group1),
 										psels, 0)),

@@ -186,6 +186,18 @@ class M24SerialContractTests(unittest.TestCase):
         self.assertTrue(MODULE.BACKEND_SOURCE_PATH.is_file())
         self.assertTrue(MODULE.ROUTE_SOURCE_PATH.is_file())
 
+    def test_twim_activation_explicitly_enables_nrfx_instance(self) -> None:
+        """Source regression only; actual transfers remain an onboard/fixture gate."""
+        source = (REPOSITORY / "cores/arduino/TwimFabric.cpp").read_text(encoding="utf-8")
+        activation = source.split("SerialFabricResult activateAdapter(", 1)[1].split(
+            "SerialFabricResult requestStopAdapter(", 1
+        )[0]
+        initialized = activation.index("nrfx_twim_init(")
+        enabled = activation.index("nrfx_twim_enable(&context->driver);")
+        active = activation.index("atomic_set(&context->active, 1);")
+        self.assertLess(initialized, enabled)
+        self.assertLess(enabled, active)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

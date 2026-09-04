@@ -372,3 +372,73 @@ SHA-256은 [M15 기준선](<../../../00_Docs/04_검증 기록/17_M15_NU54DK_Boar
 [M8 기준선](<../../../00_Docs/04_검증 기록/08_M8_업로드와_디버그_기준선.md>),
 [M14 기준선](<../../../00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md>) 및
 [M15 기준선](<../../../00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)을 따릅니다.
+
+## v0.4.0 M24~M26 무배선 온보드 gate
+
+이 묶음은 외부 점퍼 없이 연결된 NU54DK 한 대와 DAP VCOM 두 포트를 사용합니다. 보드의
+debug-control `DISABLE_SWD`가 격리 위치이면 USB와 COM이 보이더라도 flash가 `No ACK`로 실패할 수
+있습니다. 사용자 버튼 SW1/P1.09와 혼동하지 말고 SWD 연결 상태를 먼저 확인합니다.
+
+| 순서 | Runner | 실기 판정 범위 |
+| --- | --- | --- |
+| 1 | `m24_uarte_onboard.py` | UARTE20/21/22/30의 DAP VCOM 32-byte DMA 왕복 |
+| 2 | `m24_twim_onboard.py` | TWIM20/21/22의 BQ25186 MASK_ID read-only |
+| 3 | `m25_onboard.py` | 내부 VDD SAADC, EGU→DPPI→TIMER event 경로 |
+| 4 | `m26_onboard.py` | TEMP, WDT30 configure/start/feed·의도한 reset과 reset cause |
+
+먼저 [Windows 개발환경](<../../../00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>)의 NCS 환경을
+적용하고 **현재 clean commit**에서 전체 `v0.4.0` group을 새 짧은 경로에 build합니다. 다른 commit의
+기존 image는 runner가 거부하므로 예전 build root를 재사용하지 않습니다.
+
+```powershell
+$CoreRoot = (Get-Location).Path
+$Python = 'C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe'
+$PyOcd = 'C:\ncs\toolchains\dcbdc366a1\opt\bin\Scripts\pyocd.exe'
+$BuildRoot = 'C:\nb\01' # 전체 8자 이하, 아직 없는 하위 경로
+$EvidenceRoot = Join-Path $env:USERPROFILE 'Documents\NU54DK-evidence\v04-run01'
+$ProbeId = '<시험할 CMSIS-DAP UID>'
+
+if ((Get-Command python.exe).Source -ne $Python) {
+  throw 'NCS environment is required: pyocd.exe must select the bundled Python'
+}
+& $Python -I -c 'import sys, pyocd; print(sys.executable); print(pyocd.__version__, pyocd.__file__)'
+
+& $Python tools\ci\run_zephyr_build.py `
+  --workspace C:\ncs\v3.4.0 --outdir $BuildRoot --group v0.4.0 --jobs 4
+if ($LASTEXITCODE -ne 0) { throw 'v0.4.0 build failed' }
+
+$Runners = @('m24_uarte_onboard', 'm24_twim_onboard', 'm25_onboard', 'm26_onboard')
+foreach ($Runner in $Runners) {
+  & $Python "tests\hil\nu54dk\$Runner.py" `
+    --repository $CoreRoot --build-root $BuildRoot --probe-id $ProbeId --pyocd $PyOcd `
+    --evidence "$EvidenceRoot\$Runner.json"
+  if ($LASTEXITCODE -ne 0) { throw "$Runner failed; later gates were not run" }
+}
+```
+
+각 runner는 시작 시 clean source·board revision과 HEX hash를 기록하고 exact UID를 선택하며 mass erase/recover를
+사용하지 않습니다. 실패하면 해당 시점에서 멈추며, 응답 없는 보드에서 PASS를 생성하지 않습니다.
+Flash 종료 시에는 자동 reset/resume을 금지하고, 같은 probe를 다시 연결해 CPU reset·halt를 확인한
+뒤 VCOM 두 포트의 초기 buffer를 비우고 명시적으로 resume합니다. 따라서 초기 reset transient는
+앱이 READY를 보내기 전에만 제거됩니다. 시작 이후의 READY·측정 결과는 잡음을 허용하지 않습니다.
+이 묶음의 PASS를 외부 SPI/TWIS·analog 정확도·audio·encoder·동시성·전력 검증으로 확대하지 않습니다.
+
+TWIM과 M25 firmware는 유효 command 하나당 측정 결과 하나만 보내고 대기합니다. 결과에 다음
+READY가 붙어 USB read 단위에 따라 성공·실패가 달라지지 않도록 한 flash당 단발 시험으로 합니다.
+호스트는 완전한 frame 뒤에도 50 ms를 관찰하여 추가 byte를 거부합니다.
+
+M26 protocol v2는 `READY → command → AR26 → WDT reset → RESET_READY → result request → NU26`
+순서를 사용합니다. UART가 재초기화되기 전 reset 경계에서 transient byte가 관측됐으므로,
+**AR26 검증 이후의 예상 reset 구간에서만** 최대 64바이트 prefix와 정확한 RESET_READY를
+구분합니다. Prefix 원문·길이, 선택 VCOM, reset READY 대기 시간을 evidence schema v2에 남깁니다.
+RESET_READY는 다른 VCOM·다른 marker·중복·후행 byte를 허용하지 않으며, 준비 신호 뒤 별도 request에
+대한 NU26 결과는 여전히 정확한 32바이트·checksum·watchdog reset bit·retained TEMP를 요구합니다.
+초기 READY, AR26, NU26에 잡음을 붙이거나 과거 protocol v1 진단을 새 PASS로 바꿀 수 없습니다.
+이 검증은 reset 중 UART 신호가 깨끗하다는 전기적 보증을 포함하지 않습니다.
+
+M25의 수동 SAADC 모드에서는 `start()`가 DMA를 준비하고, `ready` event 이후 `sample()`이 실제
+변환을 요청합니다. `stop_timeout`이면 lease는 유지되며 `stop()`을 재시도해야 합니다. 내부 VDD
+raw code를 교정된 전압이나 외부 채널 정확도 결과로 해석하지 않습니다.
+
+현재 온보드 PASS와 exact JSON은 [교정·실기 재검증](<../../../00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)을,
+외부 fixture·최종 release 경계는 [M27 자동 준비·HOLD 기록](<../../../00_Docs/04_검증 기록/39_M27_v0.4.0_rc1_자동_준비와_HOLD.md>)을 따릅니다.
