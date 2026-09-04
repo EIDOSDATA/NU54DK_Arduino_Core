@@ -3,10 +3,12 @@
 
 from __future__ import annotations
 
+import copy
 import importlib.util
 from pathlib import Path
 import tempfile
 import unittest
+from unittest import mock
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
@@ -30,6 +32,58 @@ class M27ReleaseTests(unittest.TestCase):
         self.assertNotIn("package_reproducibility", blockers)
         self.assertIn("m24_fixture_hil", blockers)
         self.assertIn("project_owner_approval", blockers)
+
+    def test_owner_scope_excludes_metrology_not_functional_hil(self) -> None:
+        ledger = MODULE.validate_contract()
+        scope = ledger["verification_scope"]
+        self.assertFalse(scope["external_measurement_equipment_required"])
+        self.assertFalse(scope["third_party_device_qualification_required"])
+        self.assertEqual(scope["unverified_core_function_policy"], "hold-not-pass")
+        gates = {gate["id"]: gate for gate in ledger["gates"]}
+        for gate_id in ("m24_fixture_hil", "m25_fixture_hil"):
+            self.assertTrue(gates[gate_id]["required"])
+            self.assertEqual(gates[gate_id]["kind"], "physical")
+            self.assertEqual(gates[gate_id]["state"], "hold")
+
+    def test_scope_drift_or_missing_decision_is_rejected(self) -> None:
+        original = MODULE.validate_contract()
+        changes = (
+            ("external_measurement_equipment_required", True),
+            ("external_measurement_equipment_required", 0),
+            ("third_party_device_qualification_required", True),
+            ("unverified_core_function_policy", "assume-pass"),
+            ("decision_record", "missing-decision.md"),
+        )
+        for key, value in changes:
+            with self.subTest(key=key):
+                ledger = copy.deepcopy(original)
+                ledger["verification_scope"][key] = value
+                with mock.patch.object(MODULE, "strict_json", return_value=ledger):
+                    with self.assertRaises(MODULE.M27ReleaseFailure):
+                        MODULE.validate_contract()
+        ledger = copy.deepcopy(original)
+        del ledger["verification_scope"]
+        with mock.patch.object(MODULE, "strict_json", return_value=ledger):
+            with self.assertRaises(MODULE.M27ReleaseFailure):
+                MODULE.validate_contract()
+        with tempfile.TemporaryDirectory() as temporary:
+            with mock.patch.object(MODULE, "strict_json", return_value=original):
+                with self.assertRaisesRegex(
+                    MODULE.M27ReleaseFailure, "decision record is missing"
+                ):
+                    MODULE.validate_contract(Path(temporary))
+
+    def test_functional_fixture_gates_cannot_become_optional(self) -> None:
+        original = MODULE.validate_contract()
+        for gate_id in ("m24_fixture_hil", "m25_fixture_hil"):
+            with self.subTest(gate=gate_id):
+                ledger = copy.deepcopy(original)
+                next(gate for gate in ledger["gates"] if gate["id"] == gate_id)[
+                    "required"
+                ] = False
+                with mock.patch.object(MODULE, "strict_json", return_value=ledger):
+                    with self.assertRaises(MODULE.M27ReleaseFailure):
+                        MODULE.validate_contract()
 
     def test_candidate_extension_does_not_add_unapproved_stable(self) -> None:
         package = MODULE.load_package_module()

@@ -660,7 +660,7 @@
   "errata": [
     { "id": 7, "peripheral": "uarte", "obligation": "RX flush and empty FIFO accounting must not trust a stale RXD.AMOUNT value." },
     { "id": 8, "peripheral": "spim", "obligation": "MOSI corruption conditions and the pinned nrfx workaround state are covered by targeted transfer tests." },
-    { "id": 21, "peripheral": "spim", "obligation": "The final MOSI transition condition is recorded and checked with a logic analyzer where applicable." },
+    { "id": 21, "peripheral": "spim", "obligation": "The final MOSI transition condition and pinned workaround are reviewed and exercised by targeted peer transfers; unmeasured waveform quality is not guaranteed." },
     { "id": 54, "peripheral": "spis", "obligation": "SDO receives a known idle state so the erratum cannot leave it floating." },
     { "id": 105, "peripheral": "twim", "obligation": "Cancellation never disables TWIM during clock stretching; an unprovable stop requires reset before reuse." }
   ],
@@ -670,7 +670,8 @@
     "Begin-end and cross-personality handover repeat without stale pins, events, IRQs, DMA or power leases.",
     "A five-block maximum-concurrency topology runs with disjoint pins and DMA buffers.",
     "Timeout, cancel, bus error, overflow, underrun and System OFF recovery are verified.",
-    "Throughput, CPU load, latency, data loss and power are recorded for synchronous and asynchronous paths.",
+    "Software-observed throughput, CPU load, latency and data loss plus power-mode lease state are recorded for synchronous and asynchronous paths; precision timing and power metrology are outside the v0.4.0 release scope.",
+    "Owner-approved v0.4.0 functional HIL uses onboard resources and safe NU54DK peer/loopback wiring; external measurement equipment and third-party device qualification are not required, but unexecuted core functions remain HOLD.",
     "No planned profile or contract-only API is described as public support before all required states pass."
   ]
 }

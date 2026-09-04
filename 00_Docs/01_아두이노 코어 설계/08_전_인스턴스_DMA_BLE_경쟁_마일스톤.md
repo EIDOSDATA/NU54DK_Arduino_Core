@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 1.5 |
-| 문서 상태 | M23·M26 완료 / M24·M25 source·build와 runner 완료, physical gate 대기 / M27 준비 중 |
+| 문서 개정 | 1.6 |
+| 문서 상태 | M23·M26 완료 / M24·M25 온보드 기본 PASS, 코어 기능 physical gate 대기 / M27 준비 중 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.3.0` stable / commit `bae0957d2425e4418199a2a3a018bf8e9a0dc356` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
@@ -170,7 +170,9 @@ Zephyr/nrfx driver가 내부에서 EasyDMA를 쓴다는 사실과 Arduino 사용
    증명한다.
 6. ISR에서는 allocation과 무제한 대기를 금지하고 callback을 bounded event로 main thread에 넘긴다.
 7. block personality 전환 시 task·event·IRQ·DPPI publish/subscribe와 pin을 모두 해제한다.
-8. throughput, CPU 점유율, latency, overrun/drop과 전력 조건을 HIL 결과에 함께 기록한다.
+8. throughput, CPU 점유율, latency, overrun/drop과 전원 모드 조건을 HIL 결과에 함께 기록한다.
+   `v0.4.0`에서는 소프트웨어·peer로 관측 가능한 값과 측정 방법을 남기며, 정밀 시간·전력 실측은
+   [코어 기능 검증 범위 합의](<../04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)에 따라 필수 gate가 아니다.
 
 ---
 
@@ -258,7 +260,7 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 ### M24 — Serial fabric 전 인스턴스와 DMA
 
-- 상태: **작업 1~5 source/build/semantic 완료, 작업 6 물리 HIL 대기** — 5개 block·23개 personality, 핀 bank, singleton/고급 API 경계,
+- 상태: **작업 1~5 source/build/semantic 완료, 작업 6 온보드 기본 PASS·추가 기능 HIL 대기** — 5개 block·23개 personality, 핀 bank, singleton/고급 API 경계,
   DMA lifecycle과 관련 errata를 [M24 Serial Fabric 계약](10_M24_Serial_Fabric_경로와_API_계약.md)에
   고정하고 CI drift 검사를 연결했다. 회로도 재검토로 단독 HIL primary 자원 6개와 무배선 자동화
   후보 7개·외부 fixture 필요 16개도 계약에 추가했다. 실행 결과는
@@ -268,13 +270,16 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
   [M24 작업 2 검증 기록](<../04_검증 기록/35_M24_Serial_Fabric_공통_backend_기준선.md>)에 보존한다.
   작업 3~5에서 UARTE 5개, SPIM/SPIS 각 5개, TWIM/TWIS 각 4개의 direct nrfx adapter와
   sync/async·double-buffer API가 target build를 통과했다. 온보드 UARTE 4개와 TWIM 3개의
-  image/runner도 준비했으나 현재 probe SWD `No ACK` 때문에 새 물리 PASS는 기록하지 않았다.
+  기본 data-path는 `51c1986`에서 PASS했다. Exact 결과는
+  [온보드 교정·재검증](<../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)을 따른다.
+  이전 SWD `No ACK` 기록은 보존하며 기본 PASS를 전체 복구·동시성 PASS로 확대하지 않는다.
 
 - UARTE00/20/21/22/30, SPIM/SPIS00/20/21/22/30, TWIM/TWIS20/21/22/30을 구현한다.
 - Arduino 호환 singleton과 고급 instance factory/direct handle의 책임을 분리한다.
 - UARTE async ring, SPI·I2C sync/async, target/peripheral double buffer와 공통 DMA 수명주기를 제공한다.
 - 완료 gate: 각 personality 단독 HIL, 같은 block 충돌 negative·반복 handover, 다른 block 최대 동시
-  HIL, timeout/cancel/error/System OFF 복구, throughput·CPU·전력 측정.
+  HIL, timeout/cancel/error/System OFF 복구, throughput·CPU·손실·soak 기록.
+  전원 모드 lease의 올바른 해제는 필수이며 외부 계측 기반 전류·파형 보증은 제외한다.
 
 | 작업 | 범위 | 상태 |
 | --- | --- | --- |
@@ -283,13 +288,14 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 | 3 | UARTE 5개와 async RX/TX DMA | **source/build/semantic 완료 · 물리 HIL 대기** |
 | 4 | SPIM/SPIS 각 5개와 sync/async·double buffer | **source/build/semantic 완료 · 외부 fixture HIL 대기** |
 | 5 | TWIM/TWIS 각 4개와 repeated-start·target double buffer | **source/build/semantic 완료 · 물리 HIL 대기** |
-| 6 | 7개 온보드 자동 + 16개 fixture 단독 HIL, 충돌·최대동시·복구, 성능·전력 기록 | **온보드 runner 준비 · 실행/fixture 대기** |
+| 6 | 7개 온보드 + 16개 loopback/peer 기능 HIL, 충돌·허용 최대동시·복구·성능·soak | **온보드 기본 PASS · 추가 기능/fixture 대기** |
 
 ### M25 — Analog·timing·audio·event 전 인스턴스
 
-- 상태: **source/build/semantic 완료, physical HIL 대기** — SAADC·PWM, timer/event,
-  PDM·I2S·QDEC 후보와 배선 없는 내부 VDD·event runner가 준비됐다. 구현과 남은 fixture 경계는
+- 상태: **source/build/semantic과 내부 VDD·event 기본 HIL 완료, 추가 기능 HIL 대기** — SAADC·PWM, timer/event,
+  PDM·I2S·QDEC 후보를 구현했다. 구현 이력은
   [M25 검증 기록](<../04_검증 기록/37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md>)을 따른다.
+  현재 PASS는 41번 기록, 남은 기능 fixture 경계는 42번 범위 합의를 따른다.
 
 - SAADC 8채널 scan/differential/internal/calibration/oversampling/continuous DMA를 제공한다.
 - PWM20/21/22의 12 hardware channel allocator와 sequence/DPPI/DMA를 `analogWrite`, `tone`, Servo와
@@ -297,15 +303,18 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 - TIMER00/10/20~24, GPIOTE20/30, EGU10/20, DPPIC00/10/20/30,
   PPIB00/01/10/11/20/21/22/30과 GRTC 고급 경로를 제공한다.
 - PDM20/21, I2S20과 QDEC20/21의 streaming/double-buffer API와 fixture를 추가한다.
-- LED·button·VBAT monitor와 내부 event 경로는 보드 자체 자동 runner에 우선 배치한다. SAADC 정확도,
-  PWM jitter·주파수, PDM/I2S/QDEC 실제 신호는 승인된 source/sink와 계측 fixture를 사용한다.
-- 완료 gate: 전 instance 단독·동시 HIL, DMA overflow/underrun, timing jitter, long-run soak.
+- LED·button·VBAT monitor와 내부 event 경로는 보드 자체 자동 runner에 우선 배치한다. 외부 기능
+  시험은 두 NU54DK의 안전한 ADC 입력·PWM capture·PDM/I2S/QDEC 합성 신호/loopback을 사용한다.
+  실제 핀을 통과하는 신호와 기대 sample/frame/count는 필수이며 handle 생성으로 대체하지 않는다.
+- 완료 gate: 전 instance 단독·허용 동시 기능 HIL, 기본 timing·DMA overflow/underrun·복구·long-run soak.
+  정밀 ADC 정확도·jitter·음질·신호 품질, 실제 마이크·코덱·엔코더별 호환성은 필수 gate에서 제외한다.
+  합성 peer 신호를 아직 구현하거나 검증하지 못한 경로는 `NOT RUN`/HOLD를 유지한다.
 
 ### M26 — 나머지 SoC 기능과 board 경계
 
-- 상태: **전수 판정 완료, TEMP·WDT30 physical HIL 대기** — 16개 기능에 지원 경계를 부여해
+- 상태: **전수 판정 완료, TEMP·WDT30 기본 physical HIL PASS** — 16개 기능에 지원 경계를 부여해
   `unknown`을 0으로 만들고 strict ledger·생성 문서·CI gate를 연결했다. TEMP·WDT30/31 후보와
-  무배선 TEMP·WDT30 reset runner를 준비했다. 세부 판정은
+  무배선 TEMP·WDT30 reset을 41번 기록에서 검증했다. 세부 판정은
   [M26 지원 경계](11_M26_System_Peripheral_지원_경계.md)와
   [M26 검증 기록](<../04_검증 기록/38_M26_System_Peripheral_판정과_온보드_HIL_준비.md>)을 따른다.
 
@@ -328,6 +337,8 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 - 비교 Core의 공개 예제와 동일 use case를 독립 시험으로 실행하고 부족한 항목은 known limitation에
   정확히 남긴다.
 - 완료 gate: 전 인스턴스·DMA release matrix, Boards Manager lifecycle, stable artifact와 공개 검증.
+  M24·M25의 검증 깊이는 [42번 범위 합의](<../04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)를
+  따른다. 장비·외부 부품 품질 보증을 제외해도 필수 기능 HIL이나 frozen RC gate는 생략하지 않는다.
 
 ### M28 — BLE GAP·Link·Privacy 확장
 
@@ -383,16 +394,18 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 | 시험군 | 최소 fixture·증거 |
 | --- | --- |
-| Serial fabric | 두 NU54DK, logic analyzer, I2C target/controller, SPI controller/peripheral, UART flow-control loop |
-| Analog/PWM | calibrated voltage source 또는 divider, oscilloscope/logic analyzer, 12-channel 동시성 표본 |
-| Audio | PDM mic·I2S codec/loop, sample counter, underrun/overrun와 장시간 hash |
-| Event/timer | loopback pins, timestamp capture, jitter·latency histogram과 DPPI ownership negative |
+| Serial fabric (`v0.4.0`) | 두 NU54DK의 controller/target peer·loopback, 안전한 배선·필요 pull-up, 기대 데이터·오류·DMA·동시성·soak 증거 |
+| Analog/PWM (`v0.4.0`) | 두 NU54DK의 안전한 LOW/HIGH 입력·capture, 채널·sequence·기본 주기/듀티·동시성 표본; 정밀 교정 측정 제외 |
+| Audio/QDEC (`v0.4.0`) | 검증된 PDM/I2S/quadrature 합성 peer·loopback, 실제 sample/frame/count·DMA·복구·장시간 hash; 부품별 호환성 제외 |
+| Event/timer (`v0.4.0`) | loopback pins, peer/internal timestamp·count, 기본 timing·latency 기록과 DPPI ownership negative; 정밀 jitter 보증 제외 |
 | BLE base | 최소 3개 NU54DK, Android·iOS·Windows·Linux, packet trace와 reset/reconnect soak |
 | BLE advanced RF | antenna array/switch, RF attenuator 또는 통제 거리, IQ·CS calibration data |
 | Mesh/coexistence | 다중 node, power-cycle automation, BLE/802.15.4 traffic와 starvation 측정 |
 
 각 마일스톤 기록에는 exact Core/board/NCS/toolchain revision, pin wiring, power 조건, test command,
-raw log, analyzer capture hash와 PASS/FAIL 판정을 남긴다. 한 fixture에서 못 한 항목은 `NOT RUN`으로
+raw log, 사용한 경우 analyzer capture hash와 PASS/FAIL 판정을 남긴다. `v0.4.0`에서 외부 분석기·
+교정 전압원·오디오 장치는 필수가 아니다. 범위 밖 계측은 `범위 밖·미측정`으로 명시한다.
+한 fixture에서 못 한 필수 기능 항목은 `NOT RUN`으로
 남기며 build 결과로 대체하지 않는다.
 
 ---

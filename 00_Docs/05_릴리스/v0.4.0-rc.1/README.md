@@ -24,12 +24,25 @@
 Exact source·artifact·runner와 남은 재개 조건은
 [M27 자동 준비·HOLD 기록](<../../04_검증 기록/39_M27_v0.4.0_rc1_자동_준비와_HOLD.md>)을 따른다.
 Staging compile은 공개 URL 설치·실제 upload·제거·재설치·version 전환을 대신하지 않는다.
+이는 당시 후보의 결과이며 최종 frozen RC에서 다시 검증해야 한다.
+
+`51c1986`의 UART 4개·TWIM 3개·내부 VDD/event·TEMP/WDT30 기본 HIL은
+[온보드 교정·실기 재검증](<../../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)에서
+PASS했다. 아래 범위 합의는 추가 실기 PASS나 최종 공개 승인이 아니다.
+
+## 기능 검증과 사용자 통합 검증의 경계
+
+[프로젝트 소유자와의 범위 합의](<../../04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)에 따라
+온보드 자원과 두 NU54DK의 안전한 peer/loopback·합성 신호·capture로 코어 기능을 검증한다.
+별도 계측기·교정 신호원·실제 마이크/코덱/엔코더를 필수 준비물로 요구하지 않는다.
+정밀 정확도·jitter·전력·신호 품질 및 부품별 호환성은 보증하지 않으며 제품 통합 단계에서 확인한다.
+코어의 실제 데이터 경로·DMA·오류 복구·동시성·장시간 안정성은 계속 필수이며 미실행은 HOLD다.
 
 ## 공개 전 필수 항목
 
-1. M24 UARTE/TWIM 온보드 HIL과 serial 외부 fixture·최대 동시성·복구·성능·전력
-2. M25 내부 event/VDD 온보드 HIL과 analog/PWM/audio/QDEC fixture·jitter·overrun·soak
-3. M26 TEMP·WDT30 reset 온보드 HIL
+1. M24 온보드 추가 기능과 serial loopback/peer·허용 최대 동시성·복구·처리량·soak
+2. M25 analog/PWM/PDM/I2S/QDEC 합성 신호·capture, 기본 timing·DMA·overrun·복구·동시성·soak
+3. M26 TEMP·WDT30 reset 온보드 PASS 증거 유지와 관련 변경 시 회귀 검증
 4. Frozen RC commit의 host/docs/전체 Zephyr build와 이중 package 재현성
 5. 격리 Boards Manager 설치·전체 예제 compile·실제 upload·제거·version 전환
 6. 프로젝트 소유자의 명시적 공개 승인

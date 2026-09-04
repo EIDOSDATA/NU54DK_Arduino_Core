@@ -9,8 +9,8 @@
 | 제품선 | `v0.4.0` / M24 |
 | SoC / SDK | `nRF54L15` / `v3.4.0` / Zephyr `4.4.0` |
 | Board | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` / `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| 상태 | 작업 1~5 source/build/semantic 완료 — 물리 data-path·동시성·성능 HIL 대기 |
-| 갱신일 | 2026-09-03 |
+| 상태 | 작업 1~5 source/build/semantic 완료 — 온보드 기본 PASS, 추가 기능·동시성·성능 HIL 대기 |
+| 갱신일 | 2026-09-04 |
 
 ## 1. 이번 작업의 경계
 
@@ -27,7 +27,10 @@ M24의 후속 순서는 다음과 같다.
 3. **작업 3(완료):** UARTE 5개와 async RX/TX DMA source/build/semantic
 4. **작업 4(완료):** SPIM/SPIS 각 5개와 sync/async·double buffer source/build/semantic
 5. **작업 5(완료):** TWIM/TWIS 각 4개와 repeated-start·target double buffer source/build/semantic
-6. **작업 6(진행):** 온보드 UARTE/TWIM runner 준비 완료, 물리 data-path와 16개 외부 fixture·동시성·성능·전력 대기
+6. **작업 6(진행):** 온보드 UARTE 4개·TWIM 3개 기본 PASS, 추가 기능과 16개 peer/loopback·동시성·성능·soak 대기
+
+현재 온보드 증거는 [41번 기록](<../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)을 따른다.
+기본 PASS는 아래 `planned-hil` profile의 모든 기능·동시성 또는 공개 지원 완료가 아니다.
 
 ## 2. 공개 객체와 고급 API
 
@@ -174,7 +177,7 @@ Bounded stop으로 DMA 정지를 증명하지 못하면 해당 block을 fail-clo
 | --- | --- | --- |
 | 7 | UARTE | RX flush and empty FIFO accounting must not trust a stale RXD.AMOUNT value. |
 | 8 | SPIM | MOSI corruption conditions and the pinned nrfx workaround state are covered by targeted transfer tests. |
-| 21 | SPIM | The final MOSI transition condition is recorded and checked with a logic analyzer where applicable. |
+| 21 | SPIM | The final MOSI transition condition and pinned workaround are reviewed and exercised by targeted peer transfers; unmeasured waveform quality is not guaranteed. |
 | 54 | SPIS | SDO receives a known idle state so the erratum cannot leave it floating. |
 | 105 | TWIM | Cancellation never disables TWIM during clock stretching; an unprovable stop requires reset before reuse. |
 
@@ -185,7 +188,8 @@ Bounded stop으로 DMA 정지를 증명하지 못하면 해당 block을 fail-clo
 - Begin-end and cross-personality handover repeat without stale pins, events, IRQs, DMA or power leases.
 - A five-block maximum-concurrency topology runs with disjoint pins and DMA buffers.
 - Timeout, cancel, bus error, overflow, underrun and System OFF recovery are verified.
-- Throughput, CPU load, latency, data loss and power are recorded for synchronous and asynchronous paths.
+- Software-observed throughput, CPU load, latency and data loss plus power-mode lease state are recorded for synchronous and asynchronous paths; precision timing and power metrology are outside the v0.4.0 release scope.
+- Owner-approved v0.4.0 functional HIL uses onboard resources and safe NU54DK peer/loopback wiring; external measurement equipment and third-party device qualification are not required, but unexecuted core functions remain HOLD.
 - No planned profile or contract-only API is described as public support before all required states pass.
 
 최대 동시성은 이름 개수가 아니라 충돌 없는 실제 topology로 판정한다. 기준 topology는
@@ -193,6 +197,11 @@ Bounded stop으로 DMA 정지를 증명하지 못하면 해당 block을 fail-clo
 UARTE21 단독 시험은 P1 DAP UART를 재사용하지만 이 최대 동시 topology에서는
 UARTE20과 핀이 겹치지 않는 P1.10/P1.14 connector fixture route를 사용한다.
 각 handle의 DMA buffer는 겹치지 않아야 하며 LED/PMIC/DAP 전기 상태도 함께 기록한다.
+
+[42번 범위 합의](<../04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)에 따라 두 NU54DK의
+실제 통신·기대 데이터·DMA·복구·허용 동시성·soak를 검증한다. 외부 계측기는 필수가 아니며
+정밀 파형·전력·부품별 호환성을 보증하지 않는다. Errata 대응과 안전한 배선 조건은 유지하고
+기능 시험이 성립하지 않은 항목은 HOLD로 남긴다.
 
 ## 10. 단일 원본과 검사
 

@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-WINDOWS-DEV-001 |
-| 문서 개정 | 1.3 |
+| 문서 개정 | 1.4 |
 | 문서 상태 | 현재 source 개발 기준 |
 | 적용 제품 버전 | `v0.3.0` stable 이후 `main` |
 | 지원 host | Windows 10/11 x64 |
@@ -389,6 +389,11 @@ checkout이나 당시 공개 ZIP을 다시 build하는 절차는 아니다. 자�
 - 보드별 USB data cable과 독립 CMSIS-DAP V2/UART 연결
 - HIL 문서가 지정한 jumper wire와 pin fixture
 - 외장 J-Link 경로를 시험할 때만 SEGGER J-Link Software와 외장 probe
+
+`v0.4.0`은 [코어 기능 검증 범위 합의](<../04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)에
+따라 두 NU54DK의 peer/loopback·합성 신호·capture를 사용한다. 별도 로직 분석기·오실로스코프·
+교정 신호원·실제 마이크/코덱/엔코더는 필수가 아니다. 필요한 pull-up 등 수동 부품은 시험별로
+준비하며, 정밀 계측·외부 부품 호환성은 코어 기능 PASS에 포함하지 않는다.
 
 HIL PASS는 firmware가 한번 실행됐다는 사실만으로 선언하지 않는다. 시험 runner가 요구하는
 exact Core/board revision, artifact hash, probe와 COM 선택, wiring 조건과 evidence 파일을 모두
