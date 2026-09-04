@@ -9,7 +9,7 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
-import shutil
+import re
 import subprocess
 import sys
 import tempfile
@@ -112,7 +112,12 @@ def assert_exact_clean_commit(repository: Path, revision: str) -> str:
     if status:
         raise M27ReleaseFailure("candidate packaging requires a clean source checkout")
     submodules = git_output(repository, "submodule", "status", "--recursive")
-    if any(line and not line.startswith(" ") for line in submodules.splitlines()):
+    if any(
+        line.startswith(("+", "-", "U"))
+        or re.fullmatch(r" ?[0-9a-f]{40} [^\r\n]+", line) is None
+        for line in submodules.splitlines()
+        if line
+    ):
         raise M27ReleaseFailure("candidate packaging requires exact clean submodules")
     return commit
 

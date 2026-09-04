@@ -44,6 +44,14 @@ class M27ReleaseTests(unittest.TestCase):
         self.assertEqual(package.RELEASE_CANDIDATE_VERSIONS, MODULE.BASE_RC_VERSIONS)
         self.assertEqual(package.STABLE_VERSIONS, MODULE.BASE_STABLE_VERSIONS)
 
+    def test_clean_submodule_status_survives_trimmed_first_prefix(self) -> None:
+        if MODULE.git_output(REPOSITORY, "status", "--porcelain"):
+            self.skipTest("source checkout is intentionally dirty during the unit run")
+        self.assertEqual(
+            MODULE.assert_exact_clean_commit(REPOSITORY, "HEAD"),
+            MODULE.git_output(REPOSITORY, "rev-parse", "HEAD"),
+        )
+
     def test_cli_exposes_no_publish_or_finalize_command(self) -> None:
         parser = MODULE.build_parser()
         action = next(
