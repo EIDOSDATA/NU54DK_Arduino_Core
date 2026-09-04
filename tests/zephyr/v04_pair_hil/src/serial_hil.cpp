@@ -2,6 +2,7 @@
 #include "serial_hil.h"
 #include <nucode/SerialFabric.h>
 #include <variant.h>
+#include <hal/nrf_gpio.h>
 #include <cstddef>
 #include <string.h>
 namespace
@@ -88,6 +89,15 @@ namespace
     }
 }
 
+void initializeOnboardSerialIdle()
+{
+    // Onboard-only harness, called at boot or after proven STOP with no UART
+    // owner. An unselected MCU TX pad must not leave the DAP receiver floating.
+    // Weak input pulls only; never force a peer-driven signal or ignore noise.
+    nrf_gpio_cfg_input(NRF_GPIO_PIN_MAP(0, 0), NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_input(NRF_GPIO_PIN_MAP(1, 4), NRF_GPIO_PIN_PULLUP);
+}
+
 void serviceSerial()
 {
     if (!handle)
@@ -168,6 +178,7 @@ std::uint32_t serialOnboard(std::uint32_t opcode, const std::uint32_t *args,
         if (result != SerialFabricResult::success)
             return 603;
         handle = nullptr;
+        initializeOnboardSerialIdle();
         return 0;
     }
     return 400;

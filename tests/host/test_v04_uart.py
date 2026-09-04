@@ -55,6 +55,10 @@ class UartTests(unittest.TestCase):
         self.assertIn("!second_valid || first_size < 32U || second_size < 32U", source)
         self.assertIn("NRFX_UARTE_RX_ENABLE_CONT", source)
         self.assertIn("NRF_UARTE_EVENT_RXSTARTED", source)
+        firmware = (root / "tests/zephyr/v04_pair_hil/src/serial_hil.cpp").read_text(encoding="utf-8")
+        self.assertIn("NRF_GPIO_PIN_MAP(0, 0), NRF_GPIO_PIN_PULLUP", firmware)
+        self.assertIn("NRF_GPIO_PIN_MAP(1, 4), NRF_GPIO_PIN_PULLUP", firmware)
+        self.assertIn("handle = nullptr;\n        initializeOnboardSerialIdle();", firmware)
 
     def test_dma_state_fail_closed(self):
         uart.check_status([1, 1, 0, 1, 3, 0], 1)

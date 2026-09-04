@@ -166,6 +166,7 @@ namespace
 
 int main()
 {
+    initializeOnboardSerialIdle();
     v04_identity[1] = v04::version;
     v04_identity[2] = role;
     for (unsigned index = 0; index < 10; ++index)

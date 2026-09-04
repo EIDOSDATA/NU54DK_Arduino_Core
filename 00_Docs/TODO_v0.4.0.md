@@ -44,16 +44,16 @@ TODO의 체크만으로 그 원본들의 상태를 바꾸지 않는다. 이 문�
 | --- | --- |
 | 이번에 끝낸 일 | 75 identity·19 시험 family JSON/생성 문서·누락 검사, 구현 대조와 8개 준비 이슈, SWD pair protocol/runner와 onboard 후보 image 작성 |
 | 진행 중인 T 항목 | T01~T03 준비 기준선, T04 온보드 UART 공통 image 통합, T05/T09 무배선 PMIC·timer capture·내부 ADC 추가 시험; T04/T06/T07/T08 전체는 아직 미완료 |
-| 다음 구체적 행동 | T02/T07: PWM·SAADC·I2S MAXCNT 단위/경계의 조기 거부와 native Host 검사. T04/T09: UART burst 실패를 보존하고 명시적 paced producer로 분리 진단. 이후 외부 SPI/TWI·합성 신호·결선 interlock 구현 계속 |
+| 다음 구체적 행동 | T09: 정렬 병합·DAP idle pull-up 진단·CI revision resolver의 Host/target/HIL 재검사. T02/T07 MAXCNT 조기 거부는 구현, RAM/정렬 검증은 남음. 이후 T04~T08 외부 SPI/TWI·합성 신호·결선 interlock 구현 계속 |
 | 다음 작업에 필요한 사용자 행동 | 두 보드 USB 연결 완료 통보 받음. 외부 점퍼는 T10의 확정 결선표 안내 전 연결하지 않음 |
 | 외부 결선 상태 | 두 보드 상호 결선은 T10에 수행하는 요청; 현재는 USB만 전제로 온보드 경로에 한정 |
-| 작업 checkout 분리 | 사용자가 원본 checkout을 수시 코드 정렬 중이라고 확인. 변경은 보존. 현재 구현·exact build는 `C:/nb/s04`, branch `codex/v04-prep-20260905`; 원본 정렬과 합칠 때 내용 충돌을 확인 |
+| 작업 checkout 분리 | 사용자 정렬 완료. 43개 파일을 원본 main `e8cb2a5`로 보존하고 격리 branch에서 `6e19ce8`로 병합. 구현·exact build는 `C:/nb/s04`, branch `codex/v04-prep-20260905`; 원본 checkout은 다음 통합 검증 후 fast-forward 예정 |
 | 마지막 정식 온보드 source | `51c1986242b60ac99df643ee4291946aa83b9986` — 41번 기록의 제한된 범위 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; 새 실기 PASS·최종 공개 승인 없음 |
 | 알려진 문제 | 과거 COM 포트 이탈의 근본 원인 미확정; 아래 연결 진단 원칙 참조 |
 | 이 TODO 작성 작업의 실행 중 시험 | `5e6ef07` pair subset2/2 build PASS. 두 보드 primitives 902개 판정 PASS: TWIM 3개×2속도×100회, TIMER 44 CC, VDD/AVDD 각 단발/32 samples×100회. UART burst는 64-byte 손실 FAIL. 현재 실행 프로세스 없음; T01~T09 전체 미완료 |
 | 로컬 임시 build·evidence | `C:/nb/14` = `5e6ef07`; task work/v04-prep/pair-primitives-5e6ef07.json. 두 보드 모두 해당 pair role1/2, primitives 완료·sleep/제어 대기. 외부 결선 없음. 다음 소스의 근거와 혼합 금지 |
-| CI 확인 | 재개 시 실제 HEAD에 해당하는 run을 다시 조회; 과거 CI 성공을 최신 commit 성공으로 표기하지 않음 |
+| CI 확인 | `6a45403` Software Gates success / Reproducible Builds failure(pair2개 CMake revision 명령). 43번에 원본 URL·로컬 재현 기록. `077bf7e`까지 feature branch push 완료, 이후 병합·수정은 검증 후 main push 필요. 과거 CI를 최신 PASS로 표시하지 않음 |
 | 문서 작업 검증 | 문서 140개 UTF-8·내부 링크 PASS; T01~T25 순서·누락·중복 및 25개 선행조건·완료 기준 검사 PASS; M27 계약 16개/미해결 8개 유지 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 

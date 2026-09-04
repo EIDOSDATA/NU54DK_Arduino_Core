@@ -71,7 +71,11 @@ def discover(device, streams, instance, append):
     quiet(streams, append, f"V04-UART-DISCOVER/{instance}")
     if device.command(9, (instance, seed)) != [0]:
         raise ProtocolError("UART discovery arm failed")
-    selected = collect(streams, payload(seed ^ 0xc3, 32))
+    try:
+        selected = collect(streams, payload(seed ^ 0xc3, 32))
+    except ProtocolError as error:
+        status = device.command(11)
+        raise ProtocolError(f"UART discovery instance={instance}; seed={seed}; status={status}; {error}") from error
     status = device.command(11)
     if status[:4] != [0, 1, 0, 0]:
         raise ProtocolError(f"UART discovery lifecycle failed: {status}")
