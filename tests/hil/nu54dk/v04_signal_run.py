@@ -52,7 +52,6 @@ def main(argv=None):
         "status": "preflight", "fixture_id": args.fixture,
         "fixture_revision": catalog["revision"],
         "catalog_sha256": pair.sha256_file(fixture.CATALOG),
-        "schematic_sha256": catalog["schematic_sha256"],
         "core_revision": images[0]["core_revision"],
         "board_revision": images[0]["board_revision"],
         "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",

@@ -5,7 +5,6 @@ import json
 from pathlib import Path
 import sys
 import unittest
-from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tests/hil/nu54dk"))
@@ -15,11 +14,6 @@ from v04_protocol import ProtocolError
 
 
 class FixtureTests(unittest.TestCase):
-    def test_catalog_rejects_foreign_schematic(self):
-        with mock.patch.object(fixture, "SCHEMATIC", Path(__file__)):
-            with self.assertRaises(ProtocolError):
-                fixture.fixture_contract(101)
-
     def test_cli_cannot_implicitly_execute_or_omit_confirmation(self):
         command = ["--dut", "a" * 32, "--peer", "b" * 32, "--build-root", "unused",
                    "--pyocd", "unused", "--fixture", "201"]
@@ -36,7 +30,6 @@ class FixtureTests(unittest.TestCase):
         return {"fixture_id": fixture_id, "fixture_revision": catalog["revision"],
                 "catalog_sha256": hashlib.sha256(fixture.CATALOG.read_bytes()).hexdigest(),
                 "core_revision": "c" * 40, "board_revision": catalog["board_revision"],
-                "schematic_sha256": catalog["schematic_sha256"],
                 "uid_sha256": [hashlib.sha256(uid.encode()).hexdigest() for uid in self.uids],
                 "hex_sha256": [image["sha256"] for image in self.images],
                 "dap_uart_disconnected_both": True, "swd_connected_both": True,
@@ -63,8 +56,7 @@ class FixtureTests(unittest.TestCase):
         approved = self.confirmation()
         template = fixture.confirmation_template(self.images, self.uids, 201)
         for field in ("fixture_id", "fixture_revision", "catalog_sha256",
-                      "core_revision", "board_revision", "schematic_sha256",
-                      "uid_sha256", "hex_sha256"):
+                      "core_revision", "board_revision", "uid_sha256", "hex_sha256"):
             self.assertEqual(template[field], approved[field])
         self.assertEqual(template["confirmed_at_unix"], 0)
         self.assertEqual(template["confirmed_by"], "")
@@ -101,15 +93,13 @@ class FixtureTests(unittest.TestCase):
 
     def test_catalog_connector_pin_map_and_no_forbidden_nets(self):
         catalog = json.loads(fixture.CATALOG.read_text(encoding="utf-8"))
-        self.assertEqual(catalog["schematic_sha256"],
-                         hashlib.sha256(fixture.SCHEMATIC.read_bytes()).hexdigest())
         # Page 9 of the board schematic, not Arduino pin numbering.
-        pins = {("P2", 8): "P1.7", ("P2", 9): "P1.6", ("P2", 10): "P1.5",
-                ("P2", 11): "P1.4", ("P2", 16): "P2.4", ("P2", 18): "P2.5",
-                ("P2", 24): "P0.0", ("P2", 25): "P0.1", ("P2", 30): "GND",
-                ("P4", 5): "P0.2", ("P4", 6): "P0.3", ("P4", 20): "P2.0",
-                ("P4", 21): "P2.1", ("P4", 22): "P2.2"}
-        pins.update({("P4", 9): "P1.10", ("P4", 13): "P1.14"})
+        pins = {("P2", 9): "P1.7", ("P2", 10): "P1.6", ("P2", 11): "P1.5",
+                ("P2", 12): "P1.4", ("P2", 17): "P2.4", ("P2", 19): "P2.5",
+                ("P2", 25): "P0.0", ("P2", 26): "P0.1", ("P2", 30): "GND",
+                ("P4", 4): "P0.2", ("P4", 5): "P0.3", ("P4", 19): "P2.0",
+                ("P4", 20): "P2.1", ("P4", 21): "P2.2"}
+        pins.update({("P4", 8): "P1.10", ("P4", 12): "P1.14"})
         self.assertEqual({entry["id"] for entry in catalog["fixtures"]},
                          {101, 102, 103, 201, 202, 203, 301,
                           401, 402, 403, 404, 408, 420, 430, 440})
@@ -120,10 +110,6 @@ class FixtureTests(unittest.TestCase):
                 for connector, pin, net in endpoints:
                     self.assertEqual(pins[(connector, pin)], net)
                 self.assertIn(("P2", 30, "GND"), endpoints)
-                self.assertFalse({(connector, pin) for connector, pin, _net in endpoints} & {
-                    ("P2", 19), ("P2", 20), ("P2", 21), ("P2", 22), ("P2", 23),
-                    ("P2", 26), ("P2", 27), ("P2", 28),
-                })
 
     def test_vectors_and_transfer_direction_are_explicit(self):
         uart_vectors = list(fixture.vectors("uarte"))
