@@ -1,0 +1,25 @@
+{
+    "fixture_id": 101,
+    "fixture_revision": 1,
+    "catalog_sha256": "80493f0d24dd707e24f52ae2a56e72affd4d4afb36d261b20266f88a7778cfe8",
+    "core_revision": "8ebf3cc577bf28abcd44fac557d2ae1a29ffa226",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "uid_sha256": [
+        "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+        "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+    ],
+    "hex_sha256": [
+        "ebd8d87c2eba3f3f3161c934a71c8d8a039274347bd41e2a5131c0d495b3eefd",
+        "834411e05c9d88bbe3538505e67d05d7232e807f55c05fb228df00cde24c7c9a"
+    ],
+    "dap_uart_disconnected_both": true,
+    "swd_connected_both": true,
+    "power_rails_not_joined": true,
+    "equal_io_voltage_confirmed": true,
+    "common_ground_confirmed": true,
+    "links_match_catalog": true,
+    "pullups_match_catalog": true,
+    "extra_outputs_disconnected": true,
+    "confirmed_at_unix": 1788559585,
+    "confirmed_by": "eidos"
+}

@@ -13,11 +13,18 @@ from v04_protocol import ProtocolError
 from v04_uart import payload
 
 CATALOG = Path(__file__).with_name("v04_fixtures.json")
+SCHEMATIC = (
+    Path(__file__).resolve().parents[3]
+    / "board_package/NU54DK_Zephyr_DTS/NU54-DK Schematic.pdf"
+)
 CONSENT = 0x53414645
 
 
 def fixture_contract(fixture_id):
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
+    if not SCHEMATIC.is_file() or catalog.get("schematic_sha256") != hashlib.sha256(
+            SCHEMATIC.read_bytes()).hexdigest():
+        raise ProtocolError("fixture catalog is not bound to the exact board schematic")
     matching = [entry for entry in catalog["fixtures"] if entry["id"] == fixture_id]
     if len(matching) != 1:
         raise ProtocolError("unknown or duplicate fixture")
@@ -39,6 +46,7 @@ def confirmation_template(images, uids, fixture_id):
         "catalog_sha256": hashlib.sha256(CATALOG.read_bytes()).hexdigest(),
         "core_revision": images[0]["core_revision"],
         "board_revision": catalog["board_revision"],
+        "schematic_sha256": catalog["schematic_sha256"],
         "uid_sha256": [hashlib.sha256(uid.lower().encode()).hexdigest() for uid in uids],
         "hex_sha256": [image["sha256"] for image in images],
         "dap_uart_disconnected_both": False,
@@ -64,6 +72,7 @@ def validate_confirmation(confirmation, images, uids, fixture_id, now=None):
         "fixture_id": fixture_id, "fixture_revision": catalog["revision"],
         "catalog_sha256": hashlib.sha256(CATALOG.read_bytes()).hexdigest(),
         "core_revision": images[0]["core_revision"], "board_revision": catalog["board_revision"],
+        "schematic_sha256": catalog["schematic_sha256"],
         "uid_sha256": [hashlib.sha256(uid.lower().encode()).hexdigest() for uid in uids],
         "hex_sha256": [image["sha256"] for image in images],
         "dap_uart_disconnected_both": True, "swd_connected_both": True,

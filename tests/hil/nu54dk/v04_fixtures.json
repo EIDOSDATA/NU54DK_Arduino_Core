@@ -1,9 +1,10 @@
 {
   "schema_version": 1,
-  "revision": 1,
+  "revision": 2,
   "status": "preparation-not-wiring-authority",
   "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
   "schematic_page": 9,
+  "schematic_sha256": "7e959be6d8db5d31c55366bd118093727062588770772b226117dd3826798466",
   "global_conditions": [
     "두 USB 전원을 모두 분리한 상태에서 결선과 변경",
     "각 보드는 자기 USB로만 전원 공급; 두 보드 전원 레일은 서로 연결 금지",
@@ -19,10 +20,10 @@
       "banks": [2, 1],
       "instances": [[0, 20], [20, 21, 22]],
       "links": [
-        {"dut": ["P4", 21, "P2.2"], "peer": ["P2", 11, "P1.5"], "signal": "DUT TXD -> peer RXD"},
-        {"dut": ["P4", 19, "P2.0"], "peer": ["P2", 12, "P1.4"], "signal": "DUT RXD <- peer TXD"},
-        {"dut": ["P2", 19, "P2.5"], "peer": ["P2", 9, "P1.7"], "signal": "DUT RTS -> peer CTS"},
-        {"dut": ["P2", 17, "P2.4"], "peer": ["P2", 10, "P1.6"], "signal": "DUT CTS <- peer RTS"},
+        {"dut": ["P4", 22, "P2.2"], "peer": ["P2", 10, "P1.5"], "signal": "DUT TXD -> peer RXD"},
+        {"dut": ["P4", 20, "P2.0"], "peer": ["P2", 11, "P1.4"], "signal": "DUT RXD <- peer TXD"},
+        {"dut": ["P2", 18, "P2.5"], "peer": ["P2", 8, "P1.7"], "signal": "DUT RTS -> peer CTS"},
+        {"dut": ["P2", 16, "P2.4"], "peer": ["P2", 9, "P1.6"], "signal": "DUT CTS <- peer RTS"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
       "notes": "UART는 TXD-RXD와 RTS-CTS를 교차 연결합니다. flow control off vector에서는 RTS/CTS 선을 펌웨어가 구동하지 않습니다.",
@@ -34,10 +35,10 @@
       "banks": [0, 1],
       "instances": [[30], [20, 21, 22]],
       "links": [
-        {"dut": ["P2", 25, "P0.0"], "peer": ["P2", 11, "P1.5"], "signal": "DUT TXD -> peer RXD"},
-        {"dut": ["P2", 26, "P0.1"], "peer": ["P2", 12, "P1.4"], "signal": "DUT RXD <- peer TXD"},
-        {"dut": ["P4", 4, "P0.2"], "peer": ["P2", 9, "P1.7"], "signal": "DUT RTS -> peer CTS"},
-        {"dut": ["P4", 5, "P0.3"], "peer": ["P2", 10, "P1.6"], "signal": "DUT CTS <- peer RTS"},
+        {"dut": ["P2", 24, "P0.0"], "peer": ["P2", 10, "P1.5"], "signal": "DUT TXD -> peer RXD"},
+        {"dut": ["P2", 25, "P0.1"], "peer": ["P2", 11, "P1.4"], "signal": "DUT RXD <- peer TXD"},
+        {"dut": ["P4", 5, "P0.2"], "peer": ["P2", 8, "P1.7"], "signal": "DUT RTS -> peer CTS"},
+        {"dut": ["P4", 6, "P0.3"], "peer": ["P2", 9, "P1.6"], "signal": "DUT CTS <- peer RTS"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
       "notes": "양쪽 debug-control DAP UART를 분리한 뒤 사용하는 P0-P1 교차 결선입니다.",
@@ -49,10 +50,10 @@
       "banks": [1, 1],
       "instances": [[20, 21, 22], [20, 21, 22]],
       "links": [
-        {"dut": ["P2", 12, "P1.4"], "peer": ["P2", 11, "P1.5"], "signal": "DUT TXD -> peer RXD"},
-        {"dut": ["P2", 11, "P1.5"], "peer": ["P2", 12, "P1.4"], "signal": "DUT RXD <- peer TXD"},
-        {"dut": ["P2", 10, "P1.6"], "peer": ["P2", 9, "P1.7"], "signal": "DUT RTS -> peer CTS"},
-        {"dut": ["P2", 9, "P1.7"], "peer": ["P2", 10, "P1.6"], "signal": "DUT CTS <- peer RTS"},
+        {"dut": ["P2", 11, "P1.4"], "peer": ["P2", 10, "P1.5"], "signal": "DUT TXD -> peer RXD"},
+        {"dut": ["P2", 10, "P1.5"], "peer": ["P2", 11, "P1.4"], "signal": "DUT RXD <- peer TXD"},
+        {"dut": ["P2", 9, "P1.6"], "peer": ["P2", 8, "P1.7"], "signal": "DUT RTS -> peer CTS"},
+        {"dut": ["P2", 8, "P1.7"], "peer": ["P2", 9, "P1.6"], "signal": "DUT CTS <- peer RTS"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
       "notes": "P1-P1 UART 교차 결선이며 두 DAP UART level shifter를 모두 분리합니다.",
@@ -64,10 +65,10 @@
       "banks": [2, 1],
       "instances": [[0, 20], [20, 21, 22]],
       "links": [
-        {"dut": ["P4", 20, "P2.1"], "peer": ["P2", 12, "P1.4"], "signal": "SCK"},
-        {"dut": ["P4", 21, "P2.2"], "peer": ["P2", 11, "P1.5"], "signal": "DUT MOSI / DUT SPIS MISO"},
-        {"dut": ["P2", 17, "P2.4"], "peer": ["P2", 10, "P1.6"], "signal": "DUT MISO / DUT SPIS MOSI"},
-        {"dut": ["P2", 19, "P2.5"], "peer": ["P2", 9, "P1.7"], "signal": "CSN"},
+        {"dut": ["P4", 21, "P2.1"], "peer": ["P2", 11, "P1.4"], "signal": "SCK"},
+        {"dut": ["P4", 22, "P2.2"], "peer": ["P2", 10, "P1.5"], "signal": "DUT MOSI / DUT SPIS MISO"},
+        {"dut": ["P2", 16, "P2.4"], "peer": ["P2", 9, "P1.6"], "signal": "DUT MISO / DUT SPIS MOSI"},
+        {"dut": ["P2", 18, "P2.5"], "peer": ["P2", 8, "P1.7"], "signal": "CSN"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
       "notes": "DUT가 SPIS로 바뀌면 P2 전용 MISO/MOSI가 교대하므로 peer P1의 MOSI/MISO를 펌웨어가 함께 교대. SCK/CSN 출력은 controller 한 대뿐.",
@@ -79,10 +80,10 @@
       "banks": [0, 1],
       "instances": [[30], [20, 21, 22]],
       "links": [
-        {"dut": ["P2", 25, "P0.0"], "peer": ["P2", 12, "P1.4"], "signal": "SCK"},
-        {"dut": ["P2", 26, "P0.1"], "peer": ["P2", 11, "P1.5"], "signal": "MOSI"},
-        {"dut": ["P4", 4, "P0.2"], "peer": ["P2", 10, "P1.6"], "signal": "MISO"},
-        {"dut": ["P4", 5, "P0.3"], "peer": ["P2", 9, "P1.7"], "signal": "CSN"},
+        {"dut": ["P2", 24, "P0.0"], "peer": ["P2", 11, "P1.4"], "signal": "SCK"},
+        {"dut": ["P2", 25, "P0.1"], "peer": ["P2", 10, "P1.5"], "signal": "MOSI"},
+        {"dut": ["P4", 5, "P0.2"], "peer": ["P2", 9, "P1.6"], "signal": "MISO"},
+        {"dut": ["P4", 6, "P0.3"], "peer": ["P2", 8, "P1.7"], "signal": "CSN"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
       "notes": "양쪽 모두 유연 경로. controller/peripheral 역할을 바꿔도 MOSI↔MOSI, MISO↔MISO 연결 유지.",
@@ -94,10 +95,10 @@
       "banks": [1, 1],
       "instances": [[20, 21, 22], [20, 21, 22]],
       "links": [
-        {"dut": ["P2", 12, "P1.4"], "peer": ["P2", 12, "P1.4"], "signal": "SCK"},
-        {"dut": ["P2", 11, "P1.5"], "peer": ["P2", 11, "P1.5"], "signal": "MOSI"},
-        {"dut": ["P2", 10, "P1.6"], "peer": ["P2", 10, "P1.6"], "signal": "MISO"},
-        {"dut": ["P2", 9, "P1.7"], "peer": ["P2", 9, "P1.7"], "signal": "CSN"},
+        {"dut": ["P2", 11, "P1.4"], "peer": ["P2", 11, "P1.4"], "signal": "SCK"},
+        {"dut": ["P2", 10, "P1.5"], "peer": ["P2", 10, "P1.5"], "signal": "MOSI"},
+        {"dut": ["P2", 9, "P1.6"], "peer": ["P2", 9, "P1.6"], "signal": "MISO"},
+        {"dut": ["P2", 8, "P1.7"], "peer": ["P2", 8, "P1.7"], "signal": "CSN"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
       "notes": "DAP 4개 신호를 모두 격리. P1.11/12 PMIC·VBAT 신호는 사용하지 않음.",
@@ -109,8 +110,8 @@
       "banks": [1, 0],
       "instances": [[20, 21, 22], [30]],
       "links": [
-        {"dut": ["P2", 12, "P1.4"], "peer": ["P2", 25, "P0.0"], "signal": "SDA"},
-        {"dut": ["P2", 11, "P1.5"], "peer": ["P2", 26, "P0.1"], "signal": "SCL"},
+        {"dut": ["P2", 11, "P1.4"], "peer": ["P2", 24, "P0.0"], "signal": "SDA"},
+        {"dut": ["P2", 10, "P1.5"], "peer": ["P2", 25, "P0.1"], "signal": "SCL"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
       "notes": "PMIC P1.2/P1.3 버스와 완전히 분리. DUT P4.25 VDD_MOD에서만 pull-up하고 peer 전원 pin에는 연결하지 않습니다. 1MHz는 기능 통과 여부를 기록하며 rise-time 품질 보증으로 해석하지 않습니다.",
@@ -122,7 +123,7 @@
       "banks": [1, 1],
       "instances": [[20, 21, 22], [20, 21, 22]],
       "links": [
-        {"dut": ["P2", 12, "P1.4"], "peer": ["P4", 12, "P1.14"], "signal": "peer PWM level -> DUT SAADC AIN0"},
+        {"dut": ["P2", 11, "P1.4"], "peer": ["P4", 13, "P1.14"], "signal": "peer PWM level -> DUT SAADC AIN0"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
       "notes": "peer(role 2)의 LED4 buffer 입력 P1.14를 PWM source로 쓰고 DUT(role 1)의 격리된 AIN0에서 수동 SAMPLE합니다. PWM20/21/22의 channel slot 0~3을 순차 검사하며 controller_role=2만 허용합니다.",
@@ -134,7 +135,7 @@
       "banks": [1, 1],
       "instances": [[20, 21, 22], [20, 21, 22]],
       "links": [
-        {"dut": ["P2", 11, "P1.5"], "peer": ["P4", 12, "P1.14"], "signal": "peer PWM level -> DUT SAADC AIN1"},
+        {"dut": ["P2", 10, "P1.5"], "peer": ["P4", 13, "P1.14"], "signal": "peer PWM level -> DUT SAADC AIN1"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
       "notes": "AIN1용 재결선입니다. 두 보드 DAP UART를 분리하고 PWM20/21/22의 channel slot 0~3을 순차 검사합니다.",
@@ -146,7 +147,7 @@
       "banks": [1, 1],
       "instances": [[20, 21, 22], [20, 21, 22]],
       "links": [
-        {"dut": ["P2", 10, "P1.6"], "peer": ["P4", 12, "P1.14"], "signal": "peer PWM level -> DUT SAADC AIN2"},
+        {"dut": ["P2", 9, "P1.6"], "peer": ["P4", 13, "P1.14"], "signal": "peer PWM level -> DUT SAADC AIN2"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
       "notes": "AIN2용 재결선입니다. 두 보드 DAP UART를 분리하고 PWM20/21/22의 channel slot 0~3을 순차 검사합니다.",
@@ -158,7 +159,7 @@
       "banks": [1, 1],
       "instances": [[20, 21, 22], [20, 21, 22]],
       "links": [
-        {"dut": ["P2", 9, "P1.7"], "peer": ["P4", 12, "P1.14"], "signal": "peer PWM level -> DUT SAADC AIN3"},
+        {"dut": ["P2", 8, "P1.7"], "peer": ["P4", 13, "P1.14"], "signal": "peer PWM level -> DUT SAADC AIN3"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
       "notes": "AIN3용 재결선입니다. 두 보드 DAP UART를 분리하고 PWM20/21/22의 channel slot 0~3을 순차 검사합니다.",
@@ -170,7 +171,7 @@
       "banks": [1, 1],
       "instances": [[20, 21, 22], [20, 21, 22]],
       "links": [
-        {"dut": ["P4", 12, "P1.14"], "peer": ["P4", 12, "P1.14"], "signal": "peer PWM level -> DUT SAADC AIN7"},
+        {"dut": ["P4", 13, "P1.14"], "peer": ["P4", 13, "P1.14"], "signal": "peer PWM level -> DUT SAADC AIN7"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
       "notes": "AIN7은 DUT와 peer의 LED4 buffer 입력 사이 단방향 연결입니다. PWM20/21/22의 channel slot 0~3을 순차 검사하며 controller_role=2만 허용합니다.",
@@ -182,8 +183,8 @@
       "banks": [1, 1],
       "instances": [[20, 21], [20, 21]],
       "links": [
-        {"dut": ["P2", 12, "P1.4"], "peer": ["P4", 12, "P1.14"], "signal": "peer PWM -> DUT quadrature phase A"},
-        {"dut": ["P2", 10, "P1.6"], "peer": ["P4", 8, "P1.10"], "signal": "peer PWM -> DUT quadrature phase B"},
+        {"dut": ["P2", 11, "P1.4"], "peer": ["P4", 13, "P1.14"], "signal": "peer PWM -> DUT quadrature phase A"},
+        {"dut": ["P2", 9, "P1.6"], "peer": ["P4", 9, "P1.10"], "signal": "peer PWM -> DUT quadrature phase B"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
       "notes": "peer(role 2)의 LED4/LED2 buffer 입력을 PWM sequence로 구동해 DUT(role 1)의 QDEC20/21이 누산합니다. controller_role=2만 허용합니다.",
@@ -195,10 +196,10 @@
       "banks": [1, 1],
       "instances": [[20], [20]],
       "links": [
-        {"dut": ["P2", 12, "P1.4"], "peer": ["P2", 12, "P1.4"], "signal": "SCK"},
-        {"dut": ["P2", 11, "P1.5"], "peer": ["P2", 11, "P1.5"], "signal": "LRCK"},
-        {"dut": ["P2", 10, "P1.6"], "peer": ["P2", 9, "P1.7"], "signal": "DUT SDOUT -> peer SDIN"},
-        {"dut": ["P2", 9, "P1.7"], "peer": ["P2", 10, "P1.6"], "signal": "DUT SDIN <- peer SDOUT"},
+        {"dut": ["P2", 11, "P1.4"], "peer": ["P2", 11, "P1.4"], "signal": "SCK"},
+        {"dut": ["P2", 10, "P1.5"], "peer": ["P2", 10, "P1.5"], "signal": "LRCK"},
+        {"dut": ["P2", 9, "P1.6"], "peer": ["P2", 8, "P1.7"], "signal": "DUT SDOUT -> peer SDIN"},
+        {"dut": ["P2", 8, "P1.7"], "peer": ["P2", 9, "P1.6"], "signal": "DUT SDIN <- peer SDOUT"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
       "notes": "controller role만 I2S master clock을 출력하며 양쪽 SDOUT/SDIN은 교차 연결합니다. MCK는 사용하지 않습니다.",
@@ -210,9 +211,9 @@
       "banks": [1, 1],
       "instances": [[20, 21], [20, 21]],
       "links": [
-        {"dut": ["P2", 12, "P1.4"], "peer": ["P2", 11, "P1.5"], "signal": "receiver PDM CLK -> generator SPIS SCK"},
-        {"dut": ["P2", 10, "P1.6"], "peer": ["P2", 9, "P1.7"], "signal": "receiver PDM DATA <- generator SPIS MISO"},
-        {"dut": ["P2", 11, "P1.5"], "peer": ["P2", 12, "P1.4"], "signal": "receiver gate LOW -> generator SPIS CSN"},
+        {"dut": ["P2", 11, "P1.4"], "peer": ["P2", 10, "P1.5"], "signal": "receiver PDM CLK -> generator SPIS SCK"},
+        {"dut": ["P2", 9, "P1.6"], "peer": ["P2", 8, "P1.7"], "signal": "receiver PDM DATA <- generator SPIS MISO"},
+        {"dut": ["P2", 10, "P1.5"], "peer": ["P2", 11, "P1.4"], "signal": "receiver gate LOW -> generator SPIS CSN"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
       "notes": "PDM receiver가 clock을 만들고 상대 SPIS EasyDMA가 동기 bitstream을 출력합니다. mono density 순서와 stereo 좌우 channel 분리를 실기에서 판정합니다.",

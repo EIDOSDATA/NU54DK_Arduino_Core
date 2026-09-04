@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-external-fixture",
+  "status": "failed",
+  "fixture_id": 101,
+  "fixture_revision": 1,
+  "catalog_sha256": "80493f0d24dd707e24f52ae2a56e72affd4d4afb36d261b20266f88a7778cfe8",
+  "core_revision": "8ebf3cc577bf28abcd44fac557d2ae1a29ffa226",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "uart-async-and-serial-sync-async-single-double-buffer",
+  "external_wiring_executed": true,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "ebd8d87c2eba3f3f3161c934a71c8d8a039274347bd41e2a5131c0d495b3eefd",
+      "elf_sha256": "68cba6c3717ccff216de10c4c0f92c2a8ba1cc6b54c5297d19b5fcfe4eeb9117",
+      "record_sha256": "908908c9d7ad6ae2f247679d560c9d6e214d26d7467edf525b6ab4d4c7578a15",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "seconds": 7.312,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "dbd56c3716716ada0cc49fe42cdbaf70117c65cd34084a1a0398dfdfe4f80b35"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "834411e05c9d88bbe3538505e67d05d7232e807f55c05fb228df00cde24c7c9a",
+      "elf_sha256": "9ea13a31de32b9406b9d3693d3e6d2eb69b04321e190e7f64fb05541435ce61e",
+      "record_sha256": "908908c9d7ad6ae2f247679d560c9d6e214d26d7467edf525b6ab4d4c7578a15",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "seconds": 7.234,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "7e19e1ff5f1515f453b429afdee4126a55b77c73e96de5ce34b401c8aa75745f"
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "V04-FIXTURE-CLEANUP",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "confirmation_sha256": "26ba8bac577b033996d653adf48cd7d13d89c403581948d9f13e7003a0521206",
+  "confirmed_at_unix": 1788559585,
+  "error": "ProtocolError: fixture DMA timeout role=2: [1, 1, 0, 0, 0, 1, 0, 0]",
+  "completed_at_utc": "2026-09-04T22:07:15.213127+00:00"
+}

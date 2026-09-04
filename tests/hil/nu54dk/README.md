@@ -459,8 +459,8 @@ PDM/I2S/QDEC peer 신호 generator/receiver와 판정기는 build-only까지 준
 ### 외부 UART/SPI/TWI 준비 모듈 — 아직 T10 실행 안내가 아님
 
 [v04_fixtures.json](v04_fixtures.json)은 회로도 9페이지의 **커넥터 이름/핀 번호/GPIO net**을
-분리한 준비용 목록입니다. `P2` 커넥터의 9/10/11/12번은 각각 GPIO P1.7/6/5/4입니다.
-GPIO P2.4/5는 같은 커넥터의 17/19번입니다. GPIO 포트 이름을 커넥터 번호로 읽지 않습니다.
+분리한 준비용 목록입니다. `P2` 커넥터의 8/9/10/11번은 각각 GPIO P1.7/6/5/4입니다.
+GPIO P2.4/5는 같은 커넥터의 16/18번입니다. GPIO 포트 이름을 커넥터 번호로 읽지 않습니다.
 GPIO P2.6~10, PMIC I2C·INT, VBAT divider, LFXO에는 이 UART/SPI/TWI 시험을 연결하지 않습니다.
 
 새 `fixture_hil.cpp`는 고정된 UART 101/102/103, SPI 201/202/203과 TWI 301 경로만 선택합니다. 외부 명령은
@@ -514,9 +514,9 @@ PASS가 아닙니다.
 
 | ID | 기능 | 전원 분리 상태에서 연결할 신호 | 판정 범위 |
 | --- | --- | --- | --- |
-| 401~404 | PWM→SAADC | peer P4.12(P1.14) → DUT P2.12/11/10/9의 P1.4/AIN0~P1.7/AIN3 중 해당 한 선, GND↔GND | PWM20/21/22 channel 0~3, AIN0~3, 32/256 sample과 DMA 길이 |
-| 408 | PWM→SAADC | peer P4.12(P1.14) → DUT P4.12(P1.14/AIN7), GND↔GND | 안전한 LED buffer 입력의 AIN7과 PWM channel 0~3 |
-| 420 | PWM→QDEC | peer P4.12(P1.14) → DUT P2.12(P1.4/A), peer P4.8(P1.10) → DUT P2.10(P1.6/B), GND↔GND | PWM20/21/22×QDEC20/21, 방향·debounce·count |
+| 401~404 | PWM→SAADC | peer P4.13(P1.14) → DUT P2.11/10/9/8의 P1.4/AIN0~P1.7/AIN3 중 해당 한 선, GND↔GND | PWM20/21/22 channel 0~3, AIN0~3, 32/256 sample과 DMA 길이 |
+| 408 | PWM→SAADC | peer P4.13(P1.14) → DUT P4.13(P1.14/AIN7), GND↔GND | 안전한 LED buffer 입력의 AIN7과 PWM channel 0~3 |
+| 420 | PWM→QDEC | peer P4.13(P1.14) → DUT P2.11(P1.4/A), peer P4.9(P1.10) → DUT P2.9(P1.6/B), GND↔GND | PWM20/21/22×QDEC20/21, 방향·debounce·count |
 | 430 | I2S | P1.4 SCK↔SCK, P1.5 LRCK↔LRCK, P1.6↔상대 P1.7 두 선 교차, GND↔GND | master/slave, 16/48kHz, 8/16/24/32-bit, channel·DMA packing |
 | 440 | PDM | receiver P1.4 CLK→generator P1.5 SCK, receiver P1.6 DATA←generator P1.7 MISO, receiver P1.5 gate→generator P1.4 CSN, GND↔GND | PDM20/21, mono/stereo edge, 25/50/75% density 순서·channel 분리 |
 
