@@ -135,7 +135,9 @@ def run_onboard(device: Device, rounds: int, append) -> None:
                 if len(reply) != 5 or reply[:3] != [samples, 0, 1]:
                     raise ProtocolError(f"ADC lifecycle oracle failed: {reply}")
                 low, high = signed(reply[3]), signed(reply[4])
-                if not 0 < low <= high <= 4095 or (input_code == 0x80 and low <= 1000) or (input_code == 0x82 and not 1000 <= low <= high <= 3900):
+                # gain=1/4, internal 0.9 V => 3.6 V full scale. Functional,
+                # deliberately broad rail ranges; this is not calibrated voltage QA.
+                if not 0 < low <= high <= 4095 or (input_code == 0x80 and not 2500 <= low <= high <= 4000) or (input_code == 0x82 and not 1000 <= low <= high <= 3000):
                     raise ProtocolError(f"ADC internal range oracle failed input={input_code}: {reply}")
                 append(f"V04-ADC-INTERNAL/{input_code:02x}/{samples}/{round_number}", {"result": reply})
 

@@ -67,11 +67,22 @@ namespace nucode::arduino
         disabled = 0xFFU,
     };
 
-    /** @brief 한 logical SAADC channel의 positive/negative 입력입니다. */
+    /** @brief nRF54L15의 8개 SAADC gain. 내부 reference는 0.9 V입니다. */
+    enum class SaadcGain : std::uint8_t
+    {
+        two = 0U, one, two_thirds, one_half, two_fifths,
+        one_third, two_sevenths, one_quarter,
+    };
+
+    /** @brief 한 logical SAADC channel의 입력·gain입니다.
+     * gain=1 기본값을 보존합니다. 0.9 V보다 높은 입력은 적절한 감쇠 gain을
+     * 선택해야 하며, gain 선택이 pad 허용 전압을 높이지는 않습니다.
+     */
     struct SaadcChannelConfiguration
     {
         SaadcInput positive{SaadcInput::ain0};
         SaadcInput negative{SaadcInput::disabled};
+        SaadcGain gain{SaadcGain::one};
     };
 
     /** @brief SAADC 8채널 scan과 연속 double-buffer 설정입니다. */

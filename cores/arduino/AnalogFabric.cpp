@@ -573,7 +573,8 @@ namespace nucode::arduino
         for (std::size_t index = 0U; index < configuration.channel_count; ++index)
         {
             const auto &channel = configuration.channels[index];
-            if (!supportedInput(channel.positive) ||
+            if (static_cast<unsigned>(channel.gain) > static_cast<unsigned>(SaadcGain::one_quarter) ||
+                !supportedInput(channel.positive) ||
                 (channel.negative != SaadcInput::disabled &&
                  (!externalInput(channel.positive) ||
                   !externalInput(channel.negative) ||
@@ -710,6 +711,13 @@ namespace nucode::arduino
                         positive, negative, static_cast<std::uint8_t>(index));
                     channels[index] = channel;
                 }
+                // This core targets nRF54L15. Assert the complete encoding below
+                // instead of relying on another SoC's gain enum order.
+                static_assert(SAADC_CH_CONFIG_GAIN_Gain2 == 0 && SAADC_CH_CONFIG_GAIN_Gain1 == 1 &&
+                              SAADC_CH_CONFIG_GAIN_Gain2_3 == 2 && SAADC_CH_CONFIG_GAIN_Gain2_4 == 3 &&
+                              SAADC_CH_CONFIG_GAIN_Gain2_5 == 4 && SAADC_CH_CONFIG_GAIN_Gain2_6 == 5 &&
+                              SAADC_CH_CONFIG_GAIN_Gain2_7 == 6 && SAADC_CH_CONFIG_GAIN_Gain2_8 == 7);
+                channels[index].channel_config.gain = static_cast<nrf_saadc_gain_t>(context.channels[index].gain);
             }
             driver_error = nrfx_saadc_channels_config(channels, context.channel_count);
         }

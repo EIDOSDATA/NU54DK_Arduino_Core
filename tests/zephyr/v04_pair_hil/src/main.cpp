@@ -75,7 +75,7 @@ std::uint32_t adcTest(const std::uint32_t *args, std::uint32_t *out, std::uint32
     // Input allowlist: no external pad can be sampled or driven by this opcode.
     if ((args[0] != 0x80 && args[0] != 0x82) || args[1] == 0 || args[1] > 32) return 400;
     auto &adc = analogFabric().saadc();
-    const SaadcChannelConfiguration channel{static_cast<SaadcInput>(args[0]), SaadcInput::disabled};
+    const SaadcChannelConfiguration channel{static_cast<SaadcInput>(args[0]), SaadcInput::disabled, SaadcGain::one_quarter};
     if (adc.configure({&channel, 1, 12, 1, 0}) != AnalogFabricResult::success ||
         adc.start(adc_memory, args[1], nullptr, 0) != AnalogFabricResult::success) return 520;
     bool ready = false, complete = false, failed = false;

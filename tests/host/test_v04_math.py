@@ -36,6 +36,10 @@ class V04MathTests(unittest.TestCase):
         supported = analog.split("bool supportedInput(", 1)[1].split("[[nodiscard]]", 1)[0]
         self.assertNotIn("case SaadcInput::vss", supported)
         self.assertIn("case SaadcInput::avdd", supported)
+        self.assertIn("channels[index].channel_config.gain =", analog)
+        api = (ROOT / "cores/arduino/nucode/AnalogFabric.h").read_text(encoding="utf-8")
+        self.assertIn("SaadcGain gain{SaadcGain::one}", api)
+        self.assertIn("SaadcGain::one_quarter", (ROOT / "tests/zephyr/v04_pair_hil/src/main.cpp").read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__": unittest.main()
