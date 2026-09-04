@@ -297,6 +297,9 @@ namespace nucode::arduino
                 nrfx_twim_init(&context->driver, &configuration, twimEvent, context);
             if (driver_error != 0)
                 return mapResult(driver_error);
+            // nrfx_twim_init leaves the instance INITIALIZED, not POWERED_ON.
+            // xfer() requires the explicit enable transition on this nrfx API.
+            nrfx_twim_enable(&context->driver);
             context->route = route;
             context->buffers[0] = {};
             context->buffers[1] = {};
