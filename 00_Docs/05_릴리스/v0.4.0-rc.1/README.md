@@ -18,7 +18,12 @@
 - M24: UARTE·SPIM/SPIS·TWIM/TWIS 전 instance 후보와 온보드 runner
 - M25: SAADC·PWM·timer/event·PDM·I2S·QDEC 후보와 온보드 runner
 - M26: 16개 system 기능의 지원 경계, TEMP·WDT30/31 후보와 온보드 runner
-- M27: package·checksum·SBOM·license·RC index의 이중 재현 build와 fail-closed HOLD plan
+- M27: package·checksum·SBOM·license·RC index 이중 재현과 격리 staging 예제 29/29 compile PASS,
+  fail-closed HOLD plan
+
+Exact source·artifact·runner와 남은 재개 조건은
+[M27 자동 준비·HOLD 기록](<../../04_검증 기록/39_M27_v0.4.0_rc1_자동_준비와_HOLD.md>)을 따른다.
+Staging compile은 공개 URL 설치·실제 upload·제거·재설치·version 전환을 대신하지 않는다.
 
 ## 공개 전 필수 항목
 

@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 1.4 |
+| 문서 개정 | 1.5 |
 | 문서 상태 | M23·M26 완료 / M24·M25 source·build와 runner 완료, physical gate 대기 / M27 준비 중 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.3.0` stable / commit `bae0957d2425e4418199a2a3a018bf8e9a0dc356` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
@@ -319,9 +319,10 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 ### M27 — `v0.4.0` Peripheral Parity 릴리스
 
-- 상태: **준비 중 / 공개 HOLD** — package·SBOM·checksum·index 재현성과 release readiness를
-  자동화하되, M24~M26의 필수 physical evidence가 채워지기 전에는 tag·GitHub Release·stable
-  index를 만들거나 공개하지 않는다.
+- 상태: **비공개 후보 자동 gate PASS / 공개 HOLD** — package·SBOM·checksum·index 이중 재현과
+  staging 설치본 예제 29/29 compile을 통과했다. M24~M26의 필수 physical evidence와 frozen RC
+  release gate 전에는 tag·GitHub Release·stable index를 만들거나 공개하지 않는다. Exact 결과는
+  [M27 자동 준비·HOLD 기록](<../04_검증 기록/39_M27_v0.4.0_rc1_자동_준비와_HOLD.md>)을 따른다.
 
 - M23~M26 manifest, examples, HIL, package install과 clean-environment 재현 build를 통합한다.
 - 비교 Core의 공개 예제와 동일 use case를 독립 시험으로 실행하고 부족한 항목은 known limitation에

@@ -231,7 +231,7 @@ asset과 stable index 항목은 재현성, 감사와 downgrade를 위해 삭제�
 | `v0.1.0` | 역사적·비지원 | Core, 기본 API, build/upload와 package |
 | `v0.2.0` | 역사적·비지원 | CI/CD, profile·예제, Board/System과 BLE NUS |
 | `v0.3.0` | **현재 stable** | Arduino compatibility, 동적 peripheral/analog, BLE GAP/GATT/security/profile, storage |
-| `v0.4.0` | M23·M26 완료, M24·M25 physical gate와 M27 준비 중 | 75개 identity, 전 peripheral source·EasyDMA·동시성 계약과 system 기능 경계; 실제 지원 승격은 HIL 뒤 결정 |
+| `v0.4.0` | M23·M26 완료, M24·M25 physical gate·M27 공개 HOLD | 전 peripheral 후보와 비공개 package·29/29 compile 검증; 실제 지원 승격은 HIL 뒤 결정 |
 | `v0.5.0` | 계획 | Bluetooth LE 확장·ISO/LE Audio·Direction Finding·Channel Sounding·Mesh |
 | `v0.6.0` | 계획 | Storage/Crypto, TF-M, 고급 memory layout와 secure update/recovery |
 | `v0.7.0` | 계획 | Radio profile, IEEE 802.15.4, ESB와 OpenThread |
