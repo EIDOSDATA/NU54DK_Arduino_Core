@@ -209,6 +209,11 @@ def flash_image(
     command = [
         str(pyocd),
         "load",
+        "--no-config",
+        "-O",
+        "auto_unlock=false",
+        "--erase",
+        "sector",
         "--target",
         "nrf54l",
         "--uid",

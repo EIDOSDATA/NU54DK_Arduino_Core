@@ -137,6 +137,11 @@ def pyocd_command(pyocd: Path, probe_id: str, image: Path) -> list[str]:
     return [
         str(pyocd),
         "load",
+        "--no-config",
+        "-O",
+        "auto_unlock=false",
+        "--erase",
+        "sector",
         "--target",
         "nrf54l",
         "--uid",

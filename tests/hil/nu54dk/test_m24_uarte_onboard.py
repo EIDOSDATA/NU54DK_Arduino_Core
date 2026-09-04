@@ -5,7 +5,9 @@ from __future__ import annotations
 
 import importlib.util
 from pathlib import Path
+from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 
 
 SCRIPT = Path(__file__).with_name("m24_uarte_onboard.py")
@@ -46,6 +48,11 @@ class M24UarteOnboardTests(unittest.TestCase):
             [
                 "pyocd.exe",
                 "load",
+                "--no-config",
+                "-O",
+                "auto_unlock=false",
+                "--erase",
+                "sector",
                 "--target",
                 "nrf54l",
                 "--uid",
@@ -62,6 +69,27 @@ class M24UarteOnboardTests(unittest.TestCase):
     def test_ready_frame_is_fixed_per_instance(self) -> None:
         self.assertEqual(len(MODULE.ready_frame(20)), MODULE.PACKET_SIZE)
         self.assertNotEqual(MODULE.ready_frame(20), MODULE.ready_frame(21))
+
+    def test_all_onboard_flash_runners_disable_automatic_mass_erase(self) -> None:
+        for name in ("m24_uarte_onboard", "m24_twim_onboard", "m25_onboard", "m26_onboard"):
+            with self.subTest(runner=name):
+                specification = importlib.util.spec_from_file_location(
+                    f"test_safe_{name}", SCRIPT.with_name(f"{name}.py")
+                )
+                assert specification and specification.loader
+                module = importlib.util.module_from_spec(specification)
+                specification.loader.exec_module(module)
+                with patch.object(
+                    module.subprocess, "run",
+                    return_value=SimpleNamespace(returncode=0, stdout=b"flash passed"),
+                ) as command:
+                    module.flash_image(Path("pyocd.exe"), "exact-uid", Path("image.hex"), 120)
+                arguments = command.call_args.args[0]
+                self.assertEqual(arguments[arguments.index("--uid") + 1], "exact-uid")
+                self.assertEqual(arguments[arguments.index("--erase") + 1], "sector")
+                self.assertIn("auto_unlock=false", arguments)
+                self.assertIn("--no-config", arguments)
+                self.assertNotIn("chip", arguments)
 
 
 if __name__ == "__main__":
