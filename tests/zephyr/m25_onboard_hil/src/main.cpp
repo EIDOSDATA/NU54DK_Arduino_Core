@@ -136,23 +136,31 @@ bool exerciseInternalSaadc(std::int16_t &sample) {
           AnalogFabricResult::success)
     return false;
   bool complete = false;
-  for (std::uint32_t waited = 0U; waited < 100000U && !complete;
+  bool failed = false;
+  bool sampled = false;
+  for (std::uint32_t waited = 0U; waited < 100000U && !complete && !failed;
        waited += 100U) {
     SaadcEvent event{};
     while (saadc.takeEvent(event)) {
+      if (event.type == SaadcEventType::ready && !sampled) {
+        sampled = saadc.sample() == AnalogFabricResult::success;
+        failed = !sampled;
+      }
       if (event.type == SaadcEventType::buffer_complete &&
           event.buffer == saadc_samples && event.samples == 1U) {
         complete = true;
         sample = saadc_samples[0];
       }
-      if (event.type == SaadcEventType::error)
+      if (event.type == SaadcEventType::error) {
+        failed = true;
         break;
+      }
     }
     if (!complete)
       k_busy_wait(100U);
   }
   const bool stopped = saadc.stop() == AnalogFabricResult::success;
-  return complete && sample > 0 && stopped;
+  return sampled && !failed && complete && sample > 0 && stopped;
 }
 
 bool verifyStreamFabricIntegration() {

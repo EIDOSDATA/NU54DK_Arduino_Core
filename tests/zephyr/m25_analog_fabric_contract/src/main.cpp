@@ -82,6 +82,8 @@ ZTEST(m25_analog_fabric_contract, test_inactive_stop_operations_fail_closed)
                   "active가 아닌 PWM stop을 허용했습니다.");
     std::int16_t samples[8]{};
     auto &saadc = analogFabric().saadc();
+    zassert_equal(saadc.sample(), AnalogFabricResult::wrong_state,
+                  "active/READY가 아닌 SAADC SAMPLE을 허용했습니다.");
     zassert_equal(saadc.queueBuffer(samples, 8U), AnalogFabricResult::wrong_state,
                   "active가 아닌 SAADC buffer를 허용했습니다.");
 }

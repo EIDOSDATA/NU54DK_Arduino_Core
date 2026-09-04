@@ -193,9 +193,10 @@ def choose_unique_response(
     matches = [device for device, data in transcripts.items() if data == expected]
     if len(matches) != 1:
         sizes = {device: len(data) for device, data in transcripts.items()}
+        previews = {device: data[:64].hex() for device, data in transcripts.items()}
         raise UarteHilFailure(
-            "exactly one VCOM must return the reversed packet: "
-            f"matches={len(matches)}, received_sizes={sizes}"
+            "exactly one VCOM must return the expected packet: "
+            f"matches={len(matches)}, received_sizes={sizes}, preview_hex={previews}"
         )
     for device, data in transcripts.items():
         if device != matches[0] and data:

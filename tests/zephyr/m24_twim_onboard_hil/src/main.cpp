@@ -14,6 +14,12 @@
 #include <cstddef>
 #include <cstdint>
 
+// SWD-only diagnostics; never insert diagnostic bytes into the exact UART frame.
+extern "C" {
+volatile std::uint32_t m24_twim_stage = 0U;
+volatile std::uint32_t m24_twim_result = 0U;
+}
+
 namespace {
 using namespace nucode::arduino;
 
@@ -40,6 +46,13 @@ const SerialSignalPin pmic_pins[] = {
 [[noreturn]] void halt() {
   while (true)
     k_sleep(K_FOREVER);
+}
+
+void require(SerialFabricResult result, std::uint32_t stage) {
+  m24_twim_stage = stage;
+  m24_twim_result = static_cast<std::uint32_t>(result);
+  if (result != SerialFabricResult::success)
+    halt();
 }
 
 void waitForTx(UarteHandle &serial) {
@@ -142,16 +155,16 @@ int main() {
       &twi_dma,
       1U,
   };
-  if ((serial->stage(serial_configuration) != SerialFabricResult::success) ||
-      (twim->stage(twi_configuration) != SerialFabricResult::success) ||
-      (serial->activate() != SerialFabricResult::success) ||
-      (twim->activate() != SerialFabricResult::success)) {
-    halt();
-  }
+  require(serial->stage(serial_configuration), 1U);
+  require(twim->stage(twi_configuration), 2U);
+  require(serial->activate(), 3U);
+  require(twim->activate(), 4U);
 
   while (true) {
     fillReady();
+    m24_twim_stage = 5U;
     send(*serial);
+    m24_twim_stage = 6U;
     if (serial->receiveAsync(command_buffer, packet_size) !=
         SerialFabricResult::success) {
       halt();
@@ -174,12 +187,15 @@ int main() {
     if (!validCommand())
       continue;
 
+    m24_twim_stage = 7U;
     twi_workspace[0] = mask_id_register;
     twi_workspace[1] = 0U;
     const auto result = twim->transfer(pmic_address, &twi_workspace[0], 1U,
                                        &twi_workspace[1], 1U, 100000U);
     fillResult(result);
+    m24_twim_result = static_cast<std::uint32_t>(result);
     send(*serial);
+    m24_twim_stage = 8U;
     // One physical measurement per flash; no adjacent next-READY frame.
     halt();
   }

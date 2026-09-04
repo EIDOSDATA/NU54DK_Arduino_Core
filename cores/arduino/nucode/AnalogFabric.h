@@ -120,10 +120,14 @@ namespace nucode::arduino
                                                std::size_t next_samples) noexcept;
         [[nodiscard]] AnalogFabricResult queueBuffer(std::int16_t *buffer,
                                                      std::size_t samples) noexcept;
+        /** @brief interval_us=0의 ready event 이후 SAMPLE 한 번을 요청합니다.
+         * start()는 DMA를 준비하며 수동 모드의 변환을 자동 시작하지 않습니다.
+         */
         [[nodiscard]] AnalogFabricResult sample() noexcept;
         [[nodiscard]] AnalogFabricResult calibrate() noexcept;
         [[nodiscard]] std::uintptr_t sampleTaskAddress() const noexcept;
         [[nodiscard]] std::uintptr_t readyEventAddress() const noexcept;
+        /** @brief stop_timeout이면 DMA lease를 유지하며 stop() 재시도가 가능합니다. */
         [[nodiscard]] AnalogFabricResult
         stop(std::uint32_t timeout_us = 100000U) noexcept;
         [[nodiscard]] bool takeEvent(SaadcEvent &event) noexcept;
