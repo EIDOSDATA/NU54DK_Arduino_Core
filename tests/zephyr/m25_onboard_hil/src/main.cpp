@@ -248,5 +248,7 @@ int main() {
     const bool stream_linked = verifyStreamFabricIntegration();
     fillResult(event_pass, analog_pass, stream_linked, ticks, sample);
     send(*serial);
+    // One physical measurement per flash; no adjacent next-READY frame.
+    halt();
   }
 }

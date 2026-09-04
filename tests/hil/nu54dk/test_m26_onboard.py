@@ -7,6 +7,7 @@ import importlib.util
 from pathlib import Path
 from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 
 
 SCRIPT = Path(__file__).with_name("m26_onboard.py")
@@ -50,6 +51,51 @@ class M26OnboardTests(unittest.TestCase):
         self.assertEqual(len(MODULE.ready_frame()), MODULE.PACKET_SIZE)
         self.assertEqual(len(MODULE.command_frame()), MODULE.PACKET_SIZE)
         self.assertNotEqual(MODULE.ready_frame(), MODULE.command_frame())
+        self.assertEqual(len({MODULE.ready_frame(), MODULE.command_frame(),
+                              MODULE.reset_ready_frame(), MODULE.result_request_frame()}), 4)
+
+    def test_reset_epoch_retains_bounded_prefix_and_requires_exact_marker(self) -> None:
+        marker = MODULE.reset_ready_frame()
+        prefix = bytes.fromhex("fe3ede")
+        self.assertEqual(
+            MODULE.validate_reset_ready({"COM5": b"", "COM6": prefix + marker}, "COM6"),
+            prefix,
+        )
+        for selected, other in (
+            (MODULE.ready_frame(), b""),
+            (b"x" * (MODULE.MAX_RESET_PREFIX + 1) + marker, b""),
+            (marker + b"x", b""),
+            (marker + marker, b""),
+            (marker, b"x"),
+            (result_frame(), b""),
+            (b"", b""),
+        ):
+            with self.subTest(selected=selected.hex(), other=other.hex()):
+                with self.assertRaises(MODULE.M26HilFailure):
+                    MODULE.validate_reset_ready({"COM5": other, "COM6": selected}, "COM6")
+
+    def test_reset_epoch_collects_split_marker_without_dropping_prefix(self) -> None:
+        class Chunks:
+            def __init__(self, chunks):
+                self.chunks = list(chunks)
+
+            @property
+            def in_waiting(self):
+                return len(self.chunks[0]) if self.chunks else 0
+
+            def read(self, size):
+                return self.chunks.pop(0)
+
+        marker = MODULE.reset_ready_frame()
+        ports = {"COM5": Chunks([]), "COM6": Chunks([b"\xff", marker[:7], marker[7:]])}
+        with patch.object(MODULE.time, "sleep"):
+            prefix, received = MODULE.collect_reset_ready(ports, "COM6", 1.0)
+        self.assertEqual(prefix, b"\xff")
+        self.assertEqual(received["COM6"], b"\xff" + marker)
+
+    def test_reset_prefix_is_never_accepted_in_result_phase(self) -> None:
+        with self.assertRaises(MODULE.M26HilFailure):
+            MODULE.validate_result_frame(b"\xff" + result_frame())
 
     def test_armed_frame_requires_temp_and_wdt30_lifecycle(self) -> None:
         self.assertEqual(

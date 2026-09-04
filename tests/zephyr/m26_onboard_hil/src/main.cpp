@@ -116,17 +116,17 @@ namespace
                 static_cast<std::uint8_t>(value >> (byte * 8U));
     }
 
-    void fillReady() noexcept
+    void fillReady(std::uint8_t seed = 0xE6U) noexcept
     {
         for (std::size_t index = 0U; index < packet_size; ++index)
-            response_buffer[index] = static_cast<std::uint8_t>(0xE6U ^ index);
+            response_buffer[index] = static_cast<std::uint8_t>(seed ^ index);
     }
 
-    [[nodiscard]] bool validCommand() noexcept
+    [[nodiscard]] bool validCommand(std::uint8_t seed) noexcept
     {
         for (std::size_t index = 0U; index < packet_size; ++index)
         {
-            if (command_buffer[index] != static_cast<std::uint8_t>(0x26U ^ index))
+            if (command_buffer[index] != static_cast<std::uint8_t>(seed ^ index))
                 return false;
         }
         return true;
@@ -195,7 +195,7 @@ namespace
         return *serial;
     }
 
-    [[nodiscard]] bool receiveCommand(UarteHandle &serial)
+    [[nodiscard]] bool receiveCommand(UarteHandle &serial, std::uint8_t seed = 0x26U)
     {
         if (serial.receiveAsync(command_buffer, packet_size) !=
             SerialFabricResult::success)
@@ -210,7 +210,7 @@ namespace
             }
             if (event.type == UarteEventType::rx_complete &&
                 event.buffer == command_buffer && event.transferred == packet_size)
-                return validCommand();
+                return validCommand(seed);
             if (event.type == UarteEventType::error ||
                 event.type == UarteEventType::rx_cancelled)
                 return false;
@@ -235,6 +235,12 @@ int main()
     UarteHandle &serial = startSerial();
     if (resumed)
     {
+        // A reset is a new UART epoch. Do not mix the result with reset-line
+        // transients: announce boot completion, then wait for the host request.
+        fillReady(0x96U);
+        send(serial);
+        if (!receiveCommand(serial, 0x76U))
+            halt();
         const bool temperature_pass = retained_temperature >= -4000 &&
                                       retained_temperature <= 12500;
         fillResult(temperature_pass, true, retained_temperature, reset_cause,

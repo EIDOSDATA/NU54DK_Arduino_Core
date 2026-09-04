@@ -195,13 +195,20 @@ def collect_frame(
         if any(len(data) > PACKET_SIZE for data in transcripts.values()):
             break
         time.sleep(0.01)
+    if any(len(data) >= PACKET_SIZE for data in transcripts.values()):
+        time.sleep(0.05)
+        for device, stream in streams.items():
+            waiting = int(getattr(stream, "in_waiting", 0))
+            if waiting:
+                transcripts[device].extend(stream.read(waiting))
     frozen = {device: bytes(data) for device, data in transcripts.items()}
     if expected is not None:
         return choose_exact_port(frozen, expected), frozen
     candidates = [device for device, data in frozen.items() if len(data) == PACKET_SIZE]
     if len(candidates) != 1:
         raise M25HilFailure(
-            f"exactly one VCOM must return a 32-byte result: candidates={candidates}"
+            f"exactly one VCOM must return a 32-byte result: candidates={candidates}; "
+            f"sizes={ {device: len(data) for device, data in frozen.items()} }"
         )
     if any(data for device, data in frozen.items() if device != candidates[0]):
         raise M25HilFailure("non-selected VCOM returned unexpected result bytes.")

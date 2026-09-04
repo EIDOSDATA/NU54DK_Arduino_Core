@@ -394,8 +394,8 @@ debug-control `DISABLE_SWD`가 격리 위치이면 USB와 COM이 보이더라도
 $CoreRoot = (Get-Location).Path
 $Python = 'C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe'
 $PyOcd = 'C:\ncs\toolchains\dcbdc366a1\opt\bin\Scripts\pyocd.exe'
-$BuildRoot = 'C:\v4n' # 아직 없는 짧은 경로
-$EvidenceRoot = 'C:\v4hil-next' # 이전 증적과 겹치지 않는 경로
+$BuildRoot = 'C:\nb\01' # 전체 8자 이하, 아직 없는 하위 경로
+$EvidenceRoot = Join-Path $env:USERPROFILE 'Documents\NU54DK-evidence\v04-run01'
 $ProbeId = '<시험할 CMSIS-DAP UID>'
 
 & $Python tools\ci\run_zephyr_build.py `
@@ -414,5 +414,19 @@ foreach ($Runner in $Runners) {
 각 runner는 flash 전후 source·board·HEX identity와 exact UID를 검사하고 mass erase/recover를
 사용하지 않습니다. 실패하면 해당 시점에서 멈추며, 응답 없는 보드에서 PASS를 생성하지 않습니다.
 이 묶음의 PASS를 외부 SPI/TWIS·analog 정확도·audio·encoder·동시성·전력 검증으로 확대하지 않습니다.
+
+TWIM과 M25 firmware는 유효 command 하나당 측정 결과 하나만 보내고 대기합니다. 결과에 다음
+READY가 붙어 USB read 단위에 따라 성공·실패가 달라지지 않도록 한 flash당 단발 시험으로 합니다.
+호스트는 완전한 frame 뒤에도 50 ms를 관찰하여 추가 byte를 거부합니다.
+
+M26 protocol v2는 `READY → command → AR26 → WDT reset → RESET_READY → result request → NU26`
+순서를 사용합니다. UART가 재초기화되기 전 reset 경계에서 transient byte가 관측됐으므로,
+**AR26 검증 이후의 예상 reset 구간에서만** 최대 64바이트 prefix와 정확한 RESET_READY를
+구분합니다. Prefix 원문·길이, 선택 VCOM, reset READY 대기 시간을 evidence schema v2에 남깁니다.
+RESET_READY는 다른 VCOM·다른 marker·중복·후행 byte를 허용하지 않으며, 준비 신호 뒤 별도 request에
+대한 NU26 결과는 여전히 정확한 32바이트·checksum·watchdog reset bit·retained TEMP를 요구합니다.
+초기 READY, AR26, NU26에 잡음을 붙이거나 과거 protocol v1 진단을 새 PASS로 바꿀 수 없습니다.
+이 검증은 reset 중 UART 신호가 깨끗하다는 전기적 보증을 포함하지 않습니다.
+
 현재 결과와 fixture 경계는 [M27 자동 준비·HOLD 기록](<../../../00_Docs/04_검증 기록/39_M27_v0.4.0_rc1_자동_준비와_HOLD.md>)을
 따릅니다.

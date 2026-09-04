@@ -180,5 +180,7 @@ int main() {
                                        &twi_workspace[1], 1U, 100000U);
     fillResult(result);
     send(*serial);
+    // One physical measurement per flash; no adjacent next-READY frame.
+    halt();
   }
 }

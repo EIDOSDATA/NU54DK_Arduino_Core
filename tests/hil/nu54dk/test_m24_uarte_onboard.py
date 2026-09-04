@@ -91,6 +91,35 @@ class M24UarteOnboardTests(unittest.TestCase):
                 self.assertIn("--no-config", arguments)
                 self.assertNotIn("chip", arguments)
 
+    def test_single_result_collectors_reject_late_extra_bytes(self) -> None:
+        class Chunks:
+            def __init__(self, chunks):
+                self.chunks = list(chunks)
+
+            @property
+            def in_waiting(self):
+                return len(self.chunks[0]) if self.chunks else 0
+
+            def read(self, size):
+                return self.chunks.pop(0)
+
+        for name, exception_name in (("m24_twim_onboard", "TwimHilFailure"),
+                                     ("m25_onboard", "M25HilFailure"),
+                                     ("m26_onboard", "M26HilFailure")):
+            with self.subTest(runner=name):
+                specification = importlib.util.spec_from_file_location(
+                    f"test_quiet_{name}", SCRIPT.with_name(f"{name}.py")
+                )
+                module = importlib.util.module_from_spec(specification)
+                specification.loader.exec_module(module)
+                streams = {"COM5": Chunks([]), "COM6": Chunks([bytes(32), b"x"])}
+                with patch.object(module.time, "sleep"):
+                    with self.assertRaises(getattr(module, exception_name)):
+                        if name == "m26_onboard":
+                            module.collect_packet(streams, 1.0)
+                        else:
+                            module.collect_frame(streams, None, 1.0)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
