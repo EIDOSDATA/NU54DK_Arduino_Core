@@ -3,11 +3,11 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-WINDOWS-DEV-001 |
-| 문서 개정 | 1.1 |
+| 문서 개정 | 1.2 |
 | 문서 상태 | 현재 source 개발 기준 |
 | 적용 제품 버전 | `v0.3.0` stable 이후 `main` |
 | 지원 host | Windows 10/11 x64 |
-| 최종 갱신일 | 2026-09-03 |
+| 최종 갱신일 | 2026-09-04 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 새 Windows PC에서 NU54DK Arduino Core의 source를 수정하고 로컬 gate와 실물 보드
@@ -238,6 +238,38 @@ $NrfUtil = Join-Path $ApplicationRoot 'tools\nrfutil.exe'
 열린 terminal에서 `python --version`, `west --version`, `cmake --version`, `ninja --version`,
 `pyocd --version`을 확인한다. HIL별 실제 build·배선·실행 명령은
 [NU54DK HIL 시험](../../tests/hil/nu54dk/README.md)을 따른다.
+
+### Host MinGW와 target 도구의 PATH 분리
+
+Host 시험에서 추가한 외부 WinLibs 경로를 target build terminal에 그대로 넘기지 않는다.
+2026-09-04 로컬 build에서는 Nordic GDB가 외부 WinLibs의 `iconv.exe`를 찾아 실행하려다
+Windows Code Integrity에 차단된 기록이 있었다. 당시 target build 자체는 18/18 통과했지만,
+이 경고를 pyOCD 차단이나 보드 SWD 오류의 원인으로 단정할 수는 없다.
+
+우선 별도의 Nordic terminal을 사용하고 실제 `PATH`를 확인한다. 수동 진단용 child session은
+다음처럼 target에 필요한 경로만 지정할 수 있다. 아래 설정은 현재 PowerShell에만 적용되며
+전역 환경이나 보안 정책을 변경하지 않는다. Host gate는 9절의 별도 session에서 실행한다.
+
+```powershell
+$ToolchainRoot = 'C:\ncs\toolchains\dcbdc366a1' # 실제 설치 위치로 변경
+$NcsToolPaths = @(
+  "$ToolchainRoot\mingw64\bin"
+  "$ToolchainRoot\bin"
+  "$ToolchainRoot\opt\bin"
+  "$ToolchainRoot\opt\bin\Scripts"
+  "$ToolchainRoot\opt\zephyr-sdk\gnu\arm-zephyr-eabi\bin"
+  "$env:SystemRoot\System32"
+  "$env:SystemRoot"
+)
+$env:Path = $NcsToolPaths -join ';'
+$env:PYTHONUTF8 = '1'
+```
+
+이 최소 PATH 예시는 직접 target 도구를 진단할 때 사용한다. Git identity를 확인하는 저장소
+runner에는 Git의 실제 설치 경로도 필요하며, 정식 build 환경은 `environment.json` 기준으로
+구성한다. 차단 알림은 이벤트 뷰어의 `Microsoft-Windows-CodeIntegrity/Operational`에서
+**차단된 파일과 호출 프로세스**를 확인한다. 실행 허용 예외 추가, 보안 기능 해제, 차단 파일
+교체로 해결하지 않는다. SWD `No ACK`, USB 장치 이탈, UART protocol 실패는 별도로 진단한다.
 
 ## 9. 로컬 software gate 실행
 

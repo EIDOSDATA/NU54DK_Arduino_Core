@@ -21,6 +21,8 @@ QUALIFIERS = "nrf54l15/cpuapp/nu54dk"
 SCENARIO = "nucode.m26.onboard_hil"
 BAUD_RATE = 115200
 PACKET_SIZE = 32
+# Zephyr include/zephyr/drivers/hwinfo.h: RESET_WATCHDOG = BIT(4).
+RESET_WATCHDOG = 1 << 4
 MAX_COMMAND_OUTPUT = 64 * 1024
 
 
@@ -185,8 +187,8 @@ def validate_result_frame(frame: bytes) -> dict[str, int]:
         or reset_pass != 1
         or all_pass != 1
         or not -4000 <= temperature <= 12500
-        or reset_cause == 0
-        or (reset_cause & supported_cause) == 0
+        or (reset_cause & RESET_WATCHDOG) == 0
+        or (reset_cause & ~supported_cause) != 0
         or instance != 30
         or retained_pass != 1
     ):
@@ -235,7 +237,9 @@ def collect_packet(
     candidates = [device for device, data in frozen.items() if len(data) == PACKET_SIZE]
     if len(candidates) != 1:
         raise M26HilFailure(
-            f"exactly one VCOM must return one packet: candidates={candidates}"
+            "exactly one VCOM must return one packet: "
+            f"candidates={candidates}, sizes="
+            f"{ {device: len(data) for device, data in frozen.items()} }"
         )
     if any(data for device, data in frozen.items() if device != candidates[0]):
         raise M26HilFailure("non-selected VCOM returned unexpected packet bytes.")

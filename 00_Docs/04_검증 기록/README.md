@@ -71,6 +71,7 @@
 | M25 | Analog·event·stream 전 instance 후보 source/build PASS, 온보드 runner 준비; physical gate HOLD | [M25 기록](37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md) |
 | M26 | System 기능 16개 전수 판정·unknown 0, TEMP·WDT30 runner 준비; physical gate HOLD | [M26 기록](38_M26_System_Peripheral_판정과_온보드_HIL_준비.md) |
 | M27 | 비공개 RC 이중 package 재현·설치본 29/29 compile PASS; physical·공개 gate HOLD | [M27 자동 준비·HOLD 기록](39_M27_v0.4.0_rc1_자동_준비와_HOLD.md) |
+| 온보드 재개 | 새 18/18 build·M26 flash/readback 확인; READY 누락·reset 경계 잡음·USB 이탈로 formal HIL HOLD | [온보드 재개·진단 기록](40_M24_M26_온보드_재개와_USB_UART_진단.md) |
 
 ## 기록 해석 규칙
 

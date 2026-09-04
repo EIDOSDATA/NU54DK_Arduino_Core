@@ -28,13 +28,17 @@ def armed_frame(temperature: int = 2534) -> bytes:
     return bytes(frame)
 
 
-def result_frame(temperature: int = 2534) -> bytes:
+def result_frame(
+    temperature: int = 2534,
+    reset_cause: int = MODULE.RESET_WATCHDOG,
+    supported_cause: int = 0xFFFFFFFF,
+) -> bytes:
     frame = bytearray(MODULE.PACKET_SIZE)
     frame[:4] = b"NU26"
     frame[4:8] = bytes((1, 1, 1, 1))
     frame[8:12] = temperature.to_bytes(4, "little", signed=True)
-    frame[12:16] = (4).to_bytes(4, "little")
-    frame[16:20] = (0xFFFFFFFF).to_bytes(4, "little")
+    frame[12:16] = reset_cause.to_bytes(4, "little")
+    frame[16:20] = supported_cause.to_bytes(4, "little")
     frame[20:22] = bytes((30, 1))
     for value in frame[:-1]:
         frame[-1] ^= value
@@ -66,7 +70,7 @@ class M26OnboardTests(unittest.TestCase):
             {
                 "temperature_centi_celsius": 2534,
                 "watchdog_instance": 30,
-                "reset_cause": 4,
+                "reset_cause": MODULE.RESET_WATCHDOG,
                 "supported_reset_cause": 0xFFFFFFFF,
             },
         )
@@ -77,6 +81,34 @@ class M26OnboardTests(unittest.TestCase):
             invalid[-1] ^= value
         with self.assertRaises(MODULE.M26HilFailure):
             MODULE.validate_result_frame(bytes(invalid))
+
+    def test_result_rejects_non_watchdog_and_unsupported_reset_causes(self) -> None:
+        # Firmware PASS flags cannot substitute for the actual reset-cause bits.
+        for cause, supported in ((4, 0xFFFFFFFF), (16, 4), (20, 16)):
+            with self.subTest(cause=cause, supported=supported):
+                with self.assertRaises(MODULE.M26HilFailure):
+                    MODULE.validate_result_frame(
+                        result_frame(reset_cause=cause, supported_cause=supported)
+                    )
+
+    def test_observed_watchdog_packets_validate_without_promoting_hil(self) -> None:
+        # Diagnostic capture lacked READY; valid packets alone are not a full HIL PASS.
+        armed = bytes.fromhex(
+            "415232360101010101090b0000000000001e000000000000000000000000000a"
+        )
+        # The capture contained three inter-frame bytes. Do not silently strip
+        # those bytes to promote the diagnostic transcript to a formal HIL PASS.
+        result = bytes.fromhex(
+            "4e55323601010101090b000010000000b30900001e01000000000000000000a8"
+        )
+        self.assertEqual(
+            MODULE.validate_armed_frame(armed)["temperature_centi_celsius"], 2825
+        )
+        with self.assertRaises(MODULE.M26HilFailure):
+            MODULE.validate_armed_frame(armed + bytes.fromhex("fe3ede"))
+        self.assertEqual(
+            MODULE.validate_result_frame(result)["reset_cause"], MODULE.RESET_WATCHDOG
+        )
 
     def test_probe_requires_exactly_two_vcom_ports(self) -> None:
         ports = [

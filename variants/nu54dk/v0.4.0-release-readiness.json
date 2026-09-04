@@ -66,7 +66,8 @@
       "kind": "physical",
       "required": true,
       "state": "hold",
-      "reason": "probe SWD No ACK; TEMP and WDT30 reset runner is ready"
+      "reason": "flash/readback and diagnostic TEMP/WDT30 packets observed; formal READY missing, reset-boundary noise and recurrent SWD/USB failure remain",
+      "evidence": ["00_Docs/04_검증 기록/40_M24_M26_온보드_재개와_USB_UART_진단.md"]
     },
     {
       "id": "host_regression",
