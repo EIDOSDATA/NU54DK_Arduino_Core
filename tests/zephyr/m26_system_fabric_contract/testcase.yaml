@@ -1,0 +1,5 @@
+tests:
+  nucode.m26.system:
+    tags: [nucode, arduino, m26, temp, watchdog]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    build_only: true

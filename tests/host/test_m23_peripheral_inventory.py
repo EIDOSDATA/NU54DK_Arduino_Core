@@ -121,7 +121,8 @@ int main()
     }
     const auto *twis22 = findPeripheral(PeripheralKind::twis, 22U);
     if (twis22 == nullptr || std::strcmp(twis22->sharing_group, "serial22") != 0 ||
-        twis22->source_state != PeripheralSourceState::absent ||
+        twis22->source_state != PeripheralSourceState::implemented ||
+        twis22->exposure_state != PeripheralExposureState::internal ||
         twis22->hil_state != PeripheralVerificationState::not_run)
     {
         return 3;

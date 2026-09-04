@@ -163,7 +163,7 @@ class M24SerialContractTests(unittest.TestCase):
         self.assertEqual(MODULE.canonical_source_payload(cr, "lf-normalized"), lf)
         self.assertNotEqual(MODULE.canonical_source_payload(crlf, "raw"), lf)
 
-    def test_contract_only_api_does_not_promote_manifest_support(self) -> None:
+    def test_candidate_implementations_remain_internal_until_hil(self) -> None:
         manifest = MODULE.strict_json_object(MODULE.MANIFEST_PATH)
         m24 = {item["id"]: item for item in manifest["instances"] if item["milestone"] == "M24"}
         current = set(MODULE.EXPECTED_SINGLETONS.values())
@@ -172,10 +172,13 @@ class M24SerialContractTests(unittest.TestCase):
             if identity in current:
                 continue
             states = item["states"]
-            self.assertEqual(states["source"], "absent", identity)
-            self.assertEqual(states["exposure"], "none", identity)
-            for axis in ("build", "semantic", "hil", "concurrent_hil"):
-                self.assertEqual(states[axis], "not_run", f"{identity}.{axis}")
+            self.assertEqual(states["source"], "implemented", identity)
+            self.assertEqual(states["exposure"], "internal", identity)
+            self.assertEqual(states["build"], "pass", identity)
+            self.assertEqual(states["semantic"], "pass", identity)
+            self.assertEqual(states["hil"], "not_run", identity)
+            self.assertEqual(states["concurrent_hil"], "not_run", identity)
+            self.assertTrue(item["evidence"], identity)
 
     def test_candidate_header_and_handover_sources_are_required(self) -> None:
         MODULE.validate_surface(self.contract)

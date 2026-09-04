@@ -635,13 +635,26 @@ def validate_manifest_alignment(contract: dict[str, Any], identities: set[str]) 
         raise ContractFailure("manifest public objects differ from the M24 contract")
     planned = identities - set(EXPECTED_SINGLETONS.values())
     for identity in planned:
-        states = m24[identity]["states"]
+        item = m24[identity]
+        states = item["states"]
+        expected_dma = {
+            "uarte": "double_buffered",
+            "spim": "asynchronous",
+            "spis": "double_buffered",
+            "twim": "asynchronous",
+            "twis": "double_buffered",
+        }[item["kind"]]
         if (
-            states["source"] != "absent"
-            or states["exposure"] != "none"
-            or any(states[key] != "not_run" for key in ("build", "semantic", "hil", "concurrent_hil"))
+            states["source"] != "implemented"
+            or states["exposure"] != "internal"
+            or states["build"] != "pass"
+            or states["semantic"] != "pass"
+            or states["hil"] != "not_run"
+            or states["concurrent_hil"] != "not_run"
+            or item["dma"]["public_mode"] != expected_dma
+            or not item["evidence"]
         ):
-            raise ContractFailure(f"contract-only identity was prematurely promoted: {identity}")
+            raise ContractFailure(f"implemented candidate identity state drifted: {identity}")
 
 
 def validate_repository_routes() -> None:

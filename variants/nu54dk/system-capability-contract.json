@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "product_line": "v0.4.0",
+  "milestone": "M26",
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "schematic": {
+    "path": "board_package/NU54DK_Zephyr_DTS/NU54-DK Schematic.pdf",
+    "sha256": "7e959be6d8db5d31c55366bd118093727062588770772b226117dd3826798466"
+  },
+  "raw_radio_policy": "exclusive-with-managed-ble-and-not-public-in-v0.4.0",
+  "capabilities": [
+    {
+      "id": "comp",
+      "disposition": "silicon-only",
+      "surface": "none",
+      "board_boundary": "AIN0~AIN7은 P1 header에 있으나 comparator API와 threshold fixture는 v0.4.0 공개 범위가 아니다.",
+      "coexistence": "LPCOMP와 comparator106 block을 상호배타적으로 사용해야 한다.",
+      "automated_gate": "pass",
+      "physical_gate": "not_run",
+      "evidence": ["variants/nu54dk/peripheral-manifest.json", "board_package/NU54DK_Zephyr_DTS/NU54-DK Schematic.pdf"]
+    },
+    {
+      "id": "lpcomp",
+      "disposition": "silicon-only",
+      "surface": "none",
+      "board_boundary": "AIN0~AIN7은 P1 header에 있으나 저전력 comparator fixture와 Arduino API는 후속 제품선 범위다.",
+      "coexistence": "COMP와 comparator106 block을 상호배타적으로 사용해야 한다.",
+      "automated_gate": "pass",
+      "physical_gate": "not_run",
+      "evidence": ["variants/nu54dk/peripheral-manifest.json", "board_package/NU54DK_Zephyr_DTS/NU54-DK Schematic.pdf"]
+    },
+    {
+      "id": "temp",
+      "disposition": "partial",
+      "surface": "internal",
+      "board_boundary": "온칩 TEMP라 외부 배선이 필요 없고 centi-Celsius 후보 API와 target contract를 제공한다.",
+      "coexistence": "Zephyr sensor driver가 단일 TEMP block을 직렬화한다.",
+      "automated_gate": "pass",
+      "physical_gate": "not_run",
+      "evidence": ["cores/arduino/SystemFabric.cpp", "cores/arduino/nucode/SystemFabric.h", "tests/zephyr/m26_system_fabric_contract/src/main.cpp"]
+    },
+    {
+      "id": "wdt30",
+      "disposition": "partial",
+      "surface": "internal",
+      "board_boundary": "secure-domain WDT30 후보 handle을 빌드하지만 reset-cause HIL 전에는 공개하지 않는다.",
+      "coexistence": "한 WDT block의 timeout channel은 해당 Zephyr watchdog device가 소유한다.",
+      "automated_gate": "pass",
+      "physical_gate": "not_run",
+      "evidence": ["cores/arduino/SystemFabric.cpp", "cores/arduino/nucode/SystemFabric.h", "tests/zephyr/m26_system_fabric_contract/src/main.cpp"]
+    },
+    {
+      "id": "wdt31",
+      "disposition": "supported",
+      "surface": "public",
+      "board_boundary": "BoardSystem.watchdog가 application-domain WDT31을 사용한다.",
+      "coexistence": "SystemFabric 후보와 BoardSystem production path는 같은 image에서 함께 활성화하지 않는다.",
+      "automated_gate": "pass",
+      "physical_gate": "pass",
+      "evidence": ["libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp", "00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md"]
+    },
+    {
+      "id": "nfct",
+      "disposition": "silicon-only",
+      "surface": "none",
+      "board_boundary": "NFC1/NFC2는 P1.2/P1.3 header와 Wire에 공유되며 보드에 NFC antenna matching network가 없다.",
+      "coexistence": "NFCT를 선택하면 Wire/TWIM22와 해당 두 pad를 동시에 사용할 수 없다.",
+      "automated_gate": "pass",
+      "physical_gate": "not_run",
+      "evidence": ["board_package/NU54DK_Zephyr_DTS/NU54-DK Schematic.pdf", "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk_cpuapp_common.dtsi"]
+    },
+    {
+      "id": "radio",
+      "disposition": "partial",
+      "surface": "public",
+      "board_boundary": "온보드 2.4 GHz RF 경로는 NUCODE_BLE의 검증된 BLE 범위에서 사용한다.",
+      "coexistence": "raw RADIO는 managed BLE controller와 배타적이며 v0.4.0 public surface가 아니다.",
+      "automated_gate": "pass",
+      "physical_gate": "pass",
+      "evidence": ["libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp", "00_Docs/04_검증 기록/23_M19_BLE_Core_GAP_검증.md"]
+    },
+    {
+      "id": "cracen",
+      "disposition": "partial",
+      "surface": "internal",
+      "board_boundary": "온칩 security accelerator이며 NCS PSA/RNG direct build 경로만 검증됐다.",
+      "coexistence": "PSA Crypto와 NCS security subsystem이 자원과 key lifecycle을 소유한다.",
+      "automated_gate": "partial",
+      "physical_gate": "not_applicable",
+      "evidence": ["coverage/ncs-v3.4.0/records/nrf.crypto-rng.json", "00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md"]
+    },
+    {
+      "id": "kmu",
+      "disposition": "silicon-only",
+      "surface": "none",
+      "board_boundary": "온칩 key management block이며 secure provisioning 정책 없이 Arduino API로 노출하지 않는다.",
+      "coexistence": "PSA key lifecycle과 secure-domain 정책만 소유할 수 있다.",
+      "automated_gate": "pass",
+      "physical_gate": "not_applicable",
+      "evidence": ["variants/nu54dk/peripheral-manifest.json", "00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md"]
+    },
+    {
+      "id": "rng",
+      "disposition": "partial",
+      "surface": "internal",
+      "board_boundary": "NCS PSA RNG direct sample은 build되지만 stable Arduino CSPRNG API는 후속 security 제품선 범위다.",
+      "coexistence": "CRACEN/PSA entropy provider를 우회하는 raw register 접근은 허용하지 않는다.",
+      "automated_gate": "partial",
+      "physical_gate": "not_applicable",
+      "evidence": ["coverage/ncs-v3.4.0/records/nrf.crypto-rng.json", "00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md"]
+    },
+    {
+      "id": "tampc",
+      "disposition": "silicon-only",
+      "surface": "none",
+      "board_boundary": "온칩 tamper controller이며 보드 센서와 제품 tamper policy가 없다.",
+      "coexistence": "secure-domain policy 없이 application에 직접 소유권을 넘기지 않는다.",
+      "automated_gate": "pass",
+      "physical_gate": "not_applicable",
+      "evidence": ["variants/nu54dk/peripheral-manifest.json", "00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md"]
+    },
+    {
+      "id": "power",
+      "disposition": "supported",
+      "surface": "public",
+      "board_boundary": "BoardSystem.systemOff와 온보드 wake source가 검증됐다.",
+      "coexistence": "Zephyr PM과 BoardSystem이 system power transition을 직렬화한다.",
+      "automated_gate": "pass",
+      "physical_gate": "pass",
+      "evidence": ["libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp", "00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md"]
+    },
+    {
+      "id": "clock",
+      "disposition": "partial",
+      "surface": "internal",
+      "board_boundary": "32.768 kHz 외부 crystal과 system clock은 board DTS/Zephyr가 관리하며 raw Arduino clock API는 없다.",
+      "coexistence": "clock-control과 Bluetooth/system consumer의 reference lifecycle을 우회하지 않는다.",
+      "automated_gate": "pass",
+      "physical_gate": "partial",
+      "evidence": ["board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk_cpuapp_common.dtsi", "00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md"]
+    },
+    {
+      "id": "cache",
+      "disposition": "not-applicable",
+      "surface": "internal",
+      "board_boundary": "cache coherency는 Core/driver의 DMA 계약 책임이며 sketch용 manual cache API를 제품 기능으로 두지 않는다.",
+      "coexistence": "DMA adapter가 필요한 clean/invalidate와 barrier를 내부에서 수행한다.",
+      "automated_gate": "pass",
+      "physical_gate": "not_applicable",
+      "evidence": ["cores/arduino/internal/IoResourceManager.h", "00_Docs/01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md"]
+    },
+    {
+      "id": "vpr",
+      "disposition": "silicon-only",
+      "surface": "none",
+      "board_boundary": "FLPR/VPR은 별도 firmware image와 IPC 계약이 필요해 단일 Arduino cpuapp Core 범위가 아니다.",
+      "coexistence": "cpuapp가 VPR firmware lifecycle과 shared memory를 명시적으로 소유하는 profile에서만 사용한다.",
+      "automated_gate": "pass",
+      "physical_gate": "not_applicable",
+      "evidence": ["board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk_cpuapp_common.dtsi", "00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md"]
+    },
+    {
+      "id": "sqspi",
+      "disposition": "silicon-only",
+      "surface": "none",
+      "board_boundary": "sQSPI soft peripheral은 VPR firmware와 외부 memory fixture가 필요하며 온보드 전용 memory가 없다.",
+      "coexistence": "VPR image, assigned pins와 DMA buffer 계약이 모두 있는 별도 profile에서만 사용할 수 있다.",
+      "automated_gate": "pass",
+      "physical_gate": "not_run",
+      "evidence": ["board_package/NU54DK_Zephyr_DTS/NU54-DK Schematic.pdf", "variants/nu54dk/peripheral-manifest.json"]
+    }
+  ]
+}

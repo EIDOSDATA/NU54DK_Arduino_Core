@@ -179,6 +179,12 @@ def run_inventory_gate() -> None:
             REPOSITORY / "tools" / "peripheral" / "verify_m24_serial_contract.py",
         )
     )
+    run_checked(
+        (
+            sys.executable,
+            REPOSITORY / "tools" / "peripheral" / "verify_m26_system_contract.py",
+        )
+    )
 
 
 ## @brief 선택한 software gate만 실행합니다.
