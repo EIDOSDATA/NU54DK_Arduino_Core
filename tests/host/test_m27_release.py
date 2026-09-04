@@ -28,7 +28,7 @@ class M27ReleaseTests(unittest.TestCase):
         )
         self.assertFalse(ready)
         self.assertNotIn("package_reproducibility", blockers)
-        self.assertIn("m24_onboard_hil", blockers)
+        self.assertIn("m24_fixture_hil", blockers)
         self.assertIn("project_owner_approval", blockers)
 
     def test_candidate_extension_does_not_add_unapproved_stable(self) -> None:

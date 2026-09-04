@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-WINDOWS-DEV-001 |
-| 문서 개정 | 1.2 |
+| 문서 개정 | 1.3 |
 | 문서 상태 | 현재 source 개발 기준 |
 | 적용 제품 버전 | `v0.3.0` stable 이후 `main` |
 | 지원 host | Windows 10/11 x64 |
@@ -185,8 +185,10 @@ $env:NUCODE_TOOLCHAIN_ROOT = Join-Path $NcsBase 'toolchains\dcbdc366a1'
 
 ## 7. pyOCD와 NU54DK 연결 확인
 
-pyOCD는 Nordic Toolchain에 포함된 실행 파일을 직접 사용한다. 기본 설치 위치의 예는 다음과
-같다.
+pyOCD는 Nordic Toolchain의 Python으로 module을 직접 실행한다. Windows의 bundled `pyocd.exe`는
+launcher 내부의 `#!python.exe`에 따라 PATH의 다른 Python을 선택할 수 있다. 따라서 실행 파일의
+절대 경로만 지정했다고 bundled Python/package까지 고정된 것은 아니다. 기본 설치 위치의 예는
+다음과 같다.
 
 ```powershell
 $NcsBase = Join-Path $env:USERPROFILE 'ncs'
@@ -195,8 +197,9 @@ $NcsPython = Join-Path $ToolchainRoot 'opt\bin\python.exe'
 $PyOcd = Join-Path $ToolchainRoot 'opt\bin\Scripts\pyocd.exe'
 
 & $NcsPython --version
-& $PyOcd --version
-& $PyOcd list
+& $NcsPython -I -c 'import sys, pyocd; print(sys.executable); print(pyocd.__version__, pyocd.__file__)'
+& $NcsPython -I -m pyocd --version
+& $NcsPython -I -m pyocd list
 ```
 
 NU54DK의 debug USB connector를 **data 통신이 가능한 cable**로 연결한다. `pyocd list`에
@@ -209,11 +212,19 @@ NU54DK의 debug USB connector를 **data 통신이 가능한 cable**로 연결한
 1. 충전 전용 cable이 아닌지 확인하고 다른 USB port에 직접 연결한다.
 2. Arduino IDE, serial monitor, 다른 pyOCD/J-Link session처럼 probe나 COM port를 점유한
    프로그램을 닫는다.
-3. 보드를 뺐다가 다시 연결하고 `& $PyOcd list`를 다시 실행한다.
+3. 보드를 뺐다가 다시 연결하고 `& $NcsPython -I -m pyocd list`를 다시 실행한다.
 4. `verify-nordic.ps1`로 Toolchain 손상 여부를 확인한다.
 
 일반 upload에서 mass erase나 recover를 자동으로 실행하지 않는다. 보호 상태 복구나 전체
 삭제는 데이터를 잃을 수 있으므로 원인이 확인된 별도 복구 절차에서만 수행한다.
+
+`-I`는 Python의 사용자 package와 `PYTHONPATH` 유입을 막는 격리 옵션이다. 이 고정 bundle에서
+확인한 target Python은 **3.12.4**, pyOCD는 **0.42.0**이다. Host gate용 Python 3.12.10과 목적이
+다르며, target Python을 host 기준에 맞추려고 SDK 내부를 교체하지 않는다.
+
+`--pyocd` 실행 파일을 받는 HIL runner는 8절의 **전체 NCS 환경**에서 실행한다. 실행 전에
+`(Get-Command python.exe).Source`가 `$NcsPython`과 같은지, 위 module 경로가 해당 bundle 내부인지
+확인한다. 다른 Python 3.14 등의 package 경로가 나오면 flash를 시작하지 않는다.
 
 ## 8. Nordic Toolchain terminal이 필요한 경우
 
@@ -270,6 +281,19 @@ runner에는 Git의 실제 설치 경로도 필요하며, 정식 build 환경은
 구성한다. 차단 알림은 이벤트 뷰어의 `Microsoft-Windows-CodeIntegrity/Operational`에서
 **차단된 파일과 호출 프로세스**를 확인한다. 실행 허용 예외 추가, 보안 기능 해제, 차단 파일
 교체로 해결하지 않는다. SWD `No ACK`, USB 장치 이탈, UART protocol 실패는 별도로 진단한다.
+
+### Twister의 demangler 확인
+
+외부 MinGW를 제거한 뒤 `Failed to demangle ... [WinError 2]`가 나오면 Twister가 찾는
+`c++filt.exe`를 확인한다. 이 bundle의 Arm 도구는 `arm-zephyr-eabi-c++filt.exe`라는 이름으로
+설치되어 있다. 외부 WinLibs 경로 전체를 다시 넣지 말고, 작업 전용 디렉터리에 **bundled 파일과
+동일한 실행 파일의 이름 별칭**을 두고 그 디렉터리만 child PATH에 추가할 수 있다. 원본 SDK와
+전역 PATH는 변경하지 않는다.
+
+2026-09-04 재시험에서는 작업 폴더의 `ncs-bin/c++filt.exe`를 bundled
+`opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-c++filt.exe`의 hard link로 만들고 SHA-256
+동일성을 확인했다. `_ZL4testv`가 `test()`로 변환되는지 확인한 뒤 새 build를 실행했다. 보안
+차단된 파일에 이 방법을 적용하거나 허용 예외를 추가하는 절차가 아니다.
 
 ## 9. 로컬 software gate 실행
 
@@ -382,6 +406,8 @@ exact Core/board revision, artifact hash, probe와 COM 선택, wiring 조건과 
 | prerequisite hash/revision 실패 | 임의 파일 교체를 중단하고 설치기를 재실행한 뒤 log 확인 |
 | pyOCD probe가 0개 | data cable, debug connector, USB port와 장치 점유 프로그램 확인 |
 | pyOCD probe가 여러 개 | 자동 선택에 맡기지 말고 해당 HIL/upload 명령에서 UID 명시 |
+| pyOCD traceback에 다른 Python 설치 경로가 나옴 | 7절의 bundled Python `-I -m pyocd`와 8절의 NCS PATH 확인 |
+| Host 시험에서 `No module named 'yaml'` | 5절의 host venv와 hash 고정 requirements 사용; 전역 Python으로 대체하지 않음 |
 | COM port를 열 수 없음 | Serial Monitor와 다른 runner를 닫고 보드를 다시 연결 |
 | `gh auth status` 실패 | `gh auth login` 실행; Git push credential과 별도임에 유의 |
 

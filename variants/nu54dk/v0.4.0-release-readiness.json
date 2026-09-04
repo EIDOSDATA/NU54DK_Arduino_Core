@@ -23,8 +23,12 @@
       "id": "m24_onboard_hil",
       "kind": "physical",
       "required": true,
-      "state": "hold",
-      "reason": "probe SWD No ACK; UARTE and TWIM onboard runners are ready"
+      "state": "passed",
+      "evidence": [
+        "00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md",
+        "00_Docs/04_검증 기록/evidence/51c1986/m24_uarte_onboard.json",
+        "00_Docs/04_검증 기록/evidence/51c1986/m24_twim_onboard.json"
+      ]
     },
     {
       "id": "m24_fixture_hil",
@@ -44,8 +48,11 @@
       "id": "m25_onboard_hil",
       "kind": "physical",
       "required": true,
-      "state": "hold",
-      "reason": "probe SWD No ACK; internal VDD and event-path runner is ready"
+      "state": "passed",
+      "evidence": [
+        "00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md",
+        "00_Docs/04_검증 기록/evidence/51c1986/m25_onboard.json"
+      ]
     },
     {
       "id": "m25_fixture_hil",
@@ -65,9 +72,11 @@
       "id": "m26_onboard_hil",
       "kind": "physical",
       "required": true,
-      "state": "hold",
-      "reason": "flash/readback and diagnostic TEMP/WDT30 packets observed; formal READY missing, reset-boundary noise and recurrent SWD/USB failure remain",
-      "evidence": ["00_Docs/04_검증 기록/40_M24_M26_온보드_재개와_USB_UART_진단.md"]
+      "state": "passed",
+      "evidence": [
+        "00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md",
+        "00_Docs/04_검증 기록/evidence/51c1986/m26_onboard.json"
+      ]
     },
     {
       "id": "host_regression",

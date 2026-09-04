@@ -231,11 +231,15 @@ asset과 stable index 항목은 재현성, 감사와 downgrade를 위해 삭제�
 | `v0.1.0` | 역사적·비지원 | Core, 기본 API, build/upload와 package |
 | `v0.2.0` | 역사적·비지원 | CI/CD, profile·예제, Board/System과 BLE NUS |
 | `v0.3.0` | **현재 stable** | Arduino compatibility, 동적 peripheral/analog, BLE GAP/GATT/security/profile, storage |
-| `v0.4.0` | M23·M26 완료, M24·M25 physical gate·M27 공개 HOLD | 전 peripheral 후보와 비공개 package·29/29 compile 검증; 실제 지원 승격은 HIL 뒤 결정 |
+| `v0.4.0` | 개발 중 | Peripheral 확장: 온보드 기본 시험 PASS, 외부 fixture·최종 release gate 대기 |
 | `v0.5.0` | 계획 | Bluetooth LE 확장·ISO/LE Audio·Direction Finding·Channel Sounding·Mesh |
 | `v0.6.0` | 계획 | Storage/Crypto, TF-M, 고급 memory layout와 secure update/recovery |
 | `v0.7.0` | 계획 | Radio profile, IEEE 802.15.4, ESB와 OpenThread |
 | `v0.8.0` | 계획 | Matter 기반, application template와 commissioning HIL |
+
+`v0.4.0` 후보는 UART 4개·PMIC I2C 3개, 내부 ADC·event, TEMP·WDT30의
+[온보드 시험](<./00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)을
+통과했습니다. 전체 instance의 외부 신호·정확도·동시성 검증과 정식 공개는 아직 완료되지 않았습니다.
 
 ## 동작 구조
 

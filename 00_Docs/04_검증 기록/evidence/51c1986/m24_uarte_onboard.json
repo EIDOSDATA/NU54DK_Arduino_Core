@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "milestone": "M24",
+  "evidence_type": "onboard-uarte-easydma",
+  "status": "passed",
+  "core_revision": "51c1986242b60ac99df643ee4291946aa83b9986",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "probe_id_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "vcom_candidate_count": 2,
+  "baud_rate": 115200,
+  "packet_size": 32,
+  "instances": [
+    {
+      "sequence": 1,
+      "instance": 20,
+      "image": {
+        "sha256": "8173957f5c4d7eb4e832f9d30ca7d606c6dbdb4535533aa3225352f29706c74a",
+        "size": 214588,
+        "build_record_sha256": "685a179037f8e31fb96cb3397bbde7cb918f9ac27dfe529b0dc36ed72a5bd779",
+        "application_source_sha256": "ab47575152dbc4fa08bdc2ea55e913ae4c570a3e3151346cc6c2b0056782fbf3",
+        "core_source_sha256": "bd4f0e391bf1a64d540a1845a13242a822dc3481c71d0eab6d0835e341a681df"
+      },
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "seconds": 9.141,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "166b71937d3c6090a5f93c63b54961f73a501e373918e95fbe6bf52330d5ecae",
+        "controlled_start": {
+          "method": "reset-halt-drain-resume",
+          "cpuid": "0x411fd210",
+          "auto_unlock": false,
+          "mass_erase_requested": false
+        }
+      },
+      "payload_sha256": "b747c80db1465dc8d5d700751f3cb4db3ba970a96b45f60dbce2b05a9c9396fc",
+      "response_sha256": "4d909729b11b6d2b0d1ca149f55f56dc38af30440531951f8b4c1b0b47f5d044",
+      "selected_vcom_index": 0,
+      "ready_sha256": "9652029d6ad8dc70a2d9d78d433cf355731d30dcd0fa5aa292a7b7d14ce0bf5f",
+      "ready_received_sizes": {
+        "0": 32,
+        "1": 0
+      },
+      "received_sizes": {
+        "0": 32,
+        "1": 0
+      },
+      "status": "passed"
+    },
+    {
+      "sequence": 2,
+      "instance": 21,
+      "image": {
+        "sha256": "88785f536dfba2b215b25a6be6374e26e697679055f943cd641643695a7d150a",
+        "size": 214588,
+        "build_record_sha256": "685a179037f8e31fb96cb3397bbde7cb918f9ac27dfe529b0dc36ed72a5bd779",
+        "application_source_sha256": "ab47575152dbc4fa08bdc2ea55e913ae4c570a3e3151346cc6c2b0056782fbf3",
+        "core_source_sha256": "bd4f0e391bf1a64d540a1845a13242a822dc3481c71d0eab6d0835e341a681df"
+      },
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "seconds": 7.844,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "eb43fdcbd6c791f9feb97c86ecfd0e8429a324d1578b7e5b1bbf94311e5a3386",
+        "controlled_start": {
+          "method": "reset-halt-drain-resume",
+          "cpuid": "0x411fd210",
+          "auto_unlock": false,
+          "mass_erase_requested": false
+        }
+      },
+      "payload_sha256": "7230b56b217a5c25795587fc13d83eee5e78e47065a13c820eb68c2e8bdc6c7c",
+      "response_sha256": "8c2e081f5dec30b5a0f776cc25d5899d45f54847d9bdbad64426756a2cc68fca",
+      "selected_vcom_index": 0,
+      "ready_sha256": "f26e5eb79140966edf02df4fafd8fa9c5848e5e4485e7fd5eba16256acdc297b",
+      "ready_received_sizes": {
+        "0": 32,
+        "1": 0
+      },
+      "received_sizes": {
+        "0": 32,
+        "1": 0
+      },
+      "status": "passed"
+    },
+    {
+      "sequence": 3,
+      "instance": 22,
+      "image": {
+        "sha256": "bb946a821d949260a4b1b23ea09e425b9ff66145bbe3bf67c4809f5f6d4509a9",
+        "size": 214588,
+        "build_record_sha256": "685a179037f8e31fb96cb3397bbde7cb918f9ac27dfe529b0dc36ed72a5bd779",
+        "application_source_sha256": "ab47575152dbc4fa08bdc2ea55e913ae4c570a3e3151346cc6c2b0056782fbf3",
+        "core_source_sha256": "bd4f0e391bf1a64d540a1845a13242a822dc3481c71d0eab6d0835e341a681df"
+      },
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "seconds": 8.047,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "db939791a34c6afa92aa228b001436349bae625ca7ea8a1356466326759ebd11",
+        "controlled_start": {
+          "method": "reset-halt-drain-resume",
+          "cpuid": "0x411fd210",
+          "auto_unlock": false,
+          "mass_erase_requested": false
+        }
+      },
+      "payload_sha256": "1a06e84dfd22cc7bd2cd2c0717c3b31e049c18c0034dccf1b8829b73fa92094e",
+      "response_sha256": "15d27f3a384fa1efc6017440d15f433d480c1a7e8921426f3b8fe2cc9ad49fe1",
+      "selected_vcom_index": 0,
+      "ready_sha256": "48b7336e0cfd016f4ec502fd96c193469533c414e42679fb88a663026e787efa",
+      "ready_received_sizes": {
+        "0": 32,
+        "1": 0
+      },
+      "received_sizes": {
+        "0": 32,
+        "1": 0
+      },
+      "status": "passed"
+    },
+    {
+      "sequence": 4,
+      "instance": 30,
+      "image": {
+        "sha256": "39471a02d3bad561f01b12320aa83e7b12c807316b522a53bf017db17b09fab2",
+        "size": 214588,
+        "build_record_sha256": "685a179037f8e31fb96cb3397bbde7cb918f9ac27dfe529b0dc36ed72a5bd779",
+        "application_source_sha256": "ab47575152dbc4fa08bdc2ea55e913ae4c570a3e3151346cc6c2b0056782fbf3",
+        "core_source_sha256": "bd4f0e391bf1a64d540a1845a13242a822dc3481c71d0eab6d0835e341a681df"
+      },
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "seconds": 7.985,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "a4dfb55f04e5ac218569a7894810e3b8e85013bda808868e52cb06f51b3d16ea",
+        "controlled_start": {
+          "method": "reset-halt-drain-resume",
+          "cpuid": "0x411fd210",
+          "auto_unlock": false,
+          "mass_erase_requested": false
+        }
+      },
+      "payload_sha256": "703c1731d774266d3eea6bf24b7401206416d21b9c8c5adf25c8d7dd122954a0",
+      "response_sha256": "7456fc57ff3296b5dbc0571ccb6dba569bf1195709c6cce424662c49788a0908",
+      "selected_vcom_index": 1,
+      "ready_sha256": "c76d4be0969a25cfe00c0a88ac972863ed0d7d04bbc8a025ac11ac471d1fb714",
+      "ready_received_sizes": {
+        "0": 0,
+        "1": 32
+      },
+      "received_sizes": {
+        "0": 0,
+        "1": 32
+      },
+      "status": "passed"
+    }
+  ],
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "completed_at_utc": "2026-09-04T10:51:41.994736+00:00"
+}
