@@ -51,6 +51,16 @@ class BuildMatrixRunnerTests(unittest.TestCase):
         self.assertEqual(flattened, ZEPHYR.SUITES)
         self.assertEqual(len(set(flattened)), len(flattened))
 
+    def test_target_subset_never_silently_escapes_group(self) -> None:
+        names = ("nucode.v04.pair_dut", "nucode.v04.pair_peer")
+        chosen = ZEPHYR.select_suites("v0.4.0", names)
+        self.assertEqual({name for _, name in chosen}, set(names))
+        self.assertEqual(ZEPHYR.select_suites("v0.4.0"), tuple(ZEPHYR.SUITE_GROUPS["v0.4.0"]))
+        for group, invalid in (("v0.3.0", names), ("v0.4.0", names + names), ("v0.4.0", ("missing",))):
+            with self.assertRaises(ZEPHYR.BuildFailure): ZEPHYR.select_suites(group, invalid)
+        self.assertIn('"m12-zephyr-build-subset" if args.suite',
+                      (REPOSITORY / "tools/ci/run_zephyr_build.py").read_text(encoding="utf-8"))
+
     ## @brief Arduino 예제 기능군도 각 지원 릴리스에서 도입한 범위로 고정됩니다.
     def test_arduino_groups_are_explicit_and_disjoint(self) -> None:
         self.assertEqual(

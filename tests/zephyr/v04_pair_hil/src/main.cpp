@@ -26,21 +26,24 @@ alignas(4) std::int16_t adc_memory[32]{};
 std::uint32_t pmic(const std::uint32_t *args, std::uint32_t *out, std::uint32_t &count) {
     const auto instance = args[0];
     const auto repeats = args[1];
-    if ((instance != 20U && instance != 21U && instance != 22U) || repeats == 0 || repeats > 100)
+    if ((instance != 20U && instance != 21U && instance != 22U) || repeats == 0 || repeats > 100 ||
+        (args[2] != 100000 && args[2] != 400000))
         return 400;
     auto *handle = serialFabric().twim(instance);
     const SerialSignalPin pins[] = {{SerialSignal::sda, PIN_P1_02}, {SerialSignal::scl, PIN_P1_03}};
     const SerialDmaWorkspace workspace{twi_memory, sizeof(twi_memory)};
     const SerialFabricConfiguration configuration{SerialRouteClass::p1_flexible,
         SerialElectricalProfile::pmic_read_only, pins, 2, &workspace, 1};
-    if (handle == nullptr || handle->configure({TwiFabricFrequency::standard}) != SerialFabricResult::success ||
+    if (handle == nullptr || handle->configure({static_cast<TwiFabricFrequency>(args[2])}) != SerialFabricResult::success ||
         handle->stage(configuration) != SerialFabricResult::success || handle->activate() != SerialFabricResult::success)
         return 501;
     out[0] = 0;
     for (std::uint32_t round = 0; round < repeats; ++round) {
         twi_memory[0] = 0x0c;
         twi_memory[1] = 0;
-        if (handle->transfer(0x6a, twi_memory, 1, twi_memory + 1, 1, 100000) != SerialFabricResult::success || twi_memory[1] != 0x41)
+        const auto result = handle->transfer(0x6a, twi_memory, 1, twi_memory + 1, 1, 100000);
+        out[3] = static_cast<std::uint32_t>(result);
+        if (result != SerialFabricResult::success || twi_memory[1] != 0x41)
             break;
         ++out[0];
         TwiFabricEvent event{};
@@ -48,7 +51,7 @@ std::uint32_t pmic(const std::uint32_t *args, std::uint32_t *out, std::uint32_t 
     }
     out[1] = twi_memory[1];
     out[2] = static_cast<std::uint32_t>(handle->deactivate(100000));
-    count = 3;
+    count = 4;
     return out[0] == repeats && out[2] == 0 ? 0 : 502;
 }
 
@@ -69,7 +72,7 @@ std::uint32_t timerTest(const std::uint32_t *args, std::uint32_t *out, std::uint
 
 std::uint32_t adcTest(const std::uint32_t *args, std::uint32_t *out, std::uint32_t &count) {
     // Input allowlist: no external pad can be sampled or driven by this opcode.
-    if ((args[0] != 0x80 && args[0] != 0x87) || args[1] == 0 || args[1] > 32) return 400;
+    if ((args[0] != 0x80 && args[0] != 0x82) || args[1] == 0 || args[1] > 32) return 400;
     auto &adc = analogFabric().saadc();
     const SaadcChannelConfiguration channel{static_cast<SaadcInput>(args[0]), SaadcInput::disabled};
     if (adc.configure({&channel, 1, 12, 1, 0}) != AnalogFabricResult::success ||
@@ -115,7 +118,7 @@ std::uint32_t dispatch(std::uint32_t opcode, const std::uint32_t *args,
         for (unsigned index = 0; index < count; ++index) out[index] = args[index] ^ (0xa5000000U | role);
         return 0;
     }
-    if (opcode == 2 && nargs == 2) return pmic(args, out, count);
+    if (opcode == 2 && nargs == 3) return pmic(args, out, count);
     if (opcode == 3 && nargs == 3) return timerTest(args, out, count);
     if (opcode == 4 && nargs == 2) return adcTest(args, out, count);
     return 400;

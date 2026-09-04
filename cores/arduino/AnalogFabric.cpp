@@ -251,10 +251,20 @@ namespace nucode::arduino
 
         [[nodiscard]] bool supportedInput(SaadcInput input) noexcept
         {
-            const auto value = static_cast<std::uint8_t>(input);
-            return value <= static_cast<std::uint8_t>(SaadcInput::ain7) ||
-                   (value >= static_cast<std::uint8_t>(SaadcInput::vdd) &&
-                    value <= static_cast<std::uint8_t>(SaadcInput::vss));
+            if (externalInput(input)) return true;
+            // The nrfx enum spans several SoCs. nRF54L15 maps only these
+            // internal inputs; accepting VSS or VDD/2 deferred failure to start().
+            switch (input) {
+            case SaadcInput::vdd:
+            case SaadcInput::avdd:
+                return true;
+#if defined(NRF_SAADC_INPUT_DVDD)
+            case SaadcInput::dvdd:
+                return true;
+#endif
+            default:
+                return false;
+            }
         }
 
         [[nodiscard]] const internal::PinDescription *

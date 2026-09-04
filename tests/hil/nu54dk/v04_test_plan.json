@@ -82,9 +82,9 @@
     },
     {
       "id": "V04-ADC-INTERNAL", "groups": ["saadc"], "fixture": "onboard",
-      "modes": ["vdd", "vss", "manual-ready-sample-stop", "calibrate"],
+      "modes": ["vdd", "avdd", "manual-ready-sample-stop", "calibrate"],
       "parameters": {"resolution_bits": [12], "oversample": [1], "buffer_samples": [1, 32], "repetitions": 100},
-      "oracle": "READY 뒤 SAMPLE, sample 수 일치·raw range 검사·VDD>VSS. VDD raw를 교정 전압으로 취급하지 않으며 STOP 확인 뒤에만 RAM 재사용.",
+      "oracle": "READY 뒤 SAMPLE, sample 수 일치·raw range 검사·VDD>AVDD. VSS는 nRF54L15 SDK 입력이 아니므로 거부 시험 대상. Raw를 교정 전압으로 취급하지 않으며 STOP 확인 뒤에만 RAM 재사용.",
       "needs": "T05/T09: 단발에서 반복·calibration으로 확대.", "reuse": ["tests/hil/nu54dk/m25_onboard.py"], "errata": []
     },
     {

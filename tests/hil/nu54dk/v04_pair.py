@@ -116,10 +116,11 @@ def run_onboard(device: Device, rounds: int, append) -> None:
         raise ProtocolError("independent ping oracle failed")
     append("V04-PAIR-PING", {"challenge": challenge, "response": reply})
     for instance in (20, 21, 22):
-        reply = device.command(2, (instance, rounds))
-        if reply != [rounds, 0x41, 0]:
-            raise ProtocolError(f"PMIC oracle failed: {reply}")
-        append(f"V04-PMIC-READ/twim{instance}", {"rounds": rounds, "result": reply})
+        for rate in (400000, 100000):
+            reply = device.command(2, (instance, rounds, rate))
+            if reply != [rounds, 0x41, 0, 0]:
+                raise ProtocolError(f"PMIC oracle failed: {reply}")
+            append(f"V04-PMIC-READ/twim{instance}/{rate}", {"rounds": rounds, "result": reply})
     for instance in (0, 10, 20, 21, 22, 23, 24):
         channels = 8 if instance == 10 else 6
         for channel in range(channels):
@@ -128,13 +129,13 @@ def run_onboard(device: Device, rounds: int, append) -> None:
                 raise ProtocolError(f"timer capture oracle failed: {reply}")
             append(f"V04-EVENT/timer{instance:02}/capture{channel}", {"result": reply, "requested_us": 10000})
     for samples in (1, 32):
-        for input_code in (0x80, 0x87):
+        for input_code in (0x80, 0x82):
             for round_number in range(rounds):
                 reply = device.command(4, (input_code, samples))
                 if len(reply) != 5 or reply[:3] != [samples, 0, 1]:
                     raise ProtocolError(f"ADC lifecycle oracle failed: {reply}")
                 low, high = signed(reply[3]), signed(reply[4])
-                if not -64 <= low <= high <= 4095 or (input_code == 0x80 and low <= 1000) or (input_code == 0x87 and high > 410):
+                if not 0 < low <= high <= 4095 or (input_code == 0x80 and low <= 1000) or (input_code == 0x82 and not 1000 <= low <= high <= 3900):
                     raise ProtocolError(f"ADC internal range oracle failed input={input_code}: {reply}")
                 append(f"V04-ADC-INTERNAL/{input_code:02x}/{samples}/{round_number}", {"result": reply})
 

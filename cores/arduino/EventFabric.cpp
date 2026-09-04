@@ -9,6 +9,7 @@
 
 #include "internal/IoResourceManager.h"
 #include "internal/pin_description.h"
+#include "internal/timer_clock.h"
 
 #include <hal/nrf_dppi.h>
 #include <hal/nrf_egu.h>
@@ -263,32 +264,6 @@ namespace nucode::arduino
             return mapResourceResult(release_result);
         }
 
-        [[nodiscard]] bool timerPrescaler(std::uint32_t frequency_hz,
-                                          std::uint32_t &prescaler) noexcept
-        {
-            static constexpr std::uint32_t frequencies[] = {
-                16000000U,
-                8000000U,
-                4000000U,
-                2000000U,
-                1000000U,
-                500000U,
-                250000U,
-                125000U,
-                62500U,
-                31250U,
-            };
-            for (std::size_t index = 0U; index < ARRAY_SIZE(frequencies); ++index)
-            {
-                if (frequencies[index] == frequency_hz)
-                {
-                    prescaler = index;
-                    return true;
-                }
-            }
-            return false;
-        }
-
         [[nodiscard]] nrf_timer_task_t timerTask(TimerTask task,
                                                  std::uint8_t channel) noexcept
         {
@@ -391,14 +366,18 @@ namespace nucode::arduino
         if (k_is_in_isr())
             return EventFabricResult::invalid_context;
         std::uint32_t prescaler = 0U;
-        if (!timerPrescaler(frequency_hz, prescaler))
-            return EventFabricResult::invalid_argument;
         k_mutex_lock(&event_fabric_mutex, K_FOREVER);
         auto *const context = timerContext(instance_);
         if (context == nullptr)
         {
             k_mutex_unlock(&event_fabric_mutex);
             return EventFabricResult::unsupported_instance;
+        }
+        if (!internal::timerPrescalerFor(NRF_TIMER_BASE_FREQUENCY_GET(context->reg),
+                                        frequency_hz, NRF_TIMER_PRESCALER_MAX, prescaler))
+        {
+            k_mutex_unlock(&event_fabric_mutex);
+            return EventFabricResult::invalid_argument;
         }
         if (context->active)
         {

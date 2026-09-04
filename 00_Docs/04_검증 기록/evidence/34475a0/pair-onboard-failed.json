@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-onboard",
+  "status": "failed",
+  "core_revision": "34475a0571443c086bf0d1b7af488151027d59b6",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "rounds": 100,
+  "external_wiring_executed": false,
+  "plan_sha256": "d8d7ab44863fb59fd030f1516bd0a3d8357568fc3ddc5c1e98ce80f321268781",
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "ports": [
+        "COM5",
+        "COM6"
+      ],
+      "hex_sha256": "7ca59535162c85b38ac7b23b9c54c56ac11f15712c4082590ea04bb652ba1d58",
+      "elf_sha256": "b147e20252536cadba21f641eb4537733d4ff06d0530b991dda61e683b0b2804",
+      "record_sha256": "a15ddec8a5cbc6a2d073242da53a24a47058bc7fe1186aeeaf74edd4c0a79f92",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "seconds": 8.75,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "92525ba1437f5c0c37be615dec1c06663f9137e6650ffe65918c206d91ac6c25"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "ports": [
+        "COM7",
+        "COM8"
+      ],
+      "hex_sha256": "a198cfc587e80b3b4e7279ac1dc6e021bcbe5c7300c8fe343b5559ef5b56a15c",
+      "elf_sha256": "37a0b2d789a23e18d8e44f398753c67cc9a9da5bb57c4b3df8c0211fcb397242",
+      "record_sha256": "a15ddec8a5cbc6a2d073242da53a24a47058bc7fe1186aeeaf74edd4c0a79f92"
+    }
+  ],
+  "results": [
+    {
+      "id": "V04-PAIR-PING",
+      "role": 1,
+      "status": "passed",
+      "challenge": [
+        3106939668,
+        1987026095,
+        191135550,
+        1062064858
+      ],
+      "response": [
+        472916757,
+        3547307182,
+        2925821759,
+        2588791515
+      ]
+    }
+  ],
+  "error": "firmware failure role=1 op=2 seq=2 status=502 result=[0, 0, 11]",
+  "completed_at_utc": "2026-09-04T15:18:08.486820+00:00"
+}
