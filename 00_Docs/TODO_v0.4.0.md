@@ -3,11 +3,11 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID / 개정 | TODO-V04-001 / 1.1 |
-| 상태 | 활성 TODO — T01~T08 완료, T09 최신 clean image 온보드 HIL 진행 전 |
+| 상태 | 활성 TODO — T01~T09 완료, T10 첫 외부 결선 확인 대기 |
 | 작성·갱신일 | 2026-09-05 |
 | 작성 직전 기준 commit | `6c18d4c316f13eb373da6cada5675cdc82a0cf6f` |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **T09 — clean checkpoint image의 두 보드 무배선 HIL** |
+| 다음 착수 항목 | **T10 — 첫 외부 시험 묶음의 안전 결선 확인** |
 | 이번 요청의 실행 범위 | 사용자 승인: T01~T09 준비·검사·두 USB 보드의 무배선 온보드 HIL·문서·commit/push. 외부 결선 실행은 T10 확인 뒤, release 공개는 포함하지 않음 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
@@ -49,20 +49,20 @@ TODO의 체크만으로 그 원본들의 상태를 바꾸지 않는다. 이 문�
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | T01~T08: 75 identity·19 family 시험표, 구현 대조, exact pair/campaign runner, 통신·analog·stream fixture, DMA 수명주기·복구·최소 동시성, 15개 안전 결선 catalog와 confirmation template. 전체 C/C++/INO 227개 정렬과 회귀 |
-| 진행 중인 T 항목 | T09만 진행 전. 외부 fixture는 모두 `NOT RUN`이며 T10 사람 결선 확인 전 실행 금지 |
-| 다음 구체적 행동 | 현재 변경을 clean checkpoint로 commit하고 exact pair role image를 재빌드한다. 두 UID에서 무배선 primitives·PMIC·내부 ADC/event·PWM20+PWM21+SAADC 동시성 시험을 실행·기록한다 |
+| 이번에 끝낸 일 | T01~T09: 75 identity·19 family 시험표, 구현 대조, exact pair/campaign runner, 통신·analog·stream fixture, DMA 수명주기·복구·최소 동시성, 15개 안전 결선 catalog와 confirmation template, clean image 두 보드 primitives 904건. 전체 C/C++/INO 227개 정렬과 회귀 |
+| 진행 중인 T 항목 | T01~T09 완료. 외부 fixture는 모두 `NOT RUN`이며 T10 사람 결선 확인 전 실행 금지 |
+| 다음 구체적 행동 | T10에서 첫 시험 묶음의 DUT/peer 핀·GND·전압·pull-up·스위치 조건을 안내하고 사용자의 실제 결선 완료 확인을 받는다 |
 | 다음 작업에 필요한 사용자 행동 | 두 보드 USB 연결 완료 통보 받음. 외부 점퍼는 T10의 확정 결선표 안내 전 연결하지 않음 |
 | 외부 결선 상태 | 두 보드 상호 결선은 T10에 수행하는 요청; 현재는 USB만 전제로 온보드 경로에 한정 |
-| 작업 checkout 분리 | 사용자 정렬 완료. 43개 파일 `e8cb2a5` 보존·`6e19ce8` 병합. 원본 main과 격리 branch는 `94d53ae`까지 push 완료. 격리 branch의 `3b29248`·`6ea315e`는 로컬만 존재. 구현·exact build는 `C:/nb/s04`, branch `codex/v04-prep-20260905`. T01~T09 뒤 최종 정렬·검증 전 새 push 금지 |
-| 마지막 정식 온보드 source | `51c1986242b60ac99df643ee4291946aa83b9986` — 41번 기록의 제한된 범위 |
-| 작성 당시 readiness | 필수 16개 중 미해결 8개; 새 실기 PASS·최종 공개 승인 없음 |
+| 작업 checkout 분리 | 사용자 정렬과 병행할 때 충돌을 막기 위해 `C:/nb/s04`, branch `codex/v04-prep-20260905`에서 격리했다. T01~T09 구현 checkpoint는 `696defb`; 최종 증거·문서 commit을 원본 `main`에 fast-forward하고 push한 뒤 임시 분리를 종료한다 |
+| 마지막 정식 온보드 source | `696defbc6c6c5f9374cb5daa221a278d6acb3514` — T09 두 보드 exact role image primitives PASS |
+| 작성 당시 readiness | 필수 16개 중 미해결 8개; T09 무배선 PASS만 추가됐으며 외부 결선·RC·최종 공개 승인 없음 |
 | 알려진 문제 | 과거 COM 포트 이탈의 근본 원인 미확정. 2026-09-05 사용자가 HW 엔지니어의 일부 납땜 이슈 진단을 전달함: peer COM8/P0 DAP CTS 실패는 보드 경로 문제로 분리, 정상 DUT의 RTS/CTS PASS 보존. 해당 경로를 PASS로 소급 변경하지 않으며 코어 전체 RTS/CTS 미지원으로 판정하지 않음 |
-| 이 TODO 작성 작업의 실행 중 시험 | 정렬 source의 M12 Host 전체 PASS, contract45·inventory·docs143 PASS. `C:/r45` v0.4.0 full group 20/20 build-only PASS(584.46초, 실패·오류·경고0). 외부 HIL은 NOT RUN. clean checkpoint 뒤 T09 온보드 HIL 실행 전 |
-| 로컬 임시 build·evidence | 두 보드는 계속 `C:/nb/18`의 `6ea315e` role1/2, STOP 뒤 제어 대기. 영구 evidence/6ea315e 보존. C19 narrowing 실패, C20 pair PASS, C21 full20 PASS457.91초, C22 subset3 PASS78.28초, C23 subset3 PASS77.72초, UART C24·sync C25·double-buffer C26 pair 각 PASS, DMA 경계 C27 pair/Analog/Stream 4 PASS94.77초, C28 source 변경으로 중단, CTS C29·parity/break C30·SPI/TWI 오류 C31 pair PASS. C19 이후는 미커밋 compile-only이므로 exact-clean HIL에 사용 금지 |
-| 최종 정렬 gate | clang-format 22.1.8로 직접 관리 C/C++/ino 227개 write·dry-run PASS. 한국어 Doxygen 동작 주석, Allman/4칸/중괄호 필수 적용. SPDX·namespace 표식만 기계적 예외. Host 전체·v0.4 full20 회귀 PASS. T09 증거 뒤 최종 문서 commit/push 필요 |
+| 이 TODO 작성 작업의 실행 중 시험 | clean `696defb`의 M12 Host 전체 PASS. contract45·inventory·docs143 PASS, `C:/r45` v0.4.0 full group 20/20 PASS. `C:/r48` exact pair role 2/2 build PASS 뒤 두 UID에서 primitives 904건 PASS. 외부 HIL은 `NOT RUN` |
+| 로컬 임시 build·evidence | 영구 [T09 evidence](<./04_검증 기록/evidence/696defb/pair-primitives-696defb.json>)와 journal 보존. 일반 Python의 `jsonschema` 누락(`C:/r46`)과 SDK 환경 누락(`C:/r47`)은 source build 전 환경 실패로 분리했고, Nordic Python·SDK 변수를 명시한 `C:/r48`에서 같은 exact source 2/2 PASS |
+| 최종 정렬 gate | clang-format 22.1.8로 직접 관리 C/C++/ino 227개 write·dry-run PASS. 한국어 Doxygen 동작 주석, Allman/4칸/중괄호 필수 적용. SPDX·namespace 표식만 기계적 예외. clean Host 전체·v0.4 full20·T09 exact HIL 회귀 PASS. 최종 증거·문서는 이 기록 commit에 포함 |
 | CI 확인 | `94d53ae` Software Gates success(run33896135351), Reproducible Builds도 8개 job 모두 success(run33896135322, 완료UTC2026-09-04T17:04:42Z 재확인). 미푸시 `3b29248`·`6ea315e`와 미커밋 준비본의 CI PASS가 아님 |
-| 문서 작업 검증 | 문서143개 UTF-8·내부 링크 PASS, inventory/serial/system/release 계약 PASS. M27 16개/미해결8개 유지. Host의 dirty-source skip은 최종 clean gate에서 재실행 필요 |
+| 문서 작업 검증 | 문서143개 UTF-8·내부 링크 PASS, inventory/serial/system/release 계약 PASS. M27 16개/미해결8개 유지. M12 Host 전체를 clean `696defb`에서 재실행해 PASS |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드
@@ -159,11 +159,11 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
   - 완료 기준: 전원 차단 후 연결/변경 순서, 출력 충돌 방지, 필요한 부품과 사용자 확인 절차가 있다. 금지된 P2 bank와 PMIC/LED 공유 신호를 무단 사용하지 않는다.
   - 증거: `v04_fixtures.json`, HIL README, fail-closed confirmation template와 Host catalog/조건 검사 PASS. 묶음마다 T10 확인 반복.
 
-- [ ] **T09 — Host 검사·시험 펌웨어 빌드·무배선 추가 시험**
-  - 상태·선행: 추가 무배선 시험 진행 중 / 두 보드 primitives 902개 판정 PASS와 UART burst FAIL을 별도 보존. 실행할 묶음의 T01~T08 준비·안전 확인.
+- [x] **T09 — Host 검사·시험 펌웨어 빌드·무배선 추가 시험**
+  - 상태·선행: 완료 / clean `696defb`와 exact board gitlink에서 두 보드 역할 image와 primitives를 재검증. 외부 실행은 T10 전 금지.
   - 할 일: Host/계약/문서 검사와 필요한 target build·CI를 실행하고 온보드 UART·I2C·복구 등 가능한 추가 기능을 시험한다.
   - 완료 기준: 새 source의 image·runner·증거가 결합되고 무배선 가능 항목의 기대 결과가 통과한다. 외부 경로는 build-only로 명확히 남긴다.
-  - 결선·증거: 외부 점퍼 불필요, 실기는 USB·지정 UID 필요. 추가 증거 미등록; 41번 기본 PASS를 재사용할 때 영향 분석을 남긴다.
+  - 결선·증거: 외부 점퍼 없이 USB·지정 UID만 사용. M12 Host 전체와 `C:/r48` pair 2/2 build PASS. 두 역할에서 ping, TWIM20/21/22 PMIC, TIMER 7개 44 capture, 내부 VDD/AVDD SAADC 400회, PWM20+PWM21+SAADC 동시성까지 합계 904건 PASS. [결과](<./04_검증 기록/evidence/696defb/pair-primitives-696defb.json>)와 동일 경로 `.json.jsonl` journal에 exact image·UID hash·commit을 보존했다. 외부 경로는 `NOT RUN`.
 
 ## 5. B단계 — 사용자 결선 뒤 기능 검증 (T10~T15)
 
