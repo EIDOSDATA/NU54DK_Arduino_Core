@@ -21,7 +21,7 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <cerrno>
+#include <errno.h>
 
 namespace nucode::arduino
 {
