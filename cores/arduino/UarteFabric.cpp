@@ -372,9 +372,29 @@ namespace nucode::arduino
                     ? NRF_UARTE_PARITY_INCLUDED
                     : NRF_UARTE_PARITY_EXCLUDED;
 
+            // The block lease is exclusive and the former adapter proved STOP.
+            // TWIM/SPIM DMA READY registers alias UARTE RXSTARTED. A disabled
+            // block with stale READY must not be treated as a live bootloader RX.
+            if (context->driver.p_reg->ENABLE != 0U)
+            {
+                driver_error = -EBUSY;
+                return SerialFabricResult::wrong_state;
+            }
+            nrf_uarte_event_clear(context->driver.p_reg, NRF_UARTE_EVENT_RXSTARTED);
+            nrf_uarte_shorts_set(context->driver.p_reg, 0U);
+            context->event_head = context->event_tail = context->event_count = 0U;
+            context->event_overflow = false;
+            for (auto &buffer : context->buffers)
+                buffer = {};
             driver_error = nrfx_uarte_init(&context->driver, &configuration, uarteEvent);
             if (driver_error != 0)
+            {
+                // nrfx can mark itself initialized before prepare_rx/tx fails.
+                // Do not leave that partial initialization behind a staged handle.
+                if (nrfx_uarte_init_check(&context->driver))
+                    nrfx_uarte_uninit(&context->driver);
                 return mapResult(driver_error);
+            }
             context->route = route;
             atomic_set(&context->active, 1);
             irq_enable(NRFX_IRQ_NUMBER_GET(context->driver.p_reg));

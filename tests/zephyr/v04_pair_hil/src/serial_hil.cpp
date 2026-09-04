@@ -54,7 +54,10 @@ std::uint32_t start(const std::uint32_t *args, std::uint32_t *out, std::uint32_t
     if (result == SerialFabricResult::success) result = candidate->stage(route);
     if (result == SerialFabricResult::success) result = candidate->activate();
     out[0] = static_cast<unsigned>(result); count = 1;
-    if (result != SerialFabricResult::success) return 601;
+    if (result != SerialFabricResult::success) {
+        out[1] = static_cast<std::uint32_t>(candidate->lastDriverError()); count=2;
+        return 601;
+    }
     handle = candidate;
     result = handle->receiveAsync(receive[0].data,bytes,buffers == 2 ? receive[1].data : nullptr,buffers == 2 ? bytes : 0);
     out[0] = static_cast<unsigned>(result);
@@ -87,6 +90,15 @@ void serviceSerial() {
 
 std::uint32_t serialOnboard(std::uint32_t opcode, const std::uint32_t *args,
                             std::uint32_t nargs, std::uint32_t *out, std::uint32_t &count) {
+    if (opcode == 9 && nargs == 2) {
+        const std::uint32_t discovery[] = {args[0],115200,32,1,args[1],0,0};
+        const auto result=start(discovery,out,count);
+        if (result != 0) return result;
+        for (unsigned i=0;i<32;++i) transmit[i]=pattern(args[1] ^ 0xc3U,i);
+        const auto sent=handle->transmitAsync(transmit,32);
+        out[0]=static_cast<unsigned>(sent);
+        return sent == SerialFabricResult::success ? 0 : 604;
+    }
     if (opcode == 10 && nargs == 7) return start(args,out,count);
     if (opcode == 11 && nargs == 0 && handle) {
         serviceSerial();

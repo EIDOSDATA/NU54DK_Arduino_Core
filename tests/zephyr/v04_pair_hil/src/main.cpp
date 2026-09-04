@@ -122,7 +122,7 @@ std::uint32_t dispatch(std::uint32_t opcode, const std::uint32_t *args,
     if (opcode == 2 && nargs == 3) return pmic(args, out, count);
     if (opcode == 3 && nargs == 3) return timerTest(args, out, count);
     if (opcode == 4 && nargs == 2) return adcTest(args, out, count);
-    if (opcode >= 10 && opcode <= 12) return serialOnboard(opcode,args,nargs,out,count);
+    if (opcode >= 9 && opcode <= 12) return serialOnboard(opcode,args,nargs,out,count);
     return 400;
 }
 } // namespace

@@ -44,9 +44,10 @@ TODO의 체크만으로 그 원본들의 상태를 바꾸지 않는다. 이 문�
 | --- | --- |
 | 이번에 끝낸 일 | 75 identity·19 시험 family JSON/생성 문서·누락 검사, 구현 대조와 8개 준비 이슈, SWD pair protocol/runner와 onboard 후보 image 작성 |
 | 진행 중인 T 항목 | T01~T03 준비 기준선, T04 온보드 UART 공통 image 통합, T05/T09 무배선 PMIC·timer capture·내부 ADC 추가 시험; T04/T06/T07/T08 전체는 아직 미완료 |
-| 다음 구체적 행동 | Pair overlay의 누락된 NFC→GPIO 설정과 UART arm/status/stop을 commit·subset build. PMIC·교정 TIMER/ADC를 두 보드에서 재검사하고 UART Host payload runner를 연결. 이후 T04~T08 구현 계속 |
+| 다음 구체적 행동 | `C:/nb/s04` 격리 checkout에서 T04/T09 UART discovery·vector·handover 검사를 통합하고 검사. PMIC 뒤 UARTE 초기화의 stale DMA READY alias 교정, DAP 전환/잔류 bytes 분리. 이후 T04~T08 전체 구현 계속 |
 | 다음 작업에 필요한 사용자 행동 | 두 보드 USB 연결 완료 통보 받음. 외부 점퍼는 T10의 확정 결선표 안내 전 연결하지 않음 |
 | 외부 결선 상태 | 두 보드 상호 결선은 T10에 수행하는 요청; 현재는 USB만 전제로 온보드 경로에 한정 |
+| 작업 checkout 분리 | 사용자가 원본 checkout을 수시 코드 정렬 중이라고 확인. 변경은 보존. 현재 구현·exact build는 `C:/nb/s04`, branch `codex/v04-prep-20260905`; 원본 정렬과 합칠 때 내용 충돌을 확인 |
 | 마지막 정식 온보드 source | `51c1986242b60ac99df643ee4291946aa83b9986` — 41번 기록의 제한된 범위 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; 새 실기 PASS·최종 공개 승인 없음 |
 | 알려진 문제 | 과거 COM 포트 이탈의 근본 원인 미확정; 아래 연결 진단 원칙 참조 |

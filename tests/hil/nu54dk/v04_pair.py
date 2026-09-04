@@ -137,7 +137,7 @@ def run_onboard(device: Device, rounds: int, append) -> None:
                 low, high = signed(reply[3]), signed(reply[4])
                 # gain=1/4, internal 0.9 V => 3.6 V full scale. Functional,
                 # deliberately broad rail ranges; this is not calibrated voltage QA.
-                if not 0 < low <= high <= 4095 or (input_code == 0x80 and not 2500 <= low <= high <= 4000) or (input_code == 0x82 and not 1000 <= low <= high <= 3000):
+                if not 0 < low <= high <= 4095 or (input_code == 0x80 and not 2500 <= low <= high <= 4000) or (input_code == 0x82 and not 768 <= low <= high <= 1280):
                     raise ProtocolError(f"ADC internal range oracle failed input={input_code}: {reply}")
                 append(f"V04-ADC-INTERNAL/{input_code:02x}/{samples}/{round_number}", {"result": reply})
 
@@ -150,6 +150,7 @@ def main() -> int:
     parser.add_argument("--pyocd", type=Path, required=True)
     parser.add_argument("--evidence", type=Path, required=True)
     parser.add_argument("--rounds", type=int, default=100)
+    parser.add_argument("--onboard-suite", choices=("primitives", "uart", "all"), default="all")
     parser.add_argument("--execute-onboard", action="store_true", help="explicitly authorize flash of both exact role images")
     args = parser.parse_args()
     uids = validate_pair(args.dut, args.peer)
@@ -165,7 +166,7 @@ def main() -> int:
     if set(ports[0]) & set(ports[1]):
         raise ProtocolError("DUT/peer COM sets overlap")
     evidence = {"schema_version": 1, "type": "v04-pair-onboard", "status": "preflight", "core_revision": images[0]["core_revision"],
-                "board_revision": images[0]["board_revision"], "rounds": args.rounds, "external_wiring_executed": False,
+                "board_revision": images[0]["board_revision"], "rounds": args.rounds, "onboard_suite": args.onboard_suite, "external_wiring_executed": False,
                 "plan_sha256": sha256_file(Path(__file__).with_name("v04_test_plan.json")),
                 "devices": [{"role": image["role"], "uid_sha256": hashlib.sha256(uid.encode()).hexdigest(), "ports": coms,
                              "hex_sha256": image["sha256"], "elf_sha256": image["elf_sha256"], "record_sha256": image["record_sha256"]}
@@ -214,7 +215,11 @@ def main() -> int:
                         log.write(json.dumps(entry) + "\n")
                         log.flush()
                     evidence["devices"][image["role"] - 1]["flash"] = flash
-                    run_onboard(device, args.rounds, append)
+                    if args.onboard_suite in ("primitives", "all"):
+                        run_onboard(device, args.rounds, append)
+                    if args.onboard_suite in ("uart", "all"):
+                        from v04_uart import run_uart_onboard
+                        run_uart_onboard(device, ports[image["role"]-1], args.rounds, append)
                     print(f"V04_PAIR_ONBOARD_ROLE_PASS={image['role']}", flush=True)
             evidence["status"] = "passed"
         except BaseException as error:
