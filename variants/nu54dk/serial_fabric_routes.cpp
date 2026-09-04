@@ -302,7 +302,16 @@ SerialFabricResult validateNu54dkSerialFabricRoute(
                                   configuration.electrical_profile)) {
       return SerialFabricResult::unsafe_electrical_profile;
     }
-    if ((isInputSignal(entry.signal) &&
+    // Preserve the public GPIO capability mask of console-reserved P1 pads.
+    // Only the exact DAP UARTE profile may borrow them with the console off.
+    const bool released_p1_dap_uarte =
+        personality == SerialPersonality::uarte &&
+        configuration.electrical_profile == SerialElectricalProfile::dap_uart_bridge &&
+        gpioPort(description->gpio.port) == 1 && description->gpio.pin >= 4U &&
+        description->gpio.pin <= 7U &&
+        (!DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(uart20)) || !IS_ENABLED(CONFIG_SERIAL));
+    if (!released_p1_dap_uarte &&
+        ((isInputSignal(entry.signal) &&
          !hasPinCapability(description->capabilities,
                            PinCapability::digital_input) &&
          description->policy != PinPolicy::conditional_dap_uart) ||
@@ -316,7 +325,7 @@ SerialFabricResult validateNu54dkSerialFabricRoute(
           !hasPinCapability(description->capabilities,
                             PinCapability::digital_output) ||
           !hasPinCapability(description->capabilities,
-                            PinCapability::open_drain)))) {
+                            PinCapability::open_drain))))) {
       return SerialFabricResult::unsupported_route;
     }
     for (std::size_t prior = 0U; prior < index; ++prior) {

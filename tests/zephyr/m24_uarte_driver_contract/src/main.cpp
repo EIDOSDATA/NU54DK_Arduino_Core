@@ -6,6 +6,7 @@
  */
 
 #include <nucode/SerialFabric.h>
+#include "internal/IoResourceManager.h"
 
 #include <variant.h>
 
@@ -88,6 +89,28 @@ ZTEST(m24_uarte_driver_contract,
                 "inactive UARTE RX를 허용했습니다.");
   UarteEvent event{};
   zassert_false(handle->takeEvent(event), "가짜 완료 event가 생성됐습니다.");
+}
+
+ZTEST(m24_uarte_driver_contract, test_disabled_console_releases_p1_dap_route) {
+  using namespace nucode::arduino::internal;
+  IoResourceSnapshot snapshot{};
+  zassert_equal(ioResourceSnapshot(peripheralIoResource(IoResourceKind::serial_block, 20U),
+                                  snapshot), IoResourceResult::success);
+  zassert_equal(snapshot.state, IoResourceState::free,
+                "disabled uart20 still owns serial20 at boot");
+  const SerialSignalPin dap[] = {{SerialSignal::txd, PIN_P1_04},
+                                {SerialSignal::rxd, PIN_P1_05}};
+  const std::uint8_t instances[] = {20U, 21U, 22U};
+  for (const std::uint8_t instance : instances) {
+    auto *const handle = serialFabric().uarte(instance);
+    zassert_equal(handle->stage(configuration(SerialRouteClass::p1_flexible,
+                       SerialElectricalProfile::dap_uart_bridge, dap, 2U, 1U)),
+                  SerialFabricResult::success, "released P1 DAP UARTE route rejected");
+    zassert_equal(handle->stage(configuration(SerialRouteClass::p1_flexible,
+                       SerialElectricalProfile::connector_fixture, dap, 2U, 1U)),
+                  SerialFabricResult::unsafe_electrical_profile,
+                  "DAP pins must not become arbitrary connector outputs");
+  }
 }
 
 ZTEST_SUITE(m24_uarte_driver_contract, nullptr, nullptr, nullptr, nullptr,
