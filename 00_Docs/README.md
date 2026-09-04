@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 6.7 |
+| 문서 체계 개정 | 6.8 |
 | 현재 정식 버전 | `v0.3.0` |
 | 다음 목표 버전 | `v0.4.0` |
-| 최종 갱신일 | 2026-09-04 |
+| 최종 갱신일 | 2026-09-05 |
 | 작성자 | Quantum / NUCODE |
 
 이 디렉터리는 Loader 없이 동작하는 Native Full Zephyr 기반 NU54DK Arduino Core의
@@ -93,6 +93,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - `v0.4.0`의 25개 세부 작업과 인계: [실행 TODO](./TODO_v0.4.0.md)
 - 전 instance·DMA·BLE 경쟁 격차와 완료 조건: [경쟁 기준과 마일스톤](<./01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)
 - M24 serial block·핀 bank·고급 API·공통 handover backend·온보드/fixture HIL 경계: [Serial Fabric 경로와 공통 backend](<./01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md>)
+- P2/P4 물리 커넥터 번호와 net의 수기 확정 기준: [NU54DK P2/P4 커넥터 핀맵](<./01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)
 - `v0.4.0` 두 보드 기능 HIL과 정밀 계측·외부 부품 호환성의 구분: [코어 기능 검증 범위](<./04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)
 - M23의 현재 instance별 상태: [Peripheral instance matrix](<./01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)
 - M26 system/security/저수준 기능 판정: [System Peripheral 지원 경계](<./01_아두이노 코어 설계/11_M26_System_Peripheral_지원_경계.md>)
@@ -124,6 +125,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - [M23 Peripheral instance matrix](<./01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)
 - [M24 Serial Fabric 경로와 API 계약](<./01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md>)
 - [M26 System Peripheral 지원 경계](<./01_아두이노 코어 설계/11_M26_System_Peripheral_지원_경계.md>)
+- [NU54DK P2/P4 커넥터 핀맵](<./01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)
 
 ### 02. 빌드 설계
 
@@ -170,6 +172,7 @@ M1~M23과 정식 공개 증거, `v0.3.0` AC-01~AC-03·M19~M22 및 `v0.4.0` M23~M
 | 현재·다음 마일스톤 상태 | Master roadmap |
 | `v0.4.0` 세부 작업 상태·다음 행동·재개 조건 | 활성 `TODO_v0.4.0.md`; 완료 근거는 검증 기록에 연결 |
 | 물리 pin, pinctrl, peripheral route와 runner | Board submodule |
+| HIL용 P2/P4 커넥터 물리 번호↔net 수기 확정표 | `13_NU54DK_P2_P4_커넥터_핀맵.md`와 기계 판독 JSON |
 | Arduino 논리 pin과 API 계약 | Pin/Variant·API 설계 문서와 source |
 | 기능별 NCS 지원 판정 | Machine-readable coverage ledger와 지원 매트릭스 |
 | 실제 PASS/FAIL, revision과 측정값 | 검증 기록 |

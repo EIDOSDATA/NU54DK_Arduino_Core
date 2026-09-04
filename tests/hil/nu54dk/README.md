@@ -458,10 +458,14 @@ PDM/I2S/QDEC peer 신호 generator/receiver와 판정기는 build-only까지 준
 
 ### 외부 UART/SPI/TWI 준비 모듈 — 아직 T10 실행 안내가 아님
 
-[v04_fixtures.json](v04_fixtures.json)은 회로도 9페이지의 **커넥터 이름/핀 번호/GPIO net**을
-분리한 준비용 목록입니다. `P2` 커넥터의 9/10/11/12번은 각각 GPIO P1.7/6/5/4입니다.
+[v04_fixtures.json](v04_fixtures.json)은 보드 소유자가 수기로 확정한
+[P2/P4 커넥터 핀맵](<../../../00_Docs/01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)과
+[기계 판독 JSON](nu54dk_connector_pinmap.json)의 **커넥터 이름/핀 번호/GPIO net**을
+사용하는 준비용 목록입니다. 화면상 net label 위치를 다시 추정해 핀 번호를 이동하지 않습니다.
+`P2` 커넥터의 9/10/11/12번은 각각 GPIO P1.7/6/5/4입니다.
 GPIO P2.4/5는 같은 커넥터의 17/19번입니다. GPIO 포트 이름을 커넥터 번호로 읽지 않습니다.
 GPIO P2.6~10, PMIC I2C·INT, VBAT divider, LFXO에는 이 UART/SPI/TWI 시험을 연결하지 않습니다.
+`P2-27`은 SWDCLK, `P2-28`은 SWDIO이며 일반 fixture 신호로 사용하지 않습니다.
 
 새 `fixture_hil.cpp`는 고정된 UART 101/102/103, SPI 201/202/203과 TWI 301 경로만 선택합니다. 외부 명령은
 명시적인 fixture 개정·확인값·controller role 없이는 거부되며, 실행 허가는 10초 뒤 만료됩니다.

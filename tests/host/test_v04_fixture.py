@@ -91,15 +91,38 @@ class FixtureTests(unittest.TestCase):
         with self.assertRaises(ProtocolError):
             fixture.validate_confirmation(confirmation, self.images, self.uids, 301, 1001)
 
+    def test_user_confirmed_connector_pinmap_is_complete_and_locked(self):
+        path = ROOT / "tests/hil/nu54dk/nu54dk_connector_pinmap.json"
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(payload["authority"], "user-manual-transcription")
+        self.assertEqual(payload["confirmed_at"], "2026-09-05")
+        self.assertEqual(set(map(int, payload["connectors"]["P2"])), set(range(1, 31)))
+        self.assertEqual(set(map(int, payload["connectors"]["P4"])), set(range(1, 31)))
+        self.assertEqual(payload["connectors"]["P2"]["27"], "SWDCLK")
+        self.assertEqual(payload["connectors"]["P2"]["28"], "SWDIO")
+        canonical = json.dumps(payload["connectors"], sort_keys=True,
+                               separators=(",", ":")).encode()
+        self.assertEqual(hashlib.sha256(canonical).hexdigest(),
+                         "6e0ea1045ac0c09b7275c44f7232c9a3375fa2e9e8a9e4b269447cd02e1c45da")
+
     def test_catalog_connector_pin_map_and_no_forbidden_nets(self):
         catalog = json.loads(fixture.CATALOG.read_text(encoding="utf-8"))
-        # Page 9 of the board schematic, not Arduino pin numbering.
-        pins = {("P2", 9): "P1.7", ("P2", 10): "P1.6", ("P2", 11): "P1.5",
-                ("P2", 12): "P1.4", ("P2", 17): "P2.4", ("P2", 19): "P2.5",
-                ("P2", 25): "P0.0", ("P2", 26): "P0.1", ("P2", 30): "GND",
-                ("P4", 4): "P0.2", ("P4", 5): "P0.3", ("P4", 19): "P2.0",
-                ("P4", 20): "P2.1", ("P4", 21): "P2.2"}
-        pins.update({("P4", 8): "P1.10", ("P4", 12): "P1.14"})
+        pinmap_path = ROOT / "tests/hil/nu54dk/nu54dk_connector_pinmap.json"
+        pinmap = json.loads(pinmap_path.read_text(encoding="utf-8"))["connectors"]
+
+        def normalize(net):
+            if net.startswith("P") and "." in net:
+                port, pin = net.split(".")
+                return f"{port}.{int(pin)}"
+            return net
+
+        pins = {(connector, int(pin)): normalize(net)
+                for connector, entries in pinmap.items()
+                for pin, net in entries.items()}
+        allowed = {("P2", 9), ("P2", 10), ("P2", 11), ("P2", 12),
+                   ("P2", 17), ("P2", 19), ("P2", 25), ("P2", 26),
+                   ("P2", 30), ("P4", 4), ("P4", 5), ("P4", 8),
+                   ("P4", 12), ("P4", 19), ("P4", 20), ("P4", 21)}
         self.assertEqual({entry["id"] for entry in catalog["fixtures"]},
                          {101, 102, 103, 201, 202, 203, 301,
                           401, 402, 403, 404, 408, 420, 430, 440})
@@ -108,6 +131,7 @@ class FixtureTests(unittest.TestCase):
                 endpoints = [tuple(link[role]) for link in entry["links"]]
                 self.assertEqual(len(set(endpoints)), len(endpoints))
                 for connector, pin, net in endpoints:
+                    self.assertIn((connector, pin), allowed)
                     self.assertEqual(pins[(connector, pin)], net)
                 self.assertIn(("P2", 30, "GND"), endpoints)
 
