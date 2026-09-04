@@ -8,5 +8,5 @@
 /** @brief dependency 경로 검증에 사용할 고정 값을 반환합니다. */
 int leafValue()
 {
-  return 4;
+    return 4;
 }

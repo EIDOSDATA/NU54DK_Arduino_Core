@@ -12,13 +12,13 @@
 namespace nucode::arduino::internal
 {
 
-	void runtimePostLoop(void)
-	{
+    void runtimePostLoop(void)
+    {
 #if defined(CONFIG_NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK)
-		static_cast<void>(k_sleep(K_TICKS(1)));
+        static_cast<void>(k_sleep(K_TICKS(1)));
 #elif defined(CONFIG_NUCODE_ARDUINO_LOOP_YIELD)
-		k_yield();
+        k_yield();
 #endif
-	}
+    }
 
-}
+} // namespace nucode::arduino::internal

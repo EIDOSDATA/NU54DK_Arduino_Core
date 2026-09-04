@@ -13,11 +13,11 @@ volatile unsigned int multiTabResult = 0U;
 /** @brief 보조 탭에 정의된 함수를 선언 없이 호출해 prototype 생성을 검증합니다. */
 void setup(void)
 {
-	multiTabResult = combineTabValues(20U);
+    multiTabResult = combineTabValues(20U);
 }
 
 /** @brief Zephyr scheduler에 실행권을 돌려주는 최소 반복 함수입니다. */
 void loop(void)
 {
-	delay(1U);
+    delay(1U);
 }

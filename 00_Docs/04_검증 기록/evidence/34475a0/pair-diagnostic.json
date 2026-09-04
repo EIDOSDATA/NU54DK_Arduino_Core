@@ -1,0 +1,190 @@
+[
+  {
+    "role": 1,
+    "opcode": 1,
+    "args": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "core_revision": "34475a0571443c086bf0d1b7af488151027d59b6",
+    "hex_sha256": "7ca59535162c85b38ac7b23b9c54c56ac11f15712c4082590ea04bb652ba1d58",
+    "result": [
+      2768240640,
+      2768240643,
+      2768240642,
+      2768240645
+    ]
+  },
+  {
+    "role": 1,
+    "opcode": 3,
+    "args": [
+      0,
+      0,
+      10000
+    ],
+    "core_revision": "34475a0571443c086bf0d1b7af488151027d59b6",
+    "hex_sha256": "7ca59535162c85b38ac7b23b9c54c56ac11f15712c4082590ea04bb652ba1d58",
+    "result": [
+      80024,
+      0,
+      0
+    ]
+  },
+  {
+    "role": 1,
+    "opcode": 3,
+    "args": [
+      10,
+      0,
+      10000
+    ],
+    "core_revision": "34475a0571443c086bf0d1b7af488151027d59b6",
+    "hex_sha256": "7ca59535162c85b38ac7b23b9c54c56ac11f15712c4082590ea04bb652ba1d58",
+    "result": [
+      20005,
+      0,
+      0
+    ]
+  },
+  {
+    "role": 1,
+    "opcode": 3,
+    "args": [
+      20,
+      0,
+      10000
+    ],
+    "core_revision": "34475a0571443c086bf0d1b7af488151027d59b6",
+    "hex_sha256": "7ca59535162c85b38ac7b23b9c54c56ac11f15712c4082590ea04bb652ba1d58",
+    "result": [
+      10003,
+      0,
+      0
+    ]
+  },
+  {
+    "role": 1,
+    "opcode": 4,
+    "args": [
+      128,
+      1
+    ],
+    "core_revision": "34475a0571443c086bf0d1b7af488151027d59b6",
+    "hex_sha256": "7ca59535162c85b38ac7b23b9c54c56ac11f15712c4082590ea04bb652ba1d58",
+    "result": [
+      1,
+      0,
+      1,
+      4092,
+      4092
+    ]
+  },
+  {
+    "role": 1,
+    "opcode": 4,
+    "args": [
+      135,
+      32
+    ],
+    "core_revision": "34475a0571443c086bf0d1b7af488151027d59b6",
+    "hex_sha256": "7ca59535162c85b38ac7b23b9c54c56ac11f15712c4082590ea04bb652ba1d58",
+    "error": "firmware failure role=1 op=4 seq=6 status=520 result=[]"
+  },
+  {
+    "role": 2,
+    "opcode": 1,
+    "args": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "core_revision": "34475a0571443c086bf0d1b7af488151027d59b6",
+    "hex_sha256": "a198cfc587e80b3b4e7279ac1dc6e021bcbe5c7300c8fe343b5559ef5b56a15c",
+    "result": [
+      2768240643,
+      2768240640,
+      2768240641,
+      2768240646
+    ]
+  },
+  {
+    "role": 2,
+    "opcode": 3,
+    "args": [
+      0,
+      0,
+      10000
+    ],
+    "core_revision": "34475a0571443c086bf0d1b7af488151027d59b6",
+    "hex_sha256": "a198cfc587e80b3b4e7279ac1dc6e021bcbe5c7300c8fe343b5559ef5b56a15c",
+    "result": [
+      80023,
+      0,
+      0
+    ]
+  },
+  {
+    "role": 2,
+    "opcode": 3,
+    "args": [
+      10,
+      0,
+      10000
+    ],
+    "core_revision": "34475a0571443c086bf0d1b7af488151027d59b6",
+    "hex_sha256": "a198cfc587e80b3b4e7279ac1dc6e021bcbe5c7300c8fe343b5559ef5b56a15c",
+    "result": [
+      20005,
+      0,
+      0
+    ]
+  },
+  {
+    "role": 2,
+    "opcode": 3,
+    "args": [
+      20,
+      0,
+      10000
+    ],
+    "core_revision": "34475a0571443c086bf0d1b7af488151027d59b6",
+    "hex_sha256": "a198cfc587e80b3b4e7279ac1dc6e021bcbe5c7300c8fe343b5559ef5b56a15c",
+    "result": [
+      10003,
+      0,
+      0
+    ]
+  },
+  {
+    "role": 2,
+    "opcode": 4,
+    "args": [
+      128,
+      1
+    ],
+    "core_revision": "34475a0571443c086bf0d1b7af488151027d59b6",
+    "hex_sha256": "a198cfc587e80b3b4e7279ac1dc6e021bcbe5c7300c8fe343b5559ef5b56a15c",
+    "result": [
+      1,
+      0,
+      1,
+      4092,
+      4092
+    ]
+  },
+  {
+    "role": 2,
+    "opcode": 4,
+    "args": [
+      135,
+      32
+    ],
+    "core_revision": "34475a0571443c086bf0d1b7af488151027d59b6",
+    "hex_sha256": "a198cfc587e80b3b4e7279ac1dc6e021bcbe5c7300c8fe343b5559ef5b56a15c",
+    "error": "firmware failure role=2 op=4 seq=6 status=520 result=[]"
+  }
+]

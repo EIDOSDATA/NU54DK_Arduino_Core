@@ -151,6 +151,7 @@ config NUCODE_ARDUINO_SERIAL_FABRIC
 	depends on NUCODE_ARDUINO_API
 	depends on NUCODE_ARDUINO_IO_OWNERSHIP
 	depends on NUCODE_ARDUINO_GPIO
+	select NRFX_POWER
 	help
 	  UARTE, SPIM/SPIS, TWIM/TWIS가 공유하는 5개 serial block의
 	  allocation-free typed handle, 원자적 route/DMA lease와 bounded

@@ -49,6 +49,14 @@ REQUIRED_GATE_IDS = (
     "project_owner_approval",
 )
 PACKAGE_GATE_ID = "package_reproducibility"
+VERIFICATION_SCOPE = {
+    "id": "v0.4.0-core-functional-hil-v1",
+    "decision_record": "00_Docs/04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md",
+    "required_fixture": "nu54dk-onboard-or-two-board-peer-with-safe-wiring",
+    "external_measurement_equipment_required": False,
+    "third_party_device_qualification_required": False,
+    "unverified_core_function_policy": "hold-not-pass",
+}
 
 
 class M27ReleaseFailure(RuntimeError):
@@ -163,6 +171,15 @@ def validate_contract(repository: Path = REPOSITORY) -> dict[str, Any]:
     }
     if any(ledger.get(key) != value for key, value in fixed.items()):
         raise M27ReleaseFailure("M27 release identity or publication policy drifted")
+    scope = ledger.get("verification_scope")
+    if (
+        not isinstance(scope, dict)
+        or canonical_json(scope) != canonical_json(VERIFICATION_SCOPE)
+    ):
+        raise M27ReleaseFailure("M27 owner-approved functional verification scope drifted")
+    decision = (repository / scope["decision_record"]).resolve()
+    if not decision.is_relative_to(repository.resolve()) or not decision.is_file():
+        raise M27ReleaseFailure("M27 verification scope decision record is missing")
     gates = ledger.get("gates")
     if not isinstance(gates, list):
         raise M27ReleaseFailure("M27 gates must be an array")

@@ -9,28 +9,32 @@
 
 void setup()
 {
-  Serial.begin(115200);
-  while (!Serial && millis() < 3000) {
-  }
+    Serial.begin(115200);
+    while (!Serial && millis() < 3000)
+    {
+    }
 
-  if (!EEPROM.begin(EEPROMClass::maximum_size)) {
-    Serial.println("EEPROM open failed; call EEPROM.reset() only for explicit recovery.");
-    return;
-  }
+    if (!EEPROM.begin(EEPROMClass::maximum_size))
+    {
+        Serial.println("EEPROM open failed; call EEPROM.reset() only for explicit recovery.");
+        return;
+    }
 
-  uint32_t boots = 0;
-  EEPROM.get(0, boots);
-  if (boots == 0xffffffffUL) {
-    boots = 0;
-  }
-  ++boots;
-  EEPROM.put(0, boots);
-  if (!EEPROM.commit()) {
-    Serial.println("EEPROM commit failed.");
-    return;
-  }
-  Serial.print("Persistent boot count: ");
-  Serial.println(boots);
+    uint32_t boots = 0;
+    EEPROM.get(0, boots);
+    if (boots == 0xffffffffUL)
+    {
+        boots = 0;
+    }
+    ++boots;
+    EEPROM.put(0, boots);
+    if (!EEPROM.commit())
+    {
+        Serial.println("EEPROM commit failed.");
+        return;
+    }
+    Serial.print("Persistent boot count: ");
+    Serial.println(boots);
 }
 
 void loop()

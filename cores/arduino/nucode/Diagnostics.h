@@ -14,65 +14,65 @@
 namespace nucode::arduino
 {
 
-	/** @brief 진단을 생성한 Core 하위 시스템입니다. */
-	enum class DiagnosticSubsystem : std::uint8_t
-	{
-		core = 0U,
-		gpio,
-		time,
-		serial,
-		wire,
-		spi,
-		analog,
-		serial1,
-	};
+    /** @brief 진단을 생성한 Core 하위 시스템입니다. */
+    enum class DiagnosticSubsystem : std::uint8_t
+    {
+        core = 0U,
+        gpio,
+        time,
+        serial,
+        wire,
+        spi,
+        analog,
+        serial1,
+    };
 
-	/** @brief 하위 시스템에 독립적인 최소 공개 진단 분류입니다. */
-	enum class DiagnosticCode : std::uint8_t
-	{
-		none = 0U,
-		invalid_context,
-		invalid_argument,
-		invalid_pin,
-		unsupported,
-		device_not_ready,
-		not_started,
-		overflow,
-		ownership_conflict,
-		driver_error,
-	};
+    /** @brief 하위 시스템에 독립적인 최소 공개 진단 분류입니다. */
+    enum class DiagnosticCode : std::uint8_t
+    {
+        none = 0U,
+        invalid_context,
+        invalid_argument,
+        invalid_pin,
+        unsupported,
+        device_not_ready,
+        not_started,
+        overflow,
+        ownership_conflict,
+        driver_error,
+    };
 
-	/**
+    /**
 	 * @brief 할당과 logging 없이 전달할 수 있는 공개 진단 값입니다.
 	 *
 	 * 기존 backend의 비공개 진단 상태를 강제로 변경하지 않으며, 공개 projection과
 	 * 순수 포맷 함수가 공유하는 공통 값 계약입니다.
 	 */
-	struct Diagnostic
-	{
-		DiagnosticSubsystem subsystem{DiagnosticSubsystem::core};
-		DiagnosticCode code{DiagnosticCode::none};
-		int driver_error{0};
-		std::uint32_t detail{0U};
-	};
+    struct Diagnostic
+    {
+        DiagnosticSubsystem subsystem{DiagnosticSubsystem::core};
+        DiagnosticCode code{DiagnosticCode::none};
+        int driver_error{0};
+        std::uint32_t detail{0U};
+    };
 
-	/**
+    /**
 	 * @brief 하위 시스템의 안정된 영문 token을 반환합니다.
 	 *
 	 * @param subsystem 변환할 하위 시스템입니다.
 	 * @return 알려진 값의 영문 token이며, 알 수 없는 값이면 "unknown"입니다.
 	 */
-	[[nodiscard]] const char *diagnosticSubsystemToken(DiagnosticSubsystem subsystem) noexcept;
+    [[nodiscard]] const char *diagnosticSubsystemToken(DiagnosticSubsystem subsystem) noexcept;
 
-	/**
+    /**
 	 * @brief 진단 코드의 안정된 영문 token을 반환합니다.
 	 *
 	 * @param code 변환할 진단 코드입니다.
 	 * @return 알려진 값의 영문 token이며, 알 수 없는 값이면 "unknown"입니다.
 	 */
-	[[nodiscard]] const char *diagnosticCodeToken(DiagnosticCode code) noexcept;
+    [[nodiscard]] const char *diagnosticCodeToken(DiagnosticCode code) noexcept;
 
-	/**
+    /**
 	 * @brief 선택한 backend의 마지막 내부 오류를 공개 진단 값으로 투영합니다.
 	 *
 	 * 조회는 기존 backend 상태를 지우지 않습니다. 활성화된 GPIO, Serial, Serial1,
@@ -86,9 +86,9 @@ namespace nucode::arduino
 	 * @param subsystem 조회할 backend 하위 시스템입니다.
 	 * @return 공개 코드, 원본 driver 오류와 필요한 보조 detail을 담은 값입니다.
 	 */
-	[[nodiscard]] Diagnostic lastDiagnostic(DiagnosticSubsystem subsystem) noexcept;
+    [[nodiscard]] Diagnostic lastDiagnostic(DiagnosticSubsystem subsystem) noexcept;
 
-	/**
+    /**
 	 * @brief 진단을 한 줄 ASCII 형식으로 포맷합니다.
 	 *
 	 * 형식은 `NU54:<subsystem>:<code>:driver=<signed>:detail=<unsigned>`입니다.
@@ -101,10 +101,9 @@ namespace nucode::arduino
 	 * @param capacity NUL 문자를 포함한 buffer 크기입니다.
 	 * @return NUL 문자를 제외한 전체 필요 길이입니다.
 	 */
-	[[nodiscard]] std::size_t formatDiagnostic(const Diagnostic &diagnostic,
-											   char *buffer,
-											   std::size_t capacity) noexcept;
+    [[nodiscard]] std::size_t formatDiagnostic(const Diagnostic &diagnostic, char *buffer,
+                                               std::size_t capacity) noexcept;
 
-}
+} // namespace nucode::arduino
 
 #endif

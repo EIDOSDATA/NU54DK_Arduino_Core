@@ -67,11 +67,28 @@ namespace nucode::arduino
         disabled = 0xFFU,
     };
 
-    /** @brief 한 logical SAADC channel의 positive/negative 입력입니다. */
+    /** @brief nRF54L15의 8개 SAADC gain. 내부 reference는 0.9 V입니다. */
+    enum class SaadcGain : std::uint8_t
+    {
+        two = 0U,
+        one,
+        two_thirds,
+        one_half,
+        two_fifths,
+        one_third,
+        two_sevenths,
+        one_quarter,
+    };
+
+    /** @brief 한 logical SAADC channel의 입력·gain입니다.
+     * gain=1 기본값을 보존합니다. 0.9 V보다 높은 입력은 적절한 감쇠 gain을
+     * 선택해야 하며, gain 선택이 pad 허용 전압을 높이지는 않습니다.
+     */
     struct SaadcChannelConfiguration
     {
         SaadcInput positive{SaadcInput::ain0};
         SaadcInput negative{SaadcInput::disabled};
+        SaadcGain gain{SaadcGain::one};
     };
 
     /** @brief SAADC 8채널 scan과 연속 double-buffer 설정입니다. */
@@ -107,7 +124,7 @@ namespace nucode::arduino
     /** @brief SAADC 전 instance scan/continuous DMA handle입니다. */
     class SaadcFabric
     {
-    public:
+      public:
         [[nodiscard]] AnalogFabricState state() const noexcept;
         [[nodiscard]] AnalogFabricResult lastResult() const noexcept;
         [[nodiscard]] int lastDriverError() const noexcept;
@@ -115,8 +132,7 @@ namespace nucode::arduino
         [[nodiscard]] AnalogFabricResult
         configure(const SaadcConfiguration &configuration) noexcept;
         [[nodiscard]] AnalogFabricResult start(std::int16_t *first_buffer,
-                                               std::size_t first_samples,
-                                               std::int16_t *next_buffer,
+                                               std::size_t first_samples, std::int16_t *next_buffer,
                                                std::size_t next_samples) noexcept;
         [[nodiscard]] AnalogFabricResult queueBuffer(std::int16_t *buffer,
                                                      std::size_t samples) noexcept;
@@ -128,11 +144,10 @@ namespace nucode::arduino
         [[nodiscard]] std::uintptr_t sampleTaskAddress() const noexcept;
         [[nodiscard]] std::uintptr_t readyEventAddress() const noexcept;
         /** @brief stop_timeout이면 DMA lease를 유지하며 stop() 재시도가 가능합니다. */
-        [[nodiscard]] AnalogFabricResult
-        stop(std::uint32_t timeout_us = 100000U) noexcept;
+        [[nodiscard]] AnalogFabricResult stop(std::uint32_t timeout_us = 100000U) noexcept;
         [[nodiscard]] bool takeEvent(SaadcEvent &event) noexcept;
 
-    private:
+      private:
         friend class AnalogFabric;
         constexpr SaadcFabric() noexcept = default;
     };
@@ -186,7 +201,7 @@ namespace nucode::arduino
     /** @brief PWM20/21/22 한 block의 4채널 sequence handle입니다. */
     class PwmSequenceFabric
     {
-    public:
+      public:
         [[nodiscard]] std::uint8_t instance() const noexcept;
         [[nodiscard]] AnalogFabricState state() const noexcept;
         [[nodiscard]] AnalogFabricResult lastResult() const noexcept;
@@ -194,21 +209,20 @@ namespace nucode::arduino
 
         [[nodiscard]] AnalogFabricResult
         configure(const PwmSequenceConfiguration &configuration) noexcept;
-        [[nodiscard]] AnalogFabricResult
-        play(const PwmSequenceBuffer &sequence0,
-             const PwmSequenceBuffer *sequence1 = nullptr,
-             std::uint16_t playback_count = 1U, bool loop = false,
-             bool start_via_task = false) noexcept;
+        [[nodiscard]] AnalogFabricResult play(const PwmSequenceBuffer &sequence0,
+                                              const PwmSequenceBuffer *sequence1 = nullptr,
+                                              std::uint16_t playback_count = 1U, bool loop = false,
+                                              bool start_via_task = false) noexcept;
         [[nodiscard]] std::uintptr_t startTaskAddress() const noexcept;
         [[nodiscard]] AnalogFabricResult step() noexcept;
-        [[nodiscard]] AnalogFabricResult
-        stop(std::uint32_t timeout_us = 100000U) noexcept;
+        [[nodiscard]] AnalogFabricResult stop(std::uint32_t timeout_us = 100000U) noexcept;
         [[nodiscard]] bool takeEvent(PwmSequenceEvent &event) noexcept;
 
-    private:
+      private:
         friend class AnalogFabric;
-        constexpr explicit PwmSequenceFabric(std::uint8_t instance) noexcept
-            : instance_(instance) {}
+        constexpr explicit PwmSequenceFabric(std::uint8_t instance) noexcept : instance_(instance)
+        {
+        }
 
         std::uint8_t instance_;
     };
@@ -216,11 +230,11 @@ namespace nucode::arduino
     /** @brief M25 analog/timing candidate handle factory입니다. */
     class AnalogFabric
     {
-    public:
+      public:
         [[nodiscard]] SaadcFabric &saadc() noexcept;
         [[nodiscard]] PwmSequenceFabric *pwm(std::uint8_t instance) noexcept;
 
-    private:
+      private:
         friend AnalogFabric &analogFabric() noexcept;
         constexpr AnalogFabric() noexcept = default;
     };

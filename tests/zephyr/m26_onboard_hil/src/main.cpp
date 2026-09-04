@@ -45,8 +45,7 @@ namespace
 
     [[nodiscard]] std::uint32_t guardFor(const RetainedState &state) noexcept
     {
-        return state.magic ^ static_cast<std::uint32_t>(state.temperature) ^
-               retained_salt;
+        return state.magic ^ static_cast<std::uint32_t>(state.temperature) ^ retained_salt;
     }
 
     [[nodiscard]] bool validRetainedState() noexcept
@@ -65,7 +64,9 @@ namespace
     [[noreturn]] void halt()
     {
         while (true)
+        {
             k_sleep(K_FOREVER);
+        }
     }
 
     void waitForTx(UarteHandle &serial)
@@ -78,48 +79,59 @@ namespace
                 k_sleep(K_MSEC(1));
                 continue;
             }
-            if (event.type == UarteEventType::tx_complete &&
-                event.buffer == response_buffer && event.transferred == packet_size)
+            if (event.type == UarteEventType::tx_complete && event.buffer == response_buffer &&
+                event.transferred == packet_size)
+            {
                 return;
-            if (event.type == UarteEventType::error ||
-                event.type == UarteEventType::tx_cancelled)
+            }
+            if (event.type == UarteEventType::error || event.type == UarteEventType::tx_cancelled)
+            {
                 halt();
+            }
         }
     }
 
     void send(UarteHandle &serial)
     {
-        if (serial.transmitAsync(response_buffer, packet_size) !=
-            SerialFabricResult::success)
+        if (serial.transmitAsync(response_buffer, packet_size) != SerialFabricResult::success)
+        {
             halt();
+        }
         waitForTx(serial);
     }
 
     void clearResponse() noexcept
     {
         for (std::size_t index = 0U; index < packet_size; ++index)
+        {
             response_buffer[index] = 0U;
+        }
     }
 
     void finishChecksum() noexcept
     {
         std::uint8_t checksum = 0U;
         for (std::size_t index = 0U; index < packet_size - 1U; ++index)
+        {
             checksum ^= response_buffer[index];
+        }
         response_buffer[packet_size - 1U] = checksum;
     }
 
     void writeU32(std::size_t offset, std::uint32_t value) noexcept
     {
         for (std::size_t byte = 0U; byte < sizeof(value); ++byte)
-            response_buffer[offset + byte] =
-                static_cast<std::uint8_t>(value >> (byte * 8U));
+        {
+            response_buffer[offset + byte] = static_cast<std::uint8_t>(value >> (byte * 8U));
+        }
     }
 
     void fillReady(std::uint8_t seed = 0xE6U) noexcept
     {
         for (std::size_t index = 0U; index < packet_size; ++index)
+        {
             response_buffer[index] = static_cast<std::uint8_t>(seed ^ index);
+        }
     }
 
     [[nodiscard]] bool validCommand(std::uint8_t seed) noexcept
@@ -127,13 +139,15 @@ namespace
         for (std::size_t index = 0U; index < packet_size; ++index)
         {
             if (command_buffer[index] != static_cast<std::uint8_t>(seed ^ index))
+            {
                 return false;
+            }
         }
         return true;
     }
 
-    void fillArmed(bool temperature_pass, bool configured, bool started,
-                   bool fed, std::int32_t temperature, int driver_error) noexcept
+    void fillArmed(bool temperature_pass, bool configured, bool started, bool fed,
+                   std::int32_t temperature, int driver_error) noexcept
     {
         clearResponse();
         response_buffer[0] = 'A';
@@ -151,9 +165,8 @@ namespace
         finishChecksum();
     }
 
-    void fillResult(bool temperature_pass, bool reset_pass,
-                    std::int32_t temperature, std::uint32_t cause,
-                    std::uint32_t supported) noexcept
+    void fillResult(bool temperature_pass, bool reset_pass, std::int32_t temperature,
+                    std::uint32_t cause, std::uint32_t supported) noexcept
     {
         clearResponse();
         response_buffer[0] = 'N';
@@ -176,11 +189,11 @@ namespace
     {
         auto *const serial = serialFabric().uarte(30U);
         if (serial == nullptr ||
-            serial->configure({115200U, UarteParity::none, false}) !=
-                SerialFabricResult::success)
+            serial->configure({115200U, UarteParity::none, false}) != SerialFabricResult::success)
+        {
             halt();
-        const SerialDmaWorkspace serial_dma{serial_workspace,
-                                            sizeof(serial_workspace)};
+        }
+        const SerialDmaWorkspace serial_dma{serial_workspace, sizeof(serial_workspace)};
         const SerialFabricConfiguration serial_configuration{
             SerialRouteClass::p0_flexible,
             SerialElectricalProfile::dap_uart_bridge,
@@ -191,15 +204,18 @@ namespace
         };
         if (serial->stage(serial_configuration) != SerialFabricResult::success ||
             serial->activate() != SerialFabricResult::success)
+        {
             halt();
+        }
         return *serial;
     }
 
     [[nodiscard]] bool receiveCommand(UarteHandle &serial, std::uint8_t seed = 0x26U)
     {
-        if (serial.receiveAsync(command_buffer, packet_size) !=
-            SerialFabricResult::success)
+        if (serial.receiveAsync(command_buffer, packet_size) != SerialFabricResult::success)
+        {
             return false;
+        }
         while (true)
         {
             UarteEvent event{};
@@ -208,12 +224,15 @@ namespace
                 k_sleep(K_MSEC(1));
                 continue;
             }
-            if (event.type == UarteEventType::rx_complete &&
-                event.buffer == command_buffer && event.transferred == packet_size)
+            if (event.type == UarteEventType::rx_complete && event.buffer == command_buffer &&
+                event.transferred == packet_size)
+            {
                 return validCommand(seed);
-            if (event.type == UarteEventType::error ||
-                event.type == UarteEventType::rx_cancelled)
+            }
+            if (event.type == UarteEventType::error || event.type == UarteEventType::rx_cancelled)
+            {
                 return false;
+            }
         }
     }
 } // namespace
@@ -225,8 +244,7 @@ int main()
     const bool reset_report_pass = hwinfo_get_reset_cause(&reset_cause) == 0 &&
                                    hwinfo_get_supported_reset_cause(&supported_cause) == 0;
     const bool watchdog_reset =
-        reset_report_pass &&
-        (reset_cause & static_cast<std::uint32_t>(RESET_WATCHDOG)) != 0U;
+        reset_report_pass && (reset_cause & static_cast<std::uint32_t>(RESET_WATCHDOG)) != 0U;
     const bool resumed = validRetainedState() && watchdog_reset;
     const std::int32_t retained_temperature = retained_state.temperature;
     clearRetainedState();
@@ -235,16 +253,20 @@ int main()
     UarteHandle &serial = startSerial();
     if (resumed)
     {
-        // A reset is a new UART epoch. Do not mix the result with reset-line
-        // transients: announce boot completion, then wait for the host request.
+        /**
+         * @brief reset 뒤에는 새 UART epoch를 시작합니다.
+         *
+         * reset-line transient와 결과를 섞지 않도록 boot 완료를 알린 뒤 Host 요청을 기다립니다.
+         */
         fillReady(0x96U);
         send(serial);
         if (!receiveCommand(serial, 0x76U))
+        {
             halt();
-        const bool temperature_pass = retained_temperature >= -4000 &&
-                                      retained_temperature <= 12500;
-        fillResult(temperature_pass, true, retained_temperature, reset_cause,
-                   supported_cause);
+        }
+        const bool temperature_pass =
+            retained_temperature >= -4000 && retained_temperature <= 12500;
+        fillResult(temperature_pass, true, retained_temperature, reset_cause, supported_cause);
         send(serial);
         halt();
     }
@@ -254,13 +276,14 @@ int main()
         fillReady();
         send(serial);
         if (!receiveCommand(serial))
+        {
             continue;
+        }
 
         std::int32_t temperature = 0;
-        const bool temperature_pass =
-            systemFabric().temperature().readCentiCelsius(temperature) ==
-                SystemFabricResult::success &&
-            temperature >= -4000 && temperature <= 12500;
+        const bool temperature_pass = systemFabric().temperature().readCentiCelsius(temperature) ==
+                                          SystemFabricResult::success &&
+                                      temperature >= -4000 && temperature <= 12500;
         auto *const watchdog = systemFabric().watchdog(30U);
         bool configured = false;
         bool started = false;
@@ -271,23 +294,31 @@ int main()
             retained_state.magic = retained_magic;
             retained_state.temperature = temperature;
             retained_state.guard = guardFor(retained_state);
-            configured = watchdog->configure(watchdog_timeout_ms) ==
-                         SystemFabricResult::success;
+            configured = watchdog->configure(watchdog_timeout_ms) == SystemFabricResult::success;
             if (configured)
+            {
                 started = watchdog->start() == SystemFabricResult::success;
+            }
             if (started)
+            {
                 fed = watchdog->feed() == SystemFabricResult::success;
+            }
             driver_error = watchdog->lastDriverError();
         }
         if (!temperature_pass || !configured || !started || !fed)
+        {
             clearRetainedState();
-        fillArmed(temperature_pass, configured, started, fed, temperature,
-                  driver_error);
+        }
+        fillArmed(temperature_pass, configured, started, fed, temperature, driver_error);
         send(serial);
         if (!temperature_pass || !configured || !started || !fed)
+        {
             halt();
+        }
 
         while (true)
+        {
             k_sleep(K_FOREVER);
+        }
     }
 }

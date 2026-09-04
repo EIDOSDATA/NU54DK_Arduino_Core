@@ -1,0 +1,24 @@
+#include <nucode/nu54dk-arduino-pins.dtsi>
+/ {
+    chosen {
+        /delete-property/ zephyr,console;
+        /delete-property/ zephyr,shell-uart;
+        /delete-property/ zephyr,uart-mcumgr;
+        /delete-property/ zephyr,bt-mon-uart;
+        /delete-property/ zephyr,bt-c2h-uart;
+    };
+};
+&uart20 { status = "disabled"; };
+&uart30 { status = "disabled"; };
+
+/* P1.2/P1.3 are NFC pads unless explicitly released to the PMIC GPIO route. */
+&uicr { nfct-pins-as-gpios; };
+
+/* nrfx SPIS needs a compatible node, but no Zephyr driver may claim its IRQ. */
+&spi22 {
+    compatible = "nordic,nrf-spis";
+    /delete-property/ rx-delay-supported;
+    /delete-property/ rx-delay;
+    def-char = <0xff>;
+    status = "disabled";
+};

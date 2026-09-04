@@ -4,6 +4,14 @@
   "candidate_version": "0.4.0-rc.1",
   "stable_version": "0.4.0",
   "publication_policy": "no-tag-release-or-index-publication-until-every-required-gate-passes",
+  "verification_scope": {
+    "id": "v0.4.0-core-functional-hil-v1",
+    "decision_record": "00_Docs/04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md",
+    "required_fixture": "nu54dk-onboard-or-two-board-peer-with-safe-wiring",
+    "external_measurement_equipment_required": false,
+    "third_party_device_qualification_required": false,
+    "unverified_core_function_policy": "hold-not-pass"
+  },
   "gates": [
     {
       "id": "m23_inventory",
@@ -35,7 +43,7 @@
       "kind": "physical",
       "required": true,
       "state": "hold",
-      "reason": "external serial loopback/peer fixture and measurement equipment are required"
+      "reason": "safe NU54DK loopback/peer wiring and serial data-path, DMA, recovery, concurrency and soak evidence are required; external measurement equipment is not required"
     },
     {
       "id": "m25_source_build",
@@ -59,7 +67,7 @@
       "kind": "physical",
       "required": true,
       "state": "hold",
-      "reason": "SAADC/PWM/audio/QDEC signal, timing, concurrency and soak fixtures are required"
+      "reason": "safe NU54DK-generated/captured SAADC/PWM/PDM/I2S/QDEC functional signals, DMA, recovery, concurrency and soak evidence are required; precision metrology and third-party device qualification are outside scope"
     },
     {
       "id": "m26_inventory",

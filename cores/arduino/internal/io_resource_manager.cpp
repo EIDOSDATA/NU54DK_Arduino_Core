@@ -71,8 +71,7 @@ namespace nucode::arduino::internal
         }
 
         /** @brief 자원 키가 관리자에 저장 가능한 형식인지 확인합니다. */
-        [[nodiscard]] constexpr bool
-        validResource(const IoResourceId &resource) noexcept
+        [[nodiscard]] constexpr bool validResource(const IoResourceId &resource) noexcept
         {
             if (resource.kind == IoResourceKind::invalid)
             {
@@ -83,8 +82,7 @@ namespace nucode::arduino::internal
             {
                 return false;
             }
-            if ((resource.kind == IoResourceKind::gpio_pin) &&
-                (resource.domain == nullptr))
+            if ((resource.kind == IoResourceKind::gpio_pin) && (resource.domain == nullptr))
             {
                 return false;
             }
@@ -125,8 +123,7 @@ namespace nucode::arduino::internal
         }
 
         /** @brief table에서 요청과 겹치지만 exact key는 아닌 slot을 찾습니다. */
-        [[nodiscard]] ResourceSlot *
-        findConflictingSlot(const IoResourceId &resource) noexcept
+        [[nodiscard]] ResourceSlot *findConflictingSlot(const IoResourceId &resource) noexcept
         {
             for (auto &slot : resource_slots)
             {
@@ -139,8 +136,7 @@ namespace nucode::arduino::internal
         }
 
         /** @brief table에서 같은 물리 자원의 const slot을 찾습니다. */
-        [[nodiscard]] const ResourceSlot *findSlot(const IoResourceId &resource,
-                                                   int) noexcept
+        [[nodiscard]] const ResourceSlot *findSlot(const IoResourceId &resource, int) noexcept
         {
             return findSlot(resource);
         }
@@ -170,7 +166,10 @@ namespace nucode::arduino::internal
         }
 
         /** @brief mutation API를 thread 문맥으로 제한합니다. */
-        [[nodiscard]] bool isThreadContext() noexcept { return !k_is_in_isr(); }
+        [[nodiscard]] bool isThreadContext() noexcept
+        {
+            return !k_is_in_isr();
+        }
 
         /** @brief lease가 현재 manager epoch의 요청 단계인지 확인합니다. */
         [[nodiscard]] bool validLeaseEpoch(const IoResourceLease &lease) noexcept
@@ -179,16 +178,14 @@ namespace nucode::arduino::internal
         }
 
         /** @brief 호출자가 전달한 lease가 고정 배열 범위 안인지 확인합니다. */
-        [[nodiscard]] constexpr bool
-        validLeaseShape(const IoResourceLease &lease) noexcept
+        [[nodiscard]] constexpr bool validLeaseShape(const IoResourceLease &lease) noexcept
         {
             return (lease.owner.kind != IoOwnerKind::none) && (lease.count != 0U) &&
                    (lease.count <= io_resource_lease_capacity);
         }
 
         /** @brief reserve 단계의 변경·차용 entry가 모두 유효한지 검사합니다. */
-        [[nodiscard]] bool
-        validateReservedEntries(const IoResourceLease &lease) noexcept
+        [[nodiscard]] bool validateReservedEntries(const IoResourceLease &lease) noexcept
         {
             for (std::size_t index = 0U; index < lease.count; ++index)
             {
@@ -218,8 +215,7 @@ namespace nucode::arduino::internal
         }
 
         /** @brief commit된 lease의 변경 entry가 반환 가능한지 검사합니다. */
-        [[nodiscard]] IoResourceResult
-        validateReleaseEntries(const IoResourceLease &lease) noexcept
+        [[nodiscard]] IoResourceResult validateReleaseEntries(const IoResourceLease &lease) noexcept
         {
             for (std::size_t index = 0U; index < lease.count; ++index)
             {
@@ -231,8 +227,7 @@ namespace nucode::arduino::internal
 
                 const ResourceSlot *const slot = findSlot(entry.resource, 0);
                 if ((slot == nullptr) || (slot->state != IoResourceState::active) ||
-                    !sameOwner(slot->owner, lease.owner) ||
-                    (slot->generation != entry.generation))
+                    !sameOwner(slot->owner, lease.owner) || (slot->generation != entry.generation))
                 {
                     return IoResourceResult::stale_lease;
                 }
@@ -245,8 +240,7 @@ namespace nucode::arduino::internal
         }
 
         /** @brief 조회 결과를 slot 또는 free 상태로 채웁니다. */
-        void fillSnapshot(const ResourceSlot *slot,
-                          IoResourceSnapshot &snapshot) noexcept
+        void fillSnapshot(const ResourceSlot *slot, IoResourceSnapshot &snapshot) noexcept
         {
             if (slot == nullptr)
             {
@@ -259,8 +253,7 @@ namespace nucode::arduino::internal
         }
     } // namespace
 
-    IoResourceResult reserveIoResources(IoResourceOwner owner,
-                                        const IoResourceId *resources,
+    IoResourceResult reserveIoResources(IoResourceOwner owner, const IoResourceId *resources,
                                         std::size_t count, IoAcquirePolicy policy,
                                         IoResourceLease &lease,
                                         IoResourceSnapshot *conflict) noexcept
@@ -269,15 +262,12 @@ namespace nucode::arduino::internal
         {
             return IoResourceResult::invalid_context;
         }
-        if ((resources == nullptr) || (count == 0U) ||
-            (count > io_resource_lease_capacity) ||
-            (owner.kind == IoOwnerKind::none) ||
-            (policy != IoAcquirePolicy::exclusive))
+        if ((resources == nullptr) || (count == 0U) || (count > io_resource_lease_capacity) ||
+            (owner.kind == IoOwnerKind::none) || (policy != IoAcquirePolicy::exclusive))
         {
             return IoResourceResult::invalid_argument;
         }
-        if ((lease.phase == IoLeasePhase::reserved) ||
-            (lease.phase == IoLeasePhase::committed))
+        if ((lease.phase == IoLeasePhase::reserved) || (lease.phase == IoLeasePhase::committed))
         {
             return IoResourceResult::wrong_phase;
         }
@@ -324,8 +314,7 @@ namespace nucode::arduino::internal
                 }
                 selected_new[index] = true;
             }
-            else if ((slot->state == IoResourceState::reserved) ||
-                     !sameOwner(slot->owner, owner))
+            else if ((slot->state == IoResourceState::reserved) || !sameOwner(slot->owner, owner))
             {
                 if (conflict != nullptr)
                 {
@@ -358,8 +347,7 @@ namespace nucode::arduino::internal
             auto &entry = lease.entries[index];
             entry.resource = resources[index];
             entry.previous_owner = selected_new[index] ? IoResourceOwner{} : slot.owner;
-            entry.previous_state =
-                selected_new[index] ? IoResourceState::free : slot.state;
+            entry.previous_state = selected_new[index] ? IoResourceState::free : slot.state;
             entry.previous_generation = selected_new[index] ? 0U : slot.generation;
             entry.changed = selected_new[index] || !sameOwner(slot.owner, owner) ||
                             (slot.state != IoResourceState::active);
@@ -383,26 +371,22 @@ namespace nucode::arduino::internal
         return IoResourceResult::success;
     }
 
-    IoResourceResult transferIoResources(IoResourceOwner expected_owner,
-                                         IoResourceOwner new_owner,
-                                         const IoResourceId *resources,
-                                         std::size_t count, IoResourceLease &lease,
+    IoResourceResult transferIoResources(IoResourceOwner expected_owner, IoResourceOwner new_owner,
+                                         const IoResourceId *resources, std::size_t count,
+                                         IoResourceLease &lease,
                                          IoResourceSnapshot *conflict) noexcept
     {
         if (!isThreadContext())
         {
             return IoResourceResult::invalid_context;
         }
-        if ((resources == nullptr) || (count == 0U) ||
-            (count > io_resource_lease_capacity) ||
-            (expected_owner.kind == IoOwnerKind::none) ||
-            (new_owner.kind == IoOwnerKind::none) ||
+        if ((resources == nullptr) || (count == 0U) || (count > io_resource_lease_capacity) ||
+            (expected_owner.kind == IoOwnerKind::none) || (new_owner.kind == IoOwnerKind::none) ||
             sameOwner(expected_owner, new_owner))
         {
             return IoResourceResult::invalid_argument;
         }
-        if ((lease.phase == IoLeasePhase::reserved) ||
-            (lease.phase == IoLeasePhase::committed))
+        if ((lease.phase == IoLeasePhase::reserved) || (lease.phase == IoLeasePhase::committed))
         {
             return IoResourceResult::wrong_phase;
         }
@@ -428,8 +412,7 @@ namespace nucode::arduino::internal
         {
             ResourceSlot *const slot = findSlot(resources[index]);
             if ((slot == nullptr) || (slot->state != IoResourceState::active) ||
-                !sameOwner(slot->owner, expected_owner) ||
-                (slot->reservation_token != 0U))
+                !sameOwner(slot->owner, expected_owner) || (slot->reservation_token != 0U))
             {
                 if (conflict != nullptr)
                 {
@@ -545,9 +528,8 @@ namespace nucode::arduino::internal
             {
                 slot->owner = entry.previous_owner;
                 slot->state = entry.previous_state;
-                slot->generation = entry.previous_generation != 0U
-                                       ? entry.previous_generation
-                                       : allocateGeneration();
+                slot->generation = entry.previous_generation != 0U ? entry.previous_generation
+                                                                   : allocateGeneration();
             }
         }
         lease.phase = IoLeasePhase::rolled_back;
@@ -597,8 +579,7 @@ namespace nucode::arduino::internal
         return IoResourceResult::success;
     }
 
-    IoResourceResult acquireIoResources(IoResourceOwner owner,
-                                        const IoResourceId *resources,
+    IoResourceResult acquireIoResources(IoResourceOwner owner, const IoResourceId *resources,
                                         std::size_t count, IoAcquirePolicy policy,
                                         IoResourceToken &token,
                                         IoResourceSnapshot *conflict) noexcept
@@ -626,8 +607,7 @@ namespace nucode::arduino::internal
         token.count = lease.count;
         for (std::size_t index = 0U; index < lease.count; ++index)
         {
-            token.entries[index] = {lease.entries[index].resource,
-                                    lease.entries[index].generation,
+            token.entries[index] = {lease.entries[index].resource, lease.entries[index].generation,
                                     lease.entries[index].changed};
         }
         token.active = true;
@@ -636,8 +616,7 @@ namespace nucode::arduino::internal
 
     IoResourceResult releaseIoResources(IoResourceToken &token) noexcept
     {
-        if (!token.active || token.count == 0U ||
-            token.count > io_resource_token_capacity)
+        if (!token.active || token.count == 0U || token.count > io_resource_token_capacity)
         {
             return IoResourceResult::wrong_phase;
         }

@@ -67,7 +67,7 @@ namespace
         }
     }
 
-}
+} // namespace
 
 void setup()
 {
@@ -78,24 +78,21 @@ void setup()
     security.minimum_level = nucode::ble::SecurityLevel::encrypted;
     security.bonding = true;
     security.response_timeout_ms = 30000U;
-    security.io_capability =
-        nucode::ble::SecurityIoCapability::no_input_output;
+    security.io_capability = nucode::ble::SecurityIoCapability::no_input_output;
     BLESecurity.onEvent(onSecurityEvent);
     require(BLESecurity.begin(security), "security");
     require(BLEKeyboard.begin(), "hid");
     require(BLEDevice.begin("NU54-Secure-HID"), "device");
 
-    const nucode::ble::DeviceInformation information = {
-        "NUCODE", "NU54DK-HID", "UNSET", "0.3.0", "NU54DK", "0.3.0"};
+    const nucode::ble::DeviceInformation information = {"NUCODE", "NU54DK-HID", "UNSET",
+                                                        "0.3.0",  "NU54DK",     "0.3.0"};
     require(BLEDeviceInformation.configure(information), "dis");
     require(BLEBattery.setLevel(100U), "bas");
 
     require(BLEAdvertising.clear(), "advertising-clear");
     require(BLEAdvertising.setConnectable(true), "advertising-connectable");
-    require(BLEAdvertising.addServiceUuid(nucode::ble::BLEUuid(0x1812U)),
-            "advertising-hids");
-    require(BLEAdvertising.addServiceUuid(nucode::ble::BLEUuid(0x180FU)),
-            "advertising-bas");
+    require(BLEAdvertising.addServiceUuid(nucode::ble::BLEUuid(0x1812U)), "advertising-hids");
+    require(BLEAdvertising.addServiceUuid(nucode::ble::BLEUuid(0x180FU)), "advertising-bas");
     require(BLEAdvertising.setScanResponseName(true), "advertising-name");
     require(BLEAdvertising.start(), "advertising-start");
 }
@@ -113,8 +110,7 @@ void loop()
             pairing_confirmation_pending = false;
             static_cast<void>(BLESecurity.acceptPairing(true));
         }
-        else if (BLESecurity.currentLevel() >=
-                     nucode::ble::SecurityLevel::encrypted &&
+        else if (BLESecurity.currentLevel() >= nucode::ble::SecurityLevel::encrypted &&
                  BLEKeyboard.connected())
         {
             if (BLEKeyboard.press(hid_usage_a))

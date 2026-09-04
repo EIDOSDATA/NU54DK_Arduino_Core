@@ -7,21 +7,21 @@
 
 void setup()
 {
-	analogWriteResolution(12);
-	if (!analogWriteFrequency(PIN_PWM0, 1000))
-	{
-		while (true)
-		{
-			delay(1000);
-		}
-	}
+    analogWriteResolution(12);
+    if (!analogWriteFrequency(PIN_PWM0, 1000))
+    {
+        while (true)
+        {
+            delay(1000);
+        }
+    }
 }
 
 void loop()
 {
-	for (int duty = 0; duty <= 4095; duty += 16)
-	{
-		analogWrite(PIN_PWM0, duty);
-		delay(2);
-	}
+    for (int duty = 0; duty <= 4095; duty += 16)
+    {
+        analogWrite(PIN_PWM0, duty);
+        delay(2);
+    }
 }

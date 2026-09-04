@@ -12,17 +12,16 @@
 const nucode::ble::BLEUuid service_uuid("12345678-1234-5678-1234-56789abcdef0");
 const nucode::ble::BLEUuid characteristic_uuid("12345678-1234-5678-1234-56789abcdef1");
 nucode::ble::BLEService service(service_uuid);
-nucode::ble::BLECharacteristic characteristic(
-    characteristic_uuid,
-    nucode::ble::BLEProperty::read | nucode::ble::BLEProperty::write |
-        nucode::ble::BLEProperty::write_without_response |
-        nucode::ble::BLEProperty::notify | nucode::ble::BLEProperty::indicate,
-    nucode::ble::BLEPermission::read | nucode::ble::BLEPermission::write, 64U);
+nucode::ble::BLECharacteristic
+    characteristic(characteristic_uuid,
+                   nucode::ble::BLEProperty::read | nucode::ble::BLEProperty::write |
+                       nucode::ble::BLEProperty::write_without_response |
+                       nucode::ble::BLEProperty::notify | nucode::ble::BLEProperty::indicate,
+                   nucode::ble::BLEPermission::read | nucode::ble::BLEPermission::write, 64U);
 
 /** @brief server callback signature를 target compiler에 고정합니다. */
 void onCharacteristic(nucode::ble::BLECharacteristic &owner,
-                      const nucode::ble::BLECharacteristicEventInfo &event,
-                      void *context)
+                      const nucode::ble::BLECharacteristicEventInfo &event, void *context)
 {
     static_cast<void>(owner);
     static_cast<void>(event);
@@ -30,8 +29,8 @@ void onCharacteristic(nucode::ble::BLECharacteristic &owner,
 }
 
 /** @brief generic client callback signature를 target compiler에 고정합니다. */
-void onClient(nucode::ble::BLEGattClientEvent event, const std::uint8_t *data,
-              std::size_t length, void *context)
+void onClient(nucode::ble::BLEGattClientEvent event, const std::uint8_t *data, std::size_t length,
+              void *context)
 {
     static_cast<void>(event);
     static_cast<void>(data);

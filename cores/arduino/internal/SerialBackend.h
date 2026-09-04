@@ -54,6 +54,6 @@ namespace nucode::arduino::internal
     void clearSerial1Diagnostics() noexcept;
 #endif
 
-}
+} // namespace nucode::arduino::internal
 
 #endif

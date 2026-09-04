@@ -267,7 +267,8 @@ class M21BleSecurityContractTests(unittest.TestCase):
 
         deduplicator = source[source.index("void queueSecurityChangedIfNew") :]
         deduplicator = deduplicator[: deduplicator.index("\n    }", 1) + 6]
-        self.assertIn("published = atomic_set(", deduplicator)
+        deduplicator_compact = " ".join(deduplicator.split())
+        self.assertIn("published = atomic_set(", deduplicator_compact)
         self.assertNotIn("atomic_get(&published_level_value)", deduplicator)
         self.assertIn("published != static_cast<atomic_val_t>(level)", deduplicator)
 

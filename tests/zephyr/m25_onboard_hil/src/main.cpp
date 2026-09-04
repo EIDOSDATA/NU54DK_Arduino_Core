@@ -40,7 +40,9 @@ namespace
     [[noreturn]] void halt()
     {
         while (true)
+        {
             k_sleep(K_FOREVER);
+        }
     }
 
     void waitForTx(UarteHandle &serial)
@@ -53,27 +55,33 @@ namespace
                 k_sleep(K_MSEC(1));
                 continue;
             }
-            if (event.type == UarteEventType::tx_complete &&
-                event.buffer == response_buffer && event.transferred == packet_size)
+            if (event.type == UarteEventType::tx_complete && event.buffer == response_buffer &&
+                event.transferred == packet_size)
+            {
                 return;
-            if (event.type == UarteEventType::error ||
-                event.type == UarteEventType::tx_cancelled)
+            }
+            if (event.type == UarteEventType::error || event.type == UarteEventType::tx_cancelled)
+            {
                 halt();
+            }
         }
     }
 
     void send(UarteHandle &serial)
     {
-        if (serial.transmitAsync(response_buffer, packet_size) !=
-            SerialFabricResult::success)
+        if (serial.transmitAsync(response_buffer, packet_size) != SerialFabricResult::success)
+        {
             halt();
+        }
         waitForTx(serial);
     }
 
     void fillReady()
     {
         for (std::size_t index = 0U; index < packet_size; ++index)
+        {
             response_buffer[index] = static_cast<std::uint8_t>(0xE5U ^ index);
+        }
     }
 
     bool validCommand()
@@ -81,7 +89,9 @@ namespace
         for (std::size_t index = 0U; index < packet_size; ++index)
         {
             if (command_buffer[index] != static_cast<std::uint8_t>(0x25U ^ index))
+            {
                 return false;
+            }
         }
         return true;
     }
@@ -92,9 +102,13 @@ namespace
         auto *const egu = eventFabric().egu(20U);
         auto *const dppi = eventFabric().dppi(20U);
         if (timer == nullptr || egu == nullptr || dppi == nullptr)
+        {
             return false;
+        }
         if (timer->acquire(1000000U) != EventFabricResult::success)
+        {
             return false;
+        }
         if (egu->acquire(egu_channel) != EventFabricResult::success)
         {
             (void)timer->release();
@@ -114,8 +128,8 @@ namespace
         bool passed = timer->clear() == EventFabricResult::success;
         if (passed)
         {
-            connected = dppi->connect(publisher, subscriber, dppi_channel) ==
-                        EventFabricResult::success;
+            connected =
+                dppi->connect(publisher, subscriber, dppi_channel) == EventFabricResult::success;
             passed = connected;
         }
         if (passed)
@@ -124,7 +138,9 @@ namespace
             passed = enabled;
         }
         if (passed)
+        {
             passed = egu->trigger(egu_channel) == EventFabricResult::success;
+        }
         if (passed)
         {
             k_busy_wait(2000U);
@@ -133,10 +149,14 @@ namespace
         }
         bool cleanup = true;
         if (enabled)
+        {
             cleanup &= dppi->disable(dppi_channel) == EventFabricResult::success;
+        }
         if (connected)
-            cleanup &= dppi->disconnect(publisher, subscriber, dppi_channel) ==
-                       EventFabricResult::success;
+        {
+            cleanup &=
+                dppi->disconnect(publisher, subscriber, dppi_channel) == EventFabricResult::success;
+        }
         cleanup &= dppi->releaseChannel(dppi_channel) == EventFabricResult::success;
         cleanup &= egu->release(egu_channel) == EventFabricResult::success;
         cleanup &= timer->release() == EventFabricResult::success;
@@ -148,14 +168,14 @@ namespace
         auto &saadc = analogFabric().saadc();
         if (saadc.configure({internal_vdd_channel, 1U, 12U, 4U, 0U}) !=
                 AnalogFabricResult::success ||
-            saadc.start(saadc_samples, 1U, nullptr, 0U) !=
-                AnalogFabricResult::success)
+            saadc.start(saadc_samples, 1U, nullptr, 0U) != AnalogFabricResult::success)
+        {
             return false;
+        }
         bool complete = false;
         bool failed = false;
         bool sampled = false;
-        for (std::uint32_t waited = 0U; waited < 100000U && !complete && !failed;
-             waited += 100U)
+        for (std::uint32_t waited = 0U; waited < 100000U && !complete && !failed; waited += 100U)
         {
             SaadcEvent event{};
             while (saadc.takeEvent(event))
@@ -178,7 +198,9 @@ namespace
                 }
             }
             if (!complete)
+            {
                 k_busy_wait(100U);
+            }
         }
         const bool stopped = saadc.stop() == AnalogFabricResult::success;
         return sampled && !failed && complete && sample > 0 && stopped;
@@ -191,9 +213,8 @@ namespace
         auto *const i2s20 = streamFabric().i2s(20U);
         auto *const qdec20 = streamFabric().qdec(20U);
         auto *const qdec21 = streamFabric().qdec(21U);
-        return pdm20 != nullptr && pdm21 != nullptr && i2s20 != nullptr &&
-               qdec20 != nullptr && qdec21 != nullptr &&
-               pdm20->state() == StreamFabricState::inactive &&
+        return pdm20 != nullptr && pdm21 != nullptr && i2s20 != nullptr && qdec20 != nullptr &&
+               qdec21 != nullptr && pdm20->state() == StreamFabricState::inactive &&
                pdm21->state() == StreamFabricState::inactive &&
                i2s20->state() == StreamFabricState::inactive &&
                qdec20->state() == StreamFabricState::inactive &&
@@ -203,15 +224,18 @@ namespace
     void writeU32(std::size_t offset, std::uint32_t value)
     {
         for (std::size_t byte = 0U; byte < sizeof(value); ++byte)
-            response_buffer[offset + byte] =
-                static_cast<std::uint8_t>(value >> (byte * 8U));
+        {
+            response_buffer[offset + byte] = static_cast<std::uint8_t>(value >> (byte * 8U));
+        }
     }
 
-    void fillResult(bool event_pass, bool analog_pass, bool stream_linked,
-                    std::uint32_t ticks, std::int16_t sample)
+    void fillResult(bool event_pass, bool analog_pass, bool stream_linked, std::uint32_t ticks,
+                    std::int16_t sample)
     {
         for (std::size_t index = 0U; index < packet_size; ++index)
+        {
             response_buffer[index] = 0U;
+        }
         response_buffer[0] = 'N';
         response_buffer[1] = 'U';
         response_buffer[2] = '2';
@@ -226,7 +250,9 @@ namespace
         response_buffer[14] = stream_linked ? 1U : 0U;
         std::uint8_t checksum = 0U;
         for (std::size_t index = 0U; index < packet_size - 1U; ++index)
+        {
             checksum ^= response_buffer[index];
+        }
         response_buffer[packet_size - 1U] = checksum;
     }
 } // namespace
@@ -235,11 +261,11 @@ int main()
 {
     auto *const serial = serialFabric().uarte(30U);
     if (serial == nullptr ||
-        serial->configure({115200U, UarteParity::none, false}) !=
-            SerialFabricResult::success)
+        serial->configure({115200U, UarteParity::none, false}) != SerialFabricResult::success)
+    {
         halt();
-    const SerialDmaWorkspace serial_dma{serial_workspace,
-                                        sizeof(serial_workspace)};
+    }
+    const SerialDmaWorkspace serial_dma{serial_workspace, sizeof(serial_workspace)};
     const SerialFabricConfiguration serial_configuration{
         SerialRouteClass::p0_flexible,
         SerialElectricalProfile::dap_uart_bridge,
@@ -250,15 +276,18 @@ int main()
     };
     if (serial->stage(serial_configuration) != SerialFabricResult::success ||
         serial->activate() != SerialFabricResult::success)
+    {
         halt();
+    }
 
     while (true)
     {
         fillReady();
         send(*serial);
-        if (serial->receiveAsync(command_buffer, packet_size) !=
-            SerialFabricResult::success)
+        if (serial->receiveAsync(command_buffer, packet_size) != SerialFabricResult::success)
+        {
             halt();
+        }
         bool received = false;
         while (!received)
         {
@@ -268,14 +297,20 @@ int main()
                 k_sleep(K_MSEC(1));
                 continue;
             }
-            if (event.type == UarteEventType::rx_complete &&
-                event.buffer == command_buffer && event.transferred == packet_size)
+            if (event.type == UarteEventType::rx_complete && event.buffer == command_buffer &&
+                event.transferred == packet_size)
+            {
                 received = true;
+            }
             else if (event.type == UarteEventType::error)
+            {
                 halt();
+            }
         }
         if (!validCommand())
+        {
             continue;
+        }
 
         std::uint32_t ticks = 0U;
         std::int16_t sample = 0;
@@ -284,7 +319,7 @@ int main()
         const bool stream_linked = verifyStreamFabricIntegration();
         fillResult(event_pass, analog_pass, stream_linked, ticks, sample);
         send(*serial);
-        // One physical measurement per flash; no adjacent next-READY frame.
+        /** @brief flash 한 번마다 물리 측정 한 번만 수행하고 다음 READY frame을 붙이지 않습니다. */
         halt();
     }
 }

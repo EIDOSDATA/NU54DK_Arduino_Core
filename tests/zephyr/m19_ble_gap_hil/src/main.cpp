@@ -104,8 +104,7 @@ namespace
     /** @brief hex nonce 한 글자를 binary nibble로 변환합니다. */
     std::uint8_t hexNibble(char value)
     {
-        return static_cast<std::uint8_t>(value <= '9' ? value - '0'
-                                                      : value - 'a' + 10);
+        return static_cast<std::uint8_t>(value <= '9' ? value - '0' : value - 'a' + 10);
     }
 
     /** @brief full nonce UUID와 48-bit manufacturer 보조 binding을 만듭니다. */
@@ -128,9 +127,8 @@ namespace
         service_uuid = nucode::ble::BLEUuid(canonical);
         for (std::size_t index = 0U; index < nonce_binding_length; ++index)
         {
-            nonce_binding[index] = static_cast<std::uint8_t>(
-                (hexNibble(nonce[index * 2U]) << 4U) |
-                hexNibble(nonce[index * 2U + 1U]));
+            nonce_binding[index] = static_cast<std::uint8_t>((hexNibble(nonce[index * 2U]) << 4U) |
+                                                             hexNibble(nonce[index * 2U + 1U]));
         }
         return service_uuid.valid();
     }
@@ -156,8 +154,7 @@ namespace
                 const std::uint8_t *value = &result.payload[cursor + 2U];
                 return value[0] == static_cast<std::uint8_t>(company_id & 0xffU) &&
                        value[1] == static_cast<std::uint8_t>(company_id >> 8U) &&
-                       memcmp(&value[2], nonce_binding,
-                              nonce_binding_length) == 0;
+                       memcmp(&value[2], nonce_binding, nonce_binding_length) == 0;
             }
             cursor += field_length + 1U;
         }
@@ -333,8 +330,7 @@ namespace
         if (!BLEAdvertising.clear() || !BLEAdvertising.setConnectable(true) ||
             !BLEAdvertising.setInterval(160U, 240U) ||
             !BLEAdvertising.addServiceUuid(service_uuid) ||
-            !BLEAdvertising.setManufacturerData(company_id, nonce_binding,
-                                                nonce_binding_length) ||
+            !BLEAdvertising.setManufacturerData(company_id, nonce_binding, nonce_binding_length) ||
             !BLEAdvertising.setScanResponseName(true) || !BLEAdvertising.start())
         {
             fail("advertise-start");
@@ -409,8 +405,7 @@ void loop()
     }
 #ifdef NUCODE_M19_CENTRAL
     const std::int64_t now = k_uptime_get();
-    if (disconnect_pending && BLEConnection.connected() &&
-        now - connected_at >= link_hold_ms)
+    if (disconnect_pending && BLEConnection.connected() && now - connected_at >= link_hold_ms)
     {
         disconnect_pending = false;
         if (!BLEConnection.disconnect())
@@ -418,8 +413,8 @@ void loop()
             fail("disconnect-start");
         }
     }
-    if (reconnect_pending && !BLEConnection.connected() &&
-        !BLEConnection.connecting() && now >= reconnect_at)
+    if (reconnect_pending && !BLEConnection.connected() && !BLEConnection.connecting() &&
+        now >= reconnect_at)
     {
         reconnect_pending = false;
         passToken("NUCODE_M19_CENTRAL:RECONNECT_REQUEST:PASS");

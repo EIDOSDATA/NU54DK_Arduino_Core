@@ -10,7 +10,7 @@
 
 namespace nucode::arduino::internal
 {
-	/**
+    /**
 	 * @brief NU54DK production PWM route backend를 allocator에 설치합니다.
 	 *
 	 * @details 필요한 PWM20·PWM21·PWM22 장치와 dynamic pinctrl이
@@ -20,7 +20,7 @@ namespace nucode::arduino::internal
 	 * @return backend가 설치되었으면 true, 장치나 구성이 빠졌거나
 	 *         활성 출력 때문에 교체할 수 없으면 false입니다.
 	 */
-	[[nodiscard]] bool installNu54dkPwmRuntimeRouteBackend() noexcept;
-}
+    [[nodiscard]] bool installNu54dkPwmRuntimeRouteBackend() noexcept;
+} // namespace nucode::arduino::internal
 
 #endif

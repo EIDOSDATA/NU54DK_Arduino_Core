@@ -21,10 +21,9 @@
  * @param value 절댓값을 구할 값입니다.
  * @return value가 음수이면 부호를 반전한 값, 아니면 원래 값입니다.
  */
-template <typename Value>
-[[nodiscard]] constexpr Value abs(Value value) noexcept
+template <typename Value> [[nodiscard]] constexpr Value abs(Value value) noexcept
 {
-	return value < static_cast<Value>(0) ? static_cast<Value>(-value) : value;
+    return value < static_cast<Value>(0) ? static_cast<Value>(-value) : value;
 }
 
 #else

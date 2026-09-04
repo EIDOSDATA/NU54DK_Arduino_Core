@@ -7,18 +7,18 @@
 
 void setup()
 {
-	Serial.begin(115200);
+    Serial.begin(115200);
 }
 
 void loop()
 {
-	const uint8_t resolutions[] = {8, 10, 12, 14};
-	for (const uint8_t bits : resolutions)
-	{
-		analogReadResolution(bits);
-		Serial.print(bits);
-		Serial.print(" bit: ");
-		Serial.println(analogRead(A0));
-	}
-	delay(1000);
+    const uint8_t resolutions[] = {8, 10, 12, 14};
+    for (const uint8_t bits : resolutions)
+    {
+        analogReadResolution(bits);
+        Serial.print(bits);
+        Serial.print(" bit: ");
+        Serial.println(analogRead(A0));
+    }
+    delay(1000);
 }

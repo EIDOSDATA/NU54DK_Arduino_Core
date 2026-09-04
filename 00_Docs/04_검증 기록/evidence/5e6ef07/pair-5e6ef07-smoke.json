@@ -1,0 +1,1717 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-onboard",
+  "status": "failed",
+  "core_revision": "5e6ef070a7d405282e832ea2af6771e4b595328d",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "rounds": 1,
+  "onboard_suite": "all",
+  "external_wiring_executed": false,
+  "plan_sha256": "36876fa55e0a3ac53260ea1b87b7739504c0b1ee160bcb128564c1caa479ff5e",
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "ports": [
+        "COM5",
+        "COM6"
+      ],
+      "hex_sha256": "afdeb97988ac1450bba21234948f204d3404e7bb7d2d2a9d16f72580781f9b52",
+      "elf_sha256": "61f86f95cf10d8fba460f9866419a5d68145ed9cca019bf879f005c0b7648500",
+      "record_sha256": "5531f39e23437d4870542c9b18cc9a6a1c7d71ec624dfa93bcc05252d7e8484f",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "seconds": 8.25,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "b7c5320e92f23b8a8abbafb9dd22503636d33c7103dfeee32afcaec91c9d2ccc"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "ports": [
+        "COM7",
+        "COM8"
+      ],
+      "hex_sha256": "4f3a19a99cd5deea30ea712478f5571a3ed8a8843a0d13a510303f0adaee3643",
+      "elf_sha256": "afca9419364d3177d7c473f431419884df5562bcb3d7ac7acdc281eccb2997c4",
+      "record_sha256": "5531f39e23437d4870542c9b18cc9a6a1c7d71ec624dfa93bcc05252d7e8484f"
+    }
+  ],
+  "results": [
+    {
+      "id": "V04-PAIR-PING",
+      "role": 1,
+      "status": "passed",
+      "challenge": [
+        305574487,
+        1573158044,
+        1745059139,
+        2693696564
+      ],
+      "response": [
+        3073815126,
+        4173626525,
+        3439557954,
+        93228085
+      ]
+    },
+    {
+      "id": "V04-PMIC-READ/twim20/400000",
+      "role": 1,
+      "status": "passed",
+      "rounds": 1,
+      "result": [
+        1,
+        65,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "V04-PMIC-READ/twim20/100000",
+      "role": 1,
+      "status": "passed",
+      "rounds": 1,
+      "result": [
+        1,
+        65,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "V04-PMIC-READ/twim21/400000",
+      "role": 1,
+      "status": "passed",
+      "rounds": 1,
+      "result": [
+        1,
+        65,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "V04-PMIC-READ/twim21/100000",
+      "role": 1,
+      "status": "passed",
+      "rounds": 1,
+      "result": [
+        1,
+        65,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "V04-PMIC-READ/twim22/400000",
+      "role": 1,
+      "status": "passed",
+      "rounds": 1,
+      "result": [
+        1,
+        65,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "V04-PMIC-READ/twim22/100000",
+      "role": 1,
+      "status": "passed",
+      "rounds": 1,
+      "result": [
+        1,
+        65,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "V04-EVENT/timer00/capture0",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer00/capture1",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer00/capture2",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10002,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer00/capture3",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer00/capture4",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer00/capture5",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer10/capture0",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10002,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer10/capture1",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer10/capture2",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10002,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer10/capture3",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer10/capture4",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10002,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer10/capture5",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer10/capture6",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer10/capture7",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer20/capture0",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer20/capture1",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer20/capture2",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer20/capture3",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer20/capture4",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer20/capture5",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer21/capture0",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer21/capture1",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer21/capture2",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer21/capture3",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer21/capture4",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer21/capture5",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer22/capture0",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer22/capture1",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer22/capture2",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer22/capture3",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer22/capture4",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer22/capture5",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer23/capture0",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer23/capture1",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer23/capture2",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer23/capture3",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer23/capture4",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer23/capture5",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer24/capture0",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer24/capture1",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer24/capture2",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer24/capture3",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer24/capture4",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-EVENT/timer24/capture5",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        10003,
+        0,
+        0
+      ],
+      "requested_us": 10000
+    },
+    {
+      "id": "V04-ADC-INTERNAL/80/1/0",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        1,
+        0,
+        1,
+        3752,
+        3752
+      ]
+    },
+    {
+      "id": "V04-ADC-INTERNAL/82/1/0",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        1,
+        0,
+        1,
+        1044,
+        1044
+      ]
+    },
+    {
+      "id": "V04-ADC-INTERNAL/80/32/0",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        32,
+        0,
+        1,
+        3744,
+        3760
+      ]
+    },
+    {
+      "id": "V04-ADC-INTERNAL/82/32/0",
+      "role": 1,
+      "status": "passed",
+      "result": [
+        32,
+        0,
+        1,
+        1008,
+        1064
+      ]
+    },
+    {
+      "id": "V04-UART-DISCOVER/20",
+      "role": 1,
+      "status": "passed",
+      "seed": 249750943,
+      "port": "COM5",
+      "status_words": [
+        0,
+        1,
+        0,
+        0,
+        2,
+        0
+      ]
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/0/0/1/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 1966919504,
+      "baud_rate": 115200,
+      "parity": 0,
+      "hardware_flow_control": false,
+      "buffer_bytes": 1,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "5c62e091b8c0565f1bafad0dad5934276143ae2ccef7a5381e8ada5b1a8d26d2",
+      "rx_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/0/0/1/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 2841410843,
+      "baud_rate": 115200,
+      "parity": 0,
+      "hardware_flow_control": false,
+      "buffer_bytes": 1,
+      "buffers": 2,
+      "continuous_receive": false,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "722ca241c5a697ee3602ba79c89c4ea77a64fc4ddbea7fce2bef00d8eb23034d",
+      "rx_sha256": "3212878cd3e40efc4855c3b585fd2d8ca67bef9bab9c05b939606ca8c44b7317"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/0/0/32/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 2421978627,
+      "baud_rate": 115200,
+      "parity": 0,
+      "hardware_flow_control": false,
+      "buffer_bytes": 32,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "e051da82c275d04c5a171a37a1a0700cfbf4f937971fdb25f11e2ce6a0305faf",
+      "rx_sha256": "b3c2f36d49c4c90ee12f70f1d32bc7488fd6e272a26374543ecb90ce7210b61e"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/0/0/32/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 2451071258,
+      "baud_rate": 115200,
+      "parity": 0,
+      "hardware_flow_control": false,
+      "buffer_bytes": 32,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "6d600d95d6bb28b69758b8dadafacf26ad3b184c7207cb14a2e9ee63d483c1b4",
+      "rx_sha256": "1ecf8fed5b4c6422b16d3c7d39db53320d9b580cf6782d5b92766bab74d52830"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/0/0/256/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 2527239573,
+      "baud_rate": 115200,
+      "parity": 0,
+      "hardware_flow_control": false,
+      "buffer_bytes": 256,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "41fe5ac32d4aeb3d81d3a9c40624ff3d0eaae27aa459deb549e35f5e5df1ec90",
+      "rx_sha256": "90fd1cd22b50747ed777be5378bd2dd19143e213ba81bd5ecc2b61a508f0d3c1"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/0/0/256/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 921691855,
+      "baud_rate": 115200,
+      "parity": 0,
+      "hardware_flow_control": false,
+      "buffer_bytes": 256,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "9e9c7eae1a8fad17aa464122f25f18c2f9c102c2e8c8e11d2ad6f6acd24d13d2",
+      "rx_sha256": "6e02d3c7ff0a197d9f114be4cef04490a5793b81bc8fad46071adae77e4d333f"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/0/0/1024/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 1536666005,
+      "baud_rate": 115200,
+      "parity": 0,
+      "hardware_flow_control": false,
+      "buffer_bytes": 1024,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "8b15a03e16fcd5eadceb8790c6b213f516abe403da437c6d1f78c80e9a9465f9",
+      "rx_sha256": "b2e8c9746f47f09e6377f0dcf8cfbece0f123f2b635ec6a60c49597c8a76f279"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/0/0/1024/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 3429592882,
+      "baud_rate": 115200,
+      "parity": 0,
+      "hardware_flow_control": false,
+      "buffer_bytes": 1024,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "02b913a875d24f9e9ea0435efa78b283cd5ed935c6387d21eedbc0ef7f72db70",
+      "rx_sha256": "e3680acb7dfe3237cfaeaa5b7d9caa19ca42e20ad839094d77d02170be463d3b"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/0/1/1/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 382610028,
+      "baud_rate": 115200,
+      "parity": 0,
+      "hardware_flow_control": true,
+      "buffer_bytes": 1,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "acac86c0e609ca906f632b0e2dacccb2b77d22b0621f20ebece1a4835b93f6f0",
+      "rx_sha256": "e7f6c011776e8db7cd330b54174fd76f7d0216b612387a5ffcfb81e6f0919683"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/0/1/1/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 294947264,
+      "baud_rate": 115200,
+      "parity": 0,
+      "hardware_flow_control": true,
+      "buffer_bytes": 1,
+      "buffers": 2,
+      "continuous_receive": false,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "94921deaf7668f33365c02e1706e2ea889c1a9813e9d4e82d0fb1484b9de94ad",
+      "rx_sha256": "425f239060c66f1e7e05e8c400a23d0fbf72f4ca16ac035483e7e461497cdd51"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/0/1/32/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 1400897434,
+      "baud_rate": 115200,
+      "parity": 0,
+      "hardware_flow_control": true,
+      "buffer_bytes": 32,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "68996aae7fbb35eca9a11e5ad5728f6d1ca4248bc7a2aa66c3a414edea015de2",
+      "rx_sha256": "4b201335e33c800065792d760131f87fd8ad7bb997306f80930b9be14c29adbd"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/0/1/32/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 618515699,
+      "baud_rate": 115200,
+      "parity": 0,
+      "hardware_flow_control": true,
+      "buffer_bytes": 32,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "2add515df5002e6aee1f624c73e183f0121992489a53827dbfba89358e43ea30",
+      "rx_sha256": "cd23d6c65bd949ff9931bb92c24adeb0ec8eb8892eae3f91885380765d1f3669"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/0/1/256/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 1983023901,
+      "baud_rate": 115200,
+      "parity": 0,
+      "hardware_flow_control": true,
+      "buffer_bytes": 256,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "ee4ffa91b10a91e6f18824915decd7636a5971e6a04b5d2e158e547ae146b856",
+      "rx_sha256": "9747cdda63253966082c1cf1a6e497909f224fc3b6c94b2fda36c773b0aba326"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/0/1/256/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 486234754,
+      "baud_rate": 115200,
+      "parity": 0,
+      "hardware_flow_control": true,
+      "buffer_bytes": 256,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "09197e6c3d446cd32aae5b514b00212d89f802ff269044273250f1469707fbaa",
+      "rx_sha256": "c06024396dbdba4e8eebdd15907c3f8ae44b8879705df763246b184ef5be927f"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/0/1/1024/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 541521017,
+      "baud_rate": 115200,
+      "parity": 0,
+      "hardware_flow_control": true,
+      "buffer_bytes": 1024,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "33fc3d70e05d7c2d7b26a0c3d0b1d428f8771a7590872d74dbbb257ef38fdef9",
+      "rx_sha256": "70aa37605cacb84c20535ffcd04022338549d10aa2936e6b0a5c5b0167cc904d"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/0/1/1024/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 3920710936,
+      "baud_rate": 115200,
+      "parity": 0,
+      "hardware_flow_control": true,
+      "buffer_bytes": 1024,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "ed0cb8604d050329a862f7f0f10df022733bdabe763c77982fb1c529f900ce11",
+      "rx_sha256": "8cdd442c3142551c239b62f4471951e171ca68562ea936012ce3d8d565422c10"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/1/0/1/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 1876279281,
+      "baud_rate": 115200,
+      "parity": 1,
+      "hardware_flow_control": false,
+      "buffer_bytes": 1,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "d4f09e5c5af99a24c7e304ca7997d26cb00901697de08a49be0d46ab5839b614",
+      "rx_sha256": "087d80f7f182dd44f184aa86ca34488853ebcc04f0c60d5294919a466b463831"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/1/0/1/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 2973316655,
+      "baud_rate": 115200,
+      "parity": 1,
+      "hardware_flow_control": false,
+      "buffer_bytes": 1,
+      "buffers": 2,
+      "continuous_receive": false,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "49e8ce4bd0d737629de7acda006a0e08ef0c42a17e135e1f39690b8836f32522",
+      "rx_sha256": "8b95685a208b73e6971f8b645c3cad4d0cb0dc3bde27959767b03d9c702dfc33"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/1/0/32/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 2354462527,
+      "baud_rate": 115200,
+      "parity": 1,
+      "hardware_flow_control": false,
+      "buffer_bytes": 32,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "56e3b861b4fc140efd7932892e463d0eb6fc38c7a62919b963706a7d7dca621a",
+      "rx_sha256": "05ee53749a8ffcae624728520529dfda24feb04fe2be2c5664f34199b9e2888a"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/1/0/32/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 1702930261,
+      "baud_rate": 115200,
+      "parity": 1,
+      "hardware_flow_control": false,
+      "buffer_bytes": 32,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "60aa308c402cc362a0eeba7f94061cf2dc901336865160b152e178548f6f3577",
+      "rx_sha256": "73e7738bff8cbed37416664fc0fddc790e1fdc7935a18c8f6409a87a9015805d"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/1/0/256/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 3168728094,
+      "baud_rate": 115200,
+      "parity": 1,
+      "hardware_flow_control": false,
+      "buffer_bytes": 256,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "0f59365ba0f4c4dbc7b4a5c925939c239fd8478c7133a522c413409a5bdca8af",
+      "rx_sha256": "5316e512bcf6aaca8b65e5f04f1e1f7b31a7cc995098bac90f49715264815314"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/1/0/256/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 510315350,
+      "baud_rate": 115200,
+      "parity": 1,
+      "hardware_flow_control": false,
+      "buffer_bytes": 256,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "55b2303d57f6e1d48d61ca91b293dc94f2cdfe849ebafbf22d46f03547171770",
+      "rx_sha256": "0c07be28eb4cba209359449935dde029dc8ca95d967ef0a511b508c81fc79eb8"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/1/0/1024/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 2631649337,
+      "baud_rate": 115200,
+      "parity": 1,
+      "hardware_flow_control": false,
+      "buffer_bytes": 1024,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "8b232ac03f5d5d0006eb82d9523b3fa9f2eda7f8bff00682ca76a8aef3fa31f6",
+      "rx_sha256": "92b98f1ccc127884abd1975aaa4fb4a6fc1df1595230e69e529a5b7de5289645"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/1/0/1024/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 3545054944,
+      "baud_rate": 115200,
+      "parity": 1,
+      "hardware_flow_control": false,
+      "buffer_bytes": 1024,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "a40a30bacd0f8432104e93e9aa4e95092b1d926f6827b42d618e36d7c2954e2f",
+      "rx_sha256": "93217b9bfb9bf0d251bb23fe44f16133903fbb98ac53eed4a1669421c529f1ce"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/1/1/1/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 2067720166,
+      "baud_rate": 115200,
+      "parity": 1,
+      "hardware_flow_control": true,
+      "buffer_bytes": 1,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "0a3aaee7ccfb1a64f6d7bcd46657c27cb1f4569ae9e7c03445bd6c6fd013109b",
+      "rx_sha256": "26e5bfe4b0686167e3e4e0aac40cbae03515171d375f91ea563c9c044e9c5cc7"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/1/1/1/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 2050168266,
+      "baud_rate": 115200,
+      "parity": 1,
+      "hardware_flow_control": true,
+      "buffer_bytes": 1,
+      "buffers": 2,
+      "continuous_receive": false,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "a82f528810d02fb821a68d844cdf94e7df2be0f136bfded817d5ef6e58f8bde6",
+      "rx_sha256": "6191868d048b32448cc03bfa9894a8918c75bf2ab642b23481480a56257a290d"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/1/1/32/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 3955805196,
+      "baud_rate": 115200,
+      "parity": 1,
+      "hardware_flow_control": true,
+      "buffer_bytes": 32,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "7662ca2b4804811a0e25cfe8d3e946fdd8dad5e0b1f80e090709768593cf92d6",
+      "rx_sha256": "75c6c2bf2fe45747c01d809e8063aafaad2b25ec1b2059836ef576d1f53b7d2a"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/1/1/32/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 3031950742,
+      "baud_rate": 115200,
+      "parity": 1,
+      "hardware_flow_control": true,
+      "buffer_bytes": 32,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "941b493202133c402ef2c2f3c6249a5aa584fcfcd1f94e343a8e049e3e484e71",
+      "rx_sha256": "7eb13fefd6cc0ef41211b919729ace0d8248053d7f9863fe85e91e4dd0541380"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/1/1/256/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 1241816653,
+      "baud_rate": 115200,
+      "parity": 1,
+      "hardware_flow_control": true,
+      "buffer_bytes": 256,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "a2b60209f5ac15f6c3d34576c28d20e7f3dd2286b62b8e354b35774793414cad",
+      "rx_sha256": "ecbb6c0c811d77c419fe5ed85328d38b6df8efbe594b9c47dfddbaeb34dcbd8f"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/1/1/256/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 2182615087,
+      "baud_rate": 115200,
+      "parity": 1,
+      "hardware_flow_control": true,
+      "buffer_bytes": 256,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "f0a7f39436124e2ad181dafdacfecf6b78a5dd63b4e3c07efa5c5132ed54b542",
+      "rx_sha256": "ffb520bbb32d9b4ada9f431b9b34c52690a159cb96d907dcba9d7356e6293237"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/1/1/1024/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 245635213,
+      "baud_rate": 115200,
+      "parity": 1,
+      "hardware_flow_control": true,
+      "buffer_bytes": 1024,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "43c5faa84703b54dae459821d4451ce0fdb336a4d6fa39d23b9c4bf5f15fd1cb",
+      "rx_sha256": "19e129b1f59813d97a885b7252790f4a20b22e1fa76f60c4c48d13cd79cbd0ca"
+    },
+    {
+      "id": "V04-UART-DATA/20/115200/1/1/1024/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 926051268,
+      "baud_rate": 115200,
+      "parity": 1,
+      "hardware_flow_control": true,
+      "buffer_bytes": 1024,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "d6d76906aef35572afaefe4ead55e6e218a43507f96fc0302aec653e72fa163e",
+      "rx_sha256": "b0e8b3a2c9c77b37b3a9e942526c86dcf5310e382bdca8bb903582421a839431"
+    },
+    {
+      "id": "V04-UART-DATA/20/1000000/0/0/1/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 3859086391,
+      "baud_rate": 1000000,
+      "parity": 0,
+      "hardware_flow_control": false,
+      "buffer_bytes": 1,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "7902699be42c8a8e46fbbb4501726517e86b22c56a189f7625a6da49081b2451",
+      "rx_sha256": "62c66a7a5dd70c3146618063c344e531e6d4b59e379808443ce962b3abd63c5a"
+    },
+    {
+      "id": "V04-UART-DATA/20/1000000/0/0/1/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 2571124453,
+      "baud_rate": 1000000,
+      "parity": 0,
+      "hardware_flow_control": false,
+      "buffer_bytes": 1,
+      "buffers": 2,
+      "continuous_receive": false,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "0c47efa4067fe2e8bb02960b409809c59576cedff03cc44fad62fe0f5afe8631",
+      "rx_sha256": "1618249032a3e7f462f124d5586312a749979b5f3ced467ee61169644beb8a50"
+    },
+    {
+      "id": "V04-UART-DATA/20/1000000/0/0/32/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 3724391212,
+      "baud_rate": 1000000,
+      "parity": 0,
+      "hardware_flow_control": false,
+      "buffer_bytes": 32,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "0595266a48794937426df6ae5c6b9be91aa612f85cebb1a10e93ae2b35ddfca2",
+      "rx_sha256": "fab6527d25c8f862b53d1bb3e3a978860581dceaadbf5a75dd0237bc25119b03"
+    },
+    {
+      "id": "V04-UART-DATA/20/1000000/0/0/32/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 3319353144,
+      "baud_rate": 1000000,
+      "parity": 0,
+      "hardware_flow_control": false,
+      "buffer_bytes": 32,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "4c1d093ca8c941e07d50070c2690165db01370d58e056904d2dcfb80f58a950f",
+      "rx_sha256": "a2d5ffbde35d8caad931fc849fb6e5d94a926e138927c74eda170348335cee0f"
+    },
+    {
+      "id": "V04-UART-DATA/20/1000000/0/0/256/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 2280399470,
+      "baud_rate": 1000000,
+      "parity": 0,
+      "hardware_flow_control": false,
+      "buffer_bytes": 256,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "6bb546f27a9b96399deb7d734002da4b655fff9ce7aa7c31b8539337df700406",
+      "rx_sha256": "128a1382e174bb8053cfd40c1d0d6304794ca26e6b1644b5f3eb921f93faa6af"
+    },
+    {
+      "id": "V04-UART-DATA/20/1000000/0/0/256/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 3769784167,
+      "baud_rate": 1000000,
+      "parity": 0,
+      "hardware_flow_control": false,
+      "buffer_bytes": 256,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "cef70b19b94bfdfa63cf27630c7842d467d6ee3d40c5a6007ce7ef08e620bd8e",
+      "rx_sha256": "1a962ac8ce5b638063744b5fd91da26c644e98b035f958d56b54502b17f1bbac"
+    },
+    {
+      "id": "V04-UART-DATA/20/1000000/0/0/1024/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 2056592619,
+      "baud_rate": 1000000,
+      "parity": 0,
+      "hardware_flow_control": false,
+      "buffer_bytes": 1024,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "896a3cbd9de80d632e5c278e70184d7b7dccb7e6c01b52046904e8361f9a66eb",
+      "rx_sha256": "47c5528e3d76359b208096fb838916fff10108c7378ff449fe924cf3b0d6fa3c"
+    },
+    {
+      "id": "V04-UART-DATA/20/1000000/0/0/1024/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 1575120402,
+      "baud_rate": 1000000,
+      "parity": 0,
+      "hardware_flow_control": false,
+      "buffer_bytes": 1024,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "09c30e41be368be0021953e3d8296ac033b4e4ebfc9b2c3b34911c5ceea7216a",
+      "rx_sha256": "31c9072985113bdc1e0dbb8acc5dd9c24fdd2b27370bf8402a3ee9928e7a15a6"
+    },
+    {
+      "id": "V04-UART-DATA/20/1000000/0/1/1/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 3268197839,
+      "baud_rate": 1000000,
+      "parity": 0,
+      "hardware_flow_control": true,
+      "buffer_bytes": 1,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "7a4a4b50f5121ed5310ece45a7eeb7af5545af63ee2ae52add4f37788f075b1d",
+      "rx_sha256": "5bad0d1132ac152cf657be8918ae163578448d56d40def9a590fe3dcab0c339b"
+    },
+    {
+      "id": "V04-UART-DATA/20/1000000/0/1/1/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 877535929,
+      "baud_rate": 1000000,
+      "parity": 0,
+      "hardware_flow_control": true,
+      "buffer_bytes": 1,
+      "buffers": 2,
+      "continuous_receive": false,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "a3ab946b4cb8f1322be0edbd999d4564f6f009aff4f922b9ee6bc41e08579006",
+      "rx_sha256": "47f1a862513222ec929f16861bafbc38151df6dacc24e25c3572b067847f6171"
+    },
+    {
+      "id": "V04-UART-DATA/20/1000000/0/1/32/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 3445422370,
+      "baud_rate": 1000000,
+      "parity": 0,
+      "hardware_flow_control": true,
+      "buffer_bytes": 32,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "a1a0e7556ee46504892979b2d56302f01c41682065142746f494d377b507bcc4",
+      "rx_sha256": "84f6a50ef64374920994d1bdf8171b238510d41f813df5e726ce967cad808048"
+    },
+    {
+      "id": "V04-UART-DATA/20/1000000/0/1/32/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 1398687976,
+      "baud_rate": 1000000,
+      "parity": 0,
+      "hardware_flow_control": true,
+      "buffer_bytes": 32,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "d72e89439b91c323e3fd69332a2e67f0fb7e533889e120c3bc7d24b03e1f32ad",
+      "rx_sha256": "3ccf4675e1c8c76a03d21f8c780bc1e40f2a332697dc12b61bb183bbe3b7b0d5"
+    },
+    {
+      "id": "V04-UART-DATA/20/1000000/0/1/256/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 1031637516,
+      "baud_rate": 1000000,
+      "parity": 0,
+      "hardware_flow_control": true,
+      "buffer_bytes": 256,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "d468c1a7afafe9494ba14c853bff678a4598922e7f081681fcfa0013f459bc15",
+      "rx_sha256": "0d564427cd5b9aa843422422de19f2ca636ee184a4c5d355da0ddc5a83d2586a"
+    },
+    {
+      "id": "V04-UART-DATA/20/1000000/0/1/256/2",
+      "role": 1,
+      "status": "passed",
+      "seed": 649203258,
+      "baud_rate": 1000000,
+      "parity": 0,
+      "hardware_flow_control": true,
+      "buffer_bytes": 256,
+      "buffers": 2,
+      "continuous_receive": true,
+      "status_words": [
+        2,
+        1,
+        0,
+        3,
+        3,
+        3
+      ],
+      "tx_sha256": "242c1c6fe26fd52e506c567438e8e23e47446e61588a5aa9cef1a945b79149d6",
+      "rx_sha256": "bb57bb11c52fad809ce55d25b0e03e82380505b571b2217196e380044b7bd9a7"
+    },
+    {
+      "id": "V04-UART-DATA/20/1000000/0/1/1024/1",
+      "role": 1,
+      "status": "passed",
+      "seed": 3008484486,
+      "baud_rate": 1000000,
+      "parity": 0,
+      "hardware_flow_control": true,
+      "buffer_bytes": 1024,
+      "buffers": 1,
+      "continuous_receive": false,
+      "status_words": [
+        1,
+        1,
+        0,
+        1,
+        3,
+        0
+      ],
+      "tx_sha256": "71c6e1eb04b76b8fbc8195aec087b9b9c71a2919e0855e9d9ab5affedffea16c",
+      "rx_sha256": "731fd748e29b0b00a610ffc4d8b190ec52b6dfd1eaa88633c1dd60141686b5cf"
+    }
+  ],
+  "error": "V04-UART-DATA/20/1000000/0/1/1024/2: UART exact response/noise failure: {'COM5': '', 'COM6': ''}; DMA status=[1, 0, 0, 1, 3, 2]; seed=1059724907",
+  "completed_at_utc": "2026-09-04T16:09:16.453073+00:00"
+}

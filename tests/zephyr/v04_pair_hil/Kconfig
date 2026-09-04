@@ -1,0 +1,6 @@
+mainmenu "NU54DK v0.4 pair HIL"
+source "Kconfig.zephyr"
+config NUCODE_V04_HIL_ROLE
+    int "Physical role: 1 DUT, 2 peer"
+    range 1 2
+    default 1

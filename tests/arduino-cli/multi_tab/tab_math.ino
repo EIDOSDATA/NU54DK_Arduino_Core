@@ -8,11 +8,11 @@
 /** @brief 보조 탭 내부에서 사용하는 고정 기준값을 반환합니다. */
 unsigned int tabBaseValue(void)
 {
-	return 22U;
+    return 22U;
 }
 
 /** @brief 주 탭에서 전달한 값과 보조 탭 기준값을 결합합니다. */
 unsigned int combineTabValues(unsigned int value)
 {
-	return value + tabBaseValue();
+    return value + tabBaseValue();
 }

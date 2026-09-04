@@ -64,6 +64,8 @@ SUITE_GROUPS = {
         ("ac03_hil", "nucode.ac03.storage_hil"),
     ),
     "v0.4.0": (
+        ("v04_pair_hil", "nucode.v04.pair_dut"),
+        ("v04_pair_hil", "nucode.v04.pair_peer"),
         ("m23_inventory_contract", "nucode.m23.inventory_contract"),
         ("m24_serial_fabric_contract", "nucode.m24.fabric"),
         ("m24_uarte_driver_contract", "nucode.m24.uarte"),
@@ -374,6 +376,15 @@ def run_build(
     return validate_m16_role_builds(outdir, suites_to_build)
 
 
+def select_suites(group: str, requested: Sequence[str] = ()) -> tuple[tuple[str, str], ...]:
+    available = SUITES if group == "all" else SUITE_GROUPS[group]
+    if not requested:
+        return tuple(available)
+    if len(set(requested)) != len(requested) or not set(requested).issubset({name for _, name in available}):
+        raise BuildFailure("subset suite는 선택한 group 안에서 중복 없이 지정해야 합니다.")
+    return tuple(item for item in available if item[1] in requested)
+
+
 ## @brief 대표 Zephyr build를 실행하고 고정 identity evidence를 기록합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
@@ -387,19 +398,21 @@ def main(arguments: Sequence[str] | None = None) -> int:
         help="현재 source에서 검증할 릴리스 도입 기능군",
     )
     parser.add_argument("--jobs", type=int, choices=range(1, 9), default=2)
+    parser.add_argument("--suite", action="append", default=[],
+                        help="로컬 수정 회귀용 subset; 반복 지정 가능하며 전체 group gate를 대체하지 않음")
     args = parser.parse_args(arguments)
     lock = LOCK_MODULE.strict_json_object(args.lock.resolve())
     LOCK_MODULE.validate_lock(lock)
     workspace = args.workspace.resolve()
     outdir = args.outdir.resolve()
     outdir.parent.mkdir(parents=True, exist_ok=True)
-    selected_suites = SUITES if args.group == "all" else SUITE_GROUPS[args.group]
+    selected_suites = select_suites(args.group, args.suite)
     m16_role_builds = run_build(
         workspace, outdir, lock, selected_suites, args.jobs
     )
     evidence = {
         "schema_version": 2,
-        "gate": "m12-zephyr-build-only",
+        "gate": "m12-zephyr-build-subset" if args.suite else "m12-zephyr-build-only",
         "status": "passed",
         "group": args.group,
         "jobs": args.jobs,
@@ -417,7 +430,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
     )
     print(
         f"M12_ZEPHYR_BUILD_PASS={len(selected_suites)};"
-        f"GROUP={args.group};M16_ROLE_BUILDS={len(m16_role_builds)}"
+        f"GROUP={args.group};M16_ROLE_BUILDS={len(m16_role_builds)};"
+        f"SELECTION={'subset' if args.suite else 'full-group'}"
     )
     return 0
 

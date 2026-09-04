@@ -53,6 +53,6 @@ namespace nucode::arduino::internal
      */
     void yieldCurrentThread(void);
 
-}
+} // namespace nucode::arduino::internal
 
 #endif

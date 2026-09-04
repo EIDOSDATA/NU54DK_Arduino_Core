@@ -1,0 +1,146 @@
+"""External fixture preparation tests; no probe, port or physical I/O is used."""
+import copy
+import hashlib
+import json
+from pathlib import Path
+import sys
+import unittest
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tests/hil/nu54dk"))
+import v04_fixture as fixture
+import v04_fixture_run as runner
+from v04_protocol import ProtocolError
+
+
+class FixtureTests(unittest.TestCase):
+    def test_cli_cannot_implicitly_execute_or_omit_confirmation(self):
+        command = ["--dut", "a" * 32, "--peer", "b" * 32, "--build-root", "unused",
+                   "--pyocd", "unused", "--fixture", "201"]
+        self.assertFalse(runner.arguments(command).execute_fixture)
+        with self.assertRaises(ProtocolError):
+            runner.arguments(command + ["--execute-fixture"])
+
+    def confirmation(self, fixture_id=201):
+        catalog, _ = fixture.fixture_contract(fixture_id)
+        self.uids = ["a" * 32, "b" * 32]
+        self.images = [{"role": role, "core_revision": "c" * 40,
+                        "board_revision": catalog["board_revision"], "sha256": str(role) * 64}
+                       for role in (1, 2)]
+        return {"fixture_id": fixture_id, "fixture_revision": catalog["revision"],
+                "catalog_sha256": hashlib.sha256(fixture.CATALOG.read_bytes()).hexdigest(),
+                "core_revision": "c" * 40, "board_revision": catalog["board_revision"],
+                "uid_sha256": [hashlib.sha256(uid.encode()).hexdigest() for uid in self.uids],
+                "hex_sha256": [image["sha256"] for image in self.images],
+                "dap_uart_disconnected_both": True, "swd_connected_both": True,
+                "power_rails_not_joined": True, "equal_io_voltage_confirmed": True,
+                "common_ground_confirmed": True, "links_match_catalog": True,
+                "pullups_match_catalog": True,
+                "extra_outputs_disconnected": True, "confirmed_at_unix": 1000,
+                "confirmed_by": "Host mock only"}
+
+    def test_confirmation_rejects_every_missing_condition(self):
+        confirmation = self.confirmation()
+        self.assertEqual(fixture.validate_confirmation(confirmation, self.images, self.uids, 201, 1001)["id"], 201)
+        for field in confirmation:
+            bad = {key: value for key, value in confirmation.items() if key != field}
+            with self.subTest(field=field), self.assertRaises(ProtocolError):
+                fixture.validate_confirmation(bad, self.images, self.uids, 201, 1001)
+        confirmation["dap_uart_disconnected_both"] = 1
+        with self.assertRaises(ProtocolError):
+            fixture.validate_confirmation(confirmation, self.images, self.uids, 201, 1001)
+        with self.assertRaises(ProtocolError):
+            json.loads('{"confirmed": false, "confirmed": true}', object_pairs_hook=runner.unique_fields)
+
+    def test_generated_confirmation_is_bound_but_not_approved(self):
+        approved = self.confirmation()
+        template = fixture.confirmation_template(self.images, self.uids, 201)
+        for field in ("fixture_id", "fixture_revision", "catalog_sha256",
+                      "core_revision", "board_revision", "uid_sha256", "hex_sha256"):
+            self.assertEqual(template[field], approved[field])
+        self.assertEqual(template["confirmed_at_unix"], 0)
+        self.assertEqual(template["confirmed_by"], "")
+        self.assertFalse(any(template[field] for field in (
+            "dap_uart_disconnected_both", "swd_connected_both",
+            "power_rails_not_joined", "equal_io_voltage_confirmed",
+            "common_ground_confirmed", "links_match_catalog",
+            "pullups_match_catalog", "extra_outputs_disconnected")))
+        with self.assertRaises(ProtocolError):
+            fixture.validate_confirmation(template, self.images, self.uids, 201, 1001)
+
+    def test_foreign_image_role_uid_and_expiry_rejected(self):
+        confirmation = self.confirmation()
+        for now in (999, 2801):
+            with self.assertRaises(ProtocolError):
+                fixture.validate_confirmation(confirmation, self.images, self.uids, 201, now)
+        for field, value in (("role", 1), ("sha256", "f" * 64), ("core_revision", "f" * 40)):
+            images = copy.deepcopy(self.images)
+            images[1][field] = value
+            with self.subTest(field=field), self.assertRaises(ProtocolError):
+                fixture.validate_confirmation(confirmation, images, self.uids, 201, 1001)
+        with self.assertRaises(ProtocolError):
+            fixture.validate_confirmation(confirmation, self.images, self.uids[::-1], 201, 1001)
+        with self.assertRaises(ProtocolError):
+            fixture.validate_confirmation(confirmation, [], [], 201, 1001)
+
+    def test_twi_requires_explicit_catalog_pullup_confirmation(self):
+        confirmation = self.confirmation(301)
+        self.assertEqual(fixture.validate_confirmation(
+            confirmation, self.images, self.uids, 301, 1001)["family"], "twi")
+        confirmation["pullups_match_catalog"] = False
+        with self.assertRaises(ProtocolError):
+            fixture.validate_confirmation(confirmation, self.images, self.uids, 301, 1001)
+
+    def test_catalog_connector_pin_map_and_no_forbidden_nets(self):
+        catalog = json.loads(fixture.CATALOG.read_text(encoding="utf-8"))
+        # Page 9 of the board schematic, not Arduino pin numbering.
+        pins = {("P2", 9): "P1.7", ("P2", 10): "P1.6", ("P2", 11): "P1.5",
+                ("P2", 12): "P1.4", ("P2", 17): "P2.4", ("P2", 19): "P2.5",
+                ("P2", 25): "P0.0", ("P2", 26): "P0.1", ("P2", 30): "GND",
+                ("P4", 4): "P0.2", ("P4", 5): "P0.3", ("P4", 19): "P2.0",
+                ("P4", 20): "P2.1", ("P4", 21): "P2.2"}
+        pins.update({("P4", 8): "P1.10", ("P4", 12): "P1.14"})
+        self.assertEqual({entry["id"] for entry in catalog["fixtures"]},
+                         {101, 102, 103, 201, 202, 203, 301,
+                          401, 402, 403, 404, 408, 420, 430, 440})
+        for entry in catalog["fixtures"]:
+            for role in ("dut", "peer"):
+                endpoints = [tuple(link[role]) for link in entry["links"]]
+                self.assertEqual(len(set(endpoints)), len(endpoints))
+                for connector, pin, net in endpoints:
+                    self.assertEqual(pins[(connector, pin)], net)
+                self.assertIn(("P2", 30, "GND"), endpoints)
+
+    def test_vectors_and_transfer_direction_are_explicit(self):
+        uart_vectors = list(fixture.vectors("uarte"))
+        spi_vectors = list(fixture.vectors("spi"))
+        twi_vectors = list(fixture.vectors("twi"))
+        self.assertEqual(len(uart_vectors), 135)
+        self.assertEqual(len(spi_vectors), 1513)
+        self.assertEqual(len(twi_vectors), 328)
+        self.assertIn((115200, 0, 1, 256, 2, 1), uart_vectors)
+        self.assertIn((115200, 0, 0, 32, 3, 1), uart_vectors)
+        self.assertIn((115200, 0, 0, 32, 4, 1), uart_vectors)
+        self.assertIn((125000, 0, 0, 1024, 3, 3), spi_vectors)
+        self.assertIn((100000, 0, 0, 32, 1, 0x44 | (3 << 8)), twi_vectors)
+        self.assertIn((100000, 0, 0, 256, 3, 0x42 | (4 << 8)), twi_vectors)
+        self.assertIn((100000, 0, 0, 32, 1, 0x42 | (5 << 8)), twi_vectors)
+        self.assertIn((100000, 0, 0, 32, 3, 0x42 | (6 << 8)), twi_vectors)
+        source = (ROOT / "tests/hil/nu54dk/v04_fixture.py").read_text(
+            encoding="utf-8")
+        self.assertIn("spim00-twim22-concurrent", source)
+        self.assertIn("controller.command(27)", source)
+        for controller in (1, 2):
+            other = 3 - controller
+            self.assertEqual(fixture.expected_lengths(controller, controller, 32, 1, "spi"), (32, 32))
+            self.assertEqual(fixture.expected_lengths(other, controller, 32, 1, "spi"), (0, 32))
+            self.assertEqual(fixture.expected_lengths(controller, controller, 32, 1, "twi"), (32, 0))
+            self.assertEqual(fixture.expected_lengths(other, controller, 32, 1, "twi"), (0, 32))
+            self.assertEqual(fixture.expected_lengths(controller, controller, 32, 1,
+                                                       "uarte", 2), (64, 0))
+            self.assertEqual(fixture.expected_lengths(other, controller, 32, 1,
+                                                       "uarte", 2), (0, 64))
+
+
+if __name__ == "__main__":
+    unittest.main()

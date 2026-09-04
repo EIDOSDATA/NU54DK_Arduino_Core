@@ -35,8 +35,8 @@ int main()
     static_cast<void>(BLESecurity.lastError());
     static_cast<void>(BLESecurity.lastDriverError());
 
-    const nucode::ble::DeviceInformation information = {
-        "NUCODE", "NU54DK-M21", "TEST", "0.3.0", "NU54DK", "0.3.0"};
+    const nucode::ble::DeviceInformation information = {"NUCODE", "NU54DK-M21", "TEST",
+                                                        "0.3.0",  "NU54DK",     "0.3.0"};
     static_cast<void>(BLEDeviceInformation.configure(information));
     static_cast<void>(BLEBattery.setLevel(73U));
     static_cast<void>(BLEKeyboard.begin());

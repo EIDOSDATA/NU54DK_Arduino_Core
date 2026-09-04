@@ -54,5 +54,4 @@ ZTEST(m26_system_fabric_contract, test_watchdog_lifecycle_rejects_invalid_calls)
                   "configure 전 WDT stop을 허용했습니다.");
 }
 
-ZTEST_SUITE(m26_system_fabric_contract, nullptr, nullptr, nullptr, nullptr,
-            nullptr);
+ZTEST_SUITE(m26_system_fabric_contract, nullptr, nullptr, nullptr, nullptr, nullptr);

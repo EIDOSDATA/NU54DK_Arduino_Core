@@ -63,7 +63,7 @@ namespace nucode::ble
     /** @brief 지원하는 공개 UUID 저장 형식입니다. */
     class BLEUuid final
     {
-    public:
+      public:
         /** @brief UUID의 실제 폭입니다. */
         enum class Type : std::uint8_t
         {
@@ -102,7 +102,7 @@ namespace nucode::ble
         [[nodiscard]] bool operator==(const BLEUuid &other) const noexcept;
         [[nodiscard]] bool operator!=(const BLEUuid &other) const noexcept;
 
-    private:
+      private:
         Type type_ = Type::invalid;
         std::uint8_t bytes_[16] = {};
     };
@@ -110,7 +110,7 @@ namespace nucode::ble
     /** @brief Bluetooth LE 주소의 공개 형식입니다. */
     class BLEAddress final
     {
-    public:
+      public:
         /** @brief public 또는 random 주소 종류입니다. */
         enum class Type : std::uint8_t
         {
@@ -122,8 +122,7 @@ namespace nucode::ble
         BLEAddress() = default;
 
         /** @brief AA:BB:CC:DD:EE:FF 문자열과 주소 종류를 해석합니다. */
-        explicit BLEAddress(const char *text,
-                            Type type = Type::public_address) noexcept;
+        explicit BLEAddress(const char *text, Type type = Type::public_address) noexcept;
 
         /** @brief raw Bluetooth little-endian 주소로 객체를 만듭니다. */
         BLEAddress(const std::uint8_t bytes[6], Type type) noexcept;
@@ -143,7 +142,7 @@ namespace nucode::ble
         [[nodiscard]] bool operator==(const BLEAddress &other) const noexcept;
         [[nodiscard]] bool operator!=(const BLEAddress &other) const noexcept;
 
-    private:
+      private:
         Type type_ = Type::invalid;
         std::uint8_t bytes_[6] = {};
     };
@@ -179,7 +178,7 @@ namespace nucode::ble
     /** @brief Bluetooth stack과 Arduino main-thread event 경계를 소유합니다. */
     class Device final
     {
-    public:
+      public:
         /** @brief stack을 한 번 초기화하고 local name을 적용합니다. */
         [[nodiscard]] bool begin(const char *local_name) noexcept;
 
@@ -224,7 +223,7 @@ namespace nucode::ble
     /** @brief 31-byte legacy advertising payload를 고정 자원으로 구성합니다. */
     class Advertising final
     {
-    public:
+      public:
         static constexpr std::size_t maximum_payload_length = 31U;
 
         /** @brief 중지 상태에서 payload 구성을 기본값으로 초기화합니다. */
@@ -237,15 +236,13 @@ namespace nucode::ble
         [[nodiscard]] bool setFlags(std::uint8_t flags) noexcept;
 
         /** @brief 0.625 ms 단위 광고 최소·최대 interval을 설정합니다. */
-        [[nodiscard]] bool setInterval(std::uint16_t minimum,
-                                       std::uint16_t maximum) noexcept;
+        [[nodiscard]] bool setInterval(std::uint16_t minimum, std::uint16_t maximum) noexcept;
 
         /** @brief 16/32/128-bit service UUID를 광고 payload에 추가합니다. */
         [[nodiscard]] bool addServiceUuid(const BLEUuid &uuid) noexcept;
 
         /** @brief company ID와 bounded manufacturer payload를 설정합니다. */
-        [[nodiscard]] bool setManufacturerData(std::uint16_t company_id,
-                                               const void *data,
+        [[nodiscard]] bool setManufacturerData(std::uint16_t company_id, const void *data,
                                                std::size_t length) noexcept;
 
         /** @brief UUID와 bounded service data를 설정합니다. */
@@ -268,7 +265,7 @@ namespace nucode::ble
     /** @brief active/passive scan과 bounded 결과 queue를 소유합니다. */
     class Scan final
     {
-    public:
+      public:
         /** @brief 중지 상태에서 모든 software filter를 지웁니다. */
         [[nodiscard]] bool clearFilters() noexcept;
 
@@ -306,7 +303,7 @@ namespace nucode::ble
     /** @brief 단일 LE peer 연결과 실제 NCS link parameter를 소유합니다. */
     class Connection final
     {
-    public:
+      public:
         /** @brief exact scan 결과 주소에 비동기 연결을 시작합니다. */
         [[nodiscard]] bool connect(const BLEAddress &address) noexcept;
 
@@ -341,10 +338,8 @@ namespace nucode::ble
         [[nodiscard]] bool txPower(std::int8_t &dbm) const noexcept;
 
         /** @brief 1.25 ms/10 ms 단위 LE connection parameter를 요청합니다. */
-        [[nodiscard]] bool requestParameters(std::uint16_t interval_min,
-                                             std::uint16_t interval_max,
-                                             std::uint16_t latency,
-                                             std::uint16_t timeout) noexcept;
+        [[nodiscard]] bool requestParameters(std::uint16_t interval_min, std::uint16_t interval_max,
+                                             std::uint16_t latency, std::uint16_t timeout) noexcept;
     };
 
 } // namespace nucode::ble

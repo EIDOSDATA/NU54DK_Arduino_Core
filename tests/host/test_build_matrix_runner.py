@@ -39,17 +39,27 @@ ARDUINO = load_module(
 class BuildMatrixRunnerTests(unittest.TestCase):
     """! @brief 릴리스 기능군 범위·명령·진단 경계를 검증합니다. """
 
-    ## @brief Zephyr 45개 시나리오가 중복·누락 없이 4/10/15/16으로 분리됩니다.
+    ## @brief Zephyr 49개 시나리오가 중복·누락 없이 4/10/15/20으로 분리됩니다.
     def test_zephyr_groups_partition_every_suite_once(self) -> None:
         self.assertEqual(
             {name: len(suites) for name, suites in ZEPHYR.SUITE_GROUPS.items()},
-            {"v0.1.0": 4, "v0.2.0": 10, "v0.3.0": 15, "v0.4.0": 18},
+            {"v0.1.0": 4, "v0.2.0": 10, "v0.3.0": 15, "v0.4.0": 20},
         )
         flattened = tuple(
             suite for suites in ZEPHYR.SUITE_GROUPS.values() for suite in suites
         )
         self.assertEqual(flattened, ZEPHYR.SUITES)
         self.assertEqual(len(set(flattened)), len(flattened))
+
+    def test_target_subset_never_silently_escapes_group(self) -> None:
+        names = ("nucode.v04.pair_dut", "nucode.v04.pair_peer")
+        chosen = ZEPHYR.select_suites("v0.4.0", names)
+        self.assertEqual({name for _, name in chosen}, set(names))
+        self.assertEqual(ZEPHYR.select_suites("v0.4.0"), tuple(ZEPHYR.SUITE_GROUPS["v0.4.0"]))
+        for group, invalid in (("v0.3.0", names), ("v0.4.0", names + names), ("v0.4.0", ("missing",))):
+            with self.assertRaises(ZEPHYR.BuildFailure): ZEPHYR.select_suites(group, invalid)
+        self.assertIn('"m12-zephyr-build-subset" if args.suite',
+                      (REPOSITORY / "tools/ci/run_zephyr_build.py").read_text(encoding="utf-8"))
 
     ## @brief Arduino 예제 기능군도 각 지원 릴리스에서 도입한 범위로 고정됩니다.
     def test_arduino_groups_are_explicit_and_disjoint(self) -> None:

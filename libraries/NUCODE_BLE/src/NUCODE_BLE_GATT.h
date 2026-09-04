@@ -33,8 +33,7 @@ namespace nucode::ble
     };
 
     /** @brief BLEProperty bit 조합을 만듭니다. */
-    [[nodiscard]] constexpr BLEProperty operator|(BLEProperty left,
-                                                  BLEProperty right) noexcept
+    [[nodiscard]] constexpr BLEProperty operator|(BLEProperty left, BLEProperty right) noexcept
     {
         return static_cast<BLEProperty>(static_cast<std::uint8_t>(left) |
                                         static_cast<std::uint8_t>(right));
@@ -94,21 +93,19 @@ namespace nucode::ble
      */
     class BLECharacteristic final
     {
-    public:
+      public:
         static constexpr std::size_t maximum_value_length = 244U;
 
         /** @brief 내부 고정 buffer를 사용하는 characteristic을 선언합니다. */
-        BLECharacteristic(const BLEUuid &uuid, BLEProperty properties,
-                          BLEPermission permissions,
+        BLECharacteristic(const BLEUuid &uuid, BLEProperty properties, BLEPermission permissions,
                           std::size_t capacity = 20U) noexcept;
 
         /**
          * @brief caller-owned 고정 buffer를 사용하는 characteristic을 선언합니다.
          * @warning buffer는 image 수명 동안 유효해야 하며 API 밖에서 직접 수정하면 안 됩니다.
          */
-        BLECharacteristic(const BLEUuid &uuid, BLEProperty properties,
-                          BLEPermission permissions, std::uint8_t *buffer,
-                          std::size_t capacity) noexcept;
+        BLECharacteristic(const BLEUuid &uuid, BLEProperty properties, BLEPermission permissions,
+                          std::uint8_t *buffer, std::size_t capacity) noexcept;
 
         BLECharacteristic(const BLECharacteristic &) = delete;
         BLECharacteristic &operator=(const BLECharacteristic &) = delete;
@@ -129,8 +126,7 @@ namespace nucode::ble
         [[nodiscard]] std::size_t valueLength() const noexcept;
 
         /** @brief cached value를 caller buffer로 복사하고 실제 길이를 반환합니다. */
-        [[nodiscard]] std::size_t readValue(void *output,
-                                            std::size_t capacity) const noexcept;
+        [[nodiscard]] std::size_t readValue(void *output, std::size_t capacity) const noexcept;
 
         /** @brief server read 응답에 사용할 cached value를 갱신합니다. */
         [[nodiscard]] bool setValue(const void *data, std::size_t length) noexcept;
@@ -148,10 +144,9 @@ namespace nucode::ble
         [[nodiscard]] bool indicate() noexcept;
 
         /** @brief server write·CCC·전송 완료 callback을 등록합니다. */
-        void onEvent(BLECharacteristicCallback callback,
-                     void *context = nullptr) noexcept;
+        void onEvent(BLECharacteristicCallback callback, void *context = nullptr) noexcept;
 
-    private:
+      private:
         friend struct internal::GattAccess;
 
         BLEUuid uuid_;
@@ -172,7 +167,7 @@ namespace nucode::ble
      */
     class BLEService final
     {
-    public:
+      public:
         static constexpr std::size_t maximum_characteristics = 8U;
 
         explicit BLEService(const BLEUuid &uuid) noexcept;
@@ -188,7 +183,7 @@ namespace nucode::ble
         /** @brief 등록한 characteristic 수를 반환합니다. */
         [[nodiscard]] std::size_t characteristicCount() const noexcept;
 
-    private:
+      private:
         friend struct internal::GattAccess;
 
         BLEUuid uuid_;
@@ -200,13 +195,13 @@ namespace nucode::ble
     /** @brief disconnect까지 유효한 discovered remote service handle입니다. */
     class BLERemoteService final
     {
-    public:
+      public:
         [[nodiscard]] bool valid() const noexcept;
         [[nodiscard]] const BLEUuid &uuid() const noexcept;
         [[nodiscard]] std::uint16_t startHandle() const noexcept;
         [[nodiscard]] std::uint16_t endHandle() const noexcept;
 
-    private:
+      private:
         friend struct internal::GattAccess;
 
         BLEUuid uuid_;
@@ -218,14 +213,14 @@ namespace nucode::ble
     /** @brief disconnect까지 유효한 discovered remote characteristic handle입니다. */
     class BLERemoteCharacteristic final
     {
-    public:
+      public:
         [[nodiscard]] bool valid() const noexcept;
         [[nodiscard]] const BLEUuid &uuid() const noexcept;
         [[nodiscard]] std::uint16_t valueHandle() const noexcept;
         [[nodiscard]] std::uint16_t cccHandle() const noexcept;
         [[nodiscard]] BLEProperty properties() const noexcept;
 
-    private:
+      private:
         friend struct internal::GattAccess;
 
         BLEUuid uuid_;
@@ -252,14 +247,13 @@ namespace nucode::ble
     };
 
     /** @brief BLEDevice.poll()에서만 호출되는 generic GATT client callback입니다. */
-    using BLEGattClientCallback = void (*)(BLEGattClientEvent event,
-                                           const std::uint8_t *data,
+    using BLEGattClientCallback = void (*)(BLEGattClientEvent event, const std::uint8_t *data,
                                            std::size_t length, void *context);
 
     /** @brief 한 번에 한 service/characteristic operation을 수행하는 bounded GATT client입니다. */
     class GattClient final
     {
-    public:
+      public:
         /** @brief exact service와 characteristic UUID discovery를 시작합니다. */
         [[nodiscard]] bool discover(const BLEUuid &service_uuid,
                                     const BLEUuid &characteristic_uuid) noexcept;
@@ -280,8 +274,7 @@ namespace nucode::ble
         [[nodiscard]] bool write(const void *data, std::size_t length) noexcept;
 
         /** @brief response 없는 bounded write와 local TX 완료를 시작합니다. */
-        [[nodiscard]] bool writeWithoutResponse(const void *data,
-                                                std::size_t length) noexcept;
+        [[nodiscard]] bool writeWithoutResponse(const void *data, std::size_t length) noexcept;
 
         /** @brief remote CCC notification 구독을 시작합니다. */
         [[nodiscard]] bool subscribeNotifications() noexcept;
@@ -299,8 +292,7 @@ namespace nucode::ble
         [[nodiscard]] std::uint8_t lastAttError() const noexcept;
 
         /** @brief main-thread generic client callback을 등록합니다. */
-        void onEvent(BLEGattClientCallback callback,
-                     void *context = nullptr) noexcept;
+        void onEvent(BLEGattClientCallback callback, void *context = nullptr) noexcept;
     };
 
 } // namespace nucode::ble

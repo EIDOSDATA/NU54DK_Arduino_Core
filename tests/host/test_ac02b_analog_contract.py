@@ -150,6 +150,7 @@ class Ac02bAnalogContractTests(unittest.TestCase):
             ROOT / "cores" / "arduino" / "wiring_interrupt.cpp"
         ).read_text(encoding="utf-8")
         spi = (ROOT / "cores" / "arduino" / "SPI.cpp").read_text(encoding="utf-8")
+        digital_compact = " ".join(digital.split())
 
         for token in (
             "unwindActivation",
@@ -174,10 +175,13 @@ class Ac02bAnalogContractTests(unittest.TestCase):
             "interrupt_recovery_pending",
             "isGpioPinHandoverFaulted",
             "atomic_get(&state->handover_faulted)",
-            "handover.phase = cleanup_failed ? PinHandoverPhase::faulted",
             "rollbackIoResources(ownership_lease)",
         ):
             self.assertIn(token, digital)
+        self.assertIn(
+            "handover.phase = cleanup_failed ? PinHandoverPhase::faulted",
+            digital_compact,
+        )
 
         self.assertIn("unwindActivation(prepared_count + 1U)", runtime)
         self.assertIn("PwmRuntimeSuspendedOutput", pwm_header)

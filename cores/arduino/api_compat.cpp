@@ -49,8 +49,8 @@ namespace
         do
         {
             const auto digit = static_cast<unsigned int>(value % static_cast<UnsignedValue>(radix));
-            reversed[length++] = static_cast<char>((digit < 10U) ? ('0' + digit)
-                                                                 : ('a' + digit - 10U));
+            reversed[length++] =
+                static_cast<char>((digit < 10U) ? ('0' + digit) : ('a' + digit - 10U));
             value /= static_cast<UnsignedValue>(radix);
         } while (value != 0U);
 
@@ -85,8 +85,8 @@ namespace
         if ((radix == 10) && (value < 0))
         {
             output[0] = '-';
-            const UnsignedValue magnitude = static_cast<UnsignedValue>(0U) -
-                                            static_cast<UnsignedValue>(value);
+            const UnsignedValue magnitude =
+                static_cast<UnsignedValue>(0U) - static_cast<UnsignedValue>(value);
             static_cast<void>(unsignedToString(magnitude, output + 1, radix));
             return output;
         }
@@ -94,7 +94,7 @@ namespace
         return unsignedToString(static_cast<UnsignedValue>(value), output, radix);
     }
 
-}
+} // namespace
 
 extern "C" char *itoa(int value, char *string, int radix)
 {
@@ -133,8 +133,8 @@ extern "C" char *dtostrf(double value, signed char width, unsigned char precisio
     }
 
     char format[20] = {};
-    static_cast<void>(snprintf(format, sizeof(format), "%%%d.%df",
-                               static_cast<int>(width), static_cast<int>(precision)));
+    static_cast<void>(snprintf(format, sizeof(format), "%%%d.%df", static_cast<int>(width),
+                               static_cast<int>(precision)));
     static_cast<void>(sprintf(output, format, value));
     return output;
 }
