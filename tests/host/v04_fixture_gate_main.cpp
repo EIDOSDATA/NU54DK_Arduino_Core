@@ -47,6 +47,12 @@ int main()
                     !v04::fixtureInstance(Bank::p2, 21) && v04::fixtureInstance(Bank::p0, 30) &&
                     v04::fixtureInstance(Bank::p1, 22),
                 "bank별 인스턴스 allowlist가 잘못되었습니다.");
+    ok &= check(!v04::shouldQueueSerialPeripheralBuffers(true, false, false, false) &&
+                    !v04::shouldQueueSerialPeripheralBuffers(false, true, false, false) &&
+                    !v04::shouldQueueSerialPeripheralBuffers(false, false, true, false) &&
+                    !v04::shouldQueueSerialPeripheralBuffers(false, false, false, true) &&
+                    v04::shouldQueueSerialPeripheralBuffers(false, false, false, false),
+                "UART 또는 지연·controller 경로를 peripheral buffer 분기에 허용했습니다.");
 
     FixtureGate gate;
     ok &= check(!gate.arm(201, 0, FixtureGate::consent, 1, 1, 100),

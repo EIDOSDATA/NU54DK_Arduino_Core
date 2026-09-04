@@ -464,8 +464,9 @@ namespace
                 ready = 1;
             }
         }
-        else if (result == SerialFabricResult::success && !controller && !gpio_line_generator &&
-                 !deferred_twis_buffers)
+        else if (result == SerialFabricResult::success &&
+                 v04::shouldQueueSerialPeripheralBuffers(uart, controller, gpio_line_generator,
+                                                         deferred_twis_buffers))
         {
             const auto *tx = tx_length ? transmit.data : nullptr;
             auto *rx = rx_length ? receive.data : nullptr;

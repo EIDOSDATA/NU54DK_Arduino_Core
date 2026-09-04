@@ -105,6 +105,17 @@ namespace v04
     }
 
     /**
+     * @brief SPI/TWI peripheral의 전송 buffer를 준비 단계에서 등록할지 판정합니다.
+     * @note 지연 RX를 사용하는 UART가 SPI buffer 분기로 진입하면 안 됩니다.
+     */
+    constexpr bool shouldQueueSerialPeripheralBuffers(bool uart, bool controller,
+                                                       bool gpio_line_generator,
+                                                       bool deferred_twis_buffers)
+    {
+        return !uart && !controller && !gpio_line_generator && !deferred_twis_buffers;
+    }
+
+    /**
      * @brief 명시적 결선 확인 뒤 10초 동안만 명령을 허용합니다.
      * @note 물리 스위치를 감지하지 않습니다. Host의 사용자 확인과 함께 사용합니다.
      * 만료 후 활성 DMA의 STOP 증명과 자원 보존은 호출자가 수행합니다.
