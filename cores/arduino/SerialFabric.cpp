@@ -12,12 +12,16 @@
 #include "internal/SerialFabricBackend.h"
 #include "serial_fabric_routes.h"
 
+#include <hal/nrf_gpio.h>
+#include <nrfx_power.h>
+
 #include <zephyr/irq.h>
 #include <zephyr/kernel.h>
 #include <zephyr/sys/atomic.h>
 
 #include <cstddef>
 #include <cstdint>
+#include <cerrno>
 
 namespace nucode::arduino
 {
@@ -34,6 +38,13 @@ namespace nucode::arduino
         inline constexpr std::size_t handle_count = 23U;
         inline constexpr std::size_t block_count = 5U;
 
+        struct SavedPin
+        {
+            std::uint32_t psel{0U};
+            std::uint32_t configuration{0U};
+            std::uint32_t output{0U};
+        };
+
         struct HandleContext
         {
             ValidatedSerialRoute route{};
@@ -44,6 +55,9 @@ namespace nucode::arduino
             SerialFabricState state{SerialFabricState::inactive};
             SerialFabricResult last_result{SerialFabricResult::success};
             int last_driver_error{0};
+            SavedPin saved_pins[internal::serial_fabric_pin_capacity]{};
+            std::size_t saved_pin_count{0U};
+            bool constant_latency_owned{false};
         };
 
         struct BlockContext
@@ -186,6 +200,73 @@ namespace nucode::arduino
             record(context, result, driver_error);
         }
 
+        // Called only after the complete exclusive lease was reserved. Do not
+        // touch pads while validating/staging or after a conflicting acquisition.
+        bool saveRouteState(HandleContext &context, std::uint8_t instance,
+                            int &driver_error) noexcept
+        {
+            context.saved_pin_count = 0U;
+            for (std::size_t index = 0; index < context.route.pin_count; ++index)
+            {
+                auto &saved = context.saved_pins[index];
+                if (internal::nu54dkSerialFabricPsel(context.route.pins[index].pin,
+                                                     saved.psel) != SerialFabricResult::success)
+                    return false;
+                auto pin = saved.psel;
+                const auto *port = nrf_gpio_pin_port_decode(&pin);
+                saved.configuration = port->PIN_CNF[pin];
+                saved.output = nrf_gpio_pin_out_read(saved.psel);
+                ++context.saved_pin_count;
+            }
+            if (instance == 20U && context.route.route == SerialRouteClass::p2_dedicated20)
+            {
+                driver_error = nrfx_power_constlat_mode_request();
+                // EALREADY still increments nrfx's shared reference count.
+                if (driver_error != 0 && driver_error != -EALREADY)
+                    return false;
+                context.constant_latency_owned = true;
+                driver_error = 0;
+            }
+            return true;
+        }
+
+        bool restoreRouteState(HandleContext &context, int &driver_error) noexcept
+        {
+            // The adapter must have disconnected PSEL and proven DMA STOP first.
+            // Restore each owned OUT latch before PIN_CNF; never overwrite a port.
+            for (std::size_t index = 0; index < context.saved_pin_count; ++index)
+            {
+                const auto &saved = context.saved_pins[index];
+                nrf_gpio_pin_write(saved.psel, saved.output);
+                auto pin = saved.psel;
+                auto *port = nrf_gpio_pin_port_decode(&pin);
+                port->PIN_CNF[pin] = saved.configuration;
+            }
+            context.saved_pin_count = 0U;
+            if (context.constant_latency_owned)
+            {
+                driver_error = nrfx_power_constlat_mode_free();
+                // EBUSY means our reference was released; another owner remains.
+                if (driver_error != 0 && driver_error != -EBUSY)
+                    return false;
+                context.constant_latency_owned = false;
+                driver_error = 0;
+            }
+            return true;
+        }
+
+        bool waitStopped(HandleContext &context, std::uint8_t instance,
+                         std::uint32_t timeout_us) noexcept
+        {
+            while (!context.adapter->stopped(instance) && timeout_us != 0U)
+            {
+                const auto interval = timeout_us < 10U ? timeout_us : 10U;
+                k_busy_wait(interval);
+                timeout_us -= interval; // no wraparound even for UINT32_MAX
+            }
+            return context.adapter->stopped(instance);
+        }
+
         [[nodiscard]] HandleContext &contextAt(std::uint8_t index) noexcept
         {
             return contexts[index];
@@ -319,15 +400,39 @@ namespace nucode::arduino
         }
 
         context.state = SerialFabricState::activating;
+        int driver_error = 0;
+        if (!saveRouteState(context, instance_, driver_error))
+        {
+            int restore_error = 0;
+            const bool restored = restoreRouteState(context, restore_error);
+            if (!restored || internal::rollbackIoResources(context.lease) != IoResourceResult::success)
+                latchFault(context, block, SerialFabricResult::release_failed, restore_error);
+            else
+            {
+                context.lease = {};
+                context.state = SerialFabricState::staged;
+                record(context, SerialFabricResult::driver_error, driver_error);
+            }
+            const auto observed = context.last_result;
+            k_mutex_unlock(&fabric_mutex);
+            return observed;
+        }
         blocks[block].active_instance = instance_;
         atomic_ptr_set(&blocks[block].active_adapter,
                        const_cast<SerialFabricDriverAdapter *>(context.adapter));
-        int driver_error = 0;
         SerialFabricResult result =
             context.adapter->activate(instance_, context.route, driver_error);
         if (result != SerialFabricResult::success)
         {
             atomic_ptr_clear(&blocks[block].active_adapter);
+            // Failed activate is required to leave its own hardware quiescent.
+            int restore_error = 0;
+            if (!restoreRouteState(context, restore_error))
+            {
+                latchFault(context, block, SerialFabricResult::release_failed, restore_error);
+                k_mutex_unlock(&fabric_mutex);
+                return SerialFabricResult::release_failed;
+            }
             const IoResourceResult rollback_result =
                 internal::rollbackIoResources(context.lease);
             context.lease = {};
@@ -351,9 +456,22 @@ namespace nucode::arduino
         if (commit_result != IoResourceResult::success)
         {
             int cleanup_error = 0;
-            (void)context.adapter->request_stop(instance_, cleanup_error);
+            const auto stop_result = context.adapter->request_stop(instance_, cleanup_error);
+            if (stop_result != SerialFabricResult::success || !waitStopped(context, instance_, 100000U))
+            {
+                // Hardware, pins, DMA and power leases stay owned until reset.
+                latchFault(context, block, SerialFabricResult::stop_timeout, cleanup_error);
+                k_mutex_unlock(&fabric_mutex);
+                return SerialFabricResult::stop_timeout;
+            }
             const SerialFabricResult cleanup_result =
                 context.adapter->deactivate(instance_, cleanup_error);
+            if (cleanup_result != SerialFabricResult::success || !restoreRouteState(context, cleanup_error))
+            {
+                latchFault(context, block, SerialFabricResult::release_failed, cleanup_error);
+                k_mutex_unlock(&fabric_mutex);
+                return SerialFabricResult::release_failed;
+            }
             const IoResourceResult rollback_result =
                 internal::rollbackIoResources(context.lease);
             atomic_ptr_clear(&blocks[block].active_adapter);
@@ -416,14 +534,7 @@ namespace nucode::arduino
             return result;
         }
 
-        std::uint32_t elapsed = 0U;
-        while (!context.adapter->stopped(instance_) && (elapsed < timeout_us))
-        {
-            constexpr std::uint32_t poll_us = 10U;
-            k_busy_wait(poll_us);
-            elapsed += poll_us;
-        }
-        if (!context.adapter->stopped(instance_))
+        if (!waitStopped(context, instance_, timeout_us))
         {
             latchFault(context, block, SerialFabricResult::stop_timeout, driver_error);
             k_mutex_unlock(&fabric_mutex);
@@ -438,6 +549,12 @@ namespace nucode::arduino
             return result;
         }
         atomic_ptr_clear(&blocks[block].active_adapter);
+        if (!restoreRouteState(context, driver_error))
+        {
+            latchFault(context, block, SerialFabricResult::release_failed, driver_error);
+            k_mutex_unlock(&fabric_mutex);
+            return SerialFabricResult::release_failed;
+        }
         const IoResourceResult release_result =
             internal::releaseIoResources(context.lease);
         if (release_result != IoResourceResult::success)
@@ -564,7 +681,12 @@ namespace nucode::arduino
                 return;
             k_mutex_lock(&fabric_mutex, K_FOREVER);
             for (auto &context : contexts)
+            {
+                // Fake-adapter ztest isolation only, never a hardware recovery API.
+                int ignored = 0;
+                (void)restoreRouteState(context, ignored);
                 context = {};
+            }
             for (auto &adapter : adapters)
                 adapter = {};
             for (bool &registered : adapter_registered)

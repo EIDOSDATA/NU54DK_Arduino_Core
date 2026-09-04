@@ -18,6 +18,34 @@ namespace
     UarteHandle *handle = nullptr;
     unsigned bytes = 0, buffers = 0, complete = 0, tx_complete = 0, error = 0, seen = 0;
     std::uint32_t seed = 0;
+    struct SavedPad { std::uint32_t psel, configuration, output; };
+    SavedPad saved_pads[4]{};
+    unsigned saved_count = 0;
+    void snapshotPads(bool port0, unsigned count)
+    {
+        saved_count = count;
+        for (unsigned index = 0; index < count; ++index)
+        {
+            auto &saved = saved_pads[index];
+            saved.psel = NRF_GPIO_PIN_MAP(port0 ? 0 : 1, port0 ? index : index + 4);
+            auto pin = saved.psel;
+            const auto *port = nrf_gpio_pin_port_decode(&pin);
+            saved.configuration = port->PIN_CNF[pin];
+            saved.output = nrf_gpio_pin_out_read(saved.psel);
+        }
+    }
+    bool padsRestored()
+    {
+        for (unsigned index = 0; index < saved_count; ++index)
+        {
+            const auto &saved = saved_pads[index];
+            auto pin = saved.psel;
+            const auto *port = nrf_gpio_pin_port_decode(&pin);
+            if (port->PIN_CNF[pin] != saved.configuration || nrf_gpio_pin_out_read(saved.psel) != saved.output)
+                return false;
+        }
+        return true;
+    }
     std::uint8_t pattern(std::uint32_t value, unsigned index)
     {
         // Integer byte oracle also implemented independently by the Host.
@@ -68,6 +96,7 @@ namespace
             {receive[0].data, capacity}, {receive[1].data, capacity}, {transmit, sizeof(transmit)}};
         const SerialFabricConfiguration route{args[0] == 30 ? SerialRouteClass::p0_flexible : SerialRouteClass::p1_flexible,
                                               SerialElectricalProfile::dap_uart_bridge, pins, args[6] ? 4U : 2U, workspaces, 3};
+        snapshotPads(args[0] == 30, args[6] ? 4U : 2U);
         auto result = candidate->configure({args[1], args[5] ? UarteParity::even : UarteParity::none,
                                            args[6] != 0, buffers == 2 && bytes >= 32});
         if (result == SerialFabricResult::success)
@@ -173,7 +202,7 @@ std::uint32_t serialOnboard(std::uint32_t opcode, const std::uint32_t *args,
     {
         const auto result = handle->deactivate(100000);
         out[0] = static_cast<unsigned>(result);
-        out[1] = guardsIntact();
+        out[1] = guardsIntact() && padsRestored();
         count = 2;
         if (result != SerialFabricResult::success)
             return 603;

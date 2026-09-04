@@ -383,13 +383,13 @@
       "kind": "header-fixture",
       "location": "connector",
       "execution_class": "external-fixture",
-      "board_nets": ["P1.2", "P1.3", "P1.4", "P1.5", "P1.6", "P1.7", "P1.10", "P1.12", "P1.14"],
+      "board_nets": ["P1.4", "P1.5", "P1.6", "P1.7"],
       "identities": ["spim21", "spis21", "twis20", "twis21", "spim22", "spis22", "twis22"],
       "automation_scope": ["fixture-data-path", "sync-async-dma", "target-double-buffer", "error-injection"],
       "preconditions": [
         "The DAP UART switch is disabled before a non-UARTE fixture owns P1.4 through P1.7.",
-        "An external controller is required for TWIS data-path HIL even though the PMIC bus pull-ups are onboard.",
-        "LED and VBAT monitor loading remains part of the electrical result where those nets are selected."
+        "An external controller and external pull-ups are required for isolated TWIS data-path HIL.",
+        "This fixture excludes the PMIC bus, LED outputs and the capacitive VBAT monitor net."
       ]
     },
     {
@@ -501,10 +501,10 @@
       "id": "m24-twis20",
       "identity": "twis20",
       "route_class": "p1-flexible",
-      "pins": { "sda": "P1.2", "scl": "P1.3" },
+      "pins": { "sda": "P1.4", "scl": "P1.5" },
       "test_resource": "p1-header-fixture",
       "execution_class": "external-fixture",
-      "preconditions": ["The console is disabled.", "serial22 is inactive."],
+      "preconditions": ["The console is disabled.", "The DAP UART switch is disabled.", "External pull-ups are fitted on the isolated fixture, not the PMIC bus."],
       "status": "planned-hil"
     },
     {
@@ -521,10 +521,10 @@
       "id": "m24-spim21",
       "identity": "spim21",
       "route_class": "p1-flexible",
-      "pins": { "sck": "P1.10", "mosi": "P1.12", "miso": "P1.14" },
+      "pins": { "sck": "P1.4", "mosi": "P1.5", "miso": "P1.6", "csn": "P1.7" },
       "test_resource": "p1-header-fixture",
       "execution_class": "external-fixture",
-      "preconditions": ["Chip select remains sketch-owned.", "LED and VBAT monitor loading is included in HIL."],
+      "preconditions": ["The console is disabled.", "The DAP UART switch is disabled.", "The SPI fixture excludes VBAT monitor and LED loads."],
       "status": "planned-hil"
     },
     {
@@ -551,10 +551,10 @@
       "id": "m24-twis21",
       "identity": "twis21",
       "route_class": "p1-flexible",
-      "pins": { "sda": "P1.2", "scl": "P1.3" },
+      "pins": { "sda": "P1.4", "scl": "P1.5" },
       "test_resource": "p1-header-fixture",
       "execution_class": "external-fixture",
-      "preconditions": ["serial22 is inactive."],
+      "preconditions": ["The console is disabled.", "The DAP UART switch is disabled.", "External pull-ups are fitted on the isolated fixture, not the PMIC bus."],
       "status": "planned-hil"
     },
     {
@@ -571,10 +571,10 @@
       "id": "m24-spim22",
       "identity": "spim22",
       "route_class": "p1-flexible",
-      "pins": { "sck": "P1.10", "mosi": "P1.12", "miso": "P1.14" },
+      "pins": { "sck": "P1.4", "mosi": "P1.5", "miso": "P1.6", "csn": "P1.7" },
       "test_resource": "p1-header-fixture",
       "execution_class": "external-fixture",
-      "preconditions": ["Wire is inactive.", "Chip select remains sketch-owned."],
+      "preconditions": ["Wire and the console are disabled.", "The DAP UART switch is disabled.", "The SPI fixture excludes VBAT monitor and LED loads."],
       "status": "planned-hil"
     },
     {
@@ -591,10 +591,10 @@
       "id": "m24-twis22",
       "identity": "twis22",
       "route_class": "p1-flexible",
-      "pins": { "sda": "P1.2", "scl": "P1.3" },
+      "pins": { "sda": "P1.4", "scl": "P1.5" },
       "test_resource": "p1-header-fixture",
       "execution_class": "external-fixture",
-      "preconditions": ["Wire controller mode is inactive."],
+      "preconditions": ["Wire and the console are disabled.", "The DAP UART switch is disabled.", "External pull-ups are fitted on the isolated fixture, not the PMIC bus."],
       "status": "planned-hil"
     },
     {

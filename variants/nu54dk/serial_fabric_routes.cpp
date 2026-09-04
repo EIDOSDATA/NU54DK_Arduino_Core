@@ -68,14 +68,18 @@ namespace nucode::arduino::internal
             return -1;
         }
 
-        [[nodiscard]] bool isInputSignal(SerialSignal signal) noexcept
+        [[nodiscard]] bool isInputSignal(SerialPersonality personality, SerialSignal signal) noexcept
         {
+            if (personality == SerialPersonality::spis)
+                return signal == SerialSignal::sck || signal == SerialSignal::mosi || signal == SerialSignal::csn;
             return (signal == SerialSignal::rxd) || (signal == SerialSignal::cts) ||
                    (signal == SerialSignal::miso);
         }
 
-        [[nodiscard]] bool isOutputSignal(SerialSignal signal) noexcept
+        [[nodiscard]] bool isOutputSignal(SerialPersonality personality, SerialSignal signal) noexcept
         {
+            if (personality == SerialPersonality::spis)
+                return signal == SerialSignal::miso;
             return (signal == SerialSignal::txd) || (signal == SerialSignal::rts) ||
                    (signal == SerialSignal::sck) || (signal == SerialSignal::mosi) ||
                    (signal == SerialSignal::csn) || (signal == SerialSignal::dcx);
@@ -154,20 +158,21 @@ namespace nucode::arduino::internal
             }
             if (route == SerialRouteClass::p0_flexible)
             {
-                return personality == SerialPersonality::uarte
-                           ? profile == SerialElectricalProfile::dap_uart_bridge
-                           : profile == SerialElectricalProfile::dap_uart_disabled;
+                return profile == SerialElectricalProfile::dap_uart_disabled ||
+                       (personality == SerialPersonality::uarte && profile == SerialElectricalProfile::dap_uart_bridge);
             }
             if (personality == SerialPersonality::twim)
             {
                 return (profile == SerialElectricalProfile::pmic_read_only) ||
+                       (profile == SerialElectricalProfile::dap_uart_disabled) ||
                        (profile == SerialElectricalProfile::connector_fixture);
             }
             if (personality == SerialPersonality::twis)
             {
-                return profile == SerialElectricalProfile::connector_fixture;
+                return profile == SerialElectricalProfile::connector_fixture ||
+                       profile == SerialElectricalProfile::dap_uart_disabled;
             }
-            return (profile == SerialElectricalProfile::dap_uart_bridge) ||
+            return (personality == SerialPersonality::uarte && profile == SerialElectricalProfile::dap_uart_bridge) ||
                    (profile == SerialElectricalProfile::dap_uart_disabled) ||
                    (profile == SerialElectricalProfile::connector_fixture);
         }
@@ -238,14 +243,14 @@ namespace nucode::arduino::internal
             const std::uint32_t pin = description.gpio.pin;
             if ((port == 1) && (pin >= 4U) && (pin <= 7U))
             {
-                return personality == SerialPersonality::uarte
-                           ? profile == SerialElectricalProfile::dap_uart_bridge
-                           : profile == SerialElectricalProfile::dap_uart_disabled;
+                return profile == SerialElectricalProfile::dap_uart_disabled ||
+                       (personality == SerialPersonality::uarte && profile == SerialElectricalProfile::dap_uart_bridge);
             }
             if ((port == 1) && ((pin == 2U) || (pin == 3U)))
             {
                 return ((personality == SerialPersonality::twim) ||
                         (personality == SerialPersonality::twis)) &&
+                       profile != SerialElectricalProfile::dap_uart_disabled &&
                        isBidirectionalSignal(signal);
             }
             if ((description.policy == PinPolicy::input_only) ||
@@ -345,20 +350,34 @@ namespace nucode::arduino::internal
             {
                 return SerialFabricResult::unsafe_electrical_profile;
             }
+            const bool p1_dap_pad = gpioPort(description->gpio.port) == 1 &&
+                                    description->gpio.pin >= 4U && description->gpio.pin <= 7U;
+            const bool p0_dap_pad = gpioPort(description->gpio.port) == 0 && description->gpio.pin <= 3U;
+            if (configuration.electrical_profile == SerialElectricalProfile::dap_uart_disabled &&
+                IS_ENABLED(CONFIG_SERIAL) &&
+                ((p1_dap_pad && DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(uart20))) ||
+                 (p0_dap_pad && DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(uart30)))))
+                return SerialFabricResult::unsafe_electrical_profile;
             // Preserve the public GPIO capability mask of console-reserved P1 pads.
-            // Only the exact DAP UARTE profile may borrow them with the console off.
-            const bool released_p1_dap_uarte =
-                personality == SerialPersonality::uarte &&
-                configuration.electrical_profile == SerialElectricalProfile::dap_uart_bridge &&
+            // Explicit isolated fixtures can borrow only the switched DAP pads;
+            // this never changes public GPIO capability or proves a switch state.
+            const bool released_p1_dap_profile =
+                ((personality == SerialPersonality::uarte &&
+                  configuration.electrical_profile == SerialElectricalProfile::dap_uart_bridge) ||
+                 configuration.electrical_profile == SerialElectricalProfile::dap_uart_disabled) &&
                 gpioPort(description->gpio.port) == 1 && description->gpio.pin >= 4U &&
                 description->gpio.pin <= 7U &&
                 (!DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(uart20)) || !IS_ENABLED(CONFIG_SERIAL));
-            if (!released_p1_dap_uarte &&
-                ((isInputSignal(entry.signal) &&
+            const bool released_p0_dap_profile =
+                configuration.electrical_profile == SerialElectricalProfile::dap_uart_disabled &&
+                gpioPort(description->gpio.port) == 0 && description->gpio.pin <= 3U &&
+                (!DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(uart30)) || !IS_ENABLED(CONFIG_SERIAL));
+            if (!released_p1_dap_profile && !released_p0_dap_profile &&
+                ((isInputSignal(personality, entry.signal) &&
                   !hasPinCapability(description->capabilities,
                                     PinCapability::digital_input) &&
                   description->policy != PinPolicy::conditional_dap_uart) ||
-                 (isOutputSignal(entry.signal) &&
+                 (isOutputSignal(personality, entry.signal) &&
                   !hasPinCapability(description->capabilities,
                                     PinCapability::digital_output) &&
                   description->policy != PinPolicy::conditional_dap_uart) ||

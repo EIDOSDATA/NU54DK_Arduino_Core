@@ -31,6 +31,10 @@ namespace nucode::arduino::internal
     };
 
     /** @brief hardware adapter가 구현할 bounded handover 수명주기입니다. */
+    // validate is side-effect free. An unsuccessful activate must undo partial
+    // initialization and leave its hardware/DMA quiescent before returning.
+    // Successful deactivate proves STOP and disconnects PSEL; the common layer
+    // then restores GPIO and releases its shared constant-latency reference.
     struct SerialFabricDriverAdapter
     {
         SerialFabricResult (*validate)(std::uint8_t instance,
