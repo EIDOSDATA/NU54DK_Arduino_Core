@@ -120,6 +120,21 @@ class M12CiContractTests(unittest.TestCase):
         self.assertLess(linux_job.index(m24), linux_job.index(build))
         self.assertNotIn("continue-on-error", linux_job)
 
+    def test_m26_system_contract_is_fail_closed_in_both_software_gates(self) -> None:
+        gate = (REPOSITORY / "tools" / "ci" / "run_m12_gate.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('"verify_m26_system_contract.py"', gate)
+        workflow = (
+            REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
+        ).read_text(encoding="utf-8")
+        m24 = "python3 tools/peripheral/verify_m24_serial_contract.py"
+        m26 = "python3 tools/peripheral/verify_m26_system_contract.py"
+        build = "python3 tools/ci/run_zephyr_build.py"
+        self.assertIn(m26, workflow)
+        self.assertLess(workflow.index(m24), workflow.index(m26))
+        self.assertLess(workflow.index(m26), workflow.index(build))
+
     ## @brief M14 native 의미 시험이 실행 가능한 Ubuntu job에서 직접 수행되는지 검증합니다.
     def test_m14_native_semantic_gate_runs_on_ubuntu(self) -> None:
         path = REPOSITORY / ".github" / "workflows" / "m12-software-gates.yml"
@@ -464,6 +479,22 @@ class M12CiContractTests(unittest.TestCase):
                 ("m24_twim_onboard_hil", "nucode.m24.twim21_hil"),
                 ("m24_twim_onboard_hil", "nucode.m24.twim22_hil"),
             }.issubset(set(module.SUITE_GROUPS["v0.4.0"]))
+        )
+        self.assertIn(
+            ("m25_analog_fabric_contract", "nucode.m25.analog"),
+            module.SUITE_GROUPS["v0.4.0"],
+        )
+        self.assertIn(
+            ("m25_event_fabric_contract", "nucode.m25.event"),
+            module.SUITE_GROUPS["v0.4.0"],
+        )
+        self.assertIn(
+            ("m25_stream_fabric_contract", "nucode.m25.stream"),
+            module.SUITE_GROUPS["v0.4.0"],
+        )
+        self.assertIn(
+            ("m25_onboard_hil", "nucode.m25.onboard_hil"),
+            module.SUITE_GROUPS["v0.4.0"],
         )
 
     ## @brief AC-01 production contract와 자동 loopback HIL image가 원격 build gate에 포함되는지 검사합니다.

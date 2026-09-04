@@ -65,7 +65,14 @@ def run_host_gate() -> None:
     run_unittest(
         REPOSITORY / "tests" / "hil" / "nu54dk",
         "test_m24_uarte_onboard.py",
+    )
+    run_unittest(
+        REPOSITORY / "tests" / "hil" / "nu54dk",
         "test_m24_twim_onboard.py",
+    )
+    run_unittest(
+        REPOSITORY / "tests" / "hil" / "nu54dk",
+        "test_m25_onboard.py",
     )
 
 
@@ -170,6 +177,12 @@ def run_inventory_gate() -> None:
         (
             sys.executable,
             REPOSITORY / "tools" / "peripheral" / "verify_m24_serial_contract.py",
+        )
+    )
+    run_checked(
+        (
+            sys.executable,
+            REPOSITORY / "tools" / "peripheral" / "verify_m26_system_contract.py",
         )
     )
 

@@ -23,9 +23,9 @@
     {
       "id": "uarte00", "kind": "uarte", "instance": 0, "sharing_group": "serial00", "dt_node": "uart00",
       "route": { "state": "candidate", "token": "header-p2" }, "owner": "serial", "public_object": null,
-      "public_api": [], "driver": "zephyr-uart-nrfx-uarte", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "zephyr-uart-nrfx-uarte", "dma": { "hardware": true, "driver_managed": true, "public_mode": "double_buffered", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/UarteFabric.cpp", "tests/zephyr/m24_uarte_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
     {
       "id": "uarte20", "kind": "uarte", "instance": 20, "sharing_group": "serial20", "dt_node": "uart20",
@@ -37,16 +37,16 @@
     {
       "id": "uarte21", "kind": "uarte", "instance": 21, "sharing_group": "serial21", "dt_node": "uart21",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "serial", "public_object": null,
-      "public_api": [], "driver": "zephyr-uart-nrfx-uarte", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "zephyr-uart-nrfx-uarte", "dma": { "hardware": true, "driver_managed": true, "public_mode": "double_buffered", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/UarteFabric.cpp", "tests/zephyr/m24_uarte_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
     {
       "id": "uarte22", "kind": "uarte", "instance": 22, "sharing_group": "serial22", "dt_node": "uart22",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "serial", "public_object": null,
-      "public_api": [], "driver": "zephyr-uart-nrfx-uarte", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "zephyr-uart-nrfx-uarte", "dma": { "hardware": true, "driver_managed": true, "public_mode": "double_buffered", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/UarteFabric.cpp", "tests/zephyr/m24_uarte_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
     {
       "id": "uarte30", "kind": "uarte", "instance": 30, "sharing_group": "serial30", "dt_node": "uart30",
@@ -66,81 +66,81 @@
     {
       "id": "spim20", "kind": "spim", "instance": 20, "sharing_group": "serial20", "dt_node": "spi20",
       "route": { "state": "candidate", "token": "header-p1-console-conflict" }, "owner": "spi", "public_object": null,
-      "public_api": [], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "asynchronous", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpimFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
     {
       "id": "spim21", "kind": "spim", "instance": 21, "sharing_group": "serial21", "dt_node": "spi21",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "spi", "public_object": null,
-      "public_api": [], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "asynchronous", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpimFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
     {
       "id": "spim22", "kind": "spim", "instance": 22, "sharing_group": "serial22", "dt_node": "spi22",
       "route": { "state": "candidate", "token": "header-p1-wire-conflict" }, "owner": "spi", "public_object": null,
-      "public_api": [], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "asynchronous", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpimFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
     {
       "id": "spim30", "kind": "spim", "instance": 30, "sharing_group": "serial30", "dt_node": "spi30",
       "route": { "state": "candidate", "token": "header-p0-dap-conflict" }, "owner": "spi", "public_object": null,
-      "public_api": [], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "asynchronous", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpimFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
 
     {
       "id": "spis00", "kind": "spis", "instance": 0, "sharing_group": "serial00", "dt_node": "spi00",
       "route": { "state": "candidate", "token": "header-p2" }, "owner": "spi", "public_object": null,
-      "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpisFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
     {
       "id": "spis20", "kind": "spis", "instance": 20, "sharing_group": "serial20", "dt_node": "spi20",
       "route": { "state": "candidate", "token": "header-p1-console-conflict" }, "owner": "spi", "public_object": null,
-      "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpisFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
     {
       "id": "spis21", "kind": "spis", "instance": 21, "sharing_group": "serial21", "dt_node": "spi21",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "spi", "public_object": null,
-      "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpisFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
     {
       "id": "spis22", "kind": "spis", "instance": 22, "sharing_group": "serial22", "dt_node": "spi22",
       "route": { "state": "candidate", "token": "header-p1-wire-conflict" }, "owner": "spi", "public_object": null,
-      "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpisFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
     {
       "id": "spis30", "kind": "spis", "instance": 30, "sharing_group": "serial30", "dt_node": "spi30",
       "route": { "state": "candidate", "token": "header-p0-dap-conflict" }, "owner": "spi", "public_object": null,
-      "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpisFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
 
     {
       "id": "twim20", "kind": "twim", "instance": 20, "sharing_group": "serial20", "dt_node": "i2c20",
       "route": { "state": "candidate", "token": "header-p1-console-conflict" }, "owner": "wire", "public_object": null,
-      "public_api": [], "driver": "zephyr-i2c-nrfx-twim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "zephyr-i2c-nrfx-twim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "asynchronous", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwimFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
     {
       "id": "twim21", "kind": "twim", "instance": 21, "sharing_group": "serial21", "dt_node": "i2c21",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "wire", "public_object": null,
-      "public_api": [], "driver": "zephyr-i2c-nrfx-twim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "zephyr-i2c-nrfx-twim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "asynchronous", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwimFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
     {
       "id": "twim22", "kind": "twim", "instance": 22, "sharing_group": "serial22", "dt_node": "i2c22",
@@ -152,38 +152,38 @@
     {
       "id": "twim30", "kind": "twim", "instance": 30, "sharing_group": "serial30", "dt_node": "i2c30",
       "route": { "state": "candidate", "token": "header-p0-dap-conflict" }, "owner": "wire", "public_object": null,
-      "public_api": [], "driver": "zephyr-i2c-nrfx-twim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "zephyr-i2c-nrfx-twim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "asynchronous", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwimFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
 
     {
       "id": "twis20", "kind": "twis", "instance": 20, "sharing_group": "serial20", "dt_node": "i2c20",
       "route": { "state": "candidate", "token": "header-p1-console-conflict" }, "owner": "wire", "public_object": null,
-      "public_api": [], "driver": "nrfx-twis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "nrfx-twis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwisFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
     {
       "id": "twis21", "kind": "twis", "instance": 21, "sharing_group": "serial21", "dt_node": "i2c21",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "wire", "public_object": null,
-      "public_api": [], "driver": "nrfx-twis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "nrfx-twis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwisFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
     {
       "id": "twis22", "kind": "twis", "instance": 22, "sharing_group": "serial22", "dt_node": "i2c22",
       "route": { "state": "candidate", "token": "header-p1-wire-route" }, "owner": "wire", "public_object": null,
-      "public_api": [], "driver": "nrfx-twis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "nrfx-twis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwisFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
     {
       "id": "twis30", "kind": "twis", "instance": 30, "sharing_group": "serial30", "dt_node": "i2c30",
       "route": { "state": "candidate", "token": "header-p0-dap-conflict" }, "owner": "wire", "public_object": null,
-      "public_api": [], "driver": "nrfx-twis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": []
+      "public_api": [], "driver": "nrfx-twis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwisFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
     },
 
     {
@@ -226,151 +226,151 @@
       "id": "egu10", "kind": "egu", "instance": 10, "sharing_group": null, "dt_node": "egu10",
       "route": { "state": "not_required", "token": "internal-event" }, "owner": "application", "public_object": null,
       "public_api": [], "driver": "nrfx-egu", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "egu20", "kind": "egu", "instance": 20, "sharing_group": null, "dt_node": "egu20",
       "route": { "state": "not_required", "token": "internal-event" }, "owner": "application", "public_object": null,
       "public_api": [], "driver": "nrfx-egu", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
 
     {
       "id": "dppic00", "kind": "dppic", "instance": 0, "sharing_group": null, "dt_node": "dppic00",
       "route": { "state": "not_required", "token": "domain-00" }, "owner": "dppi", "public_object": null,
       "public_api": [], "driver": "nrfx-dppi", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "dppic10", "kind": "dppic", "instance": 10, "sharing_group": null, "dt_node": "dppic10",
       "route": { "state": "not_required", "token": "domain-10" }, "owner": "dppi", "public_object": null,
       "public_api": [], "driver": "nrfx-dppi", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "dppic20", "kind": "dppic", "instance": 20, "sharing_group": null, "dt_node": "dppic20",
       "route": { "state": "not_required", "token": "domain-20" }, "owner": "dppi", "public_object": null,
       "public_api": [], "driver": "nrfx-dppi", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "dppic30", "kind": "dppic", "instance": 30, "sharing_group": null, "dt_node": "dppic30",
       "route": { "state": "not_required", "token": "domain-30" }, "owner": "dppi", "public_object": null,
       "public_api": [], "driver": "nrfx-dppi", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
 
     {
       "id": "ppib00", "kind": "ppib", "instance": 0, "sharing_group": null, "dt_node": "ppib00",
       "route": { "state": "not_required", "token": "domain-00-bridge" }, "owner": "dppi", "public_object": null,
       "public_api": [], "driver": "nrfx-ppib", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "ppib01", "kind": "ppib", "instance": 1, "sharing_group": null, "dt_node": "ppib01",
       "route": { "state": "not_required", "token": "domain-00-bridge" }, "owner": "dppi", "public_object": null,
       "public_api": [], "driver": "nrfx-ppib", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "ppib10", "kind": "ppib", "instance": 10, "sharing_group": null, "dt_node": "ppib10",
       "route": { "state": "not_required", "token": "domain-10-bridge" }, "owner": "dppi", "public_object": null,
       "public_api": [], "driver": "nrfx-ppib", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "ppib11", "kind": "ppib", "instance": 11, "sharing_group": null, "dt_node": "ppib11",
       "route": { "state": "not_required", "token": "domain-10-bridge" }, "owner": "dppi", "public_object": null,
       "public_api": [], "driver": "nrfx-ppib", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "ppib20", "kind": "ppib", "instance": 20, "sharing_group": null, "dt_node": "ppib20",
       "route": { "state": "not_required", "token": "domain-20-bridge" }, "owner": "dppi", "public_object": null,
       "public_api": [], "driver": "nrfx-ppib", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "ppib21", "kind": "ppib", "instance": 21, "sharing_group": null, "dt_node": "ppib21",
       "route": { "state": "not_required", "token": "domain-20-bridge" }, "owner": "dppi", "public_object": null,
       "public_api": [], "driver": "nrfx-ppib", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "ppib22", "kind": "ppib", "instance": 22, "sharing_group": null, "dt_node": "ppib22",
       "route": { "state": "not_required", "token": "domain-20-bridge" }, "owner": "dppi", "public_object": null,
       "public_api": [], "driver": "nrfx-ppib", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "ppib30", "kind": "ppib", "instance": 30, "sharing_group": null, "dt_node": "ppib30",
       "route": { "state": "not_required", "token": "domain-30-bridge" }, "owner": "dppi", "public_object": null,
       "public_api": [], "driver": "nrfx-ppib", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
 
     {
       "id": "timer00", "kind": "timer", "instance": 0, "sharing_group": null, "dt_node": "timer00",
       "route": { "state": "not_required", "token": "domain-00" }, "owner": "timer", "public_object": null,
       "public_api": [], "driver": "nrfx-timer", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "timer10", "kind": "timer", "instance": 10, "sharing_group": null, "dt_node": "timer10",
       "route": { "state": "not_required", "token": "domain-10" }, "owner": "timer", "public_object": null,
       "public_api": [], "driver": "nrfx-timer", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "timer20", "kind": "timer", "instance": 20, "sharing_group": null, "dt_node": "timer20",
       "route": { "state": "not_required", "token": "domain-20" }, "owner": "timer", "public_object": null,
       "public_api": [], "driver": "nrfx-timer", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "timer21", "kind": "timer", "instance": 21, "sharing_group": null, "dt_node": "timer21",
       "route": { "state": "not_required", "token": "domain-20" }, "owner": "timer", "public_object": null,
       "public_api": [], "driver": "nrfx-timer", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "timer22", "kind": "timer", "instance": 22, "sharing_group": null, "dt_node": "timer22",
       "route": { "state": "not_required", "token": "domain-20" }, "owner": "timer", "public_object": null,
       "public_api": [], "driver": "nrfx-timer", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "timer23", "kind": "timer", "instance": 23, "sharing_group": null, "dt_node": "timer23",
       "route": { "state": "not_required", "token": "domain-20" }, "owner": "timer", "public_object": null,
       "public_api": [], "driver": "nrfx-timer", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "timer24", "kind": "timer", "instance": 24, "sharing_group": null, "dt_node": "timer24",
       "route": { "state": "not_required", "token": "domain-20" }, "owner": "timer", "public_object": null,
       "public_api": [], "driver": "nrfx-timer", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/EventFabric.h", "cores/arduino/EventFabric.cpp", "tests/zephyr/m25_event_fabric_contract/src/main.cpp"]
     },
     {
       "id": "grtc", "kind": "grtc", "instance": 0, "sharing_group": null, "dt_node": "grtc",
@@ -383,66 +383,66 @@
     {
       "id": "saadc", "kind": "saadc", "instance": 0, "sharing_group": null, "dt_node": "adc",
       "route": { "state": "partial", "token": "ain0-ain7-policy-limited" }, "owner": "adc", "public_object": null,
-      "public_api": ["analogRead"], "driver": "zephyr-adc-nrfx-saadc", "dma": { "hardware": true, "driver_managed": true, "public_mode": "synchronous", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "partial", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "partial" },
-      "milestone": "M25", "evidence": ["cores/arduino/wiring_analog.cpp", "dts/nucode/nu54dk-arduino-runtime.dtsi", "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md"]
+      "public_api": ["analogRead"], "driver": "zephyr-adc-nrfx-saadc", "dma": { "hardware": true, "driver_managed": true, "public_mode": "continuous", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "partial", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/AnalogFabric.h", "cores/arduino/AnalogFabric.cpp", "tests/zephyr/m25_analog_fabric_contract/src/main.cpp", "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md"]
     },
     {
       "id": "pwm20", "kind": "pwm", "instance": 20, "sharing_group": null, "dt_node": "pwm20",
       "route": { "state": "verified", "token": "header-p1-runtime" }, "owner": "pwm", "public_object": null,
-      "public_api": ["analogWrite"], "driver": "zephyr-pwm-nrfx", "dma": { "hardware": true, "driver_managed": true, "public_mode": "synchronous", "max_count_bits": 15 },
-      "states": { "silicon": "pass", "source": "partial", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "partial" },
-      "milestone": "M25", "evidence": ["cores/arduino/internal/PwmRuntime.cpp", "variants/nu54dk/pwm_runtime_routes.cpp", "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md"]
+      "public_api": ["analogWrite"], "driver": "zephyr-pwm-nrfx", "dma": { "hardware": true, "driver_managed": true, "public_mode": "double_buffered", "max_count_bits": 15 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "partial", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/AnalogFabric.h", "cores/arduino/AnalogFabric.cpp", "tests/zephyr/m25_analog_fabric_contract/src/main.cpp", "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md"]
     },
     {
       "id": "pwm21", "kind": "pwm", "instance": 21, "sharing_group": null, "dt_node": "pwm21",
       "route": { "state": "verified", "token": "header-p1-runtime" }, "owner": "pwm", "public_object": null,
-      "public_api": ["tone", "noTone"], "driver": "zephyr-pwm-nrfx", "dma": { "hardware": true, "driver_managed": true, "public_mode": "synchronous", "max_count_bits": 15 },
-      "states": { "silicon": "pass", "source": "partial", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": ["cores/arduino/internal/PwmRuntime.cpp", "variants/nu54dk/pwm_runtime_routes.cpp", "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md"]
+      "public_api": ["tone", "noTone"], "driver": "zephyr-pwm-nrfx", "dma": { "hardware": true, "driver_managed": true, "public_mode": "double_buffered", "max_count_bits": 15 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/AnalogFabric.h", "cores/arduino/AnalogFabric.cpp", "tests/zephyr/m25_analog_fabric_contract/src/main.cpp", "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md"]
     },
     {
       "id": "pwm22", "kind": "pwm", "instance": 22, "sharing_group": null, "dt_node": "pwm22",
       "route": { "state": "verified", "token": "header-p1-runtime" }, "owner": "pwm", "public_object": null,
-      "public_api": ["Servo"], "driver": "zephyr-pwm-nrfx", "dma": { "hardware": true, "driver_managed": true, "public_mode": "synchronous", "max_count_bits": 15 },
-      "states": { "silicon": "pass", "source": "partial", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": ["cores/arduino/internal/PwmRuntime.cpp", "variants/nu54dk/pwm_runtime_routes.cpp", "libraries/Servo/src/Servo.cpp", "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md"]
+      "public_api": ["Servo"], "driver": "zephyr-pwm-nrfx", "dma": { "hardware": true, "driver_managed": true, "public_mode": "double_buffered", "max_count_bits": 15 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/AnalogFabric.h", "cores/arduino/AnalogFabric.cpp", "tests/zephyr/m25_analog_fabric_contract/src/main.cpp", "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md"]
     },
 
     {
       "id": "pdm20", "kind": "pdm", "instance": 20, "sharing_group": null, "dt_node": "pdm20",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "pdm", "public_object": null,
-      "public_api": [], "driver": "nrfx-pdm", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "public_api": [], "driver": "nrfx-pdm", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/StreamFabric.h", "cores/arduino/StreamFabric.cpp", "tests/zephyr/m25_stream_fabric_contract/src/main.cpp"]
     },
     {
       "id": "pdm21", "kind": "pdm", "instance": 21, "sharing_group": null, "dt_node": "pdm21",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "pdm", "public_object": null,
-      "public_api": [], "driver": "nrfx-pdm", "dma": { "hardware": true, "driver_managed": false, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "public_api": [], "driver": "nrfx-pdm", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/StreamFabric.h", "cores/arduino/StreamFabric.cpp", "tests/zephyr/m25_stream_fabric_contract/src/main.cpp"]
     },
     {
       "id": "i2s20", "kind": "i2s", "instance": 20, "sharing_group": null, "dt_node": "i2s20",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "i2s", "public_object": null,
-      "public_api": [], "driver": "zephyr-i2s-nrfx", "dma": { "hardware": true, "driver_managed": true, "public_mode": "none", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "public_api": [], "driver": "zephyr-i2s-nrfx", "dma": { "hardware": true, "driver_managed": true, "public_mode": "double_buffered", "max_count_bits": 16 },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/StreamFabric.h", "cores/arduino/StreamFabric.cpp", "tests/zephyr/m25_stream_fabric_contract/src/main.cpp"]
     },
     {
       "id": "qdec20", "kind": "qdec", "instance": 20, "sharing_group": null, "dt_node": "qdec20",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "qdec", "public_object": null,
       "public_api": [], "driver": "nrfx-qdec", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/StreamFabric.h", "cores/arduino/StreamFabric.cpp", "tests/zephyr/m25_stream_fabric_contract/src/main.cpp"]
     },
     {
       "id": "qdec21", "kind": "qdec", "instance": 21, "sharing_group": null, "dt_node": "qdec21",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "qdec", "public_object": null,
       "public_api": [], "driver": "nrfx-qdec", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/StreamFabric.h", "cores/arduino/StreamFabric.cpp", "tests/zephyr/m25_stream_fabric_contract/src/main.cpp"]
     },
 
     {
@@ -463,15 +463,15 @@
       "id": "temp", "kind": "temp", "instance": 0, "sharing_group": null, "dt_node": "temp",
       "route": { "state": "not_required", "token": "on-chip" }, "owner": "system", "public_object": null,
       "public_api": [], "driver": "zephyr-sensor-nrf-temp", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M26", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": ["cores/arduino/nucode/SystemFabric.h", "cores/arduino/SystemFabric.cpp", "tests/zephyr/m26_system_fabric_contract/src/main.cpp"]
     },
     {
       "id": "wdt30", "kind": "wdt", "instance": 30, "sharing_group": null, "dt_node": "wdt30",
       "route": { "state": "not_required", "token": "secure-domain" }, "owner": "system", "public_object": null,
       "public_api": [], "driver": "zephyr-watchdog-nrfx", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "absent", "exposure": "none", "build": "not_run", "semantic": "not_run", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M26", "evidence": []
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
+      "milestone": "M26", "evidence": ["cores/arduino/nucode/SystemFabric.h", "cores/arduino/SystemFabric.cpp", "tests/zephyr/m26_system_fabric_contract/src/main.cpp"]
     },
     {
       "id": "wdt31", "kind": "wdt", "instance": 31, "sharing_group": null, "dt_node": "wdt31",

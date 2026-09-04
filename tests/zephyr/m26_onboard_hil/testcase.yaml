@@ -1,0 +1,5 @@
+tests:
+  nucode.m26.onboard_hil:
+    tags: [nucode, arduino, m26, system, temp, watchdog, hil, onboard]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    build_only: true
