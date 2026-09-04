@@ -65,7 +65,14 @@ def run_host_gate() -> None:
     run_unittest(
         REPOSITORY / "tests" / "hil" / "nu54dk",
         "test_m24_uarte_onboard.py",
+    )
+    run_unittest(
+        REPOSITORY / "tests" / "hil" / "nu54dk",
         "test_m24_twim_onboard.py",
+    )
+    run_unittest(
+        REPOSITORY / "tests" / "hil" / "nu54dk",
+        "test_m25_onboard.py",
     )
 
 

@@ -37,6 +37,7 @@ using internal::IoResourceId;
 using internal::IoResourceKind;
 using internal::IoResourceLease;
 using internal::IoResourceResult;
+using internal::IoResourceToken;
 using internal::PinCapability;
 using internal::PinPolicy;
 using internal::PinRoute;
@@ -57,7 +58,7 @@ template <typename Event> struct EventQueue {
 struct DmaLeaseSlot {
   const void *address{nullptr};
   std::size_t bytes{0U};
-  IoResourceLease lease{};
+  IoResourceToken token{};
   bool active{false};
 };
 
@@ -184,10 +185,10 @@ reserveDma(DmaLeaseSlot (&slots)[Capacity], IoOwnerKind owner,
     return StreamFabricResult::resource_exhausted;
   const IoResourceId resource =
       internal::dmaMemoryIoResource(address, static_cast<std::uint32_t>(bytes));
-  slot->lease = {};
+  slot->token = {};
   const auto result =
-      internal::reserveIoResources({owner, instance}, &resource, 1U,
-                                   IoAcquirePolicy::exclusive, slot->lease);
+      internal::acquireIoResources({owner, instance}, &resource, 1U,
+                                   IoAcquirePolicy::exclusive, slot->token);
   if (result != IoResourceResult::success) {
     slot = nullptr;
     return mapResourceResult(result);
@@ -200,19 +201,19 @@ reserveDma(DmaLeaseSlot (&slots)[Capacity], IoOwnerKind owner,
 
 void rollbackDma(DmaLeaseSlot &slot) noexcept {
   if (slot.active)
-    (void)internal::rollbackIoResources(slot.lease);
+    (void)internal::releaseIoResources(slot.token);
   slot = {};
 }
 
 [[nodiscard]] IoResourceResult commitDma(DmaLeaseSlot &slot) noexcept {
-  return slot.active ? internal::commitIoResources(slot.lease)
-                     : IoResourceResult::success;
+  return slot.active ? IoResourceResult::success
+                     : IoResourceResult::wrong_phase;
 }
 
 [[nodiscard]] IoResourceResult releaseDma(DmaLeaseSlot &slot) noexcept {
   if (!slot.active)
     return IoResourceResult::success;
-  const auto result = internal::releaseIoResources(slot.lease);
+  const auto result = internal::releaseIoResources(slot.token);
   slot = {};
   return result;
 }
@@ -630,10 +631,7 @@ StreamFabricResult PdmFabric::start(std::int16_t *first_buffer,
     else
       (void)internal::releaseIoResources(context->base_lease);
     context->base_lease = {};
-    if (dma_slot->lease.phase == internal::IoLeasePhase::reserved)
-      rollbackDma(*dma_slot);
-    else
-      (void)releaseDma(*dma_slot);
+    (void)releaseDma(*dma_slot);
     context->state = StreamFabricState::faulted;
     record(*context, StreamFabricResult::release_failed);
     k_mutex_unlock(&stream_fabric_mutex);
@@ -952,18 +950,10 @@ StreamFabricResult I2sFabric::start(const I2sBuffers &buffers) noexcept {
     else
       (void)internal::releaseIoResources(i2s_context.base_lease);
     i2s_context.base_lease = {};
-    if (rx_slot != nullptr) {
-      if (rx_slot->lease.phase == internal::IoLeasePhase::reserved)
-        rollbackDma(*rx_slot);
-      else
-        (void)releaseDma(*rx_slot);
-    }
-    if (tx_slot != nullptr) {
-      if (tx_slot->lease.phase == internal::IoLeasePhase::reserved)
-        rollbackDma(*tx_slot);
-      else
-        (void)releaseDma(*tx_slot);
-    }
+    if (rx_slot != nullptr)
+      (void)releaseDma(*rx_slot);
+    if (tx_slot != nullptr)
+      (void)releaseDma(*tx_slot);
     i2s_context.state = StreamFabricState::faulted;
     record(i2s_context, StreamFabricResult::release_failed);
     k_mutex_unlock(&stream_fabric_mutex);

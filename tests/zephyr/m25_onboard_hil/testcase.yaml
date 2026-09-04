@@ -1,0 +1,5 @@
+tests:
+  nucode.m25.onboard_hil:
+    tags: [nucode, arduino, m25, analog, event, hil, onboard]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    build_only: true

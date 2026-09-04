@@ -1,0 +1,20 @@
+/** @brief DAP VCOM UARTE와 M25 직접 peripheral IRQ를 단독 소유합니다. */
+#include <nucode/nu54dk-arduino-pins.dtsi>
+
+/ {
+    chosen {
+        /delete-property/ zephyr,console;
+        /delete-property/ zephyr,shell-uart;
+        /delete-property/ zephyr,uart-mcumgr;
+        /delete-property/ zephyr,bt-mon-uart;
+        /delete-property/ zephyr,bt-c2h-uart;
+    };
+};
+
+&uart20 {
+    status = "disabled";
+};
+
+&uart30 {
+    status = "disabled";
+};
