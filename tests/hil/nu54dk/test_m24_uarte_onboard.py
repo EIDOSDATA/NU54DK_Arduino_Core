@@ -49,6 +49,9 @@ class M24UarteOnboardTests(unittest.TestCase):
                 "pyocd.exe",
                 "load",
                 "--no-config",
+                "--no-reset",
+                "-O",
+                "resume_on_disconnect=false",
                 "-O",
                 "auto_unlock=false",
                 "--erase",
@@ -89,7 +92,44 @@ class M24UarteOnboardTests(unittest.TestCase):
                 self.assertEqual(arguments[arguments.index("--erase") + 1], "sector")
                 self.assertIn("auto_unlock=false", arguments)
                 self.assertIn("--no-config", arguments)
+                self.assertIn("--no-reset", arguments)
+                self.assertIn("resume_on_disconnect=false", arguments)
                 self.assertNotIn("chip", arguments)
+
+    def test_controlled_start_orders_halt_drain_and_resume(self) -> None:
+        import onboard_start
+        events = []
+        target = SimpleNamespace(
+            reset_and_halt=lambda: events.append("halt"),
+            get_state=lambda: SimpleNamespace(name="HALTED"),
+            read32=lambda address: 0x411FD210,
+            resume=lambda: events.append("resume"),
+        )
+
+        class Session:
+            def __enter__(self):
+                self.target = target
+                return self
+
+            def __exit__(self, *args):
+                events.append("close")
+
+        ports = {name: SimpleNamespace(
+            reset_input_buffer=lambda: events.append("drain-in"),
+            reset_output_buffer=lambda: events.append("drain-out"),
+        ) for name in ("COM5", "COM6")}
+        with patch.object(onboard_start.time, "sleep"):
+            factory = unittest.mock.Mock(return_value=Session())
+            result = onboard_start.reset_halted_start(ports, "probe", session_factory=factory)
+        self.assertEqual(events, ["halt", "drain-in", "drain-out", "drain-in", "drain-out", "resume", "close"])
+        self.assertEqual(result["method"], "reset-halt-drain-resume")
+        self.assertFalse(factory.call_args.kwargs["options"]["auto_unlock"])
+        self.assertFalse(factory.call_args.kwargs["options"]["resume_on_disconnect"])
+        events.clear()
+        target.get_state = lambda: SimpleNamespace(name="RUNNING")
+        with self.assertRaises(RuntimeError):
+            onboard_start.reset_halted_start(ports, "probe", session_factory=lambda **kw: Session())
+        self.assertEqual(events, ["halt", "close"])
 
     def test_single_result_collectors_reject_late_extra_bytes(self) -> None:
         class Chunks:

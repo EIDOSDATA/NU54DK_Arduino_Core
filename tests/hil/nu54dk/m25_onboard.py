@@ -222,6 +222,9 @@ def flash_image(
         str(pyocd),
         "load",
         "--no-config",
+        "--no-reset",
+        "-O",
+        "resume_on_disconnect=false",
         "-O",
         "auto_unlock=false",
         "--erase",
@@ -312,6 +315,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
             stream.reset_input_buffer()
             stream.reset_output_buffer()
         flash = flash_image(args.pyocd, args.probe_id, image["path"], args.flash_timeout)
+        from onboard_start import reset_halted_start
+        flash["controlled_start"] = reset_halted_start(streams, args.probe_id)
         ready_port, ready_transcripts = collect_frame(
             streams, ready_frame(), args.settle_seconds + args.response_timeout
         )

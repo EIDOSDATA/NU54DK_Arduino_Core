@@ -413,6 +413,9 @@ foreach ($Runner in $Runners) {
 
 각 runner는 flash 전후 source·board·HEX identity와 exact UID를 검사하고 mass erase/recover를
 사용하지 않습니다. 실패하면 해당 시점에서 멈추며, 응답 없는 보드에서 PASS를 생성하지 않습니다.
+Flash 종료 시에는 자동 reset/resume을 금지하고, 같은 probe를 다시 연결해 CPU reset·halt를 확인한
+뒤 VCOM 두 포트의 초기 buffer를 비우고 명시적으로 resume합니다. 따라서 초기 reset transient는
+앱이 READY를 보내기 전에만 제거됩니다. 시작 이후의 READY·측정 결과는 잡음을 허용하지 않습니다.
 이 묶음의 PASS를 외부 SPI/TWIS·analog 정확도·audio·encoder·동시성·전력 검증으로 확대하지 않습니다.
 
 TWIM과 M25 firmware는 유효 command 하나당 측정 결과 하나만 보내고 대기합니다. 결과에 다음
