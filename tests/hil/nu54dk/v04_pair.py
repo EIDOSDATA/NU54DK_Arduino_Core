@@ -192,6 +192,11 @@ def main() -> int:
                     target.reset_and_halt()
                     if target.get_state().name != "HALTED" or target.read32(0xE000ED00) != 0x411FD210:
                         raise ProtocolError("controlled start CPU identity failed")
+                    # SRAM survives some reset types. Never accept a prior boot's
+                    # ready marker while the new image is still initializing.
+                    for address in image["symbols"].values():
+                        target.write32(address, 0)
+                    target.flush()
                     target.resume()
                     deadline = time.monotonic() + 5
                     while target.read32(image["symbols"]["v04_identity"]) != MAGIC:

@@ -10,3 +10,12 @@
 };
 &uart20 { status = "disabled"; };
 &uart30 { status = "disabled"; };
+
+/* nrfx SPIS needs a compatible node, but no Zephyr driver may claim its IRQ. */
+&spi22 {
+    compatible = "nordic,nrf-spis";
+    /delete-property/ rx-delay-supported;
+    /delete-property/ rx-delay;
+    def-char = <0xff>;
+    status = "disabled";
+};
