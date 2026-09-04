@@ -544,6 +544,9 @@ namespace nucode::arduino
             return SerialFabricResult::wrong_state;
         }
         const bool second_valid = second_buffer != nullptr && second_size != 0U;
+        if (context->configuration.continuous_receive &&
+            (!second_valid || first_size < 32U || second_size < 32U))
+            return SerialFabricResult::invalid_argument;
         if ((first_size > UINT16_MAX) || (second_size > UINT16_MAX) ||
             !leasedBuffer(*context, first_buffer, first_size) ||
             ((second_buffer == nullptr) != (second_size == 0U)) ||
@@ -574,8 +577,9 @@ namespace nucode::arduino
             &context->driver, static_cast<std::uint8_t *>(first_buffer), first_size);
         if (result == 0)
         {
-            result = nrfx_uarte_rx_enable(&context->driver,
-                                          NRFX_UARTE_RX_ENABLE_STOP_ON_END);
+            const auto flags = NRFX_UARTE_RX_ENABLE_STOP_ON_END |
+                (context->configuration.continuous_receive ? NRFX_UARTE_RX_ENABLE_CONT : 0U);
+            result = nrfx_uarte_rx_enable(&context->driver, flags);
         }
         if (result != 0)
         {

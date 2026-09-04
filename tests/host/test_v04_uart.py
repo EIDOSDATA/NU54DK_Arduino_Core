@@ -25,6 +25,15 @@ class UartTests(unittest.TestCase):
         self.assertEqual(len(set(vectors)), 64)
         self.assertIn((1000000, 1, 1, 1024, 2), vectors)
 
+    def test_continuous_mode_is_explicit_and_bounded(self):
+        root = Path(__file__).resolve().parents[2]
+        source = (root / "cores/arduino/UarteFabric.cpp").read_text(encoding="utf-8")
+        header = (root / "cores/arduino/nucode/SerialFabric.h").read_text(encoding="utf-8")
+        self.assertIn("bool continuous_receive{false}", header)
+        self.assertIn("!second_valid || first_size < 32U || second_size < 32U", source)
+        self.assertIn("NRFX_UARTE_RX_ENABLE_CONT", source)
+        self.assertIn("NRF_UARTE_EVENT_RXSTARTED", source)
+
     def test_dma_state_fail_closed(self):
         uart.check_status([1, 1, 0, 1, 3, 0], 1)
         uart.check_status([2, 1, 0, 3, 3, 3], 2)

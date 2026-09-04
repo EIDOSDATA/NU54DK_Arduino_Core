@@ -50,7 +50,8 @@ std::uint32_t start(const std::uint32_t *args, std::uint32_t *out, std::uint32_t
         {receive[0].data,capacity},{receive[1].data,capacity},{transmit,sizeof(transmit)}};
     const SerialFabricConfiguration route{args[0] == 30 ? SerialRouteClass::p0_flexible : SerialRouteClass::p1_flexible,
         SerialElectricalProfile::dap_uart_bridge,pins,args[6] ? 4U : 2U,workspaces,3};
-    auto result = candidate->configure({args[1],args[5] ? UarteParity::even : UarteParity::none,args[6] != 0});
+    auto result = candidate->configure({args[1],args[5] ? UarteParity::even : UarteParity::none,
+                                       args[6] != 0,buffers == 2 && bytes >= 32});
     if (result == SerialFabricResult::success) result = candidate->stage(route);
     if (result == SerialFabricResult::success) result = candidate->activate();
     out[0] = static_cast<unsigned>(result); count = 1;

@@ -124,6 +124,10 @@ namespace nucode::arduino
         std::uint32_t baud_rate{115200U};
         UarteParity parity{UarteParity::none};
         bool hardware_flow_control{false};
+        /** Use ENDRX→STARTRX for two >=32-byte buffers. The application must
+         * keep IRQ latency below one buffer duration; this is not an unbounded
+         * receive queue. Short buffers use the default interrupt-linked mode. */
+        bool continuous_receive{false};
     };
 
     /** @brief 완료 queue에서 읽는 UARTE async event입니다. */

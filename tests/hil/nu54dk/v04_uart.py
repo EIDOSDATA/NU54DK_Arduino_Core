@@ -95,7 +95,12 @@ def exchange(device, streams, selected, instance, vector, append, suffix=""):
         raise ProtocolError("UART arm failed")
     if stream.write(outgoing) != len(outgoing):
         raise ProtocolError("partial Host UART write")
-    port = collect(streams, incoming)
+    try:
+        port = collect(streams, incoming)
+    except ProtocolError as error:
+        # A data-plane failure must retain the control-plane DMA state too.
+        status = device.command(11)
+        raise ProtocolError(f"{case_id}: {error}; DMA status={status}; seed={seed}") from error
     if port != selected:
         raise ProtocolError("UART VCOM identity changed after discovery")
     status = device.command(11)
@@ -103,7 +108,7 @@ def exchange(device, streams, selected, instance, vector, append, suffix=""):
     if device.command(12) != [0, 1]:
         raise ProtocolError("UART STOP/guard failed")
     append(case_id, {"seed": seed, "baud_rate": rate, "parity": parity, "hardware_flow_control": bool(flow),
-        "buffer_bytes": size, "buffers": buffers, "status_words": status,
+        "buffer_bytes": size, "buffers": buffers, "continuous_receive": buffers == 2 and size >= 32, "status_words": status,
         "tx_sha256": hashlib.sha256(outgoing).hexdigest(), "rx_sha256": hashlib.sha256(incoming).hexdigest()})
 
 
