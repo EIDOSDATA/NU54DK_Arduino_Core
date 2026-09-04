@@ -160,8 +160,8 @@ public:
 /** @brief ESP 계열 라이브러리가 사용하는 fs namespace 호환 별칭입니다. */
 namespace fs
 {
-	using ::FS;
 	using ::File;
+	using ::FS;
 }
 
 #endif

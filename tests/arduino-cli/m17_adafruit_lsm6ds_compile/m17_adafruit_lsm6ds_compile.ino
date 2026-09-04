@@ -4,9 +4,10 @@
 
 Adafruit_LSM6DS3TRC sensor;
 
-void setup() {
-  Wire.begin();
-  (void)sensor.begin_I2C();
+void setup()
+{
+    Wire.begin();
+    (void)sensor.begin_I2C();
 }
 
 void loop() {}

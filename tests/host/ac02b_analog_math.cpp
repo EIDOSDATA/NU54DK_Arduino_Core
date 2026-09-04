@@ -16,10 +16,10 @@ namespace
 	{
 		std::uint32_t period = 0U;
 		return nucode::arduino::internal::frequencyToPeriodNanoseconds(50U, period) &&
-			period == 20000000U &&
-			nucode::arduino::internal::frequencyToPeriodNanoseconds(1000U, period) &&
-			period == 1000000U &&
-			!nucode::arduino::internal::frequencyToPeriodNanoseconds(0U, period);
+			   period == 20000000U &&
+			   nucode::arduino::internal::frequencyToPeriodNanoseconds(1000U, period) &&
+			   period == 1000000U &&
+			   !nucode::arduino::internal::frequencyToPeriodNanoseconds(0U, period);
 	}
 }
 

@@ -98,7 +98,7 @@ namespace nucode::littlefs::internal
 		const std::size_t input_length = strlen(path);
 		const bool leading_slash = path[0] == '/';
 		const std::size_t required = sizeof(mount_point) - 1U +
-			(leading_slash ? 0U : 1U) + input_length + 1U;
+									 (leading_slash ? 0U : 1U) + input_length + 1U;
 		if (required > capacity || input_length > maximum_path_length)
 		{
 			recordError(FSError::invalid_argument, -ENAMETOOLONG);
@@ -133,7 +133,7 @@ namespace nucode::littlefs::internal
 		}
 
 		const int written = snprintf(destination, capacity, "%s%s%s", mount_point,
-								 leading_slash ? "" : "/", path);
+									 leading_slash ? "" : "/", path);
 		if (written < 0 || static_cast<std::size_t>(written) >= capacity)
 		{
 			recordError(FSError::invalid_argument, -ENAMETOOLONG);
@@ -181,9 +181,9 @@ namespace nucode::littlefs::internal
 	FileSlot *validSlot(std::uint8_t slot, std::uint32_t generation) noexcept
 	{
 		return slot < maximum_open_files && file_slots[slot].active &&
-			file_slots[slot].generation == generation
-				? &file_slots[slot]
-				: nullptr;
+					   file_slots[slot].generation == generation
+				   ? &file_slots[slot]
+				   : nullptr;
 	}
 
 	/** @brief 열린 파일이 하나라도 있는지 반환합니다. */
@@ -279,7 +279,7 @@ int File::available()
 		return 0;
 	}
 	const off_t current = fs_tell(&slot->file);
-	struct fs_dirent information {};
+	struct fs_dirent information{};
 	const int result = current < 0 ? static_cast<int>(current) : fs_stat(slot->path, &information);
 	if (result < 0)
 	{
@@ -288,7 +288,8 @@ int File::available()
 		return 0;
 	}
 	const std::size_t remaining = information.size > static_cast<std::size_t>(current)
-		? information.size - static_cast<std::size_t>(current) : 0U;
+									  ? information.size - static_cast<std::size_t>(current)
+									  : 0U;
 	recordError(FSError::none);
 	static_cast<void>(k_mutex_unlock(&filesystem_mutex));
 	return remaining > static_cast<std::size_t>(INT_MAX) ? INT_MAX : static_cast<int>(remaining);
@@ -407,7 +408,14 @@ bool File::seek(std::uint32_t position)
 	static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
 	FileSlot *slot = validSlot(slot_, generation_);
 	const int result = slot == nullptr ? -EBADF : fs_seek(&slot->file, position, FS_SEEK_SET);
-	if (result < 0) { recordDriverError(result); } else { recordError(FSError::none); }
+	if (result < 0)
+	{
+		recordDriverError(result);
+	}
+	else
+	{
+		recordError(FSError::none);
+	}
 	static_cast<void>(k_mutex_unlock(&filesystem_mutex));
 	return result == 0;
 }
@@ -421,7 +429,14 @@ std::size_t File::position() const
 	static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
 	FileSlot *slot = validSlot(slot_, generation_);
 	const off_t result = slot == nullptr ? static_cast<off_t>(-EBADF) : fs_tell(&slot->file);
-	if (result < 0) { recordDriverError(static_cast<int>(result)); } else { recordError(FSError::none); }
+	if (result < 0)
+	{
+		recordDriverError(static_cast<int>(result));
+	}
+	else
+	{
+		recordError(FSError::none);
+	}
 	static_cast<void>(k_mutex_unlock(&filesystem_mutex));
 	return result < 0 ? 0U : static_cast<std::size_t>(result);
 }
@@ -434,9 +449,16 @@ std::size_t File::size() const
 	}
 	static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
 	FileSlot *slot = validSlot(slot_, generation_);
-	struct fs_dirent information {};
+	struct fs_dirent information{};
 	const int result = slot == nullptr ? -EBADF : fs_stat(slot->path, &information);
-	if (result < 0) { recordDriverError(result); } else { recordError(FSError::none); }
+	if (result < 0)
+	{
+		recordDriverError(result);
+	}
+	else
+	{
+		recordError(FSError::none);
+	}
 	static_cast<void>(k_mutex_unlock(&filesystem_mutex));
 	return result < 0 ? 0U : information.size;
 }
@@ -450,7 +472,14 @@ void File::flush()
 	static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
 	FileSlot *slot = validSlot(slot_, generation_);
 	const int result = slot == nullptr ? -EBADF : fs_sync(&slot->file);
-	if (result < 0) { recordDriverError(result); } else { recordError(FSError::none); }
+	if (result < 0)
+	{
+		recordDriverError(result);
+	}
+	else
+	{
+		recordError(FSError::none);
+	}
 	static_cast<void>(k_mutex_unlock(&filesystem_mutex));
 }
 
@@ -475,7 +504,14 @@ void File::close()
 			slot->references = 0U;
 			slot->active = false;
 			slot->path[0] = '\0';
-			if (result < 0) { recordDriverError(result); } else { recordError(FSError::none); }
+			if (result < 0)
+			{
+				recordDriverError(result);
+			}
+			else
+			{
+				recordError(FSError::none);
+			}
 		}
 	}
 	slot_ = invalid_slot;
@@ -538,7 +574,10 @@ File FS::open(const char *path, const char *mode)
 		return {};
 	}
 	++slot.generation;
-	if (slot.generation == 0U) { ++slot.generation; }
+	if (slot.generation == 0U)
+	{
+		++slot.generation;
+	}
 	slot.active = true;
 	slot.references = 1U;
 	static_cast<void>(snprintf(slot.path, sizeof(slot.path), "%s", normalized));
@@ -550,73 +589,145 @@ File FS::open(const char *path, const char *mode)
 
 bool FS::exists(const char *path)
 {
-	if (!isThreadContext()) { return false; }
+	if (!isThreadContext())
+	{
+		return false;
+	}
 	char normalized[maximum_path_length + 1U]{};
-	if (!normalizePath(path, normalized, sizeof(normalized))) { return false; }
+	if (!normalizePath(path, normalized, sizeof(normalized)))
+	{
+		return false;
+	}
 	static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
-	struct fs_dirent information {};
+	struct fs_dirent information{};
 	const int result = filesystem_mounted ? fs_stat(normalized, &information) : -ENODEV;
-	if (result < 0) { result == -ENODEV ? recordError(FSError::not_mounted, result) : recordDriverError(result); }
-	else { recordError(FSError::none); }
+	if (result < 0)
+	{
+		result == -ENODEV ? recordError(FSError::not_mounted, result) : recordDriverError(result);
+	}
+	else
+	{
+		recordError(FSError::none);
+	}
 	static_cast<void>(k_mutex_unlock(&filesystem_mutex));
 	return result == 0;
 }
 
 bool FS::remove(const char *path)
 {
-	if (!isThreadContext()) { return false; }
+	if (!isThreadContext())
+	{
+		return false;
+	}
 	char normalized[maximum_path_length + 1U]{};
-	if (!normalizePath(path, normalized, sizeof(normalized))) { return false; }
+	if (!normalizePath(path, normalized, sizeof(normalized)))
+	{
+		return false;
+	}
 	static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
-	struct fs_dirent information {};
+	struct fs_dirent information{};
 	int result = filesystem_mounted ? fs_stat(normalized, &information) : -ENODEV;
-	if (result == 0 && information.type != FS_DIR_ENTRY_FILE) { result = -EISDIR; }
-	if (result == 0) { result = fs_unlink(normalized); }
-	if (result < 0) { result == -ENODEV ? recordError(FSError::not_mounted, result) : recordDriverError(result); }
-	else { recordError(FSError::none); }
+	if (result == 0 && information.type != FS_DIR_ENTRY_FILE)
+	{
+		result = -EISDIR;
+	}
+	if (result == 0)
+	{
+		result = fs_unlink(normalized);
+	}
+	if (result < 0)
+	{
+		result == -ENODEV ? recordError(FSError::not_mounted, result) : recordDriverError(result);
+	}
+	else
+	{
+		recordError(FSError::none);
+	}
 	static_cast<void>(k_mutex_unlock(&filesystem_mutex));
 	return result == 0;
 }
 
 bool FS::rename(const char *from, const char *to)
 {
-	if (!isThreadContext()) { return false; }
+	if (!isThreadContext())
+	{
+		return false;
+	}
 	char source[maximum_path_length + 1U]{};
 	char destination[maximum_path_length + 1U]{};
-	if (!normalizePath(from, source, sizeof(source)) || !normalizePath(to, destination, sizeof(destination))) { return false; }
+	if (!normalizePath(from, source, sizeof(source)) || !normalizePath(to, destination, sizeof(destination)))
+	{
+		return false;
+	}
 	static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
 	const int result = filesystem_mounted ? fs_rename(source, destination) : -ENODEV;
-	if (result < 0) { result == -ENODEV ? recordError(FSError::not_mounted, result) : recordDriverError(result); }
-	else { recordError(FSError::none); }
+	if (result < 0)
+	{
+		result == -ENODEV ? recordError(FSError::not_mounted, result) : recordDriverError(result);
+	}
+	else
+	{
+		recordError(FSError::none);
+	}
 	static_cast<void>(k_mutex_unlock(&filesystem_mutex));
 	return result == 0;
 }
 
 bool FS::mkdir(const char *path)
 {
-	if (!isThreadContext()) { return false; }
+	if (!isThreadContext())
+	{
+		return false;
+	}
 	char normalized[maximum_path_length + 1U]{};
-	if (!normalizePath(path, normalized, sizeof(normalized))) { return false; }
+	if (!normalizePath(path, normalized, sizeof(normalized)))
+	{
+		return false;
+	}
 	static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
 	const int result = filesystem_mounted ? fs_mkdir(normalized) : -ENODEV;
-	if (result < 0) { result == -ENODEV ? recordError(FSError::not_mounted, result) : recordDriverError(result); }
-	else { recordError(FSError::none); }
+	if (result < 0)
+	{
+		result == -ENODEV ? recordError(FSError::not_mounted, result) : recordDriverError(result);
+	}
+	else
+	{
+		recordError(FSError::none);
+	}
 	static_cast<void>(k_mutex_unlock(&filesystem_mutex));
 	return result == 0;
 }
 
 bool FS::rmdir(const char *path)
 {
-	if (!isThreadContext()) { return false; }
+	if (!isThreadContext())
+	{
+		return false;
+	}
 	char normalized[maximum_path_length + 1U]{};
-	if (!normalizePath(path, normalized, sizeof(normalized))) { return false; }
+	if (!normalizePath(path, normalized, sizeof(normalized)))
+	{
+		return false;
+	}
 	static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
-	struct fs_dirent information {};
+	struct fs_dirent information{};
 	int result = filesystem_mounted ? fs_stat(normalized, &information) : -ENODEV;
-	if (result == 0 && information.type != FS_DIR_ENTRY_DIR) { result = -ENOTDIR; }
-	if (result == 0) { result = fs_unlink(normalized); }
-	if (result < 0) { result == -ENODEV ? recordError(FSError::not_mounted, result) : recordDriverError(result); }
-	else { recordError(FSError::none); }
+	if (result == 0 && information.type != FS_DIR_ENTRY_DIR)
+	{
+		result = -ENOTDIR;
+	}
+	if (result == 0)
+	{
+		result = fs_unlink(normalized);
+	}
+	if (result < 0)
+	{
+		result == -ENODEV ? recordError(FSError::not_mounted, result) : recordDriverError(result);
+	}
+	else
+	{
+		recordError(FSError::none);
+	}
 	static_cast<void>(k_mutex_unlock(&filesystem_mutex));
 	return result == 0;
 }

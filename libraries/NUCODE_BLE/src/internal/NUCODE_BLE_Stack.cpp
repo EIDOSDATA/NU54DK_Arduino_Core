@@ -26,8 +26,7 @@ namespace
     atomic_t stack_ready = ATOMIC_INIT(0);
     atomic_t settings_attempted = ATOMIC_INIT(0);
     atomic_t settings_result = ATOMIC_INIT(0);
-    atomic_t facade_owner = ATOMIC_INIT(
-        static_cast<atomic_val_t>(nucode::ble::internal::FacadeOwner::none));
+    atomic_t facade_owner = ATOMIC_INIT(static_cast<atomic_val_t>(nucode::ble::internal::FacadeOwner::none));
 
     /** @brief Bluetooth settings를 stack enable 뒤 정확히 한 번 불러옵니다. */
     int loadSettingsOnce() noexcept
@@ -129,25 +128,23 @@ namespace nucode::ble::internal
     }
 
     /** @brief M20이 링크되기 전에는 generic GATT connection 관찰을 생략합니다. */
-__weak void gattConnected(struct bt_conn *connection,
-                          std::uint32_t generation) noexcept
-{
-    ARG_UNUSED(connection);
-    ARG_UNUSED(generation);
-}
+    __weak void gattConnected(struct bt_conn *connection, std::uint32_t generation) noexcept
+    {
+        ARG_UNUSED(connection);
+        ARG_UNUSED(generation);
+    }
 
     /** @brief M20이 링크되기 전에는 generic GATT disconnect 관찰을 생략합니다. */
-__weak void gattDisconnected(struct bt_conn *connection,
-                             std::uint32_t generation) noexcept
-{
-    ARG_UNUSED(connection);
-    ARG_UNUSED(generation);
-}
+    __weak void gattDisconnected(struct bt_conn *connection, std::uint32_t generation) noexcept
+    {
+        ARG_UNUSED(connection);
+        ARG_UNUSED(generation);
+    }
 
-/** @brief M20이 링크되기 전에는 GATT 종료 정리가 없습니다. */
-__weak void gattEnded() noexcept
-{
-}
+    /** @brief M20이 링크되기 전에는 GATT 종료 정리가 없습니다. */
+    __weak void gattEnded() noexcept
+    {
+    }
 
     /** @brief M20이 링크되지 않은 M19-only image는 custom schema를 거부합니다. */
     __weak bool addGattService(BLEService &service) noexcept
@@ -169,8 +166,7 @@ __weak void gattEnded() noexcept
     }
 
     /** @brief M21이 링크되기 전에는 security level 변경 관찰을 비활성화합니다. */
-    __weak void securityChanged(struct bt_conn *connection, bt_security_t level,
-                                enum bt_security_err error) noexcept
+    __weak void securityChanged(struct bt_conn *connection, bt_security_t level, enum bt_security_err error) noexcept
     {
         ARG_UNUSED(connection);
         ARG_UNUSED(level);

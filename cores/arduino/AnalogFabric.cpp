@@ -251,10 +251,12 @@ namespace nucode::arduino
 
         [[nodiscard]] bool supportedInput(SaadcInput input) noexcept
         {
-            if (externalInput(input)) return true;
+            if (externalInput(input))
+                return true;
             // The nrfx enum spans several SoCs. nRF54L15 maps only these
             // internal inputs; accepting VSS or VDD/2 deferred failure to start().
-            switch (input) {
+            switch (input)
+            {
             case SaadcInput::vdd:
             case SaadcInput::avdd:
                 return true;

@@ -10,5 +10,5 @@
 /** @brief 입력과 dependency 값을 더합니다. */
 int localAccumulate(int value)
 {
-  return value + leafValue();
+    return value + leafValue();
 }

@@ -44,18 +44,18 @@ namespace
     constexpr std::uint16_t default_advertising_interval_max = 0x00f0U;
 
     /** @brief callback에서 main thread로 전달하는 작은 GAP event record입니다. */
-struct GapEventRecord
+    struct GapEventRecord
     {
         BLEEvent event;
-    std::uint32_t generation;
-};
+        std::uint32_t generation;
+    };
 
-/** @brief scan payload와 callback 시작 session을 함께 보존합니다. */
-struct ScanResultRecord
-{
-    BLEScanResult result;
-    std::uint32_t generation;
-};
+    /** @brief scan payload와 callback 시작 session을 함께 보존합니다. */
+    struct ScanResultRecord
+    {
+        BLEScanResult result;
+        std::uint32_t generation;
+    };
 
     /** @brief legacy advertising의 caller 입력을 고정 buffer에 보존합니다. */
     struct AdvertisingConfiguration
@@ -91,7 +91,7 @@ struct ScanResultRecord
     K_MSGQ_DEFINE(gap_event_queue, sizeof(GapEventRecord),
                   CONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE,
                   alignof(GapEventRecord));
-K_MSGQ_DEFINE(scan_result_queue, sizeof(ScanResultRecord),
+    K_MSGQ_DEFINE(scan_result_queue, sizeof(ScanResultRecord),
                   CONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE,
                   alignof(BLEScanResult));
     K_MUTEX_DEFINE(gap_lifecycle_mutex);
@@ -394,12 +394,12 @@ K_MSGQ_DEFINE(scan_result_queue, sizeof(ScanResultRecord),
                       std::uint8_t advertising_type,
                       struct net_buf_simple *data) noexcept
     {
-    if (atomic_get(&scanning_active) == 0 || address == nullptr || data == nullptr)
+        if (atomic_get(&scanning_active) == 0 || address == nullptr || data == nullptr)
         {
-        return;
-    }
-    const std::uint32_t generation = static_cast<std::uint32_t>(
-        atomic_get(&device_session_generation));
+            return;
+        }
+        const std::uint32_t generation = static_cast<std::uint32_t>(
+            atomic_get(&device_session_generation));
 
         BLEScanResult result = {};
         result.address = fromZephyrAddress(*address);
@@ -423,24 +423,24 @@ K_MSGQ_DEFINE(scan_result_queue, sizeof(ScanResultRecord),
         {
             return;
         }
-    if (atomic_get(&scanning_active) == 0 ||
-        generation != static_cast<std::uint32_t>(
-                          atomic_get(&device_session_generation)))
-    {
-        return;
-    }
-    const ScanResultRecord record = {
-        .result = result,
-        .generation = generation,
-    };
-    if (k_msgq_put(&scan_result_queue, &record, K_NO_WAIT) != 0)
+        if (atomic_get(&scanning_active) == 0 ||
+            generation != static_cast<std::uint32_t>(
+                              atomic_get(&device_session_generation)))
+        {
+            return;
+        }
+        const ScanResultRecord record = {
+            .result = result,
+            .generation = generation,
+        };
+        if (k_msgq_put(&scan_result_queue, &record, K_NO_WAIT) != 0)
         {
             atomic_inc(&dropped_scan_value);
             nucode::ble::internal::recordError(BLEError::scan_result_overflow,
                                                -ENOBUFS, true);
             return;
         }
-    queueEvent(BLEEvent::scan_result, generation);
+        queueEvent(BLEEvent::scan_result, generation);
     }
 
     /** @brief MTU 교환 완료를 main-thread event로 변환합니다. */
@@ -512,9 +512,9 @@ K_MSGQ_DEFINE(scan_result_queue, sizeof(ScanResultRecord),
                 pending_connection_generation = 0U;
             }
         }
-    else if (error == 0U && atomic_get(&device_initialized) != 0 &&
-             atomic_get(&advertising_active) != 0 &&
-             active_connection == nullptr)
+        else if (error == 0U && atomic_get(&device_initialized) != 0 &&
+                 atomic_get(&advertising_active) != 0 &&
+                 active_connection == nullptr)
         {
             owns_connection = true;
             active_connection = bt_conn_ref(connection);
@@ -566,7 +566,7 @@ K_MSGQ_DEFINE(scan_result_queue, sizeof(ScanResultRecord),
                 connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
             return;
         }
-    nucode::ble::internal::gattConnected(connection, connection_generation);
+        nucode::ble::internal::gattConnected(connection, connection_generation);
         nucode::ble::internal::securityConnected(connection);
         queueEvent(BLEEvent::connected, connection_generation);
     }
@@ -591,7 +591,7 @@ K_MSGQ_DEFINE(scan_result_queue, sizeof(ScanResultRecord),
             return;
         }
 
-    nucode::ble::internal::gattDisconnected(connection, connection_generation);
+        nucode::ble::internal::gattDisconnected(connection, connection_generation);
         nucode::ble::internal::securityDisconnected(connection);
         bt_conn_unref(connection);
         atomic_set(&connection_active, 0);
@@ -1023,17 +1023,17 @@ namespace nucode::ble
         }
 
         BLEScanCallback result_callback = scan_callback;
-    if (result_callback != nullptr)
-    {
-        ScanResultRecord record = {};
-        while (k_msgq_get(&scan_result_queue, &record, K_NO_WAIT) == 0)
+        if (result_callback != nullptr)
         {
-            if (record.generation == static_cast<std::uint32_t>(
-                                         atomic_get(
-                                             &device_session_generation)))
+            ScanResultRecord record = {};
+            while (k_msgq_get(&scan_result_queue, &record, K_NO_WAIT) == 0)
             {
-                result_callback(record.result, scan_context);
-            }
+                if (record.generation == static_cast<std::uint32_t>(
+                                             atomic_get(
+                                                 &device_session_generation)))
+                {
+                    result_callback(record.result, scan_context);
+                }
             }
         }
         internal::pollGatt();
@@ -1089,15 +1089,15 @@ namespace nucode::ble
                 pending, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
             bt_conn_unref(pending);
         }
-    if (active != nullptr)
-    {
-        nucode::ble::internal::securityDisconnected(active);
+        if (active != nullptr)
+        {
+            nucode::ble::internal::securityDisconnected(active);
             static_cast<void>(bt_conn_disconnect(
                 active, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
-        bt_conn_unref(active);
-    }
-    nucode::ble::internal::gattEnded();
-    internal::releaseFacade(internal::FacadeOwner::generic);
+            bt_conn_unref(active);
+        }
+        nucode::ble::internal::gattEnded();
+        internal::releaseFacade(internal::FacadeOwner::generic);
         k_mutex_unlock(&gap_lifecycle_mutex);
     }
 
@@ -1673,20 +1673,20 @@ namespace nucode::ble
         return static_cast<int>(k_msgq_num_used_get(&scan_result_queue));
     }
 
-bool Scan::read(BLEScanResult &result) noexcept
-{
-    ScanResultRecord record = {};
-    while (k_msgq_get(&scan_result_queue, &record, K_NO_WAIT) == 0)
+    bool Scan::read(BLEScanResult &result) noexcept
     {
-        if (record.generation == static_cast<std::uint32_t>(
-                                     atomic_get(&device_session_generation)))
+        ScanResultRecord record = {};
+        while (k_msgq_get(&scan_result_queue, &record, K_NO_WAIT) == 0)
         {
-            result = record.result;
-            return true;
+            if (record.generation == static_cast<std::uint32_t>(
+                                         atomic_get(&device_session_generation)))
+            {
+                result = record.result;
+                return true;
+            }
         }
+        return false;
     }
-    return false;
-}
 
     void Scan::onResult(BLEScanCallback callback, void *context) noexcept
     {

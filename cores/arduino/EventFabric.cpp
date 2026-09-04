@@ -374,7 +374,7 @@ namespace nucode::arduino
             return EventFabricResult::unsupported_instance;
         }
         if (!internal::timerPrescalerFor(NRF_TIMER_BASE_FREQUENCY_GET(context->reg),
-                                        frequency_hz, NRF_TIMER_PRESCALER_MAX, prescaler))
+                                         frequency_hz, NRF_TIMER_PRESCALER_MAX, prescaler))
         {
             k_mutex_unlock(&event_fabric_mutex);
             return EventFabricResult::invalid_argument;

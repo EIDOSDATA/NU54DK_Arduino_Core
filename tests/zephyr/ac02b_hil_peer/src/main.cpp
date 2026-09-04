@@ -67,7 +67,7 @@ namespace
 
 	/** @brief DAPLink host RX byte를 보존하는 고정 queue입니다. */
 	K_MSGQ_DEFINE(console_rx_queue, sizeof(std::uint8_t), 256U,
-			  alignof(std::uint8_t));
+				  alignof(std::uint8_t));
 
 	/** @brief IRQ UART 한 채널의 queue와 overflow 상태입니다. */
 	struct UartRxContext
@@ -163,7 +163,7 @@ namespace
 
 	/** @brief interrupt queue에서 bounded UART 한 줄을 읽습니다. */
 	[[nodiscard]] bool readQueuedLine(UartRxContext &context, char *output,
-									 std::size_t capacity, std::int64_t timeout_ms)
+									  std::size_t capacity, std::int64_t timeout_ms)
 	{
 		if ((output == nullptr) || (capacity < 2U))
 		{
@@ -201,7 +201,7 @@ namespace
 	{
 		printk("NUCODE_AC02B_FAIL:role=peer:stage=%s:nonce=%s\n", stage,
 			   validNonce(active_nonce) ? active_nonce
-									: "00000000000000000000000000000000");
+										: "00000000000000000000000000000000");
 	}
 
 	/** @brief PWM capture 누적값을 초기화하고 P2.5를 high-Z 입력으로 전환합니다. */
@@ -351,8 +351,8 @@ namespace
 		}
 		char expected[line_capacity]{};
 		const int count = snprintf(expected, sizeof(expected),
-			"NUCODE_AC02B_RELAY:REQUEST:%s:nonce=%s",
-			relay_commands[relay_step], active_nonce);
+								   "NUCODE_AC02B_RELAY:REQUEST:%s:nonce=%s",
+								   relay_commands[relay_step], active_nonce);
 		if ((count <= 0) || (static_cast<std::size_t>(count) >= sizeof(expected)) ||
 			(strcmp(line, expected) != 0))
 		{

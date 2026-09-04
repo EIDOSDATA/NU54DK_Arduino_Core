@@ -190,7 +190,7 @@ namespace nucode::nu54dk
 
 		/** @brief 한 번 실행되는 GRTC alarm을 예약합니다. */
 		Error alarmAfterMicroseconds(std::uint64_t delay_us, AlarmCallback callback,
-									void *context = nullptr) noexcept;
+									 void *context = nullptr) noexcept;
 
 		/** @brief 대기 중인 GRTC alarm을 취소합니다. */
 		Error cancelAlarm() noexcept;

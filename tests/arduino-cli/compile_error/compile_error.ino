@@ -6,8 +6,8 @@
 /** @brief 의도적 compile 오류가 있는 setup입니다. */
 void setup()
 {
-  pinMode(LED_BUILTIN, OUTPUT);
-  nucode_intentional_compile_error = 54; // EXPECT_ERROR_LINE
+    pinMode(LED_BUILTIN, OUTPUT);
+    nucode_intentional_compile_error = 54; // EXPECT_ERROR_LINE
 }
 
 /** @brief 도달하지 않는 최소 loop입니다. */

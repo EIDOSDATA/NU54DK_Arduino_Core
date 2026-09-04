@@ -30,7 +30,7 @@ void setup()
 	std::uint32_t boot_count = 0U;
 	std::size_t actual_length = 0U;
 	const Error load_result = NU54DK.storageGet(boot_count_key, &boot_count,
-												 sizeof(boot_count), actual_length);
+												sizeof(boot_count), actual_length);
 	if ((load_result != Error::none) || (actual_length != sizeof(boot_count)))
 	{
 		boot_count = 0U;

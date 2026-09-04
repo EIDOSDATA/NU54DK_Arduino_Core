@@ -57,7 +57,7 @@ namespace
 	std::uint32_t stateGuard(const ScenarioState &state) noexcept
 	{
 		std::uint32_t guard = state.magic ^ state.schema ^
-			static_cast<std::uint32_t>(state.stage) ^ 0xa503c33cUL;
+							  static_cast<std::uint32_t>(state.stage) ^ 0xa503c33cUL;
 		for (std::size_t index = 0U; index < nonce_length; ++index)
 		{
 			guard = (guard << 5U) | (guard >> 27U);
@@ -71,22 +71,33 @@ namespace
 	{
 		switch (stage)
 		{
-		case Stage::idle: return "idle";
-		case Stage::verify_persistence: return "verify_persistence";
-		case Stage::verify_corruption: return "verify_corruption";
-		case Stage::verify_recovery: return "verify_recovery";
-		default: return "invalid";
+		case Stage::idle:
+			return "idle";
+		case Stage::verify_persistence:
+			return "verify_persistence";
+		case Stage::verify_corruption:
+			return "verify_corruption";
+		case Stage::verify_recovery:
+			return "verify_recovery";
+		default:
+			return "invalid";
 		}
 	}
 
 	/** @brief 고정 길이 소문자 16진 nonce인지 검사합니다. */
 	bool validNonce(const char *nonce) noexcept
 	{
-		if (nonce == nullptr || strlen(nonce) != nonce_length) { return false; }
+		if (nonce == nullptr || strlen(nonce) != nonce_length)
+		{
+			return false;
+		}
 		for (std::size_t index = 0U; index < nonce_length; ++index)
 		{
 			const unsigned char value = static_cast<unsigned char>(nonce[index]);
-			if (isdigit(value) == 0 && (value < 'a' || value > 'f')) { return false; }
+			if (isdigit(value) == 0 && (value < 'a' || value > 'f'))
+			{
+				return false;
+			}
 		}
 		return true;
 	}
@@ -96,9 +107,9 @@ namespace
 	{
 		const std::uint32_t stage = static_cast<std::uint32_t>(state.stage);
 		return state.magic == state_magic && state.schema == protocol_schema &&
-			stage >= static_cast<std::uint32_t>(Stage::verify_persistence) &&
-			stage <= static_cast<std::uint32_t>(Stage::verify_recovery) &&
-			validNonce(state.nonce) && state.guard == stateGuard(state);
+			   stage >= static_cast<std::uint32_t>(Stage::verify_persistence) &&
+			   stage <= static_cast<std::uint32_t>(Stage::verify_recovery) &&
+			   validNonce(state.nonce) && state.guard == stateGuard(state);
 	}
 
 	/** @brief UART FAIL token을 남기고 파괴 작업 없이 멈춥니다. */
@@ -109,7 +120,10 @@ namespace
 		Serial.print(":error=");
 		Serial.println(error);
 		Serial.flush();
-		for (;;) { k_sleep(K_SECONDS(1)); }
+		for (;;)
+		{
+			k_sleep(K_SECONDS(1));
+		}
 	}
 
 	/** @brief 상태를 Settings value 하나로 저장합니다. */
@@ -118,7 +132,10 @@ namespace
 		state.stage = next;
 		state.guard = stateGuard(state);
 		const int result = settings_save_one(state_key, &state, sizeof(state));
-		if (result != 0) { fail("STATE_SAVE", result); }
+		if (result != 0)
+		{
+			fail("STATE_SAVE", result);
+		}
 	}
 
 	/** @brief 저장된 상태를 읽고 손상 또는 부재를 idle로 처리합니다. */
@@ -157,10 +174,16 @@ namespace
 				continue;
 			}
 			const int value = Serial.read();
-			if (value < 0) { continue; }
+			if (value < 0)
+			{
+				continue;
+			}
 			if (value == '\r' || value == '\n')
 			{
-				if (length == 0U) { continue; }
+				if (length == 0U)
+				{
+					continue;
+				}
 				destination[length] = '\0';
 				return true;
 			}
@@ -179,8 +202,8 @@ namespace
 		File file = LittleFS.open(filesystem_path, FILE_READ);
 		std::uint32_t actual = 0U;
 		const std::size_t read = file
-			? file.readBytes(reinterpret_cast<std::uint8_t *>(&actual), sizeof(actual))
-			: 0U;
+									 ? file.readBytes(reinterpret_cast<std::uint8_t *>(&actual), sizeof(actual))
+									 : 0U;
 		file.close();
 		return read == sizeof(actual) && actual == expected;
 	}
@@ -190,8 +213,8 @@ namespace
 	{
 		File file = LittleFS.open(filesystem_path, FILE_WRITE);
 		const std::size_t written = file
-			? file.write(reinterpret_cast<const std::uint8_t *>(&value), sizeof(value))
-			: 0U;
+										? file.write(reinterpret_cast<const std::uint8_t *>(&value), sizeof(value))
+										: 0U;
 		file.close();
 		return written == sizeof(value);
 	}
@@ -203,7 +226,9 @@ namespace
 		Serial.flush();
 		k_sleep(K_MSEC(50));
 		sys_reboot(SYS_REBOOT_COLD);
-		for (;;) {}
+		for (;;)
+		{
+		}
 	}
 
 	/** @brief 명시적 CLEAR가 시험 data만 지우고 idle로 되돌립니다. */
@@ -222,7 +247,10 @@ namespace
 			static_cast<void>(LittleFS.end());
 		}
 		const int result = settings_delete(state_key);
-		if (result != 0 && result != -ENOENT) { fail("CLEAR_STATE", result); }
+		if (result != 0 && result != -ENOENT)
+		{
+			fail("CLEAR_STATE", result);
+		}
 		rebootAfterToken("NUCODE_AC03_CLEARED:PASS");
 	}
 
@@ -232,18 +260,39 @@ namespace
 		const flash_area *area = nullptr;
 		const int opened = flash_area_open(
 			DT_FIXED_PARTITION_ID(DT_NODELABEL(arduino_fs_partition)), &area);
-		if (opened != 0 || area == nullptr) { fail("FS_AREA_OPEN", opened); }
+		if (opened != 0 || area == nullptr)
+		{
+			fail("FS_AREA_OPEN", opened);
+		}
 		const int erased = flash_area_erase(area, 0U, area->fa_size);
 		flash_area_close(area);
-		if (erased != 0) { fail("FS_AREA_ERASE", erased); }
+		if (erased != 0)
+		{
+			fail("FS_AREA_ERASE", erased);
+		}
 
-		if (LittleFS.begin(false)) { fail("FS_IMPLICIT_FORMAT", 1); }
-		if (!LittleFS.format()) { fail("FS_EXPLICIT_FORMAT", LittleFS.lastDriverError()); }
-		if (!writeFilesystemValue(file_value)) { fail("FS_SEED", LittleFS.lastDriverError()); }
+		if (LittleFS.begin(false))
+		{
+			fail("FS_IMPLICIT_FORMAT", 1);
+		}
+		if (!LittleFS.format())
+		{
+			fail("FS_EXPLICIT_FORMAT", LittleFS.lastDriverError());
+		}
+		if (!writeFilesystemValue(file_value))
+		{
+			fail("FS_SEED", LittleFS.lastDriverError());
+		}
 
-		if (!EEPROM.reset(EEPROMClass::maximum_size)) { fail("EEPROM_RESET", EEPROM.lastDriverError()); }
+		if (!EEPROM.reset(EEPROMClass::maximum_size))
+		{
+			fail("EEPROM_RESET", EEPROM.lastDriverError());
+		}
 		EEPROM.put(16, seeded_value);
-		if (!EEPROM.commit()) { fail("EEPROM_SEED", EEPROM.lastDriverError()); }
+		if (!EEPROM.commit())
+		{
+			fail("EEPROM_SEED", EEPROM.lastDriverError());
+		}
 		saveState(state, Stage::verify_persistence);
 		rebootAfterToken("NUCODE_AC03_SEED:PASS:eeprom_commit=1:littlefs_no_format=1:littlefs_format=1");
 	}
@@ -252,9 +301,15 @@ namespace
 	[[noreturn]] void verifyPersistence(ScenarioState &state) noexcept
 	{
 		std::uint32_t value = 0U;
-		if (!EEPROM.begin(EEPROMClass::maximum_size)) { fail("EEPROM_REOPEN", EEPROM.lastDriverError()); }
+		if (!EEPROM.begin(EEPROMClass::maximum_size))
+		{
+			fail("EEPROM_REOPEN", EEPROM.lastDriverError());
+		}
 		EEPROM.get(16, value);
-		if (value != seeded_value) { fail("EEPROM_PERSISTENCE", static_cast<int>(value)); }
+		if (value != seeded_value)
+		{
+			fail("EEPROM_PERSISTENCE", static_cast<int>(value));
+		}
 		if (!LittleFS.begin(false) || !verifyFilesystemValue(file_value))
 		{
 			fail("FS_PERSISTENCE", LittleFS.lastDriverError());
@@ -262,7 +317,10 @@ namespace
 		Serial.println("NUCODE_AC03_RESET_PERSISTENCE:PASS:eeprom=1:littlefs=1");
 		const std::uint8_t malformed[] = {0x41U, 0x43U, 0x30U, 0x33U, 0xffU};
 		const int corrupted = settings_save_one(eeprom_key, malformed, sizeof(malformed));
-		if (corrupted != 0) { fail("EEPROM_CORRUPT_INJECT", corrupted); }
+		if (corrupted != 0)
+		{
+			fail("EEPROM_CORRUPT_INJECT", corrupted);
+		}
 		saveState(state, Stage::verify_corruption);
 		rebootAfterToken("NUCODE_AC03_CORRUPTION_INJECTED:PASS:length=5");
 	}
@@ -274,9 +332,15 @@ namespace
 		{
 			fail("EEPROM_CORRUPT_ACCEPTED", static_cast<int>(EEPROM.lastError()));
 		}
-		if (!EEPROM.reset(EEPROMClass::maximum_size)) { fail("EEPROM_RECOVER", EEPROM.lastDriverError()); }
+		if (!EEPROM.reset(EEPROMClass::maximum_size))
+		{
+			fail("EEPROM_RECOVER", EEPROM.lastDriverError());
+		}
 		EEPROM.put(16, recovered_value);
-		if (!EEPROM.commit()) { fail("EEPROM_RECOVER_COMMIT", EEPROM.lastDriverError()); }
+		if (!EEPROM.commit())
+		{
+			fail("EEPROM_RECOVER_COMMIT", EEPROM.lastDriverError());
+		}
 		if (!LittleFS.begin(false) || !verifyFilesystemValue(file_value))
 		{
 			fail("FS_AFTER_EEPROM_CORRUPTION", LittleFS.lastDriverError());
@@ -294,23 +358,44 @@ namespace
 	[[noreturn]] void verifyRecovery(ScenarioState &state) noexcept
 	{
 		std::uint32_t value = 0U;
-		if (!EEPROM.begin(EEPROMClass::maximum_size)) { fail("RECOVERY_REOPEN", EEPROM.lastDriverError()); }
+		if (!EEPROM.begin(EEPROMClass::maximum_size))
+		{
+			fail("RECOVERY_REOPEN", EEPROM.lastDriverError());
+		}
 		EEPROM.get(16, value);
-		if (value != recovered_value) { fail("RECOVERY_PERSISTENCE", static_cast<int>(value)); }
+		if (value != recovered_value)
+		{
+			fail("RECOVERY_PERSISTENCE", static_cast<int>(value));
+		}
 		if (!LittleFS.begin(false) || !verifyFilesystemValue(file_value))
 		{
 			fail("RECOVERY_FS_PERSISTENCE", LittleFS.lastDriverError());
 		}
-		if (!LittleFS.remove(filesystem_path)) { fail("CLEANUP_FILE", LittleFS.lastDriverError()); }
-		if (!LittleFS.end()) { fail("CLEANUP_UNMOUNT", LittleFS.lastDriverError()); }
-		if (!EEPROM.reset(EEPROMClass::maximum_size)) { fail("CLEANUP_EEPROM", EEPROM.lastDriverError()); }
+		if (!LittleFS.remove(filesystem_path))
+		{
+			fail("CLEANUP_FILE", LittleFS.lastDriverError());
+		}
+		if (!LittleFS.end())
+		{
+			fail("CLEANUP_UNMOUNT", LittleFS.lastDriverError());
+		}
+		if (!EEPROM.reset(EEPROMClass::maximum_size))
+		{
+			fail("CLEANUP_EEPROM", EEPROM.lastDriverError());
+		}
 		const int deleted = settings_delete(state_key);
-		if (deleted != 0) { fail("CLEANUP_STATE", deleted); }
+		if (deleted != 0)
+		{
+			fail("CLEANUP_STATE", deleted);
+		}
 		Serial.print("NUCODE_AC03_FINAL:PASS:nonce=");
 		Serial.print(state.nonce);
 		Serial.println(":reset_persistence=1:corruption_recovery=1:cleanup=1");
 		Serial.flush();
-		for (;;) { k_sleep(K_SECONDS(1)); }
+		for (;;)
+		{
+			k_sleep(K_SECONDS(1));
+		}
 	}
 }
 
@@ -318,7 +403,10 @@ void setup()
 {
 	Serial.begin(115200);
 	const int initialized = settings_subsys_init();
-	if (initialized != 0) { fail("SETTINGS_INIT", initialized); }
+	if (initialized != 0)
+	{
+		fail("SETTINGS_INIT", initialized);
+	}
 
 	ScenarioState state{};
 	const bool has_state = loadState(state);
@@ -328,14 +416,20 @@ void setup()
 	{
 		fail("COMMAND_READ", -EINVAL);
 	}
-	if (strcmp(command, "NUCODE_AC03_COMMAND:CLEAR") == 0) { clearScenario(); }
+	if (strcmp(command, "NUCODE_AC03_COMMAND:CLEAR") == 0)
+	{
+		clearScenario();
+	}
 
 	constexpr char start_prefix[] = "NUCODE_AC03_COMMAND:START:";
 	constexpr char continue_prefix[] = "NUCODE_AC03_COMMAND:CONTINUE:";
 	if (!has_state && strncmp(command, start_prefix, sizeof(start_prefix) - 1U) == 0)
 	{
 		const char *nonce = command + sizeof(start_prefix) - 1U;
-		if (!validNonce(nonce)) { fail("START_NONCE", -EINVAL); }
+		if (!validNonce(nonce))
+		{
+			fail("START_NONCE", -EINVAL);
+		}
 		memcpy(state.nonce, nonce, nonce_length + 1U);
 		seedScenario(state);
 	}
@@ -348,10 +442,14 @@ void setup()
 		}
 		switch (state.stage)
 		{
-		case Stage::verify_persistence: verifyPersistence(state);
-		case Stage::verify_corruption: verifyCorruption(state);
-		case Stage::verify_recovery: verifyRecovery(state);
-		default: break;
+		case Stage::verify_persistence:
+			verifyPersistence(state);
+		case Stage::verify_corruption:
+			verifyCorruption(state);
+		case Stage::verify_recovery:
+			verifyRecovery(state);
+		default:
+			break;
 		}
 	}
 	fail("COMMAND", -EINVAL);

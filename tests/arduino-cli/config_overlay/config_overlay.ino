@@ -6,11 +6,11 @@
 /** @brief 최소 Arduino GPIO 초기화를 수행합니다. */
 void setup()
 {
-  pinMode(LED_BUILTIN, OUTPUT);
+    pinMode(LED_BUILTIN, OUTPUT);
 }
 
 /** @brief Zephyr scheduler를 사용하는 최소 loop입니다. */
 void loop()
 {
-  delay(25);
+    delay(25);
 }

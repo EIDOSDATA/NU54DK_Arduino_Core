@@ -30,7 +30,6 @@ void loop()
 	if ((now - previous_feed_ms) >= feed_interval_ms)
 	{
 		previous_feed_ms = now;
-		Serial.println((NU54DK.watchdogFeed() == Error::none) ? "watchdog fed"
-													 : "watchdog feed failed");
+		Serial.println((NU54DK.watchdogFeed() == Error::none) ? "watchdog fed" : "watchdog feed failed");
 	}
 }

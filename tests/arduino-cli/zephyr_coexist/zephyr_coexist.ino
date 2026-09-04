@@ -44,7 +44,7 @@ void loop(void)
 	atomic_inc(&zephyrLoopCount);
 	k_sleep(K_MSEC(1));
 	digitalWrite(LED_BUILTIN,
-		     (atomic_get(&zephyrLoopCount) & 1) != 0 ? HIGH : LOW);
+				 (atomic_get(&zephyrLoopCount) & 1) != 0 ? HIGH : LOW);
 
 	if ((k_uptime_get() < zephyrStart) || (millis() < arduinoStart))
 	{
