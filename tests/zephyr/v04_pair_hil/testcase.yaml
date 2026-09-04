@@ -1,0 +1,13 @@
+tests:
+  nucode.v04.pair_dut:
+    platform_allow: nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    build_only: true
+    tags: [nucode, v04, hil]
+    extra_configs:
+      - CONFIG_NUCODE_V04_HIL_ROLE=1
+  nucode.v04.pair_peer:
+    platform_allow: nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    build_only: true
+    tags: [nucode, v04, hil]
+    extra_configs:
+      - CONFIG_NUCODE_V04_HIL_ROLE=2

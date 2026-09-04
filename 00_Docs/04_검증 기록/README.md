@@ -77,6 +77,9 @@
 
 ## 기록 해석 규칙
 
+진행 중인 T01~T09 준비·구현 대조는 [43번 준비 기록](43_v0.4.0_시험_준비와_구현_대조.md)을 따른다.
+준비 목록과 Host 검사 성공은 새 physical PASS가 아니다.
+
 1. 정확한 commit, checksum, 장치 UID, COM port와 수치는 해당 기록을 우선한다.
 2. 과거 record의 완료 판정을 현재 release의 전체 재시험으로 확대하지 않는다.
 3. `build-only`, `NOT RUN`, 수동 확인과 자동 HIL을 서로 같은 PASS로 합치지 않는다.
