@@ -111,3 +111,6 @@ M24/M25 전체 완료, 모든 instance의 물리 지원, 새 공개 API 또는 B
 기록은 [M27 자동 준비 기록](39_M27_v0.4.0_rc1_자동_준비와_HOLD.md)에 남기되 새 source의 최종
 release gate로 대체하지 않는다. 태그·Release·Boards Manager index는 변경하지 않았다.
 
+문서 반영 후 Markdown UTF-8·local-link 137개, CI contract unit 45개, 온보드 runner unit 25개,
+clean checkout의 M27 unit 6개를 통과했다. Readiness ledger는 16개 필수 gate 중 8개가 남아 있으며,
+이번 변경은 세 온보드 gate만 PASS로 올렸다. 외부 fixture와 frozen RC gate는 유지한다.
