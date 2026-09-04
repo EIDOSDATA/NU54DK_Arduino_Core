@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MIT
 #include "internal/timer_clock.h"
+#include "internal/dma_count.h"
 #include "protocol.h"
 #include <cassert>
 #include <iostream>
+#include <limits>
 #ifdef _WIN32
 #include <fcntl.h>
 #include <io.h>
@@ -12,6 +14,17 @@ int main() {
     _setmode(_fileno(stdin), _O_BINARY);
 #endif
     using nucode::arduino::internal::timerPrescalerFor;
+    using nucode::arduino::internal::dmaCountFits;
+    for (auto units : {1U, 2U, 4U}) {
+        for (auto maximum : {0x3fffU, 0x7fffU, 0xffffU}) {
+            const auto boundary = maximum / units;
+            assert(dmaCountFits(boundary, maximum, units));
+            assert(!dmaCountFits(boundary + 1U, maximum, units));
+            assert(!dmaCountFits(0U, maximum, units));
+            assert(!dmaCountFits(std::numeric_limits<std::size_t>::max(), maximum, units));
+        }
+    }
+    assert(!dmaCountFits(1U, 0x7fffU, 0U));
     std::uint32_t p = 0;
     assert(timerPrescalerFor(128000000, 1000000, 9, p) && p == 7);
     assert(timerPrescalerFor(32000000, 1000000, 9, p) && p == 5);

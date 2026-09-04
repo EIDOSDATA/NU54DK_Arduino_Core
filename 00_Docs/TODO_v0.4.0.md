@@ -44,15 +44,15 @@ TODO의 체크만으로 그 원본들의 상태를 바꾸지 않는다. 이 문�
 | --- | --- |
 | 이번에 끝낸 일 | 75 identity·19 시험 family JSON/생성 문서·누락 검사, 구현 대조와 8개 준비 이슈, SWD pair protocol/runner와 onboard 후보 image 작성 |
 | 진행 중인 T 항목 | T01~T03 준비 기준선, T04 온보드 UART 공통 image 통합, T05/T09 무배선 PMIC·timer capture·내부 ADC 추가 시험; T04/T06/T07/T08 전체는 아직 미완료 |
-| 다음 구체적 행동 | `C:/nb/s04` 격리 checkout에서 T04/T09 UART discovery·vector·handover 검사를 통합하고 검사. PMIC 뒤 UARTE 초기화의 stale DMA READY alias 교정, DAP 전환/잔류 bytes 분리. 이후 T04~T08 전체 구현 계속 |
+| 다음 구체적 행동 | T02/T07: PWM·SAADC·I2S MAXCNT 단위/경계의 조기 거부와 native Host 검사. T04/T09: UART burst 실패를 보존하고 명시적 paced producer로 분리 진단. 이후 외부 SPI/TWI·합성 신호·결선 interlock 구현 계속 |
 | 다음 작업에 필요한 사용자 행동 | 두 보드 USB 연결 완료 통보 받음. 외부 점퍼는 T10의 확정 결선표 안내 전 연결하지 않음 |
 | 외부 결선 상태 | 두 보드 상호 결선은 T10에 수행하는 요청; 현재는 USB만 전제로 온보드 경로에 한정 |
 | 작업 checkout 분리 | 사용자가 원본 checkout을 수시 코드 정렬 중이라고 확인. 변경은 보존. 현재 구현·exact build는 `C:/nb/s04`, branch `codex/v04-prep-20260905`; 원본 정렬과 합칠 때 내용 충돌을 확인 |
 | 마지막 정식 온보드 source | `51c1986242b60ac99df643ee4291946aa83b9986` — 41번 기록의 제한된 범위 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; 새 실기 PASS·최종 공개 승인 없음 |
 | 알려진 문제 | 과거 COM 포트 이탈의 근본 원인 미확정; 아래 연결 진단 원칙 참조 |
-| 이 TODO 작성 작업의 실행 중 시험 | `01fc2d7` Host 전체·문서142·inventory·pair subset2/2 PASS. PMIC timeout 네 조건 진단 종료; 실행 중 프로세스 없음. T01~T09 전체 미완료 |
-| 로컬 임시 build·evidence | `C:/nb/08` = `01fc2d7`; task work/v04-prep의 pair-01fc2d7·mailbox-idle-01fc2d7. DUT는 해당 pair image에서 진단 HALTED, peer는 `34475a0` pair role2. 외부 결선 없음. 새 source와 혼합 금지 |
+| 이 TODO 작성 작업의 실행 중 시험 | `5e6ef07` pair subset2/2 build PASS. 두 보드 primitives 902개 판정 PASS: TWIM 3개×2속도×100회, TIMER 44 CC, VDD/AVDD 각 단발/32 samples×100회. UART burst는 64-byte 손실 FAIL. 현재 실행 프로세스 없음; T01~T09 전체 미완료 |
+| 로컬 임시 build·evidence | `C:/nb/14` = `5e6ef07`; task work/v04-prep/pair-primitives-5e6ef07.json. 두 보드 모두 해당 pair role1/2, primitives 완료·sleep/제어 대기. 외부 결선 없음. 다음 소스의 근거와 혼합 금지 |
 | CI 확인 | 재개 시 실제 HEAD에 해당하는 run을 다시 조회; 과거 CI 성공을 최신 commit 성공으로 표기하지 않음 |
 | 문서 작업 검증 | 문서 140개 UTF-8·내부 링크 PASS; T01~T25 순서·누락·중복 및 25개 선행조건·완료 기준 검사 PASS; M27 계약 16개/미해결 8개 유지 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
@@ -118,13 +118,13 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
   - 증거: 미등록. 기존 pair runner를 재사용하더라도 v0.4.0용 통합과 검사를 끝내야 한다.
 
 - [ ] **T04 — UART·SPI·I2C 시험 프로그램 준비**
-  - 상태·선행: 미착수 / T01~T03. 작성·빌드는 결선 불필요; 외부 경로 실행은 T08·T10 이후.
+  - 상태·선행: 부분 구현 / 온보드 UART 64-vector·cancel/handover runner 준비, 고속 burst 결함 분리 중. 외부 SPI/TWI/UART와 강제 flow/error는 남음. 외부 경로 실행은 T08·T10 이후.
   - 할 일: UARTE 5개, SPIM/SPIS 각 5개, TWIM/TWIS 각 4개의 승인 경로와 역할에 송수신·flow control·DMA·buffer 전환 시험을 연결한다.
   - 완료 기준: 각 대상의 DUT/peer image와 host 판정이 build/unit을 통과하고 시험표와 연결된다. PMIC는 승인된 읽기 전용 경계를 유지한다.
   - 증거: 미등록. 온보드 UART 4개·TWIM 3개의 기본 PASS는 41번에만 해당한다.
 
 - [ ] **T05 — ADC·PWM·타이머·이벤트 시험 프로그램 준비**
-  - 상태·선행: 미착수 / T01~T03. 작성·빌드는 결선 불필요.
+  - 상태·선행: 부분 구현 / 내부 VDD·AVDD/gain=1/4와 44개 timer capture 준비·실행. 외부 ADC/PWM/event 경로는 남음. 작성·빌드는 결선 불필요.
   - 할 일: 안전한 ADC 입력·scan/sample 순서·DMA, PWM 채널/sequence의 peer capture, timer/event/DPPI 소유권을 시험한다.
   - 완료 기준: 예상 값·count·기본 timing 허용 범위를 검사하는 image/runner와 Host 시험이 준비된다. 교정 전압·정밀 jitter 보증과 구분한다.
   - 증거: 미등록. 기존 내부 VDD/event PASS로 외부 ADC/PWM을 완료 처리하지 않는다.
@@ -148,7 +148,7 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
   - 증거: 미등록. Debug-control SW1과 사용자 버튼 SW1을 구별하며 하나의 고정 결선으로 전체를 시험한다고 가정하지 않는다.
 
 - [ ] **T09 — Host 검사·시험 펌웨어 빌드·무배선 추가 시험**
-  - 상태·선행: 기존 기본 근거 있음, 추가 시험 미착수 / 실행할 묶음의 T01~T08 준비·안전 확인.
+  - 상태·선행: 추가 무배선 시험 진행 중 / 두 보드 primitives 902개 판정 PASS와 UART burst FAIL을 별도 보존. 실행할 묶음의 T01~T08 준비·안전 확인.
   - 할 일: Host/계약/문서 검사와 필요한 target build·CI를 실행하고 온보드 UART·I2C·복구 등 가능한 추가 기능을 시험한다.
   - 완료 기준: 새 source의 image·runner·증거가 결합되고 무배선 가능 항목의 기대 결과가 통과한다. 외부 경로는 build-only로 명확히 남긴다.
   - 결선·증거: 외부 점퍼 불필요, 실기는 USB·지정 UID 필요. 추가 증거 미등록; 41번 기본 PASS를 재사용할 때 영향 분석을 남긴다.

@@ -8,6 +8,7 @@
 #include <nucode/AnalogFabric.h>
 
 #include "internal/IoResourceManager.h"
+#include "internal/dma_count.h"
 #include "internal/pin_description.h"
 
 #include <variant.h>
@@ -430,7 +431,8 @@ namespace nucode::arduino
         [[nodiscard]] bool validPwmValueCount(PwmSequenceLoad load,
                                               std::size_t count) noexcept
         {
-            if (count == 0U || count > UINT16_MAX)
+            // nRF54L15 PWM DMA MAXCNT is bytes, not uint16_t values.
+            if (!internal::dmaCountFits(count, PWM_DMA_SEQ_MAXCNT_MAXCNT_Msk, sizeof(std::uint16_t)))
                 return false;
             switch (load)
             {
@@ -618,10 +620,10 @@ namespace nucode::arduino
     {
         if (k_is_in_isr())
             return AnalogFabricResult::invalid_context;
-        if (first_buffer == nullptr || first_samples == 0U ||
-            first_samples > UINT16_MAX ||
+        if (first_buffer == nullptr ||
+            !internal::dmaCountFits(first_samples, SAADC_RESULT_MAXCNT_MAXCNT_Msk, 1U) ||
             (next_buffer == nullptr) != (next_samples == 0U) ||
-            next_samples > UINT16_MAX)
+            (next_samples != 0U && !internal::dmaCountFits(next_samples, SAADC_RESULT_MAXCNT_MAXCNT_Msk, 1U)))
             return AnalogFabricResult::invalid_argument;
 
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
@@ -778,7 +780,7 @@ namespace nucode::arduino
     {
         if (k_is_in_isr())
             return AnalogFabricResult::invalid_context;
-        if (buffer == nullptr || samples == 0U || samples > UINT16_MAX)
+        if (buffer == nullptr || !internal::dmaCountFits(samples, SAADC_RESULT_MAXCNT_MAXCNT_Msk, 1U))
             return AnalogFabricResult::invalid_argument;
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         auto &context = saadc_context;

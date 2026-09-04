@@ -81,7 +81,21 @@ def discover(device, streams, instance, append):
     return selected
 
 
-def exchange(device, streams, selected, instance, vector, append, suffix=""):
+def send_payload(stream, outgoing, rate, parity, producer):
+    if producer not in ("burst", "paced-64"):
+        raise ProtocolError("unknown UART producer profile")
+    chunk_size = len(outgoing) if producer == "burst" else 64
+    for offset in range(0, len(outgoing), chunk_size):
+        chunk = outgoing[offset:offset + chunk_size]
+        if stream.write(chunk) != len(chunk):
+            raise ProtocolError("partial Host UART write")
+        if producer == "paced-64" and offset + chunk_size < len(outgoing):
+            # Explicit diagnostic producer: one chunk's wire time + 2 ms.
+            # Passing this is NOT a sustained line-rate/burst guarantee.
+            time.sleep(len(chunk) * (11 if parity else 10) / rate + .002)
+
+
+def exchange(device, streams, selected, instance, vector, append, suffix="", producer="burst"):
     rate, parity, flow, size, buffers = vector
     stream = streams[selected]
     stream.apply_settings({"baudrate": rate, "parity": "E" if parity else "N", "rtscts": bool(flow)})
@@ -93,14 +107,13 @@ def exchange(device, streams, selected, instance, vector, append, suffix=""):
     outgoing, incoming = payload(seed, size * buffers), payload(seed ^ 0x5a, size * buffers)
     if device.command(10, (instance, rate, size, buffers, seed, parity, flow)) != [0]:
         raise ProtocolError("UART arm failed")
-    if stream.write(outgoing) != len(outgoing):
-        raise ProtocolError("partial Host UART write")
+    send_payload(stream, outgoing, rate, parity, producer)
     try:
         port = collect(streams, incoming)
     except ProtocolError as error:
         # A data-plane failure must retain the control-plane DMA state too.
         status = device.command(11)
-        raise ProtocolError(f"{case_id}: {error}; DMA status={status}; seed={seed}") from error
+        raise ProtocolError(f"{case_id}: {error}; DMA status={status}; seed={seed}; producer={producer}") from error
     if port != selected:
         raise ProtocolError("UART VCOM identity changed after discovery")
     status = device.command(11)
@@ -108,11 +121,12 @@ def exchange(device, streams, selected, instance, vector, append, suffix=""):
     if device.command(12) != [0, 1]:
         raise ProtocolError("UART STOP/guard failed")
     append(case_id, {"seed": seed, "baud_rate": rate, "parity": parity, "hardware_flow_control": bool(flow),
-        "buffer_bytes": size, "buffers": buffers, "continuous_receive": buffers == 2 and size >= 32, "status_words": status,
+        "buffer_bytes": size, "buffers": buffers, "producer": producer,
+        "continuous_receive": buffers == 2 and size >= 32, "status_words": status,
         "tx_sha256": hashlib.sha256(outgoing).hexdigest(), "rx_sha256": hashlib.sha256(incoming).hexdigest()})
 
 
-def run_uart_onboard(device, ports, rounds, append):
+def run_uart_onboard(device, ports, rounds, append, producer="burst"):
     import serial
     with ExitStack() as stack:
         streams = {port: stack.enter_context(serial.Serial(port, baudrate=115200, timeout=0,
@@ -120,7 +134,7 @@ def run_uart_onboard(device, ports, rounds, append):
         for instance in (20, 21, 22, 30):
             selected = discover(device, streams, instance, append)
             for vector in vectors():
-                exchange(device, streams, selected, instance, vector, append)
+                exchange(device, streams, selected, instance, vector, append, producer=producer)
             for index in range(rounds):
                 # Exact STOP releases both the block and initial RX DMA workspace.
                 quiet(streams, append, f"V04-UART-CANCEL/{instance}/{index}")
@@ -131,5 +145,5 @@ def run_uart_onboard(device, ports, rounds, append):
                     result = device.command(2, (instance, 1, 400000))
                     if result != [1, 0x41, 0, 0]:
                         raise ProtocolError("UART to read-only TWIM handover failed")
-                exchange(device, streams, selected, instance, (115200, 0, 0, 32, 2), append, f"/handover-{index}")
+                exchange(device, streams, selected, instance, (115200, 0, 0, 32, 2), append, f"/handover-{index}", producer)
             print(f"V04_UART_ONBOARD_INSTANCE_PASS={instance};ROLE={device.image['role']}", flush=True)

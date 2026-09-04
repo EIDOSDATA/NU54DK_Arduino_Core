@@ -8,6 +8,7 @@
 #include <nucode/StreamFabric.h>
 
 #include "internal/IoResourceManager.h"
+#include "internal/dma_count.h"
 #include "internal/pin_description.h"
 
 #include <variant.h>
@@ -948,7 +949,7 @@ namespace nucode::arduino
     {
         if (k_is_in_isr())
             return StreamFabricResult::invalid_context;
-        if (buffers.words == 0U || buffers.words > UINT16_MAX ||
+        if (!internal::dmaCountFits(buffers.words, I2S_RXTXD_MAXCNT_MAXCNT_Msk, 1U) ||
             (buffers.receive == nullptr && buffers.transmit == nullptr) ||
             (buffers.receive != nullptr && buffers.transmit != nullptr &&
              buffers.receive == buffers.transmit))
@@ -1085,7 +1086,7 @@ namespace nucode::arduino
     {
         if (k_is_in_isr())
             return StreamFabricResult::invalid_context;
-        if (buffers.words == 0U || buffers.words > UINT16_MAX ||
+        if (!internal::dmaCountFits(buffers.words, I2S_RXTXD_MAXCNT_MAXCNT_Msk, 1U) ||
             (buffers.receive == nullptr && buffers.transmit == nullptr) ||
             (buffers.receive != nullptr && buffers.transmit != nullptr &&
              buffers.receive == buffers.transmit))

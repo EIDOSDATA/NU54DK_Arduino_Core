@@ -25,6 +25,28 @@ class UartTests(unittest.TestCase):
         self.assertEqual(len(set(vectors)), 64)
         self.assertIn((1000000, 1, 1, 1024, 2), vectors)
 
+    def test_producer_pacing_is_explicit_and_partial_write_fails(self):
+        class Port:
+            def __init__(self, short=False): self.parts, self.short = [], short
+            def write(self, data):
+                self.parts.append(data)
+                return len(data) - int(self.short)
+        data = uart.payload(77, 130)
+        with patch.object(uart.time, "sleep") as sleep:
+            burst = Port()
+            uart.send_payload(burst, data, 1000000, 0, "burst")
+            self.assertEqual(burst.parts, [data])
+            sleep.assert_not_called()
+            paced = Port()
+            uart.send_payload(paced, data, 1000000, 0, "paced-64")
+            self.assertEqual([len(part) for part in paced.parts], [64, 64, 2])
+            self.assertEqual(b"".join(paced.parts), data)
+            self.assertEqual(sleep.call_count, 2)
+            self.assertAlmostEqual(sleep.call_args.args[0], .00264)
+            for mode in ("burst", "paced-64"):
+                with self.assertRaises(ProtocolError): uart.send_payload(Port(True), data, 1000000, 0, mode)
+            with self.assertRaises(ProtocolError): uart.send_payload(Port(), data, 1000000, 0, "auto-retry")
+
     def test_continuous_mode_is_explicit_and_bounded(self):
         root = Path(__file__).resolve().parents[2]
         source = (root / "cores/arduino/UarteFabric.cpp").read_text(encoding="utf-8")

@@ -151,6 +151,8 @@ def main() -> int:
     parser.add_argument("--evidence", type=Path, required=True)
     parser.add_argument("--rounds", type=int, default=100)
     parser.add_argument("--onboard-suite", choices=("primitives", "uart", "all"), default="all")
+    parser.add_argument("--uart-producer", choices=("burst", "paced-64"), default="burst",
+                        help="paced-64 is a qualified functional diagnostic, not unpaced throughput PASS")
     parser.add_argument("--execute-onboard", action="store_true", help="explicitly authorize flash of both exact role images")
     args = parser.parse_args()
     uids = validate_pair(args.dut, args.peer)
@@ -167,6 +169,7 @@ def main() -> int:
         raise ProtocolError("DUT/peer COM sets overlap")
     evidence = {"schema_version": 1, "type": "v04-pair-onboard", "status": "preflight", "core_revision": images[0]["core_revision"],
                 "board_revision": images[0]["board_revision"], "rounds": args.rounds, "onboard_suite": args.onboard_suite, "external_wiring_executed": False,
+                "uart_producer": args.uart_producer,
                 "plan_sha256": sha256_file(Path(__file__).with_name("v04_test_plan.json")),
                 "devices": [{"role": image["role"], "uid_sha256": hashlib.sha256(uid.encode()).hexdigest(), "ports": coms,
                              "hex_sha256": image["sha256"], "elf_sha256": image["elf_sha256"], "record_sha256": image["record_sha256"]}
@@ -219,7 +222,7 @@ def main() -> int:
                         run_onboard(device, args.rounds, append)
                     if args.onboard_suite in ("uart", "all"):
                         from v04_uart import run_uart_onboard
-                        run_uart_onboard(device, ports[image["role"]-1], args.rounds, append)
+                        run_uart_onboard(device, ports[image["role"]-1], args.rounds, append, args.uart_producer)
                     print(f"V04_PAIR_ONBOARD_ROLE_PASS={image['role']}", flush=True)
             evidence["status"] = "passed"
         except BaseException as error:
