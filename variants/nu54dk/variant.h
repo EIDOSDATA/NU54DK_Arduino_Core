@@ -15,8 +15,8 @@
 #include <api/Common.h>
 
 #if defined(__ZEPHYR__) && defined(CONFIG_NUCODE_ARDUINO_CONNECTOR_GPIO)
-#if DT_NODE_HAS_STATUS_OKAY(DT_ALIAS(nucode_gpio0)) && \
-	DT_NODE_HAS_STATUS_OKAY(DT_ALIAS(nucode_gpio1))
+#if DT_NODE_HAS_STATUS_OKAY(DT_ALIAS(nucode_gpio0)) &&                                             \
+    DT_NODE_HAS_STATUS_OKAY(DT_ALIAS(nucode_gpio1))
 #define NUCODE_NU54DK_HAS_CONNECTOR_GPIO 1
 #else
 #define NUCODE_NU54DK_HAS_CONNECTOR_GPIO 0
@@ -116,23 +116,22 @@ inline constexpr pin_size_t A7 = static_cast<pin_size_t>(PIN_AIN7);
 #else
 enum
 {
-	A0 = PIN_A0,
-	A1 = PIN_AIN0,
-	A2 = PIN_AIN1,
-	A3 = PIN_AIN2,
-	A4 = PIN_AIN3,
-	A5 = PIN_AIN4,
-	A6 = PIN_AIN6,
-	A7 = PIN_AIN7
+    A0 = PIN_A0,
+    A1 = PIN_AIN0,
+    A2 = PIN_AIN1,
+    A3 = PIN_AIN2,
+    A4 = PIN_AIN3,
+    A5 = PIN_AIN4,
+    A6 = PIN_AIN6,
+    A7 = PIN_AIN7
 };
 #endif
 
 #define NUM_PIN_ROLES 32U
 #define NUM_DIGITAL_PINS NUM_PIN_ROLES
 #define NUM_PHYSICAL_PINS 31U
-#define NUM_DIGITAL_CAPABLE_PINS                         \
-	(20U + (4U * NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS) + \
-	 (2U * NUCODE_NU54DK_HAS_LFXO_GPIO_PINS))
+#define NUM_DIGITAL_CAPABLE_PINS                                                                   \
+    (20U + (4U * NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS) + (2U * NUCODE_NU54DK_HAS_LFXO_GPIO_PINS))
 #define NUM_ANALOG_INPUTS 8U
 #define NUM_ANALOG_OUTPUTS 1U
 
@@ -149,103 +148,88 @@ enum
 /** @brief legacy logical ID를 canonical 물리 ID로 정규화합니다. */
 [[nodiscard]] constexpr pin_size_t canonicalDigitalPin(pin_size_t pin) noexcept
 {
-	return pin == static_cast<pin_size_t>(PIN_LED1)
-			   ? static_cast<pin_size_t>(PIN_PWM0)
-			   : pin;
+    return pin == static_cast<pin_size_t>(PIN_LED1) ? static_cast<pin_size_t>(PIN_PWM0) : pin;
 }
 
 /** @brief 논리 ID가 현재 profile에서 digital GPIO 기능을 제공하는지 확인합니다. */
 [[nodiscard]] constexpr bool digitalPinIsValid(pin_size_t pin) noexcept
 {
-	const pin_size_t canonical = canonicalDigitalPin(pin);
-	const bool always_available =
-		(canonical <= static_cast<pin_size_t>(PIN_GPIO1)) ||
-		((canonical >= static_cast<pin_size_t>(PIN_P1_02)) &&
-		 (canonical <= static_cast<pin_size_t>(PIN_P1_03))) ||
-		(canonical == static_cast<pin_size_t>(PIN_P1_11)) ||
-		((canonical >= static_cast<pin_size_t>(PIN_P2_00)) &&
-		 (canonical <= static_cast<pin_size_t>(PIN_P2_08)));
-	const bool dap_uart_available = NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS &&
-									(canonical >= static_cast<pin_size_t>(PIN_P0_00)) &&
-									(canonical <= static_cast<pin_size_t>(PIN_P0_03));
-	const bool lfxo_available = NUCODE_NU54DK_HAS_LFXO_GPIO_PINS &&
-								(canonical >= static_cast<pin_size_t>(PIN_P1_00)) &&
-								(canonical <= static_cast<pin_size_t>(PIN_P1_01));
-	return always_available || dap_uart_available || lfxo_available;
+    const pin_size_t canonical = canonicalDigitalPin(pin);
+    const bool always_available = (canonical <= static_cast<pin_size_t>(PIN_GPIO1)) ||
+                                  ((canonical >= static_cast<pin_size_t>(PIN_P1_02)) &&
+                                   (canonical <= static_cast<pin_size_t>(PIN_P1_03))) ||
+                                  (canonical == static_cast<pin_size_t>(PIN_P1_11)) ||
+                                  ((canonical >= static_cast<pin_size_t>(PIN_P2_00)) &&
+                                   (canonical <= static_cast<pin_size_t>(PIN_P2_08)));
+    const bool dap_uart_available = NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS &&
+                                    (canonical >= static_cast<pin_size_t>(PIN_P0_00)) &&
+                                    (canonical <= static_cast<pin_size_t>(PIN_P0_03));
+    const bool lfxo_available = NUCODE_NU54DK_HAS_LFXO_GPIO_PINS &&
+                                (canonical >= static_cast<pin_size_t>(PIN_P1_00)) &&
+                                (canonical <= static_cast<pin_size_t>(PIN_P1_01));
+    return always_available || dap_uart_available || lfxo_available;
 }
 
 /** @brief P0/P1 GPIOTE 가능 핀만 canonical interrupt 번호로 변환합니다. */
 [[nodiscard]] constexpr pin_size_t digitalPinToInterrupt(pin_size_t pin) noexcept
 {
-	const pin_size_t canonical = canonicalDigitalPin(pin);
-	const bool port0 =
-		(canonical == static_cast<pin_size_t>(PIN_P0_04)) ||
-		(NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS &&
-		 (canonical >= static_cast<pin_size_t>(PIN_P0_00)) &&
-		 (canonical <= static_cast<pin_size_t>(PIN_P0_03)));
-	const bool port1 =
-		(canonical == static_cast<pin_size_t>(PIN_P1_08)) ||
-		(canonical == static_cast<pin_size_t>(PIN_P1_09)) ||
-		(canonical == static_cast<pin_size_t>(PIN_P1_10)) ||
-		(canonical == static_cast<pin_size_t>(PIN_P1_12)) ||
-		(canonical == static_cast<pin_size_t>(PIN_P1_13)) ||
-		(canonical == static_cast<pin_size_t>(PIN_P1_14)) ||
-		((canonical >= static_cast<pin_size_t>(PIN_P1_02)) &&
-		 (canonical <= static_cast<pin_size_t>(PIN_P1_11))) ||
-		(NUCODE_NU54DK_HAS_LFXO_GPIO_PINS &&
-		 (canonical >= static_cast<pin_size_t>(PIN_P1_00)) &&
-		 (canonical <= static_cast<pin_size_t>(PIN_P1_01)));
-	return digitalPinIsValid(canonical) && (port0 || port1)
-			   ? canonical
-			   : static_cast<pin_size_t>(NOT_AN_INTERRUPT);
+    const pin_size_t canonical = canonicalDigitalPin(pin);
+    const bool port0 = (canonical == static_cast<pin_size_t>(PIN_P0_04)) ||
+                       (NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS &&
+                        (canonical >= static_cast<pin_size_t>(PIN_P0_00)) &&
+                        (canonical <= static_cast<pin_size_t>(PIN_P0_03)));
+    const bool port1 =
+        (canonical == static_cast<pin_size_t>(PIN_P1_08)) ||
+        (canonical == static_cast<pin_size_t>(PIN_P1_09)) ||
+        (canonical == static_cast<pin_size_t>(PIN_P1_10)) ||
+        (canonical == static_cast<pin_size_t>(PIN_P1_12)) ||
+        (canonical == static_cast<pin_size_t>(PIN_P1_13)) ||
+        (canonical == static_cast<pin_size_t>(PIN_P1_14)) ||
+        ((canonical >= static_cast<pin_size_t>(PIN_P1_02)) &&
+         (canonical <= static_cast<pin_size_t>(PIN_P1_11))) ||
+        (NUCODE_NU54DK_HAS_LFXO_GPIO_PINS && (canonical >= static_cast<pin_size_t>(PIN_P1_00)) &&
+         (canonical <= static_cast<pin_size_t>(PIN_P1_01)));
+    return digitalPinIsValid(canonical) && (port0 || port1)
+               ? canonical
+               : static_cast<pin_size_t>(NOT_AN_INTERRUPT);
 }
 
 #else
 
 static inline pin_size_t canonicalDigitalPin(pin_size_t pin)
 {
-	return pin == (pin_size_t)PIN_LED1 ? (pin_size_t)PIN_PWM0 : pin;
+    return pin == (pin_size_t)PIN_LED1 ? (pin_size_t)PIN_PWM0 : pin;
 }
 
 static inline int digitalPinIsValid(pin_size_t pin)
 {
-	const pin_size_t canonical = canonicalDigitalPin(pin);
-	return (canonical <= (pin_size_t)PIN_GPIO1) ||
-		   ((canonical >= (pin_size_t)PIN_P1_02) &&
-			(canonical <= (pin_size_t)PIN_P1_03)) ||
-		   (canonical == (pin_size_t)PIN_P1_11) ||
-		   ((canonical >= (pin_size_t)PIN_P2_00) &&
-			(canonical <= (pin_size_t)PIN_P2_08)) ||
-		   (NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS &&
-			(canonical >= (pin_size_t)PIN_P0_00) &&
-			(canonical <= (pin_size_t)PIN_P0_03)) ||
-		   (NUCODE_NU54DK_HAS_LFXO_GPIO_PINS &&
-			(canonical >= (pin_size_t)PIN_P1_00) &&
-			(canonical <= (pin_size_t)PIN_P1_01));
+    const pin_size_t canonical = canonicalDigitalPin(pin);
+    return (canonical <= (pin_size_t)PIN_GPIO1) ||
+           ((canonical >= (pin_size_t)PIN_P1_02) && (canonical <= (pin_size_t)PIN_P1_03)) ||
+           (canonical == (pin_size_t)PIN_P1_11) ||
+           ((canonical >= (pin_size_t)PIN_P2_00) && (canonical <= (pin_size_t)PIN_P2_08)) ||
+           (NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS && (canonical >= (pin_size_t)PIN_P0_00) &&
+            (canonical <= (pin_size_t)PIN_P0_03)) ||
+           (NUCODE_NU54DK_HAS_LFXO_GPIO_PINS && (canonical >= (pin_size_t)PIN_P1_00) &&
+            (canonical <= (pin_size_t)PIN_P1_01));
 }
 
 static inline pin_size_t digitalPinToInterrupt(pin_size_t pin)
 {
-	const pin_size_t canonical = canonicalDigitalPin(pin);
-	const int port0 = (canonical == (pin_size_t)PIN_P0_04) ||
-					  (NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS &&
-					   (canonical >= (pin_size_t)PIN_P0_00) &&
-					   (canonical <= (pin_size_t)PIN_P0_03));
-	const int port1 =
-		(canonical == (pin_size_t)PIN_P1_08) ||
-		(canonical == (pin_size_t)PIN_P1_09) ||
-		(canonical == (pin_size_t)PIN_P1_10) ||
-		(canonical == (pin_size_t)PIN_P1_12) ||
-		(canonical == (pin_size_t)PIN_P1_13) ||
-		(canonical == (pin_size_t)PIN_P1_14) ||
-		((canonical >= (pin_size_t)PIN_P1_02) &&
-		 (canonical <= (pin_size_t)PIN_P1_11)) ||
-		(NUCODE_NU54DK_HAS_LFXO_GPIO_PINS &&
-		 (canonical >= (pin_size_t)PIN_P1_00) &&
-		 (canonical <= (pin_size_t)PIN_P1_01));
-	return digitalPinIsValid(canonical) && (port0 || port1)
-			   ? canonical
-			   : (pin_size_t)NOT_AN_INTERRUPT;
+    const pin_size_t canonical = canonicalDigitalPin(pin);
+    const int port0 =
+        (canonical == (pin_size_t)PIN_P0_04) ||
+        (NUCODE_NU54DK_HAS_DAP_UART_GPIO_PINS && (canonical >= (pin_size_t)PIN_P0_00) &&
+         (canonical <= (pin_size_t)PIN_P0_03));
+    const int port1 =
+        (canonical == (pin_size_t)PIN_P1_08) || (canonical == (pin_size_t)PIN_P1_09) ||
+        (canonical == (pin_size_t)PIN_P1_10) || (canonical == (pin_size_t)PIN_P1_12) ||
+        (canonical == (pin_size_t)PIN_P1_13) || (canonical == (pin_size_t)PIN_P1_14) ||
+        ((canonical >= (pin_size_t)PIN_P1_02) && (canonical <= (pin_size_t)PIN_P1_11)) ||
+        (NUCODE_NU54DK_HAS_LFXO_GPIO_PINS && (canonical >= (pin_size_t)PIN_P1_00) &&
+         (canonical <= (pin_size_t)PIN_P1_01));
+    return digitalPinIsValid(canonical) && (port0 || port1) ? canonical
+                                                            : (pin_size_t)NOT_AN_INTERRUPT;
 }
 
 #endif

@@ -1,0 +1,217 @@
+"""두 NU54DK만 사용하는 analog/stream 합성 신호 시험 준비입니다."""
+from __future__ import annotations
+import hashlib
+import itertools
+import struct
+import time
+
+import v04_fixture as fixture
+from v04_protocol import ProtocolError
+
+
+def vectors(family):
+    """기능 sweep와 buffer 경계를 한 번씩 바꾸는 실행 vector를 생성합니다."""
+    if family == "analog":
+        yield from itertools.product((20, 21, 22), (32, 256), (1021,), (512,),
+                                     range(4), (1, 2))
+        return
+    if family == "qdec":
+        yield from itertools.product((20, 21, 22), (20, 21), (1, 100),
+                                     (2000,), range(2), range(2))
+        return
+    if family == "i2s":
+        yield from itertools.product((16000, 48000), (8, 16, 24, 32), range(3),
+                                     (32, 256), (1, 2), (0x13579BDF,))
+        return
+    if family == "pdm":
+        yield from itertools.product((20, 21), (256, 1024), (25, 50, 75),
+                                     range(2), range(2), (1, 2))
+        return
+    raise ProtocolError("unknown signal family")
+
+
+def arguments_for(family, vector):
+    """8-word firmware 인자로 확장하며 남은 word는 반드시 0으로 고정합니다."""
+    values = list(vector)
+    if len(values) > 8:
+        raise ProtocolError("signal vector exceeds mailbox")
+    return tuple(values + [0] * (8 - len(values)))
+
+
+def wait_status(device, predicate, timeout=5.0):
+    deadline = time.monotonic() + timeout
+    words = []
+    while time.monotonic() < deadline:
+        words = device.command(36)
+        if len(words) != 8 or words[4]:
+            raise ProtocolError(f"signal firmware error role={device.image['role']}: {words}")
+        if predicate(words):
+            return words
+        time.sleep(.005)
+    raise ProtocolError(f"signal timeout role={device.image['role']}: {words}")
+
+
+def read_u16(device, samples):
+    output = []
+    for offset in range(0, samples, 16):
+        count = min(16, samples - offset)
+        words = device.command(37, (offset, count))
+        raw = struct.pack(f"<{len(words)}I", *words)
+        output.extend(struct.unpack(f"<{count}h", raw[:count * 2]))
+    return output
+
+
+def read_u32(device, words):
+    output = []
+    for offset in range(0, words, 16):
+        count = min(16, words - offset)
+        output.extend(device.command(37, (offset, count)))
+    return output
+
+
+def pattern(seed, index):
+    return ((seed + 0x9E3779B9 * (index + 1)) & 0xFFFFFFFF) ^ \
+           (((index << 16) | (index >> 16)) & 0xFFFFFFFF)
+
+
+def i2s_expected(seed, words, width, channels):
+    """NRF I2S memory word에서 활성 sample bit만 비교할 mask를 함께 반환합니다."""
+    width_mask = (1 << width) - 1 if width < 32 else 0xFFFFFFFF
+    if width <= 16 and channels == 0:
+        mask = width_mask | (width_mask << 16)
+    else:
+        mask = width_mask
+    return [pattern(seed, index) & mask for index in range(words)], mask
+
+
+def run_case(devices, selected, controller_role, vector, append):
+    family = selected["family"]
+    controller = devices[controller_role - 1]
+    receiver = devices[2 - controller_role]
+    args = arguments_for(family, vector)
+    for device in devices:
+        reply = device.command(32, (selected["id"], 1, fixture.CONSENT,
+                                    controller_role))
+        if reply != [selected["id"], 10000]:
+            raise ProtocolError(f"signal fixture arm failed: {reply}")
+    try:
+        if controller.command(34, args) != [0]:
+            raise ProtocolError("signal generator prepare failed")
+        if family == "pdm":
+            wait_status(controller, lambda words: words[2] == 1)
+        if receiver.command(34, args) != [0]:
+            raise ProtocolError("signal receiver prepare failed")
+        wait_status(receiver, lambda words: words[2] == 1)
+
+        if family == "i2s":
+            if receiver.command(35) != [0] or controller.command(35) != [0]:
+                raise ProtocolError("I2S slave/master start failed")
+            target = vector[3] * vector[4]
+            statuses = [wait_status(device, lambda words: words[3] == 1)
+                        for device in devices]
+            if any(status[5] != target for status in statuses):
+                raise ProtocolError(f"I2S DMA word count mismatch: {statuses}")
+            for device in devices:
+                peer_role = 3 - device.image["role"]
+                peer_seed = vector[5] ^ (0 if peer_role == 1 else 0x5A5A5A5A)
+                expected, mask = i2s_expected(peer_seed, target, vector[1], vector[2])
+                actual = [word & mask for word in read_u32(device, target)]
+                if actual != expected:
+                    raise ProtocolError("I2S payload/packing mismatch")
+            result = {"statuses": statuses, "scope": "i2s-full-duplex-dma"}
+        elif family == "pdm":
+            if receiver.command(35) != [0]:
+                raise ProtocolError("PDM receiver start failed")
+            receiver_status = wait_status(receiver, lambda words: words[3] == 1,
+                                          timeout=10.0)
+            sample_count = vector[1] * vector[5]
+            if receiver_status[5] != sample_count:
+                raise ProtocolError(f"PDM DMA sample count mismatch: {receiver_status}")
+            samples = read_u16(receiver, sample_count)
+            mean = sum(samples) / len(samples)
+            channel_means = None
+            if vector[3]:
+                channel_means = [sum(samples[channel::2]) / len(samples[channel::2])
+                                 for channel in range(2)]
+                if abs(channel_means[0] - channel_means[1]) < 512:
+                    raise ProtocolError(
+                        f"PDM stereo channels are not independently distinguishable: {channel_means}")
+            result = {"receiver_status": receiver_status, "mean": mean,
+                      "minimum": min(samples), "maximum": max(samples),
+                      "channel_means": channel_means,
+                      "scope": "pdm-clock-synchronous-spis-bitstream"}
+        elif family == "analog":
+            if controller.command(35) != [0]:
+                raise ProtocolError("PWM generator start failed")
+            if receiver.command(35) != [0]:
+                raise ProtocolError("SAADC sampling start failed")
+            receiver_status = wait_status(receiver, lambda words: words[3] == 1)
+            sample_count = vector[1] * vector[5]
+            samples = read_u16(receiver, sample_count)
+            if receiver_status[5] != sample_count or max(samples) <= 256:
+                raise ProtocolError("PWM-triggered SAADC did not capture a valid HIGH level")
+            result = {"receiver_status": receiver_status,
+                      "minimum": min(samples), "maximum": max(samples),
+                      "sha256": hashlib.sha256(struct.pack(f"<{len(samples)}h", *samples)).hexdigest(),
+                      "scope": "pwm-manual-saadc"}
+        else:
+            if controller.command(35) != [0]:
+                raise ProtocolError("quadrature generator start failed")
+            wait_status(controller, lambda words: words[3] == 1,
+                        timeout=max(5.0, vector[2] * vector[3] * 4 / 1_000_000 + 2.0))
+            time.sleep(vector[3] * 2 / 1_000_000)
+            report = receiver.command(37)
+            if len(report) != 3 or report[0] != 0 or report[2] != 0:
+                raise ProtocolError(f"QDEC accumulator error: {report}")
+            signed = report[1] if report[1] < 0x80000000 else report[1] - 0x100000000
+            expected = (-1 if vector[4] else 1) * vector[2] * 4
+            if signed != expected:
+                raise ProtocolError(f"QDEC count mismatch: actual={signed}, expected={expected}")
+            result = {"accumulated": signed, "double_transitions": report[2],
+                      "scope": "pwm-quadrature-qdec"}
+        append(f"V04-{family.upper()}-SIGNAL/{selected['id']}/{controller_role}/{vector}",
+               result)
+    finally:
+        original_error = __import__("sys").exception()
+        cleanup = []
+        for device in devices:
+            try:
+                cleanup.append({"role": device.image["role"], "result": device.command(33)})
+            except BaseException as cleanup_error:
+                cleanup.append({"role": device.image["role"], "error": str(cleanup_error)})
+        append("V04-SIGNAL-CLEANUP", {"status": "cleanup", "cleanup_only": True,
+                                      "results": cleanup})
+        if any(item.get("result") != [0] for item in cleanup):
+            if original_error is not None:
+                original_error.add_note(f"signal cleanup not proven: {cleanup}")
+            else:
+                raise ProtocolError(f"signal cleanup not proven: {cleanup}")
+
+
+def run_confirmed(devices, images, uids, confirmation, fixture_id, append,
+                  repetitions=1):
+    selected = fixture.validate_confirmation(confirmation, images, uids, fixture_id)
+    if selected["family"] not in {"analog", "qdec", "i2s", "pdm"}:
+        raise ProtocolError("not a signal fixture")
+    if type(repetitions) is not int or not 1 <= repetitions <= 100:
+        raise ProtocolError("repetitions out of range")
+    for repetition in range(repetitions):
+        controller_roles = (2,) if selected["family"] in {"analog", "qdec"} else (1, 2)
+        for controller_role in controller_roles:
+            pdm_means = {}
+            for vector in vectors(selected["family"]):
+                def record(case_id, result):
+                    append(f"{case_id}/repeat-{repetition + 1}", result)
+                    if (selected["family"] == "pdm" and not vector[3] and
+                            "mean" in result):
+                        key = (vector[0], vector[1], vector[4], vector[5])
+                        pdm_means.setdefault(key, {})[vector[2]] = result["mean"]
+
+                run_case(devices, selected, controller_role, vector, record)
+            for key, means in pdm_means.items():
+                if set(means) != {25, 50, 75} or not means[25] < means[50] < means[75]:
+                    raise ProtocolError(f"PDM density ordering mismatch {key}: {means}")
+                append(
+                    f"V04-PDM-DENSITY/{selected['id']}/{controller_role}/{key}"
+                    f"/repeat-{repetition + 1}",
+                    {"means": means, "scope": "pdm-mono-density-order"})

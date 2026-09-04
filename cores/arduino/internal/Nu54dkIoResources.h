@@ -12,7 +12,7 @@
 
 namespace nucode::arduino::internal
 {
-	/**
+    /**
 	 * @brief 활성 NU54DK Devicetree가 부팅 시 적용하는 고정 자원을 등록합니다.
 	 *
 	 * 현재 boot-fixed owner인 UART20의 pinctrl pad와 serial block을 active
@@ -22,10 +22,10 @@ namespace nucode::arduino::internal
 	 *
 	 * @return 모든 고정 자원을 등록하면 success, 충돌하면 해당 오류입니다.
 	 */
-	[[nodiscard]] IoResourceResult initializeNu54dkIoResources() noexcept;
+    [[nodiscard]] IoResourceResult initializeNu54dkIoResources() noexcept;
 
-	/** @brief 부팅 registry가 마지막으로 반환한 결과입니다. */
-	[[nodiscard]] IoResourceResult nu54dkIoResourceRegistryResult() noexcept;
-}
+    /** @brief 부팅 registry가 마지막으로 반환한 결과입니다. */
+    [[nodiscard]] IoResourceResult nu54dkIoResourceRegistryResult() noexcept;
+} // namespace nucode::arduino::internal
 
 #endif

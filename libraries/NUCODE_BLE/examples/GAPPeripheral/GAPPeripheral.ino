@@ -25,11 +25,9 @@ void setup()
 
     const uint8_t productData[] = {0x19U, 0x01U};
     if (!BLEDevice.begin("NU54-GAP-P") || !BLEAdvertising.clear() ||
-        !BLEAdvertising.setConnectable(true) ||
-        !BLEAdvertising.setInterval(0x00a0U, 0x00f0U) ||
+        !BLEAdvertising.setConnectable(true) || !BLEAdvertising.setInterval(0x00a0U, 0x00f0U) ||
         !BLEAdvertising.addServiceUuid(advertisedService) ||
-        !BLEAdvertising.setManufacturerData(0x0059U, productData,
-                                            sizeof(productData)) ||
+        !BLEAdvertising.setManufacturerData(0x0059U, productData, sizeof(productData)) ||
         !BLEAdvertising.start())
     {
         Serial.println("BLE GAP start failed");

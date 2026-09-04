@@ -11,19 +11,19 @@
 
 void setup()
 {
-	Serial.begin(115200);
-	analogReadResolution(12);
+    Serial.begin(115200);
+    analogReadResolution(12);
 }
 
 void loop()
 {
-	const pin_size_t pins[] = {A0, A6, A7};
-	const char *const labels[] = {"AIN5/A0", "AIN6/A6", "AIN7/A7"};
-	for (size_t index = 0; index < 3; ++index)
-	{
-		Serial.print(labels[index]);
-		Serial.print(": ");
-		Serial.println(analogRead(pins[index]));
-	}
-	delay(1000);
+    const pin_size_t pins[] = {A0, A6, A7};
+    const char *const labels[] = {"AIN5/A0", "AIN6/A6", "AIN7/A7"};
+    for (size_t index = 0; index < 3; ++index)
+    {
+        Serial.print(labels[index]);
+        Serial.print(": ");
+        Serial.println(analogRead(pins[index]));
+    }
+    delay(1000);
 }

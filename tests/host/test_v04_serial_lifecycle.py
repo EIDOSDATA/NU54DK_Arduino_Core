@@ -9,6 +9,19 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 class SerialLifecycleTests(unittest.TestCase):
+    def test_fixture_gate_allowlist_expiry_and_fault_latch(self):
+        compiler = shutil.which("g++")
+        self.assertIsNotNone(compiler)
+        with tempfile.TemporaryDirectory() as temporary:
+            executable = Path(temporary) / "fixture_gate.exe"
+            compile_result = subprocess.run(
+                [compiler, "-std=c++17", "-Wall", "-Wextra", "-Werror", "-I", str(ROOT),
+                 str(ROOT / "tests/host/v04_fixture_gate_main.cpp"), "-o", str(executable)],
+                cwd=ROOT, capture_output=True, text=True, timeout=60)
+            self.assertEqual(compile_result.returncode, 0, compile_result.stdout + compile_result.stderr)
+            run_result = subprocess.run([str(executable)], cwd=ROOT, capture_output=True, text=True, timeout=10)
+            self.assertEqual(run_result.returncode, 0, run_result.stdout + run_result.stderr)
+
     def test_native_production_route_validator(self):
         compiler = shutil.which("g++")
         self.assertIsNotNone(compiler)

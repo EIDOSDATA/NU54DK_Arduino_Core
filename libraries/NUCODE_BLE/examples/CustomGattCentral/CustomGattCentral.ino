@@ -34,8 +34,8 @@ void onBleEvent(nucode::ble::BLEEvent event, void *context)
 }
 
 /** @brief generic client 결과를 Arduino main thread에서 처리합니다. */
-void onClientEvent(nucode::ble::BLEGattClientEvent event,
-                   const uint8_t *data, size_t length, void *context)
+void onClientEvent(nucode::ble::BLEGattClientEvent event, const uint8_t *data, size_t length,
+                   void *context)
 {
     static_cast<void>(context);
     if (event == nucode::ble::BLEGattClientEvent::discovery_complete)

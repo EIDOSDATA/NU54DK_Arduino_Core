@@ -29,13 +29,12 @@ namespace nucode::arduino
     /** @brief nRF54L15 내부 TEMP 센서의 동기 측정 handle입니다. */
     class TemperatureFabric
     {
-    public:
+      public:
         /** @brief 섭씨 온도를 0.01도 단위로 읽습니다. */
-        [[nodiscard]] SystemFabricResult
-        readCentiCelsius(std::int32_t &temperature) noexcept;
+        [[nodiscard]] SystemFabricResult readCentiCelsius(std::int32_t &temperature) noexcept;
         [[nodiscard]] int lastDriverError() const noexcept;
 
-    private:
+      private:
         friend class SystemFabric;
         constexpr TemperatureFabric() noexcept = default;
     };
@@ -43,7 +42,7 @@ namespace nucode::arduino
     /** @brief WDT30 또는 WDT31 한 block의 명시적 lifecycle handle입니다. */
     class WatchdogFabric
     {
-    public:
+      public:
         [[nodiscard]] std::uint8_t instance() const noexcept;
         [[nodiscard]] bool configured() const noexcept;
         [[nodiscard]] bool active() const noexcept;
@@ -63,10 +62,11 @@ namespace nucode::arduino
         [[nodiscard]] SystemFabricResult feed() noexcept;
         [[nodiscard]] SystemFabricResult stop() noexcept;
 
-    private:
+      private:
         friend class SystemFabric;
-        constexpr explicit WatchdogFabric(std::uint8_t instance) noexcept
-            : instance_(instance) {}
+        constexpr explicit WatchdogFabric(std::uint8_t instance) noexcept : instance_(instance)
+        {
+        }
 
         std::uint8_t instance_;
     };
@@ -74,11 +74,11 @@ namespace nucode::arduino
     /** @brief M26 온칩 system peripheral 후보 handle factory입니다. */
     class SystemFabric
     {
-    public:
+      public:
         [[nodiscard]] TemperatureFabric &temperature() noexcept;
         [[nodiscard]] WatchdogFabric *watchdog(std::uint8_t instance) noexcept;
 
-    private:
+      private:
         friend SystemFabric &systemFabric() noexcept;
         constexpr SystemFabric() noexcept = default;
     };

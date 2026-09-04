@@ -14,7 +14,7 @@
 #include <cstddef>
 #include <cstdint>
 
-// SWD-only diagnostics; never insert diagnostic bytes into the exact UART frame.
+/** @brief SWD 전용 진단이며 정확한 UART frame에는 진단 byte를 넣지 않습니다. */
 extern "C"
 {
     volatile std::uint32_t m24_twim_stage = 0U;
@@ -48,7 +48,9 @@ namespace
     [[noreturn]] void halt()
     {
         while (true)
+        {
             k_sleep(K_FOREVER);
+        }
     }
 
     void require(SerialFabricResult result, std::uint32_t stage)
@@ -56,7 +58,9 @@ namespace
         m24_twim_stage = stage;
         m24_twim_result = static_cast<std::uint32_t>(result);
         if (result != SerialFabricResult::success)
+        {
             halt();
+        }
     }
 
     void waitForTx(UarteHandle &serial)
@@ -69,8 +73,7 @@ namespace
                 k_sleep(K_MSEC(1));
                 continue;
             }
-            if ((event.type == UarteEventType::tx_complete) &&
-                (event.buffer == response_buffer) &&
+            if ((event.type == UarteEventType::tx_complete) && (event.buffer == response_buffer) &&
                 (event.transferred == packet_size))
             {
                 return;
@@ -85,8 +88,7 @@ namespace
 
     void send(UarteHandle &serial)
     {
-        if (serial.transmitAsync(response_buffer, packet_size) !=
-            SerialFabricResult::success)
+        if (serial.transmitAsync(response_buffer, packet_size) != SerialFabricResult::success)
         {
             halt();
         }
@@ -96,16 +98,16 @@ namespace
     void fillReady()
     {
         for (std::size_t index = 0U; index < packet_size; ++index)
-            response_buffer[index] =
-                static_cast<std::uint8_t>(0xD0U ^ instance ^ index);
+        {
+            response_buffer[index] = static_cast<std::uint8_t>(0xD0U ^ instance ^ index);
+        }
     }
 
     bool validCommand()
     {
         for (std::size_t index = 0U; index < packet_size; ++index)
         {
-            if (command_buffer[index] !=
-                static_cast<std::uint8_t>(0x5AU ^ instance ^ index))
+            if (command_buffer[index] != static_cast<std::uint8_t>(0x5AU ^ instance ^ index))
             {
                 return false;
             }
@@ -116,7 +118,9 @@ namespace
     void fillResult(SerialFabricResult result)
     {
         for (std::size_t index = 0U; index < packet_size; ++index)
+        {
             response_buffer[index] = 0U;
+        }
         response_buffer[0] = 'N';
         response_buffer[1] = 'U';
         response_buffer[2] = 'T';
@@ -127,13 +131,14 @@ namespace
         response_buffer[7] = mask_id_register;
         response_buffer[8] = twi_workspace[1];
         response_buffer[9] = expected_mask_id;
-        response_buffer[10] = (result == SerialFabricResult::success &&
-                               twi_workspace[1] == expected_mask_id)
-                                  ? 1U
-                                  : 0U;
+        response_buffer[10] =
+            (result == SerialFabricResult::success && twi_workspace[1] == expected_mask_id) ? 1U
+                                                                                            : 0U;
         std::uint8_t checksum = 0U;
         for (std::size_t index = 0U; index < packet_size - 1U; ++index)
+        {
             checksum ^= response_buffer[index];
+        }
         response_buffer[packet_size - 1U] = checksum;
     }
 } // namespace
@@ -141,21 +146,20 @@ namespace
 int main()
 {
     if ((instance != 20U) && (instance != 21U) && (instance != 22U))
-        halt();
-
-    auto *const serial = serialFabric().uarte(30U);
-    auto *const twim = serialFabric().twim(instance);
-    if ((serial == nullptr) || (twim == nullptr) ||
-        (serial->configure({115200U, UarteParity::none, false}) !=
-         SerialFabricResult::success) ||
-        (twim->configure({TwiFabricFrequency::fast}) !=
-         SerialFabricResult::success))
     {
         halt();
     }
 
-    const SerialDmaWorkspace serial_dma{serial_workspace,
-                                        sizeof(serial_workspace)};
+    auto *const serial = serialFabric().uarte(30U);
+    auto *const twim = serialFabric().twim(instance);
+    if ((serial == nullptr) || (twim == nullptr) ||
+        (serial->configure({115200U, UarteParity::none, false}) != SerialFabricResult::success) ||
+        (twim->configure({TwiFabricFrequency::fast}) != SerialFabricResult::success))
+    {
+        halt();
+    }
+
+    const SerialDmaWorkspace serial_dma{serial_workspace, sizeof(serial_workspace)};
     const SerialFabricConfiguration serial_configuration{
         SerialRouteClass::p0_flexible,
         SerialElectricalProfile::dap_uart_bridge,
@@ -184,8 +188,7 @@ int main()
         m24_twim_stage = 5U;
         send(*serial);
         m24_twim_stage = 6U;
-        if (serial->receiveAsync(command_buffer, packet_size) !=
-            SerialFabricResult::success)
+        if (serial->receiveAsync(command_buffer, packet_size) != SerialFabricResult::success)
         {
             halt();
         }
@@ -198,8 +201,7 @@ int main()
                 k_sleep(K_MSEC(1));
                 continue;
             }
-            if ((event.type == UarteEventType::rx_complete) &&
-                (event.buffer == command_buffer) &&
+            if ((event.type == UarteEventType::rx_complete) && (event.buffer == command_buffer) &&
                 (event.transferred == packet_size))
             {
                 received = true;
@@ -210,18 +212,20 @@ int main()
             }
         }
         if (!validCommand())
+        {
             continue;
+        }
 
         m24_twim_stage = 7U;
         twi_workspace[0] = mask_id_register;
         twi_workspace[1] = 0U;
-        const auto result = twim->transfer(pmic_address, &twi_workspace[0], 1U,
-                                           &twi_workspace[1], 1U, 100000U);
+        const auto result =
+            twim->transfer(pmic_address, &twi_workspace[0], 1U, &twi_workspace[1], 1U, 100000U);
         fillResult(result);
         m24_twim_result = static_cast<std::uint32_t>(result);
         send(*serial);
         m24_twim_stage = 8U;
-        // One physical measurement per flash; no adjacent next-READY frame.
+        /** @brief flash 한 번마다 물리 측정 한 번만 수행하고 다음 READY frame을 붙이지 않습니다. */
         halt();
     }
 }

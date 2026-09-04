@@ -26,7 +26,8 @@ namespace
     atomic_t stack_ready = ATOMIC_INIT(0);
     atomic_t settings_attempted = ATOMIC_INIT(0);
     atomic_t settings_result = ATOMIC_INIT(0);
-    atomic_t facade_owner = ATOMIC_INIT(static_cast<atomic_val_t>(nucode::ble::internal::FacadeOwner::none));
+    atomic_t facade_owner =
+        ATOMIC_INIT(static_cast<atomic_val_t>(nucode::ble::internal::FacadeOwner::none));
 
     /** @brief Bluetooth settings를 stack enable 뒤 정확히 한 번 불러옵니다. */
     int loadSettingsOnce() noexcept
@@ -53,8 +54,7 @@ namespace nucode::ble::internal
     bool claimFacade(FacadeOwner owner) noexcept
     {
         return owner != FacadeOwner::none &&
-               atomic_cas(&facade_owner,
-                          static_cast<atomic_val_t>(FacadeOwner::none),
+               atomic_cas(&facade_owner, static_cast<atomic_val_t>(FacadeOwner::none),
                           static_cast<atomic_val_t>(owner));
     }
 
@@ -62,9 +62,8 @@ namespace nucode::ble::internal
     {
         if (owner != FacadeOwner::none)
         {
-            static_cast<void>(atomic_cas(
-                &facade_owner, static_cast<atomic_val_t>(owner),
-                static_cast<atomic_val_t>(FacadeOwner::none)));
+            static_cast<void>(atomic_cas(&facade_owner, static_cast<atomic_val_t>(owner),
+                                         static_cast<atomic_val_t>(FacadeOwner::none)));
         }
     }
 
@@ -101,8 +100,7 @@ namespace nucode::ble::internal
 
     bool settingsReady() noexcept
     {
-        return atomic_get(&settings_attempted) != 0 &&
-               atomic_get(&settings_result) == 0;
+        return atomic_get(&settings_attempted) != 0 && atomic_get(&settings_result) == 0;
     }
 
     int settingsResult() noexcept
@@ -166,7 +164,8 @@ namespace nucode::ble::internal
     }
 
     /** @brief M21이 링크되기 전에는 security level 변경 관찰을 비활성화합니다. */
-    __weak void securityChanged(struct bt_conn *connection, bt_security_t level, enum bt_security_err error) noexcept
+    __weak void securityChanged(struct bt_conn *connection, bt_security_t level,
+                                enum bt_security_err error) noexcept
     {
         ARG_UNUSED(connection);
         ARG_UNUSED(level);

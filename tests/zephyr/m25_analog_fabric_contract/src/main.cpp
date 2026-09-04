@@ -29,14 +29,11 @@ namespace
 ZTEST(m25_analog_fabric_contract, test_saadc_scan_contract)
 {
     auto &saadc = analogFabric().saadc();
-    zassert_equal(saadc.configure({scan_channels, 4U, 14U, 16U, 0U}),
-                  AnalogFabricResult::success, "4-channel scan 설정 실패");
-    zassert_equal(saadc.state(), AnalogFabricState::configured,
-                  "SAADC configured 상태 불일치");
-    zassert_not_equal(saadc.sampleTaskAddress(), 0U,
-                      "SAADC SAMPLE task 주소 누락");
-    zassert_not_equal(saadc.readyEventAddress(), 0U,
-                      "SAADC READY event 주소 누락");
+    zassert_equal(saadc.configure({scan_channels, 4U, 14U, 16U, 0U}), AnalogFabricResult::success,
+                  "4-channel scan 설정 실패");
+    zassert_equal(saadc.state(), AnalogFabricState::configured, "SAADC configured 상태 불일치");
+    zassert_not_equal(saadc.sampleTaskAddress(), 0U, "SAADC SAMPLE task 주소 누락");
+    zassert_not_equal(saadc.readyEventAddress(), 0U, "SAADC READY event 주소 누락");
 }
 
 ZTEST(m25_analog_fabric_contract, test_saadc_invalid_combinations_fail_closed)
@@ -50,8 +47,7 @@ ZTEST(m25_analog_fabric_contract, test_saadc_invalid_combinations_fail_closed)
         {SaadcInput::ain0, SaadcInput::disabled},
     };
     zassert_equal(saadc.configure({duplicate, 2U, 12U, 1U, 0U}),
-                  AnalogFabricResult::invalid_argument,
-                  "중복 positive channel을 허용했습니다.");
+                  AnalogFabricResult::invalid_argument, "중복 positive channel을 허용했습니다.");
 }
 
 ZTEST(m25_analog_fabric_contract, test_all_pwm_instances_and_routes_exist)
@@ -64,13 +60,14 @@ ZTEST(m25_analog_fabric_contract, test_all_pwm_instances_and_routes_exist)
         zassert_not_null(pwm, "PWM handle 누락");
         PwmSequenceConfiguration configuration{};
         for (std::size_t index = 0U; index < 4U; ++index)
+        {
             configuration.output_pins[index] = pins[index];
+        }
         configuration.top_value = 1000U;
         configuration.load = PwmSequenceLoad::individual;
         zassert_equal(pwm->configure(configuration), AnalogFabricResult::success,
                       "PWM route 설정 실패");
-        zassert_equal(pwm->state(), AnalogFabricState::configured,
-                      "PWM configured 상태 불일치");
+        zassert_equal(pwm->state(), AnalogFabricState::configured, "PWM configured 상태 불일치");
     }
     zassert_is_null(analogFabric().pwm(23U), "존재하지 않는 PWM handle 노출");
 }
@@ -88,5 +85,4 @@ ZTEST(m25_analog_fabric_contract, test_inactive_stop_operations_fail_closed)
                   "active가 아닌 SAADC buffer를 허용했습니다.");
 }
 
-ZTEST_SUITE(m25_analog_fabric_contract, nullptr, nullptr, nullptr, nullptr,
-            nullptr);
+ZTEST_SUITE(m25_analog_fabric_contract, nullptr, nullptr, nullptr, nullptr, nullptr);

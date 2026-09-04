@@ -59,7 +59,7 @@ namespace nucode::ble
      */
     class NusSerial final : public Stream
     {
-    public:
+      public:
         NusSerial() = default;
         NusSerial(const NusSerial &) = delete;
         NusSerial &operator=(const NusSerial &) = delete;

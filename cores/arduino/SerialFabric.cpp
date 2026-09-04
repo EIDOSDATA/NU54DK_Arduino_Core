@@ -73,25 +73,40 @@ namespace nucode::arduino
         bool adapter_registered[handle_count]{};
         BlockContext blocks[block_count]{};
 
-#if defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_UARTE) || \
-    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIM) ||  \
-    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIS) ||  \
-    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIM) ||  \
+#if defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_UARTE) ||                                          \
+    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIM) ||                                           \
+    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIS) ||                                           \
+    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIM) ||                                           \
     defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIS)
-#if defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_UARTE) || \
-    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIM) ||  \
+#if defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_UARTE) ||                                          \
+    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIM) ||                                           \
     defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIS)
-        void irq00(const void *) { internal::dispatchSerialFabricIrq(0U); }
+        void irq00(const void *)
+        {
+            internal::dispatchSerialFabricIrq(0U);
+        }
 #endif
-        void irq20(const void *) { internal::dispatchSerialFabricIrq(20U); }
-        void irq21(const void *) { internal::dispatchSerialFabricIrq(21U); }
-        void irq22(const void *) { internal::dispatchSerialFabricIrq(22U); }
-        void irq30(const void *) { internal::dispatchSerialFabricIrq(30U); }
+        void irq20(const void *)
+        {
+            internal::dispatchSerialFabricIrq(20U);
+        }
+        void irq21(const void *)
+        {
+            internal::dispatchSerialFabricIrq(21U);
+        }
+        void irq22(const void *)
+        {
+            internal::dispatchSerialFabricIrq(22U);
+        }
+        void irq30(const void *)
+        {
+            internal::dispatchSerialFabricIrq(30U);
+        }
 
         int connectFabricIrqs()
         {
-#if defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_UARTE) || \
-    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIM) ||  \
+#if defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_UARTE) ||                                          \
+    defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIM) ||                                           \
     defined(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIS)
             IRQ_CONNECT(SERIAL00_IRQn, IRQ_PRIO_LOWEST, irq00, nullptr, 0);
 #endif
@@ -129,7 +144,9 @@ namespace nucode::arduino
         {
             const int block = blockIndex(instance);
             if (block < 0)
+            {
                 return -1;
+            }
             switch (personality)
             {
             case SerialPersonality::uarte:
@@ -147,8 +164,7 @@ namespace nucode::arduino
             }
         }
 
-        [[nodiscard]] constexpr IoOwnerKind
-        ownerKind(SerialPersonality personality) noexcept
+        [[nodiscard]] constexpr IoOwnerKind ownerKind(SerialPersonality personality) noexcept
         {
             switch (personality)
             {
@@ -165,8 +181,7 @@ namespace nucode::arduino
             }
         }
 
-        [[nodiscard]] SerialFabricResult
-        mapResourceResult(IoResourceResult result) noexcept
+        [[nodiscard]] SerialFabricResult mapResourceResult(IoResourceResult result) noexcept
         {
             switch (result)
             {
@@ -200,8 +215,11 @@ namespace nucode::arduino
             record(context, result, driver_error);
         }
 
-        // Called only after the complete exclusive lease was reserved. Do not
-        // touch pads while validating/staging or after a conflicting acquisition.
+        /**
+         * @brief 전체 독점 lease가 예약된 뒤에만 핀 snapshot을 읽습니다.
+         *
+         * 검증·staging 중이거나 충돌한 획득 뒤에는 패드를 건드리지 않습니다.
+         */
         bool saveRouteState(HandleContext &context, std::uint8_t instance,
                             int &driver_error) noexcept
         {
@@ -209,9 +227,11 @@ namespace nucode::arduino
             for (std::size_t index = 0; index < context.route.pin_count; ++index)
             {
                 auto &saved = context.saved_pins[index];
-                if (internal::nu54dkSerialFabricPsel(context.route.pins[index].pin,
-                                                     saved.psel) != SerialFabricResult::success)
+                if (internal::nu54dkSerialFabricPsel(context.route.pins[index].pin, saved.psel) !=
+                    SerialFabricResult::success)
+                {
                     return false;
+                }
                 auto pin = saved.psel;
                 const auto *port = nrf_gpio_pin_port_decode(&pin);
                 saved.configuration = port->PIN_CNF[pin];
@@ -221,9 +241,11 @@ namespace nucode::arduino
             if (instance == 20U && context.route.route == SerialRouteClass::p2_dedicated20)
             {
                 driver_error = nrfx_power_constlat_mode_request();
-                // EALREADY still increments nrfx's shared reference count.
+                /** @brief EALREADY도 증가시킨 nrfx 공유 참조 횟수를 되돌립니다. */
                 if (driver_error != 0 && driver_error != -EALREADY)
+                {
                     return false;
+                }
                 context.constant_latency_owned = true;
                 driver_error = 0;
             }
@@ -232,8 +254,11 @@ namespace nucode::arduino
 
         bool restoreRouteState(HandleContext &context, int &driver_error) noexcept
         {
-            // The adapter must have disconnected PSEL and proven DMA STOP first.
-            // Restore each owned OUT latch before PIN_CNF; never overwrite a port.
+            /**
+             * @brief adapter가 PSEL 분리와 DMA STOP을 증명한 뒤 GPIO를 복원합니다.
+             *
+             * port 전체를 덮지 않고 각 소유 핀의 OUT latch를 PIN_CNF보다 먼저 복원합니다.
+             */
             for (std::size_t index = 0; index < context.saved_pin_count; ++index)
             {
                 const auto &saved = context.saved_pins[index];
@@ -246,9 +271,11 @@ namespace nucode::arduino
             if (context.constant_latency_owned)
             {
                 driver_error = nrfx_power_constlat_mode_free();
-                // EBUSY means our reference was released; another owner remains.
+                /** @brief EBUSY는 현재 참조는 반환됐고 다른 소유자 참조가 남았음을 뜻합니다. */
                 if (driver_error != 0 && driver_error != -EBUSY)
+                {
                     return false;
+                }
                 context.constant_latency_owned = false;
                 driver_error = 0;
             }
@@ -262,7 +289,8 @@ namespace nucode::arduino
             {
                 const auto interval = timeout_us < 10U ? timeout_us : 10U;
                 k_busy_wait(interval);
-                timeout_us -= interval; // no wraparound even for UINT32_MAX
+                /** @brief UINT32_MAX에서도 뺄셈 wraparound가 생기지 않습니다. */
+                timeout_us -= interval;
             }
             return context.adapter->stopped(instance);
         }
@@ -278,7 +306,10 @@ namespace nucode::arduino
         return personality_;
     }
 
-    std::uint8_t SerialFabricHandle::instance() const noexcept { return instance_; }
+    std::uint8_t SerialFabricHandle::instance() const noexcept
+    {
+        return instance_;
+    }
 
     SerialFabricState SerialFabricHandle::state() const noexcept
     {
@@ -304,16 +335,17 @@ namespace nucode::arduino
         return value;
     }
 
-    SerialFabricResult SerialFabricHandle::stage(
-        const SerialFabricConfiguration &configuration) noexcept
+    SerialFabricResult
+    SerialFabricHandle::stage(const SerialFabricConfiguration &configuration) noexcept
     {
         if (k_is_in_isr())
+        {
             return SerialFabricResult::invalid_context;
+        }
         k_mutex_lock(&fabric_mutex, K_FOREVER);
         auto &context = contextAt(handle_index_);
         const int block = blockIndex(instance_);
-        if ((block < 0) || blocks[block].faulted ||
-            (context.state == SerialFabricState::faulted))
+        if ((block < 0) || blocks[block].faulted || (context.state == SerialFabricState::faulted))
         {
             record(context, SerialFabricResult::faulted);
             k_mutex_unlock(&fabric_mutex);
@@ -342,8 +374,7 @@ namespace nucode::arduino
         int driver_error = 0;
         if (result == SerialFabricResult::success)
         {
-            result =
-                adapters[handle_index_].validate(instance_, candidate, driver_error);
+            result = adapters[handle_index_].validate(instance_, candidate, driver_error);
         }
         if (result != SerialFabricResult::success)
         {
@@ -368,19 +399,19 @@ namespace nucode::arduino
     SerialFabricResult SerialFabricHandle::activate() noexcept
     {
         if (k_is_in_isr())
+        {
             return SerialFabricResult::invalid_context;
+        }
         k_mutex_lock(&fabric_mutex, K_FOREVER);
         auto &context = contextAt(handle_index_);
         const int block = blockIndex(instance_);
-        if ((block < 0) || blocks[block].faulted ||
-            (context.state == SerialFabricState::faulted))
+        if ((block < 0) || blocks[block].faulted || (context.state == SerialFabricState::faulted))
         {
             record(context, SerialFabricResult::faulted);
             k_mutex_unlock(&fabric_mutex);
             return SerialFabricResult::faulted;
         }
-        if ((context.state != SerialFabricState::staged) ||
-            (context.adapter == nullptr))
+        if ((context.state != SerialFabricState::staged) || (context.adapter == nullptr))
         {
             record(context, SerialFabricResult::wrong_state);
             k_mutex_unlock(&fabric_mutex);
@@ -389,8 +420,8 @@ namespace nucode::arduino
 
         context.lease = {};
         const IoResourceResult reserve_result = internal::reserveIoResources(
-            {ownerKind(personality_), instance_}, context.resources,
-            context.resource_count, IoAcquirePolicy::exclusive, context.lease);
+            {ownerKind(personality_), instance_}, context.resources, context.resource_count,
+            IoAcquirePolicy::exclusive, context.lease);
         if (reserve_result != IoResourceResult::success)
         {
             const auto result = mapResourceResult(reserve_result);
@@ -405,8 +436,11 @@ namespace nucode::arduino
         {
             int restore_error = 0;
             const bool restored = restoreRouteState(context, restore_error);
-            if (!restored || internal::rollbackIoResources(context.lease) != IoResourceResult::success)
+            if (!restored ||
+                internal::rollbackIoResources(context.lease) != IoResourceResult::success)
+            {
                 latchFault(context, block, SerialFabricResult::release_failed, restore_error);
+            }
             else
             {
                 context.lease = {};
@@ -425,7 +459,7 @@ namespace nucode::arduino
         if (result != SerialFabricResult::success)
         {
             atomic_ptr_clear(&blocks[block].active_adapter);
-            // Failed activate is required to leave its own hardware quiescent.
+            /** @brief 실패한 activate는 자체 hardware를 정지 상태로 남겨야 합니다. */
             int restore_error = 0;
             if (!restoreRouteState(context, restore_error))
             {
@@ -433,14 +467,12 @@ namespace nucode::arduino
                 k_mutex_unlock(&fabric_mutex);
                 return SerialFabricResult::release_failed;
             }
-            const IoResourceResult rollback_result =
-                internal::rollbackIoResources(context.lease);
+            const IoResourceResult rollback_result = internal::rollbackIoResources(context.lease);
             context.lease = {};
             context.state = SerialFabricState::staged;
             if (rollback_result != IoResourceResult::success)
             {
-                latchFault(context, block, SerialFabricResult::release_failed,
-                           driver_error);
+                latchFault(context, block, SerialFabricResult::release_failed, driver_error);
                 result = SerialFabricResult::release_failed;
             }
             else
@@ -451,35 +483,34 @@ namespace nucode::arduino
             return result;
         }
 
-        const IoResourceResult commit_result =
-            internal::commitIoResources(context.lease);
+        const IoResourceResult commit_result = internal::commitIoResources(context.lease);
         if (commit_result != IoResourceResult::success)
         {
             int cleanup_error = 0;
             const auto stop_result = context.adapter->request_stop(instance_, cleanup_error);
-            if (stop_result != SerialFabricResult::success || !waitStopped(context, instance_, 100000U))
+            if (stop_result != SerialFabricResult::success ||
+                !waitStopped(context, instance_, 100000U))
             {
-                // Hardware, pins, DMA and power leases stay owned until reset.
+                /** @brief reset 전까지 hardware·핀·DMA·전원 lease를 계속 소유합니다. */
                 latchFault(context, block, SerialFabricResult::stop_timeout, cleanup_error);
                 k_mutex_unlock(&fabric_mutex);
                 return SerialFabricResult::stop_timeout;
             }
             const SerialFabricResult cleanup_result =
                 context.adapter->deactivate(instance_, cleanup_error);
-            if (cleanup_result != SerialFabricResult::success || !restoreRouteState(context, cleanup_error))
+            if (cleanup_result != SerialFabricResult::success ||
+                !restoreRouteState(context, cleanup_error))
             {
                 latchFault(context, block, SerialFabricResult::release_failed, cleanup_error);
                 k_mutex_unlock(&fabric_mutex);
                 return SerialFabricResult::release_failed;
             }
-            const IoResourceResult rollback_result =
-                internal::rollbackIoResources(context.lease);
+            const IoResourceResult rollback_result = internal::rollbackIoResources(context.lease);
             atomic_ptr_clear(&blocks[block].active_adapter);
             if ((cleanup_result != SerialFabricResult::success) ||
                 (rollback_result != IoResourceResult::success))
             {
-                latchFault(context, block, SerialFabricResult::release_failed,
-                           cleanup_error);
+                latchFault(context, block, SerialFabricResult::release_failed, cleanup_error);
             }
             else
             {
@@ -498,25 +529,26 @@ namespace nucode::arduino
         return SerialFabricResult::success;
     }
 
-    SerialFabricResult
-    SerialFabricHandle::deactivate(std::uint32_t timeout_us) noexcept
+    SerialFabricResult SerialFabricHandle::deactivate(std::uint32_t timeout_us) noexcept
     {
         if (k_is_in_isr())
+        {
             return SerialFabricResult::invalid_context;
+        }
         if (timeout_us == 0U)
+        {
             return SerialFabricResult::invalid_argument;
+        }
         k_mutex_lock(&fabric_mutex, K_FOREVER);
         auto &context = contextAt(handle_index_);
         const int block = blockIndex(instance_);
-        if ((block < 0) || blocks[block].faulted ||
-            (context.state == SerialFabricState::faulted))
+        if ((block < 0) || blocks[block].faulted || (context.state == SerialFabricState::faulted))
         {
             record(context, SerialFabricResult::faulted);
             k_mutex_unlock(&fabric_mutex);
             return SerialFabricResult::faulted;
         }
-        if ((context.state != SerialFabricState::active) ||
-            (context.adapter == nullptr))
+        if ((context.state != SerialFabricState::active) || (context.adapter == nullptr))
         {
             record(context, SerialFabricResult::wrong_state);
             k_mutex_unlock(&fabric_mutex);
@@ -525,8 +557,7 @@ namespace nucode::arduino
 
         context.state = SerialFabricState::cancelling;
         int driver_error = 0;
-        SerialFabricResult result =
-            context.adapter->request_stop(instance_, driver_error);
+        SerialFabricResult result = context.adapter->request_stop(instance_, driver_error);
         if (result != SerialFabricResult::success)
         {
             latchFault(context, block, result, driver_error);
@@ -555,12 +586,10 @@ namespace nucode::arduino
             k_mutex_unlock(&fabric_mutex);
             return SerialFabricResult::release_failed;
         }
-        const IoResourceResult release_result =
-            internal::releaseIoResources(context.lease);
+        const IoResourceResult release_result = internal::releaseIoResources(context.lease);
         if (release_result != IoResourceResult::success)
         {
-            latchFault(context, block, SerialFabricResult::release_failed,
-                       driver_error);
+            latchFault(context, block, SerialFabricResult::release_failed, driver_error);
             k_mutex_unlock(&fabric_mutex);
             return SerialFabricResult::release_failed;
         }
@@ -575,40 +604,35 @@ namespace nucode::arduino
 
     UarteHandle *SerialFabric::uarte(std::uint8_t instance) noexcept
     {
-        static UarteHandle handles[] = {
-            {0U, 0U}, {20U, 1U}, {21U, 2U}, {22U, 3U}, {30U, 4U}};
+        static UarteHandle handles[] = {{0U, 0U}, {20U, 1U}, {21U, 2U}, {22U, 3U}, {30U, 4U}};
         const int block = blockIndex(instance);
         return block < 0 ? nullptr : &handles[block];
     }
 
     SpimHandle *SerialFabric::spim(std::uint8_t instance) noexcept
     {
-        static SpimHandle handles[] = {
-            {0U, 5U}, {20U, 6U}, {21U, 7U}, {22U, 8U}, {30U, 9U}};
+        static SpimHandle handles[] = {{0U, 5U}, {20U, 6U}, {21U, 7U}, {22U, 8U}, {30U, 9U}};
         const int block = blockIndex(instance);
         return block < 0 ? nullptr : &handles[block];
     }
 
     SpisHandle *SerialFabric::spis(std::uint8_t instance) noexcept
     {
-        static SpisHandle handles[] = {
-            {0U, 10U}, {20U, 11U}, {21U, 12U}, {22U, 13U}, {30U, 14U}};
+        static SpisHandle handles[] = {{0U, 10U}, {20U, 11U}, {21U, 12U}, {22U, 13U}, {30U, 14U}};
         const int block = blockIndex(instance);
         return block < 0 ? nullptr : &handles[block];
     }
 
     TwimHandle *SerialFabric::twim(std::uint8_t instance) noexcept
     {
-        static TwimHandle handles[] = {
-            {20U, 15U}, {21U, 16U}, {22U, 17U}, {30U, 18U}};
+        static TwimHandle handles[] = {{20U, 15U}, {21U, 16U}, {22U, 17U}, {30U, 18U}};
         const int block = blockIndex(instance);
         return block <= 0 ? nullptr : &handles[block - 1];
     }
 
     TwisHandle *SerialFabric::twis(std::uint8_t instance) noexcept
     {
-        static TwisHandle handles[] = {
-            {20U, 19U}, {21U, 20U}, {22U, 21U}, {30U, 22U}};
+        static TwisHandle handles[] = {{20U, 19U}, {21U, 20U}, {22U, 21U}, {30U, 22U}};
         const int block = blockIndex(instance);
         return block <= 0 ? nullptr : &handles[block - 1];
     }
@@ -622,24 +646,23 @@ namespace nucode::arduino
     namespace internal
     {
         SerialFabricResult
-        registerSerialFabricAdapter(SerialPersonality personality,
-                                    std::uint8_t instance,
+        registerSerialFabricAdapter(SerialPersonality personality, std::uint8_t instance,
                                     const SerialFabricDriverAdapter &adapter) noexcept
         {
             if (k_is_in_isr())
+            {
                 return SerialFabricResult::invalid_context;
+            }
             const int index = handleIndex(personality, instance);
-            if ((index < 0) || (adapter.validate == nullptr) ||
-                (adapter.activate == nullptr) || (adapter.request_stop == nullptr) ||
-                (adapter.stopped == nullptr) || (adapter.deactivate == nullptr) ||
-                (adapter.handle_irq == nullptr))
+            if ((index < 0) || (adapter.validate == nullptr) || (adapter.activate == nullptr) ||
+                (adapter.request_stop == nullptr) || (adapter.stopped == nullptr) ||
+                (adapter.deactivate == nullptr) || (adapter.handle_irq == nullptr))
             {
                 return index < 0 ? SerialFabricResult::unsupported_instance
                                  : SerialFabricResult::invalid_argument;
             }
             k_mutex_lock(&fabric_mutex, K_FOREVER);
-            if (adapter_registered[index] ||
-                (contexts[index].state != SerialFabricState::inactive))
+            if (adapter_registered[index] || (contexts[index].state != SerialFabricState::inactive))
             {
                 k_mutex_unlock(&fabric_mutex);
                 return SerialFabricResult::wrong_state;
@@ -656,43 +679,131 @@ namespace nucode::arduino
         {
             const int index = handleIndex(personality, instance);
             if (index < 0)
+            {
                 return false;
+            }
             k_mutex_lock(&fabric_mutex, K_FOREVER);
             const bool active = contexts[index].state == SerialFabricState::active;
             k_mutex_unlock(&fabric_mutex);
             return active;
         }
 
+        SerialFabricResult executeSerialFabricRecovery(SerialPersonality personality,
+                                                       std::uint8_t instance,
+                                                       SerialFabricRecovery recovery) noexcept
+        {
+            if (k_is_in_isr())
+            {
+                return SerialFabricResult::invalid_context;
+            }
+            const int index = handleIndex(personality, instance);
+            const int block = blockIndex(instance);
+            if (index < 0 || block < 0 || recovery == nullptr)
+            {
+                return SerialFabricResult::invalid_argument;
+            }
+            k_mutex_lock(&fabric_mutex, K_FOREVER);
+            auto &context = contexts[index];
+            if (blocks[block].faulted || context.state == SerialFabricState::faulted)
+            {
+                record(context, SerialFabricResult::faulted);
+                k_mutex_unlock(&fabric_mutex);
+                return SerialFabricResult::faulted;
+            }
+            if (context.state != SerialFabricState::staged)
+            {
+                record(context, SerialFabricResult::wrong_state);
+                k_mutex_unlock(&fabric_mutex);
+                return SerialFabricResult::wrong_state;
+            }
+            context.lease = {};
+            const auto reserve_result = internal::reserveIoResources(
+                {ownerKind(personality), instance}, context.resources, context.resource_count,
+                IoAcquirePolicy::exclusive, context.lease);
+            if (reserve_result != IoResourceResult::success)
+            {
+                const auto result = mapResourceResult(reserve_result);
+                record(context, result);
+                k_mutex_unlock(&fabric_mutex);
+                return result;
+            }
+            int driver_error = 0;
+            SerialFabricResult result = SerialFabricResult::success;
+            if (!saveRouteState(context, instance, driver_error))
+            {
+                result = SerialFabricResult::driver_error;
+            }
+            else
+            {
+                result = recovery(instance, context.route, driver_error);
+            }
+            int restore_error = 0;
+            const bool restored = restoreRouteState(context, restore_error);
+            if (!restored)
+            {
+                latchFault(context, block, SerialFabricResult::release_failed, restore_error);
+            }
+            else
+            {
+                const auto rollback_result = internal::rollbackIoResources(context.lease);
+                if (rollback_result != IoResourceResult::success)
+                {
+                    latchFault(context, block, SerialFabricResult::release_failed, restore_error);
+                }
+                else
+                {
+                    context.lease = {};
+                    context.state = SerialFabricState::staged;
+                    record(context, result, driver_error);
+                }
+            }
+            const auto observed = context.last_result;
+            k_mutex_unlock(&fabric_mutex);
+            return observed;
+        }
+
         void dispatchSerialFabricIrq(std::uint8_t instance) noexcept
         {
             const int block = blockIndex(instance);
             if (block < 0)
+            {
                 return;
+            }
             auto *const adapter = static_cast<SerialFabricDriverAdapter *>(
                 atomic_ptr_get(&blocks[block].active_adapter));
             if (adapter != nullptr)
+            {
                 adapter->handle_irq(blocks[block].active_instance);
+            }
         }
 
 #if defined(CONFIG_ZTEST)
         void resetSerialFabricForTest() noexcept
         {
             if (k_is_in_isr())
+            {
                 return;
+            }
             k_mutex_lock(&fabric_mutex, K_FOREVER);
             for (auto &context : contexts)
             {
-                // Fake-adapter ztest isolation only, never a hardware recovery API.
+                /** @brief fake adapter ztest 격리 전용이며 실제 hardware 복구 API가 아닙니다. */
                 int ignored = 0;
                 (void)restoreRouteState(context, ignored);
                 context = {};
             }
             for (auto &adapter : adapters)
+            {
                 adapter = {};
+            }
             for (bool &registered : adapter_registered)
+            {
                 registered = false;
+            }
             for (auto &block : blocks)
+            {
                 block = {};
+            }
             k_mutex_unlock(&fabric_mutex);
         }
 #endif

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import argparse
-from contextlib import ExitStack
+from contextlib import ExitStack, contextmanager
 import datetime as dt
 import hashlib
 import json
@@ -18,6 +18,41 @@ from v04_protocol import MAGIC, VERSION, SIZE, ProbeLocks, ProtocolError, decode
 
 ROOT = Path(__file__).resolve().parents[3]
 RAM_BEGIN, RAM_END = 0x20000000, 0x20040000
+
+
+@contextmanager
+def evidence_session(path: Path, evidence: dict):
+    """Never replace an existing result/journal; finalize even before probe access."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("x+", encoding="utf-8") as output:
+        evidence["status"] = "running"
+        output.write(json.dumps(evidence, ensure_ascii=False) + "\n")
+        output.flush()
+        try:
+            with path.with_suffix(path.suffix + ".jsonl").open("x", encoding="utf-8") as log:
+                yield log
+            evidence["status"] = "passed"
+        except BaseException as error:
+            evidence["status"] = "interrupted" if isinstance(error, KeyboardInterrupt) else "failed"
+            evidence["error"] = f"{type(error).__name__}: {error}"
+            raise
+        finally:
+            evidence["completed_at_utc"] = dt.datetime.now(dt.timezone.utc).isoformat()
+            output.seek(0)
+            output.write(json.dumps(evidence, ensure_ascii=False, indent=2) + "\n")
+            output.truncate()
+            output.flush()
+
+
+def stop_after_uart_failure(device: "Device") -> dict:
+    """Cleanup is evidence, never a test PASS or an implicit retry/reset."""
+    if device.poisoned:
+        return {"status": "not_attempted", "reason": "control session poisoned; STOP unproven"}
+    try:
+        reply = device.command(13, timeout=2)
+        return {"status": "stopped" if reply == [0, 1] else "unproven", "reply": reply}
+    except BaseException as error:
+        return {"status": "unproven", "error": f"{type(error).__name__}: {error}"}
 
 
 def inspect_image(repository: Path, build_root: Path, role: int) -> dict:
@@ -66,6 +101,34 @@ def verify_identity(raw: bytes, role: int, commit: str) -> None:
         raise ProtocolError("unexpected runtime role/protocol identity")
     if raw[16:56] != commit.encode("ascii"):
         raise ProtocolError("runtime firmware commit mismatch")
+
+
+def boot_exact(stack, connect_helper, pyocd: Path, uid: str, image: dict):
+    """Flash/start one exact role image; caller owns the pair's exclusive locks."""
+    if sha256_file(image["path"]) != image["sha256"] or sha256_file(image["elf"]) != image["elf_sha256"]:
+        raise ProtocolError("image changed after preflight")
+    flash = flash_image(pyocd, uid, image["path"], 120)
+    session = connect_helper.session_with_chosen_probe(unique_id=uid, target_override="nrf54l", frequency=1000000,
+        blocking=False, no_config=True, options={"auto_unlock": False, "connect_mode": "attach", "resume_on_disconnect": False})
+    if session is None:
+        raise ProtocolError("selected probe disappeared after flash")
+    stack.enter_context(session)
+    target = session.target
+    target.reset_and_halt()
+    if target.get_state().name != "HALTED" or target.read32(0xE000ED00) != 0x411FD210:
+        raise ProtocolError("controlled start CPU identity failed")
+    # A reset may retain SRAM. Clear only the three protocol commit markers.
+    for address in image["symbols"].values():
+        target.write32(address, 0)
+    target.flush()
+    target.resume()
+    deadline = time.monotonic() + 5
+    while target.read32(image["symbols"]["v04_identity"]) != MAGIC:
+        if time.monotonic() > deadline:
+            raise ProtocolError("firmware boot identity timeout")
+        time.sleep(0.01)
+    verify_identity(bytes(target.read_memory_block8(image["symbols"]["v04_identity"], 64)), image["role"], image["core_revision"])
+    return Device(target, image, secrets.token_bytes(16)), flash
 
 
 class Device:
@@ -140,6 +203,11 @@ def run_onboard(device: Device, rounds: int, append) -> None:
                 if not 0 < low <= high <= 4095 or (input_code == 0x80 and not 2500 <= low <= high <= 4000) or (input_code == 0x82 and not 768 <= low <= high <= 1280):
                     raise ProtocolError(f"ADC internal range oracle failed input={input_code}: {reply}")
                 append(f"V04-ADC-INTERNAL/{input_code:02x}/{samples}/{round_number}", {"result": reply})
+    reply = device.command(5)
+    if reply != [1, 32, 1, 1, 1, 0, 0, 0]:
+        raise ProtocolError(f"concurrent PWM20/PWM21/SAADC oracle failed: {reply}")
+    append("V04-ANALOG-CONCURRENCY/pwm20-pwm21-saadc",
+           {"result": reply, "scope": "onboard-dma-lifecycle-no-signal-measurement"})
 
 
 def main() -> int:
@@ -178,40 +246,10 @@ def main() -> int:
         print(json.dumps(evidence, ensure_ascii=False, indent=2))
         print("V04_PAIR_PREFLIGHT_ONLY; no flash or board reset performed")
         return 0
-    args.evidence.parent.mkdir(parents=True, exist_ok=True)
-    # Exclusive create preserves earlier failures/results and prohibits accidental overwrite.
-    with args.evidence.open("x", encoding="utf-8") as output:
-        output.write(json.dumps({**evidence, "status": "running"}, ensure_ascii=False) + "\n")
-    journal = args.evidence.with_suffix(args.evidence.suffix + ".jsonl")
-    with journal.open("x", encoding="utf-8") as log:
-        try:
+    with evidence_session(args.evidence, evidence) as log:
             with ProbeLocks(uids), ExitStack() as stack:
                 for uid, image in zip(uids, images):
-                    if sha256_file(image["path"]) != image["sha256"] or sha256_file(image["elf"]) != image["elf_sha256"]:
-                        raise ProtocolError("image changed after preflight")
-                    flash = flash_image(args.pyocd, uid, image["path"], 120)
-                    session = ConnectHelper.session_with_chosen_probe(unique_id=uid, target_override="nrf54l", frequency=1000000,
-                        blocking=False, no_config=True, options={"auto_unlock": False, "connect_mode": "attach", "resume_on_disconnect": False})
-                    if session is None:
-                        raise ProtocolError("selected probe disappeared after flash")
-                    stack.enter_context(session)
-                    target = session.target
-                    target.reset_and_halt()
-                    if target.get_state().name != "HALTED" or target.read32(0xE000ED00) != 0x411FD210:
-                        raise ProtocolError("controlled start CPU identity failed")
-                    # SRAM survives some reset types. Never accept a prior boot's
-                    # ready marker while the new image is still initializing.
-                    for address in image["symbols"].values():
-                        target.write32(address, 0)
-                    target.flush()
-                    target.resume()
-                    deadline = time.monotonic() + 5
-                    while target.read32(image["symbols"]["v04_identity"]) != MAGIC:
-                        if time.monotonic() > deadline:
-                            raise ProtocolError("firmware boot identity timeout")
-                        time.sleep(0.01)
-                    verify_identity(bytes(target.read_memory_block8(image["symbols"]["v04_identity"], 64)), image["role"], image["core_revision"])
-                    device = Device(target, image, secrets.token_bytes(16))
+                    device, flash = boot_exact(stack, ConnectHelper, args.pyocd, uid, image)
                     def append(case_id, result, current_role=image["role"]):
                         entry = {"id": case_id, "role": current_role, "status": "passed", **result}
                         evidence["results"].append(entry)
@@ -222,16 +260,15 @@ def main() -> int:
                         run_onboard(device, args.rounds, append)
                     if args.onboard_suite in ("uart", "all"):
                         from v04_uart import run_uart_onboard
-                        run_uart_onboard(device, ports[image["role"]-1], args.rounds, append, args.uart_producer)
+                        try:
+                            run_uart_onboard(device, ports[image["role"]-1], args.rounds, append, args.uart_producer)
+                        except BaseException:
+                            cleanup = {"role": image["role"], **stop_after_uart_failure(device)}
+                            evidence.setdefault("failure_cleanup", []).append(cleanup)
+                            log.write(json.dumps({"type": "failure_cleanup", **cleanup}) + "\n")
+                            log.flush()
+                            raise
                     print(f"V04_PAIR_ONBOARD_ROLE_PASS={image['role']}", flush=True)
-            evidence["status"] = "passed"
-        except BaseException as error:
-            evidence["status"] = "interrupted" if isinstance(error, KeyboardInterrupt) else "failed"
-            evidence["error"] = str(error)
-            raise
-        finally:
-            evidence["completed_at_utc"] = dt.datetime.now(dt.timezone.utc).isoformat()
-            args.evidence.write_text(json.dumps(evidence, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"V04_PAIR_ONBOARD_PASS={len(evidence['results'])}; external HIL remains NOT RUN")
     return 0
 

@@ -112,8 +112,7 @@ namespace nucode::ble
     };
 
     /** @brief Sketch main-thread에서 실행되는 보안 event callback입니다. */
-    using SecurityEventCallback = void (*)(const SecurityEventRecord &event,
-                                           void *context);
+    using SecurityEventCallback = void (*)(const SecurityEventRecord &event, void *context);
 
     /** @brief 보안 manager 초기화 계약입니다. */
     struct SecurityConfig
@@ -132,7 +131,7 @@ namespace nucode::ble
      */
     class SecurityManager final
     {
-    public:
+      public:
         /** @brief SMP callback과 bounded event queue를 초기화합니다. */
         [[nodiscard]] bool begin(const SecurityConfig &config = {}) noexcept;
 
@@ -200,7 +199,7 @@ namespace nucode::ble
     /** @brief 표준 Battery Service의 level과 notification을 관리합니다. */
     class BatteryService final
     {
-    public:
+      public:
         /** @brief 0~100% battery level을 갱신하고 구독자에게 알립니다. */
         [[nodiscard]] bool setLevel(std::uint8_t percent) noexcept;
 
@@ -225,7 +224,7 @@ namespace nucode::ble
     /** @brief 표준 DIS 문자열을 runtime settings handler에 안전하게 복사합니다. */
     class DeviceInformationService final
     {
-    public:
+      public:
         /** @brief 모든 필드를 검증한 뒤 DIS cache를 한 번에 갱신합니다. */
         [[nodiscard]] bool configure(const DeviceInformation &information) noexcept;
 
@@ -244,7 +243,7 @@ namespace nucode::ble
     /** @brief 암호화된 BLE HID keyboard input report를 전송합니다. */
     class HidKeyboard final
     {
-    public:
+      public:
         /** @brief NCS HIDS service와 표준 keyboard report map을 등록합니다. */
         [[nodiscard]] bool begin() noexcept;
 
@@ -252,8 +251,7 @@ namespace nucode::ble
         [[nodiscard]] bool sendReport(const KeyboardReport &report) noexcept;
 
         /** @brief modifier와 단일 usage를 포함한 key-down report를 보냅니다. */
-        [[nodiscard]] bool press(std::uint8_t usage,
-                                 std::uint8_t modifiers = 0U) noexcept;
+        [[nodiscard]] bool press(std::uint8_t usage, std::uint8_t modifiers = 0U) noexcept;
 
         /** @brief 모든 key를 놓는 zero report를 보냅니다. */
         [[nodiscard]] bool releaseAll() noexcept;
@@ -268,7 +266,7 @@ namespace nucode::ble
         [[nodiscard]] int lastDriverError() const noexcept;
     };
 
-}
+} // namespace nucode::ble
 
 /** @brief NU54DK의 단일 BLE security manager입니다. */
 extern nucode::ble::SecurityManager BLESecurity;

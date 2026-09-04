@@ -1,5 +1,9 @@
-// Native execution of production SerialFabric.cpp with fake hardware/resources.
-// This verifies transaction behavior, not electrical HIL or the nrfx adapters.
+/**
+ * @file
+ * @brief 가짜 hardware/resource로 production SerialFabric.cpp의 transaction을 검증합니다.
+ *
+ * 전기적 HIL이나 nrfx adapter를 검증하는 시험은 아닙니다.
+ */
 #include <nucode/SerialFabric.h>
 #include "internal/SerialFabricBackend.h"
 #include "serial_fabric_routes.h"
@@ -13,85 +17,167 @@ using namespace nucode::arduino::internal;
 NRF_GPIO_Type mock_gpio[3]{};
 std::uint64_t waited_us = 0;
 int refs = 0, requests = 0, frees = 0, activations = 0, deactivations = 0;
-int rollbacks = 0, releases = 0, irq_calls = 0;
+int rollbacks = 0, releases = 0, irq_calls = 0, recoveries = 0;
 bool reserve_fail = false, commit_fail = false, activate_fail = false;
 bool stop_ready = true, stop_fail = false, deactivate_fail = false;
+bool rollback_fail = false, recovery_fail = false;
 bool reserved = false;
-int nrfx_power_constlat_mode_request() { ++requests; return refs++ ? -EALREADY : 0; }
-int nrfx_power_constlat_mode_free() { assert(refs > 0); ++frees; return --refs ? -EBUSY : 0; }
+int nrfx_power_constlat_mode_request()
+{
+    ++requests;
+    return refs++ ? -EALREADY : 0;
+}
+int nrfx_power_constlat_mode_free()
+{
+    assert(refs > 0);
+    ++frees;
+    return --refs ? -EBUSY : 0;
+}
 
 namespace nucode::arduino::internal
 {
     SerialFabricResult validateNu54dkSerialFabricRoute(SerialPersonality, std::uint8_t,
-        const SerialFabricConfiguration &config, ValidatedSerialRoute &route,
-        IoResourceId *resources, std::size_t, std::size_t &count) noexcept
+                                                       const SerialFabricConfiguration &config,
+                                                       ValidatedSerialRoute &route,
+                                                       IoResourceId *resources, std::size_t,
+                                                       std::size_t &count) noexcept
     {
         route.route = config.route;
         route.pin_count = config.pin_count;
-        for (std::size_t i = 0; i < config.pin_count; ++i) route.pins[i] = config.pins[i];
+        for (std::size_t i = 0; i < config.pin_count; ++i)
+        {
+            route.pins[i] = config.pins[i];
+        }
         resources[0] = peripheralIoResource(IoResourceKind::serial_block, 20);
         count = 1;
         return SerialFabricResult::success;
     }
     SerialFabricResult nu54dkSerialFabricPsel(pin_size_t pin, std::uint32_t &psel) noexcept
-    { psel = pin; return SerialFabricResult::success; }
-    IoResourceResult reserveIoResources(IoResourceOwner owner, const IoResourceId *, std::size_t,
-        IoAcquirePolicy, IoResourceLease &lease, IoResourceSnapshot *) noexcept
     {
-        if (reserve_fail || reserved) return IoResourceResult::conflict;
-        lease.owner = owner; lease.phase = IoLeasePhase::reserved; reserved = true;
+        psel = pin;
+        return SerialFabricResult::success;
+    }
+    IoResourceResult reserveIoResources(IoResourceOwner owner, const IoResourceId *, std::size_t,
+                                        IoAcquirePolicy, IoResourceLease &lease,
+                                        IoResourceSnapshot *) noexcept
+    {
+        if (reserve_fail || reserved)
+        {
+            return IoResourceResult::conflict;
+        }
+        lease.owner = owner;
+        lease.phase = IoLeasePhase::reserved;
+        reserved = true;
         return IoResourceResult::success;
     }
     IoResourceResult commitIoResources(IoResourceLease &lease) noexcept
     {
-        if (commit_fail) return IoResourceResult::wrong_phase;
-        lease.phase = IoLeasePhase::committed; return IoResourceResult::success;
+        if (commit_fail)
+        {
+            return IoResourceResult::wrong_phase;
+        }
+        lease.phase = IoLeasePhase::committed;
+        return IoResourceResult::success;
     }
     IoResourceResult rollbackIoResources(IoResourceLease &) noexcept
-    { assert(reserved); reserved = false; ++rollbacks; return IoResourceResult::success; }
+    {
+        assert(reserved);
+        ++rollbacks;
+        if (rollback_fail)
+        {
+            return IoResourceResult::wrong_phase;
+        }
+        reserved = false;
+        return IoResourceResult::success;
+    }
     IoResourceResult releaseIoResources(IoResourceLease &) noexcept
-    { assert(reserved); reserved = false; ++releases; return IoResourceResult::success; }
-}
+    {
+        assert(reserved);
+        reserved = false;
+        ++releases;
+        return IoResourceResult::success;
+    }
+} // namespace nucode::arduino::internal
 
 SerialFabricResult validate(std::uint8_t, const ValidatedSerialRoute &, int &) noexcept
-{ return SerialFabricResult::success; }
-SerialFabricResult activate(std::uint8_t instance, const ValidatedSerialRoute &route, int &) noexcept
+{
+    return SerialFabricResult::success;
+}
+SerialFabricResult activate(std::uint8_t instance, const ValidatedSerialRoute &route,
+                            int &) noexcept
 {
     assert(reserved);
-    if (instance == 20 && route.route == SerialRouteClass::p2_dedicated20) assert(refs > 0);
+    if (instance == 20 && route.route == SerialRouteClass::p2_dedicated20)
+    {
+        assert(refs > 0);
+    }
     ++activations;
-    // A fake failed init can still have changed pad configuration, but no DMA.
+    /** @brief 가짜 초기화 실패는 DMA 없이도 pad 설정을 바꾼 상태를 모사합니다. */
     mock_gpio[2].PIN_CNF[2] = 99;
     nrf_gpio_pin_write(66, 0);
     return activate_fail ? SerialFabricResult::driver_error : SerialFabricResult::success;
 }
 SerialFabricResult stop(std::uint8_t, int &) noexcept
-{ return stop_fail ? SerialFabricResult::driver_error : SerialFabricResult::success; }
-bool stopped(std::uint8_t) noexcept { return stop_ready; }
+{
+    return stop_fail ? SerialFabricResult::driver_error : SerialFabricResult::success;
+}
+bool stopped(std::uint8_t) noexcept
+{
+    return stop_ready;
+}
 SerialFabricResult deactivate(std::uint8_t, int &) noexcept
 {
     assert(stop_ready && reserved);
     ++deactivations;
     return deactivate_fail ? SerialFabricResult::driver_error : SerialFabricResult::success;
 }
-void irq(std::uint8_t) noexcept { ++irq_calls; }
+void irq(std::uint8_t) noexcept
+{
+    ++irq_calls;
+}
 const SerialFabricDriverAdapter adapter{validate, activate, stop, stopped, deactivate, irq};
 const SerialSignalPin pins[] = {{SerialSignal::txd, 66}, {SerialSignal::rxd, 64}};
 
+SerialFabricResult recover(std::uint8_t instance, const ValidatedSerialRoute &route,
+                           int &driver_error) noexcept
+{
+    assert(instance == 20 && route.route == SerialRouteClass::p2_dedicated20);
+    assert(reserved && refs > 0);
+    ++recoveries;
+    mock_gpio[2].PIN_CNF[2] = 101;
+    nrf_gpio_pin_write(66, 0);
+    if (recovery_fail)
+    {
+        driver_error = -EIO;
+        return SerialFabricResult::driver_error;
+    }
+    return SerialFabricResult::success;
+}
+
 UarteHandle *prepare(std::uint8_t instance = 20)
 {
-    resetSerialFabricForTest(); // fake drivers only
+    /** @brief 가짜 driver 상태만 초기화합니다. */
+    resetSerialFabricForTest();
     refs = requests = frees = activations = deactivations = rollbacks = releases = irq_calls = 0;
+    recoveries = 0;
     reserved = reserve_fail = commit_fail = activate_fail = stop_fail = deactivate_fail = false;
-    stop_ready = true; waited_us = 0;
-    for (auto &port : mock_gpio) port = {};
+    rollback_fail = recovery_fail = false;
+    stop_ready = true;
+    waited_us = 0;
+    for (auto &port : mock_gpio)
+    {
+        port = {};
+    }
     mock_gpio[2].PIN_CNF[2] = 23;
     mock_gpio[2].PIN_CNF[0] = 42;
     mock_gpio[2].PIN_CNF[9] = 77;
     mock_gpio[2].out = (1U << 2) | (1U << 9);
-    assert(registerSerialFabricAdapter(SerialPersonality::uarte, instance, adapter) == SerialFabricResult::success);
+    assert(registerSerialFabricAdapter(SerialPersonality::uarte, instance, adapter) ==
+           SerialFabricResult::success);
     auto *handle = serialFabric().uarte(instance);
-    assert(handle->stage({SerialRouteClass::p2_dedicated20, SerialElectricalProfile::connector_fixture, pins, 2}) == SerialFabricResult::success);
+    assert(handle->stage({SerialRouteClass::p2_dedicated20,
+                          SerialElectricalProfile::connector_fixture, pins, 2}) ==
+           SerialFabricResult::success);
     assert(requests == 0 && mock_gpio[2].PIN_CNF[2] == 23);
     return handle;
 }
@@ -103,44 +189,89 @@ void restored()
 int main()
 {
     auto *handle = prepare();
-    refs = 1; // unrelated nrfx owner survives our EALREADY/EBUSY pair
+    refs = 1;
+    assert(executeSerialFabricRecovery(SerialPersonality::uarte, 20, recover) ==
+           SerialFabricResult::success);
+    assert(recoveries == 1 && requests == 1 && frees == 1 && refs == 1);
+    assert(rollbacks == 1 && !reserved && handle->state() == SerialFabricState::staged);
+    restored();
+
+    handle = prepare();
+    recovery_fail = true;
+    assert(executeSerialFabricRecovery(SerialPersonality::uarte, 20, recover) ==
+           SerialFabricResult::driver_error);
+    assert(recoveries == 1 && rollbacks == 1 && !reserved);
+    assert(handle->state() == SerialFabricState::staged);
+    restored();
+
+    handle = prepare();
+    reserve_fail = true;
+    assert(executeSerialFabricRecovery(SerialPersonality::uarte, 20, recover) ==
+           SerialFabricResult::ownership_conflict);
+    assert(recoveries == 0 && requests == 0 && rollbacks == 0);
+    restored();
+
+    handle = prepare();
+    rollback_fail = true;
+    assert(executeSerialFabricRecovery(SerialPersonality::uarte, 20, recover) ==
+           SerialFabricResult::release_failed);
+    assert(recoveries == 1 && reserved && handle->state() == SerialFabricState::faulted);
+
+    handle = prepare();
+    /** @brief 무관한 nrfx 소유자는 EALREADY/EBUSY 쌍 뒤에도 참조를 유지합니다. */
+    refs = 1;
     assert(handle->activate() == SerialFabricResult::success && refs == 2);
-    dispatchSerialFabricIrq(20); assert(irq_calls == 1);
+    dispatchSerialFabricIrq(20);
+    assert(irq_calls == 1);
     assert(handle->deactivate() == SerialFabricResult::success);
     assert(refs == 1 && requests == 1 && frees == 1 && releases == 1);
-    dispatchSerialFabricIrq(20); assert(irq_calls == 1); restored();
+    dispatchSerialFabricIrq(20);
+    assert(irq_calls == 1);
+    restored();
 
     handle = prepare(0);
     assert(handle->activate() == SerialFabricResult::success && requests == 0);
-    assert(handle->deactivate() == SerialFabricResult::success && frees == 0); restored();
+    assert(handle->deactivate() == SerialFabricResult::success && frees == 0);
+    restored();
 
-    handle = prepare(); reserve_fail = true;
+    handle = prepare();
+    reserve_fail = true;
     assert(handle->activate() == SerialFabricResult::ownership_conflict);
-    assert(requests == 0 && activations == 0); restored();
+    assert(requests == 0 && activations == 0);
+    restored();
 
-    handle = prepare(); activate_fail = true;
+    handle = prepare();
+    activate_fail = true;
     assert(handle->activate() == SerialFabricResult::driver_error);
-    assert(refs == 0 && frees == 1 && rollbacks == 1 && !reserved); restored();
+    assert(refs == 0 && frees == 1 && rollbacks == 1 && !reserved);
+    restored();
 
-    handle = prepare(); commit_fail = true;
+    handle = prepare();
+    commit_fail = true;
     assert(handle->activate() == SerialFabricResult::release_failed);
-    assert(refs == 0 && frees == 1 && deactivations == 1 && rollbacks == 1); restored();
+    assert(refs == 0 && frees == 1 && deactivations == 1 && rollbacks == 1);
+    restored();
 
-    handle = prepare(); commit_fail = true; stop_ready = false;
+    handle = prepare();
+    commit_fail = true;
+    stop_ready = false;
     assert(handle->activate() == SerialFabricResult::stop_timeout);
     assert(waited_us == 100000 && reserved && refs == 1 && frees == 0 && deactivations == 0);
     assert(handle->state() == SerialFabricState::faulted && rollbacks == 0);
 
-    handle = prepare(); assert(handle->activate() == SerialFabricResult::success);
+    handle = prepare();
+    assert(handle->activate() == SerialFabricResult::success);
     stop_ready = false;
     assert(handle->deactivate(17) == SerialFabricResult::stop_timeout);
     assert(waited_us == 17 && reserved && refs == 1 && frees == 0 && releases == 0);
     assert(handle->activate() == SerialFabricResult::faulted);
 
-    handle = prepare(); assert(handle->activate() == SerialFabricResult::success);
+    handle = prepare();
+    assert(handle->activate() == SerialFabricResult::success);
     deactivate_fail = true;
     assert(handle->deactivate() == SerialFabricResult::driver_error);
     assert(reserved && refs == 1 && frees == 0 && releases == 0);
-    assert(mock_gpio[2].PIN_CNF[2] == 99); // not restored before proven adapter cleanup
+    /** @brief adapter cleanup 증명 전에는 핀 설정을 복원하지 않습니다. */
+    assert(mock_gpio[2].PIN_CNF[2] == 99);
     resetSerialFabricForTest();
 }

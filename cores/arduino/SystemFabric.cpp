@@ -41,32 +41,45 @@ namespace nucode::arduino
         [[nodiscard]] WatchdogContext *watchdogContext(std::uint8_t instance) noexcept
         {
             if (instance == 30U)
+            {
                 return &watchdog_contexts[0];
+            }
             if (instance == 31U)
+            {
                 return &watchdog_contexts[1];
+            }
             return nullptr;
         }
 
         [[nodiscard]] SystemFabricResult driverResult(int result) noexcept
         {
             if (result == 0)
+            {
                 return SystemFabricResult::success;
+            }
             if (result == -ENOMEM)
+            {
                 return SystemFabricResult::resource_exhausted;
+            }
             if (result == -EBUSY || result == -EALREADY)
+            {
                 return SystemFabricResult::wrong_state;
+            }
             if (result == -EINVAL || result == -ENOTSUP)
+            {
                 return SystemFabricResult::invalid_argument;
+            }
             return SystemFabricResult::driver_error;
         }
 
     } // namespace
 
-    SystemFabricResult
-    TemperatureFabric::readCentiCelsius(std::int32_t &temperature) noexcept
+    SystemFabricResult TemperatureFabric::readCentiCelsius(std::int32_t &temperature) noexcept
     {
         if (k_is_in_isr())
+        {
             return SystemFabricResult::invalid_context;
+        }
 
         const device *const driver = DEVICE_DT_GET(DT_NODELABEL(temp));
         if (!device_is_ready(driver))
@@ -79,7 +92,9 @@ namespace nucode::arduino
         sensor_value value{};
         int result = sensor_sample_fetch(driver);
         if (result == 0)
+        {
             result = sensor_channel_get(driver, SENSOR_CHAN_DIE_TEMP, &value);
+        }
         temperature_last_error = result;
         if (result == 0)
         {
@@ -99,7 +114,10 @@ namespace nucode::arduino
         return result;
     }
 
-    std::uint8_t WatchdogFabric::instance() const noexcept { return instance_; }
+    std::uint8_t WatchdogFabric::instance() const noexcept
+    {
+        return instance_;
+    }
 
     bool WatchdogFabric::configured() const noexcept
     {
@@ -128,14 +146,17 @@ namespace nucode::arduino
         return result;
     }
 
-    SystemFabricResult WatchdogFabric::configure(std::uint32_t timeout_ms,
-                                                 bool run_in_sleep,
+    SystemFabricResult WatchdogFabric::configure(std::uint32_t timeout_ms, bool run_in_sleep,
                                                  bool run_in_halt) noexcept
     {
         if (k_is_in_isr())
+        {
             return SystemFabricResult::invalid_context;
+        }
         if (timeout_ms == 0U)
+        {
             return SystemFabricResult::invalid_argument;
+        }
 
         k_mutex_lock(&system_fabric_mutex, K_FOREVER);
         auto *const context = watchdogContext(instance_);
@@ -174,9 +195,13 @@ namespace nucode::arduino
         context->active = false;
         std::uint8_t options = 0U;
         if (!run_in_sleep)
+        {
             options |= WDT_OPT_PAUSE_IN_SLEEP;
+        }
         if (!run_in_halt)
+        {
             options |= WDT_OPT_PAUSE_HALTED_BY_DBG;
+        }
         context->options = options;
         context->last_error = 0;
         k_mutex_unlock(&system_fabric_mutex);
@@ -186,7 +211,9 @@ namespace nucode::arduino
     SystemFabricResult WatchdogFabric::start() noexcept
     {
         if (k_is_in_isr())
+        {
             return SystemFabricResult::invalid_context;
+        }
         k_mutex_lock(&system_fabric_mutex, K_FOREVER);
         auto *const context = watchdogContext(instance_);
         if (context == nullptr)
@@ -202,7 +229,9 @@ namespace nucode::arduino
         const int result = wdt_setup(context->driver, context->options);
         context->last_error = result;
         if (result == 0)
+        {
             context->active = true;
+        }
         k_mutex_unlock(&system_fabric_mutex);
         return driverResult(result);
     }
@@ -210,7 +239,9 @@ namespace nucode::arduino
     SystemFabricResult WatchdogFabric::feed() noexcept
     {
         if (k_is_in_isr())
+        {
             return SystemFabricResult::invalid_context;
+        }
         k_mutex_lock(&system_fabric_mutex, K_FOREVER);
         auto *const context = watchdogContext(instance_);
         if (context == nullptr)
@@ -232,7 +263,9 @@ namespace nucode::arduino
     SystemFabricResult WatchdogFabric::stop() noexcept
     {
         if (k_is_in_isr())
+        {
             return SystemFabricResult::invalid_context;
+        }
         k_mutex_lock(&system_fabric_mutex, K_FOREVER);
         auto *const context = watchdogContext(instance_);
         if (context == nullptr)
@@ -268,9 +301,13 @@ namespace nucode::arduino
     {
         static WatchdogFabric handles[] = {WatchdogFabric(30U), WatchdogFabric(31U)};
         if (instance == 30U)
+        {
             return &handles[0];
+        }
         if (instance == 31U)
+        {
             return &handles[1];
+        }
         return nullptr;
     }
 

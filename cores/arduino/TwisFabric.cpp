@@ -108,11 +108,13 @@ namespace nucode::arduino
             }
         }
 
-        [[nodiscard]] bool rangeInside(const SerialDmaWorkspace &workspace,
-                                       const void *address, std::size_t size) noexcept
+        [[nodiscard]] bool rangeInside(const SerialDmaWorkspace &workspace, const void *address,
+                                       std::size_t size) noexcept
         {
             if ((address == nullptr) || (size == 0U))
+            {
                 return false;
+            }
             const auto base = reinterpret_cast<std::uintptr_t>(workspace.address);
             const auto start = reinterpret_cast<std::uintptr_t>(address);
             if ((start < base) || (workspace.size > UINTPTR_MAX - base) ||
@@ -127,34 +129,38 @@ namespace nucode::arduino
                                         std::size_t size) noexcept
         {
             if ((address == nullptr) && (size == 0U))
+            {
                 return true;
-            for (std::size_t index = 0U; index < context.route.dma_workspace_count;
-                 ++index)
+            }
+            for (std::size_t index = 0U; index < context.route.dma_workspace_count; ++index)
             {
                 if (rangeInside(context.route.dma_workspaces[index], address, size))
+                {
                     return true;
+                }
             }
             return false;
         }
 
-        [[nodiscard]] const SerialSignalPin *
-        signalPin(const ValidatedSerialRoute &route, SerialSignal signal) noexcept
+        [[nodiscard]] const SerialSignalPin *signalPin(const ValidatedSerialRoute &route,
+                                                       SerialSignal signal) noexcept
         {
             for (std::size_t index = 0U; index < route.pin_count; ++index)
             {
                 if (route.pins[index].signal == signal)
+                {
                     return &route.pins[index];
+                }
             }
             return nullptr;
         }
 
-        [[nodiscard]] bool pselFor(const ValidatedSerialRoute &route,
-                                   SerialSignal signal, std::uint32_t &psel) noexcept
+        [[nodiscard]] bool pselFor(const ValidatedSerialRoute &route, SerialSignal signal,
+                                   std::uint32_t &psel) noexcept
         {
             const auto *const entry = signalPin(route, signal);
-            return entry != nullptr &&
-                   internal::nu54dkSerialFabricPsel(entry->pin, psel) ==
-                       SerialFabricResult::success;
+            return entry != nullptr && internal::nu54dkSerialFabricPsel(entry->pin, psel) ==
+                                           SerialFabricResult::success;
         }
 
         void pushEvent(TwisContext &context, const TwiFabricEvent &event) noexcept
@@ -176,31 +182,33 @@ namespace nucode::arduino
 
         void emitBufferNeeded(TwisContext &context, bool read)
         {
-            pushEvent(context, {TwiFabricEventType::buffer_needed,
-                                context.configuration.primary_address, nullptr, nullptr,
-                                0U, 0U, read ? 1U : 2U});
+            pushEvent(context,
+                      {TwiFabricEventType::buffer_needed, context.configuration.primary_address,
+                       nullptr, nullptr, 0U, 0U, read ? 1U : 2U});
         }
 
         void clearActiveWhenEmpty(TwisContext &context)
         {
             const k_spinlock_key_t key = k_spin_lock(&context.lock);
-            const bool empty = (context.tx[0].address == nullptr) &&
-                               (context.tx[1].address == nullptr) &&
-                               (context.rx[0].address == nullptr) &&
-                               (context.rx[1].address == nullptr);
+            const bool empty =
+                (context.tx[0].address == nullptr) && (context.tx[1].address == nullptr) &&
+                (context.rx[0].address == nullptr) && (context.rx[1].address == nullptr);
             k_spin_unlock(&context.lock, key);
             if (empty)
+            {
                 atomic_clear(&context.buffers_active);
+            }
         }
 
         void handleReadRequest(TwisContext &context, bool buffer_required)
         {
             pushEvent(context,
-                      {TwiFabricEventType::read_request,
-                       context.configuration.primary_address, context.tx[0].address,
-                       nullptr, 0U, 0U, buffer_required ? 1U : 0U});
+                      {TwiFabricEventType::read_request, context.configuration.primary_address,
+                       context.tx[0].address, nullptr, 0U, 0U, buffer_required ? 1U : 0U});
             if (!buffer_required)
+            {
                 return;
+            }
             BufferRecord buffer{};
             {
                 const k_spinlock_key_t key = k_spin_lock(&context.lock);
@@ -212,28 +220,28 @@ namespace nucode::arduino
                 emitBufferNeeded(context, true);
                 return;
             }
-            const int result =
-                nrfx_twis_tx_prepare(&context.driver, buffer.address, buffer.size);
+            const int result = nrfx_twis_tx_prepare(&context.driver, buffer.address, buffer.size);
             const k_spinlock_key_t key = k_spin_lock(&context.lock);
-            context.tx[0].state =
-                result == 0 ? DmaBufferState::dma_owned : DmaBufferState::error;
+            context.tx[0].state = result == 0 ? DmaBufferState::dma_owned : DmaBufferState::error;
             k_spin_unlock(&context.lock, key);
             if (result != 0)
             {
-                pushEvent(context, {TwiFabricEventType::error,
-                                    context.configuration.primary_address, buffer.address,
-                                    nullptr, 0U, 0U, static_cast<std::uint32_t>(-result)});
+                pushEvent(context,
+                          {TwiFabricEventType::error, context.configuration.primary_address,
+                           buffer.address, nullptr, 0U, 0U, static_cast<std::uint32_t>(-result)});
             }
         }
 
         void handleWriteRequest(TwisContext &context, bool buffer_required)
         {
-            pushEvent(context, {TwiFabricEventType::write_request,
-                                context.configuration.primary_address, nullptr,
-                                const_cast<void *>(context.rx[0].address), 0U, 0U,
-                                buffer_required ? 1U : 0U});
+            pushEvent(context,
+                      {TwiFabricEventType::write_request, context.configuration.primary_address,
+                       nullptr, const_cast<void *>(context.rx[0].address), 0U, 0U,
+                       buffer_required ? 1U : 0U});
             if (!buffer_required)
+            {
                 return;
+            }
             BufferRecord buffer{};
             {
                 const k_spinlock_key_t key = k_spin_lock(&context.lock);
@@ -248,8 +256,7 @@ namespace nucode::arduino
             const int result = nrfx_twis_rx_prepare(
                 &context.driver, const_cast<void *>(buffer.address), buffer.size);
             const k_spinlock_key_t key = k_spin_lock(&context.lock);
-            context.rx[0].state =
-                result == 0 ? DmaBufferState::dma_owned : DmaBufferState::error;
+            context.rx[0].state = result == 0 ? DmaBufferState::dma_owned : DmaBufferState::error;
             k_spin_unlock(&context.lock, key);
             if (result != 0)
             {
@@ -271,14 +278,14 @@ namespace nucode::arduino
                 context.tx[1] = {};
                 k_spin_unlock(&context.lock, key);
             }
-            pushEvent(
-                context,
-                {error ? TwiFabricEventType::error : TwiFabricEventType::read_complete,
-                 context.configuration.primary_address, completed.address, nullptr,
-                 amount, 0U,
-                 error ? nrfx_twis_error_get_and_clear(&context.driver) : 0U});
+            pushEvent(context,
+                      {error ? TwiFabricEventType::error : TwiFabricEventType::read_complete,
+                       context.configuration.primary_address, completed.address, nullptr, amount,
+                       0U, error ? nrfx_twis_error_get_and_clear(&context.driver) : 0U});
             if (context.tx[0].address == nullptr)
+            {
                 emitBufferNeeded(context, true);
+            }
             clearActiveWhenEmpty(context);
         }
 
@@ -293,14 +300,15 @@ namespace nucode::arduino
                 context.rx[1] = {};
                 k_spin_unlock(&context.lock, key);
             }
-            pushEvent(
-                context,
-                {error ? TwiFabricEventType::error : TwiFabricEventType::write_complete,
-                 context.configuration.primary_address, nullptr,
-                 const_cast<void *>(completed.address), 0U, amount,
-                 error ? nrfx_twis_error_get_and_clear(&context.driver) : 0U});
+            pushEvent(context,
+                      {error ? TwiFabricEventType::error : TwiFabricEventType::write_complete,
+                       context.configuration.primary_address, nullptr,
+                       const_cast<void *>(completed.address), 0U, amount,
+                       error ? nrfx_twis_error_get_and_clear(&context.driver) : 0U});
             if (context.rx[0].address == nullptr)
+            {
                 emitBufferNeeded(context, false);
+            }
             clearActiveWhenEmpty(context);
         }
 
@@ -336,16 +344,27 @@ namespace nucode::arduino
             }
         }
 
-        void event20(const nrfx_twis_event_t *event) { twisEvent(contexts[0], *event); }
-        void event21(const nrfx_twis_event_t *event) { twisEvent(contexts[1], *event); }
-        void event22(const nrfx_twis_event_t *event) { twisEvent(contexts[2], *event); }
-        void event30(const nrfx_twis_event_t *event) { twisEvent(contexts[3], *event); }
+        void event20(const nrfx_twis_event_t *event)
+        {
+            twisEvent(contexts[0], *event);
+        }
+        void event21(const nrfx_twis_event_t *event)
+        {
+            twisEvent(contexts[1], *event);
+        }
+        void event22(const nrfx_twis_event_t *event)
+        {
+            twisEvent(contexts[2], *event);
+        }
+        void event30(const nrfx_twis_event_t *event)
+        {
+            twisEvent(contexts[3], *event);
+        }
 
-        const nrfx_twis_event_handler_t handlers[instance_count] = {event20, event21,
-                                                                    event22, event30};
+        const nrfx_twis_event_handler_t handlers[instance_count] = {event20, event21, event22,
+                                                                    event30};
 
-        SerialFabricResult validateAdapter(std::uint8_t instance,
-                                           const ValidatedSerialRoute &route,
+        SerialFabricResult validateAdapter(std::uint8_t instance, const ValidatedSerialRoute &route,
                                            int &driver_error) noexcept
         {
             driver_error = 0;
@@ -366,34 +385,35 @@ namespace nucode::arduino
             return SerialFabricResult::success;
         }
 
-        SerialFabricResult activateAdapter(std::uint8_t instance,
-                                           const ValidatedSerialRoute &route,
+        SerialFabricResult activateAdapter(std::uint8_t instance, const ValidatedSerialRoute &route,
                                            int &driver_error) noexcept
         {
             auto *const context = contextFor(instance);
             const int index = instanceIndex(instance);
             if ((context == nullptr) || (index < 0))
+            {
                 return SerialFabricResult::unsupported_instance;
+            }
             std::uint32_t scl = 0U;
             std::uint32_t sda = 0U;
-            if (!pselFor(route, SerialSignal::scl, scl) ||
-                !pselFor(route, SerialSignal::sda, sda))
+            if (!pselFor(route, SerialSignal::scl, scl) || !pselFor(route, SerialSignal::sda, sda))
             {
                 return SerialFabricResult::invalid_argument;
             }
-            context->driver_configuration = NRFX_TWIS_DEFAULT_CONFIG(
-                scl, sda, context->configuration.primary_address);
-            context->driver_configuration.addr[1] =
-                context->configuration.secondary_address;
+            context->driver_configuration =
+                NRFX_TWIS_DEFAULT_CONFIG(scl, sda, context->configuration.primary_address);
+            context->driver_configuration.addr[1] = context->configuration.secondary_address;
             if (context->configuration.internal_pullups)
             {
                 context->driver_configuration.scl_pull = NRF_GPIO_PIN_PULLUP;
                 context->driver_configuration.sda_pull = NRF_GPIO_PIN_PULLUP;
             }
-            driver_error = nrfx_twis_init(
-                &context->driver, &context->driver_configuration, handlers[index]);
+            driver_error =
+                nrfx_twis_init(&context->driver, &context->driver_configuration, handlers[index]);
             if (driver_error != 0)
+            {
                 return mapResult(driver_error);
+            }
             nrfx_twis_enable(&context->driver);
             context->route = route;
             context->tx[0] = {};
@@ -417,22 +437,27 @@ namespace nucode::arduino
             for (auto &record : context.tx)
             {
                 if (record.address != nullptr)
+                {
                     record.state = DmaBufferState::cancelled;
+                }
             }
             for (auto &record : context.rx)
             {
                 if (record.address != nullptr)
+                {
                     record.state = DmaBufferState::cancelled;
+                }
             }
             k_spin_unlock(&context.lock, key);
         }
 
-        SerialFabricResult requestStopAdapter(std::uint8_t instance,
-                                              int &driver_error) noexcept
+        SerialFabricResult requestStopAdapter(std::uint8_t instance, int &driver_error) noexcept
         {
             auto *const context = contextFor(instance);
             if (context == nullptr)
+            {
                 return SerialFabricResult::unsupported_instance;
+            }
             irq_disable(NRFX_IRQ_NUMBER_GET(context->driver.p_reg));
             if (atomic_get(&context->initialized) != 0)
             {
@@ -452,12 +477,13 @@ namespace nucode::arduino
             return context != nullptr && atomic_get(&context->initialized) == 0;
         }
 
-        SerialFabricResult deactivateAdapter(std::uint8_t instance,
-                                             int &driver_error) noexcept
+        SerialFabricResult deactivateAdapter(std::uint8_t instance, int &driver_error) noexcept
         {
             auto *const context = contextFor(instance);
             if (context == nullptr)
+            {
                 return SerialFabricResult::unsupported_instance;
+            }
             if (atomic_get(&context->initialized) != 0)
             {
                 nrfx_twis_disable(&context->driver);
@@ -473,12 +499,14 @@ namespace nucode::arduino
         void handleIrq(std::uint8_t instance) noexcept
         {
             if (auto *const context = contextFor(instance))
+            {
                 nrfx_twis_irq_handler(&context->driver);
+            }
         }
 
-        const SerialFabricDriverAdapter adapter{validateAdapter, activateAdapter,
+        const SerialFabricDriverAdapter adapter{validateAdapter,    activateAdapter,
                                                 requestStopAdapter, stoppedAdapter,
-                                                deactivateAdapter, handleIrq};
+                                                deactivateAdapter,  handleIrq};
 
         int registerAdapters()
         {
@@ -486,8 +514,7 @@ namespace nucode::arduino
             for (const std::uint8_t instance : instances)
             {
                 if (internal::registerSerialFabricAdapter(SerialPersonality::twis, instance,
-                                                          adapter) !=
-                    SerialFabricResult::success)
+                                                          adapter) != SerialFabricResult::success)
                 {
                     return -EIO;
                 }
@@ -498,16 +525,15 @@ namespace nucode::arduino
         SYS_INIT(registerAdapters, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
     } // namespace
 
-    SerialFabricResult
-    TwisHandle::configure(const TwisConfiguration &configuration) noexcept
+    SerialFabricResult TwisHandle::configure(const TwisConfiguration &configuration) noexcept
     {
         if (k_is_in_isr())
+        {
             return SerialFabricResult::invalid_context;
+        }
         const auto current = state();
-        if (((current != SerialFabricState::inactive) &&
-             (current != SerialFabricState::staged)) ||
-            (configuration.primary_address == 0U) ||
-            (configuration.primary_address > 0x7FU) ||
+        if (((current != SerialFabricState::inactive) && (current != SerialFabricState::staged)) ||
+            (configuration.primary_address == 0U) || (configuration.primary_address > 0x7FU) ||
             (configuration.secondary_address > 0x7FU) ||
             ((configuration.secondary_address != 0U) &&
              (configuration.secondary_address == configuration.primary_address)))
@@ -516,21 +542,26 @@ namespace nucode::arduino
         }
         auto *const context = contextFor(instance());
         if (context == nullptr)
+        {
             return SerialFabricResult::unsupported_instance;
+        }
         context->configuration = configuration;
         return SerialFabricResult::success;
     }
 
-    SerialFabricResult TwisHandle::queueBuffers(
-        const void *tx_buffer, std::size_t tx_size, void *rx_buffer,
-        std::size_t rx_size, const void *next_tx_buffer, std::size_t next_tx_size,
-        void *next_rx_buffer, std::size_t next_rx_size) noexcept
+    SerialFabricResult TwisHandle::queueBuffers(const void *tx_buffer, std::size_t tx_size,
+                                                void *rx_buffer, std::size_t rx_size,
+                                                const void *next_tx_buffer,
+                                                std::size_t next_tx_size, void *next_rx_buffer,
+                                                std::size_t next_rx_size) noexcept
     {
         if (k_is_in_isr())
+        {
             return SerialFabricResult::invalid_context;
+        }
         auto *const context = contextFor(instance());
-        if ((context == nullptr) || !internal::isSerialFabricHandleActive(
-                                        SerialPersonality::twis, instance()))
+        if ((context == nullptr) ||
+            !internal::isSerialFabricHandleActive(SerialPersonality::twis, instance()))
         {
             return SerialFabricResult::wrong_state;
         }
@@ -539,8 +570,7 @@ namespace nucode::arduino
             ((next_tx_buffer == nullptr) != (next_tx_size == 0U)) ||
             ((next_rx_buffer == nullptr) != (next_rx_size == 0U)) ||
             ((tx_size == 0U) && (rx_size == 0U)) || (tx_size > UINT16_MAX) ||
-            (rx_size > UINT16_MAX) || (next_tx_size > UINT16_MAX) ||
-            (next_rx_size > UINT16_MAX) ||
+            (rx_size > UINT16_MAX) || (next_tx_size > UINT16_MAX) || (next_rx_size > UINT16_MAX) ||
             !leasedBuffer(*context, tx_buffer, tx_size) ||
             !leasedBuffer(*context, rx_buffer, rx_size) ||
             !leasedBuffer(*context, next_tx_buffer, next_tx_size) ||
@@ -562,13 +592,13 @@ namespace nucode::arduino
     SerialFabricResult TwisHandle::cancelBuffers() noexcept
     {
         if (k_is_in_isr())
+        {
             return SerialFabricResult::invalid_context;
+        }
         auto *const context = contextFor(instance());
         const int index = instanceIndex(instance());
-        if ((context == nullptr) || (index < 0) ||
-            atomic_get(&context->active) == 0 ||
-            atomic_get(&context->buffers_active) == 0 ||
-            atomic_get(&context->initialized) == 0)
+        if ((context == nullptr) || (index < 0) || atomic_get(&context->active) == 0 ||
+            atomic_get(&context->buffers_active) == 0 || atomic_get(&context->initialized) == 0)
         {
             return SerialFabricResult::wrong_state;
         }
@@ -578,22 +608,20 @@ namespace nucode::arduino
         atomic_clear(&context->initialized);
         cancelRecords(*context);
         atomic_clear(&context->buffers_active);
-        const int result = nrfx_twis_init(
-            &context->driver, &context->driver_configuration, handlers[index]);
+        const int result =
+            nrfx_twis_init(&context->driver, &context->driver_configuration, handlers[index]);
         if (result != 0)
         {
-            pushEvent(*context, {TwiFabricEventType::error,
-                                 context->configuration.primary_address, nullptr,
-                                 nullptr, 0U, 0U, static_cast<std::uint32_t>(-result)});
+            pushEvent(*context, {TwiFabricEventType::error, context->configuration.primary_address,
+                                 nullptr, nullptr, 0U, 0U, static_cast<std::uint32_t>(-result)});
             return mapResult(result);
         }
         nrfx_twis_enable(&context->driver);
         atomic_set(&context->initialized, 1);
         irq_enable(NRFX_IRQ_NUMBER_GET(context->driver.p_reg));
         pushEvent(*context,
-                  {TwiFabricEventType::transfer_cancelled,
-                   context->configuration.primary_address, context->tx[0].address,
-                   const_cast<void *>(context->rx[0].address), 0U, 0U, 0U});
+                  {TwiFabricEventType::transfer_cancelled, context->configuration.primary_address,
+                   context->tx[0].address, const_cast<void *>(context->rx[0].address), 0U, 0U, 0U});
         return SerialFabricResult::success;
     }
 
@@ -601,13 +629,14 @@ namespace nucode::arduino
     {
         auto *const context = contextFor(instance());
         if (context == nullptr)
+        {
             return false;
+        }
         const k_spinlock_key_t key = k_spin_lock(&context->lock);
         if (context->event_overflow)
         {
             context->event_overflow = false;
-            event = {TwiFabricEventType::error, 0U, nullptr, nullptr, 0U, 0U,
-                     event_queue_overflow};
+            event = {TwiFabricEventType::error, 0U, nullptr, nullptr, 0U, 0U, event_queue_overflow};
             k_spin_unlock(&context->lock, key);
             return true;
         }
@@ -628,18 +657,24 @@ namespace nucode::arduino
     {
         auto *const context = contextFor(instance());
         if (context == nullptr)
+        {
             return DmaBufferState::error;
+        }
         const k_spinlock_key_t key = k_spin_lock(&context->lock);
         DmaBufferState state = DmaBufferState::application_owned;
         for (const auto &record : context->tx)
         {
             if (record.address == buffer)
+            {
                 state = record.state;
+            }
         }
         for (const auto &record : context->rx)
         {
             if (record.address == buffer)
+            {
                 state = record.state;
+            }
         }
         k_spin_unlock(&context->lock, key);
         return state;

@@ -254,8 +254,7 @@ namespace nucode::arduino
     struct SerialFabricConfiguration
     {
         SerialRouteClass route{SerialRouteClass::p1_flexible};
-        SerialElectricalProfile electrical_profile{
-            SerialElectricalProfile::connector_fixture};
+        SerialElectricalProfile electrical_profile{SerialElectricalProfile::connector_fixture};
         const SerialSignalPin *pins{nullptr};
         std::size_t pin_count{0U};
         const SerialDmaWorkspace *dma_workspaces{nullptr};
@@ -267,7 +266,7 @@ namespace nucode::arduino
     /** @brief 모든 typed handle이 공유하는 lifecycle 조회·제어 표면입니다. */
     class SerialFabricHandle
     {
-    public:
+      public:
         [[nodiscard]] SerialPersonality personality() const noexcept;
         [[nodiscard]] std::uint8_t instance() const noexcept;
         [[nodiscard]] SerialFabricState state() const noexcept;
@@ -277,17 +276,16 @@ namespace nucode::arduino
         [[nodiscard]] SerialFabricResult
         stage(const SerialFabricConfiguration &configuration) noexcept;
         [[nodiscard]] SerialFabricResult activate() noexcept;
-        [[nodiscard]] SerialFabricResult
-        deactivate(std::uint32_t timeout_us = 100000U) noexcept;
+        [[nodiscard]] SerialFabricResult deactivate(std::uint32_t timeout_us = 100000U) noexcept;
 
-    protected:
-        constexpr SerialFabricHandle(SerialPersonality personality,
-                                     std::uint8_t instance,
+      protected:
+        constexpr SerialFabricHandle(SerialPersonality personality, std::uint8_t instance,
                                      std::uint8_t handle_index) noexcept
-            : personality_(personality), instance_(instance),
-              handle_index_(handle_index) {}
+            : personality_(personality), instance_(instance), handle_index_(handle_index)
+        {
+        }
 
-    private:
+      private:
         SerialPersonality personality_;
         std::uint8_t instance_;
         std::uint8_t handle_index_;
@@ -297,127 +295,133 @@ namespace nucode::arduino
     {
         friend class SerialFabric;
 
-    public:
+      public:
         [[nodiscard]] SerialFabricResult
         configure(const UarteConfiguration &configuration) noexcept;
         [[nodiscard]] SerialFabricResult transmitAsync(const void *buffer,
                                                        std::size_t size) noexcept;
-        [[nodiscard]] SerialFabricResult
-        receiveAsync(void *first_buffer, std::size_t first_size,
-                     void *second_buffer = nullptr,
-                     std::size_t second_size = 0U) noexcept;
+        [[nodiscard]] SerialFabricResult receiveAsync(void *first_buffer, std::size_t first_size,
+                                                      void *second_buffer = nullptr,
+                                                      std::size_t second_size = 0U) noexcept;
         [[nodiscard]] SerialFabricResult cancelTransmit() noexcept;
         [[nodiscard]] SerialFabricResult cancelReceive() noexcept;
         [[nodiscard]] bool takeEvent(UarteEvent &event) noexcept;
         [[nodiscard]] DmaBufferState bufferState(const void *buffer) const noexcept;
 
-    private:
+      private:
         constexpr UarteHandle(std::uint8_t instance, std::uint8_t index) noexcept
-            : SerialFabricHandle(SerialPersonality::uarte, instance, index) {}
+            : SerialFabricHandle(SerialPersonality::uarte, instance, index)
+        {
+        }
     };
 
     class SpimHandle final : public SerialFabricHandle
     {
         friend class SerialFabric;
 
-    public:
+      public:
         [[nodiscard]] SerialFabricResult
         configure(const SpiFabricConfiguration &configuration) noexcept;
-        [[nodiscard]] SerialFabricResult transferAsync(const void *tx_buffer,
-                                                       std::size_t tx_size,
+        [[nodiscard]] SerialFabricResult transferAsync(const void *tx_buffer, std::size_t tx_size,
                                                        void *rx_buffer,
                                                        std::size_t rx_size) noexcept;
-        [[nodiscard]] SerialFabricResult
-        transfer(const void *tx_buffer, std::size_t tx_size, void *rx_buffer,
-                 std::size_t rx_size, std::uint32_t timeout_us = 100000U) noexcept;
+        [[nodiscard]] SerialFabricResult transfer(const void *tx_buffer, std::size_t tx_size,
+                                                  void *rx_buffer, std::size_t rx_size,
+                                                  std::uint32_t timeout_us = 100000U) noexcept;
         [[nodiscard]] SerialFabricResult cancelTransfer() noexcept;
         [[nodiscard]] bool takeEvent(SpiFabricEvent &event) noexcept;
         [[nodiscard]] DmaBufferState bufferState(const void *buffer) const noexcept;
 
-    private:
+      private:
         constexpr SpimHandle(std::uint8_t instance, std::uint8_t index) noexcept
-            : SerialFabricHandle(SerialPersonality::spim, instance, index) {}
+            : SerialFabricHandle(SerialPersonality::spim, instance, index)
+        {
+        }
     };
 
     class SpisHandle final : public SerialFabricHandle
     {
         friend class SerialFabric;
 
-    public:
+      public:
         [[nodiscard]] SerialFabricResult
         configure(const SpiFabricConfiguration &configuration) noexcept;
-        [[nodiscard]] SerialFabricResult
-        queueBuffers(const void *tx_buffer, std::size_t tx_size, void *rx_buffer,
-                     std::size_t rx_size, const void *next_tx_buffer = nullptr,
-                     std::size_t next_tx_size = 0U, void *next_rx_buffer = nullptr,
-                     std::size_t next_rx_size = 0U) noexcept;
+        [[nodiscard]] SerialFabricResult queueBuffers(const void *tx_buffer, std::size_t tx_size,
+                                                      void *rx_buffer, std::size_t rx_size,
+                                                      const void *next_tx_buffer = nullptr,
+                                                      std::size_t next_tx_size = 0U,
+                                                      void *next_rx_buffer = nullptr,
+                                                      std::size_t next_rx_size = 0U) noexcept;
         [[nodiscard]] SerialFabricResult cancelBuffers() noexcept;
         [[nodiscard]] bool takeEvent(SpiFabricEvent &event) noexcept;
         [[nodiscard]] DmaBufferState bufferState(const void *buffer) const noexcept;
 
-    private:
+      private:
         constexpr SpisHandle(std::uint8_t instance, std::uint8_t index) noexcept
-            : SerialFabricHandle(SerialPersonality::spis, instance, index) {}
+            : SerialFabricHandle(SerialPersonality::spis, instance, index)
+        {
+        }
     };
 
     class TwimHandle final : public SerialFabricHandle
     {
         friend class SerialFabric;
 
-    public:
-        [[nodiscard]] SerialFabricResult
-        configure(const TwimConfiguration &configuration) noexcept;
-        [[nodiscard]] SerialFabricResult transferAsync(std::uint8_t address,
-                                                       const void *tx_buffer,
-                                                       std::size_t tx_size,
-                                                       void *rx_buffer,
+      public:
+        [[nodiscard]] SerialFabricResult configure(const TwimConfiguration &configuration) noexcept;
+        [[nodiscard]] SerialFabricResult transferAsync(std::uint8_t address, const void *tx_buffer,
+                                                       std::size_t tx_size, void *rx_buffer,
                                                        std::size_t rx_size) noexcept;
-        [[nodiscard]] SerialFabricResult
-        transfer(std::uint8_t address, const void *tx_buffer, std::size_t tx_size,
-                 void *rx_buffer, std::size_t rx_size,
-                 std::uint32_t timeout_us = 100000U) noexcept;
+        [[nodiscard]] SerialFabricResult transfer(std::uint8_t address, const void *tx_buffer,
+                                                  std::size_t tx_size, void *rx_buffer,
+                                                  std::size_t rx_size,
+                                                  std::uint32_t timeout_us = 100000U) noexcept;
         [[nodiscard]] SerialFabricResult cancelTransfer() noexcept;
         [[nodiscard]] SerialFabricResult recoverBus() noexcept;
         [[nodiscard]] bool takeEvent(TwiFabricEvent &event) noexcept;
         [[nodiscard]] DmaBufferState bufferState(const void *buffer) const noexcept;
 
-    private:
+      private:
         constexpr TwimHandle(std::uint8_t instance, std::uint8_t index) noexcept
-            : SerialFabricHandle(SerialPersonality::twim, instance, index) {}
+            : SerialFabricHandle(SerialPersonality::twim, instance, index)
+        {
+        }
     };
 
     class TwisHandle final : public SerialFabricHandle
     {
         friend class SerialFabric;
 
-    public:
-        [[nodiscard]] SerialFabricResult
-        configure(const TwisConfiguration &configuration) noexcept;
-        [[nodiscard]] SerialFabricResult
-        queueBuffers(const void *tx_buffer, std::size_t tx_size, void *rx_buffer,
-                     std::size_t rx_size, const void *next_tx_buffer = nullptr,
-                     std::size_t next_tx_size = 0U, void *next_rx_buffer = nullptr,
-                     std::size_t next_rx_size = 0U) noexcept;
+      public:
+        [[nodiscard]] SerialFabricResult configure(const TwisConfiguration &configuration) noexcept;
+        [[nodiscard]] SerialFabricResult queueBuffers(const void *tx_buffer, std::size_t tx_size,
+                                                      void *rx_buffer, std::size_t rx_size,
+                                                      const void *next_tx_buffer = nullptr,
+                                                      std::size_t next_tx_size = 0U,
+                                                      void *next_rx_buffer = nullptr,
+                                                      std::size_t next_rx_size = 0U) noexcept;
         [[nodiscard]] SerialFabricResult cancelBuffers() noexcept;
         [[nodiscard]] bool takeEvent(TwiFabricEvent &event) noexcept;
         [[nodiscard]] DmaBufferState bufferState(const void *buffer) const noexcept;
 
-    private:
+      private:
         constexpr TwisHandle(std::uint8_t instance, std::uint8_t index) noexcept
-            : SerialFabricHandle(SerialPersonality::twis, instance, index) {}
+            : SerialFabricHandle(SerialPersonality::twis, instance, index)
+        {
+        }
     };
 
     /** @brief kind+instance selector만 허용하는 allocation-free factory입니다. */
     class SerialFabric final
     {
-    public:
+      public:
         [[nodiscard]] UarteHandle *uarte(std::uint8_t instance) noexcept;
         [[nodiscard]] SpimHandle *spim(std::uint8_t instance) noexcept;
         [[nodiscard]] SpisHandle *spis(std::uint8_t instance) noexcept;
         [[nodiscard]] TwimHandle *twim(std::uint8_t instance) noexcept;
         [[nodiscard]] TwisHandle *twis(std::uint8_t instance) noexcept;
 
-    private:
+      private:
         friend SerialFabric &serialFabric() noexcept;
         SerialFabric() = default;
     };

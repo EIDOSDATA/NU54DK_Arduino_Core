@@ -1,0 +1,17 @@
+{
+  "type": "failure-cleanup-not-formal-PASS",
+  "core_revision": "6ea315ef2ad71b8b7cfed1d24270bc45b214bf75",
+  "before": [
+    1,
+    0,
+    0,
+    1,
+    3,
+    0
+  ],
+  "gpio_p0_in": 11,
+  "stop": [
+    0,
+    1
+  ]
+}

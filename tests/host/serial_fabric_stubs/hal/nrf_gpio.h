@@ -1,6 +1,10 @@
 #pragma once
 #include <cstdint>
-struct NRF_GPIO_Type { std::uint32_t PIN_CNF[32]{}; std::uint32_t out{}; };
+struct NRF_GPIO_Type
+{
+    std::uint32_t PIN_CNF[32]{};
+    std::uint32_t out{};
+};
 extern NRF_GPIO_Type mock_gpio[3];
 inline NRF_GPIO_Type *nrf_gpio_pin_port_decode(std::uint32_t *pin)
 {

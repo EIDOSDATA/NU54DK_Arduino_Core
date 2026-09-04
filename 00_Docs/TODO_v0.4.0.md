@@ -3,11 +3,11 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID / 개정 | TODO-V04-001 / 1.1 |
-| 상태 | 활성 TODO — 문서 작성 완료, 아래 25개 후속 작업은 전체 완료 전 |
+| 상태 | 활성 TODO — T01~T08 완료, T09 최신 clean image 온보드 HIL 진행 전 |
 | 작성·갱신일 | 2026-09-05 |
 | 작성 직전 기준 commit | `6c18d4c316f13eb373da6cada5675cdc82a0cf6f` |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **T01 — 최종 시험 목록 확정** |
+| 다음 착수 항목 | **T09 — clean checkpoint image의 두 보드 무배선 HIL** |
 | 이번 요청의 실행 범위 | 사용자 승인: T01~T09 준비·검사·두 USB 보드의 무배선 온보드 HIL·문서·commit/push. 외부 결선 실행은 T10 확인 뒤, release 공개는 포함하지 않음 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
@@ -29,7 +29,14 @@ TODO의 체크만으로 그 원본들의 상태를 바꾸지 않는다. 이 문�
 4. 작업할 T 번호·선행조건·이번에 만들 산출물·검사 방법을 체크포인트에 적은 뒤 구현한다.
 5. 완료 기준과 증거가 모두 충족될 때만 해당 `[ ]`를 `[x]`로 바꾼다. 부분 완료는 체크하지 않고
    진행 내용·남은 항목을 적는다. 막힌 작업은 원인과 필요한 사용자 행동을 적고 안전한 독립 작업만 진행한다.
-6. 단계별로 구현·시험·문서·커밋·푸시를 묶는다. 종료·중단·인계 전에는 체크포인트를 반드시 갱신한다.
+6. 단계별로 구현·시험·문서를 묶는다. **2026-09-05 추가 지시: T01~T09를 마친 뒤 저장소가 직접
+   관리하는 전체 C/C++를 한국어 Doxygen 주석, BSD/Allman, 들여쓰기·탭 폭 4칸으로 정리하고,
+   한 줄 `if`/`for`/`while` 등을 포함해 제어문 중괄호를 생략하지 않는다. 이후 회귀 검사와 최종
+   커밋·푸시를 수행한다.** 이미 있는 로컬 체크포인트 커밋은 보존하며 이 최종 조건 전에는 새로
+   푸시하지 않는다. SDK·서드파티·보드 서브모듈·기존 공개 자산은 정렬 대상에서 제외한다.
+   `.clang-format`과 재실행 가능한 검사 경로를 남기고, 자동 정렬로 의미가 바뀌지 않았는지 검증한다.
+   주석은 정확한 동작·소유권·제한을 설명하며 단순 번역으로 잘못된 보증을 추가하지 않는다.
+   종료·중단·인계 전에는 체크포인트를 반드시 갱신한다.
    실행 중 프로세스가 있으면 명령·세션·출력 경로와 종료/대기 상태를 남긴다.
 7. 중간 보고는 사용자가 요청한 상태 설명, 오류·안전 문제·결선 요청 위주로 한다. 조용히 작업하더라도
    증거와 TODO 상태 갱신을 생략하지 않는다.
@@ -42,19 +49,20 @@ TODO의 체크만으로 그 원본들의 상태를 바꾸지 않는다. 이 문�
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | 75 identity·19 시험 family JSON/생성 문서·누락 검사, 구현 대조와 8개 준비 이슈, SWD pair protocol/runner와 onboard 후보 image 작성 |
-| 진행 중인 T 항목 | T01~T03 준비 기준선, T04 온보드 UART 공통 image 통합, T05/T09 무배선 PMIC·timer capture·내부 ADC 추가 시험; T04/T06/T07/T08 전체는 아직 미완료 |
-| 다음 구체적 행동 | T04/T07/T08: 외부 fixture 준비의 선행 결함인 DAP 격리 route 허용·GPIO 복원·P2 cross-domain 전원 lease를 보완하고, Host negative/target build 후 fixture interlock·SPI/TWI image/runner를 연결한다. 외부 핀 출력은 T10 확인 전 실행하지 않는다 |
+| 이번에 끝낸 일 | T01~T08: 75 identity·19 family 시험표, 구현 대조, exact pair/campaign runner, 통신·analog·stream fixture, DMA 수명주기·복구·최소 동시성, 15개 안전 결선 catalog와 confirmation template. 전체 C/C++/INO 227개 정렬과 회귀 |
+| 진행 중인 T 항목 | T09만 진행 전. 외부 fixture는 모두 `NOT RUN`이며 T10 사람 결선 확인 전 실행 금지 |
+| 다음 구체적 행동 | 현재 변경을 clean checkpoint로 commit하고 exact pair role image를 재빌드한다. 두 UID에서 무배선 primitives·PMIC·내부 ADC/event·PWM20+PWM21+SAADC 동시성 시험을 실행·기록한다 |
 | 다음 작업에 필요한 사용자 행동 | 두 보드 USB 연결 완료 통보 받음. 외부 점퍼는 T10의 확정 결선표 안내 전 연결하지 않음 |
 | 외부 결선 상태 | 두 보드 상호 결선은 T10에 수행하는 요청; 현재는 USB만 전제로 온보드 경로에 한정 |
-| 작업 checkout 분리 | 사용자 정렬 완료. 43개 파일 `e8cb2a5` 보존·`6e19ce8` 병합. 원본 main과 격리 branch 모두 `94d53ae`까지 push 완료. 구현·exact build는 `C:/nb/s04`, branch `codex/v04-prep-20260905` |
+| 작업 checkout 분리 | 사용자 정렬 완료. 43개 파일 `e8cb2a5` 보존·`6e19ce8` 병합. 원본 main과 격리 branch는 `94d53ae`까지 push 완료. 격리 branch의 `3b29248`·`6ea315e`는 로컬만 존재. 구현·exact build는 `C:/nb/s04`, branch `codex/v04-prep-20260905`. T01~T09 뒤 최종 정렬·검증 전 새 push 금지 |
 | 마지막 정식 온보드 source | `51c1986242b60ac99df643ee4291946aa83b9986` — 41번 기록의 제한된 범위 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; 새 실기 PASS·최종 공개 승인 없음 |
-| 알려진 문제 | 과거 COM 포트 이탈의 근본 원인 미확정; 아래 연결 진단 원칙 참조 |
-| 이 TODO 작성 작업의 실행 중 시험 | `94d53ae` Host 전체·pair2/2 build PASS. paced UART DUT 4개·peer 20/21/22 통과 후 peer30 115200/flow/1byte TX 미완료 FAIL. 별도 RTS 진단에서도 P0.3 HIGH 유지. 정상 STOP·guard 확인 후 양쪽 대기. 이전 `5e6ef07` primitives902 PASS와 burst64byte 손실 FAIL 보존. 현재 실행 프로세스 없음; 전체 미완료 |
-| 로컬 임시 build·evidence | `C:/nb/16` = `94d53ae`; task work/v04-prep/pair-idle-94d53ae.json·uart30-stall-94d53ae.json·rts-94d53ae.json. 두 보드 pair role1/2, STOP 뒤 제어 대기. 외부 결선 없음 |
-| CI 확인 | `94d53ae` Software Gates success(run33896135351), Reproducible Builds 진행 중(run33896135322). 이전 pair CMake 실패와 좁은 root trust 수정은 43번에 기록. 과거 CI를 최신 PASS로 표시하지 않음 |
-| 문서 작업 검증 | 문서 140개 UTF-8·내부 링크 PASS; T01~T25 순서·누락·중복 및 25개 선행조건·완료 기준 검사 PASS; M27 계약 16개/미해결 8개 유지 |
+| 알려진 문제 | 과거 COM 포트 이탈의 근본 원인 미확정. 2026-09-05 사용자가 HW 엔지니어의 일부 납땜 이슈 진단을 전달함: peer COM8/P0 DAP CTS 실패는 보드 경로 문제로 분리, 정상 DUT의 RTS/CTS PASS 보존. 해당 경로를 PASS로 소급 변경하지 않으며 코어 전체 RTS/CTS 미지원으로 판정하지 않음 |
+| 이 TODO 작성 작업의 실행 중 시험 | 정렬 source의 M12 Host 전체 PASS, contract45·inventory·docs143 PASS. `C:/r45` v0.4.0 full group 20/20 build-only PASS(584.46초, 실패·오류·경고0). 외부 HIL은 NOT RUN. clean checkpoint 뒤 T09 온보드 HIL 실행 전 |
+| 로컬 임시 build·evidence | 두 보드는 계속 `C:/nb/18`의 `6ea315e` role1/2, STOP 뒤 제어 대기. 영구 evidence/6ea315e 보존. C19 narrowing 실패, C20 pair PASS, C21 full20 PASS457.91초, C22 subset3 PASS78.28초, C23 subset3 PASS77.72초, UART C24·sync C25·double-buffer C26 pair 각 PASS, DMA 경계 C27 pair/Analog/Stream 4 PASS94.77초, C28 source 변경으로 중단, CTS C29·parity/break C30·SPI/TWI 오류 C31 pair PASS. C19 이후는 미커밋 compile-only이므로 exact-clean HIL에 사용 금지 |
+| 최종 정렬 gate | clang-format 22.1.8로 직접 관리 C/C++/ino 227개 write·dry-run PASS. 한국어 Doxygen 동작 주석, Allman/4칸/중괄호 필수 적용. SPDX·namespace 표식만 기계적 예외. Host 전체·v0.4 full20 회귀 PASS. T09 증거 뒤 최종 문서 commit/push 필요 |
+| CI 확인 | `94d53ae` Software Gates success(run33896135351), Reproducible Builds도 8개 job 모두 success(run33896135322, 완료UTC2026-09-04T17:04:42Z 재확인). 미푸시 `3b29248`·`6ea315e`와 미커밋 준비본의 CI PASS가 아님 |
+| 문서 작업 검증 | 문서143개 UTF-8·내부 링크 PASS, inventory/serial/system/release 계약 PASS. M27 16개/미해결8개 유지. Host의 dirty-source skip은 최종 clean gate에서 재실행 필요 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드
@@ -68,6 +76,10 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
   꽂혀 있다는 이유로 모두 정상이라고 보거나, UART 무응답만으로 CPU가 죽었다고 단정하지 않는다.
 - 초기 수신/실행 순서, WDT reset protocol, SAADC SAMPLE, TWIM enable, 꺼진 콘솔 예약은 41번에서
   교정했다. WDT 시험의 의도한 reset을 crash로 세지 않는다. 예상 reset 밖의 잡음을 무시하지 않는다.
+- 2026-09-05 peer P0 CTS 고정에 대해 사용자가 HW 엔지니어의 일부 납땜 이슈를 전달했고,
+  성공한 정상 경로 근거를 유지하며 계속 진행하도록 지시했다. 이는 현장 HW 진단 전달 기록이다.
+  납땜 위치·수리·재시험은 확인되지 않았으므로 해당 FAIL을 지우지 않고 반복 시험은 중단한다.
+  외부 MCU 핀까지 불량이라고 일반화하지 않으며 다른 DAP/USB 실패의 원인에도 소급 적용하지 않는다.
 - 기존 COM5/COM6 자체의 이탈 원인은 미확정이다. AMD CPU, Windows 차단 알림, SWD 스위치를
   확인 없이 원인으로 확정하지 않는다. [40번 진단](<./04_검증 기록/40_M24_M26_온보드_재개와_USB_UART_진단.md>)을 참조한다.
 - 당시에 Windows가 차단한 것은 GDB의 외부 WinLibs `iconv.exe` 실행이었다. pyOCD 차단 근거와
@@ -99,53 +111,53 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
 
 ## 4. A단계 — 결선 없이 준비 (T01~T09)
 
-- [ ] **T01 — 최종 시험 목록 확정**
-  - 상태·선행: 진행 중 / TODO·42번 합의·41번 실기 기록, clean source `8503e3d`와 exact board gitlink 확인. 결선 불필요.
+- [x] **T01 — 최종 시험 목록 확정**
+  - 상태·선행: 완료 / TODO·42번 합의·41번 실기 기록과 exact board gitlink 대조. 결선 불필요.
   - 할 일: 인스턴스·모드·route별 test ID, 속도, buffer 크기, 반복/soak 시간, 예상 결과·오차·오류 조건을 정의한다.
   - 완료 기준: 재사용/신규 시험, 온보드/결선/범위 밖, 적용 가능한 DMA·flow control·errata가 구분된 시험표와 누락 검사가 있다.
-  - 증거: [시험 목록](<./01_아두이노 코어 설계/12_v0.4.0_기능_시험_목록.md>)과 [43번 준비 기록](<./04_검증 기록/43_v0.4.0_시험_준비와_구현_대조.md>). 초기 engineering 수치·19 family 작성, executable vector/fixture 고정은 남음.
+  - 증거: [시험 목록](<./01_아두이노 코어 설계/12_v0.4.0_기능_시험_목록.md>)과 [43번 준비 기록](<./04_검증 기록/43_v0.4.0_시험_준비와_구현_대조.md>). 75 identity·19 family와 executable vector/fixture 고정, 누락 검사 PASS.
 
-- [ ] **T02 — 현재 코드와 검증 상태 대조**
-  - 상태·선행: 대조 기준선 작성 / T01 초안. 결선 불필요. 43번의 기능군별 source·공개 경계·남은 보완과 75개 생성 matrix 참조.
+- [x] **T02 — 현재 코드와 검증 상태 대조**
+  - 상태·선행: 완료 / T01과 43번의 기능군별 source·공개 경계·남은 보완 및 75개 생성 matrix 대조. 결선 불필요.
   - 할 일: source·build·실기·공개 API·설치 profile을 별도 축으로 대조하고 누락 구현을 식별한다.
   - 완료 기준: 모든 대상에 근거 파일/시험/commit 또는 구체적 미완료 사유가 연결되고 T04~T07·T16의 보완 목록이 있다.
-  - 증거: 미등록. 기존 source/build PASS로 이 항목 전체를 완료 처리하지 않는다.
+  - 증거: 43번 §기능별 대조·PREP-01~08·T04~T08 구현 기록. 실제 HIL 미실행과 T16 공개 통합은 별도 유지.
 
-- [ ] **T03 — 두 보드 공통 실행기 준비**
-  - 상태·선행: SWD protocol·exact image/UID·role/nonce·배타 lock·실패 journal 구현, Host 9/9 PASS. Target와 실기 검증 대기. 외부 결선 불필요.
+- [x] **T03 — 두 보드 공통 실행기 준비**
+  - 상태·선행: 완료 / SWD protocol·exact image/UID·role/nonce·배타 lock·실패 journal/STOP·dual-boot helper와 외부 명시적 CLI 준비.
   - 할 일: DUT/peer UID·COM·role·exact source/HEX hash를 결합하고 명령 순서·nonce·timeout·실패 log·재개 경계를 구현한다.
   - 완료 기준: 동일 보드 중복 선택, role 반전, stale packet, 다른 commit, noisy/truncated frame, 중단 후 잘못된 PASS 재사용을 Host 시험에서 거부한다. 실행 중 보드 점유는 배타적이다.
-  - 증거: 미등록. 기존 pair runner를 재사용하더라도 v0.4.0용 통합과 검사를 끝내야 한다.
+  - 증거: `v04_pair.py`, `v04_campaign.py`, 두 fixture runner와 Host 전체 gate PASS. stale·중복·중단·poison 조건을 거부.
 
-- [ ] **T04 — UART·SPI·I2C 시험 프로그램 준비**
-  - 상태·선행: 부분 구현 / 온보드 UART 64-vector·cancel/handover runner 준비, 고속 burst 결함 분리 중. 외부 SPI/TWI/UART와 강제 flow/error는 남음. 외부 경로 실행은 T08·T10 이후.
+- [x] **T04 — UART·SPI·I2C 시험 프로그램 준비**
+  - 상태·선행: 완료 / 온보드 UART·cancel/handover, 외부 UART 135·SPI 1,513·TWI 328개 sync/async·single/double-buffer·flow/error/cancel/NACK/stuck-low/clock-stretch·정상 재시작 image/oracle·gate·CLI 준비. 외부 실행은 T10 이후.
   - 할 일: UARTE 5개, SPIM/SPIS 각 5개, TWIM/TWIS 각 4개의 승인 경로와 역할에 송수신·flow control·DMA·buffer 전환 시험을 연결한다.
   - 완료 기준: 각 대상의 DUT/peer image와 host 판정이 build/unit을 통과하고 시험표와 연결된다. PMIC는 승인된 읽기 전용 경계를 유지한다.
-  - 증거: 미등록. 온보드 UART 4개·TWIM 3개의 기본 PASS는 41번에만 해당한다.
+  - 증거: Host 전체 PASS, `C:/r45` pair image 포함 full20 build-only PASS. 온보드 기존 PASS는 41번, 외부는 NOT RUN.
 
-- [ ] **T05 — ADC·PWM·타이머·이벤트 시험 프로그램 준비**
-  - 상태·선행: 부분 구현 / 내부 VDD·AVDD/gain=1/4와 44개 timer capture 준비·실행. 외부 ADC/PWM/event 경로는 남음. 작성·빌드는 결선 불필요.
+- [x] **T05 — ADC·PWM·타이머·이벤트 시험 프로그램 준비**
+  - 상태·선행: 완료 / 내부 VDD·AVDD와 timer/event, 외부 AIN0~3/AIN7·PWM20/21/22 channel slot 0~3·단일/이중 DMA 판정 준비. AIN4~6은 보드 공유 제한으로 contract-only.
   - 할 일: 안전한 ADC 입력·scan/sample 순서·DMA, PWM 채널/sequence의 peer capture, timer/event/DPPI 소유권을 시험한다.
   - 완료 기준: 예상 값·count·기본 timing 허용 범위를 검사하는 image/runner와 Host 시험이 준비된다. 교정 전압·정밀 jitter 보증과 구분한다.
-  - 증거: 미등록. 기존 내부 VDD/event PASS로 외부 ADC/PWM을 완료 처리하지 않는다.
+  - 증거: signal fixture 401~404/408, fixture별 48 vector, Host PASS와 M25 Analog/pair target build PASS. 외부 신호는 NOT RUN.
 
-- [ ] **T06 — PDM·I2S·QDEC 합성 신호 프로그램 준비**
-  - 상태·선행: 미착수 / T01~T03. 작성·빌드는 결선 불필요; 물리 신호 성립은 T12에서 검증.
+- [x] **T06 — PDM·I2S·QDEC 합성 신호 프로그램 준비**
+  - 상태·선행: 완료 / QDEC sampling/oracle·Stream DAP 격리와 PDM SPIS clock 동기 source·I2S 양방향 pattern·QDEC PWM quadrature generator/receiver 준비. 물리 신호 성립은 T12에서 검증.
   - 할 일: PDM20/21, I2S20, QDEC20/21의 시험 신호 생성·수신, clock 역할, frame/sample 순서, quadrature 방향/count를 구현한다.
   - 완료 기준: 기대 패턴을 독립적으로 판정하고 peer 신호 능력·속도 한계를 명시한 image/runner가 build/unit을 통과한다. 미구현 신호 발생은 HOLD다.
-  - 증거: 미등록. Handle 연결이나 내부 mock을 실제 pin 신호 PASS로 세지 않는다.
+  - 증거: fixture 420/430/440, PDM96·I2S96 vector와 Host 판정 PASS, M25 Stream/pair target build PASS. 실기 NOT RUN.
 
-- [ ] **T07 — DMA 오류·복구·동시성·장시간 시험 준비**
-  - 상태·선행: 미착수 / T03과 해당 T04~T06 준비. 작성·빌드는 결선 불필요.
+- [x] **T07 — DMA 오류·복구·동시성·장시간 시험 준비**
+  - 상태·선행: 완료 / DMA RAM 끝·overflow·정렬 사전 거부, 오류/cancel 뒤 복구, SPIM00+TWIM22와 PWM20+PWM21+SAADC 최소 동시성, bounded 연속 campaign 준비. 실제 soak는 T13.
   - 할 일: cancel/stop/restart, 적용 가능한 overflow/underrun·bus error·System OFF 복구, buffer 반환, 충돌 거부·허용 최대 동시 조합·soak를 구현한다.
   - 완료 기준: 오류 유도 방법·정상 복구 상태·손실 카운터·자원 누수 판정·지속시간이 정의된다. Host negative와 실물 오류 주입을 구분하고 불가능한 조건은 남긴다.
-  - 증거: 미등록. 서로 같은 block을 공유하는 personality는 동시 활성화를 요구하지 않는다.
+  - 증거: DMA/수명주기/fixture/campaign Host PASS와 full20 target build PASS. 더 넓은 허용 topology와 600/7200초 결과는 T13이며 미실행.
 
-- [ ] **T08 — 시험별 안전한 결선표와 스위치 안내 작성**
-  - 상태·선행: 미착수 / T01·T02 및 T04~T07의 pin/role 요구. 문서 작성에 결선 불필요.
+- [x] **T08 — 시험별 안전한 결선표와 스위치 안내 작성**
+  - 상태·선행: 완료 / 회로도 connector mapping, fixture 15개, TWI pull-up과 analog/stream 역할·금지 net·스위치 조건 작성. 아직 T10 결선 요청 아님.
   - 할 일: 회로도·pinctrl과 대조해 묶음별 DUT↔peer 핀, GND·전압·pull-up·출력 방향·DAP UART switch·제어 채널을 명시한다.
   - 완료 기준: 전원 차단 후 연결/변경 순서, 출력 충돌 방지, 필요한 부품과 사용자 확인 절차가 있다. 금지된 P2 bank와 PMIC/LED 공유 신호를 무단 사용하지 않는다.
-  - 증거: 미등록. Debug-control SW1과 사용자 버튼 SW1을 구별하며 하나의 고정 결선으로 전체를 시험한다고 가정하지 않는다.
+  - 증거: `v04_fixtures.json`, HIL README, fail-closed confirmation template와 Host catalog/조건 검사 PASS. 묶음마다 T10 확인 반복.
 
 - [ ] **T09 — Host 검사·시험 펌웨어 빌드·무배선 추가 시험**
   - 상태·선행: 추가 무배선 시험 진행 중 / 두 보드 primitives 902개 판정 PASS와 UART burst FAIL을 별도 보존. 실행할 묶음의 T01~T08 준비·안전 확인.

@@ -13,10 +13,14 @@
 #include "internal/ArduinoRuntime.h"
 
 /** @brief Zephyr 초기화 뒤 실행하는 Arduino Core 기본 초기화 hook입니다. */
-extern "C" __weak void init(void) {}
+extern "C" __weak void init(void)
+{
+}
 
 /** @brief Variant별 초기화의 기본 구현입니다. */
-extern "C" __weak void initVariant(void) {}
+extern "C" __weak void initVariant(void)
+{
+}
 
 /**
  * @brief Arduino Sketch 런타임을 시작합니다.

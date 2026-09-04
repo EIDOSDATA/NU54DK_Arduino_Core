@@ -55,10 +55,8 @@ namespace nucode::arduino
         };
 
         SpimContext contexts[instance_count] = {
-            {NRFX_SPIM_INSTANCE(NRF_SPIM00)},
-            {NRFX_SPIM_INSTANCE(NRF_SPIM20)},
-            {NRFX_SPIM_INSTANCE(NRF_SPIM21)},
-            {NRFX_SPIM_INSTANCE(NRF_SPIM22)},
+            {NRFX_SPIM_INSTANCE(NRF_SPIM00)}, {NRFX_SPIM_INSTANCE(NRF_SPIM20)},
+            {NRFX_SPIM_INSTANCE(NRF_SPIM21)}, {NRFX_SPIM_INSTANCE(NRF_SPIM22)},
             {NRFX_SPIM_INSTANCE(NRF_SPIM30)},
         };
 
@@ -109,11 +107,13 @@ namespace nucode::arduino
             }
         }
 
-        [[nodiscard]] bool rangeInside(const SerialDmaWorkspace &workspace,
-                                       const void *address, std::size_t size) noexcept
+        [[nodiscard]] bool rangeInside(const SerialDmaWorkspace &workspace, const void *address,
+                                       std::size_t size) noexcept
         {
             if ((address == nullptr) || (size == 0U))
+            {
                 return false;
+            }
             const auto base = reinterpret_cast<std::uintptr_t>(workspace.address);
             const auto start = reinterpret_cast<std::uintptr_t>(address);
             if ((start < base) || (workspace.size > UINTPTR_MAX - base) ||
@@ -128,38 +128,41 @@ namespace nucode::arduino
                                         std::size_t size) noexcept
         {
             if ((address == nullptr) && (size == 0U))
+            {
                 return true;
-            for (std::size_t index = 0U; index < context.route.dma_workspace_count;
-                 ++index)
+            }
+            for (std::size_t index = 0U; index < context.route.dma_workspace_count; ++index)
             {
                 if (rangeInside(context.route.dma_workspaces[index], address, size))
+                {
                     return true;
+                }
             }
             return false;
         }
 
-        [[nodiscard]] const SerialSignalPin *
-        signalPin(const ValidatedSerialRoute &route, SerialSignal signal) noexcept
+        [[nodiscard]] const SerialSignalPin *signalPin(const ValidatedSerialRoute &route,
+                                                       SerialSignal signal) noexcept
         {
             for (std::size_t index = 0U; index < route.pin_count; ++index)
             {
                 if (route.pins[index].signal == signal)
+                {
                     return &route.pins[index];
+                }
             }
             return nullptr;
         }
 
-        [[nodiscard]] bool pselFor(const ValidatedSerialRoute &route,
-                                   SerialSignal signal, std::uint32_t &psel) noexcept
+        [[nodiscard]] bool pselFor(const ValidatedSerialRoute &route, SerialSignal signal,
+                                   std::uint32_t &psel) noexcept
         {
             const auto *const entry = signalPin(route, signal);
-            return entry != nullptr &&
-                   internal::nu54dkSerialFabricPsel(entry->pin, psel) ==
-                       SerialFabricResult::success;
+            return entry != nullptr && internal::nu54dkSerialFabricPsel(entry->pin, psel) ==
+                                           SerialFabricResult::success;
         }
 
-        [[nodiscard]] bool spiMode(SpiFabricMode mode,
-                                   nrf_spim_mode_t &value) noexcept
+        [[nodiscard]] bool spiMode(SpiFabricMode mode, nrf_spim_mode_t &value) noexcept
         {
             switch (mode)
             {
@@ -184,12 +187,16 @@ namespace nucode::arduino
                             DmaBufferState state) noexcept
         {
             if (address == nullptr)
+            {
                 return;
+            }
             const k_spinlock_key_t key = k_spin_lock(&context.lock);
             for (auto &buffer : context.buffers)
             {
                 if (buffer.address == address)
+                {
                     buffer.state = state;
+                }
             }
             k_spin_unlock(&context.lock, key);
         }
@@ -215,20 +222,18 @@ namespace nucode::arduino
         {
             auto &context = *static_cast<SpimContext *>(opaque);
             if (event->type != NRFX_SPIM_EVENT_DONE)
+            {
                 return;
-            setBufferState(context, event->xfer_desc.p_tx_buffer,
-                           DmaBufferState::completed);
-            setBufferState(context, event->xfer_desc.p_rx_buffer,
-                           DmaBufferState::completed);
+            }
+            setBufferState(context, event->xfer_desc.p_tx_buffer, DmaBufferState::completed);
+            setBufferState(context, event->xfer_desc.p_rx_buffer, DmaBufferState::completed);
             atomic_clear(&context.transfer_active);
-            pushEvent(context,
-                      {SpiFabricEventType::transfer_complete,
-                       event->xfer_desc.p_tx_buffer, event->xfer_desc.p_rx_buffer,
-                       event->xfer_desc.tx_length, event->xfer_desc.rx_length, 0U});
+            pushEvent(context, {SpiFabricEventType::transfer_complete, event->xfer_desc.p_tx_buffer,
+                                event->xfer_desc.p_rx_buffer, event->xfer_desc.tx_length,
+                                event->xfer_desc.rx_length, 0U});
         }
 
-        SerialFabricResult validateAdapter(std::uint8_t instance,
-                                           const ValidatedSerialRoute &route,
+        SerialFabricResult validateAdapter(std::uint8_t instance, const ValidatedSerialRoute &route,
                                            int &driver_error) noexcept
         {
             driver_error = 0;
@@ -246,13 +251,14 @@ namespace nucode::arduino
             return SerialFabricResult::success;
         }
 
-        SerialFabricResult activateAdapter(std::uint8_t instance,
-                                           const ValidatedSerialRoute &route,
+        SerialFabricResult activateAdapter(std::uint8_t instance, const ValidatedSerialRoute &route,
                                            int &driver_error) noexcept
         {
             auto *const context = contextFor(instance);
             if (context == nullptr)
+            {
                 return SerialFabricResult::unsupported_instance;
+            }
             std::uint32_t sck = 0U;
             std::uint32_t mosi = 0U;
             std::uint32_t miso = 0U;
@@ -266,8 +272,7 @@ namespace nucode::arduino
                 return SerialFabricResult::invalid_argument;
             }
             (void)pselFor(route, SerialSignal::csn, csn);
-            nrfx_spim_config_t configuration =
-                NRFX_SPIM_DEFAULT_CONFIG(sck, mosi, miso, csn);
+            nrfx_spim_config_t configuration = NRFX_SPIM_DEFAULT_CONFIG(sck, mosi, miso, csn);
             configuration.frequency = context->configuration.frequency;
             configuration.mode = mode;
             configuration.bit_order =
@@ -275,10 +280,11 @@ namespace nucode::arduino
                     ? NRF_SPIM_BIT_ORDER_LSB_FIRST
                     : NRF_SPIM_BIT_ORDER_MSB_FIRST;
             configuration.orc = context->configuration.overrun_character;
-            driver_error =
-                nrfx_spim_init(&context->driver, &configuration, spimEvent, context);
+            driver_error = nrfx_spim_init(&context->driver, &configuration, spimEvent, context);
             if (driver_error != 0)
+            {
                 return mapResult(driver_error);
+            }
             context->route = route;
             context->event_head = 0U;
             context->event_tail = 0U;
@@ -289,18 +295,21 @@ namespace nucode::arduino
             return SerialFabricResult::success;
         }
 
-        SerialFabricResult requestStopAdapter(std::uint8_t instance,
-                                              int &driver_error) noexcept
+        SerialFabricResult requestStopAdapter(std::uint8_t instance, int &driver_error) noexcept
         {
             auto *const context = contextFor(instance);
             if (context == nullptr)
+            {
                 return SerialFabricResult::unsupported_instance;
+            }
             driver_error = 0;
             if (atomic_get(&context->transfer_active) != 0)
             {
                 nrfx_spim_abort(&context->driver);
                 for (auto &buffer : context->buffers)
+                {
                     setBufferState(*context, buffer.address, DmaBufferState::cancelled);
+                }
                 atomic_clear(&context->transfer_active);
             }
             return SerialFabricResult::success;
@@ -313,18 +322,21 @@ namespace nucode::arduino
                    !context->driver.cb.transfer_in_progress;
         }
 
-        SerialFabricResult deactivateAdapter(std::uint8_t instance,
-                                             int &driver_error) noexcept
+        SerialFabricResult deactivateAdapter(std::uint8_t instance, int &driver_error) noexcept
         {
             auto *const context = contextFor(instance);
             if (context == nullptr)
+            {
                 return SerialFabricResult::unsupported_instance;
+            }
             irq_disable(NRFX_IRQ_NUMBER_GET(context->driver.p_reg));
             nrfx_spim_uninit(&context->driver);
             atomic_clear(&context->active);
             context->route = {};
             for (auto &buffer : context->buffers)
+            {
                 buffer = {};
+            }
             driver_error = 0;
             return SerialFabricResult::success;
         }
@@ -332,12 +344,14 @@ namespace nucode::arduino
         void handleIrq(std::uint8_t instance) noexcept
         {
             if (auto *const context = contextFor(instance))
+            {
                 nrfx_spim_irq_handler(&context->driver);
+            }
         }
 
-        const SerialFabricDriverAdapter adapter{validateAdapter, activateAdapter,
+        const SerialFabricDriverAdapter adapter{validateAdapter,    activateAdapter,
                                                 requestStopAdapter, stoppedAdapter,
-                                                deactivateAdapter, handleIrq};
+                                                deactivateAdapter,  handleIrq};
 
         int registerAdapters()
         {
@@ -345,8 +359,7 @@ namespace nucode::arduino
             for (const std::uint8_t instance : instances)
             {
                 if (internal::registerSerialFabricAdapter(SerialPersonality::spim, instance,
-                                                          adapter) !=
-                    SerialFabricResult::success)
+                                                          adapter) != SerialFabricResult::success)
                 {
                     return -EIO;
                 }
@@ -357,44 +370,45 @@ namespace nucode::arduino
         SYS_INIT(registerAdapters, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
     } // namespace
 
-    SerialFabricResult
-    SpimHandle::configure(const SpiFabricConfiguration &configuration) noexcept
+    SerialFabricResult SpimHandle::configure(const SpiFabricConfiguration &configuration) noexcept
     {
         if (k_is_in_isr())
+        {
             return SerialFabricResult::invalid_context;
+        }
         const auto current = state();
         nrf_spim_mode_t ignored{};
-        if (((current != SerialFabricState::inactive) &&
-             (current != SerialFabricState::staged)) ||
-            (configuration.frequency == 0U) ||
-            !spiMode(configuration.mode, ignored))
+        if (((current != SerialFabricState::inactive) && (current != SerialFabricState::staged)) ||
+            (configuration.frequency == 0U) || !spiMode(configuration.mode, ignored))
         {
             return SerialFabricResult::invalid_argument;
         }
         auto *const context = contextFor(instance());
         if (context == nullptr)
+        {
             return SerialFabricResult::unsupported_instance;
+        }
         context->configuration = configuration;
         return SerialFabricResult::success;
     }
 
-    SerialFabricResult SpimHandle::transferAsync(const void *tx_buffer,
-                                                 std::size_t tx_size,
-                                                 void *rx_buffer,
-                                                 std::size_t rx_size) noexcept
+    SerialFabricResult SpimHandle::transferAsync(const void *tx_buffer, std::size_t tx_size,
+                                                 void *rx_buffer, std::size_t rx_size) noexcept
     {
         if (k_is_in_isr())
+        {
             return SerialFabricResult::invalid_context;
+        }
         auto *const context = contextFor(instance());
-        if ((context == nullptr) || !internal::isSerialFabricHandleActive(
-                                        SerialPersonality::spim, instance()))
+        if ((context == nullptr) ||
+            !internal::isSerialFabricHandleActive(SerialPersonality::spim, instance()))
         {
             return SerialFabricResult::wrong_state;
         }
         if (((tx_buffer == nullptr) != (tx_size == 0U)) ||
-            ((rx_buffer == nullptr) != (rx_size == 0U)) ||
-            ((tx_size == 0U) && (rx_size == 0U)) || (tx_size > UINT16_MAX) ||
-            (rx_size > UINT16_MAX) || !leasedBuffer(*context, tx_buffer, tx_size) ||
+            ((rx_buffer == nullptr) != (rx_size == 0U)) || ((tx_size == 0U) && (rx_size == 0U)) ||
+            (tx_size > UINT16_MAX) || (rx_size > UINT16_MAX) ||
+            !leasedBuffer(*context, tx_buffer, tx_size) ||
             !leasedBuffer(*context, rx_buffer, rx_size) ||
             atomic_get(&context->transfer_active) != 0)
         {
@@ -421,21 +435,23 @@ namespace nucode::arduino
         return SerialFabricResult::success;
     }
 
-    SerialFabricResult SpimHandle::transfer(const void *tx_buffer,
-                                            std::size_t tx_size, void *rx_buffer,
-                                            std::size_t rx_size,
+    SerialFabricResult SpimHandle::transfer(const void *tx_buffer, std::size_t tx_size,
+                                            void *rx_buffer, std::size_t rx_size,
                                             std::uint32_t timeout_us) noexcept
     {
         if ((timeout_us == 0U) || k_is_in_isr())
+        {
             return SerialFabricResult::invalid_argument;
+        }
         auto result = transferAsync(tx_buffer, tx_size, rx_buffer, rx_size);
         if (result != SerialFabricResult::success)
+        {
             return result;
+        }
         for (std::uint32_t elapsed = 0U; elapsed < timeout_us; elapsed += 10U)
         {
             SpiFabricEvent event{};
-            if (takeEvent(event) &&
-                event.type == SpiFabricEventType::transfer_complete)
+            if (takeEvent(event) && event.type == SpiFabricEventType::transfer_complete)
             {
                 return SerialFabricResult::success;
             }
@@ -448,7 +464,9 @@ namespace nucode::arduino
     SerialFabricResult SpimHandle::cancelTransfer() noexcept
     {
         if (k_is_in_isr())
+        {
             return SerialFabricResult::invalid_context;
+        }
         auto *const context = contextFor(instance());
         if ((context == nullptr) || atomic_get(&context->active) == 0 ||
             atomic_get(&context->transfer_active) == 0)
@@ -457,12 +475,12 @@ namespace nucode::arduino
         }
         nrfx_spim_abort(&context->driver);
         for (auto &buffer : context->buffers)
+        {
             setBufferState(*context, buffer.address, DmaBufferState::cancelled);
+        }
         atomic_clear(&context->transfer_active);
-        pushEvent(*context,
-                  {SpiFabricEventType::transfer_cancelled,
-                   context->buffers[0].address,
-                   const_cast<void *>(context->buffers[1].address), 0U, 0U, 0U});
+        pushEvent(*context, {SpiFabricEventType::transfer_cancelled, context->buffers[0].address,
+                             const_cast<void *>(context->buffers[1].address), 0U, 0U, 0U});
         return SerialFabricResult::success;
     }
 
@@ -470,13 +488,14 @@ namespace nucode::arduino
     {
         auto *const context = contextFor(instance());
         if (context == nullptr)
+        {
             return false;
+        }
         const k_spinlock_key_t key = k_spin_lock(&context->lock);
         if (context->event_overflow)
         {
             context->event_overflow = false;
-            event = {SpiFabricEventType::error, nullptr, nullptr, 0U, 0U,
-                     event_queue_overflow};
+            event = {SpiFabricEventType::error, nullptr, nullptr, 0U, 0U, event_queue_overflow};
             k_spin_unlock(&context->lock, key);
             return true;
         }
@@ -497,13 +516,17 @@ namespace nucode::arduino
     {
         auto *const context = contextFor(instance());
         if (context == nullptr)
+        {
             return DmaBufferState::error;
+        }
         const k_spinlock_key_t key = k_spin_lock(&context->lock);
         DmaBufferState state = DmaBufferState::application_owned;
         for (const auto &record : context->buffers)
         {
             if (record.address == buffer)
+            {
                 state = record.state;
+            }
         }
         k_spin_unlock(&context->lock, key);
         return state;

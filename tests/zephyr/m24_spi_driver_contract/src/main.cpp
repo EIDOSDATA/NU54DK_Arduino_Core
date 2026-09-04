@@ -56,8 +56,7 @@ namespace
 
     SerialFabricConfiguration configuration(SerialRouteClass route,
                                             SerialElectricalProfile electrical,
-                                            const SerialSignalPin *pins,
-                                            std::size_t pin_count,
+                                            const SerialSignalPin *pins, std::size_t pin_count,
                                             std::size_t workspace)
     {
         static SerialDmaWorkspace dma[10];
@@ -77,21 +76,16 @@ ZTEST(m24_spi_driver_contract, test_all_ten_adapters_stage_exact_routes)
         const SerialSignalPin *peripheral;
     };
     const Case cases[] = {
-        {0U, SerialRouteClass::p2_dedicated20,
-         SerialElectricalProfile::connector_fixture, controller_p2,
-         peripheral_p2},
-        {20U, SerialRouteClass::p2_dedicated20,
-         SerialElectricalProfile::connector_fixture, controller_p2,
-         peripheral_p2},
-        {21U, SerialRouteClass::p1_flexible,
-         SerialElectricalProfile::dap_uart_disabled, controller_p1,
-         peripheral_p1},
-        {22U, SerialRouteClass::p1_flexible,
-         SerialElectricalProfile::dap_uart_disabled, controller_p1,
-         peripheral_p1},
-        {30U, SerialRouteClass::p0_flexible,
-         SerialElectricalProfile::dap_uart_disabled, controller_p0,
-         peripheral_p0},
+        {0U, SerialRouteClass::p2_dedicated20, SerialElectricalProfile::connector_fixture,
+         controller_p2, peripheral_p2},
+        {20U, SerialRouteClass::p2_dedicated20, SerialElectricalProfile::connector_fixture,
+         controller_p2, peripheral_p2},
+        {21U, SerialRouteClass::p1_flexible, SerialElectricalProfile::dap_uart_disabled,
+         controller_p1, peripheral_p1},
+        {22U, SerialRouteClass::p1_flexible, SerialElectricalProfile::dap_uart_disabled,
+         controller_p1, peripheral_p1},
+        {30U, SerialRouteClass::p0_flexible, SerialElectricalProfile::dap_uart_disabled,
+         controller_p0, peripheral_p0},
     };
     for (std::size_t index = 0U; index < 5U; ++index)
     {
@@ -99,19 +93,17 @@ ZTEST(m24_spi_driver_contract, test_all_ten_adapters_stage_exact_routes)
         auto *const peripheral = serialFabric().spis(cases[index].instance);
         zassert_not_null(controller, "SPIM handle 누락");
         zassert_not_null(peripheral, "SPIS handle 누락");
-        zassert_equal(controller->configure({4000000U, SpiFabricMode::mode3,
-                                             SpiFabricBitOrder::msb_first, 0xFFU}),
+        zassert_equal(controller->configure(
+                          {4000000U, SpiFabricMode::mode3, SpiFabricBitOrder::msb_first, 0xFFU}),
                       SerialFabricResult::success, "SPIM configure 실패");
-        zassert_equal(peripheral->configure({0U, SpiFabricMode::mode3,
-                                             SpiFabricBitOrder::msb_first, 0xFEU}),
-                      SerialFabricResult::success, "SPIS configure 실패");
-        zassert_equal(controller->stage(
-                          configuration(cases[index].route, cases[index].electrical,
-                                        cases[index].controller, 3U, index)),
+        zassert_equal(
+            peripheral->configure({0U, SpiFabricMode::mode3, SpiFabricBitOrder::msb_first, 0xFEU}),
+            SerialFabricResult::success, "SPIS configure 실패");
+        zassert_equal(controller->stage(configuration(cases[index].route, cases[index].electrical,
+                                                      cases[index].controller, 3U, index)),
                       SerialFabricResult::success, "SPIM stage 실패");
-        zassert_equal(peripheral->stage(
-                          configuration(cases[index].route, cases[index].electrical,
-                                        cases[index].peripheral, 4U, index + 5U)),
+        zassert_equal(peripheral->stage(configuration(cases[index].route, cases[index].electrical,
+                                                      cases[index].peripheral, 4U, index + 5U)),
                       SerialFabricResult::success, "SPIS stage 실패");
     }
 }
@@ -121,15 +113,12 @@ ZTEST(m24_spi_driver_contract, test_inactive_dma_operations_fail_closed)
     auto *const controller = serialFabric().spim(21U);
     auto *const peripheral = serialFabric().spis(21U);
     zassert_equal(controller->transferAsync(workspaces[0], 8U, workspaces[0], 8U),
-                  SerialFabricResult::wrong_state,
-                  "inactive SPIM transfer를 허용했습니다.");
+                  SerialFabricResult::wrong_state, "inactive SPIM transfer를 허용했습니다.");
     zassert_equal(peripheral->queueBuffers(workspaces[1], 8U, workspaces[1], 8U),
-                  SerialFabricResult::wrong_state,
-                  "inactive SPIS buffer를 허용했습니다.");
+                  SerialFabricResult::wrong_state, "inactive SPIS buffer를 허용했습니다.");
     SpiFabricEvent event{};
     zassert_false(controller->takeEvent(event), "가짜 SPIM event가 있습니다.");
     zassert_false(peripheral->takeEvent(event), "가짜 SPIS event가 있습니다.");
 }
 
-ZTEST_SUITE(m24_spi_driver_contract, nullptr, nullptr, nullptr, nullptr,
-            nullptr);
+ZTEST_SUITE(m24_spi_driver_contract, nullptr, nullptr, nullptr, nullptr, nullptr);

@@ -451,6 +451,94 @@ raw code를 교정된 전압이나 외부 채널 정확도 결과로 해석하�
 sample/frame/count, DMA·복구·허용 동시성·soak는 반드시 검증합니다. 필요한 pull-up 등 수동 부품과
 전압·공통 GND·DAP UART switch·출력 충돌 확인은 생략하지 않습니다.
 
-PDM/I2S/QDEC peer 신호 생성은 준비가 필요한 후속 시험이며 이미 구현·검증됐다고 간주하지 않습니다.
-신호를 만들 수 없거나 해당 기능을 실행하지 못하면 `NOT RUN`/HOLD로 남깁니다. 정밀 정확도·jitter·
-전력·음질·부품별 호환성은 `범위 밖·미측정`으로 구분하며 코어 기능 PASS로부터 추정하지 않습니다.
+PDM/I2S/QDEC peer 신호 generator/receiver와 판정기는 build-only까지 준비했습니다. 이는 실제 핀에서
+신호가 성립했다는 뜻이 아니며 T10 결선 뒤 실행하기 전까지 `NOT RUN`입니다. 신호 생성 또는 수신이
+실패하면 HOLD로 남깁니다. 정밀 정확도·jitter·전력·음질·부품별 호환성은 `범위 밖·미측정`으로
+구분하며 코어 기능 PASS로부터 추정하지 않습니다.
+
+### 외부 UART/SPI/TWI 준비 모듈 — 아직 T10 실행 안내가 아님
+
+[v04_fixtures.json](v04_fixtures.json)은 회로도 9페이지의 **커넥터 이름/핀 번호/GPIO net**을
+분리한 준비용 목록입니다. `P2` 커넥터의 9/10/11/12번은 각각 GPIO P1.7/6/5/4입니다.
+GPIO P2.4/5는 같은 커넥터의 17/19번입니다. GPIO 포트 이름을 커넥터 번호로 읽지 않습니다.
+GPIO P2.6~10, PMIC I2C·INT, VBAT divider, LFXO에는 이 UART/SPI/TWI 시험을 연결하지 않습니다.
+
+새 `fixture_hil.cpp`는 고정된 UART 101/102/103, SPI 201/202/203과 TWI 301 경로만 선택합니다. 외부 명령은
+명시적인 fixture 개정·확인값·controller role 없이는 거부되며, 실행 허가는 10초 뒤 만료됩니다.
+STOP 미증명은 fault latch와 자원 보존으로 남습니다. 활성 외부 시험 동안 온보드 UART/PMIC
+명령은 거부하고, 한 번에 한 controller만 생성합니다. 물리 스위치 감지는 하지 않습니다.
+
+[v04_fixture.py](v04_fixture.py)는 역할·UID/image hash·30분 이내 사용자 결선 확인을 검사하고,
+UART 135-vector, SPI 1,513-vector, TWI 328-vector를 준비합니다. UART는 단일·이중 RX buffer,
+parity와 RTS/CTS를 포함하며 SPI/TWI controller는 동기·비동기 전송, peripheral/target은 단일·이중
+buffer를 구분합니다. RX는 SWD mailbox로
+전 바이트를 읽어 반대편의 독립 패턴 또는 ORC와 대조합니다. cleanup 기록은 기능 PASS와 분리합니다.
+`v04_pair.py`는 계속 **온보드 전용**이며, 외부 시험은 별도 `v04_fixture_run.py`로 분리했습니다.
+외부 실행기는 기본 preflight만 수행하고, `--execute-fixture`·별도 사용자 confirmation·새 evidence
+경로가 모두 있어야 두 보드를 제어합니다. 같은 exact-boot helper로 두 role image를 시작하고
+활성 session을 함께 유지합니다. RTS/CTS vector 하나는 receiver RX를 100ms 늦게 열어 sender TX가
+완료되지 않는지 먼저 확인한 뒤 재개합니다. 8N1 sender/8E1 receiver와 1ms LOW generator로
+parity/framing·break 오류 및 bounded STOP을 검사합니다. SPI는 125kHz 1,024-byte 전송 취소,
+TWI는 미등록 `0x44` NACK와 100kHz 256-byte 전송 취소 뒤 bounded STOP을 준비합니다.
+각 오류·취소 직후 같은 lease에서 32-byte 정상 전송을 다시 수행해 재시작도 별도로 판정합니다.
+TWI 추가 두 vector는 peer가 SDA를 LOW로 고정한 동안 복구 실패, 해제 뒤 `recoverBus()` 성공과
+32-byte 정상 전송, TWIS buffer를 5ms 늦게 제공하는 실제 clock stretch 뒤 정상 완료를 판정합니다.
+SPI fixture 201의 role 1에는 1,024-byte SPIM00 비동기 전송 중 온보드 TWIM22 PMIC read를
+수행하는 허용 동시성 case가 추가되어 있습니다. 더 넓은 5-block 동시성 및 7,200초 soak는 단독
+기능 실기 PASS 뒤 T13에서 수행하며 build-only 결과로 대체하지 않습니다.
+TWI 301은 DUT P4.25 `VDD_MOD`에서 SDA/SCL로 각각 2.2 kΩ ±5% pull-up 한 개를 연결해야 하며 peer
+전원 rail은 연결하지 않습니다. 확인 JSON의 `pullups_match_catalog`가 참이 아니면 실행을 거부합니다.
+1MHz 통과는 기능 결과이며 rise-time·신호 품질 보증이 아닙니다. 이 절은 T10 전 실행 권한이 아닙니다.
+preflight JSON에는 현재 source·UID·image hash에 묶인 `confirmation_template`이 함께 출력됩니다.
+모든 안전 조건은 `false`, 시각은 `0`, 확인자는 빈 문자열로 생성되므로 실제 연결을 확인해 채우기
+전에는 실행 승인이 되지 않습니다.
+
+두 번째 보드 COM8/P0 DAP CTS 고정에 대해 2026-09-05 사용자가 HW 엔지니어의 납땜 이슈
+진단을 전달했습니다. 정상 DUT의 RTS/CTS 결과는 유지하며, 해당 peer 경로는 FAIL 기록을 보존하고
+반복 실행을 중단합니다. 이를 전체 코어 RTS/CTS 미지원 또는 다른 USB 문제의 원인으로 일반화하지 않습니다.
+
+QDEC의 계획된 2/10ms 상태 간격에는 nrfx 기본 16384us sampling이 너무 느립니다. 후보 API에
+`sample_period_us`·`led_pre_us`·`report_events`를 추가하고 기존 기본값은 보존했습니다.
+준비용 `v04_qdec.py`는 256us sampling에서 A/B `00→01→11→10→00`을 +4, 역순을 -4로
+판정하고 대각 전이를 별도로 셉니다. 자동 report는 누산기를 비우므로 수동 `read()`와 같은 구간을
+중복 합산하지 않습니다. PWM20/21/22가 P1.14/P1.10에 quadrature sequence를 만들고 QDEC20/21이
+격리된 P1.4/P1.6에서 받는 firmware와 runner를 준비했습니다. 이 oracle과 build PASS는 QDEC 실기
+PASS가 아닙니다.
+
+### Analog·stream 합성 신호 fixture — 아직 T10 실행 안내가 아님
+
+`v04_signal_run.py`는 기본적으로 preflight만 출력합니다. `--execute-fixture`, 현재 source·두 UID·
+두 image hash에 묶인 30분 이내 confirmation, 새 evidence 경로가 모두 있어야 flash와 외부 출력을
+시도합니다. fixture 401~404/408과 420은 회로 안전상 peer인 role 2만 generator가 될 수 있습니다. 430/440은
+두 role을 번갈아 clock/generator로 검사합니다.
+
+| ID | 기능 | 전원 분리 상태에서 연결할 신호 | 판정 범위 |
+| --- | --- | --- | --- |
+| 401~404 | PWM→SAADC | peer P4.12(P1.14) → DUT P2.12/11/10/9의 P1.4/AIN0~P1.7/AIN3 중 해당 한 선, GND↔GND | PWM20/21/22 channel 0~3, AIN0~3, 32/256 sample과 DMA 길이 |
+| 408 | PWM→SAADC | peer P4.12(P1.14) → DUT P4.12(P1.14/AIN7), GND↔GND | 안전한 LED buffer 입력의 AIN7과 PWM channel 0~3 |
+| 420 | PWM→QDEC | peer P4.12(P1.14) → DUT P2.12(P1.4/A), peer P4.8(P1.10) → DUT P2.10(P1.6/B), GND↔GND | PWM20/21/22×QDEC20/21, 방향·debounce·count |
+| 430 | I2S | P1.4 SCK↔SCK, P1.5 LRCK↔LRCK, P1.6↔상대 P1.7 두 선 교차, GND↔GND | master/slave, 16/48kHz, 8/16/24/32-bit, channel·DMA packing |
+| 440 | PDM | receiver P1.4 CLK→generator P1.5 SCK, receiver P1.6 DATA←generator P1.7 MISO, receiver P1.5 gate→generator P1.4 CSN, GND↔GND | PDM20/21, mono/stereo edge, 25/50/75% density 순서·channel 분리 |
+
+401~404/408/420의 peer P1.14/P1.10은 온보드 LED buffer 입력에도 연결되어 있으나 MCU 출력끼리 맞물리지
+않는 단방향 경로입니다. DUT의 P1.4~7과 403/404 양쪽 P1.4~7을 쓰려면 두 보드 debug-control의
+`DISABLE_UART`를 DAP UART 분리 상태로 유지해야 합니다. `DISABLE_SWD`는 SWD 연결 상태로 둡니다.
+fixture를 바꿀 때 두 USB 전원을 먼저 분리하고, 표에 없는 전원·신호선은 연결하지 않습니다. AIN4
+P1.11은 DAP 전원 감지, AIN5 P1.12는 VBAT 분압기/SB4, AIN6 P1.13은 사용자 버튼과 공유하므로
+이번 무개조 peer 출력 fixture에서 제외하고 source/build 경계만 검사합니다. 이를 실기 PASS로 표시하지 않습니다.
+
+PDM source는 receiver가 만든 MHz clock을 SPIS21 EasyDMA로 추종하므로 software bit-bang을 기능
+근거로 사용하지 않습니다. mono density 평균은 25<50<75 순서를, stereo는 교대 sample channel의
+평균 차이를 검사합니다. I2S는 양쪽 독립 pattern을 sample width/channel mask로 대조합니다. 실제
+마이크·코덱·엔코더 호환성과 음질은 이 fixture의 범위가 아닙니다.
+
+Analog fixture는 각 ID마다 PWM 3 instance × channel slot 4 × sample 길이 2 × 단일/이중 buffer로
+48개 vector를 실행합니다. PDM은 instance 2 × sample 길이 2 × density 3 × mono/stereo 2 × edge 2 ×
+단일/이중 buffer 2의 96개 vector이며, I2S도 두 rate·네 width·세 channel mode·두 길이·단일/이중
+buffer의 96개 vector입니다. 수치는 준비된 실행 경우의 수이고 실기 PASS 수가 아닙니다.
+
+`v04_campaign.py`는 반복 횟수를 1~100회, 한 연속 soak를 최대 7,200초로 제한하고 1~60초 간격의
+progress를 journal에 남깁니다. 중단된 실행은 `interrupted`이며 다음 실행에 경과 시간을 합산하지
+않습니다. UART/SPI/TWI와 signal CLI의 `--repetitions`, `--duration-seconds`,
+`--progress-interval-seconds`가 이 공통 계약을 사용합니다. 단독 기능 실기 PASS 전에는 soak를
+시작하지 않으며, 동시성은 해당 fixture 조합을 별도로 승인한 뒤 수행합니다.

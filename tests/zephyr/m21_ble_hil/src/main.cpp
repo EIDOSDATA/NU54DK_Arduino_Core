@@ -123,8 +123,7 @@ namespace
     /** @brief 소문자 hex 한 글자를 4-bit 값으로 변환합니다. */
     std::uint8_t hexNibble(char value)
     {
-        return static_cast<std::uint8_t>(value <= '9' ? value - '0'
-                                                      : value - 'a' + 10);
+        return static_cast<std::uint8_t>(value <= '9' ? value - '0' : value - 'a' + 10);
     }
 
     /** @brief UART nonce 전체 128 bit를 RF 광고 검증용 binary 값으로 변환합니다. */
@@ -132,9 +131,8 @@ namespace
     {
         for (std::size_t index = 0U; index < rf_nonce_length; ++index)
         {
-            rf_nonce[index] = static_cast<std::uint8_t>(
-                (hexNibble(nonce[index * 2U]) << 4U) |
-                hexNibble(nonce[index * 2U + 1U]));
+            rf_nonce[index] = static_cast<std::uint8_t>((hexNibble(nonce[index * 2U]) << 4U) |
+                                                        hexNibble(nonce[index * 2U + 1U]));
         }
     }
 
@@ -323,8 +321,7 @@ namespace
     }
 
     /** @brief remote attribute discovery 결과를 bounded handle 표로 복사합니다. */
-    std::uint8_t onDiscovery(struct bt_conn *connection,
-                             const struct bt_gatt_attr *attribute,
+    std::uint8_t onDiscovery(struct bt_conn *connection, const struct bt_gatt_attr *attribute,
                              struct bt_gatt_discover_params *parameters)
     {
         ARG_UNUSED(connection);
@@ -339,8 +336,7 @@ namespace
             atomic_set(&discovery_complete, 1);
             return BT_GATT_ITER_STOP;
         }
-        captureCharacteristic(
-            static_cast<const struct bt_gatt_chrc *>(attribute->user_data));
+        captureCharacteristic(static_cast<const struct bt_gatt_chrc *>(attribute->user_data));
         return BT_GATT_ITER_CONTINUE;
     }
 
@@ -392,8 +388,8 @@ namespace
 
     /** @brief 단일 remote read의 chunk와 ATT 오류를 bounded buffer에 모읍니다. */
     std::uint8_t onRead(struct bt_conn *connection, std::uint8_t error,
-                        struct bt_gatt_read_params *parameters,
-                        const void *data, std::uint16_t length)
+                        struct bt_gatt_read_params *parameters, const void *data,
+                        std::uint16_t length)
     {
         ARG_UNUSED(connection);
         if (read_generation != gatt_phase_generation)
@@ -493,8 +489,8 @@ namespace
 
     /** @brief 8-byte key-down과 zero release HID report를 순서대로 검사합니다. */
     std::uint8_t onReportNotification(struct bt_conn *connection,
-                                      struct bt_gatt_subscribe_params *parameters,
-                                      const void *data, std::uint16_t length)
+                                      struct bt_gatt_subscribe_params *parameters, const void *data,
+                                      std::uint16_t length)
     {
         ARG_UNUSED(connection);
         ARG_UNUSED(parameters);
@@ -583,8 +579,7 @@ namespace
         battery_subscription.disc_params = &battery_ccc_discovery;
         battery_subscription.value = BT_GATT_CCC_NOTIFY;
         battery_subscription.min_security = BT_SECURITY_L2;
-        atomic_set_bit(battery_subscription.flags,
-                       BT_GATT_SUBSCRIBE_FLAG_VOLATILE);
+        atomic_set_bit(battery_subscription.flags, BT_GATT_SUBSCRIBE_FLAG_VOLATILE);
         battery_subscription_generation = gatt_phase_generation;
         subscriptions_started = true;
         atomic_set(&battery_subscription_complete, 0);
@@ -619,8 +614,7 @@ namespace
         report_subscription.disc_params = &report_ccc_discovery;
         report_subscription.value = BT_GATT_CCC_NOTIFY;
         report_subscription.min_security = BT_SECURITY_L2;
-        atomic_set_bit(report_subscription.flags,
-                       BT_GATT_SUBSCRIBE_FLAG_VOLATILE);
+        atomic_set_bit(report_subscription.flags, BT_GATT_SUBSCRIBE_FLAG_VOLATILE);
         report_subscription_generation = gatt_phase_generation;
         report_subscription_started = true;
         atomic_set(&report_subscription_complete, 0);
@@ -673,9 +667,8 @@ namespace
             pending_gatt_action = CentralGattAction::read_report_map;
             break;
         case ReadTarget::report_map:
-            if (read_att_error != 0U || read_length < 8U ||
-                read_buffer[0] != 0x05U || read_buffer[1] != 0x01U ||
-                read_buffer[2] != 0x09U || read_buffer[3] != 0x06U)
+            if (read_att_error != 0U || read_length < 8U || read_buffer[0] != 0x05U ||
+                read_buffer[1] != 0x01U || read_buffer[2] != 0x09U || read_buffer[3] != 0x06U)
             {
                 fail("hid-report-map");
                 return;
@@ -704,8 +697,7 @@ namespace
         read_target = ReadTarget::complete;
         security_request_pending = true;
         security_request_due_ms = k_uptime_get();
-        security_request_deadline_ms =
-            k_uptime_get() + security_request_timeout_ms;
+        security_request_deadline_ms = k_uptime_get() + security_request_timeout_ms;
         return;
     }
 
@@ -718,8 +710,7 @@ namespace
         {
             return;
         }
-        const std::uint32_t expected_pairings =
-            run_mode == RunMode::restored ? 0U : 1U;
+        const std::uint32_t expected_pairings = run_mode == RunMode::restored ? 0U : 1U;
         if (pairing_event_count != expected_pairings)
         {
             fail("pairing-event-count");
@@ -729,7 +720,8 @@ namespace
         Serial.println(nonce);
         Serial.print("NUCODE_M21_CENTRAL:BAS:NOTIFY:PASS:value=72:nonce=");
         Serial.println(nonce);
-        Serial.print("NUCODE_M21_CENTRAL:DIS:PASS:manufacturer=NUCODE:model=NU54DK-M21:serial=M21-HIL:nonce=");
+        Serial.print("NUCODE_M21_CENTRAL:DIS:PASS:manufacturer=NUCODE:model=NU54DK-M21:serial=M21-"
+                     "HIL:nonce=");
         Serial.println(nonce);
         Serial.print("NUCODE_M21_CENTRAL:HID:REPORT:PASS:bytes=8:down=04:release=00:nonce=");
         Serial.println(nonce);
@@ -745,7 +737,9 @@ namespace
         Serial.println(nonce);
         if (run_mode == RunMode::repair)
         {
-            Serial.print("NUCODE_M21_CENTRAL:FINAL:PASS:pairing=PASS:bond_restore=PASS:erase_reboot=PASS:old_key_reconnect=REJECTED:repair=PASS:bas=PASS:dis=PASS:hid_protocol=PASS:nonce=");
+            Serial.print("NUCODE_M21_CENTRAL:FINAL:PASS:pairing=PASS:bond_restore=PASS:erase_"
+                         "reboot=PASS:old_key_reconnect=REJECTED:repair=PASS:bas=PASS:dis=PASS:hid_"
+                         "protocol=PASS:nonce=");
             Serial.println(nonce);
         }
         phase_reported = true;
@@ -808,8 +802,7 @@ namespace
                         return;
                     }
                     security_request_pending = true;
-                    security_request_due_ms =
-                        k_uptime_get() + security_request_retry_ms;
+                    security_request_due_ms = k_uptime_get() + security_request_retry_ms;
                     return;
                 }
                 fail("security-request");
@@ -824,16 +817,14 @@ namespace
         }
         if (atomic_cas(&discovery_complete, 1, 0))
         {
-            if (handles.battery == 0U || handles.manufacturer == 0U ||
-                handles.model == 0U || handles.serial == 0U ||
-                handles.report_map == 0U || handles.report == 0U)
+            if (handles.battery == 0U || handles.manufacturer == 0U || handles.model == 0U ||
+                handles.serial == 0U || handles.report_map == 0U || handles.report == 0U)
             {
                 fail("profile-handles");
                 return;
             }
-            pending_gatt_action = discovery_for_pre_security
-                                      ? CentralGattAction::read_pre_security
-                                      : CentralGattAction::read_battery;
+            pending_gatt_action = discovery_for_pre_security ? CentralGattAction::read_pre_security
+                                                             : CentralGattAction::read_battery;
             return;
         }
         if (atomic_cas(&read_complete, 1, 0))
@@ -929,9 +920,8 @@ namespace
         }
         if (!key_down_sent)
         {
-            battery_value = battery_value == notified_battery
-                                ? expected_battery_read
-                                : notified_battery;
+            battery_value =
+                battery_value == notified_battery ? expected_battery_read : notified_battery;
             static_cast<void>(BLEBattery.setLevel(battery_value));
             if (BLEKeyboard.press(0x04U))
             {
@@ -962,8 +952,7 @@ namespace
         {
             return;
         }
-        const std::uint32_t expected_pairings =
-            run_mode == RunMode::restored ? 0U : 1U;
+        const std::uint32_t expected_pairings = run_mode == RunMode::restored ? 0U : 1U;
         if (pairing_event_count != expected_pairings)
         {
             fail("pairing-event-count");
@@ -983,7 +972,9 @@ namespace
         Serial.println(nonce);
         if (run_mode == RunMode::repair)
         {
-            Serial.print("NUCODE_M21_PERIPHERAL:FINAL:PASS:pairing=PASS:bond_restore=PASS:erase_reboot=PASS:old_key_reconnect=REJECTED:repair=PASS:bas=PASS:dis=PASS:hid_protocol=PASS:nonce=");
+            Serial.print("NUCODE_M21_PERIPHERAL:FINAL:PASS:pairing=PASS:bond_restore=PASS:erase_"
+                         "reboot=PASS:old_key_reconnect=REJECTED:repair=PASS:bas=PASS:dis=PASS:hid_"
+                         "protocol=PASS:nonce=");
             Serial.println(nonce);
         }
         phase_reported = true;
@@ -1053,8 +1044,7 @@ namespace
         case nucode::ble::SecurityEvent::pairing_requested:
             if (run_mode == RunMode::erased_probe)
             {
-                rejectProbePairing(BLESecurity.acceptPairing(false),
-                                   "old-key-pairing-reject");
+                rejectProbePairing(BLESecurity.acceptPairing(false), "old-key-pairing-reject");
             }
             else if (!BLESecurity.acceptPairing(true))
             {
@@ -1064,8 +1054,7 @@ namespace
         case nucode::ble::SecurityEvent::passkey_confirmation_requested:
             if (run_mode == RunMode::erased_probe)
             {
-                rejectProbePairing(BLESecurity.confirmPasskey(false),
-                                   "old-key-passkey-reject");
+                rejectProbePairing(BLESecurity.confirmPasskey(false), "old-key-passkey-reject");
             }
             else if (!BLESecurity.confirmPasskey(true))
             {
@@ -1075,8 +1064,7 @@ namespace
         case nucode::ble::SecurityEvent::passkey_input_requested:
             if (run_mode == RunMode::erased_probe)
             {
-                rejectProbePairing(BLESecurity.cancelPairing(),
-                                   "old-key-passkey-cancel");
+                rejectProbePairing(BLESecurity.cancelPairing(), "old-key-passkey-cancel");
             }
             else
             {
@@ -1161,10 +1149,8 @@ namespace
             else
             {
                 security_request_pending = true;
-                security_request_due_ms =
-                    k_uptime_get() + security_request_delay_ms;
-                security_request_deadline_ms =
-                    k_uptime_get() + security_request_timeout_ms;
+                security_request_due_ms = k_uptime_get() + security_request_delay_ms;
+                security_request_deadline_ms = k_uptime_get() + security_request_timeout_ms;
             }
 #endif
         }
@@ -1184,8 +1170,7 @@ namespace
             Serial.print(":nonce=");
             Serial.println(nonce);
             if (run_mode == RunMode::erased_probe && old_key_probe_connected &&
-                !connection_was_secured &&
-                BLESecurity.bondCount() == 0U)
+                !connection_was_secured && BLESecurity.bondCount() == 0U)
             {
                 old_key_reconnect_failed = true;
                 Serial.print("NUCODE_M21_");
@@ -1202,8 +1187,8 @@ namespace
                 Serial.println(nonce);
                 phase_reported = true;
             }
-            else if (run_mode != RunMode::erased_probe && protocol_started &&
-                     !protocol_failed && !phase_reported && !erase_in_progress)
+            else if (run_mode != RunMode::erased_probe && protocol_started && !protocol_failed &&
+                     !phase_reported && !erase_in_progress)
             {
                 if (!connection_was_secured && pairing_event_count == 0U &&
                     !persistence_pending_seen && !bond_verified_seen)
@@ -1289,8 +1274,7 @@ namespace
         }
         Serial.print("NUCODE_M21_CENTRAL:SCAN:PASS:phase=");
 #else
-        if (!BLEAdvertising.setManufacturerData(rf_company_id, rf_nonce,
-                                                rf_nonce_length) ||
+        if (!BLEAdvertising.setManufacturerData(rf_company_id, rf_nonce, rf_nonce_length) ||
             !BLEAdvertising.start())
         {
             fail("advertising-start");
@@ -1337,8 +1321,7 @@ namespace
 #else
         Serial.print("PERIPHERAL");
 #endif
-        Serial.print(initial_clear ? ":CLEAR:REQUESTED:nonce="
-                                   : ":ERASE:REQUESTED:nonce=");
+        Serial.print(initial_clear ? ":CLEAR:REQUESTED:nonce=" : ":ERASE:REQUESTED:nonce=");
         Serial.println(nonce);
         erase_in_progress = false;
     }
@@ -1356,8 +1339,7 @@ namespace
         }
         else if (acceptCommandNonce(line, start_prefix))
         {
-            startProtocol(BLESecurity.bondCount() > 0U ? RunMode::restored
-                                                       : RunMode::fresh);
+            startProtocol(BLESecurity.bondCount() > 0U ? RunMode::restored : RunMode::fresh);
         }
         else if (acceptCommandNonce(line, probe_prefix))
         {
@@ -1432,13 +1414,13 @@ namespace
         }
     }
 
-}
+} // namespace
 
 void setup()
 {
     Serial.begin(115200);
-    const nucode::ble::SecurityConfig security = {
-        nucode::ble::SecurityLevel::encrypted, true, 30000U};
+    const nucode::ble::SecurityConfig security = {nucode::ble::SecurityLevel::encrypted, true,
+                                                  30000U};
     BLESecurity.onEvent(onSecurityEvent);
     if (!BLESecurity.begin(security))
     {
@@ -1464,8 +1446,8 @@ void setup()
         fail("device-begin");
         return;
     }
-    const nucode::ble::DeviceInformation information = {
-        "NUCODE", "NU54DK-M21", "M21-HIL", "0.3.0", "NU54DK", "0.3.0"};
+    const nucode::ble::DeviceInformation information = {"NUCODE", "NU54DK-M21", "M21-HIL",
+                                                        "0.3.0",  "NU54DK",     "0.3.0"};
     if (!BLEDeviceInformation.configure(information))
     {
         fail("dis-config");

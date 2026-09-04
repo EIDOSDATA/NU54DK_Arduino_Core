@@ -48,10 +48,10 @@ namespace
     /** @brief exact local name 저장 공간입니다. */
     constexpr std::size_t maximum_local_name = CONFIG_BT_DEVICE_NAME_MAX;
 
-    K_MSGQ_DEFINE(ble_rx_queue, sizeof(std::uint8_t),
-                  CONFIG_NUCODE_BLE_RX_BUFFER_SIZE, alignof(std::uint8_t));
-    K_MSGQ_DEFINE(ble_event_queue, sizeof(Event),
-                  CONFIG_NUCODE_BLE_EVENT_QUEUE_SIZE, alignof(Event));
+    K_MSGQ_DEFINE(ble_rx_queue, sizeof(std::uint8_t), CONFIG_NUCODE_BLE_RX_BUFFER_SIZE,
+                  alignof(std::uint8_t));
+    K_MSGQ_DEFINE(ble_event_queue, sizeof(Event), CONFIG_NUCODE_BLE_EVENT_QUEUE_SIZE,
+                  alignof(Event));
     K_MUTEX_DEFINE(ble_lifecycle_mutex);
     K_MUTEX_DEFINE(ble_tx_mutex);
     K_SEM_DEFINE(ble_tx_complete, 0, 1);
@@ -187,8 +187,8 @@ namespace
     }
 
     /** @brief Central write 완료까지 caller-owned buffer 수명을 연장합니다. */
-    void centralSent(struct bt_nus_client *client, std::uint8_t error,
-                     const std::uint8_t *data, std::uint16_t length)
+    void centralSent(struct bt_nus_client *client, std::uint8_t error, const std::uint8_t *data,
+                     std::uint16_t length)
     {
         ARG_UNUSED(client);
         ARG_UNUSED(data);
@@ -211,11 +211,12 @@ namespace
     };
 
     struct bt_nus_client_init_param nus_client_parameters = {
-        .cb = {
-            .received = centralReceived,
-            .sent = centralSent,
-            .unsubscribed = centralUnsubscribed,
-        },
+        .cb =
+            {
+                .received = centralReceived,
+                .sent = centralSent,
+                .unsubscribed = centralUnsubscribed,
+            },
     };
 
     /** @brief active connection에 임시 reference를 얻습니다. */
@@ -323,13 +324,12 @@ namespace
 
         if (currentRole() == Role::central)
         {
-            const int result = bt_gatt_dm_start(connection, BT_UUID_NUS_SERVICE,
-                                                &discovery_callbacks, nullptr);
+            const int result =
+                bt_gatt_dm_start(connection, BT_UUID_NUS_SERVICE, &discovery_callbacks, nullptr);
             if (result < 0)
             {
                 recordError(Error::driver_error, result, true);
-                static_cast<void>(bt_conn_disconnect(connection,
-                                                     BT_HCI_ERR_REMOTE_USER_TERM_CONN));
+                static_cast<void>(bt_conn_disconnect(connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
             }
         }
     }
@@ -369,8 +369,7 @@ namespace
         {
             atomic_set(&role_value, static_cast<atomic_val_t>(Role::none));
             atomic_set(&ending_value, 0);
-            nucode::ble::internal::releaseFacade(
-                nucode::ble::internal::FacadeOwner::nus);
+            nucode::ble::internal::releaseFacade(nucode::ble::internal::FacadeOwner::nus);
         }
     }
 
@@ -398,8 +397,8 @@ namespace
     }
 
     /** @brief scan callback에서는 후보 주소만 복사하고 연결은 poll에 위임합니다. */
-    void deviceFound(const bt_addr_le_t *address, std::int8_t rssi,
-                     std::uint8_t advertising_type, struct net_buf_simple *data)
+    void deviceFound(const bt_addr_le_t *address, std::int8_t rssi, std::uint8_t advertising_type,
+                     struct net_buf_simple *data)
     {
         ARG_UNUSED(rssi);
         if (atomic_get(&scanning_value) == 0 ||
@@ -424,7 +423,7 @@ namespace
     /** @brief Bluetooth stack과 NUS 양쪽 모듈을 한 번만 초기화합니다. */
     int initializeModules() noexcept
     {
-        // bt_enable은 M19 공용 once-init 경계에서만 호출합니다.
+        /** @brief bt_enable은 M19 공용 once-init 경계에서만 호출합니다. */
         const int stack_result = nucode::ble::internal::ensureStack();
         if (stack_result < 0)
         {
@@ -459,9 +458,9 @@ namespace
             BT_DATA(BT_DATA_NAME_COMPLETE, peripheral_name,
                     static_cast<std::uint8_t>(::strlen(peripheral_name))),
         };
-        const int result = bt_le_adv_start(BT_LE_ADV_CONN_FAST_2,
-                                           advertising_data, ARRAY_SIZE(advertising_data),
-                                           scan_response, ARRAY_SIZE(scan_response));
+        const int result =
+            bt_le_adv_start(BT_LE_ADV_CONN_FAST_2, advertising_data, ARRAY_SIZE(advertising_data),
+                            scan_response, ARRAY_SIZE(scan_response));
         if (result == 0)
         {
             atomic_set(&advertising_value, 1);
@@ -547,8 +546,7 @@ namespace nucode::ble
             recordError(Error::already_started, -EALREADY, true);
             return false;
         }
-        if (!nucode::ble::internal::claimFacade(
-                nucode::ble::internal::FacadeOwner::nus))
+        if (!nucode::ble::internal::claimFacade(nucode::ble::internal::FacadeOwner::nus))
         {
             k_mutex_unlock(&ble_lifecycle_mutex);
             recordError(Error::already_started, -EALREADY, true);
@@ -571,8 +569,7 @@ namespace nucode::ble
         k_mutex_unlock(&ble_lifecycle_mutex);
         if (result < 0)
         {
-            nucode::ble::internal::releaseFacade(
-                nucode::ble::internal::FacadeOwner::nus);
+            nucode::ble::internal::releaseFacade(nucode::ble::internal::FacadeOwner::nus);
             recordError(Error::driver_error, result, true);
             return false;
         }
@@ -619,8 +616,7 @@ namespace nucode::ble
             recordError(Error::already_started, -EALREADY, true);
             return false;
         }
-        if (!nucode::ble::internal::claimFacade(
-                nucode::ble::internal::FacadeOwner::nus))
+        if (!nucode::ble::internal::claimFacade(nucode::ble::internal::FacadeOwner::nus))
         {
             k_mutex_unlock(&ble_lifecycle_mutex);
             recordError(Error::already_started, -EALREADY, true);
@@ -638,8 +634,7 @@ namespace nucode::ble
         k_mutex_unlock(&ble_lifecycle_mutex);
         if (result < 0)
         {
-            nucode::ble::internal::releaseFacade(
-                nucode::ble::internal::FacadeOwner::nus);
+            nucode::ble::internal::releaseFacade(nucode::ble::internal::FacadeOwner::nus);
             recordError(Error::driver_error, result, true);
             return false;
         }
@@ -777,8 +772,7 @@ namespace nucode::ble
         const bool wait_for_pending_recycle = pending != nullptr;
         if (pending != nullptr)
         {
-            static_cast<void>(bt_conn_disconnect(
-                pending, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
+            static_cast<void>(bt_conn_disconnect(pending, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
             bt_conn_unref(pending);
         }
         struct bt_conn *connection = referenceActiveConnection();
@@ -791,8 +785,7 @@ namespace nucode::ble
         {
             atomic_set(&role_value, static_cast<atomic_val_t>(Role::none));
             atomic_set(&ending_value, 0);
-            nucode::ble::internal::releaseFacade(
-                nucode::ble::internal::FacadeOwner::nus);
+            nucode::ble::internal::releaseFacade(nucode::ble::internal::FacadeOwner::nus);
         }
         atomic_set(&ready_value, 0);
     }
@@ -907,22 +900,20 @@ namespace nucode::ble
                 recordError(Error::not_connected, -ENOTCONN, true);
                 break;
             }
-            const std::size_t chunk = smaller(
-                smaller(size - sent, static_cast<std::size_t>(bt_nus_get_mtu(connection))),
-                maximum_tx_payload);
+            const std::size_t chunk =
+                smaller(smaller(size - sent, static_cast<std::size_t>(bt_nus_get_mtu(connection))),
+                        maximum_tx_payload);
             ::memcpy(tx_buffer, buffer + sent, chunk);
             k_sem_reset(&ble_tx_complete);
             atomic_set(&tx_result_value, 0);
-            const int result = currentRole() == Role::peripheral
-                                   ? bt_nus_send(connection, tx_buffer,
-                                                 static_cast<std::uint16_t>(chunk))
-                                   : bt_nus_client_send(&nus_client, tx_buffer,
-                                                        static_cast<std::uint16_t>(chunk));
+            const int result =
+                currentRole() == Role::peripheral
+                    ? bt_nus_send(connection, tx_buffer, static_cast<std::uint16_t>(chunk))
+                    : bt_nus_client_send(&nus_client, tx_buffer, static_cast<std::uint16_t>(chunk));
             bt_conn_unref(connection);
             if (result < 0)
             {
-                recordError(result == -EALREADY ? Error::busy : Error::driver_error,
-                            result, true);
+                recordError(result == -EALREADY ? Error::busy : Error::driver_error, result, true);
                 break;
             }
             if (k_sem_take(&ble_tx_complete, K_SECONDS(5)) != 0)

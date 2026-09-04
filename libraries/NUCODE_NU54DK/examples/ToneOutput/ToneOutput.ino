@@ -11,10 +11,10 @@ void setup()
 
 void loop()
 {
-	tone(PIN_PWM0, 440, 250);
-	delay(500);
-	tone(PIN_PWM0, 880);
-	delay(250);
-	noTone(PIN_PWM0);
-	delay(500);
+    tone(PIN_PWM0, 440, 250);
+    delay(500);
+    tone(PIN_PWM0, 880);
+    delay(250);
+    noTone(PIN_PWM0);
+    delay(500);
 }

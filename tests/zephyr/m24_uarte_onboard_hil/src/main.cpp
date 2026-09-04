@@ -33,7 +33,9 @@ namespace
     [[noreturn]] void halt()
     {
         while (true)
+        {
             k_sleep(K_FOREVER);
+        }
     }
 
     bool startReceive(UarteHandle &handle)
@@ -45,10 +47,10 @@ namespace
     void sendReady(UarteHandle &handle)
     {
         for (std::size_t index = 0U; index < packet_size; ++index)
-            transmit_buffer[index] =
-                static_cast<std::uint8_t>(0xA0U ^ instance ^ index);
-        if (handle.transmitAsync(transmit_buffer, packet_size) !=
-            SerialFabricResult::success)
+        {
+            transmit_buffer[index] = static_cast<std::uint8_t>(0xA0U ^ instance ^ index);
+        }
+        if (handle.transmitAsync(transmit_buffer, packet_size) != SerialFabricResult::success)
         {
             halt();
         }
@@ -60,13 +62,12 @@ namespace
                 k_sleep(K_MSEC(1));
                 continue;
             }
-            if (event.type == UarteEventType::tx_complete &&
-                event.buffer == transmit_buffer && event.transferred == packet_size)
+            if (event.type == UarteEventType::tx_complete && event.buffer == transmit_buffer &&
+                event.transferred == packet_size)
             {
                 return;
             }
-            if (event.type == UarteEventType::error ||
-                event.type == UarteEventType::tx_cancelled)
+            if (event.type == UarteEventType::error || event.type == UarteEventType::tx_cancelled)
             {
                 halt();
             }
@@ -76,15 +77,13 @@ namespace
 
 int main()
 {
-    if ((instance != 20U) && (instance != 21U) && (instance != 22U) &&
-        (instance != 30U))
+    if ((instance != 20U) && (instance != 21U) && (instance != 22U) && (instance != 30U))
     {
         halt();
     }
     auto *const handle = serialFabric().uarte(instance);
     if (handle == nullptr ||
-        handle->configure({115200U, UarteParity::none, false}) !=
-            SerialFabricResult::success)
+        handle->configure({115200U, UarteParity::none, false}) != SerialFabricResult::success)
     {
         halt();
     }
@@ -105,7 +104,9 @@ int main()
     }
     sendReady(*handle);
     if (!startReceive(*handle))
+    {
         halt();
+    }
 
     while (true)
     {
@@ -115,11 +116,13 @@ int main()
             k_sleep(K_MSEC(1));
             continue;
         }
-        if (event.type == UarteEventType::rx_complete &&
-            event.buffer == receive_buffer && event.transferred == packet_size)
+        if (event.type == UarteEventType::rx_complete && event.buffer == receive_buffer &&
+            event.transferred == packet_size)
         {
             for (std::size_t index = 0U; index < packet_size; ++index)
+            {
                 transmit_buffer[index] = receive_buffer[packet_size - index - 1U];
+            }
             while (handle->transmitAsync(transmit_buffer, packet_size) !=
                    SerialFabricResult::success)
             {
@@ -129,7 +132,9 @@ int main()
         else if (event.type == UarteEventType::tx_complete)
         {
             while (!startReceive(*handle))
+            {
                 k_sleep(K_MSEC(1));
+            }
         }
         else if (event.type == UarteEventType::error)
         {

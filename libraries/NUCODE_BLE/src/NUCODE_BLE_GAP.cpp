@@ -88,12 +88,10 @@ namespace
         BLEAddress address;
     };
 
-    K_MSGQ_DEFINE(gap_event_queue, sizeof(GapEventRecord),
-                  CONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE,
+    K_MSGQ_DEFINE(gap_event_queue, sizeof(GapEventRecord), CONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE,
                   alignof(GapEventRecord));
     K_MSGQ_DEFINE(scan_result_queue, sizeof(ScanResultRecord),
-                  CONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE,
-                  alignof(BLEScanResult));
+                  CONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE, alignof(BLEScanResult));
     K_MUTEX_DEFINE(gap_lifecycle_mutex);
 
     atomic_t device_initialized = ATOMIC_INIT(0);
@@ -216,8 +214,8 @@ namespace
     /** @brief event queue에 사용자 callback 대신 작은 record만 저장합니다. */
     void queueEvent(BLEEvent event, std::uint32_t generation = 0U) noexcept
     {
-        const std::uint32_t current_generation = static_cast<std::uint32_t>(
-            atomic_get(&device_session_generation));
+        const std::uint32_t current_generation =
+            static_cast<std::uint32_t>(atomic_get(&device_session_generation));
         const GapEventRecord record = {
             .event = event,
             .generation = generation == 0U ? current_generation : generation,
@@ -226,8 +224,7 @@ namespace
         {
             atomic_inc(&dropped_event_value);
             atomic_set(&last_driver_error_value, -ENOBUFS);
-            atomic_set(&last_error_value,
-                       static_cast<atomic_val_t>(BLEError::event_overflow));
+            atomic_set(&last_error_value, static_cast<atomic_val_t>(BLEError::event_overflow));
         }
     }
 
@@ -238,9 +235,8 @@ namespace
         {
             return false;
         }
-        destination.type = source.type() == BLEAddress::Type::public_address
-                               ? BT_ADDR_LE_PUBLIC
-                               : BT_ADDR_LE_RANDOM;
+        destination.type = source.type() == BLEAddress::Type::public_address ? BT_ADDR_LE_PUBLIC
+                                                                             : BT_ADDR_LE_RANDOM;
         ::memcpy(destination.a.val, source.data(), sizeof(destination.a.val));
         return true;
     }
@@ -248,11 +244,10 @@ namespace
     /** @brief Zephyr LE 주소를 callback 밖 수명의 공개 주소로 복사합니다. */
     BLEAddress fromZephyrAddress(const bt_addr_le_t &source) noexcept
     {
-        const bool public_type = source.type == BT_ADDR_LE_PUBLIC ||
-                                 source.type == BT_ADDR_LE_PUBLIC_ID;
-        return BLEAddress(source.a.val, public_type
-                                            ? BLEAddress::Type::public_address
-                                            : BLEAddress::Type::random_address);
+        const bool public_type =
+            source.type == BT_ADDR_LE_PUBLIC || source.type == BT_ADDR_LE_PUBLIC_ID;
+        return BLEAddress(source.a.val, public_type ? BLEAddress::Type::public_address
+                                                    : BLEAddress::Type::random_address);
     }
 
     /** @brief active connection에 race-safe 임시 reference를 얻습니다. */
@@ -269,16 +264,14 @@ namespace
     }
 
     /** @brief callback connection이 현재 session의 active link인지 검사합니다. */
-    bool activeConnectionGeneration(struct bt_conn *connection,
-                                    std::uint32_t &generation) noexcept
+    bool activeConnectionGeneration(struct bt_conn *connection, std::uint32_t &generation) noexcept
     {
         k_spinlock_key_t key = k_spin_lock(&connection_lock);
-        const bool matches = active_connection == connection &&
-                             active_connection_generation != 0U;
+        const bool matches = active_connection == connection && active_connection_generation != 0U;
         generation = matches ? active_connection_generation : 0U;
         k_spin_unlock(&connection_lock, key);
-        return matches && generation == static_cast<std::uint32_t>(
-                                            atomic_get(&device_session_generation));
+        return matches &&
+               generation == static_cast<std::uint32_t>(atomic_get(&device_session_generation));
     }
 
     /** @brief raw AD payload에서 완전·축약 local name을 복사합니다. */
@@ -301,10 +294,9 @@ namespace
             if (type == BT_DATA_NAME_COMPLETE || type == BT_DATA_NAME_SHORTENED)
             {
                 const std::size_t available = field_length - 1U;
-                const std::size_t copy_length =
-                    available < BLEScanResult::maximum_name_length
-                        ? available
-                        : BLEScanResult::maximum_name_length;
+                const std::size_t copy_length = available < BLEScanResult::maximum_name_length
+                                                    ? available
+                                                    : BLEScanResult::maximum_name_length;
                 ::memcpy(result.name, &result.payload[index + 2U], copy_length);
                 result.name[copy_length] = '\0';
                 if (copy_length != available)
@@ -355,8 +347,8 @@ namespace
                 for (std::size_t offset = 0U; offset + uuid.size() <= data_length;
                      offset += uuid.size())
                 {
-                    if (::memcmp(&result.payload[index + 2U + offset], uuid.data(),
-                                 uuid.size()) == 0)
+                    if (::memcmp(&result.payload[index + 2U + offset], uuid.data(), uuid.size()) ==
+                        0)
                     {
                         return true;
                     }
@@ -390,16 +382,15 @@ namespace
     }
 
     /** @brief stack scan callback에서 bounded 결과만 queue로 복사합니다. */
-    void scanReceived(const bt_addr_le_t *address, std::int8_t rssi,
-                      std::uint8_t advertising_type,
+    void scanReceived(const bt_addr_le_t *address, std::int8_t rssi, std::uint8_t advertising_type,
                       struct net_buf_simple *data) noexcept
     {
         if (atomic_get(&scanning_active) == 0 || address == nullptr || data == nullptr)
         {
             return;
         }
-        const std::uint32_t generation = static_cast<std::uint32_t>(
-            atomic_get(&device_session_generation));
+        const std::uint32_t generation =
+            static_cast<std::uint32_t>(atomic_get(&device_session_generation));
 
         BLEScanResult result = {};
         result.address = fromZephyrAddress(*address);
@@ -407,10 +398,9 @@ namespace
         result.connectable = advertising_type == BT_GAP_ADV_TYPE_ADV_IND ||
                              advertising_type == BT_GAP_ADV_TYPE_ADV_DIRECT_IND;
         result.scan_response = advertising_type == BT_GAP_ADV_TYPE_SCAN_RSP;
-        const std::size_t copy_length =
-            data->len < BLEScanResult::maximum_payload_length
-                ? data->len
-                : BLEScanResult::maximum_payload_length;
+        const std::size_t copy_length = data->len < BLEScanResult::maximum_payload_length
+                                            ? data->len
+                                            : BLEScanResult::maximum_payload_length;
         result.payload_length = static_cast<std::uint8_t>(copy_length);
         result.truncated = data->len > BLEScanResult::maximum_payload_length;
         if (copy_length != 0U)
@@ -424,8 +414,7 @@ namespace
             return;
         }
         if (atomic_get(&scanning_active) == 0 ||
-            generation != static_cast<std::uint32_t>(
-                              atomic_get(&device_session_generation)))
+            generation != static_cast<std::uint32_t>(atomic_get(&device_session_generation)))
         {
             return;
         }
@@ -436,8 +425,7 @@ namespace
         if (k_msgq_put(&scan_result_queue, &record, K_NO_WAIT) != 0)
         {
             atomic_inc(&dropped_scan_value);
-            nucode::ble::internal::recordError(BLEError::scan_result_overflow,
-                                               -ENOBUFS, true);
+            nucode::ble::internal::recordError(BLEError::scan_result_overflow, -ENOBUFS, true);
             return;
         }
         queueEvent(BLEEvent::scan_result, generation);
@@ -456,8 +444,8 @@ namespace
         atomic_set(&mtu_exchange_active, 0);
         if (error != 0U)
         {
-            nucode::ble::internal::recordError(BLEError::driver_error,
-                                               -static_cast<int>(error), true);
+            nucode::ble::internal::recordError(BLEError::driver_error, -static_cast<int>(error),
+                                               true);
             return;
         }
         queueEvent(BLEEvent::mtu_changed, generation);
@@ -488,14 +476,13 @@ namespace
         bool handles_current_attempt = false;
         struct bt_conn *release_connection = nullptr;
         std::uint32_t connection_generation = 0U;
-        const std::uint32_t current_generation = static_cast<std::uint32_t>(
-            atomic_get(&device_session_generation));
+        const std::uint32_t current_generation =
+            static_cast<std::uint32_t>(atomic_get(&device_session_generation));
         k_spinlock_key_t key = k_spin_lock(&connection_lock);
         if (pending_connection == connection)
         {
-            handles_current_attempt =
-                pending_connection_generation == current_generation &&
-                atomic_get(&device_initialized) != 0;
+            handles_current_attempt = pending_connection_generation == current_generation &&
+                                      atomic_get(&device_initialized) != 0;
             connection_generation = pending_connection_generation;
             if (error == 0U && handles_current_attempt && active_connection == nullptr)
             {
@@ -513,8 +500,7 @@ namespace
             }
         }
         else if (error == 0U && atomic_get(&device_initialized) != 0 &&
-                 atomic_get(&advertising_active) != 0 &&
-                 active_connection == nullptr)
+                 atomic_get(&advertising_active) != 0 && active_connection == nullptr)
         {
             owns_connection = true;
             active_connection = bt_conn_ref(connection);
@@ -527,8 +513,8 @@ namespace
         {
             if (error == 0U)
             {
-                static_cast<void>(bt_conn_disconnect(
-                    release_connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
+                static_cast<void>(
+                    bt_conn_disconnect(release_connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
             }
             bt_conn_unref(release_connection);
         }
@@ -541,29 +527,27 @@ namespace
         if (error != 0U)
         {
             atomic_set(&connection_active, 0);
-            nucode::ble::internal::recordError(BLEError::driver_error,
-                                               -static_cast<int>(error), true);
+            nucode::ble::internal::recordError(BLEError::driver_error, -static_cast<int>(error),
+                                               true);
             return;
         }
 
         if (atomic_get(&device_initialized) == 0 ||
-            connection_generation != static_cast<std::uint32_t>(
-                                         atomic_get(&device_session_generation)))
+            connection_generation !=
+                static_cast<std::uint32_t>(atomic_get(&device_session_generation)))
         {
             atomic_set(&connection_active, 0);
-            static_cast<void>(bt_conn_disconnect(
-                connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
+            static_cast<void>(bt_conn_disconnect(connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
             return;
         }
         atomic_set(&advertising_active, 0);
         atomic_set(&connection_active, 1);
         if (atomic_get(&device_initialized) == 0 ||
-            connection_generation != static_cast<std::uint32_t>(
-                                         atomic_get(&device_session_generation)))
+            connection_generation !=
+                static_cast<std::uint32_t>(atomic_get(&device_session_generation)))
         {
             atomic_set(&connection_active, 0);
-            static_cast<void>(bt_conn_disconnect(
-                connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
+            static_cast<void>(bt_conn_disconnect(connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
             return;
         }
         nucode::ble::internal::gattConnected(connection, connection_generation);
@@ -620,8 +604,7 @@ namespace
 
 #if defined(CONFIG_BT_USER_PHY_UPDATE)
     /** @brief LE PHY update를 main-thread event로 변환합니다. */
-    void phyUpdated(struct bt_conn *connection,
-                    struct bt_conn_le_phy_info *information) noexcept
+    void phyUpdated(struct bt_conn *connection, struct bt_conn_le_phy_info *information) noexcept
     {
         ARG_UNUSED(information);
         std::uint32_t generation = 0U;
@@ -726,9 +709,8 @@ namespace nucode::ble
 
     BLEUuid::BLEUuid(const char *canonical) noexcept
     {
-        if (canonical == nullptr || ::strlen(canonical) != 36U ||
-            canonical[8] != '-' || canonical[13] != '-' || canonical[18] != '-' ||
-            canonical[23] != '-')
+        if (canonical == nullptr || ::strlen(canonical) != 36U || canonical[8] != '-' ||
+            canonical[13] != '-' || canonical[18] != '-' || canonical[23] != '-')
         {
             return;
         }
@@ -753,8 +735,7 @@ namespace nucode::ble
             {
                 return;
             }
-            network_order[destination++] =
-                static_cast<std::uint8_t>((high << 4U) | low);
+            network_order[destination++] = static_cast<std::uint8_t>((high << 4U) | low);
             source += 2U;
         }
         if (destination != sizeof(network_order))
@@ -774,8 +755,7 @@ namespace nucode::ble
         result.type_ = Type::uuid32;
         for (std::size_t index = 0U; index < 4U; ++index)
         {
-            result.bytes_[index] =
-                static_cast<std::uint8_t>((value >> (index * 8U)) & 0xffU);
+            result.bytes_[index] = static_cast<std::uint8_t>((value >> (index * 8U)) & 0xffU);
         }
         return result;
     }
@@ -827,8 +807,7 @@ namespace nucode::ble
             {
                 value |= static_cast<std::uint32_t>(bytes_[index]) << (index * 8U);
             }
-            return ::snprintf(output, capacity, "%08lx",
-                              static_cast<unsigned long>(value)) == 8;
+            return ::snprintf(output, capacity, "%08lx", static_cast<unsigned long>(value)) == 8;
         }
         if (capacity < 37U)
         {
@@ -839,21 +818,19 @@ namespace nucode::ble
         {
             network_order[index] = bytes_[sizeof(network_order) - index - 1U];
         }
-        return ::snprintf(
-                   output, capacity,
-                   "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-"
-                   "%02x%02x%02x%02x%02x%02x",
-                   network_order[0], network_order[1], network_order[2], network_order[3],
-                   network_order[4], network_order[5], network_order[6], network_order[7],
-                   network_order[8], network_order[9], network_order[10], network_order[11],
-                   network_order[12], network_order[13], network_order[14],
-                   network_order[15]) == 36;
+        return ::snprintf(output, capacity,
+                          "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-"
+                          "%02x%02x%02x%02x%02x%02x",
+                          network_order[0], network_order[1], network_order[2], network_order[3],
+                          network_order[4], network_order[5], network_order[6], network_order[7],
+                          network_order[8], network_order[9], network_order[10], network_order[11],
+                          network_order[12], network_order[13], network_order[14],
+                          network_order[15]) == 36;
     }
 
     bool BLEUuid::operator==(const BLEUuid &other) const noexcept
     {
-        return type_ == other.type_ && valid() &&
-               ::memcmp(bytes_, other.bytes_, size()) == 0;
+        return type_ == other.type_ && valid() && ::memcmp(bytes_, other.bytes_, size()) == 0;
     }
 
     bool BLEUuid::operator!=(const BLEUuid &other) const noexcept
@@ -869,8 +846,8 @@ namespace nucode::ble
         }
         unsigned int values[6] = {};
         int consumed = 0;
-        if (::sscanf(text, "%2x:%2x:%2x:%2x:%2x:%2x%n", &values[0], &values[1],
-                     &values[2], &values[3], &values[4], &values[5], &consumed) != 6 ||
+        if (::sscanf(text, "%2x:%2x:%2x:%2x:%2x:%2x%n", &values[0], &values[1], &values[2],
+                     &values[3], &values[4], &values[5], &consumed) != 6 ||
             consumed != 17 || text[consumed] != '\0')
         {
             return;
@@ -917,9 +894,8 @@ namespace nucode::ble
         {
             return false;
         }
-        return ::snprintf(output, capacity, "%02X:%02X:%02X:%02X:%02X:%02X",
-                          bytes_[5], bytes_[4], bytes_[3], bytes_[2], bytes_[1],
-                          bytes_[0]) == 17;
+        return ::snprintf(output, capacity, "%02X:%02X:%02X:%02X:%02X:%02X", bytes_[5], bytes_[4],
+                          bytes_[3], bytes_[2], bytes_[1], bytes_[0]) == 17;
     }
 
     bool BLEAddress::operator==(const BLEAddress &other) const noexcept
@@ -944,8 +920,7 @@ namespace nucode::ble
             return false;
         }
         const std::size_t length = ::strlen(name);
-        if (length == 0U || length > CONFIG_BT_DEVICE_NAME_MAX ||
-            !validUtf8(name, length))
+        if (length == 0U || length > CONFIG_BT_DEVICE_NAME_MAX || !validUtf8(name, length))
         {
             internal::recordError(BLEError::invalid_argument, -EINVAL, true);
             return false;
@@ -1010,8 +985,8 @@ namespace nucode::ble
         GapEventRecord record = {};
         while (k_msgq_get(&gap_event_queue, &record, K_NO_WAIT) == 0)
         {
-            if (record.generation != static_cast<std::uint32_t>(
-                                         atomic_get(&device_session_generation)))
+            if (record.generation !=
+                static_cast<std::uint32_t>(atomic_get(&device_session_generation)))
             {
                 continue;
             }
@@ -1028,9 +1003,8 @@ namespace nucode::ble
             ScanResultRecord record = {};
             while (k_msgq_get(&scan_result_queue, &record, K_NO_WAIT) == 0)
             {
-                if (record.generation == static_cast<std::uint32_t>(
-                                             atomic_get(
-                                                 &device_session_generation)))
+                if (record.generation ==
+                    static_cast<std::uint32_t>(atomic_get(&device_session_generation)))
                 {
                     result_callback(record.result, scan_context);
                 }
@@ -1085,15 +1059,13 @@ namespace nucode::ble
 
         if (pending != nullptr)
         {
-            static_cast<void>(bt_conn_disconnect(
-                pending, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
+            static_cast<void>(bt_conn_disconnect(pending, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
             bt_conn_unref(pending);
         }
         if (active != nullptr)
         {
             nucode::ble::internal::securityDisconnected(active);
-            static_cast<void>(bt_conn_disconnect(
-                active, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
+            static_cast<void>(bt_conn_disconnect(active, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
             bt_conn_unref(active);
         }
         nucode::ble::internal::gattEnded();
@@ -1185,8 +1157,7 @@ namespace nucode::ble
         return true;
     }
 
-    bool Advertising::setInterval(std::uint16_t minimum,
-                                  std::uint16_t maximum) noexcept
+    bool Advertising::setInterval(std::uint16_t minimum, std::uint16_t maximum) noexcept
     {
         if (!requireThreadContext() || running())
         {
@@ -1196,8 +1167,8 @@ namespace nucode::ble
             }
             return false;
         }
-        if (minimum < minimum_advertising_interval ||
-            maximum > maximum_advertising_interval || minimum > maximum)
+        if (minimum < minimum_advertising_interval || maximum > maximum_advertising_interval ||
+            minimum > maximum)
         {
             internal::recordError(BLEError::invalid_argument, -EINVAL, true);
             return false;
@@ -1222,8 +1193,7 @@ namespace nucode::ble
             internal::recordError(BLEError::invalid_argument, -EINVAL, true);
             return false;
         }
-        for (std::size_t index = 0U;
-             index < advertising_configuration.service_uuid_count; ++index)
+        for (std::size_t index = 0U; index < advertising_configuration.service_uuid_count; ++index)
         {
             if (advertising_configuration.service_uuids[index] == uuid)
             {
@@ -1236,8 +1206,8 @@ namespace nucode::ble
             internal::recordError(BLEError::payload_overflow, -ENOSPC, true);
             return false;
         }
-        advertising_configuration
-            .service_uuids[advertising_configuration.service_uuid_count++] = uuid;
+        advertising_configuration.service_uuids[advertising_configuration.service_uuid_count++] =
+            uuid;
         return true;
     }
 
@@ -1281,9 +1251,9 @@ namespace nucode::ble
         if (!uuid.valid() || (data == nullptr && length != 0U) ||
             uuid.size() + length > maximum_ad_field_data)
         {
-            internal::recordError(
-                uuid.valid() ? BLEError::payload_overflow : BLEError::invalid_argument,
-                uuid.valid() ? -EMSGSIZE : -EINVAL, true);
+            internal::recordError(uuid.valid() ? BLEError::payload_overflow
+                                               : BLEError::invalid_argument,
+                                  uuid.valid() ? -EMSGSIZE : -EINVAL, true);
             return false;
         }
         advertising_configuration.service_data_uuid = uuid;
@@ -1350,8 +1320,8 @@ namespace nucode::ble
         std::size_t scan_response_size = 0U;
 
         if (!appendAdvertisingField(advertising_fields, advertising_count,
-                                    ARRAY_SIZE(advertising_fields), advertising_size,
-                                    BT_DATA_FLAGS, &configuration.flags, 1U))
+                                    ARRAY_SIZE(advertising_fields), advertising_size, BT_DATA_FLAGS,
+                                    &configuration.flags, 1U))
         {
             internal::recordError(BLEError::payload_overflow, -EMSGSIZE, true);
             return false;
@@ -1392,10 +1362,9 @@ namespace nucode::ble
         for (const auto &field : uuid_fields)
         {
             if (field.length != 0U &&
-                !appendAdvertisingField(
-                    advertising_fields, advertising_count,
-                    ARRAY_SIZE(advertising_fields), advertising_size, field.type,
-                    field.data, field.length))
+                !appendAdvertisingField(advertising_fields, advertising_count,
+                                        ARRAY_SIZE(advertising_fields), advertising_size,
+                                        field.type, field.data, field.length))
             {
                 internal::recordError(BLEError::payload_overflow, -EMSGSIZE, true);
                 return false;
@@ -1403,16 +1372,15 @@ namespace nucode::ble
         }
         if (configuration.has_manufacturer_data)
         {
-            manufacturer_field[0] =
-                static_cast<std::uint8_t>(configuration.company_id & 0xffU);
+            manufacturer_field[0] = static_cast<std::uint8_t>(configuration.company_id & 0xffU);
             manufacturer_field[1] =
                 static_cast<std::uint8_t>((configuration.company_id >> 8U) & 0xffU);
             ::memcpy(&manufacturer_field[2], configuration.manufacturer_data,
                      configuration.manufacturer_length);
-            if (!appendAdvertisingField(
-                    advertising_fields, advertising_count, ARRAY_SIZE(advertising_fields),
-                    advertising_size, BT_DATA_MANUFACTURER_DATA, manufacturer_field,
-                    configuration.manufacturer_length + 2U))
+            if (!appendAdvertisingField(advertising_fields, advertising_count,
+                                        ARRAY_SIZE(advertising_fields), advertising_size,
+                                        BT_DATA_MANUFACTURER_DATA, manufacturer_field,
+                                        configuration.manufacturer_length + 2U))
             {
                 internal::recordError(BLEError::payload_overflow, -EMSGSIZE, true);
                 return false;
@@ -1429,10 +1397,10 @@ namespace nucode::ble
                     ? BT_DATA_SVC_DATA16
                     : (uuid.type() == BLEUuid::Type::uuid32 ? BT_DATA_SVC_DATA32
                                                             : BT_DATA_SVC_DATA128);
-            if (!appendAdvertisingField(
-                    advertising_fields, advertising_count, ARRAY_SIZE(advertising_fields),
-                    advertising_size, type, service_data_field,
-                    uuid.size() + configuration.service_data_length))
+            if (!appendAdvertisingField(advertising_fields, advertising_count,
+                                        ARRAY_SIZE(advertising_fields), advertising_size, type,
+                                        service_data_field,
+                                        uuid.size() + configuration.service_data_length))
             {
                 internal::recordError(BLEError::payload_overflow, -EMSGSIZE, true);
                 return false;
@@ -1442,9 +1410,8 @@ namespace nucode::ble
         {
             const std::size_t name_length = ::strlen(local_name);
             if (!appendAdvertisingField(
-                    scan_response_fields, scan_response_count,
-                    ARRAY_SIZE(scan_response_fields), scan_response_size,
-                    BT_DATA_NAME_COMPLETE,
+                    scan_response_fields, scan_response_count, ARRAY_SIZE(scan_response_fields),
+                    scan_response_size, BT_DATA_NAME_COMPLETE,
                     reinterpret_cast<const std::uint8_t *>(local_name), name_length))
             {
                 internal::recordError(BLEError::payload_overflow, -EMSGSIZE, true);
@@ -1452,8 +1419,7 @@ namespace nucode::ble
             }
         }
 
-        std::uint32_t options = configuration.connectable ? BT_LE_ADV_OPT_CONN
-                                                          : BT_LE_ADV_OPT_NONE;
+        std::uint32_t options = configuration.connectable ? BT_LE_ADV_OPT_CONN : BT_LE_ADV_OPT_NONE;
         if (!configuration.connectable && scan_response_count != 0U)
         {
             options |= BT_LE_ADV_OPT_SCANNABLE;
@@ -1467,9 +1433,8 @@ namespace nucode::ble
             .interval_max = configuration.interval_max,
             .peer = nullptr,
         };
-        const int result = bt_le_adv_start(
-            &parameters, advertising_fields, advertising_count, scan_response_fields,
-            scan_response_count);
+        const int result = bt_le_adv_start(&parameters, advertising_fields, advertising_count,
+                                           scan_response_fields, scan_response_count);
         if (result < 0)
         {
             internal::recordError(BLEError::driver_error, result, true);
@@ -1541,8 +1506,7 @@ namespace nucode::ble
             return false;
         }
         const std::size_t length = ::strlen(exact_name);
-        if (length == 0U || length > CONFIG_BT_DEVICE_NAME_MAX ||
-            !validUtf8(exact_name, length))
+        if (length == 0U || length > CONFIG_BT_DEVICE_NAME_MAX || !validUtf8(exact_name, length))
         {
             internal::recordError(BLEError::invalid_argument, -EINVAL, true);
             return false;
@@ -1614,8 +1578,8 @@ namespace nucode::ble
             internal::recordError(BLEError::already_started, -EALREADY, true);
             return false;
         }
-        if (atomic_get(&advertising_active) != 0 ||
-            atomic_get(&connection_connecting) != 0 || atomic_get(&connection_active) != 0)
+        if (atomic_get(&advertising_active) != 0 || atomic_get(&connection_connecting) != 0 ||
+            atomic_get(&connection_active) != 0)
         {
             internal::recordError(BLEError::busy, -EBUSY, true);
             return false;
@@ -1678,8 +1642,8 @@ namespace nucode::ble
         ScanResultRecord record = {};
         while (k_msgq_get(&scan_result_queue, &record, K_NO_WAIT) == 0)
         {
-            if (record.generation == static_cast<std::uint32_t>(
-                                         atomic_get(&device_session_generation)))
+            if (record.generation ==
+                static_cast<std::uint32_t>(atomic_get(&device_session_generation)))
             {
                 result = record.result;
                 return true;
@@ -1737,8 +1701,8 @@ namespace nucode::ble
             return false;
         }
         struct bt_conn *connection = nullptr;
-        const int result = bt_conn_le_create(&peer, BT_CONN_LE_CREATE_CONN,
-                                             BT_LE_CONN_PARAM_DEFAULT, &connection);
+        const int result =
+            bt_conn_le_create(&peer, BT_CONN_LE_CREATE_CONN, BT_LE_CONN_PARAM_DEFAULT, &connection);
         if (result < 0)
         {
             internal::recordError(BLEError::driver_error, result, true);
@@ -1746,8 +1710,8 @@ namespace nucode::ble
         }
         k_spinlock_key_t key = k_spin_lock(&connection_lock);
         pending_connection = connection;
-        pending_connection_generation = static_cast<std::uint32_t>(
-            atomic_get(&device_session_generation));
+        pending_connection_generation =
+            static_cast<std::uint32_t>(atomic_get(&device_session_generation));
         last_peer_address = address;
         k_spin_unlock(&connection_lock, key);
         atomic_set(&connection_connecting, 1);
@@ -1767,8 +1731,7 @@ namespace nucode::ble
             internal::recordError(BLEError::not_connected, -ENOTCONN, true);
             return false;
         }
-        const int result = bt_conn_disconnect(connection,
-                                              BT_HCI_ERR_REMOTE_USER_TERM_CONN);
+        const int result = bt_conn_disconnect(connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
         bt_conn_unref(connection);
         if (result < 0)
         {
@@ -1858,8 +1821,7 @@ namespace nucode::ble
         struct bt_conn_info information = {};
         const int result = bt_conn_get_info(connection, &information);
         bt_conn_unref(connection);
-        if (result < 0 || information.type != BT_CONN_TYPE_LE ||
-            information.le.phy == nullptr)
+        if (result < 0 || information.type != BT_CONN_TYPE_LE || information.le.phy == nullptr)
         {
             return BLEPhy::unknown;
         }
@@ -1933,31 +1895,27 @@ namespace nucode::ble
         bt_conn_unref(connection);
         if (result < 0)
         {
-            internal::recordError(result == -ENOTSUP ? BLEError::unsupported
-                                                     : BLEError::driver_error,
-                                  result, true);
+            internal::recordError(
+                result == -ENOTSUP ? BLEError::unsupported : BLEError::driver_error, result, true);
             return false;
         }
         dbm = power.current_level;
         return true;
     }
 
-    bool Connection::requestParameters(std::uint16_t interval_min,
-                                       std::uint16_t interval_max,
-                                       std::uint16_t latency,
-                                       std::uint16_t timeout) noexcept
+    bool Connection::requestParameters(std::uint16_t interval_min, std::uint16_t interval_max,
+                                       std::uint16_t latency, std::uint16_t timeout) noexcept
     {
         if (!requireThreadContext())
         {
             return false;
         }
-        const std::uint64_t supervision_units =
-            static_cast<std::uint64_t>(timeout) * 4U;
+        const std::uint64_t supervision_units = static_cast<std::uint64_t>(timeout) * 4U;
         const std::uint64_t connection_event_units =
             static_cast<std::uint64_t>(latency + 1U) * interval_max;
-        if (interval_min < 6U || interval_max > 3200U ||
-            interval_min > interval_max || latency > 499U || timeout < 10U ||
-            timeout > 3200U || supervision_units <= connection_event_units)
+        if (interval_min < 6U || interval_max > 3200U || interval_min > interval_max ||
+            latency > 499U || timeout < 10U || timeout > 3200U ||
+            supervision_units <= connection_event_units)
         {
             internal::recordError(BLEError::invalid_argument, -EINVAL, true);
             return false;

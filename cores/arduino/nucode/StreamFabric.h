@@ -43,6 +43,14 @@ namespace nucode::arduino
         faulted,
     };
 
+    /** @brief 후보 스트림 핀을 사용할 때 사람이 확인해야 하는 전기적 조건입니다. */
+    enum class StreamElectricalProfile : std::uint8_t
+    {
+        connector_fixture = 0U,
+        /** @brief 콘솔을 끄고 DAP UART를 물리적으로 분리한 P1.4~7 전용입니다. */
+        dap_uart_disabled,
+    };
+
     /** @brief PDM20/21 입력 설정입니다. */
     struct PdmConfiguration
     {
@@ -51,6 +59,7 @@ namespace nucode::arduino
         std::uint32_t sample_rate_hz{16000U};
         bool stereo{false};
         bool left_on_rising_edge{false};
+        StreamElectricalProfile electrical_profile{StreamElectricalProfile::connector_fixture};
     };
 
     /** @brief PDM 비동기 event 종류입니다. */
@@ -75,27 +84,26 @@ namespace nucode::arduino
     /** @brief PDM20 또는 PDM21 연속 EasyDMA capture handle입니다. */
     class PdmFabric
     {
-    public:
+      public:
         [[nodiscard]] std::uint8_t instance() const noexcept;
         [[nodiscard]] StreamFabricState state() const noexcept;
         [[nodiscard]] StreamFabricResult lastResult() const noexcept;
         [[nodiscard]] int lastDriverError() const noexcept;
 
-        [[nodiscard]] StreamFabricResult
-        configure(const PdmConfiguration &configuration) noexcept;
+        [[nodiscard]] StreamFabricResult configure(const PdmConfiguration &configuration) noexcept;
         [[nodiscard]] StreamFabricResult start(std::int16_t *first_buffer,
                                                std::size_t samples) noexcept;
         [[nodiscard]] StreamFabricResult queueBuffer(std::int16_t *buffer,
                                                      std::size_t samples) noexcept;
         [[nodiscard]] std::uintptr_t startTaskAddress() const noexcept;
-        [[nodiscard]] StreamFabricResult
-        stop(std::uint32_t timeout_us = 100000U) noexcept;
+        [[nodiscard]] StreamFabricResult stop(std::uint32_t timeout_us = 100000U) noexcept;
         [[nodiscard]] bool takeEvent(PdmEvent &event) noexcept;
 
-    private:
+      private:
         friend class StreamFabric;
-        constexpr explicit PdmFabric(std::uint8_t instance) noexcept
-            : instance_(instance) {}
+        constexpr explicit PdmFabric(std::uint8_t instance) noexcept : instance_(instance)
+        {
+        }
 
         std::uint8_t instance_;
     };
@@ -129,6 +137,7 @@ namespace nucode::arduino
         I2sSampleWidth sample_width{I2sSampleWidth::bits16};
         I2sChannels channels{I2sChannels::stereo};
         bool master{true};
+        StreamElectricalProfile electrical_profile{StreamElectricalProfile::connector_fixture};
     };
 
     /** @brief 한 I2S20 transfer 구간의 TX/RX EasyDMA buffer입니다. */
@@ -160,22 +169,19 @@ namespace nucode::arduino
     /** @brief I2S20 full-duplex 연속 EasyDMA handle입니다. */
     class I2sFabric
     {
-    public:
+      public:
         [[nodiscard]] std::uint8_t instance() const noexcept;
         [[nodiscard]] StreamFabricState state() const noexcept;
         [[nodiscard]] StreamFabricResult lastResult() const noexcept;
         [[nodiscard]] int lastDriverError() const noexcept;
 
-        [[nodiscard]] StreamFabricResult
-        configure(const I2sConfiguration &configuration) noexcept;
+        [[nodiscard]] StreamFabricResult configure(const I2sConfiguration &configuration) noexcept;
         [[nodiscard]] StreamFabricResult start(const I2sBuffers &buffers) noexcept;
-        [[nodiscard]] StreamFabricResult
-        queueBuffers(const I2sBuffers &buffers) noexcept;
-        [[nodiscard]] StreamFabricResult
-        stop(std::uint32_t timeout_us = 100000U) noexcept;
+        [[nodiscard]] StreamFabricResult queueBuffers(const I2sBuffers &buffers) noexcept;
+        [[nodiscard]] StreamFabricResult stop(std::uint32_t timeout_us = 100000U) noexcept;
         [[nodiscard]] bool takeEvent(I2sEvent &event) noexcept;
 
-    private:
+      private:
         friend class StreamFabric;
         constexpr I2sFabric() noexcept = default;
     };
@@ -188,6 +194,16 @@ namespace nucode::arduino
         pin_size_t led_pin{0xFFU};
         bool debounce{false};
         bool sample_events{false};
+        /** @brief 128~131072us의 2배수 단계입니다. 기본값은 기존 nrfx의 16384us입니다. */
+        std::uint32_t sample_period_us{16384U};
+        /** @brief 0~511us이며 sample_period_us보다 짧아야 합니다. */
+        std::uint32_t led_pre_us{500U};
+        /**
+         * @brief 자동 report/누산기 초기화를 켭니다. false는 명시적인 read()로만 누산기를 읽습니다.
+         * @note 자동 report와 read()는 각각 누산기를 비우므로 같은 구간을 중복 합산하지 않습니다.
+         */
+        bool report_events{true};
+        StreamElectricalProfile electrical_profile{StreamElectricalProfile::connector_fixture};
     };
 
     /** @brief QDEC 비동기 event 종류입니다. */
@@ -210,23 +226,23 @@ namespace nucode::arduino
     /** @brief QDEC20 또는 QDEC21 quadrature capture handle입니다. */
     class QdecFabric
     {
-    public:
+      public:
         [[nodiscard]] std::uint8_t instance() const noexcept;
         [[nodiscard]] StreamFabricState state() const noexcept;
         [[nodiscard]] StreamFabricResult lastResult() const noexcept;
         [[nodiscard]] int lastDriverError() const noexcept;
 
-        [[nodiscard]] StreamFabricResult
-        configure(const QdecConfiguration &configuration) noexcept;
+        [[nodiscard]] StreamFabricResult configure(const QdecConfiguration &configuration) noexcept;
         [[nodiscard]] StreamFabricResult start() noexcept;
         [[nodiscard]] StreamFabricResult read(QdecEvent &event) noexcept;
         [[nodiscard]] StreamFabricResult stop() noexcept;
         [[nodiscard]] bool takeEvent(QdecEvent &event) noexcept;
 
-    private:
+      private:
         friend class StreamFabric;
-        constexpr explicit QdecFabric(std::uint8_t instance) noexcept
-            : instance_(instance) {}
+        constexpr explicit QdecFabric(std::uint8_t instance) noexcept : instance_(instance)
+        {
+        }
 
         std::uint8_t instance_;
     };
@@ -234,12 +250,12 @@ namespace nucode::arduino
     /** @brief M25 audio/encoder candidate handle factory입니다. */
     class StreamFabric
     {
-    public:
+      public:
         [[nodiscard]] PdmFabric *pdm(std::uint8_t instance) noexcept;
         [[nodiscard]] I2sFabric *i2s(std::uint8_t instance) noexcept;
         [[nodiscard]] QdecFabric *qdec(std::uint8_t instance) noexcept;
 
-    private:
+      private:
         friend StreamFabric &streamFabric() noexcept;
         constexpr StreamFabric() noexcept = default;
     };

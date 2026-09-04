@@ -9,6 +9,7 @@
 
 #include "internal/IoResourceManager.h"
 #include "internal/dma_count.h"
+#include "internal/dma_memory.h"
 #include "internal/pin_description.h"
 
 #include <variant.h>
@@ -48,8 +49,7 @@ namespace nucode::arduino
         inline constexpr std::size_t event_queue_capacity = 8U;
         inline constexpr pin_size_t disconnected_pin = 0xFFU;
 
-        template <typename Event>
-        struct EventQueue
+        template <typename Event> struct EventQueue
         {
             Event entries[event_queue_capacity]{};
             std::size_t read_index{0U};
@@ -97,8 +97,7 @@ namespace nucode::arduino
         K_MUTEX_DEFINE(analog_fabric_mutex);
         SaadcContext saadc_context{};
         PwmContext pwm_contexts[3]{{20U}, {21U}, {22U}};
-        nrfx_pwm_t pwm_drivers[3]{NRFX_PWM_INSTANCE(NRF_PWM20),
-                                  NRFX_PWM_INSTANCE(NRF_PWM21),
+        nrfx_pwm_t pwm_drivers[3]{NRFX_PWM_INSTANCE(NRF_PWM20), NRFX_PWM_INSTANCE(NRF_PWM21),
                                   NRFX_PWM_INSTANCE(NRF_PWM22)};
 
         template <typename Event>
@@ -117,8 +116,7 @@ namespace nucode::arduino
             return true;
         }
 
-        template <typename Event>
-        bool popEvent(EventQueue<Event> &queue, Event &event) noexcept
+        template <typename Event> bool popEvent(EventQueue<Event> &queue, Event &event) noexcept
         {
             const k_spinlock_key_t key = k_spin_lock(&queue.lock);
             if (queue.count == 0U)
@@ -133,8 +131,7 @@ namespace nucode::arduino
             return true;
         }
 
-        template <typename Event>
-        void clearEvents(EventQueue<Event> &queue) noexcept
+        template <typename Event> void clearEvents(EventQueue<Event> &queue) noexcept
         {
             const k_spinlock_key_t key = k_spin_lock(&queue.lock);
             queue.read_index = 0U;
@@ -143,22 +140,19 @@ namespace nucode::arduino
             k_spin_unlock(&queue.lock, key);
         }
 
-        void record(SaadcContext &context, AnalogFabricResult result,
-                    int driver_error = 0) noexcept
+        void record(SaadcContext &context, AnalogFabricResult result, int driver_error = 0) noexcept
         {
             context.last_result = result;
             context.last_driver_error = driver_error;
         }
 
-        void record(PwmContext &context, AnalogFabricResult result,
-                    int driver_error = 0) noexcept
+        void record(PwmContext &context, AnalogFabricResult result, int driver_error = 0) noexcept
         {
             context.last_result = result;
             context.last_driver_error = driver_error;
         }
 
-        [[nodiscard]] AnalogFabricResult
-        mapResourceResult(IoResourceResult result) noexcept
+        [[nodiscard]] AnalogFabricResult mapResourceResult(IoResourceResult result) noexcept
         {
             switch (result)
             {
@@ -177,8 +171,7 @@ namespace nucode::arduino
             }
         }
 
-        [[nodiscard]] AnalogFabricResult reserveSaadcDma(SaadcContext &context,
-                                                         void *address,
+        [[nodiscard]] AnalogFabricResult reserveSaadcDma(SaadcContext &context, void *address,
                                                          std::size_t bytes,
                                                          DmaLeaseSlot *&slot) noexcept
         {
@@ -192,13 +185,14 @@ namespace nucode::arduino
                 }
             }
             if (slot == nullptr)
+            {
                 return AnalogFabricResult::resource_exhausted;
+            }
             const IoResourceId resource =
                 internal::dmaMemoryIoResource(address, static_cast<std::uint32_t>(bytes));
             slot->lease = {};
-            const IoResourceResult reserve_result =
-                internal::reserveIoResources({IoOwnerKind::adc, 0U}, &resource, 1U,
-                                             IoAcquirePolicy::exclusive, slot->lease);
+            const IoResourceResult reserve_result = internal::reserveIoResources(
+                {IoOwnerKind::adc, 0U}, &resource, 1U, IoAcquirePolicy::exclusive, slot->lease);
             if (reserve_result != IoResourceResult::success)
             {
                 slot = nullptr;
@@ -213,7 +207,9 @@ namespace nucode::arduino
         void rollbackSaadcDma(DmaLeaseSlot &slot) noexcept
         {
             if (!slot.active)
+            {
                 return;
+            }
             (void)internal::rollbackIoResources(slot.lease);
             slot = {};
         }
@@ -227,35 +223,43 @@ namespace nucode::arduino
         [[nodiscard]] IoResourceResult releaseSaadcDma(DmaLeaseSlot &slot) noexcept
         {
             if (!slot.active)
+            {
                 return IoResourceResult::success;
+            }
             const IoResourceResult result = internal::releaseIoResources(slot.lease);
             slot = {};
             return result;
         }
 
-        [[nodiscard]] IoResourceResult
-        releaseSaadcDmaFor(SaadcContext &context, const void *address) noexcept
+        [[nodiscard]] IoResourceResult releaseSaadcDmaFor(SaadcContext &context,
+                                                          const void *address) noexcept
         {
             for (auto &slot : context.dma_leases)
             {
                 if (slot.active && slot.address == address)
+                {
                     return releaseSaadcDma(slot);
+                }
             }
             return IoResourceResult::stale_lease;
         }
 
         [[nodiscard]] bool externalInput(SaadcInput input) noexcept
         {
-            return static_cast<std::uint8_t>(input) <=
-                   static_cast<std::uint8_t>(SaadcInput::ain7);
+            return static_cast<std::uint8_t>(input) <= static_cast<std::uint8_t>(SaadcInput::ain7);
         }
 
         [[nodiscard]] bool supportedInput(SaadcInput input) noexcept
         {
             if (externalInput(input))
+            {
                 return true;
-            // The nrfx enum spans several SoCs. nRF54L15 maps only these
-            // internal inputs; accepting VSS or VDD/2 deferred failure to start().
+            }
+            /**
+             * @brief 여러 SoC를 포함하는 nrfx enum에서 nRF54L15 입력만 승인합니다.
+             *
+             * VSS나 VDD/2를 받으면 실패가 start()까지 늦어지므로 사전에 거부합니다.
+             */
             switch (input)
             {
             case SaadcInput::vdd:
@@ -270,19 +274,21 @@ namespace nucode::arduino
             }
         }
 
-        [[nodiscard]] const internal::PinDescription *
-        pinForAnalogInput(SaadcInput input) noexcept
+        [[nodiscard]] const internal::PinDescription *pinForAnalogInput(SaadcInput input) noexcept
         {
             if (!externalInput(input))
+            {
                 return nullptr;
-            const std::int8_t channel =
-                static_cast<std::int8_t>(static_cast<std::uint8_t>(input));
+            }
+            const std::int8_t channel = static_cast<std::int8_t>(static_cast<std::uint8_t>(input));
             for (std::size_t pin = 0U; pin < NUM_PIN_ROLES; ++pin)
             {
                 const auto *const description = internal::pinDescription(pin);
                 if (description != nullptr && description->canonical_pin == pin &&
                     description->analog_channel == channel)
+                {
                     return description;
+                }
             }
             return nullptr;
         }
@@ -294,13 +300,12 @@ namespace nucode::arduino
 
         [[nodiscard]] bool validOversample(std::uint16_t oversample) noexcept
         {
-            return oversample == 1U || oversample == 2U || oversample == 4U ||
-                   oversample == 8U || oversample == 16U || oversample == 32U ||
-                   oversample == 64U || oversample == 128U || oversample == 256U;
+            return oversample == 1U || oversample == 2U || oversample == 4U || oversample == 8U ||
+                   oversample == 16U || oversample == 32U || oversample == 64U ||
+                   oversample == 128U || oversample == 256U;
         }
 
-        [[nodiscard]] nrf_saadc_resolution_t
-        saadcResolution(std::uint8_t bits) noexcept
+        [[nodiscard]] nrf_saadc_resolution_t saadcResolution(std::uint8_t bits) noexcept
         {
             switch (bits)
             {
@@ -316,8 +321,7 @@ namespace nucode::arduino
             }
         }
 
-        [[nodiscard]] nrf_saadc_oversample_t
-        saadcOversample(std::uint16_t count) noexcept
+        [[nodiscard]] nrf_saadc_oversample_t saadcOversample(std::uint16_t count) noexcept
         {
             switch (count)
             {
@@ -347,12 +351,16 @@ namespace nucode::arduino
         {
             const auto value = static_cast<std::uint8_t>(input);
             if (value <= static_cast<std::uint8_t>(SaadcInput::ain7))
+            {
                 return static_cast<nrfx_analog_input_t>(value);
+            }
             if (value >= static_cast<std::uint8_t>(SaadcInput::vdd) &&
                 value <= static_cast<std::uint8_t>(SaadcInput::vss))
+            {
                 return static_cast<nrfx_analog_input_t>(
                     static_cast<std::uint8_t>(NRFX_ANALOG_INTERNAL_VDD) + value -
                     static_cast<std::uint8_t>(SaadcInput::vdd));
+            }
             return NRFX_ANALOG_INPUT_DISABLED;
         }
 
@@ -361,7 +369,9 @@ namespace nucode::arduino
             for (auto &context : pwm_contexts)
             {
                 if (context.instance == instance)
+                {
                     return &context;
+                }
             }
             return nullptr;
         }
@@ -401,15 +411,21 @@ namespace nucode::arduino
         {
 #if DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(gpio0))
             if (description.gpio.port == DEVICE_DT_GET(DT_NODELABEL(gpio0)))
+            {
                 return NRF_GPIO_PIN_MAP(0U, description.gpio.pin);
+            }
 #endif
 #if DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(gpio1))
             if (description.gpio.port == DEVICE_DT_GET(DT_NODELABEL(gpio1)))
+            {
                 return NRF_GPIO_PIN_MAP(1U, description.gpio.pin);
+            }
 #endif
 #if DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(gpio2))
             if (description.gpio.port == DEVICE_DT_GET(DT_NODELABEL(gpio2)))
+            {
                 return NRF_GPIO_PIN_MAP(2U, description.gpio.pin);
+            }
 #endif
             return NRF_PWM_PIN_NOT_CONNECTED;
         }
@@ -430,12 +446,14 @@ namespace nucode::arduino
             }
         }
 
-        [[nodiscard]] bool validPwmValueCount(PwmSequenceLoad load,
-                                              std::size_t count) noexcept
+        [[nodiscard]] bool validPwmValueCount(PwmSequenceLoad load, std::size_t count) noexcept
         {
-            // nRF54L15 PWM DMA MAXCNT is bytes, not uint16_t values.
-            if (!internal::dmaCountFits(count, PWM_DMA_SEQ_MAXCNT_MAXCNT_Msk, sizeof(std::uint16_t)))
+            /** @brief nRF54L15 PWM DMA MAXCNT는 uint16_t 개수가 아니라 byte 단위입니다. */
+            if (!internal::dmaCountFits(count, PWM_DMA_SEQ_MAXCNT_MAXCNT_Msk,
+                                        sizeof(std::uint16_t)))
+            {
                 return false;
+            }
             switch (load)
             {
             case PwmSequenceLoad::grouped:
@@ -518,10 +536,22 @@ namespace nucode::arduino
             }
         }
 
-        void saadcIrq(const void *) { nrfx_saadc_irq_handler(); }
-        void pwm20Irq(const void *) { nrfx_pwm_irq_handler(&pwm_drivers[0]); }
-        void pwm21Irq(const void *) { nrfx_pwm_irq_handler(&pwm_drivers[1]); }
-        void pwm22Irq(const void *) { nrfx_pwm_irq_handler(&pwm_drivers[2]); }
+        void saadcIrq(const void *)
+        {
+            nrfx_saadc_irq_handler();
+        }
+        void pwm20Irq(const void *)
+        {
+            nrfx_pwm_irq_handler(&pwm_drivers[0]);
+        }
+        void pwm21Irq(const void *)
+        {
+            nrfx_pwm_irq_handler(&pwm_drivers[1]);
+        }
+        void pwm22Irq(const void *)
+        {
+            nrfx_pwm_irq_handler(&pwm_drivers[2]);
+        }
 
         int connectAnalogFabricIrqs()
         {
@@ -532,8 +562,7 @@ namespace nucode::arduino
             return 0;
         }
 
-        SYS_INIT(connectAnalogFabricIrqs, APPLICATION,
-                 CONFIG_APPLICATION_INIT_PRIORITY);
+        SYS_INIT(connectAnalogFabricIrqs, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
     } // namespace
 
     AnalogFabricState SaadcFabric::state() const noexcept
@@ -560,36 +589,42 @@ namespace nucode::arduino
         return value;
     }
 
-    AnalogFabricResult
-    SaadcFabric::configure(const SaadcConfiguration &configuration) noexcept
+    AnalogFabricResult SaadcFabric::configure(const SaadcConfiguration &configuration) noexcept
     {
         if (k_is_in_isr())
+        {
             return AnalogFabricResult::invalid_context;
+        }
         if (configuration.channels == nullptr || configuration.channel_count == 0U ||
             configuration.channel_count > saadc_channel_capacity ||
             !validResolution(configuration.resolution_bits) ||
             !validOversample(configuration.oversample) ||
             configuration.interval_us > NRFX_SAADC_INTERNAL_TIMER_INTERVAL_MAX_US ||
             (configuration.interval_us != 0U && configuration.channel_count != 1U))
+        {
             return AnalogFabricResult::invalid_argument;
+        }
 
         bool used_positive[saadc_channel_capacity]{};
         for (std::size_t index = 0U; index < configuration.channel_count; ++index)
         {
             const auto &channel = configuration.channels[index];
-            if (static_cast<unsigned>(channel.gain) > static_cast<unsigned>(SaadcGain::one_quarter) ||
+            if (static_cast<unsigned>(channel.gain) >
+                    static_cast<unsigned>(SaadcGain::one_quarter) ||
                 !supportedInput(channel.positive) ||
                 (channel.negative != SaadcInput::disabled &&
-                 (!externalInput(channel.positive) ||
-                  !externalInput(channel.negative) ||
+                 (!externalInput(channel.positive) || !externalInput(channel.negative) ||
                   channel.negative == channel.positive)))
+            {
                 return AnalogFabricResult::invalid_argument;
+            }
             if (externalInput(channel.positive))
             {
                 const auto number = static_cast<std::uint8_t>(channel.positive);
-                if (used_positive[number] ||
-                    pinForAnalogInput(channel.positive) == nullptr)
+                if (used_positive[number] || pinForAnalogInput(channel.positive) == nullptr)
+                {
                     return AnalogFabricResult::invalid_argument;
+                }
                 used_positive[number] = true;
             }
         }
@@ -603,7 +638,9 @@ namespace nucode::arduino
             return AnalogFabricResult::wrong_state;
         }
         for (std::size_t index = 0U; index < configuration.channel_count; ++index)
+        {
             saadc_context.channels[index] = configuration.channels[index];
+        }
         saadc_context.channel_count = configuration.channel_count;
         saadc_context.resolution_bits = configuration.resolution_bits;
         saadc_context.oversample = configuration.oversample;
@@ -615,18 +652,25 @@ namespace nucode::arduino
         return AnalogFabricResult::success;
     }
 
-    AnalogFabricResult SaadcFabric::start(std::int16_t *first_buffer,
-                                          std::size_t first_samples,
+    AnalogFabricResult SaadcFabric::start(std::int16_t *first_buffer, std::size_t first_samples,
                                           std::int16_t *next_buffer,
                                           std::size_t next_samples) noexcept
     {
         if (k_is_in_isr())
+        {
             return AnalogFabricResult::invalid_context;
-        if (first_buffer == nullptr ||
-            !internal::dmaCountFits(first_samples, SAADC_RESULT_MAXCNT_MAXCNT_Msk, 1U) ||
+        }
+        if (!internal::dmaCountFits(first_samples, SAADC_RESULT_MAXCNT_MAXCNT_Msk, 1U) ||
+            !internal::dmaMemoryRangeValid(first_buffer, first_samples * sizeof(*first_buffer),
+                                           alignof(std::int16_t)) ||
             (next_buffer == nullptr) != (next_samples == 0U) ||
-            (next_samples != 0U && !internal::dmaCountFits(next_samples, SAADC_RESULT_MAXCNT_MAXCNT_Msk, 1U)))
+            (next_samples != 0U &&
+             (!internal::dmaCountFits(next_samples, SAADC_RESULT_MAXCNT_MAXCNT_Msk, 1U) ||
+              !internal::dmaMemoryRangeValid(next_buffer, next_samples * sizeof(*next_buffer),
+                                             alignof(std::int16_t)))))
+        {
             return AnalogFabricResult::invalid_argument;
+        }
 
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         auto &context = saadc_context;
@@ -656,7 +700,9 @@ namespace nucode::arduino
             {
                 const auto *const description = pinForAnalogInput(input);
                 if (description == nullptr)
+                {
                     continue;
+                }
                 bool duplicate = false;
                 const auto resource = internal::gpioIoResource(description->gpio);
                 for (std::size_t prior = 1U; prior < resource_count; ++prior)
@@ -669,23 +715,23 @@ namespace nucode::arduino
                     }
                 }
                 if (!duplicate)
+                {
                     resources[resource_count++] = resource;
+                }
             }
         }
         resources[resource_count++] = internal::dmaMemoryIoResource(
-            first_buffer,
-            static_cast<std::uint32_t>(first_samples * sizeof(*first_buffer)));
+            first_buffer, static_cast<std::uint32_t>(first_samples * sizeof(*first_buffer)));
         if (next_buffer != nullptr)
         {
             resources[resource_count++] = internal::dmaMemoryIoResource(
-                next_buffer,
-                static_cast<std::uint32_t>(next_samples * sizeof(*next_buffer)));
+                next_buffer, static_cast<std::uint32_t>(next_samples * sizeof(*next_buffer)));
         }
 
         context.lease = {};
-        const IoResourceResult reserve_result = internal::reserveIoResources(
-            {IoOwnerKind::adc, 0U}, resources, resource_count,
-            IoAcquirePolicy::exclusive, context.lease);
+        const IoResourceResult reserve_result =
+            internal::reserveIoResources({IoOwnerKind::adc, 0U}, resources, resource_count,
+                                         IoAcquirePolicy::exclusive, context.lease);
         if (reserve_result != IoResourceResult::success)
         {
             const auto result = mapResourceResult(reserve_result);
@@ -705,8 +751,8 @@ namespace nucode::arduino
                 const auto negative = nrfxAnalogInput(context.channels[index].negative);
                 if (negative == NRFX_ANALOG_INPUT_DISABLED)
                 {
-                    nrfx_saadc_channel_t channel = NRFX_SAADC_DEFAULT_CHANNEL_SE(
-                        positive, static_cast<std::uint8_t>(index));
+                    nrfx_saadc_channel_t channel =
+                        NRFX_SAADC_DEFAULT_CHANNEL_SE(positive, static_cast<std::uint8_t>(index));
                     channels[index] = channel;
                 }
                 else
@@ -715,13 +761,16 @@ namespace nucode::arduino
                         positive, negative, static_cast<std::uint8_t>(index));
                     channels[index] = channel;
                 }
-                // This core targets nRF54L15. Assert the complete encoding below
-                // instead of relying on another SoC's gain enum order.
-                static_assert(SAADC_CH_CONFIG_GAIN_Gain2 == 0 && SAADC_CH_CONFIG_GAIN_Gain1 == 1 &&
-                              SAADC_CH_CONFIG_GAIN_Gain2_3 == 2 && SAADC_CH_CONFIG_GAIN_Gain2_4 == 3 &&
-                              SAADC_CH_CONFIG_GAIN_Gain2_5 == 4 && SAADC_CH_CONFIG_GAIN_Gain2_6 == 5 &&
-                              SAADC_CH_CONFIG_GAIN_Gain2_7 == 6 && SAADC_CH_CONFIG_GAIN_Gain2_8 == 7);
-                channels[index].channel_config.gain = static_cast<nrf_saadc_gain_t>(context.channels[index].gain);
+                /**
+                 * @brief 다른 SoC의 gain enum 순서에 기대지 않고 nRF54L15 encoding을 전부 확인합니다.
+                 */
+                static_assert(
+                    SAADC_CH_CONFIG_GAIN_Gain2 == 0 && SAADC_CH_CONFIG_GAIN_Gain1 == 1 &&
+                    SAADC_CH_CONFIG_GAIN_Gain2_3 == 2 && SAADC_CH_CONFIG_GAIN_Gain2_4 == 3 &&
+                    SAADC_CH_CONFIG_GAIN_Gain2_5 == 4 && SAADC_CH_CONFIG_GAIN_Gain2_6 == 5 &&
+                    SAADC_CH_CONFIG_GAIN_Gain2_7 == 6 && SAADC_CH_CONFIG_GAIN_Gain2_8 == 7);
+                channels[index].channel_config.gain =
+                    static_cast<nrf_saadc_gain_t>(context.channels[index].gain);
             }
             driver_error = nrfx_saadc_channels_config(channels, context.channel_count);
         }
@@ -729,37 +778,41 @@ namespace nucode::arduino
         {
             nrfx_saadc_adv_config_t advanced = NRFX_SAADC_DEFAULT_ADV_CONFIG;
             advanced.oversampling = saadcOversample(context.oversample);
-            advanced.burst = context.oversample == 1U ? NRF_SAADC_BURST_DISABLED
-                                                      : NRF_SAADC_BURST_ENABLED;
+            advanced.burst =
+                context.oversample == 1U ? NRF_SAADC_BURST_DISABLED : NRF_SAADC_BURST_ENABLED;
             advanced.internal_timer_cc =
-                context.interval_us == 0U
-                    ? 0U
-                    : nrfx_saadc_interval_to_cc(context.interval_us);
+                context.interval_us == 0U ? 0U : nrfx_saadc_interval_to_cc(context.interval_us);
             advanced.start_on_end = true;
             const std::uint32_t mask = (1UL << context.channel_count) - 1UL;
             driver_error = nrfx_saadc_advanced_mode_set(
-                mask, saadcResolution(context.resolution_bits), &advanced,
-                saadcEventHandler);
+                mask, saadcResolution(context.resolution_bits), &advanced, saadcEventHandler);
         }
         if (driver_error == 0)
+        {
             driver_error = nrfx_saadc_buffer_set(first_buffer, first_samples);
+        }
         if (driver_error == 0 && next_buffer != nullptr)
+        {
             driver_error = nrfx_saadc_buffer_set(next_buffer, next_samples);
+        }
         if (driver_error == 0)
+        {
             driver_error = nrfx_saadc_mode_trigger();
+        }
 
         if (driver_error != 0)
         {
             if (nrfx_saadc_init_check())
+            {
                 nrfx_saadc_uninit();
+            }
             (void)internal::rollbackIoResources(context.lease);
             context.lease = {};
             record(context, AnalogFabricResult::driver_error, driver_error);
             k_mutex_unlock(&analog_fabric_mutex);
             return AnalogFabricResult::driver_error;
         }
-        const IoResourceResult commit_result =
-            internal::commitIoResources(context.lease);
+        const IoResourceResult commit_result = internal::commitIoResources(context.lease);
         if (commit_result != IoResourceResult::success)
         {
             nrfx_saadc_abort();
@@ -777,13 +830,18 @@ namespace nucode::arduino
         return AnalogFabricResult::success;
     }
 
-    AnalogFabricResult SaadcFabric::queueBuffer(std::int16_t *buffer,
-                                                std::size_t samples) noexcept
+    AnalogFabricResult SaadcFabric::queueBuffer(std::int16_t *buffer, std::size_t samples) noexcept
     {
         if (k_is_in_isr())
+        {
             return AnalogFabricResult::invalid_context;
-        if (buffer == nullptr || !internal::dmaCountFits(samples, SAADC_RESULT_MAXCNT_MAXCNT_Msk, 1U))
+        }
+        if (!internal::dmaCountFits(samples, SAADC_RESULT_MAXCNT_MAXCNT_Msk, 1U) ||
+            !internal::dmaMemoryRangeValid(buffer, samples * sizeof(*buffer),
+                                           alignof(std::int16_t)))
+        {
             return AnalogFabricResult::invalid_argument;
+        }
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         auto &context = saadc_context;
         if (context.state != AnalogFabricState::active)
@@ -820,7 +878,9 @@ namespace nucode::arduino
                                 ? AnalogFabricResult::success
                                 : AnalogFabricResult::release_failed;
         if (commit_result != IoResourceResult::success)
+        {
             context.state = AnalogFabricState::faulted;
+        }
         record(context, result, error);
         k_mutex_unlock(&analog_fabric_mutex);
         return result;
@@ -829,20 +889,25 @@ namespace nucode::arduino
     AnalogFabricResult SaadcFabric::sample() noexcept
     {
         if (k_is_in_isr())
+        {
             return AnalogFabricResult::invalid_context;
+        }
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         auto &context = saadc_context;
         const unsigned int irq_key = irq_lock();
-        if (context.state != AnalogFabricState::active ||
-            context.interval_us != 0U || atomic_get(&context.sample_ready) == 0)
+        if (context.state != AnalogFabricState::active || context.interval_us != 0U ||
+            atomic_get(&context.sample_ready) == 0)
         {
             irq_unlock(irq_key);
             record(context, AnalogFabricResult::wrong_state);
             k_mutex_unlock(&analog_fabric_mutex);
             return AnalogFabricResult::wrong_state;
         }
-        // Advanced non-blocking mode_trigger() only arms the buffer. Once
-        // READY, manual conversion requires SAMPLE, not a second START.
+        /**
+         * @brief 비동기 mode_trigger()는 buffer만 준비합니다.
+         *
+         * READY 이후 수동 변환에는 두 번째 START가 아니라 SAMPLE task가 필요합니다.
+         */
         nrfy_saadc_sample_start(NRF_SAADC, nullptr);
         irq_unlock(irq_key);
         const auto result = AnalogFabricResult::success;
@@ -854,7 +919,9 @@ namespace nucode::arduino
     AnalogFabricResult SaadcFabric::calibrate() noexcept
     {
         if (k_is_in_isr())
+        {
             return AnalogFabricResult::invalid_context;
+        }
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         auto &context = saadc_context;
         if (context.state != AnalogFabricState::active)
@@ -864,8 +931,8 @@ namespace nucode::arduino
             return AnalogFabricResult::wrong_state;
         }
         const int error = nrfx_saadc_offset_calibrate(saadcEventHandler);
-        const auto result = error == 0 ? AnalogFabricResult::success
-                                       : AnalogFabricResult::driver_error;
+        const auto result =
+            error == 0 ? AnalogFabricResult::success : AnalogFabricResult::driver_error;
         record(context, result, error);
         k_mutex_unlock(&analog_fabric_mutex);
         return result;
@@ -884,7 +951,9 @@ namespace nucode::arduino
     AnalogFabricResult SaadcFabric::stop(std::uint32_t timeout_us) noexcept
     {
         if (k_is_in_isr())
+        {
             return AnalogFabricResult::invalid_context;
+        }
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         auto &context = saadc_context;
         if (context.state != AnalogFabricState::active &&
@@ -896,25 +965,31 @@ namespace nucode::arduino
         }
         context.state = AnalogFabricState::stopping;
         atomic_clear(&context.sample_ready);
-        // nrfx consumes STOPPED in its IRQ and disables SAADC on FINISHED.
-        // A completed one-shot is already stopped; do not wait for a stale bit.
+        /**
+         * @brief 완료한 one-shot은 이미 정지했으므로 stale STOPPED bit를 기다리지 않습니다.
+         *
+         * nrfx는 IRQ에서 STOPPED를 소비하고 FINISHED에서 SAADC를 비활성화합니다.
+         */
         if (nrf_saadc_enable_check(NRF_SAADC))
+        {
             nrfx_saadc_abort();
+        }
         std::uint32_t waited = 0U;
         while (nrf_saadc_enable_check(NRF_SAADC) &&
-               !nrf_saadc_event_check(NRF_SAADC, NRF_SAADC_EVENT_STOPPED) &&
-               waited < timeout_us)
+               !nrf_saadc_event_check(NRF_SAADC, NRF_SAADC_EVENT_STOPPED) && waited < timeout_us)
         {
             k_busy_wait(10U);
             waited += 10U;
         }
-        const bool stopped =
-            !nrf_saadc_enable_check(NRF_SAADC) ||
-            nrf_saadc_event_check(NRF_SAADC, NRF_SAADC_EVENT_STOPPED);
+        const bool stopped = !nrf_saadc_enable_check(NRF_SAADC) ||
+                             nrf_saadc_event_check(NRF_SAADC, NRF_SAADC_EVENT_STOPPED);
         if (!stopped)
         {
-            // Keep both the peripheral and DMA leases until STOP is proven.
-            // The caller may retry stop(); configure()/start() remain blocked.
+            /**
+             * @brief STOP이 증명될 때까지 주변장치와 DMA lease를 모두 유지합니다.
+             *
+             * 호출자는 stop()을 재시도할 수 있지만 configure()/start()는 계속 차단됩니다.
+             */
             record(context, AnalogFabricResult::stop_timeout, -ETIMEDOUT);
             k_mutex_unlock(&analog_fabric_mutex);
             return AnalogFabricResult::stop_timeout;
@@ -926,7 +1001,9 @@ namespace nucode::arduino
         {
             const IoResourceResult slot_result = releaseSaadcDma(slot);
             if (slot_result != IoResourceResult::success)
+            {
                 release_result = slot_result;
+            }
         }
         if (release_result != IoResourceResult::success)
         {
@@ -946,13 +1023,14 @@ namespace nucode::arduino
     bool SaadcFabric::takeEvent(SaadcEvent &event) noexcept
     {
         if (k_is_in_isr())
+        {
             return false;
+        }
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         const bool present = popEvent(saadc_context.events, event);
         if (present && event.type == SaadcEventType::buffer_complete)
         {
-            const IoResourceResult release_result =
-                releaseSaadcDmaFor(saadc_context, event.buffer);
+            const IoResourceResult release_result = releaseSaadcDmaFor(saadc_context, event.buffer);
             if (release_result != IoResourceResult::success &&
                 release_result != IoResourceResult::stale_lease)
             {
@@ -964,14 +1042,16 @@ namespace nucode::arduino
         return present;
     }
 
-    std::uint8_t PwmSequenceFabric::instance() const noexcept { return instance_; }
+    std::uint8_t PwmSequenceFabric::instance() const noexcept
+    {
+        return instance_;
+    }
 
     AnalogFabricState PwmSequenceFabric::state() const noexcept
     {
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         const auto *const context = pwmContext(instance_);
-        const auto value =
-            context != nullptr ? context->state : AnalogFabricState::faulted;
+        const auto value = context != nullptr ? context->state : AnalogFabricState::faulted;
         k_mutex_unlock(&analog_fabric_mutex);
         return value;
     }
@@ -980,9 +1060,8 @@ namespace nucode::arduino
     {
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         const auto *const context = pwmContext(instance_);
-        const auto value = context != nullptr
-                               ? context->last_result
-                               : AnalogFabricResult::unsupported_instance;
+        const auto value =
+            context != nullptr ? context->last_result : AnalogFabricResult::unsupported_instance;
         k_mutex_unlock(&analog_fabric_mutex);
         return value;
     }
@@ -996,40 +1075,53 @@ namespace nucode::arduino
         return value;
     }
 
-    AnalogFabricResult PwmSequenceFabric::configure(
-        const PwmSequenceConfiguration &configuration) noexcept
+    AnalogFabricResult
+    PwmSequenceFabric::configure(const PwmSequenceConfiguration &configuration) noexcept
     {
         if (k_is_in_isr())
+        {
             return AnalogFabricResult::invalid_context;
+        }
         if (configuration.top_value < 3U || configuration.top_value > 32767U)
+        {
             return AnalogFabricResult::invalid_argument;
+        }
         const PinRoute route = pwmRoute(instance_);
         if (route == PinRoute::none)
+        {
             return AnalogFabricResult::unsupported_instance;
+        }
 
         bool has_output = false;
         for (std::size_t index = 0U; index < 4U; ++index)
         {
             const pin_size_t pin = configuration.output_pins[index];
             if (pin == disconnected_pin)
+            {
                 continue;
+            }
             has_output = true;
             const auto *const description = internal::pinDescription(pin);
             if (description == nullptr || description->canonical_pin != pin ||
                 description->policy == PinPolicy::system_reserved ||
-                !internal::hasPinCapability(description->capabilities,
-                                            PinCapability::pwm_output) ||
+                !internal::hasPinCapability(description->capabilities, PinCapability::pwm_output) ||
                 !internal::hasPinRoute(description->routes, route) ||
                 physicalPin(*description) == NRF_PWM_PIN_NOT_CONNECTED)
+            {
                 return AnalogFabricResult::unsupported_route;
+            }
             for (std::size_t prior = 0U; prior < index; ++prior)
             {
                 if (configuration.output_pins[prior] == pin)
+                {
                     return AnalogFabricResult::invalid_argument;
+                }
             }
         }
         if (!has_output)
+        {
             return AnalogFabricResult::invalid_argument;
+        }
 
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         auto *const context = pwmContext(instance_);
@@ -1056,15 +1148,17 @@ namespace nucode::arduino
 
     AnalogFabricResult PwmSequenceFabric::play(const PwmSequenceBuffer &sequence0,
                                                const PwmSequenceBuffer *sequence1,
-                                               std::uint16_t playback_count,
-                                               bool loop,
+                                               std::uint16_t playback_count, bool loop,
                                                bool start_via_task) noexcept
     {
         if (k_is_in_isr())
+        {
             return AnalogFabricResult::invalid_context;
-        if (sequence0.values == nullptr || playback_count == 0U ||
-            (loop && playback_count != 1U))
+        }
+        if (sequence0.values == nullptr || playback_count == 0U || (loop && playback_count != 1U))
+        {
             return AnalogFabricResult::invalid_argument;
+        }
 
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         auto *const context = pwmContext(instance_);
@@ -1081,9 +1175,15 @@ namespace nucode::arduino
             return AnalogFabricResult::wrong_state;
         }
         if (!validPwmValueCount(context->configuration.load, sequence0.value_count) ||
-            (sequence1 != nullptr && (sequence1->values == nullptr ||
-                                      !validPwmValueCount(context->configuration.load,
-                                                          sequence1->value_count))))
+            !internal::dmaMemoryRangeValid(sequence0.values,
+                                           sequence0.value_count * sizeof(std::uint16_t),
+                                           alignof(std::uint16_t)) ||
+            (sequence1 != nullptr &&
+             (sequence1->values == nullptr ||
+              !validPwmValueCount(context->configuration.load, sequence1->value_count) ||
+              !internal::dmaMemoryRangeValid(sequence1->values,
+                                             sequence1->value_count * sizeof(std::uint16_t),
+                                             alignof(std::uint16_t)))))
         {
             record(*context, AnalogFabricResult::invalid_argument);
             k_mutex_unlock(&analog_fabric_mutex);
@@ -1092,28 +1192,30 @@ namespace nucode::arduino
 
         IoResourceId resources[internal::io_resource_lease_capacity]{};
         std::size_t resource_count = 0U;
-        resources[resource_count++] = internal::peripheralIoResource(
-            IoResourceKind::pwm_block, instance_, driver->p_reg);
+        resources[resource_count++] =
+            internal::peripheralIoResource(IoResourceKind::pwm_block, instance_, driver->p_reg);
         for (const pin_size_t pin : context->configuration.output_pins)
         {
             if (pin == disconnected_pin)
+            {
                 continue;
+            }
             const auto *const description = internal::pinDescription(pin);
             resources[resource_count++] = internal::gpioIoResource(description->gpio);
         }
         resources[resource_count++] = internal::dmaMemoryIoResource(
-            sequence0.values, static_cast<std::uint32_t>(sequence0.value_count *
-                                                         sizeof(std::uint16_t)));
+            sequence0.values,
+            static_cast<std::uint32_t>(sequence0.value_count * sizeof(std::uint16_t)));
         if (sequence1 != nullptr)
         {
             resources[resource_count++] = internal::dmaMemoryIoResource(
-                sequence1->values, static_cast<std::uint32_t>(sequence1->value_count *
-                                                              sizeof(std::uint16_t)));
+                sequence1->values,
+                static_cast<std::uint32_t>(sequence1->value_count * sizeof(std::uint16_t)));
         }
         context->lease = {};
-        const IoResourceResult reserve_result = internal::reserveIoResources(
-            {IoOwnerKind::pwm, instance_}, resources, resource_count,
-            IoAcquirePolicy::exclusive, context->lease);
+        const IoResourceResult reserve_result =
+            internal::reserveIoResources({IoOwnerKind::pwm, instance_}, resources, resource_count,
+                                         IoAcquirePolicy::exclusive, context->lease);
         if (reserve_result != IoResourceResult::success)
         {
             const auto result = mapResourceResult(reserve_result);
@@ -1122,9 +1224,9 @@ namespace nucode::arduino
             return result;
         }
 
-        nrfx_pwm_config_t driver_configuration = NRFX_PWM_DEFAULT_CONFIG(
-            NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED,
-            NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED);
+        nrfx_pwm_config_t driver_configuration =
+            NRFX_PWM_DEFAULT_CONFIG(NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED,
+                                    NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED);
         for (std::size_t index = 0U; index < 4U; ++index)
         {
             const pin_size_t pin = context->configuration.output_pins[index];
@@ -1132,8 +1234,7 @@ namespace nucode::arduino
             {
                 driver_configuration.output_pins[index] =
                     physicalPin(*internal::pinDescription(pin));
-                driver_configuration.pin_inverted[index] =
-                    context->configuration.inverted[index];
+                driver_configuration.pin_inverted[index] = context->configuration.inverted[index];
             }
         }
         driver_configuration.irq_priority = IRQ_PRIO_LOWEST;
@@ -1141,12 +1242,10 @@ namespace nucode::arduino
         driver_configuration.count_mode = NRF_PWM_MODE_UP;
         driver_configuration.top_value = context->configuration.top_value;
         driver_configuration.load_mode = pwmLoad(context->configuration.load);
-        driver_configuration.step_mode = context->configuration.triggered_step
-                                             ? NRF_PWM_STEP_TRIGGERED
-                                             : NRF_PWM_STEP_AUTO;
+        driver_configuration.step_mode =
+            context->configuration.triggered_step ? NRF_PWM_STEP_TRIGGERED : NRF_PWM_STEP_AUTO;
 
-        int driver_error =
-            nrfx_pwm_init(driver, &driver_configuration, pwmEventHandler, context);
+        int driver_error = nrfx_pwm_init(driver, &driver_configuration, pwmEventHandler, context);
         nrf_pwm_sequence_t first{{.p_raw = sequence0.values},
                                  static_cast<std::uint16_t>(sequence0.value_count),
                                  sequence0.repeats,
@@ -1161,29 +1260,30 @@ namespace nucode::arduino
         }
         if (driver_error == 0)
         {
-            std::uint32_t flags =
-                NRFX_PWM_FLAG_SIGNAL_END_SEQ0 | NRFX_PWM_FLAG_SIGNAL_END_SEQ1;
+            std::uint32_t flags = NRFX_PWM_FLAG_SIGNAL_END_SEQ0 | NRFX_PWM_FLAG_SIGNAL_END_SEQ1;
             flags |= loop ? NRFX_PWM_FLAG_LOOP : NRFX_PWM_FLAG_STOP;
             if (start_via_task)
+            {
                 flags |= NRFX_PWM_FLAG_START_VIA_TASK;
+            }
             context->start_task =
                 sequence1 == nullptr
                     ? nrfx_pwm_simple_playback(driver, &first, playback_count, flags)
-                    : nrfx_pwm_complex_playback(driver, &first, &next, playback_count,
-                                                flags);
+                    : nrfx_pwm_complex_playback(driver, &first, &next, playback_count, flags);
         }
         if (driver_error != 0)
         {
             if (nrfx_pwm_init_check(driver))
+            {
                 nrfx_pwm_uninit(driver);
+            }
             (void)internal::rollbackIoResources(context->lease);
             context->lease = {};
             record(*context, AnalogFabricResult::driver_error, driver_error);
             k_mutex_unlock(&analog_fabric_mutex);
             return AnalogFabricResult::driver_error;
         }
-        const IoResourceResult commit_result =
-            internal::commitIoResources(context->lease);
+        const IoResourceResult commit_result = internal::commitIoResources(context->lease);
         if (commit_result != IoResourceResult::success)
         {
             (void)nrfx_pwm_stop(driver, false);
@@ -1213,16 +1313,19 @@ namespace nucode::arduino
     AnalogFabricResult PwmSequenceFabric::step() noexcept
     {
         if (k_is_in_isr())
+        {
             return AnalogFabricResult::invalid_context;
+        }
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         auto *const context = pwmContext(instance_);
         auto *const driver = pwmDriver(instance_);
         if (context == nullptr || driver == nullptr ||
-            context->state != AnalogFabricState::active ||
-            !context->configuration.triggered_step)
+            context->state != AnalogFabricState::active || !context->configuration.triggered_step)
         {
             if (context != nullptr)
+            {
                 record(*context, AnalogFabricResult::wrong_state);
+            }
             k_mutex_unlock(&analog_fabric_mutex);
             return AnalogFabricResult::wrong_state;
         }
@@ -1235,15 +1338,18 @@ namespace nucode::arduino
     AnalogFabricResult PwmSequenceFabric::stop(std::uint32_t timeout_us) noexcept
     {
         if (k_is_in_isr())
+        {
             return AnalogFabricResult::invalid_context;
+        }
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         auto *const context = pwmContext(instance_);
         auto *const driver = pwmDriver(instance_);
-        if (context == nullptr || driver == nullptr ||
-            context->state != AnalogFabricState::active)
+        if (context == nullptr || driver == nullptr || context->state != AnalogFabricState::active)
         {
             if (context != nullptr)
+            {
                 record(*context, AnalogFabricResult::wrong_state);
+            }
             k_mutex_unlock(&analog_fabric_mutex);
             return AnalogFabricResult::wrong_state;
         }
@@ -1257,8 +1363,7 @@ namespace nucode::arduino
             stopped = nrfx_pwm_stopped_check(driver);
         }
         nrfx_pwm_uninit(driver);
-        const IoResourceResult release_result =
-            internal::releaseIoResources(context->lease);
+        const IoResourceResult release_result = internal::releaseIoResources(context->lease);
         context->lease = {};
         context->start_task = 0U;
         if (release_result != IoResourceResult::success)
@@ -1295,8 +1400,8 @@ namespace nucode::arduino
 
     PwmSequenceFabric *AnalogFabric::pwm(std::uint8_t instance) noexcept
     {
-        static PwmSequenceFabric handles[3]{
-            PwmSequenceFabric(20U), PwmSequenceFabric(21U), PwmSequenceFabric(22U)};
+        static PwmSequenceFabric handles[3]{PwmSequenceFabric(20U), PwmSequenceFabric(21U),
+                                            PwmSequenceFabric(22U)};
         switch (instance)
         {
         case 20U:

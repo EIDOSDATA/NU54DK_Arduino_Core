@@ -80,8 +80,8 @@ namespace
     constexpr std::uint8_t keyboard_report_id = 1U;
     constexpr std::uint8_t keyboard_report_index = 0U;
 
-    K_MSGQ_DEFINE(security_event_queue, sizeof(SecurityEventRecord),
-                  security_event_capacity, alignof(SecurityEventRecord));
+    K_MSGQ_DEFINE(security_event_queue, sizeof(SecurityEventRecord), security_event_capacity,
+                  alignof(SecurityEventRecord));
     K_MUTEX_DEFINE(hid_api_mutex);
 
     atomic_t security_initialized = ATOMIC_INIT(0);
@@ -121,53 +121,30 @@ namespace
 
     /** @brief 표준 keyboard input report descriptor입니다. */
     constexpr std::uint8_t keyboard_report_map[] = {
-        0x05,
-        0x01, /** 일반 데스크톱 사용 페이지입니다. */
-        0x09,
-        0x06, /** 키보드 사용 항목입니다. */
-        0xA1,
-        0x01, /** 애플리케이션 collection 시작입니다. */
-        0x85,
-        keyboard_report_id, /** 입력 report ID입니다. */
-        0x05,
-        0x07, /** 키보드 사용 페이지입니다. */
-        0x19,
-        0xE0, /** 왼쪽 Control 최소 사용 ID입니다. */
-        0x29,
-        0xE7, /** 오른쪽 GUI 최대 사용 ID입니다. */
-        0x15,
-        0x00, /** modifier 논리 최소값입니다. */
-        0x25,
-        0x01, /** modifier 논리 최대값입니다. */
-        0x75,
-        0x01, /** modifier report 크기입니다. */
-        0x95,
-        0x08, /** modifier report 개수입니다. */
-        0x81,
-        0x02, /** 가변 절대 입력입니다. */
-        0x95,
-        0x01, /** 예약 byte report 개수입니다. */
-        0x75,
-        0x08, /** 예약 byte report 크기입니다. */
-        0x81,
-        0x01, /** 예약 상수 입력입니다. */
-        0x95,
-        0x06, /** 동시 key report 개수입니다. */
-        0x75,
-        0x08, /** key report 크기입니다. */
-        0x15,
-        0x00, /** key 논리 최소값입니다. */
-        0x25,
-        0x65, /** key 논리 최대값입니다. */
-        0x05,
-        0x07, /** 키보드 사용 페이지입니다. */
-        0x19,
-        0x00, /** key 사용 ID 최소값입니다. */
-        0x29,
-        0x65, /** key 사용 ID 최대값입니다. */
-        0x81,
-        0x00, /** 배열 입력입니다. */
-        0xC0, /** collection 종료입니다. */
+        0x05, 0x01,               /** 일반 데스크톱 사용 페이지입니다. */
+        0x09, 0x06,               /** 키보드 사용 항목입니다. */
+        0xA1, 0x01,               /** 애플리케이션 collection 시작입니다. */
+        0x85, keyboard_report_id, /** 입력 report ID입니다. */
+        0x05, 0x07,               /** 키보드 사용 페이지입니다. */
+        0x19, 0xE0,               /** 왼쪽 Control 최소 사용 ID입니다. */
+        0x29, 0xE7,               /** 오른쪽 GUI 최대 사용 ID입니다. */
+        0x15, 0x00,               /** modifier 논리 최소값입니다. */
+        0x25, 0x01,               /** modifier 논리 최대값입니다. */
+        0x75, 0x01,               /** modifier report 크기입니다. */
+        0x95, 0x08,               /** modifier report 개수입니다. */
+        0x81, 0x02,               /** 가변 절대 입력입니다. */
+        0x95, 0x01,               /** 예약 byte report 개수입니다. */
+        0x75, 0x08,               /** 예약 byte report 크기입니다. */
+        0x81, 0x01,               /** 예약 상수 입력입니다. */
+        0x95, 0x06,               /** 동시 key report 개수입니다. */
+        0x75, 0x08,               /** key report 크기입니다. */
+        0x15, 0x00,               /** key 논리 최소값입니다. */
+        0x25, 0x65,               /** key 논리 최대값입니다. */
+        0x05, 0x07,               /** 키보드 사용 페이지입니다. */
+        0x19, 0x00,               /** key 사용 ID 최소값입니다. */
+        0x29, 0x65,               /** key 사용 ID 최대값입니다. */
+        0x81, 0x00,               /** 배열 입력입니다. */
+        0xC0,                     /** collection 종료입니다. */
     };
 
     /** @brief keyboard report의 모든 key usage가 descriptor 범위 안인지 확인합니다. */
@@ -263,8 +240,7 @@ namespace
         }
         bool matches = false;
         k_spinlock_key_t key = k_spin_lock(&bond_lock);
-        matches = bond_lifecycle.peer_valid &&
-                  bt_addr_le_eq(&bond_lifecycle.peer, peer);
+        matches = bond_lifecycle.peer_valid && bt_addr_le_eq(&bond_lifecycle.peer, peer);
         k_spin_unlock(&bond_lock, key);
         return matches;
     }
@@ -282,8 +258,8 @@ namespace
     /** @brief 이전 bond 상태 snapshot을 복원합니다. */
     void restoreBondLifecycle(const BondLifecycleState &snapshot) noexcept
     {
-        setBondLifecycle(snapshot.peer_valid ? &snapshot.peer : nullptr,
-                         snapshot.state, snapshot.paired_this_connection);
+        setBondLifecycle(snapshot.peer_valid ? &snapshot.peer : nullptr, snapshot.state,
+                         snapshot.paired_this_connection);
     }
 
     /** @brief boot 때 로드된 bond 목록에 peer가 있었는지 확인합니다. */
@@ -333,8 +309,7 @@ namespace
 
     /** @brief connection의 security snapshot event를 만듭니다. */
     SecurityEventRecord makeEvent(SecurityEvent event, struct bt_conn *connection,
-                                  std::uint32_t passkey = 0U,
-                                  std::uint8_t reason = 0U) noexcept
+                                  std::uint32_t passkey = 0U, std::uint8_t reason = 0U) noexcept
     {
         SecurityEventRecord record = {};
         record.event = event;
@@ -350,8 +325,7 @@ namespace
     }
 
     /** @brief 주소만 가진 bond event를 만듭니다. */
-    SecurityEventRecord makePeerEvent(SecurityEvent event,
-                                      const bt_addr_le_t *peer,
+    SecurityEventRecord makePeerEvent(SecurityEvent event, const bt_addr_le_t *peer,
                                       BondState state) noexcept
     {
         SecurityEventRecord record = {};
@@ -380,13 +354,11 @@ namespace
             return;
         }
         const bt_addr_le_t *const peer = bt_conn_get_dst(connection);
-        if (bondLifecycleMatches(peer) &&
-            currentBondState() == BondState::restored_candidate)
+        if (bondLifecycleMatches(peer) && currentBondState() == BondState::restored_candidate)
         {
             setBondLifecycle(peer, BondState::verified, false);
             atomic_set(&paired_value, 1);
-            queueEvent(makePeerEvent(SecurityEvent::bond_verified, peer,
-                                     BondState::verified));
+            queueEvent(makePeerEvent(SecurityEvent::bond_verified, peer, BondState::verified));
         }
         else if (currentBondState() != BondState::removal_requested)
         {
@@ -395,11 +367,10 @@ namespace
     }
 
     /** @brief 같은 연결 수준의 중복 callback을 제거해 security_changed를 한 번만 전달합니다. */
-    void queueSecurityChangedIfNew(struct bt_conn *connection,
-                                   bt_security_t level) noexcept
+    void queueSecurityChangedIfNew(struct bt_conn *connection, bt_security_t level) noexcept
     {
-        const atomic_val_t published = atomic_set(
-            &published_level_value, static_cast<atomic_val_t>(level));
+        const atomic_val_t published =
+            atomic_set(&published_level_value, static_cast<atomic_val_t>(level));
         if (published != static_cast<atomic_val_t>(level))
         {
             queueEvent(makeEvent(SecurityEvent::security_changed, connection));
@@ -473,8 +444,7 @@ namespace
                     if (information != nullptr && output != nullptr &&
                         output->count < ARRAY_SIZE(output->bonds))
                     {
-                        bt_addr_le_copy(&output->bonds[output->count],
-                                        &information->addr);
+                        bt_addr_le_copy(&output->bonds[output->count], &information->addr);
                         ++output->count;
                     }
                 },
@@ -496,8 +466,7 @@ namespace
         struct bt_conn *released = nullptr;
         k_spinlock_key_t key = k_spin_lock(&pending_lock);
         if (pending_state.connection != nullptr &&
-            (matching_connection == nullptr ||
-             matching_connection == pending_state.connection))
+            (matching_connection == nullptr || matching_connection == pending_state.connection))
         {
             released = pending_state.connection;
             pending_state = {};
@@ -510,8 +479,8 @@ namespace
     }
 
     /** @brief 사용자 응답이 필요한 SMP 요청을 하나만 보존합니다. */
-    bool setPending(struct bt_conn *connection, PendingResponse response,
-                    SecurityEvent event, std::uint32_t passkey = 0U) noexcept
+    bool setPending(struct bt_conn *connection, PendingResponse response, SecurityEvent event,
+                    std::uint32_t passkey = 0U) noexcept
     {
         if (connection == nullptr)
         {
@@ -563,8 +532,7 @@ namespace
     {
         struct bt_conn *connection = nullptr;
         k_spinlock_key_t key = k_spin_lock(&pending_lock);
-        if (pending_state.connection != nullptr &&
-            k_uptime_get() >= pending_state.deadline_ms)
+        if (pending_state.connection != nullptr && k_uptime_get() >= pending_state.deadline_ms)
         {
             connection = pending_state.connection;
             pending_state = {};
@@ -588,8 +556,7 @@ namespace
             return;
         }
         const bt_addr_le_t *const peer = bt_conn_get_dst(connection);
-        if (bondLifecycleMatches(peer) &&
-            currentBondState() == BondState::restored_candidate)
+        if (bondLifecycleMatches(peer) && currentBondState() == BondState::restored_candidate)
         {
             setBondLifecycle(peer, BondState::none, true);
         }
@@ -597,9 +564,8 @@ namespace
     }
 
     /** @brief 모든 SMP pairing req/rsp를 허용하되 새 pairing 여부를 먼저 기록합니다. */
-    enum bt_security_err pairingAccept(
-        struct bt_conn *connection,
-        const struct bt_conn_pairing_feat *features)
+    enum bt_security_err pairingAccept(struct bt_conn *connection,
+                                       const struct bt_conn_pairing_feat *features)
     {
         ARG_UNUSED(features);
         markPairingStarted(connection);
@@ -629,8 +595,7 @@ namespace
     {
         markPairingStarted(connection);
         static_cast<void>(setPending(connection, PendingResponse::passkey_confirmation,
-                                     SecurityEvent::passkey_confirmation_requested,
-                                     passkey));
+                                     SecurityEvent::passkey_confirmation_requested, passkey));
     }
 
     /** @brief Just Works pairing도 명시적 Sketch 승인 뒤에만 진행합니다. */
@@ -765,8 +730,7 @@ namespace
     }
 
     /** @brief DIS 문자열을 caller 수명과 분리된 fixed buffer로 검증·복사합니다. */
-    bool copyDisString(const char *source,
-                       char (&destination)[maximum_dis_string_length + 1U],
+    bool copyDisString(const char *source, char (&destination)[maximum_dis_string_length + 1U],
                        bool required) noexcept
     {
         if (source == nullptr)
@@ -791,12 +755,10 @@ namespace
     }
 
     /** @brief host가 선택한 HIDS protocol mode를 exact connection slot에 반영합니다. */
-    void hidsProtocolModeChanged(enum bt_hids_pm_evt event,
-                                 struct bt_conn *connection)
+    void hidsProtocolModeChanged(enum bt_hids_pm_evt event, struct bt_conn *connection)
     {
         k_spinlock_key_t key = k_spin_lock(&hid_state_lock);
-        if (hid_connection_state.registered &&
-            hid_connection_state.connection == connection)
+        if (hid_connection_state.registered && hid_connection_state.connection == connection)
         {
             if (event == BT_HIDS_PM_EVT_BOOT_MODE_ENTERED)
             {
@@ -818,10 +780,10 @@ namespace
             return 0;
         }
         k_spinlock_key_t key = k_spin_lock(&hid_state_lock);
-        const bool already_registered = hid_connection_state.registered &&
-                                        hid_connection_state.connection == connection;
-        const bool occupied = hid_connection_state.registered &&
-                              hid_connection_state.connection != connection;
+        const bool already_registered =
+            hid_connection_state.registered && hid_connection_state.connection == connection;
+        const bool occupied =
+            hid_connection_state.registered && hid_connection_state.connection != connection;
         k_spin_unlock(&hid_state_lock, key);
         if (already_registered)
         {
@@ -862,8 +824,8 @@ namespace
             return 0;
         }
         k_spinlock_key_t key = k_spin_lock(&hid_state_lock);
-        const bool matches = hid_connection_state.registered &&
-                             hid_connection_state.connection == connection;
+        const bool matches =
+            hid_connection_state.registered && hid_connection_state.connection == connection;
         k_spin_unlock(&hid_state_lock, key);
         if (!matches)
         {
@@ -873,8 +835,7 @@ namespace
         const int result = bt_hids_disconnected(nucode_ble_hids_backend(), connection);
         struct bt_conn *released = nullptr;
         key = k_spin_lock(&hid_state_lock);
-        if (hid_connection_state.registered &&
-            hid_connection_state.connection == connection)
+        if (hid_connection_state.registered && hid_connection_state.connection == connection)
         {
             released = hid_connection_state.connection;
             hid_connection_state = {};
@@ -892,8 +853,7 @@ namespace
     {
         struct bt_conn *connection = nullptr;
         k_spinlock_key_t key = k_spin_lock(&hid_state_lock);
-        if (hid_connection_state.registered &&
-            hid_connection_state.connection != nullptr)
+        if (hid_connection_state.registered && hid_connection_state.connection != nullptr)
         {
             connection = bt_conn_ref(hid_connection_state.connection);
             if (boot_mode != nullptr)
@@ -905,7 +865,7 @@ namespace
         return connection;
     }
 
-}
+} // namespace
 
 namespace nucode::ble
 {
@@ -917,12 +877,10 @@ namespace nucode::ble
             return false;
         }
         const unsigned int level = static_cast<unsigned int>(config.minimum_level);
-        const unsigned int io_capability =
-            static_cast<unsigned int>(config.io_capability);
+        const unsigned int io_capability = static_cast<unsigned int>(config.io_capability);
         if (level < static_cast<unsigned int>(SecurityLevel::encrypted) ||
             level > static_cast<unsigned int>(SecurityLevel::secure_connections) ||
-            io_capability >
-                static_cast<unsigned int>(SecurityIoCapability::keyboard_display) ||
+            io_capability > static_cast<unsigned int>(SecurityIoCapability::keyboard_display) ||
             config.response_timeout_ms < 1000U || config.response_timeout_ms > 300000U)
         {
             recordSecurityError(SecurityError::invalid_argument, -EINVAL);
@@ -1011,15 +969,13 @@ namespace nucode::ble
         const int result = bt_conn_set_security(connection, required_level);
         if (result >= 0)
         {
-            static_cast<void>(
-                synchronizeSatisfiedSecurity(connection, required_level));
+            static_cast<void>(synchronizeSatisfiedSecurity(connection, required_level));
         }
         bt_conn_unref(connection);
         if (result < 0)
         {
-            recordSecurityError(result == -EBUSY ? SecurityError::busy
-                                                 : SecurityError::driver_error,
-                                result);
+            recordSecurityError(
+                result == -EBUSY ? SecurityError::busy : SecurityError::driver_error, result);
             return false;
         }
         recordSecurityError(SecurityError::none);
@@ -1038,8 +994,8 @@ namespace nucode::ble
             recordSecurityError(SecurityError::invalid_state, -EALREADY);
             return false;
         }
-        const int result = accept ? bt_conn_auth_pairing_confirm(connection)
-                                  : bt_conn_auth_cancel(connection);
+        const int result =
+            accept ? bt_conn_auth_pairing_confirm(connection) : bt_conn_auth_cancel(connection);
         bt_conn_unref(connection);
         if (result < 0)
         {
@@ -1096,8 +1052,8 @@ namespace nucode::ble
             recordSecurityError(SecurityError::invalid_state, -EALREADY);
             return false;
         }
-        const int result = accept ? bt_conn_auth_passkey_confirm(connection)
-                                  : bt_conn_auth_cancel(connection);
+        const int result =
+            accept ? bt_conn_auth_passkey_confirm(connection) : bt_conn_auth_cancel(connection);
         bt_conn_unref(connection);
         if (result < 0)
         {
@@ -1157,8 +1113,7 @@ namespace nucode::ble
         return count;
     }
 
-    std::size_t SecurityManager::copyBonds(PeerAddress *buffer,
-                                           std::size_t capacity) const noexcept
+    std::size_t SecurityManager::copyBonds(PeerAddress *buffer, std::size_t capacity) const noexcept
     {
         if (buffer == nullptr || capacity == 0U)
         {
@@ -1302,13 +1257,11 @@ namespace nucode::ble
         return static_cast<SecurityError>(atomic_get(&battery_error_value));
     }
 
-    bool DeviceInformationService::configure(
-        const DeviceInformation &information) noexcept
+    bool DeviceInformationService::configure(const DeviceInformation &information) noexcept
     {
         if (!requireThreadContext())
         {
-            atomic_set(&dis_error_value,
-                       static_cast<atomic_val_t>(SecurityError::invalid_context));
+            atomic_set(&dis_error_value, static_cast<atomic_val_t>(SecurityError::invalid_context));
             return false;
         }
         char manufacturer[maximum_dis_string_length + 1U] = {};
@@ -1334,12 +1287,8 @@ namespace nucode::ble
             const char *key;
             const char *value;
         } values[] = {
-            {"bt/dis/manuf", manufacturer},
-            {"bt/dis/model", model},
-            {"bt/dis/serial", serial},
-            {"bt/dis/fw", firmware},
-            {"bt/dis/hw", hardware},
-            {"bt/dis/sw", software},
+            {"bt/dis/manuf", manufacturer}, {"bt/dis/model", model}, {"bt/dis/serial", serial},
+            {"bt/dis/fw", firmware},        {"bt/dis/hw", hardware}, {"bt/dis/sw", software},
         };
         for (const auto &value : values)
         {
@@ -1442,13 +1391,11 @@ namespace nucode::ble
             return false;
         }
         const auto *const bytes = reinterpret_cast<const std::uint8_t *>(&report);
-        const int result = boot_mode
-                               ? bt_hids_boot_kb_inp_rep_send(
-                                     nucode_ble_hids_backend(), connection, bytes,
-                                     sizeof(report), nullptr)
-                               : bt_hids_inp_rep_send(
-                                     nucode_ble_hids_backend(), connection,
-                                     keyboard_report_index, bytes, sizeof(report), nullptr);
+        const int result =
+            boot_mode ? bt_hids_boot_kb_inp_rep_send(nucode_ble_hids_backend(), connection, bytes,
+                                                     sizeof(report), nullptr)
+                      : bt_hids_inp_rep_send(nucode_ble_hids_backend(), connection,
+                                             keyboard_report_index, bytes, sizeof(report), nullptr);
         bt_conn_unref(connection);
         k_mutex_unlock(&hid_api_mutex);
         if (result < 0)
@@ -1582,8 +1529,7 @@ namespace nucode::ble
                     setBondLifecycle(nullptr, BondState::none, false);
                 }
                 atomic_set(&paired_value, 0);
-                atomic_set(&current_level_value,
-                           static_cast<atomic_val_t>(SecurityLevel::none));
+                atomic_set(&current_level_value, static_cast<atomic_val_t>(SecurityLevel::none));
                 atomic_set(&published_level_value, 0);
             }
         }
@@ -1612,8 +1558,7 @@ namespace nucode::ble
                     setBondLifecycle(nullptr, BondState::none, false);
                 }
                 atomic_set(&paired_value, 0);
-                recordSecurityError(SecurityError::driver_error,
-                                    -static_cast<int>(error));
+                recordSecurityError(SecurityError::driver_error, -static_cast<int>(error));
                 queueEvent(makeEvent(SecurityEvent::error, connection, 0U,
                                      static_cast<std::uint8_t>(error)));
                 return;
@@ -1623,9 +1568,9 @@ namespace nucode::ble
             queueSecurityChangedIfNew(connection, level);
         }
 
-    }
+    } // namespace internal
 
-}
+} // namespace nucode::ble
 
 nucode::ble::SecurityManager BLESecurity;
 nucode::ble::BatteryService BLEBattery;

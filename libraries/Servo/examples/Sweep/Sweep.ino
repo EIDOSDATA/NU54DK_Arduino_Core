@@ -11,25 +11,25 @@ Servo servo;
 
 void setup()
 {
-	if (servo.attach(PIN_PWM0) == INVALID_SERVO)
-	{
-		while (true)
-		{
-			delay(1000);
-		}
-	}
+    if (servo.attach(PIN_PWM0) == INVALID_SERVO)
+    {
+        while (true)
+        {
+            delay(1000);
+        }
+    }
 }
 
 void loop()
 {
-	for (int angle = 0; angle <= 180; ++angle)
-	{
-		servo.write(angle);
-		delay(15);
-	}
-	for (int angle = 180; angle >= 0; --angle)
-	{
-		servo.write(angle);
-		delay(15);
-	}
+    for (int angle = 0; angle <= 180; ++angle)
+    {
+        servo.write(angle);
+        delay(15);
+    }
+    for (int angle = 180; angle >= 0; --angle)
+    {
+        servo.write(angle);
+        delay(15);
+    }
 }

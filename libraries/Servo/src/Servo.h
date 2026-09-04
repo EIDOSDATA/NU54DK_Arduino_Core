@@ -34,38 +34,38 @@
  */
 class Servo
 {
-public:
-	/** @brief 분리 상태의 Servo 객체를 생성합니다. */
-	Servo();
+  public:
+    /** @brief 분리 상태의 Servo 객체를 생성합니다. */
+    Servo();
 
-	/** @brief 기본 544~2400 us 범위로 핀을 PWM22에 연결합니다. */
-	std::uint8_t attach(int pin);
+    /** @brief 기본 544~2400 us 범위로 핀을 PWM22에 연결합니다. */
+    std::uint8_t attach(int pin);
 
-	/** @brief 사용자 최소·최대 pulse 범위로 핀을 PWM22에 연결합니다. */
-	std::uint8_t attach(int pin, int minimum, int maximum);
+    /** @brief 사용자 최소·최대 pulse 범위로 핀을 PWM22에 연결합니다. */
+    std::uint8_t attach(int pin, int minimum, int maximum);
 
-	/** @brief 출력을 중지하고 이전 GPIO 상태를 복원합니다. */
-	void detach();
+    /** @brief 출력을 중지하고 이전 GPIO 상태를 복원합니다. */
+    void detach();
 
-	/** @brief 0~180도 또는 200 이상인 microsecond 값을 기록합니다. */
-	void write(int value);
+    /** @brief 0~180도 또는 200 이상인 microsecond 값을 기록합니다. */
+    void write(int value);
 
-	/** @brief Servo pulse 폭을 설정 범위 안으로 제한해 기록합니다. */
-	void writeMicroseconds(int value);
+    /** @brief Servo pulse 폭을 설정 범위 안으로 제한해 기록합니다. */
+    void writeMicroseconds(int value);
 
-	/** @brief 마지막 pulse 값을 0~180도 범위로 반환합니다. */
-	int read();
+    /** @brief 마지막 pulse 값을 0~180도 범위로 반환합니다. */
+    int read();
 
-	/** @brief 마지막으로 성공한 pulse 폭을 microsecond로 반환합니다. */
-	int readMicroseconds();
+    /** @brief 마지막으로 성공한 pulse 폭을 microsecond로 반환합니다. */
+    int readMicroseconds();
 
-	/** @brief 이 객체가 현재 PWM22 channel을 소유하는지 반환합니다. */
-	bool attached();
+    /** @brief 이 객체가 현재 PWM22 channel을 소유하는지 반환합니다. */
+    bool attached();
 
-private:
-	std::uint8_t servo_index_;
-	std::uint16_t minimum_;
-	std::uint16_t maximum_;
+  private:
+    std::uint8_t servo_index_;
+    std::uint16_t minimum_;
+    std::uint16_t maximum_;
 };
 
 #endif

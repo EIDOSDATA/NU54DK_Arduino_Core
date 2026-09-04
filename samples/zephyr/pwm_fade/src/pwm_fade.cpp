@@ -9,24 +9,24 @@
 
 namespace
 {
-	int duty = 0;
-	int step = 1;
-}
+    int duty = 0;
+    int step = 1;
+} // namespace
 
 /** @brief 0% edge에서 PWM 예제를 시작합니다. */
 void setup(void)
 {
-	analogWrite(PIN_PWM0, 0);
+    analogWrite(PIN_PWM0, 0);
 }
 
 /** @brief 고정 20 ms period에서 duty 0..255 edge를 왕복합니다. */
 void loop(void)
 {
-	analogWrite(PIN_PWM0, duty);
-	duty += step;
-	if ((duty == 255) || (duty == 0))
-	{
-		step = -step;
-	}
-	delay(10U);
+    analogWrite(PIN_PWM0, duty);
+    duty += step;
+    if ((duty == 255) || (duty == 0))
+    {
+        step = -step;
+    }
+    delay(10U);
 }

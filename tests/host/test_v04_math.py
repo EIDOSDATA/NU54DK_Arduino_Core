@@ -44,9 +44,11 @@ class V04MathTests(unittest.TestCase):
     def test_dma_count_is_checked_before_nrfx(self):
         analog = (ROOT / "cores/arduino/AnalogFabric.cpp").read_text(encoding="utf-8")
         stream = (ROOT / "cores/arduino/StreamFabric.cpp").read_text(encoding="utf-8")
-        self.assertIn("dmaCountFits(count, PWM_DMA_SEQ_MAXCNT_MAXCNT_Msk, sizeof(std::uint16_t))", analog)
-        self.assertEqual(analog.count("SAADC_RESULT_MAXCNT_MAXCNT_Msk, 1U)"), 3)
-        self.assertEqual(stream.count("dmaCountFits(buffers.words, I2S_RXTXD_MAXCNT_MAXCNT_Msk, 1U)"), 2)
+        analog_compact = " ".join(analog.split())
+        stream_compact = " ".join(stream.split())
+        self.assertIn("dmaCountFits(count, PWM_DMA_SEQ_MAXCNT_MAXCNT_Msk, sizeof(std::uint16_t))", analog_compact)
+        self.assertEqual(analog_compact.count("SAADC_RESULT_MAXCNT_MAXCNT_Msk, 1U)"), 3)
+        self.assertEqual(stream_compact.count("dmaCountFits(buffers.words, I2S_RXTXD_MAXCNT_MAXCNT_Msk, 1U)"), 2)
 
 
 if __name__ == "__main__": unittest.main()

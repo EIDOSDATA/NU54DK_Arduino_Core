@@ -16,7 +16,7 @@
  */
 extern "C" unsigned long millis(void)
 {
-	return static_cast<unsigned long>(nucode::arduino::internal::timeMillis());
+    return static_cast<unsigned long>(nucode::arduino::internal::timeMillis());
 }
 
 /**
@@ -26,7 +26,7 @@ extern "C" unsigned long millis(void)
  */
 extern "C" unsigned long micros(void)
 {
-	return static_cast<unsigned long>(nucode::arduino::internal::timeMicros());
+    return static_cast<unsigned long>(nucode::arduino::internal::timeMicros());
 }
 
 /**
@@ -36,7 +36,7 @@ extern "C" unsigned long micros(void)
  */
 extern "C" void delay(unsigned long milliseconds)
 {
-	nucode::arduino::internal::sleepMilliseconds(static_cast<uint32_t>(milliseconds));
+    nucode::arduino::internal::sleepMilliseconds(static_cast<uint32_t>(milliseconds));
 }
 
 /**
@@ -46,7 +46,7 @@ extern "C" void delay(unsigned long milliseconds)
  */
 extern "C" void delayMicroseconds(unsigned int microseconds)
 {
-	nucode::arduino::internal::busyWaitMicroseconds(static_cast<uint32_t>(microseconds));
+    nucode::arduino::internal::busyWaitMicroseconds(static_cast<uint32_t>(microseconds));
 }
 
 /**
@@ -54,5 +54,5 @@ extern "C" void delayMicroseconds(unsigned int microseconds)
  */
 extern "C" void yield(void)
 {
-	nucode::arduino::internal::yieldCurrentThread();
+    nucode::arduino::internal::yieldCurrentThread();
 }

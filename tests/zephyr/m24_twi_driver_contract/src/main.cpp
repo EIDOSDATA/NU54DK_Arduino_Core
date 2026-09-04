@@ -33,8 +33,7 @@ namespace
         {SerialSignal::scl, PIN_P1_03},
     };
 
-    SerialFabricConfiguration configuration(std::uint8_t instance,
-                                            std::size_t workspace)
+    SerialFabricConfiguration configuration(std::uint8_t instance, std::size_t workspace)
     {
         static SerialDmaWorkspace dma[8];
         dma[workspace] = {workspaces[workspace], sizeof(workspaces[workspace])};
@@ -67,8 +66,8 @@ ZTEST(m24_twi_driver_contract, test_all_eight_adapters_stage_exact_routes)
         zassert_not_null(target, "TWIS handle 누락");
         zassert_equal(controller->configure({TwiFabricFrequency::fast}),
                       SerialFabricResult::success, "TWIM configure 실패");
-        zassert_equal(target->configure({0x42U, 0x43U, false}),
-                      SerialFabricResult::success, "TWIS configure 실패");
+        zassert_equal(target->configure({0x42U, 0x43U, false}), SerialFabricResult::success,
+                      "TWIS configure 실패");
         zassert_equal(controller->stage(configuration(instances[index], index)),
                       SerialFabricResult::success, "TWIM stage 실패");
         zassert_equal(target->stage(configuration(instances[index], index + 4U)),
@@ -79,16 +78,14 @@ ZTEST(m24_twi_driver_contract, test_all_eight_adapters_stage_exact_routes)
 ZTEST(m24_twi_driver_contract, test_pmic_profile_is_controller_read_only)
 {
     SerialDmaWorkspace dma{workspaces[0], sizeof(workspaces[0])};
-    const SerialFabricConfiguration config{
-        SerialRouteClass::p1_flexible,
-        SerialElectricalProfile::pmic_read_only,
-        pmic_pins,
-        2U,
-        &dma,
-        1U};
+    const SerialFabricConfiguration config{SerialRouteClass::p1_flexible,
+                                           SerialElectricalProfile::pmic_read_only,
+                                           pmic_pins,
+                                           2U,
+                                           &dma,
+                                           1U};
     auto *const target = serialFabric().twis(20U);
-    zassert_equal(target->stage(config),
-                  SerialFabricResult::unsafe_electrical_profile,
+    zassert_equal(target->stage(config), SerialFabricResult::unsafe_electrical_profile,
                   "TWIS가 온보드 PMIC net 구동을 허용했습니다.");
 }
 
@@ -96,17 +93,13 @@ ZTEST(m24_twi_driver_contract, test_inactive_dma_operations_fail_closed)
 {
     auto *const controller = serialFabric().twim(21U);
     auto *const target = serialFabric().twis(21U);
-    zassert_equal(controller->transferAsync(0x42U, workspaces[0], 1U,
-                                            workspaces[0] + 4U, 4U),
-                  SerialFabricResult::wrong_state,
-                  "inactive TWIM transfer를 허용했습니다.");
-    zassert_equal(
-        target->queueBuffers(workspaces[1], 8U, workspaces[1] + 16U, 8U),
-        SerialFabricResult::wrong_state, "inactive TWIS buffer를 허용했습니다.");
+    zassert_equal(controller->transferAsync(0x42U, workspaces[0], 1U, workspaces[0] + 4U, 4U),
+                  SerialFabricResult::wrong_state, "inactive TWIM transfer를 허용했습니다.");
+    zassert_equal(target->queueBuffers(workspaces[1], 8U, workspaces[1] + 16U, 8U),
+                  SerialFabricResult::wrong_state, "inactive TWIS buffer를 허용했습니다.");
     TwiFabricEvent event{};
     zassert_false(controller->takeEvent(event), "가짜 TWIM event가 있습니다.");
     zassert_false(target->takeEvent(event), "가짜 TWIS event가 있습니다.");
 }
 
-ZTEST_SUITE(m24_twi_driver_contract, nullptr, nullptr, nullptr, nullptr,
-            nullptr);
+ZTEST_SUITE(m24_twi_driver_contract, nullptr, nullptr, nullptr, nullptr, nullptr);

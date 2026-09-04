@@ -18,7 +18,10 @@ namespace
     UarteHandle *handle = nullptr;
     unsigned bytes = 0, buffers = 0, complete = 0, tx_complete = 0, error = 0, seen = 0;
     std::uint32_t seed = 0;
-    struct SavedPad { std::uint32_t psel, configuration, output; };
+    struct SavedPad
+    {
+        std::uint32_t psel, configuration, output;
+    };
     SavedPad saved_pads[4]{};
     unsigned saved_count = 0;
     void snapshotPads(bool port0, unsigned count)
@@ -41,14 +44,17 @@ namespace
             const auto &saved = saved_pads[index];
             auto pin = saved.psel;
             const auto *port = nrf_gpio_pin_port_decode(&pin);
-            if (port->PIN_CNF[pin] != saved.configuration || nrf_gpio_pin_out_read(saved.psel) != saved.output)
+            if (port->PIN_CNF[pin] != saved.configuration ||
+                nrf_gpio_pin_out_read(saved.psel) != saved.output)
+            {
                 return false;
+            }
         }
         return true;
     }
     std::uint8_t pattern(std::uint32_t value, unsigned index)
     {
-        // Integer byte oracle also implemented independently by the Host.
+        /** @brief Host에도 독립 구현된 정수 byte oracle입니다. */
         return static_cast<std::uint8_t>((value + 37U * index + (index >> 3U)) ^ (index >> 1U));
     }
     bool guardsIntact()
@@ -57,11 +63,19 @@ namespace
         {
             const auto &buffer = receive[slot];
             for (unsigned i = 0; i < guard; ++i)
+            {
                 if (buffer.before[i] != 0xa5 || buffer.after[i] != 0x5a)
+                {
                     return false;
+                }
+            }
             for (unsigned i = slot < buffers ? bytes : 0; i < capacity; ++i)
+            {
                 if (buffer.data[i] != 0xcc)
+                {
                     return false;
+                }
+            }
         }
         return true;
     }
@@ -70,10 +84,14 @@ namespace
         if (handle || (args[0] != 20 && args[0] != 21 && args[0] != 22 && args[0] != 30) ||
             (args[1] != 115200 && args[1] != 1000000) || !args[2] || args[2] > capacity ||
             !args[3] || args[3] > 2 || args[5] > 1 || args[6] > 1)
+        {
             return 400;
+        }
         auto *candidate = serialFabric().uarte(args[0]);
         if (!candidate)
+        {
             return 600;
+        }
         bytes = args[2];
         buffers = args[3];
         seed = args[4];
@@ -85,24 +103,39 @@ namespace
             memset(buffer.after, 0x5a, guard);
         }
         for (unsigned i = 0; i < bytes * buffers; ++i)
+        {
             transmit[i] = pattern(seed ^ 0x5aU, i);
-        const SerialSignal signals[] = {SerialSignal::txd, SerialSignal::rxd, SerialSignal::rts, SerialSignal::cts};
+        }
+        const SerialSignal signals[] = {SerialSignal::txd, SerialSignal::rxd, SerialSignal::rts,
+                                        SerialSignal::cts};
         const pin_size_t p1[] = {PIN_P1_04, PIN_P1_05, PIN_P1_06, PIN_P1_07};
         const pin_size_t p0[] = {PIN_P0_00, PIN_P0_01, PIN_P0_02, PIN_P0_03};
         SerialSignalPin pins[4]{};
         for (unsigned i = 0; i < 4; ++i)
+        {
             pins[i] = {signals[i], args[0] == 30 ? p0[i] : p1[i]};
+        }
         const SerialDmaWorkspace workspaces[] = {
             {receive[0].data, capacity}, {receive[1].data, capacity}, {transmit, sizeof(transmit)}};
-        const SerialFabricConfiguration route{args[0] == 30 ? SerialRouteClass::p0_flexible : SerialRouteClass::p1_flexible,
-                                              SerialElectricalProfile::dap_uart_bridge, pins, args[6] ? 4U : 2U, workspaces, 3};
+        const SerialFabricConfiguration route{args[0] == 30 ? SerialRouteClass::p0_flexible
+                                                            : SerialRouteClass::p1_flexible,
+                                              SerialElectricalProfile::dap_uart_bridge,
+                                              pins,
+                                              args[6] ? 4U : 2U,
+                                              workspaces,
+                                              3};
         snapshotPads(args[0] == 30, args[6] ? 4U : 2U);
-        auto result = candidate->configure({args[1], args[5] ? UarteParity::even : UarteParity::none,
-                                           args[6] != 0, buffers == 2 && bytes >= 32});
+        auto result =
+            candidate->configure({args[1], args[5] ? UarteParity::even : UarteParity::none,
+                                  args[6] != 0, buffers == 2 && bytes >= 32});
         if (result == SerialFabricResult::success)
+        {
             result = candidate->stage(route);
+        }
         if (result == SerialFabricResult::success)
+        {
             result = candidate->activate();
+        }
         out[0] = static_cast<unsigned>(result);
         count = 1;
         if (result != SerialFabricResult::success)
@@ -112,32 +145,45 @@ namespace
             return 601;
         }
         handle = candidate;
-        result = handle->receiveAsync(receive[0].data, bytes, buffers == 2 ? receive[1].data : nullptr, buffers == 2 ? bytes : 0);
+        result =
+            handle->receiveAsync(receive[0].data, bytes, buffers == 2 ? receive[1].data : nullptr,
+                                 buffers == 2 ? bytes : 0);
         out[0] = static_cast<unsigned>(result);
         return result == SerialFabricResult::success ? 0 : 602;
     }
-}
+} // namespace
 
 void initializeOnboardSerialIdle()
 {
-    // Onboard-only harness, called at boot or after proven STOP with no UART
-    // owner. An unselected MCU TX pad must not leave the DAP receiver floating.
-    // Weak input pulls only; never force a peer-driven signal or ignore noise.
+    /**
+     * @brief UART 소유자가 없고 STOP이 증명된 boot 또는 온보드 시험에서만 사용합니다.
+     *
+     * 선택되지 않은 MCU TX 패드가 DAP receiver를 floating 상태로 만들지 않도록 약한 입력 pull만
+     * 사용하며, peer가 구동하는 신호를 강제하거나 noise를 무시하지 않습니다.
+     */
     nrf_gpio_cfg_input(NRF_GPIO_PIN_MAP(0, 0), NRF_GPIO_PIN_PULLUP);
     nrf_gpio_cfg_input(NRF_GPIO_PIN_MAP(1, 4), NRF_GPIO_PIN_PULLUP);
+}
+
+bool onboardSerialActive()
+{
+    return handle != nullptr;
 }
 
 void serviceSerial()
 {
     if (!handle)
+    {
         return;
+    }
     UarteEvent event{};
     while (handle->takeEvent(event))
     {
         if (event.type == UarteEventType::rx_complete)
         {
-            unsigned slot = event.buffer == receive[0].data ? 0U : event.buffer == receive[1].data ? 1U
-                                                                                                   : 2U;
+            unsigned slot = event.buffer == receive[0].data   ? 0U
+                            : event.buffer == receive[1].data ? 1U
+                                                              : 2U;
             if (slot >= buffers || event.transferred != bytes || (seen & (1U << slot)))
             {
                 error |= 1;
@@ -145,47 +191,67 @@ void serviceSerial()
             }
             seen |= 1U << slot;
             for (unsigned i = 0; i < bytes; ++i)
+            {
                 if (receive[slot].data[i] != pattern(seed, slot * bytes + i))
+                {
                     error |= 2;
+                }
+            }
             ++complete;
             if (complete == buffers && !error)
             {
                 if (handle->transmitAsync(transmit, bytes * buffers) != SerialFabricResult::success)
+                {
                     error |= 4;
+                }
             }
         }
         else if (event.type == UarteEventType::tx_complete)
         {
             if (event.buffer != transmit || event.transferred != bytes * buffers || tx_complete)
+            {
                 error |= 8;
+            }
             ++tx_complete;
         }
         else if (event.type == UarteEventType::error)
+        {
             error |= 16;
+        }
         else if (event.type != UarteEventType::rx_buffer_needed)
+        {
             error |= 32;
+        }
     }
     if (!guardsIntact())
+    {
         error |= 64;
+    }
 }
 
-std::uint32_t serialOnboard(std::uint32_t opcode, const std::uint32_t *args,
-                            std::uint32_t nargs, std::uint32_t *out, std::uint32_t &count)
+std::uint32_t serialOnboard(std::uint32_t opcode, const std::uint32_t *args, std::uint32_t nargs,
+                            std::uint32_t *out, std::uint32_t &count)
 {
     if (opcode == 9 && nargs == 2)
     {
         const std::uint32_t discovery[] = {args[0], 115200, 32, 1, args[1], 0, 0};
         const auto result = start(discovery, out, count);
         if (result != 0)
+        {
             return result;
+        }
         for (unsigned i = 0; i < 32; ++i)
+        {
             transmit[i] = pattern(args[1] ^ 0xc3U, i);
+        }
         const auto sent = handle->transmitAsync(transmit, 32);
         out[0] = static_cast<unsigned>(sent);
         return sent == SerialFabricResult::success ? 0 : 604;
     }
     if (opcode == 10 && nargs == 7)
+    {
         return start(args, out, count);
+    }
     if (opcode == 11 && nargs == 0 && handle)
     {
         serviceSerial();
@@ -196,16 +262,27 @@ std::uint32_t serialOnboard(std::uint32_t opcode, const std::uint32_t *args,
         out[4] = static_cast<unsigned>(handle->bufferState(receive[0].data));
         out[5] = static_cast<unsigned>(handle->bufferState(receive[1].data));
         count = 6;
-        return 0; // A status query reports errors as data; it never declares PASS.
+        /** @brief 상태 조회는 오류를 data로 보고할 뿐 PASS를 선언하지 않습니다. */
+        return 0;
     }
-    if (opcode == 12 && nargs == 0 && handle)
+    /** @brief 오류 후 정지는 활성 DMA가 없어도 성공하며, 재시작하지 않습니다. */
+    if (opcode == 13 && nargs == 0 && !handle)
+    {
+        out[0] = 0;
+        out[1] = 1;
+        count = 2;
+        return 0;
+    }
+    if ((opcode == 12 || opcode == 13) && nargs == 0 && handle)
     {
         const auto result = handle->deactivate(100000);
         out[0] = static_cast<unsigned>(result);
         out[1] = guardsIntact() && padsRestored();
         count = 2;
         if (result != SerialFabricResult::success)
+        {
             return 603;
+        }
         handle = nullptr;
         initializeOnboardSerialIdle();
         return 0;

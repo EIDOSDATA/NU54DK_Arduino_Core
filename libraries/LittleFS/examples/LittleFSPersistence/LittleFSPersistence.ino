@@ -14,7 +14,7 @@ void setup()
     {
     }
 
-    // 기본 begin은 손상되었거나 비어 있는 partition을 절대 자동 포맷하지 않습니다.
+    /** @brief 기본 begin은 손상되었거나 빈 partition을 자동으로 포맷하지 않습니다. */
     if (!LittleFS.begin(false))
     {
         Serial.println("LittleFS mount failed. Run LittleFS.format() only after approval.");
@@ -23,7 +23,8 @@ void setup()
 
     uint32_t boots = 0;
     File input = LittleFS.open("/boot-count.bin", FILE_READ);
-    if (input && input.readBytes(reinterpret_cast<uint8_t *>(&boots), sizeof(boots)) != sizeof(boots))
+    if (input &&
+        input.readBytes(reinterpret_cast<uint8_t *>(&boots), sizeof(boots)) != sizeof(boots))
     {
         boots = 0;
     }
@@ -31,7 +32,8 @@ void setup()
 
     ++boots;
     File output = LittleFS.open("/boot-count.bin", FILE_WRITE);
-    if (!output || output.write(reinterpret_cast<const uint8_t *>(&boots), sizeof(boots)) != sizeof(boots))
+    if (!output ||
+        output.write(reinterpret_cast<const uint8_t *>(&boots), sizeof(boots)) != sizeof(boots))
     {
         Serial.println("LittleFS write failed.");
         return;

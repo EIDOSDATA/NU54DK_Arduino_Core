@@ -8,6 +8,7 @@
 #include "serial_fabric_routes.h"
 
 #include "internal/pin_description.h"
+#include "internal/dma_memory.h"
 
 #include <variant.h>
 
@@ -31,8 +32,7 @@ namespace nucode::arduino::internal
                 return (instance == 0U) || (instance == 20U) || (instance == 21U) ||
                        (instance == 22U) || (instance == 30U);
             }
-            return (instance == 20U) || (instance == 21U) || (instance == 22U) ||
-                   (instance == 30U);
+            return (instance == 20U) || (instance == 21U) || (instance == 22U) || (instance == 30U);
         }
 
         [[nodiscard]] bool routeAllowsInstance(SerialRouteClass route,
@@ -55,31 +55,44 @@ namespace nucode::arduino::internal
         {
 #if DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(gpio0))
             if (device == DEVICE_DT_GET(DT_NODELABEL(gpio0)))
+            {
                 return 0;
+            }
 #endif
 #if DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(gpio1))
             if (device == DEVICE_DT_GET(DT_NODELABEL(gpio1)))
+            {
                 return 1;
+            }
 #endif
 #if DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(gpio2))
             if (device == DEVICE_DT_GET(DT_NODELABEL(gpio2)))
+            {
                 return 2;
+            }
 #endif
             return -1;
         }
 
-        [[nodiscard]] bool isInputSignal(SerialPersonality personality, SerialSignal signal) noexcept
+        [[nodiscard]] bool isInputSignal(SerialPersonality personality,
+                                         SerialSignal signal) noexcept
         {
             if (personality == SerialPersonality::spis)
-                return signal == SerialSignal::sck || signal == SerialSignal::mosi || signal == SerialSignal::csn;
+            {
+                return signal == SerialSignal::sck || signal == SerialSignal::mosi ||
+                       signal == SerialSignal::csn;
+            }
             return (signal == SerialSignal::rxd) || (signal == SerialSignal::cts) ||
                    (signal == SerialSignal::miso);
         }
 
-        [[nodiscard]] bool isOutputSignal(SerialPersonality personality, SerialSignal signal) noexcept
+        [[nodiscard]] bool isOutputSignal(SerialPersonality personality,
+                                          SerialSignal signal) noexcept
         {
             if (personality == SerialPersonality::spis)
+            {
                 return signal == SerialSignal::miso;
+            }
             return (signal == SerialSignal::txd) || (signal == SerialSignal::rts) ||
                    (signal == SerialSignal::sck) || (signal == SerialSignal::mosi) ||
                    (signal == SerialSignal::csn) || (signal == SerialSignal::dcx);
@@ -123,34 +136,30 @@ namespace nucode::arduino::internal
             switch (personality)
             {
             case SerialPersonality::uarte:
-                return (mask &
-                        (signalBit(SerialSignal::txd) | signalBit(SerialSignal::rxd))) ==
+                return (mask & (signalBit(SerialSignal::txd) | signalBit(SerialSignal::rxd))) ==
                        (signalBit(SerialSignal::txd) | signalBit(SerialSignal::rxd));
             case SerialPersonality::spim:
-                return (mask &
-                        (signalBit(SerialSignal::sck) | signalBit(SerialSignal::mosi) |
-                         signalBit(SerialSignal::miso))) ==
+                return (mask & (signalBit(SerialSignal::sck) | signalBit(SerialSignal::mosi) |
+                                signalBit(SerialSignal::miso))) ==
                        (signalBit(SerialSignal::sck) | signalBit(SerialSignal::mosi) |
                         signalBit(SerialSignal::miso));
             case SerialPersonality::spis:
-                return (mask &
-                        (signalBit(SerialSignal::sck) | signalBit(SerialSignal::mosi) |
-                         signalBit(SerialSignal::miso) | signalBit(SerialSignal::csn))) ==
+                return (mask & (signalBit(SerialSignal::sck) | signalBit(SerialSignal::mosi) |
+                                signalBit(SerialSignal::miso) | signalBit(SerialSignal::csn))) ==
                        (signalBit(SerialSignal::sck) | signalBit(SerialSignal::mosi) |
                         signalBit(SerialSignal::miso) | signalBit(SerialSignal::csn));
             case SerialPersonality::twim:
             case SerialPersonality::twis:
-                return (mask &
-                        (signalBit(SerialSignal::sda) | signalBit(SerialSignal::scl))) ==
+                return (mask & (signalBit(SerialSignal::sda) | signalBit(SerialSignal::scl))) ==
                        (signalBit(SerialSignal::sda) | signalBit(SerialSignal::scl));
             default:
                 return false;
             }
         }
 
-        [[nodiscard]] bool
-        electricalProfileAllowed(SerialPersonality personality, SerialRouteClass route,
-                                 SerialElectricalProfile profile) noexcept
+        [[nodiscard]] bool electricalProfileAllowed(SerialPersonality personality,
+                                                    SerialRouteClass route,
+                                                    SerialElectricalProfile profile) noexcept
         {
             if (route == SerialRouteClass::p2_dedicated20)
             {
@@ -159,7 +168,8 @@ namespace nucode::arduino::internal
             if (route == SerialRouteClass::p0_flexible)
             {
                 return profile == SerialElectricalProfile::dap_uart_disabled ||
-                       (personality == SerialPersonality::uarte && profile == SerialElectricalProfile::dap_uart_bridge);
+                       (personality == SerialPersonality::uarte &&
+                        profile == SerialElectricalProfile::dap_uart_bridge);
             }
             if (personality == SerialPersonality::twim)
             {
@@ -172,13 +182,13 @@ namespace nucode::arduino::internal
                 return profile == SerialElectricalProfile::connector_fixture ||
                        profile == SerialElectricalProfile::dap_uart_disabled;
             }
-            return (personality == SerialPersonality::uarte && profile == SerialElectricalProfile::dap_uart_bridge) ||
+            return (personality == SerialPersonality::uarte &&
+                    profile == SerialElectricalProfile::dap_uart_bridge) ||
                    (profile == SerialElectricalProfile::dap_uart_disabled) ||
                    (profile == SerialElectricalProfile::connector_fixture);
         }
 
-        [[nodiscard]] bool dedicatedPinMatches(SerialPersonality personality,
-                                               SerialSignal signal,
+        [[nodiscard]] bool dedicatedPinMatches(SerialPersonality personality, SerialSignal signal,
                                                std::uint32_t pin) noexcept
         {
             if (personality == SerialPersonality::uarte)
@@ -234,17 +244,18 @@ namespace nucode::arduino::internal
             return false;
         }
 
-        [[nodiscard]] bool
-        specialBoardRouteAllowed(SerialPersonality personality,
-                                 const PinDescription &description, SerialSignal signal,
-                                 SerialElectricalProfile profile) noexcept
+        [[nodiscard]] bool specialBoardRouteAllowed(SerialPersonality personality,
+                                                    const PinDescription &description,
+                                                    SerialSignal signal,
+                                                    SerialElectricalProfile profile) noexcept
         {
             const int port = gpioPort(description.gpio.port);
             const std::uint32_t pin = description.gpio.pin;
             if ((port == 1) && (pin >= 4U) && (pin <= 7U))
             {
                 return profile == SerialElectricalProfile::dap_uart_disabled ||
-                       (personality == SerialPersonality::uarte && profile == SerialElectricalProfile::dap_uart_bridge);
+                       (personality == SerialPersonality::uarte &&
+                        profile == SerialElectricalProfile::dap_uart_bridge);
             }
             if ((port == 1) && ((pin == 2U) || (pin == 3U)))
             {
@@ -263,11 +274,12 @@ namespace nucode::arduino::internal
         }
     } // namespace
 
-    SerialFabricResult validateNu54dkSerialFabricRoute(
-        SerialPersonality personality, std::uint8_t instance,
-        const SerialFabricConfiguration &configuration, ValidatedSerialRoute &route,
-        IoResourceId *resources, std::size_t resource_capacity,
-        std::size_t &resource_count) noexcept
+    SerialFabricResult
+    validateNu54dkSerialFabricRoute(SerialPersonality personality, std::uint8_t instance,
+                                    const SerialFabricConfiguration &configuration,
+                                    ValidatedSerialRoute &route, IoResourceId *resources,
+                                    std::size_t resource_capacity,
+                                    std::size_t &resource_count) noexcept
     {
         route = {};
         resource_count = 0U;
@@ -278,8 +290,7 @@ namespace nucode::arduino::internal
         if (!routeAllowsInstance(configuration.route, instance) ||
             (configuration.pins == nullptr) || (configuration.pin_count == 0U) ||
             (configuration.pin_count > serial_fabric_pin_capacity) ||
-            (configuration.dma_workspace_count >
-             serial_fabric_dma_workspace_capacity) ||
+            (configuration.dma_workspace_count > serial_fabric_dma_workspace_capacity) ||
             ((configuration.dma_workspace_count != 0U) &&
              (configuration.dma_workspaces == nullptr)))
         {
@@ -292,26 +303,22 @@ namespace nucode::arduino::internal
         }
 
         const std::size_t fixed_resources =
-            2U + ((configuration.route == SerialRouteClass::p2_dedicated20 &&
-                   instance == 20U)
+            2U + ((configuration.route == SerialRouteClass::p2_dedicated20 && instance == 20U)
                       ? 1U
                       : 0U);
-        const std::size_t total_resources = fixed_resources +
-                                            configuration.pin_count +
-                                            configuration.dma_workspace_count;
+        const std::size_t total_resources =
+            fixed_resources + configuration.pin_count + configuration.dma_workspace_count;
         if ((resources == nullptr) || (resource_capacity < total_resources))
         {
             return SerialFabricResult::resource_exhausted;
         }
 
-        resources[resource_count++] =
-            peripheralIoResource(IoResourceKind::serial_block, instance);
+        resources[resource_count++] = peripheralIoResource(IoResourceKind::serial_block, instance);
         resources[resource_count++] =
             peripheralIoResource(IoResourceKind::interrupt_line, instance);
         if (fixed_resources == 3U)
         {
-            resources[resource_count++] =
-                peripheralIoResource(IoResourceKind::power_domain, 20U);
+            resources[resource_count++] = peripheralIoResource(IoResourceKind::power_domain, 20U);
         }
 
         std::uint16_t signal_mask = 0U;
@@ -330,17 +337,15 @@ namespace nucode::arduino::internal
             {
                 return SerialFabricResult::unsupported_route;
             }
-            const int expected_port =
-                configuration.route == SerialRouteClass::p0_flexible   ? 0
-                : configuration.route == SerialRouteClass::p1_flexible ? 1
-                                                                       : 2;
+            const int expected_port = configuration.route == SerialRouteClass::p0_flexible   ? 0
+                                      : configuration.route == SerialRouteClass::p1_flexible ? 1
+                                                                                             : 2;
             if (gpioPort(description->gpio.port) != expected_port)
             {
                 return SerialFabricResult::unsupported_route;
             }
             if ((configuration.route == SerialRouteClass::p2_dedicated20) &&
-                !dedicatedPinMatches(personality, entry.signal,
-                                     description->gpio.pin))
+                !dedicatedPinMatches(personality, entry.signal, description->gpio.pin))
             {
                 return SerialFabricResult::unsupported_route;
             }
@@ -352,15 +357,21 @@ namespace nucode::arduino::internal
             }
             const bool p1_dap_pad = gpioPort(description->gpio.port) == 1 &&
                                     description->gpio.pin >= 4U && description->gpio.pin <= 7U;
-            const bool p0_dap_pad = gpioPort(description->gpio.port) == 0 && description->gpio.pin <= 3U;
+            const bool p0_dap_pad =
+                gpioPort(description->gpio.port) == 0 && description->gpio.pin <= 3U;
             if (configuration.electrical_profile == SerialElectricalProfile::dap_uart_disabled &&
                 IS_ENABLED(CONFIG_SERIAL) &&
                 ((p1_dap_pad && DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(uart20))) ||
                  (p0_dap_pad && DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(uart30)))))
+            {
                 return SerialFabricResult::unsafe_electrical_profile;
-            // Preserve the public GPIO capability mask of console-reserved P1 pads.
-            // Explicit isolated fixtures can borrow only the switched DAP pads;
-            // this never changes public GPIO capability or proves a switch state.
+            }
+            /**
+             * @brief 콘솔 예약 P1 패드의 공개 GPIO capability mask를 보존합니다.
+             *
+             * 명시적으로 격리한 fixture만 전환된 DAP 패드를 빌릴 수 있으며, 이 경로는 공개 GPIO
+             * capability를 바꾸거나 실제 스위치 상태를 증명하지 않습니다.
+             */
             const bool released_p1_dap_profile =
                 ((personality == SerialPersonality::uarte &&
                   configuration.electrical_profile == SerialElectricalProfile::dap_uart_bridge) ||
@@ -374,35 +385,27 @@ namespace nucode::arduino::internal
                 (!DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(uart30)) || !IS_ENABLED(CONFIG_SERIAL));
             if (!released_p1_dap_profile && !released_p0_dap_profile &&
                 ((isInputSignal(personality, entry.signal) &&
-                  !hasPinCapability(description->capabilities,
-                                    PinCapability::digital_input) &&
+                  !hasPinCapability(description->capabilities, PinCapability::digital_input) &&
                   description->policy != PinPolicy::conditional_dap_uart) ||
                  (isOutputSignal(personality, entry.signal) &&
-                  !hasPinCapability(description->capabilities,
-                                    PinCapability::digital_output) &&
+                  !hasPinCapability(description->capabilities, PinCapability::digital_output) &&
                   description->policy != PinPolicy::conditional_dap_uart) ||
                  (isBidirectionalSignal(entry.signal) &&
-                  (!hasPinCapability(description->capabilities,
-                                     PinCapability::digital_input) ||
-                   !hasPinCapability(description->capabilities,
-                                     PinCapability::digital_output) ||
-                   !hasPinCapability(description->capabilities,
-                                     PinCapability::open_drain)))))
+                  (!hasPinCapability(description->capabilities, PinCapability::digital_input) ||
+                   !hasPinCapability(description->capabilities, PinCapability::digital_output) ||
+                   !hasPinCapability(description->capabilities, PinCapability::open_drain)))))
             {
                 return SerialFabricResult::unsupported_route;
             }
             for (std::size_t prior = 0U; prior < index; ++prior)
             {
-                if (canonicalPinId(configuration.pins[prior].pin) ==
-                    description->canonical_pin)
+                if (canonicalPinId(configuration.pins[prior].pin) == description->canonical_pin)
                 {
                     return SerialFabricResult::invalid_argument;
                 }
             }
-            signal_mask =
-                static_cast<std::uint16_t>(signal_mask | (1U << signal_value));
-            route.pins[index] = {entry.signal,
-                                 static_cast<pin_size_t>(description->canonical_pin)};
+            signal_mask = static_cast<std::uint16_t>(signal_mask | (1U << signal_value));
+            route.pins[index] = {entry.signal, static_cast<pin_size_t>(description->canonical_pin)};
             resources[resource_count++] = gpioIoResource(description->gpio);
         }
         if (!hasRequiredSignals(personality, signal_mask))
@@ -410,18 +413,17 @@ namespace nucode::arduino::internal
             return SerialFabricResult::invalid_argument;
         }
 
-        for (std::size_t index = 0U; index < configuration.dma_workspace_count;
-             ++index)
+        for (std::size_t index = 0U; index < configuration.dma_workspace_count; ++index)
         {
             const auto workspace = configuration.dma_workspaces[index];
-            if ((workspace.address == nullptr) || (workspace.size == 0U) ||
-                (workspace.size > UINT32_MAX))
+            if ((workspace.size > UINT32_MAX) ||
+                !dmaMemoryRangeValid(workspace.address, workspace.size))
             {
                 return SerialFabricResult::invalid_argument;
             }
             route.dma_workspaces[index] = workspace;
-            resources[resource_count++] = dmaMemoryIoResource(
-                workspace.address, static_cast<std::uint32_t>(workspace.size));
+            resources[resource_count++] =
+                dmaMemoryIoResource(workspace.address, static_cast<std::uint32_t>(workspace.size));
         }
 
         route.pin_count = configuration.pin_count;
@@ -431,8 +433,7 @@ namespace nucode::arduino::internal
         return SerialFabricResult::success;
     }
 
-    SerialFabricResult nu54dkSerialFabricPsel(pin_size_t pin,
-                                              std::uint32_t &psel) noexcept
+    SerialFabricResult nu54dkSerialFabricPsel(pin_size_t pin, std::uint32_t &psel) noexcept
     {
         const PinDescription *const description = pinDescription(pin);
         if ((description == nullptr) || !device_is_ready(description->gpio.port))

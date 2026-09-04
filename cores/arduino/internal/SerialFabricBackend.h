@@ -26,40 +26,46 @@ namespace nucode::arduino::internal
         SerialDmaWorkspace dma_workspaces[serial_fabric_dma_workspace_capacity]{};
         std::size_t dma_workspace_count{0U};
         SerialRouteClass route{SerialRouteClass::p1_flexible};
-        SerialElectricalProfile electrical_profile{
-            SerialElectricalProfile::connector_fixture};
+        SerialElectricalProfile electrical_profile{SerialElectricalProfile::connector_fixture};
     };
 
     /** @brief hardware adapter가 구현할 bounded handover 수명주기입니다. */
-    // validate is side-effect free. An unsuccessful activate must undo partial
-    // initialization and leave its hardware/DMA quiescent before returning.
-    // Successful deactivate proves STOP and disconnects PSEL; the common layer
-    // then restores GPIO and releases its shared constant-latency reference.
+    /**
+     * @brief 검증·활성화·비활성화 backend의 부작용 계약입니다.
+     *
+     * validate는 부작용이 없어야 합니다. 실패한 activate는 부분 초기화를 되돌리고 hardware와
+     * DMA를 정지 상태로 만들어야 합니다. 성공한 deactivate는 STOP과 PSEL 분리를 증명하며, 이후
+     * 공통 계층이 GPIO를 복원하고 공유 constant-latency 참조를 반환합니다.
+     */
     struct SerialFabricDriverAdapter
     {
-        SerialFabricResult (*validate)(std::uint8_t instance,
-                                       const ValidatedSerialRoute &route,
+        SerialFabricResult (*validate)(std::uint8_t instance, const ValidatedSerialRoute &route,
                                        int &driver_error) noexcept;
-        SerialFabricResult (*activate)(std::uint8_t instance,
-                                       const ValidatedSerialRoute &route,
+        SerialFabricResult (*activate)(std::uint8_t instance, const ValidatedSerialRoute &route,
                                        int &driver_error) noexcept;
-        SerialFabricResult (*request_stop)(std::uint8_t instance,
-                                           int &driver_error) noexcept;
+        SerialFabricResult (*request_stop)(std::uint8_t instance, int &driver_error) noexcept;
         bool (*stopped)(std::uint8_t instance) noexcept;
-        SerialFabricResult (*deactivate)(std::uint8_t instance,
-                                         int &driver_error) noexcept;
+        SerialFabricResult (*deactivate)(std::uint8_t instance, int &driver_error) noexcept;
         void (*handle_irq)(std::uint8_t instance) noexcept;
     };
 
     /** @brief 한 personality adapter를 등록합니다. 재등록은 거부합니다. */
     [[nodiscard]] SerialFabricResult
-    registerSerialFabricAdapter(SerialPersonality personality,
-                                std::uint8_t instance,
+    registerSerialFabricAdapter(SerialPersonality personality, std::uint8_t instance,
                                 const SerialFabricDriverAdapter &adapter) noexcept;
 
     /** @brief 현재 handle이 active인지 driver operation 전에 확인합니다. */
     [[nodiscard]] bool isSerialFabricHandleActive(SerialPersonality personality,
                                                   std::uint8_t instance) noexcept;
+
+    /** @brief staged route를 배타적으로 빌려 driver 비활성 상태의 복구 작업을 실행합니다. */
+    using SerialFabricRecovery = SerialFabricResult (*)(std::uint8_t instance,
+                                                        const ValidatedSerialRoute &route,
+                                                        int &driver_error) noexcept;
+
+    [[nodiscard]] SerialFabricResult
+    executeSerialFabricRecovery(SerialPersonality personality, std::uint8_t instance,
+                                SerialFabricRecovery recovery) noexcept;
 
     /** @brief block IRQ trampoline에서 현재 active personality로 전달합니다. */
     void dispatchSerialFabricIrq(std::uint8_t instance) noexcept;

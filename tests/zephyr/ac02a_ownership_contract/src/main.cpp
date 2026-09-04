@@ -61,19 +61,17 @@ namespace
     std::uint8_t test_domain_b;
 
     /** @brief 시험 전용 물리 GPIO 자원 키를 생성합니다. */
-    [[nodiscard]] constexpr IoResourceId testPin(const void *domain,
-                                                 std::uint16_t pin) noexcept
+    [[nodiscard]] constexpr IoResourceId testPin(const void *domain, std::uint16_t pin) noexcept
     {
         return {IoResourceKind::gpio_pin, domain, pin};
     }
 
     /** @brief 하나의 자원을 reserve하고 commit합니다. */
-    [[nodiscard]] IoResourceResult claim(IoResourceOwner owner,
-                                         const IoResourceId &resource,
+    [[nodiscard]] IoResourceResult claim(IoResourceOwner owner, const IoResourceId &resource,
                                          IoResourceLease &lease) noexcept
     {
-        const IoResourceResult reserve_result = reserveIoResources(
-            owner, &resource, 1U, IoAcquirePolicy::exclusive, lease);
+        const IoResourceResult reserve_result =
+            reserveIoResources(owner, &resource, 1U, IoAcquirePolicy::exclusive, lease);
         return reserve_result == IoResourceResult::success ? commitIoResources(lease)
                                                            : reserve_result;
     }
@@ -81,8 +79,7 @@ namespace
     /** @brief nRF PSEL 값을 실제 GPIO controller 자원으로 변환합니다. */
     [[nodiscard]] IoResourceId pselResource(std::uint32_t psel) noexcept
     {
-        const auto absolute_pin =
-            static_cast<std::uint16_t>((psel >> NRF_PIN_POS) & NRF_PIN_MSK);
+        const auto absolute_pin = static_cast<std::uint16_t>((psel >> NRF_PIN_POS) & NRF_PIN_MSK);
         const struct device *controller = nullptr;
         switch (absolute_pin / 32U)
         {
@@ -103,18 +100,14 @@ namespace
     }
 
     /** @brief snapshot의 owner와 active 상태를 함께 검사합니다. */
-    void expectActiveOwner(const IoResourceId &resource, IoOwnerKind kind,
-                           std::uint8_t instance)
+    void expectActiveOwner(const IoResourceId &resource, IoOwnerKind kind, std::uint8_t instance)
     {
         IoResourceSnapshot snapshot{};
-        zassert_equal(ioResourceSnapshot(resource, snapshot),
-                      IoResourceResult::success,
+        zassert_equal(ioResourceSnapshot(resource, snapshot), IoResourceResult::success,
                       "자원 snapshot 조회가 실패했습니다.");
-        zassert_equal(snapshot.state, IoResourceState::active,
-                      "자원이 active 상태가 아닙니다.");
+        zassert_equal(snapshot.state, IoResourceState::active, "자원이 active 상태가 아닙니다.");
         zassert_equal(snapshot.owner.kind, kind, "자원 owner 종류가 다릅니다.");
-        zassert_equal(snapshot.owner.instance, instance,
-                      "자원 owner instance가 다릅니다.");
+        zassert_equal(snapshot.owner.instance, instance, "자원 owner instance가 다릅니다.");
     }
 
     K_SEM_DEFINE(race_start, 0, 2);
@@ -154,33 +147,27 @@ namespace
     }
 } // namespace
 
-ZTEST(ac02a_ownership_contract,
-      test_claim_commit_same_owner_and_release_lifecycle)
+ZTEST(ac02a_ownership_contract, test_claim_commit_same_owner_and_release_lifecycle)
 {
     resetIoResourceManagerForTest();
     const IoResourceId resource = testPin(&test_domain_a, 3U);
     IoResourceLease original{};
-    zassert_equal(claim({IoOwnerKind::gpio, 0U}, resource, original),
-                  IoResourceResult::success, "최초 GPIO claim이 실패했습니다.");
+    zassert_equal(claim({IoOwnerKind::gpio, 0U}, resource, original), IoResourceResult::success,
+                  "최초 GPIO claim이 실패했습니다.");
     expectActiveOwner(resource, IoOwnerKind::gpio, 0U);
 
     IoResourceLease repeated{};
     zassert_equal(reserveIoResources({IoOwnerKind::gpio, 0U}, &resource, 1U,
                                      IoAcquirePolicy::exclusive, repeated),
-                  IoResourceResult::success,
-                  "같은 owner의 반복 reserve가 실패했습니다.");
-    zassert_false(repeated.entries[0].changed,
-                  "반복 claim을 새 획득으로 기록했습니다.");
+                  IoResourceResult::success, "같은 owner의 반복 reserve가 실패했습니다.");
+    zassert_false(repeated.entries[0].changed, "반복 claim을 새 획득으로 기록했습니다.");
     IoResourceLease stale_pending_copy = repeated;
     IoResourceLease concurrent_pending{};
     zassert_equal(reserveIoResources({IoOwnerKind::gpio, 0U}, &resource, 1U,
-                                     IoAcquirePolicy::exclusive,
-                                     concurrent_pending),
-                  IoResourceResult::conflict,
-                  "동일 owner의 동시 예약을 직렬화하지 않았습니다.");
-    zassert_equal(
-        releaseIoResources(original), IoResourceResult::conflict,
-        "진행 중인 같은-owner transaction의 원래 lease를 반환했습니다.");
+                                     IoAcquirePolicy::exclusive, concurrent_pending),
+                  IoResourceResult::conflict, "동일 owner의 동시 예약을 직렬화하지 않았습니다.");
+    zassert_equal(releaseIoResources(original), IoResourceResult::conflict,
+                  "진행 중인 같은-owner transaction의 원래 lease를 반환했습니다.");
     zassert_equal(commitIoResources(repeated), IoResourceResult::success,
                   "같은 owner의 반복 commit이 실패했습니다.");
 
@@ -188,8 +175,7 @@ ZTEST(ac02a_ownership_contract,
     zassert_equal(reserveIoResources({IoOwnerKind::gpio, 0U}, &resource, 1U,
                                      IoAcquirePolicy::exclusive, next_pending),
                   IoResourceResult::success, "다음 반복 reserve가 실패했습니다.");
-    zassert_equal(commitIoResources(stale_pending_copy),
-                  IoResourceResult::stale_lease,
+    zassert_equal(commitIoResources(stale_pending_copy), IoResourceResult::stale_lease,
                   "복사된 이전 예약 lease가 새 예약 token을 소비했습니다.");
     zassert_equal(rollbackIoResources(next_pending), IoResourceResult::success,
                   "다음 반복 reserve rollback이 실패했습니다.");
@@ -200,15 +186,12 @@ ZTEST(ac02a_ownership_contract,
     zassert_equal(releaseIoResources(original), IoResourceResult::success,
                   "원래 lease 반환이 실패했습니다.");
     IoResourceSnapshot snapshot{};
-    zassert_equal(ioResourceSnapshot(resource, snapshot),
-                  IoResourceResult::success,
+    zassert_equal(ioResourceSnapshot(resource, snapshot), IoResourceResult::success,
                   "반환 뒤 snapshot 조회가 실패했습니다.");
-    zassert_equal(snapshot.state, IoResourceState::free,
-                  "반환한 자원이 free가 아닙니다.");
+    zassert_equal(snapshot.state, IoResourceState::free, "반환한 자원이 free가 아닙니다.");
 }
 
-ZTEST(ac02a_ownership_contract,
-      test_compact_token_claims_two_resources_and_releases)
+ZTEST(ac02a_ownership_contract, test_compact_token_claims_two_resources_and_releases)
 {
     resetIoResourceManagerForTest();
     const IoResourceId resources[] = {
@@ -218,8 +201,7 @@ ZTEST(ac02a_ownership_contract,
     IoResourceToken token{};
     zassert_equal(acquireIoResources({IoOwnerKind::dppi, 20U}, resources, 2U,
                                      IoAcquirePolicy::exclusive, token),
-                  IoResourceResult::success,
-                  "compact token 획득이 실패했습니다.");
+                  IoResourceResult::success, "compact token 획득이 실패했습니다.");
     zassert_true(token.active, "compact token이 active가 아닙니다.");
     expectActiveOwner(resources[0], IoOwnerKind::dppi, 20U);
     expectActiveOwner(resources[1], IoOwnerKind::dppi, 20U);
@@ -227,14 +209,12 @@ ZTEST(ac02a_ownership_contract,
                   "compact token 반환이 실패했습니다.");
     zassert_false(token.active, "반환한 compact token이 active로 남았습니다.");
     IoResourceSnapshot snapshot{};
-    zassert_equal(ioResourceSnapshot(resources[0], snapshot),
-                  IoResourceResult::success, "반환 뒤 snapshot 조회 실패");
-    zassert_equal(snapshot.state, IoResourceState::free,
-                  "compact token 자원이 free가 아닙니다.");
+    zassert_equal(ioResourceSnapshot(resources[0], snapshot), IoResourceResult::success,
+                  "반환 뒤 snapshot 조회 실패");
+    zassert_equal(snapshot.state, IoResourceState::free, "compact token 자원이 free가 아닙니다.");
 }
 
-ZTEST(ac02a_ownership_contract,
-      test_invalid_duplicate_and_wrong_phase_requests_are_rejected)
+ZTEST(ac02a_ownership_contract, test_invalid_duplicate_and_wrong_phase_requests_are_rejected)
 {
     resetIoResourceManagerForTest();
     IoResourceLease lease{};
@@ -242,12 +222,10 @@ ZTEST(ac02a_ownership_contract,
     const IoResourceId duplicate[] = {resource, resource};
     zassert_equal(reserveIoResources({IoOwnerKind::gpio, 0U}, duplicate, 2U,
                                      IoAcquirePolicy::exclusive, lease),
-                  IoResourceResult::invalid_argument,
-                  "중복 자원 batch를 허용했습니다.");
+                  IoResourceResult::invalid_argument, "중복 자원 batch를 허용했습니다.");
     zassert_equal(reserveIoResources({IoOwnerKind::none, 0U}, &resource, 1U,
                                      IoAcquirePolicy::exclusive, lease),
-                  IoResourceResult::invalid_argument,
-                  "none owner를 허용했습니다.");
+                  IoResourceResult::invalid_argument, "none owner를 허용했습니다.");
     zassert_equal(commitIoResources(lease), IoResourceResult::wrong_phase,
                   "예약하지 않은 lease commit을 허용했습니다.");
 
@@ -255,12 +233,10 @@ ZTEST(ac02a_ownership_contract,
     malformed.owner = {IoOwnerKind::gpio, 0U};
     malformed.phase = nucode::arduino::internal::IoLeasePhase::reserved;
     malformed.count = nucode::arduino::internal::io_resource_lease_capacity + 1U;
-    zassert_equal(commitIoResources(malformed),
-                  IoResourceResult::invalid_argument,
+    zassert_equal(commitIoResources(malformed), IoResourceResult::invalid_argument,
                   "고정 배열 범위를 넘는 lease commit을 허용했습니다.");
     malformed.phase = nucode::arduino::internal::IoLeasePhase::committed;
-    zassert_equal(releaseIoResources(malformed),
-                  IoResourceResult::invalid_argument,
+    zassert_equal(releaseIoResources(malformed), IoResourceResult::invalid_argument,
                   "고정 배열 범위를 넘는 lease release를 허용했습니다.");
 
     zassert_equal(reserveIoResources({IoOwnerKind::gpio, 0U}, &resource, 1U,
@@ -272,8 +248,7 @@ ZTEST(ac02a_ownership_contract,
                   "reserve rollback이 실패했습니다.");
 }
 
-ZTEST(ac02a_ownership_contract,
-      test_batch_conflict_is_atomic_and_rollback_restores_free)
+ZTEST(ac02a_ownership_contract, test_batch_conflict_is_atomic_and_rollback_restores_free)
 {
     resetIoResourceManagerForTest();
     const IoResourceId first = testPin(&test_domain_a, 5U);
@@ -285,15 +260,12 @@ ZTEST(ac02a_ownership_contract,
     const IoResourceId batch[] = {first, occupied};
     IoResourceLease rejected{};
     IoResourceSnapshot conflict{};
-    zassert_equal(reserveIoResources({IoOwnerKind::spi, 0U}, batch, 2U,
-                                     IoAcquirePolicy::exclusive, rejected,
-                                     &conflict),
+    zassert_equal(reserveIoResources({IoOwnerKind::spi, 0U}, batch, 2U, IoAcquirePolicy::exclusive,
+                                     rejected, &conflict),
                   IoResourceResult::conflict, "충돌 batch를 허용했습니다.");
-    zassert_equal(conflict.owner.kind, IoOwnerKind::wire,
-                  "충돌 owner 진단이 다릅니다.");
+    zassert_equal(conflict.owner.kind, IoOwnerKind::wire, "충돌 owner 진단이 다릅니다.");
     IoResourceSnapshot first_snapshot{};
-    zassert_equal(ioResourceSnapshot(first, first_snapshot),
-                  IoResourceResult::success,
+    zassert_equal(ioResourceSnapshot(first, first_snapshot), IoResourceResult::success,
                   "부분 획득 여부 조회가 실패했습니다.");
     zassert_equal(first_snapshot.state, IoResourceState::free,
                   "충돌 batch가 앞 자원을 부분 획득했습니다.");
@@ -301,69 +273,55 @@ ZTEST(ac02a_ownership_contract,
     IoResourceLease rollback_lease{};
     zassert_equal(reserveIoResources({IoOwnerKind::gpio, 0U}, &first, 1U,
                                      IoAcquirePolicy::exclusive, rollback_lease),
-                  IoResourceResult::success,
-                  "rollback 대상 reserve가 실패했습니다.");
+                  IoResourceResult::success, "rollback 대상 reserve가 실패했습니다.");
     zassert_equal(rollbackIoResources(rollback_lease), IoResourceResult::success,
                   "rollback이 실패했습니다.");
-    zassert_equal(ioResourceSnapshot(first, first_snapshot),
-                  IoResourceResult::success, "rollback 뒤 조회가 실패했습니다.");
+    zassert_equal(ioResourceSnapshot(first, first_snapshot), IoResourceResult::success,
+                  "rollback 뒤 조회가 실패했습니다.");
     zassert_equal(first_snapshot.state, IoResourceState::free,
                   "rollback 뒤 자원이 free가 아닙니다.");
 }
 
-ZTEST(ac02a_ownership_contract,
-      test_copied_or_stale_lease_cannot_release_new_owner)
+ZTEST(ac02a_ownership_contract, test_copied_or_stale_lease_cannot_release_new_owner)
 {
     resetIoResourceManagerForTest();
     const IoResourceId resource = testPin(&test_domain_a, 7U);
     IoResourceLease first{};
-    zassert_equal(claim({IoOwnerKind::gpio, 0U}, resource, first),
-                  IoResourceResult::success, "첫 claim이 실패했습니다.");
+    zassert_equal(claim({IoOwnerKind::gpio, 0U}, resource, first), IoResourceResult::success,
+                  "첫 claim이 실패했습니다.");
     IoResourceLease stale_copy = first;
     zassert_equal(releaseIoResources(first), IoResourceResult::success,
                   "첫 lease 반환이 실패했습니다.");
 
     IoResourceLease second{};
-    zassert_equal(claim({IoOwnerKind::spi, 0U}, resource, second),
-                  IoResourceResult::success,
+    zassert_equal(claim({IoOwnerKind::spi, 0U}, resource, second), IoResourceResult::success,
                   "두 번째 owner claim이 실패했습니다.");
     zassert_equal(releaseIoResources(stale_copy), IoResourceResult::stale_lease,
                   "복사된 stale lease가 새 owner를 해제했습니다.");
     expectActiveOwner(resource, IoOwnerKind::spi, 0U);
 }
 
-ZTEST(ac02a_ownership_contract,
-      test_two_threads_racing_for_one_resource_have_one_winner)
+ZTEST(ac02a_ownership_contract, test_two_threads_racing_for_one_resource_have_one_winner)
 {
     resetIoResourceManagerForTest();
     k_sem_reset(&race_start);
     k_sem_reset(&race_done);
     const IoResourceId resource = testPin(&test_domain_a, 8U);
-    RaceContext first{{IoOwnerKind::wire, 22U},
-                      resource,
-                      {},
-                      IoResourceResult::invalid_argument};
-    RaceContext second{
-        {IoOwnerKind::spi, 0U}, resource, {}, IoResourceResult::invalid_argument};
+    RaceContext first{{IoOwnerKind::wire, 22U}, resource, {}, IoResourceResult::invalid_argument};
+    RaceContext second{{IoOwnerKind::spi, 0U}, resource, {}, IoResourceResult::invalid_argument};
 
-    k_thread_create(&race_thread_a, race_stack_a,
-                    K_THREAD_STACK_SIZEOF(race_stack_a), raceClaim, &first,
-                    nullptr, nullptr, 5, 0, K_NO_WAIT);
-    k_thread_create(&race_thread_b, race_stack_b,
-                    K_THREAD_STACK_SIZEOF(race_stack_b), raceClaim, &second,
-                    nullptr, nullptr, 5, 0, K_NO_WAIT);
+    k_thread_create(&race_thread_a, race_stack_a, K_THREAD_STACK_SIZEOF(race_stack_a), raceClaim,
+                    &first, nullptr, nullptr, 5, 0, K_NO_WAIT);
+    k_thread_create(&race_thread_b, race_stack_b, K_THREAD_STACK_SIZEOF(race_stack_b), raceClaim,
+                    &second, nullptr, nullptr, 5, 0, K_NO_WAIT);
     k_sem_give(&race_start);
     k_sem_give(&race_start);
-    zassert_equal(k_sem_take(&race_done, K_SECONDS(1)), 0,
-                  "첫 race thread가 끝나지 않았습니다.");
-    zassert_equal(k_sem_take(&race_done, K_SECONDS(1)), 0,
-                  "둘째 race thread가 끝나지 않았습니다.");
+    zassert_equal(k_sem_take(&race_done, K_SECONDS(1)), 0, "첫 race thread가 끝나지 않았습니다.");
+    zassert_equal(k_sem_take(&race_done, K_SECONDS(1)), 0, "둘째 race thread가 끝나지 않았습니다.");
 
-    const unsigned int success_count =
-        (first.result == IoResourceResult::success ? 1U : 0U) +
-        (second.result == IoResourceResult::success ? 1U : 0U);
-    zassert_equal(success_count, 1U,
-                  "동시 claim의 승자가 정확히 하나가 아닙니다.");
+    const unsigned int success_count = (first.result == IoResourceResult::success ? 1U : 0U) +
+                                       (second.result == IoResourceResult::success ? 1U : 0U);
+    zassert_equal(success_count, 1U, "동시 claim의 승자가 정확히 하나가 아닙니다.");
     zassert_true((first.result == IoResourceResult::conflict) ||
                      (second.result == IoResourceResult::conflict),
                  "패배 thread가 conflict를 받지 않았습니다.");
@@ -380,21 +338,18 @@ ZTEST(ac02a_ownership_contract, test_reserve_is_rejected_from_isr)
                   "ISR에서 ownership reserve를 허용했습니다.");
 }
 
-ZTEST(ac02a_ownership_contract,
-      test_expected_owner_transfer_rolls_back_generation_exactly)
+ZTEST(ac02a_ownership_contract, test_expected_owner_transfer_rolls_back_generation_exactly)
 {
     resetIoResourceManagerForTest();
     const IoResourceId resource = testPin(&test_domain_a, 10U);
     IoResourceLease gpio_lease{};
-    zassert_equal(claim({IoOwnerKind::gpio, 0U}, resource, gpio_lease),
-                  IoResourceResult::success, "GPIO 선행 claim이 실패했습니다.");
+    zassert_equal(claim({IoOwnerKind::gpio, 0U}, resource, gpio_lease), IoResourceResult::success,
+                  "GPIO 선행 claim이 실패했습니다.");
 
     IoResourceLease transfer{};
-    zassert_equal(transferIoResources({IoOwnerKind::gpio, 0U},
-                                      {IoOwnerKind::pwm, 20U}, &resource, 1U,
-                                      transfer),
-                  IoResourceResult::success,
-                  "expected-owner transfer 예약이 실패했습니다.");
+    zassert_equal(transferIoResources({IoOwnerKind::gpio, 0U}, {IoOwnerKind::pwm, 20U}, &resource,
+                                      1U, transfer),
+                  IoResourceResult::success, "expected-owner transfer 예약이 실패했습니다.");
     zassert_equal(rollbackIoResources(transfer), IoResourceResult::success,
                   "expected-owner transfer rollback이 실패했습니다.");
     expectActiveOwner(resource, IoOwnerKind::gpio, 0U);
@@ -402,20 +357,18 @@ ZTEST(ac02a_ownership_contract,
                   "rollback 뒤 원래 GPIO lease 세대가 복구되지 않았습니다.");
 }
 
-ZTEST(ac02a_ownership_contract,
-      test_expected_owner_transfer_commit_invalidates_old_lease)
+ZTEST(ac02a_ownership_contract, test_expected_owner_transfer_commit_invalidates_old_lease)
 {
     resetIoResourceManagerForTest();
     const IoResourceId resource = testPin(&test_domain_a, 11U);
     IoResourceLease gpio_lease{};
-    zassert_equal(claim({IoOwnerKind::gpio, 0U}, resource, gpio_lease),
-                  IoResourceResult::success, "GPIO 선행 claim이 실패했습니다.");
+    zassert_equal(claim({IoOwnerKind::gpio, 0U}, resource, gpio_lease), IoResourceResult::success,
+                  "GPIO 선행 claim이 실패했습니다.");
 
     IoResourceLease transfer{};
-    zassert_equal(
-        transferIoResources({IoOwnerKind::gpio, 0U}, {IoOwnerKind::spi, 0U},
-                            &resource, 1U, transfer),
-        IoResourceResult::success, "GPIO에서 SPI로 transfer가 실패했습니다.");
+    zassert_equal(transferIoResources({IoOwnerKind::gpio, 0U}, {IoOwnerKind::spi, 0U}, &resource,
+                                      1U, transfer),
+                  IoResourceResult::success, "GPIO에서 SPI로 transfer가 실패했습니다.");
     zassert_equal(commitIoResources(transfer), IoResourceResult::success,
                   "GPIO에서 SPI로 transfer commit이 실패했습니다.");
     expectActiveOwner(resource, IoOwnerKind::spi, 0U);
@@ -425,52 +378,45 @@ ZTEST(ac02a_ownership_contract,
                   "새 owner lease 반환이 실패했습니다.");
 }
 
-ZTEST(ac02a_ownership_contract,
-      test_expected_owner_transfer_rejects_mismatch_atomically)
+ZTEST(ac02a_ownership_contract, test_expected_owner_transfer_rejects_mismatch_atomically)
 {
     resetIoResourceManagerForTest();
     const IoResourceId first = testPin(&test_domain_a, 12U);
     const IoResourceId second = testPin(&test_domain_b, 13U);
     IoResourceLease first_lease{};
     IoResourceLease second_lease{};
-    zassert_equal(claim({IoOwnerKind::gpio, 0U}, first, first_lease),
-                  IoResourceResult::success, "첫 GPIO claim이 실패했습니다.");
-    zassert_equal(claim({IoOwnerKind::wire, 22U}, second, second_lease),
-                  IoResourceResult::success, "둘째 Wire claim이 실패했습니다.");
+    zassert_equal(claim({IoOwnerKind::gpio, 0U}, first, first_lease), IoResourceResult::success,
+                  "첫 GPIO claim이 실패했습니다.");
+    zassert_equal(claim({IoOwnerKind::wire, 22U}, second, second_lease), IoResourceResult::success,
+                  "둘째 Wire claim이 실패했습니다.");
     const IoResourceId resources[] = {first, second};
     IoResourceLease rejected{};
     IoResourceSnapshot conflict{};
-    zassert_equal(transferIoResources({IoOwnerKind::gpio, 0U},
-                                      {IoOwnerKind::pwm, 20U}, resources, 2U,
-                                      rejected, &conflict),
-                  IoResourceResult::conflict,
-                  "expected owner가 다른 batch를 허용했습니다.");
-    zassert_equal(conflict.owner.kind, IoOwnerKind::wire,
-                  "transfer 충돌 owner 진단이 다릅니다.");
+    zassert_equal(transferIoResources({IoOwnerKind::gpio, 0U}, {IoOwnerKind::pwm, 20U}, resources,
+                                      2U, rejected, &conflict),
+                  IoResourceResult::conflict, "expected owner가 다른 batch를 허용했습니다.");
+    zassert_equal(conflict.owner.kind, IoOwnerKind::wire, "transfer 충돌 owner 진단이 다릅니다.");
     expectActiveOwner(first, IoOwnerKind::gpio, 0U);
     expectActiveOwner(second, IoOwnerKind::wire, 22U);
 }
 
-ZTEST(ac02a_ownership_contract,
-      test_only_uart20_is_boot_fixed_and_dynamic_routes_start_free)
+ZTEST(ac02a_ownership_contract, test_only_uart20_is_boot_fixed_and_dynamic_routes_start_free)
 {
     resetIoResourceManagerForTest();
-    const IoResourceId uart_tx = pselResource(
-        DT_PROP_BY_IDX(DT_CHILD(DT_NODELABEL(uart20_default), group1), psels, 0));
-    const IoResourceId wire_sda = pselResource(
-        DT_PROP_BY_IDX(DT_CHILD(DT_NODELABEL(i2c22_default), group1), psels, 0));
-    const IoResourceId pwm_output = pselResource(
-        DT_PROP_BY_IDX(DT_CHILD(DT_NODELABEL(pwm20_default), group1), psels, 0));
+    const IoResourceId uart_tx =
+        pselResource(DT_PROP_BY_IDX(DT_CHILD(DT_NODELABEL(uart20_default), group1), psels, 0));
+    const IoResourceId wire_sda =
+        pselResource(DT_PROP_BY_IDX(DT_CHILD(DT_NODELABEL(i2c22_default), group1), psels, 0));
+    const IoResourceId pwm_output =
+        pselResource(DT_PROP_BY_IDX(DT_CHILD(DT_NODELABEL(pwm20_default), group1), psels, 0));
 
     IoResourceLease blocker{};
-    zassert_equal(claim({IoOwnerKind::gpio, 0U}, uart_tx, blocker),
-                  IoResourceResult::success,
+    zassert_equal(claim({IoOwnerKind::gpio, 0U}, uart_tx, blocker), IoResourceResult::success,
                   "registry 충돌 준비가 실패했습니다.");
     zassert_equal(initializeNu54dkIoResources(), IoResourceResult::conflict,
                   "UART20 고정 registry 충돌을 보고하지 않았습니다.");
     IoResourceSnapshot uart_after_failure{};
-    zassert_equal(ioResourceSnapshot(uart_tx, uart_after_failure),
-                  IoResourceResult::success,
+    zassert_equal(ioResourceSnapshot(uart_tx, uart_after_failure), IoResourceResult::success,
                   "registry 실패 뒤 UART 조회가 실패했습니다.");
     zassert_equal(uart_after_failure.state, IoResourceState::active,
                   "registry 실패가 선행 충돌 owner 상태를 훼손했습니다.");
@@ -483,14 +429,14 @@ ZTEST(ac02a_ownership_contract,
                   "NU54DK 고정 자원 registry 초기화가 실패했습니다.");
 
     expectActiveOwner(uart_tx, IoOwnerKind::serial, 20U);
-    expectActiveOwner(peripheralIoResource(IoResourceKind::serial_block, 20U),
-                      IoOwnerKind::serial, 20U);
+    expectActiveOwner(peripheralIoResource(IoResourceKind::serial_block, 20U), IoOwnerKind::serial,
+                      20U);
     IoResourceSnapshot wire_snapshot{};
     IoResourceSnapshot pwm_snapshot{};
-    zassert_equal(ioResourceSnapshot(wire_sda, wire_snapshot),
-                  IoResourceResult::success, "Wire22 pad 조회가 실패했습니다.");
-    zassert_equal(ioResourceSnapshot(pwm_output, pwm_snapshot),
-                  IoResourceResult::success, "PWM20 pad 조회가 실패했습니다.");
+    zassert_equal(ioResourceSnapshot(wire_sda, wire_snapshot), IoResourceResult::success,
+                  "Wire22 pad 조회가 실패했습니다.");
+    zassert_equal(ioResourceSnapshot(pwm_output, pwm_snapshot), IoResourceResult::success,
+                  "PWM20 pad 조회가 실패했습니다.");
     zassert_equal(wire_snapshot.state, IoResourceState::free,
                   "Wire22 동적 route를 부팅 시 고정했습니다.");
     zassert_equal(pwm_snapshot.state, IoResourceState::free,
@@ -499,12 +445,10 @@ ZTEST(ac02a_ownership_contract,
     IoResourceLease gpio_attempt{};
     zassert_equal(reserveIoResources({IoOwnerKind::gpio, 0U}, &uart_tx, 1U,
                                      IoAcquirePolicy::exclusive, gpio_attempt),
-                  IoResourceResult::conflict,
-                  "console TX를 GPIO가 선점했습니다.");
+                  IoResourceResult::conflict, "console TX를 GPIO가 선점했습니다.");
 }
 
-ZTEST(ac02a_ownership_contract,
-      test_legacy_alias_is_canonicalized_for_gpio_and_handover)
+ZTEST(ac02a_ownership_contract, test_legacy_alias_is_canonicalized_for_gpio_and_handover)
 {
     resetIoResourceManagerForTest();
     zassert_equal(canonicalPinId(PIN_LED1), static_cast<std::size_t>(PIN_PWM0),
@@ -520,10 +464,8 @@ ZTEST(ac02a_ownership_contract,
     expectActiveOwner(gpioIoResource(description->gpio), IoOwnerKind::gpio, 0U);
 
     GpioPinHandover handover{};
-    zassert_equal(
-        beginGpioPinHandover(PIN_LED1, {IoOwnerKind::pwm, 20U}, handover),
-        PinHandoverResult::success,
-        "legacy alias handover begin이 실패했습니다.");
+    zassert_equal(beginGpioPinHandover(PIN_LED1, {IoOwnerKind::pwm, 20U}, handover),
+                  PinHandoverResult::success, "legacy alias handover begin이 실패했습니다.");
     zassert_equal(handover.canonical_pin, static_cast<std::size_t>(PIN_PWM0),
                   "handover가 legacy slot을 별도 물리 핀으로 취급했습니다.");
     zassert_equal(rollbackGpioPinHandover(handover), PinHandoverResult::success,
@@ -531,51 +473,42 @@ ZTEST(ac02a_ownership_contract,
     expectActiveOwner(gpioIoResource(description->gpio), IoOwnerKind::gpio, 0U);
 }
 
-ZTEST(ac02a_ownership_contract,
-      test_committed_handover_restores_previous_gpio_state)
+ZTEST(ac02a_ownership_contract, test_committed_handover_restores_previous_gpio_state)
 {
     resetIoResourceManagerForTest();
     pinMode(PIN_GPIO0, OUTPUT);
     digitalWrite(PIN_GPIO0, HIGH);
-    zassert_equal(lastGpioError(), GpioError::none,
-                  "GPIO 사전 상태 설정이 실패했습니다.");
+    zassert_equal(lastGpioError(), GpioError::none, "GPIO 사전 상태 설정이 실패했습니다.");
 
     GpioPinHandover handover{};
-    zassert_equal(
-        beginGpioPinHandover(PIN_GPIO0, {IoOwnerKind::spi, 0U}, handover),
-        PinHandoverResult::success, "GPIO→SPI handover begin이 실패했습니다.");
+    zassert_equal(beginGpioPinHandover(PIN_GPIO0, {IoOwnerKind::spi, 0U}, handover),
+                  PinHandoverResult::success, "GPIO→SPI handover begin이 실패했습니다.");
     zassert_equal(commitGpioPinHandover(handover), PinHandoverResult::success,
                   "GPIO→SPI handover commit이 실패했습니다.");
-    expectActiveOwner(gpioIoResource(pinDescription(PIN_GPIO0)->gpio),
-                      IoOwnerKind::spi, 0U);
+    expectActiveOwner(gpioIoResource(pinDescription(PIN_GPIO0)->gpio), IoOwnerKind::spi, 0U);
     digitalWrite(PIN_GPIO0, LOW);
     zassert_equal(lastGpioError(), GpioError::ownership_conflict,
                   "주변장치 소유 중 digitalWrite를 허용했습니다.");
-    zassert_equal(restoreGpioAfterPeripheral(handover),
-                  PinHandoverResult::success,
+    zassert_equal(restoreGpioAfterPeripheral(handover), PinHandoverResult::success,
                   "주변장치 종료 뒤 GPIO 상태 복원이 실패했습니다.");
-    expectActiveOwner(gpioIoResource(pinDescription(PIN_GPIO0)->gpio),
-                      IoOwnerKind::gpio, 0U);
+    expectActiveOwner(gpioIoResource(pinDescription(PIN_GPIO0)->gpio), IoOwnerKind::gpio, 0U);
     digitalWrite(PIN_GPIO0, LOW);
     zassert_equal(lastGpioError(), GpioError::none,
                   "복원된 GPIO output 상태를 사용하지 못했습니다.");
 }
 
-ZTEST(ac02a_ownership_contract,
-      test_nested_two_pin_handover_is_recursive_and_exact_once)
+ZTEST(ac02a_ownership_contract, test_nested_two_pin_handover_is_recursive_and_exact_once)
 {
     resetIoResourceManagerForTest();
     pinMode(PIN_GPIO0, OUTPUT);
     pinMode(PIN_GPIO1, INPUT_PULLUP);
     GpioPinHandover first{};
     GpioPinHandover second{};
-    zassert_equal(
-        beginGpioPinHandover(PIN_GPIO0, {IoOwnerKind::wire, 22U}, first),
-        PinHandoverResult::success, "첫 중첩 handover begin이 실패했습니다.");
-    zassert_equal(
-        beginGpioPinHandover(PIN_GPIO1, {IoOwnerKind::wire, 22U}, second),
-        PinHandoverResult::success,
-        "같은 thread의 재귀 handover mutex 획득이 실패했습니다.");
+    zassert_equal(beginGpioPinHandover(PIN_GPIO0, {IoOwnerKind::wire, 22U}, first),
+                  PinHandoverResult::success, "첫 중첩 handover begin이 실패했습니다.");
+    zassert_equal(beginGpioPinHandover(PIN_GPIO1, {IoOwnerKind::wire, 22U}, second),
+                  PinHandoverResult::success,
+                  "같은 thread의 재귀 handover mutex 획득이 실패했습니다.");
     zassert_equal(rollbackGpioPinHandover(second), PinHandoverResult::success,
                   "둘째 handover rollback이 실패했습니다.");
     zassert_equal(rollbackGpioPinHandover(first), PinHandoverResult::success,
@@ -588,40 +521,32 @@ ZTEST(ac02a_ownership_contract,
                  "둘째 GPIO input 상태가 복원되지 않았습니다.");
 }
 
-ZTEST(ac02a_ownership_contract,
-      test_free_pin_handover_release_and_reserved_policy_fail_closed)
+ZTEST(ac02a_ownership_contract, test_free_pin_handover_release_and_reserved_policy_fail_closed)
 {
     resetIoResourceManagerForTest();
     GpioPinHandover free_handover{};
-    zassert_equal(
-        beginGpioPinHandover(PIN_P2_00, {IoOwnerKind::spi, 0U}, free_handover),
-        PinHandoverResult::success, "free pad handover begin이 실패했습니다.");
-    zassert_equal(commitGpioPinHandover(free_handover),
-                  PinHandoverResult::success,
+    zassert_equal(beginGpioPinHandover(PIN_P2_00, {IoOwnerKind::spi, 0U}, free_handover),
+                  PinHandoverResult::success, "free pad handover begin이 실패했습니다.");
+    zassert_equal(commitGpioPinHandover(free_handover), PinHandoverResult::success,
                   "free pad handover commit이 실패했습니다.");
-    zassert_equal(releasePeripheralPinHandover(free_handover),
-                  PinHandoverResult::success,
+    zassert_equal(releasePeripheralPinHandover(free_handover), PinHandoverResult::success,
                   "free pad 주변장치 release가 실패했습니다.");
     IoResourceSnapshot snapshot{};
-    zassert_equal(ioResourceSnapshot(
-                      gpioIoResource(pinDescription(PIN_P2_00)->gpio), snapshot),
-                  IoResourceResult::success,
-                  "free pad 반환 조회가 실패했습니다.");
+    zassert_equal(ioResourceSnapshot(gpioIoResource(pinDescription(PIN_P2_00)->gpio), snapshot),
+                  IoResourceResult::success, "free pad 반환 조회가 실패했습니다.");
     zassert_equal(snapshot.state, IoResourceState::free,
                   "주변장치 종료 뒤 원래 free pad가 해제되지 않았습니다.");
 
     GpioPinHandover reserved{};
-    zassert_equal(
-        beginGpioPinHandover(PIN_P1_04, {IoOwnerKind::adc, 0U}, reserved),
-        PinHandoverResult::unsupported,
-        "UART20 system-reserved AIN0를 동적 handover했습니다.");
+    zassert_equal(beginGpioPinHandover(PIN_P1_04, {IoOwnerKind::adc, 0U}, reserved),
+                  PinHandoverResult::unsupported,
+                  "UART20 system-reserved AIN0를 동적 handover했습니다.");
     pinMode(PIN_BUTTON1, OUTPUT);
     zassert_equal(lastGpioError(), GpioError::unsupported_capability,
                   "input-only 버튼을 output으로 구성했습니다.");
 }
 
-ZTEST(ac02a_ownership_contract,
-      test_pin_mode_claims_pad_and_reports_conflicting_owner)
+ZTEST(ac02a_ownership_contract, test_pin_mode_claims_pad_and_reports_conflicting_owner)
 {
     resetIoResourceManagerForTest();
     const auto *const led = pinDescription(PIN_LED3);
@@ -629,8 +554,7 @@ ZTEST(ac02a_ownership_contract,
     const IoResourceId led_resource = gpioIoResource(led->gpio);
 
     pinMode(PIN_LED3, OUTPUT);
-    zassert_equal(lastGpioError(), GpioError::none,
-                  "pinMode GPIO claim이 실패했습니다.");
+    zassert_equal(lastGpioError(), GpioError::none, "pinMode GPIO claim이 실패했습니다.");
     expectActiveOwner(led_resource, IoOwnerKind::gpio, 0U);
 
     resetIoResourceManagerForTest();
@@ -642,8 +566,7 @@ ZTEST(ac02a_ownership_contract,
                   "pinMode가 물리 pad 소유권 충돌을 보고하지 않았습니다.");
 }
 
-ZTEST_SUITE(ac02a_ownership_contract, nullptr, nullptr, nullptr, nullptr,
-            nullptr);
+ZTEST_SUITE(ac02a_ownership_contract, nullptr, nullptr, nullptr, nullptr, nullptr);
 
 /** @brief UART 없이 debugger가 회수할 수 있는 AC-02A ztest 결과입니다. */
 struct Ac02aEvidence
@@ -677,8 +600,7 @@ void test_main(void)
     ztest_run_all(nullptr, false, 1, 1);
     ztest_verify_all_test_suites_ran();
 
-    for (const auto *test = _ztest_unit_test_list_start;
-         test < _ztest_unit_test_list_end; ++test)
+    for (const auto *test = _ztest_unit_test_list_start; test < _ztest_unit_test_list_end; ++test)
     {
         ++nucode_ac02a_evidence.test_count;
         nucode_ac02a_evidence.run_count += test->stats->run_count;

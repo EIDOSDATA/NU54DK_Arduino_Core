@@ -75,10 +75,10 @@
     },
     {
       "id": "V04-ADC", "groups": ["saadc"], "fixture": "peer",
-      "modes": ["ain0-through-ain7", "scan-1-2-8", "differential", "calibrate", "manual-sample", "timer-dppi", "continuous-double-buffer"],
-      "parameters": {"resolution_bits": [8, 10, 12, 14], "oversample": [1, 4, 16, 256], "buffer_samples": [8, 32, 256], "manual_interval_us": 2000, "repetitions": 100},
-      "oracle": "안전한 동일 전압 domain LOW/HIGH를 channel별 교체. LOW<=fullscale의 10%, HIGH-LOW>=fullscale의 50%, differential은 부호 반전. scan 순서·sample 수·guard 일치. 정밀 전압 정확도 시험이 아님.",
-      "needs": "T02/T05/T08: AIN0~4의 실제 route/소유권 해결. 미승인 PMIC/DAP pin 구동 금지.", "reuse": [], "errata": []
+      "modes": ["ain0-ain1-ain2-ain3-ain7", "board-shared-ain4-ain5-ain6-contract-only", "manual-sample", "single-buffer", "double-buffer"],
+      "parameters": {"fixture_ids": [401, 402, 403, 404, 408], "resolution_bits": [12], "oversample": [1], "buffer_samples": [32, 256], "buffers": [1, 2], "manual_interval_us": 2000, "repetitions": 100},
+      "oracle": "같은 3.3V domain의 peer PWM을 안전한 AIN0~3/AIN7에 묶음별로 연결한다. DMA 완료 길이·buffer 반환·guard와 HIGH code를 검사한다. 정밀 전압 정확도 시험이 아니며 AIN4 DAP 감지, AIN5 VBAT 분압기, AIN6 버튼에는 peer 출력을 연결하지 않는다.",
+      "needs": "T05/T08: fixture 401~404/408을 전원 분리 상태에서 하나씩 재결선. AIN4~6은 board-shared 제한을 문서화하고 실기 PASS로 승격하지 않음.", "reuse": [], "errata": []
     },
     {
       "id": "V04-ADC-INTERNAL", "groups": ["saadc"], "fixture": "onboard",
@@ -92,7 +92,7 @@
       "modes": ["channels-0-1-2-3", "common", "grouped", "individual", "wave-form", "invert", "sequence0-1", "loop", "dppi-start", "triggered-step"],
       "parameters": {"base_clock_hz": 1000000, "top": [1000, 4000], "duty_percent": [0, 25, 50, 75, 100], "buffer_values": [4, 32, 256], "capture_periods": 100, "tolerance_percent": 5},
       "oracle": "peer capture로 period/duty ±5% 이내, 0/100%는 정적 level 확인. 12channel을 개별 구별하고 sequence 순서·end/repeat·STOP 확인. wave-form의 TOP word는 별도 해석.",
-      "needs": "T05/T08: instance당 4channel route, capture channel 할당, 기존 analogWrite/tone/Servo와 충돌 검사.", "reuse": [], "errata": []
+      "needs": "T05/T08: 안전한 P1.14 한 선에서 instance별 channel slot 0~3을 순차 검사. common/grouped/wave/invert/triggered mode는 target 계약과 후속 승인 fixture로 구분하고 기존 analogWrite/tone/Servo 충돌을 검사.", "reuse": [], "errata": []
     },
     {
       "id": "V04-GPIO", "groups": ["gpio", "gpiote"], "fixture": "peer",
@@ -145,24 +145,24 @@
     },
     {
       "id": "V04-SERIAL-CONCURRENCY", "groups": ["uarte", "spim", "spis", "twim", "twis"], "fixture": "peer",
-      "modes": ["every-directed-same-block-pair", "handover", "five-distinct-blocks"],
-      "parameters": {"repetitions": 100, "soak_seconds": 7200, "topology": ["spim00", "uarte20", "uarte21", "twim22", "uarte30"]},
-      "oracle": "86개 방향 있는 동일 block 조합을 원자적 거부하고 release 뒤 전환 성공. 5block topology는 pin/RAM 비중복으로 병행 데이터를 개별 대조, loss/reset/leak 0.",
-      "needs": "T07/T08: uarte21 비DAP 대체 route와 peer resource 확보. 모든 personality 동시 실행을 요구하지 않음.", "reuse": [], "errata": []
+      "modes": ["every-directed-same-block-pair", "handover", "spim00-twim22-concurrent", "wider-topology-follow-up"],
+      "parameters": {"repetitions": 100, "soak_seconds": 7200, "prepared_topology": ["spim00", "twim22"], "follow_up_topology": ["spim00", "uarte20", "uarte21", "twim22", "uarte30"]},
+      "oracle": "86개 방향 있는 동일 block 조합을 원자적 거부하고 release 뒤 전환 성공. fixture 201에서 1024-byte SPIM00 전송 중 TWIM22의 PMIC 0x6A/0x0C 읽기 0x41을 확인한다. 더 넓은 topology는 단독 기능 PASS 뒤 T13에서 pin/RAM 비중복과 개별 count/hash를 검증한다.",
+      "needs": "T07/T08 준비 완료: 동일 block 충돌과 SPIM00+TWIM22 허용 조합을 실행 가능하게 고정. 5block 최대 조합은 T13 후속이며 준비·build만으로 PASS 처리하지 않음.", "reuse": [], "errata": []
     },
     {
       "id": "V04-ANALOG-CONCURRENCY", "groups": ["saadc", "pwm", "pdm", "i2s", "qdec", "timer", "gpiote", "egu", "dppic", "ppib", "grtc", "gpio"], "fixture": "peer",
-      "modes": ["pwm20-21-22", "pdm20-21", "qdec20-21", "adc-event-stream", "resource-conflict"],
-      "parameters": {"soak_seconds": 7200, "repetitions": 100},
-      "oracle": "단독 PASS한 허용 topology를 병행 실행하고 독립 count/hash 대조. 12PWM 출력과 peer capture 물리 capacity 부족을 성공 처리하지 않음. 예약 lease 중복 거부.",
-      "needs": "T02/T07/T08: 최대 허용 topology의 pin/channel/RAM 할당 구체화, 실현 불능은 HOLD.", "reuse": [], "errata": []
+      "modes": ["pwm20-pwm21-saadc-onboard", "pwm20-21-22", "pdm20-21", "qdec20-21", "adc-event-stream", "resource-conflict"],
+      "parameters": {"soak_seconds": 7200, "repetitions": 100, "onboard_topology": ["pwm20", "pwm21", "saadc"]},
+      "oracle": "무배선 opcode 5에서 P1.10/P1.14의 PWM20/PWM21과 내부 VDD SAADC DMA를 동시에 활성화해 sample 32개와 두 PWM 완료 event 및 bounded STOP을 확인한다. 더 큰 조합은 단독 PASS 뒤 T13에서 독립 count/hash를 대조한다. 물리 관측 자원 부족을 성공 처리하지 않고 예약 lease 중복은 거부한다.",
+      "needs": "T07/T09: 준비된 무배선 3block 조합을 exact image에서 실행. 최대 허용 topology와 7200초 soak는 T13이며 준비·build만으로 PASS 처리하지 않음.", "reuse": ["tests/hil/nu54dk/v04_pair.py"], "errata": []
     },
     {
       "id": "V04-SOAK", "groups": ["uarte", "spim", "spis", "twim", "twis", "saadc", "pwm", "pdm", "i2s", "qdec"], "fixture": "mixed",
       "modes": ["standalone-continuous", "buffer-turnover", "metrics"],
       "parameters": {"duration_seconds": 600, "progress_interval_seconds": 5},
       "oracle": "각 instance에서 전체 시간 연속 실행, 양측 count/hash·sequence 완전성, loss/reset/guard 손상 0, 시작·종료 lease 일치. CPU/latency/throughput은 측정법과 기록하고 성능 보증으로 사용하지 않음.",
-      "needs": "T07: 재개할 때 중단 전 시간을 이어 붙여 PASS로 처리하지 않음.", "reuse": [], "errata": []
+      "needs": "T07 준비 완료: campaign runner는 하나의 monotonic session만 계수하고 중단 전 시간을 이어 붙이지 않음. 실제 600/7200초 결과는 T13에서 기록.", "reuse": ["tests/hil/nu54dk/v04_campaign.py"], "errata": []
     },
     {
       "id": "V04-SYSTEM-BOUNDARY", "groups": ["system"], "fixture": "contract",

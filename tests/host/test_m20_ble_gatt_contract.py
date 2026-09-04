@@ -69,13 +69,17 @@ class M20BleGattContractTests(unittest.TestCase):
         prepare = source[source.index("int prepareGattDatabase()") : source.index(
             "void pollGatt()", source.index("int prepareGattDatabase()")
         )]
+        prepare_compact = " ".join(prepare.split())
         self.assertGreaterEqual(prepare.count("for (std::size_t service_index"), 2)
         self.assertLess(
-            prepare.index("// 모든 schema를 먼저 검증"),
+            prepare.index("모든 schema를 먼저 검증"),
             prepare.index("bt_gatt_service_register"),
         )
         self.assertIn("bt_gatt_service_unregister", prepare)
-        self.assertIn("*service_slots[rollback].characteristics[index], false", prepare)
+        self.assertIn(
+            "*service_slots[rollback].characteristics[index], false",
+            prepare_compact,
+        )
 
     def test_server_callbacks_copy_to_fixed_queue_and_use_cached_read(self) -> None:
         """! @brief stack callback에서 Sketch를 호출하지 않고 cached value만 읽습니다. """

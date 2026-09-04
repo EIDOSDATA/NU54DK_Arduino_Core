@@ -31,8 +31,8 @@ namespace
     nucode::ble::BLECharacteristic test_characteristic(
         characteristic_uuid,
         nucode::ble::BLEProperty::read | nucode::ble::BLEProperty::write |
-            nucode::ble::BLEProperty::write_without_response |
-            nucode::ble::BLEProperty::notify | nucode::ble::BLEProperty::indicate,
+            nucode::ble::BLEProperty::write_without_response | nucode::ble::BLEProperty::notify |
+            nucode::ble::BLEProperty::indicate,
         nucode::ble::BLEPermission::read | nucode::ble::BLEPermission::write, 32U);
 
     char nonce[nonce_length + 1U] = {};
@@ -117,12 +117,10 @@ namespace
     }
 
     /** @brief exact payload 일치 여부를 검사합니다. */
-    bool matches(const std::uint8_t *data, std::size_t length,
-                 const char *expected)
+    bool matches(const std::uint8_t *data, std::size_t length, const char *expected)
     {
         const std::size_t expected_length = strlen(expected);
-        return data != nullptr && length == expected_length &&
-               memcmp(data, expected, length) == 0;
+        return data != nullptr && length == expected_length && memcmp(data, expected, length) == 0;
     }
 
     /** @brief 소문자 16진수 한 글자를 binary nibble로 변환합니다. */
@@ -143,9 +141,8 @@ namespace
 
 #ifndef NUCODE_M20_CENTRAL
     /** @brief server write·CCC·indication 완료를 main-thread에서 검증합니다. */
-    void onCharacteristic(
-        nucode::ble::BLECharacteristic &characteristic,
-        const nucode::ble::BLECharacteristicEventInfo &event, void *context)
+    void onCharacteristic(nucode::ble::BLECharacteristic &characteristic,
+                          const nucode::ble::BLECharacteristicEventInfo &event, void *context)
     {
         static_cast<void>(context);
         checkCallbackContext();
@@ -181,16 +178,14 @@ namespace
             if (event.status == 1)
             {
                 const char *payload = connection_count == 1U ? "NTF1" : "NTF2";
-                if (!test_characteristic.setValue(payload, 4U) ||
-                    !test_characteristic.notify())
+                if (!test_characteristic.setValue(payload, 4U) || !test_characteristic.notify())
                 {
                     fail("notify-send");
                 }
             }
             else if (event.status == 2 && connection_count == 1U)
             {
-                if (!test_characteristic.setValue("IND1", 4U) ||
-                    !test_characteristic.indicate())
+                if (!test_characteristic.setValue("IND1", 4U) || !test_characteristic.indicate())
                 {
                     fail("indicate-send");
                 }
@@ -202,13 +197,11 @@ namespace
             return;
         }
 
-        if (event.event ==
-            nucode::ble::BLECharacteristicEvent::indication_confirmed)
+        if (event.event == nucode::ble::BLECharacteristicEvent::indication_confirmed)
         {
             passToken("NUCODE_M20_PERIPHERAL:INDICATION_CONFIRMED:PASS");
         }
-        else if (event.event ==
-                 nucode::ble::BLECharacteristicEvent::indication_failed)
+        else if (event.event == nucode::ble::BLECharacteristicEvent::indication_failed)
         {
             fail("indication-failed");
         }
@@ -242,8 +235,8 @@ namespace
     }
 
     /** @brief generic GATT client callback의 단계별 결과를 검증합니다. */
-    void onClientEvent(nucode::ble::BLEGattClientEvent event,
-                       const std::uint8_t *data, std::size_t length, void *context)
+    void onClientEvent(nucode::ble::BLEGattClientEvent event, const std::uint8_t *data,
+                       std::size_t length, void *context)
     {
         static_cast<void>(context);
         checkCallbackContext();
@@ -271,8 +264,7 @@ namespace
             if (disconnection_count == 2U)
             {
                 phase = CentralPhase::complete;
-                Serial.print(
-                    "NUCODE_M20_CENTRAL:FINAL:PASS:callback_context=");
+                Serial.print("NUCODE_M20_CENTRAL:FINAL:PASS:callback_context=");
                 Serial.print(callback_context_valid ? "PASS" : "FAIL");
                 Serial.print(":rediscovery=PASS:nonce=");
                 Serial.println(nonce);
@@ -326,8 +318,7 @@ namespace
             }
             break;
         case CentralPhase::writing_command:
-            if (event !=
-                nucode::ble::BLEGattClientEvent::write_without_response_complete)
+            if (event != nucode::ble::BLEGattClientEvent::write_without_response_complete)
             {
                 fail("write-command-complete");
                 return;
@@ -568,9 +559,8 @@ namespace
         memcpy(nonce, command + prefix_length, nonce_length + 1U);
         for (std::size_t index = 0U; index < nonce_bytes_length; ++index)
         {
-            nonce_bytes[index] = static_cast<std::uint8_t>(
-                (hexNibble(nonce[index * 2U]) << 4U) |
-                hexNibble(nonce[index * 2U + 1U]));
+            nonce_bytes[index] = static_cast<std::uint8_t>((hexNibble(nonce[index * 2U]) << 4U) |
+                                                           hexNibble(nonce[index * 2U + 1U]));
         }
 #ifndef NUCODE_M20_CENTRAL
         if (!test_characteristic.setValue(nonce_bytes, nonce_bytes_length))
@@ -642,8 +632,7 @@ void setup()
     }
 #ifndef NUCODE_M20_CENTRAL
     if (!test_service.addCharacteristic(test_characteristic) ||
-        !BLEDevice.addService(test_service) ||
-        !test_characteristic.setValue("INIT", 4U))
+        !BLEDevice.addService(test_service) || !test_characteristic.setValue("INIT", 4U))
     {
         fail("schema");
         return;
@@ -669,10 +658,8 @@ void loop()
     pollHostCommand();
     BLEDevice.poll();
 #ifdef NUCODE_M20_CENTRAL
-    if (protocol_started && !protocol_failed &&
-        phase == CentralPhase::reconnect_delay &&
-        k_uptime_get() >= reconnect_at && !BLEConnection.connected() &&
-        !BLEConnection.connecting())
+    if (protocol_started && !protocol_failed && phase == CentralPhase::reconnect_delay &&
+        k_uptime_get() >= reconnect_at && !BLEConnection.connected() && !BLEConnection.connecting())
     {
         passToken("NUCODE_M20_CENTRAL:RECONNECT_REQUEST:PASS");
         phase = CentralPhase::idle;

@@ -382,6 +382,30 @@ checkout이나 당시 공개 ZIP을 다시 build하는 절차는 아니다. 자�
 정식 설치본의 build/upload 수명주기를 확인하려면 source staging 시험으로 대체하지 말고
 [v0.3.0 설치와 시험](../05_릴리스/v0.3.0/TESTING.md)의 stable Boards Manager 절차를 사용한다.
 
+### C/C++ 코드 정렬 도구
+
+저장소 소유 C/C++/INO는 `.clang-format`의 BSD/Allman·4칸·중괄호 필수 규칙을 사용한다.
+SDK, `third_party`, `board_package` submodule은 정렬 대상이 아니다. 정확한 도구 버전은
+`clang-format 22.1.8`이며 사용자 범위에 다음처럼 설치할 수 있다.
+
+```powershell
+py -m pip install --user clang-format==22.1.8
+$ClangFormat = py -c "import clang_format, pathlib; print(pathlib.Path(clang_format.__file__).parent / 'data' / 'bin' / 'clang-format.exe')"
+& $ClangFormat --version
+```
+
+대상만 확인하거나 명시적으로 정렬한 뒤 멱등성을 검사한다.
+
+```powershell
+py .\tools\format\run_cpp_style.py --list
+py .\tools\format\run_cpp_style.py --clang-format $ClangFormat --write
+py .\tools\format\run_cpp_style.py --clang-format $ClangFormat
+```
+
+자동 정렬은 한국어 Doxygen 내용의 정확성과 전처리기 내부 의미를 증명하지 않는다. 정렬 뒤 Host
+gate와 해당 Zephyr target build를 다시 실행하고, 동작 설명 일반 주석을 한국어 Doxygen 형식으로
+검토한다. SPDX와 namespace 닫힘 표식은 기계적 주석으로 유지할 수 있다.
+
 ## 10. 실물 시험 준비물
 
 - NU54DK 한 대: Blink, GPIO, 단일 보드 peripheral, upload/debug 시험
@@ -415,6 +439,7 @@ exact Core/board revision, artifact hash, probe와 COM 선택, wiring 조건과 
 | Host 시험에서 `No module named 'yaml'` | 5절의 host venv와 hash 고정 requirements 사용; 전역 Python으로 대체하지 않음 |
 | COM port를 열 수 없음 | Serial Monitor와 다른 runner를 닫고 보드를 다시 연결 |
 | `gh auth status` 실패 | `gh auth login` 실행; Git push credential과 별도임에 유의 |
+| `clang-format 22.1.8 필요` | 위 명령으로 정확한 사용자 범위 버전을 설치하고 `--clang-format`에 실제 경로 지정 |
 
 Prerequisite 설치 log는 `%LOCALAPPDATA%\NUCODE\NU54DK_Arduino_Core\logs`에 남는다. 정식
 Core 설치·빌드 문제는 [v0.3.0 문제 해결](../05_릴리스/v0.3.0/TROUBLESHOOTING.md)도 함께
@@ -430,6 +455,7 @@ Core 설치·빌드 문제는 [v0.3.0 문제 해결](../05_릴리스/v0.3.0/TROU
 - [ ] docs, contract, host, package, examples software gate가 통과한다.
 - [ ] 작업할 HIL의 보드 수, USB cable과 fixture 조건을 확인했다.
 - [ ] GitHub 작업이 필요하면 `gh auth status`와 저장소 권한을 확인했다.
+- [ ] 코드 변경 시 clang-format 22.1.8 정렬·멱등성 검사와 영향받는 Host/target 회귀를 통과했다.
 
 ## 13. 관련 문서
 

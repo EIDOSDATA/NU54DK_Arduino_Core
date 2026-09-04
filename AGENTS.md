@@ -12,3 +12,11 @@ For v0.4.0 implementation, verification, documentation, or release work:
    Preserve existing public assets and historical evidence.
 5. Keep the TODO while work remains. Archive or remove it only under its retention
    conditions, updating this entry point and incoming links in the same change.
+
+## First-party C/C++ style
+
+Use Korean Doxygen comments, BSD/Allman braces, four-space indentation and tab width.
+Control-flow bodies require braces even for one statement. Preserve third-party code,
+SDKs, board submodules and public release assets. Follow `.clang-format` and
+`tools/format/README.md`. The active TODO records the user-requested final formatting
+and regression gate before the next final commit/push.

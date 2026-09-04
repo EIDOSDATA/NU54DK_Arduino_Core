@@ -193,11 +193,9 @@ namespace nucode::arduino::internal
      * @param gpio Devicetree에서 생성된 GPIO descriptor입니다.
      * @return controller와 pin 번호를 보존한 물리 자원 키입니다.
      */
-    [[nodiscard]] constexpr IoResourceId
-    gpioIoResource(const gpio_dt_spec &gpio) noexcept
+    [[nodiscard]] constexpr IoResourceId gpioIoResource(const gpio_dt_spec &gpio) noexcept
     {
-        return {IoResourceKind::gpio_pin, gpio.port,
-                static_cast<std::uint16_t>(gpio.pin)};
+        return {IoResourceKind::gpio_pin, gpio.port, static_cast<std::uint16_t>(gpio.pin)};
     }
 
     /**
@@ -208,9 +206,9 @@ namespace nucode::arduino::internal
      * @param domain 동일 번호 공간을 분리할 선택적 domain입니다.
      * @return 정규화된 물리 자원 키입니다.
      */
-    [[nodiscard]] constexpr IoResourceId
-    peripheralIoResource(IoResourceKind kind, std::uint16_t index,
-                         const void *domain = nullptr) noexcept
+    [[nodiscard]] constexpr IoResourceId peripheralIoResource(IoResourceKind kind,
+                                                              std::uint16_t index,
+                                                              const void *domain = nullptr) noexcept
     {
         return {kind, domain, index, 1U};
     }
@@ -223,8 +221,8 @@ namespace nucode::arduino::internal
      * lease가 전체 buffer lease를 실수로 해제하지 않습니다. address가 nullptr이거나
      * byte_count가 0이면 reserve 단계에서 invalid_argument가 됩니다.
      */
-    [[nodiscard]] constexpr IoResourceId
-    dmaMemoryIoResource(const void *address, std::uint32_t byte_count) noexcept
+    [[nodiscard]] constexpr IoResourceId dmaMemoryIoResource(const void *address,
+                                                             std::uint32_t byte_count) noexcept
     {
         return {IoResourceKind::dma_memory, address, 0U, byte_count};
     }
@@ -241,9 +239,8 @@ namespace nucode::arduino::internal
      * @return 예약 결과입니다.
      */
     [[nodiscard]] IoResourceResult
-    reserveIoResources(IoResourceOwner owner, const IoResourceId *resources,
-                       std::size_t count, IoAcquirePolicy policy,
-                       IoResourceLease &lease,
+    reserveIoResources(IoResourceOwner owner, const IoResourceId *resources, std::size_t count,
+                       IoAcquirePolicy policy, IoResourceLease &lease,
                        IoResourceSnapshot *conflict = nullptr) noexcept;
 
     /**
@@ -255,32 +252,26 @@ namespace nucode::arduino::internal
      */
     [[nodiscard]] IoResourceResult
     transferIoResources(IoResourceOwner expected_owner, IoResourceOwner new_owner,
-                        const IoResourceId *resources, std::size_t count,
-                        IoResourceLease &lease,
+                        const IoResourceId *resources, std::size_t count, IoResourceLease &lease,
                         IoResourceSnapshot *conflict = nullptr) noexcept;
 
     /** @brief 예약한 자원 변경을 활성 상태로 확정합니다. */
-    [[nodiscard]] IoResourceResult
-    commitIoResources(IoResourceLease &lease) noexcept;
+    [[nodiscard]] IoResourceResult commitIoResources(IoResourceLease &lease) noexcept;
 
     /** @brief driver 전환 실패 후 예약 전 상태를 원자적으로 복구합니다. */
-    [[nodiscard]] IoResourceResult
-    rollbackIoResources(IoResourceLease &lease) noexcept;
+    [[nodiscard]] IoResourceResult rollbackIoResources(IoResourceLease &lease) noexcept;
 
     /** @brief 확정된 lease가 새로 획득한 자원을 반환합니다. */
-    [[nodiscard]] IoResourceResult
-    releaseIoResources(IoResourceLease &lease) noexcept;
+    [[nodiscard]] IoResourceResult releaseIoResources(IoResourceLease &lease) noexcept;
 
     /** @brief 최대 두 자원을 reserve·commit 한 연산으로 획득합니다. */
     [[nodiscard]] IoResourceResult
-    acquireIoResources(IoResourceOwner owner, const IoResourceId *resources,
-                       std::size_t count, IoAcquirePolicy policy,
-                       IoResourceToken &token,
+    acquireIoResources(IoResourceOwner owner, const IoResourceId *resources, std::size_t count,
+                       IoAcquirePolicy policy, IoResourceToken &token,
                        IoResourceSnapshot *conflict = nullptr) noexcept;
 
     /** @brief compact token이 새로 획득했던 자원을 반환합니다. */
-    [[nodiscard]] IoResourceResult
-    releaseIoResources(IoResourceToken &token) noexcept;
+    [[nodiscard]] IoResourceResult releaseIoResources(IoResourceToken &token) noexcept;
 
     /**
      * @brief 하나의 자원에 대한 일관된 snapshot을 읽습니다.
@@ -289,9 +280,8 @@ namespace nucode::arduino::internal
      * @param snapshot 조회 결과입니다. 등록되지 않은 자원은 free로 반환됩니다.
      * @return 조회 결과입니다.
      */
-    [[nodiscard]] IoResourceResult
-    ioResourceSnapshot(const IoResourceId &resource,
-                       IoResourceSnapshot &snapshot) noexcept;
+    [[nodiscard]] IoResourceResult ioResourceSnapshot(const IoResourceId &resource,
+                                                      IoResourceSnapshot &snapshot) noexcept;
 
 #if defined(CONFIG_ZTEST)
     /** @brief ztest 격리용으로 모든 소유권 상태와 lease 세대를 초기화합니다. */

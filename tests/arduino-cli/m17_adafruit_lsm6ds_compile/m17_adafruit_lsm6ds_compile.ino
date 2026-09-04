@@ -10,4 +10,6 @@ void setup()
     (void)sensor.begin_I2C();
 }
 
-void loop() {}
+void loop()
+{
+}
