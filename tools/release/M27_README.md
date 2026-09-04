@@ -4,6 +4,10 @@ M27 도구는 `v0.4.0-rc.1` package를 두 번 독립 생성해 ZIP·checksum·S
 notices가 byte-identical인지 검증하고 RC index와 HOLD plan을 만든다. 기존 M11/M18/M22 도구와
 공개 `v0.1.0`~`v0.3.0` package allowlist는 수정하지 않는다.
 
+진행 중인 전체 작업은 [v0.4.0 실행 TODO](../../00_Docs/TODO_v0.4.0.md)를 먼저 읽는다.
+아래 명령은 현재 비공개 prepare 도구의 사용법이며 TODO T18~T24의 정식 공개 절차가 이미
+구현됐다는 뜻이 아니다.
+
 이 도구에는 tag, push, GitHub Release, stable index 갱신이나 공개 명령이 없다. M24~M26 physical
 gate, Boards Manager 전체 수명주기와 프로젝트 소유자 승인이 모두 PASS가 되기 전에는 plan의
 `publication_allowed`가 항상 `false`다.
@@ -59,4 +63,6 @@ python tools/release/m27_staged_candidate.py `
 Physical evidence를 확보한 뒤에는
 `variants/nu54dk/v0.4.0-release-readiness.json`의 각 gate를 exact evidence와 함께 갱신하고,
 frozen RC commit에서 host·docs·전체 v0.4.0 Zephyr·package·Boards Manager gate를 다시 실행한다.
-Stable 공개 자동화는 모든 gate가 PASS가 된 별도 변경에서 추가한다.
+Stable 공개 절차의 준비·검사는 TODO T18의 별도 변경으로 수행한다. 준비 코드를 만들었다고
+공개를 허용하지 않으며, 실제 tag·Release·index 쓰기는 모든 technical gate와 최종 사용자 승인을
+확인한 T23에서만 수행한다.

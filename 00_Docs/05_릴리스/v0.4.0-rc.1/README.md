@@ -12,6 +12,10 @@
 이 디렉터리는 `v0.4.0-rc.1`의 공개 릴리스 문서가 아니라 M27 준비 경계를 명확히 하기 위한
 초안이다. Source/build가 끝난 후보 기능도 실제 HIL과 release gate 전에는 공개 지원이 아니다.
 
+후속 작업의 순서·현재 재개 위치는 [v0.4.0 실행 TODO](../../TODO_v0.4.0.md)를 따른다.
+T01~T15는 시험 준비·기능 검증, T16~T21은 사용자용 통합·RC/stable 비공개 검증,
+T22~T25는 최종 승인·공개·공개 URL 검사·마무리다.
+
 ## 준비된 범위
 
 - M23: 75개 peripheral identity와 공통 block/channel/DMA ownership 계약

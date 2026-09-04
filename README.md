@@ -280,6 +280,7 @@ git submodule status
 ## 문서
 
 - [전체 문서 안내](./00_Docs/README.md)
+- [v0.4.0 실행 TODO·재개 체크포인트](./00_Docs/TODO_v0.4.0.md)
 - [v0.3.0 릴리스 문서](<./00_Docs/05_릴리스/v0.3.0/README.md>)
 - [v0.3.0 마이그레이션](<./00_Docs/05_릴리스/v0.3.0/MIGRATION.md>)
 - [v0.3.0 문제 해결](<./00_Docs/05_릴리스/v0.3.0/TROUBLESHOOTING.md>)
