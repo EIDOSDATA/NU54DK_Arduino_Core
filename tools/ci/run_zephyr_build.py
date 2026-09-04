@@ -77,6 +77,7 @@ SUITE_GROUPS = {
         ("m24_twim_onboard_hil", "nucode.m24.twim21_hil"),
         ("m24_twim_onboard_hil", "nucode.m24.twim22_hil"),
         ("m25_analog_fabric_contract", "nucode.m25.analog"),
+        ("m25_event_fabric_contract", "nucode.m25.event"),
     ),
 }
 SUITES = tuple(suite for group in SUITE_GROUPS.values() for suite in group)

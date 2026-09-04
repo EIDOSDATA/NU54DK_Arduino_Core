@@ -248,6 +248,19 @@ config NUCODE_ARDUINO_ANALOG_FABRIC
 	  driver와 IRQ를 동시에 소유하지 않으며 v0.4.0 물리 gate 전에는 후보
 	  API로만 빌드합니다.
 
+config NUCODE_ARDUINO_EVENT_FABRIC
+	bool "M25 TIMER·GPIOTE·EGU·DPPI·PPIB 전 instance 후보 API 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	depends on NUCODE_ARDUINO_IO_OWNERSHIP
+	depends on NUCODE_ARDUINO_GPIO
+	depends on !NUCODE_ARDUINO_INTERRUPTS
+	help
+	  TIMER00/10/20~24, GPIOTE20/30, EGU10/20, DPPIC00/10/20/30과
+	  PPIB00/01/10/11/20/21/22/30의 channel ownership, task/event endpoint,
+	  DPPI fan-out과 domain bridge를 제공합니다. GRTC system counter는 기존
+	  BoardSystem API가 소유하므로 reset/stop하지 않습니다.
+
 config NUCODE_ARDUINO_WIRE
 	bool "Arduino Wire I2C controller 활성화"
 	default n

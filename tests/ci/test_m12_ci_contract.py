@@ -469,6 +469,10 @@ class M12CiContractTests(unittest.TestCase):
             ("m25_analog_fabric_contract", "nucode.m25.analog"),
             module.SUITE_GROUPS["v0.4.0"],
         )
+        self.assertIn(
+            ("m25_event_fabric_contract", "nucode.m25.event"),
+            module.SUITE_GROUPS["v0.4.0"],
+        )
 
     ## @brief AC-01 production contract와 자동 loopback HIL image가 원격 build gate에 포함되는지 검사합니다.
     def test_zephyr_build_includes_ac01_contract_and_hil_image(self) -> None:
