@@ -190,6 +190,8 @@ def run_gate(args: argparse.Namespace) -> Path:
         str(examples_evidence),
         "--compile-timeout",
         str(args.compile_timeout),
+        "--workers",
+        str(args.workers),
     ]
     environment = os.environ.copy()
     environment.update(
@@ -248,6 +250,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--toolchain-root", type=Path, required=True)
     parser.add_argument("--prerequisite-state-root", type=Path, required=True)
     parser.add_argument("--compile-timeout", type=int, default=3600)
+    parser.add_argument("--workers", type=int, default=4)
     return parser
 
 
@@ -256,6 +259,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
         args = build_parser().parse_args(arguments)
         if not 1 <= args.compile_timeout <= 86400:
             raise StagedCandidateFailure("compile timeout is outside 1..86400 seconds")
+        if not 1 <= args.workers <= 8:
+            raise StagedCandidateFailure("workers is outside 1..8")
         evidence = run_gate(args)
         print(f"M27_STAGED_CANDIDATE_PASS=29;EVIDENCE={evidence}")
         return 0

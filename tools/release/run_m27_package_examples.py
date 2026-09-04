@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import datetime as dt
 import importlib.util
 import json
@@ -108,8 +109,7 @@ def run_gate(args: argparse.Namespace) -> dict[str, Any]:
         listing, lock, platform_root, version=VERSION
     )
     forbidden_roots = tuple(path.resolve() for path in args.forbid_root)
-    results: list[dict[str, Any]] = []
-    for sequence, example in enumerate(lock, start=1):
+    def compile_one(sequence: int, example: dict[str, str]) -> dict[str, Any]:
         identity = (example["library"], example["example"])
         sketch = discovered[identity]
         safe_name = re.sub(
@@ -152,21 +152,43 @@ def run_gate(args: argparse.Namespace) -> dict[str, Any]:
             cache_root=args.cache_root,
             forbidden_roots=forbidden_roots,
         )
-        results.append(
-            {
-                "sequence": sequence,
-                "library": example["library"],
-                "example": example["example"],
-                "installed_relative_path": sketch.relative_to(platform_root).as_posix(),
-                "compile_seconds": round(seconds, 3),
-                "compile_log_sha256": BASE.file_sha256(log_path),
-                **identity_record,
-            }
-        )
+        record = {
+            "sequence": sequence,
+            "library": example["library"],
+            "example": example["example"],
+            "installed_relative_path": sketch.relative_to(platform_root).as_posix(),
+            "compile_seconds": round(seconds, 3),
+            "compile_log_sha256": BASE.file_sha256(log_path),
+            **identity_record,
+        }
         print(
             f"M27_PACKAGE_EXAMPLE_PASS {sequence}/{EXPECTED_EXAMPLE_COUNT} "
-            f"{example['library']}::{example['example']}"
+            f"{example['library']}::{example['example']}",
+            flush=True,
         )
+        return record
+
+    results: list[dict[str, Any]] = []
+    failures: list[str] = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as executor:
+        futures = {
+            executor.submit(compile_one, sequence, example): (
+                example["library"],
+                example["example"],
+            )
+            for sequence, example in enumerate(lock, start=1)
+        }
+        for future in concurrent.futures.as_completed(futures):
+            identity = futures[future]
+            try:
+                results.append(future.result())
+            except Exception as error:  # noqa: BLE001 - collect every parallel result
+                failures.append(f"{identity}: {error}")
+    if failures:
+        raise PackageExamplesFailure(
+            "M27 package example failures: " + "; ".join(sorted(failures))
+        )
+    results.sort(key=lambda record: int(record["sequence"]))
     evidence = {
         "schema_version": 1,
         "milestone": "M27",
@@ -202,6 +224,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--lock", type=Path, default=LOCK_PATH)
     parser.add_argument("--evidence", type=Path, required=True)
     parser.add_argument("--compile-timeout", type=int, default=3600)
+    parser.add_argument("--workers", type=int, default=4)
     return parser
 
 
@@ -210,6 +233,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
         parsed = build_parser().parse_args(arguments)
         if not 1 <= parsed.compile_timeout <= 86400:
             raise PackageExamplesFailure("compile timeout is outside 1..86400 seconds")
+        if not 1 <= parsed.workers <= 8:
+            raise PackageExamplesFailure("workers is outside 1..8")
         result = run_gate(parsed)
         print(f"M27_PACKAGE_EXAMPLES_PASS={result['compiled_count']}")
         return 0

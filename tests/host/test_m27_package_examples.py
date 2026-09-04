@@ -30,6 +30,11 @@ class M27PackageExampleTests(unittest.TestCase):
     def test_runner_uses_version_explicit_discovery(self) -> None:
         source = SCRIPT.read_text(encoding="utf-8")
         self.assertIn("version=VERSION", source)
+
+    def test_runner_parallelizes_independent_build_roots(self) -> None:
+        source = SCRIPT.read_text(encoding="utf-8")
+        self.assertIn("ThreadPoolExecutor(max_workers=args.workers)", source)
+        self.assertIn("results.sort", source)
         self.assertIn('"milestone": "M27"', source)
         self.assertNotIn("core install", source)
 

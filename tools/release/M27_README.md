@@ -48,11 +48,13 @@ python tools/release/m27_staged_candidate.py `
   --arduino-cli "C:\Program Files\Arduino CLI\arduino-cli.exe" `
   --ncs-root C:\Users\eidos\ncs\v3.4.0 `
   --toolchain-root C:\Users\eidos\ncs\toolchains\dcbdc366a1 `
-  --prerequisite-state-root "$env:LOCALAPPDATA\NUCODE\NU54DK_Arduino_Core\prerequisites"
+  --prerequisite-state-root "$env:LOCALAPPDATA\NUCODE\NU54DK_Arduino_Core\prerequisites" `
+  --workers 4
 ```
 
 성공 표식은 `M27_STAGED_CANDIDATE_PASS=29`이며 workspace 안에 package별 build와
-`m27-package-examples.json`, `m27-staged-candidate.json` 증적을 남긴다.
+`m27-package-examples.json`, `m27-staged-candidate.json` 증적을 남긴다. 기본 4개 worker는 서로
+분리된 build 경로를 사용하고 결과를 lock 순서로 다시 정렬한다.
 
 Physical evidence를 확보한 뒤에는
 `variants/nu54dk/v0.4.0-release-readiness.json`의 각 gate를 exact evidence와 함께 갱신하고,

@@ -54,6 +54,7 @@ class M27StagedCandidateTests(unittest.TestCase):
         self.assertNotIn("core install", source)
         self.assertNotIn("release create", source)
         self.assertNotIn("git tag", source)
+        self.assertIn('"--workers"', source)
 
 
 if __name__ == "__main__":
