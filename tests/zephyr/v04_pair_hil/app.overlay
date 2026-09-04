@@ -11,6 +11,9 @@
 &uart20 { status = "disabled"; };
 &uart30 { status = "disabled"; };
 
+/* P1.2/P1.3 are NFC pads unless explicitly released to the PMIC GPIO route. */
+&uicr { nfct-pins-as-gpios; };
+
 /* nrfx SPIS needs a compatible node, but no Zephyr driver may claim its IRQ. */
 &spi22 {
     compatible = "nordic,nrf-spis";

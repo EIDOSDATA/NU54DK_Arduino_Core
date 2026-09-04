@@ -43,15 +43,15 @@ TODO의 체크만으로 그 원본들의 상태를 바꾸지 않는다. 이 문�
 | 필드 | 현재 값 |
 | --- | --- |
 | 이번에 끝낸 일 | 75 identity·19 시험 family JSON/생성 문서·누락 검사, 구현 대조와 8개 준비 이슈, SWD pair protocol/runner와 onboard 후보 image 작성 |
-| 진행 중인 T 항목 | T01~T03 준비 기준선, T05/T09 무배선 PMIC·timer capture·내부 ADC 추가 시험; T04/T06/T07/T08 전체는 아직 미완료 |
-| 다음 구체적 행동 | 43번의 TIMER00/10 분주와 ADC 입력 교정을 검사·commit하고 pair subset rebuild. 통합 PMIC 400/100kHz 실패 원인 분리 뒤 두 보드 무배선 반복 검사 재실행. 이후 T04~T08 구현 계속 |
+| 진행 중인 T 항목 | T01~T03 준비 기준선, T04 온보드 UART 공통 image 통합, T05/T09 무배선 PMIC·timer capture·내부 ADC 추가 시험; T04/T06/T07/T08 전체는 아직 미완료 |
+| 다음 구체적 행동 | Pair overlay의 누락된 NFC→GPIO 설정과 UART arm/status/stop을 commit·subset build. PMIC·교정 TIMER/ADC를 두 보드에서 재검사하고 UART Host payload runner를 연결. 이후 T04~T08 구현 계속 |
 | 다음 작업에 필요한 사용자 행동 | 두 보드 USB 연결 완료 통보 받음. 외부 점퍼는 T10의 확정 결선표 안내 전 연결하지 않음 |
 | 외부 결선 상태 | 두 보드 상호 결선은 T10에 수행하는 요청; 현재는 USB만 전제로 온보드 경로에 한정 |
 | 마지막 정식 온보드 source | `51c1986242b60ac99df643ee4291946aa83b9986` — 41번 기록의 제한된 범위 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; 새 실기 PASS·최종 공개 승인 없음 |
 | 알려진 문제 | 과거 COM 포트 이탈의 근본 원인 미확정; 아래 연결 진단 원칙 참조 |
-| 이 TODO 작성 작업의 실행 중 시험 | `34475a0` Host 전체·문서142·inventory·target20/20 PASS. Pair PMIC timeout과 TIMER 분주·VSS 실패 진단 종료; 실행 중 프로세스 없음. T01~T09 전체 미완료 |
-| 로컬 임시 build·evidence | `C:/nb/07` = `34475a0`; task work/v04-prep의 pair·diagnostic·control-twi-34475a0. 두 보드 모두 해당 pair image가 마지막으로 올라갔으며 외부 결선 없음. 새 source와 혼합 금지 |
+| 이 TODO 작성 작업의 실행 중 시험 | `01fc2d7` Host 전체·문서142·inventory·pair subset2/2 PASS. PMIC timeout 네 조건 진단 종료; 실행 중 프로세스 없음. T01~T09 전체 미완료 |
+| 로컬 임시 build·evidence | `C:/nb/08` = `01fc2d7`; task work/v04-prep의 pair-01fc2d7·mailbox-idle-01fc2d7. DUT는 해당 pair image에서 진단 HALTED, peer는 `34475a0` pair role2. 외부 결선 없음. 새 source와 혼합 금지 |
 | CI 확인 | 재개 시 실제 HEAD에 해당하는 run을 다시 조회; 과거 CI 성공을 최신 commit 성공으로 표기하지 않음 |
 | 문서 작업 검증 | 문서 140개 UTF-8·내부 링크 PASS; T01~T25 순서·누락·중복 및 25개 선행조건·완료 기준 검사 PASS; M27 계약 16개/미해결 8개 유지 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |

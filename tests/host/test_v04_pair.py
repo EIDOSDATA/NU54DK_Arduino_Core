@@ -78,6 +78,10 @@ class V04PairTests(unittest.TestCase):
         source = (ROOT / "tests/zephyr/v04_pair_hil/src/main.cpp").read_text(encoding="utf-8")
         self.assertNotIn("digitalWrite(", source)
         self.assertIn('"--execute-onboard"', (HIL / "v04_pair.py").read_text(encoding="utf-8"))
+    def test_pmic_pins_released_from_nfc_in_both_images(self):
+        for app in ("v04_pair_hil", "m24_twim_onboard_hil"):
+            overlay = (ROOT / "tests/zephyr" / app / "app.overlay").read_text(encoding="utf-8")
+            self.assertRegex(overlay, r"&uicr\s*\{\s*nfct-pins-as-gpios;")
 
 
 if __name__ == "__main__": unittest.main()

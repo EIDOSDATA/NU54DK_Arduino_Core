@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // SWD controls the test even when both DAP UART level shifters are disconnected.
 #include "protocol.h"
+#include "serial_hil.h"
 #include <nucode/AnalogFabric.h>
 #include <nucode/EventFabric.h>
 #include <nucode/SerialFabric.h>
@@ -121,6 +122,7 @@ std::uint32_t dispatch(std::uint32_t opcode, const std::uint32_t *args,
     if (opcode == 2 && nargs == 3) return pmic(args, out, count);
     if (opcode == 3 && nargs == 3) return timerTest(args, out, count);
     if (opcode == 4 && nargs == 2) return adcTest(args, out, count);
+    if (opcode >= 10 && opcode <= 12) return serialOnboard(opcode,args,nargs,out,count);
     return 400;
 }
 } // namespace
@@ -139,6 +141,7 @@ int main() {
     std::uint32_t last_sequence = 0;
     std::uint32_t session_nonce[4]{};
     while (true) {
+        serviceSerial();
         if (v04_request[0] != v04::magic) { k_sleep(K_MSEC(1)); continue; }
         __DMB();
         std::uint32_t request[v04::words]{}, response[v04::words]{};
