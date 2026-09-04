@@ -43,7 +43,7 @@ class BuildMatrixRunnerTests(unittest.TestCase):
     def test_zephyr_groups_partition_every_suite_once(self) -> None:
         self.assertEqual(
             {name: len(suites) for name, suites in ZEPHYR.SUITE_GROUPS.items()},
-            {"v0.1.0": 4, "v0.2.0": 10, "v0.3.0": 15, "v0.4.0": 17},
+            {"v0.1.0": 4, "v0.2.0": 10, "v0.3.0": 15, "v0.4.0": 18},
         )
         flattened = tuple(
             suite for suites in ZEPHYR.SUITE_GROUPS.values() for suite in suites
