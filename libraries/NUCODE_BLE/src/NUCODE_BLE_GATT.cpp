@@ -313,12 +313,12 @@ namespace
     std::uint8_t client_write_data[maximum_value_length] = {};
     BLEGattClientCallback client_callback = nullptr;
     void *client_context = nullptr;
-struct bt_conn *client_operation_connection = nullptr;
-struct bt_conn *client_subscription_connection = nullptr;
-struct bt_conn *gatt_connection = nullptr;
-std::uint32_t client_operation_generation = 0U;
-std::uint32_t client_subscription_generation = 0U;
-std::uint32_t gatt_connection_generation = 0U;
+    struct bt_conn *client_operation_connection = nullptr;
+    struct bt_conn *client_subscription_connection = nullptr;
+    struct bt_conn *gatt_connection = nullptr;
+    std::uint32_t client_operation_generation = 0U;
+    std::uint32_t client_subscription_generation = 0U;
+    std::uint32_t gatt_connection_generation = 0U;
 
     /** @brief enum bit가 설정되었는지 검사합니다. */
     bool hasProperty(BLEProperty value, BLEProperty bit) noexcept
@@ -559,21 +559,21 @@ std::uint32_t gatt_connection_generation = 0U;
     }
 
     /** @brief callback connection이 현재 generic link인지 reference로 검사합니다. */
-bool currentGattConnection(struct bt_conn *connection) noexcept
+    bool currentGattConnection(struct bt_conn *connection) noexcept
     {
         if (connection == nullptr || atomic_get(&gatt_link_active) == 0)
         {
             return false;
         }
-    k_spinlock_key_t key = k_spin_lock(&client_token_lock);
-    const bool token_matches = gatt_connection == connection &&
-                               gatt_connection_generation != 0U;
-    k_spin_unlock(&client_token_lock, key);
-    if (!token_matches)
-    {
-        return false;
-    }
-    struct bt_conn *current = nucode::ble::internal::referenceConnection();
+        k_spinlock_key_t key = k_spin_lock(&client_token_lock);
+        const bool token_matches = gatt_connection == connection &&
+                                   gatt_connection_generation != 0U;
+        k_spin_unlock(&client_token_lock, key);
+        if (!token_matches)
+        {
+            return false;
+        }
+        struct bt_conn *current = nucode::ble::internal::referenceConnection();
         if (current == nullptr)
         {
             return false;
@@ -1498,32 +1498,32 @@ namespace nucode::ble::internal
         progressClientDiscovery();
     }
 
-void gattConnected(struct bt_conn *connection,
-                   std::uint32_t generation) noexcept
-{
-    k_spinlock_key_t key = k_spin_lock(&client_token_lock);
-    gatt_connection = connection;
-    gatt_connection_generation = generation;
-    k_spin_unlock(&client_token_lock, key);
-    atomic_set(&gatt_link_active, 1);
-}
+    void gattConnected(struct bt_conn *connection,
+                       std::uint32_t generation) noexcept
+    {
+        k_spinlock_key_t key = k_spin_lock(&client_token_lock);
+        gatt_connection = connection;
+        gatt_connection_generation = generation;
+        k_spin_unlock(&client_token_lock, key);
+        atomic_set(&gatt_link_active, 1);
+    }
 
-void gattDisconnected(struct bt_conn *connection,
-                      std::uint32_t generation) noexcept
-{
-    k_spinlock_key_t token_key = k_spin_lock(&client_token_lock);
-    const bool matches = gatt_connection == connection &&
-                         gatt_connection_generation == generation;
-    if (matches)
+    void gattDisconnected(struct bt_conn *connection,
+                          std::uint32_t generation) noexcept
     {
-        gatt_connection = nullptr;
-        gatt_connection_generation = 0U;
-    }
-    k_spin_unlock(&client_token_lock, token_key);
-    if (!matches)
-    {
-        return;
-    }
+        k_spinlock_key_t token_key = k_spin_lock(&client_token_lock);
+        const bool matches = gatt_connection == connection &&
+                             gatt_connection_generation == generation;
+        if (matches)
+        {
+            gatt_connection = nullptr;
+            gatt_connection_generation = 0U;
+        }
+        k_spin_unlock(&client_token_lock, token_key);
+        if (!matches)
+        {
+            return;
+        }
         atomic_set(&client_stage, static_cast<atomic_val_t>(ClientStage::idle));
         atomic_set(&gatt_link_active, 0);
         atomic_inc(&gatt_session_generation);
@@ -1543,29 +1543,29 @@ void gattDisconnected(struct bt_conn *connection,
         if (had_handles)
         {
             queueClientEvent(BLEGattClientEvent::handles_invalidated);
+        }
     }
-}
 
-void gattEnded() noexcept
-{
-    atomic_set(&client_stage, static_cast<atomic_val_t>(ClientStage::idle));
-    atomic_set(&gatt_link_active, 0);
-    atomic_inc(&gatt_session_generation);
-    k_msgq_purge(&gatt_event_queue);
-    k_spinlock_key_t key = k_spin_lock(&client_state_lock);
-    GattAccess::clear(remote_service);
-    GattAccess::clear(remote_characteristic);
-    k_spin_unlock(&client_state_lock, key);
-    atomic_set(&client_busy_value, 0);
-    atomic_set(&client_subscribed, 0);
-    atomic_set(&client_subscription_value, 0);
-    clearClientOperationToken();
-    clearClientSubscriptionToken();
-    k_spinlock_key_t token_key = k_spin_lock(&client_token_lock);
-    gatt_connection = nullptr;
-    gatt_connection_generation = 0U;
-    k_spin_unlock(&client_token_lock, token_key);
-}
+    void gattEnded() noexcept
+    {
+        atomic_set(&client_stage, static_cast<atomic_val_t>(ClientStage::idle));
+        atomic_set(&gatt_link_active, 0);
+        atomic_inc(&gatt_session_generation);
+        k_msgq_purge(&gatt_event_queue);
+        k_spinlock_key_t key = k_spin_lock(&client_state_lock);
+        GattAccess::clear(remote_service);
+        GattAccess::clear(remote_characteristic);
+        k_spin_unlock(&client_state_lock, key);
+        atomic_set(&client_busy_value, 0);
+        atomic_set(&client_subscribed, 0);
+        atomic_set(&client_subscription_value, 0);
+        clearClientOperationToken();
+        clearClientSubscriptionToken();
+        k_spinlock_key_t token_key = k_spin_lock(&client_token_lock);
+        gatt_connection = nullptr;
+        gatt_connection_generation = 0U;
+        k_spin_unlock(&client_token_lock, token_key);
+    }
 
 } // namespace nucode::ble::internal
 

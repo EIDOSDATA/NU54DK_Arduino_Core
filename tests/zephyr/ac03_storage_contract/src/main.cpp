@@ -22,7 +22,7 @@ static_assert(DT_REG_ADDR(DT_NODELABEL(slot0_partition)) == 0x0,
 static_assert(DT_REG_SIZE(DT_NODELABEL(slot0_partition)) == 0x16c000,
 			  "loaderless image 크기가 1456 KiB가 아닙니다.");
 static_assert(DT_SAME_NODE(DT_CHOSEN(zephyr_code_partition),
-					  DT_NODELABEL(slot0_partition)),
+						   DT_NODELABEL(slot0_partition)),
 			  "Zephyr code partition이 loaderless image와 다릅니다.");
 static_assert(DT_REG_ADDR(DT_NODELABEL(arduino_fs_partition)) == 0x16c000,
 			  "LittleFS 시작 주소가 다릅니다.");
@@ -39,10 +39,10 @@ ZTEST(ac03_storage_contract, test_public_bounds_are_fail_closed)
 				 static_cast<int>(EEPROM.lastError()));
 	EEPROM.write(-1, 0x12U);
 	zassert_equal(EEPROM.lastError(), EEPROMError::out_of_bounds,
-			  "음수 주소가 차단되지 않았습니다.");
+				  "음수 주소가 차단되지 않았습니다.");
 	EEPROM.write(1024, 0x34U);
 	zassert_equal(EEPROM.lastError(), EEPROMError::out_of_bounds,
-			  "끝 주소가 차단되지 않았습니다.");
+				  "끝 주소가 차단되지 않았습니다.");
 }
 
 ZTEST(ac03_storage_contract, test_littlefs_requires_mount)
@@ -51,7 +51,7 @@ ZTEST(ac03_storage_contract, test_littlefs_requires_mount)
 	File file = LittleFS.open("/must-not-open.bin", FILE_READ);
 	zassert_false(static_cast<bool>(file), "unmount 상태에서 파일이 열렸습니다.");
 	zassert_equal(LittleFS.lastError(), FSError::not_mounted,
-			  "unmount 오류가 안정 분류로 반환되지 않았습니다.");
+				  "unmount 오류가 안정 분류로 반환되지 않았습니다.");
 }
 
 ZTEST_SUITE(ac03_storage_contract, nullptr, nullptr, nullptr, nullptr, nullptr);

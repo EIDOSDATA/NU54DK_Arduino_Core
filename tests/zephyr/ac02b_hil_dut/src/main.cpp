@@ -176,7 +176,7 @@ namespace
 	 * DUT console로 요청한 뒤 host가 peer console에 전달한 exact 응답만 받습니다.
 	 */
 	[[nodiscard]] bool requestHostRelay(const char *command,
-									 const char *response)
+										const char *response)
 	{
 		if ((command == nullptr) || (response == nullptr))
 		{
@@ -310,7 +310,7 @@ namespace
 			return false;
 		}
 		const bool complete = (Wire.available() == 0) &&
-			(nucode::arduino::internal::lastWireError() == WireError::none);
+							  (nucode::arduino::internal::lastWireError() == WireError::none);
 		if (!complete)
 		{
 			wire_failure_stage = "wire-final-state";

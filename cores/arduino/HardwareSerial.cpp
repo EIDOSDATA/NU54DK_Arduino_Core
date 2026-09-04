@@ -576,7 +576,7 @@ namespace
 			{
 				const bool rx_ok = !was_started || stopRx(serial1_state);
 				const bool route_ok = rx_ok &&
-					(!route_present || serial1_route.deactivate());
+									  (!route_present || serial1_route.deactivate());
 				if (rx_ok && route_ok)
 				{
 					record(serial1_state, SerialError::none);

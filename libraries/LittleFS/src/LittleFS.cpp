@@ -84,7 +84,10 @@ LittleFSClass LittleFS;
 bool LittleFSClass::begin(bool format_on_fail)
 {
 	using namespace nucode::littlefs::internal;
-	if (!isThreadContext()) { return false; }
+	if (!isThreadContext())
+	{
+		return false;
+	}
 	static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
 	if (filesystem_mounted)
 	{
@@ -96,10 +99,20 @@ bool LittleFSClass::begin(bool format_on_fail)
 	if (result < 0 && format_on_fail)
 	{
 		result = formatLocked();
-		if (result == 0) { result = mountWithoutFormatting(); }
+		if (result == 0)
+		{
+			result = mountWithoutFormatting();
+		}
 	}
 	filesystem_mounted = result == 0;
-	if (result < 0) { recordDriverError(result); } else { recordError(FSError::none, 0); }
+	if (result < 0)
+	{
+		recordDriverError(result);
+	}
+	else
+	{
+		recordError(FSError::none, 0);
+	}
 	static_cast<void>(k_mutex_unlock(&filesystem_mutex));
 	return result == 0;
 }
@@ -107,7 +120,10 @@ bool LittleFSClass::begin(bool format_on_fail)
 bool LittleFSClass::end()
 {
 	using namespace nucode::littlefs::internal;
-	if (!isThreadContext()) { return false; }
+	if (!isThreadContext())
+	{
+		return false;
+	}
 	static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
 	if (!filesystem_mounted)
 	{
@@ -122,8 +138,15 @@ bool LittleFSClass::end()
 		return false;
 	}
 	const int result = fs_unmount(&arduino_littlefs_mount);
-	if (result == 0) { filesystem_mounted = false; recordError(FSError::none, 0); }
-	else { recordDriverError(result); }
+	if (result == 0)
+	{
+		filesystem_mounted = false;
+		recordError(FSError::none, 0);
+	}
+	else
+	{
+		recordDriverError(result);
+	}
 	static_cast<void>(k_mutex_unlock(&filesystem_mutex));
 	return result == 0;
 }
@@ -131,7 +154,10 @@ bool LittleFSClass::end()
 bool LittleFSClass::format()
 {
 	using namespace nucode::littlefs::internal;
-	if (!isThreadContext()) { return false; }
+	if (!isThreadContext())
+	{
+		return false;
+	}
 	static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
 	if (hasOpenFiles())
 	{
@@ -143,12 +169,28 @@ bool LittleFSClass::format()
 	if (filesystem_mounted)
 	{
 		result = fs_unmount(&arduino_littlefs_mount);
-		if (result == 0) { filesystem_mounted = false; }
+		if (result == 0)
+		{
+			filesystem_mounted = false;
+		}
 	}
-	if (result == 0) { result = formatLocked(); }
-	if (result == 0) { result = mountWithoutFormatting(); }
+	if (result == 0)
+	{
+		result = formatLocked();
+	}
+	if (result == 0)
+	{
+		result = mountWithoutFormatting();
+	}
 	filesystem_mounted = result == 0;
-	if (result < 0) { recordDriverError(result); } else { recordError(FSError::none, 0); }
+	if (result < 0)
+	{
+		recordDriverError(result);
+	}
+	else
+	{
+		recordError(FSError::none, 0);
+	}
 	static_cast<void>(k_mutex_unlock(&filesystem_mutex));
 	return result == 0;
 }
@@ -156,12 +198,21 @@ bool LittleFSClass::format()
 std::size_t LittleFSClass::totalBytes()
 {
 	using namespace nucode::littlefs::internal;
-	if (!isThreadContext()) { return 0U; }
+	if (!isThreadContext())
+	{
+		return 0U;
+	}
 	static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
-	struct fs_statvfs information {};
+	struct fs_statvfs information{};
 	const int result = filesystem_mounted ? fs_statvfs(mount_point, &information) : -ENODEV;
-	if (result < 0) { result == -ENODEV ? recordError(FSError::not_mounted, result) : recordDriverError(result); }
-	else { recordError(FSError::none, 0); }
+	if (result < 0)
+	{
+		result == -ENODEV ? recordError(FSError::not_mounted, result) : recordDriverError(result);
+	}
+	else
+	{
+		recordError(FSError::none, 0);
+	}
 	static_cast<void>(k_mutex_unlock(&filesystem_mutex));
 	return result < 0 ? 0U : static_cast<std::size_t>(information.f_frsize) * information.f_blocks;
 }
@@ -169,15 +220,23 @@ std::size_t LittleFSClass::totalBytes()
 std::size_t LittleFSClass::usedBytes()
 {
 	using namespace nucode::littlefs::internal;
-	if (!isThreadContext()) { return 0U; }
+	if (!isThreadContext())
+	{
+		return 0U;
+	}
 	static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
-	struct fs_statvfs information {};
+	struct fs_statvfs information{};
 	const int result = filesystem_mounted ? fs_statvfs(mount_point, &information) : -ENODEV;
-	if (result < 0) { result == -ENODEV ? recordError(FSError::not_mounted, result) : recordDriverError(result); }
-	else { recordError(FSError::none, 0); }
+	if (result < 0)
+	{
+		result == -ENODEV ? recordError(FSError::not_mounted, result) : recordDriverError(result);
+	}
+	else
+	{
+		recordError(FSError::none, 0);
+	}
 	static_cast<void>(k_mutex_unlock(&filesystem_mutex));
-	return result < 0 ? 0U : static_cast<std::size_t>(information.f_frsize) *
-		(information.f_blocks - information.f_bfree);
+	return result < 0 ? 0U : static_cast<std::size_t>(information.f_frsize) * (information.f_blocks - information.f_bfree);
 }
 
 bool LittleFSClass::mounted() const noexcept

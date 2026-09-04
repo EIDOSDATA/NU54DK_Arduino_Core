@@ -216,7 +216,7 @@ namespace
 		storeInteger<std::uint32_t>(&record[8], crc32(state.mirror, state.length));
 		memcpy(record + record_header_size, state.mirror, state.length);
 		const int result = settings_save_one(settings_key, record,
-										 record_header_size + state.length);
+											 record_header_size + state.length);
 		if (result != 0)
 		{
 			recordDriverError(result);
@@ -263,9 +263,22 @@ EERef &EERef::update(std::uint8_t value)
 
 EEPtr::EEPtr(EEPROMClass *owner, int index) noexcept : owner_(owner), index_(index) {}
 EERef EEPtr::operator*() const { return EERef(owner_, index_); }
-EEPtr &EEPtr::operator++() { ++index_; return *this; }
-EEPtr EEPtr::operator++(int) { EEPtr previous = *this; ++index_; return previous; }
-EEPtr &EEPtr::operator--() { --index_; return *this; }
+EEPtr &EEPtr::operator++()
+{
+	++index_;
+	return *this;
+}
+EEPtr EEPtr::operator++(int)
+{
+	EEPtr previous = *this;
+	++index_;
+	return previous;
+}
+EEPtr &EEPtr::operator--()
+{
+	--index_;
+	return *this;
+}
 bool EEPtr::operator==(const EEPtr &other) const noexcept { return owner_ == other.owner_ && index_ == other.index_; }
 bool EEPtr::operator!=(const EEPtr &other) const noexcept { return !(*this == other); }
 

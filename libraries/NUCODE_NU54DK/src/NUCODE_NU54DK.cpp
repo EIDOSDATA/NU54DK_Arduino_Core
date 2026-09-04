@@ -156,7 +156,7 @@ namespace nucode::nu54dk
 
 		/** @brief GRTC ISR에서는 만료 tick 저장과 work 제출만 수행합니다. */
 		void alarmInterruptHandler(int32_t channel, std::uint64_t expiration_ticks,
-							   void *user_data)
+								   void *user_data)
 		{
 			ARG_UNUSED(channel);
 			ARG_UNUSED(user_data);
@@ -274,7 +274,7 @@ namespace nucode::nu54dk
 
 		/** @brief 승인과 watchdog 정책을 같은 PMIC 임계구역에서 검사하고 RMW합니다. */
 		Error mutatePmicRegister(PmicRegister reg, std::uint8_t mask, std::uint8_t value,
-							 bool require_watchdog_policy, bool confirms_watchdog_policy) noexcept
+								 bool require_watchdog_policy, bool confirms_watchdog_policy) noexcept
 		{
 			if (!isThreadContext())
 			{
@@ -533,7 +533,7 @@ namespace nucode::nu54dk
 	}
 
 	Error BoardSystem::alarmAfterMicroseconds(std::uint64_t delay_us, AlarmCallback callback,
-										void *context) noexcept
+											  void *context) noexcept
 	{
 		if (!isThreadContext())
 		{
@@ -657,7 +657,7 @@ namespace nucode::nu54dk
 	}
 
 	Error BoardSystem::storageGet(const char *key, void *value, std::size_t capacity,
-							  std::size_t &actual_length) noexcept
+								  std::size_t &actual_length) noexcept
 	{
 		actual_length = 0U;
 		if (!isThreadContext())
@@ -997,7 +997,7 @@ namespace nucode::nu54dk
 	Error BoardSystem::pmicSetChargingEnabled(bool enabled) noexcept
 	{
 		return mutatePmicRegister(PmicRegister::charge_current_control, 0x80U,
-							  enabled ? 0x00U : 0x80U, true, false);
+								  enabled ? 0x00U : 0x80U, true, false);
 	}
 
 	Error BoardSystem::pmicSetRechargeThreshold(std::uint16_t millivolts) noexcept
@@ -1007,7 +1007,7 @@ namespace nucode::nu54dk
 			return recordError(Error::invalid_argument, -EINVAL);
 		}
 		return mutatePmicRegister(PmicRegister::ic_control, 0x20U,
-							  (millivolts == 200U) ? 0x20U : 0x00U, true, false);
+								  (millivolts == 200U) ? 0x20U : 0x00U, true, false);
 	}
 
 	Error BoardSystem::pmicSetSystemRegulation(PmicSystemRegulation regulation) noexcept
@@ -1018,7 +1018,7 @@ namespace nucode::nu54dk
 			return recordError(Error::invalid_argument, -EINVAL);
 		}
 		return mutatePmicRegister(PmicRegister::system_regulation, 0xE0U,
-							  static_cast<std::uint8_t>(raw << 5U), true, false);
+								  static_cast<std::uint8_t>(raw << 5U), true, false);
 	}
 
 	Error BoardSystem::pmicSetRegisterWatchdog(PmicRegisterWatchdog watchdog) noexcept
