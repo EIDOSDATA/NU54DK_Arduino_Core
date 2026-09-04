@@ -1,0 +1,12 @@
+tests:
+  nucode.m25.stream:
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    build_only: true
+    tags:
+      - nucode
+      - m25
+      - stream
+      - pdm
+      - i2s
+      - qdec
