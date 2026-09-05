@@ -1,0 +1,252 @@
+{
+  "after": {
+    "elf_sha256": "b4adc20924e008043f4b9b7941abbd51b68c097f3baf62a95862fd4f4aa104c9",
+    "memory": {
+      "FLASH": 183824,
+      "RAM": 161496
+    },
+    "objects": [
+      [
+        "nucode::arduino::(anonymous namespace)::contexts",
+        1408
+      ],
+      [
+        "nucode::arduino::(anonymous namespace)::contexts",
+        1680
+      ],
+      [
+        "nucode::arduino::(anonymous namespace)::contexts",
+        1740
+      ],
+      [
+        "nucode::arduino::(anonymous namespace)::contexts",
+        1840
+      ],
+      [
+        "nucode::arduino::(anonymous namespace)::contexts",
+        1880
+      ],
+      [
+        "nucode::arduino::internal::serial::(anonymous namespace)::adapter_registered",
+        23
+      ],
+      [
+        "nucode::arduino::internal::serial::(anonymous namespace)::adapters",
+        552
+      ],
+      [
+        "nucode::arduino::internal::serial::(anonymous namespace)::blocks",
+        80
+      ],
+      [
+        "nucode::arduino::internal::serial::(anonymous namespace)::contexts",
+        27416
+      ],
+      [
+        "nucode::arduino::internal::serial::(anonymous namespace)::fabric_mutex",
+        20
+      ]
+    ],
+    "public_symbols": [
+      "nucode::arduino::SerialFabric::spim(unsigned char)",
+      "nucode::arduino::SerialFabric::spis(unsigned char)",
+      "nucode::arduino::SerialFabric::twim(unsigned char)",
+      "nucode::arduino::SerialFabric::twis(unsigned char)",
+      "nucode::arduino::SerialFabric::uarte(unsigned char)",
+      "nucode::arduino::SpimHandle::cancelTransfer()",
+      "nucode::arduino::SpimHandle::configure(nucode::arduino::SpiFabricConfiguration const&)",
+      "nucode::arduino::SpimHandle::takeEvent(nucode::arduino::SpiFabricEvent&)",
+      "nucode::arduino::SpimHandle::transfer(void const*, unsigned int, void*, unsigned int, unsigned int)",
+      "nucode::arduino::SpimHandle::transferAsync(void const*, unsigned int, void*, unsigned int)",
+      "nucode::arduino::SpisHandle::configure(nucode::arduino::SpiFabricConfiguration const&)",
+      "nucode::arduino::SpisHandle::queueBuffers(void const*, unsigned int, void*, unsigned int, void const*, unsigned int, void*, unsigned int)",
+      "nucode::arduino::SpisHandle::takeEvent(nucode::arduino::SpiFabricEvent&)",
+      "nucode::arduino::TwimHandle::cancelTransfer()",
+      "nucode::arduino::TwimHandle::configure(nucode::arduino::TwimConfiguration const&)",
+      "nucode::arduino::TwimHandle::recoverBus()",
+      "nucode::arduino::TwimHandle::takeEvent(nucode::arduino::TwiFabricEvent&)",
+      "nucode::arduino::TwimHandle::transfer(unsigned char, void const*, unsigned int, void*, unsigned int, unsigned int)",
+      "nucode::arduino::TwimHandle::transferAsync(unsigned char, void const*, unsigned int, void*, unsigned int)",
+      "nucode::arduino::TwisHandle::configure(nucode::arduino::TwisConfiguration const&)",
+      "nucode::arduino::TwisHandle::queueBuffers(void const*, unsigned int, void*, unsigned int, void const*, unsigned int, void*, unsigned int)",
+      "nucode::arduino::TwisHandle::takeEvent(nucode::arduino::TwiFabricEvent&)",
+      "nucode::arduino::UarteHandle::bufferState(void const*) const",
+      "nucode::arduino::UarteHandle::configure(nucode::arduino::UarteConfiguration const&)",
+      "nucode::arduino::UarteHandle::receiveAsync(void*, unsigned int, void*, unsigned int)",
+      "nucode::arduino::UarteHandle::takeEvent(nucode::arduino::UarteEvent&)",
+      "nucode::arduino::UarteHandle::transmitAsync(void const*, unsigned int)"
+    ]
+  },
+  "before": {
+    "elf_sha256": "e6c3b25bfeefb3fe8a6aa677f429bf9b56af8087846c7a82eb967f35a594cef1",
+    "memory": {
+      "FLASH": 184016,
+      "RAM": 161496
+    },
+    "objects": [
+      [
+        "nucode::arduino::(anonymous namespace)::adapter_registered",
+        23
+      ],
+      [
+        "nucode::arduino::(anonymous namespace)::adapters",
+        552
+      ],
+      [
+        "nucode::arduino::(anonymous namespace)::blocks",
+        80
+      ],
+      [
+        "nucode::arduino::(anonymous namespace)::contexts",
+        1408
+      ],
+      [
+        "nucode::arduino::(anonymous namespace)::contexts",
+        1680
+      ],
+      [
+        "nucode::arduino::(anonymous namespace)::contexts",
+        1740
+      ],
+      [
+        "nucode::arduino::(anonymous namespace)::contexts",
+        1840
+      ],
+      [
+        "nucode::arduino::(anonymous namespace)::contexts",
+        1880
+      ],
+      [
+        "nucode::arduino::(anonymous namespace)::contexts",
+        27416
+      ],
+      [
+        "nucode::arduino::(anonymous namespace)::fabric_mutex",
+        20
+      ]
+    ],
+    "public_symbols": [
+      "nucode::arduino::SerialFabric::spim(unsigned char)",
+      "nucode::arduino::SerialFabric::spis(unsigned char)",
+      "nucode::arduino::SerialFabric::twim(unsigned char)",
+      "nucode::arduino::SerialFabric::twis(unsigned char)",
+      "nucode::arduino::SerialFabric::uarte(unsigned char)",
+      "nucode::arduino::SpimHandle::cancelTransfer()",
+      "nucode::arduino::SpimHandle::configure(nucode::arduino::SpiFabricConfiguration const&)",
+      "nucode::arduino::SpimHandle::takeEvent(nucode::arduino::SpiFabricEvent&)",
+      "nucode::arduino::SpimHandle::transfer(void const*, unsigned int, void*, unsigned int, unsigned int)",
+      "nucode::arduino::SpimHandle::transferAsync(void const*, unsigned int, void*, unsigned int)",
+      "nucode::arduino::SpisHandle::configure(nucode::arduino::SpiFabricConfiguration const&)",
+      "nucode::arduino::SpisHandle::queueBuffers(void const*, unsigned int, void*, unsigned int, void const*, unsigned int, void*, unsigned int)",
+      "nucode::arduino::SpisHandle::takeEvent(nucode::arduino::SpiFabricEvent&)",
+      "nucode::arduino::TwimHandle::cancelTransfer()",
+      "nucode::arduino::TwimHandle::configure(nucode::arduino::TwimConfiguration const&)",
+      "nucode::arduino::TwimHandle::recoverBus()",
+      "nucode::arduino::TwimHandle::takeEvent(nucode::arduino::TwiFabricEvent&)",
+      "nucode::arduino::TwimHandle::transfer(unsigned char, void const*, unsigned int, void*, unsigned int, unsigned int)",
+      "nucode::arduino::TwimHandle::transferAsync(unsigned char, void const*, unsigned int, void*, unsigned int)",
+      "nucode::arduino::TwisHandle::configure(nucode::arduino::TwisConfiguration const&)",
+      "nucode::arduino::TwisHandle::queueBuffers(void const*, unsigned int, void*, unsigned int, void const*, unsigned int, void*, unsigned int)",
+      "nucode::arduino::TwisHandle::takeEvent(nucode::arduino::TwiFabricEvent&)",
+      "nucode::arduino::UarteHandle::bufferState(void const*) const",
+      "nucode::arduino::UarteHandle::configure(nucode::arduino::UarteConfiguration const&)",
+      "nucode::arduino::UarteHandle::receiveAsync(void*, unsigned int, void*, unsigned int)",
+      "nucode::arduino::UarteHandle::takeEvent(nucode::arduino::UarteEvent&)",
+      "nucode::arduino::UarteHandle::transmitAsync(void const*, unsigned int)"
+    ]
+  },
+  "physical_executed": false,
+  "removed_public_symbols": [],
+  "source_membership": {
+    "nucode.r01.all": {
+      "SerialFabric.cpp": 1,
+      "SerialFabricLifecycle.cpp": 1,
+      "SerialFabricRegistry.cpp": 1,
+      "SpimFabric.cpp": 1,
+      "SpisFabric.cpp": 1,
+      "TwimFabric.cpp": 1,
+      "TwisFabric.cpp": 1,
+      "UarteFabric.cpp": 1
+    },
+    "nucode.r01.none": {
+      "SerialFabric.cpp": 1,
+      "SerialFabricLifecycle.cpp": 1,
+      "SerialFabricRegistry.cpp": 1,
+      "SpimFabric.cpp": 0,
+      "SpisFabric.cpp": 0,
+      "TwimFabric.cpp": 0,
+      "TwisFabric.cpp": 0,
+      "UarteFabric.cpp": 0
+    },
+    "nucode.r01.spim": {
+      "SerialFabric.cpp": 1,
+      "SerialFabricLifecycle.cpp": 1,
+      "SerialFabricRegistry.cpp": 1,
+      "SpimFabric.cpp": 1,
+      "SpisFabric.cpp": 0,
+      "TwimFabric.cpp": 0,
+      "TwisFabric.cpp": 0,
+      "UarteFabric.cpp": 0
+    },
+    "nucode.r01.spis": {
+      "SerialFabric.cpp": 1,
+      "SerialFabricLifecycle.cpp": 1,
+      "SerialFabricRegistry.cpp": 1,
+      "SpimFabric.cpp": 0,
+      "SpisFabric.cpp": 1,
+      "TwimFabric.cpp": 0,
+      "TwisFabric.cpp": 0,
+      "UarteFabric.cpp": 0
+    },
+    "nucode.r01.twim": {
+      "SerialFabric.cpp": 1,
+      "SerialFabricLifecycle.cpp": 1,
+      "SerialFabricRegistry.cpp": 1,
+      "SpimFabric.cpp": 0,
+      "SpisFabric.cpp": 0,
+      "TwimFabric.cpp": 1,
+      "TwisFabric.cpp": 0,
+      "UarteFabric.cpp": 0
+    },
+    "nucode.r01.twis": {
+      "SerialFabric.cpp": 1,
+      "SerialFabricLifecycle.cpp": 1,
+      "SerialFabricRegistry.cpp": 1,
+      "SpimFabric.cpp": 0,
+      "SpisFabric.cpp": 0,
+      "TwimFabric.cpp": 0,
+      "TwisFabric.cpp": 1,
+      "UarteFabric.cpp": 0
+    },
+    "nucode.r01.uarte": {
+      "SerialFabric.cpp": 1,
+      "SerialFabricLifecycle.cpp": 1,
+      "SerialFabricRegistry.cpp": 1,
+      "SpimFabric.cpp": 0,
+      "SpisFabric.cpp": 0,
+      "TwimFabric.cpp": 0,
+      "TwisFabric.cpp": 0,
+      "UarteFabric.cpp": 1
+    },
+    "nucode.v04.pair_dut": {
+      "SerialFabric.cpp": 1,
+      "SerialFabricLifecycle.cpp": 1,
+      "SerialFabricRegistry.cpp": 1,
+      "SpimFabric.cpp": 1,
+      "SpisFabric.cpp": 1,
+      "TwimFabric.cpp": 1,
+      "TwisFabric.cpp": 1,
+      "UarteFabric.cpp": 1
+    },
+    "nucode.v04.pair_peer": {
+      "SerialFabric.cpp": 1,
+      "SerialFabricLifecycle.cpp": 1,
+      "SerialFabricRegistry.cpp": 1,
+      "SpimFabric.cpp": 1,
+      "SpisFabric.cpp": 1,
+      "TwimFabric.cpp": 1,
+      "TwisFabric.cpp": 1,
+      "UarteFabric.cpp": 1
+    }
+  }
+}

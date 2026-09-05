@@ -22,6 +22,8 @@ class SerialConcurrencyTests(unittest.TestCase):
                 command.extend(['-I', str(ROOT / include)])
             command.extend(str(ROOT / path) for path in ['tests/host/r10_serial_concurrency_main.cpp',
                            'cores/arduino/SerialFabric.cpp',
+                           'cores/arduino/internal/serial/SerialFabricRegistry.cpp',
+                           'cores/arduino/internal/serial/SerialFabricLifecycle.cpp',
                            'cores/arduino/internal/io_resource_manager.cpp',
                            'cores/arduino/internal/resource/IoResourceTable.cpp'])
             command.extend(['-o', str(binary)])

@@ -1,0 +1,120 @@
+{
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "container_digest": "sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace",
+  "gate": "m12-zephyr-build-subset",
+  "group": "all",
+  "jobs": 4,
+  "m16_role_builds": [],
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "scenarios": [
+    "nucode.r01.none",
+    "nucode.r01.uarte",
+    "nucode.r01.spim",
+    "nucode.r01.spis",
+    "nucode.r01.twim",
+    "nucode.r01.twis",
+    "nucode.r01.all",
+    "nucode.v04.pair_dut",
+    "nucode.v04.pair_peer"
+  ],
+  "schema_version": 2,
+  "serial_source_builds": [
+    {
+      "compile_commands_sha256": "f9daa8d9768e04f6b8a32cd23298a72e2ea0436cfdf63d0e057bedf0c595b7ec",
+      "config_sha256": "51af112b90e6968d8f623e7ec96a6900af04e3fb06992916a2d8a851d4d9ea8f",
+      "elf_sha256": "d163aa5d83af840b07a0c44c40349642c379cce012d853160644e07f97531df8",
+      "resolved_personalities": [],
+      "scenario": "nucode.r01.none",
+      "sources": {},
+      "target": "nucode_arduino_core"
+    },
+    {
+      "compile_commands_sha256": "5184e82f460beb80f4d529921bbc2f616966e16c6716000384c712f9d23d2126",
+      "config_sha256": "cc23392841006050a81a472f9830891627cd7fc06179140f7140140756e557e7",
+      "elf_sha256": "1d09f3c7362eaf0e2e8b24c80f85ed5650b208b35cf9e95ad68ab2d0865fbd6e",
+      "resolved_personalities": [
+        "UARTE"
+      ],
+      "scenario": "nucode.r01.uarte",
+      "sources": {
+        "UARTE": "cores/arduino/UarteFabric.cpp"
+      },
+      "target": "nucode_arduino_core"
+    },
+    {
+      "compile_commands_sha256": "93adc80e94b58534b4f8c8c672d8b50823ebc81fca32d61fafc3ac47396c9b7c",
+      "config_sha256": "d6033f7c12a48912563a8b358c9bc8bd208fce9209c4b85e0a9f5c8952683a1c",
+      "elf_sha256": "4434d4c38113d7401645ba4046d7a390a868eae63a6c1072ce4eb49d76c891b3",
+      "resolved_personalities": [
+        "SPIM"
+      ],
+      "scenario": "nucode.r01.spim",
+      "sources": {
+        "SPIM": "cores/arduino/SpimFabric.cpp"
+      },
+      "target": "nucode_arduino_core"
+    },
+    {
+      "compile_commands_sha256": "a8db6d3ae72209cca16191513bfa56dff2a275a248ded594636e9d8d3c143ec3",
+      "config_sha256": "dfcb5a69db9c20add67aeaf81615d5a12542491262286a0e114ca6669e85a738",
+      "elf_sha256": "aec5e5a56a19b7d9fe3b550cdd28f5bfafd20346336d7a2e2f4260ebeb3facdd",
+      "resolved_personalities": [
+        "SPIS"
+      ],
+      "scenario": "nucode.r01.spis",
+      "sources": {
+        "SPIS": "cores/arduino/SpisFabric.cpp"
+      },
+      "target": "nucode_arduino_core"
+    },
+    {
+      "compile_commands_sha256": "3001d49517bc90138f81f2b953829bd973f50be0ed9981afc555322aaab84b21",
+      "config_sha256": "ade2e28a8d6d6549be25202b80208ce6891f12c1f25de31134c081b0f4851965",
+      "elf_sha256": "b91f8fbb1d0d974c6a9cf13071fac94fbd0a8ad9500e49aa3775943d12375a18",
+      "resolved_personalities": [
+        "TWIM"
+      ],
+      "scenario": "nucode.r01.twim",
+      "sources": {
+        "TWIM": "cores/arduino/TwimFabric.cpp"
+      },
+      "target": "nucode_arduino_core"
+    },
+    {
+      "compile_commands_sha256": "fdd8aad6092009df20ec73383c89961688de3e4fb11e1882416c4cd4648c2921",
+      "config_sha256": "1292af999053e4f868802996b22c00a946a8754eb11c9eff296bfb70ac54010f",
+      "elf_sha256": "a9b07e5d2469017cde7bdceacbfaec060b014231419b5a30640135b2149988a8",
+      "resolved_personalities": [
+        "TWIS"
+      ],
+      "scenario": "nucode.r01.twis",
+      "sources": {
+        "TWIS": "cores/arduino/TwisFabric.cpp"
+      },
+      "target": "nucode_arduino_core"
+    },
+    {
+      "compile_commands_sha256": "4c770f596c90fd7f3889af485822446ce6d9a0674439006949a846e6124d8361",
+      "config_sha256": "95a0511ef873a6f1add11f599ab7b45f4a8100836d8878748c9fb7b058eb6746",
+      "elf_sha256": "37af40c408b084a279200fa4e60dcbdaa2b8436fd549a98a5ffcc0eb301330c3",
+      "resolved_personalities": [
+        "SPIM",
+        "SPIS",
+        "TWIM",
+        "TWIS",
+        "UARTE"
+      ],
+      "scenario": "nucode.r01.all",
+      "sources": {
+        "SPIM": "cores/arduino/SpimFabric.cpp",
+        "SPIS": "cores/arduino/SpisFabric.cpp",
+        "TWIM": "cores/arduino/TwimFabric.cpp",
+        "TWIS": "cores/arduino/TwisFabric.cpp",
+        "UARTE": "cores/arduino/UarteFabric.cpp"
+      },
+      "target": "nucode_arduino_core"
+    }
+  ],
+  "status": "passed",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+}

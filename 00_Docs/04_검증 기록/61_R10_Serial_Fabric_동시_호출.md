@@ -73,3 +73,31 @@ section은 유지하며 긴 lifecycle STOP 확인에서만 전역 mutex를 해�
 [수정 후](evidence/r10a-1c956b7/after-initial.txt)에 연결한다.
 R10-A 완료는 R10 전체 완료가 아니다. 다음 R10-B에서 registry·IRQ·lifecycle을 분리하고
 동일 Host 및 선택/비선택 target를 재검증한다. 공개 header·Kconfig 상호 배제는 유지한다.
+
+## R10-B 구조 분리 결과
+
+factory, 단일 registry·IRQ, lifecycle·복구를 책임 대응표대로 분리했다. 긴 STOP 대기의
+예약·mutex 해제/재획득 순서를 포함한 38개 본문은 accessor 치환과 정렬 외 동일하다.
+공개 `SerialFabric.h`, 내부 backend 계약 및 5개 adapter의 byte도 동일하다.
+Host 명시적 source 목록과 M24 계약 검사기의 backend 경로를 갱신했다.
+처음 전체 Host는 옛 단일 파일에서만 lease 함수를 찾는 검사기로 실패했고, 분리된 필수
+파일을 모두 요구하도록 수정한 뒤 전체 Host가 619 PASS/2 SKIP다.
+
+| 검사 | 결과 |
+| --- | --- |
+| 동시성 / SPIM·TWIM production | 6 / 24개 PASS |
+| contract / inventory / style | 45/45 / PASS / 297개 PASS |
+| 선택/비선택 조합·DUT/peer | 9/9 build-only PASS, 326.84초 |
+| source 소속 | 공통 3개 각 1회, 각 personality의 미선택 adapter 0회 |
+| pair DUT flash / RAM | 184,016 → 183,824 B / 161,496 B 동일 |
+| 정적 객체 / 공개 method symbol | context 27,416 B·block 80 B·adapter 552 B·등록 23 B·mutex 20 B 동일, 제거 없음 |
+
+`r01.none`은 공통 Serial Fabric은 켜고 5개 personality만 끈 구성이다. 따라서 공통
+3개 source는 포함되며 adapter가 0개다. 실제 함수 분리의 flash 변화만 기록하며
+실기 성능·IRQ latency 개선은 주장하지 않는다. 모든 Host와 target은 물리 I/O 없이 실행했다.
+
+[software·source](evidence/r10b-7be9f71/software-and-source.json),
+[본문·header](evidence/r10b-7be9f71/comparison.json),
+[target](evidence/r10b-7be9f71/target-build.json),
+[메모리·symbol·소속](evidence/r10b-7be9f71/target-comparison.json)에 증거를 둔다.
+다음 R10-C는 향후 HIL 결과의 synchronous scope metadata만 교정한다. 역사적 raw evidence는 유지한다.

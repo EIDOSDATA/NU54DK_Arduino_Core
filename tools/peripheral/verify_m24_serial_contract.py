@@ -26,6 +26,11 @@ DOCUMENT_PATH = (
 )
 PUBLIC_HEADER_PATH = REPOSITORY / "cores" / "arduino" / "nucode" / "SerialFabric.h"
 BACKEND_SOURCE_PATH = REPOSITORY / "cores" / "arduino" / "SerialFabric.cpp"
+BACKEND_SOURCE_PATHS = (
+    BACKEND_SOURCE_PATH,
+    REPOSITORY / "cores/arduino/internal/serial/SerialFabricRegistry.cpp",
+    REPOSITORY / "cores/arduino/internal/serial/SerialFabricLifecycle.cpp",
+)
 ROUTE_SOURCE_PATH = REPOSITORY / "variants" / "nu54dk" / "serial_fabric_routes.cpp"
 
 EXPECTED_BLOCKS = {
@@ -347,12 +352,12 @@ def validate_surface(contract: dict[str, Any]) -> None:
         if token not in joined:
             raise ContractFailure(f"advanced API rules omit {token!r}")
 
-    required_sources = (PUBLIC_HEADER_PATH, BACKEND_SOURCE_PATH, ROUTE_SOURCE_PATH)
+    required_sources = (PUBLIC_HEADER_PATH, *BACKEND_SOURCE_PATHS, ROUTE_SOURCE_PATH)
     missing = [path.relative_to(REPOSITORY).as_posix() for path in required_sources if not path.is_file()]
     if missing:
         raise ContractFailure(f"advanced API candidate source is missing: {missing}")
     header = PUBLIC_HEADER_PATH.read_text(encoding="utf-8")
-    backend = BACKEND_SOURCE_PATH.read_text(encoding="utf-8")
+    backend = "\n".join(path.read_text(encoding="utf-8") for path in BACKEND_SOURCE_PATHS)
     route = ROUTE_SOURCE_PATH.read_text(encoding="utf-8")
     for token in ("class SerialFabric", "class UarteHandle", "class SpimHandle", "class SpisHandle", "class TwimHandle", "class TwisHandle"):
         if token not in header:

@@ -124,6 +124,8 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/SerialFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/serial/SerialFabricRegistry.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/serial/SerialFabricLifecycle.cpp"
       "${NUCODE_ARDUINO_VARIANT_ROOT}/serial_fabric_routes.cpp"
     )
   endif()
