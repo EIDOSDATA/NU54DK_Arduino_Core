@@ -168,9 +168,10 @@ class FixtureTests(unittest.TestCase):
 
     def test_spi_split_buffer_waits_for_peer_rearm_before_second_segment(self):
         class Device:
-            def __init__(self, role):
+            def __init__(self, role, trace):
                 self.image = {"role": role}
                 self.role = role
+                self.trace = trace
                 self.status_count = 0
                 self.seed = 0
                 self.commands = []
@@ -178,6 +179,7 @@ class FixtureTests(unittest.TestCase):
             def command(self, opcode, values=(), timeout=10):
                 del timeout
                 self.commands.append(opcode)
+                self.trace.append((self.role, opcode))
                 if opcode == 18:
                     return []
                 if opcode == 20:
@@ -207,13 +209,16 @@ class FixtureTests(unittest.TestCase):
                     return [0, 1]
                 raise AssertionError(f"unexpected opcode: {opcode}")
 
-        devices = [Device(1), Device(2)]
+        trace = []
+        devices = [Device(1, trace), Device(2, trace)]
         results = []
         fixture.exchange(devices, {"id": 201, "family": "spi"}, 1, (0, 20),
                          (2000000, 0, 0, 4, 3, 2),
                          lambda case_id, result: results.append((case_id, result)))
         self.assertIn(28, devices[0].commands)
         self.assertNotIn(28, devices[1].commands)
+        second_start = trace.index((1, 28))
+        self.assertEqual(trace[second_start - 2:second_start], [(2, 18), (1, 18)])
         self.assertEqual(len(results), 1)
 
 
