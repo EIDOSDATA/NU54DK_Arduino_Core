@@ -183,6 +183,10 @@ class M9SafetyContractTests(unittest.TestCase):
 
         platform = self.root / "platform"
         board_root = platform / "board_package" / "NU54DK_Zephyr_DTS"
+        identity = platform / "cores/arduino/internal/CoreIdentity.h"
+        identity.parent.mkdir(parents=True)
+        identity.write_text('#define NUCODE_CORE_SOURCE_VERSION "0.4.0-dev"\n', encoding="utf-8")
+        (platform / "platform.txt").write_text("version=0.4.0-dev\n", encoding="utf-8")
         (board_root / "boards" / "nucode" / "nu54dk").mkdir(parents=True)
         (board_root / "boards" / "nucode" / "nu54dk" / "board.yml").write_text(
             "board: fixture\n", encoding="utf-8"

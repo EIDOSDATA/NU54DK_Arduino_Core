@@ -6,6 +6,7 @@
  */
 
 #include "NUCODE_NU54DK.h"
+#include "internal/CoreIdentity.h"
 
 #include <ctype.h>
 #include <errno.h>
@@ -334,7 +335,7 @@ namespace nucode::nu54dk
 
     const char *BoardSystem::coreVersion() const noexcept
     {
-        return "0.2.0-dev";
+        return NUCODE_CORE_SOURCE_VERSION;
     }
 
     Error BoardSystem::deviceId(char *destination, std::size_t destination_size) noexcept

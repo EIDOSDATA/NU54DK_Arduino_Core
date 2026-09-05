@@ -93,6 +93,25 @@ class CacheBusyError(AdapterError):
     """! @brief 사용 중인 cache entry의 삭제를 안전하게 건너뛰기 위한 오류입니다. """
 
 
+## @brief Core 소스 버전과 설치 배포 버전을 각각 원본에서 읽습니다.
+def load_product_identity(platform_root: Path) -> dict[str, str]:
+    try:
+        header = (platform_root / "cores/arduino/internal/CoreIdentity.h").read_text(encoding="utf-8")
+        platform = (platform_root / "platform.txt").read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as error:
+        raise AdapterError("[NU54:E_PRODUCT_IDENTITY] 제품 identity 원본을 읽을 수 없습니다.") from error
+    definitions = [line for line in header.splitlines()
+                   if re.match(r"^#define[ \t]+NUCODE_CORE_SOURCE_VERSION[ \t]+", line)]
+    versions = [line[len("version="):] for line in platform.splitlines() if line.startswith("version=")]
+    if len(definitions) != 1 or len(versions) != 1:
+        raise AdapterError("[NU54:E_PRODUCT_IDENTITY] 소스·배포 버전은 각각 하나여야 합니다.")
+    match = re.fullmatch(r'#define[ \t]+NUCODE_CORE_SOURCE_VERSION[ \t]+"([^"\r\n]+)"[ \t]*', definitions[0])
+    pattern = r"[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?"
+    if match is None or not re.fullmatch(pattern, match[1]) or not re.fullmatch(pattern, versions[0]):
+        raise AdapterError("[NU54:E_PRODUCT_IDENTITY] 제품 버전 형식이 올바르지 않습니다.")
+    return {"source_version": match[1], "package_version": versions[0]}
+
+
 ## @brief 경로를 존재 여부와 무관하게 절대 경로로 정규화합니다.
 def canonical_path(value: str | Path) -> Path:
     return Path(value).expanduser().resolve(strict=False)
@@ -1433,6 +1452,7 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
             "M9 build cache를 platform/board fingerprint 내부에 둘 수 없습니다: "
             f"{cache_root}"
         )
+    product_identity = load_product_identity(platform_root)
     tools = tool_environment(platform_root)
     input_manifest = cache_input_manifest(session_paths, args, tools)
     cache_key = cache_key_for_manifest(input_manifest)
@@ -1557,6 +1577,7 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
             context = {
                 "schema_version": SESSION_CONTEXT_SCHEMA_VERSION,
                 "adapter_version": ADAPTER_VERSION,
+                "product_identity": product_identity,
                 "state": "configured",
                 "fqbn": args.fqbn,
                 "board": args.board,
@@ -2658,6 +2679,7 @@ def link(args: argparse.Namespace) -> None:
                     manifest = {
                     "schema_version": ARTIFACT_MANIFEST_SCHEMA_VERSION,
                     "adapter_version": ADAPTER_VERSION,
+                    "product_identity": load_product_identity(paths["platform_root"]),
                     "fqbn": args.fqbn,
                     "board": args.board,
                     "sysbuild": False,

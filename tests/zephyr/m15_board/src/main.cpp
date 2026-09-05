@@ -7,6 +7,7 @@
 
 #include <Arduino.h>
 #include <NUCODE_NU54DK.h>
+#include <internal/CoreIdentity.h>
 
 #include <zephyr/ztest.h>
 
@@ -103,7 +104,8 @@ ZTEST(m15_board, test_identity_and_read_only_state_use_production_backend)
     zassert_not_null(NU54DK.socName(), "SoC identity가 nullptr입니다.");
     zassert_equal(::strcmp(NU54DK.ncsVersion(), "3.4.0"), 0, "고정 NCS identity가 다릅니다.");
     zassert_not_null(NU54DK.zephyrVersion(), "Zephyr identity가 nullptr입니다.");
-    zassert_not_null(NU54DK.coreVersion(), "Core identity가 nullptr입니다.");
+    zassert_equal(::strcmp(NU54DK.coreVersion(), NUCODE_CORE_SOURCE_VERSION), 0,
+                  "Core 소스 identity 원본과 runtime 표시가 다릅니다.");
 
     char device_id[33] = {};
     zassert_equal(NU54DK.deviceId(device_id, sizeof(device_id)), Error::none,

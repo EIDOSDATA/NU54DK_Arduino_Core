@@ -105,3 +105,6 @@ production 회귀 26개와 target 5/5 build-only에 연결한다. 새 physical �
 
 R04 File 공유 slot 참조·마지막 close·thread 교차는 [55번 기록](55_R04_File_공유_slot_수명주기.md)의
 production 회귀 8개와 AC-03 target 2/2 build-only에 연결한다.
+
+R05 Core 소스·설치 package identity는 [56번 기록](56_R05_Core_소스와_패키지_identity.md)의
+6개 Host 회귀, target 2/2 및 ELF 문자열 확인에 연결한다.

@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.20.0)
 
+include("${CMAKE_CURRENT_LIST_DIR}/product_identity.cmake")
+nucode_product_identity("${NUCODE_CORE_ROOT}" source_version package_version)
+
 function(nucode_git_revision directory output_variable check_dirty)
   set(revision "unknown")
 
@@ -165,6 +168,8 @@ nucode_files_digest(
 )
 
 foreach(variable IN ITEMS
+    source_version
+    package_version
     core_revision
     core_source_sha256
     application_source_sha256
@@ -182,6 +187,8 @@ endforeach()
 
 string(CONCAT build_record_content
   "nucode_arduino_core:\n"
+  "  source_version: ${source_version_yaml}\n"
+  "  package_version: ${package_version_yaml}\n"
   "  core_revision: ${core_revision_yaml}\n"
   "  core_source_sha256: ${core_source_sha256_yaml}\n"
   "  application_source_sha256: ${application_source_sha256_yaml}\n"
