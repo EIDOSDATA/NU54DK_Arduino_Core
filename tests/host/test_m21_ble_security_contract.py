@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import re
 import unittest
+from ble_source_contracts import security_source, function_body
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
@@ -74,7 +75,7 @@ class M21BleSecurityContractTests(unittest.TestCase):
     def test_backend_reuses_common_stack_and_connection_hooks(self) -> None:
         """! @brief M21이 bt_enable이나 별도 connection callback을 만들지 못하게 합니다. """
 
-        source = SOURCE.read_text(encoding="utf-8")
+        source = security_source()
         self.assertNotIn("bt_enable(", source)
         self.assertNotIn("BT_CONN_CB_DEFINE", source)
         self.assertIn("internal::settingsReady()", source)
@@ -99,7 +100,7 @@ class M21BleSecurityContractTests(unittest.TestCase):
     def test_library_discovery_phase_excludes_internal_zephyr_backend(self) -> None:
         """! @brief Arduino 탐색 compile에서는 공개 header만 해석하도록 고정합니다. """
 
-        source = SOURCE.read_text(encoding="utf-8")
+        source = security_source()
         public_include = source.index("#include <NUCODE_BLE_Security.h>")
         guard = source.index("#if !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE)")
         internal_include = source.index("#include <internal/NUCODE_BLE_Internal.h>")
@@ -116,7 +117,7 @@ class M21BleSecurityContractTests(unittest.TestCase):
     def test_pairing_callbacks_defer_user_code_and_never_log_secrets(self) -> None:
         """! @brief stack callback에서 Sketch callback·Serial passkey 출력을 금지합니다. """
 
-        source = SOURCE.read_text(encoding="utf-8")
+        source = security_source()
         self.assertIn("K_MSGQ_DEFINE(security_event_queue", source)
         self.assertIn("k_msgq_put", source)
         self.assertIn("k_msgq_get", source)
@@ -147,7 +148,7 @@ class M21BleSecurityContractTests(unittest.TestCase):
         """! @brief 실제 장치 입출력보다 강한 SMP capability를 광고하지 않습니다. """
 
         header = HEADER.read_text(encoding="utf-8")
-        source = SOURCE.read_text(encoding="utf-8")
+        source = security_source()
         example = EXAMPLE.read_text(encoding="utf-8")
 
         for capability in (
@@ -227,7 +228,7 @@ class M21BleSecurityContractTests(unittest.TestCase):
     def test_bond_is_verified_only_after_reboot_key_restore(self) -> None:
         """! @brief 같은 boot의 메모리 목록을 persistence 성공으로 오판하지 않습니다. """
 
-        source = SOURCE.read_text(encoding="utf-8")
+        source = security_source()
         header = HEADER.read_text(encoding="utf-8")
         for token in (
             "persistence_pending",
@@ -253,11 +254,10 @@ class M21BleSecurityContractTests(unittest.TestCase):
     def test_already_encrypted_restore_is_verified_without_duplicate_event(self) -> None:
         """! @brief connected 시점에 이미 L2인 bond 복원 race를 즉시 검증합니다. """
 
-        source = SOURCE.read_text(encoding="utf-8")
+        source = security_source()
         connected = source[source.index("void securityConnected") :]
         connected = connected[: connected.index("void securityDisconnected")]
-        changed = source[source.index("void securityChanged") :]
-        changed = changed[: changed.index("\n        }\n\n    }", 1)]
+        changed = function_body(source, "void securityChanged")
 
         self.assertIn("const bt_security_t level = bt_conn_get_security(connection)", connected)
         self.assertIn("verifySecureBond(connection, level)", connected)
@@ -275,11 +275,10 @@ class M21BleSecurityContractTests(unittest.TestCase):
     def test_security_request_synchronizes_an_already_secured_link(self) -> None:
         """! @brief 보안 요청 전·후에 이미 충족된 link를 event와 bond 상태에 동기화합니다. """
 
-        source = SOURCE.read_text(encoding="utf-8")
+        source = security_source()
         synchronizer = source[source.index("bool synchronizeSatisfiedSecurity") :]
         synchronizer = synchronizer[: synchronizer.index("\n    }", 1) + 6]
-        request = source[source.index("bool SecurityManager::requestSecurity") :]
-        request = request[: request.index("bool SecurityManager::acceptPairing")]
+        request = function_body(source, "bool SecurityManager::requestSecurity")
 
         self.assertIn("bt_conn_get_security(connection)", synchronizer)
         self.assertIn("level < required_level", synchronizer)
@@ -338,7 +337,7 @@ class M21BleSecurityContractTests(unittest.TestCase):
     def test_hid_is_protocol_automated_but_os_claim_is_absent(self) -> None:
         """! @brief protocol report와 OS 수동 확인 경계를 혼동하지 않도록 고정합니다. """
 
-        source = SOURCE.read_text(encoding="utf-8")
+        source = security_source()
         self.assertIn("keyboard_report_map", source)
         backend = (LIBRARY / "src/internal/NUCODE_BLE_HidsBackend.c").read_text(encoding="utf-8")
         self.assertIn("bt_hids_inp_rep_send", backend)

@@ -147,3 +147,39 @@ Host의 atomic_set fake는 실제 Zephyr처럼 이전 값을 반환하도록 exc
 M21은 기존 canonical 목록에 빠져 있어 같은 runner에 명시적으로 세 suite를 추가한 로컬
 wrapper를 썼다. 전체 software 목록 반영은 R13에서 수행한다. 다음은 이 보정본을 기준으로
 Security/pairing/bond/BAS/DIS/HID 파일만 분리하는 R12-C1이다. 실기 NOT RUN.
+
+## R12-C1 Security/profile 분리 결과
+
+Security facade cpp는 connection/event와 공개 manager 초기화·poll을 소유한다.
+SecurityPairing은 pending 응답과 인증 callback, SecurityBond는 boot snapshot과 삭제
+rollback, SecurityHid는 HIDS reference·report/protocol mode, SecurityBattery와
+SecurityDeviceInformation은 BAS/DIS 값·오류를 각각 소유한다. 원래 mutex/spinlock 순서와
+pending reference 이동, 고정 queue 24개, boot bond snapshot 배열을 그대로 보존했다.
+내부 header는 39개 helper 선언을 공유하며 mutable extern은 추가하지 않는다.
+
+| 검사 | 결과 |
+| --- | --- |
+| 본문 / 공개·C bridge | 77개 본문 보존 / 3개 파일 byte 동일, keyboard report map 동일 |
+| 실제 Security Host | 분리 전후 12개 PASS; C bridge는 실제 C compiler로 별도 링크 |
+| 전체 Host | 626개 중 624 PASS·2 조건부 SKIP |
+| contract / inventory / style | 45/45 / PASS / 342개 PASS |
+| 추가 M21 target | contract·peripheral·central 3/3 build-only PASS |
+| source 소속 | 각 target에 Security 6개 cpp + HIDS C 1개가 정확히 1회 |
+
+| 동일 구성의 flash / RAM | C0 보정본 | 분리 후 |
+| --- | --- | --- |
+| M21 contract | 165,636 / 44,864 B | 165,848 / 44,888 B |
+| M21 peripheral | 242,624 / 58,072 B | 242,868 / 58,096 B |
+| M21 central | 242,944 / 58,056 B | 243,220 / 58,080 B |
+
+상태 배치와 module 호출로 RAM이 각 24 B 증가했다. 공개 method symbol 누락은 없다.
+첫 생성 header가 helper 안의 조건문까지 prototype으로 추출한 compile 오류는 실제 함수
+선언만 39개 남기도록 수정했다. source 계약은 파일 순서·들여쓰기 대신 함수 본문의
+중괄호 범위를 검사하고, 실제 구현의 callback·reference 시험도 함께 통과했다.
+
+[gate](evidence/r12c1-c90d2b1/software-and-source.json),
+[본문·header](evidence/r12c1-c90d2b1/comparison.json),
+[target](evidence/r12c1-c90d2b1/target-build.json),
+[메모리·symbol](evidence/r12c1-c90d2b1/target-comparison.json),
+[실제 Host](evidence/r12c1-c90d2b1/security-after.txt)를 보존한다.
+다음은 R12-D EEPROM/LittleFS다. R12 전체는 D 완료 전까지 진행 중이며 실기 NOT RUN이다.

@@ -7,12 +7,13 @@ import json
 from pathlib import Path
 import re
 import unittest
+from ble_source_contracts import security_source
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
 LIBRARY = REPOSITORY / "libraries" / "NUCODE_BLE_Security"
 HEADER = (LIBRARY / "src" / "NUCODE_BLE_Security.h").read_text(encoding="utf-8")
-SOURCE = (LIBRARY / "src" / "NUCODE_BLE_Security.cpp").read_text(encoding="utf-8")
+SOURCE = security_source()
 CONF = (LIBRARY / "zephyr" / "ble-security.conf").read_text(encoding="utf-8")
 FEATURE = json.loads((LIBRARY / "zephyr" / "feature.yml").read_text(encoding="utf-8"))
 HIL_SOURCE = (

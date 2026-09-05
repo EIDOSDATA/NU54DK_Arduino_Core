@@ -36,6 +36,11 @@ class BleSecurityTests(unittest.TestCase):
                         'libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp',
 
                         'libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.cpp',
+                        'libraries/NUCODE_BLE_Security/src/internal/security/SecurityPairing.cpp',
+                        'libraries/NUCODE_BLE_Security/src/internal/security/SecurityBond.cpp',
+                        'libraries/NUCODE_BLE_Security/src/internal/security/SecurityHid.cpp',
+                        'libraries/NUCODE_BLE_Security/src/internal/security/SecurityBattery.cpp',
+                        'libraries/NUCODE_BLE_Security/src/internal/security/SecurityDeviceInformation.cpp',
                         'tests/host/ble_stubs/hids_mock.cpp',
                         'tests/host/r12_ble_security_main.cpp']]
             result = subprocess.run(command + [str(c_object), '-o', str(binary)], capture_output=True, timeout=60)
