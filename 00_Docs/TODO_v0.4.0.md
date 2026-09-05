@@ -52,7 +52,7 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | 필드 | 현재 값 |
 | --- | --- |
 | 이번에 끝낸 일 | T01~T11. UART Fixture 101~103, SPI Fixture 201~203에 이어 exact `e2f045c`의 TWI Fixture 301에서 계획 기능 record 1,986개·cleanup 2·campaign 기록 2건, 총 1,990 result를 10 MHz SWD로 PASS |
-| 진행 중인 T 항목 | R00~R12 software 완료. [63번 기록](<./04_검증 기록/63_R12_BLE_Storage_수명주기.md>): BLE GAP/GATT/Security·Storage private 소유 경계, 실제 production Host 회귀, 전체 Host 626 PASS/2 SKIP, Storage target 2/2. current-source T11 NOT RUN |
+| 진행 중인 T 항목 | R00~R12와 R13-A package software 완료. [64번 기록](<./04_검증 기록/64_R13_도구_정책_build_구조.md>): 43개 AST·7개 산출물·8개 CLI 보존, package 20/20·contract 45/45·새 Host 5개·M18/M27 회귀 PASS. R13-B/C 및 최종 전체 gate 남음. current-source T11 NOT RUN |
 | 다음 구체적 행동 | R13: package 입력/model·license/SBOM/provenance·archive·index·검증 책임을 기존 CLI wrapper 아래 분리한다. 기존 정책 JSON/schema·생성기 원본과 deterministic drift/부정 계약을 연결한다. Kconfig 기능 파일과 CMake source/identity/provenance 경계를 기존 resolved config·target 소속 보존 하에 분리하고 누락 M21 target를 canonical runner에 연결한다. 문서·증거 책임 지도를 기록한 뒤 전체 Host/contract/inventory/docs/package/실제 설치 예제/target/style을 통과한 exact main을 push하고 T11 직전에 정지 |
 | 다음 작업에 필요한 사용자 행동 | R00~R13 구현·software gate에는 없음. 최종 current-source T11 회귀를 시작할 때 안내한 첫 fixture로 전원 OFF 상태에서 결선 변경 |
 | 외부 결선 상태 | Fixture 301 SDA·SCL·GND가 연결된 상태, 외부 저항·전원 rail 없음, 양쪽 `DISABLE_UART` 분리·`DISABLE_SWD` 연결. R13 뒤 최종 T11 회귀 시작 전 USB 전원을 끄고 해당 fixture 결선으로 변경해야 함 |
@@ -60,7 +60,7 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | 마지막 정식 외부 HIL source | `e2f045c1b4272d986d17456c5af051fe8af74f19` — Fixture 301 두 보드 exact role image TWI PASS |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; T09 무배선 PASS만 추가됐으며 외부 결선·RC·최종 공개 승인 없음 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | R12-D 전체 Host 및 C:/r12d target 2/2 종료; C:/r12dp 기준선 보존. flash/HIL 없음 |
+| 이 TODO 작성 작업의 실행 중 시험 | R13-A package/contract/Host 종료. C:/r13p 분리 전 대표 target 12/12 build-only PASS. 다음은 Kconfig/CMake 기계적 분할 및 M21 canonical 목록 보완. flash/HIL 없음 |
 | 로컬 임시 build·evidence | R00~R05 target/cache와 work/r00~r06 및 영구 evidence/r06-feaccc7, r06-f1b3fa4 보존. R06 설치 C:/r6base,r6fin 및 실패 C:/r6pkg,r6fix,r6sp, 중간 C:/r6cp. R07 기준선 C:/r7pre. 로컬 검증용 별도 index와 참조 없는 snapshot commit은 work/r06에 기록; 임시 branch/worktree 없음 |
 | 최종 정렬 gate | clang-format 22.1.8로 직접 관리 C/C++/ino 227개 write·dry-run PASS. Fixture 102 기록 전 남은 공통 header 들여쓰기 한 곳을 교정했고 M12 Host 전체·DUT/peer target 2/2 재검증 PASS, 실기 image와 runtime HEX SHA-256 동일. 한국어 Doxygen·Allman/4칸/중괄호 필수 적용 |
 | CI 확인 | 이전 `661fad9`의 [Software Gates](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811058)와 [Reproducible Builds](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811030) success 보존. `25c7f03` 계획 통합은 로컬 전체 gate를 통과해 원격 `main`에 push됐으며, 당시 로컬 GitHub CLI 인증이 없어 새 Actions 상태는 미확인 |

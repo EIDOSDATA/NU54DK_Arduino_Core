@@ -11,6 +11,25 @@
 Boards Manager ZIP, index, checksum, release manifest, SPDX SBOM, license inventory와
 third-party notices를 재현 가능하게 생성합니다.
 
+## 내부 책임과 호환 진입점
+
+`nu54_package.py`는 기존 CLI와 Python 함수·상수 이름을 유지하는 진입점입니다.
+동일 디렉터리의 `nu54_package_impl`만 명시적으로 로드하므로 외부 CWD나 PYTHONPATH의
+동명 모듈에 의존하지 않습니다. `python -I`에서도 같은 방식으로 동작합니다.
+
+| 내부 모듈 | 책임 |
+| --- | --- |
+| model / channels | SourceFile·오류·고정 계약, version/channel·공개 identity |
+| inputs / serialization | exact Git·gitlink 입력·allowlist·byte 변환, JSON·hash·checksum |
+| licenses / sbom / manifest | license·외부 prerequisite, SPDX 관계, runtime provenance |
+| archive / validation | 결정적 ZIP·sidecar 생성, 실제 파일·metadata·공개 identity 검증 |
+| index / build / cli | Boards Manager index, 생성·검증 orchestration, 인자·진단·종료 코드 |
+
+생성 출력과 실제 archive 검증은 별도 책임입니다. public entrypoint, 인자, marker,
+schema와 stable 재현 조건은 그대로 유지하며, 과거 tag의 재현은 그 tag의 원래 도구를 사용합니다.
+R13의 본문·CLI·산출물 byte 비교는
+[64번 기록](<../../00_Docs/04_검증 기록/64_R13_도구_정책_build_구조.md>)에서 추적합니다.
+
 ## 공개 stable은 불변
 
 공개된 `v0.1.0`, `v0.2.0`, `v0.3.0`의 tag, ZIP, 부속 자산과 version별 index snapshot은

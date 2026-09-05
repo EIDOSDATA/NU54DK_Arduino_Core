@@ -1,0 +1,149 @@
+{
+  "cli_relative_root_adjustment": "parents[2] -> parents[3]; same repository root",
+  "mapping": {
+    "archive": [
+      "write_deterministic_zip",
+      "write_external_checksums"
+    ],
+    "build": [
+      "build_package"
+    ],
+    "channels": [
+      "legal_review_status",
+      "archive_filename",
+      "release_channel",
+      "version_sort_key",
+      "release_tag",
+      "release_asset_url"
+    ],
+    "cli": [
+      "build_parser",
+      "main"
+    ],
+    "index": [
+      "generate_index",
+      "validate_index"
+    ],
+    "inputs": [
+      "run_checked",
+      "resolve_commit",
+      "commit_timestamp",
+      "git_tree_entries",
+      "git_blob",
+      "ensure_safe_relative_path",
+      "include_core_path",
+      "include_board_path",
+      "rewrite_platform_version",
+      "rewrite_windows_command_line_endings",
+      "collect_source_files"
+    ],
+    "licenses": [
+      "declared_spdx_identifiers",
+      "build_external_prerequisites",
+      "build_license_inventory",
+      "build_third_party_notices",
+      "concluded_file_license"
+    ],
+    "manifest": [
+      "build_release_manifest"
+    ],
+    "model": [
+      "LEGACY_PREVIEW_VERSIONS",
+      "FAILED_M10_PREVIEW_VERSIONS",
+      "SAFE_PREVIEW_VERSIONS",
+      "SUPPORTED_VERSIONS",
+      "RELEASE_CANDIDATE_VERSIONS",
+      "STABLE_VERSIONS",
+      "STABLE_RELEASE_COMMITS",
+      "PUBLISHED_STABLE_ARCHIVE_IDENTITIES",
+      "PACKAGE_VERSIONS",
+      "WINDOWS_SAFE_VERSIONS",
+      "VENDOR",
+      "ARCHITECTURE",
+      "MAINTAINER",
+      "CONTACT_EMAIL",
+      "REPOSITORY_URL",
+      "BOARD_REPOSITORY_URL",
+      "INDEX_FILENAME",
+      "RC_INDEX_FILENAME",
+      "STABLE_INDEX_FILENAME",
+      "LEGAL_REVIEW_REQUIRED",
+      "STABLE_LEGAL_REVIEW_STATUSES",
+      "NCS_VERSION",
+      "NCS_REVISION",
+      "ZEPHYR_VERSION",
+      "ZEPHYR_REVISION",
+      "TOOLCHAIN_BUNDLE_ID",
+      "ZIP_TIMESTAMP",
+      "MAX_ARCHIVE_SIZE",
+      "MAX_FILE_SIZE",
+      "METADATA_FILES",
+      "PackageError",
+      "SourceFile"
+    ],
+    "sbom": [
+      "build_spdx"
+    ],
+    "serialization": [
+      "strict_json_loads",
+      "canonical_json",
+      "sha256_bytes",
+      "sha1_bytes",
+      "normalize_runtime_payload_bytes",
+      "runtime_payload_sha256",
+      "build_internal_checksums",
+      "parse_checksums"
+    ],
+    "validation": [
+      "validate_archive",
+      "validate_index_archive"
+    ]
+  },
+  "mutable_candidate_contract": "three version tuples read from one model; explicit M27 registration; independent import generation",
+  "physical_executed": false,
+  "preserved_ast": [
+    "PackageError",
+    "SourceFile",
+    "strict_json_loads",
+    "canonical_json",
+    "sha256_bytes",
+    "sha1_bytes",
+    "normalize_runtime_payload_bytes",
+    "runtime_payload_sha256",
+    "build_internal_checksums",
+    "parse_checksums",
+    "run_checked",
+    "resolve_commit",
+    "commit_timestamp",
+    "git_tree_entries",
+    "git_blob",
+    "ensure_safe_relative_path",
+    "include_core_path",
+    "include_board_path",
+    "rewrite_platform_version",
+    "rewrite_windows_command_line_endings",
+    "collect_source_files",
+    "declared_spdx_identifiers",
+    "build_external_prerequisites",
+    "build_license_inventory",
+    "build_third_party_notices",
+    "concluded_file_license",
+    "build_spdx",
+    "legal_review_status",
+    "archive_filename",
+    "release_channel",
+    "version_sort_key",
+    "release_tag",
+    "release_asset_url",
+    "build_release_manifest",
+    "write_deterministic_zip",
+    "write_external_checksums",
+    "validate_archive",
+    "validate_index_archive",
+    "generate_index",
+    "validate_index",
+    "build_package",
+    "build_parser",
+    "main"
+  ]
+}

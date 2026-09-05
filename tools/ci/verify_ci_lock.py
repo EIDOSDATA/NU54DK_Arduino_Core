@@ -17,7 +17,7 @@ from typing import Any, Sequence
 REPOSITORY = Path(__file__).resolve().parents[2]
 LOCK_PATH = Path(__file__).with_name("ncs-3.4.0.lock.json")
 PINS_PATH = REPOSITORY / "tools" / "nu54-prerequisites" / "pins.json"
-PACKAGE_MODULE = REPOSITORY / "packaging" / "boards-manager" / "nu54_package.py"
+PACKAGE_MODEL = REPOSITORY / "packaging" / "boards-manager" / "nu54_package_impl" / "model.py"
 
 
 class LockFailure(RuntimeError):
@@ -135,7 +135,7 @@ def validate_lock(lock: dict[str, Any]) -> None:
             raise LockFailure(f"{label}가 prerequisite pins와 다릅니다: {actual} != {expected}")
 
     try:
-        package_source = PACKAGE_MODULE.read_text(encoding="utf-8")
+        package_source = PACKAGE_MODEL.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError) as error:
         raise LockFailure(f"package source를 읽지 못했습니다: {error}") from error
     for name, expected in (

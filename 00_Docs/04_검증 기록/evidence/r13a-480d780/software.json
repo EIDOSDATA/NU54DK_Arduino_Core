@@ -1,0 +1,32 @@
+{
+  "gates": {
+    "contract": {
+      "log_sha256": "33b680261f635e03670778c94526d4cd97b21ebfa4ba458846cfede296f74807",
+      "skips": 0,
+      "tests": 45
+    },
+    "m18-host": {
+      "log_sha256": "9ee8cf55ef159eab63bb0ac834561748772c5baf6f13157819e8575be131c5bc",
+      "skips": 0,
+      "tests": 25
+    },
+    "m27-host": {
+      "log_sha256": "8ffb1cd469774c43a03d4f6d7eb7164be89c63219aab39672feb54d8e99358fb",
+      "skips": 1,
+      "tests": 9
+    },
+    "module-host": {
+      "log_sha256": "3cbe60c0f511d5cfdf0cb4caaf185716b2d3db23dafd82cde304321e03c37f2d",
+      "skips": 0,
+      "tests": 5
+    },
+    "package": {
+      "log_sha256": "cf06b271b7e85c6209eea8e0b121f87e3246bbc6047ab4b4b55d6c589cf28967",
+      "skips": 0,
+      "tests": 20
+    }
+  },
+  "physical_executed": false,
+  "published": false,
+  "start_commit": "480d780"
+}

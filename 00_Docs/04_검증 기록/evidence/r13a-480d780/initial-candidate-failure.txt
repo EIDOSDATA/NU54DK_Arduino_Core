@@ -1,0 +1,25 @@
+test_candidate_extension_does_not_add_unapproved_stable (__main__.M27ReleaseTests.test_candidate_extension_does_not_add_unapproved_stable) ... ERROR
+test_clean_submodule_status_survives_trimmed_first_prefix (__main__.M27ReleaseTests.test_clean_submodule_status_survives_trimmed_first_prefix) ... skipped 'source checkout is intentionally dirty during the unit run'
+test_cli_exposes_no_publish_or_finalize_command (__main__.M27ReleaseTests.test_cli_exposes_no_publish_or_finalize_command) ... ok
+test_contract_has_every_required_gate_and_remains_hold (__main__.M27ReleaseTests.test_contract_has_every_required_gate_and_remains_hold) ... ok
+test_functional_fixture_gates_cannot_become_optional (__main__.M27ReleaseTests.test_functional_fixture_gates_cannot_become_optional) ... ok
+test_historical_package_contract_is_not_modified (__main__.M27ReleaseTests.test_historical_package_contract_is_not_modified) ... ok
+test_owner_scope_excludes_metrology_not_functional_hil (__main__.M27ReleaseTests.test_owner_scope_excludes_metrology_not_functional_hil) ... ok
+test_plan_rejects_publication_or_missing_artifacts (__main__.M27ReleaseTests.test_plan_rejects_publication_or_missing_artifacts) ... ok
+test_scope_drift_or_missing_decision_is_rejected (__main__.M27ReleaseTests.test_scope_drift_or_missing_decision_is_rejected) ... ok
+
+======================================================================
+ERROR: test_candidate_extension_does_not_add_unapproved_stable (__main__.M27ReleaseTests.test_candidate_extension_does_not_add_unapproved_stable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_m27_release.py", line 93, in test_candidate_extension_does_not_add_unapproved_stable
+    self.assertEqual(package.release_channel(MODULE.VERSION), "release-candidate")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\packaging\boards-manager\nu54_package_impl\channels.py", line 40, in release_channel
+    raise PackageError(f"지원하지 않는 패키지 버전입니다: {version}")
+_nu54_package_runtime_471e046977de129d701c.model.PackageError: 지원하지 않는 패키지 버전입니다: 0.4.0-rc.1
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.140s
+
+FAILED (errors=1, skipped=1)
