@@ -31,6 +31,16 @@ namespace nucode::arduino
         inline constexpr std::size_t event_capacity = 8U;
         inline constexpr std::uint32_t event_queue_overflow = 0x80000000UL;
 
+        /** @brief 단일 CPU에서 nrfx descriptor 교체와 이전 IRQ 배출을 하나의 경계로 묶습니다. */
+        struct IrqGuard
+        {
+            const unsigned int key{irq_lock()};
+            ~IrqGuard()
+            {
+                irq_unlock(key);
+            }
+        };
+
         struct BufferRecord
         {
             const void *address{nullptr};
@@ -49,6 +59,11 @@ namespace nucode::arduino
             std::uint8_t event_tail{0U};
             std::uint8_t event_count{0U};
             bool event_overflow{false};
+            /** @brief 공개 event 소비와 독립적인 현재 제출/동기 대기자의 terminal 기록입니다. */
+            std::uint32_t operation_generation{0U};
+            std::uint32_t terminal_generation{0U};
+            SerialFabricResult terminal_result{SerialFabricResult::wrong_state};
+            bool synchronous_waiter{false};
             atomic_t active{0};
             atomic_t transfer_active{0};
             atomic_t cancel_requested{0};
@@ -199,9 +214,8 @@ namespace nucode::arduino
             k_spin_unlock(&context.lock, key);
         }
 
-        void pushEvent(TwimContext &context, const TwiFabricEvent &event) noexcept
+        void pushEventLocked(TwimContext &context, const TwiFabricEvent &event) noexcept
         {
-            const k_spinlock_key_t key = k_spin_lock(&context.lock);
             if (context.event_count == event_capacity)
             {
                 context.event_overflow = true;
@@ -213,7 +227,6 @@ namespace nucode::arduino
                     static_cast<std::uint8_t>((context.event_tail + 1U) % event_capacity);
                 ++context.event_count;
             }
-            k_spin_unlock(&context.lock, key);
         }
 
         [[nodiscard]] TwiFabricEventType eventType(nrfx_twim_event_type_t type)
@@ -238,30 +251,44 @@ namespace nucode::arduino
         void twimEvent(const nrfx_twim_event_t *event, void *opaque)
         {
             auto &context = *static_cast<TwimContext *>(opaque);
+            const auto key = k_spin_lock(&context.lock);
+            if (atomic_get(&context.transfer_active) == 0)
+            {
+                k_spin_unlock(&context.lock, key);
+                return;
+            }
             const bool cancelled = atomic_get(&context.cancel_requested) != 0;
             const auto type =
                 cancelled ? TwiFabricEventType::transfer_cancelled : eventType(event->type);
             const auto state = cancelled                           ? DmaBufferState::cancelled
                                : event->type == NRFX_TWIM_EVT_DONE ? DmaBufferState::completed
                                                                    : DmaBufferState::error;
-            setBufferState(context, event->xfer_desc.p_primary_buf, state);
-            setBufferState(context, event->xfer_desc.p_secondary_buf, state);
+            for (auto &buffer : context.buffers)
+            {
+                buffer.state = state;
+            }
             atomic_clear(&context.cancel_requested);
-            atomic_clear(&context.transfer_active);
+            context.terminal_generation = context.operation_generation;
+            context.terminal_result = cancelled ? SerialFabricResult::stop_timeout
+                                      : event->type == NRFX_TWIM_EVT_DONE
+                                          ? SerialFabricResult::success
+                                          : SerialFabricResult::driver_error;
 
             const bool primary_tx = (event->xfer_desc.type == NRFX_TWIM_XFER_TX) ||
                                     (event->xfer_desc.type == NRFX_TWIM_XFER_TXRX) ||
                                     (event->xfer_desc.type == NRFX_TWIM_XFER_TXTX);
             const bool secondary_rx = event->xfer_desc.type == NRFX_TWIM_XFER_TXRX;
-            pushEvent(context,
-                      {type, event->xfer_desc.address,
-                       primary_tx ? event->xfer_desc.p_primary_buf : nullptr,
-                       primary_tx ? (secondary_rx ? event->xfer_desc.p_secondary_buf : nullptr)
-                                  : event->xfer_desc.p_primary_buf,
-                       primary_tx ? event->xfer_desc.primary_length : 0U,
-                       primary_tx ? (secondary_rx ? event->xfer_desc.secondary_length : 0U)
-                                  : event->xfer_desc.primary_length,
-                       static_cast<std::uint32_t>(event->type)});
+            pushEventLocked(
+                context, {type, event->xfer_desc.address,
+                          primary_tx ? event->xfer_desc.p_primary_buf : nullptr,
+                          primary_tx ? (secondary_rx ? event->xfer_desc.p_secondary_buf : nullptr)
+                                     : event->xfer_desc.p_primary_buf,
+                          primary_tx ? event->xfer_desc.primary_length : 0U,
+                          primary_tx ? (secondary_rx ? event->xfer_desc.secondary_length : 0U)
+                                     : event->xfer_desc.primary_length,
+                          static_cast<std::uint32_t>(event->type)});
+            atomic_clear(&context.transfer_active);
+            k_spin_unlock(&context.lock, key);
         }
 
         SerialFabricResult validateAdapter(std::uint8_t instance, const ValidatedSerialRoute &route,
@@ -290,6 +317,15 @@ namespace nucode::arduino
             {
                 return SerialFabricResult::unsupported_instance;
             }
+            {
+                const auto key = k_spin_lock(&context->lock);
+                const bool waiting = context->synchronous_waiter;
+                k_spin_unlock(&context->lock, key);
+                if (waiting)
+                {
+                    return SerialFabricResult::wrong_state;
+                }
+            }
             std::uint32_t scl = 0U;
             std::uint32_t sda = 0U;
             nrf_twim_frequency_t frequency{};
@@ -313,6 +349,7 @@ namespace nucode::arduino
              * 필요합니다.
              */
             nrfx_twim_enable(&context->driver);
+            const auto key = k_spin_lock(&context->lock);
             context->route = route;
             context->buffers[0] = {};
             context->buffers[1] = {};
@@ -323,6 +360,7 @@ namespace nucode::arduino
             atomic_clear(&context->transfer_active);
             atomic_clear(&context->cancel_requested);
             atomic_set(&context->active, 1);
+            k_spin_unlock(&context->lock, key);
             irq_enable(NRFX_IRQ_NUMBER_GET(context->driver.p_twim));
             return SerialFabricResult::success;
         }
@@ -335,6 +373,7 @@ namespace nucode::arduino
                 return SerialFabricResult::unsupported_instance;
             }
             driver_error = 0;
+            const IrqGuard irq_guard;
             if (atomic_get(&context->transfer_active) != 0)
             {
                 atomic_set(&context->cancel_requested, 1);
@@ -360,9 +399,11 @@ namespace nucode::arduino
             irq_disable(NRFX_IRQ_NUMBER_GET(context->driver.p_twim));
             nrfx_twim_uninit(&context->driver);
             atomic_clear(&context->active);
+            const auto key = k_spin_lock(&context->lock);
             context->route = {};
             context->buffers[0] = {};
             context->buffers[1] = {};
+            k_spin_unlock(&context->lock, key);
             driver_error = 0;
             return SerialFabricResult::success;
         }
@@ -415,6 +456,7 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         const auto current = state();
         nrf_twim_frequency_t ignored{};
         if (((current != SerialFabricState::inactive) && (current != SerialFabricState::staged)) ||
@@ -439,6 +481,7 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         auto *const context = contextFor(instance());
         if ((context == nullptr) ||
             !internal::isSerialFabricHandleActive(SerialPersonality::twim, instance()))
@@ -449,8 +492,7 @@ namespace nucode::arduino
             ((rx_buffer == nullptr) != (rx_size == 0U)) || ((tx_size == 0U) && (rx_size == 0U)) ||
             (tx_size > UINT16_MAX) || (rx_size > UINT16_MAX) ||
             !leasedBuffer(*context, tx_buffer, tx_size) ||
-            !leasedBuffer(*context, rx_buffer, rx_size) ||
-            atomic_get(&context->transfer_active) != 0)
+            !leasedBuffer(*context, rx_buffer, rx_size))
         {
             return SerialFabricResult::invalid_argument;
         }
@@ -478,13 +520,22 @@ namespace nucode::arduino
             descriptor.p_secondary_buf = nullptr;
             descriptor.secondary_length = 0U;
         }
+        const IrqGuard irq_guard;
         {
             const k_spinlock_key_t key = k_spin_lock(&context->lock);
+            if (context->synchronous_waiter || atomic_get(&context->transfer_active) != 0)
+            {
+                k_spin_unlock(&context->lock, key);
+                return SerialFabricResult::wrong_state;
+            }
+            ++context->operation_generation;
+            context->terminal_result = SerialFabricResult::wrong_state;
             context->buffers[0] = {tx_buffer, tx_size, DmaBufferState::dma_owned};
             context->buffers[1] = {rx_buffer, rx_size, DmaBufferState::dma_owned};
             k_spin_unlock(&context->lock, key);
         }
         atomic_clear(&context->cancel_requested);
+        NRFY_IRQ_PENDING_CLEAR(static_cast<IRQn_Type>(NRFX_IRQ_NUMBER_GET(context->driver.p_twim)));
         atomic_set(&context->transfer_active, 1);
         const int result = nrfx_twim_xfer(&context->driver, &descriptor, 0U);
         if (result != 0)
@@ -505,29 +556,52 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_argument;
         }
-        auto result = transferAsync(address, tx_buffer, tx_size, rx_buffer, rx_size);
-        if (result != SerialFabricResult::success)
+        auto *const context = contextFor(instance());
+        std::uint32_t generation = 0U;
         {
-            return result;
-        }
-        for (std::uint32_t elapsed = 0U; elapsed < timeout_us; elapsed += 10U)
-        {
-            TwiFabricEvent event{};
-            if (takeEvent(event))
+            const internal::SerialFabricOperationGuard operation_guard;
+            const auto result = transferAsync(address, tx_buffer, tx_size, rx_buffer, rx_size);
+            if (result != SerialFabricResult::success)
             {
-                if (event.type == TwiFabricEventType::transfer_complete)
-                {
-                    return SerialFabricResult::success;
-                }
-                if (event.type != TwiFabricEventType::transfer_cancelled)
-                {
-                    return SerialFabricResult::driver_error;
-                }
+                return result;
             }
-            k_busy_wait(10U);
+            const auto key = k_spin_lock(&context->lock);
+            context->synchronous_waiter = true;
+            generation = context->operation_generation;
+            k_spin_unlock(&context->lock, key);
         }
-        (void)cancelTransfer();
-        return SerialFabricResult::stop_timeout;
+        /** @brief 공개 queue의 stale/overflow/다른 소비자는 이 waiter의 완료 판정에 관여하지 않습니다. */
+        for (;;)
+        {
+            const auto key = k_spin_lock(&context->lock);
+            if (context->terminal_generation == generation &&
+                context->terminal_result != SerialFabricResult::wrong_state)
+            {
+                const auto result = context->terminal_result;
+                context->synchronous_waiter = false;
+                k_spin_unlock(&context->lock, key);
+                return result;
+            }
+            k_spin_unlock(&context->lock, key);
+            if (timeout_us == 0U)
+            {
+                break;
+            }
+            /** @brief 마지막 1~9 us를 포함하며 UINT32_MAX에서도 덧셈 wraparound가 없습니다. */
+            const auto interval = timeout_us < 10U ? timeout_us : 10U;
+            k_busy_wait(interval);
+            timeout_us -= interval;
+        }
+        const internal::SerialFabricOperationGuard operation_guard;
+        const auto cancelled = cancelTransfer();
+        const auto key = k_spin_lock(&context->lock);
+        context->synchronous_waiter = false;
+        k_spin_unlock(&context->lock, key);
+        /** @brief timeout은 DMA 반환 보증이 아닙니다. STOP 미확인 buffer/lease는 유지됩니다. */
+        return cancelled == SerialFabricResult::success ||
+                       cancelled == SerialFabricResult::wrong_state
+                   ? SerialFabricResult::stop_timeout
+                   : cancelled;
     }
 
     SerialFabricResult TwimHandle::cancelTransfer() noexcept
@@ -536,6 +610,8 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
+        const IrqGuard irq_guard;
         auto *const context = contextFor(instance());
         if ((context == nullptr) || atomic_get(&context->active) == 0 ||
             atomic_get(&context->transfer_active) == 0)
@@ -553,6 +629,7 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         return internal::executeSerialFabricRecovery(SerialPersonality::twim, instance(),
                                                      recoverAdapter);
     }

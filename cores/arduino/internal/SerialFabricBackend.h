@@ -58,6 +58,20 @@ namespace nucode::arduino::internal
     [[nodiscard]] bool isSerialFabricHandleActive(SerialPersonality personality,
                                                   std::uint8_t instance) noexcept;
 
+    /**
+     * @brief thread의 상태 확인·driver 제출을 lifecycle 변경과 함께 직렬화합니다.
+     * @details ISR에서는 생성하지 않습니다. 동기 완료 대기 동안에는 보유하지 않습니다.
+     * 내부 상태 조회의 재진입은 Zephyr recursive mutex 계약을 따릅니다.
+     */
+    class SerialFabricOperationGuard
+    {
+      public:
+        SerialFabricOperationGuard() noexcept;
+        ~SerialFabricOperationGuard();
+        SerialFabricOperationGuard(const SerialFabricOperationGuard &) = delete;
+        SerialFabricOperationGuard &operator=(const SerialFabricOperationGuard &) = delete;
+    };
+
     /** @brief staged route를 배타적으로 빌려 driver 비활성 상태의 복구 작업을 실행합니다. */
     using SerialFabricRecovery = SerialFabricResult (*)(std::uint8_t instance,
                                                         const ValidatedSerialRoute &route,
