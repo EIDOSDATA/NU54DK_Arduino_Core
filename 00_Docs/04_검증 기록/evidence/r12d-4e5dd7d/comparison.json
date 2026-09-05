@@ -1,0 +1,42 @@
+{
+  "physical_executed": false,
+  "preserved_token_blocks": [
+    "eeprom_public_proxy_and_facade",
+    "eeprom_record_constants",
+    "eeprom_integer_codec",
+    "eeprom_crc32",
+    "eeprom_settings_lifecycle",
+    "file_public_value_lifecycle",
+    "filesystem_public_paths",
+    "filesystem_path_mode_validation",
+    "filesystem_errors",
+    "filesystem_slots",
+    "littlefs_mount_and_partition"
+  ],
+  "sources": {
+    "libraries/EEPROM/src/EEPROM.cpp": "2aedb4d386b6f49a4456498d0b924762660099ca285e83c61ceb416b35a44896",
+    "libraries/EEPROM/src/EEPROM.h": "8a60c6fdbc73e470da920835049f2c102c4f35593c6e772b3a7e9546dd62a84c",
+    "libraries/EEPROM/src/internal/EEPROMInternal.h": "142659aa92d8c607260423fdd56890261733702ece16a3c3ceaddedddbf0e0f1",
+    "libraries/EEPROM/src/internal/EEPROMRecord.cpp": "331381d455b8dd6e7c90355a9cd3351f46d0eaa4ab5a7767da75601eff05de6e",
+    "libraries/EEPROM/src/internal/EEPROMRecord.h": "d49b7b8f31bad15c1f9ac45911c2c32a118d98d8e8398e4cdaaed111da6f1ff3",
+    "libraries/EEPROM/src/internal/EEPROMSettings.cpp": "9a3f70e9b9908612e471f78212bb2d865db797be29fc3e306f5acc65e17c7e95",
+    "libraries/LittleFS/src/FS.cpp": "ea2fa5de44e1ecee0bd4c18221ecee21b7acd88733373ab5e0757d4c1fa4be8c",
+    "libraries/LittleFS/src/FS.h": "4cb27b8dada86f519e040077b0963c6d2fccd3e5d5e062c642e5254378e9e620",
+    "libraries/LittleFS/src/LittleFS.cpp": "dfc5574593730dd8089990e8f41c6861174ffaeec9a7b6d046d2ae24fb27c466",
+    "libraries/LittleFS/src/LittleFS.h": "106befbacde3bcd0a8f01ac41332072df2574cd60c2810908c4d07201899b55a",
+    "libraries/LittleFS/src/internal/File.cpp": "4bd2b7d3e980504477f0141d792d3a58a3cc01aa69e553de232ddbe18d057b94",
+    "libraries/LittleFS/src/internal/FilePaths.cpp": "c04b04621d0b0a951cd5d46a41fac31538e443a1b54bff97393362d5ac43eb90",
+    "libraries/LittleFS/src/internal/FileSlots.cpp": "33f00720f0f2ad5696bcdf81b107a04ef962f1028a8b02fef11ef73f551ba0ed",
+    "libraries/LittleFS/src/internal/StorageInternal.h": "8be2ba3a6a78a301a471b7fe79a110f187e456cf4b17699f58d5cfccc1c6ecce"
+  },
+  "unchanged": {
+    "dts/nucode/nu54dk-arduino-storage.dtsi": "8fa977c39173dbb75b028a0967b45aa83576513d7f453453f6fbf0245ad35f80",
+    "libraries/EEPROM/src/EEPROM.h": "8a60c6fdbc73e470da920835049f2c102c4f35593c6e772b3a7e9546dd62a84c",
+    "libraries/EEPROM/zephyr/eeprom.conf": "bb648e80f8f5774945260a8d1962a0a7e9c744e00626b583d703a80c6f6f2c50",
+    "libraries/EEPROM/zephyr/feature.yml": "6b46f60b91f1f656face0b4afb6dc50a7519752757b2b887b8aa48b035899ba2",
+    "libraries/LittleFS/src/FS.h": "4cb27b8dada86f519e040077b0963c6d2fccd3e5d5e062c642e5254378e9e620",
+    "libraries/LittleFS/src/LittleFS.h": "106befbacde3bcd0a8f01ac41332072df2574cd60c2810908c4d07201899b55a",
+    "libraries/LittleFS/zephyr/feature.yml": "2917b53f0f79b6b4e50079acffc564471798ba8df70d9c3407ab6b848a492ac5",
+    "libraries/LittleFS/zephyr/littlefs.conf": "914a75ee4adae1bd470341af9f67e60964c32dd2791d42f9d3b66f4b9424867e"
+  }
+}

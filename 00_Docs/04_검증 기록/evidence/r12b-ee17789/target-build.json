@@ -1,0 +1,19 @@
+{
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "container_digest": "sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace",
+  "gate": "m12-zephyr-build-subset",
+  "group": "all",
+  "jobs": 4,
+  "m16_role_builds": [],
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "scenarios": [
+    "nucode.m19.ble_gap_contract",
+    "nucode.m20.ble_gatt_contract",
+    "nucode.m20.ble_gatt_hil_peripheral",
+    "nucode.m20.ble_gatt_hil_central"
+  ],
+  "schema_version": 2,
+  "serial_source_builds": [],
+  "status": "passed",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+}

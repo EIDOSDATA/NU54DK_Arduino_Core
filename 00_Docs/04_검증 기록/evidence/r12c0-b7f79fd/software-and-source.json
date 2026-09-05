@@ -1,0 +1,67 @@
+{
+  "actual_security_scenarios": 12,
+  "gates": {
+    "contract": {
+      "log_sha256": "fedb795139c36bab895eea889110e3e07601cbfdb1abc70e273ef5793d780699",
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "skips": 0,
+      "tests": 45
+    },
+    "host": {
+      "log_sha256": "9205c9c860da2ba51ea1e06b3ae0b4b542037ef608311fb578fb7e77b5313ad9",
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "skips": 2,
+      "tests": 626
+    },
+    "inventory": {
+      "log_sha256": "5cac786157abe5d53d21ffc41ea424d773ae85d29f2cb70af82f59e30cb04f27",
+      "result_lines": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "security-after": {
+      "log_sha256": "d1f3315538e7bdf95e76c2265cfaed7400f86c25b6ad0f2aac5c5b85fa0571e4",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "security-before": {
+      "log_sha256": "86318f226db1749b8dd7855661735b68eceae33f01e3140530cee06979684c12",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "style": {
+      "log_sha256": "a774e94df74bb8bf9533e2b2e88a54f332913c7b153ce8ce29ac0b9edfebd22f",
+      "result_lines": [
+        "CPP_STYLE_FILES=336; FAILED=0; WRITE=0"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "target": {
+      "log_sha256": "0593b19c97e838900e549ae1f9b145a05fc9c4668117c16da4cd02d426859f51",
+      "result_lines": [
+        "M12_ZEPHYR_BUILD_PASS=3;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "host_c_bridge_compiled_as_c": true,
+  "m21_selection": "canonical runner validation with explicit extra three M21 suites",
+  "physical_executed": false,
+  "report_map_preserved": true,
+  "start_commit": "b7f79fd",
+  "unchanged": {
+    "libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.h": "3d1b955f130b3b655675f18bdbbf1ebb30a6ca28b04132fd40e66826ea2b7765",
+    "libraries/NUCODE_BLE_Security/zephyr/ble-security.conf": "8bc803c4527177e6b8c646511bd743ff0e4f87b92715479bb1d52593de2f950e",
+    "libraries/NUCODE_BLE_Security/zephyr/feature.yml": "c38e892ff0073282bdb2c0ec296db73fb24cf03bb7f1330aa060ea72e09711a2"
+  }
+}

@@ -7,6 +7,7 @@ import importlib.util
 import json
 from pathlib import Path
 import unittest
+from ble_source_contracts import gap_source
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
@@ -91,16 +92,16 @@ class M19BleGapContractTests(unittest.TestCase):
     def test_stack_callbacks_only_enqueue_bounded_records(self) -> None:
         """! @brief Bluetooth callback에서 user callback·heap 사용을 금지합니다. """
 
-        source = SOURCE.read_text(encoding="utf-8")
+        source = gap_source()
         for token in (
             "K_MSGQ_DEFINE(gap_event_queue",
             "K_MSGQ_DEFINE(scan_result_queue",
-            "k_msgq_put(&gap_event_queue",
-            "k_msgq_put(&scan_result_queue",
+            "k_msgq_put(&gapEventQueue()",
+            "k_msgq_put(&scanResultQueue()",
             "Device::poll()",
-            "result_callback(record.result, scan_context)",
+            "result_callback(record.result, gapState().scan_context)",
             "record.generation",
-            "callback(record.event, event_context)",
+            "callback(record.event, gapState().event_context)",
         ):
             self.assertIn(token, source, token)
         for forbidden in (
@@ -138,7 +139,7 @@ class M19BleGapContractTests(unittest.TestCase):
             self.assertIn("currentRole() == Role::none", callback)
             self.assertLess(
                 callback.index("currentRole() == Role::none"),
-                callback.index("k_spin_lock(&connection_lock)"),
+            callback.index("k_spin_lock(&connection_lock)"),
             )
         for suite in (
             "m19_ble_gap_contract",
@@ -158,7 +159,7 @@ class M19BleGapContractTests(unittest.TestCase):
         self.assertIn("claimFacade(FacadeOwner owner)", stack)
         self.assertIn("releaseFacade(FacadeOwner owner)", stack)
         self.assertIn("FacadeOwner::nus", nus)
-        self.assertIn("FacadeOwner::generic", SOURCE.read_text(encoding="utf-8"))
+        self.assertIn("FacadeOwner::generic", gap_source())
         end = nus[nus.index("void NusSerial::end()") : nus.index(
             "void NusSerial::onEvent", nus.index("void NusSerial::end()")
         )]
@@ -240,19 +241,19 @@ class M19BleGapContractTests(unittest.TestCase):
     def test_legacy_tx_power_and_shutdown_generation_are_enforced(self) -> None:
         """! @brief TPC 비활성 target과 end-during-connect 경계를 정적으로 고정합니다. """
 
-        source = SOURCE.read_text(encoding="utf-8")
+        source = gap_source()
         self.assertIn(".phy = 0U", source)
         self.assertIn("pending_connection_generation", source)
-        self.assertIn("atomic_inc(&device_session_generation)", source)
+        self.assertIn("atomic_inc(&gapState().device_session_generation)", source)
         end = source[source.index("void Device::end()") : source.index(
             "bool Device::initialized()", source.index("void Device::end()")
         )]
         self.assertLess(
-            end.index("atomic_set(&device_initialized, 0)"),
+            end.index("atomic_set(&gapState().device_initialized, 0)"),
             end.index("bt_conn_disconnect("),
         )
-        self.assertIn("pending = pending_connection", end)
-        self.assertIn("k_msgq_purge(&gap_event_queue)", end)
+        self.assertIn("pending = gapState().pending_connection", end)
+        self.assertIn("k_msgq_purge(&gapEventQueue())", end)
         hil = (
             REPOSITORY
             / "tests"

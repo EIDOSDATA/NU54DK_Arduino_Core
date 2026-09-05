@@ -123,3 +123,5 @@ R10-A Serial Fabric STOP 예약과 동시 호출 수정은 [61번 기록](61_R10
 연결한다. R10-A/B/C software 완료이며 current-source T11은 미실행이다.
 
 R11 Analog/Stream peripheral 분리는 [62번 기록](62_R11_Analog_Stream_peripheral_분리.md)에 연결한다.
+
+R12 BLE·Storage 분리는 [63번 기록](63_R12_BLE_Storage_수명주기.md)에 연결한다. 현재 GAP A 완료, GATT B 진행이다.

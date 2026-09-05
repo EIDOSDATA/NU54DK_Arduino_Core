@@ -1,0 +1,59 @@
+{
+  "actual_security_scenarios": 12,
+  "gates": {
+    "contract": {
+      "log_sha256": "cecb56c839506ecc2c58a72dbf1a4e9705e8be80a8367abf56e75b1eb8ad2f91",
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "skips": 0,
+      "tests": 45
+    },
+    "host": {
+      "log_sha256": "6f5b33fb9e1d4cfa36db0476412ed0af96f08ba33dd714b4c6704050390d6fed",
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "skips": 2,
+      "tests": 626
+    },
+    "inventory": {
+      "log_sha256": "5cac786157abe5d53d21ffc41ea424d773ae85d29f2cb70af82f59e30cb04f27",
+      "result_lines": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "security-after": {
+      "log_sha256": "840b6accd8bc6c308d4c3a270409ed697b14d359cfabc3420f1500308ade3084",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "security-before": {
+      "log_sha256": "d1f3315538e7bdf95e76c2265cfaed7400f86c25b6ad0f2aac5c5b85fa0571e4",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "style": {
+      "log_sha256": "fcbe5b1b9f94d9a11fba9030843a4e17306ea7b3612c0ab0610cf06558a94f6f",
+      "result_lines": [
+        "CPP_STYLE_FILES=342; FAILED=0; WRITE=0"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "target": {
+      "log_sha256": "0ae8128d4b03c4dfa4b1e6788ca41f90c2e1fa3e2f876d318a58f86b555fd0e4",
+      "result_lines": [
+        "M12_ZEPHYR_BUILD_PASS=3;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "physical_executed": false,
+  "start_commit": "c90d2b1"
+}

@@ -1,0 +1,6 @@
+test_production_eeprom_record_and_restart (test_r12_eeprom.EepromPersistenceTests.test_production_eeprom_record_and_restart) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.734s
+
+OK

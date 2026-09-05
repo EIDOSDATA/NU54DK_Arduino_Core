@@ -1,0 +1,6 @@
+test_production_file (test_r04_file.FileLifetimeTests.test_production_file) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.790s
+
+OK

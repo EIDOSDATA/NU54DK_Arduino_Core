@@ -1,0 +1,388 @@
+{
+  "comparisons": {
+    "nucode.m19.ble_gap_contract": {
+      "after": {
+        "elf_sha256": "e270cee87f6c09366b852e370bea612a565bdfcc1be7511f855c10fa528d1c8e",
+        "memory": {
+          "FLASH": 183608,
+          "RAM": 47968
+        },
+        "owned_objects": [
+          {
+            "bytes": 128,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::context"
+          },
+          {
+            "bytes": 44,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::gap_event_queue"
+          },
+          {
+            "bytes": 192,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_gap_event_queue"
+          },
+          {
+            "bytes": 172,
+            "file": "GapAdvertising.cpp",
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::advertising_configuration"
+          },
+          {
+            "bytes": 60,
+            "file": "GapScanning.cpp",
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::scan_configuration"
+          },
+          {
+            "bytes": 28,
+            "file": "GapConnection.cpp",
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::bt_conn_cb_nucode_ble_gap_connection_callbacks"
+          }
+        ],
+        "public_symbols": [
+          "nucode::ble::Advertising::addServiceUuid(nucode::ble::BLEUuid const&)",
+          "nucode::ble::Advertising::running() const [clone .constprop.0]",
+          "nucode::ble::Advertising::setConnectable(bool)",
+          "nucode::ble::Advertising::setInterval(unsigned short, unsigned short)",
+          "nucode::ble::Advertising::setServiceData(nucode::ble::BLEUuid const&, void const*, unsigned int)",
+          "nucode::ble::BLEAddress::BLEAddress(char const*, nucode::ble::BLEAddress::Type)",
+          "nucode::ble::BLEAddress::valid() const",
+          "nucode::ble::BLEUuid::BLEUuid(char const*)",
+          "nucode::ble::BLEUuid::BLEUuid(unsigned short)",
+          "nucode::ble::BLEUuid::from32(unsigned int)",
+          "nucode::ble::BLEUuid::operator==(nucode::ble::BLEUuid const&) const",
+          "nucode::ble::BLEUuid::size() const",
+          "nucode::ble::BLEUuid::valid() const",
+          "nucode::ble::Connection::peerAddress() const",
+          "nucode::ble::Connection::phy() const",
+          "nucode::ble::Device::lastError() const",
+          "nucode::ble::Device::onEvent(void (*)(nucode::ble::BLEEvent, void*), void*)",
+          "nucode::ble::Scan::filterAddress(nucode::ble::BLEAddress const&)",
+          "nucode::ble::Scan::filterServiceUuid(nucode::ble::BLEUuid const&)",
+          "nucode::ble::Scan::onResult(void (*)(nucode::ble::BLEScanResult const&, void*), void*)",
+          "nucode::ble::Scan::running() const [clone .constprop.0]"
+        ]
+      },
+      "before": {
+        "elf_sha256": "633fe4080f21e170792a758777cbef5d229c92d4e821e36e59089af141d1d408",
+        "memory": {
+          "FLASH": 183380,
+          "RAM": 47920
+        },
+        "owned_objects": [
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::active_connection"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::scanning_active"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::advertising_active"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::active_connection_generation"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::device_session_generation"
+          },
+          {
+            "bytes": 44,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::gap_event_queue"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::dropped_event_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::last_driver_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::last_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::device_initialized"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::connection_active"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::connection_connecting"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::mtu_exchange_active"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::pending_connection"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::pending_connection_generation"
+          },
+          {
+            "bytes": 60,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::scan_configuration"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::event_callback"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::scan_callback"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::event_context"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::scan_context"
+          },
+          {
+            "bytes": 7,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::last_peer_address"
+          },
+          {
+            "bytes": 172,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::advertising_configuration"
+          },
+          {
+            "bytes": 28,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::bt_conn_cb_nucode_ble_gap_connection_callbacks"
+          },
+          {
+            "bytes": 192,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::_k_fifo_buf_gap_event_queue"
+          }
+        ],
+        "public_symbols": [
+          "nucode::ble::Advertising::addServiceUuid(nucode::ble::BLEUuid const&)",
+          "nucode::ble::Advertising::running() const [clone .constprop.0]",
+          "nucode::ble::Advertising::setConnectable(bool)",
+          "nucode::ble::Advertising::setInterval(unsigned short, unsigned short)",
+          "nucode::ble::Advertising::setServiceData(nucode::ble::BLEUuid const&, void const*, unsigned int)",
+          "nucode::ble::BLEAddress::BLEAddress(char const*, nucode::ble::BLEAddress::Type)",
+          "nucode::ble::BLEUuid::BLEUuid(char const*)",
+          "nucode::ble::BLEUuid::BLEUuid(unsigned short)",
+          "nucode::ble::BLEUuid::from32(unsigned int)",
+          "nucode::ble::BLEUuid::operator==(nucode::ble::BLEUuid const&) const",
+          "nucode::ble::Connection::peerAddress() const",
+          "nucode::ble::Connection::phy() const",
+          "nucode::ble::Device::lastError() const",
+          "nucode::ble::Device::onEvent(void (*)(nucode::ble::BLEEvent, void*), void*)",
+          "nucode::ble::Scan::filterAddress(nucode::ble::BLEAddress const&)",
+          "nucode::ble::Scan::filterServiceUuid(nucode::ble::BLEUuid const&)",
+          "nucode::ble::Scan::onResult(void (*)(nucode::ble::BLEScanResult const&, void*), void*)",
+          "nucode::ble::Scan::running() const [clone .constprop.0]"
+        ]
+      },
+      "removed_public_symbols": []
+    },
+    "nucode.m20.ble_gatt_contract": {
+      "after": {
+        "elf_sha256": "77b2496f1bdd094ac506db1b037b62ac4e1faf0151c2cde5afe2dafc0a10c4ea",
+        "memory": {
+          "FLASH": 179236,
+          "RAM": 50472
+        },
+        "owned_objects": [
+          {
+            "bytes": 128,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::context"
+          },
+          {
+            "bytes": 44,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::gap_event_queue"
+          },
+          {
+            "bytes": 192,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_gap_event_queue"
+          },
+          {
+            "bytes": 28,
+            "file": "GapConnection.cpp",
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::bt_conn_cb_nucode_ble_gap_connection_callbacks"
+          }
+        ],
+        "public_symbols": [
+          "nucode::ble::BLEUuid::BLEUuid(char const*)",
+          "nucode::ble::BLEUuid::operator==(nucode::ble::BLEUuid const&) const",
+          "nucode::ble::BLEUuid::type() const",
+          "nucode::ble::BLEUuid::valid() const",
+          "nucode::ble::Device::addService(nucode::ble::BLEService&)"
+        ]
+      },
+      "before": {
+        "elf_sha256": "95d28f5138aaeb8c5949366bd7f9921962483871d983191a3d413935a1f7b16d",
+        "memory": {
+          "FLASH": 179016,
+          "RAM": 50392
+        },
+        "owned_objects": [
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::active_connection"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::advertising_active"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::active_connection_generation"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::device_session_generation"
+          },
+          {
+            "bytes": 44,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::gap_event_queue"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::dropped_event_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::last_driver_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::last_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::device_initialized"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::connection_active"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::connection_connecting"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::mtu_exchange_active"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::pending_connection"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::pending_connection_generation"
+          },
+          {
+            "bytes": 28,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::bt_conn_cb_nucode_ble_gap_connection_callbacks"
+          },
+          {
+            "bytes": 192,
+            "file": "NUCODE_BLE_GAP.cpp",
+            "name": "(anonymous namespace)::_k_fifo_buf_gap_event_queue"
+          }
+        ],
+        "public_symbols": [
+          "nucode::ble::BLEUuid::BLEUuid(char const*)",
+          "nucode::ble::BLEUuid::operator==(nucode::ble::BLEUuid const&) const",
+          "nucode::ble::BLEUuid::type() const",
+          "nucode::ble::BLEUuid::valid() const",
+          "nucode::ble::Device::addService(nucode::ble::BLEService&)"
+        ]
+      },
+      "removed_public_symbols": []
+    }
+  },
+  "physical_executed": false,
+  "source_membership": {
+    "nucode.m19.ble_gap_contract": {
+      "GapAdvertising.cpp": 1,
+      "GapConnection.cpp": 1,
+      "GapScanning.cpp": 1,
+      "GapValues.cpp": 1,
+      "NUCODE_BLE_GAP.cpp": 1,
+      "NUCODE_BLE_Stack.cpp": 1
+    },
+    "nucode.m19.ble_gap_hil_central": {
+      "GapAdvertising.cpp": 1,
+      "GapConnection.cpp": 1,
+      "GapScanning.cpp": 1,
+      "GapValues.cpp": 1,
+      "NUCODE_BLE_GAP.cpp": 1,
+      "NUCODE_BLE_Stack.cpp": 1
+    },
+    "nucode.m19.ble_gap_hil_peripheral": {
+      "GapAdvertising.cpp": 1,
+      "GapConnection.cpp": 1,
+      "GapScanning.cpp": 1,
+      "GapValues.cpp": 1,
+      "NUCODE_BLE_GAP.cpp": 1,
+      "NUCODE_BLE_Stack.cpp": 1
+    },
+    "nucode.m20.ble_gatt_contract": {
+      "GapAdvertising.cpp": 1,
+      "GapConnection.cpp": 1,
+      "GapScanning.cpp": 1,
+      "GapValues.cpp": 1,
+      "NUCODE_BLE_GAP.cpp": 1,
+      "NUCODE_BLE_Stack.cpp": 1
+    }
+  }
+}

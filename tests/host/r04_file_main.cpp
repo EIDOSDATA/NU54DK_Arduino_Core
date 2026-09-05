@@ -1,4 +1,7 @@
 /** @file @brief production File의 공유 참조·마지막 close·thread 교차를 검증합니다. */
+#include "../../libraries/LittleFS/src/internal/FileSlots.cpp"
+#include "../../libraries/LittleFS/src/internal/FilePaths.cpp"
+#include "../../libraries/LittleFS/src/internal/File.cpp"
 #include "../../libraries/LittleFS/src/FS.cpp"
 #include <condition_variable>
 #include <iostream>
@@ -7,7 +10,7 @@ using namespace nucode::littlefs::internal;
 int main(int argc, char **argv)
 {
     assert(argc == 2);
-    filesystem_mounted = true;
+    filesystemState().filesystem_mounted = true;
     FS filesystem;
     File source = filesystem.open("/data", "w+");
     assert(source);
@@ -19,14 +22,14 @@ int main(int argc, char **argv)
         assigned = copy;
         assigned = assigned;
         assigned = copy;
-        assert(file_slots[0].references == 3);
+        assert(fileSlots()[0].references == 3);
         File moved(std::move(copy));
         assert(!copy && moved);
         File destination = filesystem.open("/other", "w+");
         destination = std::move(moved);
         File *const self = &destination;
         destination = std::move(*self);
-        assert(!moved && mock_closes == 1 && file_slots[0].references == 3);
+        assert(!moved && mock_closes == 1 && fileSlots()[0].references == 3);
         source.close();
         assigned.close();
         assert(destination.seek(0));
@@ -42,11 +45,11 @@ int main(int argc, char **argv)
         std::mutex mutex;
         std::condition_variable condition;
         bool attempting = false, copied = false, finish = false;
-        filesystem_mutex.lock();
+        filesystemMutex().lock();
         std::thread worker(
             [&]
             {
-                mock_before_lock = [&]
+                mockBeforeLock() = [&]
                 {
                     std::lock_guard<std::mutex> lock(mutex);
                     attempting = true;
@@ -76,10 +79,10 @@ int main(int argc, char **argv)
             finish = true;
             condition.notify_all();
         }
-        filesystem_mutex.unlock();
+        filesystemMutex().unlock();
         worker.join();
         assert(locked);
-        assert(file_slots[0].references == 1 && mock_closes == 0);
+        assert(fileSlots()[0].references == 1 && mock_closes == 0);
     }
     else if (std::strcmp(argv[1], "threads") == 0)
     {
@@ -103,38 +106,38 @@ int main(int argc, char **argv)
         {
             worker.join();
         }
-        assert(file_slots[0].references == 1 && mock_closes == 0);
+        assert(fileSlots()[0].references == 1 && mock_closes == 0);
         source.close();
         assert(mock_closes == 1 && !hasOpenFiles());
     }
     else if (std::strcmp(argv[1], "stale") == 0)
     {
-        const auto old = file_slots[0].generation;
+        const auto old = fileSlots()[0].generation;
         File alias(source);
         /** @brief 외부 폐기 후 남은 handle의 오래된 generation을 주입합니다. */
-        fs_close(&file_slots[0].file);
-        file_slots[0].active = false;
-        file_slots[0].references = 0;
+        fs_close(&fileSlots()[0].file);
+        fileSlots()[0].active = false;
+        fileSlots()[0].references = 0;
         auto replacement = filesystem.open("/replacement", "w+");
-        assert(file_slots[0].generation != old);
+        assert(fileSlots()[0].generation != old);
         File stale(source);
         assert(!stale);
         source.close();
         alias.close();
-        assert(mock_closes == 1 && file_slots[0].references == 1 && replacement);
+        assert(mock_closes == 1 && fileSlots()[0].references == 1 && replacement);
         replacement.close();
-        file_slots[0].generation = UINT32_MAX;
+        fileSlots()[0].generation = UINT32_MAX;
         auto wrapped = filesystem.open("/wrapped", "w+");
-        assert(file_slots[0].generation == 1 && wrapped);
+        assert(fileSlots()[0].generation == 1 && wrapped);
         wrapped.close();
         assert(mock_closes == 3);
     }
     else if (std::strcmp(argv[1], "saturation") == 0)
     {
-        file_slots[0].references = UINT16_MAX;
+        fileSlots()[0].references = UINT16_MAX;
         File copy(source);
-        assert(!copy && file_slots[0].references == UINT16_MAX);
-        file_slots[0].references = 1;
+        assert(!copy && fileSlots()[0].references == UINT16_MAX);
+        fileSlots()[0].references = 1;
         File invalid;
         source = invalid;
         assert(!source && mock_closes == 1);
@@ -144,8 +147,9 @@ int main(int argc, char **argv)
         mock_close_error = -EIO;
         source.close();
         assert(!source && mock_closes == 1 && !hasOpenFiles());
-        assert(atomic_get(&last_error_value) == static_cast<int>(FSError::driver_error));
-        assert(atomic_get(&last_driver_error_value) == -EIO);
+        assert(atomic_get(&filesystemState().last_error_value) ==
+               static_cast<int>(FSError::driver_error));
+        assert(atomic_get(&filesystemState().last_driver_error_value) == -EIO);
     }
     else if (std::strcmp(argv[1], "isr") == 0)
     {
@@ -156,8 +160,8 @@ int main(int argc, char **argv)
         File moved(std::move(source));
         destination = std::move(source);
         mock_in_isr = false;
-        assert(!copy && !moved && source && file_slots[0].references == 1 &&
-               file_slots[1].references == 1);
+        assert(!copy && !moved && source && fileSlots()[0].references == 1 &&
+               fileSlots()[1].references == 1);
         assert(std::strcmp(destination.name(), "/destination") == 0);
         destination.close();
     }

@@ -1,0 +1,980 @@
+{
+  "comparisons": {
+    "nucode.m21.ble_security_contract": {
+      "after": {
+        "elf_sha256": "d44931cd40f32701a5b2b535e211a1e4c1e37904374a3c6cc8f3de4451b9f71b",
+        "memory": {
+          "FLASH": 165848,
+          "RAM": 44888
+        },
+        "owned_objects": [
+          {
+            "bytes": 52,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 44,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::security_event_queue"
+          },
+          {
+            "bytes": 480,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::_k_fifo_buf_security_event_queue"
+          },
+          {
+            "bytes": 72,
+            "file": "SecurityPairing.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 24,
+            "file": "SecurityBond.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 28,
+            "file": "SecurityBond.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::startup_bonds"
+          },
+          {
+            "bytes": 24,
+            "file": "SecurityHid.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 20,
+            "file": "SecurityHid.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::hid_api_mutex"
+          },
+          {
+            "bytes": 47,
+            "file": "SecurityHid.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::keyboard_report_map"
+          },
+          {
+            "bytes": 4,
+            "file": "SecurityBattery.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::battery_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "SecurityDeviceInformation.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::dis_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "protocol_callback"
+          },
+          {
+            "bytes": 180,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage"
+          },
+          {
+            "bytes": 360,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "__compound_literal.0"
+          },
+          {
+            "bytes": 16,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_ctx_lib"
+          },
+          {
+            "bytes": 20,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_mutex"
+          },
+          {
+            "bytes": 32,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_mem_slab"
+          },
+          {
+            "bytes": 36,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "_k_mem_slab_buf_nucode_ble_keyboard_hids_storage_mem_slab"
+          }
+        ],
+        "public_symbols": [
+          "nucode::ble::BatteryService::setLevel(unsigned char)",
+          "nucode::ble::DeviceInformationService::configure(nucode::ble::DeviceInformation const&)",
+          "nucode::ble::HidKeyboard::begin()",
+          "nucode::ble::HidKeyboard::press(unsigned char, unsigned char)",
+          "nucode::ble::HidKeyboard::releaseAll()",
+          "nucode::ble::HidKeyboard::sendReport(nucode::ble::KeyboardReport const&)",
+          "nucode::ble::SecurityManager::begin(nucode::ble::SecurityConfig const&)",
+          "nucode::ble::SecurityManager::bondCount() const",
+          "nucode::ble::SecurityManager::bondCount() const::{lambda(bt_bond_info const*, void*)#1}::_FUN(bt_bond_info const*, void*)",
+          "nucode::ble::SecurityManager::bondState() const",
+          "nucode::ble::SecurityManager::currentLevel() const",
+          "nucode::ble::SecurityManager::lastDriverError() const",
+          "nucode::ble::SecurityManager::lastError() const",
+          "nucode::ble::SecurityManager::onEvent(void (*)(nucode::ble::SecurityEventRecord const&, void*), void*)",
+          "nucode::ble::SecurityManager::requestSecurity()"
+        ]
+      },
+      "before": {
+        "elf_sha256": "a6987ba36b0359d26825179a0a3dce9bb54cabac4362be0794b6369ee9e01087",
+        "memory": {
+          "FLASH": 165636,
+          "RAM": 44864
+        },
+        "owned_objects": [
+          {
+            "bytes": 10,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::bond_lifecycle"
+          },
+          {
+            "bytes": 16,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::pending_state"
+          },
+          {
+            "bytes": 8,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::hid_connection_state"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::bond_state_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::current_level_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::active_connection"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_driver_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::hid_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::hid_driver_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::hid_initialized"
+          },
+          {
+            "bytes": 44,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_event_queue"
+          },
+          {
+            "bytes": 20,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::hid_api_mutex"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::published_level_value"
+          },
+          {
+            "bytes": 12,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_config"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::paired_value"
+          },
+          {
+            "bytes": 28,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::startup_bonds"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::startup_bond_count"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_initialized"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::startup_bond_snapshot_ready"
+          },
+          {
+            "bytes": 28,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::authentication_callbacks"
+          },
+          {
+            "bytes": 16,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::authentication_info_callbacks"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_event_callback"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_event_context"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::battery_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::dis_error_value"
+          },
+          {
+            "bytes": 47,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::keyboard_report_map"
+          },
+          {
+            "bytes": 480,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::_k_fifo_buf_security_event_queue"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "protocol_callback"
+          },
+          {
+            "bytes": 180,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage"
+          },
+          {
+            "bytes": 360,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "__compound_literal.0"
+          },
+          {
+            "bytes": 16,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_ctx_lib"
+          },
+          {
+            "bytes": 20,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_mutex"
+          },
+          {
+            "bytes": 32,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_mem_slab"
+          },
+          {
+            "bytes": 36,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "_k_mem_slab_buf_nucode_ble_keyboard_hids_storage_mem_slab"
+          }
+        ],
+        "public_symbols": [
+          "nucode::ble::BatteryService::setLevel(unsigned char)",
+          "nucode::ble::DeviceInformationService::configure(nucode::ble::DeviceInformation const&)",
+          "nucode::ble::HidKeyboard::begin()",
+          "nucode::ble::HidKeyboard::press(unsigned char, unsigned char)",
+          "nucode::ble::HidKeyboard::releaseAll()",
+          "nucode::ble::HidKeyboard::sendReport(nucode::ble::KeyboardReport const&)",
+          "nucode::ble::SecurityManager::begin(nucode::ble::SecurityConfig const&)",
+          "nucode::ble::SecurityManager::bondCount() const",
+          "nucode::ble::SecurityManager::bondCount() const::{lambda(bt_bond_info const*, void*)#1}::_FUN(bt_bond_info const*, void*)",
+          "nucode::ble::SecurityManager::bondState() const",
+          "nucode::ble::SecurityManager::currentLevel() const",
+          "nucode::ble::SecurityManager::lastDriverError() const",
+          "nucode::ble::SecurityManager::lastError() const",
+          "nucode::ble::SecurityManager::onEvent(void (*)(nucode::ble::SecurityEventRecord const&, void*), void*)",
+          "nucode::ble::SecurityManager::requestSecurity()"
+        ]
+      },
+      "removed_public_symbols": []
+    },
+    "nucode.m21.ble_security_hil_central": {
+      "after": {
+        "elf_sha256": "fb41cce87565a2da44461c82b918a23751a36e072d3725a097f1939d8272d6cd",
+        "memory": {
+          "FLASH": 243220,
+          "RAM": 58080
+        },
+        "owned_objects": [
+          {
+            "bytes": 52,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 44,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::security_event_queue"
+          },
+          {
+            "bytes": 480,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::_k_fifo_buf_security_event_queue"
+          },
+          {
+            "bytes": 72,
+            "file": "SecurityPairing.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 24,
+            "file": "SecurityBond.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 28,
+            "file": "SecurityBond.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::startup_bonds"
+          },
+          {
+            "bytes": 24,
+            "file": "SecurityHid.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 20,
+            "file": "SecurityHid.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::hid_api_mutex"
+          },
+          {
+            "bytes": 4,
+            "file": "SecurityBattery.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::battery_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "SecurityDeviceInformation.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::dis_error_value"
+          },
+          {
+            "bytes": 180,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage"
+          },
+          {
+            "bytes": 360,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "__compound_literal.0"
+          },
+          {
+            "bytes": 16,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_ctx_lib"
+          },
+          {
+            "bytes": 20,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_mutex"
+          },
+          {
+            "bytes": 32,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_mem_slab"
+          },
+          {
+            "bytes": 36,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "_k_mem_slab_buf_nucode_ble_keyboard_hids_storage_mem_slab"
+          }
+        ],
+        "public_symbols": [
+          "nucode::ble::BatteryService::setLevel(unsigned char)",
+          "nucode::ble::DeviceInformationService::configure(nucode::ble::DeviceInformation const&)",
+          "nucode::ble::SecurityManager::acceptPairing(bool)",
+          "nucode::ble::SecurityManager::begin(nucode::ble::SecurityConfig const&)",
+          "nucode::ble::SecurityManager::bondCount() const",
+          "nucode::ble::SecurityManager::bondCount() const::{lambda(bt_bond_info const*, void*)#1}::_FUN(bt_bond_info const*, void*)",
+          "nucode::ble::SecurityManager::bondState() const",
+          "nucode::ble::SecurityManager::bonded() const",
+          "nucode::ble::SecurityManager::cancelPairing()",
+          "nucode::ble::SecurityManager::confirmPasskey(bool)",
+          "nucode::ble::SecurityManager::currentLevel() const",
+          "nucode::ble::SecurityManager::eraseAllBonds()",
+          "nucode::ble::SecurityManager::lastError() const",
+          "nucode::ble::SecurityManager::onEvent(void (*)(nucode::ble::SecurityEventRecord const&, void*), void*)",
+          "nucode::ble::SecurityManager::poll()",
+          "nucode::ble::SecurityManager::requestSecurity()"
+        ]
+      },
+      "before": {
+        "elf_sha256": "f3299099aea3b8aed4f3331739bb75fd5a3d4f3a8bb6237ca30b86490687fbda",
+        "memory": {
+          "FLASH": 242944,
+          "RAM": 58056
+        },
+        "owned_objects": [
+          {
+            "bytes": 10,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::bond_lifecycle"
+          },
+          {
+            "bytes": 16,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::pending_state"
+          },
+          {
+            "bytes": 8,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::hid_connection_state"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::bond_state_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::current_level_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::active_connection"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_driver_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::hid_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::hid_driver_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::hid_initialized"
+          },
+          {
+            "bytes": 44,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_event_queue"
+          },
+          {
+            "bytes": 20,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::hid_api_mutex"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::published_level_value"
+          },
+          {
+            "bytes": 12,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_config"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::paired_value"
+          },
+          {
+            "bytes": 28,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::startup_bonds"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::startup_bond_count"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_initialized"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::startup_bond_snapshot_ready"
+          },
+          {
+            "bytes": 28,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::authentication_callbacks"
+          },
+          {
+            "bytes": 16,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::authentication_info_callbacks"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_event_callback"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_event_context"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::battery_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::dis_error_value"
+          },
+          {
+            "bytes": 480,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::_k_fifo_buf_security_event_queue"
+          },
+          {
+            "bytes": 180,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage"
+          },
+          {
+            "bytes": 360,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "__compound_literal.0"
+          },
+          {
+            "bytes": 16,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_ctx_lib"
+          },
+          {
+            "bytes": 20,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_mutex"
+          },
+          {
+            "bytes": 32,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_mem_slab"
+          },
+          {
+            "bytes": 36,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "_k_mem_slab_buf_nucode_ble_keyboard_hids_storage_mem_slab"
+          }
+        ],
+        "public_symbols": [
+          "nucode::ble::BatteryService::setLevel(unsigned char)",
+          "nucode::ble::DeviceInformationService::configure(nucode::ble::DeviceInformation const&)",
+          "nucode::ble::SecurityManager::acceptPairing(bool)",
+          "nucode::ble::SecurityManager::begin(nucode::ble::SecurityConfig const&)",
+          "nucode::ble::SecurityManager::bondCount() const",
+          "nucode::ble::SecurityManager::bondCount() const::{lambda(bt_bond_info const*, void*)#1}::_FUN(bt_bond_info const*, void*)",
+          "nucode::ble::SecurityManager::bondState() const",
+          "nucode::ble::SecurityManager::bonded() const",
+          "nucode::ble::SecurityManager::cancelPairing()",
+          "nucode::ble::SecurityManager::confirmPasskey(bool)",
+          "nucode::ble::SecurityManager::currentLevel() const",
+          "nucode::ble::SecurityManager::eraseAllBonds()",
+          "nucode::ble::SecurityManager::lastError() const",
+          "nucode::ble::SecurityManager::onEvent(void (*)(nucode::ble::SecurityEventRecord const&, void*), void*)",
+          "nucode::ble::SecurityManager::poll()",
+          "nucode::ble::SecurityManager::requestSecurity()"
+        ]
+      },
+      "removed_public_symbols": []
+    },
+    "nucode.m21.ble_security_hil_peripheral": {
+      "after": {
+        "elf_sha256": "199cda1ec75d8559f3df4877e76754b982894a10cbadc73e7386bc5f961a620a",
+        "memory": {
+          "FLASH": 242868,
+          "RAM": 58096
+        },
+        "owned_objects": [
+          {
+            "bytes": 52,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 44,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::security_event_queue"
+          },
+          {
+            "bytes": 480,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::_k_fifo_buf_security_event_queue"
+          },
+          {
+            "bytes": 72,
+            "file": "SecurityPairing.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 24,
+            "file": "SecurityBond.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 28,
+            "file": "SecurityBond.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::startup_bonds"
+          },
+          {
+            "bytes": 24,
+            "file": "SecurityHid.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 20,
+            "file": "SecurityHid.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::hid_api_mutex"
+          },
+          {
+            "bytes": 47,
+            "file": "SecurityHid.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::keyboard_report_map"
+          },
+          {
+            "bytes": 4,
+            "file": "SecurityBattery.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::battery_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "SecurityDeviceInformation.cpp",
+            "name": "nucode::ble::internal::security::(anonymous namespace)::dis_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "protocol_callback"
+          },
+          {
+            "bytes": 180,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage"
+          },
+          {
+            "bytes": 360,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "__compound_literal.0"
+          },
+          {
+            "bytes": 16,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_ctx_lib"
+          },
+          {
+            "bytes": 20,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_mutex"
+          },
+          {
+            "bytes": 32,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_mem_slab"
+          },
+          {
+            "bytes": 36,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "_k_mem_slab_buf_nucode_ble_keyboard_hids_storage_mem_slab"
+          }
+        ],
+        "public_symbols": [
+          "nucode::ble::BatteryService::setLevel(unsigned char)",
+          "nucode::ble::DeviceInformationService::configure(nucode::ble::DeviceInformation const&)",
+          "nucode::ble::HidKeyboard::begin()",
+          "nucode::ble::HidKeyboard::press(unsigned char, unsigned char)",
+          "nucode::ble::HidKeyboard::releaseAll()",
+          "nucode::ble::HidKeyboard::sendReport(nucode::ble::KeyboardReport const&)",
+          "nucode::ble::SecurityManager::acceptPairing(bool)",
+          "nucode::ble::SecurityManager::begin(nucode::ble::SecurityConfig const&)",
+          "nucode::ble::SecurityManager::bondCount() const",
+          "nucode::ble::SecurityManager::bondCount() const::{lambda(bt_bond_info const*, void*)#1}::_FUN(bt_bond_info const*, void*)",
+          "nucode::ble::SecurityManager::bondState() const",
+          "nucode::ble::SecurityManager::bonded() const",
+          "nucode::ble::SecurityManager::cancelPairing()",
+          "nucode::ble::SecurityManager::confirmPasskey(bool)",
+          "nucode::ble::SecurityManager::eraseAllBonds()",
+          "nucode::ble::SecurityManager::onEvent(void (*)(nucode::ble::SecurityEventRecord const&, void*), void*)",
+          "nucode::ble::SecurityManager::poll()"
+        ]
+      },
+      "before": {
+        "elf_sha256": "7fe2fb0e2d9d97c42158e512188e95def73972d368fb791455285435c9c36eff",
+        "memory": {
+          "FLASH": 242624,
+          "RAM": 58072
+        },
+        "owned_objects": [
+          {
+            "bytes": 10,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::bond_lifecycle"
+          },
+          {
+            "bytes": 16,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::pending_state"
+          },
+          {
+            "bytes": 8,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::hid_connection_state"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::bond_state_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::current_level_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::active_connection"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_driver_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::hid_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::hid_driver_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::hid_initialized"
+          },
+          {
+            "bytes": 44,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_event_queue"
+          },
+          {
+            "bytes": 20,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::hid_api_mutex"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::published_level_value"
+          },
+          {
+            "bytes": 12,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_config"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::paired_value"
+          },
+          {
+            "bytes": 28,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::startup_bonds"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::startup_bond_count"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_initialized"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::startup_bond_snapshot_ready"
+          },
+          {
+            "bytes": 28,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::authentication_callbacks"
+          },
+          {
+            "bytes": 16,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::authentication_info_callbacks"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_event_callback"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::security_event_context"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::battery_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::dis_error_value"
+          },
+          {
+            "bytes": 47,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::keyboard_report_map"
+          },
+          {
+            "bytes": 480,
+            "file": "NUCODE_BLE_Security.cpp",
+            "name": "(anonymous namespace)::_k_fifo_buf_security_event_queue"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "protocol_callback"
+          },
+          {
+            "bytes": 180,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage"
+          },
+          {
+            "bytes": 360,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "__compound_literal.0"
+          },
+          {
+            "bytes": 16,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_ctx_lib"
+          },
+          {
+            "bytes": 20,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_mutex"
+          },
+          {
+            "bytes": 32,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "nucode_ble_keyboard_hids_storage_mem_slab"
+          },
+          {
+            "bytes": 36,
+            "file": "NUCODE_BLE_HidsBackend.c",
+            "name": "_k_mem_slab_buf_nucode_ble_keyboard_hids_storage_mem_slab"
+          }
+        ],
+        "public_symbols": [
+          "nucode::ble::BatteryService::setLevel(unsigned char)",
+          "nucode::ble::DeviceInformationService::configure(nucode::ble::DeviceInformation const&)",
+          "nucode::ble::HidKeyboard::begin()",
+          "nucode::ble::HidKeyboard::press(unsigned char, unsigned char)",
+          "nucode::ble::HidKeyboard::releaseAll()",
+          "nucode::ble::HidKeyboard::sendReport(nucode::ble::KeyboardReport const&)",
+          "nucode::ble::SecurityManager::acceptPairing(bool)",
+          "nucode::ble::SecurityManager::begin(nucode::ble::SecurityConfig const&)",
+          "nucode::ble::SecurityManager::bondCount() const",
+          "nucode::ble::SecurityManager::bondCount() const::{lambda(bt_bond_info const*, void*)#1}::_FUN(bt_bond_info const*, void*)",
+          "nucode::ble::SecurityManager::bondState() const",
+          "nucode::ble::SecurityManager::bonded() const",
+          "nucode::ble::SecurityManager::cancelPairing()",
+          "nucode::ble::SecurityManager::confirmPasskey(bool)",
+          "nucode::ble::SecurityManager::eraseAllBonds()",
+          "nucode::ble::SecurityManager::onEvent(void (*)(nucode::ble::SecurityEventRecord const&, void*), void*)",
+          "nucode::ble::SecurityManager::poll()"
+        ]
+      },
+      "removed_public_symbols": []
+    }
+  },
+  "physical_executed": false,
+  "source_membership": {
+    "nucode.m21.ble_security_contract": {
+      "NUCODE_BLE_HidsBackend.c": 1,
+      "NUCODE_BLE_Security.cpp": 1,
+      "SecurityBattery.cpp": 1,
+      "SecurityBond.cpp": 1,
+      "SecurityDeviceInformation.cpp": 1,
+      "SecurityHid.cpp": 1,
+      "SecurityPairing.cpp": 1
+    },
+    "nucode.m21.ble_security_hil_central": {
+      "NUCODE_BLE_HidsBackend.c": 1,
+      "NUCODE_BLE_Security.cpp": 1,
+      "SecurityBattery.cpp": 1,
+      "SecurityBond.cpp": 1,
+      "SecurityDeviceInformation.cpp": 1,
+      "SecurityHid.cpp": 1,
+      "SecurityPairing.cpp": 1
+    },
+    "nucode.m21.ble_security_hil_peripheral": {
+      "NUCODE_BLE_HidsBackend.c": 1,
+      "NUCODE_BLE_Security.cpp": 1,
+      "SecurityBattery.cpp": 1,
+      "SecurityBond.cpp": 1,
+      "SecurityDeviceInformation.cpp": 1,
+      "SecurityHid.cpp": 1,
+      "SecurityPairing.cpp": 1
+    }
+  }
+}

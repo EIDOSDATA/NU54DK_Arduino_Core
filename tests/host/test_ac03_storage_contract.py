@@ -138,7 +138,11 @@ class AC03StorageContractTests(unittest.TestCase):
         """! @brief EEPROM의 mirror, CRC, bounds, 명시적 commit 계약을 검증합니다. """
 
         header = (ROOT / "libraries" / "EEPROM" / "src" / "EEPROM.h").read_text(encoding="utf-8")
-        source = (ROOT / "libraries" / "EEPROM" / "src" / "EEPROM.cpp").read_text(encoding="utf-8")
+        base = ROOT / "libraries" / "EEPROM" / "src"
+        source = "\n".join((base / name).read_text(encoding="utf-8") for name in (
+            "internal/EEPROMRecord.h", "internal/EEPROMRecord.cpp",
+            "internal/EEPROMSettings.cpp", "EEPROM.cpp",
+        ))
         self.assertIn("maximum_size = 1024U", header)
         self.assertRegex(header, r"bool\s+commit\s*\(\s*\)")
         self.assertRegex(header, r"bool\s+reset\s*\(")

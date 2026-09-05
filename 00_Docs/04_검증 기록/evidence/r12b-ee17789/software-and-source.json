@@ -1,0 +1,66 @@
+{
+  "actual_gatt_scenarios": 11,
+  "full_host_before_final_state_placement": true,
+  "gates": {
+    "contract": {
+      "log_sha256": "b004f8b0e0b6d6c1b8681b572fb440de3a90769cdde642d96dda2ac33376698f",
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "skips": 0,
+      "tests": 45
+    },
+    "gatt-after": {
+      "log_sha256": "1b7ae2398988ea7dc5ca33e8dfa957c42af481a0737404505251daad91f55002",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "gatt-before": {
+      "log_sha256": "96ccafd06ece4e0695aabbc0e35e6f130f920490d8bd0de01761b08436c906e8",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "host": {
+      "log_sha256": "c4a67cc4a9b79f1a868000d8d3c04f4b84e0438087295423109435a5716b8209",
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "skips": 2,
+      "tests": 625
+    },
+    "inventory": {
+      "log_sha256": "5cac786157abe5d53d21ffc41ea424d773ae85d29f2cb70af82f59e30cb04f27",
+      "result_lines": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "m20-after": {
+      "log_sha256": "54f0137710849b736d0def2b2347f374922521c52391f6fcd2fd83b55bff5025",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 6
+    },
+    "style": {
+      "log_sha256": "72d535bca3d71b325ea318ba276cb95c1b435e81319d8fa55a272dd8d3bec9fa",
+      "result_lines": [
+        "CPP_STYLE_FILES=330; FAILED=0; WRITE=0"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "target": {
+      "log_sha256": "59ad7bc5c3f808d3b8c750e5450a28a2d7738abc654135a68c979c226b1e144b",
+      "result_lines": [
+        "M12_ZEPHYR_BUILD_PASS=4;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "physical_executed": false,
+  "start_commit": "ee17789"
+}

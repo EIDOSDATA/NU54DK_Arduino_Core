@@ -1,0 +1,6 @@
+test_production_security_lifecycle (test_r12_ble_security.BleSecurityTests.test_production_security_lifecycle) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 5.146s
+
+OK
