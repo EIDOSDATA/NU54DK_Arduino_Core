@@ -6,7 +6,7 @@
 | 완료 범위 | M1~M23, M26 판정, `v0.1.0`·`v0.2.0`·`v0.3.0` 정식 공개 |
 | 진행 범위 | `v0.4.0` M24~M25 physical gate와 M27 release 준비 |
 | 현재 정식 버전 | `v0.3.0` |
-| 최종 갱신일 | 2026-09-04 |
+| 최종 갱신일 | 2026-09-05 |
 
 이 디렉터리는 **현재 사용법이나 다음 작업을 설명하는 곳이 아니다.** 각 기록의 `다음 단계`,
 `HOLD`, `미실행`과 `NOT RUN`은 그 문서를 작성한 시점의 경계를 뜻한다. 현재 상태는
@@ -74,6 +74,7 @@
 | 온보드 재개 | 새 18/18 build·M26 flash/readback 확인; READY 누락·reset 경계 잡음·USB 이탈로 formal HIL HOLD | [온보드 재개·진단 기록](40_M24_M26_온보드_재개와_USB_UART_진단.md) |
 | 온보드 교정·재검증 | `51c1986` 18/18 build, UART 4개·TWIM 3개·내부 VDD/event·TEMP/WDT30 formal PASS; 외부 fixture·최종 release HOLD | [교정·실기 재검증](41_M24_M26_온보드_protocol_교정과_실기_재검증.md) |
 | 검증 범위 합의 | 두 NU54DK 기반 코어 기능 HIL 유지, 정밀 계측·외부 부품별 호환성은 범위 밖; 미실행 기능·공개 HOLD 유지 | [코어 기능 검증 범위](42_v0.4.0_코어_기능_검증_범위_합의.md) |
+| Fixture 101 UART | exact `2542a01`에서 P2↔P1 UARTE 양방향 data 1,620·예상 오류 24·cleanup 2건 PASS; 다른 fixture HOLD | [M24 Fixture 101 실기 검증](44_M24_Fixture_101_UART_실기_검증.md) |
 
 ## 기록 해석 규칙
 

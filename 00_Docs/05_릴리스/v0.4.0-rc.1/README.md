@@ -32,7 +32,9 @@ Staging compile은 공개 URL 설치·실제 upload·제거·재설치·version 
 
 `51c1986`의 UART 4개·TWIM 3개·내부 VDD/event·TEMP/WDT30 기본 HIL은
 [온보드 교정·실기 재검증](<../../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)에서
-PASS했다. 아래 범위 합의는 추가 실기 PASS나 최종 공개 승인이 아니다.
+PASS했다. `2542a01`의 [UART Fixture 101](<../../04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)은
+P2↔P1 UARTE 양방향 data·DMA·RTS/CTS를 통과했다. 나머지 fixture와 아래 범위 합의는 최종
+공개 승인이 아니다.
 
 ## 기능 검증과 사용자 통합 검증의 경계
 
@@ -44,7 +46,7 @@ PASS했다. 아래 범위 합의는 추가 실기 PASS나 최종 공개 승인�
 
 ## 공개 전 필수 항목
 
-1. M24 온보드 추가 기능과 serial loopback/peer·허용 최대 동시성·복구·처리량·soak
+1. M24의 남은 UART route, SPI/TWI peer·허용 최대 동시성·복구·처리량·soak
 2. M25 analog/PWM/PDM/I2S/QDEC 합성 신호·capture, 기본 timing·DMA·overrun·복구·동시성·soak
 3. M26 TEMP·WDT30 reset 온보드 PASS 증거 유지와 관련 변경 시 회귀 검증
 4. Frozen RC commit의 host/docs/전체 Zephyr build와 이중 package 재현성

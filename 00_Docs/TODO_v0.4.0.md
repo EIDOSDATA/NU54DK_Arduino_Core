@@ -2,13 +2,13 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 1.1 |
-| 상태 | 활성 TODO — T01~T09 완료, T10 첫 외부 결선 확인 대기 |
+| 문서 ID / 개정 | TODO-V04-001 / 1.2 |
+| 상태 | 활성 TODO — T01~T10 완료, T11 Fixture 101 UART PASS·나머지 통신 fixture 대기 |
 | 작성·갱신일 | 2026-09-05 |
 | 작성 직전 기준 commit | `6c18d4c316f13eb373da6cada5675cdc82a0cf6f` |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **T10 — 첫 외부 시험 묶음의 안전 결선 확인** |
-| 이번 요청의 실행 범위 | 사용자 승인: T01~T09 준비·검사·두 USB 보드의 무배선 온보드 HIL·문서·commit/push. 외부 결선 실행은 T10 확인 뒤, release 공개는 포함하지 않음 |
+| 다음 착수 항목 | **T11 — Fixture 102 UART route 결선 확인·실행** |
+| 이번 요청의 실행 범위 | 사용자 승인: 두 NU54DK의 Fixture 101 결선 확인 뒤 UART 전체 vector 실행, 결함 수정·문서·commit/push. 다음 fixture는 새 결선 확인 뒤 실행 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
 마일스톤의 제품 상태는 [로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>), 실제 PASS/FAIL은
@@ -49,20 +49,20 @@ TODO의 체크만으로 그 원본들의 상태를 바꾸지 않는다. 이 문�
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | T01~T09: 75 identity·19 family 시험표, 구현 대조, exact pair/campaign runner, 통신·analog·stream fixture, DMA 수명주기·복구·최소 동시성, 15개 안전 결선 catalog와 confirmation template, clean image 두 보드 primitives 904건. 전체 C/C++/INO 227개 정렬과 회귀 |
-| 진행 중인 T 항목 | T01~T09 완료. 외부 fixture는 모두 `NOT RUN`이며 T10 사람 결선 확인 전 실행 금지 |
-| 다음 구체적 행동 | T10에서 첫 시험 묶음의 DUT/peer 핀·GND·전압·pull-up·스위치 조건을 안내하고 사용자의 실제 결선 완료 확인을 받는다 |
-| 다음 작업에 필요한 사용자 행동 | 두 보드 USB 연결 완료 통보 받음. 외부 점퍼는 T10의 확정 결선표 안내 전 연결하지 않음 |
-| 외부 결선 상태 | 두 보드 상호 결선은 T10에 수행하는 요청; 현재는 USB만 전제로 온보드 경로에 한정 |
+| 이번에 끝낸 일 | T01~T10과 Fixture 101: 안전 결선·두 role/UID 확인, DAP UART 분리, 지연 RX fixture 결함 수정, 100 kHz SWD 제어로 UART 정상 1,620·예상 오류 24·cleanup 2건 PASS |
+| 진행 중인 T 항목 | T11 진행 중. Fixture 101 PASS; Fixture 102·103 UART, 201~203 SPI, 301 TWI는 `NOT RUN` |
+| 다음 구체적 행동 | Fixture 102의 P0↔P1 UART 결선표를 안내하고 USB 전원을 끈 상태에서 변경한 뒤 새 confirmation으로 실행한다 |
+| 다음 작업에 필요한 사용자 행동 | 현재 Fixture 101 배선을 제거하고, 다음 안내에 따라 Fixture 102로 재결선한 뒤 두 USB 재연결·완료를 확인한다 |
+| 외부 결선 상태 | Fixture 101 결선과 `DISABLE_UART` 분리 상태에서 exact `2542a01` 전체 UART campaign PASS. 다음 fixture로 바꾸기 전 USB 전원 분리 필요 |
 | 작업 checkout 분리 | 사용자 정렬과 병행할 때 충돌을 막기 위해 `C:/nb/s04`, branch `codex/v04-prep-20260905`에서 격리했다. T01~T09 구현 `696defb`와 증거 `661fad9`를 원본 `main`에 fast-forward해 push했으므로 제품 이력은 다시 `main` 하나로 통합됐다. 임시 worktree/branch는 보존 데이터 확인 뒤 정리 가능 |
-| 마지막 정식 온보드 source | `696defbc6c6c5f9374cb5daa221a278d6acb3514` — T09 두 보드 exact role image primitives PASS |
+| 마지막 정식 외부 HIL source | `2542a014c2f4dcf4309bd5372701291d1ace2f82` — Fixture 101 두 보드 exact role image UART PASS |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; T09 무배선 PASS만 추가됐으며 외부 결선·RC·최종 공개 승인 없음 |
-| 알려진 문제 | 과거 COM 포트 이탈의 근본 원인 미확정. 2026-09-05 사용자가 HW 엔지니어의 일부 납땜 이슈 진단을 전달함: peer COM8/P0 DAP CTS 실패는 보드 경로 문제로 분리, 정상 DUT의 RTS/CTS PASS 보존. 해당 경로를 PASS로 소급 변경하지 않으며 코어 전체 RTS/CTS 미지원으로 판정하지 않음 |
-| 이 TODO 작성 작업의 실행 중 시험 | clean `696defb`의 M12 Host 전체 PASS. contract45·inventory·docs143 PASS, `C:/r45` v0.4.0 full group 20/20 PASS. `C:/r48` exact pair role 2/2 build PASS 뒤 두 UID에서 primitives 904건 PASS. 외부 HIL은 `NOT RUN` |
-| 로컬 임시 build·evidence | 영구 [T09 evidence](<./04_검증 기록/evidence/696defb/pair-primitives-696defb.json>)와 journal 보존. 일반 Python의 `jsonschema` 누락(`C:/r46`)과 SDK 환경 누락(`C:/r47`)은 source build 전 환경 실패로 분리했고, Nordic Python·SDK 변수를 명시한 `C:/r48`에서 같은 exact source 2/2 PASS |
+| 알려진 문제 | 1 MHz CMSIS-DAP sector erase가 두 보드에서 각 1회 timeout됐으나 100 kHz read-only CPUID와 flash는 안정적으로 통과. 자동 recover/mass erase 없음. DAP UART가 연결된 Fixture 101은 실제 핀 충돌을 일으키므로 양쪽 `DISABLE_UART` 분리 필수 |
+| 이 TODO 작성 작업의 실행 중 시험 | exact `2542a01` role 2/2 build, 100 kHz SWD CPUID·단일 deferred RX 재현과 Fixture 101 총 1,648 result PASS. 이후 runner 속도 옵션·문서 변경의 M12 Host 전체, contract45·inventory·docs145 PASS |
+| 로컬 임시 build·evidence | T09 evidence와 [Fixture 101 전체 evidence](<./04_검증 기록/evidence/2542a01/fixture101-full-2542a01-100khz.json>)·journal 보존. exact `2542a01` role image는 `C:/r50`; 성공 evidence 원본은 사용자 Documents에도 보존 |
 | 최종 정렬 gate | clang-format 22.1.8로 직접 관리 C/C++/ino 227개 write·dry-run PASS. 한국어 Doxygen 동작 주석, Allman/4칸/중괄호 필수 적용. SPDX·namespace 표식만 기계적 예외. clean Host 전체·v0.4 full20·T09 exact HIL 회귀 PASS. 최종 증거·문서는 이 기록 commit에 포함 |
-| CI 확인 | push된 `661fad9`의 [Software Gates](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811058) success(1분35초), [Reproducible Builds](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811030) Arduino 4/4·Zephyr 4/4 success(26분43초, artifact 8개). 마지막 기록 전용 commit은 코드·시험 artifact를 바꾸지 않는다 |
-| 문서 작업 검증 | 문서143개 UTF-8·내부 링크 PASS, inventory/serial/system/release 계약 PASS. M27 16개/미해결8개 유지. M12 Host 전체를 clean `696defb`에서 재실행해 PASS |
+| CI 확인 | 이전 `661fad9`의 [Software Gates](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811058)와 [Reproducible Builds](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811030) success 보존. 이번 Fixture 101 기록 commit은 push 뒤 새 CI 결과를 확인한다 |
+| 문서 작업 검증 | 문서145개 UTF-8·내부 링크 PASS, inventory/serial/system/release 계약 PASS. M27 16개/미해결8개 유지. runner 변경 포함 M12 Host 전체 PASS |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드
@@ -167,17 +167,17 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
 
 ## 5. B단계 — 사용자 결선 뒤 기능 검증 (T10~T15)
 
-- [ ] **T10 — 첫 시험 묶음의 결선 확인**
-  - 상태·선행: 사용자 배선 대기 / 해당 T04~T09 준비. 사람의 결선·스위치 설정 필요.
+- [x] **T10 — 첫 시험 묶음의 결선 확인**
+  - 상태·선행: 완료 / 사용자가 Fixture 101 배선·DUT D/peer E·양쪽 `DISABLE_UART` 분리·USB 재연결을 확인.
   - 할 일: 정확한 두 보드 role과 승인 연결표를 안내하고 사용자의 완료 확인 뒤 preflight한다.
   - 완료 기준: 현재 session의 배선표 개정·두 UID·스위치·전압/pull-up 조건이 기록된다. 사진/장치 열거만으로 전기적 연결 전체를 검증했다고 하지 않는다.
-  - 증거: 미등록. 이후 묶음의 결선 변경 때마다 이 확인을 반복한다.
+  - 증거: [44번 Fixture 101 기록](<./04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>). 이후 묶음의 결선 변경 때마다 confirmation을 반복한다.
 
 - [ ] **T11 — M24 통신 인스턴스 기능 검증**
-  - 상태·선행: 온보드 기본 근거 외 미완료 / T04·T09·해당 T10 확인.
+  - 상태·선행: 진행 중 / Fixture 101 UART 정상 1,620·예상 오류 24·cleanup 2건 PASS. 나머지 UART·SPI·TWI fixture 미실행.
   - 할 일: UART·SPI·I2C 승인 경로를 역할별로 실행하고 실제 데이터·mode·DMA 결과를 비교한다.
   - 완료 기준: T01 표의 각 단독 기능 결과가 exact evidence에 연결되고 나머지 16개 외부 경로를 build로 대체하지 않는다. 실패는 T14로 넘긴다.
-  - 결선·증거: 묶음별 결선/스위치 변경 필요, 확인 뒤 자동 실행. 추가 증거 미등록.
+  - 결선·증거: [44번 기록과 exact evidence](<./04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>) 등록. Fixture 102·103, 201~203, 301은 묶음별 결선/스위치 변경과 새 확인 뒤 자동 실행.
 
 - [ ] **T12 — M25 입력·출력·스트림 기능 검증**
   - 상태·선행: 내부 VDD/event 기본 근거 외 미완료 / T05·T06·T09·해당 T10 확인.
@@ -192,7 +192,7 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
   - 결선·증거: 대상에 따라 결선/스위치 조작 필요. 추가 증거 미등록; System OFF 격리·재연결은 명시적으로 안내한다.
 
 - [ ] **T14 — 발견된 결함 수정과 재시험**
-  - 상태·선행: 검증 중 반복하는 항목 / T09~T13 또는 이후 gate의 실패·영향 분석.
+  - 상태·선행: 검증 중 반복하는 항목 / Fixture 101 deferred RX의 SPI 분기 진입은 `2542a01`에서 수정·단일 재현·전체 재시험 PASS. 이후 결함은 계속 이 항목으로 회귀.
   - 할 일: 실패 재현·수정·regression test를 연결하고 관련 온보드/기존 기능을 재검증한다. M26 TEMP/WDT 등 영향받는 근거도 재판정한다.
   - 완료 기준: release를 막는 미해결 코어 결함이 없고 변경된 image의 필요한 기능 시험이 통과한다. 실패 기록은 보존한다.
   - 결선·증거: 재시험 대상에 따라 필요. 새 결함이 나오면 다시 미완료로 전환; 현재 추가 증거 미등록.

@@ -6,15 +6,19 @@ from typing import Any, Callable
 
 
 def reset_halted_start(
-    streams: dict[str, Any], probe_id: str, *, session_factory: Callable | None = None
+    streams: dict[str, Any],
+    probe_id: str,
+    *,
+    session_factory: Callable | None = None,
+    swd_frequency_hz: int = 1_000_000,
 ) -> dict[str, Any]:
-    if len(streams) != 2 or not probe_id.strip():
+    if len(streams) != 2 or not probe_id.strip() or swd_frequency_hz <= 0:
         raise RuntimeError("controlled onboard start requires an exact probe and two VCOMs")
     if session_factory is None:
         from pyocd.core.helpers import ConnectHelper
         session_factory = ConnectHelper.session_with_chosen_probe
     session = session_factory(
-        unique_id=probe_id, target_override="nrf54l", frequency=1000000,
+        unique_id=probe_id, target_override="nrf54l", frequency=swd_frequency_hz,
         blocking=False, no_config=True,
         options={"auto_unlock": False, "connect_mode": "attach", "resume_on_disconnect": False},
     )
@@ -35,4 +39,5 @@ def reset_halted_start(
             stream.reset_output_buffer()
         target.resume()
     return {"method": "reset-halt-drain-resume", "cpuid": f"0x{cpuid:08x}",
+            "frequency_hz": swd_frequency_hz,
             "auto_unlock": False, "mass_erase_requested": False}

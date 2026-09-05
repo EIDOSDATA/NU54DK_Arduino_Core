@@ -133,7 +133,9 @@ def matching_port_names(port_records: Iterable[Any], probe_id: str) -> list[str]
     return devices
 
 
-def pyocd_command(pyocd: Path, probe_id: str, image: Path) -> list[str]:
+def pyocd_command(
+    pyocd: Path, probe_id: str, image: Path, swd_frequency_hz: int = 1_000_000
+) -> list[str]:
     return [
         str(pyocd),
         "load",
@@ -150,17 +152,23 @@ def pyocd_command(pyocd: Path, probe_id: str, image: Path) -> list[str]:
         "--uid",
         probe_id,
         "--frequency",
-        "1m",
+        str(swd_frequency_hz),
         str(image),
     ]
 
 
 def flash_image(
-    pyocd: Path, probe_id: str, image: Path, timeout_seconds: float
+    pyocd: Path,
+    probe_id: str,
+    image: Path,
+    timeout_seconds: float,
+    swd_frequency_hz: int = 1_000_000,
 ) -> dict[str, Any]:
     if timeout_seconds <= 0:
         raise UarteHilFailure("--flash-timeout must be positive.")
-    command = pyocd_command(pyocd, probe_id, image)
+    if swd_frequency_hz <= 0:
+        raise UarteHilFailure("--swd-frequency-hz must be positive.")
+    command = pyocd_command(pyocd, probe_id, image, swd_frequency_hz)
     started = time.monotonic()
     try:
         result = subprocess.run(
@@ -180,6 +188,7 @@ def flash_image(
     return {
         "runner": "pyocd",
         "target": "nrf54l",
+        "frequency_hz": swd_frequency_hz,
         "seconds": round(time.monotonic() - started, 3),
         "mass_erase_requested": False,
         "recover_requested": False,
@@ -285,6 +294,7 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     parser.add_argument("--pyocd", type=Path, default=Path(shutil.which("pyocd") or ""))
     parser.add_argument("--evidence", type=Path, required=True)
     parser.add_argument("--flash-timeout", type=float, default=120.0)
+    parser.add_argument("--swd-frequency-hz", type=int, default=1_000_000)
     parser.add_argument("--settle-seconds", type=float, default=1.5)
     parser.add_argument("--response-timeout", type=float, default=3.0)
     return parser.parse_args(arguments)
@@ -327,9 +337,19 @@ def main(arguments: Sequence[str] | None = None) -> int:
             for stream in streams.values():
                 stream.reset_input_buffer()
                 stream.reset_output_buffer()
-            flash = flash_image(args.pyocd, args.probe_id, image["path"], args.flash_timeout)
+            flash = flash_image(
+                args.pyocd,
+                args.probe_id,
+                image["path"],
+                args.flash_timeout,
+                args.swd_frequency_hz,
+            )
             from onboard_start import reset_halted_start
-            flash["controlled_start"] = reset_halted_start(streams, args.probe_id)
+            flash["controlled_start"] = reset_halted_start(
+                streams,
+                args.probe_id,
+                swd_frequency_hz=args.swd_frequency_hz,
+            )
             ready_port, ready_transcripts = collect_exact_frame(
                 streams, ready_frame(instance), args.settle_seconds + args.response_timeout
             )

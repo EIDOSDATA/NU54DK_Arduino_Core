@@ -103,12 +103,19 @@ def verify_identity(raw: bytes, role: int, commit: str) -> None:
         raise ProtocolError("runtime firmware commit mismatch")
 
 
-def boot_exact(stack, connect_helper, pyocd: Path, uid: str, image: dict):
+def boot_exact(
+    stack,
+    connect_helper,
+    pyocd: Path,
+    uid: str,
+    image: dict,
+    swd_frequency_hz: int = 1_000_000,
+):
     """Flash/start one exact role image; caller owns the pair's exclusive locks."""
     if sha256_file(image["path"]) != image["sha256"] or sha256_file(image["elf"]) != image["elf_sha256"]:
         raise ProtocolError("image changed after preflight")
-    flash = flash_image(pyocd, uid, image["path"], 120)
-    session = connect_helper.session_with_chosen_probe(unique_id=uid, target_override="nrf54l", frequency=1000000,
+    flash = flash_image(pyocd, uid, image["path"], 120, swd_frequency_hz)
+    session = connect_helper.session_with_chosen_probe(unique_id=uid, target_override="nrf54l", frequency=swd_frequency_hz,
         blocking=False, no_config=True, options={"auto_unlock": False, "connect_mode": "attach", "resume_on_disconnect": False})
     if session is None:
         raise ProtocolError("selected probe disappeared after flash")
@@ -216,6 +223,7 @@ def main() -> int:
     parser.add_argument("--peer", required=True)
     parser.add_argument("--build-root", type=Path, required=True)
     parser.add_argument("--pyocd", type=Path, required=True)
+    parser.add_argument("--swd-frequency-hz", type=int, default=1_000_000)
     parser.add_argument("--evidence", type=Path, required=True)
     parser.add_argument("--rounds", type=int, default=100)
     parser.add_argument("--onboard-suite", choices=("primitives", "uart", "all"), default="all")
@@ -224,8 +232,9 @@ def main() -> int:
     parser.add_argument("--execute-onboard", action="store_true", help="explicitly authorize flash of both exact role images")
     args = parser.parse_args()
     uids = validate_pair(args.dut, args.peer)
-    if not 1 <= args.rounds <= 100 or not args.pyocd.is_file():
-        raise ProtocolError("invalid rounds or pyOCD executable")
+    if (not 1 <= args.rounds <= 100 or not args.pyocd.is_file()
+            or args.swd_frequency_hz <= 0):
+        raise ProtocolError("invalid rounds, SWD frequency or pyOCD executable")
     images = [inspect_image(ROOT, args.build_root.resolve(), role) for role in (1, 2)]
     from pyocd.core.helpers import ConnectHelper
     from serial.tools import list_ports
@@ -238,6 +247,7 @@ def main() -> int:
     evidence = {"schema_version": 1, "type": "v04-pair-onboard", "status": "preflight", "core_revision": images[0]["core_revision"],
                 "board_revision": images[0]["board_revision"], "rounds": args.rounds, "onboard_suite": args.onboard_suite, "external_wiring_executed": False,
                 "uart_producer": args.uart_producer,
+                "swd_frequency_hz": args.swd_frequency_hz,
                 "plan_sha256": sha256_file(Path(__file__).with_name("v04_test_plan.json")),
                 "devices": [{"role": image["role"], "uid_sha256": hashlib.sha256(uid.encode()).hexdigest(), "ports": coms,
                              "hex_sha256": image["sha256"], "elf_sha256": image["elf_sha256"], "record_sha256": image["record_sha256"]}
@@ -249,7 +259,9 @@ def main() -> int:
     with evidence_session(args.evidence, evidence) as log:
             with ProbeLocks(uids), ExitStack() as stack:
                 for uid, image in zip(uids, images):
-                    device, flash = boot_exact(stack, ConnectHelper, args.pyocd, uid, image)
+                    device, flash = boot_exact(
+                        stack, ConnectHelper, args.pyocd, uid, image,
+                        args.swd_frequency_hz)
                     def append(case_id, result, current_role=image["role"]):
                         entry = {"id": case_id, "role": current_role, "status": "passed", **result}
                         evidence["results"].append(entry)

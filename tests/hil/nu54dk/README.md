@@ -456,7 +456,7 @@ PDM/I2S/QDEC peer 신호 generator/receiver와 판정기는 build-only까지 준
 실패하면 HOLD로 남깁니다. 정밀 정확도·jitter·전력·음질·부품별 호환성은 `범위 밖·미측정`으로
 구분하며 코어 기능 PASS로부터 추정하지 않습니다.
 
-### 외부 UART/SPI/TWI 준비 모듈 — 아직 T10 실행 안내가 아님
+### 외부 UART/SPI/TWI fixture 모듈과 현재 실행 상태
 
 [v04_fixtures.json](v04_fixtures.json)은 보드 소유자가 수기로 확정한
 [P2/P4 커넥터 핀맵](<../../../00_Docs/01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)과
@@ -485,6 +485,12 @@ buffer를 구분합니다. RX는 SWD mailbox로
 parity/framing·break 오류 및 bounded STOP을 검사합니다. SPI는 125kHz 1,024-byte 전송 취소,
 TWI는 미등록 `0x44` NACK와 100kHz 256-byte 전송 취소 뒤 bounded STOP을 준비합니다.
 각 오류·취소 직후 같은 lease에서 32-byte 정상 전송을 다시 수행해 재시작도 별도로 판정합니다.
+
+pyOCD flash와 이후 mailbox session의 SWD clock은 `--swd-frequency-hz`로 함께 지정합니다.
+기본값은 1,000,000 Hz입니다. CMSIS-DAP sector erase timeout이 재현되면 먼저 같은 UID를
+read-only로 확인하고, 자동 recover나 mass erase 없이 `--swd-frequency-hz 100000`처럼 낮출 수
+있습니다. 이 값은 UART/SPI/TWI bus clock이나 시험 vector 속도를 변경하지 않으며 evidence의
+top-level과 role별 flash 기록에 남습니다.
 TWI 추가 두 vector는 peer가 SDA를 LOW로 고정한 동안 복구 실패, 해제 뒤 `recoverBus()` 성공과
 32-byte 정상 전송, TWIS buffer를 5ms 늦게 제공하는 실제 clock stretch 뒤 정상 완료를 판정합니다.
 SPI fixture 201의 role 1에는 1,024-byte SPIM00 비동기 전송 중 온보드 TWIM22 PMIC read를
@@ -496,6 +502,11 @@ TWI 301은 DUT P4.25 `VDD_MOD`에서 SDA/SCL로 각각 2.2 kΩ ±5% pull-up 한 
 preflight JSON에는 현재 source·UID·image hash에 묶인 `confirmation_template`이 함께 출력됩니다.
 모든 안전 조건은 `false`, 시각은 `0`, 확인자는 빈 문자열로 생성되므로 실제 연결을 확인해 채우기
 전에는 실행 승인이 되지 않습니다.
+
+Fixture 101은 exact `2542a01`에서 양방향 UARTE data 1,620건과 예상 오류 24건을 통과했습니다.
+세부 결선·결함 교정·100 kHz SWD 제어·증거 hash는
+[Fixture 101 실기 기록](<../../../00_Docs/04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)에
+보존합니다. 이 결과를 아직 실행하지 않은 Fixture 102·103 또는 SPI/TWI에 확대하지 않습니다.
 
 두 번째 보드 COM8/P0 DAP CTS 고정에 대해 2026-09-05 사용자가 HW 엔지니어의 납땜 이슈
 진단을 전달했습니다. 정상 DUT의 RTS/CTS 결과는 유지하며, 해당 peer 경로는 FAIL 기록을 보존하고
