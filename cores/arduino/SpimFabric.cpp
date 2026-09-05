@@ -30,8 +30,10 @@ namespace nucode::arduino
         inline constexpr std::size_t instance_count = 5U;
         inline constexpr std::size_t event_capacity = 8U;
         inline constexpr std::uint32_t event_queue_overflow = 0x80000000UL;
-        /** @brief 64 MHz timing 기준 약 3.98 us CSN setup/hold를 만드는 최대 cycle 수입니다. */
+        /** @brief SPIM core clock 기준 최대 CSN setup/hold cycle 수입니다. */
         inline constexpr std::uint8_t csn_duration_cycles = 255U;
+        /** @brief 16 MHz SPIM20/21/22/30의 인스턴스별 기본 RXDELAY cycle 수입니다. */
+        inline constexpr std::uint8_t serial_rx_delay_cycles = 1U;
 
         struct BufferRecord
         {
@@ -282,14 +284,25 @@ namespace nucode::arduino
                     ? NRF_SPIM_BIT_ORDER_LSB_FIRST
                     : NRF_SPIM_BIT_ORDER_MSB_FIRST;
             configuration.orc = context->configuration.overrun_character;
+#if NRF_SPIM_HAS_RXDELAY
+            /**
+             * @brief 인스턴스의 core clock에 맞는 기본 수신 sample delay를 적용합니다.
+             *
+             * nRF54L15의 SPIM00은 128 MHz에서 RXDELAY 2, SPIM20/21/22/30은
+             * 16 MHz에서 RXDELAY 1이 reset 계약입니다. 공통 NRFX 기본값 2를
+             * serial SPIM에 그대로 적용하면 8 MHz에서 125 ns, 즉 한 bit 만큼
+             * MISO sample이 늦어집니다.
+             */
+            configuration.rx_delay =
+                instance == 0U ? NRF_SPIM_RXDELAY_DEFAULT : serial_rx_delay_cycles;
+#endif
 #if NRF_SPIM_HAS_HW_CSN
             /**
              * @brief 하드웨어 CSN으로 nRF54L15 SPIS의 최소 1 us setup/hold를 보장합니다.
              *
              * NRFX의 software CSN 경로는 GPIO assert 직후 START를 요청하므로 두 번째 전송의
-             * 첫 bit에서 SPIS over-read character가 노출될 수 있습니다. 각 SPIM core clock에서
-             * 최대 출력 준비 시간에 여유를 둔 약 3.98 us 값으로 시작·종료·전송 사이의 CSN timing을
-             * 고정합니다.
+             * 첫 bit에서 SPIS over-read character가 노출될 수 있습니다. 최대값 255로
+             * SPIM00에서 약 1.99 us, 16 MHz serial SPIM에서 약 15.94 us를 보장합니다.
              */
             configuration.use_hw_ss = csn != NRF_SPIM_PIN_NOT_CONNECTED;
             configuration.ss_duration = csn_duration_cycles;

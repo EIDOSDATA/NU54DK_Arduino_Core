@@ -214,6 +214,20 @@ class M24SerialContractTests(unittest.TestCase):
         )
         self.assertIn("configuration.ss_duration = csn_duration_cycles;", activation)
 
+    def test_spim_rx_delay_matches_nrf54l15_instance_clock(self) -> None:
+        """Source regression only; 8 MHz Fixture 201 proves the physical sample path."""
+        source = (REPOSITORY / "cores/arduino/SpimFabric.cpp").read_text(
+            encoding="utf-8"
+        )
+        activation = source.split("SerialFabricResult activateAdapter(", 1)[1].split(
+            "SerialFabricResult requestStopAdapter(", 1
+        )[0]
+        self.assertIn("serial_rx_delay_cycles = 1U", source)
+        self.assertIn(
+            "instance == 0U ? NRF_SPIM_RXDELAY_DEFAULT : serial_rx_delay_cycles;",
+            activation,
+        )
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
