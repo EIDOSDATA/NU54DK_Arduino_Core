@@ -18,6 +18,9 @@ namespace
     using namespace nucode::arduino;
     constexpr std::uint32_t role = CONFIG_NUCODE_V04_HIL_ROLE;
     constexpr std::uint32_t capacity = 1024;
+    constexpr std::uint32_t uart_unexpected_event = 1U << 9U;
+    constexpr std::uint32_t uart_event_type_shift = 16U;
+    constexpr std::uint32_t uart_error_mask_shift = 24U;
     struct alignas(4) Buffer
     {
         std::uint8_t before[16];
@@ -532,7 +535,16 @@ namespace
         }
         else if (event.type != UarteEventType::rx_buffer_needed)
         {
-            errors |= 512;
+            /**
+             * @brief 비정상 event의 종류와 UARTE ERRORSRC를 status word에 함께 보존합니다.
+             *
+             * 하위 16비트는 기존 판정 비트를 유지하고, 16~23비트에는 1을 더한 event 종류,
+             * 24~31비트에는 하드웨어 오류 mask를 기록합니다. 따라서 취소 event와 실제 선로
+             * parity/framing/overrun/break를 Host 증거에서 구분할 수 있습니다.
+             */
+            errors |= uart_unexpected_event;
+            errors |= (static_cast<std::uint32_t>(event.type) + 1U) << uart_event_type_shift;
+            errors |= (event.error_mask & 0xffU) << uart_error_mask_shift;
         }
         if (!uartGuards())
         {
