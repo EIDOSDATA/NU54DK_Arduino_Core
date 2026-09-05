@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import unittest
-from ble_source_contracts import gap_source
+from ble_source_contracts import gap_source, gatt_source
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
@@ -57,7 +57,7 @@ class M20BleGattContractTests(unittest.TestCase):
         """! @brief service 등록→bt_enable/settings_load 순서와 late mutation 거부를 고정합니다. """
 
         gap = gap_source()
-        source = SOURCE.read_text(encoding="utf-8")
+        source = gatt_source()
         begin = gap[gap.index("bool Device::begin(") : gap.index(
             "void Device::poll()", gap.index("bool Device::begin(")
         )]
@@ -85,7 +85,7 @@ class M20BleGattContractTests(unittest.TestCase):
     def test_server_callbacks_copy_to_fixed_queue_and_use_cached_read(self) -> None:
         """! @brief stack callback에서 Sketch를 호출하지 않고 cached value만 읽습니다. """
 
-        source = SOURCE.read_text(encoding="utf-8")
+        source = gatt_source()
         for token in (
             "K_MSGQ_DEFINE(gatt_event_queue",
             "k_msgq_put(&gatt_event_queue",
@@ -110,7 +110,7 @@ class M20BleGattContractTests(unittest.TestCase):
     def test_thread_context_and_session_tokens_fail_closed(self) -> None:
         """! @brief ISR stack 진입과 disconnect 뒤 stale callback 재사용을 거부합니다. """
 
-        source = SOURCE.read_text(encoding="utf-8")
+        source = gatt_source()
         for signature in (
             "bool BLECharacteristic::notify()",
             "bool BLECharacteristic::indicate()",
@@ -160,7 +160,7 @@ class M20BleGattContractTests(unittest.TestCase):
     def test_client_disconnect_invalidates_and_discovery_is_bounded(self) -> None:
         """! @brief reconnect 뒤 stale handle·subscription 자동 재사용을 막습니다. """
 
-        source = SOURCE.read_text(encoding="utf-8")
+        source = gatt_source()
         for token in (
             "BT_GATT_SUBSCRIBE_FLAG_VOLATILE",
             "GattAccess::clear(remote_service)",

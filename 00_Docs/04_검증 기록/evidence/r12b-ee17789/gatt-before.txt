@@ -1,0 +1,6 @@
+test_production_gatt_lifecycle (test_r12_ble_gatt.BleGattTests.test_production_gatt_lifecycle) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 4.257s
+
+OK

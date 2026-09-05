@@ -1,0 +1,237 @@
+{
+  "comparisons": {
+    "nucode.m19.ble_gap_contract": {
+      "after": {
+        "elf_sha256": "bebf9adad3fbf919e9e3d5338cc96e68c340fee30120ca8ca1f21d013a82f6e7",
+        "memory": {
+          "FLASH": 183608,
+          "RAM": 47968
+        },
+        "owned_objects": [],
+        "public_symbols": []
+      },
+      "before": {
+        "elf_sha256": "e270cee87f6c09366b852e370bea612a565bdfcc1be7511f855c10fa528d1c8e",
+        "memory": {
+          "FLASH": 183608,
+          "RAM": 47968
+        },
+        "owned_objects": [],
+        "public_symbols": []
+      },
+      "removed_public_symbols": []
+    },
+    "nucode.m20.ble_gatt_contract": {
+      "after": {
+        "elf_sha256": "c30916becd476bef2bac0b27f36048a5cb9a80b8798b32c5892065379482cfae",
+        "memory": {
+          "FLASH": 179336,
+          "RAM": 50472
+        },
+        "owned_objects": [
+          {
+            "bytes": 8,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 44,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::gatt_event_queue"
+          },
+          {
+            "bytes": 2144,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::_k_fifo_buf_gatt_event_queue"
+          },
+          {
+            "bytes": 24,
+            "file": "GattDatabase.cpp",
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 20,
+            "file": "GattDatabase.cpp",
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::gatt_schema_mutex"
+          },
+          {
+            "bytes": 108,
+            "file": "GattClient.cpp",
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::state"
+          }
+        ],
+        "public_symbols": [
+          "nucode::ble::BLECharacteristic::BLECharacteristic(nucode::ble::BLEUuid const&, nucode::ble::BLEProperty, nucode::ble::BLEPermission, unsigned int)",
+          "nucode::ble::BLECharacteristic::onEvent(void (*)(nucode::ble::BLECharacteristic&, nucode::ble::BLECharacteristicEventInfo const&, void*), void*)",
+          "nucode::ble::BLECharacteristic::setValue(void const*, unsigned int)",
+          "nucode::ble::BLECharacteristic::uuid() const",
+          "nucode::ble::BLERemoteCharacteristic::valid() const",
+          "nucode::ble::BLERemoteService::valid() const",
+          "nucode::ble::BLEService::BLEService(nucode::ble::BLEUuid const&)",
+          "nucode::ble::BLEService::addCharacteristic(nucode::ble::BLECharacteristic&)",
+          "nucode::ble::GattClient::lastAttError() const",
+          "nucode::ble::GattClient::onEvent(void (*)(nucode::ble::BLEGattClientEvent, unsigned char const*, unsigned int, void*), void*)",
+          "nucode::ble::GattClient::remoteCharacteristic() const",
+          "nucode::ble::GattClient::remoteService() const"
+        ]
+      },
+      "before": {
+        "elf_sha256": "77b2496f1bdd094ac506db1b037b62ac4e1faf0151c2cde5afe2dafc0a10c4ea",
+        "memory": {
+          "FLASH": 179236,
+          "RAM": 50472
+        },
+        "owned_objects": [
+          {
+            "bytes": 24,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::remote_service"
+          },
+          {
+            "bytes": 26,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::remote_characteristic"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::client_operation_connection"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::client_operation_generation"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::client_subscription_connection"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::client_subscription_generation"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::gatt_session_generation"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::gatt_link_active"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::gatt_connection"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::gatt_connection_generation"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::registered_service_count"
+          },
+          {
+            "bytes": 20,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::gatt_schema_mutex"
+          },
+          {
+            "bytes": 44,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::gatt_event_queue"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::client_stage"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::client_busy_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::client_subscribed"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::client_subscription_value"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::client_last_att_error"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::database_registered"
+          },
+          {
+            "bytes": 16,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::registered_services"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::client_callback"
+          },
+          {
+            "bytes": 4,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::client_context"
+          },
+          {
+            "bytes": 2144,
+            "file": "NUCODE_BLE_GATT.cpp",
+            "name": "(anonymous namespace)::_k_fifo_buf_gatt_event_queue"
+          }
+        ],
+        "public_symbols": [
+          "nucode::ble::BLECharacteristic::BLECharacteristic(nucode::ble::BLEUuid const&, nucode::ble::BLEProperty, nucode::ble::BLEPermission, unsigned int)",
+          "nucode::ble::BLECharacteristic::onEvent(void (*)(nucode::ble::BLECharacteristic&, nucode::ble::BLECharacteristicEventInfo const&, void*), void*)",
+          "nucode::ble::BLECharacteristic::setValue(void const*, unsigned int)",
+          "nucode::ble::BLEService::BLEService(nucode::ble::BLEUuid const&)",
+          "nucode::ble::BLEService::addCharacteristic(nucode::ble::BLECharacteristic&)",
+          "nucode::ble::GattClient::lastAttError() const",
+          "nucode::ble::GattClient::onEvent(void (*)(nucode::ble::BLEGattClientEvent, unsigned char const*, unsigned int, void*), void*)",
+          "nucode::ble::GattClient::remoteCharacteristic() const",
+          "nucode::ble::GattClient::remoteService() const"
+        ]
+      },
+      "removed_public_symbols": []
+    }
+  },
+  "physical_executed": false,
+  "source_membership": {
+    "nucode.m20.ble_gatt_contract": {
+      "GattClient.cpp": 1,
+      "GattDatabase.cpp": 1,
+      "GattServer.cpp": 1,
+      "NUCODE_BLE_GATT.cpp": 1
+    },
+    "nucode.m20.ble_gatt_hil_central": {
+      "GattClient.cpp": 1,
+      "GattDatabase.cpp": 1,
+      "GattServer.cpp": 1,
+      "NUCODE_BLE_GATT.cpp": 1
+    },
+    "nucode.m20.ble_gatt_hil_peripheral": {
+      "GattClient.cpp": 1,
+      "GattDatabase.cpp": 1,
+      "GattServer.cpp": 1,
+      "NUCODE_BLE_GATT.cpp": 1
+    }
+  }
+}

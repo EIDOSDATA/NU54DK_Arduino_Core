@@ -59,3 +59,48 @@ C header로 수정했으며 SDK는 수정하지 않았다. C:/r12a 실패와 r12
 [실제 Host](evidence/r12a-86b53f8/gap-after.txt)를 보존한다.
 다음은 R12-B GATT database/server/client 및 lifecycle 분리·fault injection이다.
 R12 전체는 B/C/D 완료 전까지 진행 중이며 current-source T11은 NOT RUN이다.
+
+## R12-B GATT 결과
+
+원본 cpp는 GATT session·queue·poll을 소유한다. GattDatabase는 schema·등록 rollback,
+GattServer는 cached value·CCC·notification/indication, GattClient는 discovery·operation·
+subscription을 소유한다. 고정 server slot 배열과 client 요청 buffer/params는 해당 cpp에서
+별도 private 소유하여 사용하지 않는 경로의 큰 저장소가 공통 상태를 통해 남지 않게 했다.
+mutable extern 없이 기존 mutex/spinlock 경계, 공개 singleton, 고정 한도를 보존했다.
+
+함수 본문 112개(두 characteristic constructor 초기화 목록 포함)가 accessor 이름을
+정규화하면 동일하다. 나머지 BLE source/header 12개도 byte 동일하다. 실제 GAP/GATT/Stack
+별도 TU를 링크한 Host 11개 시나리오는 분리 전후 모두 통과했다. 등록 두 번째 실패 시
+첫 service를 rollback하고 stack enable 전에 실패하며 재시도하는 경로, cached read/write
+복사와 잘못된 길이/prepare 거부, queue overflow·callback 안 end/begin, notification busy,
+indication destroy 이전 재사용 거부와 데이터 보존, disconnect 뒤 늦은 callback, client
+discovery/read/write/subscribe/unsubscribe driver·ATT 실패와 재연결을 검증했다.
+
+GATT token의 connection pointer는 기존처럼 비소유 snapshot이다. API와 현재 연결 검사에서
+일시 reference를 얻고 반환한다. pending 전송에 새 refcount 소유를 추가하지 않았다.
+
+| 검사 | 결과 |
+| --- | --- |
+| 전체 Host | 625개 중 623 PASS·2 조건부 SKIP |
+| 마지막 상태 배치 조정 뒤 회귀 | 실제 GATT 11개 / M20 계약 6개 PASS |
+| contract / inventory / style | 45/45 / PASS / 330개 PASS |
+| target | M20 contract·peripheral/central 및 M19 contract 4/4 build-only PASS |
+| source 소속 | GATT 선택 3개 target에 공통 1개+database/server/client 3개 각 1회 |
+
+첫 분리는 최소 M20 contract에서도 server slot과 client 요청 저장소가 한 context에 묶여
+RAM 14,160 B가 증가했다. 이를 private 별도 객체로 되돌린 최종 측정은 아래와 같다.
+전체 Host는 첫 분리에서 실행했고 마지막 상태 배치 변경 뒤 해당 production Host와 계약,
+target 4개를 다시 확인했다. C:/r12b 중간 결과도 로컬 보존한다.
+
+| 동일 구성의 flash / RAM | 이전 | 이후 |
+| --- | --- | --- |
+| M20 GATT | 179,236 / 50,472 B | 179,336 / 50,472 B |
+| M19 GAP | 183,608 / 47,968 B | 183,608 / 47,968 B |
+
+공개 method symbol 누락은 없다. 실제 무선·재부팅 bond 시험은 수행하지 않았다.
+[gate](evidence/r12b-ee17789/software-and-source.json),
+[본문·header](evidence/r12b-ee17789/comparison.json),
+[target](evidence/r12b-ee17789/target-build.json),
+[메모리·symbol](evidence/r12b-ee17789/target-comparison.json),
+[Host 전](evidence/r12b-ee17789/gatt-before.txt)·[후](evidence/r12b-ee17789/gatt-after.txt)를 보존한다.
+다음은 R12-C Security/profile의 pairing·bond·HIDS/BAS/DIS 수명주기 분리다.
