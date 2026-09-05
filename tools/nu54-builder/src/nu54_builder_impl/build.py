@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 from .models import ArtifactManifest, BuildContext
+from .installed_platform import materialize_installed_platform, platform_build_root, validate_platform_copy
 
 from pathlib import Path
 from typing import Any
@@ -75,6 +76,9 @@ def configure_command(
     *,
     pristine: bool,
 ) -> list[str | Path]:
+    build_platform = platform_build_root(paths)
+    if build_platform != paths['platform_root']:
+        board_root = build_platform / 'board_package' / 'NU54DK_Zephyr_DTS'
     command: list[str | Path] = [
         tools["west"],
         "-z",
@@ -95,7 +99,7 @@ def configure_command(
             "--",
             "-UCONFIG_*",
             f"-DBOARD_ROOT={board_root.as_posix()}",
-            f"-DEXTRA_ZEPHYR_MODULES={paths['platform_root'].as_posix()}",
+            f"-DEXTRA_ZEPHYR_MODULES={build_platform.as_posix()}",
             "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
         ]
     )
@@ -133,6 +137,7 @@ def materialize_application(
     platform_root = paths["platform_root"]
     sketch_root = paths["sketch_root"]
     app_root = paths["app"]
+    materialize_installed_platform(paths)
     template = platform_root / "tools" / "nu54-builder" / "templates" / "zephyr-app"
     for required in ("CMakeLists.txt", "prj.conf", "app.overlay", "sources.cmake", "src/bootstrap.cpp"):
         if not (template / required).is_file():
@@ -241,6 +246,7 @@ def prepare(args: argparse.Namespace) -> BuildContext:
 
             # 전체 key 충돌 여부를 확인한 뒤에만 persistent tree를 변경합니다.
             materialize_application(paths, args)
+            validate_platform_copy(paths, input_manifest)
 
             cache_exists = (paths["zephyr_build"] / "CMakeCache.txt").is_file()
             build_graph_exists = (paths["zephyr_build"] / "build.ninja").is_file()
@@ -327,6 +333,7 @@ def prepare(args: argparse.Namespace) -> BuildContext:
                 "ncs_version": NCS_VERSION,
                 "zephyr_version": "4.4.0",
                 "platform_root": platform_root.as_posix(),
+                "platform_build_root": platform_build_root(paths).as_posix(),
                 "board_root": board_root.resolve().as_posix(),
                 "sketch_root": paths["sketch_root"].as_posix(),
                 "build_path": paths["build_path"].as_posix(),
@@ -425,6 +432,7 @@ def migrate_feature_workspace(
             raise AdapterError("[NU54:E_CACHE_KEY_COLLISION] feature cache state의 전체 SHA-256이 다릅니다.")
         reusable = bool(stored == input_manifest and state and state.get("cache_key") == cache_key and state.get("state") == "ready" and state.get("first_configure_complete") is True and (paths["zephyr_build"] / "CMakeCache.txt").is_file() and (paths["zephyr_build"] / "build.ninja").is_file())
         materialize_application(paths, args, selected_libraries)
+        validate_platform_copy(paths, input_manifest)
         atomic_write_json(input_path, input_manifest)
         configure_seconds = 0.0
         if not reusable:
@@ -448,6 +456,7 @@ def migrate_feature_workspace(
         "input_manifest": (workspace / "input-manifest.json").as_posix(),
         "app_dir": paths["app"].as_posix(),
         "zephyr_build_dir": paths["zephyr_build"].as_posix(),
+        "platform_build_root": platform_build_root(paths).as_posix(),
         "configuration_fingerprint": f"sha256:{cache_key}",
         "selected_libraries": list(selected_libraries),
         "selected_features": input_manifest.get("configuration", {}).get("selected_features", []),
@@ -507,6 +516,8 @@ def link(args: argparse.Namespace) -> None:
                 paths["workspace"], cache_key, "building", last_build_result="running"
             )
             try:
+                materialize_installed_platform(paths)
+                validate_platform_copy(paths, current_input)
                 sources, source_provenance, manifest_changed = write_source_manifest(
                     paths, records
                 )

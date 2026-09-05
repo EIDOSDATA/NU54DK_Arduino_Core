@@ -1,6 +1,7 @@
 """! @brief source record와 결정적인 CMake 입력·provenance을 소유합니다. """
 
 from __future__ import annotations
+from .installed_platform import platform_compiled_path
 
 from pathlib import Path
 from typing import Any
@@ -145,7 +146,7 @@ def write_source_manifest(
         key = path_key(include)
         if key not in include_keys and include.is_dir() and not is_within(include, paths["build_path"]):
             include_keys.add(key)
-            includes.append(include)
+            includes.append(platform_compiled_path(include, paths))
 
     # Arduino의 sketch-local header 우선권을 보존합니다.
     add_include(paths["sketch_root"])
@@ -170,7 +171,9 @@ def write_source_manifest(
     mirror_owners: dict[str, str] = {}
     for source in sources:
         logical_identity = source_logical_identity(source, paths)
-        compiled_source = source
+        compiled_source = platform_compiled_path(source, paths)
+        if compiled_source != source and file_sha256(compiled_source) != file_sha256(source):
+            raise AdapterError('[NU54:E_PLATFORM_COPY_STALE] 설치 source와 build 복사본 bytes가 다릅니다.')
         if is_within(source, paths["build_path"]):
             relative = source.resolve().relative_to(paths["build_path"].resolve())
             mirror = canonical_path(mirror_root / relative)

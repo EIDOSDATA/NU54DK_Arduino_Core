@@ -1,0 +1,9 @@
+test_checkout_and_ascii_install_keep_original_build_root (test_r06_windows_recipe.WindowsRecipeTests.test_checkout_and_ascii_install_keep_original_build_root) ... ok
+test_copy_rejects_cache_junction_to_another_directory (test_r06_windows_recipe.WindowsRecipeTests.test_copy_rejects_cache_junction_to_another_directory) ... ok
+test_installed_command_preserves_quoted_paths_and_exit (test_r06_windows_recipe.WindowsRecipeTests.test_installed_command_preserves_quoted_paths_and_exit) ... ok
+test_package_copy_preserves_identity_recovers_bytes_and_rejects_extra_files (test_r06_windows_recipe.WindowsRecipeTests.test_package_copy_preserves_identity_recovers_bytes_and_rejects_extra_files) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.776s
+
+OK

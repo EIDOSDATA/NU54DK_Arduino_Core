@@ -1,0 +1,16 @@
+START blink
+Traceback (most recent call last):
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\install_r06.py", line 51, in <module>
+    test(cli, config, root, repo)
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\arduino-cli\run_smoke.py", line 510, in test_blink
+    run(compile_command(cli, config, build, board_examples(repository) / "Blink"))
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\arduino-cli\run_smoke.py", line 99, in run
+    raise SmokeFailure(
+r06_smoke.SmokeFailure: command failed (1): C:\NU54DEV\tools\arduino-cli-1.5.1\arduino-cli.exe compile --fqbn nucode:zephyr:nu54dk --config-file C:\r6fix\arduino-cli.yaml --build-path C:\r6fix\공백 경로\build-blink C:\Users\eidos\GitHub\NU54DK_Arduino_Core\libraries\NUCODE_NU54DK\examples\Blink
+Loading Zephyr default modules (Zephyr base).
+FATAL ERROR: command exited with status 3221226505: 'C:\Users\eidos\ncs\toolchains\dcbdc366a1\opt\bin\cmake.EXE' -DWEST_PYTHON=C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/bin/python.exe '-BC:\r6fix\cache\v1\0f\0f75c00603227471913058d0ef211211\build' -GNinja -DBOARD=nrf54l15dk/nrf54l15/cpuapp/nu54dk '-UCONFIG_*' '-DBOARD_ROOT=C:/r6fix/설치 공백/hardware/nucode/zephyr/board_package/NU54DK_Zephyr_DTS' '-DEXTRA_ZEPHYR_MODULES=C:/r6fix/설치 공백/hardware/nucode/zephyr' -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_C_COMPILER_LAUNCHER=C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/bin/ccache.exe -DCMAKE_CXX_COMPILER_LAUNCHER=C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/bin/ccache.exe -DDTC_OVERLAY_FILE=C:/r6fix/cache/v1/0f/0f75c00603227471913058d0ef211211/app/app.overlay '-SC:\r6fix\cache\v1\0f\0f75c00603227471913058d0ef211211\app'
+nu54-builder: error: ������ ���� �ڵ� 4294967295�� �����߽��ϴ�: 'C:\Users\eidos\ncs\toolchains\dcbdc366a1\opt\bin\Scripts\west.exe' -z 'C:\Users\eidos\ncs\v3.4.0\zephyr' build --cmake-only --no-sysbuild --pristine=always -b nrf54l15dk/nrf54l15/cpuapp/nu54dk -d 'C:\r6fix\cache\v1\0f\0f75c00603227471913058d0ef211211\build' 'C:\r6fix\cache\v1\0f\0f75c00603227471913058d0ef211211\app' -- '-UCONFIG_*' '-DBOARD_ROOT=C:/r6fix/��ġ ����/hardware/nucode/zephyr/board_package/NU54DK_Zephyr_DTS' '-DEXTRA_ZEPHYR_MODULES=C:/r6fix/��ġ ����/hardware/nucode/zephyr' -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_C_COMPILER_LAUNCHER=C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/bin/ccache.exe -DCMAKE_CXX_COMPILER_LAUNCHER=C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/bin/ccache.exe -DDTC_OVERLAY_FILE=C:/r6fix/cache/v1/0f/0f75c00603227471913058d0ef211211/app/app.overlay
+
+Used platform Version Path
+nucode:zephyr 0.0.90  C:\r6fix\설치 공백\hardware\nucode\zephyr
+Error during build: exit status 0xffffffff

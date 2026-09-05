@@ -16,6 +16,8 @@ compiler.libraries.ldflags=
 build.extra_flags=
 
 nu54.builder="{runtime.platform.path}/tools/nu54-builder/nu54-builder.cmd"
+# Windows command interpreter가 공백 설치 경로의 첫 인용부호를 제거하지 않도록 호출한다.
+nu54.builder.windows=cmd.exe /d /c call "{runtime.platform.path}/tools/nu54-builder/nu54-builder.cmd"
 nu54.common_args=--platform-root "{runtime.platform.path}" --build-path "{build.path}" --sketch-root "{build.source.path}" --fqbn "{build.fqbn}" --project-name "{build.project_name}" --board "{build.zephyr_board}" --profile "{build.nu54_profile}"
 nu54.upload_args=--platform-root "{runtime.platform.path}" --build-path "{build.path}" --sketch-root "{build.path}" --fqbn "{build.fqbn}" --project-name "{build.project_name}" --board "{build.zephyr_board}" --profile "{build.nu54_profile}"
 

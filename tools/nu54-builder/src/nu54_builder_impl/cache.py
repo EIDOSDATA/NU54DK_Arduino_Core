@@ -34,6 +34,7 @@ from .common import (
 from .configuration import declared_path, load_configuration_profile, resolve_library_features
 from .environment import compiler_version, tool_environment
 from .locking import build_lock, operating_system_lock
+from .installed_platform import requires_platform_copy
 from .paths import build_cache_root, cache_workspace, local_cache_root, positive_environment_integer
 
 
@@ -134,6 +135,8 @@ def cache_input_manifest(
         }
     elif hasattr(args, "profile"):
         raise AdapterError(f"[NU54:E_PROFILE_SCHEMA] profile을 찾을 수 없습니다: {profile_path}")
+    if requires_platform_copy(platform_root):
+        manifest['platform_build_copy'] = {'content': tree_content_sha256(platform_root, ('.',))}
     return manifest
 
 

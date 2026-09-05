@@ -36,6 +36,7 @@ class BuildContext(TypedDict):
     ncs_version: str
     zephyr_version: str
     platform_root: str
+    platform_build_root: NotRequired[str]
     board_root: str
     sketch_root: str
     build_path: str

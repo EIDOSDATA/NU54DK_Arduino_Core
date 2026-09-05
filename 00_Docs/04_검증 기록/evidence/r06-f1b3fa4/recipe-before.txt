@@ -1,0 +1,28 @@
+test_installed_command_preserves_quoted_paths_and_exit (test_r06_windows_recipe.WindowsRecipeTests.test_installed_command_preserves_quoted_paths_and_exit) ...
+  test_installed_command_preserves_quoted_paths_and_exit (test_r06_windows_recipe.WindowsRecipeTests.test_installed_command_preserves_quoted_paths_and_exit) (arguments='prepare --help') ... FAIL
+  test_installed_command_preserves_quoted_paths_and_exit (test_r06_windows_recipe.WindowsRecipeTests.test_installed_command_preserves_quoted_paths_and_exit) (arguments='nonsense') ... FAIL
+
+======================================================================
+FAIL: test_installed_command_preserves_quoted_paths_and_exit (test_r06_windows_recipe.WindowsRecipeTests.test_installed_command_preserves_quoted_paths_and_exit) (arguments='prepare --help')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r06_windows_recipe.py", line 35, in test_installed_command_preserves_quoted_paths_and_exit
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+AssertionError: 1 != 0 : 'C:/Users/eidos/AppData/Local/Temp/NU54' is not recognized as an internal or external command,
+operable program or batch file.
+
+
+======================================================================
+FAIL: test_installed_command_preserves_quoted_paths_and_exit (test_r06_windows_recipe.WindowsRecipeTests.test_installed_command_preserves_quoted_paths_and_exit) (arguments='nonsense')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r06_windows_recipe.py", line 35, in test_installed_command_preserves_quoted_paths_and_exit
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+AssertionError: 1 != 2 : 'C:/Users/eidos/AppData/Local/Temp/NU54' is not recognized as an internal or external command,
+operable program or batch file.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.091s
+
+FAILED (failures=2)
