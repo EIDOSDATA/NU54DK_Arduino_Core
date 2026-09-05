@@ -7,7 +7,9 @@ For v0.4.0 implementation, verification, documentation, or release work:
 2. For refactoring or any change covered by R00-R14, also read
    `00_Docs/01_아두이노 코어 설계/14_리팩토링/README.md` and the active
    `05_리팩토링_진행_체크리스트.md`. Keep the R item linked to the existing T/M gate;
-   refactoring completion never substitutes for physical or release evidence.
+   refactoring completion never substitutes for physical or release evidence. The current v0.4.0
+   order completes R00-R13 before the final current-source T11/T12-T15 physical campaign, then
+   performs T16-T18, R14 and T19-T25. Do not reuse historical T11 PASS as the final-source result.
 3. Respect the latest user request. The TODO is a work plan, not blanket permission
    to flash a board, change wiring, publish a release, or delete files.
 4. Select the relevant T01–T25 and R00-R14 item and record the intended scope before implementation.

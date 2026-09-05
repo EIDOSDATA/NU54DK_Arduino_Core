@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 2.3 |
-| 문서 상태 | M23·M26 완료 / M24 단독 기능 HIL PASS / R00~R03 안정화 뒤 M25·동시성·soak / M27 준비 중 |
+| 문서 개정 | 2.4 |
+| 문서 상태 | M23·M26 완료 / M24 역사적 단독 기능 HIL PASS / R00~R13 뒤 current-source M24·M25·동시성·soak / M27 준비 중 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.3.0` stable / commit `bae0957d2425e4418199a2a3a018bf8e9a0dc356` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
@@ -20,9 +20,9 @@
 `목표`와 `계획`은 공개 지원 선언이 아니다. 완료 단계와 제품 순서는
 [Master roadmap](02_구현_로드맵.md)이 소유한다.
 
-새 리팩토링 진단은 M23~M27을 재번호화하지 않는다. T11 뒤 R00~R03을 선행 안정화 gate로,
-R04·R05를 RC 전 정확성 gate로 연결한다. 본격적인 파일·도구 구조 분할 R06~R13은 기본적으로
-`v0.4.0` 공개 마무리 뒤 수행한다. 상세 범위와 상태는
+새 리팩토링 진단은 M23~M27을 재번호화하지 않는다. T11 뒤 R00~R05 정확성, R06~R13 구조·도구
+리팩토링을 최종 physical gate의 선행조건으로 연결한다. R13과 전체 software gate 뒤 최종 exact
+source로 current-source T11 회귀와 T12~T15를 한 번 수행하고 R14에서 RC를 고정한다. 상세 범위와 상태는
 [리팩토링 문서 안내](<14_리팩토링/README.md>)와
 [진행 체크리스트](<14_리팩토링/05_리팩토링_진행_체크리스트.md>)를 따른다.
 
@@ -306,9 +306,9 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 - 완료 gate: 각 personality 단독 HIL, 같은 block 충돌 negative·반복 handover, 다른 block 최대 동시
   HIL, timeout/cancel/error/System OFF 복구, throughput·CPU·손실·soak 기록.
   전원 모드 lease의 올바른 해제는 필수이며 외부 계측 기반 전류·파형 보증은 제외한다.
-- T11 단독 기능 뒤 R01 CMake source 소속과 R02 stale completion·timeout·같은 handle 교차 호출을
-  수정한다. Runtime/link byte 영향에 따라 필요한 Fixture 201~203/301을 새 exact image로 재검증한
-  뒤에만 M24 동시성·soak 기준으로 사용한다.
+- T11 단독 기능 체크포인트 뒤 R01 CMake source 소속부터 R13 구조화까지 완료한다. Runtime/link byte
+  영향에 따라 필요한 Fixture 101~301을 R13 뒤 최종 exact image로 재검증한 뒤에만 M24 동시성·soak
+  기준으로 사용한다.
 
 | 작업 | 범위 | 상태 |
 | --- | --- | --- |
@@ -338,8 +338,9 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 - 완료 gate: 전 instance 단독·허용 동시 기능 HIL, 기본 timing·DMA overflow/underrun·복구·long-run soak.
   정밀 ADC 정확도·jitter·음질·신호 품질, 실제 마이크·코덱·엔코더별 호환성은 필수 gate에서 제외한다.
   합성 peer 신호를 아직 구현하거나 검증하지 못한 경로는 `NOT RUN`/HOLD를 유지한다.
-- T12 전에 R03에서 ISR/thread 진단 snapshot, queue overflow, stop generation과 lock 대기 계약을
-  파일 이동 없이 먼저 검증한다. 그 결과로 고정한 exact image만 M25 physical gate에 사용한다.
+- R03에서 ISR/thread 진단 snapshot, queue overflow, stop generation과 lock 대기 계약을 먼저 고정하고
+  R11 구조 분할이 이를 보존하는지 검증한다. R13과 current-source T11 회귀 뒤 고정한 exact image만
+  M25 physical gate에 사용한다.
 
 ### M26 — 나머지 SoC 기능과 board 경계
 
@@ -369,7 +370,7 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
   정확히 남긴다.
 - 완료 gate: 전 인스턴스·DMA release matrix, Boards Manager lifecycle, stable artifact와 공개 검증.
   M24·M25의 검증 깊이는 [42번 범위 합의](<../04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)를
-  따른다. R00~R05의 release-blocking 정확성 작업과 영향 회귀를 완료하고 RC를 다시 고정한다.
+  따른다. R00~R13, current-source T11과 T12~T15 통합 실기를 완료하고 R14에서 RC를 다시 고정한다.
   장비·외부 부품 품질 보증을 제외해도 필수 기능 HIL이나 frozen RC gate는 생략하지 않는다.
 
 ### M28 — BLE GAP·Link·Privacy 확장

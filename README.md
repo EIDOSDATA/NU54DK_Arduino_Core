@@ -251,8 +251,10 @@ SPIM/SPIS30·20·21·22에 대한 9,084개 계획 벡터를 통과했습니다.
 SPIM/SPIS20·21·22 전 조합 27,252개 계획 벡터를 통과했습니다.
 [TWI Fixture 301](<./00_Docs/04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md>)에서는 P1↔P0
 TWIM/TWIS20·21·22·30의 기능 record 1,986개와 cleanup 2건을 통과해 T11 단독 기능 검증을
-완료했습니다. 다음 physical gate 전에 CMake·Serial 완료 판정·Analog/Stream 동기화의 R00~R03
-안정화를 수행합니다. Analog·stream·전체 동시성·soak와 정식 공개는 아직 완료되지 않았습니다.
+완료했습니다. 다음 physical gate 전에 R00~R13의 정확성·파일·builder·자원·Fabric·package 구조
+리팩토링과 전체 software gate를 완료합니다. 그 최종 source로 영향받는 T11을 재검증한 뒤
+T12 analog·stream과 전체 동시성·soak를 한 번의 통합 캠페인으로 진행합니다. 정식 공개는 아직
+완료되지 않았습니다.
 검증은 온보드 자원과 두 NU54DK의 통신·합성 신호·capture를 기준으로 합니다. 정밀 계측과 외부
 마이크·코덱·엔코더별 호환성·신호 품질은 보증 범위에 포함하지 않으며, 자세한 구분은
 [코어 기능 검증 범위](<./00_Docs/04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)를 따릅니다.
