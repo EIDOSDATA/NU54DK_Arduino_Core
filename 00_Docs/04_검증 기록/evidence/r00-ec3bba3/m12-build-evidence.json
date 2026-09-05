@@ -1,0 +1,49 @@
+{
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "container_digest": "sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace",
+  "gate": "m12-zephyr-build-subset",
+  "group": "all",
+  "jobs": 4,
+  "m16_role_builds": [
+    {
+      "build_record_sha256": "e365d741e4bcdefe10e826d9e7f6976b2c90e2e85880b6aa239f70b8ecfcb7bd",
+      "elf_sha256": "d5c0d5949b1811d0ee7421e159d0ec7571c6c48f08d7e503707bc5b15d87d039",
+      "elf_size": 2778880,
+      "hex_sha256": "a93a7543c7c66be86795552b0010061289f9574832fde2b16405f16da8d6278c",
+      "hex_size": 532791,
+      "role": "peripheral",
+      "role_compile_definition": "absent",
+      "scenario": "nucode.m16.ble_hil_peripheral",
+      "status": "build-only-passed",
+      "validation_scope": "image-build-only"
+    },
+    {
+      "build_record_sha256": "e365d741e4bcdefe10e826d9e7f6976b2c90e2e85880b6aa239f70b8ecfcb7bd",
+      "elf_sha256": "db37d0959bd1c5938088e2f0a0c160dea3d70537ddc948b0a358d9293cc36343",
+      "elf_size": 2781248,
+      "hex_sha256": "6d9c6d4b5567e7a0aa35c9c65d1d744f6849f820cf6de54b0e160c470c1381b9",
+      "hex_size": 533744,
+      "role": "central",
+      "role_compile_definition": "NUCODE_M16_CENTRAL=1",
+      "scenario": "nucode.m16.ble_hil_central",
+      "status": "build-only-passed",
+      "validation_scope": "image-build-only"
+    }
+  ],
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "scenarios": [
+    "nucode.m3.runtime",
+    "nucode.m16.ble_hil_peripheral",
+    "nucode.m16.ble_hil_central",
+    "nucode.v04.pair_dut",
+    "nucode.v04.pair_peer",
+    "nucode.m24.spi",
+    "nucode.m24.twi",
+    "nucode.m25.analog",
+    "nucode.m25.event",
+    "nucode.m25.stream"
+  ],
+  "schema_version": 2,
+  "status": "passed",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+}

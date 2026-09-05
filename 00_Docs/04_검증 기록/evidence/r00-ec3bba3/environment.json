@@ -1,0 +1,10 @@
+{
+  "arduino_cli": "arduino-cli  Version: 1.5.1 Commit: 01f3d4f2b Date: 2026-06-05T10:22:12Z",
+  "arm_compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+  "environment_sha256": "824994386257c9422cfba4006d678fd30ea7ccfe4960e06c8074b20fb6f3fc82",
+  "host_python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "target_python": "Python 3.12.4",
+  "toolchain_bundle": "dcbdc366a1",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+}

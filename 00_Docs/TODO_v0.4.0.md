@@ -7,8 +7,8 @@
 | 작성·갱신일 | 2026-09-06 |
 | 작성 직전 기준 commit | `25c7f035cc10093a370a693871fe2704a5a069f3` |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **R00 — 리팩토링 기준선·characterization 계약 고정** |
-| 이번 요청의 실행 범위 | R06~R13을 공개 뒤로 미루지 않고 R00~R13 완료 뒤 최종 구조의 current-source T11과 T12~T15 외부 실기를 한 번 수행하도록 모든 활성 계획을 재배치. source 리팩토링은 다음 작업의 R00부터 시작 |
+| 다음 착수 항목 | **R01 — CMake source 소속 정리** |
+| 이번 요청의 실행 범위 | 2026-09-06 사용자 지시: R00~R13을 번호 순서대로 구현·시험·문서화하고 전체 software/target/examples/style 검증과 main commit/push까지 자동 진행한다. current-source T11 직전에 멈추며 flash·HIL·결선 변경·공개는 수행하지 않는다 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
 마일스톤의 제품 상태는 [로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>), 실제 PASS/FAIL은
@@ -52,16 +52,16 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | 필드 | 현재 값 |
 | --- | --- |
 | 이번에 끝낸 일 | T01~T11. UART Fixture 101~103, SPI Fixture 201~203에 이어 exact `e2f045c`의 TWI Fixture 301에서 계획 기능 record 1,986개·cleanup 2·campaign 기록 2건, 총 1,990 result를 10 MHz SWD로 PASS |
-| 진행 중인 T 항목 | T11과 최종 외부 실기 사이의 전체 리팩토링 gate. R00~R13과 software gate 뒤 current-source T11 회귀를 수행하고 T12 Fixture 401로 전환 |
-| 다음 구체적 행동 | 리팩토링 정비 commit을 기준으로 R00의 공개 계약·환경·ELF/RAM/flash·builder/package·HIL characterization 기준선을 작성한다 |
+| 진행 중인 T 항목 | R00 완료. ec3bba3의 공개 계약·도구·대표 target 10/10 build-only·ELF/HEX/symbol/메모리와 software gate를 51번 기준선에 보존. 기존 T11 physical 결과와 구분한다 |
+| 다음 구체적 행동 | R01에서 네 adapter의 잘못된 source target 소속을 Host CMake로 재현하고 최소 수정 후 단독/비선택/허용 조합의 실제 config·소속·link 검증 |
 | 다음 작업에 필요한 사용자 행동 | R00~R13 구현·software gate에는 없음. 최종 current-source T11 회귀를 시작할 때 안내한 첫 fixture로 전원 OFF 상태에서 결선 변경 |
 | 외부 결선 상태 | Fixture 301 SDA·SCL·GND가 연결된 상태, 외부 저항·전원 rail 없음, 양쪽 `DISABLE_UART` 분리·`DISABLE_SWD` 연결. R13 뒤 최종 T11 회귀 시작 전 USB 전원을 끄고 해당 fixture 결선으로 변경해야 함 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 마지막 정식 외부 HIL source | `e2f045c1b4272d986d17456c5af051fe8af74f19` — Fixture 301 두 보드 exact role image TWI PASS |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; T09 무배선 PASS만 추가됐으며 외부 결선·RC·최종 공개 승인 없음 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | exact `e2f045c`, catalog revision 2, 내부 pull-up image 2/2를 새로 flash하고 전체 Fixture 301을 158.953초 동안 중단 없이 실행. TWI 기능 1,986건과 cleanup 2건 모두 PASS |
-| 로컬 임시 build·evidence | `C:/r82`를 포함한 C 루트 임시 build는 정식 증거 등록 뒤 삭제 완료. 성공 원본은 사용자 Documents에 보존하고 JSON/JSONL 사본을 `00_Docs/04_검증 기록/evidence/e2f045c/`에 등록. `ddbe2aa` 무효·`e25ebb0` 실패 원본은 원인 추적용 외부 보존이며 PASS 근거가 아님 |
+| 이 TODO 작성 작업의 실행 중 시험 | R00 software/대표 target 검사 종료. 실행 중인 장치 시험 없음, 새 flash/HIL 없음. 기존 Fixture 301 실행은 50번 역사 기록을 따른다 |
+| 로컬 임시 build·evidence | R00 build `C:/r00` 보존, 원본 log는 이번 작업 공간 `work/r00/`, 영구 hash·symbol·JSON은 `00_Docs/04_검증 기록/evidence/r00-ec3bba3/`. 이전 성공·무효·실패 evidence는 보존 |
 | 최종 정렬 gate | clang-format 22.1.8로 직접 관리 C/C++/ino 227개 write·dry-run PASS. Fixture 102 기록 전 남은 공통 header 들여쓰기 한 곳을 교정했고 M12 Host 전체·DUT/peer target 2/2 재검증 PASS, 실기 image와 runtime HEX SHA-256 동일. 한국어 Doxygen·Allman/4칸/중괄호 필수 적용 |
 | CI 확인 | 이전 `661fad9`의 [Software Gates](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811058)와 [Reproducible Builds](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811030) success 보존. `25c7f03` 계획 통합은 로컬 전체 gate를 통과해 원격 `main`에 push됐으며, 당시 로컬 GitHub CLI 인증이 없어 새 Actions 상태는 미확인 |
 | 문서 작업 검증 | Markdown 158개 UTF-8·내부 링크 PASS, CI contract 45/45 PASS, inventory 계획 75/M24 23/M26 16/M27 16 PASS, package 20/20 PASS, M12 Host 전체 PASS. M27 미해결 blocker 8개는 유지한다 |
@@ -188,8 +188,8 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
 R00~R14와 연결하고, 구조 변경 뒤 같은 결선을 다시 반복하지 않도록 R00~R13을 최종 외부 HIL보다
 먼저 완료하는 실행 순서다.
 
-- [ ] **R00:** 현재 commit, board/NCS/toolchain, 공개 API·CLI·artifact·저장 형식, 대표 ELF와
-  기존 Host/target/HIL을 characterization 기준선으로 고정한다.
+- [x] **R00:** 현재 commit, board/NCS/toolchain, 공개 API·CLI·artifact·저장 형식, 대표 ELF와
+  기존 Host/target/HIL을 [51번 characterization 기준선](<./04_검증 기록/51_R00_리팩토링_기준선.md>)으로 고정했다.
 - [ ] **R01:** SPIM/SPIS/TWIM/TWIS source를 명시적인 Core CMake target에 등록하고 선택/비선택·
   단독·허용 조합의 resolved config, target membership와 link를 검증한다.
 - [ ] **R02:** Serial stale completion·timeout·DMA buffer 반환·같은 handle의 교차 호출을 수정하고

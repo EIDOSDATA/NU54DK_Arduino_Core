@@ -81,6 +81,7 @@
 | Fixture 202 SPI | exact `1a133e6`에서 P0↔P1 SPIM/SPIS 9,084개 계획 벡터·cleanup 2건 PASS; Fixture 203·TWI 301 HOLD | [M24 Fixture 202 실기 검증](48_M24_Fixture_202_SPI_실기_검증.md) |
 | Fixture 203 SPI | exact `4af93da`에서 P1↔P1 SPIM/SPIS 전 조합 27,252개 계획 벡터·cleanup 2건 PASS; TWI 301 HOLD | [M24 Fixture 203 실기 검증](49_M24_Fixture_203_SPI_실기_검증.md) |
 | Fixture 301 TWI | exact `e2f045c`에서 P1↔P0 TWIM/TWIS20·21·22·30 전 조합 1,986개 기능 record·cleanup 2건 PASS; T11 완료, 동시성·soak HOLD | [M24 Fixture 301 실기 검증](50_M24_Fixture_301_TWI_실기_검증.md) |
+| R00 기준선 | exact `ec3bba3`의 API·CLI·저장 계약, software gate와 대표 target 10/10 build-only·ELF/메모리·symbol 기준선; 새 physical NOT RUN | [R00 리팩토링 기준선](51_R00_리팩토링_기준선.md) |
 
 ## 기록 해석 규칙
 

@@ -1,0 +1,66 @@
+{
+  "gates": [
+    {
+      "gate": "contract",
+      "markers": [
+        "M12_GATE_PASS=contract"
+      ],
+      "sha256": "a2d80d0e1285a4147cb08b19e8a92a5e7b2c7a377c59c8e9d8546bdc48f74808"
+    },
+    {
+      "gate": "docs",
+      "markers": [
+        "M12_GATE_PASS=docs"
+      ],
+      "sha256": "e6d20ecb0041281d62e658d03a3b84c0ad3b5ff6fef8715896cf23ccbbcf64e9"
+    },
+    {
+      "gate": "examples",
+      "markers": [
+        "M12_GATE_PASS=examples"
+      ],
+      "sha256": "96a27906e4f92a8e04c669205d92135bcccd228b0d99e55e0315545a18f31f79"
+    },
+    {
+      "gate": "host",
+      "markers": [
+        "M12_GATE_PASS=host"
+      ],
+      "sha256": "3faa770bcdc0a145124bfadacb97ffd87b3eae5530fa6ead561468e380e0a21f",
+      "skips": [
+        "! @brief 설치된 Arduino CLI가 공개 예제를 노출하는지 확인합니다. ... skipped 'M13 package 설치 후 NUCODE_M13_CLI_DISCOVERY=1로 실행합니다.'",
+        "test_clean_submodule_status_survives_trimmed_first_prefix (test_m27_release.M27ReleaseTests.test_clean_submodule_status_survives_trimmed_first_prefix) ... skipped 'source checkout is intentionally dirty during the unit run'"
+      ],
+      "tests": 599
+    },
+    {
+      "gate": "inventory",
+      "markers": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "sha256": "9510ed7072eb22b16614ed2c1cab372663f22d759fa26c1985334e7e8f32dcc9"
+    },
+    {
+      "gate": "package",
+      "markers": [
+        "M12_GATE_PASS=package"
+      ],
+      "sha256": "4c1837073e7c66736bc7414f963f9b81b9db376208effc8e83e2154a71f075e4"
+    },
+    {
+      "gate": "style",
+      "markers": [
+        "CPP_STYLE_FILES=227; FAILED=0; WRITE=0"
+      ],
+      "sha256": "6ec6bc3711c01b2ceb2e0f0deedc8f3eda25bd45a4ff97efa08a972a4e9844e5"
+    },
+    {
+      "gate": "target",
+      "markers": [
+        "M12_ZEPHYR_BUILD_PASS=10;GROUP=all;M16_ROLE_BUILDS=2;SELECTION=subset"
+      ],
+      "sha256": "968ec2db45e2d17127b914ba4401ade0d6fba8f2471c0838d63c2d62bfe41775"
+    }
+  ],
+  "source_commit": "ec3bba331b4ce99667b42312512715818e66c1df"
+}
