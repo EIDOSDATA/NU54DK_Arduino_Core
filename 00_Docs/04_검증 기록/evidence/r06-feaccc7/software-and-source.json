@@ -1,0 +1,78 @@
+{
+  "cli_cases_unchanged": 7,
+  "gates": {
+    "contract": {
+      "log_sha256": "4e924041a98e3022df6f32745342caa8ab90b290e4d9938ef38ef9270578518f",
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "skips": 0,
+      "tests": 45
+    },
+    "host": {
+      "log_sha256": "21c55321e7913e352b5ad33aaad49f5ba0fb1e3f5ad2f9687ad8ebbff58c5219",
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "skips": 2,
+      "tests": 613
+    },
+    "installed": {
+      "log_sha256": "f9b7862f806d0551fe33093bb3abd07ca3f8ddec98dfd0df76c5655f7160615a",
+      "result_lines": [
+        "PASS blink",
+        "PASS library",
+        "PASS config",
+        "PASS error",
+        "R06_INSTALLED_SMOKE_PASS=4"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "inventory": {
+      "log_sha256": "5cac786157abe5d53d21ffc41ea424d773ae85d29f2cb70af82f59e30cb04f27",
+      "result_lines": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "package": {
+      "log_sha256": "a26d7e2851187a479ade0d49a28bb7f740225607a6da6ad8e2e2af63589b8a00",
+      "result_lines": [
+        "M12_GATE_PASS=package"
+      ],
+      "skips": 0,
+      "tests": 20
+    },
+    "style": {
+      "log_sha256": "bb314b90056343ad14634708cae1b98d1ced66cff4f248fd3dab6ccac1092a80",
+      "result_lines": [
+        "CPP_STYLE_FILES=260; FAILED=0; WRITE=0"
+      ],
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "normalized_function_asts_unchanged": 106,
+  "physical_executed": false,
+  "source_sha256": {
+    "tools\\nu54-builder\\src\\nu54_builder.py": "aaaf14d4bc091da24d9efabaa4d2b057d2ae8d387dbb007fb212faa920580315",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\__init__.py": "a01472d488e611a962e6c4d9451bac2b3b1ad2196cd983e5d05f7ed7f18df603",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\artifacts.py": "3ce2b17e33f90dff7c13fa8c1a8bbdb0a01a03acb715b5d122bb5409f8887ee3",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\build.py": "cf9b44c31d1b58cc7ec59353b556ab26eb14f115aae2683595110bb5c62ccfb8",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\cache.py": "19ffd4232633ff8bb920eda794cfe7a40bd74997099d68c5efe5984d4a89b2b9",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\cli.py": "a1d2c7471388a619e67faa9f4b5e07635baf362904bcda98aa17d292ff19e755",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\common.py": "e95717fe6d057bba5c9cddada0868d1e62bdb0b05c249be8e26cf7242e134430",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\configuration.py": "bdfa0ce5adcb4424a66174ccbe3c1084c3f467da46bd67d922af78c95688dc45",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\environment.py": "aa84af669172d571d801103e34539e0b889f7b99dac969c82432adde65e36028",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\frontend.py": "4c001bd14f5cfbeee086a876d729641510214803c520c82ef39ab277698c5e7d",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\locking.py": "4b6061e9d99d75cb9aed74749a074bc46c0db698d77705f37cbf676dbd3fa10c",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\models.py": "2adba010325f21e12dcc42db8b22d29af2e70567cf8148026ab69858fda1270c",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\paths.py": "4b5f4d8023cc8912d347500987aeb47653de4cdbf16f471d4a2e782aa66f53c7",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\source_graph.py": "5649189aebf2a40ed28c218fea62b2cc6bca863d2bd535cfd5ab8b7ea3c72f3a",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\upload.py": "b08fb95aa374a59f694bb65236a94fcd2ff94fcc50166530350ddd8fa5805a62"
+  },
+  "start_commit": "feaccc720f1b4ca66632b0e8a86d6534dd2c3efa",
+  "zip_sha256": "cd233779b1a136b0d911437a9827fc2f4fa7c39e1bd80342e7d2b9e7d6503bea"
+}

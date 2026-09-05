@@ -711,7 +711,7 @@ def test_compile_error(cli: Path, config: Path, root: Path, repository: Path) ->
     marker_line = next(
         index
         for index, line in enumerate((sketch / "compile_error.ino").read_text(encoding="utf-8").splitlines(), start=1)
-        if "EXPECT_ERROR_LINE" in line
+        if "nucode_intentional_compile_error =" in line
     )
     command = compile_command(cli, config, root / "build-error", sketch)
     command.insert(-1, "--verbose")
@@ -1512,9 +1512,11 @@ def test_m8_upload_build(cli: Path, config: Path, root: Path, repository: Path) 
     platform = Path(context["platform_root"])
     platform_text = (platform / "platform.txt").read_text(encoding="utf-8")
     boards_text = (platform / "boards.txt").read_text(encoding="utf-8")
-    builder_text = (
-        platform / "tools" / "nu54-builder" / "src" / "nu54_builder.py"
-    ).read_text(encoding="utf-8")
+    builder_source = platform / "tools" / "nu54-builder" / "src"
+    upload_source = builder_source / "nu54_builder_impl" / "upload.py"
+    if not upload_source.is_file():
+        upload_source = builder_source / "nu54_builder.py"
+    builder_text = upload_source.read_text(encoding="utf-8")
     for expected in (
         "tools.nu54_pyocd.upload.pattern=",
         "--runner pyocd {upload.verbose}",

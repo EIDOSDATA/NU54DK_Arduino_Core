@@ -52,8 +52,8 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | 필드 | 현재 값 |
 | --- | --- |
 | 이번에 끝낸 일 | T01~T11. UART Fixture 101~103, SPI Fixture 201~203에 이어 exact `e2f045c`의 TWI Fixture 301에서 계획 기능 record 1,986개·cleanup 2·campaign 기록 2건, 총 1,990 result를 10 MHz SWD로 PASS |
-| 진행 중인 T 항목 | R00~R05 완료. [56번 R05](<./04_검증 기록/56_R05_Core_소스와_패키지_identity.md>)에 identity 6개 회귀, Host 609 PASS/2 조건부 SKIP, M3/M15 target 2/2 및 ELF runtime 문자열 확인 보존. 새 physical NOT RUN |
-| 다음 구체적 행동 | R06에서 builder의 configuration/feature, source graph, artifact 검증, cache/lock, SDK 환경/process 및 build/upload 책임을 내부 package로 추출한다. 기존 .cmd/Python CLI와 -I를 유지하고 신뢰된 설치 경로 로딩, 외부 CWD·공백/한국어 경로·설치 package 실행 및 실제 compile/artifact를 검증한다 |
+| 진행 중인 T 항목 | R00~R05 완료. R06-A builder 순수 추출과 Host 611 PASS/2 SKIP, 설치 compile 완료. [57번 기록](<./04_검증 기록/57_R06_builder_모듈과_설치_경로.md>)의 R06-B 기존 Windows recipe 공백 경로 결함 교정을 계속한다. 새 physical NOT RUN |
+| 다음 구체적 행동 | R06-B: Windows recipe launcher 인용부호를 교정하고 한국어·공백 설치 ZIP에서 -I actual CLI compile·artifact·오류 전달을 재검증한다. 이후 R07 EventFabric 대응표와 기계적 분할로 진행한다 |
 | 다음 작업에 필요한 사용자 행동 | R00~R13 구현·software gate에는 없음. 최종 current-source T11 회귀를 시작할 때 안내한 첫 fixture로 전원 OFF 상태에서 결선 변경 |
 | 외부 결선 상태 | Fixture 301 SDA·SCL·GND가 연결된 상태, 외부 저항·전원 rail 없음, 양쪽 `DISABLE_UART` 분리·`DISABLE_SWD` 연결. R13 뒤 최종 T11 회귀 시작 전 USB 전원을 끄고 해당 fixture 결선으로 변경해야 함 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |

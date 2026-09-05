@@ -1,0 +1,15 @@
+START blink
+Traceback (most recent call last):
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\install_r06.py", line 46, in <module>
+    test(cli, config, root, repo)
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\arduino-cli\run_smoke.py", line 510, in test_blink
+    run(compile_command(cli, config, build, board_examples(repository) / "Blink"))
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\arduino-cli\run_smoke.py", line 99, in run
+    raise SmokeFailure(
+r06_smoke.SmokeFailure: command failed (1): C:\NU54DEV\tools\arduino-cli-1.5.1\arduino-cli.exe compile --fqbn nucode:zephyr:nu54dk --config-file C:\r6pkg\arduino-cli.yaml --build-path C:\r6pkg\공백 경로\build-blink C:\Users\eidos\GitHub\NU54DK_Arduino_Core\libraries\NUCODE_NU54DK\examples\Blink
+'C:\r6pkg\설치' is not recognized as an internal or external command,
+operable program or batch file.
+
+Used platform Version Path
+nucode:zephyr 0.0.90  C:\r6pkg\설치 공백\hardware\nucode\zephyr
+Error during build: exit status 1

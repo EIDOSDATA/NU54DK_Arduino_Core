@@ -206,12 +206,16 @@ class M9CacheContractTests(unittest.TestCase):
         def collect(*, compiler_identity: str = "gcc-a") -> dict[str, object]:
             with (
                 mock.patch.object(
-                    MODULE,
+                    MODULE.implementation.common, "exact_git_revision",
+                    side_effect=lambda value: revisions[MODULE.path_key(value)],
+                ),
+                mock.patch.object(
+                    MODULE.implementation.cache,
                     "exact_git_revision",
                     side_effect=lambda value: revisions[MODULE.path_key(value)],
                 ),
                 mock.patch.object(
-                    MODULE, "compiler_version", return_value=compiler_identity
+                    MODULE.implementation.cache, "compiler_version", return_value=compiler_identity
                 ),
             ):
                 return MODULE.cache_input_manifest(paths, args, tools)

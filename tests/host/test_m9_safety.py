@@ -249,18 +249,18 @@ class M9SafetyContractTests(unittest.TestCase):
         args, workspace, _, tools = self.prepare_fixture()
         tools["ncs_root"] = Path("D:/ncs/v3.4.0")
         with (
-            mock.patch.object(MODULE, "tool_environment", return_value=tools),
+            mock.patch.object(MODULE.implementation.build, "tool_environment", return_value=tools),
             mock.patch.object(
-                MODULE,
+                MODULE.implementation.build,
                 "cache_input_manifest",
                 return_value={
                     "schema_version": MODULE.CACHE_SCHEMA_VERSION,
                     "fixture": "recovery",
                 },
             ),
-            mock.patch.object(MODULE, "materialize_application"),
-            mock.patch.object(MODULE, "configure_command", return_value=["configure"]),
-            mock.patch.object(MODULE, "run_checked") as run_checked,
+            mock.patch.object(MODULE.implementation.build, "materialize_application"),
+            mock.patch.object(MODULE.implementation.build, "configure_command", return_value=["configure"]),
+            mock.patch.object(MODULE.implementation.build, "run_checked") as run_checked,
         ):
             MODULE.prepare(args)
         run_checked.assert_called_once()
@@ -275,15 +275,15 @@ class M9SafetyContractTests(unittest.TestCase):
 
         args, workspace, cache_key, tools = self.prepare_fixture()
         with (
-            mock.patch.object(MODULE, "tool_environment", return_value=tools),
+            mock.patch.object(MODULE.implementation.build, "tool_environment", return_value=tools),
             mock.patch.object(
-                MODULE,
+                MODULE.implementation.build,
                 "cache_input_manifest",
                 return_value={"schema_version": MODULE.CACHE_SCHEMA_VERSION, "fixture": "recovery"},
             ),
-            mock.patch.object(MODULE, "materialize_application"),
-            mock.patch.object(MODULE, "configure_command", return_value=["configure"]),
-            mock.patch.object(MODULE, "run_checked") as run_checked,
+            mock.patch.object(MODULE.implementation.build, "materialize_application"),
+            mock.patch.object(MODULE.implementation.build, "configure_command", return_value=["configure"]),
+            mock.patch.object(MODULE.implementation.build, "run_checked") as run_checked,
         ):
             first = MODULE.prepare(args)
             second = MODULE.prepare(args)
@@ -303,15 +303,15 @@ class M9SafetyContractTests(unittest.TestCase):
 
         args, workspace, _, tools = self.prepare_fixture()
         with (
-            mock.patch.object(MODULE, "tool_environment", return_value=tools),
+            mock.patch.object(MODULE.implementation.build, "tool_environment", return_value=tools),
             mock.patch.object(
-                MODULE,
+                MODULE.implementation.build,
                 "cache_input_manifest",
                 return_value={"schema_version": MODULE.CACHE_SCHEMA_VERSION, "fixture": "recovery"},
             ),
-            mock.patch.object(MODULE, "materialize_application"),
-            mock.patch.object(MODULE, "configure_command", return_value=["configure"]),
-            mock.patch.object(MODULE, "run_checked", side_effect=RuntimeError("configure failed")),
+            mock.patch.object(MODULE.implementation.build, "materialize_application"),
+            mock.patch.object(MODULE.implementation.build, "configure_command", return_value=["configure"]),
+            mock.patch.object(MODULE.implementation.build, "run_checked", side_effect=RuntimeError("configure failed")),
         ):
             with self.assertRaisesRegex(RuntimeError, "configure failed"):
                 MODULE.prepare(args)
@@ -324,7 +324,7 @@ class M9SafetyContractTests(unittest.TestCase):
         """! @brief destructive cache CLI의 오타를 무시하지 않고 action 호출 전에 거부합니다. """
 
         with (
-            mock.patch.object(MODULE, "manage_cache") as manage_cache,
+            mock.patch.object(MODULE.implementation.cli, "manage_cache") as manage_cache,
             contextlib.redirect_stderr(io.StringIO()),
         ):
             result = MODULE.main(["cache", "clear", "--cache-rooot", str(self.root)])
@@ -427,16 +427,16 @@ class M9SafetyContractTests(unittest.TestCase):
             "environment": {},
         }
         with (
-            mock.patch.object(MODULE, "build_lock", side_effect=fake_build_lock),
-            mock.patch.object(MODULE, "probe_lock", side_effect=fake_probe_lock),
-            mock.patch.object(MODULE, "tool_environment", return_value=tools),
-            mock.patch.object(MODULE, "flash_environment", return_value={}),
-            mock.patch.object(MODULE, "load_context", return_value=context),
-            mock.patch.object(MODULE, "validate_flash_manifest", side_effect=validate),
-            mock.patch.object(MODULE, "validate_runner_configuration"),
-            mock.patch.object(MODULE, "select_pyocd_probe", return_value="PROBE"),
-            mock.patch.object(MODULE, "build_flash_command", return_value=["flash"]),
-            mock.patch.object(MODULE, "run_flash_process", side_effect=write),
+            mock.patch.object(MODULE.implementation.upload, "build_lock", side_effect=fake_build_lock),
+            mock.patch.object(MODULE.implementation.upload, "probe_lock", side_effect=fake_probe_lock),
+            mock.patch.object(MODULE.implementation.upload, "tool_environment", return_value=tools),
+            mock.patch.object(MODULE.implementation.upload, "flash_environment", return_value={}),
+            mock.patch.object(MODULE.implementation.upload, "load_context", return_value=context),
+            mock.patch.object(MODULE.implementation.upload, "validate_flash_manifest", side_effect=validate),
+            mock.patch.object(MODULE.implementation.upload, "validate_runner_configuration"),
+            mock.patch.object(MODULE.implementation.upload, "select_pyocd_probe", return_value="PROBE"),
+            mock.patch.object(MODULE.implementation.upload, "build_flash_command", return_value=["flash"]),
+            mock.patch.object(MODULE.implementation.upload, "run_flash_process", side_effect=write),
         ):
             MODULE.flash(args)
         self.assertEqual(

@@ -1,0 +1,14 @@
+[
+  {
+    "command": "cmd.exe /c \"C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r06\\이전 설치 공백\\nu54-builder.cmd\" prepare --help --platform-root \"C:\\경로 공백\"",
+    "returncode": 1,
+    "stderr": "'C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r06\\이전' is not recognized as an internal or external command,\noperable program or batch file.\n",
+    "stdout": ""
+  },
+  {
+    "command": "cmd.exe /d /c call \"C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r06\\이전 설치 공백\\nu54-builder.cmd\" prepare --help --platform-root \"C:\\경로 공백\"",
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "usage: nu54-builder prepare [-h] --platform-root PLATFORM_ROOT --build-path\n                            BUILD_PATH --sketch-root SKETCH_ROOT --fqbn FQBN\n                            --project-name PROJECT_NAME [--board BOARD]\n                            [--profile PROFILE]\n\noptions:\n  -h, --help            show this help message and exit\n  --platform-root PLATFORM_ROOT\n  --build-path BUILD_PATH\n  --sketch-root SKETCH_ROOT\n  --fqbn FQBN\n  --project-name PROJECT_NAME\n  --board BOARD\n  --profile PROFILE\n"
+  }
+]

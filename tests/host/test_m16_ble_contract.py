@@ -193,7 +193,7 @@ class M16BleNusContractTests(unittest.TestCase):
         )
 
         builder = (
-            REPOSITORY / "tools" / "nu54-builder" / "src" / "nu54_builder.py"
+            REPOSITORY / "tools" / "nu54-builder" / "src" / "nu54_builder_impl" / "common.py"
         ).read_text(encoding="utf-8")
         self.assertRegex(
             builder,

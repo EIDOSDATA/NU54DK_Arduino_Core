@@ -135,8 +135,8 @@ class M10PrerequisiteContractTests(unittest.TestCase):
             return real_file_sha256(path)
 
         with (
-            mock.patch.object(MODULE, "exact_git_revision", side_effect=revision),
-            mock.patch.object(MODULE, "file_sha256", side_effect=hash_file),
+            mock.patch.object(MODULE.implementation.environment, "exact_git_revision", side_effect=revision),
+            mock.patch.object(MODULE.implementation.environment, "file_sha256", side_effect=hash_file),
         ):
             MODULE.validate_packaged_prerequisites(
                 self.platform, self.ncs_root, self.toolchain
@@ -377,9 +377,11 @@ class M10PrerequisiteContractTests(unittest.TestCase):
         )()
         with (
             mock.patch.dict(os.environ, {"PATH": ""}),
-            mock.patch.object(MODULE, "exact_git_revision", side_effect=revision),
-            mock.patch.object(MODULE, "file_sha256", side_effect=hash_file),
-            mock.patch.object(MODULE, "compiler_version", return_value="fixture-gcc"),
+            mock.patch.object(MODULE.implementation.environment, "exact_git_revision", side_effect=revision),
+            mock.patch.object(MODULE.implementation.environment, "file_sha256", side_effect=hash_file),
+            mock.patch.object(MODULE.implementation.environment, "compiler_version", return_value="fixture-gcc"),
+            mock.patch.object(MODULE.implementation.cache, "exact_git_revision", side_effect=revision),
+            mock.patch.object(MODULE.implementation.cache, "compiler_version", return_value="fixture-gcc"),
         ):
             MODULE.validate_packaged_prerequisites(
                 self.platform, self.ncs_root, self.toolchain

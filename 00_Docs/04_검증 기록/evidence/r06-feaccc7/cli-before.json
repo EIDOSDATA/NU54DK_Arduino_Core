@@ -1,0 +1,62 @@
+[
+  {
+    "args": [
+      "--help"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "usage: nu54-builder [-h]\r\n                    {prepare,preprocess,record,archive,link,verify-artifact,size,flash,clean-build,cache}\r\n                    ...\r\n\r\npositional arguments:\r\n  {prepare,preprocess,record,archive,link,verify-artifact,size,flash,clean-build,cache}\r\n\r\noptions:\r\n  -h, --help            show this help message and exit\r\n"
+  },
+  {
+    "args": [
+      "prepare",
+      "--help"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "usage: nu54-builder prepare [-h] --platform-root PLATFORM_ROOT --build-path\r\n                            BUILD_PATH --sketch-root SKETCH_ROOT --fqbn FQBN\r\n                            --project-name PROJECT_NAME [--board BOARD]\r\n                            [--profile PROFILE]\r\n\r\noptions:\r\n  -h, --help            show this help message and exit\r\n  --platform-root PLATFORM_ROOT\r\n  --build-path BUILD_PATH\r\n  --sketch-root SKETCH_ROOT\r\n  --fqbn FQBN\r\n  --project-name PROJECT_NAME\r\n  --board BOARD\r\n  --profile PROFILE\r\n"
+  },
+  {
+    "args": [
+      "link",
+      "--help"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "usage: nu54-builder link [-h] --platform-root PLATFORM_ROOT --build-path\r\n                         BUILD_PATH --sketch-root SKETCH_ROOT --fqbn FQBN\r\n                         --project-name PROJECT_NAME [--board BOARD]\r\n                         [--profile PROFILE] --archive ARCHIVE\r\n                         [--objects [OBJECTS ...]]\r\n\r\noptions:\r\n  -h, --help            show this help message and exit\r\n  --platform-root PLATFORM_ROOT\r\n  --build-path BUILD_PATH\r\n  --sketch-root SKETCH_ROOT\r\n  --fqbn FQBN\r\n  --project-name PROJECT_NAME\r\n  --board BOARD\r\n  --profile PROFILE\r\n  --archive ARCHIVE\r\n  --objects [OBJECTS ...]\r\n"
+  },
+  {
+    "args": [
+      "flash",
+      "--help"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "usage: nu54-builder flash [-h] --platform-root PLATFORM_ROOT --build-path\r\n                          BUILD_PATH --sketch-root SKETCH_ROOT --fqbn FQBN\r\n                          --project-name PROJECT_NAME [--board BOARD]\r\n                          [--profile PROFILE] --manifest MANIFEST --runner\r\n                          {pyocd,jlink} [--probe-id PROBE_ID] [--verbose]\r\n\r\noptions:\r\n  -h, --help            show this help message and exit\r\n  --platform-root PLATFORM_ROOT\r\n  --build-path BUILD_PATH\r\n  --sketch-root SKETCH_ROOT\r\n  --fqbn FQBN\r\n  --project-name PROJECT_NAME\r\n  --board BOARD\r\n  --profile PROFILE\r\n  --manifest MANIFEST\r\n  --runner {pyocd,jlink}\r\n  --probe-id PROBE_ID\r\n  --verbose\r\n"
+  },
+  {
+    "args": [
+      "cache",
+      "--help"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "usage: nu54-builder cache [-h] [--cache-root CACHE_ROOT] [--include-compiler]\r\n                          {list,inspect,prune,remove,clear} [key]\r\n\r\npositional arguments:\r\n  {list,inspect,prune,remove,clear}\r\n  key\r\n\r\noptions:\r\n  -h, --help            show this help message and exit\r\n  --cache-root CACHE_ROOT\r\n  --include-compiler\r\n"
+  },
+  {
+    "args": [
+      "nonsense"
+    ],
+    "returncode": 2,
+    "stderr": "usage: nu54-builder [-h]\r\n                    {prepare,preprocess,record,archive,link,verify-artifact,size,flash,clean-build,cache}\r\n                    ...\r\nnu54-builder: error: argument command: invalid choice: 'nonsense' (choose from prepare, preprocess, record, archive, link, verify-artifact, size, flash, clean-build, cache)\r\n",
+    "stdout": ""
+  },
+  {
+    "args": [
+      "prepare"
+    ],
+    "returncode": 2,
+    "stderr": "usage: nu54-builder prepare [-h] --platform-root PLATFORM_ROOT --build-path\r\n                            BUILD_PATH --sketch-root SKETCH_ROOT --fqbn FQBN\r\n                            --project-name PROJECT_NAME [--board BOARD]\r\n                            [--profile PROFILE]\r\nnu54-builder prepare: error: the following arguments are required: --platform-root, --build-path, --sketch-root, --fqbn, --project-name\r\n",
+    "stdout": ""
+  }
+]

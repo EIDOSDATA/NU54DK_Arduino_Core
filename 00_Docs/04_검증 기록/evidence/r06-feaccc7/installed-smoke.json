@@ -1,0 +1,28 @@
+{
+  "archive_sha256": "cd233779b1a136b0d911437a9827fc2f4fa7c39e1bd80342e7d2b9e7d6503bea",
+  "cwd": "C:\\r6base",
+  "platform": "C:\\r6base\\user\\hardware\\nucode\\zephyr",
+  "tests": [
+    {
+      "seconds": 100.31,
+      "status": "PASS",
+      "test": "blink"
+    },
+    {
+      "seconds": 149.11,
+      "status": "PASS",
+      "test": "library"
+    },
+    {
+      "seconds": 81.42,
+      "status": "PASS",
+      "test": "config"
+    },
+    {
+      "retry_reason": "test marker comment line differed from intentional error statement line",
+      "seconds": 31.56,
+      "status": "PASS",
+      "test": "error"
+    }
+  ]
+}
