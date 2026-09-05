@@ -102,10 +102,10 @@ def vectors(family):
         yield 115200, 0, 0, 32, 4, 1
         return
     if family == "spi":
-        yield from itertools.product((125000, 1000000, 4000000), range(4), range(2),
+        yield from itertools.product((2000000, 4000000, 8000000), range(4), range(2),
                                      (1, 2, 31, 32, 255, 256, 1024), (1, 2, 3), (0, 1, 2))
         # 진행 중 1024-byte 전송을 즉시 취소하고 bounded STOP으로 회수합니다.
-        yield 125000, 0, 0, 1024, 3, 3
+        yield 2000000, 0, 0, 1024, 3, 3
         return
     if family == "twi":
         for values in itertools.product((100000, 400000, 1000000), (0,), (0,),
@@ -252,7 +252,7 @@ def exchange(devices, fixture, controller_role, instances, vector, append, label
         if fixture["family"] == "uarte":
             recovery_vector = (115200, 0, 0, 32, 1, 1)
         elif fixture["family"] == "spi":
-            recovery_vector = (1000000, 0, 0, 32, 3, 0)
+            recovery_vector = (2000000, 0, 0, 32, 3, 0)
         else:
             recovery_vector = (100000, 0, 0, 32, 3, 0x42)
         exchange(devices, fixture, controller_role, instances, recovery_vector, append,
@@ -314,7 +314,7 @@ def run_confirmed(devices, images, uids, confirmation, fixture_id, append):
                     exchange(devices, fixture, controller_role, instances, vector, append)
             if fixture_id == 201 and controller_role == 1:
                 exchange(devices, fixture, controller_role, (0, 20),
-                         (125000, 0, 0, 1024, 3, 4), append,
+                         (2000000, 0, 0, 1024, 3, 4), append,
                          label="/spim00-twim22-concurrent")
         finally:
             original_error = sys.exception()

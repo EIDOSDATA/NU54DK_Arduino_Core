@@ -145,7 +145,7 @@ class FixtureTests(unittest.TestCase):
         self.assertIn((115200, 0, 1, 256, 2, 1), uart_vectors)
         self.assertIn((115200, 0, 0, 32, 3, 1), uart_vectors)
         self.assertIn((115200, 0, 0, 32, 4, 1), uart_vectors)
-        self.assertIn((125000, 0, 0, 1024, 3, 3), spi_vectors)
+        self.assertIn((2000000, 0, 0, 1024, 3, 3), spi_vectors)
         self.assertIn((100000, 0, 0, 32, 1, 0x44 | (3 << 8)), twi_vectors)
         self.assertIn((100000, 0, 0, 256, 3, 0x42 | (4 << 8)), twi_vectors)
         self.assertIn((100000, 0, 0, 32, 1, 0x42 | (5 << 8)), twi_vectors)

@@ -482,7 +482,8 @@ buffer를 구분합니다. RX는 SWD mailbox로
 경로가 모두 있어야 두 보드를 제어합니다. 같은 exact-boot helper로 두 role image를 시작하고
 활성 session을 함께 유지합니다. RTS/CTS vector 하나는 receiver RX를 100ms 늦게 열어 sender TX가
 완료되지 않는지 먼저 확인한 뒤 재개합니다. 8N1 sender/8E1 receiver와 1ms LOW generator로
-parity/framing·break 오류 및 bounded STOP을 검사합니다. SPI는 125kHz 1,024-byte 전송 취소,
+parity/framing·break 오류 및 bounded STOP을 검사합니다. SPI는 모든 대상 instance에서 표현 가능한
+2/4/8MHz를 사용하며 2MHz 1,024-byte 전송 취소,
 TWI는 미등록 `0x44` NACK와 100kHz 256-byte 전송 취소 뒤 bounded STOP을 준비합니다.
 각 오류·취소 직후 같은 lease에서 32-byte 정상 전송을 다시 수행해 재시작도 별도로 판정합니다.
 

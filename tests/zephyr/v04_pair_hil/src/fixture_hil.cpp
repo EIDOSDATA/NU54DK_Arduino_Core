@@ -282,7 +282,7 @@ namespace
                      requested_style > 6)) ||
             (!i2c && !uart && args[7] > 4) ||
             (i2c && args[1] != 100000 && args[1] != 400000 && args[1] != 1000000) ||
-            (!i2c && !uart && args[1] != 125000 && args[1] != 1000000 && args[1] != 4000000) ||
+            (!i2c && !uart && args[1] != 2000000 && args[1] != 4000000 && args[1] != 8000000) ||
             (uart && args[1] != 9600 && args[1] != 115200 && args[1] != 1000000) ||
             (uart &&
              ((args[6] < 1 || args[6] > 4) || (args[6] == 2 && (!args[3] || args[7] != 1)) ||
