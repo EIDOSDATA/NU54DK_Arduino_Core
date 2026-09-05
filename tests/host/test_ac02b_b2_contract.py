@@ -46,7 +46,7 @@ class Ac02bPeripheralContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         wire = (ROOT / "cores" / "arduino" / "Wire.cpp").read_text(encoding="utf-8")
-        spi = (ROOT / "cores" / "arduino" / "SPI.cpp").read_text(encoding="utf-8")
+        spi = (ROOT / "cores" / "arduino" / "SPI.cpp").read_text(encoding="utf-8") + (ROOT / "cores/arduino/internal/spi/SpiZephyrBackend.cpp").read_text(encoding="utf-8")
         runtime = (
             ROOT / "cores" / "arduino" / "internal" / "RuntimePeripheralRoute.cpp"
         ).read_text(encoding="utf-8") + (ROOT / "cores/arduino/internal/RuntimePeripheralRouteRecovery.cpp").read_text(encoding="utf-8")
@@ -81,11 +81,11 @@ class Ac02bPeripheralContractTests(unittest.TestCase):
             "spi_interrupt_mask_faulted",
             "hasActiveSpiInterruptToken",
             "rollback_error",
-            "if (spi_started)",
+            "if (backend::started())",
         ):
             self.assertIn(token, spi)
         begin = spi.index("void begin() override")
-        idempotent = spi.index("if (spi_started)", begin)
+        idempotent = spi.index("if (backend::started())", begin)
         activate = spi.index("spi_route.activate()", begin)
         self.assertLess(idempotent, activate)
 

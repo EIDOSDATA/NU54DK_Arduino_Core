@@ -208,6 +208,7 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   if(CONFIG_NUCODE_ARDUINO_SPI)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/SPI.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/spi/SpiZephyrBackend.cpp"
     )
   endif()
 

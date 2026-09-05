@@ -1,0 +1,80 @@
+{
+  "gates": {
+    "after-initial": {
+      "log_sha256": "a593d8cb4877000fc008c4cb578701730e5c8670889c23ea1d95a3210f8cd68b",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "before": {
+      "log_sha256": "658b6dc834c5c5b9b63e72b4ba25202e50738533174a103cb9b5efb496846547",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "comparison": {
+      "log_sha256": "9c4001fb29da883f2908caf1fb1657aaadb4c482f203374a4a0840cf0f89db9c",
+      "result_lines": [
+        "R09_BODY_COMPARISON_PASS=20"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "contract": {
+      "log_sha256": "cb180b0a6d71618a605c56d96cb979f1202550c1f816d58bce12a3f650e1e5ca",
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "skips": 0,
+      "tests": 45
+    },
+    "host": {
+      "log_sha256": "a1c0d7a2bb11bc035d7e47b26c58ab46d0c31611c3d924bac1ee2c0637d4381e",
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "skips": 2,
+      "tests": 620
+    },
+    "inventory": {
+      "log_sha256": "5cac786157abe5d53d21ffc41ea424d773ae85d29f2cb70af82f59e30cb04f27",
+      "result_lines": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "style": {
+      "log_sha256": "be73c9b67490d88e1188d746be224de12b445d1cf794e4cce24824cd83783168",
+      "result_lines": [
+        "CPP_STYLE_FILES=293; FAILED=0; WRITE=0"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "target": {
+      "log_sha256": "eaf0552d1d4adadc09770d45361d7c8abd22258bd72fe82e892b1fbe4d01c890",
+      "result_lines": [
+        "M12_ZEPHYR_BUILD_FAIL: Twister가 종료 코드 1로 실패했습니다. 실패 위치: nucode.m3.runtime: error (Build failure - undefined reference to `nucode::arduino::internal::io_resource_detail::IoResourceTable::reserveIoResources(nucode::arduino::internal::IoResourceOwner, nucode::arduino::internal::IoResourceId const*, unsigned int, nucode::arduino::internal::IoAcquirePolicy, nucode::arduino::internal::IoResourceLease&, nucode::arduino::internal::IoResourceSnapshot*)')"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "target-m3": {
+      "log_sha256": "bc2e363466e48a3ab7fea859120acc8431443b9450f96edd9084f66a9525c9be",
+      "result_lines": [
+        "M12_ZEPHYR_BUILD_PASS=1;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "physical_executed": false,
+  "sources": {
+    "cores\\arduino\\SPI.cpp": "7510376d3f5c5c7ff777fe686209eb6c825c0436cf58b1c3a365d8beca0f07c9",
+    "cores\\arduino\\internal\\spi\\SpiBackendOperations.h": "9488ba5e66a439c77e8251ac474173efbb732f877e4862af095c246fcf27378b",
+    "cores\\arduino\\internal\\spi\\SpiZephyrBackend.cpp": "34ae09cb6b47a52892e061579df4ef2cd7d11a7bf431a5282fcecb560a89126e",
+    "zephyr\\CMakeLists.txt": "c5abaa496fca341d9c3236a50400c5795edc5dfc44424668135754fbef86df68"
+  },
+  "start_commit": "8d39e578639594abc748b81a531d5409f32e83d6"
+}

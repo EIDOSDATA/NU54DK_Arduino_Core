@@ -116,3 +116,5 @@ R07 EventFabric registry/peripheral 분할은 [58번 기록](58_R07_EventFabric_
 
 R08 자원 정책·transaction·동기화 및 runtime route phase/획득 기록 분리는
 [59번 기록](59_R08_자원과_경로_수명주기.md)에 연결한다.
+
+R09 Arduino SPI facade/backend 분리는 [60번 기록](60_R09_Arduino_SPI_경계.md)에 연결한다.

@@ -149,7 +149,7 @@ class Ac02bAnalogContractTests(unittest.TestCase):
         interrupt = (
             ROOT / "cores" / "arduino" / "wiring_interrupt.cpp"
         ).read_text(encoding="utf-8")
-        spi = (ROOT / "cores" / "arduino" / "SPI.cpp").read_text(encoding="utf-8")
+        spi = (ROOT / "cores" / "arduino" / "SPI.cpp").read_text(encoding="utf-8") + (ROOT / "cores/arduino/internal/spi/SpiZephyrBackend.cpp").read_text(encoding="utf-8")
         digital_compact = " ".join(digital.split())
 
         for token in (
