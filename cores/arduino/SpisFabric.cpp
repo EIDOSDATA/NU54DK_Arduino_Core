@@ -229,8 +229,14 @@ namespace nucode::arduino
                 context.next = {};
                 k_spin_unlock(&context.lock, key);
             }
-            pushEvent(context, {SpiFabricEventType::transfer_complete, event->p_tx_buf,
-                                event->p_rx_buf, event->tx_amount, event->rx_amount, 0U});
+            /**
+             * @brief 길이가 0인 DMA 방향은 NRFX register pointer 대신 사용자 queue 계약을 보존합니다.
+             *
+             * 일부 SPIS 하드웨어에서는 MAXCNT가 0이어도 PTR register의 이전 값을 완료 event에
+             * 노출할 수 있습니다. 공개 API에는 실제로 queue한 buffer 주소를 반환해야 합니다.
+             */
+            pushEvent(context, {SpiFabricEventType::transfer_complete, completed.tx, completed.rx,
+                                event->tx_amount, event->rx_amount, 0U});
 
             if ((next.tx != nullptr) || (next.rx != nullptr))
             {
