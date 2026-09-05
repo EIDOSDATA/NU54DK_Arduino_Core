@@ -1,6 +1,6 @@
 # R12 BLE·Storage 수명주기 구조 확대
 
-상태: 착수. R11 `86b53f8` 뒤의 T14/T15 software 회귀다. current-source T11 이후의 물리 시험은 미실행이다.
+상태: R12-A/B/C/D software 완료. R11 `86b53f8` 뒤의 T14/T15 software 회귀다. current-source T11 이후의 물리 시험은 미실행이다.
 
 | 단계 | 책임 | 보존·검증할 계약 |
 | --- | --- | --- |
@@ -183,3 +183,48 @@ pending reference 이동, 고정 queue 24개, boot bond snapshot 배열을 그�
 [메모리·symbol](evidence/r12c1-c90d2b1/target-comparison.json),
 [실제 Host](evidence/r12c1-c90d2b1/security-after.txt)를 보존한다.
 다음은 R12-D EEPROM/LittleFS다. R12 전체는 D 완료 전까지 진행 중이며 실기 NOT RUN이다.
+
+## R12-D Storage 결과
+
+EEPROM 공개 facade와 proxy는 원래 파일에 남기고 순수 record codec/CRC와 Settings
+mirror·commit·오류 수명주기를 분리했다. LittleFS는 File 값·참조 수명, path/mode 검증,
+고정 slot 소유·오류, FS facade, partition·mount의 경계를 갖는다. 공유 mutable extern은
+private 단일 소유 상태와 내부 accessor로 바꿨으며, 새 heap 할당이나 공개 API는 없다.
+
+| 검사 | 결과 |
+| --- | --- |
+| 전체 token 영역 / 보호 파일 | proxy 연산자를 포함한 11개 영역 보존 / 공개 header·partition·feature 8개 byte 동일 |
+| EEPROM 실제 구현 Host | 별도 process 저장·load·resize, init/load/short-load/save 실패와 재시도, 10종 손상 record 거부·명시적 reset PASS |
+| LittleFS 실제 구현 Host | 별도 process 보존, mount/open/IO/unmount 실패·재시도, 열린 참조의 format 거부, path/mode/ISR·명시적 format 8개 시나리오 PASS |
+| R04 실제 File thread 회귀 | 8개 시나리오 PASS |
+| 전체 Host | 628개 중 626 PASS·2 조건부 SKIP |
+| contract / inventory / style | 45/45 / PASS / 356개 PASS |
+| target | AC03 contract·storage HIL 2/2 build-only PASS; EEPROM 3개·LittleFS 5개 cpp 각 1회 |
+
+EEPROM oracle는 Python struct/zlib로 독립 생성한 12-byte header·CRC와 실제 저장 byte를
+비교한다. key `arduino/eeprom`, 최대 1024-byte mirror와 기존 record 형식은 동일하다.
+save 실패는 기존 저장 bytes와 dirty mirror를 유지하고 명시적 재시도로 복구한다.
+LittleFS Host의 process 간 파일은 fake filesystem의 직렬화이며 실제 LittleFS on-disk
+format 또는 전원 차단 복구 증거가 아니다. 실제 partition(0x16c000/0x8000), 기본 mount의
+NO_FORMAT, 명시적 format 경로는 원래 production 본문을 그대로 보존했다.
+
+새 별도 TU Host 링크에서 기존 mock의 inline thread_local callback이 WinLibs TLS 초기화
+중복 symbol을 만든 문제는 function-local thread_local accessor로 고쳤다. R04와 전체
+Host가 통과했으며, 이 수정은 production 동기화 동작을 바꾸지 않는다.
+
+| 동일 구성의 flash / RAM | 이전 | 이후 |
+| --- | --- | --- |
+| AC03 contract | 100,484 / 30,616 B | 100,676 / 30,616 B |
+| AC03 storage HIL | 78,952 / 26,992 B | 79,256 / 26,992 B |
+
+공개 method symbol 누락은 없고 RAM은 동일하다. [gate](evidence/r12d-4e5dd7d/software-and-source.json),
+[본문·보호 파일](evidence/r12d-4e5dd7d/comparison.json),
+[target](evidence/r12d-4e5dd7d/target-build.json),
+[기준선](evidence/r12d-4e5dd7d/target-before.json),
+[메모리·source](evidence/r12d-4e5dd7d/target-comparison.json),
+[EEPROM](evidence/r12d-4e5dd7d/eeprom-after.txt)·[LittleFS](evidence/r12d-4e5dd7d/littlefs-after.txt)·
+[File](evidence/r12d-4e5dd7d/file-after.txt) 실제 Host 로그를 보존한다.
+
+R12 전체 software 작업을 완료했다. BLE 무선·실제 bonding 저장·flash 내구성·전원 차단,
+current-source T11/T12/T13은 NOT RUN이며 기존 지원 수준은 그대로다. 다음은 R13 package,
+정책 생성, Kconfig/CMake 구조와 최종 전체 software 검증이다.

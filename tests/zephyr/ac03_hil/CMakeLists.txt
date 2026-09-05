@@ -10,7 +10,12 @@ get_filename_component(NUCODE_CORE_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../.." A
 target_sources(app PRIVATE
   src/main.cpp
   "${NUCODE_CORE_ROOT}/libraries/EEPROM/src/EEPROM.cpp"
+  "${NUCODE_CORE_ROOT}/libraries/EEPROM/src/internal/EEPROMRecord.cpp"
+  "${NUCODE_CORE_ROOT}/libraries/EEPROM/src/internal/EEPROMSettings.cpp"
   "${NUCODE_CORE_ROOT}/libraries/LittleFS/src/FS.cpp"
+  "${NUCODE_CORE_ROOT}/libraries/LittleFS/src/internal/FilePaths.cpp"
+  "${NUCODE_CORE_ROOT}/libraries/LittleFS/src/internal/FileSlots.cpp"
+  "${NUCODE_CORE_ROOT}/libraries/LittleFS/src/internal/File.cpp"
   "${NUCODE_CORE_ROOT}/libraries/LittleFS/src/LittleFS.cpp"
 )
 

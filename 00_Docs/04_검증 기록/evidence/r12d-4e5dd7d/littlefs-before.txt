@@ -1,0 +1,6 @@
+test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 2.944s
+
+OK

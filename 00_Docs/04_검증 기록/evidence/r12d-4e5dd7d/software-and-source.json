@@ -1,0 +1,84 @@
+{
+  "gates": {
+    "contract": {
+      "log_sha256": "b1b832f57c647796cf75ddc1d67115ef20d75c31f577456543f2fa9ce2b88f7f",
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "skips": 0,
+      "tests": 45
+    },
+    "eeprom-after": {
+      "log_sha256": "9d3bf154b74c4a2a49634380d84e10163701e4477b4f05add69461dc030872aa",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "eeprom-before": {
+      "log_sha256": "559a1c1fe8aa29faa7426aadf47c25fa25dc4d8b11d14bbde9b527fe670390c9",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "file-after": {
+      "log_sha256": "c9d1eda6ce047494689e2d6290ba3b0d82919988b725fa9f443f51e531f8e58f",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "host": {
+      "log_sha256": "03e8b7e44e5f87d558ab0a5183a61bfda5151d745706fb5efc5b7eb5c10fefcb",
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "skips": 2,
+      "tests": 628
+    },
+    "inventory": {
+      "log_sha256": "5cac786157abe5d53d21ffc41ea424d773ae85d29f2cb70af82f59e30cb04f27",
+      "result_lines": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "littlefs-after": {
+      "log_sha256": "fc968a13e6163ec4e8546ef75ca614aa09e1e2ee7a544db0cda55d6f9cead26c",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "littlefs-before": {
+      "log_sha256": "04d6d36026c281084e1859fa1fa46e6dc2a76b419ea44b7118ea0b0b666e6440",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "style": {
+      "log_sha256": "6e6d0578ea7cd97629d5af5f5b191928e38ee7ec6d17221e5913a2438ddaa3b3",
+      "result_lines": [
+        "CPP_STYLE_FILES=356; FAILED=0; WRITE=0"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "target": {
+      "log_sha256": "a06f92fae29addb8e4b0ea3349ca5037023c4647c452ee57d4499ce49b1c5efe",
+      "result_lines": [
+        "M12_ZEPHYR_BUILD_PASS=2;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "target-before": {
+      "log_sha256": "1f0e01edd977bbc94f5e21af3a8c18c535366013d46451283a2a3cef24e01bb8",
+      "result_lines": [
+        "M12_ZEPHYR_BUILD_PASS=2;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "physical_executed": false,
+  "start_commit": "4e5dd7d"
+}

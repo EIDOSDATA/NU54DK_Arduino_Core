@@ -1,0 +1,357 @@
+{
+  "comparisons": {
+    "nucode.ac03.storage_contract": {
+      "after": {
+        "elf_sha256": "f95277d9b013c2bbf9d3b04a71392107f678d01047e02a52159c3e9d6c15c9af",
+        "memory": {
+          "FLASH": 100676,
+          "RAM": 30616
+        },
+        "owned_objects": [
+          {
+            "bytes": 1032,
+            "file": "EEPROMSettings.cpp",
+            "name": "nucode::eeprom::internal::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 20,
+            "file": "EEPROMSettings.cpp",
+            "name": "nucode::eeprom::internal::(anonymous namespace)::eeprom_mutex"
+          },
+          {
+            "bytes": 4,
+            "file": "EEPROMSettings.cpp",
+            "name": "nucode::eeprom::internal::(anonymous namespace)::last_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "EEPROMSettings.cpp",
+            "name": "nucode::eeprom::internal::(anonymous namespace)::last_driver_error_value"
+          },
+          {
+            "bytes": 12,
+            "file": "FileSlots.cpp",
+            "name": "nucode::littlefs::internal::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 1104,
+            "file": "FileSlots.cpp",
+            "name": "nucode::littlefs::internal::(anonymous namespace)::slots"
+          },
+          {
+            "bytes": 20,
+            "file": "FileSlots.cpp",
+            "name": "nucode::littlefs::internal::(anonymous namespace)::filesystem_mutex"
+          },
+          {
+            "bytes": 36,
+            "file": "LittleFS.cpp",
+            "name": "(anonymous namespace)::arduino_littlefs_mount"
+          }
+        ],
+        "public_symbols": [
+          "EEPROMClass::begin(unsigned int)",
+          "EEPROMClass::lastError() const",
+          "EEPROMClass::write(int, unsigned char)",
+          "EEPROMClass::writeBlock(int, void const*, unsigned int, bool)",
+          "FS::open(char const*, char const*)",
+          "File::File()",
+          "File::File(unsigned char, unsigned int)",
+          "File::available()",
+          "File::close()",
+          "File::flush()",
+          "File::operator bool() const",
+          "File::peek()",
+          "File::read()",
+          "File::read(unsigned char*, unsigned int)",
+          "File::write(unsigned char const*, unsigned int)",
+          "File::write(unsigned char)",
+          "File::~File()",
+          "LittleFSClass::end()",
+          "LittleFSClass::lastError() const"
+        ]
+      },
+      "before": {
+        "elf_sha256": "77d16c9900479fc03a7ba71e5cd272bbbeca9d108afdc7ba5409e5a1aa58c9be",
+        "memory": {
+          "FLASH": 100484,
+          "RAM": 30616
+        },
+        "owned_objects": [
+          {
+            "bytes": 20,
+            "file": "EEPROM.cpp",
+            "name": "(anonymous namespace)::eeprom_mutex"
+          },
+          {
+            "bytes": 4,
+            "file": "EEPROM.cpp",
+            "name": "(anonymous namespace)::last_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "EEPROM.cpp",
+            "name": "(anonymous namespace)::last_driver_error_value"
+          },
+          {
+            "bytes": 1032,
+            "file": "EEPROM.cpp",
+            "name": "(anonymous namespace)::state"
+          },
+          {
+            "bytes": 15,
+            "file": "EEPROM.cpp",
+            "name": "(anonymous namespace)::settings_key"
+          },
+          {
+            "bytes": 36,
+            "file": "LittleFS.cpp",
+            "name": "(anonymous namespace)::arduino_littlefs_mount"
+          }
+        ],
+        "public_symbols": [
+          "EEPROMClass::begin(unsigned int)",
+          "EEPROMClass::lastError() const",
+          "EEPROMClass::write(int, unsigned char)",
+          "EEPROMClass::writeBlock(int, void const*, unsigned int, bool)",
+          "FS::open(char const*, char const*)",
+          "File::File()",
+          "File::available()",
+          "File::close()",
+          "File::flush()",
+          "File::operator bool() const",
+          "File::peek()",
+          "File::read()",
+          "File::read(unsigned char*, unsigned int)",
+          "File::write(unsigned char const*, unsigned int)",
+          "File::write(unsigned char)",
+          "File::~File()",
+          "LittleFSClass::end()",
+          "LittleFSClass::lastError() const"
+        ]
+      },
+      "removed_public_symbols": []
+    },
+    "nucode.ac03.storage_hil": {
+      "after": {
+        "elf_sha256": "f67dccd21730533f2c5750b1e15e93032373267ca71447a53bb21d19493e1691",
+        "memory": {
+          "FLASH": 79256,
+          "RAM": 26992
+        },
+        "owned_objects": [
+          {
+            "bytes": 1032,
+            "file": "EEPROMSettings.cpp",
+            "name": "nucode::eeprom::internal::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 20,
+            "file": "EEPROMSettings.cpp",
+            "name": "nucode::eeprom::internal::(anonymous namespace)::eeprom_mutex"
+          },
+          {
+            "bytes": 4,
+            "file": "EEPROMSettings.cpp",
+            "name": "nucode::eeprom::internal::(anonymous namespace)::last_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "EEPROMSettings.cpp",
+            "name": "nucode::eeprom::internal::(anonymous namespace)::last_driver_error_value"
+          },
+          {
+            "bytes": 12,
+            "file": "FileSlots.cpp",
+            "name": "nucode::littlefs::internal::(anonymous namespace)::state"
+          },
+          {
+            "bytes": 1104,
+            "file": "FileSlots.cpp",
+            "name": "nucode::littlefs::internal::(anonymous namespace)::slots"
+          },
+          {
+            "bytes": 20,
+            "file": "FileSlots.cpp",
+            "name": "nucode::littlefs::internal::(anonymous namespace)::filesystem_mutex"
+          },
+          {
+            "bytes": 36,
+            "file": "LittleFS.cpp",
+            "name": "(anonymous namespace)::arduino_littlefs_mount"
+          },
+          {
+            "bytes": 276,
+            "file": "LittleFS.cpp",
+            "name": "(anonymous namespace)::arduino_littlefs_configuration"
+          },
+          {
+            "bytes": 1,
+            "file": "LittleFS.cpp",
+            "name": "(anonymous namespace)::mount_initialized"
+          },
+          {
+            "bytes": 64,
+            "file": "LittleFS.cpp",
+            "name": "(anonymous namespace)::arduino_littlefs_configuration_read_buffer"
+          },
+          {
+            "bytes": 64,
+            "file": "LittleFS.cpp",
+            "name": "(anonymous namespace)::arduino_littlefs_configuration_prog_buffer"
+          },
+          {
+            "bytes": 32,
+            "file": "LittleFS.cpp",
+            "name": "(anonymous namespace)::arduino_littlefs_configuration_lookahead_buffer"
+          }
+        ],
+        "public_symbols": [
+          "EEPROMClass::begin(unsigned int)",
+          "EEPROMClass::commit()",
+          "EEPROMClass::lastDriverError() const",
+          "EEPROMClass::lastError() const",
+          "EEPROMClass::readBlock(int, void*, unsigned int)",
+          "EEPROMClass::reset(unsigned int)",
+          "EEPROMClass::writeBlock(int, void const*, unsigned int, bool)",
+          "FS::exists(char const*)",
+          "FS::open(char const*, char const*)",
+          "FS::remove(char const*)",
+          "File::File()",
+          "File::File(unsigned char, unsigned int)",
+          "File::available()",
+          "File::close()",
+          "File::flush()",
+          "File::operator bool() const",
+          "File::peek()",
+          "File::read()",
+          "File::read(unsigned char*, unsigned int)",
+          "File::write(unsigned char const*, unsigned int)",
+          "File::write(unsigned char)",
+          "File::~File()",
+          "LittleFSClass::begin(bool)",
+          "LittleFSClass::end()",
+          "LittleFSClass::format()",
+          "LittleFSClass::lastDriverError() const",
+          "LittleFSClass::lastError() const"
+        ]
+      },
+      "before": {
+        "elf_sha256": "118fd6aec2f3f74013644d1ade75b1dd62b4f9039b37abac8e3a5cf16ebeb506",
+        "memory": {
+          "FLASH": 78952,
+          "RAM": 26992
+        },
+        "owned_objects": [
+          {
+            "bytes": 20,
+            "file": "EEPROM.cpp",
+            "name": "(anonymous namespace)::eeprom_mutex"
+          },
+          {
+            "bytes": 4,
+            "file": "EEPROM.cpp",
+            "name": "(anonymous namespace)::last_error_value"
+          },
+          {
+            "bytes": 4,
+            "file": "EEPROM.cpp",
+            "name": "(anonymous namespace)::last_driver_error_value"
+          },
+          {
+            "bytes": 1032,
+            "file": "EEPROM.cpp",
+            "name": "(anonymous namespace)::state"
+          },
+          {
+            "bytes": 15,
+            "file": "EEPROM.cpp",
+            "name": "(anonymous namespace)::settings_key"
+          },
+          {
+            "bytes": 36,
+            "file": "LittleFS.cpp",
+            "name": "(anonymous namespace)::arduino_littlefs_mount"
+          },
+          {
+            "bytes": 276,
+            "file": "LittleFS.cpp",
+            "name": "(anonymous namespace)::arduino_littlefs_configuration"
+          },
+          {
+            "bytes": 1,
+            "file": "LittleFS.cpp",
+            "name": "(anonymous namespace)::mount_initialized"
+          },
+          {
+            "bytes": 64,
+            "file": "LittleFS.cpp",
+            "name": "(anonymous namespace)::arduino_littlefs_configuration_read_buffer"
+          },
+          {
+            "bytes": 64,
+            "file": "LittleFS.cpp",
+            "name": "(anonymous namespace)::arduino_littlefs_configuration_prog_buffer"
+          },
+          {
+            "bytes": 32,
+            "file": "LittleFS.cpp",
+            "name": "(anonymous namespace)::arduino_littlefs_configuration_lookahead_buffer"
+          }
+        ],
+        "public_symbols": [
+          "EEPROMClass::begin(unsigned int)",
+          "EEPROMClass::commit()",
+          "EEPROMClass::lastDriverError() const",
+          "EEPROMClass::lastError() const",
+          "EEPROMClass::readBlock(int, void*, unsigned int)",
+          "EEPROMClass::reset(unsigned int)",
+          "EEPROMClass::writeBlock(int, void const*, unsigned int, bool)",
+          "FS::exists(char const*)",
+          "FS::open(char const*, char const*)",
+          "FS::remove(char const*)",
+          "File::File()",
+          "File::available()",
+          "File::close()",
+          "File::flush()",
+          "File::operator bool() const",
+          "File::peek()",
+          "File::read()",
+          "File::read(unsigned char*, unsigned int)",
+          "File::write(unsigned char const*, unsigned int)",
+          "File::write(unsigned char)",
+          "File::~File()",
+          "LittleFSClass::begin(bool)",
+          "LittleFSClass::end()",
+          "LittleFSClass::format()",
+          "LittleFSClass::lastDriverError() const",
+          "LittleFSClass::lastError() const"
+        ]
+      },
+      "removed_public_symbols": []
+    }
+  },
+  "physical_executed": false,
+  "source_membership": {
+    "nucode.ac03.storage_contract": {
+      "EEPROM.cpp": 1,
+      "EEPROMRecord.cpp": 1,
+      "EEPROMSettings.cpp": 1,
+      "FS.cpp": 1,
+      "File.cpp": 1,
+      "FilePaths.cpp": 1,
+      "FileSlots.cpp": 1,
+      "LittleFS.cpp": 1
+    },
+    "nucode.ac03.storage_hil": {
+      "EEPROM.cpp": 1,
+      "EEPROMRecord.cpp": 1,
+      "EEPROMSettings.cpp": 1,
+      "FS.cpp": 1,
+      "File.cpp": 1,
+      "FilePaths.cpp": 1,
+      "FileSlots.cpp": 1,
+      "LittleFS.cpp": 1
+    }
+  }
+}

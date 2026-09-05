@@ -2,8 +2,15 @@
 #pragma once
 #include <functional>
 #include <mutex>
+#include <zephyr/sys/atomic.h>
+using k_mutex = std::recursive_mutex;
 inline thread_local bool mock_in_isr = false;
-inline thread_local std::function<void()> mock_before_lock;
+/** @brief 여러 TU에서 동일 thread의 lock 관측 callback을 공유합니다. */
+inline std::function<void()> &mockBeforeLock()
+{
+    static thread_local std::function<void()> callback;
+    return callback;
+}
 #define K_MUTEX_DEFINE(name) std::recursive_mutex name
 #define K_FOREVER 0
 inline bool k_is_in_isr()
@@ -12,9 +19,9 @@ inline bool k_is_in_isr()
 }
 inline int k_mutex_lock(std::recursive_mutex *mutex, int)
 {
-    if (mock_before_lock)
+    if (mockBeforeLock())
     {
-        mock_before_lock();
+        mockBeforeLock()();
     }
     mutex->lock();
     return 0;
