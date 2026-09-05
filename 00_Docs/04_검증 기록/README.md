@@ -113,3 +113,6 @@ R06 builder 모듈 추출·설치 compile 및 공백 recipe 교정은 [57번 기
 
 R07 EventFabric registry/peripheral 분할은 [58번 기록](58_R07_EventFabric_책임_분할.md)의
 전후 Host·target·symbol·메모리 비교에 연결한다.
+
+R08 자원 정책·transaction·동기화 및 runtime route phase/획득 기록 분리는
+[59번 기록](59_R08_자원과_경로_수명주기.md)에 연결한다.

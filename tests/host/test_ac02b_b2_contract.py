@@ -49,7 +49,7 @@ class Ac02bPeripheralContractTests(unittest.TestCase):
         spi = (ROOT / "cores" / "arduino" / "SPI.cpp").read_text(encoding="utf-8")
         runtime = (
             ROOT / "cores" / "arduino" / "internal" / "RuntimePeripheralRoute.cpp"
-        ).read_text(encoding="utf-8")
+        ).read_text(encoding="utf-8") + (ROOT / "cores/arduino/internal/RuntimePeripheralRouteRecovery.cpp").read_text(encoding="utf-8")
         for token in ("serial1_route.activate", "uart_configure", "serial1_route.deactivate"):
             self.assertIn(token, serial)
         flush_helper = serial.index("void flush(SerialPortState &state)")

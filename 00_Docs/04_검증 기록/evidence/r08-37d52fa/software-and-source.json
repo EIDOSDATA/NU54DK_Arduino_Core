@@ -1,0 +1,76 @@
+{
+  "gates": {
+    "after-initial": {
+      "log_sha256": "9b7fbdce82bd2e2240510c752934f1f346173f61cb66fe247ececba1da0f81ec",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "before": {
+      "log_sha256": "6579d8655a14f3cd80ac800e1b42c6d72a00fb88c513d570ae3c2d9263485544",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "comparison": {
+      "log_sha256": "0f9e2fa741fdbadd9ef6718ab9c16bf90a4481e957345e77c4109ec7a369aa88",
+      "result_lines": [
+        "R08_BODY_COMPARISON_PASS=21"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "contract": {
+      "log_sha256": "a3f0d48904a775695c119bcd4c69b62526613686c993ad66982edf860a9ad297",
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "skips": 0,
+      "tests": 45
+    },
+    "host": {
+      "log_sha256": "4fda125a6ee3d0bf88ab307d8cf94e43a4a565d79fc955684c92c8debc0c52e6",
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "skips": 2,
+      "tests": 619
+    },
+    "inventory": {
+      "log_sha256": "5cac786157abe5d53d21ffc41ea424d773ae85d29f2cb70af82f59e30cb04f27",
+      "result_lines": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "style": {
+      "log_sha256": "f482633ec5c63c29e686f1ffa92be76b8147fb2e256e53746909b511e655e09b",
+      "result_lines": [
+        "CPP_STYLE_FILES=285; FAILED=0; WRITE=0"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "target": {
+      "log_sha256": "afb7b79406eca9d4c09d444b6bec131d1059b19e88f724676087a7699488a2af",
+      "result_lines": [
+        "M12_ZEPHYR_BUILD_PASS=5;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "physical_executed": false,
+  "sources": {
+    "cores\\arduino\\internal\\IoResourceManager.h": "a502dd9f5cc4bf7c4da90aa22eb8e70062349cc2aea43ae7b537a3095290e497",
+    "cores\\arduino\\internal\\RuntimePeripheralRoute.cpp": "376d4d765f8fa5be89fedc756681ca2dd65b4349b8d46f3f6b7b15c0df233d0c",
+    "cores\\arduino\\internal\\RuntimePeripheralRoute.h": "1cf2d46c16756b5dc1fb056284f1804297e5791d50440946a482027726d64673",
+    "cores\\arduino\\internal\\RuntimePeripheralRouteRecovery.cpp": "4b8ff671666827e2ebcaf25498e40432fd414ac0860d043263e27b9199f46cb0",
+    "cores\\arduino\\internal\\io_resource_manager.cpp": "2756b6a2a974f7c9706c3a9a7312fe56afdcca73b493936606129d2452d8ac63",
+    "cores\\arduino\\internal\\resource\\IoResourcePolicy.h": "93d2c8b06e6661f4311914cd8ef3122cb1fbbde3eeb7b02905178bb936b77f07",
+    "cores\\arduino\\internal\\resource\\IoResourceTable.cpp": "ffddfef08c41423e6ed641b66b68b6843e282b70fd6697f4786b915df17487c0",
+    "cores\\arduino\\internal\\resource\\IoResourceTable.h": "61198c520ce9c6478f79dd5d1672070f5e44235514cf69c33617be3f54f8ac22"
+  },
+  "start_commit": "37d52fa07c3715ab3c1e2bbef50f8a6a6bafa31a"
+}

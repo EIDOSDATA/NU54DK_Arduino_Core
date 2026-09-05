@@ -7,7 +7,7 @@
 | 작성·갱신일 | 2026-09-06 |
 | 작성 직전 기준 commit | `25c7f035cc10093a370a693871fe2704a5a069f3` |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **R08 — 자원 관리자와 runtime route 책임 분리** |
+| 다음 착수 항목 | **R09 — Arduino SPI facade/backend 파일럿** |
 | 이번 요청의 실행 범위 | 2026-09-06 사용자 지시: R00~R13을 번호 순서대로 구현·시험·문서화하고 전체 software/target/examples/style 검증과 main commit/push까지 자동 진행한다. current-source T11 직전에 멈추며 flash·HIL·결선 변경·공개는 수행하지 않는다 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
@@ -52,15 +52,15 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | 필드 | 현재 값 |
 | --- | --- |
 | 이번에 끝낸 일 | T01~T11. UART Fixture 101~103, SPI Fixture 201~203에 이어 exact `e2f045c`의 TWI Fixture 301에서 계획 기능 record 1,986개·cleanup 2·campaign 기록 2건, 총 1,990 result를 10 MHz SWD로 PASS |
-| 진행 중인 T 항목 | R00~R07 완료. [58번 R07](<./04_검증 기록/58_R07_EventFabric_책임_분할.md>)에 public header/함수 body 보존, DPPI 전후 7개, Host 616 PASS/2 SKIP, target 4/4 및 source 소속·symbol·메모리 비교 보존. 새 physical NOT RUN |
-| 다음 구체적 행동 | R08: 기존 io_resource_manager.cpp의 순수 identity/충돌 정책과 예약·commit·rollback/table/Zephyr lock 경계를 분리한다. RuntimePeripheralRoute의 lifecycle phase와 block lease·pin별 handover·PM reference·pinctrl 기록을 분리하며 부분 실패·stale generation·별칭 충돌·rollback 재진입·capacity 회복/fault 유지 Host를 먼저 고정한다. 두 번째 manager와 새 public API는 만들지 않는다 |
+| 진행 중인 T 항목 | R00~R08 완료. [59번 R08](<./04_검증 기록/59_R08_자원과_경로_수명주기.md>)에 manager 본문 21개/계약 header 보존, 실제 manager·route 전후 22개 Host, 전체 Host 617 PASS/2 SKIP, target 5/5 및 메모리·source 소속 보존. 새 physical NOT RUN |
+| 다음 구체적 행동 | R09: Arduino SPI의 설정·반환값·transaction 의미를 facade에 두고 Zephyr device·pinctrl·PM·frequency/driver 오류를 backend로 분리한다. 기존 SPI00 singleton, RuntimePeripheralRoute lease와 interrupt mask를 유지한다. begin/end·transaction·CS·mode·bit order·속도·재초기화·다른 thread 호출의 Host 기준선을 먼저 고정하고 선택/비선택 target를 검증한다 |
 | 다음 작업에 필요한 사용자 행동 | R00~R13 구현·software gate에는 없음. 최종 current-source T11 회귀를 시작할 때 안내한 첫 fixture로 전원 OFF 상태에서 결선 변경 |
 | 외부 결선 상태 | Fixture 301 SDA·SCL·GND가 연결된 상태, 외부 저항·전원 rail 없음, 양쪽 `DISABLE_UART` 분리·`DISABLE_SWD` 연결. R13 뒤 최종 T11 회귀 시작 전 USB 전원을 끄고 해당 fixture 결선으로 변경해야 함 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 마지막 정식 외부 HIL source | `e2f045c1b4272d986d17456c5af051fe8af74f19` — Fixture 301 두 보드 exact role image TWI PASS |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; T09 무배선 PASS만 추가됐으며 외부 결선·RC·최종 공개 승인 없음 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | R07 Host/target 검사 종료. C:/r07a 4/4 build-only PASS, C:/r07 초기 include 실패 보존. 새 장치 시험·flash/HIL 없음 |
+| 이 TODO 작성 작업의 실행 중 시험 | R08 Host/target 검사 종료. C:/r08 5/5 build-only PASS. 새 장치 시험·flash/HIL 없음 |
 | 로컬 임시 build·evidence | R00~R05 target/cache와 work/r00~r06 및 영구 evidence/r06-feaccc7, r06-f1b3fa4 보존. R06 설치 C:/r6base,r6fin 및 실패 C:/r6pkg,r6fix,r6sp, 중간 C:/r6cp. R07 기준선 C:/r7pre. 로컬 검증용 별도 index와 참조 없는 snapshot commit은 work/r06에 기록; 임시 branch/worktree 없음 |
 | 최종 정렬 gate | clang-format 22.1.8로 직접 관리 C/C++/ino 227개 write·dry-run PASS. Fixture 102 기록 전 남은 공통 header 들여쓰기 한 곳을 교정했고 M12 Host 전체·DUT/peer target 2/2 재검증 PASS, 실기 image와 runtime HEX SHA-256 동일. 한국어 Doxygen·Allman/4칸/중괄호 필수 적용 |
 | CI 확인 | 이전 `661fad9`의 [Software Gates](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811058)와 [Reproducible Builds](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811030) success 보존. `25c7f03` 계획 통합은 로컬 전체 gate를 통과해 원격 `main`에 push됐으며, 당시 로컬 GitHub CLI 인증이 없어 새 Actions 상태는 미확인 |
