@@ -197,7 +197,7 @@ class M13ProfileContractTests(unittest.TestCase):
             }
             context = {"cache_key": "0" * 64, "cache_root": str(root / "cache"), "board_root": str(ROOT / "board_package" / "NU54DK_Zephyr_DTS")}
             args = mock.Mock(profile="standard")
-            with mock.patch.object(MODULE, "cache_workspace", return_value=workspace):
+            with mock.patch.object(MODULE.implementation.build, "cache_workspace", return_value=workspace):
                 with self.assertRaisesRegex(MODULE.AdapterError, "E_CACHE_KEY_COLLISION"):
                     MODULE.migrate_feature_workspace(session, args, {}, context, [], [], {"selected": True})
 
@@ -261,7 +261,7 @@ class M13ProfileContractTests(unittest.TestCase):
             session = {"platform_root": ROOT, "build_path": root / "build", "sketch_root": sketch, "state_root": root / "build" / "nu54-zephyr", "context": root / "build" / "nu54-zephyr" / "context.json", "records": root / "build" / "nu54-zephyr" / "records"}
             context = {"cache_key": "0" * 64, "cache_root": str(root / "cache"), "board_root": str(ROOT / "board_package" / "NU54DK_Zephyr_DTS")}
             tools = {"west": "west", "zephyr_base": ROOT, "ncs_root": ROOT, "environment": {}}
-            with mock.patch.object(MODULE, "cache_workspace", return_value=workspace), mock.patch.object(MODULE, "run_checked", side_effect=MODULE.AdapterError("configure boom")):
+            with mock.patch.object(MODULE.implementation.build, "cache_workspace", return_value=workspace), mock.patch.object(MODULE.implementation.build, "run_checked", side_effect=MODULE.AdapterError("configure boom")):
                 with self.assertRaises(MODULE.AdapterError):
                     MODULE.migrate_feature_workspace(
                         session,

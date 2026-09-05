@@ -1,0 +1,10 @@
+{
+  "cmake_sha256": "083a412e9a21430da453bcd9713ffa5589ea1c677cc4d5f58f9a0b55fab1f546",
+  "cmake_version": "4.2.1",
+  "minimal_script": "unicode-path.cmake",
+  "sdk_changed": false,
+  "system_locale_changed": false,
+  "trace_sha256": "02e4452d1723ce4d234aa7cf0c8093ee186e59ee47ca9159c7888c6376d8d326",
+  "unicode_exit_code_unsigned": 3221226505,
+  "unicode_exit_hex": "0xc0000409"
+}

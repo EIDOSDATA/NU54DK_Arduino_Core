@@ -1,0 +1,22 @@
+{
+  "archive_sha256": "9e3fafcf3e8f33eaeb9bbde14f00f44e2f008c1fa276d56c9aad6af9c0f08d7a",
+  "cwd": "C:\\r6fin",
+  "platform": "C:\\r6fin\\설치 공백\\hardware\\nucode\\zephyr",
+  "tests": [
+    {
+      "seconds": 94.8,
+      "status": "PASS",
+      "test": "blink"
+    },
+    {
+      "seconds": 85.14,
+      "status": "PASS",
+      "test": "config"
+    },
+    {
+      "seconds": 58.62,
+      "status": "PASS",
+      "test": "error"
+    }
+  ]
+}

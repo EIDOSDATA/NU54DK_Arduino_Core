@@ -1,0 +1,23 @@
+{
+  "changed_paths": [
+    "tools/nu54-builder/src/nu54_builder.py",
+    "tools/nu54-builder/src/nu54_builder_impl/__init__.py",
+    "tools/nu54-builder/src/nu54_builder_impl/artifacts.py",
+    "tools/nu54-builder/src/nu54_builder_impl/build.py",
+    "tools/nu54-builder/src/nu54_builder_impl/cache.py",
+    "tools/nu54-builder/src/nu54_builder_impl/cli.py",
+    "tools/nu54-builder/src/nu54_builder_impl/common.py",
+    "tools/nu54-builder/src/nu54_builder_impl/configuration.py",
+    "tools/nu54-builder/src/nu54_builder_impl/environment.py",
+    "tools/nu54-builder/src/nu54_builder_impl/frontend.py",
+    "tools/nu54-builder/src/nu54_builder_impl/locking.py",
+    "tools/nu54-builder/src/nu54_builder_impl/models.py",
+    "tools/nu54-builder/src/nu54_builder_impl/paths.py",
+    "tools/nu54-builder/src/nu54_builder_impl/source_graph.py",
+    "tools/nu54-builder/src/nu54_builder_impl/upload.py"
+  ],
+  "parent": "feaccc720f1b4ca66632b0e8a86d6534dd2c3efa",
+  "purpose": "local package validation only; no branch/tag/ref update",
+  "snapshot_commit": "55ec8e0ad6b75b77dbf97d13ac1bbea9f13c3e06",
+  "tree": "8ccdd75509cbe993cece8a8e337f0a971eae285c"
+}

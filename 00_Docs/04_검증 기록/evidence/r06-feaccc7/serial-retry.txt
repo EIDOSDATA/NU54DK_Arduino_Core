@@ -1,0 +1,6 @@
+test_production_sync_and_lifetime (test_r02_serial_drivers.SerialDriverTests.test_production_sync_and_lifetime) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 4.062s
+
+OK

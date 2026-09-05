@@ -108,3 +108,5 @@ production 회귀 8개와 AC-03 target 2/2 build-only에 연결한다.
 
 R05 Core 소스·설치 package identity는 [56번 기록](56_R05_Core_소스와_패키지_identity.md)의
 6개 Host 회귀, target 2/2 및 ELF 문자열 확인에 연결한다.
+
+R06 builder 모듈 추출·설치 compile 및 공백 recipe 교정은 [57번 기록](57_R06_builder_모듈과_설치_경로.md)에 연결한다.

@@ -1,0 +1,82 @@
+{
+  "gates": {
+    "contract": {
+      "log_sha256": "37b55c394aa7f5952d52def9a84aa330f0aaf88cc9939bed2e9555bac743b031",
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "skips": 0,
+      "tests": 45
+    },
+    "copy-host": {
+      "log_sha256": "f88631e7d806e764a8ad18c1a6046ce755a8f37c8272dc9d2cde5e86c743360d",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 4
+    },
+    "host": {
+      "log_sha256": "cd4646de81025b517ca48e2b7f12ccf8ca1db8cb67b08dcb33b408b6e2dbd86b",
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "skips": 2,
+      "tests": 616
+    },
+    "installed": {
+      "log_sha256": "8886c1d671eff2df7979a54a663177a410b08adca3c21622b5d1b012df5cf7ed",
+      "result_lines": [
+        "PASS blink",
+        "PASS config",
+        "PASS error",
+        "R06_INSTALLED_SMOKE_PASS=3"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "inventory": {
+      "log_sha256": "5cac786157abe5d53d21ffc41ea424d773ae85d29f2cb70af82f59e30cb04f27",
+      "result_lines": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "package": {
+      "log_sha256": "b1c6bc459fb4a2ac87a2ed09502e1588f00eef209de018560dd1a5b8c684d026",
+      "result_lines": [
+        "M12_GATE_PASS=package"
+      ],
+      "skips": 0,
+      "tests": 20
+    }
+  },
+  "physical_executed": false,
+  "snapshot": {
+    "parent": "f1b3fa4d0a461ae73c9cc05be889914208d26fa5",
+    "purpose": "local validation only; no branch/tag/ref update",
+    "snapshot_commit": "1f933cb87f5b556ac9a63e80b6b116e5d4b068ef",
+    "tree": "416e41b86d5807f9703a8b3706018f65f20c9424"
+  },
+  "sources": {
+    "platform.txt": "91b168d10e04cb4718df9b42839c0490cffe700424ff817f01ddf46b47969f97",
+    "tests\\host\\test_r06_windows_recipe.py": "1d6d65077d1f2918f79c0f73ecff49067c5ecc930dc6b61c2c86c1f3f92cb70e",
+    "tools\\nu54-builder\\src\\nu54_builder.py": "aaaf14d4bc091da24d9efabaa4d2b057d2ae8d387dbb007fb212faa920580315",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\__init__.py": "a01472d488e611a962e6c4d9451bac2b3b1ad2196cd983e5d05f7ed7f18df603",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\artifacts.py": "3ce2b17e33f90dff7c13fa8c1a8bbdb0a01a03acb715b5d122bb5409f8887ee3",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\build.py": "aff20c1b3b4cb5844db0843001ea46895b2a3c8c05d2527bd672cedff454ac94",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\cache.py": "d945cbfdefa95b44b5f4a14d42fafcc4cb9a36b2b85a52c7fb42b81e4ab93be8",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\cli.py": "a1d2c7471388a619e67faa9f4b5e07635baf362904bcda98aa17d292ff19e755",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\common.py": "e95717fe6d057bba5c9cddada0868d1e62bdb0b05c249be8e26cf7242e134430",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\configuration.py": "bdfa0ce5adcb4424a66174ccbe3c1084c3f467da46bd67d922af78c95688dc45",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\environment.py": "aa84af669172d571d801103e34539e0b889f7b99dac969c82432adde65e36028",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\frontend.py": "4c001bd14f5cfbeee086a876d729641510214803c520c82ef39ab277698c5e7d",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\installed_platform.py": "454f13f608f985d9719761019b2592d43849cb52d4734b6f09bbab613526ddfb",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\locking.py": "4b6061e9d99d75cb9aed74749a074bc46c0db698d77705f37cbf676dbd3fa10c",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\models.py": "cbb1b5c88da85a1cbba06a8461b1ca81bf6457433205004fe130808864354adf",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\paths.py": "4b5f4d8023cc8912d347500987aeb47653de4cdbf16f471d4a2e782aa66f53c7",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\source_graph.py": "ab6c6e8c7777136ea6f500ca35f586463633ce2eea3455674d336f739efa32ab",
+    "tools\\nu54-builder\\src\\nu54_builder_impl\\upload.py": "b08fb95aa374a59f694bb65236a94fcd2ff94fcc50166530350ddd8fa5805a62"
+  },
+  "start_commit": "f1b3fa4d0a461ae73c9cc05be889914208d26fa5",
+  "zip_sha256": "9e3fafcf3e8f33eaeb9bbde14f00f44e2f008c1fa276d56c9aad6af9c0f08d7a"
+}

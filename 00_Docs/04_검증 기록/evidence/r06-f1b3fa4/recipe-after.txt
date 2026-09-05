@@ -1,0 +1,6 @@
+test_installed_command_preserves_quoted_paths_and_exit (test_r06_windows_recipe.WindowsRecipeTests.test_installed_command_preserves_quoted_paths_and_exit) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.466s
+
+OK

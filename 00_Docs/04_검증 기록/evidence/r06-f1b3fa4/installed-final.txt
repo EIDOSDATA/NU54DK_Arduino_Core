@@ -1,0 +1,7 @@
+START blink
+PASS blink
+START config
+PASS config
+START error
+PASS error
+R06_INSTALLED_SMOKE_PASS=3
