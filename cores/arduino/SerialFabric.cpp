@@ -63,6 +63,8 @@ namespace nucode::arduino
         struct BlockContext
         {
             bool faulted{false};
+            bool wait_in_progress{false};
+            std::uint32_t wait_generation{0U};
             atomic_ptr_t active_adapter{nullptr};
             std::uint8_t active_instance{0U};
         };
@@ -212,6 +214,7 @@ namespace nucode::arduino
         {
             context.state = SerialFabricState::faulted;
             blocks[block].faulted = true;
+            blocks[block].wait_in_progress = false;
             record(context, result, driver_error);
         }
 
@@ -282,17 +285,48 @@ namespace nucode::arduino
             return true;
         }
 
-        bool waitStopped(HandleContext &context, std::uint8_t instance,
+        bool waitStopped(const SerialFabricDriverAdapter &adapter, std::uint8_t instance,
                          std::uint32_t timeout_us) noexcept
         {
-            while (!context.adapter->stopped(instance) && timeout_us != 0U)
+            while (!adapter.stopped(instance) && timeout_us != 0U)
             {
                 const auto interval = timeout_us < 10U ? timeout_us : 10U;
                 k_busy_wait(interval);
                 /** @brief UINT32_MAX에서도 뺄셈 wraparound가 생기지 않습니다. */
                 timeout_us -= interval;
             }
-            return context.adapter->stopped(instance);
+            return adapter.stopped(instance);
+        }
+
+        /**
+         * @brief block과 adapter를 예약하고 긴 STOP 확인만 전역 mutex 밖에서 수행합니다.
+         * @details 호출자는 fabric mutex를 한 번 보유하고 activating/cancelling 상태여야 합니다.
+         * driver의 짧은 request_stop critical section과 lease 반환 순서는 바꾸지 않습니다.
+         */
+        bool waitStoppedWithoutFabricLock(HandleContext &context, std::uint8_t instance, int block,
+                                          std::uint32_t timeout_us) noexcept
+        {
+            auto &reservation = blocks[block];
+            reservation.wait_in_progress = true;
+            ++reservation.wait_generation;
+            if (reservation.wait_generation == 0U)
+            {
+                ++reservation.wait_generation;
+            }
+            const auto generation = reservation.wait_generation;
+            const auto *const adapter = context.adapter;
+            k_mutex_unlock(&fabric_mutex);
+            const bool stopped = waitStopped(*adapter, instance, timeout_us);
+            k_mutex_lock(&fabric_mutex, K_FOREVER);
+            if (!reservation.wait_in_progress || reservation.wait_generation != generation ||
+                context.adapter != adapter ||
+                (context.state != SerialFabricState::activating &&
+                 context.state != SerialFabricState::cancelling))
+            {
+                return false;
+            }
+            reservation.wait_in_progress = false;
+            return stopped;
         }
 
         [[nodiscard]] HandleContext &contextAt(std::uint8_t index) noexcept
@@ -350,6 +384,12 @@ namespace nucode::arduino
             record(context, SerialFabricResult::faulted);
             k_mutex_unlock(&fabric_mutex);
             return SerialFabricResult::faulted;
+        }
+        if (blocks[block].wait_in_progress)
+        {
+            record(context, SerialFabricResult::wrong_state);
+            k_mutex_unlock(&fabric_mutex);
+            return SerialFabricResult::wrong_state;
         }
         if ((context.state != SerialFabricState::inactive) &&
             (context.state != SerialFabricState::staged))
@@ -411,6 +451,12 @@ namespace nucode::arduino
             k_mutex_unlock(&fabric_mutex);
             return SerialFabricResult::faulted;
         }
+        if (blocks[block].wait_in_progress)
+        {
+            record(context, SerialFabricResult::wrong_state);
+            k_mutex_unlock(&fabric_mutex);
+            return SerialFabricResult::wrong_state;
+        }
         if ((context.state != SerialFabricState::staged) || (context.adapter == nullptr))
         {
             record(context, SerialFabricResult::wrong_state);
@@ -468,8 +514,6 @@ namespace nucode::arduino
                 return SerialFabricResult::release_failed;
             }
             const IoResourceResult rollback_result = internal::rollbackIoResources(context.lease);
-            context.lease = {};
-            context.state = SerialFabricState::staged;
             if (rollback_result != IoResourceResult::success)
             {
                 latchFault(context, block, SerialFabricResult::release_failed, driver_error);
@@ -477,6 +521,8 @@ namespace nucode::arduino
             }
             else
             {
+                context.lease = {};
+                context.state = SerialFabricState::staged;
                 record(context, result, driver_error);
             }
             k_mutex_unlock(&fabric_mutex);
@@ -489,7 +535,7 @@ namespace nucode::arduino
             int cleanup_error = 0;
             const auto stop_result = context.adapter->request_stop(instance_, cleanup_error);
             if (stop_result != SerialFabricResult::success ||
-                !waitStopped(context, instance_, 100000U))
+                !waitStoppedWithoutFabricLock(context, instance_, block, 100000U))
             {
                 /** @brief reset 전까지 hardware·핀·DMA·전원 lease를 계속 소유합니다. */
                 latchFault(context, block, SerialFabricResult::stop_timeout, cleanup_error);
@@ -548,6 +594,12 @@ namespace nucode::arduino
             k_mutex_unlock(&fabric_mutex);
             return SerialFabricResult::faulted;
         }
+        if (blocks[block].wait_in_progress)
+        {
+            record(context, SerialFabricResult::wrong_state);
+            k_mutex_unlock(&fabric_mutex);
+            return SerialFabricResult::wrong_state;
+        }
         if ((context.state != SerialFabricState::active) || (context.adapter == nullptr))
         {
             record(context, SerialFabricResult::wrong_state);
@@ -565,7 +617,7 @@ namespace nucode::arduino
             return result;
         }
 
-        if (!waitStopped(context, instance_, timeout_us))
+        if (!waitStoppedWithoutFabricLock(context, instance_, block, timeout_us))
         {
             latchFault(context, block, SerialFabricResult::stop_timeout, driver_error);
             k_mutex_unlock(&fabric_mutex);
@@ -683,7 +735,8 @@ namespace nucode::arduino
                 return false;
             }
             k_mutex_lock(&fabric_mutex, K_FOREVER);
-            const bool active = contexts[index].state == SerialFabricState::active;
+            const bool active = contexts[index].state == SerialFabricState::active &&
+                                !blocks[blockIndex(instance)].wait_in_progress;
             k_mutex_unlock(&fabric_mutex);
             return active;
         }
@@ -719,6 +772,12 @@ namespace nucode::arduino
                 record(context, SerialFabricResult::faulted);
                 k_mutex_unlock(&fabric_mutex);
                 return SerialFabricResult::faulted;
+            }
+            if (blocks[block].wait_in_progress)
+            {
+                record(context, SerialFabricResult::wrong_state);
+                k_mutex_unlock(&fabric_mutex);
+                return SerialFabricResult::wrong_state;
             }
             if (context.state != SerialFabricState::staged)
             {
@@ -795,6 +854,15 @@ namespace nucode::arduino
                 return;
             }
             k_mutex_lock(&fabric_mutex, K_FOREVER);
+            for (const auto &block : blocks)
+            {
+                /** @brief fake adapter 시험에서도 대기 중인 context를 교체하지 않습니다. */
+                if (block.wait_in_progress)
+                {
+                    k_mutex_unlock(&fabric_mutex);
+                    return;
+                }
+            }
             for (auto &context : contexts)
             {
                 /** @brief fake adapter ztest 격리 전용이며 실제 hardware 복구 API가 아닙니다. */

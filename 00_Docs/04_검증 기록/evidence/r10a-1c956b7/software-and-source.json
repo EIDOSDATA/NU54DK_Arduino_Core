@@ -1,0 +1,68 @@
+{
+  "gates": {
+    "after-initial": {
+      "log_sha256": "615c06a40d1853cd931acfabaa2cf195fdcc6708b6aba06415c0f3de687fb9ca",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "before": {
+      "log_sha256": "5c34fd4bfb69c4093252550a069ac44f36d05f394a4c6e4574d98e7a9134d53b",
+      "result_lines": [
+        "FAILED (failures=5)"
+      ],
+      "skips": 0,
+      "tests": 1
+    },
+    "contract-a": {
+      "log_sha256": "c92179021f2824fdc246647101a519794221da41ed521f874625a9d80aa4ed7a",
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "skips": 0,
+      "tests": 45
+    },
+    "host-a": {
+      "log_sha256": "03343f4fb8ca00f8b83ea39242489445435b02ed883f139aa103b76b0b42cd27",
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "skips": 2,
+      "tests": 621
+    },
+    "inventory-a": {
+      "log_sha256": "5cac786157abe5d53d21ffc41ea424d773ae85d29f2cb70af82f59e30cb04f27",
+      "result_lines": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "style-a": {
+      "log_sha256": "f80943b78fe9603822d5fdc211a1d21fd00ed4777f0a5cbfe5c4da503c558ff5",
+      "result_lines": [
+        "CPP_STYLE_FILES=294; FAILED=0; WRITE=0"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "target-a": {
+      "log_sha256": "ea4308f633ee5ff877227bb8a8e45c74887ff06abeaec404a09e615a1d4c7f96",
+      "result_lines": [
+        "M12_ZEPHYR_BUILD_PASS=6;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "physical_executed": false,
+  "sources": {
+    "cores\\arduino\\SerialFabric.cpp": "d8792938517dc3bf47fd64e992cdcb58f23db91461b987e2557352ec96bdbe18",
+    "cores\\arduino\\SpimFabric.cpp": "5c0687f23e29f2d5dc3da9dbfa1b477c37ec5b70c848dcab5cbacfa6451bd263",
+    "cores\\arduino\\SpisFabric.cpp": "fda14db26e17c267134a2a42d53ead368be0afe5c6ba6fd48ee173e6dafad13f",
+    "cores\\arduino\\TwimFabric.cpp": "4cc0f7ed706b4be32682d6079cff41ad8e6328c1e976a6a97453ec93454980aa",
+    "cores\\arduino\\TwisFabric.cpp": "de67f056bd0f43dfaf71e30caad22ad34ea42ff6e37656b6d3625f7c400b4130",
+    "cores\\arduino\\UarteFabric.cpp": "42ce9453035b5ab52d2f330df8d70b70ec5ebe925e88d8570a4b78cb5bf15c90"
+  },
+  "start_commit": "1c956b7227c381aeaa6043627b9244b7b5d080a3"
+}
