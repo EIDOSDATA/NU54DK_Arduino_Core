@@ -302,7 +302,7 @@ namespace
             }
             return 0;
         }
-        if (opcode >= 16 && opcode <= 27)
+        if (opcode >= 16 && opcode <= 28)
         {
             return fixtureCommand(opcode, args, nargs, out, count);
         }

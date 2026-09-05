@@ -220,6 +220,9 @@ class FixtureTests(unittest.TestCase):
         second_start = trace.index((1, 28))
         self.assertEqual(trace[second_start - 2:second_start], [(2, 18), (1, 18)])
         self.assertEqual(len(results), 1)
+        dispatch = (ROOT / "tests/zephyr/v04_pair_hil/src/main.cpp").read_text(
+            encoding="utf-8")
+        self.assertIn("opcode >= 16 && opcode <= 28", dispatch)
 
 
 if __name__ == "__main__":
