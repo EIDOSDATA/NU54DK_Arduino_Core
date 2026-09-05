@@ -231,7 +231,7 @@ asset과 stable index 항목은 재현성, 감사와 downgrade를 위해 삭제�
 | `v0.1.0` | 역사적·비지원 | Core, 기본 API, build/upload와 package |
 | `v0.2.0` | 역사적·비지원 | CI/CD, profile·예제, Board/System과 BLE NUS |
 | `v0.3.0` | **현재 stable** | Arduino compatibility, 동적 peripheral/analog, BLE GAP/GATT/security/profile, storage |
-| `v0.4.0` | 개발 중 | Peripheral 확장: 온보드 기본·UART Fixture 101·102 PASS, 나머지 외부 fixture·최종 release gate 대기 |
+| `v0.4.0` | 개발 중 | Peripheral 확장: 온보드 기본·UART Fixture 101~103 PASS, SPI/TWI·analog/stream·최종 release gate 대기 |
 | `v0.5.0` | 계획 | Bluetooth LE 확장·ISO/LE Audio·Direction Finding·Channel Sounding·Mesh |
 | `v0.6.0` | 계획 | Storage/Crypto, TF-M, 고급 memory layout와 secure update/recovery |
 | `v0.7.0` | 계획 | Radio profile, IEEE 802.15.4, ESB와 OpenThread |
@@ -240,8 +240,9 @@ asset과 stable index 항목은 재현성, 감사와 downgrade를 위해 삭제�
 `v0.4.0` 후보는 UART 4개·PMIC I2C 3개, 내부 ADC·event, TEMP·WDT30의
 [온보드 시험](<./00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)을
 통과했고, [UART Fixture 101](<./00_Docs/04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)과
-[Fixture 102](<./00_Docs/04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)에서 UARTE00/20의 P2,
-UARTE30의 P0와 UARTE20/21/22의 P1 route 양방향 데이터·DMA·RTS/CTS를 통과했습니다. 다른 UART route,
+[Fixture 102](<./00_Docs/04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>),
+[Fixture 103](<./00_Docs/04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>)에서 UARTE00/20의 P2,
+UARTE30의 P0와 UARTE20/21/22의 P1 route 양방향 데이터·DMA·RTS/CTS를 통과했습니다.
 SPI·TWI·analog·stream·전체 동시성 검증과 정식 공개는 아직 완료되지 않았습니다.
 검증은 온보드 자원과 두 NU54DK의 통신·합성 신호·capture를 기준으로 합니다. 정밀 계측과 외부
 마이크·코덱·엔코더별 호환성·신호 품질은 보증 범위에 포함하지 않으며, 자세한 구분은

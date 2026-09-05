@@ -76,6 +76,7 @@
 | 검증 범위 합의 | 두 NU54DK 기반 코어 기능 HIL 유지, 정밀 계측·외부 부품별 호환성은 범위 밖; 미실행 기능·공개 HOLD 유지 | [코어 기능 검증 범위](42_v0.4.0_코어_기능_검증_범위_합의.md) |
 | Fixture 101 UART | exact `2542a01`에서 P2↔P1 UARTE 양방향 data 1,620·예상 오류 24·cleanup 2건 PASS; 다른 fixture HOLD | [M24 Fixture 101 실기 검증](44_M24_Fixture_101_UART_실기_검증.md) |
 | Fixture 102 UART | exact `ff3423e`에서 P0↔P1 UARTE 양방향 data 810·예상 오류 12·cleanup 2건 PASS; Fixture 103·SPI·TWI HOLD | [M24 Fixture 102 실기 검증](45_M24_Fixture_102_UART_실기_검증.md) |
+| Fixture 103 UART | exact `b3c689b`에서 P1↔P1 UARTE20/21/22 전 조합 양방향 data 2,430·예상 오류 36·cleanup 2건 PASS; SPI·TWI HOLD | [M24 Fixture 103 실기 검증](46_M24_Fixture_103_UART_실기_검증.md) |
 
 ## 기록 해석 규칙
 

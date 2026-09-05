@@ -1,0 +1,667 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-external-fixture",
+  "status": "passed",
+  "fixture_id": 103,
+  "fixture_revision": 1,
+  "catalog_sha256": "80493f0d24dd707e24f52ae2a56e72affd4d4afb36d261b20266f88a7778cfe8",
+  "core_revision": "b3c689b07f1a23e479a78bd2f852a650fd4a86d5",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "uart-async-and-serial-sync-async-single-double-buffer",
+  "swd_frequency_hz": 100000,
+  "external_wiring_executed": true,
+  "campaign": {
+    "repetitions": 5,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 10.0,
+    "interrupted_duration_reused": false,
+    "completed_cycles": 5,
+    "continuous_elapsed_seconds": 52.016,
+    "requested_duration_seconds": 0,
+    "requested_repetitions": 5
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "e941cba745b0549b076d15dc9e4aae1599291f8fddc5fe085490c61b6e938e05",
+      "elf_sha256": "a28a660fc5c1056c49d4d39782099880ed13b220de7179864aa4d62b16bb8bc0",
+      "record_sha256": "15624f6f47a7bfdb3c4709e3bc6ffeb3d807eb6d95bde72da90da4908d3f76ac",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 100000,
+        "seconds": 52.032,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "095da8e99eeea0dc69c43b7f0477977291ff090077d58ec58d65976740b965d2"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "4dee872056b1f37ec19866b3a707926f0ab4119f3f7b0d3b794b71bf73229de3",
+      "elf_sha256": "295545240cb1119720dd26780ed4d9b5ed2eebe4489400203e1fe48c471dc744",
+      "record_sha256": "15624f6f47a7bfdb3c4709e3bc6ffeb3d807eb6d95bde72da90da4908d3f76ac",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 100000,
+        "seconds": 51.953,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "75055f7c1e8af1409d640fffd295caf1e2e5fd2cd2e8e82559e72a70c8d0340b"
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 21)/(9600, 0, 0, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 1845154687,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "c28d96d1f0a8ae3a34ae65dd0933e68363edcdaebff95b395c2c26810a05c045"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-FIXTURE-CLEANUP",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-UARTE-DATA/103/2/(20, 21)/(9600, 0, 0, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 494727027,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "f1528413ad8838efd27ec269c6770ee206ba5b8f89034b63217a9734096fa410"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-FIXTURE-CLEANUP",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-CAMPAIGN-PROGRESS",
+      "status": "progress",
+      "cleanup_only": true,
+      "completed_cycles": 1,
+      "continuous_elapsed_seconds": 10.407
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 21)/(9600, 0, 0, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 3308214844,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "27c80cfc391bbd935b1382a6fb068bf808aed78fe3f31f6216dd0f85e16aeb75"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-FIXTURE-CLEANUP",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-UARTE-DATA/103/2/(20, 21)/(9600, 0, 0, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 980886370,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "99b33e8d0b3a4817efd089c1a5facfa2d9b9d1f46ec5997307a04587e15f3678"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-FIXTURE-CLEANUP",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-CAMPAIGN-PROGRESS",
+      "status": "progress",
+      "cleanup_only": true,
+      "completed_cycles": 2,
+      "continuous_elapsed_seconds": 20.797
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 21)/(9600, 0, 0, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 2770613002,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "740fd636db9f379b47b7c8a5ffe7eab26b4e5c823440c8456a812d00a5f1da69"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-FIXTURE-CLEANUP",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-UARTE-DATA/103/2/(20, 21)/(9600, 0, 0, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 2825748265,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "bd9150877ce822e8a233814ca369c53b419430105a255c8b473d45daea324856"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-FIXTURE-CLEANUP",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-CAMPAIGN-PROGRESS",
+      "status": "progress",
+      "cleanup_only": true,
+      "completed_cycles": 3,
+      "continuous_elapsed_seconds": 31.203
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 21)/(9600, 0, 0, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 3181320994,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "82fce7b6e07bde6dc8c1d4630bef50ee90c867388420978aa13ce1f239c1acc2"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-FIXTURE-CLEANUP",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-UARTE-DATA/103/2/(20, 21)/(9600, 0, 0, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 4180033881,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "149cf9b8fb60d0bf6364aaa4ef80c1f3538426425a280856def96d6a18c83439"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-FIXTURE-CLEANUP",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-CAMPAIGN-PROGRESS",
+      "status": "progress",
+      "cleanup_only": true,
+      "completed_cycles": 4,
+      "continuous_elapsed_seconds": 41.61
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 21)/(9600, 0, 0, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 1369696600,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "d04abe3208cf03f3be8701e4c40b71c34e35e7ab1377f2396bc724b73454a137"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-FIXTURE-CLEANUP",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-UARTE-DATA/103/2/(20, 21)/(9600, 0, 0, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 1028425605,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "0deb8c536d692db443a086addb2f3cba3ef165b5d1d6190545d90f8f86f48524"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-FIXTURE-CLEANUP",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-CAMPAIGN-PROGRESS",
+      "status": "progress",
+      "cleanup_only": true,
+      "completed_cycles": 5,
+      "continuous_elapsed_seconds": 52.016
+    },
+    {
+      "id": "V04-CAMPAIGN-COMPLETE",
+      "status": "passed",
+      "scope": "continuous-session",
+      "completed_cycles": 5,
+      "continuous_elapsed_seconds": 52.016,
+      "requested_duration_seconds": 0,
+      "requested_repetitions": 5,
+      "interrupted_duration_reused": false
+    }
+  ],
+  "confirmation_sha256": "c489e43ec3e756e8b804fc5fe00b9e54f1a695df7f417f81b572155d76f91d9d",
+  "confirmed_at_unix": 1788582837,
+  "completed_at_utc": "2026-09-05T04:43:41.744236+00:00"
+}

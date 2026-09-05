@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 1.8 |
-| 문서 상태 | M23·M26 완료 / M24 온보드 기본·UART Fixture 101·102 PASS, 나머지 M24·M25 physical gate 대기 / M27 준비 중 |
+| 문서 개정 | 1.9 |
+| 문서 상태 | M23·M26 완료 / M24 온보드 기본·UART Fixture 101~103 PASS, 나머지 M24·M25 physical gate 대기 / M27 준비 중 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.3.0` stable / commit `bae0957d2425e4418199a2a3a018bf8e9a0dc356` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
@@ -260,7 +260,7 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 ### M24 — Serial fabric 전 인스턴스와 DMA
 
-- 상태: **작업 1~5 source/build/semantic 완료, 작업 6 온보드 기본·UART Fixture 101·102 PASS·나머지 HIL 대기** — 5개 block·23개 personality, 핀 bank, singleton/고급 API 경계,
+- 상태: **작업 1~5 source/build/semantic 완료, 작업 6 온보드 기본·UART Fixture 101~103 PASS·나머지 HIL 대기** — 5개 block·23개 personality, 핀 bank, singleton/고급 API 경계,
   DMA lifecycle과 관련 errata를 [M24 Serial Fabric 계약](10_M24_Serial_Fabric_경로와_API_계약.md)에
   고정하고 CI drift 검사를 연결했다. 회로도 재검토로 단독 HIL primary 자원 6개와 무배선 자동화
   후보 7개·외부 fixture 필요 16개도 계약에 추가했다. 실행 결과는
@@ -276,12 +276,17 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
   통과했다. 정확한 범위는 [Fixture 101 기록](<../04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)을
   따른다. `ff3423e`에서는 Fixture 102의 P0↔P1 UARTE 양방향 정상 data 810건과 예상 오류
   12건을 통과했다. 정확한 범위는 [Fixture 102 기록](<../04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)을
-  따른다. Fixture 103과 SPI/TWI는 아직 이 결과에 포함하지 않는다.
+  따른다. `b3c689b`에서는 Fixture 103의 P1↔P1 UARTE20/21/22 전 조합 양방향 정상 data
+  2,430건과 예상 오류 36건을 통과했다. 실제 `FRAMING` 실패와 재현 분리·최종 PASS는
+  [Fixture 103 기록](<../04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>)을 따른다.
+  SPI/TWI는 아직 이 결과에 포함하지 않는다.
   이전 SWD `No ACK` 기록은 보존하며 기본 PASS를 전체 복구·동시성 PASS로 확대하지 않는다.
 
 - UARTE00/20/21/22/30, SPIM/SPIS00/20/21/22/30, TWIM/TWIS20/21/22/30을 구현한다.
 - Arduino 호환 singleton과 고급 instance factory/direct handle의 책임을 분리한다.
-- UARTE async ring, SPI·I2C sync/async, target/peripheral double buffer와 공통 DMA 수명주기를 제공한다.
+- UARTE의 고정 event ring과 두-buffer 연속 RX, SPI·I2C sync/async,
+  target/peripheral double buffer와 공통 DMA 수명주기를 제공한다. 범용 N-buffer circular DMA queue로
+  과장하지 않으며 더 깊은 queue와 backpressure 최적화는 별도 성능 gate에서 판단한다.
 - 완료 gate: 각 personality 단독 HIL, 같은 block 충돌 negative·반복 handover, 다른 block 최대 동시
   HIL, timeout/cancel/error/System OFF 복구, throughput·CPU·손실·soak 기록.
   전원 모드 lease의 올바른 해제는 필수이며 외부 계측 기반 전류·파형 보증은 제외한다.
@@ -290,10 +295,10 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 | --- | --- | --- |
 | 1 | Route/API/errata, 단독 HIL primary 자원 계약과 자동 drift 검사 | **완료** |
 | 2 | 공통 backend, typed handle, personality handover | **완료** |
-| 3 | UARTE 5개와 async RX/TX DMA | **source/build/semantic 완료 · Fixture 101·102 PASS, 추가 route HIL 대기** |
+| 3 | UARTE 5개와 async RX/TX DMA | **source/build/semantic 완료 · Fixture 101~103 외부 route PASS** |
 | 4 | SPIM/SPIS 각 5개와 sync/async·double buffer | **source/build/semantic 완료 · 외부 fixture HIL 대기** |
 | 5 | TWIM/TWIS 각 4개와 repeated-start·target double buffer | **source/build/semantic 완료 · 물리 HIL 대기** |
-| 6 | 7개 온보드 + 16개 loopback/peer 기능 HIL, 충돌·허용 최대동시·복구·성능·soak | **온보드 기본·UART Fixture 101·102 PASS · 추가 기능/fixture 대기** |
+| 6 | 7개 온보드 + 16개 loopback/peer 기능 HIL, 충돌·허용 최대동시·복구·성능·soak | **온보드 기본·UART Fixture 101~103 PASS · SPI/TWI와 추가 기능/fixture 대기** |
 
 ### M25 — Analog·timing·audio·event 전 인스턴스
 
