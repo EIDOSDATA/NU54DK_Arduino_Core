@@ -18,6 +18,8 @@ from v04_protocol import MAGIC, VERSION, SIZE, ProbeLocks, ProtocolError, decode
 
 ROOT = Path(__file__).resolve().parents[3]
 RAM_BEGIN, RAM_END = 0x20000000, 0x20040000
+## @brief 10 MHz SWD mailbox의 최소 응답 polling 간격입니다.
+MAILBOX_POLL_INTERVAL_SECONDS = 0.001
 
 
 @contextmanager
@@ -168,7 +170,7 @@ class Device:
                     if status:
                         raise ProtocolError(f"firmware failure role={role} op={opcode} seq={self.sequence} status={status} result={output}")
                     return output
-                time.sleep(0.005)
+                time.sleep(MAILBOX_POLL_INTERVAL_SECONDS)
             raise ProtocolError(f"mailbox timeout role={role} op={opcode} seq={self.sequence}")
         except BaseException:
             self.poisoned = True

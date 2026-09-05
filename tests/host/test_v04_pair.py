@@ -101,6 +101,9 @@ class V04PairTests(unittest.TestCase):
         with self.assertRaises(protocol.ProtocolError): broken.command(1)
         self.assertTrue(broken.poisoned)
         with self.assertRaises(protocol.ProtocolError): broken.command(1)
+
+    def test_mailbox_polling_interval_supports_10mhz_fixture_runs(self):
+        self.assertEqual(runner.MAILBOX_POLL_INTERVAL_SECONDS, 0.001)
     def test_os_lock_rejects_competing_process_then_releases(self):
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary)
