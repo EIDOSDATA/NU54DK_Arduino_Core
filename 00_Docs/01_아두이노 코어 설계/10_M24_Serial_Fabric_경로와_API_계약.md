@@ -1,7 +1,7 @@
 # M24 작업 1~5 — Serial Fabric 전 instance와 EasyDMA
 
 > 이 파일은 `variants/nu54dk/serial-fabric-contract.json`에서 자동 생성합니다. 직접 수정하지 마세요.
-> 현재 판정은 **공통 backend와 23개 personality adapter의 source/build/semantic 완료, UART Fixture 101~103과 SPI Fixture 201~203 PASS**입니다. 남은 물리 HIL과 `planned-hil`은 아직 공개 지원이 아닙니다.
+> 현재 판정은 **공통 backend와 23개 personality adapter의 source/build/semantic 및 승인 route 단독 기능 HIL 완료**입니다. 최대 동시성·성능·soak와 공개 통합은 아직 완료되지 않았습니다.
 
 | 항목 | 값 |
 | --- | --- |
@@ -9,7 +9,7 @@
 | 제품선 | `v0.4.0` / M24 |
 | SoC / SDK | `nRF54L15` / `v3.4.0` / Zephyr `4.4.0` |
 | Board | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` / `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| 상태 | 작업 1~5 source/build/semantic 완료 — 온보드 기본·UART 101~103·SPI 201~203 PASS, 나머지 HIL 대기 |
+| 상태 | 작업 1~5 source/build/semantic 완료 — 23개 personality 단독 기능 HIL PASS, 최대 동시성·성능·soak 대기 |
 | 갱신일 | 2026-09-06 |
 
 ## 1. 이번 작업의 경계
@@ -17,8 +17,8 @@
 이 계약은 23개 serial personality의 실제 identity, 공유 block, 허용 pin bank, 현재 route,
 고급 선택 API와 DMA 수명주기를 고정한다. 작업 2에서 allocation-free typed handle, 원자적
 route/DMA lease, bounded stop과 fail-closed handover를 구현했고 작업 3~5에서 UARTE, SPIM/SPIS,
-TWIM/TWIS direct nrfx adapter를 연결했다. Kconfig는 기본 off인 v0.4.0 후보이며, 물리 HIL을
-통과하기 전에는 stable 공개 지원으로 승격하지 않는다.
+TWIM/TWIS direct nrfx adapter를 연결했다. Kconfig는 기본 off인 v0.4.0 후보다.
+단독 기능 HIL을 통과했지만 최대 동시성·soak와 설치 package gate 전에는 stable 공개 지원으로 승격하지 않는다.
 
 M24의 후속 순서는 다음과 같다.
 
@@ -27,12 +27,13 @@ M24의 후속 순서는 다음과 같다.
 3. **작업 3(완료):** UARTE 5개와 async RX/TX DMA source/build/semantic
 4. **작업 4(완료):** SPIM/SPIS 각 5개와 sync/async·double buffer source/build/semantic
 5. **작업 5(완료):** TWIM/TWIS 각 4개와 repeated-start·target double buffer source/build/semantic
-6. **작업 6(진행):** 온보드 UARTE 4개·TWIM 3개, UART Fixture 101~103과 SPI Fixture 201~203 PASS; TWI 301·추가 동시성·성능·soak 대기
+6. **작업 6(진행):** 온보드 기본, UART Fixture 101~103, SPI Fixture 201~203과 TWI Fixture 301 PASS; 최대 동시성·성능·soak 대기
 
 현재 온보드 증거는 [41번 기록](<../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>),
 UART Fixture 101~103은 [44번](<../04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)·[45번](<../04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)·[46번](<../04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>),
 SPI Fixture 201~203은 [47번](<../04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md>)·[48번](<../04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md>)·[49번 기록](<../04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md>)을 따른다.
-부분 PASS는 아래 `planned-hil` profile의 모든 기능·동시성 또는 공개 지원 완료가 아니다.
+TWI Fixture 301은 [50번 기록](<../04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md>)을 따른다.
+`functional-hil-pass`는 해당 단독 route의 기능 HIL 판정이며 전체 동시성·soak 또는 공개 지원 완료가 아니다.
 
 ## 2. 공개 객체와 고급 API
 
@@ -96,7 +97,7 @@ allocation 없는 typed handle로 제공한다. Raw base address는 받지 않�
 P2의 `dedicated21`은 실리콘 pin matrix에는 존재하지만 P2.7~P2.10이 LED, MOD_SWO와
 PMIC_PG/PMIC_CE에 연결돼 기본 보드에서 승인하지 않는다. UARTE/SPIM/SPIS21은 P1 경로를
 사용한다. P0의 non-UARTE 경로는 점퍼가 아니라 보드의 DAP UART switch를 끈 상태가 필요하다.
-TWIM/TWIS30 fixture에는 외부 pull-up이 필요하다.
+TWI Fixture 301은 target TWIS 내부 pull-up을 사용하며 외부 pull-up과 보드 간 전원 rail을 연결하지 않는다.
 
 ## 5. 보드 자체 시험 자원
 
@@ -121,8 +122,8 @@ fixture 없이 자동화한다. P1 DAP UART를 시험할 때 P0 DAP UART를 제�
 
 ## 6. 단독 HIL 기준 route
 
-`current-verified`는 기존 v0.3.0 증거가 있는 route이고 `planned-hil`은 M24 adapter로 시험할
-고정 fixture route다. 계획 route는 지원 선언이 아니다.
+`current-verified`는 기존 v0.3.0 증거가 있는 route, `functional-hil-pass`는 M24 단독 기능 HIL을
+통과한 고정 route다. 두 상태 모두 고급 API의 v0.4.0 stable 공개 승인을 뜻하지 않는다.
 
 | Identity | Route | 핀 | 실행 분류 / 자원 | 상태 | 선행조건 |
 | --- | --- | --- | --- | --- | --- |
@@ -130,25 +131,25 @@ fixture 없이 자동화한다. P1 DAP UART를 시험할 때 P0 DAP UART를 제�
 | `uarte30` | `p0-flexible` | TXD P0.0, RXD P0.1, RTS P0.2, CTS P0.3 | **onboard-automatic** / `dap-vcom-p0` | **current-verified** | The DAP UART switch is enabled for virtual COM use. |
 | `spim00` | `p2-dedicated20` | SCK P2.1, MOSI P2.2, MISO P2.4 | **external-fixture** / `p2-header-fixture` | **current-verified** | Chip select remains sketch-owned. |
 | `twim22` | `p1-flexible` | SDA P1.2, SCL P1.3 | **onboard-automatic** / `pmic-bq25186-i2c` | **current-verified** | The onboard pull-ups and PMIC bus electrical contract remain active.<br>Automatic HIL reads the BQ25186 at address 0x6a without changing PMIC state. |
-| `uarte00` | `p2-dedicated20` | RXD P2.0, TXD P2.2, CTS P2.4, RTS P2.5 | **external-fixture** / `p2-header-fixture` | **planned-hil** | serial00 and all listed pins are free. |
-| `spis00` | `p2-dedicated20` | SCK P2.1, MISO P2.2, MOSI P2.4, CSN P2.5 | **external-fixture** / `p2-header-fixture` | **planned-hil** | serial00 and all listed pins are free. |
-| `spim20` | `p2-dedicated20` | SCK P2.1, MOSI P2.2, MISO P2.4, CSN P2.5 | **external-fixture** / `p2-header-fixture` | **planned-hil** | The console is disabled.<br>Constant-latency power mode is leased.<br>serial00 is inactive. |
-| `spis20` | `p2-dedicated20` | SCK P2.1, MISO P2.2, MOSI P2.4, CSN P2.5 | **external-fixture** / `p2-header-fixture` | **planned-hil** | The console is disabled.<br>Constant-latency power mode is leased.<br>serial00 is inactive. |
-| `twim20` | `p1-flexible` | SDA P1.2, SCL P1.3 | **onboard-automatic** / `pmic-bq25186-i2c` | **planned-hil** | The console is disabled.<br>serial22 is inactive.<br>Automatic HIL reads the onboard BQ25186 at address 0x6a without changing PMIC state. |
-| `twis20` | `p1-flexible` | SDA P1.4, SCL P1.5 | **external-fixture** / `p1-header-fixture` | **planned-hil** | The console is disabled.<br>The DAP UART switch is disabled.<br>TwisConfiguration.internal_pullups is enabled on the isolated fixture; external pull-up resistors are not fitted. |
-| `uarte21` | `p1-flexible` | TXD P1.4, RXD P1.5, RTS P1.6, CTS P1.7 | **onboard-automatic** / `dap-vcom-p1` | **planned-hil** | The uart20 console and every other P1 DAP UART owner are inactive.<br>The DAP UART switch is enabled and the host binds the P1 virtual COM port.<br>UARTE30 reports orchestration results through the independent P0 DAP UART. |
-| `spim21` | `p1-flexible` | SCK P1.4, MOSI P1.5, MISO P1.6, CSN P1.7 | **external-fixture** / `p1-header-fixture` | **planned-hil** | The console is disabled.<br>The DAP UART switch is disabled.<br>The SPI fixture excludes VBAT monitor and LED loads. |
-| `spis21` | `p1-flexible` | SCK P1.4, MOSI P1.5, MISO P1.6, CSN P1.7 | **external-fixture** / `p1-header-fixture` | **planned-hil** | The console is disabled.<br>The DAP UART switch is disabled. |
-| `twim21` | `p1-flexible` | SDA P1.2, SCL P1.3 | **onboard-automatic** / `pmic-bq25186-i2c` | **planned-hil** | serial22 is inactive.<br>Automatic HIL reads the onboard BQ25186 at address 0x6a without changing PMIC state. |
-| `twis21` | `p1-flexible` | SDA P1.4, SCL P1.5 | **external-fixture** / `p1-header-fixture` | **planned-hil** | The console is disabled.<br>The DAP UART switch is disabled.<br>TwisConfiguration.internal_pullups is enabled on the isolated fixture; external pull-up resistors are not fitted. |
-| `uarte22` | `p1-flexible` | TXD P1.4, RXD P1.5, RTS P1.6, CTS P1.7 | **onboard-automatic** / `dap-vcom-p1` | **planned-hil** | The uart20 console, Wire and every other P1 DAP UART owner are inactive.<br>The DAP UART switch is enabled and the host binds the P1 virtual COM port.<br>UARTE30 reports orchestration results through the independent P0 DAP UART. |
-| `spim22` | `p1-flexible` | SCK P1.4, MOSI P1.5, MISO P1.6, CSN P1.7 | **external-fixture** / `p1-header-fixture` | **planned-hil** | Wire and the console are disabled.<br>The DAP UART switch is disabled.<br>The SPI fixture excludes VBAT monitor and LED loads. |
-| `spis22` | `p1-flexible` | SCK P1.4, MOSI P1.5, MISO P1.6, CSN P1.7 | **external-fixture** / `p1-header-fixture` | **planned-hil** | Wire and the console are disabled.<br>The DAP UART switch is disabled. |
-| `twis22` | `p1-flexible` | SDA P1.4, SCL P1.5 | **external-fixture** / `p1-header-fixture` | **planned-hil** | Wire and the console are disabled.<br>The DAP UART switch is disabled.<br>TwisConfiguration.internal_pullups is enabled on the isolated fixture; external pull-up resistors are not fitted. |
-| `spim30` | `p0-flexible` | SCK P0.0, MOSI P0.1, MISO P0.2 | **external-fixture** / `p0-header-fixture` | **planned-hil** | Serial1 is inactive.<br>The DAP UART switch is disabled.<br>Chip select remains sketch-owned. |
-| `spis30` | `p0-flexible` | SCK P0.0, MOSI P0.1, MISO P0.2, CSN P0.3 | **external-fixture** / `p0-header-fixture` | **planned-hil** | Serial1 is inactive.<br>The DAP UART switch is disabled. |
-| `twim30` | `p0-flexible` | SDA P0.0, SCL P0.1 | **external-fixture** / `p0-header-fixture` | **planned-hil** | Serial1 is inactive.<br>The DAP UART switch is disabled.<br>The paired TWIS target enables internal SDA/SCL pull-ups; external pull-up resistors are not fitted. |
-| `twis30` | `p0-flexible` | SDA P0.0, SCL P0.1 | **external-fixture** / `p0-header-fixture` | **planned-hil** | Serial1 is inactive.<br>The DAP UART switch is disabled.<br>TwisConfiguration.internal_pullups is enabled; external pull-up resistors are not fitted. |
+| `uarte00` | `p2-dedicated20` | RXD P2.0, TXD P2.2, CTS P2.4, RTS P2.5 | **external-fixture** / `p2-header-fixture` | **functional-hil-pass** | serial00 and all listed pins are free. |
+| `spis00` | `p2-dedicated20` | SCK P2.1, MISO P2.2, MOSI P2.4, CSN P2.5 | **external-fixture** / `p2-header-fixture` | **functional-hil-pass** | serial00 and all listed pins are free. |
+| `spim20` | `p2-dedicated20` | SCK P2.1, MOSI P2.2, MISO P2.4, CSN P2.5 | **external-fixture** / `p2-header-fixture` | **functional-hil-pass** | The console is disabled.<br>Constant-latency power mode is leased.<br>serial00 is inactive. |
+| `spis20` | `p2-dedicated20` | SCK P2.1, MISO P2.2, MOSI P2.4, CSN P2.5 | **external-fixture** / `p2-header-fixture` | **functional-hil-pass** | The console is disabled.<br>Constant-latency power mode is leased.<br>serial00 is inactive. |
+| `twim20` | `p1-flexible` | SDA P1.2, SCL P1.3 | **onboard-automatic** / `pmic-bq25186-i2c` | **functional-hil-pass** | The console is disabled.<br>serial22 is inactive.<br>Automatic HIL reads the onboard BQ25186 at address 0x6a without changing PMIC state. |
+| `twis20` | `p1-flexible` | SDA P1.4, SCL P1.5 | **external-fixture** / `p1-header-fixture` | **functional-hil-pass** | The console is disabled.<br>The DAP UART switch is disabled.<br>TwisConfiguration.internal_pullups is enabled on the isolated fixture; external pull-up resistors are not fitted. |
+| `uarte21` | `p1-flexible` | TXD P1.4, RXD P1.5, RTS P1.6, CTS P1.7 | **onboard-automatic** / `dap-vcom-p1` | **functional-hil-pass** | The uart20 console and every other P1 DAP UART owner are inactive.<br>The DAP UART switch is enabled and the host binds the P1 virtual COM port.<br>UARTE30 reports orchestration results through the independent P0 DAP UART. |
+| `spim21` | `p1-flexible` | SCK P1.4, MOSI P1.5, MISO P1.6, CSN P1.7 | **external-fixture** / `p1-header-fixture` | **functional-hil-pass** | The console is disabled.<br>The DAP UART switch is disabled.<br>The SPI fixture excludes VBAT monitor and LED loads. |
+| `spis21` | `p1-flexible` | SCK P1.4, MOSI P1.5, MISO P1.6, CSN P1.7 | **external-fixture** / `p1-header-fixture` | **functional-hil-pass** | The console is disabled.<br>The DAP UART switch is disabled. |
+| `twim21` | `p1-flexible` | SDA P1.2, SCL P1.3 | **onboard-automatic** / `pmic-bq25186-i2c` | **functional-hil-pass** | serial22 is inactive.<br>Automatic HIL reads the onboard BQ25186 at address 0x6a without changing PMIC state. |
+| `twis21` | `p1-flexible` | SDA P1.4, SCL P1.5 | **external-fixture** / `p1-header-fixture` | **functional-hil-pass** | The console is disabled.<br>The DAP UART switch is disabled.<br>TwisConfiguration.internal_pullups is enabled on the isolated fixture; external pull-up resistors are not fitted. |
+| `uarte22` | `p1-flexible` | TXD P1.4, RXD P1.5, RTS P1.6, CTS P1.7 | **onboard-automatic** / `dap-vcom-p1` | **functional-hil-pass** | The uart20 console, Wire and every other P1 DAP UART owner are inactive.<br>The DAP UART switch is enabled and the host binds the P1 virtual COM port.<br>UARTE30 reports orchestration results through the independent P0 DAP UART. |
+| `spim22` | `p1-flexible` | SCK P1.4, MOSI P1.5, MISO P1.6, CSN P1.7 | **external-fixture** / `p1-header-fixture` | **functional-hil-pass** | Wire and the console are disabled.<br>The DAP UART switch is disabled.<br>The SPI fixture excludes VBAT monitor and LED loads. |
+| `spis22` | `p1-flexible` | SCK P1.4, MOSI P1.5, MISO P1.6, CSN P1.7 | **external-fixture** / `p1-header-fixture` | **functional-hil-pass** | Wire and the console are disabled.<br>The DAP UART switch is disabled. |
+| `twis22` | `p1-flexible` | SDA P1.4, SCL P1.5 | **external-fixture** / `p1-header-fixture` | **functional-hil-pass** | Wire and the console are disabled.<br>The DAP UART switch is disabled.<br>TwisConfiguration.internal_pullups is enabled on the isolated fixture; external pull-up resistors are not fitted. |
+| `spim30` | `p0-flexible` | SCK P0.0, MOSI P0.1, MISO P0.2 | **external-fixture** / `p0-header-fixture` | **functional-hil-pass** | Serial1 is inactive.<br>The DAP UART switch is disabled.<br>Chip select remains sketch-owned. |
+| `spis30` | `p0-flexible` | SCK P0.0, MOSI P0.1, MISO P0.2, CSN P0.3 | **external-fixture** / `p0-header-fixture` | **functional-hil-pass** | Serial1 is inactive.<br>The DAP UART switch is disabled. |
+| `twim30` | `p0-flexible` | SDA P0.0, SCL P0.1 | **external-fixture** / `p0-header-fixture` | **functional-hil-pass** | Serial1 is inactive.<br>The DAP UART switch is disabled.<br>The paired TWIS target enables internal SDA/SCL pull-ups; external pull-up resistors are not fitted. |
+| `twis30` | `p0-flexible` | SDA P0.0, SCL P0.1 | **external-fixture** / `p0-header-fixture` | **functional-hil-pass** | Serial1 is inactive.<br>The DAP UART switch is disabled.<br>TwisConfiguration.internal_pullups is enabled; external pull-up resistors are not fitted. |
 
 ## 7. DMA와 lifecycle
 

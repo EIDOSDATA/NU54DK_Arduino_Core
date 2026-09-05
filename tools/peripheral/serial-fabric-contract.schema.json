@@ -256,7 +256,7 @@
             "uniqueItems": true,
             "items": { "$ref": "#/$defs/nonempty" }
           },
-          "status": { "enum": ["current-verified", "planned-hil"] }
+          "status": { "enum": ["current-verified", "planned-hil", "functional-hil-pass"] }
         }
       }
     },

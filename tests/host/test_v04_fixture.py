@@ -176,6 +176,18 @@ class FixtureTests(unittest.TestCase):
             self.assertEqual(fixture.expected_lengths(other, controller, 32, 1,
                                                        "uarte", 2), (0, 64))
 
+    def test_expected_error_recovery_ids_keep_the_error_cause(self):
+        self.assertEqual(fixture.recovery_label("uarte", 3, 1),
+                         "/recovery-after-parity-mismatch")
+        self.assertEqual(fixture.recovery_label("uarte", 4, 1),
+                         "/recovery-after-break")
+        self.assertEqual(fixture.recovery_label("spi", 3, 3),
+                         "/recovery-after-cancel")
+        self.assertEqual(fixture.recovery_label("twi", 1, 0x44 | (3 << 8)),
+                         "/recovery-after-nack")
+        self.assertEqual(fixture.recovery_label("twi", 3, 0x42 | (4 << 8)),
+                         "/recovery-after-cancel")
+
     def test_spi_split_buffer_waits_for_peer_rearm_before_second_segment(self):
         class Device:
             def __init__(self, role, trace):

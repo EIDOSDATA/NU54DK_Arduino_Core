@@ -24,8 +24,8 @@
       "id": "uarte00", "kind": "uarte", "instance": 0, "sharing_group": "serial00", "dt_node": "uart00",
       "route": { "state": "candidate", "token": "header-p2" }, "owner": "serial", "public_object": null,
       "public_api": [], "driver": "zephyr-uart-nrfx-uarte", "dma": { "hardware": true, "driver_managed": true, "public_mode": "double_buffered", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/UarteFabric.cpp", "tests/zephyr/m24_uarte_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/UarteFabric.cpp", "tests/zephyr/m24_uarte_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md"]
     },
     {
       "id": "uarte20", "kind": "uarte", "instance": 20, "sharing_group": "serial20", "dt_node": "uart20",
@@ -38,15 +38,15 @@
       "id": "uarte21", "kind": "uarte", "instance": 21, "sharing_group": "serial21", "dt_node": "uart21",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "serial", "public_object": null,
       "public_api": [], "driver": "zephyr-uart-nrfx-uarte", "dma": { "hardware": true, "driver_managed": true, "public_mode": "double_buffered", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/UarteFabric.cpp", "tests/zephyr/m24_uarte_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/UarteFabric.cpp", "tests/zephyr/m24_uarte_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md", "00_Docs/04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md"]
     },
     {
       "id": "uarte22", "kind": "uarte", "instance": 22, "sharing_group": "serial22", "dt_node": "uart22",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "serial", "public_object": null,
       "public_api": [], "driver": "zephyr-uart-nrfx-uarte", "dma": { "hardware": true, "driver_managed": true, "public_mode": "double_buffered", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/UarteFabric.cpp", "tests/zephyr/m24_uarte_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/UarteFabric.cpp", "tests/zephyr/m24_uarte_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md", "00_Docs/04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md"]
     },
     {
       "id": "uarte30", "kind": "uarte", "instance": 30, "sharing_group": "serial30", "dt_node": "uart30",
@@ -67,80 +67,80 @@
       "id": "spim20", "kind": "spim", "instance": 20, "sharing_group": "serial20", "dt_node": "spi20",
       "route": { "state": "candidate", "token": "header-p1-console-conflict" }, "owner": "spi", "public_object": null,
       "public_api": [], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "asynchronous", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpimFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpimFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md"]
     },
     {
       "id": "spim21", "kind": "spim", "instance": 21, "sharing_group": "serial21", "dt_node": "spi21",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "spi", "public_object": null,
       "public_api": [], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "asynchronous", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpimFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpimFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md"]
     },
     {
       "id": "spim22", "kind": "spim", "instance": 22, "sharing_group": "serial22", "dt_node": "spi22",
       "route": { "state": "candidate", "token": "header-p1-wire-conflict" }, "owner": "spi", "public_object": null,
       "public_api": [], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "asynchronous", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpimFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpimFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md"]
     },
     {
       "id": "spim30", "kind": "spim", "instance": 30, "sharing_group": "serial30", "dt_node": "spi30",
       "route": { "state": "candidate", "token": "header-p0-dap-conflict" }, "owner": "spi", "public_object": null,
       "public_api": [], "driver": "zephyr-spi-nrfx-spim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "asynchronous", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpimFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpimFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md"]
     },
 
     {
       "id": "spis00", "kind": "spis", "instance": 0, "sharing_group": "serial00", "dt_node": "spi00",
       "route": { "state": "candidate", "token": "header-p2" }, "owner": "spi", "public_object": null,
       "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpisFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpisFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md"]
     },
     {
       "id": "spis20", "kind": "spis", "instance": 20, "sharing_group": "serial20", "dt_node": "spi20",
       "route": { "state": "candidate", "token": "header-p1-console-conflict" }, "owner": "spi", "public_object": null,
       "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpisFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpisFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md"]
     },
     {
       "id": "spis21", "kind": "spis", "instance": 21, "sharing_group": "serial21", "dt_node": "spi21",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "spi", "public_object": null,
       "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpisFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpisFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md"]
     },
     {
       "id": "spis22", "kind": "spis", "instance": 22, "sharing_group": "serial22", "dt_node": "spi22",
       "route": { "state": "candidate", "token": "header-p1-wire-conflict" }, "owner": "spi", "public_object": null,
       "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpisFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpisFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md"]
     },
     {
       "id": "spis30", "kind": "spis", "instance": 30, "sharing_group": "serial30", "dt_node": "spi30",
       "route": { "state": "candidate", "token": "header-p0-dap-conflict" }, "owner": "spi", "public_object": null,
       "public_api": [], "driver": "nrfx-spis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpisFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/SpisFabric.cpp", "tests/zephyr/m24_spi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md"]
     },
 
     {
       "id": "twim20", "kind": "twim", "instance": 20, "sharing_group": "serial20", "dt_node": "i2c20",
       "route": { "state": "candidate", "token": "header-p1-console-conflict" }, "owner": "wire", "public_object": null,
       "public_api": [], "driver": "zephyr-i2c-nrfx-twim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "asynchronous", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwimFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwimFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md", "00_Docs/04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md"]
     },
     {
       "id": "twim21", "kind": "twim", "instance": 21, "sharing_group": "serial21", "dt_node": "i2c21",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "wire", "public_object": null,
       "public_api": [], "driver": "zephyr-i2c-nrfx-twim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "asynchronous", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwimFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwimFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md", "00_Docs/04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md"]
     },
     {
       "id": "twim22", "kind": "twim", "instance": 22, "sharing_group": "serial22", "dt_node": "i2c22",
@@ -153,37 +153,37 @@
       "id": "twim30", "kind": "twim", "instance": 30, "sharing_group": "serial30", "dt_node": "i2c30",
       "route": { "state": "candidate", "token": "header-p0-dap-conflict" }, "owner": "wire", "public_object": null,
       "public_api": [], "driver": "zephyr-i2c-nrfx-twim", "dma": { "hardware": true, "driver_managed": true, "public_mode": "asynchronous", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwimFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwimFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md"]
     },
 
     {
       "id": "twis20", "kind": "twis", "instance": 20, "sharing_group": "serial20", "dt_node": "i2c20",
       "route": { "state": "candidate", "token": "header-p1-console-conflict" }, "owner": "wire", "public_object": null,
       "public_api": [], "driver": "nrfx-twis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwisFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwisFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md"]
     },
     {
       "id": "twis21", "kind": "twis", "instance": 21, "sharing_group": "serial21", "dt_node": "i2c21",
       "route": { "state": "candidate", "token": "header-p1" }, "owner": "wire", "public_object": null,
       "public_api": [], "driver": "nrfx-twis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwisFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwisFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md"]
     },
     {
       "id": "twis22", "kind": "twis", "instance": 22, "sharing_group": "serial22", "dt_node": "i2c22",
       "route": { "state": "candidate", "token": "header-p1-wire-route" }, "owner": "wire", "public_object": null,
       "public_api": [], "driver": "nrfx-twis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwisFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwisFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md"]
     },
     {
       "id": "twis30", "kind": "twis", "instance": 30, "sharing_group": "serial30", "dt_node": "i2c30",
       "route": { "state": "candidate", "token": "header-p0-dap-conflict" }, "owner": "wire", "public_object": null,
       "public_api": [], "driver": "nrfx-twis", "dma": { "hardware": true, "driver_managed": false, "public_mode": "double_buffered", "max_count_bits": 16 },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "not_run", "concurrent_hil": "not_run" },
-      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwisFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md"]
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "pass", "concurrent_hil": "not_run" },
+      "milestone": "M24", "evidence": ["cores/arduino/nucode/SerialFabric.h", "cores/arduino/TwisFabric.cpp", "tests/zephyr/m24_twi_driver_contract/src/main.cpp", "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md", "00_Docs/04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md"]
     },
 
     {

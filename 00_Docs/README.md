@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 6.8 |
+| 문서 체계 개정 | 6.9 |
 | 현재 정식 버전 | `v0.3.0` |
 | 다음 목표 버전 | `v0.4.0` |
-| 최종 갱신일 | 2026-09-05 |
+| 최종 갱신일 | 2026-09-06 |
 | 작성자 | Quantum / NUCODE |
 
 이 디렉터리는 Loader 없이 동작하는 Native Full Zephyr 기반 NU54DK Arduino Core의
@@ -15,6 +15,10 @@
 `v0.4.0` 작업을 시작하거나 이어받을 때는 [실행 TODO·재개 체크포인트](./TODO_v0.4.0.md)를
 먼저 읽는다. 시험 자동화 준비부터 결선·기능 검증·패키지 통합·RC·정식 공개까지 25개 작업의
 선행조건·완료 기준·사용자 행동을 관리하며, 현재 다음 항목은 TODO의 체크포인트에서 확인한다.
+
+현재 T11은 완료됐다. 다음은 바로 결선을 바꾸는 T12가 아니라, 새 진단을 반영한 R00~R03
+기준선·CMake·Serial·Analog/Stream 정확성 안정화와 필요한 T11 회귀다. 그 뒤 Fixture 401부터
+T12를 재개한다.
 
 T01~T09의 [기능 시험 목록](<./01_아두이노 코어 설계/12_v0.4.0_기능_시험_목록.md>)과
 [준비·구현 대조 기록](<./04_검증 기록/43_v0.4.0_시험_준비와_구현_대조.md>)에서 대상·합격 기준·남은 보완을 확인한다.
@@ -27,6 +31,7 @@ T01~T09의 [기능 시험 목록](<./01_아두이노 코어 설계/12_v0.4.0_기
 | 설계 | 현재 구현 계약은 무엇인가? | 구현과 함께 갱신 |
 | Master roadmap | 지금 어디까지 완료했고 다음은 무엇인가? | 단계 상태가 바뀔 때 갱신 |
 | 활성 TODO | 지금 어떤 세부 작업을 어떤 조건으로 재개하는가? | 작업 전 계획·종료 시 체크포인트와 증거 링크 갱신; 완료 뒤 보관/삭제 조건 적용 |
+| 리팩토링 계획 | 어떤 정확성·구조 작업을 언제 어떤 회귀와 함께 수행하는가? | R00~R14 체크리스트와 T/M 연결을 함께 갱신 |
 | 버전 마일스톤 | 해당 버전의 범위와 종료 조건은 무엇이었는가? | 버전 완료 뒤 역사 기록으로 동결 |
 | 검증 기록 | 어떤 revision과 시험이 실제로 통과했는가? | 당시 증거를 보존하고 소급 변경하지 않음 |
 | 릴리스 문서 | 사용자가 특정 버전을 어떻게 설치·이전·진단하는가? | 버전별로 독립 보존 |
@@ -61,7 +66,7 @@ T01~T09의 [기능 시험 목록](<./01_아두이노 코어 설계/12_v0.4.0_기
 | M21 | **완료** | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS; host 39/39 |
 | M22 | **완료** | Loaderless 1,456 KiB 경계, stable 재현 build, 29/29 설치본 compile, NU54DK Upload와 `v0.3.0` 정식 공개 |
 | M23 | **완료** | 75개 peripheral identity manifest·생성 matrix·공개 조회 API와 공통 block/channel/DMA 소유권 |
-| M24~M27 | **진행 중** | M24·M25 온보드 기본과 M24 UART 101~103·SPI 201~203 PASS, TWI·analog/stream HIL 대기; M26 완료, M27 최종 RC·공개 gate HOLD |
+| M24~M27 | **진행 중** | M24 23개 serial personality 단독 기능 HIL PASS, M25 analog/stream과 전체 동시성·soak 대기; M26 완료, M27 최종 RC·공개 gate HOLD |
 | M28~M33 | **계획** | Bluetooth LE 전 기능군·Mesh·Channel Sounding과 `v0.5.0` |
 | M34~M45 | **장기 계획** | security/update, radio/OpenThread와 Matter 제품선 |
 
@@ -91,6 +96,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - 일반 사용자의 구성 UX: [ADR-0002](<./00_사전 리서치/02_Arduino_구성_프로필과_예제_노출_결정.md>)
 - 현재와 다음 단계: [제품 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)
 - `v0.4.0`의 25개 세부 작업과 인계: [실행 TODO](./TODO_v0.4.0.md)
+- T11 뒤 안정화와 후속 구조 분할: [리팩토링 문서 안내](<./01_아두이노 코어 설계/14_리팩토링/README.md>)
 - 전 instance·DMA·BLE 경쟁 격차와 완료 조건: [경쟁 기준과 마일스톤](<./01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)
 - M24 serial block·핀 bank·고급 API·공통 handover backend·온보드/fixture HIL 경계: [Serial Fabric 경로와 공통 backend](<./01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md>)
 - P2/P4 물리 커넥터 번호와 net의 수기 확정 기준: [NU54DK P2/P4 커넥터 핀맵](<./01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)
@@ -101,6 +107,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - SPI P2↔P1 route의 18,169-vector 결과와 8 MHz 수신 지연 교정: [M24 Fixture 201 실기 검증](<./04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md>)
 - SPI P0↔P1 route의 9,084-vector 결과: [M24 Fixture 202 실기 검증](<./04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md>)
 - SPI P1↔P1 전 instance 조합의 27,252-vector 결과: [M24 Fixture 203 실기 검증](<./04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md>)
+- TWI P1↔P0 전 instance 조합의 1,986-record 결과: [M24 Fixture 301 실기 검증](<./04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md>)
 - M23의 현재 instance별 상태: [Peripheral instance matrix](<./01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)
 - M26 system/security/저수준 기능 판정: [System Peripheral 지원 경계](<./01_아두이노 코어 설계/11_M26_System_Peripheral_지원_경계.md>)
 - 현재 공개 API: [Arduino API 지원 범위](<./01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)
@@ -132,6 +139,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - [M24 Serial Fabric 경로와 API 계약](<./01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md>)
 - [M26 System Peripheral 지원 경계](<./01_아두이노 코어 설계/11_M26_System_Peripheral_지원_경계.md>)
 - [NU54DK P2/P4 커넥터 핀맵](<./01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)
+- [리팩토링 계획·운영·체크리스트](<./01_아두이노 코어 설계/14_리팩토링/README.md>)
 
 ### 02. 빌드 설계
 
@@ -177,6 +185,7 @@ M1~M23과 정식 공개 증거, `v0.3.0` AC-01~AC-03·M19~M22 및 `v0.4.0` M23~M
 | --- | --- |
 | 현재·다음 마일스톤 상태 | Master roadmap |
 | `v0.4.0` 세부 작업 상태·다음 행동·재개 조건 | 활성 `TODO_v0.4.0.md`; 완료 근거는 검증 기록에 연결 |
+| 리팩토링 R00~R14 순서·완료 조건 | `01_아두이노 코어 설계/14_리팩토링/`의 통합 실행계획과 진행 체크리스트 |
 | 물리 pin, pinctrl, peripheral route와 runner | Board submodule |
 | HIL용 P2/P4 커넥터 물리 번호↔net 수기 확정표 | `13_NU54DK_P2_P4_커넥터_핀맵.md`와 기계 판독 JSON |
 | Arduino 논리 pin과 API 계약 | Pin/Variant·API 설계 문서와 source |

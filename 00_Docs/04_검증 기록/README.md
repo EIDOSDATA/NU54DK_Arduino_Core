@@ -6,7 +6,7 @@
 | 완료 범위 | M1~M23, M26 판정, `v0.1.0`·`v0.2.0`·`v0.3.0` 정식 공개 |
 | 진행 범위 | `v0.4.0` M24~M25 physical gate와 M27 release 준비 |
 | 현재 정식 버전 | `v0.3.0` |
-| 최종 갱신일 | 2026-09-05 |
+| 최종 갱신일 | 2026-09-06 |
 
 이 디렉터리는 **현재 사용법이나 다음 작업을 설명하는 곳이 아니다.** 각 기록의 `다음 단계`,
 `HOLD`, `미실행`과 `NOT RUN`은 그 문서를 작성한 시점의 경계를 뜻한다. 현재 상태는
@@ -80,6 +80,7 @@
 | Fixture 201 SPI | exact `f21377e`에서 P2↔P1 SPIM/SPIS 18,169개 계획 벡터·cleanup 2건 PASS; Fixture 202~203·TWI 301 HOLD | [M24 Fixture 201 실기 검증](47_M24_Fixture_201_SPI_실기_검증.md) |
 | Fixture 202 SPI | exact `1a133e6`에서 P0↔P1 SPIM/SPIS 9,084개 계획 벡터·cleanup 2건 PASS; Fixture 203·TWI 301 HOLD | [M24 Fixture 202 실기 검증](48_M24_Fixture_202_SPI_실기_검증.md) |
 | Fixture 203 SPI | exact `4af93da`에서 P1↔P1 SPIM/SPIS 전 조합 27,252개 계획 벡터·cleanup 2건 PASS; TWI 301 HOLD | [M24 Fixture 203 실기 검증](49_M24_Fixture_203_SPI_실기_검증.md) |
+| Fixture 301 TWI | exact `e2f045c`에서 P1↔P0 TWIM/TWIS20·21·22·30 전 조합 1,986개 기능 record·cleanup 2건 PASS; T11 완료, 동시성·soak HOLD | [M24 Fixture 301 실기 검증](50_M24_Fixture_301_TWI_실기_검증.md) |
 
 ## 기록 해석 규칙
 

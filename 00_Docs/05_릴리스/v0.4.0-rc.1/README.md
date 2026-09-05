@@ -13,7 +13,9 @@
 초안이다. Source/build가 끝난 후보 기능도 실제 HIL과 release gate 전에는 공개 지원이 아니다.
 
 후속 작업의 순서·현재 재개 위치는 [v0.4.0 실행 TODO](../../TODO_v0.4.0.md)를 따른다.
-T01~T15는 시험 준비·기능 검증, T16~T21은 사용자용 통합·RC/stable 비공개 검증,
+T11 완료 뒤 R00~R03 정확성 안정화와 영향 회귀를 거쳐 T12~T15를 진행한다. R04·R05도 RC
+고정 전에 끝낸다. 세부 범위는 [리팩토링 계획](<../../01_아두이노 코어 설계/14_리팩토링/README.md>)을
+따른다. T16~T21은 사용자용 통합·RC/stable 비공개 검증,
 T22~T25는 최종 승인·공개·공개 URL 검사·마무리다.
 
 ## 준비된 범위
@@ -41,7 +43,8 @@ SPIM/SPIS00·20·21·22, 2/4/8 MHz, mode·bit order와 EasyDMA 18,169개 계획 
 [SPI Fixture 202](<../../04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md>)는 P0↔P1의
 SPIM/SPIS30·20·21·22에 대한 9,084개 계획 벡터를 통과했다.
 [SPI Fixture 203](<../../04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md>)은 P1↔P1의
-SPIM/SPIS20·21·22 전 조합 27,252개 계획 벡터를 통과했다. 남은 TWI 301·analog/stream fixture와
+SPIM/SPIS20·21·22 전 조합 27,252개 계획 벡터를 통과했다. 이후 exact `e2f045c`의 Fixture 301에서
+TWIM/TWIS20·21·22·30 기능 record 1,986개도 통과해 M24 단독 통신 기능은 완료했다. 남은 analog/stream fixture와
 아래 범위 합의는 최종 공개 승인이 아니다.
 
 ## 기능 검증과 사용자 통합 검증의 경계
@@ -54,12 +57,14 @@ SPIM/SPIS20·21·22 전 조합 27,252개 계획 벡터를 통과했다. 남은 T
 
 ## 공개 전 필수 항목
 
-1. M24의 남은 TWI 301 peer와 허용 최대 동시성·복구·처리량·soak
-2. M25 analog/PWM/PDM/I2S/QDEC 합성 신호·capture, 기본 timing·DMA·overrun·복구·동시성·soak
-3. M26 TEMP·WDT30 reset 온보드 PASS 증거 유지와 관련 변경 시 회귀 검증
-4. Frozen RC commit의 host/docs/전체 Zephyr build와 이중 package 재현성
-5. 격리 Boards Manager 설치·전체 예제 compile·실제 upload·제거·version 전환
-6. 프로젝트 소유자의 명시적 공개 승인
+1. R00~R03 기준선·CMake·Serial·Analog/Stream 정확성과 필요한 T11 회귀
+2. R04 File 수명주기와 R05 제품 identity의 RC 전 검증
+3. M24의 허용 최대 동시성·반복 복구·처리량·soak
+4. M25 analog/PWM/PDM/I2S/QDEC 합성 신호·capture, 기본 timing·DMA·overrun·복구·동시성·soak
+5. M26 TEMP·WDT30 reset 온보드 PASS 증거 유지와 관련 변경 시 회귀 검증
+6. Frozen RC commit의 host/docs/전체 Zephyr build와 이중 package 재현성
+7. 격리 Boards Manager 설치·전체 예제 compile·실제 upload·제거·version 전환
+8. 프로젝트 소유자의 명시적 공개 승인
 
 모든 gate가 PASS하기 전에는 tag·Release asset·stable index를 만들지 않는다. 이전 공개 버전과
 RC의 tag·asset·문서는 삭제하거나 덮어쓰지 않는다.

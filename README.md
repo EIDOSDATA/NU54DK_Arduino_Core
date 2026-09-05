@@ -231,7 +231,7 @@ asset과 stable index 항목은 재현성, 감사와 downgrade를 위해 삭제�
 | `v0.1.0` | 역사적·비지원 | Core, 기본 API, build/upload와 package |
 | `v0.2.0` | 역사적·비지원 | CI/CD, profile·예제, Board/System과 BLE NUS |
 | `v0.3.0` | **현재 stable** | Arduino compatibility, 동적 peripheral/analog, BLE GAP/GATT/security/profile, storage |
-| `v0.4.0` | 개발 중 | Peripheral 확장: 온보드 기본·UART 101~103·SPI 201~203 PASS, TWI·analog/stream·최종 release gate 대기 |
+| `v0.4.0` | 개발 중 | Peripheral 확장: M24 23개 serial personality 단독 기능 HIL PASS, analog/stream·동시성·soak·최종 release gate 대기 |
 | `v0.5.0` | 계획 | Bluetooth LE 확장·ISO/LE Audio·Direction Finding·Channel Sounding·Mesh |
 | `v0.6.0` | 계획 | Storage/Crypto, TF-M, 고급 memory layout와 secure update/recovery |
 | `v0.7.0` | 계획 | Radio profile, IEEE 802.15.4, ESB와 OpenThread |
@@ -248,8 +248,11 @@ SPIM/SPIS00·20·21·22, 2/4/8 MHz, Mode 0~3, MSB/LSB와 EasyDMA 18,169개 계�
 [SPI Fixture 202](<./00_Docs/04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md>)에서는 P0↔P1의
 SPIM/SPIS30·20·21·22에 대한 9,084개 계획 벡터를 통과했습니다.
 [SPI Fixture 203](<./00_Docs/04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md>)에서는 P1↔P1의
-SPIM/SPIS20·21·22 전 조합 27,252개 계획 벡터를 통과했습니다. 남은 TWI·analog·stream·
-전체 동시성 검증과 정식 공개는 아직 완료되지 않았습니다.
+SPIM/SPIS20·21·22 전 조합 27,252개 계획 벡터를 통과했습니다.
+[TWI Fixture 301](<./00_Docs/04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md>)에서는 P1↔P0
+TWIM/TWIS20·21·22·30의 기능 record 1,986개와 cleanup 2건을 통과해 T11 단독 기능 검증을
+완료했습니다. 다음 physical gate 전에 CMake·Serial 완료 판정·Analog/Stream 동기화의 R00~R03
+안정화를 수행합니다. Analog·stream·전체 동시성·soak와 정식 공개는 아직 완료되지 않았습니다.
 검증은 온보드 자원과 두 NU54DK의 통신·합성 신호·capture를 기준으로 합니다. 정밀 계측과 외부
 마이크·코덱·엔코더별 호환성·신호 품질은 보증 범위에 포함하지 않으며, 자세한 구분은
 [코어 기능 검증 범위](<./00_Docs/04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)를 따릅니다.
@@ -291,6 +294,7 @@ git submodule status
 
 - [전체 문서 안내](./00_Docs/README.md)
 - [v0.4.0 실행 TODO·재개 체크포인트](./00_Docs/TODO_v0.4.0.md)
+- [리팩토링 계획·운영·진행 체크리스트](<./00_Docs/01_아두이노 코어 설계/14_리팩토링/README.md>)
 - [v0.3.0 릴리스 문서](<./00_Docs/05_릴리스/v0.3.0/README.md>)
 - [v0.3.0 마이그레이션](<./00_Docs/05_릴리스/v0.3.0/MIGRATION.md>)
 - [v0.3.0 문제 해결](<./00_Docs/05_릴리스/v0.3.0/TROUBLESHOOTING.md>)
