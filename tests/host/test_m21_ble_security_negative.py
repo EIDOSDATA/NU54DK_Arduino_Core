@@ -42,8 +42,10 @@ class M21BleSecurityNegativeTests(unittest.TestCase):
         self.assertIn("bt_conn_get_security(connection) < BT_SECURITY_L2", send)
         self.assertIn("SecurityError::invalid_state", send)
         self.assertIn("SecurityError::not_subscribed", send)
-        self.assertIn("bt_hids_inp_rep_send", send)
-        self.assertIn("bt_hids_boot_kb_inp_rep_send", send)
+        self.assertIn("nucode_ble_hids_send", send)
+        backend = (LIBRARY / "src/internal/NUCODE_BLE_HidsBackend.c").read_text(encoding="utf-8")
+        self.assertIn("bt_hids_inp_rep_send", backend)
+        self.assertIn("bt_hids_boot_kb_inp_rep_send", backend)
 
     def test_same_boot_bond_is_pending_and_never_false_verified(self) -> None:
         """! @brief pairing 직후에는 persistence pending이며 reboot 복원 전 bonded가 아닙니다. """

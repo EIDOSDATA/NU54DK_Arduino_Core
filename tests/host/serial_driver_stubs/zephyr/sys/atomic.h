@@ -6,9 +6,9 @@ inline int atomic_get(const atomic_t *value)
 {
     return value->load();
 }
-inline void atomic_set(atomic_t *value, int next)
+inline int atomic_set(atomic_t *value, int next)
 {
-    value->store(next);
+    return value->exchange(next);
 }
 inline void atomic_clear(atomic_t *value)
 {

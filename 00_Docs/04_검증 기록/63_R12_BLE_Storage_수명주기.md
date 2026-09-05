@@ -104,3 +104,46 @@ target 4개를 다시 확인했다. C:/r12b 중간 결과도 로컬 보존한다
 [메모리·symbol](evidence/r12b-ee17789/target-comparison.json),
 [Host 전](evidence/r12b-ee17789/gatt-before.txt)·[후](evidence/r12b-ee17789/gatt-after.txt)를 보존한다.
 다음은 R12-C Security/profile의 pairing·bond·HIDS/BAS/DIS 수명주기 분리다.
+
+## R12-C0 M21 baseline compile 보정 착수
+
+추가 M21 기준선 3개가 미사용 PHY helper와 NCS HIDS C header의 deprecated enum 위치 경고로
+실패했다. 파일 분리 전에 PHY helper를 해당 feature 조건 안에 두고, HIDS SDK 호출과 init
+구조체를 기존 C backend로 옮긴다. SDK 수정·경고 억제 없이 공개 API와 report 값을 보존한다.
+이 보정 commit 뒤 Security/profile 파일 분리를 수행한다. C:/r12cp 원본 실패를 보존한다.
+
+### R12-C0 결과
+
+M21 기준선 실패를 SDK 수정·경고 억제 없이 보정했다. `publicPhy`는 실제 호출부와 같은
+CONFIG_BT_USER_PHY_UPDATE 조건 안에 둔다. HIDS init parameter 구성, protocol mode 변환,
+연결 등록/회수와 report 송신은 기존 C backend에서 실행한다. C++에는 bool mode와 고정
+buffer를 받는 private C 선언만 노출한다. callback은 C의 단일 정적 포인터로 소유한다.
+공개 Security header·feature/conf와 keyboard report map은 그대로다.
+
+| 검사 | 결과 |
+| --- | --- |
+| 실제 Security Host | 이전·이후 12개 시나리오 PASS; 이후 HIDS backend는 gcc C11로 별도 compile |
+| 전체 Host | 626개 중 624 PASS·2 조건부 SKIP |
+| contract / inventory / style | 45/45 / PASS / 336개 PASS |
+| 추가 M21 target | contract·HIL peripheral/central 3/3 build-only PASS |
+
+Host는 pending 응답의 reference, timeout, 중복/잘못된 응답, callback 안 승인, pairing 실패,
+늦은 이전 연결 callback, event queue overflow, BAS/DIS 실패, HID encryption/CCC 거부,
+boot/report protocol과 reconnect reference 회수를 검증한다. 새 pairing 완료에도 저장
+snapshot이 없으면 persistence_pending에 머물고, boot snapshot 후보가 새 pairing 없이
+L2에 도달할 때만 verified가 된다. bond 삭제 실패는 기존 상태로 rollback한다.
+저장 실패 모델은 저장된 bond가 없는 상태를 주입한다. 실제 Bluetooth key 저장 완료·
+재부팅 복원·flash 내구성을 Host PASS라고 주장하지 않는다.
+
+Host의 atomic_set fake는 실제 Zephyr처럼 이전 값을 반환하도록 exchange로 수정했다.
+첫 harness의 verified 상태를 candidate로 오인한 assertion은 재연결 후 candidate를
+만들도록 수정했으며 해당 이유로 production bond 동작을 변경하지 않았다.
+기존 source 계약은 SDK 호출 위치가 C backend로 옮겨진 사실까지 함께 검사한다.
+
+[gate·source](evidence/r12c0-b7f79fd/software-and-source.json),
+[target](evidence/r12c0-b7f79fd/target-build.json),
+[원본 실패](evidence/r12c0-b7f79fd/baseline-failure.txt),
+[Host 전](evidence/r12c0-b7f79fd/security-before.txt)·[후](evidence/r12c0-b7f79fd/security-after.txt)를 보존한다.
+M21은 기존 canonical 목록에 빠져 있어 같은 runner에 명시적으로 세 suite를 추가한 로컬
+wrapper를 썼다. 전체 software 목록 반영은 R13에서 수행한다. 다음은 이 보정본을 기준으로
+Security/pairing/bond/BAS/DIS/HID 파일만 분리하는 R12-C1이다. 실기 NOT RUN.

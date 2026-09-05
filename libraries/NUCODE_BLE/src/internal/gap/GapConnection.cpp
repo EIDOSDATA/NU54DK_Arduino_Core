@@ -230,6 +230,7 @@ namespace nucode::ble::internal::gap
 #endif
         };
 
+#if defined(CONFIG_BT_USER_PHY_UPDATE)
         /** @brief BLE PHY bit를 portable enum으로 변환합니다. */
         BLEPhy publicPhy(std::uint8_t phy) noexcept
         {
@@ -247,6 +248,7 @@ namespace nucode::ble::internal::gap
             }
             return BLEPhy::unknown;
         }
+#endif
 
     } // namespace
     /** @brief active connection에 race-safe 임시 reference를 얻습니다. */

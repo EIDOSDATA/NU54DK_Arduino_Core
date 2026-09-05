@@ -12,7 +12,6 @@
 #include <internal/NUCODE_BLE_Internal.h>
 #include <internal/NUCODE_BLE_HidsBackend.h>
 
-#include <bluetooth/services/hids.h>
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/conn.h>
 #include <zephyr/bluetooth/services/bas.h>
@@ -755,19 +754,12 @@ namespace
     }
 
     /** @brief host가 선택한 HIDS protocol mode를 exact connection slot에 반영합니다. */
-    void hidsProtocolModeChanged(enum bt_hids_pm_evt event, struct bt_conn *connection)
+    void hidsProtocolModeChanged(bool boot_mode, struct bt_conn *connection)
     {
         k_spinlock_key_t key = k_spin_lock(&hid_state_lock);
         if (hid_connection_state.registered && hid_connection_state.connection == connection)
         {
-            if (event == BT_HIDS_PM_EVT_BOOT_MODE_ENTERED)
-            {
-                hid_connection_state.in_boot_mode = true;
-            }
-            else if (event == BT_HIDS_PM_EVT_REPORT_MODE_ENTERED)
-            {
-                hid_connection_state.in_boot_mode = false;
-            }
+            hid_connection_state.in_boot_mode = boot_mode;
         }
         k_spin_unlock(&hid_state_lock, key);
     }
@@ -794,7 +786,7 @@ namespace
             return -ENOMEM;
         }
 
-        const int result = bt_hids_connected(nucode_ble_hids_backend(), connection);
+        const int result = nucode_ble_hids_connected(connection);
         if (result < 0)
         {
             return result;
@@ -809,7 +801,7 @@ namespace
         else
         {
             k_spin_unlock(&hid_state_lock, key);
-            static_cast<void>(bt_hids_disconnected(nucode_ble_hids_backend(), connection));
+            static_cast<void>(nucode_ble_hids_disconnected(connection));
             return -EALREADY;
         }
         k_spin_unlock(&hid_state_lock, key);
@@ -832,7 +824,7 @@ namespace
             return 0;
         }
 
-        const int result = bt_hids_disconnected(nucode_ble_hids_backend(), connection);
+        const int result = nucode_ble_hids_disconnected(connection);
         struct bt_conn *released = nullptr;
         key = k_spin_lock(&hid_state_lock);
         if (hid_connection_state.registered && hid_connection_state.connection == connection)
@@ -1323,20 +1315,9 @@ namespace nucode::ble
             recordHidError(SecurityError::busy, -EALREADY);
             return false;
         }
-        struct bt_hids_init_param parameters = {};
-        parameters.rep_map.data = keyboard_report_map;
-        parameters.rep_map.size = sizeof(keyboard_report_map);
-        parameters.info.bcd_hid = 0x0111U;
-        parameters.info.b_country_code = 0U;
-        parameters.info.flags = BT_HIDS_REMOTE_WAKE | BT_HIDS_NORMALLY_CONNECTABLE;
-        parameters.inp_rep_group_init.reports[keyboard_report_index].id = keyboard_report_id;
-        parameters.inp_rep_group_init.reports[keyboard_report_index].size = sizeof(KeyboardReport);
-        parameters.inp_rep_group_init.cnt = 1U;
-        parameters.is_kb = true;
-        parameters.pm_evt_handler = hidsProtocolModeChanged;
-
-        struct bt_hids *const keyboard_hids = nucode_ble_hids_backend();
-        int result = bt_hids_init(keyboard_hids, &parameters);
+        int result = nucode_ble_hids_initialize(keyboard_report_map, sizeof(keyboard_report_map),
+                                                keyboard_report_id, keyboard_report_index,
+                                                hidsProtocolModeChanged);
         if (result == 0)
         {
             atomic_set(&hid_initialized, 1);
@@ -1391,11 +1372,8 @@ namespace nucode::ble
             return false;
         }
         const auto *const bytes = reinterpret_cast<const std::uint8_t *>(&report);
-        const int result =
-            boot_mode ? bt_hids_boot_kb_inp_rep_send(nucode_ble_hids_backend(), connection, bytes,
-                                                     sizeof(report), nullptr)
-                      : bt_hids_inp_rep_send(nucode_ble_hids_backend(), connection,
-                                             keyboard_report_index, bytes, sizeof(report), nullptr);
+        const int result = nucode_ble_hids_send(connection, boot_mode, keyboard_report_index, bytes,
+                                                sizeof(report));
         bt_conn_unref(connection);
         k_mutex_unlock(&hid_api_mutex);
         if (result < 0)
