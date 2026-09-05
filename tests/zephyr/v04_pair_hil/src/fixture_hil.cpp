@@ -862,9 +862,11 @@ std::uint32_t fixtureCommand(std::uint32_t opcode, const std::uint32_t *args, st
     /** @brief RX 완료 뒤에만 최대 64바이트를 읽어 Host의 전 바이트 대조에 사용합니다. */
     const bool uart = v04::fixtureFamily(gate.fixture()) == v04::FixtureFamily::uarte;
     const std::uint32_t expected_uart_done = (1U << uart_buffers) - 1U;
+    const std::uint32_t readable_rx_length = uart ? length * uart_buffers : rx_length * segments;
     if (opcode == 24 && nargs == 2 &&
         ((!uart && rx_done == segments) || (uart && rx_done == expected_uart_done)) && !errors &&
-        args[1] && args[1] <= 64 && args[0] <= rx_length && args[1] <= rx_length - args[0])
+        args[1] && args[1] <= 64 && args[0] <= readable_rx_length &&
+        args[1] <= readable_rx_length - args[0])
     {
         count = (args[1] + 3U) / 4U;
         for (unsigned i = 0; i < args[1]; ++i)
