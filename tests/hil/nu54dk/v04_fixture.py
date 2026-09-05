@@ -102,10 +102,10 @@ def vectors(family):
         yield 115200, 0, 0, 32, 4, 1
         return
     if family == "spi":
-        yield from itertools.product((125000, 1000000, 4000000), range(4), range(2),
+        yield from itertools.product((2000000, 4000000, 8000000), range(4), range(2),
                                      (1, 2, 31, 32, 255, 256, 1024), (1, 2, 3), (0, 1, 2))
         # 진행 중 1024-byte 전송을 즉시 취소하고 bounded STOP으로 회수합니다.
-        yield 125000, 0, 0, 1024, 3, 3
+        yield 2000000, 0, 0, 1024, 3, 3
         return
     if family == "twi":
         for values in itertools.product((100000, 400000, 1000000), (0,), (0,),
@@ -171,6 +171,15 @@ def read_received(device, size):
     return bytes(data)
 
 
+def recovery_label(family, direction, address):
+    """예상 오류의 원인을 보존하는 고유 복구 record suffix를 반환합니다."""
+    if family == "uarte":
+        return "/recovery-after-parity-mismatch" if direction == 3 else "/recovery-after-break"
+    if family == "spi":
+        return "/recovery-after-cancel"
+    return "/recovery-after-nack" if address >> 8 == 3 else "/recovery-after-cancel"
+
+
 def exchange(devices, fixture, controller_role, instances, vector, append, label=""):
     """Devices must already be exact-identity, fresh-session and fixture-armed."""
     rate, mode, lsb, size, direction, address = vector
@@ -229,6 +238,18 @@ def exchange(devices, fixture, controller_role, instances, vector, append, label
         if peripheral.command(25) != [0]:
             raise ProtocolError("TWIS delayed buffer queue failed")
         wait_status(peripheral, lambda words: words[1] == 1)
+    if fixture["family"] == "spi" and address == 2:
+        wait_status(controller, lambda words: tuple(words[2:4]) == (1, 1))
+        for device in (peripheral, controller):
+            if device.command(18) != []:
+                raise ProtocolError("SPI split-buffer lease renewal failed")
+        wait_status(peripheral,
+                    lambda words: words[1] == 2 and tuple(words[2:4]) == (1, 1))
+        for device in (peripheral, controller):
+            if device.command(18) != []:
+                raise ProtocolError("SPI split-buffer lease renewal failed")
+        if controller.command(28) != [0]:
+            raise ProtocolError("SPIS next buffer handover failed")
     expected_uart_error = fixture["family"] == "uarte" and direction in (3, 4)
     expected_twi_nack = fixture["family"] == "twi" and address >> 8 == 3
     expected_twi_cancel = fixture["family"] == "twi" and address >> 8 == 4
@@ -252,11 +273,11 @@ def exchange(devices, fixture, controller_role, instances, vector, append, label
         if fixture["family"] == "uarte":
             recovery_vector = (115200, 0, 0, 32, 1, 1)
         elif fixture["family"] == "spi":
-            recovery_vector = (1000000, 0, 0, 32, 3, 0)
+            recovery_vector = (2000000, 0, 0, 32, 3, 0)
         else:
             recovery_vector = (100000, 0, 0, 32, 3, 0x42)
         exchange(devices, fixture, controller_role, instances, recovery_vector, append,
-                 label="/recovery-after-error")
+                 label=recovery_label(fixture["family"], direction, address))
         return
     results = []
     concurrent_pmic = None
@@ -314,7 +335,7 @@ def run_confirmed(devices, images, uids, confirmation, fixture_id, append):
                     exchange(devices, fixture, controller_role, instances, vector, append)
             if fixture_id == 201 and controller_role == 1:
                 exchange(devices, fixture, controller_role, (0, 20),
-                         (125000, 0, 0, 1024, 3, 4), append,
+                         (2000000, 0, 0, 1024, 3, 4), append,
                          label="/spim00-twim22-concurrent")
         finally:
             original_error = sys.exception()

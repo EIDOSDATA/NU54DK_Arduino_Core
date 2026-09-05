@@ -456,12 +456,16 @@ PDM/I2S/QDEC peer 신호 generator/receiver와 판정기는 build-only까지 준
 실패하면 HOLD로 남깁니다. 정밀 정확도·jitter·전력·음질·부품별 호환성은 `범위 밖·미측정`으로
 구분하며 코어 기능 PASS로부터 추정하지 않습니다.
 
-### 외부 UART/SPI/TWI 준비 모듈 — 아직 T10 실행 안내가 아님
+### 외부 UART/SPI/TWI fixture 모듈과 현재 실행 상태
 
-[v04_fixtures.json](v04_fixtures.json)은 회로도 9페이지의 **커넥터 이름/핀 번호/GPIO net**을
-분리한 준비용 목록입니다. `P2` 커넥터의 9/10/11/12번은 각각 GPIO P1.7/6/5/4입니다.
+[v04_fixtures.json](v04_fixtures.json)은 보드 소유자가 수기로 확정한
+[P2/P4 커넥터 핀맵](<../../../00_Docs/01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)과
+[기계 판독 JSON](nu54dk_connector_pinmap.json)의 **커넥터 이름/핀 번호/GPIO net**을
+사용하는 준비용 목록입니다. 화면상 net label 위치를 다시 추정해 핀 번호를 이동하지 않습니다.
+`P2` 커넥터의 9/10/11/12번은 각각 GPIO P1.7/6/5/4입니다.
 GPIO P2.4/5는 같은 커넥터의 17/19번입니다. GPIO 포트 이름을 커넥터 번호로 읽지 않습니다.
 GPIO P2.6~10, PMIC I2C·INT, VBAT divider, LFXO에는 이 UART/SPI/TWI 시험을 연결하지 않습니다.
+`P2-27`은 SWDCLK, `P2-28`은 SWDIO이며 일반 fixture 신호로 사용하지 않습니다.
 
 새 `fixture_hil.cpp`는 고정된 UART 101/102/103, SPI 201/202/203과 TWI 301 경로만 선택합니다. 외부 명령은
 명시적인 fixture 개정·확인값·controller role 없이는 거부되며, 실행 허가는 10초 뒤 만료됩니다.
@@ -478,20 +482,42 @@ buffer를 구분합니다. RX는 SWD mailbox로
 경로가 모두 있어야 두 보드를 제어합니다. 같은 exact-boot helper로 두 role image를 시작하고
 활성 session을 함께 유지합니다. RTS/CTS vector 하나는 receiver RX를 100ms 늦게 열어 sender TX가
 완료되지 않는지 먼저 확인한 뒤 재개합니다. 8N1 sender/8E1 receiver와 1ms LOW generator로
-parity/framing·break 오류 및 bounded STOP을 검사합니다. SPI는 125kHz 1,024-byte 전송 취소,
+parity/framing·break 오류 및 bounded STOP을 검사합니다. SPI는 모든 대상 instance에서 표현 가능한
+2/4/8MHz를 사용하며 2MHz 1,024-byte 전송 취소,
 TWI는 미등록 `0x44` NACK와 100kHz 256-byte 전송 취소 뒤 bounded STOP을 준비합니다.
 각 오류·취소 직후 같은 lease에서 32-byte 정상 전송을 다시 수행해 재시작도 별도로 판정합니다.
+
+pyOCD flash와 이후 mailbox session의 SWD clock은 `--swd-frequency-hz`로 함께 지정합니다.
+기본값은 1,000,000 Hz입니다. CMSIS-DAP sector erase timeout이 재현되면 먼저 같은 UID를
+read-only로 확인하고, 자동 recover나 mass erase 없이 `--swd-frequency-hz 100000`처럼 낮출 수
+있습니다. 이 값은 UART/SPI/TWI bus clock이나 시험 vector 속도를 변경하지 않으며 evidence의
+top-level과 role별 flash 기록에 남습니다.
 TWI 추가 두 vector는 peer가 SDA를 LOW로 고정한 동안 복구 실패, 해제 뒤 `recoverBus()` 성공과
 32-byte 정상 전송, TWIS buffer를 5ms 늦게 제공하는 실제 clock stretch 뒤 정상 완료를 판정합니다.
+`buffer_needed`가 먼저 발생한 경우 `queueBuffers()`는 대기 중인 READ/WRITE 요청을 식별해
+`nrfx_twis_tx_prepare()` 또는 `nrfx_twis_rx_prepare()`를 호출하고, 성공한 buffer를 DMA 소유로
+전환한 뒤 clock stretch를 해제합니다. Buffer 방향이 맞지 않으면 전송을 방치하지 않고 거부합니다.
 SPI fixture 201의 role 1에는 1,024-byte SPIM00 비동기 전송 중 온보드 TWIM22 PMIC read를
 수행하는 허용 동시성 case가 추가되어 있습니다. 더 넓은 5-block 동시성 및 7,200초 soak는 단독
 기능 실기 PASS 뒤 T13에서 수행하며 build-only 결과로 대체하지 않습니다.
-TWI 301은 DUT P4.25 `VDD_MOD`에서 SDA/SCL로 각각 2.2 kΩ ±5% pull-up 한 개를 연결해야 하며 peer
-전원 rail은 연결하지 않습니다. 확인 JSON의 `pullups_match_catalog`가 참이 아니면 실행을 거부합니다.
-1MHz 통과는 기능 결과이며 rise-time·신호 품질 보증이 아닙니다. 이 절은 T10 전 실행 권한이 아닙니다.
+TWI 301은 target 역할의 TWIS가 SDA/SCL 내부 pull-up을 명시적으로 활성화합니다. 외부 pull-up 저항과
+두 보드 전원 rail 연결은 사용하지 않습니다. 확인 JSON의 `pullups_match_catalog`는 외부 pull-up과
+전원 rail 연결이 없다는 사용자 확인을 포함하며, 참이 아니면 실행을 거부합니다. 내부 pull-up은 외부
+2.2 kΩ 저항보다 약하므로 1MHz 통과는 짧은 fixture 배선의 기능 결과일 뿐 rise-time·신호 품질 또는
+Fast-mode Plus 전기 규격 보증이 아닙니다. 이 절은 T10 전 실행 권한이 아닙니다.
 preflight JSON에는 현재 source·UID·image hash에 묶인 `confirmation_template`이 함께 출력됩니다.
 모든 안전 조건은 `false`, 시각은 `0`, 확인자는 빈 문자열로 생성되므로 실제 연결을 확인해 채우기
 전에는 실행 승인이 되지 않습니다.
+
+Fixture 101은 exact `2542a01`에서 양방향 UARTE data 1,620건과 예상 오류 24건을 통과했습니다.
+세부 결선·결함 교정·100 kHz SWD 제어·증거 hash는
+[Fixture 101 실기 기록](<../../../00_Docs/04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)에
+보존합니다. Fixture 102는 exact `ff3423e`에서 UARTE30 P0↔UARTE20/21/22 P1 양방향 data
+810건과 예상 오류 12건을 통과했으며 [Fixture 102 실기 기록](<../../../00_Docs/04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)에
+보존합니다. Fixture 103은 exact `b3c689b`에서 UARTE20/21/22 P1↔P1 전 조합 양방향 data
+2,430건과 예상 오류 36건을 통과했습니다. 중간 `FRAMING` 오류와 축소 재현·최종 전체 PASS의
+구분은 [Fixture 103 실기 기록](<../../../00_Docs/04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>)에
+보존합니다. UART Fixture 101~103의 결과를 아직 실행하지 않은 SPI/TWI에 확대하지 않습니다.
 
 두 번째 보드 COM8/P0 DAP CTS 고정에 대해 2026-09-05 사용자가 HW 엔지니어의 납땜 이슈
 진단을 전달했습니다. 정상 DUT의 RTS/CTS 결과는 유지하며, 해당 peer 경로는 FAIL 기록을 보존하고

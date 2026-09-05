@@ -29,6 +29,7 @@ def arguments(argv=None):
     parser.add_argument("--peer", required=True)
     parser.add_argument("--build-root", type=Path, required=True)
     parser.add_argument("--pyocd", type=Path, required=True)
+    parser.add_argument("--swd-frequency-hz", type=int, default=1_000_000)
     parser.add_argument("--fixture", type=int, choices=(101, 102, 103, 201, 202, 203, 301),
                         required=True)
     parser.add_argument("--confirmation", type=Path)
@@ -42,6 +43,8 @@ def arguments(argv=None):
                               args.progress_interval_seconds)
     if args.execute_fixture and (args.confirmation is None or args.evidence is None):
         raise ProtocolError("external execution requires explicit T10 confirmation and new evidence path")
+    if args.swd_frequency_hz <= 0:
+        raise ProtocolError("SWD frequency must be positive")
     return args
 
 
@@ -58,6 +61,7 @@ def main(argv=None):
         "catalog_sha256": pair.sha256_file(fixture.CATALOG),
         "core_revision": images[0]["core_revision"], "board_revision": images[0]["board_revision"],
         "scope": "uart-async-and-serial-sync-async-single-double-buffer",
+        "swd_frequency_hz": args.swd_frequency_hz,
         "external_wiring_executed": False,
         "campaign": {"repetitions": args.repetitions,
                      "duration_seconds": args.duration_seconds,
@@ -88,7 +92,9 @@ def main(argv=None):
                 raise ProtocolError("both confirmed probes required; no automatic substitution")
             devices = []
             for uid, image in zip(uids, images):
-                device, flash = pair.boot_exact(stack, ConnectHelper, args.pyocd, uid, image)
+                device, flash = pair.boot_exact(
+                    stack, ConnectHelper, args.pyocd, uid, image,
+                    args.swd_frequency_hz)
                 devices.append(device)
                 evidence["devices"][image["role"] - 1]["flash"] = flash
 

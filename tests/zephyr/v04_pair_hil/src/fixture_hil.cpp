@@ -18,6 +18,9 @@ namespace
     using namespace nucode::arduino;
     constexpr std::uint32_t role = CONFIG_NUCODE_V04_HIL_ROLE;
     constexpr std::uint32_t capacity = 1024;
+    constexpr std::uint32_t uart_unexpected_event = 1U << 9U;
+    constexpr std::uint32_t uart_event_type_shift = 16U;
+    constexpr std::uint32_t uart_error_mask_shift = 24U;
     struct alignas(4) Buffer
     {
         std::uint8_t before[16];
@@ -279,7 +282,7 @@ namespace
                      requested_style > 6)) ||
             (!i2c && !uart && args[7] > 4) ||
             (i2c && args[1] != 100000 && args[1] != 400000 && args[1] != 1000000) ||
-            (!i2c && !uart && args[1] != 125000 && args[1] != 1000000 && args[1] != 4000000) ||
+            (!i2c && !uart && args[1] != 2000000 && args[1] != 4000000 && args[1] != 8000000) ||
             (uart && args[1] != 9600 && args[1] != 115200 && args[1] != 1000000) ||
             (uart &&
              ((args[6] < 1 || args[6] > 4) || (args[6] == 2 && (!args[3] || args[7] != 1)) ||
@@ -430,7 +433,8 @@ namespace
         {
             twis = serialFabric().twis(args[0]);
             handle = twis;
-            result = twis ? twis->configure({0x42, 0x43, false})
+            const bool use_internal_pullups = gate.fixture() == 301U;
+            result = twis ? twis->configure({0x42, 0x43, use_internal_pullups})
                           : SerialFabricResult::unsupported_instance;
         }
         if (result == SerialFabricResult::success && !gpio_line_generator)
@@ -464,8 +468,9 @@ namespace
                 ready = 1;
             }
         }
-        else if (result == SerialFabricResult::success && !controller && !gpio_line_generator &&
-                 !deferred_twis_buffers)
+        else if (result == SerialFabricResult::success &&
+                 v04::shouldQueueSerialPeripheralBuffers(uart, controller, gpio_line_generator,
+                                                         deferred_twis_buffers))
         {
             const auto *tx = tx_length ? transmit.data : nullptr;
             auto *rx = rx_length ? receive.data : nullptr;
@@ -531,7 +536,16 @@ namespace
         }
         else if (event.type != UarteEventType::rx_buffer_needed)
         {
-            errors |= 512;
+            /**
+             * @brief 비정상 event의 종류와 UARTE ERRORSRC를 status word에 함께 보존합니다.
+             *
+             * 하위 16비트는 기존 판정 비트를 유지하고, 16~23비트에는 1을 더한 event 종류,
+             * 24~31비트에는 하드웨어 오류 mask를 기록합니다. 따라서 취소 event와 실제 선로
+             * parity/framing/overrun/break를 Host 증거에서 구분할 수 있습니다.
+             */
+            errors |= uart_unexpected_event;
+            errors |= (static_cast<std::uint32_t>(event.type) + 1U) << uart_event_type_shift;
+            errors |= (event.error_mask & 0xffU) << uart_error_mask_shift;
         }
         if (!uartGuards())
         {
@@ -543,7 +557,7 @@ namespace
     {
         if (event.type == SpiFabricEventType::buffers_armed)
         {
-            ready = 1;
+            ++ready;
         }
         else if (event.type == SpiFabricEventType::transfer_complete)
         {
@@ -640,7 +654,7 @@ void serviceFixture()
         twiEvent(twi);
     }
     if (handle && gate.controller() == role && segments == 2 && kicked && !second_kicked &&
-        tx_done == 1 && rx_done == 1 && !errors)
+        tx_done == 1 && rx_done == 1 && !errors && spim == nullptr)
     {
         second_kicked = true;
         const auto *tx = tx_length ? transmit_next.data : nullptr;
@@ -833,6 +847,23 @@ std::uint32_t fixtureCommand(std::uint32_t opcode, const std::uint32_t *args, st
                    ? 0U
                    : 707U;
     }
+    /** @brief Peer SPIS의 두 번째 buffer 활성화 확인 뒤 다음 SPIM segment를 시작합니다. */
+    if (opcode == 28U && nargs == 0U && spim != nullptr && segments == 2U && kicked &&
+        !second_kicked && tx_done == 1U && rx_done == 1U && errors == 0U &&
+        gate.controller() == role)
+    {
+        second_kicked = true;
+        const auto *tx = tx_length ? transmit_next.data : nullptr;
+        auto *rx = rx_length ? receive_next.data : nullptr;
+        const auto result = spim->transferAsync(tx, tx_length, rx, rx_length);
+        out[0] = static_cast<std::uint32_t>(result);
+        count = 1U;
+        if (result != SerialFabricResult::success)
+        {
+            errors |= 2048U;
+        }
+        return result == SerialFabricResult::success ? 0U : 708U;
+    }
     if (opcode == 23 && nargs == 0)
     {
         const bool uart = v04::fixtureFamily(gate.fixture()) == v04::FixtureFamily::uarte;
@@ -849,9 +880,11 @@ std::uint32_t fixtureCommand(std::uint32_t opcode, const std::uint32_t *args, st
     /** @brief RX 완료 뒤에만 최대 64바이트를 읽어 Host의 전 바이트 대조에 사용합니다. */
     const bool uart = v04::fixtureFamily(gate.fixture()) == v04::FixtureFamily::uarte;
     const std::uint32_t expected_uart_done = (1U << uart_buffers) - 1U;
+    const std::uint32_t readable_rx_length = uart ? length * uart_buffers : rx_length * segments;
     if (opcode == 24 && nargs == 2 &&
         ((!uart && rx_done == segments) || (uart && rx_done == expected_uart_done)) && !errors &&
-        args[1] && args[1] <= 64 && args[0] <= rx_length && args[1] <= rx_length - args[0])
+        args[1] && args[1] <= 64 && args[0] <= readable_rx_length &&
+        args[1] <= readable_rx_length - args[0])
     {
         count = (args[1] + 3U) / 4U;
         for (unsigned i = 0; i < args[1]; ++i)

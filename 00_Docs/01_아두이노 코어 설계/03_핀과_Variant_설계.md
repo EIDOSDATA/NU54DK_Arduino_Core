@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-PIN-001 |
-| 문서 개정 | 5.0 |
+| 문서 개정 | 5.1 |
 | 문서 상태 | `v0.3.0` 정식 계약 |
-| 최종 갱신일 | 2026-09-03 |
+| 최종 갱신일 | 2026-09-05 |
 | 대상 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 
 ## 1. 목적
@@ -39,10 +39,14 @@ capability를 얻는다. 이름이나 `pin < NUM_DIGITAL_PINS`만으로 GPIO·in
 | 동적 핀·주변장치 소유권 상태 | `cores/arduino/internal/IoResourceManager.h` |
 | runtime pinctrl·PM·GPIO handover | `RuntimePeripheralRoute`, `PinHandover` |
 | GPIO·시간·interrupt 동작 | `cores/arduino/wiring_*.cpp` |
+| HIL용 P2/P4 물리 핀 번호↔net | [NU54DK P2/P4 커넥터 핀맵](./13_NU54DK_P2_P4_커넥터_핀맵.md) |
 
 Variant C++에는 `P1.x`, `P2.x` 같은 물리 pin 번호를 복제하지 않는다. Board 기본 회로와 역할은
 보드 패키지가 소유하고, Core DTS는 Arduino 관점의 31-pad metadata만 추가한다. Variant는 생성된
 Devicetree node를 소비한다.
+
+실기 결선에서는 GPIO port 표기와 커넥터 이름을 혼동하지 않는다. 특히 `SWDCLK`는 `P2-27`,
+`SWDIO`는 `P2-28`이며, 전체 P2/P4 배열은 링크한 수기 확정 핀맵을 따른다.
 
 ## 3. canonical 논리 핀 모델
 

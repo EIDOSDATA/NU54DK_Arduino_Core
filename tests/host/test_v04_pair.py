@@ -51,12 +51,16 @@ class V04PairTests(unittest.TestCase):
         helper.session_with_chosen_probe.return_value = session
         with patch.object(runner, "sha256_file", side_effect=lambda path: path.suffix[1:]), \
              patch.object(runner, "flash_image", return_value={"mock_only": True}) as flash, ExitStack() as stack:
-            device, _ = runner.boot_exact(stack, helper, Path("pyocd.exe"), "a" * 32, image)
+            device, _ = runner.boot_exact(
+                stack, helper, Path("pyocd.exe"), "a" * 32, image, 100_000)
             self.assertEqual(device.image, image)
-            flash.assert_called_once_with(Path("pyocd.exe"), "a" * 32, Path("candidate.hex"), 120)
+            flash.assert_called_once_with(
+                Path("pyocd.exe"), "a" * 32, Path("candidate.hex"), 120,
+                100_000)
         self.assertEqual(target.write32.call_args_list, [unittest.mock.call(64, 0),
                          unittest.mock.call(192, 0), unittest.mock.call(320, 0)])
         options = helper.session_with_chosen_probe.call_args.kwargs
+        self.assertEqual(options["frequency"], 100_000)
         self.assertTrue(options["no_config"])
         self.assertFalse(options["options"]["auto_unlock"])
         self.assertFalse(options["options"]["resume_on_disconnect"])
@@ -97,6 +101,9 @@ class V04PairTests(unittest.TestCase):
         with self.assertRaises(protocol.ProtocolError): broken.command(1)
         self.assertTrue(broken.poisoned)
         with self.assertRaises(protocol.ProtocolError): broken.command(1)
+
+    def test_mailbox_polling_interval_supports_10mhz_fixture_runs(self):
+        self.assertEqual(runner.MAILBOX_POLL_INTERVAL_SECONDS, 0.001)
     def test_os_lock_rejects_competing_process_then_releases(self):
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary)

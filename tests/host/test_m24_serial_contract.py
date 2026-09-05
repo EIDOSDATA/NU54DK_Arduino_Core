@@ -163,7 +163,7 @@ class M24SerialContractTests(unittest.TestCase):
         self.assertEqual(MODULE.canonical_source_payload(cr, "lf-normalized"), lf)
         self.assertNotEqual(MODULE.canonical_source_payload(crlf, "raw"), lf)
 
-    def test_candidate_implementations_remain_internal_until_hil(self) -> None:
+    def test_functionally_verified_candidates_remain_internal_until_release(self) -> None:
         manifest = MODULE.strict_json_object(MODULE.MANIFEST_PATH)
         m24 = {item["id"]: item for item in manifest["instances"] if item["milestone"] == "M24"}
         current = set(MODULE.EXPECTED_SINGLETONS.values())
@@ -176,7 +176,7 @@ class M24SerialContractTests(unittest.TestCase):
             self.assertEqual(states["exposure"], "internal", identity)
             self.assertEqual(states["build"], "pass", identity)
             self.assertEqual(states["semantic"], "pass", identity)
-            self.assertEqual(states["hil"], "not_run", identity)
+            self.assertEqual(states["hil"], "pass", identity)
             self.assertEqual(states["concurrent_hil"], "not_run", identity)
             self.assertTrue(item["evidence"], identity)
 
@@ -197,6 +197,49 @@ class M24SerialContractTests(unittest.TestCase):
         active = activation.index("atomic_set(&context->active, 1);")
         self.assertLess(initialized, enabled)
         self.assertLess(enabled, active)
+
+    def test_twis_late_buffer_resumes_clock_stretched_request(self) -> None:
+        """Source regression only; Fixture 301 proves the physical clock-stretch path."""
+        source = (REPOSITORY / "cores/arduino/TwisFabric.cpp").read_text(encoding="utf-8")
+        queue = source.split("SerialFabricResult TwisHandle::queueBuffers(", 1)[1].split(
+            "SerialFabricResult TwisHandle::cancelBuffers(", 1
+        )[0]
+        self.assertIn("context.read_request_pending = buffer.address == nullptr;", source)
+        self.assertIn("context.write_request_pending = buffer.address == nullptr;", source)
+        self.assertIn("const bool resume_read = context->read_request_pending;", queue)
+        self.assertIn("const bool resume_write = context->write_request_pending;", queue)
+        self.assertIn("nrfx_twis_tx_prepare(&context->driver, tx_buffer, tx_size)", queue)
+        self.assertIn("nrfx_twis_rx_prepare(&context->driver, rx_buffer, rx_size)", queue)
+
+    def test_spim_hardware_csn_meets_nrf54l15_spis_timing(self) -> None:
+        """Source regression only; Fixture 201 proves the physical timing path."""
+        source = (REPOSITORY / "cores/arduino/SpimFabric.cpp").read_text(
+            encoding="utf-8"
+        )
+        activation = source.split("SerialFabricResult activateAdapter(", 1)[1].split(
+            "SerialFabricResult requestStopAdapter(", 1
+        )[0]
+        self.assertIn("csn_duration_cycles = 255U", source)
+        self.assertNotIn("serial_csn_duration_cycles", source)
+        self.assertIn(
+            "configuration.use_hw_ss = csn != NRF_SPIM_PIN_NOT_CONNECTED;",
+            activation,
+        )
+        self.assertIn("configuration.ss_duration = csn_duration_cycles;", activation)
+
+    def test_spim_rx_delay_matches_nrf54l15_instance_clock(self) -> None:
+        """Source regression only; 8 MHz Fixture 201 proves the physical sample path."""
+        source = (REPOSITORY / "cores/arduino/SpimFabric.cpp").read_text(
+            encoding="utf-8"
+        )
+        activation = source.split("SerialFabricResult activateAdapter(", 1)[1].split(
+            "SerialFabricResult requestStopAdapter(", 1
+        )[0]
+        self.assertIn("serial_rx_delay_cycles = 1U", source)
+        self.assertIn(
+            "instance == 0U ? NRF_SPIM_RXDELAY_DEFAULT : serial_rx_delay_cycles;",
+            activation,
+        )
 
 
 if __name__ == "__main__":

@@ -123,7 +123,7 @@ int main()
     if (twis22 == nullptr || std::strcmp(twis22->sharing_group, "serial22") != 0 ||
         twis22->source_state != PeripheralSourceState::implemented ||
         twis22->exposure_state != PeripheralExposureState::internal ||
-        twis22->hil_state != PeripheralVerificationState::not_run)
+        twis22->hil_state != PeripheralVerificationState::pass)
     {
         return 3;
     }

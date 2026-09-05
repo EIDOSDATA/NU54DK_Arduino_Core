@@ -11,7 +11,7 @@
 | Manifest schema | `1` |
 | 추적 identity | **75개** |
 | 현재 public surface가 있는 identity | **17개** |
-| 현재 HIL PASS identity | **8개** |
+| 현재 HIL PASS identity | **27개** |
 | 후속 구현 배정 | M24 23 / M25 36 / M26 16 |
 
 ## 판정 읽는 법
@@ -26,29 +26,29 @@
 
 | Identity | block / DTS | board route | source / public | DMA | build | semantic | HIL | concurrent |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `uarte00` | `serial00` / `uart00` | candidate: `header-p2` | implemented / internal: — | EasyDMA/16 bit; driver; double-buffered | pass | pass | not-run | not-run |
+| `uarte00` | `serial00` / `uart00` | candidate: `header-p2` | implemented / internal: — | EasyDMA/16 bit; driver; double-buffered | pass | pass | pass | not-run |
 | `uarte20` | `serial20` / `uart20` | verified: `console-p1.4-p1.7` | implemented / public: `Serial`, `HardwareSerial` | EasyDMA/16 bit; driver; none | pass | pass | pass | not-run |
-| `uarte21` | `serial21` / `uart21` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; driver; double-buffered | pass | pass | not-run | not-run |
-| `uarte22` | `serial22` / `uart22` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; driver; double-buffered | pass | pass | not-run | not-run |
+| `uarte21` | `serial21` / `uart21` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; driver; double-buffered | pass | pass | pass | not-run |
+| `uarte22` | `serial22` / `uart22` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; driver; double-buffered | pass | pass | pass | not-run |
 | `uarte30` | `serial30` / `uart30` | verified: `dap-vcom-p0.0-p0.3` | implemented / public: `Serial1`, `Nu54HardwareSerial` | EasyDMA/16 bit; driver; none | pass | pass | pass | partial |
 | `spim00` | `serial00` / `spi00` | verified: `header-p2.1-p2.4` | implemented / public: `SPI`, `SPIClass` | EasyDMA/16 bit; driver; synchronous | pass | pass | pass | partial |
-| `spim20` | `serial20` / `spi20` | candidate: `header-p1-console-conflict` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | not-run | not-run |
-| `spim21` | `serial21` / `spi21` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | not-run | not-run |
-| `spim22` | `serial22` / `spi22` | candidate: `header-p1-wire-conflict` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | not-run | not-run |
-| `spim30` | `serial30` / `spi30` | candidate: `header-p0-dap-conflict` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | not-run | not-run |
-| `spis00` | `serial00` / `spi00` | candidate: `header-p2` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | not-run | not-run |
-| `spis20` | `serial20` / `spi20` | candidate: `header-p1-console-conflict` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | not-run | not-run |
-| `spis21` | `serial21` / `spi21` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | not-run | not-run |
-| `spis22` | `serial22` / `spi22` | candidate: `header-p1-wire-conflict` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | not-run | not-run |
-| `spis30` | `serial30` / `spi30` | candidate: `header-p0-dap-conflict` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | not-run | not-run |
-| `twim20` | `serial20` / `i2c20` | candidate: `header-p1-console-conflict` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | not-run | not-run |
-| `twim21` | `serial21` / `i2c21` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | not-run | not-run |
+| `spim20` | `serial20` / `spi20` | candidate: `header-p1-console-conflict` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | not-run |
+| `spim21` | `serial21` / `spi21` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | not-run |
+| `spim22` | `serial22` / `spi22` | candidate: `header-p1-wire-conflict` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | not-run |
+| `spim30` | `serial30` / `spi30` | candidate: `header-p0-dap-conflict` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | not-run |
+| `spis00` | `serial00` / `spi00` | candidate: `header-p2` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
+| `spis20` | `serial20` / `spi20` | candidate: `header-p1-console-conflict` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
+| `spis21` | `serial21` / `spi21` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
+| `spis22` | `serial22` / `spi22` | candidate: `header-p1-wire-conflict` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
+| `spis30` | `serial30` / `spi30` | candidate: `header-p0-dap-conflict` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
+| `twim20` | `serial20` / `i2c20` | candidate: `header-p1-console-conflict` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | not-run |
+| `twim21` | `serial21` / `i2c21` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | not-run |
 | `twim22` | `serial22` / `i2c22` | verified: `header-p1.2-p1.3` | implemented / public: `Wire`, `TwoWire` | EasyDMA/16 bit; driver; synchronous | pass | pass | pass | partial |
-| `twim30` | `serial30` / `i2c30` | candidate: `header-p0-dap-conflict` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | not-run | not-run |
-| `twis20` | `serial20` / `i2c20` | candidate: `header-p1-console-conflict` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | not-run | not-run |
-| `twis21` | `serial21` / `i2c21` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | not-run | not-run |
-| `twis22` | `serial22` / `i2c22` | candidate: `header-p1-wire-route` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | not-run | not-run |
-| `twis30` | `serial30` / `i2c30` | candidate: `header-p0-dap-conflict` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | not-run | not-run |
+| `twim30` | `serial30` / `i2c30` | candidate: `header-p0-dap-conflict` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | not-run |
+| `twis20` | `serial20` / `i2c20` | candidate: `header-p1-console-conflict` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
+| `twis21` | `serial21` / `i2c21` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
+| `twis22` | `serial22` / `i2c22` | candidate: `header-p1-wire-route` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
+| `twis30` | `serial30` / `i2c30` | candidate: `header-p0-dap-conflict` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
 
 ## M25 배정 identity
 

@@ -43,7 +43,7 @@
       "kind": "physical",
       "required": true,
       "state": "hold",
-      "reason": "safe NU54DK loopback/peer wiring and serial data-path, DMA, recovery, concurrency and soak evidence are required; external measurement equipment is not required"
+      "reason": "all 23 serial personalities passed approved-route standalone data-path, DMA and recovery HIL; wider allowed concurrency, repeated recovery, performance and soak evidence remain required; external measurement equipment is not required"
     },
     {
       "id": "m25_source_build",

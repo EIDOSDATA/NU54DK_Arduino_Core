@@ -42,7 +42,9 @@ class M24UarteOnboardTests(unittest.TestCase):
             MODULE.choose_unique_response({"COM7": expected, "COM8": b"x"}, expected)
 
     def test_pyocd_command_is_exact_and_non_destructive(self) -> None:
-        command = MODULE.pyocd_command(Path("pyocd.exe"), "probe", Path("image.hex"))
+        command = MODULE.pyocd_command(
+            Path("pyocd.exe"), "probe", Path("image.hex"), 100_000
+        )
         self.assertEqual(
             command,
             [
@@ -61,7 +63,7 @@ class M24UarteOnboardTests(unittest.TestCase):
                 "--uid",
                 "probe",
                 "--frequency",
-                "1m",
+                "100000",
                 "image.hex",
             ],
         )
@@ -120,9 +122,16 @@ class M24UarteOnboardTests(unittest.TestCase):
         ) for name in ("COM5", "COM6")}
         with patch.object(onboard_start.time, "sleep"):
             factory = unittest.mock.Mock(return_value=Session())
-            result = onboard_start.reset_halted_start(ports, "probe", session_factory=factory)
+            result = onboard_start.reset_halted_start(
+                ports,
+                "probe",
+                session_factory=factory,
+                swd_frequency_hz=100_000,
+            )
         self.assertEqual(events, ["halt", "drain-in", "drain-out", "drain-in", "drain-out", "resume", "close"])
         self.assertEqual(result["method"], "reset-halt-drain-resume")
+        self.assertEqual(result["frequency_hz"], 100_000)
+        self.assertEqual(factory.call_args.kwargs["frequency"], 100_000)
         self.assertFalse(factory.call_args.kwargs["options"]["auto_unlock"])
         self.assertFalse(factory.call_args.kwargs["options"]["resume_on_disconnect"])
         events.clear()

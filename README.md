@@ -231,7 +231,7 @@ asset과 stable index 항목은 재현성, 감사와 downgrade를 위해 삭제�
 | `v0.1.0` | 역사적·비지원 | Core, 기본 API, build/upload와 package |
 | `v0.2.0` | 역사적·비지원 | CI/CD, profile·예제, Board/System과 BLE NUS |
 | `v0.3.0` | **현재 stable** | Arduino compatibility, 동적 peripheral/analog, BLE GAP/GATT/security/profile, storage |
-| `v0.4.0` | 개발 중 | Peripheral 확장: 온보드 기본 시험 PASS, 외부 fixture·최종 release gate 대기 |
+| `v0.4.0` | 개발 중 | Peripheral 확장: M24 23개 serial personality 단독 기능 HIL PASS, analog/stream·동시성·soak·최종 release gate 대기 |
 | `v0.5.0` | 계획 | Bluetooth LE 확장·ISO/LE Audio·Direction Finding·Channel Sounding·Mesh |
 | `v0.6.0` | 계획 | Storage/Crypto, TF-M, 고급 memory layout와 secure update/recovery |
 | `v0.7.0` | 계획 | Radio profile, IEEE 802.15.4, ESB와 OpenThread |
@@ -239,7 +239,22 @@ asset과 stable index 항목은 재현성, 감사와 downgrade를 위해 삭제�
 
 `v0.4.0` 후보는 UART 4개·PMIC I2C 3개, 내부 ADC·event, TEMP·WDT30의
 [온보드 시험](<./00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)을
-통과했습니다. 전체 instance의 실제 데이터 경로·DMA·동시성 검증과 정식 공개는 아직 완료되지 않았습니다.
+통과했고, [UART Fixture 101](<./00_Docs/04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)과
+[Fixture 102](<./00_Docs/04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>),
+[Fixture 103](<./00_Docs/04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>)에서 UARTE00/20의 P2,
+UARTE30의 P0와 UARTE20/21/22의 P1 route 양방향 데이터·DMA·RTS/CTS를 통과했습니다.
+[SPI Fixture 201](<./00_Docs/04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md>)에서는 P2↔P1의
+SPIM/SPIS00·20·21·22, 2/4/8 MHz, Mode 0~3, MSB/LSB와 EasyDMA 18,169개 계획 벡터를 통과했습니다.
+[SPI Fixture 202](<./00_Docs/04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md>)에서는 P0↔P1의
+SPIM/SPIS30·20·21·22에 대한 9,084개 계획 벡터를 통과했습니다.
+[SPI Fixture 203](<./00_Docs/04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md>)에서는 P1↔P1의
+SPIM/SPIS20·21·22 전 조합 27,252개 계획 벡터를 통과했습니다.
+[TWI Fixture 301](<./00_Docs/04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md>)에서는 P1↔P0
+TWIM/TWIS20·21·22·30의 기능 record 1,986개와 cleanup 2건을 통과해 T11 단독 기능 검증을
+완료했습니다. 다음 physical gate 전에 R00~R13의 정확성·파일·builder·자원·Fabric·package 구조
+리팩토링과 전체 software gate를 완료합니다. 그 최종 source로 영향받는 T11을 재검증한 뒤
+T12 analog·stream과 전체 동시성·soak를 한 번의 통합 캠페인으로 진행합니다. 정식 공개는 아직
+완료되지 않았습니다.
 검증은 온보드 자원과 두 NU54DK의 통신·합성 신호·capture를 기준으로 합니다. 정밀 계측과 외부
 마이크·코덱·엔코더별 호환성·신호 품질은 보증 범위에 포함하지 않으며, 자세한 구분은
 [코어 기능 검증 범위](<./00_Docs/04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)를 따릅니다.
@@ -281,6 +296,7 @@ git submodule status
 
 - [전체 문서 안내](./00_Docs/README.md)
 - [v0.4.0 실행 TODO·재개 체크포인트](./00_Docs/TODO_v0.4.0.md)
+- [리팩토링 계획·운영·진행 체크리스트](<./00_Docs/01_아두이노 코어 설계/14_리팩토링/README.md>)
 - [v0.3.0 릴리스 문서](<./00_Docs/05_릴리스/v0.3.0/README.md>)
 - [v0.3.0 마이그레이션](<./00_Docs/05_릴리스/v0.3.0/MIGRATION.md>)
 - [v0.3.0 문제 해결](<./00_Docs/05_릴리스/v0.3.0/TROUBLESHOOTING.md>)

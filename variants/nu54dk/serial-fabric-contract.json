@@ -388,7 +388,7 @@
       "automation_scope": ["fixture-data-path", "sync-async-dma", "target-double-buffer", "error-injection"],
       "preconditions": [
         "The DAP UART switch is disabled before a non-UARTE fixture owns P1.4 through P1.7.",
-        "An external controller and external pull-ups are required for isolated TWIS data-path HIL.",
+        "An external controller is required and the TWIS target enables internal SDA/SCL pull-ups for isolated data-path HIL.",
         "This fixture excludes the PMIC bus, LED outputs and the capacitive VBAT monitor net."
       ]
     },
@@ -402,7 +402,7 @@
       "automation_scope": ["fixture-data-path", "sync-async-dma", "target-double-buffer", "error-injection"],
       "preconditions": [
         "Serial1 is inactive and the DAP UART switch is disabled.",
-        "TWIM30 and TWIS30 fixtures provide external pull-ups."
+        "The paired TWIS target enables internal SDA/SCL pull-ups; external pull-up resistors are not fitted."
       ]
     }
   ],
@@ -455,7 +455,7 @@
       "test_resource": "p2-header-fixture",
       "execution_class": "external-fixture",
       "preconditions": ["serial00 and all listed pins are free."],
-      "status": "planned-hil"
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-spis00",
@@ -465,7 +465,7 @@
       "test_resource": "p2-header-fixture",
       "execution_class": "external-fixture",
       "preconditions": ["serial00 and all listed pins are free."],
-      "status": "planned-hil"
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-spim20",
@@ -475,7 +475,7 @@
       "test_resource": "p2-header-fixture",
       "execution_class": "external-fixture",
       "preconditions": ["The console is disabled.", "Constant-latency power mode is leased.", "serial00 is inactive."],
-      "status": "planned-hil"
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-spis20",
@@ -485,7 +485,7 @@
       "test_resource": "p2-header-fixture",
       "execution_class": "external-fixture",
       "preconditions": ["The console is disabled.", "Constant-latency power mode is leased.", "serial00 is inactive."],
-      "status": "planned-hil"
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-twim20",
@@ -495,7 +495,7 @@
       "test_resource": "pmic-bq25186-i2c",
       "execution_class": "onboard-automatic",
       "preconditions": ["The console is disabled.", "serial22 is inactive.", "Automatic HIL reads the onboard BQ25186 at address 0x6a without changing PMIC state."],
-      "status": "planned-hil"
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-twis20",
@@ -504,8 +504,8 @@
       "pins": { "sda": "P1.4", "scl": "P1.5" },
       "test_resource": "p1-header-fixture",
       "execution_class": "external-fixture",
-      "preconditions": ["The console is disabled.", "The DAP UART switch is disabled.", "External pull-ups are fitted on the isolated fixture, not the PMIC bus."],
-      "status": "planned-hil"
+      "preconditions": ["The console is disabled.", "The DAP UART switch is disabled.", "TwisConfiguration.internal_pullups is enabled on the isolated fixture; external pull-up resistors are not fitted."],
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-uarte21",
@@ -515,7 +515,7 @@
       "test_resource": "dap-vcom-p1",
       "execution_class": "onboard-automatic",
       "preconditions": ["The uart20 console and every other P1 DAP UART owner are inactive.", "The DAP UART switch is enabled and the host binds the P1 virtual COM port.", "UARTE30 reports orchestration results through the independent P0 DAP UART."],
-      "status": "planned-hil"
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-spim21",
@@ -525,7 +525,7 @@
       "test_resource": "p1-header-fixture",
       "execution_class": "external-fixture",
       "preconditions": ["The console is disabled.", "The DAP UART switch is disabled.", "The SPI fixture excludes VBAT monitor and LED loads."],
-      "status": "planned-hil"
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-spis21",
@@ -535,7 +535,7 @@
       "test_resource": "p1-header-fixture",
       "execution_class": "external-fixture",
       "preconditions": ["The console is disabled.", "The DAP UART switch is disabled."],
-      "status": "planned-hil"
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-twim21",
@@ -545,7 +545,7 @@
       "test_resource": "pmic-bq25186-i2c",
       "execution_class": "onboard-automatic",
       "preconditions": ["serial22 is inactive.", "Automatic HIL reads the onboard BQ25186 at address 0x6a without changing PMIC state."],
-      "status": "planned-hil"
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-twis21",
@@ -554,8 +554,8 @@
       "pins": { "sda": "P1.4", "scl": "P1.5" },
       "test_resource": "p1-header-fixture",
       "execution_class": "external-fixture",
-      "preconditions": ["The console is disabled.", "The DAP UART switch is disabled.", "External pull-ups are fitted on the isolated fixture, not the PMIC bus."],
-      "status": "planned-hil"
+      "preconditions": ["The console is disabled.", "The DAP UART switch is disabled.", "TwisConfiguration.internal_pullups is enabled on the isolated fixture; external pull-up resistors are not fitted."],
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-uarte22",
@@ -565,7 +565,7 @@
       "test_resource": "dap-vcom-p1",
       "execution_class": "onboard-automatic",
       "preconditions": ["The uart20 console, Wire and every other P1 DAP UART owner are inactive.", "The DAP UART switch is enabled and the host binds the P1 virtual COM port.", "UARTE30 reports orchestration results through the independent P0 DAP UART."],
-      "status": "planned-hil"
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-spim22",
@@ -575,7 +575,7 @@
       "test_resource": "p1-header-fixture",
       "execution_class": "external-fixture",
       "preconditions": ["Wire and the console are disabled.", "The DAP UART switch is disabled.", "The SPI fixture excludes VBAT monitor and LED loads."],
-      "status": "planned-hil"
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-spis22",
@@ -585,7 +585,7 @@
       "test_resource": "p1-header-fixture",
       "execution_class": "external-fixture",
       "preconditions": ["Wire and the console are disabled.", "The DAP UART switch is disabled."],
-      "status": "planned-hil"
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-twis22",
@@ -594,8 +594,8 @@
       "pins": { "sda": "P1.4", "scl": "P1.5" },
       "test_resource": "p1-header-fixture",
       "execution_class": "external-fixture",
-      "preconditions": ["Wire and the console are disabled.", "The DAP UART switch is disabled.", "External pull-ups are fitted on the isolated fixture, not the PMIC bus."],
-      "status": "planned-hil"
+      "preconditions": ["Wire and the console are disabled.", "The DAP UART switch is disabled.", "TwisConfiguration.internal_pullups is enabled on the isolated fixture; external pull-up resistors are not fitted."],
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-spim30",
@@ -605,7 +605,7 @@
       "test_resource": "p0-header-fixture",
       "execution_class": "external-fixture",
       "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled.", "Chip select remains sketch-owned."],
-      "status": "planned-hil"
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-spis30",
@@ -615,7 +615,7 @@
       "test_resource": "p0-header-fixture",
       "execution_class": "external-fixture",
       "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled."],
-      "status": "planned-hil"
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-twim30",
@@ -624,8 +624,8 @@
       "pins": { "sda": "P0.0", "scl": "P0.1" },
       "test_resource": "p0-header-fixture",
       "execution_class": "external-fixture",
-      "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled.", "External pull-ups are fitted by the fixture."],
-      "status": "planned-hil"
+      "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled.", "The paired TWIS target enables internal SDA/SCL pull-ups; external pull-up resistors are not fitted."],
+      "status": "functional-hil-pass"
     },
     {
       "id": "m24-twis30",
@@ -634,8 +634,8 @@
       "pins": { "sda": "P0.0", "scl": "P0.1" },
       "test_resource": "p0-header-fixture",
       "execution_class": "external-fixture",
-      "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled.", "External pull-ups are fitted by the fixture."],
-      "status": "planned-hil"
+      "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled.", "TwisConfiguration.internal_pullups is enabled; external pull-up resistors are not fitted."],
+      "status": "functional-hil-pass"
     }
   ],
   "lifecycle": {

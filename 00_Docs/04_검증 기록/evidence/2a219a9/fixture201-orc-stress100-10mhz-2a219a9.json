@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "type": "v04-spi-8mhz-orc-stress",
+  "status": "failed",
+  "fixture_id": 201,
+  "core_revision": "2a219a9fcca46ec01a1d968ccb33d8ac3b922feb",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "swd_frequency_hz": 10000000,
+  "flash_swd_frequency_hz": 100000,
+  "requested_repetitions": 100,
+  "vector": [
+    8000000,
+    0,
+    0,
+    1,
+    1,
+    0
+  ],
+  "instances": [
+    20,
+    20
+  ],
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "37d250a96f55900b72d191f2627dc27fd18190d9e62514400ffadc479f551cd1",
+      "elf_sha256": "0130d816e84907d77c8f082ddcf16506d6c8695c3da0a0a00431a19e21a058bb",
+      "record_sha256": "1cc3d26e429add934dc45ab9f23ac2523ec21e286363a1007a1ca9c8f179da96",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 100000,
+        "seconds": 42.766,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "7faa4e0bbe510b4f2e749bffd0d53b0890247e291c32d150bc61f4ceae11617c",
+        "mailbox_frequency_hz": 10000000
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "1e0b1e88f7b24f421c935838ad2f43607e2388c19017df9ebc933e8fdf13a540",
+      "elf_sha256": "be96c088e46056ec2e995451bcef38e3c430e166ea3fb99d9af10dad1183429f",
+      "record_sha256": "1cc3d26e429add934dc45ab9f23ac2523ec21e286363a1007a1ca9c8f179da96",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 100000,
+        "seconds": 44.89,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "0f39dbf4a7ab1db69be2377296153213f9eb115e01a0bb48dbe7e21056aeaa34",
+        "mailbox_frequency_hz": 10000000
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "V04-FIXTURE-CLEANUP",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "error": "ProtocolError: fixture payload mismatch role=1; actual=2d; expected=96",
+  "completed_at_utc": "2026-09-05T12:46:57.336279+00:00"
+}

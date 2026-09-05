@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": 1,
+  "revision": 2,
   "status": "preparation-not-wiring-authority",
   "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
   "schematic_page": 9,
@@ -113,8 +113,8 @@
         {"dut": ["P2", 11, "P1.5"], "peer": ["P2", 26, "P0.1"], "signal": "SCL"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
-      "notes": "PMIC P1.2/P1.3 버스와 완전히 분리. DUT P4.25 VDD_MOD에서만 pull-up하고 peer 전원 pin에는 연결하지 않습니다. 1MHz는 기능 통과 여부를 기록하며 rise-time 품질 보증으로 해석하지 않습니다.",
-      "pullups": ["SDA-DUT VDD_MOD와 SCL-DUT VDD_MOD에 각각 2.2 kΩ ±5% 한 개; 두 보드 전원 rail 직접 연결 금지"]
+      "notes": "PMIC P1.2/P1.3 버스와 완전히 분리합니다. Target 역할의 TWIS가 SDA/SCL 내부 pull-up을 활성화하므로 외부 저항과 두 보드 전원 pin 연결은 사용하지 않습니다. 1MHz는 기능 통과 여부만 기록하며 rise-time·신호 품질 보증으로 해석하지 않습니다.",
+      "pullups": ["Target 역할 TWIS의 SDA/SCL 내부 pull-up 사용; 외부 pull-up 저항과 두 보드 전원 rail 직접 연결 금지"]
     },
     {
       "id": 401,

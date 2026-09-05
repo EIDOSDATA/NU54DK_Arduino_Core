@@ -1,0 +1,5495 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-external-fixture",
+  "status": "failed",
+  "fixture_id": 103,
+  "fixture_revision": 1,
+  "catalog_sha256": "80493f0d24dd707e24f52ae2a56e72affd4d4afb36d261b20266f88a7778cfe8",
+  "core_revision": "b3c689b07f1a23e479a78bd2f852a650fd4a86d5",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "uart-async-and-serial-sync-async-single-double-buffer",
+  "swd_frequency_hz": 100000,
+  "external_wiring_executed": true,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 30.0,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "e941cba745b0549b076d15dc9e4aae1599291f8fddc5fe085490c61b6e938e05",
+      "elf_sha256": "a28a660fc5c1056c49d4d39782099880ed13b220de7179864aa4d62b16bb8bc0",
+      "record_sha256": "15624f6f47a7bfdb3c4709e3bc6ffeb3d807eb6d95bde72da90da4908d3f76ac",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 100000,
+        "seconds": 41.672,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "9dc80f5400a6d55ded7b58db2f36502df5a3bc997c6de1e10fed5f35d4abfe37"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "4dee872056b1f37ec19866b3a707926f0ab4119f3f7b0d3b794b71bf73229de3",
+      "elf_sha256": "295545240cb1119720dd26780ed4d9b5ed2eebe4489400203e1fe48c471dc744",
+      "record_sha256": "15624f6f47a7bfdb3c4709e3bc6ffeb3d807eb6d95bde72da90da4908d3f76ac",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 100000,
+        "seconds": 41.641,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "340f70a08e2465b13520dab059de6995d72120d86a3ecffd39d9a7dd8c43f6b3"
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 0, 1, 1, 1)",
+      "status": "passed",
+      "seed": 1979402100,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "rx_sha256": "e3b98a4da31a127d4bde6e43033f66ba274cab0eb7eb1c70ec41402bf6273dd8"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 0, 2, 1, 1)",
+      "status": "passed",
+      "seed": 3871731901,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            2
+          ],
+          "rx_sha256": "fb93e6f537c1358a214854bff013907aec4a1f49d6be6ecacbbc81b25d875d75"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 0, 31, 1, 1)",
+      "status": "passed",
+      "seed": 1739225993,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            31,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            31
+          ],
+          "rx_sha256": "aab0a50bba4b68103d412dc365b028890751cbd3edea57753c145b01f24b0ea1"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 0, 32, 1, 1)",
+      "status": "passed",
+      "seed": 72564148,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            32,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            32
+          ],
+          "rx_sha256": "20b3b6b69dcdead869d858d4f02b1d1962d4be6f778ef2075bbcbe746e1b4c16"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 0, 32, 1, 2)",
+      "status": "passed",
+      "seed": 2638465518,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            64,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            64
+          ],
+          "rx_sha256": "7ec004172255cbae4ab6fc1f409cdf25fb1e692c5106576ec6b4a8a01e679b6f"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 0, 255, 1, 1)",
+      "status": "passed",
+      "seed": 3325803919,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            255,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            255
+          ],
+          "rx_sha256": "248044d0192ce15576a3285f8f88e2dd1a40a43e7957ed117879766166f647d8"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 0, 255, 1, 2)",
+      "status": "passed",
+      "seed": 1936074623,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            510,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            510
+          ],
+          "rx_sha256": "264f6c17e897ea5c876f2abf480657668ee81e03183342a9966923d6440245db"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 0, 512, 1, 1)",
+      "status": "passed",
+      "seed": 1039748983,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            512,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            512
+          ],
+          "rx_sha256": "4eb9151391be05abb9ae8d7876a42084b873da897861b00daa1341adafe41294"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 0, 512, 1, 2)",
+      "status": "passed",
+      "seed": 2531491077,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "3137200013f3d3123f696d837f801b8bb612ef6266b96749421c61102a88a10c"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 0, 1024, 1, 1)",
+      "status": "passed",
+      "seed": 2153979873,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "123e923d876dccee499f646257b05b7576d50ebd480566169c80aa9bba34509e"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 0, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 2766648426,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "378d3d18c2069d6f54d466fba886934feac289770ceea349b2a65561dabe2636"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 1, 1, 1, 1)",
+      "status": "passed",
+      "seed": 1997491619,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "rx_sha256": "6d90fbacc073ee0b4c43f3a3291cecda33764f6d66d14224ad60f471f2c8334b"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 1, 2, 1, 1)",
+      "status": "passed",
+      "seed": 1756394837,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            2
+          ],
+          "rx_sha256": "d0b3936d5348ab7c3385cb48091c39651d486d9b71fb112b09a102d92c02f822"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 1, 31, 1, 1)",
+      "status": "passed",
+      "seed": 426032128,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            31,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            31
+          ],
+          "rx_sha256": "eb2379d94c566b6af18aa50a7c42472159460001590803b677ac0a95a5aa5a00"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 1, 32, 1, 1)",
+      "status": "passed",
+      "seed": 4242062398,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            32,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            32
+          ],
+          "rx_sha256": "225483bb5d7e55370f75f1c76b76d70fc1fa697c5d87d6ee9c7e93c3d64936ee"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 1, 32, 1, 2)",
+      "status": "passed",
+      "seed": 1789174033,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            64,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            64
+          ],
+          "rx_sha256": "55a4e02bd730dd16e84de168de7227d699c2e28d3a8e0d7137cc5020ddf4438f"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 1, 255, 1, 1)",
+      "status": "passed",
+      "seed": 2307028870,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            255,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            255
+          ],
+          "rx_sha256": "93a25a90897851248fdbea24bc4a4ccbac0057ec6cdf2a76f6d06e3bcebda84f"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 1, 255, 1, 2)",
+      "status": "passed",
+      "seed": 3280563933,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            510,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            510
+          ],
+          "rx_sha256": "cad5fd1934321b03a86783a3268a05d740367a943792faf22f9235d1109540ce"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 1, 512, 1, 1)",
+      "status": "passed",
+      "seed": 666553922,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            512,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            512
+          ],
+          "rx_sha256": "f5f6b17f2d49bdb3baa52d17ac6da904d312125a76d3cde608645774aa4a2c4d"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 1, 512, 1, 2)",
+      "status": "passed",
+      "seed": 303947822,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "5d78b24c60658a477962722a78d08d1c1d45c8762094692c9df520561329a0e6"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 1, 1024, 1, 1)",
+      "status": "passed",
+      "seed": 57865004,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "e40dfb533f2c49786d92068fb97badb5a9ab5498b2b304bc9792faaf3af547cd"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 0, 1, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 1991084764,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "b55eee6090c6f20ed646510db5f5f5ef55927337852460a2e3233e075646130c"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 0, 1, 1, 1)",
+      "status": "passed",
+      "seed": 2891733100,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "rx_sha256": "acac86c0e609ca906f632b0e2dacccb2b77d22b0621f20ebece1a4835b93f6f0"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 0, 2, 1, 1)",
+      "status": "passed",
+      "seed": 2119371837,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            2
+          ],
+          "rx_sha256": "846516b292d14e4c8a7fde2c152e948f34c413340f7d79c03ce830e51af38023"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 0, 31, 1, 1)",
+      "status": "passed",
+      "seed": 3365669883,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            31,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            31
+          ],
+          "rx_sha256": "373569da9dd600cd3f2c57a28350139591890051918db9a65eb0c36ad7d00a86"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 0, 32, 1, 1)",
+      "status": "passed",
+      "seed": 3426656974,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            32,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            32
+          ],
+          "rx_sha256": "32821a7a646789050b83d2f4a33b30e088f5b33cf4ac16119aeaf847ee3575c9"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 0, 32, 1, 2)",
+      "status": "passed",
+      "seed": 4009510741,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            64,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            64
+          ],
+          "rx_sha256": "60aa308c402cc362a0eeba7f94061cf2dc901336865160b152e178548f6f3577"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 0, 255, 1, 1)",
+      "status": "passed",
+      "seed": 1864412628,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            255,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            255
+          ],
+          "rx_sha256": "97d3076ee8d020e9d6cea9d9b16a13b66d832bb94b1280f3257088fcd2d3817e"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 0, 255, 1, 2)",
+      "status": "passed",
+      "seed": 3329085833,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            510,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            510
+          ],
+          "rx_sha256": "9e405d25e5e9a58d73226310a15cb9e484fc43a36b36e81566342822ecc42938"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 0, 512, 1, 1)",
+      "status": "passed",
+      "seed": 1865696399,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            512,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            512
+          ],
+          "rx_sha256": "98fd37357d9bf66dc1594997255de6577c1fc3d5ba90972e85d98464dd4b0cbc"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 0, 512, 1, 2)",
+      "status": "passed",
+      "seed": 1009732777,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "d7a511966cfe974e53e31f88969dd78d43b1d388e8e6ff4e83e338bed571aa6f"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 0, 1024, 1, 1)",
+      "status": "passed",
+      "seed": 3402602309,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "d46235b5ab60334ca8b64f05fa70e637351b0f3a05fd0bbdc17e37d38cce31e3"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 0, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 1529273001,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "50358dfdec9a7ceb90d48efb9b997ab1d4f238afb0b26f9328e984a9ec54465b"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 1, 1, 1, 1)",
+      "status": "passed",
+      "seed": 2011256920,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "rx_sha256": "4b68ab3847feda7d6c62c1fbcbeebfa35eab7351ed5e78f4ddadea5df64b8015"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 1, 2, 1, 1)",
+      "status": "passed",
+      "seed": 2328275433,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            2
+          ],
+          "rx_sha256": "1c9ac8a6740efa8df8b01e2f99784b92b14e1038a15b3a5659cf1f55da94cb23"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 1, 31, 1, 1)",
+      "status": "passed",
+      "seed": 4156677389,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            31,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            31
+          ],
+          "rx_sha256": "27c55be22a4396636a77edb74942cc9c1249534e678343ea30a577def3656472"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 1, 32, 1, 1)",
+      "status": "passed",
+      "seed": 1999422191,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            32,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            32
+          ],
+          "rx_sha256": "94f110ba6f5de9a916f6760f3a8fd36563763f8cfda5ce965aaf60fb8b678f44"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 1, 32, 1, 2)",
+      "status": "passed",
+      "seed": 2309545470,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            64,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            64
+          ],
+          "rx_sha256": "cb39da148030cf91e68b8834ced004090bfeabf9d4ff1d93d41487afbdcd05e3"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 1, 255, 1, 1)",
+      "status": "passed",
+      "seed": 2618503449,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            255,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            255
+          ],
+          "rx_sha256": "b5e59b940c8507bb0da8bbc6c5fb9f702595d879fd2a5b77e3729a6e90439ade"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 1, 255, 1, 2)",
+      "status": "passed",
+      "seed": 685334629,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            510,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            510
+          ],
+          "rx_sha256": "f69c0513d906e6622baa77e59f3b62b992e19e4de7b5108e394d008e4f1598c4"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 1, 512, 1, 1)",
+      "status": "passed",
+      "seed": 4054814610,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            512,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            512
+          ],
+          "rx_sha256": "ea3eb5223d963adc65ffde69990aeb533fb6a3351e50bd6168568bb5cc0532ee"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 1, 512, 1, 2)",
+      "status": "passed",
+      "seed": 4135603336,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "db8b41cd8d75fe67c74eb96ec1478a3159e13698269c7d8a89125212cf348ac3"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 1, 1024, 1, 1)",
+      "status": "passed",
+      "seed": 599240804,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "4471fe50b1e766a559ead6b6f3337c35d596bb8b90431fcc6e2e0c626a0cadf9"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(9600, 1, 1, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 1686782282,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "ae2ae968a28336ff6bd9d0c380e7132954e3c5369d917e293e20881207cca9d9"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 0, 1, 1, 1)",
+      "status": "passed",
+      "seed": 2987024651,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "rx_sha256": "e7cf46a078fed4fafd0b5e3aff144802b853f8ae459a4f0c14add3314b7cc3a6"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 0, 2, 1, 1)",
+      "status": "passed",
+      "seed": 2474118266,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            2
+          ],
+          "rx_sha256": "23cadd31a35286b406c4856e9653aabdb27e210396713f95ff62dd9bd064b31b"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 0, 31, 1, 1)",
+      "status": "passed",
+      "seed": 3850628186,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            31,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            31
+          ],
+          "rx_sha256": "5316a02e6f3ebe470b69596853b7b24f95d812e28d000c3e27d8e52bd05015fb"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 0, 32, 1, 1)",
+      "status": "passed",
+      "seed": 4023116668,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            32,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            32
+          ],
+          "rx_sha256": "8f93ce8b5dd04ecc3e80ac25d74ef6fd1c365b4c9bf3d1cb40c8e01247b6d0d7"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 0, 32, 1, 2)",
+      "status": "passed",
+      "seed": 2433576717,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            64,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            64
+          ],
+          "rx_sha256": "019d7502b956c2621dc8644b0f7aaa2b2f940a6ac1255e86e31f77b90eb887f2"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 0, 255, 1, 1)",
+      "status": "passed",
+      "seed": 2198525509,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            255,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            255
+          ],
+          "rx_sha256": "c2d8c10003c6a9ac48980b50b3fa9812cae32e85e5ffe904075dea5d51105b59"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 0, 255, 1, 2)",
+      "status": "passed",
+      "seed": 694854095,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            510,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            510
+          ],
+          "rx_sha256": "018d5ce76a359ac66121ca65d2ac9ca6dc7635073a74f87bc14d7dded3153865"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 0, 512, 1, 1)",
+      "status": "passed",
+      "seed": 603619811,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            512,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            512
+          ],
+          "rx_sha256": "5491b0a453cfadd83e02858b1d7354a8dfed342c762fcdbbb6e4912f1d3acd4b"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 0, 512, 1, 2)",
+      "status": "passed",
+      "seed": 440552707,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "4f52e031f421596ca48b5e6dde91406f7a8f5463e8f828e34d456f259daa6128"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 0, 1024, 1, 1)",
+      "status": "passed",
+      "seed": 30849472,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "da0a6c6f769cd43ee374ab4f25525a28d4b5827bf46a2266d7a3a6f3b66271af"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 0, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 2057095621,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "cb25fe2803e2b3a08651906b494bf602fd8f0248f825a4c357cd8b64e5b9302b"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 1, 1, 1, 1)",
+      "status": "passed",
+      "seed": 3075814768,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "rx_sha256": "148de9c5a7a44d19e56cd9ae1a554bf67847afb0c58f6e12fa29ac7ddfca9940"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 1, 2, 1, 1)",
+      "status": "passed",
+      "seed": 3406069644,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            2
+          ],
+          "rx_sha256": "d08d22cd08d7151a3a6aeacef2b75a3fd593fe3f97874a8f36d9386fa06199cd"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 1, 31, 1, 1)",
+      "status": "passed",
+      "seed": 1455092141,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            31,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            31
+          ],
+          "rx_sha256": "c04348af6d2300eeb54b71ef0a81853a3aa8e35d8a2b5ab361d17b6814c7d4f2"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 1, 32, 1, 1)",
+      "status": "passed",
+      "seed": 1100105936,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            32,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            32
+          ],
+          "rx_sha256": "414a50613bb66ff1467580c0c43fcb2701b77d6516d22bd691f1350cdd1641d1"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 1, 32, 1, 2)",
+      "status": "passed",
+      "seed": 1784074580,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            64,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            64
+          ],
+          "rx_sha256": "b272aec4d84faef81f98372ff1bb5a1d1ec32bd21e1914c9866905c45e991cf0"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 1, 255, 1, 1)",
+      "status": "passed",
+      "seed": 1374770906,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            255,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            255
+          ],
+          "rx_sha256": "39836a9080932cef5b10b36b5f87ca42eb10d52f2d763b4e1f4bf82d35598ab3"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 1, 255, 1, 2)",
+      "status": "passed",
+      "seed": 3795459950,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            510,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            510
+          ],
+          "rx_sha256": "e5ae6d206c1ce0a2cb4f45d72727589be65a0bab93dc9642cbfcfb25d49de6be"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 1, 512, 1, 1)",
+      "status": "passed",
+      "seed": 2880717311,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            512,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            512
+          ],
+          "rx_sha256": "80f9eaf9571c68ec823b71086c5893297b0a0c7a66657bdcb5e0d00bec629f62"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 1, 512, 1, 2)",
+      "status": "passed",
+      "seed": 3599031663,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "980e6655871b8df9078ef4115b10562393781ab007f1f3e480f0a71636be23f7"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 1, 1024, 1, 1)",
+      "status": "passed",
+      "seed": 2294025596,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "0a1da0eee07b3ce5c3eb61275064b69ea6489338b360fa7c5bba4b8df0e13039"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 1, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 4261237926,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "564d5272fd8c1a754228aafaaa544c39c5f5baa9842d2513acdc9707d4510415"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 0, 1, 1, 1)",
+      "status": "passed",
+      "seed": 962156868,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "rx_sha256": "3f39d5c348e5b79d06e842c114e6cc571583bbf44e4b0ebfda1a01ec05745d43"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 0, 2, 1, 1)",
+      "status": "passed",
+      "seed": 300705140,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            2
+          ],
+          "rx_sha256": "e73deb2e02f34460bf91c592a16bbff2a6ebce5681f6aeaae27309e3b68ad8a2"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 0, 31, 1, 1)",
+      "status": "passed",
+      "seed": 3433171445,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            31,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            31
+          ],
+          "rx_sha256": "7727010e583804dc50c0fbaa950f77a641b7ed59e186c84c0babe4b19d273599"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 0, 32, 1, 1)",
+      "status": "passed",
+      "seed": 3851162125,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            32,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            32
+          ],
+          "rx_sha256": "4409f3f4b5471cd7fd96578e9b2af78c9aa255278ed357383aa917ad59b1e9e2"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 0, 32, 1, 2)",
+      "status": "passed",
+      "seed": 3647974571,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            64,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            64
+          ],
+          "rx_sha256": "942e8e7c055dc16bbc9d2df6098adc6106ddf60b322b47d076c70b731ac290dd"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 0, 255, 1, 1)",
+      "status": "passed",
+      "seed": 1939818458,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            255,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            255
+          ],
+          "rx_sha256": "39836a9080932cef5b10b36b5f87ca42eb10d52f2d763b4e1f4bf82d35598ab3"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 0, 255, 1, 2)",
+      "status": "passed",
+      "seed": 3740884353,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            510,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            510
+          ],
+          "rx_sha256": "cbb511a4baff3e01506b567bbd00459e5fb2161bcd8da588cc8f09d7df1ccb9c"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 0, 512, 1, 1)",
+      "status": "passed",
+      "seed": 1201378380,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            512,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            512
+          ],
+          "rx_sha256": "10d39a48cbf9cc86307047388d72d4eca95df1f866ee7354d3f46fcd51934931"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 0, 512, 1, 2)",
+      "status": "passed",
+      "seed": 2174418866,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "f04ea100d5af773330461bdce159f6edf8ba665ffa6d20e8524a4aa73868cbe8"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 0, 1024, 1, 1)",
+      "status": "passed",
+      "seed": 3558391504,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "1a69adb98e3daadd4193a3efbae146673d9a3198730103e85fcfea0a8c4d4bcf"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 0, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 1587712425,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "50358dfdec9a7ceb90d48efb9b997ab1d4f238afb0b26f9328e984a9ec54465b"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 1, 1, 1, 1)",
+      "status": "passed",
+      "seed": 3938623001,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "rx_sha256": "68aa2e2ee5dff96e3355e6c7ee373e3d6a4e17f75f9518d843709c0c9bc3e3d4"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 1, 2, 1, 1)",
+      "status": "passed",
+      "seed": 4114760071,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            2
+          ],
+          "rx_sha256": "6c2d2a1db5b087a58be097a5230f0f65c031b23dceae6872f95771d6064fdb30"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 1, 31, 1, 1)",
+      "status": "passed",
+      "seed": 703068672,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            31,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            31
+          ],
+          "rx_sha256": "eb2379d94c566b6af18aa50a7c42472159460001590803b677ac0a95a5aa5a00"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 1, 32, 1, 1)",
+      "status": "passed",
+      "seed": 2503081983,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            32,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            32
+          ],
+          "rx_sha256": "75ab735015bba28abcf47f553a46446f5b20f7b8eae7c2374de63fccd139087f"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 1, 32, 1, 2)",
+      "status": "passed",
+      "seed": 4114899808,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            64,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            64
+          ],
+          "rx_sha256": "7aa3ea4131dc16f1a7ade87270aff686a03ddf27df177d7be6519b761d3a1b29"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 1, 255, 1, 1)",
+      "status": "passed",
+      "seed": 3050232335,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            255,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            255
+          ],
+          "rx_sha256": "8fb4a2fd7e3fba9f063b952b4d47c6272b9a8577a5420a471de285aeca23c1c1"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 1, 255, 1, 2)",
+      "status": "passed",
+      "seed": 1999819373,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            510,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            510
+          ],
+          "rx_sha256": "5a88f0c18e57b943c3042bc94d702adf6f462a8ee9ac249820e06c458cd63fd7"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 1, 512, 1, 1)",
+      "status": "passed",
+      "seed": 49655160,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            512,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            512
+          ],
+          "rx_sha256": "f7d6b5ecfc28f94049a532be00916a5be34c90efdd9c8d0e9a0c21e31d886be6"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 1, 512, 1, 2)",
+      "status": "passed",
+      "seed": 1463645830,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "71c6e1eb04b76b8fbc8195aec087b9b9c71a2919e0855e9d9ab5affedffea16c"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 1, 1024, 1, 1)",
+      "status": "passed",
+      "seed": 1846417538,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "adee3e908e6ee37459b960f1bb77113d689c8ceff363f352485ea1fe336dc74c"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 1, 1, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 943623956,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "b2cea4aaf09bc898c3eae500fcdd8049a1fd4e30220653ef276ba238d88e3d16"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 0, 1, 1, 1)",
+      "status": "passed",
+      "seed": 421380907,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "rx_sha256": "a318c24216defe206feeb73ef5be00033fa9c4a74d0b967f6532a26ca5906d3b"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 0, 2, 1, 1)",
+      "status": "passed",
+      "seed": 1618166868,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            2
+          ],
+          "rx_sha256": "7c596f8cf2973c105b7b7229578c06e7877918f757c3d7b1564415456b81dfb9"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 0, 31, 1, 1)",
+      "status": "passed",
+      "seed": 889635535,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            31,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            31
+          ],
+          "rx_sha256": "ac1fec3be42dcb688e5a133d1e80a7d264fd4767fab30cdc655bda6df3b8847b"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 0, 32, 1, 1)",
+      "status": "passed",
+      "seed": 1854301887,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            32,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            32
+          ],
+          "rx_sha256": "f018944e895c3eb150ec37c44ce214f465bd2f1a7a48229f8895730ebe84dedf"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 0, 32, 1, 2)",
+      "status": "passed",
+      "seed": 1182672955,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            64,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            64
+          ],
+          "rx_sha256": "e77021a4aadb08098f1f08ca089114028fab72330c3fbe1d59426587bca551a3"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 0, 255, 1, 1)",
+      "status": "passed",
+      "seed": 3506957157,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            255,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            255
+          ],
+          "rx_sha256": "2166c30d93ffd22cb99f61f0da76b015a14b614a774f99fb880da2281207f459"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 0, 255, 1, 2)",
+      "status": "passed",
+      "seed": 256096044,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            510,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            510
+          ],
+          "rx_sha256": "5b4e212e0a9ced1056b54399f55897cea6e9eb095e3d1ec630ae8869cf3ab651"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 0, 512, 1, 1)",
+      "status": "passed",
+      "seed": 538303276,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            512,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            512
+          ],
+          "rx_sha256": "fd062da31fa3b7779c6b48a27f0c91718b2a7d760781a943f40870870ea4efdf"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 0, 512, 1, 2)",
+      "status": "passed",
+      "seed": 307875828,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "c714e74224ab94fa2ba7cd019f8306af10e382e59104dbcce8c2a3f712a89461"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 0, 1024, 1, 1)",
+      "status": "passed",
+      "seed": 1715108503,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "849e9e9217fd85aae487dde25e7fc1c6fdb10f48ab0570578f19e2b85935dad7"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 0, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 728397318,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "efc124e6603af7b12c9d7e5bb362296f7bfec04a87580793cb3ad7f7157cfd07"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 1, 1, 1, 1)",
+      "status": "passed",
+      "seed": 1770355993,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "rx_sha256": "68aa2e2ee5dff96e3355e6c7ee373e3d6a4e17f75f9518d843709c0c9bc3e3d4"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 1, 2, 1, 1)",
+      "status": "passed",
+      "seed": 3493063692,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            2
+          ],
+          "rx_sha256": "f5f18a54a91ae19a62def7fcdbd0bd100aba72b8d5021ae0b01997c2c3a93ff1"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 1, 31, 1, 1)",
+      "status": "passed",
+      "seed": 2802472721,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            31,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            31
+          ],
+          "rx_sha256": "7203b92aff04c72af7f61ffd14e4e3ac067aebf55744e507afe6f7d368ed8af7"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 1, 32, 1, 1)",
+      "status": "passed",
+      "seed": 1370800942,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            32,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            32
+          ],
+          "rx_sha256": "3755c7a290839178962ccfaa297f4b0818b4bc99c959b1c315236722d7004e00"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 1, 32, 1, 2)",
+      "status": "passed",
+      "seed": 3629169044,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            64,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            64
+          ],
+          "rx_sha256": "a7c19b5194bb37f9c48e02b52f9a86d55c6ef1dc0061bc6c12e7b483cea63a66"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 1, 255, 1, 1)",
+      "status": "passed",
+      "seed": 1543212444,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            255,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            255
+          ],
+          "rx_sha256": "5d21d86f5ad31f7d0a67055f561ba7ff282cbff04ed9d4e6ad13ff46d728daf7"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 1, 255, 1, 2)",
+      "status": "passed",
+      "seed": 1597718430,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            510,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            510
+          ],
+          "rx_sha256": "808851f4292d7bec18de5ecdac59a040d01b65610ee3b46d929d1af765cd235d"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 1, 512, 1, 1)",
+      "status": "passed",
+      "seed": 1883189779,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            512,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            512
+          ],
+          "rx_sha256": "e37177e4b19e67c705da65bab1a12d4393ed9144b232477481a1f1a31ed3a59f"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 1, 512, 1, 2)",
+      "status": "passed",
+      "seed": 2437201258,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "2292772cad17998fe655991ad53aa1f6ff5c9278065303adb481abc04ef61aaa"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 1, 1024, 1, 1)",
+      "status": "passed",
+      "seed": 2480988966,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "8e150604b7463eaf4feecee615f9b0d4b0cb1d9653623ac2c2dc49752636fc30"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 0, 1, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 2535454034,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "661a1114d147be72d6bd8415e90bd2c48e718359635c5ddca1d2f6cc6cae0060"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 0, 1, 1, 1)",
+      "status": "passed",
+      "seed": 3813198220,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "rx_sha256": "9defb0a9e163278be0e05aa01b312ec78cfa3726869503385e76e3a4b7950648"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 0, 2, 1, 1)",
+      "status": "passed",
+      "seed": 752434429,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            2
+          ],
+          "rx_sha256": "c1827b859c66fe5541cd4622932db7191519ee9ba1d5ff83706525e36a9c3d01"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 0, 31, 1, 1)",
+      "status": "passed",
+      "seed": 1327830432,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            31,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            31
+          ],
+          "rx_sha256": "39d3901fb834fbec95f5388b56be0b0eca51b813564d74db8ce8094d52e4a5de"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 0, 32, 1, 1)",
+      "status": "passed",
+      "seed": 904444877,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            32,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            32
+          ],
+          "rx_sha256": "5680fe525242696f620055baa8b64265f89cf6738ad44937dd93789c4c961cc2"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 0, 32, 1, 2)",
+      "status": "passed",
+      "seed": 683306563,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            64,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            64
+          ],
+          "rx_sha256": "077dccabfb3ecea06c472b93a58115abc3080e17a1ddb183e219cb0f7ee0899a"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 0, 255, 1, 1)",
+      "status": "passed",
+      "seed": 3205816893,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            255,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            255
+          ],
+          "rx_sha256": "c9216590a8e29d552e9808d6f7efda466593d287b446579ab2d2254c0231d33b"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 0, 255, 1, 2)",
+      "status": "passed",
+      "seed": 1770459883,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            510,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            510
+          ],
+          "rx_sha256": "ba225c32a3bf2f6211ac50d06d11c7bfe33ccdebb43bae5677243e5b2f4d78f4"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 0, 512, 1, 1)",
+      "status": "passed",
+      "seed": 857315887,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            512,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            512
+          ],
+          "rx_sha256": "f0a7f39436124e2ad181dafdacfecf6b78a5dd63b4e3c07efa5c5132ed54b542"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 0, 512, 1, 2)",
+      "status": "passed",
+      "seed": 4232552394,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "703b5d2dca84b2bb6d2b8a79634e74b6afc1a4cfd048ec251ab3e3c3638936d4"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 0, 1024, 1, 1)",
+      "status": "passed",
+      "seed": 551866519,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "849e9e9217fd85aae487dde25e7fc1c6fdb10f48ab0570578f19e2b85935dad7"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 0, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 2046686501,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "5d1189643ae3c33148a269083b9369e4a19101b7e756509e6f7e0b5e06a61d98"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 1, 1, 1, 1)",
+      "status": "passed",
+      "seed": 3618063187,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "rx_sha256": "8de0b3c47f112c59745f717a626932264c422a7563954872e237b223af4ad643"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 1, 2, 1, 1)",
+      "status": "passed",
+      "seed": 1752554592,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            2
+          ],
+          "rx_sha256": "521f83e0af5b21787f9c4b51857f04fab1653392ca1707c7714fe93034d6ca6e"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 1, 31, 1, 1)",
+      "status": "passed",
+      "seed": 1700354175,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            31,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            31
+          ],
+          "rx_sha256": "1be64c5b8d4843521329e399638f4c2b447eca92fb441aa7ab3accde1c2cf103"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 1, 32, 1, 1)",
+      "status": "passed",
+      "seed": 1604495885,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            32,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            32
+          ],
+          "rx_sha256": "4409f3f4b5471cd7fd96578e9b2af78c9aa255278ed357383aa917ad59b1e9e2"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 1, 32, 1, 2)",
+      "status": "passed",
+      "seed": 1431394213,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            64,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            64
+          ],
+          "rx_sha256": "dd4f3039753343ef6e69e92070a961892768831e7c3c3d4cc8fdc527d2af6441"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 1, 255, 1, 1)",
+      "status": "passed",
+      "seed": 2254141283,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            255,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            255
+          ],
+          "rx_sha256": "423e77721f63e15e2b9b987c0d820315cb2ff3a550fc6717edb356b027d3315d"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 1, 255, 1, 2)",
+      "status": "passed",
+      "seed": 254495133,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            510,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            510
+          ],
+          "rx_sha256": "7c894a193352121ffc8e00494d0964f2f856bd2fdf12984b72e0a1ad2b0d6f02"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 1, 512, 1, 1)",
+      "status": "passed",
+      "seed": 3466647968,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            512,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            512
+          ],
+          "rx_sha256": "b251b7c4fbb2c84595b68e71d601f0ef76f6439d123c3f788aa8d7597fd80580"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 1, 512, 1, 2)",
+      "status": "passed",
+      "seed": 3408351182,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "ccdb20121093567852a06170a02d39d178e34d6a6adf58cdea9f78362d5b784e"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 1, 1024, 1, 1)",
+      "status": "passed",
+      "seed": 1208252906,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "82c194cc97f4bd101de293dd4bc3f268144f9fc9c713d70669a7d3cda7207b3d"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(1000000, 1, 1, 1024, 1, 2)",
+      "status": "passed",
+      "seed": 2426529614,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2048,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            2048
+          ],
+          "rx_sha256": "e645f6efd97524244f7edacd493bd4159ae5f078101e3576b53614b3da042633"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 1, 256, 2, 1)",
+      "status": "passed",
+      "seed": 1955604723,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            256,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            256
+          ],
+          "rx_sha256": "856c2d68c3d076632ba28aa6893c33e7c02a32e2fa954dc02f210b7d702416c9"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-EXPECTED-ERROR/103/1/(20, 20)/(115200, 0, 0, 32, 3, 1)",
+      "status": "passed",
+      "seed": 1899800989,
+      "error_status": [
+        1,
+        1,
+        0,
+        0,
+        101057024,
+        1,
+        0,
+        0
+      ],
+      "controller_status": [
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        32,
+        0
+      ],
+      "scope": "parity-break-nack-or-cancel-and-bounded-stop"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 0, 32, 1, 1)/recovery-after-error",
+      "status": "passed",
+      "seed": 1646669964,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            32,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            32
+          ],
+          "rx_sha256": "1578b69542e1952ca40776487fa67bd8a124a3efd543f34c388b026b5eeb0f2d"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-EXPECTED-ERROR/103/1/(20, 20)/(115200, 0, 0, 32, 4, 1)",
+      "status": "passed",
+      "seed": 1972968710,
+      "error_status": [
+        1,
+        1,
+        0,
+        0,
+        201720320,
+        1,
+        0,
+        0
+      ],
+      "controller_status": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "scope": "parity-break-nack-or-cancel-and-bounded-stop"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 20)/(115200, 0, 0, 32, 1, 1)/recovery-after-error",
+      "status": "passed",
+      "seed": 892666396,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            32,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            32
+          ],
+          "rx_sha256": "beb5af191536b6e965d7701a020abaf8ea8ba852a659b6b26e202612a39ab23d"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 21)/(9600, 0, 0, 1, 1, 1)",
+      "status": "passed",
+      "seed": 4204348198,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "rx_sha256": "951dcee3a7a4f3aac67ec76a2ce4469cc76df650f134bf2572bf60a65c982338"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 21)/(9600, 0, 0, 2, 1, 1)",
+      "status": "passed",
+      "seed": 1630880929,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            2,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            2
+          ],
+          "rx_sha256": "aa1e3f6022ed746f0f583d3337eeade8ede82863240a9b4ae45b1b4a8a213d50"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 21)/(9600, 0, 0, 31, 1, 1)",
+      "status": "passed",
+      "seed": 2922207177,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            31,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            31
+          ],
+          "rx_sha256": "8e52522216de95620ca520ee0d47a17f7e4daaa9198f08ec0d00353236915802"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 21)/(9600, 0, 0, 32, 1, 1)",
+      "status": "passed",
+      "seed": 2568172464,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            32,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            32
+          ],
+          "rx_sha256": "e76f0f23f6af9cf37d7d18e43142f3e4c6a91163124aba8989c39b7a0603796d"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 21)/(9600, 0, 0, 32, 1, 2)",
+      "status": "passed",
+      "seed": 1615162325,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            64,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            64
+          ],
+          "rx_sha256": "49df1f1b25a352b064d9e3908daa2a14f17c33aaa6484007f70b915f6efd29ea"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 21)/(9600, 0, 0, 255, 1, 1)",
+      "status": "passed",
+      "seed": 1622839203,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            255,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            255
+          ],
+          "rx_sha256": "0d7fef34e3734846877e7834f1e99fab14d930309c79d944b137f58ff2709f68"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 21)/(9600, 0, 0, 255, 1, 2)",
+      "status": "passed",
+      "seed": 3669506985,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            510,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            510
+          ],
+          "rx_sha256": "469d00bd08e4758939a5eaf9f16fbfa4ea06881f20918ddac9ee377b5f8faf51"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 21)/(9600, 0, 0, 512, 1, 1)",
+      "status": "passed",
+      "seed": 2494433961,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            512,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            512
+          ],
+          "rx_sha256": "99bd2b6c9c6a72e914e89acc84166a9a11c279f0bbdeb708198f9f31e52482cd"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 21)/(9600, 0, 0, 512, 1, 2)",
+      "status": "passed",
+      "seed": 392157111,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            3,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "37dad684e43643cd7d27392afb0caf3a3a019b3eb02b0926763afab9628d6dbe"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-UARTE-DATA/103/1/(20, 21)/(9600, 0, 0, 1024, 1, 1)",
+      "status": "passed",
+      "seed": 3945925677,
+      "results": [
+        {
+          "role": 1,
+          "status_words": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1024,
+            0
+          ],
+          "rx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "role": 2,
+          "status_words": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1024
+          ],
+          "rx_sha256": "4c0250ebca1f6ac6a7e9a3d2b2b5d4080a977bb9a1b5fd9cc8793e5c6cbb7861"
+        }
+      ],
+      "concurrent_pmic": null,
+      "scope": "asynchronous-single-or-double-buffer"
+    },
+    {
+      "id": "V04-FIXTURE-CLEANUP",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "confirmation_sha256": "c489e43ec3e756e8b804fc5fe00b9e54f1a695df7f417f81b572155d76f91d9d",
+  "confirmed_at_unix": 1788582837,
+  "error": "ProtocolError: fixture error/guard failure role=2: [1, 1, 0, 1, 67502592, 1, 0, 1024]",
+  "completed_at_utc": "2026-09-05T04:39:26.134483+00:00"
+}
