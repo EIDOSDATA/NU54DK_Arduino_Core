@@ -79,6 +79,7 @@
 | Fixture 103 UART | exact `b3c689b`에서 P1↔P1 UARTE20/21/22 전 조합 양방향 data 2,430·예상 오류 36·cleanup 2건 PASS; SPI·TWI HOLD | [M24 Fixture 103 실기 검증](46_M24_Fixture_103_UART_실기_검증.md) |
 | Fixture 201 SPI | exact `f21377e`에서 P2↔P1 SPIM/SPIS 18,169개 계획 벡터·cleanup 2건 PASS; Fixture 202~203·TWI 301 HOLD | [M24 Fixture 201 실기 검증](47_M24_Fixture_201_SPI_실기_검증.md) |
 | Fixture 202 SPI | exact `1a133e6`에서 P0↔P1 SPIM/SPIS 9,084개 계획 벡터·cleanup 2건 PASS; Fixture 203·TWI 301 HOLD | [M24 Fixture 202 실기 검증](48_M24_Fixture_202_SPI_실기_검증.md) |
+| Fixture 203 SPI | exact `4af93da`에서 P1↔P1 SPIM/SPIS 전 조합 27,252개 계획 벡터·cleanup 2건 PASS; TWI 301 HOLD | [M24 Fixture 203 실기 검증](49_M24_Fixture_203_SPI_실기_검증.md) |
 
 ## 기록 해석 규칙
 
