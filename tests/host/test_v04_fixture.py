@@ -3,6 +3,7 @@ import copy
 import hashlib
 import json
 from pathlib import Path
+import struct
 import sys
 import unittest
 
@@ -164,6 +165,56 @@ class FixtureTests(unittest.TestCase):
                                                        "uarte", 2), (64, 0))
             self.assertEqual(fixture.expected_lengths(other, controller, 32, 1,
                                                        "uarte", 2), (0, 64))
+
+    def test_spi_split_buffer_waits_for_peer_rearm_before_second_segment(self):
+        class Device:
+            def __init__(self, role):
+                self.image = {"role": role}
+                self.role = role
+                self.status_count = 0
+                self.seed = 0
+                self.commands = []
+
+            def command(self, opcode, values=(), timeout=10):
+                del timeout
+                self.commands.append(opcode)
+                if opcode == 18:
+                    return [0]
+                if opcode == 20:
+                    self.seed = values[5]
+                    return [0]
+                if opcode == 21 or opcode == 28:
+                    return [0]
+                if opcode == 22:
+                    self.status_count += 1
+                    if self.role == 1:
+                        completed = 1 if self.status_count == 1 else 2
+                        return [1, 0, completed, completed, 0, 1,
+                                completed * 4, completed * 4]
+                    if self.status_count == 1:
+                        return [1, 1, 0, 0, 0, 1, 0, 0]
+                    completed = 1 if self.status_count == 2 else 2
+                    return [1, 2, completed, completed, 0, 1,
+                            completed * 4, completed * 4]
+                if opcode == 24:
+                    offset, count = values
+                    peer_role = 3 - self.role
+                    incoming = fixture.payload(self.seed ^ (0 if peer_role == 1 else 0x5a), 8)
+                    chunk = incoming[offset:offset + count]
+                    chunk += bytes((-len(chunk)) % 4)
+                    return list(struct.unpack(f"<{len(chunk) // 4}I", chunk))
+                if opcode == 23:
+                    return [0, 1]
+                raise AssertionError(f"unexpected opcode: {opcode}")
+
+        devices = [Device(1), Device(2)]
+        results = []
+        fixture.exchange(devices, {"id": 201, "family": "spi"}, 1, (0, 20),
+                         (2000000, 0, 0, 4, 3, 2),
+                         lambda case_id, result: results.append((case_id, result)))
+        self.assertIn(28, devices[0].commands)
+        self.assertNotIn(28, devices[1].commands)
+        self.assertEqual(len(results), 1)
 
 
 if __name__ == "__main__":

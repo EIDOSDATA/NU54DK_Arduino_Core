@@ -556,7 +556,7 @@ namespace
     {
         if (event.type == SpiFabricEventType::buffers_armed)
         {
-            ready = 1;
+            ++ready;
         }
         else if (event.type == SpiFabricEventType::transfer_complete)
         {
@@ -653,7 +653,7 @@ void serviceFixture()
         twiEvent(twi);
     }
     if (handle && gate.controller() == role && segments == 2 && kicked && !second_kicked &&
-        tx_done == 1 && rx_done == 1 && !errors)
+        tx_done == 1 && rx_done == 1 && !errors && spim == nullptr)
     {
         second_kicked = true;
         const auto *tx = tx_length ? transmit_next.data : nullptr;
@@ -845,6 +845,23 @@ std::uint32_t fixtureCommand(std::uint32_t opcode, const std::uint32_t *args, st
                        concurrent_twim->state() == SerialFabricState::active
                    ? 0U
                    : 707U;
+    }
+    /** @brief Peer SPIS의 두 번째 buffer 활성화 확인 뒤 다음 SPIM segment를 시작합니다. */
+    if (opcode == 28U && nargs == 0U && spim != nullptr && segments == 2U && kicked &&
+        !second_kicked && tx_done == 1U && rx_done == 1U && errors == 0U &&
+        gate.controller() == role)
+    {
+        second_kicked = true;
+        const auto *tx = tx_length ? transmit_next.data : nullptr;
+        auto *rx = rx_length ? receive_next.data : nullptr;
+        const auto result = spim->transferAsync(tx, tx_length, rx, rx_length);
+        out[0] = static_cast<std::uint32_t>(result);
+        count = 1U;
+        if (result != SerialFabricResult::success)
+        {
+            errors |= 2048U;
+        }
+        return result == SerialFabricResult::success ? 0U : 708U;
     }
     if (opcode == 23 && nargs == 0)
     {
