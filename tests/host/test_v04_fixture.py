@@ -179,7 +179,7 @@ class FixtureTests(unittest.TestCase):
                 del timeout
                 self.commands.append(opcode)
                 if opcode == 18:
-                    return [0]
+                    return []
                 if opcode == 20:
                     self.seed = values[5]
                     return [0]

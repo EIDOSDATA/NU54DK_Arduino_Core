@@ -231,8 +231,14 @@ def exchange(devices, fixture, controller_role, instances, vector, append, label
         wait_status(peripheral, lambda words: words[1] == 1)
     if fixture["family"] == "spi" and address == 2:
         wait_status(controller, lambda words: tuple(words[2:4]) == (1, 1))
+        for device in devices:
+            if device.command(18) != []:
+                raise ProtocolError("SPI split-buffer lease renewal failed")
         wait_status(peripheral,
                     lambda words: words[1] == 2 and tuple(words[2:4]) == (1, 1))
+        for device in devices:
+            if device.command(18) != []:
+                raise ProtocolError("SPI split-buffer lease renewal failed")
         if controller.command(28) != [0]:
             raise ProtocolError("SPIS next buffer handover failed")
     expected_uart_error = fixture["family"] == "uarte" and direction in (3, 4)
