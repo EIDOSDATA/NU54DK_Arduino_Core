@@ -1,0 +1,36 @@
+[
+  {
+    "r01": {
+      "config_sha256": "9ee93f00b2b86062bbf5dd41a870f339c6f45e9aa684a1006d430255b2ae6f3a",
+      "elf_sha256": "8caf46203291fa9e8d02e8ae58a1c3c2edbd552282c39993be43d11b7d2a0a75",
+      "flash_text_data": 181092,
+      "hex_sha256": "c6b2ca40430e49d892236fd154ff7111f2d99d3baff05a31ef42359c7af75d7c",
+      "ram_data_bss": 161234
+    },
+    "r02": {
+      "config_sha256": "9ee93f00b2b86062bbf5dd41a870f339c6f45e9aa684a1006d430255b2ae6f3a",
+      "elf_sha256": "3e7c64d66eaf742ab7acd44740d0a20352cb97a53e79dfd059cc4b12e7a0bf4c",
+      "flash_text_data": 182128,
+      "hex_sha256": "754cc3c5be8e5d62032b5aa17aed606c9525c5cbe707fcc8513d97a9a7336a79",
+      "ram_data_bss": 161342
+    },
+    "role": "dut"
+  },
+  {
+    "r01": {
+      "config_sha256": "421c8211958933feeca69e22db2d62c951c3a2580dbca579af46e49221fdaee2",
+      "elf_sha256": "7971ce9b8f261cdd31de959927e8a862c522cc44c2983579219e34d995dd73df",
+      "flash_text_data": 181112,
+      "hex_sha256": "84157cfef3a345a14f6ddd6bbf7135a3c9e6337f284cd074117f3005b65fe568",
+      "ram_data_bss": 161234
+    },
+    "r02": {
+      "config_sha256": "421c8211958933feeca69e22db2d62c951c3a2580dbca579af46e49221fdaee2",
+      "elf_sha256": "aca3c4673fc7af27ca702fd65f4ab2a796c36634be118dbaba4adf67fe281ed0",
+      "flash_text_data": 182140,
+      "hex_sha256": "f9eb9517ee378aaeb0f1dd4580d82646c62bef5e0ed83b430e3f5a4c97285b66",
+      "ram_data_bss": 161342
+    },
+    "role": "peer"
+  }
+]

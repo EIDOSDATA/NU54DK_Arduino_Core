@@ -1,0 +1,68 @@
+{
+  "driver_scenarios": 8,
+  "exported_before_sha256": "70688064b992aaed0d6518c70cb4c2cfe8b75be6aac1f9c7364c7818fa092225",
+  "exported_log_normalization": "UTF-8, LF, trailing whitespace removed; gate hashes identify original work logs",
+  "file_header_executable_tokens_unchanged": true,
+  "gates": {
+    "after": {
+      "result_lines": [],
+      "sha256": "07f947cf901b3af4d032f844f7df403e94659d4403fe49bc3b1e2419fa3872f3",
+      "skips": 0,
+      "tests": 1
+    },
+    "before": {
+      "result_lines": [
+        "FAILED (failures=3)"
+      ],
+      "sha256": "7bc2f5af18df3a8433a975c0e82408794416cf43d7616936f59eb5619ba3f256",
+      "skips": 0,
+      "tests": 1
+    },
+    "contract": {
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "sha256": "9a1262c7db3b66eb22323d1d418bfc3f2c2a330ee15917e94e4eeb306fcc4262",
+      "skips": 0,
+      "tests": 45
+    },
+    "host": {
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "sha256": "06d90cde31a0038b4c710d23e3d1de737eb15deb0bd1233639f2c9bef03197d7",
+      "skips": 2,
+      "tests": 605
+    },
+    "style": {
+      "result_lines": [
+        "CPP_STYLE_FILES=259; FAILED=0; WRITE=0"
+      ],
+      "sha256": "7918ea1ecad4dc9e47f1a3a189f8cd07461a6d02326992e9579308f4beb88e41",
+      "skips": 0,
+      "tests": 0
+    },
+    "target": {
+      "result_lines": [
+        "INFO    - 0 test configurations executed on platforms, 2 test configurations were only built.",
+        "M12_ZEPHYR_BUILD_PASS=2;GROUP=v0.3.0;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "sha256": "e2c8763a6bfa1552becfa6ea82f0444481e846d3e4e827eec4d499a09735a161",
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "partition_sha256": "8fa977c39173dbb75b028a0967b45aa83576513d7f453453f6fbf0245ad35f80",
+  "physical_executed": false,
+  "source_sha256": {
+    "libraries/LittleFS/src/FS.cpp": "5e82de29b204cead471207fd118f1e35ba7c3833baec14529c290b07148c8769",
+    "libraries/LittleFS/src/FS.h": "4cb27b8dada86f519e040077b0963c6d2fccd3e5d5e062c642e5254378e9e620",
+    "tests/host/r04_file_main.cpp": "dbf6866cddcbe9d6d9cf025044dedc01cdbbd2905a4e81253823a682606a9080",
+    "tests/host/storage_stubs/Stream.h": "bd2559ac3161bf06043b52a25dc1019c5c7542da9c59e957083311a8e4569470",
+    "tests/host/storage_stubs/zephyr/fs/fs.h": "ab39f2435fba5f4edf9efd9442ac2ccb82cfb3045bbc5b6d584c3349be074c46",
+    "tests/host/storage_stubs/zephyr/kernel.h": "8de0ac9b53a100f7a2bbcfd9a955a9a3ed841efcf4eb651e5462135ef7a1eaf6",
+    "tests/host/storage_stubs/zephyr/sys/atomic.h": "c6a7e1adb470e481102c8bbc0e204e0679e6ea15e79b69a31d4a5a663e9f37bd",
+    "tests/host/test_r04_file.py": "e10a5fb5c4b1301e0cd530f3c0626aa9ac8f00ad299593df5cdc96a987871f6a"
+  },
+  "start_commit": "6b794807a0e3c8b86cfab5bc3a58b6bd0bf809b9"
+}

@@ -1,0 +1,124 @@
+{
+  "after-cmake": {
+    "markers": [
+      "OK"
+    ],
+    "sha256": "a01fadd66a1a1bbf926f95d6f9c9044f68fbc1ee0ef6f0f39bb73cf84edddcb4",
+    "test_count": 1
+  },
+  "before-cmake": {
+    "markers": [
+      "FAILED (failures=5)"
+    ],
+    "sha256": "1a0fad7d38bcba68e616ae5be5abd47aa044e8fe151b79c2ec821b2f454ed605",
+    "test_count": 1
+  },
+  "contract": {
+    "markers": [
+      "OK",
+      "M12_GATE_PASS=contract"
+    ],
+    "sha256": "10bd6aaf81804d19b0ab8f8e9e3b25e6d9485d8c641b32d505456700f41d3c05",
+    "test_count": 45
+  },
+  "host": {
+    "markers": [
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "! @brief 설치된 Arduino CLI가 공개 예제를 노출하는지 확인합니다. ... skipped 'M13 package 설치 후 NUCODE_M13_CLI_DISCOVERY=1로 실행합니다.'",
+      "OK (skipped=1)",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "test_clean_submodule_status_survives_trimmed_first_prefix (test_m27_release.M27ReleaseTests.test_clean_submodule_status_survives_trimmed_first_prefix) ... skipped 'source checkout is intentionally dirty during the unit run'",
+      "OK (skipped=1)",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "AC03_BOARD_PASS=one;PORT=COM1;RESETS=3",
+      "AC03_BOARD_PASS=two;PORT=COM2;RESETS=3",
+      "AC03_TWO_BOARD_HIL_PASS=2",
+      "OK",
+      "OK",
+      "OK",
+      "OK",
+      "M12_GATE_PASS=host"
+    ],
+    "sha256": "f30c8bd245f314723519a67697e3e19dd9870baf51004cc3bc6378aba9e024a9",
+    "test_count": 600
+  },
+  "inventory": {
+    "markers": [
+      "V04_TEST_PLAN_PASS=identities:75;families:19;physical_executed:0",
+      "M23_INVENTORY_PASS=instances:75",
+      "M24_SERIAL_CONTRACT_PASS=blocks:5;identities:23;profiles:23;onboard:7;fixture:16",
+      "M26_SYSTEM_CONTRACT_PASS=capabilities:16;unknown:0",
+      "M27_RELEASE_CONTRACT_PASS=gates:16;blockers:8",
+      "M12_GATE_PASS=inventory"
+    ],
+    "sha256": "9510ed7072eb22b16614ed2c1cab372663f22d759fa26c1985334e7e8f32dcc9",
+    "test_count": 0
+  },
+  "package": {
+    "markers": [
+      "OK",
+      "M12_GATE_PASS=package"
+    ],
+    "sha256": "cbf2548ade6a215139ba5be934623b83b9980eb551f26acf9f47637aa3f6f6fd",
+    "test_count": 20
+  },
+  "target": {
+    "markers": [
+      "M12_ZEPHYR_BUILD_PASS=9;GROUP=v0.4.0;M16_ROLE_BUILDS=0;SELECTION=subset"
+    ],
+    "sha256": "4270b20fa0b4558e7f0ba9bffa1dbbb66bd2ed7b22d6c9929045573f72ecd11f",
+    "test_count": 0
+  }
+}

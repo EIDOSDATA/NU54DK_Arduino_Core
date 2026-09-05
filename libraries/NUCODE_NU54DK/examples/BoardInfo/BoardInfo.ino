@@ -31,7 +31,7 @@ void setup()
     Serial.println(NU54DK.ncsVersion());
     Serial.print("Zephyr: ");
     Serial.println(NU54DK.zephyrVersion());
-    Serial.print("Core: ");
+    Serial.print("Core source: ");
     Serial.println(NU54DK.coreVersion());
 
     if (NU54DK.deviceId(device_id, sizeof(device_id)) == Error::none)

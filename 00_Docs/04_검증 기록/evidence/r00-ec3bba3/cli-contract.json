@@ -1,0 +1,1130 @@
+{
+  "arguments": {
+    "archive": [
+      {
+        "choices": null,
+        "default": "==SUPPRESS==",
+        "destination": "help",
+        "nargs": 0,
+        "options": [
+          "-h",
+          "--help"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "platform_root",
+        "nargs": null,
+        "options": [
+          "--platform-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "build_path",
+        "nargs": null,
+        "options": [
+          "--build-path"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "sketch_root",
+        "nargs": null,
+        "options": [
+          "--sketch-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "fqbn",
+        "nargs": null,
+        "options": [
+          "--fqbn"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "project_name",
+        "nargs": null,
+        "options": [
+          "--project-name"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "destination": "board",
+        "nargs": null,
+        "options": [
+          "--board"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": "standard",
+        "destination": "profile",
+        "nargs": null,
+        "options": [
+          "--profile"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "archive",
+        "nargs": null,
+        "options": [
+          "--archive"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "object",
+        "nargs": null,
+        "options": [
+          "--object"
+        ],
+        "required": true
+      }
+    ],
+    "cache": [
+      {
+        "choices": null,
+        "default": "==SUPPRESS==",
+        "destination": "help",
+        "nargs": 0,
+        "options": [
+          "-h",
+          "--help"
+        ],
+        "required": false
+      },
+      {
+        "choices": [
+          "list",
+          "inspect",
+          "prune",
+          "remove",
+          "clear"
+        ],
+        "default": null,
+        "destination": "cache_action",
+        "nargs": null,
+        "options": [],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "key",
+        "nargs": "?",
+        "options": [],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "cache_root",
+        "nargs": null,
+        "options": [
+          "--cache-root"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": false,
+        "destination": "include_compiler",
+        "nargs": 0,
+        "options": [
+          "--include-compiler"
+        ],
+        "required": false
+      }
+    ],
+    "clean-build": [
+      {
+        "choices": null,
+        "default": "==SUPPRESS==",
+        "destination": "help",
+        "nargs": 0,
+        "options": [
+          "-h",
+          "--help"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "platform_root",
+        "nargs": null,
+        "options": [
+          "--platform-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "build_path",
+        "nargs": null,
+        "options": [
+          "--build-path"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "sketch_root",
+        "nargs": null,
+        "options": [
+          "--sketch-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "fqbn",
+        "nargs": null,
+        "options": [
+          "--fqbn"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "project_name",
+        "nargs": null,
+        "options": [
+          "--project-name"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "destination": "board",
+        "nargs": null,
+        "options": [
+          "--board"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": "standard",
+        "destination": "profile",
+        "nargs": null,
+        "options": [
+          "--profile"
+        ],
+        "required": false
+      }
+    ],
+    "flash": [
+      {
+        "choices": null,
+        "default": "==SUPPRESS==",
+        "destination": "help",
+        "nargs": 0,
+        "options": [
+          "-h",
+          "--help"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "platform_root",
+        "nargs": null,
+        "options": [
+          "--platform-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "build_path",
+        "nargs": null,
+        "options": [
+          "--build-path"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "sketch_root",
+        "nargs": null,
+        "options": [
+          "--sketch-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "fqbn",
+        "nargs": null,
+        "options": [
+          "--fqbn"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "project_name",
+        "nargs": null,
+        "options": [
+          "--project-name"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "destination": "board",
+        "nargs": null,
+        "options": [
+          "--board"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": "standard",
+        "destination": "profile",
+        "nargs": null,
+        "options": [
+          "--profile"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "manifest",
+        "nargs": null,
+        "options": [
+          "--manifest"
+        ],
+        "required": true
+      },
+      {
+        "choices": [
+          "pyocd",
+          "jlink"
+        ],
+        "default": null,
+        "destination": "runner",
+        "nargs": null,
+        "options": [
+          "--runner"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "probe_id",
+        "nargs": null,
+        "options": [
+          "--probe-id"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": false,
+        "destination": "verbose",
+        "nargs": 0,
+        "options": [
+          "--verbose"
+        ],
+        "required": false
+      }
+    ],
+    "link": [
+      {
+        "choices": null,
+        "default": "==SUPPRESS==",
+        "destination": "help",
+        "nargs": 0,
+        "options": [
+          "-h",
+          "--help"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "platform_root",
+        "nargs": null,
+        "options": [
+          "--platform-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "build_path",
+        "nargs": null,
+        "options": [
+          "--build-path"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "sketch_root",
+        "nargs": null,
+        "options": [
+          "--sketch-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "fqbn",
+        "nargs": null,
+        "options": [
+          "--fqbn"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "project_name",
+        "nargs": null,
+        "options": [
+          "--project-name"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "destination": "board",
+        "nargs": null,
+        "options": [
+          "--board"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": "standard",
+        "destination": "profile",
+        "nargs": null,
+        "options": [
+          "--profile"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "archive",
+        "nargs": null,
+        "options": [
+          "--archive"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": [],
+        "destination": "objects",
+        "nargs": "*",
+        "options": [
+          "--objects"
+        ],
+        "required": false
+      }
+    ],
+    "prepare": [
+      {
+        "choices": null,
+        "default": "==SUPPRESS==",
+        "destination": "help",
+        "nargs": 0,
+        "options": [
+          "-h",
+          "--help"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "platform_root",
+        "nargs": null,
+        "options": [
+          "--platform-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "build_path",
+        "nargs": null,
+        "options": [
+          "--build-path"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "sketch_root",
+        "nargs": null,
+        "options": [
+          "--sketch-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "fqbn",
+        "nargs": null,
+        "options": [
+          "--fqbn"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "project_name",
+        "nargs": null,
+        "options": [
+          "--project-name"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "destination": "board",
+        "nargs": null,
+        "options": [
+          "--board"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": "standard",
+        "destination": "profile",
+        "nargs": null,
+        "options": [
+          "--profile"
+        ],
+        "required": false
+      }
+    ],
+    "preprocess": [
+      {
+        "choices": null,
+        "default": "==SUPPRESS==",
+        "destination": "help",
+        "nargs": 0,
+        "options": [
+          "-h",
+          "--help"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "platform_root",
+        "nargs": null,
+        "options": [
+          "--platform-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "build_path",
+        "nargs": null,
+        "options": [
+          "--build-path"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "sketch_root",
+        "nargs": null,
+        "options": [
+          "--sketch-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "fqbn",
+        "nargs": null,
+        "options": [
+          "--fqbn"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "project_name",
+        "nargs": null,
+        "options": [
+          "--project-name"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "destination": "board",
+        "nargs": null,
+        "options": [
+          "--board"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": "standard",
+        "destination": "profile",
+        "nargs": null,
+        "options": [
+          "--profile"
+        ],
+        "required": false
+      },
+      {
+        "choices": [
+          "includes",
+          "macros"
+        ],
+        "default": null,
+        "destination": "mode",
+        "nargs": null,
+        "options": [
+          "--mode"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": "10607",
+        "destination": "arduino_version",
+        "nargs": null,
+        "options": [
+          "--arduino-version"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": "1",
+        "destination": "discovery_phase",
+        "nargs": null,
+        "options": [
+          "--discovery-phase"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "source",
+        "nargs": null,
+        "options": [
+          "--source"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "output",
+        "nargs": null,
+        "options": [
+          "--output"
+        ],
+        "required": false
+      }
+    ],
+    "record": [
+      {
+        "choices": null,
+        "default": "==SUPPRESS==",
+        "destination": "help",
+        "nargs": 0,
+        "options": [
+          "-h",
+          "--help"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "platform_root",
+        "nargs": null,
+        "options": [
+          "--platform-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "build_path",
+        "nargs": null,
+        "options": [
+          "--build-path"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "sketch_root",
+        "nargs": null,
+        "options": [
+          "--sketch-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "fqbn",
+        "nargs": null,
+        "options": [
+          "--fqbn"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "project_name",
+        "nargs": null,
+        "options": [
+          "--project-name"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "destination": "board",
+        "nargs": null,
+        "options": [
+          "--board"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": "standard",
+        "destination": "profile",
+        "nargs": null,
+        "options": [
+          "--profile"
+        ],
+        "required": false
+      },
+      {
+        "choices": [
+          "c",
+          "cxx",
+          "asm"
+        ],
+        "default": null,
+        "destination": "language",
+        "nargs": null,
+        "options": [
+          "--language"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "source",
+        "nargs": null,
+        "options": [
+          "--source"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "object",
+        "nargs": null,
+        "options": [
+          "--object"
+        ],
+        "required": true
+      }
+    ],
+    "size": [
+      {
+        "choices": null,
+        "default": "==SUPPRESS==",
+        "destination": "help",
+        "nargs": 0,
+        "options": [
+          "-h",
+          "--help"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "platform_root",
+        "nargs": null,
+        "options": [
+          "--platform-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "build_path",
+        "nargs": null,
+        "options": [
+          "--build-path"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "sketch_root",
+        "nargs": null,
+        "options": [
+          "--sketch-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "fqbn",
+        "nargs": null,
+        "options": [
+          "--fqbn"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "project_name",
+        "nargs": null,
+        "options": [
+          "--project-name"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "destination": "board",
+        "nargs": null,
+        "options": [
+          "--board"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": "standard",
+        "destination": "profile",
+        "nargs": null,
+        "options": [
+          "--profile"
+        ],
+        "required": false
+      }
+    ],
+    "verify-artifact": [
+      {
+        "choices": null,
+        "default": "==SUPPRESS==",
+        "destination": "help",
+        "nargs": 0,
+        "options": [
+          "-h",
+          "--help"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "platform_root",
+        "nargs": null,
+        "options": [
+          "--platform-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "build_path",
+        "nargs": null,
+        "options": [
+          "--build-path"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "sketch_root",
+        "nargs": null,
+        "options": [
+          "--sketch-root"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "fqbn",
+        "nargs": null,
+        "options": [
+          "--fqbn"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "project_name",
+        "nargs": null,
+        "options": [
+          "--project-name"
+        ],
+        "required": true
+      },
+      {
+        "choices": null,
+        "default": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "destination": "board",
+        "nargs": null,
+        "options": [
+          "--board"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": "standard",
+        "destination": "profile",
+        "nargs": null,
+        "options": [
+          "--profile"
+        ],
+        "required": false
+      },
+      {
+        "choices": null,
+        "default": null,
+        "destination": "artifact",
+        "nargs": null,
+        "options": [
+          "--artifact"
+        ],
+        "required": true
+      }
+    ]
+  },
+  "constants": {
+    "ADAPTER_VERSION": "0.1.0-dev.m10",
+    "ARTIFACT_MANIFEST_SCHEMA_VERSION": 2,
+    "BUILD_ENVIRONMENT_OVERRIDE_KEYS": [
+      "CFLAGS",
+      "CXXFLAGS",
+      "CPPFLAGS",
+      "LDFLAGS",
+      "CONF_FILE",
+      "EXTRA_CONF_FILE",
+      "OVERLAY_CONFIG",
+      "DTC_OVERLAY_FILE",
+      "BOARD_ROOT",
+      "EXTRA_ZEPHYR_MODULES",
+      "CMAKE_PREFIX_PATH",
+      "CMAKE_GENERATOR",
+      "CMAKE_TOOLCHAIN_FILE",
+      "ZEPHYR_BASE",
+      "WEST_CONFIG",
+      "WEST_TOPDIR"
+    ],
+    "CACHE_SCHEMA_VERSION": 1,
+    "CONTEXT_DIRECTORY": "nu54-zephyr",
+    "DEFAULT_BOARD": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+    "DEFAULT_BUILD_CACHE_MAX_BYTES": 12884901888,
+    "DEFAULT_BUILD_CACHE_MAX_ENTRIES": 8,
+    "DEFAULT_CCACHE_MAX_SIZE": "2G",
+    "DEFAULT_PROFILE": "standard",
+    "FEATURE_ALLOWLIST": {
+      "EEPROM": "nucode.eeprom",
+      "LittleFS": "nucode.littlefs",
+      "NUCODE_BLE": "nucode.ble.nus",
+      "NUCODE_BLE_Security": "nucode.ble.security",
+      "NUCODE_NU54DK": "nucode.board",
+      "SPI": "nucode.spi",
+      "Servo": "nucode.servo",
+      "Wire": "nucode.wire"
+    },
+    "FEATURE_SCHEMA_VERSION": 1,
+    "NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "NCS_VERSION": "v3.4.0",
+    "NRFUTIL_SHA256": "1d291d8a9d6bb5bec18454f8d95064aed7f62e8997ec1c4511f13bdf1124c037",
+    "NRFUTIL_VERSION": "8.2.1",
+    "PROFILE_SCHEMA_VERSION": 1,
+    "SDK_MANAGER_VERSION": "1.16.1",
+    "SESSION_CONTEXT_SCHEMA_VERSION": 2,
+    "SOURCE_RECORD_SCHEMA_VERSION": 2,
+    "TOOLCHAIN_BUNDLE_ID": "dcbdc366a1",
+    "ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "diagnostic_codes": [
+    "E_ALLOWLIST",
+    "E_ARDUINO_INCLUDE_DIRS",
+    "E_ARDUINO_SKETCH_SOURCES",
+    "E_ARTIFACT_MANIFEST",
+    "E_BLE",
+    "E_BLE_S",
+    "E_BUILD_CACHE_MAX_BYTES",
+    "E_BUILD_CACHE_MAX_ENTRIES",
+    "E_BUILD_CACHE_ROOT",
+    "E_BUILD_RECORD",
+    "E_BUILD_VOLUME",
+    "E_CACHE_ACCESS",
+    "E_CACHE_BUSY",
+    "E_CACHE_CONTEXT_STALE",
+    "E_CACHE_INPUT",
+    "E_CACHE_KEY_COLLISION",
+    "E_CACHE_METADATA",
+    "E_CACHE_STATE",
+    "E_CCACHE_MAX_SIZE",
+    "E_COMPILERCHECK",
+    "E_CXX_COMPILER_LAUNCHER",
+    "E_C_COMPILER_LAUNCHER",
+    "E_DIR",
+    "E_DT_CODE_PARTITION",
+    "E_EXPORT_COMPILE_COMMANDS",
+    "E_EXPORT_INTEGRITY",
+    "E_EXPORT_ROLLBACK",
+    "E_FEATURE_CONFLICT",
+    "E_FEATURE_PATH",
+    "E_FEATURE_PROFILE",
+    "E_FEATURE_REQUIREMENT",
+    "E_FEATURE_SCHEMA",
+    "E_FLASH_ARTIFACT_HASH",
+    "E_FLASH_ARTIFACT_MISSING",
+    "E_FLASH_ARTIFACT_PATH",
+    "E_FLASH_BOARD_MISMATCH",
+    "E_FLASH_CACHE",
+    "E_FLASH_CONTEXT",
+    "E_FLASH_MANIFEST",
+    "E_FLASH_MANIFEST_PATH",
+    "E_FLASH_MANIFEST_VERSION",
+    "E_FLASH_SYSBUILD_UNSUPPORTED",
+    "E_FLASH_TOOLCHAIN_MISMATCH",
+    "E_FLASH_UNSAFE_OPTION",
+    "E_FLASH_WRITE",
+    "E_GENERATOR",
+    "E_ID",
+    "E_JLINK_ROOT",
+    "E_KEYS",
+    "E_MAXSIZE",
+    "E_MAX_BYTES",
+    "E_MAX_ENTRIES",
+    "E_MAX_SIZE",
+    "E_MEMORY_LAYOUT",
+    "E_NCS_ROOT",
+    "E_NU54DK",
+    "E_NU54_",
+    "E_PACKAGE_MANIFEST",
+    "E_PREFIX_PATH",
+    "E_PREREQUISITE_NCS",
+    "E_PREREQUISITE_NRFUTIL",
+    "E_PREREQUISITE_PINS",
+    "E_PREREQUISITE_READY",
+    "E_PREREQUISITE_STATE",
+    "E_PREREQUISITE_STATE_ROOT",
+    "E_PREREQUISITE_TOOLCHAIN",
+    "E_PREREQUISITE_ZEPHYR",
+    "E_PROBE_AMBIGUOUS",
+    "E_PROBE_BUSY",
+    "E_PROBE_NOT_FOUND",
+    "E_PROFILE_ID",
+    "E_PROFILE_PATH",
+    "E_PROFILE_SCHEMA",
+    "E_PROFILE_TARGET",
+    "E_PYOCD_TARGET",
+    "E_RECORD_SCHEMA_VERSION",
+    "E_RUNNER_JLINK_UNAVAILABLE",
+    "E_RUNNER_UNAVAILABLE",
+    "E_SCHEMA_VERSION",
+    "E_SOURCE_MIRROR_COLLISION",
+    "E_SOURCE_MIRROR_PATH",
+    "E_SOURCE_RECORD",
+    "E_SOURCE_RECORD_STALE",
+    "E_TOOLCHAIN_FILE",
+    "E_TOOLCHAIN_ROOT"
+  ],
+  "exit_codes": {
+    "adapter_error": 2,
+    "child_error": "child return code",
+    "interrupt": 130,
+    "success": 0
+  },
+  "source_commit": "ec3bba331b4ce99667b42312512715818e66c1df"
+}

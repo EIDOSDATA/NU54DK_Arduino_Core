@@ -495,6 +495,7 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         if ((state() != SerialFabricState::inactive) && (state() != SerialFabricState::staged))
         {
             return SerialFabricResult::wrong_state;
@@ -515,6 +516,7 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         auto *const context = contextFor(instance());
         if ((context == nullptr) ||
             !internal::isSerialFabricHandleActive(SerialPersonality::uarte, instance()))
@@ -551,6 +553,7 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         auto *const context = contextFor(instance());
         if ((context == nullptr) ||
             !internal::isSerialFabricHandleActive(SerialPersonality::uarte, instance()))
@@ -614,6 +617,7 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         auto *const context = contextFor(instance());
         if ((context == nullptr) || atomic_get(&context->active) == 0 ||
             atomic_get(&context->tx_active) == 0)
@@ -630,6 +634,7 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         auto *const context = contextFor(instance());
         if ((context == nullptr) || atomic_get(&context->active) == 0 ||
             atomic_get(&context->rx_active) == 0)

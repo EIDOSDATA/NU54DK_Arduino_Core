@@ -35,6 +35,16 @@ namespace nucode::arduino
         /** @brief 16 MHz SPIM20/21/22/30의 인스턴스별 기본 RXDELAY cycle 수입니다. */
         inline constexpr std::uint8_t serial_rx_delay_cycles = 1U;
 
+        /** @brief 단일 CPU에서 nrfx descriptor 교체와 이전 IRQ 배출을 하나의 경계로 묶습니다. */
+        struct IrqGuard
+        {
+            const unsigned int key{irq_lock()};
+            ~IrqGuard()
+            {
+                irq_unlock(key);
+            }
+        };
+
         struct BufferRecord
         {
             const void *address{nullptr};
@@ -53,6 +63,11 @@ namespace nucode::arduino
             std::uint8_t event_tail{0U};
             std::uint8_t event_count{0U};
             bool event_overflow{false};
+            /** @brief 공개 event 소비와 독립적인 현재 제출/동기 대기자의 terminal 기록입니다. */
+            std::uint32_t operation_generation{0U};
+            std::uint32_t terminal_generation{0U};
+            SerialFabricResult terminal_result{SerialFabricResult::wrong_state};
+            bool synchronous_waiter{false};
             atomic_t active{0};
             atomic_t transfer_active{0};
             k_spinlock lock{};
@@ -205,9 +220,8 @@ namespace nucode::arduino
             k_spin_unlock(&context.lock, key);
         }
 
-        void pushEvent(SpimContext &context, const SpiFabricEvent &event) noexcept
+        void pushEventLocked(SpimContext &context, const SpiFabricEvent &event) noexcept
         {
-            const k_spinlock_key_t key = k_spin_lock(&context.lock);
             if (context.event_count == event_capacity)
             {
                 context.event_overflow = true;
@@ -219,7 +233,6 @@ namespace nucode::arduino
                     static_cast<std::uint8_t>((context.event_tail + 1U) % event_capacity);
                 ++context.event_count;
             }
-            k_spin_unlock(&context.lock, key);
         }
 
         void spimEvent(const nrfx_spim_event_t *event, void *opaque)
@@ -229,12 +242,73 @@ namespace nucode::arduino
             {
                 return;
             }
-            setBufferState(context, event->xfer_desc.p_tx_buffer, DmaBufferState::completed);
-            setBufferState(context, event->xfer_desc.p_rx_buffer, DmaBufferState::completed);
+            const auto key = k_spin_lock(&context.lock);
+            if (atomic_get(&context.transfer_active) == 0)
+            {
+                k_spin_unlock(&context.lock, key);
+                return;
+            }
+            for (auto &buffer : context.buffers)
+            {
+                buffer.state = DmaBufferState::completed;
+            }
+            context.terminal_generation = context.operation_generation;
+            context.terminal_result = SerialFabricResult::success;
+            pushEventLocked(context, {SpiFabricEventType::transfer_complete,
+                                      event->xfer_desc.p_tx_buffer, event->xfer_desc.p_rx_buffer,
+                                      event->xfer_desc.tx_length, event->xfer_desc.rx_length, 0U});
             atomic_clear(&context.transfer_active);
-            pushEvent(context, {SpiFabricEventType::transfer_complete, event->xfer_desc.p_tx_buffer,
-                                event->xfer_desc.p_rx_buffer, event->xfer_desc.tx_length,
-                                event->xfer_desc.rx_length, 0U});
+            k_spin_unlock(&context.lock, key);
+        }
+
+        /**
+         * @brief STOPPED를 확인한 경우만 DMA 소유권과 driver를 반환합니다.
+         * @details pinned nrfx_spim_abort는 STOP 실패에도 in_progress를 지웁니다. 먼저 최대
+         * 100 us 안에 STOPPED를 확인하고, 미확인 시 active와 buffer를 유지합니다. 성공한 경계는
+         * END 및 pending IRQ를 비워 같은 주소의 다음 제출에 이전 IRQ가 섞이지 않게 합니다.
+         */
+        SerialFabricResult stopTransfer(SpimContext &context) noexcept
+        {
+            const auto irq_key = irq_lock();
+            if (atomic_get(&context.transfer_active) == 0)
+            {
+                irq_unlock(irq_key);
+                return SerialFabricResult::success;
+            }
+            nrfy_spim_int_disable(context.driver.p_reg, NRF_SPIM_ALL_INTS_MASK);
+            nrfy_spim_event_clear(context.driver.p_reg, NRF_SPIM_EVENT_STOPPED);
+            nrfy_spim_abort(context.driver.p_reg, nullptr);
+            std::uint32_t remaining = 100U;
+            while (!nrfy_spim_event_check(context.driver.p_reg, NRF_SPIM_EVENT_STOPPED) &&
+                   remaining != 0U)
+            {
+                k_busy_wait(1U);
+                --remaining;
+            }
+            if (!nrfy_spim_event_check(context.driver.p_reg, NRF_SPIM_EVENT_STOPPED))
+            {
+                irq_unlock(irq_key);
+                return SerialFabricResult::stop_timeout;
+            }
+            /** @brief STOPPED는 아직 clear하지 않아 pinned abort가 확인·정리할 수 있습니다. */
+            nrfx_spim_abort(&context.driver);
+            nrfy_spim_event_clear(context.driver.p_reg, NRF_SPIM_EVENT_END);
+            NRFY_IRQ_PENDING_CLEAR(
+                static_cast<IRQn_Type>(NRFX_IRQ_NUMBER_GET(context.driver.p_reg)));
+            const auto key = k_spin_lock(&context.lock);
+            for (auto &buffer : context.buffers)
+            {
+                buffer.state = DmaBufferState::cancelled;
+            }
+            context.terminal_generation = context.operation_generation;
+            context.terminal_result = SerialFabricResult::stop_timeout;
+            pushEventLocked(context,
+                            {SpiFabricEventType::transfer_cancelled, context.buffers[0].address,
+                             const_cast<void *>(context.buffers[1].address), 0U, 0U, 0U});
+            atomic_clear(&context.transfer_active);
+            k_spin_unlock(&context.lock, key);
+            irq_unlock(irq_key);
+            return SerialFabricResult::success;
         }
 
         SerialFabricResult validateAdapter(std::uint8_t instance, const ValidatedSerialRoute &route,
@@ -262,6 +336,15 @@ namespace nucode::arduino
             if (context == nullptr)
             {
                 return SerialFabricResult::unsupported_instance;
+            }
+            {
+                const auto key = k_spin_lock(&context->lock);
+                const bool waiting = context->synchronous_waiter;
+                k_spin_unlock(&context->lock, key);
+                if (waiting)
+                {
+                    return SerialFabricResult::wrong_state;
+                }
             }
             std::uint32_t sck = 0U;
             std::uint32_t mosi = 0U;
@@ -312,12 +395,14 @@ namespace nucode::arduino
             {
                 return mapResult(driver_error);
             }
+            const auto key = k_spin_lock(&context->lock);
             context->route = route;
             context->event_head = 0U;
             context->event_tail = 0U;
             context->event_count = 0U;
             context->event_overflow = false;
             atomic_set(&context->active, 1);
+            k_spin_unlock(&context->lock, key);
             irq_enable(NRFX_IRQ_NUMBER_GET(context->driver.p_reg));
             return SerialFabricResult::success;
         }
@@ -332,12 +417,7 @@ namespace nucode::arduino
             driver_error = 0;
             if (atomic_get(&context->transfer_active) != 0)
             {
-                nrfx_spim_abort(&context->driver);
-                for (auto &buffer : context->buffers)
-                {
-                    setBufferState(*context, buffer.address, DmaBufferState::cancelled);
-                }
-                atomic_clear(&context->transfer_active);
+                return stopTransfer(*context);
             }
             return SerialFabricResult::success;
         }
@@ -359,11 +439,13 @@ namespace nucode::arduino
             irq_disable(NRFX_IRQ_NUMBER_GET(context->driver.p_reg));
             nrfx_spim_uninit(&context->driver);
             atomic_clear(&context->active);
+            const auto key = k_spin_lock(&context->lock);
             context->route = {};
             for (auto &buffer : context->buffers)
             {
                 buffer = {};
             }
+            k_spin_unlock(&context->lock, key);
             driver_error = 0;
             return SerialFabricResult::success;
         }
@@ -403,6 +485,7 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         const auto current = state();
         nrf_spim_mode_t ignored{};
         if (((current != SerialFabricState::inactive) && (current != SerialFabricState::staged)) ||
@@ -426,6 +509,7 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         auto *const context = contextFor(instance());
         if ((context == nullptr) ||
             !internal::isSerialFabricHandleActive(SerialPersonality::spim, instance()))
@@ -436,13 +520,20 @@ namespace nucode::arduino
             ((rx_buffer == nullptr) != (rx_size == 0U)) || ((tx_size == 0U) && (rx_size == 0U)) ||
             (tx_size > UINT16_MAX) || (rx_size > UINT16_MAX) ||
             !leasedBuffer(*context, tx_buffer, tx_size) ||
-            !leasedBuffer(*context, rx_buffer, rx_size) ||
-            atomic_get(&context->transfer_active) != 0)
+            !leasedBuffer(*context, rx_buffer, rx_size))
         {
             return SerialFabricResult::invalid_argument;
         }
+        const IrqGuard irq_guard;
         {
             const k_spinlock_key_t key = k_spin_lock(&context->lock);
+            if (context->synchronous_waiter || atomic_get(&context->transfer_active) != 0)
+            {
+                k_spin_unlock(&context->lock, key);
+                return SerialFabricResult::wrong_state;
+            }
+            ++context->operation_generation;
+            context->terminal_result = SerialFabricResult::wrong_state;
             context->buffers[0] = {tx_buffer, tx_size, DmaBufferState::dma_owned};
             context->buffers[1] = {rx_buffer, rx_size, DmaBufferState::dma_owned};
             k_spin_unlock(&context->lock, key);
@@ -450,6 +541,8 @@ namespace nucode::arduino
         nrfx_spim_xfer_desc_t transfer =
             NRFX_SPIM_XFER_TRX(static_cast<const std::uint8_t *>(tx_buffer), tx_size,
                                static_cast<std::uint8_t *>(rx_buffer), rx_size);
+        nrfy_spim_event_clear(context->driver.p_reg, NRF_SPIM_EVENT_END);
+        NRFY_IRQ_PENDING_CLEAR(static_cast<IRQn_Type>(NRFX_IRQ_NUMBER_GET(context->driver.p_reg)));
         atomic_set(&context->transfer_active, 1);
         const int result = nrfx_spim_xfer(&context->driver, &transfer, 0U);
         if (result != 0)
@@ -470,22 +563,52 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_argument;
         }
-        auto result = transferAsync(tx_buffer, tx_size, rx_buffer, rx_size);
-        if (result != SerialFabricResult::success)
+        auto *const context = contextFor(instance());
+        std::uint32_t generation = 0U;
         {
-            return result;
-        }
-        for (std::uint32_t elapsed = 0U; elapsed < timeout_us; elapsed += 10U)
-        {
-            SpiFabricEvent event{};
-            if (takeEvent(event) && event.type == SpiFabricEventType::transfer_complete)
+            const internal::SerialFabricOperationGuard operation_guard;
+            const auto result = transferAsync(tx_buffer, tx_size, rx_buffer, rx_size);
+            if (result != SerialFabricResult::success)
             {
-                return SerialFabricResult::success;
+                return result;
             }
-            k_busy_wait(10U);
+            const auto key = k_spin_lock(&context->lock);
+            context->synchronous_waiter = true;
+            generation = context->operation_generation;
+            k_spin_unlock(&context->lock, key);
         }
-        (void)cancelTransfer();
-        return SerialFabricResult::stop_timeout;
+        /** @brief 공개 queue의 stale/overflow/다른 소비자는 이 waiter의 완료 판정에 관여하지 않습니다. */
+        for (;;)
+        {
+            const auto key = k_spin_lock(&context->lock);
+            if (context->terminal_generation == generation &&
+                context->terminal_result != SerialFabricResult::wrong_state)
+            {
+                const auto result = context->terminal_result;
+                context->synchronous_waiter = false;
+                k_spin_unlock(&context->lock, key);
+                return result;
+            }
+            k_spin_unlock(&context->lock, key);
+            if (timeout_us == 0U)
+            {
+                break;
+            }
+            /** @brief 마지막 1~9 us를 포함하며 UINT32_MAX에서도 덧셈 wraparound가 없습니다. */
+            const auto interval = timeout_us < 10U ? timeout_us : 10U;
+            k_busy_wait(interval);
+            timeout_us -= interval;
+        }
+        const internal::SerialFabricOperationGuard operation_guard;
+        const auto cancelled = cancelTransfer();
+        const auto key = k_spin_lock(&context->lock);
+        context->synchronous_waiter = false;
+        k_spin_unlock(&context->lock, key);
+        /** @brief timeout은 DMA 반환 보증이 아닙니다. STOP 미확인 buffer/lease는 유지됩니다. */
+        return cancelled == SerialFabricResult::success ||
+                       cancelled == SerialFabricResult::wrong_state
+                   ? SerialFabricResult::stop_timeout
+                   : cancelled;
     }
 
     SerialFabricResult SpimHandle::cancelTransfer() noexcept
@@ -494,21 +617,14 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         auto *const context = contextFor(instance());
         if ((context == nullptr) || atomic_get(&context->active) == 0 ||
             atomic_get(&context->transfer_active) == 0)
         {
             return SerialFabricResult::wrong_state;
         }
-        nrfx_spim_abort(&context->driver);
-        for (auto &buffer : context->buffers)
-        {
-            setBufferState(*context, buffer.address, DmaBufferState::cancelled);
-        }
-        atomic_clear(&context->transfer_active);
-        pushEvent(*context, {SpiFabricEventType::transfer_cancelled, context->buffers[0].address,
-                             const_cast<void *>(context->buffers[1].address), 0U, 0U, 0U});
-        return SerialFabricResult::success;
+        return stopTransfer(*context);
     }
 
     bool SpimHandle::takeEvent(SpiFabricEvent &event) noexcept

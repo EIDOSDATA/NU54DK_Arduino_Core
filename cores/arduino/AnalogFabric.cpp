@@ -8,6 +8,7 @@
 #include <nucode/AnalogFabric.h>
 
 #include "internal/IoResourceManager.h"
+#include "internal/FabricSynchronization.h"
 #include "internal/dma_count.h"
 #include "internal/dma_memory.h"
 #include "internal/pin_description.h"
@@ -55,6 +56,7 @@ namespace nucode::arduino
             std::size_t read_index{0U};
             std::size_t write_index{0U};
             std::size_t count{0U};
+            bool overflow{false};
             struct k_spinlock lock{};
         };
 
@@ -77,8 +79,9 @@ namespace nucode::arduino
             DmaLeaseSlot dma_leases[3]{};
             EventQueue<SaadcEvent> events{};
             AnalogFabricState state{AnalogFabricState::inactive};
-            AnalogFabricResult last_result{AnalogFabricResult::success};
-            int last_driver_error{0};
+            internal::FabricDiagnostic<AnalogFabricResult> diagnostics{};
+            internal::FabricStopSignal stop_signal{};
+            bool stop_waiting{false};
             atomic_t sample_ready{0};
         };
 
@@ -89,8 +92,9 @@ namespace nucode::arduino
             IoResourceLease lease{};
             EventQueue<PwmSequenceEvent> events{};
             AnalogFabricState state{AnalogFabricState::inactive};
-            AnalogFabricResult last_result{AnalogFabricResult::success};
-            int last_driver_error{0};
+            internal::FabricDiagnostic<AnalogFabricResult> diagnostics{};
+            internal::FabricStopSignal stop_signal{};
+            bool stop_waiting{false};
             std::uintptr_t start_task{0U};
         };
 
@@ -106,6 +110,7 @@ namespace nucode::arduino
             const k_spinlock_key_t key = k_spin_lock(&queue.lock);
             if (queue.count == event_queue_capacity)
             {
+                queue.overflow = true;
                 k_spin_unlock(&queue.lock, key);
                 return false;
             }
@@ -119,6 +124,15 @@ namespace nucode::arduino
         template <typename Event> bool popEvent(EventQueue<Event> &queue, Event &event) noexcept
         {
             const k_spinlock_key_t key = k_spin_lock(&queue.lock);
+            /** @brief 가득 찬 queue 밖에 보존한 손실을 다음 thread 연산이 덮어쓰지 않습니다. */
+            if (queue.overflow)
+            {
+                queue.overflow = false;
+                event = {};
+                event.driver_error = -ENOBUFS;
+                k_spin_unlock(&queue.lock, key);
+                return true;
+            }
             if (queue.count == 0U)
             {
                 k_spin_unlock(&queue.lock, key);
@@ -137,19 +151,18 @@ namespace nucode::arduino
             queue.read_index = 0U;
             queue.write_index = 0U;
             queue.count = 0U;
+            queue.overflow = false;
             k_spin_unlock(&queue.lock, key);
         }
 
         void record(SaadcContext &context, AnalogFabricResult result, int driver_error = 0) noexcept
         {
-            context.last_result = result;
-            context.last_driver_error = driver_error;
+            context.diagnostics.record(result, driver_error);
         }
 
         void record(PwmContext &context, AnalogFabricResult result, int driver_error = 0) noexcept
         {
-            context.last_result = result;
-            context.last_driver_error = driver_error;
+            context.diagnostics.record(result, driver_error);
         }
 
         [[nodiscard]] AnalogFabricResult mapResourceResult(IoResourceResult result) noexcept
@@ -226,8 +239,13 @@ namespace nucode::arduino
             {
                 return IoResourceResult::success;
             }
-            const IoResourceResult result = internal::releaseIoResources(slot.lease);
-            slot = {};
+            const IoResourceResult result = slot.lease.phase == internal::IoLeasePhase::reserved
+                                                ? internal::rollbackIoResources(slot.lease)
+                                                : internal::releaseIoResources(slot.lease);
+            if (result == IoResourceResult::success)
+            {
+                slot = {};
+            }
             return result;
         }
 
@@ -490,6 +508,7 @@ namespace nucode::arduino
                 break;
             case NRFX_SAADC_EVT_FINISHED:
                 atomic_clear(&saadc_context.sample_ready);
+                saadc_context.stop_signal.notifyStopped();
                 translated.type = SaadcEventType::finished;
                 break;
             case NRFX_SAADC_EVT_LIMIT:
@@ -500,8 +519,7 @@ namespace nucode::arduino
             }
             if (!pushEvent(saadc_context.events, translated))
             {
-                saadc_context.last_driver_error = -ENOBUFS;
-                saadc_context.last_result = AnalogFabricResult::resource_exhausted;
+                record(saadc_context, AnalogFabricResult::resource_exhausted, -ENOBUFS);
             }
         }
 
@@ -522,6 +540,7 @@ namespace nucode::arduino
                 translated.type = PwmSequenceEventType::playback_complete;
                 break;
             case NRFX_PWM_EVENT_STOPPED:
+                context.stop_signal.notifyStopped();
                 translated.type = PwmSequenceEventType::stopped;
                 break;
             default:
@@ -531,8 +550,7 @@ namespace nucode::arduino
             }
             if (!pushEvent(context.events, translated))
             {
-                context.last_driver_error = -ENOBUFS;
-                context.last_result = AnalogFabricResult::resource_exhausted;
+                record(context, AnalogFabricResult::resource_exhausted, -ENOBUFS);
             }
         }
 
@@ -576,7 +594,7 @@ namespace nucode::arduino
     AnalogFabricResult SaadcFabric::lastResult() const noexcept
     {
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
-        const auto value = saadc_context.last_result;
+        const auto value = saadc_context.diagnostics.snapshot().result;
         k_mutex_unlock(&analog_fabric_mutex);
         return value;
     }
@@ -584,7 +602,7 @@ namespace nucode::arduino
     int SaadcFabric::lastDriverError() const noexcept
     {
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
-        const int value = saadc_context.last_driver_error;
+        const int value = saadc_context.diagnostics.snapshot().driver_error;
         k_mutex_unlock(&analog_fabric_mutex);
         return value;
     }
@@ -631,7 +649,8 @@ namespace nucode::arduino
 
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         if (saadc_context.state == AnalogFabricState::active ||
-            saadc_context.state == AnalogFabricState::stopping)
+            saadc_context.state == AnalogFabricState::stopping ||
+            saadc_context.state == AnalogFabricState::faulted)
         {
             record(saadc_context, AnalogFabricResult::wrong_state);
             k_mutex_unlock(&analog_fabric_mutex);
@@ -740,6 +759,7 @@ namespace nucode::arduino
             return result;
         }
 
+        context.stop_signal.beginRun();
         atomic_clear(&context.sample_ready);
         int driver_error = nrfx_saadc_init(IRQ_PRIO_LOWEST);
         if (driver_error == 0)
@@ -815,11 +835,10 @@ namespace nucode::arduino
         const IoResourceResult commit_result = internal::commitIoResources(context.lease);
         if (commit_result != IoResourceResult::success)
         {
+            context.state = AnalogFabricState::stopping;
+            (void)context.stop_signal.arm();
+            nrf_saadc_event_clear(NRF_SAADC, NRF_SAADC_EVENT_STOPPED);
             nrfx_saadc_abort();
-            nrfx_saadc_uninit();
-            (void)internal::rollbackIoResources(context.lease);
-            context.lease = {};
-            context.state = AnalogFabricState::faulted;
             record(context, AnalogFabricResult::release_failed);
             k_mutex_unlock(&analog_fabric_mutex);
             return AnalogFabricResult::release_failed;
@@ -879,7 +898,10 @@ namespace nucode::arduino
                                 : AnalogFabricResult::release_failed;
         if (commit_result != IoResourceResult::success)
         {
-            context.state = AnalogFabricState::faulted;
+            context.state = AnalogFabricState::stopping;
+            (void)context.stop_signal.arm();
+            nrf_saadc_event_clear(NRF_SAADC, NRF_SAADC_EVENT_STOPPED);
+            nrfx_saadc_abort();
         }
         record(context, result, error);
         k_mutex_unlock(&analog_fabric_mutex);
@@ -956,66 +978,68 @@ namespace nucode::arduino
         }
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         auto &context = saadc_context;
-        if (context.state != AnalogFabricState::active &&
-            context.state != AnalogFabricState::stopping)
+        if ((context.state != AnalogFabricState::active &&
+             context.state != AnalogFabricState::stopping) ||
+            context.stop_waiting)
         {
             record(context, AnalogFabricResult::wrong_state);
             k_mutex_unlock(&analog_fabric_mutex);
             return AnalogFabricResult::wrong_state;
         }
+        const bool first_request = context.state == AnalogFabricState::active;
         context.state = AnalogFabricState::stopping;
+        context.stop_waiting = true;
+        const auto generation = context.stop_signal.arm();
         atomic_clear(&context.sample_ready);
-        /**
-         * @brief 완료한 one-shot은 이미 정지했으므로 stale STOPPED bit를 기다리지 않습니다.
-         *
-         * nrfx는 IRQ에서 STOPPED를 소비하고 FINISHED에서 SAADC를 비활성화합니다.
-         */
+        k_mutex_unlock(&analog_fabric_mutex);
+        /** @brief 같은 handle은 stopping 예약으로 차단하고 다른 block의 mutex는 놓습니다. */
         if (nrf_saadc_enable_check(NRF_SAADC))
         {
+            if (first_request)
+            {
+                nrf_saadc_event_clear(NRF_SAADC, NRF_SAADC_EVENT_STOPPED);
+            }
             nrfx_saadc_abort();
         }
-        std::uint32_t waited = 0U;
-        while (nrf_saadc_enable_check(NRF_SAADC) &&
-               !nrf_saadc_event_check(NRF_SAADC, NRF_SAADC_EVENT_STOPPED) && waited < timeout_us)
-        {
-            k_busy_wait(10U);
-            waited += 10U;
-        }
-        const bool stopped = !nrf_saadc_enable_check(NRF_SAADC) ||
-                             nrf_saadc_event_check(NRF_SAADC, NRF_SAADC_EVENT_STOPPED);
+        const bool stopped = internal::waitFabricStop(
+            [&]
+            {
+                return !nrf_saadc_enable_check(NRF_SAADC) ||
+                       context.stop_signal.completed(generation) ||
+                       nrf_saadc_event_check(NRF_SAADC, NRF_SAADC_EVENT_STOPPED);
+            },
+            timeout_us);
+        k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
+        context.stop_waiting = false;
         if (!stopped)
         {
-            /**
-             * @brief STOP이 증명될 때까지 주변장치와 DMA lease를 모두 유지합니다.
-             *
-             * 호출자는 stop()을 재시도할 수 있지만 configure()/start()는 계속 차단됩니다.
-             */
+            /** @brief 늦은 FINISHED와 명시적 stop 재시도까지 DMA와 base lease를 보존합니다. */
             record(context, AnalogFabricResult::stop_timeout, -ETIMEDOUT);
             k_mutex_unlock(&analog_fabric_mutex);
             return AnalogFabricResult::stop_timeout;
         }
         nrfx_saadc_uninit();
-        IoResourceResult release_result = internal::releaseIoResources(context.lease);
-        context.lease = {};
+        IoResourceResult release_result = context.lease.phase == internal::IoLeasePhase::reserved
+                                              ? internal::rollbackIoResources(context.lease)
+                                              : internal::releaseIoResources(context.lease);
+        if (release_result == IoResourceResult::success)
+        {
+            context.lease = {};
+        }
         for (auto &slot : context.dma_leases)
         {
-            const IoResourceResult slot_result = releaseSaadcDma(slot);
+            const auto slot_result = releaseSaadcDma(slot);
             if (slot_result != IoResourceResult::success)
             {
                 release_result = slot_result;
             }
         }
-        if (release_result != IoResourceResult::success)
-        {
-            context.state = AnalogFabricState::faulted;
-            record(context, AnalogFabricResult::release_failed);
-        }
-        else
-        {
-            context.state = AnalogFabricState::configured;
-            record(context, AnalogFabricResult::success);
-        }
-        const auto result = context.last_result;
+        const auto result = release_result == IoResourceResult::success
+                                ? AnalogFabricResult::success
+                                : AnalogFabricResult::release_failed;
+        context.state = result == AnalogFabricResult::success ? AnalogFabricState::configured
+                                                              : AnalogFabricState::faulted;
+        record(context, result);
         k_mutex_unlock(&analog_fabric_mutex);
         return result;
     }
@@ -1060,8 +1084,8 @@ namespace nucode::arduino
     {
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         const auto *const context = pwmContext(instance_);
-        const auto value =
-            context != nullptr ? context->last_result : AnalogFabricResult::unsupported_instance;
+        const auto value = context != nullptr ? context->diagnostics.snapshot().result
+                                              : AnalogFabricResult::unsupported_instance;
         k_mutex_unlock(&analog_fabric_mutex);
         return value;
     }
@@ -1070,7 +1094,8 @@ namespace nucode::arduino
     {
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         const auto *const context = pwmContext(instance_);
-        const int value = context != nullptr ? context->last_driver_error : -ENODEV;
+        const int value =
+            context != nullptr ? context->diagnostics.snapshot().driver_error : -ENODEV;
         k_mutex_unlock(&analog_fabric_mutex);
         return value;
     }
@@ -1131,7 +1156,8 @@ namespace nucode::arduino
             return AnalogFabricResult::unsupported_instance;
         }
         if (context->state == AnalogFabricState::active ||
-            context->state == AnalogFabricState::stopping)
+            context->state == AnalogFabricState::stopping ||
+            context->state == AnalogFabricState::faulted)
         {
             record(*context, AnalogFabricResult::wrong_state);
             k_mutex_unlock(&analog_fabric_mutex);
@@ -1224,6 +1250,7 @@ namespace nucode::arduino
             return result;
         }
 
+        context->stop_signal.beginRun();
         nrfx_pwm_config_t driver_configuration =
             NRFX_PWM_DEFAULT_CONFIG(NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED,
                                     NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED);
@@ -1286,11 +1313,9 @@ namespace nucode::arduino
         const IoResourceResult commit_result = internal::commitIoResources(context->lease);
         if (commit_result != IoResourceResult::success)
         {
+            context->state = AnalogFabricState::stopping;
+            (void)context->stop_signal.arm();
             (void)nrfx_pwm_stop(driver, false);
-            nrfx_pwm_uninit(driver);
-            (void)internal::rollbackIoResources(context->lease);
-            context->lease = {};
-            context->state = AnalogFabricState::faulted;
             record(*context, AnalogFabricResult::release_failed);
             k_mutex_unlock(&analog_fabric_mutex);
             return AnalogFabricResult::release_failed;
@@ -1344,7 +1369,10 @@ namespace nucode::arduino
         k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
         auto *const context = pwmContext(instance_);
         auto *const driver = pwmDriver(instance_);
-        if (context == nullptr || driver == nullptr || context->state != AnalogFabricState::active)
+        if (context == nullptr || driver == nullptr ||
+            (context->state != AnalogFabricState::active &&
+             context->state != AnalogFabricState::stopping) ||
+            context->stop_waiting)
         {
             if (context != nullptr)
             {
@@ -1354,34 +1382,40 @@ namespace nucode::arduino
             return AnalogFabricResult::wrong_state;
         }
         context->state = AnalogFabricState::stopping;
-        bool stopped = nrfx_pwm_stop(driver, false);
-        std::uint32_t waited = 0U;
-        while (!stopped && waited < timeout_us)
+        context->stop_waiting = true;
+        const auto generation = context->stop_signal.arm();
+        k_mutex_unlock(&analog_fabric_mutex);
+        (void)nrfx_pwm_stop(driver, false);
+        const bool stopped = internal::waitFabricStop(
+            [&]
+            {
+                return context->stop_signal.completed(generation) || nrfx_pwm_stopped_check(driver);
+            },
+            timeout_us);
+        k_mutex_lock(&analog_fabric_mutex, K_FOREVER);
+        context->stop_waiting = false;
+        if (!stopped)
         {
-            k_busy_wait(10U);
-            waited += 10U;
-            stopped = nrfx_pwm_stopped_check(driver);
+            /** @brief STOP 미확인 상태에서 uninit이나 lease 반환을 수행하지 않습니다. */
+            record(*context, AnalogFabricResult::stop_timeout, -ETIMEDOUT);
+            k_mutex_unlock(&analog_fabric_mutex);
+            return AnalogFabricResult::stop_timeout;
         }
         nrfx_pwm_uninit(driver);
-        const IoResourceResult release_result = internal::releaseIoResources(context->lease);
-        context->lease = {};
+        const auto release_result = context->lease.phase == internal::IoLeasePhase::reserved
+                                        ? internal::rollbackIoResources(context->lease)
+                                        : internal::releaseIoResources(context->lease);
+        if (release_result == IoResourceResult::success)
+        {
+            context->lease = {};
+        }
         context->start_task = 0U;
-        if (release_result != IoResourceResult::success)
-        {
-            context->state = AnalogFabricState::faulted;
-            record(*context, AnalogFabricResult::release_failed);
-        }
-        else if (!stopped)
-        {
-            context->state = AnalogFabricState::faulted;
-            record(*context, AnalogFabricResult::stop_timeout, -ETIMEDOUT);
-        }
-        else
-        {
-            context->state = AnalogFabricState::configured;
-            record(*context, AnalogFabricResult::success);
-        }
-        const auto result = context->last_result;
+        const auto result = release_result == IoResourceResult::success
+                                ? AnalogFabricResult::success
+                                : AnalogFabricResult::release_failed;
+        context->state = result == AnalogFabricResult::success ? AnalogFabricState::configured
+                                                               : AnalogFabricState::faulted;
+        record(*context, result);
         k_mutex_unlock(&analog_fabric_mutex);
         return result;
     }
@@ -1389,7 +1423,12 @@ namespace nucode::arduino
     bool PwmSequenceFabric::takeEvent(PwmSequenceEvent &event) noexcept
     {
         auto *const context = pwmContext(instance_);
-        return context != nullptr && popEvent(context->events, event);
+        const bool available = context != nullptr && popEvent(context->events, event);
+        if (available && event.driver_error == -ENOBUFS)
+        {
+            event.instance = instance_;
+        }
+        return available;
     }
 
     SaadcFabric &AnalogFabric::saadc() noexcept

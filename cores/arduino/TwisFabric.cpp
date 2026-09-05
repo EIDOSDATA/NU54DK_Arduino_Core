@@ -539,6 +539,7 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         const auto current = state();
         if (((current != SerialFabricState::inactive) && (current != SerialFabricState::staged)) ||
             (configuration.primary_address == 0U) || (configuration.primary_address > 0x7FU) ||
@@ -567,6 +568,7 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         auto *const context = contextFor(instance());
         if ((context == nullptr) ||
             !internal::isSerialFabricHandleActive(SerialPersonality::twis, instance()))
@@ -645,6 +647,7 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         auto *const context = contextFor(instance());
         const int index = instanceIndex(instance());
         if ((context == nullptr) || (index < 0) || atomic_get(&context->active) == 0 ||

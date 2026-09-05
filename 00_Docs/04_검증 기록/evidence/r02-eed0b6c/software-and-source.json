@@ -1,0 +1,76 @@
+{
+  "gates": {
+    "after": {
+      "driver_scenarios": 24,
+      "result_lines": [],
+      "sha256": "3404a7fc82c78245ef5fd772192f023ccfebd3697fe2cd6ea0137d5b4148f0ba",
+      "skips": 0,
+      "tests": 1
+    },
+    "before": {
+      "result_lines": [
+        "FAILED (failures=11)"
+      ],
+      "sha256": "4c09ae3d2a7f80733a3b377a64757125b098c82df29e90607f4534dbe7bf8eee",
+      "skips": 0,
+      "tests": 1
+    },
+    "contract": {
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "sha256": "0262acf978f74f9f73e942e94cdc875e46c44a93cbc1f6dbf57f9374b9fca08b",
+      "skips": 0,
+      "tests": 45
+    },
+    "host": {
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "sha256": "55963b15597559d87e8a1a3a063ba6a598c98afd6b796f05947610602e857486",
+      "skips": 2,
+      "tests": 602
+    },
+    "inventory": {
+      "result_lines": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "sha256": "9510ed7072eb22b16614ed2c1cab372663f22d759fa26c1985334e7e8f32dcc9",
+      "skips": 0,
+      "tests": 0
+    },
+    "target": {
+      "result_lines": [],
+      "sha256": "d1bd1846261072fd97565d09e14260eb27bf9b17347c37a680a91c401762146f",
+      "skips": 0,
+      "status": "failed-IRQn-Type-aborted",
+      "tests": 0
+    },
+    "target-final": {
+      "result_lines": [
+        "INFO    - 0 test configurations executed on platforms, 12 test configurations were only built.",
+        "M12_ZEPHYR_BUILD_PASS=12;GROUP=v0.4.0;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "sha256": "8b30c6b38d502871e7962bf471cdd59ee2a5fef34016550f0a5f46cf2b6afef5",
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "hardware_executed": false,
+  "pinned_nrfx_sha256": {
+    "nrfx_spim.c": "a9e7ad334ddfb757bf95ff834da0585c713efa4445510f76d248b07385436b82",
+    "nrfx_twim.c": "1f7037d68c22fd3f3d9e6b8e76db6512beac8b5b5abe4face5fbbfe1305e2e29"
+  },
+  "public_headers_unchanged": 25,
+  "source_sha256": {
+    "cores/arduino/SerialFabric.cpp": "7f1da64834701d8bd76e3aae3df95cc96cc38bd9f38f0a0ae706f62aaa959002",
+    "cores/arduino/SpimFabric.cpp": "3a4924547318ee5ac7eb15d81645907108a06818e94d2fc2a5bfe837eee78527",
+    "cores/arduino/SpisFabric.cpp": "e0cf749f19d17c35296b3ba73e3dbe4487037c6a411ac2c3d7ab4df80bbd01b5",
+    "cores/arduino/TwimFabric.cpp": "0fdf9756b07a50bfe49231acbb33a703387acfcfcd662d8f4901dbabb5958a6f",
+    "cores/arduino/TwisFabric.cpp": "6a541b5e6100f36e74606c830c8f066d95c3c4329fd267af827a7737756b1e00",
+    "cores/arduino/UarteFabric.cpp": "36df5e5d2c40a6ac402f35efe27330365c85464250346713a78fc6389fd6ccef",
+    "cores/arduino/internal/SerialFabricBackend.h": "7c1bd9ef997b956a14ace84e976a8de48b268293d0f8663cdb675ff4c78257f4",
+    "tests/zephyr/v04_pair_hil/src/fixture_hil.cpp": "e89107fbce0b8d41f5bc59a6422d5f8ba73d159c189e432d05862c52c28ae8e2"
+  },
+  "start_commit": "eed0b6c043e3a3b031f5e1e3d1353bb05da5fb9b"
+}

@@ -1,0 +1,29 @@
+/** @brief 직접 adapter의 IRQ를 Zephyr device가 소유하지 않는 구성입니다. */
+#include <nucode/nu54dk-arduino-pins.dtsi>
+
+/ {
+    chosen {
+        /delete-property/ zephyr,console;
+        /delete-property/ zephyr,shell-uart;
+        /delete-property/ zephyr,uart-mcumgr;
+        /delete-property/ zephyr,bt-mon-uart;
+        /delete-property/ zephyr,bt-c2h-uart;
+    };
+};
+
+&uart20 { status = "disabled"; };
+&uart30 { status = "disabled"; };
+
+/** @brief nrfx의 compatible 조건만 제공하고 device와 IRQ는 비활성으로 유지합니다. */
+&spi22 {
+    compatible = "nordic,nrf-spis";
+    /delete-property/ rx-delay-supported;
+    /delete-property/ rx-delay;
+    def-char = <0xff>;
+    status = "disabled";
+};
+
+&i2c21 {
+    compatible = "nordic,nrf-twis";
+    status = "disabled";
+};

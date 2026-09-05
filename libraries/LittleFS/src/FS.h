@@ -37,7 +37,12 @@ enum class FSError : std::uint8_t
     driver_error,
 };
 
-/** @brief Zephyr file handle을 Arduino Stream으로 노출하는 이동 전용 객체입니다. */
+/**
+ * @brief Zephyr file handle을 공유 참조로 노출하는 복사·이동 가능한 Arduino Stream입니다.
+ * @details 서로 다른 File 객체의 작업은 filesystem mutex로 직렬화하며 파일 위치도 공유합니다.
+ * 같은 File 객체의 변경·소멸과 다른 접근이 겹치면 호출자가 동기화해야 합니다. 파일 API와
+ * 복사·이동·대입·close는 thread 문맥 전용이며 ISR에서는 기존 참조를 변경하지 않습니다.
+ */
 class File final : public Stream
 {
   public:
@@ -94,7 +99,10 @@ class File final : public Stream
     /** @brief 파일 handle을 명시적으로 닫습니다. */
     void close();
 
-    /** @brief 파일을 열 때 사용한 mount 상대 경로를 반환합니다. */
+    /**
+     * @brief 파일을 열 때 사용한 mount 상대 경로를 빌려줍니다.
+     * @details 이 File의 close·대입·소멸 뒤에는 반환 포인터를 사용하지 않습니다.
+     */
     const char *name() const noexcept;
 
     /** @brief handle이 아직 유효한지 반환합니다. */

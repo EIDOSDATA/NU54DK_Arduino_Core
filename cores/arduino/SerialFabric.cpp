@@ -688,6 +688,16 @@ namespace nucode::arduino
             return active;
         }
 
+        SerialFabricOperationGuard::SerialFabricOperationGuard() noexcept
+        {
+            k_mutex_lock(&fabric_mutex, K_FOREVER);
+        }
+
+        SerialFabricOperationGuard::~SerialFabricOperationGuard()
+        {
+            k_mutex_unlock(&fabric_mutex);
+        }
+
         SerialFabricResult executeSerialFabricRecovery(SerialPersonality personality,
                                                        std::uint8_t instance,
                                                        SerialFabricRecovery recovery) noexcept

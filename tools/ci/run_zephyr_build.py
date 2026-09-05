@@ -9,6 +9,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 from typing import Any, Sequence
@@ -64,6 +65,13 @@ SUITE_GROUPS = {
         ("ac03_hil", "nucode.ac03.storage_hil"),
     ),
     "v0.4.0": (
+        ("r01_serial", "nucode.r01.none"),
+        ("r01_serial", "nucode.r01.uarte"),
+        ("r01_serial", "nucode.r01.spim"),
+        ("r01_serial", "nucode.r01.spis"),
+        ("r01_serial", "nucode.r01.twim"),
+        ("r01_serial", "nucode.r01.twis"),
+        ("r01_serial", "nucode.r01.all"),
         ("v04_pair_hil", "nucode.v04.pair_dut"),
         ("v04_pair_hil", "nucode.v04.pair_peer"),
         ("m23_inventory_contract", "nucode.m23.inventory_contract"),
@@ -385,6 +393,70 @@ def select_suites(group: str, requested: Sequence[str] = ()) -> tuple[tuple[str,
     return tuple(item for item in available if item[1] in requested)
 
 
+## @brief 요청한 personality와 실제 CONFIG·Core object·참조 symbol이 일치하는지 검사합니다.
+def validate_serial_source_builds(
+    outdir: Path, selected_suites: Sequence[tuple[str, str]]
+) -> list[dict[str, Any]]:
+    personalities = ("UARTE", "SPIM", "SPIS", "TWIM", "TWIS")
+    records: list[dict[str, Any]] = []
+    for directory, scenario in selected_suites:
+        if directory != "r01_serial":
+            continue
+        selection = scenario.rsplit(".", 1)[-1].upper()
+        expected = set(personalities) if selection == "ALL" else ({selection} if selection != "NONE" else set())
+        app = outdir / BOARD_TARGET.replace("/", "_") / "zephyr_gnu" / scenario / directory
+        config_path = app / "zephyr/.config"
+        commands_path = app / "compile_commands.json"
+        cache_path = app / "CMakeCache.txt"
+        elf_path = app / "zephyr/zephyr.elf"
+        try:
+            config = config_path.read_text(encoding="utf-8")
+            commands = json.loads(commands_path.read_text(encoding="utf-8"))
+            cache = cache_path.read_text(encoding="utf-8")
+        except (OSError, ValueError) as error:
+            raise BuildFailure(f"{scenario}: source 계약 입력이 없습니다: {error}") from error
+        if not isinstance(commands, list) or not all(isinstance(entry, dict) for entry in commands):
+            raise BuildFailure(f"{scenario}: compile database가 object 배열이 아닙니다.")
+        for prerequisite in ("CORE", "API", "IO_OWNERSHIP", "GPIO", "SERIAL_FABRIC"):
+            if f"CONFIG_NUCODE_ARDUINO_{prerequisite}=y" not in config.splitlines():
+                raise BuildFailure(f"{scenario}: resolved prerequisite {prerequisite} 누락")
+        for conflict in ("NUCODE_ARDUINO_SERIAL", "NUCODE_ARDUINO_WIRE", "NUCODE_ARDUINO_SPI", "UART_CONSOLE"):
+            if f"CONFIG_{conflict}=y" in config.splitlines():
+                raise BuildFailure(f"{scenario}: 기존 personality 상호 배제 위반: {conflict}")
+        nm_match = re.search(r"^CMAKE_NM:FILEPATH=(.+)$", cache, re.MULTILINE)
+        if nm_match is None or not elf_path.is_file():
+            raise BuildFailure(f"{scenario}: exact nm 또는 최종 ELF가 없습니다.")
+        nm = subprocess.run([nm_match.group(1).strip(), "--defined-only", "--demangle", str(elf_path)],
+                            capture_output=True, text=True, check=False)
+        if nm.returncode != 0:
+            raise BuildFailure(f"{scenario}: ELF symbol 검사가 실패했습니다: {nm.stderr}")
+        selected_objects: dict[str, str] = {}
+        for name in personalities:
+            symbol = f"CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_{name}"
+            enabled = f"{symbol}=y" in config.splitlines()
+            if enabled != (name in expected):
+                raise BuildFailure(f"{scenario}: requested/resolved {symbol} 불일치")
+            source_suffix = f"/cores/arduino/{name.title()}Fabric.cpp"
+            matches = [entry for entry in commands if str(entry.get("file", "")).replace("\\", "/").endswith(source_suffix)]
+            if len(matches) != int(enabled):
+                raise BuildFailure(f"{scenario}: {name} source 등록 수가 다릅니다: {len(matches)}")
+            if enabled:
+                command = matches[0].get("command") or " ".join(matches[0].get("arguments", []))
+                normalized = command.replace("\\", "/")
+                if "nucode_arduino_core.dir/" not in normalized:
+                    raise BuildFailure(f"{scenario}: {name} source가 Core target에 없습니다.")
+                reference = f"nucode::arduino::{name.title()}Handle::configure("
+                if reference not in nm.stdout:
+                    raise BuildFailure(f"{scenario}: 실제 참조한 {name} configure symbol이 없습니다.")
+                selected_objects[name] = source_suffix.removeprefix("/")
+        records.append({"scenario": scenario, "resolved_personalities": sorted(expected),
+                        "target": "nucode_arduino_core", "sources": selected_objects,
+                        "config_sha256": file_sha256(config_path),
+                        "compile_commands_sha256": file_sha256(commands_path),
+                        "elf_sha256": file_sha256(elf_path)})
+    return records
+
+
 ## @brief 대표 Zephyr build를 실행하고 고정 identity evidence를 기록합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
@@ -410,6 +482,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
     m16_role_builds = run_build(
         workspace, outdir, lock, selected_suites, args.jobs
     )
+    serial_source_builds = validate_serial_source_builds(outdir, selected_suites)
     evidence = {
         "schema_version": 2,
         "gate": "m12-zephyr-build-subset" if args.suite else "m12-zephyr-build-only",
@@ -419,6 +492,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
         "board": BOARD_TARGET,
         "scenarios": [scenario for _directory, scenario in selected_suites],
         "m16_role_builds": m16_role_builds,
+        "serial_source_builds": serial_source_builds,
         "ncs_revision": lock["ncs"]["revision"],
         "zephyr_revision": lock["zephyr"]["revision"],
         "container_digest": lock["linux_toolchain_container"]["digest"],

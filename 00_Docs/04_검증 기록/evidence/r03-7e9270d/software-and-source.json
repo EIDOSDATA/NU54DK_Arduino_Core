@@ -1,0 +1,102 @@
+{
+  "driver_scenarios": 26,
+  "gates": {
+    "after-final": {
+      "result_lines": [],
+      "sha256": "54e695b245c0869eb352cb039187834b3a13332c0dafebdec9c23b6adae1bd8d",
+      "skips": 0,
+      "tests": 2
+    },
+    "before": {
+      "result_lines": [
+        "FAILED (failures=10)"
+      ],
+      "sha256": "68d78f821f18195dcafd94f24ad537c01269064bb0c3a4de59e1babb4973c694",
+      "skips": 0,
+      "tests": 2
+    },
+    "before-commit-failure": {
+      "result_lines": [
+        "FAILED (failures=4)"
+      ],
+      "sha256": "e2d74c2ba37e46046276db1bbaf1a48b11ca3786f3734c06e8d59d02b44343ae",
+      "skips": 0,
+      "tests": 2
+    },
+    "contract": {
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "sha256": "8d712f398b3c721d2d5310d2e0f4924746797062ea075eba33f49ec8edc40eb7",
+      "skips": 0,
+      "tests": 45
+    },
+    "host-final": {
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "sha256": "1c0854e1986bfcb776c7ba81dc45632938266aa56464aedd4739782983d47f74",
+      "skips": 2,
+      "tests": 604
+    },
+    "inventory": {
+      "result_lines": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "sha256": "9510ed7072eb22b16614ed2c1cab372663f22d759fa26c1985334e7e8f32dcc9",
+      "skips": 0,
+      "tests": 0
+    },
+    "style": {
+      "result_lines": [
+        "CPP_STYLE_FILES=254; FAILED=0; WRITE=0"
+      ],
+      "sha256": "0c5687489555205017fd8ecaad606053ac6cd04312ded21f45e0c79f5c45ffd1",
+      "skips": 0,
+      "tests": 0
+    },
+    "target-final": {
+      "result_lines": [
+        "INFO    - 0 test configurations executed on platforms, 5 test configurations were only built.",
+        "M12_ZEPHYR_BUILD_PASS=5;GROUP=v0.4.0;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "sha256": "6f315193d8b50a20567fa29e8c5f9d32a7ce989e39be5e1dcf8be15f8922bd5a",
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "hardware_executed": false,
+  "pinned_nrfx_sha256": {
+    "nrfx_i2s.c": "592116258a06befdb607a72e45bd3930b6359737908a3c9ce4b382ca24a57163",
+    "nrfx_pdm.c": "a6f61394a0b51afb7ccc371292648c88e42ccc6bb636941b26c8136591cff3ec",
+    "nrfx_pwm.c": "8c6f9a15d40e53146d40f7149732f44dcf80d7cd34fd5aced84c49431d59709b",
+    "nrfx_saadc.c": "ad305cde2aa7d98d255848d32ef17c293d8e9faa1b8bd8b9674f3b2642e59e78"
+  },
+  "public_headers_unchanged": 25,
+  "source_sha256": {
+    "cores/arduino/AnalogFabric.cpp": "a71e435077a6839fbf322d654f9271d4f05614a27bdf00fadd5ae63a637aa05a",
+    "cores/arduino/StreamFabric.cpp": "fcf52870387aa1391520ffb79caf05eb5739f8adc800ff31a068bffcfbeee03d",
+    "cores/arduino/internal/FabricSynchronization.h": "2c707024c42066fe27f9100f683130085fc80b0b0a749954bcece98aa460a9d8",
+    "tests/host/fabric_driver_stubs/hal/nrf_gpio.h": "40c743929d341e95b804e693751cf0de2bd37e903f608f0dd48632aba4175cd1",
+    "tests/host/fabric_driver_stubs/hal/nrf_i2s.h": "f0bc2aad10256d0cf7ae4f3ba787944f38b159632feb414d3755b80e6d1423af",
+    "tests/host/fabric_driver_stubs/hal/nrf_pdm.h": "d6fd2cd5b3518b1eb1e38c0a6af9348cdc6407c3acf6683d329ccf49f171dda2",
+    "tests/host/fabric_driver_stubs/hal/nrf_pwm.h": "181703da0c852cc25123ad6e960ae92935e3c1577ba018a9fe7e1dc84fa789c2",
+    "tests/host/fabric_driver_stubs/hal/nrf_qdec.h": "f3853c623e31a043dec34b0c1e0fe7b8d5d833728613f37174f2bc349dfd0b37",
+    "tests/host/fabric_driver_stubs/hal/nrf_saadc.h": "280229d5af32428d1ad9e9b6fc1fc1b6442f7bdc660ca332666dc3db8d99770e",
+    "tests/host/fabric_driver_stubs/haly/nrfy_saadc.h": "280229d5af32428d1ad9e9b6fc1fc1b6442f7bdc660ca332666dc3db8d99770e",
+    "tests/host/fabric_driver_stubs/nrfx_i2s.h": "2374060c83745e8907ce8d84f516590ce314141348fe1f7cdc5ab76d02fd5751",
+    "tests/host/fabric_driver_stubs/nrfx_pdm.h": "3cac8ad8b67c4ee395e60e991b77fe334f8142190dca522a7b15324d35a9476d",
+    "tests/host/fabric_driver_stubs/nrfx_pwm.h": "dfb96210d1bfef52cb04ea422b728b68054f599324899a52302a8a243b28475a",
+    "tests/host/fabric_driver_stubs/nrfx_qdec.h": "752f0d44bb0529d9f5c810338c3220e4c6f311779f96484abd0abdb82ed7db73",
+    "tests/host/fabric_driver_stubs/nrfx_saadc.h": "5ee6b3f3cabe0eb35b444f6ff177e733d87b29451bb021abb9954dd8740c30f9",
+    "tests/host/fabric_driver_stubs/resource_mock.h": "78404c1f4de37f4be1c607dbe2885134df3cb2ac514f9bf56d0d3ab24471aa77",
+    "tests/host/fabric_driver_stubs/variant.h": "f169c961853632b571888694b586f6d74b68718636e4ebfb77ef6e5abab4115f",
+    "tests/host/fabric_driver_stubs/zephyr/irq.h": "ba4faf0dfb33844eecf32161b57df5c389a58c9dc1f057e053f442338dce6ed7",
+    "tests/host/fabric_driver_stubs/zephyr/kernel.h": "dd3e2cb9aafb8f81869b70ec30c477dee0a721c7a828e7ca763bd0a4a6cac4ab",
+    "tests/host/fabric_driver_stubs/zephyr/sys/util.h": "f40b9558616a2f03d587716b29428c12928dcac4e00c428e1d059f0dda8ad858",
+    "tests/host/r03_analog_driver_main.cpp": "39405541057e3b21d97a7441dcf0e9f5ad2b4dd4055ac2ce0435599142f53057",
+    "tests/host/r03_stream_driver_main.cpp": "fdd301aa8f076732bb34c978366f25b24598847ed646b1f448b9b4bc08f7f86b",
+    "tests/host/test_r03_fabric_drivers.py": "e3ae2425788876e3b090e94d208ae45c9fc66693e5a02d4abfa2b0d53f7a0425"
+  },
+  "start_commit": "7e9270dce84bb72917bca11693521493d1caf492"
+}

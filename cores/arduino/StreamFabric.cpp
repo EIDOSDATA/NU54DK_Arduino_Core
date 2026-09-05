@@ -9,6 +9,7 @@
 #include "internal/qdec_sampling.h"
 
 #include "internal/IoResourceManager.h"
+#include "internal/FabricSynchronization.h"
 #include "internal/dma_count.h"
 #include "internal/dma_memory.h"
 #include "internal/pin_description.h"
@@ -58,6 +59,7 @@ namespace nucode::arduino
             std::size_t read_index{0U};
             std::size_t write_index{0U};
             std::size_t count{0U};
+            bool overflow{false};
             struct k_spinlock lock{};
         };
 
@@ -77,8 +79,9 @@ namespace nucode::arduino
             DmaLeaseSlot dma_leases[pdm_dma_capacity]{};
             EventQueue<PdmEvent> events{};
             StreamFabricState state{StreamFabricState::inactive};
-            StreamFabricResult last_result{StreamFabricResult::success};
-            int last_driver_error{0};
+            internal::FabricDiagnostic<StreamFabricResult> diagnostics{};
+            internal::FabricStopSignal stop_signal{};
+            bool stop_waiting{false};
             bool ignore_initial_request{false};
         };
 
@@ -89,9 +92,9 @@ namespace nucode::arduino
             DmaLeaseSlot dma_leases[i2s_dma_capacity]{};
             EventQueue<I2sEvent> events{};
             StreamFabricState state{StreamFabricState::inactive};
-            StreamFabricResult last_result{StreamFabricResult::success};
-            int last_driver_error{0};
-            volatile bool stopped_seen{false};
+            internal::FabricDiagnostic<StreamFabricResult> diagnostics{};
+            internal::FabricStopSignal stop_signal{};
+            bool stop_waiting{false};
             bool first_callback{true};
         };
 
@@ -102,11 +105,12 @@ namespace nucode::arduino
             IoResourceLease base_lease{};
             EventQueue<QdecEvent> events{};
             StreamFabricState state{StreamFabricState::inactive};
-            StreamFabricResult last_result{StreamFabricResult::success};
-            int last_driver_error{0};
+            internal::FabricDiagnostic<StreamFabricResult> diagnostics{};
         };
 
         K_MUTEX_DEFINE(stream_fabric_mutex);
+        /** @brief callback이 읽는 DMA 주소/크기와 최초 요청 표식만 짧게 보호합니다. */
+        k_spinlock dma_metadata_lock{};
         PdmContext pdm_contexts[2]{{20U}, {21U}};
         I2sContext i2s_context{};
         QdecContext qdec_contexts[2]{{20U}, {21U}};
@@ -114,12 +118,38 @@ namespace nucode::arduino
         nrfx_i2s_t i2s_driver = NRFX_I2S_INSTANCE(NRF_I2S20);
         nrfx_qdec_t qdec_drivers[2]{NRFX_QDEC_INSTANCE(NRF_QDEC20), NRFX_QDEC_INSTANCE(NRF_QDEC21)};
 
+        void setInitialRequest(PdmContext &context, bool ignored) noexcept
+        {
+            const auto key = k_spin_lock(&dma_metadata_lock);
+            context.ignore_initial_request = ignored;
+            k_spin_unlock(&dma_metadata_lock, key);
+        }
+
+        bool consumeInitialRequest(PdmContext &context) noexcept
+        {
+            const auto key = k_spin_lock(&dma_metadata_lock);
+            const bool ignored = context.ignore_initial_request;
+            context.ignore_initial_request = false;
+            k_spin_unlock(&dma_metadata_lock, key);
+            return ignored;
+        }
+
+        bool exchangeFirstCallback(bool first) noexcept
+        {
+            const auto key = k_spin_lock(&dma_metadata_lock);
+            const bool previous = i2s_context.first_callback;
+            i2s_context.first_callback = first;
+            k_spin_unlock(&dma_metadata_lock, key);
+            return previous;
+        }
+
         template <typename Event>
         bool pushEvent(EventQueue<Event> &queue, const Event &event) noexcept
         {
             const k_spinlock_key_t key = k_spin_lock(&queue.lock);
             if (queue.count == event_queue_capacity)
             {
+                queue.overflow = true;
                 k_spin_unlock(&queue.lock, key);
                 return false;
             }
@@ -133,6 +163,15 @@ namespace nucode::arduino
         template <typename Event> bool popEvent(EventQueue<Event> &queue, Event &event) noexcept
         {
             const k_spinlock_key_t key = k_spin_lock(&queue.lock);
+            /** @brief 가득 찬 queue 밖에 보존한 손실을 다음 thread 연산이 덮어쓰지 않습니다. */
+            if (queue.overflow)
+            {
+                queue.overflow = false;
+                event = {};
+                event.driver_error = -ENOBUFS;
+                k_spin_unlock(&queue.lock, key);
+                return true;
+            }
             if (queue.count == 0U)
             {
                 k_spin_unlock(&queue.lock, key);
@@ -151,14 +190,14 @@ namespace nucode::arduino
             queue.read_index = 0U;
             queue.write_index = 0U;
             queue.count = 0U;
+            queue.overflow = false;
             k_spin_unlock(&queue.lock, key);
         }
 
         template <typename Context>
         void record(Context &context, StreamFabricResult result, int driver_error = 0) noexcept
         {
-            context.last_result = result;
-            context.last_driver_error = driver_error;
+            context.diagnostics.record(result, driver_error);
         }
 
         [[nodiscard]] StreamFabricResult mapResourceResult(IoResourceResult result) noexcept
@@ -212,19 +251,24 @@ namespace nucode::arduino
                 slot = nullptr;
                 return mapResourceResult(result);
             }
+            const auto key = k_spin_lock(&dma_metadata_lock);
             slot->address = address;
             slot->bytes = bytes;
             slot->active = true;
+            k_spin_unlock(&dma_metadata_lock, key);
             return StreamFabricResult::success;
         }
 
         void rollbackDma(DmaLeaseSlot &slot) noexcept
         {
-            if (slot.active)
+            if (slot.active &&
+                internal::releaseIoResources(slot.token) != IoResourceResult::success)
             {
-                (void)internal::releaseIoResources(slot.token);
+                return;
             }
+            const auto key = k_spin_lock(&dma_metadata_lock);
             slot = {};
+            k_spin_unlock(&dma_metadata_lock, key);
         }
 
         [[nodiscard]] IoResourceResult commitDma(DmaLeaseSlot &slot) noexcept
@@ -239,7 +283,12 @@ namespace nucode::arduino
                 return IoResourceResult::success;
             }
             const auto result = internal::releaseIoResources(slot.token);
-            slot = {};
+            if (result == IoResourceResult::success)
+            {
+                const auto key = k_spin_lock(&dma_metadata_lock);
+                slot = {};
+                k_spin_unlock(&dma_metadata_lock, key);
+            }
             return result;
         }
 
@@ -468,19 +517,16 @@ namespace nucode::arduino
         {
             if (event->buffer_requested)
             {
-                if (context.ignore_initial_request)
+                if (!consumeInitialRequest(context) &&
+                    !pushEvent(context.events, {PdmEventType::buffer_needed, nullptr, 0U, 0}))
                 {
-                    context.ignore_initial_request = false;
-                }
-                else if (!pushEvent(context.events, {PdmEventType::buffer_needed, nullptr, 0U, 0}))
-                {
-                    context.last_result = StreamFabricResult::resource_exhausted;
-                    context.last_driver_error = -ENOBUFS;
+                    record(context, StreamFabricResult::resource_exhausted, -ENOBUFS);
                 }
             }
             if (event->buffer_released != nullptr)
             {
                 std::size_t samples = 0U;
+                const auto key = k_spin_lock(&dma_metadata_lock);
                 for (const auto &slot : context.dma_leases)
                 {
                     if (slot.active && slot.address == event->buffer_released)
@@ -489,19 +535,18 @@ namespace nucode::arduino
                         break;
                     }
                 }
+                k_spin_unlock(&dma_metadata_lock, key);
                 if (!pushEvent(context.events,
                                {PdmEventType::buffer_complete, event->buffer_released, samples, 0}))
                 {
-                    context.last_result = StreamFabricResult::resource_exhausted;
-                    context.last_driver_error = -ENOBUFS;
+                    record(context, StreamFabricResult::resource_exhausted, -ENOBUFS);
                 }
             }
             if (event->error == NRFX_PDM_ERROR_OVERFLOW)
             {
                 if (!pushEvent(context.events, {PdmEventType::overflow, nullptr, 0U, -EOVERFLOW}))
                 {
-                    context.last_result = StreamFabricResult::resource_exhausted;
-                    context.last_driver_error = -ENOBUFS;
+                    record(context, StreamFabricResult::resource_exhausted, -ENOBUFS);
                 }
             }
         }
@@ -517,6 +562,7 @@ namespace nucode::arduino
 
         void i2sEventHandler(const nrfx_i2s_buffers_t *released, std::uint32_t status)
         {
+            const bool first_callback = exchangeFirstCallback(false);
             const bool empty_release = released == nullptr || (released->p_rx_buffer == nullptr &&
                                                                released->p_tx_buffer == nullptr);
             if (!empty_release)
@@ -528,31 +574,26 @@ namespace nucode::arduino
                 event.released.words = released->buffer_size;
                 if (!pushEvent(i2s_context.events, event))
                 {
-                    i2s_context.last_result = StreamFabricResult::resource_exhausted;
-                    i2s_context.last_driver_error = -ENOBUFS;
+                    record(i2s_context, StreamFabricResult::resource_exhausted, -ENOBUFS);
                 }
             }
             if ((status & NRFX_I2S_STATUS_NEXT_BUFFERS_NEEDED) != 0U)
             {
-                const auto type = empty_release && !i2s_context.first_callback
-                                      ? I2sEventType::underrun
-                                      : I2sEventType::buffers_needed;
+                const auto type = empty_release && !first_callback ? I2sEventType::underrun
+                                                                   : I2sEventType::buffers_needed;
                 if (!pushEvent(i2s_context.events, {type, {}, 0}))
                 {
-                    i2s_context.last_result = StreamFabricResult::resource_exhausted;
-                    i2s_context.last_driver_error = -ENOBUFS;
+                    record(i2s_context, StreamFabricResult::resource_exhausted, -ENOBUFS);
                 }
             }
             if ((status & NRFX_I2S_STATUS_TRANSFER_STOPPED) != 0U)
             {
-                i2s_context.stopped_seen = true;
+                i2s_context.stop_signal.notifyStopped();
                 if (!pushEvent(i2s_context.events, {I2sEventType::stopped, {}, 0}))
                 {
-                    i2s_context.last_result = StreamFabricResult::resource_exhausted;
-                    i2s_context.last_driver_error = -ENOBUFS;
+                    record(i2s_context, StreamFabricResult::resource_exhausted, -ENOBUFS);
                 }
             }
-            i2s_context.first_callback = false;
         }
 
         void qdecEventHandler(nrfx_qdec_event_t event, void *context_pointer)
@@ -578,8 +619,7 @@ namespace nucode::arduino
             }
             if (!pushEvent(context.events, translated))
             {
-                context.last_result = StreamFabricResult::resource_exhausted;
-                context.last_driver_error = -ENOBUFS;
+                record(context, StreamFabricResult::resource_exhausted, -ENOBUFS);
             }
         }
 
@@ -635,8 +675,8 @@ namespace nucode::arduino
     {
         k_mutex_lock(&stream_fabric_mutex, K_FOREVER);
         const auto *const context = pdmContext(instance_);
-        const auto value =
-            context != nullptr ? context->last_result : StreamFabricResult::unsupported_instance;
+        const auto value = context != nullptr ? context->diagnostics.snapshot().result
+                                              : StreamFabricResult::unsupported_instance;
         k_mutex_unlock(&stream_fabric_mutex);
         return value;
     }
@@ -645,7 +685,8 @@ namespace nucode::arduino
     {
         k_mutex_lock(&stream_fabric_mutex, K_FOREVER);
         const auto *const context = pdmContext(instance_);
-        const int value = context != nullptr ? context->last_driver_error : -ENODEV;
+        const int value =
+            context != nullptr ? context->diagnostics.snapshot().driver_error : -ENODEV;
         k_mutex_unlock(&stream_fabric_mutex);
         return value;
     }
@@ -681,7 +722,7 @@ namespace nucode::arduino
             record(*context, context->state == StreamFabricState::faulted
                                  ? StreamFabricResult::faulted
                                  : StreamFabricResult::wrong_state);
-            const auto result = context->last_result;
+            const auto result = context->diagnostics.snapshot().result;
             k_mutex_unlock(&stream_fabric_mutex);
             return result;
         }
@@ -741,6 +782,7 @@ namespace nucode::arduino
             return result;
         }
 
+        context->stop_signal.beginRun();
         const auto *const clock = internal::pinDescription(pins[0]);
         const auto *const data = internal::pinDescription(pins[1]);
         nrfx_pdm_config_t driver_configuration =
@@ -759,7 +801,7 @@ namespace nucode::arduino
             driver_error = nrfx_pdm_init(driver, &driver_configuration,
                                          instance_ == 20U ? pdm20EventHandler : pdm21EventHandler);
         }
-        context->ignore_initial_request = true;
+        setInitialRequest(*context, true);
         if (driver_error == 0)
         {
             driver_error = nrfx_pdm_start(driver);
@@ -771,6 +813,16 @@ namespace nucode::arduino
         }
         if (driver_error != 0)
         {
+            if (nrfx_pdm_init_check(driver) && nrfx_pdm_enable_check(driver))
+            {
+                /** @brief start 뒤 buffer 설정 실패도 STOP 확인까지 자원을 보존합니다. */
+                context->state = StreamFabricState::stopping;
+                (void)context->stop_signal.arm();
+                (void)nrfx_pdm_stop(driver);
+                record(*context, StreamFabricResult::driver_error, driver_error);
+                k_mutex_unlock(&stream_fabric_mutex);
+                return StreamFabricResult::driver_error;
+            }
             if (nrfx_pdm_init_check(driver))
             {
                 nrfx_pdm_uninit(driver);
@@ -778,7 +830,7 @@ namespace nucode::arduino
             rollbackDma(*dma_slot);
             (void)internal::rollbackIoResources(context->base_lease);
             context->base_lease = {};
-            context->ignore_initial_request = false;
+            setInitialRequest(*context, false);
             record(*context, StreamFabricResult::driver_error, driver_error);
             k_mutex_unlock(&stream_fabric_mutex);
             return StreamFabricResult::driver_error;
@@ -787,19 +839,9 @@ namespace nucode::arduino
         const auto dma_commit = commitDma(*dma_slot);
         if (base_commit != IoResourceResult::success || dma_commit != IoResourceResult::success)
         {
+            context->state = StreamFabricState::stopping;
+            (void)context->stop_signal.arm();
             (void)nrfx_pdm_stop(driver);
-            nrfx_pdm_uninit(driver);
-            if (context->base_lease.phase == internal::IoLeasePhase::reserved)
-            {
-                (void)internal::rollbackIoResources(context->base_lease);
-            }
-            else
-            {
-                (void)internal::releaseIoResources(context->base_lease);
-            }
-            context->base_lease = {};
-            (void)releaseDma(*dma_slot);
-            context->state = StreamFabricState::faulted;
             record(*context, StreamFabricResult::release_failed);
             k_mutex_unlock(&stream_fabric_mutex);
             return StreamFabricResult::release_failed;
@@ -856,7 +898,9 @@ namespace nucode::arduino
         }
         if (commitDma(*slot) != IoResourceResult::success)
         {
-            context->state = StreamFabricState::faulted;
+            context->state = StreamFabricState::stopping;
+            (void)context->stop_signal.arm();
+            (void)nrfx_pdm_stop(driver);
             record(*context, StreamFabricResult::release_failed);
             k_mutex_unlock(&stream_fabric_mutex);
             return StreamFabricResult::release_failed;
@@ -886,27 +930,33 @@ namespace nucode::arduino
             k_mutex_unlock(&stream_fabric_mutex);
             return StreamFabricResult::unsupported_instance;
         }
-        if (context->state != StreamFabricState::active)
+        if ((context->state != StreamFabricState::active &&
+             context->state != StreamFabricState::stopping) ||
+            context->stop_waiting)
         {
             record(*context, StreamFabricResult::wrong_state);
             k_mutex_unlock(&stream_fabric_mutex);
             return StreamFabricResult::wrong_state;
         }
         context->state = StreamFabricState::stopping;
-        const std::uint32_t started = k_cycle_get_32();
+        context->stop_waiting = true;
+        (void)context->stop_signal.arm();
+        k_mutex_unlock(&stream_fabric_mutex);
         int driver_error = nrfx_pdm_stop(driver);
-        while ((driver_error == -EBUSY || nrfx_pdm_enable_check(driver)) &&
-               k_cyc_to_us_floor32(k_cycle_get_32() - started) < timeout_us)
-        {
-            if (driver_error == -EBUSY)
+        const bool stopped = internal::waitFabricStop(
+            [&]
             {
-                driver_error = nrfx_pdm_stop(driver);
-            }
-            k_busy_wait(10U);
-        }
-        if (driver_error != 0 || nrfx_pdm_enable_check(driver))
+                if (driver_error == -EBUSY)
+                {
+                    driver_error = nrfx_pdm_stop(driver);
+                }
+                return driver_error == 0 && !nrfx_pdm_enable_check(driver);
+            },
+            timeout_us);
+        k_mutex_lock(&stream_fabric_mutex, K_FOREVER);
+        context->stop_waiting = false;
+        if (!stopped)
         {
-            context->state = StreamFabricState::faulted;
             record(*context, StreamFabricResult::stop_timeout,
                    driver_error != 0 ? driver_error : -ETIMEDOUT);
             k_mutex_unlock(&stream_fabric_mutex);
@@ -914,21 +964,24 @@ namespace nucode::arduino
         }
         nrfx_pdm_uninit(driver);
         const auto dma_release = releaseAllDma(context->dma_leases);
-        const auto base_release = internal::releaseIoResources(context->base_lease);
-        context->base_lease = {};
-        context->ignore_initial_request = false;
-        if (dma_release != IoResourceResult::success || base_release != IoResourceResult::success)
+        const auto base_release = context->base_lease.phase == internal::IoLeasePhase::reserved
+                                      ? internal::rollbackIoResources(context->base_lease)
+                                      : internal::releaseIoResources(context->base_lease);
+        if (base_release == IoResourceResult::success)
         {
-            context->state = StreamFabricState::faulted;
-            record(*context, StreamFabricResult::release_failed);
-            k_mutex_unlock(&stream_fabric_mutex);
-            return StreamFabricResult::release_failed;
+            context->base_lease = {};
         }
-        context->state = StreamFabricState::configured;
+        setInitialRequest(*context, false);
+        const auto result =
+            dma_release == IoResourceResult::success && base_release == IoResourceResult::success
+                ? StreamFabricResult::success
+                : StreamFabricResult::release_failed;
+        context->state = result == StreamFabricResult::success ? StreamFabricState::configured
+                                                               : StreamFabricState::faulted;
         (void)pushEvent(context->events, {PdmEventType::stopped, nullptr, 0U, 0});
-        record(*context, StreamFabricResult::success);
+        record(*context, result);
         k_mutex_unlock(&stream_fabric_mutex);
-        return StreamFabricResult::success;
+        return result;
     }
 
     bool PdmFabric::takeEvent(PdmEvent &event) noexcept
@@ -976,7 +1029,7 @@ namespace nucode::arduino
     StreamFabricResult I2sFabric::lastResult() const noexcept
     {
         k_mutex_lock(&stream_fabric_mutex, K_FOREVER);
-        const auto value = i2s_context.last_result;
+        const auto value = i2s_context.diagnostics.snapshot().result;
         k_mutex_unlock(&stream_fabric_mutex);
         return value;
     }
@@ -984,7 +1037,7 @@ namespace nucode::arduino
     int I2sFabric::lastDriverError() const noexcept
     {
         k_mutex_lock(&stream_fabric_mutex, K_FOREVER);
-        const int value = i2s_context.last_driver_error;
+        const int value = i2s_context.diagnostics.snapshot().driver_error;
         k_mutex_unlock(&stream_fabric_mutex);
         return value;
     }
@@ -1033,7 +1086,7 @@ namespace nucode::arduino
             record(i2s_context, i2s_context.state == StreamFabricState::faulted
                                     ? StreamFabricResult::faulted
                                     : StreamFabricResult::wrong_state);
-            const auto result = i2s_context.last_result;
+            const auto result = i2s_context.diagnostics.snapshot().result;
             k_mutex_unlock(&stream_fabric_mutex);
             return result;
         }
@@ -1112,6 +1165,7 @@ namespace nucode::arduino
             return result;
         }
 
+        i2s_context.stop_signal.beginRun();
         const auto pinNumber = [](pin_size_t pin)
         {
             return pin == disconnected_pin ? static_cast<std::uint32_t>(NRF_I2S_PIN_NOT_CONNECTED)
@@ -1142,8 +1196,7 @@ namespace nucode::arduino
         }
         nrfx_i2s_buffers_t transfer{buffers.receive, buffers.transmit,
                                     static_cast<std::uint16_t>(buffers.words)};
-        i2s_context.stopped_seen = false;
-        i2s_context.first_callback = true;
+        (void)exchangeFirstCallback(true);
         if (driver_error == 0)
         {
             driver_error = nrfx_i2s_start(&i2s_driver, &transfer, 0U);
@@ -1174,26 +1227,9 @@ namespace nucode::arduino
         if (base_commit != IoResourceResult::success || rx_commit != IoResourceResult::success ||
             tx_commit != IoResourceResult::success)
         {
+            i2s_context.state = StreamFabricState::stopping;
+            (void)i2s_context.stop_signal.arm();
             nrfx_i2s_stop(&i2s_driver);
-            nrfx_i2s_uninit(&i2s_driver);
-            if (i2s_context.base_lease.phase == internal::IoLeasePhase::reserved)
-            {
-                (void)internal::rollbackIoResources(i2s_context.base_lease);
-            }
-            else
-            {
-                (void)internal::releaseIoResources(i2s_context.base_lease);
-            }
-            i2s_context.base_lease = {};
-            if (rx_slot != nullptr)
-            {
-                (void)releaseDma(*rx_slot);
-            }
-            if (tx_slot != nullptr)
-            {
-                (void)releaseDma(*tx_slot);
-            }
-            i2s_context.state = StreamFabricState::faulted;
             record(i2s_context, StreamFabricResult::release_failed);
             k_mutex_unlock(&stream_fabric_mutex);
             return StreamFabricResult::release_failed;
@@ -1278,7 +1314,9 @@ namespace nucode::arduino
         const auto tx_commit = tx_slot != nullptr ? commitDma(*tx_slot) : IoResourceResult::success;
         if (rx_commit != IoResourceResult::success || tx_commit != IoResourceResult::success)
         {
-            i2s_context.state = StreamFabricState::faulted;
+            i2s_context.state = StreamFabricState::stopping;
+            (void)i2s_context.stop_signal.arm();
+            nrfx_i2s_stop(&i2s_driver);
             record(i2s_context, StreamFabricResult::release_failed);
             k_mutex_unlock(&stream_fabric_mutex);
             return StreamFabricResult::release_failed;
@@ -1295,43 +1333,57 @@ namespace nucode::arduino
             return StreamFabricResult::invalid_context;
         }
         k_mutex_lock(&stream_fabric_mutex, K_FOREVER);
-        if (i2s_context.state != StreamFabricState::active)
+        auto &context = i2s_context;
+        if ((context.state != StreamFabricState::active &&
+             context.state != StreamFabricState::stopping) ||
+            context.stop_waiting)
         {
-            record(i2s_context, StreamFabricResult::wrong_state);
+            record(context, StreamFabricResult::wrong_state);
             k_mutex_unlock(&stream_fabric_mutex);
             return StreamFabricResult::wrong_state;
         }
-        i2s_context.state = StreamFabricState::stopping;
-        i2s_context.stopped_seen = false;
-        nrfx_i2s_stop(&i2s_driver);
-        const std::uint32_t started = k_cycle_get_32();
-        while (!i2s_context.stopped_seen &&
-               k_cyc_to_us_floor32(k_cycle_get_32() - started) < timeout_us)
+        const bool first_request = context.state == StreamFabricState::active;
+        context.state = StreamFabricState::stopping;
+        context.stop_waiting = true;
+        const auto generation = context.stop_signal.arm();
+        k_mutex_unlock(&stream_fabric_mutex);
+        if (first_request)
         {
-            k_busy_wait(10U);
+            nrfx_i2s_stop(&i2s_driver);
         }
-        if (!i2s_context.stopped_seen)
+        const bool stopped = internal::waitFabricStop(
+            [&]
+            {
+                return context.stop_signal.completed(generation);
+            },
+            timeout_us);
+        k_mutex_lock(&stream_fabric_mutex, K_FOREVER);
+        context.stop_waiting = false;
+        if (!stopped)
         {
-            i2s_context.state = StreamFabricState::faulted;
-            record(i2s_context, StreamFabricResult::stop_timeout, -ETIMEDOUT);
+            /** @brief timeout 뒤 늦은 STOP callback을 같은 실행에 보존하고 명시적 재시도를 허용합니다. */
+            record(context, StreamFabricResult::stop_timeout, -ETIMEDOUT);
             k_mutex_unlock(&stream_fabric_mutex);
             return StreamFabricResult::stop_timeout;
         }
         nrfx_i2s_uninit(&i2s_driver);
-        const auto dma_release = releaseAllDma(i2s_context.dma_leases);
-        const auto base_release = internal::releaseIoResources(i2s_context.base_lease);
-        i2s_context.base_lease = {};
-        if (dma_release != IoResourceResult::success || base_release != IoResourceResult::success)
+        const auto dma_release = releaseAllDma(context.dma_leases);
+        const auto base_release = context.base_lease.phase == internal::IoLeasePhase::reserved
+                                      ? internal::rollbackIoResources(context.base_lease)
+                                      : internal::releaseIoResources(context.base_lease);
+        if (base_release == IoResourceResult::success)
         {
-            i2s_context.state = StreamFabricState::faulted;
-            record(i2s_context, StreamFabricResult::release_failed);
-            k_mutex_unlock(&stream_fabric_mutex);
-            return StreamFabricResult::release_failed;
+            context.base_lease = {};
         }
-        i2s_context.state = StreamFabricState::configured;
-        record(i2s_context, StreamFabricResult::success);
+        const auto result =
+            dma_release == IoResourceResult::success && base_release == IoResourceResult::success
+                ? StreamFabricResult::success
+                : StreamFabricResult::release_failed;
+        context.state = result == StreamFabricResult::success ? StreamFabricState::configured
+                                                              : StreamFabricState::faulted;
+        record(context, result);
         k_mutex_unlock(&stream_fabric_mutex);
-        return StreamFabricResult::success;
+        return result;
     }
 
     bool I2sFabric::takeEvent(I2sEvent &event) noexcept
@@ -1374,8 +1426,8 @@ namespace nucode::arduino
     {
         k_mutex_lock(&stream_fabric_mutex, K_FOREVER);
         const auto *const context = qdecContext(instance_);
-        const auto value =
-            context != nullptr ? context->last_result : StreamFabricResult::unsupported_instance;
+        const auto value = context != nullptr ? context->diagnostics.snapshot().result
+                                              : StreamFabricResult::unsupported_instance;
         k_mutex_unlock(&stream_fabric_mutex);
         return value;
     }
@@ -1384,7 +1436,8 @@ namespace nucode::arduino
     {
         k_mutex_lock(&stream_fabric_mutex, K_FOREVER);
         const auto *const context = qdecContext(instance_);
-        const int value = context != nullptr ? context->last_driver_error : -ENODEV;
+        const int value =
+            context != nullptr ? context->diagnostics.snapshot().driver_error : -ENODEV;
         k_mutex_unlock(&stream_fabric_mutex);
         return value;
     }
@@ -1425,7 +1478,7 @@ namespace nucode::arduino
             record(*context, context->state == StreamFabricState::faulted
                                  ? StreamFabricResult::faulted
                                  : StreamFabricResult::wrong_state);
-            const auto result = context->last_result;
+            const auto result = context->diagnostics.snapshot().result;
             k_mutex_unlock(&stream_fabric_mutex);
             return result;
         }

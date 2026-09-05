@@ -1,0 +1,451 @@
+{
+  "scope": "build-only; no runtime/HIL",
+  "targets": [
+    {
+      "build_root": "C:\\r00",
+      "files": {
+        "build_info.yml": {
+          "sha256": "d552a87d4026a7847811ef45a6013400fc2cfb3ec9f0f1f120c125c98e286e2c",
+          "size_bytes": 2937
+        },
+        "compile_commands.json": {
+          "sha256": "ba8c7e832de9b6fa98a8a26278d4a64529f03074dad66b5bd219edd3b0d18f90",
+          "size_bytes": 1461214
+        },
+        "nucode_arduino_core_build.yml": {
+          "sha256": "e365d741e4bcdefe10e826d9e7f6976b2c90e2e85880b6aa239f70b8ecfcb7bd",
+          "size_bytes": 629
+        },
+        "zephyr/.config": {
+          "sha256": "bcb149471829b7344a953127f89f59fe6e64b4f16d9f96380cbb9b00d282d046",
+          "size_bytes": 77683
+        },
+        "zephyr/zephyr.bin": {
+          "sha256": "1378fd3c49831534f2a0d3e50620c91e64a0d5d606e7048d4334fd01a3f82a69",
+          "size_bytes": 189704
+        },
+        "zephyr/zephyr.elf": {
+          "sha256": "db37d0959bd1c5938088e2f0a0c160dea3d70537ddc948b0a358d9293cc36343",
+          "size_bytes": 2781248
+        },
+        "zephyr/zephyr.hex": {
+          "sha256": "6d9c6d4b5567e7a0aa35c9c65d1d744f6849f820cf6de54b0e160c470c1381b9",
+          "size_bytes": 533744
+        },
+        "zephyr/zephyr.map": {
+          "sha256": "bd7acb7cb4ae9ba2a21c2e5b96d707be9a99e54ede3024626cc04eb113b5ea42",
+          "size_bytes": 1585789
+        }
+      },
+      "flash_text_plus_data": 189696,
+      "ram_data_plus_bss": 54947,
+      "scenario": "nucode.m16.ble_hil_central",
+      "size_bss": 49403,
+      "size_data": 5544,
+      "size_text": 184152,
+      "symbol_sha256": "c43ba4ffba16e9b12ca04d85e00d57fbea37de4446b25fa55e6796ae9abedf6c",
+      "symbols": "nucode.m16.ble_hil_central-symbols.txt"
+    },
+    {
+      "build_root": "C:\\r00",
+      "files": {
+        "build_info.yml": {
+          "sha256": "448b9589887cd296a588e4c97c068149a014829a58279944593748fcc8599724",
+          "size_bytes": 2940
+        },
+        "compile_commands.json": {
+          "sha256": "18e2a0c9e2af2e5e3c61b13ffbec4fc2889595f5ea2e7bc250e67868fc682b1a",
+          "size_bytes": 1466175
+        },
+        "nucode_arduino_core_build.yml": {
+          "sha256": "e365d741e4bcdefe10e826d9e7f6976b2c90e2e85880b6aa239f70b8ecfcb7bd",
+          "size_bytes": 629
+        },
+        "zephyr/.config": {
+          "sha256": "bcb149471829b7344a953127f89f59fe6e64b4f16d9f96380cbb9b00d282d046",
+          "size_bytes": 77683
+        },
+        "zephyr/zephyr.bin": {
+          "sha256": "4db394e93ea96dc3b6fc9d69f68796913f9e649ab0b772dad3d62a61586f8836",
+          "size_bytes": 189364
+        },
+        "zephyr/zephyr.elf": {
+          "sha256": "d5c0d5949b1811d0ee7421e159d0ec7571c6c48f08d7e503707bc5b15d87d039",
+          "size_bytes": 2778880
+        },
+        "zephyr/zephyr.hex": {
+          "sha256": "a93a7543c7c66be86795552b0010061289f9574832fde2b16405f16da8d6278c",
+          "size_bytes": 532791
+        },
+        "zephyr/zephyr.map": {
+          "sha256": "0867e91d8bd1b64bc914962b2afb427d66dea941a23b6bd88e5a963985dfa1c5",
+          "size_bytes": 1585223
+        }
+      },
+      "flash_text_plus_data": 189356,
+      "ram_data_plus_bss": 54874,
+      "scenario": "nucode.m16.ble_hil_peripheral",
+      "size_bss": 49330,
+      "size_data": 5544,
+      "size_text": 183812,
+      "symbol_sha256": "77eab39f98d30093876a8935a2e7954ab6b7efee7dc86abc0c970282ab37e702",
+      "symbols": "nucode.m16.ble_hil_peripheral-symbols.txt"
+    },
+    {
+      "build_root": "C:\\r00",
+      "files": {
+        "build_info.yml": {
+          "sha256": "559676ca87b4aff20d840d5e9c15dc5241d144c0d51e762b60ef227bc8b6b7eb",
+          "size_bytes": 3204
+        },
+        "compile_commands.json": {
+          "sha256": "389dc7a81e5533d92c23a764dcb07aa235f20a569f9dba1c0bf44e5331935d45",
+          "size_bytes": 1154895
+        },
+        "nucode_arduino_core_build.yml": {
+          "sha256": "10478ce484405dbb214033cb09fc34b9426534e017273bcf757d6a5a0c6d8298",
+          "size_bytes": 629
+        },
+        "zephyr/.config": {
+          "sha256": "6361325d4d68c855440f2a728388b697b8f83c1f21f946c98304ba0f97aed9dd",
+          "size_bytes": 69228
+        },
+        "zephyr/zephyr.bin": {
+          "sha256": "df038ad34b3ac18ae7ae4a49b83f230bcf713292dc4a5182ec77e9e359e6ea26",
+          "size_bytes": 96728
+        },
+        "zephyr/zephyr.elf": {
+          "sha256": "d650b4d6ee2c941f4e683438dd50f4a6574c05e67d4e97853457a85b8d71e997",
+          "size_bytes": 2015936
+        },
+        "zephyr/zephyr.hex": {
+          "sha256": "a99c212f4b3903b357d9b80634a2261229c021d31b32c21bc3546bcab493d7d7",
+          "size_bytes": 272149
+        },
+        "zephyr/zephyr.map": {
+          "sha256": "421abce09a386c0b889723bf3125ae719d06dd42437c1b58039a7b2a500ddfb1",
+          "size_bytes": 703505
+        }
+      },
+      "flash_text_plus_data": 96724,
+      "ram_data_plus_bss": 54677,
+      "scenario": "nucode.m24.spi",
+      "size_bss": 26497,
+      "size_data": 28180,
+      "size_text": 68544,
+      "symbol_sha256": "f085a841210fafc92d5d34227b2270d8f8db0b4341463ed7bba8014139142342",
+      "symbols": "nucode.m24.spi-symbols.txt"
+    },
+    {
+      "build_root": "C:\\r00",
+      "files": {
+        "build_info.yml": {
+          "sha256": "98b9c009bc5d759612b13e30fb9f3f9935eb63a02f70d7e595fbc958b78a81d7",
+          "size_bytes": 3204
+        },
+        "compile_commands.json": {
+          "sha256": "ae2e234d4e071b8dd49c24abaf3f381ecd1fec6cc6a4167c77d1c2744165d2fe",
+          "size_bytes": 1159500
+        },
+        "nucode_arduino_core_build.yml": {
+          "sha256": "0aece361f08b3c1ad42f3ed293eb7220c9e11a17e13efa1db3ef73e3827e3a0f",
+          "size_bytes": 629
+        },
+        "zephyr/.config": {
+          "sha256": "8d1225ce7eb5751446fd2c845f703ee45d7738e304c4e30c4a4bb49457f25e9a",
+          "size_bytes": 69197
+        },
+        "zephyr/zephyr.bin": {
+          "sha256": "aa353dc38fefb5363e7ec88446489ec8cdbcdd0a9dbff46aa8d78417431544ba",
+          "size_bytes": 98064
+        },
+        "zephyr/zephyr.elf": {
+          "sha256": "43655c5da7b9f403b139795c60f0bd3b5c90f4f50274bb1ed23184b2bda284b5",
+          "size_bytes": 2092092
+        },
+        "zephyr/zephyr.hex": {
+          "sha256": "4a82bd4007a008b60f3be003484d6e417a8c5e07a1214cf3508a9dcab06893ce",
+          "size_bytes": 275921
+        },
+        "zephyr/zephyr.map": {
+          "sha256": "1fbe6eb764fbb37ff2f02a099dcbe3890fdcff54eebd0a75e9289a8789e96352",
+          "size_bytes": 710537
+        }
+      },
+      "flash_text_plus_data": 98064,
+      "ram_data_plus_bss": 54081,
+      "scenario": "nucode.m24.twi",
+      "size_bss": 25885,
+      "size_data": 28196,
+      "size_text": 69868,
+      "symbol_sha256": "b9f21b5d41201a298bf2214e4be6bd0c2757e90feb1de74c4fe6c9b24e7c392e",
+      "symbols": "nucode.m24.twi-symbols.txt"
+    },
+    {
+      "build_root": "C:\\r00",
+      "files": {
+        "build_info.yml": {
+          "sha256": "77cc42350325fe10c127466a0e427f5e1d08fbc8c0d81abef1a18ccf926f42cf",
+          "size_bytes": 3228
+        },
+        "compile_commands.json": {
+          "sha256": "d580445d1f15876799a844c21a7cb366783117ddc4ddc72c1230e15d261c7484",
+          "size_bytes": 1145361
+        },
+        "nucode_arduino_core_build.yml": {
+          "sha256": "5791174557c9a1ba3ea9452852090516d6b43446ee1e7f8ab722f000ce478485",
+          "size_bytes": 629
+        },
+        "zephyr/.config": {
+          "sha256": "4d5dcd6e4a6720bde846b3e7831079d194308f42c675c5610a7d0992acdd884a",
+          "size_bytes": 69000
+        },
+        "zephyr/zephyr.bin": {
+          "sha256": "a312a8274701ae40ff3c5a6d4e5bd19f48af011c4467a79404251ad6bc4ef8c3",
+          "size_bytes": 72372
+        },
+        "zephyr/zephyr.elf": {
+          "sha256": "27380ab36a33bb92d16be100254c6f1250622642142eab5c31dfc650e644fe8e",
+          "size_bytes": 1970404
+        },
+        "zephyr/zephyr.hex": {
+          "sha256": "acfed61e1702f650acf70bd7b7896444cfcf113512ff4d0b0a72e2328128f02c",
+          "size_bytes": 203698
+        },
+        "zephyr/zephyr.map": {
+          "sha256": "480c4c92a6a9824ff0e173841198dafbc3e15299bed034f47baf633c659b5679",
+          "size_bytes": 689017
+        }
+      },
+      "flash_text_plus_data": 72372,
+      "ram_data_plus_bss": 31158,
+      "scenario": "nucode.m25.analog",
+      "size_bss": 21082,
+      "size_data": 10076,
+      "size_text": 62296,
+      "symbol_sha256": "32aa7bf8084635b4d099546b0bf7354de536cae19555cc2d5211cfc930bf658d",
+      "symbols": "nucode.m25.analog-symbols.txt"
+    },
+    {
+      "build_root": "C:\\r00",
+      "files": {
+        "build_info.yml": {
+          "sha256": "6e9f52f65059b06a5385f9c3f4195cd87f3594fed0428d35f08379b6802fa496",
+          "size_bytes": 3220
+        },
+        "compile_commands.json": {
+          "sha256": "9dacc1cca82f24fb2151a30b7c27f9fdc42d782f16215b8720bad175cbf73c6a",
+          "size_bytes": 1132985
+        },
+        "nucode_arduino_core_build.yml": {
+          "sha256": "2c10773bc9ab5665817cdcc41a1ed62cd74f766327257667eaad48f4bcd37b00",
+          "size_bytes": 629
+        },
+        "zephyr/.config": {
+          "sha256": "dcdcf24e9118b1bee3f3ba6b827376bca965bbfe3221ec8e979b527a2f3cd9df",
+          "size_bytes": 68952
+        },
+        "zephyr/zephyr.bin": {
+          "sha256": "dbcf22fcc56a8164fc803ac9529d2470bf24421dce7b1f76df5c369e0bd41531",
+          "size_bytes": 97576
+        },
+        "zephyr/zephyr.elf": {
+          "sha256": "079447a6a2ef9da1d992091876fc36cf06a9d349fc79e2275ae11ddbe503e592",
+          "size_bytes": 1858232
+        },
+        "zephyr/zephyr.hex": {
+          "sha256": "503b2e31aa8ef7fa25264a604c5f027d769058ad79f435b1fd13319bf9553481",
+          "size_bytes": 274560
+        },
+        "zephyr/zephyr.map": {
+          "sha256": "141e4b540ad68a07c95d98c466452048858b7aff20809742e0bfb4fafa037346",
+          "size_bytes": 679881
+        }
+      },
+      "flash_text_plus_data": 97572,
+      "ram_data_plus_bss": 58857,
+      "scenario": "nucode.m25.event",
+      "size_bss": 21793,
+      "size_data": 37064,
+      "size_text": 60508,
+      "symbol_sha256": "9a25c5200375ea9277712f6ce764833c917da7e2c3392e01685bb5d2660e8fd7",
+      "symbols": "nucode.m25.event-symbols.txt"
+    },
+    {
+      "build_root": "C:\\r00",
+      "files": {
+        "build_info.yml": {
+          "sha256": "179392c349af0486e1964a8de205e9c6be1ba94f82112956db58efd2f3de5995",
+          "size_bytes": 3228
+        },
+        "compile_commands.json": {
+          "sha256": "21d022715eef9d63036f5563df56a7ae3925ee591e236974457b73cfb1ff9c73",
+          "size_bytes": 1149981
+        },
+        "nucode_arduino_core_build.yml": {
+          "sha256": "296d27eaebb6267c319845f4439a6184b2ea46c2a3838729600e31ed9b5c3f88",
+          "size_bytes": 629
+        },
+        "zephyr/.config": {
+          "sha256": "9f9edde720fea49a6cd2cc1edaeba2f55e4edf2254d5fc7d6978b2eeedfaf99f",
+          "size_bytes": 69022
+        },
+        "zephyr/zephyr.bin": {
+          "sha256": "ed82f5316de02300b34446811e0033bfaa8ba6a097fcdad66662e407a40295a4",
+          "size_bytes": 75472
+        },
+        "zephyr/zephyr.elf": {
+          "sha256": "60118bf4c54df650f9ee050a6ba1b12b142f4f2c9e0feae10faa0a9a1640e1fc",
+          "size_bytes": 2012896
+        },
+        "zephyr/zephyr.hex": {
+          "sha256": "0aea1d8e11fe0d731f4502e249432ddb25a93fa1124763e70d9c5d79b2d8a9a3",
+          "size_bytes": 212370
+        },
+        "zephyr/zephyr.map": {
+          "sha256": "9fa8efc3c0da54c7d326d8dedfa7ee1236f858c8971c4a2f7f4d92b55a2d9a81",
+          "size_bytes": 696289
+        }
+      },
+      "flash_text_plus_data": 75460,
+      "ram_data_plus_bss": 32114,
+      "scenario": "nucode.m25.stream",
+      "size_bss": 21034,
+      "size_data": 11080,
+      "size_text": 64380,
+      "symbol_sha256": "21aaecd8e4a99a3c0208bd588e86c4bd559a0fce57073f51b7cfe18025b19c2f",
+      "symbols": "nucode.m25.stream-symbols.txt"
+    },
+    {
+      "build_root": "C:\\r00",
+      "files": {
+        "build_info.yml": {
+          "sha256": "0c7d98eb51573f7fedda742575f5de7c54a7f9287f5b0fa329081503e5b4c7ce",
+          "size_bytes": 2766
+        },
+        "compile_commands.json": {
+          "sha256": "5cc7981011ea2fcdf97ad68c937c98780ce43dcf2331717d3a5192ea947ee3d0",
+          "size_bytes": 1039006
+        },
+        "zephyr/.config": {
+          "sha256": "8ca6c37885d6e9b152228f5cf3da7ce9e14a88e77a0f60ccb1e3a5a274a2a179",
+          "size_bytes": 70359
+        },
+        "zephyr/zephyr.bin": {
+          "sha256": "fb2cfb2e1fb5512729dfcca6fcaaa5a07a36bb1e9dba0ce2938a02370b651004",
+          "size_bytes": 67936
+        },
+        "zephyr/zephyr.elf": {
+          "sha256": "742e71297995f430e079b3795a057ceebba3ffcae6e9eed4c54e3c839fa76ffb",
+          "size_bytes": 1863120
+        },
+        "zephyr/zephyr.hex": {
+          "sha256": "a4f831dd2104c98baddaf5211b6468d1fdc3171da6bc88bffe6a3b797c919fe8",
+          "size_bytes": 191175
+        },
+        "zephyr/zephyr.map": {
+          "sha256": "c913ef534888572a8466c95ef8129b3e78d8ff81da09970a7bd31cc600ee4601",
+          "size_bytes": 582042
+        }
+      },
+      "flash_text_plus_data": 67924,
+      "ram_data_plus_bss": 19449,
+      "scenario": "nucode.m3.runtime",
+      "size_bss": 12117,
+      "size_data": 7332,
+      "size_text": 60592,
+      "symbol_sha256": "04b0f008813ff2066b21d4ef2c32b88d021afbac32d49591ca76f0c81c2ae455",
+      "symbols": "nucode.m3.runtime-symbols.txt"
+    },
+    {
+      "build_root": "C:\\r00",
+      "files": {
+        "build_info.yml": {
+          "sha256": "328f869884b84a8d8f34e96e03169030a0c15f008e6199e25c2acc4762065b23",
+          "size_bytes": 3377
+        },
+        "compile_commands.json": {
+          "sha256": "e02711ec987011012e58c639e8a8cbb0af8eae82036eb73507efbfdd23cb1781",
+          "size_bytes": 1159793
+        },
+        "nucode_arduino_core_build.yml": {
+          "sha256": "a1c47fbb4fbd1aa9aede5451a1f7a6ee233d336522ed4bb5b10095135f86b932",
+          "size_bytes": 629
+        },
+        "zephyr/.config": {
+          "sha256": "9ee93f00b2b86062bbf5dd41a870f339c6f45e9aa684a1006d430255b2ae6f3a",
+          "size_bytes": 62203
+        },
+        "zephyr/zephyr.bin": {
+          "sha256": "db129994ff6b319118d0e5e4bf3aeb2215b534a9cf9bc31a40b23f749e5a079f",
+          "size_bytes": 181096
+        },
+        "zephyr/zephyr.elf": {
+          "sha256": "a3908bf4e93d76bde62039ffc864bc9a0001cadcad544cd216897a604c32e23b",
+          "size_bytes": 2482148
+        },
+        "zephyr/zephyr.hex": {
+          "sha256": "f26e8aef2c945ecbae6115b7e3c19c995aa5e921f6ae5c30e9cc743d65e3549a",
+          "size_bytes": 509464
+        },
+        "zephyr/zephyr.map": {
+          "sha256": "5db7dd43ea7019c1aeabab3d7c7edcbb2608029f75cfa29fb469630a31e74c4a",
+          "size_bytes": 781739
+        }
+      },
+      "flash_text_plus_data": 181092,
+      "ram_data_plus_bss": 161234,
+      "scenario": "nucode.v04.pair_dut",
+      "size_bss": 81802,
+      "size_data": 79432,
+      "size_text": 101660,
+      "symbol_sha256": "759ef3872c74b278447b3e6aba0a4365f3bc218986e8b0496023fcf90da71027",
+      "symbols": "nucode.v04.pair_dut-symbols.txt"
+    },
+    {
+      "build_root": "C:\\r00",
+      "files": {
+        "build_info.yml": {
+          "sha256": "3e16bbe9157785bb9a97fc7627a154a1e701b06bacc9da4196922167d7577cde",
+          "size_bytes": 3380
+        },
+        "compile_commands.json": {
+          "sha256": "1ba71bb2fccaa1ede99e7dc71ff879de4ba6921116f7ad7131a659f7fcfcf67e",
+          "size_bytes": 1161369
+        },
+        "nucode_arduino_core_build.yml": {
+          "sha256": "a1c47fbb4fbd1aa9aede5451a1f7a6ee233d336522ed4bb5b10095135f86b932",
+          "size_bytes": 629
+        },
+        "zephyr/.config": {
+          "sha256": "421c8211958933feeca69e22db2d62c951c3a2580dbca579af46e49221fdaee2",
+          "size_bytes": 62203
+        },
+        "zephyr/zephyr.bin": {
+          "sha256": "bd1672500144e4457a72caf705a824b43b47e9deadaed1c7d12f765f4108393e",
+          "size_bytes": 181112
+        },
+        "zephyr/zephyr.elf": {
+          "sha256": "53c9b1a8a4ff21658ec109f7efbe89b74f608c26d1161c46e550ad56eb05b2a0",
+          "size_bytes": 2482376
+        },
+        "zephyr/zephyr.hex": {
+          "sha256": "70ae778a22e362698c4f99dfd3393f2d24563d0014211a95957520eb17c01c0f",
+          "size_bytes": 509530
+        },
+        "zephyr/zephyr.map": {
+          "sha256": "75f11ec55e9905be1bb5ff21674548dbd4b8914f40d3fd83dcfde518ba202b7b",
+          "size_bytes": 781739
+        }
+      },
+      "flash_text_plus_data": 181112,
+      "ram_data_plus_bss": 161234,
+      "scenario": "nucode.v04.pair_peer",
+      "size_bss": 81802,
+      "size_data": 79432,
+      "size_text": 101680,
+      "symbol_sha256": "a23ce1711b227dab055da0ee7a5bf3dea271b05ea63271b02cd7aac731c9c07e",
+      "symbols": "nucode.v04.pair_peer-symbols.txt"
+    }
+  ]
+}

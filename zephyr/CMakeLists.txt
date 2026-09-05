@@ -6,6 +6,14 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   get_filename_component(NUCODE_ARDUINO_CORE_ROOT
     "${CMAKE_CURRENT_LIST_DIR}/.." ABSOLUTE
   )
+  include("${CMAKE_CURRENT_LIST_DIR}/cmake/product_identity.cmake")
+  nucode_product_identity("${NUCODE_ARDUINO_CORE_ROOT}"
+    NUCODE_CORE_SOURCE_VERSION NUCODE_PACKAGE_VERSION
+  )
+  set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+    "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/CoreIdentity.h"
+    "${NUCODE_ARDUINO_CORE_ROOT}/platform.txt"
+  )
 
   if(NOT CONFIG_BOARD_NRF54L15DK_NRF54L15_CPUAPP_NU54DK)
     message(FATAL_ERROR
@@ -126,25 +134,25 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   endif()
 
   if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIM)
-    zephyr_library_sources(
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/SpimFabric.cpp"
     )
   endif()
 
   if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIS)
-    zephyr_library_sources(
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/SpisFabric.cpp"
     )
   endif()
 
   if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIM)
-    zephyr_library_sources(
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/TwimFabric.cpp"
     )
   endif()
 
   if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIS)
-    zephyr_library_sources(
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/TwisFabric.cpp"
     )
   endif()
@@ -415,6 +423,12 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
 
   build_info(vendor-specific nucode-arduino-core core-revision
     VALUE "${NUCODE_CORE_REVISION}"
+  )
+  build_info(vendor-specific nucode-arduino-core source-version
+    VALUE "${NUCODE_CORE_SOURCE_VERSION}"
+  )
+  build_info(vendor-specific nucode-arduino-core package-version
+    VALUE "${NUCODE_PACKAGE_VERSION}"
   )
   build_info(vendor-specific nucode-arduino-core core-source-sha256
     VALUE "${NUCODE_CORE_SOURCE_SHA256}"

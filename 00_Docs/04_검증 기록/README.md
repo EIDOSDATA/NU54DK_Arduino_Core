@@ -81,8 +81,14 @@
 | Fixture 202 SPI | exact `1a133e6`에서 P0↔P1 SPIM/SPIS 9,084개 계획 벡터·cleanup 2건 PASS; Fixture 203·TWI 301 HOLD | [M24 Fixture 202 실기 검증](48_M24_Fixture_202_SPI_실기_검증.md) |
 | Fixture 203 SPI | exact `4af93da`에서 P1↔P1 SPIM/SPIS 전 조합 27,252개 계획 벡터·cleanup 2건 PASS; TWI 301 HOLD | [M24 Fixture 203 실기 검증](49_M24_Fixture_203_SPI_실기_검증.md) |
 | Fixture 301 TWI | exact `e2f045c`에서 P1↔P0 TWIM/TWIS20·21·22·30 전 조합 1,986개 기능 record·cleanup 2건 PASS; T11 완료, 동시성·soak HOLD | [M24 Fixture 301 실기 검증](50_M24_Fixture_301_TWI_실기_검증.md) |
+| R00 기준선 | exact `ec3bba3`의 API·CLI·저장 계약, software gate와 대표 target 10/10 build-only·ELF/메모리·symbol 기준선; 새 physical NOT RUN | [R00 리팩토링 기준선](51_R00_리팩토링_기준선.md) |
 
 ## 기록 해석 규칙
+
+R01의 source target 교정과 실제 9개 target build-only 결과는
+[52번 기록](52_R01_CMake_source_소속_교정.md)에 연결한다. 새 physical 결과는 없다.
+R02의 완료·DMA 수명주기 수정은 [53번 기록](53_R02_Serial_완료와_DMA_수명주기.md)의
+production Host 회귀 24개와 target 12/12 build-only에 연결한다.
 
 완료된 T01~T09 준비·무배선 검증과 T10 이후 외부 결선 경계는 [43번 준비 기록](43_v0.4.0_시험_준비와_구현_대조.md)을 따른다.
 준비 목록과 Host 검사 성공은 새 physical PASS가 아니다.
@@ -93,3 +99,12 @@
 4. 설계 변경으로 경로가 이동해도 당시 결과와 artifact identity는 소급 수정하지 않는다.
 5. 현재 지원 여부는 [API 지원 범위](<../01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)와
    [NCS 지원 매트릭스](<../01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)를 함께 확인한다.
+
+R03 Analog/Stream ISR·stop 및 DMA 실패 수명주기는 [54번 기록](54_R03_Analog_Stream_ISR_정지_동기화.md)의
+production 회귀 26개와 target 5/5 build-only에 연결한다. 새 physical 결과는 없다.
+
+R04 File 공유 slot 참조·마지막 close·thread 교차는 [55번 기록](55_R04_File_공유_slot_수명주기.md)의
+production 회귀 8개와 AC-03 target 2/2 build-only에 연결한다.
+
+R05 Core 소스·설치 package identity는 [56번 기록](56_R05_Core_소스와_패키지_identity.md)의
+6개 Host 회귀, target 2/2 및 ELF 문자열 확인에 연결한다.

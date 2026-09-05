@@ -809,10 +809,8 @@ std::uint32_t fixtureCommand(std::uint32_t opcode, const std::uint32_t *args, st
         }
         if (result == SerialFabricResult::success && synchronous)
         {
-            tx_done = 1;
-            rx_done = 1;
-            tx_amount = tx_length;
-            rx_amount = rx_length;
+            /** @brief 동기 waiter와 독립적으로 보존된 실제 완료 event를 한 번만 집계합니다. */
+            serviceFixture();
         }
         if (result == SerialFabricResult::success && spim && address == 3)
         {

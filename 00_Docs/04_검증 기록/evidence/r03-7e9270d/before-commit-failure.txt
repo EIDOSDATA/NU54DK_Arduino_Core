@@ -1,0 +1,45 @@
+FFFF
+======================================================================
+FAIL: test_analog_production (test_r03_fabric_drivers.FabricDriverTests.test_analog_production) (scenario='pwm_commit_failure')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 36, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: mock_live_leases == 1 && mock_pwm_uninits == 1, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_analog_driver_main.cpp, line 193
+
+
+
+======================================================================
+FAIL: test_analog_production (test_r03_fabric_drivers.FabricDriverTests.test_analog_production) (scenario='saadc_commit_failure')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 36, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: mock_live_leases == 1 && mock_saadc_uninits == 0, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_analog_driver_main.cpp, line 205
+
+
+
+======================================================================
+FAIL: test_stream_production (test_r03_fabric_drivers.FabricDriverTests.test_stream_production) (scenario='i2s_commit_failure')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 36, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: mock_live_leases == 2 && mock_i2s_uninits == 1, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_stream_driver_main.cpp, line 234
+
+
+
+======================================================================
+FAIL: test_stream_production (test_r03_fabric_drivers.FabricDriverTests.test_stream_production) (scenario='pdm_commit_failure')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 36, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: mock_live_leases == 2 && mock_pdm_uninits == 0, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_stream_driver_main.cpp, line 246
+
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 6.881s
+
+FAILED (failures=4)

@@ -1,0 +1,74 @@
+{
+  "gates": {
+    "after": {
+      "result_lines": [],
+      "sha256": "08d3cc822762dbd85b883f57c92d429ac7f27e87b0f316637d3d886fdbffc77a",
+      "skips": 0,
+      "tests": 6
+    },
+    "contract": {
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "sha256": "d6904f522f26865e62e10883c2808647ff6ba32245c528f639d0d4beb45b908f",
+      "skips": 0,
+      "tests": 45
+    },
+    "host": {
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "sha256": "9b2dfc6771d7a33f923cb4862fbc49a988cf348c4e67b2100e51703344eca2b3",
+      "skips": 2,
+      "tests": 611
+    },
+    "inventory": {
+      "result_lines": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "sha256": "aa28663192d6614cb622cba4b3122dd9f974e4c56002170db93bf1d9bdd6a0dc",
+      "skips": 0,
+      "tests": 0
+    },
+    "style": {
+      "result_lines": [
+        "CPP_STYLE_FILES=260; FAILED=0; WRITE=0"
+      ],
+      "sha256": "5f72390f36ee4b3516ebf9d83e1f55246df296f7d04e256ab9e7f24d15df8c95",
+      "skips": 0,
+      "tests": 0
+    },
+    "target": {
+      "result_lines": [
+        "INFO    - 0 test configurations executed on platforms, 2 test configurations were only built.",
+        "M12_ZEPHYR_BUILD_PASS=2;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "sha256": "60b250192e7a5b40062a10b094e9804d83529f1e9ad00abb110d5d748815d521",
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "physical_executed": false,
+  "source_sha256": {
+    "cores/arduino/internal/CoreIdentity.h": "d53aa6203c482cd6aa2aa6b4f771264f5920f5bfc2093190003b44091e40b586",
+    "libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp": "4aac05267f67deed938e56a5284ae8591ed3f08758e24feaa2462a38588fa7dc",
+    "libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.h": "b2a8d41f7f2da4230132cb1a76b032a0f044343a3d4e3544af7095587decc13f",
+    "platform.txt": "7fae489cdee06263e4aa58f6a29f892a0bbdab6243b3743748b6b69911b32317",
+    "tests/host/test_r05_identity.py": "875f27d40bf02b6d69aaab89cc17d74647353e2cba4f0adb5c0a04f0a9718f6c",
+    "tools/ci/verify_product_identity.py": "24a35a873c2fe229d93c29c48af7f163fafc8f990ff31c91c3b18d3aa6d20a52",
+    "tools/nu54-builder/src/nu54_builder.py": "0549242b743e9ad7e8969ab7cdb4da04c330ebfe358a74266858cf3454da948a",
+    "zephyr/CMakeLists.txt": "db4226bba659ce2c2f46c4ce97e471ed2cd78246c8d539a6c298cebedd3405d6",
+    "zephyr/cmake/product_identity.cmake": "aa7e461ec99c6db457a9e5d837d5406f67fdb3495b9a70392a0bb9e33664ece4",
+    "zephyr/cmake/write_build_record.cmake": "478a820397a79dacae79dfcca3278430eba8dfa622d17fa4b00e07ca3eb30937"
+  },
+  "start_commit": "1145e72f7fe3e0899d6812d43ddc0a3e0daa9541",
+  "target_build_record": "nucode_arduino_core:\n  source_version: '0.4.0-dev'\n  package_version: '0.4.0-dev'\n  core_revision: '1145e72f7fe3-dirty'\n  core_source_sha256: 'cd814670d4dcb8256a5d7dfdd89aa6dcdb01cf58fbcaeed807ebef81aeb98e35'\n  application_source_sha256: '88b4c632d6c3cd6cd7873865f0292f0d602ac1e1adc72b53a070eaa51c961159'\n  board_revision: 'fe65f2f0880b'\n  board_source_sha256: '00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e'\n  ncs_revision: '99553055607b'\n  zephyr_revision: 'bf801e4e3d19'\n  board: 'nrf54l15dk'\n  board_qualifiers: 'nrf54l15/cpuapp/nu54dk'\n  toolchain_variant: 'zephyr'\n  toolchain_path: 'C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk'\n  cxx_compiler: 'GNU 14.3.0'\n",
+  "target_core_version": {
+    "elf_sha256": "7d6bf18a171a3868c8b6d1e8190ba81b220cb53bd5f5c8ac0df6838f82e322eb",
+    "execution": "ELF inspection only",
+    "function_address": "0xaf8",
+    "instructions_hex": "0048704764110100",
+    "literal_address": "0x11164",
+    "returned_string": "0.4.0-dev"
+  }
+}

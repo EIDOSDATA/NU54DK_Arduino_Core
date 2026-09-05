@@ -146,7 +146,7 @@ namespace nucode::nu54dk
         /** @brief 고정된 Zephyr 버전을 반환합니다. */
         [[nodiscard]] const char *zephyrVersion() const noexcept;
 
-        /** @brief NU54DK Arduino Core 버전을 반환합니다. */
+        /** @brief Core 소스 버전을 반환합니다. 설치 패키지 배포 버전은 build 증거에서 구분합니다. */
         [[nodiscard]] const char *coreVersion() const noexcept;
 
         /**

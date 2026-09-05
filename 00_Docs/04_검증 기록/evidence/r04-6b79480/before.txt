@@ -1,0 +1,39 @@
+test_production_file (test_r04_file.FileLifetimeTests.test_production_file) ...
+  test_production_file (test_r04_file.FileLifetimeTests.test_production_file) (scenario='mutex') ... FAIL
+  test_production_file (test_r04_file.FileLifetimeTests.test_production_file) (scenario='threads') ... FAIL
+  test_production_file (test_r04_file.FileLifetimeTests.test_production_file) (scenario='isr') ... FAIL
+
+======================================================================
+FAIL: test_production_file (test_r04_file.FileLifetimeTests.test_production_file) (scenario='mutex')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r04_file.py", line 26, in test_production_file
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: locked, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r04_file_main.cpp, line 69
+
+
+
+======================================================================
+FAIL: test_production_file (test_r04_file.FileLifetimeTests.test_production_file) (scenario='threads')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r04_file.py", line 26, in test_production_file
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: moved && std::strcmp(moved.name(), "/data") == 0, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r04_file_main.cpp, line 85
+
+Assertion failed: moved && std::strcmp(moved.name(), "/
+
+======================================================================
+FAIL: test_production_file (test_r04_file.FileLifetimeTests.test_production_file) (scenario='isr')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r04_file.py", line 26, in test_production_file
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: !copy && file_slots[0].references == 1 && file_slots[1].references == 1, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r04_file_main.cpp, line 137
+
+
+
+----------------------------------------------------------------------
+Ran 1 test in 3.954s
+
+FAILED (failures=3)

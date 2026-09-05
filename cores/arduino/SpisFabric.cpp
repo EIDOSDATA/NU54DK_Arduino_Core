@@ -412,6 +412,7 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         const auto current = state();
         nrf_spis_mode_t ignored{};
         if (((current != SerialFabricState::inactive) && (current != SerialFabricState::staged)) ||
@@ -438,6 +439,7 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         auto *const context = contextFor(instance());
         if ((context == nullptr) ||
             !internal::isSerialFabricHandleActive(SerialPersonality::spis, instance()))
@@ -487,6 +489,7 @@ namespace nucode::arduino
         {
             return SerialFabricResult::invalid_context;
         }
+        const internal::SerialFabricOperationGuard operation_guard;
         auto *const context = contextFor(instance());
         if ((context == nullptr) || atomic_get(&context->active) == 0 ||
             atomic_get(&context->buffers_active) == 0 || atomic_get(&context->initialized) == 0)

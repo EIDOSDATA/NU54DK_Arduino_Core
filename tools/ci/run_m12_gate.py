@@ -171,6 +171,7 @@ def run_contract_gate() -> None:
 
 ## @brief M23 inventory와 M24 serial-fabric route/API 계약을 검사합니다.
 def run_inventory_gate() -> None:
+    run_checked((sys.executable, REPOSITORY / "tools" / "ci" / "verify_product_identity.py"))
     run_checked((sys.executable, REPOSITORY / "tools" / "peripheral" / "verify_v04_test_plan.py"))
     run_checked(
         (
