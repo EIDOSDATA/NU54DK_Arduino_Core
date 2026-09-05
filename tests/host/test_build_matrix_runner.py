@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
 import subprocess
 import sys
@@ -39,11 +40,11 @@ ARDUINO = load_module(
 class BuildMatrixRunnerTests(unittest.TestCase):
     """! @brief 릴리스 기능군 범위·명령·진단 경계를 검증합니다. """
 
-    ## @brief Zephyr 49개 시나리오가 중복·누락 없이 4/10/15/20으로 분리됩니다.
+    ## @brief Zephyr 56개 시나리오가 중복·누락 없이 4/10/15/27로 분리됩니다.
     def test_zephyr_groups_partition_every_suite_once(self) -> None:
         self.assertEqual(
             {name: len(suites) for name, suites in ZEPHYR.SUITE_GROUPS.items()},
-            {"v0.1.0": 4, "v0.2.0": 10, "v0.3.0": 15, "v0.4.0": 20},
+            {"v0.1.0": 4, "v0.2.0": 10, "v0.3.0": 15, "v0.4.0": 27},
         )
         flattened = tuple(
             suite for suites in ZEPHYR.SUITE_GROUPS.values() for suite in suites
@@ -60,6 +61,38 @@ class BuildMatrixRunnerTests(unittest.TestCase):
             with self.assertRaises(ZEPHYR.BuildFailure): ZEPHYR.select_suites(group, invalid)
         self.assertIn('"m12-zephyr-build-subset" if args.suite',
                       (REPOSITORY / "tools/ci/run_zephyr_build.py").read_text(encoding="utf-8"))
+
+    ## @brief 꺼진 CONFIG·잘못된 target·중복 object·누락 symbol은 build PASS로 처리하지 않습니다.
+    def test_serial_source_validator_rejects_false_positive_builds(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="nu54-r01-validator-") as temporary:
+            outdir = Path(temporary)
+            app = outdir / ZEPHYR.BOARD_TARGET.replace("/", "_") / "zephyr_gnu/nucode.r01.spim/r01_serial"
+            (app / "zephyr").mkdir(parents=True)
+            config = "".join(f"CONFIG_NUCODE_ARDUINO_{name}=y\n" for name in
+                             ("CORE", "API", "IO_OWNERSHIP", "GPIO", "SERIAL_FABRIC", "SERIAL_FABRIC_SPIM"))
+            (app / "zephyr/.config").write_text(config, encoding="utf-8")
+            (app / "zephyr/zephyr.elf").write_bytes(b"test ELF input")
+            (app / "CMakeCache.txt").write_text("CMAKE_NM:FILEPATH=exact-nm\n", encoding="utf-8")
+            command = {"file": "/checkout/cores/arduino/SpimFabric.cpp",
+                       "command": "c++ -o modules/core/CMakeFiles/nucode_arduino_core.dir/SpimFabric.cpp.obj"}
+            commands = app / "compile_commands.json"
+            commands.write_text(json.dumps([command]), encoding="utf-8")
+            selection = (("r01_serial", "nucode.r01.spim"),)
+            completed = subprocess.CompletedProcess([], 0, "nucode::arduino::SpimHandle::configure(config)\n", "")
+            with mock.patch.object(ZEPHYR.subprocess, "run", return_value=completed):
+                self.assertEqual(ZEPHYR.validate_serial_source_builds(outdir, selection)[0]["resolved_personalities"], ["SPIM"])
+                for invalid in ([], [command, command], [{**command, "command": "c++ -o zephyr.dir/SpimFabric.cpp.obj"}]):
+                    commands.write_text(json.dumps(invalid), encoding="utf-8")
+                    with self.assertRaises(ZEPHYR.BuildFailure):
+                        ZEPHYR.validate_serial_source_builds(outdir, selection)
+                commands.write_text(json.dumps([command]), encoding="utf-8")
+                (app / "zephyr/.config").write_text(config.replace("SERIAL_FABRIC_SPIM=y", "SERIAL_FABRIC_SPIM=n"), encoding="utf-8")
+                with self.assertRaises(ZEPHYR.BuildFailure):
+                    ZEPHYR.validate_serial_source_builds(outdir, selection)
+                (app / "zephyr/.config").write_text(config, encoding="utf-8")
+                completed.stdout = ""
+                with self.assertRaises(ZEPHYR.BuildFailure):
+                    ZEPHYR.validate_serial_source_builds(outdir, selection)
 
     ## @brief Arduino 예제 기능군도 각 지원 릴리스에서 도입한 범위로 고정됩니다.
     def test_arduino_groups_are_explicit_and_disjoint(self) -> None:

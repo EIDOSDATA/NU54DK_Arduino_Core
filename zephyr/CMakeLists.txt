@@ -126,25 +126,25 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   endif()
 
   if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIM)
-    zephyr_library_sources(
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/SpimFabric.cpp"
     )
   endif()
 
   if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIS)
-    zephyr_library_sources(
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/SpisFabric.cpp"
     )
   endif()
 
   if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIM)
-    zephyr_library_sources(
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/TwimFabric.cpp"
     )
   endif()
 
   if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIS)
-    zephyr_library_sources(
+    list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/TwisFabric.cpp"
     )
   endif()

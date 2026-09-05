@@ -85,6 +85,9 @@
 
 ## 기록 해석 규칙
 
+R01의 source target 교정과 실제 9개 target build-only 결과는
+[52번 기록](52_R01_CMake_source_소속_교정.md)에 연결한다. 새 physical 결과는 없다.
+
 완료된 T01~T09 준비·무배선 검증과 T10 이후 외부 결선 경계는 [43번 준비 기록](43_v0.4.0_시험_준비와_구현_대조.md)을 따른다.
 준비 목록과 Host 검사 성공은 새 physical PASS가 아니다.
 

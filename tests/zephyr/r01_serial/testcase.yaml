@@ -1,0 +1,23 @@
+common:
+  platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  build_only: true
+  tags: [nucode, r01, serial, source_contract]
+tests:
+  nucode.r01.none: {}
+  nucode.r01.uarte:
+    extra_configs: [CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_UARTE=y]
+  nucode.r01.spim:
+    extra_configs: [CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIM=y]
+  nucode.r01.spis:
+    extra_configs: [CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIS=y]
+  nucode.r01.twim:
+    extra_configs: [CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIM=y]
+  nucode.r01.twis:
+    extra_configs: [CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIS=y]
+  nucode.r01.all:
+    extra_configs:
+      - CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_UARTE=y
+      - CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIM=y
+      - CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_SPIS=y
+      - CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIM=y
+      - CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_TWIS=y
