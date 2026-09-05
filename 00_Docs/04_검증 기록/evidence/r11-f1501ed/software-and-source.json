@@ -1,0 +1,72 @@
+{
+  "gates": {
+    "contract": {
+      "log_sha256": "2ce4a27f21354a274c8f211c38cabd8e78e0000c004d88be81ee48ffced75539",
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "skips": 0,
+      "tests": 45
+    },
+    "data-after2": {
+      "log_sha256": "4363677f22af88931f40a86c1f62c8c3650f2bee3e75a2edc462040a2946b270",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "data-before3": {
+      "log_sha256": "a1c129f3ab0104844a12f576c17a3609800861661127942a6f5b2f931380e99f",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "host": {
+      "log_sha256": "d11a3738b37231fa75f034d9416047aea908e106c3742b4ffc060c3d156ce502",
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "skips": 2,
+      "tests": 623
+    },
+    "inventory": {
+      "log_sha256": "5cac786157abe5d53d21ffc41ea424d773ae85d29f2cb70af82f59e30cb04f27",
+      "result_lines": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "r03-after": {
+      "log_sha256": "2d75385bf9899328aed21a5f085cb06b565754e334f0589dd44faa51598b005b",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 2
+    },
+    "style": {
+      "log_sha256": "a7b8302081eb18cf204fe0d1f4ed1610b64274b0d560cff371700c3a4b6daf69",
+      "result_lines": [
+        "CPP_STYLE_FILES=305; FAILED=0; WRITE=0"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "target": {
+      "log_sha256": "1ef701bc4e610f9985d86355e049b9d3a354f8ca3775212023d58338e293360b",
+      "result_lines": [
+        "M12_ZEPHYR_BUILD_PASS=6;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "target-before": {
+      "log_sha256": "cb308098717869cc683794ee82f2637aec21827cf40952c2bf0bf02cf6244940",
+      "result_lines": [
+        "M12_ZEPHYR_BUILD_PASS=2;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "physical_executed": false,
+  "start_commit": "f1501ed6aa0491d0a61a1dfb1f0f7d3b545f901c"
+}

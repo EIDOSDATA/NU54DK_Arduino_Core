@@ -26,8 +26,11 @@ class DmaMemoryTests(unittest.TestCase):
     def test_all_candidate_dma_fabrics_use_full_range_validation(self):
         sources = {
             "serial": ROOT / "variants/nu54dk/serial_fabric_routes.cpp",
-            "analog": ROOT / "cores/arduino/AnalogFabric.cpp",
-            "stream": ROOT / "cores/arduino/StreamFabric.cpp",
+            "saadc": ROOT / "cores/arduino/internal/analog/SaadcFabric.cpp",
+            "pwm": ROOT / "cores/arduino/internal/analog/PwmSequenceFabric.cpp",
+            "pdm": ROOT / "cores/arduino/internal/stream/PdmFabric.cpp",
+            "i2s": ROOT / "cores/arduino/internal/stream/I2sFabric.cpp",
+            "stream_dma": ROOT / "cores/arduino/internal/stream/StreamFabricInternal.h",
         }
         for name, path in sources.items():
             with self.subTest(name=name):

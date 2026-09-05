@@ -49,6 +49,9 @@ struct nrfx_pdm_t
 inline bool mock_pdm_stop_ready = true;
 inline int mock_pdm_buffer_error = 0;
 inline unsigned mock_pdm_uninits = 0;
+inline nrfx_pdm_t *mock_pdm_drivers[2]{};
+inline std::int16_t *mock_pdm_buffer{};
+inline std::uint16_t mock_pdm_samples{};
 inline int nrfx_pdm_prescalers_calc(const nrfx_pdm_output_t *, unsigned *)
 {
     return 0;
@@ -58,6 +61,7 @@ inline int nrfx_pdm_init(nrfx_pdm_t *d, const nrfx_pdm_config_t *,
 {
     d->initialized = true;
     d->handler = handler;
+    mock_pdm_drivers[d->p_reg - mock_pdm_regs] = d;
     return 0;
 }
 inline bool nrfx_pdm_init_check(nrfx_pdm_t *d)
@@ -73,8 +77,10 @@ inline int nrfx_pdm_start(nrfx_pdm_t *d)
     d->p_reg->enabled = true;
     return 0;
 }
-inline int nrfx_pdm_buffer_set(nrfx_pdm_t *, std::int16_t *, std::uint16_t)
+inline int nrfx_pdm_buffer_set(nrfx_pdm_t *, std::int16_t *buffer, std::uint16_t samples)
 {
+    mock_pdm_buffer = buffer;
+    mock_pdm_samples = samples;
     return mock_pdm_buffer_error;
 }
 inline int nrfx_pdm_stop(nrfx_pdm_t *d)

@@ -32,7 +32,7 @@ class V04MathTests(unittest.TestCase):
     def test_target_clock_uses_actual_instance_and_internal_adc_is_soc_specific(self):
         event = (ROOT / "cores/arduino/internal/event/TimerFabric.cpp").read_text(encoding="utf-8")
         self.assertIn("timerPrescalerFor(NRF_TIMER_BASE_FREQUENCY_GET(context->reg)", event)
-        analog = (ROOT / "cores/arduino/AnalogFabric.cpp").read_text(encoding="utf-8")
+        analog = (ROOT / "cores/arduino/internal/analog/SaadcFabric.cpp").read_text(encoding="utf-8")
         supported = analog.split("bool supportedInput(", 1)[1].split("[[nodiscard]]", 1)[0]
         self.assertNotIn("case SaadcInput::vss", supported)
         self.assertIn("case SaadcInput::avdd", supported)
@@ -42,8 +42,9 @@ class V04MathTests(unittest.TestCase):
         self.assertIn("SaadcGain::one_quarter", (ROOT / "tests/zephyr/v04_pair_hil/src/main.cpp").read_text(encoding="utf-8"))
 
     def test_dma_count_is_checked_before_nrfx(self):
-        analog = (ROOT / "cores/arduino/AnalogFabric.cpp").read_text(encoding="utf-8")
-        stream = (ROOT / "cores/arduino/StreamFabric.cpp").read_text(encoding="utf-8")
+        analog = "\n".join((ROOT / "cores/arduino/internal/analog" / name).read_text(encoding="utf-8")
+                           for name in ("SaadcFabric.cpp", "PwmSequenceFabric.cpp"))
+        stream = (ROOT / "cores/arduino/internal/stream/I2sFabric.cpp").read_text(encoding="utf-8")
         analog_compact = " ".join(analog.split())
         stream_compact = " ".join(stream.split())
         self.assertIn("dmaCountFits(count, PWM_DMA_SEQ_MAXCNT_MAXCNT_Msk, sizeof(std::uint16_t))", analog_compact)

@@ -34,7 +34,7 @@ class QdecTests(unittest.TestCase):
                 qdec.verify_timing(interval, 16384)
 
     def test_production_uses_validated_period_and_explicit_report_policy(self):
-        source = (ROOT / "cores/arduino/StreamFabric.cpp").read_text(encoding="utf-8")
+        source = (ROOT / "cores/arduino/internal/stream/QdecFabric.cpp").read_text(encoding="utf-8")
         self.assertIn("internal::qdecSamplingValid(configuration.sample_period_us, configuration.led_pre_us)", source)
         self.assertIn("internal::qdecSamplePeriodCode(context->configuration.sample_period_us)", source)
         self.assertIn("driver_configuration.reportper_inten = context->configuration.report_events", source)
@@ -43,7 +43,9 @@ class QdecTests(unittest.TestCase):
         self.assertIn("report_events{true}", api)
 
     def test_stream_dap_borrowing_is_explicit_and_does_not_change_public_gpio(self):
-        source = (ROOT / "cores/arduino/StreamFabric.cpp").read_text(encoding="utf-8")
+        source = "\n".join((ROOT / "cores/arduino/internal/stream" / name).read_text(encoding="utf-8")
+                           for name in ("StreamFabricInternal.h", "PdmFabric.cpp",
+                                        "I2sFabric.cpp", "QdecFabric.cpp"))
         policy = source.split("streamPin(pin_size_t", 1)[1].split("bool duplicatePins", 1)[0]
         self.assertIn("profile == StreamElectricalProfile::dap_uart_disabled", policy)
         self.assertIn("IS_ENABLED(CONFIG_SERIAL)", policy)

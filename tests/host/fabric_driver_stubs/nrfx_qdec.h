@@ -57,9 +57,13 @@ struct nrfx_qdec_t
 };
 #define NRFX_QDEC_INSTANCE(reg) {reg}
 inline unsigned mock_qdec_reads = 0;
+inline void (*mock_qdec_handler)(nrfx_qdec_event_t, void *){};
+inline void *mock_qdec_context{};
 inline int nrfx_qdec_init(nrfx_qdec_t *, const nrfx_qdec_config_t *,
-                          void (*)(nrfx_qdec_event_t, void *), void *)
+                          void (*handler)(nrfx_qdec_event_t, void *), void *context)
 {
+    mock_qdec_handler = handler;
+    mock_qdec_context = context;
     return 0;
 }
 inline void nrfx_qdec_enable(nrfx_qdec_t *)

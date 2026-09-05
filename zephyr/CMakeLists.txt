@@ -163,6 +163,8 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   if(CONFIG_NUCODE_ARDUINO_ANALOG_FABRIC)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/AnalogFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/analog/SaadcFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/analog/PwmSequenceFabric.cpp"
     )
   endif()
 
@@ -181,6 +183,9 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   if(CONFIG_NUCODE_ARDUINO_STREAM_FABRIC)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/StreamFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/stream/PdmFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/stream/I2sFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/stream/QdecFabric.cpp"
     )
   endif()
 

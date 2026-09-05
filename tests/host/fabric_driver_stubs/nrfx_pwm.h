@@ -75,12 +75,15 @@ struct nrfx_pwm_t
 #define NRFX_PWM_INSTANCE(reg) {reg}
 inline bool mock_pwm_stop_ready = true;
 inline unsigned mock_pwm_uninits = 0, mock_pwm_steps = 0;
+inline nrfx_pwm_t *mock_pwm_drivers[3]{};
+inline nrf_pwm_sequence_t mock_pwm_sequences[2]{};
 inline int nrfx_pwm_init(nrfx_pwm_t *d, const nrfx_pwm_config_t *,
                          void (*handler)(nrfx_pwm_event_type_t, void *), void *context)
 {
     d->initialized = true;
     d->handler = handler;
     d->context = context;
+    mock_pwm_drivers[d->p_reg - mock_pwm_regs] = d;
     return 0;
 }
 inline bool nrfx_pwm_init_check(nrfx_pwm_t *d)
@@ -98,17 +101,19 @@ inline void mock_pwm_event(nrfx_pwm_t *d, nrfx_pwm_event_type_t event)
     d->handler(event, d->context);
     irq_unlock(key);
 }
-inline std::uintptr_t nrfx_pwm_simple_playback(nrfx_pwm_t *d, const nrf_pwm_sequence_t *, unsigned,
-                                               unsigned)
+inline std::uintptr_t nrfx_pwm_simple_playback(nrfx_pwm_t *d, const nrf_pwm_sequence_t *sequence,
+                                               unsigned, unsigned)
 {
     d->p_reg->enabled = true;
+    mock_pwm_sequences[0] = *sequence;
     d->p_reg->stopped = false;
     return 0x40000000U;
 }
 inline std::uintptr_t nrfx_pwm_complex_playback(nrfx_pwm_t *d, const nrf_pwm_sequence_t *s,
-                                                const nrf_pwm_sequence_t *, unsigned count,
+                                                const nrf_pwm_sequence_t *next, unsigned count,
                                                 unsigned flags)
 {
+    mock_pwm_sequences[1] = *next;
     return nrfx_pwm_simple_playback(d, s, count, flags);
 }
 inline void nrfx_pwm_step(nrfx_pwm_t *)

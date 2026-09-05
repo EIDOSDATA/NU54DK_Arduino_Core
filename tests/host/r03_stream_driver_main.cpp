@@ -1,5 +1,8 @@
 /** @file @brief production StreamFabric의 STOP·overflow·다른 block 진행을 검증합니다. */
 #include "../../cores/arduino/StreamFabric.cpp"
+#include "../../cores/arduino/internal/stream/PdmFabric.cpp"
+#include "../../cores/arduino/internal/stream/I2sFabric.cpp"
+#include "../../cores/arduino/internal/stream/QdecFabric.cpp"
 #include "fabric_driver_stubs/resource_mock.h"
 #include <condition_variable>
 #include <cstring>

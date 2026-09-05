@@ -6,7 +6,7 @@
 #include <array>
 #include <atomic>
 #include <cassert>
-inline device mock_gpio0{0}, mock_gpio1{1}, mock_gpio2{2};
+device mock_gpio0{0}, mock_gpio1{1}, mock_gpio2{2};
 inline std::atomic<int> mock_live_leases{0};
 inline bool mock_release_failure = false;
 inline bool mock_commit_failure = false;

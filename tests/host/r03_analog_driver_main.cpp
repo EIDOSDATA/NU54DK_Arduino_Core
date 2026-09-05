@@ -1,5 +1,7 @@
 /** @file @brief production AnalogFabric의 STOP·overflow와 다른 block 진행을 검증합니다. */
 #include "../../cores/arduino/AnalogFabric.cpp"
+#include "../../cores/arduino/internal/analog/SaadcFabric.cpp"
+#include "../../cores/arduino/internal/analog/PwmSequenceFabric.cpp"
 #include "fabric_driver_stubs/resource_mock.h"
 #include <condition_variable>
 #include <cstring>

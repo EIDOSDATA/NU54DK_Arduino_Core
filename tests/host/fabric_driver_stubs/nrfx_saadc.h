@@ -104,6 +104,9 @@ struct nrfx_saadc_adv_config_t
 #define NRFX_SAADC_INTERNAL_TIMER_INTERVAL_MAX_US 2047U
 inline bool mock_saadc_stop_ready = true, mock_saadc_initialized = false;
 inline unsigned mock_saadc_uninits = 0;
+inline std::int16_t *mock_saadc_buffers[3]{};
+inline std::size_t mock_saadc_sizes[3]{};
+inline unsigned mock_saadc_buffer_index{};
 inline void (*mock_saadc_handler)(const nrfx_saadc_evt_t *) = nullptr;
 inline void mock_saadc_event(int type)
 {
@@ -120,6 +123,7 @@ inline void mock_saadc_event(int type)
 inline int nrfx_saadc_init(unsigned)
 {
     mock_saadc_initialized = true;
+    mock_saadc_buffer_index = 0;
     return 0;
 }
 inline bool nrfx_saadc_init_check()
@@ -141,8 +145,11 @@ inline int nrfx_saadc_advanced_mode_set(unsigned, nrf_saadc_resolution_t,
     mock_saadc_handler = handler;
     return 0;
 }
-inline int nrfx_saadc_buffer_set(std::int16_t *, std::size_t)
+inline int nrfx_saadc_buffer_set(std::int16_t *buffer, std::size_t samples)
 {
+    const auto index = mock_saadc_buffer_index++ % 3;
+    mock_saadc_buffers[index] = buffer;
+    mock_saadc_sizes[index] = samples;
     return 0;
 }
 inline int nrfx_saadc_mode_trigger()
