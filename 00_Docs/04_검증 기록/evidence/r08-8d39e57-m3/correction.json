@@ -1,0 +1,32 @@
+{
+  "build": {
+    "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+    "container_digest": "sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace",
+    "gate": "m12-zephyr-build-subset",
+    "group": "all",
+    "jobs": 4,
+    "m16_role_builds": [],
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "scenarios": [
+      "nucode.m3.runtime"
+    ],
+    "schema_version": 2,
+    "serial_source_builds": [],
+    "status": "passed",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "cmake_sha256": "a8d44a986cda5cdfbb93108cabdd6a569a788adf6e9a288f65769276af034c55",
+  "correction": "standalone M3 source list now compiles IoResourceTable.cpp once beside io_resource_manager.cpp",
+  "initial_failure": [
+    {
+      "build_time": "59.42",
+      "name": "nucode.m3.runtime",
+      "reason": "Build failure - undefined reference to `nucode::arduino::internal::io_resource_detail::IoResourceTable::reserveIoResources(nucode::arduino::internal::IoResourceOwner, nucode::arduino::internal::IoResourceId const*, unsigned int, nucode::arduino::internal::IoAcquirePolicy, nucode::arduino::internal::IoResourceLease&, nucode::arduino::internal::IoResourceSnapshot*)'",
+      "status": "error"
+    }
+  ],
+  "initial_report_sha256": "f98e9d7d091ef938a61425f2cebc2dd6ec32a12a1e4044dcca5b86347f81f056",
+  "physical_executed": false,
+  "r09_worktree_note": "R09 SPI edits existed during this build, but compile_commands contains zero SPI.cpp/SpiZephyrBackend.cpp entries. M3 does not link those sources.",
+  "start_commit": "8d39e578639594abc748b81a531d5409f32e83d6"
+}

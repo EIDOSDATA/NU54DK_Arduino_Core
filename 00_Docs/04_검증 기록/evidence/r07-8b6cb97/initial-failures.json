@@ -1,0 +1,14 @@
+{
+  "host": {
+    "cause": "공유 pin 계약의 stub shadow 및 DPPI Host에서 미사용 factory instance 링크 의존성을 교정했다. 다른 peripheral instance stub은 호출되면 abort하며 DPPI PASS로 다른 peripheral 기능을 주장하지 않는다.",
+    "logs": {
+      "driver-initial.log": "89e8a64cd6e835fcb5ac8034124ad3098b7a849f95664b560977c596cb78aa84",
+      "driver.log": "114bbd5548b05088db4376a4c9df0a32993c9e5014bd68bf75018aec8c8e72e1"
+    }
+  },
+  "target": {
+    "cause": "새 내부 header에서 고정 nrfx가 제공하지 않는 nrf.h를 사용했다. 기존 hal/nrf_dppi.h를 통해 nrfx type을 포함하도록 교정했다.",
+    "log_sha256": "9262b8c92dcc98dea13871807772e2c6103e67340697bed0e50dca7e2dd90087",
+    "path": "C:/r07"
+  }
+}

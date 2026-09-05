@@ -18,7 +18,8 @@ class SerialDriverTests(unittest.TestCase):
                 command = [compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
                            '-DTEST_' + personality, '-I', str(ROOT/'tests/host/serial_driver_stubs'),
                            '-I', str(ROOT/'tests/host/serial_fabric_stubs'), '-I', str(ROOT/'cores/arduino'),
-                           '-I', str(ROOT/'variants/nu54dk'), str(ROOT/'cores/arduino/SerialFabric.cpp'),
+                           '-I', str(ROOT/'variants/nu54dk'), str(ROOT/'cores/arduino/SerialFabric.cpp'), str(ROOT / 'cores/arduino/internal/serial/SerialFabricRegistry.cpp'),
+                str(ROOT / 'cores/arduino/internal/serial/SerialFabricLifecycle.cpp'),
                            str(ROOT/'tests/host/r02_serial_driver_main.cpp'), '-o', str(binary)]
                 result = subprocess.run(command, capture_output=True, timeout=60)
                 self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))

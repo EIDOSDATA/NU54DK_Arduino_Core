@@ -195,7 +195,7 @@ int main()
             REPOSITORY / "cores" / "arduino" / "internal" / "IoResourceManager.h"
         ).read_text(encoding="utf-8")
         implementation = (
-            REPOSITORY / "cores" / "arduino" / "internal" / "io_resource_manager.cpp"
+            REPOSITORY / "cores" / "arduino" / "internal" / "resource" / "IoResourcePolicy.h"
         ).read_text(encoding="utf-8")
         for token in (
             "gpiote_channel", "dppi_channel", "dppi_group", "timer_channel",
@@ -345,6 +345,7 @@ int main()
                 "-DCONFIG_NUCODE_ARDUINO_IO_RESOURCE_SLOTS=48",
                 f"-I{root}",
                 f"-I{REPOSITORY / 'cores' / 'arduino'}",
+                os.fspath(REPOSITORY / "cores/arduino/internal/resource/IoResourceTable.cpp"),
                 os.fspath(harness),
                 os.fspath(
                     REPOSITORY

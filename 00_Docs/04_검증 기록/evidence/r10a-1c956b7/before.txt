@@ -1,0 +1,55 @@
+FFFFF
+======================================================================
+FAIL: test_production_stop_reservation (test_r10_serial_concurrency.SerialConcurrencyTests.test_production_stop_reservation) (scenario='progress')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r10_serial_concurrency.py", line 33, in test_production_stop_reservation
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: progressed, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r10_serial_concurrency_main.cpp, line 165
+
+
+
+======================================================================
+FAIL: test_production_stop_reservation (test_r10_serial_concurrency.SerialConcurrencyTests.test_production_stop_reservation) (scenario='same_handle')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r10_serial_concurrency.py", line 33, in test_production_stop_reservation
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: first->stage(config) == SerialFabricResult::wrong_state, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r10_serial_concurrency_main.cpp, line 139
+
+
+
+======================================================================
+FAIL: test_production_stop_reservation (test_r10_serial_concurrency.SerialConcurrencyTests.test_production_stop_reservation) (scenario='same_block')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r10_serial_concurrency.py", line 33, in test_production_stop_reservation
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: progressed, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r10_serial_concurrency_main.cpp, line 165
+
+
+
+======================================================================
+FAIL: test_production_stop_reservation (test_r10_serial_concurrency.SerialConcurrencyTests.test_production_stop_reservation) (scenario='timeout')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r10_serial_concurrency.py", line 33, in test_production_stop_reservation
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: progressed, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r10_serial_concurrency_main.cpp, line 165
+
+
+
+======================================================================
+FAIL: test_production_stop_reservation (test_r10_serial_concurrency.SerialConcurrencyTests.test_production_stop_reservation) (scenario='driver_error')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r10_serial_concurrency.py", line 33, in test_production_stop_reservation
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: progressed, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r10_serial_concurrency_main.cpp, line 165
+
+
+
+----------------------------------------------------------------------
+Ran 1 test in 10.784s
+
+FAILED (failures=5)

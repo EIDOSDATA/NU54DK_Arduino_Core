@@ -1,6 +1,6 @@
 /**
  * @file SPI.cpp
- * @brief Zephyr SPI controller 위에 Arduino SPI API를 구현합니다.
+ * @brief Arduino SPI transaction·반환값·interrupt mask를 구현합니다.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -8,9 +8,6 @@
 #include <Arduino.h>
 #include <NUCODEPeripheral.h>
 
-#include <zephyr/device.h>
-#include <zephyr/devicetree.h>
-#include <zephyr/drivers/spi.h>
 #include <zephyr/kernel.h>
 #include <zephyr/sys/atomic.h>
 
@@ -19,62 +16,16 @@
 #include <cstdint>
 
 #include "internal/SPIBackend.h"
-#include "internal/RuntimePeripheralRoute.h"
+#include "internal/spi/SpiBackendOperations.h"
 #include "internal/SpiInterruptMask.h"
-#include <peripheral_routes.h>
-
-#if !DT_HAS_CHOSEN(nucode_arduino_spi)
-#error "SPI에는 app overlay의 nucode,arduino-spi chosen controller가 필요합니다."
-#endif
-
-#define NUCODE_ARDUINO_SPI_NODE DT_CHOSEN(nucode_arduino_spi)
-
-#if !DT_NODE_HAS_STATUS_OKAY(NUCODE_ARDUINO_SPI_NODE)
-#error "nucode,arduino-spi chosen controller가 활성화되어 있지 않습니다."
-#endif
-
-#if !DT_NODE_EXISTS(DT_NODELABEL(spi00))
-#error "NU54DK SPI 구현에는 spi00 Devicetree node가 필요합니다."
-#elif !DT_SAME_NODE(NUCODE_ARDUINO_SPI_NODE, DT_NODELABEL(spi00)) &&                               \
-    !defined(NUCODE_ARDUINO_SPI_TEST_ALLOW_NON_SPI00)
-#error                                                                                             \
-    "NUCODE_M7_SPI_CHOSEN_MUST_BE_SPI00: NU54DK nucode,arduino-spi chosen은 SPI00을 가리켜야 합니다."
-#endif
-
-#if DT_NODE_EXISTS(DT_NODELABEL(spi00)) && DT_NODE_EXISTS(DT_NODELABEL(uart00))
-#if DT_SAME_NODE(NUCODE_ARDUINO_SPI_NODE, DT_NODELABEL(spi00)) &&                                  \
-    DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(uart00))
-#error                                                                                             \
-    "NUCODE_M7_SPI_UART00_CONFLICT: NU54DK spi00과 uart00은 같은 하드웨어 자원을 공유하므로 동시에 활성화할 수 없습니다."
-#endif
-#endif
 
 namespace
 {
 
+    using nucode::arduino::internal::recordSpiError;
+    using nucode::arduino::internal::recordSpiSuccess;
     using nucode::arduino::internal::SpiError;
-
-    /** @brief NU54DK chosen SPI controller가 선언한 최대 SCK 속도입니다. */
-    constexpr std::uint32_t maximum_spi_frequency_hz =
-        DT_PROP_OR(NUCODE_ARDUINO_SPI_NODE, max_frequency, 32000000U);
-
-    /** @brief NU54DK SPI00의 고정 SPIM base clock입니다. */
-    constexpr std::uint32_t spi_base_frequency_hz = 128000000U;
-
-    /** @brief nRF54L15 SPI00이 허용하는 가장 작은 prescaler입니다. */
-    constexpr std::uint32_t minimum_spi_prescaler = 4U;
-
-    /** @brief nRF54L15 SPI00이 허용하는 가장 큰 prescaler입니다. */
-    constexpr std::uint32_t maximum_spi_prescaler = 126U;
-
-    /** @brief 보드 overlay가 선택한 SPI controller입니다. */
-    const struct device *const spi_device = DEVICE_DT_GET(NUCODE_ARDUINO_SPI_NODE);
-    const nucode::arduino::internal::PeripheralRouteBinding spi_binding =
-        nucode::arduino::internal::spiRouteBinding();
-    nucode::arduino::internal::RuntimePeripheralRoute
-        spi_route(spi_binding.device, spi_binding.pinctrl_config, spi_binding.owner,
-                  spi_binding.block_kind, spi_binding.block_index);
-    bool spi_route_staged = false;
+    namespace backend = nucode::arduino::internal::spi_backend;
 
     K_MUTEX_DEFINE(spi_mutex);
 
@@ -83,10 +34,6 @@ namespace
     atomic_t spi_transaction_active = ATOMIC_INIT(0);
     atomic_t spi_transaction_frequency = ATOMIC_INIT(0);
 
-    bool spi_started = false;
-    struct spi_config spi_configurations[2] = {};
-    std::size_t active_configuration_index = 0U;
-    const struct spi_config *active_configuration = nullptr;
     BitOrder active_bit_order = MSBFIRST;
     k_tid_t spi_transaction_owner = nullptr;
     constexpr std::size_t interrupt_capacity = 8U;
@@ -96,9 +43,6 @@ namespace
     nucode::arduino::internal::SpiInterruptMaskAdapter interrupt_adapter_storage{};
     const nucode::arduino::internal::SpiInterruptMaskAdapter *interrupt_adapter = nullptr;
     bool spi_interrupt_mask_faulted = false;
-
-    /** @brief SPI 진단 상태를 원자적으로 기록합니다. */
-    void recordSpiError(SpiError error, int driver_error = 0) noexcept;
 
     /** @brief 복구되지 않은 interrupt token이 하나라도 남아 있는지 확인합니다. */
     [[nodiscard]] bool hasActiveSpiInterruptToken() noexcept
@@ -201,89 +145,19 @@ namespace
     }
 
     /**
-	 * @brief SPI 진단 상태를 원자적으로 기록합니다.
-	 *
-	 * @param error Core 내부 오류입니다.
-	 * @param driver_error Zephyr SPI가 반환한 오류입니다.
-	 */
-    void recordSpiError(SpiError error, int driver_error) noexcept
-    {
-        atomic_set(&last_spi_driver_error, static_cast<atomic_val_t>(driver_error));
-        atomic_set(&last_spi_error, static_cast<atomic_val_t>(error));
-    }
-
-    /** @brief 성공한 SPI API 뒤 이전 오류를 제거합니다. */
-    void recordSpiSuccess() noexcept
-    {
-        recordSpiError(SpiError::none);
-    }
-
-    /**
-	 * @brief Arduino SPI mode를 Zephyr operation flag로 변환합니다.
-	 *
-	 * @param mode Arduino SPI mode입니다.
-	 * @param flags 변환 결과를 받을 주소입니다.
-	 * @return mode 0~3이면 true입니다.
-	 */
-    [[nodiscard]] bool modeFlags(arduino::SPIMode mode, spi_operation_t &flags) noexcept
-    {
-        switch (mode)
-        {
-        case arduino::SPI_MODE0:
-            flags = 0U;
-            return true;
-        case arduino::SPI_MODE1:
-            flags = SPI_MODE_CPHA;
-            return true;
-        case arduino::SPI_MODE2:
-            flags = SPI_MODE_CPOL;
-            return true;
-        case arduino::SPI_MODE3:
-            flags = SPI_MODE_CPOL | SPI_MODE_CPHA;
-            return true;
-        default:
-            return false;
-        }
-    }
-
-    /**
-	 * @brief 요청한 SCK를 SPI00 prescaler 규칙으로 표현할 수 있는지 확인합니다.
-	 *
-	 * Core가 임의의 근사값을 선택하지 않도록 nRF54L15 nrfx driver와 같은
-	 * predicate를 선제 적용합니다. SPI00은 128 MHz base clock과 4~126
-	 * 범위의 짝수 prescaler를 사용합니다.
-	 *
-	 * @param frequency 요청한 SCK 속도입니다.
-	 * @return 실제 hardware driver가 허용하는 값이면 true입니다.
-	 */
-    [[nodiscard]] bool frequencySupported(std::uint32_t frequency) noexcept
-    {
-        if ((frequency == 0U) || (frequency > maximum_spi_frequency_hz))
-        {
-            return false;
-        }
-
-        const std::uint32_t prescaler = spi_base_frequency_hz / frequency;
-        return ((spi_base_frequency_hz % frequency) < prescaler) && ((prescaler % 2U) == 0U) &&
-               (prescaler >= minimum_spi_prescaler) && (prescaler <= maximum_spi_prescaler);
-    }
-
-    /**
-	 * @brief SPISettings를 CS 없는 Zephyr controller 설정으로 변환합니다.
+	 * @brief Arduino transaction 설정과 오류 우선순위를 검증합니다.
 	 *
 	 * @param settings Arduino transaction 설정입니다.
-	 * @param configuration 변환 결과를 받을 설정입니다.
 	 * @return v0.1 controller 계약과 맞으면 true입니다.
 	 */
-    [[nodiscard]] bool buildSpiConfiguration(const arduino::SPISettings &settings,
-                                             struct spi_config &configuration) noexcept
+    [[nodiscard]] bool validateSpiSettings(const arduino::SPISettings &settings) noexcept
     {
         if (settings.getBusMode() != arduino::SPI_CONTROLLER)
         {
             recordSpiError(SpiError::unsupported_bus_mode);
             return false;
         }
-        if (!frequencySupported(settings.getClockFreq()))
+        if (!backend::frequencySupported(settings.getClockFreq()))
         {
             recordSpiError(SpiError::invalid_frequency);
             return false;
@@ -294,63 +168,17 @@ namespace
             return false;
         }
 
-        spi_operation_t mode_flags = 0U;
-        if (!modeFlags(settings.getDataMode(), mode_flags))
+        switch (settings.getDataMode())
         {
+        case arduino::SPI_MODE0:
+        case arduino::SPI_MODE1:
+        case arduino::SPI_MODE2:
+        case arduino::SPI_MODE3:
+            return true;
+        default:
             recordSpiError(SpiError::invalid_data_mode);
             return false;
         }
-
-        configuration = {};
-        configuration.frequency = settings.getClockFreq();
-        configuration.operation =
-            SPI_OP_MODE_MASTER | SPI_WORD_SET(8) | mode_flags |
-            ((settings.getBitOrder() == LSBFIRST) ? SPI_TRANSFER_LSB : SPI_TRANSFER_MSB);
-        configuration.slave = 0U;
-        configuration.cs = {};
-        configuration.word_delay = 0U;
-        return true;
-    }
-
-    /**
-	 * @brief 현재 transaction 설정으로 full-duplex byte block을 전송합니다.
-	 *
-	 * @param transmit 송신 buffer입니다.
-	 * @param receive 수신 buffer입니다.
-	 * @param length buffer 길이입니다.
-	 * @return 성공하면 true입니다.
-	 */
-    [[nodiscard]] bool transferBlock(const std::uint8_t *transmit, std::uint8_t *receive,
-                                     std::size_t length) noexcept
-    {
-        if (length == 0U)
-        {
-            recordSpiSuccess();
-            return true;
-        }
-
-        struct spi_buf tx_buffer = {};
-        tx_buffer.buf = const_cast<std::uint8_t *>(transmit);
-        tx_buffer.len = length;
-        struct spi_buf_set tx_set = {};
-        tx_set.buffers = &tx_buffer;
-        tx_set.count = 1U;
-        struct spi_buf rx_buffer = {};
-        rx_buffer.buf = receive;
-        rx_buffer.len = length;
-        struct spi_buf_set rx_set = {};
-        rx_set.buffers = &rx_buffer;
-        rx_set.count = 1U;
-
-        const int result = spi_transceive(spi_device, active_configuration, &tx_set, &rx_set);
-        if (result < 0)
-        {
-            recordSpiError(SpiError::driver_error, result);
-            return false;
-        }
-
-        recordSpiSuccess();
-        return true;
     }
 
     /** @brief ArduinoCore-API HardwareSPI의 CS 없는 controller 구현입니다. */
@@ -366,30 +194,13 @@ namespace
                 return false;
             }
             static_cast<void>(k_mutex_lock(&spi_mutex, K_FOREVER));
-            if (spi_started)
+            if (backend::started())
             {
                 recordSpiError(SpiError::route_busy);
                 static_cast<void>(k_mutex_unlock(&spi_mutex));
                 return false;
             }
-            const pin_size_t pins[]{sck_pin, miso_pin, mosi_pin};
-            const nucode::arduino::internal::PeripheralSignal signals[]{
-                nucode::arduino::internal::PeripheralSignal::spi_sck,
-                nucode::arduino::internal::PeripheralSignal::spi_miso,
-                nucode::arduino::internal::PeripheralSignal::spi_mosi,
-            };
-            nucode::arduino::internal::PeripheralRouteConfiguration configuration{};
-            const auto result = nucode::arduino::internal::buildPeripheralRoute(
-                nucode::arduino::internal::PinRoute::spi00, pins, signals, 3U, configuration);
-            const bool staged =
-                (result == nucode::arduino::internal::PeripheralRouteBuildError::none) &&
-                spi_route.stage(configuration);
-            if (staged)
-            {
-                spi_route_staged = true;
-            }
-            recordSpiError(staged ? SpiError::none : SpiError::invalid_pin_route,
-                           staged ? 0 : static_cast<int>(result));
+            const bool staged = backend::setPins(sck_pin, miso_pin, mosi_pin);
             static_cast<void>(k_mutex_unlock(&spi_mutex));
             return staged;
         }
@@ -416,41 +227,13 @@ namespace
             }
 
             static_cast<void>(k_mutex_lock(&spi_mutex, K_FOREVER));
-            if (spi_started)
+            if (backend::started())
             {
                 recordSpiSuccess();
                 static_cast<void>(k_mutex_unlock(&spi_mutex));
                 return;
             }
-            if (!spi_binding.available)
-            {
-                recordSpiError(SpiError::route_error);
-            }
-            else
-            {
-                if (!spi_route_staged)
-                {
-                    nucode::arduino::internal::PeripheralRouteConfiguration route{};
-                    spi_route_staged =
-                        nucode::arduino::internal::defaultSpiRoute(route) ==
-                            nucode::arduino::internal::PeripheralRouteBuildError::none &&
-                        spi_route.stage(route);
-                }
-                if (!spi_route_staged || !spi_route.activate())
-                {
-                    recordSpiError(SpiError::route_error, spi_route.lastDriverError());
-                }
-                else if (!device_is_ready(spi_device))
-                {
-                    static_cast<void>(spi_route.deactivate());
-                    recordSpiError(SpiError::device_not_ready);
-                }
-                else
-                {
-                    spi_started = true;
-                    recordSpiSuccess();
-                }
-            }
+            backend::begin();
             static_cast<void>(k_mutex_unlock(&spi_mutex));
         }
 
@@ -481,16 +264,9 @@ namespace
             }
             atomic_clear(&spi_transaction_active);
             atomic_clear(&spi_transaction_frequency);
-            active_configuration = nullptr;
+            backend::clearConfiguration();
             spi_transaction_owner = nullptr;
-            const bool route_present = spi_started || spi_route.active() || spi_route.faulted();
-            const bool route_ok = !route_present || spi_route.deactivate();
-            spi_started = !route_ok && spi_route.active();
-            if (!route_ok)
-            {
-                recordSpiError(SpiError::route_error, spi_route.lastDriverError());
-            }
-            else
+            if (backend::end())
             {
                 recordSpiError(discarded_transaction ? SpiError::transaction_already_active
                                                      : SpiError::none);
@@ -508,7 +284,7 @@ namespace
             }
 
             static_cast<void>(k_mutex_lock(&spi_mutex, K_FOREVER));
-            if (!spi_started)
+            if (!backend::started())
             {
                 recordSpiError(SpiError::not_started);
             }
@@ -524,17 +300,20 @@ namespace
             }
             else
             {
-                active_configuration_index ^= 1U;
-                struct spi_config &configuration = spi_configurations[active_configuration_index];
-                if (buildSpiConfiguration(settings, configuration) && suspendSpiInterrupts())
+                backend::advanceConfiguration();
+                if (validateSpiSettings(settings))
                 {
-                    active_configuration = &configuration;
-                    active_bit_order = settings.getBitOrder();
-                    atomic_set(&spi_transaction_frequency,
-                               static_cast<atomic_val_t>(settings.getClockFreq()));
-                    atomic_set(&spi_transaction_active, 1);
-                    spi_transaction_owner = k_current_get();
-                    recordSpiSuccess();
+                    backend::configureValidated(settings);
+                    if (suspendSpiInterrupts())
+                    {
+                        backend::commitConfiguration();
+                        active_bit_order = settings.getBitOrder();
+                        atomic_set(&spi_transaction_frequency,
+                                   static_cast<atomic_val_t>(settings.getClockFreq()));
+                        atomic_set(&spi_transaction_active, 1);
+                        spi_transaction_owner = k_current_get();
+                        recordSpiSuccess();
+                    }
                 }
             }
             static_cast<void>(k_mutex_unlock(&spi_mutex));
@@ -565,7 +344,7 @@ namespace
                 {
                     atomic_clear(&spi_transaction_active);
                     atomic_clear(&spi_transaction_frequency);
-                    active_configuration = nullptr;
+                    backend::clearConfiguration();
                     spi_transaction_owner = nullptr;
                     recordSpiSuccess();
                 }
@@ -583,13 +362,13 @@ namespace
             }
 
             static_cast<void>(k_mutex_lock(&spi_mutex, K_FOREVER));
-            if (!spi_started)
+            if (!backend::started())
             {
                 recordSpiError(SpiError::not_started);
                 static_cast<void>(k_mutex_unlock(&spi_mutex));
                 return 0U;
             }
-            if ((atomic_get(&spi_transaction_active) == 0) || (active_configuration == nullptr))
+            if ((atomic_get(&spi_transaction_active) == 0) || !backend::configurationReady())
             {
                 recordSpiError(SpiError::transaction_not_active);
                 static_cast<void>(k_mutex_unlock(&spi_mutex));
@@ -603,7 +382,7 @@ namespace
             }
 
             std::uint8_t received = 0U;
-            static_cast<void>(transferBlock(&value, &received, 1U));
+            static_cast<void>(backend::transferBlock(&value, &received, 1U));
             static_cast<void>(k_mutex_unlock(&spi_mutex));
             return received;
         }
@@ -618,11 +397,11 @@ namespace
             }
 
             static_cast<void>(k_mutex_lock(&spi_mutex, K_FOREVER));
-            if (!spi_started || (atomic_get(&spi_transaction_active) == 0) ||
-                (active_configuration == nullptr))
+            if (!backend::started() || (atomic_get(&spi_transaction_active) == 0) ||
+                !backend::configurationReady())
             {
-                recordSpiError(spi_started ? SpiError::transaction_not_active
-                                           : SpiError::not_started);
+                recordSpiError(backend::started() ? SpiError::transaction_not_active
+                                                  : SpiError::not_started);
                 static_cast<void>(k_mutex_unlock(&spi_mutex));
                 return 0U;
             }
@@ -646,7 +425,7 @@ namespace
                 transmit[1] = static_cast<std::uint8_t>(value & 0xFFU);
             }
 
-            if (!transferBlock(transmit, receive, sizeof(transmit)))
+            if (!backend::transferBlock(transmit, receive, sizeof(transmit)))
             {
                 static_cast<void>(k_mutex_unlock(&spi_mutex));
                 return 0U;
@@ -675,11 +454,11 @@ namespace
             }
 
             static_cast<void>(k_mutex_lock(&spi_mutex, K_FOREVER));
-            if (!spi_started || (atomic_get(&spi_transaction_active) == 0) ||
-                (active_configuration == nullptr))
+            if (!backend::started() || (atomic_get(&spi_transaction_active) == 0) ||
+                !backend::configurationReady())
             {
-                recordSpiError(spi_started ? SpiError::transaction_not_active
-                                           : SpiError::not_started);
+                recordSpiError(backend::started() ? SpiError::transaction_not_active
+                                                  : SpiError::not_started);
                 static_cast<void>(k_mutex_unlock(&spi_mutex));
                 return;
             }
@@ -703,7 +482,7 @@ namespace
                 {
                     transmit[index] = bytes[offset + index];
                 }
-                if (!transferBlock(transmit, receive, chunk))
+                if (!backend::transferBlock(transmit, receive, chunk))
                 {
                     break;
                 }
@@ -824,6 +603,16 @@ SPIClass &SPI = spi_backend;
 
 namespace nucode::arduino::internal
 {
+    void recordSpiError(SpiError error, int driver_error) noexcept
+    {
+        atomic_set(&last_spi_driver_error, static_cast<atomic_val_t>(driver_error));
+        atomic_set(&last_spi_error, static_cast<atomic_val_t>(error));
+    }
+    void recordSpiSuccess() noexcept
+    {
+        recordSpiError(SpiError::none);
+    }
+
     bool registerSpiInterruptMaskAdapter(const SpiInterruptMaskAdapter &adapter) noexcept
     {
         if (k_is_in_isr() || (adapter.valid == nullptr) || (adapter.suspend == nullptr) ||
@@ -874,5 +663,3 @@ namespace nucode::arduino::internal
     }
 
 } // namespace nucode::arduino::internal
-
-#undef NUCODE_ARDUINO_SPI_NODE

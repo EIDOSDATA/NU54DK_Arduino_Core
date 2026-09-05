@@ -74,6 +74,8 @@ struct nrfx_i2s_t
 #define NRFX_I2S_INSTANCE(reg) {reg}
 inline bool mock_i2s_stop_ready = true;
 inline unsigned mock_i2s_uninits = 0;
+inline nrfx_i2s_t *mock_i2s_driver{};
+inline nrfx_i2s_buffers_t mock_i2s_buffers{};
 inline int nrfx_i2s_prescalers_calc(const nrfx_i2s_clk_params_t *, nrfx_i2s_prescalers_t *)
 {
     return 0;
@@ -83,19 +85,22 @@ inline int nrfx_i2s_init(nrfx_i2s_t *d, const nrfx_i2s_config_t *,
 {
     d->initialized = true;
     d->handler = handler;
+    mock_i2s_driver = d;
     return 0;
 }
 inline bool nrfx_i2s_init_check(nrfx_i2s_t *d)
 {
     return d->initialized;
 }
-inline int nrfx_i2s_start(nrfx_i2s_t *d, const nrfx_i2s_buffers_t *, unsigned)
+inline int nrfx_i2s_start(nrfx_i2s_t *d, const nrfx_i2s_buffers_t *buffers, unsigned)
 {
+    mock_i2s_buffers = *buffers;
     d->p_reg->enabled = true;
     return 0;
 }
-inline int nrfx_i2s_next_buffers_set(nrfx_i2s_t *, const nrfx_i2s_buffers_t *)
+inline int nrfx_i2s_next_buffers_set(nrfx_i2s_t *, const nrfx_i2s_buffers_t *buffers)
 {
+    mock_i2s_buffers = *buffers;
     return 0;
 }
 inline void mock_i2s_event(nrfx_i2s_t *d, const nrfx_i2s_buffers_t *buffers, std::uint32_t status)

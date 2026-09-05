@@ -1,0 +1,453 @@
+{
+  "comparisons": {
+    "analog": {
+      "after": {
+        "elf_sha256": "fe2d8bc957b0b951605b3ce19b1ae28092f4f6c2894ab01ca06debca9fde855b",
+        "memory": {
+          "FLASH": 73316,
+          "RAM": 31128
+        },
+        "objects": [
+          [
+            "nucode::arduino::(anonymous namespace)::analog_fabric_mutex",
+            20
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::pwm_contexts",
+            2784
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::pwm_drivers",
+            72
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::saadc_context",
+            3440
+          ]
+        ],
+        "public_symbols": [
+          "nucode::arduino::AnalogFabric::pwm(unsigned char)",
+          "nucode::arduino::AnalogFabric::saadc()",
+          "nucode::arduino::PwmSequenceFabric::configure(nucode::arduino::PwmSequenceConfiguration const&)",
+          "nucode::arduino::PwmSequenceFabric::state() const",
+          "nucode::arduino::PwmSequenceFabric::stop(unsigned int)",
+          "nucode::arduino::PwmSequenceFabric::stop(unsigned int)::{lambda()#1}::operator()() const",
+          "nucode::arduino::SaadcFabric::configure(nucode::arduino::SaadcConfiguration const&)",
+          "nucode::arduino::SaadcFabric::queueBuffer(short*, unsigned int)",
+          "nucode::arduino::SaadcFabric::readyEventAddress() const",
+          "nucode::arduino::SaadcFabric::sample()",
+          "nucode::arduino::SaadcFabric::sampleTaskAddress() const",
+          "nucode::arduino::SaadcFabric::state() const"
+        ]
+      },
+      "before": {
+        "elf_sha256": "e11762fbcabc0dc1d8c0f415076d8397d6d93f05da41c3a6a1ac017498daea33",
+        "memory": {
+          "FLASH": 73348,
+          "RAM": 31128
+        },
+        "objects": [
+          [
+            "nucode::arduino::(anonymous namespace)::analog_fabric_mutex",
+            20
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::pwm_contexts",
+            2784
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::pwm_drivers",
+            72
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::saadc_context",
+            3440
+          ]
+        ],
+        "public_symbols": [
+          "nucode::arduino::AnalogFabric::pwm(unsigned char)",
+          "nucode::arduino::AnalogFabric::saadc()",
+          "nucode::arduino::PwmSequenceFabric::configure(nucode::arduino::PwmSequenceConfiguration const&)",
+          "nucode::arduino::PwmSequenceFabric::state() const",
+          "nucode::arduino::PwmSequenceFabric::stop(unsigned int)",
+          "nucode::arduino::PwmSequenceFabric::stop(unsigned int)::{lambda()#1}::operator()() const",
+          "nucode::arduino::SaadcFabric::configure(nucode::arduino::SaadcConfiguration const&)",
+          "nucode::arduino::SaadcFabric::queueBuffer(short*, unsigned int)",
+          "nucode::arduino::SaadcFabric::readyEventAddress() const",
+          "nucode::arduino::SaadcFabric::sample()",
+          "nucode::arduino::SaadcFabric::sampleTaskAddress() const",
+          "nucode::arduino::SaadcFabric::state() const"
+        ]
+      },
+      "removed_public_symbols": []
+    },
+    "pair_dut": {
+      "after": {
+        "elf_sha256": "fef528d1bf1a32350b5883a507e4c28dd3bedb784a4c7f8346471e145da6d7f5",
+        "memory": {
+          "FLASH": 184000,
+          "RAM": 161496
+        },
+        "objects": [
+          [
+            "nucode::arduino::(anonymous namespace)::analog_fabric_mutex",
+            20
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::dma_metadata_lock",
+            1
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::i2s_context",
+            1992
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::i2s_driver",
+            36
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::pdm_contexts",
+            2992
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::pdm_drivers",
+            56
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::pwm_contexts",
+            2784
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::pwm_drivers",
+            72
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::qdec_contexts",
+            2080
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::qdec_drivers",
+            48
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::saadc_context",
+            3440
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::stream_fabric_mutex",
+            20
+          ]
+        ],
+        "public_symbols": [
+          "nucode::arduino::AnalogFabric::pwm(unsigned char)",
+          "nucode::arduino::AnalogFabric::saadc()",
+          "nucode::arduino::I2sFabric::configure(nucode::arduino::I2sConfiguration const&)",
+          "nucode::arduino::I2sFabric::queueBuffers(nucode::arduino::I2sBuffers const&)",
+          "nucode::arduino::I2sFabric::start(nucode::arduino::I2sBuffers const&)",
+          "nucode::arduino::I2sFabric::start(nucode::arduino::I2sBuffers const&)::{lambda(unsigned char)#1}::operator()(unsigned char) const [clone .isra.0]",
+          "nucode::arduino::I2sFabric::state() const",
+          "nucode::arduino::I2sFabric::stop(unsigned int)",
+          "nucode::arduino::I2sFabric::takeEvent(nucode::arduino::I2sEvent&)",
+          "nucode::arduino::PdmFabric::configure(nucode::arduino::PdmConfiguration const&)",
+          "nucode::arduino::PdmFabric::instance() const",
+          "nucode::arduino::PdmFabric::queueBuffer(short*, unsigned int)",
+          "nucode::arduino::PdmFabric::start(short*, unsigned int)",
+          "nucode::arduino::PdmFabric::state() const",
+          "nucode::arduino::PdmFabric::stop(unsigned int)",
+          "nucode::arduino::PdmFabric::stop(unsigned int)::{lambda()#1}::operator()() const",
+          "nucode::arduino::PdmFabric::takeEvent(nucode::arduino::PdmEvent&)",
+          "nucode::arduino::PwmSequenceFabric::configure(nucode::arduino::PwmSequenceConfiguration const&)",
+          "nucode::arduino::PwmSequenceFabric::play(nucode::arduino::PwmSequenceBuffer const&, nucode::arduino::PwmSequenceBuffer const*, unsigned short, bool, bool)",
+          "nucode::arduino::PwmSequenceFabric::state() const",
+          "nucode::arduino::PwmSequenceFabric::stop(unsigned int)",
+          "nucode::arduino::PwmSequenceFabric::stop(unsigned int)::{lambda()#1}::operator()() const",
+          "nucode::arduino::PwmSequenceFabric::takeEvent(nucode::arduino::PwmSequenceEvent&)",
+          "nucode::arduino::QdecFabric::configure(nucode::arduino::QdecConfiguration const&)",
+          "nucode::arduino::QdecFabric::instance() const",
+          "nucode::arduino::QdecFabric::read(nucode::arduino::QdecEvent&)",
+          "nucode::arduino::QdecFabric::start()",
+          "nucode::arduino::QdecFabric::start()::{lambda(unsigned char)#1}::operator()(unsigned char) const [clone .isra.0]",
+          "nucode::arduino::QdecFabric::state() const",
+          "nucode::arduino::QdecFabric::stop()",
+          "nucode::arduino::QdecFabric::takeEvent(nucode::arduino::QdecEvent&)",
+          "nucode::arduino::SaadcFabric::configure(nucode::arduino::SaadcConfiguration const&)",
+          "nucode::arduino::SaadcFabric::queueBuffer(short*, unsigned int)",
+          "nucode::arduino::SaadcFabric::sample()",
+          "nucode::arduino::SaadcFabric::start(short*, unsigned int, short*, unsigned int)",
+          "nucode::arduino::SaadcFabric::state() const",
+          "nucode::arduino::SaadcFabric::stop(unsigned int)",
+          "nucode::arduino::SaadcFabric::stop(unsigned int)::{lambda()#1}::operator()() const",
+          "nucode::arduino::SaadcFabric::takeEvent(nucode::arduino::SaadcEvent&)",
+          "nucode::arduino::StreamFabric::i2s(unsigned char)",
+          "nucode::arduino::StreamFabric::pdm(unsigned char)",
+          "nucode::arduino::StreamFabric::qdec(unsigned char)"
+        ]
+      },
+      "before": {
+        "elf_sha256": "b4adc20924e008043f4b9b7941abbd51b68c097f3baf62a95862fd4f4aa104c9",
+        "memory": {
+          "FLASH": 183824,
+          "RAM": 161496
+        },
+        "objects": [
+          [
+            "nucode::arduino::(anonymous namespace)::analog_fabric_mutex",
+            20
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::i2s_context",
+            1992
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::i2s_driver",
+            36
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::pdm_contexts",
+            2992
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::pdm_drivers",
+            56
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::pwm_contexts",
+            2784
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::pwm_drivers",
+            72
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::qdec_contexts",
+            2080
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::qdec_drivers",
+            48
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::saadc_context",
+            3440
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::stream_fabric_mutex",
+            20
+          ]
+        ],
+        "public_symbols": [
+          "nucode::arduino::AnalogFabric::pwm(unsigned char)",
+          "nucode::arduino::AnalogFabric::saadc()",
+          "nucode::arduino::I2sFabric::configure(nucode::arduino::I2sConfiguration const&)",
+          "nucode::arduino::I2sFabric::queueBuffers(nucode::arduino::I2sBuffers const&)",
+          "nucode::arduino::I2sFabric::start(nucode::arduino::I2sBuffers const&)",
+          "nucode::arduino::I2sFabric::start(nucode::arduino::I2sBuffers const&)::{lambda(unsigned char)#1}::operator()(unsigned char) const [clone .isra.0]",
+          "nucode::arduino::I2sFabric::state() const",
+          "nucode::arduino::I2sFabric::stop(unsigned int)",
+          "nucode::arduino::I2sFabric::takeEvent(nucode::arduino::I2sEvent&)",
+          "nucode::arduino::PdmFabric::configure(nucode::arduino::PdmConfiguration const&)",
+          "nucode::arduino::PdmFabric::queueBuffer(short*, unsigned int)",
+          "nucode::arduino::PdmFabric::start(short*, unsigned int)",
+          "nucode::arduino::PdmFabric::state() const",
+          "nucode::arduino::PdmFabric::stop(unsigned int)",
+          "nucode::arduino::PdmFabric::stop(unsigned int)::{lambda()#1}::operator()() const",
+          "nucode::arduino::PdmFabric::takeEvent(nucode::arduino::PdmEvent&)",
+          "nucode::arduino::PwmSequenceFabric::configure(nucode::arduino::PwmSequenceConfiguration const&)",
+          "nucode::arduino::PwmSequenceFabric::play(nucode::arduino::PwmSequenceBuffer const&, nucode::arduino::PwmSequenceBuffer const*, unsigned short, bool, bool)",
+          "nucode::arduino::PwmSequenceFabric::state() const",
+          "nucode::arduino::PwmSequenceFabric::stop(unsigned int)",
+          "nucode::arduino::PwmSequenceFabric::stop(unsigned int)::{lambda()#1}::operator()() const",
+          "nucode::arduino::PwmSequenceFabric::takeEvent(nucode::arduino::PwmSequenceEvent&)",
+          "nucode::arduino::QdecFabric::configure(nucode::arduino::QdecConfiguration const&)",
+          "nucode::arduino::QdecFabric::read(nucode::arduino::QdecEvent&)",
+          "nucode::arduino::QdecFabric::start()",
+          "nucode::arduino::QdecFabric::state() const",
+          "nucode::arduino::QdecFabric::stop()",
+          "nucode::arduino::QdecFabric::takeEvent(nucode::arduino::QdecEvent&)",
+          "nucode::arduino::SaadcFabric::configure(nucode::arduino::SaadcConfiguration const&)",
+          "nucode::arduino::SaadcFabric::queueBuffer(short*, unsigned int)",
+          "nucode::arduino::SaadcFabric::sample()",
+          "nucode::arduino::SaadcFabric::start(short*, unsigned int, short*, unsigned int)",
+          "nucode::arduino::SaadcFabric::state() const",
+          "nucode::arduino::SaadcFabric::stop(unsigned int)",
+          "nucode::arduino::SaadcFabric::stop(unsigned int)::{lambda()#1}::operator()() const",
+          "nucode::arduino::SaadcFabric::takeEvent(nucode::arduino::SaadcEvent&)",
+          "nucode::arduino::StreamFabric::i2s(unsigned char)",
+          "nucode::arduino::StreamFabric::pdm(unsigned char)",
+          "nucode::arduino::StreamFabric::qdec(unsigned char)"
+        ]
+      },
+      "removed_public_symbols": []
+    },
+    "stream": {
+      "after": {
+        "elf_sha256": "d12a8e008be462c33eecaafcc4f85b3a3fcc77b8d54260d38e7a553f11515965",
+        "memory": {
+          "FLASH": 77200,
+          "RAM": 32040
+        },
+        "objects": [
+          [
+            "nucode::arduino::(anonymous namespace)::dma_metadata_lock",
+            4
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::i2s_context",
+            2000
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::i2s_driver",
+            36
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::pdm_contexts",
+            3008
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::pdm_drivers",
+            56
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::qdec_contexts",
+            2096
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::qdec_drivers",
+            48
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::stream_fabric_mutex",
+            20
+          ]
+        ],
+        "public_symbols": [
+          "nucode::arduino::I2sFabric::configure(nucode::arduino::I2sConfiguration const&)",
+          "nucode::arduino::I2sFabric::queueBuffers(nucode::arduino::I2sBuffers const&)",
+          "nucode::arduino::I2sFabric::state() const",
+          "nucode::arduino::PdmFabric::configure(nucode::arduino::PdmConfiguration const&)",
+          "nucode::arduino::PdmFabric::instance() const",
+          "nucode::arduino::PdmFabric::queueBuffer(short*, unsigned int)",
+          "nucode::arduino::PdmFabric::startTaskAddress() const",
+          "nucode::arduino::QdecFabric::configure(nucode::arduino::QdecConfiguration const&)",
+          "nucode::arduino::QdecFabric::instance() const",
+          "nucode::arduino::QdecFabric::state() const",
+          "nucode::arduino::StreamFabric::i2s(unsigned char)",
+          "nucode::arduino::StreamFabric::pdm(unsigned char)",
+          "nucode::arduino::StreamFabric::qdec(unsigned char)"
+        ]
+      },
+      "before": {
+        "elf_sha256": "a4f3bebca3f258164ce410b51bf312f9b37855744d3d940ed6389cf4a17ca564",
+        "memory": {
+          "FLASH": 76972,
+          "RAM": 32040
+        },
+        "objects": [
+          [
+            "nucode::arduino::(anonymous namespace)::dma_metadata_lock",
+            4
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::i2s_context",
+            2000
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::i2s_driver",
+            36
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::pdm_contexts",
+            3008
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::pdm_drivers",
+            56
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::qdec_contexts",
+            2096
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::qdec_drivers",
+            48
+          ],
+          [
+            "nucode::arduino::(anonymous namespace)::stream_fabric_mutex",
+            20
+          ]
+        ],
+        "public_symbols": [
+          "nucode::arduino::I2sFabric::configure(nucode::arduino::I2sConfiguration const&)",
+          "nucode::arduino::I2sFabric::queueBuffers(nucode::arduino::I2sBuffers const&)",
+          "nucode::arduino::I2sFabric::state() const",
+          "nucode::arduino::PdmFabric::configure(nucode::arduino::PdmConfiguration const&)",
+          "nucode::arduino::PdmFabric::queueBuffer(short*, unsigned int)",
+          "nucode::arduino::PdmFabric::startTaskAddress() const",
+          "nucode::arduino::QdecFabric::configure(nucode::arduino::QdecConfiguration const&)",
+          "nucode::arduino::QdecFabric::state() const",
+          "nucode::arduino::StreamFabric::i2s(unsigned char)",
+          "nucode::arduino::StreamFabric::pdm(unsigned char)",
+          "nucode::arduino::StreamFabric::qdec(unsigned char)"
+        ]
+      },
+      "removed_public_symbols": []
+    }
+  },
+  "physical_executed": false,
+  "source_membership": {
+    "nucode.m25.analog": {
+      "AnalogFabric.cpp": 1,
+      "I2sFabric.cpp": 0,
+      "PdmFabric.cpp": 0,
+      "PwmSequenceFabric.cpp": 1,
+      "QdecFabric.cpp": 0,
+      "SaadcFabric.cpp": 1,
+      "StreamFabric.cpp": 0
+    },
+    "nucode.m25.onboard_hil": {
+      "AnalogFabric.cpp": 1,
+      "I2sFabric.cpp": 1,
+      "PdmFabric.cpp": 1,
+      "PwmSequenceFabric.cpp": 1,
+      "QdecFabric.cpp": 1,
+      "SaadcFabric.cpp": 1,
+      "StreamFabric.cpp": 1
+    },
+    "nucode.m25.stream": {
+      "AnalogFabric.cpp": 0,
+      "I2sFabric.cpp": 1,
+      "PdmFabric.cpp": 1,
+      "PwmSequenceFabric.cpp": 0,
+      "QdecFabric.cpp": 1,
+      "SaadcFabric.cpp": 0,
+      "StreamFabric.cpp": 1
+    },
+    "nucode.r01.none": {
+      "AnalogFabric.cpp": 0,
+      "I2sFabric.cpp": 0,
+      "PdmFabric.cpp": 0,
+      "PwmSequenceFabric.cpp": 0,
+      "QdecFabric.cpp": 0,
+      "SaadcFabric.cpp": 0,
+      "StreamFabric.cpp": 0
+    },
+    "nucode.v04.pair_dut": {
+      "AnalogFabric.cpp": 1,
+      "I2sFabric.cpp": 1,
+      "PdmFabric.cpp": 1,
+      "PwmSequenceFabric.cpp": 1,
+      "QdecFabric.cpp": 1,
+      "SaadcFabric.cpp": 1,
+      "StreamFabric.cpp": 1
+    },
+    "nucode.v04.pair_peer": {
+      "AnalogFabric.cpp": 1,
+      "I2sFabric.cpp": 1,
+      "PdmFabric.cpp": 1,
+      "PwmSequenceFabric.cpp": 1,
+      "QdecFabric.cpp": 1,
+      "SaadcFabric.cpp": 1,
+      "StreamFabric.cpp": 1
+    }
+  }
+}

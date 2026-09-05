@@ -122,6 +122,10 @@ namespace nucode::arduino::internal
         [[nodiscard]] const PeripheralRouteConfiguration &configuration() const noexcept;
 
       private:
+        /** @brief 하위 계층 결과를 기존 음수 진단 코드로 변환합니다. */
+        [[nodiscard]] static int handoverError(PinHandoverResult result) noexcept;
+        [[nodiscard]] static int ownershipError(IoResourceResult result) noexcept;
+
         /** @brief activate 실패 뒤 PM, pinctrl, GPIO와 block을 안전한 역순으로 복구합니다. */
         [[nodiscard]] bool unwindActivation(std::size_t handover_count) noexcept;
 
@@ -140,21 +144,32 @@ namespace nucode::arduino::internal
         IoResourceKind block_kind_;
         std::uint16_t block_index_;
         PeripheralRouteConfiguration staged_configuration_{};
-        pinctrl_soc_pin_t active_default_pins_[runtime_peripheral_route_pin_capacity]{};
-        pinctrl_soc_pin_t active_sleep_pins_[runtime_peripheral_route_pin_capacity]{};
-        struct pinctrl_state active_states_[2]{};
-        const struct pinctrl_state *previous_states_{nullptr};
-        std::uint8_t previous_state_count_{0U};
-        IoResourceLease block_lease_{};
-        GpioPinHandover pin_handovers_[runtime_peripheral_route_pin_capacity]{};
-        std::size_t committed_pin_count_{0U};
+        /** @brief 다음 API 허용 여부이며 실제 잔여 자원은 acquired_가 보존합니다. */
+        enum class Phase : std::uint8_t
+        {
+            empty,
+            staged,
+            active,
+            faulted,
+        };
+        /** @brief 부분 성공·복구 실패에서도 버리지 않는 실제 획득 기록입니다. */
+        struct AcquiredResources
+        {
+            pinctrl_soc_pin_t active_default_pins_[runtime_peripheral_route_pin_capacity]{};
+            pinctrl_soc_pin_t active_sleep_pins_[runtime_peripheral_route_pin_capacity]{};
+            struct pinctrl_state active_states_[2]{};
+            const struct pinctrl_state *previous_states_{nullptr};
+            std::uint8_t previous_state_count_{0U};
+            IoResourceLease block_lease_{};
+            GpioPinHandover pin_handovers_[runtime_peripheral_route_pin_capacity]{};
+            std::size_t committed_pin_count_{0U};
+            bool pinctrl_route_installed_{false};
+            bool pm_reference_held_{false};
+        };
+        AcquiredResources acquired_{};
+        Phase phase_{Phase::empty};
         RuntimePeripheralRouteError last_error_{RuntimePeripheralRouteError::none};
         int last_driver_error_{0};
-        bool staged_{false};
-        bool active_{false};
-        bool faulted_{false};
-        bool pinctrl_route_installed_{false};
-        bool pm_reference_held_{false};
     };
 
 } // namespace nucode::arduino::internal

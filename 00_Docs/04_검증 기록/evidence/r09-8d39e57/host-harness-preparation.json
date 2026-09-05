@@ -1,0 +1,4 @@
+{
+  "initial_error": "The real ArduinoCore-API Common.h weak main() declaration conflicts with the Host main(argc, argv). The harness locally renames only that declaration before including Arduino.h; vendored headers are unchanged.",
+  "initial_log_sha256": "881059cc32b33a43711d1b06d3ff880534165c91fa46f61a6dac9001892d9c0c"
+}

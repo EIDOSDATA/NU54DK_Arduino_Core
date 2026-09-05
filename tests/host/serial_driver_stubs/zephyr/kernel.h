@@ -11,7 +11,8 @@ inline std::function<void(std::uint32_t)> mock_wait;
 inline std::atomic<std::uint64_t> waited_us{0};
 #define K_MUTEX_DEFINE(name) std::recursive_mutex name
 #define K_FOREVER 0
-#define SYS_INIT(fn, level, priority)
+/** @brief 별도 translation unit에서도 초기화 함수 참조를 보존하며 장치 초기화는 실행하지 않습니다. */
+#define SYS_INIT(fn, level, priority) [[maybe_unused]] static auto mock_init_##fn = &fn
 inline bool k_is_in_isr()
 {
     return mock_in_isr;

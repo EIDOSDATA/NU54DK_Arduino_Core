@@ -133,7 +133,7 @@ class Ac02bAnalogContractTests(unittest.TestCase):
         """복구 실패가 조용히 상태를 버리거나 route를 재사용하지 않습니다."""
         runtime = (
             ROOT / "cores" / "arduino" / "internal" / "RuntimePeripheralRoute.cpp"
-        ).read_text(encoding="utf-8")
+        ).read_text(encoding="utf-8") + (ROOT / "cores/arduino/internal/RuntimePeripheralRouteRecovery.cpp").read_text(encoding="utf-8")
         adapter = (
             ROOT / "variants" / "nu54dk" / "pwm_runtime_routes.cpp"
         ).read_text(encoding="utf-8")
@@ -149,7 +149,7 @@ class Ac02bAnalogContractTests(unittest.TestCase):
         interrupt = (
             ROOT / "cores" / "arduino" / "wiring_interrupt.cpp"
         ).read_text(encoding="utf-8")
-        spi = (ROOT / "cores" / "arduino" / "SPI.cpp").read_text(encoding="utf-8")
+        spi = (ROOT / "cores" / "arduino" / "SPI.cpp").read_text(encoding="utf-8") + (ROOT / "cores/arduino/internal/spi/SpiZephyrBackend.cpp").read_text(encoding="utf-8")
         digital_compact = " ".join(digital.split())
 
         for token in (
@@ -159,7 +159,7 @@ class Ac02bAnalogContractTests(unittest.TestCase):
             "pinctrl_route_installed_",
             "pm_reference_held_",
             "refreshCommittedPinCount",
-            "faulted_ = true",
+            "phase_ = Phase::faulted",
         ):
             self.assertIn(token, runtime)
         for token in ("bool fatal", "latchFatal", "state->fatal"):

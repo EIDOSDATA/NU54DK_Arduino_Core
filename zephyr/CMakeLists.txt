@@ -66,6 +66,7 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   if(CONFIG_NUCODE_ARDUINO_IO_OWNERSHIP)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/io_resource_manager.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/resource/IoResourceTable.cpp"
       "${NUCODE_ARDUINO_VARIANT_ROOT}/io_resource_registry.cpp"
     )
   endif()
@@ -123,6 +124,8 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   if(CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/SerialFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/serial/SerialFabricRegistry.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/serial/SerialFabricLifecycle.cpp"
       "${NUCODE_ARDUINO_VARIANT_ROOT}/serial_fabric_routes.cpp"
     )
   endif()
@@ -160,18 +163,29 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   if(CONFIG_NUCODE_ARDUINO_ANALOG_FABRIC)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/AnalogFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/analog/SaadcFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/analog/PwmSequenceFabric.cpp"
     )
   endif()
 
   if(CONFIG_NUCODE_ARDUINO_EVENT_FABRIC)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/EventFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/event/EventFabricRegistry.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/event/TimerFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/event/EguFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/event/GpioteFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/event/DppiFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/event/PpibFabric.cpp"
     )
   endif()
 
   if(CONFIG_NUCODE_ARDUINO_STREAM_FABRIC)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/StreamFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/stream/PdmFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/stream/I2sFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/stream/QdecFabric.cpp"
     )
   endif()
 
@@ -187,6 +201,7 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
      CONFIG_NUCODE_ARDUINO_PWM)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/RuntimePeripheralRoute.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/RuntimePeripheralRouteRecovery.cpp"
       "${NUCODE_ARDUINO_VARIANT_ROOT}/peripheral_routes.cpp"
     )
   endif()
@@ -200,6 +215,7 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   if(CONFIG_NUCODE_ARDUINO_SPI)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/SPI.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/spi/SpiZephyrBackend.cpp"
     )
   endif()
 

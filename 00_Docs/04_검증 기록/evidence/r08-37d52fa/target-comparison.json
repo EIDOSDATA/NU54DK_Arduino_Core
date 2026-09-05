@@ -1,0 +1,58 @@
+{
+  "after": {
+    "elf_sha256": "42d100a5c1054c57d94d02623fddceb2e01d221c5cee13117ab0ba877739e9bb",
+    "manager_objects": {
+      "nucode::arduino::internal::(anonymous namespace)::io_resource_mutex": 20,
+      "nucode::arduino::internal::(anonymous namespace)::table": 6160
+    },
+    "memory": {
+      "FLASH": 184000,
+      "RAM": 161480
+    }
+  },
+  "before": {
+    "elf_sha256": "c49fe31625e37d6613270f10e386fae8a51986e67734de9d67892f5328946fd0",
+    "manager_objects": {
+      "nucode::arduino::internal::(anonymous namespace)::io_resource_mutex": 20,
+      "nucode::arduino::internal::(anonymous namespace)::next_generation": 8,
+      "nucode::arduino::internal::(anonymous namespace)::resource_slots": 6144
+    },
+    "memory": {
+      "FLASH": 183800,
+      "RAM": 161472
+    }
+  },
+  "physical_executed": false,
+  "source_membership": {
+    "nucode.ac02a.ownership_contract": {
+      "IoResourceTable.cpp": 1,
+      "RuntimePeripheralRoute.cpp": 0,
+      "RuntimePeripheralRouteRecovery.cpp": 0,
+      "io_resource_manager.cpp": 1
+    },
+    "nucode.ac02b.analog_contract": {
+      "IoResourceTable.cpp": 1,
+      "RuntimePeripheralRoute.cpp": 1,
+      "RuntimePeripheralRouteRecovery.cpp": 1,
+      "io_resource_manager.cpp": 1
+    },
+    "nucode.ac02b.b2_contract": {
+      "IoResourceTable.cpp": 1,
+      "RuntimePeripheralRoute.cpp": 1,
+      "RuntimePeripheralRouteRecovery.cpp": 1,
+      "io_resource_manager.cpp": 1
+    },
+    "nucode.v04.pair_dut": {
+      "IoResourceTable.cpp": 1,
+      "RuntimePeripheralRoute.cpp": 0,
+      "RuntimePeripheralRouteRecovery.cpp": 0,
+      "io_resource_manager.cpp": 1
+    },
+    "nucode.v04.pair_peer": {
+      "IoResourceTable.cpp": 1,
+      "RuntimePeripheralRoute.cpp": 0,
+      "RuntimePeripheralRouteRecovery.cpp": 0,
+      "io_resource_manager.cpp": 1
+    }
+  }
+}

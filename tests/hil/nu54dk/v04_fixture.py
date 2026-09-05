@@ -316,7 +316,15 @@ def exchange(devices, fixture, controller_role, instances, vector, append, label
     append(f"V04-{fixture['family'].upper()}-DATA/{fixture['id']}/{controller_role}/{instances}/{vector}{label}",
            {"seed": seed, "results": results,
             "concurrent_pmic": concurrent_pmic,
-            "scope": "asynchronous-single-or-double-buffer"})
+            "scope": transfer_scope(fixture["family"], address)})
+
+
+def transfer_scope(family, encoded_style):
+    """! @brief controller가 선택한 실제 전송 스타일의 증거 범위를 반환합니다. """
+    style = encoded_style if family == "spi" else encoded_style >> 8
+    if family in ("spi", "twi") and style == 1:
+        return "synchronous-single-buffer"
+    return "asynchronous-single-or-double-buffer"
 
 
 def run_confirmed(devices, images, uids, confirmation, fixture_id, append):

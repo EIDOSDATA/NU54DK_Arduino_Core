@@ -1,0 +1,100 @@
+{
+  "after": {
+    "elf_sha256": "e76117f6a670b2110482db036420a2d96d533b772a0dd05fe45255b2bd5c292a",
+    "memory": {
+      "FLASH": 125616,
+      "RAM": 68272
+    },
+    "public_symbols": [
+      "(anonymous namespace)::ZephyrSPI::attachInterrupt()",
+      "(anonymous namespace)::ZephyrSPI::begin()",
+      "(anonymous namespace)::ZephyrSPI::beginTransaction(arduino::SPISettings)",
+      "(anonymous namespace)::ZephyrSPI::beginTransaction(arduino::SPISettings) [clone .part.0]",
+      "(anonymous namespace)::ZephyrSPI::capabilities() const",
+      "(anonymous namespace)::ZephyrSPI::detachInterrupt()",
+      "(anonymous namespace)::ZephyrSPI::end()",
+      "(anonymous namespace)::ZephyrSPI::endTransaction()",
+      "(anonymous namespace)::ZephyrSPI::endTransaction() [clone .part.0]",
+      "(anonymous namespace)::ZephyrSPI::notUsingInterrupt(int)",
+      "(anonymous namespace)::ZephyrSPI::notUsingInterrupt(int) [clone .part.0]",
+      "(anonymous namespace)::ZephyrSPI::setPins(unsigned char, unsigned char, unsigned char)",
+      "(anonymous namespace)::ZephyrSPI::transfer(unsigned char)",
+      "(anonymous namespace)::ZephyrSPI::transfer(void*, unsigned int)",
+      "(anonymous namespace)::ZephyrSPI::transfer16(unsigned short)",
+      "(anonymous namespace)::ZephyrSPI::usingInterrupt(int)",
+      "(anonymous namespace)::ZephyrSPI::usingInterrupt(int) [clone .part.0]",
+      "(anonymous namespace)::ZephyrSPI::~ZephyrSPI()",
+      "nucode::arduino::internal::lastSpiDriverError()",
+      "nucode::arduino::internal::lastSpiError()",
+      "nucode::arduino::internal::registerSpiInterruptMaskAdapter(nucode::arduino::internal::SpiInterruptMaskAdapter const&)"
+    ],
+    "spi_objects": {
+      "(anonymous namespace)::spi_backend": 4,
+      "(anonymous namespace)::spi_mutex": 20,
+      "SPI": 4,
+      "nucode::arduino::internal::spi_backend::(anonymous namespace)::spi_configurations": 56,
+      "nucode::arduino::internal::spi_backend::(anonymous namespace)::spi_route": 4224
+    }
+  },
+  "before": {
+    "elf_sha256": "1678e631ad0ee9c2f595577124b164480c479b768578c563529fdeda15461e75",
+    "memory": {
+      "FLASH": 125456,
+      "RAM": 68272
+    },
+    "public_symbols": [
+      "(anonymous namespace)::ZephyrSPI::attachInterrupt()",
+      "(anonymous namespace)::ZephyrSPI::begin()",
+      "(anonymous namespace)::ZephyrSPI::beginTransaction(arduino::SPISettings)",
+      "(anonymous namespace)::ZephyrSPI::beginTransaction(arduino::SPISettings) [clone .part.0]",
+      "(anonymous namespace)::ZephyrSPI::capabilities() const",
+      "(anonymous namespace)::ZephyrSPI::detachInterrupt()",
+      "(anonymous namespace)::ZephyrSPI::end()",
+      "(anonymous namespace)::ZephyrSPI::endTransaction()",
+      "(anonymous namespace)::ZephyrSPI::endTransaction() [clone .part.0]",
+      "(anonymous namespace)::ZephyrSPI::notUsingInterrupt(int)",
+      "(anonymous namespace)::ZephyrSPI::notUsingInterrupt(int) [clone .part.0]",
+      "(anonymous namespace)::ZephyrSPI::setPins(unsigned char, unsigned char, unsigned char)",
+      "(anonymous namespace)::ZephyrSPI::transfer(unsigned char)",
+      "(anonymous namespace)::ZephyrSPI::transfer(void*, unsigned int)",
+      "(anonymous namespace)::ZephyrSPI::transfer16(unsigned short)",
+      "(anonymous namespace)::ZephyrSPI::usingInterrupt(int)",
+      "(anonymous namespace)::ZephyrSPI::usingInterrupt(int) [clone .part.0]",
+      "(anonymous namespace)::ZephyrSPI::~ZephyrSPI()",
+      "nucode::arduino::internal::lastSpiDriverError()",
+      "nucode::arduino::internal::lastSpiError()",
+      "nucode::arduino::internal::registerSpiInterruptMaskAdapter(nucode::arduino::internal::SpiInterruptMaskAdapter const&)"
+    ],
+    "spi_objects": {
+      "(anonymous namespace)::spi_backend": 4,
+      "(anonymous namespace)::spi_configurations": 56,
+      "(anonymous namespace)::spi_mutex": 20,
+      "(anonymous namespace)::spi_route": 4224,
+      "SPI": 4
+    }
+  },
+  "physical_executed": false,
+  "removed_public_symbols": [],
+  "source_membership": {
+    "nucode.ac02b.b2_contract": {
+      "SPI.cpp": 1,
+      "SpiZephyrBackend.cpp": 1
+    },
+    "nucode.ac02b.hil_dut": {
+      "SPI.cpp": 1,
+      "SpiZephyrBackend.cpp": 1
+    },
+    "nucode.ac02b.hil_peer": {
+      "SPI.cpp": 0,
+      "SpiZephyrBackend.cpp": 0
+    },
+    "nucode.m3.runtime": {
+      "SPI.cpp": 0,
+      "SpiZephyrBackend.cpp": 0
+    },
+    "nucode.m7.core_api": {
+      "SPI.cpp": 1,
+      "SpiZephyrBackend.cpp": 1
+    }
+  }
+}

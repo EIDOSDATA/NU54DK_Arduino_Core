@@ -110,3 +110,16 @@ R05 Core 소스·설치 package identity는 [56번 기록](56_R05_Core_소스와
 6개 Host 회귀, target 2/2 및 ELF 문자열 확인에 연결한다.
 
 R06 builder 모듈 추출·설치 compile 및 공백 recipe 교정은 [57번 기록](57_R06_builder_모듈과_설치_경로.md)에 연결한다.
+
+R07 EventFabric registry/peripheral 분할은 [58번 기록](58_R07_EventFabric_책임_분할.md)의
+전후 Host·target·symbol·메모리 비교에 연결한다.
+
+R08 자원 정책·transaction·동기화 및 runtime route phase/획득 기록 분리는
+[59번 기록](59_R08_자원과_경로_수명주기.md)에 연결한다.
+
+R09 Arduino SPI facade/backend 분리는 [60번 기록](60_R09_Arduino_SPI_경계.md)에 연결한다.
+
+R10-A Serial Fabric STOP 예약과 동시 호출 수정은 [61번 기록](61_R10_Serial_Fabric_동시_호출.md)에
+연결한다. R10-A/B/C software 완료이며 current-source T11은 미실행이다.
+
+R11 Analog/Stream peripheral 분리는 [62번 기록](62_R11_Analog_Stream_peripheral_분리.md)에 연결한다.

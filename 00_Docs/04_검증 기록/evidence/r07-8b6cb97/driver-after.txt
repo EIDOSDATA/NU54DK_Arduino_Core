@@ -1,0 +1,6 @@
+test_production_dppi_and_registry (test_r07_event_driver.EventDriverTests.test_production_dppi_and_registry) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 2.351s
+
+OK

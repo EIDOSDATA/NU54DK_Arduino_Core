@@ -12,6 +12,7 @@ target_sources(app PRIVATE
   src/test_variant.cpp
   ${NUCODE_CORE_ROOT}/cores/arduino/wiring_digital.cpp
   ${NUCODE_CORE_ROOT}/cores/arduino/internal/io_resource_manager.cpp
+  ${NUCODE_CORE_ROOT}/cores/arduino/internal/resource/IoResourceTable.cpp
   ${NUCODE_CORE_ROOT}/cores/arduino/wiring_time.cpp
   ${NUCODE_CORE_ROOT}/cores/arduino/internal/runtime_scheduler.cpp
   ${NUCODE_CORE_ROOT}/cores/arduino/internal/time_backend_nrf54.cpp

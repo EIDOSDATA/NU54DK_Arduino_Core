@@ -1,0 +1,72 @@
+{
+  "gates": {
+    "comparison": {
+      "log_sha256": "6530606e0d20b1effa204fb92cb2f459295e89384f7105d24d098845472f09fd",
+      "result_lines": [
+        "R07_BASELINE_HOST_PASS=7;PUBLIC_BODY_TOKENS_EQUAL=5;PUBLIC_HEADER_EQUAL=1"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "contract": {
+      "log_sha256": "54715a25ffb63b8afe6d163ec91ea7630fcf8718da22d3df8f1b92bfa99f4583",
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "skips": 0,
+      "tests": 45
+    },
+    "driver-after": {
+      "log_sha256": "5f54db6f6e591accb52590ab6a42b7d2bda562694dedfb1aa3cc66b4b99aed9c",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "host": {
+      "log_sha256": "014236a83e87367285543dcee28e32bc09d5505d4623b89e43924ad4b7214d32",
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "skips": 2,
+      "tests": 618
+    },
+    "inventory": {
+      "log_sha256": "5cac786157abe5d53d21ffc41ea424d773ae85d29f2cb70af82f59e30cb04f27",
+      "result_lines": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "style": {
+      "log_sha256": "e5d7a8e8a3c4c2c41261cac464b80363d6542a1cd49b6b5865d4f8db0b7e394a",
+      "result_lines": [
+        "CPP_STYLE_FILES=275; FAILED=0; WRITE=0"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "target-after": {
+      "log_sha256": "cd8a431aeddb4c0597eb105f2db1978c89fbafaed0dfd501250e484c2e14971d",
+      "result_lines": [
+        "M12_ZEPHYR_BUILD_PASS=4;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "physical_executed": false,
+  "sources": {
+    "cores\\arduino\\EventFabric.cpp": "a8e68db226b6213e78544a23db6c2221459f03fc254716e724425f36f2090ac1",
+    "cores\\arduino\\internal\\event\\DppiFabric.cpp": "b31c06a3bbd3bfc2c47313be68fe78350e755e355599151b7f8d765dad224811",
+    "cores\\arduino\\internal\\event\\EguFabric.cpp": "cb30c07faad02e41f33ebae2db290de5a789b7547cd15cf5fc2970fd7798d8b0",
+    "cores\\arduino\\internal\\event\\EventFabricInternal.h": "be7c09785c59e7fc6e79ddd32652df8edc7715da23961faf7079a7ab9c3cce31",
+    "cores\\arduino\\internal\\event\\EventFabricRegistry.cpp": "7cb93ea76e0e9dd98c35fc0349556e05844ff7791af1d0842a4f167934e6e85c",
+    "cores\\arduino\\internal\\event\\GpioteFabric.cpp": "347a5da475d4b8dd1d105d2c3feffd1935b3c1bb8bdc19e14ffcc924d5ef1f4a",
+    "cores\\arduino\\internal\\event\\PpibFabric.cpp": "6d42dcc83f02da0c99878ccfc759c07eba45d885d6e9da0794ae20efe2dff3da",
+    "cores\\arduino\\internal\\event\\TimerFabric.cpp": "402704f0d623e40fcb1932f29764b9b15591f9f14089ea1c126a81010fe8746c",
+    "cores\\arduino\\nucode\\EventFabric.h": "ce9c09b424add110f095f9d571681968a51df1c5a12d5df46e05d9199790e960",
+    "zephyr\\CMakeLists.txt": "db4f21e579438073b503e638fc8cec7e9d37f80cb6fac2e846414877372a7b0a"
+  },
+  "start_commit": "8b6cb9795f7762c37c0f3cd86a32577139b9b3ee"
+}

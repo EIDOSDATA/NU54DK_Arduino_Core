@@ -1,0 +1,35 @@
+{
+  "host_scenarios": 12,
+  "normalization": "Whitespace, comments and explicit global Arduino namespace qualifier ignored. Stage/begin/end/configuration orchestration split is checked by the same production Host harness before and after.",
+  "physical_executed": false,
+  "start_commit": "8d39e578639594abc748b81a531d5409f32e83d6",
+  "unchanged_bodies": {
+    "attachInterrupt": true,
+    "capabilities": true,
+    "clearSpiDiagnostics": true,
+    "detachInterrupt": true,
+    "frequencySupported": true,
+    "hasActiveSpiInterruptToken": true,
+    "lastSpiDriverError": true,
+    "lastSpiError": true,
+    "modeFlags": true,
+    "notUsingInterrupt": true,
+    "recordSpiError": true,
+    "recordSpiSuccess": true,
+    "registerSpiInterruptMaskAdapter": true,
+    "restoreSpiInterrupts": true,
+    "spiInterruptMaskAvailable": true,
+    "spiTransactionActive": true,
+    "spiTransactionFrequency": true,
+    "suspendSpiInterrupts": true,
+    "transferBlock": true,
+    "usingInterrupt": true
+  },
+  "unchanged_headers": [
+    "cores/arduino/Arduino.h",
+    "cores/arduino/NUCODEPeripheral.h",
+    "cores/arduino/internal/SPIBackend.h",
+    "cores/arduino/internal/SpiInterruptMask.h",
+    "libraries/SPI/src/SPI.h"
+  ]
+}

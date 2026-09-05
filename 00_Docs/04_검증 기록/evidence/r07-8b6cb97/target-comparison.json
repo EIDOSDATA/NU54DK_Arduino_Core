@@ -1,0 +1,118 @@
+{
+  "added_linked_public_symbols": [
+    "nucode::arduino::DppiFabric::instance() const",
+    "nucode::arduino::EguFabric::instance() const",
+    "nucode::arduino::GpioteFabric::instance() const",
+    "nucode::arduino::PpibFabric::instance() const",
+    "nucode::arduino::TimerFabric::instance() const"
+  ],
+  "after": {
+    "context_object_sizes": {
+      "dppi_contexts": 14848,
+      "egu_contexts": 3360,
+      "event_fabric_mutex": 20,
+      "ppib_contexts": 13440,
+      "timer_contexts": 840
+    },
+    "elf_sha256": "9947d0c8bb2494c370c591ec22ddc85309cb2ff9943445153cf8facb327b1b83",
+    "hex_sha256": "3c0ea8123f350d9a12f87289ca3eefb16f56c4e48cda83b071219e256a4744f6",
+    "memory": {
+      "FLASH": 97264,
+      "RAM": 58752
+    },
+    "public_symbols": [
+      "nucode::arduino::DppiFabric::acquireChannel(unsigned char)",
+      "nucode::arduino::DppiFabric::connect(nucode::arduino::EventEndpoint const&, nucode::arduino::EventEndpoint const&, unsigned char)",
+      "nucode::arduino::DppiFabric::instance() const",
+      "nucode::arduino::DppiFabric::releaseChannel(unsigned char)",
+      "nucode::arduino::EguFabric::event(unsigned char) const",
+      "nucode::arduino::EguFabric::instance() const",
+      "nucode::arduino::EventFabric::dppi(unsigned char)",
+      "nucode::arduino::EventFabric::egu(unsigned char)",
+      "nucode::arduino::EventFabric::gpiote(unsigned char)",
+      "nucode::arduino::EventFabric::ppib(unsigned char)",
+      "nucode::arduino::EventFabric::timer(unsigned char)",
+      "nucode::arduino::GpioteFabric::instance() const",
+      "nucode::arduino::PpibFabric::instance() const",
+      "nucode::arduino::PpibFabric::receiveEvent(unsigned char) const",
+      "nucode::arduino::PpibFabric::sendTask(unsigned char) const",
+      "nucode::arduino::TimerFabric::channelCount() const",
+      "nucode::arduino::TimerFabric::compareEvent(unsigned char) const",
+      "nucode::arduino::TimerFabric::instance() const",
+      "nucode::arduino::TimerFabric::task(nucode::arduino::TimerTask, unsigned char) const",
+      "nucode::arduino::eventFabric()"
+    ]
+  },
+  "before": {
+    "context_object_sizes": {
+      "dppi_contexts": 14848,
+      "egu_contexts": 3360,
+      "event_fabric_mutex": 20,
+      "ppib_contexts": 13440,
+      "timer_contexts": 840
+    },
+    "elf_sha256": "b080cca48561990824ea74964147c7b9da28aff0c062ec0c96bc8806566c6bc2",
+    "hex_sha256": "503b2e31aa8ef7fa25264a604c5f027d769058ad79f435b1fd13319bf9553481",
+    "memory": {
+      "FLASH": 97576,
+      "RAM": 58752
+    },
+    "public_symbols": [
+      "nucode::arduino::DppiFabric::acquireChannel(unsigned char)",
+      "nucode::arduino::DppiFabric::connect(nucode::arduino::EventEndpoint const&, nucode::arduino::EventEndpoint const&, unsigned char)",
+      "nucode::arduino::DppiFabric::releaseChannel(unsigned char)",
+      "nucode::arduino::EguFabric::event(unsigned char) const",
+      "nucode::arduino::EventFabric::dppi(unsigned char)",
+      "nucode::arduino::EventFabric::egu(unsigned char)",
+      "nucode::arduino::EventFabric::gpiote(unsigned char)",
+      "nucode::arduino::EventFabric::ppib(unsigned char)",
+      "nucode::arduino::EventFabric::timer(unsigned char)",
+      "nucode::arduino::PpibFabric::receiveEvent(unsigned char) const",
+      "nucode::arduino::PpibFabric::sendTask(unsigned char) const",
+      "nucode::arduino::TimerFabric::channelCount() const",
+      "nucode::arduino::TimerFabric::compareEvent(unsigned char) const",
+      "nucode::arduino::TimerFabric::task(nucode::arduino::TimerTask, unsigned char) const",
+      "nucode::arduino::eventFabric()"
+    ]
+  },
+  "membership": {
+    "nucode.m25.event": {
+      "DppiFabric.cpp": 1,
+      "EguFabric.cpp": 1,
+      "EventFabric.cpp": 1,
+      "EventFabricRegistry.cpp": 1,
+      "GpioteFabric.cpp": 1,
+      "PpibFabric.cpp": 1,
+      "TimerFabric.cpp": 1
+    },
+    "nucode.m3.runtime": {
+      "DppiFabric.cpp": 0,
+      "EguFabric.cpp": 0,
+      "EventFabric.cpp": 0,
+      "EventFabricRegistry.cpp": 0,
+      "GpioteFabric.cpp": 0,
+      "PpibFabric.cpp": 0,
+      "TimerFabric.cpp": 0
+    },
+    "nucode.v04.pair_dut": {
+      "DppiFabric.cpp": 1,
+      "EguFabric.cpp": 1,
+      "EventFabric.cpp": 1,
+      "EventFabricRegistry.cpp": 1,
+      "GpioteFabric.cpp": 1,
+      "PpibFabric.cpp": 1,
+      "TimerFabric.cpp": 1
+    },
+    "nucode.v04.pair_peer": {
+      "DppiFabric.cpp": 1,
+      "EguFabric.cpp": 1,
+      "EventFabric.cpp": 1,
+      "EventFabricRegistry.cpp": 1,
+      "GpioteFabric.cpp": 1,
+      "PpibFabric.cpp": 1,
+      "TimerFabric.cpp": 1
+    }
+  },
+  "physical_executed": false,
+  "removed_public_symbols": []
+}

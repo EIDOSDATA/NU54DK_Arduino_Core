@@ -1,0 +1,52 @@
+{
+  "gates": {
+    "contract-b": {
+      "log_sha256": "2049efb7f7822187bdf24649d7d7e705f8f12397dd3df1905d868b6531600374",
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "skips": 0,
+      "tests": 45
+    },
+    "host-b2": {
+      "log_sha256": "b3f713193e217cf3c4beeb5a8300dd46ed1c095c92370fe11123aac4a2f0930d",
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "skips": 2,
+      "tests": 621
+    },
+    "inventory-b": {
+      "log_sha256": "5cac786157abe5d53d21ffc41ea424d773ae85d29f2cb70af82f59e30cb04f27",
+      "result_lines": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "style-b": {
+      "log_sha256": "0231f09229be3569ea9384abe77295189d51866e82abaf593c560f2e6e02a9ec",
+      "result_lines": [
+        "CPP_STYLE_FILES=297; FAILED=0; WRITE=0"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "target-b": {
+      "log_sha256": "be682c56ad59c1fcd0641a1f261c4a5899abe667bc23c16fc6d334e891a84a86",
+      "result_lines": [
+        "M12_ZEPHYR_BUILD_PASS=9;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "physical_executed": false,
+  "sources": {
+    "cores\\arduino\\SerialFabric.cpp": "48d663d04322361d64dcd867fed1022a052ba6b93f20106d04eedec1c2fd74cc",
+    "cores\\arduino\\internal\\serial\\SerialFabricInternal.h": "5fea33f8a39c1484033b7152768ca9d902c9d2bfee5c59cdbf68adbb8b2d90df",
+    "cores\\arduino\\internal\\serial\\SerialFabricLifecycle.cpp": "8eef1f63bb14f47a9e600002b84dfc0f7f8d9e94446ccc99c7284398463f01d2",
+    "cores\\arduino\\internal\\serial\\SerialFabricRegistry.cpp": "a68e83e848a0b5defbef98e4d3f8dfa547a318712b4034ffd4bc5a9868125e5c"
+  },
+  "start_commit": "7be9f7160a35cf3b052734ea0867bb9cd0ce3516"
+}

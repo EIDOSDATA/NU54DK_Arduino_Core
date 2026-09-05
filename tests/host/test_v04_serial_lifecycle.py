@@ -44,7 +44,8 @@ class SerialLifecycleTests(unittest.TestCase):
             binary = Path(folder) / "lifecycle.exe"
             result = subprocess.run([compiler, "-std=c++17", "-Wall", "-Wextra", "-Werror", "-DCONFIG_ZTEST=1",
                 "-I", str(ROOT / "tests/host/serial_fabric_stubs"), "-I", str(ROOT / "cores/arduino"),
-                "-I", str(ROOT / "variants/nu54dk"), str(ROOT / "cores/arduino/SerialFabric.cpp"),
+                "-I", str(ROOT / "variants/nu54dk"), str(ROOT / "cores/arduino/SerialFabric.cpp"), str(ROOT / "cores/arduino/internal/serial/SerialFabricRegistry.cpp"),
+                str(ROOT / "cores/arduino/internal/serial/SerialFabricLifecycle.cpp"),
                 str(ROOT / "tests/host/v04_serial_lifecycle_main.cpp"), "-o", str(binary)], capture_output=True, timeout=60)
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
             result = subprocess.run([str(binary)], capture_output=True, timeout=10)

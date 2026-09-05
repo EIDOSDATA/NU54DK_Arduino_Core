@@ -1,0 +1,30 @@
+{
+  "host_scenarios": 22,
+  "manager_internal_contract_unchanged": true,
+  "normalization": "Whitespace/comments ignored; the existing ISR check and mutex operations move to the single facade. Validation now runs inside its lock. No transaction mutation or validation expression changed.",
+  "physical_executed": false,
+  "policy_and_transaction_body_tokens": {
+    "allocateGeneration": true,
+    "commitIoResources": true,
+    "fillSnapshot": true,
+    "findConflictingSlot": true,
+    "findEmptySlot": true,
+    "findSlot": true,
+    "ioResourceSnapshot": true,
+    "overlappingDmaMemory": true,
+    "releaseIoResources": true,
+    "reserveIoResources": true,
+    "resetIoResourceManagerForTest": true,
+    "resourcesConflict": true,
+    "rollbackIoResources": true,
+    "sameOwner": true,
+    "sameResource": true,
+    "transferIoResources": true,
+    "validLeaseEpoch": true,
+    "validLeaseShape": true,
+    "validResource": true,
+    "validateReleaseEntries": true,
+    "validateReservedEntries": true
+  },
+  "start_commit": "37d52fa07c3715ab3c1e2bbef50f8a6a6bafa31a"
+}

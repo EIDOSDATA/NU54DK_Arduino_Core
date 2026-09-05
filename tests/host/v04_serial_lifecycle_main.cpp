@@ -247,6 +247,14 @@ int main()
     restored();
 
     handle = prepare();
+    activate_fail = true;
+    rollback_fail = true;
+    assert(handle->activate() == SerialFabricResult::release_failed);
+    assert(reserved && rollbacks == 1 && releases == 0);
+    assert(handle->state() == SerialFabricState::faulted);
+    assert(handle->activate() == SerialFabricResult::faulted);
+
+    handle = prepare();
     commit_fail = true;
     assert(handle->activate() == SerialFabricResult::release_failed);
     assert(refs == 0 && frees == 1 && deactivations == 1 && rollbacks == 1);

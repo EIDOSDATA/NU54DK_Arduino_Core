@@ -490,6 +490,12 @@ namespace nucode::arduino
             return SerialFabricResult::invalid_context;
         }
         const internal::SerialFabricOperationGuard operation_guard;
+        /** @brief lifecycle STOP 예약 중에는 adapter의 취소 상태를 다시 변경하지 않습니다. */
+        if (!internal::isSerialFabricHandleActive(SerialPersonality::spis, instance()))
+        {
+            return SerialFabricResult::wrong_state;
+        }
+
         auto *const context = contextFor(instance());
         if ((context == nullptr) || atomic_get(&context->active) == 0 ||
             atomic_get(&context->buffers_active) == 0 || atomic_get(&context->initialized) == 0)

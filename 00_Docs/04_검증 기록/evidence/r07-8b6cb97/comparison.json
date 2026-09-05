@@ -1,0 +1,20 @@
+{
+  "baseline_production_subset_scenarios_pass": [
+    "lookup",
+    "invalid",
+    "capacity",
+    "disconnect",
+    "release",
+    "isr",
+    "threads"
+  ],
+  "baseline_warning_scope": "unused functions/variables from the intentionally selected original TU are excluded; production split uses full -Werror",
+  "public_header_bytes_equal": true,
+  "public_peripheral_body_tokens_equal_after_mutex_accessor_normalization": [
+    "Timer",
+    "Egu",
+    "Gpiote",
+    "Dppi",
+    "Ppib"
+  ]
+}

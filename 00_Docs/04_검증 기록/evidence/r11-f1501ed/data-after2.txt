@@ -1,0 +1,6 @@
+test_production_data_and_restarts (test_r11_fabric_data.FabricDataTests.test_production_data_and_restarts) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 4.963s
+
+OK

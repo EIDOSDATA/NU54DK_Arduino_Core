@@ -35,7 +35,7 @@ class SignalTests(unittest.TestCase):
         self.assertIn("PDM density ordering mismatch", source)
 
     def test_pdm_firmware_reports_the_released_dma_length(self):
-        source = (ROOT / "cores/arduino/StreamFabric.cpp").read_text(
+        source = (ROOT / "cores/arduino/internal/stream/PdmFabric.cpp").read_text(
             encoding="utf-8")
         self.assertIn("samples = slot.bytes / sizeof(std::int16_t)", source)
         self.assertIn("event->buffer_released, samples, 0", source)
