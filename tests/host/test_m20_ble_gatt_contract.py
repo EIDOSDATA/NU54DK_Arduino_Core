@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import unittest
+from ble_source_contracts import gap_source
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
@@ -55,7 +56,7 @@ class M20BleGattContractTests(unittest.TestCase):
     def test_schema_is_registered_before_stack_and_locked_after_start(self) -> None:
         """! @brief service 등록→bt_enable/settings_load 순서와 late mutation 거부를 고정합니다. """
 
-        gap = (LIBRARY / "src" / "NUCODE_BLE_GAP.cpp").read_text(encoding="utf-8")
+        gap = gap_source()
         source = SOURCE.read_text(encoding="utf-8")
         begin = gap[gap.index("bool Device::begin(") : gap.index(
             "void Device::poll()", gap.index("bool Device::begin(")

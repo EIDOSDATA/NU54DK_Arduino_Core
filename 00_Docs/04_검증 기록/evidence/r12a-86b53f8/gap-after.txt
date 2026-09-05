@@ -1,0 +1,6 @@
+test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 4.507s
+
+OK

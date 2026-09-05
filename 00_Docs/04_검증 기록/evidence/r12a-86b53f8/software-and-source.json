@@ -1,0 +1,67 @@
+{
+  "actual_gap_scenarios": 10,
+  "gates": {
+    "contract": {
+      "log_sha256": "ce880f06b6dd7425fe2c6d1dcd5442c4b7d3957c068bcb7277b5650a82316f37",
+      "result_lines": [
+        "M12_GATE_PASS=contract"
+      ],
+      "skips": 0,
+      "tests": 45
+    },
+    "gap-after": {
+      "log_sha256": "ebfcfb877179e3f86875ad83d4332ba03240bf6174208526f0f4046e2187fb02",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "gap-before": {
+      "log_sha256": "394d2d13137e97ff012df1a9e87adc467043bb31b1db68b8d25290fbb11de14c",
+      "result_lines": [],
+      "skips": 0,
+      "tests": 1
+    },
+    "host": {
+      "log_sha256": "a60caa47ff5f020f87791b4d83b960ac36fb515efb2c04388c79c0fec37d0b38",
+      "result_lines": [
+        "M12_GATE_PASS=host"
+      ],
+      "skips": 2,
+      "tests": 624
+    },
+    "inventory": {
+      "log_sha256": "5cac786157abe5d53d21ffc41ea424d773ae85d29f2cb70af82f59e30cb04f27",
+      "result_lines": [
+        "M12_GATE_PASS=inventory"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "style": {
+      "log_sha256": "e5e3b8452a3bf1a17142321fe6674d83899ad9d913889935b9ae162a75c041e9",
+      "result_lines": [
+        "CPP_STYLE_FILES=322; FAILED=0; WRITE=0"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "target": {
+      "log_sha256": "34ac344692921caf6a33d408067344280fafaf880e2d23ec1e014b0572ce0471",
+      "result_lines": [
+        "M12_ZEPHYR_BUILD_PASS=4;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "skips": 0,
+      "tests": 0
+    },
+    "target-before": {
+      "log_sha256": "54ac808e439d4060984f346414b405fdbcde99845ed396c88ce32665f04920b9",
+      "result_lines": [
+        "M12_ZEPHYR_BUILD_PASS=2;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ],
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "physical_executed": false,
+  "start_commit": "86b53f8"
+}
