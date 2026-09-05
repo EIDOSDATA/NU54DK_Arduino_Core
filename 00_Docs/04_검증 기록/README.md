@@ -99,3 +99,6 @@ production Host 회귀 24개와 target 12/12 build-only에 연결한다.
 4. 설계 변경으로 경로가 이동해도 당시 결과와 artifact identity는 소급 수정하지 않는다.
 5. 현재 지원 여부는 [API 지원 범위](<../01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)와
    [NCS 지원 매트릭스](<../01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)를 함께 확인한다.
+
+R03 Analog/Stream ISR·stop 및 DMA 실패 수명주기는 [54번 기록](54_R03_Analog_Stream_ISR_정지_동기화.md)의
+production 회귀 26개와 target 5/5 build-only에 연결한다. 새 physical 결과는 없다.

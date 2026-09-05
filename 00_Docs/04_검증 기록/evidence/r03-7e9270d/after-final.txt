@@ -1,0 +1,7 @@
+test_analog_production (test_r03_fabric_drivers.FabricDriverTests.test_analog_production) ... ok
+test_stream_production (test_r03_fabric_drivers.FabricDriverTests.test_stream_production) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 3.424s
+
+OK

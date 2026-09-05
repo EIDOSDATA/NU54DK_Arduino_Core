@@ -1,0 +1,105 @@
+FFFFFFFFFF
+======================================================================
+FAIL: test_analog_production (test_r03_fabric_drivers.FabricDriverTests.test_analog_production) (scenario='pwm_timeout')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 33, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: mock_live_leases==leases, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_analog_driver_main.cpp, line 38
+
+
+
+======================================================================
+FAIL: test_analog_production (test_r03_fabric_drivers.FabricDriverTests.test_analog_production) (scenario='other_progress')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 33, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: condition.wait_for(lock,std::chrono::seconds(1),[&]{return advanced;}), file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_analog_driver_main.cpp, line 62
+
+
+
+======================================================================
+FAIL: test_analog_production (test_r03_fabric_drivers.FabricDriverTests.test_analog_production) (scenario='overflow')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 33, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: overflow, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_analog_driver_main.cpp, line 76
+
+
+
+======================================================================
+FAIL: test_analog_production (test_r03_fabric_drivers.FabricDriverTests.test_analog_production) (scenario='deadline')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 33, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: waited_us==1, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_analog_driver_main.cpp, line 83
+
+
+
+======================================================================
+FAIL: test_analog_production (test_r03_fabric_drivers.FabricDriverTests.test_analog_production) (scenario='saadc_timeout')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 33, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: waited_us==21, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_analog_driver_main.cpp, line 95
+
+
+
+======================================================================
+FAIL: test_stream_production (test_r03_fabric_drivers.FabricDriverTests.test_stream_production) (scenario='i2s_timeout')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 33, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: i2s->stop(1)==StreamFabricResult::success, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_stream_driver_main.cpp, line 39
+
+
+
+======================================================================
+FAIL: test_stream_production (test_r03_fabric_drivers.FabricDriverTests.test_stream_production) (scenario='pdm_timeout')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 33, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: waited_us==21, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_stream_driver_main.cpp, line 49
+
+
+
+======================================================================
+FAIL: test_stream_production (test_r03_fabric_drivers.FabricDriverTests.test_stream_production) (scenario='other_progress')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 33, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: condition.wait_for(lock,std::chrono::seconds(1),[&]{return advanced;}), file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_stream_driver_main.cpp, line 74
+
+
+
+======================================================================
+FAIL: test_stream_production (test_r03_fabric_drivers.FabricDriverTests.test_stream_production) (scenario='overflow')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 33, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: overflow, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_stream_driver_main.cpp, line 89
+
+
+
+======================================================================
+FAIL: test_stream_production (test_r03_fabric_drivers.FabricDriverTests.test_stream_production) (scenario='deadline')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 33, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: waited_us==1, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_stream_driver_main.cpp, line 96
+
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 11.290s
+
+FAILED (failures=10)

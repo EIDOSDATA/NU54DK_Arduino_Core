@@ -7,7 +7,7 @@
 | 작성·갱신일 | 2026-09-06 |
 | 작성 직전 기준 commit | `25c7f035cc10093a370a693871fe2704a5a069f3` |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **R03 — Analog/Stream ISR·stop 동기화** |
+| 다음 착수 항목 | **R04 — LittleFS File 공유 slot retain/release** |
 | 이번 요청의 실행 범위 | 2026-09-06 사용자 지시: R00~R13을 번호 순서대로 구현·시험·문서화하고 전체 software/target/examples/style 검증과 main commit/push까지 자동 진행한다. current-source T11 직전에 멈추며 flash·HIL·결선 변경·공개는 수행하지 않는다 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
@@ -52,16 +52,16 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | 필드 | 현재 값 |
 | --- | --- |
 | 이번에 끝낸 일 | T01~T11. UART Fixture 101~103, SPI Fixture 201~203에 이어 exact `e2f045c`의 TWI Fixture 301에서 계획 기능 record 1,986개·cleanup 2·campaign 기록 2건, 총 1,990 result를 10 MHz SWD로 PASS |
-| 진행 중인 T 항목 | R00~R02 완료. [53번 R02](<./04_검증 기록/53_R02_Serial_완료와_DMA_수명주기.md>)에 수정 전 11개 실패·수정 후 24개 동작 회귀, Host 600 PASS/2 조건부 SKIP, target 12/12 build-only를 보존. 새 physical NOT RUN |
-| 다음 구체적 행동 | R03에서 Analog/Stream ISR 진단·queue overflow·DMA metadata writer/reader를 기록하고 STOP generation, timeout 시 자원 보유, 대기 중 다른 block 진행을 파일 이동 없이 교정·실제 thread/fault injection 및 target로 검증 |
+| 진행 중인 T 항목 | R00~R03 완료. [54번 R03](<./04_검증 기록/54_R03_Analog_Stream_ISR_정지_동기화.md>)에 production 회귀 26개, Host 602 PASS/2 조건부 SKIP, target 5/5 build-only 보존. 새 physical NOT RUN |
+| 다음 구체적 행동 | R04에서 File copy/assignment/move/close·generation·참조 수·마지막 close를 동일 filesystem mutex와 lock 소유 helper로 통합한다. 서로 다른 handle의 실제 thread 교차·stale/slot 재사용·내용 보존을 검증하고 API/저장 형식/partition을 유지한다 |
 | 다음 작업에 필요한 사용자 행동 | R00~R13 구현·software gate에는 없음. 최종 current-source T11 회귀를 시작할 때 안내한 첫 fixture로 전원 OFF 상태에서 결선 변경 |
 | 외부 결선 상태 | Fixture 301 SDA·SCL·GND가 연결된 상태, 외부 저항·전원 rail 없음, 양쪽 `DISABLE_UART` 분리·`DISABLE_SWD` 연결. R13 뒤 최종 T11 회귀 시작 전 USB 전원을 끄고 해당 fixture 결선으로 변경해야 함 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 마지막 정식 외부 HIL source | `e2f045c1b4272d986d17456c5af051fe8af74f19` — Fixture 301 두 보드 exact role image TWI PASS |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; T09 무배선 PASS만 추가됐으며 외부 결선·RC·최종 공개 승인 없음 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | R02 software/target 검사 종료. 실행 중인 장치 시험 없음, 새 flash/HIL 없음. 기존 Fixture 301 실행은 50번 역사 기록을 따른다 |
-| 로컬 임시 build·evidence | R00 `C:/r00`, R01 `C:/r01`, R02 PASS `C:/r02a` 및 초기 compile 실패 `C:/r02` 보존. 이번 작업 공간 `work/r00/`~`work/r02/` 원본 log와 영구 evidence `r00-ec3bba3/`, `r01-d2c125c/`, `r02-eed0b6c/` 참조 |
+| 이 TODO 작성 작업의 실행 중 시험 | R03 software/target 검사 종료. 실행 중 장치 시험 없음, 새 flash/HIL 없음 |
+| 로컬 임시 build·evidence | R00 C:/r00, R01 C:/r01, R02 C:/r02a 및 초기 실패 C:/r02, R03 초기 C:/r03와 최종 C:/r03a 보존. 작업 공간 work/r00~r03 및 영구 evidence/r03-7e9270d 참조 |
 | 최종 정렬 gate | clang-format 22.1.8로 직접 관리 C/C++/ino 227개 write·dry-run PASS. Fixture 102 기록 전 남은 공통 header 들여쓰기 한 곳을 교정했고 M12 Host 전체·DUT/peer target 2/2 재검증 PASS, 실기 image와 runtime HEX SHA-256 동일. 한국어 Doxygen·Allman/4칸/중괄호 필수 적용 |
 | CI 확인 | 이전 `661fad9`의 [Software Gates](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811058)와 [Reproducible Builds](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811030) success 보존. `25c7f03` 계획 통합은 로컬 전체 gate를 통과해 원격 `main`에 push됐으며, 당시 로컬 GitHub CLI 인증이 없어 새 Actions 상태는 미확인 |
 | 문서 작업 검증 | Markdown 158개 UTF-8·내부 링크 PASS, CI contract 45/45 PASS, inventory 계획 75/M24 23/M26 16/M27 16 PASS, package 20/20 PASS, M12 Host 전체 PASS. M27 미해결 blocker 8개는 유지한다 |
