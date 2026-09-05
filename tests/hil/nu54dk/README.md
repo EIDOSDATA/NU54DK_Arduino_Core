@@ -494,6 +494,9 @@ read-only로 확인하고, 자동 recover나 mass erase 없이 `--swd-frequency-
 top-level과 role별 flash 기록에 남습니다.
 TWI 추가 두 vector는 peer가 SDA를 LOW로 고정한 동안 복구 실패, 해제 뒤 `recoverBus()` 성공과
 32-byte 정상 전송, TWIS buffer를 5ms 늦게 제공하는 실제 clock stretch 뒤 정상 완료를 판정합니다.
+`buffer_needed`가 먼저 발생한 경우 `queueBuffers()`는 대기 중인 READ/WRITE 요청을 식별해
+`nrfx_twis_tx_prepare()` 또는 `nrfx_twis_rx_prepare()`를 호출하고, 성공한 buffer를 DMA 소유로
+전환한 뒤 clock stretch를 해제합니다. Buffer 방향이 맞지 않으면 전송을 방치하지 않고 거부합니다.
 SPI fixture 201의 role 1에는 1,024-byte SPIM00 비동기 전송 중 온보드 TWIM22 PMIC read를
 수행하는 허용 동시성 case가 추가되어 있습니다. 더 넓은 5-block 동시성 및 7,200초 soak는 단독
 기능 실기 PASS 뒤 T13에서 수행하며 build-only 결과로 대체하지 않습니다.

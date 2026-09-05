@@ -51,6 +51,8 @@ namespace nucode::arduino
             std::uint8_t event_tail{0U};
             std::uint8_t event_count{0U};
             bool event_overflow{false};
+            bool read_request_pending{false};
+            bool write_request_pending{false};
             atomic_t active{0};
             atomic_t initialized{0};
             atomic_t buffers_active{0};
@@ -213,6 +215,7 @@ namespace nucode::arduino
             {
                 const k_spinlock_key_t key = k_spin_lock(&context.lock);
                 buffer = context.tx[0];
+                context.read_request_pending = buffer.address == nullptr;
                 k_spin_unlock(&context.lock, key);
             }
             if (buffer.address == nullptr)
@@ -246,6 +249,7 @@ namespace nucode::arduino
             {
                 const k_spinlock_key_t key = k_spin_lock(&context.lock);
                 buffer = context.rx[0];
+                context.write_request_pending = buffer.address == nullptr;
                 k_spin_unlock(&context.lock, key);
             }
             if (buffer.address == nullptr)
@@ -424,6 +428,8 @@ namespace nucode::arduino
             context->event_tail = 0U;
             context->event_count = 0U;
             context->event_overflow = false;
+            context->read_request_pending = false;
+            context->write_request_pending = false;
             atomic_clear(&context->buffers_active);
             atomic_set(&context->initialized, 1);
             atomic_set(&context->active, 1);
@@ -448,6 +454,8 @@ namespace nucode::arduino
                     record.state = DmaBufferState::cancelled;
                 }
             }
+            context.read_request_pending = false;
+            context.write_request_pending = false;
             k_spin_unlock(&context.lock, key);
         }
 
@@ -580,13 +588,55 @@ namespace nucode::arduino
             return SerialFabricResult::invalid_argument;
         }
         const k_spinlock_key_t key = k_spin_lock(&context->lock);
+        if ((context->read_request_pending && tx_buffer == nullptr) ||
+            (context->write_request_pending && rx_buffer == nullptr))
+        {
+            k_spin_unlock(&context->lock, key);
+            return SerialFabricResult::invalid_argument;
+        }
+        const bool resume_read = context->read_request_pending;
+        const bool resume_write = context->write_request_pending;
         context->tx[0] = {tx_buffer, tx_size, DmaBufferState::queued};
         context->tx[1] = {next_tx_buffer, next_tx_size, DmaBufferState::queued};
         context->rx[0] = {rx_buffer, rx_size, DmaBufferState::queued};
         context->rx[1] = {next_rx_buffer, next_rx_size, DmaBufferState::queued};
-        k_spin_unlock(&context->lock, key);
+        context->read_request_pending = false;
+        context->write_request_pending = false;
         atomic_set(&context->buffers_active, 1);
-        return SerialFabricResult::success;
+        /**
+         * @brief ISR보다 buffer 제공이 늦으면 Nordic driver의 clock stretch를 여기서 해제합니다.
+         *
+         * Spinlock 구간에서 DMA 소유 상태까지 전환해 완료 IRQ가 먼저 record를 회수하는 경쟁을
+         * 막습니다.
+         */
+        const int tx_result =
+            resume_read ? nrfx_twis_tx_prepare(&context->driver, tx_buffer, tx_size) : 0;
+        const int rx_result =
+            resume_write ? nrfx_twis_rx_prepare(&context->driver, rx_buffer, rx_size) : 0;
+        if (resume_read)
+        {
+            context->tx[0].state =
+                tx_result == 0 ? DmaBufferState::dma_owned : DmaBufferState::error;
+        }
+        if (resume_write)
+        {
+            context->rx[0].state =
+                rx_result == 0 ? DmaBufferState::dma_owned : DmaBufferState::error;
+        }
+        k_spin_unlock(&context->lock, key);
+        if (tx_result != 0)
+        {
+            pushEvent(*context,
+                      {TwiFabricEventType::error, context->configuration.primary_address, tx_buffer,
+                       nullptr, 0U, 0U, static_cast<std::uint32_t>(-tx_result)});
+        }
+        if (rx_result != 0)
+        {
+            pushEvent(*context,
+                      {TwiFabricEventType::error, context->configuration.primary_address, nullptr,
+                       rx_buffer, 0U, 0U, static_cast<std::uint32_t>(-rx_result)});
+        }
+        return tx_result != 0 ? mapResult(tx_result) : mapResult(rx_result);
     }
 
     SerialFabricResult TwisHandle::cancelBuffers() noexcept

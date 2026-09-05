@@ -198,6 +198,19 @@ class M24SerialContractTests(unittest.TestCase):
         self.assertLess(initialized, enabled)
         self.assertLess(enabled, active)
 
+    def test_twis_late_buffer_resumes_clock_stretched_request(self) -> None:
+        """Source regression only; Fixture 301 proves the physical clock-stretch path."""
+        source = (REPOSITORY / "cores/arduino/TwisFabric.cpp").read_text(encoding="utf-8")
+        queue = source.split("SerialFabricResult TwisHandle::queueBuffers(", 1)[1].split(
+            "SerialFabricResult TwisHandle::cancelBuffers(", 1
+        )[0]
+        self.assertIn("context.read_request_pending = buffer.address == nullptr;", source)
+        self.assertIn("context.write_request_pending = buffer.address == nullptr;", source)
+        self.assertIn("const bool resume_read = context->read_request_pending;", queue)
+        self.assertIn("const bool resume_write = context->write_request_pending;", queue)
+        self.assertIn("nrfx_twis_tx_prepare(&context->driver, tx_buffer, tx_size)", queue)
+        self.assertIn("nrfx_twis_rx_prepare(&context->driver, rx_buffer, rx_size)", queue)
+
     def test_spim_hardware_csn_meets_nrf54l15_spis_timing(self) -> None:
         """Source regression only; Fixture 201 proves the physical timing path."""
         source = (REPOSITORY / "cores/arduino/SpimFabric.cpp").read_text(

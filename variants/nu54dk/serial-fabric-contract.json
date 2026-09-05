@@ -388,7 +388,7 @@
       "automation_scope": ["fixture-data-path", "sync-async-dma", "target-double-buffer", "error-injection"],
       "preconditions": [
         "The DAP UART switch is disabled before a non-UARTE fixture owns P1.4 through P1.7.",
-        "An external controller and external pull-ups are required for isolated TWIS data-path HIL.",
+        "An external controller is required and the TWIS target enables internal SDA/SCL pull-ups for isolated data-path HIL.",
         "This fixture excludes the PMIC bus, LED outputs and the capacitive VBAT monitor net."
       ]
     },
@@ -402,7 +402,7 @@
       "automation_scope": ["fixture-data-path", "sync-async-dma", "target-double-buffer", "error-injection"],
       "preconditions": [
         "Serial1 is inactive and the DAP UART switch is disabled.",
-        "TWIM30 and TWIS30 fixtures provide external pull-ups."
+        "The paired TWIS target enables internal SDA/SCL pull-ups; external pull-up resistors are not fitted."
       ]
     }
   ],
@@ -504,7 +504,7 @@
       "pins": { "sda": "P1.4", "scl": "P1.5" },
       "test_resource": "p1-header-fixture",
       "execution_class": "external-fixture",
-      "preconditions": ["The console is disabled.", "The DAP UART switch is disabled.", "External pull-ups are fitted on the isolated fixture, not the PMIC bus."],
+      "preconditions": ["The console is disabled.", "The DAP UART switch is disabled.", "TwisConfiguration.internal_pullups is enabled on the isolated fixture; external pull-up resistors are not fitted."],
       "status": "planned-hil"
     },
     {
@@ -554,7 +554,7 @@
       "pins": { "sda": "P1.4", "scl": "P1.5" },
       "test_resource": "p1-header-fixture",
       "execution_class": "external-fixture",
-      "preconditions": ["The console is disabled.", "The DAP UART switch is disabled.", "External pull-ups are fitted on the isolated fixture, not the PMIC bus."],
+      "preconditions": ["The console is disabled.", "The DAP UART switch is disabled.", "TwisConfiguration.internal_pullups is enabled on the isolated fixture; external pull-up resistors are not fitted."],
       "status": "planned-hil"
     },
     {
@@ -594,7 +594,7 @@
       "pins": { "sda": "P1.4", "scl": "P1.5" },
       "test_resource": "p1-header-fixture",
       "execution_class": "external-fixture",
-      "preconditions": ["Wire and the console are disabled.", "The DAP UART switch is disabled.", "External pull-ups are fitted on the isolated fixture, not the PMIC bus."],
+      "preconditions": ["Wire and the console are disabled.", "The DAP UART switch is disabled.", "TwisConfiguration.internal_pullups is enabled on the isolated fixture; external pull-up resistors are not fitted."],
       "status": "planned-hil"
     },
     {
@@ -624,7 +624,7 @@
       "pins": { "sda": "P0.0", "scl": "P0.1" },
       "test_resource": "p0-header-fixture",
       "execution_class": "external-fixture",
-      "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled.", "External pull-ups are fitted by the fixture."],
+      "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled.", "The paired TWIS target enables internal SDA/SCL pull-ups; external pull-up resistors are not fitted."],
       "status": "planned-hil"
     },
     {
@@ -634,7 +634,7 @@
       "pins": { "sda": "P0.0", "scl": "P0.1" },
       "test_resource": "p0-header-fixture",
       "execution_class": "external-fixture",
-      "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled.", "External pull-ups are fitted by the fixture."],
+      "preconditions": ["Serial1 is inactive.", "The DAP UART switch is disabled.", "TwisConfiguration.internal_pullups is enabled; external pull-up resistors are not fitted."],
       "status": "planned-hil"
     }
   ],
