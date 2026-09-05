@@ -15,6 +15,18 @@ from v04_protocol import ProtocolError
 
 
 class FixtureTests(unittest.TestCase):
+    def test_transfer_scope_matches_encoded_controller_style(self):
+        """! @brief style와 I2C address encoding을 독립적인 기대값으로 검증합니다. """
+        for family, encoded in (("spi", 1), ("twi", 0x142)):
+            with self.subTest(family=family, encoded=encoded):
+                self.assertEqual(fixture.transfer_scope(family, encoded),
+                                 "synchronous-single-buffer")
+        for family, encoded in (("spi", 0), ("spi", 2), ("twi", 0x42),
+                                ("twi", 0x242), ("uarte", 1), ("uarte", 0x142)):
+            with self.subTest(family=family, encoded=encoded):
+                self.assertEqual(fixture.transfer_scope(family, encoded),
+                                 "asynchronous-single-or-double-buffer")
+
     def test_cli_cannot_implicitly_execute_or_omit_confirmation(self):
         command = ["--dut", "a" * 32, "--peer", "b" * 32, "--build-root", "unused",
                    "--pyocd", "unused", "--fixture", "201"]

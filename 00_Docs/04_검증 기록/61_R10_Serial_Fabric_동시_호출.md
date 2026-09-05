@@ -1,6 +1,6 @@
 # R10 Serial Fabric 동시 호출과 orchestration 분리
 
-상태: 진행 중. 시작 commit `1c956b7227c381aeaa6043627b9244b7b5d080a3`.
+상태: R10-A/B/C software 완료; current-source T11 미실행. 시작 commit `1c956b7227c381aeaa6043627b9244b7b5d080a3`.
 T14의 동시성 수정·구조 회귀이며 current-source T11은 실행하지 않는다.
 
 ## 구현 전 책임 대응표
@@ -101,3 +101,13 @@ Host 명시적 source 목록과 M24 계약 검사기의 backend 경로를 갱신
 [target](evidence/r10b-7be9f71/target-build.json),
 [메모리·symbol·소속](evidence/r10b-7be9f71/target-comparison.json)에 증거를 둔다.
 다음 R10-C는 향후 HIL 결과의 synchronous scope metadata만 교정한다. 역사적 raw evidence는 유지한다.
+
+## R10-C 증거 범위 표기
+
+향후 `exchange()` 결과는 SPI style 1, TWI address 상위 byte의 style 1일 때
+`synchronous-single-buffer`로 기록한다. 이 범위는 controller 전송 스타일이며,
+상대 slave의 callback 방식까지 동기로 바뀌었다는 의미가 아니다. UART와 style 0/2는
+기존 asynchronous 범위를 유지한다. [fixture Host 12/12](evidence/r10c-ca46425/fixture-host.txt)가
+주소 encoding과 독립적인 기대값을 확인했다. 장치 접근 및 역사적 raw evidence 수정은 없다.
+R10-B 이후 runtime/CMake byte는 바뀌지 않아 target 9개 결과를 그대로 연결한다.
+R10 전체 software 작업을 완료하고 R11로 진행한다.

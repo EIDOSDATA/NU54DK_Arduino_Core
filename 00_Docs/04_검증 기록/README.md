@@ -120,4 +120,4 @@ R08 자원 정책·transaction·동기화 및 runtime route phase/획득 기록 
 R09 Arduino SPI facade/backend 분리는 [60번 기록](60_R09_Arduino_SPI_경계.md)에 연결한다.
 
 R10-A Serial Fabric STOP 예약과 동시 호출 수정은 [61번 기록](61_R10_Serial_Fabric_동시_호출.md)에
-연결한다. R10-B 구조 분리는 진행 중이다.
+연결한다. R10-A/B/C software 완료이며 current-source T11은 미실행이다.
