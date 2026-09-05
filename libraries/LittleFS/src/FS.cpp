@@ -176,13 +176,58 @@ namespace nucode::littlefs::internal
         return true;
     }
 
-    /** @brief slot index와 generation이 현재 열린 handle인지 반환합니다. */
+    /** @brief filesystem_mutex를 보유한 호출자가 slot과 generation의 유효성을 검사합니다. */
     FileSlot *validSlot(std::uint8_t slot, std::uint32_t generation) noexcept
     {
         return slot < maximum_open_files && file_slots[slot].active &&
                        file_slots[slot].generation == generation
                    ? &file_slots[slot]
                    : nullptr;
+    }
+
+    /** @brief filesystem_mutex 아래에서 유효한 공유 slot의 참조를 하나 추가합니다. */
+    bool retainSlotLocked(std::uint8_t index, std::uint32_t generation) noexcept
+    {
+        FileSlot *slot = validSlot(index, generation);
+        if (slot == nullptr)
+        {
+            return false;
+        }
+        if (slot->references == UINT16_MAX)
+        {
+            recordError(FSError::busy, -EMFILE);
+            return false;
+        }
+        ++slot->references;
+        return true;
+    }
+
+    /** @brief filesystem_mutex 아래에서 참조를 줄이고 마지막 참조만 backend를 닫습니다. */
+    void releaseSlotLocked(std::uint8_t index, std::uint32_t generation) noexcept
+    {
+        FileSlot *slot = validSlot(index, generation);
+        if (slot == nullptr)
+        {
+            return;
+        }
+        if (slot->references > 1U)
+        {
+            --slot->references;
+            recordError(FSError::none);
+            return;
+        }
+        const int result = fs_close(&slot->file);
+        slot->references = 0U;
+        slot->active = false;
+        slot->path[0] = '\0';
+        if (result < 0)
+        {
+            recordDriverError(result);
+        }
+        else
+        {
+            recordError(FSError::none);
+        }
     }
 
     /** @brief 열린 파일이 하나라도 있는지 반환합니다. */
@@ -209,56 +254,61 @@ File::File(std::uint8_t slot, std::uint32_t generation) noexcept
 {
 }
 
-File::File(const File &other) noexcept : slot_(other.slot_), generation_(other.generation_)
+File::File(const File &other) noexcept : File()
 {
-    FileSlot *slot = validSlot(slot_, generation_);
-    if (slot == nullptr || slot->references == 0xffffU)
+    if (!isThreadContext())
     {
-        slot_ = invalid_slot;
-        generation_ = 0U;
+        return;
     }
-    else
+    static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
+    if (retainSlotLocked(other.slot_, other.generation_))
     {
-        ++slot->references;
+        slot_ = other.slot_;
+        generation_ = other.generation_;
     }
+    static_cast<void>(k_mutex_unlock(&filesystem_mutex));
 }
 
 File &File::operator=(const File &other) noexcept
 {
-    if (this != &other)
+    if (this != &other && isThreadContext())
     {
-        close();
-        slot_ = other.slot_;
-        generation_ = other.generation_;
-        FileSlot *slot = validSlot(slot_, generation_);
-        if (slot == nullptr || slot->references == 0xffffU)
+        static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
+        releaseSlotLocked(slot_, generation_);
+        slot_ = invalid_slot;
+        generation_ = 0U;
+        if (retainSlotLocked(other.slot_, other.generation_))
         {
-            slot_ = invalid_slot;
-            generation_ = 0U;
+            slot_ = other.slot_;
+            generation_ = other.generation_;
         }
-        else
-        {
-            ++slot->references;
-        }
+        static_cast<void>(k_mutex_unlock(&filesystem_mutex));
     }
     return *this;
 }
 
-File::File(File &&other) noexcept : slot_(other.slot_), generation_(other.generation_)
+File::File(File &&other) noexcept : File()
 {
-    other.slot_ = invalid_slot;
-    other.generation_ = 0U;
-}
-
-File &File::operator=(File &&other) noexcept
-{
-    if (this != &other)
+    if (isThreadContext())
     {
-        close();
         slot_ = other.slot_;
         generation_ = other.generation_;
         other.slot_ = invalid_slot;
         other.generation_ = 0U;
+    }
+}
+
+File &File::operator=(File &&other) noexcept
+{
+    if (this != &other && isThreadContext())
+    {
+        static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
+        releaseSlotLocked(slot_, generation_);
+        slot_ = other.slot_;
+        generation_ = other.generation_;
+        other.slot_ = invalid_slot;
+        other.generation_ = 0U;
+        static_cast<void>(k_mutex_unlock(&filesystem_mutex));
     }
     return *this;
 }
@@ -495,30 +545,7 @@ void File::close()
         return;
     }
     static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
-    FileSlot *slot = validSlot(slot_, generation_);
-    if (slot != nullptr)
-    {
-        if (slot->references > 1U)
-        {
-            --slot->references;
-            recordError(FSError::none);
-        }
-        else
-        {
-            const int result = fs_close(&slot->file);
-            slot->references = 0U;
-            slot->active = false;
-            slot->path[0] = '\0';
-            if (result < 0)
-            {
-                recordDriverError(result);
-            }
-            else
-            {
-                recordError(FSError::none);
-            }
-        }
-    }
+    releaseSlotLocked(slot_, generation_);
     slot_ = invalid_slot;
     generation_ = 0U;
     static_cast<void>(k_mutex_unlock(&filesystem_mutex));
@@ -526,13 +553,27 @@ void File::close()
 
 const char *File::name() const noexcept
 {
-    FileSlot *slot = validSlot(slot_, generation_);
-    return slot == nullptr ? "" : slot->path + (sizeof(mount_point) - 1U);
+    if (!isThreadContext())
+    {
+        return "";
+    }
+    static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
+    const FileSlot *slot = validSlot(slot_, generation_);
+    const char *path = slot == nullptr ? "" : slot->path + (sizeof(mount_point) - 1U);
+    static_cast<void>(k_mutex_unlock(&filesystem_mutex));
+    return path;
 }
 
 File::operator bool() const noexcept
 {
-    return validSlot(slot_, generation_) != nullptr;
+    if (!isThreadContext())
+    {
+        return false;
+    }
+    static_cast<void>(k_mutex_lock(&filesystem_mutex, K_FOREVER));
+    const bool valid = validSlot(slot_, generation_) != nullptr;
+    static_cast<void>(k_mutex_unlock(&filesystem_mutex));
+    return valid;
 }
 
 File FS::open(const char *path, const char *mode)

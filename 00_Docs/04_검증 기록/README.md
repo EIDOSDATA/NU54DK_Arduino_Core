@@ -102,3 +102,6 @@ production Host 회귀 24개와 target 12/12 build-only에 연결한다.
 
 R03 Analog/Stream ISR·stop 및 DMA 실패 수명주기는 [54번 기록](54_R03_Analog_Stream_ISR_정지_동기화.md)의
 production 회귀 26개와 target 5/5 build-only에 연결한다. 새 physical 결과는 없다.
+
+R04 File 공유 slot 참조·마지막 close·thread 교차는 [55번 기록](55_R04_File_공유_slot_수명주기.md)의
+production 회귀 8개와 AC-03 target 2/2 build-only에 연결한다.
