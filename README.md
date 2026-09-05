@@ -231,7 +231,7 @@ asset과 stable index 항목은 재현성, 감사와 downgrade를 위해 삭제�
 | `v0.1.0` | 역사적·비지원 | Core, 기본 API, build/upload와 package |
 | `v0.2.0` | 역사적·비지원 | CI/CD, profile·예제, Board/System과 BLE NUS |
 | `v0.3.0` | **현재 stable** | Arduino compatibility, 동적 peripheral/analog, BLE GAP/GATT/security/profile, storage |
-| `v0.4.0` | 개발 중 | Peripheral 확장: 온보드 기본·UART 101~103·SPI 201 PASS, 나머지 SPI/TWI·analog/stream·최종 release gate 대기 |
+| `v0.4.0` | 개발 중 | Peripheral 확장: 온보드 기본·UART 101~103·SPI 201~202 PASS, SPI 203·TWI·analog/stream·최종 release gate 대기 |
 | `v0.5.0` | 계획 | Bluetooth LE 확장·ISO/LE Audio·Direction Finding·Channel Sounding·Mesh |
 | `v0.6.0` | 계획 | Storage/Crypto, TF-M, 고급 memory layout와 secure update/recovery |
 | `v0.7.0` | 계획 | Radio profile, IEEE 802.15.4, ESB와 OpenThread |
@@ -245,7 +245,9 @@ asset과 stable index 항목은 재현성, 감사와 downgrade를 위해 삭제�
 UARTE30의 P0와 UARTE20/21/22의 P1 route 양방향 데이터·DMA·RTS/CTS를 통과했습니다.
 [SPI Fixture 201](<./00_Docs/04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md>)에서는 P2↔P1의
 SPIM/SPIS00·20·21·22, 2/4/8 MHz, Mode 0~3, MSB/LSB와 EasyDMA 18,169개 계획 벡터를 통과했습니다.
-남은 SPI route·TWI·analog·stream·전체 동시성 검증과 정식 공개는 아직 완료되지 않았습니다.
+[SPI Fixture 202](<./00_Docs/04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md>)에서는 P0↔P1의
+SPIM/SPIS30·20·21·22에 대한 9,084개 계획 벡터를 통과했습니다. 남은 SPI 203·TWI·analog·
+stream·전체 동시성 검증과 정식 공개는 아직 완료되지 않았습니다.
 검증은 온보드 자원과 두 NU54DK의 통신·합성 신호·capture를 기준으로 합니다. 정밀 계측과 외부
 마이크·코덱·엔코더별 호환성·신호 품질은 보증 범위에 포함하지 않으며, 자세한 구분은
 [코어 기능 검증 범위](<./00_Docs/04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)를 따릅니다.

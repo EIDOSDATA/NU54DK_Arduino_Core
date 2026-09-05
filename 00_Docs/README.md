@@ -61,7 +61,7 @@ T01~T09의 [기능 시험 목록](<./01_아두이노 코어 설계/12_v0.4.0_기
 | M21 | **완료** | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS; host 39/39 |
 | M22 | **완료** | Loaderless 1,456 KiB 경계, stable 재현 build, 29/29 설치본 compile, NU54DK Upload와 `v0.3.0` 정식 공개 |
 | M23 | **완료** | 75개 peripheral identity manifest·생성 matrix·공개 조회 API와 공통 block/channel/DMA 소유권 |
-| M24~M27 | **진행 중** | M24·M25 온보드 기본과 M24 UART 101~103·SPI 201 PASS, 나머지 SPI/TWI·analog/stream HIL 대기; M26 완료, M27 최종 RC·공개 gate HOLD |
+| M24~M27 | **진행 중** | M24·M25 온보드 기본과 M24 UART 101~103·SPI 201~202 PASS, SPI 203·TWI·analog/stream HIL 대기; M26 완료, M27 최종 RC·공개 gate HOLD |
 | M28~M33 | **계획** | Bluetooth LE 전 기능군·Mesh·Channel Sounding과 `v0.5.0` |
 | M34~M45 | **장기 계획** | security/update, radio/OpenThread와 Matter 제품선 |
 
@@ -99,6 +99,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - UART P0↔P1 route의 양방향 810-vector 결과: [M24 Fixture 102 실기 검증](<./04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)
 - UART P1↔P1 전 instance 조합의 양방향 2,430-vector 결과: [M24 Fixture 103 실기 검증](<./04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>)
 - SPI P2↔P1 route의 18,169-vector 결과와 8 MHz 수신 지연 교정: [M24 Fixture 201 실기 검증](<./04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md>)
+- SPI P0↔P1 route의 9,084-vector 결과: [M24 Fixture 202 실기 검증](<./04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md>)
 - M23의 현재 instance별 상태: [Peripheral instance matrix](<./01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)
 - M26 system/security/저수준 기능 판정: [System Peripheral 지원 경계](<./01_아두이노 코어 설계/11_M26_System_Peripheral_지원_경계.md>)
 - 현재 공개 API: [Arduino API 지원 범위](<./01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)
