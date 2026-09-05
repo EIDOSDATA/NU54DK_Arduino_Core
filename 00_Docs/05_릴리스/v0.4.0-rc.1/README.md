@@ -32,8 +32,9 @@ Staging compile은 공개 URL 설치·실제 upload·제거·재설치·version 
 
 `51c1986`의 UART 4개·TWIM 3개·내부 VDD/event·TEMP/WDT30 기본 HIL은
 [온보드 교정·실기 재검증](<../../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)에서
-PASS했다. `2542a01`의 [UART Fixture 101](<../../04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)은
-P2↔P1 UARTE 양방향 data·DMA·RTS/CTS를 통과했다. 나머지 fixture와 아래 범위 합의는 최종
+PASS했다. `2542a01`의 [UART Fixture 101](<../../04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)과
+`ff3423e`의 [Fixture 102](<../../04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)는
+P2/P0↔P1 UARTE 양방향 data·DMA·RTS/CTS를 통과했다. 나머지 fixture와 아래 범위 합의는 최종
 공개 승인이 아니다.
 
 ## 기능 검증과 사용자 통합 검증의 경계

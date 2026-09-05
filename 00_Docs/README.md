@@ -61,7 +61,7 @@ T01~T09의 [기능 시험 목록](<./01_아두이노 코어 설계/12_v0.4.0_기
 | M21 | **완료** | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS; host 39/39 |
 | M22 | **완료** | Loaderless 1,456 KiB 경계, stable 재현 build, 29/29 설치본 compile, NU54DK Upload와 `v0.3.0` 정식 공개 |
 | M23 | **완료** | 75개 peripheral identity manifest·생성 matrix·공개 조회 API와 공통 block/channel/DMA 소유권 |
-| M24~M27 | **진행 중** | M24·M25 온보드 기본과 M24 UART Fixture 101 PASS·나머지 두 보드 HIL 대기, M26 완료; M27 최종 RC·공개 gate HOLD |
+| M24~M27 | **진행 중** | M24·M25 온보드 기본과 M24 UART Fixture 101·102 PASS·나머지 두 보드 HIL 대기, M26 완료; M27 최종 RC·공개 gate HOLD |
 | M28~M33 | **계획** | Bluetooth LE 전 기능군·Mesh·Channel Sounding과 `v0.5.0` |
 | M34~M45 | **장기 계획** | security/update, radio/OpenThread와 Matter 제품선 |
 
@@ -96,6 +96,7 @@ API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환
 - P2/P4 물리 커넥터 번호와 net의 수기 확정 기준: [NU54DK P2/P4 커넥터 핀맵](<./01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)
 - `v0.4.0` 두 보드 기능 HIL과 정밀 계측·외부 부품 호환성의 구분: [코어 기능 검증 범위](<./04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)
 - 첫 외부 UART P2↔P1 fixture의 양방향 1,620-vector 결과: [M24 Fixture 101 실기 검증](<./04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)
+- UART P0↔P1 route의 양방향 810-vector 결과: [M24 Fixture 102 실기 검증](<./04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)
 - M23의 현재 instance별 상태: [Peripheral instance matrix](<./01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)
 - M26 system/security/저수준 기능 판정: [System Peripheral 지원 경계](<./01_아두이노 코어 설계/11_M26_System_Peripheral_지원_경계.md>)
 - 현재 공개 API: [Arduino API 지원 범위](<./01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)

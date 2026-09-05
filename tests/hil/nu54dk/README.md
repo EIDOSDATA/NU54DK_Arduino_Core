@@ -506,7 +506,9 @@ preflight JSON에는 현재 source·UID·image hash에 묶인 `confirmation_temp
 Fixture 101은 exact `2542a01`에서 양방향 UARTE data 1,620건과 예상 오류 24건을 통과했습니다.
 세부 결선·결함 교정·100 kHz SWD 제어·증거 hash는
 [Fixture 101 실기 기록](<../../../00_Docs/04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)에
-보존합니다. 이 결과를 아직 실행하지 않은 Fixture 102·103 또는 SPI/TWI에 확대하지 않습니다.
+보존합니다. Fixture 102는 exact `ff3423e`에서 UARTE30 P0↔UARTE20/21/22 P1 양방향 data
+810건과 예상 오류 12건을 통과했으며 [Fixture 102 실기 기록](<../../../00_Docs/04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)에
+보존합니다. 이 결과를 아직 실행하지 않은 Fixture 103 또는 SPI/TWI에 확대하지 않습니다.
 
 두 번째 보드 COM8/P0 DAP CTS 고정에 대해 2026-09-05 사용자가 HW 엔지니어의 납땜 이슈
 진단을 전달했습니다. 정상 DUT의 RTS/CTS 결과는 유지하며, 해당 peer 경로는 FAIL 기록을 보존하고

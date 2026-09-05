@@ -109,8 +109,8 @@ namespace v04
      * @note 지연 RX를 사용하는 UART가 SPI buffer 분기로 진입하면 안 됩니다.
      */
     constexpr bool shouldQueueSerialPeripheralBuffers(bool uart, bool controller,
-                                                       bool gpio_line_generator,
-                                                       bool deferred_twis_buffers)
+                                                      bool gpio_line_generator,
+                                                      bool deferred_twis_buffers)
     {
         return !uart && !controller && !gpio_line_generator && !deferred_twis_buffers;
     }

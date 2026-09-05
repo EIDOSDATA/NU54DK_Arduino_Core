@@ -75,6 +75,7 @@
 | 온보드 교정·재검증 | `51c1986` 18/18 build, UART 4개·TWIM 3개·내부 VDD/event·TEMP/WDT30 formal PASS; 외부 fixture·최종 release HOLD | [교정·실기 재검증](41_M24_M26_온보드_protocol_교정과_실기_재검증.md) |
 | 검증 범위 합의 | 두 NU54DK 기반 코어 기능 HIL 유지, 정밀 계측·외부 부품별 호환성은 범위 밖; 미실행 기능·공개 HOLD 유지 | [코어 기능 검증 범위](42_v0.4.0_코어_기능_검증_범위_합의.md) |
 | Fixture 101 UART | exact `2542a01`에서 P2↔P1 UARTE 양방향 data 1,620·예상 오류 24·cleanup 2건 PASS; 다른 fixture HOLD | [M24 Fixture 101 실기 검증](44_M24_Fixture_101_UART_실기_검증.md) |
+| Fixture 102 UART | exact `ff3423e`에서 P0↔P1 UARTE 양방향 data 810·예상 오류 12·cleanup 2건 PASS; Fixture 103·SPI·TWI HOLD | [M24 Fixture 102 실기 검증](45_M24_Fixture_102_UART_실기_검증.md) |
 
 ## 기록 해석 규칙
 
