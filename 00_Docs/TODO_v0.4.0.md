@@ -53,7 +53,7 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | --- | --- |
 | 이번에 끝낸 일 | T01~T11. UART Fixture 101~103, SPI Fixture 201~203에 이어 exact `e2f045c`의 TWI Fixture 301에서 계획 기능 record 1,986개·cleanup 2·campaign 기록 2건, 총 1,990 result를 10 MHz SWD로 PASS |
 | 진행 중인 T 항목 | R00~R08 완료. [59번 R08](<./04_검증 기록/59_R08_자원과_경로_수명주기.md>)에 manager 본문 21개/계약 header 보존, 실제 manager·route 전후 22개 Host, 전체 Host 617 PASS/2 SKIP, target 5/5 및 메모리·source 소속 보존. 새 physical NOT RUN |
-| 다음 구체적 행동 | R09: Arduino SPI의 설정·반환값·transaction 의미를 facade에 두고 Zephyr device·pinctrl·PM·frequency/driver 오류를 backend로 분리한다. 기존 SPI00 singleton, RuntimePeripheralRoute lease와 interrupt mask를 유지한다. begin/end·transaction·CS·mode·bit order·속도·재초기화·다른 thread 호출의 Host 기준선을 먼저 고정하고 선택/비선택 target를 검증한다 |
+| 다음 구체적 행동 | R09 검증 중 발견한 R08 M3 자체 source 목록 누락은 보완했으며 C:/r09m 1/1 build-only PASS다. R09: Arduino SPI의 설정·반환값·transaction 의미를 facade에 두고 Zephyr device·pinctrl·PM·frequency/driver 오류를 backend로 분리한다. 기존 SPI00 singleton, RuntimePeripheralRoute lease와 interrupt mask를 유지한다. begin/end·transaction·CS·mode·bit order·속도·재초기화·다른 thread 호출의 Host 기준선을 먼저 고정하고 선택/비선택 target를 검증한다 |
 | 다음 작업에 필요한 사용자 행동 | R00~R13 구현·software gate에는 없음. 최종 current-source T11 회귀를 시작할 때 안내한 첫 fixture로 전원 OFF 상태에서 결선 변경 |
 | 외부 결선 상태 | Fixture 301 SDA·SCL·GND가 연결된 상태, 외부 저항·전원 rail 없음, 양쪽 `DISABLE_UART` 분리·`DISABLE_SWD` 연결. R13 뒤 최종 T11 회귀 시작 전 USB 전원을 끄고 해당 fixture 결선으로 변경해야 함 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
