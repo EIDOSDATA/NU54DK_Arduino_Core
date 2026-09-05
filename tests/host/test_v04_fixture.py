@@ -92,6 +92,16 @@ class FixtureTests(unittest.TestCase):
         with self.assertRaises(ProtocolError):
             fixture.validate_confirmation(confirmation, self.images, self.uids, 301, 1001)
 
+    def test_twi_fixture_uses_internal_pullups_without_external_resistors(self):
+        catalog, twi = fixture.fixture_contract(301)
+        self.assertEqual(catalog["revision"], 2)
+        self.assertTrue(all("내부 pull-up" in pullup for pullup in twi["pullups"]))
+        self.assertIn("외부 pull-up 저항", twi["pullups"][0])
+        source = (ROOT / "tests/zephyr/v04_pair_hil/src/fixture_hil.cpp").read_text(
+            encoding="utf-8")
+        self.assertIn("const bool use_internal_pullups = gate.fixture() == 301U;", source)
+        self.assertIn("twis->configure({0x42, 0x43, use_internal_pullups})", source)
+
     def test_user_confirmed_connector_pinmap_is_complete_and_locked(self):
         path = ROOT / "tests/hil/nu54dk/nu54dk_connector_pinmap.json"
         payload = json.loads(path.read_text(encoding="utf-8"))

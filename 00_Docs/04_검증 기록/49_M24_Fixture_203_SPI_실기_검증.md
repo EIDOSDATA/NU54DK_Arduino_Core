@@ -84,6 +84,7 @@ Fixture 201~203을 합쳐 계획된 세 SPI route fixture가 모두 통과했다
 품질, 임의 핀 route 또는 외부 SPI 부품 호환성의 보증은 아니다.
 
 M24 통신 인스턴스 기능 검증의 다음 물리 작업은 Fixture 301 TWI다. Fixture 203 점퍼를
-그대로 사용하지 않는다. USB 전원을 분리하고 TWI 301 결선과 VDD_MOD 기준 pull-up을 적용한
-뒤 새 confirmation으로 실행해야 한다. TWI 301이 끝나기 전에는 T11 또는 M24 전체를 완료로
-바꾸지 않는다.
+그대로 사용하지 않는다. 이 기록 작성 뒤 fixture catalog revision 2에서 외부 VDD_MOD pull-up
+계약을 target TWIS 내부 pull-up으로 교정했다. 따라서 USB 전원을 분리한 상태에서 TWI 301의
+SDA·SCL·GND만 연결하고 외부 저항과 보드 간 전원 rail은 연결하지 않은 뒤 새 confirmation으로
+실행해야 한다. TWI 301이 끝나기 전에는 T11 또는 M24 전체를 완료로 바꾸지 않는다.

@@ -433,7 +433,8 @@ namespace
         {
             twis = serialFabric().twis(args[0]);
             handle = twis;
-            result = twis ? twis->configure({0x42, 0x43, false})
+            const bool use_internal_pullups = gate.fixture() == 301U;
+            result = twis ? twis->configure({0x42, 0x43, use_internal_pullups})
                           : SerialFabricResult::unsupported_instance;
         }
         if (result == SerialFabricResult::success && !gpio_line_generator)

@@ -497,9 +497,11 @@ TWI 추가 두 vector는 peer가 SDA를 LOW로 고정한 동안 복구 실패, �
 SPI fixture 201의 role 1에는 1,024-byte SPIM00 비동기 전송 중 온보드 TWIM22 PMIC read를
 수행하는 허용 동시성 case가 추가되어 있습니다. 더 넓은 5-block 동시성 및 7,200초 soak는 단독
 기능 실기 PASS 뒤 T13에서 수행하며 build-only 결과로 대체하지 않습니다.
-TWI 301은 DUT P4.25 `VDD_MOD`에서 SDA/SCL로 각각 2.2 kΩ ±5% pull-up 한 개를 연결해야 하며 peer
-전원 rail은 연결하지 않습니다. 확인 JSON의 `pullups_match_catalog`가 참이 아니면 실행을 거부합니다.
-1MHz 통과는 기능 결과이며 rise-time·신호 품질 보증이 아닙니다. 이 절은 T10 전 실행 권한이 아닙니다.
+TWI 301은 target 역할의 TWIS가 SDA/SCL 내부 pull-up을 명시적으로 활성화합니다. 외부 pull-up 저항과
+두 보드 전원 rail 연결은 사용하지 않습니다. 확인 JSON의 `pullups_match_catalog`는 외부 pull-up과
+전원 rail 연결이 없다는 사용자 확인을 포함하며, 참이 아니면 실행을 거부합니다. 내부 pull-up은 외부
+2.2 kΩ 저항보다 약하므로 1MHz 통과는 짧은 fixture 배선의 기능 결과일 뿐 rise-time·신호 품질 또는
+Fast-mode Plus 전기 규격 보증이 아닙니다. 이 절은 T10 전 실행 권한이 아닙니다.
 preflight JSON에는 현재 source·UID·image hash에 묶인 `confirmation_template`이 함께 출력됩니다.
 모든 안전 조건은 `false`, 시각은 `0`, 확인자는 빈 문자열로 생성되므로 실제 연결을 확인해 채우기
 전에는 실행 승인이 되지 않습니다.
