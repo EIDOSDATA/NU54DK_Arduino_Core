@@ -166,6 +166,12 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
   if(CONFIG_NUCODE_ARDUINO_EVENT_FABRIC)
     list(APPEND NUCODE_ARDUINO_CORE_SOURCES
       "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/EventFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/event/EventFabricRegistry.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/event/TimerFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/event/EguFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/event/GpioteFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/event/DppiFabric.cpp"
+      "${NUCODE_ARDUINO_CORE_ROOT}/cores/arduino/internal/event/PpibFabric.cpp"
     )
   endif()
 

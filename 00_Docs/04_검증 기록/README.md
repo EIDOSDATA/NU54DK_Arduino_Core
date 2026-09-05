@@ -110,3 +110,6 @@ R05 Core 소스·설치 package identity는 [56번 기록](56_R05_Core_소스와
 6개 Host 회귀, target 2/2 및 ELF 문자열 확인에 연결한다.
 
 R06 builder 모듈 추출·설치 compile 및 공백 recipe 교정은 [57번 기록](57_R06_builder_모듈과_설치_경로.md)에 연결한다.
+
+R07 EventFabric registry/peripheral 분할은 [58번 기록](58_R07_EventFabric_책임_분할.md)의
+전후 Host·target·symbol·메모리 비교에 연결한다.

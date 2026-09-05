@@ -30,7 +30,7 @@ class V04MathTests(unittest.TestCase):
                 self.assertNotEqual(result.returncode, 0)
 
     def test_target_clock_uses_actual_instance_and_internal_adc_is_soc_specific(self):
-        event = (ROOT / "cores/arduino/EventFabric.cpp").read_text(encoding="utf-8")
+        event = (ROOT / "cores/arduino/internal/event/TimerFabric.cpp").read_text(encoding="utf-8")
         self.assertIn("timerPrescalerFor(NRF_TIMER_BASE_FREQUENCY_GET(context->reg)", event)
         analog = (ROOT / "cores/arduino/AnalogFabric.cpp").read_text(encoding="utf-8")
         supported = analog.split("bool supportedInput(", 1)[1].split("[[nodiscard]]", 1)[0]

@@ -1,0 +1,11 @@
+{
+  "before_sha256": "8ee844d7234e27855802b0f80077958df9ea1676dff6e65e25f3dbcf3394ec2a",
+  "public_sections": {
+    "Dppi": "8a48c6ee2fc6c3157255b9f0cf113aecf754298086d6416ba3a73bdce26530a0",
+    "Egu": "d342f708bdf4d910a81183c103cac8b9c68ebf75742073fb422ae4396fff61be",
+    "Gpiote": "60a64cecab3180a4c382373dd63ed376e36068fb4a7bd70d4c62f1e36c62e23e",
+    "Ppib": "6644bfd46c4b7109103edb8e21d722831aa40cbb8a878901527bbbd53ccad23f",
+    "Timer": "4c046f8e36da48eda12275a8b67a9b604f899a92b3324280a932bfb0188f4e0a"
+  },
+  "source_count_after": 7
+}
