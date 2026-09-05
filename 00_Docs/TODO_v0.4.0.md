@@ -2,13 +2,13 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 1.4 |
-| 상태 | 활성 TODO — T01~T10 완료, T11 UART Fixture 101~103 PASS·SPI/TWI fixture 대기 |
+| 문서 ID / 개정 | TODO-V04-001 / 1.5 |
+| 상태 | 활성 TODO — T01~T10 완료, T11 UART 101~103·SPI 201 PASS·나머지 SPI/TWI fixture 대기 |
 | 작성·갱신일 | 2026-09-05 |
-| 작성 직전 기준 commit | `6c18d4c316f13eb373da6cada5675cdc82a0cf6f` |
+| 작성 직전 기준 commit | `f21377ee9bbfee35a05748d4e5ba3ab1fd6b79b9` |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **T11 — Fixture 201 SPI route 결선 확인·실행** |
-| 이번 요청의 실행 범위 | 사용자 승인: 두 NU54DK의 Fixture 103 전체 vector 실행, 오류 진단, 문서·commit/push. 다음 fixture는 새 결선 확인 뒤 실행 |
+| 다음 착수 항목 | **T11 — Fixture 202 SPI route 결선 확인·실행** |
+| 이번 요청의 실행 범위 | 사용자 승인: Fixture 201을 10 MHz SWD로 전체 실행하고 오류 진단·수정·재시험, 문서·commit/push. 다음 fixture는 새 결선 확인 뒤 실행 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
 마일스톤의 제품 상태는 [로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>), 실제 PASS/FAIL은
@@ -49,20 +49,20 @@ TODO의 체크만으로 그 원본들의 상태를 바꾸지 않는다. 이 문�
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | T01~T10과 UART Fixture 101~103. Fixture 103은 exact `b3c689b`에서 UARTE20/21/22 P1↔P1 전 조합 양방향 정상 data 2,430·예상 오류 36·cleanup 2건 PASS |
-| 진행 중인 T 항목 | T11 진행 중. Fixture 101~103 UART PASS; Fixture 201~203 SPI와 301 TWI는 `NOT RUN` |
-| 다음 구체적 행동 | Fixture 201의 SPI 결선표를 안내하고 USB 전원을 끈 상태에서 변경한 뒤 새 confirmation으로 실행한다 |
-| 다음 작업에 필요한 사용자 행동 | 현재 Fixture 103 배선을 제거하고, 다음 안내에 따라 Fixture 201로 재결선한 뒤 두 USB 재연결·완료를 확인한다 |
-| 외부 결선 상태 | Fixture 103 결선과 양쪽 `DISABLE_UART` 분리 상태에서 exact `b3c689b` 전체 UART campaign PASS. 다음 fixture로 바꾸기 전 USB 전원 분리 필요 |
-| 작업 checkout 분리 | 사용자 정렬과 병행할 때 충돌을 막기 위해 `C:/nb/s04`, branch `codex/v04-prep-20260905`에서 격리했다. T01~T09 구현 `696defb`와 증거 `661fad9`를 원본 `main`에 fast-forward해 push했으므로 제품 이력은 다시 `main` 하나로 통합됐다. 임시 worktree/branch는 보존 데이터 확인 뒤 정리 가능 |
-| 마지막 정식 외부 HIL source | `b3c689b07f1a23e479a78bd2f852a650fd4a86d5` — Fixture 103 두 보드 exact role image UART PASS |
+| 이번에 끝낸 일 | T01~T10, UART Fixture 101~103, SPI Fixture 201. Exact `f21377e`에서 SPI 계획 ID 18,169개·cleanup 2·campaign 기록 2건, 총 18,173 result를 10 MHz SWD로 PASS |
+| 진행 중인 T 항목 | T11 진행 중. Fixture 101~103 UART와 Fixture 201 SPI PASS; Fixture 202~203 SPI와 301 TWI는 `NOT RUN` |
+| 다음 구체적 행동 | Fixture 201 점퍼를 제거하고 Fixture 202 결선표를 안내한다. USB 전원을 끈 상태에서 변경한 뒤 새 confirmation으로 실행한다 |
+| 다음 작업에 필요한 사용자 행동 | 두 USB를 분리하고 Fixture 201 배선을 모두 제거한 뒤, 안내할 Fixture 202로 재결선하여 두 USB 재연결·완료를 확인한다 |
+| 외부 결선 상태 | Fixture 201 결선과 양쪽 `DISABLE_UART` 분리 상태에서 exact `f21377e` 전체 SPI campaign PASS. Fixture 202로 바꾸기 전 반드시 USB 전원을 분리한다 |
+| 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
+| 마지막 정식 외부 HIL source | `f21377ee9bbfee35a05748d4e5ba3ab1fd6b79b9` — Fixture 201 두 보드 exact role image SPI PASS |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; T09 무배선 PASS만 추가됐으며 외부 결선·RC·최종 공개 승인 없음 |
-| 알려진 문제 | Fixture 103 준비 중 CMSIS-DAP sector erase timeout이 양쪽 보드에서 간헐적으로 발생했고, 접촉 교란 뒤 UARTE `FRAMING(0x04)` 한 건을 상세 기록했다. 축소 전환 시험과 최종 전체 실행은 PASS. 자동 recover/mass erase나 실패 결과 재사용 없음. 반복 flash를 줄이려면 exact flash read-back을 전제로 한 명시적 재사용 모드가 필요 |
-| 이 TODO 작성 작업의 실행 중 시험 | exact `b3c689b` pair 2/2 build와 100 kHz SWD Fixture 103 정상 data 2,430·예상 오류 36·cleanup 2·campaign 2건, 총 2,470 result PASS. 문서 반영 뒤 M12 Host·계약·문서 gate를 재실행한다 |
-| 로컬 임시 build·evidence | Fixture 101~103의 exact evidence와 journal을 각 commit evidence 디렉터리에 보존. Fixture 103 image는 `C:/r57`, 성공·진단 원본은 사용자 Documents에도 보존 |
+| 알려진 문제 | Fixture 201 초기 SPIM20 8 MHz 수신은 공통 RXDELAY 2가 serial SPIM core clock의 한 bit 지연이 되어 `0x96→0x2D`, `0xD2→0xA5`로 밀렸다. `a254d01`에서 SPIM00=2·serial SPIM=1로 교정했고 targeted 100+100회와 전체 재시험 PASS. 자동 recover/mass erase나 실패 결과 재사용 없음 |
+| 이 TODO 작성 작업의 실행 중 시험 | exact `f21377e` pair 2/2 build, 10 MHz SWD Fixture 201의 계획 SPI ID 18,169개 전부 PASS. 실행 시간 2,180.983초, 실패·누락·범위 이탈 0. 문서 반영 뒤 M12 Host·계약·문서 gate를 재실행한다 |
+| 로컬 임시 build·evidence | Fixture 201 image는 `C:/r74`, 진단·성공 원본은 사용자 Documents에 보존. 검증 기록에는 실패 재현 `2a219a9`, 교정 targeted `a254d01`, 전체 PASS `f21377e` evidence와 journal을 등록했다 |
 | 최종 정렬 gate | clang-format 22.1.8로 직접 관리 C/C++/ino 227개 write·dry-run PASS. Fixture 102 기록 전 남은 공통 header 들여쓰기 한 곳을 교정했고 M12 Host 전체·DUT/peer target 2/2 재검증 PASS, 실기 image와 runtime HEX SHA-256 동일. 한국어 Doxygen·Allman/4칸/중괄호 필수 적용 |
-| CI 확인 | 이전 `661fad9`의 [Software Gates](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811058)와 [Reproducible Builds](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811030) success 보존. Fixture 103 기록 commit은 push 뒤 새 CI 결과를 확인한다 |
-| 문서 작업 검증 | 문서147개 UTF-8·내부 링크 PASS, CI contract45·inventory75·serial23·system16·release16 계약 PASS. M27 미해결8개 유지. M12 Host 전체 PASS |
+| CI 확인 | 이전 `661fad9`의 [Software Gates](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811058)와 [Reproducible Builds](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811030) success 보존. Fixture 201 기록 commit은 push 뒤 새 CI 결과를 확인한다 |
+| 문서 작업 검증 | Markdown 148개 UTF-8·내부 링크 PASS, CI contract 45/45·inventory 75·serial 23·system 16·release 16 계약 PASS, package 20/20·M12 Host 전체 PASS. M27 미해결 8개 유지 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드
@@ -174,10 +174,10 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
   - 증거: [44번 Fixture 101 기록](<./04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>). 이후 묶음의 결선 변경 때마다 confirmation을 반복한다.
 
 - [ ] **T11 — M24 통신 인스턴스 기능 검증**
-  - 상태·선행: 진행 중 / Fixture 101~103 UART 정상 4,860·예상 오류 72·cleanup 6건 PASS. SPI·TWI fixture 미실행.
+  - 상태·선행: 진행 중 / Fixture 101~103 UART 정상 4,860·예상 오류 72·cleanup 6건 PASS. Fixture 201 SPI 계획 ID 18,169개·cleanup 2건 PASS. Fixture 202~203 SPI·301 TWI 미실행.
   - 할 일: UART·SPI·I2C 승인 경로를 역할별로 실행하고 실제 데이터·mode·DMA 결과를 비교한다.
   - 완료 기준: T01 표의 각 단독 기능 결과가 exact evidence에 연결되고 나머지 16개 외부 경로를 build로 대체하지 않는다. 실패는 T14로 넘긴다.
-  - 결선·증거: [44번 Fixture 101](<./04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>), [45번 Fixture 102](<./04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>), [46번 Fixture 103](<./04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>) exact evidence 등록. Fixture 201~203과 301은 묶음별 결선/스위치 변경과 새 확인 뒤 자동 실행.
+  - 결선·증거: [44번 Fixture 101](<./04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>), [45번 Fixture 102](<./04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>), [46번 Fixture 103](<./04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>), [47번 Fixture 201](<./04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md>) exact evidence 등록. Fixture 202~203과 301은 묶음별 결선/스위치 변경과 새 확인 뒤 자동 실행.
 
 - [ ] **T12 — M25 입력·출력·스트림 기능 검증**
   - 상태·선행: 내부 VDD/event 기본 근거 외 미완료 / T05·T06·T09·해당 T10 확인.
@@ -192,10 +192,10 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
   - 결선·증거: 대상에 따라 결선/스위치 조작 필요. 추가 증거 미등록; System OFF 격리·재연결은 명시적으로 안내한다.
 
 - [ ] **T14 — 발견된 결함 수정과 재시험**
-  - 상태·선행: 검증 중 반복하는 항목 / Fixture 101 deferred RX의 SPI 분기 진입은 `2542a01`에서 수정·단일 재현·전체 재시험 PASS. 이후 결함은 계속 이 항목으로 회귀.
+  - 상태·선행: 검증 중 반복하는 항목 / Fixture 101 deferred RX의 SPI 분기 진입은 `2542a01`에서 수정·재시험 PASS. Fixture 201의 8 MHz serial SPIM 수신 1-bit 지연은 `a254d01`에서 인스턴스별 RXDELAY로 교정했고 targeted·전체 재시험 PASS. 이후 결함도 계속 이 항목으로 회귀.
   - 할 일: 실패 재현·수정·regression test를 연결하고 관련 온보드/기존 기능을 재검증한다. M26 TEMP/WDT 등 영향받는 근거도 재판정한다.
   - 완료 기준: release를 막는 미해결 코어 결함이 없고 변경된 image의 필요한 기능 시험이 통과한다. 실패 기록은 보존한다.
-  - 결선·증거: 재시험 대상에 따라 필요. 새 결함이 나오면 다시 미완료로 전환; 현재 추가 증거 미등록.
+  - 결선·증거: 재시험 대상에 따라 필요. Fixture 201 실패·교정·전체 PASS는 [47번 기록](<./04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md>)에 등록했다. 새 결함이 나오면 다시 미완료로 전환한다.
 
 - [ ] **T15 — 실기 결과와 지원 범위 확정**
   - 상태·선행: 대기 / T11~T14.

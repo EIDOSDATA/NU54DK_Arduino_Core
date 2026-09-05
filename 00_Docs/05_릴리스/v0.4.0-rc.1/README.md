@@ -35,7 +35,10 @@ Staging compile은 공개 URL 설치·실제 upload·제거·재설치·version 
 PASS했다. `2542a01`의 [UART Fixture 101](<../../04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)과
 `ff3423e`의 [Fixture 102](<../../04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>),
 `b3c689b`의 [Fixture 103](<../../04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>)은
-P2/P0/P1↔P1 UARTE 양방향 data·DMA·RTS/CTS를 통과했다. 남은 SPI/TWI·analog/stream fixture와
+P2/P0/P1↔P1 UARTE 양방향 data·DMA·RTS/CTS를 통과했다. `f21377e`의
+[SPI Fixture 201](<../../04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md>)은 P2↔P1의
+SPIM/SPIS00·20·21·22, 2/4/8 MHz, mode·bit order와 EasyDMA 18,169개 계획 벡터를 통과했다.
+남은 SPI 202~203·TWI 301·analog/stream fixture와
 아래 범위 합의는 최종 공개 승인이 아니다.
 
 ## 기능 검증과 사용자 통합 검증의 경계
@@ -48,7 +51,7 @@ P2/P0/P1↔P1 UARTE 양방향 data·DMA·RTS/CTS를 통과했다. 남은 SPI/TWI
 
 ## 공개 전 필수 항목
 
-1. M24의 SPI/TWI peer·허용 최대 동시성·복구·처리량·soak
+1. M24의 남은 SPI Fixture 202~203·TWI 301 peer와 허용 최대 동시성·복구·처리량·soak
 2. M25 analog/PWM/PDM/I2S/QDEC 합성 신호·capture, 기본 timing·DMA·overrun·복구·동시성·soak
 3. M26 TEMP·WDT30 reset 온보드 PASS 증거 유지와 관련 변경 시 회귀 검증
 4. Frozen RC commit의 host/docs/전체 Zephyr build와 이중 package 재현성

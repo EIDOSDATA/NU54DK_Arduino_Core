@@ -77,6 +77,7 @@
 | Fixture 101 UART | exact `2542a01`에서 P2↔P1 UARTE 양방향 data 1,620·예상 오류 24·cleanup 2건 PASS; 다른 fixture HOLD | [M24 Fixture 101 실기 검증](44_M24_Fixture_101_UART_실기_검증.md) |
 | Fixture 102 UART | exact `ff3423e`에서 P0↔P1 UARTE 양방향 data 810·예상 오류 12·cleanup 2건 PASS; Fixture 103·SPI·TWI HOLD | [M24 Fixture 102 실기 검증](45_M24_Fixture_102_UART_실기_검증.md) |
 | Fixture 103 UART | exact `b3c689b`에서 P1↔P1 UARTE20/21/22 전 조합 양방향 data 2,430·예상 오류 36·cleanup 2건 PASS; SPI·TWI HOLD | [M24 Fixture 103 실기 검증](46_M24_Fixture_103_UART_실기_검증.md) |
+| Fixture 201 SPI | exact `f21377e`에서 P2↔P1 SPIM/SPIS 18,169개 계획 벡터·cleanup 2건 PASS; Fixture 202~203·TWI 301 HOLD | [M24 Fixture 201 실기 검증](47_M24_Fixture_201_SPI_실기_검증.md) |
 
 ## 기록 해석 규칙
 
