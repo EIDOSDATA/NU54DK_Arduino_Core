@@ -30,6 +30,10 @@ namespace nucode::arduino
         inline constexpr std::size_t instance_count = 5U;
         inline constexpr std::size_t event_capacity = 8U;
         inline constexpr std::uint32_t event_queue_overflow = 0x80000000UL;
+        /** @brief SPIM00 128 MHz core에서 약 2 us CSN setup/hold를 만드는 최대 cycle 수입니다. */
+        inline constexpr std::uint8_t spim00_csn_duration_cycles = 255U;
+        /** @brief SPIM20/21/22/30 16 MHz core에서 2 us를 넘기는 CSN cycle 수입니다. */
+        inline constexpr std::uint8_t serial_csn_duration_cycles = 33U;
 
         struct BufferRecord
         {
@@ -280,6 +284,19 @@ namespace nucode::arduino
                     ? NRF_SPIM_BIT_ORDER_LSB_FIRST
                     : NRF_SPIM_BIT_ORDER_MSB_FIRST;
             configuration.orc = context->configuration.overrun_character;
+#if NRF_SPIM_HAS_HW_CSN
+            /**
+             * @brief 하드웨어 CSN으로 nRF54L15 SPIS의 최소 1 us setup/hold를 보장합니다.
+             *
+             * NRFX의 software CSN 경로는 GPIO assert 직후 START를 요청하므로 두 번째 전송의
+             * 첫 bit에서 SPIS over-read character가 노출될 수 있습니다. 각 SPIM core clock에서
+             * 최대 출력 준비 시간에 여유를 둔 약 2 us 값으로 시작·종료·전송 사이의 CSN timing을
+             * 고정합니다.
+             */
+            configuration.use_hw_ss = csn != NRF_SPIM_PIN_NOT_CONNECTED;
+            configuration.ss_duration =
+                instance == 0U ? spim00_csn_duration_cycles : serial_csn_duration_cycles;
+#endif
             driver_error = nrfx_spim_init(&context->driver, &configuration, spimEvent, context);
             if (driver_error != 0)
             {

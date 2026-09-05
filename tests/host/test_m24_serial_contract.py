@@ -198,6 +198,23 @@ class M24SerialContractTests(unittest.TestCase):
         self.assertLess(initialized, enabled)
         self.assertLess(enabled, active)
 
+    def test_spim_hardware_csn_meets_nrf54l15_spis_timing(self) -> None:
+        """Source regression only; Fixture 201 proves the physical timing path."""
+        source = (REPOSITORY / "cores/arduino/SpimFabric.cpp").read_text(
+            encoding="utf-8"
+        )
+        activation = source.split("SerialFabricResult activateAdapter(", 1)[1].split(
+            "SerialFabricResult requestStopAdapter(", 1
+        )[0]
+        self.assertIn("spim00_csn_duration_cycles = 255U", source)
+        self.assertIn("serial_csn_duration_cycles = 33U", source)
+        self.assertIn(
+            "configuration.use_hw_ss = csn != NRF_SPIM_PIN_NOT_CONNECTED;",
+            activation,
+        )
+        normalized_activation = " ".join(activation.split())
+        self.assertIn("configuration.ss_duration = instance == 0U", normalized_activation)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
