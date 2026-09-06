@@ -1,0 +1,11 @@
+{
+  "fixture_id": 408,
+  "source": "87b987d9ed50855e0134f2c637c00706572719a5",
+  "user_confirmation_recorded_at_utc": "2026-09-06T15:35:46+00:00",
+  "confirmation_text": "연결 완료 408 진행해",
+  "wiring": "A P1.14/AIN7 P4-12 <-> B P1.14 P4-12; common GND P2-30; previous A P1.13 removed",
+  "confirmed_in_context": "Both USB disconnected for rewiring, reconnected after; DAP UART disconnected, SWD connected; existing SB/PMIC unchanged; no additional signals or power rails",
+  "signal_profile": "B PWM20/21/22 channel 0..3 -> A SAADC AIN7, 32/256 samples, single/double DMA buffers; 48 vectors",
+  "swd_frequency_hz": 10000000,
+  "scope": "T10/T12 Fixture 408 first physical execution, evidence/docs/commit/push; no Fixture 420 until separate wiring confirmation"
+}

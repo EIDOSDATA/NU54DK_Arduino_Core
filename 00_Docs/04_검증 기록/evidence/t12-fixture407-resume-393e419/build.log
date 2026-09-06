@@ -1,0 +1,27 @@
+INFO    - Using Ninja..
+INFO    - Zephyr version: ncs-v3.4.0
+INFO    - Using 'zephyr/gnu' toolchain variant.
+INFO    - Building initial testsuite list...
+INFO    - Built testsuite list in 0.01 seconds
+INFO    - Writing JSON report C:\u3o\testplan.json
+INFO    - Adding tasks to the queue...
+INFO    - Added initial list of jobs to queue
+INFO    - Total complete: [32m   1/   8[39m  12%  built (not run): [36m   1[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m   2/   8[39m  25%  built (not run): [36m   2[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m   3/   8[39m  37%  built (not run): [36m   3[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m   4/   8[39m  50%  built (not run): [36m   4[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m   5/   8[39m  62%  built (not run): [36m   5[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m   6/   8[39m  75%  built (not run): [36m   6[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m   7/   8[39m  87%  built (not run): [36m   7[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m   8/   8[39m  100%  built (not run): [36m   8[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+
+INFO    - 8 test scenarios (8 configurations) selected, 0 configurations filtered (0 by static filter, 0 at runtime).
+INFO    - 0 of 8 executed test configurations passed (0.00%), 8 built (not run), 0 failed, 0 errored, with no warnings in 519.63 seconds.
+INFO    - 0 test configurations executed on platforms, 8 test configurations were only built.
+INFO    - Saving reports...
+INFO    - Writing JSON report C:\u3o\twister.json
+INFO    - Writing xunit report C:\u3o\twister.xml...
+INFO    - Writing xunit report C:\u3o\twister_report.xml...
+INFO    - Run completed
+[M12-ZEPHYR] exec: C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe C:\ncs\v3.4.0\zephyr\scripts\twister --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m19_ble_gap_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m19_ble_gap_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m20_ble_gatt_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m20_ble_gatt_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m21_ble_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m21_ble_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil --platform nrf54l15dk/nrf54l15/cpuapp/nu54dk --board-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards --build-only --ninja --detailed-test-id --jobs 2 --outdir C:\u3o --extra-args BOARD_ROOT=C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS --extra-args EXTRA_ZEPHYR_MODULES=C:/Users/eidos/GitHub/NU54DK_Arduino_Core --extra-args USE_CCACHE=0 --scenario nucode.m19.ble_gap_hil_peripheral --scenario nucode.m19.ble_gap_hil_central --scenario nucode.m20.ble_gatt_hil_peripheral --scenario nucode.m20.ble_gatt_hil_central --scenario nucode.m21.ble_security_hil_peripheral --scenario nucode.m21.ble_security_hil_central --scenario nucode.v04.pair_dut --scenario nucode.v04.pair_peer
+M12_ZEPHYR_BUILD_PASS=8;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset

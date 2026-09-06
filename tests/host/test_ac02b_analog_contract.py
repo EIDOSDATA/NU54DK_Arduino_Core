@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-import shutil
 import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+
+from host_compiler import compiler_command
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -16,14 +17,14 @@ class Ac02bAnalogContractTests(unittest.TestCase):
     """B3 구현이 합의한 API와 고정 자원 경계를 유지하는지 검사합니다."""
 
     def test_math_contract_compiles(self) -> None:
-        compiler = shutil.which("c++") or shutil.which("g++")
+        compiler = compiler_command(optional=True)
         if compiler is None:
             self.skipTest("host C++ compiler가 없습니다.")
         with tempfile.TemporaryDirectory(prefix="nu54-ac02b-") as temporary:
             object_file = Path(temporary) / "ac02b_analog_math.o"
             subprocess.run(
                 [
-                    compiler,
+                    *compiler,
                     "-std=c++17",
                     "-Wall",
                     "-Wextra",

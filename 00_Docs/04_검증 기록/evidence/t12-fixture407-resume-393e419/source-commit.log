@@ -1,0 +1,17 @@
+warning: in the working copy of '00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/host/r04_file_main.cpp', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/host/test_r09_spi_facade.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/host/test_v04_cmake_sources.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/host/r04_file_main.cpp', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/host/test_r09_spi_facade.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/host/test_v04_cmake_sources.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/host/host_compiler.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/host/test_host_compiler.py', LF will be replaced by CRLF the next time Git touches it
+[main 393e419] test(host): support explicit Clang compiler selection
+ 29 files changed, 233 insertions(+), 110 deletions(-)
+ create mode 100644 tests/host/host_compiler.py
+ create mode 100644 tests/host/test_host_compiler.py
+RESUME_SOURCE=393e419f4c855037d4e6221c315f9be808a7d274

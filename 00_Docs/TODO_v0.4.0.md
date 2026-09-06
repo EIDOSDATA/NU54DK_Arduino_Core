@@ -2,13 +2,13 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.1 |
-| 상태 | 활성 TODO — R00~R13·최종 software gate와 current-source T11 UART·SPI·TWI 단독 회귀 완료; T12~T15·통합·RC·공개 대기 |
-| 작성·갱신일 | 2026-09-06 |
-| 작성 직전 기준 commit | `9a63251ed6f8b9916d8e49d8210414b21c5c7267` — 이번 Fixture 301 exact source |
+| 문서 ID / 개정 | TODO-V04-001 / 3.11 |
+| 상태 | 활성 TODO — R00~R13·최종 software gate·current-source T11 완료; T12 Fixture 401~408 부분 PASS, 후속 실기·통합·RC·공개 대기 |
+| 작성·갱신일 | 2026-09-07 |
+| 작성 직전 기준 commit | `87b987d9ed50855e0134f2c637c00706572719a5` — actual 408 기능 48 PASS·10,368 samples, 최초 DUT flash 실패와 재실행 구분 |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **T12 Fixture 401 PWM→AIN0 전원 OFF 결선 변경과 사용자 확인** |
-| 이번 요청의 실행 범위 | 2026-09-06 Fixture 301 준비 완료·시작 지시. Exact pair build, 10 MHz 전체 TWI 실기, 증거·문서·commit·main push 뒤 T12 Fixture 401 결선 직전 정지 |
+| 다음 착수 항목 | **420 QDEC 재결선 확인 후 실제 clean HEAD pair build·SWD 10 MHz 실기** |
+| 이번 요청의 실행 범위 | 사용자의 “연결 완료 408 진행해”를 2026-09-06T15:35:46Z에 기록했다. A P1.14↔B P1.14·공통 GND의 408을 exact 87b987d에서 실행. 최초 DUT flash timeout 뒤 read-only 응답 회복을 확인하고 원래 유효한 확인으로 단 한 번 새 실행해 48개 완료. 제품·시험·SDK·board·보안 정책 변경 없음 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
 마일스톤의 제품 상태는 [로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>), 실제 PASS/FAIL은
@@ -51,21 +51,21 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | TWI 301 exact 9a63251 첫 실행 1,986 PASS와 current-source T11 단독 회귀 완료. [73번 기록](<./04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 일곱 묶음 61,423개 기능 결과·원본 hash·동일 컴파일 입력을 대조했다. 각 exact identity와 과거 실패는 구분 보존 |
-| 진행 중인 T 항목 | 실행 중 시험 없음. Current-source T11 단독 회귀 완료, T12 Fixture 401부터 대기. T13~T15·T16~T18·R14·RC/공개 미완료 |
-| 다음 구체적 행동 | 두 USB 전원을 분리한다. A P2-12는 유지하고 연결된 B 끝을 P2-25에서 P4-12/P1.14로 옮긴다. SCL A P2-11↔B P2-26 점퍼는 양쪽 제거, P2-30 GND는 유지한다. B PWM→A AIN0 한 방향과 GND만 남긴다 |
-| 다음 작업에 필요한 사용자 행동 | Fixture 401 전원 OFF 결선 변경·양쪽 DAP UART 분리/SWD 연결·동일 I/O 전압 확인·각자 USB 재연결 완료 확인. 외부 저항/전원선 추가 없음 |
-| 외부 결선 상태 | 2026-09-06 사용자 Fixture 301 완료 확인. SDA A P2-12↔B P2-25, SCL A P2-11↔B P2-26, P2-30 GND. 이전 SPI MISO/CSN 제거. 양쪽 DAP UART 분리·SWD 연결·동일 I/O 전압·각자 USB 전원; TWIS 내부 pull-up, 외부 저항/전원 rail 없음. A D/COM5·6, B E/COM7·8 |
+| 이번에 끝낸 일 | 408 기능 48 PASS·10,368 samples·cleanup 48, exact pair build 2/2와 postflight identity 2/2 PASS. 첫 DUT flash 실패 원본 포함 83번 입력 45개 등록. 401~408 누계 기능 276·samples 59,616·cleanup 276, AIN0~7 개별 기능 근거 확보 |
+| 진행 중인 T 항목 | T12 부분 완료 — 401~408 개별 기능 완료. 420 QDEC·430 I2S·440 PDM과 나머지 T12 요구·T13 이후 미완료 |
+| 다음 구체적 행동 | 420 결선 확인 후 실제 clean HEAD의 pair image·source·role을 검증하고 SWD 10 MHz로 QDEC를 실행. 408 업로드 source 87b987d와 후속 문서 HEAD를 구분 |
+| 다음 작업에 필요한 사용자 행동 | 양쪽 USB 분리 후 기존 A P1.14 신호 끝을 P1.04로 이동(B P1.14 유지), A P1.06↔B P1.10 신호선 추가. 공통 GND·DAP UART 분리/SWD 연결·기존 SB/PMIC 유지 후 USB 재연결·420 결선 완료 확인 |
+| 외부 결선 상태 | 408 A P1.14/AIN7(P4-12)↔B P1.14(P4-12), 공통 GND(P2-30). 2026-09-06T15:35:46Z 사용자 결선 완료 지시, USB 분리 후 변경·재연결 안내에 대한 확인. 이전 A P1.13 제거·DAP UART 분리/SWD 연결·기존 SB/PMIC 유지. A D/COM5·6, B E/COM7·8. 420 결선은 아직 미확인 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
-| 마지막 정식 외부 HIL source | `9a63251ed6f8b9916d8e49d8210414b21c5c7267` — TWI 301 첫 실행 1,986 PASS. 이전 current-source UART·SPI와 역사 원본 보존 |
-| 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. Current-source T11 단독 통신 회귀 완료; M24 전체·T12~T15·RC·공개 gate 미완료 |
+| 마지막 정식 외부 HIL source | `87b987d9ed50855e0134f2c637c00706572719a5` — T12 Fixture 408 전체 48 PASS, attempt2. attempt1은 DUT flash 실패·외부 시험 미시작. 이전 exact 근거 보존 |
+| 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. T11 각 exact 완료·T12 401~408 부분 PASS; M24/M25 전체·후속 gate·RC/공개 미완료 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | HIL/build 종료. 양쪽 exact 9a63251 DUT/peer image, controller 역할별 disarm [0], 종료 read-only CPUID·full commit·role 2/2 PASS, CPU snapshot A SLEEPING·B SLEEPING. SWD 10 MHz 첫 실행 PASS. 과거 flash timeout/peer P0 CTS 원인 해결을 주장하지 않음 |
+| 이 TODO 작성 작업의 실행 중 시험 | 408 build·flash·HIL·postflight 종료. 마지막 업로드 87b987d, 2026-09-06T15:43:04.482525Z read-only postflight에서 두 source·role·CPUID 확인, 당시 모두 SLEEPING. 진행 중 시험 없음 |
 | 로컬 임시 build·evidence | 15개 과거 root의 object/archive 중간 파일 55,537개 제거, 일회성 script 50개는 work/archive/r00-r13-authoring-scripts.zip으로 hash 검증 후 보관. 2,911개 ELF/HEX/설정/log 등은 hash 불변. C:/r13h와 설치본·raw evidence·QEMU 보존; 상세는 65번 기록 |
-| 최종 정렬 gate | clang-format 22.1.8, 직접 관리 C/C++/ino 356개 dry-run PASS. 한국어 Doxygen·BSD/Allman·4칸·중괄호 필수. SDK·board·third-party·공개 자산을 정렬하지 않았으며 물리 PASS로 승격하지 않음 |
-| CI 확인 | 최종 source의 GitHub Actions는 미확인. 현재 GitHub CLI 인증에 의존하지 않고 로컬 canonical 전체 software gate를 실행했다. 이전 Actions success는 이전 source의 역사 증거로만 유지 |
-| 문서 작업 검증 | 이번 pair target 2/2, Markdown 182, contract 45, inventory 75·Serial 23·System 16 PASS; readiness blocker 8개 유지. 제품·canonical runner 변경 없음. 기존 full software/T09/BLE 및 각 fixture exact 근거 보존 |
-| 최종 HIL 입력 찾기 | C:/u3g exact 9a63251 DUT/peer와 첫 실행 JSON/journal은 73번에 있다. T12로 넘어갈 때 해당 fixture용 새 exact HEAD image·확인서를 준비한다. 기존 build·실패·raw evidence 보존 |
+| 최종 정렬 gate | clang-format 22.1.8, 직접 관리 C/C++/ino 358개 dry-run PASS. 한국어 Doxygen·BSD/Allman·4칸·중괄호 필수. 새 shared analog helper와 Host 검증은 실제 참조되어 유지 |
+| CI 확인 | 이번 문서 commit의 원격 GitHub Actions는 미확인. 393e419의 로컬 전체 software 검증 이후 제품·시험 코드 차이 0을 대조했고 87b987d exact pair 2개와 408 실기를 새로 완료 |
+| 문서 작업 검증 | 393e419의 Host 655 PASS·1 조건부 SKIP(총 656), 관련 113·계약 45·package 20·정렬 358·Inventory·예제 발견·target 8/8은 81번에 유지. 이번 exact pair 2/2(116.06초)·408 48 PASS, 최종 Markdown 192개 검사 근거는 83번 docs-verification.json |
+| 최종 HIL 입력 찾기 | C:/u3q actual 87b987d pair와 408 attempt2 원본·index·postflight는 83번. attempt1 실패 보존. C:/u3p 4a64c25는 407 역사 근거. 후속 420은 실제 clean HEAD exact pair build 필요 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드
@@ -140,10 +140,10 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
   - 증거: Host 전체 PASS, `C:/r45` pair image 포함 full20 build-only PASS. 온보드 기존 PASS는 41번, 외부는 NOT RUN.
 
 - [x] **T05 — ADC·PWM·타이머·이벤트 시험 프로그램 준비**
-  - 상태·선행: 완료 / 내부 VDD·AVDD와 timer/event, 외부 AIN0~3/AIN7·PWM20/21/22 channel slot 0~3·단일/이중 DMA 판정 준비. AIN4~6은 보드 공유 제한으로 contract-only.
+  - 상태·선행: 완료 / 내부 VDD·AVDD와 timer/event, 외부 AIN0~3/AIN7·PWM20/21/22 channel slot 0~3·단일/이중 DMA 판정 준비. AIN4는 405 오픈드레인, AIN5는 406 입력 바이어스로 추가 기능 시험하며 AIN6/407은 버튼 공유 입력 바이어스 시험으로 준비하고 실기는 별도 판정한다.
   - 할 일: 안전한 ADC 입력·scan/sample 순서·DMA, PWM 채널/sequence의 peer capture, timer/event/DPPI 소유권을 시험한다.
   - 완료 기준: 예상 값·count·기본 timing 허용 범위를 검사하는 image/runner와 Host 시험이 준비된다. 교정 전압·정밀 jitter 보증과 구분한다.
-  - 증거: signal fixture 401~404/408, fixture별 48 vector, Host PASS와 M25 Analog/pair target build PASS. 외부 신호는 NOT RUN.
+  - 증거: signal fixture 401~404/408, fixture별 48 vector, Host PASS와 M25 Analog/pair target build PASS. 이 준비 시점에는 외부 신호 NOT RUN이었다. 현재 401~408 실기는 T12와 74~79·82~83번에 구분 등록했다.
 
 - [x] **T06 — PDM·I2S·QDEC 합성 신호 프로그램 준비**
   - 상태·선행: 완료 / QDEC sampling/oracle·Stream DAP 격리와 PDM SPIS clock 동기 source·I2S 양방향 pattern·QDEC PWM quadrature generator/receiver 준비. 물리 신호 성립은 T12에서 검증.
@@ -158,7 +158,7 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
   - 증거: DMA/수명주기/fixture/campaign Host PASS와 full20 target build PASS. 더 넓은 허용 topology와 600/7200초 결과는 T13이며 미실행.
 
 - [x] **T08 — 시험별 안전한 결선표와 스위치 안내 작성**
-  - 상태·선행: 완료 / 회로도 connector mapping, fixture 15개, TWI pull-up과 analog/stream 역할·금지 net·스위치 조건 작성. 아직 T10 결선 요청 아님.
+  - 상태·선행: 완료 / 회로도 connector mapping, fixture 18개(405·406·407 추가), TWI pull-up과 analog/stream 역할·금지 net·스위치 조건 작성. 아직 T10 결선 요청 아님.
   - 할 일: 회로도·pinctrl과 대조해 묶음별 DUT↔peer 핀, GND·전압·pull-up·출력 방향·DAP UART switch·제어 채널을 명시한다.
   - 완료 기준: 전원 차단 후 연결/변경 순서, 출력 충돌 방지, 필요한 부품과 사용자 확인 절차가 있다. 금지된 P2 bank와 PMIC/LED 공유 신호를 무단 사용하지 않는다.
   - 증거: `v04_fixtures.json`, HIL README, fail-closed confirmation template와 Host catalog/조건 검사 PASS. 묶음마다 T10 확인 반복.
@@ -210,7 +210,7 @@ R00~R14와 연결하고, 구조 변경 뒤 같은 결선을 다시 반복하지 
   package gate로 최종 실기 source를 고정한다.
 - [x] **current-source T11 회귀:** R00~R13 최종 exact source로 영향받는 UART·SPI·TWI 단독 기능을
   재검증하고 나서 T12로 전환한다.
-  - 진행: exact 154324c Fixture 101 기능 1,644 PASS. [67번 기록](<./04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>) 참조. Fixture 102는 exact a49cc0d 기능 822 PASS로 [68번 기록](<./04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md>)에 등록했다. Fixture 103은 exact 7aece93 기능 2,466 PASS로 [69번 기록](<./04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md>)에 등록해 승인 UART route 세 묶음을 완료했다. Fixture 201도 exact 0f429e7 기능 18,169 PASS로 [70번 기록](<./04_검증 기록/70_T11_Fixture_201_current_source_SPI_회귀.md>)에 등록했다. Fixture 202도 exact 1349e20 기능 9,084 PASS로 [71번 기록](<./04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md>)에 등록했다. Fixture 203도 exact be49207 기능 27,252 PASS로 [72번 기록](<./04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 등록해 승인 SPI 세 route를 완료했다. Fixture 301도 exact 9a63251 기능 1,986 PASS로 [73번 기록](<./04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 등록했다. 일곱 묶음의 61,423개 기능과 동일 컴파일 입력을 대조해 current-source T11 단독 회귀를 완료했다. 다음은 T12 Fixture 401이다.
+  - 진행: exact 154324c Fixture 101 기능 1,644 PASS. [67번 기록](<./04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>) 참조. Fixture 102는 exact a49cc0d 기능 822 PASS로 [68번 기록](<./04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md>)에 등록했다. Fixture 103은 exact 7aece93 기능 2,466 PASS로 [69번 기록](<./04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md>)에 등록해 승인 UART route 세 묶음을 완료했다. Fixture 201도 exact 0f429e7 기능 18,169 PASS로 [70번 기록](<./04_검증 기록/70_T11_Fixture_201_current_source_SPI_회귀.md>)에 등록했다. Fixture 202도 exact 1349e20 기능 9,084 PASS로 [71번 기록](<./04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md>)에 등록했다. Fixture 203도 exact be49207 기능 27,252 PASS로 [72번 기록](<./04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 등록해 승인 SPI 세 route를 완료했다. Fixture 301도 exact 9a63251 기능 1,986 PASS로 [73번 기록](<./04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 등록했다. 일곱 묶음의 61,423개 기능과 동일 컴파일 입력을 대조해 current-source T11 단독 회귀를 완료했다. T12 Fixture 401~404도 각각 48개를 통과했으며 405·406·407 각각 12개와 408 PWM 48개를 통과했으며 다음은 Fixture 420 QDEC다.
 - [ ] **R14:** T16~T18의 사용자용 통합까지 끝난 뒤 current-source T11과 T12~T15 결과를 포함한
   `v0.4.0` RC를 다시 고정하고 T19로 전환한다.
 
@@ -219,10 +219,10 @@ R00~R14와 연결하고, 구조 변경 뒤 같은 결선을 다시 반복하지 
 외부 결선 PASS 캠페인은 R13 뒤 최종 source에 한 번 수행한다.
 
 - [ ] **T12 — M25 입력·출력·스트림 기능 검증**
-  - 상태·선행: 내부 VDD/event 기본 근거 외 미완료 / T05·T06·T09, R00~R13과 current-source T11 회귀 완료, 해당 T10 확인.
+  - 상태·선행: 부분 완료 — Fixture 401~404·408 각각 PWM 48 PASS·405 AIN4 오픈드레인·406 AIN5/407 AIN6 입력 바이어스 각각 12 PASS, 420·430·440·전체 요구 대기 / T05·T06·T09, R00~R13과 current-source T11 회귀 완료, 해당 T10 확인.
   - 할 일: ADC·PWM·timer/event·PDM·I2S·QDEC의 물리 신호와 예상 sample/frame/count를 비교한다.
   - 완료 기준: 합성 peer 자체의 동작과 코어 기능을 구분해 검증하고 각 instance/mode의 증거가 있다. 신호 생성 실패는 미완료이지 계측 면제가 아니다.
-  - 결선·증거: 묶음별 결선 필요, 확인 뒤 자동 실행. 추가 증거 미등록.
+  - 결선·증거: Fixture 401 exact a12e444 48 PASS·10,368 samples·cleanup 48은 [74번 기록](<./04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 등록. Fixture 402 exact ff483a1 48 PASS는 [75번 기록](<./04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존. Fixture 403 exact c95b904 48 PASS는 [76번 기록](<./04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 등록. Fixture 404 exact e080bbc 48 PASS는 [77번 기록](<./04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 등록. 405 exact 9fc12bf의 공유 AIN4 오픈드레인 12 PASS·2,592 samples는 [78번 기록](<./04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)에 보존. 406 exact 96f38e9 입력 바이어스 12 PASS·2,592 samples는 [79번 기록](<./04_검증 기록/79_T12_Fixture_406_current_source_공유_AIN5_검증.md>)에 보존. 407 exact 4a64c25의 공유 AIN6 입력 바이어스 12 PASS·2,592 samples는 [82번 기록](<04_검증 기록/82_T12_Fixture_407_current_source_공유_AIN6_검증.md>)에 보존. 408 exact 87b987d의 PWM→AIN7 48 PASS·10,368 samples는 [83번 기록](<04_검증 기록/83_T12_Fixture_408_current_source_PWM_ADC_검증.md>)에 보존. 다음은 420 QDEC다. PWM period/duty capture·ADC calibration/채널 순서 등 전체 T12 요구는 이 HIGH/sample-count 결과로 완료 처리하지 않는다.
 
 - [ ] **T13 — 복구·동시 실행·장시간 안정성 검증**
   - 상태·선행: 미착수 / T07·해당 T11/T12 단독 PASS·해당 T10 확인.
@@ -348,3 +348,11 @@ M23·후보 source/build·기본 onboard·M26 판정·기존 자산 불변 gate�
 예상 시간은 대화에서의 계획치일 뿐 완료 기준이 아니다. T01~T03 준비 약 4~8시간, 이전에 설명한
 시험 프로그램·실행기·결선 안내 준비 묶음 약 16~32시간에는 결선 후 전체 실기와 릴리스까지의
 소요 시간이 포함되지 않는다. 구현·신호 발생 가능성·결함에 따라 다시 추정한다.
+
+407 최초 준비·Windows Host 차단과 당시 **flash/HIL NOT RUN**은 [80번 기록](<./04_검증 기록/80_T12_Fixture_407_준비와_Host_실행_차단.md>)에 보존했다. 이후 81번에서 필수 Host와 영향 target 회귀를 완료했다. 이번 82번에서는 결선 유지 확인 뒤 407 첫 실기를 통과했으며 문서·증거 검증 후 원격 main에 푸시한다. 그 뒤 408 결선 확인과 실기는 83번에서 완료했다.
+
+407 재개 exact 393e419는 설치된 LLVM 22.1.8로 Host **655 PASS·1 조건부 SKIP(총 656)**, 계약 45·package 20·정렬 358·Inventory·예제 발견과 pair/BLE **target 8/8**을 통과했다. BLE 형 변환의 기계어·재배치도 6/6 동일하다. [81번 재개 기록](<04_검증 기록/81_T12_Fixture_407_Host_재개와_검증.md>)에 새 근거를 보존했다. 이전 Windows 차단 원본은 80번에 유지하며 보안 정책을 변경하지 않았다. 이 준비 단계에서는 결선 확인 만료로 실기를 보류했다. 이후 사용자 유지 확인을 받아 actual source 4a64c25의 407 첫 실행을 완료했으며 아래 82번에 구분한다.
+
+T12 Fixture 407 exact 4a64c25·SWD 10 MHz **첫 실행 12개 PASS**는 [82번 기록](<04_검증 기록/82_T12_Fixture_407_current_source_공유_AIN6_검증.md>)에 보존했다. 버튼 미누름 AIN6/P1.13에서 입력 pull-down/up/down·2,592 samples·cleanup 12개와 입력 GPIO 24회·해제 12회를 확인했다. LOW median 0·HIGH median 3752, postflight 양쪽 source/role 확인 PASS. 당시 401~407 누계는 **228개 기능·49,248 samples·228개 cleanup**이었다. 이후 408 결과는 아래 83번에 구분한다. T12 전체·T13 이후와 readiness 미해결 8개는 유지한다.
+
+T12 Fixture 408 exact 87b987d·SWD 10 MHz **48개 기능 PASS**는 [83번 기록](<04_검증 기록/83_T12_Fixture_408_current_source_PWM_ADC_검증.md>)에 보존했다. 최초 DUT flash timeout은 외부 시험 시작 전 실패였으며, 읽기 응답 회복 확인 뒤 한 번의 새 실행으로 10,368 samples·cleanup 48회를 통과했다. 두 runtime identity도 재확인했다. 401~408 누계 **276개 기능·59,616 samples·276개 cleanup**으로 AIN0~7의 개별 기능 근거를 확보했다. 다음은 **420 QDEC**이며 430 I2S·440 PDM과 남은 T12 요구·T13 이후·readiness 미해결 8개는 유지한다.

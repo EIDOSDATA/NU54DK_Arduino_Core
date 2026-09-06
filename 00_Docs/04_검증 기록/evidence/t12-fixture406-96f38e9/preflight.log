@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-synthetic-signal",
+  "status": "preflight",
+  "fixture_id": 406,
+  "fixture_revision": 4,
+  "catalog_sha256": "6942ca81e99d0744d04dd746a0e83ac4fad2adb5697b83523a22aec0642fbba2",
+  "core_revision": "96f38e9486c69cda2c76b48029bc0dc9404d9709",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": false,
+  "repetitions": 1,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "bc450586da8a2307138c71216e62f5da28db37f4b93d5ff87a54ff863228a967",
+      "elf_sha256": "c588bf4fcf2a9adc3cede3a28e77603a5deebe6ad0506d8e180944615a69e754",
+      "record_sha256": "e7b36793fc59f2af051770f1c48c829ca77d2cbc5bfaafcbd5ef4e4a07bd86d9"
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "7d4e9ee8c86895cd41636f56dadc9c71f32570b275eccb9f658b504d94af8b2c",
+      "elf_sha256": "8136abc4ddaf627e6483ccaded98a1bba644b6db02da4c3358859665bb7149a1",
+      "record_sha256": "e7b36793fc59f2af051770f1c48c829ca77d2cbc5bfaafcbd5ef4e4a07bd86d9"
+    }
+  ],
+  "results": [],
+  "fixture": {
+    "id": 406,
+    "family": "analog",
+    "banks": [
+      1,
+      1
+    ],
+    "instances": [
+      [],
+      []
+    ],
+    "links": [
+      {
+        "dut": [
+          "P4",
+          10,
+          "P1.12"
+        ],
+        "peer": [
+          "P4",
+          12,
+          "P1.14"
+        ],
+        "signal": "peer INPUT pull-down/up/down -> DUT SAADC AIN5"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "P1.12/AIN5는 SB4/VBAT_MON을 통해 VBAT 분압기 R8 470kΩ·R11 1MΩ·C12 100nF와 공유합니다(원본 회로도 1·3쪽). B P1.14는 INPUT을 유지하고 내부 pull-down/up/down으로만 신호를 만듭니다. 출력 드라이버·PWM 사용 금지. 각 단계 25ms 정착 뒤 32/256 sample·single/double buffer 12 vector, LOW raw -256~512·HIGH raw 1024 초과~4095의 모든 samples를 요구합니다. controller_role=2. SB4/PMIC 설정 변경 없음; 실제 SB4 상태·배터리 전압 측정이 아닙니다.",
+    "pullups": [
+      "B P1.14 INPUT 내부 pull-down/up/down만 사용하고 종료 시 no-pull 입력으로 해제. 외부 저항·전원선 추가 없음."
+    ]
+  },
+  "confirmation_template": {
+    "fixture_id": 406,
+    "fixture_revision": 4,
+    "catalog_sha256": "6942ca81e99d0744d04dd746a0e83ac4fad2adb5697b83523a22aec0642fbba2",
+    "core_revision": "96f38e9486c69cda2c76b48029bc0dc9404d9709",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "uid_sha256": [
+      "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0"
+    ],
+    "hex_sha256": [
+      "bc450586da8a2307138c71216e62f5da28db37f4b93d5ff87a54ff863228a967",
+      "7d4e9ee8c86895cd41636f56dadc9c71f32570b275eccb9f658b504d94af8b2c"
+    ],
+    "dap_uart_disconnected_both": false,
+    "swd_connected_both": false,
+    "power_rails_not_joined": false,
+    "equal_io_voltage_confirmed": false,
+    "common_ground_confirmed": false,
+    "links_match_catalog": false,
+    "pullups_match_catalog": false,
+    "extra_outputs_disconnected": false,
+    "confirmed_at_unix": 0,
+    "confirmed_by": ""
+  }
+}
+V04_SIGNAL_PREFLIGHT_ONLY; no probe access, flash, reset or external output

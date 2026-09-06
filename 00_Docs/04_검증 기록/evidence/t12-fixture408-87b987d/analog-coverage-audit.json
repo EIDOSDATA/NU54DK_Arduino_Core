@@ -1,0 +1,97 @@
+{
+  "status": "passed",
+  "fixtures": [
+    {
+      "fixture_id": 401,
+      "source": "a12e444cfb5ef47471c0e0d436f082acfd200c19",
+      "original": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\t12-fixture401-a12e444\\fixture401-attempt1.json.raw.gz",
+      "original_sha256": "41d4244d954666f9912668dd2c9f27f58426d8b9f342c83e64eaf4216cd0de3a",
+      "functional": 48,
+      "cleanup": 48,
+      "samples": 10368,
+      "sample_count_basis": "recorded receiver DMA counts; old PWM records retain sample hash only"
+    },
+    {
+      "fixture_id": 402,
+      "source": "ff483a1bbd2a7f275b2c59126ef0e9af09211872",
+      "original": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\t12-fixture402-ff483a1\\fixture402-attempt1.json.raw.gz",
+      "original_sha256": "46d729e64e028187916e93f86f67c18ad1016aea02518fb765bbf59c9e39fc12",
+      "functional": 48,
+      "cleanup": 48,
+      "samples": 10368,
+      "sample_count_basis": "recorded receiver DMA counts; old PWM records retain sample hash only"
+    },
+    {
+      "fixture_id": 403,
+      "source": "c95b9049a62e7c911e4b67104a8f36391ab7e168",
+      "original": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\t12-fixture403-c95b904\\fixture403-attempt1.json.raw.gz",
+      "original_sha256": "a3050e2ec0c8d0172ef773e2c94d9b2f4c1db0a3ea216e2b17064d34067c5125",
+      "functional": 48,
+      "cleanup": 48,
+      "samples": 10368,
+      "sample_count_basis": "recorded receiver DMA counts; old PWM records retain sample hash only"
+    },
+    {
+      "fixture_id": 404,
+      "source": "e080bbc8f07a0ad751d83dacdb259d395b69be5b",
+      "original": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\t12-fixture404-e080bbc\\fixture404-attempt1.json.raw.gz",
+      "original_sha256": "e22185064b3f1078cd430081063bfc5930ff53908f9bcd863ba15e92c4dd4d26",
+      "functional": 48,
+      "cleanup": 48,
+      "samples": 10368,
+      "sample_count_basis": "recorded receiver DMA counts; old PWM records retain sample hash only"
+    },
+    {
+      "fixture_id": 405,
+      "source": "9fc12bfbdafbb8a4450ed6cc61ca97b9c1efd220",
+      "original": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\t12-fixture405-9fc12bf\\fixture405-attempt1.json.raw.gz",
+      "original_sha256": "5c7d7d9a1d756693657fcc5b76aa9a49713a4149897afd4aa846de3a0700fffb",
+      "functional": 12,
+      "cleanup": 12,
+      "samples": 2592,
+      "sample_count_basis": "recorded receiver DMA counts; old PWM records retain sample hash only"
+    },
+    {
+      "fixture_id": 406,
+      "source": "96f38e9486c69cda2c76b48029bc0dc9404d9709",
+      "original": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\t12-fixture406-96f38e9\\fixture406-attempt1.json.raw.gz",
+      "original_sha256": "e2184a0146d55a834183bb37ab9235a3fda74213db6a2a056152941ad2e4c953",
+      "functional": 12,
+      "cleanup": 12,
+      "samples": 2592,
+      "sample_count_basis": "recorded receiver DMA counts; old PWM records retain sample hash only"
+    },
+    {
+      "fixture_id": 407,
+      "source": "4a64c2562fdd5e9169faecf56b43043a0afec67c",
+      "original": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\t12-fixture407-4a64c25\\fixture407-attempt1.json.raw.gz",
+      "original_sha256": "d780728ece2e30c8fb724912c23764c50ce944fb1fe76553c51d9c8192b9d602",
+      "functional": 12,
+      "cleanup": 12,
+      "samples": 2592,
+      "sample_count_basis": "recorded receiver DMA counts; old PWM records retain sample hash only"
+    },
+    {
+      "fixture_id": 408,
+      "source": "87b987d9ed50855e0134f2c637c00706572719a5",
+      "original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture408\\fixture408-attempt2.json",
+      "original_sha256": "251f4e09de518365039204026c98b84653eb11d92c1199a7901fc4d26adcefb8",
+      "functional": 48,
+      "cleanup": 48,
+      "samples": 10368,
+      "sample_count_basis": "recorded receiver DMA counts; old PWM records retain sample hash only"
+    }
+  ],
+  "totals": {
+    "functional": 276,
+    "cleanup": 276,
+    "samples": 59616
+  },
+  "pending_analog_fixture_ids": [],
+  "remaining_signal_fixtures": [
+    420,
+    430,
+    440
+  ],
+  "t12_complete": false
+}

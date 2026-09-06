@@ -1,0 +1,121 @@
+{
+  "source": "393e419f4c855037d4e6221c315f9be808a7d274",
+  "pair_comparison_source": "076685aa78247ec18e4fd95be50b2123a1f043fa",
+  "ble_comparison_source": "18a7cbe",
+  "product_delta": [
+    "libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp"
+  ],
+  "pair_builds": [
+    {
+      "scenario": "nucode.v04.pair_dut",
+      "compiled_inputs_unchanged_from_076685a": true,
+      "translation_units": 42,
+      "configuration_unchanged": true
+    },
+    {
+      "scenario": "nucode.v04.pair_peer",
+      "compiled_inputs_unchanged_from_076685a": true,
+      "translation_units": 42,
+      "configuration_unchanged": true
+    }
+  ],
+  "ble_object_comparisons": [
+    {
+      "scenario": "nucode.m19.ble_gap_hil_peripheral",
+      "gap_scanning_instructions_and_relocations_unchanged": true,
+      "objects": [
+        {
+          "path": "C:\\u2a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m19.ble_gap_hil_peripheral\\m19_ble_gap_hil\\CMakeFiles\\app.dir\\C_\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE\\src\\internal\\gap\\GapScanning.cpp.obj",
+          "object_sha256": "44826321993e1f0a4c71f610ba2d6b55813f52a09f95717a0325cef06396946a",
+          "disassembly_relocations_sha256": "fcc1b41f980249a6dccd38fb730ba749865b0dc84f2b6f681838babddb08a168"
+        },
+        {
+          "path": "C:\\u3o\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m19.ble_gap_hil_peripheral\\m19_ble_gap_hil\\CMakeFiles\\app.dir\\C_\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE\\src\\internal\\gap\\GapScanning.cpp.obj",
+          "object_sha256": "1a50d4bfc5d0c22a6bbb0ecf0c6f26731414efe8eade7e87ec90a6dfa7644317",
+          "disassembly_relocations_sha256": "fcc1b41f980249a6dccd38fb730ba749865b0dc84f2b6f681838babddb08a168"
+        }
+      ]
+    },
+    {
+      "scenario": "nucode.m19.ble_gap_hil_central",
+      "gap_scanning_instructions_and_relocations_unchanged": true,
+      "objects": [
+        {
+          "path": "C:\\u2a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m19.ble_gap_hil_central\\m19_ble_gap_hil\\CMakeFiles\\app.dir\\C_\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE\\src\\internal\\gap\\GapScanning.cpp.obj",
+          "object_sha256": "8d93550c977fd2dd0816a768fbb353fd220b491b605c86bc668027394c4bc4d3",
+          "disassembly_relocations_sha256": "fcc1b41f980249a6dccd38fb730ba749865b0dc84f2b6f681838babddb08a168"
+        },
+        {
+          "path": "C:\\u3o\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m19.ble_gap_hil_central\\m19_ble_gap_hil\\CMakeFiles\\app.dir\\C_\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE\\src\\internal\\gap\\GapScanning.cpp.obj",
+          "object_sha256": "5db2d54c657b2fbc6ae9592eabe95269eaf970ac1de7aca59fd8a34bd6a28835",
+          "disassembly_relocations_sha256": "fcc1b41f980249a6dccd38fb730ba749865b0dc84f2b6f681838babddb08a168"
+        }
+      ]
+    },
+    {
+      "scenario": "nucode.m20.ble_gatt_hil_peripheral",
+      "gap_scanning_instructions_and_relocations_unchanged": true,
+      "objects": [
+        {
+          "path": "C:\\u2a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m20.ble_gatt_hil_peripheral\\m20_ble_gatt_hil\\CMakeFiles\\app.dir\\C_\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE\\src\\internal\\gap\\GapScanning.cpp.obj",
+          "object_sha256": "e7dfbe552ecdb76c27a3d511588fbdf551c44d3c621b352a34edeb9ba792a638",
+          "disassembly_relocations_sha256": "fcc1b41f980249a6dccd38fb730ba749865b0dc84f2b6f681838babddb08a168"
+        },
+        {
+          "path": "C:\\u3o\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m20.ble_gatt_hil_peripheral\\m20_ble_gatt_hil\\CMakeFiles\\app.dir\\C_\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE\\src\\internal\\gap\\GapScanning.cpp.obj",
+          "object_sha256": "ee99e6686d2ad1a78c50dc65ce12d68ba18cafcd6aa13050f1216fcfd00e0a57",
+          "disassembly_relocations_sha256": "fcc1b41f980249a6dccd38fb730ba749865b0dc84f2b6f681838babddb08a168"
+        }
+      ]
+    },
+    {
+      "scenario": "nucode.m20.ble_gatt_hil_central",
+      "gap_scanning_instructions_and_relocations_unchanged": true,
+      "objects": [
+        {
+          "path": "C:\\u2a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m20.ble_gatt_hil_central\\m20_ble_gatt_hil\\CMakeFiles\\app.dir\\C_\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE\\src\\internal\\gap\\GapScanning.cpp.obj",
+          "object_sha256": "5682becb71fc3028fb9b28435ec2a59d119a24c55e8d5317adfb2fba77167190",
+          "disassembly_relocations_sha256": "fcc1b41f980249a6dccd38fb730ba749865b0dc84f2b6f681838babddb08a168"
+        },
+        {
+          "path": "C:\\u3o\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m20.ble_gatt_hil_central\\m20_ble_gatt_hil\\CMakeFiles\\app.dir\\C_\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE\\src\\internal\\gap\\GapScanning.cpp.obj",
+          "object_sha256": "3a1be3dd8966a865c56813baf8c5f1c2aeeac56b83d63873418947991bdbd992",
+          "disassembly_relocations_sha256": "fcc1b41f980249a6dccd38fb730ba749865b0dc84f2b6f681838babddb08a168"
+        }
+      ]
+    },
+    {
+      "scenario": "nucode.m21.ble_security_hil_peripheral",
+      "gap_scanning_instructions_and_relocations_unchanged": true,
+      "objects": [
+        {
+          "path": "C:\\u2a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m21.ble_security_hil_peripheral\\m21_ble_hil\\CMakeFiles\\app.dir\\C_\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE\\src\\internal\\gap\\GapScanning.cpp.obj",
+          "object_sha256": "097452445c78f5772d2aa33061bc64b722595c82e26e3654e712c54655fd3351",
+          "disassembly_relocations_sha256": "fcc1b41f980249a6dccd38fb730ba749865b0dc84f2b6f681838babddb08a168"
+        },
+        {
+          "path": "C:\\u3o\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m21.ble_security_hil_peripheral\\m21_ble_hil\\CMakeFiles\\app.dir\\C_\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE\\src\\internal\\gap\\GapScanning.cpp.obj",
+          "object_sha256": "754e49fc2f7d8ef9aa3f497ff5101d4131009a311510897128b85e32ca1bbf99",
+          "disassembly_relocations_sha256": "fcc1b41f980249a6dccd38fb730ba749865b0dc84f2b6f681838babddb08a168"
+        }
+      ]
+    },
+    {
+      "scenario": "nucode.m21.ble_security_hil_central",
+      "gap_scanning_instructions_and_relocations_unchanged": true,
+      "objects": [
+        {
+          "path": "C:\\u2a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m21.ble_security_hil_central\\m21_ble_hil\\CMakeFiles\\app.dir\\C_\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE\\src\\internal\\gap\\GapScanning.cpp.obj",
+          "object_sha256": "d194674e90a172edeb742169e06da61ab9ca36224c576e0d6372c122c0dc01a6",
+          "disassembly_relocations_sha256": "fcc1b41f980249a6dccd38fb730ba749865b0dc84f2b6f681838babddb08a168"
+        },
+        {
+          "path": "C:\\u3o\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m21.ble_security_hil_central\\m21_ble_hil\\CMakeFiles\\app.dir\\C_\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE\\src\\internal\\gap\\GapScanning.cpp.obj",
+          "object_sha256": "c9da7fb87617abe709ef8ae5393e58dd1aa67ace7bf52fa9339fb3c104b4bd07",
+          "disassembly_relocations_sha256": "fcc1b41f980249a6dccd38fb730ba749865b0dc84f2b6f681838babddb08a168"
+        }
+      ]
+    }
+  ],
+  "scope": "BLE explicit uint8_t cast preserves GCC target instructions and relocations. Historical BLE HIL retains its original source; no new BLE physical PASS is claimed."
+}

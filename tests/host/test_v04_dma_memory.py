@@ -1,21 +1,22 @@
 """EasyDMA RAM 범위 검사와 production 적용 지점을 검증합니다."""
 from pathlib import Path
-import shutil
 import subprocess
 import tempfile
 import unittest
+
+from host_compiler import compiler_command
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
 class DmaMemoryTests(unittest.TestCase):
     def test_native_full_range_and_alignment_boundaries(self):
-        compiler = shutil.which("g++")
+        compiler = compiler_command()
         self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory(prefix="nu54-v04-dma-") as folder:
             binary = Path(folder) / "dma-memory.exe"
             result = subprocess.run(
-                [compiler, "-std=c++17", "-Wall", "-Wextra", "-Werror",
+                [*compiler, "-std=c++17", "-Wall", "-Wextra", "-Werror",
                  "-I", str(ROOT / "cores/arduino"),
                  str(ROOT / "tests/host/v04_dma_memory_main.cpp"), "-o", str(binary)],
                 capture_output=True, text=True, timeout=60)

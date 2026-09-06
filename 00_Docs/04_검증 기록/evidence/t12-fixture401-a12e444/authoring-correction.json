@@ -1,0 +1,9 @@
+{
+  "type": "post-execution-audit-authoring-correction",
+  "initial_script": "audit_results_initial.py",
+  "failure": "KeyError: swd_frequency_hz at role flash metadata lookup",
+  "correction": "Use canonical role flash frequency_hz; top-level remains swd_frequency_hz. Also assert mass_erase_requested and recover_requested are false.",
+  "firmware_changed": false,
+  "hil_rerun": false,
+  "original_hil_evidence_modified": false
+}

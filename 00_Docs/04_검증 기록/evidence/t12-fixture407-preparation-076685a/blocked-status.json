@@ -1,0 +1,38 @@
+{
+  "status": "blocked",
+  "fixture_id": 407,
+  "source": "076685aa78247ec18e4fd95be50b2123a1f043fa",
+  "checked_at_utc": "2026-09-06T13:59:41.399545+00:00",
+  "reason": "Windows Smart App Control denies the pinned WinLibs g++.exe: WinError 4551, Code Integrity 3077/3033. Native Windows PATH retry produced the same denial.",
+  "host_full_gate": "not run; required C++ focused tests are blocked",
+  "signal_tests": {
+    "passed_python": 13,
+    "blocked_cpp": 1,
+    "total": 14
+  },
+  "lifecycle_tests": {
+    "blocked_cpp": 3,
+    "total": 3
+  },
+  "fixture_tests_passed": 12,
+  "contract_tests_passed": 45,
+  "style_files_passed": 358,
+  "pre_record_markdown_files_passed": 188,
+  "inventory": [
+    75,
+    23,
+    16
+  ],
+  "readiness_blockers": 8,
+  "pair_target_builds_passed": 2,
+  "build_seconds": 114.63,
+  "usb_inventory_passed": 2,
+  "flash_executed": false,
+  "reset_executed": false,
+  "fixture407_physical_executed": false,
+  "security_policy_modified": false,
+  "last_physical_source": "96f38e9486c69cda2c76b48029bc0dc9404d9709",
+  "last_physical_fixture": 406,
+  "next_required_fixture": 408,
+  "resume": "Use an approved Host development environment; run the full Host gate before 407 flash/HIL. Rebind confirmation to actual exact images and reconfirm wiring if its 30-minute validity elapsed. Do not substitute target build for Host or HIL."
+}

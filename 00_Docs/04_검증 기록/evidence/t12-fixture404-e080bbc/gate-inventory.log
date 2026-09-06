@@ -1,0 +1,15 @@
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tools\peripheral\verify_generated.py
+GENERATED_CONTRACTS_PASS=5;GENERATORS=4
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tools\ci\verify_product_identity.py
+PRODUCT_IDENTITY_PASS=source:0.4.0-dev;checkout:0.4.0-dev
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tools\peripheral\verify_v04_test_plan.py
+V04_TEST_PLAN_PASS=identities:75;families:19;physical_executed:0
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tools\peripheral\verify_m23_inventory.py
+M23_INVENTORY_PASS=instances:75
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tools\peripheral\verify_m24_serial_contract.py
+M24_SERIAL_CONTRACT_PASS=blocks:5;identities:23;profiles:23;onboard:7;fixture:16
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tools\peripheral\verify_m26_system_contract.py
+M26_SYSTEM_CONTRACT_PASS=capabilities:16;unknown:0
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tools\release\m27_release.py contract
+M27_RELEASE_CONTRACT_PASS=gates:16;blockers:8
+M12_GATE_PASS=inventory

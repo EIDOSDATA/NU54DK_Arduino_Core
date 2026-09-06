@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-synthetic-signal",
+  "status": "preflight",
+  "fixture_id": 401,
+  "fixture_revision": 2,
+  "catalog_sha256": "50ad2ee57f26ac65cc9b88a0197c9064131fbffd5e060aea2a648e5f72ffd8e3",
+  "core_revision": "a12e444cfb5ef47471c0e0d436f082acfd200c19",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": false,
+  "repetitions": 1,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "fefbf9000a838d6adf4d2a1407e520312ece193c6a6f7ba14e22268c786f9d58",
+      "elf_sha256": "0d0aafe9cbde933f59592f8335e4f5105298afb78f9aac4234f668992d3577a8",
+      "record_sha256": "bd8620bb46bcba5ee56cf08952415f0e151da7e4fa5fc1604fdfaaa66f7527bb"
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "a7789f6e87fcd123c86a974d36165bf2bf83abb1ba2b167fd9931cd1818dfd59",
+      "elf_sha256": "b9711a19901fba03381731a388ffccaa0ada777380cf7a378a59690c767e4c11",
+      "record_sha256": "bd8620bb46bcba5ee56cf08952415f0e151da7e4fa5fc1604fdfaaa66f7527bb"
+    }
+  ],
+  "results": [],
+  "fixture": {
+    "id": 401,
+    "family": "analog",
+    "banks": [
+      1,
+      1
+    ],
+    "instances": [
+      [
+        20,
+        21,
+        22
+      ],
+      [
+        20,
+        21,
+        22
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "peer": [
+          "P4",
+          12,
+          "P1.14"
+        ],
+        "signal": "peer PWM level -> DUT SAADC AIN0"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "peer(role 2)�� LED4 buffer �Է� P1.14�� PWM source�� ���� DUT(role 1)�� �ݸ��� AIN0���� ���� SAMPLE�մϴ�. PWM20/21/22�� channel slot 0~3�� ���� �˻��ϸ� controller_role=2�� ����մϴ�.",
+    "pullups": []
+  },
+  "confirmation_template": {
+    "fixture_id": 401,
+    "fixture_revision": 2,
+    "catalog_sha256": "50ad2ee57f26ac65cc9b88a0197c9064131fbffd5e060aea2a648e5f72ffd8e3",
+    "core_revision": "a12e444cfb5ef47471c0e0d436f082acfd200c19",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "uid_sha256": [
+      "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0"
+    ],
+    "hex_sha256": [
+      "fefbf9000a838d6adf4d2a1407e520312ece193c6a6f7ba14e22268c786f9d58",
+      "a7789f6e87fcd123c86a974d36165bf2bf83abb1ba2b167fd9931cd1818dfd59"
+    ],
+    "dap_uart_disconnected_both": false,
+    "swd_connected_both": false,
+    "power_rails_not_joined": false,
+    "equal_io_voltage_confirmed": false,
+    "common_ground_confirmed": false,
+    "links_match_catalog": false,
+    "pullups_match_catalog": false,
+    "extra_outputs_disconnected": false,
+    "confirmed_at_unix": 0,
+    "confirmed_by": ""
+  }
+}
+V04_SIGNAL_PREFLIGHT_ONLY; no probe access, flash, reset or external output

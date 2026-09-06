@@ -1,0 +1,12 @@
+{
+  "RecordedAtUtc": "2026-09-06T14:43:13.1756831Z",
+  "Removed": [
+    {
+      "Path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture407\\clang-shared-probe.exe",
+      "Bytes": 62976,
+      "SHA256": "9b1e4733881b36a4e1981c0de2f958851012b7c2bcf1eb64f7940444bb046baf",
+      "Reason": "One-off Clang capability probe superseded by canonical native Host tests"
+    }
+  ],
+  "RecursiveDeletion": false
+}

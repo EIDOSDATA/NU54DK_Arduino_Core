@@ -1,0 +1,23 @@
+...........E..
+======================================================================
+ERROR: test_shared_source_never_drives_high_and_releases_on_abort (__main__.SignalTests.test_shared_source_never_drives_high_and_releases_on_abort)
+! @brief 실제 firmware helper를 컴파일하여 잘못된 인자·중복 시작·해제를 검사합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_signal.py", line 129, in test_shared_source_never_drives_high_and_releases_on_abort
+    result = subprocess.run([compiler, "-std=c++17", "-Wall", "-Wextra", "-Werror",
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.980s
+
+FAILED (errors=1)

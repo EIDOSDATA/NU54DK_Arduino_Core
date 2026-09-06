@@ -1,0 +1,8 @@
+test_fixture_gate_allowlist_expiry_and_fault_latch (test_v04_serial_lifecycle.SerialLifecycleTests.test_fixture_gate_allowlist_expiry_and_fault_latch) ... ok
+test_native_production_lifecycle (test_v04_serial_lifecycle.SerialLifecycleTests.test_native_production_lifecycle) ... ok
+test_native_production_route_validator (test_v04_serial_lifecycle.SerialLifecycleTests.test_native_production_route_validator) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.777s
+
+OK

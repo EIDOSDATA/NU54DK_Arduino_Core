@@ -1,0 +1,12 @@
+C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\v04_fixture_gate_main.cpp:28:77: error: code should be clang-formatted [-Wclang-format-violations]
+                    v04::fixtureFamily(405) == v04::FixtureFamily::analog &&
+                                                                            ^
+C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\v04_fixture_gate_main.cpp:29:78: error: code should be clang-formatted [-Wclang-format-violations]
+                    v04::fixtureFamily(406) == v04::FixtureFamily::invalid &&
+                                                                             ^
+C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\v04_fixture_gate_main.cpp:30:78: error: code should be clang-formatted [-Wclang-format-violations]
+                    v04::fixtureFamily(407) == v04::FixtureFamily::invalid &&
+                                                                             ^
+
+CPP_STYLE_FILES=358; FAILED=1; WRITE=0
+CPP_STYLE_FAIL=tests/host/v04_fixture_gate_main.cpp

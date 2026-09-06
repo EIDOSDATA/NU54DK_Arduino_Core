@@ -1,0 +1,13 @@
+{
+  "fixture_id": 406,
+  "baseline_source": "911b6ac0ea28d0f8dc634d10dec41037fdf9edd5",
+  "user_confirmation_recorded_at_utc": "2026-09-06T13:25:22+00:00",
+  "confirmation_text": "어. 그리 했어.",
+  "wiring": "A P1.12/AIN5 <-> B P1.14; common GND; prior A P1.11 removed; both USB disconnected for wiring then reconnected; DAP UART disconnected; SWD connected; SB4/PMIC unchanged",
+  "signal_profile": "B remains INPUT with pulldown/pullup/pulldown, 25ms settling, no output driver",
+  "swd_frequency_hz": 10000000,
+  "pending_after_406": [
+    407,
+    408
+  ]
+}

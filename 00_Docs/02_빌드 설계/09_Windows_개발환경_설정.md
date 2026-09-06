@@ -3,11 +3,11 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-WINDOWS-DEV-001 |
-| 문서 개정 | 1.4 |
+| 문서 개정 | 1.5 |
 | 문서 상태 | 현재 source 개발 기준 |
 | 적용 제품 버전 | `v0.3.0` stable 이후 `main` |
 | 지원 host | Windows 10/11 x64 |
-| 최종 갱신일 | 2026-09-04 |
+| 최종 갱신일 | 2026-09-06 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 새 Windows PC에서 NU54DK Arduino Core의 source를 수정하고 로컬 gate와 실물 보드
@@ -321,6 +321,39 @@ $ArduinoCli = (Get-Command arduino-cli.exe -ErrorAction Stop).Source
 있으면 전체 host 환경이 준비된 것으로 보지 않는다. Windows Application Control이 임시 native
 실행 파일만 차단한 경우에는 시험 출력의 명시적 skip 사유와 target Zephyr 시험 결과를 함께
 판정한다.
+
+### 9.1 Host 컴파일러의 명시적 선택
+
+Host C/C++ 시험은 `tests/host/host_compiler.py`를 통해 `CXX`와 `CC`를 읽는다.
+각 변수에는 실행 파일 경로 하나를 넣는다. 명시한 도구가 없으면 다른 도구로 전환하거나
+시험을 건너뛰지 않고 실패한다. 지정하지 않으면 기존 GCC 우선 탐색을 유지한다.
+추가 인자는 `NUCODE_HOST_CXX_FLAGS`와 `NUCODE_HOST_CC_FLAGS`의 JSON 문자열 배열로
+전달한다. 인자의 공백을 유지하며 shell 명령으로 해석하지 않는다. CMake Host 구성 시험에도
+같은 C++ 컴파일러와 인자를 전달한다.
+
+설치된 LLVM 22.1.8의 Clang/LLD와 WinLibs UCRT header·library를 함께 사용하는 예시는 다음과
+같다. 경로는 현재 설치 위치로 확인해 지정한다. Target compiler·Nordic SDK 고정값과 별개인
+Host 시험 환경이며, 실행 기록에는 선택한 도구 버전·hash·인자를 남긴다.
+
+```powershell
+$HostLlvmBin = 'C:\NU54DEV\tools\LLVM-22.1.8\bin'
+$HostMingwRoot = 'C:\NU54DEV\tools\WinLibs-16.1.0-UCRT\mingw64'
+$env:CC = Join-Path $HostLlvmBin 'clang.exe'
+$env:CXX = Join-Path $HostLlvmBin 'clang++.exe'
+$HostCompilerFlags = @('--target=x86_64-w64-windows-gnu',
+    ('--sysroot=' + $HostMingwRoot.Replace('\', '/')), '-fuse-ld=lld')
+$env:NUCODE_HOST_CC_FLAGS = ConvertTo-Json -InputObject $HostCompilerFlags -Compress
+$env:NUCODE_HOST_CXX_FLAGS = $env:NUCODE_HOST_CC_FLAGS
+$env:Path = $HostLlvmBin + ';' + (Join-Path $HostMingwRoot 'bin') + ';' + $env:Path
+& $Python .\tools\ci\run_m12_gate.py host
+```
+
+Clang의 GNU target·sysroot·LLD 구성은 [공식 toolchain 문서](https://clang.llvm.org/docs/Toolchain.html)를
+참고한다. 이 선택은 실행 가능한 별도 컴파일러를 사용하는 절차다. Windows가 차단한 실행 파일의
+복사·이름 변경·보안 정책 변경을 수행하지 않는다. 새 도구에서도 모든 필수 native 시험의 실제
+compile/link/run을 확인하며 과거 GCC 성공을 새 Clang 결과로 집계하지 않는다.
+
+### 9.2 고정 SDK와 Arduino 검사
 
 고정 NCS 설치본까지 포함해 M23 manifest의 DTS identity를 확인할 때는 다음 명령을 추가한다.
 

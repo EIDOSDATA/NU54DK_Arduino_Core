@@ -1,0 +1,10 @@
+$ErrorActionPreference = 'Stop'
+$env:PATH = 'C:\NU54DEV\venv\host-3.12.10\Scripts;C:\NU54DEV\tools\WinLibs-16.1.0-UCRT\mingw64\bin;C:\NU54DEV\tools\arduino-cli-1.5.1;C:\Program Files\Git\cmd;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Windows\System32;C:\Windows'
+$env:CXX = 'C:\NU54DEV\tools\WinLibs-16.1.0-UCRT\mingw64\bin\g++.exe'
+$env:PYTHONDONTWRITEBYTECODE = '1'
+$env:PYTHONUTF8 = '1'
+$env:NUCODE_NCS_ROOT = 'C:\ncs\v3.4.0'
+$env:NUCODE_TOOLCHAIN_ROOT = 'C:\ncs\toolchains\dcbdc366a1'
+Set-Location -LiteralPath 'C:\Users\eidos\GitHub\NU54DK_Arduino_Core'
+& 'C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe' -B tools/ci/run_m12_gate.py host *> 'C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t12-fixture405\gate-host.log'
+exit $LASTEXITCODE

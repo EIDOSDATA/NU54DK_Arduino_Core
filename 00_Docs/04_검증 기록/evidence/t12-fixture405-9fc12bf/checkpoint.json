@@ -1,0 +1,13 @@
+{
+  "fixture_id": 405,
+  "baseline_source": "b6611d7f4de9f40673583f36a4c1ee9fb20b2a43",
+  "user_confirmation_recorded_at_utc": "2026-09-06T12:52:24+00:00",
+  "confirmation_text": "ㅇㅇ 했다. P1.11 했다",
+  "wiring": "A P1.11/AIN4 <-> B P1.14 open-drain; common GND; separate USB; DAP UART disconnected; SWD connected; SB1 and PMIC unchanged",
+  "swd_frequency_hz": 10000000,
+  "pending_after_405": [
+    406,
+    407,
+    408
+  ]
+}

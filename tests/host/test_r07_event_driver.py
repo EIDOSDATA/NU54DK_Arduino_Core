@@ -1,9 +1,10 @@
 """! @brief production DPPI·registry와 실제 Host thread를 실행합니다. """
 from pathlib import Path
-import shutil
 import subprocess
 import tempfile
 import unittest
+
+from host_compiler import compiler_command
 
 ROOT = Path(__file__).resolve().parents[2]
 SCENARIOS = ['lookup', 'invalid', 'capacity', 'disconnect', 'release', 'isr', 'threads']
@@ -11,11 +12,11 @@ SCENARIOS = ['lookup', 'invalid', 'capacity', 'disconnect', 'release', 'isr', 't
 
 class EventDriverTests(unittest.TestCase):
     def test_production_dppi_and_registry(self):
-        compiler = shutil.which('g++')
+        compiler = compiler_command()
         self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory(prefix='nu54-r07-') as directory:
             binary = Path(directory) / 'event.exe'
-            command = [compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
+            command = [*compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
                        '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections']
             for include in ['tests/host/event_fabric_stubs', 'tests/host/fabric_driver_stubs',
                             'tests/host/serial_driver_stubs', 'tests/host/serial_fabric_stubs', 'cores/arduino']:

@@ -1,9 +1,10 @@
 """! @brief 실제 자원 관리자·runtime route의 실패 경계를 Host에서 실행합니다. """
 from pathlib import Path
-import shutil
 import subprocess
 import tempfile
 import unittest
+
+from host_compiler import compiler_command
 
 ROOT = Path(__file__).resolve().parents[2]
 SCENARIOS = ['cycle', 'guards', 'block', 'alias', 'begin0', 'begin1', 'pinctrl',
@@ -14,11 +15,11 @@ SCENARIOS = ['cycle', 'guards', 'block', 'alias', 'begin0', 'begin1', 'pinctrl',
 
 class ResourceRouteTests(unittest.TestCase):
     def test_production_resource_and_route(self):
-        compiler = shutil.which('g++')
+        compiler = compiler_command()
         self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory(prefix='nu54-r08-') as directory:
             binary = Path(directory) / 'route.exe'
-            command = [compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
+            command = [*compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
                        '-DCONFIG_ZTEST=1', '-DCONFIG_NUCODE_ARDUINO_IO_RESOURCE_SLOTS=8']
             for include in ['tests/host/route_stubs', 'tests/host/serial_driver_stubs',
                             'tests/host/serial_fabric_stubs', 'cores/arduino']:

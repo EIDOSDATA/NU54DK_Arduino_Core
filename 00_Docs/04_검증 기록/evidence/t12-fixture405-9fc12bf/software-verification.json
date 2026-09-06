@@ -1,0 +1,52 @@
+{
+  "source": "9fc12bfbdafbb8a4450ed6cc61ca97b9c1efd220",
+  "host_tests": 648,
+  "host_test_groups": 80,
+  "contract_tests": 45,
+  "cpp_style_files": 358,
+  "pair_target_builds": 2,
+  "readiness_blockers": 8,
+  "checks": [
+    {
+      "log": "gate-host-final.log",
+      "status": "passed",
+      "sha256": "766436701d2ced1a69dd4c63c75ab1805eb53eb7620cd6c14b69c4dadcd5e323"
+    },
+    {
+      "log": "gate-contract-prebuild.log",
+      "status": "passed",
+      "sha256": "e5adf50fa8dd8de8fcb057840119aa3e5e937cd7c4ff3eb11b9a0fb3407ecb90"
+    },
+    {
+      "log": "gate-inventory-prebuild.log",
+      "status": "passed",
+      "sha256": "7e58023f0d3cd63fb88dfb19c5c477d19a2c78e29e995a1b66bbfe7491c26fc6"
+    },
+    {
+      "log": "gate-docs-prebuild.log",
+      "status": "passed",
+      "sha256": "9c1f4227a1b660108845a0a646bb23e9858026ea1a72139bfa64cddeaa0633ea"
+    },
+    {
+      "log": "style-check-verified.log",
+      "status": "passed",
+      "sha256": "815a91c0143d286f3f4c0b1e54d2730cebed26477dc9ae233728fb51159d3d63"
+    },
+    {
+      "log": "build.log",
+      "status": "passed",
+      "sha256": "57809f9d28585229c14ae440fd6721b6ebfa1081c3a8e4b5a13d4ce6ac71a882"
+    }
+  ],
+  "preparation_failures_preserved": [
+    {
+      "log": "gate-host.log",
+      "reason": "Legacy gate test still expected fixture 405 to be invalid; updated to analog while 406/407 stay disabled until prepared."
+    },
+    {
+      "log": "style-check-final.log",
+      "reason": "Expanded gate assertion formatting required normalization; final full style check passed."
+    }
+  ],
+  "physical_claim": "None; separate fixture405-attempt1 and postflight records contain physical evidence."
+}

@@ -1,0 +1,15 @@
+{
+  "source": "87b987d9ed50855e0134f2c637c00706572719a5",
+  "fixture_id": 408,
+  "failed_attempt": "fixture408-attempt1.json",
+  "failure_phase": "DUT sector flash CMSIS-DAP timeout",
+  "functional_results_first_attempt": 0,
+  "external_wiring_executed_first_attempt": false,
+  "diagnostic": "probe-diagnostic.json",
+  "observed_recovery": "Both exact probes read expected CPUID at 10 MHz; A HALTED, B SLEEPING; four COM ports remain",
+  "root_cause": "unresolved; similar historical timeouts do not establish common root cause",
+  "next_action": "One complete new canonical run with same source/images/SWD and original confirmation timestamp",
+  "maximum_additional_attempts": 1,
+  "failed_results_reused": false,
+  "mass_erase_recover_unlock": false
+}

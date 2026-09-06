@@ -1,0 +1,31 @@
+{
+  "status": "passed",
+  "documents": 187,
+  "contract_tests": 45,
+  "readiness_blockers": 8,
+  "checks": [
+    {
+      "gate": "docs",
+      "log": "gate-docs.log",
+      "sha256": "f2cce8c73eb76f9b4bae9b2effa0ab0a4d4f1b160a80b288d72e437c12485834",
+      "sha256_basis": "published UTF-8 LF bytes",
+      "status": "passed"
+    },
+    {
+      "gate": "contract",
+      "log": "gate-contract.log",
+      "sha256": "dffe44d0340de396be8f85f4d66ad45943d6d4c92680101183232d3b5dc90387",
+      "sha256_basis": "published UTF-8 LF bytes",
+      "status": "passed"
+    },
+    {
+      "gate": "inventory",
+      "log": "gate-inventory.log",
+      "sha256": "66a2622de2e660e17c7e16fcdb13bd7befe2ccdf3b37e363061e727e6013aaab",
+      "sha256_basis": "published UTF-8 LF bytes",
+      "status": "passed"
+    }
+  ],
+  "prior_software_hash_basis": "software-verification.json checks refer to original bytes preserved as .raw.gz and indexed in raw-files.json",
+  "physical_evidence": "fixture405-attempt1.json; 12 functional records and 2592 samples"
+}

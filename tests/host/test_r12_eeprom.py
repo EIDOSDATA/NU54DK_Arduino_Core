@@ -1,23 +1,24 @@
 """! @brief production EEPROM과 독립 Python codec oracle로 영속 byte를 검사합니다. """
 from pathlib import Path
-import shutil
 import struct
 import subprocess
 import tempfile
 import unittest
 import zlib
 
+from host_compiler import compiler_command
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
 class EepromPersistenceTests(unittest.TestCase):
     def test_production_eeprom_record_and_restart(self):
-        compiler = shutil.which('g++')
+        compiler = compiler_command()
         self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory(prefix='nu54-r12-eeprom-') as folder:
             folder = Path(folder)
             binary = folder / 'eeprom.exe'
-            command = [compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
+            command = [*compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
                        '-I', str(ROOT / 'tests/host/storage_stubs'),
                        '-I', str(ROOT / 'libraries/EEPROM/src'),
                        str(ROOT / 'libraries/EEPROM/src/EEPROM.cpp'),

@@ -6,10 +6,11 @@ from __future__ import annotations
 from collections.abc import Iterator
 from contextlib import contextmanager
 import os
-import shutil
 import subprocess
 import unittest
 from pathlib import Path
+
+from host_compiler import compiler_command
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
@@ -17,7 +18,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 class M14CoreContractTests(unittest.TestCase):
     def test_disabled_peripheral_stubs_compile_link_and_fail_closed(self) -> None:
-        compiler = self._find_cxx_compiler()
+        compiler = compiler_command()
 
         with self._host_build_directory() as temporary_root:
             harness = temporary_root / "disabled_peripheral_stubs.cpp"
@@ -104,7 +105,7 @@ extern "C" int disabled_stub_test_main()
                 encoding="utf-8",
             )
             command = [
-                compiler,
+                *compiler,
                 "-std=c++1z",
                 "-DHOST",
                 f"-I{REPOSITORY_ROOT / 'cores' / 'arduino'}",
@@ -148,7 +149,7 @@ extern "C" int disabled_stub_test_main()
             )
 
     def test_core_utility_random_f_and_diagnostics_compile_link(self) -> None:
-        compiler = self._find_cxx_compiler()
+        compiler = compiler_command()
 
         with self._host_build_directory() as temporary_root:
             atomic_header = temporary_root / "zephyr" / "sys" / "atomic.h"
@@ -546,7 +547,7 @@ extern "C" int m14_test_main()
                 encoding="utf-8",
             )
             command = [
-                compiler,
+                *compiler,
                  "-std=c++1z",
                  "-DHOST",
                  "-DCONFIG_NUCODE_ARDUINO_GPIO=1",
@@ -638,15 +639,6 @@ extern "C" int m14_test_main()
         staging.mkdir(parents=True, exist_ok=True)
         yield staging
 
-    @staticmethod
-    def _find_cxx_compiler() -> str:
-        candidates = [os.environ.get("CXX"), "g++", "clang++", "c++"]
-        for candidate in candidates:
-            if candidate:
-                compiler = shutil.which(candidate)
-                if compiler:
-                    return compiler
-        raise AssertionError("M14 host 계약 시험에 사용할 C++17 compiler를 찾지 못했습니다.")
 
 
 if __name__ == "__main__":

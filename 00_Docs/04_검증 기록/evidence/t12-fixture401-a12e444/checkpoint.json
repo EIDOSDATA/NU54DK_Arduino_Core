@@ -1,0 +1,14 @@
+{
+  "task": "T12 Fixture 401 only",
+  "source": "a12e444cfb5ef47471c0e0d436f082acfd200c19",
+  "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "user_confirmation_recorded_at_utc": "2026-09-06T11:37:59+00:00",
+  "user_statement": "T12가 맞다면 이제 시작하도록 해.",
+  "confirmation_context": "Start instruction follows Fixture 401 wiring guide and T12 confirmation: A P2-12/P1.4 AIN0 to B P4-12/P1.14 PWM, A P2-30 to B P2-30 GND only. Old TWI SCL removed at both ends, rewiring with both USB powers removed; both DAP UART disconnected, SWD connected, equal I/O voltage and independent USB power, no interboard power rail, external resistor or other signal driver. Controller role 2 only.",
+  "confirmation_kind": "User start instruction interpreted in immediately preceding wiring context; no instrumented wiring inspection",
+  "swd_frequency_hz": 10000000,
+  "build_root": "C:/u3h",
+  "scope": "Fresh exact pair build, one 48-vector canonical signal cycle for Fixture 401 at SWD 10 MHz, evidence/documents/commit/main push; stop before Fixture 402 rewiring.",
+  "status_at_recording": "preparing",
+  "t12_complete": false
+}

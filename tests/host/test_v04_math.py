@@ -1,6 +1,5 @@
 """Compile the production timer math and firmware framing on the Host."""
 from pathlib import Path
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -10,14 +9,16 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tests/hil/nu54dk"))
 import v04_protocol
 
+from host_compiler import compiler_command
+
 
 class V04MathTests(unittest.TestCase):
     def test_production_clock_math_and_cross_language_protocol(self):
-        compiler = shutil.which("g++")
+        compiler = compiler_command()
         self.assertIsNotNone(compiler, "Host C++ compiler required")
         with tempfile.TemporaryDirectory(prefix="nu54-v04-math-") as directory:
             binary = Path(directory) / "math.exe"
-            result = subprocess.run([compiler, "-std=c++17", "-Wall", "-Wextra", "-Werror",
+            result = subprocess.run([*compiler, "-std=c++17", "-Wall", "-Wextra", "-Werror",
                 "-I", str(ROOT / "cores/arduino"), "-I", str(ROOT / "tests/zephyr/v04_pair_hil/src"),
                 str(ROOT / "tests/host/v04_math_main.cpp"), "-o", str(binary)], capture_output=True, timeout=60)
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))

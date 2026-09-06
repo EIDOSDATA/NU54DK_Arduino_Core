@@ -1,0 +1,121 @@
+{
+  "status": "passed",
+  "current_fixture": 408,
+  "next_fixture": 420,
+  "current": {
+    "id": 408,
+    "family": "analog",
+    "banks": [
+      1,
+      1
+    ],
+    "instances": [
+      [
+        20,
+        21,
+        22
+      ],
+      [
+        20,
+        21,
+        22
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P4",
+          12,
+          "P1.14"
+        ],
+        "peer": [
+          "P4",
+          12,
+          "P1.14"
+        ],
+        "signal": "peer PWM level -> DUT SAADC AIN7"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "AIN7은 DUT와 peer의 LED4 buffer 입력 사이 단방향 연결입니다. PWM20/21/22의 channel slot 0~3을 순차 검사하며 controller_role=2만 허용합니다.",
+    "pullups": []
+  },
+  "next": {
+    "id": 420,
+    "family": "qdec",
+    "banks": [
+      1,
+      1
+    ],
+    "instances": [
+      [
+        20,
+        21
+      ],
+      [
+        20,
+        21
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "peer": [
+          "P4",
+          12,
+          "P1.14"
+        ],
+        "signal": "peer PWM -> DUT quadrature phase A"
+      },
+      {
+        "dut": [
+          "P2",
+          10,
+          "P1.6"
+        ],
+        "peer": [
+          "P4",
+          8,
+          "P1.10"
+        ],
+        "signal": "peer PWM -> DUT quadrature phase B"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "peer(role 2)의 LED4/LED2 buffer 입력을 PWM sequence로 구동해 DUT(role 1)의 QDEC20/21이 누산합니다. controller_role=2만 허용합니다.",
+    "pullups": []
+  },
+  "catalog_revision": 5,
+  "catalog_sha256": "e8db80525fcc9545ba6879453c22924d14123361c394702b147cdfec695aa511",
+  "pinmap_sha256": "6bfcf3ac8d5eff25a8a26870382ebf634bd4bef41e0f2ac06170e665b645991d",
+  "connector_pinmap_matches": true,
+  "no_next_fixture_executed": true
+}

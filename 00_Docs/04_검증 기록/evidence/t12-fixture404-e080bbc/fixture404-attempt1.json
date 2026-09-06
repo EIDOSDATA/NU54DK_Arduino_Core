@@ -1,0 +1,1855 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-synthetic-signal",
+  "status": "passed",
+  "fixture_id": 404,
+  "fixture_revision": 2,
+  "catalog_sha256": "50ad2ee57f26ac65cc9b88a0197c9064131fbffd5e060aea2a648e5f72ffd8e3",
+  "core_revision": "e080bbc8f07a0ad751d83dacdb259d395b69be5b",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": true,
+  "repetitions": 1,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false,
+    "completed_cycles": 1,
+    "continuous_elapsed_seconds": 26.5,
+    "requested_duration_seconds": 0,
+    "requested_repetitions": 1
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "fe507720f07babd9c84a44beab9607587d65784bac5a18c341382c42dc93c145",
+      "elf_sha256": "a6e07433b0e50b669ee95d30841b151e4dfbc9b3b2823135e15e4b91ba25d9ec",
+      "record_sha256": "89658e60ff13b1649170ca57fea14dd0faca11324175867db2e6cdf7edafb5f8",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 3.031,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "d9ec77b6ab6966a66895db241eccde638d204de8b2fee2a49e9373167cc9d6fe"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "42af80e76ea36871fcbc5a335c72818632d8519e3ebbe6fb9dc066d73fd9d80d",
+      "elf_sha256": "fb3c948054b9eec66ed5a1eba15c2aeeff3ab463de23d7ddcb254c8709644053",
+      "record_sha256": "89658e60ff13b1649170ca57fea14dd0faca11324175867db2e6cdf7edafb5f8",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 2.969,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "76e63d90c30a0d6f0890ac179cdbbcfb2f04d6993e7af152d0d1d885a2aecf03"
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(20, 32, 1021, 512, 0, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        32,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3776,
+      "sha256": "2c181a34b0c0db6faf0336b22cd7ea6bbce56741be403151bfc8d4114ce1bbcd",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(20, 32, 1021, 512, 0, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        64,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "5f13a1a84a24aa778f5bbc668a7b5708f57f5e8c2d4543fdf7adb71a5e0a7dbe",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(20, 32, 1021, 512, 1, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        32,
+        32,
+        0
+      ],
+      "minimum": -8,
+      "maximum": 3760,
+      "sha256": "480c3f9e90347012d7a07e96bc1a0155ea106e351f41b64ff2efafa0efae32c1",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(20, 32, 1021, 512, 1, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        64,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "1d3050dcf7111df28297ccac6d8304f1ed4a9b9afa4d45431ad303981dcb3568",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(20, 32, 1021, 512, 2, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        32,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "41bda25d9874e3a5be26f07a71bd83a84bee452ff590c2b507d513b86d943eed",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(20, 32, 1021, 512, 2, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        64,
+        32,
+        0
+      ],
+      "minimum": -8,
+      "maximum": 3760,
+      "sha256": "6b56455ac9a0574d6de077d097891a2f19db1327cb780ec1cf7f40f0d0c54373",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(20, 32, 1021, 512, 3, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        32,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "129260638340b30c97f14a5205b89c751b32bf986cc879b12a7790929e5536b6",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(20, 32, 1021, 512, 3, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        64,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3764,
+      "sha256": "3c950495dc7223e16edacff7c6c1f77de092110fc24a3bb279f39768ac7b7381",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(20, 256, 1021, 512, 0, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        256,
+        256,
+        0
+      ],
+      "minimum": -20,
+      "maximum": 3768,
+      "sha256": "a083f14a3c938790827532ec45d30ae9499ba35e6571921b19bad52e464b9d25",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(20, 256, 1021, 512, 0, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        512,
+        256,
+        0
+      ],
+      "minimum": -440,
+      "maximum": 3764,
+      "sha256": "13f32b55d290afe73139f21f8726d1cbe92d1d89f222813888ecb2acaa446cfb",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(20, 256, 1021, 512, 1, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        256,
+        256,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "c5cf8959376c30d78ff9381dbea5f85808a3b8723d31596ddd01dace78c06350",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(20, 256, 1021, 512, 1, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        512,
+        256,
+        0
+      ],
+      "minimum": -16,
+      "maximum": 3764,
+      "sha256": "51943ea3173f13a8c23189434e6d0963811103bd9150f466b286713571b88735",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(20, 256, 1021, 512, 2, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        256,
+        256,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "ff43a3c642927626c1a78772ce3a06d012e458b6fddaff6f2bc175a08f3953c4",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(20, 256, 1021, 512, 2, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        512,
+        256,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3764,
+      "sha256": "0347b6fdde62ecc1921b08d820c97095bd3a72cb3dd04b59351d42168df10b2d",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(20, 256, 1021, 512, 3, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        256,
+        256,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "eaf7e3e88f4f3aeb1c252d2c39ea7a9e9f26560dcb7d4c7b11d5f750a4a83d27",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(20, 256, 1021, 512, 3, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        512,
+        256,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3768,
+      "sha256": "7d10048001bee1de452dfb5714891e18c1153c6d025c841d054ca9dc450a9e97",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(21, 32, 1021, 512, 0, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        32,
+        32,
+        0
+      ],
+      "minimum": -8,
+      "maximum": 3768,
+      "sha256": "0cc80319aa6bda2772574923d9e57954fdcb1c002a8b181404834533eddc5a56",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(21, 32, 1021, 512, 0, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        64,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "7d4c2f5aced4d7a31f262cc70bade76cdf5ef6152c203f29603db66df410d697",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(21, 32, 1021, 512, 1, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        32,
+        32,
+        0
+      ],
+      "minimum": -8,
+      "maximum": 3760,
+      "sha256": "df32dc08e9b5a0295aae41e3a1482d23b1a080a6d2da5a33a06182c379e726cd",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(21, 32, 1021, 512, 1, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        64,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "387d7743556e410e7dfd09f62008b5c6d234ec7bf48e62eaf25aa0b0831410be",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(21, 32, 1021, 512, 2, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        32,
+        32,
+        0
+      ],
+      "minimum": -8,
+      "maximum": 3760,
+      "sha256": "d87304afeef3d7c03b35aabdae881b10d413fd95df39c44d38d19c74242ced3e",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(21, 32, 1021, 512, 2, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        64,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "438f64bc6ff6defb5fd86b7bfb4e9bc0170c38d359b0db8a501aeeaefe080a85",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(21, 32, 1021, 512, 3, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        32,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "ddf27a0c10dd1bb25cc126ba25a06e4602cc3832e2dba3a5436576f81c0c36b6",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(21, 32, 1021, 512, 3, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        64,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "f97d240943b8138ea680a696d6aad8c5331012513caed014a57cf123f66b052d",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(21, 256, 1021, 512, 0, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        256,
+        256,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3764,
+      "sha256": "21945fb6e8243fdf031ea63715be9786bf2bb1d51621ce8a5fda2ee1fd5bb33f",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(21, 256, 1021, 512, 0, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        512,
+        256,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3764,
+      "sha256": "e8a5e4bcd74e53b4b843c8bf8469360c45ceb75f2a65ded0860be2703a9eb3fc",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(21, 256, 1021, 512, 1, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        256,
+        256,
+        0
+      ],
+      "minimum": -20,
+      "maximum": 3764,
+      "sha256": "6e8f5316895ecef86cbe667d3da77a3318b5c24d05b58d0122794e0daf5eb3b5",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(21, 256, 1021, 512, 1, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        512,
+        256,
+        0
+      ],
+      "minimum": -20,
+      "maximum": 3768,
+      "sha256": "f83dd5518ac600524a7a8ad169a0cb69389d79e0002c8c1c7f2dcb8556804ca3",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(21, 256, 1021, 512, 2, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        256,
+        256,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3764,
+      "sha256": "a1b1c561b40f3546f7a940ffe1a1ae2525381eaaf8fb052755bb8fe4d0c101e0",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(21, 256, 1021, 512, 2, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        512,
+        256,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3764,
+      "sha256": "c5016cef99941ee7d019441b7235251802d561c1774f046f9d008471c2911197",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(21, 256, 1021, 512, 3, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        256,
+        256,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3764,
+      "sha256": "2ce4d3b6963a76bfad2a764a67067fc34cc5b709c03df9fca85be80270650d03",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(21, 256, 1021, 512, 3, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        512,
+        256,
+        0
+      ],
+      "minimum": -24,
+      "maximum": 3764,
+      "sha256": "459625f97cef1271390f09a5ff644a05c13dad8b90e843248dc873a7b926610e",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(22, 32, 1021, 512, 0, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        32,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "8241bf466dcd61b2a534610f5bcee1cdb50c504dd0eef85635d6a916bf1b6a24",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(22, 32, 1021, 512, 0, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        64,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "c0b9ebff68dc5b7fe69730b7b3bb778ccd8abd53563ab633681d03b0ff5c4dfc",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(22, 32, 1021, 512, 1, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        32,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "859a94379df6396f2e11236bf4ef933fc15d96e3d990a2194e16931953129fcb",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(22, 32, 1021, 512, 1, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        64,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "35893f9a4e9a0a4e134a6e03e9d0eea8f6ea68a5e01689f5ecfbee4dbd61a1e5",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(22, 32, 1021, 512, 2, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        32,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "883dea97efdafbcbb1047742b32c91bda87d606f37855cef367fcccf77c53d0e",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(22, 32, 1021, 512, 2, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        64,
+        32,
+        0
+      ],
+      "minimum": -196,
+      "maximum": 3760,
+      "sha256": "9f9ab857228259b0995d641a19326bf3f4331d99edabfd8a1830907e2298b75d",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(22, 32, 1021, 512, 3, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        32,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3756,
+      "sha256": "c0f187054f230a524d9c60c5ecf11506c1c3f386f6511fa0f1976a5980186e76",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(22, 32, 1021, 512, 3, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        64,
+        32,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3760,
+      "sha256": "3d72493b16da47f5debdb76c3fe73f88da581c3098b003c2e7e81a61c47cc90a",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(22, 256, 1021, 512, 0, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        256,
+        256,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3764,
+      "sha256": "c0dd9b11a7a501f701feb202c55d7e915e658f72fecda2d9ea76436d439030de",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(22, 256, 1021, 512, 0, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        512,
+        256,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3764,
+      "sha256": "27275cea8ef972e3ffde66514ed0bd3f2c6ae93f73dffac9be5b0cad196e3efe",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(22, 256, 1021, 512, 1, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        256,
+        256,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3768,
+      "sha256": "f8415f2fcf7326e0d1c70415b5670823c91e8627a70fde0d51e8b51cc4bfc398",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(22, 256, 1021, 512, 1, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        512,
+        256,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3768,
+      "sha256": "951804a3df87d6786d75f142bdc9d0081113c67c55f7318c9963c5de7e859930",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(22, 256, 1021, 512, 2, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        256,
+        256,
+        0
+      ],
+      "minimum": -16,
+      "maximum": 3768,
+      "sha256": "e01a429bc15e26d1a1b5ac4359f5639bbb14ee7d54e813a3f1f79c922ede302e",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(22, 256, 1021, 512, 2, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        512,
+        256,
+        0
+      ],
+      "minimum": -16,
+      "maximum": 3760,
+      "sha256": "009b7e0fbc354018ffe86046942015835be6f696cbeaebf26113a0b6a539ac52",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(22, 256, 1021, 512, 3, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        256,
+        256,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3768,
+      "sha256": "52951627df306426e0758776790e70ed7c81f62e22a6611b38d0fa3f156b683d",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-ANALOG-SIGNAL/404/2/(22, 256, 1021, 512, 3, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        512,
+        256,
+        0
+      ],
+      "minimum": -12,
+      "maximum": 3764,
+      "sha256": "4ce8cd3d6f55ef2c11979e55aa7b62613a21119658cbf0403d0e0c97f01d87c4",
+      "scope": "pwm-manual-saadc"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-CAMPAIGN-PROGRESS",
+      "status": "progress",
+      "cleanup_only": true,
+      "completed_cycles": 1,
+      "continuous_elapsed_seconds": 26.5
+    },
+    {
+      "id": "V04-CAMPAIGN-COMPLETE",
+      "status": "passed",
+      "scope": "continuous-session",
+      "completed_cycles": 1,
+      "continuous_elapsed_seconds": 26.5,
+      "requested_duration_seconds": 0,
+      "requested_repetitions": 1,
+      "interrupted_duration_reused": false
+    }
+  ],
+  "confirmation_sha256": "ffa7ef3f571da9b10222ff10d745f73868e2b1f2786dbb75906af9cb3c08bf06",
+  "completed_at_utc": "2026-09-06T12:30:08.821238+00:00"
+}

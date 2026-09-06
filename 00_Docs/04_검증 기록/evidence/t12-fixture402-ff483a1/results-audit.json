@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "fixture_id": 402,
+  "source": "ff483a1bbd2a7f275b2c59126ef0e9af09211872",
+  "attempt": 1,
+  "independent_plan_order_and_unique_functional_ids": "passed",
+  "functional_records": 48,
+  "cleanup_records": 48,
+  "campaign_records": 2,
+  "total_journal_records": 98,
+  "journal_matches_final_json": true,
+  "samples_read": 10368,
+  "raw_minimum": -372,
+  "raw_maximum": 3776,
+  "vectors_observing_low_below_256": 48,
+  "vectors_observing_high_above_256": 48,
+  "continuous_elapsed_seconds": 26.469,
+  "swd_frequency_hz": 10000000,
+  "controller_roles": [
+    2
+  ],
+  "receiver_roles": [
+    1
+  ],
+  "functional_scope": "PWM output channel routing, manual SAADC sample count, single/double DMA completion, observed HIGH and cleanup",
+  "not_measured": [
+    "calibrated voltage or ADC precision",
+    "PWM period/duty capture or jitter",
+    "T12 remaining fixtures",
+    "T13 concurrency/soak"
+  ],
+  "hashes": {
+    "fixture402-attempt1.json": "46d729e64e028187916e93f86f67c18ad1016aea02518fb765bbf59c9e39fc12",
+    "fixture402-attempt1.json.jsonl": "bfc296829357274734b0e28c54079d68a48cc091a476442de893e90f0a6eec43"
+  }
+}

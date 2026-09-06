@@ -2,16 +2,23 @@
 from __future__ import annotations
 import hashlib
 import itertools
+import statistics
 import struct
 import time
 
 import v04_fixture as fixture
 from v04_protocol import ProtocolError
 
+INPUT_BIAS_FIXTURES = (406, 407)
+SHARED_ANALOG_FIXTURES = (405,) + INPUT_BIAS_FIXTURES
 
-def vectors(family):
+def vectors(family, fixture_id=None):
     """기능 sweep와 buffer 경계를 한 번씩 바꾸는 실행 vector를 생성합니다."""
     if family == "analog":
+        if fixture_id in SHARED_ANALOG_FIXTURES:
+            for samples, buffers, phase in itertools.product((32, 256), (1, 2), range(3)):
+                yield (0, samples, phase, 0, 0, buffers)
+            return
         yield from itertools.product((20, 21, 22), (32, 256), (1021,), (512,),
                                      range(4), (1, 2))
         return
@@ -84,17 +91,61 @@ def i2s_expected(seed, words, width, channels):
     return [pattern(seed, index) & mask for index in range(words)], mask
 
 
+def shared_source_readback(source, phase, fixture_id=405):
+    """! @brief nRF54L15 PIN_CNF의 DIR/INPUT/PULL/DRIVE0/DRIVE1도 독립 해석합니다. """
+    level = int(phase == 1)
+    if fixture_id == 405:
+        expected, raw = [1, phase, 46, 1, 1, 1, level], 0x80D
+    elif fixture_id in INPUT_BIAS_FIXTURES:
+        expected, raw = [1, phase, 46, 0, level, 0, 1], 0xC if level else 0x4
+    else:
+        raise ProtocolError("unknown shared analog fixture")
+    if len(source) != 9 or source[:7] != expected or source[8] & 0xF0F != raw:
+        raise ProtocolError(f"shared analog source configuration mismatch: {source}")
+
+
+def shared_analog_result(vector, status, samples, source, fixture_id=405):
+    """! @brief 공유 입력별 LOW/HIGH 경계와 DMA 완료를 독립 판정합니다. """
+    phase = vector[2]
+    expected = vector[1] * vector[5]
+    level = int(phase == 1)
+    shared_source_readback(source, phase, fixture_id)
+    if (len(status) != 8 or status[:5] != [1, 1, 1, 1, 0] or
+            status[5:7] != [expected, vector[1]] or len(samples) != expected):
+        raise ProtocolError(f"shared analog DMA completion mismatch: {status}")
+    high_threshold = 1024 if fixture_id in INPUT_BIAS_FIXTURES else 256
+    low_limit = 512 if fixture_id in INPUT_BIAS_FIXTURES else 256
+    high = sum(sample > high_threshold for sample in samples)
+    median = statistics.median(samples)
+    if min(samples) < -256 or max(samples) > 4095:
+        raise ProtocolError("shared analog raw samples are outside functional bounds")
+    if level:
+        required_percent = 100 if fixture_id in INPUT_BIAS_FIXTURES else 95
+        if high * 100 < expected * required_percent or median <= high_threshold:
+            raise ProtocolError("shared analog HIGH phase did not rise")
+    elif max(samples) > low_limit:
+        raise ProtocolError("shared analog input did not return LOW")
+    return {"receiver_status": status, "source_readback": source,
+            "phase": (("pulldown-before", "pullup", "pulldown-after") if fixture_id in INPUT_BIAS_FIXTURES else
+                      ("low-before", "released", "low-after"))[phase],
+            "minimum": min(samples), "maximum": max(samples), "median": median,
+            "high_samples": high, "samples": samples,
+            "sha256": hashlib.sha256(struct.pack(f"<{len(samples)}h", *samples)).hexdigest(),
+            "scope": (f"input-bias-shared-ain{fixture_id - 401}-manual-saadc" if fixture_id in INPUT_BIAS_FIXTURES else
+                      "open-drain-shared-ain4-manual-saadc")}
+
+
 def run_case(devices, selected, controller_role, vector, append):
     family = selected["family"]
     controller = devices[controller_role - 1]
     receiver = devices[2 - controller_role]
     args = arguments_for(family, vector)
-    for device in devices:
-        reply = device.command(32, (selected["id"], 1, fixture.CONSENT,
-                                    controller_role))
-        if reply != [selected["id"], 10000]:
-            raise ProtocolError(f"signal fixture arm failed: {reply}")
     try:
+        for device in devices:
+            reply = device.command(32, (selected["id"], 1, fixture.CONSENT,
+                                        controller_role))
+            if reply != [selected["id"], 10000]:
+                raise ProtocolError(f"signal fixture arm failed: {reply}")
         if controller.command(34, args) != [0]:
             raise ProtocolError("signal generator prepare failed")
         if family == "pdm":
@@ -142,18 +193,30 @@ def run_case(devices, selected, controller_role, vector, append):
                       "scope": "pdm-clock-synchronous-spis-bitstream"}
         elif family == "analog":
             if controller.command(35) != [0]:
-                raise ProtocolError("PWM generator start failed")
+                raise ProtocolError("analog generator start failed")
+            source = controller.command(38) if selected["id"] in SHARED_ANALOG_FIXTURES else None
+            if source is not None:
+                shared_source_readback(source, vector[2], selected["id"])
+                time.sleep(.025 if selected["id"] in INPUT_BIAS_FIXTURES else .010)
             if receiver.command(35) != [0]:
                 raise ProtocolError("SAADC sampling start failed")
             receiver_status = wait_status(receiver, lambda words: words[3] == 1)
             sample_count = vector[1] * vector[5]
             samples = read_u16(receiver, sample_count)
-            if receiver_status[5] != sample_count or max(samples) <= 256:
-                raise ProtocolError("PWM-triggered SAADC did not capture a valid HIGH level")
-            result = {"receiver_status": receiver_status,
-                      "minimum": min(samples), "maximum": max(samples),
-                      "sha256": hashlib.sha256(struct.pack(f"<{len(samples)}h", *samples)).hexdigest(),
-                      "scope": "pwm-manual-saadc"}
+            if selected["id"] in SHARED_ANALOG_FIXTURES:
+                result = shared_analog_result(vector, receiver_status, samples, source, selected["id"])
+                final_source = controller.command(38)
+                shared_source_readback(final_source, vector[2], selected["id"])
+                if len(final_source) != 9 or final_source[:7] != source[:7]:
+                    raise ProtocolError(f"shared source changed during sampling: {final_source}")
+                result["source_readback_after"] = final_source
+            else:
+                if receiver_status[5] != sample_count or max(samples) <= 256:
+                    raise ProtocolError("PWM-triggered SAADC did not capture a valid HIGH level")
+                result = {"receiver_status": receiver_status,
+                          "minimum": min(samples), "maximum": max(samples),
+                          "sha256": hashlib.sha256(struct.pack(f"<{len(samples)}h", *samples)).hexdigest(),
+                          "scope": "pwm-manual-saadc"}
         else:
             if controller.command(35) != [0]:
                 raise ProtocolError("quadrature generator start failed")
@@ -174,14 +237,22 @@ def run_case(devices, selected, controller_role, vector, append):
     finally:
         original_error = __import__("sys").exception()
         cleanup = []
-        for device in devices:
+        cleanup_devices = (controller, receiver) if selected["id"] in SHARED_ANALOG_FIXTURES else devices
+        for device in cleanup_devices:
             try:
-                cleanup.append({"role": device.image["role"], "result": device.command(33)})
+                item = {"role": device.image["role"], "result": device.command(33)}
+                if selected["id"] in SHARED_ANALOG_FIXTURES and device is controller:
+                    state = device.command(38)
+                    item["source_readback"] = state
+                    if (len(state) != 9 or state[:7] != [0, 0xFFFFFFFF, 46, 0, 0, 0, 1] or
+                            state[8] & 0xF0F != 0):
+                        item["error"] = "shared source input release not proven"
+                cleanup.append(item)
             except BaseException as cleanup_error:
                 cleanup.append({"role": device.image["role"], "error": str(cleanup_error)})
         append("V04-SIGNAL-CLEANUP", {"status": "cleanup", "cleanup_only": True,
                                       "results": cleanup})
-        if any(item.get("result") != [0] for item in cleanup):
+        if any(item.get("result") != [0] or "error" in item for item in cleanup):
             if original_error is not None:
                 original_error.add_note(f"signal cleanup not proven: {cleanup}")
             else:
@@ -199,7 +270,7 @@ def run_confirmed(devices, images, uids, confirmation, fixture_id, append,
         controller_roles = (2,) if selected["family"] in {"analog", "qdec"} else (1, 2)
         for controller_role in controller_roles:
             pdm_means = {}
-            for vector in vectors(selected["family"]):
+            for vector in vectors(selected["family"], fixture_id):
                 def record(case_id, result):
                     append(f"{case_id}/repeat-{repetition + 1}", result)
                     if (selected["family"] == "pdm" and not vector[3] and
