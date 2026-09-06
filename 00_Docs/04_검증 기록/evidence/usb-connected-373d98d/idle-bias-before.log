@@ -1,0 +1,37 @@
+FFF
+======================================================================
+FAIL: test_failed_readback_keeps_cpu_halted (__main__.IdleBiasTests.test_failed_readback_keeps_cpu_halted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t09-connected\test_idle_bias.py", line 44, in test_failed_readback_keeps_cpu_halted
+    with self.assertRaisesRegex(RuntimeError, 'readback'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: RuntimeError not raised
+
+======================================================================
+FAIL: test_only_pull_fields_are_set_before_drain_and_resume (__main__.IdleBiasTests.test_only_pull_fields_are_set_before_drain_and_resume)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t09-connected\test_idle_bias.py", line 32, in test_only_pull_fields_are_set_before_drain_and_resume
+    self.assertEqual(values, {0x5010A080: 0xE, 0x500D8290: 0x1000E})
+AssertionError: {1343266944: 2, 1343062672: 65538} != {1343266944: 14, 1343062672: 65550}
+- {1343062672: 65538, 1343266944: 2}
+?                 ^^              ^
+
++ {1343062672: 65550, 1343266944: 14}
+?                 ^^              ^^
+
+
+======================================================================
+FAIL: test_output_pin_is_rejected_before_any_write_or_resume (__main__.IdleBiasTests.test_output_pin_is_rejected_before_any_write_or_resume)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t09-connected\test_idle_bias.py", line 38, in test_output_pin_is_rejected_before_any_write_or_resume
+    with self.assertRaisesRegex(RuntimeError, 'input'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: RuntimeError not raised
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.002s
+
+FAILED (failures=3)

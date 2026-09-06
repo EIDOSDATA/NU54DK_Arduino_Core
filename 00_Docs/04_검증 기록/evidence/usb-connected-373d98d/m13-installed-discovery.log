@@ -1,0 +1,49 @@
+test_arduino_cli_discovers_canonical_examples_when_installed (test_m13_profiles.M13ProfileContractTests.test_arduino_cli_discovers_canonical_examples_when_installed)
+! @brief ��ġ�� Arduino CLI�� ���� ������ �����ϴ��� Ȯ���մϴ�. ... Exception in thread Thread-1 (_readerthread):
+Traceback (most recent call last):
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1599, in _readerthread
+    buffer.append(fh.read())
+                  ^^^^^^^^^
+UnicodeDecodeError: 'cp949' codec can't decode byte 0xec in position 7643: illegal multibyte sequence
+ERROR
+test_canonical_examples_have_no_zephyr_sidecars (test_m13_profiles.M13ProfileContractTests.test_canonical_examples_have_no_zephyr_sidecars)
+! @brief ���� ������ ino������ Ž�� �������� Ȯ���մϴ�. ... ok
+test_duplicate_feature_key_uses_feature_schema_diagnostic (test_m13_profiles.M13ProfileContractTests.test_duplicate_feature_key_uses_feature_schema_diagnostic)
+! @brief feature manifest �ߺ� key�� profile ������ �߸� �������� �ʽ��ϴ�. ... ok
+test_feature_cache_collision_is_fail_closed (test_m13_profiles.M13ProfileContractTests.test_feature_cache_collision_is_fail_closed)
+! @brief ��� cache directory�� �ٸ� full key�� ����� �ʽ��ϴ�. ... ok
+test_feature_configure_failure_marks_cache_failed (test_m13_profiles.M13ProfileContractTests.test_feature_configure_failure_marks_cache_failed)
+! @brief ���� configure ���и� failed/configure-failed ���·� �����մϴ�. ... ok
+test_only_selected_bundled_library_is_resolved (test_m13_profiles.M13ProfileContractTests.test_only_selected_bundled_library_is_resolved)
+! @brief ���� source record�� ������ bundled library�� �����մϴ�. ... ok
+test_profile_rejects_wrong_fqbn_and_zephyr_board (test_m13_profiles.M13ProfileContractTests.test_profile_rejects_wrong_fqbn_and_zephyr_board)
+! @brief profile�� ���� Arduino �� Zephyr target�� �ٸ��� �ߴ��մϴ�. ... ok
+test_profile_string_types_and_windows_paths_are_rejected (test_m13_profiles.M13ProfileContractTests.test_profile_string_types_and_windows_paths_are_rejected)
+! @brief malformed scalar�� Windows ���� ��θ� schema ������ �ź��մϴ�. ... ok
+test_schema_path_conflict_and_cache_key_contract (test_m13_profiles.M13ProfileContractTests.test_schema_path_conflict_and_cache_key_contract)
+! @brief �߸��� manifest�� �ź��ϰ� feature ������ cache key�� �ٲٴ��� Ȯ���մϴ�. ... ok
+test_selected_feature_fragments_merge_before_expert_override (test_m13_profiles.M13ProfileContractTests.test_selected_feature_fragments_merge_before_expert_override)
+! @brief ���� feature fragment�� sketch override�� ���� ������ �����մϴ�. ... ok
+test_standard_profile_and_allowlist (test_m13_profiles.M13ProfileContractTests.test_standard_profile_and_allowlist)
+! @brief ǥ�� profile�� bundled feature manifest�� �����մϴ�. ... ok
+
+======================================================================
+ERROR: test_arduino_cli_discovers_canonical_examples_when_installed (test_m13_profiles.M13ProfileContractTests.test_arduino_cli_discovers_canonical_examples_when_installed)
+! @brief ��ġ�� Arduino CLI�� ���� ������ �����ϴ��� Ȯ���մϴ�.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_m13_profiles.py", line 298, in test_arduino_cli_discovers_canonical_examples_when_installed
+    document = json.loads(result.stdout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\json\__init__.py", line 339, in loads
+    raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+TypeError: the JSON object must be str, bytes or bytearray, not NoneType
+
+----------------------------------------------------------------------
+Ran 11 tests in 2.508s
+
+FAILED (errors=1)

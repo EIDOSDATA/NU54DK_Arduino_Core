@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "gate": "m20-ble-generic-gatt-pair-hil",
+  "status": "passed",
+  "created_at_utc": "2026-09-06T05:49:23.905392+00:00",
+  "core_revision": "18a7cbec9cceed38d6c866131afdac9e6ffbc4b8",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "board_target": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "nonce": "d124c239715b1ee1dfd65755041b6c1b",
+  "boards": {
+    "peripheral": {
+      "daplink_uid": "<probe-sha256:32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9>",
+      "msd_root": "D:\\",
+      "uart_port": "COM5"
+    },
+    "central": {
+      "daplink_uid": "<probe-sha256:4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0>",
+      "msd_root": "E:\\",
+      "uart_port": "COM7"
+    }
+  },
+  "images": {
+    "peripheral": {
+      "name": "zephyr.hex",
+      "size": 559922,
+      "sha256": "331b6142a2ec9a322aef2c615e58322193426f34af5cdec5fef5f6e071789828",
+      "flash_sequence": "2",
+      "flash_bytes": "560128",
+      "build_record": {
+        "core_revision": "18a7cbec9cce",
+        "core_source_sha256": "4258cd43be58c87a88e3a573b7dd4954d00db0c354e0b079180828c15d9daa88",
+        "application_source_sha256": "222fb546be392d3fb2837079db9d19d00db9b73fca5e90c8e13b713ab09f45b0",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "62f3a55f7873927adf66d63484e491a3fdcf62703079ac532921833e8d69109d"
+      }
+    },
+    "central": {
+      "name": "zephyr.hex",
+      "size": 567474,
+      "sha256": "916574fc17828666b005baeed1e8147da0e1a49610379c56de67e7693ca56098",
+      "flash_sequence": "2",
+      "flash_bytes": "567808",
+      "build_record": {
+        "core_revision": "18a7cbec9cce",
+        "core_source_sha256": "4258cd43be58c87a88e3a573b7dd4954d00db0c354e0b079180828c15d9daa88",
+        "application_source_sha256": "222fb546be392d3fb2837079db9d19d00db9b73fca5e90c8e13b713ab09f45b0",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "62f3a55f7873927adf66d63484e491a3fdcf62703079ac532921833e8d69109d"
+      }
+    }
+  },
+  "transcripts": {
+    "peripheral": {
+      "name": "m20-pair-18a7cbe.peripheral.transcript.log",
+      "size": 959,
+      "sha256": "fae302448f9603a951409f7fa850df35b63954a07d2c1b24e4bb751297b314c3"
+    },
+    "central": {
+      "name": "m20-pair-18a7cbe.central.transcript.log",
+      "size": 2129,
+      "sha256": "e5de04f1e58f454eb55539fde19b7e5eed4162aad3868d3954310c39db7dddc9"
+    }
+  },
+  "results": {
+    "peripheral": {
+      "nonce": "d124c239715b1ee1dfd65755041b6c1b",
+      "connection_rounds": [
+        1,
+        2
+      ],
+      "write_response": "PASS",
+      "write_command": "PASS",
+      "indication_confirmation": "PASS",
+      "callback_context": "PASS"
+    },
+    "central": {
+      "nonce": "d124c239715b1ee1dfd65755041b6c1b",
+      "connection_rounds": [
+        1,
+        2
+      ],
+      "discovery_rounds": [
+        1,
+        2
+      ],
+      "nonce_challenge": "PASS",
+      "read": "PASS",
+      "write_response": "PASS",
+      "write_command": "PASS",
+      "notification_rounds": [
+        1,
+        2
+      ],
+      "indication": "PASS",
+      "handle_invalidation_rounds": [
+        1,
+        2
+      ],
+      "callback_context": "PASS"
+    }
+  },
+  "coverage": {
+    "service_registration": true,
+    "exact_service_characteristic_discovery": true,
+    "gatt_nonce_challenge_bits": 128,
+    "cached_read": true,
+    "write_with_response": true,
+    "write_without_response": true,
+    "notification_subscribe_unsubscribe": true,
+    "indication_confirmation": true,
+    "disconnect_handle_invalidation": true,
+    "reconnect_rediscovery_resubscribe": true,
+    "callback_context": "arduino-main-thread"
+  },
+  "safety": {
+    "external_wiring_required": false,
+    "mass_erase_requested": false,
+    "pmic_write_executed": false
+  }
+}

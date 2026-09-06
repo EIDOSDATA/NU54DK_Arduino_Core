@@ -1,0 +1,121 @@
+$ErrorActionPreference = 'Stop'
+$repoPath = 'C:\Users\eidos\GitHub\NU54DK_Arduino_Core'
+$workPath = 'C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work'
+$recordPath = Join-Path $workPath 'usb-followup'
+$rootNames = @('r00','r01','r02a','r03a','r04','r05','r07a','r08','r09','r09m','r10b','r11','r12d','r13f','r13u')
+$roots = @($rootNames | ForEach-Object { 'C:\' + $_ })
+$rootPattern = ($roots | ForEach-Object { [regex]::Escape($_) + '(?=[\\/\s"'']|$)' }) -join '|'
+$active = @(Get-CimInstance Win32_Process | Where-Object { $_.Name -match '^(python|pythonw|ninja|cmake|cc1|cc1plus|arm-zephyr-eabi-.+)\.exe$' -and $_.CommandLine -match $rootPattern })
+if ($active.Count -ne 0) { throw 'A selected historical build is still in use' }
+if (@(& git -C $repoPath status --porcelain).Count -ne 0) { throw 'Expected clean source before local cleanup' }
+$inventory = [System.Collections.Generic.List[object]]::new()
+$preserved = [System.Collections.Generic.List[object]]::new()
+$candidates = [System.Collections.Generic.List[object]]::new()
+foreach ($rootPath in $roots)
+{
+    if (-not (Test-Path -LiteralPath $rootPath -PathType Container)) { continue }
+    $resolvedRoot = (Resolve-Path -LiteralPath $rootPath).Path
+    if ($resolvedRoot -cne $rootPath -or $resolvedRoot -notin $roots) { throw 'Historical root escaped allowlist' }
+    $rootItem = Get-Item -LiteralPath $resolvedRoot
+    if (($rootItem.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { throw 'Reparse root is forbidden' }
+    $entries = @(Get-ChildItem -LiteralPath $resolvedRoot -Recurse -Force)
+    if (@($entries | Where-Object { ($_.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0 }).Count -ne 0) { throw 'Reparse descendant is forbidden' }
+    foreach ($item in $entries)
+    {
+        if ($item.PSIsContainer) { continue }
+        if (-not $item.FullName.StartsWith($resolvedRoot + '\', [StringComparison]::OrdinalIgnoreCase)) { throw 'File escaped historical root' }
+        if ($item.Name -match '\.(obj|obj\.d|a)$')
+        {
+            $candidates.Add($item)
+        }
+        elseif ($item.Name -match '^zephyr\.(elf|hex|bin|map)$|^\.config$|\.(yml|yaml)$|^(compile_commands|twister|testplan|m12-build-evidence)\.json$|^build\.log$')
+        {
+            $preserved.Add(@{path=$item.FullName; bytes=$item.Length; sha256=(Get-FileHash -LiteralPath $item.FullName -Algorithm SHA256).Hash.ToLowerInvariant()})
+        }
+    }
+}
+foreach ($item in $candidates)
+{
+    $inventory.Add(@{path=$item.FullName; bytes=$item.Length; sha256=(Get-FileHash -LiteralPath $item.FullName -Algorithm SHA256).Hash.ToLowerInvariant(); category='regenerable-target-intermediate'})
+}
+$archiveRoot = Join-Path $workPath 'archive'
+New-Item -ItemType Directory -Path $archiveRoot -Force | Out-Null
+$scriptArchive = Join-Path $archiveRoot 'r00-r13-authoring-scripts.zip'
+if (Test-Path -LiteralPath $scriptArchive) { throw 'Authoring archive already exists' }
+$scripts = @(Get-ChildItem -LiteralPath $workPath -File -Filter '*.py' | Where-Object { $_.Name -match '^(edit_|split_|finish_|tidy_|fix_)' })
+if ($scripts.Count -ne 50) { throw 'Authoring script inventory changed' }
+$scriptRecords = @($scripts | ForEach-Object { @{path=$_.FullName; name=$_.Name; bytes=$_.Length; sha256=(Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()} })
+Compress-Archive -LiteralPath $scripts.FullName -DestinationPath $scriptArchive -CompressionLevel Optimal
+$zip = [IO.Compression.ZipFile]::OpenRead($scriptArchive)
+try
+{
+    if ($zip.Entries.Count -ne $scripts.Count) { throw 'Authoring archive entry count mismatch' }
+    foreach ($record in $scriptRecords)
+    {
+        $entry = $zip.GetEntry($record.name)
+        if ($null -eq $entry -or $entry.Length -ne $record.bytes) { throw 'Authoring archive size mismatch' }
+        $stream = $entry.Open()
+        $sha = [Security.Cryptography.SHA256]::Create()
+        try { $digest = [Convert]::ToHexString($sha.ComputeHash($stream)).ToLowerInvariant() }
+        finally { $sha.Dispose(); $stream.Dispose() }
+        if ($digest -cne $record.sha256) { throw 'Authoring archive hash mismatch' }
+    }
+}
+finally { $zip.Dispose() }
+$utf8 = [Text.UTF8Encoding]::new($false)
+$journalPath = Join-Path $recordPath 'cleanup-files.jsonl.gz'
+if (Test-Path -LiteralPath $journalPath) { throw 'Cleanup journal already exists' }
+$fileStream = [IO.File]::Create($journalPath)
+$gzip = [IO.Compression.GZipStream]::new($fileStream, [IO.Compression.CompressionLevel]::Optimal)
+$writer = [IO.StreamWriter]::new($gzip, $utf8)
+$removed = 0
+$removedBytes = 0L
+try
+{
+    foreach ($record in $inventory)
+    {
+        # 삭제 직전에 이미 확인한 절대 경로와 크기를 다시 대조합니다.
+        $current = Get-Item -LiteralPath $record.path
+        if ($current.FullName -cne $record.path -or $current.Length -ne $record.bytes -or $current.Name -notmatch '\.(obj|obj\.d|a)$') { throw 'Cleanup candidate changed' }
+        Remove-Item -LiteralPath $current.FullName -Force
+        $writer.WriteLine(($record | ConvertTo-Json -Compress))
+        $removed += 1; $removedBytes += $record.bytes
+    }
+    foreach ($record in $scriptRecords)
+    {
+        $current = Get-Item -LiteralPath $record.path
+        if ($current.DirectoryName -cne $workPath -or (Get-FileHash -LiteralPath $current.FullName -Algorithm SHA256).Hash.ToLowerInvariant() -cne $record.sha256) { throw 'Archived script changed' }
+        Remove-Item -LiteralPath $current.FullName -Force
+        $record.category = 'archived-authoring-script'
+        $writer.WriteLine(($record | ConvertTo-Json -Compress))
+        $removed += 1; $removedBytes += $record.bytes
+    }
+}
+finally { $writer.Dispose(); $gzip.Dispose(); $fileStream.Dispose() }
+foreach ($record in $preserved)
+{
+    if (-not (Test-Path -LiteralPath $record.path -PathType Leaf) -or (Get-FileHash -LiteralPath $record.path -Algorithm SHA256).Hash.ToLowerInvariant() -cne $record.sha256) { throw 'Preserved artifact changed' }
+}
+$cacheRecords = @()
+$cacheRoots = @('packaging/boards-manager','tests/arduino-cli','tests/ci','tests/hil/nu54dk','tests/host','tools/ci','tools/coverage','tools/nu54-builder/src','tools/peripheral','tools/release','tools/variant')
+foreach ($relativeRoot in $cacheRoots)
+{
+    $basePath = Join-Path $repoPath $relativeRoot
+    $cacheDirs = @(Get-ChildItem -LiteralPath $basePath -Directory -Recurse -Filter '__pycache__')
+    foreach ($cacheDir in $cacheDirs)
+    {
+        $resolvedCache = (Resolve-Path -LiteralPath $cacheDir.FullName).Path
+        if (-not $resolvedCache.StartsWith($repoPath + '\', [StringComparison]::OrdinalIgnoreCase) -or ($cacheDir.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { throw 'Cache escaped repository' }
+        if (@(& git -C $repoPath ls-files -- $resolvedCache).Count -ne 0) { throw 'Cache contains tracked files' }
+        $files = @(Get-ChildItem -LiteralPath $resolvedCache -Recurse -Force -File)
+        if (@($files | Where-Object { $_.Extension -notin @('.pyc','.pyo') }).Count -ne 0) { throw 'Cache contains a non-regenerable file' }
+        $bytes = ($files | Measure-Object -Property Length -Sum).Sum
+        $cacheRecords += @{path=$resolvedCache; files=$files.Count; bytes=$bytes}
+        Remove-Item -LiteralPath $resolvedCache -Recurse -Force
+    }
+}
+if (@(& git -C $repoPath status --porcelain).Count -ne 0) { throw 'Local cleanup changed tracked source' }
+$preserved | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $recordPath 'cleanup-preserved-artifacts.json') -Encoding utf8
+$summary = @{completed_at_utc=[DateTime]::UtcNow.ToString('o'); historical_build_roots=$roots; intermediate_files=$inventory.Count; archived_scripts=$scriptRecords.Count; removed_files=$removed; removed_bytes=$removedBytes; python_caches=$cacheRecords; authoring_archive=@{path=$scriptArchive; sha256=(Get-FileHash -LiteralPath $scriptArchive -Algorithm SHA256).Hash.ToLowerInvariant()}; preserved_artifact_count=$preserved.Count; preserved_artifacts_hash_unchanged=$true; tracked_source_unchanged=$true; SDK_and_board_untouched=$true; final_build_root_preserved='C:\r13h'; journal=$journalPath}
+$summary | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $recordPath 'cleanup-summary.json') -Encoding utf8
+Write-Output ('LOCAL_CLEANUP_PASS;INTERMEDIATES=' + $inventory.Count + ';ARCHIVED_SCRIPTS=' + $scriptRecords.Count + ';BYTES=' + $removedBytes + ';PRESERVED_ARTIFACTS=' + $preserved.Count)

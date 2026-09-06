@@ -1,0 +1,49 @@
+{
+  "status": "passed",
+  "scope": "Three route regressions with separate exact firmware identities; not one frozen-source campaign",
+  "records": [
+    {
+      "fixture_id": 201,
+      "source": "0f429e7ab9b5b8e24f4ff19e47abe60014975547",
+      "audit_sha256": "52cb82f1004a7981c14f67cb95a9037f895509a26a7225a5b5c3be1e8954edf5",
+      "functional_pass": 18169,
+      "normal_vectors": 18144,
+      "recovery_data_pass": 12,
+      "expected_error_pass": 12,
+      "concurrent_pass": 1,
+      "data_pass": 18157
+    },
+    {
+      "fixture_id": 202,
+      "source": "1349e208073d0fd7d3b020a5e9facf771b371237",
+      "audit_sha256": "90f530a9e88143daf04f4aa4ea2cc628673a4b8d38a32e3152b9df5bd4b6abfe",
+      "functional_pass": 9084,
+      "normal_vectors": 9072,
+      "recovery_data_pass": 6,
+      "expected_error_pass": 6,
+      "concurrent_pass": 0,
+      "data_pass": 9078
+    },
+    {
+      "fixture_id": 203,
+      "source": "be4920757fd9faf2ea38721d2aa374246a259f29",
+      "audit_sha256": "e07bcb00577971c40fb77d98388fa3e3598de66341b65823d836d9ec206b2570",
+      "functional_pass": 27252,
+      "normal_vectors": 27216,
+      "recovery_data_pass": 18,
+      "expected_error_pass": 18,
+      "concurrent_pass": 0,
+      "data_pass": 27234
+    }
+  ],
+  "totals": {
+    "functional_pass": 54505,
+    "normal_vectors": 54432,
+    "recovery_data_pass": 36,
+    "expected_error_pass": 36,
+    "concurrent_pass": 1,
+    "data_pass": 54469
+  },
+  "current_source_t11_complete": false,
+  "remaining_t11_fixture": 301
+}

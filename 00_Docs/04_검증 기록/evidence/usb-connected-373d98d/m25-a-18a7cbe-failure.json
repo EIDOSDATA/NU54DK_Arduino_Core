@@ -1,0 +1,22 @@
+{
+  "case": "m25-a",
+  "status": "failed",
+  "core_revision": "18a7cbec9cceed38d6c866131afdac9e6ffbc4b8",
+  "started_at_utc": "2026-09-06T05:45:28.515005+00:00",
+  "completed_at_utc": "2026-09-06T05:45:40.636695+00:00",
+  "error_type": "M25HilFailure",
+  "error": "exactly one VCOM must return the expected frame: matches=0, sizes={'COM5': 0, 'COM6': 38}",
+  "canonical_arguments_redacted": [
+    "--repository",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core",
+    "--build-root",
+    "C:\\u2a",
+    "--probe-id",
+    "<probe-sha256:32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9>",
+    "--pyocd",
+    "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\Scripts\\pyocd.exe",
+    "--evidence",
+    "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t09-connected\\m25-a-18a7cbe.json"
+  ],
+  "automatic_retry": false
+}

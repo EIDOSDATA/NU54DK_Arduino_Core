@@ -1,0 +1,35 @@
+{
+  "source": "1349e208073d0fd7d3b020a5e9facf771b371237",
+  "fixture_id": 202,
+  "status": "passed",
+  "swd_frequency_hz": 10000000,
+  "data_pass": 9078,
+  "normal_vectors": 9072,
+  "expected_error_pass": 6,
+  "recovery_data_pass": 6,
+  "functional_pass": 9084,
+  "cleanup_records": 2,
+  "campaign_records": 2,
+  "journal_records": 9088,
+  "coverage_per_role_instance_pair": {
+    "1/(30, 20)": 1514,
+    "1/(30, 21)": 1514,
+    "1/(30, 22)": 1514,
+    "2/(30, 20)": 1514,
+    "2/(30, 21)": 1514,
+    "2/(30, 22)": 1514
+  },
+  "continuous_elapsed_seconds": 1085.266,
+  "journal_matches_final_json": true,
+  "functional_ids_unique": true,
+  "independent_plan_ids_match": true,
+  "sha256": {
+    "fixture202-attempt1.json": "793d832d1ef7d6084cbe24e3dab0a87eea67a25528f274838907cbd73b6cc660",
+    "fixture202-attempt1.json.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fixture202-attempt2.json": "052feb7afa14096465318be953b38e89a2b3b8d2318ad6ab9fafde361616bca4",
+    "fixture202-attempt2.json.jsonl": "e49a7c9c77325294c772e6ec0f2f5e14c3e1838631250ff82ad9b37ffd46cab9"
+  },
+  "initial_flash_failure_preserved": true,
+  "initial_functional_records": 0,
+  "successful_attempt": 2
+}

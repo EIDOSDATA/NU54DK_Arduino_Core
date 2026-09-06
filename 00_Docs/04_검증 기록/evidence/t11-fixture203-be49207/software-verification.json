@@ -1,0 +1,37 @@
+{
+  "scope": "Documentation and evidence changes after Fixture 203, no production code changes",
+  "checks": [
+    {
+      "gate": "docs",
+      "command": "python -B tools/ci/run_m12_gate.py docs",
+      "status": "passed",
+      "log": "gate-docs.log",
+      "sha256": "fb9fafd02af60e23b4a5c9f4774b36ac06649648f0191c319b6771b5fa95ba56"
+    },
+    {
+      "gate": "contract",
+      "command": "python -B tools/ci/run_m12_gate.py contract",
+      "status": "passed",
+      "log": "gate-contract.log",
+      "sha256": "15a4d27f42f2f0a46b21cb446eaabc42c86f55a42e0d3df569c4569f3e05caf6"
+    },
+    {
+      "gate": "inventory",
+      "command": "python -B tools/ci/run_m12_gate.py inventory",
+      "status": "passed",
+      "log": "gate-inventory.log",
+      "sha256": "66a2622de2e660e17c7e16fcdb13bd7befe2ccdf3b37e363061e727e6013aaab"
+    },
+    {
+      "gate": "docs-final",
+      "command": "python -B tools/ci/run_m12_gate.py docs",
+      "status": "passed",
+      "reason": "Final result paragraphs and evidence links added after initial gates",
+      "log": "gate-docs-final.log",
+      "sha256": "fb9fafd02af60e23b4a5c9f4774b36ac06649648f0191c319b6771b5fa95ba56"
+    }
+  ],
+  "markdown_files": 181,
+  "contract_tests": 45,
+  "readiness_blockers": 8
+}

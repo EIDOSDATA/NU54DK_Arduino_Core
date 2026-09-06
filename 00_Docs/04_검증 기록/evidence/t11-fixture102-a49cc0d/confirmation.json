@@ -1,0 +1,25 @@
+{
+  "fixture_id": 102,
+  "fixture_revision": 2,
+  "catalog_sha256": "50ad2ee57f26ac65cc9b88a0197c9064131fbffd5e060aea2a648e5f72ffd8e3",
+  "core_revision": "a49cc0dbc1ef8bf5f697106d873bdce55f5911df",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "uid_sha256": [
+    "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+    "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0"
+  ],
+  "hex_sha256": [
+    "44895cce9e1e7de4bbe10c857d16cddb6e88babea0f6f601aec4e98281e5ed2f",
+    "06cb5b4b12110ff089963b185137cb1c2d9163f3a28250fa0ee65e3061d95abe"
+  ],
+  "dap_uart_disconnected_both": true,
+  "swd_connected_both": true,
+  "power_rails_not_joined": true,
+  "equal_io_voltage_confirmed": true,
+  "common_ground_confirmed": true,
+  "links_match_catalog": true,
+  "pullups_match_catalog": true,
+  "extra_outputs_disconnected": true,
+  "confirmed_at_unix": 1788677055.0,
+  "confirmed_by": "Project owner (user confirmation in this task)"
+}

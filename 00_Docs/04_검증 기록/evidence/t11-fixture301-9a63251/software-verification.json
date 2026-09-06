@@ -1,0 +1,37 @@
+{
+  "scope": "Documentation and evidence changes after Fixture 301, no production code changes",
+  "checks": [
+    {
+      "gate": "docs",
+      "command": "python -B tools/ci/run_m12_gate.py docs",
+      "status": "passed",
+      "log": "gate-docs.log",
+      "sha256": "a483d0fc3a38113c4659b8cf7c46ffc50a24352dee370174f6b185a3cdc0135c"
+    },
+    {
+      "gate": "contract",
+      "command": "python -B tools/ci/run_m12_gate.py contract",
+      "status": "passed",
+      "log": "gate-contract.log",
+      "sha256": "2d07028e9b78c7190d6157bc8166f120363f3b84eb60ec24a3da086d3a4c77af"
+    },
+    {
+      "gate": "inventory",
+      "command": "python -B tools/ci/run_m12_gate.py inventory",
+      "status": "passed",
+      "log": "gate-inventory.log",
+      "sha256": "66a2622de2e660e17c7e16fcdb13bd7befe2ccdf3b37e363061e727e6013aaab"
+    },
+    {
+      "gate": "docs-final",
+      "command": "python -B tools/ci/run_m12_gate.py docs",
+      "status": "passed",
+      "reason": "Final evidence paragraphs, grammar and completed-T11 next-step wording reviewed",
+      "log": "gate-docs-final.log",
+      "sha256": "a483d0fc3a38113c4659b8cf7c46ffc50a24352dee370174f6b185a3cdc0135c"
+    }
+  ],
+  "markdown_files": 182,
+  "contract_tests": 45,
+  "readiness_blockers": 8
+}

@@ -1,0 +1,13 @@
+{
+  "task": "current-source T11 Fixture 203 only",
+  "source": "be4920757fd9faf2ea38721d2aa374246a259f29",
+  "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "user_confirmation_recorded_at_utc": "2026-09-06T09:37:03+00:00",
+  "user_statement": "203 테스트 시작해. 연결 했어.",
+  "confirmation_context": "User confirmed immediately preceding Fixture 203 instructions: A and B P2-12 SCK, P2-11 MOSI, P2-10 MISO, P2-9 CSN, P2-30 GND; power off for rewiring, both DAP UART disconnected and SWD connected, equal I/O voltage, own USB power, no joined power rails, external pullups or other outputs.",
+  "confirmation_kind": "User attestation; physical wiring is not instrumented",
+  "swd_frequency_hz": 10000000,
+  "build_root": "C:/u3f",
+  "scope": "Exact clean-source pair build/preflight, one canonical full Fixture 203 cycle, evidence/documents/commit/main push; stop before Fixture 301 wiring",
+  "status_at_recording": "preparing"
+}

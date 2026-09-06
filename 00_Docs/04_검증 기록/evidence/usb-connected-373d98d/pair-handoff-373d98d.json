@@ -1,0 +1,76 @@
+{
+  "type": "exact-pair-handoff-identity-and-ping-only",
+  "core_revision": "373d98da055b83e86b039448965d630e8d546497",
+  "created_at_utc": "2026-09-06T06:03:32.301567+00:00",
+  "external_fixture_commands_executed": false,
+  "onboard_full_suite_executed": false,
+  "swd_frequency_hz": 10000000,
+  "devices": [
+    {
+      "role": 1,
+      "probe_id_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "03355da967d94a242e22f4cc2fa9e80b69c496703f73df5b07b80816b4315712",
+      "elf_sha256": "7ccaee598b4064113242a3cead38dd5af54fb2029ad0fb2eaaf38fa2b7f71964",
+      "record_sha256": "f79e166b8f45945581c9253824033c7a49e63e287b04a4fd2faa2bfe3a546f32",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 6.422,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "b4732214f61a33a520c416c9d5e126d55eaa2dce1177ca07de0cdb1245078d49"
+      },
+      "cpuid": "0x411fd210",
+      "runtime_identity_hex": "48494c34010000000100000000000000333733643938646130353562383365383662303339343438393635643633306538643534363439370000000000000000",
+      "challenge": [
+        988934212,
+        3373862958,
+        3845425170,
+        1172272605
+      ],
+      "response": [
+        2683433029,
+        1813581871,
+        1077184531,
+        3772741084
+      ],
+      "state": "SLEEPING",
+      "status": "passed"
+    },
+    {
+      "role": 2,
+      "probe_id_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "92160ba20acb850ce657e65a739dc3d1cb75868188a8859e22427cc53fb3aa7a",
+      "elf_sha256": "f738c6f2271b4e007950e8e457b41027b368074ae70e9f616f9bd509d6276c3a",
+      "record_sha256": "f79e166b8f45945581c9253824033c7a49e63e287b04a4fd2faa2bfe3a546f32",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 6.14,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "f6dd7a9ed318a0005180cb3d453cd7dfe8dbe63a39a1a68513db7cff1243fd24"
+      },
+      "cpuid": "0x411fd210",
+      "runtime_identity_hex": "48494c34010000000200000000000000333733643938646130353562383365383662303339343438393635643633306538643534363439370000000000000000",
+      "challenge": [
+        1912458395,
+        425082874,
+        1021383511,
+        475530023
+      ],
+      "response": [
+        3573402777,
+        3159769080,
+        2581664597,
+        3109552933
+      ],
+      "state": "SLEEPING",
+      "status": "passed"
+    }
+  ],
+  "status": "passed",
+  "completed_at_utc": "2026-09-06T06:03:46.184373+00:00"
+}

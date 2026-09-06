@@ -419,7 +419,12 @@ foreach ($Runner in $Runners) {
 각 runner는 시작 시 clean source·board revision과 HEX hash를 기록하고 exact UID를 선택하며 mass erase/recover를
 사용하지 않습니다. 실패하면 해당 시점에서 멈추며, 응답 없는 보드에서 PASS를 생성하지 않습니다.
 Flash 종료 시에는 자동 reset/resume을 금지하고, 같은 probe를 다시 연결해 CPU reset·halt를 확인한
-뒤 VCOM 두 포트의 초기 buffer를 비우고 명시적으로 resume합니다. 따라서 초기 reset transient는
+뒤 DAP target TX P0.00·P1.04가 reset 입력인지 확인하고 내부 pull-up으로 유휴 HIGH를 준비합니다.
+고정 nRF54L15의 PIN_CNF에서 PULL 필드만 변경하며 출력 방향·다른 pin 설정은 바꾸지 않습니다.
+입력 조건이나 readback이 다르면 CPU를 resume하지 않습니다. 활성 UART는 driver가 TX 출력을
+설정하고, 비선택 UART 입력은 bias를 유지하여 host가 두 VCOM에 보내는 동안 floating RX에
+예상 밖 byte가 들어오는 것을 막습니다. 변경 전·후 PIN_CNF는 controlled-start evidence에 남습니다.
+이후 VCOM 두 포트의 초기 buffer를 비우고 명시적으로 resume합니다. 따라서 초기 reset transient는
 앱이 READY를 보내기 전에만 제거됩니다. 시작 이후의 READY·측정 결과는 잡음을 허용하지 않습니다.
 이 묶음의 PASS를 외부 SPI/TWIS·analog 정확도·audio·encoder·동시성·전력 검증으로 확대하지 않습니다.
 
@@ -568,3 +573,17 @@ progress를 journal에 남깁니다. 중단된 실행은 `interrupted`이며 다
 않습니다. UART/SPI/TWI와 signal CLI의 `--repetitions`, `--duration-seconds`,
 `--progress-interval-seconds`가 이 공통 계약을 사용합니다. 단독 기능 실기 PASS 전에는 soak를
 시작하지 않으며, 동시성은 해당 fixture 조합을 별도로 승인한 뒤 수행합니다.
+
+R00~R13 이후 exact 154324c의 current-source Fixture 101은 SWD 10 MHz에서 데이터 1,620개·예상 오류 24개를 통과했습니다. [67번 기록](<../../../00_Docs/04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)에 exact 증거를 보존합니다. 전체 current-source T11과 T12/T13 PASS는 아직 아닙니다.
+
+Current-source Fixture 102도 exact a49cc0d·SWD 10 MHz에서 데이터 810개·예상 오류 12개를 통과했습니다. [68번 기록](<../../../00_Docs/04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md>)에 원본을 보존합니다.
+
+Current-source Fixture 103은 exact 7aece93·SWD 10 MHz에서 데이터 2,430개·예상 오류 36개를 통과했습니다. 최초 peer flash timeout과 읽기 전용 진단 뒤 한 번의 새 실행을 [69번 기록](<../../../00_Docs/04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md>)에 구분해 보존했습니다. UART 세 묶음을 완료했습니다.
+
+Current-source Fixture 201도 exact 0f429e7·SWD 10 MHz에서 data 18,157개와 예상 cancel 12개를 통과했습니다. Data에는 recovery 12개와 SPIM00+TWIM22 동시성 1개가 포함됩니다. [70번 기록](<../../../00_Docs/04_검증 기록/70_T11_Fixture_201_current_source_SPI_회귀.md>)에 원본을 보존합니다.
+
+Current-source Fixture 202는 exact 1349e20·SWD 10 MHz에서 data 9,078개와 예상 cancel 6개를 통과했습니다. Data에는 recovery 6개가 포함됩니다. 최초 peer flash 실패·진단과 한 번의 새 전체 실행은 [71번 기록](<../../../00_Docs/04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md>)에 구분 보존했습니다.
+
+Current-source Fixture 203은 exact be49207·SWD 10 MHz에서 data 27,234개와 예상 cancel 18개를 통과했습니다. Data에는 recovery 18개가 포함됩니다. 최초 DUT flash 실패·진단과 한 번의 새 전체 실행은 [72번 기록](<../../../00_Docs/04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 구분 보존했습니다. 승인 SPI 세 route의 회귀를 마쳤습니다.
+
+Current-source Fixture 301은 exact 9a63251·SWD 10 MHz 첫 실행에서 data 1,968개, NACK/cancel 12개, stuck-SDA bus recovery 6개를 통과했습니다. Data에는 복구 18개와 clock stretch 6개가 포함됩니다. [73번 기록](<../../../00_Docs/04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 고유 ID·순서 대조와 current-source T11 단독 회귀 완료를 보존했습니다. 다음은 T12 Fixture 401 PWM→AIN0 결선입니다.

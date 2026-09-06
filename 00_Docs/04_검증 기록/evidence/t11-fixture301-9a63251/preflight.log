@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-external-fixture",
+  "status": "preflight",
+  "fixture_id": 301,
+  "fixture_revision": 2,
+  "catalog_sha256": "50ad2ee57f26ac65cc9b88a0197c9064131fbffd5e060aea2a648e5f72ffd8e3",
+  "core_revision": "9a63251ed6f8b9916d8e49d8210414b21c5c7267",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "uart-async-and-serial-sync-async-single-double-buffer",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": false,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "bbd2a1197d33f0242286a18eea89146472180833f26a4ff572d00edb186af40b",
+      "elf_sha256": "2b31ed41ff649417a847fa26a8f036be6522d388e5f3938c1f22032825364f0e",
+      "record_sha256": "438d64191808a9117640ccb10b539c2971dd434ab4c8da585946e04ff18a870c"
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "920a78e2f8a76c7c33c15835380fbf28c423126c702fa3b43b1cd1a480d5cc64",
+      "elf_sha256": "59a4806e700d2da9577361e5c0c20cbcb7dc664f599494d29567ecbff2268fcb",
+      "record_sha256": "438d64191808a9117640ccb10b539c2971dd434ab4c8da585946e04ff18a870c"
+    }
+  ],
+  "results": [],
+  "fixture": {
+    "id": 301,
+    "family": "twi",
+    "banks": [
+      1,
+      0
+    ],
+    "instances": [
+      [
+        20,
+        21,
+        22
+      ],
+      [
+        30
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "peer": [
+          "P2",
+          25,
+          "P0.0"
+        ],
+        "signal": "SDA"
+      },
+      {
+        "dut": [
+          "P2",
+          11,
+          "P1.5"
+        ],
+        "peer": [
+          "P2",
+          26,
+          "P0.1"
+        ],
+        "signal": "SCL"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "PMIC P1.2/P1.3 버스와 완전히 분리합니다. Target 역할의 TWIS가 SDA/SCL 내부 pull-up을 활성화하므로 외부 저항과 두 보드 전원 pin 연결은 사용하지 않습니다. 1MHz는 기능 통과 여부만 기록하며 rise-time·신호 품질 보증으로 해석하지 않습니다.",
+    "pullups": [
+      "Target 역할 TWIS의 SDA/SCL 내부 pull-up 사용; 외부 pull-up 저항과 두 보드 전원 rail 직접 연결 금지"
+    ]
+  },
+  "confirmation_template": {
+    "fixture_id": 301,
+    "fixture_revision": 2,
+    "catalog_sha256": "50ad2ee57f26ac65cc9b88a0197c9064131fbffd5e060aea2a648e5f72ffd8e3",
+    "core_revision": "9a63251ed6f8b9916d8e49d8210414b21c5c7267",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "uid_sha256": [
+      "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0"
+    ],
+    "hex_sha256": [
+      "bbd2a1197d33f0242286a18eea89146472180833f26a4ff572d00edb186af40b",
+      "920a78e2f8a76c7c33c15835380fbf28c423126c702fa3b43b1cd1a480d5cc64"
+    ],
+    "dap_uart_disconnected_both": false,
+    "swd_connected_both": false,
+    "power_rails_not_joined": false,
+    "equal_io_voltage_confirmed": false,
+    "common_ground_confirmed": false,
+    "links_match_catalog": false,
+    "pullups_match_catalog": false,
+    "extra_outputs_disconnected": false,
+    "confirmed_at_unix": 0,
+    "confirmed_by": ""
+  }
+}
+V04_FIXTURE_PREFLIGHT_ONLY; no probe access, flash, reset or external output

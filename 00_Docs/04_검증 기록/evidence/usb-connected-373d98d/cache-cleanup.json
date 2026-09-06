@@ -1,0 +1,93 @@
+{
+  "removed_bytes": 217893.0,
+  "scope": "Regenerated Python bytecode only; build images, raw HIL evidence and source retained",
+  "files": [
+    {
+      "sha256": "fce2e3279e95ba9e686d98cd20b74466fd8464757de16eb9d8a5bab712a42b39",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\__pycache__\\verify_ci_lock.cpython-312.pyc",
+      "bytes": 14276
+    },
+    {
+      "sha256": "649a92f8a42555a5fa6ec1f8b56626b037d9b7fd7ca627399ba6cbde480260ed",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\__pycache__\\nu54_builder.cpython-312.pyc",
+      "bytes": 1996
+    },
+    {
+      "sha256": "6ccb2f48f34558e60fc018afa9694ebd95c930dc43869c3a25dbde71a59e7dc9",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\nu54_builder_impl\\__pycache__\\__init__.cpython-312.pyc",
+      "bytes": 6145
+    },
+    {
+      "sha256": "802267b0c50346c5b51d7ffe6495676787ce2a7f9aee29ed902db05bf556cd5f",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\nu54_builder_impl\\__pycache__\\artifacts.cpython-312.pyc",
+      "bytes": 23345
+    },
+    {
+      "sha256": "b33c135013f95e6621a8598a71f5d1846ec368695f3e78d0b7195c89725973c7",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\nu54_builder_impl\\__pycache__\\build.cpython-312.pyc",
+      "bytes": 31632
+    },
+    {
+      "sha256": "316d74badfa50bca5e328bd6b333c746912accf19742b5a26fd42e1b7d4a2cad",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\nu54_builder_impl\\__pycache__\\cache.cpython-312.pyc",
+      "bytes": 24660
+    },
+    {
+      "sha256": "543c8b77342d30ce38579caf8ef896da2d41e78fbb78397414ba0256b3ccc51d",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\nu54_builder_impl\\__pycache__\\cli.cpython-312.pyc",
+      "bytes": 8828
+    },
+    {
+      "sha256": "f4feb6c7c7b42bf306ea091d8fcc8151209c07adabc99e1a03d559438c630679",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\nu54_builder_impl\\__pycache__\\common.cpython-312.pyc",
+      "bytes": 15644
+    },
+    {
+      "sha256": "19c006203273f9ffc7696c93b3b7488f0b06f14bf009ed5a254fa3168e527605",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\nu54_builder_impl\\__pycache__\\configuration.cpython-312.pyc",
+      "bytes": 11188
+    },
+    {
+      "sha256": "5272829032b8b7e7e3209ca712ec104df105f8737c025e4962a81c4ac3e43c1f",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\nu54_builder_impl\\__pycache__\\environment.cpython-312.pyc",
+      "bytes": 17222
+    },
+    {
+      "sha256": "4dd53e8411b0d60c137d75fd6cc266de70ad14af78505b33d6076cd50c4d3a8b",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\nu54_builder_impl\\__pycache__\\frontend.cpython-312.pyc",
+      "bytes": 9270
+    },
+    {
+      "sha256": "6a85de4c0ff5b791f685b46443756d57f97c21cdcbff6ab997df954cb3deaf64",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\nu54_builder_impl\\__pycache__\\installed_platform.cpython-312.pyc",
+      "bytes": 5194
+    },
+    {
+      "sha256": "ea26e0b59e66bf5a7a57167c06302fb0292a66f4d5bc0e4cce40ee51163cfd8a",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\nu54_builder_impl\\__pycache__\\locking.cpython-312.pyc",
+      "bytes": 10549
+    },
+    {
+      "sha256": "2e717f7730999ab6378f90ab9e5980d929015e4879953b6a470771e8f52a99c0",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\nu54_builder_impl\\__pycache__\\models.cpython-312.pyc",
+      "bytes": 4007
+    },
+    {
+      "sha256": "2403c8709b8ac063395a4cef20f0a34507a50312ce2c021b6b82b2d5f143868a",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\nu54_builder_impl\\__pycache__\\paths.cpython-312.pyc",
+      "bytes": 5704
+    },
+    {
+      "sha256": "0687f79a9fa4603ecdd98c645c748d01b89182f2d46e1dab082f5fdc626fe9e8",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\nu54_builder_impl\\__pycache__\\source_graph.cpython-312.pyc",
+      "bytes": 12125
+    },
+    {
+      "sha256": "a66bd8a0375eaf9628d7b78e89783ec7079444765d43361c04379d97f42699c4",
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\nu54_builder_impl\\__pycache__\\upload.cpython-312.pyc",
+      "bytes": 16108
+    }
+  ],
+  "removed_files": 17,
+  "removed_cache_directories": 3
+}

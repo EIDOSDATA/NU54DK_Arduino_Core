@@ -1,0 +1,28 @@
+{
+  "observed_at_utc": "2026-09-06T03:58:59.234474+00:00",
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "core_revision": "c94298f925410fbef78300d8af4d7a1b3fef4aaf",
+      "hex_sha256": "90e852bd86ded64ccfaa99bc374113e762dde9ebbd0d2730c1083ad28686e843",
+      "runtime_identity_sha256": "35c0d560883c4a2ec69adadba3c0ab9422c8b1c3cbab5b2a25defe839697027b",
+      "cpuid": "0x411fd210",
+      "cpu_state": "SLEEPING",
+      "status": "passed"
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "core_revision": "c94298f925410fbef78300d8af4d7a1b3fef4aaf",
+      "hex_sha256": "8cd085bf5a2cb423595dbd264a407b70925270d0539ca07a38d7a30e40c22cda",
+      "runtime_identity_sha256": "bb232720ea2a0caa04833c1e655b3031b83edb833b422bf14f27699ed33cd850",
+      "cpuid": "0x411fd210",
+      "cpu_state": "SLEEPING",
+      "status": "passed"
+    }
+  ],
+  "flash_executed": false,
+  "reset_requested": false,
+  "memory_written": false
+}

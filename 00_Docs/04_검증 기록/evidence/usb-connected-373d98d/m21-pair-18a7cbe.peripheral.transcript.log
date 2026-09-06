@@ -1,0 +1,32 @@
+NUCODE_M21_PERIPHERAL:CLEAR:REQUESTED:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_REBOOTING:role=peripheral:nonce=64990e5cbff36ad47527a7573aba6ed5
+*** Booting nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+NUCODE_M21_READY:role=peripheral:bond_count=0
+NUCODE_M21_PERIPHERAL:ADVERTISE:PASS:phase=first:rf_nonce_binding_bits=128:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_EVENT:CONNECTED:role=peripheral:phase=first:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_PERIPHERAL:PROFILE:PASS:bas_notify=72:hid_bytes=8:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_PERIPHERAL:PHASE:PASS:phase=first:pairing_events=1:bond_count=1:bond_state=persistence_pending:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_REBOOTING:role=peripheral:nonce=64990e5cbff36ad47527a7573aba6ed5
+*** Booting nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+NUCODE_M21_READY:role=peripheral:bond_count=1
+NUCODE_M21_PERIPHERAL:ADVERTISE:PASS:phase=restore:rf_nonce_binding_bits=128:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_EVENT:CONNECTED:role=peripheral:phase=restore:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_PERIPHERAL:PROFILE:PASS:bas_notify=72:hid_bytes=8:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_PERIPHERAL:PHASE:PASS:phase=restore:pairing_events=0:bond_count=1:bond_state=verified:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_PERIPHERAL:ERASE:REQUESTED:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_EVENT:DISCONNECTED:role=peripheral:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_REBOOTING:role=peripheral:nonce=64990e5cbff36ad47527a7573aba6ed5
+*** Booting nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+NUCODE_M21_READY:role=peripheral:bond_count=0
+NUCODE_M21_PERIPHERAL:ADVERTISE:PASS:phase=erased_probe:rf_nonce_binding_bits=128:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_EVENT:CONNECTED:role=peripheral:phase=erased_probe:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_EVENT:DISCONNECTED:role=peripheral:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_PERIPHERAL:OLD_KEY:RECONNECT:REJECTED:bond_count=0:pairing_requested=1:security_failed=1:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_PERIPHERAL:ADVERTISE:PASS:phase=repair:rf_nonce_binding_bits=128:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_EVENT:CONNECTED:role=peripheral:phase=repair:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_PERIPHERAL:PROFILE:PASS:bas_notify=72:hid_bytes=8:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_PERIPHERAL:PHASE:PASS:phase=repair:pairing_events=1:bond_count=1:bond_state=persistence_pending:nonce=64990e5cbff36ad47527a7573aba6ed5
+NUCODE_M21_PERIPHERAL:FINAL:PASS:pairing=PASS:bond_restore=PASS:erase_reboot=PASS:old_key_reconnect=REJECTED:repair=PASS:bas=PASS:dis=PASS:hid_protocol=PASS:nonce=64990e5cbff36ad47527a7573aba6ed5

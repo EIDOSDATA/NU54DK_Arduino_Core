@@ -1,0 +1,15 @@
+{
+  "source": "7aece93395f0d74272816894a18c2c5e3f1a2abe",
+  "fixture_id": 103,
+  "failed_attempt": "fixture103-attempt1.json",
+  "failure_phase": "peer sector flash: CMSIS-DAP timeout",
+  "external_wiring_executed_first_attempt": false,
+  "functional_results_first_attempt": 0,
+  "diagnostic": "probe-diagnostic.json",
+  "observed_recovery": "Both exact probes respond to 10 MHz SWD CPUID reads; A SLEEPING, B HALTED, all four COM ports enumerated",
+  "root_cause": "unresolved",
+  "next_action": "One new canonical run with unchanged exact images and 10 MHz, still-current original user confirmation, new evidence file",
+  "maximum_additional_attempts": 1,
+  "failed_results_reused": false,
+  "mass_erase_recover_unlock": false
+}

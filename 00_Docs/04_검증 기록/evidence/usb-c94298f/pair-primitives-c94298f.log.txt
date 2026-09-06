@@ -1,0 +1,7 @@
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+V04_PAIR_ONBOARD_ROLE_PASS=1
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+V04_PAIR_ONBOARD_ROLE_PASS=2
+V04_PAIR_ONBOARD_PASS=904; external HIL remains NOT RUN

@@ -1,0 +1,7 @@
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+{"role": 1, "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9", "com_ports": ["COM5", "COM6"], "cpuid": "0x411fd210", "state": "SLEEPING", "status": "passed"}
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+{"role": 2, "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0", "com_ports": ["COM7", "COM8"], "cpuid": "0x411fd210", "state": "HALTED", "status": "passed"}
+PROBE_READ_ONLY_DIAGNOSTIC_COMPLETE

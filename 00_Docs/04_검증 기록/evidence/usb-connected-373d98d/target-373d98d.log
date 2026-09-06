@@ -1,0 +1,30 @@
+INFO    - Using Ninja..
+INFO    - Zephyr version: ncs-v3.4.0
+INFO    - Using 'zephyr/gnu' toolchain variant.
+INFO    - Building initial testsuite list...
+INFO    - Built testsuite list in 0.01 seconds
+INFO    - Writing JSON report C:\u2b\testplan.json
+INFO    - Adding tasks to the queue...
+INFO    - Added initial list of jobs to queue
+INFO    - Total complete: [32m   1/  11[39m   9%  built (not run): [36m   1[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m   2/  11[39m  18%  built (not run): [36m   2[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m   3/  11[39m  27%  built (not run): [36m   3[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m   4/  11[39m  36%  built (not run): [36m   4[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m   5/  11[39m  45%  built (not run): [36m   5[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m   6/  11[39m  54%  built (not run): [36m   6[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m   7/  11[39m  63%  built (not run): [36m   7[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m   8/  11[39m  72%  built (not run): [36m   8[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m   9/  11[39m  81%  built (not run): [36m   9[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m  10/  11[39m  90%  built (not run): [36m  10[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m  11/  11[39m  100%  built (not run): [36m  11[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+
+INFO    - 11 test scenarios (11 configurations) selected, 0 configurations filtered (0 by static filter, 0 at runtime).
+INFO    - 0 of 11 executed test configurations passed (0.00%), 11 built (not run), 0 failed, 0 errored, with no warnings in 465.22 seconds.
+INFO    - 0 test configurations executed on platforms, 11 test configurations were only built.
+INFO    - Saving reports...
+INFO    - Writing JSON report C:\u2b\twister.json
+INFO    - Writing xunit report C:\u2b\twister.xml...
+INFO    - Writing xunit report C:\u2b\twister_report.xml...
+INFO    - Run completed
+[M12-ZEPHYR] exec: C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe C:\ncs\v3.4.0\zephyr\scripts\twister --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m24_uarte_onboard_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m24_uarte_onboard_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m24_uarte_onboard_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m24_uarte_onboard_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m24_twim_onboard_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m24_twim_onboard_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m24_twim_onboard_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m25_onboard_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m26_onboard_hil --platform nrf54l15dk/nrf54l15/cpuapp/nu54dk --board-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards --build-only --ninja --detailed-test-id --jobs 4 --outdir C:\u2b --extra-args BOARD_ROOT=C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS --extra-args EXTRA_ZEPHYR_MODULES=C:/Users/eidos/GitHub/NU54DK_Arduino_Core --extra-args USE_CCACHE=0 --scenario nucode.v04.pair_dut --scenario nucode.v04.pair_peer --scenario nucode.m24.uarte20_hil --scenario nucode.m24.uarte21_hil --scenario nucode.m24.uarte22_hil --scenario nucode.m24.uarte30_hil --scenario nucode.m24.twim20_hil --scenario nucode.m24.twim21_hil --scenario nucode.m24.twim22_hil --scenario nucode.m25.onboard_hil --scenario nucode.m26.onboard_hil
+M12_ZEPHYR_BUILD_PASS=11;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset

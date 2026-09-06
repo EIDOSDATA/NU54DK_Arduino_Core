@@ -1,0 +1,110 @@
+{
+  "usb-inventory.json": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\usb-inventory.json",
+    "bytes": 745,
+    "sha256": "d47507e33fafdce5f85af2663784eca746d79c3f2002278abf83b0c1bc4fba14",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/usb-inventory.json"
+  },
+  "swd-preflight.json": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\swd-preflight.json",
+    "bytes": 893,
+    "sha256": "3f4edc7df174a8c5f9475814620ca85d04c8510a8761a404198e03dafa6dfce5",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/swd-preflight.json"
+  },
+  "pair-primitives-c94298f.json": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\pair-primitives-c94298f.json",
+    "bytes": 179287,
+    "sha256": "22c00a8e0af18ed141f49910f19ba9b056efee7d168805e0b6d2c6bdd3d4507a",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/pair-primitives-c94298f.json"
+  },
+  "pair-primitives-c94298f.json.jsonl": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\pair-primitives-c94298f.json.jsonl",
+    "bytes": 93060,
+    "sha256": "61c7fc953412156cbf0b0432188057b8d85e310905e1f02f82c378db1076eeea",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/pair-primitives-c94298f.json.jsonl"
+  },
+  "pair-primitives-c94298f.log": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\pair-primitives-c94298f.log",
+    "bytes": 253,
+    "sha256": "0c3122ebbc24cac937f6f71b19d1a149074e7a2c78dc77671105e6ac65b9be83",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/pair-primitives-c94298f.log.txt"
+  },
+  "onboard-summary.json": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\onboard-summary.json",
+    "bytes": 1900,
+    "sha256": "326cfb0592fb988b12b2e734bf0abae50975b2f5db28ccced46bdbeff3f0c0a5",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/onboard-summary.json"
+  },
+  "hardware-postflight.json": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\hardware-postflight.json",
+    "bytes": 1107,
+    "sha256": "9c1aef71ad7458e854d8c174398991d64600ffdb16815ece1d18c06801912d32",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/hardware-postflight.json"
+  },
+  "cleanup-summary.json": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\cleanup-summary.json",
+    "bytes": 3102,
+    "sha256": "29d03011c2fc85b4019e30c680a9c8b66b9fd3018c110cba01403d1112b062b9",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/cleanup-summary.json"
+  },
+  "cleanup-preserved-artifacts.json": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\cleanup-preserved-artifacts.json",
+    "bytes": 698086,
+    "sha256": "39bff799aaf52f962d0c5a1b1daf5de67d45abf845c136c7feb9d856fa672fad",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/cleanup-preserved-artifacts.json"
+  },
+  "cleanup-files.jsonl.gz": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\cleanup-files.jsonl.gz",
+    "bytes": 3039581,
+    "sha256": "e8c1c5b61d0c86513baf588d19574c887bbbd73487d9aa82cbcc4d147939894b",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/cleanup-files.jsonl.gz"
+  },
+  "cleanup.log": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\cleanup.log",
+    "bytes": 102,
+    "sha256": "b653860ab78e30ba7a16bb91f5825877c069537509ddd9b564524668fe436b2f",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/cleanup.log.txt"
+  },
+  "checkpoint.md": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\checkpoint.md",
+    "bytes": 1738,
+    "sha256": "8a4e266ad1a080230e52b2050c7add161764b57610b52b1c0ebb785ccad5c885",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/checkpoint.md.txt"
+  },
+  "run_onboard.py": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\run_onboard.py",
+    "bytes": 2753,
+    "sha256": "1a9663a311cd3aae2eced012d069f227473ef12f8d4ca15bda8d0a25b8084cf3",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/run_onboard.py.txt"
+  },
+  "cleanup.ps1": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\cleanup.ps1",
+    "bytes": 8454,
+    "sha256": "148b9c7be2f73fb6c05e722dbcc3eee0e718694275c372f7ef4d55de38d13fc4",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/cleanup.ps1.txt"
+  },
+  "docs-final.log": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\docs-final.log",
+    "bytes": 69,
+    "sha256": "890e1e853eb559025a77812c5f52c1bd6274d43eb072f4b485fa07e2b77170fe",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/docs-final.log.txt"
+  },
+  "contract.log": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\contract.log",
+    "bytes": 7516,
+    "sha256": "01f5b0488c5067c1f63acca08acb1a9407863264e67edeaa0be70956ad6c096c",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/contract.log.txt"
+  },
+  "inventory.log": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\inventory.log",
+    "bytes": 1413,
+    "sha256": "7e58023f0d3cd63fb88dfb19c5c477d19a2c78e29e995a1b66bbfe7491c26fc6",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/inventory.log.txt"
+  },
+  "style.log": {
+    "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\style.log",
+    "bytes": 40,
+    "sha256": "a4c20c2be37aa611270a24e85826c8013654d6bb404477070db2009c783906a5",
+    "repository_copy": "00_Docs/04_검증 기록/evidence/usb-c94298f/style.log.txt"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "source": "a49cc0dbc1ef8bf5f697106d873bdce55f5911df",
+  "fixture_id": 102,
+  "status": "passed",
+  "swd_frequency_hz": 10000000,
+  "data_pass": 810,
+  "normal_vectors": 792,
+  "cts_deferred_rx": 6,
+  "expected_error_pass": 12,
+  "recovery_data_pass": 12,
+  "functional_pass": 822,
+  "cleanup_records": 2,
+  "campaign_records": 2,
+  "journal_records": 826,
+  "coverage_per_role_instance_pair": {
+    "1/(30, 20)": 137,
+    "1/(30, 21)": 137,
+    "1/(30, 22)": 137,
+    "2/(30, 20)": 137,
+    "2/(30, 21)": 137,
+    "2/(30, 22)": 137
+  },
+  "continuous_elapsed_seconds": 239.5,
+  "journal_matches_final_json": true,
+  "functional_ids_unique": true,
+  "sha256": {
+    "fixture102-attempt1.json": "1753889bc2e3734060a3993b6958580b66271da9a424d1965b392c81fbcc60e5",
+    "fixture102-attempt1.json.jsonl": "02d0eb90769d46f5dd716664329a6fa83480c21c590a3b9ca0a647bb67e557c5"
+  }
+}

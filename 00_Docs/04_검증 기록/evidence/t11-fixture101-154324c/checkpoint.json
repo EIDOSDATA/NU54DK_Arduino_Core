@@ -1,0 +1,13 @@
+{
+  "task": "current-source T11 Fixture 101 only",
+  "source": "154324ce7a865522374066ca957ebc98909c7c19",
+  "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "user_confirmation_recorded_at_utc": "2026-09-06T06:25:33+00:00",
+  "user_statement": "결선 완료. SWD 속도는 최대치로 하는거 알지?",
+  "confirmation_context": "Immediately preceding Fixture 101 five-wire instructions, DAP UART disconnected both, SWD connected both, equal I/O voltage, separate USB power, no joined power rails, no external pullups or other output devices; user confirmed completion.",
+  "confirmation_kind": "User attestation; physical wiring is not instrumented",
+  "swd_frequency_hz": 10000000,
+  "build_root": "C:/u3a",
+  "scope": "Exact clean-source build/preflight, one canonical full Fixture 101 cycle, evidence/documents/commit/main push; stop before Fixture 102 wiring",
+  "status": "building"
+}

@@ -1,0 +1,119 @@
+{
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "boards": {
+    "central": {
+      "daplink_uid": "<probe-sha256:4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0>",
+      "uart_port": "COM7"
+    },
+    "peripheral": {
+      "daplink_uid": "<probe-sha256:32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9>",
+      "uart_port": "COM5"
+    }
+  },
+  "core_revision": "18a7cbec9cceed38d6c866131afdac9e6ffbc4b8",
+  "coverage": {
+    "bas_read_and_notify": true,
+    "bond_delete_request_accepted": true,
+    "bond_delete_warm_reboot_zero": true,
+    "bond_persistence_pending_not_verified_same_boot": true,
+    "bond_repair": true,
+    "bond_warm_reboot_restore": true,
+    "dis_read": true,
+    "encrypted_gatt_negative": true,
+    "hid_report_protocol": true,
+    "manual_os_hid_confirmation_pending": true,
+    "old_key_reconnect_rejected": true,
+    "pairing": true,
+    "windows_or_smartphone_hid_input": false
+  },
+  "created_at_utc": "2026-09-06T05:50:53.122236+00:00",
+  "gate": "m21-ble-security-profile-pair-hil",
+  "images": {
+    "central": {
+      "flash_sequence": "3",
+      "name": "zephyr.hex",
+      "sha256": "3fc06572581066901eddd38c0799a44036ab4b489debfa488e5b288f25e552e2"
+    },
+    "peripheral": {
+      "flash_sequence": "3",
+      "name": "zephyr.hex",
+      "sha256": "7884f719abc48a32675556026b7cb864cf3043889b31a0a77e102083490f9a6f"
+    }
+  },
+  "nonce": "64990e5cbff36ad47527a7573aba6ed5",
+  "results": {
+    "central": {
+      "bond_counts": [
+        1,
+        1,
+        0,
+        1
+      ],
+      "bond_states": [
+        "persistence_pending",
+        "verified",
+        "none",
+        "persistence_pending"
+      ],
+      "erase_reboot_verified": true,
+      "final_pass": true,
+      "nonce": "64990e5cbff36ad47527a7573aba6ed5",
+      "old_key_reconnect_rejected": true,
+      "pairing_events": [
+        1,
+        0,
+        1
+      ],
+      "phases": [
+        "first",
+        "restore",
+        "erased_probe",
+        "repair"
+      ],
+      "rf_nonce_binding_bits": 128,
+      "role": "central"
+    },
+    "peripheral": {
+      "bond_counts": [
+        1,
+        1,
+        0,
+        1
+      ],
+      "bond_states": [
+        "persistence_pending",
+        "verified",
+        "none",
+        "persistence_pending"
+      ],
+      "erase_reboot_verified": true,
+      "final_pass": true,
+      "nonce": "64990e5cbff36ad47527a7573aba6ed5",
+      "old_key_reconnect_rejected": true,
+      "pairing_events": [
+        1,
+        0,
+        1
+      ],
+      "phases": [
+        "first",
+        "restore",
+        "erased_probe",
+        "repair"
+      ],
+      "rf_nonce_binding_bits": 128,
+      "role": "peripheral"
+    }
+  },
+  "rf_nonce_binding_bits": 128,
+  "safety": {
+    "factory_reset_executed": false,
+    "mass_erase_requested": false
+  },
+  "schema_version": 3,
+  "status": "passed",
+  "transcripts": {
+    "central_sha256": "6ec55fc94a2203306934fa190d9aa9a3993b930a7345b2365bbb64e4ef4d4a29",
+    "peripheral_sha256": "5637933e9a109c2ce8a4ec4bddd16d2af1c4bad806b936202058c4fea78f8a13"
+  }
+}

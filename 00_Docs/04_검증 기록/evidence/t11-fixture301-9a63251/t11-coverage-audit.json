@@ -1,0 +1,73 @@
+{
+  "status": "passed",
+  "scope": "Approved single communication routes after R00-R13 with matching compiled inputs; exact embedded source identity preserved per fixture",
+  "records": [
+    {
+      "fixture_id": 101,
+      "source": "154324ce7a865522374066ca957ebc98909c7c19",
+      "functional_pass": 1644,
+      "cleanup_records": 2,
+      "audit_sha256": "2d5eae30b936a3f255f1e465c11b2f83603a81df1e9fdab46320bb5480d228e3",
+      "original_journal_sha256": "e123aba1314f58ef30d350790366bd54296d3970acdfa765e583f52cd21d5c3b"
+    },
+    {
+      "fixture_id": 102,
+      "source": "a49cc0dbc1ef8bf5f697106d873bdce55f5911df",
+      "functional_pass": 822,
+      "cleanup_records": 2,
+      "audit_sha256": "10818c3a975f2b7023f1bdca937cb8d4e50fe80308407c2dfbff91d61e358d6b",
+      "original_journal_sha256": "02d0eb90769d46f5dd716664329a6fa83480c21c590a3b9ca0a647bb67e557c5"
+    },
+    {
+      "fixture_id": 103,
+      "source": "7aece93395f0d74272816894a18c2c5e3f1a2abe",
+      "functional_pass": 2466,
+      "cleanup_records": 2,
+      "audit_sha256": "953fc5b3aa722f0329164dec7674b6fbf484df682aa4e100627a2348da0e7208",
+      "original_journal_sha256": "3c60f92e92c038ece6e27639acef4b7975f92a27cd5d19e3b423b21b7375d1ec"
+    },
+    {
+      "fixture_id": 201,
+      "source": "0f429e7ab9b5b8e24f4ff19e47abe60014975547",
+      "functional_pass": 18169,
+      "cleanup_records": 2,
+      "audit_sha256": "52cb82f1004a7981c14f67cb95a9037f895509a26a7225a5b5c3be1e8954edf5",
+      "original_journal_sha256": "a6cc23b01d59e66d29d92a48044561cf221da7efe50032ba8c04fb100bf5bfae"
+    },
+    {
+      "fixture_id": 202,
+      "source": "1349e208073d0fd7d3b020a5e9facf771b371237",
+      "functional_pass": 9084,
+      "cleanup_records": 2,
+      "audit_sha256": "90f530a9e88143daf04f4aa4ea2cc628673a4b8d38a32e3152b9df5bd4b6abfe",
+      "original_journal_sha256": "e49a7c9c77325294c772e6ec0f2f5e14c3e1838631250ff82ad9b37ffd46cab9"
+    },
+    {
+      "fixture_id": 203,
+      "source": "be4920757fd9faf2ea38721d2aa374246a259f29",
+      "functional_pass": 27252,
+      "cleanup_records": 2,
+      "audit_sha256": "e07bcb00577971c40fb77d98388fa3e3598de66341b65823d836d9ec206b2570",
+      "original_journal_sha256": "fcdff0b91908160df50c4a6e9078e5f2b97703aa979dece42b13cc82f82793b8"
+    },
+    {
+      "fixture_id": 301,
+      "source": "9a63251ed6f8b9916d8e49d8210414b21c5c7267",
+      "functional_pass": 1986,
+      "cleanup_records": 2,
+      "audit_sha256": "5a53528343b754313417f4db96f159e481e1ad1f38ecd3b3a4ad08f4713c37cd",
+      "original_journal_sha256": "cf24ce0b47f06f366bc4fa74f0f70b35ddfbde7db23a6d185b141ed7014834ce"
+    }
+  ],
+  "totals": {
+    "uart_functional_pass": 4932,
+    "spi_functional_pass": 54505,
+    "twi_functional_pass": 1986,
+    "functional_pass": 61423,
+    "cleanup_records": 14
+  },
+  "current_source_t11_complete": true,
+  "next_physical_fixture": 401,
+  "m24_release_gate_promoted": false,
+  "t12_t15_or_release_complete": false
+}

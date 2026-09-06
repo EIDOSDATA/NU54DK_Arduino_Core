@@ -1,0 +1,29 @@
+{
+  "scope": "Documentation and evidence changes after Fixture 103, no production code changes",
+  "checks": [
+    {
+      "gate": "docs",
+      "command": "python -B tools/ci/run_m12_gate.py docs",
+      "status": "passed",
+      "log": "gate-docs.log",
+      "sha256": "88d66e1145346e3b50baf016fdbb85cad9553a6b7a073726da7e28a0556b2798"
+    },
+    {
+      "gate": "contract",
+      "command": "python -B tools/ci/run_m12_gate.py contract",
+      "status": "passed",
+      "log": "gate-contract.log",
+      "sha256": "e2faa0a41c6017bc59d00e4571c4116cec7d0187811b56c6d69d6787f69d39b3"
+    },
+    {
+      "gate": "inventory",
+      "command": "python -B tools/ci/run_m12_gate.py inventory",
+      "status": "passed",
+      "log": "gate-inventory.log",
+      "sha256": "7e58023f0d3cd63fb88dfb19c5c477d19a2c78e29e995a1b66bbfe7491c26fc6"
+    }
+  ],
+  "markdown_files": 178,
+  "contract_tests": 45,
+  "readiness_blockers": 8
+}

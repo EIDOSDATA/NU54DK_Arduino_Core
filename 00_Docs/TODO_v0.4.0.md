@@ -2,13 +2,13 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 2.2 |
-| 상태 | 활성 TODO — R00~R13·최종 software gate 완료; current-source T11·T12~T15 및 후속 공개 단계 대기 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.1 |
+| 상태 | 활성 TODO — R00~R13·최종 software gate와 current-source T11 UART·SPI·TWI 단독 회귀 완료; T12~T15·통합·RC·공개 대기 |
 | 작성·갱신일 | 2026-09-06 |
-| 작성 직전 기준 commit | `cf966a8ed614713235cd8178bd4b1eb8ab120d36` — 최종 구현과 전체 software gate source |
+| 작성 직전 기준 commit | `9a63251ed6f8b9916d8e49d8210414b21c5c7267` — 이번 Fixture 301 exact source |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **current-source T11 — Fixture 101 전원 OFF 결선 확인 대기** |
-| 이번 요청의 실행 범위 | 2026-09-06 사용자 지시: R00~R13을 번호 순서대로 구현·시험·문서화하고 전체 software/target/examples/style 검증과 main commit/push까지 자동 진행한다. current-source T11 직전에 멈추며 flash·HIL·결선 변경·공개는 수행하지 않는다 |
+| 다음 착수 항목 | **T12 Fixture 401 PWM→AIN0 전원 OFF 결선 변경과 사용자 확인** |
+| 이번 요청의 실행 범위 | 2026-09-06 Fixture 301 준비 완료·시작 지시. Exact pair build, 10 MHz 전체 TWI 실기, 증거·문서·commit·main push 뒤 T12 Fixture 401 결선 직전 정지 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
 마일스톤의 제품 상태는 [로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>), 실제 PASS/FAIL은
@@ -51,21 +51,21 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | R00~R13 리팩토링·최종 software gate·main commit/push. 과거 exact e2f045c의 Fixture 301 총 1,990 result PASS는 역사적 체크포인트로만 보존하며 current-source T11은 NOT RUN |
-| 진행 중인 T 항목 | R00~R13 구현·최종 software gate 완료. [64번 기록](<./04_검증 기록/64_R13_도구_정책_build_구조.md>)의 clean exact cf966a8 전체 60 target·설치 예제 29개·Host/contract/inventory/docs/package/style와 QEMU를 통과했다. current-source T11 NOT RUN |
-| 다음 구체적 행동 | 양쪽 보드 USB 전원을 끄고 마지막 알려진 Fixture 301 신호선을 제거한 뒤 Fixture 101 UART 4선+공통 GND를 연결한다. DISABLE_UART 분리·DISABLE_SWD 연결, 동일 I/O 전압·단락 없음과 사용자 결선 완료 확인이 선행조건이다. 확인 전 flash/HIL 금지 |
-| 다음 작업에 필요한 사용자 행동 | Fixture 101 전원 OFF 결선과 스위치 상태를 확인하고 결선 완료를 알려준다. 이번 R00~R13 무인 작업은 여기서 종료 |
-| 외부 결선 상태 | 직접 관측하지 않음. 마지막 알려진 상태는 Fixture 301 SDA·SCL·GND, 외부 저항·전원 rail 없음, DISABLE_UART 분리·DISABLE_SWD 연결이며 현재도 같다고 가정하지 않는다 |
+| 이번에 끝낸 일 | TWI 301 exact 9a63251 첫 실행 1,986 PASS와 current-source T11 단독 회귀 완료. [73번 기록](<./04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 일곱 묶음 61,423개 기능 결과·원본 hash·동일 컴파일 입력을 대조했다. 각 exact identity와 과거 실패는 구분 보존 |
+| 진행 중인 T 항목 | 실행 중 시험 없음. Current-source T11 단독 회귀 완료, T12 Fixture 401부터 대기. T13~T15·T16~T18·R14·RC/공개 미완료 |
+| 다음 구체적 행동 | 두 USB 전원을 분리한다. A P2-12는 유지하고 연결된 B 끝을 P2-25에서 P4-12/P1.14로 옮긴다. SCL A P2-11↔B P2-26 점퍼는 양쪽 제거, P2-30 GND는 유지한다. B PWM→A AIN0 한 방향과 GND만 남긴다 |
+| 다음 작업에 필요한 사용자 행동 | Fixture 401 전원 OFF 결선 변경·양쪽 DAP UART 분리/SWD 연결·동일 I/O 전압 확인·각자 USB 재연결 완료 확인. 외부 저항/전원선 추가 없음 |
+| 외부 결선 상태 | 2026-09-06 사용자 Fixture 301 완료 확인. SDA A P2-12↔B P2-25, SCL A P2-11↔B P2-26, P2-30 GND. 이전 SPI MISO/CSN 제거. 양쪽 DAP UART 분리·SWD 연결·동일 I/O 전압·각자 USB 전원; TWIS 내부 pull-up, 외부 저항/전원 rail 없음. A D/COM5·6, B E/COM7·8 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
-| 마지막 정식 외부 HIL source | `e2f045c1b4272d986d17456c5af051fe8af74f19` — Fixture 301 두 보드 exact role image TWI PASS |
-| 작성 당시 readiness | 필수 16개 중 미해결 8개; T09 무배선 PASS만 추가됐으며 외부 결선·RC·최종 공개 승인 없음 |
+| 마지막 정식 외부 HIL source | `9a63251ed6f8b9916d8e49d8210414b21c5c7267` — TWI 301 첫 실행 1,986 PASS. 이전 current-source UART·SPI와 역사 원본 보존 |
+| 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. Current-source T11 단독 통신 회귀 완료; M24 전체·T12~T15·RC·공개 gate 미완료 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | 최종 cf966a8 전체 software gate 종료: 60 target build-only, QEMU 3개 실제 실행, 설치 예제 29개 configure/live SHA PASS. 499fde3의 16개 smoke baseline과 cf966a8 M7 전체·M8 compile 2개 영향 회귀를 구분해 보존. current-source T11 flash/HIL 없음 |
-| 로컬 임시 build·evidence | R00~R13의 C:/r00~C:/r13*와 작업 work 보존. 최신 C:/r13u 전체 target, C:/r13v 설치 29개, C:/r13w M7/M8, C:/r13z QEMU와 종료 HEAD pair C:/r13h. 499fde3의 C:/r13f·r13i·r13s 최초 smoke 실패·r13t 재개 및 QEMU r13q NOT RUN/r13q2 PASS도 보존. work/qemu portable, R06 별도 index·참조 없는 snapshot commit이 남아 있으며 임시 branch/worktree 없음. 최신 35개 configure/live 원본은 cache 정리 전에 보존 |
+| 이 TODO 작성 작업의 실행 중 시험 | HIL/build 종료. 양쪽 exact 9a63251 DUT/peer image, controller 역할별 disarm [0], 종료 read-only CPUID·full commit·role 2/2 PASS, CPU snapshot A SLEEPING·B SLEEPING. SWD 10 MHz 첫 실행 PASS. 과거 flash timeout/peer P0 CTS 원인 해결을 주장하지 않음 |
+| 로컬 임시 build·evidence | 15개 과거 root의 object/archive 중간 파일 55,537개 제거, 일회성 script 50개는 work/archive/r00-r13-authoring-scripts.zip으로 hash 검증 후 보관. 2,911개 ELF/HEX/설정/log 등은 hash 불변. C:/r13h와 설치본·raw evidence·QEMU 보존; 상세는 65번 기록 |
 | 최종 정렬 gate | clang-format 22.1.8, 직접 관리 C/C++/ino 356개 dry-run PASS. 한국어 Doxygen·BSD/Allman·4칸·중괄호 필수. SDK·board·third-party·공개 자산을 정렬하지 않았으며 물리 PASS로 승격하지 않음 |
 | CI 확인 | 최종 source의 GitHub Actions는 미확인. 현재 GitHub CLI 인증에 의존하지 않고 로컬 canonical 전체 software gate를 실행했다. 이전 Actions success는 이전 source의 역사 증거로만 유지 |
-| 문서 작업 검증 | Markdown 173개 UTF-8·내부 링크, contract 45/45, inventory·생성 drift, package 20/20, Host 639 PASS·M13 조건부 1 SKIP와 별도 실제 설치 M13 11/11, 전체 target 60개·설치 예제 29개·QEMU 3개 PASS. readiness blocker 8개 유지 |
-| 최종 HIL 입력 찾기 | 전체 software gate는 exact cf966a8. 종료 문서 commit의 HEAD를 기록한 DUT/peer는 C:/r13h이며, 작업 outputs/final-report.md·artifact-index.json과 work/r13/r13h-artifact-index.json에서 Core/board/HEX를 확인한다. 재개 시 현재 HEAD와 source·artifact hash를 실제 대조하고 결선 확인 전 flash/HIL 금지 |
+| 문서 작업 검증 | 이번 pair target 2/2, Markdown 182, contract 45, inventory 75·Serial 23·System 16 PASS; readiness blocker 8개 유지. 제품·canonical runner 변경 없음. 기존 full software/T09/BLE 및 각 fixture exact 근거 보존 |
+| 최종 HIL 입력 찾기 | C:/u3g exact 9a63251 DUT/peer와 첫 실행 JSON/journal은 73번에 있다. T12로 넘어갈 때 해당 fixture용 새 exact HEAD image·확인서를 준비한다. 기존 build·실패·raw evidence 보존 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드
@@ -164,6 +164,8 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
   - 증거: `v04_fixtures.json`, HIL README, fail-closed confirmation template와 Host catalog/조건 검사 PASS. 묶음마다 T10 확인 반복.
 
 - [x] **T09 — Host 검사·시험 펌웨어 빌드·무배선 추가 시험**
+  - DAP UART 연결 후 추가 회귀: 373d98d 온보드 18 PASS와 18a7cbe BLE M19/M20/M21 pair PASS. idle bias 교정·처음 실패·새 exact 결과는 [66번 기록](<./04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>)에 분리 보존. 외부 current-source T11 NOT RUN.
+  - R13 이후 회귀: exact c94298f의 두 보드에서 온보드 904 PASS. [65번 기록](<./04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)에 기존 T09와 구분해 등록. 외부 current-source T11 NOT RUN.
   - 상태·선행: 완료 / clean `696defb`와 exact board gitlink에서 두 보드 역할 image와 primitives를 재검증. 외부 실행은 T10 전 금지.
   - 할 일: Host/계약/문서 검사와 필요한 target build·CI를 실행하고 온보드 UART·I2C·복구 등 가능한 추가 기능을 시험한다.
   - 완료 기준: 새 source의 image·runner·증거가 결합되고 무배선 가능 항목의 기대 결과가 통과한다. 외부 경로는 build-only로 명확히 남긴다.
@@ -206,8 +208,9 @@ R00~R14와 연결하고, 구조 변경 뒤 같은 결선을 다시 반복하지 
   M25·BLE·Storage 회귀 범위를 누적한다.
 - [x] **R13:** package tool·정책 생성·Kconfig/CMake·문서/증거 구조화를 완료하고 전체 Host·target·예제·
   package gate로 최종 실기 source를 고정한다.
-- [ ] **current-source T11 회귀:** R00~R13 최종 exact source로 영향받는 UART·SPI·TWI 단독 기능을
+- [x] **current-source T11 회귀:** R00~R13 최종 exact source로 영향받는 UART·SPI·TWI 단독 기능을
   재검증하고 나서 T12로 전환한다.
+  - 진행: exact 154324c Fixture 101 기능 1,644 PASS. [67번 기록](<./04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>) 참조. Fixture 102는 exact a49cc0d 기능 822 PASS로 [68번 기록](<./04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md>)에 등록했다. Fixture 103은 exact 7aece93 기능 2,466 PASS로 [69번 기록](<./04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md>)에 등록해 승인 UART route 세 묶음을 완료했다. Fixture 201도 exact 0f429e7 기능 18,169 PASS로 [70번 기록](<./04_검증 기록/70_T11_Fixture_201_current_source_SPI_회귀.md>)에 등록했다. Fixture 202도 exact 1349e20 기능 9,084 PASS로 [71번 기록](<./04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md>)에 등록했다. Fixture 203도 exact be49207 기능 27,252 PASS로 [72번 기록](<./04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 등록해 승인 SPI 세 route를 완료했다. Fixture 301도 exact 9a63251 기능 1,986 PASS로 [73번 기록](<./04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 등록했다. 일곱 묶음의 61,423개 기능과 동일 컴파일 입력을 대조해 current-source T11 단독 회귀를 완료했다. 다음은 T12 Fixture 401이다.
 - [ ] **R14:** T16~T18의 사용자용 통합까지 끝난 뒤 current-source T11과 T12~T15 결과를 포함한
   `v0.4.0` RC를 다시 고정하고 T19로 전환한다.
 

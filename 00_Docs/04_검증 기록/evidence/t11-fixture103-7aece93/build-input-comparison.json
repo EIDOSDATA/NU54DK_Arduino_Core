@@ -1,0 +1,25 @@
+{
+  "old_source": "a49cc0dbc1ef8bf5f697106d873bdce55f5911df",
+  "new_source": "7aece93395f0d74272816894a18c2c5e3f1a2abe",
+  "scope": "Compiled inputs, config, source membership, memory only; runtime commit identity differs",
+  "targets": [
+    {
+      "scenario": "nucode.v04.pair_dut",
+      "equal_to_a49cc0d": {
+        "repository_compiled_sources_sha256": true,
+        "normalized_config_sha256": true,
+        "source_membership_sha256": true,
+        "memory_bytes": true
+      }
+    },
+    {
+      "scenario": "nucode.v04.pair_peer",
+      "equal_to_a49cc0d": {
+        "repository_compiled_sources_sha256": true,
+        "normalized_config_sha256": true,
+        "source_membership_sha256": true,
+        "memory_bytes": true
+      }
+    }
+  ]
+}

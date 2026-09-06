@@ -1,0 +1,6 @@
+CASE_START=m26-b
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+FRAME_OBSERVATION={"expected_hex": "e6e7e4e5e2e3e0e1eeefecedeaebe8e9f6f7f4f5f2f3f0f1fefffcfdfafbf8f9", "received_hex": {"COM7": "", "COM8": "e6e7e4e5e2e3e0e1eeefecedeaebe8e9f6f7f4f5f2f3f0f1fefffcfdfafbf8f9"}}
+M26_ONBOARD_HIL_PASS=1;TEMP_CENTI_C=3575;WDT=30;EVIDENCE=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t09-connected\m26-b-373d98d.json
+CASE_PASS=m26-b

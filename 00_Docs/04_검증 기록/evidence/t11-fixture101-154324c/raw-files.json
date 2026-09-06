@@ -1,0 +1,223 @@
+{
+  "source": "154324ce7a865522374066ca957ebc98909c7c19",
+  "uid_plaintext_scan": "passed",
+  "raw_gzip_roundtrip": "passed",
+  "files": [
+    {
+      "name": "audit_results.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2799,
+      "original_sha256": "6f141d7380ff494151f75b64614b8571b2a02d85016258d926c834fa68668b40",
+      "normalized_bytes": 2799,
+      "normalized_sha256": "6f141d7380ff494151f75b64614b8571b2a02d85016258d926c834fa68668b40",
+      "original_archive": "audit_results.py.raw.gz"
+    },
+    {
+      "name": "build-input-comparison.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 756,
+      "original_sha256": "dbc8f31642811d6e16c5fc292604e61e2448cf8f86a3a179f9a9a11e24b832d3",
+      "normalized_bytes": 756,
+      "normalized_sha256": "dbc8f31642811d6e16c5fc292604e61e2448cf8f86a3a179f9a9a11e24b832d3",
+      "original_archive": "build-input-comparison.json.raw.gz"
+    },
+    {
+      "name": "build.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 2049,
+      "original_sha256": "71538935b372a987dac6118edb464b90631345ae92c5a00ea62f9af42de28cfe",
+      "normalized_bytes": 2028,
+      "normalized_sha256": "cabf2902d11c5c12d3f538c380d1a51dc0c0f3b42f65e864c0ae38eca3396a75",
+      "original_archive": "build.log.raw.gz"
+    },
+    {
+      "name": "checkpoint.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 901,
+      "original_sha256": "61bd349c571db606da0da81b27bff77e7a7aaf2e3d642b2db30ff1bd92a5f5bc",
+      "normalized_bytes": 901,
+      "normalized_sha256": "61bd349c571db606da0da81b27bff77e7a7aaf2e3d642b2db30ff1bd92a5f5bc",
+      "original_archive": "checkpoint.json.raw.gz"
+    },
+    {
+      "name": "confirmation.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 978,
+      "original_sha256": "8dcde5c51f0936204f77e31faccf49fbb06d4f85b6b0a070d993d696c08adc92",
+      "normalized_bytes": 978,
+      "normalized_sha256": "8dcde5c51f0936204f77e31faccf49fbb06d4f85b6b0a070d993d696c08adc92",
+      "original_archive": "confirmation.json.raw.gz"
+    },
+    {
+      "name": "exact-images.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1567,
+      "original_sha256": "5b931ca0fef5931dd58d28b46c7ed67873f01afa4dd8572528e7914b62ebf332",
+      "normalized_bytes": 1567,
+      "normalized_sha256": "5b931ca0fef5931dd58d28b46c7ed67873f01afa4dd8572528e7914b62ebf332",
+      "original_archive": "exact-images.json.raw.gz"
+    },
+    {
+      "name": "fixture101-attempt1.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1426416,
+      "original_sha256": "8027417381cc0db36fd2a0981b13caecb47f4f5ce0ecff90e082c13e06c332c6",
+      "normalized_bytes": 1365735,
+      "normalized_sha256": "e0794c6fa22be06f4d06dbf55779cdf3d8c98dfed941e849a68b4c8e2e57af66",
+      "original_archive": "fixture101-attempt1.json.raw.gz"
+    },
+    {
+      "name": "fixture101-attempt1.json.jsonl",
+      "normalization": "utf8-lf",
+      "original_bytes": 765446,
+      "original_sha256": "e123aba1314f58ef30d350790366bd54296d3970acdfa765e583f52cd21d5c3b",
+      "normalized_bytes": 763798,
+      "normalized_sha256": "19bb441a6f614f28ebd61afc08335a8e2191a0ebecf7accbd435cf56cc781a42",
+      "original_archive": "fixture101-attempt1.json.jsonl.raw.gz"
+    },
+    {
+      "name": "fixture101-attempt1.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 243,
+      "original_sha256": "10fd9f7e3788fa7ba5a17ce27a8b7f3202d1d6c2c637fe0347876a986c24d267",
+      "normalized_bytes": 238,
+      "normalized_sha256": "109b83a3d69eba735f39faef069041beec47e827d51ca8c07a0eba24a3e68dd6",
+      "original_archive": "fixture101-attempt1.log.raw.gz"
+    },
+    {
+      "name": "postflight.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1332,
+      "original_sha256": "66a5adb1963019d997cc43fbf91d9c78f36b387f39faad2e74db46ddd5ae356a",
+      "normalized_bytes": 1332,
+      "normalized_sha256": "66a5adb1963019d997cc43fbf91d9c78f36b387f39faad2e74db46ddd5ae356a",
+      "original_archive": "postflight.json.raw.gz"
+    },
+    {
+      "name": "postflight.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 198,
+      "original_sha256": "6d7f22466cc97da9eebbbc711f5e4173933b3240681c3b1761e04963dfa7e48c",
+      "normalized_bytes": 193,
+      "normalized_sha256": "1be3c48674b58bbcbf00c0a1c6f8aaffabf0665810a9778291387ad2d5f2d21a",
+      "original_archive": "postflight.log.raw.gz"
+    },
+    {
+      "name": "postflight.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 1599,
+      "original_sha256": "d7b01ef92fa24fe11ec69968f459d77776b4e51bb632abd535e5ef8fc441acdc",
+      "normalized_bytes": 1599,
+      "normalized_sha256": "d7b01ef92fa24fe11ec69968f459d77776b4e51bb632abd535e5ef8fc441acdc",
+      "original_archive": "postflight.py.raw.gz"
+    },
+    {
+      "name": "preflight.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 4102,
+      "original_sha256": "d365114e0d56c4770761200232da1c23173cea38d190133960fb8d330eae8aa0",
+      "normalized_bytes": 3952,
+      "normalized_sha256": "5c07b63332b3bd97d4f120c16e6df2169f22b8e0158c168ae1cf4d895e554f0e",
+      "original_archive": "preflight.log.raw.gz"
+    },
+    {
+      "name": "prepare.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2033,
+      "original_sha256": "ba63d7332d241e6ccde207af2a9425d771b8c5f30d3213cae9278e44cd2779a2",
+      "normalized_bytes": 2033,
+      "normalized_sha256": "ba63d7332d241e6ccde207af2a9425d771b8c5f30d3213cae9278e44cd2779a2",
+      "original_archive": "prepare.py.raw.gz"
+    },
+    {
+      "name": "results-audit.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1014,
+      "original_sha256": "2d5eae30b936a3f255f1e465c11b2f83603a81df1e9fdab46320bb5480d228e3",
+      "normalized_bytes": 1014,
+      "normalized_sha256": "2d5eae30b936a3f255f1e465c11b2f83603a81df1e9fdab46320bb5480d228e3",
+      "original_archive": "results-audit.json.raw.gz"
+    },
+    {
+      "name": "role1-build-record.yml",
+      "normalization": "utf8-lf",
+      "original_bytes": 692,
+      "original_sha256": "3525bc285c24c57e92c679e1fb0d83be698412bad8f2ce311c575d0d7c3c0c84",
+      "normalized_bytes": 677,
+      "normalized_sha256": "60f73cdda0405a411906cc1dd24e74204eb86bdf7edba81898323d248d620009",
+      "original_archive": "role1-build-record.yml.raw.gz"
+    },
+    {
+      "name": "role1-build.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 47325,
+      "original_sha256": "9a39787b2abacc03a115492f59062a497794c798c1311ed305725775425f5ff5",
+      "normalized_bytes": 46922,
+      "normalized_sha256": "ef8275e052755c164b5f7fd804389ef3809d4f3f0811a6546677d081d6e3c4d1",
+      "original_archive": "role1-build.log.raw.gz"
+    },
+    {
+      "name": "role2-build-record.yml",
+      "normalization": "utf8-lf",
+      "original_bytes": 692,
+      "original_sha256": "3525bc285c24c57e92c679e1fb0d83be698412bad8f2ce311c575d0d7c3c0c84",
+      "normalized_bytes": 677,
+      "normalized_sha256": "60f73cdda0405a411906cc1dd24e74204eb86bdf7edba81898323d248d620009",
+      "original_archive": "role2-build-record.yml.raw.gz"
+    },
+    {
+      "name": "role2-build.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 47333,
+      "original_sha256": "25168469138afa5b3bb0f1a3d59cc885b07838ea66faf8a6f9cb4203775fe38f",
+      "normalized_bytes": 46930,
+      "normalized_sha256": "45dcb2a53ced558e23917bb9c1c430779198a5747e1f3feb9a390bd93248fd4f",
+      "original_archive": "role2-build.log.raw.gz"
+    },
+    {
+      "name": "run.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 643,
+      "original_sha256": "cd4190a8c0a78ce92a4cf559bf516d8d9c5ea94baeba262df19b467be3660622",
+      "normalized_bytes": 643,
+      "normalized_sha256": "cd4190a8c0a78ce92a4cf559bf516d8d9c5ea94baeba262df19b467be3660622",
+      "original_archive": "run.py.raw.gz"
+    },
+    {
+      "name": "runtime.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2543,
+      "original_sha256": "8beec73464cd2381e2fe0efc283c7cf6efc844b031da93219af96801b3385276",
+      "normalized_bytes": 2543,
+      "normalized_sha256": "8beec73464cd2381e2fe0efc283c7cf6efc844b031da93219af96801b3385276",
+      "original_archive": "runtime.py.raw.gz"
+    },
+    {
+      "name": "target-artifact-index.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 16825,
+      "original_sha256": "1846a8674d4d380b696e4a448a98acb5a5285a8828db04825412882e835a0100",
+      "normalized_bytes": 16594,
+      "normalized_sha256": "af085376db21af7488ae6ccaa5f8515a0341c49ce5478f9e92836874842f744e",
+      "original_archive": "target-artifact-index.json.raw.gz"
+    },
+    {
+      "name": "target-build-evidence.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 519,
+      "original_sha256": "70c126d622fa7897863bb67660c9b8265fc54503b1840f6cf153ac337cec315c",
+      "normalized_bytes": 519,
+      "normalized_sha256": "70c126d622fa7897863bb67660c9b8265fc54503b1840f6cf153ac337cec315c",
+      "original_archive": "target-build-evidence.json.raw.gz"
+    },
+    {
+      "name": "usb-inventory.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 580,
+      "original_sha256": "9c7dad148aefe9816642edca2721386d600dab6001026055fc24ae7f28c1d477",
+      "normalized_bytes": 580,
+      "normalized_sha256": "9c7dad148aefe9816642edca2721386d600dab6001026055fc24ae7f28c1d477",
+      "original_archive": "usb-inventory.json.raw.gz"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+CASE_START=twim-b
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+FRAME_OBSERVATION={"expected_hex": "c4c5c6c7c0c1c2c3cccdcecfc8c9cacbd4d5d6d7d0d1d2d3dcdddedfd8d9dadb", "received_hex": {"COM7": "", "COM8": "c4c5c6c7c0c1c2c3cccdcecfc8c9cacbd4d5d6d7d0d1d2d3dcdddedfd8d9dadb"}}
+M24_TWIM_INSTANCE_PASS=20;VALUE=0x41
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+FRAME_OBSERVATION={"expected_hex": "c5c4c7c6c1c0c3c2cdcccfcec9c8cbcad5d4d7d6d1d0d3d2dddcdfded9d8dbda", "received_hex": {"COM7": "", "COM8": "c5c4c7c6c1c0c3c2cdcccfcec9c8cbcad5d4d7d6d1d0d3d2dddcdfded9d8dbda"}}
+M24_TWIM_INSTANCE_PASS=21;VALUE=0x41
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+FRAME_OBSERVATION={"expected_hex": "c6c7c4c5c2c3c0c1cecfcccdcacbc8c9d6d7d4d5d2d3d0d1dedfdcdddadbd8d9", "received_hex": {"COM7": "", "COM8": "c6c7c4c5c2c3c0c1cecfcccdcacbc8c9d6d7d4d5d2d3d0d1dedfdcdddadbd8d9"}}
+M24_TWIM_INSTANCE_PASS=22;VALUE=0x41
+M24_TWIM_ONBOARD_HIL_PASS=3;EVIDENCE=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t09-connected\twim-b-373d98d.json
+CASE_PASS=twim-b

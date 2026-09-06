@@ -120,10 +120,28 @@ R08 자원 정책·transaction·동기화 및 runtime route phase/획득 기록 
 R09 Arduino SPI facade/backend 분리는 [60번 기록](60_R09_Arduino_SPI_경계.md)에 연결한다.
 
 R10-A Serial Fabric STOP 예약과 동시 호출 수정은 [61번 기록](61_R10_Serial_Fabric_동시_호출.md)에
-연결한다. R10-A/B/C software 완료이며 current-source T11은 미실행이다.
+연결한다. R10-A/B/C software 완료 당시 current-source T11은 미실행이었다.
 
 R11 Analog/Stream peripheral 분리는 [62번 기록](62_R11_Analog_Stream_peripheral_분리.md)에 연결한다.
 
-R12 BLE·Storage 분리는 [63번 기록](63_R12_BLE_Storage_수명주기.md)에 연결한다. 현재 GAP A 완료, GATT B 진행이다.
+R12 BLE·Storage 분리는 [63번 기록](63_R12_BLE_Storage_수명주기.md)에 연결한다. GAP/GATT/Security·Storage와 전체 R12 software 회귀를 완료했다.
 
 R13 도구·정책·build 구조와 최종 software 입력은 [64번 기록](64_R13_도구_정책_build_구조.md)에 연결한다.
+
+R13 뒤 USB 무배선 온보드 904 PASS와 중간 파일 정리는 [65번 기록](65_R13_후속_USB_무배선_실기와_정리.md)에 연결한다. 해당 65번 실행 당시 두 보드는 USB만 연결되어 있었고 외부 current-source T11은 미실행이었다.
+
+DAP UART 연결 전환 뒤 BLE 회귀와 온보드 유휴 bias 교정은 [66번 기록](66_T09_UART_유휴_bias와_BLE_회귀.md)에 연결한다. 해당 66번 실행 당시 외부 current-source T11은 미실행이었다.
+
+사용자 Fixture 101 결선 완료 뒤 exact 154324c·SWD 10 MHz의 기능 1,644 PASS는 [67번 기록](67_T11_Fixture_101_current_source_UART_회귀.md)에 연결한다. 해당 실행 뒤 Fixture 102로 이어졌다.
+
+Exact a49cc0d·SWD 10 MHz의 Fixture 102 기능 822 PASS는 [68번 기록](68_T11_Fixture_102_current_source_UART_회귀.md)에 연결한다. 해당 실행 뒤 Fixture 103으로 이어졌다.
+
+Fixture 103 exact 7aece93·SWD 10 MHz 기능 2,466 PASS와 최초 peer flash 실패·한정 재개는 [69번 기록](69_T11_Fixture_103_current_source_UART_회귀.md)에 보존했다. Current-source UART 세 묶음을 완료했다.
+
+Fixture 201 exact 0f429e7·SWD 10 MHz 기능 18,169 PASS와 새 결선은 [70번 기록](70_T11_Fixture_201_current_source_SPI_회귀.md)에 보존했다. 해당 실행 뒤 Fixture 202로 이어졌다.
+
+Fixture 202 exact 1349e20·SWD 10 MHz 기능 9,084 PASS, 최초 peer flash 실패·한정 재개는 [71번 기록](71_T11_Fixture_202_current_source_SPI_회귀.md)에 보존했다.
+
+Fixture 203 exact be49207·SWD 10 MHz 기능 27,252 PASS, 최초 DUT flash 실패·한정 재개는 [72번 기록](72_T11_Fixture_203_current_source_SPI_회귀.md)에 보존했다. Current-source SPI 세 route를 완료했다.
+
+Fixture 301 exact 9a63251·SWD 10 MHz 첫 실행 1,986 PASS와 current-source T11 단독 통신 회귀 완료는 [73번 기록](73_T11_Fixture_301_current_source_TWI_회귀.md)에 보존했다. UART·SPI·TWI 일곱 묶음 61,423개 기능 결과를 대조했다. 다음은 T12 Fixture 401 PWM→AIN0다.

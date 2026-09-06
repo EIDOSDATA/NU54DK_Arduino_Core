@@ -1,0 +1,13 @@
+{
+  "scope": "Post-run SPI aggregate report authoring only",
+  "initial_script": "audit_spi_coverage-initial.py",
+  "observed_error": "KeyError: spim00_twim22_concurrent_pass; the historical Fixture 202 audit has no such field",
+  "correction": "Read the hash-verified original journal for each fixture and count actual concurrency records; require one only in Fixture 201",
+  "second_draft": "audit_spi_coverage-canonical-draft.py",
+  "second_draft_error": "The canonical UTF-8/LF journal was compared against its original-byte hash; historical originals must be restored from .raw.gz before that comparison",
+  "initial_failure_before_output_written": true,
+  "hil_result_changed": false,
+  "hardware_test_repeated": false,
+  "production_or_canonical_runner_changed": false,
+  "diagnostic_script_note": "diagnose_probe-executed.py preserves the script used for the one read-only diagnostic; diagnose_probe.py corrects only its inherited peer/DUT docstring afterward"
+}

@@ -1,0 +1,33 @@
+test_exact_port_rejects_extra_bytes (test_m24_twim_onboard.M24TwimOnboardTests.test_exact_port_rejects_extra_bytes) ... ok
+test_probe_must_have_exactly_two_ports (test_m24_twim_onboard.M24TwimOnboardTests.test_probe_must_have_exactly_two_ports) ... ok
+test_ready_and_command_frames_are_unique (test_m24_twim_onboard.M24TwimOnboardTests.test_ready_and_command_frames_are_unique) ... ok
+test_result_frame_requires_exact_read_only_identity (test_m24_twim_onboard.M24TwimOnboardTests.test_result_frame_requires_exact_read_only_identity) ... ok
+test_failed_readback_keeps_cpu_halted (test_m24_uarte_onboard.IdleBiasTests.test_failed_readback_keeps_cpu_halted) ... ok
+test_only_pull_fields_are_set_before_drain_and_resume (test_m24_uarte_onboard.IdleBiasTests.test_only_pull_fields_are_set_before_drain_and_resume) ... ok
+test_output_pin_is_rejected_before_any_write_or_resume (test_m24_uarte_onboard.IdleBiasTests.test_output_pin_is_rejected_before_any_write_or_resume) ... ok
+test_all_onboard_flash_runners_disable_automatic_mass_erase (test_m24_uarte_onboard.M24UarteOnboardTests.test_all_onboard_flash_runners_disable_automatic_mass_erase) ... ok
+test_controlled_start_orders_halt_drain_and_resume (test_m24_uarte_onboard.M24UarteOnboardTests.test_controlled_start_orders_halt_drain_and_resume) ... ok
+test_pyocd_command_is_exact_and_non_destructive (test_m24_uarte_onboard.M24UarteOnboardTests.test_pyocd_command_is_exact_and_non_destructive) ... ok
+test_ready_frame_is_fixed_per_instance (test_m24_uarte_onboard.M24UarteOnboardTests.test_ready_frame_is_fixed_per_instance) ... ok
+test_response_must_be_exact_unique_and_other_port_silent (test_m24_uarte_onboard.M24UarteOnboardTests.test_response_must_be_exact_unique_and_other_port_silent) ... ok
+test_selected_probe_requires_exactly_two_vcom_ports (test_m24_uarte_onboard.M24UarteOnboardTests.test_selected_probe_requires_exactly_two_vcom_ports) ... ok
+test_single_result_collectors_reject_late_extra_bytes (test_m24_uarte_onboard.M24UarteOnboardTests.test_single_result_collectors_reject_late_extra_bytes) ... ok
+test_exact_port_rejects_noise (test_m25_onboard.M25OnboardTests.test_exact_port_rejects_noise) ... ok
+test_probe_requires_exactly_two_vcom_ports (test_m25_onboard.M25OnboardTests.test_probe_requires_exactly_two_vcom_ports) ... ok
+test_protocol_frames_are_fixed (test_m25_onboard.M25OnboardTests.test_protocol_frames_are_fixed) ... ok
+test_result_requires_both_physical_checks (test_m25_onboard.M25OnboardTests.test_result_requires_both_physical_checks) ... ok
+test_armed_frame_requires_temp_and_wdt30_lifecycle (test_m26_onboard.M26OnboardTests.test_armed_frame_requires_temp_and_wdt30_lifecycle) ... ok
+test_exact_frame_rejects_noise (test_m26_onboard.M26OnboardTests.test_exact_frame_rejects_noise) ... ok
+test_observed_watchdog_packets_validate_without_promoting_hil (test_m26_onboard.M26OnboardTests.test_observed_watchdog_packets_validate_without_promoting_hil) ... ok
+test_probe_requires_exactly_two_vcom_ports (test_m26_onboard.M26OnboardTests.test_probe_requires_exactly_two_vcom_ports) ... ok
+test_protocol_frames_are_fixed (test_m26_onboard.M26OnboardTests.test_protocol_frames_are_fixed) ... ok
+test_reset_epoch_collects_split_marker_without_dropping_prefix (test_m26_onboard.M26OnboardTests.test_reset_epoch_collects_split_marker_without_dropping_prefix) ... ok
+test_reset_epoch_retains_bounded_prefix_and_requires_exact_marker (test_m26_onboard.M26OnboardTests.test_reset_epoch_retains_bounded_prefix_and_requires_exact_marker) ... ok
+test_reset_prefix_is_never_accepted_in_result_phase (test_m26_onboard.M26OnboardTests.test_reset_prefix_is_never_accepted_in_result_phase) ... ok
+test_result_rejects_non_watchdog_and_unsupported_reset_causes (test_m26_onboard.M26OnboardTests.test_result_rejects_non_watchdog_and_unsupported_reset_causes) ... ok
+test_result_requires_reset_cause_and_retained_temp (test_m26_onboard.M26OnboardTests.test_result_requires_reset_cause_and_retained_temp) ... ok
+
+----------------------------------------------------------------------
+Ran 28 tests in 0.035s
+
+OK
