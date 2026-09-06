@@ -419,7 +419,12 @@ foreach ($Runner in $Runners) {
 각 runner는 시작 시 clean source·board revision과 HEX hash를 기록하고 exact UID를 선택하며 mass erase/recover를
 사용하지 않습니다. 실패하면 해당 시점에서 멈추며, 응답 없는 보드에서 PASS를 생성하지 않습니다.
 Flash 종료 시에는 자동 reset/resume을 금지하고, 같은 probe를 다시 연결해 CPU reset·halt를 확인한
-뒤 VCOM 두 포트의 초기 buffer를 비우고 명시적으로 resume합니다. 따라서 초기 reset transient는
+뒤 DAP target TX P0.00·P1.04가 reset 입력인지 확인하고 내부 pull-up으로 유휴 HIGH를 준비합니다.
+고정 nRF54L15의 PIN_CNF에서 PULL 필드만 변경하며 출력 방향·다른 pin 설정은 바꾸지 않습니다.
+입력 조건이나 readback이 다르면 CPU를 resume하지 않습니다. 활성 UART는 driver가 TX 출력을
+설정하고, 비선택 UART 입력은 bias를 유지하여 host가 두 VCOM에 보내는 동안 floating RX에
+예상 밖 byte가 들어오는 것을 막습니다. 변경 전·후 PIN_CNF는 controlled-start evidence에 남습니다.
+이후 VCOM 두 포트의 초기 buffer를 비우고 명시적으로 resume합니다. 따라서 초기 reset transient는
 앱이 READY를 보내기 전에만 제거됩니다. 시작 이후의 READY·측정 결과는 잡음을 허용하지 않습니다.
 이 묶음의 PASS를 외부 SPI/TWIS·analog 정확도·audio·encoder·동시성·전력 검증으로 확대하지 않습니다.
 

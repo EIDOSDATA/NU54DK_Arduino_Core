@@ -129,3 +129,5 @@ R12 BLE·Storage 분리는 [63번 기록](63_R12_BLE_Storage_수명주기.md)에
 R13 도구·정책·build 구조와 최종 software 입력은 [64번 기록](64_R13_도구_정책_build_구조.md)에 연결한다.
 
 R13 뒤 USB 무배선 온보드 904 PASS와 중간 파일 정리는 [65번 기록](65_R13_후속_USB_무배선_실기와_정리.md)에 연결한다. 현재 두 보드는 각각 USB에 연결되어 있고 보드 간 선은 없으며, 외부 current-source T11은 미실행이다.
+
+DAP UART 연결 전환 뒤 BLE 회귀와 온보드 유휴 bias 교정은 [66번 기록](66_T09_UART_유휴_bias와_BLE_회귀.md)에 연결한다. 외부 current-source T11은 계속 미실행이다.

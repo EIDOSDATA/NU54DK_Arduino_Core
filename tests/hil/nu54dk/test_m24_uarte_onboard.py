@@ -101,10 +101,16 @@ class M24UarteOnboardTests(unittest.TestCase):
     def test_controlled_start_orders_halt_drain_and_resume(self) -> None:
         import onboard_start
         events = []
+        registers = {address: 2 for _, address in onboard_start.DAP_UART_TX_PIN_CNF}
+        def write32(address, value):
+            registers[address] = value
+            events.append("bias-input")
         target = SimpleNamespace(
             reset_and_halt=lambda: events.append("halt"),
             get_state=lambda: SimpleNamespace(name="HALTED"),
-            read32=lambda address: 0x411FD210,
+            read32=lambda address: 0x411FD210 if address == 0xE000ED00 else registers[address],
+            write32=write32,
+            flush=lambda: events.append("flush"),
             resume=lambda: events.append("resume"),
         )
 
@@ -128,7 +134,7 @@ class M24UarteOnboardTests(unittest.TestCase):
                 session_factory=factory,
                 swd_frequency_hz=100_000,
             )
-        self.assertEqual(events, ["halt", "drain-in", "drain-out", "drain-in", "drain-out", "resume", "close"])
+        self.assertEqual(events, ["halt", "bias-input", "bias-input", "flush", "drain-in", "drain-out", "drain-in", "drain-out", "resume", "close"])
         self.assertEqual(result["method"], "reset-halt-drain-resume")
         self.assertEqual(result["frequency_hz"], 100_000)
         self.assertEqual(factory.call_args.kwargs["frequency"], 100_000)
@@ -168,6 +174,58 @@ class M24UarteOnboardTests(unittest.TestCase):
                             module.collect_packet(streams, 1.0)
                         else:
                             module.collect_frame(streams, None, 1.0)
+
+
+class IdleBiasTests(unittest.TestCase):
+    """! @brief UART 유휴 bias의 pin 보존과 실패 시 CPU 정지 계약을 검증합니다. """
+
+    def execute(self, values, reject_write=False):
+        import onboard_start
+        events = []
+        def write(address, value):
+            events.append(("write", address, value))
+            if not reject_write:
+                values[address] = value
+        target = SimpleNamespace(
+            reset_and_halt=lambda: events.append("halt"),
+            get_state=lambda: SimpleNamespace(name="HALTED"),
+            read32=lambda address: 0x411FD210 if address == 0xE000ED00 else values[address],
+            write32=write, flush=lambda: events.append("flush"),
+            resume=lambda: events.append("resume"),
+        )
+        class Session:
+            def __enter__(self):
+                self.target = target
+                return self
+            def __exit__(self, *_):
+                events.append("close")
+        streams = {name: SimpleNamespace(
+            reset_input_buffer=lambda: events.append("drain"),
+            reset_output_buffer=lambda: None,
+        ) for name in ("COM5", "COM6")}
+        self.events = events
+        with patch.object(onboard_start.time, "sleep"):
+            return onboard_start.reset_halted_start(
+                streams, "probe", session_factory=lambda **kwargs: Session())
+
+    def test_only_pull_fields_are_set_before_drain_and_resume(self):
+        values = {0x5010A080: 0x2, 0x500D8290: 0x10002}
+        result = self.execute(values)
+        self.assertEqual(values, {0x5010A080: 0xE, 0x500D8290: 0x1000E})
+        self.assertEqual(len(result["dap_uart_idle_bias"]), 2)
+        self.assertLess(self.events.index("flush"), self.events.index("drain"))
+        self.assertLess(self.events.index("drain"), self.events.index("resume"))
+
+    def test_output_pin_is_rejected_before_any_write_or_resume(self):
+        with self.assertRaisesRegex(RuntimeError, "input"):
+            self.execute({0x5010A080: 0x2, 0x500D8290: 0x3})
+        self.assertFalse(any(isinstance(event, tuple) for event in self.events))
+        self.assertNotIn("resume", self.events)
+
+    def test_failed_readback_keeps_cpu_halted(self):
+        with self.assertRaisesRegex(RuntimeError, "readback"):
+            self.execute({0x5010A080: 0x2, 0x500D8290: 0x2}, reject_write=True)
+        self.assertNotIn("resume", self.events)
 
 
 if __name__ == "__main__":
