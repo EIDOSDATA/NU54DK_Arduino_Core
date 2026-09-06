@@ -1,0 +1,329 @@
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+{
+  "source": "6bd8d3f15ad29fc21f7a58c736cd86e917a3d314",
+  "started_at_utc": "2026-09-06T16:55:40.354815+00:00",
+  "scope": "fixture420-prepared-idle-and-cancel-before-start",
+  "swd_frequency_hz": 10000000,
+  "flash_executed": false,
+  "reset_executed": false,
+  "start_command_executed": false,
+  "cases": [
+    {
+      "pwm": 20,
+      "qdec": 20,
+      "cleanup": [
+        {
+          "role": 1,
+          "reply": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "reply": [
+            0
+          ]
+        }
+      ],
+      "source_before": {
+        "out": 0,
+        "pin14": 2,
+        "pin10": 2
+      },
+      "controller_status": [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        400,
+        0
+      ],
+      "receiver_gpio_in": 0,
+      "idle_qdec_report": [
+        0,
+        0,
+        0
+      ],
+      "source_prepared": {
+        "out": 0,
+        "pin14": 3,
+        "pin10": 3
+      },
+      "status": "passed",
+      "source_after": {
+        "out": 0,
+        "pin14": 2,
+        "pin10": 2
+      }
+    },
+    {
+      "pwm": 20,
+      "qdec": 21,
+      "cleanup": [
+        {
+          "role": 1,
+          "reply": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "reply": [
+            0
+          ]
+        }
+      ],
+      "source_before": {
+        "out": 0,
+        "pin14": 2,
+        "pin10": 2
+      },
+      "controller_status": [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        400,
+        0
+      ],
+      "receiver_gpio_in": 0,
+      "idle_qdec_report": [
+        0,
+        0,
+        0
+      ],
+      "source_prepared": {
+        "out": 0,
+        "pin14": 3,
+        "pin10": 3
+      },
+      "status": "passed",
+      "source_after": {
+        "out": 0,
+        "pin14": 2,
+        "pin10": 2
+      }
+    },
+    {
+      "pwm": 21,
+      "qdec": 20,
+      "cleanup": [
+        {
+          "role": 1,
+          "reply": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "reply": [
+            0
+          ]
+        }
+      ],
+      "source_before": {
+        "out": 0,
+        "pin14": 2,
+        "pin10": 2
+      },
+      "controller_status": [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        400,
+        0
+      ],
+      "receiver_gpio_in": 0,
+      "idle_qdec_report": [
+        0,
+        0,
+        0
+      ],
+      "source_prepared": {
+        "out": 0,
+        "pin14": 3,
+        "pin10": 3
+      },
+      "status": "passed",
+      "source_after": {
+        "out": 0,
+        "pin14": 2,
+        "pin10": 2
+      }
+    },
+    {
+      "pwm": 21,
+      "qdec": 21,
+      "cleanup": [
+        {
+          "role": 1,
+          "reply": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "reply": [
+            0
+          ]
+        }
+      ],
+      "source_before": {
+        "out": 0,
+        "pin14": 2,
+        "pin10": 2
+      },
+      "controller_status": [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        400,
+        0
+      ],
+      "receiver_gpio_in": 0,
+      "idle_qdec_report": [
+        0,
+        0,
+        0
+      ],
+      "source_prepared": {
+        "out": 0,
+        "pin14": 3,
+        "pin10": 3
+      },
+      "status": "passed",
+      "source_after": {
+        "out": 0,
+        "pin14": 2,
+        "pin10": 2
+      }
+    },
+    {
+      "pwm": 22,
+      "qdec": 20,
+      "cleanup": [
+        {
+          "role": 1,
+          "reply": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "reply": [
+            0
+          ]
+        }
+      ],
+      "source_before": {
+        "out": 0,
+        "pin14": 2,
+        "pin10": 2
+      },
+      "controller_status": [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        400,
+        0
+      ],
+      "receiver_gpio_in": 0,
+      "idle_qdec_report": [
+        0,
+        0,
+        0
+      ],
+      "source_prepared": {
+        "out": 0,
+        "pin14": 3,
+        "pin10": 3
+      },
+      "status": "passed",
+      "source_after": {
+        "out": 0,
+        "pin14": 2,
+        "pin10": 2
+      }
+    },
+    {
+      "pwm": 22,
+      "qdec": 21,
+      "cleanup": [
+        {
+          "role": 1,
+          "reply": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "reply": [
+            0
+          ]
+        }
+      ],
+      "source_before": {
+        "out": 0,
+        "pin14": 2,
+        "pin10": 2
+      },
+      "controller_status": [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        400,
+        0
+      ],
+      "receiver_gpio_in": 0,
+      "idle_qdec_report": [
+        0,
+        0,
+        0
+      ],
+      "source_prepared": {
+        "out": 0,
+        "pin14": 3,
+        "pin10": 3
+      },
+      "status": "passed",
+      "source_after": {
+        "out": 0,
+        "pin14": 2,
+        "pin10": 2
+      }
+    }
+  ],
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "continued_after_valid_disarm_sequence": 240
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "continued_after_valid_disarm_sequence": 2076
+    }
+  ],
+  "status": "passed",
+  "completed_at_utc": "2026-09-06T16:55:41.768204+00:00"
+}
