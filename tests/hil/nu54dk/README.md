@@ -573,3 +573,5 @@ progress를 journal에 남깁니다. 중단된 실행은 `interrupted`이며 다
 않습니다. UART/SPI/TWI와 signal CLI의 `--repetitions`, `--duration-seconds`,
 `--progress-interval-seconds`가 이 공통 계약을 사용합니다. 단독 기능 실기 PASS 전에는 soak를
 시작하지 않으며, 동시성은 해당 fixture 조합을 별도로 승인한 뒤 수행합니다.
+
+R00~R13 이후 exact 154324c의 current-source Fixture 101은 SWD 10 MHz에서 데이터 1,620개·예상 오류 24개를 통과했습니다. [67번 기록](<../../../00_Docs/04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)의 exact 증거와 Fixture 102 다음 결선을 따릅니다. 전체 current-source T11과 T12/T13 PASS는 아직 아닙니다.

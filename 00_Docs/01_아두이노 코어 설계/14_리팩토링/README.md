@@ -2,7 +2,7 @@
 
 작성·갱신일: 2026-09-06
 문서 묶음 개정: 0.3
-현재 진행: R00~R13·전체 software gate 완료 / current-source T11 Fixture 101 결선 확인 대기
+현재 진행: R00~R13·전체 software gate 완료 / current-source T11 Fixture 101 PASS / Fixture 102 결선 변경 대기
 
 ## 먼저 읽을 문서
 
@@ -43,7 +43,7 @@ Host/target 5개 구성을 통과했다. R09는 [60번 기록](<../../04_검증 
 Host와 target 총 5개 구성을 통과했다. R10은 [61번 기록](<../../04_검증 기록/61_R10_Serial_Fabric_동시_호출.md>)의
 동시성·구조·scope 검증을 완료했다. R11은 [62번 기록](<../../04_검증 기록/62_R11_Analog_Stream_peripheral_분리.md>)의
 Host·target 6개 회귀를 완료했다. R12는 [63번 기록](<../../04_검증 기록/63_R12_BLE_Storage_수명주기.md>)의
-BLE/Storage 실제 Host와 target 회귀를 완료했다. R13도 [64번 기록](<../../04_검증 기록/64_R13_도구_정책_build_구조.md>)의 전체 software gate를 완료했다. 다음은 current-source T11 Fixture 101 전원 OFF 결선 확인이며 새 실기는 NOT RUN이다.
+BLE/Storage 실제 Host와 target 회귀를 완료했다. R13도 [64번 기록](<../../04_검증 기록/64_R13_도구_정책_build_구조.md>)의 전체 software gate를 완료했다. Current-source T11은 exact 154324c의 Fixture 101 기능 1,644개를 통과했다. 다음은 Fixture 102 전원 OFF 결선 변경이다.
 
 정식 경로는 `00_Docs/01_아두이노 코어 설계/14_리팩토링/`이다. 임시 최상위 묶음명과 문서 묶음 SemVer는 제거하고, 활성 `00_Docs/TODO_v0.4.0.md`는 기존 위치와 T01~T25 번호를 유지한다.
 
@@ -59,4 +59,6 @@ BLE/Storage 실제 Host와 target 회귀를 완료했다. R13도 [64번 기록](
 
 신규 문서의 기술 출처는 각 문서 말미에 있다. 원격 링크는 확인한 commit에 고정했고, 사용자의 실제 실행 HEAD·장치·로그는 별도 기준선에 기록하도록 했다.
 
-2026-09-06 후속: [65번 기록](<../../04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)의 904 PASS·파일 정리를 보존한다. 이후 DAP UART 연결 전환 뒤 [66번 기록](<../../04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>)에서 UART idle bias를 교정하고 온보드 18개 결과·BLE 3개 pair gate를 통과했다. 현재 두 보드는 USB만 연결되어 있고 보드 간 선은 없다. 외부 current-source T11 직전에서 정지했으며 다음은 전원 OFF·Fixture 101 결선·DAP UART 분리 확인이다.
+2026-09-06 후속: [65번 기록](<../../04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)의 904 PASS·파일 정리를 보존한다. 이후 DAP UART 연결 전환 뒤 [66번 기록](<../../04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>)에서 UART idle bias를 교정하고 온보드 18개 결과·BLE 3개 pair gate를 통과했다. 이후 사용자 결선 완료 확인에 따라 exact 154324c의 current-source T11 Fixture 101을 SWD 10 MHz로 실행해 기능 1,644개를 통과했다. 현재 Fixture 101 결선·DAP UART 분리·SWD 연결 상태이며 다음은 전원 OFF·Fixture 102 결선 변경과 새 사용자 확인이다.
+
+Current-source T11 첫 UART 회귀의 exact 증거와 다음 결선은 [67번 기록](<../../04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)에 연결한다. 전체 T11·T12~T15와 RC/공개는 미완료다.

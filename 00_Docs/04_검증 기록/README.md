@@ -120,7 +120,7 @@ R08 자원 정책·transaction·동기화 및 runtime route phase/획득 기록 
 R09 Arduino SPI facade/backend 분리는 [60번 기록](60_R09_Arduino_SPI_경계.md)에 연결한다.
 
 R10-A Serial Fabric STOP 예약과 동시 호출 수정은 [61번 기록](61_R10_Serial_Fabric_동시_호출.md)에
-연결한다. R10-A/B/C software 완료이며 current-source T11은 미실행이다.
+연결한다. R10-A/B/C software 완료 당시 current-source T11은 미실행이었다.
 
 R11 Analog/Stream peripheral 분리는 [62번 기록](62_R11_Analog_Stream_peripheral_분리.md)에 연결한다.
 
@@ -128,6 +128,8 @@ R12 BLE·Storage 분리는 [63번 기록](63_R12_BLE_Storage_수명주기.md)에
 
 R13 도구·정책·build 구조와 최종 software 입력은 [64번 기록](64_R13_도구_정책_build_구조.md)에 연결한다.
 
-R13 뒤 USB 무배선 온보드 904 PASS와 중간 파일 정리는 [65번 기록](65_R13_후속_USB_무배선_실기와_정리.md)에 연결한다. 현재 두 보드는 각각 USB에 연결되어 있고 보드 간 선은 없으며, 외부 current-source T11은 미실행이다.
+R13 뒤 USB 무배선 온보드 904 PASS와 중간 파일 정리는 [65번 기록](65_R13_후속_USB_무배선_실기와_정리.md)에 연결한다. 해당 65번 실행 당시 두 보드는 USB만 연결되어 있었고 외부 current-source T11은 미실행이었다.
 
-DAP UART 연결 전환 뒤 BLE 회귀와 온보드 유휴 bias 교정은 [66번 기록](66_T09_UART_유휴_bias와_BLE_회귀.md)에 연결한다. 외부 current-source T11은 계속 미실행이다.
+DAP UART 연결 전환 뒤 BLE 회귀와 온보드 유휴 bias 교정은 [66번 기록](66_T09_UART_유휴_bias와_BLE_회귀.md)에 연결한다. 해당 66번 실행 당시 외부 current-source T11은 미실행이었다.
+
+사용자 Fixture 101 결선 완료 뒤 exact 154324c·SWD 10 MHz의 기능 1,644 PASS는 [67번 기록](67_T11_Fixture_101_current_source_UART_회귀.md)에 연결한다. 다음은 Fixture 102 결선 변경이다.
