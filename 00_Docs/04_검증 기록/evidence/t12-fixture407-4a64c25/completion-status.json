@@ -1,0 +1,13 @@
+{
+  "source": "4a64c2562fdd5e9169faecf56b43043a0afec67c",
+  "recorded_at_utc": "2026-09-06T15:09:26.684352+00:00",
+  "status": "fixture407-passed",
+  "fixture407_physical_executed": true,
+  "fixture408_physical_executed": false,
+  "swd_frequency_hz": 10000000,
+  "last_uploaded_source": "4a64c2562fdd5e9169faecf56b43043a0afec67c",
+  "last_uploaded_fixture": 407,
+  "runtime_identity_rechecked": true,
+  "security_policy_modified": false,
+  "pending": "Fixture 408 requires USB-off rewiring and separate user confirmation"
+}

@@ -6,7 +6,7 @@
 | 완료 범위 | M1~M23, M26 판정, `v0.1.0`·`v0.2.0`·`v0.3.0` 정식 공개 |
 | 진행 범위 | `v0.4.0` M24~M25 physical gate와 M27 release 준비 |
 | 현재 정식 버전 | `v0.3.0` |
-| 최종 갱신일 | 2026-09-06 |
+| 최종 갱신일 | 2026-09-07 |
 
 이 디렉터리는 **현재 사용법이나 다음 작업을 설명하는 곳이 아니다.** 각 기록의 `다음 단계`,
 `HOLD`, `미실행`과 `NOT RUN`은 그 문서를 작성한 시점의 경계를 뜻한다. 현재 상태는
@@ -144,18 +144,20 @@ Fixture 202 exact 1349e20·SWD 10 MHz 기능 9,084 PASS, 최초 peer flash 실�
 
 Fixture 203 exact be49207·SWD 10 MHz 기능 27,252 PASS, 최초 DUT flash 실패·한정 재개는 [72번 기록](72_T11_Fixture_203_current_source_SPI_회귀.md)에 보존했다. Current-source SPI 세 route를 완료했다.
 
-Fixture 301 exact 9a63251·SWD 10 MHz 첫 실행 1,986 PASS와 current-source T11 단독 통신 회귀 완료는 [73번 기록](73_T11_Fixture_301_current_source_TWI_회귀.md)에 보존했다. UART·SPI·TWI 일곱 묶음 61,423개 기능 결과를 대조했다. 이후 T12 Fixture 401~404도 각각 48개를 통과했으며 405 오픈드레인·406 입력 바이어스 시험도 완료했으며 다음은 필수 후속 407→408이다.
+Fixture 301 exact 9a63251·SWD 10 MHz 첫 실행 1,986 PASS와 current-source T11 단독 통신 회귀 완료는 [73번 기록](73_T11_Fixture_301_current_source_TWI_회귀.md)에 보존했다. UART·SPI·TWI 일곱 묶음 61,423개 기능 결과를 대조했다. 이후 T12 Fixture 401~404도 각각 48개를 통과했으며 405 오픈드레인·406/407 입력 바이어스 시험도 완료했으며 다음은 필수 후속 408이다.
 
-T12 Fixture 401 exact a12e444·SWD 10 MHz 첫 실행 48개 기능 PASS와 10,368 samples·cleanup 48개는 [74번 기록](<74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 보존했다. T12는 부분 완료이며 405 오픈드레인·406 입력 바이어스 시험도 완료했으며 다음은 필수 후속 407→408이다. PWM 주기·듀티 capture와 T12 나머지 요구·후속 gate는 이 결과로 완료 처리하지 않는다.
+T12 Fixture 401 exact a12e444·SWD 10 MHz 첫 실행 48개 기능 PASS와 10,368 samples·cleanup 48개는 [74번 기록](<74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 보존했다. T12는 부분 완료이며 405 오픈드레인·406/407 입력 바이어스 시험도 완료했으며 다음은 필수 후속 408이다. PWM 주기·듀티 capture와 T12 나머지 요구·후속 gate는 이 결과로 완료 처리하지 않는다.
 
-T12 Fixture 402 exact ff483a1·SWD 10 MHz 첫 실행 48개 PASS는 [75번 기록](<75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존했다. 401·402 합계 기능 96개·samples 20,736개이며 각 exact identity는 구분한다. 405 오픈드레인·406 입력 바이어스 시험도 완료했으며 다음은 필수 후속 407→408이다.
+T12 Fixture 402 exact ff483a1·SWD 10 MHz 첫 실행 48개 PASS는 [75번 기록](<75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존했다. 401·402 합계 기능 96개·samples 20,736개이며 각 exact identity는 구분한다. 405 오픈드레인·406/407 입력 바이어스 시험도 완료했으며 다음은 필수 후속 408이다.
 
-T12 Fixture 403 exact c95b904·SWD 10 MHz 첫 실행 48개 PASS는 [76번 기록](<76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 보존했다. 401~403 합계 기능 144개·samples 31,104개이며 각 exact identity는 구분한다. 405 오픈드레인·406 입력 바이어스 시험도 완료했으며 다음은 필수 후속 407→408이다.
+T12 Fixture 403 exact c95b904·SWD 10 MHz 첫 실행 48개 PASS는 [76번 기록](<76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 보존했다. 401~403 합계 기능 144개·samples 31,104개이며 각 exact identity는 구분한다. 405 오픈드레인·406/407 입력 바이어스 시험도 완료했으며 다음은 필수 후속 408이다.
 
-T12 Fixture 404 exact e080bbc·SWD 10 MHz 첫 실행 48개 PASS는 [77번 기록](<77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 보존했다. 401~404 합계 기능 192개·samples 41,472개이며 각 exact identity는 구분한다. 405 오픈드레인·406 입력 바이어스 시험도 완료했으며 다음은 필수 후속 407→408이다.
+T12 Fixture 404 exact e080bbc·SWD 10 MHz 첫 실행 48개 PASS는 [77번 기록](<77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 보존했다. 401~404 합계 기능 192개·samples 41,472개이며 각 exact identity는 구분한다. 405 오픈드레인·406/407 입력 바이어스 시험도 완료했으며 다음은 필수 후속 408이다.
 
-T12 Fixture 405 exact 9fc12bf·SWD 10 MHz **첫 실행 12개 PASS**, LOW/해제/LOW·2,592 samples·cleanup 12개와 GPIO readback은 [78번 기록](<78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)에 보존했다. 공유 AIN4/P1.11의 기능을 확인했으며 이후 406도 완료했으며 후속 **407→408을 모두 수행**한다. 제품 core 변경 없이 Host 648개·pair target 2/2를 통과했고 T12 전체·후속 gate는 미완료다.
+T12 Fixture 405 exact 9fc12bf·SWD 10 MHz **첫 실행 12개 PASS**, LOW/해제/LOW·2,592 samples·cleanup 12개와 GPIO readback은 [78번 기록](<78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)에 보존했다. 공유 AIN4/P1.11의 기능을 확인했으며 이후 406·407도 완료했으며 후속 **408도 수행**한다. 제품 core 변경 없이 Host 648개·pair target 2/2를 통과했고 T12 전체·후속 gate는 미완료다.
 
-T12 Fixture 406 exact 96f38e9·SWD 10 MHz **첫 실행 12개 PASS**, 입력 pull-down/up/down·2,592 samples·cleanup 12개와 GPIO readback은 [79번 기록](<79_T12_Fixture_406_current_source_공유_AIN5_검증.md>)에 보존했다. Host 649개·pair target 2/2 PASS. 401~406 합계 기능 216개·samples 46,656개이며 **407→408도 모두 필수 후속**이다. 이후 사용자가 407 결선 A P1.13↔B P1.14·공통 GND와 USB 분리/재연결을 확인했다. 버튼 미누름·DAP UART 분리/SWD 연결 조건이며 LLVM Host 회귀를 완료했으며 결선 유지 재확인 뒤 407 실기를 진행한다. T12 전체·후속 gate는 미완료다.
+T12 Fixture 406 exact 96f38e9·SWD 10 MHz **첫 실행 12개 PASS**, 입력 pull-down/up/down·2,592 samples·cleanup 12개와 GPIO readback은 [79번 기록](<79_T12_Fixture_406_current_source_공유_AIN5_검증.md>)에 보존했다. Host 649개·pair target 2/2 PASS. 당시 401~406 합계 기능 216개·samples 46,656개였으며 407의 새 결과는 아래 82번에 구분한다. 이후 사용자가 407 결선 A P1.13↔B P1.14·공통 GND와 USB 분리/재연결을 확인했다. 버튼 미누름·DAP UART 분리/SWD 연결 조건이며 LLVM Host 회귀 뒤 결선 유지를 재확인해 407 첫 실행 12개를 통과했다. 다음은 별도 결선 확인이 필요한 408이다. T12 전체·후속 gate는 미완료다.
 
-407 재개 exact 393e419는 설치된 LLVM 22.1.8로 Host **655 PASS·1 조건부 SKIP(총 656)**, 계약 45·package 20·정렬 358·Inventory·예제 발견과 pair/BLE **target 8/8**을 통과했다. BLE 형 변환의 기계어·재배치도 6/6 동일하다. [81번 재개 기록](<81_T12_Fixture_407_Host_재개와_검증.md>)에 새 근거를 보존했다. 이전 Windows 차단 원본은 80번에 유지하며 보안 정책을 변경하지 않았다. **407 flash/HIL NOT RUN**: 마지막 결선 확인의 30분 유효시간이 지나 동일 결선·버튼 미누름 유지 답변을 기다린다. 답변 후 실제 clean HEAD의 image를 확인해 SWD 10 MHz로 진행하며 **408도 필수**다.
+407 재개 exact 393e419는 설치된 LLVM 22.1.8로 Host **655 PASS·1 조건부 SKIP(총 656)**, 계약 45·package 20·정렬 358·Inventory·예제 발견과 pair/BLE **target 8/8**을 통과했다. BLE 형 변환의 기계어·재배치도 6/6 동일하다. [81번 재개 기록](<81_T12_Fixture_407_Host_재개와_검증.md>)에 새 근거를 보존했다. 이전 Windows 차단 원본은 80번에 유지하며 보안 정책을 변경하지 않았다. 이 준비 단계에서는 결선 확인 만료로 실기를 보류했다. 이후 사용자 유지 확인을 받아 actual source 4a64c25의 407 첫 실행을 완료했으며 아래 82번에 구분한다.
+
+T12 Fixture 407 exact 4a64c25·SWD 10 MHz **첫 실행 12개 PASS**는 [82번 기록](<82_T12_Fixture_407_current_source_공유_AIN6_검증.md>)에 보존했다. 버튼 미누름 AIN6/P1.13에서 입력 pull-down/up/down·2,592 samples·cleanup 12개와 입력 GPIO 24회·해제 12회를 확인했다. LOW median 0·HIGH median 3752, postflight 양쪽 source/role 확인 PASS. 401~407 누계 **228개 기능·49,248 samples·228개 cleanup**이며 다음은 **408/AIN7** 별도 재결선·확인이다. T12 전체·T13 이후와 readiness 미해결 8개는 유지한다.

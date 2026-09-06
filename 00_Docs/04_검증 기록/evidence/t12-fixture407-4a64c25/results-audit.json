@@ -1,0 +1,110 @@
+{
+  "status": "passed",
+  "fixture_id": 407,
+  "source": "4a64c2562fdd5e9169faecf56b43043a0afec67c",
+  "attempt": 1,
+  "functional_records": 12,
+  "cleanup_records": 12,
+  "campaign_records": 2,
+  "total_journal_records": 26,
+  "journal_matches_final_json": true,
+  "samples_read": 2592,
+  "phase_groups": [
+    {
+      "sample_count": 32,
+      "total_samples_per_phase": 32,
+      "phase_medians": [
+        0.0,
+        3752.0,
+        0.0
+      ],
+      "phase_minima": [
+        -12,
+        3744,
+        -8
+      ],
+      "phase_maxima": [
+        4,
+        3764,
+        4
+      ]
+    },
+    {
+      "sample_count": 32,
+      "total_samples_per_phase": 64,
+      "phase_medians": [
+        0.0,
+        3752.0,
+        0.0
+      ],
+      "phase_minima": [
+        -12,
+        3744,
+        -12
+      ],
+      "phase_maxima": [
+        4,
+        3764,
+        4
+      ]
+    },
+    {
+      "sample_count": 256,
+      "total_samples_per_phase": 256,
+      "phase_medians": [
+        0.0,
+        3752.0,
+        0.0
+      ],
+      "phase_minima": [
+        -20,
+        3740,
+        -16
+      ],
+      "phase_maxima": [
+        4,
+        3764,
+        4
+      ]
+    },
+    {
+      "sample_count": 256,
+      "total_samples_per_phase": 512,
+      "phase_medians": [
+        0.0,
+        3752.0,
+        0.0
+      ],
+      "phase_minima": [
+        -16,
+        3744,
+        -16
+      ],
+      "phase_maxima": [
+        12,
+        3768,
+        4
+      ]
+    }
+  ],
+  "independent_sample_hash_oracle_and_transition_audit": "passed",
+  "source_input_bias_readbacks": 24,
+  "source_input_release_readbacks": 12,
+  "raw_minimum": -20,
+  "raw_maximum": 3768,
+  "continuous_elapsed_seconds": 7.141,
+  "swd_frequency_hz": 10000000,
+  "functional_scope": "AIN6 button-unpressed shared input INPUT pulldown/pullup/pulldown, single/double SAADC DMA and cleanup",
+  "not_measured": [
+    "button actuation, debounce or wake behavior",
+    "calibrated voltage",
+    "calibrated ADC precision",
+    "PWM period/duty",
+    "Fixture 408 and later T12",
+    "T13 soak/concurrency"
+  ],
+  "hashes": {
+    "fixture407-attempt1.json": "d780728ece2e30c8fb724912c23764c50ce944fb1fe76553c51d9c8192b9d602",
+    "fixture407-attempt1.json.jsonl": "cd1c437662243181edd028276acaa6a8bf900e2836b76f310a8255c52969c598"
+  }
+}
