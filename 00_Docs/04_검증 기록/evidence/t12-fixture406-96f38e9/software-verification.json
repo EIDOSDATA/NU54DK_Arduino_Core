@@ -1,0 +1,50 @@
+{
+  "source": "96f38e9486c69cda2c76b48029bc0dc9404d9709",
+  "host_tests": 649,
+  "host_test_groups": 80,
+  "contract_tests": 45,
+  "cpp_style_files": 358,
+  "pair_target_builds": 2,
+  "pair_build_seconds": 117.09,
+  "readiness_blockers": 8,
+  "checks": [
+    {
+      "log": "gate-host.log",
+      "status": "passed",
+      "sha256": "a55721715336ebaabcbdc3a9ddf3769dc1012d809bfc7f5c110594c27a79d01f",
+      "sha256_basis": "original bytes preserved in .raw.gz"
+    },
+    {
+      "log": "gate-contract-prebuild.log",
+      "status": "passed",
+      "sha256": "dbda0c81e5ab2bc31314ca6545de9982e55930447eb381319d8bf7c9db862a60",
+      "sha256_basis": "original bytes preserved in .raw.gz"
+    },
+    {
+      "log": "gate-inventory-prebuild.log",
+      "status": "passed",
+      "sha256": "7e58023f0d3cd63fb88dfb19c5c477d19a2c78e29e995a1b66bbfe7491c26fc6",
+      "sha256_basis": "original bytes preserved in .raw.gz"
+    },
+    {
+      "log": "gate-docs-prebuild.log",
+      "status": "passed",
+      "sha256": "8fd54032b541c197273e7bedc4a3ca000683e162abe63c704f9ebd3f2299e0a3",
+      "sha256_basis": "original bytes preserved in .raw.gz"
+    },
+    {
+      "log": "style-check.log",
+      "status": "passed",
+      "sha256": "815a91c0143d286f3f4c0b1e54d2730cebed26477dc9ae233728fb51159d3d63",
+      "sha256_basis": "original bytes preserved in .raw.gz"
+    },
+    {
+      "log": "build.log",
+      "status": "passed",
+      "sha256": "b24af4c334f0b50cfe4c4b420475b6504e034dee46cb986438bd9f2516ffd404",
+      "sha256_basis": "original bytes preserved in .raw.gz"
+    }
+  ],
+  "preparation_failures": [],
+  "physical_claim": "None; fixture406-attempt1 and postflight contain physical evidence."
+}
