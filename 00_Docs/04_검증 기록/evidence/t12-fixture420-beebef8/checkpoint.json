@@ -1,0 +1,11 @@
+{
+  "fixture_id": 420,
+  "source": "beebef829de94f92a3a0b6b8b0a6ed2447d3b560",
+  "user_confirmation_recorded_at_utc": "2026-09-06T16:05:26+00:00",
+  "confirmation_text": "연결 했어. 시작하자.",
+  "wiring": "A P1.04 P2-12 <-> B P1.14 P4-12; A P1.06 P2-10 <-> B P1.10 P4-8; common GND P2-30; previous A P1.14 removed",
+  "confirmed_in_context": "Both USB disconnected for rewiring, reconnected after; DAP UART disconnected, SWD connected; existing SB/PMIC unchanged; no additional signals or power rails",
+  "signal_profile": "B PWM20/21/22 -> A QDEC20/21, cycles 1/100, state interval 2000us, both directions, debounce off/on; 48 vectors",
+  "swd_frequency_hz": 10000000,
+  "scope": "T10/T12 Fixture 420 physical execution, evidence/docs/commit/push; no Fixture 430 until separate wiring confirmation"
+}

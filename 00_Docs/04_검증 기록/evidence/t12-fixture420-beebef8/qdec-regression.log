@@ -1,0 +1,13 @@
+test_double_transition_does_not_count_as_motion (test_v04_qdec.QdecTests.test_double_transition_does_not_count_as_motion) ... ok
+test_forward_reverse_cycles_and_cancellation (test_v04_qdec.QdecTests.test_forward_reverse_cycles_and_cancellation) ... ok
+test_native_period_and_led_boundaries (test_v04_qdec.QdecTests.test_native_period_and_led_boundaries) ... ok
+test_native_pwm_levels_match_independent_ab_decoder (test_v04_qdec.QdecTests.test_native_pwm_levels_match_independent_ab_decoder)
+! @brief 실제 C++ 파형의 극성·A/B 배치·idle 복귀를 독립 전이 표로 검사합니다. ... ok
+test_production_uses_validated_period_and_explicit_report_policy (test_v04_qdec.QdecTests.test_production_uses_validated_period_and_explicit_report_policy) ... ok
+test_sampling_cannot_use_slow_nrfx_default (test_v04_qdec.QdecTests.test_sampling_cannot_use_slow_nrfx_default) ... ok
+test_stream_dap_borrowing_is_explicit_and_does_not_change_public_gpio (test_v04_qdec.QdecTests.test_stream_dap_borrowing_is_explicit_and_does_not_change_public_gpio) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.483s
+
+OK

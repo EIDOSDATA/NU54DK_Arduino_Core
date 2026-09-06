@@ -1,0 +1,34 @@
+{
+  "source": "fc9f1536e2caf4efee387c1a69b3a4c9e24adf3b",
+  "checked_at_utc": "2026-09-06T16:36:13.777947+00:00",
+  "swd_frequency_hz": 10000000,
+  "flash_executed": false,
+  "reset_executed": false,
+  "fixture_commands_executed": false,
+  "b_cleanup_confirmed": false,
+  "purpose": "read-only snapshot after cancelled prepared PWM; not cleanup PASS",
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "identity": "48494c34010000000100000000000000666339663135333665326361663465666565333837633161363962336134633965323461646633620000000000000000",
+      "cpuid": "0x411fd210",
+      "state": "SLEEPING",
+      "pin14_cnf": 2,
+      "pin10_cnf": 2,
+      "gpio_out_mask": 0,
+      "pwm20_enable": 0
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "identity": "48494c34010000000200000000000000666339663135333665326361663465666565333837633161363962336134633965323461646633620000000000000000",
+      "cpuid": "0x411fd210",
+      "state": "SLEEPING",
+      "pin14_cnf": 3,
+      "pin10_cnf": 3,
+      "gpio_out_mask": 0,
+      "pwm20_enable": 1
+    }
+  ]
+}

@@ -1,0 +1,195 @@
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+{
+  "source": "beebef829de94f92a3a0b6b8b0a6ed2447d3b560",
+  "started_at_utc": "2026-09-06T16:18:08.210137+00:00",
+  "scope": "diagnostic-only-same-fixture420-finite-waveform",
+  "swd_frequency_hz": 10000000,
+  "flash_executed": false,
+  "reset_executed": false,
+  "register_writes": false,
+  "vector": [
+    20,
+    20,
+    100,
+    10000,
+    0,
+    0
+  ],
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "continued_after_valid_disarm_sequence": 5
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "continued_after_valid_disarm_sequence": 6
+    }
+  ],
+  "cleanup": [
+    {
+      "role": 1,
+      "reply": [
+        0
+      ]
+    },
+    {
+      "role": 2,
+      "reply": [
+        0
+      ]
+    }
+  ],
+  "ready": [
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    400,
+    0
+  ],
+  "before": [
+    {
+      "gpio_in": 0,
+      "pin_cnf": {
+        "4": 0,
+        "6": 0
+      },
+      "peripheral": {
+        "0x200": 0,
+        "0x300": 4,
+        "0x500": 1,
+        "0x508": 1,
+        "0x50c": 0,
+        "0x510": 0,
+        "0x514": 4294967294,
+        "0x520": 36,
+        "0x524": 38,
+        "0x528": 0,
+        "0x544": 1
+      }
+    },
+    {
+      "gpio_in": 16,
+      "pin_cnf": {
+        "14": 2,
+        "10": 2
+      },
+      "peripheral": {
+        "0x500": 0,
+        "0x504": 0,
+        "0x508": 2000,
+        "0x50c": 4,
+        "0x510": 2,
+        "0x514": 1,
+        "0x518": 0,
+        "0x560": 46,
+        "0x564": 42
+      }
+    }
+  ],
+  "running": [
+    {
+      "gpio_in": 64,
+      "pin_cnf": {
+        "4": 0,
+        "6": 0
+      },
+      "peripheral": {
+        "0x200": 0,
+        "0x300": 4,
+        "0x500": 1,
+        "0x508": 1,
+        "0x50c": 0,
+        "0x510": 0,
+        "0x514": 4294967295,
+        "0x520": 36,
+        "0x524": 38,
+        "0x528": 0,
+        "0x544": 1
+      }
+    },
+    {
+      "gpio_in": 1040,
+      "pin_cnf": {
+        "14": 3,
+        "10": 3
+      },
+      "peripheral": {
+        "0x500": 1,
+        "0x504": 0,
+        "0x508": 10000,
+        "0x50c": 4,
+        "0x510": 2,
+        "0x514": 50,
+        "0x518": 0,
+        "0x560": 46,
+        "0x564": 42
+      }
+    }
+  ],
+  "complete": [
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    400,
+    0
+  ],
+  "after": [
+    {
+      "gpio_in": 0,
+      "pin_cnf": {
+        "4": 0,
+        "6": 0
+      },
+      "peripheral": {
+        "0x200": 0,
+        "0x300": 4,
+        "0x500": 1,
+        "0x508": 1,
+        "0x50c": 0,
+        "0x510": 0,
+        "0x514": 4294966896,
+        "0x520": 36,
+        "0x524": 38,
+        "0x528": 0,
+        "0x544": 2
+      }
+    },
+    {
+      "gpio_in": 16,
+      "pin_cnf": {
+        "14": 3,
+        "10": 3
+      },
+      "peripheral": {
+        "0x500": 0,
+        "0x504": 0,
+        "0x508": 10000,
+        "0x50c": 4,
+        "0x510": 2,
+        "0x514": 50,
+        "0x518": 0,
+        "0x560": 46,
+        "0x564": 42
+      }
+    }
+  ],
+  "qdec_report": [
+    0,
+    4294966896,
+    2
+  ],
+  "status": "diagnostic-completed",
+  "completed_at_utc": "2026-09-06T16:18:13.416106+00:00"
+}
+OBSERVED_A_PHASE_STATES=[0, 1, 2, 3]

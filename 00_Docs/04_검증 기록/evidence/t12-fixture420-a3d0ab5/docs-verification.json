@@ -1,0 +1,19 @@
+{
+  "source_prepared": "a3d0ab59bcee7a7940177fd768ad0f4a7c40c65c",
+  "markdown_files": 193,
+  "command": [
+    "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts\\python.exe",
+    "-B",
+    "tools/ci/run_m12_gate.py",
+    "docs"
+  ],
+  "result": "passed",
+  "log_original_sha256": "ced44746ee90520a7e170a82bce3faf43d337576eff1a91c130ec867bbaf6f39",
+  "log_normalized_sha256": "20121f45c947a56816a0a3b27ac5d3d7262dda8c61f6208f5af473e40fe51192",
+  "code_changes_after_source": [],
+  "last_source_physical_executed": false,
+  "prior_fc9f153_functional_pass": 48,
+  "prior_fc9f153_prepared_cancel": "failed; controlled reset cleanup verified",
+  "next_action": "unchanged 420 wiring reconfirmation required",
+  "historical_records_modified": false
+}

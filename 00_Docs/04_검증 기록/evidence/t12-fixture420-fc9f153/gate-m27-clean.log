@@ -1,0 +1,14 @@
+test_candidate_extension_does_not_add_unapproved_stable (test_m27_release.M27ReleaseTests.test_candidate_extension_does_not_add_unapproved_stable) ... ok
+test_clean_submodule_status_survives_trimmed_first_prefix (test_m27_release.M27ReleaseTests.test_clean_submodule_status_survives_trimmed_first_prefix) ... ok
+test_cli_exposes_no_publish_or_finalize_command (test_m27_release.M27ReleaseTests.test_cli_exposes_no_publish_or_finalize_command) ... ok
+test_contract_has_every_required_gate_and_remains_hold (test_m27_release.M27ReleaseTests.test_contract_has_every_required_gate_and_remains_hold) ... ok
+test_functional_fixture_gates_cannot_become_optional (test_m27_release.M27ReleaseTests.test_functional_fixture_gates_cannot_become_optional) ... ok
+test_historical_package_contract_is_not_modified (test_m27_release.M27ReleaseTests.test_historical_package_contract_is_not_modified) ... ok
+test_owner_scope_excludes_metrology_not_functional_hil (test_m27_release.M27ReleaseTests.test_owner_scope_excludes_metrology_not_functional_hil) ... ok
+test_plan_rejects_publication_or_missing_artifacts (test_m27_release.M27ReleaseTests.test_plan_rejects_publication_or_missing_artifacts) ... ok
+test_scope_drift_or_missing_decision_is_rejected (test_m27_release.M27ReleaseTests.test_scope_drift_or_missing_decision_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.583s
+
+OK

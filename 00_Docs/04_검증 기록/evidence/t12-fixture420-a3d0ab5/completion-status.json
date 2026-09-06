@@ -1,0 +1,16 @@
+{
+  "source": "a3d0ab59bcee7a7940177fd768ad0f4a7c40c65c",
+  "recorded_at_utc": "2026-09-06T16:43:27.750053+00:00",
+  "status": "software-ready-awaiting-wiring-reconfirmation",
+  "source_physical_executed": false,
+  "prior_functional_source": "fc9f1536e2caf4efee387c1a69b3a4c9e24adf3b",
+  "prior_functional_pass": 48,
+  "prior_prepared_cancel": "failed; B cleaned by controlled reset, no flash/test retry",
+  "wiring_confirmation_original_utc": "2026-09-06T16:05:26+00:00",
+  "confirmation_expired_utc": "2026-09-06T16:35:26+00:00",
+  "reconfirmation_requested": true,
+  "reconfirmation_received": false,
+  "last_uploaded_source": "fc9f1536e2caf4efee387c1a69b3a4c9e24adf3b",
+  "next_fixture": 420,
+  "pending": "Confirm unchanged 420 wiring, then current clean HEAD exact pair build, 48 QDEC vectors and 6 prepared cancellations; no 430 yet"
+}

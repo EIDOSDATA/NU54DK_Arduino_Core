@@ -1,0 +1,6 @@
+{
+  "00_Docs/TODO_v0.4.0.md": "baf81dc4bc76fe9c7727bfb0501d13bdba708ec4a8c84e2292bd66ee7bc64e71",
+  "tests/host/test_v04_qdec.py": "df9f926dd5d8a840239ffbceab4b08a1930cea97a1fadd93ade5735693e5c975",
+  "tests/zephyr/v04_pair_hil/src/signal_hil.cpp": "e26741229cb8556040042ba94034cead12c2a775863dd4495dedf59f7899fa70",
+  "tests/zephyr/v04_pair_hil/src/qdec_waveform.h": "67dcf277d22904d58f18e253e2002a08c697816b9f28891a2e85d5ee6734e0e4"
+}
