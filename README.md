@@ -253,7 +253,7 @@ SPIM/SPIS20·21·22 전 조합 27,252개 계획 벡터를 통과했습니다.
 TWIM/TWIS20·21·22·30의 기능 record 1,986개와 cleanup 2건을 통과해 T11 단독 기능 검증을
 역사적 체크포인트로 완료했습니다. 이후 R00~R13 리팩토링과 전체 software gate는
 [64번 기록](<./00_Docs/04_검증 기록/64_R13_도구_정책_build_구조.md>)으로 완료했습니다. 최종 source의
-current-source T11은 exact 154324c의 Fixture 101 기능 1,644개를 통과했습니다. Fixture 102도 exact a49cc0d에서 822개를 통과했으며 Fixture 103도 exact 7aece93에서 2,466개를 통과했습니다. 승인 UART route 세 묶음을 완료했고 Fixture 201 SPI도 exact 0f429e7에서 18,169개를 통과했습니다. Fixture 202도 exact 1349e20에서 9,084개를 통과했습니다. Fixture 203도 exact be49207에서 27,252개를 통과해 SPI 세 묶음을 완료했습니다. Fixture 301도 exact 9a63251에서 1,986개를 통과해 current-source T11 단독 회귀를 완료했습니다. T12 Fixture 401 exact a12e444·402 exact ff483a1·403 exact c95b904·404 exact e080bbc에서 각각 48개를 통과했습니다. 다음은 Fixture 408 PWM→AIN7 결선 변경입니다.
+current-source T11은 exact 154324c의 Fixture 101 기능 1,644개를 통과했습니다. Fixture 102도 exact a49cc0d에서 822개를 통과했으며 Fixture 103도 exact 7aece93에서 2,466개를 통과했습니다. 승인 UART route 세 묶음을 완료했고 Fixture 201 SPI도 exact 0f429e7에서 18,169개를 통과했습니다. Fixture 202도 exact 1349e20에서 9,084개를 통과했습니다. Fixture 203도 exact be49207에서 27,252개를 통과해 SPI 세 묶음을 완료했습니다. Fixture 301도 exact 9a63251에서 1,986개를 통과해 current-source T11 단독 회귀를 완료했습니다. T12 Fixture 401 exact a12e444·402 exact ff483a1·403 exact c95b904·404 exact e080bbc에서 각각 48개를 통과했습니다. 405도 오픈드레인 12개를 통과했으며 다음은 필수 후속 406→407→408입니다.
 다음 결선의 사용자 확인 뒤 T12 analog·stream 및 전체 동시성·soak 통합 캠페인을 진행합니다.
 정식 공개는 아직 완료되지 않았습니다.
 검증은 온보드 자원과 두 NU54DK의 통신·합성 신호·capture를 기준으로 합니다. 정밀 계측과 외부
@@ -331,12 +331,14 @@ Current-source Fixture 202의 exact 1349e20·9,084개 기능 PASS, 최초 peer f
 
 Current-source Fixture 203의 exact be49207·27,252개 기능 PASS, 최초 DUT flash 실패·진단은 [72번 기록](<./00_Docs/04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 연결한다. 해당 exact 원본은 별도로 보존한다.
 
-Current-source Fixture 301 exact 9a63251·1,986개 기능 PASS와 T11 단독 회귀 완료 근거는 [73번 기록](<./00_Docs/04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 연결한다. 일곱 fixture의 원본 61,423개와 동일 컴파일 입력을 대조했으며 exact identity는 구분 보존한다. T12 Fixture 401~404 각 48개 PASS 뒤 다음은 Fixture 405→406→407→408이고 M24/M25 전체·T13~T15·RC/공개 gate는 미완료다.
+Current-source Fixture 301 exact 9a63251·1,986개 기능 PASS와 T11 단독 회귀 완료 근거는 [73번 기록](<./00_Docs/04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 연결한다. 일곱 fixture의 원본 61,423개와 동일 컴파일 입력을 대조했으며 exact identity는 구분 보존한다. T12 Fixture 401~404 각 48개 PASS 뒤 405도 완료했고 다음은 Fixture 406→407→408이며 M24/M25 전체·T13~T15·RC/공개 gate는 미완료다.
 
-T12 Fixture 401 exact a12e444·SWD 10 MHz 첫 실행 48개 기능 PASS와 10,368 samples·cleanup 48개는 [74번 기록](<00_Docs/04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 보존했다. T12는 부분 완료이며 다음 순서는 사용자 지정 405→406→407→408이며 현재 405 AIN4/P1.11 오픈드레인 시험을 준비한다. PWM 주기·듀티 capture와 T12 나머지 요구·후속 gate는 이 결과로 완료 처리하지 않는다.
+T12 Fixture 401 exact a12e444·SWD 10 MHz 첫 실행 48개 기능 PASS와 10,368 samples·cleanup 48개는 [74번 기록](<00_Docs/04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 보존했다. T12는 부분 완료이며 405도 오픈드레인 시험을 완료했으며 다음은 필수 후속 406→407→408이다. PWM 주기·듀티 capture와 T12 나머지 요구·후속 gate는 이 결과로 완료 처리하지 않는다.
 
-T12 Fixture 402 exact ff483a1·SWD 10 MHz 첫 실행 48개 PASS는 [75번 기록](<00_Docs/04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존했다. 401·402 합계 기능 96개·samples 20,736개이며 각 exact identity는 구분한다. 다음 순서는 사용자 지정 405→406→407→408이며 현재 405 AIN4/P1.11 오픈드레인 시험을 준비한다.
+T12 Fixture 402 exact ff483a1·SWD 10 MHz 첫 실행 48개 PASS는 [75번 기록](<00_Docs/04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존했다. 401·402 합계 기능 96개·samples 20,736개이며 각 exact identity는 구분한다. 405도 오픈드레인 시험을 완료했으며 다음은 필수 후속 406→407→408이다.
 
-T12 Fixture 403 exact c95b904·SWD 10 MHz 첫 실행 48개 PASS는 [76번 기록](<00_Docs/04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 보존했다. 401~403 합계 기능 144개·samples 31,104개이며 각 exact identity는 구분한다. 다음 순서는 사용자 지정 405→406→407→408이며 현재 405 AIN4/P1.11 오픈드레인 시험을 준비한다.
+T12 Fixture 403 exact c95b904·SWD 10 MHz 첫 실행 48개 PASS는 [76번 기록](<00_Docs/04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 보존했다. 401~403 합계 기능 144개·samples 31,104개이며 각 exact identity는 구분한다. 405도 오픈드레인 시험을 완료했으며 다음은 필수 후속 406→407→408이다.
 
-T12 Fixture 404 exact e080bbc·SWD 10 MHz 첫 실행 48개 PASS는 [77번 기록](<00_Docs/04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 보존했다. 401~404 합계 기능 192개·samples 41,472개이며 각 exact identity는 구분한다. 다음 순서는 사용자 지정 405→406→407→408이며 현재 405 AIN4/P1.11 오픈드레인 시험을 준비한다.
+T12 Fixture 404 exact e080bbc·SWD 10 MHz 첫 실행 48개 PASS는 [77번 기록](<00_Docs/04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 보존했다. 401~404 합계 기능 192개·samples 41,472개이며 각 exact identity는 구분한다. 405도 오픈드레인 시험을 완료했으며 다음은 필수 후속 406→407→408이다.
+
+T12 Fixture 405 exact 9fc12bf·SWD 10 MHz **첫 실행 12개 PASS**, LOW/해제/LOW·2,592 samples·cleanup 12개와 GPIO readback은 [78번 기록](<00_Docs/04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)에 보존했다. 공유 AIN4/P1.11의 기능을 확인했으며 후속 **406→407→408을 모두 수행**한다. 제품 core 변경 없이 Host 648개·pair target 2/2를 통과했고 T12 전체·후속 gate는 미완료다.

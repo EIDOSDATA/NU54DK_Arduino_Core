@@ -1,0 +1,110 @@
+{
+  "status": "passed",
+  "fixture_id": 405,
+  "source": "9fc12bfbdafbb8a4450ed6cc61ca97b9c1efd220",
+  "attempt": 1,
+  "functional_records": 12,
+  "cleanup_records": 12,
+  "campaign_records": 2,
+  "total_journal_records": 26,
+  "journal_matches_final_json": true,
+  "samples_read": 2592,
+  "phase_groups": [
+    {
+      "sample_count": 32,
+      "total_samples_per_phase": 32,
+      "phase_medians": [
+        68.0,
+        3752.0,
+        68.0
+      ],
+      "phase_minima": [
+        60,
+        3748,
+        64
+      ],
+      "phase_maxima": [
+        76,
+        3756,
+        76
+      ]
+    },
+    {
+      "sample_count": 32,
+      "total_samples_per_phase": 64,
+      "phase_medians": [
+        70.0,
+        3752.0,
+        72.0
+      ],
+      "phase_minima": [
+        64,
+        3744,
+        64
+      ],
+      "phase_maxima": [
+        72,
+        3760,
+        76
+      ]
+    },
+    {
+      "sample_count": 256,
+      "total_samples_per_phase": 256,
+      "phase_medians": [
+        68.0,
+        3752.0,
+        68.0
+      ],
+      "phase_minima": [
+        60,
+        3744,
+        64
+      ],
+      "phase_maxima": [
+        72,
+        3760,
+        76
+      ]
+    },
+    {
+      "sample_count": 256,
+      "total_samples_per_phase": 512,
+      "phase_medians": [
+        68.0,
+        3752.0,
+        68.0
+      ],
+      "phase_minima": [
+        64,
+        3740,
+        56
+      ],
+      "phase_maxima": [
+        76,
+        3760,
+        84
+      ]
+    }
+  ],
+  "independent_sample_hash_oracle_and_transition_audit": "passed",
+  "source_open_drain_readbacks": 24,
+  "source_input_release_readbacks": 12,
+  "raw_minimum": 56,
+  "raw_maximum": 3760,
+  "continuous_elapsed_seconds": 6.906,
+  "swd_frequency_hz": 10000000,
+  "functional_scope": "AIN4 PMIC_INT shared input LOW/release/LOW, static open-drain, single/double SAADC DMA and cleanup",
+  "not_measured": [
+    "PMIC interrupt generation or register behavior",
+    "SB1 continuity",
+    "calibrated ADC precision",
+    "PWM period/duty",
+    "Fixture 406/407/408 and later T12",
+    "T13 soak/concurrency"
+  ],
+  "hashes": {
+    "fixture405-attempt1.json": "5c7d7d9a1d756693657fcc5b76aa9a49713a4149897afd4aa846de3a0700fffb",
+    "fixture405-attempt1.json.jsonl": "33718b75e9ac95ec2abf49eabebf9ec4344e0bbacc36fc6ce1b3d351e07d7b7e"
+  }
+}

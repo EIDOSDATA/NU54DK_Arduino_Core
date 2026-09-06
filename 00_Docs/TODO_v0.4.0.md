@@ -2,13 +2,13 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.5 |
-| 상태 | 활성 TODO — R00~R13·최종 software gate·current-source T11 완료; T12 Fixture 401~404 부분 PASS, 후속 실기·통합·RC·공개 대기 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.6 |
+| 상태 | 활성 TODO — R00~R13·최종 software gate·current-source T11 완료; T12 Fixture 401~405 부분 PASS, 후속 실기·통합·RC·공개 대기 |
 | 작성·갱신일 | 2026-09-06 |
-| 작성 직전 기준 commit | `e080bbc8f07a0ad751d83dacdb259d395b69be5b` — 이번 Fixture 404 exact source |
+| 작성 직전 기준 commit | `9fc12bfbdafbb8a4450ed6cc61ca97b9c1efd220` — 이번 Fixture 405 exact source |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **T12 Fixture 408 PWM→AIN7: A P1.07→P1.14 전원 OFF 결선 변경과 사용자 확인** |
-| 이번 요청의 실행 범위 | 2026-09-06 사용자 404 진행 지시. Exact pair build, 10 MHz 48-vector 실기, 증거·문서·commit·main push 뒤 408 결선 직전 정지 |
+| 다음 착수 항목 | **T12 Fixture 406 AIN5/P1.12 공유 입력 시험 준비·결선 안내·사용자 확인; 407→408도 필수** |
+| 이번 요청의 실행 범위 | 2026-09-06 사용자 405 실행 및 405~408 전체 수행 지시. 405 오픈드레인 시험 구현·Host 648·exact pair build·10 MHz 12-vector 실기·증거·문서·commit·main push 완료 후 406 개별 결선 안내·확인 대기 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
 마일스톤의 제품 상태는 [로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>), 실제 PASS/FAIL은
@@ -51,21 +51,21 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | Fixture 404 exact e080bbc 첫 실행 48 PASS·10,368 samples·cleanup 48. [77번 기록](<./04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 보존. 401~404 합계 기능 192개·samples 41,472개; T12 부분 완료 |
-| 진행 중인 T 항목 | T12 Fixture 405 AIN4/P1.11의 오픈드레인 LOW→해제→LOW 시험을 구현·Host 검증·pair build 후 실행한다. 401~404 완료; 사용자 요청으로 405·406·407·408 모두 수행 대상이며 아직 PASS가 아니다. T11 각 exact 근거와 R00~R13 완료를 보존하며 제품 core 변경 없이 T05/T10/T12 시험 경로를 확장한다 |
-| 다음 구체적 행동 | 405용 고정 B P1.14 S0D1·내부 pull-up 신호원과 A P1.11 SAADC를 검증한다. 32/256 samples·single/double buffer·LOW/해제/LOW 12 vector, DMA 길이·양쪽 cleanup·GPIO 설정 readback·ADC 전환 oracle을 사용한다. 정확한 source로 pair build 후 10 MHz SWD 실행·증거·문서·커밋·푸시. 후속 순서는 406→407→408 |
-| 다음 작업에 필요한 사용자 행동 | 405 결선 완료 확인을 받았다. 다음 406은 별도 GPIO 안내와 전원 OFF 결선 변경 확인이 필요하다. SB1/PMIC 설정은 변경하지 않는다 |
+| 이번에 끝낸 일 | Fixture 405 exact 9fc12bf 첫 실행 12 PASS·2,592 samples·cleanup 12·GPIO readback 통과. [78번 기록](<./04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)에 보존. 401~405 합계 기능 204개·samples 44,064개; T12 부분 완료 |
+| 진행 중인 T 항목 | 실행 중 시험 없음. T12 Fixture 401~405 완료, 406→407→408 모두 필수 후속. T11 각 exact 증거·R00~R13 완료 보존. T13~T15·최종 통합·RC/공개 미완료 |
+| 다음 구체적 행동 | 406 AIN5/P1.12의 VBAT 분압기/SB4 공유 회로에 맞는 기능 신호원을 준비·검증하고 별도 GPIO 결선 안내·사용자 완료 확인 후 실행한다. 그 다음 407 AIN6/P1.13, 408 AIN7/P1.14를 반드시 수행한다 |
+| 다음 작업에 필요한 사용자 행동 | 405 결선을 유지한다. 406용 구체적 안내 뒤 두 USB 전원 OFF 변경·DAP UART 분리/SWD 연결·재연결 확인이 필요하다. 아직 406 출력은 허용하지 않으며 사용자 확인을 대신 작성하지 않는다 |
 | 외부 결선 상태 | 2026-09-06T12:52:24Z 사용자 답변 기록: “ㅇㅇ 했다. P1.11 했다”. 전원 OFF 변경 안내에 따라 A P1.11/P4-9↔B P1.14/P4-12와 공통 GND/P2-30, DAP UART 분리·SWD 연결·각자 USB 재연결 확인. A D/COM5·6, B E/COM7·8. P1.11은 SB1을 통해 PMIC_INT/BQ25186 /INT와 공유하며 DAP 전원 감지 핀이 아니다 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
-| 마지막 정식 외부 HIL source | `e080bbc8f07a0ad751d83dacdb259d395b69be5b` — T12 Fixture 404 첫 실행 48 PASS. 이전 401~403과 T11 exact 근거 보존 |
-| 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. T11 단독 완료·T12 401~404 부분 PASS; M24/M25 전체·후속 gate·RC/공개 미완료 |
+| 마지막 정식 외부 HIL source | `9fc12bfbdafbb8a4450ed6cc61ca97b9c1efd220` — T12 Fixture 405 첫 실행 12 PASS. 이전 401~404와 T11 exact 근거 보존 |
+| 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. T11 각 exact 완료·T12 401~405 부분 PASS; M24/M25 전체·후속 gate·RC/공개 미완료 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | HIL/build 종료. 양쪽 exact e080bbc DUT/peer, 매 vector 양쪽 disarm [0], 종료 read-only CPUID·full commit·role 2/2 PASS. CPU snapshot은 77번 원본 참조. 10 MHz 첫 실행 PASS; 과거 flash/CTS 원인 해결을 주장하지 않음 |
+| 이 TODO 작성 작업의 실행 중 시험 | HIL/build/Host 종료. 양쪽 exact 9fc12bf DUT/peer, 매 vector 양쪽 disarm [0]·B 입력 복귀 readback PASS. 종료 read-only CPUID·full commit·role 2/2 PASS, 양쪽 SLEEPING. SWD 10 MHz 첫 실행 PASS |
 | 로컬 임시 build·evidence | 15개 과거 root의 object/archive 중간 파일 55,537개 제거, 일회성 script 50개는 work/archive/r00-r13-authoring-scripts.zip으로 hash 검증 후 보관. 2,911개 ELF/HEX/설정/log 등은 hash 불변. C:/r13h와 설치본·raw evidence·QEMU 보존; 상세는 65번 기록 |
-| 최종 정렬 gate | clang-format 22.1.8, 직접 관리 C/C++/ino 356개 dry-run PASS. 한국어 Doxygen·BSD/Allman·4칸·중괄호 필수. SDK·board·third-party·공개 자산을 정렬하지 않았으며 물리 PASS로 승격하지 않음 |
+| 최종 정렬 gate | clang-format 22.1.8, 직접 관리 C/C++/ino 358개 dry-run PASS. 한국어 Doxygen·BSD/Allman·4칸·중괄호 필수. 새 shared analog helper와 Host 검증은 실제 참조되어 유지 |
 | CI 확인 | 최종 source의 GitHub Actions는 미확인. 현재 GitHub CLI 인증에 의존하지 않고 로컬 canonical 전체 software gate를 실행했다. 이전 Actions success는 이전 source의 역사 증거로만 유지 |
-| 문서 작업 검증 | 이번 pair target 2/2, Markdown 186, contract 45, inventory 75·Serial 23·System 16 PASS; readiness blocker 8개 유지. 제품·canonical runner 변경 없음; 기존 full software·401~403·T11 exact 근거 보존 |
-| 최종 HIL 입력 찾기 | C:/u3k exact e080bbc DUT/peer와 첫 실행 JSON/journal은 77번에 있다. 408은 새 exact HEAD image·확인서가 필요하며 기존 build·원본 증거 보존 |
+| 문서 작업 검증 | 이번 전체 Host 648·계약 45·Inventory 75/23/16·pair target 2/2 PASS. 최종 Markdown 187개 검증 PASS, 78번에 등록. readiness blocker 8개 유지. 제품 core/build tool/board 변경 없음; runner와 시험 firmware 확장은 새 exact image로 405 실기 검증 |
+| 최종 HIL 입력 찾기 | C:/u3l exact 9fc12bf DUT/peer와 첫 실행 JSON/journal은 78번에 있다. 406·407은 전용 안전 시험 준비·새 exact image·결선 확인 필요. 408도 후속 필수이며 기존 build·원본 증거 보존 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드
@@ -210,7 +210,7 @@ R00~R14와 연결하고, 구조 변경 뒤 같은 결선을 다시 반복하지 
   package gate로 최종 실기 source를 고정한다.
 - [x] **current-source T11 회귀:** R00~R13 최종 exact source로 영향받는 UART·SPI·TWI 단독 기능을
   재검증하고 나서 T12로 전환한다.
-  - 진행: exact 154324c Fixture 101 기능 1,644 PASS. [67번 기록](<./04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>) 참조. Fixture 102는 exact a49cc0d 기능 822 PASS로 [68번 기록](<./04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md>)에 등록했다. Fixture 103은 exact 7aece93 기능 2,466 PASS로 [69번 기록](<./04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md>)에 등록해 승인 UART route 세 묶음을 완료했다. Fixture 201도 exact 0f429e7 기능 18,169 PASS로 [70번 기록](<./04_검증 기록/70_T11_Fixture_201_current_source_SPI_회귀.md>)에 등록했다. Fixture 202도 exact 1349e20 기능 9,084 PASS로 [71번 기록](<./04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md>)에 등록했다. Fixture 203도 exact be49207 기능 27,252 PASS로 [72번 기록](<./04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 등록해 승인 SPI 세 route를 완료했다. Fixture 301도 exact 9a63251 기능 1,986 PASS로 [73번 기록](<./04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 등록했다. 일곱 묶음의 61,423개 기능과 동일 컴파일 입력을 대조해 current-source T11 단독 회귀를 완료했다. T12 Fixture 401~404도 각각 48개를 통과했으며 다음은 사용자 지정 Fixture 405→406→407→408이다.
+  - 진행: exact 154324c Fixture 101 기능 1,644 PASS. [67번 기록](<./04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>) 참조. Fixture 102는 exact a49cc0d 기능 822 PASS로 [68번 기록](<./04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md>)에 등록했다. Fixture 103은 exact 7aece93 기능 2,466 PASS로 [69번 기록](<./04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md>)에 등록해 승인 UART route 세 묶음을 완료했다. Fixture 201도 exact 0f429e7 기능 18,169 PASS로 [70번 기록](<./04_검증 기록/70_T11_Fixture_201_current_source_SPI_회귀.md>)에 등록했다. Fixture 202도 exact 1349e20 기능 9,084 PASS로 [71번 기록](<./04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md>)에 등록했다. Fixture 203도 exact be49207 기능 27,252 PASS로 [72번 기록](<./04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 등록해 승인 SPI 세 route를 완료했다. Fixture 301도 exact 9a63251 기능 1,986 PASS로 [73번 기록](<./04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 등록했다. 일곱 묶음의 61,423개 기능과 동일 컴파일 입력을 대조해 current-source T11 단독 회귀를 완료했다. T12 Fixture 401~404도 각각 48개를 통과했으며 405도 12개를 통과했으며 다음은 필수 후속 Fixture 406→407→408이다.
 - [ ] **R14:** T16~T18의 사용자용 통합까지 끝난 뒤 current-source T11과 T12~T15 결과를 포함한
   `v0.4.0` RC를 다시 고정하고 T19로 전환한다.
 
@@ -219,10 +219,10 @@ R00~R14와 연결하고, 구조 변경 뒤 같은 결선을 다시 반복하지 
 외부 결선 PASS 캠페인은 R13 뒤 최종 source에 한 번 수행한다.
 
 - [ ] **T12 — M25 입력·출력·스트림 기능 검증**
-  - 상태·선행: 부분 완료 — Fixture 401 AIN0·402 AIN1·403 AIN2·404 AIN3 각각 48 PASS, 후속 fixture·전체 요구 대기 / T05·T06·T09, R00~R13과 current-source T11 회귀 완료, 해당 T10 확인.
+  - 상태·선행: 부분 완료 — Fixture 401~404 각각 PWM 48 PASS·405 AIN4 오픈드레인 12 PASS, 406→407→408·후속 fixture·전체 요구 대기 / T05·T06·T09, R00~R13과 current-source T11 회귀 완료, 해당 T10 확인.
   - 할 일: ADC·PWM·timer/event·PDM·I2S·QDEC의 물리 신호와 예상 sample/frame/count를 비교한다.
   - 완료 기준: 합성 peer 자체의 동작과 코어 기능을 구분해 검증하고 각 instance/mode의 증거가 있다. 신호 생성 실패는 미완료이지 계측 면제가 아니다.
-  - 결선·증거: Fixture 401 exact a12e444 48 PASS·10,368 samples·cleanup 48은 [74번 기록](<./04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 등록. Fixture 402 exact ff483a1 48 PASS는 [75번 기록](<./04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존. Fixture 403 exact c95b904 48 PASS는 [76번 기록](<./04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 등록. Fixture 404 exact e080bbc 48 PASS는 [77번 기록](<./04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 등록. 다음은 405→406→407→408이며 공유 AIN4~6도 개별 기능 시험한다. PWM period/duty capture·ADC calibration/채널 순서 등 전체 T12 요구는 이 HIGH/sample-count 결과로 완료 처리하지 않는다.
+  - 결선·증거: Fixture 401 exact a12e444 48 PASS·10,368 samples·cleanup 48은 [74번 기록](<./04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 등록. Fixture 402 exact ff483a1 48 PASS는 [75번 기록](<./04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존. Fixture 403 exact c95b904 48 PASS는 [76번 기록](<./04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 등록. Fixture 404 exact e080bbc 48 PASS는 [77번 기록](<./04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 등록. 405 exact 9fc12bf의 공유 AIN4 오픈드레인 12 PASS·2,592 samples는 [78번 기록](<./04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)에 보존. 다음은 406→407→408이며 공유 AIN5~6도 개별 기능 시험한다. PWM period/duty capture·ADC calibration/채널 순서 등 전체 T12 요구는 이 HIGH/sample-count 결과로 완료 처리하지 않는다.
 
 - [ ] **T13 — 복구·동시 실행·장시간 안정성 검증**
   - 상태·선행: 미착수 / T07·해당 T11/T12 단독 PASS·해당 T10 확인.
