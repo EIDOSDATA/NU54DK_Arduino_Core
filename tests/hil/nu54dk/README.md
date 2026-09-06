@@ -584,4 +584,6 @@ Current-source Fixture 201도 exact 0f429e7·SWD 10 MHz에서 data 18,157개와 
 
 Current-source Fixture 202는 exact 1349e20·SWD 10 MHz에서 data 9,078개와 예상 cancel 6개를 통과했습니다. Data에는 recovery 6개가 포함됩니다. 최초 peer flash 실패·진단과 한 번의 새 전체 실행은 [71번 기록](<../../../00_Docs/04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md>)에 구분 보존했습니다.
 
-Current-source Fixture 203은 exact be49207·SWD 10 MHz에서 data 27,234개와 예상 cancel 18개를 통과했습니다. Data에는 recovery 18개가 포함됩니다. 최초 DUT flash 실패·진단과 한 번의 새 전체 실행은 [72번 기록](<../../../00_Docs/04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 구분 보존했습니다. 승인 SPI 세 route의 회귀를 마쳤으며 다음은 Fixture 301 TWI 결선입니다.
+Current-source Fixture 203은 exact be49207·SWD 10 MHz에서 data 27,234개와 예상 cancel 18개를 통과했습니다. Data에는 recovery 18개가 포함됩니다. 최초 DUT flash 실패·진단과 한 번의 새 전체 실행은 [72번 기록](<../../../00_Docs/04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 구분 보존했습니다. 승인 SPI 세 route의 회귀를 마쳤습니다.
+
+Current-source Fixture 301은 exact 9a63251·SWD 10 MHz 첫 실행에서 data 1,968개, NACK/cancel 12개, stuck-SDA bus recovery 6개를 통과했습니다. Data에는 복구 18개와 clock stretch 6개가 포함됩니다. [73번 기록](<../../../00_Docs/04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 고유 ID·순서 대조와 current-source T11 단독 회귀 완료를 보존했습니다. 다음은 T12 Fixture 401 PWM→AIN0 결선입니다.

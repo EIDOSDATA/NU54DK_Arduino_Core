@@ -142,4 +142,6 @@ Fixture 201 exact 0f429e7·SWD 10 MHz 기능 18,169 PASS와 새 결선은 [70번
 
 Fixture 202 exact 1349e20·SWD 10 MHz 기능 9,084 PASS, 최초 peer flash 실패·한정 재개는 [71번 기록](71_T11_Fixture_202_current_source_SPI_회귀.md)에 보존했다.
 
-Fixture 203 exact be49207·SWD 10 MHz 기능 27,252 PASS, 최초 DUT flash 실패·한정 재개와 다음 Fixture 301 TWI 결선은 [72번 기록](72_T11_Fixture_203_current_source_SPI_회귀.md)에 보존했다. Current-source SPI 세 route를 완료했다.
+Fixture 203 exact be49207·SWD 10 MHz 기능 27,252 PASS, 최초 DUT flash 실패·한정 재개는 [72번 기록](72_T11_Fixture_203_current_source_SPI_회귀.md)에 보존했다. Current-source SPI 세 route를 완료했다.
+
+Fixture 301 exact 9a63251·SWD 10 MHz 첫 실행 1,986 PASS와 current-source T11 단독 통신 회귀 완료는 [73번 기록](73_T11_Fixture_301_current_source_TWI_회귀.md)에 보존했다. UART·SPI·TWI 일곱 묶음 61,423개 기능 결과를 대조했다. 다음은 T12 Fixture 401 PWM→AIN0다.

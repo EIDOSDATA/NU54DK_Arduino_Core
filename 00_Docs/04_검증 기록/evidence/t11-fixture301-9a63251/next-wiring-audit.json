@@ -1,0 +1,122 @@
+{
+  "status": "passed",
+  "current_fixture": 301,
+  "next_fixture": 401,
+  "catalog_revision": 2,
+  "catalog_sha256": "50ad2ee57f26ac65cc9b88a0197c9064131fbffd5e060aea2a648e5f72ffd8e3",
+  "connector_pinmap_matches": true,
+  "current": {
+    "id": 301,
+    "family": "twi",
+    "banks": [
+      1,
+      0
+    ],
+    "instances": [
+      [
+        20,
+        21,
+        22
+      ],
+      [
+        30
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "peer": [
+          "P2",
+          25,
+          "P0.0"
+        ],
+        "signal": "SDA"
+      },
+      {
+        "dut": [
+          "P2",
+          11,
+          "P1.5"
+        ],
+        "peer": [
+          "P2",
+          26,
+          "P0.1"
+        ],
+        "signal": "SCL"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "PMIC P1.2/P1.3 버스와 완전히 분리합니다. Target 역할의 TWIS가 SDA/SCL 내부 pull-up을 활성화하므로 외부 저항과 두 보드 전원 pin 연결은 사용하지 않습니다. 1MHz는 기능 통과 여부만 기록하며 rise-time·신호 품질 보증으로 해석하지 않습니다.",
+    "pullups": [
+      "Target 역할 TWIS의 SDA/SCL 내부 pull-up 사용; 외부 pull-up 저항과 두 보드 전원 rail 직접 연결 금지"
+    ]
+  },
+  "next": {
+    "id": 401,
+    "family": "analog",
+    "banks": [
+      1,
+      1
+    ],
+    "instances": [
+      [
+        20,
+        21,
+        22
+      ],
+      [
+        20,
+        21,
+        22
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "peer": [
+          "P4",
+          12,
+          "P1.14"
+        ],
+        "signal": "peer PWM level -> DUT SAADC AIN0"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "peer(role 2)의 LED4 buffer 입력 P1.14를 PWM source로 쓰고 DUT(role 1)의 격리된 AIN0에서 수동 SAMPLE합니다. PWM20/21/22의 channel slot 0~3을 순차 검사하며 controller_role=2만 허용합니다.",
+    "pullups": []
+  },
+  "no_next_fixture_executed": true
+}
