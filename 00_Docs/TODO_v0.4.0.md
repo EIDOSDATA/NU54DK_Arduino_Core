@@ -49,6 +49,9 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 
 ## 2. 현재 재개 체크포인트
 
+420 추가 교정: fc9f153은 정방향/역방향 48개를 통과했으나 START 전 취소에서 B PWM20 STOP timeout(status 730)을 발견했다. 420은 GPIO LOW를 저장·복원하는 준비 상태로 변경하고 PWM은 START에서만 실행한다. STOP timeout 상태도 후속 stopAll에서 재확인한다. 실패 원본과 48 PASS를 분리 보존하고 수정 source에서 48개 및 준비 취소 6개를 재검증한다. public PwmSequenceFabric start_via_task의 미시작 STOP 동작은 별도 T14 재현 이슈로 남긴다.
+
+
 420 진행 중(2026-09-06T16:05:26Z 사용자 확인): A P1.04↔B P1.14, A P1.06↔B P1.10, 공통 GND. SWD 10 MHz exact beebef8 첫 vector는 `[0,0,1]`로 실패, 양쪽 disarm 완료. 같은 결선 100-cycle 진단에서 4개 입력 상태를 관측했다. 이번 T10/T12·T14 수정 범위는 HIL generator의 AB 비트 배치·PWM 극성·QDEC 이전 idle 초기화이며 R11 public core/SDK는 변경하지 않는다. native 파형/Host·정렬·영향 pair target와 exact-source 48-vector 실기로 재검증하고 실패 원본을 보존한다. 430은 별도 결선 확인까지 대기.
 
 

@@ -15,7 +15,6 @@
 #include <variant.h>
 #include <hal/nrf_gpio.h>
 #include <zephyr/kernel.h>
-#include <zephyr/sys/sys_io.h>
 #include <string.h>
 
 namespace
@@ -52,6 +51,41 @@ namespace
     std::int64_t next_analog_sample_ms = 0;
     bool cs_owned = false;
     std::uint32_t cs_psel = 0U, cs_configuration = 0U, cs_output = 0U;
+    bool qdec_idle_owned = false;
+    std::uint32_t qdec_idle_configuration[2]{}, qdec_idle_output[2]{};
+    constexpr std::uint32_t qdec_idle_pins[2]{NRF_GPIO_PIN_MAP(1, 14), NRF_GPIO_PIN_MAP(1, 10)};
+
+    /** @brief fixture gate 안에서 QDEC 송신 핀을 LOW로 준비하고 원래 상태를 저장합니다. */
+    void prepareQdecIdle()
+    {
+        for (unsigned index = 0U; index < 2U; ++index)
+        {
+            auto pin = qdec_idle_pins[index];
+            auto *const port = nrf_gpio_pin_port_decode(&pin);
+            qdec_idle_configuration[index] = port->PIN_CNF[pin];
+            qdec_idle_output[index] = (port->OUT >> pin) & 1U;
+            nrf_gpio_pin_clear(qdec_idle_pins[index]);
+            nrf_gpio_cfg_output(qdec_idle_pins[index]);
+        }
+        qdec_idle_owned = true;
+    }
+
+    /** @brief PWM STOP 확인 뒤 또는 START 전 취소에서 송신 핀의 원래 상태를 복원합니다. */
+    void restoreQdecIdle()
+    {
+        if (!qdec_idle_owned)
+        {
+            return;
+        }
+        for (unsigned index = 0U; index < 2U; ++index)
+        {
+            auto pin = qdec_idle_pins[index];
+            auto *const port = nrf_gpio_pin_port_decode(&pin);
+            nrf_gpio_pin_write(qdec_idle_pins[index], qdec_idle_output[index]);
+            port->PIN_CNF[pin] = qdec_idle_configuration[index];
+        }
+        qdec_idle_owned = false;
+    }
 
     /** @brief 공유 ADC 시험의 고정 B P1.14 오픈드레인 또는 입력 바이어스를 설정합니다. */
     struct SharedAnalogGpio
@@ -126,7 +160,8 @@ namespace
     {
         shared_source.release();
         bool stopped = true;
-        if (pwm != nullptr && pwm->state() == AnalogFabricState::active)
+        if (pwm != nullptr && (pwm->state() == AnalogFabricState::active ||
+                               pwm->state() == AnalogFabricState::stopping))
         {
             stopped &= pwm->stop(100000U) == AnalogFabricResult::success;
         }
@@ -153,6 +188,7 @@ namespace
         }
         if (stopped)
         {
+            restoreQdecIdle();
             saadc = nullptr;
             pwm = nullptr;
             qdec = nullptr;
@@ -258,13 +294,12 @@ namespace
                 }
             }
             pwm_playbacks = args[2];
-            /** @brief QDEC가 시작되기 전에 핀·DMA를 점유하고 두 출력을 idle LOW로 만듭니다. */
-            ready = pwm != nullptr &&
-                    pwm->configure(configuration) == AnalogFabricResult::success &&
-                    pwm->play({pwm_values, 16U, 0U, 0U}, nullptr,
-                              static_cast<std::uint16_t>(pwm_playbacks), false,
-                              true) == AnalogFabricResult::success &&
-                    pwm->startTaskAddress() != 0U;
+            ready = pwm != nullptr && pwm->configure(configuration) == AnalogFabricResult::success;
+            if (ready)
+            {
+                /** @brief DMA를 시작하지 않고 핀만 LOW로 두므로 준비 취소에도 STOP이 필요 없습니다. */
+                prepareQdecIdle();
+            }
             return ready;
         }
         qdec = streamFabric().qdec(static_cast<std::uint8_t>(args[1]));
@@ -445,12 +480,10 @@ namespace
             }
             break;
         case v04::FixtureFamily::qdec:
-            if (controller && pwm != nullptr && ready && pwm->startTaskAddress() != 0U)
-            {
-                /** @brief gate 내부에서 Fabric이 반환한 준비된 START task만 실행합니다. */
-                sys_write32(1U, pwm->startTaskAddress());
-                result = true;
-            }
+            result = controller && pwm != nullptr && ready && qdec_idle_owned &&
+                     pwm->play({pwm_values, 16U, 0U, 0U}, nullptr,
+                               static_cast<std::uint16_t>(pwm_playbacks),
+                               false) == AnalogFabricResult::success;
             break;
         case v04::FixtureFamily::i2s:
             if (i2s != nullptr)
