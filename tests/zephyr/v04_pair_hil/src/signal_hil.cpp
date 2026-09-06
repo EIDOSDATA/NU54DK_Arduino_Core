@@ -17,6 +17,7 @@
 #include <variant.h>
 #include <hal/nrf_gpio.h>
 #include <zephyr/kernel.h>
+#include <nrf_sys_event.h>
 #include <string.h>
 
 namespace
@@ -74,6 +75,7 @@ namespace
     DppiFabric *pdm_dppi = nullptr;
     bool pdm_clock_owned = false, pdm_data_owned = false, pdm_channel_owned = false;
     bool pdm_edge_connected = false;
+    bool pdm_constlat_owned = false;
     std::uint32_t pwm_playbacks = 1U, analog_buffers = 1U;
     std::uint32_t i2s_buffers = 1U, pdm_buffers = 1U;
     std::uint32_t analog_completed_mask = 0U, i2s_completed_mask = 0U;
@@ -229,6 +231,14 @@ namespace
         }
         pdm_gpiote = nullptr;
         pdm_dppi = nullptr;
+        if (pdm_constlat_owned)
+        {
+            if (nrf_sys_event_release_global_constlat() != 0)
+            {
+                return false;
+            }
+            pdm_constlat_owned = false;
+        }
         return true;
     }
 
@@ -440,6 +450,12 @@ namespace
     /** @brief stereo는 수신 clock의 양 에지로 data를 뒤집어 반대 부호 채널을 만듭니다. */
     bool preparePdmStereo(bool inverted)
     {
+        /** @brief MHz clock 입력의 첫 에지부터 DPPI 지연을 일정하게 유지합니다. */
+        if (nrf_sys_event_request_global_constlat() != 0)
+        {
+            return false;
+        }
+        pdm_constlat_owned = true;
         pdm_gpiote = eventFabric().gpiote(20U);
         pdm_dppi = eventFabric().dppi(20U);
         if (pdm_gpiote == nullptr || pdm_dppi == nullptr)
