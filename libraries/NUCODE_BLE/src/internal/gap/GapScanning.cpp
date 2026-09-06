@@ -283,7 +283,8 @@ namespace nucode::ble
         }
         k_msgq_purge(&scanResultQueue());
         const struct bt_le_scan_param parameters = {
-            .type = active ? BT_LE_SCAN_TYPE_ACTIVE : BT_LE_SCAN_TYPE_PASSIVE,
+            .type = static_cast<std::uint8_t>(active ? BT_LE_SCAN_TYPE_ACTIVE
+                                                     : BT_LE_SCAN_TYPE_PASSIVE),
             .options = BT_LE_SCAN_OPT_FILTER_DUPLICATE,
             .interval = BT_GAP_SCAN_FAST_INTERVAL,
             .window = BT_GAP_SCAN_FAST_WINDOW,

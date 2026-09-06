@@ -1,20 +1,21 @@
 """! @brief 독립 translation unit의 실제 Analog/Stream data 경계를 검증합니다. """
 from pathlib import Path
-import shutil
 import subprocess
 import tempfile
 import unittest
+
+from host_compiler import compiler_command
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
 class FabricDataTests(unittest.TestCase):
     def test_production_data_and_restarts(self):
-        compiler = shutil.which('g++')
+        compiler = compiler_command()
         self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory(prefix='nu54-r11-') as folder:
             binary = Path(folder) / 'data.exe'
-            args = [compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
+            args = [*compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
                     '-DCONFIG_SERIAL=0', '-DTEST_UART_STATUS=0']
             for directory in ['tests/host/fabric_driver_stubs', 'tests/host/serial_driver_stubs',
                               'tests/host/serial_fabric_stubs', 'cores/arduino']:

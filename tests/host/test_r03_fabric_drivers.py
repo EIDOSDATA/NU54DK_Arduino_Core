@@ -1,9 +1,10 @@
 """! @brief 실제 production Fabric과 fake nrfx의 thread/STOP 경계를 검증합니다. """
 from pathlib import Path
-import shutil
 import subprocess
 import tempfile
 import unittest
+
+from host_compiler import compiler_command
 ROOT=Path(__file__).resolve().parents[2]
 
 
@@ -19,11 +20,11 @@ class FabricDriverTests(unittest.TestCase):
                                  'i2s_commit_failure','pdm_commit_failure','pdm_buffer_failure'])
 
     def run_driver(self,driver,scenarios):
-        compiler=shutil.which('g++')
+        compiler=compiler_command()
         self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory(prefix='nu54-r03-') as folder:
             binary=Path(folder)/(driver+'.exe')
-            args=[compiler,'-std=c++17','-Wall','-Wextra','-Werror','-pthread',
+            args=[*compiler,'-std=c++17','-Wall','-Wextra','-Werror','-pthread',
                   '-DCONFIG_SERIAL=0','-DTEST_UART_STATUS=0']
             for directory in ['tests/host/fabric_driver_stubs','tests/host/serial_driver_stubs',
                               'tests/host/serial_fabric_stubs','cores/arduino']:

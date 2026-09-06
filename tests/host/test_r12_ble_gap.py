@@ -1,19 +1,20 @@
 """! @brief 실제 GAP/Stack을 fake Bluetooth와 링크하여 lifecycle을 검증합니다. """
 from pathlib import Path
-import shutil
 import subprocess
 import tempfile
 import unittest
+
+from host_compiler import compiler_command
 ROOT = Path(__file__).resolve().parents[2]
 
 
 class BleGapTests(unittest.TestCase):
     def test_production_gap_lifecycle(self):
-        compiler = shutil.which('g++')
+        compiler = compiler_command()
         self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory(prefix='nu54-r12-gap-') as folder:
             binary = Path(folder) / 'gap.exe'
-            command = [compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
+            command = [*compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
                        '-DCONFIG_BT_DEVICE_NAME_MAX=32', '-DCONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE=24',
                        '-DCONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE=8', '-DCONFIG_BT_USER_PHY_UPDATE=1',
                        '-DCONFIG_BT_SETTINGS=1', '-DCONFIG_BT_SMP=1']

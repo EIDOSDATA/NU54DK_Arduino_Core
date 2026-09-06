@@ -1,11 +1,14 @@
 """! @brief 실제 Core CMake의 personality source 소속과 단일 등록을 검증합니다. """
 
 from pathlib import Path
+import os
+import shlex
 import shutil
 import subprocess
 import tempfile
 import unittest
 
+from host_compiler import compiler_command
 
 ROOT = Path(__file__).resolve().parents[2]
 PERSONALITIES = ("UARTE", "SPIM", "SPIS", "TWIM", "TWIS")
@@ -17,6 +20,8 @@ class CoreSourceMembershipTests(unittest.TestCase):
     def test_personality_sources_belong_only_to_named_core(self):
         cmake = shutil.which("cmake")
         self.assertIsNotNone(cmake)
+        compiler = compiler_command()
+        compiler_flags = subprocess.list2cmdline(compiler[1:]) if os.name == "nt" else shlex.join(compiler[1:])
         matrix = [(), *[(name,) for name in PERSONALITIES], PERSONALITIES]
         with tempfile.TemporaryDirectory(prefix="nu54-r01-cmake-") as temporary:
             root = Path(temporary)
@@ -54,6 +59,7 @@ file(WRITE "${CMAKE_BINARY_DIR}/inherited.txt" "${inherited_sources}")
                 with self.subTest(enabled=enabled):
                     output = root / f"build-{index}"
                     command = [cmake, "-S", str(root), "-B", str(output), "-G", "Ninja"]
+                    command += [f"-DCMAKE_CXX_COMPILER={compiler[0]}", f"-DCMAKE_CXX_FLAGS={compiler_flags}"]
                     command += [f"-DCONFIG_NUCODE_ARDUINO_SERIAL_FABRIC_{name}={'ON' if name in enabled else 'OFF'}" for name in PERSONALITIES]
                     result = subprocess.run(command, capture_output=True, text=True, timeout=90)
                     self.assertEqual(result.returncode, 0, result.stdout + result.stderr)

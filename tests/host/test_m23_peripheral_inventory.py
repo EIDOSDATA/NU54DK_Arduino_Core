@@ -12,6 +12,8 @@ import subprocess
 import tempfile
 import unittest
 
+from host_compiler import compiler_command
+
 
 REPOSITORY = Path(__file__).resolve().parents[2]
 SCRIPT = REPOSITORY / "tools" / "peripheral" / "verify_m23_inventory.py"
@@ -86,7 +88,7 @@ class M23PeripheralInventoryTests(unittest.TestCase):
                 MODULE.validate_ncs_dts(self.manifest["identity"], temporary_root)
 
     def test_public_inventory_api_compiles_links_and_runs(self) -> None:
-        compiler = self._find_cxx_compiler()
+        compiler = compiler_command()
         build_root = REPOSITORY / "build"
         build_root.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(dir=build_root) as temporary:
@@ -170,7 +172,7 @@ int main()
             )
             executable = root / ("m23_inventory.exe" if os.name == "nt" else "m23_inventory")
             command = [
-                compiler,
+                *compiler,
                 "-std=c++17",
                 f"-I{REPOSITORY / 'cores' / 'arduino'}",
                 os.fspath(harness),
@@ -208,7 +210,7 @@ int main()
         self.assertIn("resourcesConflict", implementation)
 
     def test_common_ownership_dma_and_block_semantics_run_on_host(self) -> None:
-        compiler = self._find_cxx_compiler()
+        compiler = compiler_command()
         build_root = REPOSITORY / "build"
         build_root.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(dir=build_root) as temporary:
@@ -339,7 +341,7 @@ int main()
             )
             executable = root / ("m23_ownership.exe" if os.name == "nt" else "m23_ownership")
             command = [
-                compiler,
+                *compiler,
                 "-std=c++17",
                 "-DCONFIG_ZTEST=1",
                 "-DCONFIG_NUCODE_ARDUINO_IO_RESOURCE_SLOTS=48",
@@ -369,12 +371,6 @@ int main()
                 raise
             self.assertEqual(executed.returncode, 0, msg=executed.stdout + executed.stderr)
 
-    @staticmethod
-    def _find_cxx_compiler() -> str:
-        for candidate in (os.environ.get("CXX"), "g++", "clang++", "c++"):
-            if candidate and (resolved := shutil.which(candidate)):
-                return resolved
-        raise AssertionError("M23 host contract needs a C++17 compiler")
 
 
 if __name__ == "__main__":

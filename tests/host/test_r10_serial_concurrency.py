@@ -1,9 +1,10 @@
 """! @brief 실제 Serial lifecycle·resource manager의 STOP 중 교차 호출을 검증합니다. """
 from pathlib import Path
-import shutil
 import subprocess
 import tempfile
 import unittest
+
+from host_compiler import compiler_command
 
 ROOT = Path(__file__).resolve().parents[2]
 SCENARIOS = ['progress', 'same_handle', 'same_block', 'timeout', 'request_error', 'driver_error']
@@ -11,11 +12,11 @@ SCENARIOS = ['progress', 'same_handle', 'same_block', 'timeout', 'request_error'
 
 class SerialConcurrencyTests(unittest.TestCase):
     def test_production_stop_reservation(self):
-        compiler = shutil.which('g++')
+        compiler = compiler_command()
         self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory(prefix='nu54-r10-') as directory:
             binary = Path(directory) / 'serial.exe'
-            command = [compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
+            command = [*compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
                        '-DCONFIG_NUCODE_ARDUINO_IO_RESOURCE_SLOTS=48']
             for include in ['tests/host/serial_driver_stubs', 'tests/host/serial_fabric_stubs',
                             'cores/arduino', 'variants/nu54dk']:

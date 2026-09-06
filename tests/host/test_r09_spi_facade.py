@@ -1,9 +1,10 @@
 """! @brief 실제 Arduino SPI 구현의 driver·transaction 경계를 실행합니다. """
 from pathlib import Path
-import shutil
 import subprocess
 import tempfile
 import unittest
+
+from host_compiler import compiler_command
 
 ROOT = Path(__file__).resolve().parents[2]
 SCENARIOS = ['lifecycle', 'route_fail', 'end_retry', 'settings', 'modes', 'thread',
@@ -12,11 +13,13 @@ SCENARIOS = ['lifecycle', 'route_fail', 'end_retry', 'settings', 'modes', 'threa
 
 class SpiFacadeTests(unittest.TestCase):
     def test_production_spi_facade(self):
-        compiler = shutil.which('g++')
+        compiler = compiler_command()
         self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory(prefix='nu54-r09-') as directory:
             binary = Path(directory) / 'spi.exe'
-            command = [compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread']
+            # Arduino의 weak main 선언은 모든 번역 단위에서 Host entrypoint와 구분합니다.
+            command = [*compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
+                       '-Dmain=arduino_core_entry']
             for include in ['tests/host/spi_facade_stubs', 'tests/host/route_stubs',
                             'third_party/ArduinoCore-API', 'cores/arduino', 'variants/nu54dk']:
                 command.extend(['-I', str(ROOT / include)])

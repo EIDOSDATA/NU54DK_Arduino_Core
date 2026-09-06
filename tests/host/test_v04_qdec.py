@@ -1,6 +1,5 @@
 """Host-only QDEC expected signal and sampling contract tests."""
 from pathlib import Path
-import shutil
 import re
 import subprocess
 import sys
@@ -11,6 +10,8 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tests/hil/nu54dk"))
 import v04_qdec as qdec
 from v04_protocol import ProtocolError
+
+from host_compiler import compiler_command
 
 
 class QdecTests(unittest.TestCase):
@@ -62,7 +63,7 @@ class QdecTests(unittest.TestCase):
             self.assertIn("<NUCODE_PIN_CAP_ANALOG>", node)
 
     def test_native_period_and_led_boundaries(self):
-        compiler = shutil.which("g++")
+        compiler = compiler_command()
         self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory() as temporary:
             output = Path(temporary) / "qdec.exe"
@@ -86,7 +87,7 @@ int main()
     return 0;
 }
 '''
-            result = subprocess.run([compiler, "-std=c++17", "-Wall", "-Wextra", "-Werror",
+            result = subprocess.run([*compiler, "-std=c++17", "-Wall", "-Wextra", "-Werror",
                                      "-I", str(ROOT / "cores/arduino"), "-x", "c++", "-", "-o", str(output)],
                                     input=source, capture_output=True, text=True, timeout=60)
             self.assertEqual(result.returncode, 0, result.stderr)

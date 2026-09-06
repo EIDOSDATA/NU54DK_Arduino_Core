@@ -13,6 +13,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from host_compiler import compiler_command
+
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 VERIFIER_PATH = REPOSITORY_ROOT / "tools" / "variant" / "verify_nu54dk_pinmap.py"
@@ -139,9 +141,9 @@ class M14VariantContractTests(unittest.TestCase):
                 VERIFIER.verify_pinmap(temporary_root, Path("unused"))
 
     def test_public_constants_compile_without_changing_legacy_values(self) -> None:
-        cxx = self._find_compiler(("g++", "clang++", "c++"))
+        cxx = compiler_command()
         language_probe = subprocess.run(
-            [cxx, "-std=c++17", "-x", "c++", "-fsyntax-only", "-"],
+            [*cxx, "-std=c++17", "-x", "c++", "-fsyntax-only", "-"],
             input="inline constexpr int value = 1;\n",
             capture_output=True,
             text=True,
@@ -180,7 +182,7 @@ int main() { return 0; }
             )
             result = subprocess.run(
                 [
-                    cxx,
+                    *cxx,
                     "-std=c++17",
                     "-fsyntax-only",
                     f"-I{REPOSITORY_ROOT / 'variants' / 'nu54dk'}",
@@ -211,13 +213,6 @@ int main() { return 0; }
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(REPOSITORY_ROOT / relative, target)
 
-    @staticmethod
-    def _find_compiler(candidates: tuple[str, ...]) -> str:
-        for candidate in candidates:
-            compiler = shutil.which(candidate)
-            if compiler:
-                return compiler
-        raise AssertionError("M14 Variant header 계약 시험용 C++ compiler가 없습니다.")
 
 
 if __name__ == "__main__":

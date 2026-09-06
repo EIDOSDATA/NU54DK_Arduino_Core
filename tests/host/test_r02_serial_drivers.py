@@ -1,21 +1,22 @@
 """! @brief production Serial adapter와 수명주기를 fake nrfx 및 실제 thread로 검증합니다. """
 from pathlib import Path
-import shutil
 import subprocess
 import tempfile
 import unittest
+
+from host_compiler import compiler_command
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
 class SerialDriverTests(unittest.TestCase):
     def test_production_sync_and_lifetime(self):
-        compiler = shutil.which('g++')
+        compiler = compiler_command()
         self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory(prefix='nu54-r02-') as temporary:
             for personality in ('SPIM', 'TWIM'):
                 binary = Path(temporary) / (personality + '.exe')
-                command = [compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
+                command = [*compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
                            '-DTEST_' + personality, '-I', str(ROOT/'tests/host/serial_driver_stubs'),
                            '-I', str(ROOT/'tests/host/serial_fabric_stubs'), '-I', str(ROOT/'cores/arduino'),
                            '-I', str(ROOT/'variants/nu54dk'), str(ROOT/'cores/arduino/SerialFabric.cpp'), str(ROOT / 'cores/arduino/internal/serial/SerialFabricRegistry.cpp'),

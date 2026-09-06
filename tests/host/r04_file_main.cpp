@@ -20,7 +20,9 @@ int main(int argc, char **argv)
         assert(source.write(bytes, sizeof(bytes)) == sizeof(bytes));
         File copy(source), assigned;
         assigned = copy;
-        assigned = assigned;
+        /** @brief 동일 객체의 복사 대입을 별칭으로 실행하여 참조 수 보존을 검사합니다. */
+        File &copy_self = assigned;
+        assigned = copy_self;
         assigned = copy;
         assert(fileSlots()[0].references == 3);
         File moved(std::move(copy));

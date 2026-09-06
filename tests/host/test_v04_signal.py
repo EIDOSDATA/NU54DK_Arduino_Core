@@ -1,6 +1,5 @@
 """합성 신호 runner의 vector, oracle, 실행 안전 gate를 검사합니다."""
 from pathlib import Path
-import shutil
 import subprocess
 import tempfile
 import sys
@@ -12,6 +11,8 @@ sys.path.insert(0, str(ROOT / "tests/hil/nu54dk"))
 import v04_signal as signal
 import v04_signal_run as runner
 from v04_protocol import ProtocolError
+
+from host_compiler import compiler_command
 
 
 class SignalTests(unittest.TestCase):
@@ -122,11 +123,11 @@ class SignalTests(unittest.TestCase):
 
     def test_shared_source_never_drives_high_and_releases_on_abort(self):
         """! @brief 실제 firmware helper를 컴파일하여 잘못된 인자·중복 시작·해제를 검사합니다. """
-        compiler = shutil.which("g++")
+        compiler = compiler_command()
         self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory() as temporary:
             executable = Path(temporary) / "shared.exe"
-            result = subprocess.run([compiler, "-std=c++17", "-Wall", "-Wextra", "-Werror",
+            result = subprocess.run([*compiler, "-std=c++17", "-Wall", "-Wextra", "-Werror",
                 "-I", str(ROOT), str(ROOT / "tests/host/v04_shared_analog_main.cpp"),
                 "-o", str(executable)], capture_output=True, text=True, timeout=60)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)

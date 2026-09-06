@@ -1,28 +1,29 @@
 """! @brief 실제 GAP/Security/Stack을 fake Bluetooth와 링크하여 lifecycle을 검증합니다. """
 from pathlib import Path
-import shutil
 import subprocess
 import tempfile
 import unittest
+
+from host_compiler import compiler_command
 ROOT = Path(__file__).resolve().parents[2]
 
 
 class BleSecurityTests(unittest.TestCase):
     def test_production_security_lifecycle(self):
-        compiler = shutil.which('g++')
+        compiler = compiler_command()
         self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory(prefix='nu54-r12-security-') as folder:
             binary = Path(folder) / 'security.exe'
             c_object = Path(folder) / 'hids_backend.o'
-            c_compiler = shutil.which('gcc')
+            c_compiler = compiler_command('c')
             self.assertIsNotNone(c_compiler)
-            c_result = subprocess.run([c_compiler, '-std=c11', '-Wall', '-Wextra', '-Werror',
+            c_result = subprocess.run([*c_compiler, '-std=c11', '-Wall', '-Wextra', '-Werror',
                 '-I', str(ROOT / 'tests/host/ble_stubs'),
                 '-I', str(ROOT / 'libraries/NUCODE_BLE_Security/src'),
                 '-c', str(ROOT / 'libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_HidsBackend.c'),
                 '-o', str(c_object)], capture_output=True, timeout=60)
             self.assertEqual(c_result.returncode, 0, c_result.stderr.decode(errors='replace'))
-            command = [compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
+            command = [*compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
                        '-DCONFIG_BT_DEVICE_NAME_MAX=32', '-DCONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE=24',
                        '-DCONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE=8', '-DCONFIG_BT_USER_PHY_UPDATE=1',
                        '-DCONFIG_BT_MAX_PAIRED=4', '-DCONFIG_BT_SETTINGS=1', '-DCONFIG_BT_SMP=1']
