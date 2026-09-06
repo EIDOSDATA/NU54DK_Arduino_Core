@@ -39,6 +39,27 @@ namespace
     alignas(4) std::uint32_t i2s_tx[4][stream_capacity]{};
     v04::I2sFiniteTransfer i2s_transfer;
     bool i2s_tail_complete = false;
+    /** @brief 짧은 DMA 실패의 시작·요청·반환·정지 순서를 보존하는 읽기 전용 HIL 추적입니다. */
+    volatile std::uint32_t i2s_trace[32][6]{};
+    volatile std::uint32_t i2s_trace_count = 0U;
+    std::uint32_t i2s_start_cycles = 0U;
+
+    /** @brief 시작 기준 us와 단계·인자 네 개를 저장하며 가득 차면 앞선 원본을 보존합니다. */
+    void traceI2s(std::uint32_t phase, std::uint32_t a = 0U, std::uint32_t b = 0U,
+                  std::uint32_t c = 0U, std::uint32_t d = 0U)
+    {
+        const auto index = i2s_trace_count;
+        if (index < 32U)
+        {
+            i2s_trace[index][0] = k_cyc_to_us_floor32(k_cycle_get_32() - i2s_start_cycles);
+            i2s_trace[index][1] = phase;
+            i2s_trace[index][2] = a;
+            i2s_trace[index][3] = b;
+            i2s_trace[index][4] = c;
+            i2s_trace[index][5] = d;
+            i2s_trace_count = index + 1U;
+        }
+    }
     alignas(4) std::uint8_t pdm_source[pdm_source_capacity]{};
 
     SaadcFabric *saadc = nullptr;
@@ -334,6 +355,7 @@ namespace
         requested = args[3];
         i2s_buffers = args[4];
         i2s_transfer.reset(i2s_buffers);
+        i2s_trace_count = 0U;
         i2s_tail_complete = false;
         memset(i2s_rx[2], 0xcc, sizeof(i2s_rx[2]));
         memset(i2s_rx[3], 0xcc, sizeof(i2s_rx[3]));
@@ -497,8 +519,11 @@ namespace
         case v04::FixtureFamily::i2s:
             if (i2s != nullptr)
             {
+                i2s_start_cycles = k_cycle_get_32();
+                traceI2s(100U);
                 result =
                     i2s->start({i2s_rx[0], i2s_tx[0], requested}) == StreamFabricResult::success;
+                traceI2s(101U, result);
             }
             break;
         case v04::FixtureFamily::pdm:
@@ -603,9 +628,15 @@ void serviceSignal()
     }
     if (i2s != nullptr)
     {
+        if (started && i2s_trace_count == 2U)
+        {
+            traceI2s(200U);
+        }
         I2sEvent event{};
         while (i2s->takeEvent(event))
         {
+            traceI2s(400U, static_cast<std::uint32_t>(event.type), i2s_transfer.nextSlot(), amount,
+                     error);
             if (event.type == I2sEventType::buffers_complete)
             {
                 const unsigned slot = event.released.receive == i2s_rx[0]   ? 0U
@@ -631,8 +662,13 @@ void serviceSignal()
             else if (event.type == I2sEventType::buffers_needed && !i2s_tail_complete)
             {
                 const auto slot = i2s_transfer.nextSlot();
-                if (slot >= 4U || i2s->queueBuffers({i2s_rx[slot], i2s_tx[slot], requested}) !=
-                                      StreamFabricResult::success)
+                const auto before = k_cycle_get_32();
+                const auto queued = slot < 4U
+                                        ? i2s->queueBuffers({i2s_rx[slot], i2s_tx[slot], requested})
+                                        : StreamFabricResult::invalid_argument;
+                traceI2s(300U, slot, static_cast<std::uint32_t>(queued),
+                         k_cyc_to_us_floor32(k_cycle_get_32() - before));
+                if (queued != StreamFabricResult::success)
                 {
                     error |= 128U;
                 }
@@ -650,7 +686,10 @@ void serviceSignal()
         if (error == 0U && i2s_transfer.complete() && i2s_tail_complete)
         {
             /** @brief tail 반환 뒤 보호 buffer가 활성인 동안 정지하여 마지막 sample을 보존합니다. */
-            if (i2s->stop(100000U) == StreamFabricResult::success)
+            traceI2s(500U);
+            const auto stopped = i2s->stop(100000U);
+            traceI2s(501U, static_cast<std::uint32_t>(stopped));
+            if (stopped == StreamFabricResult::success)
             {
                 i2s = nullptr;
                 complete = true;

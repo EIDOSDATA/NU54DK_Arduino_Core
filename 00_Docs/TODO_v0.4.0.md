@@ -1,5 +1,7 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
+430 재개 중: 사용자가 2026-09-06T18:35:58Z 결선 유지를 재확인했다. T12/T14에서 짧은 I2S buffer 오류 위치를 구분하는 HIL RAM trace를 추가하고 새 clean source pair·Host 검증 뒤 430을 SWD 10 MHz로 재실행한다. 440은 미실행 유지. 진단 source와 최종 교정 source를 구분해 문서·commit/push한다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID / 개정 | TODO-V04-001 / 3.15 |
