@@ -66,7 +66,8 @@ Windows 경로로 통일한 직전 406의 고정 Host 환경에서도 동일하�
 최초 [signal log](evidence/t12-fixture407-preparation-076685a/signal-host-initial.log)와 [lifecycle log](evidence/t12-fixture407-preparation-076685a/lifecycle-host-initial.log),
 고정 환경의 [signal 재확인](evidence/t12-fixture407-preparation-076685a/signal-host.log)을 보존했다. 이는 Host 환경 차단이며
 실기 실패나 보드 결함이 아니다. 보안 정책·allowlist·파일 차단 속성을 변경하거나 컴파일러를 위장하지 않았다.
-승인된 별도 Host 환경이 있는지 사용자에게 질문했고 답변 대기 중이다.
+승인된 별도 Host 환경이 있는지 질문했으나 사용자는 모른다고 답하며 기존 정상 동작 여부를 물었다.
+다른 환경 경로를 반복 요청하지 않고 기존 환경의 성공·차단 근거를 재확인했다.
 
 ## 원본 보존과 재개
 
@@ -96,3 +97,18 @@ Windows 경로로 통일한 직전 406의 고정 Host 환경에서도 동일하�
 문서 등록 뒤 최종 링크 검사와 staged 원본 36개 gzip/hash 대조를 수행한 후 로컬 checkpoint로 commit한다.
 필수 Host 검증은 계속 BLOCKED이며 문서 검사를 Host 또는 물리 PASS로 사용하지 않는다.
 최종 Git 상태·실행 프로세스 종료·board/SDK 불변은 저장소 밖 인계 보고서에 남긴다.
+
+## 기존 환경의 정상 동작 재확인
+
+406의 고정 Host 실행 script와 성공 log에서 같은 WinLibs g++.exe 경로로 649개 gate가 통과했고,
+407에서 막힌 shared helper·lifecycle C++ 검사도 당시에는 성공했음을 확인했다.
+이번 최초 관측 차단은 2026-09-06T13:52:28Z(한국 시각 22:52)의 Code Integrity 3077이다.
+현재 compiler hash는 최초 차단 진단과 같고 파일 최종 수정일은 2026-07-30이다. 다만 406 시점의
+compiler 개별 파일 hash는 기록하지 않았으므로 두 시점의 binary 동일성을 hash로 증명했다고 하지 않는다.
+
+현재 파일은 Authenticode NotSigned이며 SAC registry 값은 1(On)이다. CiTool의 읽기 전용 정책 목록
+조회는 접근 거부되어 중단했고 권한 상승이나 다른 경로를 통한 정책 목록 조회를 시도하지 않았다.
+[추가 진단](evidence/t12-fixture407-host-diagnostic-20260906.json)에 사실과 한계를 구분했다.
+[Microsoft 문서](https://learn.microsoft.com/en-us/windows/apps/develop/smart-app-control/test-your-app-with-smart-app-control)는
+앱 평판이 시간에 따라 달라질 수 있다고 설명한다. 이번 판정 변경의 실제 원인이 평판 갱신인지 다른 조건인지는
+현재 근거로 확정하지 못했다. 결선 변경이나 407 C++ 코드 실행 실패로 추정하지 않는다. 407 실기는 계속 미실행이다.
