@@ -316,3 +316,5 @@ git submodule status
 작성자는 **NUCODE의 Quantum**입니다. NUCODE가 작성한 코드는 [MIT License](LICENSE)를
 적용합니다. 외부 구성요소에는 각 원 라이선스와 고지가 적용되며 자세한 내용은
 [third-party notices](./third_party/THIRD_PARTY_NOTICES.md)를 확인하십시오.
+
+2026-09-06 후속: USB로만 연결된 두 보드의 R13 이후 온보드 904 PASS와 파일 정리는 [65번 기록](<./00_Docs/04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)에 보존한다. 보드 간 결선은 없으며 DISABLE_UART 상태 확인과 외부 current-source T11 Fixture 101 결선은 남아 있다.

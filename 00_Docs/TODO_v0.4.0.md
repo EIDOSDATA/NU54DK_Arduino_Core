@@ -5,10 +5,10 @@
 | 문서 ID / 개정 | TODO-V04-001 / 2.2 |
 | 상태 | 활성 TODO — R00~R13·최종 software gate 완료; current-source T11·T12~T15 및 후속 공개 단계 대기 |
 | 작성·갱신일 | 2026-09-06 |
-| 작성 직전 기준 commit | `cf966a8ed614713235cd8178bd4b1eb8ab120d36` — 최종 구현과 전체 software gate source |
+| 작성 직전 기준 commit | `c94298f925410fbef78300d8af4d7a1b3fef4aaf` — R13 종료와 이번 온보드 실기의 exact source |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
 | 다음 착수 항목 | **current-source T11 — Fixture 101 전원 OFF 결선 확인 대기** |
-| 이번 요청의 실행 범위 | 2026-09-06 사용자 지시: R00~R13을 번호 순서대로 구현·시험·문서화하고 전체 software/target/examples/style 검증과 main commit/push까지 자동 진행한다. current-source T11 직전에 멈추며 flash·HIL·결선 변경·공개는 수행하지 않는다 |
+| 이번 요청의 실행 범위 | 2026-09-06 후속 지시: USB로 연결되고 보드 간 선이 없는 두 보드에서 가능한 검증, 불필요 파일 정리, 문서 갱신·commit·main push. 기존 R00~R13 완료 뒤 T09 무배선 회귀를 수행했으며 외부 current-source T11은 별도 결선 확인 전 NOT RUN |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
 마일스톤의 제품 상태는 [로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>), 실제 PASS/FAIL은
@@ -51,21 +51,21 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | R00~R13 리팩토링·최종 software gate·main commit/push. 과거 exact e2f045c의 Fixture 301 총 1,990 result PASS는 역사적 체크포인트로만 보존하며 current-source T11은 NOT RUN |
-| 진행 중인 T 항목 | R00~R13 구현·최종 software gate 완료. [64번 기록](<./04_검증 기록/64_R13_도구_정책_build_구조.md>)의 clean exact cf966a8 전체 60 target·설치 예제 29개·Host/contract/inventory/docs/package/style와 QEMU를 통과했다. current-source T11 NOT RUN |
-| 다음 구체적 행동 | 양쪽 보드 USB 전원을 끄고 마지막 알려진 Fixture 301 신호선을 제거한 뒤 Fixture 101 UART 4선+공통 GND를 연결한다. DISABLE_UART 분리·DISABLE_SWD 연결, 동일 I/O 전압·단락 없음과 사용자 결선 완료 확인이 선행조건이다. 확인 전 flash/HIL 금지 |
-| 다음 작업에 필요한 사용자 행동 | Fixture 101 전원 OFF 결선과 스위치 상태를 확인하고 결선 완료를 알려준다. 이번 R00~R13 무인 작업은 여기서 종료 |
-| 외부 결선 상태 | 직접 관측하지 않음. 마지막 알려진 상태는 Fixture 301 SDA·SCL·GND, 외부 저항·전원 rail 없음, DISABLE_UART 분리·DISABLE_SWD 연결이며 현재도 같다고 가정하지 않는다 |
+| 이번에 끝낸 일 | R00~R13·전체 software gate 뒤 exact c94298f 두 보드 무배선 온보드 904 PASS와 로컬 중간 파일 정리. [65번 기록](<./04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)에 실제 결과·보존 파일·정리 manifest 등록 |
+| 진행 중인 T 항목 | T09 무배선 회귀 완료. PMIC read-only·timer·내부 ADC·PWM/SAADC 수명주기만 실제 PASS. current-source T11, 외부 T12/T13 및 RC·공개는 대기 |
+| 다음 구체적 행동 | DISABLE_UART의 현재 연결/분리 상태 확인. USB-UART/BLE는 DAP UART 연결 상태가 필요하다. 외부 T11 전환 때는 양쪽 전원을 끄고 Fixture 101을 연결한 뒤 DAP UART 분리·SWD 연결·동일 I/O 전압·단락 없음을 확인한다 |
+| 다음 작업에 필요한 사용자 행동 | 현재 DISABLE_UART 상태를 알려준다. 외부 current-source T11을 진행할 때는 Fixture 101 전원 OFF 결선을 별도로 완료·확인한다 |
+| 외부 결선 상태 | 2026-09-06 사용자 확인: 두 보드 각각 USB 연결, 보드 간 결선 없음. CMSIS-DAP 2개와 COM5/6·COM7/8, 양쪽 SWD CPUID·runtime identity 관측. DISABLE_UART 위치는 미확인. 과거 Fixture 301 선이 남았다고 가정하지 않음 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 마지막 정식 외부 HIL source | `e2f045c1b4272d986d17456c5af051fe8af74f19` — Fixture 301 두 보드 exact role image TWI PASS |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; T09 무배선 PASS만 추가됐으며 외부 결선·RC·최종 공개 승인 없음 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | 최종 cf966a8 전체 software gate 종료: 60 target build-only, QEMU 3개 실제 실행, 설치 예제 29개 configure/live SHA PASS. 499fde3의 16개 smoke baseline과 cf966a8 M7 전체·M8 compile 2개 영향 회귀를 구분해 보존. current-source T11 flash/HIL 없음 |
-| 로컬 임시 build·evidence | R00~R13의 C:/r00~C:/r13*와 작업 work 보존. 최신 C:/r13u 전체 target, C:/r13v 설치 29개, C:/r13w M7/M8, C:/r13z QEMU와 종료 HEAD pair C:/r13h. 499fde3의 C:/r13f·r13i·r13s 최초 smoke 실패·r13t 재개 및 QEMU r13q NOT RUN/r13q2 PASS도 보존. work/qemu portable, R06 별도 index·참조 없는 snapshot commit이 남아 있으며 임시 branch/worktree 없음. 최신 35개 configure/live 원본은 cache 정리 전에 보존 |
+| 이 TODO 작성 작업의 실행 중 시험 | T09 무배선 904건과 종료 SWD identity 확인 완료. 실행 중 HIL 없음. 두 보드에는 exact c94298f DUT/peer image가 남아 있음. 외부 fixture·USB-UART·BLE는 이번에 미실행 |
+| 로컬 임시 build·evidence | 15개 과거 root의 object/archive 중간 파일 55,537개 제거, 일회성 script 50개는 work/archive/r00-r13-authoring-scripts.zip으로 hash 검증 후 보관. 2,911개 ELF/HEX/설정/log 등은 hash 불변. C:/r13h와 설치본·raw evidence·QEMU 보존; 상세는 65번 기록 |
 | 최종 정렬 gate | clang-format 22.1.8, 직접 관리 C/C++/ino 356개 dry-run PASS. 한국어 Doxygen·BSD/Allman·4칸·중괄호 필수. SDK·board·third-party·공개 자산을 정렬하지 않았으며 물리 PASS로 승격하지 않음 |
 | CI 확인 | 최종 source의 GitHub Actions는 미확인. 현재 GitHub CLI 인증에 의존하지 않고 로컬 canonical 전체 software gate를 실행했다. 이전 Actions success는 이전 source의 역사 증거로만 유지 |
-| 문서 작업 검증 | Markdown 173개 UTF-8·내부 링크, contract 45/45, inventory·생성 drift, package 20/20, Host 639 PASS·M13 조건부 1 SKIP와 별도 실제 설치 M13 11/11, 전체 target 60개·설치 예제 29개·QEMU 3개 PASS. readiness blocker 8개 유지 |
-| 최종 HIL 입력 찾기 | 전체 software gate는 exact cf966a8. 종료 문서 commit의 HEAD를 기록한 DUT/peer는 C:/r13h이며, 작업 outputs/final-report.md·artifact-index.json과 work/r13/r13h-artifact-index.json에서 Core/board/HEX를 확인한다. 재개 시 현재 HEAD와 source·artifact hash를 실제 대조하고 결선 확인 전 flash/HIL 금지 |
+| 문서 작업 검증 | 이번 후속: Markdown 174개 UTF-8·내부 링크, contract 45/45, inventory·생성 drift, style 356개 PASS. 제품 source는 불변. R13의 package 20/20·Host 639 PASS/조건부 1 SKIP·별도 M13 11/11·전체 target 60·설치 예제 29·QEMU 3 PASS는 64번의 exact source 근거로 유지. readiness blocker 8개 유지 |
+| 최종 HIL 입력 찾기 | C:/r13h DUT/peer는 exact c94298f이며 이번 온보드 904 PASS 입력이다. work/usb-followup 및 65번 evidence에서 역할·HEX·runtime identity 확인. 다음 checkout HEAD가 다르면 source 불변성을 대조하고 exact revision image를 새로 build한 뒤 외부 결선 확인 후 실행 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드
@@ -164,6 +164,7 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
   - 증거: `v04_fixtures.json`, HIL README, fail-closed confirmation template와 Host catalog/조건 검사 PASS. 묶음마다 T10 확인 반복.
 
 - [x] **T09 — Host 검사·시험 펌웨어 빌드·무배선 추가 시험**
+  - R13 이후 회귀: exact c94298f의 두 보드에서 온보드 904 PASS. [65번 기록](<./04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)에 기존 T09와 구분해 등록. 외부 current-source T11 NOT RUN.
   - 상태·선행: 완료 / clean `696defb`와 exact board gitlink에서 두 보드 역할 image와 primitives를 재검증. 외부 실행은 T10 전 금지.
   - 할 일: Host/계약/문서 검사와 필요한 target build·CI를 실행하고 온보드 UART·I2C·복구 등 가능한 추가 기능을 시험한다.
   - 완료 기준: 새 source의 image·runner·증거가 결합되고 무배선 가능 항목의 기대 결과가 통과한다. 외부 경로는 build-only로 명확히 남긴다.

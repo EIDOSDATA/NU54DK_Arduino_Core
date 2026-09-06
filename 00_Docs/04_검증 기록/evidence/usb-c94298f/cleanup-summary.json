@@ -1,0 +1,101 @@
+{
+  "authoring_archive": {
+    "sha256": "de874afa1c74e6683a308b9f2243f276f7e11dc1fd90290faf4e9986e3ba2e08",
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\archive\\r00-r13-authoring-scripts.zip"
+  },
+  "preserved_artifact_count": 2911,
+  "historical_build_roots": [
+    "C:\\r00",
+    "C:\\r01",
+    "C:\\r02a",
+    "C:\\r03a",
+    "C:\\r04",
+    "C:\\r05",
+    "C:\\r07a",
+    "C:\\r08",
+    "C:\\r09",
+    "C:\\r09m",
+    "C:\\r10b",
+    "C:\\r11",
+    "C:\\r12d",
+    "C:\\r13f",
+    "C:\\r13u"
+  ],
+  "tracked_source_unchanged": true,
+  "removed_files": 55587,
+  "journal": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\usb-followup\\cleanup-files.jsonl.gz",
+  "removed_bytes": 2303344327,
+  "completed_at_utc": "2026-09-06T04:00:28.8826307Z",
+  "intermediate_files": 55537,
+  "python_caches": [
+    {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\packaging\\boards-manager\\__pycache__",
+      "bytes": 94415.0,
+      "files": 2
+    },
+    {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\packaging\\boards-manager\\nu54_package_impl\\__pycache__",
+      "bytes": 97717.0,
+      "files": 13
+    },
+    {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\arduino-cli\\__pycache__",
+      "bytes": 168133.0,
+      "files": 2
+    },
+    {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\ci\\__pycache__",
+      "bytes": 119254.0,
+      "files": 6
+    },
+    {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\hil\\nu54dk\\__pycache__",
+      "bytes": 1396562.0,
+      "files": 62
+    },
+    {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host\\__pycache__",
+      "bytes": 2261537.0,
+      "files": 133
+    },
+    {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\__pycache__",
+      "bytes": 270901.0,
+      "files": 17
+    },
+    {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\coverage\\__pycache__",
+      "bytes": 67768.0,
+      "files": 2
+    },
+    {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\__pycache__",
+      "bytes": 196035.0,
+      "files": 2
+    },
+    {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-builder\\src\\nu54_builder_impl\\__pycache__",
+      "bytes": 201621.0,
+      "files": 15
+    },
+    {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\peripheral\\__pycache__",
+      "bytes": 273242.0,
+      "files": 9
+    },
+    {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\release\\__pycache__",
+      "bytes": 836549.0,
+      "files": 20
+    },
+    {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\variant\\__pycache__",
+      "bytes": 43238.0,
+      "files": 2
+    }
+  ],
+  "archived_scripts": 50,
+  "SDK_and_board_untouched": true,
+  "preserved_artifacts_hash_unchanged": true,
+  "final_build_root_preserved": "C:\\r13h"
+}

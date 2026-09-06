@@ -1,0 +1,22 @@
+# USB 무배선 후속 검증 체크포인트
+
+사용자 지시: 문서 갱신, 더 이상 쓰지 않는 파일 정리, USB로만 연결된 두 보드에서 가능한 검증,
+마무리 문서·커밋·main 푸시. 보드 간 결선은 없다고 사용자가 확인했다.
+
+R00~R13은 완료했고 이번 범위는 T09 무배선 회귀와 정리다. current-source T11 외부 fixture는
+실행하지 않는다. USB-UART/BLE는 DISABLE_UART 상태 확인에 따라 진행한다.
+
+정식 runner가 clean exact checkout을 요구하므로 진행 기록은 이 작업 체크포인트에 먼저
+남기고 시험 종료 뒤 활성 TODO와 신규 65번 검증 기록에 결과·현재 보드 상태를 반영한다.
+현재 실행 source는 c94298f925410fbef78300d8af4d7a1b3fef4aaf, 기존 C:/r13h DUT/peer exact
+artifact는 마지막 전체 gate source와 컴파일 입력·설정·메모리가 같은 것을 이미 검증했다.
+
+두 CMSIS-DAP와 COM5/6, COM7/8을 관측했고 양쪽 SWD CPUID 0x411fd210 읽기를 통과했다.
+원문 UID는 출력·문서·증거에 쓰지 않는다. canonical v04_pair primitives를 100회 설정으로
+각 보드에서 실행한다. PMIC read-only, timer capture, 내부 ADC 및 PWM/SAADC 수명주기만
+실행하며 외부 pin 측정·UART 연결·전압 정확도·장시간 soak 결과로 확대하지 않는다.
+Flash는 exact 두 역할 image의 sector erase, auto_unlock=false, no recover로 제한한다.
+
+정리 후보는 재생성 가능한 Python cache와 과거 build 중간 object/archive, 사용이 끝난
+일회성 scratch 편집 script다. 먼저 실제 경로·참조·파일 목록을 확인하고 source·SDK·board·
+공개 자산·최종 artifact·과거 raw evidence는 보존한다.

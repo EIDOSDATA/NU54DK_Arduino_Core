@@ -1,0 +1,56 @@
+{
+  "source_commit": "c94298f925410fbef78300d8af4d7a1b3fef4aaf",
+  "status": "passed",
+  "result_count": 904,
+  "counts": {
+    "V04-PAIR-PING": 2,
+    "V04-PMIC-READ": 12,
+    "V04-EVENT": 88,
+    "V04-ADC-INTERNAL": 800,
+    "V04-ANALOG-CONCURRENCY": 2
+  },
+  "pmic_transactions": 1200,
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "ports": [
+        "COM5",
+        "COM6"
+      ],
+      "hex_sha256": "90e852bd86ded64ccfaa99bc374113e762dde9ebbd0d2730c1083ad28686e843",
+      "elf_sha256": "d4433c172de4ecc23852e52a9d5d6f2e8048d9bce87262e0cc3519e27771bbf2",
+      "record_sha256": "d8c7ec63c6d47a8a91e26ac3f0d26a1e59f166862c75496eaf41df777ae28ec5",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 6.109,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "9dc3d014cade7dcdada5ea1a5abdd7ffe923c668f957c5b045de335eb68616a7"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "ports": [
+        "COM7",
+        "COM8"
+      ],
+      "hex_sha256": "8cd085bf5a2cb423595dbd264a407b70925270d0539ca07a38d7a30e40c22cda",
+      "elf_sha256": "847d9d16ad448389f57d1e120d1c1f340cdd91b1d5352b63702b7f36f8ddb5db",
+      "record_sha256": "d8c7ec63c6d47a8a91e26ac3f0d26a1e59f166862c75496eaf41df777ae28ec5",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 5.985,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "7add351dadae5eb81a5903e404969d4ee744e26518749794d24460a752d2256a"
+      }
+    }
+  ],
+  "external_wiring_executed": false
+}

@@ -1,0 +1,27 @@
+{
+  "observed_at_utc": "2026-09-06T03:51:43.688126+00:00",
+  "user_report": "two USB-connected boards; no inter-board wires",
+  "python": "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\python.exe",
+  "pyocd_version": "0.42.0",
+  "probe_count": 2,
+  "devices": [
+    {
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "ports": [
+        "COM7",
+        "COM8"
+      ],
+      "probe_type": "CMSISDAPProbe"
+    },
+    {
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "ports": [
+        "COM5",
+        "COM6"
+      ],
+      "probe_type": "CMSISDAPProbe"
+    }
+  ],
+  "flash_executed": false,
+  "target_connection_executed": false
+}
