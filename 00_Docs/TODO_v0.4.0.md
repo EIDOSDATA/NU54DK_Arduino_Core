@@ -1,6 +1,6 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
-440 진행 중: 사용자 2026-09-06T19:45:39Z 결선 완료 확인, T10/T12 PDM 검증을 SWD 10 MHz로 시작했다. Exact 8685cd8의 다음 buffer 미공급 overflow를 교정한 017f3a5에서 mono 4개 PASS 후 stereo 양쪽 동일 입력을 재현했다. 같은 결선에 GPIOTE20/DPPI20의 clock-edge 연동 stereo 신호원을 추가하고 좌우 부호·edge·source 반전 oracle과 Host 음성 사례를 검증한다. 새 clean source 전체 440을 다시 실행하며 다른 T12 결선 시험은 진행하지 않는다. 원래 입력 pull-up 및 GPIO 기본 입력 복귀와 각 peripheral 해제를 구분 기록한다.
+440 진행 중: 사용자 2026-09-06T19:45:39Z 결선 완료 확인, T10/T12 PDM 검증을 SWD 10 MHz로 시작했다. 8685cd8의 buffer 미공급 overflow 교정 후 017f3a5에서 mono 4개 PASS·stereo 동일 입력 실패를 재현했다. f6ad299의 GPIOTE/DPPI stereo 신호원은 HIL의 UART 전용 pin metadata로 prepare 실패했다. UART를 끈 HIL overlay에서만 P1.04~07을 DAP UART GPIO Kconfig 조건부 capability로 명시하고 재검증한다. 일반 core/board 정책은 변경하지 않는다. 원래 입력 pull-up·GPIO 기본 입력 복귀와 각 peripheral 해제를 구분 기록하며 440 이외 결선 시험은 미실행이다.
 
 | 항목 | 내용 |
 | --- | --- |
