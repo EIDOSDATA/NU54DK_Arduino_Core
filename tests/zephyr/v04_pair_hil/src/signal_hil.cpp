@@ -17,7 +17,11 @@
 #include <variant.h>
 #include <hal/nrf_gpio.h>
 #include <zephyr/kernel.h>
+/** @brief 고정 SDK의 C 전용 header 선언에 C linkage를 적용합니다. */
+extern "C"
+{
 #include <nrf_sys_event.h>
+}
 #include <string.h>
 
 namespace
