@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-external-fixture",
+  "status": "failed",
+  "fixture_id": 103,
+  "fixture_revision": 2,
+  "catalog_sha256": "50ad2ee57f26ac65cc9b88a0197c9064131fbffd5e060aea2a648e5f72ffd8e3",
+  "core_revision": "7aece93395f0d74272816894a18c2c5e3f1a2abe",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "uart-async-and-serial-sync-async-single-double-buffer",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": false,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "bd6b54617e9ebca8b6d46b3cf3f0e73324781e63356a878659aaf38bcbf84d53",
+      "elf_sha256": "d70589ca6f0167ceb9b1de8bed6885257fd1515a656bb24e1aa747ab9a35765b",
+      "record_sha256": "c68833f6a91913eb07a9e4c7d3ac84e99816104c698227267beea6728e7ced91",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 3.047,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "8381481e59aed646f1f99eb1f8b853f751831c1a7fa4b4c5a444ac3ddb19ea37"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "73182b4efe80a949366a61b9734a6b1a8827eca2cb6cec09ff5a01bb480eb6d9",
+      "elf_sha256": "6b933fae6526e2fbbd921771b8fee7a6fbb94fe00ff52fa1ceae78b137d1ae47",
+      "record_sha256": "c68833f6a91913eb07a9e4c7d3ac84e99816104c698227267beea6728e7ced91"
+    }
+  ],
+  "results": [],
+  "confirmation_sha256": "4b2695edc680b605593dbe734b10b0c9769d75e001005bf079377cb1dc99476b",
+  "confirmed_at_unix": 1788678331.0,
+  "error": "UarteHilFailure: pyOCD exited with 1: 0000678 W Board ID 5415 is not recognized [mbed_board]\r\n0000807 W NRF54L15 is not in a secure state [target_nRF54L]\r\n0001040 I Loading C:\\u3c\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\zephyr\\zephyr.hex [load_cmd]\r\n[---|---|---|---|---|---|---|---|---|----]\r\n[=0011309 E Probe error during disconnect: [session]\r\n0011309 C Timeout reading from probe <probe-sha256:4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0> [__main__]\r\n",
+  "completed_at_utc": "2026-09-06T07:10:06.975812+00:00"
+}

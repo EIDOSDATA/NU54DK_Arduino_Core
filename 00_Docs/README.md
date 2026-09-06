@@ -18,7 +18,7 @@
 
 과거 exact source의 T11은 역사적 단독 기능 체크포인트로 보존한다. R00~R13의 정확성·구조
 리팩토링과 최종 전체 software gate는 [64번 기록](<./04_검증 기록/64_R13_도구_정책_build_구조.md>)으로 완료했다.
-Current-source T11은 exact 154324c의 Fixture 101 기능 1,644개를 통과했다. Fixture 102도 exact a49cc0d에서 822개를 통과했으며 다음은 Fixture 103 전원 OFF 결선 변경이다.
+Current-source T11은 exact 154324c의 Fixture 101 기능 1,644개를 통과했다. Fixture 102도 exact a49cc0d에서 822개를 통과했으며 Fixture 103도 exact 7aece93에서 2,466개를 통과했다. 승인 UART route 세 묶음을 완료했고 다음은 Fixture 201 SPI 결선 변경이다.
 사용자 확인과 current-source T11 회귀 뒤 Fixture 401부터 T12~T15 통합 실기를 진행한다.
 
 T01~T09의 [기능 시험 목록](<./01_아두이노 코어 설계/12_v0.4.0_기능_시험_목록.md>)과
@@ -213,8 +213,10 @@ M1~M23과 정식 공개 증거, `v0.3.0` AC-01~AC-03·M19~M22 및 `v0.4.0` M23~M
 6. NCS/Zephyr/Toolchain 또는 board revision이 바뀌면 기존 검증의 유효성을 다시 판정한다.
 7. 구조 변경 뒤 UTF-8, 상대 Markdown link와 package allowlist를 함께 검사한다.
 
-2026-09-06 후속: [65번 기록](<./04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)의 904 PASS·파일 정리를 보존한다. 이후 DAP UART 연결 전환 뒤 [66번 기록](<./04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>)에서 UART idle bias를 교정하고 온보드 18개 결과·BLE 3개 pair gate를 통과했다. 이후 사용자 결선 완료 확인에 따라 exact 154324c의 current-source T11 Fixture 101을 SWD 10 MHz로 실행해 기능 1,644개를 통과했다. 이후 exact a49cc0d의 Fixture 102 기능 822개를 SWD 10 MHz로 통과했다. 현재 Fixture 102 결선·DAP UART 분리·SWD 연결 상태이며 다음은 전원 OFF·Fixture 103 결선 변경과 새 사용자 확인이다.
+2026-09-06 후속: [65번 기록](<./04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)의 904 PASS·파일 정리를 보존한다. 이후 DAP UART 연결 전환 뒤 [66번 기록](<./04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>)에서 UART idle bias를 교정하고 온보드 18개 결과·BLE 3개 pair gate를 통과했다. 이후 사용자 결선 완료 확인에 따라 exact 154324c의 current-source T11 Fixture 101을 SWD 10 MHz로 실행해 기능 1,644개를 통과했다. 이후 exact a49cc0d의 Fixture 102 기능 822개를 SWD 10 MHz로 통과했다. 이후 exact 7aece93의 Fixture 103 기능 2,466개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 진단은 별도 보존했다. 현재 Fixture 103 결선·DAP UART 분리·SWD 연결 상태이며 다음은 전원 OFF·Fixture 201 SPI 결선 변경과 새 사용자 확인이다.
 
 Current-source T11 첫 UART 회귀의 exact 증거는 [67번 기록](<./04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)에 연결한다. 전체 T11·T12~T15와 RC/공개는 미완료다.
 
-Current-source Fixture 102의 exact a49cc0d·822 PASS와 다음 Fixture 103 결선은 [68번 기록](<./04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md>)에 연결한다.
+Current-source Fixture 102의 exact a49cc0d·822 PASS는 [68번 기록](<./04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md>)에 연결한다.
+
+Current-source Fixture 103의 exact 7aece93·2,466 PASS, 최초 flash 실패·진단과 다음 Fixture 201 결선은 [69번 기록](<./04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md>)에 연결한다. Current-source UART 세 묶음 완료이며 SPI·TWI는 대기한다.

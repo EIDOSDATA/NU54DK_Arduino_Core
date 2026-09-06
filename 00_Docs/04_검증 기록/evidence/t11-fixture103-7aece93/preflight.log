@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-external-fixture",
+  "status": "preflight",
+  "fixture_id": 103,
+  "fixture_revision": 2,
+  "catalog_sha256": "50ad2ee57f26ac65cc9b88a0197c9064131fbffd5e060aea2a648e5f72ffd8e3",
+  "core_revision": "7aece93395f0d74272816894a18c2c5e3f1a2abe",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "uart-async-and-serial-sync-async-single-double-buffer",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": false,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "bd6b54617e9ebca8b6d46b3cf3f0e73324781e63356a878659aaf38bcbf84d53",
+      "elf_sha256": "d70589ca6f0167ceb9b1de8bed6885257fd1515a656bb24e1aa747ab9a35765b",
+      "record_sha256": "c68833f6a91913eb07a9e4c7d3ac84e99816104c698227267beea6728e7ced91"
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "73182b4efe80a949366a61b9734a6b1a8827eca2cb6cec09ff5a01bb480eb6d9",
+      "elf_sha256": "6b933fae6526e2fbbd921771b8fee7a6fbb94fe00ff52fa1ceae78b137d1ae47",
+      "record_sha256": "c68833f6a91913eb07a9e4c7d3ac84e99816104c698227267beea6728e7ced91"
+    }
+  ],
+  "results": [],
+  "fixture": {
+    "id": 103,
+    "family": "uarte",
+    "banks": [
+      1,
+      1
+    ],
+    "instances": [
+      [
+        20,
+        21,
+        22
+      ],
+      [
+        20,
+        21,
+        22
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "peer": [
+          "P2",
+          11,
+          "P1.5"
+        ],
+        "signal": "DUT TXD -> peer RXD"
+      },
+      {
+        "dut": [
+          "P2",
+          11,
+          "P1.5"
+        ],
+        "peer": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "signal": "DUT RXD <- peer TXD"
+      },
+      {
+        "dut": [
+          "P2",
+          10,
+          "P1.6"
+        ],
+        "peer": [
+          "P2",
+          9,
+          "P1.7"
+        ],
+        "signal": "DUT RTS -> peer CTS"
+      },
+      {
+        "dut": [
+          "P2",
+          9,
+          "P1.7"
+        ],
+        "peer": [
+          "P2",
+          10,
+          "P1.6"
+        ],
+        "signal": "DUT CTS <- peer RTS"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "P1-P1 UART 교차 결선이며 두 DAP UART level shifter를 모두 분리합니다.",
+    "pullups": []
+  },
+  "confirmation_template": {
+    "fixture_id": 103,
+    "fixture_revision": 2,
+    "catalog_sha256": "50ad2ee57f26ac65cc9b88a0197c9064131fbffd5e060aea2a648e5f72ffd8e3",
+    "core_revision": "7aece93395f0d74272816894a18c2c5e3f1a2abe",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "uid_sha256": [
+      "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0"
+    ],
+    "hex_sha256": [
+      "bd6b54617e9ebca8b6d46b3cf3f0e73324781e63356a878659aaf38bcbf84d53",
+      "73182b4efe80a949366a61b9734a6b1a8827eca2cb6cec09ff5a01bb480eb6d9"
+    ],
+    "dap_uart_disconnected_both": false,
+    "swd_connected_both": false,
+    "power_rails_not_joined": false,
+    "equal_io_voltage_confirmed": false,
+    "common_ground_confirmed": false,
+    "links_match_catalog": false,
+    "pullups_match_catalog": false,
+    "extra_outputs_disconnected": false,
+    "confirmed_at_unix": 0,
+    "confirmed_by": ""
+  }
+}
+V04_FIXTURE_PREFLIGHT_ONLY; no probe access, flash, reset or external output

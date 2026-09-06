@@ -576,4 +576,6 @@ progress를 journal에 남깁니다. 중단된 실행은 `interrupted`이며 다
 
 R00~R13 이후 exact 154324c의 current-source Fixture 101은 SWD 10 MHz에서 데이터 1,620개·예상 오류 24개를 통과했습니다. [67번 기록](<../../../00_Docs/04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)에 exact 증거를 보존합니다. 전체 current-source T11과 T12/T13 PASS는 아직 아닙니다.
 
-Current-source Fixture 102도 exact a49cc0d·SWD 10 MHz에서 데이터 810개·예상 오류 12개를 통과했습니다. [68번 기록](<../../../00_Docs/04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md>)의 원본과 다음 Fixture 103 결선을 따릅니다.
+Current-source Fixture 102도 exact a49cc0d·SWD 10 MHz에서 데이터 810개·예상 오류 12개를 통과했습니다. [68번 기록](<../../../00_Docs/04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md>)에 원본을 보존합니다.
+
+Current-source Fixture 103은 exact 7aece93·SWD 10 MHz에서 데이터 2,430개·예상 오류 36개를 통과했습니다. 최초 peer flash timeout과 읽기 전용 진단 뒤 한 번의 새 실행을 [69번 기록](<../../../00_Docs/04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md>)에 구분해 보존했습니다. UART 세 묶음은 완료했으며 다음은 Fixture 201 SPI 결선입니다.

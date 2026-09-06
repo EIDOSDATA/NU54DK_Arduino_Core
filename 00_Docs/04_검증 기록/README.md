@@ -134,4 +134,6 @@ DAP UART 연결 전환 뒤 BLE 회귀와 온보드 유휴 bias 교정은 [66번 
 
 사용자 Fixture 101 결선 완료 뒤 exact 154324c·SWD 10 MHz의 기능 1,644 PASS는 [67번 기록](67_T11_Fixture_101_current_source_UART_회귀.md)에 연결한다. 해당 실행 뒤 Fixture 102로 이어졌다.
 
-Exact a49cc0d·SWD 10 MHz의 Fixture 102 기능 822 PASS는 [68번 기록](68_T11_Fixture_102_current_source_UART_회귀.md)에 연결한다. 다음은 Fixture 103 결선 변경이다.
+Exact a49cc0d·SWD 10 MHz의 Fixture 102 기능 822 PASS는 [68번 기록](68_T11_Fixture_102_current_source_UART_회귀.md)에 연결한다. 해당 실행 뒤 Fixture 103으로 이어졌다.
+
+Fixture 103 exact 7aece93·SWD 10 MHz 기능 2,466 PASS와 최초 peer flash 실패·한정 재개는 [69번 기록](69_T11_Fixture_103_current_source_UART_회귀.md)에 보존했다. Current-source UART 세 묶음 완료, 다음은 Fixture 201 SPI다.
