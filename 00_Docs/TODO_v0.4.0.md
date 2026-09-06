@@ -5,9 +5,9 @@
 | 문서 ID / 개정 | TODO-V04-001 / 2.2 |
 | 상태 | 활성 TODO — R00~R13·최종 software gate 완료; current-source T11·T12~T15 및 후속 공개 단계 대기 |
 | 작성·갱신일 | 2026-09-06 |
-| 작성 직전 기준 commit | `c94298f925410fbef78300d8af4d7a1b3fef4aaf` — R13 종료와 이번 온보드 실기의 exact source |
+| 작성 직전 기준 commit | `32535c124633d6effbfa1c9397737c091d6e3b8b` — 직전 후속 기록; 실제 온보드 검증 source는 c94298f |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **current-source T11 — Fixture 101 전원 OFF 결선 확인 대기** |
+| 다음 착수 항목 | **T09 추가 USB-UART·BLE — DAP UART 연결 전환 대기**; 외부 current-source T11은 Fixture 101 결선 대기 |
 | 이번 요청의 실행 범위 | 2026-09-06 후속 지시: USB로 연결되고 보드 간 선이 없는 두 보드에서 가능한 검증, 불필요 파일 정리, 문서 갱신·commit·main push. 기존 R00~R13 완료 뒤 T09 무배선 회귀를 수행했으며 외부 current-source T11은 별도 결선 확인 전 NOT RUN |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
@@ -53,9 +53,9 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | --- | --- |
 | 이번에 끝낸 일 | R00~R13·전체 software gate 뒤 exact c94298f 두 보드 무배선 온보드 904 PASS와 로컬 중간 파일 정리. [65번 기록](<./04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)에 실제 결과·보존 파일·정리 manifest 등록 |
 | 진행 중인 T 항목 | T09 무배선 회귀 완료. PMIC read-only·timer·내부 ADC·PWM/SAADC 수명주기만 실제 PASS. current-source T11, 외부 T12/T13 및 RC·공개는 대기 |
-| 다음 구체적 행동 | DISABLE_UART의 현재 연결/분리 상태 확인. USB-UART/BLE는 DAP UART 연결 상태가 필요하다. 외부 T11 전환 때는 양쪽 전원을 끄고 Fixture 101을 연결한 뒤 DAP UART 분리·SWD 연결·동일 I/O 전압·단락 없음을 확인한다 |
-| 다음 작업에 필요한 사용자 행동 | 현재 DISABLE_UART 상태를 알려준다. 외부 current-source T11을 진행할 때는 Fixture 101 전원 OFF 결선을 별도로 완료·확인한다 |
-| 외부 결선 상태 | 2026-09-06 사용자 확인: 두 보드 각각 USB 연결, 보드 간 결선 없음. CMSIS-DAP 2개와 COM5/6·COM7/8, 양쪽 SWD CPUID·runtime identity 관측. DISABLE_UART 위치는 미확인. 과거 Fixture 301 선이 남았다고 가정하지 않음 |
+| 다음 구체적 행동 | 두 보드의 USB와 다른 전원을 모두 끈 뒤 DISABLE_UART를 DAP UART 연결 상태로 전환하고 USB를 다시 연결한다. DISABLE_SWD는 SWD 연결 상태를 유지한다. 보드 간 결선은 하지 않고 완료 확인 뒤 USB-UART·BLE 가능 범위를 검증한다 |
+| 다음 작업에 필요한 사용자 행동 | 두 보드의 전원 OFF → DAP UART 연결 상태 전환 → USB 재연결을 마친 뒤 완료를 알려준다. 이후 외부 T11을 진행할 때는 다시 전원 OFF 상태에서 Fixture 101 결선과 DAP UART 분리를 별도로 확인한다 |
+| 외부 결선 상태 | 2026-09-06 사용자 확인: 두 보드 각각 USB 연결, 보드 간 결선 없음, DISABLE_UART는 Disabled(DAP UART 분리) 상태. 앞선 관측은 CMSIS-DAP 2개, COM5/6·COM7/8, 양쪽 SWD CPUID·runtime identity PASS. 스위치는 사용자가 확인했으며 에이전트가 조작하지 않음 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 마지막 정식 외부 HIL source | `e2f045c1b4272d986d17456c5af051fe8af74f19` — Fixture 301 두 보드 exact role image TWI PASS |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; T09 무배선 PASS만 추가됐으며 외부 결선·RC·최종 공개 승인 없음 |

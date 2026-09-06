@@ -213,4 +213,4 @@ M1~M23과 정식 공개 증거, `v0.3.0` AC-01~AC-03·M19~M22 및 `v0.4.0` M23~M
 6. NCS/Zephyr/Toolchain 또는 board revision이 바뀌면 기존 검증의 유효성을 다시 판정한다.
 7. 구조 변경 뒤 UTF-8, 상대 Markdown link와 package allowlist를 함께 검사한다.
 
-2026-09-06 후속: USB로만 연결된 두 보드의 R13 이후 온보드 904 PASS와 파일 정리는 [65번 기록](<./04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)에 보존한다. 보드 간 결선은 없으며 DISABLE_UART 상태 확인과 외부 current-source T11 Fixture 101 결선은 남아 있다.
+2026-09-06 후속: USB로만 연결된 두 보드의 R13 이후 온보드 904 PASS와 파일 정리는 [65번 기록](<./04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)에 보존한다. 후속 사용자 확인으로 보드 간 결선 없음·DISABLE_UART Disabled(DAP UART 분리) 상태를 확정했다. 추가 USB-UART/BLE에는 전원 OFF 후 DAP UART 연결 전환이 필요하며, 외부 current-source T11 Fixture 101 결선은 별도로 남아 있다.

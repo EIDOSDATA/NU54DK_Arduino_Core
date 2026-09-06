@@ -317,4 +317,4 @@ git submodule status
 적용합니다. 외부 구성요소에는 각 원 라이선스와 고지가 적용되며 자세한 내용은
 [third-party notices](./third_party/THIRD_PARTY_NOTICES.md)를 확인하십시오.
 
-2026-09-06 후속: USB로만 연결된 두 보드의 R13 이후 온보드 904 PASS와 파일 정리는 [65번 기록](<./00_Docs/04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)에 보존한다. 보드 간 결선은 없으며 DISABLE_UART 상태 확인과 외부 current-source T11 Fixture 101 결선은 남아 있다.
+2026-09-06 후속: USB로만 연결된 두 보드의 R13 이후 온보드 904 PASS와 파일 정리는 [65번 기록](<./00_Docs/04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)에 보존한다. 후속 사용자 확인으로 보드 간 결선 없음·DISABLE_UART Disabled(DAP UART 분리) 상태를 확정했다. 추가 USB-UART/BLE에는 전원 OFF 후 DAP UART 연결 전환이 필요하며, 외부 current-source T11 Fixture 101 결선은 별도로 남아 있다.
