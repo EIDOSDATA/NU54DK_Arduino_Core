@@ -109,3 +109,46 @@ application 설정 전체를 사용한다. M21에서 발견한 SPI driver 누락
 [CMake Host](evidence/r13b-a1b19aa/cmake-host.txt),
 [목록 검사](evidence/r13b-a1b19aa/matrix-host.txt)를 보존한다.
 R13-C 정책·증거 구조와 최종 전체 gate를 계속한다.
+
+## R13-C 정책·예제 gate·문서 역할
+
+[정책 원본 지도](../../tools/peripheral/README.md)는 기존 JSON/schema와 M23/M24/M26/시험
+계획 생성기의 소유 관계를 연결한다. 공개 singleton·silicon/IRQ·지원 상태의 `EXPECTED_*`
+상수는 JSON 원본 오류를 잡는 독립 oracle이므로 JSON에서 다시 생성하지 않는다.
+기존 schema를 합치거나 profile·readiness 지원 상태를 바꾸지 않았다.
+
+새 `verify_generated.py`는 기존 validator를 통과한 5개 생성물을 hash seed 17/101의
+독립 Python process에서 메모리로 생성한다. 두 결과와 저장된 UTF-8/LF 내용을 대조하며
+원본·생성물 파일을 쓰지 않는다. M12 inventory는 이 검사와 기존 개별 계약 검사를 함께
+수행한다. 독립 Host 3개는 비결정성·생성 누락·저장물 변조·읽기 실패·경로 이탈과 Windows
+CRLF 정규화를 검증한다. 실제 고정 SDK DTS와 M23 75개·M24 23개 계약 대조도 PASS다.
+
+기존 29개 설치 예제 runner에는 선택적인 `--package-version 0.0.90`을 추가했다. 기존
+기본값·M27 RC 계약은 유지한다. software preview는 release_version `0.0.90`, milestone
+`R13`, `staged-software-package-examples`로 기록하여 RC 판정과 구분한다. Host 5개는
+두 모드의 실제 gate orchestration과 저장 JSON identity를 fake compiler로 검증한다.
+이 Host의 예제 PASS marker는 실제 compile 증거가 아니며 최종 실제 29개 compile은 별도다.
+
+| 결정 / 역할 | 유지하는 원본과 검증 기록 |
+| --- | --- |
+| Loader 없는 전체 Zephyr image | [Arduino CLI 통합](<../02_빌드 설계/03_Arduino_CLI_통합.md>)과 기존 build template |
+| 고정 메모리·lease·generation | [R02](53_R02_Serial_완료와_DMA_수명주기.md), [R08](59_R08_자원과_경로_수명주기.md) |
+| ISR/thread·STOP·오류 소유권 | [검증 기록 index](README.md)의 R02/R03/R08/R10/R11 기록 |
+| DTS 사실 / 제품 정책 | [정책 지도](../../tools/peripheral/README.md)·기존 schema·고정 SDK/board |
+| 제품 identity / protocol·schema 수명주기 | [R05](56_R05_Core_소스와_패키지_identity.md), [R06](57_R06_builder_모듈과_설치_경로.md) |
+| Fabric private 경계 / 공개 API 보존 | [R07](58_R07_EventFabric_책임_분할.md)~[R12](63_R12_BLE_Storage_수명주기.md)의 책임·본문·target 증거 |
+| 설계·계약 | 01_아두이노 코어 설계와 code의 기존 공개 header·schema |
+| 실기 runbook / 활성 계획 | [HIL README](../../tests/hil/nu54dk/README.md)와 [TODO](../TODO_v0.4.0.md) |
+| 생성 문서 / 실행·release 증거 | 생성기는 정책 지도, 실제 판정은 04_검증 기록, 불변 공개 자료는 05_릴리스 |
+
+폴더·과거 raw evidence를 이동하지 않고 원본으로 연결했다. 각 새 evidence 디렉터리는
+시작 commit·물리 실행 여부·log hash·artifact identity와 실패/재시험의 별도 파일을 갖는다.
+큰 원시 build log는 고정 로컬 경로와 SHA-256을 함께 기록하고 기존 공개 증거를 덮어쓰지 않는다.
+
+[gate](evidence/r13c-3ab31b1/software.json),
+[생성물 hash](evidence/r13c-3ab31b1/generated.json),
+[독립 생성 Host](evidence/r13c-3ab31b1/generated-host.txt),
+[예제 identity Host](evidence/r13c-3ab31b1/example-identity-host.txt),
+[추가 SPI-on AC02B target](evidence/r13c-3ab31b1/additional-spi-on-target.json)를 보존한다.
+R13 구현을 마쳤으며 전체 60개 target·실제 설치 예제·package·Host 최종 검증이 남았다.
+최종 게이트를 통과한 뒤에만 R13을 완료 체크하고 current-source T11 직전에서 멈춘다.

@@ -1,0 +1,58 @@
+{
+  "gates": {
+    "contract": {
+      "log_sha256": "c1e4bd120557b28f4324c09fe277c7b3f30147f2ce47bcdace4025ab338690bc",
+      "result_lines": [
+        "Ran 45 tests in 0.110s",
+        "M12_GATE_PASS=contract"
+      ]
+    },
+    "example-identity-host": {
+      "log_sha256": "88223ad5a63c6fde1e91ad5ecbaaed960e02dee763e88dc19bfe7e3dce00a96c",
+      "result_lines": [
+        "Ran 5 tests in 0.100s"
+      ]
+    },
+    "generated": {
+      "log_sha256": "06a97268be4a5b78996fdab87e1ef832f6c407045ca6afe487bb5151652ce2ce",
+      "result_lines": [
+        "GENERATED_CONTRACTS_PASS=5;GENERATORS=4"
+      ]
+    },
+    "generated-host": {
+      "log_sha256": "e45412124ef1d255a106ddbab32b37846ec00372011cf335a1aa6951f293f50d",
+      "result_lines": [
+        "Ran 3 tests in 0.007s"
+      ]
+    },
+    "inventory": {
+      "log_sha256": "66a2622de2e660e17c7e16fcdb13bd7befe2ccdf3b37e363061e727e6013aaab",
+      "result_lines": [
+        "GENERATED_CONTRACTS_PASS=5;GENERATORS=4",
+        "M23_INVENTORY_PASS=instances:75",
+        "M24_SERIAL_CONTRACT_PASS=blocks:5;identities:23;profiles:23;onboard:7;fixture:16",
+        "M12_GATE_PASS=inventory"
+      ]
+    },
+    "m23-dts": {
+      "log_sha256": "68242d4c4b5d6efdfcf68ffe5e0288ba939ee484962302253c1707355c9f4749",
+      "result_lines": [
+        "M23_INVENTORY_PASS=instances:75"
+      ]
+    },
+    "m24-dts": {
+      "log_sha256": "138335eb61c82c9f3840ab1d8ecc80d11a897744c25341959cc6d56d4167689f",
+      "result_lines": [
+        "M24_SERIAL_CONTRACT_PASS=blocks:5;identities:23;profiles:23;onboard:7;fixture:16"
+      ]
+    },
+    "spi-on-target": {
+      "log_sha256": "5c19d4415002cd85ce90ec84cd18ef110140365489dee0c7fa2d827ed27e956f",
+      "result_lines": [
+        "M12_ZEPHYR_BUILD_PASS=1;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset"
+      ]
+    }
+  },
+  "physical_executed": false,
+  "start_commit": "3ab31b1"
+}

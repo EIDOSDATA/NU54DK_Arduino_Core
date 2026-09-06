@@ -1,0 +1,37 @@
+{
+  "generators": [
+    "verify_m23_inventory",
+    "verify_m24_serial_contract",
+    "verify_m26_system_contract",
+    "verify_v04_test_plan"
+  ],
+  "normalization": "UTF-8 with LF; existing Git checkout EOL contract",
+  "outputs": {
+    "00_Docs/01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md": {
+      "bytes_utf8_lf": 14321,
+      "sha256_utf8_lf": "ffabcb8a5a2cf8aaa925ee49a3a0c02cba9f64efdd34bcc899263e880e6967b4"
+    },
+    "00_Docs/01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md": {
+      "bytes_utf8_lf": 25062,
+      "sha256_utf8_lf": "6cdf0def2f195a25c78e8363ceb5d0870ec0b8818294b526841197cd0fcbb1cb"
+    },
+    "00_Docs/01_아두이노 코어 설계/11_M26_System_Peripheral_지원_경계.md": {
+      "bytes_utf8_lf": 5805,
+      "sha256_utf8_lf": "4ece400dfb8bfb63a85e06112b81b65632de57dc3d777332cb3e2fa97a16cbfa"
+    },
+    "00_Docs/01_아두이노 코어 설계/12_v0.4.0_기능_시험_목록.md": {
+      "bytes_utf8_lf": 28800,
+      "sha256_utf8_lf": "37b05fb240c9ab9feb585f263ba03bb706fb2cd7374e0466a4b8733af4b2434f"
+    },
+    "cores/arduino/generated/PeripheralInventory.inc": {
+      "bytes_utf8_lf": 33474,
+      "sha256_utf8_lf": "39ed157f7828e8027cb8134bfb1d2937db810650e97e9456ec7b26f14a4df342"
+    }
+  },
+  "physical_executed": false,
+  "python_hash_seeds": [
+    17,
+    101
+  ],
+  "schema_version": 1
+}

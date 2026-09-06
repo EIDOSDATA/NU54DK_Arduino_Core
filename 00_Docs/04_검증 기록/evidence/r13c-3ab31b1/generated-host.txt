@@ -1,0 +1,8 @@
+test_changed_missing_or_outside_output_is_rejected (__main__.GeneratedContractTests.test_changed_missing_or_outside_output_is_rejected) ... ok
+test_checkout_crlf_preserves_utf8_lf_contract (__main__.GeneratedContractTests.test_checkout_crlf_preserves_utf8_lf_contract) ... ok
+test_nondeterministic_or_omitted_generation_is_rejected (__main__.GeneratedContractTests.test_nondeterministic_or_omitted_generation_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.007s
+
+OK

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile every Arduino example from a staged v0.4.0-rc.1 package."""
+"""! @brief 고정 29개 예제를 설치 package에서 빌드하고 로컬 software 증거와 RC 증거를 구분합니다. """
 
 from __future__ import annotations
 
@@ -73,6 +73,9 @@ def load_example_lock(path: Path = LOCK_PATH) -> list[dict[str, str]]:
 
 
 def run_gate(args: argparse.Namespace) -> dict[str, Any]:
+    package_version = getattr(args, "package_version", VERSION)
+    if package_version not in (VERSION, "0.0.90"):
+        raise PackageExamplesFailure("unsupported example validation package version")
     cli = args.arduino_cli.resolve()
     config = args.config.resolve()
     platform_root = args.platform_root.resolve()
@@ -106,7 +109,7 @@ def run_gate(args: argparse.Namespace) -> dict[str, Any]:
     if not isinstance(listing, dict):
         raise PackageExamplesFailure("Arduino CLI example listing root is not an object")
     discovered = BASE.parse_installed_examples(
-        listing, lock, platform_root, version=VERSION
+        listing, lock, platform_root, version=package_version
     )
     forbidden_roots = tuple(path.resolve() for path in args.forbid_root)
     def compile_one(sequence: int, example: dict[str, str]) -> dict[str, Any]:
@@ -191,10 +194,10 @@ def run_gate(args: argparse.Namespace) -> dict[str, Any]:
     results.sort(key=lambda record: int(record["sequence"]))
     evidence = {
         "schema_version": 1,
-        "milestone": "M27",
-        "evidence_type": "staged-candidate-package-examples",
+        "milestone": "M27" if package_version == VERSION else "R13",
+        "evidence_type": "staged-candidate-package-examples" if package_version == VERSION else "staged-software-package-examples",
         "status": "passed",
-        "release_version": VERSION,
+        "release_version": package_version,
         "fqbn": FQBN,
         "example_lock_sha256": BASE.file_sha256(args.lock.resolve()),
         "arduino_cli": BASE.cli_identity(cli, config),
@@ -214,6 +217,8 @@ def build_parser() -> argparse.ArgumentParser:
         description="Compile all examples from staged NU54DK v0.4.0-rc.1"
     )
     parser.add_argument("--arduino-cli", type=Path, required=True)
+    parser.add_argument("--package-version", choices=(VERSION, "0.0.90"), default=VERSION,
+                        help="기존 RC 또는 공개하지 않는 R13 software 검증용 preview")
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--platform-root", type=Path, required=True)
     parser.add_argument("--build-root", type=Path, required=True)
