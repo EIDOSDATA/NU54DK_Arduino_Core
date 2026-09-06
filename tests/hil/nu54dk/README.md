@@ -586,6 +586,8 @@ Current-source Fixture 202는 exact 1349e20·SWD 10 MHz에서 data 9,078개와 �
 
 Current-source Fixture 203은 exact be49207·SWD 10 MHz에서 data 27,234개와 예상 cancel 18개를 통과했습니다. Data에는 recovery 18개가 포함됩니다. 최초 DUT flash 실패·진단과 한 번의 새 전체 실행은 [72번 기록](<../../../00_Docs/04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 구분 보존했습니다. 승인 SPI 세 route의 회귀를 마쳤습니다.
 
-Current-source Fixture 301은 exact 9a63251·SWD 10 MHz 첫 실행에서 data 1,968개, NACK/cancel 12개, stuck-SDA bus recovery 6개를 통과했습니다. Data에는 복구 18개와 clock stretch 6개가 포함됩니다. [73번 기록](<../../../00_Docs/04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 고유 ID·순서 대조와 current-source T11 단독 회귀 완료를 보존했습니다. T12 Fixture 401도 48개를 통과했으며 다음은 Fixture 402 PWM→AIN1 결선입니다.
+Current-source Fixture 301은 exact 9a63251·SWD 10 MHz 첫 실행에서 data 1,968개, NACK/cancel 12개, stuck-SDA bus recovery 6개를 통과했습니다. Data에는 복구 18개와 clock stretch 6개가 포함됩니다. [73번 기록](<../../../00_Docs/04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 고유 ID·순서 대조와 current-source T11 단독 회귀 완료를 보존했습니다. T12 Fixture 401도 48개를 통과했으며 다음은 Fixture 403 PWM→AIN2 결선입니다.
 
-T12 Fixture 401 exact a12e444·SWD 10 MHz 첫 실행 48개 기능 PASS와 10,368 samples·cleanup 48개는 [74번 기록](<../../../00_Docs/04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 보존했다. T12는 부분 완료이며 다음은 Fixture 402 PWM→AIN1이다. PWM 주기·듀티 capture와 T12 나머지 요구·후속 gate는 이 결과로 완료 처리하지 않는다.
+T12 Fixture 401 exact a12e444·SWD 10 MHz 첫 실행 48개 기능 PASS와 10,368 samples·cleanup 48개는 [74번 기록](<../../../00_Docs/04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 보존했다. T12는 부분 완료이며 다음은 Fixture 403 PWM→AIN2이다. PWM 주기·듀티 capture와 T12 나머지 요구·후속 gate는 이 결과로 완료 처리하지 않는다.
+
+T12 Fixture 402 exact ff483a1·SWD 10 MHz 첫 실행 48개 PASS는 [75번 기록](<../../../00_Docs/04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존했다. 401·402 합계 기능 96개·samples 20,736개이며 각 exact identity는 구분한다. 다음은 전원 OFF·A P1.05→P1.06/AIN2 변경 후 Fixture 403이다.
