@@ -1,0 +1,109 @@
+{
+  "status": "passed",
+  "current_fixture": 404,
+  "next_fixture": 408,
+  "current": {
+    "id": 404,
+    "family": "analog",
+    "banks": [
+      1,
+      1
+    ],
+    "instances": [
+      [
+        20,
+        21,
+        22
+      ],
+      [
+        20,
+        21,
+        22
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P2",
+          9,
+          "P1.7"
+        ],
+        "peer": [
+          "P4",
+          12,
+          "P1.14"
+        ],
+        "signal": "peer PWM level -> DUT SAADC AIN3"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "AIN3용 재결선입니다. 두 보드 DAP UART를 분리하고 PWM20/21/22의 channel slot 0~3을 순차 검사합니다.",
+    "pullups": []
+  },
+  "next": {
+    "id": 408,
+    "family": "analog",
+    "banks": [
+      1,
+      1
+    ],
+    "instances": [
+      [
+        20,
+        21,
+        22
+      ],
+      [
+        20,
+        21,
+        22
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P4",
+          12,
+          "P1.14"
+        ],
+        "peer": [
+          "P4",
+          12,
+          "P1.14"
+        ],
+        "signal": "peer PWM level -> DUT SAADC AIN7"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "AIN7은 DUT와 peer의 LED4 buffer 입력 사이 단방향 연결입니다. PWM20/21/22의 channel slot 0~3을 순차 검사하며 controller_role=2만 허용합니다.",
+    "pullups": []
+  },
+  "catalog_revision": 2,
+  "catalog_sha256": "50ad2ee57f26ac65cc9b88a0197c9064131fbffd5e060aea2a648e5f72ffd8e3",
+  "connector_pinmap_matches": true,
+  "no_next_fixture_executed": true
+}

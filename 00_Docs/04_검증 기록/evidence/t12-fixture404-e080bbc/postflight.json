@@ -1,0 +1,30 @@
+{
+  "checked_at_utc": "2026-09-06T12:31:23.744413+00:00",
+  "source": "e080bbc8f07a0ad751d83dacdb259d395b69be5b",
+  "swd_frequency_hz": 10000000,
+  "flash_executed": false,
+  "reset_executed": false,
+  "fixture_commands_executed": false,
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "fe507720f07babd9c84a44beab9607587d65784bac5a18c341382c42dc93c145",
+      "elf_sha256": "a6e07433b0e50b669ee95d30841b151e4dfbc9b3b2823135e15e4b91ba25d9ec",
+      "runtime_identity_hex": "48494c34010000000100000000000000653038306262633866303761306164373531643833646163646232353964333935623639626535620000000000000000",
+      "cpuid": "0x411fd210",
+      "state": "SLEEPING",
+      "status": "passed"
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "42af80e76ea36871fcbc5a335c72818632d8519e3ebbe6fb9dc066d73fd9d80d",
+      "elf_sha256": "fb3c948054b9eec66ed5a1eba15c2aeeff3ab463de23d7ddcb254c8709644053",
+      "runtime_identity_hex": "48494c34010000000200000000000000653038306262633866303761306164373531643833646163646232353964333935623639626535620000000000000000",
+      "cpuid": "0x411fd210",
+      "state": "SLEEPING",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "scope": "T12 analog partial coverage; distinct exact images preserved",
+  "fixtures": [
+    {
+      "fixture_id": 401,
+      "source": "a12e444cfb5ef47471c0e0d436f082acfd200c19",
+      "functional": 48,
+      "cleanup": 48,
+      "samples_read": 10368,
+      "original_journal_sha256": "173375caa50152429388af63e6b84262cbd87630f563c38ad8bab3ed973c7725"
+    },
+    {
+      "fixture_id": 402,
+      "source": "ff483a1bbd2a7f275b2c59126ef0e9af09211872",
+      "functional": 48,
+      "cleanup": 48,
+      "samples_read": 10368,
+      "original_journal_sha256": "bfc296829357274734b0e28c54079d68a48cc091a476442de893e90f0a6eec43"
+    },
+    {
+      "fixture_id": 403,
+      "source": "c95b9049a62e7c911e4b67104a8f36391ab7e168",
+      "functional": 48,
+      "cleanup": 48,
+      "samples_read": 10368,
+      "original_journal_sha256": "0f4e87485d2ee08f138c1948a61337ced6c04db0696122911e2aa3b412356eae"
+    },
+    {
+      "fixture_id": 404,
+      "source": "e080bbc8f07a0ad751d83dacdb259d395b69be5b",
+      "functional": 48,
+      "cleanup": 48,
+      "samples_read": 10368,
+      "original_journal_sha256": "ea18113a53f9e4a07c0bbe482878d64d3597d0cc15c1b0c661ee4cbe7216a809"
+    }
+  ],
+  "functional_total": 192,
+  "cleanup_total": 192,
+  "samples_total": 41472,
+  "t12_complete": false,
+  "remaining_fixtures": [
+    408,
+    420,
+    430,
+    440
+  ]
+}
