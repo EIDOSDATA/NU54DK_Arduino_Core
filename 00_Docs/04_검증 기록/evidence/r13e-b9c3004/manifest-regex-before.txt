@@ -1,0 +1,2 @@
+CMake Error at work/r13/manifest-regex-before.cmake:5 (message):
+  REVISION_REGEX=rejected valid 40-digit revision

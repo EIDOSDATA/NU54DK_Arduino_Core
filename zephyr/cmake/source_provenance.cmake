@@ -83,8 +83,10 @@ function(nucode_release_manifest_revision field output_variable)
     string(JSON manifest_revision ERROR_VARIABLE manifest_error
       GET "${manifest_content}" "${field}"
     )
+    string(LENGTH "${manifest_revision}" manifest_revision_length)
     if("${manifest_error}" STREQUAL "NOTFOUND" AND
-       "${manifest_revision}" MATCHES "^[0-9a-fA-F]{40}$")
+       manifest_revision_length EQUAL 40 AND
+       "${manifest_revision}" MATCHES "^[0-9a-fA-F]+$")
       string(TOLOWER "${manifest_revision}" revision)
     endif()
   endif()

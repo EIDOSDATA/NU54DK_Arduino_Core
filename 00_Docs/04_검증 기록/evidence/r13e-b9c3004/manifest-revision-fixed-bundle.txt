@@ -1,0 +1,9 @@
+test_configure_and_live_parsers_validate_full_revision (__main__.ManifestRevisionTests.test_configure_and_live_parsers_validate_full_revision)
+! @brief 40자리 대소문자 SHA와 길이·문자·JSON 오류를 두 실제 함수에서 검증합니다. ... ok
+test_live_writer_restores_core_and_board_from_gitless_manifest (__main__.ManifestRevisionTests.test_live_writer_restores_core_and_board_from_gitless_manifest)
+! @brief 실제 build record writer가 package의 Core·board SHA를 YAML에 기록합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.189s
+
+OK

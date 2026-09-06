@@ -1,0 +1,11 @@
+test_checkout_drift_is_detected_and_regenerated (__main__.ProductIdentityTests.test_checkout_drift_is_detected_and_regenerated) ... ok
+test_checkout_identity_and_schema_independence (__main__.ProductIdentityTests.test_checkout_identity_and_schema_independence) ... ok
+test_cmake_matches_builder_and_rejects_invalid_identity (__main__.ProductIdentityTests.test_cmake_matches_builder_and_rejects_invalid_identity) ... ok
+test_live_build_record_carries_both_versions (__main__.ProductIdentityTests.test_live_build_record_carries_both_versions) ... ok
+test_payload_identity_tracks_source_but_allows_package_stamping (__main__.ProductIdentityTests.test_payload_identity_tracks_source_but_allows_package_stamping) ... ok
+test_stamped_install_preserves_source_version (__main__.ProductIdentityTests.test_stamped_install_preserves_source_version) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.568s
+
+OK

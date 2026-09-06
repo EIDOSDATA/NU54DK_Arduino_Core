@@ -178,3 +178,26 @@ runner가 자신의 임시 디렉터리를 정리했다. 이미 성공한 compil
 package의 helper를 별도 실행해 실패 부분을 완료했다. 아직 실행하지 않은 M9 이후 9개와
 M8 두 선택값의 compile만 이어간다. 이 분리 실행은 하나의 무실패 smoke 실행으로 표시하지 않는다.
 [원본 실패와 재시험](evidence/r13d-499fde3/software.json)에 각 단계 log hash를 보존한다.
+
+## R13-E 설치 package의 Git-less revision 복원 교정
+
+최종 설치 artifact를 추적하며 exact `499fde3` package의 release manifest에는 올바른 Core·board
+SHA가 있지만 configure의 `build_info.yml`과 매 build의 live YAML은 `unknown`인 결함을 발견했다.
+실제 CMake에서 `^[0-9a-fA-F]{40}$`가 유효한 40자리 SHA를 거부하는 것을 재현했다.
+두 production reader를 길이 40자 검사와 anchored 16진수 문자 검사로 교정했다.
+공개 API·CLI·schema·저장 형식·partition·package producer는 바꾸지 않는다.
+설치 artifact의 누락된 revision을 복원하는 metadata 동작 변경이며 이전 unknown을 정상으로
+승격하지 않는다. SDK·board·기존 공개 archive도 변경하지 않는다.
+
+새 Host 2개는 두 실제 CMake 함수의 소문자·대문자 SHA, 39/41자리, 비16진수·공백·null·
+누락·잘못된 JSON·파일 없음과 실제 live writer의 Core/board YAML을 검사한다.
+수정 전 5개 subcase 실패를 보존했으며 Host와 고정 SDK의 실제 CMake 모두 2/2 PASS다.
+기존 R05 identity 6/6와 contract 45/45도 PASS다.
+[실패·수정·입력 증거](evidence/r13e-b9c3004/software.json)에 raw 압축본과 preview를 구분했다.
+
+기존 `499fde3` package의 60 target·29 compile·smoke는 해당 source의 결과로 보존한다.
+진행 중인 설치 smoke는 이미 압축 해제한 불변 `499fde3` package와 변경 없는 smoke helper를
+사용한다. R13-E commit 뒤 새 source로 전체 target·Host·package·설치 29개를 검증하고,
+각 설치 compile 직후 configure/live SHA를 둘 다 확인해 cache 정리 전에 원본 YAML을 보존한다.
+영향받는 M7 provenance와 M8 compile도 새 package로 재시험한다. R13은 아직 완료 체크하지 않는다.
+current-source T11과 모든 flash/HIL은 NOT RUN이다.
