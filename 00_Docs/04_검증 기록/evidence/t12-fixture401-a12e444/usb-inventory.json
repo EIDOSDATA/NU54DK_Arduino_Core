@@ -1,0 +1,26 @@
+{
+  "created_at_utc": "2026-09-06T11:41:46.918600+00:00",
+  "flash_executed": false,
+  "boards": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "msd_root": "D:\\",
+      "target_uart": "COM5",
+      "matching_vcoms": [
+        "COM5",
+        "COM6"
+      ]
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "msd_root": "E:\\",
+      "target_uart": "COM7",
+      "matching_vcoms": [
+        "COM7",
+        "COM8"
+      ]
+    }
+  ]
+}

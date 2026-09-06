@@ -2,7 +2,7 @@
 
 작성·갱신일: 2026-09-06
 문서 묶음 개정: 0.3
-현재 진행: R00~R13·전체 software gate 완료 / current-source T11 UART·SPI·TWI 단독 회귀 완료 / T12 Fixture 401 결선 변경 대기
+현재 진행: R00~R13·전체 software gate 완료 / current-source T11 UART·SPI·TWI 단독 회귀 완료 / T12 Fixture 401 48 PASS / Fixture 402 결선 변경 대기
 
 ## 먼저 읽을 문서
 
@@ -43,7 +43,7 @@ Host/target 5개 구성을 통과했다. R09는 [60번 기록](<../../04_검증 
 Host와 target 총 5개 구성을 통과했다. R10은 [61번 기록](<../../04_검증 기록/61_R10_Serial_Fabric_동시_호출.md>)의
 동시성·구조·scope 검증을 완료했다. R11은 [62번 기록](<../../04_검증 기록/62_R11_Analog_Stream_peripheral_분리.md>)의
 Host·target 6개 회귀를 완료했다. R12는 [63번 기록](<../../04_검증 기록/63_R12_BLE_Storage_수명주기.md>)의
-BLE/Storage 실제 Host와 target 회귀를 완료했다. R13도 [64번 기록](<../../04_검증 기록/64_R13_도구_정책_build_구조.md>)의 전체 software gate를 완료했다. Current-source T11은 exact 154324c의 Fixture 101 기능 1,644개를 통과했다. Fixture 102도 exact a49cc0d에서 822개를 통과했으며 Fixture 103도 exact 7aece93에서 2,466개를 통과했다. 승인 UART route 세 묶음을 완료했고 Fixture 201 SPI도 exact 0f429e7에서 18,169개를 통과했다. Fixture 202도 exact 1349e20에서 9,084개를 통과했다. Fixture 203도 exact be49207에서 27,252개를 통과해 SPI 세 묶음을 완료했다. Fixture 301도 exact 9a63251에서 1,986개를 통과해 current-source T11 단독 회귀를 완료했다. 다음은 T12 Fixture 401 PWM→AIN0 결선 변경이다.
+BLE/Storage 실제 Host와 target 회귀를 완료했다. R13도 [64번 기록](<../../04_검증 기록/64_R13_도구_정책_build_구조.md>)의 전체 software gate를 완료했다. Current-source T11은 exact 154324c의 Fixture 101 기능 1,644개를 통과했다. Fixture 102도 exact a49cc0d에서 822개를 통과했으며 Fixture 103도 exact 7aece93에서 2,466개를 통과했다. 승인 UART route 세 묶음을 완료했고 Fixture 201 SPI도 exact 0f429e7에서 18,169개를 통과했다. Fixture 202도 exact 1349e20에서 9,084개를 통과했다. Fixture 203도 exact be49207에서 27,252개를 통과해 SPI 세 묶음을 완료했다. Fixture 301도 exact 9a63251에서 1,986개를 통과해 current-source T11 단독 회귀를 완료했다. T12 Fixture 401도 exact a12e444에서 48개를 통과했다. 다음은 Fixture 402 PWM→AIN1 결선 변경이다.
 
 정식 경로는 `00_Docs/01_아두이노 코어 설계/14_리팩토링/`이다. 임시 최상위 묶음명과 문서 묶음 SemVer는 제거하고, 활성 `00_Docs/TODO_v0.4.0.md`는 기존 위치와 T01~T25 번호를 유지한다.
 
@@ -59,7 +59,7 @@ BLE/Storage 실제 Host와 target 회귀를 완료했다. R13도 [64번 기록](
 
 신규 문서의 기술 출처는 각 문서 말미에 있다. 원격 링크는 확인한 commit에 고정했고, 사용자의 실제 실행 HEAD·장치·로그는 별도 기준선에 기록하도록 했다.
 
-2026-09-06 후속: [65번 기록](<../../04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)의 904 PASS·파일 정리를 보존한다. 이후 DAP UART 연결 전환 뒤 [66번 기록](<../../04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>)에서 UART idle bias를 교정하고 온보드 18개 결과·BLE 3개 pair gate를 통과했다. 이후 사용자 결선 완료 확인에 따라 exact 154324c의 current-source T11 Fixture 101을 SWD 10 MHz로 실행해 기능 1,644개를 통과했다. 이후 exact a49cc0d의 Fixture 102 기능 822개를 SWD 10 MHz로 통과했다. 이후 exact 7aece93의 Fixture 103 기능 2,466개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 진단은 별도 보존했다. 이후 exact 0f429e7의 Fixture 201 SPI 기능 18,169개를 SWD 10 MHz로 통과했다. 이후 exact 1349e20의 Fixture 202 SPI 기능 9,084개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 읽기 전용 진단은 별도 보존했다. 이후 exact be49207의 Fixture 203 SPI 기능 27,252개를 SWD 10 MHz로 통과했다. 최초 DUT flash 실패와 읽기 전용 진단은 별도 보존했다. 이후 exact 9a63251의 Fixture 301 TWI 기능 1,986개를 첫 실행·SWD 10 MHz로 통과해 current-source T11 단독 통신 회귀를 완료했다. 현재 Fixture 301 결선·DAP UART 분리·SWD 연결 상태이며 다음은 전원 OFF·T12 Fixture 401 PWM→AIN0 결선 변경과 새 사용자 확인이다.
+2026-09-06 후속: [65번 기록](<../../04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)의 904 PASS·파일 정리를 보존한다. 이후 DAP UART 연결 전환 뒤 [66번 기록](<../../04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>)에서 UART idle bias를 교정하고 온보드 18개 결과·BLE 3개 pair gate를 통과했다. 이후 사용자 결선 완료 확인에 따라 exact 154324c의 current-source T11 Fixture 101을 SWD 10 MHz로 실행해 기능 1,644개를 통과했다. 이후 exact a49cc0d의 Fixture 102 기능 822개를 SWD 10 MHz로 통과했다. 이후 exact 7aece93의 Fixture 103 기능 2,466개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 진단은 별도 보존했다. 이후 exact 0f429e7의 Fixture 201 SPI 기능 18,169개를 SWD 10 MHz로 통과했다. 이후 exact 1349e20의 Fixture 202 SPI 기능 9,084개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 읽기 전용 진단은 별도 보존했다. 이후 exact be49207의 Fixture 203 SPI 기능 27,252개를 SWD 10 MHz로 통과했다. 최초 DUT flash 실패와 읽기 전용 진단은 별도 보존했다. 이후 exact 9a63251의 Fixture 301 TWI 기능 1,986개를 첫 실행·SWD 10 MHz로 통과해 current-source T11 단독 통신 회귀를 완료했다. 이후 T12 Fixture 401 exact a12e444에서 PWM→AIN0 48개 기능을 첫 실행·10 MHz로 통과했다. 현재 401 결선·DAP UART 분리·SWD 연결 상태이며 다음은 전원 OFF·Fixture 402 PWM→AIN1 결선 변경과 새 사용자 확인이다.
 
 Current-source T11 첫 UART 회귀의 exact 증거는 [67번 기록](<../../04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)에 연결한다. Current-source T11 단독 회귀는 완료했으며 T12~T15와 RC/공개는 미완료다.
 
@@ -73,4 +73,6 @@ Current-source Fixture 202의 exact 1349e20·9,084개 기능 PASS, 최초 peer f
 
 Current-source Fixture 203의 exact be49207·27,252개 기능 PASS, 최초 DUT flash 실패·진단은 [72번 기록](<../../04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 연결한다. 해당 exact 원본은 별도로 보존한다.
 
-Current-source Fixture 301 exact 9a63251·1,986개 기능 PASS와 T11 단독 회귀 완료 근거는 [73번 기록](<../../04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 연결한다. 일곱 fixture의 원본 61,423개와 동일 컴파일 입력을 대조했으며 exact identity는 구분 보존한다. 다음은 T12 Fixture 401이고 M24 전체·T13~T15·RC/공개 gate는 미완료다.
+Current-source Fixture 301 exact 9a63251·1,986개 기능 PASS와 T11 단독 회귀 완료 근거는 [73번 기록](<../../04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 연결한다. 일곱 fixture의 원본 61,423개와 동일 컴파일 입력을 대조했으며 exact identity는 구분 보존한다. T12 Fixture 401 48개 PASS 뒤 다음은 Fixture 402이고 M24/M25 전체·T13~T15·RC/공개 gate는 미완료다.
+
+T12 Fixture 401 exact a12e444·SWD 10 MHz 첫 실행 48개 기능 PASS와 10,368 samples·cleanup 48개는 [74번 기록](<../../04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 보존했다. T12는 부분 완료이며 다음은 Fixture 402 PWM→AIN1이다. PWM 주기·듀티 capture와 T12 나머지 요구·후속 gate는 이 결과로 완료 처리하지 않는다.
