@@ -1,0 +1,21 @@
+CASE_START=m19-pair
+NU54DK M19 pair discovery SUCCESS: peripheral=<probe-sha256:32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9>/COM5, central=<probe-sha256:4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0>/COM7
+[central] NUCODE_M19_CENTRAL:SCAN_FILTER:PASS:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb
+[central] NUCODE_M19_EVENT:CONNECTED:round=1:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb
+[peripheral] NUCODE_M19_EVENT:CONNECTED:round=1:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb
+[central] NUCODE_M19_CENTRAL:TX_POWER:PASS:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb
+[central] NUCODE_M19_CENTRAL:LINK_REQUESTS:PASS:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb
+[peripheral] NUCODE_M19_EVENT:DISCONNECTED:count=1:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb
+[central] NUCODE_M19_EVENT:DISCONNECTED:count=1:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb
+[peripheral] NUCODE_M19_PERIPHERAL:READVERTISE:PASS:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb
+[central] NUCODE_M19_CENTRAL:RECONNECT_REQUEST:PASS:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb
+[peripheral] NUCODE_M19_EVENT:CONNECTED:round=2:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb
+[central] NUCODE_M19_EVENT:CONNECTED:round=2:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb
+[peripheral] NUCODE_M19_PERIPHERAL:RECONNECT:PASS:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb
+[central] NUCODE_M19_CENTRAL:RECONNECT:PASS:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb
+[central] NUCODE_M19_EVENT:DISCONNECTED:count=2:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb[peripheral] NUCODE_M19_EVENT:DISCONNECTED:count=2:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb
+
+[central] NUCODE_M19_CENTRAL:FINAL:PASS:callback_context=PASS:reconnect=PASS:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb
+[peripheral] NUCODE_M19_PERIPHERAL:FINAL:PASS:callback_context=PASS:reconnect=PASS:nonce=c9d923025f5b0d59c3a81fa1dbc41bbb
+NU54DK M19 BLE GAP pair HIL PASS: evidence=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t09-connected\m19-pair-18a7cbe.json
+CASE_PASS=m19-pair

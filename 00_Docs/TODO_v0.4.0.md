@@ -2,12 +2,12 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 2.3 |
+| 문서 ID / 개정 | TODO-V04-001 / 2.4 |
 | 상태 | 활성 TODO — R00~R13·최종 software gate 완료; current-source T11·T12~T15 및 후속 공개 단계 대기 |
 | 작성·갱신일 | 2026-09-06 |
-| 작성 직전 기준 commit | `32535c124633d6effbfa1c9397737c091d6e3b8b` — 직전 후속 기록; 실제 온보드 검증 source는 c94298f |
+| 작성 직전 기준 commit | `373d98da055b83e86b039448965d630e8d546497` — idle bias 수정·온보드 검증 source; BLE source는 18a7cbe |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **T09 UART idle bias 수정 후 exact 이미지 재검증**; 외부 current-source T11은 Fixture 101 결선 대기 |
+| 다음 착수 항목 | **외부 current-source T11 직전 정지** — 다음은 전원 OFF·Fixture 101 결선·DAP UART 분리 확인 |
 | 이번 요청의 실행 범위 | 2026-09-06 후속 지시: USB로 연결되고 보드 간 선이 없는 두 보드에서 가능한 검증, 불필요 파일 정리, 문서 갱신·commit·main push. 기존 R00~R13 완료 뒤 T09 무배선 회귀를 수행했으며 외부 current-source T11은 별도 결선 확인 전 NOT RUN |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
@@ -51,21 +51,21 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | R00~R13 완료 뒤 추가 무배선 시험 진행. exact 18a7cbe target 17/17, BLE M19/M20/M21 pair PASS. 온보드 최초 실패와 idle bias 진단은 [66번 기록](<./04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>)에 연결 |
-| 진행 중인 T 항목 | T09/T14 — 비선택 DAP TX 입력의 pull-up 누락을 재현하고 shared onboard 시작 helper를 교정. Host 28 PASS; 수정 source의 실제 온보드 재검증 대기 |
-| 다음 구체적 행동 | idle bias 수정 commit을 고정하고 4 UART·3 TWIM·M25·M26·pair 역할 이미지 총 11개를 새 exact source로 build한 뒤 두 보드에서 순차 검증한다 |
-| 다음 작업에 필요한 사용자 행동 | 현재 추가 행동 불필요. 사용자 확인으로 DAP UART 연결 전환·USB 재연결 완료. 외부 current-source T11은 시작하지 않으며 추후 전원 OFF 상태의 Fixture 101 결선·DAP UART 분리 확인이 필요 |
+| 이번에 끝낸 일 | T09 추가 검증 완료. 373d98d 온보드 8개 runner/18개 결과 PASS, 18a7cbe BLE M19/M20/M21 pair PASS, idle bias 교정과 최초 실패 보존. [66번 기록](<./04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>) 참조 |
+| 진행 중인 T 항목 | 현재 실행 없음. R00~R13 및 T09 후속 완료. 외부 current-source T11·T12/T13·후속 RC/공개 대기 |
+| 다음 구체적 행동 | 사용자가 다음 외부 실기를 시작할 때 두 보드의 모든 전원을 끄고 Fixture 101 UART 4선+GND를 연결하며 DAP UART를 분리한다. SWD 연결을 유지하고 결선 완료 확인 뒤 exact source image로 preflight한다 |
+| 다음 작업에 필요한 사용자 행동 | 지금 요청한 T11 직전 작업은 완료. 다음 착수에는 전원 OFF·Fixture 101 결선·DAP UART 분리·USB 재연결 완료 확인이 필요 |
 | 외부 결선 상태 | 2026-09-06 최신 사용자 확인: 두 보드 각각 USB, 보드 간 결선 없음, DAP UART 연결 전환 완료, SWD 연결 유지. COM5/6·COM7/8과 exact 두 UID SHA 재확인. 스위치 조작은 사용자가 수행 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 마지막 정식 외부 HIL source | `e2f045c1b4272d986d17456c5af051fe8af74f19` — Fixture 301 두 보드 exact role image TWI PASS |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; T09 무배선 PASS만 추가됐으며 외부 결선·RC·최종 공개 승인 없음 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | BLE 3개 pair gate 종료. 두 보드에는 exact 18a7cbe M21 peripheral/central image가 남아 있다. 현재 HIL 프로세스 없음; 수정 source build와 온보드 회귀가 다음 작업 |
+| 이 TODO 작성 작업의 실행 중 시험 | 실행 중 HIL/build 없음. 두 보드에는 exact 373d98d DUT/peer image가 남아 있으며 종료 CPUID·runtime role/commit·독립 ping 2/2 PASS. 외부 fixture 명령 미실행 |
 | 로컬 임시 build·evidence | 15개 과거 root의 object/archive 중간 파일 55,537개 제거, 일회성 script 50개는 work/archive/r00-r13-authoring-scripts.zip으로 hash 검증 후 보관. 2,911개 ELF/HEX/설정/log 등은 hash 불변. C:/r13h와 설치본·raw evidence·QEMU 보존; 상세는 65번 기록 |
 | 최종 정렬 gate | clang-format 22.1.8, 직접 관리 C/C++/ino 356개 dry-run PASS. 한국어 Doxygen·BSD/Allman·4칸·중괄호 필수. SDK·board·third-party·공개 자산을 정렬하지 않았으며 물리 PASS로 승격하지 않음 |
 | CI 확인 | 최종 source의 GitHub Actions는 미확인. 현재 GitHub CLI 인증에 의존하지 않고 로컬 canonical 전체 software gate를 실행했다. 이전 Actions success는 이전 source의 역사 증거로만 유지 |
-| 문서 작업 검증 | 이번 idle bias 교정의 전후 신규 Host 3개는 수정 전 FAIL / 수정 후 PASS, 온보드 관련 28개와 Markdown 174개 PASS. 제품 source·공개 API·board·SDK 불변; final 문서/contract/inventory/style gate는 종료 시 실행 |
-| 최종 HIL 입력 찾기 | C:/r13h DUT/peer는 exact c94298f이며 이번 온보드 904 PASS 입력이다. work/usb-followup 및 65번 evidence에서 역할·HEX·runtime identity 확인. 다음 checkout HEAD가 다르면 source 불변성을 대조하고 exact revision image를 새로 build한 뒤 외부 결선 확인 후 실행 |
+| 문서 작업 검증 | 전체 Host 642 PASS/조건부 1 SKIP, 별도 설치 M13 11 PASS, contract 45, inventory/생성 drift, style 356, Markdown 175 PASS. 최초 target 17개와 교정 source target 11개 PASS. R13 full 60/package/설치 예제/QEMU 근거는 64번에 유지. readiness blocker 8개 |
+| 최종 HIL 입력 찾기 | C:/u2b DUT/peer는 exact 373d98d이며 종료 identity/ping 근거가 66번에 있다. BLE는 C:/u2a exact 18a7cbe. 마지막 문서 HEAD와 다음 HIL source가 다르면 제품 입력 불변성과 build/runtime identity를 대조하고 exact HEAD image를 새로 준비 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드
@@ -164,6 +164,7 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
   - 증거: `v04_fixtures.json`, HIL README, fail-closed confirmation template와 Host catalog/조건 검사 PASS. 묶음마다 T10 확인 반복.
 
 - [x] **T09 — Host 검사·시험 펌웨어 빌드·무배선 추가 시험**
+  - DAP UART 연결 후 추가 회귀: 373d98d 온보드 18 PASS와 18a7cbe BLE M19/M20/M21 pair PASS. idle bias 교정·처음 실패·새 exact 결과는 [66번 기록](<./04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>)에 분리 보존. 외부 current-source T11 NOT RUN.
   - R13 이후 회귀: exact c94298f의 두 보드에서 온보드 904 PASS. [65번 기록](<./04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)에 기존 T09와 구분해 등록. 외부 current-source T11 NOT RUN.
   - 상태·선행: 완료 / clean `696defb`와 exact board gitlink에서 두 보드 역할 image와 primitives를 재검증. 외부 실행은 T10 전 금지.
   - 할 일: Host/계약/문서 검사와 필요한 target build·CI를 실행하고 온보드 UART·I2C·복구 등 가능한 추가 기능을 시험한다.

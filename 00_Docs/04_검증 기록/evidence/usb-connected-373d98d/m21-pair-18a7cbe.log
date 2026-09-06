@@ -1,0 +1,84 @@
+CASE_START=m21-pair
+NU54DK M21 pair discovery SUCCESS: peripheral=<probe-sha256:32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9>/COM5, central=<probe-sha256:4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0>/COM7
+[peripheral] \xd7\xfb\xfe*** Booting nRF Connect SDK v3.4.0-99553055607b ***
+[peripheral] *** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+[peripheral] NUCODE_M21_READY:role=peripheral:bond_count=2
+[central] \xfc\xc0\xc0*** Booting nRF Connect SDK v3.4.0-99553055607b ***
+[central] *** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+[central] NUCODE_M21_READY:role=central:bond_count=1
+[central] NUCODE_M21_CENTRAL:CLEAR:REQUESTED:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_PERIPHERAL:CLEAR:REQUESTED:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_REBOOTING:role=peripheral:nonce=64990e5cbff36ad47527a7573aba6ed5[central] NUCODE_M21_REBOOTING:role=central:nonce=64990e5cbff36ad47527a7573aba6ed5
+
+[peripheral] *** Booting nRF Connect SDK v3.4.0-99553055607b ***
+[central] *** Booting nRF Connect SDK v3.4.0-99553055607b ***
+[peripheral] *** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+[central] *** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+[central] NUCODE_M21_READY:role=central:bond_count=0
+[peripheral] NUCODE_M21_READY:role=peripheral:bond_count=0
+[peripheral] NUCODE_M21_PERIPHERAL:ADVERTISE:PASS:phase=first:rf_nonce_binding_bits=128:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:SCAN:PASS:phase=first:rf_nonce_binding_bits=128:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_EVENT:CONNECTED:role=central:phase=first:nonce=64990e5cbff36ad47527a7573aba6ed5[peripheral] NUCODE_M21_EVENT:CONNECTED:role=peripheral:phase=first:nonce=64990e5cbff36ad47527a7573aba6ed5
+
+[central] NUCODE_M21_CENTRAL:SECURE_GATT:DENIED:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_PERIPHERAL:PROFILE:PASS:bas_notify=72:hid_bytes=8:nonce=64990e5cbff36ad47527a7573aba6ed5[central] NUCODE_M21_CENTRAL:BAS:READ:PASS:value=73:nonce=64990e5cbff36ad47527a7573aba6ed5
+
+[central] NUCODE_M21_CENTRAL:BAS:NOTIFY:PASS:value=72:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_PERIPHERAL:PHASE:PASS:phase=first:pairing_events=1:bond_count=1:bond_state=persistence_pending:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:DIS:PASS:manufacturer=NUCODE:model=NU54DK-M21:serial=M21-HIL:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:HID:REPORT:PASS:bytes=8:down=04:release=00:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:PHASE:PASS:phase=first:pairing_events=1:bond_count=1:bond_state=persistence_pending:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_REBOOTING:role=central:nonce=64990e5cbff36ad47527a7573aba6ed5[peripheral] NUCODE_M21_REBOOTING:role=peripheral:nonce=64990e5cbff36ad47527a7573aba6ed5
+
+[central] *** Booting nRF Connect SDK v3.4.0-99553055607b ***[peripheral] *** Booting nRF Connect SDK v3.4.0-99553055607b ***
+
+[peripheral] *** Using Zephyr OS v4.4.0-bf801e4e3d19 ***[central] *** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+
+[central] NUCODE_M21_READY:role=central:bond_count=1
+[peripheral] NUCODE_M21_READY:role=peripheral:bond_count=1
+[peripheral] NUCODE_M21_PERIPHERAL:ADVERTISE:PASS:phase=restore:rf_nonce_binding_bits=128:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:SCAN:PASS:phase=restore:rf_nonce_binding_bits=128:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_EVENT:CONNECTED:role=central:phase=restore:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_EVENT:CONNECTED:role=peripheral:phase=restore:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_PERIPHERAL:PROFILE:PASS:bas_notify=72:hid_bytes=8:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_PERIPHERAL:PHASE:PASS:phase=restore:pairing_events=0:bond_count=1:bond_state=verified:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:BAS:READ:PASS:value=73:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:BAS:NOTIFY:PASS:value=72:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:DIS:PASS:manufacturer=NUCODE:model=NU54DK-M21:serial=M21-HIL:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:HID:REPORT:PASS:bytes=8:down=04:release=00:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:PHASE:PASS:phase=restore:pairing_events=0:bond_count=1:bond_state=verified:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:ERASE:REQUESTED:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_PERIPHERAL:ERASE:REQUESTED:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_EVENT:DISCONNECTED:role=peripheral:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_EVENT:DISCONNECTED:role=central:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_REBOOTING:role=central:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_REBOOTING:role=peripheral:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] *** Booting nRF Connect SDK v3.4.0-99553055607b ***
+[peripheral] *** Booting nRF Connect SDK v3.4.0-99553055607b ***
+[peripheral] *** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+[central] *** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+[central] NUCODE_M21_READY:role=central:bond_count=0
+[peripheral] NUCODE_M21_READY:role=peripheral:bond_count=0
+[peripheral] NUCODE_M21_PERIPHERAL:ADVERTISE:PASS:phase=erased_probe:rf_nonce_binding_bits=128:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:SCAN:PASS:phase=erased_probe:rf_nonce_binding_bits=128:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_EVENT:CONNECTED:role=central:phase=erased_probe:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_EVENT:CONNECTED:role=peripheral:phase=erased_probe:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_EVENT:DISCONNECTED:role=central:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_EVENT:DISCONNECTED:role=peripheral:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_PERIPHERAL:OLD_KEY:RECONNECT:REJECTED:bond_count=0:pairing_requested=1:security_failed=1:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:OLD_KEY:RECONNECT:REJECTED:bond_count=0:pairing_requested=1:security_failed=1:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_PERIPHERAL:ADVERTISE:PASS:phase=repair:rf_nonce_binding_bits=128:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:SCAN:PASS:phase=repair:rf_nonce_binding_bits=128:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_EVENT:CONNECTED:role=central:phase=repair:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_EVENT:CONNECTED:role=peripheral:phase=repair:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_PERIPHERAL:PROFILE:PASS:bas_notify=72:hid_bytes=8:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:BAS:READ:PASS:value=73:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:BAS:NOTIFY:PASS:value=72:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_PERIPHERAL:PHASE:PASS:phase=repair:pairing_events=1:bond_count=1:bond_state=persistence_pending:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:DIS:PASS:manufacturer=NUCODE:model=NU54DK-M21:serial=M21-HIL:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:HID:REPORT:PASS:bytes=8:down=04:release=00:nonce=64990e5cbff36ad47527a7573aba6ed5
+[peripheral] NUCODE_M21_PERIPHERAL:FINAL:PASS:pairing=PASS:bond_restore=PASS:erase_reboot=PASS:old_key_reconnect=REJECTED:repair=PASS:bas=PASS:dis=PASS:hid_protocol=PASS:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:PHASE:PASS:phase=repair:pairing_events=1:bond_count=1:bond_state=persistence_pending:nonce=64990e5cbff36ad47527a7573aba6ed5
+[central] NUCODE_M21_CENTRAL:FINAL:PASS:pairing=PASS:bond_restore=PASS:erase_reboot=PASS:old_key_reconnect=REJECTED:repair=PASS:bas=PASS:dis=PASS:hid_protocol=PASS:nonce=64990e5cbff36ad47527a7573aba6ed5
+M21 BLE SECURITY PROFILE HIL PASS: nonce=64990e5cbff36ad47527a7573aba6ed5, evidence=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t09-connected\m21-pair-18a7cbe.json
+CASE_PASS=m21-pair

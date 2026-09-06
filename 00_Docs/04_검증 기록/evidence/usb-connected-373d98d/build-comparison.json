@@ -1,0 +1,94 @@
+{
+  "first_source": "18a7cbec9cceed38d6c866131afdac9e6ffbc4b8",
+  "corrected_source": "373d98da055b83e86b039448965d630e8d546497",
+  "changed_files": [
+    "00_Docs/04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md",
+    "00_Docs/04_검증 기록/README.md",
+    "00_Docs/TODO_v0.4.0.md",
+    "tests/hil/nu54dk/README.md",
+    "tests/hil/nu54dk/onboard_start.py",
+    "tests/hil/nu54dk/test_m24_uarte_onboard.py"
+  ],
+  "product_source_changed": false,
+  "compiled_input_config_memory_comparisons": [
+    {
+      "scenario": "nucode.v04.pair_dut",
+      "repository_compiled_sources_sha256": true,
+      "normalized_config_sha256": true,
+      "source_membership_sha256": true,
+      "memory_bytes": true
+    },
+    {
+      "scenario": "nucode.v04.pair_peer",
+      "repository_compiled_sources_sha256": true,
+      "normalized_config_sha256": true,
+      "source_membership_sha256": true,
+      "memory_bytes": true
+    },
+    {
+      "scenario": "nucode.m24.uarte20_hil",
+      "repository_compiled_sources_sha256": true,
+      "normalized_config_sha256": true,
+      "source_membership_sha256": true,
+      "memory_bytes": true
+    },
+    {
+      "scenario": "nucode.m24.uarte21_hil",
+      "repository_compiled_sources_sha256": true,
+      "normalized_config_sha256": true,
+      "source_membership_sha256": true,
+      "memory_bytes": true
+    },
+    {
+      "scenario": "nucode.m24.uarte22_hil",
+      "repository_compiled_sources_sha256": true,
+      "normalized_config_sha256": true,
+      "source_membership_sha256": true,
+      "memory_bytes": true
+    },
+    {
+      "scenario": "nucode.m24.uarte30_hil",
+      "repository_compiled_sources_sha256": true,
+      "normalized_config_sha256": true,
+      "source_membership_sha256": true,
+      "memory_bytes": true
+    },
+    {
+      "scenario": "nucode.m24.twim20_hil",
+      "repository_compiled_sources_sha256": true,
+      "normalized_config_sha256": true,
+      "source_membership_sha256": true,
+      "memory_bytes": true
+    },
+    {
+      "scenario": "nucode.m24.twim21_hil",
+      "repository_compiled_sources_sha256": true,
+      "normalized_config_sha256": true,
+      "source_membership_sha256": true,
+      "memory_bytes": true
+    },
+    {
+      "scenario": "nucode.m24.twim22_hil",
+      "repository_compiled_sources_sha256": true,
+      "normalized_config_sha256": true,
+      "source_membership_sha256": true,
+      "memory_bytes": true
+    },
+    {
+      "scenario": "nucode.m25.onboard_hil",
+      "repository_compiled_sources_sha256": true,
+      "normalized_config_sha256": true,
+      "source_membership_sha256": true,
+      "memory_bytes": true
+    },
+    {
+      "scenario": "nucode.m26.onboard_hil",
+      "repository_compiled_sources_sha256": true,
+      "normalized_config_sha256": true,
+      "source_membership_sha256": true,
+      "memory_bytes": true
+    }
+  ],
+  "ble_hil_source": "18a7cbec9cceed38d6c866131afdac9e6ffbc4b8",
+  "ble_runtime_and_runner_unchanged_by_idle_fix": true
+}

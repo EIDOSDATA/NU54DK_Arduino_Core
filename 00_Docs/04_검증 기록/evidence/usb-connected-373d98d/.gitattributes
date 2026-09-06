@@ -1,0 +1,6 @@
+# 원본 UART byte와 명시적으로 정규화한 사본의 SHA-256을 checkout과 무관하게 보존합니다.
+* -text
+# log는 protocol 원본 또는 실행 출력이므로 byte 보존을 우선하고 text diff를 생성하지 않습니다.
+*.log -diff
+# 실행 당시 script 사본의 마지막 빈 줄도 hash에 포함되므로 그대로 보존합니다.
+end_checks.ps1 whitespace=-blank-at-eof

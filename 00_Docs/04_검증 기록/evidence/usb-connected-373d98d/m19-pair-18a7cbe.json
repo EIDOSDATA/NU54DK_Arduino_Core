@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "gate": "m19-ble-gap-pair-hil",
+  "status": "passed",
+  "created_at_utc": "2026-09-06T05:48:22.427147+00:00",
+  "core_revision": "18a7cbec9cceed38d6c866131afdac9e6ffbc4b8",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "board_target": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "nonce": "c9d923025f5b0d59c3a81fa1dbc41bbb",
+  "boards": {
+    "peripheral": {
+      "daplink_uid": "<probe-sha256:32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9>",
+      "msd_root": "D:\\",
+      "uart_port": "COM5"
+    },
+    "central": {
+      "daplink_uid": "<probe-sha256:4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0>",
+      "msd_root": "E:\\",
+      "uart_port": "COM7"
+    }
+  },
+  "images": {
+    "peripheral": {
+      "name": "zephyr.hex",
+      "size": 539859,
+      "sha256": "3560d2dbd2bc8fdcdf8fe59bb40b696507740ab58a69ec4c5470f654a0198e75",
+      "flash_sequence": "1",
+      "flash_bytes": "540160",
+      "build_record": {
+        "core_revision": "18a7cbec9cce",
+        "core_source_sha256": "4258cd43be58c87a88e3a573b7dd4954d00db0c354e0b079180828c15d9daa88",
+        "application_source_sha256": "cab9aa8725af58cb809ca2692969f702c623d75a6626f7b43e07fecca7df0e61",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "e20320bbe978ece12655cc293624f91b5c434b0c1584c36ca47f2e1567f92767"
+      }
+    },
+    "central": {
+      "name": "zephyr.hex",
+      "size": 543271,
+      "sha256": "a4ace3237e025ec66078ddcf7a722a272cc632b5502d9bcefaea8b7f4f7495f5",
+      "flash_sequence": "1",
+      "flash_bytes": "543744",
+      "build_record": {
+        "core_revision": "18a7cbec9cce",
+        "core_source_sha256": "4258cd43be58c87a88e3a573b7dd4954d00db0c354e0b079180828c15d9daa88",
+        "application_source_sha256": "cab9aa8725af58cb809ca2692969f702c623d75a6626f7b43e07fecca7df0e61",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "e20320bbe978ece12655cc293624f91b5c434b0c1584c36ca47f2e1567f92767"
+      }
+    }
+  },
+  "transcripts": {
+    "peripheral": {
+      "name": "m19-pair-18a7cbe.peripheral.transcript.log",
+      "size": 781,
+      "sha256": "aff3e0c9413a7e4a7addfc0d8b9eeee0122884a2c0866118a4fc41141b270966"
+    },
+    "central": {
+      "name": "m19-pair-18a7cbe.central.transcript.log",
+      "size": 925,
+      "sha256": "6000b0ad2a9391d58b4620565ccbfd3afd22a7eaa78a7a23af1ef10096844e3e"
+    }
+  },
+  "results": {
+    "peripheral": {
+      "nonce": "c9d923025f5b0d59c3a81fa1dbc41bbb",
+      "connection_rounds": [
+        1,
+        2
+      ],
+      "disconnection_count": 2,
+      "callback_context": "PASS",
+      "reconnect": "PASS"
+    },
+    "central": {
+      "nonce": "c9d923025f5b0d59c3a81fa1dbc41bbb",
+      "connection_rounds": [
+        1,
+        2
+      ],
+      "disconnection_count": 2,
+      "callback_context": "PASS",
+      "reconnect": "PASS"
+    }
+  },
+  "coverage": {
+    "legacy_advertising": true,
+    "service_uuid_filter": true,
+    "manufacturer_data": true,
+    "rf_nonce_binding_bits": 128,
+    "connect_disconnect": true,
+    "explicit_reconnect": true,
+    "link_requests": [
+      "att_mtu",
+      "phy",
+      "connection_parameters",
+      "tx_power"
+    ],
+    "callback_context": "arduino-main-thread"
+  },
+  "safety": {
+    "external_wiring_required": false,
+    "mass_erase_requested": false,
+    "pmic_write_executed": false
+  }
+}

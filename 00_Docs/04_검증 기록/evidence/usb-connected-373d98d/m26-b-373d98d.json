@@ -1,0 +1,75 @@
+{
+  "schema_version": 2,
+  "protocol_version": 2,
+  "milestone": "M26",
+  "evidence_type": "onboard-temp-and-wdt30-reset",
+  "status": "passed",
+  "core_revision": "373d98da055b83e86b039448965d630e8d546497",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "probe_id_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "vcom_candidate_count": 2,
+  "baud_rate": 115200,
+  "image_sha256": "32e181f2528640ebfc4a1a2cca5e596a3f4e511f9c7b4d687ad584e66b63cc4a",
+  "image_size": 225743,
+  "build_record_sha256": "adda23aece91d586d96a01c6de1c51140fe21d870ca4955e3ca7a2a77a26a217",
+  "application_source_sha256": "4274540f36f04f774a2ef47bd582dc2473f3a57b9a63a8d72f9968c607fd0231",
+  "core_source_sha256": "4258cd43be58c87a88e3a573b7dd4954d00db0c354e0b079180828c15d9daa88",
+  "flash": {
+    "runner": "pyocd",
+    "target": "nrf54l",
+    "seconds": 7.609,
+    "mass_erase_requested": false,
+    "recover_requested": false,
+    "output_sha256": "39695d919ebd15c4a12e7c4e93f2e087276ff787a252951bf7655d2456b8c6f2",
+    "controlled_start": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    }
+  },
+  "selected_vcom_index": 1,
+  "ready_received_sizes": {
+    "0": 0,
+    "1": 32
+  },
+  "armed_received_sizes": {
+    "0": 0,
+    "1": 32
+  },
+  "result_received_sizes": {
+    "0": 0,
+    "1": 32
+  },
+  "reset_ready_seconds": 1.938,
+  "reset_prefix_hex": "ff5544",
+  "reset_prefix_size": 3,
+  "reset_ready_received_sizes": {
+    "0": 0,
+    "1": 35
+  },
+  "temperature_centi_celsius": 3575,
+  "watchdog_instance": 30,
+  "reset_cause": 16,
+  "supported_reset_cause": 2483,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "completed_at_utc": "2026-09-06T05:59:39.373303+00:00"
+}

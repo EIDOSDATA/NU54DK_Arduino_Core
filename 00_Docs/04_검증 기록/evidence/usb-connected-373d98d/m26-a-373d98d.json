@@ -1,0 +1,75 @@
+{
+  "schema_version": 2,
+  "protocol_version": 2,
+  "milestone": "M26",
+  "evidence_type": "onboard-temp-and-wdt30-reset",
+  "status": "passed",
+  "core_revision": "373d98da055b83e86b039448965d630e8d546497",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "probe_id_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "vcom_candidate_count": 2,
+  "baud_rate": 115200,
+  "image_sha256": "32e181f2528640ebfc4a1a2cca5e596a3f4e511f9c7b4d687ad584e66b63cc4a",
+  "image_size": 225743,
+  "build_record_sha256": "adda23aece91d586d96a01c6de1c51140fe21d870ca4955e3ca7a2a77a26a217",
+  "application_source_sha256": "4274540f36f04f774a2ef47bd582dc2473f3a57b9a63a8d72f9968c607fd0231",
+  "core_source_sha256": "4258cd43be58c87a88e3a573b7dd4954d00db0c354e0b079180828c15d9daa88",
+  "flash": {
+    "runner": "pyocd",
+    "target": "nrf54l",
+    "seconds": 7.328,
+    "mass_erase_requested": false,
+    "recover_requested": false,
+    "output_sha256": "080a457ce50746b201295b80f0af0a8cbbef853c29f7d3551cc46eb653734739",
+    "controlled_start": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    }
+  },
+  "selected_vcom_index": 1,
+  "ready_received_sizes": {
+    "0": 0,
+    "1": 32
+  },
+  "armed_received_sizes": {
+    "0": 0,
+    "1": 32
+  },
+  "result_received_sizes": {
+    "0": 0,
+    "1": 32
+  },
+  "reset_ready_seconds": 1.937,
+  "reset_prefix_hex": "7d9bdd55f57dffdfbfffdf7dff5dd7575f5f155d57df55ff557f7d",
+  "reset_prefix_size": 27,
+  "reset_ready_received_sizes": {
+    "0": 0,
+    "1": 59
+  },
+  "temperature_centi_celsius": 3450,
+  "watchdog_instance": 30,
+  "reset_cause": 16,
+  "supported_reset_cause": 2483,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "completed_at_utc": "2026-09-06T05:59:23.353626+00:00"
+}

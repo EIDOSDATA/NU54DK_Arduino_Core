@@ -1,0 +1,7 @@
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+{"type": "bounded-diagnostic-not-formal-suite", "source": "18a7cbec9cceed38d6c866131afdac9e6ffbc4b8", "probe_id_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9", "reason": "TWIM22 canonical READY contained 34 bytes; inspect exact wire frame and firmware stage without another flash", "flash_executed": false, "before": {"cpuid": "0x411fd210", "state": "SLEEPING", "m24_twim_stage": 6, "m24_twim_result": 0}, "created_at_utc": "2026-09-06T05:41:56.408381+00:00", "controlled_start": {"method": "reset-halt-drain-resume", "cpuid": "0x411fd210", "frequency_hz": 1000000, "auto_unlock": false, "mass_erase_requested": false}, "ready_hex": {"COM5": "", "COM6": "c6c7c4c5c2c3c0c1cecfcccdcacbc8c9d6d7d4d5d2d3d0d1dedfdcdddadbd8d9"}, "response_hex": {"COM5": "", "COM6": "4e55545716006a0c414101000000000000000000000000000000000000000069"}, "validated_result": {"address": 106, "register": 12, "value": 65}, "diagnostic_status": "passed", "after": {"cpuid": "0x411fd210", "state": "SLEEPING", "m24_twim_stage": 8, "m24_twim_result": 0}}

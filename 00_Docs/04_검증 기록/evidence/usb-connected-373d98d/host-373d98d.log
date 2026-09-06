@@ -1,0 +1,206 @@
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_ac01_contract.py
+test_connector_dtsi_uses_only_approved_free_gpio_pair (test_ac01_contract.AC01ContractTests.test_connector_dtsi_uses_only_approved_free_gpio_pair) ... ok
+test_safe_interrupt_and_timing_apis_have_real_backends (test_ac01_contract.AC01ContractTests.test_safe_interrupt_and_timing_apis_have_real_backends) ... ok
+test_standard_and_ble_profiles_share_one_connector_definition (test_ac01_contract.AC01ContractTests.test_standard_and_ble_profiles_share_one_connector_definition) ... ok
+test_variant_exposes_connector_capability_and_ownership (test_ac01_contract.AC01ContractTests.test_variant_exposes_connector_capability_and_ownership) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.005s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_ac02b_analog_contract.py
+test_examples_exist (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_examples_exist) ... ok
+test_math_contract_compiles (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_math_contract_compiles) ... ok
+test_production_pwm_route_backend_is_transactional (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_production_pwm_route_backend_is_transactional)
+Production adapter가 B2 route 수명주기와 실패 복구를 사용합니다. ... ok
+test_public_implementation_contains_fixed_policy (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_public_implementation_contains_fixed_policy) ... ok
+test_recovery_failure_is_fail_closed_and_gpio_transition_is_rollbackable (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_recovery_failure_is_fail_closed_and_gpio_transition_is_rollbackable)
+복구 실패가 조용히 상태를 버리거나 route를 재사용하지 않습니다. ... ok
+test_servo_is_fixed_memory_pwm22_backend (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_servo_is_fixed_memory_pwm22_backend) ... ok
+test_target_contract_covers_adc_pwm_tone_servo_and_pm (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_target_contract_covers_adc_pwm_tone_servo_and_pm) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 3.536s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_ac02b_b2_contract.py
+test_disabled_backends_and_library_discovery_fail_closed (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_disabled_backends_and_library_discovery_fail_closed) ... ok
+test_instance_route_matrix_and_zero_psel_boundary_are_fixed (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_instance_route_matrix_and_zero_psel_boundary_are_fixed) ... ok
+test_lifecycle_and_fail_closed_operations_are_present (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_lifecycle_and_fail_closed_operations_are_present) ... ok
+test_public_concrete_types_and_capabilities_are_explicit (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_public_concrete_types_and_capabilities_are_explicit) ... ok
+test_public_diagnostics_distinguish_runtime_routes_and_serial1 (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_public_diagnostics_distinguish_runtime_routes_and_serial1) ... ok
+test_wire_target_and_extra_instances_are_not_faked (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_wire_target_and_extra_instances_are_not_faked) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.005s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_ac03_storage_contract.py
+test_approved_legacy_headers_and_examples_exist (test_ac03_storage_contract.AC03StorageContractTests.test_approved_legacy_headers_and_examples_exist)
+! @brief 대표 Arduino include와 세 공개 예제를 검증합니다. ... ok
+test_builder_validates_the_effective_linker_partition (test_ac03_storage_contract.AC03StorageContractTests.test_builder_validates_the_effective_linker_partition)
+! @brief generated DTS와 linker map의 일치를 산출물 공개 전에 검증합니다. ... ok
+test_eeprom_record_and_explicit_commit_contract (test_ac03_storage_contract.AC03StorageContractTests.test_eeprom_record_and_explicit_commit_contract)
+! @brief EEPROM의 mirror, CRC, bounds, 명시적 commit 계약을 검증합니다. ... ok
+test_feature_manifests_are_allowlisted_and_profile_compatible (test_ac03_storage_contract.AC03StorageContractTests.test_feature_manifests_are_allowlisted_and_profile_compatible)
+! @brief EEPROM과 LittleFS의 선언형 build 입력을 검증합니다. ... ok
+test_littlefs_default_mount_cannot_format (test_ac03_storage_contract.AC03StorageContractTests.test_littlefs_default_mount_cannot_format)
+! @brief 기본 mount와 명시적 format 경계를 검증합니다. ... ok
+test_partition_is_common_exact_and_non_overlapping (test_ac03_storage_contract.AC03StorageContractTests.test_partition_is_common_exact_and_non_overlapping)
+! @brief 두 profile이 같은 loaderless flash 분할과 linker 설정을 포함하는지 검증합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.020s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_build_matrix_runner.py
+test_all_nu54dk_testcase_metadata_is_in_canonical_runner (test_build_matrix_runner.BuildMatrixRunnerTests.test_all_nu54dk_testcase_metadata_is_in_canonical_runner)
+! @brief 독립 testcase YAML을 대조하여 새 target의 canonical 목록 누락을 거부합니다. ... ok
+ARDUINO_CLI_BOOTSTRAP_RETRY=1/2;DELAY_SECONDS=2
+test_arduino_compile_retries_only_bootstrap_failure (test_build_matrix_runner.BuildMatrixRunnerTests.test_arduino_compile_retries_only_bootstrap_failure) ... ok
+test_arduino_groups_are_explicit_and_disjoint (test_build_matrix_runner.BuildMatrixRunnerTests.test_arduino_groups_are_explicit_and_disjoint) ... ok
+test_child_python_output_is_unbuffered (test_build_matrix_runner.BuildMatrixRunnerTests.test_child_python_output_is_unbuffered) ... ok
+test_serial_source_validator_rejects_false_positive_builds (test_build_matrix_runner.BuildMatrixRunnerTests.test_serial_source_validator_rejects_false_positive_builds) ... ok
+test_target_subset_never_silently_escapes_group (test_build_matrix_runner.BuildMatrixRunnerTests.test_target_subset_never_silently_escapes_group) ... ok
+test_zephyr_failure_summary_identifies_scenario (test_build_matrix_runner.BuildMatrixRunnerTests.test_zephyr_failure_summary_identifies_scenario) ... ok
+test_zephyr_groups_partition_every_suite_once (test_build_matrix_runner.BuildMatrixRunnerTests.test_zephyr_groups_partition_every_suite_once) ... ok
+test_zephyr_plan_uses_short_isolated_outdirs (test_build_matrix_runner.BuildMatrixRunnerTests.test_zephyr_plan_uses_short_isolated_outdirs) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.069s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_fixed_gate_runner.py
+test_main_rejects_different_repository_root (test_fixed_gate_runner.FixedGateRunnerTests.test_main_rejects_different_repository_root) ... ok
+test_parser_rejects_arbitrary_host_command (test_fixed_gate_runner.FixedGateRunnerTests.test_parser_rejects_arbitrary_host_command) ... ok
+test_runtime_fingerprint_normalizes_only_platform_version (test_fixed_gate_runner.FixedGateRunnerTests.test_runtime_fingerprint_normalizes_only_platform_version) ... ok
+test_short_workspace_preserves_existing_slot (test_fixed_gate_runner.FixedGateRunnerTests.test_short_workspace_preserves_existing_slot) ... ok
+test_short_workspace_rejects_exhausted_slots (test_fixed_gate_runner.FixedGateRunnerTests.test_short_workspace_rejects_exhausted_slots) ... ok
+test_short_workspace_rejects_long_path_budget (test_fixed_gate_runner.FixedGateRunnerTests.test_short_workspace_rejects_long_path_budget) ... ok
+test_smoke_cli_config_isolates_data_downloads_and_user (test_fixed_gate_runner.FixedGateRunnerTests.test_smoke_cli_config_isolates_data_downloads_and_user) ... ok
+test_smoke_scope_uses_only_canonical_m9_name (test_fixed_gate_runner.FixedGateRunnerTests.test_smoke_scope_uses_only_canonical_m9_name) ... ok
+test_stage_zephyr_gate_tree_preserves_relative_core_root (test_fixed_gate_runner.FixedGateRunnerTests.test_stage_zephyr_gate_tree_preserves_relative_core_root) ... ok
+test_twister_result_binds_report_to_workspace (test_fixed_gate_runner.FixedGateRunnerTests.test_twister_result_binds_report_to_workspace) ... ok
+test_twister_result_rejects_non_build_only_status (test_fixed_gate_runner.FixedGateRunnerTests.test_twister_result_rejects_non_build_only_status) ... ok
+test_twister_result_requires_exact_build_only_set (test_fixed_gate_runner.FixedGateRunnerTests.test_twister_result_requires_exact_build_only_set) ... ok
+test_validate_platform_accepts_exact_identity (test_fixed_gate_runner.FixedGateRunnerTests.test_validate_platform_accepts_exact_identity) ... ok
+test_validate_platform_rejects_payload_tampering (test_fixed_gate_runner.FixedGateRunnerTests.test_validate_platform_rejects_payload_tampering) ... ok
+test_zephyr_command_uses_short_non_junction_contract (test_fixed_gate_runner.FixedGateRunnerTests.test_zephyr_command_uses_short_non_junction_contract) ... ok
+test_zephyr_environment_stages_fixed_demangler (test_fixed_gate_runner.FixedGateRunnerTests.test_zephyr_environment_stages_fixed_demangler) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.287s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m10_prerequisites.py
+test_builder_launcher_isolates_embedded_python_runtime (test_m10_prerequisites.M10PrerequisiteContractTests.test_builder_launcher_isolates_embedded_python_runtime)
+! @brief 외부 Python 환경이 NCS Toolchain 표준 library를 오염시키지 못하게 합니다. ... ok
+test_builder_launcher_searches_exact_user_toolchain_first (test_m10_prerequisites.M10PrerequisiteContractTests.test_builder_launcher_searches_exact_user_toolchain_first)
+! @brief Arduino process가 PATH 없이 사용자 profile의 고정 Python을 찾습니다. ... ok
+test_changed_pin_hash_is_rejected (test_m10_prerequisites.M10PrerequisiteContractTests.test_changed_pin_hash_is_rejected)
+! @brief package pin byte가 바뀌면 과거 완료 marker를 재사용하지 않습니다. ... ok
+test_empty_explicit_ncs_root_does_not_fall_back (test_m10_prerequisites.M10PrerequisiteContractTests.test_empty_explicit_ncs_root_does_not_fall_back)
+! @brief 환경 변수를 빈 값으로 명시해도 기존 NCS를 선택하지 않습니다. ... ok
+test_explicit_ncs_root_is_authoritative (test_m10_prerequisites.M10PrerequisiteContractTests.test_explicit_ncs_root_is_authoritative)
+! @brief 명시한 NCS root만 선택하고 기본 설치 후보를 조회하지 않습니다. ... ok
+test_gitless_revision_falls_back_only_to_valid_release_manifest (test_m10_prerequisites.M10PrerequisiteContractTests.test_gitless_revision_falls_back_only_to_valid_release_manifest)
+! @brief 상위 Git을 오인하지 않고 40자리 archive revision만 사용합니다. ... ok
+test_incomplete_or_wrong_ready_marker_is_rejected (test_m10_prerequisites.M10PrerequisiteContractTests.test_incomplete_or_wrong_ready_marker_is_rejected)
+! @brief incomplete 상태와 다른 Toolchain marker를 모두 fail-closed 처리합니다. ... ok
+test_installer_is_user_scoped_resumable_and_version_checked (test_m10_prerequisites.M10PrerequisiteContractTests.test_installer_is_user_scoped_resumable_and_version_checked)
+! @brief 설치기는 사용자 경로와 단계 marker만 사용하고 고정 version을 확인합니다. ... ok
+test_installer_sets_utf8_before_any_runtime_output (test_m10_prerequisites.M10PrerequisiteContractTests.test_installer_sets_utf8_before_any_runtime_output)
+! @brief 설치기가 첫 출력 전에 PS 5.1 console과 native pipe를 UTF-8로 고정합니다. ... ok
+test_installer_uses_powershell_51_compatible_log_append (test_m10_prerequisites.M10PrerequisiteContractTests.test_installer_uses_powershell_51_compatible_log_append)
+! @brief PS 5.1에서 허용되지 않는 Tee 매개 변수 조합을 차단합니다. ... ERROR
+test_invalid_explicit_ncs_root_does_not_fall_back (test_m10_prerequisites.M10PrerequisiteContractTests.test_invalid_explicit_ncs_root_does_not_fall_back)
+! @brief 격리 NCS가 없을 때 기존 사용자·C 드라이브 설치로 새지 않습니다. ... ok
+test_matching_release_manifest_and_ready_marker_are_accepted (test_m10_prerequisites.M10PrerequisiteContractTests.test_matching_release_manifest_and_ready_marker_are_accepted)
+! @brief package, pin과 설치 marker의 3-way identity가 같으면 승인합니다. ... ok
+test_packaged_revisions_use_bundled_git_with_empty_path (test_m10_prerequisites.M10PrerequisiteContractTests.test_packaged_revisions_use_bundled_git_with_empty_path)
+! @brief system Git이 없어도 NCS/Zephyr는 Toolchain Git으로만 조회합니다. ... ok
+test_packaged_toolchain_discovery_requires_only_pinned_bundle (test_m10_prerequisites.M10PrerequisiteContractTests.test_packaged_toolchain_discovery_requires_only_pinned_bundle)
+! @brief package는 env와 registry의 다른 bundle을 무시하고 exact pin만 선택합니다. ... ok
+test_pin_file_fixes_official_bytes_and_all_nordic_versions (test_m10_prerequisites.M10PrerequisiteContractTests.test_pin_file_fixes_official_bytes_and_all_nordic_versions)
+! @brief 공식 URL, byte hash와 SDK/Toolchain revision이 정확히 고정됩니다. ... ok
+test_post_install_cmd_emits_strict_utf8_for_korean_output (test_m10_prerequisites.M10PrerequisiteContractTests.test_post_install_cmd_emits_strict_utf8_for_korean_output)
+! @brief Arduino gRPC에 전달할 한글 출력을 엄격한 UTF-8로 보장합니다. ... FAIL
+test_post_install_cmd_preserves_quoted_platform_root_and_exit_code (test_m10_prerequisites.M10PrerequisiteContractTests.test_post_install_cmd_preserves_quoted_platform_root_and_exit_code)
+! @brief trailing slash와 공백이 있는 package root를 실제 CMD 호출로 보존합니다. ... FAIL
+test_post_install_propagates_powershell_exit_code (test_m10_prerequisites.M10PrerequisiteContractTests.test_post_install_propagates_powershell_exit_code)
+! @brief Arduino hook가 설치 실패를 성공으로 숨기지 않습니다. ... ok
+test_powershell_install_and_verify_scripts_parse (test_m10_prerequisites.M10PrerequisiteContractTests.test_powershell_install_and_verify_scripts_parse)
+! @brief clean Windows에서 실행할 두 PowerShell script가 parser 오류 없이 읽힙니다. ... ERROR
+test_powershell_scripts_do_not_depend_on_hash_module_autoload (test_m10_prerequisites.M10PrerequisiteContractTests.test_powershell_scripts_do_not_depend_on_hash_module_autoload)
+! @brief clean PowerShell에서 SHA-256 cmdlet 자동 로드에 의존하지 않습니다. ... ok
+test_sdk_manager_requirement_uses_exact_version_operator (test_m10_prerequisites.M10PrerequisiteContractTests.test_sdk_manager_requirement_uses_exact_version_operator)
+! @brief nRF Util installation set이 sdk-manager patch version까지 고정합니다. ... ok
+test_toolchain_manifest_bundle_id_is_verified (test_m10_prerequisites.M10PrerequisiteContractTests.test_toolchain_manifest_bundle_id_is_verified)
+! @brief directory 이름과 내부 Nordic bundle metadata가 모두 pin과 같아야 합니다. ... ok
+test_verifier_checks_reused_marker_version_and_normalized_nrfutil_path (test_m10_prerequisites.M10PrerequisiteContractTests.test_verifier_checks_reused_marker_version_and_normalized_nrfutil_path)
+! @brief verifier가 Builder와 같은 ready marker version/path 계약을 적용합니다. ... ok
+test_verify_script_initializes_utf8_before_runtime_setup (test_m10_prerequisites.M10PrerequisiteContractTests.test_verify_script_initializes_utf8_before_runtime_setup)
+! @brief 검증 subprocess도 첫 출력 전에 UTF-8 출력을 고정합니다. ... ok
+
+======================================================================
+ERROR: test_installer_uses_powershell_51_compatible_log_append (test_m10_prerequisites.M10PrerequisiteContractTests.test_installer_uses_powershell_51_compatible_log_append)
+! @brief PS 5.1에서 허용되지 않는 Tee 매개 변수 조합을 차단합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_m10_prerequisites.py", line 471, in test_installer_uses_powershell_51_compatible_log_append
+    result = subprocess.run(
+             ^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] 지정된 파일을 찾을 수 없습니다
+
+======================================================================
+ERROR: test_powershell_install_and_verify_scripts_parse (test_m10_prerequisites.M10PrerequisiteContractTests.test_powershell_install_and_verify_scripts_parse)
+! @brief clean Windows에서 실행할 두 PowerShell script가 parser 오류 없이 읽힙니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_m10_prerequisites.py", line 422, in test_powershell_install_and_verify_scripts_parse
+    result = subprocess.run(
+             ^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] 지정된 파일을 찾을 수 없습니다
+
+======================================================================
+FAIL: test_post_install_cmd_emits_strict_utf8_for_korean_output (test_m10_prerequisites.M10PrerequisiteContractTests.test_post_install_cmd_emits_strict_utf8_for_korean_output)
+! @brief Arduino gRPC에 전달할 한글 출력을 엄격한 UTF-8로 보장합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_m10_prerequisites.py", line 556, in test_post_install_cmd_emits_strict_utf8_for_korean_output
+    self.assertEqual(result.returncode, 0, result.stdout)
+AssertionError: 9009 != 0 : b"'powershell.exe' is not recognized as an internal or external command,\r\noperable program or batch file.\r\nNU54DK Nordic prerequisite installation failed with exit code 9009. \r\n"
+
+======================================================================
+FAIL: test_post_install_cmd_preserves_quoted_platform_root_and_exit_code (test_m10_prerequisites.M10PrerequisiteContractTests.test_post_install_cmd_preserves_quoted_platform_root_and_exit_code)
+! @brief trailing slash와 공백이 있는 package root를 실제 CMD 호출로 보존합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_m10_prerequisites.py", line 523, in test_post_install_cmd_preserves_quoted_platform_root_and_exit_code
+    self.assertEqual(success.returncode, 0, success.stdout)
+AssertionError: 9009 != 0 : 'powershell.exe' is not recognized as an internal or external command,
+operable program or batch file.
+NU54DK Nordic prerequisite installation failed with exit code 9009. 
+
+
+----------------------------------------------------------------------
+Ran 24 tests in 4.143s
+
+FAILED (failures=2, errors=2)
+M12_GATE_FAIL: 명령이 종료 코드 1로 실패했습니다: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m10_prerequisites.py

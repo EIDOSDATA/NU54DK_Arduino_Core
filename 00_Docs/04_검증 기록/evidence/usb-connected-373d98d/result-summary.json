@@ -1,0 +1,73 @@
+{
+  "onboard_source": "373d98da055b83e86b039448965d630e8d546497",
+  "onboard_runner_passes": 8,
+  "onboard_case_passes": 18,
+  "uart_instance_results": 8,
+  "pmic_instance_results": 6,
+  "m25_results": 2,
+  "m26_results": 2,
+  "ble_source": "18a7cbec9cceed38d6c866131afdac9e6ffbc4b8",
+  "ble_pair_gates_passed": [
+    "m19",
+    "m20",
+    "m21"
+  ],
+  "first_attempt_failures_preserved": [
+    {
+      "case": "m25-a",
+      "error": "exactly one VCOM must return the expected frame: matches=0, sizes={'COM5': 0, 'COM6': 38}",
+      "core_revision": "18a7cbec9cceed38d6c866131afdac9e6ffbc4b8"
+    },
+    {
+      "case": "twim-a",
+      "error": "exactly one VCOM must return the expected frame: matches=0, sizes={'COM5': 0, 'COM6': 34}",
+      "core_revision": "18a7cbec9cceed38d6c866131afdac9e6ffbc4b8"
+    },
+    {
+      "case": "twim-b",
+      "error": "exactly one VCOM must return the expected frame: matches=0, sizes={'COM7': 0, 'COM8': 33}",
+      "core_revision": "18a7cbec9cceed38d6c866131afdac9e6ffbc4b8"
+    },
+    {
+      "case": "uart-a",
+      "error": "non-selected VCOM returned unexpected bytes: port=COM6, size=11",
+      "core_revision": "18a7cbec9cceed38d6c866131afdac9e6ffbc4b8"
+    },
+    {
+      "case": "uart-b",
+      "error": "non-selected VCOM returned unexpected bytes: port=COM8, size=12",
+      "core_revision": "18a7cbec9cceed38d6c866131afdac9e6ffbc4b8"
+    }
+  ],
+  "host": {
+    "total": 643,
+    "passed": 642,
+    "skipped": 1,
+    "actual_installed_m13_separate_pass": 11
+  },
+  "onboard_measurements": {
+    "m25-a": {
+      "timer_ticks": 2004,
+      "vdd_raw": 4092,
+      "stream_linked": 1
+    },
+    "m25-b": {
+      "timer_ticks": 2004,
+      "vdd_raw": 4092,
+      "stream_linked": 1
+    },
+    "m26-a": {
+      "reset_ready_seconds": 1.937,
+      "reset_prefix_size": 27,
+      "temperature_centi_celsius": 3450,
+      "reset_cause": 16
+    },
+    "m26-b": {
+      "reset_ready_seconds": 1.938,
+      "reset_prefix_size": 3,
+      "temperature_centi_celsius": 3575,
+      "reset_cause": 16
+    }
+  },
+  "external_current_source_T11": "NOT RUN"
+}

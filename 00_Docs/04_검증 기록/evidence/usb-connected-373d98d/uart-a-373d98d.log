@@ -1,0 +1,23 @@
+CASE_START=uart-a
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+FRAME_OBSERVATION={"expected_hex": "b4b5b6b7b0b1b2b3bcbdbebfb8b9babba4a5a6a7a0a1a2a3acadaeafa8a9aaab", "received_hex": {"COM5": "b4b5b6b7b0b1b2b3bcbdbebfb8b9babba4a5a6a7a0a1a2a3acadaeafa8a9aaab", "COM6": ""}}
+FRAME_OBSERVATION={"expected_hex": "3737f64e3f2c139cbdbeed205f2e29a0e1e4ad5a32588d3a7956f85a4c3f9661", "received_hex": {"COM5": "3737f64e3f2c139cbdbeed205f2e29a0e1e4ad5a32588d3a7956f85a4c3f9661", "COM6": ""}}
+M24_UARTE_INSTANCE_PASS=20;VCOM=0
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+FRAME_OBSERVATION={"expected_hex": "b5b4b7b6b1b0b3b2bdbcbfbeb9b8bbbaa5a4a7a6a1a0a3a2adacafaea9a8abaa", "received_hex": {"COM5": "b5b4b7b6b1b0b3b2bdbcbfbeb9b8bbbaa5a4a7a6a1a0a3a2adacafaea9a8abaa", "COM6": ""}}
+FRAME_OBSERVATION={"expected_hex": "013697a873692c209a652730a156005d5ffc7387516cc25bbe8551cf46b2d2ac", "received_hex": {"COM5": "013697a873692c209a652730a156005d5ffc7387516cc25bbe8551cf46b2d2ac", "COM6": ""}}
+M24_UARTE_INSTANCE_PASS=21;VCOM=0
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+FRAME_OBSERVATION={"expected_hex": "b6b7b4b5b2b3b0b1bebfbcbdbabbb8b9a6a7a4a5a2a3a0a1aeafacadaaaba8a9", "received_hex": {"COM5": "b6b7b4b5b2b3b0b1bebfbcbdbabbb8b9a6a7a4a5a2a3a0a1aeafacadaaaba8a9", "COM6": ""}}
+FRAME_OBSERVATION={"expected_hex": "c2e2293cc55c22cea465dfed0cf11cc2a8c9771a4296fe2184e5e2a71c61b83b", "received_hex": {"COM5": "c2e2293cc55c22cea465dfed0cf11cc2a8c9771a4296fe2184e5e2a71c61b83b", "COM6": ""}}
+M24_UARTE_INSTANCE_PASS=22;VCOM=0
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+FRAME_OBSERVATION={"expected_hex": "bebfbcbdbabbb8b9b6b7b4b5b2b3b0b1aeafacadaaaba8a9a6a7a4a5a2a3a0a1", "received_hex": {"COM5": "", "COM6": "bebfbcbdbabbb8b9b6b7b4b5b2b3b0b1aeafacadaaaba8a9a6a7a4a5a2a3a0a1"}}
+FRAME_OBSERVATION={"expected_hex": "5a52603c0e0e4ffee2f685fc2721f6c941c42417de0f672dce2974494ecd0271", "received_hex": {"COM5": "", "COM6": "5a52603c0e0e4ffee2f685fc2721f6c941c42417de0f672dce2974494ecd0271"}}
+M24_UARTE_INSTANCE_PASS=30;VCOM=1
+M24_UARTE_ONBOARD_HIL_PASS=4;EVIDENCE=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t09-connected\uart-a-373d98d.json
+CASE_PASS=uart-a

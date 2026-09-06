@@ -1,0 +1,13 @@
+CASE_START=twim-b
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+FRAME_OBSERVATION={"expected_hex": "c4c5c6c7c0c1c2c3cccdcecfc8c9cacbd4d5d6d7d0d1d2d3dcdddedfd8d9dadb", "received_hex": {"COM7": "", "COM8": "c4c5c6c7c0c1c2c3cccdcecfc8c9cacbd4d5d6d7d0d1d2d3dcdddedfd8d9dadb"}}
+M24_TWIM_INSTANCE_PASS=20;VALUE=0x41
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+FRAME_OBSERVATION={"expected_hex": "c5c4c7c6c1c0c3c2cdcccfcec9c8cbcad5d4d7d6d1d0d3d2dddcdfded9d8dbda", "received_hex": {"COM7": "", "COM8": "c5c4c7c6c1c0c3c2cdcccfcec9c8cbcad5d4d7d6d1d0d3d2dddcdfded9d8dbda"}}
+M24_TWIM_INSTANCE_PASS=21;VALUE=0x41
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+FRAME_OBSERVATION={"expected_hex": "c6c7c4c5c2c3c0c1cecfcccdcacbc8c9d6d7d4d5d2d3d0d1dedfdcdddadbd8d9", "received_hex": {"COM7": "", "COM8": "f8c6c7c4c5c2c3c0c1cecfcccdcacbc8c9d6d7d4d5d2d3d0d1dedfdcdddadbd8d9"}}
+CASE_FAIL={"case": "twim-b", "status": "failed", "core_revision": "18a7cbec9cceed38d6c866131afdac9e6ffbc4b8", "started_at_utc": "2026-09-06T05:42:18.690162+00:00", "completed_at_utc": "2026-09-06T05:42:43.301501+00:00", "error_type": "TwimHilFailure", "error": "exactly one VCOM must return the expected frame: matches=0, sizes={'COM7': 0, 'COM8': 33}", "canonical_arguments_redacted": ["--repository", "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core", "--build-root", "C:\\u2a", "--probe-id", "<probe-sha256:4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0>", "--pyocd", "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\Scripts\\pyocd.exe", "--evidence", "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t09-connected\\twim-b-18a7cbe.json"], "automatic_retry": false}

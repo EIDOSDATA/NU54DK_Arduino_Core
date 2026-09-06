@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "milestone": "M25",
+  "evidence_type": "onboard-egu-dppi-timer-and-internal-vdd-saadc",
+  "status": "passed",
+  "core_revision": "373d98da055b83e86b039448965d630e8d546497",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "probe_id_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "vcom_candidate_count": 2,
+  "baud_rate": 115200,
+  "image_sha256": "fe15467d0b81742209e733aa342577272bb4de8425d56b7c9ea463b8bdaca34b",
+  "image_size": 377045,
+  "build_record_sha256": "a26fca406d98649dfc4aec5c6a2b1489bb6569314d46ecd8f8ed9138a80add2d",
+  "application_source_sha256": "9549a6e40e1581bc0046a9cb70c322f9c19038e0cf6c2aa8f5cffcafde8bf90c",
+  "core_source_sha256": "4258cd43be58c87a88e3a573b7dd4954d00db0c354e0b079180828c15d9daa88",
+  "flash": {
+    "runner": "pyocd",
+    "target": "nrf54l",
+    "seconds": 9.703,
+    "mass_erase_requested": false,
+    "recover_requested": false,
+    "output_sha256": "8f24e4539a3a3c7277e3be49a839ab9cd2d2c7635e1d02f2b2acf4df510e7623",
+    "controlled_start": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    }
+  },
+  "selected_vcom_index": 1,
+  "ready_received_sizes": {
+    "0": 0,
+    "1": 32
+  },
+  "result_received_sizes": {
+    "0": 0,
+    "1": 32
+  },
+  "timer_ticks": 2004,
+  "vdd_raw": 4092,
+  "stream_linked": 1,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "completed_at_utc": "2026-09-06T05:59:06.207396+00:00"
+}

@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "milestone": "M24",
+  "evidence_type": "onboard-twim-bq25186-read-only",
+  "status": "passed",
+  "core_revision": "373d98da055b83e86b039448965d630e8d546497",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "probe_id_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "vcom_candidate_count": 2,
+  "baud_rate": 115200,
+  "pmic_address": 106,
+  "register": 12,
+  "expected_value": 65,
+  "write_operations": 0,
+  "instances": [
+    {
+      "sequence": 1,
+      "instance": 20,
+      "image_sha256": "6518cb9d012cd0592ec5e852c335f41732a14dda5f3ab217c17ad925ca9bc8a8",
+      "image_size": 235582,
+      "build_record_sha256": "7a1be42416a298eb9f8cc42f693647281de1c0089d5553e9569153ecae1f66a3",
+      "application_source_sha256": "9d965d6370e30ab74b8bb7c9fcb0f2827f06ede715f41100f2f82daabe4a31e7",
+      "core_source_sha256": "4258cd43be58c87a88e3a573b7dd4954d00db0c354e0b079180828c15d9daa88",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "seconds": 7.265,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "fd9e90c1b095ffa14f39d3bf0449e7984441d159ceaaceb3980a800803fa6ac3",
+        "controlled_start": {
+          "method": "reset-halt-drain-resume",
+          "cpuid": "0x411fd210",
+          "frequency_hz": 1000000,
+          "dap_uart_idle_bias": [
+            {
+              "pin": "P0.00",
+              "pin_cnf_address": "0x5010a080",
+              "before": "0x00000002",
+              "after": "0x0000000e",
+              "mode": "input-pullup"
+            },
+            {
+              "pin": "P1.04",
+              "pin_cnf_address": "0x500d8290",
+              "before": "0x00000002",
+              "after": "0x0000000e",
+              "mode": "input-pullup"
+            }
+          ],
+          "auto_unlock": false,
+          "mass_erase_requested": false
+        }
+      },
+      "selected_vcom_index": 1,
+      "ready_received_sizes": {
+        "0": 0,
+        "1": 32
+      },
+      "result_received_sizes": {
+        "0": 0,
+        "1": 32
+      },
+      "address": 106,
+      "register": 12,
+      "value": 65,
+      "status": "passed"
+    },
+    {
+      "sequence": 2,
+      "instance": 21,
+      "image_sha256": "ae6f6c336975575cf3ef7fcbf29a7669621e6ba85ca69445304f3255b18b5e96",
+      "image_size": 235582,
+      "build_record_sha256": "7a1be42416a298eb9f8cc42f693647281de1c0089d5553e9569153ecae1f66a3",
+      "application_source_sha256": "9d965d6370e30ab74b8bb7c9fcb0f2827f06ede715f41100f2f82daabe4a31e7",
+      "core_source_sha256": "4258cd43be58c87a88e3a573b7dd4954d00db0c354e0b079180828c15d9daa88",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "seconds": 5.437,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "6b5d5992854ed601a7482025d401cffe424e4eae8378476a37458edd8644feaf",
+        "controlled_start": {
+          "method": "reset-halt-drain-resume",
+          "cpuid": "0x411fd210",
+          "frequency_hz": 1000000,
+          "dap_uart_idle_bias": [
+            {
+              "pin": "P0.00",
+              "pin_cnf_address": "0x5010a080",
+              "before": "0x00000002",
+              "after": "0x0000000e",
+              "mode": "input-pullup"
+            },
+            {
+              "pin": "P1.04",
+              "pin_cnf_address": "0x500d8290",
+              "before": "0x00000002",
+              "after": "0x0000000e",
+              "mode": "input-pullup"
+            }
+          ],
+          "auto_unlock": false,
+          "mass_erase_requested": false
+        }
+      },
+      "selected_vcom_index": 1,
+      "ready_received_sizes": {
+        "0": 0,
+        "1": 32
+      },
+      "result_received_sizes": {
+        "0": 0,
+        "1": 32
+      },
+      "address": 106,
+      "register": 12,
+      "value": 65,
+      "status": "passed"
+    },
+    {
+      "sequence": 3,
+      "instance": 22,
+      "image_sha256": "6f22d85f7d006a93084d7f0a96a6b017b1ed2dac63bdb1f2778f3bd9e332e9b7",
+      "image_size": 235582,
+      "build_record_sha256": "7a1be42416a298eb9f8cc42f693647281de1c0089d5553e9569153ecae1f66a3",
+      "application_source_sha256": "9d965d6370e30ab74b8bb7c9fcb0f2827f06ede715f41100f2f82daabe4a31e7",
+      "core_source_sha256": "4258cd43be58c87a88e3a573b7dd4954d00db0c354e0b079180828c15d9daa88",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "seconds": 5.532,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "2d24da4ba3317aaf00f71db09159b4d771cccdd131de9b1329b8d5a20c21834c",
+        "controlled_start": {
+          "method": "reset-halt-drain-resume",
+          "cpuid": "0x411fd210",
+          "frequency_hz": 1000000,
+          "dap_uart_idle_bias": [
+            {
+              "pin": "P0.00",
+              "pin_cnf_address": "0x5010a080",
+              "before": "0x00000002",
+              "after": "0x0000000e",
+              "mode": "input-pullup"
+            },
+            {
+              "pin": "P1.04",
+              "pin_cnf_address": "0x500d8290",
+              "before": "0x00000002",
+              "after": "0x0000000e",
+              "mode": "input-pullup"
+            }
+          ],
+          "auto_unlock": false,
+          "mass_erase_requested": false
+        }
+      },
+      "selected_vcom_index": 1,
+      "ready_received_sizes": {
+        "0": 0,
+        "1": 32
+      },
+      "result_received_sizes": {
+        "0": 0,
+        "1": 32
+      },
+      "address": 106,
+      "register": 12,
+      "value": 65,
+      "status": "passed"
+    }
+  ],
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "completed_at_utc": "2026-09-06T06:01:04.749742+00:00"
+}
