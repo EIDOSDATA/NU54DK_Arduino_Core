@@ -34,10 +34,11 @@ namespace
     alignas(4) std::int16_t analog_samples[2][analog_capacity]{};
     alignas(4) std::int16_t pdm_samples[2][stream_capacity]{};
     alignas(4) std::uint16_t pwm_values[16]{};
-    /** @brief slot 2는 마지막 payload를 DMA에서 반환받기 위한 전용 tail이며 판정에서 제외합니다. */
-    alignas(4) std::uint32_t i2s_rx[3][stream_capacity]{};
-    alignas(4) std::uint32_t i2s_tx[3][stream_capacity]{};
+    /** @brief slot 2는 시작 지연만큼 밀린 payload를 수집하고 slot 3은 정지 중 재사용을 막습니다. */
+    alignas(4) std::uint32_t i2s_rx[4][stream_capacity]{};
+    alignas(4) std::uint32_t i2s_tx[4][stream_capacity]{};
     v04::I2sFiniteTransfer i2s_transfer;
+    bool i2s_tail_complete = false;
     alignas(4) std::uint8_t pdm_source[pdm_source_capacity]{};
 
     SaadcFabric *saadc = nullptr;
@@ -333,6 +334,9 @@ namespace
         requested = args[3];
         i2s_buffers = args[4];
         i2s_transfer.reset(i2s_buffers);
+        i2s_tail_complete = false;
+        memset(i2s_rx[2], 0xcc, sizeof(i2s_rx[2]));
+        memset(i2s_rx[3], 0xcc, sizeof(i2s_rx[3]));
         for (std::size_t slot = 0U; slot < 2U; ++slot)
         {
             for (std::size_t index = 0U; index < requested; ++index)
@@ -607,8 +611,14 @@ void serviceSignal()
                 const unsigned slot = event.released.receive == i2s_rx[0]   ? 0U
                                       : event.released.receive == i2s_rx[1] ? 1U
                                                                             : 2U;
-                if (slot >= i2s_buffers || event.released.transmit != i2s_tx[slot] ||
-                    event.released.words != requested || !i2s_transfer.released(slot))
+                if (event.released.receive == i2s_rx[2] && event.released.transmit == i2s_tx[2] &&
+                    event.released.words == requested && i2s_transfer.complete() &&
+                    !i2s_tail_complete)
+                {
+                    i2s_tail_complete = true;
+                }
+                else if (slot >= i2s_buffers || event.released.transmit != i2s_tx[slot] ||
+                         event.released.words != requested || !i2s_transfer.released(slot))
                 {
                     error |= 64U;
                 }
@@ -618,11 +628,10 @@ void serviceSignal()
                     amount += static_cast<std::uint32_t>(event.released.words);
                 }
             }
-            else if (event.type == I2sEventType::buffers_needed && !i2s_transfer.complete())
+            else if (event.type == I2sEventType::buffers_needed && !i2s_tail_complete)
             {
                 const auto slot = i2s_transfer.nextSlot();
-                if (slot >= 3U || i2s->queueBuffers({i2s_rx[slot], i2s_tx[slot],
-                                                     slot == 2U ? stream_capacity : requested}) !=
+                if (slot >= 4U || i2s->queueBuffers({i2s_rx[slot], i2s_tx[slot], requested}) !=
                                       StreamFabricResult::success)
                 {
                     error |= 128U;
@@ -638,9 +647,9 @@ void serviceSignal()
                 error |= 128U;
             }
         }
-        if (error == 0U && i2s_transfer.complete())
+        if (error == 0U && i2s_transfer.complete() && i2s_tail_complete)
         {
-            /** @brief payload 반환 뒤 tail이 활성인 동안 정지하여 시험 buffer 재사용을 막습니다. */
+            /** @brief tail 반환 뒤 보호 buffer가 활성인 동안 정지하여 마지막 sample을 보존합니다. */
             if (i2s->stop(100000U) == StreamFabricResult::success)
             {
                 i2s = nullptr;
@@ -800,11 +809,11 @@ std::uint32_t signalCommand(std::uint32_t opcode, const std::uint32_t *args, std
         return result == StreamFabricResult::success ? 0U : 733U;
     }
     const auto family = v04::fixtureFamily(gate.fixture());
-    const std::uint32_t available = family == v04::FixtureFamily::analog
-                                        ? requested * analog_buffers
-                                    : family == v04::FixtureFamily::pdm ? requested * pdm_buffers
-                                    : family == v04::FixtureFamily::i2s ? requested * i2s_buffers
-                                                                        : requested;
+    const std::uint32_t available =
+        family == v04::FixtureFamily::analog ? requested * analog_buffers
+        : family == v04::FixtureFamily::pdm  ? requested * pdm_buffers
+        : family == v04::FixtureFamily::i2s  ? requested * i2s_buffers + 16U
+                                             : requested;
     if (opcode == 37U && nargs == 2U && args[1] != 0U && args[1] <= 16U && args[0] <= available &&
         args[1] <= available - args[0])
     {
@@ -813,7 +822,9 @@ std::uint32_t signalCommand(std::uint32_t opcode, const std::uint32_t *args, std
             for (std::size_t index = 0U; index < args[1]; ++index)
             {
                 const std::size_t linear = args[0] + index;
-                out[index] = i2s_rx[linear / requested][linear % requested];
+                const auto payload_words = requested * i2s_buffers;
+                out[index] = linear < payload_words ? i2s_rx[linear / requested][linear % requested]
+                                                    : i2s_rx[2][linear - payload_words];
             }
             count = args[1];
             return 0U;

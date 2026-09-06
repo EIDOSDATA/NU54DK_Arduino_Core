@@ -16,6 +16,35 @@ from host_compiler import compiler_command
 
 
 class SignalTests(unittest.TestCase):
+    def test_i2s_full_payload_preserves_packed_samples_after_bounded_startup(self):
+        """! @brief 시작 frame 뒤 전체 payload와 packed 상위 sample 손상·누락을 검사합니다. """
+        for width in (8, 16, 24, 32):
+            for channels in (0, 1, 2):
+                with self.subTest(width=width, channels=channels):
+                    words, seed = 32, 0x13579BDF
+                    shifts = list(range(0, 32, width)) if width <= 16 else [0]
+                    mask = (1 << width) - 1
+                    expected, _ = signal.i2s_expected(seed, words, width, channels)
+                    samples = [(word >> shift) & mask for word in expected for shift in shifts]
+                    padding = 3 * (2 if channels == 0 else 1)
+                    def capture(prefix, body):
+                        values = [0] * prefix + body
+                        values += [0] * ((words + 16) * len(shifts) - len(values))
+                        return [sum(values[index + offset] << shift
+                                    for offset, shift in enumerate(shifts))
+                                for index in range(0, len(values), len(shifts))]
+                    raw = capture(padding, samples)
+                    result = signal.i2s_received(raw, seed, words, width, channels)
+                    self.assertEqual(result["payload_samples"], len(samples))
+                    self.assertEqual(result["startup_zero_samples"], padding)
+                    damaged = list(samples)
+                    damaged[3] ^= 1
+                    for invalid in (capture(padding, damaged), capture(padding, samples[:-1]),
+                                    capture(padding, samples[:5] + samples[6:]),
+                                    capture(9 * (2 if channels == 0 else 1), samples), raw[:-1]):
+                        with self.assertRaises(ProtocolError):
+                            signal.i2s_received(invalid, seed, words, width, channels)
+
     def test_i2s_finite_transfer_waits_for_payload_release_and_uses_separate_tail(self):
         """! @brief 실제 HIL 순서 helper에서 단일/이중 반환·중복·미제출 slot을 검사합니다. """
         source = r'''
@@ -237,7 +266,7 @@ int main()
         _, left16 = signal.i2s_expected(1, 2, 16, 1)
         _, stereo32 = signal.i2s_expected(1, 2, 32, 0)
         self.assertEqual(stereo16, 0xFFFFFFFF)
-        self.assertEqual(left16, 0xFFFF)
+        self.assertEqual(left16, 0xFFFFFFFF)
         self.assertEqual(stereo32, 0xFFFFFFFF)
 
     def test_pdm_runner_requires_channel_and_density_discrimination(self):

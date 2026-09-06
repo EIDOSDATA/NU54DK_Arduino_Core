@@ -19,10 +19,10 @@ namespace v04
             completed_ = 0U;
         }
 
-        /** @brief 다음 payload 또는 전용 tail slot 2를 반환하며 모두 제출했으면 3입니다. */
+        /** @brief 다음 payload, tail slot 2, 정지 보호용 slot 3 순서로 반환합니다. */
         std::uint32_t nextSlot() const
         {
-            return next_ < buffers_ ? next_ : next_ == buffers_ ? 2U : 3U;
+            return next_ < buffers_ ? next_ : 2U + next_ - buffers_;
         }
 
         /** @brief driver가 다음 buffer를 실제로 수락한 뒤에만 진행합니다. */
