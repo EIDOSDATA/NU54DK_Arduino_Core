@@ -253,7 +253,7 @@ SPIM/SPIS20·21·22 전 조합 27,252개 계획 벡터를 통과했습니다.
 TWIM/TWIS20·21·22·30의 기능 record 1,986개와 cleanup 2건을 통과해 T11 단독 기능 검증을
 역사적 체크포인트로 완료했습니다. 이후 R00~R13 리팩토링과 전체 software gate는
 [64번 기록](<./00_Docs/04_검증 기록/64_R13_도구_정책_build_구조.md>)으로 완료했습니다. 최종 source의
-current-source T11은 exact 154324c의 Fixture 101 기능 1,644개를 통과했습니다. Fixture 102도 exact a49cc0d에서 822개를 통과했으며 Fixture 103도 exact 7aece93에서 2,466개를 통과했습니다. 승인 UART route 세 묶음을 완료했고 Fixture 201 SPI도 exact 0f429e7에서 18,169개를 통과했습니다. Fixture 202도 exact 1349e20에서 9,084개를 통과했습니다. 다음은 Fixture 203 SPI 결선 변경입니다.
+current-source T11은 exact 154324c의 Fixture 101 기능 1,644개를 통과했습니다. Fixture 102도 exact a49cc0d에서 822개를 통과했으며 Fixture 103도 exact 7aece93에서 2,466개를 통과했습니다. 승인 UART route 세 묶음을 완료했고 Fixture 201 SPI도 exact 0f429e7에서 18,169개를 통과했습니다. Fixture 202도 exact 1349e20에서 9,084개를 통과했습니다. Fixture 203도 exact be49207에서 27,252개를 통과해 SPI 세 묶음을 완료했습니다. 다음은 Fixture 301 TWI 결선 변경입니다.
 사용자 확인과 T11 회귀 뒤 T12 analog·stream 및 전체 동시성·soak 통합 캠페인을 진행합니다.
 정식 공개는 아직 완료되지 않았습니다.
 검증은 온보드 자원과 두 NU54DK의 통신·합성 신호·capture를 기준으로 합니다. 정밀 계측과 외부
@@ -317,7 +317,7 @@ git submodule status
 적용합니다. 외부 구성요소에는 각 원 라이선스와 고지가 적용되며 자세한 내용은
 [third-party notices](./third_party/THIRD_PARTY_NOTICES.md)를 확인하십시오.
 
-2026-09-06 후속: [65번 기록](<./00_Docs/04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)의 904 PASS·파일 정리를 보존한다. 이후 DAP UART 연결 전환 뒤 [66번 기록](<./00_Docs/04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>)에서 UART idle bias를 교정하고 온보드 18개 결과·BLE 3개 pair gate를 통과했다. 이후 사용자 결선 완료 확인에 따라 exact 154324c의 current-source T11 Fixture 101을 SWD 10 MHz로 실행해 기능 1,644개를 통과했다. 이후 exact a49cc0d의 Fixture 102 기능 822개를 SWD 10 MHz로 통과했다. 이후 exact 7aece93의 Fixture 103 기능 2,466개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 진단은 별도 보존했다. 이후 exact 0f429e7의 Fixture 201 SPI 기능 18,169개를 SWD 10 MHz로 통과했다. 이후 exact 1349e20의 Fixture 202 SPI 기능 9,084개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 읽기 전용 진단은 별도 보존했다. 현재 Fixture 202 결선·DAP UART 분리·SWD 연결 상태이며 다음은 전원 OFF·Fixture 203 SPI 결선 변경과 새 사용자 확인이다.
+2026-09-06 후속: [65번 기록](<./00_Docs/04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)의 904 PASS·파일 정리를 보존한다. 이후 DAP UART 연결 전환 뒤 [66번 기록](<./00_Docs/04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>)에서 UART idle bias를 교정하고 온보드 18개 결과·BLE 3개 pair gate를 통과했다. 이후 사용자 결선 완료 확인에 따라 exact 154324c의 current-source T11 Fixture 101을 SWD 10 MHz로 실행해 기능 1,644개를 통과했다. 이후 exact a49cc0d의 Fixture 102 기능 822개를 SWD 10 MHz로 통과했다. 이후 exact 7aece93의 Fixture 103 기능 2,466개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 진단은 별도 보존했다. 이후 exact 0f429e7의 Fixture 201 SPI 기능 18,169개를 SWD 10 MHz로 통과했다. 이후 exact 1349e20의 Fixture 202 SPI 기능 9,084개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 읽기 전용 진단은 별도 보존했다. 이후 exact be49207의 Fixture 203 SPI 기능 27,252개를 SWD 10 MHz로 통과했다. 최초 DUT flash 실패와 읽기 전용 진단은 별도 보존했다. 현재 Fixture 203 결선·DAP UART 분리·SWD 연결 상태이며 다음은 전원 OFF·Fixture 301 TWI 결선 변경과 새 사용자 확인이다.
 
 Current-source T11 첫 UART 회귀의 exact 증거는 [67번 기록](<./00_Docs/04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)에 연결한다. 전체 T11·T12~T15와 RC/공개는 미완료다.
 
@@ -327,4 +327,6 @@ Current-source Fixture 103의 exact 7aece93·2,466 PASS, 최초 flash 실패·�
 
 Current-source Fixture 201의 exact 0f429e7·18,169개 기능 PASS는 [70번 기록](<./00_Docs/04_검증 기록/70_T11_Fixture_201_current_source_SPI_회귀.md>)에 연결한다. 해당 exact 원본은 별도로 보존한다.
 
-Current-source Fixture 202의 exact 1349e20·9,084개 기능 PASS, 최초 peer flash 실패·진단과 다음 Fixture 203 결선은 [71번 기록](<./00_Docs/04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md>)에 연결한다. SPI 203·TWI 301과 후속 실기는 대기한다.
+Current-source Fixture 202의 exact 1349e20·9,084개 기능 PASS, 최초 peer flash 실패·진단은 [71번 기록](<./00_Docs/04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md>)에 연결한다. 해당 exact 원본은 별도로 보존한다.
+
+Current-source Fixture 203의 exact be49207·27,252개 기능 PASS, 최초 DUT flash 실패·진단과 다음 Fixture 301 결선은 [72번 기록](<./00_Docs/04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 연결한다. TWI 301과 후속 실기는 대기한다.

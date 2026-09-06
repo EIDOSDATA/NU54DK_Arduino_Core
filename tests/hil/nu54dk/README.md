@@ -582,4 +582,6 @@ Current-source Fixture 103은 exact 7aece93·SWD 10 MHz에서 데이터 2,430개
 
 Current-source Fixture 201도 exact 0f429e7·SWD 10 MHz에서 data 18,157개와 예상 cancel 12개를 통과했습니다. Data에는 recovery 12개와 SPIM00+TWIM22 동시성 1개가 포함됩니다. [70번 기록](<../../../00_Docs/04_검증 기록/70_T11_Fixture_201_current_source_SPI_회귀.md>)에 원본을 보존합니다.
 
-Current-source Fixture 202는 exact 1349e20·SWD 10 MHz에서 data 9,078개와 예상 cancel 6개를 통과했습니다. Data에는 recovery 6개가 포함됩니다. 최초 peer flash 실패·진단과 한 번의 새 전체 실행은 [71번 기록](<../../../00_Docs/04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md>)에 구분 보존했으며 다음은 Fixture 203 SPI 결선입니다.
+Current-source Fixture 202는 exact 1349e20·SWD 10 MHz에서 data 9,078개와 예상 cancel 6개를 통과했습니다. Data에는 recovery 6개가 포함됩니다. 최초 peer flash 실패·진단과 한 번의 새 전체 실행은 [71번 기록](<../../../00_Docs/04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md>)에 구분 보존했습니다.
+
+Current-source Fixture 203은 exact be49207·SWD 10 MHz에서 data 27,234개와 예상 cancel 18개를 통과했습니다. Data에는 recovery 18개가 포함됩니다. 최초 DUT flash 실패·진단과 한 번의 새 전체 실행은 [72번 기록](<../../../00_Docs/04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 구분 보존했습니다. 승인 SPI 세 route의 회귀를 마쳤으며 다음은 Fixture 301 TWI 결선입니다.

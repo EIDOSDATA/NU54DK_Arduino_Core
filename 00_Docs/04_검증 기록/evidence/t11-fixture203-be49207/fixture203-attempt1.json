@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-external-fixture",
+  "status": "failed",
+  "fixture_id": 203,
+  "fixture_revision": 2,
+  "catalog_sha256": "50ad2ee57f26ac65cc9b88a0197c9064131fbffd5e060aea2a648e5f72ffd8e3",
+  "core_revision": "be4920757fd9faf2ea38721d2aa374246a259f29",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "uart-async-and-serial-sync-async-single-double-buffer",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": false,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "771b2f167cc01d8ef38ccfd43af0d45c41fc1956fcebef4e3ca83c7db12e1209",
+      "elf_sha256": "bba74a6d67b59a946f61e627250168a0c435e76cdd49a9f8bc63e542728636be",
+      "record_sha256": "33282154b7d6eb77779c28a39eba7d377c0a3023f705faee0e846181160a7ff6"
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "ada36a3b6a002c776a93a4a8738cd377ce0eafb43102a93cdd1dab4cb9774bef",
+      "elf_sha256": "fb73cbb0a652d295ed1a000414a99220abfae407f770f0d14906d37885baf3a7",
+      "record_sha256": "33282154b7d6eb77779c28a39eba7d377c0a3023f705faee0e846181160a7ff6"
+    }
+  ],
+  "results": [],
+  "confirmation_sha256": "67eb31a42502bca725836f83d8516802dc812515a49ae3349d27aef4cfc870df",
+  "confirmed_at_unix": 1788687423.0,
+  "error": "UarteHilFailure: pyOCD exited with 1: 0000762 W Board ID 5415 is not recognized [mbed_board]\r\n0000920 W NRF54L15 is not in a secure state [target_nRF54L]\r\n0001170 I Loading C:\\u3f\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\zephyr.hex [load_cmd]\r\n[---|---|---|---|---|---|---|---|---|----]\r\n[=================0012297 E Probe error during disconnect: [session]\r\n0012297 C Timeout reading from probe <probe-sha256:32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9> [__main__]\r\n",
+  "completed_at_utc": "2026-09-06T09:44:03.707266+00:00"
+}

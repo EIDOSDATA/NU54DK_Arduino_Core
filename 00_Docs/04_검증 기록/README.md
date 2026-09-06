@@ -140,4 +140,6 @@ Fixture 103 exact 7aece93·SWD 10 MHz 기능 2,466 PASS와 최초 peer flash 실
 
 Fixture 201 exact 0f429e7·SWD 10 MHz 기능 18,169 PASS와 새 결선은 [70번 기록](70_T11_Fixture_201_current_source_SPI_회귀.md)에 보존했다. 해당 실행 뒤 Fixture 202로 이어졌다.
 
-Fixture 202 exact 1349e20·SWD 10 MHz 기능 9,084 PASS, 최초 peer flash 실패·한정 재개와 다음 Fixture 203 결선은 [71번 기록](71_T11_Fixture_202_current_source_SPI_회귀.md)에 보존했다.
+Fixture 202 exact 1349e20·SWD 10 MHz 기능 9,084 PASS, 최초 peer flash 실패·한정 재개는 [71번 기록](71_T11_Fixture_202_current_source_SPI_회귀.md)에 보존했다.
+
+Fixture 203 exact be49207·SWD 10 MHz 기능 27,252 PASS, 최초 DUT flash 실패·한정 재개와 다음 Fixture 301 TWI 결선은 [72번 기록](72_T11_Fixture_203_current_source_SPI_회귀.md)에 보존했다. Current-source SPI 세 route를 완료했다.
