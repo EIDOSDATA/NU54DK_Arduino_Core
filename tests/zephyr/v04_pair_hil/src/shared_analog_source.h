@@ -11,7 +11,7 @@ namespace v04
     /** @brief 전용 저전류 신호원을 사용하는 공유 입력 fixture만 허용합니다. */
     constexpr bool sharedAnalogFixture(std::uint32_t fixture)
     {
-        return fixture == 405U || fixture == 406U;
+        return fixture == 405U || fixture == 406U || fixture == 407U;
     }
 
     /** @brief PWM 인자와 구별되는 공유 입력의 세 단계 vector만 허용합니다. */
@@ -23,7 +23,7 @@ namespace v04
     }
 
     /**
-     * @brief 405는 LOW/해제, 406은 입력 pull-down/up/down을 적용하고 입력으로 해제합니다.
+     * @brief 405는 LOW/해제, 406·407은 입력 pull-down/up/down을 적용하고 입력으로 해제합니다.
      * @note Backend는 고정 B P1.14만 사용합니다. 기존 출력 설정은 복원하지 않습니다.
      */
     template <typename Backend> class SharedAnalogSource
@@ -38,7 +38,7 @@ namespace v04
             }
             Backend::input();
             Backend::write(true);
-            bias_only_ = fixture == 406U;
+            bias_only_ = fixture != 405U;
             if (bias_only_)
             {
                 Backend::inputBias(true);

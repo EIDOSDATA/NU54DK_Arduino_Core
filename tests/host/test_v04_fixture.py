@@ -106,7 +106,7 @@ class FixtureTests(unittest.TestCase):
 
     def test_twi_fixture_uses_internal_pullups_without_external_resistors(self):
         catalog, twi = fixture.fixture_contract(301)
-        self.assertEqual(catalog["revision"], 4)
+        self.assertEqual(catalog["revision"], 5)
         self.assertTrue(all("내부 pull-up" in pullup for pullup in twi["pullups"]))
         self.assertIn("외부 pull-up 저항", twi["pullups"][0])
         source = (ROOT / "tests/zephyr/v04_pair_hil/src/fixture_hil.cpp").read_text(
@@ -144,11 +144,11 @@ class FixtureTests(unittest.TestCase):
                 for pin, net in entries.items()}
         allowed = {("P2", 9), ("P2", 10), ("P2", 11), ("P2", 12),
                    ("P2", 17), ("P2", 19), ("P2", 25), ("P2", 26),
-                   ("P2", 30), ("P4", 4), ("P4", 5), ("P4", 8), ("P4", 9), ("P4", 10),
+                   ("P2", 30), ("P4", 4), ("P4", 5), ("P4", 8), ("P4", 9), ("P4", 10), ("P4", 11),
                    ("P4", 12), ("P4", 19), ("P4", 20), ("P4", 21)}
         self.assertEqual({entry["id"] for entry in catalog["fixtures"]},
                          {101, 102, 103, 201, 202, 203, 301,
-                          401, 402, 403, 404, 405, 406, 408, 420, 430, 440})
+                          401, 402, 403, 404, 405, 406, 407, 408, 420, 430, 440})
         for entry in catalog["fixtures"]:
             for role in ("dut", "peer"):
                 endpoints = [tuple(link[role]) for link in entry["links"]]

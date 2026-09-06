@@ -166,7 +166,7 @@ namespace
         return stopped;
     }
 
-    /** @brief 고정 PWM 또는 공유 AIN4/5용 저전류 신호와 SAADC를 준비합니다. */
+    /** @brief 고정 PWM 또는 공유 AIN4~6용 저전류 신호와 SAADC를 준비합니다. */
     bool prepareAnalog(const std::uint32_t *args)
     {
         const bool shared = v04::sharedAnalogFixture(gate.fixture());

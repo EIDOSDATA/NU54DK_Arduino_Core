@@ -52,15 +52,15 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | 필드 | 현재 값 |
 | --- | --- |
 | 이번에 끝낸 일 | Fixture 406 exact 96f38e9 첫 실행 12 PASS·2,592 samples·cleanup 12·GPIO readback 통과. [79번 기록](<./04_검증 기록/79_T12_Fixture_406_current_source_공유_AIN5_검증.md>)에 보존. 401~406 합계 기능 216개·samples 46,656개; T12 부분 완료 |
-| 진행 중인 T 항목 | T12 부분 완료. AIN0~5의 해당 기능 경로 검증 완료; 407 AIN6/P1.13 버튼 공유 입력을 개별 준비·확인 뒤 진행하고 408도 필수 후속. 제품 core와 R00~R13 완료 유지 |
-| 다음 구체적 행동 | 407 결선 안내: 양쪽 USB 분리, A 신호선 P1.12→P1.13/AIN6(P4-11) 변경, B P1.14·공통 GND 유지. DAP UART 분리·SWD 연결·기존 SB/PMIC 유지, 버튼 누르지 않기, USB 재연결. 사용자 완료 확인 뒤 407 신호원·Host·exact pair build·SWD 10 MHz 실기 진행 |
-| 다음 작업에 필요한 사용자 행동 | 위 407 결선·전원 OFF 변경/USB 재연결·버튼 미누름 조건의 새 완료 확인. 406 “어. 그리 했어.”는 406에만 유효. 408도 별도 확인 후 필수 수행 |
-| 외부 결선 상태 | 2026-09-06T13:25:22Z 사용자 “어. 그리 했어.” 답변 기록. A P1.12/P4-10↔B P1.14/P4-12·공통 GND/P2-30, 이전 A P1.11 제거·전원 OFF 변경/USB 재연결·DAP UART 분리/SWD 연결·SB4/PMIC 유지 확인. A D/COM5·6, B E/COM7·8 |
+| 진행 중인 T 항목 | T05/T10/T12 Fixture 407 AIN6/P1.13 버튼 공유 입력을 준비·실행한다. 고정 B P1.14 INPUT pull-down/up/down, 25ms 정착, 32/256 samples·single/double buffer 12 vector. 제품 core·R00~R13 완료 유지; 408도 필수 후속 |
+| 다음 구체적 행동 | 407 allowlist와 신호원·독립 LOW/HIGH oracle·DMA/GPIO/cleanup을 Host로 검증하고 exact pair build 후 SWD 10 MHz 실기. 사용자 버튼 미누름 조건을 유지하며 결과·문서·commit·main push까지 진행 |
+| 다음 작업에 필요한 사용자 행동 | 직전 407 결선 안내에 대해 사용자가 USB 제거·407 결선·재연결과 진행을 확인했다. 추가 407 확인 요청 없이 진행한다. 다음 408은 개별 결선 안내·확인 필요 |
+| 외부 결선 상태 | 2026-09-06T13:47:49Z 사용자 USB 제거 후 407 결선·재연결 확인. A P1.13/AIN6(P4-11)↔B P1.14(P4-12)·공통 GND(P2-30), 이전 A P1.12 제거·DAP UART 분리/SWD 연결·버튼 미누름 안내 조건. A D/COM5·6, B E/COM7·8; 기존 SB/PMIC 설정 유지 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 마지막 정식 외부 HIL source | `96f38e9486c69cda2c76b48029bc0dc9404d9709` — T12 Fixture 406 첫 실행 12 PASS. 이전 401~405와 T11 exact 근거 보존 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. T11 각 exact 완료·T12 401~406 부분 PASS; M24/M25 전체·후속 gate·RC/공개 미완료 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | HIL/build/Host 종료. 양쪽 exact 96f38e9 DUT/peer, 매 vector 양쪽 disarm [0]·B no-pull INPUT 복귀 PASS. 13:40:06 UTC read-only CPUID·full commit·role 2/2 PASS, 순간 상태 A RUNNING/B SLEEPING. SWD 10 MHz 첫 실행 PASS |
+| 이 TODO 작성 작업의 실행 중 시험 | 407 준비: signal Python 판정 13개·fixture 12개·style 358·계약 45·Inventory·docs PASS. C++ Host는 Windows Smart App Control의 g++.exe 차단(WinError 4551)으로 미완료. 차단 log 보존, 보안 정책 변경 없음. 독립 exact pair target build를 진행하며 Host gate 통과 전 flash/HIL 금지 |
 | 로컬 임시 build·evidence | 15개 과거 root의 object/archive 중간 파일 55,537개 제거, 일회성 script 50개는 work/archive/r00-r13-authoring-scripts.zip으로 hash 검증 후 보관. 2,911개 ELF/HEX/설정/log 등은 hash 불변. C:/r13h와 설치본·raw evidence·QEMU 보존; 상세는 65번 기록 |
 | 최종 정렬 gate | clang-format 22.1.8, 직접 관리 C/C++/ino 358개 dry-run PASS. 한국어 Doxygen·BSD/Allman·4칸·중괄호 필수. 새 shared analog helper와 Host 검증은 실제 참조되어 유지 |
 | CI 확인 | 최종 source의 GitHub Actions는 미확인. 현재 GitHub CLI 인증에 의존하지 않고 로컬 canonical 전체 software gate를 실행했다. 이전 Actions success는 이전 source의 역사 증거로만 유지 |
@@ -140,7 +140,7 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
   - 증거: Host 전체 PASS, `C:/r45` pair image 포함 full20 build-only PASS. 온보드 기존 PASS는 41번, 외부는 NOT RUN.
 
 - [x] **T05 — ADC·PWM·타이머·이벤트 시험 프로그램 준비**
-  - 상태·선행: 완료 / 내부 VDD·AVDD와 timer/event, 외부 AIN0~3/AIN7·PWM20/21/22 channel slot 0~3·단일/이중 DMA 판정 준비. AIN4는 405 오픈드레인, AIN5는 406 입력 바이어스로 추가 기능 시험하며 AIN6/407도 필수 후속이다.
+  - 상태·선행: 완료 / 내부 VDD·AVDD와 timer/event, 외부 AIN0~3/AIN7·PWM20/21/22 channel slot 0~3·단일/이중 DMA 판정 준비. AIN4는 405 오픈드레인, AIN5는 406 입력 바이어스로 추가 기능 시험하며 AIN6/407은 버튼 공유 입력 바이어스 시험으로 준비하고 실기는 별도 판정한다.
   - 할 일: 안전한 ADC 입력·scan/sample 순서·DMA, PWM 채널/sequence의 peer capture, timer/event/DPPI 소유권을 시험한다.
   - 완료 기준: 예상 값·count·기본 timing 허용 범위를 검사하는 image/runner와 Host 시험이 준비된다. 교정 전압·정밀 jitter 보증과 구분한다.
   - 증거: signal fixture 401~404/408, fixture별 48 vector, Host PASS와 M25 Analog/pair target build PASS. 이 준비 시점에는 외부 신호 NOT RUN이었다. 현재 401~406 실기는 T12와 74~79번에 구분 등록했다.
@@ -158,7 +158,7 @@ runner의 기본 PASS다. 온보드 PASS는 UART 4개·PMIC I2C 3개·내부 VDD
   - 증거: DMA/수명주기/fixture/campaign Host PASS와 full20 target build PASS. 더 넓은 허용 topology와 600/7200초 결과는 T13이며 미실행.
 
 - [x] **T08 — 시험별 안전한 결선표와 스위치 안내 작성**
-  - 상태·선행: 완료 / 회로도 connector mapping, fixture 17개(405·406 추가), TWI pull-up과 analog/stream 역할·금지 net·스위치 조건 작성. 아직 T10 결선 요청 아님.
+  - 상태·선행: 완료 / 회로도 connector mapping, fixture 18개(405·406·407 추가), TWI pull-up과 analog/stream 역할·금지 net·스위치 조건 작성. 아직 T10 결선 요청 아님.
   - 할 일: 회로도·pinctrl과 대조해 묶음별 DUT↔peer 핀, GND·전압·pull-up·출력 방향·DAP UART switch·제어 채널을 명시한다.
   - 완료 기준: 전원 차단 후 연결/변경 순서, 출력 충돌 방지, 필요한 부품과 사용자 확인 절차가 있다. 금지된 P2 bank와 PMIC/LED 공유 신호를 무단 사용하지 않는다.
   - 증거: `v04_fixtures.json`, HIL README, fail-closed confirmation template와 Host catalog/조건 검사 PASS. 묶음마다 T10 확인 반복.

@@ -86,3 +86,7 @@ T12 Fixture 404 exact e080bbc·SWD 10 MHz 첫 실행 48개 PASS는 [77번 기록
 T12 Fixture 405 exact 9fc12bf·SWD 10 MHz **첫 실행 12개 PASS**, LOW/해제/LOW·2,592 samples·cleanup 12개와 GPIO readback은 [78번 기록](<../../04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)에 보존했다. 공유 AIN4/P1.11의 기능을 확인했으며 이후 406도 완료했으며 후속 **407→408을 모두 수행**한다. 제품 core 변경 없이 Host 648개·pair target 2/2를 통과했고 T12 전체·후속 gate는 미완료다.
 
 T12 Fixture 406 exact 96f38e9·SWD 10 MHz **첫 실행 12개 PASS**, 입력 pull-down/up/down·2,592 samples·cleanup 12개와 GPIO readback은 [79번 기록](<../../04_검증 기록/79_T12_Fixture_406_current_source_공유_AIN5_검증.md>)에 보존했다. Host 649개·pair target 2/2 PASS. 401~406 합계 기능 216개·samples 46,656개이며 **407→408도 모두 필수 후속**이다. 현재 406 결선에서 양쪽 USB 분리 후 A P1.12→P1.13/AIN6만 옮기고 B P1.14·공통 GND·DAP UART 분리/SWD 연결을 유지한다. 버튼을 누르지 않고 USB 재연결·사용자 확인 뒤 407을 준비·실행한다. T12 전체·후속 gate는 미완료다.
+
+현재 T05/T10/T12의 407 AIN6/P1.13 버튼 공유 입력을 준비·실행한다. 사용자 USB 분리·407 결선·재연결 확인 완료. B P1.14 INPUT pull-down/up/down·25ms 정착·12 vector와 Host·exact pair build 후 SWD 10 MHz 실기·문서·commit·push를 진행한다. 408도 필수 후속이다.
+
+407 준비 Host의 C++ 실행은 Windows Smart App Control이 기존 g++.exe를 차단해 미완료다. Python oracle·fixture·정렬·계약·Inventory·docs는 통과했다. 독립 target build를 진행하되 Host gate가 통과하기 전 407 flash/HIL은 실행하지 않는다.

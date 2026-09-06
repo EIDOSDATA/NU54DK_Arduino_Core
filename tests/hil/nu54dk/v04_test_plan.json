@@ -75,10 +75,10 @@
     },
     {
       "id": "V04-ADC", "groups": ["saadc"], "fixture": "peer",
-      "modes": ["ain0-ain1-ain2-ain3-ain7", "shared-ain4-open-drain", "shared-ain5-input-bias", "shared-ain6-pending-functional-test", "manual-sample", "single-buffer", "double-buffer"],
-      "parameters": {"fixture_ids": [401, 402, 403, 404, 405, 406, 408], "pending_fixture_ids": [407], "required_analog_fixture_ids": [401, 402, 403, 404, 405, 406, 407, 408], "resolution_bits": [12], "oversample": [1], "buffer_samples": [32, 256], "buffers": [1, 2], "manual_interval_us": 2000, "repetitions": 100},
-      "oracle": "동일 I/O 전압의 peer PWM을 AIN0~3/AIN7에 묶음별로 연결해 HIGH와 DMA 길이를 검사한다. 405 AIN4/P1.11은 SB1/PMIC_INT/BQ25186 /INT 공유이므로 B P1.14 S0D1·내부 pull-up의 LOW/해제/LOW만 사용한다. LOW raw -256~256, 해제 raw -256~4095 중 95% 이상 >256 및 median >256, 실제 GPIO readback·DMA 길이·cleanup을 확인한다. PMIC 128µs interrupt LOW를 허용하는 기능 oracle이며 정밀 전압 검증은 아니다. 406 AIN5/P1.12 VBAT 분압기/SB4·100nF 필터는 B P1.14 INPUT pull-down/up/down·25ms 정착으로 12 vector를 검사한다. 모든 LOW raw -256~512·HIGH raw 1024 초과~4095와 입력 모드 GPIO raw readback·DMA·cleanup을 요구한다. 407 AIN6/P1.13 버튼도 필수 후속 기능 시험으로 별도 준비한다.",
-      "needs": "T05/T10/T12: fixture 401~408을 전원 분리 상태에서 하나씩 재결선하고 사용자 확인 후 실행. 405는 오픈드레인·406은 입력 바이어스 각각 12 vector. 407은 안전한 신호원 설계 및 개별 실기 대기. 공유 회로를 이유로 생략하거나 준비만으로 PASS 처리하지 않음.", "reuse": [], "errata": []
+      "modes": ["ain0-ain1-ain2-ain3-ain7", "shared-ain4-open-drain", "shared-ain5-input-bias", "shared-ain6-input-bias-button-unpressed", "manual-sample", "single-buffer", "double-buffer"],
+      "parameters": {"fixture_ids": [401, 402, 403, 404, 405, 406, 407, 408], "pending_fixture_ids": [], "required_analog_fixture_ids": [401, 402, 403, 404, 405, 406, 407, 408], "resolution_bits": [12], "oversample": [1], "buffer_samples": [32, 256], "buffers": [1, 2], "manual_interval_us": 2000, "repetitions": 100},
+      "oracle": "동일 I/O 전압의 peer PWM을 AIN0~3/AIN7에 묶음별로 연결해 HIGH와 DMA 길이를 검사한다. 405 AIN4/P1.11은 SB1/PMIC_INT/BQ25186 /INT 공유이므로 B P1.14 S0D1·내부 pull-up의 LOW/해제/LOW만 사용한다. LOW raw -256~256, 해제 raw -256~4095 중 95% 이상 >256 및 median >256, 실제 GPIO readback·DMA 길이·cleanup을 확인한다. PMIC 128µs interrupt LOW를 허용하는 기능 oracle이며 정밀 전압 검증은 아니다. 406 AIN5/P1.12 VBAT 분압기/SB4·100nF 필터는 B P1.14 INPUT pull-down/up/down·25ms 정착으로 12 vector를 검사한다. 모든 LOW raw -256~512·HIGH raw 1024 초과~4095와 입력 모드 GPIO raw readback·DMA·cleanup을 요구한다. 407 AIN6/P1.13은 버튼을 누르지 않고 B INPUT 바이어스·25ms 정착·12 vector로 동일 LOW/HIGH·GPIO·DMA·cleanup을 검사한다. 버튼 자체·wake 검증은 아니다.",
+      "needs": "T05/T10/T12: fixture 401~408을 전원 분리 상태에서 하나씩 재결선하고 사용자 확인 후 실행. 405는 오픈드레인, 406·407은 INPUT 바이어스 각각 12 vector. 407은 버튼 미누름 조건이며 각 ID의 실기는 별도 증거로 판정한다. 공유 회로를 이유로 생략하거나 준비만으로 PASS 처리하지 않음.", "reuse": [], "errata": []
     },
     {
       "id": "V04-ADC-INTERNAL", "groups": ["saadc"], "fixture": "onboard",

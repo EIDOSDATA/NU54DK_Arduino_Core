@@ -9,7 +9,8 @@ import time
 import v04_fixture as fixture
 from v04_protocol import ProtocolError
 
-SHARED_ANALOG_FIXTURES = (405, 406)
+INPUT_BIAS_FIXTURES = (406, 407)
+SHARED_ANALOG_FIXTURES = (405,) + INPUT_BIAS_FIXTURES
 
 def vectors(family, fixture_id=None):
     """기능 sweep와 buffer 경계를 한 번씩 바꾸는 실행 vector를 생성합니다."""
@@ -95,7 +96,7 @@ def shared_source_readback(source, phase, fixture_id=405):
     level = int(phase == 1)
     if fixture_id == 405:
         expected, raw = [1, phase, 46, 1, 1, 1, level], 0x80D
-    elif fixture_id == 406:
+    elif fixture_id in INPUT_BIAS_FIXTURES:
         expected, raw = [1, phase, 46, 0, level, 0, 1], 0xC if level else 0x4
     else:
         raise ProtocolError("unknown shared analog fixture")
@@ -112,25 +113,25 @@ def shared_analog_result(vector, status, samples, source, fixture_id=405):
     if (len(status) != 8 or status[:5] != [1, 1, 1, 1, 0] or
             status[5:7] != [expected, vector[1]] or len(samples) != expected):
         raise ProtocolError(f"shared analog DMA completion mismatch: {status}")
-    high_threshold = 1024 if fixture_id == 406 else 256
-    low_limit = 512 if fixture_id == 406 else 256
+    high_threshold = 1024 if fixture_id in INPUT_BIAS_FIXTURES else 256
+    low_limit = 512 if fixture_id in INPUT_BIAS_FIXTURES else 256
     high = sum(sample > high_threshold for sample in samples)
     median = statistics.median(samples)
     if min(samples) < -256 or max(samples) > 4095:
         raise ProtocolError("shared analog raw samples are outside functional bounds")
     if level:
-        required_percent = 100 if fixture_id == 406 else 95
+        required_percent = 100 if fixture_id in INPUT_BIAS_FIXTURES else 95
         if high * 100 < expected * required_percent or median <= high_threshold:
             raise ProtocolError("shared analog HIGH phase did not rise")
     elif max(samples) > low_limit:
         raise ProtocolError("shared analog input did not return LOW")
     return {"receiver_status": status, "source_readback": source,
-            "phase": (("pulldown-before", "pullup", "pulldown-after") if fixture_id == 406 else
+            "phase": (("pulldown-before", "pullup", "pulldown-after") if fixture_id in INPUT_BIAS_FIXTURES else
                       ("low-before", "released", "low-after"))[phase],
             "minimum": min(samples), "maximum": max(samples), "median": median,
             "high_samples": high, "samples": samples,
             "sha256": hashlib.sha256(struct.pack(f"<{len(samples)}h", *samples)).hexdigest(),
-            "scope": ("input-bias-shared-ain5-manual-saadc" if fixture_id == 406 else
+            "scope": (f"input-bias-shared-ain{fixture_id - 401}-manual-saadc" if fixture_id in INPUT_BIAS_FIXTURES else
                       "open-drain-shared-ain4-manual-saadc")}
 
 
@@ -196,7 +197,7 @@ def run_case(devices, selected, controller_role, vector, append):
             source = controller.command(38) if selected["id"] in SHARED_ANALOG_FIXTURES else None
             if source is not None:
                 shared_source_readback(source, vector[2], selected["id"])
-                time.sleep(.025 if selected["id"] == 406 else .010)
+                time.sleep(.025 if selected["id"] in INPUT_BIAS_FIXTURES else .010)
             if receiver.command(35) != [0]:
                 raise ProtocolError("SAADC sampling start failed")
             receiver_status = wait_status(receiver, lambda words: words[3] == 1)

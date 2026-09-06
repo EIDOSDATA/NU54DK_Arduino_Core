@@ -24,7 +24,7 @@ def arguments(argv=None):
     parser.add_argument("--pyocd", type=Path, required=True)
     parser.add_argument("--swd-frequency-hz", type=int, default=1_000_000)
     parser.add_argument("--fixture", type=int,
-                        choices=(401, 402, 403, 404, 405, 406, 408, 420, 430, 440),
+                        choices=(401, 402, 403, 404, 405, 406, 407, 408, 420, 430, 440),
                         required=True)
     parser.add_argument("--confirmation", type=Path)
     parser.add_argument("--evidence", type=Path)

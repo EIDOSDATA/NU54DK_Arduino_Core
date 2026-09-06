@@ -48,13 +48,13 @@ namespace
 int main()
 {
     using v04::FixtureGate;
-    for (unsigned fixture : {405U, 406U})
+    for (unsigned fixture : {405U, 406U, 407U})
     {
         for (unsigned role : {1U, 2U})
         {
             FixtureGate gate;
             assert(!gate.arm(fixture, 1, FixtureGate::consent, 1, role, 0));
-            assert(!gate.arm(407, 1, FixtureGate::consent, 2, role, 0));
+            assert(!gate.arm(409, 1, FixtureGate::consent, 2, role, 0));
             assert(gate.arm(fixture, 1, FixtureGate::consent, 2, role, 0));
             assert(!gate.live(10000));
         }
@@ -66,7 +66,7 @@ int main()
             assert(!source.start());
             assert(!source.prepare(fixture, 1, args));
             assert(!source.prepare(404, 2, args));
-            assert(!source.prepare(407, 2, args));
+            assert(!source.prepare(408, 2, args));
             for (unsigned index : {0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U})
             {
                 auto saved = args[index];
@@ -76,10 +76,10 @@ int main()
             }
             assert(Pin::actions.empty());
             assert(source.prepare(fixture, 2, args));
-            assert(Pin::actions == std::vector<int>({0, 1, fixture == 406U ? 4 : 3}));
+            assert(Pin::actions == std::vector<int>({0, 1, fixture != 405U ? 4 : 3}));
             assert(!source.prepare(fixture, 2, args));
             assert(source.start());
-            if (fixture == 406U)
+            if (fixture != 405U)
             {
                 assert(!Pin::output && Pin::bias_up == (phase == 1U));
             }
