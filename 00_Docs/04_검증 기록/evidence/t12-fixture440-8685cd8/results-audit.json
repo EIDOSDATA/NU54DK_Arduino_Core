@@ -1,0 +1,29 @@
+{
+  "audit_status": "passed",
+  "campaign_status": "failed",
+  "source": "8685cd8b361b0a8178b1c77227ede7c5e980aaa6",
+  "fixture_id": 440,
+  "functional_pass": 0,
+  "density_pass": 0,
+  "cleanup_pass": 1,
+  "raw_captures": 0,
+  "audited_functional_samples": 0,
+  "journal_records": 1,
+  "whole_fixture_pass": false,
+  "failed_cases": 1,
+  "unexecuted_vectors": 191,
+  "error": "ProtocolError: signal firmware error role=2: [1, 1, 1, 0, 512, 0, 256, 0]",
+  "counts": [],
+  "capture_scope": "Canonical read_u16 returned samples copied unchanged; startup pin read adds no fixture commands",
+  "not_claimed": [
+    "external microphone compatibility or calibrated audio quality",
+    "4 settling and 100 measured continuous buffers",
+    "T13 injected overflow recovery/concurrency/soak",
+    "T12 whole gate"
+  ],
+  "sha256": {
+    "fixture440-attempt1.json": "7eee8f14e4d40a5f801c8ec55a9aeef718972577d0299b4d8fef61be61e32fcf",
+    "fixture440-attempt1.json.jsonl": "d8dde3e461de46c4b4563ae7cd1e48bb7f7ca57b7b055d4c1cd3ab8eda77e79e",
+    "pdm-samples.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,1483 @@
+/dts-v1/;
+
+/* node '/' defined in zephyr\dts\vendor\nordic\nrf_common.dtsi:25 */
+/ {
+	#address-cells = < 0x1 >;                         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:19 */
+	#size-cells = < 0x1 >;                            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:20 */
+	compatible = "nucode,nu54dk-nrf54l15-cpuapp";     /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nrf54l15dk_nrf54l15_cpuapp_nu54dk.dts:16 */
+	model = "NUCODE NU54DK nRF54L15 Application MCU"; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nrf54l15dk_nrf54l15_cpuapp_nu54dk.dts:17 */
+
+	/* node '/pin-controller' defined in zephyr\dts\vendor\nordic\nrf_common.dtsi:26 */
+	pinctrl: pin-controller {
+		compatible = "nordic,nrf-pinctrl"; /* in zephyr\dts\vendor\nordic\nrf_common.dtsi:31 */
+
+		/* node '/pin-controller/uart20_default' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:11 */
+		uart20_default: uart20_default {
+			phandle = < 0x4 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:98 */
+
+			/* node '/pin-controller/uart20_default/group1' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:12 */
+			group1 {
+				psels = < 0x24 >,
+				        < 0x2000026 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:13 */
+			};
+
+			/* node '/pin-controller/uart20_default/group2' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:17 */
+			group2 {
+				psels = < 0x1000025 >,
+				        < 0x3000027 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:18 */
+				bias-pull-up;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:20 */
+			};
+		};
+
+		/* node '/pin-controller/uart20_sleep' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:24 */
+		uart20_sleep: uart20_sleep {
+			phandle = < 0x5 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:99 */
+
+			/* node '/pin-controller/uart20_sleep/group1' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:25 */
+			group1 {
+				psels = < 0x1000025 >,
+				        < 0x2000026 >,
+				        < 0x3000027 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:26 */
+				low-power-enable;      /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:29 */
+			};
+
+			/* node '/pin-controller/uart20_sleep/group2' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:32 */
+			group2 {
+				psels = < 0x24 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:33 */
+				low-power-enable; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:34 */
+				bias-pull-up;     /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:35 */
+			};
+		};
+
+		/* node '/pin-controller/uart30_default' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:39 */
+		uart30_default: uart30_default {
+			phandle = < 0xd >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:105 */
+
+			/* node '/pin-controller/uart30_default/group1' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:40 */
+			group1 {
+				psels = < 0x0 >,
+				        < 0x2000002 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:41 */
+			};
+
+			/* node '/pin-controller/uart30_default/group2' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:45 */
+			group2 {
+				psels = < 0x1000001 >,
+				        < 0x3000003 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:46 */
+				bias-pull-up;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:48 */
+			};
+		};
+
+		/* node '/pin-controller/uart30_sleep' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:52 */
+		uart30_sleep: uart30_sleep {
+			phandle = < 0xe >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:106 */
+
+			/* node '/pin-controller/uart30_sleep/group1' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:53 */
+			group1 {
+				psels = < 0x0 >,
+				        < 0x1000001 >,
+				        < 0x2000002 >,
+				        < 0x3000003 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:54 */
+				low-power-enable;      /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:58 */
+			};
+		};
+
+		/* node '/pin-controller/i2c22_default' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:79 */
+		i2c22_default: i2c22_default {
+			phandle = < 0x6 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:117 */
+
+			/* node '/pin-controller/i2c22_default/group1' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:80 */
+			group1 {
+				psels = < 0xc000022 >,
+				        < 0xb000023 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:81 */
+			};
+		};
+
+		/* node '/pin-controller/i2c22_sleep' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:86 */
+		i2c22_sleep: i2c22_sleep {
+			phandle = < 0x7 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:118 */
+
+			/* node '/pin-controller/i2c22_sleep/group1' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:87 */
+			group1 {
+				psels = < 0xc000022 >,
+				        < 0xb000023 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:88 */
+				low-power-enable;      /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:90 */
+			};
+		};
+
+		/* node '/pin-controller/pwm20_default' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:94 */
+		pwm20_default: pwm20_default {
+			phandle = < 0x8 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:112 */
+
+			/* node '/pin-controller/pwm20_default/group1' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:95 */
+			group1 {
+				psels = < 0x1600002a >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:96 */
+			};
+		};
+
+		/* node '/pin-controller/pwm20_sleep' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:100 */
+		pwm20_sleep: pwm20_sleep {
+			phandle = < 0x9 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:113 */
+
+			/* node '/pin-controller/pwm20_sleep/group1' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:101 */
+			group1 {
+				psels = < 0x1600002a >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:102 */
+				low-power-enable;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk-pinctrl.dtsi:103 */
+			};
+		};
+	};
+
+	/* node '/entropy_bt_hci' defined in zephyr\dts\vendor\nordic\nrf_common.dtsi:34 */
+	rng_hci: entropy_bt_hci {
+		compatible = "zephyr,bt-hci-entropy"; /* in zephyr\dts\vendor\nordic\nrf_common.dtsi:35 */
+		status = "disabled";                  /* in zephyr\dts\vendor\nordic\nrf_common.dtsi:36 */
+	};
+
+	/* node '/cpus' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:22 */
+	cpus {
+		#address-cells = < 0x1 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:23 */
+		#size-cells = < 0x0 >;    /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:24 */
+
+		/* node '/cpus/cpu@0' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:26 */
+		cpuapp: cpu: cpu@0 {
+			compatible = "arm,cortex-m33f"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:27 */
+			reg = < 0x0 >;                  /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:28 */
+			device_type = "cpu";            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:29 */
+			clocks = < &hfpll >;            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:30 */
+			#address-cells = < 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:31 */
+			#size-cells = < 0x1 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:32 */
+
+			/* node '/cpus/cpu@0/itm@e0000000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:34 */
+			itm: itm@e0000000 {
+				compatible = "arm,armv8m-itm";     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:35 */
+				reg = < 0xe0000000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:36 */
+				swo-ref-frequency = < 0x7a12000 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:37 */
+			};
+		};
+	};
+
+	/* node '/clocks' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:52 */
+	clocks {
+
+		/* node '/clocks/pclk' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:53 */
+		pclk: pclk {
+			compatible = "fixed-clock";     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:54 */
+			#clock-cells = < 0x0 >;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:55 */
+			clock-frequency = < 0xf42400 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:56 */
+			phandle = < 0xc >;              /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:596 */
+		};
+
+		/* node '/clocks/lfxo' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:59 */
+		lfxo: lfxo {
+			compatible = "nordic,nrf54l-lfxo";        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:60 */
+			#clock-cells = < 0x0 >;                   /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:61 */
+			clock-frequency = < 0x8000 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:62 */
+			load-capacitors = "internal";             /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:36 */
+			load-capacitance-femtofarad = < 0x4268 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:37 */
+			phandle = < 0xb >;                        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:596 */
+		};
+
+		/* node '/clocks/hfxo' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:65 */
+		hfxo: hfxo {
+			compatible = "nordic,nrf54l-hfxo";        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:66 */
+			#clock-cells = < 0x0 >;                   /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:67 */
+			clock-frequency = < 0x1e84800 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:68 */
+			startup-time-us = < 0x672 >;              /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:69 */
+			load-capacitors = "internal";             /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:41 */
+			load-capacitance-femtofarad = < 0x3a98 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:42 */
+			phandle = < 0x3 >;                        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:243 */
+		};
+
+		/* node '/clocks/hfpll' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:72 */
+		hfpll: hfpll {
+			compatible = "fixed-clock";      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:73 */
+			#clock-cells = < 0x0 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:74 */
+			clock-frequency = < 0x7a12000 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:75 */
+			phandle = < 0x1 >;               /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:30 */
+		};
+	};
+
+	/* node '/soc' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:79 */
+	soc {
+		#address-cells = < 0x1 >;            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:80 */
+		#size-cells = < 0x1 >;               /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:81 */
+		compatible = "simple-bus";           /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:23 */
+		interrupt-parent = < &cpuapp_nvic >; /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:24 */
+		ranges;                              /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:25 */
+
+		/* node '/soc/uicr@ffd000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:86 */
+		uicr: uicr@ffd000 {
+			compatible = "nordic,nrf-uicr";   /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:87 */
+			reg = < 0xffd000 0x1000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:88 */
+			ranges = < 0x0 0xffd000 0x1000 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:89 */
+			#address-cells = < 0x1 >;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:90 */
+			#size-cells = < 0x1 >;            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:91 */
+			nfct-pins-as-gpios;               /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:46 */
+
+			/* node '/soc/uicr@ffd000/uicr@500' defined in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:62 */
+			bl_storage: uicr@500 {
+				reg = < 0x500 0x460 >; /* in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:63 */
+			};
+		};
+
+		/* node '/soc/ficr@ffc000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:95 */
+		ficr: ficr@ffc000 {
+			compatible = "nordic,nrf-ficr"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:96 */
+			reg = < 0xffc000 0x1000 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:97 */
+			#nordic,ficr-cells = < 0x1 >;   /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:98 */
+		};
+
+		/* node '/soc/memory@20000000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:101 */
+		cpuapp_sram: memory@20000000 {
+			compatible = "mmio-sram";            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:102 */
+			#address-cells = < 0x1 >;            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:103 */
+			#size-cells = < 0x1 >;               /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:104 */
+			reg = < 0x20000000 0x40000 >;        /* in zephyr\dts\vendor\nordic\nrf54l15.dtsi:10 */
+			ranges = < 0x0 0x20000000 0x40000 >; /* in zephyr\dts\vendor\nordic\nrf54l15.dtsi:11 */
+			status = "okay";                     /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:32 */
+		};
+
+		/* node '/soc/peripheral@50000000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:114 */
+		global_peripherals: peripheral@50000000 {
+			reg = < 0x50000000 0x10000000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:115 */
+			#address-cells = < 0x1 >;               /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:116 */
+			#size-cells = < 0x1 >;                  /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:117 */
+			ranges = < 0x0 0x50000000 0x10000000 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:118 */
+
+			/* node '/soc/peripheral@50000000/dppic@42000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:121 */
+			dppic00: dppic@42000 {
+				compatible = "nordic,nrf-dppic"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:122 */
+				reg = < 0x42000 0x808 >;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:123 */
+				channels = < 0x8 >;              /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:125 */
+				groups = < 0x2 >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:126 */
+				status = "okay";                 /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:95 */
+			};
+
+			/* node '/soc/peripheral@50000000/ppib@43000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:129 */
+			ppib00: ppib@43000 {
+				compatible = "nordic,nrf-ppib"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:130 */
+				reg = < 0x43000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:131 */
+				channels = < 0x8 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:133 */
+				status = "okay";                /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:111 */
+			};
+
+			/* node '/soc/peripheral@50000000/ppib@44000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:136 */
+			ppib01: ppib@44000 {
+				compatible = "nordic,nrf-ppib"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:137 */
+				reg = < 0x44000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:138 */
+				channels = < 0x8 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:140 */
+				status = "okay";                /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:115 */
+			};
+
+			/* node '/soc/peripheral@50000000/spi@4a000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:143 */
+			spi00: spi@4a000 {
+				compatible = "nordic,nrf-spim"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:150 */
+				#address-cells = < 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:151 */
+				#size-cells = < 0x0 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:152 */
+				reg = < 0x4a000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:153 */
+				interrupts = < 0x4a 0x1 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:154 */
+				clocks = < &hfpll >;            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:155 */
+				max-frequency = < 0x1e84800 >;  /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:156 */
+				easydma-maxcnt-bits = < 0x10 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:157 */
+				rx-delay-supported;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:158 */
+				rx-delay = < 0x1 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:159 */
+				status = "disabled";            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:160 */
+			};
+
+			/* node '/soc/peripheral@50000000/uart@4a000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:163 */
+			uart00: uart@4a000 {
+				compatible = "nordic,nrf-uarte"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:164 */
+				reg = < 0x4a000 0x1000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:165 */
+				interrupts = < 0x4a 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:166 */
+				clocks = < &hfpll >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:167 */
+				status = "disabled";             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:168 */
+				endtx-stoptx-supported;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:169 */
+				frame-timeout-supported;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:170 */
+			};
+
+			/* node '/soc/peripheral@50000000/vpr@4c000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:173 */
+			cpuflpr_vpr: vpr@4c000 {
+				compatible = "nordic,nrf-vpr-coprocessor"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:174 */
+				reg = < 0x4c000 0x1000 >;                  /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:175 */
+				ranges = < 0x0 0x4c000 0x1000 >;           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:176 */
+				#address-cells = < 0x1 >;                  /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:177 */
+				#size-cells = < 0x1 >;                     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:178 */
+				status = "disabled";                       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:179 */
+				enable-secure;                             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:180 */
+				hibernation-ram-block = < 0x20 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:181 */
+
+				/* node '/soc/peripheral@50000000/vpr@4c000/mailbox@1' defined in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:44 */
+				cpuapp_vevif_rx: mailbox@1 {
+					compatible = "nordic,nrf-vevif-event-rx"; /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:45 */
+					reg = < 0x1 0x1000 >;                     /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:46 */
+					status = "disabled";                      /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:47 */
+					interrupts = < 0x4c 0x1 >;                /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:48 */
+					#mbox-cells = < 0x1 >;                    /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:49 */
+					nordic,events = < 0x1 >;                  /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:50 */
+					nordic,events-mask = < 0x100000 >;        /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:51 */
+				};
+
+				/* node '/soc/peripheral@50000000/vpr@4c000/mailbox@0' defined in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:54 */
+				cpuapp_vevif_tx: mailbox@0 {
+					compatible = "nordic,nrf-vevif-task-tx"; /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:55 */
+					reg = < 0x0 0x1000 >;                    /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:56 */
+					#mbox-cells = < 0x1 >;                   /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:57 */
+					nordic,tasks = < 0x7 >;                  /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:58 */
+					nordic,tasks-mask = < 0x7f0000 >;        /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:59 */
+					status = "disabled";                     /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:60 */
+				};
+			};
+
+			/* node '/soc/peripheral@50000000/gpio@50400' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:193 */
+			gpio2: gpio@50400 {
+				compatible = "nordic,nrf-gpio"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:194 */
+				gpio-controller;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:195 */
+				reg = < 0x50400 0x300 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:196 */
+				#gpio-cells = < 0x2 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:197 */
+				ngpios = < 0xb >;               /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:198 */
+				port = < 0x2 >;                 /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:200 */
+				status = "okay";                /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:77 */
+				phandle = < 0x10 >;             /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:17 */
+			};
+
+			/* node '/soc/peripheral@50000000/timer@55000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:203 */
+			timer00: timer@55000 {
+				compatible = "nordic,nrf-timer"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:204 */
+				status = "disabled";             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:205 */
+				reg = < 0x55000 0x1000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:206 */
+				cc-num = < 0x6 >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:207 */
+				max-bit-width = < 0x20 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:208 */
+				interrupts = < 0x55 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:209 */
+				clocks = < &hfpll >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:210 */
+				prescaler = < 0x0 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:211 */
+			};
+
+			/* node '/soc/peripheral@50000000/dppic@82000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:214 */
+			dppic10: dppic@82000 {
+				compatible = "nordic,nrf-dppic"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:215 */
+				reg = < 0x82000 0x808 >;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:216 */
+				channels = < 0x18 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:218 */
+				groups = < 0x6 >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:219 */
+				status = "okay";                 /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:99 */
+			};
+
+			/* node '/soc/peripheral@50000000/ppib@83000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:222 */
+			ppib10: ppib@83000 {
+				compatible = "nordic,nrf-ppib"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:223 */
+				reg = < 0x83000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:224 */
+				channels = < 0x8 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:226 */
+				status = "okay";                /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:119 */
+			};
+
+			/* node '/soc/peripheral@50000000/ppib@84000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:229 */
+			ppib11: ppib@84000 {
+				compatible = "nordic,nrf-ppib"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:230 */
+				reg = < 0x84000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:231 */
+				channels = < 0x10 >;            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:233 */
+				status = "okay";                /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:123 */
+			};
+
+			/* node '/soc/peripheral@50000000/timer@85000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:236 */
+			timer10: timer@85000 {
+				compatible = "nordic,nrf-timer"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:237 */
+				status = "disabled";             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:238 */
+				reg = < 0x85000 0x1000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:239 */
+				cc-num = < 0x8 >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:240 */
+				max-bit-width = < 0x20 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:241 */
+				interrupts = < 0x85 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:242 */
+				clocks = < &hfxo >;              /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:243 */
+				prescaler = < 0x0 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:244 */
+			};
+
+			/* node '/soc/peripheral@50000000/egu@87000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:247 */
+			egu10: egu@87000 {
+				compatible = "nordic,nrf-egu"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:248 */
+				reg = < 0x87000 0x1000 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:249 */
+				interrupts = < 0x87 0x1 >;     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:250 */
+				status = "disabled";           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:251 */
+			};
+
+			/* node '/soc/peripheral@50000000/radio@8a000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:254 */
+			radio: radio@8a000 {
+				compatible = "nordic,nrf-radio"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:255 */
+				reg = < 0x8a000 0x1000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:256 */
+				interrupts = < 0x8a 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:257 */
+				dfe-supported;                   /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:259 */
+				ieee802154-supported;            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:260 */
+				ble-2mbps-supported;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:261 */
+				ble-coded-phy-supported;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:262 */
+				ble-cs-supported;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:263 */
+				status = "okay";                 /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:89 */
+
+				/* node '/soc/peripheral@50000000/radio@8a000/ieee802154' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:265 */
+				ieee802154: ieee802154 {
+					compatible = "nordic,nrf-ieee802154"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:266 */
+					status = "okay";                      /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:93 */
+				};
+
+				/* node '/soc/peripheral@50000000/radio@8a000/bt_hci_sdc' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:270 */
+				bt_hci_sdc: bt_hci_sdc {
+					compatible = "nordic,bt-hci-sdc"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:271 */
+					status = "okay";                  /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:40 */
+				};
+
+				/* node '/soc/peripheral@50000000/radio@8a000/bt_hci_controller' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:275 */
+				bt_hci_controller: bt_hci_controller {
+					compatible = "zephyr,bt-hci-ll-sw-split"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:276 */
+					status = "disabled";                      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:277 */
+				};
+			};
+
+			/* node '/soc/peripheral@50000000/dppic@c2000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:281 */
+			dppic20: dppic@c2000 {
+				compatible = "nordic,nrf-dppic"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:282 */
+				reg = < 0xc2000 0x808 >;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:283 */
+				channels = < 0x10 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:285 */
+				groups = < 0x6 >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:286 */
+				status = "okay";                 /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:103 */
+			};
+
+			/* node '/soc/peripheral@50000000/ppib@c3000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:289 */
+			ppib20: ppib@c3000 {
+				compatible = "nordic,nrf-ppib"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:290 */
+				reg = < 0xc3000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:291 */
+				channels = < 0x8 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:293 */
+				status = "okay";                /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:127 */
+			};
+
+			/* node '/soc/peripheral@50000000/ppib@c4000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:296 */
+			ppib21: ppib@c4000 {
+				compatible = "nordic,nrf-ppib"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:297 */
+				reg = < 0xc4000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:298 */
+				channels = < 0x10 >;            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:300 */
+				status = "okay";                /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:131 */
+			};
+
+			/* node '/soc/peripheral@50000000/ppib@c5000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:303 */
+			ppib22: ppib@c5000 {
+				compatible = "nordic,nrf-ppib"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:304 */
+				reg = < 0xc5000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:305 */
+				channels = < 0x4 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:307 */
+				status = "okay";                /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:135 */
+			};
+
+			/* node '/soc/peripheral@50000000/i2c@c6000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:310 */
+			i2c20: i2c@c6000 {
+				compatible = "nordic,nrf-twim";    /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:311 */
+				#address-cells = < 0x1 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:312 */
+				#size-cells = < 0x0 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:313 */
+				reg = < 0xc6000 0x1000 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:314 */
+				interrupts = < 0xc6 0x1 >;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:315 */
+				easydma-maxcnt-bits = < 0x10 >;    /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:316 */
+				clock-tolerance-percent = < 0x6 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:317 */
+				status = "disabled";               /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:318 */
+				zephyr,pm-device-runtime-auto;     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:319 */
+			};
+
+			/* node '/soc/peripheral@50000000/spi@c6000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:322 */
+			spi20: spi@c6000 {
+				compatible = "nordic,nrf-spim"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:329 */
+				#address-cells = < 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:330 */
+				#size-cells = < 0x0 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:331 */
+				reg = < 0xc6000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:332 */
+				interrupts = < 0xc6 0x1 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:333 */
+				max-frequency = < 0x7a1200 >;   /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:334 */
+				easydma-maxcnt-bits = < 0x10 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:335 */
+				rx-delay-supported;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:336 */
+				rx-delay = < 0x1 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:337 */
+				status = "disabled";            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:338 */
+			};
+
+			/* node '/soc/peripheral@50000000/uart@c6000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:341 */
+			uart20: uart@c6000 {
+				compatible = "nordic,nrf-uarte"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:342 */
+				reg = < 0xc6000 0x1000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:343 */
+				interrupts = < 0xc6 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:344 */
+				endtx-stoptx-supported;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:346 */
+				frame-timeout-supported;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:347 */
+				current-speed = < 0x1c200 >;     /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:97 */
+				pinctrl-0 = < &uart20_default >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:98 */
+				pinctrl-1 = < &uart20_sleep >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:99 */
+				pinctrl-names = "default",
+				                "sleep";         /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:100 */
+				status = "disabled";             /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:11 */
+			};
+
+			/* node '/soc/peripheral@50000000/i2c@c7000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:350 */
+			i2c21: i2c@c7000 {
+				compatible = "nordic,nrf-twim";    /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:351 */
+				#address-cells = < 0x1 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:352 */
+				#size-cells = < 0x0 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:353 */
+				reg = < 0xc7000 0x1000 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:354 */
+				interrupts = < 0xc7 0x1 >;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:355 */
+				easydma-maxcnt-bits = < 0x10 >;    /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:356 */
+				clock-tolerance-percent = < 0x6 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:357 */
+				status = "disabled";               /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:358 */
+				zephyr,pm-device-runtime-auto;     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:359 */
+			};
+
+			/* node '/soc/peripheral@50000000/spi@c7000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:362 */
+			spi21: spi@c7000 {
+				compatible = "nordic,nrf-spim"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:369 */
+				#address-cells = < 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:370 */
+				#size-cells = < 0x0 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:371 */
+				reg = < 0xc7000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:372 */
+				interrupts = < 0xc7 0x1 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:373 */
+				max-frequency = < 0x7a1200 >;   /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:374 */
+				easydma-maxcnt-bits = < 0x10 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:375 */
+				rx-delay-supported;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:376 */
+				rx-delay = < 0x1 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:377 */
+				status = "disabled";            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:378 */
+			};
+
+			/* node '/soc/peripheral@50000000/uart@c7000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:381 */
+			uart21: uart@c7000 {
+				compatible = "nordic,nrf-uarte"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:382 */
+				reg = < 0xc7000 0x1000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:383 */
+				interrupts = < 0xc7 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:384 */
+				status = "disabled";             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:385 */
+				endtx-stoptx-supported;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:386 */
+				frame-timeout-supported;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:387 */
+			};
+
+			/* node '/soc/peripheral@50000000/i2c@c8000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:390 */
+			i2c22: i2c@c8000 {
+				compatible = "nordic,nrf-twim";    /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:391 */
+				#address-cells = < 0x1 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:392 */
+				#size-cells = < 0x0 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:393 */
+				reg = < 0xc8000 0x1000 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:394 */
+				interrupts = < 0xc8 0x1 >;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:395 */
+				easydma-maxcnt-bits = < 0x10 >;    /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:396 */
+				clock-tolerance-percent = < 0x6 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:397 */
+				zephyr,pm-device-runtime-auto;     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:399 */
+				status = "okay";                   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:115 */
+				clock-frequency = < 0x186a0 >;     /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:116 */
+				pinctrl-0 = < &i2c22_default >;    /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:117 */
+				pinctrl-1 = < &i2c22_sleep >;      /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:118 */
+				pinctrl-names = "default",
+				                "sleep";           /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:119 */
+
+				/* node '/soc/peripheral@50000000/i2c@c8000/bq25186@6a' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:122 */
+				bq25186: bq25186@6a {
+					compatible = "ti,bq25186"; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:123 */
+					reg = < 0x6a >;            /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:124 */
+					status = "disabled";       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:125 */
+				};
+			};
+
+			/* node '/soc/peripheral@50000000/spi@c8000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:402 */
+			spi22: spi@c8000 {
+				#address-cells = < 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:410 */
+				#size-cells = < 0x0 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:411 */
+				reg = < 0xc8000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:412 */
+				interrupts = < 0xc8 0x1 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:413 */
+				max-frequency = < 0x7a1200 >;   /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:414 */
+				easydma-maxcnt-bits = < 0x10 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:415 */
+				compatible = "nordic,nrf-spis"; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:50 */
+				def-char = < 0xff >;            /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:53 */
+				status = "disabled";            /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:54 */
+			};
+
+			/* node '/soc/peripheral@50000000/uart@c8000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:421 */
+			uart22: uart@c8000 {
+				compatible = "nordic,nrf-uarte"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:422 */
+				reg = < 0xc8000 0x1000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:423 */
+				interrupts = < 0xc8 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:424 */
+				status = "disabled";             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:425 */
+				endtx-stoptx-supported;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:426 */
+				frame-timeout-supported;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:427 */
+			};
+
+			/* node '/soc/peripheral@50000000/egu@c9000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:430 */
+			egu20: egu@c9000 {
+				compatible = "nordic,nrf-egu"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:431 */
+				reg = < 0xc9000 0x1000 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:432 */
+				interrupts = < 0xc9 0x1 >;     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:433 */
+				status = "disabled";           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:434 */
+			};
+
+			/* node '/soc/peripheral@50000000/timer@ca000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:437 */
+			timer20: timer@ca000 {
+				compatible = "nordic,nrf-timer"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:438 */
+				status = "disabled";             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:439 */
+				reg = < 0xca000 0x1000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:440 */
+				cc-num = < 0x6 >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:441 */
+				max-bit-width = < 0x20 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:442 */
+				interrupts = < 0xca 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:443 */
+				prescaler = < 0x0 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:444 */
+			};
+
+			/* node '/soc/peripheral@50000000/timer@cb000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:447 */
+			timer21: timer@cb000 {
+				compatible = "nordic,nrf-timer"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:448 */
+				status = "disabled";             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:449 */
+				reg = < 0xcb000 0x1000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:450 */
+				cc-num = < 0x6 >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:451 */
+				max-bit-width = < 0x20 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:452 */
+				interrupts = < 0xcb 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:453 */
+				prescaler = < 0x0 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:454 */
+			};
+
+			/* node '/soc/peripheral@50000000/timer@cc000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:457 */
+			timer22: timer@cc000 {
+				compatible = "nordic,nrf-timer"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:458 */
+				status = "disabled";             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:459 */
+				reg = < 0xcc000 0x1000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:460 */
+				cc-num = < 0x6 >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:461 */
+				max-bit-width = < 0x20 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:462 */
+				interrupts = < 0xcc 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:463 */
+				prescaler = < 0x0 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:464 */
+			};
+
+			/* node '/soc/peripheral@50000000/timer@cd000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:467 */
+			timer23: timer@cd000 {
+				compatible = "nordic,nrf-timer"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:468 */
+				status = "disabled";             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:469 */
+				reg = < 0xcd000 0x1000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:470 */
+				cc-num = < 0x6 >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:471 */
+				max-bit-width = < 0x20 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:472 */
+				interrupts = < 0xcd 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:473 */
+				prescaler = < 0x0 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:474 */
+			};
+
+			/* node '/soc/peripheral@50000000/timer@ce000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:477 */
+			timer24: timer@ce000 {
+				compatible = "nordic,nrf-timer"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:478 */
+				status = "disabled";             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:479 */
+				reg = < 0xce000 0x1000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:480 */
+				cc-num = < 0x6 >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:481 */
+				max-bit-width = < 0x20 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:482 */
+				interrupts = < 0xce 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:483 */
+				prescaler = < 0x0 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:484 */
+			};
+
+			/* node '/soc/peripheral@50000000/pdm@d0000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:487 */
+			pdm20: pdm@d0000 {
+				compatible = "nordic,nrf-pdm"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:488 */
+				status = "disabled";           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:489 */
+				reg = < 0xd0000 0x1000 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:490 */
+				interrupts = < 0xd0 0x1 >;     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:491 */
+			};
+
+			/* node '/soc/peripheral@50000000/pdm@d1000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:494 */
+			pdm21: pdm@d1000 {
+				compatible = "nordic,nrf-pdm"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:495 */
+				status = "disabled";           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:496 */
+				reg = < 0xd1000 0x1000 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:497 */
+				interrupts = < 0xd1 0x1 >;     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:498 */
+			};
+
+			/* node '/soc/peripheral@50000000/pwm@d2000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:501 */
+			pwm20: pwm@d2000 {
+				compatible = "nordic,nrf-pwm";  /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:502 */
+				reg = < 0xd2000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:504 */
+				interrupts = < 0xd2 0x1 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:505 */
+				#pwm-cells = < 0x3 >;           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:506 */
+				idleout-supported;              /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:507 */
+				status = "okay";                /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:111 */
+				pinctrl-0 = < &pwm20_default >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:112 */
+				pinctrl-1 = < &pwm20_sleep >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:113 */
+				pinctrl-names = "default",
+				                "sleep";        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:114 */
+				phandle = < 0x12 >;             /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:41 */
+			};
+
+			/* node '/soc/peripheral@50000000/pwm@d3000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:510 */
+			pwm21: pwm@d3000 {
+				compatible = "nordic,nrf-pwm"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:511 */
+				status = "disabled";           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:512 */
+				reg = < 0xd3000 0x1000 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:513 */
+				interrupts = < 0xd3 0x1 >;     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:514 */
+				#pwm-cells = < 0x3 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:515 */
+				idleout-supported;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:516 */
+			};
+
+			/* node '/soc/peripheral@50000000/pwm@d4000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:519 */
+			pwm22: pwm@d4000 {
+				compatible = "nordic,nrf-pwm"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:520 */
+				status = "disabled";           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:521 */
+				reg = < 0xd4000 0x1000 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:522 */
+				interrupts = < 0xd4 0x1 >;     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:523 */
+				#pwm-cells = < 0x3 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:524 */
+				idleout-supported;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:525 */
+			};
+
+			/* node '/soc/peripheral@50000000/adc@d5000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:528 */
+			adc: adc@d5000 {
+				compatible = "nordic,nrf-saadc"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:529 */
+				reg = < 0xd5000 0x1000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:530 */
+				interrupts = < 0xd5 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:531 */
+				#io-channel-cells = < 0x1 >;     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:533 */
+				zephyr,pm-device-runtime-auto;   /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:534 */
+				#address-cells = < 0x1 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:130 */
+				#size-cells = < 0x0 >;           /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:131 */
+				status = "okay";                 /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:132 */
+				phandle = < 0x14 >;              /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:89 */
+
+				/* node '/soc/peripheral@50000000/adc@d5000/channel@5' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:134 */
+				channel@5 {
+					reg = < 0x5 >;                         /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:135 */
+					zephyr,gain = "ADC_GAIN_1_6";          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:136 */
+					zephyr,reference = "ADC_REF_INTERNAL"; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:137 */
+					zephyr,acquisition-time = < 0x0 >;     /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:138 */
+					zephyr,input-positive = < 0x5 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:139 */
+					zephyr,resolution = < 0xc >;           /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:140 */
+				};
+			};
+
+			/* node '/soc/peripheral@50000000/nfct@d6000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:537 */
+			nfct: nfct@d6000 {
+				compatible = "nordic,nrf-nfct-v2"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:538 */
+				reg = < 0xd6000 0x1000 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:539 */
+				interrupts = < 0xd6 0x1 >;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:540 */
+				status = "disabled";               /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:65 */
+			};
+
+			/* node '/soc/peripheral@50000000/temp@d7000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:544 */
+			temp: temp@d7000 {
+				compatible = "nordic,nrf-temp"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:545 */
+				reg = < 0xd7000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:546 */
+				interrupts = < 0xd7 0x1 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:547 */
+				status = "okay";                /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:97 */
+			};
+
+			/* node '/soc/peripheral@50000000/gpio@d8200' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:551 */
+			gpio1: gpio@d8200 {
+				compatible = "nordic,nrf-gpio";  /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:552 */
+				gpio-controller;                 /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:553 */
+				reg = < 0xd8200 0x300 >;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:554 */
+				#gpio-cells = < 0x2 >;           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:555 */
+				ngpios = < 0x11 >;               /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:556 */
+				port = < 0x1 >;                  /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:558 */
+				gpiote-instance = < &gpiote20 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:559 */
+				status = "okay";                 /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:73 */
+				phandle = < 0x11 >;              /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:22 */
+			};
+
+			/* node '/soc/peripheral@50000000/gpiote@da000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:562 */
+			gpiote20: gpiote@da000 {
+				compatible = "nordic,nrf-gpiote"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:563 */
+				reg = < 0xda000 0x1000 >;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:564 */
+				instance = < 0x14 >;              /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:566 */
+				interrupts = < 0xdb 0x1 >;        /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:82 */
+				status = "okay";                  /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:81 */
+				phandle = < 0xa >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:559 */
+			};
+
+			/* node '/soc/peripheral@50000000/i2s@dd000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:569 */
+			i2s20: i2s@dd000 {
+				compatible = "nordic,nrf-i2s"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:570 */
+				#address-cells = < 0x1 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:571 */
+				#size-cells = < 0x0 >;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:572 */
+				reg = < 0xdd000 0x1000 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:573 */
+				interrupts = < 0xdd 0x1 >;     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:574 */
+				status = "disabled";           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:575 */
+			};
+
+			/* node '/soc/peripheral@50000000/qdec@e0000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:578 */
+			qdec20: qdec@e0000 {
+				compatible = "nordic,nrf-qdec"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:579 */
+				reg = < 0xe0000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:580 */
+				interrupts = < 0xe0 0x1 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:581 */
+				status = "disabled";            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:582 */
+			};
+
+			/* node '/soc/peripheral@50000000/qdec@e1000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:585 */
+			qdec21: qdec@e1000 {
+				compatible = "nordic,nrf-qdec"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:586 */
+				reg = < 0xe1000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:587 */
+				interrupts = < 0xe1 0x1 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:588 */
+				status = "disabled";            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:589 */
+			};
+
+			/* node '/soc/peripheral@50000000/grtc@e2000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:592 */
+			grtc: grtc@e2000 {
+				compatible = "nordic,nrf-grtc";                                       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:593 */
+				reg = < 0xe2000 0x1000 >;                                             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:594 */
+				cc-num = < 0xc >;                                                     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:595 */
+				clocks = < &lfxo >,
+				         < &pclk >;                                                   /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:596 */
+				clock-names = "lfclock",
+				              "hfclock";                                              /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:597 */
+				extended-channels = < 0x0 >;                                          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:599 */
+				interrupts = < 0xe4 0x1 >,
+				             < 0xe5 0x1 >;                                            /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:73 */
+				owned-channels = < 0x0 0x1 0x2 0x3 0x4 0x5 0x6 0x7 0x8 0x9 0xa 0xb >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:55 */
+				child-owned-channels = < 0x3 0x4 0x7 0x8 0x9 0xa 0xb >;               /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:56 */
+				status = "okay";                                                      /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:57 */
+			};
+
+			/* node '/soc/peripheral@50000000/dppic@102000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:602 */
+			dppic30: dppic@102000 {
+				compatible = "nordic,nrf-dppic"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:603 */
+				reg = < 0x102000 0x808 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:604 */
+				channels = < 0x4 >;              /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:606 */
+				groups = < 0x2 >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:607 */
+				status = "okay";                 /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:107 */
+			};
+
+			/* node '/soc/peripheral@50000000/ppib@103000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:610 */
+			ppib30: ppib@103000 {
+				compatible = "nordic,nrf-ppib"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:611 */
+				reg = < 0x103000 0x1000 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:612 */
+				channels = < 0x4 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:614 */
+				status = "okay";                /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:139 */
+			};
+
+			/* node '/soc/peripheral@50000000/i2c@104000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:617 */
+			i2c30: i2c@104000 {
+				compatible = "nordic,nrf-twim";    /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:618 */
+				#address-cells = < 0x1 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:619 */
+				#size-cells = < 0x0 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:620 */
+				reg = < 0x104000 0x1000 >;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:621 */
+				interrupts = < 0x104 0x1 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:622 */
+				easydma-maxcnt-bits = < 0x10 >;    /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:623 */
+				clock-tolerance-percent = < 0x6 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:624 */
+				status = "disabled";               /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:625 */
+				zephyr,pm-device-runtime-auto;     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:626 */
+			};
+
+			/* node '/soc/peripheral@50000000/spi@104000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:629 */
+			spi30: spi@104000 {
+				compatible = "nordic,nrf-spim"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:636 */
+				#address-cells = < 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:637 */
+				#size-cells = < 0x0 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:638 */
+				reg = < 0x104000 0x1000 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:639 */
+				interrupts = < 0x104 0x1 >;     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:640 */
+				max-frequency = < 0x7a1200 >;   /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:641 */
+				easydma-maxcnt-bits = < 0x10 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:642 */
+				rx-delay-supported;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:643 */
+				rx-delay = < 0x1 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:644 */
+				status = "disabled";            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:645 */
+			};
+
+			/* node '/soc/peripheral@50000000/uart@104000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:648 */
+			uart30: uart@104000 {
+				compatible = "nordic,nrf-uarte"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:649 */
+				reg = < 0x104000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:650 */
+				interrupts = < 0x104 0x1 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:651 */
+				endtx-stoptx-supported;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:653 */
+				frame-timeout-supported;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:654 */
+				current-speed = < 0x1c200 >;     /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:104 */
+				pinctrl-0 = < &uart30_default >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:105 */
+				pinctrl-1 = < &uart30_sleep >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:106 */
+				pinctrl-names = "default",
+				                "sleep";         /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:107 */
+				status = "disabled";             /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:12 */
+			};
+
+			/* node '/soc/peripheral@50000000/clock@10e000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:657 */
+			clock: clock@10e000 {
+				compatible = "nordic,nrf-clock"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:658 */
+				reg = < 0x10e000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:659 */
+				interrupts = < 0x105 0x1 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:660 */
+				status = "okay";                 /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:101 */
+			};
+
+			/* node '/soc/peripheral@50000000/power@10e000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:664 */
+			power: power@10e000 {
+				compatible = "nordic,nrf-power";  /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:665 */
+				reg = < 0x10e000 0x1000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:666 */
+				ranges = < 0x0 0x10e000 0x1000 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:667 */
+				interrupts = < 0x105 0x1 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:668 */
+				status = "disabled";              /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:669 */
+				#address-cells = < 0x1 >;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:670 */
+				#size-cells = < 0x1 >;            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:671 */
+
+				/* node '/soc/peripheral@50000000/power@10e000/gpregret1@500' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:673 */
+				gpregret1: gpregret1@500 {
+					#address-cells = < 0x1 >;           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:674 */
+					#size-cells = < 0x1 >;              /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:675 */
+					compatible = "nordic,nrf-gpregret"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:676 */
+					reg = < 0x500 0x1 >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:677 */
+					status = "okay";                    /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:105 */
+
+					/* node '/soc/peripheral@50000000/power@10e000/gpregret1@500/boot_mode@0' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:107 */
+					boot_mode0: boot_mode@0 {
+						compatible = "zephyr,retention"; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:108 */
+						status = "okay";                 /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:109 */
+						reg = < 0x0 0x1 >;               /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:110 */
+					};
+				};
+
+				/* node '/soc/peripheral@50000000/power@10e000/gpregret2@504' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:681 */
+				gpregret2: gpregret2@504 {
+					#address-cells = < 0x1 >;           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:682 */
+					#size-cells = < 0x1 >;              /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:683 */
+					compatible = "nordic,nrf-gpregret"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:684 */
+					reg = < 0x504 0x1 >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:685 */
+					status = "disabled";                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:686 */
+				};
+			};
+
+			/* node '/soc/peripheral@50000000/comparator@106000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:690 */
+			comp: comparator@106000 {
+				compatible = "nordic,nrf-comp"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:695 */
+				reg = < 0x106000 0x1000 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:696 */
+				status = "disabled";            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:697 */
+				interrupts = < 0x106 0x1 >;     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:698 */
+			};
+
+			/* node '/soc/peripheral@50000000/watchdog@108000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:704 */
+			wdt30: watchdog@108000 {
+				compatible = "nordic,nrf-wdt"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:705 */
+				reg = < 0x108000 0x620 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:706 */
+				interrupts = < 0x108 0x1 >;    /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:707 */
+				status = "disabled";           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:708 */
+			};
+
+			/* node '/soc/peripheral@50000000/watchdog@109000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:712 */
+			wdt31: watchdog@109000 {
+				compatible = "nordic,nrf-wdt"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:713 */
+				reg = < 0x109000 0x620 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:714 */
+				interrupts = < 0x109 0x1 >;    /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:715 */
+				status = "disabled";           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:716 */
+			};
+
+			/* node '/soc/peripheral@50000000/gpio@10a000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:719 */
+			gpio0: gpio@10a000 {
+				compatible = "nordic,nrf-gpio";  /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:720 */
+				gpio-controller;                 /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:721 */
+				reg = < 0x10a000 0x300 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:722 */
+				#gpio-cells = < 0x2 >;           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:723 */
+				ngpios = < 0x7 >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:724 */
+				port = < 0x0 >;                  /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:726 */
+				gpiote-instance = < &gpiote30 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:727 */
+				status = "okay";                 /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:69 */
+				phandle = < 0x13 >;              /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:67 */
+			};
+
+			/* node '/soc/peripheral@50000000/gpiote@10c000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:730 */
+			gpiote30: gpiote@10c000 {
+				compatible = "nordic,nrf-gpiote"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:731 */
+				reg = < 0x10c000 0x1000 >;        /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:732 */
+				instance = < 0x1e >;              /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:734 */
+				interrupts = < 0x10d 0x1 >;       /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:90 */
+				status = "okay";                  /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:85 */
+				phandle = < 0xf >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:727 */
+			};
+
+			/* node '/soc/peripheral@50000000/regulator@120000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:737 */
+			regulators: regulator@120000 {
+				compatible = "nordic,nrf54l-regulators"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:738 */
+				reg = < 0x120000 0x1000 >;               /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:739 */
+				#address-cells = < 0x1 >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:741 */
+				#size-cells = < 0x1 >;                   /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:742 */
+				status = "okay";                         /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:46 */
+
+				/* node '/soc/peripheral@50000000/regulator@120000/regulator@120600' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:744 */
+				vregmain: regulator@120600 {
+					compatible = "nordic,nrf5x-regulator"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:745 */
+					reg = < 0x120600 0x1 >;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:746 */
+					regulator-name = "VREGMAIN";           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:748 */
+					status = "okay";                       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:50 */
+					regulator-initial-mode = < 0x1 >;      /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:51 */
+				};
+			};
+		};
+
+		/* node '/soc/rram-controller@5004b000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:754 */
+		rram_controller: rram-controller@5004b000 {
+			compatible = "nordic,rram-controller"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:755 */
+			reg = < 0x5004b000 0x1000 >;           /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:756 */
+			ranges;                                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:757 */
+			#address-cells = < 0x1 >;              /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:758 */
+			#size-cells = < 0x1 >;                 /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:759 */
+			interrupts = < 0x4b 0x1 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:760 */
+
+			/* node '/soc/rram-controller@5004b000/rram@0' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:762 */
+			cpuapp_rram: rram@0 {
+				compatible = "soc-nv-flash";   /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:763 */
+				erase-block-size = < 0x1000 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:764 */
+				write-block-size = < 0x10 >;   /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:765 */
+				status = "okay";               /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:766 */
+				#address-cells = < 0x1 >;      /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:767 */
+				#size-cells = < 0x1 >;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:768 */
+				reg = < 0x0 0x17d000 >;        /* in zephyr\dts\vendor\nordic\nrf54l15.dtsi:15 */
+				ranges = < 0x0 0x0 0x17d000 >; /* in zephyr\dts\vendor\nordic\nrf54l15.dtsi:16 */
+
+				/* node '/soc/rram-controller@5004b000/rram@0/partitions' defined in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:8 */
+				partitions {
+					#address-cells = < 0x1 >; /* in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:9 */
+					#size-cells = < 0x1 >;    /* in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:10 */
+
+					/* node '/soc/rram-controller@5004b000/rram@0/partitions/partition@0' defined in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:12 */
+					boot_partition: partition@0 {
+						compatible = "zephyr,mapped-partition"; /* in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:13 */
+						label = "mcuboot";                      /* in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:14 */
+						reg = < 0x0 0xf800 >;                   /* in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:18 */
+					};
+
+					/* node '/soc/rram-controller@5004b000/rram@0/partitions/partition@10000' defined in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:40 */
+					slot0_partition: partition@10000 {
+						compatible = "zephyr,mapped-partition"; /* in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:41 */
+						label = "image-0";                      /* in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:42 */
+						reg = < 0x10000 0xb2000 >;              /* in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:43 */
+					};
+
+					/* node '/soc/rram-controller@5004b000/rram@0/partitions/partition@c2000' defined in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:46 */
+					slot1_partition: partition@c2000 {
+						compatible = "zephyr,mapped-partition"; /* in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:47 */
+						label = "image-1";                      /* in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:48 */
+						reg = < 0xc2000 0xb2000 >;              /* in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:49 */
+					};
+
+					/* node '/soc/rram-controller@5004b000/rram@0/partitions/partition@174000' defined in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:52 */
+					storage_partition: partition@174000 {
+						compatible = "zephyr,mapped-partition"; /* in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:53 */
+						label = "storage";                      /* in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:54 */
+						reg = < 0x174000 0x9000 >;              /* in zephyr\dts\vendor\nordic\nrf54l15_cpuapp_partition.dtsi:55 */
+					};
+				};
+			};
+		};
+
+		/* node '/soc/memory@50041000' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:772 */
+		nrf_mpc: memory@50041000 {
+			compatible = "nordic,nrf-mpc";     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:773 */
+			reg = < 0x50041000 0x1000 >;       /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:774 */
+			#address-cells = < 0x1 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:775 */
+			#size-cells = < 0x1 >;             /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:776 */
+			override-num = < 0x5 >;            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:777 */
+			override-granularity = < 0x1000 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:778 */
+		};
+
+		/* node '/soc/cpuapp-ppb-bus' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:781 */
+		cpuapp_ppb: cpuapp-ppb-bus {
+			#address-cells = < 0x1 >;  /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:782 */
+			#size-cells = < 0x1 >;     /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:783 */
+			compatible = "simple-bus"; /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:65 */
+			ranges;                    /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:66 */
+
+			/* node '/soc/cpuapp-ppb-bus/interrupt-controller@e000e100' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:785 */
+			cpuapp_nvic: nvic: interrupt-controller@e000e100 {
+				#address-cells = < 0x1 >;            /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:786 */
+				compatible = "arm,v8m-nvic";         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:787 */
+				reg = < 0xe000e100 0xc00 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:788 */
+				arm,num-irq-priority-bits = < 0x3 >; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:789 */
+				interrupt-controller;                /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:790 */
+				#interrupt-cells = < 0x2 >;          /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:791 */
+				phandle = < 0x2 >;                   /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:24 */
+			};
+
+			/* node '/soc/cpuapp-ppb-bus/timer@e000e010' defined in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:794 */
+			cpuapp_systick: systick: timer@e000e010 {
+				compatible = "arm,armv8m-systick"; /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:795 */
+				reg = < 0xe000e010 0x10 >;         /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:796 */
+				status = "disabled";               /* in zephyr\dts\vendor\nordic\nrf54l_05_10_15.dtsi:797 */
+			};
+		};
+	};
+
+	/* node '/chosen' defined in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:17 */
+	chosen {
+		zephyr,bt-hci = &bt_hci_sdc;                /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:18 */
+		zephyr,entropy = &psa_rng;                  /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:19 */
+		zephyr,flash-controller = &rram_controller; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:19 */
+		zephyr,flash = &cpuapp_rram;                /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:20 */
+		zephyr,ieee802154 = &ieee802154;            /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:21 */
+		zephyr,boot-mode = &boot_mode0;             /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:22 */
+		zephyr,code-partition = &slot0_partition;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nrf54l15dk_nrf54l15_cpuapp_nu54dk.dts:20 */
+		zephyr,sram = &cpuapp_sram;                 /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nrf54l15dk_nrf54l15_cpuapp_nu54dk.dts:21 */
+	};
+
+	/* node '/rng' defined in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:28 */
+	rng: rng {
+		status = "disabled";                      /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:29 */
+		compatible = "nordic,nrf-cracen-ctrdrbg"; /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:30 */
+	};
+
+	/* node '/psa-rng' defined in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:33 */
+	psa_rng: psa-rng {
+		compatible = "zephyr,psa-crypto-rng"; /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:34 */
+		status = "okay";                      /* in zephyr\dts\arm\nordic\nrf54l_05_10_15_cpuapp.dtsi:35 */
+	};
+
+	/* node '/leds' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:13 */
+	leds {
+		compatible = "gpio-leds"; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:14 */
+
+		/* node '/leds/led_0' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:16 */
+		led0: led_0 {
+			gpios = < &gpio2 0x9 0x0 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:17 */
+			label = "Green LED 0";      /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:18 */
+		};
+
+		/* node '/leds/led_1' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:21 */
+		led1: led_1 {
+			gpios = < &gpio1 0xa 0x0 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:22 */
+			label = "Green LED 1";      /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:23 */
+		};
+
+		/* node '/leds/led_2' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:26 */
+		led2: led_2 {
+			gpios = < &gpio2 0x7 0x0 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:27 */
+			label = "Green LED 2";      /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:28 */
+		};
+
+		/* node '/leds/led_3' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:31 */
+		led3: led_3 {
+			gpios = < &gpio1 0xe 0x0 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:32 */
+			label = "Green LED 3";      /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:33 */
+		};
+	};
+
+	/* node '/pwmleds' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:37 */
+	pwmleds {
+		compatible = "pwm-leds"; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:38 */
+
+		/* node '/pwmleds/pwm_led_1' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:40 */
+		pwm_led1: pwm_led_1 {
+			pwms = < &pwm20 0x0 0x1312d00 0x0 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:41 */
+		};
+	};
+
+	/* node '/buttons' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:45 */
+	buttons {
+		compatible = "gpio-keys"; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:46 */
+
+		/* node '/buttons/button_0' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:48 */
+		button0: button_0 {
+			gpios = < &gpio1 0xd 0x11 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:49 */
+			label = "Push button 0";     /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:50 */
+			zephyr,code = < 0xb >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:51 */
+		};
+
+		/* node '/buttons/button_1' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:54 */
+		button1: button_1 {
+			gpios = < &gpio1 0x9 0x11 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:55 */
+			label = "Push button 1";     /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:56 */
+			zephyr,code = < 0x2 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:57 */
+		};
+
+		/* node '/buttons/button_2' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:60 */
+		button2: button_2 {
+			gpios = < &gpio1 0x8 0x11 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:61 */
+			label = "Push button 2";     /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:62 */
+			zephyr,code = < 0x3 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:63 */
+		};
+
+		/* node '/buttons/button_3' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:66 */
+		button3: button_3 {
+			gpios = < &gpio0 0x4 0x11 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:67 */
+			label = "Push button 3";     /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:68 */
+			zephyr,code = < 0x4 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:69 */
+		};
+	};
+
+	/* node '/aliases' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:73 */
+	aliases {
+		led0 = &led0;               /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:74 */
+		led1 = &led1;               /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:75 */
+		led2 = &led2;               /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:76 */
+		led3 = &led3;               /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:77 */
+		pwm-led0 = &pwm_led1;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:78 */
+		sw0 = &button0;             /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:79 */
+		sw1 = &button1;             /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:80 */
+		sw2 = &button2;             /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:81 */
+		sw3 = &button3;             /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:82 */
+		watchdog0 = &wdt31;         /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:83 */
+		mcuboot-button0 = &button0; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:26 */
+		mcuboot-led0 = &led0;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_cpuapp_common.dtsi:27 */
+	};
+
+	/* node '/vbatt' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:87 */
+	vbatt: vbatt {
+		compatible = "voltage-divider"; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:88 */
+		io-channels = < &adc 0x5 >;     /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:89 */
+		output-ohms = < 0xf4240 >;      /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:90 */
+		full-ohms = < 0x166e30 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:91 */
+		status = "disabled";            /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards\nucode\nu54dk\nu54dk_common.dtsi:92 */
+	};
+
+	/* node '/arduino-pin-map' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:23 */
+	nucode_arduino_pin_map: arduino-pin-map {
+		compatible = "nucode,arduino-pin-map"; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:24 */
+
+		/* node '/arduino-pin-map/pin-p0-00' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:26 */
+		arduino_p0_00: pin-p0-00 {
+			gpios = < &gpio0 0x0 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:27 */
+			nucode,capability-mask = < 0xf >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:28 */
+			nucode,policy = < 0x4 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:29 */
+			nucode,ownership = < 0x9 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:30 */
+			nucode,route-mask = < 0x6043 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:31 */
+		};
+
+		/* node '/arduino-pin-map/pin-p0-01' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:33 */
+		arduino_p0_01: pin-p0-01 {
+			gpios = < &gpio0 0x1 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:34 */
+			nucode,capability-mask = < 0xf >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:35 */
+			nucode,policy = < 0x4 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:36 */
+			nucode,ownership = < 0x9 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:37 */
+			nucode,route-mask = < 0x6043 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:38 */
+		};
+
+		/* node '/arduino-pin-map/pin-p0-02' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:40 */
+		arduino_p0_02: pin-p0-02 {
+			gpios = < &gpio0 0x2 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:41 */
+			nucode,capability-mask = < 0xf >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:42 */
+			nucode,policy = < 0x4 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:43 */
+			nucode,ownership = < 0x9 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:44 */
+			nucode,route-mask = < 0x6043 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:45 */
+		};
+
+		/* node '/arduino-pin-map/pin-p0-03' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:47 */
+		arduino_p0_03: pin-p0-03 {
+			gpios = < &gpio0 0x3 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:48 */
+			nucode,capability-mask = < 0xf >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:49 */
+			nucode,policy = < 0x4 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:50 */
+			nucode,ownership = < 0x9 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:51 */
+			nucode,route-mask = < 0x6043 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:52 */
+		};
+
+		/* node '/arduino-pin-map/pin-p0-04' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:54 */
+		arduino_p0_04: pin-p0-04 {
+			gpios = < &gpio0 0x4 0x1 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:55 */
+			nucode,capability-mask = < 0x5 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:56 */
+			nucode,policy = < 0x1 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:57 */
+			nucode,ownership = < 0x1 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:58 */
+			nucode,route-mask = < 0x7043 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:59 */
+		};
+
+		/* node '/arduino-pin-map/pin-p1-00' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:62 */
+		arduino_p1_00: pin-p1-00 {
+			gpios = < &gpio1 0x0 0x0 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:63 */
+			nucode,capability-mask = < 0x2f >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:64 */
+			nucode,policy = < 0x3 >;           /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:65 */
+			nucode,ownership = < 0x9 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:66 */
+			nucode,route-mask = < 0x6a28b >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:67 */
+		};
+
+		/* node '/arduino-pin-map/pin-p1-01' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:69 */
+		arduino_p1_01: pin-p1-01 {
+			gpios = < &gpio1 0x1 0x0 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:70 */
+			nucode,capability-mask = < 0x2f >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:71 */
+			nucode,policy = < 0x3 >;           /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:72 */
+			nucode,ownership = < 0x9 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:73 */
+			nucode,route-mask = < 0x6a28b >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:74 */
+		};
+
+		/* node '/arduino-pin-map/pin-p1-02' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:76 */
+		arduino_p1_02: pin-p1-02 {
+			gpios = < &gpio1 0x2 0x0 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:77 */
+			nucode,capability-mask = < 0x2f >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:78 */
+			nucode,policy = < 0x2 >;           /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:79 */
+			nucode,ownership = < 0x3 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:80 */
+			nucode,route-mask = < 0x6a293 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:81 */
+		};
+
+		/* node '/arduino-pin-map/pin-p1-03' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:83 */
+		arduino_p1_03: pin-p1-03 {
+			gpios = < &gpio1 0x3 0x0 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:84 */
+			nucode,capability-mask = < 0x2f >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:85 */
+			nucode,policy = < 0x2 >;           /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:86 */
+			nucode,ownership = < 0x3 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:87 */
+			nucode,route-mask = < 0x6a293 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:88 */
+		};
+
+		/* node '/arduino-pin-map/pin-p1-04' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:90 */
+		arduino_p1_04: pin-p1-04 {
+			gpios = < &gpio1 0x4 0x0 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:91 */
+			nucode,route-mask = < 0x6a2a7 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:95 */
+			nucode,analog-channel = < 0x0 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:96 */
+			nucode,capability-mask = < 0x13 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:21 */
+			nucode,policy = < 0x4 >;           /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:22 */
+			nucode,ownership = < 0x9 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:23 */
+		};
+
+		/* node '/arduino-pin-map/pin-p1-05' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:98 */
+		arduino_p1_05: pin-p1-05 {
+			gpios = < &gpio1 0x5 0x0 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:99 */
+			nucode,route-mask = < 0x6a2a7 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:103 */
+			nucode,analog-channel = < 0x1 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:104 */
+			nucode,capability-mask = < 0x13 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:27 */
+			nucode,policy = < 0x4 >;           /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:28 */
+			nucode,ownership = < 0x9 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:29 */
+		};
+
+		/* node '/arduino-pin-map/pin-p1-06' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:106 */
+		arduino_p1_06: pin-p1-06 {
+			gpios = < &gpio1 0x6 0x0 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:107 */
+			nucode,route-mask = < 0x6a2a7 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:111 */
+			nucode,analog-channel = < 0x2 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:112 */
+			nucode,capability-mask = < 0x13 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:33 */
+			nucode,policy = < 0x4 >;           /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:34 */
+			nucode,ownership = < 0x9 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:35 */
+		};
+
+		/* node '/arduino-pin-map/pin-p1-07' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:114 */
+		arduino_p1_07: pin-p1-07 {
+			gpios = < &gpio1 0x7 0x0 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:115 */
+			nucode,route-mask = < 0x6a2a7 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:119 */
+			nucode,analog-channel = < 0x3 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:120 */
+			nucode,capability-mask = < 0x13 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:39 */
+			nucode,policy = < 0x4 >;           /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:40 */
+			nucode,ownership = < 0x9 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil\app.overlay:41 */
+		};
+
+		/* node '/arduino-pin-map/pin-p1-08' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:122 */
+		arduino_p1_08: pin-p1-08 {
+			gpios = < &gpio1 0x8 0x1 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:123 */
+			nucode,capability-mask = < 0x5 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:124 */
+			nucode,policy = < 0x1 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:125 */
+			nucode,ownership = < 0x1 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:126 */
+			nucode,route-mask = < 0x6b283 >;  /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:127 */
+		};
+
+		/* node '/arduino-pin-map/pin-p1-09' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:129 */
+		arduino_p1_09: pin-p1-09 {
+			gpios = < &gpio1 0x9 0x1 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:130 */
+			nucode,capability-mask = < 0x5 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:131 */
+			nucode,policy = < 0x1 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:132 */
+			nucode,ownership = < 0x1 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:133 */
+			nucode,route-mask = < 0x6b283 >;  /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:134 */
+		};
+
+		/* node '/arduino-pin-map/pin-p1-10' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:136 */
+		arduino_p1_10: pin-p1-10 {
+			gpios = < &gpio1 0xa 0x0 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:137 */
+			nucode,capability-mask = < 0x2f >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:138 */
+			nucode,policy = < 0x2 >;           /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:139 */
+			nucode,ownership = < 0x5 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:140 */
+			nucode,route-mask = < 0x6aa83 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:141 */
+		};
+
+		/* node '/arduino-pin-map/pin-p1-11' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:143 */
+		arduino_p1_11: pin-p1-11 {
+			gpios = < &gpio1 0xb 0x1 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:144 */
+			nucode,capability-mask = < 0x15 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:145 */
+			nucode,policy = < 0x1 >;           /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:146 */
+			nucode,ownership = < 0x8 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:147 */
+			nucode,route-mask = < 0x6a687 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:148 */
+			nucode,analog-channel = < 0x4 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:149 */
+		};
+
+		/* node '/arduino-pin-map/pin-p1-12' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:151 */
+		arduino_p1_12: pin-p1-12 {
+			gpios = < &gpio1 0xc 0x0 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:152 */
+			nucode,capability-mask = < 0x3f >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:153 */
+			nucode,policy = < 0x2 >;           /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:154 */
+			nucode,ownership = < 0x6 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:155 */
+			nucode,route-mask = < 0x6a687 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:156 */
+			nucode,analog-channel = < 0x5 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:157 */
+		};
+
+		/* node '/arduino-pin-map/pin-p1-13' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:159 */
+		arduino_p1_13: pin-p1-13 {
+			gpios = < &gpio1 0xd 0x1 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:160 */
+			nucode,capability-mask = < 0x15 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:161 */
+			nucode,policy = < 0x1 >;           /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:162 */
+			nucode,ownership = < 0x1 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:163 */
+			nucode,route-mask = < 0x6b287 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:164 */
+			nucode,analog-channel = < 0x6 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:165 */
+		};
+
+		/* node '/arduino-pin-map/pin-p1-14' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:167 */
+		arduino_p1_14: pin-p1-14 {
+			gpios = < &gpio1 0xe 0x0 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:168 */
+			nucode,capability-mask = < 0x3f >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:169 */
+			nucode,policy = < 0x0 >;           /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:170 */
+			nucode,ownership = < 0x0 >;        /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:171 */
+			nucode,route-mask = < 0x6aa87 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:172 */
+			nucode,analog-channel = < 0x7 >;   /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:173 */
+		};
+
+		/* node '/arduino-pin-map/pin-p2-00' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:176 */
+		arduino_p2_00: pin-p2-00 {
+			gpios = < &gpio2 0x0 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:177 */
+			nucode,capability-mask = < 0xb >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:178 */
+			nucode,policy = < 0x0 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:179 */
+			nucode,ownership = < 0x2 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:180 */
+			nucode,route-mask = < 0x12001 >;  /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:181 */
+		};
+
+		/* node '/arduino-pin-map/pin-p2-01' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:183 */
+		arduino_p2_01: pin-p2-01 {
+			gpios = < &gpio2 0x1 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:184 */
+			nucode,capability-mask = < 0xb >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:185 */
+			nucode,policy = < 0x2 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:186 */
+			nucode,ownership = < 0x4 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:187 */
+			nucode,route-mask = < 0x12101 >;  /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:188 */
+		};
+
+		/* node '/arduino-pin-map/pin-p2-02' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:190 */
+		arduino_p2_02: pin-p2-02 {
+			gpios = < &gpio2 0x2 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:191 */
+			nucode,capability-mask = < 0xb >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:192 */
+			nucode,policy = < 0x2 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:193 */
+			nucode,ownership = < 0x4 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:194 */
+			nucode,route-mask = < 0x12101 >;  /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:195 */
+		};
+
+		/* node '/arduino-pin-map/pin-p2-03' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:197 */
+		arduino_p2_03: pin-p2-03 {
+			gpios = < &gpio2 0x3 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:198 */
+			nucode,capability-mask = < 0xb >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:199 */
+			nucode,policy = < 0x0 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:200 */
+			nucode,ownership = < 0x2 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:201 */
+			nucode,route-mask = < 0x12001 >;  /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:202 */
+		};
+
+		/* node '/arduino-pin-map/pin-p2-04' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:204 */
+		arduino_p2_04: pin-p2-04 {
+			gpios = < &gpio2 0x4 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:205 */
+			nucode,capability-mask = < 0xb >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:206 */
+			nucode,policy = < 0x2 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:207 */
+			nucode,ownership = < 0x4 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:208 */
+			nucode,route-mask = < 0x12101 >;  /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:209 */
+		};
+
+		/* node '/arduino-pin-map/pin-p2-05' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:211 */
+		arduino_p2_05: pin-p2-05 {
+			gpios = < &gpio2 0x5 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:212 */
+			nucode,capability-mask = < 0xb >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:213 */
+			nucode,policy = < 0x0 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:214 */
+			nucode,ownership = < 0x2 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:215 */
+			nucode,route-mask = < 0x12001 >;  /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:216 */
+		};
+
+		/* node '/arduino-pin-map/pin-p2-06' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:218 */
+		arduino_p2_06: pin-p2-06 {
+			gpios = < &gpio2 0x6 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:219 */
+			nucode,capability-mask = < 0xb >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:220 */
+			nucode,policy = < 0x0 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:221 */
+			nucode,ownership = < 0x2 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:222 */
+			nucode,route-mask = < 0x12001 >;  /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:223 */
+		};
+
+		/* node '/arduino-pin-map/pin-p2-07' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:225 */
+		arduino_p2_07: pin-p2-07 {
+			gpios = < &gpio2 0x7 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:226 */
+			nucode,capability-mask = < 0x3 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:227 */
+			nucode,policy = < 0x0 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:228 */
+			nucode,ownership = < 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:229 */
+			nucode,route-mask = < 0x12801 >;  /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:230 */
+		};
+
+		/* node '/arduino-pin-map/pin-p2-08' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:232 */
+		arduino_p2_08: pin-p2-08 {
+			gpios = < &gpio2 0x8 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:233 */
+			nucode,capability-mask = < 0x1 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:234 */
+			nucode,policy = < 0x1 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:235 */
+			nucode,ownership = < 0x8 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:236 */
+			nucode,route-mask = < 0x12401 >;  /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:237 */
+		};
+
+		/* node '/arduino-pin-map/pin-p2-09' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:239 */
+		arduino_p2_09: pin-p2-09 {
+			gpios = < &gpio2 0x9 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:240 */
+			nucode,capability-mask = < 0x3 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:241 */
+			nucode,policy = < 0x0 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:242 */
+			nucode,ownership = < 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:243 */
+			nucode,route-mask = < 0x12801 >;  /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:244 */
+		};
+
+		/* node '/arduino-pin-map/pin-p2-10' defined in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:246 */
+		arduino_p2_10: pin-p2-10 {
+			gpios = < &gpio2 0xa 0x0 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:247 */
+			nucode,capability-mask = < 0x0 >; /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:248 */
+			nucode,policy = < 0x5 >;          /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:249 */
+			nucode,ownership = < 0x8 >;       /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:250 */
+			nucode,route-mask = < 0x12401 >;  /* in ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\dts\nucode\nu54dk-arduino-pins.dtsi:251 */
+		};
+	};
+};

@@ -1,0 +1,53 @@
+{
+  "checked_at_utc": "2026-09-06T19:50:33.667915+00:00",
+  "source": "8685cd8b361b0a8178b1c77227ede7c5e980aaa6",
+  "swd_frequency_hz": 10000000,
+  "flash_executed": false,
+  "reset_executed": false,
+  "fixture_commands_executed": false,
+  "register_definition": "Fixed SDK nrf54l15_global.h / nrf54l15_types.h; ENABLE offset 0x500",
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "8752652b25b85f7e25ac36568f77222affaaa8cd976b639644822dcaf11aa851",
+      "elf_sha256": "d0849410436af26af628a83a452d166eb6a86b0a8381aabacceab8a746cba05d",
+      "runtime_identity_hex": "48494c34010000000100000000000000383638356364386233363162306138313738623163373732323765646537633565393830616161360000000000000000",
+      "cpuid": "0x411fd210",
+      "state": "SLEEPING",
+      "signal_pin_cnf": {
+        "4": 12,
+        "5": 2,
+        "6": 2,
+        "7": 2
+      },
+      "peripheral_enable": {
+        "PDM20": 0,
+        "PDM21": 0,
+        "SPIS21": 0
+      },
+      "identity_status": "passed"
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "3297b1939445981ef768e971472f160979b4d177ccada41962b9e7b5d1ee6727",
+      "elf_sha256": "8e1e143dfad146617645f1d306130b08972291010aae377e43453c5d0bf93a5f",
+      "runtime_identity_hex": "48494c34010000000200000000000000383638356364386233363162306138313738623163373732323765646537633565393830616161360000000000000000",
+      "cpuid": "0x411fd210",
+      "state": "SLEEPING",
+      "signal_pin_cnf": {
+        "4": 12,
+        "5": 2,
+        "6": 2,
+        "7": 2
+      },
+      "peripheral_enable": {
+        "PDM20": 0,
+        "PDM21": 0,
+        "SPIS21": 0
+      },
+      "identity_status": "passed"
+    }
+  ]
+}

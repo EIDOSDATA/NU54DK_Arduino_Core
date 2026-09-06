@@ -1,0 +1,25 @@
+{
+  "source": "ea4e25a035dbc9219e417bf2a2056ce6f9a2e09c",
+  "fixture440_status": "failed",
+  "functional_pass": 4,
+  "functional_scope": "mono DMA completion, length, ordering, sample readout only; density ordering not reached",
+  "cleanup_pass": 5,
+  "postflight_roles_pass": 2,
+  "failed_cases": 1,
+  "unexecuted_vectors": 187,
+  "whole_fixture_pass": false,
+  "t12_whole_completed": false,
+  "last_uploaded_source": "ea4e25a035dbc9219e417bf2a2056ce6f9a2e09c",
+  "background_hardware_tests_running": false,
+  "confirmation_utc": "2026-09-06T19:45:39Z",
+  "confirmation_expiry_utc": "2026-09-06T20:15:39Z",
+  "next_action": "Obtain current Fixture440 wiring-isolation confirmation; rebuild clean HEAD pair, read generator/receiver setup, diagnose identical stereo channels before the full sweep",
+  "remaining": [
+    "PDM20/21 role/mode/buffer sweep and mono density ordering",
+    "PDM four settling plus 100 measured continuous buffers",
+    "T12 PWM period/duty capture",
+    "T12 ADC calibration and multichannel sequence",
+    "T12 timer/event requirements",
+    "T13 and later gates"
+  ]
+}

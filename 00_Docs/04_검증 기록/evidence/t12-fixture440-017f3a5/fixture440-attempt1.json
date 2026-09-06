@@ -1,0 +1,230 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-synthetic-signal",
+  "status": "failed",
+  "fixture_id": 440,
+  "fixture_revision": 5,
+  "catalog_sha256": "e8db80525fcc9545ba6879453c22924d14123361c394702b147cdfec695aa511",
+  "core_revision": "017f3a55c02e2cd9d2859c7002747d3904ca41ba",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": true,
+  "repetitions": 1,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "f414647193652ffd1762d6558937503139b4efc3a60cd66495c67142c77f79f7",
+      "elf_sha256": "7c7908568bcf0cea86e7d5c5eb84684b6eeca28ae47a782b8c6d0c7d0fc37089",
+      "record_sha256": "6aebb679dbea64911aefc53056120a7280c1fc38fc60d26d41e778a6864ae62f",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 6.078,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "016c3c25ef3255c406866cf4b70792aeb9643b6fb0aa570c616b88915ca2a679"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "520864617e5e24439c5cb81c7c1dd1c09571ae4a31224299c3e51a8d4578a2c2",
+      "elf_sha256": "a2d8fbfbf22351c60fcf2429855bfa99c31f2e2ced7a7a4fd156bcc271216eb7",
+      "record_sha256": "6aebb679dbea64911aefc53056120a7280c1fc38fc60d26d41e778a6864ae62f",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 5.922,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "111f94a39e1dd6dc3da17d082a0cbe3abb166a23186e973901313f088a142242"
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "V04-PDM-SIGNAL/440/1/(20, 256, 25, 0, 0, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        256,
+        256,
+        0
+      ],
+      "mean": -17265.77734375,
+      "minimum": -20478,
+      "maximum": 2279,
+      "channel_means": null,
+      "scope": "pdm-clock-synchronous-spis-bitstream"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-PDM-SIGNAL/440/1/(20, 256, 25, 0, 0, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        512,
+        256,
+        0
+      ],
+      "mean": -18002.4765625,
+      "minimum": -20478,
+      "maximum": 2279,
+      "channel_means": null,
+      "scope": "pdm-clock-synchronous-spis-bitstream"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-PDM-SIGNAL/440/1/(20, 256, 25, 0, 1, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        256,
+        256,
+        0
+      ],
+      "mean": -17265.77734375,
+      "minimum": -20478,
+      "maximum": 2279,
+      "channel_means": null,
+      "scope": "pdm-clock-synchronous-spis-bitstream"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-PDM-SIGNAL/440/1/(20, 256, 25, 0, 1, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        512,
+        256,
+        0
+      ],
+      "mean": -18002.4765625,
+      "minimum": -20478,
+      "maximum": 2279,
+      "channel_means": null,
+      "scope": "pdm-clock-synchronous-spis-bitstream"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "confirmation_sha256": "cba411f32dfb10eae33b98192453d650d0ef9273cb8a63a374ff8ec02b52103d",
+  "error": "ProtocolError: PDM stereo channels are not independently distinguishable: [-14895.46875, -14895.46875]",
+  "completed_at_utc": "2026-09-06T19:57:02.080391+00:00"
+}
