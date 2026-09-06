@@ -8,7 +8,7 @@
 | 작성 직전 기준 commit | `b929b14f37d7d086c9accad748aab83b58a0e7be` — C:/u4f 440 진단 source. Clock/gate 분리 요구 실패, 문서 commit과 업로드 source 구분 |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
 | 다음 착수 항목 | **USB 분리 후 clock/gate 점퍼 점검·수정 확인 → net 분리 재검사 → PDM 전체 재검증** |
-| 이번 요청의 실행 범위 | 사용자 “ㅇㅇ 그대로야. 언제쯤 PDM 검증 끝나?”, 2026-09-06T20:28:12Z 유지 확인. T10/T12 440 정적 data·canonical 설정 trace·clock 전달·pull-down net 진단. 코드 변경 없음, SWD 10 MHz, 문서·commit/push |
+| 이번 요청의 실행 범위 | 사용자 “재연결 완료. 다시해.”, 2026-09-06T21:02:10Z 확인. T10/T12 440 분리 검사 96개 PASS 뒤 exact 79e4bdd 모노 DMA 4개·첫 stereo 부호 반전 실패. T14 HIL clock 입력 설정 후 안정화 시간 보완, 기존 판정 유지·Host/정렬/pair build·같은 결선 재시험·문서·commit/push. SWD 10 MHz |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
 마일스톤의 제품 상태는 [로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>), 실제 PASS/FAIL은

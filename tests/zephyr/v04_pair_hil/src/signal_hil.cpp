@@ -455,6 +455,8 @@ namespace
         const auto clock_pin = NRF_GPIO_PIN_MAP(1U, role == 1U ? 4U : 5U);
         /** @brief 수신기가 시작하기 전에도 clock 입력을 정해진 LOW로 유지합니다. */
         nrf_gpio_cfg_input(clock_pin, NRF_GPIO_PIN_PULLDOWN);
+        /** @brief 이전 pull-up의 입력 잔류값으로 stereo 초기 위상이 반전되지 않게 기다립니다. */
+        k_busy_wait(10U);
         const bool initial_high = (nrf_gpio_pin_read(clock_pin) != 0U) != inverted;
         pdm_data_owned = pdm_gpiote->acquireOutput(1U, secondPin(), GpiotePolarity::toggle,
                                                    initial_high) == EventFabricResult::success;
