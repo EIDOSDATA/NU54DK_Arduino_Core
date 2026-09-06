@@ -132,4 +132,6 @@ R13 뒤 USB 무배선 온보드 904 PASS와 중간 파일 정리는 [65번 기�
 
 DAP UART 연결 전환 뒤 BLE 회귀와 온보드 유휴 bias 교정은 [66번 기록](66_T09_UART_유휴_bias와_BLE_회귀.md)에 연결한다. 해당 66번 실행 당시 외부 current-source T11은 미실행이었다.
 
-사용자 Fixture 101 결선 완료 뒤 exact 154324c·SWD 10 MHz의 기능 1,644 PASS는 [67번 기록](67_T11_Fixture_101_current_source_UART_회귀.md)에 연결한다. 다음은 Fixture 102 결선 변경이다.
+사용자 Fixture 101 결선 완료 뒤 exact 154324c·SWD 10 MHz의 기능 1,644 PASS는 [67번 기록](67_T11_Fixture_101_current_source_UART_회귀.md)에 연결한다. 해당 실행 뒤 Fixture 102로 이어졌다.
+
+Exact a49cc0d·SWD 10 MHz의 Fixture 102 기능 822 PASS는 [68번 기록](68_T11_Fixture_102_current_source_UART_회귀.md)에 연결한다. 다음은 Fixture 103 결선 변경이다.
