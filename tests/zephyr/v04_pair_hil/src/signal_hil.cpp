@@ -32,7 +32,8 @@ namespace
     bool controller = false;
 
     alignas(4) std::int16_t analog_samples[2][analog_capacity]{};
-    alignas(4) std::int16_t pdm_samples[2][stream_capacity]{};
+    /** @brief payload 0/1과 별도 guard 2/3으로 완료 전에 DMA가 입력을 덮어쓰지 않게 합니다. */
+    alignas(4) std::int16_t pdm_samples[4][stream_capacity]{};
     alignas(4) std::uint16_t pwm_values[16]{};
     /** @brief slot 2는 시작 지연만큼 밀린 payload를 수집하고 slot 3은 정지 중 재사용을 막습니다. */
     alignas(4) std::uint32_t i2s_rx[4][stream_capacity]{};
@@ -72,6 +73,7 @@ namespace
     std::uint32_t i2s_buffers = 1U, pdm_buffers = 1U;
     std::uint32_t analog_completed_mask = 0U, i2s_completed_mask = 0U;
     std::uint32_t pdm_completed_mask = 0U;
+    std::uint32_t pdm_next_slot = 2U;
     std::uint32_t analog_sampled = 0U;
     std::int64_t next_analog_sample_ms = 0;
     bool cs_owned = false;
@@ -395,6 +397,7 @@ namespace
         }
         requested = args[1];
         pdm_buffers = args[5];
+        pdm_next_slot = pdm_buffers == 2U ? 1U : 2U;
         if (!controller)
         {
             pdm = streamFabric().pdm(static_cast<std::uint8_t>(args[0]));
@@ -438,7 +441,7 @@ namespace
         pdm_spis = serialFabric().spis(21U);
         if (pdm_spis == nullptr ||
             pdm_spis->configure({1000000U, SpiFabricMode::mode0, SpiFabricBitOrder::msb_first,
-                                 0U}) != SerialFabricResult::success ||
+                                 byte}) != SerialFabricResult::success ||
             pdm_spis->stage(route) != SerialFabricResult::success ||
             pdm_spis->activate() != SerialFabricResult::success ||
             pdm_spis->queueBuffers(pdm_source, source_bytes, nullptr, 0U) !=
@@ -531,11 +534,6 @@ namespace
             {
                 nrf_gpio_pin_clear(cs_psel);
                 result = pdm->start(pdm_samples[0], requested) == StreamFabricResult::success;
-                if (result && pdm_buffers == 2U)
-                {
-                    result =
-                        pdm->queueBuffer(pdm_samples[1], requested) == StreamFabricResult::success;
-                }
             }
             break;
         default:
@@ -705,12 +703,28 @@ void serviceSignal()
         PdmEvent event{};
         while (pdm->takeEvent(event))
         {
-            if (event.type == PdmEventType::buffer_complete)
+            if (event.type == PdmEventType::buffer_needed)
+            {
+                if (pdm_next_slot < 4U)
+                {
+                    if (pdm->queueBuffer(pdm_samples[pdm_next_slot], requested) !=
+                        StreamFabricResult::success)
+                    {
+                        error |= 512U;
+                    }
+                    else
+                    {
+                        pdm_next_slot = pdm_next_slot == 1U ? 2U : pdm_next_slot + 1U;
+                    }
+                }
+            }
+            else if (event.type == PdmEventType::buffer_complete)
             {
                 const unsigned slot = event.buffer == pdm_samples[0]   ? 0U
                                       : event.buffer == pdm_samples[1] ? 1U
                                                                        : 2U;
-                if (slot >= pdm_buffers || event.samples != requested)
+                if (slot >= pdm_buffers || event.samples != requested ||
+                    (pdm_completed_mask & (1U << slot)) != 0U || amount != slot * requested)
                 {
                     error |= 256U;
                 }
@@ -718,7 +732,21 @@ void serviceSignal()
                 {
                     pdm_completed_mask |= 1U << slot;
                     amount += static_cast<std::uint32_t>(event.samples);
-                    complete = pdm_completed_mask == ((1U << pdm_buffers) - 1U);
+                    if (pdm_completed_mask == ((1U << pdm_buffers) - 1U))
+                    {
+                        /** @brief 요청 payload 반환 후 guard가 진행하는 동안 정지를 확인합니다. */
+                        if (pdm->stop(100000U) == StreamFabricResult::success)
+                        {
+                            nrf_gpio_pin_set(cs_psel);
+                            complete = true;
+                            pdm = nullptr;
+                        }
+                        else
+                        {
+                            error |= 512U;
+                        }
+                        break;
+                    }
                 }
             }
             else if (event.type == PdmEventType::overflow || event.type == PdmEventType::error)
