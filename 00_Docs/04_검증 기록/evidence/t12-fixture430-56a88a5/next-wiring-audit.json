@@ -1,0 +1,169 @@
+{
+  "status": "passed",
+  "current_fixture": 430,
+  "next_fixture": 440,
+  "current": {
+    "id": 430,
+    "family": "i2s",
+    "banks": [
+      1,
+      1
+    ],
+    "instances": [
+      [
+        20
+      ],
+      [
+        20
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "peer": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "signal": "SCK"
+      },
+      {
+        "dut": [
+          "P2",
+          11,
+          "P1.5"
+        ],
+        "peer": [
+          "P2",
+          11,
+          "P1.5"
+        ],
+        "signal": "LRCK"
+      },
+      {
+        "dut": [
+          "P2",
+          10,
+          "P1.6"
+        ],
+        "peer": [
+          "P2",
+          9,
+          "P1.7"
+        ],
+        "signal": "DUT SDOUT -> peer SDIN"
+      },
+      {
+        "dut": [
+          "P2",
+          9,
+          "P1.7"
+        ],
+        "peer": [
+          "P2",
+          10,
+          "P1.6"
+        ],
+        "signal": "DUT SDIN <- peer SDOUT"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "controller role만 I2S master clock을 출력하며 양쪽 SDOUT/SDIN은 교차 연결합니다. MCK는 사용하지 않습니다.",
+    "pullups": []
+  },
+  "next": {
+    "id": 440,
+    "family": "pdm",
+    "banks": [
+      1,
+      1
+    ],
+    "instances": [
+      [
+        20,
+        21
+      ],
+      [
+        20,
+        21
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "peer": [
+          "P2",
+          11,
+          "P1.5"
+        ],
+        "signal": "receiver PDM CLK -> generator SPIS SCK"
+      },
+      {
+        "dut": [
+          "P2",
+          10,
+          "P1.6"
+        ],
+        "peer": [
+          "P2",
+          9,
+          "P1.7"
+        ],
+        "signal": "receiver PDM DATA <- generator SPIS MISO"
+      },
+      {
+        "dut": [
+          "P2",
+          11,
+          "P1.5"
+        ],
+        "peer": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "signal": "receiver gate LOW -> generator SPIS CSN"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "PDM receiver가 clock을 만들고 상대 SPIS EasyDMA가 동기 bitstream을 출력합니다. mono density 순서와 stereo 좌우 channel 분리를 실기에서 판정합니다.",
+    "pullups": []
+  },
+  "catalog_revision": 5,
+  "catalog_sha256": "e8db80525fcc9545ba6879453c22924d14123361c394702b147cdfec695aa511",
+  "pinmap_sha256": "6bfcf3ac8d5eff25a8a26870382ebf634bd4bef41e0f2ac06170e665b645991d",
+  "connector_pinmap_matches": true,
+  "no_next_fixture_executed": true
+}

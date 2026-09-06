@@ -1,0 +1,43 @@
+{
+  "source_tested": "7c44abffb30402c56cb5e2fd7a1c21829b3b3a16",
+  "markdown_files": 195,
+  "command": [
+    "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts\\python.exe",
+    "-B",
+    "tools/ci/run_m12_gate.py",
+    "docs"
+  ],
+  "result": "passed",
+  "log_original_sha256": "2b50458eb5c9e4b5e13eb4e3c07bc5a1d56d49d0c33771944d15adcd744d169d",
+  "log_normalized_sha256": "d9f633e42dc75c61b1e04e8dbd2814b5642af46a093f501b9fb563050b623127",
+  "raw_originals_byte_verified": 121,
+  "code_changes_after_source": [],
+  "source_physical_executed": true,
+  "functional_pass": 72,
+  "whole_fixture_pass": false,
+  "failed_cases": 1,
+  "unexecuted_cases": 119,
+  "cleanup_pass": 73,
+  "postflight_roles_pass": 2,
+  "historical_records_modified": false,
+  "next_fixture": 430,
+  "fixture440_executed": false,
+  "next_action": "Localize short-buffer I2S error and obtain unchanged430 reconfirmation before next signals",
+  "staged_files_match_disk_bytes": true,
+  "staged_diff_check": "passed",
+  "scope": [
+    "README.md",
+    "00_Docs/README.md",
+    "00_Docs/TODO_v0.4.0.md",
+    "00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md",
+    "00_Docs/01_아두이노 코어 설계/14_리팩토링/README.md",
+    "00_Docs/01_아두이노 코어 설계/14_리팩토링/05_리팩토링_진행_체크리스트.md",
+    "00_Docs/04_검증 기록/README.md",
+    "tests/hil/nu54dk/README.md",
+    "00_Docs/04_검증 기록/86_T12_Fixture_430_current_source_I2S_검증.md",
+    "00_Docs/04_검증 기록/evidence/t12-fixture430-56a88a5/",
+    "00_Docs/04_검증 기록/evidence/t12-fixture430-c461182/",
+    "00_Docs/04_검증 기록/evidence/t12-fixture430-7c44abf/"
+  ],
+  "evidence_whitespace_note": "read_i2s_buffers.py retains original final blank line; only that archived copy disables blank-at-eof diagnostic via .gitattributes; active source checks unchanged"
+}

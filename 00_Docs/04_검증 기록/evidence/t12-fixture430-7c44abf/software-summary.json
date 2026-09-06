@@ -1,0 +1,31 @@
+{
+  "source": "7c44abffb30402c56cb5e2fd7a1c21829b3b3a16",
+  "host": {
+    "total": 659,
+    "passed": 658,
+    "skipped": 1,
+    "groups": 81,
+    "skip_reason": "! @brief 설치된 Arduino CLI가 공개 예제를 노출하는지 확인합니다. ... skipped 'M13 package 설치 후 NUCODE_M13_CLI_DISCOVERY=1로 실행합니다.'",
+    "native_compiler_skips": 0
+  },
+  "style_files": 360,
+  "style_failed": 0,
+  "exact_pair_built": 2,
+  "target_build_seconds": 120.55,
+  "prior_source_host": {
+    "source": "c4611822d5a1180741989a351112b8784d610d5d",
+    "total": 658,
+    "passed": 657,
+    "skipped": 1
+  },
+  "physical_executed_for_this_source": true,
+  "fixture430_status": "failed",
+  "not_reexecuted": [
+    "full target matrix",
+    "package gate",
+    "example compile matrix",
+    "remote GitHub Actions"
+  ],
+  "public_core_sdk_board_changes": false,
+  "readiness_open_blockers": 8
+}
