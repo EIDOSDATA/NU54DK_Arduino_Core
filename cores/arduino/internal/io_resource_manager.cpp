@@ -114,30 +114,15 @@ namespace nucode::arduino::internal
         {
             return IoResourceResult::invalid_argument;
         }
-        IoResourceLease lease{};
-        IoResourceResult result =
-            reserveIoResources(owner, resources, count, policy, lease, conflict);
-        if (result != IoResourceResult::success)
+        if (k_is_in_isr())
         {
-            return result;
+            return IoResourceResult::invalid_context;
         }
-        result = commitIoResources(lease);
-        if (result != IoResourceResult::success)
-        {
-            (void)rollbackIoResources(lease);
-            return result;
-        }
-        token = {};
-        token.owner = lease.owner;
-        token.manager_epoch = lease.manager_epoch;
-        token.count = lease.count;
-        for (std::size_t index = 0U; index < lease.count; ++index)
-        {
-            token.entries[index] = {lease.entries[index].resource, lease.entries[index].generation,
-                                    lease.entries[index].changed};
-        }
-        token.active = true;
-        return IoResourceResult::success;
+        k_mutex_lock(&io_resource_mutex, K_FOREVER);
+        const auto result =
+            table.acquireIoResources(owner, resources, count, policy, token, conflict);
+        k_mutex_unlock(&io_resource_mutex);
+        return result;
     }
 
     IoResourceResult releaseIoResources(IoResourceToken &token) noexcept
@@ -146,22 +131,13 @@ namespace nucode::arduino::internal
         {
             return IoResourceResult::wrong_phase;
         }
-        IoResourceLease lease{};
-        lease.owner = token.owner;
-        lease.phase = IoLeasePhase::committed;
-        lease.manager_epoch = token.manager_epoch;
-        lease.count = token.count;
-        for (std::size_t index = 0U; index < token.count; ++index)
+        if (k_is_in_isr())
         {
-            lease.entries[index].resource = token.entries[index].resource;
-            lease.entries[index].generation = token.entries[index].generation;
-            lease.entries[index].changed = token.entries[index].changed;
+            return IoResourceResult::invalid_context;
         }
-        const IoResourceResult result = releaseIoResources(lease);
-        if (result == IoResourceResult::success)
-        {
-            token = {};
-        }
+        k_mutex_lock(&io_resource_mutex, K_FOREVER);
+        const auto result = table.releaseIoResources(token);
+        k_mutex_unlock(&io_resource_mutex);
         return result;
     }
 

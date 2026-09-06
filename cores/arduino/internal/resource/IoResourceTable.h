@@ -24,6 +24,13 @@ namespace nucode::arduino::internal::io_resource_detail
         IoResourceResult commitIoResources(IoResourceLease &lease) noexcept;
         IoResourceResult rollbackIoResources(IoResourceLease &lease) noexcept;
         IoResourceResult releaseIoResources(IoResourceLease &lease) noexcept;
+        /** @brief 최대 두 자원의 즉시 획득을 큰 임시 lease 없이 원자적으로 처리합니다. */
+        IoResourceResult acquireIoResources(IoResourceOwner owner, const IoResourceId *resources,
+                                            std::size_t count, IoAcquirePolicy policy,
+                                            IoResourceToken &token,
+                                            IoResourceSnapshot *conflict) noexcept;
+        /** @brief compact token의 전체 세대를 먼저 검사한 뒤 자원을 반환합니다. */
+        IoResourceResult releaseIoResources(IoResourceToken &token) noexcept;
         IoResourceResult ioResourceSnapshot(const IoResourceId &resource,
                                             IoResourceSnapshot &snapshot) noexcept;
 #if defined(CONFIG_ZTEST)

@@ -1,6 +1,6 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
-430 재개 중: 사용자가 2026-09-06T18:35:58Z 결선 유지를 재확인했다. T12/T14에서 짧은 I2S buffer 오류 위치를 구분하는 HIL RAM trace를 추가하고 새 clean source pair·Host 검증 뒤 430을 SWD 10 MHz로 재실행한다. 440은 미실행 유지. 진단 source와 최종 교정 source를 구분해 문서·commit/push한다.
+430 재개 중: 사용자가 2026-09-06T18:35:58Z 결선 유지를 재확인했다. T12/T14에서 짧은 I2S buffer 오류 위치를 구분하는 HIL RAM trace를 추가하고 새 clean source pair·Host 검증 뒤 430을 SWD 10 MHz로 재실행한다. 440은 미실행 유지. 70971f4 trace에서 queue 278~309 us 뒤 underrun을 재현했다. 공용 compact token이 매번 16-entry 임시 lease를 생성·변환하던 경로를 작은 token의 원자적 직접 처리로 교정한다. 4,000단계 기존 알고리즘 대조와 자원/route 회귀, 전체 Host·영향 target·430 실기를 검증한다. 진단 source와 최종 교정 source를 구분해 문서·commit/push한다.
 
 | 항목 | 내용 |
 | --- | --- |
