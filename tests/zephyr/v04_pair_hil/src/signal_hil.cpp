@@ -7,6 +7,7 @@
 #include "signal_hil.h"
 #include "fixture_gate.h"
 #include "fixture_hil.h"
+#include "shared_analog_source.h"
 #include <nucode/AnalogFabric.h>
 #include <nucode/SerialFabric.h>
 #include <nucode/StreamFabric.h>
@@ -50,6 +51,30 @@ namespace
     bool cs_owned = false;
     std::uint32_t cs_psel = 0U, cs_configuration = 0U, cs_output = 0U;
 
+    /** @brief PMIC /INT 공유 시험에서 고정 B P1.14만 LOW 또는 해제 상태로 설정합니다. */
+    struct SharedAnalogGpio
+    {
+        static constexpr std::uint32_t pin = NRF_GPIO_PIN_MAP(1, 14);
+
+        static void input()
+        {
+            nrf_gpio_cfg_input(pin, NRF_GPIO_PIN_NOPULL);
+        }
+
+        static void write(bool released)
+        {
+            nrf_gpio_pin_write(pin, released ? 1U : 0U);
+        }
+
+        static void openDrainPullup()
+        {
+            nrf_gpio_cfg(pin, NRF_GPIO_PIN_DIR_OUTPUT, NRF_GPIO_PIN_INPUT_CONNECT,
+                         NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_S0D1, NRF_GPIO_PIN_NOSENSE);
+        }
+    };
+
+    v04::SharedAnalogSource<SharedAnalogGpio> shared_source;
+
     /** @brief role별 교차 결선의 첫 번째 signal pin을 반환합니다. */
     pin_size_t firstPin()
     {
@@ -91,6 +116,7 @@ namespace
     /** @brief 모든 signal handle을 역순으로 정지·해제합니다. */
     bool stopAll()
     {
+        shared_source.release();
         bool stopped = true;
         if (pwm != nullptr && pwm->state() == AnalogFabricState::active)
         {
@@ -134,13 +160,16 @@ namespace
         return stopped;
     }
 
-    /** @brief 안전한 LED buffer 입력 PWM과 격리 AIN0의 시험을 준비합니다. */
+    /** @brief 고정 PWM 또는 공유 AIN4용 오픈드레인 신호와 SAADC를 준비합니다. */
     bool prepareAnalog(const std::uint32_t *args)
     {
-        if ((args[0] < 20U || args[0] > 22U) || args[1] == 0U || args[1] > analog_capacity ||
-            args[2] < 100U || args[2] > 10000U || args[3] > args[2] || args[4] > 3U ||
-            (args[5] != 1U && args[5] != 2U) ||
-            !((gate.fixture() >= 401U && gate.fixture() <= 404U) || gate.fixture() == 408U))
+        const bool shared = gate.fixture() == 405U;
+        if (shared
+                ? !v04::sharedAnalogArguments(args)
+                : ((args[0] < 20U || args[0] > 22U) || args[1] == 0U || args[1] > analog_capacity ||
+                   args[2] < 100U || args[2] > 10000U || args[3] > args[2] || args[4] > 3U ||
+                   (args[5] != 1U && args[5] != 2U) ||
+                   !((gate.fixture() >= 401U && gate.fixture() <= 404U) || gate.fixture() == 408U)))
         {
             return false;
         }
@@ -148,6 +177,11 @@ namespace
         analog_buffers = args[5];
         if (controller)
         {
+            if (shared)
+            {
+                ready = shared_source.prepare(gate.fixture(), role, args);
+                return ready;
+            }
             pwm = analogFabric().pwm(static_cast<std::uint8_t>(args[0]));
             PwmSequenceConfiguration configuration{};
             configuration.output_pins[args[4]] = PIN_P1_14;
@@ -162,6 +196,16 @@ namespace
             return ready;
         }
         saadc = &analogFabric().saadc();
+        if (shared)
+        {
+            for (auto &buffer : analog_samples)
+            {
+                for (auto &sample : buffer)
+                {
+                    sample = INT16_MIN;
+                }
+            }
+        }
         const auto input =
             static_cast<SaadcInput>(gate.fixture() == 408U ? 7U : gate.fixture() - 401U);
         const SaadcChannelConfiguration channel{input, SaadcInput::disabled,
@@ -373,7 +417,11 @@ namespace
         switch (v04::fixtureFamily(gate.fixture()))
         {
         case v04::FixtureFamily::analog:
-            if (controller && pwm != nullptr)
+            if (controller && gate.fixture() == 405U)
+            {
+                result = shared_source.start();
+            }
+            else if (controller && pwm != nullptr)
             {
                 result = pwm->play({pwm_values, 4U, 0U, 0U}, nullptr, 1U, true) ==
                          AnalogFabricResult::success;
@@ -625,6 +673,24 @@ std::uint32_t signalCommand(std::uint32_t opcode, const std::uint32_t *args, std
         out[6] = requested;
         out[7] = i2s_completed_mask;
         count = 8U;
+        return 0U;
+    }
+    /** @brief 해제 뒤에도 B P1.14 설정을 읽어 입력 복귀를 확인합니다. 핀은 변경하지 않습니다. */
+    if (opcode == 38U && nargs == 0U && role == 2U)
+    {
+        const auto psel = SharedAnalogGpio::pin;
+        auto pin = psel;
+        auto *const port = nrf_gpio_pin_port_decode(&pin);
+        out[0] = shared_source.owned();
+        out[1] = shared_source.phase();
+        out[2] = psel;
+        out[3] = nrf_gpio_pin_dir_get(psel) == NRF_GPIO_PIN_DIR_OUTPUT;
+        out[4] = nrf_gpio_pin_pull_get(psel) == NRF_GPIO_PIN_PULLUP;
+        out[5] = nrf_gpio_pin_drive_get(psel) == NRF_GPIO_PIN_S0D1;
+        out[6] = nrf_gpio_pin_out_read(psel);
+        out[7] = nrf_gpio_pin_read(psel);
+        out[8] = port->PIN_CNF[pin];
+        count = 9U;
         return 0U;
     }
     if (!gate.live(k_uptime_get()))

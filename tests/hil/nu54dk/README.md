@@ -540,12 +540,14 @@ PASS가 아닙니다.
 
 `v04_signal_run.py`는 기본적으로 preflight만 출력합니다. `--execute-fixture`, 현재 source·두 UID·
 두 image hash에 묶인 30분 이내 confirmation, 새 evidence 경로가 모두 있어야 flash와 외부 출력을
-시도합니다. fixture 401~404/408과 420은 회로 안전상 peer인 role 2만 generator가 될 수 있습니다. 430/440은
+시도합니다. fixture 401~405/408과 420은 회로 안전상 peer인 role 2만 generator가 될 수 있습니다. 430/440은
 두 role을 번갈아 clock/generator로 검사합니다.
 
 | ID | 기능 | 전원 분리 상태에서 연결할 신호 | 판정 범위 |
 | --- | --- | --- | --- |
 | 401~404 | PWM→SAADC | peer P4.12(P1.14) → DUT P2.12/11/10/9의 P1.4/AIN0~P1.7/AIN3 중 해당 한 선, GND↔GND | PWM20/21/22 channel 0~3, AIN0~3, 32/256 sample과 DMA 길이 |
+| 405 | 오픈드레인→SAADC | B P1.14 → A P1.11/AIN4, GND↔GND | PMIC_INT 공유 입력의 LOW/해제/LOW·32/256 sample·단일/이중 DMA·GPIO readback |
+| 406·407 | 공유 AIN5·AIN6 | 별도 설계·결선 안내 대기 | 사용자 지정 필수 후속 기능 시험; 미실행 |
 | 408 | PWM→SAADC | peer P4.12(P1.14) → DUT P4.12(P1.14/AIN7), GND↔GND | 안전한 LED buffer 입력의 AIN7과 PWM channel 0~3 |
 | 420 | PWM→QDEC | peer P4.12(P1.14) → DUT P2.12(P1.4/A), peer P4.8(P1.10) → DUT P2.10(P1.6/B), GND↔GND | PWM20/21/22×QDEC20/21, 방향·debounce·count |
 | 430 | I2S | P1.4 SCK↔SCK, P1.5 LRCK↔LRCK, P1.6↔상대 P1.7 두 선 교차, GND↔GND | master/slave, 16/48kHz, 8/16/24/32-bit, channel·DMA packing |
@@ -554,16 +556,23 @@ PASS가 아닙니다.
 401~404/408/420의 peer P1.14/P1.10은 온보드 LED buffer 입력에도 연결되어 있으나 MCU 출력끼리 맞물리지
 않는 단방향 경로입니다. DUT의 P1.4~7과 403/404 양쪽 P1.4~7을 쓰려면 두 보드 debug-control의
 `DISABLE_UART`를 DAP UART 분리 상태로 유지해야 합니다. `DISABLE_SWD`는 SWD 연결 상태로 둡니다.
-fixture를 바꿀 때 두 USB 전원을 먼저 분리하고, 표에 없는 전원·신호선은 연결하지 않습니다. AIN4
-P1.11은 DAP 전원 감지, AIN5 P1.12는 VBAT 분압기/SB4, AIN6 P1.13은 사용자 버튼과 공유하므로
-이번 무개조 peer 출력 fixture에서 제외하고 source/build 경계만 검사합니다. 이를 실기 PASS로 표시하지 않습니다.
+fixture를 바꿀 때 두 USB 전원을 먼저 분리하고, 표에 없는 전원·신호선은 연결하지 않습니다.
+AIN4 P1.11은 **SB1→PMIC_INT→BQ25186 /INT**와 공유합니다(원본 회로도 1·3쪽). 405는 B P1.14를
+S0D1·내부 pull-up으로 구성해 LOW 또는 해제만 출력합니다. SB1·PMIC 설정 변경과 강한 HIGH 출력은 없습니다.
+SB1 연결 시 R3 10kΩ도 pull-up에 참여하나 실제 SB1 상태를 추정하지 않습니다. LOW raw는 -256~256,
+해제 raw는 -256~4095 안에서 95% 이상 >256 및 median >256이어야 합니다. 해제 단계에는 PMIC의 짧은
+interrupt LOW를 허용하며 정확한 전압·PMIC 동작 검증으로 확대하지 않습니다. 시작 전 10ms 정착,
+명령 38의 실제 GPIO 설정과 전체 ADC sample·hash를 보존하고 양쪽 cleanup 시 B를 먼저 입력으로 해제합니다.
+AIN5 P1.12는 VBAT 분압기/SB4, AIN6 P1.13은 사용자 버튼과 공유합니다. **405→406→407→408을 모두
+수행**하며 406·407은 개별 신호원 설계·결선 확인·실기 대기 상태입니다. 준비만으로 PASS 처리하지 않습니다.
 
 PDM source는 receiver가 만든 MHz clock을 SPIS21 EasyDMA로 추종하므로 software bit-bang을 기능
 근거로 사용하지 않습니다. mono density 평균은 25<50<75 순서를, stereo는 교대 sample channel의
 평균 차이를 검사합니다. I2S는 양쪽 독립 pattern을 sample width/channel mask로 대조합니다. 실제
 마이크·코덱·엔코더 호환성과 음질은 이 fixture의 범위가 아닙니다.
 
-Analog fixture는 각 ID마다 PWM 3 instance × channel slot 4 × sample 길이 2 × 단일/이중 buffer로
+405는 sample 길이 2 × 단일/이중 buffer 2 × LOW/해제/LOW 3의 **12 vector·2,592 samples**입니다.
+401~404/408 Analog fixture는 각 ID마다 PWM 3 instance × channel slot 4 × sample 길이 2 × 단일/이중 buffer로
 48개 vector를 실행합니다. PDM은 instance 2 × sample 길이 2 × density 3 × mono/stereo 2 × edge 2 ×
 단일/이중 buffer 2의 96개 vector이며, I2S도 두 rate·네 width·세 channel mode·두 길이·단일/이중
 buffer의 96개 vector입니다. 수치는 준비된 실행 경우의 수이고 실기 PASS 수가 아닙니다.
@@ -586,12 +595,12 @@ Current-source Fixture 202는 exact 1349e20·SWD 10 MHz에서 data 9,078개와 �
 
 Current-source Fixture 203은 exact be49207·SWD 10 MHz에서 data 27,234개와 예상 cancel 18개를 통과했습니다. Data에는 recovery 18개가 포함됩니다. 최초 DUT flash 실패·진단과 한 번의 새 전체 실행은 [72번 기록](<../../../00_Docs/04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 구분 보존했습니다. 승인 SPI 세 route의 회귀를 마쳤습니다.
 
-Current-source Fixture 301은 exact 9a63251·SWD 10 MHz 첫 실행에서 data 1,968개, NACK/cancel 12개, stuck-SDA bus recovery 6개를 통과했습니다. Data에는 복구 18개와 clock stretch 6개가 포함됩니다. [73번 기록](<../../../00_Docs/04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 고유 ID·순서 대조와 current-source T11 단독 회귀 완료를 보존했습니다. T12 Fixture 401~404도 각각 48개를 통과했으며 다음은 Fixture 408 PWM→AIN7 결선입니다.
+Current-source Fixture 301은 exact 9a63251·SWD 10 MHz 첫 실행에서 data 1,968개, NACK/cancel 12개, stuck-SDA bus recovery 6개를 통과했습니다. Data에는 복구 18개와 clock stretch 6개가 포함됩니다. [73번 기록](<../../../00_Docs/04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 고유 ID·순서 대조와 current-source T11 단독 회귀 완료를 보존했습니다. T12 Fixture 401~404도 각각 48개를 통과했으며 다음 순서는 사용자 지정 405→406→407→408이며 현재 405 AIN4/P1.11 오픈드레인 시험을 준비한다.
 
-T12 Fixture 401 exact a12e444·SWD 10 MHz 첫 실행 48개 기능 PASS와 10,368 samples·cleanup 48개는 [74번 기록](<../../../00_Docs/04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 보존했다. T12는 부분 완료이며 다음은 Fixture 408 PWM→AIN7이다. PWM 주기·듀티 capture와 T12 나머지 요구·후속 gate는 이 결과로 완료 처리하지 않는다.
+T12 Fixture 401 exact a12e444·SWD 10 MHz 첫 실행 48개 기능 PASS와 10,368 samples·cleanup 48개는 [74번 기록](<../../../00_Docs/04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 보존했다. T12는 부분 완료이며 다음 순서는 사용자 지정 405→406→407→408이며 현재 405 AIN4/P1.11 오픈드레인 시험을 준비한다. PWM 주기·듀티 capture와 T12 나머지 요구·후속 gate는 이 결과로 완료 처리하지 않는다.
 
-T12 Fixture 402 exact ff483a1·SWD 10 MHz 첫 실행 48개 PASS는 [75번 기록](<../../../00_Docs/04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존했다. 401·402 합계 기능 96개·samples 20,736개이며 각 exact identity는 구분한다. 다음은 전원 OFF·A P1.07→P1.14/AIN7 변경 후 Fixture 408이다.
+T12 Fixture 402 exact ff483a1·SWD 10 MHz 첫 실행 48개 PASS는 [75번 기록](<../../../00_Docs/04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존했다. 401·402 합계 기능 96개·samples 20,736개이며 각 exact identity는 구분한다. 다음 순서는 사용자 지정 405→406→407→408이며 현재 405 AIN4/P1.11 오픈드레인 시험을 준비한다.
 
-T12 Fixture 403 exact c95b904·SWD 10 MHz 첫 실행 48개 PASS는 [76번 기록](<../../../00_Docs/04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 보존했다. 401~403 합계 기능 144개·samples 31,104개이며 각 exact identity는 구분한다. 다음은 전원 OFF·A P1.07→P1.14/AIN7 변경 후 Fixture 408이다.
+T12 Fixture 403 exact c95b904·SWD 10 MHz 첫 실행 48개 PASS는 [76번 기록](<../../../00_Docs/04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 보존했다. 401~403 합계 기능 144개·samples 31,104개이며 각 exact identity는 구분한다. 다음 순서는 사용자 지정 405→406→407→408이며 현재 405 AIN4/P1.11 오픈드레인 시험을 준비한다.
 
-T12 Fixture 404 exact e080bbc·SWD 10 MHz 첫 실행 48개 PASS는 [77번 기록](<../../../00_Docs/04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 보존했다. 401~404 합계 기능 192개·samples 41,472개이며 각 exact identity는 구분한다. 다음은 전원 OFF·A P1.07→P1.14/AIN7 변경 후 Fixture 408이다.
+T12 Fixture 404 exact e080bbc·SWD 10 MHz 첫 실행 48개 PASS는 [77번 기록](<../../../00_Docs/04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 보존했다. 401~404 합계 기능 192개·samples 41,472개이며 각 exact identity는 구분한다. 다음 순서는 사용자 지정 405→406→407→408이며 현재 405 AIN4/P1.11 오픈드레인 시험을 준비한다.

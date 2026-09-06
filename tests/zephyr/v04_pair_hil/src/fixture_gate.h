@@ -36,7 +36,7 @@ namespace v04
         {
             return FixtureFamily::twi;
         }
-        if ((fixture >= 401 && fixture <= 404) || fixture == 408)
+        if ((fixture >= 401 && fixture <= 405) || fixture == 408)
         {
             return FixtureFamily::analog;
         }
@@ -86,6 +86,7 @@ namespace v04
         case 402:
         case 403:
         case 404:
+        case 405:
         case 408:
         case 420:
         case 430:
@@ -132,7 +133,7 @@ namespace v04
         {
             if (fixture_ || faulted_ || rev != revision || confirmed != consent ||
                 (controller_role != 1 && controller_role != 2) ||
-                ((((id >= 401 && id <= 404) || id == 408 || id == 420)) && controller_role != 2) ||
+                ((((id >= 401 && id <= 405) || id == 408 || id == 420)) && controller_role != 2) ||
                 fixtureBank(id, local_role) == Bank::invalid || now > UINT64_MAX - lease_ms)
             {
                 return false;

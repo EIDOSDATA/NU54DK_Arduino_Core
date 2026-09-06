@@ -52,10 +52,10 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | 필드 | 현재 값 |
 | --- | --- |
 | 이번에 끝낸 일 | Fixture 404 exact e080bbc 첫 실행 48 PASS·10,368 samples·cleanup 48. [77번 기록](<./04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 보존. 401~404 합계 기능 192개·samples 41,472개; T12 부분 완료 |
-| 진행 중인 T 항목 | 실행 중 시험 없음. T12 Fixture 401~404 완료, 408부터 대기. T11 완료·각 exact 근거 보존; T13~T15·최종 통합·RC/공개 미완료 |
-| 다음 구체적 행동 | 두 USB를 분리하고 A 쪽만 P1.07에서 P1.14/AIN7로 이동한다(P2-9→P4-12). B P1.14/P4-12와 공통 GND/P2-30은 유지한다. B만 PWM 출력, A는 SAADC 입력 |
-| 다음 작업에 필요한 사용자 행동 | Fixture 408 전원 OFF 결선 변경·DAP UART 양쪽 분리/SWD 연결·동일 I/O 전압·각자 USB 재연결 완료 확인. 외부 저항/전원선/다른 출력 없음 |
-| 외부 결선 상태 | 404 GPIO 안내 뒤 사용자 진행 지시 문맥에 따른 확인. B P1.14/P4-12 PWM→A P1.07/P2-9 AIN3, GND/P2-30만 사용. A P1.06 연결 제거 조건. DAP UART 양쪽 분리·SWD 연결·동일 I/O 전압·각자 USB. A D/COM5·6, B E/COM7·8 |
+| 진행 중인 T 항목 | T12 Fixture 405 AIN4/P1.11의 오픈드레인 LOW→해제→LOW 시험을 구현·Host 검증·pair build 후 실행한다. 401~404 완료; 사용자 요청으로 405·406·407·408 모두 수행 대상이며 아직 PASS가 아니다. T11 각 exact 근거와 R00~R13 완료를 보존하며 제품 core 변경 없이 T05/T10/T12 시험 경로를 확장한다 |
+| 다음 구체적 행동 | 405용 고정 B P1.14 S0D1·내부 pull-up 신호원과 A P1.11 SAADC를 검증한다. 32/256 samples·single/double buffer·LOW/해제/LOW 12 vector, DMA 길이·양쪽 cleanup·GPIO 설정 readback·ADC 전환 oracle을 사용한다. 정확한 source로 pair build 후 10 MHz SWD 실행·증거·문서·커밋·푸시. 후속 순서는 406→407→408 |
+| 다음 작업에 필요한 사용자 행동 | 405 결선 완료 확인을 받았다. 다음 406은 별도 GPIO 안내와 전원 OFF 결선 변경 확인이 필요하다. SB1/PMIC 설정은 변경하지 않는다 |
+| 외부 결선 상태 | 2026-09-06T12:52:24Z 사용자 답변 기록: “ㅇㅇ 했다. P1.11 했다”. 전원 OFF 변경 안내에 따라 A P1.11/P4-9↔B P1.14/P4-12와 공통 GND/P2-30, DAP UART 분리·SWD 연결·각자 USB 재연결 확인. A D/COM5·6, B E/COM7·8. P1.11은 SB1을 통해 PMIC_INT/BQ25186 /INT와 공유하며 DAP 전원 감지 핀이 아니다 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 마지막 정식 외부 HIL source | `e080bbc8f07a0ad751d83dacdb259d395b69be5b` — T12 Fixture 404 첫 실행 48 PASS. 이전 401~403과 T11 exact 근거 보존 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. T11 단독 완료·T12 401~404 부분 PASS; M24/M25 전체·후속 gate·RC/공개 미완료 |
@@ -210,7 +210,7 @@ R00~R14와 연결하고, 구조 변경 뒤 같은 결선을 다시 반복하지 
   package gate로 최종 실기 source를 고정한다.
 - [x] **current-source T11 회귀:** R00~R13 최종 exact source로 영향받는 UART·SPI·TWI 단독 기능을
   재검증하고 나서 T12로 전환한다.
-  - 진행: exact 154324c Fixture 101 기능 1,644 PASS. [67번 기록](<./04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>) 참조. Fixture 102는 exact a49cc0d 기능 822 PASS로 [68번 기록](<./04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md>)에 등록했다. Fixture 103은 exact 7aece93 기능 2,466 PASS로 [69번 기록](<./04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md>)에 등록해 승인 UART route 세 묶음을 완료했다. Fixture 201도 exact 0f429e7 기능 18,169 PASS로 [70번 기록](<./04_검증 기록/70_T11_Fixture_201_current_source_SPI_회귀.md>)에 등록했다. Fixture 202도 exact 1349e20 기능 9,084 PASS로 [71번 기록](<./04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md>)에 등록했다. Fixture 203도 exact be49207 기능 27,252 PASS로 [72번 기록](<./04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 등록해 승인 SPI 세 route를 완료했다. Fixture 301도 exact 9a63251 기능 1,986 PASS로 [73번 기록](<./04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 등록했다. 일곱 묶음의 61,423개 기능과 동일 컴파일 입력을 대조해 current-source T11 단독 회귀를 완료했다. T12 Fixture 401~404도 각각 48개를 통과했으며 다음은 Fixture 408이다.
+  - 진행: exact 154324c Fixture 101 기능 1,644 PASS. [67번 기록](<./04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>) 참조. Fixture 102는 exact a49cc0d 기능 822 PASS로 [68번 기록](<./04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md>)에 등록했다. Fixture 103은 exact 7aece93 기능 2,466 PASS로 [69번 기록](<./04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md>)에 등록해 승인 UART route 세 묶음을 완료했다. Fixture 201도 exact 0f429e7 기능 18,169 PASS로 [70번 기록](<./04_검증 기록/70_T11_Fixture_201_current_source_SPI_회귀.md>)에 등록했다. Fixture 202도 exact 1349e20 기능 9,084 PASS로 [71번 기록](<./04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md>)에 등록했다. Fixture 203도 exact be49207 기능 27,252 PASS로 [72번 기록](<./04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 등록해 승인 SPI 세 route를 완료했다. Fixture 301도 exact 9a63251 기능 1,986 PASS로 [73번 기록](<./04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 등록했다. 일곱 묶음의 61,423개 기능과 동일 컴파일 입력을 대조해 current-source T11 단독 회귀를 완료했다. T12 Fixture 401~404도 각각 48개를 통과했으며 다음은 사용자 지정 Fixture 405→406→407→408이다.
 - [ ] **R14:** T16~T18의 사용자용 통합까지 끝난 뒤 current-source T11과 T12~T15 결과를 포함한
   `v0.4.0` RC를 다시 고정하고 T19로 전환한다.
 
@@ -222,7 +222,7 @@ R00~R14와 연결하고, 구조 변경 뒤 같은 결선을 다시 반복하지 
   - 상태·선행: 부분 완료 — Fixture 401 AIN0·402 AIN1·403 AIN2·404 AIN3 각각 48 PASS, 후속 fixture·전체 요구 대기 / T05·T06·T09, R00~R13과 current-source T11 회귀 완료, 해당 T10 확인.
   - 할 일: ADC·PWM·timer/event·PDM·I2S·QDEC의 물리 신호와 예상 sample/frame/count를 비교한다.
   - 완료 기준: 합성 peer 자체의 동작과 코어 기능을 구분해 검증하고 각 instance/mode의 증거가 있다. 신호 생성 실패는 미완료이지 계측 면제가 아니다.
-  - 결선·증거: Fixture 401 exact a12e444 48 PASS·10,368 samples·cleanup 48은 [74번 기록](<./04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 등록. Fixture 402 exact ff483a1 48 PASS는 [75번 기록](<./04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존. Fixture 403 exact c95b904 48 PASS는 [76번 기록](<./04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 등록. Fixture 404 exact e080bbc 48 PASS는 [77번 기록](<./04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 등록. 다음은 408. PWM period/duty capture·ADC calibration/채널 순서 등 전체 T12 요구는 이 HIGH/sample-count 결과로 완료 처리하지 않는다.
+  - 결선·증거: Fixture 401 exact a12e444 48 PASS·10,368 samples·cleanup 48은 [74번 기록](<./04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 등록. Fixture 402 exact ff483a1 48 PASS는 [75번 기록](<./04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존. Fixture 403 exact c95b904 48 PASS는 [76번 기록](<./04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 등록. Fixture 404 exact e080bbc 48 PASS는 [77번 기록](<./04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 등록. 다음은 405→406→407→408이며 공유 AIN4~6도 개별 기능 시험한다. PWM period/duty capture·ADC calibration/채널 순서 등 전체 T12 요구는 이 HIGH/sample-count 결과로 완료 처리하지 않는다.
 
 - [ ] **T13 — 복구·동시 실행·장시간 안정성 검증**
   - 상태·선행: 미착수 / T07·해당 T11/T12 단독 PASS·해당 T10 확인.

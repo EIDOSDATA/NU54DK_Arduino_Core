@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": 2,
+  "revision": 3,
   "status": "preparation-not-wiring-authority",
   "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
   "schematic_page": 9,
@@ -10,7 +10,7 @@
     "공통 GND와 표의 신호만 연결; 두 보드 VDD_MOD 전압 동일 여부 확인",
     "두 보드 debug-control의 DISABLE_UART는 DAP 분리 상태, DISABLE_SWD는 SWD 연결 상태",
     "스위치 레버 방향만으로 ON/OFF를 추정하지 않음; 회로의 신호 상태 기준",
-    "외부 장치·배터리·점퍼의 다른 출력이 시험 선을 구동하지 않음"
+    "fixture에 명시된 공유 회로 외 외부 장치·배터리·점퍼의 다른 출력이 시험 선을 구동하지 않음"
   ],
   "fixtures": [
     {
@@ -163,6 +163,18 @@
       ],
       "notes": "AIN3용 재결선입니다. 두 보드 DAP UART를 분리하고 PWM20/21/22의 channel slot 0~3을 순차 검사합니다.",
       "pullups": []
+    },
+    {
+      "id": 405,
+      "family": "analog",
+      "banks": [1, 1],
+      "instances": [[], []],
+      "links": [
+        {"dut": ["P4", 9, "P1.11"], "peer": ["P4", 12, "P1.14"], "signal": "peer open-drain LOW/release -> DUT SAADC AIN4"},
+        {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
+      ],
+      "notes": "P1.11/AIN4는 SB1을 통해 PMIC_INT/BQ25186 /INT와 공유합니다(원본 회로도 1·3쪽). B P1.14만 S0D1 LOW/해제로 구동하며 강한 HIGH/PWM 출력은 금지합니다. SB1 및 PMIC 설정 변경 없음. controller_role=2, 32/256 sample·single/double buffer마다 LOW→해제→LOW 12 vector. 406·407은 별도 준비·결선 확인 후 수행 대상입니다.",
+      "pullups": ["B P1.14 내부 pull-up 사용. SB1 연결 시 보드 R3 10kΩ/VDD_MOD와 병렬. 외부 저항 없음. 실제 SB1 개폐와 무관하게 해제 시 HIGH가 관측되어야 PASS."]
     },
     {
       "id": 408,
