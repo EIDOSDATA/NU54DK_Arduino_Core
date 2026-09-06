@@ -1,0 +1,393 @@
+Loading Zephyr module(s) (Zephyr base): sysbuild_default
+-- Found Python3: C:/ncs/toolchains/dcbdc366a1/opt/bin/python.exe (found suitable version "3.12.4", minimum required is "3.12") found components: Interpreter
+-- Cache files will be written to: C:/ncs/v3.4.0/zephyr/.cache
+-- Found west (found suitable version "1.5.0", minimum required is "0.14.0")
+-- Board: nrf54l15dk, qualifiers: nrf54l15/cpuapp/nu54dk
+Parsing C:/ncs/v3.4.0/zephyr/share/sysbuild/Kconfig
+Loaded configuration 'C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract/_sysbuild/empty.conf'
+Merged configuration 'C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract/_sysbuild/empty.conf'
+Merged configuration 'C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract/zephyr/misc/generated/extra_kconfig_options.conf'
+Configuration saved to 'C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract/zephyr/.config'
+Kconfig header saved to 'C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract/_sysbuild/autoconf.h'
+-- 
+   **********************************************
+   * Running CMake for ac02a_ownership_contract *
+   **********************************************
+
+Loading Zephyr default modules (Zephyr base).
+-- Application: C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/ac02a_ownership_contract
+-- CMake version: 4.2.1
+-- Found Python3: C:/ncs/toolchains/dcbdc366a1/opt/bin/python.exe (found suitable version "3.12.4", minimum required is "3.12") found components: Interpreter
+-- Cache files will be written to: C:/ncs/v3.4.0/zephyr/.cache
+-- Zephyr version: 4.4.0 (C:/ncs/v3.4.0/zephyr)
+-- Found west (found suitable version "1.5.0", minimum required is "0.14.0")
+-- Board: nrf54l15dk, qualifiers: nrf54l15/cpuapp/nu54dk
+-- Found host-tools: zephyr 1.0.1 (C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk)
+-- Found toolchain: zephyr 1.0.1 (C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk)
+-- Found Dtc: C:/ncs/toolchains/dcbdc366a1/opt/bin/dtc.exe (found suitable version "1.4.7", minimum required is "1.4.6")
+-- Found BOARD.dts: C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nrf54l15dk_nrf54l15_cpuapp_nu54dk.dts
+-- Found devicetree overlay: C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/ac02a_ownership_contract/app.overlay
+-- Generated zephyr.dts: C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract/ac02a_ownership_contract/zephyr/zephyr.dts
+-- Generated pickled edt: C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract/ac02a_ownership_contract/zephyr/edt.pickle
+-- Generated devicetree_generated.h: C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract/ac02a_ownership_contract/zephyr/include/generated/zephyr/devicetree_generated.h
+
+warning: Deprecated symbol NRF_PLATFORM_LUMOS is enabled.
+
+Parsing C:/ncs/v3.4.0/zephyr/Kconfig
+Loaded configuration 'C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nrf54l15dk_nrf54l15_cpuapp_nu54dk_defconfig'
+Merged configuration 'C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/ac02a_ownership_contract/prj.conf'
+Merged configuration 'C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract/ac02a_ownership_contract/zephyr/.config.sysbuild'
+Configuration saved to 'C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract/ac02a_ownership_contract/zephyr/.config'
+Kconfig header saved to 'C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract/ac02a_ownership_contract/zephyr/include/generated/zephyr/autoconf.h'
+-- Found GnuLd: C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/arm-zephyr-eabi/bin/ld.bfd.exe (found version "2.43.1")
+-- The C compiler identification is GNU 14.3.0
+-- The CXX compiler identification is GNU 14.3.0
+-- The ASM compiler identification is GNU
+-- Found assembler: C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc.exe
+-- overriding FLASH runner nrfutil; it's now pyocd
+-- overriding DEBUG runner jlink; it's now pyocd
+-- Using ccache: C:/ncs/toolchains/dcbdc366a1/opt/bin/ccache.exe
+-- NUCODE Arduino Core 36ba819bbe03; NU54DK board fe65f2f0880b
+-- Found gen_kobject_list: C:/ncs/v3.4.0/zephyr/scripts/build/gen_kobject_list.py
+-- Configuring done (32.7s)
+CMake Warning in C:/ncs/v3.4.0/nrf/subsys/nrf_security/src/core/nrf_oberon/CMakeLists.txt:
+  The object file directory
+
+    C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract/ac02a_ownership_contract/modules/nrf/subsys/nrf_security/src/core/nrf_oberon/CMakeFiles/psa_core.dir/./
+
+  has 187 characters.  The maximum full path to an object file is 250
+  characters (see CMAKE_OBJECT_PATH_MAX).  Object file
+
+    1639c0cb50b4915073bf1cd4553ad860/psa_crypto_slot_management.c.obj
+
+  cannot be safely placed under this directory.  The build may not work
+  correctly.
+
+
+CMake Warning in C:/ncs/v3.4.0/nrf/subsys/nrf_security/src/drivers/cracen/CMakeLists.txt:
+  The object file directory
+
+    C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract/ac02a_ownership_contract/modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/./
+
+  has 195 characters.  The maximum full path to an object file is 250
+  characters (see CMAKE_OBJECT_PATH_MAX).  Object file
+
+    cracenpsa/src/internal/pake/cracen_srp_key_management.c.obj
+
+  cannot be safely placed under this directory.  The build may not work
+  correctly.
+
+
+-- Generating done (2.3s)
+-- Build files have been written to: C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract/ac02a_ownership_contract
+-- Configuring done (44.6s)
+-- Generating done (0.2s)
+-- Build files have been written to: C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract
+[1/8] Creating directories for 'ac02a_ownership_contract'
+[2/8] No download step for 'ac02a_ownership_contract'
+[3/8] No update step for 'ac02a_ownership_contract'
+[4/8] No patch step for 'ac02a_ownership_contract'
+[5/8] No configure step for 'ac02a_ownership_contract'
+[5/8] Performing build step for 'ac02a_ownership_contract'
+[1/294] Generating ../../zephyr/include/generated/ncs_version.h
+[2/294] Generating ../../zephyr/include/generated/ncs_commit.h
+[3/294] Generating ../../zephyr/include/generated/zephyr_commit.h
+[4/294] Generating include/generated/zephyr/version.h
+-- Zephyr version: 4.4.0 (C:/ncs/v3.4.0/zephyr), build: ncs-v3.4.0
+[5/294] C:\WINDOWS\system32\cmd.exe /C "cd /D C:\u4a\nrf54l15dk_nrf54l15_cpuapp_nu54dk\zephyr_gnu\nucode.ac02a.ownership_contract\ac02a_ownership_contract\modules\nucode_arduino_core && C:\ncs\toolchains\dcbdc366a1\opt\bin\cmake.exe -DNUCODE_CORE_ROOT=C:/Users/eidos/GitHub/NU54DK_Arduino_Core -DNUCODE_APPLICATION_SOURCE_DIR=C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/ac02a_ownership_contract -DNUCODE_BOARD_PACKAGE_ROOT=C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS -DNUCODE_NRF_DIR=C:/ncs/v3.4.0/nrf -DNUCODE_ZEPHYR_BASE=C:/ncs/v3.4.0/zephyr -DNUCODE_GIT_EXECUTABLE=C:/ncs/toolchains/dcbdc366a1/mingw64/bin/git.exe -DNUCODE_BUILD_RECORD=C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract/ac02a_ownership_contract/nucode_arduino_core_build.yml -DNUCODE_BOARD=nrf54l15dk -DNUCODE_BOARD_QUALIFIERS=nrf54l15/cpuapp/nu54dk -DNUCODE_TOOLCHAIN_VARIANT=zephyr -DNUCODE_TOOLCHAIN_PATH=C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk "-DNUCODE_CXX_COMPILER=GNU 14.3.0" -P C:/Users/eidos/GitHub/NU54DK_Arduino_Core/zephyr/cmake/write_build_record.cmake"
+[6/294] Generating misc/generated/syscalls.json, misc/generated/struct_tags.json
+[7/294] Generating include/generated/device-api-sections.ld, include/generated/device-api-sections.cmake
+[8/294] Generating include/generated/zephyr/driver-validation.h
+[9/294] Generating include/generated/zephyr/syscall_dispatch.c, include/generated/zephyr/syscall_exports_llext.c, syscall_weakdefs_llext.c, include/generated/zephyr/syscall_list.h
+[10/294] Generating include/generated/zephyr/kobj-types-enum.h, include/generated/zephyr/otype-to-str.h, include/generated/zephyr/otype-to-size.h
+[11/294] Building C object zephyr/lib/heap/CMakeFiles/heap_constants.dir/heap_constants.c.obj
+[12/294] Generating ../../include/generated/zephyr/heap_constants.h
+[13/294] Building C object zephyr/CMakeFiles/offsets.dir/arch/arm/core/offsets/offsets.c.obj
+[14/294] Generating include/generated/zephyr/offsets.h
+[15/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/nrf_security_utils.dir/utils/nrf_security_mutexes.c.obj
+[16/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/nrf_security_utils.dir/utils/nrf_security_events.c.obj
+[17/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/nrf_security_utils.dir/utils/nrf_security_core.c.obj
+[18/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/nrf_security_utils.dir/utils/nrf_security_mem_helpers.c.obj
+[19/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/sxsymcrypt/src/aead.c.obj
+[20/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/sxsymcrypt/src/blkcipher.c.obj
+[21/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/sxsymcrypt/src/chachapoly.c.obj
+[22/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/sxsymcrypt/src/cmac.c.obj
+[23/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/sxsymcrypt/src/cmdma.c.obj
+[24/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/sxsymcrypt/src/cmmask.c.obj
+[25/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/sxsymcrypt/src/hash.c.obj
+[26/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/sxsymcrypt/src/hmac.c.obj
+[27/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/sxsymcrypt/src/keyref.c.obj
+[28/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/sxsymcrypt/src/mac.c.obj
+[29/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/sxsymcrypt/src/sha3.c.obj
+[30/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/sxsymcrypt/src/trng.c.obj
+[31/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/sxsymcrypt/src/platform/baremetal/cmdma_hw.c.obj
+[32/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/sxsymcrypt/src/platform/baremetal/interrupts.c.obj
+[33/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/silexpk/interface/sxbuf/sxbufops.c.obj
+[34/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/silexpk/src/blind.c.obj
+[35/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/silexpk/src/ed448.c.obj
+[36/294] Linking C static library modules\nrf\subsys\nrf_security\src\libnrf_security_utils.a
+[37/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/silexpk/src/ed25519.c.obj
+[38/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/silexpk/src/iomem.c.obj
+[39/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/silexpk/src/montgomery.c.obj
+[40/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/silexpk/src/statuscodes.c.obj
+[41/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/c86b62237571dcb961c1a2c2dae825d0/pk_baremetal.c.obj
+[42/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/silexpk/target/hw/ba414/pkhardware_ba414e.c.obj
+[43/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/silexpk/target/hw/ba414/ba414_status.c.obj
+[44/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/silexpk/target/hw/ba414/ec_curves.c.obj
+[45/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/silexpk/target/hw/ba414/cmddefs_ecc.c.obj
+[46/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/silexpk/target/hw/ba414/cmddefs_modmath.c.obj
+[47/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/silexpk/target/hw/ba414/cmddefs_ecjpake.c.obj
+[48/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/common/src/cracen/hardware/hardware.c.obj
+[49/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/common/src/cracen/common.c.obj
+[50/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/common/src/cracen/cracen_rndinrange.c.obj
+[51/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/common/src/cracen/ec_helpers.c.obj
+[52/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/common/src/cracen/prng_pool.c.obj
+[53/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/common/src/cracen/lib_kmu.c.obj
+[54/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/cracenpsa/src/cracen_psa.c.obj
+[55/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/cracenpsa/src/internal/ecc/cracen_ecc_helpers.c.obj
+[56/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/cracenpsa/src/internal/ecc/cracen_ecc_keygen.c.obj
+[57/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/cracenpsa/src/internal/ecc/cracen_ecc_key_management.c.obj
+[58/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/cracenpsa/src/internal/aes/cracen_aes_ecb.c.obj
+[59/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/cracenpsa/src/internal/aes/cracen_aes_cbc.c.obj
+[60/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/cracenpsa/src/cracen_psa_cipher.c.obj
+[61/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/cracenpsa/src/cracen_psa_ctr_drbg.c.obj
+[62/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/cracenpsa/src/cracen_psa_ikg.c.obj
+[63/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/cracenpsa/src/cracen_psa_key_management.c.obj
+[64/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/cracenpsa/src/internal/rsa/cracen_rsa_key_management.c.obj
+[65/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/cracenpsa/src/internal/pake/cracen_wpa3_key_management.c.obj
+[66/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/cracenpsa/src/internal/pake/cracen_spake2p_key_management.c.obj
+[67/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/cracenpsa/src/internal/pake/cracen_srp_key_management.c.obj
+[68/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/cracenpsa/src/internal/ecc/cracen_ecdsa.c.obj
+[69/294] Building C object modules/nrf/subsys/nrf_security/src/drivers/cracen/CMakeFiles/cracen_psa_driver.dir/cracenpsa/src/cracen_psa_kmu.c.obj
+[70/294] Building C object modules/nrf/subsys/nrf_security/src/core/nrf_oberon/CMakeFiles/psa_core.dir/f1b11d39e5e5d62a56a1713ce5b7e1f9/threading/threading_alt.c.obj
+[71/294] Building C object modules/nrf/subsys/nrf_security/src/core/nrf_oberon/CMakeFiles/psa_core.dir/7baec30036d1156ea4491bb943cef2b2/platform/platform.c.obj
+[72/294] Building C object modules/nrf/subsys/nrf_security/src/core/nrf_oberon/CMakeFiles/psa_core.dir/7baec30036d1156ea4491bb943cef2b2/platform/platform_util.c.obj
+[73/294] Building C object modules/nrf/subsys/nrf_security/src/core/nrf_oberon/CMakeFiles/psa_core.dir/7baec30036d1156ea4491bb943cef2b2/utilities/constant_time.c.obj
+[74/294] Building C object modules/nrf/subsys/nrf_security/src/core/nrf_oberon/CMakeFiles/psa_core.dir/7baec30036d1156ea4491bb943cef2b2/core/psa_crypto.c.obj
+[75/294] Building C object modules/nrf/subsys/nrf_security/src/core/nrf_oberon/CMakeFiles/psa_core.dir/7baec30036d1156ea4491bb943cef2b2/core/psa_crypto_client.c.obj
+[76/294] Building C object modules/nrf/subsys/nrf_security/src/core/nrf_oberon/CMakeFiles/psa_core.dir/1639c0cb50b4915073bf1cd4553ad860/psa_crypto_slot_management.c.obj
+[77/294] Building C object modules/nrf/subsys/nrf_security/src/core/nrf_oberon/CMakeFiles/psa_core.dir/7baec30036d1156ea4491bb943cef2b2/core/psa_crypto_storage.c.obj
+[78/294] Building C object modules/nrf/subsys/nrf_security/src/core/nrf_oberon/CMakeFiles/psa_core.dir/f1b11d39e5e5d62a56a1713ce5b7e1f9/psa_crypto_driver_wrappers.c.obj
+[79/294] Building C object modules/nrf/subsys/nrf_security/src/core/nrf_oberon/CMakeFiles/psa_core.dir/1863f2d243b0c4b4004406efa82f10ad/src/mbedtls_psa_platform.c.obj
+[80/294] Building C object zephyr/arch/common/CMakeFiles/isr_tables.dir/isr_tables.c.obj
+[81/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/7baec30036d1156ea4491bb943cef2b2/platform/memory_buffer_alloc.c.obj
+[82/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/utilities/asn1parse.c.obj
+[83/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/utilities/asn1write.c.obj
+[84/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/utilities/base64.c.obj
+[85/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/utilities/oid.c.obj
+[86/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/utilities/pem.c.obj
+[87/294] Linking C static library modules\nrf\subsys\nrf_security\src\drivers\cracen\libcracen_psa_driver.a
+[88/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/utilities/pkcs5.c.obj
+[89/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/legacy_sub/src/bignum.c.obj
+[90/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/7baec30036d1156ea4491bb943cef2b2/legacy_sub/src/bignum_core.c.obj
+[91/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/legacy_sub/src/ecp.c.obj
+[92/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/7baec30036d1156ea4491bb943cef2b2/legacy_sub/src/ecp_curves.c.obj
+[93/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/7baec30036d1156ea4491bb943cef2b2/legacy_sub/src/psa_util_internal.c.obj
+[94/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/extras/md.c.obj
+[95/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/extras/nist_kw.c.obj
+[96/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/extras/pk.c.obj
+[97/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/extras/pk_ecc.c.obj
+[98/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/extras/pk_rsa.c.obj
+[99/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/extras/pk_wrap.c.obj
+[100/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/extras/pkparse.c.obj
+[101/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/extras/pkwrite.c.obj
+[102/294] Building C object modules/nrf/subsys/nrf_security/src/CMakeFiles/mbedcrypto.dir/C_/ncs/v3.4.0/modules/crypto/oberon-psa-crypto/core/psa_util.c.obj
+[103/294] Building CXX object CMakeFiles/app.dir/src/main.cpp.obj
+[104/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/libc/validate_libc.c.obj
+[105/294] Linking C static library modules\nrf\subsys\nrf_security\src\core\nrf_oberon\libpsa_core.a
+[106/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/cpp/abi/cpp_dtors.c.obj
+[107/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/cpp/minimal/cpp_virtual.c.obj
+[108/294] Building CXX object zephyr/CMakeFiles/zephyr.dir/lib/cpp/minimal/cpp_vtable.cpp.obj
+[109/294] Building CXX object zephyr/CMakeFiles/zephyr.dir/lib/cpp/minimal/cpp_new.cpp.obj
+[110/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/heap/heap.c.obj
+[111/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/os/cbprintf_packaged.c.obj
+[112/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/os/clock.c.obj
+[113/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/os/printk.c.obj
+[114/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/os/sem.c.obj
+[115/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/os/thread_entry.c.obj
+[116/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/os/cbprintf_complete.c.obj
+[117/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/os/assert.c.obj
+[118/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/dec.c.obj
+[119/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/hex.c.obj
+[120/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/rb.c.obj
+[121/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/set.c.obj
+[122/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/timeutil.c.obj
+[123/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/bitarray.c.obj
+[124/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/bitmask.c.obj
+[125/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/getopt/getopt.c.obj
+[126/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/getopt/getopt_common.c.obj
+[127/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/onoff.c.obj
+[128/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/notify.c.obj
+[129/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/ring_buffer.c.obj
+[130/294] Building C object zephyr/CMakeFiles/zephyr.dir/lib/utils/last_section_id.c.obj
+[131/294] Building C object zephyr/CMakeFiles/zephyr.dir/misc/generated/configs.c.obj
+[132/294] Building C object zephyr/CMakeFiles/zephyr.dir/subsys/logging/log_minimal.c.obj
+[133/294] Building C object zephyr/CMakeFiles/zephyr.dir/subsys/mem_mgmt/mem_attr.c.obj
+[134/294] Building C object zephyr/CMakeFiles/zephyr.dir/subsys/random/random_psa.c.obj
+[135/294] Building C object zephyr/CMakeFiles/zephyr.dir/subsys/tracing/tracing_none.c.obj
+[136/294] Building C object zephyr/CMakeFiles/zephyr.dir/C_/ncs/v3.4.0/nrf/lib/boot_banner/banner.c.obj
+[137/294] Generating linker_zephyr_pre0.cmd
+[138/294] Building C object zephyr/arch/common/CMakeFiles/arch__common.dir/sw_isr_common.c.obj
+[139/294] Building C object zephyr/arch/common/CMakeFiles/arch__common.dir/init.c.obj
+[140/294] Building C object zephyr/arch/common/CMakeFiles/arch__common.dir/xip.c.obj
+[141/294] Linking C static library zephyr\arch\common\libisr_tables.a
+[142/294] Building C object zephyr/arch/arch/arm/core/CMakeFiles/arch__arm__core.dir/fatal.c.obj
+[143/294] Building C object zephyr/arch/arch/arm/core/CMakeFiles/arch__arm__core.dir/nmi.c.obj
+[144/294] Building ASM object zephyr/arch/arch/arm/core/CMakeFiles/arch__arm__core.dir/nmi_on_reset.S.obj
+[145/294] Building C object zephyr/arch/arch/arm/core/CMakeFiles/arch__arm__core.dir/__aeabi_atexit.c.obj
+[146/294] Building C object zephyr/arch/arch/arm/core/CMakeFiles/arch__arm__core.dir/irq_offload.c.obj
+[147/294] Building C object zephyr/arch/arch/arm/core/CMakeFiles/arch__arm__core.dir/tls.c.obj
+[148/294] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/fault.c.obj
+[149/294] Building ASM object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/fault_s.S.obj
+[150/294] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/fpu.c.obj
+[151/294] Building ASM object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/reset.S.obj
+[152/294] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/scb.c.obj
+[153/294] Building ASM object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/vector_table.S.obj
+[154/294] Building ASM object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/svc.S.obj
+[155/294] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/irq_manage.c.obj
+[156/294] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/prep_c.c.obj
+[157/294] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/thread.c.obj
+[158/294] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/cpu_idle.c.obj
+[159/294] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/exc_exit.c.obj
+[160/294] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/thread_abort.c.obj
+[161/294] Building ASM object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/swap_helper.S.obj
+[162/294] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/irq_init.c.obj
+[163/294] Building C object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/isr_wrapper.c.obj
+[164/294] Building ASM object zephyr/arch/arch/arm/core/cortex_m/CMakeFiles/arch__arm__core__cortex_m.dir/__aeabi_read_tp.S.obj
+[165/294] Building C object zephyr/arch/arch/arm/core/cortex_m/cmse/CMakeFiles/arch__arm__core__cortex_m__cmse.dir/arm_core_cmse.c.obj
+[166/294] Building C object zephyr/arch/arch/arm/core/mpu/CMakeFiles/arch__arm__core__mpu.dir/arm_core_mpu.c.obj
+[167/294] Building C object zephyr/arch/arch/arm/core/mpu/CMakeFiles/arch__arm__core__mpu.dir/arm_mpu.c.obj
+[168/294] Building C object zephyr/arch/arch/arm/core/mpu/CMakeFiles/arch__arm__core__mpu.dir/arm_mpu_regions.c.obj
+[169/294] Building C object zephyr/lib/libc/picolibc/CMakeFiles/lib__libc__picolibc.dir/assert.c.obj
+[170/294] Building C object zephyr/lib/libc/picolibc/CMakeFiles/lib__libc__picolibc.dir/cbprintf.c.obj
+[171/294] Building C object zephyr/lib/libc/picolibc/CMakeFiles/lib__libc__picolibc.dir/chk_fail.c.obj
+[172/294] Building C object zephyr/lib/libc/picolibc/CMakeFiles/lib__libc__picolibc.dir/errno_wrap.c.obj
+[173/294] Building C object zephyr/lib/libc/picolibc/CMakeFiles/lib__libc__picolibc.dir/exit.c.obj
+[174/294] Building C object zephyr/lib/libc/picolibc/CMakeFiles/lib__libc__picolibc.dir/locks.c.obj
+[175/294] Building C object zephyr/lib/libc/picolibc/CMakeFiles/lib__libc__picolibc.dir/stdio.c.obj
+[176/294] Building C object zephyr/lib/libc/common/CMakeFiles/lib__libc__common.dir/source/stdlib/abort.c.obj
+[177/294] Building C object zephyr/lib/libc/common/CMakeFiles/lib__libc__common.dir/source/time/time.c.obj
+[178/294] Building C object zephyr/lib/libc/common/CMakeFiles/lib__libc__common.dir/source/stdlib/malloc.c.obj
+[179/294] Building C object zephyr/lib/posix/c_lib_ext/CMakeFiles/lib__posix__c_lib_ext.dir/fnmatch.c.obj
+[180/294] Building C object zephyr/lib/posix/c_lib_ext/CMakeFiles/lib__posix__c_lib_ext.dir/getentropy.c.obj
+[181/294] Building C object zephyr/lib/posix/c_lib_ext/CMakeFiles/lib__posix__c_lib_ext.dir/getopt_shim.c.obj
+[182/294] Building C object zephyr/soc/soc/nrf54l15/CMakeFiles/soc__nordic.dir/validate_base_addresses.c.obj
+[183/294] Building C object zephyr/soc/soc/nrf54l15/CMakeFiles/soc__nordic.dir/validate_binding_headers.c.obj
+[184/294] Building C object zephyr/soc/soc/nrf54l15/CMakeFiles/soc__nordic.dir/validate_enabled_instances.c.obj
+[185/294] Building C object zephyr/soc/soc/nrf54l15/CMakeFiles/soc__nordic.dir/nrf54l/soc.c.obj
+[186/294] Building C object zephyr/soc/soc/nrf54l15/CMakeFiles/soc__nordic.dir/validate_rram_partitions.c.obj
+[187/294] Building C object zephyr/soc/soc/nrf54l15/CMakeFiles/soc__nordic.dir/common/reboot.c.obj
+[188/294] Building C object zephyr/soc/soc/nrf54l15/CMakeFiles/soc__nordic.dir/common/gpiote_nrfx.c.obj
+[189/294] Building C object zephyr/subsys/testsuite/ztest/CMakeFiles/subsys__testsuite__ztest.dir/src/ztest.c.obj
+[190/294] Building C object zephyr/subsys/testsuite/ztest/CMakeFiles/subsys__testsuite__ztest.dir/src/ztest_error_hook.c.obj
+[191/294] Building C object zephyr/subsys/testsuite/ztest/CMakeFiles/subsys__testsuite__ztest.dir/src/ztest_rules.c.obj
+[192/294] Building C object zephyr/subsys/testsuite/ztest/CMakeFiles/subsys__testsuite__ztest.dir/src/ztest_defaults.c.obj
+[193/294] Building C object zephyr/drivers/cache/CMakeFiles/drivers__cache.dir/cache_nrf.c.obj
+[194/294] Building C object zephyr/drivers/clock_control/CMakeFiles/drivers__clock_control.dir/clock_control_nrf.c.obj
+[195/294] Building C object zephyr/drivers/console/CMakeFiles/drivers__console.dir/uart_console.c.obj
+[196/294] Building C object zephyr/drivers/gpio/CMakeFiles/drivers__gpio.dir/gpio_nrfx.c.obj
+[197/294] Building C object zephyr/drivers/pinctrl/CMakeFiles/drivers__pinctrl.dir/common.c.obj
+[198/294] Building C object zephyr/drivers/pinctrl/CMakeFiles/drivers__pinctrl.dir/pinctrl_nrf.c.obj
+[199/294] Building C object zephyr/drivers/serial/CMakeFiles/drivers__serial.dir/uart_nrfx_uarte.c.obj
+[200/294] Building C object zephyr/drivers/timer/CMakeFiles/drivers__timer.dir/sys_clock_init.c.obj
+[201/294] Building C object zephyr/drivers/timer/CMakeFiles/drivers__timer.dir/nrf_grtc_timer.c.obj
+[202/294] Linking C static library modules\nrf\subsys\nrf_security\src\libmbedcrypto.a
+[203/294] Building C object modules/nrf/subsys/nrf_security/src/zephyr/CMakeFiles/mbedtls_zephyr.dir/psa_crypto_init.c.obj
+[204/294] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/C_/ncs/v3.4.0/modules/hal/nordic/nrfx/bsp/stable/mdk/system_nrf54l.c.obj
+[205/294] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/nrfx_glue.c.obj
+[206/294] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/C_/ncs/v3.4.0/modules/hal/nordic/nrfx/helpers/nrfx_flag32_allocator.c.obj
+[207/294] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/C_/ncs/v3.4.0/modules/hal/nordic/nrfx/helpers/nrfx_ram_ctrl.c.obj
+[208/294] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/C_/ncs/v3.4.0/modules/hal/nordic/nrfx/drivers/src/nrfx_clock.c.obj
+[209/294] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/C_/ncs/v3.4.0/modules/hal/nordic/nrfx/drivers/src/nrfx_clock_hfclk.c.obj
+[210/294] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/aaad18e50d2cdc88669175d6ccabba60/drivers/src/nrfx_clock_hfclkaudio.c.obj
+[211/294] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/C_/ncs/v3.4.0/modules/hal/nordic/nrfx/drivers/src/nrfx_clock_hfclk192m.c.obj
+[212/294] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/C_/ncs/v3.4.0/modules/hal/nordic/nrfx/drivers/src/nrfx_clock_lfclk.c.obj
+[213/294] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/C_/ncs/v3.4.0/modules/hal/nordic/nrfx/drivers/src/nrfx_clock_xo.c.obj
+[214/294] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/C_/ncs/v3.4.0/modules/hal/nordic/nrfx/drivers/src/nrfx_clock_xo24m.c.obj
+[215/294] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/C_/ncs/v3.4.0/modules/hal/nordic/nrfx/drivers/src/nrfx_gpiote.c.obj
+[216/294] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/C_/ncs/v3.4.0/modules/hal/nordic/nrfx/drivers/src/nrfx_grtc.c.obj
+[217/294] Building C object modules/hal_nordic/modules/hal_nordic/nrfx/CMakeFiles/nrfx.dir/C_/ncs/v3.4.0/modules/hal/nordic/nrfx/drivers/src/nrfx_rramc.c.obj
+[218/294] Building CXX object modules/nucode_arduino_core/CMakeFiles/nucode_arduino_core.dir/7458996baa990a163b26f366e9f1c5ac/ArduinoCore-API/api/Common.cpp.obj
+[219/294] Building CXX object modules/nucode_arduino_core/CMakeFiles/nucode_arduino_core.dir/7458996baa990a163b26f366e9f1c5ac/ArduinoCore-API/api/Print.cpp.obj
+[220/294] Building CXX object modules/nucode_arduino_core/CMakeFiles/nucode_arduino_core.dir/7458996baa990a163b26f366e9f1c5ac/ArduinoCore-API/api/Stream.cpp.obj
+[221/294] Building CXX object modules/nucode_arduino_core/CMakeFiles/nucode_arduino_core.dir/7458996baa990a163b26f366e9f1c5ac/ArduinoCore-API/api/String.cpp.obj
+[222/294] Building CXX object modules/nucode_arduino_core/CMakeFiles/nucode_arduino_core.dir/C_/Users/eidos/GitHub/NU54DK_Arduino_Core/cores/arduino/api_compat.cpp.obj
+[223/294] Building CXX object modules/nucode_arduino_core/CMakeFiles/nucode_arduino_core.dir/C_/Users/eidos/GitHub/NU54DK_Arduino_Core/cores/arduino/diagnostics.cpp.obj
+[224/294] Building CXX object modules/nucode_arduino_core/CMakeFiles/nucode_arduino_core.dir/cc314e12e60355fcdf57201c36652ebb/cores/arduino/peripheral_inventory.cpp.obj
+[225/294] Building CXX object modules/nucode_arduino_core/CMakeFiles/nucode_arduino_core.dir/cc314e12e60355fcdf57201c36652ebb/cores/arduino/peripheral_stubs.cpp.obj
+[226/294] Building CXX object modules/nucode_arduino_core/CMakeFiles/nucode_arduino_core.dir/cc314e12e60355fcdf57201c36652ebb/cores/arduino/wiring_random.cpp.obj
+[227/294] Building CXX object modules/nucode_arduino_core/CMakeFiles/nucode_arduino_core.dir/0052909d3a638e45609fe3a2bcca09ed/internal/io_resource_manager.cpp.obj
+[228/294] Building CXX object modules/nucode_arduino_core/CMakeFiles/nucode_arduino_core.dir/0052909d3a638e45609fe3a2bcca09ed/internal/resource/IoResourceTable.cpp.obj
+[229/294] Building CXX object modules/nucode_arduino_core/CMakeFiles/nucode_arduino_core.dir/e1ce731b444d8030ea45993914ced84c/nu54dk/io_resource_registry.cpp.obj
+[230/294] Building CXX object modules/nucode_arduino_core/CMakeFiles/nucode_arduino_core.dir/cc314e12e60355fcdf57201c36652ebb/cores/arduino/wiring_digital.cpp.obj
+[231/294] Building CXX object modules/nucode_arduino_core/CMakeFiles/nucode_arduino_core.dir/cc314e12e60355fcdf57201c36652ebb/cores/arduino/wiring_pulse_shift.cpp.obj
+[232/294] Building CXX object modules/nucode_arduino_core/CMakeFiles/nucode_arduino_core.dir/C_/Users/eidos/GitHub/NU54DK_Arduino_Core/variants/nu54dk/variant.cpp.obj
+[233/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/main_weak.c.obj
+[234/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/banner.c.obj
+[235/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/busy_wait.c.obj
+[236/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/device.c.obj
+[237/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/errno.c.obj
+[238/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/fatal.c.obj
+[239/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/init.c.obj
+[240/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/kheap.c.obj
+[241/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/mem_slab.c.obj
+[242/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/float.c.obj
+[243/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/version.c.obj
+[244/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/idle.c.obj
+[245/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/mailbox.c.obj
+[246/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/msg_q.c.obj
+[247/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/mutex.c.obj
+[248/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/queue.c.obj
+[249/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/sem.c.obj
+[250/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/stack.c.obj
+[251/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/system_work_q.c.obj
+[252/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/work.c.obj
+[253/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/condvar.c.obj
+[254/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/thread.c.obj
+[255/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/sched.c.obj
+[256/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/pipe.c.obj
+[257/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/timeslicing.c.obj
+[258/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/spinlock_validate.c.obj
+[259/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/irq_offload.c.obj
+[260/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/timeout.c.obj
+[261/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/timer.c.obj
+[262/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/events.c.obj
+[263/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/mempool.c.obj
+[264/294] Building C object zephyr/kernel/CMakeFiles/kernel.dir/dynamic_disabled.c.obj
+[265/294] Building C object zephyr/CMakeFiles/zephyr_pre0.dir/misc/empty_file.c.obj
+[266/294] Linking CXX static library app\libapp.a
+[267/294] Linking CXX static library zephyr\libzephyr.a
+[268/294] Linking C static library zephyr\drivers\serial\libdrivers__serial.a
+[269/294] Linking C static library zephyr\arch\arch\arm\core\mpu\libarch__arm__core__mpu.a
+[270/294] Linking C static library zephyr\arch\arch\arm\core\cortex_m\cmse\libarch__arm__core__cortex_m__cmse.a
+[271/294] Linking C static library zephyr\drivers\gpio\libdrivers__gpio.a
+[272/294] Linking C static library zephyr\drivers\console\libdrivers__console.a
+[273/294] Linking C static library zephyr\lib\libc\common\liblib__libc__common.a
+[274/294] Linking C static library zephyr\drivers\clock_control\libdrivers__clock_control.a
+[275/294] Linking C static library zephyr\drivers\cache\libdrivers__cache.a
+[276/294] Linking C static library zephyr\subsys\testsuite\ztest\libsubsys__testsuite__ztest.a
+[277/294] Linking C static library zephyr\drivers\pinctrl\libdrivers__pinctrl.a
+[278/294] Linking C static library zephyr\lib\posix\c_lib_ext\liblib__posix__c_lib_ext.a
+[279/294] Linking C static library zephyr\arch\common\libarch__common.a
+[280/294] Linking C static library zephyr\arch\arch\arm\core\libarch__arm__core.a
+[281/294] Linking C static library zephyr\soc\soc\nrf54l15\libsoc__nordic.a
+[282/294] Linking C static library zephyr\lib\libc\picolibc\liblib__libc__picolibc.a
+[283/294] Linking C static library zephyr\arch\arch\arm\core\cortex_m\libarch__arm__core__cortex_m.a
+[284/294] Linking C static library modules\nrf\subsys\nrf_security\src\zephyr\libmbedtls_zephyr.a
+[285/294] Linking C static library zephyr\drivers\timer\libdrivers__timer.a
+[286/294] Linking CXX static library modules\nucode_arduino_core\libnucode_arduino_core.a
+[287/294] Linking C static library modules\hal_nordic\modules\hal_nordic\nrfx\libnrfx.a
+[288/294] Linking C static library zephyr\kernel\libkernel.a
+[289/294] Linking CXX executable zephyr\zephyr_pre0.elf; Logical command for additional byproducts on target: zephyr_pre0
+[290/294] Generating linker.cmd
+[291/294] Generating isr_tables.c, isr_tables_vt.ld, isr_tables_swi.ld
+[292/294] Building C object zephyr/CMakeFiles/zephyr_final.dir/misc/empty_file.c.obj
+[293/294] Building C object zephyr/CMakeFiles/zephyr_final.dir/isr_tables.c.obj
+[294/294] Linking CXX executable zephyr\zephyr.elf
+Memory region         Used Size  Region Size  %age Used
+           FLASH:      114848 B      1524 KB      7.36%
+             RAM:       54168 B       256 KB     20.66%
+        IDT_LIST:           0 B        32 KB      0.00%
+Generating files from C:/u4a/nrf54l15dk_nrf54l15_cpuapp_nu54dk/zephyr_gnu/nucode.ac02a.ownership_contract/ac02a_ownership_contract/zephyr/zephyr.elf for board: nrf54l15dk/nrf54l15/cpuapp/nu54dk
+[7/8] No install step for 'ac02a_ownership_contract'
+[8/8] Completed 'ac02a_ownership_contract'

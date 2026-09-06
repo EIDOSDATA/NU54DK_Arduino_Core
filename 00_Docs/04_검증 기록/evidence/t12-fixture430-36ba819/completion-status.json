@@ -1,0 +1,19 @@
+{
+  "source": "36ba819bbe03280fa82c62ef76b00c87a92c2aff",
+  "status": "fixture430-passed",
+  "source_physical_executed": true,
+  "functional_pass": 192,
+  "failed_cases": 0,
+  "unexecuted_cases": 0,
+  "cleanup_pass": 192,
+  "postflight_pass": 2,
+  "whole_fixture_pass": true,
+  "user_unchanged_wiring_confirmation_utc": "2026-09-06T18:35:58Z",
+  "confirmation_expires_utc": "2026-09-06T19:05:58Z",
+  "last_uploaded_source": "36ba819bbe03280fa82c62ef76b00c87a92c2aff",
+  "next_fixture": 440,
+  "fixture440_executed": false,
+  "next_action": "USB disconnected, change to Fixture440 wiring and obtain new confirmation before signals",
+  "t12_whole_completed": false,
+  "background_hardware_tests_running": false
+}

@@ -1,0 +1,238 @@
+{
+  "status": "passed",
+  "source": "36ba819bbe03280fa82c62ef76b00c87a92c2aff",
+  "timing_records": 384,
+  "successful_queue_calls": 960,
+  "queue_elapsed_us": {
+    "min": 104,
+    "max": 112,
+    "mean": 108.01145833333334
+  },
+  "previous_failed_source": "70971f41aa1e0485d3e974fc8a4cd4f123ae2f33",
+  "previous_failed_vector_queue_us": [
+    309,
+    308,
+    278,
+    282
+  ],
+  "previous_failed_vector_now_passed": [
+    {
+      "role": 1,
+      "queue_elapsed_us": [
+        110,
+        105
+      ],
+      "entries": [
+        [
+          1,
+          100,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          377,
+          101,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          398,
+          200,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          402,
+          400,
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          513,
+          300,
+          2,
+          0,
+          110,
+          0
+        ],
+        [
+          765,
+          400,
+          1,
+          3,
+          0,
+          0
+        ],
+        [
+          769,
+          400,
+          0,
+          3,
+          32,
+          0
+        ],
+        [
+          876,
+          300,
+          3,
+          0,
+          105,
+          0
+        ],
+        [
+          1094,
+          400,
+          1,
+          4,
+          32,
+          0
+        ],
+        [
+          1097,
+          400,
+          0,
+          4,
+          32,
+          0
+        ],
+        [
+          1100,
+          500,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1237,
+          501,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "role": 2,
+      "queue_elapsed_us": [
+        111,
+        108
+      ],
+      "entries": [
+        [
+          1,
+          100,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          385,
+          101,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          406,
+          200,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          410,
+          400,
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          524,
+          300,
+          2,
+          0,
+          111,
+          0
+        ],
+        [
+          5709,
+          400,
+          1,
+          3,
+          0,
+          0
+        ],
+        [
+          5712,
+          400,
+          0,
+          3,
+          32,
+          0
+        ],
+        [
+          5822,
+          300,
+          3,
+          0,
+          108,
+          0
+        ],
+        [
+          6035,
+          400,
+          1,
+          4,
+          32,
+          0
+        ],
+        [
+          6039,
+          400,
+          0,
+          4,
+          32,
+          0
+        ],
+        [
+          6042,
+          500,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          6190,
+          501,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    }
+  ],
+  "observed_underrun_or_error_events": 0,
+  "nominal_32word_24or32bit_stereo_48khz_buffer_us": 333.3333333333333,
+  "clock": "Fixed Zephyr GRTC system cycle counter, configured 1 MHz; not calibrated external sample rate or jitter",
+  "capture": "Passive RAM reads after canonical completed payload reads; no extra mailbox/fixture commands",
+  "sha256": {
+    "i2s-timings.jsonl": "1a497136ec8e8f4156ba4f92f6be33348709b098676171c427b632bffbdf4979",
+    "previous-timing-trace.json": "8ef373f4fb2e45e4a7330552e80fca1d99909a4d930957ffcb04d00e2f4987a7"
+  }
+}
