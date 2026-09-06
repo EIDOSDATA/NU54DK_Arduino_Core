@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "documents": 189,
+  "log": "gate-docs-blocked.log",
+  "sha256": "015517bbda9129f14c7f02c9e8fb883d18ee231d47b56b0e82c4ab863cb5430b",
+  "sha256_basis": "published UTF-8 LF bytes",
+  "host_status": "blocked",
+  "physical_executed": false
+}

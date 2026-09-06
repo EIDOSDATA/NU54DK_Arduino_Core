@@ -1,0 +1,24 @@
+{
+  "source": "076685aa78247ec18e4fd95be50b2123a1f043fa",
+  "prior_fixture406_source": "96f38e9486c69cda2c76b48029bc0dc9404d9709",
+  "product_build_tool_board_delta": [],
+  "pair_builds": [
+    {
+      "scenario": "nucode.v04.pair_dut",
+      "compiled_membership_unchanged": true,
+      "changed_compiled_inputs": [
+        "tests/zephyr/v04_pair_hil/src/signal_hil.cpp"
+      ],
+      "unchanged_compiled_inputs": 41
+    },
+    {
+      "scenario": "nucode.v04.pair_peer",
+      "compiled_membership_unchanged": true,
+      "changed_compiled_inputs": [
+        "tests/zephyr/v04_pair_hil/src/signal_hil.cpp"
+      ],
+      "unchanged_compiled_inputs": 41
+    }
+  ],
+  "physical_claim": "407 must run on these new images; prior fixture results retain their original source identity"
+}

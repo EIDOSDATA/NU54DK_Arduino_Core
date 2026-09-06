@@ -1,0 +1,53 @@
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\ci -p test_*.py
+test_actions_are_pinned_to_commits (test_m12_ci_contract.M12CiContractTests.test_actions_are_pinned_to_commits) ... ok
+test_artifact_paths_stay_inside_workspace (test_m12_ci_contract.M12CiContractTests.test_artifact_paths_stay_inside_workspace) ... ok
+test_build_record_scopes_git_safe_directory (test_m12_ci_contract.M12CiContractTests.test_build_record_scopes_git_safe_directory) ... ok
+test_cache_keys_include_exact_identity (test_m12_ci_contract.M12CiContractTests.test_cache_keys_include_exact_identity) ... ok
+test_example_discovery_inputs_are_canonical (test_m12_ci_contract.M12CiContractTests.test_example_discovery_inputs_are_canonical) ... ok
+test_gitlink_check_scopes_safe_directory (test_m12_ci_contract.M12CiContractTests.test_gitlink_check_scopes_safe_directory) ... ok
+test_hil_is_manual_self_hosted_and_locked (test_m12_ci_contract.M12CiContractTests.test_hil_is_manual_self_hosted_and_locked) ... ok
+test_host_gate_runs_ac03_hil_runner_unit_contract (test_m12_ci_contract.M12CiContractTests.test_host_gate_runs_ac03_hil_runner_unit_contract) ... ok
+test_host_gate_runs_m26_onboard_runner_unit_contract (test_m12_ci_contract.M12CiContractTests.test_host_gate_runs_m26_onboard_runner_unit_contract) ... ok
+test_host_gate_uses_windows_runner (test_m12_ci_contract.M12CiContractTests.test_host_gate_uses_windows_runner) ... ok
+test_host_requirements_are_exact_and_hashed (test_m12_ci_contract.M12CiContractTests.test_host_requirements_are_exact_and_hashed) ... ok
+test_lock_matches_repository_contract (test_m12_ci_contract.M12CiContractTests.test_lock_matches_repository_contract) ... ok
+test_m14_native_semantic_gate_runs_on_ubuntu (test_m12_ci_contract.M12CiContractTests.test_m14_native_semantic_gate_runs_on_ubuntu) ... ok
+test_m16_role_validator_rejects_missing_central_definition (test_m12_ci_contract.M12CiContractTests.test_m16_role_validator_rejects_missing_central_definition) ... ok
+test_m17_feasibility_scopes_git_safe_directory (test_m12_ci_contract.M12CiContractTests.test_m17_feasibility_scopes_git_safe_directory) ... ok
+test_m23_inventory_gates_generated_and_exact_dts_sources (test_m12_ci_contract.M12CiContractTests.test_m23_inventory_gates_generated_and_exact_dts_sources) ... ok
+test_m24_serial_contract_gates_routes_and_exact_dts_sources (test_m12_ci_contract.M12CiContractTests.test_m24_serial_contract_gates_routes_and_exact_dts_sources) ... ok
+test_m26_system_contract_is_fail_closed_in_both_software_gates (test_m12_ci_contract.M12CiContractTests.test_m26_system_contract_is_fail_closed_in_both_software_gates) ... ok
+test_m27_release_contract_is_checked_before_v04_build (test_m12_ci_contract.M12CiContractTests.test_m27_release_contract_is_checked_before_v04_build) ... ok
+test_pull_request_workflow_has_required_gates (test_m12_ci_contract.M12CiContractTests.test_pull_request_workflow_has_required_gates) ... ok
+test_reproducible_build_runs_for_v030_rc_tags (test_m12_ci_contract.M12CiContractTests.test_reproducible_build_runs_for_v030_rc_tags) ... ok
+test_reproducible_build_runs_m14_qemu_runtime_and_uploads_evidence (test_m12_ci_contract.M12CiContractTests.test_reproducible_build_runs_m14_qemu_runtime_and_uploads_evidence) ... ok
+test_reproducible_build_runs_m17_feasibility_in_pinned_container (test_m12_ci_contract.M12CiContractTests.test_reproducible_build_runs_m17_feasibility_in_pinned_container) ... ok
+test_reproducible_build_uses_digest_and_exact_cache (test_m12_ci_contract.M12CiContractTests.test_reproducible_build_uses_digest_and_exact_cache) ... ok
+test_reproducible_build_uses_release_era_parallel_matrix (test_m12_ci_contract.M12CiContractTests.test_reproducible_build_uses_release_era_parallel_matrix) ... ok
+test_reproducible_cache_paths_are_normalized (test_m12_ci_contract.M12CiContractTests.test_reproducible_cache_paths_are_normalized) ... ok
+test_windows_arduino_build_uses_short_temp_and_preserves_failure_log (test_m12_ci_contract.M12CiContractTests.test_windows_arduino_build_uses_short_temp_and_preserves_failure_log) ... ok
+test_windows_build_runs_m17_external_arduino_after_smoke (test_m12_ci_contract.M12CiContractTests.test_windows_build_runs_m17_external_arduino_after_smoke) ... ok
+test_workflows_do_not_use_runner_context_in_job_env (test_m12_ci_contract.M12CiContractTests.test_workflows_do_not_use_runner_context_in_job_env) ... ok
+test_workflows_pin_available_python (test_m12_ci_contract.M12CiContractTests.test_workflows_pin_available_python) ... ok
+test_zephyr_build_disables_ccache (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_disables_ccache) ... ok
+test_zephyr_build_has_fail_closed_m16_role_images (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_has_fail_closed_m16_role_images) ... ok
+test_zephyr_build_includes_ac01_contract_and_hil_image (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_includes_ac01_contract_and_hil_image) ... ok
+test_zephyr_build_includes_ac02_contracts_and_hil_images (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_includes_ac02_contracts_and_hil_images) ... ok
+test_zephyr_build_includes_ac03_contract_and_hil_image (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_includes_ac03_contract_and_hil_image) ... ok
+test_zephyr_build_includes_m14_production_and_hil_images (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_includes_m14_production_and_hil_images) ... ok
+test_zephyr_build_includes_m15_contract_and_system_off_image (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_includes_m15_contract_and_system_off_image) ... ok
+test_zephyr_build_includes_m23_inventory_contract (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_includes_m23_inventory_contract) ... ok
+test_zephyr_build_includes_m24_serial_fabric_contract (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_includes_m24_serial_fabric_contract) ... ok
+test_zephyr_build_requires_short_windows_outdir (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_requires_short_windows_outdir) ... ok
+test_command_selects_exact_runtime_scenario_without_build_only (test_m14_qemu_runner.M14QemuRunnerTests.test_command_selects_exact_runtime_scenario_without_build_only) ... ok
+[M14-QEMU] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe C:\Users\eidos\AppData\Local\Temp\tmpzrfz47nx\ncs\zephyr\scripts\twister --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m14_cpp_policy --platform qemu_cortex_m3 --scenario nucode.m14.cpp_policy --ninja --detailed-test-id --inline-logs --jobs 2 --outdir C:\Users\eidos\AppData\Local\Temp\tmpzrfz47nx\out --extra-args USE_CCACHE=0
+test_run_runtime_validates_workspace_and_report (test_m14_qemu_runner.M14QemuRunnerTests.test_run_runtime_validates_workspace_and_report) ... ok
+test_validate_report_accepts_exact_runtime_pass (test_m14_qemu_runner.M14QemuRunnerTests.test_validate_report_accepts_exact_runtime_pass) ... ok
+test_validate_report_rejects_non_runtime_or_inexact_results (test_m14_qemu_runner.M14QemuRunnerTests.test_validate_report_rejects_non_runtime_or_inexact_results) ... ok
+test_bootstrap_fetches_commit_before_local_west_init (test_prepare_ncs_workspace.PrepareNcsWorkspaceTests.test_bootstrap_fetches_commit_before_local_west_init) ... ok
+
+----------------------------------------------------------------------
+Ran 45 tests in 0.131s
+
+OK
+M12_GATE_PASS=contract

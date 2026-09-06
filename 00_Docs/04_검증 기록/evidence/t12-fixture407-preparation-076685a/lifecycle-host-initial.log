@@ -1,0 +1,56 @@
+EEE
+======================================================================
+ERROR: test_fixture_gate_allowlist_expiry_and_fault_latch (__main__.SerialLifecycleTests.test_fixture_gate_allowlist_expiry_and_fault_latch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_serial_lifecycle.py", line 17, in test_fixture_gate_allowlist_expiry_and_fault_latch
+    compile_result = subprocess.run(
+                     ^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_native_production_lifecycle (__main__.SerialLifecycleTests.test_native_production_lifecycle)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_serial_lifecycle.py", line 45, in test_native_production_lifecycle
+    result = subprocess.run([compiler, "-std=c++17", "-Wall", "-Wextra", "-Werror", "-DCONFIG_ZTEST=1",
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_native_production_route_validator (__main__.SerialLifecycleTests.test_native_production_route_validator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_serial_lifecycle.py", line 31, in test_native_production_route_validator
+    result = subprocess.run([compiler, "-std=c++17", "-Wall", "-Wextra", "-Werror",
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.307s
+
+FAILED (errors=3)

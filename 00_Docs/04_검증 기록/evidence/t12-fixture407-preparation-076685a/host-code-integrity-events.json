@@ -1,0 +1,52 @@
+[
+  {
+    "TimeCreated": "2026-09-06T22:53:26.1317688+09:00",
+    "Id": 3077,
+    "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\python-3.12.10\\python.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\g++.exe that did not meet the Enterprise signing level requirements or violated code integrity policy (Policy ID:{0283ac0f-fff1-49ae-ada1-8a933130cad6})."
+  },
+  {
+    "TimeCreated": "2026-09-06T22:53:26.1245617+09:00",
+    "Id": 3033,
+    "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\python-3.12.10\\python.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\g++.exe that did not meet the Enterprise signing level requirements."
+  },
+  {
+    "TimeCreated": "2026-09-06T22:52:29.0078068+09:00",
+    "Id": 3077,
+    "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\python-3.12.10\\python.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\g++.exe that did not meet the Enterprise signing level requirements or violated code integrity policy (Policy ID:{0283ac0f-fff1-49ae-ada1-8a933130cad6})."
+  },
+  {
+    "TimeCreated": "2026-09-06T22:52:28.9988216+09:00",
+    "Id": 3033,
+    "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\python-3.12.10\\python.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\g++.exe that did not meet the Enterprise signing level requirements."
+  },
+  {
+    "TimeCreated": "2026-09-06T22:52:28.8379166+09:00",
+    "Id": 3077,
+    "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\python-3.12.10\\python.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\g++.exe that did not meet the Enterprise signing level requirements or violated code integrity policy (Policy ID:{0283ac0f-fff1-49ae-ada1-8a933130cad6})."
+  },
+  {
+    "TimeCreated": "2026-09-06T22:52:28.829044+09:00",
+    "Id": 3033,
+    "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\python-3.12.10\\python.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\g++.exe that did not meet the Enterprise signing level requirements."
+  },
+  {
+    "TimeCreated": "2026-09-06T22:52:28.6725917+09:00",
+    "Id": 3077,
+    "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\python-3.12.10\\python.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\g++.exe that did not meet the Enterprise signing level requirements or violated code integrity policy (Policy ID:{0283ac0f-fff1-49ae-ada1-8a933130cad6})."
+  },
+  {
+    "TimeCreated": "2026-09-06T22:52:28.6621453+09:00",
+    "Id": 3033,
+    "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\python-3.12.10\\python.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\g++.exe that did not meet the Enterprise signing level requirements."
+  },
+  {
+    "TimeCreated": "2026-09-06T22:52:28.1020896+09:00",
+    "Id": 3077,
+    "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\python-3.12.10\\python.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\g++.exe that did not meet the Enterprise signing level requirements or violated code integrity policy (Policy ID:{0283ac0f-fff1-49ae-ada1-8a933130cad6})."
+  },
+  {
+    "TimeCreated": "2026-09-06T22:52:28.0933437+09:00",
+    "Id": 3033,
+    "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\python-3.12.10\\python.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\g++.exe that did not meet the Enterprise signing level requirements."
+  }
+]

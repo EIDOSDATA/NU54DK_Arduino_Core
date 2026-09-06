@@ -1,8 +1,8 @@
 # NU54DK Arduino Core — 리팩토링 문서 묶음
 
 작성·갱신일: 2026-09-06
-문서 묶음 개정: 0.3
-현재 진행: R00~R13·전체 software gate 완료 / current-source T11 UART·SPI·TWI 단독 회귀 완료 / T12 Fixture 401~404 각 48 PASS·405/406 각 12 PASS / 407→408 준비·결선 확인 대기
+문서 묶음 개정: 0.4
+현재 진행: R00~R13·전체 software gate 완료 / current-source T11 UART·SPI·TWI 단독 회귀 완료 / T12 Fixture 401~404 각 48 PASS·405/406 각 12 PASS / 407 결선 확인·target build 완료 / Host 차단으로 실기 대기 / 408 필수 후속
 
 ## 먼저 읽을 문서
 
@@ -59,7 +59,7 @@ BLE/Storage 실제 Host와 target 회귀를 완료했다. R13도 [64번 기록](
 
 신규 문서의 기술 출처는 각 문서 말미에 있다. 원격 링크는 확인한 commit에 고정했고, 사용자의 실제 실행 HEAD·장치·로그는 별도 기준선에 기록하도록 했다.
 
-2026-09-06 후속: [65번 기록](<../../04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)의 904 PASS·파일 정리를 보존한다. 이후 DAP UART 연결 전환 뒤 [66번 기록](<../../04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>)에서 UART idle bias를 교정하고 온보드 18개 결과·BLE 3개 pair gate를 통과했다. 이후 사용자 결선 완료 확인에 따라 exact 154324c의 current-source T11 Fixture 101을 SWD 10 MHz로 실행해 기능 1,644개를 통과했다. 이후 exact a49cc0d의 Fixture 102 기능 822개를 SWD 10 MHz로 통과했다. 이후 exact 7aece93의 Fixture 103 기능 2,466개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 진단은 별도 보존했다. 이후 exact 0f429e7의 Fixture 201 SPI 기능 18,169개를 SWD 10 MHz로 통과했다. 이후 exact 1349e20의 Fixture 202 SPI 기능 9,084개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 읽기 전용 진단은 별도 보존했다. 이후 exact be49207의 Fixture 203 SPI 기능 27,252개를 SWD 10 MHz로 통과했다. 최초 DUT flash 실패와 읽기 전용 진단은 별도 보존했다. 이후 exact 9a63251의 Fixture 301 TWI 기능 1,986개를 첫 실행·SWD 10 MHz로 통과해 current-source T11 단독 통신 회귀를 완료했다. 이후 T12 Fixture 401 exact a12e444에서 PWM→AIN0 48개 기능을 첫 실행·10 MHz로 통과했다. 이후 Fixture 402 exact ff483a1에서 PWM→AIN1 48개도 첫 실행·10 MHz로 통과했다. 이후 403 exact c95b904에서 PWM→AIN2 48개도 첫 실행·10 MHz로 통과했다. 이후 404 exact e080bbc에서 PWM→AIN3 48개도 첫 실행·10 MHz로 통과했다. 현재 406 결선 A P1.12↔B P1.14이며 다음은 전원 OFF·A 쪽만 P1.13/AIN6으로 변경한 뒤 407 사용자 확인이다.
+2026-09-06 후속: [65번 기록](<../../04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)의 904 PASS·파일 정리를 보존한다. 이후 DAP UART 연결 전환 뒤 [66번 기록](<../../04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>)에서 UART idle bias를 교정하고 온보드 18개 결과·BLE 3개 pair gate를 통과했다. 이후 사용자 결선 완료 확인에 따라 exact 154324c의 current-source T11 Fixture 101을 SWD 10 MHz로 실행해 기능 1,644개를 통과했다. 이후 exact a49cc0d의 Fixture 102 기능 822개를 SWD 10 MHz로 통과했다. 이후 exact 7aece93의 Fixture 103 기능 2,466개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 진단은 별도 보존했다. 이후 exact 0f429e7의 Fixture 201 SPI 기능 18,169개를 SWD 10 MHz로 통과했다. 이후 exact 1349e20의 Fixture 202 SPI 기능 9,084개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 읽기 전용 진단은 별도 보존했다. 이후 exact be49207의 Fixture 203 SPI 기능 27,252개를 SWD 10 MHz로 통과했다. 최초 DUT flash 실패와 읽기 전용 진단은 별도 보존했다. 이후 exact 9a63251의 Fixture 301 TWI 기능 1,986개를 첫 실행·SWD 10 MHz로 통과해 current-source T11 단독 통신 회귀를 완료했다. 이후 T12 Fixture 401 exact a12e444에서 PWM→AIN0 48개 기능을 첫 실행·10 MHz로 통과했다. 이후 Fixture 402 exact ff483a1에서 PWM→AIN1 48개도 첫 실행·10 MHz로 통과했다. 이후 403 exact c95b904에서 PWM→AIN2 48개도 첫 실행·10 MHz로 통과했다. 이후 404 exact e080bbc에서 PWM→AIN3 48개도 첫 실행·10 MHz로 통과했다. 현재 사용자 확인된 407 결선 A P1.13↔B P1.14이며 Host 컴파일러 실행 차단 해결과 필수 회귀 뒤 407 실기를 진행한다.
 
 Current-source T11 첫 UART 회귀의 exact 증거는 [67번 기록](<../../04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)에 연결한다. Current-source T11 단독 회귀는 완료했으며 T12~T15와 RC/공개는 미완료다.
 
@@ -85,8 +85,6 @@ T12 Fixture 404 exact e080bbc·SWD 10 MHz 첫 실행 48개 PASS는 [77번 기록
 
 T12 Fixture 405 exact 9fc12bf·SWD 10 MHz **첫 실행 12개 PASS**, LOW/해제/LOW·2,592 samples·cleanup 12개와 GPIO readback은 [78번 기록](<../../04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)에 보존했다. 공유 AIN4/P1.11의 기능을 확인했으며 이후 406도 완료했으며 후속 **407→408을 모두 수행**한다. 제품 core 변경 없이 Host 648개·pair target 2/2를 통과했고 T12 전체·후속 gate는 미완료다.
 
-T12 Fixture 406 exact 96f38e9·SWD 10 MHz **첫 실행 12개 PASS**, 입력 pull-down/up/down·2,592 samples·cleanup 12개와 GPIO readback은 [79번 기록](<../../04_검증 기록/79_T12_Fixture_406_current_source_공유_AIN5_검증.md>)에 보존했다. Host 649개·pair target 2/2 PASS. 401~406 합계 기능 216개·samples 46,656개이며 **407→408도 모두 필수 후속**이다. 현재 406 결선에서 양쪽 USB 분리 후 A P1.12→P1.13/AIN6만 옮기고 B P1.14·공통 GND·DAP UART 분리/SWD 연결을 유지한다. 버튼을 누르지 않고 USB 재연결·사용자 확인 뒤 407을 준비·실행한다. T12 전체·후속 gate는 미완료다.
+T12 Fixture 406 exact 96f38e9·SWD 10 MHz **첫 실행 12개 PASS**, 입력 pull-down/up/down·2,592 samples·cleanup 12개와 GPIO readback은 [79번 기록](<../../04_검증 기록/79_T12_Fixture_406_current_source_공유_AIN5_검증.md>)에 보존했다. Host 649개·pair target 2/2 PASS. 401~406 합계 기능 216개·samples 46,656개이며 **407→408도 모두 필수 후속**이다. 이후 사용자가 407 결선 A P1.13↔B P1.14·공통 GND와 USB 분리/재연결을 확인했다. 버튼 미누름·DAP UART 분리/SWD 연결 조건이며 Host 차단 해결과 필수 회귀 뒤 407 실기를 진행한다. T12 전체·후속 gate는 미완료다.
 
-현재 T05/T10/T12의 407 AIN6/P1.13 버튼 공유 입력을 준비·실행한다. 사용자 USB 분리·407 결선·재연결 확인 완료. B P1.14 INPUT pull-down/up/down·25ms 정착·12 vector와 Host·exact pair build 후 SWD 10 MHz 실기·문서·commit·push를 진행한다. 408도 필수 후속이다.
-
-407 준비 Host의 C++ 실행은 Windows Smart App Control이 기존 g++.exe를 차단해 미완료다. Python oracle·fixture·정렬·계약·Inventory·docs는 통과했다. 독립 target build를 진행하되 Host gate가 통과하기 전 407 flash/HIL은 실행하지 않는다.
+407 준비 exact 076685a는 INPUT 바이어스·12 vector 구현 및 pair target 2/2·계약·Inventory·정렬을 통과했다. 사용자 407 결선·USB 재연결도 확인했다. Windows Smart App Control이 고정 g++.exe를 차단해 필수 Host 검증이 미완료이므로 **407 flash/HIL NOT RUN**이다. [80번 준비·차단 기록](<../../04_검증 기록/80_T12_Fixture_407_준비와_Host_실행_차단.md>)에 원본 진단·다음 행동을 보존했다. 승인된 Host 환경과 전체 회귀를 확보한 뒤 407을 실행하며 **408도 필수**다. 이번 checkpoint는 로컬 보존이며 최종 회귀 전 push하지 않는다.

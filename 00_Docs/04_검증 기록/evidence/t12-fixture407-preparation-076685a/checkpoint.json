@@ -1,0 +1,13 @@
+{
+  "fixture_id": 407,
+  "baseline_source": "e698b96d08036ffe3c9d464b8121947679a8efee",
+  "user_confirmation_recorded_at_utc": "2026-09-06T13:47:49+00:00",
+  "confirmation_text": "USB 제거 후 407 결선을 한 다음, 다시 연결을 했어. 이제 진행하도록 해.",
+  "preceding_wiring_instructions": "Both USB off; move A P1.12 to P1.13/AIN6; keep B P1.14 and common GND; DAP UART disconnected/SWD connected; buttons not pressed; reconnect both USB.",
+  "wiring": "A P1.13/AIN6 P4-11 <-> B P1.14 P4-12; common GND P2-30; prior A P1.12 removed; both USB disconnected for wiring then reconnected; existing SB/PMIC unchanged",
+  "signal_profile": "B INPUT pulldown/pullup/pulldown, 25ms settling, no output driver; A button remains unpressed",
+  "swd_frequency_hz": 10000000,
+  "pending_after_407": [
+    408
+  ]
+}

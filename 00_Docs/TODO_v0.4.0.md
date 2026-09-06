@@ -2,13 +2,13 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.7 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.8 |
 | 상태 | 활성 TODO — R00~R13·최종 software gate·current-source T11 완료; T12 Fixture 401~406 부분 PASS, 후속 실기·통합·RC·공개 대기 |
 | 작성·갱신일 | 2026-09-06 |
-| 작성 직전 기준 commit | `96f38e9486c69cda2c76b48029bc0dc9404d9709` — 이번 Fixture 406 exact source |
+| 작성 직전 기준 commit | `076685aa78247ec18e4fd95be50b2123a1f043fa` — Fixture 407 준비 source, Host BLOCKED·실기 미실행 |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **T12 Fixture 407 AIN6/P1.13 버튼 공유 입력 시험 준비·결선 안내·사용자 확인; 408도 필수** |
-| 이번 요청의 실행 범위 | 2026-09-06 사용자 406 실행 지시와 결선 확인. 406 입력 바이어스 구현·Host 649·exact pair build·10 MHz 첫 실행 12 PASS·증거·문서·commit·main push까지 완료하고 407→408 개별 결선 확인 대기 |
+| 다음 착수 항목 | **407 Host 컴파일러 실행 차단 해결·필수 회귀 후 실기; 408도 필수** |
+| 이번 요청의 실행 범위 | 사용자가 USB 분리 후 407 결선·재연결과 실행을 지시했다. 구현·pair build·독립 software gate·USB 열거 완료. Smart App Control g++.exe 차단으로 Host·407 flash/HIL은 미완료. 문서·진단·로컬 checkpoint 보존, 회귀 전 원격 push 보류 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
 마일스톤의 제품 상태는 [로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>), 실제 PASS/FAIL은
@@ -51,21 +51,21 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | Fixture 406 exact 96f38e9 첫 실행 12 PASS·2,592 samples·cleanup 12·GPIO readback 통과. [79번 기록](<./04_검증 기록/79_T12_Fixture_406_current_source_공유_AIN5_검증.md>)에 보존. 401~406 합계 기능 216개·samples 46,656개; T12 부분 완료 |
-| 진행 중인 T 항목 | T05/T10/T12 Fixture 407 AIN6/P1.13 버튼 공유 입력을 준비·실행한다. 고정 B P1.14 INPUT pull-down/up/down, 25ms 정착, 32/256 samples·single/double buffer 12 vector. 제품 core·R00~R13 완료 유지; 408도 필수 후속 |
-| 다음 구체적 행동 | 407 allowlist와 신호원·독립 LOW/HIGH oracle·DMA/GPIO/cleanup을 Host로 검증하고 exact pair build 후 SWD 10 MHz 실기. 사용자 버튼 미누름 조건을 유지하며 결과·문서·commit·main push까지 진행 |
-| 다음 작업에 필요한 사용자 행동 | 직전 407 결선 안내에 대해 사용자가 USB 제거·407 결선·재연결과 진행을 확인했다. 추가 407 확인 요청 없이 진행한다. 다음 408은 개별 결선 안내·확인 필요 |
+| 이번에 끝낸 일 | 407 INPUT 바이어스·12 vector 구현, pair target 2/2·계약 45·fixture 12·Python signal 13·정렬 358·Inventory·docs·USB 열거 PASS. C++ Host 차단과 미실기는 [80번 기록](<./04_검증 기록/80_T12_Fixture_407_준비와_Host_실행_차단.md>)에 보존. 401~406 누계 기능 216·samples 46,656 유지 |
+| 진행 중인 T 항목 | T05/T10/T12의 407 준비 부분 완료. Host 필수 C++ 실행 차단으로 407 HIL 미실행. 준비 source 076685a; 제품 core·R00~R13 완료 유지. 408도 필수 후속 |
+| 다음 구체적 행동 | 승인된 Host 개발 환경 확인 뒤 signal/lifecycle 및 canonical 전체 Host gate 실행. 실제 clean source와 pair image를 다시 결합한다. 407 결선 확인 30분이 지났으면 재확인하고 SWD 10 MHz로 첫 실기 수행. 406 PASS를 407로 복사하지 않음 |
+| 다음 작업에 필요한 사용자 행동 | 실행이 승인된 Host 개발 환경 경로에 대한 질문 대기. g++.exe에 Smart App Control 차단 확인; 보안 정책 우회 없음. 결선 확인 유효 시간은 13:47:49 UTC부터 30분이며 경과 시 재확인 필요 |
 | 외부 결선 상태 | 2026-09-06T13:47:49Z 사용자 USB 제거 후 407 결선·재연결 확인. A P1.13/AIN6(P4-11)↔B P1.14(P4-12)·공통 GND(P2-30), 이전 A P1.12 제거·DAP UART 분리/SWD 연결·버튼 미누름 안내 조건. A D/COM5·6, B E/COM7·8; 기존 SB/PMIC 설정 유지 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 마지막 정식 외부 HIL source | `96f38e9486c69cda2c76b48029bc0dc9404d9709` — T12 Fixture 406 첫 실행 12 PASS. 이전 401~405와 T11 exact 근거 보존 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. T11 각 exact 완료·T12 401~406 부분 PASS; M24/M25 전체·후속 gate·RC/공개 미완료 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | 407 준비: signal Python 판정 13개·fixture 12개·style 358·계약 45·Inventory·docs PASS. C++ Host는 Windows Smart App Control의 g++.exe 차단(WinError 4551)으로 미완료. 차단 log 보존, 보안 정책 변경 없음. 독립 exact pair target build를 진행하며 Host gate 통과 전 flash/HIL 금지 |
+| 이 TODO 작성 작업의 실행 중 시험 | 모든 준비 검사·build·USB 열거 종료. Windows C++ Host 차단 log 보존. 407 flash/reset/HIL 미실행; 두 보드의 마지막 업로드 source는 406 exact 96f38e9. 재연결 후 runtime identity는 미검사 |
 | 로컬 임시 build·evidence | 15개 과거 root의 object/archive 중간 파일 55,537개 제거, 일회성 script 50개는 work/archive/r00-r13-authoring-scripts.zip으로 hash 검증 후 보관. 2,911개 ELF/HEX/설정/log 등은 hash 불변. C:/r13h와 설치본·raw evidence·QEMU 보존; 상세는 65번 기록 |
 | 최종 정렬 gate | clang-format 22.1.8, 직접 관리 C/C++/ino 358개 dry-run PASS. 한국어 Doxygen·BSD/Allman·4칸·중괄호 필수. 새 shared analog helper와 Host 검증은 실제 참조되어 유지 |
 | CI 확인 | 최종 source의 GitHub Actions는 미확인. 현재 GitHub CLI 인증에 의존하지 않고 로컬 canonical 전체 software gate를 실행했다. 이전 Actions success는 이전 source의 역사 증거로만 유지 |
-| 문서 작업 검증 | 이번 전체 Host 649·계약 45·Inventory 75/23/16·pair target 2/2 PASS. 최종 Markdown 188개 검증 PASS, 79번에 등록. readiness blocker 8개 유지. 제품 core/build tool/board 변경 없음; 406 시험 firmware 확장은 새 exact image로 실기 검증 |
-| 최종 HIL 입력 찾기 | C:/u3m exact 96f38e9 DUT/peer와 첫 실행 JSON/journal은 79번에 있다. 407은 전용 시험 준비·새 exact image·결선 확인 필요. 408도 후속 필수이며 기존 build·원본 증거 보존 |
+| 문서 작업 검증 | 407 준비 Host signal Python 13 PASS/C++ 1 BLOCKED·lifecycle C++ 3 BLOCKED·fixture 12 PASS·계약 45·Inventory 75/23/16·style 358·pair target 2/2 PASS. 최종 Markdown 189개 검증 PASS, 80번에 등록. readiness blocker 8개 유지 |
+| 최종 HIL 입력 찾기 | C:/u3n 준비 exact 076685a DUT/peer와 미실행 image hash·Host 차단 evidence는 80번. 마지막 실제 HIL C:/u3m exact 96f38e9는 79번. 준비 source와 최종 문서 HEAD를 혼동하지 말고 재개 시 exact identity 재검증 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드
@@ -219,7 +219,7 @@ R00~R14와 연결하고, 구조 변경 뒤 같은 결선을 다시 반복하지 
 외부 결선 PASS 캠페인은 R13 뒤 최종 source에 한 번 수행한다.
 
 - [ ] **T12 — M25 입력·출력·스트림 기능 검증**
-  - 상태·선행: 부분 완료 — Fixture 401~404 각각 PWM 48 PASS·405 AIN4 오픈드레인·406 AIN5 입력 바이어스 각각 12 PASS, 407→408·후속 fixture·전체 요구 대기 / T05·T06·T09, R00~R13과 current-source T11 회귀 완료, 해당 T10 확인.
+  - 상태·선행: 부분 완료 — Fixture 401~404 각각 PWM 48 PASS·405 AIN4 오픈드레인·406 AIN5 입력 바이어스 각각 12 PASS, 407 결선·build 완료/Host 차단으로 실기 대기·408·후속 fixture·전체 요구 대기 / T05·T06·T09, R00~R13과 current-source T11 회귀 완료, 해당 T10 확인.
   - 할 일: ADC·PWM·timer/event·PDM·I2S·QDEC의 물리 신호와 예상 sample/frame/count를 비교한다.
   - 완료 기준: 합성 peer 자체의 동작과 코어 기능을 구분해 검증하고 각 instance/mode의 증거가 있다. 신호 생성 실패는 미완료이지 계측 면제가 아니다.
   - 결선·증거: Fixture 401 exact a12e444 48 PASS·10,368 samples·cleanup 48은 [74번 기록](<./04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 등록. Fixture 402 exact ff483a1 48 PASS는 [75번 기록](<./04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존. Fixture 403 exact c95b904 48 PASS는 [76번 기록](<./04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 등록. Fixture 404 exact e080bbc 48 PASS는 [77번 기록](<./04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 등록. 405 exact 9fc12bf의 공유 AIN4 오픈드레인 12 PASS·2,592 samples는 [78번 기록](<./04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)에 보존. 406 exact 96f38e9 입력 바이어스 12 PASS·2,592 samples는 [79번 기록](<./04_검증 기록/79_T12_Fixture_406_current_source_공유_AIN5_검증.md>)에 보존. 다음은 407→408이며 공유 AIN6도 개별 기능 시험한다. PWM period/duty capture·ADC calibration/채널 순서 등 전체 T12 요구는 이 HIGH/sample-count 결과로 완료 처리하지 않는다.
@@ -348,3 +348,5 @@ M23·후보 source/build·기본 onboard·M26 판정·기존 자산 불변 gate�
 예상 시간은 대화에서의 계획치일 뿐 완료 기준이 아니다. T01~T03 준비 약 4~8시간, 이전에 설명한
 시험 프로그램·실행기·결선 안내 준비 묶음 약 16~32시간에는 결선 후 전체 실기와 릴리스까지의
 소요 시간이 포함되지 않는다. 구현·신호 발생 가능성·결함에 따라 다시 추정한다.
+
+407 준비·Windows Host 차단과 **flash/HIL NOT RUN**은 [80번 기록](<./04_검증 기록/80_T12_Fixture_407_준비와_Host_실행_차단.md>)에 보존했다. 이번 source·문서 checkpoint는 로컬 commit으로 보존하며 필수 전체 Host 회귀 전 원격 main에 푸시하지 않는다.
