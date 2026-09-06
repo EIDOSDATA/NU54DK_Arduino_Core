@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": 3,
+  "revision": 4,
   "status": "preparation-not-wiring-authority",
   "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
   "schematic_page": 9,
@@ -173,8 +173,20 @@
         {"dut": ["P4", 9, "P1.11"], "peer": ["P4", 12, "P1.14"], "signal": "peer open-drain LOW/release -> DUT SAADC AIN4"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
-      "notes": "P1.11/AIN4는 SB1을 통해 PMIC_INT/BQ25186 /INT와 공유합니다(원본 회로도 1·3쪽). B P1.14만 S0D1 LOW/해제로 구동하며 강한 HIGH/PWM 출력은 금지합니다. SB1 및 PMIC 설정 변경 없음. controller_role=2, 32/256 sample·single/double buffer마다 LOW→해제→LOW 12 vector. 406·407은 별도 준비·결선 확인 후 수행 대상입니다.",
+      "notes": "P1.11/AIN4는 SB1을 통해 PMIC_INT/BQ25186 /INT와 공유합니다(원본 회로도 1·3쪽). B P1.14만 S0D1 LOW/해제로 구동하며 강한 HIGH/PWM 출력은 금지합니다. SB1 및 PMIC 설정 변경 없음. controller_role=2, 32/256 sample·single/double buffer마다 LOW→해제→LOW 12 vector. 406은 입력 바이어스로 별도 준비하고 407은 후속 준비·결선 확인 후 수행 대상입니다.",
       "pullups": ["B P1.14 내부 pull-up 사용. SB1 연결 시 보드 R3 10kΩ/VDD_MOD와 병렬. 외부 저항 없음. 실제 SB1 개폐와 무관하게 해제 시 HIGH가 관측되어야 PASS."]
+    },
+    {
+      "id": 406,
+      "family": "analog",
+      "banks": [1, 1],
+      "instances": [[], []],
+      "links": [
+        {"dut": ["P4", 10, "P1.12"], "peer": ["P4", 12, "P1.14"], "signal": "peer INPUT pull-down/up/down -> DUT SAADC AIN5"},
+        {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
+      ],
+      "notes": "P1.12/AIN5는 SB4/VBAT_MON을 통해 VBAT 분압기 R8 470kΩ·R11 1MΩ·C12 100nF와 공유합니다(원본 회로도 1·3쪽). B P1.14는 INPUT을 유지하고 내부 pull-down/up/down으로만 신호를 만듭니다. 출력 드라이버·PWM 사용 금지. 각 단계 25ms 정착 뒤 32/256 sample·single/double buffer 12 vector, LOW raw -256~512·HIGH raw 1024 초과~4095의 모든 samples를 요구합니다. controller_role=2. SB4/PMIC 설정 변경 없음; 실제 SB4 상태·배터리 전압 측정이 아닙니다.",
+      "pullups": ["B P1.14 INPUT 내부 pull-down/up/down만 사용하고 종료 시 no-pull 입력으로 해제. 외부 저항·전원선 추가 없음."]
     },
     {
       "id": 408,

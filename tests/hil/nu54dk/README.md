@@ -540,14 +540,15 @@ PASS가 아닙니다.
 
 `v04_signal_run.py`는 기본적으로 preflight만 출력합니다. `--execute-fixture`, 현재 source·두 UID·
 두 image hash에 묶인 30분 이내 confirmation, 새 evidence 경로가 모두 있어야 flash와 외부 출력을
-시도합니다. fixture 401~405/408과 420은 회로 안전상 peer인 role 2만 generator가 될 수 있습니다. 430/440은
+시도합니다. fixture 401~406/408과 420은 회로 안전상 peer인 role 2만 generator가 될 수 있습니다. 430/440은
 두 role을 번갈아 clock/generator로 검사합니다.
 
 | ID | 기능 | 전원 분리 상태에서 연결할 신호 | 판정 범위 |
 | --- | --- | --- | --- |
 | 401~404 | PWM→SAADC | peer P4.12(P1.14) → DUT P2.12/11/10/9의 P1.4/AIN0~P1.7/AIN3 중 해당 한 선, GND↔GND | PWM20/21/22 channel 0~3, AIN0~3, 32/256 sample과 DMA 길이 |
 | 405 | 오픈드레인→SAADC | B P1.14 → A P1.11/AIN4, GND↔GND | PMIC_INT 공유 입력의 LOW/해제/LOW·32/256 sample·단일/이중 DMA·GPIO readback |
-| 406·407 | 공유 AIN5·AIN6 | 별도 설계·결선 안내 대기 | 사용자 지정 필수 후속 기능 시험; 미실행 |
+| 406 | 입력 바이어스→SAADC | B P1.14 → A P1.12/AIN5, GND↔GND | VBAT_MON/SB4·100nF 공유 입력; INPUT pull-down/up/down·25ms 정착·12 vector |
+| 407 | 공유 AIN6 | 별도 설계·결선 안내 대기 | 사용자 지정 필수 후속 기능 시험; 미실행 |
 | 408 | PWM→SAADC | peer P4.12(P1.14) → DUT P4.12(P1.14/AIN7), GND↔GND | 안전한 LED buffer 입력의 AIN7과 PWM channel 0~3 |
 | 420 | PWM→QDEC | peer P4.12(P1.14) → DUT P2.12(P1.4/A), peer P4.8(P1.10) → DUT P2.10(P1.6/B), GND↔GND | PWM20/21/22×QDEC20/21, 방향·debounce·count |
 | 430 | I2S | P1.4 SCK↔SCK, P1.5 LRCK↔LRCK, P1.6↔상대 P1.7 두 선 교차, GND↔GND | master/slave, 16/48kHz, 8/16/24/32-bit, channel·DMA packing |
@@ -563,15 +564,20 @@ SB1 연결 시 R3 10kΩ도 pull-up에 참여하나 실제 SB1 상태를 추정�
 해제 raw는 -256~4095 안에서 95% 이상 >256 및 median >256이어야 합니다. 해제 단계에는 PMIC의 짧은
 interrupt LOW를 허용하며 정확한 전압·PMIC 동작 검증으로 확대하지 않습니다. 시작 전 10ms 정착,
 명령 38의 실제 GPIO 설정과 전체 ADC sample·hash를 보존하고 양쪽 cleanup 시 B를 먼저 입력으로 해제합니다.
-AIN5 P1.12는 VBAT 분압기/SB4, AIN6 P1.13은 사용자 버튼과 공유합니다. **405→406→407→408을 모두
-수행**하며 406·407은 개별 신호원 설계·결선 확인·실기 대기 상태입니다. 준비만으로 PASS 처리하지 않습니다.
+AIN5 P1.12는 SB4→VBAT_MON→R8 470kΩ/VBAT·R11 1MΩ/GND·C12 100nF와 공유합니다.
+406은 B P1.14의 **INPUT 내부 pull-down/up/down**으로 필터를 충방전하며 출력 드라이버는 활성화하지 않습니다.
+25ms 정착 후 모든 LOW sample이 -256~512, 모든 HIGH sample이 1024 초과~4095여야 PASS입니다.
+GPIO raw PIN_CNF mask 0xF0F는 LOW 0x4/HIGH 0xC, 종료 no-pull 입력은 0이어야 합니다.
+SB4·PMIC 설정을 변경하지 않으며 실제 배터리 전압이나 SB4 연결 상태를 측정한 것으로 취급하지 않습니다.
+AIN6 P1.13은 사용자 버튼과 공유합니다. **405→406→407→408을 모두 수행**하며 407은 개별 신호원
+설계·결선 확인·실기 대기입니다. 준비만으로 PASS 처리하지 않습니다.
 
 PDM source는 receiver가 만든 MHz clock을 SPIS21 EasyDMA로 추종하므로 software bit-bang을 기능
 근거로 사용하지 않습니다. mono density 평균은 25<50<75 순서를, stereo는 교대 sample channel의
 평균 차이를 검사합니다. I2S는 양쪽 독립 pattern을 sample width/channel mask로 대조합니다. 실제
 마이크·코덱·엔코더 호환성과 음질은 이 fixture의 범위가 아닙니다.
 
-405는 sample 길이 2 × 단일/이중 buffer 2 × LOW/해제/LOW 3의 **12 vector·2,592 samples**입니다.
+405·406은 각각 sample 길이 2 × 단일/이중 buffer 2 × LOW/HIGH/LOW 3의 **12 vector·2,592 samples**입니다. 405는 오픈드레인, 406은 입력 바이어스 방식입니다.
 401~404/408 Analog fixture는 각 ID마다 PWM 3 instance × channel slot 4 × sample 길이 2 × 단일/이중 buffer로
 48개 vector를 실행합니다. PDM은 instance 2 × sample 길이 2 × density 3 × mono/stereo 2 × edge 2 ×
 단일/이중 buffer 2의 96개 vector이며, I2S도 두 rate·네 width·세 channel mode·두 길이·단일/이중

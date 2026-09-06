@@ -15,20 +15,21 @@ from v04_protocol import ProtocolError
 
 
 class SignalTests(unittest.TestCase):
-    def test_405_runs_all_phases_and_proves_source_release_even_on_failure(self):
+    def test_shared_fixtures_run_all_phases_and_release_even_on_failure(self):
         """! @brief Host 실행 순서와 실패 뒤 양쪽 cleanup을 모의 mailbox로 검증합니다. """
         import struct
         events = []
         class Device:
-            def __init__(self, role, fail=False):
+            def __init__(self, role, fixture_id, fail=False):
                 self.image = {"role": role}
+                self.fixture_id = fixture_id
                 self.active = False
                 self.args = None
                 self.fail = fail
             def command(self, opcode, args=()):
                 events.append((self.image["role"], opcode))
                 if opcode == 32:
-                    return [405, 10000]
+                    return [self.fixture_id, 10000]
                 if opcode == 34:
                     self.active = True
                     self.args = args
@@ -47,23 +48,51 @@ class SignalTests(unittest.TestCase):
                     return list(struct.unpack(f"<{args[1] // 2}I", struct.pack(f"<{args[1]}h", *([sample] * args[1]))))
                 if opcode == 38:
                     if self.active:
+                        if self.fixture_id == 406:
+                            level = int(self.args[2] == 1)
+                            return [1, self.args[2], 46, 0, level, 0, 1, 0, 0xC if level else 0x4]
                         return [1, self.args[2], 46, 1, 1, 1, int(self.args[2] == 1), 0, 0x80D]
                     return [0, 0xFFFFFFFF, 46, 0, 0, 0, 1, 0, 0]
                 raise AssertionError(opcode)
-        selected = {"id": 405, "family": "analog"}
         records = []
-        with patch.object(signal.time, "sleep"):
-            for vector in signal.vectors("analog", 405):
-                events.clear()
-                signal.run_case([Device(1), Device(2)], selected, 2, vector,
-                                lambda case, result: records.append((case, result)))
+        with patch.object(signal.time, "sleep") as sleep:
+            for fixture_id in (405, 406):
+                selected = {"id": fixture_id, "family": "analog"}
+                for vector in signal.vectors("analog", fixture_id):
+                    events.clear()
+                    signal.run_case([Device(1, fixture_id), Device(2, fixture_id)], selected, 2, vector,
+                                    lambda case, result: records.append((case, result)))
+                    self.assertEqual(events[-3:], [(2, 33), (2, 38), (1, 33)])
+                    sleep.assert_called_with(.025 if fixture_id == 406 else .010)
+                with self.assertRaisesRegex(ProtocolError, "injected receiver start failure"):
+                    signal.run_case([Device(1, fixture_id, True), Device(2, fixture_id)], selected, 2,
+                                    (0, 32, 0, 0, 0, 1), lambda *args: None)
                 self.assertEqual(events[-3:], [(2, 33), (2, 38), (1, 33)])
-            with self.assertRaisesRegex(ProtocolError, "injected receiver start failure"):
-                signal.run_case([Device(1, True), Device(2)], selected, 2,
-                                (0, 32, 0, 0, 0, 1), lambda *args: None)
-            self.assertEqual(events[-3:], [(2, 33), (2, 38), (1, 33)])
-        self.assertEqual(len(records), 24)
-        self.assertEqual(sum(len(result.get("samples", [])) for _, result in records), 2592)
+        self.assertEqual(len(records), 48)
+        self.assertEqual(sum(len(result.get("samples", [])) for _, result in records), 5184)
+
+    def test_406_requires_input_bias_and_fully_settled_low_high_samples(self):
+        """! @brief VBAT 공유 입력의 출력 활성화·미정착·경계 위반을 거부합니다. """
+        status = [1, 1, 1, 1, 0, 32, 32, 0]
+        for phase in (0, 1, 2):
+            level = int(phase == 1)
+            vector = (0, 32, phase, 0, 0, 1)
+            source = [1, phase, 46, 0, level, 0, 1, 0, 0xC if level else 0x4]
+            samples = [1025 if level else 512] * 32
+            result = signal.shared_analog_result(vector, status, samples, source, 406)
+            self.assertEqual(result['scope'], 'input-bias-shared-ain5-manual-saadc')
+            for wrong in ([-257] * 32, [4096] * 32,
+                          samples[:-1] + [1024 if level else 513], samples[:-1]):
+                with self.assertRaises(ProtocolError):
+                    signal.shared_analog_result(vector, status, wrong, source, 406)
+            for index, bad in ((3, 1), (4, 1 - level), (8, source[8] | 1), (8, 0x80D)):
+                wrong = source.copy()
+                wrong[index] = bad
+                with self.assertRaises(ProtocolError):
+                    signal.shared_analog_result(vector, status, samples, wrong, 406)
+        self.assertEqual(list(signal.vectors("analog", 406)), list(signal.vectors("analog", 405)))
+        with self.assertRaises(ProtocolError):
+            signal.shared_source_readback(source, 2, 407)
 
     def test_shared_source_never_drives_high_and_releases_on_abort(self):
         """! @brief 실제 firmware helper를 컴파일하여 잘못된 인자·중복 시작·해제를 검사합니다. """

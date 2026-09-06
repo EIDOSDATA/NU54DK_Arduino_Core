@@ -84,3 +84,5 @@ T12 Fixture 403 exact c95b904·SWD 10 MHz 첫 실행 48개 PASS는 [76번 기록
 T12 Fixture 404 exact e080bbc·SWD 10 MHz 첫 실행 48개 PASS는 [77번 기록](<../../04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 보존했다. 401~404 합계 기능 192개·samples 41,472개이며 각 exact identity는 구분한다. 405도 오픈드레인 시험을 완료했으며 다음은 필수 후속 406→407→408이다.
 
 T12 Fixture 405 exact 9fc12bf·SWD 10 MHz **첫 실행 12개 PASS**, LOW/해제/LOW·2,592 samples·cleanup 12개와 GPIO readback은 [78번 기록](<../../04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)에 보존했다. 공유 AIN4/P1.11의 기능을 확인했으며 후속 **406→407→408을 모두 수행**한다. 제품 core 변경 없이 Host 648개·pair target 2/2를 통과했고 T12 전체·후속 gate는 미완료다.
+
+현재 T05/T10/T12의 Fixture 406 AIN5/P1.12를 준비한다. VBAT 분압기·100nF 필터 공유 회로를 확인했고, B P1.14 INPUT pull-down/up/down의 전용 12 vector·25ms 정착·DMA/GPIO/cleanup 검증 후 10 MHz 실기를 수행한다. 사용자 결선 확인 완료. 제품 core·R00~R13 완료는 유지하며 407→408도 필수 후속이다.

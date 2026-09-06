@@ -51,7 +51,7 @@ namespace
     bool cs_owned = false;
     std::uint32_t cs_psel = 0U, cs_configuration = 0U, cs_output = 0U;
 
-    /** @brief PMIC /INT 공유 시험에서 고정 B P1.14만 LOW 또는 해제 상태로 설정합니다. */
+    /** @brief 공유 ADC 시험의 고정 B P1.14 오픈드레인 또는 입력 바이어스를 설정합니다. */
     struct SharedAnalogGpio
     {
         static constexpr std::uint32_t pin = NRF_GPIO_PIN_MAP(1, 14);
@@ -70,6 +70,12 @@ namespace
         {
             nrf_gpio_cfg(pin, NRF_GPIO_PIN_DIR_OUTPUT, NRF_GPIO_PIN_INPUT_CONNECT,
                          NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_S0D1, NRF_GPIO_PIN_NOSENSE);
+        }
+
+        /** @brief VBAT_MON 필터는 출력 드라이버를 켜지 않고 내부 저항으로만 충방전합니다. */
+        static void inputBias(bool pullup)
+        {
+            nrf_gpio_cfg_input(pin, pullup ? NRF_GPIO_PIN_PULLUP : NRF_GPIO_PIN_PULLDOWN);
         }
     };
 
@@ -160,10 +166,10 @@ namespace
         return stopped;
     }
 
-    /** @brief 고정 PWM 또는 공유 AIN4용 오픈드레인 신호와 SAADC를 준비합니다. */
+    /** @brief 고정 PWM 또는 공유 AIN4/5용 저전류 신호와 SAADC를 준비합니다. */
     bool prepareAnalog(const std::uint32_t *args)
     {
-        const bool shared = gate.fixture() == 405U;
+        const bool shared = v04::sharedAnalogFixture(gate.fixture());
         if (shared
                 ? !v04::sharedAnalogArguments(args)
                 : ((args[0] < 20U || args[0] > 22U) || args[1] == 0U || args[1] > analog_capacity ||
@@ -417,7 +423,7 @@ namespace
         switch (v04::fixtureFamily(gate.fixture()))
         {
         case v04::FixtureFamily::analog:
-            if (controller && gate.fixture() == 405U)
+            if (controller && v04::sharedAnalogFixture(gate.fixture()))
             {
                 result = shared_source.start();
             }

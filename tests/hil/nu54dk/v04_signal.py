@@ -9,11 +9,12 @@ import time
 import v04_fixture as fixture
 from v04_protocol import ProtocolError
 
+SHARED_ANALOG_FIXTURES = (405, 406)
 
 def vectors(family, fixture_id=None):
     """기능 sweep와 buffer 경계를 한 번씩 바꾸는 실행 vector를 생성합니다."""
     if family == "analog":
-        if fixture_id == 405:
+        if fixture_id in SHARED_ANALOG_FIXTURES:
             for samples, buffers, phase in itertools.product((32, 256), (1, 2), range(3)):
                 yield (0, samples, phase, 0, 0, buffers)
             return
@@ -89,37 +90,48 @@ def i2s_expected(seed, words, width, channels):
     return [pattern(seed, index) & mask for index in range(words)], mask
 
 
-def shared_source_readback(source, phase):
+def shared_source_readback(source, phase, fixture_id=405):
     """! @brief nRF54L15 PIN_CNF의 DIR/INPUT/PULL/DRIVE0/DRIVE1도 독립 해석합니다. """
-    if (len(source) != 9 or source[:7] != [1, phase, 46, 1, 1, 1, int(phase == 1)] or
-            source[8] & 0xF0F != 0x80D):
-        raise ProtocolError(f"shared analog source is not fixed open-drain: {source}")
+    level = int(phase == 1)
+    if fixture_id == 405:
+        expected, raw = [1, phase, 46, 1, 1, 1, level], 0x80D
+    elif fixture_id == 406:
+        expected, raw = [1, phase, 46, 0, level, 0, 1], 0xC if level else 0x4
+    else:
+        raise ProtocolError("unknown shared analog fixture")
+    if len(source) != 9 or source[:7] != expected or source[8] & 0xF0F != raw:
+        raise ProtocolError(f"shared analog source configuration mismatch: {source}")
 
 
-def shared_analog_result(vector, status, samples, source):
-    """! @brief PMIC 공유 입력의 정적 LOW/해제와 DMA 완료를 독립 판정합니다. """
+def shared_analog_result(vector, status, samples, source, fixture_id=405):
+    """! @brief 공유 입력별 LOW/HIGH 경계와 DMA 완료를 독립 판정합니다. """
     phase = vector[2]
     expected = vector[1] * vector[5]
     level = int(phase == 1)
-    shared_source_readback(source, phase)
+    shared_source_readback(source, phase, fixture_id)
     if (len(status) != 8 or status[:5] != [1, 1, 1, 1, 0] or
             status[5:7] != [expected, vector[1]] or len(samples) != expected):
         raise ProtocolError(f"shared analog DMA completion mismatch: {status}")
-    high = sum(sample > 256 for sample in samples)
+    high_threshold = 1024 if fixture_id == 406 else 256
+    low_limit = 512 if fixture_id == 406 else 256
+    high = sum(sample > high_threshold for sample in samples)
     median = statistics.median(samples)
     if min(samples) < -256 or max(samples) > 4095:
         raise ProtocolError("shared analog raw samples are outside functional bounds")
     if level:
-        if high * 100 < expected * 95 or median <= 256:
-            raise ProtocolError("released shared analog input did not rise")
-    elif high != 0 or max(samples) > 256:
+        required_percent = 100 if fixture_id == 406 else 95
+        if high * 100 < expected * required_percent or median <= high_threshold:
+            raise ProtocolError("shared analog HIGH phase did not rise")
+    elif max(samples) > low_limit:
         raise ProtocolError("shared analog input did not return LOW")
     return {"receiver_status": status, "source_readback": source,
-            "phase": ("low-before", "released", "low-after")[phase],
+            "phase": (("pulldown-before", "pullup", "pulldown-after") if fixture_id == 406 else
+                      ("low-before", "released", "low-after"))[phase],
             "minimum": min(samples), "maximum": max(samples), "median": median,
             "high_samples": high, "samples": samples,
             "sha256": hashlib.sha256(struct.pack(f"<{len(samples)}h", *samples)).hexdigest(),
-            "scope": "open-drain-shared-ain4-manual-saadc"}
+            "scope": ("input-bias-shared-ain5-manual-saadc" if fixture_id == 406 else
+                      "open-drain-shared-ain4-manual-saadc")}
 
 
 def run_case(devices, selected, controller_role, vector, append):
@@ -181,19 +193,19 @@ def run_case(devices, selected, controller_role, vector, append):
         elif family == "analog":
             if controller.command(35) != [0]:
                 raise ProtocolError("analog generator start failed")
-            source = controller.command(38) if selected["id"] == 405 else None
+            source = controller.command(38) if selected["id"] in SHARED_ANALOG_FIXTURES else None
             if source is not None:
-                shared_source_readback(source, vector[2])
-                time.sleep(.010)
+                shared_source_readback(source, vector[2], selected["id"])
+                time.sleep(.025 if selected["id"] == 406 else .010)
             if receiver.command(35) != [0]:
                 raise ProtocolError("SAADC sampling start failed")
             receiver_status = wait_status(receiver, lambda words: words[3] == 1)
             sample_count = vector[1] * vector[5]
             samples = read_u16(receiver, sample_count)
-            if selected["id"] == 405:
-                result = shared_analog_result(vector, receiver_status, samples, source)
+            if selected["id"] in SHARED_ANALOG_FIXTURES:
+                result = shared_analog_result(vector, receiver_status, samples, source, selected["id"])
                 final_source = controller.command(38)
-                shared_source_readback(final_source, vector[2])
+                shared_source_readback(final_source, vector[2], selected["id"])
                 if len(final_source) != 9 or final_source[:7] != source[:7]:
                     raise ProtocolError(f"shared source changed during sampling: {final_source}")
                 result["source_readback_after"] = final_source
@@ -224,11 +236,11 @@ def run_case(devices, selected, controller_role, vector, append):
     finally:
         original_error = __import__("sys").exception()
         cleanup = []
-        cleanup_devices = (controller, receiver) if selected["id"] == 405 else devices
+        cleanup_devices = (controller, receiver) if selected["id"] in SHARED_ANALOG_FIXTURES else devices
         for device in cleanup_devices:
             try:
                 item = {"role": device.image["role"], "result": device.command(33)}
-                if selected["id"] == 405 and device is controller:
+                if selected["id"] in SHARED_ANALOG_FIXTURES and device is controller:
                     state = device.command(38)
                     item["source_readback"] = state
                     if (len(state) != 9 or state[:7] != [0, 0xFFFFFFFF, 46, 0, 0, 0, 1] or

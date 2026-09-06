@@ -26,7 +26,7 @@ int main()
                     v04::fixtureFamily(404) == v04::FixtureFamily::analog &&
                     v04::fixtureFamily(408) == v04::FixtureFamily::analog &&
                     v04::fixtureFamily(405) == v04::FixtureFamily::analog &&
-                    v04::fixtureFamily(406) == v04::FixtureFamily::invalid &&
+                    v04::fixtureFamily(406) == v04::FixtureFamily::analog &&
                     v04::fixtureFamily(407) == v04::FixtureFamily::invalid &&
                     v04::fixtureFamily(420) == v04::FixtureFamily::qdec &&
                     v04::fixtureFamily(430) == v04::FixtureFamily::i2s &&
