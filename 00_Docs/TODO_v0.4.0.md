@@ -2,13 +2,13 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.11 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.12 |
 | 상태 | 활성 TODO — R00~R13·최종 software gate·current-source T11 완료; T12 Fixture 401~408 부분 PASS, 후속 실기·통합·RC·공개 대기 |
 | 작성·갱신일 | 2026-09-07 |
 | 작성 직전 기준 commit | `87b987d9ed50855e0134f2c637c00706572719a5` — actual 408 기능 48 PASS·10,368 samples, 최초 DUT flash 실패와 재실행 구분 |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **420 QDEC 재결선 확인 후 실제 clean HEAD pair build·SWD 10 MHz 실기** |
-| 이번 요청의 실행 범위 | 사용자의 “연결 완료 408 진행해”를 2026-09-06T15:35:46Z에 기록했다. A P1.14↔B P1.14·공통 GND의 408을 exact 87b987d에서 실행. 최초 DUT flash timeout 뒤 read-only 응답 회복을 확인하고 원래 유효한 확인으로 단 한 번 새 실행해 48개 완료. 제품·시험·SDK·board·보안 정책 변경 없음 |
+| 다음 착수 항목 | **420 수정 source의 exact pair build 후 같은 확인 결선으로 QDEC 48-vector 재검증** |
+| 이번 요청의 실행 범위 | 2026-09-06T16:05:26Z 사용자 420 결선 확인. exact beebef8 첫 항목 실패와 같은 결선 진단 보존. T10/T12·T14 HIL generator AB/극성/idle 준비 순서 수정, Host·정렬·pair build와 48-vector 재검증. R11 public core/SDK/board 변경 없음 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
 마일스톤의 제품 상태는 [로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>), 실제 PASS/FAIL은
@@ -49,13 +49,16 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 
 ## 2. 현재 재개 체크포인트
 
+420 진행 중(2026-09-06T16:05:26Z 사용자 확인): A P1.04↔B P1.14, A P1.06↔B P1.10, 공통 GND. SWD 10 MHz exact beebef8 첫 vector는 `[0,0,1]`로 실패, 양쪽 disarm 완료. 같은 결선 100-cycle 진단에서 4개 입력 상태를 관측했다. 이번 T10/T12·T14 수정 범위는 HIL generator의 AB 비트 배치·PWM 극성·QDEC 이전 idle 초기화이며 R11 public core/SDK는 변경하지 않는다. native 파형/Host·정렬·영향 pair target와 exact-source 48-vector 실기로 재검증하고 실패 원본을 보존한다. 430은 별도 결선 확인까지 대기.
+
+
 | 필드 | 현재 값 |
 | --- | --- |
 | 이번에 끝낸 일 | 408 기능 48 PASS·10,368 samples·cleanup 48, exact pair build 2/2와 postflight identity 2/2 PASS. 첫 DUT flash 실패 원본 포함 83번 입력 45개 등록. 401~408 누계 기능 276·samples 59,616·cleanup 276, AIN0~7 개별 기능 근거 확보 |
 | 진행 중인 T 항목 | T12 부분 완료 — 401~408 개별 기능 완료. 420 QDEC·430 I2S·440 PDM과 나머지 T12 요구·T13 이후 미완료 |
-| 다음 구체적 행동 | 420 결선 확인 후 실제 clean HEAD의 pair image·source·role을 검증하고 SWD 10 MHz로 QDEC를 실행. 408 업로드 source 87b987d와 후속 문서 HEAD를 구분 |
-| 다음 작업에 필요한 사용자 행동 | 양쪽 USB 분리 후 기존 A P1.14 신호 끝을 P1.04로 이동(B P1.14 유지), A P1.06↔B P1.10 신호선 추가. 공통 GND·DAP UART 분리/SWD 연결·기존 SB/PMIC 유지 후 USB 재연결·420 결선 완료 확인 |
-| 외부 결선 상태 | 408 A P1.14/AIN7(P4-12)↔B P1.14(P4-12), 공통 GND(P2-30). 2026-09-06T15:35:46Z 사용자 결선 완료 지시, USB 분리 후 변경·재연결 안내에 대한 확인. 이전 A P1.13 제거·DAP UART 분리/SWD 연결·기존 SB/PMIC 유지. A D/COM5·6, B E/COM7·8. 420 결선은 아직 미확인 |
+| 다음 구체적 행동 | HIL generator만 수정한 clean source로 pair 두 role을 빌드하고 원래 420 확인 시각이 유효한 동안 SWD 10 MHz 실기. 430은 별도 결선 확인까지 대기 |
+| 다음 작업에 필요한 사용자 행동 | 현재 420 결선 유지. 확인 유효기간이 지날 경우 실제 실행 전에 유지 여부를 재확인한다 |
+| 외부 결선 상태 | 420 A P1.04↔B P1.14, A P1.06↔B P1.10, 공통 GND. 2026-09-06T16:05:26Z USB 분리 후 결선 변경·재연결 안내에 대한 사용자 확인. DAP UART 분리/SWD 연결·기존 SB/PMIC 유지. SWD 10 MHz |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 마지막 정식 외부 HIL source | `87b987d9ed50855e0134f2c637c00706572719a5` — T12 Fixture 408 전체 48 PASS, attempt2. attempt1은 DUT flash 실패·외부 시험 미시작. 이전 exact 근거 보존 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. T11 각 exact 완료·T12 401~408 부분 PASS; M24/M25 전체·후속 gate·RC/공개 미완료 |

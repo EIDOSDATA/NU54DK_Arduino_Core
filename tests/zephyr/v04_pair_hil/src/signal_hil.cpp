@@ -8,12 +8,14 @@
 #include "fixture_gate.h"
 #include "fixture_hil.h"
 #include "shared_analog_source.h"
+#include "qdec_waveform.h"
 #include <nucode/AnalogFabric.h>
 #include <nucode/SerialFabric.h>
 #include <nucode/StreamFabric.h>
 #include <variant.h>
 #include <hal/nrf_gpio.h>
 #include <zephyr/kernel.h>
+#include <zephyr/sys/sys_io.h>
 #include <string.h>
 
 namespace
@@ -247,19 +249,22 @@ namespace
             configuration.output_pins[1] = PIN_P1_10;
             configuration.top_value = static_cast<std::uint16_t>(args[3]);
             configuration.load = PwmSequenceLoad::individual;
-            const std::uint8_t forward[4]{1U, 3U, 2U, 0U};
-            const std::uint8_t reverse[4]{2U, 3U, 1U, 0U};
-            const auto *const states = args[4] ? reverse : forward;
             for (std::size_t step = 0U; step < 4U; ++step)
             {
-                pwm_values[step * 4U] =
-                    (states[step] & 1U) ? static_cast<std::uint16_t>(args[3]) : 0U;
-                pwm_values[step * 4U + 1U] =
-                    (states[step] & 2U) ? static_cast<std::uint16_t>(args[3]) : 0U;
-                pwm_values[step * 4U + 2U] = pwm_values[step * 4U + 3U] = 0U;
+                for (unsigned channel = 0U; channel < 4U; ++channel)
+                {
+                    pwm_values[step * 4U + channel] =
+                        v04::qdecPwmValue(step, channel, args[4] != 0U, configuration.top_value);
+                }
             }
             pwm_playbacks = args[2];
-            ready = pwm != nullptr && pwm->configure(configuration) == AnalogFabricResult::success;
+            /** @brief QDEC가 시작되기 전에 핀·DMA를 점유하고 두 출력을 idle LOW로 만듭니다. */
+            ready = pwm != nullptr &&
+                    pwm->configure(configuration) == AnalogFabricResult::success &&
+                    pwm->play({pwm_values, 16U, 0U, 0U}, nullptr,
+                              static_cast<std::uint16_t>(pwm_playbacks), false,
+                              true) == AnalogFabricResult::success &&
+                    pwm->startTaskAddress() != 0U;
             return ready;
         }
         qdec = streamFabric().qdec(static_cast<std::uint8_t>(args[1]));
@@ -440,10 +445,12 @@ namespace
             }
             break;
         case v04::FixtureFamily::qdec:
-            result = controller && pwm != nullptr &&
-                     pwm->play({pwm_values, 16U, 0U, 0U}, nullptr,
-                               static_cast<std::uint16_t>(pwm_playbacks),
-                               false) == AnalogFabricResult::success;
+            if (controller && pwm != nullptr && ready && pwm->startTaskAddress() != 0U)
+            {
+                /** @brief gate 내부에서 Fabric이 반환한 준비된 START task만 실행합니다. */
+                sys_write32(1U, pwm->startTaskAddress());
+                result = true;
+            }
             break;
         case v04::FixtureFamily::i2s:
             if (i2s != nullptr)
