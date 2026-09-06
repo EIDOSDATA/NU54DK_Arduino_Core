@@ -13,6 +13,7 @@
 #include <nucode/AnalogFabric.h>
 #include <nucode/SerialFabric.h>
 #include <nucode/StreamFabric.h>
+#include <nucode/EventFabric.h>
 #include <variant.h>
 #include <hal/nrf_gpio.h>
 #include <zephyr/kernel.h>
@@ -69,6 +70,10 @@ namespace
     I2sFabric *i2s = nullptr;
     PdmFabric *pdm = nullptr;
     SpisHandle *pdm_spis = nullptr;
+    GpioteFabric *pdm_gpiote = nullptr;
+    DppiFabric *pdm_dppi = nullptr;
+    bool pdm_clock_owned = false, pdm_data_owned = false, pdm_channel_owned = false;
+    bool pdm_edge_connected = false;
     std::uint32_t pwm_playbacks = 1U, analog_buffers = 1U;
     std::uint32_t i2s_buffers = 1U, pdm_buffers = 1U;
     std::uint32_t analog_completed_mask = 0U, i2s_completed_mask = 0U;
@@ -182,6 +187,51 @@ namespace
         cs_owned = false;
     }
 
+    /** @brief stereo 신호원의 clock event 연결을 끊은 뒤 task·pin 자원을 반환합니다. */
+    bool stopPdmStereo()
+    {
+        if (pdm_channel_owned)
+        {
+            if (pdm_dppi->disable(0U) != EventFabricResult::success)
+            {
+                return false;
+            }
+            if (pdm_edge_connected)
+            {
+                if (pdm_dppi->disconnect(pdm_gpiote->inEvent(0U), pdm_gpiote->outTask(1U), 0U) !=
+                    EventFabricResult::success)
+                {
+                    return false;
+                }
+                pdm_edge_connected = false;
+            }
+            if (pdm_dppi->releaseChannel(0U) != EventFabricResult::success)
+            {
+                return false;
+            }
+            pdm_channel_owned = false;
+        }
+        if (pdm_data_owned)
+        {
+            if (pdm_gpiote->release(1U) != EventFabricResult::success)
+            {
+                return false;
+            }
+            pdm_data_owned = false;
+        }
+        if (pdm_clock_owned)
+        {
+            if (pdm_gpiote->release(0U) != EventFabricResult::success)
+            {
+                return false;
+            }
+            pdm_clock_owned = false;
+        }
+        pdm_gpiote = nullptr;
+        pdm_dppi = nullptr;
+        return true;
+    }
+
     /** @brief 모든 signal handle을 역순으로 정지·해제합니다. */
     bool stopAll()
     {
@@ -210,6 +260,7 @@ namespace
             stopped &= pdm->stop(100000U) == StreamFabricResult::success;
         }
         restoreChipSelect();
+        stopped &= stopPdmStereo();
         if (pdm_spis != nullptr && pdm_spis->state() == SerialFabricState::active)
         {
             stopped &= pdm_spis->deactivate(100000U) == SerialFabricResult::success;
@@ -386,7 +437,42 @@ namespace
         return ready;
     }
 
-    /** @brief PDM receiver 또는 SPIS EasyDMA bitstream source를 준비합니다. */
+    /** @brief stereo는 수신 clock의 양 에지로 data를 뒤집어 반대 부호 채널을 만듭니다. */
+    bool preparePdmStereo(bool inverted)
+    {
+        pdm_gpiote = eventFabric().gpiote(20U);
+        pdm_dppi = eventFabric().dppi(20U);
+        if (pdm_gpiote == nullptr || pdm_dppi == nullptr)
+        {
+            return false;
+        }
+        pdm_clock_owned = pdm_gpiote->acquireInput(0U, firstPin(), GpiotePolarity::toggle) ==
+                          EventFabricResult::success;
+        if (!pdm_clock_owned)
+        {
+            return false;
+        }
+        const auto clock_pin = NRF_GPIO_PIN_MAP(1U, role == 1U ? 4U : 5U);
+        /** @brief 수신기가 시작하기 전에도 clock 입력을 정해진 LOW로 유지합니다. */
+        nrf_gpio_cfg_input(clock_pin, NRF_GPIO_PIN_PULLDOWN);
+        const bool initial_high = (nrf_gpio_pin_read(clock_pin) != 0U) != inverted;
+        pdm_data_owned = pdm_gpiote->acquireOutput(1U, secondPin(), GpiotePolarity::toggle,
+                                                   initial_high) == EventFabricResult::success;
+        if (!pdm_data_owned)
+        {
+            return false;
+        }
+        pdm_channel_owned = pdm_dppi->acquireChannel(0U) == EventFabricResult::success;
+        if (!pdm_channel_owned)
+        {
+            return false;
+        }
+        pdm_edge_connected = pdm_dppi->connect(pdm_gpiote->inEvent(0U), pdm_gpiote->outTask(1U),
+                                               0U) == EventFabricResult::success;
+        return pdm_edge_connected && pdm_dppi->enable(0U) == EventFabricResult::success;
+    }
+
+    /** @brief PDM receiver 또는 mono SPIS·stereo GPIOTE/DPPI 신호원을 준비합니다. */
     bool preparePdm(const std::uint32_t *args)
     {
         if ((args[0] != 20U && args[0] != 21U) || args[1] == 0U || args[1] > stream_capacity ||
@@ -418,6 +504,11 @@ namespace
             cs_owned = true;
             ready = true;
             return true;
+        }
+        if (args[3] != 0U)
+        {
+            ready = preparePdmStereo(args[2] == 75U);
+            return ready;
         }
         const std::uint8_t byte = args[2] == 25U ? 0x11U : args[2] == 50U ? 0x55U : 0x77U;
         const std::size_t source_bytes = requested * pdm_buffers * 8U;

@@ -1,6 +1,6 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
-440 진행 중: 사용자 2026-09-06T19:45:39Z 결선 완료 확인, T10/T12의 PDM 검증을 SWD 10 MHz로 시작했다. Exact 8685cd8 첫 조건에서 다음 buffer 미공급 overflow를 재현했고 양쪽 cleanup과 PDM/SPIS off를 확인했다. T14에서 HIL의 buffer 요청 처리·유한 전송 정지를 교정한 뒤 새 clean source의 전체 440을 재검증한다. P1.04의 원래 입력 pull-up과 종료 GPIO 대조도 보완한다. 다른 T12 결선 시험은 실행하지 않는다.
+440 진행 중: 사용자 2026-09-06T19:45:39Z 결선 완료 확인, T10/T12 PDM 검증을 SWD 10 MHz로 시작했다. Exact 8685cd8의 다음 buffer 미공급 overflow를 교정한 017f3a5에서 mono 4개 PASS 후 stereo 양쪽 동일 입력을 재현했다. 같은 결선에 GPIOTE20/DPPI20의 clock-edge 연동 stereo 신호원을 추가하고 좌우 부호·edge·source 반전 oracle과 Host 음성 사례를 검증한다. 새 clean source 전체 440을 다시 실행하며 다른 T12 결선 시험은 진행하지 않는다. 원래 입력 pull-up 및 GPIO 기본 입력 복귀와 각 peripheral 해제를 구분 기록한다.
 
 | 항목 | 내용 |
 | --- | --- |

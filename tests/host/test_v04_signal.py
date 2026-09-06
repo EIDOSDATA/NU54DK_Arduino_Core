@@ -16,6 +16,20 @@ from host_compiler import compiler_command
 
 
 class SignalTests(unittest.TestCase):
+    def test_pdm_stereo_rejects_shared_channels_swaps_wrong_edges_and_short_dma(self):
+        """! @brief 좌우 구별·에지 반전·source 반전과 손상된 수신 길이를 독립 검사합니다. """
+        for density in (25, 50, 75):
+            for edge in (0, 1):
+                vector = (20, 256, density, 1, edge, 1)
+                positive = (not edge) != (density == 75)
+                pair = [2000, -3000] if positive else [-3000, 2000]
+                valid = pair * 128
+                self.assertEqual(signal.pdm_received(valid, vector)["channel_means"], pair)
+                for invalid in ([2000] * 256, [-3000] * 256, [2000, 3000] * 128,
+                                pair[::-1] * 128, valid[:-1], []):
+                    with self.assertRaises(ProtocolError):
+                        signal.pdm_received(invalid, vector)
+
     def test_i2s_full_payload_preserves_packed_samples_after_bounded_startup(self):
         """! @brief 시작 frame 뒤 전체 payload와 packed 상위 sample 손상·누락을 검사합니다. """
         for width in (8, 16, 24, 32):

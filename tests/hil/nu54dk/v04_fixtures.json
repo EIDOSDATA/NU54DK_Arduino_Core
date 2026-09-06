@@ -251,7 +251,7 @@
         {"dut": ["P2", 11, "P1.5"], "peer": ["P2", 12, "P1.4"], "signal": "receiver gate LOW -> generator SPIS CSN"},
         {"dut": ["P2", 30, "GND"], "peer": ["P2", 30, "GND"], "signal": "GND"}
       ],
-      "notes": "PDM receiver가 clock을 만들고 상대 SPIS EasyDMA가 동기 bitstream을 출력합니다. mono density 순서와 stereo 좌우 channel 분리를 실기에서 판정합니다.",
+      "notes": "PDM receiver가 clock을 만듭니다. Mono는 상대 SPIS EasyDMA/ORC의 25/50/75% density 순서를 검사합니다. Stereo는 같은 clock/data 결선에서 GPIOTE20→DPPI20→GPIOTE20 task로 양 clock edge에 data를 반전하여 반대 부호 채널을 만듭니다. 75 profile은 source 극성을 반전하며 stereo profile 숫자를 25/50/75% density로 해석하지 않습니다. 좌우 channel·edge·극성 순서를 실기에서 판정합니다.",
       "pullups": []
     }
   ]

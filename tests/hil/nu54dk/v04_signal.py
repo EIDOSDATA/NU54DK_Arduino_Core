@@ -152,6 +152,30 @@ def shared_analog_result(vector, status, samples, source, fixture_id=405):
                       "open-drain-shared-ain4-manual-saadc")}
 
 
+def pdm_received(samples, vector):
+    """! @brief 전체 DMA sample과 mono 밀도·stereo 에지/반전의 독립 채널을 판정합니다. """
+    sample_count = vector[1] * vector[5]
+    if len(samples) != sample_count or not samples:
+        raise ProtocolError("PDM received sample length mismatch")
+    mean = sum(samples) / len(samples)
+    channel_means = None
+    if vector[3]:
+        channel_means = [sum(samples[channel::2]) / len(samples[channel::2]) for channel in range(2)]
+        if abs(channel_means[0] - channel_means[1]) < 512:
+            raise ProtocolError(f"PDM stereo channels are not independently distinguishable: {channel_means}")
+        left_positive = (not vector[4]) != (vector[2] == 75)
+        expected_signs = (1, -1) if left_positive else (-1, 1)
+        if any(value * sign <= 512 for value, sign in zip(channel_means, expected_signs)):
+            raise ProtocolError(f"PDM stereo edge/polarity order mismatch: {channel_means}; expected={expected_signs}")
+    return {"mean": mean, "minimum": min(samples), "maximum": max(samples),
+            "channel_means": channel_means,
+            "scope": "pdm-clock-synchronous-gpiote-dppi-stereo" if vector[3] else
+                     "pdm-clock-synchronous-spis-bitstream",
+            "generator_pattern": ("edge-locked-opposite-levels-inverted" if vector[2] == 75 else
+                                  "edge-locked-opposite-levels") if vector[3] else
+                                 f"mono-density-{vector[2]}-percent"}
+
+
 def run_case(devices, selected, controller_role, vector, append):
     family = selected["family"]
     controller = devices[controller_role - 1]
@@ -195,18 +219,7 @@ def run_case(devices, selected, controller_role, vector, append):
             if receiver_status[5] != sample_count:
                 raise ProtocolError(f"PDM DMA sample count mismatch: {receiver_status}")
             samples = read_u16(receiver, sample_count)
-            mean = sum(samples) / len(samples)
-            channel_means = None
-            if vector[3]:
-                channel_means = [sum(samples[channel::2]) / len(samples[channel::2])
-                                 for channel in range(2)]
-                if abs(channel_means[0] - channel_means[1]) < 512:
-                    raise ProtocolError(
-                        f"PDM stereo channels are not independently distinguishable: {channel_means}")
-            result = {"receiver_status": receiver_status, "mean": mean,
-                      "minimum": min(samples), "maximum": max(samples),
-                      "channel_means": channel_means,
-                      "scope": "pdm-clock-synchronous-spis-bitstream"}
+            result = {"receiver_status": receiver_status, **pdm_received(samples, vector)}
         elif family == "analog":
             if controller.command(35) != [0]:
                 raise ProtocolError("analog generator start failed")
