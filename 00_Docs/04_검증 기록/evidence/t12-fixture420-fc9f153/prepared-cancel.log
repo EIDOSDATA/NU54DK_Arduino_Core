@@ -1,0 +1,68 @@
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+Traceback (most recent call last):
+{
+  "source": "fc9f1536e2caf4efee387c1a69b3a4c9e24adf3b",
+  "started_at_utc": "2026-09-06T16:28:39.363628+00:00",
+  "scope": "fixture420-prepared-idle-and-cancel-before-start",
+  "swd_frequency_hz": 10000000,
+  "flash_executed": false,
+  "reset_executed": false,
+  "start_command_executed": false,
+  "cases": [
+    {
+      "pwm": 20,
+      "qdec": 20,
+      "cleanup": [
+        {
+          "role": 1,
+          "reply": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "error": "firmware failure role=2 op=33 seq=2009 status=730 result=[1]"
+        }
+      ],
+      "controller_status": [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        400,
+        0
+      ],
+      "receiver_gpio_in": 0,
+      "idle_qdec_report": [
+        0,
+        0,
+        0
+      ],
+      "status": "passed"
+    }
+  ],
+  "devices": [
+    {
+      "role": 1,
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t12-fixture420-fixed\prepared_cancel.py", line 62, in <module>
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "continued_after_valid_disarm_sequence": 240
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "continued_after_valid_disarm_sequence": 2005
+    }
+  ],
+  "status": "failed",
+  "error": "",
+  "completed_at_utc": "2026-09-06T16:28:40.573037+00:00"
+}
+    assert case['cleanup'] == [{'role': 1, 'reply': [0]}, {'role': 2, 'reply': [0]}]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

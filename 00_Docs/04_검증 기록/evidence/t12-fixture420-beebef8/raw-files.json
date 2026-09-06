@@ -1,0 +1,449 @@
+{
+  "source": "beebef829de94f92a3a0b6b8b0a6ed2447d3b560",
+  "status": "first-vector-failed",
+  "uid_plaintext_scan": "passed",
+  "raw_gzip_roundtrip": "passed",
+  "artifact_note": "Includes executed and prepared scripts; execution claims come from result files only",
+  "files": [
+    {
+      "name": "artifact-index.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\artifact-index.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 30,
+      "original_sha256": "b77910e5c0fb1caca62f0a5cb300446e117967655d8f57cae9c0f836fbc55c53",
+      "normalized_bytes": 29,
+      "normalized_sha256": "8463fceb0836edb3680ebfe442118913349bd7be7ef32f53c2ac5fa1f9fb5ba6",
+      "original_archive": "artifact-index.log.raw.gz"
+    },
+    {
+      "name": "audit_results.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\audit_results.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 4216,
+      "original_sha256": "815983fd2f4d8b3c7c2c96372da645719bfe90d52b732d1563605ea27321f85e",
+      "normalized_bytes": 4216,
+      "normalized_sha256": "815983fd2f4d8b3c7c2c96372da645719bfe90d52b732d1563605ea27321f85e",
+      "original_archive": "audit_results.py.raw.gz"
+    },
+    {
+      "name": "audit_wiring.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\audit_wiring.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 1673,
+      "original_sha256": "5433353e642a0b0b95bdaa77af088327427ca36fe6a8ef7ec998f0c4ed1b3717",
+      "normalized_bytes": 1673,
+      "normalized_sha256": "5433353e642a0b0b95bdaa77af088327427ca36fe6a8ef7ec998f0c4ed1b3717",
+      "original_archive": "audit_wiring.py.raw.gz"
+    },
+    {
+      "name": "build-input-comparison.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\build-input-comparison.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 2207,
+      "original_sha256": "8f9dd8446e59ca346de1831c84f17cdbd94f9e2bcf9735d1ec89932ea80d15ce",
+      "normalized_bytes": 2207,
+      "normalized_sha256": "8f9dd8446e59ca346de1831c84f17cdbd94f9e2bcf9735d1ec89932ea80d15ce",
+      "original_archive": "build-input-comparison.json.raw.gz"
+    },
+    {
+      "name": "build.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\build.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 2049,
+      "original_sha256": "f7b258ade42e5691f6e7b4976c8fcb81d12e974acabbe0c0c73caacf0264d437",
+      "normalized_bytes": 2028,
+      "normalized_sha256": "b017dc4c6290db3b21c96890612ae77d26a5f843f01b8f7e2d996e0e0125cb66",
+      "original_archive": "build.log.raw.gz"
+    },
+    {
+      "name": "checkpoint.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\checkpoint.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 811,
+      "original_sha256": "f55fc05823001c83abdbd552f2d7cf62a310885a45d87eb531a496c664812859",
+      "normalized_bytes": 811,
+      "normalized_sha256": "f55fc05823001c83abdbd552f2d7cf62a310885a45d87eb531a496c664812859",
+      "original_archive": "checkpoint.json.raw.gz"
+    },
+    {
+      "name": "collect-build.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\collect-build.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 85,
+      "original_sha256": "0e9eb3451d84ba572f221dff5b0d1c082db2a7e0f05c84b301cf09583e38976d",
+      "normalized_bytes": 84,
+      "normalized_sha256": "157ff899baa545a0caf3d674cb3721c7256e4551bb9aa29e793be954208bc5db",
+      "original_archive": "collect-build.log.raw.gz"
+    },
+    {
+      "name": "collect_build.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\collect_build.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2255,
+      "original_sha256": "1037a56a9e489738eb3dd4842d5951f5cb3d7503e16f12617b46169285ae4606",
+      "normalized_bytes": 2255,
+      "normalized_sha256": "1037a56a9e489738eb3dd4842d5951f5cb3d7503e16f12617b46169285ae4606",
+      "original_archive": "collect_build.py.raw.gz"
+    },
+    {
+      "name": "confirmation.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\confirmation.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 978,
+      "original_sha256": "d0681f28d0232e2b971cd49cbb63fc0613ae6510ec37d5b6dabdefcc9c535480",
+      "normalized_bytes": 978,
+      "normalized_sha256": "d0681f28d0232e2b971cd49cbb63fc0613ae6510ec37d5b6dabdefcc9c535480",
+      "original_archive": "confirmation.json.raw.gz"
+    },
+    {
+      "name": "diagnose_qdec.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\diagnose_qdec.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 4895,
+      "original_sha256": "8e5e36869eac57828cf0740ee750df1944add9aa84b99237025bd6de51890bf0",
+      "normalized_bytes": 4895,
+      "normalized_sha256": "8e5e36869eac57828cf0740ee750df1944add9aa84b99237025bd6de51890bf0",
+      "original_archive": "diagnose_qdec.py.raw.gz"
+    },
+    {
+      "name": "exact-images.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\exact-images.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1567,
+      "original_sha256": "8116bc4e317d5a2fe415e382661f52f5c6ff561e6c8b5bb63c86be9477817999",
+      "normalized_bytes": 1567,
+      "normalized_sha256": "8116bc4e317d5a2fe415e382661f52f5c6ff561e6c8b5bb63c86be9477817999",
+      "original_archive": "exact-images.json.raw.gz"
+    },
+    {
+      "name": "fixture420-attempt1.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\fixture420-attempt1.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 2666,
+      "original_sha256": "2e607cfd96997f1cc3d00ea9de9bbec80bb5087515565b89b18a8e3ccf62e93d",
+      "normalized_bytes": 2588,
+      "normalized_sha256": "314a1167fbefe7c58c4e19192de6c191c41f07c398004c4e53cb679d99fee374",
+      "original_archive": "fixture420-attempt1.json.raw.gz"
+    },
+    {
+      "name": "fixture420-attempt1.json.jsonl",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\fixture420-attempt1.json.jsonl",
+      "normalization": "utf8-lf",
+      "original_bytes": 151,
+      "original_sha256": "d8dde3e461de46c4b4563ae7cd1e48bb7f7ca57b7b055d4c1cd3ab8eda77e79e",
+      "normalized_bytes": 150,
+      "normalized_sha256": "e70865827427e9f35793869a5d7b5c5c5386f4c6d88d4e0b04d5e7968b1bbf6e",
+      "original_archive": "fixture420-attempt1.json.jsonl.raw.gz"
+    },
+    {
+      "name": "fixture420-attempt1.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\fixture420-attempt1.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 189,
+      "original_sha256": "920f91205659f509a5a6b5784e3939ab9a1522afe3a3aa70169680516b0c6451",
+      "normalized_bytes": 184,
+      "normalized_sha256": "b262dfd90625e40bd5fbf451ab21b8d0c8544d1540b55adc8b52dd660e2658fb",
+      "original_archive": "fixture420-attempt1.log.raw.gz"
+    },
+    {
+      "name": "freeze_fixed.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\freeze_fixed.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 3719,
+      "original_sha256": "01bcde504f835c1cc8269f4689f0b4bc2c8d96cd5f050a4dedd209b258b34cdf",
+      "normalized_bytes": 3719,
+      "normalized_sha256": "01bcde504f835c1cc8269f4689f0b4bc2c8d96cd5f050a4dedd209b258b34cdf",
+      "original_archive": "freeze_fixed.py.raw.gz"
+    },
+    {
+      "name": "gate-contract-fixed.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\gate-contract-fixed.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1474,
+      "original_sha256": "3c232d61d908cbefdccf4aae260bebdc36b71dd0aabcd11bdba03f1dad22c969",
+      "normalized_bytes": 1448,
+      "normalized_sha256": "eec5fe9e89857a35d5e54cbd43a029ff8d71d71e578421e19b03296eabefe4e5",
+      "original_archive": "gate-contract-fixed.json.raw.gz"
+    },
+    {
+      "name": "gate-contract-fixed.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\gate-contract-fixed.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 7516,
+      "original_sha256": "a1ccf215a6fd5b08076334831d93a69e9b1eead6c131eb15b723b1d4e106f1ef",
+      "normalized_bytes": 7463,
+      "normalized_sha256": "ee534ba439ccf25c450e79271a75749661c3b462df8cf8a276435f326c9785e0",
+      "original_archive": "gate-contract-fixed.log.raw.gz"
+    },
+    {
+      "name": "gate-host-fixed.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\gate-host-fixed.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1470,
+      "original_sha256": "98efb73fff932f665b5400e9d562fd894b3e39c92768e10ee88f034b226b75ee",
+      "normalized_bytes": 1444,
+      "normalized_sha256": "c4e820bdbdfa6b640b3fa71005dd2742fb370a6f793735d265ed224d52ce60d3",
+      "original_archive": "gate-host-fixed.json.raw.gz"
+    },
+    {
+      "name": "gate-host-fixed.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\gate-host-fixed.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 163219,
+      "original_sha256": "d6b520e8c53b49a0ba50315e2da774454045bfbdd5a0186bf66ddd036d9689ce",
+      "normalized_bytes": 161611,
+      "normalized_sha256": "c101fda08b4cb53cc221486fc038ff76dd872c386d1fd4ebd9400f575537e719",
+      "original_archive": "gate-host-fixed.log.raw.gz"
+    },
+    {
+      "name": "initialize.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\initialize.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 3453,
+      "original_sha256": "4bddbd817a004979352e7b0e1b647a3e6e6c2b78ed0fc571e52cfdf338dca9ae",
+      "normalized_bytes": 3453,
+      "normalized_sha256": "4bddbd817a004979352e7b0e1b647a3e6e6c2b78ed0fc571e52cfdf338dca9ae",
+      "original_archive": "initialize.py.raw.gz"
+    },
+    {
+      "name": "next-wiring-audit.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\next-wiring-audit.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 2745,
+      "original_sha256": "1bc97cfe9e06847de3702d28733d063aad0c55fc858028cab47d28fa71d87a2b",
+      "normalized_bytes": 2745,
+      "normalized_sha256": "1bc97cfe9e06847de3702d28733d063aad0c55fc858028cab47d28fa71d87a2b",
+      "original_archive": "next-wiring-audit.json.raw.gz"
+    },
+    {
+      "name": "postflight.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\postflight.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1331,
+      "original_sha256": "628dcab10c0366b473accf0b0da75c9ae4c4b287337b1ed7a89bd7ec4aea68e5",
+      "normalized_bytes": 1331,
+      "normalized_sha256": "628dcab10c0366b473accf0b0da75c9ae4c4b287337b1ed7a89bd7ec4aea68e5",
+      "original_archive": "postflight.json.raw.gz"
+    },
+    {
+      "name": "postflight.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\postflight.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 198,
+      "original_sha256": "6d7f22466cc97da9eebbbc711f5e4173933b3240681c3b1761e04963dfa7e48c",
+      "normalized_bytes": 193,
+      "normalized_sha256": "1be3c48674b58bbcbf00c0a1c6f8aaffabf0665810a9778291387ad2d5f2d21a",
+      "original_archive": "postflight.log.raw.gz"
+    },
+    {
+      "name": "postflight.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\postflight.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 1599,
+      "original_sha256": "d7b01ef92fa24fe11ec69968f459d77776b4e51bb632abd535e5ef8fc441acdc",
+      "normalized_bytes": 1599,
+      "normalized_sha256": "d7b01ef92fa24fe11ec69968f459d77776b4e51bb632abd535e5ef8fc441acdc",
+      "original_archive": "postflight.py.raw.gz"
+    },
+    {
+      "name": "preflight.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\preflight.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 3695,
+      "original_sha256": "86c6d2bf774290ac620b01e8edf0d605754e768dc6966730ad1099d640e459f6",
+      "normalized_bytes": 3571,
+      "normalized_sha256": "6f13b5526608b11a5af2fb11d5830091445e32b7582afbc7d1fab4009e6f313d",
+      "original_archive": "preflight.log.raw.gz"
+    },
+    {
+      "name": "prepare.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\prepare.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2032,
+      "original_sha256": "da17545df75773362f5f9549ad253715fa94f29465c849f9ef09dbfacb45c053",
+      "normalized_bytes": 2032,
+      "normalized_sha256": "da17545df75773362f5f9549ad253715fa94f29465c849f9ef09dbfacb45c053",
+      "original_archive": "prepare.py.raw.gz"
+    },
+    {
+      "name": "qdec-diagnostic1.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\qdec-diagnostic1.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 126101,
+      "original_sha256": "ebe2fa8de788fde22bf305966c121974a4912b47609abbcd30b2e6f674020eac",
+      "normalized_bytes": 126101,
+      "normalized_sha256": "ebe2fa8de788fde22bf305966c121974a4912b47609abbcd30b2e6f674020eac",
+      "original_archive": "qdec-diagnostic1.json.raw.gz"
+    },
+    {
+      "name": "qdec-diagnostic1.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\qdec-diagnostic1.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 3569,
+      "original_sha256": "42484f446bae77f8adb06d99ce13f0480ff959b0324d9ede0419328a2ac7df34",
+      "normalized_bytes": 3374,
+      "normalized_sha256": "c048e0d525040c1134564cc8fddd1f7a31c4471d4fb53b2ddde3e2352851087e",
+      "original_archive": "qdec-diagnostic1.log.raw.gz"
+    },
+    {
+      "name": "qdec-regression.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\qdec-regression.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1546,
+      "original_sha256": "3f0a9fd1f5f7eaf48601070a56fece3ad4935b2326e55bf35727a4342a611d28",
+      "normalized_bytes": 1514,
+      "normalized_sha256": "2acf5b82c9f359f2983a0d737798cdbf0a7303344189db65ab7cb8e3a503240d",
+      "original_archive": "qdec-regression.json.raw.gz"
+    },
+    {
+      "name": "qdec-regression.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\qdec-regression.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 1167,
+      "original_sha256": "d38b720b32dd02a4dad8f875ecd16416ec4801f57369b4cbfc263cf4d6cf2ccf",
+      "normalized_bytes": 1154,
+      "normalized_sha256": "65e53f63962e2a919e64b00c30a1d40599f1d565a8e378ca643d85647b252c05",
+      "original_archive": "qdec-regression.log.raw.gz"
+    },
+    {
+      "name": "role1-build-record.yml",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\role1-build-record.yml",
+      "normalization": "utf8-lf",
+      "original_bytes": 692,
+      "original_sha256": "51b736da275f46b599ac954b4d5a5f634f51988f676f332489dd219d0a0c7805",
+      "normalized_bytes": 677,
+      "normalized_sha256": "6dac3f25ba24f2a574236657be4cb1de7acb1bf53190451409aeee99eda20839",
+      "original_archive": "role1-build-record.yml.raw.gz"
+    },
+    {
+      "name": "role1-build.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\role1-build.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 47325,
+      "original_sha256": "c71af9704f2c72c97aa2d7d7fd3eeb9d0a9678cc99dffd3ac58ffcfbbbf472db",
+      "normalized_bytes": 46922,
+      "normalized_sha256": "cf1aa08d0e6bfe0e0288ecfa9cb84807f7606581bff493bf8ee6d176bbb1e1e3",
+      "original_archive": "role1-build.log.raw.gz"
+    },
+    {
+      "name": "role2-build-record.yml",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\role2-build-record.yml",
+      "normalization": "utf8-lf",
+      "original_bytes": 692,
+      "original_sha256": "51b736da275f46b599ac954b4d5a5f634f51988f676f332489dd219d0a0c7805",
+      "normalized_bytes": 677,
+      "normalized_sha256": "6dac3f25ba24f2a574236657be4cb1de7acb1bf53190451409aeee99eda20839",
+      "original_archive": "role2-build-record.yml.raw.gz"
+    },
+    {
+      "name": "role2-build.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\role2-build.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 47333,
+      "original_sha256": "92b2f22229b8e53414dddb8963bab89e96f6f2cd62e76257ae43505998871d0a",
+      "normalized_bytes": 46930,
+      "normalized_sha256": "e0975398d4a34c8e2877e44df36166d8950bd245cf02f8d88ae4b7cdac2de50e",
+      "original_archive": "role2-build.log.raw.gz"
+    },
+    {
+      "name": "run.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\run.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 642,
+      "original_sha256": "54dd2adff77105560f006a1ad06ed43f866c7623a00bb8bdb073d7c71ab6f873",
+      "normalized_bytes": 642,
+      "normalized_sha256": "54dd2adff77105560f006a1ad06ed43f866c7623a00bb8bdb073d7c71ab6f873",
+      "original_archive": "run.py.raw.gz"
+    },
+    {
+      "name": "runtime.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\runtime.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2558,
+      "original_sha256": "df90e8f51cd9311302dd375957d4a5e6a4a2ee347c8e002a72e5456e32a7a94b",
+      "normalized_bytes": 2558,
+      "normalized_sha256": "df90e8f51cd9311302dd375957d4a5e6a4a2ee347c8e002a72e5456e32a7a94b",
+      "original_archive": "runtime.py.raw.gz"
+    },
+    {
+      "name": "software-input-comparison.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\software-input-comparison.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 27310,
+      "original_sha256": "57bb2a0b31883fcbe50fea5399c0993e51838b5a6c5da27bd41502688f5791c0",
+      "normalized_bytes": 27310,
+      "normalized_sha256": "57bb2a0b31883fcbe50fea5399c0993e51838b5a6c5da27bd41502688f5791c0",
+      "original_archive": "software-input-comparison.json.raw.gz"
+    },
+    {
+      "name": "software.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\software.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2765,
+      "original_sha256": "47f860d0d3b027160240c8cde285345389328c35cd04449eee95501beba53d56",
+      "normalized_bytes": 2765,
+      "normalized_sha256": "47f860d0d3b027160240c8cde285345389328c35cd04449eee95501beba53d56",
+      "original_archive": "software.py.raw.gz"
+    },
+    {
+      "name": "source-commit.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\source-commit.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 1141,
+      "original_sha256": "6e6593cc4db394c714d4fb9fcde2364683239e11e4f977233a4e9eee5dfa488c",
+      "normalized_bytes": 1130,
+      "normalized_sha256": "cbc909cf9eac691f660f6fc86acd03af17168dbb4851a237a9de579e1a659d1c",
+      "original_archive": "source-commit.log.raw.gz"
+    },
+    {
+      "name": "source.txt",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\source.txt",
+      "normalization": "utf8-lf",
+      "original_bytes": 41,
+      "original_sha256": "5d5cbedd98fdc92f9dde16a3c936c41d727834f584ace731d877ae4e6012cd93",
+      "normalized_bytes": 41,
+      "normalized_sha256": "5d5cbedd98fdc92f9dde16a3c936c41d727834f584ace731d877ae4e6012cd93",
+      "original_archive": "source.txt.raw.gz"
+    },
+    {
+      "name": "style-check.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\style-check.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 40,
+      "original_sha256": "06ba9bf288e359fe8bb62938b16a61654ce9dfcfd721f4438adf9be83d1b5b1d",
+      "normalized_bytes": 39,
+      "normalized_sha256": "632294d8cc8a86d9a4934a119d0521fa2325d66e063b022042c02483a7431127",
+      "original_archive": "style-check.log.raw.gz"
+    },
+    {
+      "name": "target-artifact-index.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\target-artifact-index.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 16825,
+      "original_sha256": "b8963c1f2dc64d179d169d89bbed81b660eca9bab39603201042dc2d564d7ebe",
+      "normalized_bytes": 16594,
+      "normalized_sha256": "59af9ff48b3d7ef423e1aa9b06fbf6c5d05870e5776ec9a840796ecfc9c3766d",
+      "original_archive": "target-artifact-index.json.raw.gz"
+    },
+    {
+      "name": "target-build-evidence.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\target-build-evidence.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 519,
+      "original_sha256": "70c126d622fa7897863bb67660c9b8265fc54503b1840f6cf153ac337cec315c",
+      "normalized_bytes": 519,
+      "normalized_sha256": "70c126d622fa7897863bb67660c9b8265fc54503b1840f6cf153ac337cec315c",
+      "original_archive": "target-build-evidence.json.raw.gz"
+    },
+    {
+      "name": "usb-inventory.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture420\\usb-inventory.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 580,
+      "original_sha256": "f31f0a2a61d49bedbf6937749929dc47882c297648ef6d783773a1e4a649836f",
+      "normalized_bytes": 580,
+      "normalized_sha256": "f31f0a2a61d49bedbf6937749929dc47882c297648ef6d783773a1e4a649836f",
+      "original_archive": "usb-inventory.json.raw.gz"
+    }
+  ]
+}

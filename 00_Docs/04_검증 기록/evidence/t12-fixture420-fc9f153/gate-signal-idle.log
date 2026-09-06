@@ -1,0 +1,24 @@
+test_405_has_low_release_low_for_every_dma_boundary (test_v04_signal.SignalTests.test_405_has_low_release_low_for_every_dma_boundary) ... ok
+test_406_requires_input_bias_and_fully_settled_low_high_samples (test_v04_signal.SignalTests.test_406_requires_input_bias_and_fully_settled_low_high_samples)
+! @brief VBAT 공유 입력의 출력 활성화·미정착·경계 위반을 거부합니다. ... ok
+test_407_button_shared_input_rejects_stuck_low_and_any_output_driver (test_v04_signal.SignalTests.test_407_button_shared_input_rejects_stuck_low_and_any_output_driver)
+! @brief 버튼 공유 입력의 세 단계·DMA 경계와 눌림 LOW·출력 구성을 거부합니다. ... ok
+test_default_cli_is_preflight_and_execution_needs_files (test_v04_signal.SignalTests.test_default_cli_is_preflight_and_execution_needs_files) ... ok
+test_i2s_masks_are_width_and_channel_explicit (test_v04_signal.SignalTests.test_i2s_masks_are_width_and_channel_explicit) ... ok
+test_invalid_vectors_fail_closed (test_v04_signal.SignalTests.test_invalid_vectors_fail_closed) ... ok
+test_partial_arm_failure_still_disarms_both_devices (test_v04_signal.SignalTests.test_partial_arm_failure_still_disarms_both_devices)
+! @brief 두 번째 보드 arm 실패 시 첫 번째 보드의 lease를 방치하지 않습니다. ... ok
+test_pdm_firmware_reports_the_released_dma_length (test_v04_signal.SignalTests.test_pdm_firmware_reports_the_released_dma_length) ... ok
+test_pdm_runner_requires_channel_and_density_discrimination (test_v04_signal.SignalTests.test_pdm_runner_requires_channel_and_density_discrimination) ... ok
+test_shared_adc_oracle_rejects_stuck_levels_short_dma_and_push_pull (test_v04_signal.SignalTests.test_shared_adc_oracle_rejects_stuck_levels_short_dma_and_push_pull) ... ok
+test_shared_fixtures_run_all_phases_and_release_even_on_failure (test_v04_signal.SignalTests.test_shared_fixtures_run_all_phases_and_release_even_on_failure)
+! @brief Host 실행 순서와 실패 뒤 양쪽 cleanup을 모의 mailbox로 검증합니다. ... ok
+test_shared_source_never_drives_high_and_releases_on_abort (test_v04_signal.SignalTests.test_shared_source_never_drives_high_and_releases_on_abort)
+! @brief 실제 firmware helper를 컴파일하여 잘못된 인자·중복 시작·해제를 검사합니다. ... ok
+test_signal_campaign_is_bounded (test_v04_signal.SignalTests.test_signal_campaign_is_bounded) ... ok
+test_vector_counts_and_boundaries (test_v04_signal.SignalTests.test_vector_counts_and_boundaries) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.877s
+
+OK

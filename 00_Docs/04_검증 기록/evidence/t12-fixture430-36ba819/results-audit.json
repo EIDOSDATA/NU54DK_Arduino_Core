@@ -1,0 +1,2526 @@
+{
+  "status": "passed",
+  "fixture_id": 430,
+  "source": "36ba819bbe03280fa82c62ef76b00c87a92c2aff",
+  "attempt": 1,
+  "functional_records": 192,
+  "cleanup_records": 192,
+  "campaign_records": 2,
+  "total_journal_records": 386,
+  "journal_matches_final_json": true,
+  "independent_plan_order_and_unique_functional_ids": "passed",
+  "raw_payload_records": 384,
+  "received_words_both_roles": 82944,
+  "counts": [
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "478c0523af6f0ae44d15e44504c23b356fcdec228b938fec166a4dfd6c69e85b",
+        "f6a6bb0549a315ab080c99723b439a75cf8e53ea579626135f1e4b1a718f972e"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "f1520093d307a095d2794f641c95fd270f3e7f100f9904de518ae6e8402dc813",
+        "c9eb2582af090ebc868b06ba23e6db56b3208ce054a49ed31c10cc4f53b91e83"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ddd3015107f7843b4b85dcc31c0f562629acda2d6f59bc95c341791fca1dfd61",
+        "9bf411b410915966e9dcc7aafec0fd00f45b9fdb6a762b0cc8a078f3ed6eca19"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "547a0d4bd671b6ddf680d7a70c209936b988f3afc7b07519f6fad025b274ac4e",
+        "67a1bc941e83a7641131f84ea48b264659c60d38a43d9a488f009a4ee4fd6de1"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "18a3ef285e3e1a80e613913a892fe0b761ef17a9ec05ca34490063d66ee764c2",
+        "ab583a438a9cceda83ae504dc33421f737111aabf59d0f758cb4b4fce2d0eedf"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "dd801e56b984030ed8c5f9f2da0d2769809a3e9ebf7f1978a53eba0d40481356",
+        "2c7c9f23b94bf2516ca4d4bc23e6fd617e3e9b527d94cfb2c357c06a1e088d6d"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "4a843128abe62f1e4434c3f6909b3987c85db8fc69080a3d7aad245aab072953",
+        "b4e79ee9c43e2da1f68f270ce8c90a8f956773bb591322a3939d4eea8481d4bb"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "4e0b703a3d8405cd4d2c3856394ce83f8675f490e5226899a231c8fc37fbc37d",
+        "7a8da8d93bc7b7737435c9747d24f624db70058f70e1bcbe8085bd59b6a61188"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "18a3ef285e3e1a80e613913a892fe0b761ef17a9ec05ca34490063d66ee764c2",
+        "ab583a438a9cceda83ae504dc33421f737111aabf59d0f758cb4b4fce2d0eedf"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "dd801e56b984030ed8c5f9f2da0d2769809a3e9ebf7f1978a53eba0d40481356",
+        "2c7c9f23b94bf2516ca4d4bc23e6fd617e3e9b527d94cfb2c357c06a1e088d6d"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "4a843128abe62f1e4434c3f6909b3987c85db8fc69080a3d7aad245aab072953",
+        "b4e79ee9c43e2da1f68f270ce8c90a8f956773bb591322a3939d4eea8481d4bb"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "4e0b703a3d8405cd4d2c3856394ce83f8675f490e5226899a231c8fc37fbc37d",
+        "7a8da8d93bc7b7737435c9747d24f624db70058f70e1bcbe8085bd59b6a61188"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "478c0523af6f0ae44d15e44504c23b356fcdec228b938fec166a4dfd6c69e85b",
+        "4093de8bcf20e583bba1bd0e5d6cba4f3e4348d1e637d05dc5562ea5558a7fb2"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "f1520093d307a095d2794f641c95fd270f3e7f100f9904de518ae6e8402dc813",
+        "f8e757c04875253c95321d75dabeb47ac559cf73e980a92351696cb1b543e130"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ddd3015107f7843b4b85dcc31c0f562629acda2d6f59bc95c341791fca1dfd61",
+        "7a983d0bc51d63f29b77a26aae707f8bf8a1427eb71cba02f76963046692631a"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "547a0d4bd671b6ddf680d7a70c209936b988f3afc7b07519f6fad025b274ac4e",
+        "3a5fdb1f1d79e83dd06fc47706a35fac7d3ee4d182b2a3cce1e1913f66bca067"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "18a3ef285e3e1a80e613913a892fe0b761ef17a9ec05ca34490063d66ee764c2",
+        "f3e26373bc0e0c90ccb6e1ca00d23733710c43a29e4b8460e4f62d9e488269a4"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "dd801e56b984030ed8c5f9f2da0d2769809a3e9ebf7f1978a53eba0d40481356",
+        "dad8c8d6a24b34f573d81276ce9de70da7b70f9b7ac9156c0fc44d5e88d42462"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "4a843128abe62f1e4434c3f6909b3987c85db8fc69080a3d7aad245aab072953",
+        "e91ff9426392ad2b68443b53c05ecf8b0f738487bba70bf75bce7f7ab42bd7aa"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "4e0b703a3d8405cd4d2c3856394ce83f8675f490e5226899a231c8fc37fbc37d",
+        "f62ec99a9f48bc93e48d8329cc07e34baf09b4437a700789d751c7987d2365f2"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "18a3ef285e3e1a80e613913a892fe0b761ef17a9ec05ca34490063d66ee764c2",
+        "f3e26373bc0e0c90ccb6e1ca00d23733710c43a29e4b8460e4f62d9e488269a4"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "dd801e56b984030ed8c5f9f2da0d2769809a3e9ebf7f1978a53eba0d40481356",
+        "dad8c8d6a24b34f573d81276ce9de70da7b70f9b7ac9156c0fc44d5e88d42462"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "4a843128abe62f1e4434c3f6909b3987c85db8fc69080a3d7aad245aab072953",
+        "e91ff9426392ad2b68443b53c05ecf8b0f738487bba70bf75bce7f7ab42bd7aa"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "4e0b703a3d8405cd4d2c3856394ce83f8675f490e5226899a231c8fc37fbc37d",
+        "f62ec99a9f48bc93e48d8329cc07e34baf09b4437a700789d751c7987d2365f2"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "c7f87b7bea8c8a01b44d8b674f5cc3ba883943347d6341047d4b39f73e72e67f",
+        "c58358c3ad801f33e3a1e673d43a5c958556063d0c429f760ce6250bb71b777d"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "d97ebc4234fbdd246a493babd252f089b353cf63fb25bcb12864b0d868bb7e24",
+        "67f125e4e7e29986315f40c12a4e4b4ed3463d084969e293905d933921de66d5"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "cb22da95574b76eddbc1548170c800c6f2984e58fd3b661917691a8c00f33b8e",
+        "2ed492d5ee00f80c0141218ce39c6b6e3f08df7855ee711880d6a283f754a053"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "18899b3ee18a51e370f63e660ae4af26ad73ee6ef273e75bf780039dbc5bcf74",
+        "9642d1d7bac8ed478ad2959c8406bf5f30675381393df9e21325a636a1d84b22"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "22b74cb55757be74f8dcbc7218c617505b101637aee90099ad773acedee02b30",
+        "75a5ce108d3f95e5c38ffbafd8ccc7070b67d1186688500464851e287d442184"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "a5292fac1b87fa7cd3ae70eb96c2ee197a91aa8da3667934059fc4c326b5176e",
+        "f88acbfce57fd0d395c0e9ed4ebb296932c3134e7b548c5d56aaa126817702bb"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "84b7c5e18255e17e41f03607bbf6b8012a22a9be13982103f30464e1e1fab455",
+        "8b02be6743b64f034b6e412c1ba803969138b6d7164e7487b4063f56e4e5efa8"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "e73927581b89a116db039b0d43e1f905d27880f8b0a9553cc9f82c12c9211cbc",
+        "54beb99fb5fe202d68497087ab135f6c39370b4d254cb7650f8d44e521cf16c0"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "22b74cb55757be74f8dcbc7218c617505b101637aee90099ad773acedee02b30",
+        "75a5ce108d3f95e5c38ffbafd8ccc7070b67d1186688500464851e287d442184"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "a5292fac1b87fa7cd3ae70eb96c2ee197a91aa8da3667934059fc4c326b5176e",
+        "f88acbfce57fd0d395c0e9ed4ebb296932c3134e7b548c5d56aaa126817702bb"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "84b7c5e18255e17e41f03607bbf6b8012a22a9be13982103f30464e1e1fab455",
+        "8b02be6743b64f034b6e412c1ba803969138b6d7164e7487b4063f56e4e5efa8"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "e73927581b89a116db039b0d43e1f905d27880f8b0a9553cc9f82c12c9211cbc",
+        "54beb99fb5fe202d68497087ab135f6c39370b4d254cb7650f8d44e521cf16c0"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "c676dd3ef5d698b7bd7f8a70a5f732ccd94bcc0722fa58a6a81f9c7398b260fb",
+        "32ee3e262291e19c232ac28393514578aa633685eb9b74ba665a9488322787a0"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "1624eff06a4fb2791c8a4e9031c2b7ec635f0ecbd3ed463cd8da787c35646f56",
+        "cf429f8ad42f125938768431b4b5005dcbc7490d57b77a9509346c83dc77f1eb"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "75a8f19b7e25eab31688bf71cd03078b7f085a6b4dd6a99ba7ee249f63786cc2",
+        "5512b01e1c57d708df75f3530ccea9a5f97cf78147f9a64ff5b66be5b8642dac"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "2e6d5efd1c5902f9d10e85506733873625da825993a649f75391ce263bc7c8ed",
+        "37c23ed26963812bec1468ff72019c4f373afe6031fd4022b58272c90bafb10f"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "478c0523af6f0ae44d15e44504c23b356fcdec228b938fec166a4dfd6c69e85b",
+        "4093de8bcf20e583bba1bd0e5d6cba4f3e4348d1e637d05dc5562ea5558a7fb2"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "f1520093d307a095d2794f641c95fd270f3e7f100f9904de518ae6e8402dc813",
+        "f8e757c04875253c95321d75dabeb47ac559cf73e980a92351696cb1b543e130"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ddd3015107f7843b4b85dcc31c0f562629acda2d6f59bc95c341791fca1dfd61",
+        "7a983d0bc51d63f29b77a26aae707f8bf8a1427eb71cba02f76963046692631a"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "547a0d4bd671b6ddf680d7a70c209936b988f3afc7b07519f6fad025b274ac4e",
+        "3a5fdb1f1d79e83dd06fc47706a35fac7d3ee4d182b2a3cce1e1913f66bca067"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "478c0523af6f0ae44d15e44504c23b356fcdec228b938fec166a4dfd6c69e85b",
+        "4093de8bcf20e583bba1bd0e5d6cba4f3e4348d1e637d05dc5562ea5558a7fb2"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "f1520093d307a095d2794f641c95fd270f3e7f100f9904de518ae6e8402dc813",
+        "f8e757c04875253c95321d75dabeb47ac559cf73e980a92351696cb1b543e130"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ddd3015107f7843b4b85dcc31c0f562629acda2d6f59bc95c341791fca1dfd61",
+        "7a983d0bc51d63f29b77a26aae707f8bf8a1427eb71cba02f76963046692631a"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "547a0d4bd671b6ddf680d7a70c209936b988f3afc7b07519f6fad025b274ac4e",
+        "3a5fdb1f1d79e83dd06fc47706a35fac7d3ee4d182b2a3cce1e1913f66bca067"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "478c0523af6f0ae44d15e44504c23b356fcdec228b938fec166a4dfd6c69e85b",
+        "f6a6bb0549a315ab080c99723b439a75cf8e53ea579626135f1e4b1a718f972e"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "f1520093d307a095d2794f641c95fd270f3e7f100f9904de518ae6e8402dc813",
+        "c9eb2582af090ebc868b06ba23e6db56b3208ce054a49ed31c10cc4f53b91e83"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ddd3015107f7843b4b85dcc31c0f562629acda2d6f59bc95c341791fca1dfd61",
+        "9bf411b410915966e9dcc7aafec0fd00f45b9fdb6a762b0cc8a078f3ed6eca19"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "547a0d4bd671b6ddf680d7a70c209936b988f3afc7b07519f6fad025b274ac4e",
+        "67a1bc941e83a7641131f84ea48b264659c60d38a43d9a488f009a4ee4fd6de1"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "18a3ef285e3e1a80e613913a892fe0b761ef17a9ec05ca34490063d66ee764c2",
+        "ab583a438a9cceda83ae504dc33421f737111aabf59d0f758cb4b4fce2d0eedf"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "dd801e56b984030ed8c5f9f2da0d2769809a3e9ebf7f1978a53eba0d40481356",
+        "2c7c9f23b94bf2516ca4d4bc23e6fd617e3e9b527d94cfb2c357c06a1e088d6d"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "4a843128abe62f1e4434c3f6909b3987c85db8fc69080a3d7aad245aab072953",
+        "b4e79ee9c43e2da1f68f270ce8c90a8f956773bb591322a3939d4eea8481d4bb"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "4e0b703a3d8405cd4d2c3856394ce83f8675f490e5226899a231c8fc37fbc37d",
+        "7a8da8d93bc7b7737435c9747d24f624db70058f70e1bcbe8085bd59b6a61188"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "18a3ef285e3e1a80e613913a892fe0b761ef17a9ec05ca34490063d66ee764c2",
+        "ab583a438a9cceda83ae504dc33421f737111aabf59d0f758cb4b4fce2d0eedf"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "dd801e56b984030ed8c5f9f2da0d2769809a3e9ebf7f1978a53eba0d40481356",
+        "2c7c9f23b94bf2516ca4d4bc23e6fd617e3e9b527d94cfb2c357c06a1e088d6d"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "4a843128abe62f1e4434c3f6909b3987c85db8fc69080a3d7aad245aab072953",
+        "b4e79ee9c43e2da1f68f270ce8c90a8f956773bb591322a3939d4eea8481d4bb"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "4e0b703a3d8405cd4d2c3856394ce83f8675f490e5226899a231c8fc37fbc37d",
+        "7a8da8d93bc7b7737435c9747d24f624db70058f70e1bcbe8085bd59b6a61188"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "478c0523af6f0ae44d15e44504c23b356fcdec228b938fec166a4dfd6c69e85b",
+        "4093de8bcf20e583bba1bd0e5d6cba4f3e4348d1e637d05dc5562ea5558a7fb2"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "f1520093d307a095d2794f641c95fd270f3e7f100f9904de518ae6e8402dc813",
+        "f8e757c04875253c95321d75dabeb47ac559cf73e980a92351696cb1b543e130"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ddd3015107f7843b4b85dcc31c0f562629acda2d6f59bc95c341791fca1dfd61",
+        "7a983d0bc51d63f29b77a26aae707f8bf8a1427eb71cba02f76963046692631a"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "547a0d4bd671b6ddf680d7a70c209936b988f3afc7b07519f6fad025b274ac4e",
+        "3a5fdb1f1d79e83dd06fc47706a35fac7d3ee4d182b2a3cce1e1913f66bca067"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "18a3ef285e3e1a80e613913a892fe0b761ef17a9ec05ca34490063d66ee764c2",
+        "f3e26373bc0e0c90ccb6e1ca00d23733710c43a29e4b8460e4f62d9e488269a4"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "dd801e56b984030ed8c5f9f2da0d2769809a3e9ebf7f1978a53eba0d40481356",
+        "dad8c8d6a24b34f573d81276ce9de70da7b70f9b7ac9156c0fc44d5e88d42462"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "4a843128abe62f1e4434c3f6909b3987c85db8fc69080a3d7aad245aab072953",
+        "e91ff9426392ad2b68443b53c05ecf8b0f738487bba70bf75bce7f7ab42bd7aa"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "4e0b703a3d8405cd4d2c3856394ce83f8675f490e5226899a231c8fc37fbc37d",
+        "f62ec99a9f48bc93e48d8329cc07e34baf09b4437a700789d751c7987d2365f2"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "18a3ef285e3e1a80e613913a892fe0b761ef17a9ec05ca34490063d66ee764c2",
+        "f3e26373bc0e0c90ccb6e1ca00d23733710c43a29e4b8460e4f62d9e488269a4"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "dd801e56b984030ed8c5f9f2da0d2769809a3e9ebf7f1978a53eba0d40481356",
+        "dad8c8d6a24b34f573d81276ce9de70da7b70f9b7ac9156c0fc44d5e88d42462"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "4a843128abe62f1e4434c3f6909b3987c85db8fc69080a3d7aad245aab072953",
+        "e91ff9426392ad2b68443b53c05ecf8b0f738487bba70bf75bce7f7ab42bd7aa"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "4e0b703a3d8405cd4d2c3856394ce83f8675f490e5226899a231c8fc37fbc37d",
+        "f62ec99a9f48bc93e48d8329cc07e34baf09b4437a700789d751c7987d2365f2"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "c7f87b7bea8c8a01b44d8b674f5cc3ba883943347d6341047d4b39f73e72e67f",
+        "c58358c3ad801f33e3a1e673d43a5c958556063d0c429f760ce6250bb71b777d"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "d97ebc4234fbdd246a493babd252f089b353cf63fb25bcb12864b0d868bb7e24",
+        "67f125e4e7e29986315f40c12a4e4b4ed3463d084969e293905d933921de66d5"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "cb22da95574b76eddbc1548170c800c6f2984e58fd3b661917691a8c00f33b8e",
+        "2ed492d5ee00f80c0141218ce39c6b6e3f08df7855ee711880d6a283f754a053"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "18899b3ee18a51e370f63e660ae4af26ad73ee6ef273e75bf780039dbc5bcf74",
+        "9642d1d7bac8ed478ad2959c8406bf5f30675381393df9e21325a636a1d84b22"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "22b74cb55757be74f8dcbc7218c617505b101637aee90099ad773acedee02b30",
+        "75a5ce108d3f95e5c38ffbafd8ccc7070b67d1186688500464851e287d442184"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "a5292fac1b87fa7cd3ae70eb96c2ee197a91aa8da3667934059fc4c326b5176e",
+        "f88acbfce57fd0d395c0e9ed4ebb296932c3134e7b548c5d56aaa126817702bb"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "84b7c5e18255e17e41f03607bbf6b8012a22a9be13982103f30464e1e1fab455",
+        "8b02be6743b64f034b6e412c1ba803969138b6d7164e7487b4063f56e4e5efa8"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "e73927581b89a116db039b0d43e1f905d27880f8b0a9553cc9f82c12c9211cbc",
+        "54beb99fb5fe202d68497087ab135f6c39370b4d254cb7650f8d44e521cf16c0"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "22b74cb55757be74f8dcbc7218c617505b101637aee90099ad773acedee02b30",
+        "75a5ce108d3f95e5c38ffbafd8ccc7070b67d1186688500464851e287d442184"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "a5292fac1b87fa7cd3ae70eb96c2ee197a91aa8da3667934059fc4c326b5176e",
+        "f88acbfce57fd0d395c0e9ed4ebb296932c3134e7b548c5d56aaa126817702bb"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "84b7c5e18255e17e41f03607bbf6b8012a22a9be13982103f30464e1e1fab455",
+        "8b02be6743b64f034b6e412c1ba803969138b6d7164e7487b4063f56e4e5efa8"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "e73927581b89a116db039b0d43e1f905d27880f8b0a9553cc9f82c12c9211cbc",
+        "54beb99fb5fe202d68497087ab135f6c39370b4d254cb7650f8d44e521cf16c0"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "c676dd3ef5d698b7bd7f8a70a5f732ccd94bcc0722fa58a6a81f9c7398b260fb",
+        "32ee3e262291e19c232ac28393514578aa633685eb9b74ba665a9488322787a0"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "1624eff06a4fb2791c8a4e9031c2b7ec635f0ecbd3ed463cd8da787c35646f56",
+        "cf429f8ad42f125938768431b4b5005dcbc7490d57b77a9509346c83dc77f1eb"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "75a8f19b7e25eab31688bf71cd03078b7f085a6b4dd6a99ba7ee249f63786cc2",
+        "5512b01e1c57d708df75f3530ccea9a5f97cf78147f9a64ff5b66be5b8642dac"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "2e6d5efd1c5902f9d10e85506733873625da825993a649f75391ce263bc7c8ed",
+        "37c23ed26963812bec1468ff72019c4f373afe6031fd4022b58272c90bafb10f"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "478c0523af6f0ae44d15e44504c23b356fcdec228b938fec166a4dfd6c69e85b",
+        "4093de8bcf20e583bba1bd0e5d6cba4f3e4348d1e637d05dc5562ea5558a7fb2"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "f1520093d307a095d2794f641c95fd270f3e7f100f9904de518ae6e8402dc813",
+        "f8e757c04875253c95321d75dabeb47ac559cf73e980a92351696cb1b543e130"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ddd3015107f7843b4b85dcc31c0f562629acda2d6f59bc95c341791fca1dfd61",
+        "7a983d0bc51d63f29b77a26aae707f8bf8a1427eb71cba02f76963046692631a"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "547a0d4bd671b6ddf680d7a70c209936b988f3afc7b07519f6fad025b274ac4e",
+        "3a5fdb1f1d79e83dd06fc47706a35fac7d3ee4d182b2a3cce1e1913f66bca067"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "478c0523af6f0ae44d15e44504c23b356fcdec228b938fec166a4dfd6c69e85b",
+        "4093de8bcf20e583bba1bd0e5d6cba4f3e4348d1e637d05dc5562ea5558a7fb2"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "f1520093d307a095d2794f641c95fd270f3e7f100f9904de518ae6e8402dc813",
+        "f8e757c04875253c95321d75dabeb47ac559cf73e980a92351696cb1b543e130"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ddd3015107f7843b4b85dcc31c0f562629acda2d6f59bc95c341791fca1dfd61",
+        "7a983d0bc51d63f29b77a26aae707f8bf8a1427eb71cba02f76963046692631a"
+      ]
+    },
+    {
+      "controller_role": 1,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "547a0d4bd671b6ddf680d7a70c209936b988f3afc7b07519f6fad025b274ac4e",
+        "3a5fdb1f1d79e83dd06fc47706a35fac7d3ee4d182b2a3cce1e1913f66bca067"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "478c0523af6f0ae44d15e44504c23b356fcdec228b938fec166a4dfd6c69e85b",
+        "f6a6bb0549a315ab080c99723b439a75cf8e53ea579626135f1e4b1a718f972e"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "f1520093d307a095d2794f641c95fd270f3e7f100f9904de518ae6e8402dc813",
+        "c9eb2582af090ebc868b06ba23e6db56b3208ce054a49ed31c10cc4f53b91e83"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ddd3015107f7843b4b85dcc31c0f562629acda2d6f59bc95c341791fca1dfd61",
+        "9bf411b410915966e9dcc7aafec0fd00f45b9fdb6a762b0cc8a078f3ed6eca19"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "547a0d4bd671b6ddf680d7a70c209936b988f3afc7b07519f6fad025b274ac4e",
+        "67a1bc941e83a7641131f84ea48b264659c60d38a43d9a488f009a4ee4fd6de1"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "18a3ef285e3e1a80e613913a892fe0b761ef17a9ec05ca34490063d66ee764c2",
+        "ab583a438a9cceda83ae504dc33421f737111aabf59d0f758cb4b4fce2d0eedf"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "dd801e56b984030ed8c5f9f2da0d2769809a3e9ebf7f1978a53eba0d40481356",
+        "2c7c9f23b94bf2516ca4d4bc23e6fd617e3e9b527d94cfb2c357c06a1e088d6d"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "4a843128abe62f1e4434c3f6909b3987c85db8fc69080a3d7aad245aab072953",
+        "b4e79ee9c43e2da1f68f270ce8c90a8f956773bb591322a3939d4eea8481d4bb"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "4e0b703a3d8405cd4d2c3856394ce83f8675f490e5226899a231c8fc37fbc37d",
+        "7a8da8d93bc7b7737435c9747d24f624db70058f70e1bcbe8085bd59b6a61188"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "18a3ef285e3e1a80e613913a892fe0b761ef17a9ec05ca34490063d66ee764c2",
+        "ab583a438a9cceda83ae504dc33421f737111aabf59d0f758cb4b4fce2d0eedf"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "dd801e56b984030ed8c5f9f2da0d2769809a3e9ebf7f1978a53eba0d40481356",
+        "2c7c9f23b94bf2516ca4d4bc23e6fd617e3e9b527d94cfb2c357c06a1e088d6d"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "4a843128abe62f1e4434c3f6909b3987c85db8fc69080a3d7aad245aab072953",
+        "b4e79ee9c43e2da1f68f270ce8c90a8f956773bb591322a3939d4eea8481d4bb"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 8,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "4e0b703a3d8405cd4d2c3856394ce83f8675f490e5226899a231c8fc37fbc37d",
+        "7a8da8d93bc7b7737435c9747d24f624db70058f70e1bcbe8085bd59b6a61188"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "e03c159f40a90ec6fc0ef50cbadd6953c8351a5c0f7b9577d2a2d62d9619d95d",
+        "f6a6bb0549a315ab080c99723b439a75cf8e53ea579626135f1e4b1a718f972e"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "92c5e3646008cf8e8fd0d4662bb0a0f4970205715dedf47fa3489201de9df061",
+        "c9eb2582af090ebc868b06ba23e6db56b3208ce054a49ed31c10cc4f53b91e83"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ed173b1ce447eb4aa84b95dc1192c6c574e66fb342995e88581924bf6325f7b9",
+        "9bf411b410915966e9dcc7aafec0fd00f45b9fdb6a762b0cc8a078f3ed6eca19"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "3cb7017d88986ada206aeaf192d9fd064524f3970695557a0464e15b8ef16b3d",
+        "67a1bc941e83a7641131f84ea48b264659c60d38a43d9a488f009a4ee4fd6de1"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "ed13045d51f5f775f188cf3ef11c49ab3965170f0ca5e745d8025b528820eba4",
+        "ab583a438a9cceda83ae504dc33421f737111aabf59d0f758cb4b4fce2d0eedf"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "aa18226c0e2ff43070e7807f83b1dcd32c230e93ab6bd6f3a7848f84f4351660",
+        "2c7c9f23b94bf2516ca4d4bc23e6fd617e3e9b527d94cfb2c357c06a1e088d6d"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "95762dc9c7d9547600834e76dcf6dafb0f82e31954064dcff380c0b0bf96dc23",
+        "b4e79ee9c43e2da1f68f270ce8c90a8f956773bb591322a3939d4eea8481d4bb"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "e8076491dc0680ad932123998134eef88a7ca052bd4f7858abbef651faa84ab0",
+        "7a8da8d93bc7b7737435c9747d24f624db70058f70e1bcbe8085bd59b6a61188"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "ed13045d51f5f775f188cf3ef11c49ab3965170f0ca5e745d8025b528820eba4",
+        "ab583a438a9cceda83ae504dc33421f737111aabf59d0f758cb4b4fce2d0eedf"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "aa18226c0e2ff43070e7807f83b1dcd32c230e93ab6bd6f3a7848f84f4351660",
+        "2c7c9f23b94bf2516ca4d4bc23e6fd617e3e9b527d94cfb2c357c06a1e088d6d"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "95762dc9c7d9547600834e76dcf6dafb0f82e31954064dcff380c0b0bf96dc23",
+        "b4e79ee9c43e2da1f68f270ce8c90a8f956773bb591322a3939d4eea8481d4bb"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 16,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "e8076491dc0680ad932123998134eef88a7ca052bd4f7858abbef651faa84ab0",
+        "7a8da8d93bc7b7737435c9747d24f624db70058f70e1bcbe8085bd59b6a61188"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "798b2d00c346215ccb1f17f87e75f41d4fdf9591d9c8de47ee2cf609f9369bbf",
+        "649e494f9ddb3508e528f71c9ce544642072340942e0b3d8c497c24282fb22ba"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "95f61d017cd7692b250985f7462848feda22c34989284ff2e69e98121e44883c",
+        "caca29940c84f33729240a3ab9a80a887b4ec26ab65cd7eae918cac97eb9ffc2"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ee1a6bac0328dfa7609537d5776cf25460e61519f3495f3ba2a901a9c7d2e489",
+        "2afa4cc1b2cee2968dc39f1962554a17cc039ad67bc05495cc03b707bddf150f"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "8ab755e636603beae2d00c0ec61f234e5045231a9d22a48984f066d41a82b1b3",
+        "50ffe77905f0f7709da493d2d7b88a22290e247fced974e3d1bb03912def84b1"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "c9aafc967590e7859442c9dc48bde236de53337f541ab2461916df10dd6cd259",
+        "549f03e05deb16483f5ade422843e97929d7048bca55b257fde0aa871d3dd604"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "844f8517b35ac445306fbd39926fee17345f7ba9e7117b3c036d42661119bae1",
+        "6b5edede6663363cd88488ffcd52bab9b7024a1a2fb39e1eff54c8dd6c94b7b5"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "d2b80c71545ff92368bc6e805d3e21b2d39727ce791134427708636f6e4bc838",
+        "054f55bcbb152fc2f6be3b3032ee5a011141ab1bb9a98c6a8813744668a76e73"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "ab6d6a954dc59613c86c2018a21b687c7dcbe8c8b9a9ef071a627866d182421b",
+        "bf2b5a9801c79d0f66d0e48654bdb23c784e0a8688f80f2806ae19a719f4de82"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "c9aafc967590e7859442c9dc48bde236de53337f541ab2461916df10dd6cd259",
+        "549f03e05deb16483f5ade422843e97929d7048bca55b257fde0aa871d3dd604"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "844f8517b35ac445306fbd39926fee17345f7ba9e7117b3c036d42661119bae1",
+        "6b5edede6663363cd88488ffcd52bab9b7024a1a2fb39e1eff54c8dd6c94b7b5"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "d2b80c71545ff92368bc6e805d3e21b2d39727ce791134427708636f6e4bc838",
+        "054f55bcbb152fc2f6be3b3032ee5a011141ab1bb9a98c6a8813744668a76e73"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 24,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "ab6d6a954dc59613c86c2018a21b687c7dcbe8c8b9a9ef071a627866d182421b",
+        "bf2b5a9801c79d0f66d0e48654bdb23c784e0a8688f80f2806ae19a719f4de82"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "f06f1d8c75cdb066c3f11abe453379307821f45ab0ebf3a3bae3279326c9ab5c",
+        "d7d3ce71fca71e1eed10e695be2cc22af54b8afaf8e9a7e296ced21cc8639822"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "4362776229dd551bcd93ef411b7edcb5484f503c2fe8aba9ebb0f6d95f84a299",
+        "83c19c219527c836b60809e754c6f72c4bcbed2d3d2d7a25e8d6100697bfa164"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "da7ecfe797a8d13fc878b2a4df6adedb05bcf541daad9b5d509caca01de22e44",
+        "766507483c06af35ac84d29a8e937155415c2b292e8527242e46cf6641673feb"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "e81a885eeb0598ae6e56644c7ee9268edc6a65cd4052422533e36e167535d335",
+        "c620de5659f292de19b1cbb4df9efc4e7c66baad743065fa0b846b7515d83bda"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "e03c159f40a90ec6fc0ef50cbadd6953c8351a5c0f7b9577d2a2d62d9619d95d",
+        "f6a6bb0549a315ab080c99723b439a75cf8e53ea579626135f1e4b1a718f972e"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "92c5e3646008cf8e8fd0d4662bb0a0f4970205715dedf47fa3489201de9df061",
+        "c9eb2582af090ebc868b06ba23e6db56b3208ce054a49ed31c10cc4f53b91e83"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ed173b1ce447eb4aa84b95dc1192c6c574e66fb342995e88581924bf6325f7b9",
+        "9bf411b410915966e9dcc7aafec0fd00f45b9fdb6a762b0cc8a078f3ed6eca19"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "3cb7017d88986ada206aeaf192d9fd064524f3970695557a0464e15b8ef16b3d",
+        "67a1bc941e83a7641131f84ea48b264659c60d38a43d9a488f009a4ee4fd6de1"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "e03c159f40a90ec6fc0ef50cbadd6953c8351a5c0f7b9577d2a2d62d9619d95d",
+        "f6a6bb0549a315ab080c99723b439a75cf8e53ea579626135f1e4b1a718f972e"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "92c5e3646008cf8e8fd0d4662bb0a0f4970205715dedf47fa3489201de9df061",
+        "c9eb2582af090ebc868b06ba23e6db56b3208ce054a49ed31c10cc4f53b91e83"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ed173b1ce447eb4aa84b95dc1192c6c574e66fb342995e88581924bf6325f7b9",
+        "9bf411b410915966e9dcc7aafec0fd00f45b9fdb6a762b0cc8a078f3ed6eca19"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 16000,
+      "width_bits": 32,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "3cb7017d88986ada206aeaf192d9fd064524f3970695557a0464e15b8ef16b3d",
+        "67a1bc941e83a7641131f84ea48b264659c60d38a43d9a488f009a4ee4fd6de1"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "478c0523af6f0ae44d15e44504c23b356fcdec228b938fec166a4dfd6c69e85b",
+        "f6a6bb0549a315ab080c99723b439a75cf8e53ea579626135f1e4b1a718f972e"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "f1520093d307a095d2794f641c95fd270f3e7f100f9904de518ae6e8402dc813",
+        "c9eb2582af090ebc868b06ba23e6db56b3208ce054a49ed31c10cc4f53b91e83"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ddd3015107f7843b4b85dcc31c0f562629acda2d6f59bc95c341791fca1dfd61",
+        "9bf411b410915966e9dcc7aafec0fd00f45b9fdb6a762b0cc8a078f3ed6eca19"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "547a0d4bd671b6ddf680d7a70c209936b988f3afc7b07519f6fad025b274ac4e",
+        "67a1bc941e83a7641131f84ea48b264659c60d38a43d9a488f009a4ee4fd6de1"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "18a3ef285e3e1a80e613913a892fe0b761ef17a9ec05ca34490063d66ee764c2",
+        "ab583a438a9cceda83ae504dc33421f737111aabf59d0f758cb4b4fce2d0eedf"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "dd801e56b984030ed8c5f9f2da0d2769809a3e9ebf7f1978a53eba0d40481356",
+        "2c7c9f23b94bf2516ca4d4bc23e6fd617e3e9b527d94cfb2c357c06a1e088d6d"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "4a843128abe62f1e4434c3f6909b3987c85db8fc69080a3d7aad245aab072953",
+        "b4e79ee9c43e2da1f68f270ce8c90a8f956773bb591322a3939d4eea8481d4bb"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "4e0b703a3d8405cd4d2c3856394ce83f8675f490e5226899a231c8fc37fbc37d",
+        "7a8da8d93bc7b7737435c9747d24f624db70058f70e1bcbe8085bd59b6a61188"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "18a3ef285e3e1a80e613913a892fe0b761ef17a9ec05ca34490063d66ee764c2",
+        "ab583a438a9cceda83ae504dc33421f737111aabf59d0f758cb4b4fce2d0eedf"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "dd801e56b984030ed8c5f9f2da0d2769809a3e9ebf7f1978a53eba0d40481356",
+        "2c7c9f23b94bf2516ca4d4bc23e6fd617e3e9b527d94cfb2c357c06a1e088d6d"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "4a843128abe62f1e4434c3f6909b3987c85db8fc69080a3d7aad245aab072953",
+        "b4e79ee9c43e2da1f68f270ce8c90a8f956773bb591322a3939d4eea8481d4bb"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 8,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "4e0b703a3d8405cd4d2c3856394ce83f8675f490e5226899a231c8fc37fbc37d",
+        "7a8da8d93bc7b7737435c9747d24f624db70058f70e1bcbe8085bd59b6a61188"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "e03c159f40a90ec6fc0ef50cbadd6953c8351a5c0f7b9577d2a2d62d9619d95d",
+        "f6a6bb0549a315ab080c99723b439a75cf8e53ea579626135f1e4b1a718f972e"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "92c5e3646008cf8e8fd0d4662bb0a0f4970205715dedf47fa3489201de9df061",
+        "c9eb2582af090ebc868b06ba23e6db56b3208ce054a49ed31c10cc4f53b91e83"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ed173b1ce447eb4aa84b95dc1192c6c574e66fb342995e88581924bf6325f7b9",
+        "9bf411b410915966e9dcc7aafec0fd00f45b9fdb6a762b0cc8a078f3ed6eca19"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "3cb7017d88986ada206aeaf192d9fd064524f3970695557a0464e15b8ef16b3d",
+        "67a1bc941e83a7641131f84ea48b264659c60d38a43d9a488f009a4ee4fd6de1"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "ed13045d51f5f775f188cf3ef11c49ab3965170f0ca5e745d8025b528820eba4",
+        "ab583a438a9cceda83ae504dc33421f737111aabf59d0f758cb4b4fce2d0eedf"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "aa18226c0e2ff43070e7807f83b1dcd32c230e93ab6bd6f3a7848f84f4351660",
+        "2c7c9f23b94bf2516ca4d4bc23e6fd617e3e9b527d94cfb2c357c06a1e088d6d"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "95762dc9c7d9547600834e76dcf6dafb0f82e31954064dcff380c0b0bf96dc23",
+        "b4e79ee9c43e2da1f68f270ce8c90a8f956773bb591322a3939d4eea8481d4bb"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "e8076491dc0680ad932123998134eef88a7ca052bd4f7858abbef651faa84ab0",
+        "7a8da8d93bc7b7737435c9747d24f624db70058f70e1bcbe8085bd59b6a61188"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "ed13045d51f5f775f188cf3ef11c49ab3965170f0ca5e745d8025b528820eba4",
+        "ab583a438a9cceda83ae504dc33421f737111aabf59d0f758cb4b4fce2d0eedf"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "aa18226c0e2ff43070e7807f83b1dcd32c230e93ab6bd6f3a7848f84f4351660",
+        "2c7c9f23b94bf2516ca4d4bc23e6fd617e3e9b527d94cfb2c357c06a1e088d6d"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "95762dc9c7d9547600834e76dcf6dafb0f82e31954064dcff380c0b0bf96dc23",
+        "b4e79ee9c43e2da1f68f270ce8c90a8f956773bb591322a3939d4eea8481d4bb"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 16,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "e8076491dc0680ad932123998134eef88a7ca052bd4f7858abbef651faa84ab0",
+        "7a8da8d93bc7b7737435c9747d24f624db70058f70e1bcbe8085bd59b6a61188"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "798b2d00c346215ccb1f17f87e75f41d4fdf9591d9c8de47ee2cf609f9369bbf",
+        "649e494f9ddb3508e528f71c9ce544642072340942e0b3d8c497c24282fb22ba"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "95f61d017cd7692b250985f7462848feda22c34989284ff2e69e98121e44883c",
+        "caca29940c84f33729240a3ab9a80a887b4ec26ab65cd7eae918cac97eb9ffc2"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ee1a6bac0328dfa7609537d5776cf25460e61519f3495f3ba2a901a9c7d2e489",
+        "2afa4cc1b2cee2968dc39f1962554a17cc039ad67bc05495cc03b707bddf150f"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "8ab755e636603beae2d00c0ec61f234e5045231a9d22a48984f066d41a82b1b3",
+        "50ffe77905f0f7709da493d2d7b88a22290e247fced974e3d1bb03912def84b1"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "c9aafc967590e7859442c9dc48bde236de53337f541ab2461916df10dd6cd259",
+        "549f03e05deb16483f5ade422843e97929d7048bca55b257fde0aa871d3dd604"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "844f8517b35ac445306fbd39926fee17345f7ba9e7117b3c036d42661119bae1",
+        "6b5edede6663363cd88488ffcd52bab9b7024a1a2fb39e1eff54c8dd6c94b7b5"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "d2b80c71545ff92368bc6e805d3e21b2d39727ce791134427708636f6e4bc838",
+        "054f55bcbb152fc2f6be3b3032ee5a011141ab1bb9a98c6a8813744668a76e73"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "ab6d6a954dc59613c86c2018a21b687c7dcbe8c8b9a9ef071a627866d182421b",
+        "bf2b5a9801c79d0f66d0e48654bdb23c784e0a8688f80f2806ae19a719f4de82"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "c9aafc967590e7859442c9dc48bde236de53337f541ab2461916df10dd6cd259",
+        "549f03e05deb16483f5ade422843e97929d7048bca55b257fde0aa871d3dd604"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "844f8517b35ac445306fbd39926fee17345f7ba9e7117b3c036d42661119bae1",
+        "6b5edede6663363cd88488ffcd52bab9b7024a1a2fb39e1eff54c8dd6c94b7b5"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "d2b80c71545ff92368bc6e805d3e21b2d39727ce791134427708636f6e4bc838",
+        "054f55bcbb152fc2f6be3b3032ee5a011141ab1bb9a98c6a8813744668a76e73"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 24,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "ab6d6a954dc59613c86c2018a21b687c7dcbe8c8b9a9ef071a627866d182421b",
+        "bf2b5a9801c79d0f66d0e48654bdb23c784e0a8688f80f2806ae19a719f4de82"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "f06f1d8c75cdb066c3f11abe453379307821f45ab0ebf3a3bae3279326c9ab5c",
+        "d7d3ce71fca71e1eed10e695be2cc22af54b8afaf8e9a7e296ced21cc8639822"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 0,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "4362776229dd551bcd93ef411b7edcb5484f503c2fe8aba9ebb0f6d95f84a299",
+        "83c19c219527c836b60809e754c6f72c4bcbed2d3d2d7a25e8d6100697bfa164"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "da7ecfe797a8d13fc878b2a4df6adedb05bcf541daad9b5d509caca01de22e44",
+        "766507483c06af35ac84d29a8e937155415c2b292e8527242e46cf6641673feb"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 0,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "e81a885eeb0598ae6e56644c7ee9268edc6a65cd4052422533e36e167535d335",
+        "c620de5659f292de19b1cbb4df9efc4e7c66baad743065fa0b846b7515d83bda"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "e03c159f40a90ec6fc0ef50cbadd6953c8351a5c0f7b9577d2a2d62d9619d95d",
+        "f6a6bb0549a315ab080c99723b439a75cf8e53ea579626135f1e4b1a718f972e"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 1,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "92c5e3646008cf8e8fd0d4662bb0a0f4970205715dedf47fa3489201de9df061",
+        "c9eb2582af090ebc868b06ba23e6db56b3208ce054a49ed31c10cc4f53b91e83"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ed173b1ce447eb4aa84b95dc1192c6c574e66fb342995e88581924bf6325f7b9",
+        "9bf411b410915966e9dcc7aafec0fd00f45b9fdb6a762b0cc8a078f3ed6eca19"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 1,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "3cb7017d88986ada206aeaf192d9fd064524f3970695557a0464e15b8ef16b3d",
+        "67a1bc941e83a7641131f84ea48b264659c60d38a43d9a488f009a4ee4fd6de1"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 1,
+      "received_words_per_role": 32,
+      "raw_payload_sha256_by_receiver_role": [
+        "e03c159f40a90ec6fc0ef50cbadd6953c8351a5c0f7b9577d2a2d62d9619d95d",
+        "f6a6bb0549a315ab080c99723b439a75cf8e53ea579626135f1e4b1a718f972e"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 2,
+      "words_per_buffer": 32,
+      "buffers": 2,
+      "received_words_per_role": 64,
+      "raw_payload_sha256_by_receiver_role": [
+        "92c5e3646008cf8e8fd0d4662bb0a0f4970205715dedf47fa3489201de9df061",
+        "c9eb2582af090ebc868b06ba23e6db56b3208ce054a49ed31c10cc4f53b91e83"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 1,
+      "received_words_per_role": 256,
+      "raw_payload_sha256_by_receiver_role": [
+        "ed173b1ce447eb4aa84b95dc1192c6c574e66fb342995e88581924bf6325f7b9",
+        "9bf411b410915966e9dcc7aafec0fd00f45b9fdb6a762b0cc8a078f3ed6eca19"
+      ]
+    },
+    {
+      "controller_role": 2,
+      "sample_rate_hz_requested": 48000,
+      "width_bits": 32,
+      "channels": 2,
+      "words_per_buffer": 256,
+      "buffers": 2,
+      "received_words_per_role": 512,
+      "raw_payload_sha256_by_receiver_role": [
+        "3cb7017d88986ada206aeaf192d9fd064524f3970695557a0464e15b8ef16b3d",
+        "67a1bc941e83a7641131f84ea48b264659c60d38a43d9a488f009a4ee4fd6de1"
+      ]
+    }
+  ],
+  "continuous_elapsed_seconds": 47.609,
+  "swd_frequency_hz": 10000000,
+  "capture_note": "Canonical read_u32 payloads copied unchanged; passive RAM timing reads after completion, no extra mailbox or fixture commands",
+  "not_measured": [
+    "calibrated sample rate or jitter",
+    "external codec compatibility or audio quality",
+    "injected underrun/overrun recovery",
+    "T13 concurrency/soak"
+  ],
+  "hashes": {
+    "fixture430-attempt1.json": "f9d3a9116445d00abdbcae5143f790c0e8d18d5826ce23604744c670e1b4a345",
+    "fixture430-attempt1.json.jsonl": "9539b48a8a070e8bcba10992a84d930fbea539800fe1c5a5b6a95c7e35f0a635",
+    "i2s-payloads.jsonl": "0381bda15741043d23d974a28bd8a0f4f2a3a7b7889a286691a078f83b445225"
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-synthetic-signal",
+  "status": "preflight",
+  "fixture_id": 420,
+  "fixture_revision": 5,
+  "catalog_sha256": "e8db80525fcc9545ba6879453c22924d14123361c394702b147cdfec695aa511",
+  "core_revision": "fc9f1536e2caf4efee387c1a69b3a4c9e24adf3b",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": false,
+  "repetitions": 1,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "ed312febabde291a52ff19cb2756192eaf9e1358ab0410ea8216ca6d0da6f594",
+      "elf_sha256": "18af45db1ad20489efea09458f60473421663c85fccd9bd2d06bb362965c4ada",
+      "record_sha256": "f9fea76a084951a58aed9e1ed51b6113b2ce4aef83c6cc38593f5497e6329ec0"
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "5763893783121f20a39a9bb64df7f57e07eefb0fe77d350e5b4ae33a51cc4296",
+      "elf_sha256": "3061680ac362a2fba00a30d17fd9c977eb642814f29600b2e2548fc76c6693db",
+      "record_sha256": "f9fea76a084951a58aed9e1ed51b6113b2ce4aef83c6cc38593f5497e6329ec0"
+    }
+  ],
+  "results": [],
+  "fixture": {
+    "id": 420,
+    "family": "qdec",
+    "banks": [
+      1,
+      1
+    ],
+    "instances": [
+      [
+        20,
+        21
+      ],
+      [
+        20,
+        21
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "peer": [
+          "P4",
+          12,
+          "P1.14"
+        ],
+        "signal": "peer PWM -> DUT quadrature phase A"
+      },
+      {
+        "dut": [
+          "P2",
+          10,
+          "P1.6"
+        ],
+        "peer": [
+          "P4",
+          8,
+          "P1.10"
+        ],
+        "signal": "peer PWM -> DUT quadrature phase B"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "peer(role 2)의 LED4/LED2 buffer 입력을 PWM sequence로 구동해 DUT(role 1)의 QDEC20/21이 누산합니다. controller_role=2만 허용합니다.",
+    "pullups": []
+  },
+  "confirmation_template": {
+    "fixture_id": 420,
+    "fixture_revision": 5,
+    "catalog_sha256": "e8db80525fcc9545ba6879453c22924d14123361c394702b147cdfec695aa511",
+    "core_revision": "fc9f1536e2caf4efee387c1a69b3a4c9e24adf3b",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "uid_sha256": [
+      "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0"
+    ],
+    "hex_sha256": [
+      "ed312febabde291a52ff19cb2756192eaf9e1358ab0410ea8216ca6d0da6f594",
+      "5763893783121f20a39a9bb64df7f57e07eefb0fe77d350e5b4ae33a51cc4296"
+    ],
+    "dap_uart_disconnected_both": false,
+    "swd_connected_both": false,
+    "power_rails_not_joined": false,
+    "equal_io_voltage_confirmed": false,
+    "common_ground_confirmed": false,
+    "links_match_catalog": false,
+    "pullups_match_catalog": false,
+    "extra_outputs_disconnected": false,
+    "confirmed_at_unix": 0,
+    "confirmed_by": ""
+  }
+}
+V04_SIGNAL_PREFLIGHT_ONLY; no probe access, flash, reset or external output

@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t12-fixture420-fixed\postflight.py", line 8, in <module>
+    images = [pair.inspect_image(REPO, BUILD, role) for role in (1, 2)]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\hil\nu54dk\v04_pair.py", line 64, in inspect_image
+    raise ProtocolError("exact clean checkout required before flashing")
+v04_protocol.ProtocolError: exact clean checkout required before flashing

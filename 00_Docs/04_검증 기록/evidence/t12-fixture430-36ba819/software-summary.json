@@ -1,0 +1,49 @@
+{
+  "source": "36ba819bbe03280fa82c62ef76b00c87a92c2aff",
+  "host": {
+    "total": 660,
+    "passed": 659,
+    "skipped": 1,
+    "groups": 82,
+    "skip_reason": "! @brief 설치된 Arduino CLI가 공개 예제를 노출하는지 확인합니다. ... skipped 'M13 package 설치 후 NUCODE_M13_CLI_DISCOVERY=1로 실행합니다.'",
+    "native_compiler_skips": 0
+  },
+  "contract_tests_passed": 45,
+  "inventory": "passed; readiness open blockers remain 8",
+  "package_tests_passed": 20,
+  "style_files": 361,
+  "style_failed": 0,
+  "pair_builds": 2,
+  "pair_build_seconds": 285.6,
+  "affected_builds": 8,
+  "affected_scenarios": [
+    "nucode.m3.runtime",
+    "nucode.ac02a.ownership_contract",
+    "nucode.m24.fabric",
+    "nucode.m24.spi",
+    "nucode.m24.twi",
+    "nucode.m25.analog",
+    "nucode.m25.event",
+    "nucode.m25.stream"
+  ],
+  "affected_build_seconds": 472.83,
+  "native_differential_steps": 4000,
+  "native_reference": "prior reserve-commit-convert-release algorithm",
+  "native_precommit_subsets": [
+    "compact-native-final.json",
+    "resource-route.json"
+  ],
+  "full_host_includes_final_committed_native_test": true,
+  "internal_core_resource_manager_changed": true,
+  "public_api_sdk_board_changed": false,
+  "fixture430_status": "passed",
+  "physical_executed_for_this_source": true,
+  "not_reexecuted": [
+    "entire target matrix",
+    "example compile matrix",
+    "remote GitHub Actions",
+    "current-source T11 external wiring regression",
+    "T13 concurrency/soak"
+  ],
+  "readiness_open_blockers": 8
+}

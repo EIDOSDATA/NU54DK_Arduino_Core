@@ -456,6 +456,132 @@ namespace nucode::arduino::internal::io_resource_detail
         return IoResourceResult::success;
     }
 
+    IoResourceResult IoResourceTable::acquireIoResources(IoResourceOwner owner,
+                                                         const IoResourceId *resources,
+                                                         std::size_t count, IoAcquirePolicy policy,
+                                                         IoResourceToken &token,
+                                                         IoResourceSnapshot *conflict) noexcept
+    {
+        if (resources == nullptr || count == 0U || count > io_resource_token_capacity ||
+            token.active || owner.kind == IoOwnerKind::none || policy != IoAcquirePolicy::exclusive)
+        {
+            return IoResourceResult::invalid_argument;
+        }
+        for (std::size_t index = 0U; index < count; ++index)
+        {
+            if (!validResource(resources[index]))
+            {
+                return IoResourceResult::invalid_argument;
+            }
+            for (std::size_t prior = 0U; prior < index; ++prior)
+            {
+                if (resourcesConflict(resources[index], resources[prior]))
+                {
+                    return IoResourceResult::invalid_argument;
+                }
+            }
+        }
+        ResourceSlot *selected[io_resource_token_capacity]{};
+        bool created[io_resource_token_capacity]{};
+        for (std::size_t index = 0U; index < count; ++index)
+        {
+            auto *slot = findSlot(resources[index]);
+            if (slot == nullptr)
+            {
+                auto *const overlapping = findConflictingSlot(resources[index]);
+                if (overlapping != nullptr)
+                {
+                    if (conflict != nullptr)
+                    {
+                        fillSnapshot(overlapping, *conflict);
+                    }
+                    return IoResourceResult::conflict;
+                }
+                slot = findEmptySlot(selected, index);
+                if (slot == nullptr)
+                {
+                    return IoResourceResult::capacity_exhausted;
+                }
+                created[index] = true;
+            }
+            else if (slot->state == IoResourceState::reserved || !sameOwner(slot->owner, owner) ||
+                     slot->reservation_token != 0U)
+            {
+                if (conflict != nullptr)
+                {
+                    fillSnapshot(slot, *conflict);
+                }
+                return IoResourceResult::conflict;
+            }
+            selected[index] = slot;
+        }
+        token = {};
+        token.owner = owner;
+        token.manager_epoch = manager_epoch;
+        token.count = count;
+        /** @brief 기존 reserve→commit과 같은 순서로 세대를 소비하여 stale 판정을 보존합니다. */
+        for (std::size_t index = 0U; index < count; ++index)
+        {
+            token.entries[index] = {resources[index], allocateGeneration(), created[index]};
+        }
+        for (std::size_t index = 0U; index < count; ++index)
+        {
+            if (created[index])
+            {
+                const auto generation = allocateGeneration();
+                *selected[index] = {resources[index], owner, IoResourceState::active,
+                                    generation,       0U,    true};
+                token.entries[index].generation = generation;
+            }
+        }
+        token.active = true;
+        return IoResourceResult::success;
+    }
+
+    IoResourceResult IoResourceTable::releaseIoResources(IoResourceToken &token) noexcept
+    {
+        if (!token.active || token.count == 0U || token.count > io_resource_token_capacity)
+        {
+            return IoResourceResult::wrong_phase;
+        }
+        if (token.owner.kind == IoOwnerKind::none)
+        {
+            return IoResourceResult::invalid_argument;
+        }
+        if (token.manager_epoch != manager_epoch)
+        {
+            return IoResourceResult::stale_lease;
+        }
+        ResourceSlot *selected[io_resource_token_capacity]{};
+        for (std::size_t index = 0U; index < token.count; ++index)
+        {
+            const auto &entry = token.entries[index];
+            if (entry.changed)
+            {
+                auto *const slot = findSlot(entry.resource);
+                if (slot == nullptr || slot->state != IoResourceState::active ||
+                    !sameOwner(slot->owner, token.owner) || slot->generation != entry.generation)
+                {
+                    return IoResourceResult::stale_lease;
+                }
+                if (slot->reservation_token != 0U)
+                {
+                    return IoResourceResult::conflict;
+                }
+                selected[index] = slot;
+            }
+        }
+        for (std::size_t index = 0U; index < token.count; ++index)
+        {
+            if (selected[index] != nullptr)
+            {
+                *selected[index] = {};
+            }
+        }
+        token = {};
+        return IoResourceResult::success;
+    }
+
     IoResourceResult IoResourceTable::ioResourceSnapshot(const IoResourceId &resource,
                                                          IoResourceSnapshot &snapshot) noexcept
     {

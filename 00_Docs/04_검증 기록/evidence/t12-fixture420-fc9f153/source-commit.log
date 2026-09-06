@@ -1,0 +1,7 @@
+warning: in the working copy of '00_Docs/TODO_v0.4.0.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/zephyr/v04_pair_hil/src/signal_hil.cpp', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '00_Docs/TODO_v0.4.0.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/zephyr/v04_pair_hil/src/signal_hil.cpp', LF will be replaced by CRLF the next time Git touches it
+[main a3d0ab5] test(hil): make QDEC prepared cancellation restore idle pins
+ 2 files changed, 51 insertions(+), 15 deletions(-)
+FINAL_SOURCE=a3d0ab59bcee7a7940177fd768ad0f4a7c40c65c

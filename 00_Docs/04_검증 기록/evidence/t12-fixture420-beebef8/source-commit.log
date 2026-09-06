@@ -1,0 +1,11 @@
+warning: in the working copy of '00_Docs/TODO_v0.4.0.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/host/test_v04_qdec.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/zephyr/v04_pair_hil/src/signal_hil.cpp', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '00_Docs/TODO_v0.4.0.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/host/test_v04_qdec.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/zephyr/v04_pair_hil/src/signal_hil.cpp', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/zephyr/v04_pair_hil/src/qdec_waveform.h', LF will be replaced by CRLF the next time Git touches it
+[main fc9f153] test(hil): correct QDEC waveform polarity and prepared idle
+ 4 files changed, 109 insertions(+), 19 deletions(-)
+ create mode 100644 tests/zephyr/v04_pair_hil/src/qdec_waveform.h
+FIXED_SOURCE=fc9f1536e2caf4efee387c1a69b3a4c9e24adf3b

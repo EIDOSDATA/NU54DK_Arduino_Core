@@ -1,0 +1,4 @@
+* -text
+*.log -diff
+# 실행 당시 원본의 마지막 빈 줄을 보존하는 진단 사본입니다.
+read_i2s_buffers.py whitespace=-blank-at-eof

@@ -1,0 +1,681 @@
+{
+  "build_root": "C:\\u4a",
+  "physical_executed": false,
+  "canonical_evidence": {
+    "path": "C:\\u4a\\m12-build-evidence.json",
+    "bytes": 671,
+    "sha256": "253c1095bd14f789fc666bce8c170c7853b35a8f99036103fb42312ba5765caa"
+  },
+  "targets": [
+    {
+      "scenario": "nucode.m3.runtime",
+      "status": "built-not-run",
+      "artifacts": {
+        "zephyr.elf": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m3.runtime\\m3_runtime\\zephyr\\zephyr.elf",
+          "bytes": 1879208,
+          "sha256": "442ac357202649aee6bb2aff48f1629cc759120c6335997fff2c3e76b5cb10dc"
+        },
+        "zephyr.hex": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m3.runtime\\m3_runtime\\zephyr\\zephyr.hex",
+          "bytes": 191625,
+          "sha256": "c552ae1d926450fb29baca23c99d98c060e6e4c513f7fade452aaf40764ed56f"
+        },
+        ".config": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m3.runtime\\m3_runtime\\zephyr\\.config",
+          "bytes": 70359,
+          "sha256": "8ca6c37885d6e9b152228f5cf3da7ce9e14a88e77a0f60ccb1e3a5a274a2a179"
+        }
+      },
+      "identity_records": [],
+      "core_module_enabled": false,
+      "identity_scope": "standalone contract: exact clean Git source plus compiled source hashes",
+      "repository_compiled_sources_sha256": {
+        "tests/zephyr/m3_runtime/src/main.cpp": "1926d691ca769e5492a1b7767a894d86bdd8cff5296a6ef90dc0e55dcba98fe8",
+        "tests/zephyr/m3_runtime/src/test_variant.cpp": "11b1d4ab81967ec173dd331a14b2907a4cab5c531911c12249140a842bb7ef66",
+        "cores/arduino/wiring_digital.cpp": "195434ec9f905e77d47a5b356f5a132dd52a3849d28e75bd7720cec24f8806e0",
+        "cores/arduino/internal/io_resource_manager.cpp": "4206585b87a365db9ec89d608f904cd90405031f4473aa0f3c5d68ccfcdb0bb9",
+        "cores/arduino/internal/resource/IoResourceTable.cpp": "d59f6a93649ae46e1d60f0523301306ebad1be9ffa9f24ad866fbbf1885e6463",
+        "cores/arduino/wiring_time.cpp": "b6ee4289e4851cdf6590ac4c9b5a198c353dfe30bb99ae60ecb34edeba9a1949",
+        "cores/arduino/internal/runtime_scheduler.cpp": "2e7c4e3f47560be6fe06356a638e2c9fde1c5552a971af8867155bb84a8fe28f",
+        "cores/arduino/internal/time_backend_nrf54.cpp": "1360f54db8982078a3f03ce4645c8deefaad14ede52356d4cdbf43c6a9829870"
+      },
+      "config_symbols": 1527,
+      "normalized_config_sha256": "682609cae8f9ef10c5e9e1f91718862893adcd8a3defe7948178684cccfe4f57",
+      "source_count": 241,
+      "source_membership_sha256": "3ba0454b7b333ec9a2c06a732f09531ddf3f71d54f04ecb3b56c8fd2afa53ca8",
+      "memory_bytes": {
+        "FLASH": 68096,
+        "RAM": 19176
+      },
+      "build_log": {
+        "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m3.runtime\\build.log",
+        "bytes": 38342,
+        "sha256": "16664afcce6760db1d0f61b9cc471c07fe908889fbe20cf0cd5f16bb0e3bd9b3"
+      },
+      "compile_commands": {
+        "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m3.runtime\\m3_runtime\\compile_commands.json",
+        "bytes": 1043646,
+        "sha256": "95e29d129cd161745b526b373b0fcbafd9dec28a6f2729d43e1f0f05e10b61fe"
+      }
+    },
+    {
+      "scenario": "nucode.ac02a.ownership_contract",
+      "status": "built-not-run",
+      "artifacts": {
+        "zephyr.elf": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.ac02a.ownership_contract\\ac02a_ownership_contract\\zephyr\\zephyr.elf",
+          "bytes": 1969916,
+          "sha256": "9bb84ae66d6ee23f62aef77118b2ea421fd68edf98a694d29a9c1a31fda126df"
+        },
+        "zephyr.hex": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.ac02a.ownership_contract\\ac02a_ownership_contract\\zephyr\\zephyr.hex",
+          "bytes": 323136,
+          "sha256": "7c563e25f2de26066561ea1b0c9069870504601e416ed8479fb4d7306a166908"
+        },
+        ".config": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.ac02a.ownership_contract\\ac02a_ownership_contract\\zephyr\\.config",
+          "bytes": 71355,
+          "sha256": "993962e1d3654ff59e803bded0a7602e5197023ebd416ba61211f618affc41d2"
+        }
+      },
+      "identity_records": [
+        {
+          "file": {
+            "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.ac02a.ownership_contract\\ac02a_ownership_contract\\nucode_arduino_core_build.yml",
+            "bytes": 692,
+            "sha256": "775d1695e606f5e6040d9ddb26e75f61b9d60c7496902ef717c45756208895ac"
+          },
+          "identity": {
+            "source_version": "0.4.0-dev",
+            "package_version": "0.4.0-dev",
+            "core_revision": "36ba819bbe03",
+            "core_source_sha256": "38103b2e4444c79a43b077f4f35b72f334107a1deb6bac4e1e39ac13129b67da",
+            "application_source_sha256": "8add725541763c0e91cdecf68113385dabb0d9b114486595e411cd0a98c9399b",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "ncs_revision": "99553055607b",
+            "zephyr_revision": "bf801e4e3d19",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "toolchain_variant": "zephyr",
+            "toolchain_path": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+            "cxx_compiler": "GNU 14.3.0"
+          }
+        }
+      ],
+      "core_module_enabled": true,
+      "identity_scope": "Core build record",
+      "repository_compiled_sources_sha256": {
+        "tests/zephyr/ac02a_ownership_contract/src/main.cpp": "e7557df4f942c46a56098fedd70feba9c9ba34f25267232f6c0850378aa40eed",
+        "third_party/ArduinoCore-API/api/Common.cpp": "1382df4deef885c82ffcab78cbcaa9757ea61028b9a22210e9b047bcdbec5066",
+        "third_party/ArduinoCore-API/api/Print.cpp": "948c4ad05b6dc76539ad321ceb782d511a4049e5e32f1eca44d015c158efe826",
+        "third_party/ArduinoCore-API/api/Stream.cpp": "d5ad632508b4df5ec1ec64036417c3a0015b9f75aa5d2b288297a0d3f0f6ca52",
+        "third_party/ArduinoCore-API/api/String.cpp": "3d41737c3e00ea748c65334d3cacbb10c6857beeec098dcd7e4cd065fb0baa22",
+        "cores/arduino/api_compat.cpp": "2bad2143b757d00cf28de363e29c774fca4c587bd2238639126c1d6debc75f02",
+        "cores/arduino/diagnostics.cpp": "468a7087170930112672a13fd010cfdd48a55ee2ecebc375f5e3724cbea4c144",
+        "cores/arduino/peripheral_inventory.cpp": "9212b8ec98c9143093ea3d807323f5a013321028faff741f241fc4832005c323",
+        "cores/arduino/peripheral_stubs.cpp": "66ad1c884c419840580911e92d6f21c0e0c11bc15dea38fe91606aeeb606be38",
+        "cores/arduino/wiring_random.cpp": "ecaac9399c3f84c720e461f118d625b64814c31ea36bf895ab06f52cfed38549",
+        "cores/arduino/internal/io_resource_manager.cpp": "4206585b87a365db9ec89d608f904cd90405031f4473aa0f3c5d68ccfcdb0bb9",
+        "cores/arduino/internal/resource/IoResourceTable.cpp": "d59f6a93649ae46e1d60f0523301306ebad1be9ffa9f24ad866fbbf1885e6463",
+        "variants/nu54dk/io_resource_registry.cpp": "5285cb8705f16f0ce7f95908d01c492fe10a9a735d66eaaa910c7f047c874dc4",
+        "cores/arduino/wiring_digital.cpp": "195434ec9f905e77d47a5b356f5a132dd52a3849d28e75bd7720cec24f8806e0",
+        "cores/arduino/wiring_pulse_shift.cpp": "46740bfbd5012c1e9106d335ab04fcdd73ff0861aaeaa8d05cd3dd4913787f8f",
+        "variants/nu54dk/variant.cpp": "5675d6c92a85b030940aba3185c8f43c4a1158f771c32961dcf0a01e851c7202"
+      },
+      "config_symbols": 1550,
+      "normalized_config_sha256": "888c6aa164cc4ad6a7a129bd97af76a72a8a8e3eaee659c0170f1da1cd509e26",
+      "source_count": 250,
+      "source_membership_sha256": "659a7149946a76ed0e8953d0c5fe4d285d806611c81ce6e3aabd4389adbf1b3f",
+      "memory_bytes": {
+        "FLASH": 114848,
+        "RAM": 54168
+      },
+      "build_log": {
+        "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.ac02a.ownership_contract\\build.log",
+        "bytes": 42792,
+        "sha256": "e5b240fe66da8667f0ecbfa4f8c9b244be7cabcd48c21faa70a4a7b56b1207f0"
+      },
+      "compile_commands": {
+        "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.ac02a.ownership_contract\\ac02a_ownership_contract\\compile_commands.json",
+        "bytes": 1180119,
+        "sha256": "0d1f7f3254ee6a4a6315d5381dffee9443ebf6500c4b7243bdfb1b226a59bcb9"
+      }
+    },
+    {
+      "scenario": "nucode.m24.fabric",
+      "status": "built-not-run",
+      "artifacts": {
+        "zephyr.elf": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.fabric\\m24_serial_fabric_contract\\zephyr\\zephyr.elf",
+          "bytes": 1960364,
+          "sha256": "65f7757c2c1f05c40fd7c29b864bc07544743c55707db1e1e384b38abea4fcbd"
+        },
+        "zephyr.hex": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.fabric\\m24_serial_fabric_contract\\zephyr\\zephyr.hex",
+          "bytes": 287496,
+          "sha256": "6a1dff86500404c405658a75d85e7387eb74a017fad90b4a59d9fe6597419cc2"
+        },
+        ".config": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.fabric\\m24_serial_fabric_contract\\zephyr\\.config",
+          "bytes": 71329,
+          "sha256": "08d46a29d134e9ac6436e7792674103817c72b97291b33ed00a8a8923a36b45e"
+        }
+      },
+      "identity_records": [
+        {
+          "file": {
+            "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.fabric\\m24_serial_fabric_contract\\nucode_arduino_core_build.yml",
+            "bytes": 692,
+            "sha256": "e527e22fc08202402891052ad4157ee24007abd527df4ab335681daacd6a224e"
+          },
+          "identity": {
+            "source_version": "0.4.0-dev",
+            "package_version": "0.4.0-dev",
+            "core_revision": "36ba819bbe03",
+            "core_source_sha256": "38103b2e4444c79a43b077f4f35b72f334107a1deb6bac4e1e39ac13129b67da",
+            "application_source_sha256": "d19e19fe9ddb29b817c201b46a7e6d55b2d72755b5fd8b9a4394bb6cba6137e4",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "ncs_revision": "99553055607b",
+            "zephyr_revision": "bf801e4e3d19",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "toolchain_variant": "zephyr",
+            "toolchain_path": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+            "cxx_compiler": "GNU 14.3.0"
+          }
+        }
+      ],
+      "core_module_enabled": true,
+      "identity_scope": "Core build record",
+      "repository_compiled_sources_sha256": {
+        "tests/zephyr/m24_serial_fabric_contract/src/main.cpp": "ee8b662c0864226be70c3651a71369267cfee8e2e693c05a66fc2cb88f6da360",
+        "third_party/ArduinoCore-API/api/Common.cpp": "1382df4deef885c82ffcab78cbcaa9757ea61028b9a22210e9b047bcdbec5066",
+        "third_party/ArduinoCore-API/api/Print.cpp": "948c4ad05b6dc76539ad321ceb782d511a4049e5e32f1eca44d015c158efe826",
+        "third_party/ArduinoCore-API/api/Stream.cpp": "d5ad632508b4df5ec1ec64036417c3a0015b9f75aa5d2b288297a0d3f0f6ca52",
+        "third_party/ArduinoCore-API/api/String.cpp": "3d41737c3e00ea748c65334d3cacbb10c6857beeec098dcd7e4cd065fb0baa22",
+        "cores/arduino/api_compat.cpp": "2bad2143b757d00cf28de363e29c774fca4c587bd2238639126c1d6debc75f02",
+        "cores/arduino/diagnostics.cpp": "468a7087170930112672a13fd010cfdd48a55ee2ecebc375f5e3724cbea4c144",
+        "cores/arduino/peripheral_inventory.cpp": "9212b8ec98c9143093ea3d807323f5a013321028faff741f241fc4832005c323",
+        "cores/arduino/peripheral_stubs.cpp": "66ad1c884c419840580911e92d6f21c0e0c11bc15dea38fe91606aeeb606be38",
+        "cores/arduino/wiring_random.cpp": "ecaac9399c3f84c720e461f118d625b64814c31ea36bf895ab06f52cfed38549",
+        "cores/arduino/internal/io_resource_manager.cpp": "4206585b87a365db9ec89d608f904cd90405031f4473aa0f3c5d68ccfcdb0bb9",
+        "cores/arduino/internal/resource/IoResourceTable.cpp": "d59f6a93649ae46e1d60f0523301306ebad1be9ffa9f24ad866fbbf1885e6463",
+        "variants/nu54dk/io_resource_registry.cpp": "5285cb8705f16f0ce7f95908d01c492fe10a9a735d66eaaa910c7f047c874dc4",
+        "cores/arduino/wiring_digital.cpp": "195434ec9f905e77d47a5b356f5a132dd52a3849d28e75bd7720cec24f8806e0",
+        "cores/arduino/wiring_pulse_shift.cpp": "46740bfbd5012c1e9106d335ab04fcdd73ff0861aaeaa8d05cd3dd4913787f8f",
+        "variants/nu54dk/variant.cpp": "5675d6c92a85b030940aba3185c8f43c4a1158f771c32961dcf0a01e851c7202",
+        "cores/arduino/SerialFabric.cpp": "48d663d04322361d64dcd867fed1022a052ba6b93f20106d04eedec1c2fd74cc",
+        "cores/arduino/internal/serial/SerialFabricRegistry.cpp": "a68e83e848a0b5defbef98e4d3f8dfa547a318712b4034ffd4bc5a9868125e5c",
+        "cores/arduino/internal/serial/SerialFabricLifecycle.cpp": "8eef1f63bb14f47a9e600002b84dfc0f7f8d9e94446ccc99c7284398463f01d2",
+        "variants/nu54dk/serial_fabric_routes.cpp": "860030f87bb6f5560ac40eb87f446882177a5af2c48270a941f50af831358c2a"
+      },
+      "config_symbols": 1550,
+      "normalized_config_sha256": "2d79e5a079d0400fd54283d2adeae2d3d9062105ecac585dbb64c0286db4ef98",
+      "source_count": 253,
+      "source_membership_sha256": "70845a8f5331b778c0a78c2ab033a7fe54a0355d9da7f4848ee0183299f60bcb",
+      "memory_bytes": {
+        "FLASH": 102176,
+        "RAM": 54248
+      },
+      "build_log": {
+        "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.fabric\\build.log",
+        "bytes": 42410,
+        "sha256": "0bf7a6d0abb0e960ce1de446e54d44a5c7ba2ee75de99d7c8936739cee898a2c"
+      },
+      "compile_commands": {
+        "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.fabric\\m24_serial_fabric_contract\\compile_commands.json",
+        "bytes": 1177791,
+        "sha256": "4876a0a849b2e5b32254a1d411664aef99378b8d86d6a97ece3f1fd806ca58b7"
+      }
+    },
+    {
+      "scenario": "nucode.m24.spi",
+      "status": "built-not-run",
+      "artifacts": {
+        "zephyr.elf": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.spi\\m24_spi_driver_contract\\zephyr\\zephyr.elf",
+          "bytes": 2047752,
+          "sha256": "3a925d28fa27956ad3b5daf0484fbf27dd6c6f546b7b4a48fc2a64ee181c5df3"
+        },
+        "zephyr.hex": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.spi\\m24_spi_driver_contract\\zephyr\\zephyr.hex",
+          "bytes": 274886,
+          "sha256": "8d47b1c75fc7b18d4a90213ef6698321b8b7eb04e316719c78e561ce1383e751"
+        },
+        ".config": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.spi\\m24_spi_driver_contract\\zephyr\\.config",
+          "bytes": 69228,
+          "sha256": "6361325d4d68c855440f2a728388b697b8f83c1f21f946c98304ba0f97aed9dd"
+        }
+      },
+      "identity_records": [
+        {
+          "file": {
+            "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.spi\\m24_spi_driver_contract\\nucode_arduino_core_build.yml",
+            "bytes": 692,
+            "sha256": "b645160f2ba1d94a95d3257e44b463bcca160de757577c46d0b9e343098766fd"
+          },
+          "identity": {
+            "source_version": "0.4.0-dev",
+            "package_version": "0.4.0-dev",
+            "core_revision": "36ba819bbe03",
+            "core_source_sha256": "38103b2e4444c79a43b077f4f35b72f334107a1deb6bac4e1e39ac13129b67da",
+            "application_source_sha256": "584622c6f393aa0a5affee0d7bb050759e1df6c678d097a991006941d20f205e",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "ncs_revision": "99553055607b",
+            "zephyr_revision": "bf801e4e3d19",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "toolchain_variant": "zephyr",
+            "toolchain_path": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+            "cxx_compiler": "GNU 14.3.0"
+          }
+        }
+      ],
+      "core_module_enabled": true,
+      "identity_scope": "Core build record",
+      "repository_compiled_sources_sha256": {
+        "tests/zephyr/m24_spi_driver_contract/src/main.cpp": "928782cd32f60fde8fef0c508a471dfcc4d6f1e7dbcb33f37849a6da7ecb646a",
+        "third_party/ArduinoCore-API/api/Common.cpp": "1382df4deef885c82ffcab78cbcaa9757ea61028b9a22210e9b047bcdbec5066",
+        "third_party/ArduinoCore-API/api/Print.cpp": "948c4ad05b6dc76539ad321ceb782d511a4049e5e32f1eca44d015c158efe826",
+        "third_party/ArduinoCore-API/api/Stream.cpp": "d5ad632508b4df5ec1ec64036417c3a0015b9f75aa5d2b288297a0d3f0f6ca52",
+        "third_party/ArduinoCore-API/api/String.cpp": "3d41737c3e00ea748c65334d3cacbb10c6857beeec098dcd7e4cd065fb0baa22",
+        "cores/arduino/api_compat.cpp": "2bad2143b757d00cf28de363e29c774fca4c587bd2238639126c1d6debc75f02",
+        "cores/arduino/diagnostics.cpp": "468a7087170930112672a13fd010cfdd48a55ee2ecebc375f5e3724cbea4c144",
+        "cores/arduino/peripheral_inventory.cpp": "9212b8ec98c9143093ea3d807323f5a013321028faff741f241fc4832005c323",
+        "cores/arduino/peripheral_stubs.cpp": "66ad1c884c419840580911e92d6f21c0e0c11bc15dea38fe91606aeeb606be38",
+        "cores/arduino/wiring_random.cpp": "ecaac9399c3f84c720e461f118d625b64814c31ea36bf895ab06f52cfed38549",
+        "cores/arduino/internal/io_resource_manager.cpp": "4206585b87a365db9ec89d608f904cd90405031f4473aa0f3c5d68ccfcdb0bb9",
+        "cores/arduino/internal/resource/IoResourceTable.cpp": "d59f6a93649ae46e1d60f0523301306ebad1be9ffa9f24ad866fbbf1885e6463",
+        "variants/nu54dk/io_resource_registry.cpp": "5285cb8705f16f0ce7f95908d01c492fe10a9a735d66eaaa910c7f047c874dc4",
+        "cores/arduino/wiring_digital.cpp": "195434ec9f905e77d47a5b356f5a132dd52a3849d28e75bd7720cec24f8806e0",
+        "cores/arduino/wiring_pulse_shift.cpp": "46740bfbd5012c1e9106d335ab04fcdd73ff0861aaeaa8d05cd3dd4913787f8f",
+        "variants/nu54dk/variant.cpp": "5675d6c92a85b030940aba3185c8f43c4a1158f771c32961dcf0a01e851c7202",
+        "cores/arduino/SerialFabric.cpp": "48d663d04322361d64dcd867fed1022a052ba6b93f20106d04eedec1c2fd74cc",
+        "cores/arduino/internal/serial/SerialFabricRegistry.cpp": "a68e83e848a0b5defbef98e4d3f8dfa547a318712b4034ffd4bc5a9868125e5c",
+        "cores/arduino/internal/serial/SerialFabricLifecycle.cpp": "8eef1f63bb14f47a9e600002b84dfc0f7f8d9e94446ccc99c7284398463f01d2",
+        "variants/nu54dk/serial_fabric_routes.cpp": "860030f87bb6f5560ac40eb87f446882177a5af2c48270a941f50af831358c2a",
+        "cores/arduino/SpimFabric.cpp": "5c0687f23e29f2d5dc3da9dbfa1b477c37ec5b70c848dcab5cbacfa6451bd263",
+        "cores/arduino/SpisFabric.cpp": "fda14db26e17c267134a2a42d53ead368be0afe5c6ba6fd48ee173e6dafad13f"
+      },
+      "config_symbols": 1494,
+      "normalized_config_sha256": "3d3bb2d63fd219c1ef3dda4cb4bb78904782ea4f8ecc72e9e42c3756d2ab8865",
+      "source_count": 253,
+      "source_membership_sha256": "5ea16f58473c65965faac2af7337b89be7d8de73bca483b70ddfaa2011d8f75e",
+      "memory_bytes": {
+        "FLASH": 97700,
+        "RAM": 54664
+      },
+      "build_log": {
+        "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.spi\\build.log",
+        "bytes": 43701,
+        "sha256": "9a3ee57ec83be7d9a4cbfbe54e4270ff6ffdde0edb776359146df1199035bfa2"
+      },
+      "compile_commands": {
+        "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.spi\\m24_spi_driver_contract\\compile_commands.json",
+        "bytes": 1168586,
+        "sha256": "510ab119c377649d51c0f749f9aaf90a9a9a69db51c6594f4b1867a0eb0341de"
+      }
+    },
+    {
+      "scenario": "nucode.m24.twi",
+      "status": "built-not-run",
+      "artifacts": {
+        "zephyr.elf": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.twi\\m24_twi_driver_contract\\zephyr\\zephyr.elf",
+          "bytes": 2118960,
+          "sha256": "d36414bccbdc275c05f6c4b06376e993b74c33efa9770a484d0d9a7136b508a6"
+        },
+        "zephyr.hex": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.twi\\m24_twi_driver_contract\\zephyr\\zephyr.hex",
+          "bytes": 277742,
+          "sha256": "fa7e750686b042a144d0764814bb3e451f75a6e6c261f4f8beced5848576ce3e"
+        },
+        ".config": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.twi\\m24_twi_driver_contract\\zephyr\\.config",
+          "bytes": 69197,
+          "sha256": "8d1225ce7eb5751446fd2c845f703ee45d7738e304c4e30c4a4bb49457f25e9a"
+        }
+      },
+      "identity_records": [
+        {
+          "file": {
+            "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.twi\\m24_twi_driver_contract\\nucode_arduino_core_build.yml",
+            "bytes": 692,
+            "sha256": "fce10a003397bbbece7f3019fb32c95e06480f5a000089df02c95f6a3591f835"
+          },
+          "identity": {
+            "source_version": "0.4.0-dev",
+            "package_version": "0.4.0-dev",
+            "core_revision": "36ba819bbe03",
+            "core_source_sha256": "38103b2e4444c79a43b077f4f35b72f334107a1deb6bac4e1e39ac13129b67da",
+            "application_source_sha256": "0fde6a9bcb00e2398e06b94914ec4cccf96aec1afbbdbed312ab97014670aeab",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "ncs_revision": "99553055607b",
+            "zephyr_revision": "bf801e4e3d19",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "toolchain_variant": "zephyr",
+            "toolchain_path": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+            "cxx_compiler": "GNU 14.3.0"
+          }
+        }
+      ],
+      "core_module_enabled": true,
+      "identity_scope": "Core build record",
+      "repository_compiled_sources_sha256": {
+        "tests/zephyr/m24_twi_driver_contract/src/main.cpp": "93ce7f846b998d8fd6b108267fbad0efe287838854849e91f877641fb91d9ae5",
+        "third_party/ArduinoCore-API/api/Common.cpp": "1382df4deef885c82ffcab78cbcaa9757ea61028b9a22210e9b047bcdbec5066",
+        "third_party/ArduinoCore-API/api/Print.cpp": "948c4ad05b6dc76539ad321ceb782d511a4049e5e32f1eca44d015c158efe826",
+        "third_party/ArduinoCore-API/api/Stream.cpp": "d5ad632508b4df5ec1ec64036417c3a0015b9f75aa5d2b288297a0d3f0f6ca52",
+        "third_party/ArduinoCore-API/api/String.cpp": "3d41737c3e00ea748c65334d3cacbb10c6857beeec098dcd7e4cd065fb0baa22",
+        "cores/arduino/api_compat.cpp": "2bad2143b757d00cf28de363e29c774fca4c587bd2238639126c1d6debc75f02",
+        "cores/arduino/diagnostics.cpp": "468a7087170930112672a13fd010cfdd48a55ee2ecebc375f5e3724cbea4c144",
+        "cores/arduino/peripheral_inventory.cpp": "9212b8ec98c9143093ea3d807323f5a013321028faff741f241fc4832005c323",
+        "cores/arduino/peripheral_stubs.cpp": "66ad1c884c419840580911e92d6f21c0e0c11bc15dea38fe91606aeeb606be38",
+        "cores/arduino/wiring_random.cpp": "ecaac9399c3f84c720e461f118d625b64814c31ea36bf895ab06f52cfed38549",
+        "cores/arduino/internal/io_resource_manager.cpp": "4206585b87a365db9ec89d608f904cd90405031f4473aa0f3c5d68ccfcdb0bb9",
+        "cores/arduino/internal/resource/IoResourceTable.cpp": "d59f6a93649ae46e1d60f0523301306ebad1be9ffa9f24ad866fbbf1885e6463",
+        "variants/nu54dk/io_resource_registry.cpp": "5285cb8705f16f0ce7f95908d01c492fe10a9a735d66eaaa910c7f047c874dc4",
+        "cores/arduino/wiring_digital.cpp": "195434ec9f905e77d47a5b356f5a132dd52a3849d28e75bd7720cec24f8806e0",
+        "cores/arduino/wiring_pulse_shift.cpp": "46740bfbd5012c1e9106d335ab04fcdd73ff0861aaeaa8d05cd3dd4913787f8f",
+        "variants/nu54dk/variant.cpp": "5675d6c92a85b030940aba3185c8f43c4a1158f771c32961dcf0a01e851c7202",
+        "cores/arduino/SerialFabric.cpp": "48d663d04322361d64dcd867fed1022a052ba6b93f20106d04eedec1c2fd74cc",
+        "cores/arduino/internal/serial/SerialFabricRegistry.cpp": "a68e83e848a0b5defbef98e4d3f8dfa547a318712b4034ffd4bc5a9868125e5c",
+        "cores/arduino/internal/serial/SerialFabricLifecycle.cpp": "8eef1f63bb14f47a9e600002b84dfc0f7f8d9e94446ccc99c7284398463f01d2",
+        "variants/nu54dk/serial_fabric_routes.cpp": "860030f87bb6f5560ac40eb87f446882177a5af2c48270a941f50af831358c2a",
+        "cores/arduino/TwimFabric.cpp": "4cc0f7ed706b4be32682d6079cff41ad8e6328c1e976a6a97453ec93454980aa",
+        "cores/arduino/TwisFabric.cpp": "de67f056bd0f43dfaf71e30caad22ad34ea42ff6e37656b6d3625f7c400b4130"
+      },
+      "config_symbols": 1493,
+      "normalized_config_sha256": "6c4a21606803ec418028612598070da629282ca7c369069e94d2cef1dafce3db",
+      "source_count": 254,
+      "source_membership_sha256": "fa5b1cc87abc513c95e40622fae80675c37ad2a36586e08705df712847e50169",
+      "memory_bytes": {
+        "FLASH": 98720,
+        "RAM": 54040
+      },
+      "build_log": {
+        "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.twi\\build.log",
+        "bytes": 43864,
+        "sha256": "6a8c733da1dd2bfd68d092ccca9a54d3b97ebf8179b251c8997b923220dbf808"
+      },
+      "compile_commands": {
+        "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m24.twi\\m24_twi_driver_contract\\compile_commands.json",
+        "bytes": 1173191,
+        "sha256": "45bdff19cd927526606a55463404eb46047016dce93bda35b17f20964a4007c1"
+      }
+    },
+    {
+      "scenario": "nucode.m25.analog",
+      "status": "built-not-run",
+      "artifacts": {
+        "zephyr.elf": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.analog\\m25_analog_fabric_contract\\zephyr\\zephyr.elf",
+          "bytes": 2029140,
+          "sha256": "884e97e8ef3d74d951e3b0b1252c4bdcba4802a3be3ceac9e5bbf0e7f3ac9da6"
+        },
+        "zephyr.hex": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.analog\\m25_analog_fabric_contract\\zephyr\\zephyr.hex",
+          "bytes": 206353,
+          "sha256": "09c3d9230c950dc80e37e914e2ff91c2378b1845fbe8cc47586d5edfaa06b470"
+        },
+        ".config": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.analog\\m25_analog_fabric_contract\\zephyr\\.config",
+          "bytes": 69000,
+          "sha256": "4d5dcd6e4a6720bde846b3e7831079d194308f42c675c5610a7d0992acdd884a"
+        }
+      },
+      "identity_records": [
+        {
+          "file": {
+            "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.analog\\m25_analog_fabric_contract\\nucode_arduino_core_build.yml",
+            "bytes": 692,
+            "sha256": "947860925a04acab6a2fc23fc6ca10eceeb82c6a2d0ff8bb09aea4c398ab4676"
+          },
+          "identity": {
+            "source_version": "0.4.0-dev",
+            "package_version": "0.4.0-dev",
+            "core_revision": "36ba819bbe03",
+            "core_source_sha256": "38103b2e4444c79a43b077f4f35b72f334107a1deb6bac4e1e39ac13129b67da",
+            "application_source_sha256": "66b077a4cdbe162688ef2747bdaf2d619e41a2840f842f288935f332470c7645",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "ncs_revision": "99553055607b",
+            "zephyr_revision": "bf801e4e3d19",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "toolchain_variant": "zephyr",
+            "toolchain_path": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+            "cxx_compiler": "GNU 14.3.0"
+          }
+        }
+      ],
+      "core_module_enabled": true,
+      "identity_scope": "Core build record",
+      "repository_compiled_sources_sha256": {
+        "tests/zephyr/m25_analog_fabric_contract/src/main.cpp": "6491e93a95a25b7e3bd83c799a6322e234b721a4c75d7bea320dd3c8ab9492d0",
+        "third_party/ArduinoCore-API/api/Common.cpp": "1382df4deef885c82ffcab78cbcaa9757ea61028b9a22210e9b047bcdbec5066",
+        "third_party/ArduinoCore-API/api/Print.cpp": "948c4ad05b6dc76539ad321ceb782d511a4049e5e32f1eca44d015c158efe826",
+        "third_party/ArduinoCore-API/api/Stream.cpp": "d5ad632508b4df5ec1ec64036417c3a0015b9f75aa5d2b288297a0d3f0f6ca52",
+        "third_party/ArduinoCore-API/api/String.cpp": "3d41737c3e00ea748c65334d3cacbb10c6857beeec098dcd7e4cd065fb0baa22",
+        "cores/arduino/api_compat.cpp": "2bad2143b757d00cf28de363e29c774fca4c587bd2238639126c1d6debc75f02",
+        "cores/arduino/diagnostics.cpp": "468a7087170930112672a13fd010cfdd48a55ee2ecebc375f5e3724cbea4c144",
+        "cores/arduino/peripheral_inventory.cpp": "9212b8ec98c9143093ea3d807323f5a013321028faff741f241fc4832005c323",
+        "cores/arduino/peripheral_stubs.cpp": "66ad1c884c419840580911e92d6f21c0e0c11bc15dea38fe91606aeeb606be38",
+        "cores/arduino/wiring_random.cpp": "ecaac9399c3f84c720e461f118d625b64814c31ea36bf895ab06f52cfed38549",
+        "cores/arduino/internal/io_resource_manager.cpp": "4206585b87a365db9ec89d608f904cd90405031f4473aa0f3c5d68ccfcdb0bb9",
+        "cores/arduino/internal/resource/IoResourceTable.cpp": "d59f6a93649ae46e1d60f0523301306ebad1be9ffa9f24ad866fbbf1885e6463",
+        "variants/nu54dk/io_resource_registry.cpp": "5285cb8705f16f0ce7f95908d01c492fe10a9a735d66eaaa910c7f047c874dc4",
+        "cores/arduino/wiring_digital.cpp": "195434ec9f905e77d47a5b356f5a132dd52a3849d28e75bd7720cec24f8806e0",
+        "cores/arduino/wiring_pulse_shift.cpp": "46740bfbd5012c1e9106d335ab04fcdd73ff0861aaeaa8d05cd3dd4913787f8f",
+        "variants/nu54dk/variant.cpp": "5675d6c92a85b030940aba3185c8f43c4a1158f771c32961dcf0a01e851c7202",
+        "cores/arduino/AnalogFabric.cpp": "7c4d71c5559b276cc49fe9f144be832c3ab0c959ff94916ecb21b0466dc17851",
+        "cores/arduino/internal/analog/SaadcFabric.cpp": "8e4dd630bf458163725e88ec8b7f2b0c335f416ca07f99970f6be2b49e1666bb",
+        "cores/arduino/internal/analog/PwmSequenceFabric.cpp": "920c2e21337a5326944e8ec3a782914fddb986d949ff75a0ac6d7c9b8f4138d3"
+      },
+      "config_symbols": 1489,
+      "normalized_config_sha256": "dc8c54a9f6657539fbbaccd8b71f073f1f03f989d3a3ebb858573ddf5b1e9994",
+      "source_count": 249,
+      "source_membership_sha256": "d9a6674e2ce785375244bb0aabf82ccf93f046def49995ac4ca7e1bd5c9ff1cb",
+      "memory_bytes": {
+        "FLASH": 73316,
+        "RAM": 31128
+      },
+      "build_log": {
+        "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.analog\\build.log",
+        "bytes": 43092,
+        "sha256": "7684530027f5a3454424b4682cdeea728745338cc8ad7f6b60673d8e4042a784"
+      },
+      "compile_commands": {
+        "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.analog\\m25_analog_fabric_contract\\compile_commands.json",
+        "bytes": 1159611,
+        "sha256": "6db7deba634a4195b319ea8de29642b7fdf28bb55b122e62af86b76948a6c698"
+      }
+    },
+    {
+      "scenario": "nucode.m25.event",
+      "status": "built-not-run",
+      "artifacts": {
+        "zephyr.elf": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.event\\m25_event_fabric_contract\\zephyr\\zephyr.elf",
+          "bytes": 1915680,
+          "sha256": "8a377250df7e0473c21ad7b4e2451bc6de9aa57b1ffabfb2c5940a9a90558446"
+        },
+        "zephyr.hex": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.event\\m25_event_fabric_contract\\zephyr\\zephyr.hex",
+          "bytes": 271479,
+          "sha256": "4c3db7045746b6d265a8fddf53db135bfbc97accf8e5790cb6e2b3f4d8335704"
+        },
+        ".config": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.event\\m25_event_fabric_contract\\zephyr\\.config",
+          "bytes": 68952,
+          "sha256": "dcdcf24e9118b1bee3f3ba6b827376bca965bbfe3221ec8e979b527a2f3cd9df"
+        }
+      },
+      "identity_records": [
+        {
+          "file": {
+            "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.event\\m25_event_fabric_contract\\nucode_arduino_core_build.yml",
+            "bytes": 692,
+            "sha256": "f6511375188ee16ff070f801d1fdd007222062551b8d94c82ac55a716f368edb"
+          },
+          "identity": {
+            "source_version": "0.4.0-dev",
+            "package_version": "0.4.0-dev",
+            "core_revision": "36ba819bbe03",
+            "core_source_sha256": "38103b2e4444c79a43b077f4f35b72f334107a1deb6bac4e1e39ac13129b67da",
+            "application_source_sha256": "e61b9214d09cf603f661ab5fa43049c2fec12920a0c5d1b480f6286c4322874e",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "ncs_revision": "99553055607b",
+            "zephyr_revision": "bf801e4e3d19",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "toolchain_variant": "zephyr",
+            "toolchain_path": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+            "cxx_compiler": "GNU 14.3.0"
+          }
+        }
+      ],
+      "core_module_enabled": true,
+      "identity_scope": "Core build record",
+      "repository_compiled_sources_sha256": {
+        "tests/zephyr/m25_event_fabric_contract/src/main.cpp": "b54d4626a524cbd8b36127d0b5778e72b4be4873c46ee447cd32b5865342d5f4",
+        "third_party/ArduinoCore-API/api/Common.cpp": "1382df4deef885c82ffcab78cbcaa9757ea61028b9a22210e9b047bcdbec5066",
+        "third_party/ArduinoCore-API/api/Print.cpp": "948c4ad05b6dc76539ad321ceb782d511a4049e5e32f1eca44d015c158efe826",
+        "third_party/ArduinoCore-API/api/Stream.cpp": "d5ad632508b4df5ec1ec64036417c3a0015b9f75aa5d2b288297a0d3f0f6ca52",
+        "third_party/ArduinoCore-API/api/String.cpp": "3d41737c3e00ea748c65334d3cacbb10c6857beeec098dcd7e4cd065fb0baa22",
+        "cores/arduino/api_compat.cpp": "2bad2143b757d00cf28de363e29c774fca4c587bd2238639126c1d6debc75f02",
+        "cores/arduino/diagnostics.cpp": "468a7087170930112672a13fd010cfdd48a55ee2ecebc375f5e3724cbea4c144",
+        "cores/arduino/peripheral_inventory.cpp": "9212b8ec98c9143093ea3d807323f5a013321028faff741f241fc4832005c323",
+        "cores/arduino/peripheral_stubs.cpp": "66ad1c884c419840580911e92d6f21c0e0c11bc15dea38fe91606aeeb606be38",
+        "cores/arduino/wiring_random.cpp": "ecaac9399c3f84c720e461f118d625b64814c31ea36bf895ab06f52cfed38549",
+        "cores/arduino/internal/io_resource_manager.cpp": "4206585b87a365db9ec89d608f904cd90405031f4473aa0f3c5d68ccfcdb0bb9",
+        "cores/arduino/internal/resource/IoResourceTable.cpp": "d59f6a93649ae46e1d60f0523301306ebad1be9ffa9f24ad866fbbf1885e6463",
+        "variants/nu54dk/io_resource_registry.cpp": "5285cb8705f16f0ce7f95908d01c492fe10a9a735d66eaaa910c7f047c874dc4",
+        "cores/arduino/wiring_digital.cpp": "195434ec9f905e77d47a5b356f5a132dd52a3849d28e75bd7720cec24f8806e0",
+        "cores/arduino/wiring_pulse_shift.cpp": "46740bfbd5012c1e9106d335ab04fcdd73ff0861aaeaa8d05cd3dd4913787f8f",
+        "variants/nu54dk/variant.cpp": "5675d6c92a85b030940aba3185c8f43c4a1158f771c32961dcf0a01e851c7202",
+        "cores/arduino/EventFabric.cpp": "a8e68db226b6213e78544a23db6c2221459f03fc254716e724425f36f2090ac1",
+        "cores/arduino/internal/event/EventFabricRegistry.cpp": "7cb93ea76e0e9dd98c35fc0349556e05844ff7791af1d0842a4f167934e6e85c",
+        "cores/arduino/internal/event/TimerFabric.cpp": "402704f0d623e40fcb1932f29764b9b15591f9f14089ea1c126a81010fe8746c",
+        "cores/arduino/internal/event/EguFabric.cpp": "cb30c07faad02e41f33ebae2db290de5a789b7547cd15cf5fc2970fd7798d8b0",
+        "cores/arduino/internal/event/GpioteFabric.cpp": "347a5da475d4b8dd1d105d2c3feffd1935b3c1bb8bdc19e14ffcc924d5ef1f4a",
+        "cores/arduino/internal/event/DppiFabric.cpp": "b31c06a3bbd3bfc2c47313be68fe78350e755e355599151b7f8d765dad224811",
+        "cores/arduino/internal/event/PpibFabric.cpp": "6d42dcc83f02da0c99878ccfc759c07eba45d885d6e9da0794ae20efe2dff3da"
+      },
+      "config_symbols": 1487,
+      "normalized_config_sha256": "7dd5a55e29b2a04e1f9c24f27f60ea7c187460b2b7ae1f77a6b85ce214591143",
+      "source_count": 251,
+      "source_membership_sha256": "778c142cdf403cd95f28d15d1ac281dc6d963ac6125626a4f092502370ba7390",
+      "memory_bytes": {
+        "FLASH": 96480,
+        "RAM": 58752
+      },
+      "build_log": {
+        "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.event\\build.log",
+        "bytes": 43501,
+        "sha256": "185821f2dfc3a26fef1225560ec3ed483e541773a52db5e9f8d1231aa69bb7c2"
+      },
+      "compile_commands": {
+        "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.event\\m25_event_fabric_contract\\compile_commands.json",
+        "bytes": 1166140,
+        "sha256": "7e7315d6ddcddde0870ad6041b2fbfbd9a8aa17da6a33df7ca5201c9b20f6fcc"
+      }
+    },
+    {
+      "scenario": "nucode.m25.stream",
+      "status": "built-not-run",
+      "artifacts": {
+        "zephyr.elf": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.stream\\m25_stream_fabric_contract\\zephyr\\zephyr.elf",
+          "bytes": 2100292,
+          "sha256": "42994c5385ab79217d20b453a5cc65d1b6b48716c9e1bb3fa2e870a4e9368b41"
+        },
+        "zephyr.hex": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.stream\\m25_stream_fabric_contract\\zephyr\\zephyr.hex",
+          "bytes": 214649,
+          "sha256": "9e043cdf761d4880f0e6cbf287203d889a8de87ca809e437d0f373b598a875e9"
+        },
+        ".config": {
+          "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.stream\\m25_stream_fabric_contract\\zephyr\\.config",
+          "bytes": 69022,
+          "sha256": "9f9edde720fea49a6cd2cc1edaeba2f55e4edf2254d5fc7d6978b2eeedfaf99f"
+        }
+      },
+      "identity_records": [
+        {
+          "file": {
+            "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.stream\\m25_stream_fabric_contract\\nucode_arduino_core_build.yml",
+            "bytes": 692,
+            "sha256": "287c3243a634e3bdcc5d87a32a5c0d9133c5a810744203726e6c635e3951d9ab"
+          },
+          "identity": {
+            "source_version": "0.4.0-dev",
+            "package_version": "0.4.0-dev",
+            "core_revision": "36ba819bbe03",
+            "core_source_sha256": "38103b2e4444c79a43b077f4f35b72f334107a1deb6bac4e1e39ac13129b67da",
+            "application_source_sha256": "3d9350272c83e655bdd6f460fdaa610f97262ae3cd35ec5c362b41c3f737bd9e",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "ncs_revision": "99553055607b",
+            "zephyr_revision": "bf801e4e3d19",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "toolchain_variant": "zephyr",
+            "toolchain_path": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+            "cxx_compiler": "GNU 14.3.0"
+          }
+        }
+      ],
+      "core_module_enabled": true,
+      "identity_scope": "Core build record",
+      "repository_compiled_sources_sha256": {
+        "tests/zephyr/m25_stream_fabric_contract/src/main.cpp": "09e1f4d0e9127feeac71c0c9bb9dfe5282f3112d34adf9307751cc67b827a3a5",
+        "third_party/ArduinoCore-API/api/Common.cpp": "1382df4deef885c82ffcab78cbcaa9757ea61028b9a22210e9b047bcdbec5066",
+        "third_party/ArduinoCore-API/api/Print.cpp": "948c4ad05b6dc76539ad321ceb782d511a4049e5e32f1eca44d015c158efe826",
+        "third_party/ArduinoCore-API/api/Stream.cpp": "d5ad632508b4df5ec1ec64036417c3a0015b9f75aa5d2b288297a0d3f0f6ca52",
+        "third_party/ArduinoCore-API/api/String.cpp": "3d41737c3e00ea748c65334d3cacbb10c6857beeec098dcd7e4cd065fb0baa22",
+        "cores/arduino/api_compat.cpp": "2bad2143b757d00cf28de363e29c774fca4c587bd2238639126c1d6debc75f02",
+        "cores/arduino/diagnostics.cpp": "468a7087170930112672a13fd010cfdd48a55ee2ecebc375f5e3724cbea4c144",
+        "cores/arduino/peripheral_inventory.cpp": "9212b8ec98c9143093ea3d807323f5a013321028faff741f241fc4832005c323",
+        "cores/arduino/peripheral_stubs.cpp": "66ad1c884c419840580911e92d6f21c0e0c11bc15dea38fe91606aeeb606be38",
+        "cores/arduino/wiring_random.cpp": "ecaac9399c3f84c720e461f118d625b64814c31ea36bf895ab06f52cfed38549",
+        "cores/arduino/internal/io_resource_manager.cpp": "4206585b87a365db9ec89d608f904cd90405031f4473aa0f3c5d68ccfcdb0bb9",
+        "cores/arduino/internal/resource/IoResourceTable.cpp": "d59f6a93649ae46e1d60f0523301306ebad1be9ffa9f24ad866fbbf1885e6463",
+        "variants/nu54dk/io_resource_registry.cpp": "5285cb8705f16f0ce7f95908d01c492fe10a9a735d66eaaa910c7f047c874dc4",
+        "cores/arduino/wiring_digital.cpp": "195434ec9f905e77d47a5b356f5a132dd52a3849d28e75bd7720cec24f8806e0",
+        "cores/arduino/wiring_pulse_shift.cpp": "46740bfbd5012c1e9106d335ab04fcdd73ff0861aaeaa8d05cd3dd4913787f8f",
+        "variants/nu54dk/variant.cpp": "5675d6c92a85b030940aba3185c8f43c4a1158f771c32961dcf0a01e851c7202",
+        "cores/arduino/StreamFabric.cpp": "3501a7ad5750a49490aa93102ce391c628ac7cd0e424621d112386b02820abe8",
+        "cores/arduino/internal/stream/PdmFabric.cpp": "696e39692104f0afb8503b0672ffeb962ec5f4f12dc5d8190222782df765a228",
+        "cores/arduino/internal/stream/I2sFabric.cpp": "192624b2d529f7002dd88fe7033848af1b96c14382d2fc406c976235ea90f385",
+        "cores/arduino/internal/stream/QdecFabric.cpp": "e3edc70a89a5564df84e5157003b80da2ca75da590c789e558eabfa9a8a57167"
+      },
+      "config_symbols": 1490,
+      "normalized_config_sha256": "06cf0f81bb535b45cdccdacccc64bb718cc3794517c55a5671be636e6f6b596f",
+      "source_count": 251,
+      "source_membership_sha256": "6011d5aa44fa836c655d962d4c6b8d1545e0b00f1805640e7c9b5a74bb716cc3",
+      "memory_bytes": {
+        "FLASH": 76272,
+        "RAM": 32040
+      },
+      "build_log": {
+        "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.stream\\build.log",
+        "bytes": 43416,
+        "sha256": "d18adb408f4d90a32b479aee0185d61cd0b261c6a6331c907f27a0537f506e2a"
+      },
+      "compile_commands": {
+        "path": "C:\\u4a\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.stream\\m25_stream_fabric_contract\\compile_commands.json",
+        "bytes": 1168921,
+        "sha256": "7dbc966ea5839fc68624cf5a4524fde2f052699e2ab1e55ba6d7356fec2ad29e"
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "source": "7c44abffb30402c56cb5e2fd7a1c21829b3b3a16",
+  "status": "fixture430-failed-awaiting-unchanged-wiring-reconfirmation",
+  "source_physical_executed": true,
+  "functional_pass": 72,
+  "failed_cases": 1,
+  "unexecuted_cases": 119,
+  "cleanup_pass": 73,
+  "postflight_pass": 2,
+  "whole_fixture_pass": false,
+  "failed_vector": [
+    48000,
+    24,
+    0,
+    32,
+    1,
+    324508639
+  ],
+  "failed_controller_role": 1,
+  "error": "signal firmware error role=1: [1, 1, 1, 0, 128, 32, 32, 1]",
+  "original_confirmation_utc": "2026-09-06T17:43:49Z",
+  "confirmation_expired_utc": "2026-09-06T18:13:49Z",
+  "reconfirmation_requested": true,
+  "reconfirmation_received": false,
+  "next_fixture": 430,
+  "last_uploaded_source": "7c44abffb30402c56cb5e2fd7a1c21829b3b3a16",
+  "next_action": "Localize short-buffer underrun timing; fresh unchanged430 confirmation before any new signals; clean HEAD pair and full 192 rerun; no accumulation of partial PASS",
+  "fixture440_executed": false,
+  "background_hardware_tests_running": false
+}

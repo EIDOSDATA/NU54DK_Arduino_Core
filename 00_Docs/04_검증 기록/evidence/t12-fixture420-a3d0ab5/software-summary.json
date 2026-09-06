@@ -1,0 +1,32 @@
+{
+  "source": "a3d0ab59bcee7a7940177fd768ad0f4a7c40c65c",
+  "host": {
+    "total": 657,
+    "passed": 656,
+    "skipped": 1,
+    "groups": 81,
+    "skip_reason": "! @brief 설치된 Arduino CLI가 공개 예제를 노출하는지 확인합니다. ... skipped 'M13 package 설치 후 NUCODE_M13_CLI_DISCOVERY=1로 실행합니다.'",
+    "native_compiler_skips": 0
+  },
+  "style_files": 359,
+  "style_failed": 0,
+  "exact_pair_built": 2,
+  "physical_executed_for_this_source": false,
+  "contract_tests": {
+    "source_stage": "beebef8 plus fixed HIL working tree",
+    "passed": 45
+  },
+  "package_tests": {
+    "source": "fc9f1536e2caf4efee387c1a69b3a4c9e24adf3b",
+    "passed": 20
+  },
+  "inventory_examples": {
+    "source": "fc9f1536e2caf4efee387c1a69b3a4c9e24adf3b",
+    "status": "passed"
+  },
+  "final_delta_from_prior_software": [
+    "00_Docs/TODO_v0.4.0.md",
+    "tests/zephyr/v04_pair_hil/src/signal_hil.cpp"
+  ],
+  "readiness_open_blockers": 8
+}

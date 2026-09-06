@@ -1,0 +1,510 @@
+{
+  "status": "passed",
+  "fixture_id": 420,
+  "source": "6bd8d3f15ad29fc21f7a58c736cd86e917a3d314",
+  "attempt": 1,
+  "functional_records": 48,
+  "cleanup_records": 48,
+  "campaign_records": 2,
+  "total_journal_records": 98,
+  "journal_matches_final_json": true,
+  "independent_plan_order_and_unique_functional_ids": "passed",
+  "counts": [
+    {
+      "pwm": 20,
+      "qdec": 20,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": false,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "pwm": 20,
+      "qdec": 20,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": true,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "pwm": 20,
+      "qdec": 20,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": false,
+      "expected": -4,
+      "actual": -4
+    },
+    {
+      "pwm": 20,
+      "qdec": 20,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": true,
+      "expected": -4,
+      "actual": -4
+    },
+    {
+      "pwm": 20,
+      "qdec": 20,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": false,
+      "expected": 400,
+      "actual": 400
+    },
+    {
+      "pwm": 20,
+      "qdec": 20,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": true,
+      "expected": 400,
+      "actual": 400
+    },
+    {
+      "pwm": 20,
+      "qdec": 20,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": false,
+      "expected": -400,
+      "actual": -400
+    },
+    {
+      "pwm": 20,
+      "qdec": 20,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": true,
+      "expected": -400,
+      "actual": -400
+    },
+    {
+      "pwm": 20,
+      "qdec": 21,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": false,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "pwm": 20,
+      "qdec": 21,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": true,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "pwm": 20,
+      "qdec": 21,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": false,
+      "expected": -4,
+      "actual": -4
+    },
+    {
+      "pwm": 20,
+      "qdec": 21,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": true,
+      "expected": -4,
+      "actual": -4
+    },
+    {
+      "pwm": 20,
+      "qdec": 21,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": false,
+      "expected": 400,
+      "actual": 400
+    },
+    {
+      "pwm": 20,
+      "qdec": 21,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": true,
+      "expected": 400,
+      "actual": 400
+    },
+    {
+      "pwm": 20,
+      "qdec": 21,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": false,
+      "expected": -400,
+      "actual": -400
+    },
+    {
+      "pwm": 20,
+      "qdec": 21,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": true,
+      "expected": -400,
+      "actual": -400
+    },
+    {
+      "pwm": 21,
+      "qdec": 20,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": false,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "pwm": 21,
+      "qdec": 20,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": true,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "pwm": 21,
+      "qdec": 20,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": false,
+      "expected": -4,
+      "actual": -4
+    },
+    {
+      "pwm": 21,
+      "qdec": 20,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": true,
+      "expected": -4,
+      "actual": -4
+    },
+    {
+      "pwm": 21,
+      "qdec": 20,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": false,
+      "expected": 400,
+      "actual": 400
+    },
+    {
+      "pwm": 21,
+      "qdec": 20,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": true,
+      "expected": 400,
+      "actual": 400
+    },
+    {
+      "pwm": 21,
+      "qdec": 20,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": false,
+      "expected": -400,
+      "actual": -400
+    },
+    {
+      "pwm": 21,
+      "qdec": 20,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": true,
+      "expected": -400,
+      "actual": -400
+    },
+    {
+      "pwm": 21,
+      "qdec": 21,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": false,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "pwm": 21,
+      "qdec": 21,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": true,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "pwm": 21,
+      "qdec": 21,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": false,
+      "expected": -4,
+      "actual": -4
+    },
+    {
+      "pwm": 21,
+      "qdec": 21,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": true,
+      "expected": -4,
+      "actual": -4
+    },
+    {
+      "pwm": 21,
+      "qdec": 21,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": false,
+      "expected": 400,
+      "actual": 400
+    },
+    {
+      "pwm": 21,
+      "qdec": 21,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": true,
+      "expected": 400,
+      "actual": 400
+    },
+    {
+      "pwm": 21,
+      "qdec": 21,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": false,
+      "expected": -400,
+      "actual": -400
+    },
+    {
+      "pwm": 21,
+      "qdec": 21,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": true,
+      "expected": -400,
+      "actual": -400
+    },
+    {
+      "pwm": 22,
+      "qdec": 20,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": false,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "pwm": 22,
+      "qdec": 20,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": true,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "pwm": 22,
+      "qdec": 20,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": false,
+      "expected": -4,
+      "actual": -4
+    },
+    {
+      "pwm": 22,
+      "qdec": 20,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": true,
+      "expected": -4,
+      "actual": -4
+    },
+    {
+      "pwm": 22,
+      "qdec": 20,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": false,
+      "expected": 400,
+      "actual": 400
+    },
+    {
+      "pwm": 22,
+      "qdec": 20,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": true,
+      "expected": 400,
+      "actual": 400
+    },
+    {
+      "pwm": 22,
+      "qdec": 20,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": false,
+      "expected": -400,
+      "actual": -400
+    },
+    {
+      "pwm": 22,
+      "qdec": 20,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": true,
+      "expected": -400,
+      "actual": -400
+    },
+    {
+      "pwm": 22,
+      "qdec": 21,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": false,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "pwm": 22,
+      "qdec": 21,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": true,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "pwm": 22,
+      "qdec": 21,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": false,
+      "expected": -4,
+      "actual": -4
+    },
+    {
+      "pwm": 22,
+      "qdec": 21,
+      "cycles": 1,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": true,
+      "expected": -4,
+      "actual": -4
+    },
+    {
+      "pwm": 22,
+      "qdec": 21,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": false,
+      "expected": 400,
+      "actual": 400
+    },
+    {
+      "pwm": 22,
+      "qdec": 21,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": false,
+      "debounce": true,
+      "expected": 400,
+      "actual": 400
+    },
+    {
+      "pwm": 22,
+      "qdec": 21,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": false,
+      "expected": -400,
+      "actual": -400
+    },
+    {
+      "pwm": 22,
+      "qdec": 21,
+      "cycles": 100,
+      "state_interval_us": 2000,
+      "reverse": true,
+      "debounce": true,
+      "expected": -400,
+      "actual": -400
+    }
+  ],
+  "absolute_accumulated_total": 9696,
+  "signed_accumulated_total": 0,
+  "double_transitions": 0,
+  "continuous_elapsed_seconds": 22.063,
+  "swd_frequency_hz": 10000000,
+  "functional_scope": "PWM quadrature -> QDEC20/21 counts and direction, debounce off/on, stop between configurations",
+  "not_measured": [
+    "real encoder compatibility or bounce filtering effectiveness",
+    "calibrated period/jitter",
+    "overflow or invalid-transition injection",
+    "T13 concurrency/soak"
+  ],
+  "hashes": {
+    "fixture420-attempt1.json": "cd3174de55fdb06c617ca4b8a23e0e12491a531bc70cc0ada9fe860cb94c986b",
+    "fixture420-attempt1.json.jsonl": "2e467c7bc6cc59f2115ec5881efa6cd727549299dddb4f4e13fbe15a40d1a01f"
+  }
+}

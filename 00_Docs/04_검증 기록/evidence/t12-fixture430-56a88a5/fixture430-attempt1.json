@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-synthetic-signal",
+  "status": "failed",
+  "fixture_id": 430,
+  "fixture_revision": 5,
+  "catalog_sha256": "e8db80525fcc9545ba6879453c22924d14123361c394702b147cdfec695aa511",
+  "core_revision": "56a88a5c9b9c68055fccfa9b185a7f1cb6aa4a73",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": true,
+  "repetitions": 1,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "90c51d144b18f8ae97e57b5859924d2f6885fde2cd6d9e134ed253155efe162f",
+      "elf_sha256": "1d8d533c16eedb209f9b812dc0e07a3c33e5e9b058e26ac94a448fbd4bca021f",
+      "record_sha256": "b75299e3a8d426e8cce0d21af0b0d2151cb290ccc6fc39a95ab90c6e0f52a866",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 3.063,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "e31ae74701de8672a34865cc714feabd9825c8267152e030c92465ab77d8b447"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "44e4c16d7cddf169f841f275a54e905892855ebb7781848517133114242018e8",
+      "elf_sha256": "60e5d385820c5b77fb68a2e794b595dcfae9723d04903bb4168c8e743ee5eeca",
+      "record_sha256": "b75299e3a8d426e8cce0d21af0b0d2151cb290ccc6fc39a95ab90c6e0f52a866",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 2.969,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "0e87824c4eceb067f8bf2c34c8f7b0a50b276e4806ea99b58a548a2a8955de78"
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "confirmation_sha256": "cf9207c62aff9677bf56aa85939a5ff95bfcc3300f3d41c833786dafcef67b70",
+  "error": "ProtocolError: signal firmware error role=1: [1, 1, 1, 0, 128, 0, 32, 0]",
+  "completed_at_utc": "2026-09-06T17:49:03.668791+00:00"
+}

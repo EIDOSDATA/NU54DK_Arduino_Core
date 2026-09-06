@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-synthetic-signal",
+  "status": "preflight",
+  "fixture_id": 430,
+  "fixture_revision": 5,
+  "catalog_sha256": "e8db80525fcc9545ba6879453c22924d14123361c394702b147cdfec695aa511",
+  "core_revision": "7c44abffb30402c56cb5e2fd7a1c21829b3b3a16",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": false,
+  "repetitions": 1,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "08e12c6c00c8eb46a21bda8e9247194bdc54a52b4b6b40a2ec92d269fbb701da",
+      "elf_sha256": "30e0b1b6db7a546211d563c2986b87ed5f0a2cc3ac8d4a5b49fd8ce876c8beba",
+      "record_sha256": "61f561c70c6496fa0ebe34aacf2fde067effb5aaa2976bd9545ad25500bd18fd"
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "0f5b731ca028178b15141bd77e0dd5b237bff49b3f41b72d10d87a52902fc715",
+      "elf_sha256": "4e912a8e9b508d065a0bb3691273bdc79ae7cc259283c813854584feb1cab52f",
+      "record_sha256": "61f561c70c6496fa0ebe34aacf2fde067effb5aaa2976bd9545ad25500bd18fd"
+    }
+  ],
+  "results": [],
+  "fixture": {
+    "id": 430,
+    "family": "i2s",
+    "banks": [
+      1,
+      1
+    ],
+    "instances": [
+      [
+        20
+      ],
+      [
+        20
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "peer": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "signal": "SCK"
+      },
+      {
+        "dut": [
+          "P2",
+          11,
+          "P1.5"
+        ],
+        "peer": [
+          "P2",
+          11,
+          "P1.5"
+        ],
+        "signal": "LRCK"
+      },
+      {
+        "dut": [
+          "P2",
+          10,
+          "P1.6"
+        ],
+        "peer": [
+          "P2",
+          9,
+          "P1.7"
+        ],
+        "signal": "DUT SDOUT -> peer SDIN"
+      },
+      {
+        "dut": [
+          "P2",
+          9,
+          "P1.7"
+        ],
+        "peer": [
+          "P2",
+          10,
+          "P1.6"
+        ],
+        "signal": "DUT SDIN <- peer SDOUT"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "controller role만 I2S master clock을 출력하며 양쪽 SDOUT/SDIN은 교차 연결합니다. MCK는 사용하지 않습니다.",
+    "pullups": []
+  },
+  "confirmation_template": {
+    "fixture_id": 430,
+    "fixture_revision": 5,
+    "catalog_sha256": "e8db80525fcc9545ba6879453c22924d14123361c394702b147cdfec695aa511",
+    "core_revision": "7c44abffb30402c56cb5e2fd7a1c21829b3b3a16",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "uid_sha256": [
+      "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0"
+    ],
+    "hex_sha256": [
+      "08e12c6c00c8eb46a21bda8e9247194bdc54a52b4b6b40a2ec92d269fbb701da",
+      "0f5b731ca028178b15141bd77e0dd5b237bff49b3f41b72d10d87a52902fc715"
+    ],
+    "dap_uart_disconnected_both": false,
+    "swd_connected_both": false,
+    "power_rails_not_joined": false,
+    "equal_io_voltage_confirmed": false,
+    "common_ground_confirmed": false,
+    "links_match_catalog": false,
+    "pullups_match_catalog": false,
+    "extra_outputs_disconnected": false,
+    "confirmed_at_unix": 0,
+    "confirmed_by": ""
+  }
+}
+V04_SIGNAL_PREFLIGHT_ONLY; no probe access, flash, reset or external output

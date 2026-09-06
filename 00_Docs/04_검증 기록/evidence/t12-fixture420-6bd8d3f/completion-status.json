@@ -1,0 +1,31 @@
+{
+  "source": "6bd8d3f15ad29fc21f7a58c736cd86e917a3d314",
+  "recorded_at_utc": "2026-09-06T16:58:00.144885+00:00",
+  "status": "fixture420-functional-and-prepared-cancel-passed",
+  "source_physical_executed": true,
+  "functional_pass": 48,
+  "functional_cleanup_pass": 48,
+  "prepared_cancel_pass": 6,
+  "prepared_cancel_cleanup_replies": 12,
+  "postflight_roles_pass": 2,
+  "continuous_functional_elapsed_seconds": 22.063,
+  "swd_frequency_hz": 10000000,
+  "wiring_reconfirmation_utc": "2026-09-06T16:48:47Z",
+  "last_uploaded_source": "6bd8d3f15ad29fc21f7a58c736cd86e917a3d314",
+  "build_root": "C:\\u3u",
+  "next_fixture": 430,
+  "next_fixture_executed": false,
+  "next_action": "USB off, change to 430 I2S links and obtain fresh wiring confirmation",
+  "remaining": [
+    "430 I2S",
+    "440 PDM",
+    "remaining T12 requirements",
+    "T13 concurrency/soak",
+    "T14 public PwmSequenceFabric deferred START cancellation defect",
+    "T15 and later integration/release gates"
+  ],
+  "readiness_open_blockers": 8,
+  "repo_code_changes_this_resume": [],
+  "unused_repo_files_removed": [],
+  "cleanup_note": "Current HIL header and native regression are referenced; prior evidence and build artifacts retained"
+}

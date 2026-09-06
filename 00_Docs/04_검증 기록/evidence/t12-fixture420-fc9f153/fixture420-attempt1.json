@@ -1,0 +1,1327 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-synthetic-signal",
+  "status": "passed",
+  "fixture_id": 420,
+  "fixture_revision": 5,
+  "catalog_sha256": "e8db80525fcc9545ba6879453c22924d14123361c394702b147cdfec695aa511",
+  "core_revision": "fc9f1536e2caf4efee387c1a69b3a4c9e24adf3b",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": true,
+  "repetitions": 1,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false,
+    "completed_cycles": 1,
+    "continuous_elapsed_seconds": 22.172,
+    "requested_duration_seconds": 0,
+    "requested_repetitions": 1
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "ed312febabde291a52ff19cb2756192eaf9e1358ab0410ea8216ca6d0da6f594",
+      "elf_sha256": "18af45db1ad20489efea09458f60473421663c85fccd9bd2d06bb362965c4ada",
+      "record_sha256": "f9fea76a084951a58aed9e1ed51b6113b2ce4aef83c6cc38593f5497e6329ec0",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 6.328,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "aa90e83e31ce8b2c4dab5d811c507c8fce1930a4098490972487c9a9a7b66dc0"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "5763893783121f20a39a9bb64df7f57e07eefb0fe77d350e5b4ae33a51cc4296",
+      "elf_sha256": "3061680ac362a2fba00a30d17fd9c977eb642814f29600b2e2548fc76c6693db",
+      "record_sha256": "f9fea76a084951a58aed9e1ed51b6113b2ce4aef83c6cc38593f5497e6329ec0",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 5.922,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "12d044dba0ba58a1ada0b96e512565b4d8b1217ad0fb4e77a1e94e8ee7d9d805"
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(20, 20, 1, 2000, 0, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": 4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(20, 20, 1, 2000, 0, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": 4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(20, 20, 1, 2000, 1, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": -4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(20, 20, 1, 2000, 1, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": -4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(20, 20, 100, 2000, 0, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": 400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(20, 20, 100, 2000, 0, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": 400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(20, 20, 100, 2000, 1, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": -400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(20, 20, 100, 2000, 1, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": -400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(20, 21, 1, 2000, 0, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": 4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(20, 21, 1, 2000, 0, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": 4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(20, 21, 1, 2000, 1, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": -4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(20, 21, 1, 2000, 1, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": -4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(20, 21, 100, 2000, 0, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": 400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(20, 21, 100, 2000, 0, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": 400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(20, 21, 100, 2000, 1, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": -400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(20, 21, 100, 2000, 1, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": -400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(21, 20, 1, 2000, 0, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": 4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(21, 20, 1, 2000, 0, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": 4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(21, 20, 1, 2000, 1, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": -4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(21, 20, 1, 2000, 1, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": -4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(21, 20, 100, 2000, 0, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": 400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(21, 20, 100, 2000, 0, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": 400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(21, 20, 100, 2000, 1, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": -400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(21, 20, 100, 2000, 1, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": -400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(21, 21, 1, 2000, 0, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": 4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(21, 21, 1, 2000, 0, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": 4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(21, 21, 1, 2000, 1, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": -4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(21, 21, 1, 2000, 1, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": -4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(21, 21, 100, 2000, 0, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": 400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(21, 21, 100, 2000, 0, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": 400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(21, 21, 100, 2000, 1, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": -400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(21, 21, 100, 2000, 1, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": -400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(22, 20, 1, 2000, 0, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": 4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(22, 20, 1, 2000, 0, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": 4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(22, 20, 1, 2000, 1, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": -4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(22, 20, 1, 2000, 1, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": -4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(22, 20, 100, 2000, 0, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": 400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(22, 20, 100, 2000, 0, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": 400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(22, 20, 100, 2000, 1, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": -400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(22, 20, 100, 2000, 1, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": -400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(22, 21, 1, 2000, 0, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": 4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(22, 21, 1, 2000, 0, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": 4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(22, 21, 1, 2000, 1, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": -4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(22, 21, 1, 2000, 1, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": -4,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(22, 21, 100, 2000, 0, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": 400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(22, 21, 100, 2000, 0, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": 400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(22, 21, 100, 2000, 1, 0)/repeat-1",
+      "status": "passed",
+      "accumulated": -400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-QDEC-SIGNAL/420/2/(22, 21, 100, 2000, 1, 1)/repeat-1",
+      "status": "passed",
+      "accumulated": -400,
+      "double_transitions": 0,
+      "scope": "pwm-quadrature-qdec"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-CAMPAIGN-PROGRESS",
+      "status": "progress",
+      "cleanup_only": true,
+      "completed_cycles": 1,
+      "continuous_elapsed_seconds": 22.172
+    },
+    {
+      "id": "V04-CAMPAIGN-COMPLETE",
+      "status": "passed",
+      "scope": "continuous-session",
+      "completed_cycles": 1,
+      "continuous_elapsed_seconds": 22.172,
+      "requested_duration_seconds": 0,
+      "requested_repetitions": 1,
+      "interrupted_duration_reused": false
+    }
+  ],
+  "confirmation_sha256": "280bb3e01dd3df35510eb46c1717f052713e74eb4a3eb5a3617382ffcde3b678",
+  "completed_at_utc": "2026-09-06T16:27:31.334213+00:00"
+}

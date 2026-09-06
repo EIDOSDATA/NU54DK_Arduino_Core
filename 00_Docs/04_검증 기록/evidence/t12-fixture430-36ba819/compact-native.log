@@ -1,0 +1,6 @@
+test_transactions_match_prior_lease_algorithm (test_compact_tokens.CompactTokenTests.test_transactions_match_prior_lease_algorithm) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.843s
+
+OK

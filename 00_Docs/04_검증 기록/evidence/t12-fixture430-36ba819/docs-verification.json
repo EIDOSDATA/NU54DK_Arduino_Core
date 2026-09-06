@@ -1,0 +1,41 @@
+{
+  "source_tested": "36ba819bbe03280fa82c62ef76b00c87a92c2aff",
+  "markdown_files": 196,
+  "command": [
+    "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts\\python.exe",
+    "-B",
+    "tools/ci/run_m12_gate.py",
+    "docs"
+  ],
+  "result": "passed",
+  "log_original_sha256": "47998b67a6e4d3633f792569c251f15194324dca29f69cba4a59ec50ce3de443",
+  "log_normalized_sha256": "bd46e6605e104bbfc495fe9b3efe55ae0f7dc18f267b6cd5e0e7ad16fa10a95d",
+  "raw_originals_byte_verified": 121,
+  "code_changes_after_source": [],
+  "source_physical_executed": true,
+  "functional_pass": 192,
+  "whole_fixture_pass": true,
+  "failed_cases": 0,
+  "unexecuted_cases": 0,
+  "cleanup_pass": 192,
+  "postflight_roles_pass": 2,
+  "historical_records_modified": false,
+  "next_fixture": 440,
+  "fixture440_executed": false,
+  "next_action": "Obtain USB-off Fixture440 rewiring confirmation before next signals",
+  "staged_files_match_disk_bytes": true,
+  "staged_diff_check": "passed",
+  "scope": [
+    "README.md",
+    "00_Docs/README.md",
+    "00_Docs/TODO_v0.4.0.md",
+    "00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md",
+    "00_Docs/01_아두이노 코어 설계/14_리팩토링/README.md",
+    "00_Docs/01_아두이노 코어 설계/14_리팩토링/05_리팩토링_진행_체크리스트.md",
+    "00_Docs/04_검증 기록/README.md",
+    "tests/hil/nu54dk/README.md",
+    "00_Docs/04_검증 기록/87_T12_Fixture_430_current_source_I2S_재검증.md",
+    "00_Docs/04_검증 기록/evidence/t12-fixture430-70971f4/",
+    "00_Docs/04_검증 기록/evidence/t12-fixture430-36ba819/"
+  ]
+}

@@ -83,12 +83,29 @@ def pattern(seed, index):
 
 def i2s_expected(seed, words, width, channels):
     """NRF I2S memory word에서 활성 sample bit만 비교할 mask를 함께 반환합니다."""
-    width_mask = (1 << width) - 1 if width < 32 else 0xFFFFFFFF
-    if width <= 16 and channels == 0:
-        mask = width_mask | (width_mask << 16)
-    else:
-        mask = width_mask
+    mask = 0xFFFFFF if width == 24 else 0xFFFFFFFF
     return [pattern(seed, index) & mask for index in range(words)], mask
+
+
+def i2s_received(raw, seed, words, width, channels):
+    """시작 시 최대 8개의 zero frame 뒤 요청 payload 전체를 sample 단위로 검증합니다."""
+    if len(raw) != words + 16:
+        raise ProtocolError("I2S capture word count mismatch")
+    expected, _ = i2s_expected(seed, words, width, channels)
+    sample_mask = (1 << width) - 1
+    shifts = range(0, 32, width) if width <= 16 else (0,)
+    unpack = lambda data: [(word >> shift) & sample_mask
+                           for word in data for shift in shifts]
+    actual_samples, expected_samples = unpack(raw), unpack(expected)
+    padding = next((index for index, value in enumerate(actual_samples) if value), len(actual_samples))
+    frame_samples = 2 if channels == 0 else 1
+    if padding > 8 * frame_samples or padding % frame_samples:
+        raise ProtocolError("I2S startup zero-frame bound/alignment mismatch")
+    if actual_samples[padding:padding + len(expected_samples)] != expected_samples:
+        raise ProtocolError("I2S payload/packing mismatch")
+    return {"startup_zero_samples": padding, "payload_samples": len(expected_samples),
+            "capture_words": len(raw),
+            "raw_sha256": hashlib.sha256(b"".join(word.to_bytes(4, "little") for word in raw)).hexdigest()}
 
 
 def shared_source_readback(source, phase, fixture_id=405):
@@ -162,14 +179,13 @@ def run_case(devices, selected, controller_role, vector, append):
                         for device in devices]
             if any(status[5] != target for status in statuses):
                 raise ProtocolError(f"I2S DMA word count mismatch: {statuses}")
+            payloads = []
             for device in devices:
                 peer_role = 3 - device.image["role"]
                 peer_seed = vector[5] ^ (0 if peer_role == 1 else 0x5A5A5A5A)
-                expected, mask = i2s_expected(peer_seed, target, vector[1], vector[2])
-                actual = [word & mask for word in read_u32(device, target)]
-                if actual != expected:
-                    raise ProtocolError("I2S payload/packing mismatch")
-            result = {"statuses": statuses, "scope": "i2s-full-duplex-dma"}
+                payloads.append({"receiver_role": device.image["role"], **i2s_received(
+                    read_u32(device, target + 16), peer_seed, target, vector[1], vector[2])})
+            result = {"statuses": statuses, "payloads": payloads, "scope": "i2s-full-duplex-dma"}
         elif family == "pdm":
             if receiver.command(35) != [0]:
                 raise ProtocolError("PDM receiver start failed")

@@ -1,0 +1,15 @@
+{
+  "source": "70971f41aa1e0485d3e974fc8a4cd4f123ae2f33",
+  "fixture_id": 430,
+  "scope": "T10/T12 Fixture430 canonical I2S vectors with both clock-controller roles; postflight, docs, commit and push; no 440 before new wiring confirmation",
+  "user_confirmation_recorded_at_utc": "2026-09-06T18:35:58+00:00",
+  "confirmation_text": "결선 완료. 430을 테스트 해.",
+  "wiring": "A P1.04(P2-12) <-> B P1.04(P2-12); A P1.05(P2-11) <-> B P1.05(P2-11); A P1.06(P2-10) -> B P1.07(P2-9); B P1.06(P2-10) -> A P1.07(P2-9); common GND(P2-30)",
+  "confirmed_in_context": "Both USB disconnected during rewiring and reconnected; previous 420 signal wires removed; DAP UART disconnected, SWD connected; existing SB/PMIC unchanged; no MCK, extra signals or joined power rails",
+  "swd_frequency_hz": 10000000,
+  "new_fixture_confirmation": true,
+  "prior_attempt_source": "7c44abffb30402c56cb5e2fd7a1c21829b3b3a16",
+  "prior_attempt_result": "72 pass then 48kHz/24bit/stereo/32word buffer error; cleanup73 and postflight2 pass",
+  "fix": "Diagnostic RAM trace only: start return, first service, event order, queue result/time and STOP result; preserve failure oracle",
+  "user_message": "뭐가 문제였니? 결선 유지중이야."
+}

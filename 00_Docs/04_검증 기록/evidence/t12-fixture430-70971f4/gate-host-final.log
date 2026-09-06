@@ -1,0 +1,1612 @@
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_ac01_contract.py
+test_connector_dtsi_uses_only_approved_free_gpio_pair (test_ac01_contract.AC01ContractTests.test_connector_dtsi_uses_only_approved_free_gpio_pair) ... ok
+test_safe_interrupt_and_timing_apis_have_real_backends (test_ac01_contract.AC01ContractTests.test_safe_interrupt_and_timing_apis_have_real_backends) ... ok
+test_standard_and_ble_profiles_share_one_connector_definition (test_ac01_contract.AC01ContractTests.test_standard_and_ble_profiles_share_one_connector_definition) ... ok
+test_variant_exposes_connector_capability_and_ownership (test_ac01_contract.AC01ContractTests.test_variant_exposes_connector_capability_and_ownership) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.004s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_ac02b_analog_contract.py
+test_examples_exist (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_examples_exist) ... ok
+test_math_contract_compiles (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_math_contract_compiles) ... ok
+test_production_pwm_route_backend_is_transactional (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_production_pwm_route_backend_is_transactional)
+Production adapter가 B2 route 수명주기와 실패 복구를 사용합니다. ... ok
+test_public_implementation_contains_fixed_policy (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_public_implementation_contains_fixed_policy) ... ok
+test_recovery_failure_is_fail_closed_and_gpio_transition_is_rollbackable (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_recovery_failure_is_fail_closed_and_gpio_transition_is_rollbackable)
+복구 실패가 조용히 상태를 버리거나 route를 재사용하지 않습니다. ... ok
+test_servo_is_fixed_memory_pwm22_backend (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_servo_is_fixed_memory_pwm22_backend) ... ok
+test_target_contract_covers_adc_pwm_tone_servo_and_pm (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_target_contract_covers_adc_pwm_tone_servo_and_pm) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.061s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_ac02b_b2_contract.py
+test_disabled_backends_and_library_discovery_fail_closed (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_disabled_backends_and_library_discovery_fail_closed) ... ok
+test_instance_route_matrix_and_zero_psel_boundary_are_fixed (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_instance_route_matrix_and_zero_psel_boundary_are_fixed) ... ok
+test_lifecycle_and_fail_closed_operations_are_present (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_lifecycle_and_fail_closed_operations_are_present) ... ok
+test_public_concrete_types_and_capabilities_are_explicit (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_public_concrete_types_and_capabilities_are_explicit) ... ok
+test_public_diagnostics_distinguish_runtime_routes_and_serial1 (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_public_diagnostics_distinguish_runtime_routes_and_serial1) ... ok
+test_wire_target_and_extra_instances_are_not_faked (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_wire_target_and_extra_instances_are_not_faked) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.004s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_ac03_storage_contract.py
+test_approved_legacy_headers_and_examples_exist (test_ac03_storage_contract.AC03StorageContractTests.test_approved_legacy_headers_and_examples_exist)
+! @brief 대표 Arduino include와 세 공개 예제를 검증합니다. ... ok
+test_builder_validates_the_effective_linker_partition (test_ac03_storage_contract.AC03StorageContractTests.test_builder_validates_the_effective_linker_partition)
+! @brief generated DTS와 linker map의 일치를 산출물 공개 전에 검증합니다. ... ok
+test_eeprom_record_and_explicit_commit_contract (test_ac03_storage_contract.AC03StorageContractTests.test_eeprom_record_and_explicit_commit_contract)
+! @brief EEPROM의 mirror, CRC, bounds, 명시적 commit 계약을 검증합니다. ... ok
+test_feature_manifests_are_allowlisted_and_profile_compatible (test_ac03_storage_contract.AC03StorageContractTests.test_feature_manifests_are_allowlisted_and_profile_compatible)
+! @brief EEPROM과 LittleFS의 선언형 build 입력을 검증합니다. ... ok
+test_littlefs_default_mount_cannot_format (test_ac03_storage_contract.AC03StorageContractTests.test_littlefs_default_mount_cannot_format)
+! @brief 기본 mount와 명시적 format 경계를 검증합니다. ... ok
+test_partition_is_common_exact_and_non_overlapping (test_ac03_storage_contract.AC03StorageContractTests.test_partition_is_common_exact_and_non_overlapping)
+! @brief 두 profile이 같은 loaderless flash 분할과 linker 설정을 포함하는지 검증합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.014s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_build_matrix_runner.py
+test_all_nu54dk_testcase_metadata_is_in_canonical_runner (test_build_matrix_runner.BuildMatrixRunnerTests.test_all_nu54dk_testcase_metadata_is_in_canonical_runner)
+! @brief 독립 testcase YAML을 대조하여 새 target의 canonical 목록 누락을 거부합니다. ... ok
+test_arduino_compile_retries_only_bootstrap_failure (test_build_matrix_runner.BuildMatrixRunnerTests.test_arduino_compile_retries_only_bootstrap_failure) ... ARDUINO_CLI_BOOTSTRAP_RETRY=1/2;DELAY_SECONDS=2
+ok
+test_arduino_groups_are_explicit_and_disjoint (test_build_matrix_runner.BuildMatrixRunnerTests.test_arduino_groups_are_explicit_and_disjoint) ... ok
+test_child_python_output_is_unbuffered (test_build_matrix_runner.BuildMatrixRunnerTests.test_child_python_output_is_unbuffered) ... ok
+test_serial_source_validator_rejects_false_positive_builds (test_build_matrix_runner.BuildMatrixRunnerTests.test_serial_source_validator_rejects_false_positive_builds) ... ok
+test_target_subset_never_silently_escapes_group (test_build_matrix_runner.BuildMatrixRunnerTests.test_target_subset_never_silently_escapes_group) ... ok
+test_zephyr_failure_summary_identifies_scenario (test_build_matrix_runner.BuildMatrixRunnerTests.test_zephyr_failure_summary_identifies_scenario) ... ok
+test_zephyr_groups_partition_every_suite_once (test_build_matrix_runner.BuildMatrixRunnerTests.test_zephyr_groups_partition_every_suite_once) ... ok
+test_zephyr_plan_uses_short_isolated_outdirs (test_build_matrix_runner.BuildMatrixRunnerTests.test_zephyr_plan_uses_short_isolated_outdirs) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.046s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_fixed_gate_runner.py
+test_main_rejects_different_repository_root (test_fixed_gate_runner.FixedGateRunnerTests.test_main_rejects_different_repository_root) ... ok
+test_parser_rejects_arbitrary_host_command (test_fixed_gate_runner.FixedGateRunnerTests.test_parser_rejects_arbitrary_host_command) ... ok
+test_runtime_fingerprint_normalizes_only_platform_version (test_fixed_gate_runner.FixedGateRunnerTests.test_runtime_fingerprint_normalizes_only_platform_version) ... ok
+test_short_workspace_preserves_existing_slot (test_fixed_gate_runner.FixedGateRunnerTests.test_short_workspace_preserves_existing_slot) ... ok
+test_short_workspace_rejects_exhausted_slots (test_fixed_gate_runner.FixedGateRunnerTests.test_short_workspace_rejects_exhausted_slots) ... ok
+test_short_workspace_rejects_long_path_budget (test_fixed_gate_runner.FixedGateRunnerTests.test_short_workspace_rejects_long_path_budget) ... ok
+test_smoke_cli_config_isolates_data_downloads_and_user (test_fixed_gate_runner.FixedGateRunnerTests.test_smoke_cli_config_isolates_data_downloads_and_user) ... ok
+test_smoke_scope_uses_only_canonical_m9_name (test_fixed_gate_runner.FixedGateRunnerTests.test_smoke_scope_uses_only_canonical_m9_name) ... ok
+test_stage_zephyr_gate_tree_preserves_relative_core_root (test_fixed_gate_runner.FixedGateRunnerTests.test_stage_zephyr_gate_tree_preserves_relative_core_root) ... ok
+test_twister_result_binds_report_to_workspace (test_fixed_gate_runner.FixedGateRunnerTests.test_twister_result_binds_report_to_workspace) ... ok
+test_twister_result_rejects_non_build_only_status (test_fixed_gate_runner.FixedGateRunnerTests.test_twister_result_rejects_non_build_only_status) ... ok
+test_twister_result_requires_exact_build_only_set (test_fixed_gate_runner.FixedGateRunnerTests.test_twister_result_requires_exact_build_only_set) ... ok
+test_validate_platform_accepts_exact_identity (test_fixed_gate_runner.FixedGateRunnerTests.test_validate_platform_accepts_exact_identity) ... ok
+test_validate_platform_rejects_payload_tampering (test_fixed_gate_runner.FixedGateRunnerTests.test_validate_platform_rejects_payload_tampering) ... ok
+test_zephyr_command_uses_short_non_junction_contract (test_fixed_gate_runner.FixedGateRunnerTests.test_zephyr_command_uses_short_non_junction_contract) ... ok
+test_zephyr_environment_stages_fixed_demangler (test_fixed_gate_runner.FixedGateRunnerTests.test_zephyr_environment_stages_fixed_demangler) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.173s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_host_compiler.py
+test_c_flags_are_independent_of_cxx_flags (test_host_compiler.HostCompilerTests.test_c_flags_are_independent_of_cxx_flags) ... ok
+test_defaults_preserve_gcc_first_selection (test_host_compiler.HostCompilerTests.test_defaults_preserve_gcc_first_selection) ... ok
+test_explicit_compiler_and_arguments_preserve_spaces (test_host_compiler.HostCompilerTests.test_explicit_compiler_and_arguments_preserve_spaces) ... ok
+test_invalid_flags_are_rejected_without_shell_parsing (test_host_compiler.HostCompilerTests.test_invalid_flags_are_rejected_without_shell_parsing) ... ok
+test_missing_explicit_compiler_does_not_fall_back_or_skip (test_host_compiler.HostCompilerTests.test_missing_explicit_compiler_does_not_fall_back_or_skip) ... ok
+test_optional_absence_and_invalid_language (test_host_compiler.HostCompilerTests.test_optional_absence_and_invalid_language) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.008s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m10_prerequisites.py
+test_builder_launcher_isolates_embedded_python_runtime (test_m10_prerequisites.M10PrerequisiteContractTests.test_builder_launcher_isolates_embedded_python_runtime)
+! @brief 외부 Python 환경이 NCS Toolchain 표준 library를 오염시키지 못하게 합니다. ... ok
+test_builder_launcher_searches_exact_user_toolchain_first (test_m10_prerequisites.M10PrerequisiteContractTests.test_builder_launcher_searches_exact_user_toolchain_first)
+! @brief Arduino process가 PATH 없이 사용자 profile의 고정 Python을 찾습니다. ... ok
+test_changed_pin_hash_is_rejected (test_m10_prerequisites.M10PrerequisiteContractTests.test_changed_pin_hash_is_rejected)
+! @brief package pin byte가 바뀌면 과거 완료 marker를 재사용하지 않습니다. ... ok
+test_empty_explicit_ncs_root_does_not_fall_back (test_m10_prerequisites.M10PrerequisiteContractTests.test_empty_explicit_ncs_root_does_not_fall_back)
+! @brief 환경 변수를 빈 값으로 명시해도 기존 NCS를 선택하지 않습니다. ... ok
+test_explicit_ncs_root_is_authoritative (test_m10_prerequisites.M10PrerequisiteContractTests.test_explicit_ncs_root_is_authoritative)
+! @brief 명시한 NCS root만 선택하고 기본 설치 후보를 조회하지 않습니다. ... ok
+test_gitless_revision_falls_back_only_to_valid_release_manifest (test_m10_prerequisites.M10PrerequisiteContractTests.test_gitless_revision_falls_back_only_to_valid_release_manifest)
+! @brief 상위 Git을 오인하지 않고 40자리 archive revision만 사용합니다. ... ok
+test_incomplete_or_wrong_ready_marker_is_rejected (test_m10_prerequisites.M10PrerequisiteContractTests.test_incomplete_or_wrong_ready_marker_is_rejected)
+! @brief incomplete 상태와 다른 Toolchain marker를 모두 fail-closed 처리합니다. ... ok
+test_installer_is_user_scoped_resumable_and_version_checked (test_m10_prerequisites.M10PrerequisiteContractTests.test_installer_is_user_scoped_resumable_and_version_checked)
+! @brief 설치기는 사용자 경로와 단계 marker만 사용하고 고정 version을 확인합니다. ... ok
+test_installer_sets_utf8_before_any_runtime_output (test_m10_prerequisites.M10PrerequisiteContractTests.test_installer_sets_utf8_before_any_runtime_output)
+! @brief 설치기가 첫 출력 전에 PS 5.1 console과 native pipe를 UTF-8로 고정합니다. ... ok
+test_installer_uses_powershell_51_compatible_log_append (test_m10_prerequisites.M10PrerequisiteContractTests.test_installer_uses_powershell_51_compatible_log_append)
+! @brief PS 5.1에서 허용되지 않는 Tee 매개 변수 조합을 차단합니다. ... ok
+test_invalid_explicit_ncs_root_does_not_fall_back (test_m10_prerequisites.M10PrerequisiteContractTests.test_invalid_explicit_ncs_root_does_not_fall_back)
+! @brief 격리 NCS가 없을 때 기존 사용자·C 드라이브 설치로 새지 않습니다. ... ok
+test_matching_release_manifest_and_ready_marker_are_accepted (test_m10_prerequisites.M10PrerequisiteContractTests.test_matching_release_manifest_and_ready_marker_are_accepted)
+! @brief package, pin과 설치 marker의 3-way identity가 같으면 승인합니다. ... ok
+test_packaged_revisions_use_bundled_git_with_empty_path (test_m10_prerequisites.M10PrerequisiteContractTests.test_packaged_revisions_use_bundled_git_with_empty_path)
+! @brief system Git이 없어도 NCS/Zephyr는 Toolchain Git으로만 조회합니다. ... ok
+test_packaged_toolchain_discovery_requires_only_pinned_bundle (test_m10_prerequisites.M10PrerequisiteContractTests.test_packaged_toolchain_discovery_requires_only_pinned_bundle)
+! @brief package는 env와 registry의 다른 bundle을 무시하고 exact pin만 선택합니다. ... ok
+test_pin_file_fixes_official_bytes_and_all_nordic_versions (test_m10_prerequisites.M10PrerequisiteContractTests.test_pin_file_fixes_official_bytes_and_all_nordic_versions)
+! @brief 공식 URL, byte hash와 SDK/Toolchain revision이 정확히 고정됩니다. ... ok
+test_post_install_cmd_emits_strict_utf8_for_korean_output (test_m10_prerequisites.M10PrerequisiteContractTests.test_post_install_cmd_emits_strict_utf8_for_korean_output)
+! @brief Arduino gRPC에 전달할 한글 출력을 엄격한 UTF-8로 보장합니다. ... ok
+test_post_install_cmd_preserves_quoted_platform_root_and_exit_code (test_m10_prerequisites.M10PrerequisiteContractTests.test_post_install_cmd_preserves_quoted_platform_root_and_exit_code)
+! @brief trailing slash와 공백이 있는 package root를 실제 CMD 호출로 보존합니다. ... ok
+test_post_install_propagates_powershell_exit_code (test_m10_prerequisites.M10PrerequisiteContractTests.test_post_install_propagates_powershell_exit_code)
+! @brief Arduino hook가 설치 실패를 성공으로 숨기지 않습니다. ... ok
+test_powershell_install_and_verify_scripts_parse (test_m10_prerequisites.M10PrerequisiteContractTests.test_powershell_install_and_verify_scripts_parse)
+! @brief clean Windows에서 실행할 두 PowerShell script가 parser 오류 없이 읽힙니다. ... ok
+test_powershell_scripts_do_not_depend_on_hash_module_autoload (test_m10_prerequisites.M10PrerequisiteContractTests.test_powershell_scripts_do_not_depend_on_hash_module_autoload)
+! @brief clean PowerShell에서 SHA-256 cmdlet 자동 로드에 의존하지 않습니다. ... ok
+test_sdk_manager_requirement_uses_exact_version_operator (test_m10_prerequisites.M10PrerequisiteContractTests.test_sdk_manager_requirement_uses_exact_version_operator)
+! @brief nRF Util installation set이 sdk-manager patch version까지 고정합니다. ... ok
+test_toolchain_manifest_bundle_id_is_verified (test_m10_prerequisites.M10PrerequisiteContractTests.test_toolchain_manifest_bundle_id_is_verified)
+! @brief directory 이름과 내부 Nordic bundle metadata가 모두 pin과 같아야 합니다. ... ok
+test_verifier_checks_reused_marker_version_and_normalized_nrfutil_path (test_m10_prerequisites.M10PrerequisiteContractTests.test_verifier_checks_reused_marker_version_and_normalized_nrfutil_path)
+! @brief verifier가 Builder와 같은 ready marker version/path 계약을 적용합니다. ... ok
+test_verify_script_initializes_utf8_before_runtime_setup (test_m10_prerequisites.M10PrerequisiteContractTests.test_verify_script_initializes_utf8_before_runtime_setup)
+! @brief 검증 subprocess도 첫 출력 전에 UTF-8 출력을 고정합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 1.689s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m10_remote_runner.py
+test_arduino_cli_15_uses_supported_json_flags (test_m10_remote_runner.M10RemoteRunnerContractTests.test_arduino_cli_15_uses_supported_json_flags)
+! @brief 대상 Arduino CLI 1.5 계열이 지원하는 global JSON flag를 사용합니다. ... ok
+test_checkpoint_writes_are_atomic_and_write_through (test_m10_remote_runner.M10RemoteRunnerContractTests.test_checkpoint_writes_are_atomic_and_write_through)
+! @brief state/evidence가 같은 directory의 임시 파일에서 원자 교체됩니다. ... ok
+test_clean_baseline_requires_absent_ncs_and_prerequisite_state (test_m10_remote_runner.M10RemoteRunnerContractTests.test_clean_baseline_requires_absent_ncs_and_prerequisite_state)
+! @brief fresh M10 run은 기존 Nordic 설치를 clean 설치로 오인하지 않습니다. ... ok
+test_complete_lifecycle_is_checkpointed (test_m10_remote_runner.M10RemoteRunnerContractTests.test_complete_lifecycle_is_checkpointed)
+! @brief 설치부터 uninstall 및 reinstall까지 모든 단계 이름을 고정합니다. ... ok
+test_exact_arduino_cli_identity_is_asserted_and_recorded (test_m10_remote_runner.M10RemoteRunnerContractTests.test_exact_arduino_cli_identity_is_asserted_and_recorded)
+! @brief version 문자열뿐 아니라 commit과 실행 파일 hash도 고정합니다. ... ok
+test_failed_post_install_can_be_retried_for_an_installed_core (test_m10_remote_runner.M10RemoteRunnerContractTests.test_failed_post_install_can_be_retried_for_an_installed_core)
+! @brief CLI가 설치됨으로 남긴 core도 post-install을 직접 재실행합니다. ... ok
+test_idempotent_uninstall_runs_once_when_core_is_installed (test_m10_remote_runner.M10RemoteRunnerContractTests.test_idempotent_uninstall_runs_once_when_core_is_installed)
+! @brief 정상 설치 상태에서는 uninstall을 정확히 한 번 호출합니다. ... ok
+test_index_cannot_redirect_to_an_arbitrary_archive (test_m10_remote_runner.M10RemoteRunnerContractTests.test_index_cannot_redirect_to_an_arbitrary_archive)
+! @brief index의 filename과 EIDOSDATA release URL을 version별로 고정합니다. ... ok
+test_installed_release_byte_provenance_is_in_evidence (test_m10_remote_runner.M10RemoteRunnerContractTests.test_installed_release_byte_provenance_is_in_evidence)
+! @brief 설치 archive와 release manifest의 commit/checksum identity를 남깁니다. ... ok
+test_local_runner_has_windows_powershell_utf8_signature (test_m10_remote_runner.M10RemoteRunnerContractTests.test_local_runner_has_windows_powershell_utf8_signature)
+! @brief 한글 실행기를 영문 Windows PowerShell 5.1도 UTF-8로 읽게 합니다. ... ok
+test_multi_probe_failure_preserves_count_in_evidence (test_m10_remote_runner.M10RemoteRunnerContractTests.test_multi_probe_failure_preserves_count_in_evidence)
+! @brief 선택 없는 multi-probe 실패 evidence에 실제 count와 차단 사유를 남깁니다. ... ok
+test_native_command_returns_one_object_under_strict_mode (test_m10_remote_runner.M10RemoteRunnerContractTests.test_native_command_returns_one_object_under_strict_mode)
+! @brief PS 5.1 Task 결과가 success stream에 섞여 JSON 결과를 배열로 만들지 않습니다. ... ok
+test_native_output_is_disk_spooled_and_tail_bounded (test_m10_remote_runner.M10RemoteRunnerContractTests.test_native_output_is_disk_spooled_and_tail_bounded)
+! @brief 장시간 native 출력은 file로 흘리고 제한된 tail만 메모리에 반환합니다. ... ok
+test_nordic_verifier_is_invoked_from_installed_platform (test_m10_remote_runner.M10RemoteRunnerContractTests.test_nordic_verifier_is_invoked_from_installed_platform)
+! @brief 설치된 core 내부 verifier를 JSON mode로 명시 실행합니다. ... ok
+test_powershell_51_parser_accepts_both_scripts (test_m10_remote_runner.M10RemoteRunnerContractTests.test_powershell_51_parser_accepts_both_scripts)
+! @brief Windows PowerShell parser가 두 파일을 오류 없이 해석합니다. ... ok
+test_probe_identity_and_credentials_are_redacted (test_m10_remote_runner.M10RemoteRunnerContractTests.test_probe_identity_and_credentials_are_redacted)
+! @brief probe UID와 자격 증명 형태를 두 실행기에서 제거합니다. ... ok
+test_probe_is_required_unless_explicitly_relaxed (test_m10_remote_runner.M10RemoteRunnerContractTests.test_probe_is_required_unless_explicitly_relaxed)
+! @brief 기본 HIL은 probe를 요구하고 조사 실행만 명시적으로 생략합니다. ... ok
+test_public_index_uses_repository_owner (test_m10_remote_runner.M10RemoteRunnerContractTests.test_public_index_uses_repository_owner)
+! @brief 기본 index가 공개 EIDOSDATA 저장소를 가리키는지 검증합니다. ... ok
+test_pyocd_api_count_uses_utf8_and_ten_uploads (test_m10_remote_runner.M10RemoteRunnerContractTests.test_pyocd_api_count_uses_utf8_and_ten_uploads)
+! @brief 한국어 Windows에서도 probe 열거와 RC 10회 HIL이 재현되는지 고정합니다. ... ok
+test_pyocd_api_probe_count_accepts_only_one_integer (test_m10_remote_runner.M10RemoteRunnerContractTests.test_pyocd_api_probe_count_accepts_only_one_integer)
+! @brief pyOCD API의 비식별 count 한 개만 안전하게 해석합니다. ... ok
+test_pyocd_api_probe_count_rejects_ambiguous_output (test_m10_remote_runner.M10RemoteRunnerContractTests.test_pyocd_api_probe_count_rejects_ambiguous_output)
+! @brief 빈 값, 음수와 부가 출력이 섞인 count를 fail-closed 처리합니다. ... ok
+test_resume_fingerprint_pins_runner_cli_index_and_archives (test_m10_remote_runner.M10RemoteRunnerContractTests.test_resume_fingerprint_pins_runner_cli_index_and_archives)
+! @brief mutable main URL이나 실행기 교체가 기존 PASS checkpoint와 섞이지 않습니다. ... ok
+test_run_identity_has_one_global_mutex_owner (test_m10_remote_runner.M10RemoteRunnerContractTests.test_run_identity_has_one_global_mutex_owner)
+! @brief 같은 RunId의 두 process가 Arduino data와 checkpoint를 공유하지 않습니다. ... ok
+test_ssh_authentication_fails_closed (test_m10_remote_runner.M10RemoteRunnerContractTests.test_ssh_authentication_fails_closed)
+! @brief SSH가 password fallback과 미확인 host key를 허용하지 않습니다. ... ok
+test_target_runner_is_ascii_only (test_m10_remote_runner.M10RemoteRunnerContractTests.test_target_runner_is_ascii_only)
+! @brief 대상 PC 전송 파일에 code page 의존 문자가 없음을 검증합니다. ... ok
+test_target_uses_isolated_arduino_directories (test_m10_remote_runner.M10RemoteRunnerContractTests.test_target_uses_isolated_arduino_directories)
+! @brief run별 data, downloads, sketchbook과 build를 분리합니다. ... ok
+test_timeout_and_exit_code_contract_is_fail_closed (test_m10_remote_runner.M10RemoteRunnerContractTests.test_timeout_and_exit_code_contract_is_fail_closed)
+! @brief native command가 timeout과 exit code를 모두 검사합니다. ... ok
+test_uninstall_crash_window_recovers_when_core_is_already_absent (test_m10_remote_runner.M10RemoteRunnerContractTests.test_uninstall_crash_window_recovers_when_core_is_already_absent)
+! @brief uninstall 뒤 checkpoint 전 중단된 재개가 재삭제 없이 성공합니다. ... ok
+test_versions_and_post_install_are_explicit (test_m10_remote_runner.M10RemoteRunnerContractTests.test_versions_and_post_install_are_explicit)
+! @brief preview version과 post-install 실행을 암묵적으로 선택하지 않습니다. ... ok
+
+----------------------------------------------------------------------
+Ran 29 tests in 8.965s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m11_rc_hil.py
+test_argument_defaults_preserve_source_mode_and_force_one_rc_upload (test_m11_rc_hil.M11RcHilTests.test_argument_defaults_preserve_source_mode_and_force_one_rc_upload)
+! @brief source mode 10회와 RC mode 1회 기본값을 분리해 보존합니다. ... ok
+test_auto_uart_opens_all_candidates_and_selects_unique_token (test_m11_rc_hil.M11RcHilTests.test_auto_uart_opens_all_candidates_and_selects_unique_token)
+! @brief COM3·COM4를 동시에 열고 READY가 있는 하나만 승인합니다. ... ok
+test_auto_uart_rejects_ambiguous_or_occupied_candidates (test_m11_rc_hil.M11RcHilTests.test_auto_uart_rejects_ambiguous_or_occupied_candidates)
+! @brief READY 중복과 후보 port 점유를 모두 fail-closed 처리합니다. ... ok
+test_build_manifest_rejects_hex_outside_build_and_hash_change (test_m11_rc_hil.M11RcHilTests.test_build_manifest_rejects_hex_outside_build_and_hash_change)
+! @brief HEX path traversal과 compile 뒤 byte 변경을 거부합니다. ... ok
+test_command_output_is_bounded_and_keeps_upload_pass_tail (test_m11_rc_hil.M11RcHilTests.test_command_output_is_bounded_and_keeps_upload_pass_tail)
+! @brief 큰 출력은 disk에 spool하고 마지막 upload PASS 표식은 보존합니다. ... ok
+test_command_timeout_terminates_descendant_process (test_m11_rc_hil.M11RcHilTests.test_command_timeout_terminates_descendant_process)
+! @brief timeout된 HIL command의 후손 process가 실행을 계속하지 못합니다. ... ok
+test_committed_file_hash_ignores_worktree_crlf_conversion (test_m11_rc_hil.M11RcHilTests.test_committed_file_hash_ignores_worktree_crlf_conversion)
+! @brief LF Git blob을 CRLF 작업 파일과 독립적으로 구분합니다. ... ok
+test_flash_log_requires_one_safe_pyocd_upload (test_m11_rc_hil.M11RcHilTests.test_flash_log_requires_one_safe_pyocd_upload)
+! @brief exact HEX의 비파괴 pyOCD command 한 건만 승인합니다. ... ok
+test_rc_main_compiles_uploads_once_and_writes_identity_evidence (test_m11_rc_hil.M11RcHilTests.test_rc_main_compiles_uploads_once_and_writes_identity_evidence)
+! @brief RC root→compile→pyOCD 1회→UART 순서를 JSON evidence에 고정합니다. ... ok
+test_rejects_manifest_path_traversal_and_unexpected_file (test_m11_rc_hil.M11RcHilTests.test_rejects_manifest_path_traversal_and_unexpected_file)
+! @brief manifest traversal과 package 밖 추가 payload를 모두 거부합니다. ... ok
+test_validates_and_byte_exactly_stages_rc_platform (test_m11_rc_hil.M11RcHilTests.test_validates_and_byte_exactly_stages_rc_platform)
+! @brief 원본과 staged root가 같은 tree identity를 가져야 합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 3.964s
+
+OK
+[NU54] command output truncated to final 32 MiB
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+NU54_UPLOAD_PASS runner=pyocd
+NUCODE_M8_UPLOAD_ATTEMPT:1/1
+NUCODE_M8_UPLOAD_ATTEMPT_PASS:1/1
+M8_UPLOAD_HIL_PASS runner=pyocd repetitions=1 hex_sha256=3f8e73b74c458dcf96bcdf19bf482239a9abf5ced2b78737a4418d6035c81a03 result=C:\Users\eidos\AppData\Local\Temp\nu54-m11-rc-hil-fg3b5ac2\workspace\20260906T183824-212648Z\m8-upload-result.json
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m11_release.py
+test_00_m11_rejects_the_m18_release_candidate (test_m11_release.M11ReleaseTests.test_00_m11_rejects_the_m18_release_candidate)
+! @brief M11 역사적 자동화가 v0.2 RC를 받아들이지 않는지 검증합니다. ... usage: python.exe -m unittest prepare [-h] [--repo-root REPO_ROOT]
+                                      --output-dir OUTPUT_DIR --version
+                                      {0.1.0-rc.2} [--commit COMMIT]
+python.exe -m unittest prepare: error: argument --version: invalid choice: '0.2.0-rc.1' (choose from 0.1.0-rc.2)
+ok
+test_01_rc_package_and_index_have_separate_identity (test_m11_release.M11ReleaseTests.test_01_rc_package_and_index_have_separate_identity) ... ok
+test_02_published_stable_rebuild_and_mixed_channels_fail (test_m11_release.M11ReleaseTests.test_02_published_stable_rebuild_and_mixed_channels_fail)
+! @brief 개발 HEAD에서 공개 stable을 덮어쓰지 못하고 채널 혼합도 거부합니다. ... ok
+test_03_plan_binds_all_artifacts_and_human_boundary (test_m11_release.M11ReleaseTests.test_03_plan_binds_all_artifacts_and_human_boundary) ... ok
+test_04_plan_rejects_tampered_artifact (test_m11_release.M11ReleaseTests.test_04_plan_rejects_tampered_artifact) ... ok
+test_05_command_gate_redacts_output_and_binds_plan (test_m11_release.M11ReleaseTests.test_05_command_gate_redacts_output_and_binds_plan) ... ok
+test_06_failed_command_never_becomes_pass_evidence (test_m11_release.M11ReleaseTests.test_06_failed_command_never_becomes_pass_evidence) ... ok
+test_07_extracted_package_placeholder_points_to_fixed_rc (test_m11_release.M11ReleaseTests.test_07_extracted_package_placeholder_points_to_fixed_rc) ... ok
+test_08_documentation_must_be_exact_committed_blob (test_m11_release.M11ReleaseTests.test_08_documentation_must_be_exact_committed_blob) ... ok
+test_09_m10_import_requires_clean_machine_and_safe_preview_generation (test_m11_release.M11ReleaseTests.test_09_m10_import_requires_clean_machine_and_safe_preview_generation) ... ok
+test_10_finalize_reports_hold_when_required_gate_is_missing (test_m11_release.M11ReleaseTests.test_10_finalize_reports_hold_when_required_gate_is_missing) ... ok
+test_11_all_technical_gates_still_require_human_stable_approval (test_m11_release.M11ReleaseTests.test_11_all_technical_gates_still_require_human_stable_approval) ... ok
+test_12_forged_evidence_type_is_rejected (test_m11_release.M11ReleaseTests.test_12_forged_evidence_type_is_rejected) ... ok
+test_13_documentation_cannot_be_replaced_by_a_command_gate (test_m11_release.M11ReleaseTests.test_13_documentation_cannot_be_replaced_by_a_command_gate)
+! @brief 종료 코드 0인 임의 명령이 exact 문서 blob gate를 대신하지 못합니다. ... ok
+test_14_command_evidence_requires_redacted_log_and_full_schema (test_m11_release.M11ReleaseTests.test_14_command_evidence_requires_redacted_log_and_full_schema)
+! @brief log나 실행 field가 빠진 합성 PASS JSON을 finalize에서 거부합니다. ... ok
+test_15_redaction_covers_bearer_json_and_github_environment_tokens (test_m11_release.M11ReleaseTests.test_15_redaction_covers_bearer_json_and_github_environment_tokens)
+! @brief 공개 log에 흔한 GitHub token 표기 변형을 모두 제거합니다. ... ok
+test_16_plan_and_archive_never_accept_an_empty_commit (test_m11_release.M11ReleaseTests.test_16_plan_and_archive_never_accept_an_empty_commit)
+! @brief 빈 core revision으로 exact commit 비교를 우회하지 못합니다. ... ok
+test_17_documentation_evidence_is_rechecked_against_git_blob (test_m11_release.M11ReleaseTests.test_17_documentation_evidence_is_rechecked_against_git_blob)
+! @brief file evidence의 size·SHA·Git object를 finalize 시점에 다시 검증합니다. ... ok
+test_18_imported_m10_gate_rechecks_frozen_raw_evidence (test_m11_release.M11ReleaseTests.test_18_imported_m10_gate_rechecks_frozen_raw_evidence)
+! @brief import 뒤 원본 M10 JSON이 바뀌면 gate validation을 실패시킵니다. ... ok
+test_19_command_log_is_bounded_while_preserving_redaction (test_m11_release.M11ReleaseTests.test_19_command_log_is_bounded_while_preserving_redaction)
+! @brief 큰 command 출력도 공개 log 상한 안에서 정제해 기록합니다. ... ok
+test_20_post_gate_source_failure_preserves_log_bound (test_m11_release.M11ReleaseTests.test_20_post_gate_source_failure_preserves_log_bound)
+! @brief 실행 후 source 실패를 덧붙여도 공개 log byte 상한을 넘지 않습니다. ... ok
+test_21_timeout_terminates_descendant_processes (test_m11_release.M11ReleaseTests.test_21_timeout_terminates_descendant_processes)
+! @brief timeout 시 직접 자식뿐 아니라 command의 후손 process도 종료합니다. ... ok
+test_22_m10_followup_allows_only_ancestor_documentation_and_tests (test_m11_release.M11ReleaseTests.test_22_m10_followup_allows_only_ancestor_documentation_and_tests)
+! @brief M10 이후 허용 경로만 바뀐 ancestor 이력을 수용합니다. ... ok
+test_23_m10_runtime_payload_mismatch_is_rejected (test_m11_release.M11ReleaseTests.test_23_m10_runtime_payload_mismatch_is_rejected)
+! @brief archive 이름과 commit을 맞춰도 runtime payload가 다르면 거부합니다. ... ok
+test_24_imported_m10_records_runtime_provenance (test_m11_release.M11ReleaseTests.test_24_imported_m10_records_runtime_provenance)
+! @brief 가져온 gate가 M10/RC revision과 허용 diff를 동결합니다. ... ok
+test_25_run_gate_cli_rejects_arbitrary_command_tail (test_m11_release.M11ReleaseTests.test_25_run_gate_cli_rejects_arbitrary_command_tail)
+! @brief 종료 코드 0인 임의 argv를 public gate CLI에 주입할 수 없습니다. ... usage: python.exe -m unittest [-h]
+                              {prepare,validate-plan,run-gate,record-docs,import-m10,finalize}
+                              ...
+python.exe -m unittest: error: unrecognized arguments: -- C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -c raise SystemExit(0)
+ok
+test_26_fixed_gate_contract_pins_repo_runner_and_exact_scope (test_m11_release.M11ReleaseTests.test_26_fixed_gate_contract_pins_repo_runner_and_exact_scope)
+! @brief gate 계약이 runner blob·archive·CLI·시험 범위를 모두 고정합니다. ... ok
+test_27_rc_hil_result_byte_tamper_is_rejected (test_m11_release.M11ReleaseTests.test_27_rc_hil_result_byte_tamper_is_rejected)
+! @brief 동결한 HIL result JSON의 사후 변경을 evidence checksum이 차단합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 28 tests in 58.744s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m11_remote_runner.py
+test_01_powershell_51_parser_accepts_runner (test_m11_remote_runner.M11RemoteRunnerContractTests.test_01_powershell_51_parser_accepts_runner)
+! @brief Windows PowerShell 5.1 parser가 전체 script를 해석합니다. ... ok
+test_01b_runner_has_windows_powershell_utf8_signature (test_m11_remote_runner.M11RemoteRunnerContractTests.test_01b_runner_has_windows_powershell_utf8_signature)
+! @brief 한글 RC 실행기를 영문 Windows PowerShell 5.1도 UTF-8로 읽게 합니다. ... ok
+test_02_ssh_authentication_and_host_key_are_fail_closed (test_m11_remote_runner.M11RemoteRunnerContractTests.test_02_ssh_authentication_and_host_key_are_fail_closed)
+! @brief password fallback과 확인하지 않은 host key를 허용하지 않습니다. ... ok
+test_03_public_exact_commit_and_submodule_are_forced (test_m11_remote_runner.M11RemoteRunnerContractTests.test_03_public_exact_commit_and_submodule_are_forced)
+! @brief credential 없는 공개 clone 뒤 exact detached commit만 사용합니다. ... ok
+test_04_m10_ready_marker_selects_pinned_python_and_git (test_m11_remote_runner.M11RemoteRunnerContractTests.test_04_m10_ready_marker_selects_pinned_python_and_git)
+! @brief M10 완료 marker와 고정 Toolchain 실행 파일만 사용합니다. ... ok
+test_05_arduino_cli_identity_and_gate_set_are_fixed (test_m11_remote_runner.M11RemoteRunnerContractTests.test_05_arduino_cli_identity_and_gate_set_are_fixed)
+! @brief exact Arduino CLI와 세 개의 repo-owned gate만 실행합니다. ... ok
+test_06_plan_and_every_artifact_are_checked_before_transfer (test_m11_remote_runner.M11RemoteRunnerContractTests.test_06_plan_and_every_artifact_are_checked_before_transfer)
+! @brief plan allowlist의 전체 byte·크기·경로를 로컬에서 검증합니다. ... ok
+test_07_release_bundle_runtime_rejects_modified_artifact (test_m11_remote_runner.M11RemoteRunnerContractTests.test_07_release_bundle_runtime_rejects_modified_artifact)
+! @brief 실제 bundle validator가 변조한 artifact를 fail-closed 처리합니다. ... ok
+test_08_evidence_log_and_hil_result_are_always_retrieved (test_m11_remote_runner.M11RemoteRunnerContractTests.test_08_evidence_log_and_hil_result_are_always_retrieved)
+! @brief 성공과 실패 모두에서 고정 companion 파일 회수를 시도합니다. ... ok
+test_09_timeout_and_output_capture_are_bounded (test_m11_remote_runner.M11RemoteRunnerContractTests.test_09_timeout_and_output_capture_are_bounded)
+! @brief 장시간 gate도 disk spool, timeout과 process-tree 종료를 사용합니다. ... ok
+test_09b_remote_gate_uses_uploaded_ascii_launcher (test_m11_remote_runner.M11RemoteRunnerContractTests.test_09b_remote_gate_uses_uploaded_ascii_launcher)
+! @brief 긴 remote command를 SSH command line에 직접 넣지 않습니다. ... ok
+test_10_credentials_device_and_endpoint_are_redacted (test_m11_remote_runner.M11RemoteRunnerContractTests.test_10_credentials_device_and_endpoint_are_redacted)
+! @brief endpoint, token, probe UID와 COM port 원문을 제거합니다. ... ok
+test_11_result_omits_endpoint_and_records_hashes (test_m11_remote_runner.M11RemoteRunnerContractTests.test_11_result_omits_endpoint_and_records_hashes)
+! @brief orchestrator JSON에는 endpoint 원문 대신 hash와 gate byte를 남깁니다. ... ok
+test_12_remote_paths_are_unique_and_never_deleted_for_reuse (test_m11_remote_runner.M11RemoteRunnerContractTests.test_12_remote_paths_are_unique_and_never_deleted_for_reuse)
+! @brief run별 새 경로를 요구해 이전 evidence와 checkout을 섞지 않습니다. ... ok
+test_13_gate_records_use_powershell_51_object_array (test_m11_remote_runner.M11RemoteRunnerContractTests.test_13_gate_records_use_powershell_51_object_array)
+! @brief generic list array 변환의 PowerShell 5.1 binder 오류를 차단합니다. ... ok
+test_14_post_processing_failure_records_failed_receipt (test_m11_remote_runner.M11RemoteRunnerContractTests.test_14_post_processing_failure_records_failed_receipt)
+! @brief 로컬 검증·복사·마감 실패도 fail-closed receipt로 남깁니다. ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 4.240s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m13_profiles.py
+test_arduino_cli_discovers_canonical_examples_when_installed (test_m13_profiles.M13ProfileContractTests.test_arduino_cli_discovers_canonical_examples_when_installed)
+! @brief 설치된 Arduino CLI가 공개 예제를 노출하는지 확인합니다. ... skipped 'M13 package 설치 후 NUCODE_M13_CLI_DISCOVERY=1로 실행합니다.'
+test_canonical_examples_have_no_zephyr_sidecars (test_m13_profiles.M13ProfileContractTests.test_canonical_examples_have_no_zephyr_sidecars)
+! @brief 공개 예제가 ino만으로 탐색 가능한지 확인합니다. ... ok
+test_duplicate_feature_key_uses_feature_schema_diagnostic (test_m13_profiles.M13ProfileContractTests.test_duplicate_feature_key_uses_feature_schema_diagnostic)
+! @brief feature manifest 중복 key를 profile 오류로 잘못 보고하지 않습니다. ... ok
+test_feature_cache_collision_is_fail_closed (test_m13_profiles.M13ProfileContractTests.test_feature_cache_collision_is_fail_closed)
+! @brief 축약 cache directory의 다른 full key를 덮어쓰지 않습니다. ... ok
+test_feature_configure_failure_marks_cache_failed (test_m13_profiles.M13ProfileContractTests.test_feature_configure_failure_marks_cache_failed)
+! @brief 최종 configure 실패를 failed/configure-failed 상태로 보존합니다. ... ok
+test_only_selected_bundled_library_is_resolved (test_m13_profiles.M13ProfileContractTests.test_only_selected_bundled_library_is_resolved)
+! @brief 실제 source record에 등장한 bundled library만 선택합니다. ... ok
+test_profile_rejects_wrong_fqbn_and_zephyr_board (test_m13_profiles.M13ProfileContractTests.test_profile_rejects_wrong_fqbn_and_zephyr_board)
+! @brief profile이 실제 Arduino 및 Zephyr target과 다르면 중단합니다. ... ok
+test_profile_string_types_and_windows_paths_are_rejected (test_m13_profiles.M13ProfileContractTests.test_profile_string_types_and_windows_paths_are_rejected)
+! @brief malformed scalar와 Windows 절대 경로를 schema 오류로 거부합니다. ... ok
+test_schema_path_conflict_and_cache_key_contract (test_m13_profiles.M13ProfileContractTests.test_schema_path_conflict_and_cache_key_contract)
+! @brief 잘못된 manifest를 거부하고 feature 집합이 cache key를 바꾸는지 확인합니다. ... ok
+test_selected_feature_fragments_merge_before_expert_override (test_m13_profiles.M13ProfileContractTests.test_selected_feature_fragments_merge_before_expert_override)
+! @brief 선택 feature fragment와 sketch override의 병합 순서를 검증합니다. ... ok
+test_standard_profile_and_allowlist (test_m13_profiles.M13ProfileContractTests.test_standard_profile_and_allowlist)
+! @brief 표준 profile과 bundled feature manifest를 검증합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.720s
+
+OK (skipped=1)
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m14_core_contract.py
+test_core_utility_random_f_and_diagnostics_compile_link (test_m14_core_contract.M14CoreContractTests.test_core_utility_random_f_and_diagnostics_compile_link) ... ok
+test_disabled_peripheral_stubs_compile_link_and_fail_closed (test_m14_core_contract.M14CoreContractTests.test_disabled_peripheral_stubs_compile_link_and_fail_closed) ... ok
+test_generated_native_runtime_semantics (test_m14_core_contract.M14CoreContractTests.test_generated_native_runtime_semantics) ... ok
+test_peripheral_config_matrix_has_real_link_targets (test_m14_core_contract.M14CoreContractTests.test_peripheral_config_matrix_has_real_link_targets) ... ok
+test_production_sources_are_registered (test_m14_core_contract.M14CoreContractTests.test_production_sources_are_registered) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 5.147s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m14_pin_hil_runner.py
+test_accepts_exact_led_button_and_edge_contract (nu54_m14_pin_hil.M14PinHilTests.test_accepts_exact_led_button_and_edge_contract)
+! @brief LED 2개와 버튼 3개의 완전한 protocol만 승인합니다. ... ok
+test_board_checkout_must_match_parent_gitlink (nu54_m14_pin_hil.M14PinHilTests.test_board_checkout_must_match_parent_gitlink)
+! @brief clean submodule이라도 부모 commit과 다른 revision이면 거부합니다. ... ok
+test_build_record_requires_clean_exact_target_identity (nu54_m14_pin_hil.M14PinHilTests.test_build_record_requires_clean_exact_target_identity)
+! @brief dirty revision이나 다른 NCS/board target의 HEX를 거부합니다. ... ok
+test_evidence_binds_revisions_image_transcript_and_exclusion (nu54_m14_pin_hil.M14PinHilTests.test_evidence_binds_revisions_image_transcript_and_exclusion)
+! @brief PASS JSON이 exact byte와 PWM-owned 제외 근거를 함께 기록합니다. ... ok
+test_existing_evidence_requires_explicit_overwrite (nu54_m14_pin_hil.M14PinHilTests.test_existing_evidence_requires_explicit_overwrite)
+! @brief 이전 PASS 증적을 자동으로 덮어쓰지 않는지 확인합니다. ... ok
+test_m14_keeps_live_worktree_digest_contract (nu54_m14_pin_hil.M14PinHilTests.test_m14_keeps_live_worktree_digest_contract)
+! @brief M14 local build 검증이 CI canonical helper로 바뀌지 않게 고정합니다. ... ok
+test_manual_acknowledgement_and_timeout_are_explicit (nu54_m14_pin_hil.M14PinHilTests.test_manual_acknowledgement_and_timeout_are_explicit)
+! @brief 실제 실행 기본값은 수동 동작을 암묵적으로 승인하지 않습니다. ... ok
+test_rejects_duplicate_protocol_after_final_pass (nu54_m14_pin_hil.M14PinHilTests.test_rejects_duplicate_protocol_after_final_pass)
+! @brief 최종 PASS 뒤 중복 또는 위조 protocol token을 거부합니다. ... ok
+test_rejects_missing_edge_and_incomplete_change_pair (nu54_m14_pin_hil.M14PinHilTests.test_rejects_missing_edge_and_incomplete_change_pair)
+! @brief edge 0회와 CHANGE release 추가 edge 부재를 모두 거부합니다. ... ok
+test_rejects_target_failure_and_missing_pin (nu54_m14_pin_hil.M14PinHilTests.test_rejects_target_failure_and_missing_pin)
+! @brief target FAIL 또는 신규 핀 누락을 PASS로 승격하지 않습니다. ... ok
+test_rejects_wrong_logical_id_and_action_order (nu54_m14_pin_hil.M14PinHilTests.test_rejects_wrong_logical_id_and_action_order)
+! @brief 이름/ID 불일치와 안내보다 앞선 물리 동작 결과를 거부합니다. ... ok
+test_uart_waits_for_complete_terminal_line (nu54_m14_pin_hil.M14PinHilTests.test_uart_waits_for_complete_terminal_line)
+! @brief FAIL prefix만 보고 조기 종료하지 않고 진단 line 전체를 보존합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.018s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m14_variant_contract.py
+test_core_dts_maps_all_31_pads_with_legacy_alias_compatibility (test_m14_variant_contract.M14VariantContractTests.test_core_dts_maps_all_31_pads_with_legacy_alias_compatibility) ... ok
+test_duplicate_physical_pad_in_core_dts_is_rejected (test_m14_variant_contract.M14VariantContractTests.test_duplicate_physical_pad_in_core_dts_is_rejected) ... ok
+test_public_constants_compile_without_changing_legacy_values (test_m14_variant_contract.M14VariantContractTests.test_public_constants_compile_without_changing_legacy_values) ... ok
+test_route_matrix_and_fail_closed_policies_are_visible_in_evidence (test_m14_variant_contract.M14VariantContractTests.test_route_matrix_and_fail_closed_policies_are_visible_in_evidence) ... ok
+test_verifier_writes_machine_readable_evidence (test_m14_variant_contract.M14VariantContractTests.test_verifier_writes_machine_readable_evidence) ... ok
+test_zephyr_c_header_avoids_min_max_macro_redefinition (test_m14_variant_contract.M14VariantContractTests.test_zephyr_c_header_avoids_min_max_macro_redefinition) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.357s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m15_board_system_contract.py
+test_alarm_callback_is_deferred_out_of_grtc_isr (test_m15_board_system_contract.M15BoardSystemContractTests.test_alarm_callback_is_deferred_out_of_grtc_isr)
+! @brief GRTC ISR에서 사용자 callback을 직접 실행하지 않도록 검사합니다. ... ok
+test_feature_merges_exact_board_system_fragments (test_m15_board_system_contract.M15BoardSystemContractTests.test_feature_merges_exact_board_system_fragments)
+! @brief Arduino library 선택이 Wire와 고정 conf·overlay를 자동 병합하는지 검사합니다. ... ok
+test_m15_system_off_hil_is_command_gated_and_manual (test_m15_board_system_contract.M15BoardSystemContractTests.test_m15_system_off_hil_is_command_gated_and_manual)
+! @brief 결합 HIL이 SWD 격리 뒤 timed와 button ARM을 순서대로 요구합니다. ... ok
+test_pmic_begin_is_read_only_and_driver_node_stays_disabled (test_m15_board_system_contract.M15BoardSystemContractTests.test_pmic_begin_is_read_only_and_driver_node_stays_disabled)
+! @brief begin 경로의 register write와 PMIC DTS 자동 활성화를 차단합니다. ... ok
+test_pmic_writes_require_explicit_ram_only_authorization (test_m15_board_system_contract.M15BoardSystemContractTests.test_pmic_writes_require_explicit_ram_only_authorization)
+! @brief PMIC write가 공개 raw register 없이 매 boot 명시 승인을 요구하는지 검사합니다. ... ok
+test_public_examples_exist_without_zephyr_sidecars (test_m15_board_system_contract.M15BoardSystemContractTests.test_public_examples_exist_without_zephyr_sidecars)
+! @brief 사용자가 prj.conf나 overlay를 편집하지 않아도 예제를 열 수 있는지 검사합니다. ... ok
+test_public_surface_contains_board_system_contract (test_m15_board_system_contract.M15BoardSystemContractTests.test_public_surface_contains_board_system_contract)
+! @brief M15 승인 API와 안정 오류 타입이 단일 전역 객체에 노출되는지 검사합니다. ... ok
+test_serial_flush_waits_for_the_final_physical_frame (test_m15_board_system_contract.M15BoardSystemContractTests.test_serial_flush_waits_for_the_final_physical_frame)
+! @brief polling TX mutex 안에서 마지막 8N1 frame drain을 보장합니다. ... ok
+test_storage_namespace_and_bounds_are_fixed (test_m15_board_system_contract.M15BoardSystemContractTests.test_storage_namespace_and_bounds_are_fixed)
+! @brief Sketch가 설정 저장소 전체나 무제한 값을 소유하지 못하게 합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.004s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m15_lfxo_contract.py
+test_all_arduino_and_m15_builds_include_the_shared_fragment (test_m15_lfxo_contract.M15LfxoContractTests.test_all_arduino_and_m15_builds_include_the_shared_fragment)
+! @brief 모든 Arduino 빌드와 M15 image가 같은 DTSI를 사용하도록 고정합니다. ... ok
+test_profile_and_library_feature_do_not_duplicate_board_override (test_m15_lfxo_contract.M15LfxoContractTests.test_profile_and_library_feature_do_not_duplicate_board_override)
+! @brief profile 추가나 library 선택에 따라 LFXO 설정이 달라지지 않게 합니다. ... ok
+test_shared_fragment_uses_only_external_load_capacitors (test_m15_lfxo_contract.M15LfxoContractTests.test_shared_fragment_uses_only_external_load_capacitors)
+! @brief 외부 커패시터 선택과 내부 커패시터 속성 삭제를 고정합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.002s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m15_system_off_hil_runner.py
+test_accepts_exact_protocol_records_terminated_by_lone_cr (nu54_m15_system_off_hil.M15SystemOffHilTests.test_accepts_exact_protocol_records_terminated_by_lone_cr)
+! @brief 단독 CR 뒤 boot banner가 와도 payload 전체 일치를 유지합니다. ... ok
+test_accepts_exact_schema_two_timed_then_button_sequence (nu54_m15_system_off_hil.M15SystemOffHilTests.test_accepts_exact_schema_two_timed_then_button_sequence)
+! @brief CLOCK과 LOW_POWER_WAKE 단일 원인을 모두 요구합니다. ... ok
+test_acknowledgements_and_timeout_are_explicit (nu54_m15_system_off_hil.M15SystemOffHilTests.test_acknowledgements_and_timeout_are_explicit)
+! @brief interface switch와 버튼 승인을 서로 독립적으로 요구합니다. ... ok
+test_capture_handles_lone_cr_and_split_crlf_records (nu54_m15_system_off_hil.M15SystemOffHilTests.test_capture_handles_lone_cr_and_split_crlf_records)
+! @brief live capture가 단독 CR과 chunk 분리 CRLF를 중복 없이 처리합니다. ... ok
+test_capture_requires_two_confirmations_and_sends_bound_nonce (nu54_m15_system_off_hil.M15SystemOffHilTests.test_capture_requires_two_confirmations_and_sends_bound_nonce)
+! @brief SWD 격리 뒤 timed ARM, SW0 release 뒤 button ARM만 보냅니다. ... ok
+test_dirty_imported_helper_or_board_source_is_rejected (nu54_m15_system_off_hil.M15SystemOffHilTests.test_dirty_imported_helper_or_board_source_is_rejected)
+! @brief 공용 helper나 board 변경을 실제 flash 전에 거부합니다. ... ok
+test_eof_and_uart_failure_preserve_partial_transcript (nu54_m15_system_off_hil.M15SystemOffHilTests.test_eof_and_uart_failure_preserve_partial_transcript)
+! @brief 격리 확인 EOF와 후속 UART 단절도 수집 byte를 보존합니다. ... ok
+test_evidence_records_schema_two_switch_and_no_post_isolation_probe (nu54_m15_system_off_hil.M15SystemOffHilTests.test_evidence_records_schema_two_switch_and_no_post_isolation_probe)
+! @brief 증적이 switch 방향을 추측하지 않고 금지 동작을 false로 기록합니다. ... ok
+test_existing_evidence_is_preserved_until_atomic_pass_replace (nu54_m15_system_off_hil.M15SystemOffHilTests.test_existing_evidence_is_preserved_until_atomic_pass_replace)
+! @brief 실패한 재시험이 이전 PASS를 파괴하지 않는지 확인합니다. ... ok
+test_flash_occurs_before_capture_and_only_once (nu54_m15_system_off_hil.M15SystemOffHilTests.test_flash_occurs_before_capture_and_only_once)
+! @brief SWD 격리 prompt가 가능한 capture보다 flash가 먼저 한 번 실행됩니다. ... ok
+test_rejects_failure_missing_line_and_trailing_protocol (nu54_m15_system_off_hil.M15SystemOffHilTests.test_rejects_failure_missing_line_and_trailing_protocol)
+! @brief FAIL, 누락과 최종 PASS 뒤 추가 protocol을 거부합니다. ... ok
+test_rejects_nonce_mismatch (nu54_m15_system_off_hil.M15SystemOffHilTests.test_rejects_nonce_mismatch)
+! @brief 재부팅 경계를 다른 실행의 token으로 조합하지 않습니다. ... ok
+test_rejects_protocol_record_without_any_line_boundary (nu54_m15_system_off_hil.M15SystemOffHilTests.test_rejects_protocol_record_without_any_line_boundary)
+! @brief token과 boot banner 사이에 EOL이 없으면 부분 복원하지 않습니다. ... ok
+test_reset_cause_is_exact_supported_and_never_debug (nu54_m15_system_off_hil.M15SystemOffHilTests.test_reset_cause_is_exact_supported_and_never_debug)
+! @brief CLOCK·LOW_POWER_WAKE 외 원인과 RESET_DEBUG 혼합을 거부합니다. ... ok
+test_wake_timing_is_fail_closed (nu54_m15_system_off_hil.M15SystemOffHilTests.test_wake_timing_is_fail_closed)
+! @brief 너무 빠르거나 느린 timed wake와 이른 SW0 wake를 거부합니다. ... ok
+test_wrong_swd_confirmation_stops_before_any_arm (nu54_m15_system_off_hil.M15SystemOffHilTests.test_wrong_swd_confirmation_stops_before_any_arm)
+! @brief 모호한 switch 상태에서는 UART ARM조차 전송하지 않습니다. ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.028s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m16_ble_contract.py
+test_arduino_library_metadata_and_example_contract (test_m16_ble_contract.M16BleNusContractTests.test_arduino_library_metadata_and_example_contract)
+! @brief Boards Manager가 NUS library와 양쪽 역할 예제를 찾는지 검증합니다. ... ok
+test_ble_profile_feature_and_board_menu_are_wired (test_m16_ble_contract.M16BleNusContractTests.test_ble_profile_feature_and_board_menu_are_wired)
+! @brief ble profile 선택만으로 필요한 NUS feature가 병합되는지 검사합니다. ... ok
+test_bluetooth_callbacks_are_deferred_to_poll_through_fixed_queues (test_m16_ble_contract.M16BleNusContractTests.test_bluetooth_callbacks_are_deferred_to_poll_through_fixed_queues)
+! @brief Bluetooth context에서 Sketch callback 직접 실행과 동적 queue를 차단합니다. ... ok
+test_kconfig_and_feature_register_bounded_ble_runtime (test_m16_ble_contract.M16BleNusContractTests.test_kconfig_and_feature_register_bounded_ble_runtime)
+! @brief BLE 구현과 고정 queue 크기가 library feature에 명시되는지 검사합니다. ... ok
+test_peripheral_example_keeps_received_data_free_of_event_logs (test_m16_ble_contract.M16BleNusContractTests.test_peripheral_example_keeps_received_data_free_of_event_logs)
+! @brief 수신 event 로그가 NUS-Serial 데이터 경로에 섞이지 않도록 고정합니다. ... ok
+test_public_nus_stream_surface_is_complete (test_m16_ble_contract.M16BleNusContractTests.test_public_nus_stream_surface_is_complete)
+! @brief peripheral과 central이 공유하는 Arduino Stream 표면을 고정합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.007s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m16_ble_pair.py
+test_accepts_exact_frame_boundaries_and_reconnect (test_m16_ble_pair.M16BlePairHilTests.test_accepts_exact_frame_boundaries_and_reconnect)
+! @brief 양쪽 exact protocol에서 1/20/21/64 및 재연결을 승인합니다. ... ok
+test_evidence_binds_two_boards_images_and_raw_transcript_sha (test_m16_ble_pair.M16BlePairHilTests.test_evidence_binds_two_boards_images_and_raw_transcript_sha)
+! @brief evidence가 두 UID·MSD·COM과 두 raw transcript hash를 기록합니다. ... ok
+test_existing_evidence_requires_explicit_overwrite (test_m16_ble_pair.M16BlePairHilTests.test_existing_evidence_requires_explicit_overwrite)
+! @brief 기존 PASS와 companion raw transcript를 암묵적으로 덮지 않습니다. ... ok
+test_nonce_is_exact_lowercase_hex (test_m16_ble_pair.M16BlePairHilTests.test_nonce_is_exact_lowercase_hex)
+! @brief nonce 길이·문자 집합을 고정해 stale 판정의 모호성을 제거합니다. ... ok
+test_rejects_missing_or_wrong_frame_boundary (test_m16_ble_pair.M16BlePairHilTests.test_rejects_missing_or_wrong_frame_boundary)
+! @brief 20/21 byte 경계 누락이나 잘못된 길이를 PASS로 승격하지 않습니다. ... ok
+test_rejects_missing_reconnect_and_wrong_byte_total (test_m16_ble_pair.M16BlePairHilTests.test_rejects_missing_reconnect_and_wrong_byte_total)
+! @brief 두 번째 연결과 peripheral 106/21 byte 계약 누락을 거부합니다. ... ok
+test_rejects_stale_nonce_before_current_final (test_m16_ble_pair.M16BlePairHilTests.test_rejects_stale_nonce_before_current_final)
+! @brief 이전 실행 FINAL이나 frame을 현재 PASS로 재사용하지 못하게 합니다. ... ok
+test_rejects_target_fail_and_tokens_after_final (test_m16_ble_pair.M16BlePairHilTests.test_rejects_target_fail_and_tokens_after_final)
+! @brief target FAIL 및 FINAL 뒤 중복 protocol token을 모두 거부합니다. ... ok
+test_requires_two_distinct_uids_volumes_and_ports (test_m16_ble_pair.M16BlePairHilTests.test_requires_two_distinct_uids_volumes_and_ports)
+! @brief 같은 UID·MSD·COM을 role 두 개로 오인하지 않게 차단합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.014s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m17_coverage.py
+test_build_only_failure_is_gate_failure (test_m17_coverage.M17CoverageTests.test_build_only_failure_is_gate_failure)
+! @brief build-only 항목의 evidence가 있는 fail은 coverage gate를 실패시킵니다. ... ok
+test_deferred_failure_is_valid_and_rendered (test_m17_coverage.M17CoverageTests.test_deferred_failure_is_valid_and_rendered)
+! @brief deferred 실패는 gate를 막지 않고 evidence와 요약에 명시합니다. ... ok
+test_duplicate_json_key_is_rejected (test_m17_coverage.M17CoverageTests.test_duplicate_json_key_is_rejected) ... ok
+test_evidence_drive_path_is_rejected (test_m17_coverage.M17CoverageTests.test_evidence_drive_path_is_rejected)
+! @brief evidence에도 Windows absolute·drive-relative 경로를 허용하지 않습니다. ... ok
+test_external_source_requires_exact_commit (test_m17_coverage.M17CoverageTests.test_external_source_requires_exact_commit) ... ok
+test_fixture_validates_without_checkout_probe (test_m17_coverage.M17CoverageTests.test_fixture_validates_without_checkout_probe) ... ok
+test_generated_outputs_accept_git_crlf_checkout (test_m17_coverage.M17CoverageTests.test_generated_outputs_accept_git_crlf_checkout)
+! @brief 생성 요약의 Git CRLF checkout을 LF 원본과 동일하게 검증합니다. ... ok
+test_invalid_enum_is_rejected (test_m17_coverage.M17CoverageTests.test_invalid_enum_is_rejected) ... ok
+test_manifest_path_traversal_is_rejected (test_m17_coverage.M17CoverageTests.test_manifest_path_traversal_is_rejected) ... ok
+test_manifest_record_hash_accepts_git_crlf_checkout (test_m17_coverage.M17CoverageTests.test_manifest_record_hash_accepts_git_crlf_checkout)
+! @brief Git text 변환으로 생긴 CRLF가 LF 기준 record hash를 바꾸지 않습니다. ... ok
+test_manifest_record_hash_mismatch_is_rejected (test_m17_coverage.M17CoverageTests.test_manifest_record_hash_mismatch_is_rejected) ... ok
+test_manifest_record_hash_rejects_bare_cr (test_m17_coverage.M17CoverageTests.test_manifest_record_hash_rejects_bare_cr)
+! @brief Git의 CRLF 변환이 아닌 단독 CR은 모호한 입력으로 거부합니다. ... ok
+test_manifest_record_hash_rejects_content_change_with_crlf (test_m17_coverage.M17CoverageTests.test_manifest_record_hash_rejects_content_change_with_crlf)
+! @brief CRLF checkout에서도 실제 record 내용 변경은 SHA mismatch로 거부합니다. ... ok
+test_manifest_revision_mismatch_is_rejected (test_m17_coverage.M17CoverageTests.test_manifest_revision_mismatch_is_rejected) ... ok
+test_networking_supported_promotion_is_rejected (test_m17_coverage.M17CoverageTests.test_networking_supported_promotion_is_rejected) ... ok
+test_pass_and_fail_require_evidence (test_m17_coverage.M17CoverageTests.test_pass_and_fail_require_evidence)
+! @brief 완료 결과인 pass와 fail에 evidence가 없으면 거부합니다. ... ok
+test_planned_and_not_run_reject_evidence (test_m17_coverage.M17CoverageTests.test_planned_and_not_run_reject_evidence)
+! @brief 미실행 상태인 planned와 not-run에는 evidence를 금지합니다. ... ok
+test_record_path_must_be_derived_from_id (test_m17_coverage.M17CoverageTests.test_record_path_must_be_derived_from_id) ... ok
+test_record_revision_mismatch_is_rejected (test_m17_coverage.M17CoverageTests.test_record_revision_mismatch_is_rejected) ... ok
+test_repository_dataset_and_generated_outputs_are_current (test_m17_coverage.M17CoverageTests.test_repository_dataset_and_generated_outputs_are_current) ... ok
+test_resolved_path_outside_root_is_rejected (test_m17_coverage.M17CoverageTests.test_resolved_path_outside_root_is_rejected)
+! @brief symlink 등으로 resolve 결과가 root 밖이면 fail-closed로 거부합니다. ... ok
+test_sensor_wrapper_is_rejected (test_m17_coverage.M17CoverageTests.test_sensor_wrapper_is_rejected) ... ok
+test_supported_failure_is_gate_failure (test_m17_coverage.M17CoverageTests.test_supported_failure_is_gate_failure)
+! @brief supported 항목의 evidence가 있는 fail도 coverage gate를 실패시킵니다. ... ok
+test_unknown_record_field_is_rejected (test_m17_coverage.M17CoverageTests.test_unknown_record_field_is_rejected) ... ok
+test_windows_drive_paths_are_rejected (test_m17_coverage.M17CoverageTests.test_windows_drive_paths_are_rejected)
+! @brief C:/·D:/와 drive-relative 경로를 상대 경로로 해석하지 않습니다. ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 1.263s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m17_external_arduino.py
+test_arduino_cli_exact_version_and_sha_are_recorded (test_m17_external_arduino.M17ExternalArduinoTests.test_arduino_cli_exact_version_and_sha_are_recorded)
+! @brief shell 없이 실행한 exact 1.5.1과 executable SHA를 정규화합니다. ... ok
+test_arduino_cli_rejects_wrong_or_ambiguous_version (test_m17_external_arduino.M17ExternalArduinoTests.test_arduino_cli_rejects_wrong_or_ambiguous_version)
+! @brief 다른 version과 version token 중복을 fail-closed로 거부합니다. ... ok
+test_arduino_cli_replacement_is_rejected (test_m17_external_arduino.M17ExternalArduinoTests.test_arduino_cli_replacement_is_rejected)
+! @brief compile 중 executable byte가 바뀌면 종료 검증에서 거부합니다. ... ok
+test_arduino_library_compatibility_contract_is_present (test_m17_external_arduino.M17ExternalArduinoTests.test_arduino_library_compatibility_contract_is_present)
+! @brief 외부 Arduino library가 요구하는 macro, Print와 정수 GPIO overload를 고정합니다. ... ok
+test_compile_sketch_targets_lsm6ds3trc (test_m17_external_arduino.M17ExternalArduinoTests.test_compile_sketch_targets_lsm6ds3trc)
+! @brief compile gate가 NU54DK 검증 대상 LSM6DS3TR-C를 직접 사용하는지 확인합니다. ... ok
+test_contained_target_rejects_destination_escape (test_m17_external_arduino.M17ExternalArduinoTests.test_contained_target_rejects_destination_escape)
+! @brief 최종 resolve 결과가 destination 밖이면 추출 전에 거부합니다. ... ok
+test_download_checksum_contract_matches_lock (test_m17_external_arduino.M17ExternalArduinoTests.test_download_checksum_contract_matches_lock)
+! @brief lock SHA가 64자리이며 evidence에 사용할 수 있는 digest인지 확인합니다. ... ok
+test_exact_checkout_allows_only_untracked_ci_output_root (test_m17_external_arduino.M17ExternalArduinoTests.test_exact_checkout_allows_only_untracked_ci_output_root)
+! @brief 기존 CI evidence는 허용하되 다른 untracked source는 거부합니다. ... ok
+test_exact_checkout_rejects_dirty_core_or_board (test_m17_external_arduino.M17ExternalArduinoTests.test_exact_checkout_rejects_dirty_core_or_board)
+! @brief Core 또는 board의 미커밋 변경은 compile 전에 거부합니다. ... ok
+test_exact_checkout_rejects_gitlink_or_checkout_mismatch (test_m17_external_arduino.M17ExternalArduinoTests.test_exact_checkout_rejects_gitlink_or_checkout_mismatch)
+! @brief parent gitlink 또는 실제 board HEAD가 exact pin과 다르면 거부합니다. ... ok
+test_lock_rejects_changed_checksum_and_duplicate_key (test_m17_external_arduino.M17ExternalArduinoTests.test_lock_rejects_changed_checksum_and_duplicate_key)
+! @brief checksum 변경과 중복 JSON key를 fail-closed로 거부합니다. ... ok
+test_repository_lock_is_exact (test_m17_external_arduino.M17ExternalArduinoTests.test_repository_lock_is_exact)
+! @brief 저장소 lock이 승인한 세 tag·commit·SHA만 포함하는지 확인합니다. ... ok
+test_safe_extract_accepts_single_root (test_m17_external_arduino.M17ExternalArduinoTests.test_safe_extract_accepts_single_root)
+! @brief 정상 archive에서 root를 제거한 library tree만 생성합니다. ... ok
+test_safe_extract_rejects_traversal (test_m17_external_arduino.M17ExternalArduinoTests.test_safe_extract_rejects_traversal)
+! @brief 상위 경로를 쓰는 ZIP member를 거부합니다. ... ok
+test_safe_extract_rejects_windows_drive_unc_and_ads (test_m17_external_arduino.M17ExternalArduinoTests.test_safe_extract_rejects_windows_drive_unc_and_ads)
+! @brief drive-relative·drive absolute·UNC·ADS ZIP 경로를 모두 거부합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.058s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m17_feasibility.py
+test_build_command_is_fixed_sysbuild (test_m17_feasibility.M17FeasibilityTests.test_build_command_is_fixed_sysbuild)
+! @brief 명령이 고정 board와 sysbuild 및 저장소 BOARD_ROOT를 사용합니다. ... ok
+test_crypto_nu54dk_failure_is_gate_failure (test_m17_feasibility.M17FeasibilityTests.test_crypto_nu54dk_failure_is_gate_failure)
+! @brief crypto RNG는 official과 NU54DK가 모두 성공해야 gate를 통과합니다. ... ok
+test_declared_samples_and_support_boundary_are_exact (test_m17_feasibility.M17FeasibilityTests.test_declared_samples_and_support_boundary_are_exact)
+! @brief 검토 대상은 공식 세 sample이며 지원 선언은 runner에 포함하지 않습니다. ... ok
+test_execution_inputs_reject_board_revision_or_gitlink_mismatch (test_m17_feasibility.M17FeasibilityTests.test_execution_inputs_reject_board_revision_or_gitlink_mismatch)
+! @brief 실제 checkout과 부모 gitlink가 lock revision에서 벗어나면 거부합니다. ... ok
+test_execution_inputs_reject_dirty_board (test_m17_feasibility.M17FeasibilityTests.test_execution_inputs_reject_dirty_board)
+! @brief exact revision이어도 board checkout이 dirty이면 build 전에 거부합니다. ... ok
+test_execution_inputs_reject_dirty_ncs_or_zephyr_workspace (test_m17_feasibility.M17FeasibilityTests.test_execution_inputs_reject_dirty_ncs_or_zephyr_workspace)
+! @brief revision이 같아도 NCS·Zephyr source 변경은 exact workspace가 아닙니다. ... ok
+test_git_output_scopes_safe_directory_to_repository (test_m17_feasibility.M17FeasibilityTests.test_git_output_scopes_safe_directory_to_repository)
+! @brief 공백 경로도 전역 변경 없이 해당 저장소만 신뢰합니다. ... ok
+test_git_revision_rejects_malformed_output (test_m17_feasibility.M17FeasibilityTests.test_git_revision_rejects_malformed_output)
+! @brief Git 성공 코드여도 40자리 SHA가 아니면 exact 입력을 거부합니다. ... ok
+test_network_nu54dk_failure_is_recorded_but_not_gate_failure (test_m17_feasibility.M17FeasibilityTests.test_network_nu54dk_failure_is_recorded_but_not_gate_failure)
+! @brief deferred networking은 official만 gate이며 NU54DK 실패는 evidence에 보존합니다. ... ok
+test_official_control_failure_is_gate_failure (test_m17_feasibility.M17FeasibilityTests.test_official_control_failure_is_gate_failure)
+! @brief official control 실패가 있어도 두 역할의 evidence를 보존하고 gate를 실패시킵니다. ... ok
+test_policy_rejects_crypto_deferred_or_hil (test_m17_feasibility.M17FeasibilityTests.test_policy_rejects_crypto_deferred_or_hil)
+! @brief crypto build-only 항목을 deferred로 낮추거나 HIL로 오표기하지 못하게 합니다. ... ok
+test_policy_rejects_networking_support_promotion (test_m17_feasibility.M17FeasibilityTests.test_policy_rejects_networking_support_promotion)
+! @brief networking sample을 build-only 또는 supported로 승격하지 못하게 합니다. ... ok
+test_run_build_hashes_normalized_log (test_m17_feasibility.M17FeasibilityTests.test_run_build_hashes_normalized_log)
+! @brief 통합 stdout을 정규화해 exact log hash와 결과를 남깁니다. ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.043s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m18_release.py
+test_asset_tamper_and_extra_file_are_rejected (test_m18_release.M18ReleaseTests.test_asset_tamper_and_extra_file_are_rejected) ... ok
+test_checksum_sidecar_forgery_is_rejected_even_when_records_are_rehashed (test_m18_release.M18ReleaseTests.test_checksum_sidecar_forgery_is_rejected_even_when_records_are_rehashed) ... ok
+test_cli_exposes_no_stable_publish_or_version_override (test_m18_release.M18ReleaseTests.test_cli_exposes_no_stable_publish_or_version_override) ... ok
+test_dirty_core_and_dirty_board_are_rejected (test_m18_release.M18ReleaseTests.test_dirty_core_and_dirty_board_are_rejected) ... ok
+test_evidence_artifact_and_document_blob_tamper_are_rejected (test_m18_release.M18ReleaseTests.test_evidence_artifact_and_document_blob_tamper_are_rejected) ... ok
+test_external_process_is_always_shell_false (test_m18_release.M18ReleaseTests.test_external_process_is_always_shell_false) ... ok
+test_immutable_plan_fields_and_roles_are_rejected_when_tampered (test_m18_release.M18ReleaseTests.test_immutable_plan_fields_and_roles_are_rejected_when_tampered) ... ok
+test_nondeterministic_second_build_is_rejected (test_m18_release.M18ReleaseTests.test_nondeterministic_second_build_is_rejected) ... ok
+test_package_contract_is_read_only_and_rejects_rc_or_pin_mutation (test_m18_release.M18ReleaseTests.test_package_contract_is_read_only_and_rejects_rc_or_pin_mutation) ... ok
+test_plan_unknown_field_is_rejected (test_m18_release.M18ReleaseTests.test_plan_unknown_field_is_rejected) ... ok
+test_prepare_builds_twice_and_validates_exact_allowlist (test_m18_release.M18ReleaseTests.test_prepare_builds_twice_and_validates_exact_allowlist) ... ok
+test_publish_binds_verification_to_discovered_release_id (test_m18_release.M18ReleaseTests.test_publish_binds_verification_to_discovered_release_id)
+! @brief 생성 직후 발견한 release ID가 재조회 중 바뀌면 검증을 중단합니다. ... ok
+test_publish_draft_uses_only_safe_flags_and_rechecks_remote_bytes (test_m18_release.M18ReleaseTests.test_publish_draft_uses_only_safe_flags_and_rechecks_remote_bytes)
+! @brief untagged Draft를 ID 기반으로 생성·검증하고 tag download를 쓰지 않습니다. ... ok
+test_publish_rejects_existing_local_or_github_release (test_m18_release.M18ReleaseTests.test_publish_rejects_existing_local_or_github_release)
+! @brief local tag 및 REST 목록에서 보이는 기존·중복 Draft를 생성 전에 거부합니다. ... ok
+test_publish_rejects_non_main_or_unpushed_origin_main (test_m18_release.M18ReleaseTests.test_publish_rejects_non_main_or_unpushed_origin_main)
+! @brief main/current HEAD/origin-main과 remote main 불일치를 거부합니다. ... ok
+test_publish_rejects_non_public_repository_or_missing_remote_commit (test_m18_release.M18ReleaseTests.test_publish_rejects_non_public_repository_or_missing_remote_commit)
+! @brief PUBLIC/default main과 GitHub target commit 부재를 거부합니다. ... ok
+test_publish_rejects_remote_sha_mismatch (test_m18_release.M18ReleaseTests.test_publish_rejects_remote_sha_mismatch)
+! @brief asset ID·이름·상태·크기·digest와 다운로드 byte 불일치를 거부합니다. ... ok
+test_publish_rejects_remote_tag_created_during_draft (test_m18_release.M18ReleaseTests.test_publish_rejects_remote_tag_created_during_draft)
+! @brief Draft 생성 뒤 원격 tag ref가 생기면 Draft 계약 위반으로 거부합니다. ... ok
+test_publish_waits_for_delayed_draft_and_bounds_discovery (test_m18_release.M18ReleaseTests.test_publish_waits_for_delayed_draft_and_bounds_discovery)
+! @brief Draft 목록의 짧은 지연은 재조회하고 무한 대기는 하지 않습니다. ... ok
+test_published_stable_root_index_identities_are_exact (test_m18_release.M18ReleaseTests.test_published_stable_root_index_identities_are_exact)
+! @brief M18 역사 경계와 현재 공개 root index의 exact byte를 함께 보호합니다. ... ok
+test_stable_contract_change_is_rejected (test_m18_release.M18ReleaseTests.test_stable_contract_change_is_rejected) ... ok
+test_stable_root_index_crlf_worktree_is_rejected (test_m18_release.M18ReleaseTests.test_stable_root_index_crlf_worktree_is_rejected)
+! @brief Windows CRLF로 변형된 stable index를 M18이 거부하는지 검증합니다. ... ok
+test_unexpected_directory_and_symlink_are_rejected (test_m18_release.M18ReleaseTests.test_unexpected_directory_and_symlink_are_rejected) ... ok
+test_verify_accepts_missing_optional_digest_and_rejects_foreign_url (test_m18_release.M18ReleaseTests.test_verify_accepts_missing_optional_digest_and_rejects_foreign_url)
+! @brief 미지원 digest 생략은 허용하되 다른 저장소 Draft URL은 거부합니다. ... ok
+test_verify_rejects_release_name_or_body_mismatch (test_m18_release.M18ReleaseTests.test_verify_rejects_release_name_or_body_mismatch)
+! @brief GitHub Release 제목과 본문이 exact local 문서와 다르면 거부합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 5.318s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m19_ble_gap_contract.py
+test_feature_resolver_accepts_ble_and_rejects_standard (test_m19_ble_gap_contract.M19BleGapContractTests.test_feature_resolver_accepts_ble_and_rejects_standard)
+! @brief library feature가 ble profile에만 결합되는지 production resolver로 검사합니다. ... ok
+test_kconfig_and_examples_cover_gap_boundaries (test_m19_ble_gap_contract.M19BleGapContractTests.test_kconfig_and_examples_cover_gap_boundaries)
+! @brief fixed queue와 사용자 예제가 package source에 포함됐는지 검사합니다. ... ok
+test_legacy_tx_power_and_shutdown_generation_are_enforced (test_m19_ble_gap_contract.M19BleGapContractTests.test_legacy_tx_power_and_shutdown_generation_are_enforced)
+! @brief TPC 비활성 target과 end-during-connect 경계를 정적으로 고정합니다. ... ok
+test_nus_callbacks_ignore_generic_gap_links_and_targets_link_bundle (test_m19_ble_gap_contract.M19BleGapContractTests.test_nus_callbacks_ignore_generic_gap_links_and_targets_link_bundle)
+! @brief GAP/GATT link가 미사용 NUS 상태를 오염하지 않도록 bundle parity를 고정합니다. ... ok
+test_once_init_and_m21_observer_hooks_are_shared (test_m19_ble_gap_contract.M19BleGapContractTests.test_once_init_and_m21_observer_hooks_are_shared)
+! @brief NUS/GAP/M21이 bt_enable과 connection callback을 중복 소유하지 않습니다. ... ok
+test_public_header_is_arduino_friendly_and_complete (test_m19_ble_gap_contract.M19BleGapContractTests.test_public_header_is_arduino_friendly_and_complete)
+! @brief Zephyr type 없이 목표 GAP 객체와 진단을 노출합니다. ... ok
+test_stack_callbacks_only_enqueue_bounded_records (test_m19_ble_gap_contract.M19BleGapContractTests.test_stack_callbacks_only_enqueue_bounded_records)
+! @brief Bluetooth callback에서 user callback·heap 사용을 금지합니다. ... ok
+test_user_phy_control_disables_zephyr_auto_update (test_m19_ble_gap_contract.M19BleGapContractTests.test_user_phy_control_disables_zephyr_auto_update)
+! @brief 공개 PHY 요청과 HIL이 Zephyr 자동 PHY 절차와 경쟁하지 않도록 고정합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.080s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m19_ble_gap_hil.py
+test_reordered_token_is_rejected (test_m19_ble_gap_hil.M19BleGapHilParserTest.test_reordered_token_is_rejected) ... ok
+test_short_nonce_is_rejected (test_m19_ble_gap_hil.M19BleGapHilParserTest.test_short_nonce_is_rejected)
+! @brief full 128-bit가 아닌 RF fixture nonce를 거부합니다. ... ok
+test_stale_nonce_is_rejected (test_m19_ble_gap_hil.M19BleGapHilParserTest.test_stale_nonce_is_rejected) ... ok
+test_target_fail_is_rejected (test_m19_ble_gap_hil.M19BleGapHilParserTest.test_target_fail_is_rejected) ... ok
+test_valid_pair_transcripts_pass (test_m19_ble_gap_hil.M19BleGapHilParserTest.test_valid_pair_transcripts_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.000s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m20_ble_gatt_contract.py
+test_client_disconnect_invalidates_and_discovery_is_bounded (test_m20_ble_gatt_contract.M20BleGattContractTests.test_client_disconnect_invalidates_and_discovery_is_bounded)
+! @brief reconnect 뒤 stale handle·subscription 자동 재사용을 막습니다. ... ok
+test_kconfig_examples_and_target_contracts_exist (test_m20_ble_gatt_contract.M20BleGattContractTests.test_kconfig_examples_and_target_contracts_exist)
+! @brief resolver config, examples와 M19/M20 분리 target gate를 확인합니다. ... ok
+test_public_server_and_client_surface_is_complete (test_m20_ble_gatt_contract.M20BleGattContractTests.test_public_server_and_client_surface_is_complete)
+! @brief portable UUID·service·characteristic·remote handle API를 검사합니다. ... ok
+test_schema_is_registered_before_stack_and_locked_after_start (test_m20_ble_gatt_contract.M20BleGattContractTests.test_schema_is_registered_before_stack_and_locked_after_start)
+! @brief service 등록→bt_enable/settings_load 순서와 late mutation 거부를 고정합니다. ... ok
+test_server_callbacks_copy_to_fixed_queue_and_use_cached_read (test_m20_ble_gatt_contract.M20BleGattContractTests.test_server_callbacks_copy_to_fixed_queue_and_use_cached_read)
+! @brief stack callback에서 Sketch를 호출하지 않고 cached value만 읽습니다. ... ok
+test_thread_context_and_session_tokens_fail_closed (test_m20_ble_gatt_contract.M20BleGattContractTests.test_thread_context_and_session_tokens_fail_closed)
+! @brief ISR stack 진입과 disconnect 뒤 stale callback 재사용을 거부합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.015s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m20_ble_gatt_hil.py
+test_missing_rediscovery_is_rejected (test_m20_ble_gatt_hil.M20BleGattHilParserTest.test_missing_rediscovery_is_rejected) ... ok
+test_reordered_write_modes_are_rejected (test_m20_ble_gatt_hil.M20BleGattHilParserTest.test_reordered_write_modes_are_rejected) ... ok
+test_short_nonce_is_rejected (test_m20_ble_gatt_hil.M20BleGattHilParserTest.test_short_nonce_is_rejected)
+! @brief full 128-bit가 아닌 runner challenge를 fail-closed로 거부합니다. ... ok
+test_stale_nonce_is_rejected (test_m20_ble_gatt_hil.M20BleGattHilParserTest.test_stale_nonce_is_rejected) ... ok
+test_target_fail_is_rejected (test_m20_ble_gatt_hil.M20BleGattHilParserTest.test_target_fail_is_rejected) ... ok
+test_valid_pair_transcripts_pass (test_m20_ble_gatt_hil.M20BleGattHilParserTest.test_valid_pair_transcripts_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.001s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m21_ble_security_contract.py
+test_already_encrypted_restore_is_verified_without_duplicate_event (test_m21_ble_security_contract.M21BleSecurityContractTests.test_already_encrypted_restore_is_verified_without_duplicate_event)
+! @brief connected 시점에 이미 L2인 bond 복원 race를 즉시 검증합니다. ... ok
+test_auth_callbacks_match_the_configured_io_capability (test_m21_ble_security_contract.M21BleSecurityContractTests.test_auth_callbacks_match_the_configured_io_capability)
+! @brief 실제 장치 입출력보다 강한 SMP capability를 광고하지 않습니다. ... ok
+test_backend_reuses_common_stack_and_connection_hooks (test_m21_ble_security_contract.M21BleSecurityContractTests.test_backend_reuses_common_stack_and_connection_hooks)
+! @brief M21이 bt_enable이나 별도 connection callback을 만들지 못하게 합니다. ... ok
+test_board_and_security_share_zms_settings_backend (test_m21_ble_security_contract.M21BleSecurityContractTests.test_board_and_security_share_zms_settings_backend)
+! @brief board/system과 BLE bond 저장소가 단일 ZMS backend를 공유합니다. ... ok
+test_bond_is_verified_only_after_reboot_key_restore (test_m21_ble_security_contract.M21BleSecurityContractTests.test_bond_is_verified_only_after_reboot_key_restore)
+! @brief 같은 boot의 메모리 목록을 persistence 성공으로 오판하지 않습니다. ... ok
+test_erased_probe_rejects_every_interactive_pairing_path (test_m21_ble_security_contract.M21BleSecurityContractTests.test_erased_probe_rejects_every_interactive_pairing_path)
+! @brief 이전 key 거부 단계에서 Just Works와 passkey 재 pairing을 모두 거부합니다. ... ok
+test_feature_enables_smp_settings_bas_dis_and_encrypted_hids (test_m21_ble_security_contract.M21BleSecurityContractTests.test_feature_enables_smp_settings_bas_dis_and_encrypted_hids)
+! @brief 별도 feature가 표준 profile dependency를 완전하게 선언하는지 검사합니다. ... ok
+test_hid_is_protocol_automated_but_os_claim_is_absent (test_m21_ble_security_contract.M21BleSecurityContractTests.test_hid_is_protocol_automated_but_os_claim_is_absent)
+! @brief protocol report와 OS 수동 확인 경계를 혼동하지 않도록 고정합니다. ... ok
+test_hil_bounds_pre_security_link_recovery_in_main_loop (test_m21_ble_security_contract.M21BleSecurityContractTests.test_hil_bounds_pre_security_link_recovery_in_main_loop)
+! @brief 연결 성립 transient만 phase당 세 번까지 callback 밖에서 복구합니다. ... ok
+test_hil_clear_stops_only_active_gap_operations (test_m21_ble_security_contract.M21BleSecurityContractTests.test_hil_clear_stops_only_active_gap_operations)
+! @brief 초기 CLEAR가 유휴 GAP 객체의 오류 event를 만들지 않도록 고정합니다. ... ok
+test_hil_continues_when_security_was_satisfied_before_event_poll (test_m21_ble_security_contract.M21BleSecurityContractTests.test_hil_continues_when_security_was_satisfied_before_event_poll)
+! @brief 보안 event와 GAP/read 상태기의 교차 순서에도 profile 검증을 재개합니다. ... ok
+test_hil_defers_non_fresh_security_request_to_main_loop (test_m21_ble_security_contract.M21BleSecurityContractTests.test_hil_defers_non_fresh_security_request_to_main_loop)
+! @brief 연결 직후 요청을 미루고 이미 진행 중인 SMP는 bounded 간격으로 재확인합니다. ... ok
+test_hil_initializes_runtime_profiles_after_stack_enable (test_m21_ble_security_contract.M21BleSecurityContractTests.test_hil_initializes_runtime_profiles_after_stack_enable)
+! @brief HIDS는 stack 전에 등록하고 DIS·BAS runtime 값은 stack 뒤에 설정합니다. ... ok
+test_hil_invalidates_stale_gatt_callbacks_on_disconnect_and_reset (test_m21_ble_security_contract.M21BleSecurityContractTests.test_hil_invalidates_stale_gatt_callbacks_on_disconnect_and_reset)
+! @brief 이전 연결 callback이 새 phase 완료 flag를 오염하지 못하게 세대를 무효화합니다. ... ok
+test_hil_observes_encrypted_read_denial_before_security_request (test_m21_ble_security_contract.M21BleSecurityContractTests.test_hil_observes_encrypted_read_denial_before_security_request)
+! @brief ATT 자동 보안 재시도를 끄고 평문 HIDS read 거부를 직접 검증합니다. ... ok
+test_hil_repeats_profile_notifications_after_server_ccc_restore (test_m21_ble_security_contract.M21BleSecurityContractTests.test_hil_repeats_profile_notifications_after_server_ccc_restore)
+! @brief client 구독 재등록 전 송신 성공 race에도 profile 값을 반복 전달합니다. ... ok
+test_hil_serializes_all_gatt_transitions_by_main_loop (test_m21_ble_security_contract.M21BleSecurityContractTests.test_hil_serializes_all_gatt_transitions_by_main_loop)
+! @brief discovery·read·subscribe 전이를 one-shot main-loop 작업으로 직렬화합니다. ... ok
+test_hil_uses_typed_characteristic_and_auto_ccc_discovery (test_m21_ble_security_contract.M21BleSecurityContractTests.test_hil_uses_typed_characteristic_and_auto_ccc_discovery)
+! @brief 원격 characteristic 값과 CCC를 유효한 Zephyr discovery 방식으로 찾습니다. ... ok
+test_library_discovery_phase_excludes_internal_zephyr_backend (test_m21_ble_security_contract.M21BleSecurityContractTests.test_library_discovery_phase_excludes_internal_zephyr_backend)
+! @brief Arduino 탐색 compile에서는 공개 header만 해석하도록 고정합니다. ... ok
+test_pairing_callbacks_defer_user_code_and_never_log_secrets (test_m21_ble_security_contract.M21BleSecurityContractTests.test_pairing_callbacks_defer_user_code_and_never_log_secrets)
+! @brief stack callback에서 Sketch callback·Serial passkey 출력을 금지합니다. ... ok
+test_public_surface_covers_security_profiles_and_hid (test_m21_ble_security_contract.M21BleSecurityContractTests.test_public_surface_covers_security_profiles_and_hid)
+! @brief pairing·bond·BAS·DIS·keyboard API가 모두 공개되는지 확인합니다. ... ok
+test_security_request_synchronizes_an_already_secured_link (test_m21_ble_security_contract.M21BleSecurityContractTests.test_security_request_synchronizes_an_already_secured_link)
+! @brief 보안 요청 전·후에 이미 충족된 link를 event와 bond 상태에 동기화합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.031s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m21_ble_security_hil.py
+test_accepts_pair_restore_erase_repair_and_profiles (test_m21_ble_security_hil.M21BleSecurityHilTests.test_accepts_pair_restore_erase_repair_and_profiles)
+! @brief exact 중앙·주변장치 transcript를 승인합니다. ... ok
+test_boot_ready_ignores_preflash_protocol_but_runtime_rejects_it (test_m21_ble_security_hil.M21BleSecurityHilTests.test_boot_ready_ignores_preflash_protocol_but_runtime_rejects_it)
+! @brief flash 중 남은 이전 firmware token은 READY 전만 무시합니다. ... ok
+test_evidence_marks_only_protocol_hid_as_automatic (test_m21_ble_security_hil.M21BleSecurityHilTests.test_evidence_marks_only_protocol_hid_as_automatic)
+! @brief OS 입력 확인은 자동 PASS와 분리해 pending으로 남깁니다. ... ok
+test_phase_transitions_have_bounded_security_settle_windows (test_m21_ble_security_hil.M21BleSecurityHilTests.test_phase_transitions_have_bounded_security_settle_windows)
+! @brief bond 저장·재부팅 준비·SMP 거부 뒤에 제한된 전환 유예를 강제합니다. ... ok
+test_rejects_erase_without_post_reboot_zero_bond (test_m21_ble_security_hil.M21BleSecurityHilTests.test_rejects_erase_without_post_reboot_zero_bond)
+! @brief 제거 요청 직후 값을 영속 삭제 완료로 오판하지 않습니다. ... ok
+test_rejects_missing_encrypted_gatt_negative_or_hid (test_m21_ble_security_hil.M21BleSecurityHilTests.test_rejects_missing_encrypted_gatt_negative_or_hid)
+! @brief 암호화 전 거부나 8-byte HID 검증 누락을 거부합니다. ... ok
+test_rejects_missing_or_short_rf_nonce_binding (test_m21_ble_security_hil.M21BleSecurityHilTests.test_rejects_missing_or_short_rf_nonce_binding)
+! @brief 128-bit RF peer binding 누락·축소를 모두 거부합니다. ... ok
+test_rejects_stale_nonce_target_fail_and_wrong_pairing_count (test_m21_ble_security_hil.M21BleSecurityHilTests.test_rejects_stale_nonce_target_fail_and_wrong_pairing_count)
+! @brief stale 실행, target FAIL과 restore 재페어를 모두 거부합니다. ... ok
+test_requires_distinct_boards_and_exact_nonce (test_m21_ble_security_hil.M21BleSecurityHilTests.test_requires_distinct_boards_and_exact_nonce)
+! @brief 같은 UID·MSD·UART와 잘못된 nonce를 차단합니다. ... ok
+test_uart_console_rendering_is_ascii_safe (test_m21_ble_security_hil.M21BleSecurityHilTests.test_uart_console_rendering_is_ascii_safe)
+! @brief UTF-8로 해석 가능한 UART 잡음도 Windows code page와 무관하게 출력합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.009s
+
+OK
+[central] NUCODE_M21_EVENT:DISCONNECTED:role=central:nonce=fedcba9876543210fedcba9876543210
+[central] NUCODE_M21_FAIL:role=central:reason=old-image
+[central] NUCODE_M21_READY:role=central:bond_count=0
+[central] NUCODE_M21_EVENT:DISCONNECTED:role=central:nonce=fedcba9876543210fedcba9876543210
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m21_ble_security_negative.py
+test_battery_isr_error_and_hid_usage_range_are_api_specific (test_m21_ble_security_negative.M21BleSecurityNegativeTests.test_battery_isr_error_and_hid_usage_range_are_api_specific)
+! @brief BAS ISR 오류와 HID descriptor 범위 밖 usage를 정확히 거부합니다. ... ok
+test_delete_scope_is_ble_bond_only_and_profile_is_ble_only (test_m21_ble_security_negative.M21BleSecurityNegativeTests.test_delete_scope_is_ble_bond_only_and_profile_is_ble_only)
+! @brief erase 범위와 BLE profile 한계를 유지하면서 NUS dependency와 결합합니다. ... ok
+test_hil_requires_full_rf_nonce_before_connect (test_m21_ble_security_negative.M21BleSecurityNegativeTests.test_hil_requires_full_rf_nonce_before_connect)
+! @brief 이름만 같은 stale 장치에는 연결하지 않고 128-bit nonce를 요구합니다. ... ok
+test_no_fixed_passkey_secret_log_or_unencrypted_hids_config (test_m21_ble_security_negative.M21BleSecurityNegativeTests.test_no_fixed_passkey_secret_log_or_unencrypted_hids_config)
+! @brief 고정 passkey·secret 로그·평문 HIDS 설정을 모두 금지합니다. ... ok
+test_rejects_hid_before_encryption_or_subscription (test_m21_ble_security_negative.M21BleSecurityNegativeTests.test_rejects_hid_before_encryption_or_subscription)
+! @brief L2 미만 link와 CCC 미구독 HID 전송을 PASS로 올리지 않습니다. ... ok
+test_rejects_security_below_encrypted_and_invalid_timeout (test_m21_ble_security_negative.M21BleSecurityNegativeTests.test_rejects_security_below_encrypted_and_invalid_timeout)
+! @brief 무암호화 및 비정상 사용자 응답 timeout을 초기화에서 거부합니다. ... ok
+test_same_boot_bond_is_pending_and_never_false_verified (test_m21_ble_security_negative.M21BleSecurityNegativeTests.test_same_boot_bond_is_pending_and_never_false_verified)
+! @brief pairing 직후에는 persistence pending이며 reboot 복원 전 bonded가 아닙니다. ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.003s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m22_cleanroom.py
+test_cleanup_rejects_parent_wrong_token_and_changed_evidence (test_m22_cleanroom.M22CleanroomTests.test_cleanup_rejects_parent_wrong_token_and_changed_evidence)
+! @brief broad target, token mismatch, evidence 변경을 모두 fail-closed 처리합니다. ... ok
+test_cleanup_removes_only_exact_leaf_and_preserves_evidence (test_m22_cleanroom.M22CleanroomTests.test_cleanup_removes_only_exact_leaf_and_preserves_evidence)
+! @brief marker와 외부 hash 확인 뒤 exact run leaf 하나만 제거합니다. ... ok
+test_cleanup_removes_windows_readonly_file_inside_exact_leaf (test_m22_cleanroom.M22CleanroomTests.test_cleanup_removes_windows_readonly_file_inside_exact_leaf)
+! @brief 격리 NCS Git object와 같은 Windows 읽기 전용 파일도 안전하게 제거합니다. ... ok
+test_core_list_uses_installed_version_field (test_m22_cleanroom.M22CleanroomTests.test_core_list_uses_installed_version_field)
+! @brief Arduino CLI 1.5 JSON의 installed_version을 exact 비교합니다. ... ok
+test_dry_run_contract_has_no_side_effect_and_no_uid_field (test_m22_cleanroom.M22CleanroomTests.test_dry_run_contract_has_no_side_effect_and_no_uid_field)
+! @brief 실제 설치 전 exact URL·격리·수명주기·cleanup 정책을 고정합니다. ... ok
+test_environment_rehomes_every_mutable_root (test_m22_cleanroom.M22CleanroomTests.test_environment_rehomes_every_mutable_root)
+! @brief 원래 Arduino15/NCS/PATH를 상속하지 않고 run leaf로 재배치합니다. ... ok
+test_flash_log_binds_exact_uid_and_non_destructive_options (test_m22_cleanroom.M22CleanroomTests.test_flash_log_binds_exact_uid_and_non_destructive_options)
+! @brief 설치본 upload가 exact UID·HEX를 쓰고 erase/recover를 금지합니다. ... ok
+test_layout_does_not_precreate_nordic_install_leaves (test_m22_cleanroom.M22CleanroomTests.test_layout_does_not_precreate_nordic_install_leaves)
+! @brief Nordic SDK와 Toolchain 설치 대상 leaf를 미리 만들지 않습니다. ... ok
+test_layout_rejects_preexisting_nordic_install_leaf (test_m22_cleanroom.M22CleanroomTests.test_layout_rejects_preexisting_nordic_install_leaf)
+! @brief Nordic 설치 대상 leaf가 먼저 생기면 즉시 중단합니다. ... ok
+test_rc_index_requires_exact_public_asset_identity (test_m22_cleanroom.M22CleanroomTests.test_rc_index_requires_exact_public_asset_identity)
+! @brief 공개 RC URL/hash/size가 plan과 다르면 설치 전에 차단합니다. ... ok
+test_readonly_retry_rejects_path_outside_exact_leaf (test_m22_cleanroom.M22CleanroomTests.test_readonly_retry_rejects_path_outside_exact_leaf)
+! @brief 읽기 전용 복구 callback이 exact run leaf 밖 경로를 거부합니다. ... ok
+test_runner_binding_requires_exact_release_commit_and_bytes (test_m22_cleanroom.M22CleanroomTests.test_runner_binding_requires_exact_release_commit_and_bytes)
+! @brief clean-room runner가 exact plan commit과 byte에 묶이는지 확인합니다. ... ok
+test_uid_and_user_path_are_redacted (test_m22_cleanroom.M22CleanroomTests.test_uid_and_user_path_are_redacted)
+! @brief 외부 log에 probe UID와 실제 Windows 사용자명이 남지 않습니다. ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.111s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m22_fixed_gate.py
+test_host_gate_is_exact_unittest_discovery (test_m22_fixed_gate.M22FixedGateTests.test_host_gate_is_exact_unittest_discovery)
+! @brief host gate가 임의 test command를 받지 않습니다. ... ok
+test_package_examples_delegates_all_isolated_roots (test_m22_fixed_gate.M22FixedGateTests.test_package_examples_delegates_all_isolated_roots)
+! @brief 설치본 예제 gate에 SDK/toolchain/cache/forbid root를 모두 넘깁니다. ... ok
+test_rc_upload_requires_exact_uid_but_redacts_it (test_m22_fixed_gate.M22FixedGateTests.test_rc_upload_requires_exact_uid_but_redacts_it)
+! @brief RC upload는 pyOCD 1회와 UID를 강제하되 공개 문구에서 지웁니다. ... ok
+test_rc_upload_without_uid_fails_closed (test_m22_fixed_gate.M22FixedGateTests.test_rc_upload_without_uid_fails_closed)
+! @brief 다중 probe 환경에서 암묵 선택을 허용하지 않습니다. ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.004s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m22_package_examples.py
+test_deep_forbidden_path_scan_is_fail_closed (test_m22_package_examples.M22PackageExamplesTests.test_deep_forbidden_path_scan_is_fail_closed)
+! @brief 중첩 manifest 문자열의 기존 Arduino15 경로도 거부합니다. ... ok
+test_discovery_accepts_only_installed_platform_paths (test_m22_package_examples.M22PackageExamplesTests.test_discovery_accepts_only_installed_platform_paths)
+! @brief Arduino CLI가 설치본에서 열거한 exact 29개만 승인합니다. ... ok
+test_discovery_rejects_source_checkout_substitution (test_m22_package_examples.M22PackageExamplesTests.test_discovery_rejects_source_checkout_substitution)
+! @brief 저장소 source 예제를 설치본으로 가장하면 실패합니다. ... ok
+test_discovery_rejects_unlocked_installed_package_example (test_m22_package_examples.M22PackageExamplesTests.test_discovery_rejects_unlocked_installed_package_example)
+! @brief 새 package 예제를 lock/compile 대상에서 빠뜨릴 수 없습니다. ... ok
+test_lock_contains_every_29_profiled_examples (test_m22_package_examples.M22PackageExamplesTests.test_lock_contains_every_29_profiled_examples)
+! @brief 공개 package 예제 집합과 BLE profile 구분을 고정합니다. ... ok
+test_lock_matches_every_repository_library_example (test_m22_package_examples.M22PackageExamplesTests.test_lock_matches_every_repository_library_example)
+! @brief package source에 추가된 Arduino 예제가 lock 밖으로 빠지지 않습니다. ... ok
+test_manifest_binds_isolated_package_sdk_toolchain_and_cache (test_m22_package_examples.M22PackageExamplesTests.test_manifest_binds_isolated_package_sdk_toolchain_and_cache)
+! @brief build identity가 모든 격리 root와 HEX byte에 묶입니다. ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.526s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m22_release.py
+test_finalize_requires_exact_four_passed_gates (test_m22_release.M22ReleaseTests.test_finalize_requires_exact_four_passed_gates)
+! @brief host/examples/upload/clean-room 모두 있어야 RC3 ready가 됩니다. ... ok
+test_package_contract_contains_only_exact_new_rc (test_m22_release.M22ReleaseTests.test_package_contract_contains_only_exact_new_rc)
+! @brief 0.3.0-rc.3이 과거 RC/stable 계약 뒤에 정확히 추가됩니다. ... ok
+test_parser_exposes_no_publish_or_push_command (test_m22_release.M22ReleaseTests.test_parser_exposes_no_publish_or_push_command)
+! @brief M22 자동화가 GitHub Release 조작 경로를 제공하지 않습니다. ... ok
+test_stable_index_is_exact_and_tamper_is_rejected (test_m22_release.M22ReleaseTests.test_stable_index_is_exact_and_tamper_is_rejected)
+! @brief RC3 준비가 기존 stable index 한 byte 변경도 거부합니다. ... ok
+test_two_builds_must_be_byte_identical (test_m22_release.M22ReleaseTests.test_two_builds_must_be_byte_identical)
+! @brief 독립 build 중 한 byte라도 다르면 prepare가 진행되지 않습니다. ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.052s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m23_peripheral_inventory.py
+test_common_ownership_contract_lists_dma_and_event_resources (test_m23_peripheral_inventory.M23PeripheralInventoryTests.test_common_ownership_contract_lists_dma_and_event_resources) ... ok
+test_common_ownership_dma_and_block_semantics_run_on_host (test_m23_peripheral_inventory.M23PeripheralInventoryTests.test_common_ownership_dma_and_block_semantics_run_on_host) ... ok
+test_exhaustive_instance_omission_is_rejected (test_m23_peripheral_inventory.M23PeripheralInventoryTests.test_exhaustive_instance_omission_is_rejected) ... ok
+test_pinned_ncs_dts_checksum_and_labels_are_verified (test_m23_peripheral_inventory.M23PeripheralInventoryTests.test_pinned_ncs_dts_checksum_and_labels_are_verified) ... ok
+test_public_inventory_api_compiles_links_and_runs (test_m23_peripheral_inventory.M23PeripheralInventoryTests.test_public_inventory_api_compiles_links_and_runs) ... ok
+test_public_object_alias_is_rejected (test_m23_peripheral_inventory.M23PeripheralInventoryTests.test_public_object_alias_is_rejected) ... ok
+test_same_serial_block_personality_set_is_exact (test_m23_peripheral_inventory.M23PeripheralInventoryTests.test_same_serial_block_personality_set_is_exact) ... ok
+test_schema_inventory_sources_and_generated_outputs_pass (test_m23_peripheral_inventory.M23PeripheralInventoryTests.test_schema_inventory_sources_and_generated_outputs_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 11.517s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m24_serial_contract.py
+test_block_personality_omission_is_rejected (test_m24_serial_contract.M24SerialContractTests.test_block_personality_omission_is_rejected) ... ok
+test_candidate_header_and_handover_sources_are_required (test_m24_serial_contract.M24SerialContractTests.test_candidate_header_and_handover_sources_are_required) ... ok
+test_contract_schema_generated_document_and_exact_ncs_pass (test_m24_serial_contract.M24SerialContractTests.test_contract_schema_generated_document_and_exact_ncs_pass) ... ok
+test_dedicated_pin_mapping_and_board_conflict_are_rejected_on_drift (test_m24_serial_contract.M24SerialContractTests.test_dedicated_pin_mapping_and_board_conflict_are_rejected_on_drift) ... ok
+test_every_identity_needs_one_approved_hil_profile (test_m24_serial_contract.M24SerialContractTests.test_every_identity_needs_one_approved_hil_profile) ... ok
+test_functionally_verified_candidates_remain_internal_until_release (test_m24_serial_contract.M24SerialContractTests.test_functionally_verified_candidates_remain_internal_until_release) ... ok
+test_local_board_source_checksum_is_fail_closed (test_m24_serial_contract.M24SerialContractTests.test_local_board_source_checksum_is_fail_closed) ... ok
+test_onboard_resources_partition_profiles_and_keep_fixture_boundary (test_m24_serial_contract.M24SerialContractTests.test_onboard_resources_partition_profiles_and_keep_fixture_boundary) ... ok
+test_public_alias_or_singleton_identity_drift_is_rejected (test_m24_serial_contract.M24SerialContractTests.test_public_alias_or_singleton_identity_drift_is_rejected) ... ok
+test_spim_hardware_csn_meets_nrf54l15_spis_timing (test_m24_serial_contract.M24SerialContractTests.test_spim_hardware_csn_meets_nrf54l15_spis_timing)
+Source regression only; Fixture 201 proves the physical timing path. ... ok
+test_spim_rx_delay_matches_nrf54l15_instance_clock (test_m24_serial_contract.M24SerialContractTests.test_spim_rx_delay_matches_nrf54l15_instance_clock)
+Source regression only; 8 MHz Fixture 201 proves the physical sample path. ... ok
+test_text_source_hash_is_checkout_eol_invariant (test_m24_serial_contract.M24SerialContractTests.test_text_source_hash_is_checkout_eol_invariant) ... ok
+test_twim_activation_explicitly_enables_nrfx_instance (test_m24_serial_contract.M24SerialContractTests.test_twim_activation_explicitly_enables_nrfx_instance)
+Source regression only; actual transfers remain an onboard/fixture gate. ... ok
+test_twis_late_buffer_resumes_clock_stretched_request (test_m24_serial_contract.M24SerialContractTests.test_twis_late_buffer_resumes_clock_stretched_request)
+Source regression only; Fixture 301 proves the physical clock-stretch path. ... ok
+test_unsafe_pin_profile_is_rejected (test_m24_serial_contract.M24SerialContractTests.test_unsafe_pin_profile_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.173s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m26_system_contract.py
+test_all_m26_identities_have_a_non_unknown_disposition (test_m26_system_contract.M26SystemContractTests.test_all_m26_identities_have_a_non_unknown_disposition) ... ok
+test_raw_radio_is_exclusive_with_managed_ble (test_m26_system_contract.M26SystemContractTests.test_raw_radio_is_exclusive_with_managed_ble) ... ok
+test_schematic_hash_and_generated_document_are_exact (test_m26_system_contract.M26SystemContractTests.test_schematic_hash_and_generated_document_are_exact) ... ok
+test_silicon_only_capability_cannot_be_public (test_m26_system_contract.M26SystemContractTests.test_silicon_only_capability_cannot_be_public) ... ok
+test_supported_state_requires_automated_and_physical_pass (test_m26_system_contract.M26SystemContractTests.test_supported_state_requires_automated_and_physical_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.043s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m27_package_examples.py
+test_local_software_package_cannot_be_labeled_rc_evidence (test_m27_package_examples.M27PackageExampleTests.test_local_software_package_cannot_be_labeled_rc_evidence)
+! @brief 기존 RC 기본값과 software preview의 별도 identity를 유지합니다. ... M27_PACKAGE_EXAMPLE_PASS 1/29 EEPROM::EEPROMPersistence
+M27_PACKAGE_EXAMPLE_PASS 2/29 LittleFS::LittleFSPersistence
+M27_PACKAGE_EXAMPLE_PASS 3/29 NUCODE BLE::CustomGattCentral
+M27_PACKAGE_EXAMPLE_PASS 4/29 NUCODE BLE::CustomGattPeripheral
+M27_PACKAGE_EXAMPLE_PASS 5/29 NUCODE BLE::GAPCentral
+M27_PACKAGE_EXAMPLE_PASS 6/29 NUCODE BLE::GAPPeripheral
+M27_PACKAGE_EXAMPLE_PASS 7/29 NUCODE BLE::NUSCentral
+M27_PACKAGE_EXAMPLE_PASS 8/29 NUCODE BLE::NUSPeripheral
+M27_PACKAGE_EXAMPLE_PASS 9/29 NUCODE BLE Security::SecureKeyboard
+M27_PACKAGE_EXAMPLE_PASS 10/29 NUCODE NU54DK::AnalogChannels
+M27_PACKAGE_EXAMPLE_PASS 11/29 NUCODE NU54DK::AnalogReadA0
+M27_PACKAGE_EXAMPLE_PASS 12/29 NUCODE NU54DK::AnalogResolution
+M27_PACKAGE_EXAMPLE_PASS 13/29 NUCODE NU54DK::Blink
+M27_PACKAGE_EXAMPLE_PASS 14/29 NUCODE NU54DK::BoardInfo
+M27_PACKAGE_EXAMPLE_PASS 15/29 NUCODE NU54DK::CounterAlarm
+M27_PACKAGE_EXAMPLE_PASS 16/29 NUCODE NU54DK::DynamicPWM
+M27_PACKAGE_EXAMPLE_PASS 17/29 NUCODE NU54DK::InterruptButton
+M27_PACKAGE_EXAMPLE_PASS 18/29 NUCODE NU54DK::PWMFade
+M27_PACKAGE_EXAMPLE_PASS 19/29 NUCODE NU54DK::Serial1RuntimePins
+M27_PACKAGE_EXAMPLE_PASS 20/29 NUCODE NU54DK::SerialEcho
+M27_PACKAGE_EXAMPLE_PASS 21/29 NUCODE NU54DK::SettingsStorage
+M27_PACKAGE_EXAMPLE_PASS 22/29 NUCODE NU54DK::SPI00RuntimePins
+M27_PACKAGE_EXAMPLE_PASS 23/29 NUCODE NU54DK::SystemOffWake
+M27_PACKAGE_EXAMPLE_PASS 24/29 NUCODE NU54DK::ToneOutput
+M27_PACKAGE_EXAMPLE_PASS 25/29 NUCODE NU54DK::WatchdogBasic
+M27_PACKAGE_EXAMPLE_PASS 26/29 NUCODE NU54DK::WireRuntimePins
+M27_PACKAGE_EXAMPLE_PASS 27/29 Servo::Sweep
+M27_PACKAGE_EXAMPLE_PASS 28/29 SPI::SPITransaction
+M27_PACKAGE_EXAMPLE_PASS 29/29 Wire::WirePmicId
+M27_PACKAGE_EXAMPLE_PASS 1/29 EEPROM::EEPROMPersistence
+M27_PACKAGE_EXAMPLE_PASS 2/29 LittleFS::LittleFSPersistence
+M27_PACKAGE_EXAMPLE_PASS 3/29 NUCODE BLE::CustomGattCentral
+M27_PACKAGE_EXAMPLE_PASS 4/29 NUCODE BLE::CustomGattPeripheral
+M27_PACKAGE_EXAMPLE_PASS 5/29 NUCODE BLE::GAPCentral
+M27_PACKAGE_EXAMPLE_PASS 6/29 NUCODE BLE::GAPPeripheral
+M27_PACKAGE_EXAMPLE_PASS 7/29 NUCODE BLE::NUSCentral
+M27_PACKAGE_EXAMPLE_PASS 8/29 NUCODE BLE::NUSPeripheral
+M27_PACKAGE_EXAMPLE_PASS 9/29 NUCODE BLE Security::SecureKeyboard
+M27_PACKAGE_EXAMPLE_PASS 10/29 NUCODE NU54DK::AnalogChannels
+M27_PACKAGE_EXAMPLE_PASS 11/29 NUCODE NU54DK::AnalogReadA0
+M27_PACKAGE_EXAMPLE_PASS 12/29 NUCODE NU54DK::AnalogResolution
+M27_PACKAGE_EXAMPLE_PASS 13/29 NUCODE NU54DK::Blink
+M27_PACKAGE_EXAMPLE_PASS 14/29 NUCODE NU54DK::BoardInfo
+M27_PACKAGE_EXAMPLE_PASS 15/29 NUCODE NU54DK::CounterAlarm
+M27_PACKAGE_EXAMPLE_PASS 16/29 NUCODE NU54DK::DynamicPWM
+M27_PACKAGE_EXAMPLE_PASS 17/29 NUCODE NU54DK::InterruptButton
+M27_PACKAGE_EXAMPLE_PASS 18/29 NUCODE NU54DK::PWMFade
+M27_PACKAGE_EXAMPLE_PASS 19/29 NUCODE NU54DK::Serial1RuntimePins
+M27_PACKAGE_EXAMPLE_PASS 20/29 NUCODE NU54DK::SerialEcho
+M27_PACKAGE_EXAMPLE_PASS 21/29 NUCODE NU54DK::SettingsStorage
+M27_PACKAGE_EXAMPLE_PASS 22/29 NUCODE NU54DK::SPI00RuntimePins
+M27_PACKAGE_EXAMPLE_PASS 23/29 NUCODE NU54DK::SystemOffWake
+M27_PACKAGE_EXAMPLE_PASS 24/29 NUCODE NU54DK::ToneOutput
+M27_PACKAGE_EXAMPLE_PASS 25/29 NUCODE NU54DK::WatchdogBasic
+M27_PACKAGE_EXAMPLE_PASS 26/29 NUCODE NU54DK::WireRuntimePins
+M27_PACKAGE_EXAMPLE_PASS 27/29 Servo::Sweep
+M27_PACKAGE_EXAMPLE_PASS 28/29 SPI::SPITransaction
+M27_PACKAGE_EXAMPLE_PASS 29/29 Wire::WirePmicId
+ok
+test_lock_has_exact_version_profiles_and_count (test_m27_package_examples.M27PackageExampleTests.test_lock_has_exact_version_profiles_and_count) ... ok
+test_m22_historical_runner_remains_pinned (test_m27_package_examples.M27PackageExampleTests.test_m22_historical_runner_remains_pinned) ... ok
+test_runner_parallelizes_independent_build_roots (test_m27_package_examples.M27PackageExampleTests.test_runner_parallelizes_independent_build_roots) ... ok
+test_runner_uses_version_explicit_discovery (test_m27_package_examples.M27PackageExampleTests.test_runner_uses_version_explicit_discovery) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.087s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m27_release.py
+test_candidate_extension_does_not_add_unapproved_stable (test_m27_release.M27ReleaseTests.test_candidate_extension_does_not_add_unapproved_stable) ... ok
+test_clean_submodule_status_survives_trimmed_first_prefix (test_m27_release.M27ReleaseTests.test_clean_submodule_status_survives_trimmed_first_prefix) ... ok
+test_cli_exposes_no_publish_or_finalize_command (test_m27_release.M27ReleaseTests.test_cli_exposes_no_publish_or_finalize_command) ... ok
+test_contract_has_every_required_gate_and_remains_hold (test_m27_release.M27ReleaseTests.test_contract_has_every_required_gate_and_remains_hold) ... ok
+test_functional_fixture_gates_cannot_become_optional (test_m27_release.M27ReleaseTests.test_functional_fixture_gates_cannot_become_optional) ... ok
+test_historical_package_contract_is_not_modified (test_m27_release.M27ReleaseTests.test_historical_package_contract_is_not_modified) ... ok
+test_owner_scope_excludes_metrology_not_functional_hil (test_m27_release.M27ReleaseTests.test_owner_scope_excludes_metrology_not_functional_hil) ... ok
+test_plan_rejects_publication_or_missing_artifacts (test_m27_release.M27ReleaseTests.test_plan_rejects_publication_or_missing_artifacts) ... ok
+test_scope_drift_or_missing_decision_is_rejected (test_m27_release.M27ReleaseTests.test_scope_drift_or_missing_decision_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 2.083s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m27_staged_candidate.py
+test_archive_members_require_exact_root (test_m27_staged_candidate.M27StagedCandidateTests.test_archive_members_require_exact_root) ... ok
+test_runner_has_no_publication_command (test_m27_staged_candidate.M27StagedCandidateTests.test_runner_has_no_publication_command) ... ok
+test_stage_archive_places_payload_at_arduino_platform_path (test_m27_staged_candidate.M27StagedCandidateTests.test_stage_archive_places_payload_at_arduino_platform_path) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.013s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m8_flash.py
+test_accepts_matching_non_sysbuild_artifacts (test_m8_flash.M8FlashContractTests.test_accepts_matching_non_sysbuild_artifacts)
+! @brief export와 native artifact가 같을 때 upload 입력을 승인합니다. ... ok
+test_flash_command_has_no_destructive_option (test_m8_flash.M8FlashContractTests.test_flash_command_has_no_destructive_option)
+! @brief 일반 upload 명령에 erase 또는 recover가 없는지 검증합니다. ... ok
+test_redacts_explicit_probe_identity_without_losing_selection_mode (test_m8_flash.M8FlashContractTests.test_redacts_explicit_probe_identity_without_losing_selection_mode)
+! @brief 결과 JSON이 UID를 숨기면서 선택 방식과 메뉴를 보존하는지 검증합니다. ... ok
+test_rejects_board_mismatch (test_m8_flash.M8FlashContractTests.test_rejects_board_mismatch)
+! @brief 다른 board로 생성된 manifest를 거부합니다. ... ok
+test_rejects_destructive_runner_metadata (test_m8_flash.M8FlashContractTests.test_rejects_destructive_runner_metadata)
+! @brief runners.yaml에 숨은 erase/recover option도 일반 upload에서 거부합니다. ... ok
+test_rejects_exported_hex_hash_mismatch (test_m8_flash.M8FlashContractTests.test_rejects_exported_hex_hash_mismatch)
+! @brief build 후 변경된 export HEX를 거부합니다. ... ok
+test_rejects_missing_or_ambiguous_pyocd_probe (test_m8_flash.M8FlashContractTests.test_rejects_missing_or_ambiguous_pyocd_probe)
+! @brief probe 없음과 다중 probe 무지정 상태를 구분해 거부합니다. ... ok
+test_rejects_missing_runner (test_m8_flash.M8FlashContractTests.test_rejects_missing_runner)
+! @brief build에 등록되지 않은 runner를 거부합니다. ... ok
+test_rejects_native_hex_mismatch (test_m8_flash.M8FlashContractTests.test_rejects_native_hex_mismatch)
+! @brief west가 기록할 native HEX와 export HEX가 다르면 거부합니다. ... ok
+test_rejects_sysbuild_manifest (test_m8_flash.M8FlashContractTests.test_rejects_sysbuild_manifest)
+! @brief 아직 지원하지 않는 merged sysbuild artifact를 명확히 거부합니다. ... ok
+test_selects_noninteractive_or_explicit_uid_upload_tool (test_m8_flash.M8FlashContractTests.test_selects_noninteractive_or_explicit_uid_upload_tool)
+! @brief 기본 pyOCD와 명시 UID 전용 메뉴가 분리되는지 검증합니다. ... ok
+test_selects_one_or_explicit_pyocd_probe (test_m8_flash.M8FlashContractTests.test_selects_one_or_explicit_pyocd_probe)
+! @brief 단일 probe 자동 선택과 명시 UID 선택을 검증합니다. ... ok
+test_validates_both_runner_contracts (test_m8_flash.M8FlashContractTests.test_validates_both_runner_contracts)
+! @brief pyOCD와 J-Link 고정 target argument를 YAML에서 확인합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.199s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m9_cache.py
+test_actual_input_collector_tracks_board_sdk_and_toolchain_identity (test_m9_cache.M9CacheContractTests.test_actual_input_collector_tracks_board_sdk_and_toolchain_identity)
+! @brief 실제 collector가 board/NCS/Zephyr/compiler 입력을 key에 포함합니다. ... ok
+test_byte_quota_prune_preserves_active_lock (test_m9_cache.M9CacheContractTests.test_byte_quota_prune_preserves_active_lock)
+! @brief byte quota에서도 활성 lock을 건너뛰고 비활성 entry를 정리합니다. ... ok
+test_cache_root_inside_platform_fingerprint_is_rejected (test_m9_cache.M9CacheContractTests.test_cache_root_inside_platform_fingerprint_is_rejected)
+! @brief cache가 platform hash에 자기 자신을 포함하는 배치를 거부합니다. ... ok
+test_cache_workspace_uses_bounded_key_and_schema_namespace (test_m9_cache.M9CacheContractTests.test_cache_workspace_uses_bounded_key_and_schema_namespace)
+! @brief Windows 경로를 제한한 directory key가 schema namespace에 포함됩니다. ... ok
+test_canonical_manifest_key_ignores_dictionary_order (test_m9_cache.M9CacheContractTests.test_canonical_manifest_key_ignores_dictionary_order)
+! @brief 같은 canonical JSON은 field 순서와 무관하게 같은 key를 얻습니다. ... ok
+test_dead_local_lock_is_recovered (test_m9_cache.M9CacheContractTests.test_dead_local_lock_is_recovered)
+! @brief 종료된 같은 host PID의 stale lock만 자동 회수합니다. ... ok
+test_default_cache_root_keeps_windows_object_path_short (test_m9_cache.M9CacheContractTests.test_default_cache_root_keeps_windows_object_path_short)
+! @brief 기본 cache root가 긴 nRF Security object 경로를 위한 짧은 suffix를 씁니다. ... ok
+test_external_library_sources_keep_private_header_semantics (test_m9_cache.M9CacheContractTests.test_external_library_sources_keep_private_header_semantics)
+! @brief 각 library source를 원본 경로에서 컴파일하고 include 순서를 보존합니다. ... ok
+test_foreign_metadata_does_not_block_local_os_lock (test_m9_cache.M9CacheContractTests.test_foreign_metadata_does_not_block_local_os_lock)
+! @brief local-only cache에서는 stale 외부 metadata보다 OS lock을 신뢰합니다. ... ok
+test_generated_source_categories_do_not_share_a_mirror (test_m9_cache.M9CacheContractTests.test_generated_source_categories_do_not_share_a_mirror)
+! @brief sketch와 library의 같은 파일명이 별도 mirror source로 유지됩니다. ... ok
+test_generated_source_identity_is_build_path_independent (test_m9_cache.M9CacheContractTests.test_generated_source_identity_is_build_path_independent)
+! @brief 다른 Arduino 임시 build path가 같은 Sketch mirror 이름을 사용합니다. ... ok
+test_live_lock_serializes_two_workers (test_m9_cache.M9CacheContractTests.test_live_lock_serializes_two_workers)
+! @brief 같은 cache의 두 worker가 lock 임계구역에 동시에 진입하지 않습니다. ... ok
+test_lru_prune_preserves_current_and_pinned_entries (test_m9_cache.M9CacheContractTests.test_lru_prune_preserves_current_and_pinned_entries)
+! @brief quota 정리는 오래된 비보호 entry만 제거합니다. ... ok
+test_os_lock_serializes_processes_and_recovers_after_termination (test_m9_cache.M9CacheContractTests.test_os_lock_serializes_processes_and_recovers_after_termination)
+! @brief 별도 process의 lock을 차단하고 owner 종료 뒤 OS가 자동 회수합니다. ... ok
+test_parent_build_flags_are_removed_before_toolchain_environment (test_m9_cache.M9CacheContractTests.test_parent_build_flags_are_removed_before_toolchain_environment)
+! @brief shell의 build flag가 canonical key 밖에서 child build를 바꾸지 못합니다. ... ok
+test_prepare_graph_invalidation_removes_only_owned_placeholders (test_m9_cache.M9CacheContractTests.test_prepare_graph_invalidation_removes_only_owned_placeholders)
+! @brief library 재선택 전 record와 build 내부 placeholder만 무효화합니다. ... ok
+test_probe_mutex_identity_does_not_depend_on_user_temp_path (test_m9_cache.M9CacheContractTests.test_probe_mutex_identity_does_not_depend_on_user_temp_path)
+! @brief 같은 probe UID는 사용자별 TEMP가 달라도 같은 Global mutex를 사용합니다. ... ok
+test_remove_rejects_invalid_key_and_active_lock (test_m9_cache.M9CacheContractTests.test_remove_rejects_invalid_key_and_active_lock)
+! @brief 모호한 경로와 활성 lock이 있는 entry 삭제를 차단합니다. ... ok
+test_remove_rejects_truncated_key_collision (test_m9_cache.M9CacheContractTests.test_remove_rejects_truncated_key_collision)
+! @brief 같은 128-bit prefix의 다른 전체 key를 대신 삭제하지 않습니다. ... ok
+test_removed_entry_can_be_recreated_without_compiler_cache (test_m9_cache.M9CacheContractTests.test_removed_entry_can_be_recreated_without_compiler_cache)
+! @brief 단일 tree 삭제 후 같은 key state를 다시 만들며 compiler cache를 보존합니다. ... ok
+test_state_transition_preserves_created_time (test_m9_cache.M9CacheContractTests.test_state_transition_preserves_created_time)
+! @brief cache 상태 전이가 생성 시각과 누적 field를 보존합니다. ... ok
+test_target_sdk_toolchain_and_board_identity_invalidate_key (test_m9_cache.M9CacheContractTests.test_target_sdk_toolchain_and_board_identity_invalidate_key)
+! @brief 비호환 target/tool identity 변경은 모두 다른 full key를 만듭니다. ... ok
+test_tree_content_hash_detects_content_and_path (test_m9_cache.M9CacheContractTests.test_tree_content_hash_detects_content_and_path)
+! @brief dirty Core 내용과 상대 경로 변경이 fingerprint에 반영됩니다. ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.651s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m9_safety.py
+test_configure_failed_tree_recovers_once_then_becomes_cache_hit (test_m9_safety.M9SafetyContractTests.test_configure_failed_tree_recovers_once_then_becomes_cache_hit)
+! @brief 실패 cache는 pristine 1회 복구 후 configure-failed를 유지하지 않습니다. ... ok
+test_configure_failure_marks_cache_unusable (test_m9_safety.M9SafetyContractTests.test_configure_failure_marks_cache_unusable)
+! @brief pristine configure 실패 시 first-complete를 false로 고정하고 실패를 기록합니다. ... ok
+test_flash_holds_session_cache_and_probe_locks_during_validation (test_m9_safety.M9SafetyContractTests.test_flash_holds_session_cache_and_probe_locks_during_validation)
+! @brief flash 검증과 write 전체가 session→cache→probe lock 순서를 유지합니다. ... ok
+test_flash_rejects_current_toolchain_identity_mismatch (test_m9_safety.M9SafetyContractTests.test_flash_rejects_current_toolchain_identity_mismatch)
+! @brief build와 다른 NCS/toolchain으로 flash하는 요청을 거부합니다. ... ok
+test_passthrough_allowlist_is_exact (test_m9_safety.M9SafetyContractTests.test_passthrough_allowlist_is_exact)
+! @brief include와 object 전달만 허용하고 option 오타를 거부합니다. ... ok
+test_prepare_configure_uses_application_volume_across_windows_drives (test_m9_safety.M9SafetyContractTests.test_prepare_configure_uses_application_volume_across_windows_drives)
+! @brief NCS와 cache drive가 달라도 configure의 cwd는 application 쪽을 사용합니다. ... ok
+test_publish_keyboard_interrupt_restores_previous_generation (test_m9_safety.M9SafetyContractTests.test_publish_keyboard_interrupt_restores_previous_generation)
+! @brief metadata commit 중 Ctrl+C도 이전 공개 generation을 보존합니다. ... ok
+test_publish_metadata_failure_restores_artifacts_manifest_and_context (test_m9_safety.M9SafetyContractTests.test_publish_metadata_failure_restores_artifacts_manifest_and_context)
+! @brief export 뒤 metadata 실패도 이전 공개 generation 전체를 복구합니다. ... ok
+test_transactional_export_publishes_one_verified_generation (test_m9_safety.M9SafetyContractTests.test_transactional_export_publishes_one_verified_generation)
+! @brief staging이 모두 끝난 뒤 네 artifact를 검증된 generation으로 교체합니다. ... ok
+test_transactional_export_restores_old_generation_on_commit_failure (test_m9_safety.M9SafetyContractTests.test_transactional_export_restores_old_generation_on_commit_failure)
+! @brief 두 번째 artifact 교체 실패 시 이미 교체한 파일도 이전 값으로 복원합니다. ... ok
+test_unknown_cache_option_fails_closed_before_dispatch (test_m9_safety.M9SafetyContractTests.test_unknown_cache_option_fails_closed_before_dispatch)
+! @brief destructive cache CLI의 오타를 무시하지 않고 action 호출 전에 거부합니다. ... ok
+test_west_build_working_directory_rejects_split_cache_volumes (test_m9_safety.M9SafetyContractTests.test_west_build_working_directory_rejects_split_cache_volumes)
+! @brief application과 build가 서로 다른 Windows volume이면 명시적으로 거부합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.381s
+
+OK
+NU54_UPLOAD_START runner=pyocd probe=PROBE board=nrf54l15dk/nrf54l15/cpuapp/nu54dk hex_sha256=1111111111111111111111111111111111111111111111111111111111111111
+NU54_UPLOAD_PASS runner=pyocd probe=PROBE
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r02_serial_drivers.py
+test_production_sync_and_lifetime (test_r02_serial_drivers.SerialDriverTests.test_production_sync_and_lifetime) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.951s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r03_fabric_drivers.py
+test_analog_production (test_r03_fabric_drivers.FabricDriverTests.test_analog_production) ... ok
+test_stream_production (test_r03_fabric_drivers.FabricDriverTests.test_stream_production) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 2.505s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r04_file.py
+test_production_file (test_r04_file.FileLifetimeTests.test_production_file) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.298s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r05_identity.py
+test_checkout_drift_is_detected_and_regenerated (test_r05_identity.ProductIdentityTests.test_checkout_drift_is_detected_and_regenerated) ... ok
+test_checkout_identity_and_schema_independence (test_r05_identity.ProductIdentityTests.test_checkout_identity_and_schema_independence) ... ok
+test_cmake_matches_builder_and_rejects_invalid_identity (test_r05_identity.ProductIdentityTests.test_cmake_matches_builder_and_rejects_invalid_identity) ... ok
+test_live_build_record_carries_both_versions (test_r05_identity.ProductIdentityTests.test_live_build_record_carries_both_versions) ... ok
+test_payload_identity_tracks_source_but_allows_package_stamping (test_r05_identity.ProductIdentityTests.test_payload_identity_tracks_source_but_allows_package_stamping) ... ok
+test_stamped_install_preserves_source_version (test_r05_identity.ProductIdentityTests.test_stamped_install_preserves_source_version) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.410s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r06_builder_modules.py
+test_extracted_entry_isolated_from_cwd_and_pythonpath (test_r06_builder_modules.BuilderPackageTests.test_extracted_entry_isolated_from_cwd_and_pythonpath) ... ok
+test_source_package_includes_explicit_models_and_launcher (test_r06_builder_modules.BuilderPackageTests.test_source_package_includes_explicit_models_and_launcher) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.052s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r06_windows_recipe.py
+test_checkout_and_ascii_install_keep_original_build_root (test_r06_windows_recipe.WindowsRecipeTests.test_checkout_and_ascii_install_keep_original_build_root) ... ok
+test_copy_rejects_cache_junction_to_another_directory (test_r06_windows_recipe.WindowsRecipeTests.test_copy_rejects_cache_junction_to_another_directory) ... ok
+test_installed_command_preserves_quoted_paths_and_exit (test_r06_windows_recipe.WindowsRecipeTests.test_installed_command_preserves_quoted_paths_and_exit) ... ok
+test_package_copy_preserves_identity_recovers_bytes_and_rejects_extra_files (test_r06_windows_recipe.WindowsRecipeTests.test_package_copy_preserves_identity_recovers_bytes_and_rejects_extra_files) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.785s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r07_event_driver.py
+test_production_dppi_and_registry (test_r07_event_driver.EventDriverTests.test_production_dppi_and_registry) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.740s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r08_resource_route.py
+test_production_resource_and_route (test_r08_resource_route.ResourceRouteTests.test_production_resource_and_route) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 2.123s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r09_spi_facade.py
+test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.559s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r10_serial_concurrency.py
+test_production_stop_reservation (test_r10_serial_concurrency.SerialConcurrencyTests.test_production_stop_reservation) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.897s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r11_fabric_data.py
+test_production_data_and_restarts (test_r11_fabric_data.FabricDataTests.test_production_data_and_restarts) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.278s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r12_ble_gap.py
+test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.076s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r12_ble_gatt.py
+test_production_gatt_lifecycle (test_r12_ble_gatt.BleGattTests.test_production_gatt_lifecycle) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 4.754s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r12_ble_security.py
+test_production_security_lifecycle (test_r12_ble_security.BleSecurityTests.test_production_security_lifecycle) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 5.766s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r12_eeprom.py
+test_production_eeprom_record_and_restart (test_r12_eeprom.EepromPersistenceTests.test_production_eeprom_record_and_restart) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.954s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r12_littlefs.py
+test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.191s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r13_generated.py
+test_changed_missing_or_outside_output_is_rejected (test_r13_generated.GeneratedContractTests.test_changed_missing_or_outside_output_is_rejected) ... ok
+test_checkout_crlf_preserves_utf8_lf_contract (test_r13_generated.GeneratedContractTests.test_checkout_crlf_preserves_utf8_lf_contract) ... ok
+test_nondeterministic_or_omitted_generation_is_rejected (test_r13_generated.GeneratedContractTests.test_nondeterministic_or_omitted_generation_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.008s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r13_manifest_revision.py
+test_configure_and_live_parsers_validate_full_revision (test_r13_manifest_revision.ManifestRevisionTests.test_configure_and_live_parsers_validate_full_revision)
+! @brief 40자리 대소문자 SHA와 길이·문자·JSON 오류를 두 실제 함수에서 검증합니다. ... ok
+test_live_writer_restores_core_and_board_from_gitless_manifest (test_r13_manifest_revision.ManifestRevisionTests.test_live_writer_restores_core_and_board_from_gitless_manifest)
+! @brief 실제 build record writer가 package의 Core·board SHA를 YAML에 기록합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.973s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_r13_package_modules.py
+test_error_marker_and_no_partial_output_for_invalid_version (test_r13_package_modules.PackageModuleTests.test_error_marker_and_no_partial_output_for_invalid_version) ... ok
+test_isolated_cli_ignores_foreign_package_and_pythonpath (test_r13_package_modules.PackageModuleTests.test_isolated_cli_ignores_foreign_package_and_pythonpath) ... ok
+test_repository_default_and_multiple_import_identity (test_r13_package_modules.PackageModuleTests.test_repository_default_and_multiple_import_identity) ... ok
+test_same_consumer_reload_does_not_reuse_candidate_state (test_r13_package_modules.PackageModuleTests.test_same_consumer_reload_does_not_reuse_candidate_state) ... ok
+test_stable_snapshot_includes_moved_package_model (test_r13_package_modules.PackageModuleTests.test_stable_snapshot_includes_moved_package_model) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.933s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_v04_campaign.py
+test_duration_is_fresh_for_each_invocation (test_v04_campaign.CampaignTests.test_duration_is_fresh_for_each_invocation) ... ok
+test_invalid_or_unbounded_options_fail_closed (test_v04_campaign.CampaignTests.test_invalid_or_unbounded_options_fail_closed) ... ok
+test_repetition_campaign_is_bounded (test_v04_campaign.CampaignTests.test_repetition_campaign_is_bounded) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_v04_cmake_sources.py
+test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 9.442s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_v04_dma_memory.py
+test_all_candidate_dma_fabrics_use_full_range_validation (test_v04_dma_memory.DmaMemoryTests.test_all_candidate_dma_fabrics_use_full_range_validation) ... ok
+test_native_full_range_and_alignment_boundaries (test_v04_dma_memory.DmaMemoryTests.test_native_full_range_and_alignment_boundaries) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.553s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_v04_fixture.py
+test_catalog_connector_pin_map_and_no_forbidden_nets (test_v04_fixture.FixtureTests.test_catalog_connector_pin_map_and_no_forbidden_nets) ... ok
+test_cli_cannot_implicitly_execute_or_omit_confirmation (test_v04_fixture.FixtureTests.test_cli_cannot_implicitly_execute_or_omit_confirmation) ... ok
+test_confirmation_rejects_every_missing_condition (test_v04_fixture.FixtureTests.test_confirmation_rejects_every_missing_condition) ... ok
+test_expected_error_recovery_ids_keep_the_error_cause (test_v04_fixture.FixtureTests.test_expected_error_recovery_ids_keep_the_error_cause) ... ok
+test_foreign_image_role_uid_and_expiry_rejected (test_v04_fixture.FixtureTests.test_foreign_image_role_uid_and_expiry_rejected) ... ok
+test_generated_confirmation_is_bound_but_not_approved (test_v04_fixture.FixtureTests.test_generated_confirmation_is_bound_but_not_approved) ... ok
+test_spi_split_buffer_waits_for_peer_rearm_before_second_segment (test_v04_fixture.FixtureTests.test_spi_split_buffer_waits_for_peer_rearm_before_second_segment) ... ok
+test_transfer_scope_matches_encoded_controller_style (test_v04_fixture.FixtureTests.test_transfer_scope_matches_encoded_controller_style)
+! @brief style와 I2C address encoding을 독립적인 기대값으로 검증합니다. ... ok
+test_twi_fixture_uses_internal_pullups_without_external_resistors (test_v04_fixture.FixtureTests.test_twi_fixture_uses_internal_pullups_without_external_resistors) ... ok
+test_twi_requires_explicit_catalog_pullup_confirmation (test_v04_fixture.FixtureTests.test_twi_requires_explicit_catalog_pullup_confirmation) ... ok
+test_user_confirmed_connector_pinmap_is_complete_and_locked (test_v04_fixture.FixtureTests.test_user_confirmed_connector_pinmap_is_complete_and_locked) ... ok
+test_vectors_and_transfer_direction_are_explicit (test_v04_fixture.FixtureTests.test_vectors_and_transfer_direction_are_explicit) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.013s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_v04_math.py
+test_dma_count_is_checked_before_nrfx (test_v04_math.V04MathTests.test_dma_count_is_checked_before_nrfx) ... ok
+test_production_clock_math_and_cross_language_protocol (test_v04_math.V04MathTests.test_production_clock_math_and_cross_language_protocol) ... ok
+test_target_clock_uses_actual_instance_and_internal_adc_is_soc_specific (test_v04_math.V04MathTests.test_target_clock_uses_actual_instance_and_internal_adc_is_soc_specific) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.832s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_v04_pair.py
+test_boot_checks_images_and_clears_only_mailbox_markers_before_resume (test_v04_pair.V04PairTests.test_boot_checks_images_and_clears_only_mailbox_markers_before_resume) ... ok
+test_corruption_and_length_rejected (test_v04_pair.V04PairTests.test_corruption_and_length_rejected) ... ok
+test_empty_nonce_and_oversized_values_rejected (test_v04_pair.V04PairTests.test_empty_nonce_and_oversized_values_rejected) ... ok
+test_evidence_existing_journal_is_preserved_and_result_finalized (test_v04_pair.V04PairTests.test_evidence_existing_journal_is_preserved_and_result_finalized) ... ok
+test_evidence_interrupt_retains_partial_results (test_v04_pair.V04PairTests.test_evidence_interrupt_retains_partial_results) ... ok
+test_failure_stop_cannot_hide_failure_or_retry_poisoned_device (test_v04_pair.V04PairTests.test_failure_stop_cannot_hide_failure_or_retry_poisoned_device) ... ok
+test_frame_roundtrip (test_v04_pair.V04PairTests.test_frame_roundtrip) ... ok
+test_identity_commit_and_role (test_v04_pair.V04PairTests.test_identity_commit_and_role) ... ok
+test_mailbox_polling_interval_supports_10mhz_fixture_runs (test_v04_pair.V04PairTests.test_mailbox_polling_interval_supports_10mhz_fixture_runs) ... ok
+test_no_external_pin_opcode_or_implicit_flash (test_v04_pair.V04PairTests.test_no_external_pin_opcode_or_implicit_flash) ... ok
+test_onboard_runner_requires_multi_dma_concurrency_result (test_v04_pair.V04PairTests.test_onboard_runner_requires_multi_dma_concurrency_result) ... ok
+test_os_lock_rejects_competing_process_then_releases (test_v04_pair.V04PairTests.test_os_lock_rejects_competing_process_then_releases) ... ok
+test_pmic_pins_released_from_nfc_in_both_images (test_v04_pair.V04PairTests.test_pmic_pins_released_from_nfc_in_both_images) ... ok
+test_same_probe_rejected (test_v04_pair.V04PairTests.test_same_probe_rejected) ... ok
+test_stale_role_opcode_nonce_rejected (test_v04_pair.V04PairTests.test_stale_role_opcode_nonce_rejected) ... ok
+test_swd_mailbox_commit_and_poison (test_v04_pair.V04PairTests.test_swd_mailbox_commit_and_poison) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.200s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_v04_qdec.py
+test_double_transition_does_not_count_as_motion (test_v04_qdec.QdecTests.test_double_transition_does_not_count_as_motion) ... ok
+test_forward_reverse_cycles_and_cancellation (test_v04_qdec.QdecTests.test_forward_reverse_cycles_and_cancellation) ... ok
+test_native_period_and_led_boundaries (test_v04_qdec.QdecTests.test_native_period_and_led_boundaries) ... ok
+test_native_pwm_levels_match_independent_ab_decoder (test_v04_qdec.QdecTests.test_native_pwm_levels_match_independent_ab_decoder)
+! @brief 실제 C++ 파형의 극성·A/B 배치·idle 복귀를 독립 전이 표로 검사합니다. ... ok
+test_production_uses_validated_period_and_explicit_report_policy (test_v04_qdec.QdecTests.test_production_uses_validated_period_and_explicit_report_policy) ... ok
+test_sampling_cannot_use_slow_nrfx_default (test_v04_qdec.QdecTests.test_sampling_cannot_use_slow_nrfx_default) ... ok
+test_stream_dap_borrowing_is_explicit_and_does_not_change_public_gpio (test_v04_qdec.QdecTests.test_stream_dap_borrowing_is_explicit_and_does_not_change_public_gpio) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.184s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_v04_revision.py
+test_different_owner_is_scoped_and_nonrepository_rejected (test_v04_revision.RevisionTests.test_different_owner_is_scoped_and_nonrepository_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.370s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_v04_serial_lifecycle.py
+test_fixture_gate_allowlist_expiry_and_fault_latch (test_v04_serial_lifecycle.SerialLifecycleTests.test_fixture_gate_allowlist_expiry_and_fault_latch) ... ok
+test_native_production_lifecycle (test_v04_serial_lifecycle.SerialLifecycleTests.test_native_production_lifecycle) ... ok
+test_native_production_route_validator (test_v04_serial_lifecycle.SerialLifecycleTests.test_native_production_route_validator) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.020s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_v04_signal.py
+test_405_has_low_release_low_for_every_dma_boundary (test_v04_signal.SignalTests.test_405_has_low_release_low_for_every_dma_boundary) ... ok
+test_406_requires_input_bias_and_fully_settled_low_high_samples (test_v04_signal.SignalTests.test_406_requires_input_bias_and_fully_settled_low_high_samples)
+! @brief VBAT 공유 입력의 출력 활성화·미정착·경계 위반을 거부합니다. ... ok
+test_407_button_shared_input_rejects_stuck_low_and_any_output_driver (test_v04_signal.SignalTests.test_407_button_shared_input_rejects_stuck_low_and_any_output_driver)
+! @brief 버튼 공유 입력의 세 단계·DMA 경계와 눌림 LOW·출력 구성을 거부합니다. ... ok
+test_default_cli_is_preflight_and_execution_needs_files (test_v04_signal.SignalTests.test_default_cli_is_preflight_and_execution_needs_files) ... ok
+test_i2s_finite_transfer_waits_for_payload_release_and_uses_separate_tail (test_v04_signal.SignalTests.test_i2s_finite_transfer_waits_for_payload_release_and_uses_separate_tail)
+! @brief 실제 HIL 순서 helper에서 단일/이중 반환·중복·미제출 slot을 검사합니다. ... ok
+test_i2s_full_payload_preserves_packed_samples_after_bounded_startup (test_v04_signal.SignalTests.test_i2s_full_payload_preserves_packed_samples_after_bounded_startup)
+! @brief 시작 frame 뒤 전체 payload와 packed 상위 sample 손상·누락을 검사합니다. ... ok
+test_i2s_masks_are_width_and_channel_explicit (test_v04_signal.SignalTests.test_i2s_masks_are_width_and_channel_explicit) ... ok
+test_invalid_vectors_fail_closed (test_v04_signal.SignalTests.test_invalid_vectors_fail_closed) ... ok
+test_partial_arm_failure_still_disarms_both_devices (test_v04_signal.SignalTests.test_partial_arm_failure_still_disarms_both_devices)
+! @brief 두 번째 보드 arm 실패 시 첫 번째 보드의 lease를 방치하지 않습니다. ... ok
+test_pdm_firmware_reports_the_released_dma_length (test_v04_signal.SignalTests.test_pdm_firmware_reports_the_released_dma_length) ... ok
+test_pdm_runner_requires_channel_and_density_discrimination (test_v04_signal.SignalTests.test_pdm_runner_requires_channel_and_density_discrimination) ... ok
+test_shared_adc_oracle_rejects_stuck_levels_short_dma_and_push_pull (test_v04_signal.SignalTests.test_shared_adc_oracle_rejects_stuck_levels_short_dma_and_push_pull) ... ok
+test_shared_fixtures_run_all_phases_and_release_even_on_failure (test_v04_signal.SignalTests.test_shared_fixtures_run_all_phases_and_release_even_on_failure)
+! @brief Host 실행 순서와 실패 뒤 양쪽 cleanup을 모의 mailbox로 검증합니다. ... ok
+test_shared_source_never_drives_high_and_releases_on_abort (test_v04_signal.SignalTests.test_shared_source_never_drives_high_and_releases_on_abort)
+! @brief 실제 firmware helper를 컴파일하여 잘못된 인자·중복 시작·해제를 검사합니다. ... ok
+test_signal_campaign_is_bounded (test_v04_signal.SignalTests.test_signal_campaign_is_bounded) ... ok
+test_vector_counts_and_boundaries (test_v04_signal.SignalTests.test_vector_counts_and_boundaries) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 1.301s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_v04_test_plan.py
+test_duplicate_json_key_rejected (test_v04_test_plan.V04TestPlanTests.test_duplicate_json_key_rejected) ... ok
+test_empty_criteria_and_bad_reuse_path_rejected (test_v04_test_plan.V04TestPlanTests.test_empty_criteria_and_bad_reuse_path_rejected) ... ok
+test_exact_inventory_and_generated_document (test_v04_test_plan.V04TestPlanTests.test_exact_inventory_and_generated_document) ... ok
+test_instance_omission_rejected (test_v04_test_plan.V04TestPlanTests.test_instance_omission_rejected) ... ok
+test_inventory_gate_calls_preparation_validator (test_v04_test_plan.V04TestPlanTests.test_inventory_gate_calls_preparation_validator) ... ok
+test_missing_or_duplicate_case_rejected (test_v04_test_plan.V04TestPlanTests.test_missing_or_duplicate_case_rejected) ... ok
+test_passing_plan_or_result_field_rejected (test_v04_test_plan.V04TestPlanTests.test_passing_plan_or_result_field_rejected) ... ok
+test_qdec_not_dma (test_v04_test_plan.V04TestPlanTests.test_qdec_not_dma) ... ok
+test_unknown_erratum_rejected (test_v04_test_plan.V04TestPlanTests.test_unknown_erratum_rejected) ... ok
+test_zero_timeout_and_loss_allowance_rejected (test_v04_test_plan.V04TestPlanTests.test_zero_timeout_and_loss_allowance_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.032s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_v04_uart.py
+test_ambiguous_noisy_and_truncated_response_rejected (test_v04_uart.UartTests.test_ambiguous_noisy_and_truncated_response_rejected) ... ok
+test_continuous_mode_is_explicit_and_bounded (test_v04_uart.UartTests.test_continuous_mode_is_explicit_and_bounded) ... ok
+test_dma_state_fail_closed (test_v04_uart.UartTests.test_dma_state_fail_closed) ... ok
+test_oracle (test_v04_uart.UartTests.test_oracle) ... ok
+test_producer_pacing_is_explicit_and_partial_write_fails (test_v04_uart.UartTests.test_producer_pacing_is_explicit_and_partial_write_fails) ... ok
+test_vectors (test_v04_uart.UartTests.test_vectors) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.018s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\hil\nu54dk -p test_ac03_storage.py
+test_accepts_complete_reset_and_recovery_protocol (test_ac03_storage.AC03StorageHilTests.test_accepts_complete_reset_and_recovery_protocol)
+! @brief 영속성·손상·명시 복구·정리가 모두 있을 때만 PASS입니다. ... ok
+test_exact_input_binds_commit_gitlink_record_digest_and_hex (test_ac03_storage.AC03StorageHilTests.test_exact_input_binds_commit_gitlink_record_digest_and_hex)
+! @brief exact 입력 검사가 revision·board·record·source digest를 모두 묶습니다. ... ok
+test_failure_recovery_preserves_original_error_and_no_evidence (test_ac03_storage.AC03StorageHilTests.test_failure_recovery_preserves_original_error_and_no_evidence)
+! @brief 물리 실패 뒤 CLEAR를 시도하되 원래 오류와 FAIL 상태를 유지합니다. ... ok
+test_final_prefix_is_not_accepted_until_complete_newline (test_ac03_storage.AC03StorageHilTests.test_final_prefix_is_not_accepted_until_complete_newline)
+! @brief FINAL 본문이 모두 와도 개행 전에는 완료 line으로 보지 않습니다. ... ok
+test_pass_evidence_contains_revisions_and_source_digests (test_ac03_storage.AC03StorageHilTests.test_pass_evidence_contains_revisions_and_source_digests)
+! @brief PASS JSON에 exact Core·board·source·build·HEX identity를 기록합니다. ... ok
+test_recovery_continues_after_one_board_cleanup_failure (test_ac03_storage.AC03StorageHilTests.test_recovery_continues_after_one_board_cleanup_failure)
+! @brief 한 보드 CLEAR 실패가 다른 접촉 보드 복구를 막지 않습니다. ... ok
+test_rejects_missing_reordered_or_failed_phase (test_ac03_storage.AC03StorageHilTests.test_rejects_missing_reordered_or_failed_phase)
+! @brief 빠진 단계, 순서 변경과 target FAIL을 모두 거부합니다. ... ok
+test_rejects_wrong_final_nonce_and_trailing_token (test_ac03_storage.AC03StorageHilTests.test_rejects_wrong_final_nonce_and_trailing_token)
+! @brief 다른 실행의 final과 final 뒤 위조 token을 거부합니다. ... ok
+test_requires_explicit_destructive_approval_before_image_access (test_ac03_storage.AC03StorageHilTests.test_requires_explicit_destructive_approval_before_image_access)
+! @brief 승인 없이는 HEX 확인이나 flash보다 먼저 중단합니다. ... ok
+test_requires_new_evidence_before_exact_input_or_flash (test_ac03_storage.AC03StorageHilTests.test_requires_new_evidence_before_exact_input_or_flash)
+! @brief evidence 누락·기존 파일은 HEX 검증과 물리 실행보다 먼저 거부합니다. ... ok
+test_requires_two_distinct_board_ids (test_ac03_storage.AC03StorageHilTests.test_requires_two_distinct_board_ids)
+! @brief runner가 한 보드 또는 같은 UID 두 번을 허용하지 않습니다. ... ok
+test_target_source_performs_real_corruption_and_cleanup (test_ac03_storage.AC03StorageHilTests.test_target_source_performs_real_corruption_and_cleanup)
+! @brief HIL image가 합성 token이 아닌 raw 손상과 실제 reset을 수행합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.019s
+
+OK
+AC03_BOARD_PASS=one;PORT=COM1;RESETS=3
+AC03_BOARD_PASS=two;PORT=COM2;RESETS=3
+AC03_TWO_BOARD_HIL_PASS=2
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\hil\nu54dk -p test_m24_uarte_onboard.py
+test_failed_readback_keeps_cpu_halted (test_m24_uarte_onboard.IdleBiasTests.test_failed_readback_keeps_cpu_halted) ... ok
+test_only_pull_fields_are_set_before_drain_and_resume (test_m24_uarte_onboard.IdleBiasTests.test_only_pull_fields_are_set_before_drain_and_resume) ... ok
+test_output_pin_is_rejected_before_any_write_or_resume (test_m24_uarte_onboard.IdleBiasTests.test_output_pin_is_rejected_before_any_write_or_resume) ... ok
+test_all_onboard_flash_runners_disable_automatic_mass_erase (test_m24_uarte_onboard.M24UarteOnboardTests.test_all_onboard_flash_runners_disable_automatic_mass_erase) ... ok
+test_controlled_start_orders_halt_drain_and_resume (test_m24_uarte_onboard.M24UarteOnboardTests.test_controlled_start_orders_halt_drain_and_resume) ... ok
+test_pyocd_command_is_exact_and_non_destructive (test_m24_uarte_onboard.M24UarteOnboardTests.test_pyocd_command_is_exact_and_non_destructive) ... ok
+test_ready_frame_is_fixed_per_instance (test_m24_uarte_onboard.M24UarteOnboardTests.test_ready_frame_is_fixed_per_instance) ... ok
+test_response_must_be_exact_unique_and_other_port_silent (test_m24_uarte_onboard.M24UarteOnboardTests.test_response_must_be_exact_unique_and_other_port_silent) ... ok
+test_selected_probe_requires_exactly_two_vcom_ports (test_m24_uarte_onboard.M24UarteOnboardTests.test_selected_probe_requires_exactly_two_vcom_ports) ... ok
+test_single_result_collectors_reject_late_extra_bytes (test_m24_uarte_onboard.M24UarteOnboardTests.test_single_result_collectors_reject_late_extra_bytes) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.025s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\hil\nu54dk -p test_m24_twim_onboard.py
+test_exact_port_rejects_extra_bytes (test_m24_twim_onboard.M24TwimOnboardTests.test_exact_port_rejects_extra_bytes) ... ok
+test_probe_must_have_exactly_two_ports (test_m24_twim_onboard.M24TwimOnboardTests.test_probe_must_have_exactly_two_ports) ... ok
+test_ready_and_command_frames_are_unique (test_m24_twim_onboard.M24TwimOnboardTests.test_ready_and_command_frames_are_unique) ... ok
+test_result_frame_requires_exact_read_only_identity (test_m24_twim_onboard.M24TwimOnboardTests.test_result_frame_requires_exact_read_only_identity) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\hil\nu54dk -p test_m25_onboard.py
+test_exact_port_rejects_noise (test_m25_onboard.M25OnboardTests.test_exact_port_rejects_noise) ... ok
+test_probe_requires_exactly_two_vcom_ports (test_m25_onboard.M25OnboardTests.test_probe_requires_exactly_two_vcom_ports) ... ok
+test_protocol_frames_are_fixed (test_m25_onboard.M25OnboardTests.test_protocol_frames_are_fixed) ... ok
+test_result_requires_both_physical_checks (test_m25_onboard.M25OnboardTests.test_result_requires_both_physical_checks) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\hil\nu54dk -p test_m26_onboard.py
+test_armed_frame_requires_temp_and_wdt30_lifecycle (test_m26_onboard.M26OnboardTests.test_armed_frame_requires_temp_and_wdt30_lifecycle) ... ok
+test_exact_frame_rejects_noise (test_m26_onboard.M26OnboardTests.test_exact_frame_rejects_noise) ... ok
+test_observed_watchdog_packets_validate_without_promoting_hil (test_m26_onboard.M26OnboardTests.test_observed_watchdog_packets_validate_without_promoting_hil) ... ok
+test_probe_requires_exactly_two_vcom_ports (test_m26_onboard.M26OnboardTests.test_probe_requires_exactly_two_vcom_ports) ... ok
+test_protocol_frames_are_fixed (test_m26_onboard.M26OnboardTests.test_protocol_frames_are_fixed) ... ok
+test_reset_epoch_collects_split_marker_without_dropping_prefix (test_m26_onboard.M26OnboardTests.test_reset_epoch_collects_split_marker_without_dropping_prefix) ... ok
+test_reset_epoch_retains_bounded_prefix_and_requires_exact_marker (test_m26_onboard.M26OnboardTests.test_reset_epoch_retains_bounded_prefix_and_requires_exact_marker) ... ok
+test_reset_prefix_is_never_accepted_in_result_phase (test_m26_onboard.M26OnboardTests.test_reset_prefix_is_never_accepted_in_result_phase) ... ok
+test_result_rejects_non_watchdog_and_unsupported_reset_causes (test_m26_onboard.M26OnboardTests.test_result_rejects_non_watchdog_and_unsupported_reset_causes) ... ok
+test_result_requires_reset_cause_and_retained_temp (test_m26_onboard.M26OnboardTests.test_result_requires_reset_cause_and_retained_temp) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.001s
+
+OK
+M12_GATE_PASS=host

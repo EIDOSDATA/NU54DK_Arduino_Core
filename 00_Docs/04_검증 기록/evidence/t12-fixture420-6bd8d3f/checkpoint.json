@@ -1,0 +1,12 @@
+{
+  "source": "6bd8d3f15ad29fc21f7a58c736cd86e917a3d314",
+  "fixture_id": 420,
+  "scope": "T10/T12 Fixture420 final waveform and prepared cancellation; docs/commit/push; no Fixture430 until rewiring confirmation",
+  "user_confirmation_recorded_at_utc": "2026-09-06T16:48:47+00:00",
+  "confirmation_text": "ㅇㅇ 그대로야.",
+  "wiring": "A P1.04(P2-12) <-> B P1.14(P4-12); A P1.06(P2-10) <-> B P1.10(P4-8); common GND(P2-30)",
+  "confirmed_in_context": "Same prior USB-off rewiring/reconnection; no changes since prior confirmation; DAP UART disconnected, SWD connected; existing SB/PMIC unchanged; no extra signals or joined power rails",
+  "swd_frequency_hz": 10000000,
+  "prior_confirmation_expired": true,
+  "new_user_reconfirmation": true
+}

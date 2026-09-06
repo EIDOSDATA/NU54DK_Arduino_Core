@@ -8,6 +8,8 @@
 #include "fixture_gate.h"
 #include "fixture_hil.h"
 #include "shared_analog_source.h"
+#include "qdec_waveform.h"
+#include "i2s_finite_transfer.h"
 #include <nucode/AnalogFabric.h>
 #include <nucode/SerialFabric.h>
 #include <nucode/StreamFabric.h>
@@ -32,8 +34,32 @@ namespace
     alignas(4) std::int16_t analog_samples[2][analog_capacity]{};
     alignas(4) std::int16_t pdm_samples[2][stream_capacity]{};
     alignas(4) std::uint16_t pwm_values[16]{};
-    alignas(4) std::uint32_t i2s_rx[2][stream_capacity]{};
-    alignas(4) std::uint32_t i2s_tx[2][stream_capacity]{};
+    /** @brief slot 2는 시작 지연만큼 밀린 payload를 수집하고 slot 3은 정지 중 재사용을 막습니다. */
+    alignas(4) std::uint32_t i2s_rx[4][stream_capacity]{};
+    alignas(4) std::uint32_t i2s_tx[4][stream_capacity]{};
+    v04::I2sFiniteTransfer i2s_transfer;
+    bool i2s_tail_complete = false;
+    /** @brief 짧은 DMA 실패의 시작·요청·반환·정지 순서를 보존하는 읽기 전용 HIL 추적입니다. */
+    volatile std::uint32_t i2s_trace[32][6]{};
+    volatile std::uint32_t i2s_trace_count = 0U;
+    std::uint32_t i2s_start_cycles = 0U;
+
+    /** @brief 시작 기준 us와 단계·인자 네 개를 저장하며 가득 차면 앞선 원본을 보존합니다. */
+    void traceI2s(std::uint32_t phase, std::uint32_t a = 0U, std::uint32_t b = 0U,
+                  std::uint32_t c = 0U, std::uint32_t d = 0U)
+    {
+        const auto index = i2s_trace_count;
+        if (index < 32U)
+        {
+            i2s_trace[index][0] = k_cyc_to_us_floor32(k_cycle_get_32() - i2s_start_cycles);
+            i2s_trace[index][1] = phase;
+            i2s_trace[index][2] = a;
+            i2s_trace[index][3] = b;
+            i2s_trace[index][4] = c;
+            i2s_trace[index][5] = d;
+            i2s_trace_count = index + 1U;
+        }
+    }
     alignas(4) std::uint8_t pdm_source[pdm_source_capacity]{};
 
     SaadcFabric *saadc = nullptr;
@@ -50,6 +76,41 @@ namespace
     std::int64_t next_analog_sample_ms = 0;
     bool cs_owned = false;
     std::uint32_t cs_psel = 0U, cs_configuration = 0U, cs_output = 0U;
+    bool qdec_idle_owned = false;
+    std::uint32_t qdec_idle_configuration[2]{}, qdec_idle_output[2]{};
+    constexpr std::uint32_t qdec_idle_pins[2]{NRF_GPIO_PIN_MAP(1, 14), NRF_GPIO_PIN_MAP(1, 10)};
+
+    /** @brief fixture gate 안에서 QDEC 송신 핀을 LOW로 준비하고 원래 상태를 저장합니다. */
+    void prepareQdecIdle()
+    {
+        for (unsigned index = 0U; index < 2U; ++index)
+        {
+            auto pin = qdec_idle_pins[index];
+            auto *const port = nrf_gpio_pin_port_decode(&pin);
+            qdec_idle_configuration[index] = port->PIN_CNF[pin];
+            qdec_idle_output[index] = (port->OUT >> pin) & 1U;
+            nrf_gpio_pin_clear(qdec_idle_pins[index]);
+            nrf_gpio_cfg_output(qdec_idle_pins[index]);
+        }
+        qdec_idle_owned = true;
+    }
+
+    /** @brief PWM STOP 확인 뒤 또는 START 전 취소에서 송신 핀의 원래 상태를 복원합니다. */
+    void restoreQdecIdle()
+    {
+        if (!qdec_idle_owned)
+        {
+            return;
+        }
+        for (unsigned index = 0U; index < 2U; ++index)
+        {
+            auto pin = qdec_idle_pins[index];
+            auto *const port = nrf_gpio_pin_port_decode(&pin);
+            nrf_gpio_pin_write(qdec_idle_pins[index], qdec_idle_output[index]);
+            port->PIN_CNF[pin] = qdec_idle_configuration[index];
+        }
+        qdec_idle_owned = false;
+    }
 
     /** @brief 공유 ADC 시험의 고정 B P1.14 오픈드레인 또는 입력 바이어스를 설정합니다. */
     struct SharedAnalogGpio
@@ -124,7 +185,8 @@ namespace
     {
         shared_source.release();
         bool stopped = true;
-        if (pwm != nullptr && pwm->state() == AnalogFabricState::active)
+        if (pwm != nullptr && (pwm->state() == AnalogFabricState::active ||
+                               pwm->state() == AnalogFabricState::stopping))
         {
             stopped &= pwm->stop(100000U) == AnalogFabricResult::success;
         }
@@ -136,7 +198,8 @@ namespace
         {
             stopped &= qdec->stop() == StreamFabricResult::success;
         }
-        if (i2s != nullptr && i2s->state() == StreamFabricState::active)
+        if (i2s != nullptr && (i2s->state() == StreamFabricState::active ||
+                               i2s->state() == StreamFabricState::stopping))
         {
             stopped &= i2s->stop(100000U) == StreamFabricResult::success;
         }
@@ -151,6 +214,7 @@ namespace
         }
         if (stopped)
         {
+            restoreQdecIdle();
             saadc = nullptr;
             pwm = nullptr;
             qdec = nullptr;
@@ -247,19 +311,21 @@ namespace
             configuration.output_pins[1] = PIN_P1_10;
             configuration.top_value = static_cast<std::uint16_t>(args[3]);
             configuration.load = PwmSequenceLoad::individual;
-            const std::uint8_t forward[4]{1U, 3U, 2U, 0U};
-            const std::uint8_t reverse[4]{2U, 3U, 1U, 0U};
-            const auto *const states = args[4] ? reverse : forward;
             for (std::size_t step = 0U; step < 4U; ++step)
             {
-                pwm_values[step * 4U] =
-                    (states[step] & 1U) ? static_cast<std::uint16_t>(args[3]) : 0U;
-                pwm_values[step * 4U + 1U] =
-                    (states[step] & 2U) ? static_cast<std::uint16_t>(args[3]) : 0U;
-                pwm_values[step * 4U + 2U] = pwm_values[step * 4U + 3U] = 0U;
+                for (unsigned channel = 0U; channel < 4U; ++channel)
+                {
+                    pwm_values[step * 4U + channel] =
+                        v04::qdecPwmValue(step, channel, args[4] != 0U, configuration.top_value);
+                }
             }
             pwm_playbacks = args[2];
             ready = pwm != nullptr && pwm->configure(configuration) == AnalogFabricResult::success;
+            if (ready)
+            {
+                /** @brief DMA를 시작하지 않고 핀만 LOW로 두므로 준비 취소에도 STOP이 필요 없습니다. */
+                prepareQdecIdle();
+            }
             return ready;
         }
         qdec = streamFabric().qdec(static_cast<std::uint8_t>(args[1]));
@@ -288,6 +354,11 @@ namespace
         }
         requested = args[3];
         i2s_buffers = args[4];
+        i2s_transfer.reset(i2s_buffers);
+        i2s_trace_count = 0U;
+        i2s_tail_complete = false;
+        memset(i2s_rx[2], 0xcc, sizeof(i2s_rx[2]));
+        memset(i2s_rx[3], 0xcc, sizeof(i2s_rx[3]));
         for (std::size_t slot = 0U; slot < 2U; ++slot)
         {
             for (std::size_t index = 0U; index < requested; ++index)
@@ -440,7 +511,7 @@ namespace
             }
             break;
         case v04::FixtureFamily::qdec:
-            result = controller && pwm != nullptr &&
+            result = controller && pwm != nullptr && ready && qdec_idle_owned &&
                      pwm->play({pwm_values, 16U, 0U, 0U}, nullptr,
                                static_cast<std::uint16_t>(pwm_playbacks),
                                false) == AnalogFabricResult::success;
@@ -448,13 +519,11 @@ namespace
         case v04::FixtureFamily::i2s:
             if (i2s != nullptr)
             {
+                i2s_start_cycles = k_cycle_get_32();
+                traceI2s(100U);
                 result =
                     i2s->start({i2s_rx[0], i2s_tx[0], requested}) == StreamFabricResult::success;
-                if (result && i2s_buffers == 2U)
-                {
-                    result = i2s->queueBuffers({i2s_rx[1], i2s_tx[1], requested}) ==
-                             StreamFabricResult::success;
-                }
+                traceI2s(101U, result);
             }
             break;
         case v04::FixtureFamily::pdm:
@@ -480,6 +549,11 @@ namespace
         return result;
     }
 } // namespace
+
+bool signalNeedsPolling()
+{
+    return i2s != nullptr && started && error == 0U && !complete;
+}
 
 bool signalClaimed()
 {
@@ -554,16 +628,28 @@ void serviceSignal()
     }
     if (i2s != nullptr)
     {
+        if (started && i2s_trace_count == 2U)
+        {
+            traceI2s(200U);
+        }
         I2sEvent event{};
         while (i2s->takeEvent(event))
         {
+            traceI2s(400U, static_cast<std::uint32_t>(event.type), i2s_transfer.nextSlot(), amount,
+                     error);
             if (event.type == I2sEventType::buffers_complete)
             {
                 const unsigned slot = event.released.receive == i2s_rx[0]   ? 0U
                                       : event.released.receive == i2s_rx[1] ? 1U
                                                                             : 2U;
-                if (slot >= i2s_buffers || event.released.transmit != i2s_tx[slot] ||
-                    event.released.words != requested)
+                if (event.released.receive == i2s_rx[2] && event.released.transmit == i2s_tx[2] &&
+                    event.released.words == requested && i2s_transfer.complete() &&
+                    !i2s_tail_complete)
+                {
+                    i2s_tail_complete = true;
+                }
+                else if (slot >= i2s_buffers || event.released.transmit != i2s_tx[slot] ||
+                         event.released.words != requested || !i2s_transfer.released(slot))
                 {
                     error |= 64U;
                 }
@@ -571,11 +657,44 @@ void serviceSignal()
                 {
                     i2s_completed_mask |= 1U << slot;
                     amount += static_cast<std::uint32_t>(event.released.words);
-                    complete = i2s_completed_mask == ((1U << i2s_buffers) - 1U);
+                }
+            }
+            else if (event.type == I2sEventType::buffers_needed && !i2s_tail_complete)
+            {
+                const auto slot = i2s_transfer.nextSlot();
+                const auto before = k_cycle_get_32();
+                const auto queued = slot < 4U
+                                        ? i2s->queueBuffers({i2s_rx[slot], i2s_tx[slot], requested})
+                                        : StreamFabricResult::invalid_argument;
+                traceI2s(300U, slot, static_cast<std::uint32_t>(queued),
+                         k_cyc_to_us_floor32(k_cycle_get_32() - before));
+                if (queued != StreamFabricResult::success)
+                {
+                    error |= 128U;
+                }
+                else
+                {
+                    i2s_transfer.queued();
                 }
             }
             else if (event.type == I2sEventType::error ||
                      (event.type == I2sEventType::underrun && !complete))
+            {
+                error |= 128U;
+            }
+        }
+        if (error == 0U && i2s_transfer.complete() && i2s_tail_complete)
+        {
+            /** @brief tail 반환 뒤 보호 buffer가 활성인 동안 정지하여 마지막 sample을 보존합니다. */
+            traceI2s(500U);
+            const auto stopped = i2s->stop(100000U);
+            traceI2s(501U, static_cast<std::uint32_t>(stopped));
+            if (stopped == StreamFabricResult::success)
+            {
+                i2s = nullptr;
+                complete = true;
+            }
+            else
             {
                 error |= 128U;
             }
@@ -729,11 +848,11 @@ std::uint32_t signalCommand(std::uint32_t opcode, const std::uint32_t *args, std
         return result == StreamFabricResult::success ? 0U : 733U;
     }
     const auto family = v04::fixtureFamily(gate.fixture());
-    const std::uint32_t available = family == v04::FixtureFamily::analog
-                                        ? requested * analog_buffers
-                                    : family == v04::FixtureFamily::pdm ? requested * pdm_buffers
-                                    : family == v04::FixtureFamily::i2s ? requested * i2s_buffers
-                                                                        : requested;
+    const std::uint32_t available =
+        family == v04::FixtureFamily::analog ? requested * analog_buffers
+        : family == v04::FixtureFamily::pdm  ? requested * pdm_buffers
+        : family == v04::FixtureFamily::i2s  ? requested * i2s_buffers + 16U
+                                             : requested;
     if (opcode == 37U && nargs == 2U && args[1] != 0U && args[1] <= 16U && args[0] <= available &&
         args[1] <= available - args[0])
     {
@@ -742,7 +861,9 @@ std::uint32_t signalCommand(std::uint32_t opcode, const std::uint32_t *args, std
             for (std::size_t index = 0U; index < args[1]; ++index)
             {
                 const std::size_t linear = args[0] + index;
-                out[index] = i2s_rx[linear / requested][linear % requested];
+                const auto payload_words = requested * i2s_buffers;
+                out[index] = linear < payload_words ? i2s_rx[linear / requested][linear % requested]
+                                                    : i2s_rx[2][linear - payload_words];
             }
             count = args[1];
             return 0U;

@@ -1,0 +1,23 @@
+{
+  "source": "fc9f1536e2caf4efee387c1a69b3a4c9e24adf3b",
+  "role": 2,
+  "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "reason": "prepared PWM cancellation STOP timeout; cleanup only, no test retry",
+  "swd_frequency_hz": 10000000,
+  "flash_executed": false,
+  "reset_executed": true,
+  "fixture_commands_executed": false,
+  "started_at_utc": "2026-09-06T16:38:58.373608+00:00",
+  "pwm_enable": {
+    "20": 0,
+    "21": 0,
+    "22": 0
+  },
+  "pin_cnf": {
+    "14": 2,
+    "10": 2
+  },
+  "cpu_state": "SLEEPING",
+  "status": "cleanup-by-controlled-reset-verified",
+  "completed_at_utc": "2026-09-06T16:38:58.969680+00:00"
+}

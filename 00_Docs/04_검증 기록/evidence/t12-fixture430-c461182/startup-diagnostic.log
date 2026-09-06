@@ -1,0 +1,28 @@
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+{"controller": 1, "width": 8, "channels": 0, "offsets": [[1], [1]]}
+{"controller": 1, "width": 8, "channels": 1, "offsets": [[], []]}
+{"controller": 1, "width": 8, "channels": 2, "offsets": [[], []]}
+{"controller": 1, "width": 16, "channels": 0, "offsets": [[1], []]}
+{"controller": 1, "width": 16, "channels": 1, "offsets": [[], []]}
+{"controller": 1, "width": 16, "channels": 2, "offsets": [[], []]}
+{"controller": 1, "width": 24, "channels": 0, "offsets": [[2], []]}
+{"controller": 1, "width": 24, "channels": 1, "offsets": [[1], []]}
+{"controller": 1, "width": 24, "channels": 2, "offsets": [[1], []]}
+{"controller": 1, "width": 32, "channels": 0, "offsets": [[2], []]}
+{"controller": 1, "width": 32, "channels": 1, "offsets": [[1], []]}
+{"controller": 1, "width": 32, "channels": 2, "offsets": [[1], []]}
+{"controller": 2, "width": 8, "channels": 0, "offsets": [[1], [1]]}
+{"controller": 2, "width": 8, "channels": 1, "offsets": [[], []]}
+{"controller": 2, "width": 8, "channels": 2, "offsets": [[], []]}
+{"controller": 2, "width": 16, "channels": 0, "offsets": [[], [1]]}
+{"controller": 2, "width": 16, "channels": 1, "offsets": [[], []]}
+{"controller": 2, "width": 16, "channels": 2, "offsets": [[], []]}
+{"controller": 2, "width": 24, "channels": 0, "offsets": [[], [2]]}
+{"controller": 2, "width": 24, "channels": 1, "offsets": [[], [1]]}
+{"controller": 2, "width": 24, "channels": 2, "offsets": [[], [1]]}
+{"controller": 2, "width": 32, "channels": 0, "offsets": [[], [2]]}
+{"controller": 2, "width": 32, "channels": 1, "offsets": [[], [1]]}
+{"controller": 2, "width": 32, "channels": 2, "offsets": [[], [1]]}
