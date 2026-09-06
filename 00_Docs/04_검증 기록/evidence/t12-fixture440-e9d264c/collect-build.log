@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t12-fixture440-constlat-link\collect_build.py", line 22, in <module>
+    assert target['source_membership_sha256'] == old['source_membership_sha256']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

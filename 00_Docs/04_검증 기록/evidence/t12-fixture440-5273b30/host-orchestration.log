@@ -1,0 +1,76 @@
+{"log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\gate-host-final.log", "returncode": 0}
+가 다른 접촉 보드 복구를 막지 않습니다. ... ok
+test_rejects_missing_reordered_or_failed_phase (test_ac03_storage.AC03StorageHilTests.test_rejects_missing_reordered_or_failed_phase)
+! @brief 빠진 단계, 순서 변경과 target FAIL을 모두 거부합니다. ... ok
+test_rejects_wrong_final_nonce_and_trailing_token (test_ac03_storage.AC03StorageHilTests.test_rejects_wrong_final_nonce_and_trailing_token)
+! @brief 다른 실행의 final과 final 뒤 위조 token을 거부합니다. ... ok
+test_requires_explicit_destructive_approval_before_image_access (test_ac03_storage.AC03StorageHilTests.test_requires_explicit_destructive_approval_before_image_access)
+! @brief 승인 없이는 HEX 확인이나 flash보다 먼저 중단합니다. ... ok
+test_requires_new_evidence_before_exact_input_or_flash (test_ac03_storage.AC03StorageHilTests.test_requires_new_evidence_before_exact_input_or_flash)
+! @brief evidence 누락·기존 파일은 HEX 검증과 물리 실행보다 먼저 거부합니다. ... ok
+test_requires_two_distinct_board_ids (test_ac03_storage.AC03StorageHilTests.test_requires_two_distinct_board_ids)
+! @brief runner가 한 보드 또는 같은 UID 두 번을 허용하지 않습니다. ... ok
+test_target_source_performs_real_corruption_and_cleanup (test_ac03_storage.AC03StorageHilTests.test_target_source_performs_real_corruption_and_cleanup)
+! @brief HIL image가 합성 token이 아닌 raw 손상과 실제 reset을 수행합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.017s
+
+OK
+AC03_BOARD_PASS=one;PORT=COM1;RESETS=3
+AC03_BOARD_PASS=two;PORT=COM2;RESETS=3
+AC03_TWO_BOARD_HIL_PASS=2
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\hil\nu54dk -p test_m24_uarte_onboard.py
+test_failed_readback_keeps_cpu_halted (test_m24_uarte_onboard.IdleBiasTests.test_failed_readback_keeps_cpu_halted) ... ok
+test_only_pull_fields_are_set_before_drain_and_resume (test_m24_uarte_onboard.IdleBiasTests.test_only_pull_fields_are_set_before_drain_and_resume) ... ok
+test_output_pin_is_rejected_before_any_write_or_resume (test_m24_uarte_onboard.IdleBiasTests.test_output_pin_is_rejected_before_any_write_or_resume) ... ok
+test_all_onboard_flash_runners_disable_automatic_mass_erase (test_m24_uarte_onboard.M24UarteOnboardTests.test_all_onboard_flash_runners_disable_automatic_mass_erase) ... ok
+test_controlled_start_orders_halt_drain_and_resume (test_m24_uarte_onboard.M24UarteOnboardTests.test_controlled_start_orders_halt_drain_and_resume) ... ok
+test_pyocd_command_is_exact_and_non_destructive (test_m24_uarte_onboard.M24UarteOnboardTests.test_pyocd_command_is_exact_and_non_destructive) ... ok
+test_ready_frame_is_fixed_per_instance (test_m24_uarte_onboard.M24UarteOnboardTests.test_ready_frame_is_fixed_per_instance) ... ok
+test_response_must_be_exact_unique_and_other_port_silent (test_m24_uarte_onboard.M24UarteOnboardTests.test_response_must_be_exact_unique_and_other_port_silent) ... ok
+test_selected_probe_requires_exactly_two_vcom_ports (test_m24_uarte_onboard.M24UarteOnboardTests.test_selected_probe_requires_exactly_two_vcom_ports) ... ok
+test_single_result_collectors_reject_late_extra_bytes (test_m24_uarte_onboard.M24UarteOnboardTests.test_single_result_collectors_reject_late_extra_bytes) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.028s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\hil\nu54dk -p test_m24_twim_onboard.py
+test_exact_port_rejects_extra_bytes (test_m24_twim_onboard.M24TwimOnboardTests.test_exact_port_rejects_extra_bytes) ... ok
+test_probe_must_have_exactly_two_ports (test_m24_twim_onboard.M24TwimOnboardTests.test_probe_must_have_exactly_two_ports) ... ok
+test_ready_and_command_frames_are_unique (test_m24_twim_onboard.M24TwimOnboardTests.test_ready_and_command_frames_are_unique) ... ok
+test_result_frame_requires_exact_read_only_identity (test_m24_twim_onboard.M24TwimOnboardTests.test_result_frame_requires_exact_read_only_identity) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\hil\nu54dk -p test_m25_onboard.py
+test_exact_port_rejects_noise (test_m25_onboard.M25OnboardTests.test_exact_port_rejects_noise) ... ok
+test_probe_requires_exactly_two_vcom_ports (test_m25_onboard.M25OnboardTests.test_probe_requires_exactly_two_vcom_ports) ... ok
+test_protocol_frames_are_fixed (test_m25_onboard.M25OnboardTests.test_protocol_frames_are_fixed) ... ok
+test_result_requires_both_physical_checks (test_m25_onboard.M25OnboardTests.test_result_requires_both_physical_checks) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\hil\nu54dk -p test_m26_onboard.py
+test_armed_frame_requires_temp_and_wdt30_lifecycle (test_m26_onboard.M26OnboardTests.test_armed_frame_requires_temp_and_wdt30_lifecycle) ... ok
+test_exact_frame_rejects_noise (test_m26_onboard.M26OnboardTests.test_exact_frame_rejects_noise) ... ok
+test_observed_watchdog_packets_validate_without_promoting_hil (test_m26_onboard.M26OnboardTests.test_observed_watchdog_packets_validate_without_promoting_hil) ... ok
+test_probe_requires_exactly_two_vcom_ports (test_m26_onboard.M26OnboardTests.test_probe_requires_exactly_two_vcom_ports) ... ok
+test_protocol_frames_are_fixed (test_m26_onboard.M26OnboardTests.test_protocol_frames_are_fixed) ... ok
+test_reset_epoch_collects_split_marker_without_dropping_prefix (test_m26_onboard.M26OnboardTests.test_reset_epoch_collects_split_marker_without_dropping_prefix) ... ok
+test_reset_epoch_retains_bounded_prefix_and_requires_exact_marker (test_m26_onboard.M26OnboardTests.test_reset_epoch_retains_bounded_prefix_and_requires_exact_marker) ... ok
+test_reset_prefix_is_never_accepted_in_result_phase (test_m26_onboard.M26OnboardTests.test_reset_prefix_is_never_accepted_in_result_phase) ... ok
+test_result_rejects_non_watchdog_and_unsupported_reset_causes (test_m26_onboard.M26OnboardTests.test_result_rejects_non_watchdog_and_unsupported_reset_causes) ... ok
+test_result_requires_reset_cause_and_retained_temp (test_m26_onboard.M26OnboardTests.test_result_requires_reset_cause_and_retained_temp) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.001s
+
+OK
+M12_GATE_PASS=host
+

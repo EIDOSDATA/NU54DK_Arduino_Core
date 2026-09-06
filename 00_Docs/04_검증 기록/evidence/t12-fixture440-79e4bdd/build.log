@@ -1,0 +1,21 @@
+INFO    - Using Ninja..
+INFO    - Zephyr version: ncs-v3.4.0
+INFO    - Using 'zephyr/gnu' toolchain variant.
+INFO    - Building initial testsuite list...
+INFO    - Built testsuite list in 0.01 seconds
+INFO    - Writing JSON report C:\u4g\testplan.json
+INFO    - Adding tasks to the queue...
+INFO    - Added initial list of jobs to queue
+INFO    - Total complete: [32m   1/   2[39m  50%  built (not run): [36m   1[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+INFO    - Total complete: [32m   2/   2[39m  100%  built (not run): [36m   2[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+
+INFO    - 2 test scenarios (2 configurations) selected, 0 configurations filtered (0 by static filter, 0 at runtime).
+INFO    - 0 of 2 executed test configurations passed (0.00%), 2 built (not run), 0 failed, 0 errored, with no warnings in 118.57 seconds.
+INFO    - 0 test configurations executed on platforms, 2 test configurations were only built.
+INFO    - Saving reports...
+INFO    - Writing JSON report C:\u4g\twister.json
+INFO    - Writing xunit report C:\u4g\twister.xml...
+INFO    - Writing xunit report C:\u4g\twister_report.xml...
+INFO    - Run completed
+[M12-ZEPHYR] exec: C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe C:\ncs\v3.4.0\zephyr\scripts\twister --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil --platform nrf54l15dk/nrf54l15/cpuapp/nu54dk --board-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards --build-only --ninja --detailed-test-id --jobs 2 --outdir C:\u4g --extra-args BOARD_ROOT=C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS --extra-args EXTRA_ZEPHYR_MODULES=C:/Users/eidos/GitHub/NU54DK_Arduino_Core --extra-args USE_CCACHE=0 --scenario nucode.v04.pair_dut --scenario nucode.v04.pair_peer
+M12_ZEPHYR_BUILD_PASS=2;GROUP=all;M16_ROLE_BUILDS=0;SELECTION=subset

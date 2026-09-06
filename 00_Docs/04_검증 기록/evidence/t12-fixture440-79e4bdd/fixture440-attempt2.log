@@ -1,0 +1,5 @@
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+V04_FIXTURE_FAIL: PDM stereo edge/polarity order mismatch: [-14889.4453125, 14893.9609375]; expected=(1, -1)

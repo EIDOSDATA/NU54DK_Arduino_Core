@@ -1,0 +1,23 @@
+{
+  "checked_at_utc": "2026-09-06T21:13:17.166292+00:00",
+  "swd_frequency_hz": 10000000,
+  "flash_executed": false,
+  "reset_executed": false,
+  "fixture_commands_executed": false,
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "cpuid": "0x411fd210",
+      "state": "HALTED",
+      "passed": true
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "cpuid": "0x411fd210",
+      "state": "SLEEPING",
+      "passed": true
+    }
+  ]
+}

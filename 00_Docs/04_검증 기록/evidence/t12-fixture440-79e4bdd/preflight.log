@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-synthetic-signal",
+  "status": "preflight",
+  "fixture_id": 440,
+  "fixture_revision": 5,
+  "catalog_sha256": "26fcb8482b72b9f7bebf5786388a514462aaa5c40e19eb8bb338b9f187e5ca95",
+  "core_revision": "79e4bdd509bc5b12209364399fe9a115cf3946a7",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": false,
+  "repetitions": 1,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "6506bec0570d02108ea9b0f54899f158b0e7b223ac0d0a7ca42286c4a35cbf98",
+      "elf_sha256": "0e1b8c06908f61d79ee2a1865fd7948e118129079b2e8529578d06f340b6f6ba",
+      "record_sha256": "9c5114cc6f3eaa3e15d0e503df06e0fcc2fe9a6eedc52f5ab492a1fe2a116866"
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "955e5cb8d2e61f3689f9cc4ac1fa1600b2a52c3fac7b062a18b09e37ea04419d",
+      "elf_sha256": "f1e5c6af33c931cace62dab2d78d6fbfc7edf6514ee0fce05626391d86ef63b4",
+      "record_sha256": "9c5114cc6f3eaa3e15d0e503df06e0fcc2fe9a6eedc52f5ab492a1fe2a116866"
+    }
+  ],
+  "results": [],
+  "fixture": {
+    "id": 440,
+    "family": "pdm",
+    "banks": [
+      1,
+      1
+    ],
+    "instances": [
+      [
+        20,
+        21
+      ],
+      [
+        20,
+        21
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "peer": [
+          "P2",
+          11,
+          "P1.5"
+        ],
+        "signal": "receiver PDM CLK -> generator SPIS SCK"
+      },
+      {
+        "dut": [
+          "P2",
+          10,
+          "P1.6"
+        ],
+        "peer": [
+          "P2",
+          9,
+          "P1.7"
+        ],
+        "signal": "receiver PDM DATA <- generator SPIS MISO"
+      },
+      {
+        "dut": [
+          "P2",
+          11,
+          "P1.5"
+        ],
+        "peer": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "signal": "receiver gate LOW -> generator SPIS CSN"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "PDM receiver가 clock을 만듭니다. Mono는 상대 SPIS EasyDMA/ORC의 25/50/75% density 순서를 검사합니다. Stereo는 같은 clock/data 결선에서 GPIOTE20→DPPI20→GPIOTE20 task로 양 clock edge에 data를 반전하여 반대 부호 채널을 만듭니다. 75 profile은 source 극성을 반전하며 stereo profile 숫자를 25/50/75% density로 해석하지 않습니다. 좌우 channel·edge·극성 순서를 실기에서 판정합니다.",
+    "pullups": []
+  },
+  "confirmation_template": {
+    "fixture_id": 440,
+    "fixture_revision": 5,
+    "catalog_sha256": "26fcb8482b72b9f7bebf5786388a514462aaa5c40e19eb8bb338b9f187e5ca95",
+    "core_revision": "79e4bdd509bc5b12209364399fe9a115cf3946a7",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "uid_sha256": [
+      "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0"
+    ],
+    "hex_sha256": [
+      "6506bec0570d02108ea9b0f54899f158b0e7b223ac0d0a7ca42286c4a35cbf98",
+      "955e5cb8d2e61f3689f9cc4ac1fa1600b2a52c3fac7b062a18b09e37ea04419d"
+    ],
+    "dap_uart_disconnected_both": false,
+    "swd_connected_both": false,
+    "power_rails_not_joined": false,
+    "equal_io_voltage_confirmed": false,
+    "common_ground_confirmed": false,
+    "links_match_catalog": false,
+    "pullups_match_catalog": false,
+    "extra_outputs_disconnected": false,
+    "confirmed_at_unix": 0,
+    "confirmed_by": ""
+  }
+}
+V04_SIGNAL_PREFLIGHT_ONLY; no probe access, flash, reset or external output

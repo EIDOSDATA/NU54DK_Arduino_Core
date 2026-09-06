@@ -1,0 +1,26 @@
+{
+  "source": "79e4bdd509bc5b12209364399fe9a115cf3946a7",
+  "status": "independent-nets-pass96;mono-pass4;stereo-polarity-fail1;remaining187",
+  "public_core_sdk_board_changed": false,
+  "swd_frequency_hz": 10000000,
+  "whole_pdm_pass": false,
+  "whole_t12_pass": false,
+  "continuous_4_settling_100_measured_buffers": "not implemented or executed",
+  "software": {
+    "target_builds_passed": 2,
+    "same_compiled_input_as_source": "ea4e25a035dbc9219e417bf2a2056ce6f9a2e09c"
+  },
+  "physical": {
+    "campaign_status": "failed",
+    "functional_pass": 4,
+    "density_pass": 0,
+    "cleanup_pass": 5,
+    "raw_captures": 5,
+    "audited_functional_samples": 1536,
+    "failed_cases": 1,
+    "unexecuted_vectors": 187,
+    "error": "ProtocolError: PDM stereo edge/polarity order mismatch: [-14889.4453125, 14893.9609375]; expected=(1, -1)",
+    "postflight_roles_passed": 2,
+    "independent_clock_gate_observations_passed": 96
+  }
+}

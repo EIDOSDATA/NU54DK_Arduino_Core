@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t12-fixture440-constlat\collect_failed_build.py", line 16, in <module>
+    shutil.copyfile(path, target)
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\shutil.py", line 260, in copyfile
+    with open(src, 'rb') as fsrc:
+         ^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\u4i\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\build.log'

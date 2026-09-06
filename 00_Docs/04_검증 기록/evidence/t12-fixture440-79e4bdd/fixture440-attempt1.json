@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-synthetic-signal",
+  "status": "failed",
+  "fixture_id": 440,
+  "fixture_revision": 5,
+  "catalog_sha256": "26fcb8482b72b9f7bebf5786388a514462aaa5c40e19eb8bb338b9f187e5ca95",
+  "core_revision": "79e4bdd509bc5b12209364399fe9a115cf3946a7",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": false,
+  "repetitions": 1,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "6506bec0570d02108ea9b0f54899f158b0e7b223ac0d0a7ca42286c4a35cbf98",
+      "elf_sha256": "0e1b8c06908f61d79ee2a1865fd7948e118129079b2e8529578d06f340b6f6ba",
+      "record_sha256": "9c5114cc6f3eaa3e15d0e503df06e0fcc2fe9a6eedc52f5ab492a1fe2a116866"
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "955e5cb8d2e61f3689f9cc4ac1fa1600b2a52c3fac7b062a18b09e37ea04419d",
+      "elf_sha256": "f1e5c6af33c931cace62dab2d78d6fbfc7edf6514ee0fce05626391d86ef63b4",
+      "record_sha256": "9c5114cc6f3eaa3e15d0e503df06e0fcc2fe9a6eedc52f5ab492a1fe2a116866"
+    }
+  ],
+  "results": [],
+  "confirmation_sha256": "91a92818c7046ce408b0781cc3c1c3df72d32f8f3e375480c5993b14d4edf207",
+  "error": "UarteHilFailure: pyOCD exited with 1: 0000797 W Board ID 5415 is not recognized [mbed_board]\r\n0000957 W NRF54L15 is not in a secure state [target_nRF54L]\r\n0001188 I Loading C:\\u4g\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\zephyr.hex [load_cmd]\r\n[---|---|---|---|---|---|---|---|---|----]\r\n[==0011518 E Probe error during disconnect: [session]\r\n0011518 C Timeout reading from probe <probe-sha256:32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9> [__main__]\r\n",
+  "completed_at_utc": "2026-09-06T21:12:48.775048+00:00"
+}

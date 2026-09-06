@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t12-fixture440-rewired\audit_net_settled_retry.py", line 32, in <module>
+    assert not mismatches, mismatches
+           ^^^^^^^^^^^^^^
+AssertionError: [{'case': 'NET/1/4/0', 'pin': (1, 5), 'expected': 0, 'actual': 1}]

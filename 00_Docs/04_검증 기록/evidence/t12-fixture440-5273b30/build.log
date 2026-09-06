@@ -1,0 +1,37 @@
+INFO    - Using Ninja..
+INFO    - Zephyr version: ncs-v3.4.0
+INFO    - Using 'zephyr/gnu' toolchain variant.
+INFO    - Building initial testsuite list...
+INFO    - Built testsuite list in 0.00 seconds
+INFO    - Writing JSON report C:\u4i\testplan.json
+INFO    - Adding tasks to the queue...
+INFO    - Added initial list of jobs to queue
+ERROR   - nrf54l15dk/nrf54l15/cpuapp/nu54dk nucode.v04.pair_dut                        ERROR: Build failure
+ERROR   - see: C:\u4i\nrf54l15dk_nrf54l15_cpuapp_nu54dk\zephyr_gnu\nucode.v04.pair_dut\build.log
+INFO    - Total complete: [32m   1/   2[39m  50%  built (not run): [36m   0[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [31m   1[39m
+ERROR   - nrf54l15dk/nrf54l15/cpuapp/nu54dk nucode.v04.pair_peer                       ERROR: Build failure
+ERROR   - see: C:\u4i\nrf54l15dk_nrf54l15_cpuapp_nu54dk\zephyr_gnu\nucode.v04.pair_peer\build.log
+INFO    - Total complete: [32m   2/   2[39m  100%  built (not run): [36m   0[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [31m   2[39m
+
+INFO    - 2 test scenarios (2 configurations) selected, 0 configurations filtered (0 by static filter, 0 at runtime).
+INFO    - 0 of 2 executed test configurations passed (0.00%), 0 built (not run), 0 failed, 2 errored, with no warnings in 125.43 seconds.
+INFO    - 0 test configurations executed on platforms, 2 test configurations were only built.
+INFO    - Saving reports...
+INFO    - Writing JSON report C:\u4i\twister.json
+INFO    - Writing xunit report C:\u4i\twister.xml...
+INFO    - Writing xunit report C:\u4i\twister_report.xml...
+INFO    - -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+INFO    - The following issues were found (showing the top 10 items):
+INFO    - 1) nucode.v04.pair_dut on nrf54l15dk/nrf54l15/cpuapp/nu54dk error (Build failure - undefined reference to `nrf_sys_event_release_global_constlat()')
+INFO    - 2) nucode.v04.pair_peer on nrf54l15dk/nrf54l15/cpuapp/nu54dk error (Build failure - undefined reference to `nrf_sys_event_release_global_constlat()')
+INFO    - 
+INFO    - To rerun the tests, call twister using the following commandline:
+INFO    - west twister -p <PLATFORM> -s <TEST ID> --detailed-test-id, for example:
+INFO    - 
+INFO    - west twister -p nrf54l15dk/nrf54l15/cpuapp/nu54dk -s nucode.v04.pair_peer --detailed-test-id
+INFO    - or with west:
+INFO    - west build -p -b nrf54l15dk/nrf54l15/cpuapp/nu54dk ..\..\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil -T nucode.v04.pair_peer
+INFO    - -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+INFO    - Run completed
+M12_ZEPHYR_BUILD_FAIL: Twister가 종료 코드 1로 실패했습니다. 실패 위치: nucode.v04.pair_dut: error (Build failure - undefined reference to `nrf_sys_event_release_global_constlat()'); nucode.v04.pair_peer: error (Build failure - undefined reference to `nrf_sys_event_release_global_constlat()')
+[M12-ZEPHYR] exec: C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe C:\ncs\v3.4.0\zephyr\scripts\twister --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\v04_pair_hil --platform nrf54l15dk/nrf54l15/cpuapp/nu54dk --board-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\board_package\NU54DK_Zephyr_DTS\boards --build-only --ninja --detailed-test-id --jobs 2 --outdir C:\u4i --extra-args BOARD_ROOT=C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS --extra-args EXTRA_ZEPHYR_MODULES=C:/Users/eidos/GitHub/NU54DK_Arduino_Core --extra-args USE_CCACHE=0 --scenario nucode.v04.pair_dut --scenario nucode.v04.pair_peer

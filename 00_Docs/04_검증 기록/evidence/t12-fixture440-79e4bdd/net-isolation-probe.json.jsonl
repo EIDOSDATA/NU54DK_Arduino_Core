@@ -1,0 +1,9 @@
+{"id": "NET/1/4/0", "driver_role": 1, "driver_pin": 4, "level": 0, "observed": [{"role": 1, "p1_04": 0, "p1_05": 1, "pin_cnf": {"4": 1, "5": 4}}, {"role": 2, "p1_04": 0, "p1_05": 0, "pin_cnf": {"4": 4, "5": 4}}]}
+{"id": "NET/1/4/1", "driver_role": 1, "driver_pin": 4, "level": 1, "observed": [{"role": 1, "p1_04": 1, "p1_05": 0, "pin_cnf": {"4": 1, "5": 4}}, {"role": 2, "p1_04": 0, "p1_05": 1, "pin_cnf": {"4": 4, "5": 4}}]}
+{"id": "NET/1/5/0", "driver_role": 1, "driver_pin": 5, "level": 0, "observed": [{"role": 1, "p1_04": 0, "p1_05": 0, "pin_cnf": {"4": 4, "5": 1}}, {"role": 2, "p1_04": 0, "p1_05": 0, "pin_cnf": {"4": 4, "5": 4}}]}
+{"id": "NET/1/5/1", "driver_role": 1, "driver_pin": 5, "level": 1, "observed": [{"role": 1, "p1_04": 0, "p1_05": 1, "pin_cnf": {"4": 4, "5": 1}}, {"role": 2, "p1_04": 1, "p1_05": 0, "pin_cnf": {"4": 4, "5": 4}}]}
+{"id": "NET/2/4/0", "driver_role": 2, "driver_pin": 4, "level": 0, "observed": [{"role": 1, "p1_04": 0, "p1_05": 0, "pin_cnf": {"4": 4, "5": 4}}, {"role": 2, "p1_04": 0, "p1_05": 0, "pin_cnf": {"4": 1, "5": 4}}]}
+{"id": "NET/2/4/1", "driver_role": 2, "driver_pin": 4, "level": 1, "observed": [{"role": 1, "p1_04": 0, "p1_05": 1, "pin_cnf": {"4": 4, "5": 4}}, {"role": 2, "p1_04": 1, "p1_05": 0, "pin_cnf": {"4": 1, "5": 4}}]}
+{"id": "NET/2/5/0", "driver_role": 2, "driver_pin": 5, "level": 0, "observed": [{"role": 1, "p1_04": 0, "p1_05": 0, "pin_cnf": {"4": 4, "5": 4}}, {"role": 2, "p1_04": 0, "p1_05": 0, "pin_cnf": {"4": 4, "5": 1}}]}
+{"id": "NET/2/5/1", "driver_role": 2, "driver_pin": 5, "level": 1, "observed": [{"role": 1, "p1_04": 1, "p1_05": 0, "pin_cnf": {"4": 4, "5": 4}}, {"role": 2, "p1_04": 0, "p1_05": 1, "pin_cnf": {"4": 4, "5": 1}}]}
+{"id": "NET-CLEANUP", "results": [{"role": 1, "result": [0], "pins_restored": {"4": 12, "5": 2}}, {"role": 2, "result": [0], "pins_restored": {"4": 12, "5": 2}}]}

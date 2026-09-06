@@ -1,0 +1,52 @@
+{
+  "source": "e9d264c502488754fbda2eabcf174764f703e37d",
+  "prior_source": "7641229dca8c37be7a0d07241d407cb14cbf76ca",
+  "comparisons": [
+    {
+      "role": 1,
+      "changed_translation_units": [
+        "tests/zephyr/v04_pair_hil/src/signal_hil.cpp"
+      ],
+      "source_membership_identical": false,
+      "source_membership_difference": {
+        "role": 1,
+        "added": {
+          "C:/ncs/v3.4.0/zephyr/soc/nordic/common/nrf_sys_event.c": 1
+        },
+        "removed": {}
+      },
+      "resolved_dts_identical": true,
+      "config_added": [
+        "# CONFIG_NRF_SYS_EVENT_IRQ_LATENCY is not set",
+        "# CONFIG_SOC_NRF_FORCE_CONSTLAT is not set",
+        "CONFIG_NRF_SYS_EVENT=y"
+      ],
+      "config_removed": [
+        "# CONFIG_NRF_SYS_EVENT is not set"
+      ]
+    },
+    {
+      "role": 2,
+      "changed_translation_units": [
+        "tests/zephyr/v04_pair_hil/src/signal_hil.cpp"
+      ],
+      "source_membership_identical": false,
+      "source_membership_difference": {
+        "role": 2,
+        "added": {
+          "C:/ncs/v3.4.0/zephyr/soc/nordic/common/nrf_sys_event.c": 1
+        },
+        "removed": {}
+      },
+      "resolved_dts_identical": true,
+      "config_added": [
+        "# CONFIG_NRF_SYS_EVENT_IRQ_LATENCY is not set",
+        "# CONFIG_SOC_NRF_FORCE_CONSTLAT is not set",
+        "CONFIG_NRF_SYS_EVENT=y"
+      ],
+      "config_removed": [
+        "# CONFIG_NRF_SYS_EVENT is not set"
+      ]
+    }
+  ]
+}

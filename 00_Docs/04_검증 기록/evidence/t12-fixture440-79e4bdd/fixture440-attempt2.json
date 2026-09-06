@@ -1,0 +1,234 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-synthetic-signal",
+  "status": "failed",
+  "fixture_id": 440,
+  "fixture_revision": 5,
+  "catalog_sha256": "26fcb8482b72b9f7bebf5786388a514462aaa5c40e19eb8bb338b9f187e5ca95",
+  "core_revision": "79e4bdd509bc5b12209364399fe9a115cf3946a7",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": true,
+  "repetitions": 1,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "6506bec0570d02108ea9b0f54899f158b0e7b223ac0d0a7ca42286c4a35cbf98",
+      "elf_sha256": "0e1b8c06908f61d79ee2a1865fd7948e118129079b2e8529578d06f340b6f6ba",
+      "record_sha256": "9c5114cc6f3eaa3e15d0e503df06e0fcc2fe9a6eedc52f5ab492a1fe2a116866",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 3.078,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "454da06bcde1612d855f9b007af17e394e12c68e16ea2f89b483c291f31c145b"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "955e5cb8d2e61f3689f9cc4ac1fa1600b2a52c3fac7b062a18b09e37ea04419d",
+      "elf_sha256": "f1e5c6af33c931cace62dab2d78d6fbfc7edf6514ee0fce05626391d86ef63b4",
+      "record_sha256": "9c5114cc6f3eaa3e15d0e503df06e0fcc2fe9a6eedc52f5ab492a1fe2a116866",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 2.968,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "1ef0861c68fffb12d9095984ed04bf641d5ee215234a6b3d22f3fd5d9d2c2095"
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "V04-PDM-SIGNAL/440/1/(20, 256, 25, 0, 0, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        256,
+        256,
+        0
+      ],
+      "mean": -12968.93359375,
+      "minimum": -16918,
+      "maximum": 1608,
+      "channel_means": null,
+      "scope": "pdm-clock-synchronous-spis-bitstream",
+      "generator_pattern": "mono-density-25-percent"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-PDM-SIGNAL/440/1/(20, 256, 25, 0, 0, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        512,
+        256,
+        0
+      ],
+      "mean": -13520.779296875,
+      "minimum": -16918,
+      "maximum": 1608,
+      "channel_means": null,
+      "scope": "pdm-clock-synchronous-spis-bitstream",
+      "generator_pattern": "mono-density-25-percent"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-PDM-SIGNAL/440/1/(20, 256, 25, 0, 1, 1)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        256,
+        256,
+        0
+      ],
+      "mean": -12968.1875,
+      "minimum": -16916,
+      "maximum": 1602,
+      "channel_means": null,
+      "scope": "pdm-clock-synchronous-spis-bitstream",
+      "generator_pattern": "mono-density-25-percent"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-PDM-SIGNAL/440/1/(20, 256, 25, 0, 1, 2)/repeat-1",
+      "status": "passed",
+      "receiver_status": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        512,
+        256,
+        0
+      ],
+      "mean": -13520.40625,
+      "minimum": -16916,
+      "maximum": 1602,
+      "channel_means": null,
+      "scope": "pdm-clock-synchronous-spis-bitstream",
+      "generator_pattern": "mono-density-25-percent"
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-SIGNAL-CLEANUP/repeat-1",
+      "status": "cleanup",
+      "cleanup_only": true,
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "confirmation_sha256": "91a92818c7046ce408b0781cc3c1c3df72d32f8f3e375480c5993b14d4edf207",
+  "error": "ProtocolError: PDM stereo edge/polarity order mismatch: [-14889.4453125, 14893.9609375]; expected=(1, -1)",
+  "completed_at_utc": "2026-09-06T21:13:28.475921+00:00"
+}
