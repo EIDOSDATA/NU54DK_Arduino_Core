@@ -1,0 +1,13 @@
+{
+  "source": "87b987d9ed50855e0134f2c637c00706572719a5",
+  "recorded_at_utc": "2026-09-06T15:43:34.452661+00:00",
+  "status": "fixture408-passed",
+  "fixture408_physical_executed": true,
+  "fixture420_physical_executed": false,
+  "swd_frequency_hz": 10000000,
+  "last_uploaded_source": "87b987d9ed50855e0134f2c637c00706572719a5",
+  "last_uploaded_fixture": 408,
+  "runtime_identity_rechecked": true,
+  "security_policy_modified": false,
+  "pending": "Fixture 420 requires USB-off rewiring and separate user confirmation"
+}

@@ -1,0 +1,18 @@
+{
+  "source_under_test": "87b987d9ed50855e0134f2c637c00706572719a5",
+  "markdown_files": 192,
+  "command": [
+    "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts\\python.exe",
+    "-B",
+    "tools/ci/run_m12_gate.py",
+    "docs"
+  ],
+  "result": "passed",
+  "log_original_sha256": "57c481ecabea15abe631d3d3a98e374436c74923e40d452f200172f3570b25df",
+  "log_normalized_sha256": "1e49e6b8189adccffe1dea12bdc43429012e9309b7ea96f95d8e75b36e00dd76",
+  "code_changes_since_validated_source": [],
+  "physical_fixture408": "passed",
+  "functional_records": 48,
+  "samples": 10368,
+  "historical_records_modified": false
+}
