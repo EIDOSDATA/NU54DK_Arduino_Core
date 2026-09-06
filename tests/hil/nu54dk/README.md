@@ -578,4 +578,6 @@ R00~R13 이후 exact 154324c의 current-source Fixture 101은 SWD 10 MHz에서 �
 
 Current-source Fixture 102도 exact a49cc0d·SWD 10 MHz에서 데이터 810개·예상 오류 12개를 통과했습니다. [68번 기록](<../../../00_Docs/04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md>)에 원본을 보존합니다.
 
-Current-source Fixture 103은 exact 7aece93·SWD 10 MHz에서 데이터 2,430개·예상 오류 36개를 통과했습니다. 최초 peer flash timeout과 읽기 전용 진단 뒤 한 번의 새 실행을 [69번 기록](<../../../00_Docs/04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md>)에 구분해 보존했습니다. UART 세 묶음은 완료했으며 다음은 Fixture 201 SPI 결선입니다.
+Current-source Fixture 103은 exact 7aece93·SWD 10 MHz에서 데이터 2,430개·예상 오류 36개를 통과했습니다. 최초 peer flash timeout과 읽기 전용 진단 뒤 한 번의 새 실행을 [69번 기록](<../../../00_Docs/04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md>)에 구분해 보존했습니다. UART 세 묶음을 완료했습니다.
+
+Current-source Fixture 201도 exact 0f429e7·SWD 10 MHz에서 data 18,157개와 예상 cancel 12개를 통과했습니다. Data에는 recovery 12개와 SPIM00+TWIM22 동시성 1개가 포함됩니다. [70번 기록](<../../../00_Docs/04_검증 기록/70_T11_Fixture_201_current_source_SPI_회귀.md>)에 원본을 보존하며 다음은 Fixture 202 SPI 결선입니다.

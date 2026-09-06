@@ -1,0 +1,183 @@
+{
+  "status": "passed",
+  "current_fixture": 201,
+  "next_fixture": 202,
+  "catalog_revision": 2,
+  "connector_pinmap_matches": true,
+  "current": {
+    "id": 201,
+    "family": "spi",
+    "banks": [
+      2,
+      1
+    ],
+    "instances": [
+      [
+        0,
+        20
+      ],
+      [
+        20,
+        21,
+        22
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P4",
+          20,
+          "P2.1"
+        ],
+        "peer": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "signal": "SCK"
+      },
+      {
+        "dut": [
+          "P4",
+          21,
+          "P2.2"
+        ],
+        "peer": [
+          "P2",
+          11,
+          "P1.5"
+        ],
+        "signal": "DUT MOSI / DUT SPIS MISO"
+      },
+      {
+        "dut": [
+          "P2",
+          17,
+          "P2.4"
+        ],
+        "peer": [
+          "P2",
+          10,
+          "P1.6"
+        ],
+        "signal": "DUT MISO / DUT SPIS MOSI"
+      },
+      {
+        "dut": [
+          "P2",
+          19,
+          "P2.5"
+        ],
+        "peer": [
+          "P2",
+          9,
+          "P1.7"
+        ],
+        "signal": "CSN"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "DUT가 SPIS로 바뀌면 P2 전용 MISO/MOSI가 교대하므로 peer P1의 MOSI/MISO를 펌웨어가 함께 교대. SCK/CSN 출력은 controller 한 대뿐.",
+    "pullups": []
+  },
+  "next": {
+    "id": 202,
+    "family": "spi",
+    "banks": [
+      0,
+      1
+    ],
+    "instances": [
+      [
+        30
+      ],
+      [
+        20,
+        21,
+        22
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P2",
+          25,
+          "P0.0"
+        ],
+        "peer": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "signal": "SCK"
+      },
+      {
+        "dut": [
+          "P2",
+          26,
+          "P0.1"
+        ],
+        "peer": [
+          "P2",
+          11,
+          "P1.5"
+        ],
+        "signal": "MOSI"
+      },
+      {
+        "dut": [
+          "P4",
+          4,
+          "P0.2"
+        ],
+        "peer": [
+          "P2",
+          10,
+          "P1.6"
+        ],
+        "signal": "MISO"
+      },
+      {
+        "dut": [
+          "P4",
+          5,
+          "P0.3"
+        ],
+        "peer": [
+          "P2",
+          9,
+          "P1.7"
+        ],
+        "signal": "CSN"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "양쪽 모두 유연 경로. controller/peripheral 역할을 바꿔도 MOSI↔MOSI, MISO↔MISO 연결 유지.",
+    "pullups": []
+  },
+  "no_next_fixture_executed": true
+}
