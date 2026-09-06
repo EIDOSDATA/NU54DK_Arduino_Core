@@ -1,0 +1,36 @@
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_m10_packaging.py
+test_01_manifest_contract_and_exact_git_revisions (test_m10_packaging.M10PackagingTests.test_01_manifest_contract_and_exact_git_revisions) ... ok
+test_02_archive_is_byte_reproducible (test_m10_packaging.M10PackagingTests.test_02_archive_is_byte_reproducible) ... ok
+test_03_archive_has_one_root_and_excludes_development_inputs (test_m10_packaging.M10PackagingTests.test_03_archive_has_one_root_and_excludes_development_inputs) ... ok
+test_03b_windows_command_scripts_use_strict_crlf (test_m10_packaging.M10PackagingTests.test_03b_windows_command_scripts_use_strict_crlf)
+! @brief RC command script 변환의 ASCII·CRLF 계약을 검증합니다. ... ok
+test_04_platform_is_exact_commit_content_except_version (test_m10_packaging.M10PackagingTests.test_04_platform_is_exact_commit_content_except_version) ... ok
+test_05_sbom_license_and_checksum_sidecars_are_present (test_m10_packaging.M10PackagingTests.test_05_sbom_license_and_checksum_sidecars_are_present) ... ok
+test_06_board_license_scopes_are_split_and_noticed (test_m10_packaging.M10PackagingTests.test_06_board_license_scopes_are_split_and_noticed) ... ok
+test_07_external_prerequisites_are_not_marked_as_redistributed (test_m10_packaging.M10PackagingTests.test_07_external_prerequisites_are_not_marked_as_redistributed) ... ok
+test_08_validator_rejects_tampered_payload (test_m10_packaging.M10PackagingTests.test_08_validator_rejects_tampered_payload) ... ok
+test_09_index_contains_both_versions_in_latest_first_order (test_m10_packaging.M10PackagingTests.test_09_index_contains_both_versions_in_latest_first_order) ... ok
+test_10_index_validator_rejects_wrong_public_identity (test_m10_packaging.M10PackagingTests.test_10_index_validator_rejects_wrong_public_identity) ... ok
+test_10a_checked_in_stable_index_has_current_public_identity (test_m10_packaging.M10PackagingTests.test_10a_checked_in_stable_index_has_current_public_identity)
+! @brief 장기 사용자 endpoint의 stable index identity를 검증합니다. ... ok
+test_10aa_stable_index_checkout_is_forced_to_lf (test_m10_packaging.M10PackagingTests.test_10aa_stable_index_checkout_is_forced_to_lf)
+! @brief 공개 stable index의 Git checkout 줄바꿈 계약을 검증합니다. ... ok
+test_11_supported_versions_are_fail_closed (test_m10_packaging.M10PackagingTests.test_11_supported_versions_are_fail_closed) ... ok
+test_11a_stable_package_has_approved_identity_and_own_index (test_m10_packaging.M10PackagingTests.test_11a_stable_package_has_approved_identity_and_own_index)
+! @brief 승인된 stable 버전이 RC와 분리된 공개 identity를 갖는지 검증합니다. ... ok
+test_11aa_stable_package_rejects_a_different_commit (test_m10_packaging.M10PackagingTests.test_11aa_stable_package_rejects_a_different_commit)
+! @brief 공개 stable 이름으로 다른 source byte를 생성하지 못하게 합니다. ... ok
+test_11aaa_published_stable_index_archive_uses_exact_bytes (test_m10_packaging.M10PackagingTests.test_11aaa_published_stable_index_archive_uses_exact_bytes)
+! @brief 과거 stable은 최신 source 허용목록 대신 공개 byte identity로 검증합니다. ... ok
+test_11ab_published_v020_runtime_matches_public_rc2 (test_m10_packaging.M10PackagingTests.test_11ab_published_v020_runtime_matches_public_rc2)
+! @brief 공개 stable과 RC2의 version-independent runtime payload를 검증합니다. ... ok
+test_11b_current_safe_pair_has_one_runtime_payload (test_m10_packaging.M10PackagingTests.test_11b_current_safe_pair_has_one_runtime_payload)
+! @brief 새 immutable preview 두 개가 같은 source와 runtime payload를 사용합니다. ... ok
+test_12_runtime_payload_fingerprint_ignores_only_platform_version (test_m10_packaging.M10PackagingTests.test_12_runtime_payload_fingerprint_ignores_only_platform_version)
+! @brief 버전 문자열만 다른 동일 payload와 실제 byte 변경을 구분합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 241.994s
+
+OK
+M12_GATE_PASS=package

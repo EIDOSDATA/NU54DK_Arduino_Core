@@ -5,9 +5,9 @@
 | 문서 ID / 개정 | TODO-V04-001 / 3.9 |
 | 상태 | 활성 TODO — R00~R13·최종 software gate·current-source T11 완료; T12 Fixture 401~406 부분 PASS, 후속 실기·통합·RC·공개 대기 |
 | 작성·갱신일 | 2026-09-06 |
-| 작성 직전 기준 commit | `076685aa78247ec18e4fd95be50b2123a1f043fa` — Fixture 407 준비 source, Host BLOCKED·실기 미실행 |
+| 작성 직전 기준 commit | `393e419f4c855037d4e6221c315f9be808a7d274` — LLVM Host 회귀 완료·407 준비 source, 실기 미실행 |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **LLVM 전체 회귀·새 exact pair image 확인 후 Fixture 407 실기; 408도 필수** |
+| 다음 착수 항목 | **407 결선 유지 재확인 답변 후 실제 clean HEAD pair image 확인·SWD 10 MHz 실기; 408도 필수** |
 | 이번 요청의 실행 범위 | 사용자 재개 지시로 LLVM 22.1.8 Host 선택 지원을 추가했다. T09/T12·R13 도구 유지보수: CC/CXX·JSON 인자 선택 23개 시험군, 명시적 환경 6개 회귀, 자기 복사 대입·Arduino entrypoint 분리, BLE scan enum→uint8_t 명시 변환 1줄. 관련 Host 113 PASS. 전체 Host·계약·Inventory·정렬 및 pair/BLE target을 검증한 뒤 407만 실행. SDK·board·보안 정책 변경 없음 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
@@ -51,21 +51,21 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | 기존 g++는 재개 후에도 Windows 차단. 설치된 Clang/LLD는 실제 compile/link/run 가능하며 관련 Host 113개 PASS. 407 준비·이전 차단은 80번 보존. 401~406 누계 기능 216·samples 46,656 유지 |
-| 진행 중인 T 항목 | T09/T12: LLVM 전체 Host 및 current-source pair/BLE target 회귀 진행. 407 실기 미실행. 408도 필수 후속 |
-| 다음 구체적 행동 | 새 clean source에서 canonical Host·계약·Inventory·docs·style와 pair 2개/BLE 6개 target을 검사한다. 407 결선 확인 30분이 경과했으므로 실제 flash 직전 같은 결선·버튼 미누름을 재확인한다. SWD 10 MHz 고정 |
+| 이번에 끝낸 일 | LLVM Host 655 PASS·1 조건부 SKIP, 관련 113 PASS·계약 45·package 20·정렬 358·Inventory·예제 발견·target 8/8, BLE 기계어·재배치 6/6 동일. 81번 증거 등록. 407 HIL 미실행; 401~406 기능 216·samples 46,656 유지 |
+| 진행 중인 T 항목 | T09 재개 software 검증 완료. T12 Fixture 407 결선 유지 재확인 답변 대기. 408도 필수 후속 |
+| 다음 구체적 행동 | 407 결선·버튼 미누름 유지 답변을 받고, 실제 clean HEAD pair image를 준비해 exact identity를 검증한다. 첫 407 실행 12 vector·2,592 samples·cleanup 12개를 SWD 10 MHz로 검사. 문서 HEAD와 기존 393e419 image를 혼동하지 않음 |
 | 다음 작업에 필요한 사용자 행동 | 별도 Host 환경 경로는 필요 없다. 설치된 LLVM이 정상 동작한다. 모든 software·image 준비 후 407 결선 A P1.13↔B P1.14·공통 GND, DAP UART 분리/SWD 연결·버튼 미누름이 유지되는지만 재확인한다 |
 | 외부 결선 상태 | 2026-09-06T13:47:49Z 사용자 USB 제거 후 407 결선·재연결 확인. A P1.13/AIN6(P4-11)↔B P1.14(P4-12)·공통 GND(P2-30), 이전 A P1.12 제거·DAP UART 분리/SWD 연결·버튼 미누름 안내 조건. A D/COM5·6, B E/COM7·8; 기존 SB/PMIC 설정 유지 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 마지막 정식 외부 HIL source | `96f38e9486c69cda2c76b48029bc0dc9404d9709` — T12 Fixture 406 첫 실행 12 PASS. 이전 401~405와 T11 exact 근거 보존 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. T11 각 exact 완료·T12 401~406 부분 PASS; M24/M25 전체·후속 gate·RC/공개 미완료 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | 관련 Host 113개 종료·PASS. 후속 canonical 전체 Host 및 target 회귀 예정. 407 flash/reset/HIL 미실행. 마지막 업로드 source는 406 exact 96f38e9; 재연결 후 runtime identity 미검사 |
+| 이 TODO 작성 작업의 실행 중 시험 | 모든 software gate·target build·USB 열거 종료. 407 flash/reset/HIL 미실행. 마지막 업로드는 406 exact 96f38e9, 재연결 후 runtime identity 미검사 |
 | 로컬 임시 build·evidence | 15개 과거 root의 object/archive 중간 파일 55,537개 제거, 일회성 script 50개는 work/archive/r00-r13-authoring-scripts.zip으로 hash 검증 후 보관. 2,911개 ELF/HEX/설정/log 등은 hash 불변. C:/r13h와 설치본·raw evidence·QEMU 보존; 상세는 65번 기록 |
 | 최종 정렬 gate | clang-format 22.1.8, 직접 관리 C/C++/ino 358개 dry-run PASS. 한국어 Doxygen·BSD/Allman·4칸·중괄호 필수. 새 shared analog helper와 Host 검증은 실제 참조되어 유지 |
-| CI 확인 | 최종 source의 GitHub Actions는 미확인. 현재 GitHub CLI 인증에 의존하지 않고 로컬 canonical 전체 software gate를 실행했다. 이전 Actions success는 이전 source의 역사 증거로만 유지 |
-| 문서 작업 검증 | 초기 Clang 실행에서 자기 대입·weak main·enum narrowing·CMake target 선택 문제를 발견해 기록했다. 수정 뒤 관련 Host 113/113 PASS. 전체 Host 656개와 새 target·문서 결과는 아직 미확정 |
-| 최종 HIL 입력 찾기 | C:/u3n 준비 exact 076685a DUT/peer와 미실행 image hash·Host 차단 evidence는 80번. 마지막 실제 HIL C:/u3m exact 96f38e9는 79번. 준비 source와 최종 문서 HEAD를 혼동하지 말고 재개 시 exact identity 재검증 |
+| CI 확인 | 새 source의 원격 GitHub Actions는 미확인. 로컬 canonical Host·계약·package·Inventory·docs·examples와 영향 target 8개를 검증했다. 이전 Actions는 역사 증거로만 유지 |
+| 문서 작업 검증 | Host 655 PASS·1 조건부 SKIP(총 656), 관련 113·계약 45·package 20·정렬 358·Inventory·예제 발견·target 8/8 PASS. 등록 전 Markdown 189 PASS; 최종 등록 후 검사 결과는 81번·docs verification JSON에 보존 |
+| 최종 HIL 입력 찾기 | C:/u3o exact 393e419 pair/BLE 8개는 build-only, pair image 검사 2/2. 81번 원본 index·Host 환경·입력 비교 참조. 마지막 실제 HIL은 C:/u3m exact 96f38e9 Fixture 406. 최종 문서 HEAD로 재개하면 새 exact pair build 필요 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드
@@ -219,7 +219,7 @@ R00~R14와 연결하고, 구조 변경 뒤 같은 결선을 다시 반복하지 
 외부 결선 PASS 캠페인은 R13 뒤 최종 source에 한 번 수행한다.
 
 - [ ] **T12 — M25 입력·출력·스트림 기능 검증**
-  - 상태·선행: 부분 완료 — Fixture 401~404 각각 PWM 48 PASS·405 AIN4 오픈드레인·406 AIN5 입력 바이어스 각각 12 PASS, 407 결선·build 완료/Host 차단으로 실기 대기·408·후속 fixture·전체 요구 대기 / T05·T06·T09, R00~R13과 current-source T11 회귀 완료, 해당 T10 확인.
+  - 상태·선행: 부분 완료 — Fixture 401~404 각각 PWM 48 PASS·405 AIN4 오픈드레인·406 AIN5 입력 바이어스 각각 12 PASS, 407 결선·build 완료/LLVM Host 회귀 완료·결선 유지 재확인 대기·408·후속 fixture·전체 요구 대기 / T05·T06·T09, R00~R13과 current-source T11 회귀 완료, 해당 T10 확인.
   - 할 일: ADC·PWM·timer/event·PDM·I2S·QDEC의 물리 신호와 예상 sample/frame/count를 비교한다.
   - 완료 기준: 합성 peer 자체의 동작과 코어 기능을 구분해 검증하고 각 instance/mode의 증거가 있다. 신호 생성 실패는 미완료이지 계측 면제가 아니다.
   - 결선·증거: Fixture 401 exact a12e444 48 PASS·10,368 samples·cleanup 48은 [74번 기록](<./04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 등록. Fixture 402 exact ff483a1 48 PASS는 [75번 기록](<./04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존. Fixture 403 exact c95b904 48 PASS는 [76번 기록](<./04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 등록. Fixture 404 exact e080bbc 48 PASS는 [77번 기록](<./04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 등록. 405 exact 9fc12bf의 공유 AIN4 오픈드레인 12 PASS·2,592 samples는 [78번 기록](<./04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)에 보존. 406 exact 96f38e9 입력 바이어스 12 PASS·2,592 samples는 [79번 기록](<./04_검증 기록/79_T12_Fixture_406_current_source_공유_AIN5_검증.md>)에 보존. 다음은 407→408이며 공유 AIN6도 개별 기능 시험한다. PWM period/duty capture·ADC calibration/채널 순서 등 전체 T12 요구는 이 HIGH/sample-count 결과로 완료 처리하지 않는다.
@@ -349,4 +349,6 @@ M23·후보 source/build·기본 onboard·M26 판정·기존 자산 불변 gate�
 시험 프로그램·실행기·결선 안내 준비 묶음 약 16~32시간에는 결선 후 전체 실기와 릴리스까지의
 소요 시간이 포함되지 않는다. 구현·신호 발생 가능성·결함에 따라 다시 추정한다.
 
-407 준비·Windows Host 차단과 **flash/HIL NOT RUN**은 [80번 기록](<./04_검증 기록/80_T12_Fixture_407_준비와_Host_실행_차단.md>)에 보존했다. 이번 source·문서 checkpoint는 로컬 commit으로 보존하며 필수 전체 Host 회귀 전 원격 main에 푸시하지 않는다.
+407 최초 준비·Windows Host 차단과 당시 **flash/HIL NOT RUN**은 [80번 기록](<./04_검증 기록/80_T12_Fixture_407_준비와_Host_실행_차단.md>)에 보존했다. 이번 재개에서 필수 Host와 영향 target 회귀를 완료했으며 문서·증거 검증 후 원격 main에 푸시한다. 407 실기는 결선 유지 재확인 답변 대기다.
+
+407 재개 exact 393e419는 설치된 LLVM 22.1.8로 Host **655 PASS·1 조건부 SKIP(총 656)**, 계약 45·package 20·정렬 358·Inventory·예제 발견과 pair/BLE **target 8/8**을 통과했다. BLE 형 변환의 기계어·재배치도 6/6 동일하다. [81번 재개 기록](<04_검증 기록/81_T12_Fixture_407_Host_재개와_검증.md>)에 새 근거를 보존했다. 이전 Windows 차단 원본은 80번에 유지하며 보안 정책을 변경하지 않았다. **407 flash/HIL NOT RUN**: 마지막 결선 확인의 30분 유효시간이 지나 동일 결선·버튼 미누름 유지 답변을 기다린다. 답변 후 실제 clean HEAD의 image를 확인해 SWD 10 MHz로 진행하며 **408도 필수**다.

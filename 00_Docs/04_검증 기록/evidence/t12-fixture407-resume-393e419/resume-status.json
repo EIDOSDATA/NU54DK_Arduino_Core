@@ -1,0 +1,21 @@
+{
+  "source": "393e419f4c855037d4e6221c315f9be808a7d274",
+  "recorded_at_utc": "2026-09-06T14:43:14.630333+00:00",
+  "status": "software-passed-awaiting-wiring-reconfirmation",
+  "fixture407_physical_executed": false,
+  "fixture408_physical_executed": false,
+  "swd_frequency_hz": 10000000,
+  "security_policy_modified": false,
+  "host": {
+    "total": 656,
+    "passed": 655,
+    "conditional_skipped": 1,
+    "groups": 81,
+    "skip_reason": "'M13 package 설치 후 NUCODE_M13_CLI_DISCOVERY=1로 실행합니다.'",
+    "required_native_compiler_skips": 0
+  },
+  "last_uploaded_source": "96f38e9486c69cda2c76b48029bc0dc9404d9709",
+  "last_uploaded_fixture": 406,
+  "runtime_identity_rechecked": false,
+  "pending": "Fresh confirmation that Fixture 407 wiring and button-unpressed conditions remain unchanged; previous 13:47:49 UTC confirmation expired after 30 minutes"
+}

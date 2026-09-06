@@ -1,0 +1,593 @@
+test_production_sync_and_lifetime (test_r02_serial_drivers.SerialDriverTests.test_production_sync_and_lifetime) ... ok
+test_analog_production (test_r03_fabric_drivers.FabricDriverTests.test_analog_production) ... ok
+test_stream_production (test_r03_fabric_drivers.FabricDriverTests.test_stream_production) ... ok
+test_production_file (test_r04_file.FileLifetimeTests.test_production_file) ... FAIL
+test_checkout_drift_is_detected_and_regenerated (test_r05_identity.ProductIdentityTests.test_checkout_drift_is_detected_and_regenerated) ... ok
+test_checkout_identity_and_schema_independence (test_r05_identity.ProductIdentityTests.test_checkout_identity_and_schema_independence) ... ok
+test_cmake_matches_builder_and_rejects_invalid_identity (test_r05_identity.ProductIdentityTests.test_cmake_matches_builder_and_rejects_invalid_identity) ... ok
+test_live_build_record_carries_both_versions (test_r05_identity.ProductIdentityTests.test_live_build_record_carries_both_versions) ... ok
+test_payload_identity_tracks_source_but_allows_package_stamping (test_r05_identity.ProductIdentityTests.test_payload_identity_tracks_source_but_allows_package_stamping) ... ok
+test_stamped_install_preserves_source_version (test_r05_identity.ProductIdentityTests.test_stamped_install_preserves_source_version) ... ok
+test_extracted_entry_isolated_from_cwd_and_pythonpath (test_r06_builder_modules.BuilderPackageTests.test_extracted_entry_isolated_from_cwd_and_pythonpath) ... ok
+test_source_package_includes_explicit_models_and_launcher (test_r06_builder_modules.BuilderPackageTests.test_source_package_includes_explicit_models_and_launcher) ... ok
+test_checkout_and_ascii_install_keep_original_build_root (test_r06_windows_recipe.WindowsRecipeTests.test_checkout_and_ascii_install_keep_original_build_root) ... ok
+test_copy_rejects_cache_junction_to_another_directory (test_r06_windows_recipe.WindowsRecipeTests.test_copy_rejects_cache_junction_to_another_directory) ... ok
+test_installed_command_preserves_quoted_paths_and_exit (test_r06_windows_recipe.WindowsRecipeTests.test_installed_command_preserves_quoted_paths_and_exit) ... ok
+test_package_copy_preserves_identity_recovers_bytes_and_rejects_extra_files (test_r06_windows_recipe.WindowsRecipeTests.test_package_copy_preserves_identity_recovers_bytes_and_rejects_extra_files) ... ok
+test_production_dppi_and_registry (test_r07_event_driver.EventDriverTests.test_production_dppi_and_registry) ... ok
+test_production_resource_and_route (test_r08_resource_route.ResourceRouteTests.test_production_resource_and_route) ... ok
+test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) ... FAIL
+test_production_stop_reservation (test_r10_serial_concurrency.SerialConcurrencyTests.test_production_stop_reservation) ... ok
+test_production_data_and_restarts (test_r11_fabric_data.FabricDataTests.test_production_data_and_restarts) ... ok
+test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) ... FAIL
+test_production_gatt_lifecycle (test_r12_ble_gatt.BleGattTests.test_production_gatt_lifecycle) ... FAIL
+test_production_security_lifecycle (test_r12_ble_security.BleSecurityTests.test_production_security_lifecycle) ... FAIL
+test_production_eeprom_record_and_restart (test_r12_eeprom.EepromPersistenceTests.test_production_eeprom_record_and_restart) ... ok
+test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) ... ok
+test_changed_missing_or_outside_output_is_rejected (test_r13_generated.GeneratedContractTests.test_changed_missing_or_outside_output_is_rejected) ... ok
+test_checkout_crlf_preserves_utf8_lf_contract (test_r13_generated.GeneratedContractTests.test_checkout_crlf_preserves_utf8_lf_contract) ... ok
+test_nondeterministic_or_omitted_generation_is_rejected (test_r13_generated.GeneratedContractTests.test_nondeterministic_or_omitted_generation_is_rejected) ... ok
+test_configure_and_live_parsers_validate_full_revision (test_r13_manifest_revision.ManifestRevisionTests.test_configure_and_live_parsers_validate_full_revision)
+! @brief 40자리 대소문자 SHA와 길이·문자·JSON 오류를 두 실제 함수에서 검증합니다. ... ok
+test_live_writer_restores_core_and_board_from_gitless_manifest (test_r13_manifest_revision.ManifestRevisionTests.test_live_writer_restores_core_and_board_from_gitless_manifest)
+! @brief 실제 build record writer가 package의 Core·board SHA를 YAML에 기록합니다. ... ok
+test_error_marker_and_no_partial_output_for_invalid_version (test_r13_package_modules.PackageModuleTests.test_error_marker_and_no_partial_output_for_invalid_version) ... ok
+test_isolated_cli_ignores_foreign_package_and_pythonpath (test_r13_package_modules.PackageModuleTests.test_isolated_cli_ignores_foreign_package_and_pythonpath) ... ok
+test_repository_default_and_multiple_import_identity (test_r13_package_modules.PackageModuleTests.test_repository_default_and_multiple_import_identity) ... ok
+test_same_consumer_reload_does_not_reuse_candidate_state (test_r13_package_modules.PackageModuleTests.test_same_consumer_reload_does_not_reuse_candidate_state) ... ok
+test_stable_snapshot_includes_moved_package_model (test_r13_package_modules.PackageModuleTests.test_stable_snapshot_includes_moved_package_model) ... ok
+test_duration_is_fresh_for_each_invocation (test_v04_campaign.CampaignTests.test_duration_is_fresh_for_each_invocation) ... ok
+test_invalid_or_unbounded_options_fail_closed (test_v04_campaign.CampaignTests.test_invalid_or_unbounded_options_fail_closed) ... ok
+test_repetition_campaign_is_bounded (test_v04_campaign.CampaignTests.test_repetition_campaign_is_bounded) ... ok
+test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) ... 
+  test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=()) ... FAIL
+  test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('UARTE',)) ... FAIL
+  test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('SPIM',)) ... FAIL
+  test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('SPIS',)) ... FAIL
+  test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('TWIM',)) ... FAIL
+  test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('TWIS',)) ... FAIL
+  test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('UARTE', 'SPIM', 'SPIS', 'TWIM', 'TWIS')) ... FAIL
+test_all_candidate_dma_fabrics_use_full_range_validation (test_v04_dma_memory.DmaMemoryTests.test_all_candidate_dma_fabrics_use_full_range_validation) ... ok
+test_native_full_range_and_alignment_boundaries (test_v04_dma_memory.DmaMemoryTests.test_native_full_range_and_alignment_boundaries) ... ok
+test_catalog_connector_pin_map_and_no_forbidden_nets (test_v04_fixture.FixtureTests.test_catalog_connector_pin_map_and_no_forbidden_nets) ... ok
+test_cli_cannot_implicitly_execute_or_omit_confirmation (test_v04_fixture.FixtureTests.test_cli_cannot_implicitly_execute_or_omit_confirmation) ... ok
+test_confirmation_rejects_every_missing_condition (test_v04_fixture.FixtureTests.test_confirmation_rejects_every_missing_condition) ... ok
+test_expected_error_recovery_ids_keep_the_error_cause (test_v04_fixture.FixtureTests.test_expected_error_recovery_ids_keep_the_error_cause) ... ok
+test_foreign_image_role_uid_and_expiry_rejected (test_v04_fixture.FixtureTests.test_foreign_image_role_uid_and_expiry_rejected) ... ok
+test_generated_confirmation_is_bound_but_not_approved (test_v04_fixture.FixtureTests.test_generated_confirmation_is_bound_but_not_approved) ... ok
+test_spi_split_buffer_waits_for_peer_rearm_before_second_segment (test_v04_fixture.FixtureTests.test_spi_split_buffer_waits_for_peer_rearm_before_second_segment) ... ok
+test_transfer_scope_matches_encoded_controller_style (test_v04_fixture.FixtureTests.test_transfer_scope_matches_encoded_controller_style)
+! @brief style와 I2C address encoding을 독립적인 기대값으로 검증합니다. ... ok
+test_twi_fixture_uses_internal_pullups_without_external_resistors (test_v04_fixture.FixtureTests.test_twi_fixture_uses_internal_pullups_without_external_resistors) ... ok
+test_twi_requires_explicit_catalog_pullup_confirmation (test_v04_fixture.FixtureTests.test_twi_requires_explicit_catalog_pullup_confirmation) ... ok
+test_user_confirmed_connector_pinmap_is_complete_and_locked (test_v04_fixture.FixtureTests.test_user_confirmed_connector_pinmap_is_complete_and_locked) ... ok
+test_vectors_and_transfer_direction_are_explicit (test_v04_fixture.FixtureTests.test_vectors_and_transfer_direction_are_explicit) ... ok
+test_dma_count_is_checked_before_nrfx (test_v04_math.V04MathTests.test_dma_count_is_checked_before_nrfx) ... ok
+test_production_clock_math_and_cross_language_protocol (test_v04_math.V04MathTests.test_production_clock_math_and_cross_language_protocol) ... ok
+test_target_clock_uses_actual_instance_and_internal_adc_is_soc_specific (test_v04_math.V04MathTests.test_target_clock_uses_actual_instance_and_internal_adc_is_soc_specific) ... ok
+test_boot_checks_images_and_clears_only_mailbox_markers_before_resume (test_v04_pair.V04PairTests.test_boot_checks_images_and_clears_only_mailbox_markers_before_resume) ... ok
+test_corruption_and_length_rejected (test_v04_pair.V04PairTests.test_corruption_and_length_rejected) ... ok
+test_empty_nonce_and_oversized_values_rejected (test_v04_pair.V04PairTests.test_empty_nonce_and_oversized_values_rejected) ... ok
+test_evidence_existing_journal_is_preserved_and_result_finalized (test_v04_pair.V04PairTests.test_evidence_existing_journal_is_preserved_and_result_finalized) ... ok
+test_evidence_interrupt_retains_partial_results (test_v04_pair.V04PairTests.test_evidence_interrupt_retains_partial_results) ... ok
+test_failure_stop_cannot_hide_failure_or_retry_poisoned_device (test_v04_pair.V04PairTests.test_failure_stop_cannot_hide_failure_or_retry_poisoned_device) ... ok
+test_frame_roundtrip (test_v04_pair.V04PairTests.test_frame_roundtrip) ... ok
+test_identity_commit_and_role (test_v04_pair.V04PairTests.test_identity_commit_and_role) ... ok
+test_mailbox_polling_interval_supports_10mhz_fixture_runs (test_v04_pair.V04PairTests.test_mailbox_polling_interval_supports_10mhz_fixture_runs) ... ok
+test_no_external_pin_opcode_or_implicit_flash (test_v04_pair.V04PairTests.test_no_external_pin_opcode_or_implicit_flash) ... ok
+test_onboard_runner_requires_multi_dma_concurrency_result (test_v04_pair.V04PairTests.test_onboard_runner_requires_multi_dma_concurrency_result) ... ok
+test_os_lock_rejects_competing_process_then_releases (test_v04_pair.V04PairTests.test_os_lock_rejects_competing_process_then_releases) ... ok
+test_pmic_pins_released_from_nfc_in_both_images (test_v04_pair.V04PairTests.test_pmic_pins_released_from_nfc_in_both_images) ... ok
+test_same_probe_rejected (test_v04_pair.V04PairTests.test_same_probe_rejected) ... ok
+test_stale_role_opcode_nonce_rejected (test_v04_pair.V04PairTests.test_stale_role_opcode_nonce_rejected) ... ok
+test_swd_mailbox_commit_and_poison (test_v04_pair.V04PairTests.test_swd_mailbox_commit_and_poison) ... ok
+test_double_transition_does_not_count_as_motion (test_v04_qdec.QdecTests.test_double_transition_does_not_count_as_motion) ... ok
+test_forward_reverse_cycles_and_cancellation (test_v04_qdec.QdecTests.test_forward_reverse_cycles_and_cancellation) ... ok
+test_native_period_and_led_boundaries (test_v04_qdec.QdecTests.test_native_period_and_led_boundaries) ... ok
+test_production_uses_validated_period_and_explicit_report_policy (test_v04_qdec.QdecTests.test_production_uses_validated_period_and_explicit_report_policy) ... ok
+test_sampling_cannot_use_slow_nrfx_default (test_v04_qdec.QdecTests.test_sampling_cannot_use_slow_nrfx_default) ... ok
+test_stream_dap_borrowing_is_explicit_and_does_not_change_public_gpio (test_v04_qdec.QdecTests.test_stream_dap_borrowing_is_explicit_and_does_not_change_public_gpio) ... ok
+test_different_owner_is_scoped_and_nonrepository_rejected (test_v04_revision.RevisionTests.test_different_owner_is_scoped_and_nonrepository_rejected) ... ok
+test_fixture_gate_allowlist_expiry_and_fault_latch (test_v04_serial_lifecycle.SerialLifecycleTests.test_fixture_gate_allowlist_expiry_and_fault_latch) ... ok
+test_native_production_lifecycle (test_v04_serial_lifecycle.SerialLifecycleTests.test_native_production_lifecycle) ... ok
+test_native_production_route_validator (test_v04_serial_lifecycle.SerialLifecycleTests.test_native_production_route_validator) ... ok
+test_405_has_low_release_low_for_every_dma_boundary (test_v04_signal.SignalTests.test_405_has_low_release_low_for_every_dma_boundary) ... ok
+test_406_requires_input_bias_and_fully_settled_low_high_samples (test_v04_signal.SignalTests.test_406_requires_input_bias_and_fully_settled_low_high_samples)
+! @brief VBAT 공유 입력의 출력 활성화·미정착·경계 위반을 거부합니다. ... ok
+test_407_button_shared_input_rejects_stuck_low_and_any_output_driver (test_v04_signal.SignalTests.test_407_button_shared_input_rejects_stuck_low_and_any_output_driver)
+! @brief 버튼 공유 입력의 세 단계·DMA 경계와 눌림 LOW·출력 구성을 거부합니다. ... ok
+test_default_cli_is_preflight_and_execution_needs_files (test_v04_signal.SignalTests.test_default_cli_is_preflight_and_execution_needs_files) ... ok
+test_i2s_masks_are_width_and_channel_explicit (test_v04_signal.SignalTests.test_i2s_masks_are_width_and_channel_explicit) ... ok
+test_invalid_vectors_fail_closed (test_v04_signal.SignalTests.test_invalid_vectors_fail_closed) ... ok
+test_partial_arm_failure_still_disarms_both_devices (test_v04_signal.SignalTests.test_partial_arm_failure_still_disarms_both_devices)
+! @brief 두 번째 보드 arm 실패 시 첫 번째 보드의 lease를 방치하지 않습니다. ... ok
+test_pdm_firmware_reports_the_released_dma_length (test_v04_signal.SignalTests.test_pdm_firmware_reports_the_released_dma_length) ... ok
+test_pdm_runner_requires_channel_and_density_discrimination (test_v04_signal.SignalTests.test_pdm_runner_requires_channel_and_density_discrimination) ... ok
+test_shared_adc_oracle_rejects_stuck_levels_short_dma_and_push_pull (test_v04_signal.SignalTests.test_shared_adc_oracle_rejects_stuck_levels_short_dma_and_push_pull) ... ok
+test_shared_fixtures_run_all_phases_and_release_even_on_failure (test_v04_signal.SignalTests.test_shared_fixtures_run_all_phases_and_release_even_on_failure)
+! @brief Host 실행 순서와 실패 뒤 양쪽 cleanup을 모의 mailbox로 검증합니다. ... ok
+test_shared_source_never_drives_high_and_releases_on_abort (test_v04_signal.SignalTests.test_shared_source_never_drives_high_and_releases_on_abort)
+! @brief 실제 firmware helper를 컴파일하여 잘못된 인자·중복 시작·해제를 검사합니다. ... ok
+test_signal_campaign_is_bounded (test_v04_signal.SignalTests.test_signal_campaign_is_bounded) ... ok
+test_vector_counts_and_boundaries (test_v04_signal.SignalTests.test_vector_counts_and_boundaries) ... ok
+test_duplicate_json_key_rejected (test_v04_test_plan.V04TestPlanTests.test_duplicate_json_key_rejected) ... ok
+test_empty_criteria_and_bad_reuse_path_rejected (test_v04_test_plan.V04TestPlanTests.test_empty_criteria_and_bad_reuse_path_rejected) ... ok
+test_exact_inventory_and_generated_document (test_v04_test_plan.V04TestPlanTests.test_exact_inventory_and_generated_document) ... ok
+test_instance_omission_rejected (test_v04_test_plan.V04TestPlanTests.test_instance_omission_rejected) ... ok
+test_inventory_gate_calls_preparation_validator (test_v04_test_plan.V04TestPlanTests.test_inventory_gate_calls_preparation_validator) ... ok
+test_missing_or_duplicate_case_rejected (test_v04_test_plan.V04TestPlanTests.test_missing_or_duplicate_case_rejected) ... ok
+test_passing_plan_or_result_field_rejected (test_v04_test_plan.V04TestPlanTests.test_passing_plan_or_result_field_rejected) ... ok
+test_qdec_not_dma (test_v04_test_plan.V04TestPlanTests.test_qdec_not_dma) ... ok
+test_unknown_erratum_rejected (test_v04_test_plan.V04TestPlanTests.test_unknown_erratum_rejected) ... ok
+test_zero_timeout_and_loss_allowance_rejected (test_v04_test_plan.V04TestPlanTests.test_zero_timeout_and_loss_allowance_rejected) ... ok
+test_ambiguous_noisy_and_truncated_response_rejected (test_v04_uart.UartTests.test_ambiguous_noisy_and_truncated_response_rejected) ... ok
+test_continuous_mode_is_explicit_and_bounded (test_v04_uart.UartTests.test_continuous_mode_is_explicit_and_bounded) ... ok
+test_dma_state_fail_closed (test_v04_uart.UartTests.test_dma_state_fail_closed) ... ok
+test_oracle (test_v04_uart.UartTests.test_oracle) ... ok
+test_producer_pacing_is_explicit_and_partial_write_fails (test_v04_uart.UartTests.test_producer_pacing_is_explicit_and_partial_write_fails) ... ok
+test_vectors (test_v04_uart.UartTests.test_vectors) ... ok
+
+======================================================================
+FAIL: test_production_file (test_r04_file.FileLifetimeTests.test_production_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r04_file.py", line 23, in test_production_file
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 1 != 0 : C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r04_file_main.cpp:23:18: error: explicitly assigning value of variable of type 'File' to itself [-Werror,-Wself-assign-overloaded]
+   23 |         assigned = assigned;
+      |         ~~~~~~~~ ^ ~~~~~~~~
+1 error generated.
+
+
+======================================================================
+FAIL: test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r09_spi_facade.py", line 28, in test_production_spi_facade
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 1 != 0 : In file included from C:\Users\eidos\GitHub\NU54DK_Arduino_Core\cores\arduino\SPI.cpp:8:
+In file included from C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\spi_facade_stubs\Arduino.h:3:
+In file included from C:\Users\eidos\GitHub\NU54DK_Arduino_Core\cores\arduino\NUCODEPeripheral.h:11:
+C:\Users\eidos\GitHub\NU54DK_Arduino_Core\third_party\ArduinoCore-API\api/Common.h:110:9: error: 'main' should not be 'extern "C"' [-Werror,-Wmain]
+  110 |     int main() __attribute__((weak));
+      |         ^
+1 error generated.
+In file included from C:\Users\eidos\GitHub\NU54DK_Arduino_Core\cores\arduino\internal\spi\SpiZephyrBackend.cpp:6:
+In file included from C:\Users\eidos\GitHub\NU54DK_Arduino_Core\cores\arduino\internal/spi/SpiBackendOperations.h:8:
+In file included from C:\Users\eidos\GitHub\NU54DK_Arduino_Core\third_party\ArduinoCore-API\api/HardwareSPI.h:22:
+C:\Users\eidos\GitHub\NU54DK_Arduino_Core\third_party\ArduinoCore-API\api\Common.h:110:9: error: 'main' should not be 'extern "C"' [-Werror,-Wmain]
+  110 |     int main() __attribute__((weak));
+      |         ^
+1 error generated.
+
+
+======================================================================
+FAIL: test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_gap.py", line 32, in test_production_gap_lifecycle
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 1 != 0 : C:\Users\eidos\GitHub\NU54DK_Arduino_Core\libraries\NUCODE_BLE\src\internal\gap\GapScanning.cpp:286:21: error: non-constant-expression cannot be narrowed from type '(unnamed enum at C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\ble_stubs\ble_mock.h:219:1)' to 'std::uint8_t' (aka 'unsigned char') in initializer list [-Wc++11-narrowing]
+  286 |             .type = active ? BT_LE_SCAN_TYPE_ACTIVE : BT_LE_SCAN_TYPE_PASSIVE,
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\eidos\GitHub\NU54DK_Arduino_Core\libraries\NUCODE_BLE\src\internal\gap\GapScanning.cpp:286:21: note: insert an explicit cast to silence this issue
+  286 |             .type = active ? BT_LE_SCAN_TYPE_ACTIVE : BT_LE_SCAN_TYPE_PASSIVE,
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                     static_cast<uint8_t>(                                    )
+1 error generated.
+
+
+======================================================================
+FAIL: test_production_gatt_lifecycle (test_r12_ble_gatt.BleGattTests.test_production_gatt_lifecycle)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_gatt.py", line 37, in test_production_gatt_lifecycle
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 1 != 0 : C:\Users\eidos\GitHub\NU54DK_Arduino_Core\libraries\NUCODE_BLE\src\internal\gap\GapScanning.cpp:286:21: error: non-constant-expression cannot be narrowed from type '(unnamed enum at C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\ble_stubs\ble_mock.h:219:1)' to 'std::uint8_t' (aka 'unsigned char') in initializer list [-Wc++11-narrowing]
+  286 |             .type = active ? BT_LE_SCAN_TYPE_ACTIVE : BT_LE_SCAN_TYPE_PASSIVE,
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\eidos\GitHub\NU54DK_Arduino_Core\libraries\NUCODE_BLE\src\internal\gap\GapScanning.cpp:286:21: note: insert an explicit cast to silence this issue
+  286 |             .type = active ? BT_LE_SCAN_TYPE_ACTIVE : BT_LE_SCAN_TYPE_PASSIVE,
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                     static_cast<uint8_t>(                                    )
+1 error generated.
+
+
+======================================================================
+FAIL: test_production_security_lifecycle (test_r12_ble_security.BleSecurityTests.test_production_security_lifecycle)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_security.py", line 48, in test_production_security_lifecycle
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 1 != 0 : C:\Users\eidos\GitHub\NU54DK_Arduino_Core\libraries\NUCODE_BLE\src\internal\gap\GapScanning.cpp:286:21: error: non-constant-expression cannot be narrowed from type '(unnamed enum at C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\ble_stubs\ble_mock.h:219:1)' to 'std::uint8_t' (aka 'unsigned char') in initializer list [-Wc++11-narrowing]
+  286 |             .type = active ? BT_LE_SCAN_TYPE_ACTIVE : BT_LE_SCAN_TYPE_PASSIVE,
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\eidos\GitHub\NU54DK_Arduino_Core\libraries\NUCODE_BLE\src\internal\gap\GapScanning.cpp:286:21: note: insert an explicit cast to silence this issue
+  286 |             .type = active ? BT_LE_SCAN_TYPE_ACTIVE : BT_LE_SCAN_TYPE_PASSIVE,
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                     static_cast<uint8_t>(                                    )
+1 error generated.
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=())
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 59, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- The CXX compiler identification is Clang 22.1.8 with GNU-like command-line
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - failed
+-- Check for working CXX compiler: C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe
+-- Check for working CXX compiler: C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe - broken
+-- Configuring incomplete, errors occurred!
+CMake Error at C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/share/cmake-4.4/Modules/CMakeTestCXXCompiler.cmake:71 (message):
+  The C++ compiler
+
+    "C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe"
+
+  is not able to compile a simple test program.
+
+  It fails with the following output:
+
+    Change Dir: 'C:/Users/eidos/AppData/Local/Temp/nu54-r01-cmake-hpz277y2/build-0/CMakeFiles/CMakeScratch/TryCompile-cnhwt5'
+    
+    Run Build Command(s): C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe -v cmTC_f3362
+    [1/2] C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -D_MBCS  -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -MD -MT CMakeFiles/cmTC_f3362.dir/testCXXCompiler.cxx.obj -MF CMakeFiles\cmTC_f3362.dir\testCXXCompiler.cxx.obj.d -o CMakeFiles/cmTC_f3362.dir/testCXXCompiler.cxx.obj -c C:/Users/eidos/AppData/Local/Temp/nu54-r01-cmake-hpz277y2/build-0/CMakeFiles/CMakeScratch/TryCompile-cnhwt5/testCXXCompiler.cxx
+    [2/2] C:\WINDOWS\system32\cmd.exe /C "cd . && C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld CMakeFiles/cmTC_f3362.dir/testCXXCompiler.cxx.obj -o cmTC_f3362.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_f3362.lib -Xlinker /pdb:cmTC_f3362.pdb -Xlinker /version:0.0   -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames  && cd ."
+    FAILED: [code=1] cmTC_f3362.exe 
+    C:\WINDOWS\system32\cmd.exe /C "cd . && C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld CMakeFiles/cmTC_f3362.dir/testCXXCompiler.cxx.obj -o cmTC_f3362.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_f3362.lib -Xlinker /pdb:cmTC_f3362.pdb -Xlinker /version:0.0   -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames  && cd ."
+    lld-link: error: could not open 'kernel32.lib': no such file or directory
+    lld-link: error: could not open 'user32.lib': no such file or directory
+    lld-link: error: could not open 'gdi32.lib': no such file or directory
+    lld-link: error: could not open 'winspool.lib': no such file or directory
+    lld-link: error: could not open 'shell32.lib': no such file or directory
+    lld-link: error: could not open 'ole32.lib': no such file or directory
+    lld-link: error: could not open 'oleaut32.lib': no such file or directory
+    lld-link: error: could not open 'uuid.lib': no such file or directory
+    lld-link: error: could not open 'comdlg32.lib': no such file or directory
+    lld-link: error: could not open 'advapi32.lib': no such file or directory
+    lld-link: error: could not open 'oldnames.lib': no such file or directory
+    lld-link: error: could not open 'msvcrtd.lib': no such file or directory
+    clang++: error: linker command failed with exit code 1 (use -v to see invocation)
+    ninja: build stopped: subcommand failed.
+    
+    
+
+
+
+  CMake will not be able to correctly generate this project.
+Call Stack (most recent call first):
+  CMakeLists.txt:3 (project)
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('UARTE',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 59, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- The CXX compiler identification is Clang 22.1.8 with GNU-like command-line
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - failed
+-- Check for working CXX compiler: C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe
+-- Check for working CXX compiler: C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe - broken
+-- Configuring incomplete, errors occurred!
+CMake Error at C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/share/cmake-4.4/Modules/CMakeTestCXXCompiler.cmake:71 (message):
+  The C++ compiler
+
+    "C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe"
+
+  is not able to compile a simple test program.
+
+  It fails with the following output:
+
+    Change Dir: 'C:/Users/eidos/AppData/Local/Temp/nu54-r01-cmake-hpz277y2/build-1/CMakeFiles/CMakeScratch/TryCompile-pgawvp'
+    
+    Run Build Command(s): C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe -v cmTC_387b8
+    [1/2] C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -D_MBCS  -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -MD -MT CMakeFiles/cmTC_387b8.dir/testCXXCompiler.cxx.obj -MF CMakeFiles\cmTC_387b8.dir\testCXXCompiler.cxx.obj.d -o CMakeFiles/cmTC_387b8.dir/testCXXCompiler.cxx.obj -c C:/Users/eidos/AppData/Local/Temp/nu54-r01-cmake-hpz277y2/build-1/CMakeFiles/CMakeScratch/TryCompile-pgawvp/testCXXCompiler.cxx
+    [2/2] C:\WINDOWS\system32\cmd.exe /C "cd . && C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld CMakeFiles/cmTC_387b8.dir/testCXXCompiler.cxx.obj -o cmTC_387b8.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_387b8.lib -Xlinker /pdb:cmTC_387b8.pdb -Xlinker /version:0.0   -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames  && cd ."
+    FAILED: [code=1] cmTC_387b8.exe 
+    C:\WINDOWS\system32\cmd.exe /C "cd . && C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld CMakeFiles/cmTC_387b8.dir/testCXXCompiler.cxx.obj -o cmTC_387b8.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_387b8.lib -Xlinker /pdb:cmTC_387b8.pdb -Xlinker /version:0.0   -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames  && cd ."
+    lld-link: error: could not open 'kernel32.lib': no such file or directory
+    lld-link: error: could not open 'user32.lib': no such file or directory
+    lld-link: error: could not open 'gdi32.lib': no such file or directory
+    lld-link: error: could not open 'winspool.lib': no such file or directory
+    lld-link: error: could not open 'shell32.lib': no such file or directory
+    lld-link: error: could not open 'ole32.lib': no such file or directory
+    lld-link: error: could not open 'oleaut32.lib': no such file or directory
+    lld-link: error: could not open 'uuid.lib': no such file or directory
+    lld-link: error: could not open 'comdlg32.lib': no such file or directory
+    lld-link: error: could not open 'advapi32.lib': no such file or directory
+    lld-link: error: could not open 'oldnames.lib': no such file or directory
+    lld-link: error: could not open 'msvcrtd.lib': no such file or directory
+    clang++: error: linker command failed with exit code 1 (use -v to see invocation)
+    ninja: build stopped: subcommand failed.
+    
+    
+
+
+
+  CMake will not be able to correctly generate this project.
+Call Stack (most recent call first):
+  CMakeLists.txt:3 (project)
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('SPIM',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 59, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- The CXX compiler identification is Clang 22.1.8 with GNU-like command-line
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - failed
+-- Check for working CXX compiler: C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe
+-- Check for working CXX compiler: C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe - broken
+-- Configuring incomplete, errors occurred!
+CMake Error at C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/share/cmake-4.4/Modules/CMakeTestCXXCompiler.cmake:71 (message):
+  The C++ compiler
+
+    "C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe"
+
+  is not able to compile a simple test program.
+
+  It fails with the following output:
+
+    Change Dir: 'C:/Users/eidos/AppData/Local/Temp/nu54-r01-cmake-hpz277y2/build-2/CMakeFiles/CMakeScratch/TryCompile-9dshvt'
+    
+    Run Build Command(s): C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe -v cmTC_d4e2f
+    [1/2] C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -D_MBCS  -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -MD -MT CMakeFiles/cmTC_d4e2f.dir/testCXXCompiler.cxx.obj -MF CMakeFiles\cmTC_d4e2f.dir\testCXXCompiler.cxx.obj.d -o CMakeFiles/cmTC_d4e2f.dir/testCXXCompiler.cxx.obj -c C:/Users/eidos/AppData/Local/Temp/nu54-r01-cmake-hpz277y2/build-2/CMakeFiles/CMakeScratch/TryCompile-9dshvt/testCXXCompiler.cxx
+    [2/2] C:\WINDOWS\system32\cmd.exe /C "cd . && C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld CMakeFiles/cmTC_d4e2f.dir/testCXXCompiler.cxx.obj -o cmTC_d4e2f.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_d4e2f.lib -Xlinker /pdb:cmTC_d4e2f.pdb -Xlinker /version:0.0   -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames  && cd ."
+    FAILED: [code=1] cmTC_d4e2f.exe 
+    C:\WINDOWS\system32\cmd.exe /C "cd . && C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld CMakeFiles/cmTC_d4e2f.dir/testCXXCompiler.cxx.obj -o cmTC_d4e2f.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_d4e2f.lib -Xlinker /pdb:cmTC_d4e2f.pdb -Xlinker /version:0.0   -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames  && cd ."
+    lld-link: error: could not open 'kernel32.lib': no such file or directory
+    lld-link: error: could not open 'user32.lib': no such file or directory
+    lld-link: error: could not open 'gdi32.lib': no such file or directory
+    lld-link: error: could not open 'winspool.lib': no such file or directory
+    lld-link: error: could not open 'shell32.lib': no such file or directory
+    lld-link: error: could not open 'ole32.lib': no such file or directory
+    lld-link: error: could not open 'oleaut32.lib': no such file or directory
+    lld-link: error: could not open 'uuid.lib': no such file or directory
+    lld-link: error: could not open 'comdlg32.lib': no such file or directory
+    lld-link: error: could not open 'advapi32.lib': no such file or directory
+    lld-link: error: could not open 'oldnames.lib': no such file or directory
+    lld-link: error: could not open 'msvcrtd.lib': no such file or directory
+    clang++: error: linker command failed with exit code 1 (use -v to see invocation)
+    ninja: build stopped: subcommand failed.
+    
+    
+
+
+
+  CMake will not be able to correctly generate this project.
+Call Stack (most recent call first):
+  CMakeLists.txt:3 (project)
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('SPIS',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 59, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- The CXX compiler identification is Clang 22.1.8 with GNU-like command-line
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - failed
+-- Check for working CXX compiler: C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe
+-- Check for working CXX compiler: C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe - broken
+-- Configuring incomplete, errors occurred!
+CMake Error at C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/share/cmake-4.4/Modules/CMakeTestCXXCompiler.cmake:71 (message):
+  The C++ compiler
+
+    "C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe"
+
+  is not able to compile a simple test program.
+
+  It fails with the following output:
+
+    Change Dir: 'C:/Users/eidos/AppData/Local/Temp/nu54-r01-cmake-hpz277y2/build-3/CMakeFiles/CMakeScratch/TryCompile-pbqqpo'
+    
+    Run Build Command(s): C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe -v cmTC_4a3b4
+    [1/2] C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -D_MBCS  -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -MD -MT CMakeFiles/cmTC_4a3b4.dir/testCXXCompiler.cxx.obj -MF CMakeFiles\cmTC_4a3b4.dir\testCXXCompiler.cxx.obj.d -o CMakeFiles/cmTC_4a3b4.dir/testCXXCompiler.cxx.obj -c C:/Users/eidos/AppData/Local/Temp/nu54-r01-cmake-hpz277y2/build-3/CMakeFiles/CMakeScratch/TryCompile-pbqqpo/testCXXCompiler.cxx
+    [2/2] C:\WINDOWS\system32\cmd.exe /C "cd . && C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld CMakeFiles/cmTC_4a3b4.dir/testCXXCompiler.cxx.obj -o cmTC_4a3b4.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_4a3b4.lib -Xlinker /pdb:cmTC_4a3b4.pdb -Xlinker /version:0.0   -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames  && cd ."
+    FAILED: [code=1] cmTC_4a3b4.exe 
+    C:\WINDOWS\system32\cmd.exe /C "cd . && C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld CMakeFiles/cmTC_4a3b4.dir/testCXXCompiler.cxx.obj -o cmTC_4a3b4.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_4a3b4.lib -Xlinker /pdb:cmTC_4a3b4.pdb -Xlinker /version:0.0   -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames  && cd ."
+    lld-link: error: could not open 'kernel32.lib': no such file or directory
+    lld-link: error: could not open 'user32.lib': no such file or directory
+    lld-link: error: could not open 'gdi32.lib': no such file or directory
+    lld-link: error: could not open 'winspool.lib': no such file or directory
+    lld-link: error: could not open 'shell32.lib': no such file or directory
+    lld-link: error: could not open 'ole32.lib': no such file or directory
+    lld-link: error: could not open 'oleaut32.lib': no such file or directory
+    lld-link: error: could not open 'uuid.lib': no such file or directory
+    lld-link: error: could not open 'comdlg32.lib': no such file or directory
+    lld-link: error: could not open 'advapi32.lib': no such file or directory
+    lld-link: error: could not open 'oldnames.lib': no such file or directory
+    lld-link: error: could not open 'msvcrtd.lib': no such file or directory
+    clang++: error: linker command failed with exit code 1 (use -v to see invocation)
+    ninja: build stopped: subcommand failed.
+    
+    
+
+
+
+  CMake will not be able to correctly generate this project.
+Call Stack (most recent call first):
+  CMakeLists.txt:3 (project)
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('TWIM',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 59, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- The CXX compiler identification is Clang 22.1.8 with GNU-like command-line
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - failed
+-- Check for working CXX compiler: C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe
+-- Check for working CXX compiler: C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe - broken
+-- Configuring incomplete, errors occurred!
+CMake Error at C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/share/cmake-4.4/Modules/CMakeTestCXXCompiler.cmake:71 (message):
+  The C++ compiler
+
+    "C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe"
+
+  is not able to compile a simple test program.
+
+  It fails with the following output:
+
+    Change Dir: 'C:/Users/eidos/AppData/Local/Temp/nu54-r01-cmake-hpz277y2/build-4/CMakeFiles/CMakeScratch/TryCompile-neldh7'
+    
+    Run Build Command(s): C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe -v cmTC_28273
+    [1/2] C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -D_MBCS  -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -MD -MT CMakeFiles/cmTC_28273.dir/testCXXCompiler.cxx.obj -MF CMakeFiles\cmTC_28273.dir\testCXXCompiler.cxx.obj.d -o CMakeFiles/cmTC_28273.dir/testCXXCompiler.cxx.obj -c C:/Users/eidos/AppData/Local/Temp/nu54-r01-cmake-hpz277y2/build-4/CMakeFiles/CMakeScratch/TryCompile-neldh7/testCXXCompiler.cxx
+    [2/2] C:\WINDOWS\system32\cmd.exe /C "cd . && C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld CMakeFiles/cmTC_28273.dir/testCXXCompiler.cxx.obj -o cmTC_28273.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_28273.lib -Xlinker /pdb:cmTC_28273.pdb -Xlinker /version:0.0   -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames  && cd ."
+    FAILED: [code=1] cmTC_28273.exe 
+    C:\WINDOWS\system32\cmd.exe /C "cd . && C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld CMakeFiles/cmTC_28273.dir/testCXXCompiler.cxx.obj -o cmTC_28273.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_28273.lib -Xlinker /pdb:cmTC_28273.pdb -Xlinker /version:0.0   -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames  && cd ."
+    lld-link: error: could not open 'kernel32.lib': no such file or directory
+    lld-link: error: could not open 'user32.lib': no such file or directory
+    lld-link: error: could not open 'gdi32.lib': no such file or directory
+    lld-link: error: could not open 'winspool.lib': no such file or directory
+    lld-link: error: could not open 'shell32.lib': no such file or directory
+    lld-link: error: could not open 'ole32.lib': no such file or directory
+    lld-link: error: could not open 'oleaut32.lib': no such file or directory
+    lld-link: error: could not open 'uuid.lib': no such file or directory
+    lld-link: error: could not open 'comdlg32.lib': no such file or directory
+    lld-link: error: could not open 'advapi32.lib': no such file or directory
+    lld-link: error: could not open 'oldnames.lib': no such file or directory
+    lld-link: error: could not open 'msvcrtd.lib': no such file or directory
+    clang++: error: linker command failed with exit code 1 (use -v to see invocation)
+    ninja: build stopped: subcommand failed.
+    
+    
+
+
+
+  CMake will not be able to correctly generate this project.
+Call Stack (most recent call first):
+  CMakeLists.txt:3 (project)
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('TWIS',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 59, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- The CXX compiler identification is Clang 22.1.8 with GNU-like command-line
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - failed
+-- Check for working CXX compiler: C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe
+-- Check for working CXX compiler: C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe - broken
+-- Configuring incomplete, errors occurred!
+CMake Error at C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/share/cmake-4.4/Modules/CMakeTestCXXCompiler.cmake:71 (message):
+  The C++ compiler
+
+    "C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe"
+
+  is not able to compile a simple test program.
+
+  It fails with the following output:
+
+    Change Dir: 'C:/Users/eidos/AppData/Local/Temp/nu54-r01-cmake-hpz277y2/build-5/CMakeFiles/CMakeScratch/TryCompile-x523q0'
+    
+    Run Build Command(s): C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe -v cmTC_a2c63
+    [1/2] C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -D_MBCS  -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -MD -MT CMakeFiles/cmTC_a2c63.dir/testCXXCompiler.cxx.obj -MF CMakeFiles\cmTC_a2c63.dir\testCXXCompiler.cxx.obj.d -o CMakeFiles/cmTC_a2c63.dir/testCXXCompiler.cxx.obj -c C:/Users/eidos/AppData/Local/Temp/nu54-r01-cmake-hpz277y2/build-5/CMakeFiles/CMakeScratch/TryCompile-x523q0/testCXXCompiler.cxx
+    [2/2] C:\WINDOWS\system32\cmd.exe /C "cd . && C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld CMakeFiles/cmTC_a2c63.dir/testCXXCompiler.cxx.obj -o cmTC_a2c63.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_a2c63.lib -Xlinker /pdb:cmTC_a2c63.pdb -Xlinker /version:0.0   -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames  && cd ."
+    FAILED: [code=1] cmTC_a2c63.exe 
+    C:\WINDOWS\system32\cmd.exe /C "cd . && C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld CMakeFiles/cmTC_a2c63.dir/testCXXCompiler.cxx.obj -o cmTC_a2c63.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_a2c63.lib -Xlinker /pdb:cmTC_a2c63.pdb -Xlinker /version:0.0   -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames  && cd ."
+    lld-link: error: could not open 'kernel32.lib': no such file or directory
+    lld-link: error: could not open 'user32.lib': no such file or directory
+    lld-link: error: could not open 'gdi32.lib': no such file or directory
+    lld-link: error: could not open 'winspool.lib': no such file or directory
+    lld-link: error: could not open 'shell32.lib': no such file or directory
+    lld-link: error: could not open 'ole32.lib': no such file or directory
+    lld-link: error: could not open 'oleaut32.lib': no such file or directory
+    lld-link: error: could not open 'uuid.lib': no such file or directory
+    lld-link: error: could not open 'comdlg32.lib': no such file or directory
+    lld-link: error: could not open 'advapi32.lib': no such file or directory
+    lld-link: error: could not open 'oldnames.lib': no such file or directory
+    lld-link: error: could not open 'msvcrtd.lib': no such file or directory
+    clang++: error: linker command failed with exit code 1 (use -v to see invocation)
+    ninja: build stopped: subcommand failed.
+    
+    
+
+
+
+  CMake will not be able to correctly generate this project.
+Call Stack (most recent call first):
+  CMakeLists.txt:3 (project)
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('UARTE', 'SPIM', 'SPIS', 'TWIM', 'TWIS'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 59, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- The CXX compiler identification is Clang 22.1.8 with GNU-like command-line
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - failed
+-- Check for working CXX compiler: C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe
+-- Check for working CXX compiler: C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe - broken
+-- Configuring incomplete, errors occurred!
+CMake Error at C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/share/cmake-4.4/Modules/CMakeTestCXXCompiler.cmake:71 (message):
+  The C++ compiler
+
+    "C:/NU54DEV/tools/LLVM-22.1.8/bin/clang++.exe"
+
+  is not able to compile a simple test program.
+
+  It fails with the following output:
+
+    Change Dir: 'C:/Users/eidos/AppData/Local/Temp/nu54-r01-cmake-hpz277y2/build-6/CMakeFiles/CMakeScratch/TryCompile-cf5rl8'
+    
+    Run Build Command(s): C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe -v cmTC_fd151
+    [1/2] C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -D_MBCS  -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -MD -MT CMakeFiles/cmTC_fd151.dir/testCXXCompiler.cxx.obj -MF CMakeFiles\cmTC_fd151.dir\testCXXCompiler.cxx.obj.d -o CMakeFiles/cmTC_fd151.dir/testCXXCompiler.cxx.obj -c C:/Users/eidos/AppData/Local/Temp/nu54-r01-cmake-hpz277y2/build-6/CMakeFiles/CMakeScratch/TryCompile-cf5rl8/testCXXCompiler.cxx
+    [2/2] C:\WINDOWS\system32\cmd.exe /C "cd . && C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld CMakeFiles/cmTC_fd151.dir/testCXXCompiler.cxx.obj -o cmTC_fd151.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_fd151.lib -Xlinker /pdb:cmTC_fd151.pdb -Xlinker /version:0.0   -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames  && cd ."
+    FAILED: [code=1] cmTC_fd151.exe 
+    C:\WINDOWS\system32\cmd.exe /C "cd . && C:\NU54DEV\tools\LLVM-22.1.8\bin\clang++.exe -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld CMakeFiles/cmTC_fd151.dir/testCXXCompiler.cxx.obj -o cmTC_fd151.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_fd151.lib -Xlinker /pdb:cmTC_fd151.pdb -Xlinker /version:0.0   -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames  && cd ."
+    lld-link: error: could not open 'kernel32.lib': no such file or directory
+    lld-link: error: could not open 'user32.lib': no such file or directory
+    lld-link: error: could not open 'gdi32.lib': no such file or directory
+    lld-link: error: could not open 'winspool.lib': no such file or directory
+    lld-link: error: could not open 'shell32.lib': no such file or directory
+    lld-link: error: could not open 'ole32.lib': no such file or directory
+    lld-link: error: could not open 'oleaut32.lib': no such file or directory
+    lld-link: error: could not open 'uuid.lib': no such file or directory
+    lld-link: error: could not open 'comdlg32.lib': no such file or directory
+    lld-link: error: could not open 'advapi32.lib': no such file or directory
+    lld-link: error: could not open 'oldnames.lib': no such file or directory
+    lld-link: error: could not open 'msvcrtd.lib': no such file or directory
+    clang++: error: linker command failed with exit code 1 (use -v to see invocation)
+    ninja: build stopped: subcommand failed.
+    
+    
+
+
+
+  CMake will not be able to correctly generate this project.
+Call Stack (most recent call first):
+  CMakeLists.txt:3 (project)
+
+
+
+
+----------------------------------------------------------------------
+Ran 113 tests in 56.070s
+
+FAILED (failures=12)
