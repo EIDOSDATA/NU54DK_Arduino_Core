@@ -363,7 +363,14 @@ int main()
         serviceSignal();
         if (v04_request[0] != v04::magic)
         {
-            k_sleep(K_MSEC(1));
+            if (signalNeedsPolling())
+            {
+                k_busy_wait(10U);
+            }
+            else
+            {
+                k_sleep(K_MSEC(1));
+            }
             continue;
         }
         __DMB();

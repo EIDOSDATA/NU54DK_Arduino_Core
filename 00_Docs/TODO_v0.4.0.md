@@ -1,5 +1,7 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
+430 진행 중: 2026-09-06T17:43:49Z 사용자가 430 결선을 확인했다. exact 56a88a5 첫 16 kHz/8-bit/stereo/32-word/단일 buffer 실행은 payload 반환 전 underrun으로 실패했고 양쪽 disarm·I2S off·핀 복원은 확인했다. T12/T14 HIL 교정으로 buffers_needed에 다음 payload/tail을 제출하고 마지막 payload 반환 후 STOP하며, 짧은 DMA 구간은 thread에서 즉시 service한다. 기대 payload와 오류 기준은 유지하며 새 exact source의 Host·build·192개 실기 재검증 뒤 문서·commit/push한다. 공용 PWM T14 이슈와 440 이후는 별도 유지한다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID / 개정 | TODO-V04-001 / 3.14 |

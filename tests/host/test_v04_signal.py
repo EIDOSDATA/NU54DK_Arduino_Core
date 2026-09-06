@@ -16,6 +16,42 @@ from host_compiler import compiler_command
 
 
 class SignalTests(unittest.TestCase):
+    def test_i2s_finite_transfer_waits_for_payload_release_and_uses_separate_tail(self):
+        """! @brief 실제 HIL 순서 helper에서 단일/이중 반환·중복·미제출 slot을 검사합니다. """
+        source = r'''
+#include "i2s_finite_transfer.h"
+#include <cassert>
+int main()
+{
+    v04::I2sFiniteTransfer plan;
+    plan.reset(1);
+    assert(!plan.complete() && plan.nextSlot() == 2);
+    assert(!plan.released(1) && !plan.released(2));
+    plan.queued();
+    assert(plan.nextSlot() == 3 && !plan.complete());
+    assert(plan.released(0) && plan.complete());
+    assert(!plan.released(0));
+    plan.reset(2);
+    assert(plan.nextSlot() == 1 && !plan.released(1));
+    plan.queued();
+    assert(plan.released(0) && !plan.complete() && plan.nextSlot() == 2);
+    assert(!plan.released(0) && !plan.released(2));
+    plan.queued();
+    assert(plan.released(1) && plan.complete() && plan.nextSlot() == 3);
+    assert(!plan.released(1) && !plan.released(2));
+}
+'''
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "finite.cpp"
+            executable = Path(folder) / "finite.exe"
+            path.write_text(source, encoding="utf-8")
+            result = subprocess.run(compiler_command() + ["-std=c++17", "-Wall", "-Wextra", "-Werror",
+                "-I", str(ROOT / "tests/zephyr/v04_pair_hil/src"), str(path), "-o", str(executable)],
+                capture_output=True, text=True, timeout=60)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            result = subprocess.run([str(executable)], capture_output=True, text=True, timeout=10)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_shared_fixtures_run_all_phases_and_release_even_on_failure(self):
         """! @brief Host 실행 순서와 실패 뒤 양쪽 cleanup을 모의 mailbox로 검증합니다. """
         import struct

@@ -9,6 +9,7 @@
 #include "fixture_hil.h"
 #include "shared_analog_source.h"
 #include "qdec_waveform.h"
+#include "i2s_finite_transfer.h"
 #include <nucode/AnalogFabric.h>
 #include <nucode/SerialFabric.h>
 #include <nucode/StreamFabric.h>
@@ -33,8 +34,10 @@ namespace
     alignas(4) std::int16_t analog_samples[2][analog_capacity]{};
     alignas(4) std::int16_t pdm_samples[2][stream_capacity]{};
     alignas(4) std::uint16_t pwm_values[16]{};
-    alignas(4) std::uint32_t i2s_rx[2][stream_capacity]{};
-    alignas(4) std::uint32_t i2s_tx[2][stream_capacity]{};
+    /** @brief slot 2는 마지막 payload를 DMA에서 반환받기 위한 전용 tail이며 판정에서 제외합니다. */
+    alignas(4) std::uint32_t i2s_rx[3][stream_capacity]{};
+    alignas(4) std::uint32_t i2s_tx[3][stream_capacity]{};
+    v04::I2sFiniteTransfer i2s_transfer;
     alignas(4) std::uint8_t pdm_source[pdm_source_capacity]{};
 
     SaadcFabric *saadc = nullptr;
@@ -173,7 +176,8 @@ namespace
         {
             stopped &= qdec->stop() == StreamFabricResult::success;
         }
-        if (i2s != nullptr && i2s->state() == StreamFabricState::active)
+        if (i2s != nullptr && (i2s->state() == StreamFabricState::active ||
+                               i2s->state() == StreamFabricState::stopping))
         {
             stopped &= i2s->stop(100000U) == StreamFabricResult::success;
         }
@@ -328,6 +332,7 @@ namespace
         }
         requested = args[3];
         i2s_buffers = args[4];
+        i2s_transfer.reset(i2s_buffers);
         for (std::size_t slot = 0U; slot < 2U; ++slot)
         {
             for (std::size_t index = 0U; index < requested; ++index)
@@ -490,11 +495,6 @@ namespace
             {
                 result =
                     i2s->start({i2s_rx[0], i2s_tx[0], requested}) == StreamFabricResult::success;
-                if (result && i2s_buffers == 2U)
-                {
-                    result = i2s->queueBuffers({i2s_rx[1], i2s_tx[1], requested}) ==
-                             StreamFabricResult::success;
-                }
             }
             break;
         case v04::FixtureFamily::pdm:
@@ -520,6 +520,11 @@ namespace
         return result;
     }
 } // namespace
+
+bool signalNeedsPolling()
+{
+    return i2s != nullptr && started && error == 0U && !complete;
+}
 
 bool signalClaimed()
 {
@@ -603,7 +608,7 @@ void serviceSignal()
                                       : event.released.receive == i2s_rx[1] ? 1U
                                                                             : 2U;
                 if (slot >= i2s_buffers || event.released.transmit != i2s_tx[slot] ||
-                    event.released.words != requested)
+                    event.released.words != requested || !i2s_transfer.released(slot))
                 {
                     error |= 64U;
                 }
@@ -611,11 +616,37 @@ void serviceSignal()
                 {
                     i2s_completed_mask |= 1U << slot;
                     amount += static_cast<std::uint32_t>(event.released.words);
-                    complete = i2s_completed_mask == ((1U << i2s_buffers) - 1U);
+                }
+            }
+            else if (event.type == I2sEventType::buffers_needed && !i2s_transfer.complete())
+            {
+                const auto slot = i2s_transfer.nextSlot();
+                if (slot >= 3U || i2s->queueBuffers({i2s_rx[slot], i2s_tx[slot],
+                                                     slot == 2U ? stream_capacity : requested}) !=
+                                      StreamFabricResult::success)
+                {
+                    error |= 128U;
+                }
+                else
+                {
+                    i2s_transfer.queued();
                 }
             }
             else if (event.type == I2sEventType::error ||
                      (event.type == I2sEventType::underrun && !complete))
+            {
+                error |= 128U;
+            }
+        }
+        if (error == 0U && i2s_transfer.complete())
+        {
+            /** @brief payload 반환 뒤 tail이 활성인 동안 정지하여 시험 buffer 재사용을 막습니다. */
+            if (i2s->stop(100000U) == StreamFabricResult::success)
+            {
+                i2s = nullptr;
+                complete = true;
+            }
+            else
             {
                 error |= 128U;
             }
