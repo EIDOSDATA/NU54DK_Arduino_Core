@@ -11,6 +11,7 @@ import sys
 import tempfile
 import unittest
 from unittest import mock
+import yaml
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
@@ -40,17 +41,33 @@ ARDUINO = load_module(
 class BuildMatrixRunnerTests(unittest.TestCase):
     """! @brief 릴리스 기능군 범위·명령·진단 경계를 검증합니다. """
 
-    ## @brief Zephyr 56개 시나리오가 중복·누락 없이 4/10/15/27로 분리됩니다.
+    ## @brief Zephyr 60개 시나리오가 중복·누락 없이 4/10/19/27로 분리됩니다.
     def test_zephyr_groups_partition_every_suite_once(self) -> None:
         self.assertEqual(
             {name: len(suites) for name, suites in ZEPHYR.SUITE_GROUPS.items()},
-            {"v0.1.0": 4, "v0.2.0": 10, "v0.3.0": 15, "v0.4.0": 27},
+            {"v0.1.0": 4, "v0.2.0": 10, "v0.3.0": 19, "v0.4.0": 27},
         )
         flattened = tuple(
             suite for suites in ZEPHYR.SUITE_GROUPS.values() for suite in suites
         )
         self.assertEqual(flattened, ZEPHYR.SUITES)
         self.assertEqual(len(set(flattened)), len(flattened))
+
+    def test_all_nu54dk_testcase_metadata_is_in_canonical_runner(self) -> None:
+        """! @brief 독립 testcase YAML을 대조하여 새 target의 canonical 목록 누락을 거부합니다. """
+        expected = set()
+        excluded = set()
+        for path in (REPOSITORY / "tests/zephyr").glob("*/testcase.yaml"):
+            document = yaml.safe_load(path.read_text(encoding="utf-8"))
+            common = document.get("common", {})
+            for name, test in document["tests"].items():
+                platforms = test.get("platform_allow", common.get("platform_allow", []))
+                if ZEPHYR.BOARD_TARGET in platforms:
+                    expected.add((path.parent.name, name))
+                else:
+                    excluded.add(name)
+        self.assertEqual(set(ZEPHYR.SUITES), expected)
+        self.assertEqual(excluded, {"nucode.m14.cpp_policy"})
 
     def test_target_subset_never_silently_escapes_group(self) -> None:
         names = ("nucode.v04.pair_dut", "nucode.v04.pair_peer")

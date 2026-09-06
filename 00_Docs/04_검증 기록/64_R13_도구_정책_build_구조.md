@@ -57,3 +57,19 @@ M27 8 PASS/dirty-checkout 1 SKIP와 Markdown 172개를 통과했다. 최초 CI l
 [M27](evidence/r13a-480d780/m27-host.txt), [M18](evidence/r13a-480d780/m18-host.txt),
 [최초 lock 실패](evidence/r13a-480d780/initial-lock-failure.txt),
 [최초 candidate 실패](evidence/r13a-480d780/initial-candidate-failure.txt)를 보존한다.
+
+### R13-B0 선택되지 않은 SPI driver 참조 보정
+
+M21 Board+Security를 canonical 목록에 추가하자 `CONFIG_SPI=n`인데 SPI00 DTS node가
+활성인 기존 구성에서 공통 route cpp가 없는 SPI device/pinctrl symbol을 참조해 link가
+실패했다. Kconfig/CMake 분리는 기존 본문과 같은 내용이며 이 결함은 선택 경계의 누락이다.
+SPI binding과 pinctrl 선언에 실제 SPI driver 선택 조건을 함께 적용했다. driver가 없으면
+기존 비활성 경로와 같이 빈 binding을 반환한다. 다른 route·singleton·DTS·public API는 같다.
+
+16개 최초 build 중 15개는 build-only 성공, M21 Board+Security 1개는 실패였다. 수정 뒤
+실패한 M21 구성(SPI off)과 M7(SPI on)만 새 경로에서 2/2 재빌드 PASS했다. 이 보정과
+canonical M21 metadata/누락 검사는 기계적 CMake/Kconfig 파일 분리와 별도 commit이다.
+[원래 16개 report](evidence/r13b0-a1b19aa/target-before.json),
+[링크 실패](evidence/r13b0-a1b19aa/link-failure.txt),
+[재시험](evidence/r13b0-a1b19aa/target-after.json),
+[설정·artifact](evidence/r13b0-a1b19aa/software.json)를 보존한다.

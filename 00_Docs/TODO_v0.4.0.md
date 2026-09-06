@@ -60,7 +60,7 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | 마지막 정식 외부 HIL source | `e2f045c1b4272d986d17456c5af051fe8af74f19` — Fixture 301 두 보드 exact role image TWI PASS |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; T09 무배선 PASS만 추가됐으며 외부 결선·RC·최종 공개 승인 없음 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | R13-A package/contract/Host 종료. C:/r13p 분리 전 대표 target 12/12 build-only PASS. 다음은 Kconfig/CMake 기계적 분할 및 M21 canonical 목록 보완. flash/HIL 없음 |
+| 이 TODO 작성 작업의 실행 중 시험 | R13-B 최초 16개 중 M21 Board+Security 1개 SPI driver 미선택 link 실패, 15개 build-only 성공. 별도 보정 뒤 C:/r13fx SPI off/on 2개 PASS. 기계적 분리 전후 대표 12개 config/source/flash/RAM 동일. 전체 Host 종료; R13-C와 최종 전체 gate 남음. flash/HIL 없음 |
 | 로컬 임시 build·evidence | R00~R05 target/cache와 work/r00~r06 및 영구 evidence/r06-feaccc7, r06-f1b3fa4 보존. R06 설치 C:/r6base,r6fin 및 실패 C:/r6pkg,r6fix,r6sp, 중간 C:/r6cp. R07 기준선 C:/r7pre. 로컬 검증용 별도 index와 참조 없는 snapshot commit은 work/r06에 기록; 임시 branch/worktree 없음 |
 | 최종 정렬 gate | clang-format 22.1.8로 직접 관리 C/C++/ino 227개 write·dry-run PASS. Fixture 102 기록 전 남은 공통 header 들여쓰기 한 곳을 교정했고 M12 Host 전체·DUT/peer target 2/2 재검증 PASS, 실기 image와 runtime HEX SHA-256 동일. 한국어 Doxygen·Allman/4칸/중괄호 필수 적용 |
 | CI 확인 | 이전 `661fad9`의 [Software Gates](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811058)와 [Reproducible Builds](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811030) success 보존. `25c7f03` 계획 통합은 로컬 전체 gate를 통과해 원격 `main`에 push됐으며, 당시 로컬 GitHub CLI 인증이 없어 새 Actions 상태는 미확인 |
