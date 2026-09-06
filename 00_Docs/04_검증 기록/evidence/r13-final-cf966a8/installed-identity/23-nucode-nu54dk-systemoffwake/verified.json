@@ -1,0 +1,105 @@
+{
+  "manifest_path": "C:\\r13v\\examples\\23-nucode-nu54dk-systemoffwake\\SystemOffWake.ino.nu54-build.json",
+  "manifest_sha256": "657a3cc14a9905b6b00230ee1c44746b41fb510b5723e78b4ecb15f8649add63",
+  "artifacts": {
+    "bin": {
+      "path": "C:/r13v/examples/23-nucode-nu54dk-systemoffwake/SystemOffWake.ino.bin",
+      "sha256": "1626e281428e8b860e1b5d055ac77ec6b6b2d7be91dda7cbf92b655563668413",
+      "size": 108716
+    },
+    "elf": {
+      "path": "C:/r13v/examples/23-nucode-nu54dk-systemoffwake/SystemOffWake.ino.elf",
+      "sha256": "34be3fe3c941eb7d60e39eac17713c96f6118f60235b49dc836e6d5496737c92",
+      "size": 2426004
+    },
+    "hex": {
+      "path": "C:/r13v/examples/23-nucode-nu54dk-systemoffwake/SystemOffWake.ino.hex",
+      "sha256": "0aab7999d168da166e51cd48d0f5e81e3d2fc8a82915d0da85f453cc077bdf51",
+      "size": 305948
+    },
+    "map": {
+      "path": "C:/r13v/examples/23-nucode-nu54dk-systemoffwake/SystemOffWake.ino.map",
+      "sha256": "a3d855573653f4e57e6f165e34b85c0937b362c533514df8a762b7d39d287a15",
+      "size": 885226
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:40a70611c987cdd056864a5bb4596b2c2f969cc802fc1eb486239da35bd7f03b",
+        "path": "C:/r13v/cache/v1/74/74056f4ce6c923dae3980275c8541a5f/platform/libraries/NUCODE_NU54DK/examples/SystemOffWake"
+      },
+      {
+        "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+        "path": "C:/r13v/cache/v1/74/74056f4ce6c923dae3980275c8541a5f/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/r13v/cache/v1/74/74056f4ce6c923dae3980275c8541a5f/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:62270ed0bca3ce8e6ef7e237f2dd18eafa7129a98d2046e4e14424db5c273576",
+        "path": "C:/r13v/cache/v1/74/74056f4ce6c923dae3980275c8541a5f/platform/libraries/NUCODE_NU54DK/src"
+      },
+      {
+        "content_sha256": "sha256:3b65ed5d371c87058a3d4bcb0e5e9009a72f1e958c65a35b1c207b04d258afc9",
+        "path": "C:/r13v/cache/v1/74/74056f4ce6c923dae3980275c8541a5f/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/r13v/cache/v1/74/74056f4ce6c923dae3980275c8541a5f/build/nucode_arduino_core_build.yml",
+      "sha256": "c6af7942f16faa8c4cf0ed117c3f93708a1e78f349252150752f959c65be8981"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/r13v/cache/v1/74/74056f4ce6c923dae3980275c8541a5f/app/generated-sources/sketch/SystemOffWake.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/SystemOffWake.ino.cpp",
+        "sha256": "6c767c19f7cde9e9b9e99ea40cc65baec13c28e6a5d2697e91a01e723ca12693",
+        "source_path": "C:/r13v/examples/23-nucode-nu54dk-systemoffwake/sketch/SystemOffWake.ino.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/74/74056f4ce6c923dae3980275c8541a5f/platform/libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp",
+        "logical_identity": "platform:libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp",
+        "sha256": "7a5fe7013f0a6d1de5799025edb5c19515bce39ff08249954b12bf7885973d2d",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\r13v\\identity-records\\23-nucode-nu54dk-systemoffwake\\nucode_arduino_core_build.yml",
+    "sha256": "c6af7942f16faa8c4cf0ed117c3f93708a1e78f349252150752f959c65be8981",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core_source_sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "application_source_sha256": "9859f6ee63984fe1aeca6072f144e5322f6a52bdab266949948254ee26be04aa",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\r13v\\identity-records\\23-nucode-nu54dk-systemoffwake\\build_info.yml",
+    "sha256": "4f701bd0e8fac77de64e59ecf6482f727e054e64c002054ba9348643bbc973b3",
+    "identity": {
+      "application-source-sha256": "9859f6ee63984fe1aeca6072f144e5322f6a52bdab266949948254ee26be04aa",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core-source-sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

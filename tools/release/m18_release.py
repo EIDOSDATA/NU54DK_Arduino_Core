@@ -345,7 +345,13 @@ def assert_safe_output(repo_root: Path, output_dir: Path) -> None:
 ## @brief stable index와 package stable map source의 byte identity를 고정합니다.
 def stable_source_snapshot(repo_root: Path) -> dict[str, str]:
     result: dict[str, str] = {}
-    for relative in STABLE_SOURCE_PATHS:
+    source_paths = list(STABLE_SOURCE_PATHS)
+    implementation = repo_root / "packaging/boards-manager/nu54_package_impl"
+    source_paths.extend(
+        path.relative_to(repo_root).as_posix()
+        for path in sorted(implementation.glob("*.py"))
+    )
+    for relative in source_paths:
         path = repo_root / relative
         if not path.is_file():
             raise M18Error(f"stable 보호 대상 파일이 없습니다: {relative}")

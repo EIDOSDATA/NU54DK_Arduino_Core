@@ -1,0 +1,95 @@
+{
+  "manifest_path": "C:\\r13v\\examples\\24-nucode-nu54dk-toneoutput\\ToneOutput.ino.nu54-build.json",
+  "manifest_sha256": "f99e86f85db997faff4c3f7110b6ffc9515a212f0f825d795fdd3f99767256a9",
+  "artifacts": {
+    "bin": {
+      "path": "C:/r13v/examples/24-nucode-nu54dk-toneoutput/ToneOutput.ino.bin",
+      "sha256": "824a9276716197de95ba7a595dd44bd60c5f2a5e53430a4a1ddfde658023af65",
+      "size": 107052
+    },
+    "elf": {
+      "path": "C:/r13v/examples/24-nucode-nu54dk-toneoutput/ToneOutput.ino.elf",
+      "sha256": "3c47622938a49a10db417d23adc7f5b4a5f4754895410381eb6227818704f7d2",
+      "size": 2328740
+    },
+    "hex": {
+      "path": "C:/r13v/examples/24-nucode-nu54dk-toneoutput/ToneOutput.ino.hex",
+      "sha256": "f3fafa8b27f73efe3d9574639579cd73cef33d830012bd2399927bc25be2f06e",
+      "size": 301218
+    },
+    "map": {
+      "path": "C:/r13v/examples/24-nucode-nu54dk-toneoutput/ToneOutput.ino.map",
+      "sha256": "38ebc780512b0d3df58038bcba892e97fd3c456cd623fea654ffb43fa1b0e774",
+      "size": 807663
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:f40e447ee66d1124f3d40e2f129120a77cd2ec375e33b3db6e903c079be84c0c",
+        "path": "C:/r13v/cache/v1/b8/b8ed88234a6cded77499b55f7185f1ec/platform/libraries/NUCODE_NU54DK/examples/ToneOutput"
+      },
+      {
+        "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+        "path": "C:/r13v/cache/v1/b8/b8ed88234a6cded77499b55f7185f1ec/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/r13v/cache/v1/b8/b8ed88234a6cded77499b55f7185f1ec/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:c7baad7bed29b595aacc821bb66e1be7c068f1df40108047afa636880c6a34c7",
+        "path": "C:/r13v/cache/v1/b8/b8ed88234a6cded77499b55f7185f1ec/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/r13v/cache/v1/b8/b8ed88234a6cded77499b55f7185f1ec/build/nucode_arduino_core_build.yml",
+      "sha256": "e949d16471d1a653ff4bec985e4eac3b400f48957b1643f9094ec74252969a58"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/r13v/cache/v1/b8/b8ed88234a6cded77499b55f7185f1ec/app/generated-sources/sketch/ToneOutput.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/ToneOutput.ino.cpp",
+        "sha256": "6c9c27bb633a4e275a03de5bca8ff718d2e41db70a2ab8eaab9beb298f9261d2",
+        "source_path": "C:/r13v/examples/24-nucode-nu54dk-toneoutput/sketch/ToneOutput.ino.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\r13v\\identity-records\\24-nucode-nu54dk-toneoutput\\nucode_arduino_core_build.yml",
+    "sha256": "e949d16471d1a653ff4bec985e4eac3b400f48957b1643f9094ec74252969a58",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core_source_sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "application_source_sha256": "e593acb37455ed4ef56d82660db12e9a2f719110c885807f5e2ef52dd830c4d2",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\r13v\\identity-records\\24-nucode-nu54dk-toneoutput\\build_info.yml",
+    "sha256": "404885959085e0b9aacf226b6a8ebd5a2ee60636c06253198025d0f1baf4de7e",
+    "identity": {
+      "application-source-sha256": "e593acb37455ed4ef56d82660db12e9a2f719110c885807f5e2ef52dd830c4d2",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core-source-sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

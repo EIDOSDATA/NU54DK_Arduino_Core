@@ -1,0 +1,425 @@
+{
+  "adapter_version": "0.1.0-dev.m10",
+  "artifacts": {
+    "bin": {
+      "path": "C:/r13v/examples/26-nucode-nu54dk-wireruntimepins/WireRuntimePins.ino.bin",
+      "sha256": "e5397b5ebb8ad3593e2c51fcb190e77e3597b9e2974d96785fa31ad8c9356c59",
+      "size": 104600
+    },
+    "elf": {
+      "path": "C:/r13v/examples/26-nucode-nu54dk-wireruntimepins/WireRuntimePins.ino.elf",
+      "sha256": "889f1783d530e595aa4bcb54a81c20045c6f0d161b6262bae3366f904c533800",
+      "size": 2287788
+    },
+    "hex": {
+      "path": "C:/r13v/examples/26-nucode-nu54dk-wireruntimepins/WireRuntimePins.ino.hex",
+      "sha256": "5930d83444a711535fae82876b383b8d1e679f66ba6669dc4fc5b16d74a9f437",
+      "size": 294341
+    },
+    "map": {
+      "path": "C:/r13v/examples/26-nucode-nu54dk-wireruntimepins/WireRuntimePins.ino.map",
+      "sha256": "c3fec3e25180f08969b55225c4df4a0e316c90988e0cd5d70f5b7ef58f29d3fe",
+      "size": 807002
+    }
+  },
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "built_at_utc": "2026-09-06T03:31:29.179601+00:00",
+  "cache": {
+    "cache_dir": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4",
+    "input_manifest": {
+      "adapter": {
+        "platform_content": "sha256:67edbebdd5f7ba43428a7b878f92676054c079617fb552d0287de26de7f81ce0",
+        "platform_root": "C:/r13v/검증 설치/hardware/nucode/zephyr",
+        "version": "0.1.0-dev.m10"
+      },
+      "board_package": {
+        "content": "sha256:d7c53a705c331c9c0137d421adaf1079cc7177e791c641df20588da95db97849",
+        "revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "root": "C:/r13v/검증 설치/hardware/nucode/zephyr/board_package/NU54DK_Zephyr_DTS"
+      },
+      "configuration": {
+        "profile": {
+          "conf": "sha256:da22673694b88fa6b391ba92f87d214ecbe26e8417e92a1cf9cd2f6fb1363dff",
+          "id": "standard",
+          "manifest": "sha256:b545ea7b9799b30f830fe8399d6efe49cc89c5f6ededdc7e9eac21de1750616a",
+          "overlay": "sha256:f270dfade0eeb067dd6ad389825c7a4dcaa9f599fbf09459de2919849392e53c"
+        },
+        "selected_features": [
+          {
+            "conf": [],
+            "id": "nucode.wire",
+            "manifest": "sha256:800f54e9fd3acf64ed8e19049d3fc4c4ede9937ef4e6ba001d190c1b13a3f9cd",
+            "overlays": []
+          }
+        ]
+      },
+      "ncs": {
+        "declared_version": "v3.4.0",
+        "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "nrf_west_yml": "sha256:04e4c21ce96b989fb2a73a4581c0309d1fdc9b27a53b3a34976beb0c8cb2b78d",
+        "root": "C:/Users/eidos/ncs/v3.4.0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "zephyr_version_file": "sha256:fd6ba7636a003973a983412c2906173dc45ce3ba62386e407b212f9a5736ce01"
+      },
+      "platform_build_copy": {
+        "content": "sha256:93161a3861157d616712d373c0773541b3c4796294180bf42bd0eed0eb6a592d"
+      },
+      "schema_version": 1,
+      "sketch": {
+        "app_overlay": "missing",
+        "prj_conf": "missing",
+        "root": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_NU54DK/examples/WireRuntimePins"
+      },
+      "target": {
+        "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "fqbn": "nucode:zephyr:nu54dk:feature_set=standard",
+        "profile": "standard",
+        "sysbuild": false
+      },
+      "toolchain": {
+        "bundle_id": "dcbdc366a1",
+        "compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "environment": "sha256:824994386257c9422cfba4006d678fd30ea7ccfe4960e06c8074b20fb6f3fc82",
+        "manifest": "sha256:e5ed500e679a8e2baa1d71e0ddf68167f25d9f514985a7cb746b607be67413a8",
+        "root": "C:/Users/eidos/ncs/toolchains/dcbdc366a1"
+      }
+    },
+    "key": "d19e4bc4ea2c916515ffdf0320ae28d4294b072729a47e622c303d14090b236a",
+    "schema_version": 1,
+    "source_manifest_sha256": "sha256:a742d5786d478563c2a5bcdf262a675a384be61db6e4cfcd41895458d7b75044"
+  },
+  "context": {
+    "adapter_version": "0.1.0-dev.m10",
+    "app_dir": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/app",
+    "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+    "board_root": "C:/r13v/검증 설치/hardware/nucode/zephyr/board_package/NU54DK_Zephyr_DTS",
+    "build_duration_seconds": 261.011944,
+    "build_path": "C:/r13v/examples/26-nucode-nu54dk-wireruntimepins",
+    "cache_dir": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4",
+    "cache_key": "d19e4bc4ea2c916515ffdf0320ae28d4294b072729a47e622c303d14090b236a",
+    "cache_reused": false,
+    "cache_root": "C:/r13v/cache",
+    "cache_schema_version": 1,
+    "ccache": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/bin/ccache.exe",
+    "ccache_dir": "C:/r13v/cache/compiler-cache",
+    "ccache_stats_after": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 7864,
+      "cache_size_kibibyte": 174368,
+      "called_for_link": 1868,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 26,
+      "direct_cache_miss": 7864,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 15716,
+      "internal_error": 0,
+      "local_storage_hit": 26,
+      "local_storage_miss": 7864,
+      "local_storage_read_hit": 52,
+      "local_storage_read_miss": 15728,
+      "local_storage_write": 15728,
+      "max_cache_size_kibibyte": 1953125,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 909,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 0,
+      "preprocessed_cache_miss": 7864,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 1788665489,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "ccache_stats_before": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 7010,
+      "cache_size_kibibyte": 156140,
+      "called_for_link": 1726,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 24,
+      "direct_cache_miss": 7010,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 14010,
+      "internal_error": 0,
+      "local_storage_hit": 24,
+      "local_storage_miss": 7010,
+      "local_storage_read_hit": 48,
+      "local_storage_read_miss": 14020,
+      "local_storage_write": 14020,
+      "max_cache_size_kibibyte": 1953125,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 839,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 0,
+      "preprocessed_cache_miss": 7010,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 1788665161,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "ccache_stats_delta": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 854,
+      "cache_size_kibibyte": 18228,
+      "called_for_link": 142,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 2,
+      "direct_cache_miss": 854,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 1706,
+      "internal_error": 0,
+      "local_storage_hit": 2,
+      "local_storage_miss": 854,
+      "local_storage_read_hit": 4,
+      "local_storage_read_miss": 1708,
+      "local_storage_write": 1708,
+      "max_cache_size_kibibyte": 0,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 70,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 0,
+      "preprocessed_cache_miss": 854,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 328,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "configuration_fingerprint": "sha256:d19e4bc4ea2c916515ffdf0320ae28d4294b072729a47e622c303d14090b236a",
+    "configure_duration_seconds": 46.255047,
+    "configure_mode": "cmake-only",
+    "configure_reason": "selected-features",
+    "configure_skipped": false,
+    "cxx_compiler": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-g++.exe",
+    "fqbn": "nucode:zephyr:nu54dk:feature_set=standard",
+    "input_manifest": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/input-manifest.json",
+    "link_configure_duration_seconds": 33.047434,
+    "memory_layout": {
+      "code_partition": "slot0_partition",
+      "flash_end": 1490944,
+      "flash_origin": 0,
+      "flash_size": 1490944
+    },
+    "ncs_root": "C:/Users/eidos/ncs/v3.4.0",
+    "ncs_version": "v3.4.0",
+    "platform_build_root": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/platform",
+    "platform_root": "C:/r13v/검증 설치/hardware/nucode/zephyr",
+    "pristine_configure_count": 1,
+    "product_identity": {
+      "package_version": "0.0.90",
+      "source_version": "0.4.0-dev"
+    },
+    "profile": "standard",
+    "provisional_cache_key": "9a83080e81fef231401149577635b58eb955ddd6a7d65e1795f04a1b9d0dda3f",
+    "recovery_count": 0,
+    "schema_version": 2,
+    "selected_features": [
+      {
+        "conf": [],
+        "id": "nucode.wire",
+        "manifest": "sha256:800f54e9fd3acf64ed8e19049d3fc4c4ede9937ef4e6ba001d190c1b13a3f9cd",
+        "overlays": []
+      }
+    ],
+    "selected_libraries": [
+      "Wire"
+    ],
+    "size_tool": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-size.exe",
+    "sketch_root": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_NU54DK/examples/WireRuntimePins",
+    "source_manifest_changed": true,
+    "state": "built",
+    "sysbuild": false,
+    "toolchain_bundle_id": "dcbdc366a1",
+    "toolchain_root": "C:/Users/eidos/ncs/toolchains/dcbdc366a1",
+    "updated_at_utc": "2026-09-06T03:31:29.171263+00:00",
+    "zephyr_build_dir": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/build",
+    "zephyr_version": "4.4.0"
+  },
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=standard",
+  "metrics": {
+    "build_seconds": 261.011944,
+    "ccache_delta": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 854,
+      "cache_size_kibibyte": 18228,
+      "called_for_link": 142,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 2,
+      "direct_cache_miss": 854,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 1706,
+      "internal_error": 0,
+      "local_storage_hit": 2,
+      "local_storage_miss": 854,
+      "local_storage_read_hit": 4,
+      "local_storage_read_miss": 1708,
+      "local_storage_write": 1708,
+      "max_cache_size_kibibyte": 0,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 70,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 0,
+      "preprocessed_cache_miss": 854,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 328,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "configure_seconds": 33.047434
+  },
+  "product_identity": {
+    "package_version": "0.0.90",
+    "source_version": "0.4.0-dev"
+  },
+  "schema_version": 2,
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:c297538da2c165570ee46a8bf697656dc8802195fb6edd5b50cc5d341845cb58",
+        "path": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/platform/libraries/NUCODE_NU54DK/examples/WireRuntimePins"
+      },
+      {
+        "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+        "path": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:b776dcc7665a389174905e777b4872bff416425abc7471ff69a21c2397e02963",
+        "path": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/platform/libraries/Wire/src"
+      },
+      {
+        "content_sha256": "sha256:ae29f215bf379f91944f2e14599d847d0182ba16d19de4603975f2ee4c080fe3",
+        "path": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/build/nucode_arduino_core_build.yml",
+      "sha256": "54c98c9f0e79e7febe49b3d675821fa67e615800a5f6a684b2a80cdcf0f7f647"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/app/generated-sources/sketch/WireRuntimePins.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/WireRuntimePins.ino.cpp",
+        "sha256": "c302ccc50951259345f1e8467a4c30af6fa97991b46eaeb205d0dbbe85969bbe",
+        "source_path": "C:/r13v/examples/26-nucode-nu54dk-wireruntimepins/sketch/WireRuntimePins.ino.cpp"
+      }
+    ]
+  },
+  "sources": [
+    "C:/r13v/examples/26-nucode-nu54dk-wireruntimepins/sketch/WireRuntimePins.ino.cpp"
+  ],
+  "sysbuild": false
+}

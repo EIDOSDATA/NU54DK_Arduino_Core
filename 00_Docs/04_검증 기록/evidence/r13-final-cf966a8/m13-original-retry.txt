@@ -1,0 +1,27 @@
+test_arduino_cli_discovers_canonical_examples_when_installed (test_m13_profiles.M13ProfileContractTests.test_arduino_cli_discovers_canonical_examples_when_installed)
+! @brief 설치된 Arduino CLI가 공개 예제를 노출하는지 확인합니다. ... ok
+test_canonical_examples_have_no_zephyr_sidecars (test_m13_profiles.M13ProfileContractTests.test_canonical_examples_have_no_zephyr_sidecars)
+! @brief 공개 예제가 ino만으로 탐색 가능한지 확인합니다. ... ok
+test_duplicate_feature_key_uses_feature_schema_diagnostic (test_m13_profiles.M13ProfileContractTests.test_duplicate_feature_key_uses_feature_schema_diagnostic)
+! @brief feature manifest 중복 key를 profile 오류로 잘못 보고하지 않습니다. ... ok
+test_feature_cache_collision_is_fail_closed (test_m13_profiles.M13ProfileContractTests.test_feature_cache_collision_is_fail_closed)
+! @brief 축약 cache directory의 다른 full key를 덮어쓰지 않습니다. ... ok
+test_feature_configure_failure_marks_cache_failed (test_m13_profiles.M13ProfileContractTests.test_feature_configure_failure_marks_cache_failed)
+! @brief 최종 configure 실패를 failed/configure-failed 상태로 보존합니다. ... ok
+test_only_selected_bundled_library_is_resolved (test_m13_profiles.M13ProfileContractTests.test_only_selected_bundled_library_is_resolved)
+! @brief 실제 source record에 등장한 bundled library만 선택합니다. ... ok
+test_profile_rejects_wrong_fqbn_and_zephyr_board (test_m13_profiles.M13ProfileContractTests.test_profile_rejects_wrong_fqbn_and_zephyr_board)
+! @brief profile이 실제 Arduino 및 Zephyr target과 다르면 중단합니다. ... ok
+test_profile_string_types_and_windows_paths_are_rejected (test_m13_profiles.M13ProfileContractTests.test_profile_string_types_and_windows_paths_are_rejected)
+! @brief malformed scalar와 Windows 절대 경로를 schema 오류로 거부합니다. ... ok
+test_schema_path_conflict_and_cache_key_contract (test_m13_profiles.M13ProfileContractTests.test_schema_path_conflict_and_cache_key_contract)
+! @brief 잘못된 manifest를 거부하고 feature 집합이 cache key를 바꾸는지 확인합니다. ... ok
+test_selected_feature_fragments_merge_before_expert_override (test_m13_profiles.M13ProfileContractTests.test_selected_feature_fragments_merge_before_expert_override)
+! @brief 선택 feature fragment와 sketch override의 병합 순서를 검증합니다. ... ok
+test_standard_profile_and_allowlist (test_m13_profiles.M13ProfileContractTests.test_standard_profile_and_allowlist)
+! @brief 표준 profile과 bundled feature manifest를 검증합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 3.955s
+
+OK

@@ -196,7 +196,7 @@ class M19BleGapContractTests(unittest.TestCase):
     def test_kconfig_and_examples_cover_gap_boundaries(self) -> None:
         """! @brief fixed queue와 사용자 예제가 package source에 포함됐는지 검사합니다. """
 
-        kconfig = (REPOSITORY / "zephyr" / "Kconfig").read_text(encoding="utf-8")
+        kconfig = (REPOSITORY / "zephyr" / "config/ble.Kconfig").read_text(encoding="utf-8")
         feature_conf = (LIBRARY / "zephyr" / "ble-nus.conf").read_text(
             encoding="utf-8"
         )

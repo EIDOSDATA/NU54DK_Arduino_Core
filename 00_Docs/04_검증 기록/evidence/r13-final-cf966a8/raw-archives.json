@@ -1,0 +1,2394 @@
+{
+  "contract.txt": {
+    "archive": {
+      "bytes": 1517,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\contract.txt.raw.gz",
+      "sha256": "8e34c6ccb413d1da514af0b6109b05118fae48495f97d620713dc9002eb7139e"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 7516,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-contract.log",
+      "sha256": "88a11ddf439cc1c1b9f97a3876f452994894d7840ef365b78595b1dbfb5ab4b9"
+    }
+  },
+  "diagnostic-identity/diagnostic-littlefs/LittleFSPersistence.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3912,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\diagnostic-identity\\diagnostic-littlefs\\LittleFSPersistence.ino.nu54-build.json.raw.gz",
+      "sha256": "464870193c92be0911e547c3ec157f8187faa185746de2cea4aa6b344552e02a"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 19229,
+      "path": "C:\\r13v\\diagnostic-evidence\\identity-records\\diagnostic-littlefs\\LittleFSPersistence.ino.nu54-build.json",
+      "sha256": "d24584341240007d7659509242bf0cf6a21371e9bcc143dc86c1a2cd9d2b1cf5"
+    }
+  },
+  "diagnostic-identity/diagnostic-littlefs/build_info.yml": {
+    "archive": {
+      "bytes": 1180,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\diagnostic-identity\\diagnostic-littlefs\\build_info.yml.raw.gz",
+      "sha256": "da7593a262b58560794ccfa26a7bb96a97b3478b741ef33fa0f9a1e2f63a5c12"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\diagnostic-evidence\\identity-records\\diagnostic-littlefs\\build_info.yml",
+      "sha256": "0c238a2efc705ebabec7fa558201d77526511fb2eb6035d7445438eaf1dd2705"
+    }
+  },
+  "diagnostic-identity/diagnostic-littlefs/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 447,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\diagnostic-identity\\diagnostic-littlefs\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "2e395cc3076b0308f9e565dcc4e0dbca87855a54f03b71751903fe40416b5d64"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\diagnostic-evidence\\identity-records\\diagnostic-littlefs\\nucode_arduino_core_build.yml",
+      "sha256": "e8dd0e2d9334bb980cfe07429cd1fdfb27e3c33efe55f839a6977cd201983ddd"
+    }
+  },
+  "diagnostic-identity/diagnostic-littlefs/verified.json": {
+    "archive": {
+      "bytes": 1970,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\diagnostic-identity\\diagnostic-littlefs\\verified.json.raw.gz",
+      "sha256": "4b4b2be17703af5be22cd444cfe4023075d8144b1a2a454ce0207f09cc6f433b"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 7251,
+      "path": "C:\\r13v\\diagnostic-evidence\\identity-records\\diagnostic-littlefs\\verified.json",
+      "sha256": "9f6dfbf4a3b4c3b38c68bad70a88ccb65334b03846ef7fbf9bb607ce32854e44"
+    }
+  },
+  "docs.txt": {
+    "archive": {
+      "bytes": 84,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\docs.txt.raw.gz",
+      "sha256": "b9a09f9ed11da6b1943f994f992d9eb6206d32f737c3de05304b2fcaec11077e"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 69,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-docs.log",
+      "sha256": "121d1eb4ab8a74190e4b53d5a203d8f0470fe4547837d3cdcd74cc687b46337e"
+    }
+  },
+  "environment-baseline.json": {
+    "archive": {
+      "bytes": 401,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\environment-baseline.json.raw.gz",
+      "sha256": "4b33d12b35bbb86cacf7451f085de944bf08ef3f00d150d9ff5cce7ba1b745fc"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 561,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r00-ec3bba3\\environment.json",
+      "sha256": "2bf6d9e9f0ae46afab9c39541f0b1318852d9f61fc6b2a18ada79e748619d743"
+    }
+  },
+  "environment-final.json": {
+    "archive": {
+      "bytes": 1099,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\environment-final.json.raw.gz",
+      "sha256": "9607cd9caab159e2a8f4cec4b034d1fd4badebbe3d4e6e1c57e5dd8f26861b00"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 2831,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-environment.json",
+      "sha256": "4979dc2333459e8ea2ba3c84fa4b9f2df64fb878ab456011d9f45a8a3601570a"
+    }
+  },
+  "examples.txt": {
+    "archive": {
+      "bytes": 237,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\examples.txt.raw.gz",
+      "sha256": "57df185d0180ce0f88b22b0ecefde3be3f9eb121e642e56afd250521ff52fd3d"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 323,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-examples.log",
+      "sha256": "96a27906e4f92a8e04c669205d92135bcccd228b0d99e55e0315545a18f31f79"
+    }
+  },
+  "final-docs.txt": {
+    "archive": {
+      "bytes": 84,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\final-docs.txt.raw.gz",
+      "sha256": "b9a09f9ed11da6b1943f994f992d9eb6206d32f737c3de05304b2fcaec11077e"
+    },
+    "preview": "UTF-8/LF normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 69,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\final-document-gate.log",
+      "sha256": "121d1eb4ab8a74190e4b53d5a203d8f0470fe4547837d3cdcd74cc687b46337e"
+    }
+  },
+  "host.txt": {
+    "archive": {
+      "bytes": 32077,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\host.txt.raw.gz",
+      "sha256": "77fdd46fa16133ed868951ce10bf2e7e6e2e47f3ca7a4de1eb67541790184984"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 159708,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-host.log",
+      "sha256": "d03318992d3dff5a1bc13f18382c197f3f5e32dd3142923b4382305826a473f5"
+    }
+  },
+  "installed-example-diagnostic.json": {
+    "archive": {
+      "bytes": 1970,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-example-diagnostic.json.raw.gz",
+      "sha256": "4b4b2be17703af5be22cd444cfe4023075d8144b1a2a454ce0207f09cc6f433b"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 7251,
+      "path": "C:\\r13v\\diagnostic-evidence\\identity-records\\diagnostic-littlefs\\verified.json",
+      "sha256": "9f6dfbf4a3b4c3b38c68bad70a88ccb65334b03846ef7fbf9bb607ce32854e44"
+    }
+  },
+  "installed-example-diagnostic.txt": {
+    "archive": {
+      "bytes": 173800,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-example-diagnostic.txt.raw.gz",
+      "sha256": "f7249f7f593291ecf5ce01bcc76b7f63eda41d9fd8b4d3f65543fad7a45254ad"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 1276611,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-example-diagnostic.log",
+      "sha256": "6e77cf9ac7dac0c2fdff50880284a089c1fa76db68ebe09d94925e8101371df6"
+    }
+  },
+  "installed-examples-initial-failure.txt": {
+    "archive": {
+      "bytes": 642,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-examples-initial-failure.txt.raw.gz",
+      "sha256": "cbe8f6977f27917c3eaea5512be68f70c656151490ce7b4a91d33cfd60fc3aa0"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 2053,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-installed-examples.log",
+      "sha256": "7af4aac459d2d4e32155e8937397368f5b8dbd3d191e54dc28a332030ff3ea8a"
+    }
+  },
+  "installed-examples.json": {
+    "archive": {
+      "bytes": 5566,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-examples.json.raw.gz",
+      "sha256": "ce39fc3de8d46cd9939d9d6cf60a4fff03c683dc12bea131080ef63eae6944cc"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 23190,
+      "path": "C:\\r13v\\examples-resume.json",
+      "sha256": "dd8ce7e66da68626b1111910d1f774fb4c1c7aae15c7acd3000fb8d9b11ac40c"
+    }
+  },
+  "installed-examples.txt": {
+    "archive": {
+      "bytes": 190,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-examples.txt.raw.gz",
+      "sha256": "09ed797409bcfdc0985d9b6b70c3b57782bd9c51ab8ad209b1ce082171b0cc75"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 274,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-installed-examples-resume.log",
+      "sha256": "260d64832512bef8647a92684d0f399fff189186e5b87883b40c05940736aa92"
+    }
+  },
+  "installed-identities.json": {
+    "archive": {
+      "bytes": 23406,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identities.json.raw.gz",
+      "sha256": "a3525543c38ccd47c4bc838ca533e5fb5fbd99123fc2cb5d4ef24f159b64e6d0"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 206500,
+      "path": "C:\\r13v\\verified-identities-resume.json",
+      "sha256": "4d6a262dfc4b7ea4bf8a942f077af75426a3a236ace0b3951cd1487f81bbf16b"
+    }
+  },
+  "installed-identity/01-eeprom-eeprompersistence/EEPROMPersistence.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3721,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\01-eeprom-eeprompersistence\\EEPROMPersistence.ino.nu54-build.json.raw.gz",
+      "sha256": "6a9adcbdcdba70da59ba3032d21fac5198be1ae97933c73d71d3f52d2d5b883f"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 18299,
+      "path": "C:\\r13v\\identity-records\\01-eeprom-eeprompersistence\\EEPROMPersistence.ino.nu54-build.json",
+      "sha256": "15ceb80a0437f9d44639f5024aa8ee33ff7b610ef20faa87486f465daf45658a"
+    }
+  },
+  "installed-identity/01-eeprom-eeprompersistence/build_info.yml": {
+    "archive": {
+      "bytes": 1180,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\01-eeprom-eeprompersistence\\build_info.yml.raw.gz",
+      "sha256": "974263e1c090db5ed3990d7efd6e59a1292cd80efbb08f8ff9a9baea50a5fb60"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\01-eeprom-eeprompersistence\\build_info.yml",
+      "sha256": "7c0b6dfab23d59e5743d03e34e9dcdddbcda5ff822210fa40140e7e2b3c6681f"
+    }
+  },
+  "installed-identity/01-eeprom-eeprompersistence/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 446,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\01-eeprom-eeprompersistence\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "ca17f80e20aa53009ec1ae6d6e8d7d7328fc0b84e0fbb9bd36d51807ae670fd0"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\01-eeprom-eeprompersistence\\nucode_arduino_core_build.yml",
+      "sha256": "275921a8a54466cd24a9819ae6160aecb4175b0826a86b68fc92c0644b6abf1e"
+    }
+  },
+  "installed-identity/01-eeprom-eeprompersistence/verified.json": {
+    "archive": {
+      "bytes": 1863,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\01-eeprom-eeprompersistence\\verified.json.raw.gz",
+      "sha256": "8bc99f2c2e532d9238127731cc5e552621fcbfe455eeebca78283620ce0b7dae"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 6473,
+      "path": "C:\\r13v\\identity-records\\01-eeprom-eeprompersistence\\verified.json",
+      "sha256": "c2959d616d56638f43713ce2476fe60cab23f4a772d552928ba9f2f7a53b1235"
+    }
+  },
+  "installed-identity/02-littlefs-littlefspersistence/LittleFSPersistence.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3877,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\02-littlefs-littlefspersistence\\LittleFSPersistence.ino.nu54-build.json.raw.gz",
+      "sha256": "d0d8e54e82a267734b706bc6988a443327126dad741966cce2671f490d1f817e"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 19420,
+      "path": "C:\\r13v\\identity-records\\02-littlefs-littlefspersistence\\LittleFSPersistence.ino.nu54-build.json",
+      "sha256": "2122473a3f943d616e9b8a4f2ed5ea50eb43b034c84b9fbd6f5e3086d2574c6d"
+    }
+  },
+  "installed-identity/02-littlefs-littlefspersistence/build_info.yml": {
+    "archive": {
+      "bytes": 1180,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\02-littlefs-littlefspersistence\\build_info.yml.raw.gz",
+      "sha256": "da7593a262b58560794ccfa26a7bb96a97b3478b741ef33fa0f9a1e2f63a5c12"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\02-littlefs-littlefspersistence\\build_info.yml",
+      "sha256": "0c238a2efc705ebabec7fa558201d77526511fb2eb6035d7445438eaf1dd2705"
+    }
+  },
+  "installed-identity/02-littlefs-littlefspersistence/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 447,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\02-littlefs-littlefspersistence\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "2e395cc3076b0308f9e565dcc4e0dbca87855a54f03b71751903fe40416b5d64"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\02-littlefs-littlefspersistence\\nucode_arduino_core_build.yml",
+      "sha256": "e8dd0e2d9334bb980cfe07429cd1fdfb27e3c33efe55f839a6977cd201983ddd"
+    }
+  },
+  "installed-identity/02-littlefs-littlefspersistence/verified.json": {
+    "archive": {
+      "bytes": 1977,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\02-littlefs-littlefspersistence\\verified.json.raw.gz",
+      "sha256": "0c34e7bdb2fd8255bc003f6d961ff9a4561df9ce82d7311186dc813cde2bc8c8"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 7402,
+      "path": "C:\\r13v\\identity-records\\02-littlefs-littlefspersistence\\verified.json",
+      "sha256": "b773c505cb22f8230d2c00e6d1c754df47323cd44fb2e56e970fc8a4773cd9b9"
+    }
+  },
+  "installed-identity/03-nucode-ble-customgattcentral/CustomGattCentral.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 4460,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\03-nucode-ble-customgattcentral\\CustomGattCentral.ino.nu54-build.json.raw.gz",
+      "sha256": "cbcbda4ccf067c39e07da75fd645036a313ad33ed987cb16fa1bc0c23160f377"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 23482,
+      "path": "C:\\r13v\\identity-records\\03-nucode-ble-customgattcentral\\CustomGattCentral.ino.nu54-build.json",
+      "sha256": "1326cac04bbf1a4495b037c7439c1df9eabb9fd87b19d584fa3022897fc6b459"
+    }
+  },
+  "installed-identity/03-nucode-ble-customgattcentral/build_info.yml": {
+    "archive": {
+      "bytes": 1180,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\03-nucode-ble-customgattcentral\\build_info.yml.raw.gz",
+      "sha256": "ad3770b2dd3a7029bb7beeb90a94b91a7d926d5154f9edcd1160252ac1821bb9"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\03-nucode-ble-customgattcentral\\build_info.yml",
+      "sha256": "bc455fdce214ff0cf80c8f01ee731268ccc2a6f35dd09947d2c98e50e5210f63"
+    }
+  },
+  "installed-identity/03-nucode-ble-customgattcentral/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 447,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\03-nucode-ble-customgattcentral\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "dd134f54b3f3023695e31ae6b91d9f0dc49906c350f5b4ef049b820650c46e82"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\03-nucode-ble-customgattcentral\\nucode_arduino_core_build.yml",
+      "sha256": "ff7ede763f738062f59f479c7877aac68fe95dbe8f56563067611b4faabd8622"
+    }
+  },
+  "installed-identity/03-nucode-ble-customgattcentral/verified.json": {
+    "archive": {
+      "bytes": 2479,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\03-nucode-ble-customgattcentral\\verified.json.raw.gz",
+      "sha256": "b8fbaf650341aec081d04c3f744f30d1676643f06a0c770fe4f287ab22898e96"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 10830,
+      "path": "C:\\r13v\\identity-records\\03-nucode-ble-customgattcentral\\verified.json",
+      "sha256": "f10da76e453623d5a8a0dcd08c562feb8c527185e3f140079d74ec356c4628ef"
+    }
+  },
+  "installed-identity/04-nucode-ble-customgattperipheral/CustomGattPeripheral.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 4380,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\04-nucode-ble-customgattperipheral\\CustomGattPeripheral.ino.nu54-build.json.raw.gz",
+      "sha256": "67d39a7cd0caffaa6d0cc65bbce324ed118104beff65a2c09d69da3be5a83b7b"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 23447,
+      "path": "C:\\r13v\\identity-records\\04-nucode-ble-customgattperipheral\\CustomGattPeripheral.ino.nu54-build.json",
+      "sha256": "627c7a278e1262e689faf5ec43a352cee3aba06d4c15e34ceca1a866bb216da4"
+    }
+  },
+  "installed-identity/04-nucode-ble-customgattperipheral/build_info.yml": {
+    "archive": {
+      "bytes": 1181,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\04-nucode-ble-customgattperipheral\\build_info.yml.raw.gz",
+      "sha256": "4c5e59a999fd56017f8efafd3a354d8a6903e323d2b543624a51c36683a99f47"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\04-nucode-ble-customgattperipheral\\build_info.yml",
+      "sha256": "a153a1698ce487eca25bd611f051a6e75d2418a344822c97019ba623ba6e6019"
+    }
+  },
+  "installed-identity/04-nucode-ble-customgattperipheral/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 450,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\04-nucode-ble-customgattperipheral\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "2a6fd7aaa66c9db6ed89f1b6b9427a707b6f37c1b22b0a316af3414fab5249e0"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\04-nucode-ble-customgattperipheral\\nucode_arduino_core_build.yml",
+      "sha256": "637078840f4481ba9b1a1af033290d944c70b9b61a9fcff77b44086dadbb50c1"
+    }
+  },
+  "installed-identity/04-nucode-ble-customgattperipheral/verified.json": {
+    "archive": {
+      "bytes": 2477,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\04-nucode-ble-customgattperipheral\\verified.json.raw.gz",
+      "sha256": "e1d73dec85ddfba0b4847cde144cb44f65920fd67f535ce8cd7b8c7a5237c82b"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 10839,
+      "path": "C:\\r13v\\identity-records\\04-nucode-ble-customgattperipheral\\verified.json",
+      "sha256": "7e79ce094954849821c2702aa88a69604ddb503db9c80779c24c83814328831b"
+    }
+  },
+  "installed-identity/05-nucode-ble-gapcentral/GAPCentral.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 4430,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\05-nucode-ble-gapcentral\\GAPCentral.ino.nu54-build.json.raw.gz",
+      "sha256": "e75af2eb567e7a1060e978f598a81385ef0f43b339e54698ed2c20953d3fd1dc"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 23286,
+      "path": "C:\\r13v\\identity-records\\05-nucode-ble-gapcentral\\GAPCentral.ino.nu54-build.json",
+      "sha256": "a9dfb941ed99feda05129dc7eb76fa60c49a88d9514a77742cf2476df0e5b582"
+    }
+  },
+  "installed-identity/05-nucode-ble-gapcentral/build_info.yml": {
+    "archive": {
+      "bytes": 1180,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\05-nucode-ble-gapcentral\\build_info.yml.raw.gz",
+      "sha256": "30a743758124fda668f4021d27b764f50e737678948247b4f67cab3dc3561cbb"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\05-nucode-ble-gapcentral\\build_info.yml",
+      "sha256": "e6490fe468dae5b37e4cb4a0e5741eff11cc6f6bb5028df16b3e10c12b91d61f"
+    }
+  },
+  "installed-identity/05-nucode-ble-gapcentral/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 447,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\05-nucode-ble-gapcentral\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "70fed8b24b8b4aee8b391283088949992bef4418a282e5f6d2b4cc94977866a9"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\05-nucode-ble-gapcentral\\nucode_arduino_core_build.yml",
+      "sha256": "50d970b43e78950904fc18391eff877f2fbc390eb9c56d42cbe7a87bab1d47d3"
+    }
+  },
+  "installed-identity/05-nucode-ble-gapcentral/verified.json": {
+    "archive": {
+      "bytes": 2461,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\05-nucode-ble-gapcentral\\verified.json.raw.gz",
+      "sha256": "ee8ec875c5ce2bb79db5e43a5765fc4a27c60a4e00ac7bfdc461e29037201f5c"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 10669,
+      "path": "C:\\r13v\\identity-records\\05-nucode-ble-gapcentral\\verified.json",
+      "sha256": "66e9f779b6f061930428851b1d4e8785e1ea53f67c5165824d72a82e46e69348"
+    }
+  },
+  "installed-identity/06-nucode-ble-gapperipheral/GAPPeripheral.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 4447,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\06-nucode-ble-gapperipheral\\GAPPeripheral.ino.nu54-build.json.raw.gz",
+      "sha256": "2c75ed9451f97859497b2d8b25fe90a929c10bcfe41e57700d86308e0d4e8cec"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 23340,
+      "path": "C:\\r13v\\identity-records\\06-nucode-ble-gapperipheral\\GAPPeripheral.ino.nu54-build.json",
+      "sha256": "704477edb86a8e5a198ada47b796cac6386fdeb7d864336cc7212c40d5e80de9"
+    }
+  },
+  "installed-identity/06-nucode-ble-gapperipheral/build_info.yml": {
+    "archive": {
+      "bytes": 1181,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\06-nucode-ble-gapperipheral\\build_info.yml.raw.gz",
+      "sha256": "135c894c0394ba7bdad4a4373b870f7b0c7c1f91d672cd02bc8fa56487335f62"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\06-nucode-ble-gapperipheral\\build_info.yml",
+      "sha256": "95781e8ecc3eceee4fad3c7d9a4795bcfdd03e5163d96d7deba4d2da550aafde"
+    }
+  },
+  "installed-identity/06-nucode-ble-gapperipheral/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 449,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\06-nucode-ble-gapperipheral\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "3a29ba47fda3832ea8ceba0178f6995b62e14615031cce0abe5722c8a6dab84c"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\06-nucode-ble-gapperipheral\\nucode_arduino_core_build.yml",
+      "sha256": "39ff26a774a005c99db980cde98c152155703dcf1c2a4e640c7d8dc96b562b2e"
+    }
+  },
+  "installed-identity/06-nucode-ble-gapperipheral/verified.json": {
+    "archive": {
+      "bytes": 2469,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\06-nucode-ble-gapperipheral\\verified.json.raw.gz",
+      "sha256": "2ec825e556d66bce1bc2639d7eed644b6b465db227a839feb73fb5cd402b4dfa"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 10720,
+      "path": "C:\\r13v\\identity-records\\06-nucode-ble-gapperipheral\\verified.json",
+      "sha256": "37862a6f68523742d6a5adbf4481b83a86e109e55975568c771b2b638416c448"
+    }
+  },
+  "installed-identity/07-nucode-ble-nuscentral/NUSCentral.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 4449,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\07-nucode-ble-nuscentral\\NUSCentral.ino.nu54-build.json.raw.gz",
+      "sha256": "3c3daa5b03497e611295e702d1da7ab0b9627f97c0e4f48674cfc38a4b8f8523"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 23300,
+      "path": "C:\\r13v\\identity-records\\07-nucode-ble-nuscentral\\NUSCentral.ino.nu54-build.json",
+      "sha256": "856a3c867aa482e9364d2ba0e0db60b9efc5c469df085571b93701bee2caaf60"
+    }
+  },
+  "installed-identity/07-nucode-ble-nuscentral/build_info.yml": {
+    "archive": {
+      "bytes": 1182,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\07-nucode-ble-nuscentral\\build_info.yml.raw.gz",
+      "sha256": "db26860f32ad306cface07e0acaf9d229c9e796571ec18aace6870facf79db12"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\07-nucode-ble-nuscentral\\build_info.yml",
+      "sha256": "368065e16bc7fff25f4b2a9442d3f524d377870dca97d85c4f5cbce715610fc4"
+    }
+  },
+  "installed-identity/07-nucode-ble-nuscentral/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 446,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\07-nucode-ble-nuscentral\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "86c4dc3590fa6aaa90841239778138374ffc0f632c16dc322533df9111a8d335"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\07-nucode-ble-nuscentral\\nucode_arduino_core_build.yml",
+      "sha256": "acbb0b9ac454259aefe2cdf82c7bdb52efcf602792657094fba4667617efeb59"
+    }
+  },
+  "installed-identity/07-nucode-ble-nuscentral/verified.json": {
+    "archive": {
+      "bytes": 2458,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\07-nucode-ble-nuscentral\\verified.json.raw.gz",
+      "sha256": "4d78701708ea7a60f7c80061b0071f9637cd793d20d857d4e3846ebd73881691"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 10669,
+      "path": "C:\\r13v\\identity-records\\07-nucode-ble-nuscentral\\verified.json",
+      "sha256": "bd7d9daef6025590fc25736e2c17af4c483745b2661b4e89fba5b8855c5ee04d"
+    }
+  },
+  "installed-identity/08-nucode-ble-nusperipheral/NUSPeripheral.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 4448,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\08-nucode-ble-nusperipheral\\NUSPeripheral.ino.nu54-build.json.raw.gz",
+      "sha256": "e6a165743c6a5a95f006b131e2a1b5984070c527513b4cd4f30771e8aaeef235"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 23352,
+      "path": "C:\\r13v\\identity-records\\08-nucode-ble-nusperipheral\\NUSPeripheral.ino.nu54-build.json",
+      "sha256": "5ca01a0715848ad8ebbb8d795b5d76273c33e58778794101399739437f731511"
+    }
+  },
+  "installed-identity/08-nucode-ble-nusperipheral/build_info.yml": {
+    "archive": {
+      "bytes": 1179,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\08-nucode-ble-nusperipheral\\build_info.yml.raw.gz",
+      "sha256": "6f3cb5951902da386fdd3ab51b8dd612d9e7cac5245bda6309ef56f931084989"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\08-nucode-ble-nusperipheral\\build_info.yml",
+      "sha256": "b5e163140d0eadb7911b3b03caa1b2764db19c28a070e36eb30dd2aba47a320e"
+    }
+  },
+  "installed-identity/08-nucode-ble-nusperipheral/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 446,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\08-nucode-ble-nusperipheral\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "6f432b06d3e4920b09ec60e0c7ca472e45fa011fd26322f74fe3f8d15adc83c6"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\08-nucode-ble-nusperipheral\\nucode_arduino_core_build.yml",
+      "sha256": "bd086e093415205f00a42c270f2b02d88380fa652945c2c8695d9ce7bb62f341"
+    }
+  },
+  "installed-identity/08-nucode-ble-nusperipheral/verified.json": {
+    "archive": {
+      "bytes": 2470,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\08-nucode-ble-nusperipheral\\verified.json.raw.gz",
+      "sha256": "982b6bb5d2a353ac2f9a783edd58c7289acf7669bdf75d4060a1fdb0e1abe775"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 10720,
+      "path": "C:\\r13v\\identity-records\\08-nucode-ble-nusperipheral\\verified.json",
+      "sha256": "d1fbf7a2ee4a0357512ac3c77d770d0dfb336b8cf872ac28d6eaba4a8078c609"
+    }
+  },
+  "installed-identity/09-nucode-ble-security-securekeyboard/SecureKeyboard.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 5203,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\09-nucode-ble-security-securekeyboard\\SecureKeyboard.ino.nu54-build.json.raw.gz",
+      "sha256": "590cd957616d43a7e5d14ce296ffe0fe42058c149a3459676e4ce3f5bdf723e6"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 29248,
+      "path": "C:\\r13v\\identity-records\\09-nucode-ble-security-securekeyboard\\SecureKeyboard.ino.nu54-build.json",
+      "sha256": "212ec841025828c048762ed06adf303e115dd632e0a09d7ee814ddaf1138b7e7"
+    }
+  },
+  "installed-identity/09-nucode-ble-security-securekeyboard/build_info.yml": {
+    "archive": {
+      "bytes": 1181,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\09-nucode-ble-security-securekeyboard\\build_info.yml.raw.gz",
+      "sha256": "f0bcd09d52372c5d9d953e08fc4cd7740c00cafb8e063a25fe37aaa6117dcb97"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\09-nucode-ble-security-securekeyboard\\build_info.yml",
+      "sha256": "7f3c0b37a7206966a84d1ace6e428e4249a5ab8e30f0ee0a78a7bc48887c043c"
+    }
+  },
+  "installed-identity/09-nucode-ble-security-securekeyboard/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 448,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\09-nucode-ble-security-securekeyboard\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "239274e51bca2b73f32489ac652a1c42c477656ba94b288218433de6c6c8fa2b"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\09-nucode-ble-security-securekeyboard\\nucode_arduino_core_build.yml",
+      "sha256": "3daa737bb3d8be75022b5457c24f9dd38541875460e9bcaaebb173ba8bb9ed83"
+    }
+  },
+  "installed-identity/09-nucode-ble-security-securekeyboard/verified.json": {
+    "archive": {
+      "bytes": 3058,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\09-nucode-ble-security-securekeyboard\\verified.json.raw.gz",
+      "sha256": "3b83fcc638dfbbf0be2d0451a3d0461998ebd3518292a81aea53c6ec0944dd0b"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 15183,
+      "path": "C:\\r13v\\identity-records\\09-nucode-ble-security-securekeyboard\\verified.json",
+      "sha256": "223eee750bc0099844389a40f4db7b0943fb9741393cf8917db26fa9b71279d4"
+    }
+  },
+  "installed-identity/10-nucode-nu54dk-analogchannels/AnalogChannels.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3270,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\10-nucode-nu54dk-analogchannels\\AnalogChannels.ino.nu54-build.json.raw.gz",
+      "sha256": "1743ce11b4c9f41c91e50c6527c733220a751b9d8253750c4f56713aff2d6d69"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 15598,
+      "path": "C:\\r13v\\identity-records\\10-nucode-nu54dk-analogchannels\\AnalogChannels.ino.nu54-build.json",
+      "sha256": "5afd2ee689a8268f6c3df935fe9e01b5fcd785dd61512eb44cf6e6c45cb4f72d"
+    }
+  },
+  "installed-identity/10-nucode-nu54dk-analogchannels/build_info.yml": {
+    "archive": {
+      "bytes": 1179,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\10-nucode-nu54dk-analogchannels\\build_info.yml.raw.gz",
+      "sha256": "8fb50fb7ed542eba57f6e793fdf5ebf2763bb044769ab29c98ab824b1734b70a"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\10-nucode-nu54dk-analogchannels\\build_info.yml",
+      "sha256": "9c8e16c1bba870a32fcb2cd4ee241edfb47e7184cc7114e0a3e0329d76266ba2"
+    }
+  },
+  "installed-identity/10-nucode-nu54dk-analogchannels/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 448,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\10-nucode-nu54dk-analogchannels\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "ee678b8620fdaab8979b75daf3a44b6ce1441e33c19307fadcf856218dceaf5f"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\10-nucode-nu54dk-analogchannels\\nucode_arduino_core_build.yml",
+      "sha256": "c1abdfe98a69ec0d85609c5dc90054b8c882062c79f332a4753baaa9ecc4f9a3"
+    }
+  },
+  "installed-identity/10-nucode-nu54dk-analogchannels/verified.json": {
+    "archive": {
+      "bytes": 1516,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\10-nucode-nu54dk-analogchannels\\verified.json.raw.gz",
+      "sha256": "d81d3ca44e586c87c6b223d2580f1ca48d4b70cf8aa59970b8aded2596702b2c"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4719,
+      "path": "C:\\r13v\\identity-records\\10-nucode-nu54dk-analogchannels\\verified.json",
+      "sha256": "6339c5ddf2b009da1b4330f5e884112279ec080942d2a41cc578de707d08ce04"
+    }
+  },
+  "installed-identity/11-nucode-nu54dk-analogreada0/AnalogReadA0.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3268,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\11-nucode-nu54dk-analogreada0\\AnalogReadA0.ino.nu54-build.json.raw.gz",
+      "sha256": "1d33e4972ce1570d7edb4ea7c9015697972741c31cc8a8bbb91241d19e5b5f5b"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 15562,
+      "path": "C:\\r13v\\identity-records\\11-nucode-nu54dk-analogreada0\\AnalogReadA0.ino.nu54-build.json",
+      "sha256": "fb434b4a39c7aafa278be6f88778c80d0cd9749cb933f3bda4095f0859fb4ba5"
+    }
+  },
+  "installed-identity/11-nucode-nu54dk-analogreada0/build_info.yml": {
+    "archive": {
+      "bytes": 1181,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\11-nucode-nu54dk-analogreada0\\build_info.yml.raw.gz",
+      "sha256": "658f7d672271ff0920660622031a05f9b737cc618e82e19c82d9baffd7015469"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\11-nucode-nu54dk-analogreada0\\build_info.yml",
+      "sha256": "88f13c40adfad08b27eac56ae9b2d5a892ea8b9f404513c307e21c0eeeb1653e"
+    }
+  },
+  "installed-identity/11-nucode-nu54dk-analogreada0/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 448,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\11-nucode-nu54dk-analogreada0\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "9222bd3dbaef2c46ae2955b6ab048f39fcf396b4f75cef8200f6b3b3045ac014"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\11-nucode-nu54dk-analogreada0\\nucode_arduino_core_build.yml",
+      "sha256": "82d9d2965529192697afe872d001550d1e95beb09d52cbe8e24c13d6b6bd5177"
+    }
+  },
+  "installed-identity/11-nucode-nu54dk-analogreada0/verified.json": {
+    "archive": {
+      "bytes": 1519,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\11-nucode-nu54dk-analogreada0\\verified.json.raw.gz",
+      "sha256": "162d20de98dd886af3d5ffeaff217c3ca0f5c29f63424637ede9554fb00694e2"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4685,
+      "path": "C:\\r13v\\identity-records\\11-nucode-nu54dk-analogreada0\\verified.json",
+      "sha256": "bc86d655402f8203a4cc74b32c50b457650a1b3be6570b94d356605127035fc2"
+    }
+  },
+  "installed-identity/12-nucode-nu54dk-analogresolution/AnalogResolution.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3275,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\12-nucode-nu54dk-analogresolution\\AnalogResolution.ino.nu54-build.json.raw.gz",
+      "sha256": "4924e1571b3b95694d004d2c42d0fd678300b70b4d4795ca24284323b2d6c60d"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 15630,
+      "path": "C:\\r13v\\identity-records\\12-nucode-nu54dk-analogresolution\\AnalogResolution.ino.nu54-build.json",
+      "sha256": "841ea59cb73133f6422233577d53c3cdeeb9e72fb20592eeecf2598d3b400c73"
+    }
+  },
+  "installed-identity/12-nucode-nu54dk-analogresolution/build_info.yml": {
+    "archive": {
+      "bytes": 1180,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\12-nucode-nu54dk-analogresolution\\build_info.yml.raw.gz",
+      "sha256": "0ba9d08f3f2903f9d843bc72b7787e43049b7f88e5b06808f5bc965df6ef7fba"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\12-nucode-nu54dk-analogresolution\\build_info.yml",
+      "sha256": "8d6fe5c49b649d2f7d267f06f59740b4a759c8e725fd0e1d63c4fa31345f420f"
+    }
+  },
+  "installed-identity/12-nucode-nu54dk-analogresolution/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 446,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\12-nucode-nu54dk-analogresolution\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "4f95c332f5e3baa877cada6c8011d3570a5a01cb10386234b01f9029ef68b458"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\12-nucode-nu54dk-analogresolution\\nucode_arduino_core_build.yml",
+      "sha256": "9f52d220e2454303f623ad972aed9759cc8593b4797a6e4d855bdc5dd97c614c"
+    }
+  },
+  "installed-identity/12-nucode-nu54dk-analogresolution/verified.json": {
+    "archive": {
+      "bytes": 1526,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\12-nucode-nu54dk-analogresolution\\verified.json.raw.gz",
+      "sha256": "c4bc0a3f0c9dbb3968b0a9dd666357bece75b4d86695b702719bf2aeec14cd51"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4753,
+      "path": "C:\\r13v\\identity-records\\12-nucode-nu54dk-analogresolution\\verified.json",
+      "sha256": "b1ce605f5a3b97093d5dd19ab723468112a453ef056303a4e3ecbb7e3fa3981b"
+    }
+  },
+  "installed-identity/13-nucode-nu54dk-blink/Blink.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3265,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\13-nucode-nu54dk-blink\\Blink.ino.nu54-build.json.raw.gz",
+      "sha256": "61128c08b252e9cb1c5101f8230461b526db4fe2de76356cab02b7ae3e636b0c"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 15432,
+      "path": "C:\\r13v\\identity-records\\13-nucode-nu54dk-blink\\Blink.ino.nu54-build.json",
+      "sha256": "e0d4a4f6ade32870c3f4a41721f24af9514898d6a9b4b06dccaacc44d2ed0595"
+    }
+  },
+  "installed-identity/13-nucode-nu54dk-blink/build_info.yml": {
+    "archive": {
+      "bytes": 1181,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\13-nucode-nu54dk-blink\\build_info.yml.raw.gz",
+      "sha256": "0a217d4da484b1cd50bb06255f4e97c7b4f72a9928a28677011ad8dd25291949"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\13-nucode-nu54dk-blink\\build_info.yml",
+      "sha256": "fbeda3bae9a06dd7f804e6de0c82d11a32dd5c2778ba9a3da25eb5e30028c0fc"
+    }
+  },
+  "installed-identity/13-nucode-nu54dk-blink/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 448,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\13-nucode-nu54dk-blink\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "925e2fe40fa6e30322a5fd638e1c37887eeb979e2a185aec50262df60ec06e58"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\13-nucode-nu54dk-blink\\nucode_arduino_core_build.yml",
+      "sha256": "25df51c16455d92b0d82be8d7d76b7469b0084ccab98cf15c7c8390e295607d2"
+    }
+  },
+  "installed-identity/13-nucode-nu54dk-blink/verified.json": {
+    "archive": {
+      "bytes": 1511,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\13-nucode-nu54dk-blink\\verified.json.raw.gz",
+      "sha256": "34cbd4ed3a1dd60d5af4e59e2893ac980892ee10f63003b26276e8d6986b7e6f"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4566,
+      "path": "C:\\r13v\\identity-records\\13-nucode-nu54dk-blink\\verified.json",
+      "sha256": "79c951d85f90f6f58d91ff9f84f9ef0c2e9643274d9c1027a34b6aaade4432d8"
+    }
+  },
+  "installed-identity/14-nucode-nu54dk-boardinfo/BoardInfo.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3653,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\14-nucode-nu54dk-boardinfo\\BoardInfo.ino.nu54-build.json.raw.gz",
+      "sha256": "dc19121e6047daa47df15ecb4a67979488fee5e1a9d8aed31974d9f35e66a08f"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 17197,
+      "path": "C:\\r13v\\identity-records\\14-nucode-nu54dk-boardinfo\\BoardInfo.ino.nu54-build.json",
+      "sha256": "39115ca21ecb8c7dc5e2236d77079e28a1c5545c888a9f590dfd408950c76e20"
+    }
+  },
+  "installed-identity/14-nucode-nu54dk-boardinfo/build_info.yml": {
+    "archive": {
+      "bytes": 1180,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\14-nucode-nu54dk-boardinfo\\build_info.yml.raw.gz",
+      "sha256": "70a8748b629be8816a3a163f6a797e3ed34313854ca41a185d563ff61492f64f"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\14-nucode-nu54dk-boardinfo\\build_info.yml",
+      "sha256": "bf487e638ae38d24261f4ee016fc448a8e187edafd2eed4677cde2ab605555c8"
+    }
+  },
+  "installed-identity/14-nucode-nu54dk-boardinfo/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 447,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\14-nucode-nu54dk-boardinfo\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "3cea0bc21acb5d99595e2828f6383669e41c05c4dd9613ca64d4ec084fd74931"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\14-nucode-nu54dk-boardinfo\\nucode_arduino_core_build.yml",
+      "sha256": "beff8453ca3587dd5d56970aef2d566ec780727bdf5fce06bd74f0e73b2d1196"
+    }
+  },
+  "installed-identity/14-nucode-nu54dk-boardinfo/verified.json": {
+    "archive": {
+      "bytes": 1680,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\14-nucode-nu54dk-boardinfo\\verified.json.raw.gz",
+      "sha256": "830afa074d2bb0a17fa014b36b2f5a00e7b303e3a9e49319e83eeba1f255e74c"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 5311,
+      "path": "C:\\r13v\\identity-records\\14-nucode-nu54dk-boardinfo\\verified.json",
+      "sha256": "8d81b99a6478bfacf5af05572ea90884bbdf67a1af0f620a3b0bf719c78e9348"
+    }
+  },
+  "installed-identity/15-nucode-nu54dk-counteralarm/CounterAlarm.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3667,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\15-nucode-nu54dk-counteralarm\\CounterAlarm.ino.nu54-build.json.raw.gz",
+      "sha256": "f5d31b6cbddaa9a2fab03501a0e73be5eb6017b8680a1bbe19ae77b5d6bbfcc3"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 17264,
+      "path": "C:\\r13v\\identity-records\\15-nucode-nu54dk-counteralarm\\CounterAlarm.ino.nu54-build.json",
+      "sha256": "abdc13459aa4100a82964b5de71ae7b7a2fbd11d2c0f53f99a22470bcb1a86c3"
+    }
+  },
+  "installed-identity/15-nucode-nu54dk-counteralarm/build_info.yml": {
+    "archive": {
+      "bytes": 1178,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\15-nucode-nu54dk-counteralarm\\build_info.yml.raw.gz",
+      "sha256": "52fe2cb3971763d61f9c32b2f75eeec9549ca5c6be3927937e11377c7ad4dcfa"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\15-nucode-nu54dk-counteralarm\\build_info.yml",
+      "sha256": "1afe365b1c5da75173be5afc190943e7e3966da26bcaf860cace38de60b9ea1d"
+    }
+  },
+  "installed-identity/15-nucode-nu54dk-counteralarm/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 446,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\15-nucode-nu54dk-counteralarm\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "1447c307a432200a74a5dd3ee6c424810a97415483eefc6839b719d4c5118c3b"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\15-nucode-nu54dk-counteralarm\\nucode_arduino_core_build.yml",
+      "sha256": "22a44130311472d2356472c753fa5fd69c6d28cdc6869f964e5178d9e3b53552"
+    }
+  },
+  "installed-identity/15-nucode-nu54dk-counteralarm/verified.json": {
+    "archive": {
+      "bytes": 1685,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\15-nucode-nu54dk-counteralarm\\verified.json.raw.gz",
+      "sha256": "aafff341b9ea05d7ffa4d190d342b0c9896194b910c24d38f794d967e678b7e6"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 5362,
+      "path": "C:\\r13v\\identity-records\\15-nucode-nu54dk-counteralarm\\verified.json",
+      "sha256": "990980d815e77f1c928c8f2cc012f2ef3f56beebfe4b4432c4634737045db596"
+    }
+  },
+  "installed-identity/16-nucode-nu54dk-dynamicpwm/DynamicPWM.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3265,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\16-nucode-nu54dk-dynamicpwm\\DynamicPWM.ino.nu54-build.json.raw.gz",
+      "sha256": "de1885b4df268f673328f5e4e381727db6a0db930ada425700ea15b0cbacedc6"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 15526,
+      "path": "C:\\r13v\\identity-records\\16-nucode-nu54dk-dynamicpwm\\DynamicPWM.ino.nu54-build.json",
+      "sha256": "de98cc0bf2b107b4d00b7932d402989314b7bba62ec972fe8f030eb55f228a9d"
+    }
+  },
+  "installed-identity/16-nucode-nu54dk-dynamicpwm/build_info.yml": {
+    "archive": {
+      "bytes": 1180,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\16-nucode-nu54dk-dynamicpwm\\build_info.yml.raw.gz",
+      "sha256": "60879cab49ad5f619c57507e769b05e7971da4394fd86429270e7d3bc7d853b4"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\16-nucode-nu54dk-dynamicpwm\\build_info.yml",
+      "sha256": "4f1165f5034ebc2252f1f7b0fe82b1063dc68d52498a0434c2f11e75aefc0807"
+    }
+  },
+  "installed-identity/16-nucode-nu54dk-dynamicpwm/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 445,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\16-nucode-nu54dk-dynamicpwm\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "d49c0d180502e25877e0e251711cdbbbd9eee3f73ec614eaf605cee6e18150f4"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\16-nucode-nu54dk-dynamicpwm\\nucode_arduino_core_build.yml",
+      "sha256": "16ada18ec16997c21eb791add88dbed2c382f95e267ad4730baba48097d9f881"
+    }
+  },
+  "installed-identity/16-nucode-nu54dk-dynamicpwm/verified.json": {
+    "archive": {
+      "bytes": 1523,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\16-nucode-nu54dk-dynamicpwm\\verified.json.raw.gz",
+      "sha256": "2fead60b2ab25a81a3404d540ffec8c52276ae6b7b19e65aa86bbdf8034573bd"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4651,
+      "path": "C:\\r13v\\identity-records\\16-nucode-nu54dk-dynamicpwm\\verified.json",
+      "sha256": "682e089842b546d78d40248e0114627ade4b8b2ccbad88bc63b3fbced229b20b"
+    }
+  },
+  "installed-identity/17-nucode-nu54dk-interruptbutton/InterruptButton.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3274,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\17-nucode-nu54dk-interruptbutton\\InterruptButton.ino.nu54-build.json.raw.gz",
+      "sha256": "80d1dd25a56254706eb8356c165582247b1d22ca7b29dbd19bc227530f39b1a3"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 15627,
+      "path": "C:\\r13v\\identity-records\\17-nucode-nu54dk-interruptbutton\\InterruptButton.ino.nu54-build.json",
+      "sha256": "158ce871623769756b19dc93ef580ce53afa7cdad57c79b133359b6b7765436a"
+    }
+  },
+  "installed-identity/17-nucode-nu54dk-interruptbutton/build_info.yml": {
+    "archive": {
+      "bytes": 1180,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\17-nucode-nu54dk-interruptbutton\\build_info.yml.raw.gz",
+      "sha256": "666c08233617875c483b554aacdf1e5a06545e9d0bc94f53a01aaf161cd40f60"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\17-nucode-nu54dk-interruptbutton\\build_info.yml",
+      "sha256": "df8f33c8150f7da1c1f1a105feec34b71675e22b0596b3244dbf425f50dab9a0"
+    }
+  },
+  "installed-identity/17-nucode-nu54dk-interruptbutton/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 448,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\17-nucode-nu54dk-interruptbutton\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "abd0498efb83a05cbc6bd1b751c7f6b3153fa1055e085b124aa875f64f44784b"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\17-nucode-nu54dk-interruptbutton\\nucode_arduino_core_build.yml",
+      "sha256": "471d53040a0d969b8b41b4c37daeb30684316218a580308381ea6c26330a95ab"
+    }
+  },
+  "installed-identity/17-nucode-nu54dk-interruptbutton/verified.json": {
+    "archive": {
+      "bytes": 1526,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\17-nucode-nu54dk-interruptbutton\\verified.json.raw.gz",
+      "sha256": "1763ef3f2b024fc22510911eb1569a1682e43a21f49ad9644f2cfc00121a7ba6"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4736,
+      "path": "C:\\r13v\\identity-records\\17-nucode-nu54dk-interruptbutton\\verified.json",
+      "sha256": "a067fabe45876966dec661baf0e39ca624b80fd0ec887718461a587f8848af9e"
+    }
+  },
+  "installed-identity/18-nucode-nu54dk-pwmfade/PWMFade.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3267,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\18-nucode-nu54dk-pwmfade\\PWMFade.ino.nu54-build.json.raw.gz",
+      "sha256": "6cb81e44b0c3cbe44429d7f64db5839ac7006e8ad1ce35ac5cba11dd0f544c62"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 15478,
+      "path": "C:\\r13v\\identity-records\\18-nucode-nu54dk-pwmfade\\PWMFade.ino.nu54-build.json",
+      "sha256": "74e92d88a075e129c370dc90161d547e20403f24c385fa362a29610c00e7e161"
+    }
+  },
+  "installed-identity/18-nucode-nu54dk-pwmfade/build_info.yml": {
+    "archive": {
+      "bytes": 1179,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\18-nucode-nu54dk-pwmfade\\build_info.yml.raw.gz",
+      "sha256": "c286467e996eacbde2bef8f0f101ffcc610c3de741df7d79970bcdb0eee66eda"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\18-nucode-nu54dk-pwmfade\\build_info.yml",
+      "sha256": "cf8150e93b67795e2be5e4abdac0f58826baff97d27cf541d9ab78e5f1b29b1d"
+    }
+  },
+  "installed-identity/18-nucode-nu54dk-pwmfade/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 448,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\18-nucode-nu54dk-pwmfade\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "b602277ffb86591d5719355e7fcd012fd559f4efc3592ccd867011497a183820"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\18-nucode-nu54dk-pwmfade\\nucode_arduino_core_build.yml",
+      "sha256": "910caf245730d2f1c47deaacf42474c1c44deda04b3c2199e316a36f9abdf279"
+    }
+  },
+  "installed-identity/18-nucode-nu54dk-pwmfade/verified.json": {
+    "archive": {
+      "bytes": 1517,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\18-nucode-nu54dk-pwmfade\\verified.json.raw.gz",
+      "sha256": "04bd8db2acb3d14abf4796994468a82db4cc7017aec06fde9b99510ec950c481"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4600,
+      "path": "C:\\r13v\\identity-records\\18-nucode-nu54dk-pwmfade\\verified.json",
+      "sha256": "6a3aaf751155de599361c273a0887660bc204bd58b529edcf73687f9d0123c8f"
+    }
+  },
+  "installed-identity/19-nucode-nu54dk-serial1runtimepins/Serial1RuntimePins.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3272,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\19-nucode-nu54dk-serial1runtimepins\\Serial1RuntimePins.ino.nu54-build.json.raw.gz",
+      "sha256": "49f5eb20bc9b54b3ca187a891d505874645072cdc38dcdff06d27cf7d7d93de7"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 15676,
+      "path": "C:\\r13v\\identity-records\\19-nucode-nu54dk-serial1runtimepins\\Serial1RuntimePins.ino.nu54-build.json",
+      "sha256": "6fb6b31c59bf19309c59116b80611ac09d087d21d57b2ee0b6a3288b0f74a255"
+    }
+  },
+  "installed-identity/19-nucode-nu54dk-serial1runtimepins/build_info.yml": {
+    "archive": {
+      "bytes": 1180,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\19-nucode-nu54dk-serial1runtimepins\\build_info.yml.raw.gz",
+      "sha256": "68ab2b7c748e46122ac530b49b7161be6fd73a61cc8cab348353ca986d485c21"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\19-nucode-nu54dk-serial1runtimepins\\build_info.yml",
+      "sha256": "d1abd1130d5f71c4493611d017f1ddd2389ec8a10274d98c28477b661020f640"
+    }
+  },
+  "installed-identity/19-nucode-nu54dk-serial1runtimepins/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 449,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\19-nucode-nu54dk-serial1runtimepins\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "a32a627f849a19322277cf29333d263656a2e1ee0102997df0ccaca665436678"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\19-nucode-nu54dk-serial1runtimepins\\nucode_arduino_core_build.yml",
+      "sha256": "1874ead3baeb3f89a3069d1aef55e6495bb65e9419208cf5e6a8d445a30a65e4"
+    }
+  },
+  "installed-identity/19-nucode-nu54dk-serial1runtimepins/verified.json": {
+    "archive": {
+      "bytes": 1534,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\19-nucode-nu54dk-serial1runtimepins\\verified.json.raw.gz",
+      "sha256": "37a928b1d80d24287e3106ce44c5cc8bd501d866cf59bfd73cca34b853502b2e"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4787,
+      "path": "C:\\r13v\\identity-records\\19-nucode-nu54dk-serial1runtimepins\\verified.json",
+      "sha256": "6735e1e435e733c6c5f326903ada3ddc731111c7d3312211a2bfb3bcaa36bde5"
+    }
+  },
+  "installed-identity/20-nucode-nu54dk-serialecho/SerialEcho.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3269,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\20-nucode-nu54dk-serialecho\\SerialEcho.ino.nu54-build.json.raw.gz",
+      "sha256": "8eee525772d653a4ab8c0d8ef2a620a6cf06dc2f7acd4d87eb4143db3c3786ad"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 15532,
+      "path": "C:\\r13v\\identity-records\\20-nucode-nu54dk-serialecho\\SerialEcho.ino.nu54-build.json",
+      "sha256": "3964ded95f4db58980477ce58629399d7a4feb098655dadd68c6b44284f95c14"
+    }
+  },
+  "installed-identity/20-nucode-nu54dk-serialecho/build_info.yml": {
+    "archive": {
+      "bytes": 1179,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\20-nucode-nu54dk-serialecho\\build_info.yml.raw.gz",
+      "sha256": "327e8f12d670888177581952712a4611cf9d63c366bad5b9227072400ba2acad"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\20-nucode-nu54dk-serialecho\\build_info.yml",
+      "sha256": "63c6508aac9389cbd55b4752422b45caacbe2c97d5660b2fd1c5cd72e22fe2a2"
+    }
+  },
+  "installed-identity/20-nucode-nu54dk-serialecho/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 448,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\20-nucode-nu54dk-serialecho\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "6ff1d6c59d5eba775505f27ef18ae999958e036b543a9f8d970d16a4899ae1ee"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\20-nucode-nu54dk-serialecho\\nucode_arduino_core_build.yml",
+      "sha256": "bdd8b40b40ddcf22f17e3071434340116da22334a8c497c8616b027a2a800dbf"
+    }
+  },
+  "installed-identity/20-nucode-nu54dk-serialecho/verified.json": {
+    "archive": {
+      "bytes": 1520,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\20-nucode-nu54dk-serialecho\\verified.json.raw.gz",
+      "sha256": "5b938dd8d7f8fde8e236c2a4b9e32135173d6541e0e8bfbde1e240bda047c26f"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4651,
+      "path": "C:\\r13v\\identity-records\\20-nucode-nu54dk-serialecho\\verified.json",
+      "sha256": "6b8b2b85bac74ba362e5bc62f447b455b1611c251f6641a2546bde2ab40ec15a"
+    }
+  },
+  "installed-identity/21-nucode-nu54dk-settingsstorage/SettingsStorage.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3664,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\21-nucode-nu54dk-settingsstorage\\SettingsStorage.ino.nu54-build.json.raw.gz",
+      "sha256": "168a0ce1160d839437d433ad6f69f7c73589c8223a1ed82f602688194d448d93"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 17316,
+      "path": "C:\\r13v\\identity-records\\21-nucode-nu54dk-settingsstorage\\SettingsStorage.ino.nu54-build.json",
+      "sha256": "912a39323ff8dfae4bcdce3909b5f8fda4ba3a18d3e61b4b51450279b2b8e53a"
+    }
+  },
+  "installed-identity/21-nucode-nu54dk-settingsstorage/build_info.yml": {
+    "archive": {
+      "bytes": 1181,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\21-nucode-nu54dk-settingsstorage\\build_info.yml.raw.gz",
+      "sha256": "90649845ca5988b4df71a110abece5dc6c5005c963b6beefe9c4bcc1dd0db650"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\21-nucode-nu54dk-settingsstorage\\build_info.yml",
+      "sha256": "8f585dcaa3c1c53cefddd93b47d783add5ddaa4f335a0c9df57e0c80fd053a50"
+    }
+  },
+  "installed-identity/21-nucode-nu54dk-settingsstorage/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 444,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\21-nucode-nu54dk-settingsstorage\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "cc8724531b863aacc7307e981f6f007caff584721cb1e414268339c668ee1285"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\21-nucode-nu54dk-settingsstorage\\nucode_arduino_core_build.yml",
+      "sha256": "c825528e8e29107afd45692fa4aeb5ce5b7d48bb090732410535da7688ac4095"
+    }
+  },
+  "installed-identity/21-nucode-nu54dk-settingsstorage/verified.json": {
+    "archive": {
+      "bytes": 1689,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\21-nucode-nu54dk-settingsstorage\\verified.json.raw.gz",
+      "sha256": "f6820572becf4acdfd8134b79fa58835ee9f72d236f4b819932d4a1afe72e157"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 5413,
+      "path": "C:\\r13v\\identity-records\\21-nucode-nu54dk-settingsstorage\\verified.json",
+      "sha256": "63a8f0e8b181b97e17a64a33b85d82e09c648976ed72e9be65df7992181ae63b"
+    }
+  },
+  "installed-identity/22-nucode-nu54dk-spi00runtimepins/SPI00RuntimePins.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3492,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\22-nucode-nu54dk-spi00runtimepins\\SPI00RuntimePins.ino.nu54-build.json.raw.gz",
+      "sha256": "4a99ac5f4adfb3767bf7faf3d4d555258338c89028f2155d8a546b7613baf6cc"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 16383,
+      "path": "C:\\r13v\\identity-records\\22-nucode-nu54dk-spi00runtimepins\\SPI00RuntimePins.ino.nu54-build.json",
+      "sha256": "093049dd32c94418236329ed787118cf8029fb3631b73c781cca12dcba4ff701"
+    }
+  },
+  "installed-identity/22-nucode-nu54dk-spi00runtimepins/build_info.yml": {
+    "archive": {
+      "bytes": 1180,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\22-nucode-nu54dk-spi00runtimepins\\build_info.yml.raw.gz",
+      "sha256": "6a52cf86f8f68a02d3a9260dd5262dcfa438676f113809b84f35eacb91ccaace"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\22-nucode-nu54dk-spi00runtimepins\\build_info.yml",
+      "sha256": "f16a8f9d9624f3e993683a148c60e9b00240a2b2bfee10477554ebd96f44ef3b"
+    }
+  },
+  "installed-identity/22-nucode-nu54dk-spi00runtimepins/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 447,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\22-nucode-nu54dk-spi00runtimepins\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "a37fd45eb8cf7ad2301ad29e245cf700bf9c1d63c09e5dd7b3da46acf1e9758a"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\22-nucode-nu54dk-spi00runtimepins\\nucode_arduino_core_build.yml",
+      "sha256": "e62d233c064a2f2aac93a242ba928f75dafcb6edc0e8098d57a3e53adb8eed9a"
+    }
+  },
+  "installed-identity/22-nucode-nu54dk-spi00runtimepins/verified.json": {
+    "archive": {
+      "bytes": 1586,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\22-nucode-nu54dk-spi00runtimepins\\verified.json.raw.gz",
+      "sha256": "ed1902849201eb350a297f7553aaad0e6e82c62f8e6b98f0ba737946f71b6ec9"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4973,
+      "path": "C:\\r13v\\identity-records\\22-nucode-nu54dk-spi00runtimepins\\verified.json",
+      "sha256": "bd4ac9f95eda1e9c07ef3232d8034926b542592dbd9c6086c3c69378b15f06c3"
+    }
+  },
+  "installed-identity/23-nucode-nu54dk-systemoffwake/SystemOffWake.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3670,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\23-nucode-nu54dk-systemoffwake\\SystemOffWake.ino.nu54-build.json.raw.gz",
+      "sha256": "0fbcad81f2c688e7d94d4be3c422723ecc94db954afe8754f5b93d4c1d2382cc"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 17280,
+      "path": "C:\\r13v\\identity-records\\23-nucode-nu54dk-systemoffwake\\SystemOffWake.ino.nu54-build.json",
+      "sha256": "657a3cc14a9905b6b00230ee1c44746b41fb510b5723e78b4ecb15f8649add63"
+    }
+  },
+  "installed-identity/23-nucode-nu54dk-systemoffwake/build_info.yml": {
+    "archive": {
+      "bytes": 1181,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\23-nucode-nu54dk-systemoffwake\\build_info.yml.raw.gz",
+      "sha256": "d99be35c0bee8bacab7fe3bfd0e775868a87d78a563b6d8249790447592668ab"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\23-nucode-nu54dk-systemoffwake\\build_info.yml",
+      "sha256": "4f701bd0e8fac77de64e59ecf6482f727e054e64c002054ba9348643bbc973b3"
+    }
+  },
+  "installed-identity/23-nucode-nu54dk-systemoffwake/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 447,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\23-nucode-nu54dk-systemoffwake\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "8a7ac4160928a83654f7137d5c88219fb790d564c9ba77c5dfc6d7dc66ebfd23"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\23-nucode-nu54dk-systemoffwake\\nucode_arduino_core_build.yml",
+      "sha256": "c6af7942f16faa8c4cf0ed117c3f93708a1e78f349252150752f959c65be8981"
+    }
+  },
+  "installed-identity/23-nucode-nu54dk-systemoffwake/verified.json": {
+    "archive": {
+      "bytes": 1697,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\23-nucode-nu54dk-systemoffwake\\verified.json.raw.gz",
+      "sha256": "bd9654215e73f02cd9f98ea27560b315334d5b5c27967d5258a0a07769724b15"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 5379,
+      "path": "C:\\r13v\\identity-records\\23-nucode-nu54dk-systemoffwake\\verified.json",
+      "sha256": "d7ad89522698e3f4a173ccbf2420d50451428c84367ffe2279245bddb6be5a98"
+    }
+  },
+  "installed-identity/24-nucode-nu54dk-toneoutput/ToneOutput.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3268,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\24-nucode-nu54dk-toneoutput\\ToneOutput.ino.nu54-build.json.raw.gz",
+      "sha256": "515f8ea44182d316524e022763be8245630a46767602e281fe83d42cde3aaee3"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 15535,
+      "path": "C:\\r13v\\identity-records\\24-nucode-nu54dk-toneoutput\\ToneOutput.ino.nu54-build.json",
+      "sha256": "f99e86f85db997faff4c3f7110b6ffc9515a212f0f825d795fdd3f99767256a9"
+    }
+  },
+  "installed-identity/24-nucode-nu54dk-toneoutput/build_info.yml": {
+    "archive": {
+      "bytes": 1180,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\24-nucode-nu54dk-toneoutput\\build_info.yml.raw.gz",
+      "sha256": "2376c0da1179d87053fc2252ca741c00a3c8975c813cbc14baffddfa1a7c5474"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\24-nucode-nu54dk-toneoutput\\build_info.yml",
+      "sha256": "404885959085e0b9aacf226b6a8ebd5a2ee60636c06253198025d0f1baf4de7e"
+    }
+  },
+  "installed-identity/24-nucode-nu54dk-toneoutput/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 448,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\24-nucode-nu54dk-toneoutput\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "92b45b5b2a05bd3f814c3ab4f3d4f57e8217d8d12255371b4ebb3b9d3772ec9c"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\24-nucode-nu54dk-toneoutput\\nucode_arduino_core_build.yml",
+      "sha256": "e949d16471d1a653ff4bec985e4eac3b400f48957b1643f9094ec74252969a58"
+    }
+  },
+  "installed-identity/24-nucode-nu54dk-toneoutput/verified.json": {
+    "archive": {
+      "bytes": 1516,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\24-nucode-nu54dk-toneoutput\\verified.json.raw.gz",
+      "sha256": "35bcf206c3c04f24a40452da3a19be3e30d01cdc22f0adbb6c43e3884ee930a1"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4651,
+      "path": "C:\\r13v\\identity-records\\24-nucode-nu54dk-toneoutput\\verified.json",
+      "sha256": "55d28836707edddda7789630b28fcdca92bf8fb53ce0cae5ecbe03e61253c97a"
+    }
+  },
+  "installed-identity/25-nucode-nu54dk-watchdogbasic/WatchdogBasic.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3656,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\25-nucode-nu54dk-watchdogbasic\\WatchdogBasic.ino.nu54-build.json.raw.gz",
+      "sha256": "a4798ed1de7ba62d0712dd3e3df2bfbcedb86f4ec7c8aafb122086eba93030a9"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 17282,
+      "path": "C:\\r13v\\identity-records\\25-nucode-nu54dk-watchdogbasic\\WatchdogBasic.ino.nu54-build.json",
+      "sha256": "5f426b6230c7e28d8b8b300089acb595c1677d455a1b83bdcf3bb77009fe7387"
+    }
+  },
+  "installed-identity/25-nucode-nu54dk-watchdogbasic/build_info.yml": {
+    "archive": {
+      "bytes": 1180,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\25-nucode-nu54dk-watchdogbasic\\build_info.yml.raw.gz",
+      "sha256": "f64dec2f1fbf488fa08a17a57b6b0557787bb042476d3d24c7d3a10f35e37100"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\25-nucode-nu54dk-watchdogbasic\\build_info.yml",
+      "sha256": "b890182d2a8b24938701750f68d552ca5a1ee079013d75f44afd0ac7447e2007"
+    }
+  },
+  "installed-identity/25-nucode-nu54dk-watchdogbasic/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 448,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\25-nucode-nu54dk-watchdogbasic\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "d98e57691a6c1324759f113554e62c55e4071d9107a0a8c2c79e76231195a51d"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\25-nucode-nu54dk-watchdogbasic\\nucode_arduino_core_build.yml",
+      "sha256": "f21d8e6d31b9a6870d0f2dd7694856deffef7a4c7756bf9ddaa298fe51cce2bc"
+    }
+  },
+  "installed-identity/25-nucode-nu54dk-watchdogbasic/verified.json": {
+    "archive": {
+      "bytes": 1687,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\25-nucode-nu54dk-watchdogbasic\\verified.json.raw.gz",
+      "sha256": "e24952fd5ed655c345b54926464818a5b664c13b1dca9ad46345d4386411bd89"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 5379,
+      "path": "C:\\r13v\\identity-records\\25-nucode-nu54dk-watchdogbasic\\verified.json",
+      "sha256": "5d631031a196856e2e3744597bf168715eb1fe9067a1a053c08abce3f178115d"
+    }
+  },
+  "installed-identity/26-nucode-nu54dk-wireruntimepins/WireRuntimePins.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3483,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\26-nucode-nu54dk-wireruntimepins\\WireRuntimePins.ino.nu54-build.json.raw.gz",
+      "sha256": "9a77ab9d58b0f62bfdf3777b74eb76504ec0b579817f32028099086319d2bc8e"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 16369,
+      "path": "C:\\r13v\\identity-records\\26-nucode-nu54dk-wireruntimepins\\WireRuntimePins.ino.nu54-build.json",
+      "sha256": "ef3f96b2b90b28faa1d2f0561c39e41d05c47ff8094721c4aa2ff99e2800061c"
+    }
+  },
+  "installed-identity/26-nucode-nu54dk-wireruntimepins/build_info.yml": {
+    "archive": {
+      "bytes": 1178,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\26-nucode-nu54dk-wireruntimepins\\build_info.yml.raw.gz",
+      "sha256": "ec9b6f446520f8a9e3f541bfe70d989abe6e7274e11fe7fe3bfe2594f49ff9c3"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\26-nucode-nu54dk-wireruntimepins\\build_info.yml",
+      "sha256": "7e3bca34d4e12417f91d87bb68b38ed55e1e98c19478c219cf33dd98e6c41a9d"
+    }
+  },
+  "installed-identity/26-nucode-nu54dk-wireruntimepins/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 448,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\26-nucode-nu54dk-wireruntimepins\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "ef845f85276720ba177a0c7626df76b784e5d3cd46a6ca4caa5165289c159db3"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\26-nucode-nu54dk-wireruntimepins\\nucode_arduino_core_build.yml",
+      "sha256": "54c98c9f0e79e7febe49b3d675821fa67e615800a5f6a684b2a80cdcf0f7f647"
+    }
+  },
+  "installed-identity/26-nucode-nu54dk-wireruntimepins/verified.json": {
+    "archive": {
+      "bytes": 1582,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\26-nucode-nu54dk-wireruntimepins\\verified.json.raw.gz",
+      "sha256": "f37182530f87a6ad0d2a5fa54689be8cb52b79662b174a7caacfae357c8a4cfa"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4957,
+      "path": "C:\\r13v\\identity-records\\26-nucode-nu54dk-wireruntimepins\\verified.json",
+      "sha256": "0db0c37aa30bde0222155589a35a1b4572afc7db1e8e5960646d5fda62f63ac4"
+    }
+  },
+  "installed-identity/27-servo-sweep/Sweep.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3589,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\27-servo-sweep\\Sweep.ino.nu54-build.json.raw.gz",
+      "sha256": "23a13e86dc02fa084472dad1bef232521abc8ad10fb6f46e8300cec027a564d4"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 16781,
+      "path": "C:\\r13v\\identity-records\\27-servo-sweep\\Sweep.ino.nu54-build.json",
+      "sha256": "ed63e80b5fb1309f63325b57c5fc42bc97ff45ee98786ee48cfd43616ab0ab04"
+    }
+  },
+  "installed-identity/27-servo-sweep/build_info.yml": {
+    "archive": {
+      "bytes": 1180,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\27-servo-sweep\\build_info.yml.raw.gz",
+      "sha256": "7ed189db0ee81f12eabf95f79b7edca71b1f75197c06d8c08ae4528cc795807e"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\27-servo-sweep\\build_info.yml",
+      "sha256": "2c0e1080f175577e37b4c800af903193c20a927ad88998fcbb83f485de5ff159"
+    }
+  },
+  "installed-identity/27-servo-sweep/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 447,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\27-servo-sweep\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "03c8689531651297ac8d295ac0cff85a0207ad93977f755456d1714cd3c61e24"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\27-servo-sweep\\nucode_arduino_core_build.yml",
+      "sha256": "eaf515938be401652ac7259e3f4386a484b31373ebd37a10c56d5030b62747a6"
+    }
+  },
+  "installed-identity/27-servo-sweep/verified.json": {
+    "archive": {
+      "bytes": 1668,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\27-servo-sweep\\verified.json.raw.gz",
+      "sha256": "f888e4b115e125941e25cc31557f1a5dcb437e4c9bae89b9c3d96ba457c80a9f"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 5115,
+      "path": "C:\\r13v\\identity-records\\27-servo-sweep\\verified.json",
+      "sha256": "66ae376b0ae07d56d745cceb2d9546971cbdbe89f618738fb774e1ecf9b0de84"
+    }
+  },
+  "installed-identity/28-spi-spitransaction/SPITransaction.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3463,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\28-spi-spitransaction\\SPITransaction.ino.nu54-build.json.raw.gz",
+      "sha256": "6db4bc3f2a9b237e0abdaf18dd631753e676cd8596c4499da3a8ae50dcc8971c"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 16247,
+      "path": "C:\\r13v\\identity-records\\28-spi-spitransaction\\SPITransaction.ino.nu54-build.json",
+      "sha256": "4a6ec844caaf9b4306541147ae42169ee041844327f9414d3061bec0b7734c77"
+    }
+  },
+  "installed-identity/28-spi-spitransaction/build_info.yml": {
+    "archive": {
+      "bytes": 1179,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\28-spi-spitransaction\\build_info.yml.raw.gz",
+      "sha256": "e315d66ed4689e299ea1699570923706d686c2280cef29e146a42176d6a8b220"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\28-spi-spitransaction\\build_info.yml",
+      "sha256": "44820ddf830a2551af816362fd5b5f09818d76b90940e0188b6e71ec3895d3af"
+    }
+  },
+  "installed-identity/28-spi-spitransaction/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 446,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\28-spi-spitransaction\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "c334c96382d7ad2453d7ee3b250c7d7b35c71b27792f4c276fd05084d902552a"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\28-spi-spitransaction\\nucode_arduino_core_build.yml",
+      "sha256": "c308311d4f81247367d94178367f2f15a8b19da4db1115a215ad4b71d554cd8d"
+    }
+  },
+  "installed-identity/28-spi-spitransaction/verified.json": {
+    "archive": {
+      "bytes": 1558,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\28-spi-spitransaction\\verified.json.raw.gz",
+      "sha256": "15c3d58b8c6aeb13216f1c08d46295926e1a56184f4b4a236ccb783f4a75627b"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4849,
+      "path": "C:\\r13v\\identity-records\\28-spi-spitransaction\\verified.json",
+      "sha256": "cb12d5fb70f6b395048dc95c87f64bcce06ac085e4f41365a625ecdf22f5b99f"
+    }
+  },
+  "installed-identity/29-wire-wirepmicid/WirePmicId.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3462,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\29-wire-wirepmicid\\WirePmicId.ino.nu54-build.json.raw.gz",
+      "sha256": "81eec9a3a9ed0df19dfa193842bdd0b03e922171a065dea3179dfd549d455ecf"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 16191,
+      "path": "C:\\r13v\\identity-records\\29-wire-wirepmicid\\WirePmicId.ino.nu54-build.json",
+      "sha256": "af64d207a28aecb79cadc60ad241d1d1e5b8214d46160618db39a45baeac4dcb"
+    }
+  },
+  "installed-identity/29-wire-wirepmicid/build_info.yml": {
+    "archive": {
+      "bytes": 1178,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\29-wire-wirepmicid\\build_info.yml.raw.gz",
+      "sha256": "22f8328cc87186571dfe2680178289ebf2e8f3ac7deb3a57a4c6d120eb774919"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13v\\identity-records\\29-wire-wirepmicid\\build_info.yml",
+      "sha256": "6bb46cfcb0ddb8df424e404b507fdc679ff2d72fc4119ec92f526fb680e1988e"
+    }
+  },
+  "installed-identity/29-wire-wirepmicid/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 448,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\29-wire-wirepmicid\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "bd3630c6781cc08b7b3455a678f2ceddc25797403c6078410ea44dab5dd1e3d7"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13v\\identity-records\\29-wire-wirepmicid\\nucode_arduino_core_build.yml",
+      "sha256": "17bf69ac19bec63f82c11d2288e52cd8f809b3a347990e4f65abd46a488cb497"
+    }
+  },
+  "installed-identity/29-wire-wirepmicid/verified.json": {
+    "archive": {
+      "bytes": 1553,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\installed-identity\\29-wire-wirepmicid\\verified.json.raw.gz",
+      "sha256": "6b06ee75b1c0047552f9506fc76bbf6e1be6d0d4f43c16df764c6ce30d079d34"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4791,
+      "path": "C:\\r13v\\identity-records\\29-wire-wirepmicid\\verified.json",
+      "sha256": "aa9a8819e74ee25179fa421dbfb6e38bb5d49754925df3486cc1e2cedcb5b50d"
+    }
+  },
+  "inventory.txt": {
+    "archive": {
+      "bytes": 478,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\inventory.txt.raw.gz",
+      "sha256": "d00cd3db4732b074df546824f56e8b55c8a3331fed8e60c6cf336e70a98f64f1"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 1413,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-inventory.log",
+      "sha256": "7e58023f0d3cd63fb88dfb19c5c477d19a2c78e29e995a1b66bbfe7491c26fc6"
+    }
+  },
+  "m13-initial-abnormal.txt": {
+    "archive": {
+      "bytes": 23,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\m13-initial-abnormal.txt.raw.gz",
+      "sha256": "7dd4c46a7ecad9639b15c95f387b41635699fcf498f1674ae71110a48d317e77"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 3,
+      "path": "C:\\r13i\\m13-discovery.log",
+      "sha256": "ab5df625bc76dbd4e163bed2dd888df828f90159bb93556525c31821b6541d46"
+    }
+  },
+  "m13-installed.txt": {
+    "archive": {
+      "bytes": 938,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\m13-installed.txt.raw.gz",
+      "sha256": "8c4a7a6d7c87365cd60acfbddae6977f044468a7e93f12aae80d71216edf48f9"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 2645,
+      "path": "C:\\r13v\\m13-discovery.log",
+      "sha256": "4d0c02f64268c095b7242fdc64444bf73a926eac8dabe14a817af483e8b1d18b"
+    }
+  },
+  "m13-original-retry.txt": {
+    "archive": {
+      "bytes": 941,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\m13-original-retry.txt.raw.gz",
+      "sha256": "7fde9e396a9763591e0ffdc95e0cd249535a62d7feea0eb665a094dee8d50b9d"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 2743,
+      "path": "C:\\r13i\\m13-discovery-retry.log",
+      "sha256": "74faec82441db8e78d5e14869c177cd7243ef8c172eae8d5c8897ea5609cd89b"
+    }
+  },
+  "m8-recipes-before.json": {
+    "archive": {
+      "bytes": 432,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\m8-recipes-before.json.raw.gz",
+      "sha256": "c971db62cf5bce53c45207733f70540275ae26f994df9b49b935ade191bc1864"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 691,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\m8-installed-recipes.json",
+      "sha256": "f064c567861668f94104cacbd18f9bf5b051b71e7e3444d4ea36d87d203675e8"
+    }
+  },
+  "m9-cache-baseline.json": {
+    "archive": {
+      "bytes": 1710,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\m9-cache-baseline.json.raw.gz",
+      "sha256": "ce59648b4f8ef6ba8b447a2a5b9a137f1922e3cd3026b909695a0d2e46b27bf4"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 28071,
+      "path": "C:\\r13t\\m9-evidence.json",
+      "sha256": "b743ac2159c9f634708a3b49e63f13c1c7a19f4282175c28ae8dbb45244c14cd"
+    }
+  },
+  "package-reproducibility.json": {
+    "archive": {
+      "bytes": 781,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\package-reproducibility.json.raw.gz",
+      "sha256": "5045150b0e78ad61e706e693a5acb2db06c8842dd4d29cc978f9fc4253f6fca0"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 1674,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-package-reproducibility.json",
+      "sha256": "96c0dacd498aeb7248044a94a384c5a0f5eb710ed440383325d5b3140cdbe838"
+    }
+  },
+  "package.txt": {
+    "archive": {
+      "bytes": 1271,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\package.txt.raw.gz",
+      "sha256": "60751b3fa12ba41e7c30ac9e6311ccc3d82885bf04906f1e92a934444f92c25d"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4191,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-package-gate.log",
+      "sha256": "18073832b7e38b87bd78bfff11a2a6ce3196c10a4f65006d2db2432fc43afe5d"
+    }
+  },
+  "provenance-identities.json": {
+    "archive": {
+      "bytes": 4738,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identities.json.raw.gz",
+      "sha256": "892521e9d6cb93f5ef4db870c4fa29143d766b364f709e6a5878c5350b0b2a6a"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 30701,
+      "path": "C:\\r13w\\verified-identities.json",
+      "sha256": "0501d4fe9fdc8b2c6b356905e5b7361efe60c7aee851f77641ccb0288fc83cb4"
+    }
+  },
+  "provenance-identity/build-m7-analog-read-a0/AnalogReadA0.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3178,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\build-m7-analog-read-a0\\AnalogReadA0.ino.nu54-build.json.raw.gz",
+      "sha256": "dbdad4a879f2db9f7dc95db98070419e3c089da8e836cc84e5cdf3a9bfb47b5b"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 15550,
+      "path": "C:\\r13w\\identity-records\\build-m7-analog-read-a0\\AnalogReadA0.ino.nu54-build.json",
+      "sha256": "4f59f84082fe3bf4ae81dfae677819f95cb972027d11a858ab1cf3192ece128c"
+    }
+  },
+  "provenance-identity/build-m7-analog-read-a0/build_info.yml": {
+    "archive": {
+      "bytes": 1208,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\build-m7-analog-read-a0\\build_info.yml.raw.gz",
+      "sha256": "fb935ed2823fd2511b8f8b38efb356f887ffeffbb35e4145ec9275575a366363"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4485,
+      "path": "C:\\r13w\\identity-records\\build-m7-analog-read-a0\\build_info.yml",
+      "sha256": "13a4255d51cd534f015b5882b755fa4c66d3eff2ec8d1e142a5073041ec12c2d"
+    }
+  },
+  "provenance-identity/build-m7-analog-read-a0/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 447,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\build-m7-analog-read-a0\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "dcef2de94f9cc91b9fd90904cf69d3d23ac304821bf2dc47b0a9da24b53160be"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13w\\identity-records\\build-m7-analog-read-a0\\nucode_arduino_core_build.yml",
+      "sha256": "1b42ae55cdad7b917e49b912f9121247d31068bfad1d6d2ad9081971cfdd3bbb"
+    }
+  },
+  "provenance-identity/build-m7-analog-read-a0/verified.json": {
+    "archive": {
+      "bytes": 1563,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\build-m7-analog-read-a0\\verified.json.raw.gz",
+      "sha256": "e5492daecabe7f7eb98af90f870dab331e071f65a56ae77b916c90a5c361cd67"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4721,
+      "path": "C:\\r13w\\identity-records\\build-m7-analog-read-a0\\verified.json",
+      "sha256": "c98c31ae43894f77d20305b8eb0039ff33c32d434564832989ade3706f8a916c"
+    }
+  },
+  "provenance-identity/build-m7-pwm-fade/PWMFade.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3187,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\build-m7-pwm-fade\\PWMFade.ino.nu54-build.json.raw.gz",
+      "sha256": "77c3eabe0fe26a9dae72da4d98d593c92fa2dbc6c37bf7bf355a0add97a9c1ab"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 15458,
+      "path": "C:\\r13w\\identity-records\\build-m7-pwm-fade\\PWMFade.ino.nu54-build.json",
+      "sha256": "08e83dc07a9a96c342a0aa3c209e0c7c9243beafc85c8ee4e192dfd899a9d482"
+    }
+  },
+  "provenance-identity/build-m7-pwm-fade/build_info.yml": {
+    "archive": {
+      "bytes": 1208,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\build-m7-pwm-fade\\build_info.yml.raw.gz",
+      "sha256": "056a4409ce8479ccbf7dfd9aa13bc420ba52f21b2fd0450e6fe4c606c9450dea"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4485,
+      "path": "C:\\r13w\\identity-records\\build-m7-pwm-fade\\build_info.yml",
+      "sha256": "f1414e231a38a00e67d3be0c979ecf6bd90de713f09c9184cd6942fe6a0657fe"
+    }
+  },
+  "provenance-identity/build-m7-pwm-fade/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 447,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\build-m7-pwm-fade\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "86e1c4ce57fc41a24c8a08186a562b12b7f266dcf90b946fb5efba82b600b7cc"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13w\\identity-records\\build-m7-pwm-fade\\nucode_arduino_core_build.yml",
+      "sha256": "c2bdda5c1cd2eae054a703b2a8b21e6fbcf064411922e9150162434ceb70f153"
+    }
+  },
+  "provenance-identity/build-m7-pwm-fade/verified.json": {
+    "archive": {
+      "bytes": 1562,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\build-m7-pwm-fade\\verified.json.raw.gz",
+      "sha256": "6684e37b0fe07d740b341dbd64cb44c8219f104a34a7364e1afb57804aa9873b"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4628,
+      "path": "C:\\r13w\\identity-records\\build-m7-pwm-fade\\verified.json",
+      "sha256": "41b49a0126c02c59c6c7ce051aec98487d8c4a63d723b30b0679b3f7cb05a230"
+    }
+  },
+  "provenance-identity/build-m7-spi-transaction/SPITransaction.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3346,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\build-m7-spi-transaction\\SPITransaction.ino.nu54-build.json.raw.gz",
+      "sha256": "6862029f2425e5d016ea491ee4dc516510f7683e5ab62968b910dd38855bf5c8"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 16279,
+      "path": "C:\\r13w\\identity-records\\build-m7-spi-transaction\\SPITransaction.ino.nu54-build.json",
+      "sha256": "f09e4822a6416ab2979bfe84182ce1e1a4ad371d2ea6ebe83552d8d511a90a02"
+    }
+  },
+  "provenance-identity/build-m7-spi-transaction/build_info.yml": {
+    "archive": {
+      "bytes": 1207,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\build-m7-spi-transaction\\build_info.yml.raw.gz",
+      "sha256": "d6cd2b2464471f1db7271ec1ce69be46ceb71721e44b7400aeffd93805181e54"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4485,
+      "path": "C:\\r13w\\identity-records\\build-m7-spi-transaction\\build_info.yml",
+      "sha256": "b6431b554b8508d9d309eea21292d514aac7c8bd4dfc04a2b8be8b5f0258f50c"
+    }
+  },
+  "provenance-identity/build-m7-spi-transaction/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 447,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\build-m7-spi-transaction\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "9c14adfb6dd784d35449783ed973785ef56a85b74ff96a0230b95f64bc7dc661"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13w\\identity-records\\build-m7-spi-transaction\\nucode_arduino_core_build.yml",
+      "sha256": "d46aff49db78c5c0c453d34c675fae39e6ce0d3d88f7d6e396fcd72eda8eb954"
+    }
+  },
+  "provenance-identity/build-m7-spi-transaction/verified.json": {
+    "archive": {
+      "bytes": 1615,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\build-m7-spi-transaction\\verified.json.raw.gz",
+      "sha256": "147ab684569196c0adee06a157f720cf5d06e00a10cfbcd8dfcae87878f0e4be"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4950,
+      "path": "C:\\r13w\\identity-records\\build-m7-spi-transaction\\verified.json",
+      "sha256": "b678f4f765e6f5c0a9d7a69cf2e9fac3f9a385dc3a87c259b9f05440f31b9bc0"
+    }
+  },
+  "provenance-identity/build-m7-wire-pmic-id/WirePmicId.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3323,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\build-m7-wire-pmic-id\\WirePmicId.ino.nu54-build.json.raw.gz",
+      "sha256": "64abb58a366e5cd31f36a7a5782819dc36c447b7b12a19da2a9bd7c19b66ff8d"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 16203,
+      "path": "C:\\r13w\\identity-records\\build-m7-wire-pmic-id\\WirePmicId.ino.nu54-build.json",
+      "sha256": "a7749d763168beb3a7d7033676c4eba5f1560ae87939798325884e07741b8421"
+    }
+  },
+  "provenance-identity/build-m7-wire-pmic-id/build_info.yml": {
+    "archive": {
+      "bytes": 1209,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\build-m7-wire-pmic-id\\build_info.yml.raw.gz",
+      "sha256": "07415645e831d835de6751be837f2051ec87e3e93c2c5697cfe4e9d6a3707221"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4485,
+      "path": "C:\\r13w\\identity-records\\build-m7-wire-pmic-id\\build_info.yml",
+      "sha256": "c017a0d15059b4397e55703514e14eb2708e23a15d6dbe43f1c8f06bc5f69486"
+    }
+  },
+  "provenance-identity/build-m7-wire-pmic-id/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 449,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\build-m7-wire-pmic-id\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "5b0cc2c89b8a51ce0a0bc02d557d83f801eb42adc8b210c50fbfa57fa57d55f6"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13w\\identity-records\\build-m7-wire-pmic-id\\nucode_arduino_core_build.yml",
+      "sha256": "119089527f5b6bdc54df59913eb92f64e7a836b8f9b927503219582c4da43dce"
+    }
+  },
+  "provenance-identity/build-m7-wire-pmic-id/verified.json": {
+    "archive": {
+      "bytes": 1616,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\build-m7-wire-pmic-id\\verified.json.raw.gz",
+      "sha256": "fb6175e034d3fd7091d7e2cef7f5ec67df5b0e1175cc9eb08407560c83aa7659"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4892,
+      "path": "C:\\r13w\\identity-records\\build-m7-wire-pmic-id\\verified.json",
+      "sha256": "4d6a4303f929206fafb13033f531707e15e97448397d9f074b496e62a9e85cf3"
+    }
+  },
+  "provenance-identity/m8-compile-pyocd/build_info.yml": {
+    "archive": {
+      "bytes": 1181,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\m8-compile-pyocd\\build_info.yml.raw.gz",
+      "sha256": "28eef4bc2024470a973aa960bd1cd579b1d002cde0ee1f38e98a09b66b0f6789"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13w\\identity-records\\m8-compile-pyocd\\build_info.yml",
+      "sha256": "ca0dcb6bbd16840b5d0c3046c0a3a03e522805419586ff2f57392bdb2d8eae97"
+    }
+  },
+  "provenance-identity/m8-compile-pyocd/m8_upload.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3186,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\m8-compile-pyocd\\m8_upload.ino.nu54-build.json.raw.gz",
+      "sha256": "e582ac3770148559c48e0b84a122213068f74687024c431928f2102dcd26094d"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 15243,
+      "path": "C:\\r13w\\identity-records\\m8-compile-pyocd\\m8_upload.ino.nu54-build.json",
+      "sha256": "a91677e0e0af36203522932bff4dc2a843a204c6800189e1af5dc52786943ad1"
+    }
+  },
+  "provenance-identity/m8-compile-pyocd/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 448,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\m8-compile-pyocd\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "2b63cab618fb3943252faad19eaab0e71d973f0fdec5e40029ee95abdaa328e8"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13w\\identity-records\\m8-compile-pyocd\\nucode_arduino_core_build.yml",
+      "sha256": "e0cb83641516e0c1a13dacaad8bad6ce09f173c18052c6eca4c00d1a533b3c1c"
+    }
+  },
+  "provenance-identity/m8-compile-pyocd/verified.json": {
+    "archive": {
+      "bytes": 1511,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\m8-compile-pyocd\\verified.json.raw.gz",
+      "sha256": "4111be0ec9318fcca7d1991a998a2fb8a8ad0fa828f2237042cf229973380933"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4464,
+      "path": "C:\\r13w\\identity-records\\m8-compile-pyocd\\verified.json",
+      "sha256": "2dfeb5295d9b0e39d053438ac8af04b03ee1d097d3f2949d4cb841b72c1c20ce"
+    }
+  },
+  "provenance-identity/m8-compile-pyocd_uid/build_info.yml": {
+    "archive": {
+      "bytes": 1183,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\m8-compile-pyocd_uid\\build_info.yml.raw.gz",
+      "sha256": "5e5bc80d7787884bf686ea7da39c225f6eba81aabfd307b56247c55cf2f31bce"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 4363,
+      "path": "C:\\r13w\\identity-records\\m8-compile-pyocd_uid\\build_info.yml",
+      "sha256": "27530ab439e60782746aec097cf8d9f5e754dec1c5e24eaec9439c006296f8b2"
+    }
+  },
+  "provenance-identity/m8-compile-pyocd_uid/m8_upload.ino.nu54-build.json": {
+    "archive": {
+      "bytes": 3201,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\m8-compile-pyocd_uid\\m8_upload.ino.nu54-build.json.raw.gz",
+      "sha256": "cd95fa95837aaecd6274dd9bd4e91e18ba3ee04f20f980bb048f35d4735b3edf"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 15306,
+      "path": "C:\\r13w\\identity-records\\m8-compile-pyocd_uid\\m8_upload.ino.nu54-build.json",
+      "sha256": "8d2f1daddb70d4fdc97cfd272e939327308b0746d9a13e19c681f9bc8098ba82"
+    }
+  },
+  "provenance-identity/m8-compile-pyocd_uid/nucode_arduino_core_build.yml": {
+    "archive": {
+      "bytes": 449,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\m8-compile-pyocd_uid\\nucode_arduino_core_build.yml.raw.gz",
+      "sha256": "c336dc2a55fe8177bae74e3f8b1abf74344b545e8e94a72e40d7667c652df27b"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 757,
+      "path": "C:\\r13w\\identity-records\\m8-compile-pyocd_uid\\nucode_arduino_core_build.yml",
+      "sha256": "e38d12b3bd4d12da27bbc175a88c2323f747e7f9cfca1fad7c99aaa3288c9165"
+    }
+  },
+  "provenance-identity/m8-compile-pyocd_uid/verified.json": {
+    "archive": {
+      "bytes": 1509,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-identity\\m8-compile-pyocd_uid\\verified.json.raw.gz",
+      "sha256": "467267a4c5208db86e62bfad27ca4371d5962aa9968e5bb334f4252dfc5c1e67"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 4496,
+      "path": "C:\\r13w\\identity-records\\m8-compile-pyocd_uid\\verified.json",
+      "sha256": "cbfc0d7ba58608887266e5737d4212b75b204e54322edfd09e0b9791be4baef8"
+    }
+  },
+  "provenance-smoke.json": {
+    "archive": {
+      "bytes": 229,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-smoke.json.raw.gz",
+      "sha256": "2674fc32cfda4efe86efd0f78e43ee64d903e6958cbd8d78390f5ed804654412"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 289,
+      "path": "C:\\r13w\\provenance-smoke.json",
+      "sha256": "78e58d18b7426634dd4a9aab2e0856fc51976df160fbb95ca5e11867f4452b71"
+    }
+  },
+  "provenance-smoke.txt": {
+    "archive": {
+      "bytes": 146,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\provenance-smoke.txt.raw.gz",
+      "sha256": "286ef90924c1037994dc5f9198a847592e3a6db49d9a35ebbb6c63e7e47c3339"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 147,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-provenance-smoke.log",
+      "sha256": "bbee7c073f7272bd2ec837983c02c4d29675352e57b884dfc5b5a4c4dd836222"
+    }
+  },
+  "qemu-artifacts.json": {
+    "archive": {
+      "bytes": 537,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\qemu-artifacts.json.raw.gz",
+      "sha256": "122fac79507d0d87a9f60f4b34e61b16e6c3d8e46044d4cf0f2e469b091fa511"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 1386,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-qemu-artifacts.json",
+      "sha256": "db50d5481df4973c6c891b9db892f7dbcbb9b4657bac2718dee7214ae7694f66"
+    }
+  },
+  "qemu-handler.txt": {
+    "archive": {
+      "bytes": 438,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\qemu-handler.txt.raw.gz",
+      "sha256": "bddc844660fb68a3aedcb944cf7a495330abc16651876f3fdbb87c3cc6a4bd8a"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 1340,
+      "path": "C:\\r13z\\qemu_cortex_m3_ti_lm3s6965\\zephyr_gnu\\nucode.m14.cpp_policy\\handler.log",
+      "sha256": "7ac281dfcb7be477294878374d0dd8f3901e95ce26c7c99aca67db918a684fd6"
+    }
+  },
+  "qemu-initial-not-run.json": {
+    "archive": {
+      "bytes": 668,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\qemu-initial-not-run.json.raw.gz",
+      "sha256": "067765ce91fd6bfebfed8f4401e0c12c35edffc0abaccd30effa02caf02ab121"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 2216,
+      "path": "C:\\r13q\\twister.json",
+      "sha256": "b7b61221d68129521854bff03d8ba5c027eef195beb66201ea9bd777b443986e"
+    }
+  },
+  "qemu-inputs.json": {
+    "archive": {
+      "bytes": 398,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\qemu-inputs.json.raw.gz",
+      "sha256": "bf096833fa05bb7987f6726b2a2fbf29b326a2d08e71c5edef5b110683f9563e"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 638,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\qemu-inputs.json",
+      "sha256": "6b6ee6dc1dc4808d9375545db7307bb5eccb4b4fdbbc9b0c7bf2245d7a3ffd01"
+    }
+  },
+  "qemu-runtime.json": {
+    "archive": {
+      "bytes": 562,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\qemu-runtime.json.raw.gz",
+      "sha256": "7a05d293acba461e1214235f1fdf5f97e2aa3ce5949f5b66d4c721f456a1c50b"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 978,
+      "path": "C:\\r13z\\m14-qemu-evidence.json",
+      "sha256": "b0a05aaab1386a19bfba78d388042e60a78ae9d187d1c15f67e0387ffa2451e1"
+    }
+  },
+  "qemu-twister.json": {
+    "archive": {
+      "bytes": 637,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\qemu-twister.json.raw.gz",
+      "sha256": "4ea8167576a36b471f1eff9606d9842d308dc27b285ba0e4b7063c1c00c4f7d2"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 2023,
+      "path": "C:\\r13z\\twister.json",
+      "sha256": "4935b3b3a7da18155a9a7f38cb67e2d703b7eec0b97561fbbea3d10c79b48802"
+    }
+  },
+  "qemu.txt": {
+    "archive": {
+      "bytes": 734,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\qemu.txt.raw.gz",
+      "sha256": "eb7270e902f3fd3f9cf75614e691386c4039485aa4ee20d2333cfe3a4015ba24"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 1549,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-qemu.log",
+      "sha256": "d6af29ee57745fdb1ff12d9598895fbb6cb0c8715fe3cb4e4af1ea79b2667692"
+    }
+  },
+  "software-smoke-baseline.json": {
+    "archive": {
+      "bytes": 989,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\software-smoke-baseline.json.raw.gz",
+      "sha256": "1fce35d3f9e183ed8d639dbc6de740b362af17183313c49212096b8006f5d6a5"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 2807,
+      "path": "C:\\r13t\\software-smoke.json",
+      "sha256": "98038e2d17c5315e41881d978378cbae7aea7461435191724f6982b4ba04a862"
+    }
+  },
+  "software-smoke-baseline.txt": {
+    "archive": {
+      "bytes": 190,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\software-smoke-baseline.txt.raw.gz",
+      "sha256": "75f5bc9fdac7a0c531c276bb94bdead006d51b8479eb034934572aac193d19ac"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 470,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\final-installed-smoke-resume.log",
+      "sha256": "7995c19f77b109675c3e432e6b7e4380075f7fdead68a98459b9b9082dc84a20"
+    }
+  },
+  "source-audit.json": {
+    "archive": {
+      "bytes": 32868,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\source-audit.json.raw.gz",
+      "sha256": "1237c8e57b49ec3116dab2ec619b8a2bb19096c69d195924401b375fac1fb20c"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 162161,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-source-audit.json",
+      "sha256": "0b1cd6924843592519f183bb85aa29f31fc3f28546df1c03d1fda052efea427a"
+    }
+  },
+  "style.txt": {
+    "archive": {
+      "bytes": 58,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\style.txt.raw.gz",
+      "sha256": "c443babfe9704afa28a54393ba38432755565a82180ee233288c978163d4e45f"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 40,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-style.log",
+      "sha256": "a4c20c2be37aa611270a24e85826c8013654d6bb404477070db2009c783906a5"
+    }
+  },
+  "target-artifacts.json": {
+    "archive": {
+      "bytes": 37414,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\target-artifacts.json.raw.gz",
+      "sha256": "e04dbbf6ef2012697db6da176a02e80d055a49ab3ec6ec85bd61f1385726dd80"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 356760,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\r13u-artifact-index.json",
+      "sha256": "4c52d68bbfbc77fcd481af5afe559e09a8ad4ce86c627390b7aaa3f3e503ede2"
+    }
+  },
+  "target-canonical.json": {
+    "archive": {
+      "bytes": 2203,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\target-canonical.json.raw.gz",
+      "sha256": "b575e998798c58dbbb56753c69e76213e430d383260c98f79d8995dff97df6c1"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 7057,
+      "path": "C:\\r13u\\m12-build-evidence.json",
+      "sha256": "d526b8e4b3a107f6f28e8ed752d1ba021e83fca09442e2aa802609bc1ab52b8e"
+    }
+  },
+  "target-comparison.json": {
+    "archive": {
+      "bytes": 607,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\target-comparison.json.raw.gz",
+      "sha256": "283eacc265c3a49ba934b4e393d79a2b7be5425314c734b258019df8c9d4843f"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 10868,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-target-comparison.json",
+      "sha256": "432b04ecae45a121f0084f6da0d4726c64bca135d54afd847ac1fc89a051cc34"
+    }
+  },
+  "target-twister.json": {
+    "archive": {
+      "bytes": 6523,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\target-twister.json.raw.gz",
+      "sha256": "d9d14969815d736cff2cd733f52d753028f2ff11196e41986201bcda3a01cd63"
+    },
+    "preview": "JSON snapshot; original bytes additionally preserved against Git newline normalization in raw.gz",
+    "raw": {
+      "bytes": 87547,
+      "path": "C:\\r13u\\twister.json",
+      "sha256": "0248b7fd98d326f941bf1a22d65aaadc9cda143e6b648c11bd70ab94b36a165d"
+    }
+  },
+  "target.txt": {
+    "archive": {
+      "bytes": 2027,
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13-final-cf966a8\\target.txt.raw.gz",
+      "sha256": "141fa36bf5d2e509f2112e72fd288f09fe1ee49aa6289e151eec9c3115bd7436"
+    },
+    "preview": "UTF-8/LF/trailing-space normalized; original bytes in raw.gz",
+    "raw": {
+      "bytes": 18386,
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-target.log",
+      "sha256": "1a267af5c9d84501996b02ace8f630ad519f6b6e3f446d7432ca26ba32421ce1"
+    }
+  }
+}

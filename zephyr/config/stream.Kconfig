@@ -1,0 +1,17 @@
+config NUCODE_ARDUINO_STREAM_FABRIC
+	bool "M25 PDM·I2S·QDEC 전 instance 후보 API 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	depends on NUCODE_ARDUINO_IO_OWNERSHIP
+	depends on NUCODE_ARDUINO_GPIO
+	depends on !AUDIO_DMIC_NRFX_PDM
+	depends on !I2S_NRFX
+	depends on !QDEC_NRFX
+	select NRFX_PDM
+	select NRFX_I2S
+	select NRFX_QDEC
+	help
+	  PDM20/21의 연속 capture, I2S20의 TX/RX/full-duplex double-buffer와
+	  QDEC20/21의 accumulator/event를 고정 queue와 DMA ownership으로
+	  제공합니다. 해당 block의 Zephyr driver와 IRQ를 동시에 소유하지 않으며
+	  v0.4.0 외부 fixture gate 전에는 후보 API로만 빌드합니다.

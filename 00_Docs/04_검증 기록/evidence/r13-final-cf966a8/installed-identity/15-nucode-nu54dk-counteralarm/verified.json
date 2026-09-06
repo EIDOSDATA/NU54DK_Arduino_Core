@@ -1,0 +1,105 @@
+{
+  "manifest_path": "C:\\r13v\\examples\\15-nucode-nu54dk-counteralarm\\CounterAlarm.ino.nu54-build.json",
+  "manifest_sha256": "abdc13459aa4100a82964b5de71ae7b7a2fbd11d2c0f53f99a22470bcb1a86c3",
+  "artifacts": {
+    "bin": {
+      "path": "C:/r13v/examples/15-nucode-nu54dk-counteralarm/CounterAlarm.ino.bin",
+      "sha256": "45010fdc212d6fbd5b30b21b936d6588087fb35f2e34a5a4f246ffb1f38b8e18",
+      "size": 107956
+    },
+    "elf": {
+      "path": "C:/r13v/examples/15-nucode-nu54dk-counteralarm/CounterAlarm.ino.elf",
+      "sha256": "fdaa6e8b904326bb1b525554855a30c274daa1322d35084778e3f47594b10a1f",
+      "size": 2406784
+    },
+    "hex": {
+      "path": "C:/r13v/examples/15-nucode-nu54dk-counteralarm/CounterAlarm.ino.hex",
+      "sha256": "051218f1bfa699e870b016e38b4212a79d13002c57c99de5356c1107c4261d3b",
+      "size": 303775
+    },
+    "map": {
+      "path": "C:/r13v/examples/15-nucode-nu54dk-counteralarm/CounterAlarm.ino.map",
+      "sha256": "44397ad6cafcb9763297dbdfd8d995fa9ede4b08d83c9d0e919d97780cc2eda7",
+      "size": 884955
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:631bb8c5a670f1ccc181a1111e8b65efddc8afdf189baba55398129e3668be52",
+        "path": "C:/r13v/cache/v1/b7/b7ac1f7bac82297920dddb2ee30a444f/platform/libraries/NUCODE_NU54DK/examples/CounterAlarm"
+      },
+      {
+        "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+        "path": "C:/r13v/cache/v1/b7/b7ac1f7bac82297920dddb2ee30a444f/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/r13v/cache/v1/b7/b7ac1f7bac82297920dddb2ee30a444f/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:62270ed0bca3ce8e6ef7e237f2dd18eafa7129a98d2046e4e14424db5c273576",
+        "path": "C:/r13v/cache/v1/b7/b7ac1f7bac82297920dddb2ee30a444f/platform/libraries/NUCODE_NU54DK/src"
+      },
+      {
+        "content_sha256": "sha256:d9726933b1aaf6890615b3c802e2a313fb956fb6de623a939ca481cbac221af4",
+        "path": "C:/r13v/cache/v1/b7/b7ac1f7bac82297920dddb2ee30a444f/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/r13v/cache/v1/b7/b7ac1f7bac82297920dddb2ee30a444f/build/nucode_arduino_core_build.yml",
+      "sha256": "22a44130311472d2356472c753fa5fd69c6d28cdc6869f964e5178d9e3b53552"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/r13v/cache/v1/b7/b7ac1f7bac82297920dddb2ee30a444f/app/generated-sources/sketch/CounterAlarm.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/CounterAlarm.ino.cpp",
+        "sha256": "fa5f78c1a6670f015e12f80137afbbdb2eb833a71eb9a6b975cf3b91c7003b51",
+        "source_path": "C:/r13v/examples/15-nucode-nu54dk-counteralarm/sketch/CounterAlarm.ino.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/b7/b7ac1f7bac82297920dddb2ee30a444f/platform/libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp",
+        "logical_identity": "platform:libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp",
+        "sha256": "7a5fe7013f0a6d1de5799025edb5c19515bce39ff08249954b12bf7885973d2d",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\r13v\\identity-records\\15-nucode-nu54dk-counteralarm\\nucode_arduino_core_build.yml",
+    "sha256": "22a44130311472d2356472c753fa5fd69c6d28cdc6869f964e5178d9e3b53552",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core_source_sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "application_source_sha256": "045a5511e2cb4b17acad7314aa1bbc9bcbe53e6c065a10c7de2c6092cb6fd48f",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\r13v\\identity-records\\15-nucode-nu54dk-counteralarm\\build_info.yml",
+    "sha256": "1afe365b1c5da75173be5afc190943e7e3966da26bcaf860cace38de60b9ea1d",
+    "identity": {
+      "application-source-sha256": "045a5511e2cb4b17acad7314aa1bbc9bcbe53e6c065a10c7de2c6092cb6fd48f",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core-source-sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

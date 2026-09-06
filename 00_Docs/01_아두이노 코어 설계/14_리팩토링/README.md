@@ -2,7 +2,7 @@
 
 작성·갱신일: 2026-09-06
 문서 묶음 개정: 0.3
-현재 진행: 역사적 T11 완료 / R00 기준선 완료 / R01 source 소속 정리 착수
+현재 진행: R00~R13·전체 software gate 완료 / current-source T11 Fixture 101 결선 확인 대기
 
 ## 먼저 읽을 문서
 
@@ -43,7 +43,7 @@ Host/target 5개 구성을 통과했다. R09는 [60번 기록](<../../04_검증 
 Host와 target 총 5개 구성을 통과했다. R10은 [61번 기록](<../../04_검증 기록/61_R10_Serial_Fabric_동시_호출.md>)의
 동시성·구조·scope 검증을 완료했다. R11은 [62번 기록](<../../04_검증 기록/62_R11_Analog_Stream_peripheral_분리.md>)의
 Host·target 6개 회귀를 완료했다. R12는 [63번 기록](<../../04_검증 기록/63_R12_BLE_Storage_수명주기.md>)의
-BLE/Storage 실제 Host와 target 회귀를 완료했다. 다음은 R13 도구·정책·build 구조다.
+BLE/Storage 실제 Host와 target 회귀를 완료했다. R13도 [64번 기록](<../../04_검증 기록/64_R13_도구_정책_build_구조.md>)의 전체 software gate를 완료했다. 다음은 current-source T11 Fixture 101 전원 OFF 결선 확인이며 새 실기는 NOT RUN이다.
 
 정식 경로는 `00_Docs/01_아두이노 코어 설계/14_리팩토링/`이다. 임시 최상위 묶음명과 문서 묶음 SemVer는 제거하고, 활성 `00_Docs/TODO_v0.4.0.md`는 기존 위치와 T01~T25 번호를 유지한다.
 

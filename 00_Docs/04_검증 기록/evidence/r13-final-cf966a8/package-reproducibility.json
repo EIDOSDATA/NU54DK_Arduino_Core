@@ -1,0 +1,42 @@
+{
+  "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "package_version": "0.0.90",
+  "independent_outputs": [
+    "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-package-a",
+    "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-package-b"
+  ],
+  "byte_identical": true,
+  "files": {
+    "nucode-nu54dk-zephyr-0.0.90.CHECKSUMS.sha256": {
+      "sha256": "e9023104b407ae16f4393e74b12edd5d9b7061ab7a8bdad2869c836a359c384d",
+      "bytes": 552
+    },
+    "nucode-nu54dk-zephyr-0.0.90.license-inventory.json": {
+      "sha256": "dd86bf8e9e697f0fbba5ac46dab6a7415ba9040d6f6b67c71439765a89dfb222",
+      "bytes": 20488
+    },
+    "nucode-nu54dk-zephyr-0.0.90.release-manifest.json": {
+      "sha256": "a112a04d2e169642226b68a96a562d87622a5adf114b3e341666ac6c979f1925",
+      "bytes": 136442
+    },
+    "nucode-nu54dk-zephyr-0.0.90.spdx.json": {
+      "sha256": "b493168f5d5669d717596f03c9b9ad5d0bfb2308efc9260c7cfec0fda9c0f6c6",
+      "bytes": 252993
+    },
+    "nucode-nu54dk-zephyr-0.0.90.THIRD_PARTY_NOTICES.md": {
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "bytes": 1813
+    },
+    "nucode-nu54dk-zephyr-0.0.90.zip": {
+      "sha256": "77414a8da67f31aebf19bd30cbd922c9b5e492f894187dcbaeaa3de69f033350",
+      "bytes": 2576814
+    },
+    "package_nucode_nu54dk_preview_index.json": {
+      "sha256": "ef10fc72f0b6cbca1f51d5c5118a3e98e5f9c33169994f10b7baffd9f3dfeee6",
+      "bytes": 1153
+    }
+  },
+  "physical_executed": false,
+  "published": false
+}

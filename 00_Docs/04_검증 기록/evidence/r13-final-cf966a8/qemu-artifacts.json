@@ -1,0 +1,32 @@
+{
+  "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+  "physical_executed": false,
+  "actual_runtime_cases": 3,
+  "files": {
+    "zephyr/zephyr.elf": {
+      "path": "C:\\r13z\\qemu_cortex_m3_ti_lm3s6965\\zephyr_gnu\\nucode.m14.cpp_policy\\zephyr\\zephyr.elf",
+      "sha256": "b31dc5defb2a7eaa29568e4b70caf289a12b25b76fedffd5b908c4cba3fd2a8f",
+      "bytes": 853000
+    },
+    "zephyr/.config": {
+      "path": "C:\\r13z\\qemu_cortex_m3_ti_lm3s6965\\zephyr_gnu\\nucode.m14.cpp_policy\\zephyr\\.config",
+      "sha256": "ac59a0fe49b0b8c57a62abf487e8f280a378cb8166cd2be5c9775829618fde2b",
+      "bytes": 51850
+    },
+    "handler.log": {
+      "path": "C:\\r13z\\qemu_cortex_m3_ti_lm3s6965\\zephyr_gnu\\nucode.m14.cpp_policy\\handler.log",
+      "sha256": "7ac281dfcb7be477294878374d0dd8f3901e95ce26c7c99aca67db918a684fd6",
+      "bytes": 1340
+    },
+    "build.log": {
+      "path": "C:\\r13z\\qemu_cortex_m3_ti_lm3s6965\\zephyr_gnu\\nucode.m14.cpp_policy\\build.log",
+      "sha256": "639b153a16ae573071f9a04f9889c7a1212a143554233c0f76cf28193476901d",
+      "bytes": 16667
+    },
+    "compile_commands.json": {
+      "path": "C:\\r13z\\qemu_cortex_m3_ti_lm3s6965\\zephyr_gnu\\nucode.m14.cpp_policy\\compile_commands.json",
+      "sha256": "275a9463ad5d85a7f3966bcba5d647a07df801997d4bf04851b720fb81968ba5",
+      "bytes": 302664
+    }
+  }
+}

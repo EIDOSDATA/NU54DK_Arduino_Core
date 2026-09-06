@@ -1,0 +1,586 @@
+{
+  "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "live_and_configure_records_preserved": 6,
+  "records": [
+    {
+      "manifest_path": "C:\\r13w\\tmp\\n54m5-7lrsfeg8\\build-m7-analog-read-a0\\AnalogReadA0.ino.nu54-build.json",
+      "manifest_sha256": "4f59f84082fe3bf4ae81dfae677819f95cb972027d11a858ab1cf3192ece128c",
+      "artifacts": {
+        "bin": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-analog-read-a0/AnalogReadA0.ino.bin",
+          "sha256": "0613c6beffc3af9471d162319d349ebb2317eab69d7ffe28f09a1845fdf0c446",
+          "size": 105988
+        },
+        "elf": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-analog-read-a0/AnalogReadA0.ino.elf",
+          "sha256": "1dcf16349bd7d753f1206528d6287d22782c397b332008cedc6ec87aad1fdde4",
+          "size": 2326864
+        },
+        "hex": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-analog-read-a0/AnalogReadA0.ino.hex",
+          "sha256": "2241bde6f7746d2559e408c99d90c3443d0357a24510817d2a29db3ce4d5c1a0",
+          "size": 298256
+        },
+        "map": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-analog-read-a0/AnalogReadA0.ino.map",
+          "sha256": "3224fee56c917c2e264a79d85676bd986b77ea77255549ab03d51d51c177f17d",
+          "size": 807901
+        }
+      },
+      "source_inputs": {
+        "include_roots": [
+          {
+            "content_sha256": "sha256:e3934f1c5599cf33c3e743a6714e1d7597297c2431bf263e85af92d5ea8b2da1",
+            "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_NU54DK/examples/AnalogReadA0"
+          },
+          {
+            "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+            "path": "C:/r13w/tmp/n54m5-7lrsfeg8/user/hardware/nucode/zephyr/cores/arduino"
+          },
+          {
+            "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+            "path": "C:/r13w/tmp/n54m5-7lrsfeg8/user/hardware/nucode/zephyr/variants/nu54dk"
+          },
+          {
+            "content_sha256": "sha256:9b98b26168124e63ea845c3deed72cdc74ccfeeb5eebb6c01280da49df7d2d24",
+            "path": "C:/r13w/tmp/n54m5-7lrsfeg8/cache/v1/fa/fa0d335f87d19ead29215b5d2fe7474e/app/generated-sources/sketch"
+          }
+        ],
+        "live_build_record": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/cache/v1/fa/fa0d335f87d19ead29215b5d2fe7474e/build/nucode_arduino_core_build.yml",
+          "sha256": "1b42ae55cdad7b917e49b912f9121247d31068bfad1d6d2ad9081971cfdd3bbb"
+        },
+        "sources": [
+          {
+            "compiled_path": "C:/r13w/tmp/n54m5-7lrsfeg8/cache/v1/fa/fa0d335f87d19ead29215b5d2fe7474e/app/generated-sources/sketch/AnalogReadA0.ino.cpp",
+            "logical_identity": "arduino-generated:sketch/AnalogReadA0.ino.cpp",
+            "sha256": "45f3e1ac8c6832f49f54ebb8c8dd1f66e21a3a848a689fd0622bf4f9b773d5d8",
+            "source_path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-analog-read-a0/sketch/AnalogReadA0.ino.cpp"
+          }
+        ]
+      },
+      "live_record": {
+        "path": "C:\\r13w\\identity-records\\build-m7-analog-read-a0\\nucode_arduino_core_build.yml",
+        "sha256": "1b42ae55cdad7b917e49b912f9121247d31068bfad1d6d2ad9081971cfdd3bbb",
+        "identity": {
+          "source_version": "0.4.0-dev",
+          "package_version": "0.0.90",
+          "core_revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+          "core_source_sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+          "application_source_sha256": "063a30ac1cf0aaff4283a3ba59ca61aaf00f3a0e87f0288da1fbdf395b5d6a9d",
+          "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+          "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+          "ncs_revision": "99553055607b",
+          "zephyr_revision": "bf801e4e3d19",
+          "board": "nrf54l15dk",
+          "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+          "toolchain_variant": "zephyr",
+          "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+          "cxx_compiler": "GNU 14.3.0"
+        }
+      },
+      "configure_record": {
+        "path": "C:\\r13w\\identity-records\\build-m7-analog-read-a0\\build_info.yml",
+        "sha256": "13a4255d51cd534f015b5882b755fa4c66d3eff2ec8d1e142a5073041ec12c2d",
+        "identity": {
+          "application-source-sha256": "063a30ac1cf0aaff4283a3ba59ca61aaf00f3a0e87f0288da1fbdf395b5d6a9d",
+          "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+          "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+          "core-revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+          "core-source-sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+          "cxx-compiler": "GNU 14.3.0",
+          "ncs-revision": "99553055607b",
+          "package-version": "0.0.90",
+          "source-version": "0.4.0-dev",
+          "zephyr-revision": "bf801e4e3d19"
+        }
+      },
+      "physical_executed": false
+    },
+    {
+      "manifest_path": "C:\\r13w\\tmp\\n54m5-7lrsfeg8\\build-m7-pwm-fade\\PWMFade.ino.nu54-build.json",
+      "manifest_sha256": "08e83dc07a9a96c342a0aa3c209e0c7c9243beafc85c8ee4e192dfd899a9d482",
+      "artifacts": {
+        "bin": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-pwm-fade/PWMFade.ino.bin",
+          "sha256": "3962ca9a88474a50ddedf90ccd485753e514f81e92a57e5cc070987770275212",
+          "size": 106236
+        },
+        "elf": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-pwm-fade/PWMFade.ino.elf",
+          "sha256": "01e8a71b75f3c44b4bdfe76573a7dc9dc3466ccc283c1037e4c6105b765e7ad7",
+          "size": 2327604
+        },
+        "hex": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-pwm-fade/PWMFade.ino.hex",
+          "sha256": "0dac2f1972c3a4b2e89fba582e472d6462d45d2582ca3363775c4c850e69d94a",
+          "size": 298939
+        },
+        "map": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-pwm-fade/PWMFade.ino.map",
+          "sha256": "f093fad1b622ad976370c87e3c766a6d9f183a93b05049e28db9bf4ff1166d3f",
+          "size": 807428
+        }
+      },
+      "source_inputs": {
+        "include_roots": [
+          {
+            "content_sha256": "sha256:974ae38644fa7cbaf25264be1d2db83c257974b862ca06e84bc3e1135696cdaf",
+            "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_NU54DK/examples/PWMFade"
+          },
+          {
+            "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+            "path": "C:/r13w/tmp/n54m5-7lrsfeg8/user/hardware/nucode/zephyr/cores/arduino"
+          },
+          {
+            "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+            "path": "C:/r13w/tmp/n54m5-7lrsfeg8/user/hardware/nucode/zephyr/variants/nu54dk"
+          },
+          {
+            "content_sha256": "sha256:ae58f42adb291074020a4a46b3a083ba0310646ed6064c9c3488b67f3abc3b6d",
+            "path": "C:/r13w/tmp/n54m5-7lrsfeg8/cache/v1/6b/6b9769e21fe0977fd53c249a8c85be7d/app/generated-sources/sketch"
+          }
+        ],
+        "live_build_record": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/cache/v1/6b/6b9769e21fe0977fd53c249a8c85be7d/build/nucode_arduino_core_build.yml",
+          "sha256": "c2bdda5c1cd2eae054a703b2a8b21e6fbcf064411922e9150162434ceb70f153"
+        },
+        "sources": [
+          {
+            "compiled_path": "C:/r13w/tmp/n54m5-7lrsfeg8/cache/v1/6b/6b9769e21fe0977fd53c249a8c85be7d/app/generated-sources/sketch/PWMFade.ino.cpp",
+            "logical_identity": "arduino-generated:sketch/PWMFade.ino.cpp",
+            "sha256": "dd67c570220ab9aaaef00a793563a0cafc424d07b53cf6059ead9c74f5a68692",
+            "source_path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-pwm-fade/sketch/PWMFade.ino.cpp"
+          }
+        ]
+      },
+      "live_record": {
+        "path": "C:\\r13w\\identity-records\\build-m7-pwm-fade\\nucode_arduino_core_build.yml",
+        "sha256": "c2bdda5c1cd2eae054a703b2a8b21e6fbcf064411922e9150162434ceb70f153",
+        "identity": {
+          "source_version": "0.4.0-dev",
+          "package_version": "0.0.90",
+          "core_revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+          "core_source_sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+          "application_source_sha256": "6ee24c68dcaaa51665688a26d737194e6067953d09f05deee4aeffc6be7e8c97",
+          "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+          "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+          "ncs_revision": "99553055607b",
+          "zephyr_revision": "bf801e4e3d19",
+          "board": "nrf54l15dk",
+          "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+          "toolchain_variant": "zephyr",
+          "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+          "cxx_compiler": "GNU 14.3.0"
+        }
+      },
+      "configure_record": {
+        "path": "C:\\r13w\\identity-records\\build-m7-pwm-fade\\build_info.yml",
+        "sha256": "f1414e231a38a00e67d3be0c979ecf6bd90de713f09c9184cd6942fe6a0657fe",
+        "identity": {
+          "application-source-sha256": "6ee24c68dcaaa51665688a26d737194e6067953d09f05deee4aeffc6be7e8c97",
+          "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+          "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+          "core-revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+          "core-source-sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+          "cxx-compiler": "GNU 14.3.0",
+          "ncs-revision": "99553055607b",
+          "package-version": "0.0.90",
+          "source-version": "0.4.0-dev",
+          "zephyr-revision": "bf801e4e3d19"
+        }
+      },
+      "physical_executed": false
+    },
+    {
+      "manifest_path": "C:\\r13w\\tmp\\n54m5-7lrsfeg8\\build-m7-spi-transaction\\SPITransaction.ino.nu54-build.json",
+      "manifest_sha256": "f09e4822a6416ab2979bfe84182ce1e1a4ad371d2ea6ebe83552d8d511a90a02",
+      "artifacts": {
+        "bin": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-spi-transaction/SPITransaction.ino.bin",
+          "sha256": "fe11ee9685c3502efe52c3a3a3e1250b12644291ab97323d7915e8107f94873e",
+          "size": 104800
+        },
+        "elf": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-spi-transaction/SPITransaction.ino.elf",
+          "sha256": "fdd6700af90dfdd77e14fee025dc86464d456e6ecfdd31be7e4a83fc92f22251",
+          "size": 2289652
+        },
+        "hex": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-spi-transaction/SPITransaction.ino.hex",
+          "sha256": "0469d0eff20fe7e841a8571a9175dc7b24d9c2d0510fde68eeb31e9fcee0a1ff",
+          "size": 294881
+        },
+        "map": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-spi-transaction/SPITransaction.ino.map",
+          "sha256": "2f18fb933d2dbd497ac34e67d0240a28b6662711fef3ce06043f7aaf91880eb4",
+          "size": 807544
+        }
+      },
+      "source_inputs": {
+        "include_roots": [
+          {
+            "content_sha256": "sha256:723fbc98d264e03cca8b33c9f0dcaf5e39573051853a20ad2935bacf66d1ee55",
+            "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/SPI/examples/SPITransaction"
+          },
+          {
+            "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+            "path": "C:/r13w/tmp/n54m5-7lrsfeg8/user/hardware/nucode/zephyr/cores/arduino"
+          },
+          {
+            "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+            "path": "C:/r13w/tmp/n54m5-7lrsfeg8/user/hardware/nucode/zephyr/variants/nu54dk"
+          },
+          {
+            "content_sha256": "sha256:93684a3bdca314ba4e20d4903120c5cc3903cffb2817a08001a894d92cad1cdf",
+            "path": "C:/r13w/tmp/n54m5-7lrsfeg8/user/hardware/nucode/zephyr/libraries/SPI/src"
+          },
+          {
+            "content_sha256": "sha256:8980b8c1881d0373db872156be0eabe9b619872ffc24a34ac4f73bfd25e8b8b4",
+            "path": "C:/r13w/tmp/n54m5-7lrsfeg8/cache/v1/65/65d1e7b4239c03aa6a934a6aa6662611/app/generated-sources/sketch"
+          }
+        ],
+        "live_build_record": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/cache/v1/65/65d1e7b4239c03aa6a934a6aa6662611/build/nucode_arduino_core_build.yml",
+          "sha256": "d46aff49db78c5c0c453d34c675fae39e6ce0d3d88f7d6e396fcd72eda8eb954"
+        },
+        "sources": [
+          {
+            "compiled_path": "C:/r13w/tmp/n54m5-7lrsfeg8/cache/v1/65/65d1e7b4239c03aa6a934a6aa6662611/app/generated-sources/sketch/SPITransaction.ino.cpp",
+            "logical_identity": "arduino-generated:sketch/SPITransaction.ino.cpp",
+            "sha256": "c880c2857c48b63c0b35e481c5461cba155699a42cd4f35c10f1837f69ea3fce",
+            "source_path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-spi-transaction/sketch/SPITransaction.ino.cpp"
+          }
+        ]
+      },
+      "live_record": {
+        "path": "C:\\r13w\\identity-records\\build-m7-spi-transaction\\nucode_arduino_core_build.yml",
+        "sha256": "d46aff49db78c5c0c453d34c675fae39e6ce0d3d88f7d6e396fcd72eda8eb954",
+        "identity": {
+          "source_version": "0.4.0-dev",
+          "package_version": "0.0.90",
+          "core_revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+          "core_source_sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+          "application_source_sha256": "0379036bea8d8be48386b6c36ce825755fd2f0cc1c4f4c949c54da0b699150fc",
+          "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+          "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+          "ncs_revision": "99553055607b",
+          "zephyr_revision": "bf801e4e3d19",
+          "board": "nrf54l15dk",
+          "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+          "toolchain_variant": "zephyr",
+          "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+          "cxx_compiler": "GNU 14.3.0"
+        }
+      },
+      "configure_record": {
+        "path": "C:\\r13w\\identity-records\\build-m7-spi-transaction\\build_info.yml",
+        "sha256": "b6431b554b8508d9d309eea21292d514aac7c8bd4dfc04a2b8be8b5f0258f50c",
+        "identity": {
+          "application-source-sha256": "0379036bea8d8be48386b6c36ce825755fd2f0cc1c4f4c949c54da0b699150fc",
+          "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+          "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+          "core-revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+          "core-source-sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+          "cxx-compiler": "GNU 14.3.0",
+          "ncs-revision": "99553055607b",
+          "package-version": "0.0.90",
+          "source-version": "0.4.0-dev",
+          "zephyr-revision": "bf801e4e3d19"
+        }
+      },
+      "physical_executed": false
+    },
+    {
+      "manifest_path": "C:\\r13w\\tmp\\n54m5-7lrsfeg8\\build-m7-wire-pmic-id\\WirePmicId.ino.nu54-build.json",
+      "manifest_sha256": "a7749d763168beb3a7d7033676c4eba5f1560ae87939798325884e07741b8421",
+      "artifacts": {
+        "bin": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-wire-pmic-id/WirePmicId.ino.bin",
+          "sha256": "b41dcec5925a1bf767cc175e8f04ca307001db79ac2907a4bfac7ce23443c0a9",
+          "size": 105216
+        },
+        "elf": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-wire-pmic-id/WirePmicId.ino.elf",
+          "sha256": "e8e8c78a5be7445b1da6d6c4aeda2be0920fbbedbb1bc210385c1836d2959ab4",
+          "size": 2291796
+        },
+        "hex": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-wire-pmic-id/WirePmicId.ino.hex",
+          "sha256": "0c2607014f27b3c9acc1745274886090f79f0e50a52cc6588426b2bfa05498ee",
+          "size": 296088
+        },
+        "map": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-wire-pmic-id/WirePmicId.ino.map",
+          "sha256": "23532b595b1bcca4b6eee1faa5aebdecf85b735ab884c180ee42bd7ffb38ed1b",
+          "size": 808301
+        }
+      },
+      "source_inputs": {
+        "include_roots": [
+          {
+            "content_sha256": "sha256:775402ed5327f839470c717220b8c6dee76b37de3d93571d8c8c539369ef66a8",
+            "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/Wire/examples/WirePmicId"
+          },
+          {
+            "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+            "path": "C:/r13w/tmp/n54m5-7lrsfeg8/user/hardware/nucode/zephyr/cores/arduino"
+          },
+          {
+            "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+            "path": "C:/r13w/tmp/n54m5-7lrsfeg8/user/hardware/nucode/zephyr/variants/nu54dk"
+          },
+          {
+            "content_sha256": "sha256:b776dcc7665a389174905e777b4872bff416425abc7471ff69a21c2397e02963",
+            "path": "C:/r13w/tmp/n54m5-7lrsfeg8/user/hardware/nucode/zephyr/libraries/Wire/src"
+          },
+          {
+            "content_sha256": "sha256:933098f7af5fefca1bd2274bc10f2d8492d2cf37b01442e6ad4634860cf80bad",
+            "path": "C:/r13w/tmp/n54m5-7lrsfeg8/cache/v1/62/62a73bddba26cd9d0ba7535f4d9ffd4f/app/generated-sources/sketch"
+          }
+        ],
+        "live_build_record": {
+          "path": "C:/r13w/tmp/n54m5-7lrsfeg8/cache/v1/62/62a73bddba26cd9d0ba7535f4d9ffd4f/build/nucode_arduino_core_build.yml",
+          "sha256": "119089527f5b6bdc54df59913eb92f64e7a836b8f9b927503219582c4da43dce"
+        },
+        "sources": [
+          {
+            "compiled_path": "C:/r13w/tmp/n54m5-7lrsfeg8/cache/v1/62/62a73bddba26cd9d0ba7535f4d9ffd4f/app/generated-sources/sketch/WirePmicId.ino.cpp",
+            "logical_identity": "arduino-generated:sketch/WirePmicId.ino.cpp",
+            "sha256": "406977c706f3dcf4298f15b0912f5d8e9761bf0290127b955246efe275696f60",
+            "source_path": "C:/r13w/tmp/n54m5-7lrsfeg8/build-m7-wire-pmic-id/sketch/WirePmicId.ino.cpp"
+          }
+        ]
+      },
+      "live_record": {
+        "path": "C:\\r13w\\identity-records\\build-m7-wire-pmic-id\\nucode_arduino_core_build.yml",
+        "sha256": "119089527f5b6bdc54df59913eb92f64e7a836b8f9b927503219582c4da43dce",
+        "identity": {
+          "source_version": "0.4.0-dev",
+          "package_version": "0.0.90",
+          "core_revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+          "core_source_sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+          "application_source_sha256": "2c8004306763140ae963fb4145e1a839765105ff3624fa64803811c908afef13",
+          "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+          "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+          "ncs_revision": "99553055607b",
+          "zephyr_revision": "bf801e4e3d19",
+          "board": "nrf54l15dk",
+          "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+          "toolchain_variant": "zephyr",
+          "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+          "cxx_compiler": "GNU 14.3.0"
+        }
+      },
+      "configure_record": {
+        "path": "C:\\r13w\\identity-records\\build-m7-wire-pmic-id\\build_info.yml",
+        "sha256": "c017a0d15059b4397e55703514e14eb2708e23a15d6dbe43f1c8f06bc5f69486",
+        "identity": {
+          "application-source-sha256": "2c8004306763140ae963fb4145e1a839765105ff3624fa64803811c908afef13",
+          "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+          "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+          "core-revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+          "core-source-sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+          "cxx-compiler": "GNU 14.3.0",
+          "ncs-revision": "99553055607b",
+          "package-version": "0.0.90",
+          "source-version": "0.4.0-dev",
+          "zephyr-revision": "bf801e4e3d19"
+        }
+      },
+      "physical_executed": false
+    },
+    {
+      "manifest_path": "C:\\r13w\\m8-compile-pyocd\\m8_upload.ino.nu54-build.json",
+      "manifest_sha256": "a91677e0e0af36203522932bff4dc2a843a204c6800189e1af5dc52786943ad1",
+      "artifacts": {
+        "bin": {
+          "path": "C:/r13w/m8-compile-pyocd/m8_upload.ino.bin",
+          "sha256": "2eb4c00167f448bb997b6f69fc7aafc69c871efc751ef3ad8a589d30a18cbbf6",
+          "size": 107908
+        },
+        "elf": {
+          "path": "C:/r13w/m8-compile-pyocd/m8_upload.ino.elf",
+          "sha256": "32db67f94c74c7c90a414b99e9b221bb664edec62bb7e368c480176d394bb728",
+          "size": 2294692
+        },
+        "hex": {
+          "path": "C:/r13w/m8-compile-pyocd/m8_upload.ino.hex",
+          "sha256": "4b1c35cbdff77b67a0a8ab277c330f4503ceaddabd8d5992551a4635e1ed5fb5",
+          "size": 303640
+        },
+        "map": {
+          "path": "C:/r13w/m8-compile-pyocd/m8_upload.ino.map",
+          "sha256": "1afb9fc2dd9ab3ccc50c8986e442103cd551680d88bf79d8555d7a270a74da3f",
+          "size": 808246
+        }
+      },
+      "source_inputs": {
+        "include_roots": [
+          {
+            "content_sha256": "sha256:0113edd5af67b9ea587c3472fb7068feaa4d5432a6d882a567979e79edd93d5b",
+            "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/arduino-cli/m8_upload"
+          },
+          {
+            "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+            "path": "C:/r13w/cache/v1/d9/d9befc2aa689055aa9a1efb0810ae1f5/platform/cores/arduino"
+          },
+          {
+            "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+            "path": "C:/r13w/cache/v1/d9/d9befc2aa689055aa9a1efb0810ae1f5/platform/variants/nu54dk"
+          },
+          {
+            "content_sha256": "sha256:d5c6a7a236a1f3cf37215a382fffa74a552b33c8d99ca836dda7e4964ac50da6",
+            "path": "C:/r13w/cache/v1/d9/d9befc2aa689055aa9a1efb0810ae1f5/app/generated-sources/sketch"
+          }
+        ],
+        "live_build_record": {
+          "path": "C:/r13w/cache/v1/d9/d9befc2aa689055aa9a1efb0810ae1f5/build/nucode_arduino_core_build.yml",
+          "sha256": "e0cb83641516e0c1a13dacaad8bad6ce09f173c18052c6eca4c00d1a533b3c1c"
+        },
+        "sources": [
+          {
+            "compiled_path": "C:/r13w/cache/v1/d9/d9befc2aa689055aa9a1efb0810ae1f5/app/generated-sources/sketch/m8_upload.ino.cpp",
+            "logical_identity": "arduino-generated:sketch/m8_upload.ino.cpp",
+            "sha256": "ac9678dfbaed8a25e90e6596c39babd6fcb01d2c9c2365e990ed3dd44ecff934",
+            "source_path": "C:/r13w/m8-compile-pyocd/sketch/m8_upload.ino.cpp"
+          }
+        ]
+      },
+      "live_record": {
+        "path": "C:\\r13w\\identity-records\\m8-compile-pyocd\\nucode_arduino_core_build.yml",
+        "sha256": "e0cb83641516e0c1a13dacaad8bad6ce09f173c18052c6eca4c00d1a533b3c1c",
+        "identity": {
+          "source_version": "0.4.0-dev",
+          "package_version": "0.0.90",
+          "core_revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+          "core_source_sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+          "application_source_sha256": "4521f389807df91b1e203feef9bedfe1a99385f5160f0b2eb378d149ef0d6dca",
+          "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+          "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+          "ncs_revision": "99553055607b",
+          "zephyr_revision": "bf801e4e3d19",
+          "board": "nrf54l15dk",
+          "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+          "toolchain_variant": "zephyr",
+          "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+          "cxx_compiler": "GNU 14.3.0"
+        }
+      },
+      "configure_record": {
+        "path": "C:\\r13w\\identity-records\\m8-compile-pyocd\\build_info.yml",
+        "sha256": "ca0dcb6bbd16840b5d0c3046c0a3a03e522805419586ff2f57392bdb2d8eae97",
+        "identity": {
+          "application-source-sha256": "4521f389807df91b1e203feef9bedfe1a99385f5160f0b2eb378d149ef0d6dca",
+          "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+          "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+          "core-revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+          "core-source-sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+          "cxx-compiler": "GNU 14.3.0",
+          "ncs-revision": "99553055607b",
+          "package-version": "0.0.90",
+          "source-version": "0.4.0-dev",
+          "zephyr-revision": "bf801e4e3d19"
+        }
+      },
+      "physical_executed": false
+    },
+    {
+      "manifest_path": "C:\\r13w\\m8-compile-pyocd_uid\\m8_upload.ino.nu54-build.json",
+      "manifest_sha256": "8d2f1daddb70d4fdc97cfd272e939327308b0746d9a13e19c681f9bc8098ba82",
+      "artifacts": {
+        "bin": {
+          "path": "C:/r13w/m8-compile-pyocd_uid/m8_upload.ino.bin",
+          "sha256": "2eb4c00167f448bb997b6f69fc7aafc69c871efc751ef3ad8a589d30a18cbbf6",
+          "size": 107908
+        },
+        "elf": {
+          "path": "C:/r13w/m8-compile-pyocd_uid/m8_upload.ino.elf",
+          "sha256": "5c0a1aa9160cb16943e1623b72a812f242736e17b6f84c2d0df0adecd8343994",
+          "size": 2294692
+        },
+        "hex": {
+          "path": "C:/r13w/m8-compile-pyocd_uid/m8_upload.ino.hex",
+          "sha256": "4b1c35cbdff77b67a0a8ab277c330f4503ceaddabd8d5992551a4635e1ed5fb5",
+          "size": 303640
+        },
+        "map": {
+          "path": "C:/r13w/m8-compile-pyocd_uid/m8_upload.ino.map",
+          "sha256": "0653c7237cfab11b8b6760f4230690b96352ac1a62dabc93e6b9e9b418bf4704",
+          "size": 808246
+        }
+      },
+      "source_inputs": {
+        "include_roots": [
+          {
+            "content_sha256": "sha256:0113edd5af67b9ea587c3472fb7068feaa4d5432a6d882a567979e79edd93d5b",
+            "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/arduino-cli/m8_upload"
+          },
+          {
+            "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+            "path": "C:/r13w/cache/v1/6b/6bd382b19b8b421374cb143f52741d99/platform/cores/arduino"
+          },
+          {
+            "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+            "path": "C:/r13w/cache/v1/6b/6bd382b19b8b421374cb143f52741d99/platform/variants/nu54dk"
+          },
+          {
+            "content_sha256": "sha256:d5c6a7a236a1f3cf37215a382fffa74a552b33c8d99ca836dda7e4964ac50da6",
+            "path": "C:/r13w/cache/v1/6b/6bd382b19b8b421374cb143f52741d99/app/generated-sources/sketch"
+          }
+        ],
+        "live_build_record": {
+          "path": "C:/r13w/cache/v1/6b/6bd382b19b8b421374cb143f52741d99/build/nucode_arduino_core_build.yml",
+          "sha256": "e38d12b3bd4d12da27bbc175a88c2323f747e7f9cfca1fad7c99aaa3288c9165"
+        },
+        "sources": [
+          {
+            "compiled_path": "C:/r13w/cache/v1/6b/6bd382b19b8b421374cb143f52741d99/app/generated-sources/sketch/m8_upload.ino.cpp",
+            "logical_identity": "arduino-generated:sketch/m8_upload.ino.cpp",
+            "sha256": "ac9678dfbaed8a25e90e6596c39babd6fcb01d2c9c2365e990ed3dd44ecff934",
+            "source_path": "C:/r13w/m8-compile-pyocd_uid/sketch/m8_upload.ino.cpp"
+          }
+        ]
+      },
+      "live_record": {
+        "path": "C:\\r13w\\identity-records\\m8-compile-pyocd_uid\\nucode_arduino_core_build.yml",
+        "sha256": "e38d12b3bd4d12da27bbc175a88c2323f747e7f9cfca1fad7c99aaa3288c9165",
+        "identity": {
+          "source_version": "0.4.0-dev",
+          "package_version": "0.0.90",
+          "core_revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+          "core_source_sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+          "application_source_sha256": "5795672b1768909bf6429d037904c773660862a06bbd9c43def22e317b722d37",
+          "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+          "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+          "ncs_revision": "99553055607b",
+          "zephyr_revision": "bf801e4e3d19",
+          "board": "nrf54l15dk",
+          "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+          "toolchain_variant": "zephyr",
+          "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+          "cxx_compiler": "GNU 14.3.0"
+        }
+      },
+      "configure_record": {
+        "path": "C:\\r13w\\identity-records\\m8-compile-pyocd_uid\\build_info.yml",
+        "sha256": "27530ab439e60782746aec097cf8d9f5e754dec1c5e24eaec9439c006296f8b2",
+        "identity": {
+          "application-source-sha256": "5795672b1768909bf6429d037904c773660862a06bbd9c43def22e317b722d37",
+          "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+          "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+          "core-revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+          "core-source-sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+          "cxx-compiler": "GNU 14.3.0",
+          "ncs-revision": "99553055607b",
+          "package-version": "0.0.90",
+          "source-version": "0.4.0-dev",
+          "zephyr-revision": "bf801e4e3d19"
+        }
+      },
+      "physical_executed": false
+    }
+  ],
+  "physical_executed": false
+}

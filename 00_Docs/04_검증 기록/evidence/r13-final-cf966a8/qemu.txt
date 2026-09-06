@@ -1,0 +1,21 @@
+[M14-QEMU] exec: C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe C:\ncs\v3.4.0\zephyr\scripts\twister --testsuite-root C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m14_cpp_policy --platform qemu_cortex_m3 --scenario nucode.m14.cpp_policy --ninja --detailed-test-id --inline-logs --jobs 2 --outdir C:\r13z --extra-args USE_CCACHE=0
+INFO    - Using Ninja..
+INFO    - Zephyr version: ncs-v3.4.0
+INFO    - Using 'zephyr/gnu' toolchain variant.
+INFO    - Building initial testsuite list...
+INFO    - Built testsuite list in 0.01 seconds
+INFO    - Writing JSON report C:\r13z\testplan.json
+INFO    - Adding tasks to the queue...
+INFO    - Added initial list of jobs to queue
+INFO    - Total complete: [32m   1/   1[39m  100%  built (not run): [36m   0[39m, filtered: [39m   0[39m, failed: [39m   0[39m, error: [39m   0[39m
+
+INFO    - 1 test scenarios (1 configurations) selected, 0 configurations filtered (0 by static filter, 0 at runtime).
+INFO    - 1 of 1 executed test configurations passed (100.00%), 0 built (not run), 0 failed, 0 errored, with no warnings in 106.96 seconds.
+INFO    - 3 of 3 executed test cases passed (100.00%) on 1 out of total 1514 platforms (0.07%).
+INFO    - 1 test configurations executed on platforms, 0 test configurations were only built.
+INFO    - Saving reports...
+INFO    - Writing JSON report C:\r13z\twister.json
+INFO    - Writing xunit report C:\r13z\twister.xml...
+INFO    - Writing xunit report C:\r13z\twister_report.xml...
+INFO    - Run completed
+M14_QEMU_RUNTIME_PASS=3

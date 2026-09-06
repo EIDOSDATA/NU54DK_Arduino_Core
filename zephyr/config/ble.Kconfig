@@ -1,0 +1,81 @@
+config NUCODE_BLE_NUS
+	bool "NUCODE BLE Nordic UART Service 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	depends on BT
+	help
+	  공식 NCS NUS service/client를 하나의 Arduino Stream으로 노출합니다.
+	  callback 데이터는 고정 queue를 거쳐 Sketch의 poll 문맥에서 전달됩니다.
+
+config NUCODE_BLE_CORE
+	bool "NUCODE BLE Core/GAP 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	depends on BT
+	help
+	  Bluetooth once-init, local name, legacy advertising, bounded scan과
+	  단일 connection lifecycle을 Arduino main-thread event로 노출합니다.
+
+config NUCODE_BLE_CORE_EVENT_QUEUE_SIZE
+	int "NUCODE BLE Core/GAP event queue 항목 수"
+	default 24
+	range 4 64
+	depends on NUCODE_BLE_CORE
+	help
+	  Bluetooth callback에서 BLEDevice.poll()로 전달할 작은 GAP event
+	  record의 고정 개수입니다.
+
+config NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE
+	int "NUCODE BLE scan result queue 항목 수"
+	default 8
+	range 2 32
+	depends on NUCODE_BLE_CORE
+	help
+	  callback 밖 수명을 보장하는 31-byte bounded scan 결과 개수입니다.
+
+config NUCODE_BLE_GATT
+	bool "NUCODE 범용 GATT server/client 활성화"
+	default n
+	depends on NUCODE_BLE_CORE
+	depends on BT_GATT_CLIENT
+	depends on BT_GATT_DYNAMIC_DB
+	help
+	  Bluetooth 시작 전 고정 schema 등록, cached server value와 한 번에
+	  하나의 bounded generic client operation을 제공합니다.
+
+config NUCODE_BLE_GATT_MAX_SERVICES
+	int "NUCODE GATT service 최대 수"
+	default 4
+	range 1 8
+	depends on NUCODE_BLE_GATT
+
+config NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE
+	int "service별 characteristic 최대 수"
+	default 8
+	range 1 8
+	depends on NUCODE_BLE_GATT
+
+config NUCODE_BLE_GATT_EVENT_QUEUE_SIZE
+	int "NUCODE GATT callback event queue 항목 수"
+	default 8
+	range 4 32
+	depends on NUCODE_BLE_GATT
+	help
+	  server write·CCC·전송 완료와 client payload를 최대 244 byte까지
+	  복사해 BLEDevice.poll()로 전달하는 고정 record 개수입니다.
+
+config NUCODE_BLE_RX_BUFFER_SIZE
+	int "NUCODE BLE NUS RX queue byte 수"
+	default 512
+	range 64 2048
+	depends on NUCODE_BLE_NUS
+	help
+	  NCS callback에서 수신 byte를 복사할 고정 queue 크기입니다.
+
+config NUCODE_BLE_EVENT_QUEUE_SIZE
+	int "NUCODE BLE event queue 항목 수"
+	default 16
+	range 4 64
+	depends on NUCODE_BLE_NUS
+	help
+	  poll에서 사용자 callback으로 전달할 고정 event queue 크기입니다.

@@ -25,7 +25,7 @@ PINCTRL_DT_DEV_CONFIG_DECLARE(DT_NODELABEL(uart30));
 #if DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(i2c22))
 PINCTRL_DT_DEV_CONFIG_DECLARE(DT_NODELABEL(i2c22));
 #endif
-#if DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(spi00))
+#if defined(CONFIG_SPI) && DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(spi00))
 PINCTRL_DT_DEV_CONFIG_DECLARE(DT_NODELABEL(spi00));
 #endif
 #endif
@@ -226,7 +226,9 @@ namespace nucode::arduino::internal
 
     PeripheralRouteBinding spiRouteBinding() noexcept
     {
-#if defined(CONFIG_PINCTRL_DYNAMIC) && DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(spi00))
+        /** @brief DTS 활성 상태와 함께 실제 SPI driver의 device 생성 여부를 확인합니다. */
+#if defined(CONFIG_SPI) && defined(CONFIG_PINCTRL_DYNAMIC) &&                                      \
+    DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(spi00))
         return {DEVICE_DT_GET(DT_NODELABEL(spi00)),
                 PINCTRL_DT_DEV_CONFIG_GET(DT_NODELABEL(spi00)),
                 {IoOwnerKind::spi, 0U},

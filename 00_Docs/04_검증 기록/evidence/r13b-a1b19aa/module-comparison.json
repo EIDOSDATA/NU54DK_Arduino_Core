@@ -1,0 +1,25 @@
+{
+  "cmake_files": [
+    "source_selection.cmake",
+    "source_provenance.cmake",
+    "build_record_target.cmake"
+  ],
+  "cmake_inline_tokens_identical": true,
+  "config_names_defaults_depends_select_menu_unchanged": true,
+  "kconfig_before_sha256": "1017f5e235d883190f21f01e0946a5430c800e3eec9d219ab47574cdbc4418fc",
+  "kconfig_files": [
+    "core.Kconfig",
+    "serial.Kconfig",
+    "analog_fabric.Kconfig",
+    "event.Kconfig",
+    "stream.Kconfig",
+    "system.Kconfig",
+    "buses.Kconfig",
+    "analog.Kconfig",
+    "ble.Kconfig",
+    "scheduler.Kconfig"
+  ],
+  "kconfig_inline_byte_identical": true,
+  "physical_executed": false,
+  "storage_policy": "existing library feature conf and SDK symbols; no new Kconfig gate"
+}

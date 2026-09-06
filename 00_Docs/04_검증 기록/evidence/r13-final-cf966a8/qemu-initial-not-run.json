@@ -1,0 +1,63 @@
+{
+    "environment":{
+        "os":"Windows",
+        "zephyr_version":"ncs-v3.4.0",
+        "toolchain":"zephyr/gnu",
+        "commit_date":"2026-07-01T15:51:10+02:00",
+        "run_date":"2026-09-06T00:28:22+00:00",
+        "options":{
+            "testsuite_root":[
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m14_cpp_policy"
+            ],
+            "platform":[
+                "qemu_cortex_m3"
+            ],
+            "test":[
+                "nucode.m14.cpp_policy"
+            ],
+            "inline_logs":true,
+            "jobs":2,
+            "detailed_test_id":true,
+            "outdir":"C:\\r13q",
+            "extra_args":[
+                "USE_CCACHE=0"
+            ]
+        }
+    },
+    "testsuites":[
+        {
+            "name":"nucode.m14.cpp_policy",
+            "arch":"arm",
+            "platform":"qemu_cortex_m3/ti_lm3s6965",
+            "path":"..\\..\\..\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m14_cpp_policy",
+            "run_id":"1d980cc60eee354ad693b525d0d9986d",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"311.12",
+            "testcases":[
+                {
+                    "identifier":"nucode.m14.cpp_policy.m14_cpp_policy.random_and_diagnostics_on_zephyr",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                },
+                {
+                    "identifier":"nucode.m14.cpp_policy.m14_cpp_policy.dynamic_cast_and_typeid",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                },
+                {
+                    "identifier":"nucode.m14.cpp_policy.m14_cpp_policy.throw_catch_and_stack_unwind",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        }
+    ]
+}

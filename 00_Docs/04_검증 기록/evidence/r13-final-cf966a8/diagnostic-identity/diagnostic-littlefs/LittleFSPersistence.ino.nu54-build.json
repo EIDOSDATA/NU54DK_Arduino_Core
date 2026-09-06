@@ -1,0 +1,468 @@
+{
+  "adapter_version": "0.1.0-dev.m10",
+  "artifacts": {
+    "bin": {
+      "path": "C:/r13v/diagnostic-littlefs/LittleFSPersistence.ino.bin",
+      "sha256": "4673fbabb5ef3b365d52a32dd7a13caff9264315ad29cab824abf9c69dc02e4a",
+      "size": 127812
+    },
+    "elf": {
+      "path": "C:/r13v/diagnostic-littlefs/LittleFSPersistence.ino.elf",
+      "sha256": "ce6015930347775ef4956c31ee5d7543d89974fa22c8f46bc078f4963047179f",
+      "size": 2692316
+    },
+    "hex": {
+      "path": "C:/r13v/diagnostic-littlefs/LittleFSPersistence.ino.hex",
+      "sha256": "c6412e6e9411d32531c6e8bd5620bb79d15d438200a6ebfb50b850a7a8b8132a",
+      "size": 359649
+    },
+    "map": {
+      "path": "C:/r13v/diagnostic-littlefs/LittleFSPersistence.ino.map",
+      "sha256": "8750cda8c33218f1daf75ae52ecd8e70642c42fd0cee30796611e2919f2e522e",
+      "size": 874847
+    }
+  },
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "built_at_utc": "2026-09-06T02:48:57.615694+00:00",
+  "cache": {
+    "cache_dir": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1",
+    "input_manifest": {
+      "adapter": {
+        "platform_content": "sha256:67edbebdd5f7ba43428a7b878f92676054c079617fb552d0287de26de7f81ce0",
+        "platform_root": "C:/r13v/검증 설치/hardware/nucode/zephyr",
+        "version": "0.1.0-dev.m10"
+      },
+      "board_package": {
+        "content": "sha256:d7c53a705c331c9c0137d421adaf1079cc7177e791c641df20588da95db97849",
+        "revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "root": "C:/r13v/검증 설치/hardware/nucode/zephyr/board_package/NU54DK_Zephyr_DTS"
+      },
+      "configuration": {
+        "profile": {
+          "conf": "sha256:da22673694b88fa6b391ba92f87d214ecbe26e8417e92a1cf9cd2f6fb1363dff",
+          "id": "standard",
+          "manifest": "sha256:b545ea7b9799b30f830fe8399d6efe49cc89c5f6ededdc7e9eac21de1750616a",
+          "overlay": "sha256:f270dfade0eeb067dd6ad389825c7a4dcaa9f599fbf09459de2919849392e53c"
+        },
+        "selected_features": [
+          {
+            "conf": [
+              "sha256:bd696219c9970a5749c4f14a1f6a00219d6785808d0e507cf5a190d1f36916f6"
+            ],
+            "id": "nucode.littlefs",
+            "manifest": "sha256:2e48757164839368a58d718996fdc3b767d321d36281c196684856e5bc223375",
+            "overlays": []
+          }
+        ]
+      },
+      "ncs": {
+        "declared_version": "v3.4.0",
+        "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "nrf_west_yml": "sha256:04e4c21ce96b989fb2a73a4581c0309d1fdc9b27a53b3a34976beb0c8cb2b78d",
+        "root": "C:/Users/eidos/ncs/v3.4.0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "zephyr_version_file": "sha256:fd6ba7636a003973a983412c2906173dc45ce3ba62386e407b212f9a5736ce01"
+      },
+      "platform_build_copy": {
+        "content": "sha256:93161a3861157d616712d373c0773541b3c4796294180bf42bd0eed0eb6a592d"
+      },
+      "schema_version": 1,
+      "sketch": {
+        "app_overlay": "missing",
+        "prj_conf": "missing",
+        "root": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/LittleFS/examples/LittleFSPersistence"
+      },
+      "target": {
+        "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "fqbn": "nucode:zephyr:nu54dk:feature_set=standard",
+        "profile": "standard",
+        "sysbuild": false
+      },
+      "toolchain": {
+        "bundle_id": "dcbdc366a1",
+        "compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "environment": "sha256:824994386257c9422cfba4006d678fd30ea7ccfe4960e06c8074b20fb6f3fc82",
+        "manifest": "sha256:e5ed500e679a8e2baa1d71e0ddf68167f25d9f514985a7cb746b607be67413a8",
+        "root": "C:/Users/eidos/ncs/toolchains/dcbdc366a1"
+      }
+    },
+    "key": "711cf71404e7e05fe4301075bb5996c1f515fea5894fb73ac8720b23f75ded09",
+    "schema_version": 1,
+    "source_manifest_sha256": "sha256:53cb905e80f21ee722e5c1d53ff32a52cf2fa24704aef004d65f70b4a978d073"
+  },
+  "context": {
+    "adapter_version": "0.1.0-dev.m10",
+    "app_dir": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/app",
+    "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+    "board_root": "C:/r13v/검증 설치/hardware/nucode/zephyr/board_package/NU54DK_Zephyr_DTS",
+    "build_duration_seconds": 379.670949,
+    "build_path": "C:/r13v/diagnostic-littlefs",
+    "cache_dir": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1",
+    "cache_key": "711cf71404e7e05fe4301075bb5996c1f515fea5894fb73ac8720b23f75ded09",
+    "cache_reused": false,
+    "cache_root": "C:/r13v/cache",
+    "cache_schema_version": 1,
+    "ccache": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/bin/ccache.exe",
+    "ccache_dir": "C:/r13v/cache/compiler-cache",
+    "ccache_stats_after": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 1635,
+      "cache_size_kibibyte": 37300,
+      "called_for_link": 400,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 5,
+      "direct_cache_miss": 1635,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 3269,
+      "internal_error": 0,
+      "local_storage_hit": 5,
+      "local_storage_miss": 1635,
+      "local_storage_read_hit": 10,
+      "local_storage_read_miss": 3270,
+      "local_storage_write": 3270,
+      "max_cache_size_kibibyte": 1953125,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 195,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 0,
+      "preprocessed_cache_miss": 1635,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 1788662937,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "ccache_stats_before": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 1243,
+      "cache_size_kibibyte": 28940,
+      "called_for_link": 326,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 4,
+      "direct_cache_miss": 1243,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 2485,
+      "internal_error": 0,
+      "local_storage_hit": 4,
+      "local_storage_miss": 1243,
+      "local_storage_read_hit": 8,
+      "local_storage_read_miss": 2486,
+      "local_storage_write": 2486,
+      "max_cache_size_kibibyte": 1953125,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 159,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 0,
+      "preprocessed_cache_miss": 1243,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 1788662520,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "ccache_stats_delta": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 392,
+      "cache_size_kibibyte": 8360,
+      "called_for_link": 74,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 1,
+      "direct_cache_miss": 392,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 784,
+      "internal_error": 0,
+      "local_storage_hit": 1,
+      "local_storage_miss": 392,
+      "local_storage_read_hit": 2,
+      "local_storage_read_miss": 784,
+      "local_storage_write": 784,
+      "max_cache_size_kibibyte": 0,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 36,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 0,
+      "preprocessed_cache_miss": 392,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 417,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "configuration_fingerprint": "sha256:711cf71404e7e05fe4301075bb5996c1f515fea5894fb73ac8720b23f75ded09",
+    "configure_duration_seconds": 128.172603,
+    "configure_mode": "cmake-only",
+    "configure_reason": "selected-features",
+    "configure_skipped": false,
+    "cxx_compiler": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-g++.exe",
+    "fqbn": "nucode:zephyr:nu54dk:feature_set=standard",
+    "input_manifest": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/input-manifest.json",
+    "link_configure_duration_seconds": 87.68907,
+    "memory_layout": {
+      "code_partition": "slot0_partition",
+      "flash_end": 1490944,
+      "flash_origin": 0,
+      "flash_size": 1490944
+    },
+    "ncs_root": "C:/Users/eidos/ncs/v3.4.0",
+    "ncs_version": "v3.4.0",
+    "platform_build_root": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/platform",
+    "platform_root": "C:/r13v/검증 설치/hardware/nucode/zephyr",
+    "pristine_configure_count": 1,
+    "product_identity": {
+      "package_version": "0.0.90",
+      "source_version": "0.4.0-dev"
+    },
+    "profile": "standard",
+    "provisional_cache_key": "51b37279718dc3382da941c2c72921453ee4e112d806d5a9479b3e5e48f4da25",
+    "recovery_count": 0,
+    "schema_version": 2,
+    "selected_features": [
+      {
+        "conf": [
+          "sha256:bd696219c9970a5749c4f14a1f6a00219d6785808d0e507cf5a190d1f36916f6"
+        ],
+        "id": "nucode.littlefs",
+        "manifest": "sha256:2e48757164839368a58d718996fdc3b767d321d36281c196684856e5bc223375",
+        "overlays": []
+      }
+    ],
+    "selected_libraries": [
+      "LittleFS"
+    ],
+    "size_tool": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-size.exe",
+    "sketch_root": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/LittleFS/examples/LittleFSPersistence",
+    "source_manifest_changed": true,
+    "state": "built",
+    "sysbuild": false,
+    "toolchain_bundle_id": "dcbdc366a1",
+    "toolchain_root": "C:/Users/eidos/ncs/toolchains/dcbdc366a1",
+    "updated_at_utc": "2026-09-06T02:48:57.598841+00:00",
+    "zephyr_build_dir": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/build",
+    "zephyr_version": "4.4.0"
+  },
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=standard",
+  "metrics": {
+    "build_seconds": 379.670949,
+    "ccache_delta": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 392,
+      "cache_size_kibibyte": 8360,
+      "called_for_link": 74,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 1,
+      "direct_cache_miss": 392,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 784,
+      "internal_error": 0,
+      "local_storage_hit": 1,
+      "local_storage_miss": 392,
+      "local_storage_read_hit": 2,
+      "local_storage_read_miss": 784,
+      "local_storage_write": 784,
+      "max_cache_size_kibibyte": 0,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 36,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 0,
+      "preprocessed_cache_miss": 392,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 417,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "configure_seconds": 87.68907
+  },
+  "product_identity": {
+    "package_version": "0.0.90",
+    "source_version": "0.4.0-dev"
+  },
+  "schema_version": 2,
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:3c682f077cd69503a42ba6e2fb2875740dae1a2938ea2729b548a51aa2a91d15",
+        "path": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/platform/libraries/LittleFS/examples/LittleFSPersistence"
+      },
+      {
+        "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+        "path": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:b1630383dd052cc494e935e96f196895c7403623305185720fdecce4a0a8179c",
+        "path": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/platform/libraries/LittleFS/src"
+      },
+      {
+        "content_sha256": "sha256:fa60dd9da89d1ff31d7c791f548af2930b65a6bf082d2e6d5d059cce4dcea4c1",
+        "path": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/platform/libraries/LittleFS/src/internal"
+      },
+      {
+        "content_sha256": "sha256:6eeb08fbf1e83d044c2dad66dd6af4fb808c77dbb0dbc8040a619a6fde75ba79",
+        "path": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/build/nucode_arduino_core_build.yml",
+      "sha256": "e8dd0e2d9334bb980cfe07429cd1fdfb27e3c33efe55f839a6977cd201983ddd"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/app/generated-sources/sketch/LittleFSPersistence.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/LittleFSPersistence.ino.cpp",
+        "sha256": "512dba2194e5ec81c0ad306336d2766a52c92caafcd76c0048709ff050e85e8d",
+        "source_path": "C:/r13v/diagnostic-littlefs/sketch/LittleFSPersistence.ino.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/platform/libraries/LittleFS/src/FS.cpp",
+        "logical_identity": "platform:libraries/LittleFS/src/FS.cpp",
+        "sha256": "ea2fa5de44e1ecee0bd4c18221ecee21b7acd88733373ab5e0757d4c1fa4be8c",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/LittleFS/src/FS.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/platform/libraries/LittleFS/src/LittleFS.cpp",
+        "logical_identity": "platform:libraries/LittleFS/src/LittleFS.cpp",
+        "sha256": "dfc5574593730dd8089990e8f41c6861174ffaeec9a7b6d046d2ae24fb27c466",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/LittleFS/src/LittleFS.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/platform/libraries/LittleFS/src/internal/File.cpp",
+        "logical_identity": "platform:libraries/LittleFS/src/internal/File.cpp",
+        "sha256": "4bd2b7d3e980504477f0141d792d3a58a3cc01aa69e553de232ddbe18d057b94",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/LittleFS/src/internal/File.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/platform/libraries/LittleFS/src/internal/FilePaths.cpp",
+        "logical_identity": "platform:libraries/LittleFS/src/internal/FilePaths.cpp",
+        "sha256": "c04b04621d0b0a951cd5d46a41fac31538e443a1b54bff97393362d5ac43eb90",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/LittleFS/src/internal/FilePaths.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/71/711cf71404e7e05fe4301075bb5996c1/platform/libraries/LittleFS/src/internal/FileSlots.cpp",
+        "logical_identity": "platform:libraries/LittleFS/src/internal/FileSlots.cpp",
+        "sha256": "33f00720f0f2ad5696bcdf81b107a04ef962f1028a8b02fef11ef73f551ba0ed",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/LittleFS/src/internal/FileSlots.cpp"
+      }
+    ]
+  },
+  "sources": [
+    "C:/r13v/diagnostic-littlefs/sketch/LittleFSPersistence.ino.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/LittleFS/src/FS.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/LittleFS/src/LittleFS.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/LittleFS/src/internal/File.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/LittleFS/src/internal/FilePaths.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/LittleFS/src/internal/FileSlots.cpp"
+  ],
+  "sysbuild": false
+}

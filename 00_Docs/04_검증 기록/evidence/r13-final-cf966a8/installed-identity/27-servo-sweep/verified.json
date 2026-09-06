@@ -1,0 +1,105 @@
+{
+  "manifest_path": "C:\\r13v\\examples\\27-servo-sweep\\Sweep.ino.nu54-build.json",
+  "manifest_sha256": "ed63e80b5fb1309f63325b57c5fc42bc97ff45ee98786ee48cfd43616ab0ab04",
+  "artifacts": {
+    "bin": {
+      "path": "C:/r13v/examples/27-servo-sweep/Sweep.ino.bin",
+      "sha256": "47057d62f6b4ebb61f395c6de80c289f30b98859d6e4cdd13f6f3e25474dc145",
+      "size": 106744
+    },
+    "elf": {
+      "path": "C:/r13v/examples/27-servo-sweep/Sweep.ino.elf",
+      "sha256": "981bac56ea416db2a563db371fbaf8504706ab7ff6ef94b8abab37fd3660f3fa",
+      "size": 2314824
+    },
+    "hex": {
+      "path": "C:/r13v/examples/27-servo-sweep/Sweep.ino.hex",
+      "sha256": "a86dbb356bbe63bc914cda3255d7fc0e42817a9c2d0661c7fd5b654537cebd21",
+      "size": 300371
+    },
+    "map": {
+      "path": "C:/r13v/examples/27-servo-sweep/Sweep.ino.map",
+      "sha256": "f8c05fe1c2b693d6aed02eeace8ef365176a4ca4601479ddacd15dc8539c33ed",
+      "size": 810203
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:a06c6ae0462444cc7381dcbfef5f639319f5111dbb997e6caa7c00a4394735da",
+        "path": "C:/r13v/cache/v1/7a/7a017f53183916a3d963fd2b3f6db4c3/platform/libraries/Servo/examples/Sweep"
+      },
+      {
+        "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+        "path": "C:/r13v/cache/v1/7a/7a017f53183916a3d963fd2b3f6db4c3/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/r13v/cache/v1/7a/7a017f53183916a3d963fd2b3f6db4c3/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:06fb9476f4e3f1330d5b8faeda1a78a96013cdd43829667b24028613137259ac",
+        "path": "C:/r13v/cache/v1/7a/7a017f53183916a3d963fd2b3f6db4c3/platform/libraries/Servo/src"
+      },
+      {
+        "content_sha256": "sha256:4e27c13af2c56def8eb85b3ee2e608862304ec7e78de9c2fb17a816a45219e32",
+        "path": "C:/r13v/cache/v1/7a/7a017f53183916a3d963fd2b3f6db4c3/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/r13v/cache/v1/7a/7a017f53183916a3d963fd2b3f6db4c3/build/nucode_arduino_core_build.yml",
+      "sha256": "eaf515938be401652ac7259e3f4386a484b31373ebd37a10c56d5030b62747a6"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/r13v/cache/v1/7a/7a017f53183916a3d963fd2b3f6db4c3/app/generated-sources/sketch/Sweep.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/Sweep.ino.cpp",
+        "sha256": "ee4ea9d748d84742cc82cae1b586aef207629874b0beba6145426c28fe6f3218",
+        "source_path": "C:/r13v/examples/27-servo-sweep/sketch/Sweep.ino.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/7a/7a017f53183916a3d963fd2b3f6db4c3/platform/libraries/Servo/src/Servo.cpp",
+        "logical_identity": "platform:libraries/Servo/src/Servo.cpp",
+        "sha256": "926534b76589ff8126b0141bfb160d28eb3f55f0aa3b02d611bae8cf2c9cfd81",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/Servo/src/Servo.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\r13v\\identity-records\\27-servo-sweep\\nucode_arduino_core_build.yml",
+    "sha256": "eaf515938be401652ac7259e3f4386a484b31373ebd37a10c56d5030b62747a6",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core_source_sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "application_source_sha256": "79863a2d67359e4bcdd351109e3410f8f6eb785b146e63462f9da5f89a3c614c",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\r13v\\identity-records\\27-servo-sweep\\build_info.yml",
+    "sha256": "2c0e1080f175577e37b4c800af903193c20a927ad88998fcbb83f485de5ff159",
+    "identity": {
+      "application-source-sha256": "79863a2d67359e4bcdd351109e3410f8f6eb785b146e63462f9da5f89a3c614c",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core-source-sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

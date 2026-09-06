@@ -1,0 +1,95 @@
+{
+  "manifest_path": "C:\\r13w\\m8-compile-pyocd\\m8_upload.ino.nu54-build.json",
+  "manifest_sha256": "a91677e0e0af36203522932bff4dc2a843a204c6800189e1af5dc52786943ad1",
+  "artifacts": {
+    "bin": {
+      "path": "C:/r13w/m8-compile-pyocd/m8_upload.ino.bin",
+      "sha256": "2eb4c00167f448bb997b6f69fc7aafc69c871efc751ef3ad8a589d30a18cbbf6",
+      "size": 107908
+    },
+    "elf": {
+      "path": "C:/r13w/m8-compile-pyocd/m8_upload.ino.elf",
+      "sha256": "32db67f94c74c7c90a414b99e9b221bb664edec62bb7e368c480176d394bb728",
+      "size": 2294692
+    },
+    "hex": {
+      "path": "C:/r13w/m8-compile-pyocd/m8_upload.ino.hex",
+      "sha256": "4b1c35cbdff77b67a0a8ab277c330f4503ceaddabd8d5992551a4635e1ed5fb5",
+      "size": 303640
+    },
+    "map": {
+      "path": "C:/r13w/m8-compile-pyocd/m8_upload.ino.map",
+      "sha256": "1afb9fc2dd9ab3ccc50c8986e442103cd551680d88bf79d8555d7a270a74da3f",
+      "size": 808246
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:0113edd5af67b9ea587c3472fb7068feaa4d5432a6d882a567979e79edd93d5b",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/arduino-cli/m8_upload"
+      },
+      {
+        "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+        "path": "C:/r13w/cache/v1/d9/d9befc2aa689055aa9a1efb0810ae1f5/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/r13w/cache/v1/d9/d9befc2aa689055aa9a1efb0810ae1f5/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:d5c6a7a236a1f3cf37215a382fffa74a552b33c8d99ca836dda7e4964ac50da6",
+        "path": "C:/r13w/cache/v1/d9/d9befc2aa689055aa9a1efb0810ae1f5/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/r13w/cache/v1/d9/d9befc2aa689055aa9a1efb0810ae1f5/build/nucode_arduino_core_build.yml",
+      "sha256": "e0cb83641516e0c1a13dacaad8bad6ce09f173c18052c6eca4c00d1a533b3c1c"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/r13w/cache/v1/d9/d9befc2aa689055aa9a1efb0810ae1f5/app/generated-sources/sketch/m8_upload.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/m8_upload.ino.cpp",
+        "sha256": "ac9678dfbaed8a25e90e6596c39babd6fcb01d2c9c2365e990ed3dd44ecff934",
+        "source_path": "C:/r13w/m8-compile-pyocd/sketch/m8_upload.ino.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\r13w\\identity-records\\m8-compile-pyocd\\nucode_arduino_core_build.yml",
+    "sha256": "e0cb83641516e0c1a13dacaad8bad6ce09f173c18052c6eca4c00d1a533b3c1c",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core_source_sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "application_source_sha256": "4521f389807df91b1e203feef9bedfe1a99385f5160f0b2eb378d149ef0d6dca",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\r13w\\identity-records\\m8-compile-pyocd\\build_info.yml",
+    "sha256": "ca0dcb6bbd16840b5d0c3046c0a3a03e522805419586ff2f57392bdb2d8eae97",
+    "identity": {
+      "application-source-sha256": "4521f389807df91b1e203feef9bedfe1a99385f5160f0b2eb378d149ef0d6dca",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core-source-sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

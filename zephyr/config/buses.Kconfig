@@ -1,0 +1,39 @@
+config NUCODE_ARDUINO_WIRE
+	bool "Arduino Wire I2C controller 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	select I2C
+	select NUCODE_ARDUINO_GPIO
+	select PM_DEVICE
+	select PM_DEVICE_RUNTIME
+	select PINCTRL
+	select PINCTRL_DYNAMIC
+	select PINCTRL_KEEP_SLEEP_STATE
+	help
+	  nucode,arduino-wire chosen controller를 ArduinoCore-API HardwareI2C로
+	  노출합니다. controller mode, 100/400 kHz와 고정 TX/RX buffer만
+	  지원합니다.
+
+config NUCODE_ARDUINO_WIRE_BUFFER_SIZE
+	int "Arduino Wire TX/RX buffer byte 수"
+	default 32
+	range 16 512
+	depends on NUCODE_ARDUINO_WIRE
+	help
+	  TX와 RX에 각각 할당하는 고정 buffer 크기입니다. 동적 메모리는
+	  사용하지 않습니다.
+
+config NUCODE_ARDUINO_SPI
+	bool "Arduino SPI controller 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	select SPI
+	select NUCODE_ARDUINO_GPIO
+	select PM_DEVICE
+	select PM_DEVICE_RUNTIME
+	select PINCTRL
+	select PINCTRL_DYNAMIC
+	select PINCTRL_KEEP_SLEEP_STATE
+	help
+	  nucode,arduino-spi chosen controller를 CS 없는 HardwareSPI로
+	  노출합니다. 외부 target의 CS 역할은 Sketch가 직접 소유합니다.

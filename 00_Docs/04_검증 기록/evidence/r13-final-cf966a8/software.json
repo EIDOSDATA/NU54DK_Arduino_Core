@@ -1,0 +1,200 @@
+{
+  "board_gitlink": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "configure_and_live_identity_records_preserved": 35,
+  "gates": {
+    "contract": {
+      "completion_marker": "M12_GATE_PASS=contract",
+      "raw_log": {
+        "bytes": 7516,
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-contract.log",
+        "sha256": "88a11ddf439cc1c1b9f97a3876f452994894d7840ef365b78595b1dbfb5ab4b9"
+      },
+      "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36"
+    },
+    "docs": {
+      "completion_marker": "M12_GATE_PASS=docs",
+      "raw_log": {
+        "bytes": 69,
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-docs.log",
+        "sha256": "121d1eb4ab8a74190e4b53d5a203d8f0470fe4547837d3cdcd74cc687b46337e"
+      },
+      "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36"
+    },
+    "examples": {
+      "completion_marker": "M12_GATE_PASS=examples",
+      "raw_log": {
+        "bytes": 323,
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-examples.log",
+        "sha256": "96a27906e4f92a8e04c669205d92135bcccd228b0d99e55e0315545a18f31f79"
+      },
+      "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36"
+    },
+    "host": {
+      "completion_marker": "M12_GATE_PASS=host",
+      "raw_log": {
+        "bytes": 159708,
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-host.log",
+        "sha256": "d03318992d3dff5a1bc13f18382c197f3f5e32dd3142923b4382305826a473f5"
+      },
+      "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36"
+    },
+    "installed-examples": {
+      "completion_marker": "R13_RESUMED_INSTALLED_EXAMPLES_PASS=29;",
+      "raw_log": {
+        "bytes": 274,
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-installed-examples-resume.log",
+        "sha256": "260d64832512bef8647a92684d0f399fff189186e5b87883b40c05940736aa92"
+      },
+      "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36"
+    },
+    "inventory": {
+      "completion_marker": "M12_GATE_PASS=inventory",
+      "raw_log": {
+        "bytes": 1413,
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-inventory.log",
+        "sha256": "7e58023f0d3cd63fb88dfb19c5c477d19a2c78e29e995a1b66bbfe7491c26fc6"
+      },
+      "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36"
+    },
+    "package": {
+      "completion_marker": "M12_GATE_PASS=package",
+      "raw_log": {
+        "bytes": 4191,
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-package-gate.log",
+        "sha256": "18073832b7e38b87bd78bfff11a2a6ce3196c10a4f65006d2db2432fc43afe5d"
+      },
+      "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36"
+    },
+    "provenance-smoke": {
+      "completion_marker": "INSTALLED_CONFIGURE_AND_LIVE_IDENTITY_PASS=6;MODE=provenance-smoke",
+      "raw_log": {
+        "bytes": 147,
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-provenance-smoke.log",
+        "sha256": "bbee7c073f7272bd2ec837983c02c4d29675352e57b884dfc5b5a4c4dd836222"
+      },
+      "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36"
+    },
+    "qemu": {
+      "completion_marker": "M14_QEMU_RUNTIME_PASS=3",
+      "raw_log": {
+        "bytes": 1549,
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-qemu.log",
+        "sha256": "d6af29ee57745fdb1ff12d9598895fbb6cb0c8715fe3cb4e4af1ea79b2667692"
+      },
+      "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36"
+    },
+    "software-smoke-baseline": {
+      "completion_marker": "FINAL_INSTALLED_SMOKE_PASS=16;M8_COMPILE_ONLY=2",
+      "raw_log": {
+        "bytes": 470,
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\final-installed-smoke-resume.log",
+        "sha256": "7995c19f77b109675c3e432e6b7e4380075f7fdead68a98459b9b9082dc84a20"
+      },
+      "source_commit": "499fde3931248fe44f94bab3dc656bfef5111a38"
+    },
+    "style": {
+      "completion_marker": "CPP_STYLE_FILES=356; FAILED=0",
+      "raw_log": {
+        "bytes": 40,
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-style.log",
+        "sha256": "a4c20c2be37aa611270a24e85826c8013654d6bb404477070db2009c783906a5"
+      },
+      "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36"
+    },
+    "target": {
+      "completion_marker": "M12_ZEPHYR_BUILD_PASS=60;",
+      "raw_log": {
+        "bytes": 18386,
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-target.log",
+        "sha256": "1a267af5c9d84501996b02ace8f630ad519f6b6e3f446d7432ca26ba32421ce1"
+      },
+      "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36"
+    }
+  },
+  "host": {
+    "actual_installed_m13_passed": 11,
+    "conditional_skipped": 1,
+    "passed": 639,
+    "tests": 640
+  },
+  "installed_example_resume": {
+    "initial_failure_log": {
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\verified-installed-examples.log",
+      "sha256": "7af4aac459d2d4e32155e8937397368f5b8dbd3d191e54dc28a332030ff3ea8a"
+    },
+    "retained": [
+      1,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+    ],
+    "retried": [
+      2,
+      3
+    ]
+  },
+  "installed_examples": 29,
+  "m16_role_images_within_60": 2,
+  "m8_upload_sentinel": "NOT RUN: would enumerate physical probes",
+  "next": "current-source T11 / Fixture 101 / power OFF wiring and user confirmation",
+  "package_source_files_changed_from_499fde3": [
+    "zephyr/cmake/source_provenance.cmake",
+    "zephyr/cmake/write_build_record.cmake"
+  ],
+  "physical_executed": false,
+  "qemu_runtime_cases": 3,
+  "release_published": false,
+  "retained_readiness_blockers": 8,
+  "software_smoke": {
+    "baseline_source_commit": "499fde3931248fe44f94bab3dc656bfef5111a38",
+    "completed_routines": 16,
+    "initial_passed_routines": [
+      "blink",
+      "library",
+      "config",
+      "error",
+      "parallel",
+      "m6"
+    ],
+    "latest_source_affected_regression": "M7 full routine, M8 compile 2, installed examples 29 with configure/live revision and artifact/input hash verification",
+    "m7_split_completion": "Four original M7 compile/config checks then current/monolithic actual writer scope regression PASS",
+    "resumed_routines": [
+      "m9",
+      "m11",
+      "m15",
+      "m16",
+      "m19m20",
+      "m21",
+      "ac02b",
+      "ac03",
+      "examples"
+    ],
+    "single_uninterrupted_run": false
+  },
+  "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+  "target_compiled_sources_config_memory_unchanged_from_499fde3": true,
+  "target_scenarios_built_not_run": 60
+}

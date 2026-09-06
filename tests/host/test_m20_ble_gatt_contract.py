@@ -192,7 +192,7 @@ class M20BleGattContractTests(unittest.TestCase):
     def test_kconfig_examples_and_target_contracts_exist(self) -> None:
         """! @brief resolver config, examples와 M19/M20 분리 target gate를 확인합니다. """
 
-        kconfig = (REPOSITORY / "zephyr" / "Kconfig").read_text(encoding="utf-8")
+        kconfig = (REPOSITORY / "zephyr" / "config/ble.Kconfig").read_text(encoding="utf-8")
         feature_conf = (LIBRARY / "zephyr" / "ble-nus.conf").read_text(
             encoding="utf-8"
         )

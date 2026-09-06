@@ -1,0 +1,94 @@
+{
+  "before_commit": "b9c30042f23ff2de65280f29ae81149e104cebf2",
+  "package_with_failure_source": "499fde3931248fe44f94bab3dc656bfef5111a38",
+  "defect": "Valid 40-digit Core/board manifest revisions rejected by CMake interval-regex syntax; configure and live records remained unknown",
+  "fix": "Explicit string length 40 and anchored hexadecimal character set in both actual CMake readers",
+  "new_tests": 2,
+  "before_failing_subcases": 5,
+  "after_host_cmake_passed": 2,
+  "after_sdk_cmake_passed": 2,
+  "existing_identity_tests_passed": 6,
+  "contract_passed": 45,
+  "physical_executed": false,
+  "logs": {
+    "manifest-regex-before": {
+      "raw": {
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\manifest-regex-before.log",
+        "sha256": "40b01c25851d0627ebfb82f0554d268314378841d3284180d3342398fab1f94e",
+        "bytes": 121
+      },
+      "archive": {
+        "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13e-b9c3004\\manifest-regex-before.raw.gz",
+        "sha256": "7ab9c0b0be830a46d1a4371466b6a59dd55fb0c131687a93d323d8169e21bace",
+        "bytes": 135
+      },
+      "preview": "LF/trailing-space normalized; original bytes in raw.gz"
+    },
+    "manifest-revision-before": {
+      "raw": {
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\manifest-revision-before.log",
+        "sha256": "8c8ed3b40ad7df2af36a1ce63f6c6fabe73db42ab629e485bfc7a2f431eb66fe",
+        "bytes": 7073
+      },
+      "archive": {
+        "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13e-b9c3004\\manifest-revision-before.raw.gz",
+        "sha256": "686ea38400d7997629ffe63b48848c268178969edd83edd0d249d4008e7946d3",
+        "bytes": 1051
+      },
+      "preview": "LF/trailing-space normalized; original bytes in raw.gz"
+    },
+    "manifest-revision-fixed-host": {
+      "raw": {
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\manifest-revision-fixed-host.log",
+        "sha256": "fcb44d976c0880d8bc9a4320e09603cf91c48707ef91b344d777ad355abf93b2",
+        "bytes": 627
+      },
+      "archive": {
+        "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13e-b9c3004\\manifest-revision-fixed-host.raw.gz",
+        "sha256": "4f3111a00cfdd5cf7638cac00bd46f419212882a85e68423097a2238f417705a",
+        "bytes": 354
+      },
+      "preview": "LF/trailing-space normalized; original bytes in raw.gz"
+    },
+    "manifest-revision-fixed-bundle": {
+      "raw": {
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\manifest-revision-fixed-bundle.log",
+        "sha256": "0aa4300e237b53f7e4c76f815f64e45b23d48824eb158cc4b4d47306e3b60141",
+        "bytes": 627
+      },
+      "archive": {
+        "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13e-b9c3004\\manifest-revision-fixed-bundle.raw.gz",
+        "sha256": "235b52d28324b26d5da217a6b81a9f78eed18bbf3b0dc5c5fea54df216608f35",
+        "bytes": 354
+      },
+      "preview": "LF/trailing-space normalized; original bytes in raw.gz"
+    },
+    "manifest-contract": {
+      "raw": {
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\manifest-contract.log",
+        "sha256": "5095a8f3673854b85867d02ab07cdcedbbf01ebd951c3974ef0f47d878edea8b",
+        "bytes": 7516
+      },
+      "archive": {
+        "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13e-b9c3004\\manifest-contract.raw.gz",
+        "sha256": "ce2249fd53692849db45497cebd40cb5b74ab2c574dd0e42f838143a8e1772cf",
+        "bytes": 1517
+      },
+      "preview": "LF/trailing-space normalized; original bytes in raw.gz"
+    },
+    "manifest-existing-identity": {
+      "raw": {
+        "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\manifest-existing-identity.log",
+        "sha256": "9e348dfb6860aad7b662fb623f10eacffb23ee656a5e2386da14c1d16bf13f15",
+        "bytes": 955
+      },
+      "archive": {
+        "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\r13e-b9c3004\\manifest-existing-identity.raw.gz",
+        "sha256": "205156d499759766915d0c6714847171fc75b4bc35960eca83a496a092992700",
+        "bytes": 288
+      },
+      "preview": "LF/trailing-space normalized; original bytes in raw.gz"
+    }
+  },
+  "next": "Commit then repeat complete target/Host/package/examples and preserve actual configure/live identity before cache pruning. Existing immutable 499fde3 package smoke remains a separately identified baseline."
+}

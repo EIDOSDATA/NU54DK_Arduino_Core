@@ -1,0 +1,105 @@
+{
+  "manifest_path": "C:\\r13v\\examples\\21-nucode-nu54dk-settingsstorage\\SettingsStorage.ino.nu54-build.json",
+  "manifest_sha256": "912a39323ff8dfae4bcdce3909b5f8fda4ba3a18d3e61b4b51450279b2b8e53a",
+  "artifacts": {
+    "bin": {
+      "path": "C:/r13v/examples/21-nucode-nu54dk-settingsstorage/SettingsStorage.ino.bin",
+      "sha256": "a024a250f5814c72a9e975789206061c64109438f2b6db3bfb11367c84d92cfd",
+      "size": 113748
+    },
+    "elf": {
+      "path": "C:/r13v/examples/21-nucode-nu54dk-settingsstorage/SettingsStorage.ino.elf",
+      "sha256": "ed8fe2217aac955879f7dfcf803f52442ef56b6fe8bb86dd98121dc1161e2265",
+      "size": 2536748
+    },
+    "hex": {
+      "path": "C:/r13v/examples/21-nucode-nu54dk-settingsstorage/SettingsStorage.ino.hex",
+      "sha256": "bf0bf0654ed42603b11c4b463f4f77dd49f7815a7a35836792ca09199c93ce74",
+      "size": 320065
+    },
+    "map": {
+      "path": "C:/r13v/examples/21-nucode-nu54dk-settingsstorage/SettingsStorage.ino.map",
+      "sha256": "39568566b3cdc9456988d4777b8b9d7940e9b80d94ba119ddba664ace88fdf44",
+      "size": 886270
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:fcdd1cb876444cebc6e09b02f5a74baa38a0e908b79f4e4758c7cdc0c2d12ed5",
+        "path": "C:/r13v/cache/v1/aa/aaba0a1121c6a68242470b83a7cb7ade/platform/libraries/NUCODE_NU54DK/examples/SettingsStorage"
+      },
+      {
+        "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+        "path": "C:/r13v/cache/v1/aa/aaba0a1121c6a68242470b83a7cb7ade/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/r13v/cache/v1/aa/aaba0a1121c6a68242470b83a7cb7ade/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:62270ed0bca3ce8e6ef7e237f2dd18eafa7129a98d2046e4e14424db5c273576",
+        "path": "C:/r13v/cache/v1/aa/aaba0a1121c6a68242470b83a7cb7ade/platform/libraries/NUCODE_NU54DK/src"
+      },
+      {
+        "content_sha256": "sha256:097badd5d83977bcdbd40afabeec652add43a1684738017d1b49b1be842dfac9",
+        "path": "C:/r13v/cache/v1/aa/aaba0a1121c6a68242470b83a7cb7ade/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/r13v/cache/v1/aa/aaba0a1121c6a68242470b83a7cb7ade/build/nucode_arduino_core_build.yml",
+      "sha256": "c825528e8e29107afd45692fa4aeb5ce5b7d48bb090732410535da7688ac4095"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/r13v/cache/v1/aa/aaba0a1121c6a68242470b83a7cb7ade/app/generated-sources/sketch/SettingsStorage.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/SettingsStorage.ino.cpp",
+        "sha256": "32bc8328340f700e69c6ac640911eac75f8e7f88e0d6b4213b86453658545b35",
+        "source_path": "C:/r13v/examples/21-nucode-nu54dk-settingsstorage/sketch/SettingsStorage.ino.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/aa/aaba0a1121c6a68242470b83a7cb7ade/platform/libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp",
+        "logical_identity": "platform:libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp",
+        "sha256": "7a5fe7013f0a6d1de5799025edb5c19515bce39ff08249954b12bf7885973d2d",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\r13v\\identity-records\\21-nucode-nu54dk-settingsstorage\\nucode_arduino_core_build.yml",
+    "sha256": "c825528e8e29107afd45692fa4aeb5ce5b7d48bb090732410535da7688ac4095",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core_source_sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "application_source_sha256": "92789e203da2ed2d0aec01525eb35b6a17e443a5a932ecee80c929aab7c20cb9",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\r13v\\identity-records\\21-nucode-nu54dk-settingsstorage\\build_info.yml",
+    "sha256": "8f585dcaa3c1c53cefddd93b47d783add5ddaa4f335a0c9df57e0c80fd053a50",
+    "identity": {
+      "application-source-sha256": "92789e203da2ed2d0aec01525eb35b6a17e443a5a932ecee80c929aab7c20cb9",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core-source-sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

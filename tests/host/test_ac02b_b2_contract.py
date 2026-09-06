@@ -117,7 +117,7 @@ class Ac02bPeripheralContractTests(unittest.TestCase):
         stubs = (ROOT / "cores" / "arduino" / "peripheral_stubs.cpp").read_text(
             encoding="utf-8"
         )
-        cmake = (ROOT / "zephyr" / "CMakeLists.txt").read_text(encoding="utf-8")
+        cmake = (ROOT / "zephyr" / "cmake/source_selection.cmake").read_text(encoding="utf-8")
         wire_example = (
             ROOT
             / "libraries"

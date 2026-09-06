@@ -1,0 +1,10 @@
+test_error_marker_and_no_partial_output_for_invalid_version (__main__.PackageModuleTests.test_error_marker_and_no_partial_output_for_invalid_version) ... ok
+test_isolated_cli_ignores_foreign_package_and_pythonpath (__main__.PackageModuleTests.test_isolated_cli_ignores_foreign_package_and_pythonpath) ... ok
+test_repository_default_and_multiple_import_identity (__main__.PackageModuleTests.test_repository_default_and_multiple_import_identity) ... ok
+test_same_consumer_reload_does_not_reuse_candidate_state (__main__.PackageModuleTests.test_same_consumer_reload_does_not_reuse_candidate_state) ... ok
+test_stable_snapshot_includes_moved_package_model (__main__.PackageModuleTests.test_stable_snapshot_includes_moved_package_model) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.881s
+
+OK

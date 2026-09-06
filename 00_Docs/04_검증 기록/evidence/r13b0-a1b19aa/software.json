@@ -1,0 +1,19 @@
+{
+  "after": "2/2 canonical subset PASS",
+  "artifacts": {
+    "nucode.m21.ble_board_contract": {
+      "elf_sha256": "f082d19c819db6280bd76bad679258bc959b876d01f141f806c7dff988f9b794",
+      "hex_sha256": "e800cc29d9174b3a2f8e6ad6f5942f28c4631fd6677f791481c9f8dc5da0cff6",
+      "spi_driver": false
+    },
+    "nucode.m7.core_api": {
+      "elf_sha256": "01dae17800d5a64e726c3a7ca5e9500141955c157f12bca06d76da4920a5760f",
+      "hex_sha256": "883823371d5dec37e476226cdb09f1e3643be75c4f4059f3913aa169d4feeae5",
+      "spi_driver": true
+    }
+  },
+  "before": "15 built-only; M21 Board+Security link error",
+  "physical_executed": false,
+  "start_commit": "a1b19aa",
+  "target_log_sha256": "339dff810aaca27aeb21862550ff5b5a7469b29c6b5c64304afa69d6952e8e02"
+}

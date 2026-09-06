@@ -1,0 +1,74 @@
+test_configure_and_live_parsers_validate_full_revision (__main__.ManifestRevisionTests.test_configure_and_live_parsers_validate_full_revision)
+! @brief 40자리 대소문자 SHA와 길이·문자·JSON 오류를 두 실제 함수에서 검증합니다. ...
+  test_configure_and_live_parsers_validate_full_revision (__main__.ManifestRevisionTests.test_configure_and_live_parsers_validate_full_revision) (parser='source_provenance.cmake', manifest='{"core_revision": "499fde3931248fe44f94bab3dc656bfef5111a38"}')
+! @brief 40자리 대소문자 SHA와 길이·문자·JSON 오류를 두 실제 함수에서 검증합니다. ... FAIL
+  test_configure_and_live_parsers_validate_full_revision (__main__.ManifestRevisionTests.test_configure_and_live_parsers_validate_full_revision) (parser='source_provenance.cmake', manifest='{"core_revision": "499FDE3931248FE44F94BAB3DC656BFEF5111A38"}')
+! @brief 40자리 대소문자 SHA와 길이·문자·JSON 오류를 두 실제 함수에서 검증합니다. ... FAIL
+  test_configure_and_live_parsers_validate_full_revision (__main__.ManifestRevisionTests.test_configure_and_live_parsers_validate_full_revision) (parser='write_build_record.cmake', manifest='{"core_revision": "499fde3931248fe44f94bab3dc656bfef5111a38"}')
+! @brief 40자리 대소문자 SHA와 길이·문자·JSON 오류를 두 실제 함수에서 검증합니다. ... FAIL
+  test_configure_and_live_parsers_validate_full_revision (__main__.ManifestRevisionTests.test_configure_and_live_parsers_validate_full_revision) (parser='write_build_record.cmake', manifest='{"core_revision": "499FDE3931248FE44F94BAB3DC656BFEF5111A38"}')
+! @brief 40자리 대소문자 SHA와 길이·문자·JSON 오류를 두 실제 함수에서 검증합니다. ... FAIL
+test_live_writer_restores_core_and_board_from_gitless_manifest (__main__.ManifestRevisionTests.test_live_writer_restores_core_and_board_from_gitless_manifest)
+! @brief 실제 build record writer가 package의 Core·board SHA를 YAML에 기록합니다. ... FAIL
+
+======================================================================
+FAIL: test_configure_and_live_parsers_validate_full_revision (__main__.ManifestRevisionTests.test_configure_and_live_parsers_validate_full_revision) (parser='source_provenance.cmake', manifest='{"core_revision": "499fde3931248fe44f94bab3dc656bfef5111a38"}')
+! @brief 40자리 대소문자 SHA와 길이·문자·JSON 오류를 두 실제 함수에서 검증합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r13_manifest_revision.py", line 59, in test_configure_and_live_parsers_validate_full_revision
+    self.assertEqual(output.read_text(encoding='utf-8'), expected)
+AssertionError: 'unknown' != '499fde3931248fe44f94bab3dc656bfef5111a38'
+- unknown
++ 499fde3931248fe44f94bab3dc656bfef5111a38
+
+
+======================================================================
+FAIL: test_configure_and_live_parsers_validate_full_revision (__main__.ManifestRevisionTests.test_configure_and_live_parsers_validate_full_revision) (parser='source_provenance.cmake', manifest='{"core_revision": "499FDE3931248FE44F94BAB3DC656BFEF5111A38"}')
+! @brief 40자리 대소문자 SHA와 길이·문자·JSON 오류를 두 실제 함수에서 검증합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r13_manifest_revision.py", line 59, in test_configure_and_live_parsers_validate_full_revision
+    self.assertEqual(output.read_text(encoding='utf-8'), expected)
+AssertionError: 'unknown' != '499fde3931248fe44f94bab3dc656bfef5111a38'
+- unknown
++ 499fde3931248fe44f94bab3dc656bfef5111a38
+
+
+======================================================================
+FAIL: test_configure_and_live_parsers_validate_full_revision (__main__.ManifestRevisionTests.test_configure_and_live_parsers_validate_full_revision) (parser='write_build_record.cmake', manifest='{"core_revision": "499fde3931248fe44f94bab3dc656bfef5111a38"}')
+! @brief 40자리 대소문자 SHA와 길이·문자·JSON 오류를 두 실제 함수에서 검증합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r13_manifest_revision.py", line 59, in test_configure_and_live_parsers_validate_full_revision
+    self.assertEqual(output.read_text(encoding='utf-8'), expected)
+AssertionError: 'unknown' != '499fde3931248fe44f94bab3dc656bfef5111a38'
+- unknown
++ 499fde3931248fe44f94bab3dc656bfef5111a38
+
+
+======================================================================
+FAIL: test_configure_and_live_parsers_validate_full_revision (__main__.ManifestRevisionTests.test_configure_and_live_parsers_validate_full_revision) (parser='write_build_record.cmake', manifest='{"core_revision": "499FDE3931248FE44F94BAB3DC656BFEF5111A38"}')
+! @brief 40자리 대소문자 SHA와 길이·문자·JSON 오류를 두 실제 함수에서 검증합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r13_manifest_revision.py", line 59, in test_configure_and_live_parsers_validate_full_revision
+    self.assertEqual(output.read_text(encoding='utf-8'), expected)
+AssertionError: 'unknown' != '499fde3931248fe44f94bab3dc656bfef5111a38'
+- unknown
++ 499fde3931248fe44f94bab3dc656bfef5111a38
+
+
+======================================================================
+FAIL: test_live_writer_restores_core_and_board_from_gitless_manifest (__main__.ManifestRevisionTests.test_live_writer_restores_core_and_board_from_gitless_manifest)
+! @brief 실제 build record writer가 package의 Core·board SHA를 YAML에 기록합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r13_manifest_revision.py", line 87, in test_live_writer_restores_core_and_board_from_gitless_manifest
+    self.assertIn(f"core_revision: '{CORE}'", record)
+AssertionError: "core_revision: '499fde3931248fe44f94bab3dc656bfef5111a38'" not found in "nucode_arduino_core:\n  source_version: '0.4.0-dev'\n  package_version: '0.0.90'\n  core_revision: 'unknown'\n  core_source_sha256: '4d4a21dc6a276f4b0e73d1e788145f81834c24eee3be9341d01a4d71f8ec9757'\n  application_source_sha256: 'cdb3e334ebf83fe608d1e2d6382a3942660c0db1126d901e3e7904695803e443'\n  board_revision: 'unknown'\n  board_source_sha256: 'unknown'\n  ncs_revision: 'unknown'\n  zephyr_revision: 'unknown'\n  board: ''\n  board_qualifiers: ''\n  toolchain_variant: ''\n  toolchain_path: ''\n  cxx_compiler: ''\n"
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.121s
+
+FAILED (failures=5)

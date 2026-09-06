@@ -1,0 +1,4760 @@
+{
+  "baseline_commit": "ec3bba331b4ce99667b42312512715818e66c1df",
+  "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+  "board_gitlink": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "protected_existing_paths": [
+    "00_Docs/04_검증 기록/evidence/077bf7e/pair-paced-failed.json",
+    "00_Docs/04_검증 기록/evidence/1a133e6/fixture202-full-10mhz-1a133e6.json",
+    "00_Docs/04_검증 기록/evidence/1a133e6/fixture202-full-10mhz-1a133e6.json.jsonl",
+    "00_Docs/04_검증 기록/evidence/2542a01/fixture101-full-2542a01-100khz.json",
+    "00_Docs/04_검증 기록/evidence/2542a01/fixture101-full-2542a01-100khz.json.jsonl",
+    "00_Docs/04_검증 기록/evidence/2a219a9/fixture201-orc-stress100-10mhz-2a219a9.json",
+    "00_Docs/04_검증 기록/evidence/2a219a9/fixture201-orc-stress100-10mhz-2a219a9.json.jsonl",
+    "00_Docs/04_검증 기록/evidence/34475a0/pair-diagnostic.json",
+    "00_Docs/04_검증 기록/evidence/34475a0/pair-onboard-failed.json",
+    "00_Docs/04_검증 기록/evidence/34475a0/target-build.json",
+    "00_Docs/04_검증 기록/evidence/34475a0/twim-control.json",
+    "00_Docs/04_검증 기록/evidence/4af93da/fixture203-full-10mhz-4af93da.json",
+    "00_Docs/04_검증 기록/evidence/4af93da/fixture203-full-10mhz-4af93da.json.jsonl",
+    "00_Docs/04_검증 기록/evidence/51c1986/m24_twim_onboard.json",
+    "00_Docs/04_검증 기록/evidence/51c1986/m24_uarte_onboard.json",
+    "00_Docs/04_검증 기록/evidence/51c1986/m25_onboard.json",
+    "00_Docs/04_검증 기록/evidence/51c1986/m26_onboard.json",
+    "00_Docs/04_검증 기록/evidence/5e6ef07/pair-5e6ef07-smoke.json",
+    "00_Docs/04_검증 기록/evidence/5e6ef07/pair-primitives-5e6ef07.json",
+    "00_Docs/04_검증 기록/evidence/5e6ef07/uart-stall-5e6ef07.json",
+    "00_Docs/04_검증 기록/evidence/696defb/pair-primitives-696defb.json",
+    "00_Docs/04_검증 기록/evidence/696defb/pair-primitives-696defb.json.jsonl",
+    "00_Docs/04_검증 기록/evidence/6ea315e/pair-all-6ea315e.json",
+    "00_Docs/04_검증 기록/evidence/6ea315e/stop-uart30-6ea.json",
+    "00_Docs/04_검증 기록/evidence/94d53ae/pair-idle-94d53ae.json",
+    "00_Docs/04_검증 기록/evidence/94d53ae/rts-94d53ae.json",
+    "00_Docs/04_검증 기록/evidence/94d53ae/uart30-stall-94d53ae.json",
+    "00_Docs/04_검증 기록/evidence/a254d01/fixture201-buffered-rx-stress100-10mhz-a254d01.json",
+    "00_Docs/04_검증 기록/evidence/a254d01/fixture201-buffered-rx-stress100-10mhz-a254d01.json.jsonl",
+    "00_Docs/04_검증 기록/evidence/a254d01/fixture201-orc-stress100-10mhz-a254d01.json",
+    "00_Docs/04_검증 기록/evidence/a254d01/fixture201-orc-stress100-10mhz-a254d01.json.jsonl",
+    "00_Docs/04_검증 기록/evidence/b3c689b/fixture103-full-b3c689b-100khz-retry2.json",
+    "00_Docs/04_검증 기록/evidence/b3c689b/fixture103-full-b3c689b-100khz-retry2.json.jsonl",
+    "00_Docs/04_검증 기록/evidence/b3c689b/fixture103-full-b3c689b-100khz.json",
+    "00_Docs/04_검증 기록/evidence/b3c689b/fixture103-full-b3c689b-100khz.json.jsonl",
+    "00_Docs/04_검증 기록/evidence/b3c689b/fixture103-targeted-9600-double-5cycles.json",
+    "00_Docs/04_검증 기록/evidence/b3c689b/fixture103-targeted-9600-double-5cycles.json.jsonl",
+    "00_Docs/04_검증 기록/evidence/b3c689b/fixture103-targeted-transitions-5cycles.json",
+    "00_Docs/04_검증 기록/evidence/b3c689b/fixture103-targeted-transitions-5cycles.json.jsonl",
+    "00_Docs/04_검증 기록/evidence/e2f045c/fixture301-full-10mhz-e2f045c.json",
+    "00_Docs/04_검증 기록/evidence/e2f045c/fixture301-full-10mhz-e2f045c.json.jsonl",
+    "00_Docs/04_검증 기록/evidence/f21377e/fixture201-full-10mhz-f21377e.json",
+    "00_Docs/04_검증 기록/evidence/f21377e/fixture201-full-10mhz-f21377e.json.jsonl",
+    "00_Docs/04_검증 기록/evidence/ff3423e/fixture102-full-ff3423e-100khz.json",
+    "00_Docs/04_검증 기록/evidence/ff3423e/fixture102-full-ff3423e-100khz.json.jsonl",
+    "00_Docs/05_릴리스/README.md",
+    "00_Docs/05_릴리스/v0.1.0-rc.1/KNOWN_ISSUES.md",
+    "00_Docs/05_릴리스/v0.1.0-rc.1/MIGRATION.md",
+    "00_Docs/05_릴리스/v0.1.0-rc.1/README.md",
+    "00_Docs/05_릴리스/v0.1.0-rc.1/RELEASE_NOTES.md",
+    "00_Docs/05_릴리스/v0.1.0-rc.1/TROUBLESHOOTING.md",
+    "00_Docs/05_릴리스/v0.1.0-rc.1/WITHDRAWAL.md",
+    "00_Docs/05_릴리스/v0.1.0-rc.2/KNOWN_ISSUES.md",
+    "00_Docs/05_릴리스/v0.1.0-rc.2/MIGRATION.md",
+    "00_Docs/05_릴리스/v0.1.0-rc.2/README.md",
+    "00_Docs/05_릴리스/v0.1.0-rc.2/RELEASE_NOTES.md",
+    "00_Docs/05_릴리스/v0.1.0-rc.2/TROUBLESHOOTING.md",
+    "00_Docs/05_릴리스/v0.1.0/KNOWN_ISSUES.md",
+    "00_Docs/05_릴리스/v0.1.0/MIGRATION.md",
+    "00_Docs/05_릴리스/v0.1.0/README.md",
+    "00_Docs/05_릴리스/v0.1.0/RELEASE_NOTES.md",
+    "00_Docs/05_릴리스/v0.1.0/TROUBLESHOOTING.md",
+    "00_Docs/05_릴리스/v0.2.0/KNOWN_ISSUES.md",
+    "00_Docs/05_릴리스/v0.2.0/MIGRATION.md",
+    "00_Docs/05_릴리스/v0.2.0/README.md",
+    "00_Docs/05_릴리스/v0.2.0/RELEASE_NOTES.md",
+    "00_Docs/05_릴리스/v0.2.0/TROUBLESHOOTING.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.1/CLEANROOM_ABORT.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.1/KNOWN_ISSUES.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.1/MIGRATION.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.1/README.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.1/RELEASE_NOTES.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.1/TESTING.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.1/TROUBLESHOOTING.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.2/KNOWN_ISSUES.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.2/MIGRATION.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.2/README.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.2/RELEASE_NOTES.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.2/TESTING.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.2/TROUBLESHOOTING.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.3/KNOWN_ISSUES.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.3/MIGRATION.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.3/README.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.3/RELEASE_NOTES.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.3/TESTING.md",
+    "00_Docs/05_릴리스/v0.3.0-rc.3/TROUBLESHOOTING.md",
+    "00_Docs/05_릴리스/v0.3.0/KNOWN_ISSUES.md",
+    "00_Docs/05_릴리스/v0.3.0/MIGRATION.md",
+    "00_Docs/05_릴리스/v0.3.0/README.md",
+    "00_Docs/05_릴리스/v0.3.0/RELEASE_NOTES.md",
+    "00_Docs/05_릴리스/v0.3.0/TESTING.md",
+    "00_Docs/05_릴리스/v0.3.0/TROUBLESHOOTING.md",
+    "00_Docs/05_릴리스/v0.4.0-rc.1/README.md",
+    "board_package/NU54DK_Zephyr_DTS",
+    "package_nucode_nu54dk_index.json",
+    "package_nucode_nu54dk_preview_index.json",
+    "third_party/.gitkeep",
+    "third_party/ArduinoCore-API.provenance.yml",
+    "third_party/ArduinoCore-API/LICENSE",
+    "third_party/ArduinoCore-API/README.md",
+    "third_party/ArduinoCore-API/api/ArduinoAPI.h",
+    "third_party/ArduinoCore-API/api/Binary.h",
+    "third_party/ArduinoCore-API/api/CanMsg.cpp",
+    "third_party/ArduinoCore-API/api/CanMsg.h",
+    "third_party/ArduinoCore-API/api/CanMsgRingbuffer.cpp",
+    "third_party/ArduinoCore-API/api/CanMsgRingbuffer.h",
+    "third_party/ArduinoCore-API/api/Client.h",
+    "third_party/ArduinoCore-API/api/Common.cpp",
+    "third_party/ArduinoCore-API/api/Common.h",
+    "third_party/ArduinoCore-API/api/Compat.h",
+    "third_party/ArduinoCore-API/api/DMAPool.h",
+    "third_party/ArduinoCore-API/api/HardwareCAN.h",
+    "third_party/ArduinoCore-API/api/HardwareI2C.h",
+    "third_party/ArduinoCore-API/api/HardwareSPI.h",
+    "third_party/ArduinoCore-API/api/HardwareSerial.h",
+    "third_party/ArduinoCore-API/api/IPAddress.cpp",
+    "third_party/ArduinoCore-API/api/IPAddress.h",
+    "third_party/ArduinoCore-API/api/Interrupts.h",
+    "third_party/ArduinoCore-API/api/PluggableUSB.cpp",
+    "third_party/ArduinoCore-API/api/PluggableUSB.h",
+    "third_party/ArduinoCore-API/api/Print.cpp",
+    "third_party/ArduinoCore-API/api/Print.h",
+    "third_party/ArduinoCore-API/api/Printable.h",
+    "third_party/ArduinoCore-API/api/RingBuffer.h",
+    "third_party/ArduinoCore-API/api/Server.h",
+    "third_party/ArduinoCore-API/api/Stream.cpp",
+    "third_party/ArduinoCore-API/api/Stream.h",
+    "third_party/ArduinoCore-API/api/String.cpp",
+    "third_party/ArduinoCore-API/api/String.h",
+    "third_party/ArduinoCore-API/api/USBAPI.h",
+    "third_party/ArduinoCore-API/api/Udp.h",
+    "third_party/ArduinoCore-API/api/WCharacter.h",
+    "third_party/ArduinoCore-API/api/deprecated-avr-comp/avr/dtostrf.c.impl",
+    "third_party/ArduinoCore-API/api/deprecated-avr-comp/avr/dtostrf.h",
+    "third_party/ArduinoCore-API/api/deprecated-avr-comp/avr/interrupt.h",
+    "third_party/ArduinoCore-API/api/deprecated-avr-comp/avr/pgmspace.h",
+    "third_party/ArduinoCore-API/api/deprecated/Client.h",
+    "third_party/ArduinoCore-API/api/deprecated/HardwareSerial.h",
+    "third_party/ArduinoCore-API/api/deprecated/IPAddress.h",
+    "third_party/ArduinoCore-API/api/deprecated/Print.h",
+    "third_party/ArduinoCore-API/api/deprecated/Printable.h",
+    "third_party/ArduinoCore-API/api/deprecated/Server.h",
+    "third_party/ArduinoCore-API/api/deprecated/Stream.h",
+    "third_party/ArduinoCore-API/api/deprecated/Udp.h",
+    "third_party/ArduinoCore-API/api/deprecated/WString.h",
+    "third_party/ArduinoCore-API/api/itoa.h",
+    "third_party/THIRD_PARTY_NOTICES.md"
+  ],
+  "protected_path_count": 147,
+  "protected_bytes_unchanged": true,
+  "non_document_git_entries_sha256": "b085c20fc210595e1fd3400140fb8193792f023602fc1f796e0ae0dad54b791a",
+  "non_document_git_entries": {
+    ".clang-format": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7c1cd1148598f783f2abd2cad4c0c734685dc875"
+    },
+    ".gitattributes": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0c3bd33657de9ed9e4910d937e71f854763df52a"
+    },
+    ".github/workflows/m12-nu54dk-hil.yml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "260a67f186450c33267db8673b037ed8f91badaa"
+    },
+    ".github/workflows/m12-reproducible-build.yml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "cc314df8bf7af72ffc18ab8125f062dee59f965b"
+    },
+    ".github/workflows/m12-software-gates.yml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6f0d7f58d3876368fba8305c14ce0f8e0c8f211e"
+    },
+    ".gitignore": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3663ba90ba7268d0031dd862271606780103de87"
+    },
+    ".gitmodules": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fd933a01fe7094c0c940ac46e048567237775e7a"
+    },
+    "LICENSE": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e49717d585505a540e7f5df63b5721181078b890"
+    },
+    "board_package/NU54DK_Zephyr_DTS": {
+      "mode": "160000",
+      "kind": "commit",
+      "oid": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3"
+    },
+    "boards.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ef5bdd798519817409598fe68af3e36cb0633e97"
+    },
+    "cores/arduino/AnalogFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1388d6284486c6b06c16d88ce8686f02eb378c57"
+    },
+    "cores/arduino/Arduino.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "48e6ff24cf3c8570b6daaed6a75e19c9911847ac"
+    },
+    "cores/arduino/EventFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "611e4278878b641286203d65ee6f942a13f3a5c2"
+    },
+    "cores/arduino/HardwareSerial.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1492892bc8126e9e3a2dbee4cfa55364b6d477e2"
+    },
+    "cores/arduino/HardwareSerial.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1292cc50ce6395512d048907e03e3ae860a22370"
+    },
+    "cores/arduino/NUCODEPeripheral.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e1da5d71dfdb4b5ba6687f9f0d31fde8b8fda614"
+    },
+    "cores/arduino/Print.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "285064492f55abe9afbc473c6ce6de394b78f0ee"
+    },
+    "cores/arduino/Printable.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "37df7ec0cb7cae77c4d1c5d649be133ed9aa8b43"
+    },
+    "cores/arduino/SPI.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b1d2847f249fd683562bdb03df0817535ecc5fce"
+    },
+    "cores/arduino/SerialFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c236cc636dec21378b7613fe7d9a17f62b0a853c"
+    },
+    "cores/arduino/SpimFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c09e9535b25b6038dc06b15cbbd6e04f36d6896a"
+    },
+    "cores/arduino/SpisFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f3990c4af20cf2723a4d4042bde4b34886e262d4"
+    },
+    "cores/arduino/Stream.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ccac8c3e8c6007f09c083e6935f7ad22bf7d463e"
+    },
+    "cores/arduino/StreamFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a7f88d1646202280fd849e7f58a24f2d239600bd"
+    },
+    "cores/arduino/SystemFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5ee49913e88a0ff218ba6c85aafc3bac149bd984"
+    },
+    "cores/arduino/TwimFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "585fa8469d352e8cd391c53cdfb3e0b291f32852"
+    },
+    "cores/arduino/TwisFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "98cee32cac2e41cfecac571fc608f72c02aa0646"
+    },
+    "cores/arduino/UarteFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "abeceb4819cf69f16ceb1da966ba11cbefce7df8"
+    },
+    "cores/arduino/WString.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "68ea51abace54fafaa455956ffcda1151ec4c55d"
+    },
+    "cores/arduino/Wire.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "58c7126a44f4bc58a5122229a79d8771e3c6cb7f"
+    },
+    "cores/arduino/api_compat.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "562496b8d0a4a51aa57fc1ef1ecc3ba51bb5f4d9"
+    },
+    "cores/arduino/diagnostics.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "65c28b1a9b4fac7843c67d780698d4f3dce65ecb"
+    },
+    "cores/arduino/generated/PeripheralInventory.inc": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "edca8d8862c4b31e2765476e987adda1d2f349e6"
+    },
+    "cores/arduino/internal/.gitkeep": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8b137891791fe96927ad78e64b0aad7bded08bdc"
+    },
+    "cores/arduino/internal/AnalogBackend.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4e97c4b9a05267de81ce818effa961acd216839a"
+    },
+    "cores/arduino/internal/AnalogRuntimeMath.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6c8da5bdea56462b0bf6375f9f32eb253a7cdd4f"
+    },
+    "cores/arduino/internal/ArduinoRuntime.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b2a36bb35bb07ff1b7837e6f321371a278dd9518"
+    },
+    "cores/arduino/internal/ArduinoUtility.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "42b9faf34d0084b557217b23ab83f18724d467f2"
+    },
+    "cores/arduino/internal/CoreIdentity.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b0a573f9a14ece59659638efab0dacd23f165ee5"
+    },
+    "cores/arduino/internal/FabricSynchronization.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3368e88e586114523a7de74db694822b5f13424a"
+    },
+    "cores/arduino/internal/IoResourceManager.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a704c8c8b58b7c1d3934b591ac3d9c2dfee4d232"
+    },
+    "cores/arduino/internal/Nu54dkIoResources.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fc42af3831c3aa47b35eae8f5cd34dfa29b1a6e3"
+    },
+    "cores/arduino/internal/PinHandover.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2955a4904e0bdc5fc895213a5a65ed09c6a03693"
+    },
+    "cores/arduino/internal/PwmRuntime.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2f8456caf75e7e36f06220c5884deadbf1dd90d8"
+    },
+    "cores/arduino/internal/PwmRuntime.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ade631e3e993337cbf8c273edda46a03510edaa7"
+    },
+    "cores/arduino/internal/RandomMath.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d21a821bdaa214c1808481a6f880fa78022debb2"
+    },
+    "cores/arduino/internal/RuntimePeripheralRoute.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "17d3af96d8bf829ee6c57c4811b980662da7f9ed"
+    },
+    "cores/arduino/internal/RuntimePeripheralRoute.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ef55cae18c36289ad9590b08022d55809e1271a5"
+    },
+    "cores/arduino/internal/RuntimePeripheralRouteRecovery.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "777dd48f9112114d39bb76df3c0696ebdaf43ca3"
+    },
+    "cores/arduino/internal/SPIBackend.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ae9395e67a6a2b478a2fdc94122428be11dc7dc5"
+    },
+    "cores/arduino/internal/SerialBackend.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "aeec72fdd41d70db01ba0e313acd625937287ffd"
+    },
+    "cores/arduino/internal/SerialFabricBackend.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "45c969be104ad2384419b851596f508798feb908"
+    },
+    "cores/arduino/internal/SpiInterruptMask.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "71b0594a07568e5ddc3c1ffeb95652e0ccb261ee"
+    },
+    "cores/arduino/internal/TimeBackend.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9fe321909289b36abcec3b834091df0d1ce91d47"
+    },
+    "cores/arduino/internal/TimeMath.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4325186a883480092727cf299bb7ef224fe425b2"
+    },
+    "cores/arduino/internal/WireBackend.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c611829410ef725af2d487fc9208ce7b7caabb53"
+    },
+    "cores/arduino/internal/analog/AnalogFabricInternal.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "dd0d3de1fc0b4e27c03cf7d41d38de3aaff8da66"
+    },
+    "cores/arduino/internal/analog/PwmSequenceFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c359934fb3d9df05975155082d1699a330a5c191"
+    },
+    "cores/arduino/internal/analog/SaadcFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ed6b8cba8886a34614b095f1c289d32948c99dd2"
+    },
+    "cores/arduino/internal/dma_count.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "902f0055abd9072da302310b9776aaad342e2674"
+    },
+    "cores/arduino/internal/dma_memory.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "52431a1ecdccd813b66a6ffa86bea48ea05ae92d"
+    },
+    "cores/arduino/internal/event/DppiFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ffd8522018f1ebf9794a0cac0ee32b9431f0e8a3"
+    },
+    "cores/arduino/internal/event/EguFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "400b4ca3c9686765434b9b1277985a44dce94016"
+    },
+    "cores/arduino/internal/event/EventFabricInternal.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7ec696dbeace4e1ae1275db49cf5aa308c157129"
+    },
+    "cores/arduino/internal/event/EventFabricRegistry.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c498c72d9083221775d6ede7ecfed8ba7d9a0108"
+    },
+    "cores/arduino/internal/event/GpioteFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f7606b98f42e745a35c528ff98b0beb0549645c3"
+    },
+    "cores/arduino/internal/event/PpibFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7a113da537308308cdd492969387b580584ccc97"
+    },
+    "cores/arduino/internal/event/TimerFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "56e2c9118741be67559e491a5d4779e5ec588f78"
+    },
+    "cores/arduino/internal/io_resource_manager.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b59dd950f8d79c1b0ae5f43771c03e1fba018653"
+    },
+    "cores/arduino/internal/pin_description.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3032c58cae92ae0d3cc9ea610a40a8ddc97ae8ea"
+    },
+    "cores/arduino/internal/qdec_sampling.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "827745048221e3e059f78393fc3618e2eec38844"
+    },
+    "cores/arduino/internal/resource/IoResourcePolicy.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6e0d442219345b3ca28cbf03a4b5f33310c9ac5f"
+    },
+    "cores/arduino/internal/resource/IoResourceTable.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c19d9b3ec0f60234bf0b26b51d294a03806fb6df"
+    },
+    "cores/arduino/internal/resource/IoResourceTable.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "418f3006294e162100fabbeba184a3193fb71017"
+    },
+    "cores/arduino/internal/runtime_scheduler.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4c98d602e77d214c8a8ce625261cc9700bbd8378"
+    },
+    "cores/arduino/internal/serial/SerialFabricInternal.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4e381872248da1406397e1cff7463326f1648862"
+    },
+    "cores/arduino/internal/serial/SerialFabricLifecycle.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e92c63adbabf03a85c7a366e8c2aeacd0224ec53"
+    },
+    "cores/arduino/internal/serial/SerialFabricRegistry.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "858a28b0442c06e34120e0655825edbb8816de88"
+    },
+    "cores/arduino/internal/spi/SpiBackendOperations.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "92d0609a663738021d8a7047034f84fa4a4e86c0"
+    },
+    "cores/arduino/internal/spi/SpiZephyrBackend.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ccd008a15e32d7c1718a66a2338ac8dee706bf77"
+    },
+    "cores/arduino/internal/stream/I2sFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "330d6379d36493b54020c66bd89691dfe9ba9277"
+    },
+    "cores/arduino/internal/stream/PdmFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "386f116bb1bcf87a0c71390b0295d9028b54282a"
+    },
+    "cores/arduino/internal/stream/QdecFabric.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4f919050e844b7e41b67490f9d02776b84d771a5"
+    },
+    "cores/arduino/internal/stream/StreamFabricInternal.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7aa6671d8c21187d446a165feb3736d4d7eb67de"
+    },
+    "cores/arduino/internal/time_backend_nrf54.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "39cb7d65728228191f5307ab540e6ae3733d830f"
+    },
+    "cores/arduino/internal/timer_clock.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e4026835d0b01ecfbc67655091bb0aff12ef1df9"
+    },
+    "cores/arduino/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "20ecc6ea2fb661b0a350790f7fb92c77874c176e"
+    },
+    "cores/arduino/nucode/AnalogFabric.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "666b19812ed5628469321d7c60447b74387ac652"
+    },
+    "cores/arduino/nucode/Diagnostics.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "52c84f09667a9cfa004f905370cc21000b1ab89b"
+    },
+    "cores/arduino/nucode/EventFabric.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e1b9876d1e63d3ff6bffdae4c3ca7f95b5459fdf"
+    },
+    "cores/arduino/nucode/PeripheralInventory.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0149c1feba838aaab288cac0544ddefa934cbd5e"
+    },
+    "cores/arduino/nucode/SerialFabric.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "593e09f269d98d79c90377058ef0ab83a2fa2e74"
+    },
+    "cores/arduino/nucode/StreamFabric.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c22f10ea9b89131339f0a97283b4356a2656cbe6"
+    },
+    "cores/arduino/nucode/SystemFabric.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "01944de51aede3692eb45b6835dac1215a4dc0fb"
+    },
+    "cores/arduino/peripheral_inventory.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "cf143485fb5bc93148eb0e32dee477ed532b912a"
+    },
+    "cores/arduino/peripheral_stubs.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bd4eb5de43478364001fd294d6e620c69efc5166"
+    },
+    "cores/arduino/wiring_analog.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c636355bd9427836c6f1661d13a7738073655889"
+    },
+    "cores/arduino/wiring_digital.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7e19f3e094d4709750fb026b00d8d17aa94c688d"
+    },
+    "cores/arduino/wiring_interrupt.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4e73cf57bf3dfdd849f629624faa5e6789151f37"
+    },
+    "cores/arduino/wiring_pulse_shift.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "37408eb90e608aff3fc045ff669142811185871e"
+    },
+    "cores/arduino/wiring_random.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "85c84616335251329a15ca8da614c0c0adaee18c"
+    },
+    "cores/arduino/wiring_time.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6206133fa46288878b01183644879abad3917f7b"
+    },
+    "coverage/ncs-v3.4.0/generated/summary.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c04fef4d579f0c80273118eff45c3ac765e51f5d"
+    },
+    "coverage/ncs-v3.4.0/manifest.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0212e94dcf70384906ada89ef389adca4030bbe2"
+    },
+    "coverage/ncs-v3.4.0/records/arduino.adafruit-lsm6ds.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ca591fc4e15218ab23178f7f28fe4d74351e688d"
+    },
+    "coverage/ncs-v3.4.0/records/board.system.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "30459d740153191a1359eaa0e0445950ea2722e2"
+    },
+    "coverage/ncs-v3.4.0/records/nrf.802154-phy-test.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7aef5053e98c5a1d5fdaf626a721c48b3baad56e"
+    },
+    "coverage/ncs-v3.4.0/records/nrf.ble-nus.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8b05d9af6284e46a946ae060df33b8a0dd16505e"
+    },
+    "coverage/ncs-v3.4.0/records/nrf.crypto-rng.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1e0094c12a96901c40de343d6f7a6fd8d52351a7"
+    },
+    "coverage/ncs-v3.4.0/records/nrf.matter-template.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a7b65f8ef15b7b8a91de254ca9ecaab7bb618cdf"
+    },
+    "coverage/ncs-v3.4.0/records/nrf.openthread-cli.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fd1c3d900b85bf665524bdeafedb1e7c65126c62"
+    },
+    "coverage/ncs-v3.4.0/records/zephyr.sensor-direct.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "aec729dce68d2add46a50a9a311a0ddbd9eb36a3"
+    },
+    "coverage/ncs-v3.4.0/records/zephyr.settings-storage.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a366c4a496fef7e3170b967e9c109b399dd088bf"
+    },
+    "dts/bindings/misc/nucode,arduino-adc-input.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "17442b0aa44116972339790a12e24292df048c3d"
+    },
+    "dts/bindings/misc/nucode,arduino-connector-gpios.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "526e6e3d851e53260c16fea67385f295617032dc"
+    },
+    "dts/bindings/misc/nucode,arduino-pin-map.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b20e09f6798501ae12ca3dfe70f81ed12e24f8c4"
+    },
+    "dts/bindings/vendor-prefixes.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "41fb5e1d5e123ab00825575746732b8e4baab6ef"
+    },
+    "dts/nucode/nu54dk-arduino-connectors.dtsi": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "66964919a6fa84f8212630d6f0dfec689f879c34"
+    },
+    "dts/nucode/nu54dk-arduino-pin-metadata.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "000a9e6a33aa5fa07d31513ccf5680afe43088a8"
+    },
+    "dts/nucode/nu54dk-arduino-pins.dtsi": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ba52ecf74168db36fd1bb715d62c5f4b66678a06"
+    },
+    "dts/nucode/nu54dk-arduino-runtime.dtsi": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c4bcffae1e49311b12e1b0617eb2cfda8460f2a5"
+    },
+    "dts/nucode/nu54dk-arduino-storage.dtsi": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "de43aacb73af761ab6aab153be0faa7ffa8db8b6"
+    },
+    "dts/nucode/nu54dk-lfxo-external-caps.dtsi": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d75c8e4325bc49a3733959cf1c14aaf5800dbdda"
+    },
+    "libraries/.gitkeep": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8b137891791fe96927ad78e64b0aad7bded08bdc"
+    },
+    "libraries/EEPROM/examples/EEPROMPersistence/EEPROMPersistence.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "619df44113be5716738005ba1f304ab4cd8a6754"
+    },
+    "libraries/EEPROM/library.properties": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3f667afd1cccd3eb925f1ed356ea0da6de5de3aa"
+    },
+    "libraries/EEPROM/src/EEPROM.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "823c9bc42e1b637aff58a7076fe3b2750f0a2176"
+    },
+    "libraries/EEPROM/src/EEPROM.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "557720b2013fcd3bd2d86d27cf95944d815432a5"
+    },
+    "libraries/EEPROM/src/internal/EEPROMInternal.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f7a018ebed43a4dc6c1fd18f1e6454a216a3e388"
+    },
+    "libraries/EEPROM/src/internal/EEPROMRecord.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "44e190986390d90b9b000ef13239ea4e2e78a523"
+    },
+    "libraries/EEPROM/src/internal/EEPROMRecord.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2b695da88952d34b253253be297b46a4bc24a416"
+    },
+    "libraries/EEPROM/src/internal/EEPROMSettings.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "937ae72a41a092d6fb8d048e7d7908c6cc040f7c"
+    },
+    "libraries/EEPROM/zephyr/eeprom.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "273675ccb895ac6685f26e632de0b103efc6b2cd"
+    },
+    "libraries/EEPROM/zephyr/feature.yml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d5325d1a33672d5e160f38197f9714c7c46546a9"
+    },
+    "libraries/LittleFS/examples/LittleFSPersistence/LittleFSPersistence.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fdc1e229782f9e29b28e314d247c9f51a55cdde7"
+    },
+    "libraries/LittleFS/library.properties": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4f16e56516ddcbe80083ee772e4a29bc34329b98"
+    },
+    "libraries/LittleFS/src/FS.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "48154811bacea72c1d961999d3711b11a3a77247"
+    },
+    "libraries/LittleFS/src/FS.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "50c04b94e46361b914e2f36fe420e519d94f2654"
+    },
+    "libraries/LittleFS/src/LittleFS.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "78d92a9bc4990630f608e7e060458c2a663ab0ee"
+    },
+    "libraries/LittleFS/src/LittleFS.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "439d404e54df1f1cd110f1a4198f8cc55ae21ace"
+    },
+    "libraries/LittleFS/src/internal/File.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "75ca07c33839fb1cbe79601ba9a1c316671952fe"
+    },
+    "libraries/LittleFS/src/internal/FilePaths.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "445d60f914803052eb543bb01e4405680b408b0d"
+    },
+    "libraries/LittleFS/src/internal/FileSlots.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c00996158ea7d807a78aee829f57eaa4ab21287c"
+    },
+    "libraries/LittleFS/src/internal/StorageInternal.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "970668c0cf4e5f3ca5150006cb9dc40bb59aec7b"
+    },
+    "libraries/LittleFS/zephyr/feature.yml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8375ca24b18cb9a80b6b9596e6799e117344f855"
+    },
+    "libraries/LittleFS/zephyr/littlefs.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "69e44beb319b26b51e2cf8d623288d5da1116198"
+    },
+    "libraries/NUCODE_BLE/examples/CustomGattCentral/CustomGattCentral.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6de2d92ee636edf65ab4ba6741be9c78af6a2fcc"
+    },
+    "libraries/NUCODE_BLE/examples/CustomGattPeripheral/CustomGattPeripheral.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1da2539f147068edd053b316b87a9b896cadf06f"
+    },
+    "libraries/NUCODE_BLE/examples/GAPCentral/GAPCentral.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "76888c4a2a18d7384f24cacc56d58499eace6742"
+    },
+    "libraries/NUCODE_BLE/examples/GAPPeripheral/GAPPeripheral.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6e1fbceebc0be62ff829ed4f1a95293db54c5d95"
+    },
+    "libraries/NUCODE_BLE/examples/NUSCentral/NUSCentral.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0a17bc0965e49ee6cd3dcf9e292f59cc4222a070"
+    },
+    "libraries/NUCODE_BLE/examples/NUSPeripheral/NUSPeripheral.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e37a9d23b4006c77fd9be6222e3ae8b31d7e4227"
+    },
+    "libraries/NUCODE_BLE/library.properties": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c6117a37356b98f91a00c0bdcbc51ce7c7866247"
+    },
+    "libraries/NUCODE_BLE/src/NUCODE_BLE.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4ac1b81bb57c4354d7d2abeda94dbb7a6a7b99d7"
+    },
+    "libraries/NUCODE_BLE/src/NUCODE_BLE.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3857a8c5c2444c7f55c1b6b429deccbe4aa52a08"
+    },
+    "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "34807ee809af7200110f9fbf88ab2537a1b02578"
+    },
+    "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e2b449d7c8cc802b6af1da14b0b441312061b2ab"
+    },
+    "libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9eb3654aa728a35b7cb85c5334a7059e6e9506b9"
+    },
+    "libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c2cff0fdbc3e2017e13836dd04b73edf38e77b20"
+    },
+    "libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Internal.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "95caf4147beb8dc91fc75a267a7b7f263b4d75d2"
+    },
+    "libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0ee505fb49856de54f57d55a191be176d5cfd583"
+    },
+    "libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "353204de9e573cbcd606b9e0669160c416af6ee0"
+    },
+    "libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ed2af3b74e301f26602ee39c1cd6fcc5f730067d"
+    },
+    "libraries/NUCODE_BLE/src/internal/gap/GapInternal.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e34545e4c44acbda2d308c6578a4cff5106e275f"
+    },
+    "libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7be42d3070cbebc7a821cbbbce03b77d25d38634"
+    },
+    "libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "51f46953a9a4e5d84878b787c4de332a654a9070"
+    },
+    "libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "05e656fb11173e7a1e5a826dafd6a0b38b0d17d1"
+    },
+    "libraries/NUCODE_BLE/src/internal/gatt/GattDatabase.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d04db3aa3a4982bd244f9bbcb40c122245823eb4"
+    },
+    "libraries/NUCODE_BLE/src/internal/gatt/GattInternal.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "40d42a2259a989fd37447e4268c0da05e6ec5778"
+    },
+    "libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "476ba358279e69410468f9c95f1529daba1c7591"
+    },
+    "libraries/NUCODE_BLE/zephyr/ble-nus.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c5838cfad07baf514d5e0d77c689a5f270f347f2"
+    },
+    "libraries/NUCODE_BLE/zephyr/feature.yml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5d9c83c6c04d07843f4f07df998edb8a89b197b5"
+    },
+    "libraries/NUCODE_BLE_Security/examples/SecureKeyboard/SecureKeyboard.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4663fac64b4adaae8078ce922e627b76d853fc87"
+    },
+    "libraries/NUCODE_BLE_Security/library.properties": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8f6b9b6a6381e4004949839b8a00afe9e70fccfd"
+    },
+    "libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "27f7244a7438e943d4f2e1c9c6af96fe576b2f09"
+    },
+    "libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "98b4813b8856587b8e93514afb6975188bb9a2c1"
+    },
+    "libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_HidsBackend.c": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0ab2f65071fafaebf8994922aa95b2790b257061"
+    },
+    "libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_HidsBackend.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a793cc6c80cba3950c42b335c46ce511da38afd7"
+    },
+    "libraries/NUCODE_BLE_Security/src/internal/security/SecurityBattery.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "56b361cca8b65514861b40c304aea91ecead527f"
+    },
+    "libraries/NUCODE_BLE_Security/src/internal/security/SecurityBond.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "586e9ba94192cef028fb12623f81523f6688e568"
+    },
+    "libraries/NUCODE_BLE_Security/src/internal/security/SecurityDeviceInformation.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4d3e0578680bdf414abe8f9e6a79182f6fceabab"
+    },
+    "libraries/NUCODE_BLE_Security/src/internal/security/SecurityHid.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "88f2970a99576614cdb43a74606cf83444717ad9"
+    },
+    "libraries/NUCODE_BLE_Security/src/internal/security/SecurityInternal.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b250ad6b54a854e3d053234d855682648c77eeca"
+    },
+    "libraries/NUCODE_BLE_Security/src/internal/security/SecurityPairing.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d93848558d6a341c38d895c8d660664bb1011933"
+    },
+    "libraries/NUCODE_BLE_Security/zephyr/ble-security.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "33083ab765904af1274e487e23006e3c6e9245d8"
+    },
+    "libraries/NUCODE_BLE_Security/zephyr/feature.yml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9231bb6ec769a1c6fb468dc815aad5a47457316a"
+    },
+    "libraries/NUCODE_NU54DK/examples/AnalogChannels/AnalogChannels.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f45f8dc7bc8dfce611fa162f2057f9f23f2862db"
+    },
+    "libraries/NUCODE_NU54DK/examples/AnalogReadA0/AnalogReadA0.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d5c06cd71c058d795e536ee41b89470562233084"
+    },
+    "libraries/NUCODE_NU54DK/examples/AnalogResolution/AnalogResolution.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7b97a23d0fc467e436da0550631f667f113e020f"
+    },
+    "libraries/NUCODE_NU54DK/examples/Blink/Blink.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "044e16bf38ea84dc874d9f881a3c399b08014436"
+    },
+    "libraries/NUCODE_NU54DK/examples/BoardInfo/BoardInfo.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6f20c0752ba922366bec5d97def58de3289df9e0"
+    },
+    "libraries/NUCODE_NU54DK/examples/CounterAlarm/CounterAlarm.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e42b19b0d4f3014b99065fa41ec9cbb181fc71bd"
+    },
+    "libraries/NUCODE_NU54DK/examples/DynamicPWM/DynamicPWM.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "37371c77e332d623ac2515aaa2a8fda332bb8fe6"
+    },
+    "libraries/NUCODE_NU54DK/examples/InterruptButton/InterruptButton.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "71787f4de6e243df2e61a0cc4be55d3ccbada841"
+    },
+    "libraries/NUCODE_NU54DK/examples/PWMFade/PWMFade.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a8376cc79f528173115585d7e69ddfdad2a67484"
+    },
+    "libraries/NUCODE_NU54DK/examples/SPI00RuntimePins/SPI00RuntimePins.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "67fb7c0dee489d9a05d1117eb8eac6e96f69fa5c"
+    },
+    "libraries/NUCODE_NU54DK/examples/Serial1RuntimePins/Serial1RuntimePins.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4c43423fd16b92f687e2d8b49c8619b9cc2158ca"
+    },
+    "libraries/NUCODE_NU54DK/examples/SerialEcho/SerialEcho.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "70c40c0ecbcc7d0d8fc64b9faacfa1db3ae57b36"
+    },
+    "libraries/NUCODE_NU54DK/examples/SettingsStorage/SettingsStorage.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a25981332283ca2c2b100f49e3c2da50e7a86501"
+    },
+    "libraries/NUCODE_NU54DK/examples/SystemOffWake/SystemOffWake.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4d184059a83ea69cef24b0d953e1d05138c79538"
+    },
+    "libraries/NUCODE_NU54DK/examples/ToneOutput/ToneOutput.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "63bd3097384e5bca026e0a3db62fc4cbb2a470f2"
+    },
+    "libraries/NUCODE_NU54DK/examples/WatchdogBasic/WatchdogBasic.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c8dd2e709d6d2d1ea4d2468de581c88284c992a2"
+    },
+    "libraries/NUCODE_NU54DK/examples/WireRuntimePins/WireRuntimePins.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "94c52e0364738f559edc098a6e415189d0376a87"
+    },
+    "libraries/NUCODE_NU54DK/library.properties": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "424c3daf7822d67b89ea974695e9cfeb85f0e6ca"
+    },
+    "libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "01798c8b4a2f07042ae3c483c14022eb90d71af8"
+    },
+    "libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1ba7407747b81b2959fd8f3bf5a405233b5c9d16"
+    },
+    "libraries/NUCODE_NU54DK/zephyr/board-system.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "984ae05e457b4f6e85b96c1b6d9a9168dd01d65d"
+    },
+    "libraries/NUCODE_NU54DK/zephyr/board-system.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "451d4988f5dc1d0c922faf8f1d3d773408e6c88e"
+    },
+    "libraries/NUCODE_NU54DK/zephyr/feature.yml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a2cbbd6ae26368d6cd733ae4c44e6c5e7721bb64"
+    },
+    "libraries/SPI/examples/SPITransaction/SPITransaction.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "97185061c2234c3810054854d50e47e25ac9541a"
+    },
+    "libraries/SPI/library.properties": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d5a9b81df012000a638f22abb9a37be7cc421e8b"
+    },
+    "libraries/SPI/src/SPI.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "54f5e698c2e70cd5cebfc42391509b237b980ed9"
+    },
+    "libraries/SPI/zephyr/feature.yml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "63e37afbb02a4a389c7db634eb8e77123414f016"
+    },
+    "libraries/Servo/examples/Sweep/Sweep.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e2437acd2f6ceaa331a5b98edd6cbcccde4f9f1c"
+    },
+    "libraries/Servo/library.properties": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "cbfbd44e4c35e71c15d7665ae6b2393055525bac"
+    },
+    "libraries/Servo/src/Servo.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f0c0c2f7f434432748ca222c79e3b4a4ca2b4b64"
+    },
+    "libraries/Servo/src/Servo.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "48f77970558725611f204555bd6415a3d392834e"
+    },
+    "libraries/Servo/zephyr/feature.yml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8162567746bbc27d5c3b4c2ef41ff9804282e347"
+    },
+    "libraries/Servo/zephyr/servo.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "af2a0602362e3f5ba99db190bbdda0444078d091"
+    },
+    "libraries/Wire/examples/WirePmicId/WirePmicId.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5237cc207afa526330a7b9ff3daaf5f17570182d"
+    },
+    "libraries/Wire/library.properties": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7f1cbbe69d868e165470eb9a0dd2ad2c4d98dc69"
+    },
+    "libraries/Wire/src/Wire.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "663edec606feda82d7bc89fdeb766e40062b35ee"
+    },
+    "libraries/Wire/zephyr/feature.yml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0bc071d695786677638cd390cbc1e8b200d09163"
+    },
+    "package_nucode_nu54dk_index.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f5b8987be29b0a7b223d084506c0df2d1253cd82"
+    },
+    "package_nucode_nu54dk_preview_index.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "707f2d663d8e181f5cbe2e4750dfd7a94a636b39"
+    },
+    "packaging/boards-manager/.gitkeep": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8b137891791fe96927ad78e64b0aad7bded08bdc"
+    },
+    "packaging/boards-manager/build-preview.ps1": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c43bc798f85b8047e876355c8aa6fb5b48fb072f"
+    },
+    "packaging/boards-manager/build-stable.ps1": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1601a18e520f370e9d4ab0d87c1b8d59893edb2f"
+    },
+    "packaging/boards-manager/nu54_package.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "33c96ef3fa0ff58e37689a0e4f2e705ab282e0f7"
+    },
+    "packaging/boards-manager/nu54_package_impl/__init__.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "63af8b172752d67829f7ae99d50c0bb1465279e5"
+    },
+    "packaging/boards-manager/nu54_package_impl/archive.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7be3da64481cce6e307f2bc5824eb219c52f860c"
+    },
+    "packaging/boards-manager/nu54_package_impl/build.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e2ea6173d714242a55fbd98e51268b469b89b42c"
+    },
+    "packaging/boards-manager/nu54_package_impl/channels.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2daf828cc845c639f3b0ece43512d62fba831e83"
+    },
+    "packaging/boards-manager/nu54_package_impl/cli.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5cbb9712d8537b419c841efdca8cf7480a9aea30"
+    },
+    "packaging/boards-manager/nu54_package_impl/index.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7cb3d38dc9442b8b4757fd16d64bc4f1a54a533b"
+    },
+    "packaging/boards-manager/nu54_package_impl/inputs.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "832d56ec98139c9d0ab4f7ed7c7169e97a6de321"
+    },
+    "packaging/boards-manager/nu54_package_impl/licenses.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f3e58952b87d76c52e4b35ba13f62c539ec519bf"
+    },
+    "packaging/boards-manager/nu54_package_impl/manifest.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "46db6df3954ef1600df62957769253428727b397"
+    },
+    "packaging/boards-manager/nu54_package_impl/model.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ce5cd392ea04928b569c4445d3f5754cae00eafb"
+    },
+    "packaging/boards-manager/nu54_package_impl/sbom.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "39f932e634d6c08b88347ef00e86110ab39268a6"
+    },
+    "packaging/boards-manager/nu54_package_impl/serialization.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2554964d449844e7a514aef80c6559db4fe83fdc"
+    },
+    "packaging/boards-manager/nu54_package_impl/validation.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1aad03ddffda40608b8ac1de3366351215408dcd"
+    },
+    "platform.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "da454fed29d186c0083c8552fdcc265d6a778c52"
+    },
+    "post_install.bat": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1e4489e122ec17b9a1c17de882c67fe5d00ba619"
+    },
+    "samples/zephyr/analog_read_a0/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "eb857725b0020da902eed612dd509f302802a77c"
+    },
+    "samples/zephyr/analog_read_a0/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7e685d6ec8688aa9672ebbaf8ec442bee20dce5a"
+    },
+    "samples/zephyr/analog_read_a0/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b1d3a2d4867cf49355c6865a20b01c04b74d8be0"
+    },
+    "samples/zephyr/analog_read_a0/src/analog_read_a0.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "64834860d75ca436df4c2cde4c14bdcb271e07d7"
+    },
+    "samples/zephyr/blink/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a8fcb6205d9841eced986373c9a0d20b94abbf9d"
+    },
+    "samples/zephyr/blink/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9d9daef6803b5a18f5c361f6737cf2e536a75ba9"
+    },
+    "samples/zephyr/blink/src/Blink.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "54dbc8488b6d226a988ee788bc4df926a3643ab8"
+    },
+    "samples/zephyr/gpio_input_smoke/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "dc80c4a0145f7078cf606a90f592f53642cecc9a"
+    },
+    "samples/zephyr/gpio_input_smoke/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9d9daef6803b5a18f5c361f6737cf2e536a75ba9"
+    },
+    "samples/zephyr/gpio_input_smoke/src/gpio_input_smoke.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "923c7acb305d0d76d4312b09184b305d9cd77d4e"
+    },
+    "samples/zephyr/interrupt_button/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5b801bd94ca3284c32a992e1337fd75b7656226d"
+    },
+    "samples/zephyr/interrupt_button/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c46f649835874ed5cfcc1c9bb98cd5793cca356f"
+    },
+    "samples/zephyr/interrupt_button/src/interrupt_button.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5f4b6dcdeb8677a855a5dc58ced966533766723c"
+    },
+    "samples/zephyr/pwm_fade/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1078b6b898b628d869d790840891169d20de8025"
+    },
+    "samples/zephyr/pwm_fade/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4168f355a47fc0fe96d1ffdf085c3b06a342d2b7"
+    },
+    "samples/zephyr/pwm_fade/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "06dfdb9d1f51301f9e9e53fe5612a5b5d3a77bc9"
+    },
+    "samples/zephyr/pwm_fade/src/pwm_fade.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "64fd5faca25aa149f1969b386625b84d9fe8521c"
+    },
+    "samples/zephyr/runtime_smoke/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "35ca3a11408a554c786441ba10e277545809cde4"
+    },
+    "samples/zephyr/runtime_smoke/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bda53905704080b1524149fd9d9cb8646916d21d"
+    },
+    "samples/zephyr/runtime_smoke/src/runtime_smoke.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d116431926c641766116a64f1d6662c354258935"
+    },
+    "samples/zephyr/runtime_smoke/src/serial_event_probe.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bc0e9b1ada5aa91962017f05075cd02d9a921af4"
+    },
+    "samples/zephyr/runtime_timing/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "089f800717aa1ac418a2f3eb2fd66873e949217c"
+    },
+    "samples/zephyr/runtime_timing/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "856bf4f22bb0f76b06b10496306a0eb996491029"
+    },
+    "samples/zephyr/runtime_timing/src/runtime_timing.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "66dbe8274b738cd55ad29b06af062b39eaef091d"
+    },
+    "samples/zephyr/serial_echo/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6a4d943df807d264de4a23f3597bf58172cb3484"
+    },
+    "samples/zephyr/serial_echo/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9c7573246c45cbedc16f21e342524ae4b5dca253"
+    },
+    "samples/zephyr/serial_echo/src/serial_echo.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7a8a411a70ff46918b7b33d404c2bdef198c32aa"
+    },
+    "samples/zephyr/spi_transaction/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "93b6c799e6d8efbd3a55424bc282d12904cda30d"
+    },
+    "samples/zephyr/spi_transaction/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "64a2ee9e376be114ccf2f8f28d250158e1cedb14"
+    },
+    "samples/zephyr/spi_transaction/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7296c7b525ff8fb5b5a8291afb417e834b43341f"
+    },
+    "samples/zephyr/spi_transaction/src/spi_transaction.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4f5d1b358b8cd6d6071ed58989ea2b07f7d05691"
+    },
+    "samples/zephyr/wire_pmic_id/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4236c066310b385b2f43daea8f38b8e6a37b310b"
+    },
+    "samples/zephyr/wire_pmic_id/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2e647c8cc0af6d1ef75d6bacea6b660b9b592336"
+    },
+    "samples/zephyr/wire_pmic_id/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "61ef301493062f638ba61de48ba85dc677967dd0"
+    },
+    "samples/zephyr/wire_pmic_id/src/wire_pmic_id.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d706b46297959859408aba3a9799990dc2d14568"
+    },
+    "tests/arduino-cli/.gitkeep": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8b137891791fe96927ad78e64b0aad7bded08bdc"
+    },
+    "tests/arduino-cli/compile_error/compile_error.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "064d8b443983a9b271a939b7d5b7366fe42087a1"
+    },
+    "tests/arduino-cli/config_overlay/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1f9e077c1691960a555e85ff216e45053ac61fdf"
+    },
+    "tests/arduino-cli/config_overlay/config_overlay.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "184ea1529cc8483a1f3150db27f0e40ee6a71658"
+    },
+    "tests/arduino-cli/config_overlay/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7de2d11a15bf6716c4d93d0c6759cc4b0d7fc1d3"
+    },
+    "tests/arduino-cli/libraries/LeafValue/library.properties": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4731266a94b6c9128956c61f8ce9f9baa0629875"
+    },
+    "tests/arduino-cli/libraries/LeafValue/src/LeafValue.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "388afd5dcb950ce48369c76ee8aa55472ef0b431"
+    },
+    "tests/arduino-cli/libraries/LeafValue/src/LeafValue.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f39e7d2f9c8f8f10f043c797bc8f2f410485f4e1"
+    },
+    "tests/arduino-cli/libraries/LocalAccumulator/library.properties": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "17216a0e35fe38251ea423437c8c3128bde2147a"
+    },
+    "tests/arduino-cli/libraries/LocalAccumulator/src/LocalAccumulator.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "74ac554c719046fae8a504bc7e21954ef30087d7"
+    },
+    "tests/arduino-cli/libraries/LocalAccumulator/src/LocalAccumulator.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e965ac00fbcceecdd42aee39f1b7309cd8ed659f"
+    },
+    "tests/arduino-cli/local_library/SketchLocal.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c4e6e949feceba17461bb34aab8d6193053c95ad"
+    },
+    "tests/arduino-cli/local_library/local_library.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c47b1c05303a332695d87ad1662c21e6e4929905"
+    },
+    "tests/arduino-cli/m17_adafruit_lsm6ds_compile/m17_adafruit_lsm6ds_compile.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "217db1d6c834d82cc97e58c9ae024b5b52543633"
+    },
+    "tests/arduino-cli/m8_upload/m8_upload.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a6b7b61767d0871b49f5b4b2558e5e1bece9c1f8"
+    },
+    "tests/arduino-cli/multi_tab/multi_tab.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bc3abee11f96765e20b642c5b78f3b5c102154bd"
+    },
+    "tests/arduino-cli/multi_tab/tab_math.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fb2e560d0171e26548e3ca494c526d28abe3a8de"
+    },
+    "tests/arduino-cli/run_smoke.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "425ce633404a943c691614af2ca44eae30596cd2"
+    },
+    "tests/arduino-cli/zephyr_coexist/zephyr_coexist.ino": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6cd0f940c70c4dbadbbb7f2c866f581972b3bb2f"
+    },
+    "tests/ci/test_m12_ci_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ad2797ee132ac14c8fcbcd0bbf1c981112c31e50"
+    },
+    "tests/ci/test_m14_qemu_runner.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e8a58153c0a162fcea7d2ffa450a9421ccb382ec"
+    },
+    "tests/ci/test_prepare_ncs_workspace.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "884d868f6cefd89ea6d0272467f08af4a6189b95"
+    },
+    "tests/hil/nu54dk/ac01_gpio_hil.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "453e462f84812508e462a23d2cd6a677f53bb826"
+    },
+    "tests/hil/nu54dk/ac02b_peripheral.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c3655dd725ba7957a49003b0a6697b80f05fb9cd"
+    },
+    "tests/hil/nu54dk/ac03_storage.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "aa4feba797f8c3b122d11c435d58a9364bbcb9e9"
+    },
+    "tests/hil/nu54dk/ble_pair_hil_common.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "312e3003c4d244456bd30b2eead9cf26ec385d4e"
+    },
+    "tests/hil/nu54dk/m14_pin_hil.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b373e2ae37f32e9c3962b54b29167258c8bbeca5"
+    },
+    "tests/hil/nu54dk/m15_auto.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c32fa914a0a61bfb1705ad25e680722707a329c3"
+    },
+    "tests/hil/nu54dk/m15_system_off.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "597de2086c88f52da55a4ca942e9e3b3f6e32755"
+    },
+    "tests/hil/nu54dk/m16_ble_pair.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d8bbefa6227f1bf77b07ec631d7cc989d206adf6"
+    },
+    "tests/hil/nu54dk/m19_ble_gap.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "682a924b3c88ae42454df7d78b4ffe7c48eed707"
+    },
+    "tests/hil/nu54dk/m20_ble_gatt.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8354d3a62da2d4b7d93987f4c537d336b7767788"
+    },
+    "tests/hil/nu54dk/m21_ble_security.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3abf2f6c697618418b9401cdfcefebc5f3e139cd"
+    },
+    "tests/hil/nu54dk/m24_twim_onboard.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f5eddfc756527e68f1d641beabbe6b088ea437bc"
+    },
+    "tests/hil/nu54dk/m24_uarte_onboard.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "08bcd504188f4dbad6501f75bd5a5376377ec672"
+    },
+    "tests/hil/nu54dk/m25_onboard.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6930d287ad245a5d69b3f8c585e0762f514f24fe"
+    },
+    "tests/hil/nu54dk/m26_onboard.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1e83f5094cb745c8ca437e50f31fd795cc3360e9"
+    },
+    "tests/hil/nu54dk/m6_serial_echo.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "87b1f9c98ab81b5e269ceba45331486e392a6fa1"
+    },
+    "tests/hil/nu54dk/m7_i2c_pmic.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3223d6d518edec7ccf42f5e167fb611cd8362d9f"
+    },
+    "tests/hil/nu54dk/m7_peripheral_hil.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "da429220958829d2696fae25e6e4cca552c9756b"
+    },
+    "tests/hil/nu54dk/m8_debug.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9725e4ff1de07c39f29ab38a40d6f61f8055b089"
+    },
+    "tests/hil/nu54dk/m8_upload.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4d0bc51e4e63d45bc3fb06321467ce79ae8a838c"
+    },
+    "tests/hil/nu54dk/nu54dk_connector_pinmap.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "053c9b39a8563cbb762995af621257046b5b092d"
+    },
+    "tests/hil/nu54dk/onboard_start.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "adc27de133e998be05f2dd3f7ae42c303a3b23d8"
+    },
+    "tests/hil/nu54dk/test_ac01_gpio_hil.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a19e3ce0098bb0eb019518fe29741b211feefa08"
+    },
+    "tests/hil/nu54dk/test_ac02b_peripheral.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c5de6012ec8bd84e1a6a9dcdf1592fae43ed410b"
+    },
+    "tests/hil/nu54dk/test_ac03_storage.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2dc1d2cf1e445ed01d4e7946739d72e77c044da1"
+    },
+    "tests/hil/nu54dk/test_m14_pin_hil.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6a3969c6ce29215e1009da1fb06fecc33b8e274b"
+    },
+    "tests/hil/nu54dk/test_m15_auto.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0428c8bf0a3c6f5f4063eb501a64a39fffddb35f"
+    },
+    "tests/hil/nu54dk/test_m15_system_off.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b40dc7e4119dfd7b44b18a754f213444092a676c"
+    },
+    "tests/hil/nu54dk/test_m24_twim_onboard.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "85b9a99007e24c09c298909bcab9dcd187f777d4"
+    },
+    "tests/hil/nu54dk/test_m24_uarte_onboard.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "80ffd220b5b2edd0bf6000ba79e24e1383c9d6d5"
+    },
+    "tests/hil/nu54dk/test_m25_onboard.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d43cc807b45c24164d27c2dea7fc64fabc5225ac"
+    },
+    "tests/hil/nu54dk/test_m26_onboard.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "623df7b12fe782cfc47a99173290c0db81da0798"
+    },
+    "tests/hil/nu54dk/test_m7_i2c_pmic.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b54da839f967b9c3e2b86c07fdb28ca643d74ce2"
+    },
+    "tests/hil/nu54dk/test_m7_peripheral_hil.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "847cd6f1dc7039183d8e33cab43bee2ecb0adb4d"
+    },
+    "tests/hil/nu54dk/v04_campaign.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "80f0a62edd282f432c58f6a8b5d3d9c60bf82e52"
+    },
+    "tests/hil/nu54dk/v04_fixture.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8e76036bf5bed59cfeee6a5623078170f022a8ac"
+    },
+    "tests/hil/nu54dk/v04_fixture_run.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c79fe08f8152544cb289181814abcc8142679035"
+    },
+    "tests/hil/nu54dk/v04_fixtures.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "07894e75d9206bc63adb2209a49f4755edba9412"
+    },
+    "tests/hil/nu54dk/v04_pair.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4432bb4b0797f98a1ad6aa1458dcd83657153faa"
+    },
+    "tests/hil/nu54dk/v04_protocol.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2676cec36106e853f465e6817f26df7b57e37c0a"
+    },
+    "tests/hil/nu54dk/v04_qdec.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "723980fe42dc2263bee13de214de15c7db04e18b"
+    },
+    "tests/hil/nu54dk/v04_signal.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "050901f5cfc68b7bed8947a99b90142e8253ade0"
+    },
+    "tests/hil/nu54dk/v04_signal_run.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "99ddc2a9810018f7ed97b9850de8a84dc481bf51"
+    },
+    "tests/hil/nu54dk/v04_test_plan.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "06046d5af997abddfe87ff62cf9d1c03dc7b0e06"
+    },
+    "tests/hil/nu54dk/v04_uart.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "79014a188cac128afa125d746194d911d692a2b3"
+    },
+    "tests/host/.gitkeep": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8b137891791fe96927ad78e64b0aad7bded08bdc"
+    },
+    "tests/host/ac02b_analog_math.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "87ca7e57820d019c8153d1829a6ec3c8180beff2"
+    },
+    "tests/host/ble_source_contracts.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "06f4fe1ad0882c5b9a9efb840647f139c6725099"
+    },
+    "tests/host/ble_stubs/Arduino.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1e4fc77c7c7716ddd29cec3cc3f2c9693b16b8b3"
+    },
+    "tests/host/ble_stubs/ble_mock.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "982ad4e45e98162ca9fcdf28e14f2aefbec766e5"
+    },
+    "tests/host/ble_stubs/bluetooth/services/hids.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fd716a96b5174f49e0cefba37745b05330dc8476"
+    },
+    "tests/host/ble_stubs/gatt_mock.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3b42bca7149a1d86e3b417af48f193dc2b466d56"
+    },
+    "tests/host/ble_stubs/hids_mock.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b6b3844ec1f9bb089a3784289fd3b5706de2ed06"
+    },
+    "tests/host/ble_stubs/security_mock.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ddf6d37e198211b09ea04f5ef1dfa9590b389c35"
+    },
+    "tests/host/ble_stubs/zephyr/bluetooth/att.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "117fbe7668650fa2bc39d4b03e42cd41fa858bfe"
+    },
+    "tests/host/ble_stubs/zephyr/bluetooth/bluetooth.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fd81eaef482827c40a4eb231cf187393e7b163e0"
+    },
+    "tests/host/ble_stubs/zephyr/bluetooth/conn.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9b4ea53dcfe3c276657d3fdfaf6cd772d596b528"
+    },
+    "tests/host/ble_stubs/zephyr/bluetooth/gap.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fd81eaef482827c40a4eb231cf187393e7b163e0"
+    },
+    "tests/host/ble_stubs/zephyr/bluetooth/gatt.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "117fbe7668650fa2bc39d4b03e42cd41fa858bfe"
+    },
+    "tests/host/ble_stubs/zephyr/bluetooth/hci.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fd81eaef482827c40a4eb231cf187393e7b163e0"
+    },
+    "tests/host/ble_stubs/zephyr/bluetooth/services/bas.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9283938344f198e9fa81490977e3e04480c8a290"
+    },
+    "tests/host/ble_stubs/zephyr/bluetooth/uuid.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "117fbe7668650fa2bc39d4b03e42cd41fa858bfe"
+    },
+    "tests/host/ble_stubs/zephyr/kernel.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8dfc21a67ee32b0d10a934cbce3009489d252da6"
+    },
+    "tests/host/ble_stubs/zephyr/net_buf.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fd81eaef482827c40a4eb231cf187393e7b163e0"
+    },
+    "tests/host/ble_stubs/zephyr/settings/settings.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fd81eaef482827c40a4eb231cf187393e7b163e0"
+    },
+    "tests/host/ble_stubs/zephyr/sys/atomic.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "006ddacd92015a287a5194927bd49be8e9e0557d"
+    },
+    "tests/host/ble_stubs/zephyr/sys/util.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e74454a869bec60b8287366ef93469005f8bc97c"
+    },
+    "tests/host/event_fabric_stubs/hal/nrf_dppi.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "cfff1b65a58c35c68915c768d15dd031cd1b8774"
+    },
+    "tests/host/event_fabric_stubs/hal/nrf_egu.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0c63c98478fa6649db0ae9d7a0a1d7a22c8477d5"
+    },
+    "tests/host/event_fabric_stubs/hal/nrf_ppib.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9cf85c769a97011a47fe318b4981906fb5cc12c9"
+    },
+    "tests/host/event_fabric_stubs/internal/pin_description.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8c8f901b07ab0ce1af4a60caa202ec251a8549f4"
+    },
+    "tests/host/event_fabric_stubs/nrf.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ea42b63d503b82750a8eaaf72e63abed66bba85c"
+    },
+    "tests/host/event_fabric_stubs/unused_instances.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bc04774e2f0cc81489dc82e16fa8e399b0362532"
+    },
+    "tests/host/event_fabric_stubs/zephyr/kernel.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "36ec412d40b77611acaaefab2f93ef894fa96cb2"
+    },
+    "tests/host/fabric_driver_stubs/hal/nrf_gpio.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ceb9789bf94bfe26da62c4d118f57644b5b57c47"
+    },
+    "tests/host/fabric_driver_stubs/hal/nrf_i2s.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "88819a70f378f5be6915e4e87918cfe4f3ce7278"
+    },
+    "tests/host/fabric_driver_stubs/hal/nrf_pdm.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "713b66e8dccfe15ce66f6471ac5855b5fbdb6be3"
+    },
+    "tests/host/fabric_driver_stubs/hal/nrf_pwm.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "535f2bed93b2b98caecdadd76f97b74e6d8e386c"
+    },
+    "tests/host/fabric_driver_stubs/hal/nrf_qdec.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4917ffafeca7f63b965eaedb1932a7813586397c"
+    },
+    "tests/host/fabric_driver_stubs/hal/nrf_saadc.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8c0fe81377d45888d528c9abc14c41bcb05ee4b3"
+    },
+    "tests/host/fabric_driver_stubs/haly/nrfy_saadc.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8c0fe81377d45888d528c9abc14c41bcb05ee4b3"
+    },
+    "tests/host/fabric_driver_stubs/nrfx_i2s.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "dc2fe2422da1754056627f880cb265e51bc6a092"
+    },
+    "tests/host/fabric_driver_stubs/nrfx_pdm.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5de2073c719db00038fd015a25133cff2c7355eb"
+    },
+    "tests/host/fabric_driver_stubs/nrfx_pwm.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3e3d80f98fc334706c3d81016e2f24e00e8ba73b"
+    },
+    "tests/host/fabric_driver_stubs/nrfx_qdec.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bb4a58951a41a4bdf86d600109ae01ee133f9f51"
+    },
+    "tests/host/fabric_driver_stubs/nrfx_saadc.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c6a99ddcc331830c0e1c1dd14cb03d35ebd2a3e7"
+    },
+    "tests/host/fabric_driver_stubs/resource_mock.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "82756da30f6de9ab3516b1280474118bbdf1666c"
+    },
+    "tests/host/fabric_driver_stubs/variant.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e6cd241dac4d5f999442496b585bb1a238734c01"
+    },
+    "tests/host/fabric_driver_stubs/zephyr/irq.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "98423bac5e9d31353394161c0febc1ab38e1f16e"
+    },
+    "tests/host/fabric_driver_stubs/zephyr/kernel.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1078563f934fde6a271d53a1f70e25b71287047f"
+    },
+    "tests/host/fabric_driver_stubs/zephyr/sys/util.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a6351e90ee3df080940763f1e759f01bacf46c4a"
+    },
+    "tests/host/r02_serial_driver_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a2dab9e1276ef1d846b537f21d164056adc4865b"
+    },
+    "tests/host/r03_analog_driver_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2d8ed4371287a4579de6a711719f7b94ccfcd218"
+    },
+    "tests/host/r03_stream_driver_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a61de4c2e71d3f4c50cd217b291e2287ddbd238e"
+    },
+    "tests/host/r04_file_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "36f2f7ce89ea783c0afced4d0ee7f246a1b80dfa"
+    },
+    "tests/host/r07_event_driver_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a8c6ac6c0362593f5abf8694c8d5b5bc1ceb2b56"
+    },
+    "tests/host/r08_resource_route_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "cce029ca85e6d555c11b2371fe03abed9eb8d36e"
+    },
+    "tests/host/r09_spi_facade_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d42354a1ac7c0ddedae34a2a4993a8b545021de0"
+    },
+    "tests/host/r10_serial_concurrency_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c87829db9bea6575259772405c1f9ce4450a6b0e"
+    },
+    "tests/host/r11_fabric_data_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bce82ff205dc1e4826e4dfb690a1dd4b3943a817"
+    },
+    "tests/host/r12_ble_gap_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9afa1b4a10b6d60fb11cdaf15992d298d7b034b0"
+    },
+    "tests/host/r12_ble_gatt_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a872db5959a5dbe9e288d2f6048a9291d34d670f"
+    },
+    "tests/host/r12_ble_security_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "009693706b6e5d92929ed8ca410519790e01311b"
+    },
+    "tests/host/r12_eeprom_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4df48ab3fa2350364971ccb3a1a13117c0304e0a"
+    },
+    "tests/host/r12_littlefs_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f6a22e2857e90a8eef47fc5a2319b7074bd6a852"
+    },
+    "tests/host/route_stubs/zephyr/device.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "667f6f45e41880a5388113eb071ca68157a0c7cb"
+    },
+    "tests/host/route_stubs/zephyr/drivers/gpio.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "061b1270e49fa89ccc180ac383aac813a87fde02"
+    },
+    "tests/host/route_stubs/zephyr/drivers/pinctrl.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "604af48628f23ea5be208a730bd2b8c9dc77e59e"
+    },
+    "tests/host/route_stubs/zephyr/pm/device.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f3f323f2c796efabc9b0987656db55e1ee070adf"
+    },
+    "tests/host/route_stubs/zephyr/pm/device_runtime.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fb28fa000aec6bfc1fdf11e846d42b2cdd900266"
+    },
+    "tests/host/serial_driver_stubs/nrfx_spim.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5ae34e2c6976f852c11f9f4a8abd1da048da2f00"
+    },
+    "tests/host/serial_driver_stubs/nrfx_twim.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "19b7126af5fe41d69fd3c27d58b31e557ce86c31"
+    },
+    "tests/host/serial_driver_stubs/zephyr/irq.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4b7044bc5abbd26399d1925628bc26d99d2a748a"
+    },
+    "tests/host/serial_driver_stubs/zephyr/kernel.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1a8c52034ee956f7d4e33112850ea25f91437a30"
+    },
+    "tests/host/serial_driver_stubs/zephyr/sys/atomic.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e02e6b3844fd347b7cd72c30006f3078189fd224"
+    },
+    "tests/host/serial_fabric_stubs/api/Common.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9176dcf5010482f08b058bd943096bfaad66e2bc"
+    },
+    "tests/host/serial_fabric_stubs/hal/nrf_gpio.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6331d295df014a2c42346e3c87e089053e3276b8"
+    },
+    "tests/host/serial_fabric_stubs/internal/pin_description.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5df3da309312dcd1a91ed4787d8de4296a19d866"
+    },
+    "tests/host/serial_fabric_stubs/nrfx_power.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e5e5344b5ff201b6b80cb9afd6db02fca1f5e880"
+    },
+    "tests/host/serial_fabric_stubs/variant.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6f70f09beec2219624baeca92e2cd7deaa104fb4"
+    },
+    "tests/host/serial_fabric_stubs/zephyr/device.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "44b70fadc9b6dfaa913b05af9b4aa4d92d173cc4"
+    },
+    "tests/host/serial_fabric_stubs/zephyr/devicetree.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6db0e200ed19d2b492c86ae9ad8e799cb125e17f"
+    },
+    "tests/host/serial_fabric_stubs/zephyr/drivers/gpio.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "00fbd17ea3f9aba87dcca71cd8d601dd5bb5f2be"
+    },
+    "tests/host/serial_fabric_stubs/zephyr/irq.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6f70f09beec2219624baeca92e2cd7deaa104fb4"
+    },
+    "tests/host/serial_fabric_stubs/zephyr/kernel.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "85e82ae9622be7acaf5bd2071fb65de336849a58"
+    },
+    "tests/host/serial_fabric_stubs/zephyr/sys/atomic.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7278016462e6a5b8d0e09e07fa16d66cae5d1de6"
+    },
+    "tests/host/spi_facade_stubs/Arduino.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "db8bf5b8a61c0e51b16d8e27a66e85ece4ad1662"
+    },
+    "tests/host/spi_facade_stubs/zephyr/devicetree.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7b0a2c9d6e25eb83b5eae6205857229bc38d6ebe"
+    },
+    "tests/host/spi_facade_stubs/zephyr/drivers/spi.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1a1eac7a16b5b211518ca1ce8293adaaa5c8e043"
+    },
+    "tests/host/spi_facade_stubs/zephyr/kernel.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0704ed3412fdf28c62505789a31690d3b0d8db82"
+    },
+    "tests/host/spi_facade_stubs/zephyr/sys/atomic.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "01c8891b07d93e3a8e2f436954a6a9ad42428fab"
+    },
+    "tests/host/storage_stubs/Stream.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5cac9f857e6cc43deeab39ee8ac83630a870729a"
+    },
+    "tests/host/storage_stubs/zephyr/devicetree.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fc9dd6bcc56727c8b2189927957a05a47c496eaf"
+    },
+    "tests/host/storage_stubs/zephyr/fs/fs.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3570ec38ce614612189a80db92d0c7eeaea3d532"
+    },
+    "tests/host/storage_stubs/zephyr/fs/littlefs.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "74c241751a9aeee4374e4af3d84cb0245349187c"
+    },
+    "tests/host/storage_stubs/zephyr/kernel.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "dce617d4d319b09fc47f4272600a97000d765102"
+    },
+    "tests/host/storage_stubs/zephyr/settings/settings.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "92c3e452854b43d9d90ab2a3b4f3fde3e382cbbd"
+    },
+    "tests/host/storage_stubs/zephyr/storage/flash_map.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9216cfd23c72858ca973418a0a1f76e434a7460f"
+    },
+    "tests/host/storage_stubs/zephyr/sys/atomic.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3547e6cdd7868296a8a641edcac5128f7ea19b82"
+    },
+    "tests/host/test_ac01_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "76c8760fb1a31d9b324628893903b45bc96db577"
+    },
+    "tests/host/test_ac02b_analog_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5dcc317cbc2f15c3de011d34c277a3647b0a5c59"
+    },
+    "tests/host/test_ac02b_b2_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "78c9763756c2a01cb50debee1e75925deebd1a28"
+    },
+    "tests/host/test_ac03_storage_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "590bf6565e86e0f21dadead045c5d64c78a2ff34"
+    },
+    "tests/host/test_build_matrix_runner.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4f53ffea0580c5bafebd2d692a2a9f5a9b8d42ba"
+    },
+    "tests/host/test_fixed_gate_runner.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ce2d0df6fcf4316fb51687d7564d8ceca6bb4b72"
+    },
+    "tests/host/test_m10_packaging.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "980c62a8471d5c7150f824c1b4536e7a28e7edc7"
+    },
+    "tests/host/test_m10_prerequisites.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7248f3e6f54203c73ebad381ba529af4a50d8d1e"
+    },
+    "tests/host/test_m10_remote_runner.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1bc23ab3a63f0c17c9be6acfd1386c581b0654bb"
+    },
+    "tests/host/test_m11_rc_hil.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f9c8c5b02759068b47cd7ebecd74135348db3e74"
+    },
+    "tests/host/test_m11_release.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9bf3165985438f404aca257cccc13f5621c19437"
+    },
+    "tests/host/test_m11_remote_runner.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5647321ba5541c98acd063081b53604953ea9cdb"
+    },
+    "tests/host/test_m13_profiles.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "73705b8fa522e9ac0da5a7ba50acedd951260db5"
+    },
+    "tests/host/test_m14_core_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2699ddbb74cfc323b72c18a175b6e22391b50f55"
+    },
+    "tests/host/test_m14_pin_hil_runner.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "74bb782f9f6ddc698872b430bfbf2da6204372c8"
+    },
+    "tests/host/test_m14_variant_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "64df61d0964c450f780acfe984c3745d7009555a"
+    },
+    "tests/host/test_m15_board_system_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ff04cb349d8fdd84c7d1d0ccb915a01fc06ec970"
+    },
+    "tests/host/test_m15_lfxo_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8f266b56198e6e9ad44e0f938267f07c8c60a228"
+    },
+    "tests/host/test_m15_system_off_hil_runner.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8f3679b7343d6baf7913c7b6c307af02b952915c"
+    },
+    "tests/host/test_m16_ble_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ba5f103576c2bfad2417bda22c38c34234972c69"
+    },
+    "tests/host/test_m16_ble_pair.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ba7d9badeaf9c9789b8d216a2514f75024f01034"
+    },
+    "tests/host/test_m17_coverage.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "aa972da7393eb0b01b51c6f7e0576ec75de4867a"
+    },
+    "tests/host/test_m17_external_arduino.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f6530113d7f70a9a1dc7a928e0253bf24e862b96"
+    },
+    "tests/host/test_m17_feasibility.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c86c83546261567f51482e89141fc457f8c5fbc5"
+    },
+    "tests/host/test_m18_release.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "51f83bbe6430b5a210b325e491f51ade47d54803"
+    },
+    "tests/host/test_m19_ble_gap_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "25d5e2df1e804bc333cef76aeb2186363ffdacee"
+    },
+    "tests/host/test_m19_ble_gap_hil.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d1ad85cbb85b7ff4db4809329985d013c92da243"
+    },
+    "tests/host/test_m20_ble_gatt_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d2ea134abf82eecef07202758cba11336ca4e122"
+    },
+    "tests/host/test_m20_ble_gatt_hil.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "afb473886df13f5af1768869c08fd87f45e95bfc"
+    },
+    "tests/host/test_m21_ble_security_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bb38afdebfba86430788d2c83786c81a2373cbbf"
+    },
+    "tests/host/test_m21_ble_security_hil.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "acf122d937b71093eacbf21a391182da137b191c"
+    },
+    "tests/host/test_m21_ble_security_negative.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bcfa06aa132d90445e6403ae43ade43210c150c6"
+    },
+    "tests/host/test_m22_cleanroom.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "579956b3d198fdfc1ae8433fb29dc8f05bbe4127"
+    },
+    "tests/host/test_m22_fixed_gate.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "22c592f89ecb21353100e15f85b7de103d98d68c"
+    },
+    "tests/host/test_m22_package_examples.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a8381fbff665d873cacd5cb0323ba108a74a2241"
+    },
+    "tests/host/test_m22_release.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d8a3d92ec2d42ef851a0ac89341bc69b4a55d8cc"
+    },
+    "tests/host/test_m23_peripheral_inventory.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b6fad6edd797ce47dc28e954f6795c2f5a444e98"
+    },
+    "tests/host/test_m24_serial_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "186d86768affff4917f115f239f37833c0985225"
+    },
+    "tests/host/test_m26_system_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0a2413648281d42415bfcff5da8ef80c9e382320"
+    },
+    "tests/host/test_m27_package_examples.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b149623ed5b403539f0b06f2140dc1833268d05e"
+    },
+    "tests/host/test_m27_release.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b88c43bfc6b0905b653318ce1373a3e85a12542a"
+    },
+    "tests/host/test_m27_staged_candidate.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e7fe2fde334b4a00dad42f82637e76944daa27ae"
+    },
+    "tests/host/test_m8_flash.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "cc9fb42a40914831397d88ee0713557774cd688a"
+    },
+    "tests/host/test_m9_cache.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "97ce152163f6b1c2ea803853451c61ae2ab6121a"
+    },
+    "tests/host/test_m9_safety.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "db6c5892323d43f96713c7170d6052b2d0275e81"
+    },
+    "tests/host/test_r02_serial_drivers.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "048c1ec81be6ee46503a778de37de16664d7d383"
+    },
+    "tests/host/test_r03_fabric_drivers.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e8196ca413427f2d75706c046e31a03910d74198"
+    },
+    "tests/host/test_r04_file.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "788fc437b6171de28bcc818bfc3e42b06a34a314"
+    },
+    "tests/host/test_r05_identity.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6b93ce246b9ba591dee8786bfcc95707a8988d83"
+    },
+    "tests/host/test_r06_builder_modules.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "69f0b80361862eea5c53077e60b1a494c01ece06"
+    },
+    "tests/host/test_r06_windows_recipe.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "56b0656e83ba0c14a40ed7df5f0043b7d9956e25"
+    },
+    "tests/host/test_r07_event_driver.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "540f4626bb7aa8171c231415b89de56ae847cb54"
+    },
+    "tests/host/test_r08_resource_route.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1b10069b23c41d5ef65e6c98ac3dabdf94546b1a"
+    },
+    "tests/host/test_r09_spi_facade.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fabae50e19a0fe76f0a416d590add6655e3f86ff"
+    },
+    "tests/host/test_r10_serial_concurrency.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9728169d0c8f76c0cd85360a9260393f4f5fd663"
+    },
+    "tests/host/test_r11_fabric_data.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "55f504bbf1c62538d2ef8ef001163c30e4712559"
+    },
+    "tests/host/test_r12_ble_gap.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a0ae0ba4525f5a8d01bd3d50400e03236b40a35b"
+    },
+    "tests/host/test_r12_ble_gatt.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b0f626810b268e02c4df08ba99796c4ac671532a"
+    },
+    "tests/host/test_r12_ble_security.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f32604953b1bdbb9d88c68910404125ec13988a3"
+    },
+    "tests/host/test_r12_eeprom.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "48265243768919f4c51771bd242de4b67a838188"
+    },
+    "tests/host/test_r12_littlefs.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9689797d16fedf0021b13f55d48b79e7f0bc5091"
+    },
+    "tests/host/test_r13_generated.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0b86ca7e121572e9325498bc954da255297c84d1"
+    },
+    "tests/host/test_r13_manifest_revision.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bba25994c992ce54ef0b79526fe9c47ab1ec2af4"
+    },
+    "tests/host/test_r13_package_modules.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5bf2c4a2a43217de8c668a2c65983818ac6f502a"
+    },
+    "tests/host/test_v04_campaign.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9e39ed141b1565a9bb04ee0e0d4c4642af174a7a"
+    },
+    "tests/host/test_v04_cmake_sources.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a95979180996e447b8f9d4a233ca6bf7e57b5d15"
+    },
+    "tests/host/test_v04_dma_memory.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f5481a5ed0d3c137eaf44716cb766a159852526a"
+    },
+    "tests/host/test_v04_fixture.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bdfa03655a543f7bf49f6c9b9f2e2686126ee822"
+    },
+    "tests/host/test_v04_math.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5a6505a29754a7507f0b0a96f014e07bdbef8e7b"
+    },
+    "tests/host/test_v04_pair.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fc731ca60f28d272547c3254bce8d0811e00d02d"
+    },
+    "tests/host/test_v04_qdec.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4dc48631fb49f780ba56d99c36545ebdd5d05f35"
+    },
+    "tests/host/test_v04_revision.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1fce1a88801de8350a2423cc567cc8a25c09c91b"
+    },
+    "tests/host/test_v04_serial_lifecycle.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5d47ae3697a9bca118828ab85bc2d00263bfbb12"
+    },
+    "tests/host/test_v04_signal.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "979cf235b5989f28cf6abedbe26827bbb75920af"
+    },
+    "tests/host/test_v04_test_plan.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f1058ae7df3b68ed93fbd269d3afcd921e1d51fe"
+    },
+    "tests/host/test_v04_uart.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "95fd5aaf4dd2ad9ef6bccc96c69d08fe09495f4b"
+    },
+    "tests/host/v04_dma_memory_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c504e586187f33764d8fe42ae175ff9632eff1c8"
+    },
+    "tests/host/v04_fixture_gate_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b304f4a1eb6e505329fec84a0643a2a5c408f695"
+    },
+    "tests/host/v04_math_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0f10347aa848e93ba94d733d5f6e23413860db01"
+    },
+    "tests/host/v04_serial_lifecycle_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "47ed7488eef2fbaec3c53033c8c31e1bbcb50528"
+    },
+    "tests/host/v04_serial_routes_main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9011aef4311b7246c18e2cec81fa663f97e73066"
+    },
+    "tests/zephyr/.gitkeep": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8b137891791fe96927ad78e64b0aad7bded08bdc"
+    },
+    "tests/zephyr/ac01_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ad0b91d04e0ac8c3c63a8f9255d7f8d8c9d659fc"
+    },
+    "tests/zephyr/ac01_contract/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8cf84135576287436d421ff4eaf2b3c3f35b239b"
+    },
+    "tests/zephyr/ac01_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "06a847d779b261a1e23cbb9e76f4323d350cd071"
+    },
+    "tests/zephyr/ac01_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "05f2ab2ed814b7f6ff9262b9463aa5c09b1f3bfa"
+    },
+    "tests/zephyr/ac01_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "de9fdc31b32f3a8e7ead135645d38da7ca23f962"
+    },
+    "tests/zephyr/ac01_hil/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0b0cba7208f7e2b98860376271975a23a49de4e7"
+    },
+    "tests/zephyr/ac01_hil/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "70dc64ba869569cf64e1d31e12b3cc4e493597dd"
+    },
+    "tests/zephyr/ac01_hil/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3219a38d5aada7d00477a8d2d3b6c0e2f4952761"
+    },
+    "tests/zephyr/ac01_hil/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "773f1324f37cce58b6b354afc9ccb3126aed56ac"
+    },
+    "tests/zephyr/ac01_hil/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6e83167b3f9e7b8af8c02fb424ae4161dd32cc0e"
+    },
+    "tests/zephyr/ac02a_ownership_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ab73849680cd6cb7c7998a9a75baa2090e21a2d0"
+    },
+    "tests/zephyr/ac02a_ownership_contract/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fd0456edd2401728f405b442d71b4be44b304142"
+    },
+    "tests/zephyr/ac02a_ownership_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "29c711d32c875daca52e4983f97d4c7f15f3d8d3"
+    },
+    "tests/zephyr/ac02a_ownership_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "66d988fdbfd2c472a0391ea148c45a428fe4bf71"
+    },
+    "tests/zephyr/ac02a_ownership_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "eaea596a0556e75526860b61a2d44ef21598802e"
+    },
+    "tests/zephyr/ac02b_analog_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "40376977da3098f726a480b0aa856590bcd9a4df"
+    },
+    "tests/zephyr/ac02b_analog_contract/boards/nrf54l15dk_nrf54l15_cpuapp_nu54dk.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "395841890337fb8e095cdd5afaaef2310ba84ead"
+    },
+    "tests/zephyr/ac02b_analog_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9c6909f66ea78c467825476c6d8840cc2641b9f7"
+    },
+    "tests/zephyr/ac02b_analog_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "404553bf3d6e647b396670b10433ed23abc722e8"
+    },
+    "tests/zephyr/ac02b_analog_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b7bef1006a9033cc3141003a8e63eada0dd1b664"
+    },
+    "tests/zephyr/ac02b_b2_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "661da87e3ed730ce7905488f8732feaf64d86d53"
+    },
+    "tests/zephyr/ac02b_b2_contract/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6379a997ab962e70c48eed7a0acfa0116369b943"
+    },
+    "tests/zephyr/ac02b_b2_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b3601771a62f06d2b08b098b05fe0d5ac57a4027"
+    },
+    "tests/zephyr/ac02b_b2_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9f5b91995d5598e6fcea31281107143b38eb06cc"
+    },
+    "tests/zephyr/ac02b_b2_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "98628e236265278853291aa715e8eadaaa0aec13"
+    },
+    "tests/zephyr/ac02b_hil_dut/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d1eebdc3047a1587d644e5a2178b8ace5d46d0c2"
+    },
+    "tests/zephyr/ac02b_hil_dut/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3f56bf6db565c20eb4dc1cb3ba10cffe9977ef2d"
+    },
+    "tests/zephyr/ac02b_hil_dut/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "55d1ecb4dc508462ba320cf51014e59598b8ab9b"
+    },
+    "tests/zephyr/ac02b_hil_dut/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e47e2659436b97d7d83d2322b284d2ad2dc8b5e7"
+    },
+    "tests/zephyr/ac02b_hil_dut/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1f63a7077018d4c7906e5cee9f2b60e246d7ca75"
+    },
+    "tests/zephyr/ac02b_hil_peer/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "791fc5a5e0243c190977a6c31d56397d46b37d42"
+    },
+    "tests/zephyr/ac02b_hil_peer/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "670d81e8c761777fe0773764f32c11ff30ae6286"
+    },
+    "tests/zephyr/ac02b_hil_peer/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8fd8a287c62bc92c6d54406b9bfd359c3bb6a463"
+    },
+    "tests/zephyr/ac02b_hil_peer/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "63dc212ecdd65f3423d29282efbf45240df8a9ba"
+    },
+    "tests/zephyr/ac02b_hil_peer/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5cddb84f5add9fab1b7c7a8490e122d4ab505cb9"
+    },
+    "tests/zephyr/ac03_hil/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "87d6146511cbc72db54e035eb651f261bc44b4ab"
+    },
+    "tests/zephyr/ac03_hil/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "cecaff5784191ad535574141b1a094b8fe5266ef"
+    },
+    "tests/zephyr/ac03_hil/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "dc3ef6319fd1d380b4681591bc8c384c97e3c6a6"
+    },
+    "tests/zephyr/ac03_hil/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d080d805c3bb90a3d8eccd82c6ccc45112f22812"
+    },
+    "tests/zephyr/ac03_hil/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1f860be4391b2ce20591ab8e0e2e858111dadb25"
+    },
+    "tests/zephyr/ac03_storage_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c2bd1d1c9eb00d22b7284b714ff7604298942d1a"
+    },
+    "tests/zephyr/ac03_storage_contract/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "79855c1cc3c8a4604c22b6c77320ea9a6efef0d4"
+    },
+    "tests/zephyr/ac03_storage_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5d08bff368d64ec58ed44b65f82f05b1f17322ad"
+    },
+    "tests/zephyr/ac03_storage_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e84b67dfd67bdddf33d52992729d418106520971"
+    },
+    "tests/zephyr/ac03_storage_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "60b28ae2c98386f15441c999c962d8a19531c985"
+    },
+    "tests/zephyr/m14_core_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4ed5e03bde285d0c19eebb2e91ebd5171f2d1ddb"
+    },
+    "tests/zephyr/m14_core_contract/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9af0ea4485ec41f681e120cd11c001f1e2bc57cb"
+    },
+    "tests/zephyr/m14_core_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f89962a2bcf1067ec183352f1966131652910b42"
+    },
+    "tests/zephyr/m14_core_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8e733ffeebdb4a7720d3dade16640b0a8a5b9108"
+    },
+    "tests/zephyr/m14_core_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "67f52a20580dd3d6ed74880055c2bad865cb9331"
+    },
+    "tests/zephyr/m14_cpp_policy/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6ff5b53a99bbb5ac7bb0bfc5ff83a0b1b693df3e"
+    },
+    "tests/zephyr/m14_cpp_policy/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8afd36d00273e004553308b08d8c63a4ff18fd48"
+    },
+    "tests/zephyr/m14_cpp_policy/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "44e785df7d44f8ed7de480fa3c8cca87595c7af7"
+    },
+    "tests/zephyr/m14_cpp_policy/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bce552de821b3003e26ba8c862cfa37a95bd1ff6"
+    },
+    "tests/zephyr/m14_pin_hil/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b0bba22f130a2309b522823d3fbf30a8aad6cfe1"
+    },
+    "tests/zephyr/m14_pin_hil/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b8ca0113c26c6090f635d12395288603720f3615"
+    },
+    "tests/zephyr/m14_pin_hil/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3219a38d5aada7d00477a8d2d3b6c0e2f4952761"
+    },
+    "tests/zephyr/m14_pin_hil/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "46f51e5ef0e1a93ab21060c6b1eb56f9f4b62a91"
+    },
+    "tests/zephyr/m14_pin_hil/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7c42f8ddba2f4baacbbd6b067ed02075303aa946"
+    },
+    "tests/zephyr/m14_variant_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1608a6ee92122635c91b815e31cd7c39cf60913b"
+    },
+    "tests/zephyr/m14_variant_contract/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4e800f5b6895903df24feb748e5e3e330375743c"
+    },
+    "tests/zephyr/m14_variant_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "dab6ad40fd78dd0be18b1bdbe148987c4090d179"
+    },
+    "tests/zephyr/m14_variant_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "18b6247be45762344e5ea090ac0b17f37c79f675"
+    },
+    "tests/zephyr/m14_variant_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bdd26344884d4748d7db4b961c6f0a04867b3c6b"
+    },
+    "tests/zephyr/m15_board/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "42ddf612fd5d045898b39b27877517fa15f1ad3f"
+    },
+    "tests/zephyr/m15_board/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f01071de0cb2cab70bfead61d6d1bd6951115239"
+    },
+    "tests/zephyr/m15_board/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3cc7d10581cb9a5a37bb6b7e20019b7667a94e8b"
+    },
+    "tests/zephyr/m15_board/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8d45b7ec71578ca806980aaba77f19b5d90314dc"
+    },
+    "tests/zephyr/m15_board/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1c56cfc6bc315e71863e5a273e2ee37ddb77f5b2"
+    },
+    "tests/zephyr/m15_hil/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8af6acc3ec2eb7935b6624ce181eceda0f39141a"
+    },
+    "tests/zephyr/m15_hil/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3a0e7d60620cfce2e23aed99b7c2947608f4eb8d"
+    },
+    "tests/zephyr/m15_hil/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a7010380acfd7807da8344ee902abe5d1b0706f4"
+    },
+    "tests/zephyr/m15_hil/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a2dabaabb5c739c6b6818abcd33bf1801d36086c"
+    },
+    "tests/zephyr/m15_hil/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b248f4404a534fbc5ee8e83da149cdc8793f2d87"
+    },
+    "tests/zephyr/m15_wake/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "af190fbec64c38852441b8acdcbedb813c5544d5"
+    },
+    "tests/zephyr/m15_wake/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0af0dc5e2270b00ba640c63cca0fb3ffe6f0d2e8"
+    },
+    "tests/zephyr/m15_wake/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "60b6b2096990fda91808f31de31433cdfb448437"
+    },
+    "tests/zephyr/m15_wake/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "12a82f26eb2cf70917a8b66621a7b73e190b68fe"
+    },
+    "tests/zephyr/m15_wake/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fc43c06d90f9973a8315169e4bfabd12ea983d92"
+    },
+    "tests/zephyr/m16_ble_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "df25eb44426f15eabe55fcea486c6a60c0fca4b4"
+    },
+    "tests/zephyr/m16_ble_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8fb0524f1febfc428977c8194b4c3f7630fcb605"
+    },
+    "tests/zephyr/m16_ble_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3de818ef12dbb54368e42a174b7d227900aa3ab8"
+    },
+    "tests/zephyr/m16_ble_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e2ea1de5e8b75a77c9a195b6eedc5c5e5316fd8b"
+    },
+    "tests/zephyr/m16_ble_hil/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f424eb6415a5ce750ad7b5fb599be04c899a59f5"
+    },
+    "tests/zephyr/m16_ble_hil/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7084b21ea11b7459e8af9bb84f6655746f2700ef"
+    },
+    "tests/zephyr/m16_ble_hil/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "cb0eb9b71dca45ba498cfe40be13f090d7168df2"
+    },
+    "tests/zephyr/m16_ble_hil/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "481c17ebdec114281b7675fff2ee8e36e38d912e"
+    },
+    "tests/zephyr/m17_sensor_direct/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fa41128245be42235bf0f0499c2660f0ecb4bd83"
+    },
+    "tests/zephyr/m17_sensor_direct/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "99756daec305cc12e5a8bf3afb572dc2ffb3538e"
+    },
+    "tests/zephyr/m17_sensor_direct/src/main.c": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3a2373586c91ae29387ef7985f5f7a3a5a09482b"
+    },
+    "tests/zephyr/m17_sensor_direct/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6a0714e89e4c1ccbf077b2f84205c3b3f28a32a3"
+    },
+    "tests/zephyr/m19_ble_gap_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b4f5c37f154101d30f5cc6237d3095f7562aed7e"
+    },
+    "tests/zephyr/m19_ble_gap_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b56376c676b0b773383c1d82dd99a2871cc3e700"
+    },
+    "tests/zephyr/m19_ble_gap_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "809df547f058c685771d584976d283ef73249afc"
+    },
+    "tests/zephyr/m19_ble_gap_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d1a3943da7ff6e55e766942aa9f4484a179c099a"
+    },
+    "tests/zephyr/m19_ble_gap_hil/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0d60a9ee28d99d3370662d62149ece82623798a9"
+    },
+    "tests/zephyr/m19_ble_gap_hil/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0e50055788fac109f44d39168927d889a8d4339c"
+    },
+    "tests/zephyr/m19_ble_gap_hil/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7ac11af4df394df5ec79ffc7c7dfa2ecb8819b15"
+    },
+    "tests/zephyr/m19_ble_gap_hil/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "34bb65a90f83ff06c49300d352934e79ce6a5bd1"
+    },
+    "tests/zephyr/m20_ble_gatt_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7c2d79654b3fac9616bbf8b5db8ae8cef18b1874"
+    },
+    "tests/zephyr/m20_ble_gatt_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1025c5fe767b842a4928429008f3c6c654257fb2"
+    },
+    "tests/zephyr/m20_ble_gatt_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "01d7aa58c95d7595ddcd304b8ceb9aa5d09d4c45"
+    },
+    "tests/zephyr/m20_ble_gatt_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4a81e8afe188a9c170d9f41dfa33a23954a31a1a"
+    },
+    "tests/zephyr/m20_ble_gatt_hil/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e8d93974f22561b20a94105e0a3c6060b068856b"
+    },
+    "tests/zephyr/m20_ble_gatt_hil/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "86397232ac8a23a03225f2e72ce2725db09e7eb8"
+    },
+    "tests/zephyr/m20_ble_gatt_hil/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9687d2c4fb9bdb67f1e5e6c236215f30576a9097"
+    },
+    "tests/zephyr/m20_ble_gatt_hil/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b5b37710443c49a5e9fe0ded4e3720a37da8d559"
+    },
+    "tests/zephyr/m21_ble_board_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d17eae63bf2f6c1d9bc4db42229b461423f2741d"
+    },
+    "tests/zephyr/m21_ble_board_contract/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "09db6f13243b16c4889ad8557db88d34a4db6145"
+    },
+    "tests/zephyr/m21_ble_board_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4567ffd7345d2327cc6b11d15f4f74316a34d0dd"
+    },
+    "tests/zephyr/m21_ble_board_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bad42ef880e239f7f76d70f8c24876db0ec5f77d"
+    },
+    "tests/zephyr/m21_ble_board_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2f8ae19c039a9dc26f53b2d5b74b015b47c7e220"
+    },
+    "tests/zephyr/m21_ble_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a2849a1f9d8fee0bfb21d1f667dc6c22af4ee7f5"
+    },
+    "tests/zephyr/m21_ble_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2b7be214a7c5f937d624c872317c59701aa95afb"
+    },
+    "tests/zephyr/m21_ble_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e04303a2748c74750cc4f8ab468bace9e8b701a0"
+    },
+    "tests/zephyr/m21_ble_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6682139bd612837c3154c2f0643078dc2a1fbd29"
+    },
+    "tests/zephyr/m21_ble_hil/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "34644195e95413478b4d364b46115133e0c177d4"
+    },
+    "tests/zephyr/m21_ble_hil/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fc8e149fb6973fd7a039237df417dd5772217bb4"
+    },
+    "tests/zephyr/m21_ble_hil/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d0a780c1627700852d2785c25573bce4500c1cb5"
+    },
+    "tests/zephyr/m21_ble_hil/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5b89dc30c984a69187da9c5533a6e0f239bec9dd"
+    },
+    "tests/zephyr/m23_inventory_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1549aa0811e9b3088c8c404b25735f0d64f236b9"
+    },
+    "tests/zephyr/m23_inventory_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "43ffba9dccbbd805a911947975dac52216e38a8d"
+    },
+    "tests/zephyr/m23_inventory_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f354778aea22291b32c500cf6c45a4258d9b4afe"
+    },
+    "tests/zephyr/m23_inventory_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "86b78800f0e6a21109a0a3f3bec83b81788cd680"
+    },
+    "tests/zephyr/m24_serial_fabric_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0808f4febc27a498b85a7752227d94118dc7fc24"
+    },
+    "tests/zephyr/m24_serial_fabric_contract/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e215cda8c309ada50eb6be840e629c9a88d591d1"
+    },
+    "tests/zephyr/m24_serial_fabric_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d162495f35f52f35ddce4e79fe7d28ecc141f719"
+    },
+    "tests/zephyr/m24_serial_fabric_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d7f507cca57f5e16bb98c8e4907cbc908ed97c57"
+    },
+    "tests/zephyr/m24_serial_fabric_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "40cc2f2910ea6c1d2c6cdd7d09a48f0777d02a43"
+    },
+    "tests/zephyr/m24_spi_driver_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "55347e27fe2db73d61fd77620220cc028caef254"
+    },
+    "tests/zephyr/m24_spi_driver_contract/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6e1e35dd2e9d386eb375c3378d2ed5eadd6c70d8"
+    },
+    "tests/zephyr/m24_spi_driver_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3d665c5ece1c2e040e89a0330e4076858f02b58e"
+    },
+    "tests/zephyr/m24_spi_driver_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "585168ab3e4b056fc3a820062478274f9bba3257"
+    },
+    "tests/zephyr/m24_spi_driver_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ecfb11ecda5d0312470d1138dd1d38e82d75996c"
+    },
+    "tests/zephyr/m24_twi_driver_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "aa360eeb7d022eff5e2f0b174628e08371ed61c1"
+    },
+    "tests/zephyr/m24_twi_driver_contract/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "746ca445b888714abbab620edd99378deb9fb547"
+    },
+    "tests/zephyr/m24_twi_driver_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "48fb7d8e9946948e648bed15490015f1b26326cd"
+    },
+    "tests/zephyr/m24_twi_driver_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1c8d47e90e757bad966e77bdcd8ad32580b3c370"
+    },
+    "tests/zephyr/m24_twi_driver_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "463e41cb90633da94b9de662e2d44438d8048f3e"
+    },
+    "tests/zephyr/m24_twim_onboard_hil/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b142d25acb416dab3e1b3cdca99549592a2ec4f7"
+    },
+    "tests/zephyr/m24_twim_onboard_hil/Kconfig": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b407ec50ef5464e34efbec5399314df03ca51e85"
+    },
+    "tests/zephyr/m24_twim_onboard_hil/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a49d4bbb9ebded15efaf1fc11c33a286d27f9857"
+    },
+    "tests/zephyr/m24_twim_onboard_hil/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7406ee4646990ecc70f359e92a9c69652dd04bcc"
+    },
+    "tests/zephyr/m24_twim_onboard_hil/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0e36fa903b9fea6a2c2f4cf835b2c171268bcb28"
+    },
+    "tests/zephyr/m24_twim_onboard_hil/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1ca0d44bff3d2179584590d98e35e8d5e4689c66"
+    },
+    "tests/zephyr/m24_uarte_driver_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "aeb800e6a531cec13bc8b0ebf46ee6df6e727738"
+    },
+    "tests/zephyr/m24_uarte_driver_contract/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f07a760ca6d32558f4fa02498d7bafce9b669fb0"
+    },
+    "tests/zephyr/m24_uarte_driver_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "451ea191b9be60496e03948a3666b88e0ef97e10"
+    },
+    "tests/zephyr/m24_uarte_driver_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "07bb6fb1b04855af901d2bc18a020bfe6ce839cd"
+    },
+    "tests/zephyr/m24_uarte_driver_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "39d5d7c216db553c875b9561aa0ae3c3cdad7973"
+    },
+    "tests/zephyr/m24_uarte_onboard_hil/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4984552a967ab7b5bc152e452a2623db21571ddc"
+    },
+    "tests/zephyr/m24_uarte_onboard_hil/Kconfig": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0fd094e5c2f4fa551e725a4ab796adb24918190e"
+    },
+    "tests/zephyr/m24_uarte_onboard_hil/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "752ed1f872bc6242e4f7c01dd500aba3540bbf02"
+    },
+    "tests/zephyr/m24_uarte_onboard_hil/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "38541118b5ad2a455e27eb44b72927f59ae6d688"
+    },
+    "tests/zephyr/m24_uarte_onboard_hil/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0273bd7a66a82d79d6d5f5fcb38ae0e77eb3a1c8"
+    },
+    "tests/zephyr/m24_uarte_onboard_hil/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e9785589da1b54fb565188e65af740c55e7c5a65"
+    },
+    "tests/zephyr/m25_analog_fabric_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "67cf5e5848d6a00b1141fcbc0b1b9689de85331c"
+    },
+    "tests/zephyr/m25_analog_fabric_contract/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0fde64864183121ffeb7dc565453eeefa45e93c3"
+    },
+    "tests/zephyr/m25_analog_fabric_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4f8b62da10d837ee7d81ce7869df42d8e42aaaa4"
+    },
+    "tests/zephyr/m25_analog_fabric_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "55a5985689cdd425b697835924ba1952a979fe70"
+    },
+    "tests/zephyr/m25_analog_fabric_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3b3f792633c8fa2b88818a62a1519194173358a4"
+    },
+    "tests/zephyr/m25_event_fabric_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4fda2e1efd125eb8c12d9e8d0c1f533ed473a1c3"
+    },
+    "tests/zephyr/m25_event_fabric_contract/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e5f51821a91e79ab49e7851fd5daa5d32bdc28a7"
+    },
+    "tests/zephyr/m25_event_fabric_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0d084542b040de4297cbd9cc459f571989f4f76c"
+    },
+    "tests/zephyr/m25_event_fabric_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "cd7a94751b30296391282a5b90926c2e6908e9c9"
+    },
+    "tests/zephyr/m25_event_fabric_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c24555c2935f5f1815f154635157efcc159d8c57"
+    },
+    "tests/zephyr/m25_onboard_hil/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "03bbf221d2c07769dc8565f2a9047447e6d84957"
+    },
+    "tests/zephyr/m25_onboard_hil/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "57ca92d48ab24a0abddc2971bc77b1195841b895"
+    },
+    "tests/zephyr/m25_onboard_hil/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6da14c1d08eae9fcb113b703941738bd2b19d587"
+    },
+    "tests/zephyr/m25_onboard_hil/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "14831dc8513f61a1a8feff206c981bbd3f569071"
+    },
+    "tests/zephyr/m25_onboard_hil/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "942193100d15501ee609d7ba11cd9fb220e7680c"
+    },
+    "tests/zephyr/m25_stream_fabric_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c53ae38829967b794f6011f7b95b42e5fbd35bf9"
+    },
+    "tests/zephyr/m25_stream_fabric_contract/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8d93526ee9aab332d09d63a243ba1b3fc75b060b"
+    },
+    "tests/zephyr/m25_stream_fabric_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "35720ba1e3aa6d1ab7c3a3089cb15481aa96b3ab"
+    },
+    "tests/zephyr/m25_stream_fabric_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4349eb708931eda719033adda06ad6fcdc1a39f6"
+    },
+    "tests/zephyr/m25_stream_fabric_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "85f9576fcf225f07e646ff460fc5faacf0f8bea5"
+    },
+    "tests/zephyr/m26_onboard_hil/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "908c815c2e9c99d47474860c33ca26afc709a391"
+    },
+    "tests/zephyr/m26_onboard_hil/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bbbedc3216001b4e1d3dc660d262d4e7e26ebe70"
+    },
+    "tests/zephyr/m26_onboard_hil/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c5a8eb034a651e54d5e8c1dc85536263bdabcb30"
+    },
+    "tests/zephyr/m26_onboard_hil/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4375dbfaa55137264927c7f8c04b88e37000f31e"
+    },
+    "tests/zephyr/m26_onboard_hil/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d6644028a44ee06df3afa877e96a6c68a83bbd69"
+    },
+    "tests/zephyr/m26_system_fabric_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7873f97d4bd2ff45a76baed2af394b62428b9aab"
+    },
+    "tests/zephyr/m26_system_fabric_contract/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "309749432a6bbb26590f10cd8cca10994e30dde5"
+    },
+    "tests/zephyr/m26_system_fabric_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6c1628eefe238f3952d4e01545b000f3c34160ad"
+    },
+    "tests/zephyr/m26_system_fabric_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ca88ec35330e81e5a1fba6bd059366f724c2b654"
+    },
+    "tests/zephyr/m26_system_fabric_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2e0eed4a622b440d118f378f7c85ff90491f1ef3"
+    },
+    "tests/zephyr/m3_runtime/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5e253ef72147a41a1706e647fa1d746df4f9154e"
+    },
+    "tests/zephyr/m3_runtime/boards/nrf54l15dk_nrf54l15_cpuapp_nu54dk.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "462daa5c9eb1e8ac709c31b40f0e0502822fb824"
+    },
+    "tests/zephyr/m3_runtime/include/variant.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "94081e60a03e80ec0fac7677585a6f19d73f6916"
+    },
+    "tests/zephyr/m3_runtime/negative/missing_led0.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f67208d942e1fe4a7dcda7305f976a3ad9760753"
+    },
+    "tests/zephyr/m3_runtime/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "de911b4ddb433c7526c37a1f61362d23accaab7e"
+    },
+    "tests/zephyr/m3_runtime/scripts/check_missing_led0.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bacf55c460ff0b7b44c2f9390e32bdb9e3827452"
+    },
+    "tests/zephyr/m3_runtime/scripts/daplink_msd_flash.cmd": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e1595fbc24313c1250095878d599074d50536138"
+    },
+    "tests/zephyr/m3_runtime/scripts/daplink_msd_flash.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ba652f27a289ad4d94ca01ace226d46379e84cd2"
+    },
+    "tests/zephyr/m3_runtime/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d7c68f6b2f852623953cc9c700b27de9a7510218"
+    },
+    "tests/zephyr/m3_runtime/src/test_variant.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "73cfcdfd66a8d634779175f9f0bb9994e04c8243"
+    },
+    "tests/zephyr/m3_runtime/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b3cd4acf7641632d972b4178285e34ac311aac4b"
+    },
+    "tests/zephyr/m4_api_contract/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d906ddb324c326e4a43b0d506ea3b3a2c6305854"
+    },
+    "tests/zephyr/m4_api_contract/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4b924c1345998ec07d063fc9a5867356da100672"
+    },
+    "tests/zephyr/m4_api_contract/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e88c1857966847ef8926fad3fd9f149f44c438d8"
+    },
+    "tests/zephyr/m4_api_contract/src/sketch.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a48c76aae86afc53deff912ad0ecec8b088f0e80"
+    },
+    "tests/zephyr/m4_api_contract/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3482362bcbe9651602f34dfae67f61bbd08ecc3a"
+    },
+    "tests/zephyr/m6_config_contract/negative/serial_callback_conflict.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "04b58f68f05fe56e8d750dff443ca1b9b7e8bd61"
+    },
+    "tests/zephyr/m6_config_contract/scripts/check_serial_callback_conflict.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "43e7fe79675469d3a38074ef1373d3e37ee6c06f"
+    },
+    "tests/zephyr/m6_core_api/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "388f0a588c64e355b19bf1c1b926d8ae150de0bf"
+    },
+    "tests/zephyr/m6_core_api/boards/nrf54l15dk_nrf54l15_cpuapp_nu54dk.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "22bb7734cf2d944076230ad257095f53c7e72b61"
+    },
+    "tests/zephyr/m6_core_api/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5f20f2a2666cae7a3d133dc7f7bde90ede844a19"
+    },
+    "tests/zephyr/m6_core_api/src/c_header_contract.c": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "91f1bf80e8d434bc2d2cad224da4b7d0ef17bc04"
+    },
+    "tests/zephyr/m6_core_api/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "56b5930e114cf6878d69b74227159108be2ec741"
+    },
+    "tests/zephyr/m6_core_api/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2c6c91f60ae6d91a8c419668479e4ad205a0afc1"
+    },
+    "tests/zephyr/m7_config_contract/negative/missing_wire_chosen.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bb974ba208cfca4897b12a74a9737120444c7368"
+    },
+    "tests/zephyr/m7_config_contract/negative/non_spi00_chosen.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "276b9015f0f356b54e7970ad81644bc6b562368c"
+    },
+    "tests/zephyr/m7_config_contract/negative/spi00_uart00_conflict.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5b02456fe38f2154f4be66371c889e6e1dde6a39"
+    },
+    "tests/zephyr/m7_config_contract/scripts/check_negative_configurations.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "78d753badb9820292ce2d7bcdf378d776f1fcc84"
+    },
+    "tests/zephyr/m7_core_api/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "cbf29cbc8dffaed99e723d00ccb45c1547b2a2fe"
+    },
+    "tests/zephyr/m7_core_api/boards/nrf54l15dk_nrf54l15_cpuapp_nu54dk.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ffd352b6da4df3d44400a1aa4783e211006db1a0"
+    },
+    "tests/zephyr/m7_core_api/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fd666d13e04e601e34f4a426070cd9b6c7a80835"
+    },
+    "tests/zephyr/m7_core_api/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "36c1254b5e4406199b5209421796b6c474edccb4"
+    },
+    "tests/zephyr/m7_core_api/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "26412b1494f5e44c3abc9680b87d4d11598f2361"
+    },
+    "tests/zephyr/m7_peripheral_hil/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9b3218691bdee92b8f92f29a74ff5c17966556b8"
+    },
+    "tests/zephyr/m7_peripheral_hil/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "12912d87e29b4bfd511bd568e8c1d12d2d31f2cc"
+    },
+    "tests/zephyr/m7_peripheral_hil/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "26927816a3cd70ccfbd17935b5fb1d9d53a7905c"
+    },
+    "tests/zephyr/m7_peripheral_hil/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d8bdcb827f88f54791cf918bb8a5a0ea3d783a23"
+    },
+    "tests/zephyr/r01_serial/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0b162f04f586946da9bd647a6e4dc2381312e498"
+    },
+    "tests/zephyr/r01_serial/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7290810abe37926db61fb2eb1408cf73598a9409"
+    },
+    "tests/zephyr/r01_serial/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "94c8466a0e7d9cf6d545f6956b00c4e113824808"
+    },
+    "tests/zephyr/r01_serial/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "542db911814974159c3982588d5a60ecac372526"
+    },
+    "tests/zephyr/r01_serial/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3423e2159278d45d2d59d114cd81eb321027b7f9"
+    },
+    "tests/zephyr/v04_pair_hil/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4357c6d34def96a53b13f82599b2164a8953db3a"
+    },
+    "tests/zephyr/v04_pair_hil/Kconfig": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "00cebcad33bb15aa107b4f8540ae3a76d438827d"
+    },
+    "tests/zephyr/v04_pair_hil/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bf67a716b11ee4a29b0cb95182c05c7d0f5b71ac"
+    },
+    "tests/zephyr/v04_pair_hil/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "207f2aca1e6f8f09ecbfeb29cb6fb0b08e994834"
+    },
+    "tests/zephyr/v04_pair_hil/read_revision.cmake": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7109b22232dc8c9bae831bd64d875e64635484da"
+    },
+    "tests/zephyr/v04_pair_hil/src/fixture_gate.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9a5d0740de9e91a9c116522fa4a653723e1e03cb"
+    },
+    "tests/zephyr/v04_pair_hil/src/fixture_hil.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4ee9082a56d1f14fd6285c408e9365fa7ecc238e"
+    },
+    "tests/zephyr/v04_pair_hil/src/fixture_hil.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7e147aae8f4daf96e72072565cfa1d814ce5ed41"
+    },
+    "tests/zephyr/v04_pair_hil/src/main.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7fce036641355345a1bf6054b448af95297f4044"
+    },
+    "tests/zephyr/v04_pair_hil/src/protocol.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "23055f92c4ab952b6b44d5d04e9f5d90fcce5ca3"
+    },
+    "tests/zephyr/v04_pair_hil/src/serial_hil.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "71b4030a247846110635224137b5e5ded3669b6b"
+    },
+    "tests/zephyr/v04_pair_hil/src/serial_hil.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fd86425e42f25a0cd95a208cf741d950f3baaec1"
+    },
+    "tests/zephyr/v04_pair_hil/src/signal_hil.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2cdb644d2c1c72594b98aa29734a22fab6be5be2"
+    },
+    "tests/zephyr/v04_pair_hil/src/signal_hil.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "44691e68014cdac10d850205041dfa48765989a0"
+    },
+    "tests/zephyr/v04_pair_hil/testcase.yaml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "afd830fce9a5a860d6f87a4d37758ef0c069c012"
+    },
+    "third_party/.gitkeep": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8b137891791fe96927ad78e64b0aad7bded08bdc"
+    },
+    "third_party/ArduinoCore-API.provenance.yml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "396e108aa86393994c95560086d575c404abaf90"
+    },
+    "third_party/ArduinoCore-API/LICENSE": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c6487f4fdf701640ac0f559eb0130cdf76c5d3f4"
+    },
+    "third_party/ArduinoCore-API/api/ArduinoAPI.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a7d8c0b8b1d4ef87dddd21918a718a612fe7c276"
+    },
+    "third_party/ArduinoCore-API/api/Binary.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bb5a1b08b3fe4637b303780300b803d953c0a259"
+    },
+    "third_party/ArduinoCore-API/api/CanMsg.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f6511a695ac6a7ae8e5b449fd41055423264413a"
+    },
+    "third_party/ArduinoCore-API/api/CanMsg.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3bd74b9174b17fc5c263355af4f4718da86322c1"
+    },
+    "third_party/ArduinoCore-API/api/CanMsgRingbuffer.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8ad9e30c836759894fa3a5b886dca45768a3894f"
+    },
+    "third_party/ArduinoCore-API/api/CanMsgRingbuffer.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0f445796fcca6bc5ed50cb9a8febf8adebcac086"
+    },
+    "third_party/ArduinoCore-API/api/Client.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "702b80961bfbafac23121745228a7944f9aeb796"
+    },
+    "third_party/ArduinoCore-API/api/Common.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "390556573ec5092ef716520acfb4a7fe56afbae2"
+    },
+    "third_party/ArduinoCore-API/api/Common.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "18abd324f407154c39d0ee9bcb7233dafa612b6c"
+    },
+    "third_party/ArduinoCore-API/api/Compat.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0aa1353d068f2cee5489c80909e372a8153fba8b"
+    },
+    "third_party/ArduinoCore-API/api/DMAPool.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fc6782e4e9e40a09dc10deb63bd4f9aa0ddb430f"
+    },
+    "third_party/ArduinoCore-API/api/HardwareCAN.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7b197e149e579a46d79467f76e4384bb37a696ff"
+    },
+    "third_party/ArduinoCore-API/api/HardwareI2C.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "749c5d4be24c213de3f73a2f6b61230b41cc4a20"
+    },
+    "third_party/ArduinoCore-API/api/HardwareSPI.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "54987d5112437ee6afb9b2ecafccef5fe3549423"
+    },
+    "third_party/ArduinoCore-API/api/HardwareSerial.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "89b216e26edae9a87d0c432d791afba076f49001"
+    },
+    "third_party/ArduinoCore-API/api/IPAddress.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7f503e32d5c1cde5da411f8df5b1c0949b8ff59a"
+    },
+    "third_party/ArduinoCore-API/api/IPAddress.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "cf2aaafa5ce184cc780443ab1e6a9027adbba90d"
+    },
+    "third_party/ArduinoCore-API/api/Interrupts.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4726dfb4e3e3674fbcce6e9ca4060cb657b8834f"
+    },
+    "third_party/ArduinoCore-API/api/PluggableUSB.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c9fe6860aca9f555b9072958b39611f60c683231"
+    },
+    "third_party/ArduinoCore-API/api/PluggableUSB.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "222ccf3077cc0f257829bbd1ad6110e4b6184010"
+    },
+    "third_party/ArduinoCore-API/api/Print.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fa2d00015e2104a49c06126bf4247fed575ca3ad"
+    },
+    "third_party/ArduinoCore-API/api/Print.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "11e9e11f83d1c7be805af832c27434d1453d5612"
+    },
+    "third_party/ArduinoCore-API/api/Printable.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fbd48cd1220b4b79956f22831df759d8da6efbba"
+    },
+    "third_party/ArduinoCore-API/api/RingBuffer.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3190405394ccc5f29c95703431be7644ac395114"
+    },
+    "third_party/ArduinoCore-API/api/Server.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ea8ce19e24f1990d4a44545ac072d933eae9dfa5"
+    },
+    "third_party/ArduinoCore-API/api/Stream.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5edaf5d2173e9271bbf04e3a33bd48e71c67e87b"
+    },
+    "third_party/ArduinoCore-API/api/Stream.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "be6d8801dc7c6a9de3ea16b2b99780f9d8ec502e"
+    },
+    "third_party/ArduinoCore-API/api/String.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "cf94dedff67190825bd51c8219bde63c50c5e7a5"
+    },
+    "third_party/ArduinoCore-API/api/String.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f2413e14b26734005f1cc50e21d9f5b458587421"
+    },
+    "third_party/ArduinoCore-API/api/USBAPI.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "67754b255b85134f3a62894a0e0a07b0340e9229"
+    },
+    "third_party/ArduinoCore-API/api/Udp.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "008bec04990f39d3dc6fdb99df3de6dd6684e16a"
+    },
+    "third_party/ArduinoCore-API/api/WCharacter.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d407dbfa0b675299656ab15deac0384082545b24"
+    },
+    "third_party/ArduinoCore-API/api/deprecated-avr-comp/avr/dtostrf.c.impl": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f410886c17e9874f61117c3d2268f4882ffd6927"
+    },
+    "third_party/ArduinoCore-API/api/deprecated-avr-comp/avr/dtostrf.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1a6a7b6ecc2f18810dbd7aa51c749e477bb77b21"
+    },
+    "third_party/ArduinoCore-API/api/deprecated-avr-comp/avr/interrupt.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a2873cf96c8219b8fa8e77bc71924bebc4634675"
+    },
+    "third_party/ArduinoCore-API/api/deprecated-avr-comp/avr/pgmspace.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6505616b8573e0ccdd71073400c237ecf9bedab4"
+    },
+    "third_party/ArduinoCore-API/api/deprecated/Client.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "bad638f395a86d60a36822c2cfdfae2835f220cc"
+    },
+    "third_party/ArduinoCore-API/api/deprecated/HardwareSerial.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d9cf646c089251501c8be9b642e7c4a141b7eca2"
+    },
+    "third_party/ArduinoCore-API/api/deprecated/IPAddress.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f18c435c3a5621c87defd78e4a8cebc6e64b57de"
+    },
+    "third_party/ArduinoCore-API/api/deprecated/Print.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ae788d437b9508b6777dda994c02e7a5e2ef520d"
+    },
+    "third_party/ArduinoCore-API/api/deprecated/Printable.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2c941eb3bf1202fdadc6a31eda30b20eeec627bc"
+    },
+    "third_party/ArduinoCore-API/api/deprecated/Server.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5b7643a8ef7c768aac8fc1274239f4ec6324621b"
+    },
+    "third_party/ArduinoCore-API/api/deprecated/Stream.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a3fb6519193b22cee16840c4a191c6ca9df12d41"
+    },
+    "third_party/ArduinoCore-API/api/deprecated/Udp.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "29d6fbe9c60331332c23ac3eaf0fdae5a4780e9c"
+    },
+    "third_party/ArduinoCore-API/api/deprecated/WString.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "15a40bb1e910626cca7e0269d034bb9f5537d063"
+    },
+    "third_party/ArduinoCore-API/api/itoa.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "eaa2b8e42e01f601a8f8a158b466cd29b7bcf73b"
+    },
+    "tools/ci/m17-external-libraries.lock.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1de03b87d361561b80f1fe2d2c00f8fd05b25062"
+    },
+    "tools/ci/ncs-3.4.0.lock.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d893f514fc044e39faa6806d59153967a107ba5b"
+    },
+    "tools/ci/prepare_ncs_workspace.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "21e4450fca2d2374b6768ace658eb3a704ba24f8"
+    },
+    "tools/ci/requirements-host.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1c1c39334f773d8794f6271631ca18e5fd408fa7"
+    },
+    "tools/ci/run_build_matrix.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "787de874cfe3729b624df538cf2104451af98cfe"
+    },
+    "tools/ci/run_m12_gate.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "14439a1ebe35db2b60755560a41650318f626186"
+    },
+    "tools/ci/run_m14_qemu.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "da2af053885a66165d8fadf6c604562fd69c39db"
+    },
+    "tools/ci/run_m17_external_arduino.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6406b1d678954d8c1470c0d1b9259e185c604949"
+    },
+    "tools/ci/run_m17_feasibility.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c8d7b324421999ff8d3c902c6507db0c15a535b8"
+    },
+    "tools/ci/run_zephyr_build.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a66858ea586f79a0b613945e54ada64d20803e18"
+    },
+    "tools/ci/verify_ci_lock.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "956cc4ca6dcb1e55bcdb26eb343e4f15de1641ff"
+    },
+    "tools/ci/verify_product_identity.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6bf3483d33538a47812ae2c2688c04aa6777406d"
+    },
+    "tools/coverage/m17_coverage.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8fe8c5578c2ca5fab63b4aaa88126e62549a2ff5"
+    },
+    "tools/format/run_cpp_style.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7d0c7be7d86461e335d4c784181278c7f49ef5df"
+    },
+    "tools/nu54-builder/nu54-builder.cmd": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f692b3691ca2ad2a858ae135a0dfde037aec79ce"
+    },
+    "tools/nu54-builder/src/nu54_builder.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6c53c7db070706669eb9504ea183649ad1166070"
+    },
+    "tools/nu54-builder/src/nu54_builder_impl/__init__.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7848208771b3159a3b7c07682c8e01e608a23c7b"
+    },
+    "tools/nu54-builder/src/nu54_builder_impl/artifacts.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "43e1c1d0188b0c9d4e7d7d124de96ce5da268481"
+    },
+    "tools/nu54-builder/src/nu54_builder_impl/build.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "af2110372819b65b5d7a1babfe570ac2924378eb"
+    },
+    "tools/nu54-builder/src/nu54_builder_impl/cache.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5b44d31f0825f516d70945ee52c66c766be3c99d"
+    },
+    "tools/nu54-builder/src/nu54_builder_impl/cli.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b4a148b0d7f723f9d5c40e044d860083cebb0ca3"
+    },
+    "tools/nu54-builder/src/nu54_builder_impl/common.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "680ed3e1de7376de4ded8689ff0a8fa3cf4ef825"
+    },
+    "tools/nu54-builder/src/nu54_builder_impl/configuration.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8d4b5483bbbf4f8fdfbfe30c72f2d9afb25c1c98"
+    },
+    "tools/nu54-builder/src/nu54_builder_impl/environment.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6eb603ba7626188be3258316f0d7eb48c3526c9c"
+    },
+    "tools/nu54-builder/src/nu54_builder_impl/frontend.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8c670c3a5f4a04e77436151ea854111b121a35dd"
+    },
+    "tools/nu54-builder/src/nu54_builder_impl/installed_platform.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c976dacef16e173583d18dc6ae1e25505f55bb80"
+    },
+    "tools/nu54-builder/src/nu54_builder_impl/locking.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7edf824e59d0562bdfeba1ee3af51b993e4f2d69"
+    },
+    "tools/nu54-builder/src/nu54_builder_impl/models.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f01c3d880119e150f641061f30a09896bf3206aa"
+    },
+    "tools/nu54-builder/src/nu54_builder_impl/paths.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8fd2c54f98453eeba04f85445f60067ceca8da2a"
+    },
+    "tools/nu54-builder/src/nu54_builder_impl/source_graph.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b2cafd290132bb9fd61ba05dbc9e10e7bb99e309"
+    },
+    "tools/nu54-builder/src/nu54_builder_impl/upload.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d7c8f84bb1247ac8477020b7ac86050ac310240c"
+    },
+    "tools/nu54-builder/templates/zephyr-app/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c17950f54841a081b3f7f8c9c48266ba678654c7"
+    },
+    "tools/nu54-builder/templates/zephyr-app/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4ee7eb005fb0780291431cf6192596e8a3e82c47"
+    },
+    "tools/nu54-builder/templates/zephyr-app/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9d9daef6803b5a18f5c361f6737cf2e536a75ba9"
+    },
+    "tools/nu54-builder/templates/zephyr-app/sources.cmake": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "71db79dc0308a997fe2fa11d1b01a1fae94da239"
+    },
+    "tools/nu54-builder/templates/zephyr-app/src/bootstrap.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3567ac45a8a5620b65082c6647b6286134000366"
+    },
+    "tools/nu54-prerequisites/install-nordic.ps1": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "82ba1bf623fab38320eb455552f3dff40c2dcec6"
+    },
+    "tools/nu54-prerequisites/nrfutil-requirements.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "cd64697c1e0eedbf4f48b1786c7740a6fa943813"
+    },
+    "tools/nu54-prerequisites/pins.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0ab05f7e72749bc4c8bfd0287e66928ca7a41d46"
+    },
+    "tools/nu54-prerequisites/verify-nordic.ps1": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "57c79837625e6317ed39a5bd3cc3248b8c1db456"
+    },
+    "tools/peripheral/peripheral-manifest.schema.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d278419d009b0b7771927d4c9e0b9721f580ee2d"
+    },
+    "tools/peripheral/serial-fabric-contract.schema.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4ce2700f73b52a68482251ae93682cd081d10e6a"
+    },
+    "tools/peripheral/verify_generated.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "aea6161ba00c064e8648f0ec7d3cea09dfcac79d"
+    },
+    "tools/peripheral/verify_m23_inventory.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "71cf4a8c934bb67aed371aab955835a2ffced5f4"
+    },
+    "tools/peripheral/verify_m24_serial_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b0c71e78f7139b524a73b177dac87b5bb3c10850"
+    },
+    "tools/peripheral/verify_m26_system_contract.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "841307cfe3f78966271ec5fa760935333e000bb3"
+    },
+    "tools/peripheral/verify_v04_test_plan.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c73e681a93db3c1229ad58ae054d70bcb73f0890"
+    },
+    "tools/release/invoke-m11-rc-windows.ps1": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "215ea5dfd8af91084331bbccde5b941d92f4b688"
+    },
+    "tools/release/m18_release.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fb4afb508a45bc975ff31756e86f24bc86302afd"
+    },
+    "tools/release/m22-package-examples.lock.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "03e0b18a2c1ebf4e2b9503eb0c2ec8a8a5fa2d71"
+    },
+    "tools/release/m22_cleanroom.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b920ef5be7de2e506d7ef1893c0c994063ea4dcc"
+    },
+    "tools/release/m22_cleanup_recovery.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8addbf677f80908836aa29a351c6edb48f0cadfb"
+    },
+    "tools/release/m22_release.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d223dd22012f59482a818e32f65e6355715ca61d"
+    },
+    "tools/release/m27-package-examples.lock.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7ef777544ad8d3434364a6c4da9c4e98b01e9ebc"
+    },
+    "tools/release/m27_release.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7fc1f3668c713ffbc362cc2f37d3c628ec3326d2"
+    },
+    "tools/release/m27_staged_candidate.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "628bb40fd0e9ed29e467c5d45cdd897722113b0b"
+    },
+    "tools/release/nu54_release.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "224d852987e2e58093033af3250d45be397834da"
+    },
+    "tools/release/run_fixed_gate.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e9ab535c34f36b61433013d9a3f23f60f2fc173e"
+    },
+    "tools/release/run_m22_fixed_gate.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e7cb0718462814a04d21855aee6c9ae2ac87becc"
+    },
+    "tools/release/run_m22_package_examples.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "73663da6c35470bf67b1a4cf89e6aa9219859f3b"
+    },
+    "tools/release/run_m27_package_examples.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "652c1f1ac2c312a3a2b0268042aaeb480eecf70a"
+    },
+    "tools/remote-windows/m10/invoke-m10-clean-windows.ps1": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c5eb46ee5d72014c543f136a887620c59e47b9cd"
+    },
+    "tools/remote-windows/m10/run-m10-target.ps1": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "02f234479954b2e0e507ba3f079147468d2f33e3"
+    },
+    "tools/remote-windows/setup-nu54-ci-ssh.cmd": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "246f782f90e33355362228903f6903fe0485ca3e"
+    },
+    "tools/remote-windows/setup-nu54-ci-ssh.ps1": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "b41fec73909452e4befe82740620168f126b5e46"
+    },
+    "tools/variant/verify_nu54dk_pinmap.py": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e4d04df951ad40da5e1627c4c7cd499d730b11f7"
+    },
+    "variants/nu54dk/.gitkeep": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8b137891791fe96927ad78e64b0aad7bded08bdc"
+    },
+    "variants/nu54dk/digital_pins.inc": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "33052704ed5a963c897252f3c3d8bd23d8865a53"
+    },
+    "variants/nu54dk/io_resource_registry.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1417ca408b0827e7e058fbf3f666a79e36fd6bef"
+    },
+    "variants/nu54dk/peripheral-manifest.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a7055b7ea0bd76b89c67b445aeeb4f10f5bd0d22"
+    },
+    "variants/nu54dk/peripheral_routes.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f860ce50e6de032f9f14ac003d11a743ff4e52d3"
+    },
+    "variants/nu54dk/peripheral_routes.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "058dfb05b62a8817e43b7bfeb53265331774d201"
+    },
+    "variants/nu54dk/profiles/ble/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d3d1ffeee972d8cad6c8aaca2946aad20949c5b3"
+    },
+    "variants/nu54dk/profiles/ble/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "cc874f988223d8a1a9e5f1551705111662c41f74"
+    },
+    "variants/nu54dk/profiles/ble/profile.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "233b27fd9fd1618030493c1d9c4eead71a5478b4"
+    },
+    "variants/nu54dk/profiles/standard/app.overlay": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "19435d79bbba04ea6ab6f2484231516779e8880f"
+    },
+    "variants/nu54dk/profiles/standard/prj.conf": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "54a1763f3cadb12ead4aa9bfb77fee815baa03ec"
+    },
+    "variants/nu54dk/profiles/standard/profile.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3452b5a6656468f59957d13d492b04fcb10e43e3"
+    },
+    "variants/nu54dk/pwm_runtime_routes.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "5387383189e43ec81ae3ee700007a1b94ec114ef"
+    },
+    "variants/nu54dk/pwm_runtime_routes.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "62ee3f9df0665efcdc82fdccd25714c93fd22037"
+    },
+    "variants/nu54dk/serial-fabric-contract.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "70d7cc848340c6f6b36950a9eb5446304fa9675d"
+    },
+    "variants/nu54dk/serial_fabric_routes.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8b21522cc4faaa2c9c9a44ad1ca8302f7704cfad"
+    },
+    "variants/nu54dk/serial_fabric_routes.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a14abf390a824176565251b326d0e7d280982399"
+    },
+    "variants/nu54dk/system-capability-contract.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4ade811374df5b62ccbd503ee0df59cf909494b5"
+    },
+    "variants/nu54dk/v0.4.0-release-readiness.json": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "62b3479987eac1fbdd377d151da4e180b1f88f3f"
+    },
+    "variants/nu54dk/variant.cpp": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "ded499ae9e42028547956fa60220d5951301360a"
+    },
+    "variants/nu54dk/variant.h": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "d4f541ec857c78cc85db7670e95fd82fee7c8f3c"
+    },
+    "zephyr/.gitkeep": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8b137891791fe96927ad78e64b0aad7bded08bdc"
+    },
+    "zephyr/CMakeLists.txt": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "293820572b5648ab984f6fc6d72239e7a7ae0180"
+    },
+    "zephyr/Kconfig": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "2705b7516fad97e2e4b1696b583cb085f11af888"
+    },
+    "zephyr/cmake/build_record_target.cmake": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6b6a8bf46d112277edb4440311b798fff81f0f99"
+    },
+    "zephyr/cmake/product_identity.cmake": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "92ff3ad03914085918f8e5ae120e6a63689113aa"
+    },
+    "zephyr/cmake/source_provenance.cmake": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7583214d0b7bb59c999a4de243be8831f209f086"
+    },
+    "zephyr/cmake/source_selection.cmake": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "584f868fe5d7b1f4eeabc8e1fb2cae6cc2edeeb0"
+    },
+    "zephyr/cmake/write_build_record.cmake": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1f802644b665427102dbde99d784525dbfc86bef"
+    },
+    "zephyr/config/analog.Kconfig": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8b473cbd3182f6623dda6e8c5fe41d360c6df34c"
+    },
+    "zephyr/config/analog_fabric.Kconfig": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "3cae1e1a21984fe5c1c2513202d9d4fe36cdfaf0"
+    },
+    "zephyr/config/ble.Kconfig": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "55e8cb7d176f6d708248495a51663ad9af488b4f"
+    },
+    "zephyr/config/buses.Kconfig": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1750c375a72e17b4b4edc29683ffdbea2c4f276b"
+    },
+    "zephyr/config/core.Kconfig": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f08a18c6d89ae886b9422376d167a0392fe6ae24"
+    },
+    "zephyr/config/event.Kconfig": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "8863f373b6a19c9748164bcbd3a9d7a04515ae99"
+    },
+    "zephyr/config/scheduler.Kconfig": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "a2a9de0089dcccf15e9df9df85dd24624a3c381f"
+    },
+    "zephyr/config/serial.Kconfig": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6d9f63b6442c5c73ff2e31445a51bd2f854b807b"
+    },
+    "zephyr/config/stream.Kconfig": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6640650a6938ab2cf6bf9dc0dde8bdb9a5fda799"
+    },
+    "zephyr/config/system.Kconfig": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "7de530449a172bf0f0a3cfcf112c94fd361256cd"
+    },
+    "zephyr/module.yml": {
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "e5881902c79d96904880325049eefdfdeb6f54ee"
+    }
+  },
+  "physical_executed": false
+}

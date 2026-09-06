@@ -147,13 +147,7 @@ def configure_v04_candidate(package: Any) -> None:
         raise M27ReleaseFailure("historical release-candidate allowlist changed")
     if tuple(package.STABLE_VERSIONS) != BASE_STABLE_VERSIONS:
         raise M27ReleaseFailure("historical stable allowlist changed")
-    package.RELEASE_CANDIDATE_VERSIONS = BASE_RC_VERSIONS + (VERSION,)
-    package.PACKAGE_VERSIONS = (
-        tuple(package.SUPPORTED_VERSIONS)
-        + package.RELEASE_CANDIDATE_VERSIONS
-        + BASE_STABLE_VERSIONS
-    )
-    package.WINDOWS_SAFE_VERSIONS = tuple(package.WINDOWS_SAFE_VERSIONS) + (VERSION,)
+    package.configure_release_candidates(BASE_RC_VERSIONS + (VERSION,))
 
 
 def validate_contract(repository: Path = REPOSITORY) -> dict[str, Any]:

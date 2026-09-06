@@ -106,7 +106,7 @@ class AC01ContractTests(unittest.TestCase):
         self.assertIn("GPIO_DT_SPEC_GET(DT_NODELABEL(node_label), gpios)", source)
         self.assertIn("enabledCapabilities", source)
 
-        kconfig = (REPOSITORY_ROOT / "zephyr" / "Kconfig").read_text(
+        kconfig = (REPOSITORY_ROOT / "zephyr" / "config/core.Kconfig").read_text(
             encoding="utf-8"
         )
         connector_config = kconfig.split(

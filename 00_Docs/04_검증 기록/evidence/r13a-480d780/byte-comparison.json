@@ -1,0 +1,105 @@
+{
+  "artifacts": {
+    "nucode-nu54dk-zephyr-0.0.90.CHECKSUMS.sha256": {
+      "bytes": 552,
+      "sha256": "1027dfb280b46e1fb3dab5a4b7e16a7e5cd481491db38cd4576ccc36366ddba0"
+    },
+    "nucode-nu54dk-zephyr-0.0.90.THIRD_PARTY_NOTICES.md": {
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d"
+    },
+    "nucode-nu54dk-zephyr-0.0.90.license-inventory.json": {
+      "bytes": 20488,
+      "sha256": "dd86bf8e9e697f0fbba5ac46dab6a7415ba9040d6f6b67c71439765a89dfb222"
+    },
+    "nucode-nu54dk-zephyr-0.0.90.release-manifest.json": {
+      "bytes": 131504,
+      "sha256": "6870c05a4b51c4bc18ebd9353c637c92dc6cee9269ce8d3c59589fd9c58b2365"
+    },
+    "nucode-nu54dk-zephyr-0.0.90.spdx.json": {
+      "bytes": 243540,
+      "sha256": "d26ec382854cc35635b44df19e94e10b99a67cac99926b1712d331477ca05055"
+    },
+    "nucode-nu54dk-zephyr-0.0.90.zip": {
+      "bytes": 2558516,
+      "sha256": "4a955be761d6de1f50d85f890a220d36b4b03a4f1ec07189209b87e6a3e99541"
+    },
+    "package_nucode_nu54dk_preview_index.json": {
+      "bytes": 1153,
+      "sha256": "c856d8dde15c4c532580566b8622d9b61550333e0181a2bd1938d435a3f6d17a"
+    }
+  },
+  "cli_cases": [
+    {
+      "arguments": [],
+      "exit": 2,
+      "stderr_sha256": "5d4f270df6e6f705a96cb5cc8d69ed8617543360c151719003d16153ecb99a88",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "arguments": [
+        "--help"
+      ],
+      "exit": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "c696b9ba94e03f40f29ceb1499d914d14732c12121dc0961d863599489c7968b"
+    },
+    {
+      "arguments": [
+        "build",
+        "--help"
+      ],
+      "exit": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "eefa8b807b0eb7050e22d06269a6915394474ceef0c91eac2e3f9c2a905bfbc0"
+    },
+    {
+      "arguments": [
+        "validate",
+        "--help"
+      ],
+      "exit": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "636cad1e65f1f94194e5300369a8627585e7a0c3a707dc008f54f3a40f78542c"
+    },
+    {
+      "arguments": [
+        "index",
+        "--help"
+      ],
+      "exit": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e35f706ea25edc90c2e6c5de1da93e240fab6d2ed400d8f1dc0532f4f95d2be9"
+    },
+    {
+      "arguments": [
+        "validate-index",
+        "--help"
+      ],
+      "exit": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "c6bfa195453250aaf5dc46713a9c156a78bb374c1ff56701101a0d29e74d4071"
+    },
+    {
+      "arguments": [
+        "invalid-command"
+      ],
+      "exit": 2,
+      "stderr_sha256": "f2a2be45bf26938a14599e872cd6db9f14a519f0bac5e06e6b43e96e4f7e6965",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "arguments": [
+        "build",
+        "--version",
+        "invalid"
+      ],
+      "exit": 2,
+      "stderr_sha256": "55ec49f788d970d4eceaa77fd83b83e3a6f6131b0803ee8133548a2a48a4c637",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "physical_executed": false,
+  "published": false,
+  "source_commit": "480d780"
+}

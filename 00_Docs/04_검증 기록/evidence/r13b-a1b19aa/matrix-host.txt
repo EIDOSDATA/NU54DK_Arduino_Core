@@ -1,0 +1,16 @@
+test_all_nu54dk_testcase_metadata_is_in_canonical_runner (__main__.BuildMatrixRunnerTests.test_all_nu54dk_testcase_metadata_is_in_canonical_runner)
+! @brief 독립 testcase YAML을 대조하여 새 target의 canonical 목록 누락을 거부합니다. ... ok
+ARDUINO_CLI_BOOTSTRAP_RETRY=1/2;DELAY_SECONDS=2
+test_arduino_compile_retries_only_bootstrap_failure (__main__.BuildMatrixRunnerTests.test_arduino_compile_retries_only_bootstrap_failure) ... ok
+test_arduino_groups_are_explicit_and_disjoint (__main__.BuildMatrixRunnerTests.test_arduino_groups_are_explicit_and_disjoint) ... ok
+test_child_python_output_is_unbuffered (__main__.BuildMatrixRunnerTests.test_child_python_output_is_unbuffered) ... ok
+test_serial_source_validator_rejects_false_positive_builds (__main__.BuildMatrixRunnerTests.test_serial_source_validator_rejects_false_positive_builds) ... ok
+test_target_subset_never_silently_escapes_group (__main__.BuildMatrixRunnerTests.test_target_subset_never_silently_escapes_group) ... ok
+test_zephyr_failure_summary_identifies_scenario (__main__.BuildMatrixRunnerTests.test_zephyr_failure_summary_identifies_scenario) ... ok
+test_zephyr_groups_partition_every_suite_once (__main__.BuildMatrixRunnerTests.test_zephyr_groups_partition_every_suite_once) ... ok
+test_zephyr_plan_uses_short_isolated_outdirs (__main__.BuildMatrixRunnerTests.test_zephyr_plan_uses_short_isolated_outdirs) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.158s
+
+OK
