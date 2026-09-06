@@ -1,0 +1,44 @@
+{
+  "source": "b929b14f37d7d086c9accad748aab83b58a0e7be",
+  "pair_builds": 2,
+  "pair_build_seconds": 122.39,
+  "comparison_source": "ea4e25a035dbc9219e417bf2a2056ce6f9a2e09c",
+  "comparisons": [
+    {
+      "role": 1,
+      "translation_units_identical": 42,
+      "normalized_config_identical": true,
+      "source_membership_identical": true,
+      "resolved_dts_bytes_identical": true,
+      "runtime_identity_expected_to_change": true,
+      "dts_sha256": "6afffe185d84c79368637cb34f23e16eecc9523945f7e837d06ca0cd7f6bdce0"
+    },
+    {
+      "role": 2,
+      "translation_units_identical": 42,
+      "normalized_config_identical": true,
+      "source_membership_identical": true,
+      "resolved_dts_bytes_identical": true,
+      "runtime_identity_expected_to_change": true,
+      "dts_sha256": "6afffe185d84c79368637cb34f23e16eecc9523945f7e837d06ca0cd7f6bdce0"
+    }
+  ],
+  "canonical_runner_sha256": {
+    "tests/hil/nu54dk/v04_signal.py": "cc4cc77af659dd5ab4a92d91d913873df619ea8c37cd42a68b4b8f17058be730",
+    "tests/hil/nu54dk/v04_signal_run.py": "f70c100e1f388004eac8d78aeb00bf89abd7de99c1c1292efbd430cb31a08959",
+    "tests/hil/nu54dk/v04_fixture.py": "b6be2245e3b33f59a39916183504a7d1743ecd321f11ea0b7a0216cc1f69c06b",
+    "tests/hil/nu54dk/v04_pair.py": "d0c12bf161cf5d7d6b1e9becdc3190a91064ff2136f9d523a34cc1f7011047a5",
+    "tests/hil/nu54dk/v04_fixtures.json": "26fcb8482b72b9f7bebf5786388a514462aaa5c40e19eb8bb338b9f187e5ca95"
+  },
+  "public_core_sdk_board_changed": false,
+  "new_host_or_style_run": false,
+  "prior_source_host": {
+    "passed": 660,
+    "skipped": 1,
+    "groups": 82,
+    "native_compiler_skips": 0
+  },
+  "prior_source_style_files": 361,
+  "new_physical_result": "clock/gate separation requirement failed",
+  "pdm_functional_gate_completed": false
+}
