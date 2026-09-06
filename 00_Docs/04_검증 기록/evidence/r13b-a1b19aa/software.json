@@ -1,0 +1,31 @@
+{
+  "gates": {
+    "cmake-host": {
+      "log_sha256": "404fa487ab2ed91aa7323e21e7a1073bbcee0878803028ba5ae6cbf9b5b4a437",
+      "skips": 0,
+      "tests": 1
+    },
+    "contract": {
+      "log_sha256": "c8fcf5244783ae2cc0ec13af08260abcc4098f916d271e9b2f0a901a5d79a207",
+      "skips": 0,
+      "tests": 45
+    },
+    "host": {
+      "log_sha256": "09c58bdde2f3f2036551600feb83a3a0d4def76179c204c59ef3935d86de4a6a",
+      "skips": 2,
+      "tests": 634
+    },
+    "matrix-host": {
+      "log_sha256": "2d8f706d1805561604fff88d1a3a19d6a6504d1ffd81933527e7c8c461944aea",
+      "skips": 0,
+      "tests": 9
+    },
+    "style": {
+      "log_sha256": "6e6d0578ea7cd97629d5af5f5b191928e38ee7ec6d17221e5913a2438ddaa3b3",
+      "skips": 0,
+      "tests": 0
+    }
+  },
+  "physical_executed": false,
+  "start_commit": "a1b19aa"
+}

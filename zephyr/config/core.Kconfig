@@ -1,0 +1,91 @@
+config NUCODE_ARDUINO_RUNTIME
+	bool "Arduino setup()/loop() 런타임 활성화"
+	default y
+	help
+	  Zephyr main entry에서 init(), initVariant(), setup()과 loop()를
+	  실행합니다. Core 구성요소를 ztest에서 독립 검증할 때만 비활성화합니다.
+
+config NUCODE_ARDUINO_API
+	bool "ArduinoCore-API 공통 구현 활성화"
+	default y
+	select COMMON_LIBC_MALLOC
+	select REQUIRES_FLOAT_PRINTF
+	help
+	  ArduinoCore-API 1.5.2의 Common, String, Print와 Stream 구현을
+	  Core image에 연결합니다. String은 libc malloc arena를 사용합니다.
+
+config NUCODE_ARDUINO_IO_OWNERSHIP
+	bool "물리 I/O 자원 소유권 관리자 활성화"
+	default y
+	help
+	  GPIO pad, peripheral block, GPIOTE/DPPI/timer channel과 DMA RAM range를
+	  정규화된 키로 관리합니다.
+	  여러 자원을 reserve/commit/rollback하는 동안 충돌과 stale lease를
+	  검사하며 동적 메모리를 사용하지 않습니다. AC-02A에서는 현재 보드의
+	  고정 pinctrl 자원과 GPIO 획득 계약을 포함하며 M23 이후 async driver가
+	  같은 transaction에서 block·pin·event·buffer를 함께 예약할 수 있습니다.
+
+config NUCODE_ARDUINO_IO_RESOURCE_SLOTS
+	int "물리 I/O 자원 table slot 수"
+	default 48
+	range 16 128
+	depends on NUCODE_ARDUINO_IO_OWNERSHIP
+	help
+	  동시에 추적할 물리 pin과 peripheral block의 최대 개수입니다.
+
+config NUCODE_ARDUINO_GPIO
+	bool "Arduino digital GPIO API 활성화"
+	default y
+	select GPIO
+	select NUCODE_ARDUINO_IO_OWNERSHIP
+	help
+	  Variant의 Devicetree descriptor를 통해 pinMode(), digitalWrite()와
+	  digitalRead()를 제공합니다. 물리 GPIO controller와 pin 번호는 최종
+	  보드·Arduino profile Devicetree가 소유합니다.
+
+config NUCODE_ARDUINO_CONNECTOR_GPIO
+	bool "기존 NU54DK connector GPIO 구성과의 호환 표식"
+	default y
+	depends on NUCODE_ARDUINO_GPIO
+	help
+	  v0.2.x profile과 prj.conf 호환을 위해 이름을 유지합니다. 현재 canonical
+	  pin map은 이 값과 관계없이 P2.5와 P2.6을 Arduino digital pin으로
+	  노출합니다. 새 profile에서 두 핀을 숨기는 feature gate로 사용하지 마십시오.
+
+config NUCODE_ARDUINO_DAP_UART_GPIO_PINS
+	bool "SB5~SB8 DAP UART 조건부 P0.0~P0.3 GPIO 허용"
+	default n
+	depends on NUCODE_ARDUINO_GPIO
+	help
+	  NU54DK 회로의 SB5~SB8과 DAP level shifter/UART 연결 상태를 사용자가
+	  확인한 전용 profile에서만 P0.0~P0.3의 일반 digital GPIO capability를
+	  허용합니다. 비활성 상태에서도 Serial1/UART30 route metadata는 유지됩니다.
+
+config NUCODE_ARDUINO_LFXO_GPIO_PINS
+	bool "SB18~SB21 LFXO 조건부 P1.0/P1.1 GPIO 허용"
+	default n
+	depends on NUCODE_ARDUINO_GPIO
+	help
+	  SB18~SB21이 LFXO가 아니라 GPIO 조립 상태임을 사용자가 확인한 전용
+	  profile에서만 P1.0/P1.1의 digital GPIO capability를 허용합니다.
+	  기본 standard/ble profile은 fail-closed로 두 핀을 거부합니다.
+
+config NUCODE_ARDUINO_INTERRUPTS
+	bool "Arduino GPIO edge interrupt API 활성화"
+	default y
+	depends on NUCODE_ARDUINO_GPIO
+	help
+	  Variant가 interrupt capability를 부여한 input 핀에 RISING,
+	  FALLING, CHANGE와 one-shot/rearm 방식의 LOW/HIGH level callback을
+	  제공합니다. noInterrupts()/interrupts()는 Arduino GPIO callback만
+	  중첩 안전하게 mask하며 다른 Zephyr IRQ를 중지하지 않습니다.
+	  Callback은 GPIO ISR에서 직접 실행되므로 blocking API를 호출할 수
+	  없습니다.
+
+config NUCODE_ARDUINO_TIME
+	bool "Arduino 시간 API 활성화"
+	default y
+	depends on TIMER_HAS_64BIT_CYCLE_COUNTER
+	help
+	  Zephyr uptime과 64-bit hardware cycle counter를 사용해 millis(),
+	  micros(), delay(), delayMicroseconds()와 yield()를 제공합니다.

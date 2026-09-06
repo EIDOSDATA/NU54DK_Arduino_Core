@@ -203,7 +203,7 @@ class M16BleNusContractTests(unittest.TestCase):
     def test_kconfig_and_feature_register_bounded_ble_runtime(self) -> None:
         """! @brief BLE 구현과 고정 queue 크기가 library feature에 명시되는지 검사합니다. """
 
-        kconfig = (REPOSITORY / "zephyr" / "Kconfig").read_text(encoding="utf-8")
+        kconfig = (REPOSITORY / "zephyr" / "config/ble.Kconfig").read_text(encoding="utf-8")
         for symbol in (
             "config NUCODE_BLE_NUS",
             "config NUCODE_BLE_RX_BUFFER_SIZE",

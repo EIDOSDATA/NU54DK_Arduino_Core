@@ -73,3 +73,39 @@ canonical M21 metadata/누락 검사는 기계적 CMake/Kconfig 파일 분리와
 [링크 실패](evidence/r13b0-a1b19aa/link-failure.txt),
 [재시험](evidence/r13b0-a1b19aa/target-after.json),
 [설정·artifact](evidence/r13b0-a1b19aa/software.json)를 보존한다.
+
+### R13-B 기계적 분리 결과
+
+Kconfig는 기존 symbol/menu 순서를 유지해 core·serial·analog fabric·event·stream·system·
+buses·analog·BLE·scheduler의 10개 파일을 `zephyr/config`에서 포함한다. Windows의
+대소문자 구분 없는 filesystem 때문에 기존 `Kconfig`와 충돌하는 `kconfig/` 이름은 쓰지 않는다.
+최상위 CORE 조건과 malloc default는 원래 위치에 남겼고, include를 펼친 UTF-8 내용은
+기준선과 byte 동일하다. Storage는 기존 library conf/SDK symbol을 그대로 사용한다.
+
+CMake source_selection은 명시적 source 목록, source_provenance는 Git·내용 hash와
+build_info, build_record_target는 기존 sidecar target를 소유한다. product_identity와
+write_build_record의 기존 구현은 보존했다. include를 펼친 token이 동일하며 추가 함수 scope는
+없다. script 상대 경로는 include 디렉터리에 맞춰 같은 실제 write_build_record를 가리킨다.
+
+| 검사 | 결과 |
+| --- | --- |
+| application resolved config | 대표 12개 전체 CONFIG value/disabled symbol 동일 |
+| 실제 compile_commands source | 대표 12개 source multiset·중복 수 동일 |
+| flash/RAM | 대표 12개 모두 동일; pair DUT 184,000/161,496 B |
+| 실제 CMake Host | Serial 7개 선택/비선택 조합·단일 target 소속 PASS |
+| canonical 목록 | 독립 testcase YAML의 NU54DK 60개 전체와 일치; QEMU 1개는 별도 runner |
+| 전체 Host | 634개 중 632 PASS·2 조건부 SKIP |
+| contract / style / docs | 45/45 / 356개 / 173개 PASS |
+
+비교 도구의 초기 `.config` 탐색이 sysbuild의 빈 설정을 선택한 것을 발견해 ELF와 같은
+application 디렉터리의 `.config`로 고정하고 최소 symbol 개수도 검증했다. 최종 비교는 실제
+application 설정 전체를 사용한다. M21에서 발견한 SPI driver 누락은 위 B0의 별도 수정과
+재시험에 연결한다. 최초 16개 전체를 PASS로 바꾸지 않고 실패 report를 보존한다.
+
+[gate](evidence/r13b-a1b19aa/software.json),
+[본문·파일 대응](evidence/r13b-a1b19aa/module-comparison.json),
+[12개 설정·source·메모리](evidence/r13b-a1b19aa/target-comparison.json),
+[기준선 target](evidence/r13b-a1b19aa/target-baseline.json),
+[CMake Host](evidence/r13b-a1b19aa/cmake-host.txt),
+[목록 검사](evidence/r13b-a1b19aa/matrix-host.txt)를 보존한다.
+R13-C 정책·증거 구조와 최종 전체 gate를 계속한다.

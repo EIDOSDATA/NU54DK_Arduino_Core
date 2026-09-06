@@ -52,8 +52,8 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | 필드 | 현재 값 |
 | --- | --- |
 | 이번에 끝낸 일 | T01~T11. UART Fixture 101~103, SPI Fixture 201~203에 이어 exact `e2f045c`의 TWI Fixture 301에서 계획 기능 record 1,986개·cleanup 2·campaign 기록 2건, 총 1,990 result를 10 MHz SWD로 PASS |
-| 진행 중인 T 항목 | R00~R12와 R13-A package software 완료. [64번 기록](<./04_검증 기록/64_R13_도구_정책_build_구조.md>): 43개 AST·7개 산출물·8개 CLI 보존, package 20/20·contract 45/45·새 Host 5개·M18/M27 회귀 PASS. R13-B/C 및 최종 전체 gate 남음. current-source T11 NOT RUN |
-| 다음 구체적 행동 | R13: package 입력/model·license/SBOM/provenance·archive·index·검증 책임을 기존 CLI wrapper 아래 분리한다. 기존 정책 JSON/schema·생성기 원본과 deterministic drift/부정 계약을 연결한다. Kconfig 기능 파일과 CMake source/identity/provenance 경계를 기존 resolved config·target 소속 보존 하에 분리하고 누락 M21 target를 canonical runner에 연결한다. 문서·증거 책임 지도를 기록한 뒤 전체 Host/contract/inventory/docs/package/실제 설치 예제/target/style을 통과한 exact main을 push하고 T11 직전에 정지 |
+| 진행 중인 T 항목 | R00~R12와 R13-A/B software 구조 완료. [64번 기록](<./04_검증 기록/64_R13_도구_정책_build_구조.md>): 12개 실제 config/source/flash/RAM 동일, 전체 Host 632 PASS/2 SKIP, M21 누락·SPI off link 보정 별도 PASS. R13-C와 최종 전체 gate 남음. current-source T11 NOT RUN |
+| 다음 구체적 행동 | R13-C: 기존 정책 JSON/schema/생성기 원본 지도와 독립 process 생성 drift 검사를 통합한다. 로컬 software preview의 설치 예제 결과는 RC와 별도 identity로 기록한다. 문서/증거 책임과 불변 로그 보관 index를 갱신한 뒤 clean exact main에서 Host/contract/inventory/docs/package/설치 예제/전체 60 target/style을 검증하고 main push 후 T11 직전에 정지 |
 | 다음 작업에 필요한 사용자 행동 | R00~R13 구현·software gate에는 없음. 최종 current-source T11 회귀를 시작할 때 안내한 첫 fixture로 전원 OFF 상태에서 결선 변경 |
 | 외부 결선 상태 | Fixture 301 SDA·SCL·GND가 연결된 상태, 외부 저항·전원 rail 없음, 양쪽 `DISABLE_UART` 분리·`DISABLE_SWD` 연결. R13 뒤 최종 T11 회귀 시작 전 USB 전원을 끄고 해당 fixture 결선으로 변경해야 함 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |

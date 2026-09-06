@@ -369,7 +369,7 @@ class M12CiContractTests(unittest.TestCase):
     ## @brief CMake build record도 조회 대상 저장소 하나만 Git safe.directory로 지정합니다.
     def test_build_record_scopes_git_safe_directory(self) -> None:
         for relative in (
-            "zephyr/CMakeLists.txt",
+            "zephyr/cmake/source_provenance.cmake",
             "zephyr/cmake/write_build_record.cmake",
         ):
             source = (REPOSITORY / relative).read_text(encoding="utf-8")

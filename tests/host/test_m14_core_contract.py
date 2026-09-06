@@ -600,7 +600,7 @@ extern "C" int m14_test_main()
         )
 
     def test_production_sources_are_registered(self) -> None:
-        cmake_source = (REPOSITORY_ROOT / "zephyr" / "CMakeLists.txt").read_text(
+        cmake_source = (REPOSITORY_ROOT / "zephyr" / "cmake/source_selection.cmake").read_text(
             encoding="utf-8"
         )
         self.assertIn('cores/arduino/wiring_random.cpp"', cmake_source)

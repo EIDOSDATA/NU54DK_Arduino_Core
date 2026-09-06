@@ -1,0 +1,12 @@
+config NUCODE_ARDUINO_SYSTEM_FABRIC
+	bool "M26 TEMP·WDT30/31 후보 API 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	select SENSOR
+	select TEMP_NRF5
+	select WATCHDOG
+	help
+	  내부 TEMP 센서의 0.01도 단위 동기 측정과 WDT30/31의 명시적
+	  configure/start/feed/stop lifecycle을 Zephyr driver 위에 제공합니다.
+	  기존 BoardSystem WDT31과 동시에 사용하지 않으며 v0.4.0 물리 gate
+	  전에는 후보 API로만 빌드합니다.

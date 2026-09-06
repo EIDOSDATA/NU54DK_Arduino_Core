@@ -1,0 +1,175 @@
+{
+  "comparisons": {
+    "nucode.ac03.storage_contract": {
+      "after_memory": {
+        "FLASH": 100676,
+        "RAM": 30616
+      },
+      "before_memory": {
+        "FLASH": 100676,
+        "RAM": 30616
+      },
+      "config_sha256": "10bcc8d28b6bf88bf1088e67d44cd0b9e626833ae1a93bdec46e11cf9837afad",
+      "config_symbols": 1674,
+      "source_count": 283,
+      "source_membership_sha256": "a58273cbc7fffcd9ad55b7c9d1cc53bb1782180827d98747975cb01255dd91d6"
+    },
+    "nucode.m19.ble_gap_contract": {
+      "after_memory": {
+        "FLASH": 183608,
+        "RAM": 47968
+      },
+      "before_memory": {
+        "FLASH": 183608,
+        "RAM": 47968
+      },
+      "config_sha256": "cb03051641980d5f8e08e153977c9cc5b81737f89a465dca016738e0d2225da1",
+      "config_symbols": 1723,
+      "source_count": 281,
+      "source_membership_sha256": "29c3af97e2b2fed09de75e2478ae392ac297dd532b208222b8900f4a8db53a54"
+    },
+    "nucode.m20.ble_gatt_contract": {
+      "after_memory": {
+        "FLASH": 179336,
+        "RAM": 50472
+      },
+      "before_memory": {
+        "FLASH": 179336,
+        "RAM": 50472
+      },
+      "config_sha256": "dd6eef8e88e49f5ec65d9a152ff1bd8d76d0fa0218ea4e51cfba74d59ae60c4c",
+      "config_symbols": 1727,
+      "source_count": 285,
+      "source_membership_sha256": "087dc54ddcc3e92147300c9a852f6e0e78a73fafb05a3b714f05c94dbcc3d396"
+    },
+    "nucode.m25.analog": {
+      "after_memory": {
+        "FLASH": 73316,
+        "RAM": 31128
+      },
+      "before_memory": {
+        "FLASH": 73316,
+        "RAM": 31128
+      },
+      "config_sha256": "dc8c54a9f6657539fbbaccd8b71f073f1f03f989d3a3ebb858573ddf5b1e9994",
+      "config_symbols": 1489,
+      "source_count": 249,
+      "source_membership_sha256": "d9a6674e2ce785375244bb0aabf82ccf93f046def49995ac4ca7e1bd5c9ff1cb"
+    },
+    "nucode.m25.event": {
+      "after_memory": {
+        "FLASH": 97408,
+        "RAM": 58752
+      },
+      "before_memory": {
+        "FLASH": 97408,
+        "RAM": 58752
+      },
+      "config_sha256": "7dd5a55e29b2a04e1f9c24f27f60ea7c187460b2b7ae1f77a6b85ce214591143",
+      "config_symbols": 1487,
+      "source_count": 251,
+      "source_membership_sha256": "778c142cdf403cd95f28d15d1ac281dc6d963ac6125626a4f092502370ba7390"
+    },
+    "nucode.m25.stream": {
+      "after_memory": {
+        "FLASH": 77200,
+        "RAM": 32040
+      },
+      "before_memory": {
+        "FLASH": 77200,
+        "RAM": 32040
+      },
+      "config_sha256": "06cf0f81bb535b45cdccdacccc64bb718cc3794517c55a5671be636e6f6b596f",
+      "config_symbols": 1490,
+      "source_count": 251,
+      "source_membership_sha256": "6011d5aa44fa836c655d962d4c6b8d1545e0b00f1805640e7c9b5a74bb716cc3"
+    },
+    "nucode.m26.system": {
+      "after_memory": {
+        "FLASH": 59620,
+        "RAM": 19792
+      },
+      "before_memory": {
+        "FLASH": 59620,
+        "RAM": 19792
+      },
+      "config_sha256": "7a866bdef416c635b333c40dff5c2c95b6d10a114ee98efaf73e70a589272486",
+      "config_symbols": 1507,
+      "source_count": 246,
+      "source_membership_sha256": "283d156df04329e969f4581e6086380b578a409dc277548be15eaa15c780a027"
+    },
+    "nucode.m6.core_api": {
+      "after_memory": {
+        "FLASH": 127356,
+        "RAM": 62032
+      },
+      "before_memory": {
+        "FLASH": 127356,
+        "RAM": 62032
+      },
+      "config_sha256": "edf9a14aa0bcad1a64309aa10b5556be7b8dce103d5be3028c104de59436ca5d",
+      "config_symbols": 1568,
+      "source_count": 258,
+      "source_membership_sha256": "3a691badedd3c90ae65ff3a0240902f9dfd411ea585cd8f648c5657d1bbcd84c"
+    },
+    "nucode.m7.core_api": {
+      "after_memory": {
+        "FLASH": 147376,
+        "RAM": 68504
+      },
+      "before_memory": {
+        "FLASH": 147376,
+        "RAM": 68504
+      },
+      "config_sha256": "6c79c91cfc9dbba58ace858419e6f5340070edd9dd61149bc4ed00549488e4e9",
+      "config_symbols": 1647,
+      "source_count": 277,
+      "source_membership_sha256": "1b3dc1521ade0cff6ee1eac7ab3c673ec9f0e9f97039e36576b23f565c3a4b51"
+    },
+    "nucode.r01.all": {
+      "after_memory": {
+        "FLASH": 106916,
+        "RAM": 58256
+      },
+      "before_memory": {
+        "FLASH": 106916,
+        "RAM": 58256
+      },
+      "config_sha256": "ce020dc65d3d1f4541e45167450c400333a85caa09e3a5e389d472ba04ed2486",
+      "config_symbols": 1501,
+      "source_count": 260,
+      "source_membership_sha256": "3089411798f15724d65b76b5f221020bb1cabbb3640c416139af444c513b063b"
+    },
+    "nucode.r01.none": {
+      "after_memory": {
+        "FLASH": 54036,
+        "RAM": 21560
+      },
+      "before_memory": {
+        "FLASH": 54036,
+        "RAM": 21560
+      },
+      "config_sha256": "033bc6416604823928dde64981d3fdfc08ac7c586a7f67e400def8c1a15dc4da",
+      "config_symbols": 1492,
+      "source_count": 249,
+      "source_membership_sha256": "2c82bc9586a6b67831c322bc79469205e19d98fa409e0872065bdcb96dfe89fc"
+    },
+    "nucode.v04.pair_dut": {
+      "after_memory": {
+        "FLASH": 184000,
+        "RAM": 161496
+      },
+      "before_memory": {
+        "FLASH": 184000,
+        "RAM": 161496
+      },
+      "config_sha256": "cbe7c744e50ee3783624a4611a4ef9041433fa9686efebecb8828d303f63f69f",
+      "config_symbols": 1318,
+      "source_count": 276,
+      "source_membership_sha256": "a692ffe6ff6305328336eba1fc44531021d901d44c6f0d288b523ad03daf3ea0"
+    }
+  },
+  "config_values_identical": true,
+  "physical_executed": false,
+  "source_multisets_identical": true
+}

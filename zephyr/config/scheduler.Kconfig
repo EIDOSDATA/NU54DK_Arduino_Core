@@ -1,0 +1,26 @@
+choice NUCODE_ARDUINO_LOOP_POLICY
+	prompt "Sketch loop 반환 후 Zephyr 공존 정책"
+	default NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK
+	help
+	  빠르게 반환하는 loop()가 낮은 priority thread와 idle 실행을 계속
+	  방해하지 않도록 Core가 각 반복 뒤 적용할 scheduler 정책을 선택합니다.
+
+config NUCODE_ARDUINO_LOOP_SLEEP_ONE_TICK
+	bool "한 kernel tick sleep"
+	help
+	  각 loop() 반환 뒤 현재 main thread를 한 kernel tick 동안 재웁니다.
+	  Zephyr 공존을 우선하는 기본 정책입니다.
+
+config NUCODE_ARDUINO_LOOP_YIELD
+	bool "같은 priority thread에 yield"
+	help
+	  각 loop() 반환 뒤 k_yield()를 호출합니다. 낮은 priority thread와
+	  idle의 실행은 보장하지 않습니다.
+
+config NUCODE_ARDUINO_LOOP_NONE
+	bool "Core scheduler 개입 없음"
+	help
+	  loop() 반환 뒤 즉시 다음 loop()를 호출합니다. 최대 반복률이 필요한
+	  application이 Zephyr 공존 책임을 직접 관리할 때 사용합니다.
+
+endchoice

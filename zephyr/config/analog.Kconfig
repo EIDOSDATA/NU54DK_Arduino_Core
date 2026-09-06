@@ -1,0 +1,35 @@
+config NUCODE_ARDUINO_ADC
+	bool "Arduino AIN0~AIN7 ADC 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	select ADC
+	select NUCODE_ARDUINO_GPIO
+	help
+	  nucode,arduino-adc chosen io-channel을 AIN0~AIN7과 A0~A7에
+	  연결합니다. 시스템 전용 핀은 metadata와 channel이 존재하더라도
+	  ownership 충돌을 반환하며 임의로 빼앗지 않습니다.
+
+config NUCODE_ARDUINO_PWM
+	bool "Arduino 동적 PWM·tone backend 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	select PWM
+	select NUCODE_ARDUINO_GPIO
+	select PM_DEVICE
+	select PM_DEVICE_RUNTIME
+	select PINCTRL
+	select PINCTRL_DYNAMIC
+	select PINCTRL_KEEP_SLEEP_STATE
+	help
+	  PWM20은 analogWrite(), PWM21은 tone(), PWM22는 Servo가 독립적으로
+	  사용합니다. 지원 P1 출력 핀의 route와 GPIO ownership을 실행 중
+	  안전하게 전환하고, 실패하면 이전 상태를 복원합니다.
+
+config NUCODE_ARDUINO_SERVO
+	bool "Arduino Servo library용 PWM22 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	select NUCODE_ARDUINO_PWM
+	help
+	  Servo library가 PWM22의 네 channel을 사용하는 고정 메모리 backend를
+	  활성화합니다. 이 옵션은 Servo library의 feature 설정이 선택합니다.

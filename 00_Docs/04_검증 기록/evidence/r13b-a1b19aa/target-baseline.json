@@ -1,0 +1,58 @@
+{
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "container_digest": "sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace",
+  "gate": "m12-zephyr-build-subset",
+  "group": "all",
+  "jobs": 4,
+  "m16_role_builds": [],
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "scenarios": [
+    "nucode.m6.core_api",
+    "nucode.m7.core_api",
+    "nucode.m19.ble_gap_contract",
+    "nucode.m20.ble_gatt_contract",
+    "nucode.ac03.storage_contract",
+    "nucode.r01.none",
+    "nucode.r01.all",
+    "nucode.v04.pair_dut",
+    "nucode.m25.analog",
+    "nucode.m25.event",
+    "nucode.m25.stream",
+    "nucode.m26.system"
+  ],
+  "schema_version": 2,
+  "serial_source_builds": [
+    {
+      "compile_commands_sha256": "5024ae22ad5e35a5bbd6869fe6ce4b732dd8b35381f93f7cc7b5299024d7453c",
+      "config_sha256": "51af112b90e6968d8f623e7ec96a6900af04e3fb06992916a2d8a851d4d9ea8f",
+      "elf_sha256": "2fee29900e8ef903ebf366a3c95e04fe319e10cea3bedc7aece172de92f180bd",
+      "resolved_personalities": [],
+      "scenario": "nucode.r01.none",
+      "sources": {},
+      "target": "nucode_arduino_core"
+    },
+    {
+      "compile_commands_sha256": "11ef61623686cab8860cbb1e6d4fdcb0aa0a8105b3e6d09e41ed392db373d161",
+      "config_sha256": "95a0511ef873a6f1add11f599ab7b45f4a8100836d8878748c9fb7b058eb6746",
+      "elf_sha256": "2d2fa958863368b4d98028f3c5674331399967c56d81b2d2dd7752d71fc065e2",
+      "resolved_personalities": [
+        "SPIM",
+        "SPIS",
+        "TWIM",
+        "TWIS",
+        "UARTE"
+      ],
+      "scenario": "nucode.r01.all",
+      "sources": {
+        "SPIM": "cores/arduino/SpimFabric.cpp",
+        "SPIS": "cores/arduino/SpisFabric.cpp",
+        "TWIM": "cores/arduino/TwimFabric.cpp",
+        "TWIS": "cores/arduino/TwisFabric.cpp",
+        "UARTE": "cores/arduino/UarteFabric.cpp"
+      },
+      "target": "nucode_arduino_core"
+    }
+  ],
+  "status": "passed",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+}
