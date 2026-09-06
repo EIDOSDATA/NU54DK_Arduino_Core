@@ -1,0 +1,73 @@
+cmake:
+  application:
+    configuration-dir: 'C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/app'
+    source-dir: 'C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/app'
+  board:
+    name: 'nrf54l15dk'
+    path:
+     - 'C:/Users/eidos/ncs/v3.4.0/zephyr/boards/nordic/nrf54l15dk'
+     - 'C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/platform/board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk'
+    qualifiers: 'nrf54l15/cpuapp/nu54dk'
+    revision: ''
+  devicetree:
+    bindings-dirs:
+     - 'C:/Users/eidos/ncs/v3.4.0/nrf/dts/bindings'
+     - 'C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/platform/dts/bindings'
+     - 'C:/Users/eidos/ncs/v3.4.0/zephyr/dts/bindings'
+    files:
+     - 'C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/platform/board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nrf54l15dk_nrf54l15_cpuapp_nu54dk.dts'
+     - 'C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/app/app.overlay'
+    include-dirs:
+     - 'C:/Users/eidos/ncs/v3.4.0/nrf/include'
+     - 'C:/Users/eidos/ncs/v3.4.0/nrf/dts/common'
+     - 'C:/Users/eidos/ncs/v3.4.0/nrf/dts/riscv'
+     - 'C:/Users/eidos/ncs/v3.4.0/nrf/dts/arm'
+     - 'C:/Users/eidos/ncs/v3.4.0/nrf/dts'
+     - 'C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/platform/dts'
+     - 'C:/Users/eidos/ncs/v3.4.0/zephyr/include'
+     - 'C:/Users/eidos/ncs/v3.4.0/zephyr/include/zephyr'
+     - 'C:/Users/eidos/ncs/v3.4.0/zephyr/dts/common'
+     - 'C:/Users/eidos/ncs/v3.4.0/zephyr/dts/vendor'
+     - 'C:/Users/eidos/ncs/v3.4.0/zephyr/dts/rx'
+     - 'C:/Users/eidos/ncs/v3.4.0/zephyr/dts/x86'
+     - 'C:/Users/eidos/ncs/v3.4.0/zephyr/dts/xtensa'
+     - 'C:/Users/eidos/ncs/v3.4.0/zephyr/dts/sparc'
+     - 'C:/Users/eidos/ncs/v3.4.0/zephyr/dts/riscv'
+     - 'C:/Users/eidos/ncs/v3.4.0/zephyr/dts/posix'
+     - 'C:/Users/eidos/ncs/v3.4.0/zephyr/dts/arm64'
+     - 'C:/Users/eidos/ncs/v3.4.0/zephyr/dts/arm'
+     - 'C:/Users/eidos/ncs/v3.4.0/zephyr/dts/arc'
+     - 'C:/Users/eidos/ncs/v3.4.0/zephyr/dts'
+    user-files:
+     - 'C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/app/app.overlay'
+  kconfig:
+    files:
+     - 'C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/platform/board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nrf54l15dk_nrf54l15_cpuapp_nu54dk_defconfig'
+     - 'C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/app/prj.conf'
+    user-files:
+     - 'C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/app/prj.conf'
+  toolchain:
+    name: 'zephyr'
+    path: 'C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk'
+  vendor-specific:
+    nordic:
+      svdfile: 'C:/Users/eidos/ncs/v3.4.0/modules/hal/nordic/nrfx/bsp/stable/mdk/nrf54l15_application.svd'
+    nucode-arduino-core:
+      application-source-sha256: 'a12dabc782813d9f4429562b559214551b1171cc2497f418d30e4cc65540866e'
+      board-package-revision: 'fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3'
+      board-source-sha256: '07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484'
+      core-revision: 'cf966a8ed614713235cd8178bd4b1eb8ab120d36'
+      core-source-sha256: '6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735'
+      cxx-compiler: 'GNU 14.3.0'
+      ncs-revision: '99553055607b'
+      package-version: '0.0.90'
+      source-version: '0.4.0-dev'
+      zephyr-revision: 'bf801e4e3d19'
+  zephyr:
+    version: '4.4.0'
+    zephyr-base: 'C:/Users/eidos/ncs/v3.4.0/zephyr'
+version: '0.1.0'
+west:
+  command: 'C:\Users\eidos\ncs\toolchains\dcbdc366a1\opt\bin\Scripts\west -z C:\Users\eidos\ncs\v3.4.0\zephyr build --cmake-only --no-sysbuild --pristine=always -b nrf54l15dk/nrf54l15/cpuapp/nu54dk -d C:\r13v\cache\v1\d1\d19e4bc4ea2c916515ffdf0320ae28d4\build C:\r13v\cache\v1\d1\d19e4bc4ea2c916515ffdf0320ae28d4\app -- -UCONFIG_* -DBOARD_ROOT=C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/platform/board_package/NU54DK_Zephyr_DTS -DEXTRA_ZEPHYR_MODULES=C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/platform -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_C_COMPILER_LAUNCHER=C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/bin/ccache.exe -DCMAKE_CXX_COMPILER_LAUNCHER=C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/bin/ccache.exe -DDTC_OVERLAY_FILE=C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/app/app.overlay'
+  topdir: 'C:\Users\eidos\ncs\v3.4.0'
+  version: '1.5.0'

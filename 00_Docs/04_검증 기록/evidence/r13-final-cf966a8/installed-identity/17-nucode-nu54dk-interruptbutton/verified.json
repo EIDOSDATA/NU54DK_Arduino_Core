@@ -1,0 +1,95 @@
+{
+  "manifest_path": "C:\\r13v\\examples\\17-nucode-nu54dk-interruptbutton\\InterruptButton.ino.nu54-build.json",
+  "manifest_sha256": "158ce871623769756b19dc93ef580ce53afa7cdad57c79b133359b6b7765436a",
+  "artifacts": {
+    "bin": {
+      "path": "C:/r13v/examples/17-nucode-nu54dk-interruptbutton/InterruptButton.ino.bin",
+      "sha256": "d5ff8edb7291723f3dd6f9377b471107715f312c92ef7ab2993b7708800a1589",
+      "size": 109420
+    },
+    "elf": {
+      "path": "C:/r13v/examples/17-nucode-nu54dk-interruptbutton/InterruptButton.ino.elf",
+      "sha256": "ca9aad4f8334f5cf0091d466fdc7090378f4a28b3b742c671c9487bfba3ba1c8",
+      "size": 2297232
+    },
+    "hex": {
+      "path": "C:/r13v/examples/17-nucode-nu54dk-interruptbutton/InterruptButton.ino.hex",
+      "sha256": "c23f36eb06dbdd097a5d4fe91f226c1acd49aa41aba7e94471aff12570175586",
+      "size": 307886
+    },
+    "map": {
+      "path": "C:/r13v/examples/17-nucode-nu54dk-interruptbutton/InterruptButton.ino.map",
+      "sha256": "7c0a77bc9875a16c328eebd81854c8986c8c7df954fb7c48ce6aba8f929996a0",
+      "size": 808479
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:45092f2f848cc4dcb2b47df333e6abdf8b1d765f11b30ea02fcf33458a06d02e",
+        "path": "C:/r13v/cache/v1/82/826e17df737f8e426e3a14728fe38dd4/platform/libraries/NUCODE_NU54DK/examples/InterruptButton"
+      },
+      {
+        "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+        "path": "C:/r13v/cache/v1/82/826e17df737f8e426e3a14728fe38dd4/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/r13v/cache/v1/82/826e17df737f8e426e3a14728fe38dd4/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:914dff1d5d9b2bf915413e899b634e6a1d6b0817196afd7b6b46769c8ccf4bd2",
+        "path": "C:/r13v/cache/v1/82/826e17df737f8e426e3a14728fe38dd4/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/r13v/cache/v1/82/826e17df737f8e426e3a14728fe38dd4/build/nucode_arduino_core_build.yml",
+      "sha256": "471d53040a0d969b8b41b4c37daeb30684316218a580308381ea6c26330a95ab"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/r13v/cache/v1/82/826e17df737f8e426e3a14728fe38dd4/app/generated-sources/sketch/InterruptButton.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/InterruptButton.ino.cpp",
+        "sha256": "2cf64277cdea100dd0c86fc66e628f99182b9ae97e33cad77086960f88337c8e",
+        "source_path": "C:/r13v/examples/17-nucode-nu54dk-interruptbutton/sketch/InterruptButton.ino.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\r13v\\identity-records\\17-nucode-nu54dk-interruptbutton\\nucode_arduino_core_build.yml",
+    "sha256": "471d53040a0d969b8b41b4c37daeb30684316218a580308381ea6c26330a95ab",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core_source_sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "application_source_sha256": "ed27a66949bb3e2609af73667edbb4f9fef702f6a462a07e7cc1387bdfe5882a",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\r13v\\identity-records\\17-nucode-nu54dk-interruptbutton\\build_info.yml",
+    "sha256": "df8f33c8150f7da1c1f1a105feec34b71675e22b0596b3244dbf425f50dab9a0",
+    "identity": {
+      "application-source-sha256": "ed27a66949bb3e2609af73667edbb4f9fef702f6a462a07e7cc1387bdfe5882a",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core-source-sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

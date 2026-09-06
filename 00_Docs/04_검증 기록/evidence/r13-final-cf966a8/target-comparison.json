@@ -1,0 +1,367 @@
+{
+  "before_commit": "499fde3931248fe44f94bab3dc656bfef5111a38",
+  "after_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+  "physical_executed": false,
+  "records": [
+    {
+      "scenario": "nucode.m3.runtime",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m4.api_contract",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m6.core_api",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m7.core_api",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m14.core_contract",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m14.variant_contract",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m14.pin_hil",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m15.board",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m15.auto_hil",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m15.wake",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m16.ble_contract",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m16.ble_hil_peripheral",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m16.ble_hil_central",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m17.sensor_direct",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m19.ble_gap_contract",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m19.ble_gap_hil_peripheral",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m19.ble_gap_hil_central",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m20.ble_gatt_contract",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m20.ble_gatt_hil_peripheral",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m20.ble_gatt_hil_central",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m21.ble_security_contract",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m21.ble_security_hil_peripheral",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m21.ble_security_hil_central",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m21.ble_board_contract",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.ac01.contract",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.ac01.gpio_hil",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.ac02a.ownership_contract",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.ac02b.b2_contract",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.ac02b.analog_contract",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.ac02b.hil_dut",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.ac02b.hil_peer",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.ac03.storage_contract",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.ac03.storage_hil",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.r01.none",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.r01.uarte",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.r01.spim",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.r01.spis",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.r01.twim",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.r01.twis",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.r01.all",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.v04.pair_dut",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.v04.pair_peer",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m23.inventory_contract",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m24.fabric",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m24.uarte",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m24.spi",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m24.twi",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m24.uarte20_hil",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m24.uarte21_hil",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m24.uarte22_hil",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m24.uarte30_hil",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m24.twim20_hil",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m24.twim21_hil",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m24.twim22_hil",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m25.analog",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m25.event",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m25.stream",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m25.onboard_hil",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m26.system",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    },
+    {
+      "scenario": "nucode.m26.onboard_hil",
+      "compiled_repository_inputs_identical": true,
+      "config_identical": true,
+      "memory_identical": true
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "manifest_path": "C:\\r13v\\examples\\26-nucode-nu54dk-wireruntimepins\\WireRuntimePins.ino.nu54-build.json",
+  "manifest_sha256": "ef3f96b2b90b28faa1d2f0561c39e41d05c47ff8094721c4aa2ff99e2800061c",
+  "artifacts": {
+    "bin": {
+      "path": "C:/r13v/examples/26-nucode-nu54dk-wireruntimepins/WireRuntimePins.ino.bin",
+      "sha256": "e5397b5ebb8ad3593e2c51fcb190e77e3597b9e2974d96785fa31ad8c9356c59",
+      "size": 104600
+    },
+    "elf": {
+      "path": "C:/r13v/examples/26-nucode-nu54dk-wireruntimepins/WireRuntimePins.ino.elf",
+      "sha256": "889f1783d530e595aa4bcb54a81c20045c6f0d161b6262bae3366f904c533800",
+      "size": 2287788
+    },
+    "hex": {
+      "path": "C:/r13v/examples/26-nucode-nu54dk-wireruntimepins/WireRuntimePins.ino.hex",
+      "sha256": "5930d83444a711535fae82876b383b8d1e679f66ba6669dc4fc5b16d74a9f437",
+      "size": 294341
+    },
+    "map": {
+      "path": "C:/r13v/examples/26-nucode-nu54dk-wireruntimepins/WireRuntimePins.ino.map",
+      "sha256": "c3fec3e25180f08969b55225c4df4a0e316c90988e0cd5d70f5b7ef58f29d3fe",
+      "size": 807002
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:c297538da2c165570ee46a8bf697656dc8802195fb6edd5b50cc5d341845cb58",
+        "path": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/platform/libraries/NUCODE_NU54DK/examples/WireRuntimePins"
+      },
+      {
+        "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+        "path": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:b776dcc7665a389174905e777b4872bff416425abc7471ff69a21c2397e02963",
+        "path": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/platform/libraries/Wire/src"
+      },
+      {
+        "content_sha256": "sha256:ae29f215bf379f91944f2e14599d847d0182ba16d19de4603975f2ee4c080fe3",
+        "path": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/build/nucode_arduino_core_build.yml",
+      "sha256": "54c98c9f0e79e7febe49b3d675821fa67e615800a5f6a684b2a80cdcf0f7f647"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/r13v/cache/v1/d1/d19e4bc4ea2c916515ffdf0320ae28d4/app/generated-sources/sketch/WireRuntimePins.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/WireRuntimePins.ino.cpp",
+        "sha256": "c302ccc50951259345f1e8467a4c30af6fa97991b46eaeb205d0dbbe85969bbe",
+        "source_path": "C:/r13v/examples/26-nucode-nu54dk-wireruntimepins/sketch/WireRuntimePins.ino.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\r13v\\identity-records\\26-nucode-nu54dk-wireruntimepins\\nucode_arduino_core_build.yml",
+    "sha256": "54c98c9f0e79e7febe49b3d675821fa67e615800a5f6a684b2a80cdcf0f7f647",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core_source_sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "application_source_sha256": "a12dabc782813d9f4429562b559214551b1171cc2497f418d30e4cc65540866e",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\r13v\\identity-records\\26-nucode-nu54dk-wireruntimepins\\build_info.yml",
+    "sha256": "7e3bca34d4e12417f91d87bb68b38ed55e1e98c19478c219cf33dd98e6c41a9d",
+    "identity": {
+      "application-source-sha256": "a12dabc782813d9f4429562b559214551b1171cc2497f418d30e4cc65540866e",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core-source-sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

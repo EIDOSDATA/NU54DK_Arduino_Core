@@ -3,11 +3,11 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID / 개정 | TODO-V04-001 / 2.2 |
-| 상태 | 활성 TODO — T01~T11 역사적 체크포인트 완료; R00~R13 뒤 current-source T11·T12~T15 통합 실기 |
+| 상태 | 활성 TODO — R00~R13·최종 software gate 완료; current-source T11·T12~T15 및 후속 공개 단계 대기 |
 | 작성·갱신일 | 2026-09-06 |
-| 작성 직전 기준 commit | `25c7f035cc10093a370a693871fe2704a5a069f3` |
+| 작성 직전 기준 commit | `cf966a8ed614713235cd8178bd4b1eb8ab120d36` — 최종 구현과 전체 software gate source |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **R13 — package·정책·Kconfig/CMake·문서 구조화** |
+| 다음 착수 항목 | **current-source T11 — Fixture 101 전원 OFF 결선 확인 대기** |
 | 이번 요청의 실행 범위 | 2026-09-06 사용자 지시: R00~R13을 번호 순서대로 구현·시험·문서화하고 전체 software/target/examples/style 검증과 main commit/push까지 자동 진행한다. current-source T11 직전에 멈추며 flash·HIL·결선 변경·공개는 수행하지 않는다 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
@@ -51,20 +51,21 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | T01~T11. UART Fixture 101~103, SPI Fixture 201~203에 이어 exact `e2f045c`의 TWI Fixture 301에서 계획 기능 record 1,986개·cleanup 2·campaign 기록 2건, 총 1,990 result를 10 MHz SWD로 PASS |
-| 진행 중인 T 항목 | R13-E에서 Git-less package의 CMake revision 복원 결함을 발견·교정했다. 실제 parser/writer 새 Host 2개와 기존 identity 6개·contract 45개 PASS. 기존 499fde3의 전체 gate는 해당 source의 증거로 보존하며, 수정 source의 전체 target·Host·package·29 설치 예제·영향 provenance를 재검증한다. current-source T11 NOT RUN |
-| 다음 구체적 행동 | R13-E commit 뒤 고정 SDK의 전체 60 target와 새 package의 실제 29개 예제에서 Core/board configure·live SHA를 확인하고 원본 YAML을 cache 정리 전에 보존한다. M7/M8 영향 회귀와 나머지 software gate 뒤 R13 완료·main push/clean·Fixture 101 전원 OFF 결선 안내 |
-| 다음 작업에 필요한 사용자 행동 | R00~R13 구현·software gate에는 없음. 최종 current-source T11 회귀를 시작할 때 안내한 첫 fixture로 전원 OFF 상태에서 결선 변경 |
-| 외부 결선 상태 | Fixture 301 SDA·SCL·GND가 연결된 상태, 외부 저항·전원 rail 없음, 양쪽 `DISABLE_UART` 분리·`DISABLE_SWD` 연결. R13 뒤 최종 T11 회귀 시작 전 USB 전원을 끄고 해당 fixture 결선으로 변경해야 함 |
+| 이번에 끝낸 일 | R00~R13 리팩토링·최종 software gate·main commit/push. 과거 exact e2f045c의 Fixture 301 총 1,990 result PASS는 역사적 체크포인트로만 보존하며 current-source T11은 NOT RUN |
+| 진행 중인 T 항목 | R00~R13 구현·최종 software gate 완료. [64번 기록](<./04_검증 기록/64_R13_도구_정책_build_구조.md>)의 clean exact cf966a8 전체 60 target·설치 예제 29개·Host/contract/inventory/docs/package/style와 QEMU를 통과했다. current-source T11 NOT RUN |
+| 다음 구체적 행동 | 양쪽 보드 USB 전원을 끄고 마지막 알려진 Fixture 301 신호선을 제거한 뒤 Fixture 101 UART 4선+공통 GND를 연결한다. DISABLE_UART 분리·DISABLE_SWD 연결, 동일 I/O 전압·단락 없음과 사용자 결선 완료 확인이 선행조건이다. 확인 전 flash/HIL 금지 |
+| 다음 작업에 필요한 사용자 행동 | Fixture 101 전원 OFF 결선과 스위치 상태를 확인하고 결선 완료를 알려준다. 이번 R00~R13 무인 작업은 여기서 종료 |
+| 외부 결선 상태 | 직접 관측하지 않음. 마지막 알려진 상태는 Fixture 301 SDA·SCL·GND, 외부 저항·전원 rail 없음, DISABLE_UART 분리·DISABLE_SWD 연결이며 현재도 같다고 가정하지 않는다 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 마지막 정식 외부 HIL source | `e2f045c1b4272d986d17456c5af051fe8af74f19` — Fixture 301 두 보드 exact role image TWI PASS |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개; T09 무배선 PASS만 추가됐으며 외부 결선·RC·최종 공개 승인 없음 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | 불변 499fde3 package의 미실행 smoke 재개: 작업 work/run_final_installed.py, unified session 8576, work/r13/final-installed-smoke-resume.log. R13-E 변경은 이 설치 복사본과 이미 로드된 smoke helper를 바꾸지 않는다. 새 source 검증은 commit 뒤 별도 root/log에 실행. flash/HIL 없음 |
-| 로컬 임시 build·evidence | R00~R05 target/cache와 work/r00~r06 및 영구 evidence/r06-feaccc7, r06-f1b3fa4 보존. R06 설치 C:/r6base,r6fin 및 실패 C:/r6pkg,r6fix,r6sp, 중간 C:/r6cp. R07 기준선 C:/r7pre. 로컬 검증용 별도 index와 참조 없는 snapshot commit은 work/r06에 기록; 임시 branch/worktree 없음 |
-| 최종 정렬 gate | clang-format 22.1.8로 직접 관리 C/C++/ino 227개 write·dry-run PASS. Fixture 102 기록 전 남은 공통 header 들여쓰기 한 곳을 교정했고 M12 Host 전체·DUT/peer target 2/2 재검증 PASS, 실기 image와 runtime HEX SHA-256 동일. 한국어 Doxygen·Allman/4칸/중괄호 필수 적용 |
-| CI 확인 | 이전 `661fad9`의 [Software Gates](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811058)와 [Reproducible Builds](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/33913811030) success 보존. `25c7f03` 계획 통합은 로컬 전체 gate를 통과해 원격 `main`에 push됐으며, 당시 로컬 GitHub CLI 인증이 없어 새 Actions 상태는 미확인 |
-| 문서 작업 검증 | Markdown 158개 UTF-8·내부 링크 PASS, CI contract 45/45 PASS, inventory 계획 75/M24 23/M26 16/M27 16 PASS, package 20/20 PASS, M12 Host 전체 PASS. M27 미해결 blocker 8개는 유지한다 |
+| 이 TODO 작성 작업의 실행 중 시험 | 최종 cf966a8 전체 software gate 종료: 60 target build-only, QEMU 3개 실제 실행, 설치 예제 29개 configure/live SHA PASS. 499fde3의 16개 smoke baseline과 cf966a8 M7 전체·M8 compile 2개 영향 회귀를 구분해 보존. current-source T11 flash/HIL 없음 |
+| 로컬 임시 build·evidence | R00~R13의 C:/r00~C:/r13*와 작업 work 보존. 최신 C:/r13u 전체 target, C:/r13v 설치 29개, C:/r13w M7/M8, C:/r13z QEMU와 종료 HEAD pair C:/r13h. 499fde3의 C:/r13f·r13i·r13s 최초 smoke 실패·r13t 재개 및 QEMU r13q NOT RUN/r13q2 PASS도 보존. work/qemu portable, R06 별도 index·참조 없는 snapshot commit이 남아 있으며 임시 branch/worktree 없음. 최신 35개 configure/live 원본은 cache 정리 전에 보존 |
+| 최종 정렬 gate | clang-format 22.1.8, 직접 관리 C/C++/ino 356개 dry-run PASS. 한국어 Doxygen·BSD/Allman·4칸·중괄호 필수. SDK·board·third-party·공개 자산을 정렬하지 않았으며 물리 PASS로 승격하지 않음 |
+| CI 확인 | 최종 source의 GitHub Actions는 미확인. 현재 GitHub CLI 인증에 의존하지 않고 로컬 canonical 전체 software gate를 실행했다. 이전 Actions success는 이전 source의 역사 증거로만 유지 |
+| 문서 작업 검증 | Markdown 173개 UTF-8·내부 링크, contract 45/45, inventory·생성 drift, package 20/20, Host 639 PASS·M13 조건부 1 SKIP와 별도 실제 설치 M13 11/11, 전체 target 60개·설치 예제 29개·QEMU 3개 PASS. readiness blocker 8개 유지 |
+| 최종 HIL 입력 찾기 | 전체 software gate는 exact cf966a8. 종료 문서 commit의 HEAD를 기록한 DUT/peer는 C:/r13h이며, 작업 outputs/final-report.md·artifact-index.json과 work/r13/r13h-artifact-index.json에서 Core/board/HEX를 확인한다. 재개 시 현재 HEAD와 source·artifact hash를 실제 대조하고 결선 확인 전 flash/HIL 금지 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드
@@ -194,16 +195,16 @@ R00~R14와 연결하고, 구조 변경 뒤 같은 결선을 다시 반복하지 
   단독·허용 조합의 resolved config, target membership와 link를 검증한다.
 - [x] **R02:** Serial stale completion·timeout·DMA buffer 반환·같은 handle의 교차 호출을 수정하고
   최종 Fixture 101~301 회귀 범위를 기록한다. 중간 PASS 캠페인은 만들지 않는다.
-- [ ] **R03:** Analog/Stream의 ISR 진단 snapshot·overflow·stop generation과 lock 대기를 파일 이동
+- [x] **R03:** Analog/Stream의 ISR 진단 snapshot·overflow·stop generation과 lock 대기를 파일 이동
   없이 수정하고 R11 및 최종 T12가 지킬 동작 계약을 고정한다.
-- [ ] **R04/R05:** LittleFS File retain/release와 제품 identity 원본을 구조 분할 전에 정리한다.
-- [ ] **R06~R07:** `nu54-builder` 순수 모듈과 `EventFabric` 기계적 분할 파일럿을 외부 계약·target
+- [x] **R04/R05:** LittleFS File retain/release와 제품 identity 원본을 구조 분할 전에 정리한다.
+- [x] **R06~R07:** `nu54-builder` 순수 모듈과 `EventFabric` 기계적 분할 파일럿을 외부 계약·target
   결과가 유지되는 작은 변경으로 완료한다.
-- [ ] **R08~R10:** 자원/route 책임, Arduino SPI facade/backend, Serial orchestration·동시 호출 정책을
+- [x] **R08~R10:** 자원/route 책임, Arduino SPI facade/backend, Serial orchestration·동시 호출 정책을
   분리하고 최종 M24·동시성 회귀 범위를 누적한다.
-- [ ] **R11~R12:** Analog/Stream peripheral별 분할과 BLE/Storage 수명주기 구조화를 완료하고 최종
+- [x] **R11~R12:** Analog/Stream peripheral별 분할과 BLE/Storage 수명주기 구조화를 완료하고 최종
   M25·BLE·Storage 회귀 범위를 누적한다.
-- [ ] **R13:** package tool·정책 생성·Kconfig/CMake·문서/증거 구조화를 완료하고 전체 Host·target·예제·
+- [x] **R13:** package tool·정책 생성·Kconfig/CMake·문서/증거 구조화를 완료하고 전체 Host·target·예제·
   package gate로 최종 실기 source를 고정한다.
 - [ ] **current-source T11 회귀:** R00~R13 최종 exact source로 영향받는 UART·SPI·TWI 단독 기능을
   재검증하고 나서 T12로 전환한다.

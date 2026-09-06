@@ -1,0 +1,20 @@
+{
+  "container_digest": "sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace",
+  "execution": "runtime",
+  "gate": "m14-qemu-runtime",
+  "lock_sha256": "8c5ab4deaf0bb21dc83957330c49531d011e142959c6f93f7b47052bba5146f3",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "platform_report": "qemu_cortex_m3/ti_lm3s6965",
+  "platform_request": "qemu_cortex_m3",
+  "qemu_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\qemu\\portable\\qemu-system-arm.EXE",
+  "qemu_version": "QEMU emulator version 11.1.0 (v11.1.0-12130-ge470268ff4)",
+  "scenario": "nucode.m14.cpp_policy",
+  "schema_version": 1,
+  "status": "passed",
+  "testcases": [
+    "nucode.m14.cpp_policy.m14_cpp_policy.throw_catch_and_stack_unwind",
+    "nucode.m14.cpp_policy.m14_cpp_policy.dynamic_cast_and_typeid",
+    "nucode.m14.cpp_policy.m14_cpp_policy.random_and_diagnostics_on_zephyr"
+  ],
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+}

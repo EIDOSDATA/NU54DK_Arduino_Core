@@ -1,0 +1,11 @@
+{
+  "qemu_source": "https://qemu.weilnetz.de/w64/qemu-w64-setup-20260811.exe",
+  "qemu_official_referral": "https://www.qemu.org/download/",
+  "extraction_tool_source": "https://www.7-zip.org/download.html",
+  "installer_sha512": "5bcf9eed634e8575a37b74f445af41a2fe4106da512d0c30c368301d4c105037fdfab40a5287367a28a957624cddebbc8c07e16c88ab6634f554cdf3d16bf543",
+  "installer_sha256": "f98a8aeb5f7faea9765b6dee28316c266cd179d80354a2fed8e50176f9a2e59f",
+  "binary_sha256": "f5280fbf925ed36be443cf48b66516f0ffa28b6b9b164956ad4bd6ac9c9619db",
+  "global_installation": false,
+  "sdk_modified": false,
+  "physical_executed": false
+}

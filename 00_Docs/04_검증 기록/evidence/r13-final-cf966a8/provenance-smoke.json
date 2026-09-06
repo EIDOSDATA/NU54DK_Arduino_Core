@@ -1,0 +1,10 @@
+{
+  "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+  "m7": "4 actual compile/config checks plus actual live scope PASS",
+  "m8_compile_only": [
+    "pyocd",
+    "pyocd_uid"
+  ],
+  "physical_executed": false,
+  "upload_sentinel": "NOT RUN: would enumerate probes"
+}

@@ -1,6 +1,6 @@
 # R13 도구·정책·build 구조와 최종 software 입력
 
-상태: 진행 중. R12 `480d780` 뒤 R13-A package, R13-B Kconfig/CMake,
+상태: R13 구현·최종 software gate 완료. current-source T11 직전 대기. R12 `480d780` 뒤 R13-A package, R13-B Kconfig/CMake,
 R13-C 정책·증거와 전체 software gate를 순서대로 기록한다. flash/HIL은 실행하지 않는다.
 
 ## R13-A package 책임 분리
@@ -150,8 +150,7 @@ CRLF 정규화를 검증한다. 실제 고정 SDK DTS와 M23 75개·M24 23개 �
 [독립 생성 Host](evidence/r13c-3ab31b1/generated-host.txt),
 [예제 identity Host](evidence/r13c-3ab31b1/example-identity-host.txt),
 [추가 SPI-on AC02B target](evidence/r13c-3ab31b1/additional-spi-on-target.json)를 보존한다.
-R13 구현을 마쳤으며 전체 60개 target·실제 설치 예제·package·Host 최종 검증이 남았다.
-최종 게이트를 통과한 뒤에만 R13을 완료 체크하고 current-source T11 직전에서 멈춘다.
+R13-C 단계에서 전체 software gate를 다음 검증으로 남겼다. 이후 D/E의 발견 결함과 아래 최종 판정으로 연결한다.
 
 ## R13-D 최종 설치 smoke의 provenance fixture 보완 범위
 
@@ -201,3 +200,70 @@ SHA가 있지만 configure의 `build_info.yml`과 매 build의 live YAML은 `unk
 각 설치 compile 직후 configure/live SHA를 둘 다 확인해 cache 정리 전에 원본 YAML을 보존한다.
 영향받는 M7 provenance와 M8 compile도 새 package로 재시험한다. R13은 아직 완료 체크하지 않는다.
 current-source T11과 모든 flash/HIL은 NOT RUN이다.
+
+## R13 최종 software 판정과 실기 인계
+
+최종 구현 source는 `cf966a8ed614713235cd8178bd4b1eb8ab120d36`, board gitlink는
+`fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3`다. R13-E 교정 뒤 이 clean source로 전체
+target·Host·package·설치 예제·QEMU·기타 gate를 다시 검증했다. 아래 완료 기록 commit은
+문서·증거만 추가한다. 종료 HEAD의 DUT/peer는 별도 `C:/r13h`에 빌드해 같은 application 설정·
+컴파일 source·메모리·Core/application/board digest와 새 revision identity를 대조한다.
+그 exact SHA·artifact는 작업 `outputs/final-report.md`, `outputs/artifact-index.json`과
+`work/r13/r13h-artifact-index.json`에 기록한다. 재개 시 실제 파일·현재 HEAD·해시를 다시 대조한다.
+
+| 최종 검사 | 실제 결과 |
+| --- | --- |
+| 전체 Host | 640개 중 639 PASS·설치 조건부 M13 1 SKIP; 새 실제 설치 환경 M13 별도 11/11 PASS |
+| CI contract | 45/45 PASS |
+| Inventory·생성 drift | 75 instance / Serial 23 identity / System 16 capability / 생성물 5개 PASS; readiness blocker 8개 유지 |
+| 전체 NU54DK target | 60/60 build-only PASS. M16 peripheral/central 2개는 이 60개 안에 포함, 역할·서로 다른 HEX 확인 |
+| R13-E target 비교 | 이전 499fde3의 60개와 실제 컴파일 C/C++ source hash·application config·Flash/RAM 동일 |
+| QEMU M14 | exception/unwind·RTTI·random/diagnostics 실제 실행 3/3 PASS |
+| Package | 계약 20/20; exact source preview 0.0.90의 독립 출력 7개 byte 동일 |
+| 설치 package 예제 | Git-less 한국어·공백 경로 29/29 실제 compile, artifact/input hash와 configure/live Core·board SHA 확인 |
+| Arduino smoke | 499fde3 baseline 16개 완료(6개 + M7 분리 재시험 + 나머지 9개). cf966a8의 영향 M7 전체와 M8 compile 2개 재시험 PASS |
+| 설치 revision 보존 | 최신 예제 29개 + M7/M8 6개 = 35개 configure/live record 쌍을 cache 정리 전에 원본 gzip과 preview로 보존 |
+| C/C++ style | first-party 356개 dry-run PASS; SDK/board/third-party/공개 자산 제외 |
+| 문서 | 173개 UTF-8·내부 링크 PASS; 종료 문서 변경 뒤 재검사 |
+| 보존 | 기준선에 있던 board·third-party·공개 자료·과거 raw evidence 보호 경로 147개 Git byte 동일 |
+
+기존 499fde3 package와 cf966a8 package의 source 파일 차이는 두 CMake revision reader뿐이다.
+builder/cache·runtime·package producer는 byte 동일하다. smoke helper는 R13-D에서 교정했으며
+그 b9c3004와 cf966a8 사이에는 byte 동일하다. 따라서 기존 16개 smoke는 baseline source를
+명시해 보존하고, 영향을 받는 provenance와 실제 설치 전체 29개를 새 package로
+재검증했다. 16개 전부를 cf966a8에서 단일 연속 실행했다고 주장하지 않는다.
+새 설치 29개 첫 시도의 일부 CLI compile은 configure 후 자세한 오류 없이 exit 1로 종료했다.
+같은 source·도구·package에서 실패한 예제만 canonical compile 함수로 재개했고, 이미 성공한
+예제는 보존 artifact·원본 입력·configure/live record를 재검증했다. 실패 경로와 원본 log는
+보존하고 재시험 출력은 별도 examples-resume 경로에 만들었다. 최초 원인을 확정하지 않는다.
+R13-D의 M7 최초 helper 실패·분리 재시험, R13-E의 잘못된 unknown revision과 CMake 재현 실패도
+각 시작 source의 원본으로 보존하며 현재 PASS로 덮어쓰지 않았다.
+
+이전 설치 M13 child는 `...` 뒤 비정상 종료했다. 원본과 Host 환경의 11개 재시험 PASS를
+보존했다. 이번 새 설치 M13도 Host 환경에서 11/11 PASS다. 최초 원인은 로그만으로 확정하지 않는다.
+QEMU 최초 시도는 Windows QEMU_BIN_PATH 누락으로 build-only/3 NOT RUN이었다. gate가 이를
+거부했고 SDK를 수정하지 않은 portable QEMU 경로 지정 후 실제 실행 3 PASS를 확인했다.
+이번 최종 source에서도 별도 root에서 3개 실제 실행을 통과했다. Linux container lock은
+입력 고정 정보이며 실제 실행은 Windows 고정 bundle이었다.
+
+M8 upload-field sentinel은 실제 probe를 열거하므로 NOT RUN이다. 선택값별 compile과
+manifest/runner 및 순수 recipe 계약을 검사했다. 새 package에서 recipe byte는 기존과 동일하다.
+QEMU는 작업 work/qemu에만 압축 해제했고 설치 프로그램·전역 PATH·SDK를 바꾸지 않았다.
+설치 예제와 M8 출력은 로컬에 보존한다. canonical smoke의 자체 임시 build는 runner 정책대로
+정리되며, M7 configure/live 원본과 manifest는 정리 전에 별도 보존했다.
+
+[전체 판정](evidence/r13-final-cf966a8/software.json),
+[target 60개](evidence/r13-final-cf966a8/target-artifacts.json),
+[설치 29개 identity](evidence/r13-final-cf966a8/installed-identities.json),
+[M7/M8 영향 identity](evidence/r13-final-cf966a8/provenance-identities.json),
+[package 재현성](evidence/r13-final-cf966a8/package-reproducibility.json),
+[QEMU 실행](evidence/r13-final-cf966a8/qemu-runtime.json),
+[source 보존](evidence/r13-final-cf966a8/source-audit.json)에 원본 경로와 해시를 연결한다.
+
+R00~R13 완료는 current-source T11, T12/T13, 물리 BLE/Storage, T16~T18·R14·T19~T25 완료가 아니다.
+GitHub Actions 최신 상태와 공개 승인은 확인하지 않았다. 다음은
+[Fixture 101](44_M24_Fixture_101_UART_실기_검증.md)의 전원 OFF 결선 확인이다.
+현재 하드웨어를 관측하지 않았다. 마지막 알려진 Fixture 301 신호선이 남아 있을 수 있다.
+양쪽 USB와 모든 전원을 끄고 이전 신호선을 제거한 뒤 UART 4선과 공통 GND를 연결한다.
+외부 pull-up·보드 간 전원 rail 없이 DISABLE_UART 분리·DISABLE_SWD 연결, 동일 I/O 전압·
+단락 없음과 사용자 결선 완료 확인을 마치기 전에는 flash/HIL을 시작하지 않는다.

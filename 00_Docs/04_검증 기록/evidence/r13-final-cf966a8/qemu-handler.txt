@@ -1,0 +1,27 @@
+*** Booting nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+Running TESTSUITE m14_cpp_policy
+===================================================================
+START - test_dynamic_cast_and_typeid
+ PASS - test_dynamic_cast_and_typeid in 0.001 seconds
+===================================================================
+START - test_random_and_diagnostics_on_zephyr
+ PASS - test_random_and_diagnostics_on_zephyr in 0.001 seconds
+===================================================================
+START - test_throw_catch_and_stack_unwind
+ PASS - test_throw_catch_and_stack_unwind in 0.001 seconds
+===================================================================
+TESTSUITE m14_cpp_policy succeeded
+
+------ TESTSUITE SUMMARY START ------
+
+SUITE PASS - 100.00% [m14_cpp_policy]: pass = 3, fail = 0, skip = 0, total = 3 duration = 0.003 seconds
+ - PASS - [m14_cpp_policy.test_dynamic_cast_and_typeid] duration = 0.001 seconds
+ - PASS - [m14_cpp_policy.test_random_and_diagnostics_on_zephyr] duration = 0.001 seconds
+ - PASS - [m14_cpp_policy.test_throw_catch_and_stack_unwind] duration = 0.001 seconds
+
+------ TESTSUITE SUMMARY END ------
+
+===================================================================
+RunID: 652b79b34999a4a39edc78c9424e6441
+PROJECT EXECUTION SUCCESSFUL

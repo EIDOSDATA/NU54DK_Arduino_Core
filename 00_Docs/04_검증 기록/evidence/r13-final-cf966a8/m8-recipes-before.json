@@ -1,0 +1,12 @@
+{
+  "source_commit": "499fde3931248fe44f94bab3dc656bfef5111a38",
+  "status": "passed",
+  "execution": "read-only canonical M8 recipe checks",
+  "upload_sentinel": "NOT RUN",
+  "physical_executed": false,
+  "files": {
+    "C:\\r13s\\검증 설치\\hardware\\nucode\\zephyr\\platform.txt": "c6e56d63ff8a9e62f435e85659f3aa100d531d10d58d6c90ee7d077a36594a2f",
+    "C:\\r13s\\검증 설치\\hardware\\nucode\\zephyr\\boards.txt": "45482fc5ddac58d12a9412a02cc2a64e90247da4f1179701f185a68b17b88128",
+    "C:\\r13s\\검증 설치\\hardware\\nucode\\zephyr\\tools\\nu54-builder\\src\\nu54_builder_impl\\upload.py": "b08fb95aa374a59f694bb65236a94fcd2ff94fcc50166530350ddd8fa5805a62"
+  }
+}

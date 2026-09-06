@@ -1,0 +1,64 @@
+{
+  "source_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+  "board_gitlink": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "board_worktree_clean": true,
+  "sdk": [
+    {
+      "path": "C:\\ncs\\v3.4.0\\nrf",
+      "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+      "tracked_worktree_clean": true
+    },
+    {
+      "path": "C:\\ncs\\v3.4.0\\zephyr",
+      "revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+      "tracked_worktree_clean": true
+    },
+    {
+      "path": "C:\\Users\\eidos\\ncs\\v3.4.0\\nrf",
+      "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+      "tracked_worktree_clean": true
+    },
+    {
+      "path": "C:\\Users\\eidos\\ncs\\v3.4.0\\zephyr",
+      "revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+      "tracked_worktree_clean": true
+    }
+  ],
+  "tools": {
+    "host_python": {
+      "path": "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts\\python.exe",
+      "sha256": "0b471133e110cfb53a061cad528ce8e517d7b9ac41a0a396c39ad795a487fc14",
+      "version": "Python 3.12.10"
+    },
+    "target_python": {
+      "path": "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\python.exe",
+      "sha256": "fd5c46d73d29ba21b04c844bbaf9096066136526911230645a2a040d23fb612b",
+      "version": "Python 3.12.4"
+    },
+    "arduino_cli": {
+      "path": "C:\\NU54DEV\\tools\\arduino-cli-1.5.1\\arduino-cli.exe",
+      "sha256": "65daefba1423010575d0874275734cb4a917faf5293609f01e9db6ed1c1c7e79",
+      "version": "arduino-cli  Version: 1.5.1 Commit: 01f3d4f2b Date: 2026-06-05T10:22:12Z"
+    },
+    "clang_format": {
+      "path": "C:\\NU54DEV\\tools\\LLVM-22.1.8\\bin\\clang-format.exe",
+      "sha256": "3c563ca6f676b84bee959e530b2a10c010019168b695f3877f3423e3a4949e1b",
+      "version": "clang-format version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)"
+    },
+    "host_gxx": {
+      "path": "C:\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\g++.exe",
+      "sha256": "82b7669f84077cfd283ee165b53c75180251ea665fe1440cf5e7b4d160dc37cd",
+      "version": "g++.exe (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0"
+    },
+    "target_gxx": {
+      "path": "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\zephyr-sdk\\gnu\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-g++.exe",
+      "sha256": "35f6ddb8dbd3bd8748f0740ae10055d9b6666135e416198aeb5b69a1df31f782",
+      "version": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0"
+    }
+  },
+  "toolchain_environment_sha256": {
+    "C:\\ncs\\toolchains\\dcbdc366a1\\environment.json": "824994386257c9422cfba4006d678fd30ea7ccfe4960e06c8074b20fb6f3fc82",
+    "C:\\Users\\eidos\\ncs\\toolchains\\dcbdc366a1\\environment.json": "824994386257c9422cfba4006d678fd30ea7ccfe4960e06c8074b20fb6f3fc82"
+  },
+  "physical_executed": false
+}

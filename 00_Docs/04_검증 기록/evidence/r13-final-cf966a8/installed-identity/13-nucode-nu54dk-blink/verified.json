@@ -1,0 +1,95 @@
+{
+  "manifest_path": "C:\\r13v\\examples\\13-nucode-nu54dk-blink\\Blink.ino.nu54-build.json",
+  "manifest_sha256": "e0d4a4f6ade32870c3f4a41721f24af9514898d6a9b4b06dccaacc44d2ed0595",
+  "artifacts": {
+    "bin": {
+      "path": "C:/r13v/examples/13-nucode-nu54dk-blink/Blink.ino.bin",
+      "sha256": "462578b2cf066f19ac6b26dce73e939ef7f3cd9b5e6c10373d593d0d92b151a2",
+      "size": 107732
+    },
+    "elf": {
+      "path": "C:/r13v/examples/13-nucode-nu54dk-blink/Blink.ino.elf",
+      "sha256": "3ea160657d14f96fa62fb4ce03bb592eb944a5da6660b75b8f27e68bb64e9994",
+      "size": 2294128
+    },
+    "hex": {
+      "path": "C:/r13v/examples/13-nucode-nu54dk-blink/Blink.ino.hex",
+      "sha256": "66348df41385a16a44d7ea547d82fb3102be43bba0fb401306872ac6492e6d49",
+      "size": 303145
+    },
+    "map": {
+      "path": "C:/r13v/examples/13-nucode-nu54dk-blink/Blink.ino.map",
+      "sha256": "d54ddc12def8382ddceffdd7db382f9c00b64d64d65437e1d36fbd2c4432f037",
+      "size": 807633
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:3f3b482c1f7296d7dd78964e8adf8a96ef3719ee777a7f4303a853f8fe0adf9e",
+        "path": "C:/r13v/cache/v1/8e/8e56f68030dd23add4927a5a660ad651/platform/libraries/NUCODE_NU54DK/examples/Blink"
+      },
+      {
+        "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+        "path": "C:/r13v/cache/v1/8e/8e56f68030dd23add4927a5a660ad651/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/r13v/cache/v1/8e/8e56f68030dd23add4927a5a660ad651/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:ac693afc4dc5a35b7937b11b35da977e26e5b07a8e4c07b8b22c570a49324027",
+        "path": "C:/r13v/cache/v1/8e/8e56f68030dd23add4927a5a660ad651/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/r13v/cache/v1/8e/8e56f68030dd23add4927a5a660ad651/build/nucode_arduino_core_build.yml",
+      "sha256": "25df51c16455d92b0d82be8d7d76b7469b0084ccab98cf15c7c8390e295607d2"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/r13v/cache/v1/8e/8e56f68030dd23add4927a5a660ad651/app/generated-sources/sketch/Blink.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/Blink.ino.cpp",
+        "sha256": "0a69a5da758d570ca424b57f99e829404771181bdd5886769092d3a774d3c284",
+        "source_path": "C:/r13v/examples/13-nucode-nu54dk-blink/sketch/Blink.ino.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\r13v\\identity-records\\13-nucode-nu54dk-blink\\nucode_arduino_core_build.yml",
+    "sha256": "25df51c16455d92b0d82be8d7d76b7469b0084ccab98cf15c7c8390e295607d2",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core_source_sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "application_source_sha256": "96fb259c08dae83d36fc76601fb02d38bca901a1ac1a564d36374afe0277ac49",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\r13v\\identity-records\\13-nucode-nu54dk-blink\\build_info.yml",
+    "sha256": "fbeda3bae9a06dd7f804e6de0c82d11a32dd5c2778ba9a3da25eb5e30028c0fc",
+    "identity": {
+      "application-source-sha256": "96fb259c08dae83d36fc76601fb02d38bca901a1ac1a564d36374afe0277ac49",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+      "core-source-sha256": "6aa851f4bb5c32585e6af69168204badcca84cef56f268db27f23ceab3c57735",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

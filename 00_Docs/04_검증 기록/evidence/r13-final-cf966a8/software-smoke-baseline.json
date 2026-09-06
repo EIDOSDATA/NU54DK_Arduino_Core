@@ -1,0 +1,81 @@
+{
+  "source_commit": "499fde3931248fe44f94bab3dc656bfef5111a38",
+  "integration_runner_commit": "cf966a8ed614713235cd8178bd4b1eb8ab120d36",
+  "package_sha256": "18c836d22ff9f337f85ebc9be8fe1196dae9cfbdafc717e66f2dfa02df2bbcd1",
+  "smoke_routines": [
+    "m9",
+    "m11",
+    "m15",
+    "m16",
+    "m19m20",
+    "m21",
+    "ac02b",
+    "ac03",
+    "examples"
+  ],
+  "earlier_passed_routines": [
+    "blink",
+    "library",
+    "config",
+    "error",
+    "parallel",
+    "m6"
+  ],
+  "m7_focused_completion": "Four original M7 compile/config checks then current/monolithic actual writer scope regression PASS",
+  "m8_compile_only": [
+    {
+      "selection": "pyocd",
+      "manifest_sha256": "d0f6910e61678e9d61d32962ee95cb94f9c4c751c04c495b9b7d76717c1eaf9e",
+      "artifacts": {
+        "bin": {
+          "path": "C:/r13t/m8-compile-pyocd/m8_upload.ino.bin",
+          "sha256": "2eb4c00167f448bb997b6f69fc7aafc69c871efc751ef3ad8a589d30a18cbbf6",
+          "size": 107908
+        },
+        "elf": {
+          "path": "C:/r13t/m8-compile-pyocd/m8_upload.ino.elf",
+          "sha256": "55325cf89ce788f7b053d5ccd766bc73b36e691f379b40423c33b4513eed8d87",
+          "size": 2294692
+        },
+        "hex": {
+          "path": "C:/r13t/m8-compile-pyocd/m8_upload.ino.hex",
+          "sha256": "4b1c35cbdff77b67a0a8ab277c330f4503ceaddabd8d5992551a4635e1ed5fb5",
+          "size": 303640
+        },
+        "map": {
+          "path": "C:/r13t/m8-compile-pyocd/m8_upload.ino.map",
+          "sha256": "6fe87d9fdc63995cf5ab050e2748c552b9f1367edb19c60d6a5b2334aeecf914",
+          "size": 808246
+        }
+      }
+    },
+    {
+      "selection": "pyocd_uid",
+      "manifest_sha256": "2006d4abed44b3fbdb8cbacc7891836dc26463e98a4604307f59845020b7fde2",
+      "artifacts": {
+        "bin": {
+          "path": "C:/r13t/m8-compile-pyocd_uid/m8_upload.ino.bin",
+          "sha256": "2eb4c00167f448bb997b6f69fc7aafc69c871efc751ef3ad8a589d30a18cbbf6",
+          "size": 107908
+        },
+        "elf": {
+          "path": "C:/r13t/m8-compile-pyocd_uid/m8_upload.ino.elf",
+          "sha256": "2192bcb12cce59b7a0e799b5ddaabeb58f61e3e46a1651883ce44d829e69bda0",
+          "size": 2294692
+        },
+        "hex": {
+          "path": "C:/r13t/m8-compile-pyocd_uid/m8_upload.ino.hex",
+          "sha256": "4b1c35cbdff77b67a0a8ab277c330f4503ceaddabd8d5992551a4635e1ed5fb5",
+          "size": 303640
+        },
+        "map": {
+          "path": "C:/r13t/m8-compile-pyocd_uid/m8_upload.ino.map",
+          "sha256": "fd36f5b4f9fe91c7f38f350795292507403e13aeb6d502b16f4b4df5122b00ef",
+          "size": 808246
+        }
+      }
+    }
+  ],
+  "physical_executed": false,
+  "m8_upload_field_sentinel": "NOT RUN: would enumerate physical probes"
+}

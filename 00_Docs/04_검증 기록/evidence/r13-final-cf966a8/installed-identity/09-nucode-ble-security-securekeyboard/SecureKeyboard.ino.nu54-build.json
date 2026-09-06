@@ -1,0 +1,596 @@
+{
+  "adapter_version": "0.1.0-dev.m10",
+  "artifacts": {
+    "bin": {
+      "path": "C:/r13v/examples/09-nucode-ble-security-securekeyboard/SecureKeyboard.ino.bin",
+      "sha256": "caae806e7d328178180ba5aa94ed495bb1c893bc77152b911b145ba465c3a5a3",
+      "size": 311268
+    },
+    "elf": {
+      "path": "C:/r13v/examples/09-nucode-ble-security-securekeyboard/SecureKeyboard.ino.elf",
+      "sha256": "5e3e61dec45d07488ab8cee1b9ee553f3c8b62b4d1e841229f3b08b12d8bace6",
+      "size": 4744352
+    },
+    "hex": {
+      "path": "C:/r13v/examples/09-nucode-ble-security-securekeyboard/SecureKeyboard.ino.hex",
+      "sha256": "4af10d0225ca45b81046de35d04225eb810a5660b1c35913ea77ddc119ea3e64",
+      "size": 875672
+    },
+    "map": {
+      "path": "C:/r13v/examples/09-nucode-ble-security-securekeyboard/SecureKeyboard.ino.map",
+      "sha256": "0001e90da477f6643edb6051773152066a812b70ec4bc555923ac57e26ffdf2d",
+      "size": 2058911
+    }
+  },
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "built_at_utc": "2026-09-06T03:00:11.234566+00:00",
+  "cache": {
+    "cache_dir": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169",
+    "input_manifest": {
+      "adapter": {
+        "platform_content": "sha256:67edbebdd5f7ba43428a7b878f92676054c079617fb552d0287de26de7f81ce0",
+        "platform_root": "C:/r13v/검증 설치/hardware/nucode/zephyr",
+        "version": "0.1.0-dev.m10"
+      },
+      "board_package": {
+        "content": "sha256:d7c53a705c331c9c0137d421adaf1079cc7177e791c641df20588da95db97849",
+        "revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "root": "C:/r13v/검증 설치/hardware/nucode/zephyr/board_package/NU54DK_Zephyr_DTS"
+      },
+      "configuration": {
+        "profile": {
+          "conf": "sha256:445d7d5fff89b0db707b04cf309d02cf01b644cb0b26e0d188ac6d106cea24da",
+          "id": "ble",
+          "manifest": "sha256:7ab72df5aa070f5b6136f6b256ec430947297af9108cd031a610c47b6f9c460c",
+          "overlay": "sha256:80950b95f2e3dcc1926112705fca4dba6d959dbfe133a0ed38134bda02553507"
+        },
+        "selected_features": [
+          {
+            "conf": [
+              "sha256:d0da42712ce22596084a2ebffe30e38db22c53e9ba048f6f6ca315b2b6a6fa1a"
+            ],
+            "id": "nucode.ble.nus",
+            "manifest": "sha256:3ebf4c215e5e71d0b046324e59123fe984ba61f37211c963f57a57f12e8741b1",
+            "overlays": []
+          },
+          {
+            "conf": [
+              "sha256:b84e03405f9042bb2fb55ae42aef3811a6cc6e23cef20d44bf00337c87b2b8a3"
+            ],
+            "id": "nucode.ble.security",
+            "manifest": "sha256:af15b3e07b85f7215b2889273073272b4c83208dc0b0eb90c3d2b41b676d0579",
+            "overlays": []
+          }
+        ]
+      },
+      "ncs": {
+        "declared_version": "v3.4.0",
+        "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "nrf_west_yml": "sha256:04e4c21ce96b989fb2a73a4581c0309d1fdc9b27a53b3a34976beb0c8cb2b78d",
+        "root": "C:/Users/eidos/ncs/v3.4.0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "zephyr_version_file": "sha256:fd6ba7636a003973a983412c2906173dc45ce3ba62386e407b212f9a5736ce01"
+      },
+      "platform_build_copy": {
+        "content": "sha256:93161a3861157d616712d373c0773541b3c4796294180bf42bd0eed0eb6a592d"
+      },
+      "schema_version": 1,
+      "sketch": {
+        "app_overlay": "missing",
+        "prj_conf": "missing",
+        "root": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/examples/SecureKeyboard"
+      },
+      "target": {
+        "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+        "profile": "ble",
+        "sysbuild": false
+      },
+      "toolchain": {
+        "bundle_id": "dcbdc366a1",
+        "compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "environment": "sha256:824994386257c9422cfba4006d678fd30ea7ccfe4960e06c8074b20fb6f3fc82",
+        "manifest": "sha256:e5ed500e679a8e2baa1d71e0ddf68167f25d9f514985a7cb746b607be67413a8",
+        "root": "C:/Users/eidos/ncs/toolchains/dcbdc366a1"
+      }
+    },
+    "key": "928a8083ae4a114bb69dbde179ec3169a3bd8ea695d6b368dec9e89919e9413e",
+    "schema_version": 1,
+    "source_manifest_sha256": "sha256:683bd634cf15364ff139eca4e630d1f6f9030800984e718fcb34b73139abd8d3"
+  },
+  "context": {
+    "adapter_version": "0.1.0-dev.m10",
+    "app_dir": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/app",
+    "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+    "board_root": "C:/r13v/검증 설치/hardware/nucode/zephyr/board_package/NU54DK_Zephyr_DTS",
+    "build_duration_seconds": 383.849728,
+    "build_path": "C:/r13v/examples/09-nucode-ble-security-securekeyboard",
+    "cache_dir": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169",
+    "cache_key": "928a8083ae4a114bb69dbde179ec3169a3bd8ea695d6b368dec9e89919e9413e",
+    "cache_reused": false,
+    "cache_root": "C:/r13v/cache",
+    "cache_schema_version": 1,
+    "ccache": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/bin/ccache.exe",
+    "ccache_dir": "C:/r13v/cache/compiler-cache",
+    "ccache_stats_after": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 2800,
+      "cache_size_kibibyte": 65272,
+      "called_for_link": 726,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 9,
+      "direct_cache_miss": 2800,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 5598,
+      "internal_error": 0,
+      "local_storage_hit": 9,
+      "local_storage_miss": 2800,
+      "local_storage_read_hit": 18,
+      "local_storage_read_miss": 5600,
+      "local_storage_write": 5600,
+      "max_cache_size_kibibyte": 1953125,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 354,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 0,
+      "preprocessed_cache_miss": 2800,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 1788663603,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "ccache_stats_before": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 2325,
+      "cache_size_kibibyte": 53292,
+      "called_for_link": 576,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 7,
+      "direct_cache_miss": 2325,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 4649,
+      "internal_error": 0,
+      "local_storage_hit": 7,
+      "local_storage_miss": 2325,
+      "local_storage_read_hit": 14,
+      "local_storage_read_miss": 4650,
+      "local_storage_write": 4650,
+      "max_cache_size_kibibyte": 1953125,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 281,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 0,
+      "preprocessed_cache_miss": 2325,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 1788663226,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "ccache_stats_delta": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 475,
+      "cache_size_kibibyte": 11980,
+      "called_for_link": 150,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 2,
+      "direct_cache_miss": 475,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 949,
+      "internal_error": 0,
+      "local_storage_hit": 2,
+      "local_storage_miss": 475,
+      "local_storage_read_hit": 4,
+      "local_storage_read_miss": 950,
+      "local_storage_write": 950,
+      "max_cache_size_kibibyte": 0,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 73,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 0,
+      "preprocessed_cache_miss": 475,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 377,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "configuration_fingerprint": "sha256:928a8083ae4a114bb69dbde179ec3169a3bd8ea695d6b368dec9e89919e9413e",
+    "configure_duration_seconds": 176.603074,
+    "configure_mode": "cmake-only",
+    "configure_reason": "selected-features",
+    "configure_skipped": false,
+    "cxx_compiler": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-g++.exe",
+    "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+    "input_manifest": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/input-manifest.json",
+    "link_configure_duration_seconds": 96.418037,
+    "memory_layout": {
+      "code_partition": "slot0_partition",
+      "flash_end": 1490944,
+      "flash_origin": 0,
+      "flash_size": 1490944
+    },
+    "ncs_root": "C:/Users/eidos/ncs/v3.4.0",
+    "ncs_version": "v3.4.0",
+    "platform_build_root": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform",
+    "platform_root": "C:/r13v/검증 설치/hardware/nucode/zephyr",
+    "pristine_configure_count": 1,
+    "product_identity": {
+      "package_version": "0.0.90",
+      "source_version": "0.4.0-dev"
+    },
+    "profile": "ble",
+    "provisional_cache_key": "7dcb1915f2da128acd4ac95f808b2d876500b6c5b32d6adb5c8345c5fe3eef35",
+    "recovery_count": 0,
+    "schema_version": 2,
+    "selected_features": [
+      {
+        "conf": [
+          "sha256:d0da42712ce22596084a2ebffe30e38db22c53e9ba048f6f6ca315b2b6a6fa1a"
+        ],
+        "id": "nucode.ble.nus",
+        "manifest": "sha256:3ebf4c215e5e71d0b046324e59123fe984ba61f37211c963f57a57f12e8741b1",
+        "overlays": []
+      },
+      {
+        "conf": [
+          "sha256:b84e03405f9042bb2fb55ae42aef3811a6cc6e23cef20d44bf00337c87b2b8a3"
+        ],
+        "id": "nucode.ble.security",
+        "manifest": "sha256:af15b3e07b85f7215b2889273073272b4c83208dc0b0eb90c3d2b41b676d0579",
+        "overlays": []
+      }
+    ],
+    "selected_libraries": [
+      "NUCODE_BLE",
+      "NUCODE_BLE_Security"
+    ],
+    "size_tool": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-size.exe",
+    "sketch_root": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/examples/SecureKeyboard",
+    "source_manifest_changed": true,
+    "state": "built",
+    "sysbuild": false,
+    "toolchain_bundle_id": "dcbdc366a1",
+    "toolchain_root": "C:/Users/eidos/ncs/toolchains/dcbdc366a1",
+    "updated_at_utc": "2026-09-06T03:00:11.217535+00:00",
+    "zephyr_build_dir": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/build",
+    "zephyr_version": "4.4.0"
+  },
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+  "metrics": {
+    "build_seconds": 383.849728,
+    "ccache_delta": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 475,
+      "cache_size_kibibyte": 11980,
+      "called_for_link": 150,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 2,
+      "direct_cache_miss": 475,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 949,
+      "internal_error": 0,
+      "local_storage_hit": 2,
+      "local_storage_miss": 475,
+      "local_storage_read_hit": 4,
+      "local_storage_read_miss": 950,
+      "local_storage_write": 950,
+      "max_cache_size_kibibyte": 0,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 73,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 0,
+      "preprocessed_cache_miss": 475,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 377,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "configure_seconds": 96.418037
+  },
+  "product_identity": {
+    "package_version": "0.0.90",
+    "source_version": "0.4.0-dev"
+  },
+  "schema_version": 2,
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:485c2c452fdc981bb9e0eb5d5598c07fc23a095c1658a40c78a9825560addba7",
+        "path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE_Security/examples/SecureKeyboard"
+      },
+      {
+        "content_sha256": "sha256:bbb8b0d75a86d3b4f75554fda0a33076d0b71133cc2cf135a507344424869c74",
+        "path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:b1134d08c1ccba1c9a74f8cbb9d673e0a3daeffcbf5595fbf0888c2bad5ee3b9",
+        "path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE_Security/src"
+      },
+      {
+        "content_sha256": "sha256:92b104fcce0711fc630a0ae3e0fd3d2b29a140155115d7927c686087e93d5b6e",
+        "path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE/src"
+      },
+      {
+        "content_sha256": "sha256:ad84811a4f3024a599102b1cf69994825c14d5a3b45458869e346bfcd135471e",
+        "path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE_Security/src/internal"
+      },
+      {
+        "content_sha256": "sha256:7ba906eb03705ff02efa2afb71636ba698fed6bfc8f8e3639d92180e004445ab",
+        "path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE_Security/src/internal/security"
+      },
+      {
+        "content_sha256": "sha256:f69358aafb9d1ab53c3ec24318c9caffda84db721301b52122524f8547c78ddf",
+        "path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE/src/internal"
+      },
+      {
+        "content_sha256": "sha256:f3c5269bf914ee25aace9a6f721745aa8d2eeefe7277d1ef9dc79e8a64190ef1",
+        "path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE/src/internal/gap"
+      },
+      {
+        "content_sha256": "sha256:cb34354e1d68b864d5c80a72fef54105b4b45e6c0dcd60abfb9fd85cbe438eee",
+        "path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE/src/internal/gatt"
+      },
+      {
+        "content_sha256": "sha256:4ff0236efc89e2267e6204234f2c2aa5e59a55c2daced03f178e75418c4c8646",
+        "path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/build/nucode_arduino_core_build.yml",
+      "sha256": "3daa737bb3d8be75022b5457c24f9dd38541875460e9bcaaebb173ba8bb9ed83"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/app/generated-sources/sketch/SecureKeyboard.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/SecureKeyboard.ino.cpp",
+        "sha256": "154e89b4b034cbfd38042bb054a10ac8de0e8c50e5ab7614105849bdcffad34f",
+        "source_path": "C:/r13v/examples/09-nucode-ble-security-securekeyboard/sketch/SecureKeyboard.ino.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.cpp",
+        "sha256": "a0a8c40593ac98f668e1649b6e00c63c1d673ee387a8241a2fda9bb9dca6c5a2",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_HidsBackend.c",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_HidsBackend.c",
+        "sha256": "8c567b73fe32838fb4bb207e342d9ebacdc8b8666e53a26bd4f4a67db6c875b7",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_HidsBackend.c"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE_Security/src/internal/security/SecurityBattery.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/internal/security/SecurityBattery.cpp",
+        "sha256": "fc17ba5dc4b107fd95fa3f8b3af685b1dd8195690e9bd382bcb41649bc67afe8",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityBattery.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE_Security/src/internal/security/SecurityBond.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/internal/security/SecurityBond.cpp",
+        "sha256": "b302fc568ce3e616c22c59a9adeae0be2fe201d28249067f9697a4dc606acd69",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityBond.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE_Security/src/internal/security/SecurityDeviceInformation.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/internal/security/SecurityDeviceInformation.cpp",
+        "sha256": "6a80dfef4a42f4a13758ea8c11ca45a6bd65e1cc0e506feafd995599fac06fa5",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityDeviceInformation.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE_Security/src/internal/security/SecurityHid.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/internal/security/SecurityHid.cpp",
+        "sha256": "53323db91bf7b2ce4a539235b24cd4a911de7abfec6e9fb0c79a88d8e7158b7b",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityHid.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE_Security/src/internal/security/SecurityPairing.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/internal/security/SecurityPairing.cpp",
+        "sha256": "d9b7d2fd858fbc680084f17827d4fa479e879017754d8eb242e20fee4785a45a",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityPairing.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE/src/NUCODE_BLE.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/NUCODE_BLE.cpp",
+        "sha256": "b00bc57a041ee64a6177012bf9d8accb94ae77aa511e66b8f5b31c34e219cd19",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp",
+        "sha256": "0620f953594c340168843c44b3a1de1f6d59178d2ae735a773fa6ade96c2cdbe",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp",
+        "sha256": "1554db319e91533e5320a8b0962a8697d1eee15cc8bcc29713c47e0f405090d3",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp",
+        "sha256": "a03332ccb9c7b46f17dfeb8c73e3601d84b97a3d95ba4eb043b0786f51a8a009",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp",
+        "sha256": "d9efded333359c4c2e1118eb6bf0763c84fc613023aa9424f954a8571b1a3c94",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
+        "sha256": "151da35d2db341c162c0fdc3d49f670e5b01a7f65345a1f5ea314d3e8029c719",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp",
+        "sha256": "d37b49fc8adbe7608ecb77c824aceaa3b5d8bb8b0ff3ec243be229a8f50cf253",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp",
+        "sha256": "63abfb1375549aa7767dd4d8a49fc8d4cb73b66c0e32a8890dfa4c46d8d49875",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp",
+        "sha256": "5aedc89cde5be3b313e47ae32e94b89f3942a046114a3463003fb079014a614b",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE/src/internal/gatt/GattDatabase.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gatt/GattDatabase.cpp",
+        "sha256": "067977c47b647dde098f50de3472e4c6eb6c6239b4671a53251e4fcb68bd8fc1",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattDatabase.cpp"
+      },
+      {
+        "compiled_path": "C:/r13v/cache/v1/92/928a8083ae4a114bb69dbde179ec3169/platform/libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp",
+        "sha256": "62848a2f3cd64fa4b3ffaffcd21bc434a1a45fb11e15fef152d8dcb403daae37",
+        "source_path": "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp"
+      }
+    ]
+  },
+  "sources": [
+    "C:/r13v/examples/09-nucode-ble-security-securekeyboard/sketch/SecureKeyboard.ino.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_HidsBackend.c",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityBattery.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityBond.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityDeviceInformation.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityHid.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityPairing.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattDatabase.cpp",
+    "C:/r13v/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp"
+  ],
+  "sysbuild": false
+}
