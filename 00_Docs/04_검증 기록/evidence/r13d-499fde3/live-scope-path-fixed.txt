@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\run_live_scope.py", line 10, in <module>
+    module.test_live_build_record_scope(context,root)
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\arduino-cli\run_smoke.py", line 465, in test_live_build_record_scope
+    run(writer_command)
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\arduino-cli\run_smoke.py", line 99, in run
+    raise SmokeFailure(
+r13_live_scope.SmokeFailure: command failed (1): C:\Users\eidos\ncs\toolchains\dcbdc366a1\opt\bin\cmake.exe -DNUCODE_GIT_EXECUTABLE=C:/Program Files/Git/cmd/git.EXE -DNUCODE_CORE_ROOT=C:/Users/eidos/Documents/Codex/2026-09-06/new-chat/work/r13/live-scope-path-fixed/build-record-core -DNUCODE_BOARD_PACKAGE_ROOT=C:/Users/eidos/Documents/Codex/2026-09-06/new-chat/work/r13/live-scope-path-fixed/build-record-board -DNUCODE_APPLICATION_SOURCE_DIR=C:/Users/eidos/Documents/Codex/2026-09-06/new-chat/work/r13/live-scope-path-fixed/build-record-application -DNUCODE_NRF_DIR=C:/Users/eidos/ncs/v3.4.0/nrf -DNUCODE_ZEPHYR_BASE=C:/Users/eidos/ncs/v3.4.0/zephyr -DNUCODE_BUILD_RECORD=C:/Users/eidos/Documents/Codex/2026-09-06/new-chat/work/r13/live-scope-path-fixed/nucode_arduino_core_build.yml -DNUCODE_BOARD=nrf54l15dk/nrf54l15/cpuapp/nu54dk -DNUCODE_BOARD_QUALIFIERS=nrf54l15/cpuapp/nu54dk -DNUCODE_TOOLCHAIN_VARIANT=zephyr -DNUCODE_TOOLCHAIN_PATH=C:/Users/eidos/ncs/toolchains/dcbdc366a1 -DNUCODE_CXX_COMPILER=C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-g++.exe -P C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\r13\live-scope-path-fixed\build-record-core\zephyr\cmake\write_build_record.cmake
+CMake Error at C:/Users/eidos/Documents/Codex/2026-09-06/new-chat/work/r13/live-scope-path-fixed/build-record-core/zephyr/cmake/write_build_record.cmake:3 (include):
+  include could not find requested file:
+
+    C:/Users/eidos/Documents/Codex/2026-09-06/new-chat/work/r13/live-scope-path-fixed/build-record-core/zephyr/cmake/product_identity.cmake

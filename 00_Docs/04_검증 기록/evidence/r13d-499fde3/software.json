@@ -1,0 +1,62 @@
+{
+  "product_source_commit": "499fde3931248fe44f94bab3dc656bfef5111a38",
+  "physical_executed": false,
+  "production_files_changed": false,
+  "test_helper": "tests/arduino-cli/run_smoke.py",
+  "logs": {
+    "final-installed-smoke.log": {
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\final-installed-smoke.log",
+      "sha256": "56d3fb376b3e85fc2fcc4ac66e5134067ea7ded8ba30d6a1e6fefa63b9614034"
+    },
+    "live-scope-before.log": {
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\live-scope-before.log",
+      "sha256": "d3d7d33651a672e0cb47c9df92921b0ead87b222c2047898447a54816daa57bb"
+    },
+    "live-scope-path-fixed.log": {
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\live-scope-path-fixed.log",
+      "sha256": "7185031cb429b20000e66de0e2f637aba125ba2fba2812bcc440d481deced690",
+      "raw_archive": "live-scope-path-fixed.raw.gz",
+      "raw_archive_sha256": "02f27b9d3f5f4d841cf931db88bff084f62a2d473be8cb6328e2036d6fe51d38",
+      "text_preview": "Trailing blank lines trimmed; original bytes preserved in raw archive and work log"
+    },
+    "live-scope-fixed.log": {
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\live-scope-fixed.log",
+      "sha256": "de15ee7d7f733663be4a26bfdff66e757def133d86bc8cea158776a77d74986e"
+    },
+    "live-scope-legacy.log": {
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\live-scope-legacy.log",
+      "sha256": "de15ee7d7f733663be4a26bfdff66e757def133d86bc8cea158776a77d74986e"
+    },
+    "identity-after-smoke-fix.log": {
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\identity-after-smoke-fix.log",
+      "sha256": "2dc9616ade779a26c2a830d14daee06486df2ac4205d67b6d025a792087a4a0f"
+    },
+    "contract-after-smoke-fix.log": {
+      "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\r13\\contract-after-smoke-fix.log",
+      "sha256": "8c4795b84c930158f04262d864e63182f275640780d4e99ced18dde3749c85da"
+    }
+  },
+  "passed_before_failure": [
+    "blink",
+    "library",
+    "config",
+    "error",
+    "parallel",
+    "m6"
+  ],
+  "m7_compile_and_config_checks": "Four examples completed before the call to test_live_build_record_scope at the end of the loop failed. The original canonical temporary directory was cleaned by its runner.",
+  "m7_failed_portion": "CMake input collection path, then missing product_identity.cmake fixture input",
+  "m7_focused_retry": "Same installed 0.0.90 package: actual baseline/header/library/DTS hash, dirty and restore checks passed for current and monolithic CMake layouts",
+  "remaining_smoke": [
+    "m9",
+    "m11",
+    "m15",
+    "m16",
+    "m19m20",
+    "m21",
+    "ac02b",
+    "ac03",
+    "examples"
+  ],
+  "m8_upload_sentinel": "NOT RUN; compile-only selections still pending"
+}

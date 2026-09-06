@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\run_live_scope.py", line 10, in <module>
+    module.test_live_build_record_scope(context,root)
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\arduino-cli\run_smoke.py", line 383, in test_live_build_record_scope
+    configure_scope = read_cmake_glob_scope(
+                      ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\arduino-cli\run_smoke.py", line 376, in read_cmake_glob_scope
+    raise SmokeFailure(f"CMake core input scope was not found: {cmake_file}: {collection}")
+r13_live_scope.SmokeFailure: CMake core input scope was not found: C:\r13i\검증 설치\hardware\nucode\zephyr\zephyr\CMakeLists.txt: NUCODE_CORE_BUILD_INPUTS

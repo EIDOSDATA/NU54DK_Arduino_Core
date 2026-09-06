@@ -380,8 +380,11 @@ def read_cmake_glob_scope(cmake_file: Path, collection: str, root_variable: str)
 ## @brief 공개 header, library metadata, DTS binding이 live core provenance에 포함되는지 검증합니다.
 def test_live_build_record_scope(context: dict, root: Path) -> None:
     platform = Path(context["platform_root"])
+    configure_source = platform / "zephyr" / "cmake" / "source_provenance.cmake"
+    if not configure_source.is_file():
+        configure_source = platform / "zephyr" / "CMakeLists.txt"
     configure_scope = read_cmake_glob_scope(
-        platform / "zephyr" / "CMakeLists.txt",
+        configure_source,
         "NUCODE_CORE_BUILD_INPUTS",
         "NUCODE_ARDUINO_CORE_ROOT",
     )
@@ -410,6 +413,12 @@ def test_live_build_record_scope(context: dict, root: Path) -> None:
         Path("zephyr/module.yml"),
         Path("zephyr/cmake/write_build_record.cmake"),
     )
+    identity_files = (
+        Path("cores/arduino/internal/CoreIdentity.h"),
+        Path("platform.txt"),
+        Path("zephyr/cmake/product_identity.cmake"),
+    )
+    fixture_files += tuple(path for path in identity_files if (platform / path).is_file())
     for relative_path in fixture_files:
         source = platform / relative_path
         destination = core / relative_path
@@ -425,7 +434,7 @@ def test_live_build_record_scope(context: dict, root: Path) -> None:
     if git is None or not cmake.is_file():
         raise SmokeFailure("live build record regression requires git and the NCS cmake executable")
     run((git, "init", core))
-    run((git, "-C", core, "add", "cores", "dts", "libraries", "third_party", "variants", "zephyr"))
+    run((git, "-C", core, "add", "--all"))
     run(
         (
             git,

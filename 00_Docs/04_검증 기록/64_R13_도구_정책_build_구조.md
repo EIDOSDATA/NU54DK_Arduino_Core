@@ -152,3 +152,29 @@ CRLF 정규화를 검증한다. 실제 고정 SDK DTS와 M23 75개·M24 23개 �
 [추가 SPI-on AC02B target](evidence/r13c-3ab31b1/additional-spi-on-target.json)를 보존한다.
 R13 구현을 마쳤으며 전체 60개 target·실제 설치 예제·package·Host 최종 검증이 남았다.
 최종 게이트를 통과한 뒤에만 R13을 완료 체크하고 current-source T11 직전에서 멈춘다.
+
+## R13-D 최종 설치 smoke의 provenance fixture 보완 범위
+
+최종 exact 499fde3에서 전체 target 60개와 실제 설치 예제 29개는 통과했다. Arduino smoke의
+M7 마지막 live provenance 검사에서 test helper가 이동 전 CMakeLists.txt의 입력 목록을
+찾아 실패했다. 옮긴 source_provenance.cmake와 이전 monolithic package 경로를 구분해
+검사하고, R05 이후 writer가 요구하는 identity 입력을 독립 fixture에도 포함한다.
+제품 runtime·package·SDK는 바꾸지 않는다. 같은 설치 package의 실제 CMake writer로
+baseline·공개 header/library metadata/DTS 변경·dirty 표식·복원 회귀를 확인한 뒤
+실패한 M7 경계와 아직 실행하지 않은 smoke부터 재개한다. 기존 통과 결과와 실패 원본은 보존한다.
+
+
+### R13-D 보완 결과
+
+현재 package는 source_provenance.cmake를, 이전 단일 CMake 배치는 CMakeLists.txt를 읽는다.
+독립 fixture에는 존재하는 CoreIdentity.h·platform.txt·product_identity.cmake를 함께 복사하고
+fixture 전용 Git 저장소의 전체 입력을 stage한다. 실제 설치 package에서 현재/이전 배치 모두
+baseline·공개 header/library metadata/DTS 변경·dirty와 복원을 통과했다. identity Host 6개와
+contract 45개도 통과했다. 제품 runtime·builder·CMake producer·package 입력은 변경하지 않았다.
+
+원래 smoke는 Blink/library/config/error/parallel/M6의 6개 routine을 PASS했다. M7의 4개 예제
+compile·설정 검사는 끝났고, 그 loop 뒤의 provenance helper에서 실패했다. 이때 canonical
+runner가 자신의 임시 디렉터리를 정리했다. 이미 성공한 compile을 전부 반복하지 않고 같은
+package의 helper를 별도 실행해 실패 부분을 완료했다. 아직 실행하지 않은 M9 이후 9개와
+M8 두 선택값의 compile만 이어간다. 이 분리 실행은 하나의 무실패 smoke 실행으로 표시하지 않는다.
+[원본 실패와 재시험](evidence/r13d-499fde3/software.json)에 각 단계 log hash를 보존한다.
