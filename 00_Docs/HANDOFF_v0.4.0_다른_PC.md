@@ -1,6 +1,6 @@
 # v0.4.0 다른 PC 재개 인계
 
-현재 기능 실행(100번): exact4e48252 GPIO/GPIOTE2502·exact3334b17 steadyPWM675·exact0db0689 추가PWM288은 PASS다. QDEC은 종료 순서 교정 뒤 exactb5c86a4에서26조건을 통과했으나4000 예상에3999로 중단했다. 초기값0·double0·최종phase00과 원본/입력 복귀를 보존하고 독립 GPIO observer로 누락 위치를 진단한다. I2S432는b5c86a4로 별도 실행 중이다. T13은32단독/8동시와 C→S→U 계획만 확정했다. T12전체·T13실기·RC는 미완료다.
+현재 기능 실행(100번): exact4e48252 GPIO/GPIOTE2502·exact3334b17 steadyPWM675·exact0db0689 추가PWM288·exactb5c86a4 I2S432는 PASS다. QDEC은b5c86a4에서26조건 뒤4000 예상에3999로 중단했고, e521825 독립 GPIO observer로 원인을 진단 중이다. 기존 실패 원본·입력 복귀를 보존했다. T13은32단독/8동시와 C→S→U 계획만 확정했다. T12전체·T13실기·RC는 미완료다.
 
 [T13 후속 GPIO 결선](../tests/hil/nu54dk/T13_PLAN.md)은 C→S→U 두 단계다.
 

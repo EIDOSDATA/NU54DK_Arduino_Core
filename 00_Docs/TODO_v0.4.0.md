@@ -1,6 +1,6 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
-현재 기능 실행(100번): exact4e48252 GPIO/GPIOTE2502·exact3334b17 steadyPWM675·exact0db0689 추가PWM288은 PASS다. QDEC은 종료 순서 교정 뒤 exactb5c86a4에서26조건을 통과했으나4000 예상에3999로 중단했다. 초기값0·double0·최종phase00과 원본/입력 복귀를 보존하고 독립 GPIO observer로 누락 위치를 진단한다. I2S432는b5c86a4로 별도 실행 중이다. T13은32단독/8동시와 C→S→U 계획만 확정했다. T12전체·T13실기·RC는 미완료다.
+현재 기능 실행(100번): exact4e48252 GPIO/GPIOTE2502·exact3334b17 steadyPWM675·exact0db0689 추가PWM288·exactb5c86a4 I2S432는 PASS다. QDEC은b5c86a4에서26조건 뒤4000 예상에3999로 중단했고, e521825 독립 GPIO observer로 원인을 진단 중이다. 기존 실패 원본·입력 복귀를 보존했다. T13은32단독/8동시와 C→S→U 계획만 확정했다. T12전체·T13실기·RC는 미완료다.
 
 현재 실행 범위(2026-09-07 후속): 사용자가 **T12 현재 공통 결선 묶음 검증과 T13 시험 조합·추가 결선 확정까지** 지시했다. 17개 공통 GPIO/GPIOTE, PWM 나머지 모드, QDEC 추가 조건, I2S 연속·단방향을 구현·Host·target·실기로 구분해 진행한다. T13은 조합·자원 충돌·추가 GPIO 결선표를 확정하는 단계이며 soak 실행은 이번 범위에 포함하지 않는다. 새 증거와 문서를 갱신하고 commit/push·CI를 확인한다. T12 전체·T13 실기·후속 gate·RC·공개는 미완료로 유지한다.
 
@@ -25,10 +25,10 @@ T12 다음 준비 범위(2026-09-07): 97번의 첫 capture를 common/grouped/ind
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.40 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.41 |
 | 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 외부/내부 부분 PASS·전체 미완료 |
 | 작성·갱신일 | 2026-09-08 |
-| 작성 직전 기준 commit | `3334b1777327cc8106644a4c49760736d0f1d864` — GPIO 완료·steady 675 PASS 이후 terminal STOP Host 교정 |
+| 작성 직전 기준 commit | `e5218255b3796d660a62da7c2dc518b6c1371b66` — I2S432 완료·QDEC 독립 계측 준비 source |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
 | 다음 착수 항목 | **Host 교정·clean commit/build 뒤 additional-signals(모드288→QDEC240→I2S432), 문서·증거·push/CI** |
 | 이번 요청의 실행 범위 | 새 PC 인수·환경·main/submodule 확인, 첫 PWM peer capture 구현/Host/target과 240조건 실기·증거·commit/push. 후속 PWM 모드·GPIO/GPIOTE·I2S·QDEC를 이어간다. T12 전체·후속 gate 완료 처리 없음 |
@@ -81,22 +81,22 @@ GPIO/GPIOTE 전체·I2S 연속/단방향·QDEC 추가 조건 및 PWM의 나머�
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | 4e48252 GPIO 기능 2502/2502·결선105·입력 복귀, 3334b17 steady PWM675/675·새 결선105 PASS. T13 계획 확정·실기0 |
+| 이번에 끝낸 일 | GPIO/GPIOTE2502·steadyPWM675·추가PWM288·I2S432 기능 PASS. 각 exact source·새501·cleanup/postflight 분리 보존. T1332단독/8동시 계획 확정·실기0 |
 | 진행 중인 T 항목 | [100번](<04_검증 기록/100_T12_공통_기능_묶음과_T13_조합_확정.md>) T12 공통 묶음과 T13 조합·추가 결선 확정. T13 soak는 이번 범위 밖 |
-| 다음 구체적 행동 | 최초 finite raw와 규격에 맞춘 Host 판정을 검사하고 새 clean image로 additional-signals를 실행. 이전 steady675는 3334b17 증거로 구분 |
+| 다음 구체적 행동 | e521825 QDEC240에서 GPIO 독립 전이·최초 hardware 불일치·마지막 공개 read 반환값을 관측한다. 3999 원인을 확인한 뒤 필요한 수정·회귀·증거 갱신·push/CI |
 | 다음 작업에 필요한 사용자 행동 | 현재 17신호+GND·DAP UART 분리·SWD 연결 유지와 HW 미조작 확인을 받음. 이번 고정 세션은 2026-09-08 07:00 KST 만료. 새 추가 결선은 T13 계획에서 확정하며 이번에는 변경하지 않음 |
-| 외부 결선 상태 | 사용자 확인한 C의 17신호+GND 유지. 15:42 UTC 이후 3334b17 postflight 두 역할·17 GPIO 입력·PWM/QDEC/I2S/DPPI/GPIOTE off 확인. 재연결 뒤 COM/확인을 재사용하지 않음 |
+| 외부 결선 상태 | 현재 C17신호+GND·양쪽DAP UART 분리/SWD 연결 유지 확인. I2S b5c86a4 종료 postflight 양쪽17 GPIO 입력·주변장치off PASS 뒤 e521825 QDEC 실행. 재연결 뒤 COM/확인 재사용 금지 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
-| 다른 PC 재개 | [인계 문서](HANDOFF_v0.4.0_다른_PC.md)의 이전 PC 상태, 96번 인수, 97번 PWM capture와 99번 공통 결선 검사를 구분. 최신 실행/후속 범위는 이 TODO와 99번 |
-| 마지막 정식 외부 HIL source | `3334b1777327cc8106644a4c49760736d0f1d864` — steady675 PASS이나 신호 campaign 전체 failed. GPIO2502는 exact4e48252. 이전 source별 PASS는 원본 유지 |
+| 다른 PC 재개 | [인계 문서](HANDOFF_v0.4.0_다른_PC.md)의 이전 PC 상태와96/97/99를 보존. 최신 범위·실행 source·결과는 이 TODO와100번 |
+| 마지막 정식 외부 HIL source | I2S432 완료는b5c86a4. 현재QDEC 진단 image는e521825. GPIO4e48252·steady3334b17·모드0db0689의 PASS를 새 image source로 소급하지 않음 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. 420 정의된 기능·준비 취소와 430 I2S 기능 완료. T12 전체·T13 이후·R14·RC·공개는 대기. 공용 자원 경로 변경 이후 필요한 최종-source 통신 회귀는 후속 통합에서 확인 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | 5261(GPIO)은 정상 종료, 64663(신호)은 finite Host 오판에서 종료. 양쪽 cleanup/postflight 완료. 다음 실행은 새 clean source로 준비 중 |
+| 이 TODO 작성 작업의 실행 중 시험 | I2S74696은432PASS·postflightPASS로 종료. QDEC 진단25455만 두 probe를 점유. 5261/64663/57573/1800은 모두 종료했고 원본 보존 |
 | 로컬 임시 build·evidence | C:/pcv04 baseline·C:/pwm04 최초 build 실패·C:/pwc04 준비·C:/pwh04 054d08f·C:/pwq04 0d7f382 보존. 97번에 두 flash 실패·성공·raw/SHA 보존. 삭제 실행 없음 |
-| 최종 정렬 gate | 3334b17 clang-format22.1.8, C/C++/ino387개 PASS. 한국어 Doxygen·Allman·4칸·중괄호 필수 |
+| 최종 정렬 gate | e521825 clang-format22.1.8 C/C++/ino388개 PASS. Host91그룹720시험719PASS·조건부SKIP1, 관련 pair2/2·contract/package/inventory/docs PASS |
 | CI 확인 | origin/main 27e0f25 Software SUCCESS(34118608639), Reproducible SUCCESS(34118608640), 2026-09-07 12:46 UTC 관측. 645df82/4e48252 및 후속 변경은 아직 push 전 |
-| 문서 작업 검증 | 시험 JSON·생성 목록·HIL/common 안내·인계·99번을 180/900/3600초 기준으로 갱신. 이전 시간 정책과 physical 원본·readiness HOLD 유지 |
-| 최종 HIL 입력 찾기 | GPIO C:/cgc04=4e48252, 첫 신호 C:/cav04=3334b17. raw·postflight·SHA는100번 evidence. 다음 image는 clean source/build 후 지정 |
+| 문서 작업 검증 | T13계획180/900/3600초·C→S→U 두 변경과32단독/8동시를 production route Host로 검사. Software·실기 범위와readiness HOLD 유지 |
+| 최종 HIL 입력 찾기 | GPIO C:/cgc04=4e48252, steady C:/cav04=3334b17, 모드 C:/caw04=0db0689, I2S C:/cax04=b5c86a4, QDEC진단 C:/caz04=e521825. Raw/SHA/postflight는100번 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드
