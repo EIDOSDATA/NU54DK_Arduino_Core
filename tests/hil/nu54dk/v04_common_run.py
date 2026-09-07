@@ -10,6 +10,7 @@ import sys
 
 import v04_common_gpio as gpio
 import v04_common_qdec as qdec
+import v04_qdec_read_diagnostic as qdec_diagnostic
 import v04_common_i2s as i2s
 import v04_common_pwm_modes as pwm_modes
 import v04_pwm_capture as pwm
@@ -29,7 +30,7 @@ def arguments(argv=None):
     parser.add_argument('--pyocd', required=True, type=Path)
     parser.add_argument('--session-grant', required=True, type=Path)
     parser.add_argument('--evidence', type=Path)
-    parser.add_argument('--section', choices=('all', 'gpio', 'task', 'edge', 'qdec', 'pwm', 'pwm-modes', 'i2s', 'signals', 'additional-signals', 'qdec-i2s'), default='all')
+    parser.add_argument('--section', choices=('all', 'gpio', 'task', 'edge', 'qdec', 'qdec-read-diagnostic', 'pwm', 'pwm-modes', 'i2s', 'signals', 'additional-signals', 'qdec-i2s'), default='all')
     parser.add_argument('--execute-fixture', action='store_true')
     parser.add_argument('--cmsis-dap-limit-packets', action='store_true')
     parser.add_argument('--swd-frequency-hz', type=int, default=10000000)
@@ -57,6 +58,9 @@ def main(argv=None):
                              'hex_sha256': image['sha256'], 'elf_sha256': image['elf_sha256'],
                              'record_sha256': image['record_sha256']} for uid, image in zip(uids, images)],
                 'results': []}
+    if args.section == 'qdec-read-diagnostic':
+        evidence['type'] = 'v04-common-qdec-read-diagnostic'
+        evidence['functional_regression'] = False
     if not args.execute_fixture:
         print(json.dumps(evidence, ensure_ascii=False, indent=2))
         print('V04_COMMON_PREFLIGHT_ONLY; no probe access, flash, reset or external output')
@@ -103,6 +107,8 @@ def main(argv=None):
                     print(f'COMMON_SECTION_PASS={name}', flush=True)
             elif args.section == 'qdec':
                 qdec.run(devices, continuity.check, append)
+            elif args.section == 'qdec-read-diagnostic':
+                qdec_diagnostic.run(devices, continuity.check, append)
             elif args.section == 'pwm':
                 pwm.run_common(devices, continuity.check, append)
             elif args.section == 'i2s':

@@ -32,7 +32,7 @@ def counts(raw, steps, double_transitions):
 
 
 @contextmanager
-def armed(devices, current, append, label, instance, debounce):
+def armed(devices, current, append, label, instance, debounce, *, observation_mode=None):
     """! @brief B가 LOW를 유지한 상태에서 A sampling을 시작·정지한 뒤 B를 입력으로 반환합니다. """
     current(520)
     original = None
@@ -40,7 +40,8 @@ def armed(devices, current, append, label, instance, debounce):
         for device in devices:
             expect(device.command(80, (520, 1, CONSENT, 2)), [520, 10000], 'QDEC arm')
         for device in reversed(devices):
-            expect(device.command(83, (instance, debounce)), [0], 'QDEC prepare')
+            values = (instance, debounce) if observation_mode is None else (instance, debounce, observation_mode)
+            expect(device.command(83, values), [0], 'QDEC prepare')
         time.sleep(.004)
         yield
     except BaseException as error:
@@ -49,7 +50,7 @@ def armed(devices, current, append, label, instance, debounce):
         raise
     finally:
         mismatch = False
-        for page in (0, 1, 2):
+        for page in (0, 1, 2, 4):
             try:
                 raw = devices[0].command(85, (page,), timeout=2)
                 append(label + f'/diagnostic-page{page}', {'status': 'observation', 'words': raw})
