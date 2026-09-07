@@ -1,0 +1,67 @@
+{
+  "read_only": true,
+  "policy_changed": false,
+  "scope": "Recent CodeIntegrity records mentioning task native continuous.exe or existing ninja.exe",
+  "records": [
+    {
+      "TimeCreated": "2026-09-07T11:20:24.4682158+09:00",
+      "Id": 3077,
+      "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\cmake.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\ninja.exe that did not meet the Enterprise signing level requirements or violated code integrity policy (Policy ID:{0283ac0f-fff1-49ae-ada1-8a933130cad6})."
+    },
+    {
+      "TimeCreated": "2026-09-07T11:20:24.4666963+09:00",
+      "Id": 3033,
+      "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\cmake.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\ninja.exe that did not meet the Enterprise signing level requirements."
+    },
+    {
+      "TimeCreated": "2026-09-07T11:20:24.3310457+09:00",
+      "Id": 3077,
+      "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\cmake.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\ninja.exe that did not meet the Enterprise signing level requirements or violated code integrity policy (Policy ID:{0283ac0f-fff1-49ae-ada1-8a933130cad6})."
+    },
+    {
+      "TimeCreated": "2026-09-07T11:20:24.3294595+09:00",
+      "Id": 3033,
+      "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\cmake.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\ninja.exe that did not meet the Enterprise signing level requirements."
+    },
+    {
+      "TimeCreated": "2026-09-07T11:20:24.1968221+09:00",
+      "Id": 3077,
+      "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\cmake.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\ninja.exe that did not meet the Enterprise signing level requirements or violated code integrity policy (Policy ID:{0283ac0f-fff1-49ae-ada1-8a933130cad6})."
+    },
+    {
+      "TimeCreated": "2026-09-07T11:20:24.1952808+09:00",
+      "Id": 3033,
+      "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\cmake.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\ninja.exe that did not meet the Enterprise signing level requirements."
+    },
+    {
+      "TimeCreated": "2026-09-07T11:20:24.0504046+09:00",
+      "Id": 3077,
+      "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\cmake.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\ninja.exe that did not meet the Enterprise signing level requirements or violated code integrity policy (Policy ID:{0283ac0f-fff1-49ae-ada1-8a933130cad6})."
+    },
+    {
+      "TimeCreated": "2026-09-07T11:20:24.0488896+09:00",
+      "Id": 3033,
+      "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\cmake.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\ninja.exe that did not meet the Enterprise signing level requirements."
+    },
+    {
+      "TimeCreated": "2026-09-07T11:20:23.9232904+09:00",
+      "Id": 3077,
+      "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\cmake.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\ninja.exe that did not meet the Enterprise signing level requirements or violated code integrity policy (Policy ID:{0283ac0f-fff1-49ae-ada1-8a933130cad6})."
+    },
+    {
+      "TimeCreated": "2026-09-07T11:20:23.9217185+09:00",
+      "Id": 3033,
+      "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\cmake.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\ninja.exe that did not meet the Enterprise signing level requirements."
+    },
+    {
+      "TimeCreated": "2026-09-07T11:20:23.7919162+09:00",
+      "Id": 3077,
+      "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\cmake.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\ninja.exe that did not meet the Enterprise signing level requirements or violated code integrity policy (Policy ID:{0283ac0f-fff1-49ae-ada1-8a933130cad6})."
+    },
+    {
+      "TimeCreated": "2026-09-07T11:20:23.7894993+09:00",
+      "Id": 3033,
+      "Message": "Code Integrity determined that a process (\\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\cmake.exe) attempted to load \\Device\\HarddiskVolume3\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\ninja.exe that did not meet the Enterprise signing level requirements."
+    }
+  ]
+}

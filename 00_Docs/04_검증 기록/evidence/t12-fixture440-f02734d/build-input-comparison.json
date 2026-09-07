@@ -1,0 +1,30 @@
+{
+  "source": "f02734d69d9722085771fc1a34d5ed0cf756bc4e",
+  "prior_source": "917dc0284b1185d23eeef3f8df31bd3498f78408",
+  "comparisons": [
+    {
+      "role": 1,
+      "repository_translation_units": 42,
+      "git_source_blobs_identical": true,
+      "raw_newline_only_differences": [
+        "tests/zephyr/v04_pair_hil/src/main.cpp"
+      ],
+      "membership_identical": true,
+      "config_identical": true,
+      "dts_identical": true
+    },
+    {
+      "role": 2,
+      "repository_translation_units": 42,
+      "git_source_blobs_identical": true,
+      "raw_newline_only_differences": [
+        "tests/zephyr/v04_pair_hil/src/main.cpp"
+      ],
+      "membership_identical": true,
+      "config_identical": true,
+      "dts_identical": true
+    }
+  ],
+  "continuous_helper_runner_tests_identical": true,
+  "old_full_host_status": "blocked; not promoted by this build or hardware run"
+}

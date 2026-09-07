@@ -1,0 +1,65 @@
+{
+  "checked_at_utc": "2026-09-07T02:46:51.697356+00:00",
+  "source": "f02734d69d9722085771fc1a34d5ed0cf756bc4e",
+  "swd_frequency_hz": 10000000,
+  "flash_executed": false,
+  "reset_executed": false,
+  "fixture_commands_executed": false,
+  "register_definition": "Fixed SDK nrf54l15_global.h / nrf54l15_types.h; ENABLE offset 0x500",
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "f8a3f23daab8674ac4aefcc1999f68a6589056bae7c59204ed0b63fa4f3a4813",
+      "elf_sha256": "b281626137999b5734d261c66fc786529241b11c4d0fa154c8d4822360f69f87",
+      "runtime_identity_hex": "48494c34010000000100000000000000663032373334643639643937323230383537373166633161333464356564306366373536626334650000000000000000",
+      "cpuid": "0x411fd210",
+      "state": "SLEEPING",
+      "signal_pin_cnf": {
+        "4": 2,
+        "5": 2,
+        "6": 2,
+        "7": 2
+      },
+      "peripheral_enable": {
+        "POWER_CONSTLATSTAT": 0,
+        "PDM20": 0,
+        "PDM21": 0,
+        "SPIS21": 0,
+        "GPIOTE20_CONFIG0": 0,
+        "GPIOTE20_CONFIG1": 0,
+        "GPIOTE20_PUBLISH_IN0": 0,
+        "GPIOTE20_SUBSCRIBE_OUT1": 0,
+        "DPPI20_CHANNEL0": 0
+      },
+      "identity_status": "passed"
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "9f2953de6919e706a52ce3bf3f10526c4c58c1d62a53459a3c1885157eca15cb",
+      "elf_sha256": "2082efc3b226c97d45be1cc0230a8bcea7f98c77ec0175ab82bc09cc5487e3b6",
+      "runtime_identity_hex": "48494c34010000000200000000000000663032373334643639643937323230383537373166633161333464356564306366373536626334650000000000000000",
+      "cpuid": "0x411fd210",
+      "state": "SLEEPING",
+      "signal_pin_cnf": {
+        "4": 12,
+        "5": 0,
+        "6": 2,
+        "7": 0
+      },
+      "peripheral_enable": {
+        "POWER_CONSTLATSTAT": 0,
+        "PDM20": 0,
+        "PDM21": 0,
+        "SPIS21": 0,
+        "GPIOTE20_CONFIG0": 0,
+        "GPIOTE20_CONFIG1": 0,
+        "GPIOTE20_PUBLISH_IN0": 0,
+        "GPIOTE20_SUBSCRIBE_OUT1": 0,
+        "DPPI20_CHANNEL0": 0
+      },
+      "identity_status": "passed"
+    }
+  ]
+}
