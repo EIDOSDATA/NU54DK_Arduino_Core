@@ -1,4 +1,4 @@
-"""! @brief 공통 결선 세션의 exact flash·연속성 확인·GPIO/GPIOTE 실기를 수행합니다. """
+"""! @brief 공통 결선의 exact flash·연속성 확인·GPIO/PWM/QDEC/I2S 실기를 수행합니다. """
 from __future__ import annotations
 
 import argparse
@@ -29,7 +29,7 @@ def arguments(argv=None):
     parser.add_argument('--pyocd', required=True, type=Path)
     parser.add_argument('--session-grant', required=True, type=Path)
     parser.add_argument('--evidence', type=Path)
-    parser.add_argument('--section', choices=('all', 'gpio', 'task', 'edge', 'qdec', 'pwm', 'pwm-modes', 'i2s', 'signals'), default='all')
+    parser.add_argument('--section', choices=('all', 'gpio', 'task', 'edge', 'qdec', 'pwm', 'pwm-modes', 'i2s', 'signals', 'additional-signals'), default='all')
     parser.add_argument('--execute-fixture', action='store_true')
     parser.add_argument('--cmsis-dap-limit-packets', action='store_true')
     parser.add_argument('--swd-frequency-hz', type=int, default=10000000)
@@ -91,9 +91,11 @@ def main(argv=None):
                         print(f'COMMON_PHYSICAL_PASSED={completed};SECTION={args.section}', flush=True)
             evidence['external_wiring_executed'] = True
             wiring.run_checks(devices, append, lambda: continuity.check(501))
-            if args.section == 'signals':
+            if args.section in ('signals', 'additional-signals'):
                 for name, execute in (('pwm', pwm.run_common), ('pwm-modes', pwm_modes.run),
                                       ('qdec', qdec.run), ('i2s', i2s.run)):
+                    if args.section == 'additional-signals' and name == 'pwm':
+                        continue
                     print(f'COMMON_SECTION_START={name}', flush=True)
                     execute(devices, continuity.check, append)
                     print(f'COMMON_SECTION_PASS={name}', flush=True)

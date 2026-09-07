@@ -18,9 +18,10 @@ def vectors():
 
 
 def finite_duties(repeats, delay, plays):
-    """! @brief repeats는 모든 frame, end-delay는 각 sequence의 마지막 frame에만 적용합니다. """
-    return ([25] * (1 + repeats) + [50] * (1 + repeats + delay) +
-            [75] * (1 + repeats) + [25] * (1 + repeats + delay)) * plays
+    """! @brief LOOPSDONE→STOP의 마지막 frame은 REFRESH/ENDDELAY 없이 한 주기만 실행됩니다. """
+    pair = ([25] * (1 + repeats) + [50] * (1 + repeats + delay) +
+            [75] * (1 + repeats) + [25] * (1 + repeats + delay))
+    return pair * (plays - 1) + pair[:-(1 + repeats + delay)] + [25]
 
 
 def finite_received(vector, status, edges):

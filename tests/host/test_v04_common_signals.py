@@ -1,5 +1,7 @@
 """! @brief 축소 PWM의 누락과 QDEC signed/double-transition 거짓 PASS를 검사합니다. """
 import itertools
+import gzip
+import json
 from pathlib import Path
 import sys
 import unittest
@@ -62,9 +64,9 @@ class CommonSignalsTests(unittest.TestCase):
                 with self.assertRaises(ProtocolError):
                     modes.finite_received(vector, raw, invalid)
 
-        # @brief 반복·지연의 교환과 총 길이만 같은 잘못된 frame 배분을 각각 거부합니다.
+        ## @brief 반복·지연의 교환과 총 길이만 같은 잘못된 frame 배분을 각각 거부합니다.
         vector = (20, 0, 1000, 0, 0, 9, 3, 4)
-        wrong_distribution = ([25] * 13 + [50] * 10 + [75] * 13 + [25] * 10) * 4
+        wrong_distribution = [25] * 13 + [50] * 10 + modes.finite_duties(9, 3, 4)[23:]
         self.assertEqual(len(wrong_distribution), len(modes.finite_duties(9, 3, 4)))
         for faulty in (modes.finite_duties(3, 9, 4), wrong_distribution):
             wrong = [[value, level] for index, duty in enumerate(faulty)
@@ -72,6 +74,26 @@ class CommonSignalsTests(unittest.TestCase):
             status = [1, 1, 1, 0, len(wrong), 0, 0, len(faulty) * 1000 + 200000, 0, 0, 0, 1]
             with self.assertRaises(ProtocolError):
                 modes.finite_received(vector, status, wrong)
+
+    def test_finite_pwm_first_physical_trace_matches_documented_terminal_stop(self):
+        """! @brief 최초 172주기 원본과 마지막 반복을 잘못 더한 파형을 구별합니다. """
+        archive = ROOT / '00_Docs/04_검증 기록/evidence/t12-common-signals-3334b17-first/result.json.gz'
+        original = json.loads(gzip.decompress(archive.read_bytes()))
+        self.assertEqual(original['status'], 'failed')
+        raw = next(row for row in original['results']
+                   if row['id'] == 'V04-COMMON-PWM-MODES/20/0/1000/0/0/9/3/4/0/raw')
+        vector = (20, 0, 1000, 0, 0, 9, 3, 4)
+        self.assertEqual(modes.finite_received(vector, raw['receiver'], raw['edges'])['complete_pulses'], 172)
+        self.assertEqual(len(modes.finite_duties(0, 0, 52)), 208)
+        self.assertEqual(len(modes.finite_duties(9, 3, 4)), 172)
+        extended = [edge.copy() for edge in raw['edges']]
+        for period in range(1, 13):
+            extended.extend([[raw['edges'][-2][0] + period * 1000, 1],
+                             [raw['edges'][-1][0] + period * 1000, 0]])
+        status = raw['receiver'].copy()
+        status[4] = len(extended)
+        with self.assertRaises(ProtocolError):
+            modes.finite_received(vector, status, extended)
 
     def test_compact_pwm_preserves_each_identity_axis_and_duty_polarity(self):
         full = {row for load in pwm.LOADS for row in pwm.vectors(load)}
