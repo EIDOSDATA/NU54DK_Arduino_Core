@@ -47,7 +47,7 @@ class WindowsRecipeTests(unittest.TestCase):
         copy_module = BUILDER.implementation.build
         helper = sys.modules[copy_module.platform_build_root.__module__]
         with tempfile.TemporaryDirectory(prefix='nu54-r06-copy-') as folder:
-            root = Path(folder)
+            root = Path(folder).resolve()
             installed = root / '설치 공백'
             installed.mkdir()
             (installed / 'release-manifest.json').write_text('{"schema_version": 1}', encoding='utf-8')
