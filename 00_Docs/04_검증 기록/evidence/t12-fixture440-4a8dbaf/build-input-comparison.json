@@ -1,0 +1,22 @@
+{
+  "source": "4a8dbafe74e251bbc2897775dae15688ab950823",
+  "prior_source": "e9d264c502488754fbda2eabcf174764f703e37d",
+  "comparisons": [
+    {
+      "role": 1,
+      "repository_translation_units": 42,
+      "repository_inputs_identical": true,
+      "membership_identical": true,
+      "config_identical": true,
+      "dts_identical": true
+    },
+    {
+      "role": 2,
+      "repository_translation_units": 42,
+      "repository_inputs_identical": true,
+      "membership_identical": true,
+      "config_identical": true,
+      "dts_identical": true
+    }
+  ]
+}

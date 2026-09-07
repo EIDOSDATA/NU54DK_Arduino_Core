@@ -1,0 +1,25 @@
+{
+  "source": "917dc0284b1185d23eeef3f8df31bd3498f78408",
+  "devices": [
+    {
+      "role": 1,
+      "pin_cnf": {
+        "4": 12,
+        "5": 2,
+        "6": 2,
+        "7": 2
+      }
+    },
+    {
+      "role": 2,
+      "pin_cnf": {
+        "4": 12,
+        "5": 2,
+        "6": 2,
+        "7": 2
+      }
+    }
+  ],
+  "extra_fixture_commands": false,
+  "capture": "passive read immediately after canonical boot"
+}

@@ -1,0 +1,20 @@
+{
+  "source": "4a8dbafe74e251bbc2897775dae15688ab950823",
+  "captures": 6,
+  "raw_samples": 1536,
+  "means_by_receiver_first": {
+    "False": [
+      17261.26171875,
+      17261.26171875,
+      17261.26171875
+    ],
+    "True": [
+      -12968.93359375,
+      -2.2890625,
+      12962.44140625
+    ]
+  },
+  "same_target_image": true,
+  "only_sequence_changed": true,
+  "cleanup_pass": true
+}

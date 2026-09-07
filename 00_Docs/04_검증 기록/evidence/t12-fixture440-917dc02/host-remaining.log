@@ -1,0 +1,1097 @@
+PATTERN=test_r03_fabric_drivers.py
+test_analog_production (test_r03_fabric_drivers.FabricDriverTests.test_analog_production) ... ok
+test_stream_production (test_r03_fabric_drivers.FabricDriverTests.test_stream_production) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 7.332s
+
+OK
+PATTERN=test_r04_file.py
+test_production_file (test_r04_file.FileLifetimeTests.test_production_file) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.311s
+
+OK
+PATTERN=test_r05_identity.py
+test_checkout_drift_is_detected_and_regenerated (test_r05_identity.ProductIdentityTests.test_checkout_drift_is_detected_and_regenerated) ... ok
+test_checkout_identity_and_schema_independence (test_r05_identity.ProductIdentityTests.test_checkout_identity_and_schema_independence) ... ok
+test_cmake_matches_builder_and_rejects_invalid_identity (test_r05_identity.ProductIdentityTests.test_cmake_matches_builder_and_rejects_invalid_identity) ... ok
+test_live_build_record_carries_both_versions (test_r05_identity.ProductIdentityTests.test_live_build_record_carries_both_versions) ... ok
+test_payload_identity_tracks_source_but_allows_package_stamping (test_r05_identity.ProductIdentityTests.test_payload_identity_tracks_source_but_allows_package_stamping) ... ok
+test_stamped_install_preserves_source_version (test_r05_identity.ProductIdentityTests.test_stamped_install_preserves_source_version) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.463s
+
+OK
+PATTERN=test_r06_builder_modules.py
+test_extracted_entry_isolated_from_cwd_and_pythonpath (test_r06_builder_modules.BuilderPackageTests.test_extracted_entry_isolated_from_cwd_and_pythonpath) ... ok
+test_source_package_includes_explicit_models_and_launcher (test_r06_builder_modules.BuilderPackageTests.test_source_package_includes_explicit_models_and_launcher) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.232s
+
+OK
+PATTERN=test_r06_windows_recipe.py
+test_checkout_and_ascii_install_keep_original_build_root (test_r06_windows_recipe.WindowsRecipeTests.test_checkout_and_ascii_install_keep_original_build_root) ... ok
+test_copy_rejects_cache_junction_to_another_directory (test_r06_windows_recipe.WindowsRecipeTests.test_copy_rejects_cache_junction_to_another_directory) ... ok
+test_installed_command_preserves_quoted_paths_and_exit (test_r06_windows_recipe.WindowsRecipeTests.test_installed_command_preserves_quoted_paths_and_exit) ... ok
+test_package_copy_preserves_identity_recovers_bytes_and_rejects_extra_files (test_r06_windows_recipe.WindowsRecipeTests.test_package_copy_preserves_identity_recovers_bytes_and_rejects_extra_files) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.855s
+
+OK
+PATTERN=test_r07_event_driver.py
+test_production_dppi_and_registry (test_r07_event_driver.EventDriverTests.test_production_dppi_and_registry) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.985s
+
+OK
+PATTERN=test_r08_resource_route.py
+test_production_resource_and_route (test_r08_resource_route.ResourceRouteTests.test_production_resource_and_route) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 4.325s
+
+OK
+PATTERN=test_r09_spi_facade.py
+test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) ... 
+  test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='lifecycle') ... ERROR
+  test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='route_fail') ... ERROR
+  test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='end_retry') ... ERROR
+  test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='settings') ... ERROR
+  test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='modes') ... ERROR
+  test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='thread') ... ERROR
+  test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='buffer') ... ERROR
+  test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='driver') ... ERROR
+  test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='mask') ... ERROR
+  test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='mask_begin_fail') ... ERROR
+  test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='mask_end_retry') ... ERROR
+  test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='isr') ... ERROR
+
+======================================================================
+ERROR: test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='lifecycle')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r09_spi_facade.py", line 33, in test_production_spi_facade
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=20)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='route_fail')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r09_spi_facade.py", line 33, in test_production_spi_facade
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=20)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='end_retry')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r09_spi_facade.py", line 33, in test_production_spi_facade
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=20)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='settings')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r09_spi_facade.py", line 33, in test_production_spi_facade
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=20)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='modes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r09_spi_facade.py", line 33, in test_production_spi_facade
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=20)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='thread')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r09_spi_facade.py", line 33, in test_production_spi_facade
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=20)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='buffer')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r09_spi_facade.py", line 33, in test_production_spi_facade
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=20)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='driver')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r09_spi_facade.py", line 33, in test_production_spi_facade
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=20)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='mask')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r09_spi_facade.py", line 33, in test_production_spi_facade
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=20)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='mask_begin_fail')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r09_spi_facade.py", line 33, in test_production_spi_facade
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=20)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='mask_end_retry')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r09_spi_facade.py", line 33, in test_production_spi_facade
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=20)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_spi_facade (test_r09_spi_facade.SpiFacadeTests.test_production_spi_facade) (scenario='isr')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r09_spi_facade.py", line 33, in test_production_spi_facade
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=20)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+----------------------------------------------------------------------
+Ran 1 test in 6.615s
+
+FAILED (errors=12)
+PATTERN=test_r10_serial_concurrency.py
+test_production_stop_reservation (test_r10_serial_concurrency.SerialConcurrencyTests.test_production_stop_reservation) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 4.081s
+
+OK
+PATTERN=test_r11_fabric_data.py
+test_production_data_and_restarts (test_r11_fabric_data.FabricDataTests.test_production_data_and_restarts) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 5.152s
+
+OK
+PATTERN=test_r12_ble_gap.py
+test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) ... 
+  test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='lifecycle') ... ERROR
+  test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='late_callback') ... ERROR
+  test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='reconnect') ... ERROR
+  test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='queue_overflow') ... ERROR
+  test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='reentrant') ... ERROR
+  test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='pending_end') ... ERROR
+  test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='scan_copy') ... ERROR
+  test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='driver_failure') ... ERROR
+  test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='settings_failure') ... ERROR
+  test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='advertising') ... ERROR
+
+======================================================================
+ERROR: test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='lifecycle')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_gap.py", line 37, in test_production_gap_lifecycle
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=10)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='late_callback')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_gap.py", line 37, in test_production_gap_lifecycle
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=10)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='reconnect')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_gap.py", line 37, in test_production_gap_lifecycle
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=10)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='queue_overflow')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_gap.py", line 37, in test_production_gap_lifecycle
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=10)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='reentrant')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_gap.py", line 37, in test_production_gap_lifecycle
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=10)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='pending_end')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_gap.py", line 37, in test_production_gap_lifecycle
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=10)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='scan_copy')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_gap.py", line 37, in test_production_gap_lifecycle
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=10)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='driver_failure')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_gap.py", line 37, in test_production_gap_lifecycle
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=10)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='settings_failure')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_gap.py", line 37, in test_production_gap_lifecycle
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=10)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle) (scenario='advertising')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_gap.py", line 37, in test_production_gap_lifecycle
+    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=10)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+----------------------------------------------------------------------
+Ran 1 test in 7.212s
+
+FAILED (errors=10)
+PATTERN=test_r12_ble_gatt.py
+test_production_gatt_lifecycle (test_r12_ble_gatt.BleGattTests.test_production_gatt_lifecycle) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 6.682s
+
+OK
+PATTERN=test_r12_ble_security.py
+test_production_security_lifecycle (test_r12_ble_security.BleSecurityTests.test_production_security_lifecycle) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 8.898s
+
+OK
+PATTERN=test_r12_eeprom.py
+test_production_eeprom_record_and_restart (test_r12_eeprom.EepromPersistenceTests.test_production_eeprom_record_and_restart) ... ERROR
+
+======================================================================
+ERROR: test_production_eeprom_record_and_restart (test_r12_eeprom.EepromPersistenceTests.test_production_eeprom_record_and_restart)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_eeprom.py", line 40, in test_production_eeprom_record_and_restart
+    run('write', path)
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_eeprom.py", line 32, in run
+    result = subprocess.run([str(binary), scenario, str(path)], capture_output=True, timeout=10)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+----------------------------------------------------------------------
+Ran 1 test in 2.500s
+
+FAILED (errors=1)
+PATTERN=test_r12_littlefs.py
+test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) ... 
+  test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) (scenario='write') ... ERROR
+  test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) (scenario='read') ... FAIL
+  test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) (scenario='mount_failure') ... FAIL
+  test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) (scenario='open_failure') ... FAIL
+  test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) (scenario='io_failure') ... FAIL
+  test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) (scenario='busy_mount') ... FAIL
+  test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) (scenario='path_mode') ... ERROR
+  test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) (scenario='read') ... FAIL
+
+======================================================================
+ERROR: test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) (scenario='write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_littlefs.py", line 35, in test_production_littlefs_lifecycle
+    result = subprocess.run([str(binary), scenario, str(image)], capture_output=True, timeout=10)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) (scenario='path_mode')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_littlefs.py", line 38, in test_production_littlefs_lifecycle
+    self.assertEqual(image.read_bytes(), before)
+                     ^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\eidos\\AppData\\Local\\Temp\\nu54-r12-littlefs-ikj56erz\\fake-filesystem.bin'
+
+======================================================================
+FAIL: test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) (scenario='read')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_littlefs.py", line 36, in test_production_littlefs_lifecycle
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: file && file.size() == 4, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r12_littlefs_main.cpp, line 47
+
+
+======================================================================
+FAIL: test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) (scenario='mount_failure')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_littlefs.py", line 36, in test_production_littlefs_lifecycle
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: file && file.size() == 4, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r12_littlefs_main.cpp, line 47
+
+
+======================================================================
+FAIL: test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) (scenario='open_failure')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_littlefs.py", line 36, in test_production_littlefs_lifecycle
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: retry, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r12_littlefs_main.cpp, line 59
+
+
+======================================================================
+FAIL: test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) (scenario='io_failure')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_littlefs.py", line 36, in test_production_littlefs_lifecycle
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: file, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r12_littlefs_main.cpp, line 65
+
+
+======================================================================
+FAIL: test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) (scenario='busy_mount')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_littlefs.py", line 36, in test_production_littlefs_lifecycle
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: !LittleFS.end() && LittleFS.mounted(), file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r12_littlefs_main.cpp, line 85
+
+
+======================================================================
+FAIL: test_production_littlefs_lifecycle (test_r12_littlefs.LittleFsPersistenceTests.test_production_littlefs_lifecycle) (scenario='read')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_littlefs.py", line 36, in test_production_littlefs_lifecycle
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: file && file.size() == 4, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r12_littlefs_main.cpp, line 47
+
+
+----------------------------------------------------------------------
+Ran 1 test in 12.057s
+
+FAILED (failures=6, errors=2)
+PATTERN=test_r13_generated.py
+test_changed_missing_or_outside_output_is_rejected (test_r13_generated.GeneratedContractTests.test_changed_missing_or_outside_output_is_rejected) ... ok
+test_checkout_crlf_preserves_utf8_lf_contract (test_r13_generated.GeneratedContractTests.test_checkout_crlf_preserves_utf8_lf_contract) ... ok
+test_nondeterministic_or_omitted_generation_is_rejected (test_r13_generated.GeneratedContractTests.test_nondeterministic_or_omitted_generation_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.008s
+
+OK
+PATTERN=test_r13_manifest_revision.py
+test_configure_and_live_parsers_validate_full_revision (test_r13_manifest_revision.ManifestRevisionTests.test_configure_and_live_parsers_validate_full_revision)
+! @brief 40자리 대소문자 SHA와 길이·문자·JSON 오류를 두 실제 함수에서 검증합니다. ... ok
+test_live_writer_restores_core_and_board_from_gitless_manifest (test_r13_manifest_revision.ManifestRevisionTests.test_live_writer_restores_core_and_board_from_gitless_manifest)
+! @brief 실제 build record writer가 package의 Core·board SHA를 YAML에 기록합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.034s
+
+OK
+PATTERN=test_r13_package_modules.py
+test_error_marker_and_no_partial_output_for_invalid_version (test_r13_package_modules.PackageModuleTests.test_error_marker_and_no_partial_output_for_invalid_version) ... ok
+test_isolated_cli_ignores_foreign_package_and_pythonpath (test_r13_package_modules.PackageModuleTests.test_isolated_cli_ignores_foreign_package_and_pythonpath) ... ok
+test_repository_default_and_multiple_import_identity (test_r13_package_modules.PackageModuleTests.test_repository_default_and_multiple_import_identity) ... ok
+test_same_consumer_reload_does_not_reuse_candidate_state (test_r13_package_modules.PackageModuleTests.test_same_consumer_reload_does_not_reuse_candidate_state) ... ok
+test_stable_snapshot_includes_moved_package_model (test_r13_package_modules.PackageModuleTests.test_stable_snapshot_includes_moved_package_model) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.963s
+
+OK
+PATTERN=test_v04_campaign.py
+test_duration_is_fresh_for_each_invocation (test_v04_campaign.CampaignTests.test_duration_is_fresh_for_each_invocation) ... ok
+test_invalid_or_unbounded_options_fail_closed (test_v04_campaign.CampaignTests.test_invalid_or_unbounded_options_fail_closed) ... ok
+test_repetition_campaign_is_bounded (test_v04_campaign.CampaignTests.test_repetition_campaign_is_bounded) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+OK
+PATTERN=test_v04_cmake_sources.py
+test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) ... 
+  test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=()) ... FAIL
+  test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('UARTE',)) ... FAIL
+  test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('SPIM',)) ... FAIL
+  test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('SPIS',)) ... FAIL
+  test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('TWIM',)) ... FAIL
+  test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('TWIS',)) ... FAIL
+  test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('UARTE', 'SPIM', 'SPIS', 'TWIM', 'TWIS')) ... FAIL
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=())
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 65, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- Configuring incomplete, errors occurred!
+CMake Error at CMakeLists.txt:3 (project):
+  Running
+
+   'C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe' '--version'
+
+  failed with:
+
+   unknown error
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('UARTE',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 65, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- Configuring incomplete, errors occurred!
+CMake Error at CMakeLists.txt:3 (project):
+  Running
+
+   'C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe' '--version'
+
+  failed with:
+
+   unknown error
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('SPIM',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 65, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- Configuring incomplete, errors occurred!
+CMake Error at CMakeLists.txt:3 (project):
+  Running
+
+   'C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe' '--version'
+
+  failed with:
+
+   unknown error
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('SPIS',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 65, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- Configuring incomplete, errors occurred!
+CMake Error at CMakeLists.txt:3 (project):
+  Running
+
+   'C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe' '--version'
+
+  failed with:
+
+   unknown error
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('TWIM',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 65, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- Configuring incomplete, errors occurred!
+CMake Error at CMakeLists.txt:3 (project):
+  Running
+
+   'C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe' '--version'
+
+  failed with:
+
+   unknown error
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('TWIS',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 65, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- Configuring incomplete, errors occurred!
+CMake Error at CMakeLists.txt:3 (project):
+  Running
+
+   'C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe' '--version'
+
+  failed with:
+
+   unknown error
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('UARTE', 'SPIM', 'SPIS', 'TWIM', 'TWIS'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 65, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- Configuring incomplete, errors occurred!
+CMake Error at CMakeLists.txt:3 (project):
+  Running
+
+   'C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe' '--version'
+
+  failed with:
+
+   unknown error
+
+
+
+
+----------------------------------------------------------------------
+Ran 1 test in 2.133s
+
+FAILED (failures=7)
+PATTERN=test_v04_dma_memory.py
+test_all_candidate_dma_fabrics_use_full_range_validation (test_v04_dma_memory.DmaMemoryTests.test_all_candidate_dma_fabrics_use_full_range_validation) ... ok
+test_native_full_range_and_alignment_boundaries (test_v04_dma_memory.DmaMemoryTests.test_native_full_range_and_alignment_boundaries) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 2.917s
+
+OK
+PATTERN=test_v04_fixture.py
+test_catalog_connector_pin_map_and_no_forbidden_nets (test_v04_fixture.FixtureTests.test_catalog_connector_pin_map_and_no_forbidden_nets) ... ok
+test_cli_cannot_implicitly_execute_or_omit_confirmation (test_v04_fixture.FixtureTests.test_cli_cannot_implicitly_execute_or_omit_confirmation) ... ok
+test_confirmation_rejects_every_missing_condition (test_v04_fixture.FixtureTests.test_confirmation_rejects_every_missing_condition) ... ok
+test_expected_error_recovery_ids_keep_the_error_cause (test_v04_fixture.FixtureTests.test_expected_error_recovery_ids_keep_the_error_cause) ... ok
+test_foreign_image_role_uid_and_expiry_rejected (test_v04_fixture.FixtureTests.test_foreign_image_role_uid_and_expiry_rejected) ... ok
+test_generated_confirmation_is_bound_but_not_approved (test_v04_fixture.FixtureTests.test_generated_confirmation_is_bound_but_not_approved) ... ok
+test_spi_split_buffer_waits_for_peer_rearm_before_second_segment (test_v04_fixture.FixtureTests.test_spi_split_buffer_waits_for_peer_rearm_before_second_segment) ... ok
+test_transfer_scope_matches_encoded_controller_style (test_v04_fixture.FixtureTests.test_transfer_scope_matches_encoded_controller_style)
+! @brief style와 I2C address encoding을 독립적인 기대값으로 검증합니다. ... ok
+test_twi_fixture_uses_internal_pullups_without_external_resistors (test_v04_fixture.FixtureTests.test_twi_fixture_uses_internal_pullups_without_external_resistors) ... ok
+test_twi_requires_explicit_catalog_pullup_confirmation (test_v04_fixture.FixtureTests.test_twi_requires_explicit_catalog_pullup_confirmation) ... ok
+test_user_confirmed_connector_pinmap_is_complete_and_locked (test_v04_fixture.FixtureTests.test_user_confirmed_connector_pinmap_is_complete_and_locked) ... ok
+test_vectors_and_transfer_direction_are_explicit (test_v04_fixture.FixtureTests.test_vectors_and_transfer_direction_are_explicit) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.014s
+
+OK
+PATTERN=test_v04_math.py
+test_dma_count_is_checked_before_nrfx (test_v04_math.V04MathTests.test_dma_count_is_checked_before_nrfx) ... ok
+test_production_clock_math_and_cross_language_protocol (test_v04_math.V04MathTests.test_production_clock_math_and_cross_language_protocol) ... ok
+test_target_clock_uses_actual_instance_and_internal_adc_is_soc_specific (test_v04_math.V04MathTests.test_target_clock_uses_actual_instance_and_internal_adc_is_soc_specific) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.867s
+
+OK
+PATTERN=test_v04_pair.py
+test_boot_checks_images_and_clears_only_mailbox_markers_before_resume (test_v04_pair.V04PairTests.test_boot_checks_images_and_clears_only_mailbox_markers_before_resume) ... ok
+test_corruption_and_length_rejected (test_v04_pair.V04PairTests.test_corruption_and_length_rejected) ... ok
+test_empty_nonce_and_oversized_values_rejected (test_v04_pair.V04PairTests.test_empty_nonce_and_oversized_values_rejected) ... ok
+test_evidence_existing_journal_is_preserved_and_result_finalized (test_v04_pair.V04PairTests.test_evidence_existing_journal_is_preserved_and_result_finalized) ... ok
+test_evidence_interrupt_retains_partial_results (test_v04_pair.V04PairTests.test_evidence_interrupt_retains_partial_results) ... ok
+test_failure_stop_cannot_hide_failure_or_retry_poisoned_device (test_v04_pair.V04PairTests.test_failure_stop_cannot_hide_failure_or_retry_poisoned_device) ... ok
+test_frame_roundtrip (test_v04_pair.V04PairTests.test_frame_roundtrip) ... ok
+test_identity_commit_and_role (test_v04_pair.V04PairTests.test_identity_commit_and_role) ... ok
+test_mailbox_polling_interval_supports_10mhz_fixture_runs (test_v04_pair.V04PairTests.test_mailbox_polling_interval_supports_10mhz_fixture_runs) ... ok
+test_no_external_pin_opcode_or_implicit_flash (test_v04_pair.V04PairTests.test_no_external_pin_opcode_or_implicit_flash) ... ok
+test_onboard_runner_requires_multi_dma_concurrency_result (test_v04_pair.V04PairTests.test_onboard_runner_requires_multi_dma_concurrency_result) ... ok
+test_os_lock_rejects_competing_process_then_releases (test_v04_pair.V04PairTests.test_os_lock_rejects_competing_process_then_releases) ... ok
+test_pmic_pins_released_from_nfc_in_both_images (test_v04_pair.V04PairTests.test_pmic_pins_released_from_nfc_in_both_images) ... ok
+test_same_probe_rejected (test_v04_pair.V04PairTests.test_same_probe_rejected) ... ok
+test_stale_role_opcode_nonce_rejected (test_v04_pair.V04PairTests.test_stale_role_opcode_nonce_rejected) ... ok
+test_swd_mailbox_commit_and_poison (test_v04_pair.V04PairTests.test_swd_mailbox_commit_and_poison) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.209s
+
+OK
+PATTERN=test_v04_qdec.py
+test_double_transition_does_not_count_as_motion (test_v04_qdec.QdecTests.test_double_transition_does_not_count_as_motion) ... ok
+test_forward_reverse_cycles_and_cancellation (test_v04_qdec.QdecTests.test_forward_reverse_cycles_and_cancellation) ... ok
+test_native_period_and_led_boundaries (test_v04_qdec.QdecTests.test_native_period_and_led_boundaries) ... ERROR
+test_native_pwm_levels_match_independent_ab_decoder (test_v04_qdec.QdecTests.test_native_pwm_levels_match_independent_ab_decoder)
+! @brief 실제 C++ 파형의 극성·A/B 배치·idle 복귀를 독립 전이 표로 검사합니다. ... ERROR
+test_production_uses_validated_period_and_explicit_report_policy (test_v04_qdec.QdecTests.test_production_uses_validated_period_and_explicit_report_policy) ... ok
+test_sampling_cannot_use_slow_nrfx_default (test_v04_qdec.QdecTests.test_sampling_cannot_use_slow_nrfx_default) ... ok
+test_stream_dap_borrowing_is_explicit_and_does_not_change_public_gpio (test_v04_qdec.QdecTests.test_stream_dap_borrowing_is_explicit_and_does_not_change_public_gpio) ... ok
+
+======================================================================
+ERROR: test_native_period_and_led_boundaries (test_v04_qdec.QdecTests.test_native_period_and_led_boundaries)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_qdec.py", line 147, in test_native_period_and_led_boundaries
+    self.assertEqual(subprocess.run([str(output)], timeout=10).returncode, 0)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_native_pwm_levels_match_independent_ab_decoder (test_v04_qdec.QdecTests.test_native_pwm_levels_match_independent_ab_decoder)
+! @brief 실제 C++ 파형의 극성·A/B 배치·idle 복귀를 독립 전이 표로 검사합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_qdec.py", line 51, in test_native_pwm_levels_match_independent_ab_decoder
+    lines = subprocess.check_output([str(output)], text=True, timeout=10).splitlines()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+----------------------------------------------------------------------
+Ran 7 tests in 5.720s
+
+FAILED (errors=2)
+PATTERN=test_v04_revision.py
+test_different_owner_is_scoped_and_nonrepository_rejected (test_v04_revision.RevisionTests.test_different_owner_is_scoped_and_nonrepository_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.377s
+
+OK
+PATTERN=test_v04_serial_lifecycle.py
+test_fixture_gate_allowlist_expiry_and_fault_latch (test_v04_serial_lifecycle.SerialLifecycleTests.test_fixture_gate_allowlist_expiry_and_fault_latch) ... ok
+test_native_production_lifecycle (test_v04_serial_lifecycle.SerialLifecycleTests.test_native_production_lifecycle) ... ok
+test_native_production_route_validator (test_v04_serial_lifecycle.SerialLifecycleTests.test_native_production_route_validator) ... ERROR
+
+======================================================================
+ERROR: test_native_production_route_validator (test_v04_serial_lifecycle.SerialLifecycleTests.test_native_production_route_validator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_serial_lifecycle.py", line 38, in test_native_production_route_validator
+    result = subprocess.run([str(binary)], capture_output=True, timeout=10)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+----------------------------------------------------------------------
+Ran 3 tests in 7.962s
+
+FAILED (errors=1)
+PATTERN=test_v04_signal.py
+test_405_has_low_release_low_for_every_dma_boundary (test_v04_signal.SignalTests.test_405_has_low_release_low_for_every_dma_boundary) ... ok
+test_406_requires_input_bias_and_fully_settled_low_high_samples (test_v04_signal.SignalTests.test_406_requires_input_bias_and_fully_settled_low_high_samples)
+! @brief VBAT 공유 입력의 출력 활성화·미정착·경계 위반을 거부합니다. ... ok
+test_407_button_shared_input_rejects_stuck_low_and_any_output_driver (test_v04_signal.SignalTests.test_407_button_shared_input_rejects_stuck_low_and_any_output_driver)
+! @brief 버튼 공유 입력의 세 단계·DMA 경계와 눌림 LOW·출력 구성을 거부합니다. ... ok
+test_default_cli_is_preflight_and_execution_needs_files (test_v04_signal.SignalTests.test_default_cli_is_preflight_and_execution_needs_files) ... ok
+test_i2s_finite_transfer_waits_for_payload_release_and_uses_separate_tail (test_v04_signal.SignalTests.test_i2s_finite_transfer_waits_for_payload_release_and_uses_separate_tail)
+! @brief 실제 HIL 순서 helper에서 단일/이중 반환·중복·미제출 slot을 검사합니다. ... ok
+test_i2s_full_payload_preserves_packed_samples_after_bounded_startup (test_v04_signal.SignalTests.test_i2s_full_payload_preserves_packed_samples_after_bounded_startup)
+! @brief 시작 frame 뒤 전체 payload와 packed 상위 sample 손상·누락을 검사합니다. ... ok
+test_i2s_masks_are_width_and_channel_explicit (test_v04_signal.SignalTests.test_i2s_masks_are_width_and_channel_explicit) ... ok
+test_invalid_vectors_fail_closed (test_v04_signal.SignalTests.test_invalid_vectors_fail_closed) ... ok
+test_partial_arm_failure_still_disarms_both_devices (test_v04_signal.SignalTests.test_partial_arm_failure_still_disarms_both_devices)
+! @brief 두 번째 보드 arm 실패 시 첫 번째 보드의 lease를 방치하지 않습니다. ... ok
+test_pdm_firmware_reports_the_released_dma_length (test_v04_signal.SignalTests.test_pdm_firmware_reports_the_released_dma_length) ... ok
+test_pdm_runner_requires_channel_and_density_discrimination (test_v04_signal.SignalTests.test_pdm_runner_requires_channel_and_density_discrimination) ... ok
+test_pdm_stereo_rejects_shared_channels_swaps_wrong_edges_and_short_dma (test_v04_signal.SignalTests.test_pdm_stereo_rejects_shared_channels_swaps_wrong_edges_and_short_dma)
+! @brief 좌우 구별·에지 반전·source 반전과 손상된 수신 길이를 독립 검사합니다. ... ok
+test_shared_adc_oracle_rejects_stuck_levels_short_dma_and_push_pull (test_v04_signal.SignalTests.test_shared_adc_oracle_rejects_stuck_levels_short_dma_and_push_pull) ... ok
+test_shared_fixtures_run_all_phases_and_release_even_on_failure (test_v04_signal.SignalTests.test_shared_fixtures_run_all_phases_and_release_even_on_failure)
+! @brief Host 실행 순서와 실패 뒤 양쪽 cleanup을 모의 mailbox로 검증합니다. ... ok
+test_shared_source_never_drives_high_and_releases_on_abort (test_v04_signal.SignalTests.test_shared_source_never_drives_high_and_releases_on_abort)
+! @brief 실제 firmware helper를 컴파일하여 잘못된 인자·중복 시작·해제를 검사합니다. ... ok
+test_signal_campaign_is_bounded (test_v04_signal.SignalTests.test_signal_campaign_is_bounded) ... ok
+test_vector_counts_and_boundaries (test_v04_signal.SignalTests.test_vector_counts_and_boundaries) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 6.017s
+
+OK
+PATTERN=test_v04_test_plan.py
+test_duplicate_json_key_rejected (test_v04_test_plan.V04TestPlanTests.test_duplicate_json_key_rejected) ... ok
+test_empty_criteria_and_bad_reuse_path_rejected (test_v04_test_plan.V04TestPlanTests.test_empty_criteria_and_bad_reuse_path_rejected) ... ok
+test_exact_inventory_and_generated_document (test_v04_test_plan.V04TestPlanTests.test_exact_inventory_and_generated_document) ... ok
+test_instance_omission_rejected (test_v04_test_plan.V04TestPlanTests.test_instance_omission_rejected) ... ok
+test_inventory_gate_calls_preparation_validator (test_v04_test_plan.V04TestPlanTests.test_inventory_gate_calls_preparation_validator) ... ok
+test_missing_or_duplicate_case_rejected (test_v04_test_plan.V04TestPlanTests.test_missing_or_duplicate_case_rejected) ... ok
+test_passing_plan_or_result_field_rejected (test_v04_test_plan.V04TestPlanTests.test_passing_plan_or_result_field_rejected) ... ok
+test_qdec_not_dma (test_v04_test_plan.V04TestPlanTests.test_qdec_not_dma) ... ok
+test_unknown_erratum_rejected (test_v04_test_plan.V04TestPlanTests.test_unknown_erratum_rejected) ... ok
+test_zero_timeout_and_loss_allowance_rejected (test_v04_test_plan.V04TestPlanTests.test_zero_timeout_and_loss_allowance_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.035s
+
+OK
+PATTERN=test_v04_uart.py
+test_ambiguous_noisy_and_truncated_response_rejected (test_v04_uart.UartTests.test_ambiguous_noisy_and_truncated_response_rejected) ... ok
+test_continuous_mode_is_explicit_and_bounded (test_v04_uart.UartTests.test_continuous_mode_is_explicit_and_bounded) ... ok
+test_dma_state_fail_closed (test_v04_uart.UartTests.test_dma_state_fail_closed) ... ok
+test_oracle (test_v04_uart.UartTests.test_oracle) ... ok
+test_producer_pacing_is_explicit_and_partial_write_fails (test_v04_uart.UartTests.test_producer_pacing_is_explicit_and_partial_write_fails) ... ok
+test_vectors (test_v04_uart.UartTests.test_vectors) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.010s
+
+OK
+PATTERN=test_ac03_storage.py
+test_accepts_complete_reset_and_recovery_protocol (test_ac03_storage.AC03StorageHilTests.test_accepts_complete_reset_and_recovery_protocol)
+! @brief 영속성·손상·명시 복구·정리가 모두 있을 때만 PASS입니다. ... ok
+test_exact_input_binds_commit_gitlink_record_digest_and_hex (test_ac03_storage.AC03StorageHilTests.test_exact_input_binds_commit_gitlink_record_digest_and_hex)
+! @brief exact 입력 검사가 revision·board·record·source digest를 모두 묶습니다. ... ok
+test_failure_recovery_preserves_original_error_and_no_evidence (test_ac03_storage.AC03StorageHilTests.test_failure_recovery_preserves_original_error_and_no_evidence)
+! @brief 물리 실패 뒤 CLEAR를 시도하되 원래 오류와 FAIL 상태를 유지합니다. ... ok
+test_final_prefix_is_not_accepted_until_complete_newline (test_ac03_storage.AC03StorageHilTests.test_final_prefix_is_not_accepted_until_complete_newline)
+! @brief FINAL 본문이 모두 와도 개행 전에는 완료 line으로 보지 않습니다. ... ok
+test_pass_evidence_contains_revisions_and_source_digests (test_ac03_storage.AC03StorageHilTests.test_pass_evidence_contains_revisions_and_source_digests)
+! @brief PASS JSON에 exact Core·board·source·build·HEX identity를 기록합니다. ... ok
+test_recovery_continues_after_one_board_cleanup_failure (test_ac03_storage.AC03StorageHilTests.test_recovery_continues_after_one_board_cleanup_failure)
+! @brief 한 보드 CLEAR 실패가 다른 접촉 보드 복구를 막지 않습니다. ... ok
+test_rejects_missing_reordered_or_failed_phase (test_ac03_storage.AC03StorageHilTests.test_rejects_missing_reordered_or_failed_phase)
+! @brief 빠진 단계, 순서 변경과 target FAIL을 모두 거부합니다. ... ok
+test_rejects_wrong_final_nonce_and_trailing_token (test_ac03_storage.AC03StorageHilTests.test_rejects_wrong_final_nonce_and_trailing_token)
+! @brief 다른 실행의 final과 final 뒤 위조 token을 거부합니다. ... ok
+test_requires_explicit_destructive_approval_before_image_access (test_ac03_storage.AC03StorageHilTests.test_requires_explicit_destructive_approval_before_image_access)
+! @brief 승인 없이는 HEX 확인이나 flash보다 먼저 중단합니다. ... ok
+test_requires_new_evidence_before_exact_input_or_flash (test_ac03_storage.AC03StorageHilTests.test_requires_new_evidence_before_exact_input_or_flash)
+! @brief evidence 누락·기존 파일은 HEX 검증과 물리 실행보다 먼저 거부합니다. ... ok
+test_requires_two_distinct_board_ids (test_ac03_storage.AC03StorageHilTests.test_requires_two_distinct_board_ids)
+! @brief runner가 한 보드 또는 같은 UID 두 번을 허용하지 않습니다. ... ok
+test_target_source_performs_real_corruption_and_cleanup (test_ac03_storage.AC03StorageHilTests.test_target_source_performs_real_corruption_and_cleanup)
+! @brief HIL image가 합성 token이 아닌 raw 손상과 실제 reset을 수행합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.017s
+
+OK
+AC03_BOARD_PASS=one;PORT=COM1;RESETS=3
+AC03_BOARD_PASS=two;PORT=COM2;RESETS=3
+AC03_TWO_BOARD_HIL_PASS=2
+PATTERN=test_m24_uarte_onboard.py
+test_failed_readback_keeps_cpu_halted (test_m24_uarte_onboard.IdleBiasTests.test_failed_readback_keeps_cpu_halted) ... ok
+test_only_pull_fields_are_set_before_drain_and_resume (test_m24_uarte_onboard.IdleBiasTests.test_only_pull_fields_are_set_before_drain_and_resume) ... ok
+test_output_pin_is_rejected_before_any_write_or_resume (test_m24_uarte_onboard.IdleBiasTests.test_output_pin_is_rejected_before_any_write_or_resume) ... ok
+test_all_onboard_flash_runners_disable_automatic_mass_erase (test_m24_uarte_onboard.M24UarteOnboardTests.test_all_onboard_flash_runners_disable_automatic_mass_erase) ... ok
+test_controlled_start_orders_halt_drain_and_resume (test_m24_uarte_onboard.M24UarteOnboardTests.test_controlled_start_orders_halt_drain_and_resume) ... ok
+test_pyocd_command_is_exact_and_non_destructive (test_m24_uarte_onboard.M24UarteOnboardTests.test_pyocd_command_is_exact_and_non_destructive) ... ok
+test_ready_frame_is_fixed_per_instance (test_m24_uarte_onboard.M24UarteOnboardTests.test_ready_frame_is_fixed_per_instance) ... ok
+test_response_must_be_exact_unique_and_other_port_silent (test_m24_uarte_onboard.M24UarteOnboardTests.test_response_must_be_exact_unique_and_other_port_silent) ... ok
+test_selected_probe_requires_exactly_two_vcom_ports (test_m24_uarte_onboard.M24UarteOnboardTests.test_selected_probe_requires_exactly_two_vcom_ports) ... ok
+test_single_result_collectors_reject_late_extra_bytes (test_m24_uarte_onboard.M24UarteOnboardTests.test_single_result_collectors_reject_late_extra_bytes) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.029s
+
+OK
+PATTERN=test_m24_twim_onboard.py
+test_exact_port_rejects_extra_bytes (test_m24_twim_onboard.M24TwimOnboardTests.test_exact_port_rejects_extra_bytes) ... ok
+test_probe_must_have_exactly_two_ports (test_m24_twim_onboard.M24TwimOnboardTests.test_probe_must_have_exactly_two_ports) ... ok
+test_ready_and_command_frames_are_unique (test_m24_twim_onboard.M24TwimOnboardTests.test_ready_and_command_frames_are_unique) ... ok
+test_result_frame_requires_exact_read_only_identity (test_m24_twim_onboard.M24TwimOnboardTests.test_result_frame_requires_exact_read_only_identity) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK
+PATTERN=test_m25_onboard.py
+test_exact_port_rejects_noise (test_m25_onboard.M25OnboardTests.test_exact_port_rejects_noise) ... ok
+test_probe_requires_exactly_two_vcom_ports (test_m25_onboard.M25OnboardTests.test_probe_requires_exactly_two_vcom_ports) ... ok
+test_protocol_frames_are_fixed (test_m25_onboard.M25OnboardTests.test_protocol_frames_are_fixed) ... ok
+test_result_requires_both_physical_checks (test_m25_onboard.M25OnboardTests.test_result_requires_both_physical_checks) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK
+PATTERN=test_m26_onboard.py
+test_armed_frame_requires_temp_and_wdt30_lifecycle (test_m26_onboard.M26OnboardTests.test_armed_frame_requires_temp_and_wdt30_lifecycle) ... ok
+test_exact_frame_rejects_noise (test_m26_onboard.M26OnboardTests.test_exact_frame_rejects_noise) ... ok
+test_observed_watchdog_packets_validate_without_promoting_hil (test_m26_onboard.M26OnboardTests.test_observed_watchdog_packets_validate_without_promoting_hil) ... ok
+test_probe_requires_exactly_two_vcom_ports (test_m26_onboard.M26OnboardTests.test_probe_requires_exactly_two_vcom_ports) ... ok
+test_protocol_frames_are_fixed (test_m26_onboard.M26OnboardTests.test_protocol_frames_are_fixed) ... ok
+test_reset_epoch_collects_split_marker_without_dropping_prefix (test_m26_onboard.M26OnboardTests.test_reset_epoch_collects_split_marker_without_dropping_prefix) ... ok
+test_reset_epoch_retains_bounded_prefix_and_requires_exact_marker (test_m26_onboard.M26OnboardTests.test_reset_epoch_retains_bounded_prefix_and_requires_exact_marker) ... ok
+test_reset_prefix_is_never_accepted_in_result_phase (test_m26_onboard.M26OnboardTests.test_reset_prefix_is_never_accepted_in_result_phase) ... ok
+test_result_rejects_non_watchdog_and_unsupported_reset_causes (test_m26_onboard.M26OnboardTests.test_result_rejects_non_watchdog_and_unsupported_reset_causes) ... ok
+test_result_requires_reset_cause_and_retained_temp (test_m26_onboard.M26OnboardTests.test_result_requires_reset_cause_and_retained_temp) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.001s
+
+OK

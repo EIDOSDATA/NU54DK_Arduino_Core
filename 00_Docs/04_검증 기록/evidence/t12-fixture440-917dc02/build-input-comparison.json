@@ -1,0 +1,32 @@
+{
+  "source": "917dc0284b1185d23eeef3f8df31bd3498f78408",
+  "prior_source": "4a8dbafe74e251bbc2897775dae15688ab950823",
+  "comparisons": [
+    {
+      "role": 1,
+      "repository_translation_units": 42,
+      "repository_inputs_identical": false,
+      "changed_TUs": [
+        "main.cpp",
+        "signal_hil.cpp"
+      ],
+      "added_header": "pdm_continuous.h",
+      "membership_identical": true,
+      "config_identical": true,
+      "dts_identical": true
+    },
+    {
+      "role": 2,
+      "repository_translation_units": 42,
+      "repository_inputs_identical": false,
+      "changed_TUs": [
+        "main.cpp",
+        "signal_hil.cpp"
+      ],
+      "added_header": "pdm_continuous.h",
+      "membership_identical": true,
+      "config_identical": true,
+      "dts_identical": true
+    }
+  ]
+}
