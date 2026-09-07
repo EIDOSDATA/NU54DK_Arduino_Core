@@ -1,0 +1,499 @@
+[
+  {
+    "path": "audit_pc.py",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\audit_pc.py",
+    "raw_bytes": 2988,
+    "raw_sha256": "ecb3f041b3f02b340104036883a6b218edc490ed46cf9de8384d8b498c6fe1ef",
+    "normalized_sha256": "ecb3f041b3f02b340104036883a6b218edc490ed46cf9de8384d8b498c6fe1ef"
+  },
+  {
+    "path": "baseline-contract.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\baseline-contract.json",
+    "raw_bytes": 461,
+    "raw_sha256": "13b5e3e712c561b06bfddce0369e6322873c086fb50e92cbf15ce5d94a72c973",
+    "normalized_sha256": "abe6a182df73dc70292f219886711abade86c682561a94041e5075a4071420ea"
+  },
+  {
+    "path": "baseline-contract.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\baseline-contract.log",
+    "raw_bytes": 7554,
+    "raw_sha256": "98b493af6b70b52a64da1e7e567042dc64cd1823cc8c1ae39f3f7eb123b652de",
+    "normalized_sha256": "d1147d8aec6cf82cc5e6e8eee3a84b6bb19525be0b6c025325482f94125567bb"
+  },
+  {
+    "path": "baseline-docs.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\baseline-docs.json",
+    "raw_bytes": 453,
+    "raw_sha256": "f02bbad18bdae980e3da3e1f11eb7ab7ea00bfc979a2f5385e6c43a1989b80f3",
+    "normalized_sha256": "28e60f918f6853d41e7042d44b75bf198f331dfe9840086eda43d8b142db0ed2"
+  },
+  {
+    "path": "baseline-docs.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\baseline-docs.log",
+    "raw_bytes": 69,
+    "raw_sha256": "f6612cc3b11b2cc4f37119e6b341594055b01f71c1561b2de4a4090cb7ea9346",
+    "normalized_sha256": "478bcdd4e113b9b9f992863ca1ff644ec936cc522d12fbd8df048042a7c34691"
+  },
+  {
+    "path": "baseline-examples.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\baseline-examples.json",
+    "raw_bytes": 539,
+    "raw_sha256": "24c5de979430e2a4f978941a6bf3baf1727ee95fcb8d0875de848680c5cfcfaf",
+    "normalized_sha256": "6a1651f9c0b2b4457fdafab975eca210f600dcf14e0cbb4caa267b0a4536d6fd"
+  },
+  {
+    "path": "baseline-examples.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\baseline-examples.log",
+    "raw_bytes": 338,
+    "raw_sha256": "97f2ddac1de40d8586275efd0d06ba318482f858a52c1d8f0859186450c8dc1a",
+    "normalized_sha256": "ac4be51e3b6937c7a0ad94958518e9dd466a69d74caa7118d4c4b4296f780172"
+  },
+  {
+    "path": "baseline-host.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\baseline-host.json",
+    "raw_bytes": 453,
+    "raw_sha256": "a4c80bbc6fc0b7737417da777b05995b48a866a9f8d455596e27293847b8102d",
+    "normalized_sha256": "4930a2cabb4a1704dade831930da5d23cea1a9a0f1af07c69b881bf6ef23ff6d"
+  },
+  {
+    "path": "baseline-host.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\baseline-host.log",
+    "raw_bytes": 170763,
+    "raw_sha256": "03beca3dc21e16fef257b9174c83c6e0e08275be3ae86d4502e9a63e19ee19b9",
+    "normalized_sha256": "24e0b20a29b86145a0e950bf42073a0fd7993a20b9dbe3d83d60f51d21a5405a"
+  },
+  {
+    "path": "baseline-inventory.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\baseline-inventory.json",
+    "raw_bytes": 463,
+    "raw_sha256": "8095192e86995adb6381ddcbbe2bb278bab56f144d30fb5a8299ac113fcd42fd",
+    "normalized_sha256": "78365997e340e1c9c2edb6875a49e4d4bbd37b2983d0991d4f62718aacbbbcf1"
+  },
+  {
+    "path": "baseline-inventory.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\baseline-inventory.log",
+    "raw_bytes": 1546,
+    "raw_sha256": "8efc41e1f9734d065dfdb3292806c34b3f3ff16b7b9b69b5d6ae2ac8479703f1",
+    "normalized_sha256": "b5cec2b07b3908ec8c03031d1a93937e1cbc38bfffb7a5b3557fe8e414e859bb"
+  },
+  {
+    "path": "baseline-package.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\baseline-package.json",
+    "raw_bytes": 459,
+    "raw_sha256": "36489c7f526b30caef8b93e5b63ba60bfda75567adb5988cd837636a994d2330",
+    "normalized_sha256": "afb55af4f83b1466c8b47420432e7626c30d67064fb9d3fad0141a7eae5d67e8"
+  },
+  {
+    "path": "baseline-package.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\baseline-package.log",
+    "raw_bytes": 4209,
+    "raw_sha256": "a928bac69e2cbea440e6ee214e142fa24883ba0dad44b7122c869915584c1f12",
+    "normalized_sha256": "fe857f17f2717ce5516deebf48ec2f5a31564a0c26945890b588d37d4da4c910"
+  },
+  {
+    "path": "baseline-target.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\baseline-target.json",
+    "raw_bytes": 650,
+    "raw_sha256": "7a38f9ed08bfe4ef14565e34ad0a10a814982851533a8201da0baa73bd14f323",
+    "normalized_sha256": "d47ac16ae76b050fb42bf4a507ba2ec66e709b39f6fefa9c7be64950faa00d1a"
+  },
+  {
+    "path": "baseline-target.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\baseline-target.log",
+    "raw_bytes": 2060,
+    "raw_sha256": "691733bd9e0a13bd7cd5e9120796b018e12dc527a48c0b741acc43f6e5b15731",
+    "normalized_sha256": "eead6f05c6ee5208405baebebabeb35bffd4ae9d6b62349aeca231f359bc44d2"
+  },
+  {
+    "path": "check_pc.py",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\check_pc.py",
+    "raw_bytes": 3419,
+    "raw_sha256": "f5ed0246ed0b72d0eedacba6bb25aca071b3c86e039b9e7f901b71e92d5ae86a",
+    "normalized_sha256": "f5ed0246ed0b72d0eedacba6bb25aca071b3c86e039b9e7f901b71e92d5ae86a"
+  },
+  {
+    "path": "handoff-ci-build-snapshot.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\handoff-ci-build-snapshot.json",
+    "raw_bytes": 3169,
+    "raw_sha256": "df10d330b8275a0ecbfcbaeba34b152ab126305fd5824144b53d64073a8b4a50",
+    "normalized_sha256": "35e0b96ae9e3c1334356cff318de087492dc22e2cfc3109d4ebb42c4628c8e4c"
+  },
+  {
+    "path": "handoff-ci-build.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\handoff-ci-build.json",
+    "raw_bytes": 39018,
+    "raw_sha256": "1fffbd607e6d33b4202e3d7014bc072df9208eb0399b8412513b5b3658991088",
+    "normalized_sha256": "bf3950c0dd14134a0556248e1ac204beec64f5fc8bfc01be9a8efe5ba68237a1"
+  },
+  {
+    "path": "handoff-ci-software.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\handoff-ci-software.json",
+    "raw_bytes": 16428,
+    "raw_sha256": "88790c673f777374f886f2c33a2a6857e7ae56fd566b424f885e883f4d142554",
+    "normalized_sha256": "780874bc5d3ca06fefd18101865e91ddf066600cc8193298de60dd140f6062b3"
+  },
+  {
+    "path": "new-pc-environment.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\new-pc-environment.json",
+    "raw_bytes": 5700,
+    "raw_sha256": "b6cc3ba7e76cc8667408fe464546d29b71d2326eef08afd8c3fce6bd8346ac1d",
+    "normalized_sha256": "76da2d5b2c8ca6b8af8488be6aed91efb732fcefcc3a979f66bcafcba9dba143"
+  },
+  {
+    "path": "new-pc-usb-enumeration.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\new-pc-usb-enumeration.json",
+    "raw_bytes": 38,
+    "raw_sha256": "cbc54b4e0c701324610a26fac0e7b79c9a966f5a7747211a1bcde5f45aa492ec",
+    "normalized_sha256": "aa531c4488d927eb6946f57fb46cede9621da87debf7a4ea2602205f28a3ee18"
+  },
+  {
+    "path": "pwm-draft-target.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-draft-target.json",
+    "raw_bytes": 651,
+    "raw_sha256": "4817ef13581477810c7df616019bc0a9f774fef130bff05756a655fb7aa84954",
+    "normalized_sha256": "73455b040ca1f04cf2edd092ae375196f9a14beddb058b1e6533c369c4b8de63"
+  },
+  {
+    "path": "pwm-draft-target.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-draft-target.log",
+    "raw_bytes": 3269,
+    "raw_sha256": "46a9231d00f47ba181a8814e11473b76314baca4af2c81bced25a029e839e915",
+    "normalized_sha256": "ff0b0a423bbebae1efed18d378f49e3c4c3d0626fea5919e56b8def5da943386"
+  },
+  {
+    "path": "pwm-exact-contract.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-contract.json",
+    "raw_bytes": 462,
+    "raw_sha256": "76911a6d39c5afcd10b044a7891547de9d265d84f0bfd41d92a47c8074a7fc5c",
+    "normalized_sha256": "a0da36b08ed7e19089bf71d15bd1811b8070f49decc0d66e6d13c33f315f11b8"
+  },
+  {
+    "path": "pwm-exact-contract.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-contract.log",
+    "raw_bytes": 7554,
+    "raw_sha256": "d083c721b4264f839c6861eb4deab2fdd821ac6bbba034965e3393335edec273",
+    "normalized_sha256": "d78920adc0cb92db31a1ee5ecb6e9e9be49d33e34b81c3152a3a49181a4afe08"
+  },
+  {
+    "path": "pwm-exact-docs.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-docs.json",
+    "raw_bytes": 454,
+    "raw_sha256": "40b1519a72b8428de9c42abaf9cfb45845671d1eca83a3eeeb65a97ec02db76e",
+    "normalized_sha256": "d3051ead8efb1e5b11f7212ede2c5b659cc65b158103611bd060f497cb09730e"
+  },
+  {
+    "path": "pwm-exact-docs.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-docs.log",
+    "raw_bytes": 69,
+    "raw_sha256": "f6612cc3b11b2cc4f37119e6b341594055b01f71c1561b2de4a4090cb7ea9346",
+    "normalized_sha256": "478bcdd4e113b9b9f992863ca1ff644ec936cc522d12fbd8df048042a7c34691"
+  },
+  {
+    "path": "pwm-exact-examples.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-examples.json",
+    "raw_bytes": 540,
+    "raw_sha256": "6c29d96b5093d52ff51928ff3f47a7b4d3ab6b751a3abd1d67a274d6627087b8",
+    "normalized_sha256": "1653d302ba6f6ccbda985674a6eef85e26007bf533713b2352db090666bea4bf"
+  },
+  {
+    "path": "pwm-exact-examples.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-examples.log",
+    "raw_bytes": 338,
+    "raw_sha256": "97f2ddac1de40d8586275efd0d06ba318482f858a52c1d8f0859186450c8dc1a",
+    "normalized_sha256": "ac4be51e3b6937c7a0ad94958518e9dd466a69d74caa7118d4c4b4296f780172"
+  },
+  {
+    "path": "pwm-exact-host.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-host.json",
+    "raw_bytes": 454,
+    "raw_sha256": "d6208999ab126642d6d879c571aa2df457f8733893f26c5499a9fdd0624d5eeb",
+    "normalized_sha256": "8077a8a0603e2db05289aed5e4337dbd71d9dcd4d1156291d2cda2336ac5ffff"
+  },
+  {
+    "path": "pwm-exact-host.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-host.log",
+    "raw_bytes": 172076,
+    "raw_sha256": "d835255d3d3545fb249d353265b856cc2ae026fa8a96e3822618330aac86d3ad",
+    "normalized_sha256": "3f672e89e5e9e9d73b20fed7976f5c5979e2be309c914de613f7afc74a662a00"
+  },
+  {
+    "path": "pwm-exact-images.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-images.json",
+    "raw_bytes": 1607,
+    "raw_sha256": "d4c7a48d133e397d73808e5fbe4b246e6e3957df6e094f6905e184979934b900",
+    "normalized_sha256": "decd3398072b5bcbe8fcf77dc6a2d899f292971a4f9fdbec388721f0677d5b1b"
+  },
+  {
+    "path": "pwm-exact-inventory.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-inventory.json",
+    "raw_bytes": 464,
+    "raw_sha256": "8cbda6bf4fd0fcf5535f0e493cc926252d9b89b30bf0fd75a71b72af00d595ec",
+    "normalized_sha256": "15c85ed18de58f6cc37eef7cd5f342ee467632a97a4ed0abe6fcf60b268a1a97"
+  },
+  {
+    "path": "pwm-exact-inventory.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-inventory.log",
+    "raw_bytes": 1546,
+    "raw_sha256": "8efc41e1f9734d065dfdb3292806c34b3f3ff16b7b9b69b5d6ae2ac8479703f1",
+    "normalized_sha256": "b5cec2b07b3908ec8c03031d1a93937e1cbc38bfffb7a5b3557fe8e414e859bb"
+  },
+  {
+    "path": "pwm-exact-ncs-inventory.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-ncs-inventory.log",
+    "raw_bytes": 33,
+    "raw_sha256": "cd91923d4d552d279f95997838adee428f73cd48907dcc603a68339b9be6be2b",
+    "normalized_sha256": "68242d4c4b5d6efdfcf68ffe5e0288ba939ee484962302253c1707355c9f4749"
+  },
+  {
+    "path": "pwm-exact-ncs-serial.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-ncs-serial.log",
+    "raw_bytes": 82,
+    "raw_sha256": "ff9cec5b0e1efd5ef665c9bd9a0e970ad00badecf1856e61a1e41acf3e311dce",
+    "normalized_sha256": "138335eb61c82c9f3840ab1d8ecc80d11a897744c25341959cc6d56d4167689f"
+  },
+  {
+    "path": "pwm-exact-package.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-package.json",
+    "raw_bytes": 460,
+    "raw_sha256": "580246788c588588e54c71cfa09113c28c1f0c61c339d3584f5a3a0638ba6735",
+    "normalized_sha256": "4a3d1394fb50a0eb63cf05d9829c55942b140ffc11a2bb7ae8fc62f446612d27"
+  },
+  {
+    "path": "pwm-exact-package.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-package.log",
+    "raw_bytes": 4208,
+    "raw_sha256": "2dbd2a7c8dfbab1b38f951c8f4138f6fa57b15355fa849eab066bc9d8954ea6b",
+    "normalized_sha256": "3368e731a33d2b9d0caa94b5c51c217e9409150bd447a5938de9f56c8bfba624"
+  },
+  {
+    "path": "pwm-exact-style.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-style.log",
+    "raw_bytes": 40,
+    "raw_sha256": "417f4f1aac6a443a5bdf843b6894cca766d8264500a6c5aee813536d1f8bdfea",
+    "normalized_sha256": "435d0351df5053e63c0b283b41e9dada2755ac788d6eddda49c1e68b946491cf"
+  },
+  {
+    "path": "pwm-exact-target.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-target.json",
+    "raw_bytes": 651,
+    "raw_sha256": "4c5c5ba4302a3f4edbd16f9ae344acaedb0ea1e116b5d7357c10f4fbbb1d263f",
+    "normalized_sha256": "8fdcd0602335a5f2cd4c71f51fc17dd64f6a28194ce6a1ce86de1dea27039626"
+  },
+  {
+    "path": "pwm-exact-target.log",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\pwm-exact-target.log",
+    "raw_bytes": 2060,
+    "raw_sha256": "76d9e790731e4bfb31eb3e1a94ecffc818d939024d7eba91d51835a576e50dba",
+    "normalized_sha256": "db0e4563d4ef0ea4ac0bc370e481cf1543619fbd51fa45a7b31dfe4442a5160a"
+  },
+  {
+    "path": "baseline/twister.json",
+    "workspace_original": "C:\\pcv04\\twister.json",
+    "raw_bytes": 3090,
+    "raw_sha256": "c38b6258aa39b8fb7a9acf3280c4a8d0c4596996ce354315e95867e80f2c7bad",
+    "normalized_sha256": "f885548ce5ba79a8532863b0431bb64e0d979f012b7dc4eca97a7d46461e4253"
+  },
+  {
+    "path": "baseline/testplan.json",
+    "workspace_original": "C:\\pcv04\\testplan.json",
+    "raw_bytes": 2842,
+    "raw_sha256": "e3da723f007ec6229701f1e0c34d3de912c657a2191a6440a7df8f6593ba37bb",
+    "normalized_sha256": "925a28d9bad0706ed55ccca51801d5f5b472ea9ff612a80404a0077248b6f1de"
+  },
+  {
+    "path": "baseline/m12-build-evidence.json",
+    "workspace_original": "C:\\pcv04\\m12-build-evidence.json",
+    "raw_bytes": 522,
+    "raw_sha256": "60373305eaa6b1ae6dd3d435841b0f82d19741c82b0ed13abcec93b77cebe03a",
+    "normalized_sha256": "60373305eaa6b1ae6dd3d435841b0f82d19741c82b0ed13abcec93b77cebe03a"
+  },
+  {
+    "path": "baseline/dut/build.log",
+    "workspace_original": "C:\\pcv04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\build.log",
+    "raw_bytes": 47458,
+    "raw_sha256": "f11cf4297ba5121c9d61e3fae1265b9679d433aac76c25eefae384bfff4469b5",
+    "normalized_sha256": "1d72fc288f5570ed65b30ebfc891d9026d02ea0bfb951742a2000da5eb0c44cf"
+  },
+  {
+    "path": "baseline/dut/nucode_arduino_core_build.yml",
+    "workspace_original": "C:\\pcv04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\nucode_arduino_core_build.yml",
+    "raw_bytes": 692,
+    "raw_sha256": "6ffe515025ed9c6200b2e406a6b51a8891370481b4d905533a393cfa8bf49c33",
+    "normalized_sha256": "1777c0fe89d21dc084bc9cb0bbe527d843a105f15a6f122dfe5411e693f2c75c"
+  },
+  {
+    "path": "baseline/dut/.config",
+    "workspace_original": "C:\\pcv04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\.config",
+    "raw_bytes": 62283,
+    "raw_sha256": "b0e51eb47a6944cb122c2ee399f6127377d4a568c6d96677757ef0f0330b563a",
+    "normalized_sha256": "3e0ecdc294eaaa2105e77308b04628e5d27d006e8f99de0dd5fa73250253a081"
+  },
+  {
+    "path": "baseline/peer/build.log",
+    "workspace_original": "C:\\pcv04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\build.log",
+    "raw_bytes": 47466,
+    "raw_sha256": "d7c21d8f0be2ceb69d52c62c8512e8808100f6ac023fe51bf96b6d45a3163869",
+    "normalized_sha256": "9ec7af3d94fc1ddc9ada36bf530b658713dcd967cb8ce38b7b320af00a358ff8"
+  },
+  {
+    "path": "baseline/peer/nucode_arduino_core_build.yml",
+    "workspace_original": "C:\\pcv04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\nucode_arduino_core_build.yml",
+    "raw_bytes": 692,
+    "raw_sha256": "6ffe515025ed9c6200b2e406a6b51a8891370481b4d905533a393cfa8bf49c33",
+    "normalized_sha256": "1777c0fe89d21dc084bc9cb0bbe527d843a105f15a6f122dfe5411e693f2c75c"
+  },
+  {
+    "path": "baseline/peer/.config",
+    "workspace_original": "C:\\pcv04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\zephyr\\.config",
+    "raw_bytes": 62283,
+    "raw_sha256": "429aac1c4ab9abdd12ef654853770a6ee886f302ef5a1ba49301f514e71b667d",
+    "normalized_sha256": "e8ac6b2e526cef6814c7725abcde47f26d6ef8d28e38218e9d84c0e5987556ca"
+  },
+  {
+    "path": "draft-failure/twister.json",
+    "workspace_original": "C:\\pwm04\\twister.json",
+    "raw_bytes": 38343,
+    "raw_sha256": "1cf43d8478c5ba962c60c1e2f0290a33ec927d1f5208125fb0d446af75f6a6c1",
+    "normalized_sha256": "9a7ec987d10c1fe1b26209d355ea5ed6121e1ab9b75957fdd948ddd4dee7132c"
+  },
+  {
+    "path": "draft-failure/testplan.json",
+    "workspace_original": "C:\\pwm04\\testplan.json",
+    "raw_bytes": 2842,
+    "raw_sha256": "aa5d0bff3767a697e6ce6e310fc9d32045ed3b9543975c8383036218f7c4290c",
+    "normalized_sha256": "e81c97252f16d58d9da14f3c5bf0c4ec249a1309bbc6d165ef974c3c6db7ee96"
+  },
+  {
+    "path": "draft-failure/dut/build.log",
+    "workspace_original": "C:\\pwm04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\build.log",
+    "raw_bytes": 47537,
+    "raw_sha256": "77d544168cd7ad53c41896be1a799fd37536103ebbea0f6ad5e920815cad898c",
+    "normalized_sha256": "61bf728b40f7d3bd59e898c98f94878fe7838f1bf1fc79c4523a596e36cd541b"
+  },
+  {
+    "path": "draft-failure/dut/nucode_arduino_core_build.yml",
+    "workspace_original": "C:\\pwm04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\nucode_arduino_core_build.yml",
+    "raw_bytes": 692,
+    "raw_sha256": "f21746876f3ea2c1b4d40f5efee8753ae92ba60ed558e92d4326b2d53bff8834",
+    "normalized_sha256": "e600dc85962859d7e4f4672e5adb21d2d50e143133b3fbc4c5db25ac795c0e81"
+  },
+  {
+    "path": "draft-failure/dut/.config",
+    "workspace_original": "C:\\pwm04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\.config",
+    "raw_bytes": 62283,
+    "raw_sha256": "b0e51eb47a6944cb122c2ee399f6127377d4a568c6d96677757ef0f0330b563a",
+    "normalized_sha256": "3e0ecdc294eaaa2105e77308b04628e5d27d006e8f99de0dd5fa73250253a081"
+  },
+  {
+    "path": "draft-failure/peer/build.log",
+    "workspace_original": "C:\\pwm04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\build.log",
+    "raw_bytes": 34375,
+    "raw_sha256": "0455a6429f53b7d5d3613d5ae1a320fd9b6ed889a70fce130014d70d3835095f",
+    "normalized_sha256": "5d229aed63489a8072c1afff739b336c5e2b4b4e81ead0a0e2bb20f160dc6487"
+  },
+  {
+    "path": "draft-failure/peer/nucode_arduino_core_build.yml",
+    "workspace_original": "C:\\pwm04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\nucode_arduino_core_build.yml",
+    "raw_bytes": 692,
+    "raw_sha256": "f21746876f3ea2c1b4d40f5efee8753ae92ba60ed558e92d4326b2d53bff8834",
+    "normalized_sha256": "e600dc85962859d7e4f4672e5adb21d2d50e143133b3fbc4c5db25ac795c0e81"
+  },
+  {
+    "path": "draft-failure/peer/.config",
+    "workspace_original": "C:\\pwm04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\zephyr\\.config",
+    "raw_bytes": 62283,
+    "raw_sha256": "429aac1c4ab9abdd12ef654853770a6ee886f302ef5a1ba49301f514e71b667d",
+    "normalized_sha256": "e8ac6b2e526cef6814c7725abcde47f26d6ef8d28e38218e9d84c0e5987556ca"
+  },
+  {
+    "path": "exact/twister.json",
+    "workspace_original": "C:\\pwc04\\twister.json",
+    "raw_bytes": 3090,
+    "raw_sha256": "c009e8c83e56f2e0b7020f0ee2db2b46f82e588775e3853daaa68f27c7e500c6",
+    "normalized_sha256": "11ba4febd02ce89fd09710425c07aafaa5995a4e4f6cea2baf3de99b110542c4"
+  },
+  {
+    "path": "exact/testplan.json",
+    "workspace_original": "C:\\pwc04\\testplan.json",
+    "raw_bytes": 2842,
+    "raw_sha256": "5c24f17ac6d23435fd3dd0d0d2c7893c5d1c7fe5eda28f84f37060f735936c50",
+    "normalized_sha256": "4497ec6bce667a580a799dcedcd60ad5c245a673943bf7ce17ef04c56e22aca5"
+  },
+  {
+    "path": "exact/m12-build-evidence.json",
+    "workspace_original": "C:\\pwc04\\m12-build-evidence.json",
+    "raw_bytes": 522,
+    "raw_sha256": "60373305eaa6b1ae6dd3d435841b0f82d19741c82b0ed13abcec93b77cebe03a",
+    "normalized_sha256": "60373305eaa6b1ae6dd3d435841b0f82d19741c82b0ed13abcec93b77cebe03a"
+  },
+  {
+    "path": "exact/dut/build.log",
+    "workspace_original": "C:\\pwc04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\build.log",
+    "raw_bytes": 47537,
+    "raw_sha256": "3402d4db55eeac5cf47517b867a675ab6eee3d7109f34ae3f86d4d29908d2a9e",
+    "normalized_sha256": "5bdbbfa5f099fcce364e08e4d3e9020c02a29c659ff69975d528d2de1896d5e6"
+  },
+  {
+    "path": "exact/dut/nucode_arduino_core_build.yml",
+    "workspace_original": "C:\\pwc04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\nucode_arduino_core_build.yml",
+    "raw_bytes": 692,
+    "raw_sha256": "c046841c8ba8b13b1a7ea8c8428aa45a7c0abcfeae60355a5cec652416dd3bd7",
+    "normalized_sha256": "2b0944011d1e82cf724635e73630e4167dadab083464d5e78358738748fd07e8"
+  },
+  {
+    "path": "exact/dut/.config",
+    "workspace_original": "C:\\pwc04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\.config",
+    "raw_bytes": 62283,
+    "raw_sha256": "b0e51eb47a6944cb122c2ee399f6127377d4a568c6d96677757ef0f0330b563a",
+    "normalized_sha256": "3e0ecdc294eaaa2105e77308b04628e5d27d006e8f99de0dd5fa73250253a081"
+  },
+  {
+    "path": "exact/peer/build.log",
+    "workspace_original": "C:\\pwc04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\build.log",
+    "raw_bytes": 47545,
+    "raw_sha256": "f59bcb5371c96cfa6fe5a8615b14411878fcca99b1aaed3af823d7452c1038b5",
+    "normalized_sha256": "996b75d298dfdd802645cb81fea5d77ddd2d075badf9aef0c907eb0c7d46b4fe"
+  },
+  {
+    "path": "exact/peer/nucode_arduino_core_build.yml",
+    "workspace_original": "C:\\pwc04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\nucode_arduino_core_build.yml",
+    "raw_bytes": 692,
+    "raw_sha256": "c046841c8ba8b13b1a7ea8c8428aa45a7c0abcfeae60355a5cec652416dd3bd7",
+    "normalized_sha256": "2b0944011d1e82cf724635e73630e4167dadab083464d5e78358738748fd07e8"
+  },
+  {
+    "path": "exact/peer/.config",
+    "workspace_original": "C:\\pwc04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\zephyr\\.config",
+    "raw_bytes": 62283,
+    "raw_sha256": "429aac1c4ab9abdd12ef654853770a6ee886f302ef5a1ba49301f514e71b667d",
+    "normalized_sha256": "e8ac6b2e526cef6814c7725abcde47f26d6ef8d28e38218e9d84c0e5987556ca"
+  },
+  {
+    "path": "current-usb.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\current-usb.json",
+    "raw_bytes": 1350,
+    "raw_sha256": "b026d3078aafab8bc84eca9dcc59c89e9d17e46fb73afdd8e2b33c03647db51e",
+    "normalized_sha256": "022ba470206db29a8fb5a73a0e995b287135cb116e4c988b0cc4a3ff5e48039b"
+  },
+  {
+    "path": "current-swd.json",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\current-swd.json",
+    "raw_bytes": 886,
+    "raw_sha256": "5f7becad5312d56464fb416bcc29ab8866a2a6907b0697a93176c5b3a32fd496",
+    "normalized_sha256": "76253325ef8c608f6429490dd1c9379192b40f97d918601ff569223645dab245"
+  },
+  {
+    "path": "check_current_swd.py",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\check_current_swd.py",
+    "raw_bytes": 2910,
+    "raw_sha256": "a947e08fe8c9ed828fc966840cb5b1246cf974e891b7815eed36d5cf9fff9da1",
+    "normalized_sha256": "a947e08fe8c9ed828fc966840cb5b1246cf974e891b7815eed36d5cf9fff9da1"
+  },
+  {
+    "path": "run_swd_check.py",
+    "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\run_swd_check.py",
+    "raw_bytes": 637,
+    "raw_sha256": "bfda6a6a0126ce46653c627ab52ed1440865c40ab36b07f6baa48cdd3a0c421e",
+    "normalized_sha256": "bfda6a6a0126ce46653c627ab52ed1440865c40ab36b07f6baa48cdd3a0c421e"
+  }
+]

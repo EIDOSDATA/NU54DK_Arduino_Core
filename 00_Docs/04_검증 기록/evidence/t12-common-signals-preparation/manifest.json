@@ -1,0 +1,563 @@
+{
+  "type": "T12 common signals and T13 topology preparation",
+  "physical_executed": false,
+  "archived_at_utc": "2026-09-07T14:03:30.121487+00:00",
+  "baseline_revision": "4e4825279a9bd665221c40490c4d9c8781cd27ae",
+  "worktree_dirty": true,
+  "host": {
+    "groups": 91,
+    "tests": 715,
+    "passed": 713,
+    "conditional_skips": [
+      "installed Arduino CLI discovery opt-in",
+      "M27 clean-checkout test during dirty preparation"
+    ]
+  },
+  "pwm_steady_vectors": 675,
+  "pwm_finite_vectors": 192,
+  "pwm_triggered_vectors": 96,
+  "qdec_vectors": 240,
+  "i2s_vectors": 432,
+  "target_preparation": {
+    "final_build_root": "C:/cao04",
+    "passed_roles": 2,
+    "first_failures_preserved": [
+      "I2S narrowing",
+      "PWM peer null-pointer compile warning",
+      "DUT RAM overflow 5968 bytes"
+    ],
+    "later_change": "Faulted cleanup now fails closed; exact clean build required before flash"
+  },
+  "t13": {
+    "standalone": 32,
+    "combinations": 8,
+    "physical_executed": false,
+    "future_harnesses": [
+      "S",
+      "U"
+    ],
+    "sequential_measurement_minutes": 261
+  },
+  "inputs": [
+    {
+      "path": "tests/hil/nu54dk/T13_PLAN.md",
+      "lf_sha256_at_archive": "66ed34242e6e64a3a0495699e5d4cbb44bbef6803700b22db6df40077732b939"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_common_i2s.py",
+      "lf_sha256_at_archive": "ebedee9c7406b08ab4653c00ae51e3829cc1b413e73753e18896fe912fb122de"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_common_pwm_modes.py",
+      "lf_sha256_at_archive": "af5de9e31a70c040612a2f4d66086288367b3edb171b97671459ce92a8895b7c"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_common_qdec.py",
+      "lf_sha256_at_archive": "995362ba2753bac6c8ac84216dd5b8f93e2d06f00921c065d35bb38abab7f3b1"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_t13_plan.py",
+      "lf_sha256_at_archive": "84438aed469f3aba0167edd04bed0baf93740a42b5ea00dc25876f2a41acc848"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_t13_topologies.json",
+      "lf_sha256_at_archive": "6c17cb487472d793ff71cd89fff60eaad96a541d0b71e45fc18b980e2f56038d"
+    },
+    {
+      "path": "tests/host/test_v04_common_i2s.py",
+      "lf_sha256_at_archive": "2e3f5a2646e51a3951df228a7bb076797decddb14e21c0d0fddd539ff6113f6c"
+    },
+    {
+      "path": "tests/host/test_v04_common_signals.py",
+      "lf_sha256_at_archive": "0f5d5af11f9ef8887b02b974e189557e0267c33ecc759a3f536421798c7f2395"
+    },
+    {
+      "path": "tests/host/test_v04_t13_plan.py",
+      "lf_sha256_at_archive": "7a748c0077cdd19120f8346438a06ec6d02828abfd4c429d59d345e2125ddeba"
+    },
+    {
+      "path": "tests/host/v04_t13_routes_main.cpp",
+      "lf_sha256_at_archive": "a3be612633067eac971ac91e2c9fe902243bfd5a4a8c4d171c472203d4ed5106"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/common_i2s_hil.cpp",
+      "lf_sha256_at_archive": "8ce4e87fb3edd51fa6288ab6249212a8895c8a928ad13d53ba74aeaec0f01d03"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/common_i2s_hil.h",
+      "lf_sha256_at_archive": "a34d2200f4ee996a545583055da13a75766cf33d931501b920c26ce737b02184"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/common_qdec_hil.cpp",
+      "lf_sha256_at_archive": "bb2abe20ff9664ae0bb785f976540475424b4b39c0c81fe65cff16b042c5fd02"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/common_qdec_hil.h",
+      "lf_sha256_at_archive": "800c65559c9bef5dda4702d1883fedf33317b1f5c1591eb84c4199cfdd207402"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/i2s_stream_oracle.h",
+      "lf_sha256_at_archive": "7efcb0f73c57122751174c8ec668958888a6623a3d5fdcbfc10b64293992e175"
+    },
+    {
+      "path": "tests/hil/nu54dk/COMMON_WIRING.md",
+      "lf_sha256_at_archive": "9ab6e99606bfeac6025fb79436615d1782a564311a2c34d29f2765783021a3be"
+    },
+    {
+      "path": "tests/hil/nu54dk/README.md",
+      "lf_sha256_at_archive": "1271a94e963718af6cb251278026b0dc22f9e5c90b2283a8fc011cbd6e652c80"
+    },
+    {
+      "path": "tests/hil/nu54dk/ac01_gpio_hil.py",
+      "lf_sha256_at_archive": "f3cfc22b112b5e8a02ad5d2bb22bf0d62e6dfd380c7c68561aa40b6a5f440c6a"
+    },
+    {
+      "path": "tests/hil/nu54dk/ac02b_peripheral.py",
+      "lf_sha256_at_archive": "1bae486bd9285eaafc710af641b163c1b9cfe712f6af3ce73310aeb1e924843a"
+    },
+    {
+      "path": "tests/hil/nu54dk/ac03_storage.py",
+      "lf_sha256_at_archive": "ce3e2123b8afd8895051e3bb6ae1c46ffcb0cd89aad1f25584d5e19c7127db78"
+    },
+    {
+      "path": "tests/hil/nu54dk/ble_pair_hil_common.py",
+      "lf_sha256_at_archive": "45620a231d9153b4801b8e4f76e32f424feec04222d6ca66c9a6a53db7238921"
+    },
+    {
+      "path": "tests/hil/nu54dk/m14_pin_hil.py",
+      "lf_sha256_at_archive": "957fa29e1ee408d95bcc0b978693dbc4ffdb83b0507fde53e6f979397097cd29"
+    },
+    {
+      "path": "tests/hil/nu54dk/m15_auto.py",
+      "lf_sha256_at_archive": "0255577e60cdc55572b1856ae91b90fbe7237275422a1e96a663db3cfe6461dd"
+    },
+    {
+      "path": "tests/hil/nu54dk/m15_system_off.py",
+      "lf_sha256_at_archive": "bc7d27fbd77c838e294973ff81049945b18639f0fba22aed1e9a36233f7c61a5"
+    },
+    {
+      "path": "tests/hil/nu54dk/m16_ble_pair.py",
+      "lf_sha256_at_archive": "a0c1fcff6e0112a55caab3ef367b73e562ccaf7e510ae22b704d436a804bf5fa"
+    },
+    {
+      "path": "tests/hil/nu54dk/m19_ble_gap.py",
+      "lf_sha256_at_archive": "056dd2815631070f7f70135e5c7f2b9c16c2e69846f5db158acaccffab15a472"
+    },
+    {
+      "path": "tests/hil/nu54dk/m20_ble_gatt.py",
+      "lf_sha256_at_archive": "cd76e2a8d0975bf0ccb513bd06f0eff9b7cbede09a650821aa982e5c9a38fcc3"
+    },
+    {
+      "path": "tests/hil/nu54dk/m21_ble_security.py",
+      "lf_sha256_at_archive": "6e012262d665d468197eeb8ece257f21fd7a70c90555f139bda6e128bb16792b"
+    },
+    {
+      "path": "tests/hil/nu54dk/m24_twim_onboard.py",
+      "lf_sha256_at_archive": "df3829a0e5786928c1ffe51600bb187cef9e5188bdb1be353e5a6517c8a100ae"
+    },
+    {
+      "path": "tests/hil/nu54dk/m24_uarte_onboard.py",
+      "lf_sha256_at_archive": "60edc27778a9355740c09f424d8cf27da57cdee8c30135a6ed06814ff1cb46c9"
+    },
+    {
+      "path": "tests/hil/nu54dk/m25_onboard.py",
+      "lf_sha256_at_archive": "a52956ec07c3d320165abf595b01df1aa11b895f80a234d2fbd37d10f7ce4f58"
+    },
+    {
+      "path": "tests/hil/nu54dk/m26_onboard.py",
+      "lf_sha256_at_archive": "ca60eaf6e8db480ea9132a43066d52455b36b9d8804b2168e2c330bb34bd9619"
+    },
+    {
+      "path": "tests/hil/nu54dk/m6_serial_echo.py",
+      "lf_sha256_at_archive": "af8f1bf841660c54b25626221355d862df5f31de7fb814ea434eb404e0f3dfaf"
+    },
+    {
+      "path": "tests/hil/nu54dk/m7_i2c_pmic.py",
+      "lf_sha256_at_archive": "6dd2398f6ccbee931ec80445e33e439387ef50b173c01068d09913dbdb2a71df"
+    },
+    {
+      "path": "tests/hil/nu54dk/m7_peripheral_hil.py",
+      "lf_sha256_at_archive": "cc0ad8e7c9142c3558cf3d1dfd75dea8e8fdb187a402af880c3f47e72fa420c0"
+    },
+    {
+      "path": "tests/hil/nu54dk/m8_debug.py",
+      "lf_sha256_at_archive": "e870a97b72ba17a7f38ee8583b06190589157862ef2e9fd228c4a6f898848c1d"
+    },
+    {
+      "path": "tests/hil/nu54dk/m8_upload.py",
+      "lf_sha256_at_archive": "422e637f0a3fc6cb63769131bfee4866a2406d0dec2c33fcc5c389601d9b327b"
+    },
+    {
+      "path": "tests/hil/nu54dk/nu54dk_connector_pinmap.json",
+      "lf_sha256_at_archive": "6bfcf3ac8d5eff25a8a26870382ebf634bd4bef41e0f2ac06170e665b645991d"
+    },
+    {
+      "path": "tests/hil/nu54dk/onboard_start.py",
+      "lf_sha256_at_archive": "44e9a784d464983241acb1c91c4b9878a37a6e261fefbf51734a431fab1607d3"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_ac01_gpio_hil.py",
+      "lf_sha256_at_archive": "2c58bc9520315c5d0fc464ebf1708556ce035bed80ac2e42c1df39a5e6de007f"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_ac02b_peripheral.py",
+      "lf_sha256_at_archive": "bb1d6d9ed279aca12c1efccbd5c31825f429f8dfdb582b01e274b4297d17f0cf"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_ac03_storage.py",
+      "lf_sha256_at_archive": "da9378ae87a1e42d92788e665cfde3410c8dcc79e95ebae116ef75b4508a1fbc"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m14_pin_hil.py",
+      "lf_sha256_at_archive": "e57e833afc1508a00a83752cca5c0e959f3d1e4d6cd8d2a0987bfde65ef2965e"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m15_auto.py",
+      "lf_sha256_at_archive": "5c7a09ca0d1bb5b51225a87f915a9e18e11f2909bb6b1954ea0a64aadf60c372"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m15_system_off.py",
+      "lf_sha256_at_archive": "2392cb98e2459c2eae725d8b62623457b28971458688a9c445fdb787d5e86a8d"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m24_twim_onboard.py",
+      "lf_sha256_at_archive": "a530aa28502760136a96eb7d0191b8ff756c9d54b58a02459176edcab5a247d6"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m24_uarte_onboard.py",
+      "lf_sha256_at_archive": "f33f3146c416b5d6f0454b3edd30f965af71f69748ee740476f351767be6caeb"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m25_onboard.py",
+      "lf_sha256_at_archive": "79424534cb13067298fb69c0a4cdb2010e47e2d22f225a8aec43a825e2d888f7"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m26_onboard.py",
+      "lf_sha256_at_archive": "2ced6dd40d354d034fa3c1cc1127a45e70ba9e9ef160401b00be5135ccc91f56"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m7_i2c_pmic.py",
+      "lf_sha256_at_archive": "85c054688437f87029c1db6d22d5d30f16220b235c99e1617f9f03a5f425e0fd"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m7_peripheral_hil.py",
+      "lf_sha256_at_archive": "6b90b14d44f2b9b9d18d4143f8983461dc5fdb75524730b159b9441aa2bd8381"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_campaign.py",
+      "lf_sha256_at_archive": "ab6f922facd08cba7f418cd710713a42cc556f8b4ec9a088432d2ae32b3f4005"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_common_bundle.json",
+      "lf_sha256_at_archive": "225cec8780e70307089384655a773a9421bcb8d8da2aee379e9301e329d65d0c"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_common_fixture.json",
+      "lf_sha256_at_archive": "8d5b0e2bbe328193c1ef114a41dee6e94143d3b4fa3c8eb925fbb600df986775"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_common_gpio.py",
+      "lf_sha256_at_archive": "def3f0197d9cec9a3dce62834fddeb32e8af76707c2dc6ba7d47254ab0cdd1b7"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_common_run.py",
+      "lf_sha256_at_archive": "9a7c3da16ab6d21d4db35791f4798ccdf641d1794c15add660a96269757acf8b"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_common_session.py",
+      "lf_sha256_at_archive": "fbbdda14eba2699fff055789b2895b2837d04ffb65ddb9a2356241ea4572b36a"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_fixture.py",
+      "lf_sha256_at_archive": "7ef4a27530721363dd79c9340984a5a9a9283ed54c3298cda205b96120238626"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_fixture_run.py",
+      "lf_sha256_at_archive": "1e299e81dbee424eb26e2dfbc1f5492c5234e474bcd4c55023cf7e36d64f6acf"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_fixtures.json",
+      "lf_sha256_at_archive": "26fcb8482b72b9f7bebf5786388a514462aaa5c40e19eb8bb338b9f187e5ca95"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_nojumper.py",
+      "lf_sha256_at_archive": "1e991368729f8fa1fc8d5caf18e8043c27fa10ab8b887fe1242999242f848739"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_pair.py",
+      "lf_sha256_at_archive": "e98ea4ed0455073761318f0b71b8be04e1340ef20be9cc0e4159d4f778a40590"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_pdm_continuous.py",
+      "lf_sha256_at_archive": "9c9cc774de41ef9a6e0a74b5f29bb5ac7ea96b723b27730b398cb6138b6a487e"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_protocol.py",
+      "lf_sha256_at_archive": "f0d4ddcf447f1dbc39a3d25ed444044a24056fb6ff81e91c3c12033026bda1bb"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_pwm_capture.py",
+      "lf_sha256_at_archive": "f5c912f11b9d44abde3bfe8a3961a22f733a0aeae60fe540a89190825cdd748b"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_qdec.py",
+      "lf_sha256_at_archive": "fb2d5774570d31862542799ff979d311034fd51a75a411cdc90e005361f8f409"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_signal.py",
+      "lf_sha256_at_archive": "80f56cfd6171c641cb1dc29686fe4ff1a2814b21c6f7d75caf25b9f1c27c37b3"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_signal_run.py",
+      "lf_sha256_at_archive": "be9f6ac4f126dab5b56fd25e02e90dae60dde8cfca18e4adef0d6ac7b12d3fe7"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_test_plan.json",
+      "lf_sha256_at_archive": "9c19d20c7272a5b4c4e6ab64925e24235c4bb1431b82898d7319c37b72776596"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_uart.py",
+      "lf_sha256_at_archive": "04005c0c4cd08d51e397c4533b859fc478f3b3acb945e61b03fb631d90f60739"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_wiring.py",
+      "lf_sha256_at_archive": "7695416d7d8139ce0aa96e579a9eef4cdcf297dfe8b53b9fdb8d7c50c7d269bc"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_wiring_run.py",
+      "lf_sha256_at_archive": "5f688038e257454e216f923dc227f3dc2711279aa82600ba9249cc53b65f6399"
+    },
+    {
+      "path": "tests/host/test_v04_common.py",
+      "lf_sha256_at_archive": "290927eb29ac4731fd5fbe21b009ef72821e11fa6b60bd28e969f6140026ec49"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/CMakeLists.txt",
+      "lf_sha256_at_archive": "74b517e62a2eef5019835195fba4f20336cb3831ca7b9228161392f9181757c1"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/app.overlay",
+      "lf_sha256_at_archive": "ad14da62332f8f47f6d827317813c3d3d76ab5a29c20a80497c5c8060968345a"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/prj.conf",
+      "lf_sha256_at_archive": "32222f4cda9c84fd483dd27e9628085a466f5a441fa5c8aac0edc169a24b4207"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/common_gpio_hil.cpp",
+      "lf_sha256_at_archive": "24a89673175fc4facdbf0c1ef6bbbaa81bf7662ef113ed1c6ce65bf4a01bc372"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/common_gpio_hil.h",
+      "lf_sha256_at_archive": "74df2316a6f5873f05a485c0fb3454e327a4abd8c4eb3b04b3d67ed5da827d05"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/common_wiring.h",
+      "lf_sha256_at_archive": "7f651e76f0364bf93617d723c454db55610128fb16898908b8d7d01b2eb7cc86"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/fixture_gate.h",
+      "lf_sha256_at_archive": "8998a4d6851b0d9f70549b2ae0c0c1ef0f84e6625ac5741927f747fc8012e6b1"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/fixture_hil.cpp",
+      "lf_sha256_at_archive": "a176c6d7b108735864665043fd3788163394a073624256d4ecef985aa297aef0"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/fixture_hil.h",
+      "lf_sha256_at_archive": "6baeb1d29406cbfb0b7477647d3f6e3ba7969fec8e040ffa4558899588916bf1"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/i2s_finite_transfer.h",
+      "lf_sha256_at_archive": "2331eddea65b95b6408d609bcaa15ae02bd828a178b34557b24d71745ddbc62f"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/main.cpp",
+      "lf_sha256_at_archive": "d1625d61ce0efba2311c89f34d017c0cfc610819f22209afa386586058b0829d"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/pdm_continuous.h",
+      "lf_sha256_at_archive": "a8e6f3d1ce95b4acc697fafb4e0ee1ed2cde77e73e923aecfcfabb43f3f0750f"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/protocol.h",
+      "lf_sha256_at_archive": "f4a5e8961e46d0ab4d407e6d1c34ad61a85c5a4e53a1daa5aacc3864b0226f36"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/pwm_capture_hil.cpp",
+      "lf_sha256_at_archive": "a0009edc7cd2ec7ab4b076f27f99d8789f862d5a31a3a30cca40752b054607a5"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/pwm_capture_hil.h",
+      "lf_sha256_at_archive": "2c78b075efa852cd5b5ffcf927b89361fca9c3d5f20bec7e4fbb0756da5ce0e8"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/pwm_capture_vector.h",
+      "lf_sha256_at_archive": "7f8470b56cce47f6159008600bf0e2f822016bdf52c42d1a155ebe7ea0790096"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/qdec_waveform.h",
+      "lf_sha256_at_archive": "67dcf277d22904d58f18e253e2002a08c697816b9f28891a2e85d5ee6734e0e4"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/serial_hil.cpp",
+      "lf_sha256_at_archive": "eac398ea275c22c379391f7b306af245236827449c05594def1b85ed3838f12f"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/serial_hil.h",
+      "lf_sha256_at_archive": "24ed763ce7dd6974c19b3ecf731626b5ac6968e206d0e2351c3c9a64e08ea136"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/shared_analog_source.h",
+      "lf_sha256_at_archive": "a13a4bc30a45738d2dc6062c74502b17b5d632d8ee9f1b5d948cea2c1f71f5cd"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/signal_hil.cpp",
+      "lf_sha256_at_archive": "978e7dae41c1e8a6e010fa3e30e5ce69bcadf7a8e12d72035e64973708fcbe49"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/signal_hil.h",
+      "lf_sha256_at_archive": "25d4f3940d46dd40f5e4c4e6fe22166b1e6e45de9a2d86da0d777cc9ecdb2903"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/wiring_hil.cpp",
+      "lf_sha256_at_archive": "d879bbebb7575143e4b4db01ba2ceb892c3d943744f216ae04c44116032c5de6"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/wiring_hil.h",
+      "lf_sha256_at_archive": "74dc150ff6b84bfab8690ca40707eddff68708983b36669c0cb4c71611eb9788"
+    }
+  ],
+  "files": [
+    {
+      "path": "common-signal-prep-target.json.gz",
+      "raw_sha256": "c093209c4aa02d89692c4fa5f96cb1700f833421ba82c1199f1aeb5492d68281",
+      "gzip_sha256": "30ee62ecce6a092567172bdde1e9f16fa24ab65d28db4104e4e2eafeeb032980"
+    },
+    {
+      "path": "common-signal-prep-target.log.gz",
+      "raw_sha256": "8cda4fa0e4c1503034a2000d2953cfb000344b5f8197cb48088fc89f41820ffd",
+      "gzip_sha256": "3c7d6d8d1c313bb8c165ddfc739553ce5e4789cd789dc5d695319a850ff7c982"
+    },
+    {
+      "path": "common-i2s-prep-target.json.gz",
+      "raw_sha256": "e92db65ab5eab7604acbdc4ae613e8657a02c30269897cde09fb9637e3df3c20",
+      "gzip_sha256": "56e740905799ff86711a6b78973354a7863d8016dcf3fd989d6de637cb15dc39"
+    },
+    {
+      "path": "common-i2s-prep-target.log.gz",
+      "raw_sha256": "98875807ca68973ded3b7fc8df14ee6ebaf4e09028c119c63132c640a4db36f8",
+      "gzip_sha256": "4a45fc439d1aec201c47b7e83761d20a2c3ba0f56a5873970017178cf50987cb"
+    },
+    {
+      "path": "common-all-signals-prep-target.json.gz",
+      "raw_sha256": "71e900cdbf80ab1ae2140ba0428595212bb2da33e4e07c2f510ee557faa1828a",
+      "gzip_sha256": "75e30ee3c508cb323fda9b1c1ca931d6dfef0820f061d0b00755995ccf5902a4"
+    },
+    {
+      "path": "common-all-signals-prep-target.log.gz",
+      "raw_sha256": "07644b298c922976a281908d9085959de3270ac3f6cd491b48093e61d2f87ec9",
+      "gzip_sha256": "f382456b9b5115ffd4f9a5a2e80d18ecc0b35f47a60a5d9ef95a9c44941ee88d"
+    },
+    {
+      "path": "common-all-signals-prep2-target.json.gz",
+      "raw_sha256": "3613b6dc24a78c5d43f28b3382712917f75e5453a98c651624724699e8925d9b",
+      "gzip_sha256": "f19ea58c1bdb7cd87859d12018feeb2c844e0beb119d39e02e9efaeb86bbc766"
+    },
+    {
+      "path": "common-all-signals-prep2-target.log.gz",
+      "raw_sha256": "e63ae97bd84c5a7364bcfef1a3ee19fe04814762d2e43cc3af9a47455eb520ba",
+      "gzip_sha256": "81194da724820ef01c78759d9d139d998cb192234119538cd666d00c096a74bc"
+    },
+    {
+      "path": "common-all-signals-prep3-target.json.gz",
+      "raw_sha256": "57c9834a56feb8d306e4f3f4004dd46c35b65a6b4f6c57feeb2054c4e1a2b9da",
+      "gzip_sha256": "2edabc0b7839fa442f62a4fcc51a039b56efa6bfbe774d5ee3232738521312e1"
+    },
+    {
+      "path": "common-all-signals-prep3-target.log.gz",
+      "raw_sha256": "10ac869f8c9c5a2d040cea5479c5ec48c73f476a010dd1a4915f0c7be244c7c4",
+      "gzip_sha256": "5e143ca0ef3a75f033b79b5d864584c823c137f3529ba5ff1e9b32c043d66795"
+    },
+    {
+      "path": "common-all-signals-host.json.gz",
+      "raw_sha256": "e8db0d8b5fc625a7a5c9b1e010c34317a348b05dcdba937e6377e0833f01cc30",
+      "gzip_sha256": "3b2c50612c89b34048e3d0d88ef4a70a80e11b13d024165146dba187e3dacc93"
+    },
+    {
+      "path": "common-all-signals-host.log.gz",
+      "raw_sha256": "015f9b4c55dd4598e60fb76423a85880aff7d94f95fafde133964f4f9705bc61",
+      "gzip_sha256": "5243c6610226e42c5398fa9fb22c502d73e4d2252d002b0f341f89a4f8718c2b"
+    },
+    {
+      "path": "common-t13-plan-host.json.gz",
+      "raw_sha256": "a811941857ca1c05fd8642e8db898b4bfa623274f2876dd47db339882b94ba07",
+      "gzip_sha256": "591b52c52fec0bc37e527e25c84d4ab3fd3918fbaf4908edb0125e64e66de1fc"
+    },
+    {
+      "path": "common-t13-plan-host.log.gz",
+      "raw_sha256": "f465ab7dde59d1bbc0a5ff8fb02635f92111d15c7fbe4033b95ca388277bbe95",
+      "gzip_sha256": "1b907cfb586acc2e25b9ce708db5bb61b83fc01c599f027251501c2b43067e96"
+    },
+    {
+      "path": "common-signal-style-final.json.gz",
+      "raw_sha256": "8a79b3d0719c00ef64ce5948808648d9a53ae267fc0bdb2377dccc2b37304979",
+      "gzip_sha256": "8a85bd2da9a1f013ad7cab2e1ed12a1546088be59b5de223f914090d209f5c6a"
+    },
+    {
+      "path": "common-signal-style-final.log.gz",
+      "raw_sha256": "d207ae55399e4cede08e1c874bc480068f667a86849ed6329cf7201745a140d2",
+      "gzip_sha256": "7958e132f30f3f9ccb7a6d8cc2e1aaec84a34d27805a6cd737280fad7040276a"
+    },
+    {
+      "path": "common-signal-precommit-host.json.gz",
+      "raw_sha256": "79e7e1cc242fcd9fb0387c35432c6ecb5bb9e4b0650455e37e2174ecc53d6ef4",
+      "gzip_sha256": "d8c530fecb57123f009f0b5fe82b4fbeda20756fd6cbfc57313c5cfbbbedf65e"
+    },
+    {
+      "path": "common-signal-precommit-host.log.gz",
+      "raw_sha256": "7a354a30f5ac8f9d454550039703ac75f33d7c250e1e8d37dba144b2101275fe",
+      "gzip_sha256": "ff25a8b74cab5ef432df186c215f23ee7534af581faa2e0e9445d783b8ddcd2f"
+    },
+    {
+      "path": "common-signal-precommit-docs.json.gz",
+      "raw_sha256": "e84c20f6200036dce96b1b03a0bfbd2c2f04527beb22b23018736f6c9a98cfc2",
+      "gzip_sha256": "c2a79db1c21f97043e2576099f1d0a6b80739399b7f50e6fee8869bf3726b38f"
+    },
+    {
+      "path": "common-signal-precommit-docs.log.gz",
+      "raw_sha256": "15382fb50a2d89b584a2d43cd8fab0aa58412df71eabe07415fac274952a9cff",
+      "gzip_sha256": "c0d80868df32c1d4b2cd76fe3d6fd5ede3f30bd0d11d0d0872f1fce116c73cc1"
+    },
+    {
+      "path": "common-signal-precommit-contract.json.gz",
+      "raw_sha256": "a850a61743137f7a2b4879bf898be5d918a1449ff04daba2708fa3c2c60a6ca7",
+      "gzip_sha256": "f4435c9584b641039b349b050d1cfccef97b34b2eb0c17a4b6f0a7d686b8b1ed"
+    },
+    {
+      "path": "common-signal-precommit-contract.log.gz",
+      "raw_sha256": "864ef516abd4169395e318152ba9ea85034cda60cdae74061180afec7d55274b",
+      "gzip_sha256": "d6dc2afac86508833e8e42bbc17476df33fc9f3e9bca5d916822087984bc138f"
+    },
+    {
+      "path": "common-signal-precommit-package.json.gz",
+      "raw_sha256": "1b7c95801a5cd161e99a0636436166d10d1fc5a35364c499ed8f18f3e5e431b9",
+      "gzip_sha256": "b4271562b6a8b90117263eb4bb7732d8338e8da63209fbd3847b048e350fce48"
+    },
+    {
+      "path": "common-signal-precommit-package.log.gz",
+      "raw_sha256": "311aa6b5061651982271149fc000f5a4660c1f876cc7d1c7f963d3ecb3b40fbd",
+      "gzip_sha256": "2cf7291b81e55c8c6c9c418396d41831c0c00dbad61e43626d422a797f6e69d2"
+    },
+    {
+      "path": "common-signal-precommit-inventory.json.gz",
+      "raw_sha256": "5c028f0ce17d1cd8e713b92fa66aa92ec10f4b4389071055f91e1a6d6173bd4e",
+      "gzip_sha256": "f15416724700f7c6c50e7056692e74ca72e7e1dab80f916d0c00bd527e3328f6"
+    },
+    {
+      "path": "common-signal-precommit-inventory.log.gz",
+      "raw_sha256": "8efc41e1f9734d065dfdb3292806c34b3f3ff16b7b9b69b5d6ae2ac8479703f1",
+      "gzip_sha256": "c73c50af0b797e4e53d712027c6c3d2137481c82b8014e1c425e0d378cd735cb"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "pwm-usb-package",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+    "package"
+  ],
+  "started_at": "2026-09-07T08:42:54.362236+00:00",
+  "finished_at": "2026-09-07T08:44:36.918337+00:00",
+  "exit_code": 0,
+  "log_sha256": "cbe3da11a2c26bf58c2466073dd0c528820729efecdde47df5b7697371377c47"
+}

@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "type": "v04-common-wiring-check",
+  "status": "failed",
+  "fixture_id": 501,
+  "fixture_revision": 1,
+  "catalog_sha256": "8d5b0e2bbe328193c1ef114a41dee6e94143d3b4fa3c8eb925fbb600df986775",
+  "core_revision": "8c1cfe27551b46fab101a75de61f502899d0d95c",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "17-signal-connectivity-not-gpio-api-or-t12-completion",
+  "swd_frequency_hz": 10000000,
+  "cmsis_dap_limit_packets": true,
+  "external_wiring_executed": true,
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "142acb8bd9df31ef10f78112ad322c170b5eedd39fafbf011b9da647a827e5fb",
+      "elf_sha256": "0b719d8242838d8744c4e87e340bf045421876711f8f1f457a596111fa10155b",
+      "record_sha256": "eff1d77d7cc4da2ae5bb19e194d5a15a3505a10ae1ba58b05fde831de2691fe7",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "cmsis_dap_limit_packets": true,
+        "seconds": 7.75,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "b49eb6499eb22fbed0f36a546dd69fa8b059da34053831ce4a85fe8d890fef7d"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "d01f6f1b2cc0fd9f95be159c3bae7f874f810b9d7775bdd380aa8a1c672eb93f",
+      "elf_sha256": "3429e68a4663539eb9d6fe6ba3df18379e2bb2dc968ca08f901c4c362ca3b025",
+      "record_sha256": "eff1d77d7cc4da2ae5bb19e194d5a15a3505a10ae1ba58b05fde831de2691fe7",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "cmsis_dap_limit_packets": true,
+        "seconds": 7.422,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "1a471ea43665fca0260c9d70e3ff821f7e621db9ddba7f76925e1a0f59479414"
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "V04-WIRING/501/controller1/baseline/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/baseline/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net1/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131070,
+        1,
+        131071,
+        131071,
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net1/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131070,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net1/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net1/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net1",
+      "status": "passed",
+      "direction": 1,
+      "net": 1,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net2/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131069,
+        2,
+        131071,
+        131071,
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net2/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/cleanup",
+      "status": "cleanup",
+      "outcomes": [
+        {
+          "role": 1,
+          "stopped": true,
+          "words": [
+            131069,
+            0,
+            0,
+            0,
+            4294967295,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "stopped": true,
+          "words": [
+            131071,
+            0,
+            0,
+            0,
+            4294967295,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "confirmation_sha256": "46bdb513f27888a89e03b13aba42731fa628f690e3a1dcb97aa18ee8774e0827",
+  "error": "ProtocolError: wiring mismatch: {'levels': {'expected': 131069, 'actual': 131071}}",
+  "completed_at_utc": "2026-09-07T10:58:34.351984+00:00"
+}

@@ -1,0 +1,43 @@
+{
+  "observed_at_utc": "2026-09-07T08:14:24.489946+00:00",
+  "probes": [
+    {
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "description": "Arm \"NU54DK_v2_Pre-release\""
+    },
+    {
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "description": "Arm \"NU54DK_v2_Pre-release\""
+    }
+  ],
+  "ports": [
+    {
+      "device": "COM12",
+      "description": "USB \uc9c1\ub82c \uc7a5\uce58(COM12)",
+      "vid": 3368,
+      "pid": 516,
+      "serial_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+    },
+    {
+      "device": "COM14",
+      "description": "USB \uc9c1\ub82c \uc7a5\uce58(COM14)",
+      "vid": 3368,
+      "pid": 516,
+      "serial_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0"
+    },
+    {
+      "device": "COM15",
+      "description": "USB \uc9c1\ub82c \uc7a5\uce58(COM15)",
+      "vid": 3368,
+      "pid": 516,
+      "serial_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0"
+    },
+    {
+      "device": "COM13",
+      "description": "USB \uc9c1\ub82c \uc7a5\uce58(COM13)",
+      "vid": 3368,
+      "pid": 516,
+      "serial_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+    }
+  ]
+}

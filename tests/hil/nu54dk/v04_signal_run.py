@@ -3,6 +3,7 @@
 from __future__ import annotations
 import argparse
 from contextlib import ExitStack
+from functools import partial
 import hashlib
 import json
 from pathlib import Path
@@ -13,6 +14,7 @@ import v04_campaign as campaign
 import v04_pair as pair
 import v04_signal as signal
 import v04_pdm_continuous as pdm_continuous
+import v04_pwm_capture as pwm_capture
 from v04_protocol import ProbeLocks, ProtocolError, validate_pair
 from v04_fixture_run import unique_fields
 
@@ -34,7 +36,17 @@ def arguments(argv=None):
     parser.add_argument("--progress-interval-seconds", type=float, default=5)
     parser.add_argument("--execute-fixture", action="store_true")
     parser.add_argument("--pdm-continuous", action="store_true")
+    parser.add_argument("--pwm-capture", action="store_true")
+    parser.add_argument("--pwm-load", choices=tuple(pwm_capture.LOADS),
+                        help="capture one load mode with 4/32/256 DMA values")
+    parser.add_argument("--cmsis-dap-limit-packets", action="store_true",
+                        help="limit CMSIS-DAP to one in-flight USB command; keep SWD frequency")
     args = parser.parse_args(argv)
+    if args.pwm_load is not None and not args.pwm_capture:
+        raise ProtocolError("PWM load sweep requires --pwm-capture")
+    if args.pwm_capture and (args.fixture != 408 or args.swd_frequency_hz != 10_000_000 or
+                             args.pdm_continuous or args.duration_seconds != 0):
+        raise ProtocolError("PWM capture requires fixture 408, SWD 10 MHz and a finite campaign")
     if args.pdm_continuous and args.fixture != 440:
         raise ProtocolError("continuous PDM requires fixture 440")
     campaign.validate_options(args.repetitions, args.duration_seconds,
@@ -63,8 +75,11 @@ def main(argv=None):
         "board_revision": images[0]["board_revision"],
         "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",
         "swd_frequency_hz": args.swd_frequency_hz,
+        "cmsis_dap_limit_packets": args.cmsis_dap_limit_packets,
         "external_wiring_executed": False, "repetitions": args.repetitions,
         "pdm_continuous": args.pdm_continuous,
+        "pwm_capture": args.pwm_capture,
+        "pwm_capture_load": args.pwm_load,
         "campaign": {"repetitions": args.repetitions,
                      "duration_seconds": args.duration_seconds,
                      "progress_interval_seconds": args.progress_interval_seconds,
@@ -97,7 +112,7 @@ def main(argv=None):
             for uid, image in zip(uids, images):
                 device, flash = pair.boot_exact(
                     stack, ConnectHelper, args.pyocd, uid, image,
-                    args.swd_frequency_hz)
+                    args.swd_frequency_hz, cmsis_dap_limit_packets=args.cmsis_dap_limit_packets)
                 devices.append(device)
                 evidence["devices"][image["role"] - 1]["flash"] = flash
 
@@ -108,7 +123,8 @@ def main(argv=None):
                 journal.flush()
 
             evidence["external_wiring_executed"] = True
-            run_confirmed = pdm_continuous.run_confirmed if args.pdm_continuous else signal.run_confirmed
+            run_confirmed = (partial(pwm_capture.run_confirmed, load=args.pwm_load) if args.pwm_capture else
+                             pdm_continuous.run_confirmed if args.pdm_continuous else signal.run_confirmed)
             evidence["campaign"].update(campaign.run_cycles(
                 lambda _cycle: run_confirmed(
                     devices, images, uids, confirmation, args.fixture, append, 1),

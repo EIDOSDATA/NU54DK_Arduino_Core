@@ -1,0 +1,1910 @@
+{
+  "schema_version": 1,
+  "status": "planning-only",
+  "physical_executed": false,
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "harnesses": {
+    "C": {
+      "P1.14": "P1.14",
+      "P1.10": "P1.10",
+      "P1.04": "P1.04",
+      "P1.05": "P1.05",
+      "P1.06": "P1.07",
+      "P1.07": "P1.06",
+      "P0.00": "P0.00",
+      "P0.01": "P0.01",
+      "P0.02": "P0.02",
+      "P0.03": "P0.03",
+      "P2.00": "P2.00",
+      "P2.01": "P2.01",
+      "P2.02": "P2.02",
+      "P2.03": "P2.03",
+      "P2.04": "P2.04",
+      "P2.05": "P2.05",
+      "P2.06": "P2.06"
+    },
+    "S": {
+      "P1.14": "P1.14",
+      "P1.10": "P1.10",
+      "P1.04": "P1.05",
+      "P1.05": "P1.04",
+      "P1.06": "P1.07",
+      "P1.07": "P1.06",
+      "P0.00": "P0.00",
+      "P0.01": "P0.01",
+      "P0.02": "P0.02",
+      "P0.03": "P0.03",
+      "P2.00": "P2.00",
+      "P2.01": "P2.01",
+      "P2.02": "P2.04",
+      "P2.03": "P2.03",
+      "P2.04": "P2.02",
+      "P2.05": "P2.05",
+      "P2.06": "P2.06"
+    },
+    "U": {
+      "P1.14": "P1.14",
+      "P1.10": "P1.10",
+      "P1.04": "P1.05",
+      "P1.05": "P1.04",
+      "P1.06": "P1.07",
+      "P1.07": "P1.06",
+      "P0.00": "P0.00",
+      "P0.01": "P0.01",
+      "P0.02": "P0.02",
+      "P0.03": "P0.03",
+      "P2.00": "P2.02",
+      "P2.01": "P2.01",
+      "P2.02": "P2.00",
+      "P2.03": "P2.03",
+      "P2.04": "P2.05",
+      "P2.05": "P2.04",
+      "P2.06": "P2.06"
+    }
+  },
+  "common_ground": "GND P2-30 ↔ P2-30",
+  "current_harness": "C",
+  "future_order": [
+    "S",
+    "U"
+  ],
+  "standalone": [
+    {
+      "kind": "uarte",
+      "instance": 0,
+      "duration_seconds": 180,
+      "harness": "U",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "uarte",
+          "instance": 0,
+          "bank": "p2_dedicated20",
+          "profile": "connector_fixture",
+          "pins": {
+            "txd": "P2.02",
+            "rxd": "P2.00",
+            "rts": "P2.05",
+            "cts": "P2.04"
+          }
+        },
+        "b": {
+          "kind": "uarte",
+          "instance": 0,
+          "bank": "p2_dedicated20",
+          "profile": "connector_fixture",
+          "pins": {
+            "rxd": "P2.00",
+            "txd": "P2.02",
+            "cts": "P2.04",
+            "rts": "P2.05"
+          }
+        },
+        "rate": 1000000,
+        "buffer_bytes": 1024,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "8N1/full-duplex"
+      },
+      "measured_role": "a"
+    },
+    {
+      "kind": "uarte",
+      "instance": 20,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "uarte",
+          "instance": 20,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "txd": "P1.04",
+            "rxd": "P1.05",
+            "rts": "P1.06",
+            "cts": "P1.07"
+          }
+        },
+        "b": {
+          "kind": "uarte",
+          "instance": 20,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "rxd": "P1.05",
+            "txd": "P1.04",
+            "cts": "P1.07",
+            "rts": "P1.06"
+          }
+        },
+        "rate": 1000000,
+        "buffer_bytes": 1024,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "8N1/full-duplex"
+      },
+      "measured_role": "a"
+    },
+    {
+      "kind": "uarte",
+      "instance": 21,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "uarte",
+          "instance": 21,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "txd": "P1.04",
+            "rxd": "P1.05",
+            "rts": "P1.06",
+            "cts": "P1.07"
+          }
+        },
+        "b": {
+          "kind": "uarte",
+          "instance": 21,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "rxd": "P1.05",
+            "txd": "P1.04",
+            "cts": "P1.07",
+            "rts": "P1.06"
+          }
+        },
+        "rate": 1000000,
+        "buffer_bytes": 1024,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "8N1/full-duplex"
+      },
+      "measured_role": "a"
+    },
+    {
+      "kind": "uarte",
+      "instance": 22,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "uarte",
+          "instance": 22,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "txd": "P1.04",
+            "rxd": "P1.05",
+            "rts": "P1.06",
+            "cts": "P1.07"
+          }
+        },
+        "b": {
+          "kind": "uarte",
+          "instance": 22,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "rxd": "P1.05",
+            "txd": "P1.04",
+            "cts": "P1.07",
+            "rts": "P1.06"
+          }
+        },
+        "rate": 1000000,
+        "buffer_bytes": 1024,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "8N1/full-duplex"
+      },
+      "measured_role": "a"
+    },
+    {
+      "kind": "uarte",
+      "instance": 30,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "uarte",
+          "instance": 30,
+          "bank": "p0_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "txd": "P0.00",
+            "rxd": "P0.01",
+            "rts": "P0.02",
+            "cts": "P0.03"
+          }
+        },
+        "b": {
+          "kind": "uarte",
+          "instance": 30,
+          "bank": "p0_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "rxd": "P0.00",
+            "txd": "P0.01",
+            "cts": "P0.02",
+            "rts": "P0.03"
+          }
+        },
+        "rate": 1000000,
+        "buffer_bytes": 1024,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "8N1/full-duplex"
+      },
+      "measured_role": "a"
+    },
+    {
+      "kind": "spim",
+      "instance": 0,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "spim",
+          "instance": 0,
+          "bank": "p2_dedicated20",
+          "profile": "connector_fixture",
+          "pins": {
+            "sck": "P2.01",
+            "mosi": "P2.02",
+            "miso": "P2.04",
+            "csn": "P2.05"
+          }
+        },
+        "b": {
+          "kind": "spis",
+          "instance": 0,
+          "bank": "p2_dedicated20",
+          "profile": "connector_fixture",
+          "pins": {
+            "sck": "P2.01",
+            "mosi": "P2.04",
+            "miso": "P2.02",
+            "csn": "P2.05"
+          }
+        },
+        "rate": 8000000,
+        "buffer_bytes": 1024,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "mode0/msb/full-duplex"
+      },
+      "measured_role": "a"
+    },
+    {
+      "kind": "spim",
+      "instance": 20,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "spim",
+          "instance": 20,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sck": "P1.04",
+            "mosi": "P1.06",
+            "miso": "P1.07",
+            "csn": "P1.05"
+          }
+        },
+        "b": {
+          "kind": "spis",
+          "instance": 20,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sck": "P1.05",
+            "mosi": "P1.07",
+            "miso": "P1.06",
+            "csn": "P1.04"
+          }
+        },
+        "rate": 8000000,
+        "buffer_bytes": 1024,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "mode0/msb/full-duplex"
+      },
+      "measured_role": "a"
+    },
+    {
+      "kind": "spim",
+      "instance": 21,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "spim",
+          "instance": 21,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sck": "P1.04",
+            "mosi": "P1.06",
+            "miso": "P1.07",
+            "csn": "P1.05"
+          }
+        },
+        "b": {
+          "kind": "spis",
+          "instance": 21,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sck": "P1.05",
+            "mosi": "P1.07",
+            "miso": "P1.06",
+            "csn": "P1.04"
+          }
+        },
+        "rate": 8000000,
+        "buffer_bytes": 1024,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "mode0/msb/full-duplex"
+      },
+      "measured_role": "a"
+    },
+    {
+      "kind": "spim",
+      "instance": 22,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "spim",
+          "instance": 22,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sck": "P1.04",
+            "mosi": "P1.06",
+            "miso": "P1.07",
+            "csn": "P1.05"
+          }
+        },
+        "b": {
+          "kind": "spis",
+          "instance": 22,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sck": "P1.05",
+            "mosi": "P1.07",
+            "miso": "P1.06",
+            "csn": "P1.04"
+          }
+        },
+        "rate": 8000000,
+        "buffer_bytes": 1024,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "mode0/msb/full-duplex"
+      },
+      "measured_role": "a"
+    },
+    {
+      "kind": "spim",
+      "instance": 30,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "spim",
+          "instance": 30,
+          "bank": "p0_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sck": "P0.00",
+            "mosi": "P0.01",
+            "miso": "P0.02",
+            "csn": "P0.03"
+          }
+        },
+        "b": {
+          "kind": "spis",
+          "instance": 30,
+          "bank": "p0_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sck": "P0.00",
+            "mosi": "P0.01",
+            "miso": "P0.02",
+            "csn": "P0.03"
+          }
+        },
+        "rate": 8000000,
+        "buffer_bytes": 1024,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "mode0/msb/full-duplex"
+      },
+      "measured_role": "a"
+    },
+    {
+      "kind": "spis",
+      "instance": 0,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "spim",
+          "instance": 0,
+          "bank": "p2_dedicated20",
+          "profile": "connector_fixture",
+          "pins": {
+            "sck": "P2.01",
+            "mosi": "P2.02",
+            "miso": "P2.04",
+            "csn": "P2.05"
+          }
+        },
+        "b": {
+          "kind": "spis",
+          "instance": 0,
+          "bank": "p2_dedicated20",
+          "profile": "connector_fixture",
+          "pins": {
+            "sck": "P2.01",
+            "mosi": "P2.04",
+            "miso": "P2.02",
+            "csn": "P2.05"
+          }
+        },
+        "rate": 8000000,
+        "buffer_bytes": 1024,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "mode0/msb/full-duplex"
+      },
+      "measured_role": "b"
+    },
+    {
+      "kind": "spis",
+      "instance": 20,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "spim",
+          "instance": 20,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sck": "P1.04",
+            "mosi": "P1.06",
+            "miso": "P1.07",
+            "csn": "P1.05"
+          }
+        },
+        "b": {
+          "kind": "spis",
+          "instance": 20,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sck": "P1.05",
+            "mosi": "P1.07",
+            "miso": "P1.06",
+            "csn": "P1.04"
+          }
+        },
+        "rate": 8000000,
+        "buffer_bytes": 1024,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "mode0/msb/full-duplex"
+      },
+      "measured_role": "b"
+    },
+    {
+      "kind": "spis",
+      "instance": 21,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "spim",
+          "instance": 21,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sck": "P1.04",
+            "mosi": "P1.06",
+            "miso": "P1.07",
+            "csn": "P1.05"
+          }
+        },
+        "b": {
+          "kind": "spis",
+          "instance": 21,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sck": "P1.05",
+            "mosi": "P1.07",
+            "miso": "P1.06",
+            "csn": "P1.04"
+          }
+        },
+        "rate": 8000000,
+        "buffer_bytes": 1024,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "mode0/msb/full-duplex"
+      },
+      "measured_role": "b"
+    },
+    {
+      "kind": "spis",
+      "instance": 22,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "spim",
+          "instance": 22,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sck": "P1.04",
+            "mosi": "P1.06",
+            "miso": "P1.07",
+            "csn": "P1.05"
+          }
+        },
+        "b": {
+          "kind": "spis",
+          "instance": 22,
+          "bank": "p1_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sck": "P1.05",
+            "mosi": "P1.07",
+            "miso": "P1.06",
+            "csn": "P1.04"
+          }
+        },
+        "rate": 8000000,
+        "buffer_bytes": 1024,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "mode0/msb/full-duplex"
+      },
+      "measured_role": "b"
+    },
+    {
+      "kind": "spis",
+      "instance": 30,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "spim",
+          "instance": 30,
+          "bank": "p0_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sck": "P0.00",
+            "mosi": "P0.01",
+            "miso": "P0.02",
+            "csn": "P0.03"
+          }
+        },
+        "b": {
+          "kind": "spis",
+          "instance": 30,
+          "bank": "p0_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sck": "P0.00",
+            "mosi": "P0.01",
+            "miso": "P0.02",
+            "csn": "P0.03"
+          }
+        },
+        "rate": 8000000,
+        "buffer_bytes": 1024,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "mode0/msb/full-duplex"
+      },
+      "measured_role": "b"
+    },
+    {
+      "kind": "twim",
+      "instance": 20,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "twim",
+          "instance": 20,
+          "bank": "p1_flexible",
+          "profile": "connector_fixture",
+          "pins": {
+            "sda": "P1.10",
+            "scl": "P1.14"
+          }
+        },
+        "b": {
+          "kind": "twis",
+          "instance": 20,
+          "bank": "p1_flexible",
+          "profile": "connector_fixture",
+          "pins": {
+            "sda": "P1.10",
+            "scl": "P1.14"
+          }
+        },
+        "rate": 400000,
+        "buffer_bytes": 256,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "write-read/repeated-start/0x42"
+      },
+      "measured_role": "a"
+    },
+    {
+      "kind": "twim",
+      "instance": 21,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "twim",
+          "instance": 21,
+          "bank": "p1_flexible",
+          "profile": "connector_fixture",
+          "pins": {
+            "sda": "P1.10",
+            "scl": "P1.14"
+          }
+        },
+        "b": {
+          "kind": "twis",
+          "instance": 21,
+          "bank": "p1_flexible",
+          "profile": "connector_fixture",
+          "pins": {
+            "sda": "P1.10",
+            "scl": "P1.14"
+          }
+        },
+        "rate": 400000,
+        "buffer_bytes": 256,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "write-read/repeated-start/0x42"
+      },
+      "measured_role": "a"
+    },
+    {
+      "kind": "twim",
+      "instance": 22,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "twim",
+          "instance": 22,
+          "bank": "p1_flexible",
+          "profile": "connector_fixture",
+          "pins": {
+            "sda": "P1.10",
+            "scl": "P1.14"
+          }
+        },
+        "b": {
+          "kind": "twis",
+          "instance": 22,
+          "bank": "p1_flexible",
+          "profile": "connector_fixture",
+          "pins": {
+            "sda": "P1.10",
+            "scl": "P1.14"
+          }
+        },
+        "rate": 400000,
+        "buffer_bytes": 256,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "write-read/repeated-start/0x42"
+      },
+      "measured_role": "a"
+    },
+    {
+      "kind": "twim",
+      "instance": 30,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "twim",
+          "instance": 30,
+          "bank": "p0_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sda": "P0.00",
+            "scl": "P0.01"
+          }
+        },
+        "b": {
+          "kind": "twis",
+          "instance": 30,
+          "bank": "p0_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sda": "P0.00",
+            "scl": "P0.01"
+          }
+        },
+        "rate": 400000,
+        "buffer_bytes": 256,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "write-read/repeated-start/0x42"
+      },
+      "measured_role": "a"
+    },
+    {
+      "kind": "twis",
+      "instance": 20,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "twim",
+          "instance": 20,
+          "bank": "p1_flexible",
+          "profile": "connector_fixture",
+          "pins": {
+            "sda": "P1.10",
+            "scl": "P1.14"
+          }
+        },
+        "b": {
+          "kind": "twis",
+          "instance": 20,
+          "bank": "p1_flexible",
+          "profile": "connector_fixture",
+          "pins": {
+            "sda": "P1.10",
+            "scl": "P1.14"
+          }
+        },
+        "rate": 400000,
+        "buffer_bytes": 256,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "write-read/repeated-start/0x42"
+      },
+      "measured_role": "b"
+    },
+    {
+      "kind": "twis",
+      "instance": 21,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "twim",
+          "instance": 21,
+          "bank": "p1_flexible",
+          "profile": "connector_fixture",
+          "pins": {
+            "sda": "P1.10",
+            "scl": "P1.14"
+          }
+        },
+        "b": {
+          "kind": "twis",
+          "instance": 21,
+          "bank": "p1_flexible",
+          "profile": "connector_fixture",
+          "pins": {
+            "sda": "P1.10",
+            "scl": "P1.14"
+          }
+        },
+        "rate": 400000,
+        "buffer_bytes": 256,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "write-read/repeated-start/0x42"
+      },
+      "measured_role": "b"
+    },
+    {
+      "kind": "twis",
+      "instance": 22,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "twim",
+          "instance": 22,
+          "bank": "p1_flexible",
+          "profile": "connector_fixture",
+          "pins": {
+            "sda": "P1.10",
+            "scl": "P1.14"
+          }
+        },
+        "b": {
+          "kind": "twis",
+          "instance": 22,
+          "bank": "p1_flexible",
+          "profile": "connector_fixture",
+          "pins": {
+            "sda": "P1.10",
+            "scl": "P1.14"
+          }
+        },
+        "rate": 400000,
+        "buffer_bytes": 256,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "write-read/repeated-start/0x42"
+      },
+      "measured_role": "b"
+    },
+    {
+      "kind": "twis",
+      "instance": 30,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "serial_link": {
+        "a": {
+          "kind": "twim",
+          "instance": 30,
+          "bank": "p0_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sda": "P0.00",
+            "scl": "P0.01"
+          }
+        },
+        "b": {
+          "kind": "twis",
+          "instance": 30,
+          "bank": "p0_flexible",
+          "profile": "dap_uart_disabled",
+          "pins": {
+            "sda": "P0.00",
+            "scl": "P0.01"
+          }
+        },
+        "rate": 400000,
+        "buffer_bytes": 256,
+        "buffers_per_direction": 2,
+        "guard_bytes_per_end": 16,
+        "mode": "write-read/repeated-start/0x42"
+      },
+      "measured_role": "b"
+    },
+    {
+      "kind": "saadc",
+      "instance": 0,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "configuration": "A internal VDD/AVDD 12bit scan/32samples x2/2ms"
+    },
+    {
+      "kind": "pwm",
+      "instance": 20,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "configuration": "B P1.14→A P1.14; slot0/TOP1000/duty50/individual/32values/loop; A TIMER22 capture"
+    },
+    {
+      "kind": "pwm",
+      "instance": 21,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "configuration": "B P1.14→A P1.14; slot0/TOP1000/duty50/individual/32values/loop; A TIMER22 capture"
+    },
+    {
+      "kind": "pwm",
+      "instance": 22,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "configuration": "B P1.14→A P1.14; slot0/TOP1000/duty50/individual/32values/loop; A TIMER22 capture"
+    },
+    {
+      "kind": "pdm",
+      "instance": 20,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "configuration": "A P1.04 clock/P1.06 data/P1.05 CS; B P1.05 clock/P1.07 data/P1.04 CS;16k/mono/1024samples x4"
+    },
+    {
+      "kind": "pdm",
+      "instance": 21,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "configuration": "A P1.04 clock/P1.06 data/P1.05 CS; B P1.05 clock/P1.07 data/P1.04 CS;16k/mono/1024samples x4"
+    },
+    {
+      "kind": "i2s",
+      "instance": 20,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "configuration": "A master P1.04 SCK/P1.05 LRCK; B slave P1.05 SCK/P1.04 LRCK; TX P1.06/RX P1.07 both;48k/32bit/stereo/256word x3"
+    },
+    {
+      "kind": "qdec",
+      "instance": 20,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "configuration": "B P1.14/P1.10 phases→A same pins;256us sample/2ms step/5ms read/100cycle direction change"
+    },
+    {
+      "kind": "qdec",
+      "instance": 21,
+      "duration_seconds": 180,
+      "harness": "S",
+      "execution_status": "not-run",
+      "configuration": "B P1.14/P1.10 phases→A same pins;256us sample/2ms step/5ms read/100cycle direction change"
+    }
+  ],
+  "topologies": [
+    {
+      "id": "C01",
+      "name": "UART20+UART21+TWI22+UART30",
+      "harness": "S",
+      "duration_seconds": 900,
+      "serial_links": [
+        {
+          "a": {
+            "kind": "uarte",
+            "instance": 20,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "txd": "P1.04",
+              "rxd": "P1.05"
+            }
+          },
+          "b": {
+            "kind": "uarte",
+            "instance": 20,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "rxd": "P1.05",
+              "txd": "P1.04"
+            }
+          },
+          "rate": 1000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "8N1/full-duplex"
+        },
+        {
+          "a": {
+            "kind": "uarte",
+            "instance": 21,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "txd": "P1.06",
+              "rxd": "P1.07"
+            }
+          },
+          "b": {
+            "kind": "uarte",
+            "instance": 21,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "rxd": "P1.07",
+              "txd": "P1.06"
+            }
+          },
+          "rate": 1000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "8N1/full-duplex"
+        },
+        {
+          "a": {
+            "kind": "twim",
+            "instance": 22,
+            "bank": "p1_flexible",
+            "profile": "connector_fixture",
+            "pins": {
+              "sda": "P1.10",
+              "scl": "P1.14"
+            }
+          },
+          "b": {
+            "kind": "twis",
+            "instance": 22,
+            "bank": "p1_flexible",
+            "profile": "connector_fixture",
+            "pins": {
+              "sda": "P1.10",
+              "scl": "P1.14"
+            }
+          },
+          "rate": 400000,
+          "buffer_bytes": 256,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "write-read/repeated-start/0x42"
+        },
+        {
+          "a": {
+            "kind": "uarte",
+            "instance": 30,
+            "bank": "p0_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "txd": "P0.00",
+              "rxd": "P0.01",
+              "rts": "P0.02",
+              "cts": "P0.03"
+            }
+          },
+          "b": {
+            "kind": "uarte",
+            "instance": 30,
+            "bank": "p0_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "rxd": "P0.00",
+              "txd": "P0.01",
+              "cts": "P0.02",
+              "rts": "P0.03"
+            }
+          },
+          "rate": 1000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "8N1/full-duplex"
+        }
+      ],
+      "other_components": [],
+      "execution_status": "not-run",
+      "runner_status": "implementation-required"
+    },
+    {
+      "id": "C02",
+      "name": "SPI20+UART21+UART30",
+      "harness": "S",
+      "duration_seconds": 900,
+      "serial_links": [
+        {
+          "a": {
+            "kind": "spim",
+            "instance": 20,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "sck": "P1.04",
+              "mosi": "P1.06",
+              "miso": "P1.07",
+              "csn": "P1.05"
+            }
+          },
+          "b": {
+            "kind": "spis",
+            "instance": 20,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "sck": "P1.05",
+              "mosi": "P1.07",
+              "miso": "P1.06",
+              "csn": "P1.04"
+            }
+          },
+          "rate": 8000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "mode0/msb/full-duplex"
+        },
+        {
+          "a": {
+            "kind": "uarte",
+            "instance": 21,
+            "bank": "p1_flexible",
+            "profile": "connector_fixture",
+            "pins": {
+              "txd": "P1.14",
+              "rxd": "P1.10"
+            }
+          },
+          "b": {
+            "kind": "uarte",
+            "instance": 21,
+            "bank": "p1_flexible",
+            "profile": "connector_fixture",
+            "pins": {
+              "rxd": "P1.14",
+              "txd": "P1.10"
+            }
+          },
+          "rate": 1000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "8N1/full-duplex"
+        },
+        {
+          "a": {
+            "kind": "uarte",
+            "instance": 30,
+            "bank": "p0_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "txd": "P0.00",
+              "rxd": "P0.01",
+              "rts": "P0.02",
+              "cts": "P0.03"
+            }
+          },
+          "b": {
+            "kind": "uarte",
+            "instance": 30,
+            "bank": "p0_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "rxd": "P0.00",
+              "txd": "P0.01",
+              "cts": "P0.02",
+              "rts": "P0.03"
+            }
+          },
+          "rate": 1000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "8N1/full-duplex"
+        }
+      ],
+      "other_components": [],
+      "execution_status": "not-run",
+      "runner_status": "implementation-required"
+    },
+    {
+      "id": "C03",
+      "name": "UART20+SPI30+TWI22",
+      "harness": "S",
+      "duration_seconds": 900,
+      "serial_links": [
+        {
+          "a": {
+            "kind": "uarte",
+            "instance": 20,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "txd": "P1.04",
+              "rxd": "P1.05"
+            }
+          },
+          "b": {
+            "kind": "uarte",
+            "instance": 20,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "rxd": "P1.05",
+              "txd": "P1.04"
+            }
+          },
+          "rate": 1000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "8N1/full-duplex"
+        },
+        {
+          "a": {
+            "kind": "spim",
+            "instance": 30,
+            "bank": "p0_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "sck": "P0.00",
+              "mosi": "P0.01",
+              "miso": "P0.02",
+              "csn": "P0.03"
+            }
+          },
+          "b": {
+            "kind": "spis",
+            "instance": 30,
+            "bank": "p0_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "sck": "P0.00",
+              "mosi": "P0.01",
+              "miso": "P0.02",
+              "csn": "P0.03"
+            }
+          },
+          "rate": 8000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "mode0/msb/full-duplex"
+        },
+        {
+          "a": {
+            "kind": "twim",
+            "instance": 22,
+            "bank": "p1_flexible",
+            "profile": "connector_fixture",
+            "pins": {
+              "sda": "P1.10",
+              "scl": "P1.14"
+            }
+          },
+          "b": {
+            "kind": "twis",
+            "instance": 22,
+            "bank": "p1_flexible",
+            "profile": "connector_fixture",
+            "pins": {
+              "sda": "P1.10",
+              "scl": "P1.14"
+            }
+          },
+          "rate": 400000,
+          "buffer_bytes": 256,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "write-read/repeated-start/0x42"
+        }
+      ],
+      "other_components": [],
+      "execution_status": "not-run",
+      "runner_status": "implementation-required"
+    },
+    {
+      "id": "C04",
+      "name": "SPI20+TWI21+TWI30",
+      "harness": "S",
+      "duration_seconds": 900,
+      "serial_links": [
+        {
+          "a": {
+            "kind": "spim",
+            "instance": 20,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "sck": "P1.04",
+              "mosi": "P1.06",
+              "miso": "P1.07",
+              "csn": "P1.05"
+            }
+          },
+          "b": {
+            "kind": "spis",
+            "instance": 20,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "sck": "P1.05",
+              "mosi": "P1.07",
+              "miso": "P1.06",
+              "csn": "P1.04"
+            }
+          },
+          "rate": 8000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "mode0/msb/full-duplex"
+        },
+        {
+          "a": {
+            "kind": "twim",
+            "instance": 21,
+            "bank": "p1_flexible",
+            "profile": "connector_fixture",
+            "pins": {
+              "sda": "P1.10",
+              "scl": "P1.14"
+            }
+          },
+          "b": {
+            "kind": "twis",
+            "instance": 21,
+            "bank": "p1_flexible",
+            "profile": "connector_fixture",
+            "pins": {
+              "sda": "P1.10",
+              "scl": "P1.14"
+            }
+          },
+          "rate": 400000,
+          "buffer_bytes": 256,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "write-read/repeated-start/0x42"
+        },
+        {
+          "a": {
+            "kind": "twim",
+            "instance": 30,
+            "bank": "p0_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "sda": "P0.00",
+              "scl": "P0.01"
+            }
+          },
+          "b": {
+            "kind": "twis",
+            "instance": 30,
+            "bank": "p0_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "sda": "P0.00",
+              "scl": "P0.01"
+            }
+          },
+          "rate": 400000,
+          "buffer_bytes": 256,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "write-read/repeated-start/0x42"
+        }
+      ],
+      "other_components": [],
+      "execution_status": "not-run",
+      "runner_status": "implementation-required"
+    },
+    {
+      "id": "C05",
+      "name": "SPI00+UART20+UART21+TWI22+UART30",
+      "harness": "S",
+      "duration_seconds": 3600,
+      "serial_links": [
+        {
+          "a": {
+            "kind": "spim",
+            "instance": 0,
+            "bank": "p2_dedicated20",
+            "profile": "connector_fixture",
+            "pins": {
+              "sck": "P2.01",
+              "mosi": "P2.02",
+              "miso": "P2.04",
+              "csn": "P2.05"
+            }
+          },
+          "b": {
+            "kind": "spis",
+            "instance": 0,
+            "bank": "p2_dedicated20",
+            "profile": "connector_fixture",
+            "pins": {
+              "sck": "P2.01",
+              "mosi": "P2.04",
+              "miso": "P2.02",
+              "csn": "P2.05"
+            }
+          },
+          "rate": 8000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "mode0/msb/full-duplex"
+        },
+        {
+          "a": {
+            "kind": "uarte",
+            "instance": 20,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "txd": "P1.04",
+              "rxd": "P1.05"
+            }
+          },
+          "b": {
+            "kind": "uarte",
+            "instance": 20,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "rxd": "P1.05",
+              "txd": "P1.04"
+            }
+          },
+          "rate": 1000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "8N1/full-duplex"
+        },
+        {
+          "a": {
+            "kind": "uarte",
+            "instance": 21,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "txd": "P1.06",
+              "rxd": "P1.07"
+            }
+          },
+          "b": {
+            "kind": "uarte",
+            "instance": 21,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "rxd": "P1.07",
+              "txd": "P1.06"
+            }
+          },
+          "rate": 1000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "8N1/full-duplex"
+        },
+        {
+          "a": {
+            "kind": "twim",
+            "instance": 22,
+            "bank": "p1_flexible",
+            "profile": "connector_fixture",
+            "pins": {
+              "sda": "P1.10",
+              "scl": "P1.14"
+            }
+          },
+          "b": {
+            "kind": "twis",
+            "instance": 22,
+            "bank": "p1_flexible",
+            "profile": "connector_fixture",
+            "pins": {
+              "sda": "P1.10",
+              "scl": "P1.14"
+            }
+          },
+          "rate": 400000,
+          "buffer_bytes": 256,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "write-read/repeated-start/0x42"
+        },
+        {
+          "a": {
+            "kind": "uarte",
+            "instance": 30,
+            "bank": "p0_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "txd": "P0.00",
+              "rxd": "P0.01",
+              "rts": "P0.02",
+              "cts": "P0.03"
+            }
+          },
+          "b": {
+            "kind": "uarte",
+            "instance": 30,
+            "bank": "p0_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "rxd": "P0.00",
+              "txd": "P0.01",
+              "cts": "P0.02",
+              "rts": "P0.03"
+            }
+          },
+          "rate": 1000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "8N1/full-duplex"
+        }
+      ],
+      "other_components": [],
+      "execution_status": "not-run",
+      "runner_status": "implementation-required"
+    },
+    {
+      "id": "C06",
+      "name": "I2S20+PWM20+SAADC+UART30",
+      "harness": "S",
+      "duration_seconds": 900,
+      "serial_links": [
+        {
+          "a": {
+            "kind": "uarte",
+            "instance": 30,
+            "bank": "p0_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "txd": "P0.00",
+              "rxd": "P0.01",
+              "rts": "P0.02",
+              "cts": "P0.03"
+            }
+          },
+          "b": {
+            "kind": "uarte",
+            "instance": 30,
+            "bank": "p0_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "rxd": "P0.00",
+              "txd": "P0.01",
+              "cts": "P0.02",
+              "rts": "P0.03"
+            }
+          },
+          "rate": 1000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "8N1/full-duplex"
+        }
+      ],
+      "other_components": [
+        {
+          "name": "I2S20",
+          "a_pins": [
+            "P1.04",
+            "P1.05",
+            "P1.06",
+            "P1.07"
+          ],
+          "b_pins": [
+            "P1.05",
+            "P1.04",
+            "P1.07",
+            "P1.06"
+          ],
+          "a_resources": [
+            "i2s20"
+          ],
+          "b_resources": [
+            "i2s20"
+          ],
+          "configuration": "A master SCK=P1.04 LRCK=P1.05 TX=P1.06 RX=P1.07; B slave SCK=P1.05 LRCK=P1.04 TX=P1.06 RX=P1.07; 48kHz/32bit/stereo/256word/3slot"
+        },
+        {
+          "name": "PWM20 peer capture",
+          "a_pins": [
+            "P1.14"
+          ],
+          "b_pins": [
+            "P1.14"
+          ],
+          "a_resources": [
+            "gpiote20:0",
+            "dppi20:0",
+            "timer22"
+          ],
+          "b_resources": [
+            "pwm20"
+          ],
+          "configuration": "B TOP1000/duty50/individual/32values/loop; A continuous edge count+timestamp"
+        },
+        {
+          "name": "SAADC",
+          "a_pins": [],
+          "b_pins": [],
+          "a_resources": [
+            "saadc"
+          ],
+          "b_resources": [],
+          "configuration": "A internal VDD/AVDD scan 12bit 32samples x2 buffers; 2ms SAMPLE"
+        }
+      ],
+      "execution_status": "not-run",
+      "runner_status": "implementation-required"
+    },
+    {
+      "id": "C07",
+      "name": "QDEC20+UART20+UART21+UART30+SAADC",
+      "harness": "S",
+      "duration_seconds": 900,
+      "serial_links": [
+        {
+          "a": {
+            "kind": "uarte",
+            "instance": 20,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "txd": "P1.04",
+              "rxd": "P1.05"
+            }
+          },
+          "b": {
+            "kind": "uarte",
+            "instance": 20,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "rxd": "P1.05",
+              "txd": "P1.04"
+            }
+          },
+          "rate": 1000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "8N1/full-duplex"
+        },
+        {
+          "a": {
+            "kind": "uarte",
+            "instance": 21,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "txd": "P1.06",
+              "rxd": "P1.07"
+            }
+          },
+          "b": {
+            "kind": "uarte",
+            "instance": 21,
+            "bank": "p1_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "rxd": "P1.07",
+              "txd": "P1.06"
+            }
+          },
+          "rate": 1000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "8N1/full-duplex"
+        },
+        {
+          "a": {
+            "kind": "uarte",
+            "instance": 30,
+            "bank": "p0_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "txd": "P0.00",
+              "rxd": "P0.01",
+              "rts": "P0.02",
+              "cts": "P0.03"
+            }
+          },
+          "b": {
+            "kind": "uarte",
+            "instance": 30,
+            "bank": "p0_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "rxd": "P0.00",
+              "txd": "P0.01",
+              "cts": "P0.02",
+              "rts": "P0.03"
+            }
+          },
+          "rate": 1000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "8N1/full-duplex"
+        }
+      ],
+      "other_components": [
+        {
+          "name": "QDEC20",
+          "a_pins": [
+            "P1.14",
+            "P1.10"
+          ],
+          "b_pins": [
+            "P1.14",
+            "P1.10"
+          ],
+          "a_resources": [
+            "qdec20"
+          ],
+          "b_resources": [
+            "cpu-phase-source"
+          ],
+          "configuration": "B 2ms/step continuously forward/reverse 100cycles; A 256us sample, 5ms hardware read"
+        },
+        {
+          "name": "SAADC",
+          "a_pins": [],
+          "b_pins": [],
+          "a_resources": [
+            "saadc"
+          ],
+          "b_resources": [],
+          "configuration": "A internal VDD 12bit/32samples x2; 2ms SAMPLE"
+        }
+      ],
+      "execution_status": "not-run",
+      "runner_status": "implementation-required"
+    },
+    {
+      "id": "C08",
+      "name": "PDM20+PWM21+SAADC+UART30",
+      "harness": "S",
+      "duration_seconds": 900,
+      "serial_links": [
+        {
+          "a": {
+            "kind": "uarte",
+            "instance": 30,
+            "bank": "p0_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "txd": "P0.00",
+              "rxd": "P0.01",
+              "rts": "P0.02",
+              "cts": "P0.03"
+            }
+          },
+          "b": {
+            "kind": "uarte",
+            "instance": 30,
+            "bank": "p0_flexible",
+            "profile": "dap_uart_disabled",
+            "pins": {
+              "rxd": "P0.00",
+              "txd": "P0.01",
+              "cts": "P0.02",
+              "rts": "P0.03"
+            }
+          },
+          "rate": 1000000,
+          "buffer_bytes": 1024,
+          "buffers_per_direction": 2,
+          "guard_bytes_per_end": 16,
+          "mode": "8N1/full-duplex"
+        }
+      ],
+      "other_components": [
+        {
+          "name": "PDM20 mono source",
+          "a_pins": [
+            "P1.04",
+            "P1.05",
+            "P1.06"
+          ],
+          "b_pins": [
+            "P1.05",
+            "P1.04",
+            "P1.07",
+            "P1.06"
+          ],
+          "a_resources": [
+            "pdm20",
+            "gpio-cs"
+          ],
+          "b_resources": [
+            "serial21"
+          ],
+          "configuration": "A PDM CLK=P1.04 DATA=P1.06 CS=P1.05; B SPIS21 SCK=P1.05 MISO=P1.07 CS=P1.04 MOSI=P1.06 input;16kHz/mono/1024samples x4/50percent source"
+        },
+        {
+          "name": "PWM21 peer capture",
+          "a_pins": [
+            "P1.14"
+          ],
+          "b_pins": [
+            "P1.14"
+          ],
+          "a_resources": [
+            "gpiote20:0",
+            "dppi20:0",
+            "timer22"
+          ],
+          "b_resources": [
+            "pwm21"
+          ],
+          "configuration": "B TOP1000/duty25/individual/32values/loop; A continuous edge count+timestamp"
+        },
+        {
+          "name": "SAADC",
+          "a_pins": [],
+          "b_pins": [],
+          "a_resources": [
+            "saadc"
+          ],
+          "b_resources": [],
+          "configuration": "A internal VDD 12bit/32samples x2; 2ms SAMPLE"
+        }
+      ],
+      "execution_status": "not-run",
+      "runner_status": "implementation-required"
+    }
+  ],
+  "recovery_repetitions": 100,
+  "handover_repetitions": 100,
+  "unexpected_loss_allowed": 0,
+  "unexpected_reset_allowed": 0,
+  "guard_bytes": 16,
+  "continuous_measurement_minutes_sequential": 261,
+  "manual_boundaries": [
+    "C→S with both USB disconnected; confirm exact GPIO and DAP switches anew",
+    "S→U with both USB disconnected; fresh wiring check",
+    "System OFF fixture isolation/reconnect remains separate"
+  ],
+  "not_covered": [
+    "all pairwise resource/peripheral combinations",
+    "all UART ports with simultaneous hardware flow control",
+    "unsupported P2 dedicated21 bank",
+    "T13 physical execution",
+    "RC or release"
+  ]
+}

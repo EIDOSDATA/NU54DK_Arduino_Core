@@ -15,6 +15,7 @@ HIL = ROOT / "tests/hil/nu54dk"
 sys.path.insert(0, str(HIL))
 import v04_protocol as protocol
 import v04_pair as runner
+import m24_uarte_onboard as onboard
 
 
 class FakeTarget:
@@ -37,6 +38,48 @@ class FakeTarget:
 
 class V04PairTests(unittest.TestCase):
     nonce = bytes(range(16))
+
+    def test_single_packet_flash_preserves_exact_controlled_command(self):
+        """! @brief USB 옵션 하나 외에 UID·속도·sector·잠금 금지 계약이 같은지 검사합니다. """
+        args = (Path('pyocd.exe'), 'a' * 32, Path('candidate.hex'), 10000000)
+        default = onboard.pyocd_command(*args)
+        limited = onboard.pyocd_command(*args, cmsis_dap_limit_packets=True)
+        self.assertEqual(limited, default[:-1] + ['-O', 'cmsis_dap.limit_packets=true', default[-1]])
+        self.assertIn('auto_unlock=false', limited)
+        self.assertIn('resume_on_disconnect=false', limited)
+        self.assertEqual(limited[limited.index('--erase') + 1], 'sector')
+        self.assertEqual(limited[limited.index('--frequency') + 1], '10000000')
+        self.assertEqual(limited[limited.index('--uid') + 1], 'a' * 32)
+        self.assertIn('--no-config', limited)
+        self.assertIn('--no-reset', limited)
+        with self.assertRaises(onboard.UarteHilFailure):
+            onboard.pyocd_command(*args, cmsis_dap_limit_packets='false')
+
+    def test_single_packet_option_reaches_flash_and_control_session(self):
+        """! @brief flash와 mailbox 모두 같은 명시적 USB 설정을 받고 controlled start를 유지합니다. """
+        image = {'path': Path('candidate.hex'), 'elf': Path('candidate.elf'),
+                 'sha256': 'hex', 'elf_sha256': 'elf', 'role': 2, 'core_revision': 'b' * 40,
+                 'symbols': {'v04_request': 64, 'v04_response': 192, 'v04_identity': 320}}
+        session = MagicMock()
+        session.target.get_state.return_value.name = 'HALTED'
+        session.target.read32.side_effect = lambda address: 0x411FD210 if address == 0xE000ED00 else protocol.MAGIC
+        session.target.read_memory_block8.return_value = struct.pack('<4I', protocol.MAGIC, 1, 2, 0) + b'b' * 40 + bytes(8)
+        helper = Mock()
+        helper.session_with_chosen_probe.return_value = session
+        with patch.object(runner, 'sha256_file', side_effect=lambda path: path.suffix[1:]), \
+             patch.object(runner, 'flash_image', return_value={}) as flash, ExitStack() as stack:
+            runner.boot_exact(stack, helper, Path('pyocd.exe'), 'b' * 32, image, 10000000,
+                              cmsis_dap_limit_packets=True)
+        flash.assert_called_once_with(Path('pyocd.exe'), 'b' * 32, Path('candidate.hex'), 120,
+                                      10000000, cmsis_dap_limit_packets=True)
+        call = helper.session_with_chosen_probe.call_args.kwargs
+        self.assertEqual(call['unique_id'], 'b' * 32)
+        self.assertEqual(call['frequency'], 10000000)
+        self.assertTrue(call['no_config'])
+        self.assertEqual(call['options'], {'auto_unlock': False, 'connect_mode': 'attach',
+                                          'resume_on_disconnect': False, 'cmsis_dap.limit_packets': True})
+        session.target.reset_and_halt.assert_called_once()
+        session.target.resume.assert_called_once()
 
     def test_boot_checks_images_and_clears_only_mailbox_markers_before_resume(self):
         image = {"path": Path("candidate.hex"), "elf": Path("candidate.elf"),

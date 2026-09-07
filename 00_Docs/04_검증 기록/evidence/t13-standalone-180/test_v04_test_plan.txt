@@ -1,0 +1,15 @@
+test_duplicate_json_key_rejected (test_v04_test_plan.V04TestPlanTests.test_duplicate_json_key_rejected) ... ok
+test_empty_criteria_and_bad_reuse_path_rejected (test_v04_test_plan.V04TestPlanTests.test_empty_criteria_and_bad_reuse_path_rejected) ... ok
+test_exact_inventory_and_generated_document (test_v04_test_plan.V04TestPlanTests.test_exact_inventory_and_generated_document) ... ok
+test_instance_omission_rejected (test_v04_test_plan.V04TestPlanTests.test_instance_omission_rejected) ... ok
+test_inventory_gate_calls_preparation_validator (test_v04_test_plan.V04TestPlanTests.test_inventory_gate_calls_preparation_validator) ... ok
+test_missing_or_duplicate_case_rejected (test_v04_test_plan.V04TestPlanTests.test_missing_or_duplicate_case_rejected) ... ok
+test_passing_plan_or_result_field_rejected (test_v04_test_plan.V04TestPlanTests.test_passing_plan_or_result_field_rejected) ... ok
+test_qdec_not_dma (test_v04_test_plan.V04TestPlanTests.test_qdec_not_dma) ... ok
+test_unknown_erratum_rejected (test_v04_test_plan.V04TestPlanTests.test_unknown_erratum_rejected) ... ok
+test_zero_timeout_and_loss_allowance_rejected (test_v04_test_plan.V04TestPlanTests.test_zero_timeout_and_loss_allowance_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.038s
+
+OK

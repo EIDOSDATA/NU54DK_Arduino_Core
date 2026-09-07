@@ -1,0 +1,494 @@
+{
+  "conclusion": "success",
+  "headSha": "f42bda55f7b45f7af0a347ecf5f1f516bb34eb6a",
+  "jobs": [
+    {
+      "completedAt": "2026-09-07T07:36:00Z",
+      "conclusion": "success",
+      "databaseId": 101660385705,
+      "name": "UTF-8 and local links",
+      "startedAt": "2026-09-07T07:35:42Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-09-07T07:35:44Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-09-07T07:35:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:48Z",
+          "conclusion": "success",
+          "name": "Checkout exact source and board package",
+          "number": 2,
+          "startedAt": "2026-09-07T07:35:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:57Z",
+          "conclusion": "success",
+          "name": "Set up Python 3.12.10",
+          "number": 3,
+          "startedAt": "2026-09-07T07:35:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:58Z",
+          "conclusion": "success",
+          "name": "Check tracked Markdown",
+          "number": 4,
+          "startedAt": "2026-09-07T07:35:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:58Z",
+          "conclusion": "success",
+          "name": "Post Set up Python 3.12.10",
+          "number": 7,
+          "startedAt": "2026-09-07T07:35:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:58Z",
+          "conclusion": "success",
+          "name": "Post Checkout exact source and board package",
+          "number": 8,
+          "startedAt": "2026-09-07T07:35:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:58Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 9,
+          "startedAt": "2026-09-07T07:35:58Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227435/job/101660385705"
+    },
+    {
+      "completedAt": "2026-09-07T07:36:43Z",
+      "conclusion": "success",
+      "databaseId": 101660385835,
+      "name": "Reproducible Boards Manager package",
+      "startedAt": "2026-09-07T07:36:19Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-09-07T07:36:20Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-09-07T07:36:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:26Z",
+          "conclusion": "success",
+          "name": "Checkout exact source and board package",
+          "number": 2,
+          "startedAt": "2026-09-07T07:36:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:35Z",
+          "conclusion": "success",
+          "name": "Set up Python 3.12.10",
+          "number": 3,
+          "startedAt": "2026-09-07T07:36:26Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:40Z",
+          "conclusion": "success",
+          "name": "Build and validate reproducible packages",
+          "number": 4,
+          "startedAt": "2026-09-07T07:36:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:41Z",
+          "conclusion": "success",
+          "name": "Post Set up Python 3.12.10",
+          "number": 7,
+          "startedAt": "2026-09-07T07:36:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:41Z",
+          "conclusion": "success",
+          "name": "Post Checkout exact source and board package",
+          "number": 8,
+          "startedAt": "2026-09-07T07:36:41Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:41Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 9,
+          "startedAt": "2026-09-07T07:36:41Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227435/job/101660385835"
+    },
+    {
+      "completedAt": "2026-09-07T07:36:01Z",
+      "conclusion": "success",
+      "databaseId": 101660385853,
+      "name": "M23 inventory and M24 serial-fabric contract",
+      "startedAt": "2026-09-07T07:35:42Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-09-07T07:35:43Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-09-07T07:35:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:48Z",
+          "conclusion": "success",
+          "name": "Checkout exact source and board package",
+          "number": 2,
+          "startedAt": "2026-09-07T07:35:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:58Z",
+          "conclusion": "success",
+          "name": "Set up Python 3.12.10",
+          "number": 3,
+          "startedAt": "2026-09-07T07:35:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:58Z",
+          "conclusion": "success",
+          "name": "Verify exhaustive manifest, route and API contracts",
+          "number": 4,
+          "startedAt": "2026-09-07T07:35:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:59Z",
+          "conclusion": "success",
+          "name": "Post Set up Python 3.12.10",
+          "number": 7,
+          "startedAt": "2026-09-07T07:35:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:59Z",
+          "conclusion": "success",
+          "name": "Post Checkout exact source and board package",
+          "number": 8,
+          "startedAt": "2026-09-07T07:35:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:59Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 9,
+          "startedAt": "2026-09-07T07:35:59Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227435/job/101660385853"
+    },
+    {
+      "completedAt": "2026-09-07T07:36:02Z",
+      "conclusion": "success",
+      "databaseId": 101660385863,
+      "name": "CI contract",
+      "startedAt": "2026-09-07T07:35:43Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-09-07T07:35:44Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-09-07T07:35:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:50Z",
+          "conclusion": "success",
+          "name": "Checkout exact source and board package",
+          "number": 2,
+          "startedAt": "2026-09-07T07:35:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:59Z",
+          "conclusion": "success",
+          "name": "Set up Python 3.12.10",
+          "number": 3,
+          "startedAt": "2026-09-07T07:35:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:00Z",
+          "conclusion": "success",
+          "name": "Verify CI lock and workflow boundaries",
+          "number": 4,
+          "startedAt": "2026-09-07T07:35:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:00Z",
+          "conclusion": "success",
+          "name": "Post Set up Python 3.12.10",
+          "number": 7,
+          "startedAt": "2026-09-07T07:36:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:00Z",
+          "conclusion": "success",
+          "name": "Post Checkout exact source and board package",
+          "number": 8,
+          "startedAt": "2026-09-07T07:36:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:00Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 9,
+          "startedAt": "2026-09-07T07:36:00Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227435/job/101660385863"
+    },
+    {
+      "completedAt": "2026-09-07T07:36:38Z",
+      "conclusion": "success",
+      "databaseId": 101660385883,
+      "name": "Arduino example discovery",
+      "startedAt": "2026-09-07T07:36:18Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-09-07T07:36:19Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-09-07T07:36:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:24Z",
+          "conclusion": "success",
+          "name": "Checkout exact source and board package",
+          "number": 2,
+          "startedAt": "2026-09-07T07:36:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:32Z",
+          "conclusion": "success",
+          "name": "Set up Python 3.12.10",
+          "number": 3,
+          "startedAt": "2026-09-07T07:36:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:33Z",
+          "conclusion": "success",
+          "name": "Set up Arduino CLI 1.5.1",
+          "number": 4,
+          "startedAt": "2026-09-07T07:36:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:36Z",
+          "conclusion": "success",
+          "name": "Discover packaged library examples",
+          "number": 5,
+          "startedAt": "2026-09-07T07:36:33Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:36Z",
+          "conclusion": "success",
+          "name": "Post Set up Python 3.12.10",
+          "number": 9,
+          "startedAt": "2026-09-07T07:36:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:37Z",
+          "conclusion": "success",
+          "name": "Post Checkout exact source and board package",
+          "number": 10,
+          "startedAt": "2026-09-07T07:36:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:37Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 11,
+          "startedAt": "2026-09-07T07:36:37Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227435/job/101660385883"
+    },
+    {
+      "completedAt": "2026-09-07T07:38:30Z",
+      "conclusion": "success",
+      "databaseId": 101660385900,
+      "name": "Host unit with Windows PowerShell contracts",
+      "startedAt": "2026-09-07T07:35:42Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-09-07T07:35:43Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-09-07T07:35:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:01Z",
+          "conclusion": "success",
+          "name": "Checkout exact source and board package",
+          "number": 2,
+          "startedAt": "2026-09-07T07:35:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:01Z",
+          "conclusion": "success",
+          "name": "Set up Python 3.12.10",
+          "number": 3,
+          "startedAt": "2026-09-07T07:36:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:14Z",
+          "conclusion": "success",
+          "name": "Install exact host test dependencies",
+          "number": 4,
+          "startedAt": "2026-09-07T07:36:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:26Z",
+          "conclusion": "success",
+          "name": "Run host unit tests",
+          "number": 5,
+          "startedAt": "2026-09-07T07:36:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:26Z",
+          "conclusion": "success",
+          "name": "Post Set up Python 3.12.10",
+          "number": 9,
+          "startedAt": "2026-09-07T07:38:26Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:28Z",
+          "conclusion": "success",
+          "name": "Post Checkout exact source and board package",
+          "number": 10,
+          "startedAt": "2026-09-07T07:38:26Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:28Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 11,
+          "startedAt": "2026-09-07T07:38:28Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227435/job/101660385900"
+    },
+    {
+      "completedAt": "2026-09-07T07:36:01Z",
+      "conclusion": "success",
+      "databaseId": 101660386252,
+      "name": "M14 Core native semantic runtime",
+      "startedAt": "2026-09-07T07:35:43Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-09-07T07:35:44Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-09-07T07:35:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:49Z",
+          "conclusion": "success",
+          "name": "Checkout exact source and board package",
+          "number": 2,
+          "startedAt": "2026-09-07T07:35:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:58Z",
+          "conclusion": "success",
+          "name": "Set up Python 3.12.10",
+          "number": 3,
+          "startedAt": "2026-09-07T07:35:49Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:59Z",
+          "conclusion": "success",
+          "name": "Execute M14 native Core semantics",
+          "number": 4,
+          "startedAt": "2026-09-07T07:35:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:59Z",
+          "conclusion": "success",
+          "name": "Post Set up Python 3.12.10",
+          "number": 7,
+          "startedAt": "2026-09-07T07:35:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:00Z",
+          "conclusion": "success",
+          "name": "Post Checkout exact source and board package",
+          "number": 8,
+          "startedAt": "2026-09-07T07:35:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:00Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 9,
+          "startedAt": "2026-09-07T07:36:00Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227435/job/101660386252"
+    }
+  ],
+  "status": "completed",
+  "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227435",
+  "observed_at_utc": "2026-09-07T08:05:56.778353+00:00"
+}

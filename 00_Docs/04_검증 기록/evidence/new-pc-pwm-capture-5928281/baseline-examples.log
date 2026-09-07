@@ -1,0 +1,5 @@
+[M12] exec: C:\Users\eidos\GitHub\NU54DK_Arduino_Core\.venv\Scripts\python.exe C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\arduino-cli\run_smoke.py --cli "C:\Program Files\Arduino CLI\arduino-cli.exe" --tests examples
+SMOKE_TEST_START=custom/examples
+PASS: examples
+ARDUINO_SMOKE_GROUP_PASS=custom;TESTS=1
+M12_GATE_PASS=examples

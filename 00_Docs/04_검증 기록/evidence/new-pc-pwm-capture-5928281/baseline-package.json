@@ -1,0 +1,13 @@
+{
+  "name": "baseline-package",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+    "package"
+  ],
+  "started_at": "2026-09-07T07:49:08.904432+00:00",
+  "finished_at": "2026-09-07T07:50:51.069051+00:00",
+  "exit_code": 0,
+  "log_sha256": "a928bac69e2cbea440e6ee214e142fa24883ba0dad44b7122c869915584c1f12"
+}

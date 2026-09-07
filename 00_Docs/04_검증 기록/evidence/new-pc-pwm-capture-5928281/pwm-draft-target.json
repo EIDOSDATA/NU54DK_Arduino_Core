@@ -1,0 +1,24 @@
+{
+  "name": "pwm-draft-target",
+  "command": [
+    "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_zephyr_build.py",
+    "--workspace",
+    "C:\\ncs\\v3.4.0",
+    "--outdir",
+    "C:\\pwm04",
+    "--group",
+    "v0.4.0",
+    "--suite",
+    "nucode.v04.pair_dut",
+    "--suite",
+    "nucode.v04.pair_peer",
+    "--jobs",
+    "2"
+  ],
+  "started_at": "2026-09-07T08:01:13.628970+00:00",
+  "finished_at": "2026-09-07T08:02:44.602774+00:00",
+  "exit_code": 1,
+  "log_sha256": "46a9231d00f47ba181a8814e11473b76314baca4af2c81bced25a029e839e915"
+}

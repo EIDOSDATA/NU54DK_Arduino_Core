@@ -1,0 +1,43 @@
+{
+  "observed_at_utc": "2026-09-07T11:24:08.511354+00:00",
+  "runs": [
+    {
+      "core_revision": "8c1cfe27551b46fab101a75de61f502899d0d95c",
+      "workflows": [
+        {
+          "conclusion": "success",
+          "databaseId": 34114413580,
+          "status": "completed",
+          "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34114413580",
+          "workflowName": "M12 Software Gates"
+        },
+        {
+          "conclusion": "cancelled",
+          "databaseId": 34114413599,
+          "status": "completed",
+          "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34114413599",
+          "workflowName": "M12 Reproducible Builds"
+        }
+      ]
+    },
+    {
+      "core_revision": "d8d1e135cfc96c1608c55c81b4f111963f56c10a",
+      "workflows": [
+        {
+          "conclusion": "",
+          "databaseId": 34114830182,
+          "status": "in_progress",
+          "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34114830182",
+          "workflowName": "M12 Reproducible Builds"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 34114830062,
+          "status": "completed",
+          "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34114830062",
+          "workflowName": "M12 Software Gates"
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # NU54DK HIL 시험
 
+공통 결선 최신 상태: [Fixture 501 안내](COMMON_WIRING.md)의 exact d8d1e13 재검사에서 P1.10 포함 102 net-round·자동 해제 3개를 통과했고 양쪽 출력을 해제했다. 첫 8c1cfe2 실패는 보존한다. [99번](<../../../00_Docs/04_검증 기록/99_공통_결선_검사와_승인_전_자동_진행_계획.md>)에서 원본·범위와 단독 180초·동시 900초·전체 대표 한 조합 3600초 기준을 관리한다. GPIO API·T12 전체 완료는 아니며 아래 무결선 상태는 이전 94·95번 당시 기록이다.
+
 현재 개발 검증(2026-09-07): [94번](<../../../00_Docs/04_검증 기록/94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>)에서 PWM 미시작 STOP 수정·두 보드 회귀와 전체 software/설치 예제 검증을 완료했다. [95번](<../../../00_Docs/04_검증 기록/95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)의 내부 ADC·TIMER·이벤트·시간 함수와 PWM 회귀도 두 보드 1,808명령 PASS다. 보드 간 결선은 해제됐으며 T12 전체·T13 이후와 RC/공개는 미완료다. 아래 source별 이력의 당시 상태와 현재 재개 조건을 구별한다.
 
 이 디렉터리는 NU54DK 실물 보드가 필요한 host-side 시험만 관리합니다. 일반 host unit test나
@@ -7,6 +9,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 
 | 파일 | 역할 | 주요 fixture |
 | --- | --- | --- |
+| `v04_wiring_run.py` / `v04_wiring.py` | 고정 17신호의 양방향 LOW/해제 102회와 pulse/lease 자동 해제 | Fixture 501, 새 확인서·SWD 10 MHz, GPIO API PASS와 구별 |
 | `v04_nojumper.py` | PWM·내부 ADC·TIMER·EGU/DPPI/PPIB·시간 함수의 exact SWD 명령/판정 | 두 지정 보드 USB/SWD, 보드 간 결선 해제, 94·95번 |
 | `m6_serial_echo.py` | pyOCD flash 후 UART READY·echo 검증 | NU54DK, CMSIS-DAP V2 UART |
 | `m7_i2c_pmic.py` | BQ25186 고정 ID register의 읽기 전용 I2C 검증 | 보드 내장 PMIC |
@@ -33,6 +36,58 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `../../host/test_m21_ble_security_hil.py` | M21 persistence·old-key·RF nonce binding·profile parser 경계를 검증 | 없음 |
 
 ## 실행 원칙
+
+### T12 PWM peer capture 첫 경로 준비
+
+`v04_signal_run.py --fixture 408 --pwm-capture --swd-frequency-hz 10000000`는
+기존 408 결선 **B GPIO P1.14 → A GPIO P1.14, GND ↔ GND**를 사용하는 별도 측정 모드다.
+현재 준비 범위는 PWM20/21/22 × slot 0~3 × TOP 1000/4000 × duty 0/25/50/75/100% ×
+DMA word bit15 극성 두 가지의 240 vector다. Individual load·4 values·CPU start·loop로 실행한다.
+이 준비는 물리 PASS가 아니며 common/grouped/wave-form, 길이 32/256, sequence0/1 순서·유한
+end/repeat, DPPI START, triggered-step과 pin idle inversion은 후속 범위다.
+
+A는 GPIOTE20 channel 0 → DPPI20 channel 0 → TIMER22 CC0(1 MHz)로 에지 시각을 캡처한다.
+CPU polling은 이벤트/CC/level을 수집하며 timestamp를 생성하지 않는다. 각 비정적 case의
+201개 에지로 100주기와 각각의 HIGH 비율을 독립 판정한다. 주기는 목표의 ±5%, duty는 목표
+비율의 상대 ±5%다. 0/100%는 에지 없음과 100주기 길이의 정적 level을 확인한다. 누락·중복·
+역순·극성·개별 오차·guard 실패를 평균으로 숨기지 않는다. 실제 clock 교정·jitter 보증은 아니다.
+
+첫 측정의 안전 경계는 기존 exact source/board/image·현재 UID·배타 probe lock·sector flash·
+`auto_unlock=false`·controlled start와 30분 이내 결선 확인을 그대로 사용한다. 새 모드는
+SWD 10 MHz와 유한 campaign만 허용한다. 기본 CLI는 preflight-only이며 `--execute-fixture`와
+현재 confirmation 없이는 probe를 열지 않는다. 원본 status/에지를 판정 전에 journal에 남기고,
+중간 측정 실패도 partial raw를 보존한다. 종료는 B 출력 STOP→A capture 자원 반환 순서다.
+
+새 PC에서는 USB/probe를 다시 열거해 A/B 역할을 확인한 뒤 두 USB 분리→위 GPIO 결선→재연결을
+안내한다. 두 DAP UART 분리·SWD 연결, 동일 I/O 전압·공통 GND·전원 레일 비연결과 현재 결선
+완료를 사용자에게 확인받는다. 이전 COM/결선 확인·이 문단 자체를 실행 승인으로 재사용하지 않는다.
+Mailbox 40/41/42/43/44/45/46은 각각 arm/prepare/start/capture/raw/stop/status다. capture의
+transport 성공과 물리 측정 성공은 별도이며 status/error와 Host oracle 모두 통과해야 한다.
+
+`--cmsis-dap-limit-packets`는 flash와 이후 SWD session의 USB 동시 명령을 1개로 제한하는
+명시적 진단 옵션이다. 기본은 기존 설정이며 SWD 주파수·sector erase·exact UID·controlled
+start·`auto_unlock=false`·확인/lock 계약은 유지한다. [pyOCD 공식 옵션](https://pyocd.io/docs/options.html)의
+`cmsis_dap.limit_packets`를 사용하고 SDK/driver를 수정하지 않는다. 읽기 성공만으로 flash
+timeout 원인을 확정하지 않으며 옵션·최초 실패·후속 결과를 evidence에 각각 기록한다.
+
+### T12 PWM load·DMA 길이 확장 준비
+
+`--pwm-capture --pwm-load common|grouped|individual|wave-form`은 선택한 load 한 개에서
+4/32/256 values를 각각 검사한다. Common/grouped/individual은 각 720조건이고 WaveForm은
+slot 0~2의 540조건이다. WaveForm의 네 번째 word는 출력 slot 3이 아닌 RAM TOP이다.
+이 모드에서는 register TOP을 반대 값(1000↔4000)으로 두어 RAM TOP 사용을 실제 period로
+구별한다. 나머지 load에서는 선택한 decoder lane과 다른 lane의 duty를 다르게 넣어 매핑을 검사한다.
+
+기존 `--pwm-capture`만 지정하면 240조건 첫 경로를 유지한다. 그 실기는 [97번](<../../../00_Docs/04_검증 기록/97_T12_PWM_peer_capture_첫_240조건_검증.md>)에
+고정되어 있으며 새로운 load/길이 시험의 PASS로 재사용하지 않는다. Opcode 41은 기존 5개 인자
+또는 load ID(0/1/2/3)·value count를 덧붙인 7개 인자만 받는다. 그 밖의 길이·WaveForm slot 3은 거부한다.
+
+Common/256/4000의 한 sequence는 약 1.024초로 100주기 capture보다 길다. Host는 capture 뒤
+첫 sequence 완료를 최대 2초 기다리고, 완료되지 않으면 원본을 보존한 뒤 실패로 처리한다.
+두 보드의 10초 lease·B 우선 STOP·exact image/UID·10 MHz·현재 결선 확인을 유지한다.
+이 확장은 **constant-duty CPU-start loop**이며 sequence0/1의 시간상 순서·유한 end/repeat,
+DPPI START·triggered-step·idle inversion의 완료 근거가 아니다. 다음 실행 전 현재 408 결선의
+확인을 다시 받아야 하며 이전 30분 확인을 자동 연장하지 않는다.
 
 - 보드 target과 build manifest가 기대값과 일치해야 합니다.
 - 일반 upload 경로에서는 mass erase나 recover를 사용하지 않습니다.
@@ -593,6 +648,11 @@ progress를 journal에 남깁니다. 중단된 실행은 `interrupted`이며 다
 않습니다. UART/SPI/TWI와 signal CLI의 `--repetitions`, `--duration-seconds`,
 `--progress-interval-seconds`가 이 공통 계약을 사용합니다. 단독 기능 실기 PASS 전에는 soak를
 시작하지 않으며, 동시성은 해당 fixture 조합을 별도로 승인한 뒤 수행합니다.
+
+2026-09-07 사용자 지시로 T13 단독 안정성 목표는 인스턴스별 **180초(3분)**입니다.
+실행기는 기간을 명시적으로 받으므로 해당 단독 campaign에 `--duration-seconds 180`을 전달합니다.
+일반 기능 검사 기본값 0과 공통 실행기 최대 7200초는 유지하며, 전체 기능 sweep 반복을
+각 인스턴스의 연속 부하 증거로 대체하지 않습니다. 동시 시험은 각 확정 조합 900초이며, 전체 대표 고부하 한 조합만 3600초로 대체합니다. 대표 한 조합을 family마다 중복 선정하지 않습니다.
 
 R00~R13 이후 exact 154324c의 current-source Fixture 101은 SWD 10 MHz에서 데이터 1,620개·예상 오류 24개를 통과했습니다. [67번 기록](<../../../00_Docs/04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)에 exact 증거를 보존합니다. 전체 current-source T11과 T12/T13 PASS는 아직 아닙니다.
 

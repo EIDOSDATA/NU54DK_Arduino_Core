@@ -65,12 +65,14 @@ def validate(plan: dict, root: Path = ROOT) -> list[dict]:
         expected_groups.setdefault("system" if item["milestone"] == "M26" else item["kind"], []).append(item["id"])
     require(plan["groups"] == expected_groups, "inventory group/identity omission or drift")
     limits = plan["limits"]
-    require(set(limits) == {"command_timeout_seconds", "stop_timeout_us", "recovery_repetitions", "handover_repetitions", "standalone_soak_seconds", "concurrent_soak_seconds", "unexpected_loss_allowed", "unexpected_reset_allowed", "guard_bytes"}, "limit fields drifted")
+    require(set(limits) == {"command_timeout_seconds", "stop_timeout_us", "recovery_repetitions", "handover_repetitions", "standalone_soak_seconds", "concurrent_soak_seconds", "representative_soak_seconds", "unexpected_loss_allowed", "unexpected_reset_allowed", "guard_bytes"}, "limit fields drifted")
     for key, value in limits.items():
         require(type(value) is int and 0 <= value <= 86400000, f"invalid limit {key}")
         if not key.startswith("unexpected_"):
             require(value > 0, f"zero limit {key}")
     require(limits["unexpected_loss_allowed"] == limits["unexpected_reset_allowed"] == 0, "loss/reset allowance changed")
+    require(limits["standalone_soak_seconds"] <= limits["concurrent_soak_seconds"] <=
+            limits["representative_soak_seconds"] <= 7200, "soak duration ordering or campaign bound drifted")
     require(isinstance(plan["cases"], list), "cases must be an array")
     seen = set()
     errata = set()
@@ -83,6 +85,11 @@ def validate(plan: dict, root: Path = ROOT) -> list[dict]:
         require(case["fixture"] in {"onboard", "peer", "primary-route", "mixed", "contract"}, f"invalid fixture: {name}")
         require(isinstance(case["modes"], list) and case["modes"] and all(isinstance(mode, str) and mode for mode in case["modes"]) and len(set(case["modes"])) == len(case["modes"]), f"invalid modes: {name}")
         require(isinstance(case["parameters"], dict) and case["parameters"], f"missing parameters: {name}")
+        if name == "V04-SOAK":
+            require(case["parameters"].get("duration_seconds") == limits["standalone_soak_seconds"], "standalone duration mismatch")
+        if name in {"V04-SERIAL-CONCURRENCY", "V04-ANALOG-CONCURRENCY"}:
+            require(case["parameters"].get("soak_seconds") == limits["concurrent_soak_seconds"] and
+                    case["parameters"].get("representative_soak_seconds") == limits["representative_soak_seconds"], "concurrent duration mismatch")
         for key in ("oracle", "needs"):
             require(isinstance(case[key], str) and case[key].strip(), f"missing {key}: {name}")
         require(isinstance(case["reuse"], list) and isinstance(case["errata"], list), f"invalid evidence/errata: {name}")

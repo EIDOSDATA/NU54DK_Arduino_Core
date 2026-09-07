@@ -1,0 +1,1153 @@
+{
+  "conclusion": "success",
+  "headSha": "f42bda55f7b45f7af0a347ecf5f1f516bb34eb6a",
+  "jobs": [
+    {
+      "completedAt": "2026-09-07T07:52:05Z",
+      "conclusion": "success",
+      "databaseId": 101660385128,
+      "name": "Zephyr v0.2.0 in pinned Nordic container",
+      "startedAt": "2026-09-07T07:35:42Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-09-07T07:35:44Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-09-07T07:35:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:43Z",
+          "conclusion": "success",
+          "name": "Initialize containers",
+          "number": 2,
+          "startedAt": "2026-09-07T07:35:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:48Z",
+          "conclusion": "success",
+          "name": "Checkout exact source and board package",
+          "number": 3,
+          "startedAt": "2026-09-07T07:36:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:49Z",
+          "conclusion": "success",
+          "name": "Verify lock and derive cache key",
+          "number": 4,
+          "startedAt": "2026-09-07T07:36:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:37:42Z",
+          "conclusion": "success",
+          "name": "Restore exact west workspace",
+          "number": 5,
+          "startedAt": "2026-09-07T07:36:49Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:37:57Z",
+          "conclusion": "success",
+          "name": "Prepare exact NCS source workspace",
+          "number": 6,
+          "startedAt": "2026-09-07T07:37:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:37:57Z",
+          "conclusion": "skipped",
+          "name": "Verify M23 inventory against exact NCS Devicetree",
+          "number": 7,
+          "startedAt": "2026-09-07T07:37:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:37:57Z",
+          "conclusion": "skipped",
+          "name": "Verify M24 serial-fabric contract against exact NCS Devicetree",
+          "number": 8,
+          "startedAt": "2026-09-07T07:37:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:37:57Z",
+          "conclusion": "skipped",
+          "name": "Verify M26 system-peripheral support boundary",
+          "number": 9,
+          "startedAt": "2026-09-07T07:37:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:37:57Z",
+          "conclusion": "skipped",
+          "name": "Verify M27 release-readiness HOLD contract",
+          "number": 10,
+          "startedAt": "2026-09-07T07:37:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:40:53Z",
+          "conclusion": "success",
+          "name": "Build v0.2.0 Zephyr suites",
+          "number": 11,
+          "startedAt": "2026-09-07T07:37:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:49:02Z",
+          "conclusion": "success",
+          "name": "Record M17 NCS build feasibility",
+          "number": 12,
+          "startedAt": "2026-09-07T07:40:53Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:49:16Z",
+          "conclusion": "success",
+          "name": "Run M14 C++ policy on QEMU",
+          "number": 13,
+          "startedAt": "2026-09-07T07:49:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:51:59Z",
+          "conclusion": "success",
+          "name": "Upload software build and runtime evidence",
+          "number": 14,
+          "startedAt": "2026-09-07T07:49:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:51:59Z",
+          "conclusion": "success",
+          "name": "Post Restore exact west workspace",
+          "number": 26,
+          "startedAt": "2026-09-07T07:51:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:52:00Z",
+          "conclusion": "success",
+          "name": "Post Checkout exact source and board package",
+          "number": 27,
+          "startedAt": "2026-09-07T07:51:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:52:03Z",
+          "conclusion": "success",
+          "name": "Stop containers",
+          "number": 28,
+          "startedAt": "2026-09-07T07:52:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:52:03Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 29,
+          "startedAt": "2026-09-07T07:52:03Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297/job/101660385128"
+    },
+    {
+      "completedAt": "2026-09-07T07:56:57Z",
+      "conclusion": "success",
+      "databaseId": 101660385218,
+      "name": "Arduino v0.2.0 with pinned Windows prerequisites",
+      "startedAt": "2026-09-07T07:35:42Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-09-07T07:35:44Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-09-07T07:35:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:07Z",
+          "conclusion": "success",
+          "name": "Checkout exact source and board package",
+          "number": 2,
+          "startedAt": "2026-09-07T07:35:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:07Z",
+          "conclusion": "success",
+          "name": "Set up Python 3.12.10",
+          "number": 3,
+          "startedAt": "2026-09-07T07:36:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:09Z",
+          "conclusion": "success",
+          "name": "Set up Arduino CLI 1.5.1",
+          "number": 4,
+          "startedAt": "2026-09-07T07:36:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:26Z",
+          "conclusion": "success",
+          "name": "Verify lock and derive cache key",
+          "number": 5,
+          "startedAt": "2026-09-07T07:36:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:31Z",
+          "conclusion": "success",
+          "name": "Restore Windows Builder cache",
+          "number": 6,
+          "startedAt": "2026-09-07T07:36:26Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:42:48Z",
+          "conclusion": "success",
+          "name": "Install or verify exact Nordic prerequisites",
+          "number": 7,
+          "startedAt": "2026-09-07T07:36:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:43:04Z",
+          "conclusion": "success",
+          "name": "Verify installed source revisions",
+          "number": 8,
+          "startedAt": "2026-09-07T07:42:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:54:29Z",
+          "conclusion": "success",
+          "name": "Compile v0.2.0 Arduino examples",
+          "number": 9,
+          "startedAt": "2026-09-07T07:43:04Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:38Z",
+          "conclusion": "success",
+          "name": "Compile pinned M17 external Arduino libraries",
+          "number": 10,
+          "startedAt": "2026-09-07T07:54:29Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:45Z",
+          "conclusion": "success",
+          "name": "Upload Arduino build evidence",
+          "number": 11,
+          "startedAt": "2026-09-07T07:56:38Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:46Z",
+          "conclusion": "success",
+          "name": "Post Restore Windows Builder cache",
+          "number": 20,
+          "startedAt": "2026-09-07T07:56:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:46Z",
+          "conclusion": "success",
+          "name": "Post Set up Python 3.12.10",
+          "number": 21,
+          "startedAt": "2026-09-07T07:56:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:52Z",
+          "conclusion": "success",
+          "name": "Post Checkout exact source and board package",
+          "number": 22,
+          "startedAt": "2026-09-07T07:56:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:54Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 23,
+          "startedAt": "2026-09-07T07:56:52Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297/job/101660385218"
+    },
+    {
+      "completedAt": "2026-09-07T07:50:53Z",
+      "conclusion": "success",
+      "databaseId": 101660385230,
+      "name": "Zephyr v0.3.0 in pinned Nordic container",
+      "startedAt": "2026-09-07T07:35:42Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-09-07T07:35:43Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-09-07T07:35:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:42Z",
+          "conclusion": "success",
+          "name": "Initialize containers",
+          "number": 2,
+          "startedAt": "2026-09-07T07:35:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:48Z",
+          "conclusion": "success",
+          "name": "Checkout exact source and board package",
+          "number": 3,
+          "startedAt": "2026-09-07T07:36:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:48Z",
+          "conclusion": "success",
+          "name": "Verify lock and derive cache key",
+          "number": 4,
+          "startedAt": "2026-09-07T07:36:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:37:46Z",
+          "conclusion": "success",
+          "name": "Restore exact west workspace",
+          "number": 5,
+          "startedAt": "2026-09-07T07:36:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:05Z",
+          "conclusion": "success",
+          "name": "Prepare exact NCS source workspace",
+          "number": 6,
+          "startedAt": "2026-09-07T07:37:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:05Z",
+          "conclusion": "skipped",
+          "name": "Verify M23 inventory against exact NCS Devicetree",
+          "number": 7,
+          "startedAt": "2026-09-07T07:38:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:05Z",
+          "conclusion": "skipped",
+          "name": "Verify M24 serial-fabric contract against exact NCS Devicetree",
+          "number": 8,
+          "startedAt": "2026-09-07T07:38:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:05Z",
+          "conclusion": "skipped",
+          "name": "Verify M26 system-peripheral support boundary",
+          "number": 9,
+          "startedAt": "2026-09-07T07:38:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:05Z",
+          "conclusion": "skipped",
+          "name": "Verify M27 release-readiness HOLD contract",
+          "number": 10,
+          "startedAt": "2026-09-07T07:38:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:47:22Z",
+          "conclusion": "success",
+          "name": "Build v0.3.0 Zephyr suites",
+          "number": 11,
+          "startedAt": "2026-09-07T07:38:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:47:22Z",
+          "conclusion": "skipped",
+          "name": "Record M17 NCS build feasibility",
+          "number": 12,
+          "startedAt": "2026-09-07T07:47:22Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:47:22Z",
+          "conclusion": "skipped",
+          "name": "Run M14 C++ policy on QEMU",
+          "number": 13,
+          "startedAt": "2026-09-07T07:47:22Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:50:45Z",
+          "conclusion": "success",
+          "name": "Upload software build and runtime evidence",
+          "number": 14,
+          "startedAt": "2026-09-07T07:47:22Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:50:45Z",
+          "conclusion": "success",
+          "name": "Post Restore exact west workspace",
+          "number": 26,
+          "startedAt": "2026-09-07T07:50:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:50:46Z",
+          "conclusion": "success",
+          "name": "Post Checkout exact source and board package",
+          "number": 27,
+          "startedAt": "2026-09-07T07:50:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:50:52Z",
+          "conclusion": "success",
+          "name": "Stop containers",
+          "number": 28,
+          "startedAt": "2026-09-07T07:50:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:50:52Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 29,
+          "startedAt": "2026-09-07T07:50:52Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297/job/101660385230"
+    },
+    {
+      "completedAt": "2026-09-07T07:56:11Z",
+      "conclusion": "success",
+      "databaseId": 101660385260,
+      "name": "Arduino v0.1.0 with pinned Windows prerequisites",
+      "startedAt": "2026-09-07T07:35:42Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-09-07T07:35:44Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-09-07T07:35:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:59Z",
+          "conclusion": "success",
+          "name": "Checkout exact source and board package",
+          "number": 2,
+          "startedAt": "2026-09-07T07:35:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:35:59Z",
+          "conclusion": "success",
+          "name": "Set up Python 3.12.10",
+          "number": 3,
+          "startedAt": "2026-09-07T07:35:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:01Z",
+          "conclusion": "success",
+          "name": "Set up Arduino CLI 1.5.1",
+          "number": 4,
+          "startedAt": "2026-09-07T07:35:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:03Z",
+          "conclusion": "success",
+          "name": "Verify lock and derive cache key",
+          "number": 5,
+          "startedAt": "2026-09-07T07:36:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:04Z",
+          "conclusion": "success",
+          "name": "Restore Windows Builder cache",
+          "number": 6,
+          "startedAt": "2026-09-07T07:36:03Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:41:49Z",
+          "conclusion": "success",
+          "name": "Install or verify exact Nordic prerequisites",
+          "number": 7,
+          "startedAt": "2026-09-07T07:36:04Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:41:54Z",
+          "conclusion": "success",
+          "name": "Verify installed source revisions",
+          "number": 8,
+          "startedAt": "2026-09-07T07:41:49Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:03Z",
+          "conclusion": "success",
+          "name": "Compile v0.1.0 Arduino examples",
+          "number": 9,
+          "startedAt": "2026-09-07T07:41:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:03Z",
+          "conclusion": "skipped",
+          "name": "Compile pinned M17 external Arduino libraries",
+          "number": 10,
+          "startedAt": "2026-09-07T07:56:03Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:06Z",
+          "conclusion": "success",
+          "name": "Upload Arduino build evidence",
+          "number": 11,
+          "startedAt": "2026-09-07T07:56:03Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:06Z",
+          "conclusion": "success",
+          "name": "Post Restore Windows Builder cache",
+          "number": 20,
+          "startedAt": "2026-09-07T07:56:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:06Z",
+          "conclusion": "success",
+          "name": "Post Set up Python 3.12.10",
+          "number": 21,
+          "startedAt": "2026-09-07T07:56:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:10Z",
+          "conclusion": "success",
+          "name": "Post Checkout exact source and board package",
+          "number": 22,
+          "startedAt": "2026-09-07T07:56:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:10Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 23,
+          "startedAt": "2026-09-07T07:56:10Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297/job/101660385260"
+    },
+    {
+      "completedAt": "2026-09-07T07:57:01Z",
+      "conclusion": "success",
+      "databaseId": 101660385270,
+      "name": "Zephyr v0.4.0 in pinned Nordic container",
+      "startedAt": "2026-09-07T07:35:42Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-09-07T07:35:44Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-09-07T07:35:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:47Z",
+          "conclusion": "success",
+          "name": "Initialize containers",
+          "number": 2,
+          "startedAt": "2026-09-07T07:35:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:52Z",
+          "conclusion": "success",
+          "name": "Checkout exact source and board package",
+          "number": 3,
+          "startedAt": "2026-09-07T07:36:47Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:53Z",
+          "conclusion": "success",
+          "name": "Verify lock and derive cache key",
+          "number": 4,
+          "startedAt": "2026-09-07T07:36:52Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:06Z",
+          "conclusion": "success",
+          "name": "Restore exact west workspace",
+          "number": 5,
+          "startedAt": "2026-09-07T07:36:53Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:27Z",
+          "conclusion": "success",
+          "name": "Prepare exact NCS source workspace",
+          "number": 6,
+          "startedAt": "2026-09-07T07:38:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:27Z",
+          "conclusion": "success",
+          "name": "Verify M23 inventory against exact NCS Devicetree",
+          "number": 7,
+          "startedAt": "2026-09-07T07:38:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:27Z",
+          "conclusion": "success",
+          "name": "Verify M24 serial-fabric contract against exact NCS Devicetree",
+          "number": 8,
+          "startedAt": "2026-09-07T07:38:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:27Z",
+          "conclusion": "success",
+          "name": "Verify M26 system-peripheral support boundary",
+          "number": 9,
+          "startedAt": "2026-09-07T07:38:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:27Z",
+          "conclusion": "success",
+          "name": "Verify M27 release-readiness HOLD contract",
+          "number": 10,
+          "startedAt": "2026-09-07T07:38:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:51:13Z",
+          "conclusion": "success",
+          "name": "Build v0.4.0 Zephyr suites",
+          "number": 11,
+          "startedAt": "2026-09-07T07:38:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:51:13Z",
+          "conclusion": "skipped",
+          "name": "Record M17 NCS build feasibility",
+          "number": 12,
+          "startedAt": "2026-09-07T07:51:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:51:13Z",
+          "conclusion": "skipped",
+          "name": "Run M14 C++ policy on QEMU",
+          "number": 13,
+          "startedAt": "2026-09-07T07:51:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:51Z",
+          "conclusion": "success",
+          "name": "Upload software build and runtime evidence",
+          "number": 14,
+          "startedAt": "2026-09-07T07:51:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:51Z",
+          "conclusion": "success",
+          "name": "Post Restore exact west workspace",
+          "number": 26,
+          "startedAt": "2026-09-07T07:56:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:52Z",
+          "conclusion": "success",
+          "name": "Post Checkout exact source and board package",
+          "number": 27,
+          "startedAt": "2026-09-07T07:56:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:58Z",
+          "conclusion": "success",
+          "name": "Stop containers",
+          "number": 28,
+          "startedAt": "2026-09-07T07:56:52Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:58Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 29,
+          "startedAt": "2026-09-07T07:56:58Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297/job/101660385270"
+    },
+    {
+      "completedAt": "2026-09-07T07:56:06Z",
+      "conclusion": "success",
+      "databaseId": 101660385297,
+      "name": "Arduino v0.3.0-ble with pinned Windows prerequisites",
+      "startedAt": "2026-09-07T07:35:42Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-09-07T07:35:45Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-09-07T07:35:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:02Z",
+          "conclusion": "success",
+          "name": "Checkout exact source and board package",
+          "number": 2,
+          "startedAt": "2026-09-07T07:35:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:02Z",
+          "conclusion": "success",
+          "name": "Set up Python 3.12.10",
+          "number": 3,
+          "startedAt": "2026-09-07T07:36:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:04Z",
+          "conclusion": "success",
+          "name": "Set up Arduino CLI 1.5.1",
+          "number": 4,
+          "startedAt": "2026-09-07T07:36:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:06Z",
+          "conclusion": "success",
+          "name": "Verify lock and derive cache key",
+          "number": 5,
+          "startedAt": "2026-09-07T07:36:04Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:08Z",
+          "conclusion": "success",
+          "name": "Restore Windows Builder cache",
+          "number": 6,
+          "startedAt": "2026-09-07T07:36:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:41:17Z",
+          "conclusion": "success",
+          "name": "Install or verify exact Nordic prerequisites",
+          "number": 7,
+          "startedAt": "2026-09-07T07:36:08Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:41:19Z",
+          "conclusion": "success",
+          "name": "Verify installed source revisions",
+          "number": 8,
+          "startedAt": "2026-09-07T07:41:17Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:55:56Z",
+          "conclusion": "success",
+          "name": "Compile v0.3.0-ble Arduino examples",
+          "number": 9,
+          "startedAt": "2026-09-07T07:41:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:55:56Z",
+          "conclusion": "skipped",
+          "name": "Compile pinned M17 external Arduino libraries",
+          "number": 10,
+          "startedAt": "2026-09-07T07:55:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:00Z",
+          "conclusion": "success",
+          "name": "Upload Arduino build evidence",
+          "number": 11,
+          "startedAt": "2026-09-07T07:55:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:00Z",
+          "conclusion": "success",
+          "name": "Post Restore Windows Builder cache",
+          "number": 20,
+          "startedAt": "2026-09-07T07:56:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:01Z",
+          "conclusion": "success",
+          "name": "Post Set up Python 3.12.10",
+          "number": 21,
+          "startedAt": "2026-09-07T07:56:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:04Z",
+          "conclusion": "success",
+          "name": "Post Checkout exact source and board package",
+          "number": 22,
+          "startedAt": "2026-09-07T07:56:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:56:04Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 23,
+          "startedAt": "2026-09-07T07:56:04Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297/job/101660385297"
+    },
+    {
+      "completedAt": "2026-09-07T08:03:56Z",
+      "conclusion": "success",
+      "databaseId": 101660385317,
+      "name": "Arduino v0.3.0-compat with pinned Windows prerequisites",
+      "startedAt": "2026-09-07T07:35:42Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-09-07T07:35:45Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-09-07T07:35:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:00Z",
+          "conclusion": "success",
+          "name": "Checkout exact source and board package",
+          "number": 2,
+          "startedAt": "2026-09-07T07:35:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:00Z",
+          "conclusion": "success",
+          "name": "Set up Python 3.12.10",
+          "number": 3,
+          "startedAt": "2026-09-07T07:36:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:01Z",
+          "conclusion": "success",
+          "name": "Set up Arduino CLI 1.5.1",
+          "number": 4,
+          "startedAt": "2026-09-07T07:36:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:04Z",
+          "conclusion": "success",
+          "name": "Verify lock and derive cache key",
+          "number": 5,
+          "startedAt": "2026-09-07T07:36:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:05Z",
+          "conclusion": "success",
+          "name": "Restore Windows Builder cache",
+          "number": 6,
+          "startedAt": "2026-09-07T07:36:04Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:39:46Z",
+          "conclusion": "success",
+          "name": "Install or verify exact Nordic prerequisites",
+          "number": 7,
+          "startedAt": "2026-09-07T07:36:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:39:48Z",
+          "conclusion": "success",
+          "name": "Verify installed source revisions",
+          "number": 8,
+          "startedAt": "2026-09-07T07:39:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T08:03:51Z",
+          "conclusion": "success",
+          "name": "Compile v0.3.0-compat Arduino examples",
+          "number": 9,
+          "startedAt": "2026-09-07T07:39:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T08:03:51Z",
+          "conclusion": "skipped",
+          "name": "Compile pinned M17 external Arduino libraries",
+          "number": 10,
+          "startedAt": "2026-09-07T08:03:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T08:03:52Z",
+          "conclusion": "success",
+          "name": "Upload Arduino build evidence",
+          "number": 11,
+          "startedAt": "2026-09-07T08:03:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T08:03:52Z",
+          "conclusion": "success",
+          "name": "Post Restore Windows Builder cache",
+          "number": 20,
+          "startedAt": "2026-09-07T08:03:52Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T08:03:53Z",
+          "conclusion": "success",
+          "name": "Post Set up Python 3.12.10",
+          "number": 21,
+          "startedAt": "2026-09-07T08:03:52Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T08:03:55Z",
+          "conclusion": "success",
+          "name": "Post Checkout exact source and board package",
+          "number": 22,
+          "startedAt": "2026-09-07T08:03:53Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T08:03:55Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 23,
+          "startedAt": "2026-09-07T08:03:55Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297/job/101660385317"
+    },
+    {
+      "completedAt": "2026-09-07T07:41:15Z",
+      "conclusion": "success",
+      "databaseId": 101660385366,
+      "name": "Zephyr v0.1.0 in pinned Nordic container",
+      "startedAt": "2026-09-07T07:35:43Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-09-07T07:35:45Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-09-07T07:35:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:48Z",
+          "conclusion": "success",
+          "name": "Initialize containers",
+          "number": 2,
+          "startedAt": "2026-09-07T07:35:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:54Z",
+          "conclusion": "success",
+          "name": "Checkout exact source and board package",
+          "number": 3,
+          "startedAt": "2026-09-07T07:36:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:36:54Z",
+          "conclusion": "success",
+          "name": "Verify lock and derive cache key",
+          "number": 4,
+          "startedAt": "2026-09-07T07:36:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:14Z",
+          "conclusion": "success",
+          "name": "Restore exact west workspace",
+          "number": 5,
+          "startedAt": "2026-09-07T07:36:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:32Z",
+          "conclusion": "success",
+          "name": "Prepare exact NCS source workspace",
+          "number": 6,
+          "startedAt": "2026-09-07T07:38:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:32Z",
+          "conclusion": "skipped",
+          "name": "Verify M23 inventory against exact NCS Devicetree",
+          "number": 7,
+          "startedAt": "2026-09-07T07:38:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:32Z",
+          "conclusion": "skipped",
+          "name": "Verify M24 serial-fabric contract against exact NCS Devicetree",
+          "number": 8,
+          "startedAt": "2026-09-07T07:38:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:32Z",
+          "conclusion": "skipped",
+          "name": "Verify M26 system-peripheral support boundary",
+          "number": 9,
+          "startedAt": "2026-09-07T07:38:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:38:32Z",
+          "conclusion": "skipped",
+          "name": "Verify M27 release-readiness HOLD contract",
+          "number": 10,
+          "startedAt": "2026-09-07T07:38:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:40:32Z",
+          "conclusion": "success",
+          "name": "Build v0.1.0 Zephyr suites",
+          "number": 11,
+          "startedAt": "2026-09-07T07:38:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:40:32Z",
+          "conclusion": "skipped",
+          "name": "Record M17 NCS build feasibility",
+          "number": 12,
+          "startedAt": "2026-09-07T07:40:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:40:32Z",
+          "conclusion": "skipped",
+          "name": "Run M14 C++ policy on QEMU",
+          "number": 13,
+          "startedAt": "2026-09-07T07:40:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:41:07Z",
+          "conclusion": "success",
+          "name": "Upload software build and runtime evidence",
+          "number": 14,
+          "startedAt": "2026-09-07T07:40:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:41:07Z",
+          "conclusion": "success",
+          "name": "Post Restore exact west workspace",
+          "number": 26,
+          "startedAt": "2026-09-07T07:41:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:41:07Z",
+          "conclusion": "success",
+          "name": "Post Checkout exact source and board package",
+          "number": 27,
+          "startedAt": "2026-09-07T07:41:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:41:14Z",
+          "conclusion": "success",
+          "name": "Stop containers",
+          "number": 28,
+          "startedAt": "2026-09-07T07:41:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-09-07T07:41:14Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 29,
+          "startedAt": "2026-09-07T07:41:14Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297/job/101660385366"
+    }
+  ],
+  "status": "completed",
+  "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297",
+  "observed_at_utc": "2026-09-07T08:05:55.168406+00:00"
+}

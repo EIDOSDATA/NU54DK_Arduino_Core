@@ -1,0 +1,13 @@
+{
+  "name": "wiring-recheck-final-docs",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+    "docs"
+  ],
+  "started_at": "2026-09-07T11:24:33.918338+00:00",
+  "finished_at": "2026-09-07T11:24:34.671074+00:00",
+  "exit_code": 0,
+  "log_sha256": "e5484cd9bc6bf828ed2f22712e347fd086a5a6eed2e93cc20d6506ea1ff15b2f"
+}

@@ -16,27 +16,27 @@ CATALOG = Path(__file__).with_name("v04_fixtures.json")
 CONSENT = 0x53414645
 
 
-def fixture_contract(fixture_id):
-    catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
+def fixture_contract(fixture_id, *, catalog_path=CATALOG):
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
     matching = [entry for entry in catalog["fixtures"] if entry["id"] == fixture_id]
     if len(matching) != 1:
         raise ProtocolError("unknown or duplicate fixture")
     return catalog, matching[0]
 
 
-def confirmation_template(images, uids, fixture_id):
+def confirmation_template(images, uids, fixture_id, *, catalog_path=CATALOG):
     """현재 image/보드에 묶인 T10 확인서 초안을 만듭니다.
 
     안전 조건과 사람 확인 필드는 의도적으로 미확인 상태로 둡니다. 따라서 출력된 초안은
     사용자가 실제 결선을 확인해 값을 채우기 전에는 실행 승인이 되지 않습니다.
     """
-    catalog, _fixture = fixture_contract(fixture_id)
+    catalog, _fixture = fixture_contract(fixture_id, catalog_path=catalog_path)
     if len(images) != 2 or len(uids) != 2 or uids[0].lower() == uids[1].lower():
         raise ProtocolError("two distinct exact boards required")
     return {
         "fixture_id": fixture_id,
         "fixture_revision": catalog["revision"],
-        "catalog_sha256": hashlib.sha256(CATALOG.read_bytes()).hexdigest(),
+        "catalog_sha256": hashlib.sha256(catalog_path.read_bytes()).hexdigest(),
         "core_revision": images[0]["core_revision"],
         "board_revision": catalog["board_revision"],
         "uid_sha256": [hashlib.sha256(uid.lower().encode()).hexdigest() for uid in uids],
@@ -54,15 +54,15 @@ def confirmation_template(images, uids, fixture_id):
     }
 
 
-def validate_confirmation(confirmation, images, uids, fixture_id, now=None):
+def validate_confirmation(confirmation, images, uids, fixture_id, now=None, *, catalog_path=CATALOG):
     """A named, current human confirmation is necessary, not proof of wiring."""
-    catalog, fixture = fixture_contract(fixture_id)
+    catalog, fixture = fixture_contract(fixture_id, catalog_path=catalog_path)
     now = time.time() if now is None else now
     if len(images) != 2 or len(uids) != 2 or uids[0].lower() == uids[1].lower():
         raise ProtocolError("two distinct exact boards required")
     expected = {
         "fixture_id": fixture_id, "fixture_revision": catalog["revision"],
-        "catalog_sha256": hashlib.sha256(CATALOG.read_bytes()).hexdigest(),
+        "catalog_sha256": hashlib.sha256(catalog_path.read_bytes()).hexdigest(),
         "core_revision": images[0]["core_revision"], "board_revision": catalog["board_revision"],
         "uid_sha256": [hashlib.sha256(uid.lower().encode()).hexdigest() for uid in uids],
         "hex_sha256": [image["sha256"] for image in images],

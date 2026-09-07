@@ -1,0 +1,24 @@
+{
+  "name": "pwm-ready-target",
+  "command": [
+    "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_zephyr_build.py",
+    "--workspace",
+    "C:\\ncs\\v3.4.0",
+    "--outdir",
+    "C:/pwh04",
+    "--group",
+    "v0.4.0",
+    "--suite",
+    "nucode.v04.pair_dut",
+    "--suite",
+    "nucode.v04.pair_peer",
+    "--jobs",
+    "2"
+  ],
+  "started_at": "2026-09-07T08:20:31.274981+00:00",
+  "finished_at": "2026-09-07T08:22:14.148206+00:00",
+  "exit_code": 0,
+  "log_sha256": "64ab875e57eb35d35005c2e75709f59939c7472aa5841ee2306769696ee00c01"
+}

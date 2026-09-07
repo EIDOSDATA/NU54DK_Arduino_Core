@@ -1,0 +1,160 @@
+{
+  "observed_at_utc": "2026-09-07T08:05:32.443843+00:00",
+  "source_revision": {
+    "command": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit_code": 0,
+    "output": "59282818fc3733dae4b247a8942069955eabc2df\n"
+  },
+  "initial_revision": "f42bda55f7b45f7af0a347ecf5f1f516bb34eb6a",
+  "initial_worktree_clean": true,
+  "tools": [
+    {
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "--version"
+      ],
+      "exit_code": 0,
+      "output": "Python 3.12.10\r\n"
+    },
+    {
+      "command": [
+        "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\python.exe",
+        "--version"
+      ],
+      "exit_code": 0,
+      "output": "Python 3.12.4\r\n"
+    },
+    {
+      "command": [
+        "C:\\Users\\eidos\\AppData\\Local\\Microsoft\\WinGet\\Packages\\BrechtSanders.WinLibs.MCF.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\\mingw64\\bin\\gcc.exe",
+        "--version"
+      ],
+      "exit_code": 0,
+      "output": "gcc.exe (MinGW-W64 x86_64-ucrt-mcf-seh, built by Brecht Sanders, r1) 16.1.0\r\nCopyright (C) 2026 Free Software Foundation, Inc.\r\nThis is free software; see the source for copying conditions.  There is NO\r\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\r\n\r\n"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\LLVM\\bin\\ld.lld.exe",
+        "--version"
+      ],
+      "exit_code": 0,
+      "output": "LLD 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1) (compatible with GNU linkers)\n"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\LLVM\\bin\\clang-format.exe",
+        "--version"
+      ],
+      "exit_code": 0,
+      "output": "clang-format version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)\n"
+    },
+    {
+      "command": [
+        "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\cmake.exe",
+        "--version"
+      ],
+      "exit_code": 0,
+      "output": "cmake version 4.2.1\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).\n"
+    },
+    {
+      "command": [
+        "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\ninja.exe",
+        "--version"
+      ],
+      "exit_code": 0,
+      "output": "1.13.2\r\n"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\Arduino CLI\\arduino-cli.exe",
+        "version"
+      ],
+      "exit_code": 0,
+      "output": "arduino-cli  Version: 1.5.1 Commit: 01f3d4f2b Date: 2026-06-05T10:22:12Z\n"
+    }
+  ],
+  "tool_sha256": {
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe": "0b471133e110cfb53a061cad528ce8e517d7b9ac41a0a396c39ad795a487fc14",
+    "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\python.exe": "fd5c46d73d29ba21b04c844bbaf9096066136526911230645a2a040d23fb612b",
+    "C:\\Users\\eidos\\AppData\\Local\\Microsoft\\WinGet\\Packages\\BrechtSanders.WinLibs.MCF.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\\mingw64\\bin\\gcc.exe": "efd1fdc2a5213ffab95d29e4bffd496b370ec845b3f56904667af24b3de9ba82",
+    "C:\\Program Files\\LLVM\\bin\\ld.lld.exe": "72de1900946337aba56616b14713a2efa293ecdf54b945a9d7d0f6676c3b9ecd",
+    "C:\\Program Files\\LLVM\\bin\\clang-format.exe": "3c563ca6f676b84bee959e530b2a10c010019168b695f3877f3423e3a4949e1b",
+    "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\cmake.exe": "083a412e9a21430da453bcd9713ffa5589ea1c677cc4d5f58f9a0b55fab1f546",
+    "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\ninja.exe": "e52a7ad9538d9618c67a0bd777964e2eec8a30f68b810a2f6adce1f2daf847b8",
+    "C:\\Program Files\\Arduino CLI\\arduino-cli.exe": "1017de89179c3167e6b8a38ca6cc4091fa69a3cf97aafa7810f01423003f5571"
+  },
+  "host_compiler_flags": [
+    "-fuse-ld=lld"
+  ],
+  "security_policy_changed": false,
+  "usb": {
+    "probes": [],
+    "ports": []
+  },
+  "swd_access": false,
+  "flash": false,
+  "external_wiring_executed": false,
+  "git": [
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "submodule",
+        "status",
+        "--recursive"
+      ],
+      "exit_code": 0,
+      "output": " fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3 board_package/NU54DK_Zephyr_DTS (heads/main)\n"
+    },
+    {
+      "command": [
+        "git",
+        "-C",
+        "C:\\ncs\\v3.4.0\\nrf",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": "99553055607b2e9885fbc80ccd11fa9da81c2df0\n"
+    },
+    {
+      "command": [
+        "git",
+        "-C",
+        "C:\\ncs\\v3.4.0\\zephyr",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": "bf801e4e3d19e1ffa76164346480cb7734dd2800\n"
+    }
+  ],
+  "prerequisite_script": {
+    "command": [
+      "powershell.exe",
+      "-NoLogo",
+      "-NoProfile",
+      "-File",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-prerequisites\\verify-nordic.ps1",
+      "-PlatformRoot",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core",
+      "-NcsRoot",
+      "C:\\ncs",
+      "-Json"
+    ],
+    "exit_code": 1,
+    "output": "File C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\nu54-prerequisites\\verify-nordic.ps1 cannot be loaded because runn\r\ning scripts is disabled on this system. For more information, see about_Execution_Policies at https:/go.microsoft.com/f\r\nwlink/?LinkID=135170.\r\n    + CategoryInfo          : SecurityError: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : UnauthorizedAccess\r\n"
+  }
+}

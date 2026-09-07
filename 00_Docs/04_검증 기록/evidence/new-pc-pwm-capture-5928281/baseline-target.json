@@ -1,0 +1,24 @@
+{
+  "name": "baseline-target",
+  "command": [
+    "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_zephyr_build.py",
+    "--workspace",
+    "C:\\ncs\\v3.4.0",
+    "--outdir",
+    "C:\\pcv04",
+    "--group",
+    "v0.4.0",
+    "--suite",
+    "nucode.v04.pair_dut",
+    "--suite",
+    "nucode.v04.pair_peer",
+    "--jobs",
+    "2"
+  ],
+  "started_at": "2026-09-07T07:50:55.675645+00:00",
+  "finished_at": "2026-09-07T07:53:11.334189+00:00",
+  "exit_code": 0,
+  "log_sha256": "691733bd9e0a13bd7cd5e9120796b018e12dc527a48c0b741acc43f6e5b15731"
+}

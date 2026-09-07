@@ -1,0 +1,15 @@
+{
+  "name": "pwm-exact-examples",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+    "examples",
+    "--arduino-cli",
+    "C:\\Program Files\\Arduino CLI\\arduino-cli.exe"
+  ],
+  "started_at": "2026-09-07T08:09:56.192522+00:00",
+  "finished_at": "2026-09-07T08:10:04.205168+00:00",
+  "exit_code": 0,
+  "log_sha256": "97f2ddac1de40d8586275efd0d06ba318482f858a52c1d8f0859186450c8dc1a"
+}

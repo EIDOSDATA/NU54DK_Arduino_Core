@@ -1,0 +1,13 @@
+{
+  "name": "wiring-d8d1e13-hardware",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\run_ncs.py",
+    "wiring_launch_recheck.py",
+    "execute"
+  ],
+  "started_at": "2026-09-07T11:18:50.154420+00:00",
+  "finished_at": "2026-09-07T11:19:19.844413+00:00",
+  "exit_code": 0,
+  "log_sha256": "3dd7358907488ceb430a4c345732c7b1f0898eadfbf1b97dd426f21c6734c2ee"
+}

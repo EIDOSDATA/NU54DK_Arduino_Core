@@ -40,6 +40,17 @@ class V04TestPlanTests(unittest.TestCase):
         with self.assertRaises(MODULE.PlanFailure):
             MODULE.validate(self.plan)
 
+    def test_soak_case_and_limit_durations_cannot_disagree(self):
+        """! @brief 시간 단축 뒤 실행 case가 이전 장기 값을 유지하는 설정 오류를 거부합니다. """
+        for case_id, field in (("V04-SOAK", "duration_seconds"),
+                               ("V04-SERIAL-CONCURRENCY", "soak_seconds"),
+                               ("V04-ANALOG-CONCURRENCY", "representative_soak_seconds")):
+            plan = copy.deepcopy(self.plan)
+            case = next(row for row in plan["cases"] if row["id"] == case_id)
+            case["parameters"][field] += 1
+            with self.assertRaisesRegex(MODULE.PlanFailure, "duration mismatch"):
+                MODULE.validate(plan)
+
     def test_zero_timeout_and_loss_allowance_rejected(self):
         for key, value in (("command_timeout_seconds", 0), ("unexpected_loss_allowed", 1), ("guard_bytes", True)):
             plan = copy.deepcopy(self.plan)

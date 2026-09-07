@@ -1,0 +1,183 @@
+{
+  "scope": "65b0c7b working-tree implementation; no new physical signal test",
+  "base_commit": "65b0c7b8585574595ba11c4e0f7231f7e46ef25b",
+  "checks": [
+    {
+      "name": "wiring-first-test_v04_wiring",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/host",
+        "-p",
+        "test_v04_wiring.py",
+        "-v"
+      ],
+      "started_at": "2026-09-07T10:44:58.302628+00:00",
+      "finished_at": "2026-09-07T10:44:58.677672+00:00",
+      "exit_code": 0,
+      "log_sha256": "65a3b35174323b0e7150a2d3a1ed3719e515b92a43391e552ad165f6d23c5389",
+      "file": "test_v04_wiring.log.gz",
+      "gzip_sha256": "16f738b09bcc670a7474990b44ee506530bd56c94590c65668e4345e007f6524"
+    },
+    {
+      "name": "wiring-first-test_v04_test_plan",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/host",
+        "-p",
+        "test_v04_test_plan.py",
+        "-v"
+      ],
+      "started_at": "2026-09-07T10:44:58.693454+00:00",
+      "finished_at": "2026-09-07T10:44:58.868303+00:00",
+      "exit_code": 0,
+      "log_sha256": "120c9ed0f09a3eda9dee045f039fedab6dce081d847bc30f8bc7e1c577fc406e",
+      "file": "test_v04_test_plan.log.gz",
+      "gzip_sha256": "7dae76ceb1ad2c6e2fd85ec8b156148c3ff31484a89f6c0acada177f39211f47"
+    },
+    {
+      "name": "wiring-first-test_v04_fixture",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/host",
+        "-p",
+        "test_v04_fixture.py",
+        "-v"
+      ],
+      "started_at": "2026-09-07T10:44:58.868303+00:00",
+      "finished_at": "2026-09-07T10:44:59.055194+00:00",
+      "exit_code": 0,
+      "log_sha256": "466dd84ddd31ee2972fad196c0d03e41b8b3d5ac39a4984e4550832e22d0b5f8",
+      "file": "test_v04_fixture.log.gz",
+      "gzip_sha256": "2e267325f9f1454596d9a0dac4a096d0e630335cd4c5f3af5b13312c3aae64b6"
+    },
+    {
+      "name": "wiring-first-host",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "host"
+      ],
+      "started_at": "2026-09-07T10:45:17.642653+00:00",
+      "finished_at": "2026-09-07T10:49:47.781756+00:00",
+      "exit_code": 0,
+      "log_sha256": "955a3f5b416cd529bbd7e8c7b15738666eddd42cef5bce2af19b95389c136032",
+      "file": "host.log.gz",
+      "gzip_sha256": "7b100bcc3746dd45caa8e545b4d92f276243dc90209356ef14349895a3aab760"
+    },
+    {
+      "name": "wiring-first-target",
+      "command": [
+        "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_zephyr_build.py",
+        "--workspace",
+        "C:\\ncs\\v3.4.0",
+        "--outdir",
+        "C:\\wic04",
+        "--group",
+        "v0.4.0",
+        "--suite",
+        "nucode.v04.pair_dut",
+        "--suite",
+        "nucode.v04.pair_peer",
+        "--jobs",
+        "2"
+      ],
+      "started_at": "2026-09-07T10:45:17.148540+00:00",
+      "finished_at": "2026-09-07T10:47:20.576728+00:00",
+      "exit_code": 0,
+      "log_sha256": "76f197e323fd7465eef2651ac47d1cdc162b71ccb7d38aa915f741e647b13f8c",
+      "file": "target.log.gz",
+      "gzip_sha256": "4659893c071e9ca58ebeecd3603aa290e5b648a4ae73422d97cc5877459635f1"
+    },
+    {
+      "name": "wiring-first-docs",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "docs"
+      ],
+      "started_at": "2026-09-07T10:49:47.781756+00:00",
+      "finished_at": "2026-09-07T10:49:48.330294+00:00",
+      "exit_code": 0,
+      "log_sha256": "e5484cd9bc6bf828ed2f22712e347fd086a5a6eed2e93cc20d6506ea1ff15b2f",
+      "file": "docs.log.gz",
+      "gzip_sha256": "7370d008d2304d9333faf47653c5a085401fac33073e905ddb1219c3e33fbefd"
+    },
+    {
+      "name": "wiring-first-contract",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "contract"
+      ],
+      "started_at": "2026-09-07T10:51:00.566368+00:00",
+      "finished_at": "2026-09-07T10:51:01.072506+00:00",
+      "exit_code": 0,
+      "log_sha256": "38977cb445857797a7ac09143f4667a5ffcf4716c836e99da560fc198b4f41cf",
+      "file": "contract.log.gz",
+      "gzip_sha256": "8faf384ab8fe9607c2b4dcf43aff0a01500a2f1100e050bdc9d86f01c10a6880"
+    },
+    {
+      "name": "wiring-first-package",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "package"
+      ],
+      "started_at": "2026-09-07T10:51:01.072506+00:00",
+      "finished_at": "2026-09-07T10:52:35.845248+00:00",
+      "exit_code": 0,
+      "log_sha256": "82b8892a10fcc39d8dfcb24a67d9bdc415e93383c79fd73398f3c5256f904209",
+      "file": "package.log.gz",
+      "gzip_sha256": "1fb5d38406ab41cf26b81b6a82902b37caf17fe3a2fb668327d9bf65cdcb94f4"
+    },
+    {
+      "name": "wiring-first-inventory",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "inventory"
+      ],
+      "started_at": "2026-09-07T10:52:35.846112+00:00",
+      "finished_at": "2026-09-07T10:52:37.307144+00:00",
+      "exit_code": 0,
+      "log_sha256": "8efc41e1f9734d065dfdb3292806c34b3f3ff16b7b9b69b5d6ae2ac8479703f1",
+      "file": "inventory.log.gz",
+      "gzip_sha256": "c73c50af0b797e4e53d712027c6c3d2137481c82b8014e1c425e0d378cd735cb"
+    },
+    {
+      "name": "wiring-first-style",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "tools/format/run_cpp_style.py",
+        "--clang-format",
+        "C:/Program Files/LLVM/bin/clang-format.exe"
+      ],
+      "started_at": "2026-09-07T10:51:01.275808+00:00",
+      "finished_at": "2026-09-07T10:51:10.778775+00:00",
+      "exit_code": 0,
+      "log_sha256": "2db63cd0c13b686a2106981ebc84fa3696c7baaa43c5ff76e502b53511d5cd61",
+      "file": "style.log.gz",
+      "gzip_sha256": "f1373219574520b0d5b4bfd6c19e04ba74cb21071a084247be19c1570d0faf81"
+    }
+  ],
+  "diagnostic": "The first read reused the prior postflight expectation A PIN_CNF=0 and failed at actual value 2 after reconnection. Both values select input. The follow-up checks current DIR bit for every common GPIO using pinned SDK register definitions; no firmware, reset or hardware state was changed by these reads."
+}

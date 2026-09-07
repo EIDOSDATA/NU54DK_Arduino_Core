@@ -112,13 +112,19 @@ def boot_exact(
     uid: str,
     image: dict,
     swd_frequency_hz: int = 1_000_000,
+    *, cmsis_dap_limit_packets: bool = False,
 ):
     """Flash/start one exact role image; caller owns the pair's exclusive locks."""
     if sha256_file(image["path"]) != image["sha256"] or sha256_file(image["elf"]) != image["elf_sha256"]:
         raise ProtocolError("image changed after preflight")
-    flash = flash_image(pyocd, uid, image["path"], 120, swd_frequency_hz)
+    ## @brief 기본 flash 호출은 유지하고 명시된 경우에만 USB 명령 동시성을 제한합니다.
+    flash_options = {"cmsis_dap_limit_packets": True} if cmsis_dap_limit_packets else {}
+    flash = flash_image(pyocd, uid, image["path"], 120, swd_frequency_hz, **flash_options)
+    options = {"auto_unlock": False, "connect_mode": "attach", "resume_on_disconnect": False}
+    if cmsis_dap_limit_packets:
+        options["cmsis_dap.limit_packets"] = True
     session = connect_helper.session_with_chosen_probe(unique_id=uid, target_override="nrf54l", frequency=swd_frequency_hz,
-        blocking=False, no_config=True, options={"auto_unlock": False, "connect_mode": "attach", "resume_on_disconnect": False})
+        blocking=False, no_config=True, options=options)
     if session is None:
         raise ProtocolError("selected probe disappeared after flash")
     stack.enter_context(session)

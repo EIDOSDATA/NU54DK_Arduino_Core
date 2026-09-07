@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "method": "offline independent literal raw oracle; no runner oracle import",
+  "core_revision": "d8d1e135cfc96c1608c55c81b4f111963f56c10a",
+  "net_rounds": 102,
+  "pulse_timeouts": 2,
+  "dual_lease_timeouts": 1,
+  "raw_observations": 416,
+  "cleanup_groups": 3,
+  "p1_10_passed_net_rounds": [
+    "V04-WIRING/501/controller1/round1/net2",
+    "V04-WIRING/501/controller1/round2/net2",
+    "V04-WIRING/501/controller1/round3/net2",
+    "V04-WIRING/501/controller2/round1/net2",
+    "V04-WIRING/501/controller2/round2/net2",
+    "V04-WIRING/501/controller2/round3/net2"
+  ],
+  "postflight": "both exact runtime identities; all 17 PIN_CNF zero; PWM/DPPI off; no reset/halt/flash",
+  "result_raw_sha256": "634b92eafe4c5a75b9bf1f4b6aa07bea36cdc7c896bacbbfd27d8407d89d2939",
+  "journal_raw_sha256": "2ae99a0fe66456c2f27e595748401758cb660d060a01adcadd7617aaac493bf5"
+}

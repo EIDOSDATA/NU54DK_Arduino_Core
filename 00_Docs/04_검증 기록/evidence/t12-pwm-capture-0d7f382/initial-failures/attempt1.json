@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-synthetic-signal",
+  "status": "failed",
+  "fixture_id": 408,
+  "fixture_revision": 5,
+  "catalog_sha256": "4546cdc4d477a0f3618ceed650994c1a8dfa86d432c37a64a9e5b41a0d6c5961",
+  "core_revision": "054d08fc869cb4089434f02800b5c438c1407be9",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": false,
+  "repetitions": 1,
+  "pdm_continuous": false,
+  "pwm_capture": true,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "45878a0601a3f74bcf3483e1bc81bbb3f7dbe3371f2206afe947db3fc674d70a",
+      "elf_sha256": "843eaffe7bb009f3ecb8c058b61437db43041343bcd18251f77b04f0fa199dd9",
+      "record_sha256": "ea896b2ee6dfcdae30ca1a18294fe45025fe4c202c2dad590d679929bed55270",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 9.344,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "7338d5f3fb11e072e026c40f9af33d9562ce6f1d30c0293c45f89403a1087988"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "1f9ed2786d95466533421aa95ec6ecf7c773d3b1883ff8c976e7af297398515c",
+      "elf_sha256": "8047d85252d8b652fb3f58dbed3690e9d016e4cf9a7c006a3b34d7033d46739e",
+      "record_sha256": "ea896b2ee6dfcdae30ca1a18294fe45025fe4c202c2dad590d679929bed55270"
+    }
+  ],
+  "results": [],
+  "confirmation_sha256": "708cf0aa7b267822927e438934af894d42e9e5ad82f50acc4b4ef0db3e2ef695",
+  "error": "UarteHilFailure: pyOCD exited with 1: 0000626 W Board ID 5415 is not recognized [mbed_board]\r\n0000703 C SWD/JTAG communication failure (No ACK); check USB cable, reduce debugger clock [__main__]\r\n",
+  "completed_at_utc": "2026-09-07T08:26:29.501311+00:00"
+}

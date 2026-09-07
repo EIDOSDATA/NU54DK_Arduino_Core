@@ -1,0 +1,33 @@
+{
+  "observed_at_utc": "2026-09-07T08:35:55.250952+00:00",
+  "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "source": "054d08fc869cb4089434f02800b5c438c1407be9",
+  "frequency_hz": 10000000,
+  "explicit_flash_reset_halt_resume": false,
+  "observations": [
+    {
+      "cmsis_dap.limit_packets": false,
+      "chunks": 49,
+      "bytes": 194188,
+      "mismatched_bytes": 0,
+      "state_before": "HALTED",
+      "backend_packets": 8,
+      "state_after": "HALTED",
+      "read_complete": true,
+      "seconds": 1.953,
+      "read_sha256": "db7742cd73993ce8454af84af779df7c8c0447eb3c54a4a18c5e94d41cdff9fa"
+    },
+    {
+      "cmsis_dap.limit_packets": true,
+      "chunks": 49,
+      "bytes": 194188,
+      "mismatched_bytes": 0,
+      "state_before": "HALTED",
+      "backend_packets": 1,
+      "state_after": "HALTED",
+      "read_complete": true,
+      "seconds": 2.985,
+      "read_sha256": "db7742cd73993ce8454af84af779df7c8c0447eb3c54a4a18c5e94d41cdff9fa"
+    }
+  ]
+}

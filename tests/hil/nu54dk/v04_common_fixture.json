@@ -1,0 +1,269 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "status": "wiring-check-preparation-not-physical-pass",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "schematic_page": 9,
+  "global_conditions": [
+    "두 USB 전원을 모두 분리한 상태에서 결선과 변경",
+    "각 보드는 자기 USB로만 전원 공급; 두 보드 전원 레일은 서로 연결 금지",
+    "공통 GND와 표의 신호만 연결; 두 보드 VDD_MOD 전압 동일 여부 확인",
+    "두 보드 debug-control의 DISABLE_UART는 DAP 분리 상태, DISABLE_SWD는 SWD 연결 상태",
+    "스위치 레버 방향만으로 ON/OFF를 추정하지 않음; 회로의 신호 상태 기준",
+    "fixture에 명시된 공유 회로 외 외부 장치·배터리·점퍼의 다른 출력이 시험 선을 구동하지 않음"
+  ],
+  "fixtures": [
+    {
+      "id": 501,
+      "family": "wiring",
+      "banks": [
+        3,
+        3
+      ],
+      "instances": [
+        [],
+        []
+      ],
+      "links": [
+        {
+          "dut": [
+            "P4",
+            12,
+            "P1.14"
+          ],
+          "peer": [
+            "P4",
+            12,
+            "P1.14"
+          ],
+          "signal": "net-1"
+        },
+        {
+          "dut": [
+            "P4",
+            8,
+            "P1.10"
+          ],
+          "peer": [
+            "P4",
+            8,
+            "P1.10"
+          ],
+          "signal": "net-2"
+        },
+        {
+          "dut": [
+            "P2",
+            12,
+            "P1.4"
+          ],
+          "peer": [
+            "P2",
+            12,
+            "P1.4"
+          ],
+          "signal": "net-3"
+        },
+        {
+          "dut": [
+            "P2",
+            11,
+            "P1.5"
+          ],
+          "peer": [
+            "P2",
+            11,
+            "P1.5"
+          ],
+          "signal": "net-4"
+        },
+        {
+          "dut": [
+            "P2",
+            10,
+            "P1.6"
+          ],
+          "peer": [
+            "P2",
+            9,
+            "P1.7"
+          ],
+          "signal": "net-5"
+        },
+        {
+          "dut": [
+            "P2",
+            9,
+            "P1.7"
+          ],
+          "peer": [
+            "P2",
+            10,
+            "P1.6"
+          ],
+          "signal": "net-6"
+        },
+        {
+          "dut": [
+            "P2",
+            25,
+            "P0.0"
+          ],
+          "peer": [
+            "P2",
+            25,
+            "P0.0"
+          ],
+          "signal": "net-7"
+        },
+        {
+          "dut": [
+            "P2",
+            26,
+            "P0.1"
+          ],
+          "peer": [
+            "P2",
+            26,
+            "P0.1"
+          ],
+          "signal": "net-8"
+        },
+        {
+          "dut": [
+            "P4",
+            4,
+            "P0.2"
+          ],
+          "peer": [
+            "P4",
+            4,
+            "P0.2"
+          ],
+          "signal": "net-9"
+        },
+        {
+          "dut": [
+            "P4",
+            5,
+            "P0.3"
+          ],
+          "peer": [
+            "P4",
+            5,
+            "P0.3"
+          ],
+          "signal": "net-10"
+        },
+        {
+          "dut": [
+            "P4",
+            19,
+            "P2.0"
+          ],
+          "peer": [
+            "P4",
+            19,
+            "P2.0"
+          ],
+          "signal": "net-11"
+        },
+        {
+          "dut": [
+            "P4",
+            20,
+            "P2.1"
+          ],
+          "peer": [
+            "P4",
+            20,
+            "P2.1"
+          ],
+          "signal": "net-12"
+        },
+        {
+          "dut": [
+            "P4",
+            21,
+            "P2.2"
+          ],
+          "peer": [
+            "P4",
+            21,
+            "P2.2"
+          ],
+          "signal": "net-13"
+        },
+        {
+          "dut": [
+            "P4",
+            22,
+            "P2.3"
+          ],
+          "peer": [
+            "P4",
+            22,
+            "P2.3"
+          ],
+          "signal": "net-14"
+        },
+        {
+          "dut": [
+            "P2",
+            17,
+            "P2.4"
+          ],
+          "peer": [
+            "P2",
+            17,
+            "P2.4"
+          ],
+          "signal": "net-15"
+        },
+        {
+          "dut": [
+            "P2",
+            19,
+            "P2.5"
+          ],
+          "peer": [
+            "P2",
+            19,
+            "P2.5"
+          ],
+          "signal": "net-16"
+        },
+        {
+          "dut": [
+            "P2",
+            20,
+            "P2.6"
+          ],
+          "peer": [
+            "P2",
+            20,
+            "P2.6"
+          ],
+          "signal": "net-17"
+        },
+        {
+          "dut": [
+            "P2",
+            30,
+            "GND"
+          ],
+          "peer": [
+            "P2",
+            30,
+            "GND"
+          ],
+          "signal": "GND"
+        }
+      ],
+      "notes": "고정 17신호의 입력 pull-up과 단일 open-drain LOW만 허용. P2.07/P2.08과 전원 레일 제외. GPIO API 기능 PASS와 구별.",
+      "pullups": [],
+      "repetitions": 3,
+      "pulse_limit_ms": 500
+    }
+  ]
+}

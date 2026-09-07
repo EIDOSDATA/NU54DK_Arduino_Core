@@ -1,0 +1,8 @@
+test_duration_is_fresh_for_each_invocation (test_v04_campaign.CampaignTests.test_duration_is_fresh_for_each_invocation) ... ok
+test_invalid_or_unbounded_options_fail_closed (test_v04_campaign.CampaignTests.test_invalid_or_unbounded_options_fail_closed) ... ok
+test_repetition_campaign_is_bounded (test_v04_campaign.CampaignTests.test_repetition_campaign_is_bounded) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+OK
