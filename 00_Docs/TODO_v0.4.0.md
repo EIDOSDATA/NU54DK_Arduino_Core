@@ -1,13 +1,13 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
-직전 완료 범위(T12/T14): PWM 미시작 STOP 결함 수정과 두 보드 1,944명령/4,320회 회귀를 완료했다. 이어 내부 ADC·TIMER·EGU/DPPI/PPIB·시간 함수와 PWM 회귀 1,808명령을 두 보드에서 통과했다. 완료한 전체 로컬 Host 680 PASS·1 조건부 SKIP, 전체 target 61/61과 확장 target 1/1, 설치 예제 29/29를 검증했다. 상세 source와 최초 실패는 94·95번에 보존한다. 현재 보드 간 결선은 해제됐으며 T12 전체·T13 이후는 미완료다.
+직전 완료 범위(T12/T14): PWM 미시작 STOP 결함 수정과 두 보드 1,944명령/4,320회 회귀를 완료했다. 이어 내부 ADC·TIMER·EGU/DPPI/PPIB·시간 함수와 PWM 회귀 1,808명령을 두 보드에서 통과했다. 최종 원격 Software 7/7·재현 빌드 8/8과 Host 680 PASS·2 조건부 SKIP, 전체 target 61/61과 확장 target 1/1, 설치 예제 29/29를 검증했다. 상세 source와 최초 실패는 94·95번에 보존한다. 현재 보드 간 결선은 해제됐으며 T12 전체·T13 이후는 미완료다.
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.28 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.29 |
 | 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 외부/내부 부분 PASS·전체 미완료 |
 | 작성·갱신일 | 2026-09-07 |
-| 작성 직전 기준 commit | `3bc8fad6ca347e5e3cbc888149c0d4d727473c22` — package CLI UTF-8 교정과 최종 Host source; 내부 HIL은 874658a, 전체 target·설치 package 제품 source는 080d771 |
+| 작성 직전 기준 commit | `828166109968b2ceb40fc2d9c054255558d995d5` — 최종 원격 두 workflow 15개 job SUCCESS; 내부 HIL은 874658a, 전체 로컬 target·설치 package 제품 source는 080d771 |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
 | 다음 착수 항목 | **T12 PWM peer capture·GPIO/GPIOTE·I2S 연속/단방향·QDEC 추가 조건. 상세 범위는 95번** |
 | 이번 요청의 실행 범위 | 사용자가 결선 해제 상태에서 자동 진행 가능한 범위의 실행을 지시했다. T14 PWM 미시작 STOP 최소 재현·수정·Host/target/무점퍼 보드 회귀, T12 잔여 시험 준비와 소프트웨어 검증, 문서·정리·commit/push를 수행한다. 보드 접근은 exact UID·SWD 10 MHz·controlled start로 제한한다. 새 결선이나 물리 재연결이 필요하면 해당 실기만 보류하고 독립 작업을 마무리한다 |
@@ -59,13 +59,14 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | 다음 작업에 필요한 사용자 행동 | 현재 자동 실행 중인 실기는 없다. 다음 외부 시험의 정확한 GPIO 결선 안내 후 두 USB 분리·결선 변경·재연결 확인이 필요하다 |
 | 외부 결선 상태 | 2026-09-07 사용자 최신 보고: 보드 간 결선 해제. 이전 440 결선 확인은 현재 유효하지 않다. 두 USB/SWD로 무점퍼 HIL을 완료했으며 해당 image의 UART/console은 off다. 두 보드 ADC/PWM/DPPI off·P1.14 입력 복귀를 읽었다 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
+| 다른 PC 재개 | [인계 문서](HANDOFF_v0.4.0_다른_PC.md)에 clone·환경·source·보드 상태·다음 T12와 로컬 보존물을 정리했다. 사용자 요청으로 이번 마무리 후 다른 PC에서 이어간다 |
 | 마지막 정식 외부 HIL source | `f02734d69d9722085771fc1a34d5ed0cf756bc4e` — 연속 기능/cleanup 96·밀도 16 PASS, 미실행 0. 기본 192+32는 코드·설정이 같은 917dc02에서 실행 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. 420 정의된 기능·준비 취소와 430 I2S 기능 완료. T12 전체·T13 이후·R14·RC·공개는 대기. 공용 자원 경로 변경 이후 필요한 최종-source 통신 회귀는 후속 통합에서 확인 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
 | 이 TODO 작성 작업의 실행 중 시험 | 없음. 두 보드는 874658a nojumper image의 명령 대기 상태, ready count 904·실패 latch 0. 보드별 원본 journal과 최종 register를 95번에 보존 |
 | 로컬 임시 build·evidence | 최종 C:/u4p·C:/nj26·C:/nj27·C:/nj28·C:/u4y 및 CI 비교용 C:/u4ci15·C:/u4ci15n 유지. 이번 초안/준비 진단 28파일을 hash 검증 ZIP으로 보관. C:/u4d2·C:/u4d3·C:/u4x 삭제는 자동 승인 검토 차단으로 미실행이며 94번에 목록과 이유를 보존. 과거 65번 정리 결과는 유지 |
 | 최종 정렬 gate | clang-format 22.1.8, C/C++/ino 371개 PASS. 한국어 Doxygen·Allman·4칸·중괄호 필수 |
-| CI 확인 | 직전 전체 로컬 PASS는 clean 65f5ae2의 85그룹 680 PASS·1 조건부 SKIP. 최신 3bc8fad 전체 Host는 R02의 WinError 4551로 중단돼 이후 미실행이며 원격 전체 판정을 기다린다. R13 CP1252 재현 포함 6개·package 20개·CI 계약 45개 PASS. 원격 f67f568에서 GNU15/LLD20의 BLE 세 시험 실행 PASS 뒤 package CLI 인코딩 실패를 확인해 진입점에서 교정했다. M13 설치본 발견 11 PASS 별도. 최종 원격 두 workflow는 push SHA별 원본을 따르며 모든 실패·교정은 94번에서 추적한다 |
+| CI 확인 | Exact 8281661 원격 Software Gates 7/7·Reproducible Builds 8/8 SUCCESS. Host 85그룹 680 PASS·2 조건부 SKIP(설치 CLI/NCS 환경 조건). 계약 45·package 20·문서 205 PASS. 로컬 3bc8fad Host의 WinError 4551 중단은 실패 기록으로 유지하며 원격 전체 실행으로 최종 source를 검증했다. M13 설치본 발견 11 PASS와 exact NCS 검사 별도. 94번의 원본 로그·SHA·15개 job 감사 참조. 이 후속 commit은 문서·증거만 갱신한다 |
 | 문서 작업 검증 | 94·95번과 활성 문서에서 결과·source·남은 조건을 연결했다. 원본 433개와 stage 884개 대조·문서 205개 검사를 통과했다. CI 후속 교정은 94번 별도 evidence에 추가하고 변경 문서를 재검사한다. 93번 이하 역사 기록은 유지 |
 | 최종 HIL 입력 찾기 | 95번 evidence/t12-internal-nojumper-874658a에 C:/nj28 exact image·두 보드 1,808명령과 독립 감사·postflight. 최초 35f30b2 실패는 별도 폴더. 기존 외부 PDM은 92번 f02734d이며 결선 해제 후 재실행하지 않음 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |

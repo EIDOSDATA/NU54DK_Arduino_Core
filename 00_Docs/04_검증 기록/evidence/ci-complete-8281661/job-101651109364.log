@@ -1,0 +1,627 @@
+2026-09-07T06:59:00.6078093Z Current runner version: '2.337.0'
+2026-09-07T06:59:00.6112401Z ##[group]Runner Image Provisioner
+2026-09-07T06:59:00.6113702Z Hosted Compute Agent
+2026-09-07T06:59:00.6114682Z Version: 20260828.587
+2026-09-07T06:59:00.6115654Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-07T06:59:00.6116938Z Build Date: 2026-08-28T16:44:25Z
+2026-09-07T06:59:00.6118104Z Worker ID: {bd8be9db-db8d-4a9d-bc7a-8f9f04e107d5}
+2026-09-07T06:59:00.6119258Z Azure Region: eastus
+2026-09-07T06:59:00.6120171Z ##[endgroup]
+2026-09-07T06:59:00.6122287Z ##[group]Operating System
+2026-09-07T06:59:00.6123236Z Ubuntu
+2026-09-07T06:59:00.6124143Z 24.04.4
+2026-09-07T06:59:00.6125098Z LTS
+2026-09-07T06:59:00.6125941Z ##[endgroup]
+2026-09-07T06:59:00.6126972Z ##[group]Runner Image
+2026-09-07T06:59:00.6127862Z Image: ubuntu-24.04
+2026-09-07T06:59:00.6128860Z Version: 20260831.293.1
+2026-09-07T06:59:00.6130928Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260831.293/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-07T06:59:00.6133426Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260831.293
+2026-09-07T06:59:00.6135035Z ##[endgroup]
+2026-09-07T06:59:00.6137131Z ##[group]GITHUB_TOKEN Permissions
+2026-09-07T06:59:00.6140017Z Contents: read
+2026-09-07T06:59:00.6140903Z Metadata: read
+2026-09-07T06:59:00.6141734Z Packages: read
+2026-09-07T06:59:00.6142787Z ##[endgroup]
+2026-09-07T06:59:00.6145576Z Secret source: Actions
+2026-09-07T06:59:00.6147564Z Prepare workflow directory
+2026-09-07T06:59:00.6916146Z Prepare all required actions
+2026-09-07T06:59:00.6965320Z Getting action download info
+2026-09-07T06:59:00.8325568Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-07T06:59:00.9219704Z Download action repository 'actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9' (SHA:55cc8345863c7cc4c66a329aec7e433d2d1c52a9)
+2026-09-07T06:59:01.0373264Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-09-07T06:59:01.2252532Z Complete job name: Zephyr v0.3.0 in pinned Nordic container
+2026-09-07T06:59:01.2723025Z ##[group]Checking docker version
+2026-09-07T06:59:01.2735690Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+2026-09-07T06:59:01.3505068Z '1.48'
+2026-09-07T06:59:01.3522513Z Docker daemon API version: '1.48'
+2026-09-07T06:59:01.3523281Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+2026-09-07T06:59:01.3686062Z '1.48'
+2026-09-07T06:59:01.3699367Z Docker client API version: '1.48'
+2026-09-07T06:59:01.3703933Z ##[endgroup]
+2026-09-07T06:59:01.3706295Z ##[group]Clean up resources from previous jobs
+2026-09-07T06:59:01.3712462Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=491c2d"
+2026-09-07T06:59:01.3856419Z ##[command]/usr/bin/docker network prune --force --filter "label=491c2d"
+2026-09-07T06:59:01.3984457Z ##[endgroup]
+2026-09-07T06:59:01.3985004Z ##[group]Create local container network
+2026-09-07T06:59:01.3995364Z ##[command]/usr/bin/docker network create --label 491c2d github_network_b70236fb081a43bd94df29c4299aeb08
+2026-09-07T06:59:01.4495171Z e741605a9c60bbc1e59b581a6948fc315c63d8cc91cc74af55b43b016f9fc5fa
+2026-09-07T06:59:01.4514473Z ##[endgroup]
+2026-09-07T06:59:01.4538591Z ##[group]Starting job container
+2026-09-07T06:59:01.4562940Z ##[command]/usr/bin/docker --config /home/runner/work/_temp/.docker_ad6447e3-25a6-47a0-8207-8e38d930f090 login ghcr.io -u EIDOSDATA --password-stdin
+2026-09-07T06:59:01.6240064Z ##[command]/usr/bin/docker --config /home/runner/work/_temp/.docker_ad6447e3-25a6-47a0-8207-8e38d930f090 pull ghcr.io/nrfconnect/sdk-nrf-toolchain@sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace
+2026-09-07T06:59:01.8136405Z ghcr.io/nrfconnect/sdk-nrf-toolchain@sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace: Pulling from nrfconnect/sdk-nrf-toolchain
+2026-09-07T06:59:01.8138789Z 0e5f8475f38b: Pulling fs layer
+2026-09-07T06:59:01.8139685Z 141b168d8f33: Pulling fs layer
+2026-09-07T06:59:01.8140254Z 4d388cae68ce: Pulling fs layer
+2026-09-07T06:59:01.8140768Z 247b86090209: Pulling fs layer
+2026-09-07T06:59:01.8141268Z 62cc81e4bb07: Pulling fs layer
+2026-09-07T06:59:01.8141774Z b95acdca19cd: Pulling fs layer
+2026-09-07T06:59:01.8142298Z cb6074b2feb0: Pulling fs layer
+2026-09-07T06:59:01.8142805Z c9e9dcbde5ee: Pulling fs layer
+2026-09-07T06:59:01.8143298Z 247b86090209: Waiting
+2026-09-07T06:59:01.8143741Z 62cc81e4bb07: Waiting
+2026-09-07T06:59:01.8144188Z b95acdca19cd: Waiting
+2026-09-07T06:59:01.8144627Z c9e9dcbde5ee: Waiting
+2026-09-07T06:59:01.8145064Z cb6074b2feb0: Waiting
+2026-09-07T06:59:01.9114440Z 4d388cae68ce: Verifying Checksum
+2026-09-07T06:59:01.9119978Z 4d388cae68ce: Download complete
+2026-09-07T06:59:01.9722396Z 0e5f8475f38b: Verifying Checksum
+2026-09-07T06:59:01.9723717Z 0e5f8475f38b: Download complete
+2026-09-07T06:59:02.0341045Z 62cc81e4bb07: Download complete
+2026-09-07T06:59:02.3103617Z b95acdca19cd: Verifying Checksum
+2026-09-07T06:59:02.3104754Z b95acdca19cd: Download complete
+2026-09-07T06:59:02.3729725Z cb6074b2feb0: Verifying Checksum
+2026-09-07T06:59:02.3730660Z cb6074b2feb0: Download complete
+2026-09-07T06:59:02.4370835Z c9e9dcbde5ee: Verifying Checksum
+2026-09-07T06:59:02.4387641Z c9e9dcbde5ee: Download complete
+2026-09-07T06:59:03.1018368Z 141b168d8f33: Verifying Checksum
+2026-09-07T06:59:03.1030345Z 141b168d8f33: Download complete
+2026-09-07T06:59:03.5233893Z 0e5f8475f38b: Pull complete
+2026-09-07T06:59:06.2818522Z 247b86090209: Verifying Checksum
+2026-09-07T06:59:06.2819058Z 247b86090209: Download complete
+2026-09-07T06:59:19.1356731Z 141b168d8f33: Pull complete
+2026-09-07T06:59:19.3119745Z 4d388cae68ce: Pull complete
+2026-09-07T06:59:51.4458470Z 247b86090209: Pull complete
+2026-09-07T06:59:51.4547070Z 62cc81e4bb07: Pull complete
+2026-09-07T06:59:51.6449387Z b95acdca19cd: Pull complete
+2026-09-07T06:59:51.6530968Z cb6074b2feb0: Pull complete
+2026-09-07T06:59:51.6596280Z c9e9dcbde5ee: Pull complete
+2026-09-07T06:59:51.6628433Z Digest: sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace
+2026-09-07T06:59:51.6636258Z Status: Downloaded newer image for ghcr.io/nrfconnect/sdk-nrf-toolchain@sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace
+2026-09-07T06:59:51.6643653Z ghcr.io/nrfconnect/sdk-nrf-toolchain@sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace
+2026-09-07T06:59:51.6726967Z ##[command]/usr/bin/docker create --name fd9b4aa0412347f2a6af3508592945f7_ghcrionrfconnectsdknrftoolchainsha256f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace_f843d3 --label 491c2d --workdir /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core --network github_network_b70236fb081a43bd94df29c4299aeb08  -e "HOME=/github/home" -e GITHUB_ACTIONS=true -e CI=true -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work":"/__w" -v "/home/runner/actions-runner/cached/2.337.0/externals":"/__e":ro -v "/home/runner/work/_temp":"/__w/_temp" -v "/home/runner/work/_actions":"/__w/_actions" -v "/opt/hostedtoolcache":"/__t" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" --entrypoint "tail" ghcr.io/nrfconnect/sdk-nrf-toolchain@sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace "-f" "/dev/null"
+2026-09-07T06:59:51.6958922Z 2166a185d1aea1ad90062d99d1870bcf82a4fcea277ed5309f88a5df69e645a9
+2026-09-07T06:59:51.6981670Z ##[command]/usr/bin/docker start 2166a185d1aea1ad90062d99d1870bcf82a4fcea277ed5309f88a5df69e645a9
+2026-09-07T06:59:51.8677501Z 2166a185d1aea1ad90062d99d1870bcf82a4fcea277ed5309f88a5df69e645a9
+2026-09-07T06:59:51.8701822Z ##[command]/usr/bin/docker ps --all --filter id=2166a185d1aea1ad90062d99d1870bcf82a4fcea277ed5309f88a5df69e645a9 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+2026-09-07T06:59:51.8823717Z 2166a185d1aea1ad90062d99d1870bcf82a4fcea277ed5309f88a5df69e645a9 Up Less than a second
+2026-09-07T06:59:51.8841221Z ##[command]/usr/bin/docker inspect --format "{{range .Config.Env}}{{println .}}{{end}}" 2166a185d1aea1ad90062d99d1870bcf82a4fcea277ed5309f88a5df69e645a9
+2026-09-07T06:59:51.8965363Z HOME=/github/home
+2026-09-07T06:59:51.8965706Z GITHUB_ACTIONS=true
+2026-09-07T06:59:51.8966029Z CI=true
+2026-09-07T06:59:51.8966441Z PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+2026-09-07T06:59:51.8967165Z BASH_ENV=/opt/non-interactive-setup.sh
+2026-09-07T06:59:51.8983592Z ##[endgroup]
+2026-09-07T06:59:51.8992901Z ##[group]Waiting for all services to be ready
+2026-09-07T06:59:51.8994497Z ##[endgroup]
+2026-09-07T06:59:51.9331224Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-07T06:59:51.9331913Z with:
+2026-09-07T06:59:51.9332136Z   fetch-depth: 0
+2026-09-07T06:59:51.9332370Z   submodules: recursive
+2026-09-07T06:59:51.9332635Z   repository: EIDOSDATA/NU54DK_Arduino_Core
+2026-09-07T06:59:51.9335364Z   token: ***
+2026-09-07T06:59:51.9335588Z   ssh-strict: true
+2026-09-07T06:59:51.9335818Z   ssh-user: git
+2026-09-07T06:59:51.9336041Z   persist-credentials: true
+2026-09-07T06:59:51.9336289Z   clean: true
+2026-09-07T06:59:51.9336512Z   sparse-checkout-cone-mode: true
+2026-09-07T06:59:51.9337449Z   fetch-tags: false
+2026-09-07T06:59:51.9337674Z   show-progress: true
+2026-09-07T06:59:51.9337895Z   lfs: false
+2026-09-07T06:59:51.9338109Z   set-safe-directory: true
+2026-09-07T06:59:51.9338370Z   allow-unsafe-pr-checkout: false
+2026-09-07T06:59:51.9338880Z env:
+2026-09-07T06:59:51.9339109Z   NCS_CI_WORKSPACE: /tmp/nu54dk-ncs-v3.4.0
+2026-09-07T06:59:51.9339610Z   M12_EVIDENCE: /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/m12-evidence/v0.3.0
+2026-09-07T06:59:51.9340055Z ##[endgroup]
+2026-09-07T06:59:51.9401845Z ##[command]/usr/bin/docker exec  2166a185d1aea1ad90062d99d1870bcf82a4fcea277ed5309f88a5df69e645a9 sh -c "cat /etc/*release | grep ^ID"
+2026-09-07T06:59:52.1329479Z Syncing repository: EIDOSDATA/NU54DK_Arduino_Core
+2026-09-07T06:59:52.1330991Z ##[group]Getting Git version info
+2026-09-07T06:59:52.1331449Z Working directory is '/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core'
+2026-09-07T06:59:52.1332254Z [command]/usr/bin/git version
+2026-09-07T06:59:52.1332518Z git version 2.43.0
+2026-09-07T06:59:52.1339418Z ##[endgroup]
+2026-09-07T06:59:52.1362491Z Temporarily overriding HOME='/__w/_temp/6e4f2d3d-4f13-4916-bb24-36ce1291abfa' before making global git config changes
+2026-09-07T06:59:52.1363619Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-07T06:59:52.1367377Z [command]/usr/bin/git config --global --add safe.directory /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core
+2026-09-07T06:59:52.1400821Z Deleting the contents of '/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core'
+2026-09-07T06:59:52.1405495Z ##[group]Determining repository object format
+2026-09-07T06:59:52.1407898Z ##[endgroup]
+2026-09-07T06:59:52.1408483Z ##[group]Initializing the repository
+2026-09-07T06:59:52.1411865Z [command]/usr/bin/git init /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core
+2026-09-07T06:59:52.1449118Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-07T06:59:52.1450054Z hint: is subject to change. To configure the initial branch name to use in all
+2026-09-07T06:59:52.1450856Z hint: of your new repositories, which will suppress this warning, call:
+2026-09-07T06:59:52.1451463Z hint: 
+2026-09-07T06:59:52.1451939Z hint: 	git config --global init.defaultBranch <name>
+2026-09-07T06:59:52.1452442Z hint: 
+2026-09-07T06:59:52.1452907Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-07T06:59:52.1453761Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-07T06:59:52.1454384Z hint: 
+2026-09-07T06:59:52.1454708Z hint: 	git branch -m <name>
+2026-09-07T06:59:52.1458997Z Initialized empty Git repository in /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/
+2026-09-07T06:59:52.1478366Z [command]/usr/bin/git remote add origin https://github.com/EIDOSDATA/NU54DK_Arduino_Core
+2026-09-07T06:59:52.1518387Z ##[endgroup]
+2026-09-07T06:59:52.1519038Z ##[group]Disabling automatic garbage collection
+2026-09-07T06:59:52.1519931Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-07T06:59:52.1559321Z ##[endgroup]
+2026-09-07T06:59:52.1559949Z ##[group]Setting up auth
+2026-09-07T06:59:52.1560408Z Removing SSH command configuration
+2026-09-07T06:59:52.1561074Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-07T06:59:52.1596335Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-07T06:59:52.1849216Z Removing HTTP extra header
+2026-09-07T06:59:52.1857322Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-07T06:59:52.1891668Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-07T06:59:52.2152061Z Removing includeIf entries pointing to credentials config files
+2026-09-07T06:59:52.2153039Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T06:59:52.2189651Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-07T06:59:52.2451378Z [command]/usr/bin/git config --file /__w/_temp/git-credentials-2d23ac68-2ae6-4efb-950e-15047349b026.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-07T06:59:52.2493340Z [command]/usr/bin/git config --local includeIf.gitdir:/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git.path /__w/_temp/git-credentials-2d23ac68-2ae6-4efb-950e-15047349b026.config
+2026-09-07T06:59:52.2528018Z [command]/usr/bin/git config --local includeIf.gitdir:/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/worktrees/*.path /__w/_temp/git-credentials-2d23ac68-2ae6-4efb-950e-15047349b026.config
+2026-09-07T06:59:52.2563260Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-2d23ac68-2ae6-4efb-950e-15047349b026.config
+2026-09-07T06:59:52.2598392Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-2d23ac68-2ae6-4efb-950e-15047349b026.config
+2026-09-07T06:59:52.2629688Z ##[endgroup]
+2026-09-07T06:59:52.2630168Z ##[group]Fetching the repository
+2026-09-07T06:59:52.2637821Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-09-07T06:59:55.5213282Z From https://github.com/EIDOSDATA/NU54DK_Arduino_Core
+2026-09-07T06:59:55.5214091Z  * [new branch]      main               -> origin/main
+2026-09-07T06:59:55.5214697Z  * [new tag]         m10-preview-0.0.90 -> m10-preview-0.0.90
+2026-09-07T06:59:55.5215296Z  * [new tag]         m10-preview-0.0.91 -> m10-preview-0.0.91
+2026-09-07T06:59:55.5215928Z  * [new tag]         m10-preview-0.0.92 -> m10-preview-0.0.92
+2026-09-07T06:59:55.5217356Z  * [new tag]         m10-preview-0.0.93 -> m10-preview-0.0.93
+2026-09-07T06:59:55.5218217Z  * [new tag]         m10-preview-0.0.94 -> m10-preview-0.0.94
+2026-09-07T06:59:55.5219449Z  * [new tag]         m10-preview-0.0.95 -> m10-preview-0.0.95
+2026-09-07T06:59:55.5220188Z  * [new tag]         m10-preview-0.0.96 -> m10-preview-0.0.96
+2026-09-07T06:59:55.5220990Z  * [new tag]         m10-preview-0.0.97 -> m10-preview-0.0.97
+2026-09-07T06:59:55.5223046Z  * [new tag]         v0.1.0             -> v0.1.0
+2026-09-07T06:59:55.5223576Z  * [new tag]         v0.1.0-rc.2        -> v0.1.0-rc.2
+2026-09-07T06:59:55.5224085Z  * [new tag]         v0.2.0             -> v0.2.0
+2026-09-07T06:59:55.5224559Z  * [new tag]         v0.2.0-rc.1        -> v0.2.0-rc.1
+2026-09-07T06:59:55.5248163Z  * [new tag]         v0.2.0-rc.2        -> v0.2.0-rc.2
+2026-09-07T06:59:55.5254202Z  * [new tag]         v0.3.0             -> v0.3.0
+2026-09-07T06:59:55.5255222Z  * [new tag]         v0.3.0-rc.1        -> v0.3.0-rc.1
+2026-09-07T06:59:55.5255851Z  * [new tag]         v0.3.0-rc.2        -> v0.3.0-rc.2
+2026-09-07T06:59:55.5256321Z  * [new tag]         v0.3.0-rc.3        -> v0.3.0-rc.3
+2026-09-07T06:59:55.5263000Z [command]/usr/bin/git branch --list --remote origin/main
+2026-09-07T06:59:55.5295050Z   origin/main
+2026-09-07T06:59:55.5303501Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+2026-09-07T06:59:55.5331239Z 828166109968b2ceb40fc2d9c054255558d995d5
+2026-09-07T06:59:55.5336160Z ##[endgroup]
+2026-09-07T06:59:55.5337251Z ##[group]Determining the checkout info
+2026-09-07T06:59:55.5337953Z ##[endgroup]
+2026-09-07T06:59:55.5348187Z [command]/usr/bin/git sparse-checkout disable
+2026-09-07T06:59:55.5383810Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-07T06:59:55.5419162Z ##[group]Checking out the ref
+2026-09-07T06:59:55.5421699Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-09-07T06:59:56.2077813Z Switched to a new branch 'main'
+2026-09-07T06:59:56.2078399Z branch 'main' set up to track 'origin/main'.
+2026-09-07T06:59:56.2123170Z ##[endgroup]
+2026-09-07T06:59:56.2123609Z ##[group]Setting up auth for fetching submodules
+2026-09-07T06:59:56.2129755Z [command]/usr/bin/git config --file /__w/_temp/git-credentials-2d23ac68-2ae6-4efb-950e-15047349b026.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-07T06:59:56.2174680Z [command]/usr/bin/git config --global include.path /__w/_temp/git-credentials-2d23ac68-2ae6-4efb-950e-15047349b026.config
+2026-09-07T06:59:56.2218579Z [command]/usr/bin/git config --global --unset-all url.https://github.com/.insteadOf
+2026-09-07T06:59:56.2254630Z [command]/usr/bin/git config --global --add url.https://github.com/.insteadOf git@github.com:
+2026-09-07T06:59:56.2292481Z [command]/usr/bin/git config --global --add url.https://github.com/.insteadOf org-48746729@github.com:
+2026-09-07T06:59:56.2327309Z ##[endgroup]
+2026-09-07T06:59:56.2328116Z ##[group]Fetching submodules
+2026-09-07T06:59:56.2330689Z [command]/usr/bin/git submodule sync --recursive
+2026-09-07T06:59:56.2603061Z [command]/usr/bin/git -c protocol.version=2 submodule update --init --force --recursive
+2026-09-07T06:59:56.2858849Z Submodule 'board_package/NU54DK_Zephyr_DTS' (https://github.com/Nucode01/NU54DK_Zephyr_DTS.git) registered for path 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:59:56.2887678Z Cloning into '/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS'...
+2026-09-07T06:59:57.3564811Z Submodule path 'board_package/NU54DK_Zephyr_DTS': checked out 'fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3'
+2026-09-07T06:59:57.3601001Z [command]/usr/bin/git submodule foreach --recursive git config --local gc.auto 0
+2026-09-07T06:59:57.3847483Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:59:57.3894231Z ##[endgroup]
+2026-09-07T06:59:57.3894857Z ##[group]Persisting credentials for submodules
+2026-09-07T06:59:57.3901230Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'url\.https\:\/\/github\.com\/\.insteadOf' && git config --local --unset-all 'url.https://github.com/.insteadOf' || :"
+2026-09-07T06:59:57.4145662Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:59:57.4201707Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-07T06:59:57.4448383Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:59:57.4467699Z file:/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config	remote.origin.url
+2026-09-07T06:59:57.4498455Z [command]/usr/bin/git config --file /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config includeIf.gitdir:/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS.path /__w/_temp/git-credentials-2d23ac68-2ae6-4efb-950e-15047349b026.config
+2026-09-07T06:59:57.4539289Z [command]/usr/bin/git config --file /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config includeIf.gitdir:/github/workspace/.git/modules/board_package/NU54DK_Zephyr_DTS.path /github/runner_temp/git-credentials-2d23ac68-2ae6-4efb-950e-15047349b026.config
+2026-09-07T06:59:57.4575681Z [command]/usr/bin/git submodule foreach --recursive git config --local --add 'url.https://github.com/.insteadOf' 'git@github.com:'
+2026-09-07T06:59:57.4820717Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:59:57.4872498Z [command]/usr/bin/git submodule foreach --recursive git config --local --add 'url.https://github.com/.insteadOf' 'org-48746729@github.com:'
+2026-09-07T06:59:57.5114610Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:59:57.5162568Z ##[endgroup]
+2026-09-07T06:59:57.5207618Z [command]/usr/bin/git log -1 --format=%H
+2026-09-07T06:59:57.5239183Z 828166109968b2ceb40fc2d9c054255558d995d5
+2026-09-07T06:59:57.5469079Z ##[group]Run python3 tools/ci/verify_ci_lock.py --github-output
+2026-09-07T06:59:57.5469612Z [36;1mpython3 tools/ci/verify_ci_lock.py --github-output[0m
+2026-09-07T06:59:57.5474104Z shell: bash --noprofile --norc -e -o pipefail {0}
+2026-09-07T06:59:57.5474439Z env:
+2026-09-07T06:59:57.5474672Z   NCS_CI_WORKSPACE: /tmp/nu54dk-ncs-v3.4.0
+2026-09-07T06:59:57.5475149Z   M12_EVIDENCE: /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/m12-evidence/v0.3.0
+2026-09-07T06:59:57.5475588Z ##[endgroup]
+2026-09-07T06:59:57.8743030Z {"container": "ghcr.io/nrfconnect/sdk-nrf-toolchain@sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace", "linux_cache_key": "ncs-linux-amd64-99553055607b2e9885fbc80ccd11fa9da81c2df0-bf801e4e3d19e1ffa76164346480cb7734dd2800-tc-fbf7391cab-img-f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace", "lock_sha256": "c7b13775c24c7e6b8e3e57cabd15223d9c28e97267571d3067edf9c0bc808e86", "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0", "windows_cache_key": "ncs-windows-x64-99553055607b2e9885fbc80ccd11fa9da81c2df0-bf801e4e3d19e1ffa76164346480cb7734dd2800-tc-dcbdc366a1", "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"}
+2026-09-07T06:59:57.8948116Z ##[group]Run actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+2026-09-07T06:59:57.8948502Z with:
+2026-09-07T06:59:57.8948730Z   path: /tmp/nu54dk-ncs-v3.4.0
+2026-09-07T06:59:57.8949676Z   key: ncs-linux-amd64-99553055607b2e9885fbc80ccd11fa9da81c2df0-bf801e4e3d19e1ffa76164346480cb7734dd2800-tc-fbf7391cab-img-f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace
+2026-09-07T06:59:57.8950646Z   enableCrossOsArchive: false
+2026-09-07T06:59:57.8950909Z   fail-on-cache-miss: false
+2026-09-07T06:59:57.8951162Z   lookup-only: false
+2026-09-07T06:59:57.8951381Z   save-always: false
+2026-09-07T06:59:57.8951581Z env:
+2026-09-07T06:59:57.8951805Z   NCS_CI_WORKSPACE: /tmp/nu54dk-ncs-v3.4.0
+2026-09-07T06:59:57.8952268Z   M12_EVIDENCE: /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/m12-evidence/v0.3.0
+2026-09-07T06:59:57.8952725Z ##[endgroup]
+2026-09-07T06:59:57.8957751Z ##[command]/usr/bin/docker exec  2166a185d1aea1ad90062d99d1870bcf82a4fcea277ed5309f88a5df69e645a9 sh -c "cat /etc/*release | grep ^ID"
+2026-09-07T06:59:58.1638712Z Cache hit for: ncs-linux-amd64-99553055607b2e9885fbc80ccd11fa9da81c2df0-bf801e4e3d19e1ffa76164346480cb7734dd2800-tc-fbf7391cab-img-f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace
+2026-09-07T06:59:59.2259948Z Received 213909504 of 3680507477 (5.8%), 204.0 MBs/sec
+2026-09-07T07:00:00.2354548Z Received 411041792 of 3680507477 (11.2%), 194.9 MBs/sec
+2026-09-07T07:00:01.2357652Z Received 671088640 of 3680507477 (18.2%), 212.6 MBs/sec
+2026-09-07T07:00:02.2548142Z Received 939524096 of 3680507477 (25.5%), 222.3 MBs/sec
+2026-09-07T07:00:03.2549882Z Received 1207959552 of 3680507477 (32.8%), 229.0 MBs/sec
+2026-09-07T07:00:04.2570655Z Received 1442840576 of 3680507477 (39.2%), 228.2 MBs/sec
+2026-09-07T07:00:05.2553872Z Received 1681915904 of 3680507477 (45.7%), 228.2 MBs/sec
+2026-09-07T07:00:06.2555016Z Received 1912602624 of 3680507477 (52.0%), 227.1 MBs/sec
+2026-09-07T07:00:07.2849267Z Received 2147483648 of 3680507477 (58.3%), 226.0 MBs/sec
+2026-09-07T07:00:08.3070580Z Received 2378170368 of 3680507477 (64.6%), 225.0 MBs/sec
+2026-09-07T07:00:09.3118079Z Received 2642411520 of 3680507477 (71.8%), 227.3 MBs/sec
+2026-09-07T07:00:10.3140326Z Received 2860515328 of 3680507477 (77.7%), 225.7 MBs/sec
+2026-09-07T07:00:11.3123198Z Received 3087007744 of 3680507477 (83.9%), 225.0 MBs/sec
+2026-09-07T07:00:12.3139581Z Received 3355443200 of 3680507477 (91.2%), 227.1 MBs/sec
+2026-09-07T07:00:13.3135254Z Received 3611295744 of 3680507477 (98.1%), 228.2 MBs/sec
+2026-09-07T07:00:13.6320855Z Received 3680507477 of 3680507477 (100.0%), 227.8 MBs/sec
+2026-09-07T07:00:13.6322408Z Cache Size: ~3510 MB (3680507477 B)
+2026-09-07T07:00:13.6430810Z [command]/usr/bin/tar -xf /__w/_temp/8eeacd0d-e4c9-46f9-9162-76f07f2f3449/cache.tgz -P -C /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core -z
+2026-09-07T07:00:50.4845219Z Cache restored successfully
+2026-09-07T07:00:50.6635426Z Cache restored from key: ncs-linux-amd64-99553055607b2e9885fbc80ccd11fa9da81c2df0-bf801e4e3d19e1ffa76164346480cb7734dd2800-tc-fbf7391cab-img-f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace
+2026-09-07T07:00:50.6873074Z ##[group]Run python3 tools/ci/prepare_ncs_workspace.py --workspace "$NCS_CI_WORKSPACE" --evidence "$M12_EVIDENCE/ncs-identity.json"
+2026-09-07T07:00:50.6874064Z [36;1mpython3 tools/ci/prepare_ncs_workspace.py --workspace "$NCS_CI_WORKSPACE" --evidence "$M12_EVIDENCE/ncs-identity.json"[0m
+2026-09-07T07:00:50.6874861Z shell: bash --noprofile --norc -e -o pipefail {0}
+2026-09-07T07:00:50.6875181Z env:
+2026-09-07T07:00:50.6875419Z   NCS_CI_WORKSPACE: /tmp/nu54dk-ncs-v3.4.0
+2026-09-07T07:00:50.6875889Z   M12_EVIDENCE: /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/m12-evidence/v0.3.0
+2026-09-07T07:00:50.6876324Z ##[endgroup]
+2026-09-07T07:00:50.8255135Z [M12-NCS] exec: git fetch --no-tags --depth=1 origin 99553055607b2e9885fbc80ccd11fa9da81c2df0
+2026-09-07T07:00:54.3432260Z From https://github.com/nrfconnect/sdk-nrf
+2026-09-07T07:00:54.3432962Z  * branch              99553055607b2e9885fbc80ccd11fa9da81c2df0 -> FETCH_HEAD
+2026-09-07T07:00:54.3433691Z [M12-NCS] exec: git checkout --detach 99553055607b2e9885fbc80ccd11fa9da81c2df0
+2026-09-07T07:00:55.1404702Z HEAD is now at 99553055 manifest: Update revisions for v3.4.0 tag
+2026-09-07T07:00:55.1405348Z [M12-NCS] exec: west update --narrow
+2026-09-07T07:01:08.3835721Z === updating zephyr (zephyr):
+2026-09-07T07:01:08.3836268Z --- zephyr: fetching, need revision ncs-v3.4.0
+2026-09-07T07:01:08.3837193Z From https://github.com/nrfconnect/sdk-zephyr
+2026-09-07T07:01:08.3837729Z  * tag                       ncs-v3.4.0 -> FETCH_HEAD
+2026-09-07T07:01:08.3838412Z HEAD is now at bf801e4e3d1 [nrf fromtree] doc: zms: add interactive storage calculators
+2026-09-07T07:01:08.3839074Z === updating bsim (tools/bsim):
+2026-09-07T07:01:08.3839573Z HEAD is now at a88d335 main manifest: Update to v2.5
+2026-09-07T07:01:08.3840209Z === updating wfa-qt-control-app (modules/lib/wfa-qt-control-app):
+2026-09-07T07:01:08.3840929Z HEAD is now at 1f19f0b ci: Whitelist Zephyr compliance checks in workflow
+2026-09-07T07:01:08.3841556Z === updating mcuboot (bootloader/mcuboot):
+2026-09-07T07:01:08.3842043Z --- mcuboot: fetching, need revision ncs-v3.4.0
+2026-09-07T07:01:08.3842578Z From https://github.com/nrfconnect/sdk-mcuboot
+2026-09-07T07:01:08.3843065Z  * tag                 ncs-v3.4.0 -> FETCH_HEAD
+2026-09-07T07:01:08.3843702Z HEAD is now at c1d2d128 [nrf noup] boot/zephyr/kconfig: nrf54h20 default to PSA_CRYPTO
+2026-09-07T07:01:08.3844395Z === updating qcbor (modules/tee/tf-m/qcbor):
+2026-09-07T07:01:08.3844976Z HEAD is now at bfe7b34 [nrf noup] zephyr: module: Add module file for qcbor
+2026-09-07T07:01:08.3845595Z === updating t_cose (modules/tee/tf-m/t_cose):
+2026-09-07T07:01:08.3846194Z HEAD is now at 024c429 [nrf noup] zephyr: module: Add module file for t_cose
+2026-09-07T07:01:08.3847460Z === updating mbedtls (modules/crypto/mbedtls):
+2026-09-07T07:01:08.3847985Z --- mbedtls: fetching, need revision ncs-v3.4.0
+2026-09-07T07:01:08.3848510Z From https://github.com/nrfconnect/sdk-mbedtls
+2026-09-07T07:01:08.3849004Z  * tag                   ncs-v3.4.0 -> FETCH_HEAD
+2026-09-07T07:01:08.3849634Z HEAD is now at 4c0c10c7f [nrf toup] x509_crt.c: fix unused variable errors
+2026-09-07T07:01:08.3850345Z === updating oberon-psa-crypto (modules/crypto/oberon-psa-crypto):
+2026-09-07T07:01:08.3850996Z --- oberon-psa-crypto: fetching, need revision ncs-v3.4.0
+2026-09-07T07:01:08.3851629Z From https://github.com/nrfconnect/sdk-oberon-psa-crypto
+2026-09-07T07:01:08.3852167Z  * tag               ncs-v3.4.0 -> FETCH_HEAD
+2026-09-07T07:01:08.3852824Z HEAD is now at be405cf [nrf toup] Remove config to allow RSA PSS for TLS with TF-M
+2026-09-07T07:01:08.3853416Z === updating nrfxlib (nrfxlib):
+2026-09-07T07:01:08.3853701Z --- nrfxlib: fetching, need revision v3.4.0
+2026-09-07T07:01:08.3854036Z From https://github.com/nrfconnect/sdk-nrfxlib
+2026-09-07T07:01:08.3854409Z  * tag                   v3.4.0     -> FETCH_HEAD
+2026-09-07T07:01:08.3854864Z HEAD is now at d4ce5fe1a softdevice_controller: rev c8da3098f9f034a44b6ebad30819cc0cea51da47
+2026-09-07T07:01:08.3855679Z === updating trusted-firmware-m (modules/tee/tf-m/trusted-firmware-m):
+2026-09-07T07:01:08.3856141Z --- trusted-firmware-m: fetching, need revision ncs-v3.4.0
+2026-09-07T07:01:08.3856550Z From https://github.com/nrfconnect/sdk-trusted-firmware-m
+2026-09-07T07:01:08.3857176Z  * tag                   ncs-v3.4.0 -> FETCH_HEAD
+2026-09-07T07:01:08.3857522Z HEAD is now at c9f73070a [nrf noup] lib: qcbor: Add target
+2026-09-07T07:01:08.3857924Z === updating psa-arch-tests (modules/tee/tf-m/psa-arch-tests):
+2026-09-07T07:01:08.3858372Z HEAD is now at 2deff6b [nrf noup] platform: use older version platform api
+2026-09-07T07:01:08.3858767Z === updating matter (modules/lib/matter):
+2026-09-07T07:01:08.3859085Z --- matter: fetching, need revision v3.4.0
+2026-09-07T07:01:08.3859424Z From https://github.com/nrfconnect/sdk-connectedhomeip
+2026-09-07T07:01:08.3859768Z  * tag                     v3.4.0     -> FETCH_HEAD
+2026-09-07T07:01:08.3860175Z HEAD is now at 1206d45da3 [nrf noup] [west zap-*] Apply copilot suggestions
+2026-09-07T07:01:08.3860633Z Synchronizing submodule url for 'third_party/nlio/repo'
+2026-09-07T07:01:08.3861029Z Synchronizing submodule url for 'third_party/nlassert/repo'
+2026-09-07T07:01:08.3861436Z Synchronizing submodule url for 'third_party/pigweed/repo'
+2026-09-07T07:01:08.3861822Z Synchronizing submodule url for 'third_party/jsoncpp/repo'
+2026-09-07T07:01:08.3862166Z === updating cjson (modules/lib/cjson):
+2026-09-07T07:01:08.3862583Z HEAD is now at c6af068 [nrf fromtree] fix: potential memory leak in merge_patch() (#611)
+2026-09-07T07:01:08.3863071Z === updating azure-sdk-for-c (modules/lib/azure-sdk-for-c):
+2026-09-07T07:01:08.3863490Z HEAD is now at 308c171c [nrf fromlist] Make repository a Zephyr module
+2026-09-07T07:01:08.3863900Z === updating cirrus (modules/hal/cirrus-logic):
+2026-09-07T07:01:08.3864269Z HEAD is now at 1c837bc sdk-mcu-drivers: Kconfig compliance fix
+2026-09-07T07:01:08.3864645Z === updating openthread (modules/lib/openthread):
+2026-09-07T07:01:08.3865095Z HEAD is now at 0fe68ff23 [nrf noup] mbedtls: call mbedtls_ssl_set_hostname on setup
+2026-09-07T07:01:08.3865568Z === updating nrf_wifi (modules/lib/nrf_wifi):
+2026-09-07T07:01:08.3866022Z HEAD is now at 5046744 [nrf fromlist] hal: fw_patch_loader: derive patch chunk size from Kconfig
+2026-09-07T07:01:08.3866461Z === updating cmock (test/cmock):
+2026-09-07T07:01:08.3867019Z HEAD is now at f65066f Merge pull request #404 from tz18/patch-1
+2026-09-07T07:01:08.3867508Z Synchronizing submodule url for 'vendor/c_exception'
+2026-09-07T07:01:08.3867994Z Synchronizing submodule url for 'vendor/unity'
+2026-09-07T07:01:08.3868652Z === updating memfault-firmware-sdk (modules/lib/memfault-firmware-sdk):
+2026-09-07T07:01:08.3869584Z --- memfault-firmware-sdk: fetching, need revision 1.40.0
+2026-09-07T07:01:08.3870253Z From https://github.com/memfault/memfault-firmware-sdk
+2026-09-07T07:01:08.3870637Z  * tag               1.40.0     -> FETCH_HEAD
+2026-09-07T07:01:08.3870989Z HEAD is now at f5408bd Memfault Firmware SDK 1.40.0 (Build 18075)
+2026-09-07T07:01:08.3871382Z === updating coremark (modules/benchmark/coremark):
+2026-09-07T07:01:08.3871822Z HEAD is now at d5fad6b Merge pull request #51 from volodymyr-bondarchuk/zephyr
+2026-09-07T07:01:08.3872256Z === updating hostap (modules/lib/hostap):
+2026-09-07T07:01:08.3872688Z HEAD is now at dc22e8cf8 [noup] wpa_supplicant: Report AP enable failures to wifi mgmt
+2026-09-07T07:01:08.3873152Z === updating canopennode (modules/lib/canopennode):
+2026-09-07T07:01:08.3873576Z HEAD is now at dec12fa stack: map CANopenNode crc16_ccitt() to Zephyr crc16_itu_t()
+2026-09-07T07:01:08.3873984Z === updating chre (modules/lib/chre):
+2026-09-07T07:01:08.3874358Z HEAD is now at c4c2f49f Merge pull request #10 from aescolar/c++17_deprect
+2026-09-07T07:01:08.3874751Z === updating cmsis (modules/hal/cmsis):
+2026-09-07T07:01:08.3875057Z HEAD is now at 512cc7e cmsis: pac_armv81.h missing
+2026-09-07T07:01:08.3875391Z === updating cmsis-dsp (modules/lib/cmsis-dsp):
+2026-09-07T07:01:08.3876043Z HEAD is now at 97512610 arm_biquad_cascade_df1_32x64_q31: asrl(val, -shift) -> lsll(val, shift) (#265)
+2026-09-07T07:01:08.3878526Z === updating cmsis-nn (modules/lib/cmsis-nn):
+2026-09-07T07:01:08.3879064Z HEAD is now at d20117c Update arm_depthwise_conv_wrapper_s8.c (#163)
+2026-09-07T07:01:08.3879601Z === updating cmsis_6 (modules/hal/cmsis_6):
+2026-09-07T07:01:08.3880178Z HEAD is now at 30a859f4 m-profile/gcc: Support picolibc startup mechanism (#246)
+2026-09-07T07:01:08.3880800Z === updating dhara (modules/lib/dhara):
+2026-09-07T07:01:08.3881273Z HEAD is now at 6f163ca Remove error correction codes
+2026-09-07T07:01:08.3881735Z === updating edtt (tools/edtt):
+2026-09-07T07:01:08.3882125Z HEAD is now at c282625 Fix broken link in Readme.md
+2026-09-07T07:01:08.3882596Z === updating fatfs (modules/fs/fatfs):
+2026-09-07T07:01:08.3883044Z HEAD is now at f4ead3b zephyr: Bring back accidentally removed disk access window alignment
+2026-09-07T07:01:08.3883502Z === updating hal_nordic (modules/hal/nordic):
+2026-09-07T07:01:08.3883839Z HEAD is now at 18da0cc nrfs: added gswdt service
+2026-09-07T07:01:08.3884156Z === updating hal_st (modules/hal/st):
+2026-09-07T07:01:08.3884711Z HEAD is now at 7a79288 CMakelist.txt: fix unconditional directory inclusion
+2026-09-07T07:01:08.3885317Z === updating hal_tdk (modules/hal/tdk):
+2026-09-07T07:01:08.3885778Z HEAD is now at fa54cb6 Add icm45688p (#30)
+2026-09-07T07:01:08.3886337Z === updating hal_wurthelektronik (modules/hal/wurthelektronik):
+2026-09-07T07:01:08.3887055Z HEAD is now at 7c1297e Remove warnings
+2026-09-07T07:01:08.3887496Z === updating liblc3 (modules/lib/liblc3):
+2026-09-07T07:01:08.3888152Z HEAD is now at 48bbd3e Rename lc3 python package to lc3py, and bump version to 1.1.2
+2026-09-07T07:01:08.3888844Z === updating libmetal (modules/hal/libmetal):
+2026-09-07T07:01:08.3889401Z HEAD is now at 66e0842 lib: update libmetal to release v2025.10.0
+2026-09-07T07:01:08.3890085Z === updating libsbc (modules/lib/libsbc):
+2026-09-07T07:01:08.3890539Z HEAD is now at 8e1beda first version
+2026-09-07T07:01:08.3890989Z === updating littlefs (modules/fs/littlefs):
+2026-09-07T07:01:08.3891605Z HEAD is now at 8f5ca34 Merge pull request #19 from mkaranki/update-to-v2.10.2
+2026-09-07T07:01:08.3892288Z === updating loramac-node (modules/lib/loramac-node):
+2026-09-07T07:01:08.3892918Z HEAD is now at fb00b383 zephyr: configure FragDecoder using Kconfig
+2026-09-07T07:01:08.3893493Z === updating lvgl (modules/lib/gui/lvgl):
+2026-09-07T07:01:08.3893979Z HEAD is now at 85aa60d18 chore: release v9.5.0 (#9753)
+2026-09-07T07:01:08.3894514Z === updating mipi-sys-t (modules/debug/mipi-sys-t):
+2026-09-07T07:01:08.3895075Z HEAD is now at 5a9d605 MIPI support for IAR Compilers
+2026-09-07T07:01:08.3895652Z === updating mldsa-native (modules/crypto/mldsa-native):
+2026-09-07T07:01:08.3896428Z HEAD is now at 3fc1998 [zep noup] Add module.yml
+2026-09-07T07:01:08.3897090Z === updating nanopb (modules/lib/nanopb):
+2026-09-07T07:01:08.3897620Z HEAD is now at 5499fd4 C++ descriptor size needs to be guarded
+2026-09-07T07:01:08.3898152Z === updating net-tools (tools/net-tools):
+2026-09-07T07:01:08.3898705Z HEAD is now at 64d7acc net-setup: Remove the -eu option from bash
+2026-09-07T07:01:08.3899348Z === updating nrf_hw_models (modules/bsim_hw_models/nrf_hw_models):
+2026-09-07T07:01:08.3900035Z HEAD is now at 158b971 RADIO: Correct TXPOWER mapping for 54 devices
+2026-09-07T07:01:08.3900633Z === updating open-amp (modules/lib/open-amp):
+2026-09-07T07:01:08.3901225Z HEAD is now at 5efe797 lib: update open-amp lib to release v2025.10.0
+2026-09-07T07:01:08.3901839Z === updating percepio (modules/debug/percepio):
+2026-09-07T07:01:08.3902279Z HEAD is now at f9159fe Merge pull request #19 from percepio/main
+2026-09-07T07:01:08.3902657Z === updating picolibc (modules/lib/picolibc):
+2026-09-07T07:01:08.3903092Z HEAD is now at 01254932e tinystdio: Avoid all use of float/double types in vfprintf
+2026-09-07T07:01:08.3903515Z === updating segger (modules/debug/segger):
+2026-09-07T07:01:08.3904208Z HEAD is now at 50892fd segger: debugmon: Rename DebugMon_Handler to z_arm_debug_monitor
+2026-09-07T07:01:08.3904947Z === updating tf-m-tests (modules/tee/tf-m/tf-m-tests):
+2026-09-07T07:01:08.3905395Z HEAD is now at 46b82fa [zep noup] replace upstream readme
+2026-09-07T07:01:08.3905785Z === updating tf-psa-crypto (modules/crypto/tf-psa-crypto):
+2026-09-07T07:01:08.3906260Z HEAD is now at efdf9e209 [zep fromtree] [1.1] Fix alignment problems with IAR and Zephyr
+2026-09-07T07:01:08.3907198Z === updating uoscore-uedhoc (modules/lib/uoscore-uedhoc):
+2026-09-07T07:01:08.3907875Z HEAD is now at dc0ab63 Merge pull request #10 from rlubos/upmerge-03-26
+2026-09-07T07:01:08.3908292Z === updating zcbor (modules/lib/zcbor):
+2026-09-07T07:01:08.3908639Z HEAD is now at 9164bd1 tests: Format platform in multiline
+2026-09-07T07:01:08.3909114Z [M12-NCS] exec: /tmp/nu54dk-ncs-v3.4.0/nrf/scripts/print_toolchain_checksum.sh
+2026-09-07T07:01:08.3978513Z fbf7391cab
+2026-09-07T07:01:08.3978815Z {
+2026-09-07T07:01:08.3979436Z   "container_digest": "sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace",
+2026-09-07T07:01:08.3980167Z   "linux_toolchain_id": "fbf7391cab",
+2026-09-07T07:01:08.3980653Z   "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+2026-09-07T07:01:08.3981137Z   "schema_version": 1,
+2026-09-07T07:01:08.3981570Z   "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+2026-09-07T07:01:08.3982069Z }
+2026-09-07T07:01:08.4155324Z ##[group]Run python3 tools/ci/run_zephyr_build.py --workspace "$NCS_CI_WORKSPACE" --outdir "$M12_EVIDENCE/twister" --group "v0.3.0"
+2026-09-07T07:01:08.4156257Z [36;1mpython3 tools/ci/run_zephyr_build.py --workspace "$NCS_CI_WORKSPACE" --outdir "$M12_EVIDENCE/twister" --group "v0.3.0"[0m
+2026-09-07T07:01:08.4157319Z shell: bash --noprofile --norc -e -o pipefail {0}
+2026-09-07T07:01:08.4157637Z env:
+2026-09-07T07:01:08.4157873Z   NCS_CI_WORKSPACE: /tmp/nu54dk-ncs-v3.4.0
+2026-09-07T07:01:08.4158346Z   M12_EVIDENCE: /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/m12-evidence/v0.3.0
+2026-09-07T07:01:08.4158793Z ##[endgroup]
+2026-09-07T07:01:10.0900075Z INFO    - Using Ninja..
+2026-09-07T07:01:10.1878307Z INFO    - Zephyr version: bf801e4e3d19
+2026-09-07T07:01:10.4939254Z INFO    - Using 'zephyr/gnu' toolchain variant.
+2026-09-07T07:01:11.8475005Z INFO    - Building initial testsuite list...
+2026-09-07T07:01:11.8528449Z INFO    - Built testsuite list in 0.01 seconds
+2026-09-07T07:01:11.8529907Z INFO    - Writing JSON report /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/m12-evidence/v0.3.0/twister/testplan.json
+2026-09-07T07:01:11.8796367Z INFO    - JOBS: 2
+2026-09-07T07:01:11.8800311Z INFO    - Adding tasks to the queue...
+2026-09-07T07:01:11.8870289Z INFO    - Added initial list of jobs to queue
+2026-09-07T07:02:06.0100302Z INFO    - Total complete:    1/  19   5%  built (not run):    1, filtered:    0, failed:    0, error:    0
+2026-09-07T07:02:48.9534339Z INFO    - Total complete:    2/  19  10%  built (not run):    2, filtered:    0, failed:    0, error:    0
+2026-09-07T07:02:56.3996329Z INFO    - Total complete:    3/  19  15%  built (not run):    3, filtered:    0, failed:    0, error:    0
+2026-09-07T07:03:43.8688007Z INFO    - Total complete:    4/  19  21%  built (not run):    4, filtered:    0, failed:    0, error:    0
+2026-09-07T07:03:51.4479626Z INFO    - Total complete:    5/  19  26%  built (not run):    5, filtered:    0, failed:    0, error:    0
+2026-09-07T07:04:33.9595067Z INFO    - Total complete:    6/  19  31%  built (not run):    6, filtered:    0, failed:    0, error:    0
+2026-09-07T07:04:38.7869267Z INFO    - Total complete:    7/  19  36%  built (not run):    7, filtered:    0, failed:    0, error:    0
+2026-09-07T07:05:23.3141672Z INFO    - Total complete:    8/  19  42%  built (not run):    8, filtered:    0, failed:    0, error:    0
+2026-09-07T07:05:41.2519718Z INFO    - Total complete:    9/  19  47%  built (not run):    9, filtered:    0, failed:    0, error:    0
+2026-09-07T07:06:26.7503031Z INFO    - Total complete:   10/  19  52%  built (not run):   10, filtered:    0, failed:    0, error:    0
+2026-09-07T07:06:44.9032869Z INFO    - Total complete:   11/  19  57%  built (not run):   11, filtered:    0, failed:    0, error:    0
+2026-09-07T07:07:24.9174926Z INFO    - Total complete:   12/  19  63%  built (not run):   12, filtered:    0, failed:    0, error:    0
+2026-09-07T07:07:41.9134291Z INFO    - Total complete:   13/  19  68%  built (not run):   13, filtered:    0, failed:    0, error:    0
+2026-09-07T07:08:18.1952588Z INFO    - Total complete:   14/  19  73%  built (not run):   14, filtered:    0, failed:    0, error:    0
+2026-09-07T07:08:36.0859401Z INFO    - Total complete:   15/  19  78%  built (not run):   15, filtered:    0, failed:    0, error:    0
+2026-09-07T07:09:12.8009700Z INFO    - Total complete:   16/  19  84%  built (not run):   16, filtered:    0, failed:    0, error:    0
+2026-09-07T07:09:29.7627299Z INFO    - Total complete:   17/  19  89%  built (not run):   17, filtered:    0, failed:    0, error:    0
+2026-09-07T07:09:56.7849710Z INFO    - Total complete:   18/  19  94%  built (not run):   18, filtered:    0, failed:    0, error:    0
+2026-09-07T07:09:56.8080280Z INFO    - Total complete:   19/  19  100%  built (not run):   19, filtered:    0, failed:    0, error:    0
+2026-09-07T07:09:56.8081493Z INFO    - 19 test scenarios (19 configurations) selected, 0 configurations filtered (0 by static filter, 0 at runtime).
+2026-09-07T07:09:56.8151996Z INFO    - 0 of 19 executed test configurations passed (0.00%), 19 built (not run), 0 failed, 0 errored, with no warnings in 526.73 seconds.
+2026-09-07T07:09:56.8153348Z INFO    - 0 test configurations executed on platforms, 19 test configurations were only built.
+2026-09-07T07:09:56.8154120Z INFO    - Saving reports...
+2026-09-07T07:09:56.8154935Z INFO    - Writing JSON report /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/m12-evidence/v0.3.0/twister/twister.json
+2026-09-07T07:09:56.8169396Z INFO    - Writing xunit report /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/m12-evidence/v0.3.0/twister/twister.xml...
+2026-09-07T07:09:56.8190829Z INFO    - Writing xunit report /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/m12-evidence/v0.3.0/twister/twister_report.xml...
+2026-09-07T07:09:56.8221941Z INFO    - Run completed
+2026-09-07T07:09:56.8898087Z [M12-ZEPHYR] exec: /opt/ncs/toolchains/fbf7391cab/usr/local/bin/python3 /tmp/nu54dk-ncs-v3.4.0/zephyr/scripts/twister --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/m19_ble_gap_contract --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/m19_ble_gap_hil --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/m19_ble_gap_hil --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/m20_ble_gatt_contract --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/m20_ble_gatt_hil --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/m20_ble_gatt_hil --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/m21_ble_contract --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/m21_ble_hil --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/m21_ble_hil --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/m21_ble_board_contract --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/ac01_contract --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/ac01_hil --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/ac02a_ownership_contract --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/ac02b_b2_contract --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/ac02b_analog_contract --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/ac02b_hil_dut --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/ac02b_hil_peer --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/ac03_storage_contract --testsuite-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/ac03_hil --platform nrf54l15dk/nrf54l15/cpuapp/nu54dk --board-root /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS/boards --build-only --ninja --detailed-test-id --jobs 2 --outdir /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/m12-evidence/v0.3.0/twister --extra-args BOARD_ROOT=/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS --extra-args EXTRA_ZEPHYR_MODULES=/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core --extra-args USE_CCACHE=0 --scenario nucode.m19.ble_gap_contract --scenario nucode.m19.ble_gap_hil_peripheral --scenario nucode.m19.ble_gap_hil_central --scenario nucode.m20.ble_gatt_contract --scenario nucode.m20.ble_gatt_hil_peripheral --scenario nucode.m20.ble_gatt_hil_central --scenario nucode.m21.ble_security_contract --scenario nucode.m21.ble_security_hil_peripheral --scenario nucode.m21.ble_security_hil_central --scenario nucode.m21.ble_board_contract --scenario nucode.ac01.contract --scenario nucode.ac01.gpio_hil --scenario nucode.ac02a.ownership_contract --scenario nucode.ac02b.b2_contract --scenario nucode.ac02b.analog_contract --scenario nucode.ac02b.hil_dut --scenario nucode.ac02b.hil_peer --scenario nucode.ac03.storage_contract --scenario nucode.ac03.storage_hil
+2026-09-07T07:09:56.8908850Z M12_ZEPHYR_BUILD_PASS=19;GROUP=v0.3.0;M16_ROLE_BUILDS=0;SELECTION=full-group
+2026-09-07T07:09:56.9087926Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-07T07:09:56.9088347Z with:
+2026-09-07T07:09:56.9088648Z   name: m12-zephyr-v0.3.0-828166109968b2ceb40fc2d9c054255558d995d5
+2026-09-07T07:09:56.9089143Z   path: /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/m12-evidence/v0.3.0
+2026-09-07T07:09:56.9089582Z   if-no-files-found: warn
+2026-09-07T07:09:56.9089821Z   retention-days: 14
+2026-09-07T07:09:56.9090048Z   compression-level: 6
+2026-09-07T07:09:56.9090272Z   overwrite: false
+2026-09-07T07:09:56.9090496Z   include-hidden-files: false
+2026-09-07T07:09:56.9090738Z   archive: true
+2026-09-07T07:09:56.9090939Z env:
+2026-09-07T07:09:56.9091162Z   NCS_CI_WORKSPACE: /tmp/nu54dk-ncs-v3.4.0
+2026-09-07T07:09:56.9091608Z   M12_EVIDENCE: /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/m12-evidence/v0.3.0
+2026-09-07T07:09:56.9092032Z ##[endgroup]
+2026-09-07T07:09:56.9095969Z ##[command]/usr/bin/docker exec  2166a185d1aea1ad90062d99d1870bcf82a4fcea277ed5309f88a5df69e645a9 sh -c "cat /etc/*release | grep ^ID"
+2026-09-07T07:10:25.8962842Z With the provided path, there will be 163094 files uploaded
+2026-09-07T07:10:25.8969093Z Artifact name is valid!
+2026-09-07T07:10:25.8969486Z Root directory input is valid!
+2026-09-07T07:10:28.1779749Z Uploading artifact: m12-zephyr-v0.3.0-828166109968b2ceb40fc2d9c054255558d995d5.zip
+2026-09-07T07:10:28.1820500Z Beginning upload of artifact content to blob storage
+2026-09-07T07:10:31.0369830Z Uploaded bytes 8388608
+2026-09-07T07:10:35.0681702Z Uploaded bytes 16777216
+2026-09-07T07:10:37.6939872Z Uploaded bytes 25165824
+2026-09-07T07:10:42.6587059Z Uploaded bytes 33554432
+2026-09-07T07:10:48.2620858Z Uploaded bytes 41943040
+2026-09-07T07:10:50.8056424Z Uploaded bytes 50331648
+2026-09-07T07:10:55.6651939Z Uploaded bytes 58720256
+2026-09-07T07:10:59.8034103Z Uploaded bytes 67108864
+2026-09-07T07:11:03.1840060Z Uploaded bytes 75497472
+2026-09-07T07:11:07.8949542Z Uploaded bytes 83886080
+2026-09-07T07:11:10.9528970Z Uploaded bytes 92274688
+2026-09-07T07:11:14.2918240Z Uploaded bytes 100663296
+2026-09-07T07:11:19.1827790Z Uploaded bytes 109051904
+2026-09-07T07:11:21.4022651Z Uploaded bytes 117440512
+2026-09-07T07:11:25.4738132Z Uploaded bytes 125829120
+2026-09-07T07:11:29.8217323Z Uploaded bytes 134217728
+2026-09-07T07:11:31.9102169Z Uploaded bytes 142606336
+2026-09-07T07:11:36.2999988Z Uploaded bytes 150994944
+2026-09-07T07:11:40.1862588Z Uploaded bytes 159383552
+2026-09-07T07:11:43.0917855Z Uploaded bytes 167772160
+2026-09-07T07:11:47.2698504Z Uploaded bytes 176160768
+2026-09-07T07:11:49.7182224Z Uploaded bytes 184549376
+2026-09-07T07:11:53.0120676Z Uploaded bytes 192937984
+2026-09-07T07:11:57.3640320Z Uploaded bytes 201326592
+2026-09-07T07:11:59.1760285Z Uploaded bytes 209715200
+2026-09-07T07:12:02.8416925Z Uploaded bytes 218103808
+2026-09-07T07:12:06.1339285Z Uploaded bytes 226492416
+2026-09-07T07:12:07.9381973Z Uploaded bytes 234881024
+2026-09-07T07:12:11.7219109Z Uploaded bytes 243269632
+2026-09-07T07:12:14.7681395Z Uploaded bytes 251658240
+2026-09-07T07:12:16.4944846Z Uploaded bytes 260046848
+2026-09-07T07:12:20.0352161Z Uploaded bytes 268435456
+2026-09-07T07:12:22.9470010Z Uploaded bytes 276824064
+2026-09-07T07:12:24.8322559Z Uploaded bytes 285212672
+2026-09-07T07:12:28.1178258Z Uploaded bytes 293601280
+2026-09-07T07:12:30.7955623Z Uploaded bytes 301989888
+2026-09-07T07:12:32.6027742Z Uploaded bytes 310378496
+2026-09-07T07:12:35.6089393Z Uploaded bytes 318767104
+2026-09-07T07:12:38.0801691Z Uploaded bytes 327155712
+2026-09-07T07:12:40.0017951Z Uploaded bytes 335544320
+2026-09-07T07:12:42.8581535Z Uploaded bytes 343932928
+2026-09-07T07:12:45.2717787Z Uploaded bytes 352321536
+2026-09-07T07:12:46.4805881Z Uploaded bytes 360710144
+2026-09-07T07:12:49.3849685Z Uploaded bytes 369098752
+2026-09-07T07:12:51.9725919Z Uploaded bytes 377487360
+2026-09-07T07:12:53.1785827Z Uploaded bytes 385875968
+2026-09-07T07:12:55.6535483Z Uploaded bytes 394264576
+2026-09-07T07:12:58.1958927Z Uploaded bytes 402653184
+2026-09-07T07:12:59.3809389Z Uploaded bytes 411041792
+2026-09-07T07:13:01.7314786Z Uploaded bytes 419430400
+2026-09-07T07:13:04.3138061Z Uploaded bytes 427819008
+2026-09-07T07:13:05.3401944Z Uploaded bytes 436207616
+2026-09-07T07:13:07.3238182Z Uploaded bytes 444596224
+2026-09-07T07:13:09.9121870Z Uploaded bytes 452984832
+2026-09-07T07:13:14.3832301Z Uploaded bytes 461373440
+2026-09-07T07:13:14.4219323Z Uploaded bytes 469762048
+2026-09-07T07:13:14.4342204Z Uploaded bytes 478150656
+2026-09-07T07:13:14.4361202Z Uploaded bytes 486539264
+2026-09-07T07:13:14.4802743Z Uploaded bytes 494927872
+2026-09-07T07:13:14.5222321Z Uploaded bytes 496912141
+2026-09-07T07:13:14.5393943Z Finished uploading artifact content to blob storage!
+2026-09-07T07:13:14.5400341Z SHA256 digest of uploaded artifact is 8e20388c9b546c0a23ff3240ae45e51c11d7576fe1cadeb9b51547c9b9a1aba2
+2026-09-07T07:13:14.5403067Z Finalizing artifact upload
+2026-09-07T07:13:14.7904648Z Artifact m12-zephyr-v0.3.0-828166109968b2ceb40fc2d9c054255558d995d5 successfully finalized. Artifact ID 10008008840
+2026-09-07T07:13:14.7905702Z Artifact m12-zephyr-v0.3.0-828166109968b2ceb40fc2d9c054255558d995d5 has been successfully uploaded! Final size is 496912141 bytes. Artifact ID is 10008008840
+2026-09-07T07:13:14.7910642Z Artifact download URL: https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876773/artifacts/10008008840
+2026-09-07T07:13:14.9556994Z Post job cleanup.
+2026-09-07T07:13:14.9561712Z ##[command]/usr/bin/docker exec  2166a185d1aea1ad90062d99d1870bcf82a4fcea277ed5309f88a5df69e645a9 sh -c "cat /etc/*release | grep ^ID"
+2026-09-07T07:13:15.1818759Z Cache hit occurred on the primary key ncs-linux-amd64-99553055607b2e9885fbc80ccd11fa9da81c2df0-bf801e4e3d19e1ffa76164346480cb7734dd2800-tc-fbf7391cab-img-f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace, not saving cache.
+2026-09-07T07:13:15.1993343Z Post job cleanup.
+2026-09-07T07:13:15.2001744Z ##[command]/usr/bin/docker exec  2166a185d1aea1ad90062d99d1870bcf82a4fcea277ed5309f88a5df69e645a9 sh -c "cat /etc/*release | grep ^ID"
+2026-09-07T07:13:15.3914219Z [command]/usr/bin/git version
+2026-09-07T07:13:15.3960751Z git version 2.43.0
+2026-09-07T07:13:15.3999458Z Temporarily overriding HOME='/__w/_temp/b70642ea-136f-4d38-9fb7-987ef1404088' before making global git config changes
+2026-09-07T07:13:15.4005585Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-07T07:13:15.4006843Z [command]/usr/bin/git config --global --add safe.directory /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core
+2026-09-07T07:13:15.4040587Z Removing SSH command configuration
+2026-09-07T07:13:15.4047032Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-07T07:13:15.4087048Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-07T07:13:15.4345677Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T07:13:15.4417376Z Removing HTTP extra header
+2026-09-07T07:13:15.4418670Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-07T07:13:15.4457587Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-07T07:13:15.4697288Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T07:13:15.4763248Z Removing includeIf entries pointing to credentials config files
+2026-09-07T07:13:15.4770160Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T07:13:15.4800410Z includeif.gitdir:/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git.path
+2026-09-07T07:13:15.4801839Z includeif.gitdir:/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/worktrees/*.path
+2026-09-07T07:13:15.4803852Z includeif.gitdir:/github/workspace/.git.path
+2026-09-07T07:13:15.4804475Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-07T07:13:15.4818842Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git.path
+2026-09-07T07:13:15.4838275Z /__w/_temp/git-credentials-2d23ac68-2ae6-4efb-950e-15047349b026.config
+2026-09-07T07:13:15.4850668Z [command]/usr/bin/git config --local --unset includeif.gitdir:/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git.path \/__w\/_temp\/git\-credentials\-2d23ac68\-2ae6\-4efb\-950e\-15047349b026\.config
+2026-09-07T07:13:15.4893600Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/worktrees/*.path
+2026-09-07T07:13:15.4919994Z /__w/_temp/git-credentials-2d23ac68-2ae6-4efb-950e-15047349b026.config
+2026-09-07T07:13:15.4929473Z [command]/usr/bin/git config --local --unset includeif.gitdir:/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/worktrees/*.path \/__w\/_temp\/git\-credentials\-2d23ac68\-2ae6\-4efb\-950e\-15047349b026\.config
+2026-09-07T07:13:15.4964808Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-07T07:13:15.4999702Z /github/runner_temp/git-credentials-2d23ac68-2ae6-4efb-950e-15047349b026.config
+2026-09-07T07:13:15.5001937Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-2d23ac68\-2ae6\-4efb\-950e\-15047349b026\.config
+2026-09-07T07:13:15.5051365Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-07T07:13:15.5078396Z /github/runner_temp/git-credentials-2d23ac68-2ae6-4efb-950e-15047349b026.config
+2026-09-07T07:13:15.5094192Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-2d23ac68\-2ae6\-4efb\-950e\-15047349b026\.config
+2026-09-07T07:13:15.5130883Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-07T07:13:15.5377476Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T07:13:15.5396389Z file:/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config	remote.origin.url
+2026-09-07T07:13:15.5437325Z [command]/usr/bin/git config --file /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T07:13:15.5458086Z includeif.gitdir:/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS.path
+2026-09-07T07:13:15.5459257Z includeif.gitdir:/github/workspace/.git/modules/board_package/NU54DK_Zephyr_DTS.path
+2026-09-07T07:13:15.5467894Z [command]/usr/bin/git config --file /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config --get-all includeif.gitdir:/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS.path
+2026-09-07T07:13:15.5495137Z /__w/_temp/git-credentials-2d23ac68-2ae6-4efb-950e-15047349b026.config
+2026-09-07T07:13:15.5503792Z [command]/usr/bin/git config --file /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config --unset includeif.gitdir:/__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS.path \/__w\/_temp\/git\-credentials\-2d23ac68\-2ae6\-4efb\-950e\-15047349b026\.config
+2026-09-07T07:13:15.5538175Z [command]/usr/bin/git config --file /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config --get-all includeif.gitdir:/github/workspace/.git/modules/board_package/NU54DK_Zephyr_DTS.path
+2026-09-07T07:13:15.5566406Z /github/runner_temp/git-credentials-2d23ac68-2ae6-4efb-950e-15047349b026.config
+2026-09-07T07:13:15.5630631Z [command]/usr/bin/git config --file /__w/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config --unset includeif.gitdir:/github/workspace/.git/modules/board_package/NU54DK_Zephyr_DTS.path \/github\/runner_temp\/git\-credentials\-2d23ac68\-2ae6\-4efb\-950e\-15047349b026\.config
+2026-09-07T07:13:15.5638392Z Removing credentials config '/__w/_temp/git-credentials-2d23ac68-2ae6-4efb-950e-15047349b026.config'
+2026-09-07T07:13:15.5754929Z Stop and remove container: fd9b4aa0412347f2a6af3508592945f7_ghcrionrfconnectsdknrftoolchainsha256f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace_f843d3
+2026-09-07T07:13:15.5760906Z ##[command]/usr/bin/docker rm --force 2166a185d1aea1ad90062d99d1870bcf82a4fcea277ed5309f88a5df69e645a9
+2026-09-07T07:13:21.5664120Z 2166a185d1aea1ad90062d99d1870bcf82a4fcea277ed5309f88a5df69e645a9
+2026-09-07T07:13:21.5695930Z Remove container network: github_network_b70236fb081a43bd94df29c4299aeb08
+2026-09-07T07:13:21.5700604Z ##[command]/usr/bin/docker network rm github_network_b70236fb081a43bd94df29c4299aeb08
+2026-09-07T07:13:21.6665034Z github_network_b70236fb081a43bd94df29c4299aeb08
+2026-09-07T07:13:21.6735372Z Cleaning up orphan processes

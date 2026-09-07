@@ -1,0 +1,226 @@
+{
+  "verified_ci_source": "828166109968b2ceb40fc2d9c054255558d995d5",
+  "status": "passed",
+  "files": [
+    {
+      "name": "job-101649928690.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101649928690.log",
+      "original_archive": "job-101649928690.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "3f2b221520d9b271eaf9ec2f7c9de1c36bf5318689dfd339556a15dfe1727715",
+      "original_bytes": 30459,
+      "normalized_sha256": "ccb148067179aed793576f733b1ef24500b5fb7a840c3377f7b42dc861c61917",
+      "normalized_bytes": 30455
+    },
+    {
+      "name": "job-101649928775.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101649928775.log",
+      "original_archive": "job-101649928775.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "688c6463b6e2481a55f838440735d44e4f40fdb36511817ee9d7b33e22acbb14",
+      "original_bytes": 27224,
+      "normalized_sha256": "bcd1144d8bb241d8b405d50c6c40d6a9b1308fa141012ab978161a883275f13b",
+      "normalized_bytes": 27220
+    },
+    {
+      "name": "job-101649928778.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101649928778.log",
+      "original_archive": "job-101649928778.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "cad120e4d7a5b925b12ced2cd1f82402c1037d2780108e3adfb77a6165df013a",
+      "original_bytes": 27740,
+      "normalized_sha256": "f9ef0440e3af0268acec54042d375d3307432d9508a7104122aaa8e58e4ac9ed",
+      "normalized_bytes": 27736
+    },
+    {
+      "name": "job-101649928812.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101649928812.log",
+      "original_archive": "job-101649928812.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "5651a81ff63f415b8d3bcc4059b76a311a74a44f889fa5fb27f65d47c4268dbb",
+      "original_bytes": 26483,
+      "normalized_sha256": "5e25a4e8fe2d4478d257d893cea113e7adc892f8b69a7f3976de67fa56fb169f",
+      "normalized_bytes": 26479
+    },
+    {
+      "name": "job-101649928855.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101649928855.log",
+      "original_archive": "job-101649928855.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "ba15a5d104f494b35c5bb669e59858ceac5f066ee0a9566cb4ca45dd491718f3",
+      "original_bytes": 34202,
+      "normalized_sha256": "01562ae5e040b708fbb4b049c44cde1aea3d0fa6c8017ae041a90f720ba202d1",
+      "normalized_bytes": 34198
+    },
+    {
+      "name": "job-101649928858.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101649928858.log",
+      "original_archive": "job-101649928858.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "f84b8d3be3a5aa541a8cbbca00576f4eb49b929c3b124dbf69be34b08b395b1e",
+      "original_bytes": 25352,
+      "normalized_sha256": "10f139482859bd4346c6b29043e2595c033bcd9fd19dc4dd79ad2434d292fc9a",
+      "normalized_bytes": 25348
+    },
+    {
+      "name": "job-101651109198.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101651109198.log",
+      "original_archive": "job-101651109198.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "3b4883feeec20d25b6956f04a6d43d738d3437e4d4220aabd3a6c8aad04bd34a",
+      "original_bytes": 46173,
+      "normalized_sha256": "a3fe8d6dd804010ac30665fdc04e488deb52e5a8785d008913ab78e1389b1fae",
+      "normalized_bytes": 46169
+    },
+    {
+      "name": "job-101651109349.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101651109349.log",
+      "original_archive": "job-101651109349.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "e429138447996af43fee3b6b3f676742807f82717fb983b0e29281397ee0b507",
+      "original_bytes": 48661,
+      "normalized_sha256": "bcf979f7b747c6dc15b3186ca085b73d3f431f208bedea01322aedd726697571",
+      "normalized_bytes": 48657
+    },
+    {
+      "name": "job-101651109351.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101651109351.log",
+      "original_archive": "job-101651109351.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "7c5df963691dbf4d20b2d64f6bac822ea13643f90e32cdb2d1a3dde549f20c5b",
+      "original_bytes": 64716,
+      "normalized_sha256": "9d2eece9447446770d156f4f4f41ff2dbf6c2a21627bc5f5d346d72c4b2210f1",
+      "normalized_bytes": 64712
+    },
+    {
+      "name": "job-101651109364.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101651109364.log",
+      "original_archive": "job-101651109364.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "e9074484f2e6b816d01b633b2d5d88a6d5d3a5589497c8fb8562d3583e24d1fd",
+      "original_bytes": 61095,
+      "normalized_sha256": "2b53344de2739e3843959d332da6d670fc76b9a4b42d3ff3583533681673441c",
+      "normalized_bytes": 61091
+    },
+    {
+      "name": "job-101651109369.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101651109369.log",
+      "original_archive": "job-101651109369.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "5123f48624f0eb6fb91a3e4e54c17e1347e58987fad45e19a7e5bb1d4e9488ca",
+      "original_bytes": 44338,
+      "normalized_sha256": "058dbc4ab18fc515b81ef3860458cb105db4dae6352697059ff9dee8dceac3a8",
+      "normalized_bytes": 44334
+    },
+    {
+      "name": "job-101651109418.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101651109418.log",
+      "original_archive": "job-101651109418.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "ad7cd89c1c2b25615b498776d42c239dac457876c81161fd09d25644a92f956a",
+      "original_bytes": 55939,
+      "normalized_sha256": "01fe88c51226ea60d44cf6635c9dc5507246106f1bf55e8c11eeb19d519e37c0",
+      "normalized_bytes": 55935
+    },
+    {
+      "name": "job-101651109427.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101651109427.log",
+      "original_archive": "job-101651109427.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "87490b924f4a7831799340a5bf285ed12ebbad880fc7d9f8bb9209f99143699d",
+      "original_bytes": 66854,
+      "normalized_sha256": "a5c9851a7c34aaf65d709a073d2cb346079d5d72f56acd691ba406f742df1ddd",
+      "normalized_bytes": 66850
+    },
+    {
+      "name": "job-101651109437.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101651109437.log",
+      "original_archive": "job-101651109437.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "a16a48cfe85b3b8ed359ec16ea2032b457403b052a647a03bf0e31d3f1912b77",
+      "original_bytes": 45320,
+      "normalized_sha256": "314d18806a6bef707ece3d4fe697d62b5e1941c246e68136ba7d3252b9c5ea37",
+      "normalized_bytes": 45316
+    },
+    {
+      "name": "software-jobs.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\software-jobs.json",
+      "original_archive": "software-jobs.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "323a5a92b6f9d244979329b63f2cf6d70e1735f5ce67c3fb89f663135ac84c4b",
+      "original_bytes": 9736,
+      "normalized_sha256": "323a5a92b6f9d244979329b63f2cf6d70e1735f5ce67c3fb89f663135ac84c4b",
+      "normalized_bytes": 9736
+    },
+    {
+      "name": "build-jobs.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\build-jobs.json",
+      "original_archive": "build-jobs.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "097140b10bef3537a333125ad64a95f664fc45fd1b4e69249a3c1e244fa7a72e",
+      "original_bytes": 23741,
+      "normalized_sha256": "097140b10bef3537a333125ad64a95f664fc45fd1b4e69249a3c1e244fa7a72e",
+      "normalized_bytes": 23741
+    },
+    {
+      "name": "final-ci-audit.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\final-ci-audit.json",
+      "original_archive": "final-ci-audit.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "e7b7a1deca104c09db962c99afa473e6f78f9c08fd76bde3eeb9170ac80d744c",
+      "original_bytes": 18868,
+      "normalized_sha256": "e7b7a1deca104c09db962c99afa473e6f78f9c08fd76bde3eeb9170ac80d744c",
+      "normalized_bytes": 18868
+    },
+    {
+      "name": "remote-final-8281661.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\remote-final-8281661.json",
+      "original_archive": "remote-final-8281661.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "2ae76b855369c2e3de06ff6de96dca9483e73a783a121d15489ef63dcbb225ff",
+      "original_bytes": 989,
+      "normalized_sha256": "251e3416098d3fb997eb2de6f9747a24c7e596983773154f5be3d09b4dc4f069",
+      "normalized_bytes": 960
+    },
+    {
+      "name": "ci-8281661-host-success.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-host-success.log",
+      "original_archive": "ci-8281661-host-success.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "c37fbe66b3e781e720f64427cfc189e6b8b0ceba8cd714182b31cddd0ce870b0",
+      "original_bytes": 263343,
+      "normalized_sha256": "68d5f67f9e7dfcee006349fa95353f22261eef7097c3c2e6d2570601b0459475",
+      "normalized_bytes": 263339
+    },
+    {
+      "name": "ci-8281661-host-success-audit.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-host-success-audit.json",
+      "original_archive": "ci-8281661-host-success-audit.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "1ded089e7555e2510ff2d121cfd5bd031abe6f5fbb1be0e8d56b9ffcf510149e",
+      "original_bytes": 10393,
+      "normalized_sha256": "1ded089e7555e2510ff2d121cfd5bd031abe6f5fbb1be0e8d56b9ffcf510149e",
+      "normalized_bytes": 10393
+    },
+    {
+      "name": "docs-cross-pc-final.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\docs-cross-pc-final.log",
+      "original_archive": "docs-cross-pc-final.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "f6612cc3b11b2cc4f37119e6b341594055b01f71c1561b2de4a4090cb7ea9346",
+      "original_bytes": 69,
+      "normalized_sha256": "478bcdd4e113b9b9f992863ca1ff644ec936cc522d12fbd8df048042a7c34691",
+      "normalized_bytes": 67
+    },
+    {
+      "name": "docs-cross-pc-final.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\docs-cross-pc-final.json",
+      "original_archive": "docs-cross-pc-final.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "833f899ea85844811917588e866d1196e3a5170180dde81d9fd952924ce7d854",
+      "original_bytes": 1898,
+      "normalized_sha256": "da201db5a2d878fd7446381df24c1aaecd8c41bd18034a7a45f380d32a2519e0",
+      "normalized_bytes": 1862
+    }
+  ]
+}

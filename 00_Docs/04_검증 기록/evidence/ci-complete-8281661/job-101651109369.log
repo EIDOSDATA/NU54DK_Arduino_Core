@@ -1,0 +1,453 @@
+2026-09-07T06:59:00.9610677Z Current runner version: '2.337.0'
+2026-09-07T06:59:00.9632353Z ##[group]Runner Image Provisioner
+2026-09-07T06:59:00.9633017Z Hosted Compute Agent
+2026-09-07T06:59:00.9633486Z Version: 20260819.586
+2026-09-07T06:59:00.9633932Z Commit: 3cc4a88dfa507ef76119ad1bb3eccc6378bb2b76
+2026-09-07T06:59:00.9634439Z Build Date: 2026-08-18T23:20:18Z
+2026-09-07T06:59:00.9635014Z Worker ID: {3806451c-66f5-4472-84ec-c43af8270bb3}
+2026-09-07T06:59:00.9635599Z Azure Region: centralus
+2026-09-07T06:59:00.9636633Z ##[endgroup]
+2026-09-07T06:59:00.9637767Z ##[group]Operating System
+2026-09-07T06:59:00.9638240Z Microsoft Windows Server 2025
+2026-09-07T06:59:00.9638768Z 10.0.26100
+2026-09-07T06:59:00.9639165Z Datacenter
+2026-09-07T06:59:00.9639546Z ##[endgroup]
+2026-09-07T06:59:00.9639940Z ##[group]Runner Image
+2026-09-07T06:59:00.9640380Z Image: windows-2025-vs2026
+2026-09-07T06:59:00.9640820Z Version: 20260824.214.3
+2026-09-07T06:59:00.9642100Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20260824.214/images/windows/Windows2025-VS2026-Readme.md
+2026-09-07T06:59:00.9643395Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20260824.214
+2026-09-07T06:59:00.9644086Z ##[endgroup]
+2026-09-07T06:59:00.9644936Z ##[group]GITHUB_TOKEN Permissions
+2026-09-07T06:59:00.9646635Z Contents: read
+2026-09-07T06:59:00.9647100Z Metadata: read
+2026-09-07T06:59:00.9647496Z Packages: read
+2026-09-07T06:59:00.9647914Z ##[endgroup]
+2026-09-07T06:59:00.9649492Z Secret source: Actions
+2026-09-07T06:59:00.9650211Z Prepare workflow directory
+2026-09-07T06:59:01.0069035Z Prepare all required actions
+2026-09-07T06:59:01.0109568Z Getting action download info
+2026-09-07T06:59:01.2356210Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-07T06:59:01.5907239Z Download action repository 'actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97' (SHA:5fda3b95a4ea91299a34e894583c3862153e4b97)
+2026-09-07T06:59:02.2027678Z Download action repository 'arduino/setup-arduino-cli@81d310742121c928ea9c8bbd407b4217b432ae02' (SHA:81d310742121c928ea9c8bbd407b4217b432ae02)
+2026-09-07T06:59:02.5279690Z Download action repository 'actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9' (SHA:55cc8345863c7cc4c66a329aec7e433d2d1c52a9)
+2026-09-07T06:59:02.8321400Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-09-07T06:59:03.1462619Z Complete job name: Arduino v0.1.0 with pinned Windows prerequisites
+2026-09-07T06:59:03.4484806Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-07T06:59:03.4486224Z with:
+2026-09-07T06:59:03.4486778Z   fetch-depth: 0
+2026-09-07T06:59:03.4487278Z   submodules: recursive
+2026-09-07T06:59:03.4487823Z   repository: EIDOSDATA/NU54DK_Arduino_Core
+2026-09-07T06:59:03.4490104Z   token: ***
+2026-09-07T06:59:03.4490586Z   ssh-strict: true
+2026-09-07T06:59:03.4491118Z   ssh-user: git
+2026-09-07T06:59:03.4491601Z   persist-credentials: true
+2026-09-07T06:59:03.4492136Z   clean: true
+2026-09-07T06:59:03.4492633Z   sparse-checkout-cone-mode: true
+2026-09-07T06:59:03.4493316Z   fetch-tags: false
+2026-09-07T06:59:03.4493970Z   show-progress: true
+2026-09-07T06:59:03.4494507Z   lfs: false
+2026-09-07T06:59:03.4495007Z   set-safe-directory: true
+2026-09-07T06:59:03.4495530Z   allow-unsafe-pr-checkout: false
+2026-09-07T06:59:03.4496687Z env:
+2026-09-07T06:59:03.4497255Z   NUCODE_NCS_INSTALL_ROOT: D:\ncs
+2026-09-07T06:59:03.4497901Z   NUCODE_NCS_ROOT: D:\ncs\v3.4.0
+2026-09-07T06:59:03.4498844Z   NUCODE_TOOLCHAIN_ROOT: D:\ncs\toolchains\dcbdc366a1
+2026-09-07T06:59:03.4499480Z   NUCODE_PREREQUISITE_STATE_ROOT: D:\nu54-prerequisites
+2026-09-07T06:59:03.4500138Z   M12_EVIDENCE: D:\a\NU54DK_Arduino_Core\NU54DK_Arduino_Core\m12-evidence\v0.1.0
+2026-09-07T06:59:03.4500848Z   NUCODE_CI_TEMP: D:\t
+2026-09-07T06:59:03.4501325Z ##[endgroup]
+2026-09-07T06:59:03.6989351Z Syncing repository: EIDOSDATA/NU54DK_Arduino_Core
+2026-09-07T06:59:03.6990897Z ##[group]Getting Git version info
+2026-09-07T06:59:03.6991476Z Working directory is 'D:\a\NU54DK_Arduino_Core\NU54DK_Arduino_Core'
+2026-09-07T06:59:03.8399886Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-09-07T06:59:04.4588400Z git version 2.55.0.windows.5
+2026-09-07T06:59:04.4629563Z ##[endgroup]
+2026-09-07T06:59:04.4645239Z Temporarily overriding HOME='D:\a\_temp\65a1fd96-db04-49d6-8624-ab181f1541b2' before making global git config changes
+2026-09-07T06:59:04.4646288Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-07T06:59:04.4653783Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\NU54DK_Arduino_Core\NU54DK_Arduino_Core
+2026-09-07T06:59:04.5230664Z Deleting the contents of 'D:\a\NU54DK_Arduino_Core\NU54DK_Arduino_Core'
+2026-09-07T06:59:04.5235801Z ##[group]Determining repository object format
+2026-09-07T06:59:04.5237455Z ##[endgroup]
+2026-09-07T06:59:04.5238352Z ##[group]Initializing the repository
+2026-09-07T06:59:04.5244813Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\NU54DK_Arduino_Core\NU54DK_Arduino_Core
+2026-09-07T06:59:04.7761765Z Initialized empty Git repository in D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/
+2026-09-07T06:59:04.7805195Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/EIDOSDATA/NU54DK_Arduino_Core
+2026-09-07T06:59:04.8634361Z ##[endgroup]
+2026-09-07T06:59:04.8635228Z ##[group]Disabling automatic garbage collection
+2026-09-07T06:59:04.8641905Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-09-07T06:59:04.8890864Z ##[endgroup]
+2026-09-07T06:59:04.8891712Z ##[group]Setting up auth
+2026-09-07T06:59:04.8892410Z Removing SSH command configuration
+2026-09-07T06:59:04.8903249Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-09-07T06:59:04.9143468Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-09-07T06:59:07.4190497Z Removing HTTP extra header
+2026-09-07T06:59:07.4203400Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-07T06:59:07.4456008Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-09-07T06:59:07.9013921Z Removing includeIf entries pointing to credentials config files
+2026-09-07T06:59:07.9023768Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T06:59:07.9261358Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-09-07T06:59:08.3450219Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-7efc1b0b-b4e9-431e-8e9a-cb663ec17311.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-09-07T06:59:08.3711569Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git.path D:\a\_temp\git-credentials-7efc1b0b-b4e9-431e-8e9a-cb663ec17311.config
+2026-09-07T06:59:08.3953364Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/worktrees/*.path D:\a\_temp\git-credentials-7efc1b0b-b4e9-431e-8e9a-cb663ec17311.config
+2026-09-07T06:59:08.4242868Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-7efc1b0b-b4e9-431e-8e9a-cb663ec17311.config
+2026-09-07T06:59:08.4479239Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-7efc1b0b-b4e9-431e-8e9a-cb663ec17311.config
+2026-09-07T06:59:08.4708434Z ##[endgroup]
+2026-09-07T06:59:08.4708905Z ##[group]Fetching the repository
+2026-09-07T06:59:08.4719276Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-09-07T06:59:14.4292141Z From https://github.com/EIDOSDATA/NU54DK_Arduino_Core
+2026-09-07T06:59:14.4293073Z  * [new branch]      main               -> origin/main
+2026-09-07T06:59:14.4294208Z  * [new tag]         m10-preview-0.0.90 -> m10-preview-0.0.90
+2026-09-07T06:59:14.4294745Z  * [new tag]         m10-preview-0.0.91 -> m10-preview-0.0.91
+2026-09-07T06:59:14.4295193Z  * [new tag]         m10-preview-0.0.92 -> m10-preview-0.0.92
+2026-09-07T06:59:14.4295715Z  * [new tag]         m10-preview-0.0.93 -> m10-preview-0.0.93
+2026-09-07T06:59:14.4296195Z  * [new tag]         m10-preview-0.0.94 -> m10-preview-0.0.94
+2026-09-07T06:59:14.4297585Z  * [new tag]         m10-preview-0.0.95 -> m10-preview-0.0.95
+2026-09-07T06:59:14.4298110Z  * [new tag]         m10-preview-0.0.96 -> m10-preview-0.0.96
+2026-09-07T06:59:14.4298540Z  * [new tag]         m10-preview-0.0.97 -> m10-preview-0.0.97
+2026-09-07T06:59:14.4298959Z  * [new tag]         v0.1.0             -> v0.1.0
+2026-09-07T06:59:14.4299501Z  * [new tag]         v0.1.0-rc.2        -> v0.1.0-rc.2
+2026-09-07T06:59:14.4299919Z  * [new tag]         v0.2.0             -> v0.2.0
+2026-09-07T06:59:14.4300286Z  * [new tag]         v0.2.0-rc.1        -> v0.2.0-rc.1
+2026-09-07T06:59:14.4300665Z  * [new tag]         v0.2.0-rc.2        -> v0.2.0-rc.2
+2026-09-07T06:59:14.4302116Z  * [new tag]         v0.3.0             -> v0.3.0
+2026-09-07T06:59:14.4302674Z  * [new tag]         v0.3.0-rc.1        -> v0.3.0-rc.1
+2026-09-07T06:59:14.4303106Z  * [new tag]         v0.3.0-rc.2        -> v0.3.0-rc.2
+2026-09-07T06:59:14.4303533Z  * [new tag]         v0.3.0-rc.3        -> v0.3.0-rc.3
+2026-09-07T06:59:14.4348347Z [command]"C:\Program Files\Git\bin\git.exe" branch --list --remote origin/main
+2026-09-07T06:59:14.5936201Z   origin/main
+2026-09-07T06:59:14.5981366Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/remotes/origin/main
+2026-09-07T06:59:14.6576260Z 828166109968b2ceb40fc2d9c054255558d995d5
+2026-09-07T06:59:14.6611916Z ##[endgroup]
+2026-09-07T06:59:14.6612295Z ##[group]Determining the checkout info
+2026-09-07T06:59:14.6613776Z ##[endgroup]
+2026-09-07T06:59:14.6621396Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-09-07T06:59:14.6994933Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-09-07T06:59:14.7256503Z ##[group]Checking out the ref
+2026-09-07T06:59:14.7266692Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+2026-09-07T06:59:15.8423507Z Updating files:  58% (3704/6353)
+2026-09-07T06:59:15.8498216Z Updating files:  59% (3749/6353)
+2026-09-07T06:59:15.8566735Z Updating files:  60% (3812/6353)
+2026-09-07T06:59:15.8637867Z Updating files:  61% (3876/6353)
+2026-09-07T06:59:15.8704699Z Updating files:  62% (3939/6353)
+2026-09-07T06:59:15.8771142Z Updating files:  63% (4003/6353)
+2026-09-07T06:59:15.8850188Z Updating files:  64% (4066/6353)
+2026-09-07T06:59:15.8979411Z Updating files:  65% (4130/6353)
+2026-09-07T06:59:15.9057929Z Updating files:  66% (4193/6353)
+2026-09-07T06:59:15.9154318Z Updating files:  67% (4257/6353)
+2026-09-07T06:59:15.9231022Z Updating files:  68% (4321/6353)
+2026-09-07T06:59:15.9933141Z Updating files:  69% (4384/6353)
+2026-09-07T06:59:16.0518918Z Updating files:  70% (4448/6353)
+2026-09-07T06:59:16.0613491Z Updating files:  71% (4511/6353)
+2026-09-07T06:59:16.0709996Z Updating files:  72% (4575/6353)
+2026-09-07T06:59:16.0785159Z Updating files:  73% (4638/6353)
+2026-09-07T06:59:16.0851481Z Updating files:  74% (4702/6353)
+2026-09-07T06:59:16.0917193Z Updating files:  75% (4765/6353)
+2026-09-07T06:59:16.0993407Z Updating files:  76% (4829/6353)
+2026-09-07T06:59:16.1093907Z Updating files:  77% (4892/6353)
+2026-09-07T06:59:16.1181830Z Updating files:  78% (4956/6353)
+2026-09-07T06:59:16.1269188Z Updating files:  79% (5019/6353)
+2026-09-07T06:59:16.1360527Z Updating files:  80% (5083/6353)
+2026-09-07T06:59:16.1612060Z Updating files:  81% (5146/6353)
+2026-09-07T06:59:16.1685377Z Updating files:  82% (5210/6353)
+2026-09-07T06:59:16.1748372Z Updating files:  83% (5273/6353)
+2026-09-07T06:59:16.1845141Z Updating files:  84% (5337/6353)
+2026-09-07T06:59:16.1937367Z Updating files:  85% (5401/6353)
+2026-09-07T06:59:16.2033462Z Updating files:  86% (5464/6353)
+2026-09-07T06:59:16.2142287Z Updating files:  87% (5528/6353)
+2026-09-07T06:59:16.2233537Z Updating files:  88% (5591/6353)
+2026-09-07T06:59:16.2342570Z Updating files:  89% (5655/6353)
+2026-09-07T06:59:16.2426447Z Updating files:  90% (5718/6353)
+2026-09-07T06:59:16.2499540Z Updating files:  91% (5782/6353)
+2026-09-07T06:59:16.2600402Z Updating files:  92% (5845/6353)
+2026-09-07T06:59:16.2675232Z Updating files:  93% (5909/6353)
+2026-09-07T06:59:16.2744630Z Updating files:  94% (5972/6353)
+2026-09-07T06:59:16.2816958Z Updating files:  95% (6036/6353)
+2026-09-07T06:59:16.2888384Z Updating files:  96% (6099/6353)
+2026-09-07T06:59:16.2971154Z Updating files:  97% (6163/6353)
+2026-09-07T06:59:16.3074062Z Updating files:  98% (6226/6353)
+2026-09-07T06:59:16.3176211Z Updating files:  99% (6290/6353)
+2026-09-07T06:59:16.3176820Z Updating files: 100% (6353/6353)
+2026-09-07T06:59:16.3177108Z Updating files: 100% (6353/6353), done.
+2026-09-07T06:59:16.4094385Z Switched to a new branch 'main'
+2026-09-07T06:59:16.4171131Z branch 'main' set up to track 'origin/main'.
+2026-09-07T06:59:16.4294030Z ##[endgroup]
+2026-09-07T06:59:16.4294403Z ##[group]Setting up auth for fetching submodules
+2026-09-07T06:59:16.4306460Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-7efc1b0b-b4e9-431e-8e9a-cb663ec17311.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-09-07T06:59:16.5040752Z [command]"C:\Program Files\Git\bin\git.exe" config --global include.path D:\a\_temp\git-credentials-7efc1b0b-b4e9-431e-8e9a-cb663ec17311.config
+2026-09-07T06:59:16.5340795Z [command]"C:\Program Files\Git\bin\git.exe" config --global --unset-all url.https://github.com/.insteadOf
+2026-09-07T06:59:16.5700303Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add url.https://github.com/.insteadOf git@github.com:
+2026-09-07T06:59:16.5979402Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add url.https://github.com/.insteadOf org-48746729@github.com:
+2026-09-07T06:59:16.6225667Z ##[endgroup]
+2026-09-07T06:59:16.6226152Z ##[group]Fetching submodules
+2026-09-07T06:59:16.6241808Z [command]"C:\Program Files\Git\bin\git.exe" submodule sync --recursive
+2026-09-07T06:59:17.0674368Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 submodule update --init --force --recursive
+2026-09-07T06:59:17.5070851Z Submodule 'board_package/NU54DK_Zephyr_DTS' (https://github.com/Nucode01/NU54DK_Zephyr_DTS.git) registered for path 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:59:17.5652821Z Cloning into 'D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS'...
+2026-09-07T06:59:18.6717964Z Submodule path 'board_package/NU54DK_Zephyr_DTS': checked out 'fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3'
+2026-09-07T06:59:18.6925224Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local gc.auto 0"
+2026-09-07T06:59:19.1047702Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:59:19.1829920Z ##[endgroup]
+2026-09-07T06:59:19.1830392Z ##[group]Persisting credentials for submodules
+2026-09-07T06:59:19.1839791Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'url\.https\:\/\/github\.com\/\.insteadOf' && git config --local --unset-all 'url.https://github.com/.insteadOf' || :\""
+2026-09-07T06:59:19.6606391Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:59:19.7345779Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-09-07T06:59:20.2145182Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:59:20.2422978Z file:D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config	remote.origin.url
+2026-09-07T06:59:20.2626746Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config includeIf.gitdir:D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS.path D:\a\_temp\git-credentials-7efc1b0b-b4e9-431e-8e9a-cb663ec17311.config
+2026-09-07T06:59:20.2864035Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config includeIf.gitdir:/github/workspace/.git/modules/board_package/NU54DK_Zephyr_DTS.path /github/runner_temp/git-credentials-7efc1b0b-b4e9-431e-8e9a-cb663ec17311.config
+2026-09-07T06:59:20.3099969Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --add 'url.https://github.com/.insteadOf' 'git@github.com:'"
+2026-09-07T06:59:20.7689258Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:59:20.8186433Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --add 'url.https://github.com/.insteadOf' 'org-48746729@github.com:'"
+2026-09-07T06:59:21.6091275Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:59:21.6572958Z ##[endgroup]
+2026-09-07T06:59:21.6835580Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-09-07T06:59:21.7049519Z 828166109968b2ceb40fc2d9c054255558d995d5
+2026-09-07T06:59:21.7446252Z ##[group]Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+2026-09-07T06:59:21.7446718Z with:
+2026-09-07T06:59:21.7446949Z   python-version: 3.12.10
+2026-09-07T06:59:21.7447208Z   check-latest: false
+2026-09-07T06:59:21.7449399Z   token: ***
+2026-09-07T06:59:21.7449658Z   update-environment: true
+2026-09-07T06:59:21.7449924Z   allow-prereleases: false
+2026-09-07T06:59:21.7450161Z   freethreaded: false
+2026-09-07T06:59:21.7450385Z env:
+2026-09-07T06:59:21.7450608Z   NUCODE_NCS_INSTALL_ROOT: D:\ncs
+2026-09-07T06:59:21.7450890Z   NUCODE_NCS_ROOT: D:\ncs\v3.4.0
+2026-09-07T06:59:21.7451183Z   NUCODE_TOOLCHAIN_ROOT: D:\ncs\toolchains\dcbdc366a1
+2026-09-07T06:59:21.7451509Z   NUCODE_PREREQUISITE_STATE_ROOT: D:\nu54-prerequisites
+2026-09-07T06:59:21.7451884Z   M12_EVIDENCE: D:\a\NU54DK_Arduino_Core\NU54DK_Arduino_Core\m12-evidence\v0.1.0
+2026-09-07T06:59:21.7452219Z   NUCODE_CI_TEMP: D:\t
+2026-09-07T06:59:21.7452436Z ##[endgroup]
+2026-09-07T06:59:21.8682786Z ##[group]Installed versions
+2026-09-07T06:59:21.8765979Z Successfully set up CPython (3.12.10)
+2026-09-07T06:59:21.8766626Z ##[endgroup]
+2026-09-07T06:59:21.9044365Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-09-07T06:59:21.9045968Z ##[group]Run arduino/setup-arduino-cli@81d310742121c928ea9c8bbd407b4217b432ae02
+2026-09-07T06:59:21.9046397Z with:
+2026-09-07T06:59:21.9046668Z   version: 1.5.1
+2026-09-07T06:59:21.9048417Z   token: ***
+2026-09-07T06:59:21.9048650Z env:
+2026-09-07T06:59:21.9048879Z   NUCODE_NCS_INSTALL_ROOT: D:\ncs
+2026-09-07T06:59:21.9049137Z   NUCODE_NCS_ROOT: D:\ncs\v3.4.0
+2026-09-07T06:59:21.9049565Z   NUCODE_TOOLCHAIN_ROOT: D:\ncs\toolchains\dcbdc366a1
+2026-09-07T06:59:21.9050583Z   NUCODE_PREREQUISITE_STATE_ROOT: D:\nu54-prerequisites
+2026-09-07T06:59:21.9051049Z   M12_EVIDENCE: D:\a\NU54DK_Arduino_Core\NU54DK_Arduino_Core\m12-evidence\v0.1.0
+2026-09-07T06:59:21.9051415Z   NUCODE_CI_TEMP: D:\t
+2026-09-07T06:59:21.9051726Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T06:59:21.9052139Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-09-07T06:59:21.9052521Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T06:59:21.9052889Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T06:59:21.9053249Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T06:59:21.9053556Z ##[endgroup]
+2026-09-07T06:59:23.1321734Z [command]"C:\Program Files\PowerShell\7\pwsh.exe" -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "$ErrorActionPreference = 'Stop' ; try { Add-Type -AssemblyName System.IO.Compression.ZipFile } catch { } ; try { [System.IO.Compression.ZipFile]::ExtractToDirectory('D:\a\_temp\41c2b483-1d78-499f-9775-667db650a738', 'D:\a\_temp\25278c22-00bb-44a3-a181-0e18ba5504eb', $true) } catch { if (($_.Exception.GetType().FullName -eq 'System.Management.Automation.MethodException') -or ($_.Exception.GetType().FullName -eq 'System.Management.Automation.RuntimeException') ){ Expand-Archive -LiteralPath 'D:\a\_temp\41c2b483-1d78-499f-9775-667db650a738' -DestinationPath 'D:\a\_temp\25278c22-00bb-44a3-a181-0e18ba5504eb' -Force } else { throw $_ } } ;"
+2026-09-07T06:59:23.6161935Z ##[group]Run python tools/ci/verify_ci_lock.py --github-output
+2026-09-07T06:59:23.6162673Z [36;1mpython tools/ci/verify_ci_lock.py --github-output[0m
+2026-09-07T06:59:24.9178387Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-09-07T06:59:24.9178769Z env:
+2026-09-07T06:59:24.9179104Z   NUCODE_NCS_INSTALL_ROOT: D:\ncs
+2026-09-07T06:59:24.9179447Z   NUCODE_NCS_ROOT: D:\ncs\v3.4.0
+2026-09-07T06:59:24.9179811Z   NUCODE_TOOLCHAIN_ROOT: D:\ncs\toolchains\dcbdc366a1
+2026-09-07T06:59:24.9180204Z   NUCODE_PREREQUISITE_STATE_ROOT: D:\nu54-prerequisites
+2026-09-07T06:59:24.9180581Z   M12_EVIDENCE: D:\a\NU54DK_Arduino_Core\NU54DK_Arduino_Core\m12-evidence\v0.1.0
+2026-09-07T06:59:24.9180904Z   NUCODE_CI_TEMP: D:\t
+2026-09-07T06:59:24.9181215Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T06:59:24.9181599Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-09-07T06:59:24.9182108Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T06:59:24.9182471Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T06:59:24.9182858Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T06:59:24.9183146Z ##[endgroup]
+2026-09-07T06:59:29.9720708Z {"container": "ghcr.io/nrfconnect/sdk-nrf-toolchain@sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace", "linux_cache_key": "ncs-linux-amd64-99553055607b2e9885fbc80ccd11fa9da81c2df0-bf801e4e3d19e1ffa76164346480cb7734dd2800-tc-fbf7391cab-img-f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace", "lock_sha256": "8c5ab4deaf0bb21dc83957330c49531d011e142959c6f93f7b47052bba5146f3", "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0", "windows_cache_key": "ncs-windows-x64-99553055607b2e9885fbc80ccd11fa9da81c2df0-bf801e4e3d19e1ffa76164346480cb7734dd2800-tc-dcbdc366a1", "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"}
+2026-09-07T06:59:30.1132880Z ##[group]Run actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+2026-09-07T06:59:30.1133349Z with:
+2026-09-07T06:59:30.1133601Z   path: ~\AppData\Local\NUCODE\NU54DK_Arduino_Core
+2026-09-07T06:59:30.1134545Z   key: ncs-windows-x64-99553055607b2e9885fbc80ccd11fa9da81c2df0-bf801e4e3d19e1ffa76164346480cb7734dd2800-tc-dcbdc366a1-builder-v1
+2026-09-07T06:59:30.1135068Z   enableCrossOsArchive: false
+2026-09-07T06:59:30.1135328Z   fail-on-cache-miss: false
+2026-09-07T06:59:30.1135591Z   lookup-only: false
+2026-09-07T06:59:30.1136049Z   save-always: false
+2026-09-07T06:59:30.1136275Z env:
+2026-09-07T06:59:30.1136531Z   NUCODE_NCS_INSTALL_ROOT: D:\ncs
+2026-09-07T06:59:30.1136770Z   NUCODE_NCS_ROOT: D:\ncs\v3.4.0
+2026-09-07T06:59:30.1137062Z   NUCODE_TOOLCHAIN_ROOT: D:\ncs\toolchains\dcbdc366a1
+2026-09-07T06:59:30.1137395Z   NUCODE_PREREQUISITE_STATE_ROOT: D:\nu54-prerequisites
+2026-09-07T06:59:30.1137877Z   M12_EVIDENCE: D:\a\NU54DK_Arduino_Core\NU54DK_Arduino_Core\m12-evidence\v0.1.0
+2026-09-07T06:59:30.1138229Z   NUCODE_CI_TEMP: D:\t
+2026-09-07T06:59:30.1138521Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T06:59:30.1138914Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-09-07T06:59:30.1139284Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T06:59:30.1139690Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T06:59:30.1140038Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T06:59:30.1140344Z ##[endgroup]
+2026-09-07T06:59:30.6257413Z Cache hit for: ncs-windows-x64-99553055607b2e9885fbc80ccd11fa9da81c2df0-bf801e4e3d19e1ffa76164346480cb7734dd2800-tc-dcbdc366a1-builder-v1
+2026-09-07T06:59:31.3915365Z Received 9266879 of 9266879 (100.0%), 14.7 MBs/sec
+2026-09-07T06:59:31.3916907Z Cache Size: ~9 MB (9266879 B)
+2026-09-07T06:59:31.3948029Z [command]"C:\Program Files\Git\usr\bin\tar.exe" -xf D:/a/_temp/b084ad5c-148d-4dd8-98bd-05de2ed78f6b/cache.tzst -P -C D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core --force-local --use-compress-program "zstd -d"
+2026-09-07T06:59:31.7783024Z Cache restored successfully
+2026-09-07T06:59:31.7876044Z Cache restored from key: ncs-windows-x64-99553055607b2e9885fbc80ccd11fa9da81c2df0-bf801e4e3d19e1ffa76164346480cb7734dd2800-tc-dcbdc366a1-builder-v1
+2026-09-07T06:59:31.8116314Z ##[group]Run powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .\tools\nu54-prerequisites\install-nordic.ps1 -PlatformRoot . -NcsRoot "$env:NUCODE_NCS_INSTALL_ROOT"
+2026-09-07T06:59:31.8117832Z [36;1mpowershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .\tools\nu54-prerequisites\install-nordic.ps1 -PlatformRoot . -NcsRoot "$env:NUCODE_NCS_INSTALL_ROOT"[0m
+2026-09-07T06:59:31.8172386Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-09-07T06:59:31.8172774Z env:
+2026-09-07T06:59:31.8173003Z   NUCODE_NCS_INSTALL_ROOT: D:\ncs
+2026-09-07T06:59:31.8173300Z   NUCODE_NCS_ROOT: D:\ncs\v3.4.0
+2026-09-07T06:59:31.8173584Z   NUCODE_TOOLCHAIN_ROOT: D:\ncs\toolchains\dcbdc366a1
+2026-09-07T06:59:31.8173955Z   NUCODE_PREREQUISITE_STATE_ROOT: D:\nu54-prerequisites
+2026-09-07T06:59:31.8174333Z   M12_EVIDENCE: D:\a\NU54DK_Arduino_Core\NU54DK_Arduino_Core\m12-evidence\v0.1.0
+2026-09-07T06:59:31.8174785Z   NUCODE_CI_TEMP: D:\t
+2026-09-07T06:59:31.8175086Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T06:59:31.8175507Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-09-07T06:59:31.8175924Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T06:59:31.8176293Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T06:59:31.8176702Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T06:59:31.8177005Z ##[endgroup]
+2026-09-07T06:59:44.1228977Z [NU54DK] 공식 nRF Util byte 준비
+2026-09-07T06:59:44.2101901Z [NU54DK] sdk-manager 1.16.1 설치
+2026-09-07T06:59:45.7147703Z [NU54DK] Toolchain dcbdc366a1 설치 또는 재개
+2026-09-07T06:59:46.2482993Z Using the global server for downloads. Use '--region cn' for the server in Mainland China.
+2026-09-07T07:00:56.8959852Z [NU54DK] NCS v3.4.0 설치 또는 재개
+2026-09-07T07:00:58.0954594Z Using the global server for downloads. Use '--region cn' for the server in Mainland China.
+2026-09-07T07:04:38.5766198Z Warning: The SDK has been installed to 'D:\ncs\v3.4.0' but it has not been registered with cmake. Please run 'nrfutil sdk-manager sdk register v3.4.0' or run 'west zephyr-export' within the SDK folder.
+2026-09-07T07:04:38.5881921Z [NU54DK] 설치 byte와 revision 최종 검증
+2026-09-07T07:05:30.4856917Z [NU54DK] 완료 marker 재검증
+2026-09-07T07:05:30.9547006Z [NU54DK] Nordic prerequisite installation PASS.
+2026-09-07T07:05:30.9557744Z 설치 root: D:\ncs
+2026-09-07T07:05:30.9580599Z 검증 log : C:\Users\runneradmin\AppData\Local\NUCODE\NU54DK_Arduino_Core\logs\prerequisites-20260907-065943.log
+2026-09-07T07:05:31.1320487Z ##[group]Run python tools/ci/verify_ci_lock.py --workspace "$env:NUCODE_NCS_ROOT"
+2026-09-07T07:05:31.1321110Z [36;1mpython tools/ci/verify_ci_lock.py --workspace "$env:NUCODE_NCS_ROOT"[0m
+2026-09-07T07:05:31.1543482Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-09-07T07:05:31.1543860Z env:
+2026-09-07T07:05:31.1544113Z   NUCODE_NCS_INSTALL_ROOT: D:\ncs
+2026-09-07T07:05:31.1544375Z   NUCODE_NCS_ROOT: D:\ncs\v3.4.0
+2026-09-07T07:05:31.1544729Z   NUCODE_TOOLCHAIN_ROOT: D:\ncs\toolchains\dcbdc366a1
+2026-09-07T07:05:31.1545087Z   NUCODE_PREREQUISITE_STATE_ROOT: D:\nu54-prerequisites
+2026-09-07T07:05:31.1545469Z   M12_EVIDENCE: D:\a\NU54DK_Arduino_Core\NU54DK_Arduino_Core\m12-evidence\v0.1.0
+2026-09-07T07:05:31.1545833Z   NUCODE_CI_TEMP: D:\t
+2026-09-07T07:05:31.1546138Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T07:05:31.1546550Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-09-07T07:05:31.1547016Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T07:05:31.1547399Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T07:05:31.1547790Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T07:05:31.1548094Z ##[endgroup]
+2026-09-07T07:05:33.5178262Z {"container": "ghcr.io/nrfconnect/sdk-nrf-toolchain@sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace", "linux_cache_key": "ncs-linux-amd64-99553055607b2e9885fbc80ccd11fa9da81c2df0-bf801e4e3d19e1ffa76164346480cb7734dd2800-tc-fbf7391cab-img-f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace", "lock_sha256": "8c5ab4deaf0bb21dc83957330c49531d011e142959c6f93f7b47052bba5146f3", "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0", "windows_cache_key": "ncs-windows-x64-99553055607b2e9885fbc80ccd11fa9da81c2df0-bf801e4e3d19e1ffa76164346480cb7734dd2800-tc-dcbdc366a1", "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"}
+2026-09-07T07:05:33.6252835Z ##[group]Run New-Item -ItemType Directory -Path $env:M12_EVIDENCE -Force | Out-Null
+2026-09-07T07:05:33.6253536Z [36;1mNew-Item -ItemType Directory -Path $env:M12_EVIDENCE -Force | Out-Null[0m
+2026-09-07T07:05:33.6254003Z [36;1mNew-Item -ItemType Directory -Path $env:NUCODE_CI_TEMP -Force | Out-Null[0m
+2026-09-07T07:05:33.6254362Z [36;1m$env:TEMP = $env:NUCODE_CI_TEMP[0m
+2026-09-07T07:05:33.6254619Z [36;1m$env:TMP = $env:NUCODE_CI_TEMP[0m
+2026-09-07T07:05:33.6255007Z [36;1m$cli = (Get-Command arduino-cli.exe).Source[0m
+2026-09-07T07:05:33.6255474Z [36;1m& $cli version 2>&1 | Tee-Object -FilePath (Join-Path $env:M12_EVIDENCE 'arduino-cli-version.txt')[0m
+2026-09-07T07:05:33.6255944Z [36;1m$previousErrorAction = $ErrorActionPreference[0m
+2026-09-07T07:05:33.6256365Z [36;1m$ErrorActionPreference = 'Continue'[0m
+2026-09-07T07:05:33.6256766Z [36;1mpython .\tests\arduino-cli\run_smoke.py --cli $cli --group 'v0.1.0' 2>&1 |[0m
+2026-09-07T07:05:33.6257318Z [36;1m  Tee-Object -FilePath (Join-Path $env:M12_EVIDENCE 'arduino-build.log')[0m
+2026-09-07T07:05:33.6257669Z [36;1m$commandExitCode = $LASTEXITCODE[0m
+2026-09-07T07:05:33.6257992Z [36;1m$ErrorActionPreference = $previousErrorAction[0m
+2026-09-07T07:05:33.6258355Z [36;1mif ($commandExitCode -ne 0) { exit $commandExitCode }[0m
+2026-09-07T07:05:33.6312778Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-09-07T07:05:33.6313245Z env:
+2026-09-07T07:05:33.6313478Z   NUCODE_NCS_INSTALL_ROOT: D:\ncs
+2026-09-07T07:05:33.6313926Z   NUCODE_NCS_ROOT: D:\ncs\v3.4.0
+2026-09-07T07:05:33.6314224Z   NUCODE_TOOLCHAIN_ROOT: D:\ncs\toolchains\dcbdc366a1
+2026-09-07T07:05:33.6314600Z   NUCODE_PREREQUISITE_STATE_ROOT: D:\nu54-prerequisites
+2026-09-07T07:05:33.6314978Z   M12_EVIDENCE: D:\a\NU54DK_Arduino_Core\NU54DK_Arduino_Core\m12-evidence\v0.1.0
+2026-09-07T07:05:33.6315318Z   NUCODE_CI_TEMP: D:\t
+2026-09-07T07:05:33.6315645Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T07:05:33.6316067Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-09-07T07:05:33.6316445Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T07:05:33.6316815Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T07:05:33.6317211Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T07:05:33.6317507Z ##[endgroup]
+2026-09-07T07:05:34.7229836Z arduino-cli  Version: 1.5.1 Commit: 01f3d4f2b Date: 2026-06-05T10:22:12Z
+2026-09-07T07:05:36.2818897Z SMOKE_TEST_START=v0.1.0/blink
+2026-09-07T07:07:11.0536769Z PASS: blink
+2026-09-07T07:07:11.0539211Z SMOKE_TEST_START=v0.1.0/m6
+2026-09-07T07:09:50.6464846Z PASS: m6
+2026-09-07T07:09:50.6465304Z SMOKE_TEST_START=v0.1.0/m7
+2026-09-07T07:15:32.9594867Z PASS: m7
+2026-09-07T07:15:32.9596697Z ARDUINO_SMOKE_GROUP_PASS=v0.1.0;TESTS=3
+2026-09-07T07:15:34.1160797Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-07T07:15:34.1161830Z with:
+2026-09-07T07:15:34.1162174Z   name: m12-arduino-v0.1.0-828166109968b2ceb40fc2d9c054255558d995d5
+2026-09-07T07:15:34.1162557Z   path: D:\a\NU54DK_Arduino_Core\NU54DK_Arduino_Core\m12-evidence\v0.1.0
+2026-09-07T07:15:34.1162963Z   if-no-files-found: warn
+2026-09-07T07:15:34.1163216Z   retention-days: 14
+2026-09-07T07:15:34.1163461Z   compression-level: 6
+2026-09-07T07:15:34.1163704Z   overwrite: false
+2026-09-07T07:15:34.1163963Z   include-hidden-files: false
+2026-09-07T07:15:34.1164303Z   archive: true
+2026-09-07T07:15:34.1164710Z env:
+2026-09-07T07:15:34.1164995Z   NUCODE_NCS_INSTALL_ROOT: D:\ncs
+2026-09-07T07:15:34.1165308Z   NUCODE_NCS_ROOT: D:\ncs\v3.4.0
+2026-09-07T07:15:34.1165694Z   NUCODE_TOOLCHAIN_ROOT: D:\ncs\toolchains\dcbdc366a1
+2026-09-07T07:15:34.1166916Z   NUCODE_PREREQUISITE_STATE_ROOT: D:\nu54-prerequisites
+2026-09-07T07:15:34.1167512Z   M12_EVIDENCE: D:\a\NU54DK_Arduino_Core\NU54DK_Arduino_Core\m12-evidence\v0.1.0
+2026-09-07T07:15:34.1167883Z   NUCODE_CI_TEMP: D:\t
+2026-09-07T07:15:34.1168186Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T07:15:34.1168624Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-09-07T07:15:34.1169020Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T07:15:34.1169430Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T07:15:34.1169780Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-09-07T07:15:34.1170086Z ##[endgroup]
+2026-09-07T07:15:36.4827846Z With the provided path, there will be 2 files uploaded
+2026-09-07T07:15:36.4832024Z Artifact name is valid!
+2026-09-07T07:15:36.4833527Z Root directory input is valid!
+2026-09-07T07:15:36.8114447Z Uploading artifact: m12-arduino-v0.1.0-828166109968b2ceb40fc2d9c054255558d995d5.zip
+2026-09-07T07:15:36.8152186Z Beginning upload of artifact content to blob storage
+2026-09-07T07:15:37.2085641Z Uploaded bytes 505
+2026-09-07T07:15:37.2475301Z Finished uploading artifact content to blob storage!
+2026-09-07T07:15:37.2476482Z SHA256 digest of uploaded artifact is 1acd78974d916b0f1591e1c550a02fe32512bffd6d64ee3292ed648693e40510
+2026-09-07T07:15:37.2477076Z Finalizing artifact upload
+2026-09-07T07:15:37.5624871Z Artifact m12-arduino-v0.1.0-828166109968b2ceb40fc2d9c054255558d995d5 successfully finalized. Artifact ID 10008079632
+2026-09-07T07:15:37.5626043Z Artifact m12-arduino-v0.1.0-828166109968b2ceb40fc2d9c054255558d995d5 has been successfully uploaded! Final size is 505 bytes. Artifact ID is 10008079632
+2026-09-07T07:15:37.5633920Z Artifact download URL: https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876773/artifacts/10008079632
+2026-09-07T07:15:37.7245704Z Post job cleanup.
+2026-09-07T07:15:38.2259519Z Cache hit occurred on the primary key ncs-windows-x64-99553055607b2e9885fbc80ccd11fa9da81c2df0-bf801e4e3d19e1ffa76164346480cb7734dd2800-tc-dcbdc366a1-builder-v1, not saving cache.
+2026-09-07T07:15:38.2735607Z Post job cleanup.
+2026-09-07T07:15:39.4856029Z Post job cleanup.
+2026-09-07T07:15:39.6457328Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-09-07T07:15:39.6724772Z git version 2.55.0.windows.5
+2026-09-07T07:15:39.6786549Z Temporarily overriding HOME='D:\a\_temp\bb724274-0009-4b4d-b7dd-7ebc2928348e' before making global git config changes
+2026-09-07T07:15:39.6787150Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-07T07:15:39.6795239Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\NU54DK_Arduino_Core\NU54DK_Arduino_Core
+2026-09-07T07:15:40.0145816Z Removing SSH command configuration
+2026-09-07T07:15:40.0156572Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-09-07T07:15:40.0440502Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-09-07T07:15:40.9669679Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T07:15:41.1238268Z Removing HTTP extra header
+2026-09-07T07:15:41.1248307Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-07T07:15:41.1519461Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-09-07T07:15:41.5940689Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T07:15:41.6699757Z Removing includeIf entries pointing to credentials config files
+2026-09-07T07:15:41.6710729Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T07:15:41.6926094Z includeif.gitdir:D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git.path
+2026-09-07T07:15:41.6926706Z includeif.gitdir:D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/worktrees/*.path
+2026-09-07T07:15:41.6927037Z includeif.gitdir:/github/workspace/.git.path
+2026-09-07T07:15:41.6927324Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-07T07:15:41.6963415Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git.path
+2026-09-07T07:15:41.7171988Z D:\a\_temp\git-credentials-7efc1b0b-b4e9-431e-8e9a-cb663ec17311.config
+2026-09-07T07:15:41.7213254Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git.path D\:\\a\\_temp\\git\-credentials\-7efc1b0b\-b4e9\-431e\-8e9a\-cb663ec17311\.config
+2026-09-07T07:15:41.7463026Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/worktrees/*.path
+2026-09-07T07:15:41.7668455Z D:\a\_temp\git-credentials-7efc1b0b-b4e9-431e-8e9a-cb663ec17311.config
+2026-09-07T07:15:41.7705523Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-7efc1b0b\-b4e9\-431e\-8e9a\-cb663ec17311\.config
+2026-09-07T07:15:41.7952533Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-07T07:15:41.8155916Z /github/runner_temp/git-credentials-7efc1b0b-b4e9-431e-8e9a-cb663ec17311.config
+2026-09-07T07:15:41.8229446Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-7efc1b0b\-b4e9\-431e\-8e9a\-cb663ec17311\.config
+2026-09-07T07:15:41.8484399Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-07T07:15:41.8713767Z /github/runner_temp/git-credentials-7efc1b0b-b4e9-431e-8e9a-cb663ec17311.config
+2026-09-07T07:15:41.8749779Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-7efc1b0b\-b4e9\-431e\-8e9a\-cb663ec17311\.config
+2026-09-07T07:15:41.8992984Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-09-07T07:15:42.3809500Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T07:15:42.4131478Z file:D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config	remote.origin.url
+2026-09-07T07:15:42.4393349Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T07:15:42.4629069Z includeif.gitdir:D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS.path
+2026-09-07T07:15:42.4633364Z includeif.gitdir:/github/workspace/.git/modules/board_package/NU54DK_Zephyr_DTS.path
+2026-09-07T07:15:42.4669743Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config --get-all includeif.gitdir:D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS.path
+2026-09-07T07:15:42.4898667Z D:\a\_temp\git-credentials-7efc1b0b-b4e9-431e-8e9a-cb663ec17311.config
+2026-09-07T07:15:42.4937860Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config --unset includeif.gitdir:D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS.path D\:\\a\\_temp\\git\-credentials\-7efc1b0b\-b4e9\-431e\-8e9a\-cb663ec17311\.config
+2026-09-07T07:15:42.5193198Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config --get-all includeif.gitdir:/github/workspace/.git/modules/board_package/NU54DK_Zephyr_DTS.path
+2026-09-07T07:15:42.5404323Z /github/runner_temp/git-credentials-7efc1b0b-b4e9-431e-8e9a-cb663ec17311.config
+2026-09-07T07:15:42.5441660Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:/a/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config --unset includeif.gitdir:/github/workspace/.git/modules/board_package/NU54DK_Zephyr_DTS.path \/github\/runner_temp\/git\-credentials\-7efc1b0b\-b4e9\-431e\-8e9a\-cb663ec17311\.config
+2026-09-07T07:15:42.5697674Z Removing credentials config 'D:\a\_temp\git-credentials-7efc1b0b-b4e9-431e-8e9a-cb663ec17311.config'
+2026-09-07T07:15:42.5930224Z Cleaning up orphan processes
+2026-09-07T07:15:43.1568918Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: arduino/setup-arduino-cli@81d310742121c928ea9c8bbd407b4217b432ae02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -1,0 +1,527 @@
+{
+  "source": "828166109968b2ceb40fc2d9c054255558d995d5",
+  "job_id": 101649928848,
+  "run_id": 34092876776,
+  "groups": 85,
+  "reported_tests": 682,
+  "skipped": 2,
+  "all_groups_ok": true,
+  "canonical_marker": true,
+  "rows": [
+    {
+      "pattern": "test_ac01_contract.py",
+      "tests": 4,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_ac02b_analog_contract.py",
+      "tests": 7,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_ac02b_b2_contract.py",
+      "tests": 6,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_ac03_storage_contract.py",
+      "tests": 6,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_build_matrix_runner.py",
+      "tests": 9,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_compact_tokens.py",
+      "tests": 1,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_fixed_gate_runner.py",
+      "tests": 16,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_host_compiler.py",
+      "tests": 6,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m10_prerequisites.py",
+      "tests": 24,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m10_remote_runner.py",
+      "tests": 29,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m11_rc_hil.py",
+      "tests": 11,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m11_release.py",
+      "tests": 28,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m11_remote_runner.py",
+      "tests": 16,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m13_profiles.py",
+      "tests": 11,
+      "outcome": "OK (skipped=1)",
+      "skips": [
+        "'M13 package \\uc124\\uce58 \\ud6c4 NUCODE_M13_CLI_DISCOVERY=1\\ub85c \\uc2e4\\ud589\\ud569\\ub2c8\\ub2e4.'"
+      ]
+    },
+    {
+      "pattern": "test_m14_core_contract.py",
+      "tests": 5,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m14_pin_hil_runner.py",
+      "tests": 12,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m14_variant_contract.py",
+      "tests": 6,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m15_board_system_contract.py",
+      "tests": 9,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m15_lfxo_contract.py",
+      "tests": 3,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m15_system_off_hil_runner.py",
+      "tests": 16,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m16_ble_contract.py",
+      "tests": 6,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m16_ble_pair.py",
+      "tests": 9,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m17_coverage.py",
+      "tests": 25,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m17_external_arduino.py",
+      "tests": 15,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m17_feasibility.py",
+      "tests": 13,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m18_release.py",
+      "tests": 25,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m19_ble_gap_contract.py",
+      "tests": 8,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m19_ble_gap_hil.py",
+      "tests": 5,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m20_ble_gatt_contract.py",
+      "tests": 6,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m20_ble_gatt_hil.py",
+      "tests": 6,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m21_ble_security_contract.py",
+      "tests": 22,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m21_ble_security_hil.py",
+      "tests": 10,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m21_ble_security_negative.py",
+      "tests": 7,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m22_cleanroom.py",
+      "tests": 13,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m22_fixed_gate.py",
+      "tests": 4,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m22_package_examples.py",
+      "tests": 7,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m22_release.py",
+      "tests": 5,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m23_peripheral_inventory.py",
+      "tests": 8,
+      "outcome": "OK (skipped=1)",
+      "skips": [
+        "'exact NCS v3.4.0 workspace is not installed'"
+      ]
+    },
+    {
+      "pattern": "test_m24_serial_contract.py",
+      "tests": 15,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m26_system_contract.py",
+      "tests": 5,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m27_package_examples.py",
+      "tests": 5,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m27_release.py",
+      "tests": 9,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m27_staged_candidate.py",
+      "tests": 3,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m8_flash.py",
+      "tests": 13,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m9_cache.py",
+      "tests": 23,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m9_safety.py",
+      "tests": 12,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r02_serial_drivers.py",
+      "tests": 1,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r03_fabric_drivers.py",
+      "tests": 3,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r04_file.py",
+      "tests": 1,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r05_identity.py",
+      "tests": 6,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r06_builder_modules.py",
+      "tests": 2,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r06_windows_recipe.py",
+      "tests": 4,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r07_event_driver.py",
+      "tests": 1,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r08_resource_route.py",
+      "tests": 1,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r09_spi_facade.py",
+      "tests": 1,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r10_serial_concurrency.py",
+      "tests": 1,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r11_fabric_data.py",
+      "tests": 1,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r12_ble_gap.py",
+      "tests": 1,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r12_ble_gatt.py",
+      "tests": 1,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r12_ble_security.py",
+      "tests": 1,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r12_eeprom.py",
+      "tests": 1,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r12_littlefs.py",
+      "tests": 1,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r13_generated.py",
+      "tests": 3,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r13_manifest_revision.py",
+      "tests": 2,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_r13_package_modules.py",
+      "tests": 6,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_v04_campaign.py",
+      "tests": 3,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_v04_cmake_sources.py",
+      "tests": 1,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_v04_dma_memory.py",
+      "tests": 2,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_v04_fixture.py",
+      "tests": 12,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_v04_math.py",
+      "tests": 3,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_v04_nojumper.py",
+      "tests": 7,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_v04_nojumper_internal.py",
+      "tests": 8,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_v04_pair.py",
+      "tests": 16,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_v04_pdm_continuous.py",
+      "tests": 4,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_v04_qdec.py",
+      "tests": 7,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_v04_revision.py",
+      "tests": 1,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_v04_serial_lifecycle.py",
+      "tests": 3,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_v04_signal.py",
+      "tests": 17,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_v04_test_plan.py",
+      "tests": 10,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_v04_uart.py",
+      "tests": 6,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_ac03_storage.py",
+      "tests": 12,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m24_uarte_onboard.py",
+      "tests": 10,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m24_twim_onboard.py",
+      "tests": 4,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m25_onboard.py",
+      "tests": 4,
+      "outcome": "OK",
+      "skips": []
+    },
+    {
+      "pattern": "test_m26_onboard.py",
+      "tests": 10,
+      "outcome": "OK",
+      "skips": []
+    }
+  ],
+  "passed": 680
+}

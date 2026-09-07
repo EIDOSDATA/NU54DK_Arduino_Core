@@ -1,0 +1,311 @@
+2026-09-07T06:54:00.5718555Z Current runner version: '2.337.0'
+2026-09-07T06:54:00.5745987Z ##[group]Runner Image Provisioner
+2026-09-07T06:54:00.5747214Z Hosted Compute Agent
+2026-09-07T06:54:00.5747804Z Version: 20260828.587
+2026-09-07T06:54:00.5748451Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-07T06:54:00.5749420Z Build Date: 2026-08-28T16:44:25Z
+2026-09-07T06:54:00.5750145Z Worker ID: {eb1127c1-594f-48db-8cb1-6bcb3d171859}
+2026-09-07T06:54:00.5750896Z Azure Region: eastus
+2026-09-07T06:54:00.5751669Z ##[endgroup]
+2026-09-07T06:54:00.5753257Z ##[group]Operating System
+2026-09-07T06:54:00.5754000Z Ubuntu
+2026-09-07T06:54:00.5754509Z 24.04.4
+2026-09-07T06:54:00.5755045Z LTS
+2026-09-07T06:54:00.5755566Z ##[endgroup]
+2026-09-07T06:54:00.5756138Z ##[group]Runner Image
+2026-09-07T06:54:00.5756815Z Image: ubuntu-24.04
+2026-09-07T06:54:00.5757372Z Version: 20260831.293.1
+2026-09-07T06:54:00.5758627Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260831.293/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-07T06:54:00.5760636Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260831.293
+2026-09-07T06:54:00.5761939Z ##[endgroup]
+2026-09-07T06:54:00.5763004Z ##[group]GITHUB_TOKEN Permissions
+2026-09-07T06:54:00.5765293Z Contents: read
+2026-09-07T06:54:00.5765920Z Metadata: read
+2026-09-07T06:54:00.5766548Z ##[endgroup]
+2026-09-07T06:54:00.5768692Z Secret source: Actions
+2026-09-07T06:54:00.5770084Z Prepare workflow directory
+2026-09-07T06:54:00.6105564Z Prepare all required actions
+2026-09-07T06:54:00.6154219Z Getting action download info
+2026-09-07T06:54:00.8101164Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-07T06:54:00.9300782Z Download action repository 'actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97' (SHA:5fda3b95a4ea91299a34e894583c3862153e4b97)
+2026-09-07T06:54:01.1158471Z Complete job name: CI contract
+2026-09-07T06:54:01.1926509Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-07T06:54:01.1927594Z with:
+2026-09-07T06:54:01.1928010Z   fetch-depth: 0
+2026-09-07T06:54:01.1928454Z   submodules: recursive
+2026-09-07T06:54:01.1928948Z   repository: EIDOSDATA/NU54DK_Arduino_Core
+2026-09-07T06:54:01.1933236Z   token: ***
+2026-09-07T06:54:01.1933664Z   ssh-strict: true
+2026-09-07T06:54:01.1934161Z   ssh-user: git
+2026-09-07T06:54:01.1934603Z   persist-credentials: true
+2026-09-07T06:54:01.1935085Z   clean: true
+2026-09-07T06:54:01.1935564Z   sparse-checkout-cone-mode: true
+2026-09-07T06:54:01.1936148Z   fetch-tags: false
+2026-09-07T06:54:01.1936590Z   show-progress: true
+2026-09-07T06:54:01.1937035Z   lfs: false
+2026-09-07T06:54:01.1937457Z   set-safe-directory: true
+2026-09-07T06:54:01.1937959Z   allow-unsafe-pr-checkout: false
+2026-09-07T06:54:01.1938723Z ##[endgroup]
+2026-09-07T06:54:01.2932664Z Syncing repository: EIDOSDATA/NU54DK_Arduino_Core
+2026-09-07T06:54:01.2935491Z ##[group]Getting Git version info
+2026-09-07T06:54:01.2936862Z Working directory is '/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core'
+2026-09-07T06:54:01.2938833Z [command]/usr/bin/git version
+2026-09-07T06:54:01.3008025Z git version 2.55.0
+2026-09-07T06:54:01.3034142Z ##[endgroup]
+2026-09-07T06:54:01.3044969Z Temporarily overriding HOME='/home/runner/work/_temp/230004ed-3758-4235-ab21-2653895135e6' before making global git config changes
+2026-09-07T06:54:01.3047288Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-07T06:54:01.3053040Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core
+2026-09-07T06:54:01.3104666Z Deleting the contents of '/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core'
+2026-09-07T06:54:01.3107945Z ##[group]Determining repository object format
+2026-09-07T06:54:01.3109468Z ##[endgroup]
+2026-09-07T06:54:01.3110587Z ##[group]Initializing the repository
+2026-09-07T06:54:01.3115114Z [command]/usr/bin/git init /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core
+2026-09-07T06:54:01.3312233Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-07T06:54:01.3313965Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-07T06:54:01.3315564Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-07T06:54:01.3316767Z hint: call:
+2026-09-07T06:54:01.3317384Z hint:
+2026-09-07T06:54:01.3318181Z hint: 	git config --global init.defaultBranch <name>
+2026-09-07T06:54:01.3319246Z hint:
+2026-09-07T06:54:01.3320261Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-07T06:54:01.3322027Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-07T06:54:01.3323233Z hint:
+2026-09-07T06:54:01.3323885Z hint: 	git branch -m <name>
+2026-09-07T06:54:01.3324704Z hint:
+2026-09-07T06:54:01.3325466Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-07T06:54:01.3326584Z Initialized empty Git repository in /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/
+2026-09-07T06:54:01.3329461Z [command]/usr/bin/git remote add origin https://github.com/EIDOSDATA/NU54DK_Arduino_Core
+2026-09-07T06:54:01.3382917Z ##[endgroup]
+2026-09-07T06:54:01.3383724Z ##[group]Disabling automatic garbage collection
+2026-09-07T06:54:01.3388456Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-07T06:54:01.3422760Z ##[endgroup]
+2026-09-07T06:54:01.3424299Z ##[group]Setting up auth
+2026-09-07T06:54:01.3425218Z Removing SSH command configuration
+2026-09-07T06:54:01.3430185Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-07T06:54:01.3466739Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-07T06:54:01.3841296Z Removing HTTP extra header
+2026-09-07T06:54:01.3847706Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-07T06:54:01.3884273Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-07T06:54:01.4108424Z Removing includeIf entries pointing to credentials config files
+2026-09-07T06:54:01.4109666Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T06:54:01.4143686Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-07T06:54:01.4407305Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-219c434a-d91d-4689-b7a6-71c634527380.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-07T06:54:01.4447216Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git.path /home/runner/work/_temp/git-credentials-219c434a-d91d-4689-b7a6-71c634527380.config
+2026-09-07T06:54:01.4479323Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-219c434a-d91d-4689-b7a6-71c634527380.config
+2026-09-07T06:54:01.4515027Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-219c434a-d91d-4689-b7a6-71c634527380.config
+2026-09-07T06:54:01.4548239Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-219c434a-d91d-4689-b7a6-71c634527380.config
+2026-09-07T06:54:01.4578003Z ##[endgroup]
+2026-09-07T06:54:01.4578772Z ##[group]Fetching the repository
+2026-09-07T06:54:01.4584812Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-09-07T06:54:04.1232957Z From https://github.com/EIDOSDATA/NU54DK_Arduino_Core
+2026-09-07T06:54:04.1234443Z  * [new branch]      main               -> origin/main
+2026-09-07T06:54:04.1235889Z  * [new tag]         m10-preview-0.0.90 -> m10-preview-0.0.90
+2026-09-07T06:54:04.1237097Z  * [new tag]         m10-preview-0.0.91 -> m10-preview-0.0.91
+2026-09-07T06:54:04.1238212Z  * [new tag]         m10-preview-0.0.92 -> m10-preview-0.0.92
+2026-09-07T06:54:04.1239317Z  * [new tag]         m10-preview-0.0.93 -> m10-preview-0.0.93
+2026-09-07T06:54:04.1240465Z  * [new tag]         m10-preview-0.0.94 -> m10-preview-0.0.94
+2026-09-07T06:54:04.1242059Z  * [new tag]         m10-preview-0.0.95 -> m10-preview-0.0.95
+2026-09-07T06:54:04.1243189Z  * [new tag]         m10-preview-0.0.96 -> m10-preview-0.0.96
+2026-09-07T06:54:04.1244447Z  * [new tag]         m10-preview-0.0.97 -> m10-preview-0.0.97
+2026-09-07T06:54:04.1245663Z  * [new tag]         v0.1.0             -> v0.1.0
+2026-09-07T06:54:04.1246724Z  * [new tag]         v0.1.0-rc.2        -> v0.1.0-rc.2
+2026-09-07T06:54:04.1247871Z  * [new tag]         v0.2.0             -> v0.2.0
+2026-09-07T06:54:04.1249098Z  * [new tag]         v0.2.0-rc.1        -> v0.2.0-rc.1
+2026-09-07T06:54:04.1250353Z  * [new tag]         v0.2.0-rc.2        -> v0.2.0-rc.2
+2026-09-07T06:54:04.1251957Z  * [new tag]         v0.3.0             -> v0.3.0
+2026-09-07T06:54:04.1253210Z  * [new tag]         v0.3.0-rc.1        -> v0.3.0-rc.1
+2026-09-07T06:54:04.1254412Z  * [new tag]         v0.3.0-rc.2        -> v0.3.0-rc.2
+2026-09-07T06:54:04.1255617Z  * [new tag]         v0.3.0-rc.3        -> v0.3.0-rc.3
+2026-09-07T06:54:04.1258473Z [command]/usr/bin/git branch --list --remote origin/main
+2026-09-07T06:54:04.1284209Z   origin/main
+2026-09-07T06:54:04.1295045Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+2026-09-07T06:54:04.1321999Z 828166109968b2ceb40fc2d9c054255558d995d5
+2026-09-07T06:54:04.1327750Z ##[endgroup]
+2026-09-07T06:54:04.1330357Z ##[group]Determining the checkout info
+2026-09-07T06:54:04.1333016Z ##[endgroup]
+2026-09-07T06:54:04.1334283Z [command]/usr/bin/git sparse-checkout disable
+2026-09-07T06:54:04.1386525Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-07T06:54:04.1423084Z ##[group]Checking out the ref
+2026-09-07T06:54:04.1426879Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-09-07T06:54:04.7722655Z Switched to a new branch 'main'
+2026-09-07T06:54:04.7731548Z branch 'main' set up to track 'origin/main'.
+2026-09-07T06:54:04.7763535Z ##[endgroup]
+2026-09-07T06:54:04.7764509Z ##[group]Setting up auth for fetching submodules
+2026-09-07T06:54:04.7771031Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-219c434a-d91d-4689-b7a6-71c634527380.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-07T06:54:04.7817363Z [command]/usr/bin/git config --global include.path /home/runner/work/_temp/git-credentials-219c434a-d91d-4689-b7a6-71c634527380.config
+2026-09-07T06:54:04.7852888Z [command]/usr/bin/git config --global --unset-all url.https://github.com/.insteadOf
+2026-09-07T06:54:04.7888991Z [command]/usr/bin/git config --global --add url.https://github.com/.insteadOf git@github.com:
+2026-09-07T06:54:04.7928100Z [command]/usr/bin/git config --global --add url.https://github.com/.insteadOf org-48746729@github.com:
+2026-09-07T06:54:04.7959736Z ##[endgroup]
+2026-09-07T06:54:04.7960348Z ##[group]Fetching submodules
+2026-09-07T06:54:04.7963876Z [command]/usr/bin/git submodule sync --recursive
+2026-09-07T06:54:04.8204007Z [command]/usr/bin/git -c protocol.version=2 submodule update --init --force --recursive
+2026-09-07T06:54:04.8458548Z Submodule 'board_package/NU54DK_Zephyr_DTS' (https://github.com/Nucode01/NU54DK_Zephyr_DTS.git) registered for path 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:54:04.8485713Z Cloning into '/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS'...
+2026-09-07T06:54:05.6175573Z Submodule path 'board_package/NU54DK_Zephyr_DTS': checked out 'fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3'
+2026-09-07T06:54:05.6210131Z [command]/usr/bin/git submodule foreach --recursive git config --local gc.auto 0
+2026-09-07T06:54:05.6456676Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:54:05.6665880Z ##[endgroup]
+2026-09-07T06:54:05.6666772Z ##[group]Persisting credentials for submodules
+2026-09-07T06:54:05.6673743Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'url\.https\:\/\/github\.com\/\.insteadOf' && git config --local --unset-all 'url.https://github.com/.insteadOf' || :"
+2026-09-07T06:54:05.6914227Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:54:05.6972272Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-07T06:54:05.7217157Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:54:05.7240822Z file:/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config	remote.origin.url
+2026-09-07T06:54:05.7274730Z [command]/usr/bin/git config --file /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config includeIf.gitdir:/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS.path /home/runner/work/_temp/git-credentials-219c434a-d91d-4689-b7a6-71c634527380.config
+2026-09-07T06:54:05.7326247Z [command]/usr/bin/git config --file /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config includeIf.gitdir:/github/workspace/.git/modules/board_package/NU54DK_Zephyr_DTS.path /github/runner_temp/git-credentials-219c434a-d91d-4689-b7a6-71c634527380.config
+2026-09-07T06:54:05.7374048Z [command]/usr/bin/git submodule foreach --recursive git config --local --add 'url.https://github.com/.insteadOf' 'git@github.com:'
+2026-09-07T06:54:05.7614862Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:54:05.7667452Z [command]/usr/bin/git submodule foreach --recursive git config --local --add 'url.https://github.com/.insteadOf' 'org-48746729@github.com:'
+2026-09-07T06:54:05.7897334Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:54:05.7948084Z ##[endgroup]
+2026-09-07T06:54:05.7993870Z [command]/usr/bin/git log -1 --format=%H
+2026-09-07T06:54:05.8022768Z 828166109968b2ceb40fc2d9c054255558d995d5
+2026-09-07T06:54:05.8279727Z ##[group]Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+2026-09-07T06:54:05.8280153Z with:
+2026-09-07T06:54:05.8280462Z   python-version: 3.12.10
+2026-09-07T06:54:05.8280716Z   check-latest: false
+2026-09-07T06:54:05.8283685Z   token: ***
+2026-09-07T06:54:05.8283907Z   update-environment: true
+2026-09-07T06:54:05.8284151Z   allow-prereleases: false
+2026-09-07T06:54:05.8284381Z   freethreaded: false
+2026-09-07T06:54:05.8284592Z ##[endgroup]
+2026-09-07T06:54:05.9444992Z ##[group]Installed versions
+2026-09-07T06:54:05.9469641Z Version 3.12.10 was not found in the local cache
+2026-09-07T06:54:06.5068239Z Version 3.12.10 is available for downloading
+2026-09-07T06:54:06.5069904Z Download from "https://github.com/actions/python-versions/releases/download/3.12.10-14343898437/python-3.12.10-linux-24.04-x64.tar.gz"
+2026-09-07T06:54:07.1955130Z Extract downloaded archive
+2026-09-07T06:54:07.2095578Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/6b538356-5aa3-4451-a8af-584eece79a43 -f /home/runner/work/_temp/b2ef84ca-4244-453d-9ce5-970e943c4419
+2026-09-07T06:54:09.2334814Z Execute installation script
+2026-09-07T06:54:09.2433503Z Check if Python hostedtoolcache folder exist...
+2026-09-07T06:54:09.2434174Z Create Python 3.12.10 folder
+2026-09-07T06:54:09.2446693Z Copy Python binaries to hostedtoolcache folder
+2026-09-07T06:54:09.7474528Z Create additional symlinks (Required for the UsePythonVersion Azure Pipelines task and the setup-python GitHub Action)
+2026-09-07T06:54:09.7516276Z Upgrading pip...
+2026-09-07T06:54:11.8902032Z Looking in links: /tmp/tmp3z4veq12
+2026-09-07T06:54:11.8909015Z Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.12.10/x64/lib/python3.12/site-packages (25.0.1)
+2026-09-07T06:54:13.7036683Z Collecting pip
+2026-09-07T06:54:13.7344809Z Downloading pip-26.2.1-py3-none-any.whl.metadata (4.6 kB)
+2026-09-07T06:54:13.7423842Z Downloading pip-26.2.1-py3-none-any.whl (1.8 MB)
+2026-09-07T06:54:13.7858711Z ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 60.3 MB/s eta 0:00:00
+2026-09-07T06:54:13.7859221Z 
+2026-09-07T06:54:13.8023591Z Installing collected packages: pip
+2026-09-07T06:54:13.8025279Z Attempting uninstall: pip
+2026-09-07T06:54:13.8047636Z Found existing installation: pip 25.0.1
+2026-09-07T06:54:13.8415507Z Uninstalling pip-25.0.1:
+2026-09-07T06:54:13.8472120Z Successfully uninstalled pip-25.0.1
+2026-09-07T06:54:14.7244999Z Successfully installed pip-26.2.1
+2026-09-07T06:54:14.7752118Z Create complete file
+2026-09-07T06:54:14.7792090Z Successfully set up CPython (3.12.10)
+2026-09-07T06:54:14.7793470Z ##[endgroup]
+2026-09-07T06:54:14.7974351Z ##[group]Run python tools/ci/run_m12_gate.py contract
+2026-09-07T06:54:14.7974855Z [36;1mpython tools/ci/run_m12_gate.py contract[0m
+2026-09-07T06:54:14.8017257Z shell: /usr/bin/bash -e {0}
+2026-09-07T06:54:14.8017539Z env:
+2026-09-07T06:54:14.8017829Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-09-07T06:54:14.8018317Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.10/x64/lib/pkgconfig
+2026-09-07T06:54:14.8018779Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-09-07T06:54:14.8019184Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-09-07T06:54:14.8019614Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-09-07T06:54:14.8020050Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.10/x64/lib
+2026-09-07T06:54:14.8020406Z ##[endgroup]
+2026-09-07T06:54:14.8458962Z [M12] exec: /opt/hostedtoolcache/Python/3.12.10/x64/bin/python -m unittest discover -v -s /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/ci -p test_*.py
+2026-09-07T06:54:15.0839690Z test_actions_are_pinned_to_commits (test_m12_ci_contract.M12CiContractTests.test_actions_are_pinned_to_commits) ... ok
+2026-09-07T06:54:15.0847698Z test_artifact_paths_stay_inside_workspace (test_m12_ci_contract.M12CiContractTests.test_artifact_paths_stay_inside_workspace) ... ok
+2026-09-07T06:54:15.0849783Z test_build_record_scopes_git_safe_directory (test_m12_ci_contract.M12CiContractTests.test_build_record_scopes_git_safe_directory) ... ok
+2026-09-07T06:54:15.0851754Z test_cache_keys_include_exact_identity (test_m12_ci_contract.M12CiContractTests.test_cache_keys_include_exact_identity) ... ok
+2026-09-07T06:54:15.0856438Z test_example_discovery_inputs_are_canonical (test_m12_ci_contract.M12CiContractTests.test_example_discovery_inputs_are_canonical) ... ok
+2026-09-07T06:54:15.0858176Z test_gitlink_check_scopes_safe_directory (test_m12_ci_contract.M12CiContractTests.test_gitlink_check_scopes_safe_directory) ... ok
+2026-09-07T06:54:15.0860815Z test_hil_is_manual_self_hosted_and_locked (test_m12_ci_contract.M12CiContractTests.test_hil_is_manual_self_hosted_and_locked) ... ok
+2026-09-07T06:54:15.0863324Z test_host_gate_runs_ac03_hil_runner_unit_contract (test_m12_ci_contract.M12CiContractTests.test_host_gate_runs_ac03_hil_runner_unit_contract) ... ok
+2026-09-07T06:54:15.0865585Z test_host_gate_runs_m26_onboard_runner_unit_contract (test_m12_ci_contract.M12CiContractTests.test_host_gate_runs_m26_onboard_runner_unit_contract) ... ok
+2026-09-07T06:54:15.0867494Z test_host_gate_uses_windows_runner (test_m12_ci_contract.M12CiContractTests.test_host_gate_uses_windows_runner) ... ok
+2026-09-07T06:54:15.0870242Z test_host_requirements_are_exact_and_hashed (test_m12_ci_contract.M12CiContractTests.test_host_requirements_are_exact_and_hashed) ... ok
+2026-09-07T06:54:15.0904916Z test_lock_matches_repository_contract (test_m12_ci_contract.M12CiContractTests.test_lock_matches_repository_contract) ... ok
+2026-09-07T06:54:15.0906787Z test_m14_native_semantic_gate_runs_on_ubuntu (test_m12_ci_contract.M12CiContractTests.test_m14_native_semantic_gate_runs_on_ubuntu) ... ok
+2026-09-07T06:54:15.0983267Z test_m16_role_validator_rejects_missing_central_definition (test_m12_ci_contract.M12CiContractTests.test_m16_role_validator_rejects_missing_central_definition) ... ok
+2026-09-07T06:54:15.0985112Z test_m17_feasibility_scopes_git_safe_directory (test_m12_ci_contract.M12CiContractTests.test_m17_feasibility_scopes_git_safe_directory) ... ok
+2026-09-07T06:54:15.0988189Z test_m23_inventory_gates_generated_and_exact_dts_sources (test_m12_ci_contract.M12CiContractTests.test_m23_inventory_gates_generated_and_exact_dts_sources) ... ok
+2026-09-07T06:54:15.0991088Z test_m24_serial_contract_gates_routes_and_exact_dts_sources (test_m12_ci_contract.M12CiContractTests.test_m24_serial_contract_gates_routes_and_exact_dts_sources) ... ok
+2026-09-07T06:54:15.0993935Z test_m26_system_contract_is_fail_closed_in_both_software_gates (test_m12_ci_contract.M12CiContractTests.test_m26_system_contract_is_fail_closed_in_both_software_gates) ... ok
+2026-09-07T06:54:15.0996148Z test_m27_release_contract_is_checked_before_v04_build (test_m12_ci_contract.M12CiContractTests.test_m27_release_contract_is_checked_before_v04_build) ... ok
+2026-09-07T06:54:15.1004370Z test_pull_request_workflow_has_required_gates (test_m12_ci_contract.M12CiContractTests.test_pull_request_workflow_has_required_gates) ... ok
+2026-09-07T06:54:15.1005840Z test_reproducible_build_runs_for_v030_rc_tags (test_m12_ci_contract.M12CiContractTests.test_reproducible_build_runs_for_v030_rc_tags) ... ok
+2026-09-07T06:54:15.1007891Z test_reproducible_build_runs_m14_qemu_runtime_and_uploads_evidence (test_m12_ci_contract.M12CiContractTests.test_reproducible_build_runs_m14_qemu_runtime_and_uploads_evidence) ... ok
+2026-09-07T06:54:15.1009568Z test_reproducible_build_runs_m17_feasibility_in_pinned_container (test_m12_ci_contract.M12CiContractTests.test_reproducible_build_runs_m17_feasibility_in_pinned_container) ... ok
+2026-09-07T06:54:15.1011111Z test_reproducible_build_uses_digest_and_exact_cache (test_m12_ci_contract.M12CiContractTests.test_reproducible_build_uses_digest_and_exact_cache) ... ok
+2026-09-07T06:54:15.1013592Z test_reproducible_build_uses_release_era_parallel_matrix (test_m12_ci_contract.M12CiContractTests.test_reproducible_build_uses_release_era_parallel_matrix) ... ok
+2026-09-07T06:54:15.1015228Z test_reproducible_cache_paths_are_normalized (test_m12_ci_contract.M12CiContractTests.test_reproducible_cache_paths_are_normalized) ... ok
+2026-09-07T06:54:15.1017324Z test_windows_arduino_build_uses_short_temp_and_preserves_failure_log (test_m12_ci_contract.M12CiContractTests.test_windows_arduino_build_uses_short_temp_and_preserves_failure_log) ... ok
+2026-09-07T06:54:15.1019599Z test_windows_build_runs_m17_external_arduino_after_smoke (test_m12_ci_contract.M12CiContractTests.test_windows_build_runs_m17_external_arduino_after_smoke) ... ok
+2026-09-07T06:54:15.1022273Z test_workflows_do_not_use_runner_context_in_job_env (test_m12_ci_contract.M12CiContractTests.test_workflows_do_not_use_runner_context_in_job_env) ... ok
+2026-09-07T06:54:15.1024735Z test_workflows_pin_available_python (test_m12_ci_contract.M12CiContractTests.test_workflows_pin_available_python) ... ok
+2026-09-07T06:54:15.1026514Z test_zephyr_build_disables_ccache (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_disables_ccache) ... ok
+2026-09-07T06:54:15.1037636Z test_zephyr_build_has_fail_closed_m16_role_images (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_has_fail_closed_m16_role_images) ... ok
+2026-09-07T06:54:15.1046052Z test_zephyr_build_includes_ac01_contract_and_hil_image (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_includes_ac01_contract_and_hil_image) ... ok
+2026-09-07T06:54:15.1054945Z test_zephyr_build_includes_ac02_contracts_and_hil_images (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_includes_ac02_contracts_and_hil_images) ... ok
+2026-09-07T06:54:15.1063129Z test_zephyr_build_includes_ac03_contract_and_hil_image (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_includes_ac03_contract_and_hil_image) ... ok
+2026-09-07T06:54:15.1073597Z test_zephyr_build_includes_m14_production_and_hil_images (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_includes_m14_production_and_hil_images) ... ok
+2026-09-07T06:54:15.1081537Z test_zephyr_build_includes_m15_contract_and_system_off_image (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_includes_m15_contract_and_system_off_image) ... ok
+2026-09-07T06:54:15.1088995Z test_zephyr_build_includes_m23_inventory_contract (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_includes_m23_inventory_contract) ... ok
+2026-09-07T06:54:15.1097803Z test_zephyr_build_includes_m24_serial_fabric_contract (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_includes_m24_serial_fabric_contract) ... ok
+2026-09-07T06:54:15.1106418Z test_zephyr_build_requires_short_windows_outdir (test_m12_ci_contract.M12CiContractTests.test_zephyr_build_requires_short_windows_outdir) ... ok
+2026-09-07T06:54:15.1108333Z test_command_selects_exact_runtime_scenario_without_build_only (test_m14_qemu_runner.M14QemuRunnerTests.test_command_selects_exact_runtime_scenario_without_build_only) ... ok
+2026-09-07T06:54:15.1122269Z [M14-QEMU] exec: /opt/hostedtoolcache/Python/3.12.10/x64/bin/python /tmp/tmpsmyvw0dc/ncs/zephyr/scripts/twister --testsuite-root /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/tests/zephyr/m14_cpp_policy --platform qemu_cortex_m3 --scenario nucode.m14.cpp_policy --ninja --detailed-test-id --inline-logs --jobs 2 --outdir /tmp/tmpsmyvw0dc/out --extra-args USE_CCACHE=0
+2026-09-07T06:54:15.1125152Z test_run_runtime_validates_workspace_and_report (test_m14_qemu_runner.M14QemuRunnerTests.test_run_runtime_validates_workspace_and_report) ... ok
+2026-09-07T06:54:15.1129052Z test_validate_report_accepts_exact_runtime_pass (test_m14_qemu_runner.M14QemuRunnerTests.test_validate_report_accepts_exact_runtime_pass) ... ok
+2026-09-07T06:54:15.1143855Z test_validate_report_rejects_non_runtime_or_inexact_results (test_m14_qemu_runner.M14QemuRunnerTests.test_validate_report_rejects_non_runtime_or_inexact_results) ... ok
+2026-09-07T06:54:15.1162222Z test_bootstrap_fetches_commit_before_local_west_init (test_prepare_ncs_workspace.PrepareNcsWorkspaceTests.test_bootstrap_fetches_commit_before_local_west_init) ... ok
+2026-09-07T06:54:15.1163227Z 
+2026-09-07T06:54:15.1164085Z ----------------------------------------------------------------------
+2026-09-07T06:54:15.1164639Z Ran 45 tests in 0.034s
+2026-09-07T06:54:15.1164863Z 
+2026-09-07T06:54:15.1164967Z OK
+2026-09-07T06:54:15.1313980Z M12_GATE_PASS=contract
+2026-09-07T06:54:15.1488794Z Post job cleanup.
+2026-09-07T06:54:15.2830265Z Post job cleanup.
+2026-09-07T06:54:15.3698506Z [command]/usr/bin/git version
+2026-09-07T06:54:15.3754673Z git version 2.55.0
+2026-09-07T06:54:15.3791861Z Temporarily overriding HOME='/home/runner/work/_temp/0b97615b-1a2b-49b3-bcf4-9ce0f420193a' before making global git config changes
+2026-09-07T06:54:15.3793176Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-07T06:54:15.3797926Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core
+2026-09-07T06:54:15.3834674Z Removing SSH command configuration
+2026-09-07T06:54:15.3841713Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-07T06:54:15.3880390Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-07T06:54:15.4142606Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:54:15.4234131Z Removing HTTP extra header
+2026-09-07T06:54:15.4241197Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-07T06:54:15.4296434Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-07T06:54:15.4556861Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:54:15.4616722Z Removing includeIf entries pointing to credentials config files
+2026-09-07T06:54:15.4625146Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T06:54:15.4668614Z includeif.gitdir:/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git.path
+2026-09-07T06:54:15.4670498Z includeif.gitdir:/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/worktrees/*.path
+2026-09-07T06:54:15.4672256Z includeif.gitdir:/github/workspace/.git.path
+2026-09-07T06:54:15.4673387Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-07T06:54:15.4683677Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git.path
+2026-09-07T06:54:15.4715122Z /home/runner/work/_temp/git-credentials-219c434a-d91d-4689-b7a6-71c634527380.config
+2026-09-07T06:54:15.4734973Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-219c434a\-d91d\-4689\-b7a6\-71c634527380\.config
+2026-09-07T06:54:15.4778200Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/worktrees/*.path
+2026-09-07T06:54:15.4808708Z /home/runner/work/_temp/git-credentials-219c434a-d91d-4689-b7a6-71c634527380.config
+2026-09-07T06:54:15.4863179Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-219c434a\-d91d\-4689\-b7a6\-71c634527380\.config
+2026-09-07T06:54:15.4893801Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-07T06:54:15.4927561Z /github/runner_temp/git-credentials-219c434a-d91d-4689-b7a6-71c634527380.config
+2026-09-07T06:54:15.4948792Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-219c434a\-d91d\-4689\-b7a6\-71c634527380\.config
+2026-09-07T06:54:15.4988184Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-07T06:54:15.5030931Z /github/runner_temp/git-credentials-219c434a-d91d-4689-b7a6-71c634527380.config
+2026-09-07T06:54:15.5041566Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-219c434a\-d91d\-4689\-b7a6\-71c634527380\.config
+2026-09-07T06:54:15.5083886Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-07T06:54:15.5330940Z Entering 'board_package/NU54DK_Zephyr_DTS'
+2026-09-07T06:54:15.5351128Z file:/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config	remote.origin.url
+2026-09-07T06:54:15.5386524Z [command]/usr/bin/git config --file /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T06:54:15.5418670Z includeif.gitdir:/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS.path
+2026-09-07T06:54:15.5420220Z includeif.gitdir:/github/workspace/.git/modules/board_package/NU54DK_Zephyr_DTS.path
+2026-09-07T06:54:15.5426749Z [command]/usr/bin/git config --file /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config --get-all includeif.gitdir:/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS.path
+2026-09-07T06:54:15.5451607Z /home/runner/work/_temp/git-credentials-219c434a-d91d-4689-b7a6-71c634527380.config
+2026-09-07T06:54:15.5461223Z [command]/usr/bin/git config --file /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config --unset includeif.gitdir:/home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS.path \/home\/runner\/work\/_temp\/git\-credentials\-219c434a\-d91d\-4689\-b7a6\-71c634527380\.config
+2026-09-07T06:54:15.5498189Z [command]/usr/bin/git config --file /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config --get-all includeif.gitdir:/github/workspace/.git/modules/board_package/NU54DK_Zephyr_DTS.path
+2026-09-07T06:54:15.5524986Z /github/runner_temp/git-credentials-219c434a-d91d-4689-b7a6-71c634527380.config
+2026-09-07T06:54:15.5534628Z [command]/usr/bin/git config --file /home/runner/work/NU54DK_Arduino_Core/NU54DK_Arduino_Core/.git/modules/board_package/NU54DK_Zephyr_DTS/config --unset includeif.gitdir:/github/workspace/.git/modules/board_package/NU54DK_Zephyr_DTS.path \/github\/runner_temp\/git\-credentials\-219c434a\-d91d\-4689\-b7a6\-71c634527380\.config
+2026-09-07T06:54:15.5570107Z Removing credentials config '/home/runner/work/_temp/git-credentials-219c434a-d91d-4689-b7a6-71c634527380.config'
+2026-09-07T06:54:15.5720632Z Cleaning up orphan processes
