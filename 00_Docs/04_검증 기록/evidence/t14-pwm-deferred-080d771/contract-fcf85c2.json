@@ -1,0 +1,36 @@
+{
+  "started_at_utc": "2026-09-07T05:17:48.525778+00:00",
+  "command": [
+    "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts\\python.exe",
+    "-B",
+    "tools/ci/run_m12_gate.py",
+    "contract"
+  ],
+  "environment": {
+    "CC": "C:\\NU54DEV\\tools\\LLVM-22.1.8\\bin\\clang.exe",
+    "CXX": "C:\\NU54DEV\\tools\\LLVM-22.1.8\\bin\\clang++.exe",
+    "NUCODE_HOST_CC_FLAGS": "[\"--target=x86_64-w64-windows-gnu\", \"--sysroot=C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64\", \"-fuse-ld=lld\"]",
+    "NUCODE_HOST_CXX_FLAGS": "[\"--target=x86_64-w64-windows-gnu\", \"--sysroot=C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64\", \"-fuse-ld=lld\"]",
+    "PATH": "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts;C:\\NU54DEV\\tools\\LLVM-22.1.8\\bin;C:/ncs/toolchains/dcbdc366a1/opt/bin;C:\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin;C:\\NU54DEV\\tools\\arduino-cli-1.5.1;C:\\Program Files\\Git\\cmd;C:\\Windows\\System32\\WindowsPowerShell\\v1.0;C:\\Windows\\System32;C:\\Windows"
+  },
+  "source": "fcf85c2d440b9d389bf08eb42f2f0971a9bdf510",
+  "build_tools": {
+    "cmake.exe": {
+      "path": "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\cmake.exe",
+      "sha256": "083a412e9a21430da453bcd9713ffa5589ea1c677cc4d5f58f9a0b55fab1f546"
+    },
+    "ninja.exe": {
+      "path": "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\ninja.exe",
+      "sha256": "e52a7ad9538d9618c67a0bd777964e2eec8a30f68b810a2f6adce1f2daf847b8"
+    }
+  },
+  "dirty": false,
+  "compiler_sha256": {
+    "clang.exe": "986af49c2d1eefeac324f724ff54597753d1053927fa5d58a37a457f578e1cf8",
+    "clang++.exe": "986af49c2d1eefeac324f724ff54597753d1053927fa5d58a37a457f578e1cf8",
+    "ld.lld.exe": "72de1900946337aba56616b14713a2efa293ecdf54b945a9d7d0f6676c3b9ecd"
+  },
+  "returncode": 0,
+  "ended_at_utc": "2026-09-07T05:17:49.755194+00:00",
+  "log_sha256": "09a2d0d87a8fbdfeb348046e884cb9ce8d2825c145ba21c7115b3767016c731e"
+}

@@ -1,0 +1,197 @@
+{
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "container_digest": "sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace",
+  "gate": "m12-zephyr-build-only",
+  "group": "all",
+  "jobs": 8,
+  "m16_role_builds": [
+    {
+      "build_record_sha256": "54464a9013a516e4aadff8e6a08728fc9e2f4f172289fa2a6e39760782aee6aa",
+      "elf_sha256": "459650c239d8d8ac059c8ab1e81a15e783478381446e70a1068c6682b86ac1f6",
+      "elf_size": 2794788,
+      "hex_sha256": "b1847249c5fae01b50119dde7893593480b988447b09617fa5359500b31b758c",
+      "hex_size": 533408,
+      "role": "peripheral",
+      "role_compile_definition": "absent",
+      "scenario": "nucode.m16.ble_hil_peripheral",
+      "status": "build-only-passed",
+      "validation_scope": "image-build-only"
+    },
+    {
+      "build_record_sha256": "54464a9013a516e4aadff8e6a08728fc9e2f4f172289fa2a6e39760782aee6aa",
+      "elf_sha256": "075a104f65757fee7bc5285e64fecdee3658d4fb13fbeff88ed309e8e99d3cb9",
+      "elf_size": 2797156,
+      "hex_sha256": "70513c431c01fe84b1880e64982ef37e56015450c572da08b3845698e7946ba0",
+      "hex_size": 534361,
+      "role": "central",
+      "role_compile_definition": "NUCODE_M16_CENTRAL=1",
+      "scenario": "nucode.m16.ble_hil_central",
+      "status": "build-only-passed",
+      "validation_scope": "image-build-only"
+    }
+  ],
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "scenarios": [
+    "nucode.m3.runtime",
+    "nucode.m4.api_contract",
+    "nucode.m6.core_api",
+    "nucode.m7.core_api",
+    "nucode.m14.core_contract",
+    "nucode.m14.variant_contract",
+    "nucode.m14.pin_hil",
+    "nucode.m15.board",
+    "nucode.m15.auto_hil",
+    "nucode.m15.wake",
+    "nucode.m16.ble_contract",
+    "nucode.m16.ble_hil_peripheral",
+    "nucode.m16.ble_hil_central",
+    "nucode.m17.sensor_direct",
+    "nucode.m19.ble_gap_contract",
+    "nucode.m19.ble_gap_hil_peripheral",
+    "nucode.m19.ble_gap_hil_central",
+    "nucode.m20.ble_gatt_contract",
+    "nucode.m20.ble_gatt_hil_peripheral",
+    "nucode.m20.ble_gatt_hil_central",
+    "nucode.m21.ble_security_contract",
+    "nucode.m21.ble_security_hil_peripheral",
+    "nucode.m21.ble_security_hil_central",
+    "nucode.m21.ble_board_contract",
+    "nucode.ac01.contract",
+    "nucode.ac01.gpio_hil",
+    "nucode.ac02a.ownership_contract",
+    "nucode.ac02b.b2_contract",
+    "nucode.ac02b.analog_contract",
+    "nucode.ac02b.hil_dut",
+    "nucode.ac02b.hil_peer",
+    "nucode.ac03.storage_contract",
+    "nucode.ac03.storage_hil",
+    "nucode.r01.none",
+    "nucode.r01.uarte",
+    "nucode.r01.spim",
+    "nucode.r01.spis",
+    "nucode.r01.twim",
+    "nucode.r01.twis",
+    "nucode.r01.all",
+    "nucode.v04.pair_dut",
+    "nucode.v04.pair_peer",
+    "nucode.m23.inventory_contract",
+    "nucode.m24.fabric",
+    "nucode.m24.uarte",
+    "nucode.m24.spi",
+    "nucode.m24.twi",
+    "nucode.m24.uarte20_hil",
+    "nucode.m24.uarte21_hil",
+    "nucode.m24.uarte22_hil",
+    "nucode.m24.uarte30_hil",
+    "nucode.m24.twim20_hil",
+    "nucode.m24.twim21_hil",
+    "nucode.m24.twim22_hil",
+    "nucode.m25.analog",
+    "nucode.m25.event",
+    "nucode.m25.stream",
+    "nucode.m25.onboard_hil",
+    "nucode.m25.nojumper_hil",
+    "nucode.m26.system",
+    "nucode.m26.onboard_hil"
+  ],
+  "schema_version": 2,
+  "serial_source_builds": [
+    {
+      "compile_commands_sha256": "dbf17e18a716f1a403f0a72eaf7d8a06979de6bd07e5884775a9987dc37c7310",
+      "config_sha256": "51af112b90e6968d8f623e7ec96a6900af04e3fb06992916a2d8a851d4d9ea8f",
+      "elf_sha256": "36ed486412ef89cc0564e3e2ca47fbda81031108f46d045760d2c23c4da4788c",
+      "resolved_personalities": [],
+      "scenario": "nucode.r01.none",
+      "sources": {},
+      "target": "nucode_arduino_core"
+    },
+    {
+      "compile_commands_sha256": "29387055dd2b9d1d22278b070c6bf6b2088efd64075dd2a2a872949974804469",
+      "config_sha256": "cc23392841006050a81a472f9830891627cd7fc06179140f7140140756e557e7",
+      "elf_sha256": "67b93ec094ad6cdc8c4bcec821f7134337c273b84a9935dbff6d39a98682c0b9",
+      "resolved_personalities": [
+        "UARTE"
+      ],
+      "scenario": "nucode.r01.uarte",
+      "sources": {
+        "UARTE": "cores/arduino/UarteFabric.cpp"
+      },
+      "target": "nucode_arduino_core"
+    },
+    {
+      "compile_commands_sha256": "b668bc2957d6380c1c24f58c2346a18143af103e483153f106ea0e8c8699a058",
+      "config_sha256": "d6033f7c12a48912563a8b358c9bc8bd208fce9209c4b85e0a9f5c8952683a1c",
+      "elf_sha256": "07787fe4556947529d208e4d859204871e9d4f04b089570c33da02c2a456b713",
+      "resolved_personalities": [
+        "SPIM"
+      ],
+      "scenario": "nucode.r01.spim",
+      "sources": {
+        "SPIM": "cores/arduino/SpimFabric.cpp"
+      },
+      "target": "nucode_arduino_core"
+    },
+    {
+      "compile_commands_sha256": "dc4fb29cd9cee01210d085b546f18eb847b2fcb53a1180f3b7cf2810924f842f",
+      "config_sha256": "dfcb5a69db9c20add67aeaf81615d5a12542491262286a0e114ca6669e85a738",
+      "elf_sha256": "623f2a87a37b2b99a17254ef7e1a6011f562df7a4a01a1fae45a120737d8fbf2",
+      "resolved_personalities": [
+        "SPIS"
+      ],
+      "scenario": "nucode.r01.spis",
+      "sources": {
+        "SPIS": "cores/arduino/SpisFabric.cpp"
+      },
+      "target": "nucode_arduino_core"
+    },
+    {
+      "compile_commands_sha256": "11e9b453d86262a10e2d25a50ed2c8e48c8accca8945a88bc2fd4a4a5bfc698b",
+      "config_sha256": "ade2e28a8d6d6549be25202b80208ce6891f12c1f25de31134c081b0f4851965",
+      "elf_sha256": "2ae27d70b70bbadd2f8f2c6d3a90f2e03e670be3002372a9eabf8020be3227af",
+      "resolved_personalities": [
+        "TWIM"
+      ],
+      "scenario": "nucode.r01.twim",
+      "sources": {
+        "TWIM": "cores/arduino/TwimFabric.cpp"
+      },
+      "target": "nucode_arduino_core"
+    },
+    {
+      "compile_commands_sha256": "16f48424ab84e31989db9b6a444aa74ff45831b8c65663c39bf78d5a0641edd2",
+      "config_sha256": "1292af999053e4f868802996b22c00a946a8754eb11c9eff296bfb70ac54010f",
+      "elf_sha256": "3e400620213102ec12a7cd080110bcfba80f56ae32a0a7adca391d40c4e3f01a",
+      "resolved_personalities": [
+        "TWIS"
+      ],
+      "scenario": "nucode.r01.twis",
+      "sources": {
+        "TWIS": "cores/arduino/TwisFabric.cpp"
+      },
+      "target": "nucode_arduino_core"
+    },
+    {
+      "compile_commands_sha256": "ef6c33839f35a1abca0373277f47167782caea12a19fa11d81740a0e48a66cad",
+      "config_sha256": "95a0511ef873a6f1add11f599ab7b45f4a8100836d8878748c9fb7b058eb6746",
+      "elf_sha256": "54d6ba632fef173cf5e7efb85637b3804aaf55de0ab52ad9704df0cd4322ae12",
+      "resolved_personalities": [
+        "SPIM",
+        "SPIS",
+        "TWIM",
+        "TWIS",
+        "UARTE"
+      ],
+      "scenario": "nucode.r01.all",
+      "sources": {
+        "SPIM": "cores/arduino/SpimFabric.cpp",
+        "SPIS": "cores/arduino/SpisFabric.cpp",
+        "TWIM": "cores/arduino/TwimFabric.cpp",
+        "TWIS": "cores/arduino/TwisFabric.cpp",
+        "UARTE": "cores/arduino/UarteFabric.cpp"
+      },
+      "target": "nucode_arduino_core"
+    }
+  ],
+  "status": "passed",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+}

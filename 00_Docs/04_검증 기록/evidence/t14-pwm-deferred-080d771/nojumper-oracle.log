@@ -1,0 +1,12 @@
+test_cancel_rejects_any_dma_or_period_activity (test_v04_nojumper.NojumperTests.test_cancel_rejects_any_dma_or_period_activity) ... ok
+test_failure_is_preserved_before_poisoning_session (test_v04_nojumper.NojumperTests.test_failure_is_preserved_before_poisoning_session) ... ok
+test_identity_result_and_cleanup_fail_closed (test_v04_nojumper.NojumperTests.test_identity_result_and_cleanup_fail_closed) ... ok
+test_plan_has_all_modes_without_duplicate_vectors (test_v04_nojumper.NojumperTests.test_plan_has_all_modes_without_duplicate_vectors) ... ok
+test_started_requires_dma_and_wave_counter (test_v04_nojumper.NojumperTests.test_started_requires_dma_and_wave_counter) ... ok
+test_subscribed_start_must_be_rejected (test_v04_nojumper.NojumperTests.test_subscribed_start_must_be_rejected) ... ok
+test_valid_cancel_and_start_modes (test_v04_nojumper.NojumperTests.test_valid_cancel_and_start_modes) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.002s
+
+OK

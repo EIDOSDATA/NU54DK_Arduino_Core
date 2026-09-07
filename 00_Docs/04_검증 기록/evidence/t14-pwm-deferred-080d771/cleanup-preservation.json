@@ -1,0 +1,187 @@
+{
+  "archive": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\obsolete-drafts.zip",
+  "archive_sha256": "de8555cb7acafbdd9e9863596ac730da0cf41d79b5c1901d630c519a6e7fd012",
+  "roundtrip": "passed",
+  "files": [
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\compile_draft.py",
+      "archive_path": "authoring/compile_draft.py",
+      "bytes": 1784,
+      "sha256": "bbef13b940d93fe288af8ff7e5ced86d334e55de96fc498eb0e30402071a4113"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\rebuild_draft.py",
+      "archive_path": "authoring/rebuild_draft.py",
+      "bytes": 1257,
+      "sha256": "98f6d3d9999b9403e78b901248689042a734242c4a2654f1165dd4bac97987ad"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\v04_nojumper_expanded.py",
+      "archive_path": "authoring/v04_nojumper_expanded.py",
+      "bytes": 14731,
+      "sha256": "ae4ab07ce075b2356f41b520a13a0381387828bebebfea121535a858c7a3dbda"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\test_v04_nojumper_internal.py",
+      "archive_path": "authoring/test_v04_nojumper_internal.py",
+      "bytes": 5633,
+      "sha256": "f28096ffaeba6df1cf599cb9bb190f53b0bf4a9c4b20ee84bfb9af638816be4b"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\nojumper_adc.h",
+      "archive_path": "authoring/nojumper_adc.h",
+      "bytes": 6934,
+      "sha256": "ef17b4184828cfbfaea4966d63e61b7a49a170e4dc9f2317f9378177a3b7cac8"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\nojumper_event.h",
+      "archive_path": "authoring/nojumper_event.h",
+      "bytes": 13118,
+      "sha256": "8a502db1f70fa47e0447fb07296ee26a8b906b6f4b3da9fe7f1682982e575695"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\nojumper_ownership.h",
+      "archive_path": "authoring/nojumper_ownership.h",
+      "bytes": 1153,
+      "sha256": "21612905aef5184fd505a105efc79eb78fd4a85292c4ec7c923eb51a9434cad7"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\nojumper_time.h",
+      "archive_path": "authoring/nojumper_time.h",
+      "bytes": 2932,
+      "sha256": "71e5a9cf21b613e0129721c769802f07324d40c140858d5db437b344dd1b14b0"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\nojumper_timer.h",
+      "archive_path": "authoring/nojumper_timer.h",
+      "bytes": 4898,
+      "sha256": "f989219402fd1123a56a9a9ac90e07e59ef7efdffb174e081b45908687befc03"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\draft-target\\app.overlay",
+      "archive_path": "authoring/draft-target/app.overlay",
+      "bytes": 123,
+      "sha256": "1ad5b2c17e9ad77b0b40e9e30ee44ac435f3488772d41607058db1f91612c582"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\draft-target\\CMakeLists.txt",
+      "archive_path": "authoring/draft-target/CMakeLists.txt",
+      "bytes": 441,
+      "sha256": "1ad8d398b02586176549f4190bcbda36ee153e7a26e1d33cdbda4477fccfb7f4"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\draft-target\\prj.conf",
+      "archive_path": "authoring/draft-target/prj.conf",
+      "bytes": 738,
+      "sha256": "e87d7c0e98687bd0201ac02642d4bf59e8e0b66c84c8d28d041e9e542edb045a"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\draft-target\\src\\main.cpp",
+      "archive_path": "authoring/draft-target/src/main.cpp",
+      "bytes": 11319,
+      "sha256": "5889341b364a33b8266fb0a9dba5652d69bfa95b43483596f02fb45e838fc65a"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\draft-target\\src\\nojumper_adc.h",
+      "archive_path": "authoring/draft-target/src/nojumper_adc.h",
+      "bytes": 7060,
+      "sha256": "8d426e6f23d7f441e918803afd455f4532d66444fa6f137f9267af2dec29f2b9"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\draft-target\\src\\nojumper_event.h",
+      "archive_path": "authoring/draft-target/src/nojumper_event.h",
+      "bytes": 15995,
+      "sha256": "4b53fd933f5351b974b1e1f6abe0441678024097afcf87a952c19fb8266f3e7e"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\draft-target\\src\\nojumper_ownership.h",
+      "archive_path": "authoring/draft-target/src/nojumper_ownership.h",
+      "bytes": 1196,
+      "sha256": "af60903c1f88523ae641b741aea71a044872754536275feea2410b540a5a4e8b"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\draft-target\\src\\nojumper_time.h",
+      "archive_path": "authoring/draft-target/src/nojumper_time.h",
+      "bytes": 2977,
+      "sha256": "f9fea2e33381415cb1b27bf11d9c5913434ff55798a4bfc219e70c0bc54a89b0"
+    },
+    {
+      "original_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\draft-target\\src\\nojumper_timer.h",
+      "archive_path": "authoring/draft-target/src/nojumper_timer.h",
+      "bytes": 5244,
+      "sha256": "883e1d7052a380f72f3f99c251b9f6b1aa9daa22241b64b940122d9b5281a99d"
+    },
+    {
+      "original_path": "C:\\u4d2\\CMakeCache.txt",
+      "archive_path": "preparation/u4d2/CMakeCache.txt",
+      "bytes": 8354,
+      "sha256": "224a4f402214800ab334692b3c4d7f73762387dd52d585a57a8846c364d36c08"
+    },
+    {
+      "original_path": "C:\\u4d2\\CMakeFiles\\CMakeConfigureLog.yaml",
+      "archive_path": "preparation/u4d2/CMakeFiles/CMakeConfigureLog.yaml",
+      "bytes": 71178,
+      "sha256": "bdb649121997b86778cc015b7d5ee23547b3b6c8d977a5f57f168ceec6716241"
+    },
+    {
+      "original_path": "C:\\u4d3\\build_info.yml",
+      "archive_path": "preparation/u4d3/build_info.yml",
+      "bytes": 3192,
+      "sha256": "3d20770468b0ebd158056551223aca37cd6015e70208da8a74e090cdcc728fca"
+    },
+    {
+      "original_path": "C:\\u4d3\\CMakeCache.txt",
+      "archive_path": "preparation/u4d3/CMakeCache.txt",
+      "bytes": 30481,
+      "sha256": "70f540eb0da28c86b7ce42e84f8cabf431c7a8a1ef97474156539d0d61f16ca2"
+    },
+    {
+      "original_path": "C:\\u4d3\\CMakeFiles\\CMakeConfigureLog.yaml",
+      "archive_path": "preparation/u4d3/CMakeFiles/CMakeConfigureLog.yaml",
+      "bytes": 276882,
+      "sha256": "2c7ee972fc8a5a30f1c7fee4000aad19b8cb4e300fc49e76b6871b272bb68240"
+    },
+    {
+      "original_path": "C:\\u4d3\\nucode_arduino_core_build.yml",
+      "archive_path": "preparation/u4d3/nucode_arduino_core_build.yml",
+      "bytes": 692,
+      "sha256": "ea46a420643ea20078893eac5930eb6337c187cff2c26f518e9c1e386f70fda2"
+    },
+    {
+      "original_path": "C:\\u4d3\\zephyr\\.config",
+      "archive_path": "preparation/u4d3/zephyr/.config",
+      "bytes": 61918,
+      "sha256": "dc9f2eb86024f3716159e6020e46e7b5dff09cea066f988a19cb0ac5b80dca12"
+    },
+    {
+      "original_path": "C:\\u4d3\\zephyr\\zephyr.hex",
+      "archive_path": "preparation/u4d3/zephyr/zephyr.hex",
+      "bytes": 289013,
+      "sha256": "f01b79dfea2aa82a24d72cc727ba11ede285fbce4c2f711cc62a6aa4e37c813f"
+    },
+    {
+      "original_path": "C:\\u4x\\installation.json",
+      "archive_path": "preparation/u4x/installation.json",
+      "bytes": 373,
+      "sha256": "33f736dff58f3f811fd6fe65165816d93390a1d97bb85ee054009359496bdf0f"
+    },
+    {
+      "original_path": "C:\\u4x\\m13-discovery.log",
+      "archive_path": "preparation/u4x/m13-discovery.log",
+      "bytes": 2644,
+      "sha256": "4f3782d35bebdf6e41652131caf251db00b533f639a97ab37d8622b304183bdb"
+    }
+  ],
+  "cleanup_candidates": [
+    "C:\\u4d2",
+    "C:\\u4d3",
+    "C:\\u4x"
+  ],
+  "preserved_final_roots": [
+    "C:/u4p",
+    "C:/nj26",
+    "C:/nj27",
+    "C:/u4y"
+  ],
+  "scope_note": "Only this turn obsolete prototypes; current targets, installed builds, SDK, submodule and historical evidence retained"
+}

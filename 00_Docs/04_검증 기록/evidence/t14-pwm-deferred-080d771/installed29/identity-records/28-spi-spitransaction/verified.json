@@ -1,0 +1,99 @@
+{
+  "manifest_path": "C:\\u4y\\examples\\28-spi-spitransaction\\SPITransaction.ino.nu54-build.json",
+  "manifest_sha256": "e84251cb75101dd0cc2ff42c1b069756f6b89255e86bbc585e4f8f7d59144d1e",
+  "artifacts": {
+    "bin": {
+      "path": "C:/u4y/examples/28-spi-spitransaction/SPITransaction.ino.bin",
+      "sha256": "abe621fedaab7fafbafe909869063247748187fa5ea0fff2a261f23b905d81cd",
+      "size": 104800
+    },
+    "elf": {
+      "path": "C:/u4y/examples/28-spi-spitransaction/SPITransaction.ino.elf",
+      "sha256": "503a691fd98320925d29ea8d861d1b60dc84d3d4cbc7ca27a4113e679717ed22",
+      "size": 2292276
+    },
+    "hex": {
+      "path": "C:/u4y/examples/28-spi-spitransaction/SPITransaction.ino.hex",
+      "sha256": "037f5840553691a0116fcb10ab850393223080a4220fe7baf0c7f844f8e1164f",
+      "size": 294902
+    },
+    "map": {
+      "path": "C:/u4y/examples/28-spi-spitransaction/SPITransaction.ino.map",
+      "sha256": "a0a6ce03a6144b988823fb5a421f31344c2770066fd51c14d8ea093b6dbadc79",
+      "size": 808646
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:5119586924102c377a78acb6822150447b8169681f91192302ceb537c98e63a1",
+        "path": "C:/u4y/cache/v1/bd/bd4aed675d21a7680c3003c40c548960/platform/libraries/SPI/examples/SPITransaction"
+      },
+      {
+        "content_sha256": "sha256:95fb13858b1e597e73efa01d9c5fcfbd5c3d9d7346644516053b816232d7f453",
+        "path": "C:/u4y/cache/v1/bd/bd4aed675d21a7680c3003c40c548960/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/u4y/cache/v1/bd/bd4aed675d21a7680c3003c40c548960/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:93684a3bdca314ba4e20d4903120c5cc3903cffb2817a08001a894d92cad1cdf",
+        "path": "C:/u4y/cache/v1/bd/bd4aed675d21a7680c3003c40c548960/platform/libraries/SPI/src"
+      },
+      {
+        "content_sha256": "sha256:9d29cc354efcaea6b1b872d7509df345d37415023649a9818ef81bbfb1c75fae",
+        "path": "C:/u4y/cache/v1/bd/bd4aed675d21a7680c3003c40c548960/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/u4y/cache/v1/bd/bd4aed675d21a7680c3003c40c548960/build/nucode_arduino_core_build.yml",
+      "sha256": "60a1ead474351b673f0f372f67a035a2341c09e26e6f61fc0fa9b1a4053bb72c"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/u4y/cache/v1/bd/bd4aed675d21a7680c3003c40c548960/app/generated-sources/sketch/SPITransaction.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/SPITransaction.ino.cpp",
+        "sha256": "800d28a27b7b7fc0114a988aab361f9dc7e5529a7266030d523c6f32b1bf1a5c",
+        "source_path": "C:/u4y/examples/28-spi-spitransaction/sketch/SPITransaction.ino.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\u4y\\identity-records\\28-spi-spitransaction\\nucode_arduino_core_build.yml",
+    "sha256": "60a1ead474351b673f0f372f67a035a2341c09e26e6f61fc0fa9b1a4053bb72c",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core_source_sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "application_source_sha256": "cce021e4e7c9278ca9cc751832dc285f9e72c284e8ceebdc759a0bafee0a8ead",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\u4y\\identity-records\\28-spi-spitransaction\\build_info.yml",
+    "sha256": "f1ee024ca3a1241fc77e1e64ee8da9e6a402b0bfa78d41d04b14efbcdb787b46",
+    "identity": {
+      "application-source-sha256": "cce021e4e7c9278ca9cc751832dc285f9e72c284e8ceebdc759a0bafee0a8ead",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core-source-sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

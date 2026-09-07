@@ -1,0 +1,30 @@
+{
+  "at": "2026-09-07T03:43:37.230508+00:00",
+  "flash": false,
+  "reset": false,
+  "frequency_hz": 10000000,
+  "devices": [
+    {
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "cpuid": "0x411fd210",
+      "state": "SLEEPING",
+      "pwm_enable": [
+        0,
+        0,
+        0
+      ],
+      "p1_14_pin_cnf": 2
+    },
+    {
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "cpuid": "0x411fd210",
+      "state": "SLEEPING",
+      "pwm_enable": [
+        0,
+        0,
+        0
+      ],
+      "p1_14_pin_cnf": 2
+    }
+  ]
+}

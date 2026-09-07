@@ -1,0 +1,44 @@
+2026-09-07 13:52:19,647 - twister - INFO - Using Ninja..
+2026-09-07 13:52:21,328 - twister - INFO - Zephyr version: ncs-v3.4.0
+2026-09-07 13:52:21,926 - twister - DEBUG - Running cmake script C:\ncs\v3.4.0\zephyr\cmake\verify-toolchain.cmake
+2026-09-07 13:52:21,927 - twister - DEBUG - Calling cmake: ['C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\cmake.EXE', '-DFORMAT=json', '-P', 'C:\\ncs\\v3.4.0\\zephyr\\cmake\\verify-toolchain.cmake']
+2026-09-07 13:52:24,952 - twister - DEBUG - Finished running C:\ncs\v3.4.0\zephyr\cmake\verify-toolchain.cmake
+2026-09-07 13:52:24,952 - twister - INFO - Using 'zephyr/gnu' toolchain variant.
+2026-09-07 13:52:27,262 - twister - DEBUG - Reading testsuite configuration files under C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m25_nojumper_hil...
+2026-09-07 13:52:27,262 - twister - DEBUG - Found possible testsuite in C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m25_nojumper_hil
+2026-09-07 13:52:27,273 - twister - DEBUG - No duplicates found.
+2026-09-07 13:52:27,273 - twister - DEBUG -  platform filter: ['nrf54l15dk/nrf54l15/cpuapp/nu54dk']
+2026-09-07 13:52:27,273 - twister - DEBUG - platform_pattern: []
+2026-09-07 13:52:27,273 - twister - DEBUG -    vendor filter: []
+2026-09-07 13:52:27,275 - twister - DEBUG -      arch_filter: None
+2026-09-07 13:52:27,275 - twister - DEBUG -       tag_filter: None
+2026-09-07 13:52:27,275 - twister - DEBUG -      exclude_tag: None
+2026-09-07 13:52:27,275 - twister - DEBUG - Checking platform filter: ['nrf54l15dk/nrf54l15/cpuapp/nu54dk']
+2026-09-07 13:52:27,275 - twister - INFO - Building initial testsuite list...
+2026-09-07 13:52:27,277 - twister - INFO - Built testsuite list in 0.00 seconds
+2026-09-07 13:52:27,277 - twister - INFO - Writing JSON report C:\nj26\testplan.json
+2026-09-07 13:52:29,513 - twister - INFO - Adding tasks to the queue...
+2026-09-07 13:52:29,514 - twister - DEBUG - adding nrf54l15dk/nrf54l15/cpuapp/nu54dk\zephyr/gnu\nucode.m25.nojumper_hil
+2026-09-07 13:52:29,516 - twister - INFO - Added initial list of jobs to queue
+2026-09-07 13:52:31,423 - twister - DEBUG - Running cmake on C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m25_nojumper_hil for nrf54l15dk/nrf54l15/cpuapp/nu54dk
+2026-09-07 13:52:31,423 - twister - DEBUG - Building C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m25_nojumper_hil using sysbuild
+2026-09-07 13:52:31,425 - twister - DEBUG - Calling cmake: ['C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\cmake.EXE', '-BC:\\nj26\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.nojumper_hil', '-DTC_RUNID=7c25179f9caed909ece2dbd398706a95', '-DTC_NAME=nucode.m25.nojumper_hil', '-DSB_CONFIG_COMPILER_WARNINGS_AS_ERRORS=y', '-DEXTRA_GEN_EDT_ARGS=--edtlib-Werror', '-GNinja', '-DPython3_EXECUTABLE=C:/ncs/toolchains/dcbdc366a1/opt/bin/python.exe', '-DZEPHYR_TOOLCHAIN_VARIANT=zephyr/gnu', '-SC:\\ncs\\v3.4.0\\zephyr/share/sysbuild', '-DAPP_DIR=C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m25_nojumper_hil', '-DBOARD_ROOT=C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS', '-DEXTRA_ZEPHYR_MODULES=C:/Users/eidos/GitHub/NU54DK_Arduino_Core', '-DUSE_CCACHE=0', '-DBOARD=nrf54l15dk/nrf54l15/cpuapp/nu54dk']
+2026-09-07 13:52:35,272 - twister - DEBUG - Launched 2 jobs
+2026-09-07 13:53:41,708 - twister - DEBUG - Loaded sysbuild domain data from C:\nj26\nrf54l15dk_nrf54l15_cpuapp_nu54dk\zephyr_gnu\nucode.m25.nojumper_hil\domains.yaml
+2026-09-07 13:53:41,714 - twister - DEBUG - Finished running cmake C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m25_nojumper_hil for nrf54l15dk/nrf54l15/cpuapp/nu54dk in 70.28 seconds
+2026-09-07 13:53:41,719 - twister - DEBUG - build test: nrf54l15dk/nrf54l15/cpuapp/nu54dk\zephyr/gnu\nucode.m25.nojumper_hil
+2026-09-07 13:53:41,719 - twister - DEBUG - Building C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m25_nojumper_hil for nrf54l15dk/nrf54l15/cpuapp/nu54dk
+2026-09-07 13:53:41,762 - twister - DEBUG - Running C:\ncs\toolchains\dcbdc366a1\opt\bin\cmake.EXE --build C:\nj26\nrf54l15dk_nrf54l15_cpuapp_nu54dk\zephyr_gnu\nucode.m25.nojumper_hil
+2026-09-07 13:55:29,006 - twister - DEBUG - Finished building C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\zephyr\m25_nojumper_hil for nrf54l15dk/nrf54l15/cpuapp/nu54dk in 107.28 seconds
+2026-09-07 13:55:29,008 - twister - DEBUG - Determine test cases for test instance: nrf54l15dk/nrf54l15/cpuapp/nu54dk\zephyr/gnu\nucode.m25.nojumper_hil
+2026-09-07 13:55:29,008 - twister - DEBUG - Determine test cases for test suite: nucode.m25.nojumper_hil
+2026-09-07 13:55:29,112 - twister - DEBUG - Test instance nrf54l15dk/nrf54l15/cpuapp/nu54dk\zephyr/gnu\nucode.m25.nojumper_hil already has 1 testcase(s) known: [<TestCase nucode.m25.nojumper_hil with not run>]
+2026-09-07 13:55:29,114 - twister - DEBUG - Instance nrf54l15dk/nrf54l15/cpuapp/nu54dk\zephyr/gnu\nucode.m25.nojumper_hil can't run (run:False, handler.ready:False)
+2026-09-07 13:55:29,240 - twister - INFO - 1 test scenarios (1 configurations) selected, 0 configurations filtered (0 by static filter, 0 at runtime).
+2026-09-07 13:55:29,370 - twister - INFO - [32m0 of 1[39m executed test configurations passed (0.00%), [36m1[39m built (not run), 0 failed, 0 errored, with no warnings in 189.73 seconds.
+2026-09-07 13:55:29,370 - twister - INFO - [32m0[39m test configurations executed on platforms, [36m1[39m test configurations were only built.
+2026-09-07 13:55:29,370 - twister - INFO - Saving reports...
+2026-09-07 13:55:29,370 - twister - INFO - Writing JSON report C:\nj26\twister.json
+2026-09-07 13:55:29,370 - twister - INFO - Writing xunit report C:\nj26\twister.xml...
+2026-09-07 13:55:29,370 - twister - INFO - Writing xunit report C:\nj26\twister_report.xml...
+2026-09-07 13:55:29,370 - twister - INFO - Run completed

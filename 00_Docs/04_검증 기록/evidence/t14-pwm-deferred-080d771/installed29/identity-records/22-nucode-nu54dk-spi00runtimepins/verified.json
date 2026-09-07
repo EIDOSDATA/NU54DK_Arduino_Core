@@ -1,0 +1,99 @@
+{
+  "manifest_path": "C:\\u4y\\examples\\22-nucode-nu54dk-spi00runtimepins\\SPI00RuntimePins.ino.nu54-build.json",
+  "manifest_sha256": "10661b2d6f332d04dd65634ef61a626f512da6ca544545cf4b1abaa67cb0278d",
+  "artifacts": {
+    "bin": {
+      "path": "C:/u4y/examples/22-nucode-nu54dk-spi00runtimepins/SPI00RuntimePins.ino.bin",
+      "sha256": "3aabb7ec8ad92aca1d5bbdccc8084c173f12bf12a132c3c7f291a0fb6dc9f857",
+      "size": 104664
+    },
+    "elf": {
+      "path": "C:/u4y/examples/22-nucode-nu54dk-spi00runtimepins/SPI00RuntimePins.ino.elf",
+      "sha256": "34ad0c1fecca65b759ac1d6802d4c9486e62ce9110d562a8a498aaf2d9fb600e",
+      "size": 2291728
+    },
+    "hex": {
+      "path": "C:/u4y/examples/22-nucode-nu54dk-spi00runtimepins/SPI00RuntimePins.ino.hex",
+      "sha256": "2c2998d4b3cbf47da32db7bee4d09410024ddb2cba19097e185fc5a90333d4e0",
+      "size": 294521
+    },
+    "map": {
+      "path": "C:/u4y/examples/22-nucode-nu54dk-spi00runtimepins/SPI00RuntimePins.ino.map",
+      "sha256": "cd6512b51e0f0be7e9943b555189410891c02faf5e6e8e9998838811a169b544",
+      "size": 808106
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:e843f123bab24c17af367d8469aa8b32fbf127369c764b42e010fba8c2e3cf72",
+        "path": "C:/u4y/cache/v1/e7/e758ca41c27ed60cedf63d84ced994a2/platform/libraries/NUCODE_NU54DK/examples/SPI00RuntimePins"
+      },
+      {
+        "content_sha256": "sha256:95fb13858b1e597e73efa01d9c5fcfbd5c3d9d7346644516053b816232d7f453",
+        "path": "C:/u4y/cache/v1/e7/e758ca41c27ed60cedf63d84ced994a2/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/u4y/cache/v1/e7/e758ca41c27ed60cedf63d84ced994a2/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:93684a3bdca314ba4e20d4903120c5cc3903cffb2817a08001a894d92cad1cdf",
+        "path": "C:/u4y/cache/v1/e7/e758ca41c27ed60cedf63d84ced994a2/platform/libraries/SPI/src"
+      },
+      {
+        "content_sha256": "sha256:6ab988c7535b9efdaf03aed7decf816d7e8d59ff2f29f9afa6999532ed51bf7b",
+        "path": "C:/u4y/cache/v1/e7/e758ca41c27ed60cedf63d84ced994a2/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/u4y/cache/v1/e7/e758ca41c27ed60cedf63d84ced994a2/build/nucode_arduino_core_build.yml",
+      "sha256": "74c02d546b2c3db234430978079ef5ecd4c63b79fefc803d395961dd430093ac"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/u4y/cache/v1/e7/e758ca41c27ed60cedf63d84ced994a2/app/generated-sources/sketch/SPI00RuntimePins.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/SPI00RuntimePins.ino.cpp",
+        "sha256": "d5cddbd9e8f45b02ece910f4ae3765c6d8ee6500f9ea88cf9c5f0466ac4062fe",
+        "source_path": "C:/u4y/examples/22-nucode-nu54dk-spi00runtimepins/sketch/SPI00RuntimePins.ino.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\u4y\\identity-records\\22-nucode-nu54dk-spi00runtimepins\\nucode_arduino_core_build.yml",
+    "sha256": "74c02d546b2c3db234430978079ef5ecd4c63b79fefc803d395961dd430093ac",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core_source_sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "application_source_sha256": "2eb368ca43b612d129ebdd3bfabef9478ec86a772a1331f4b6a447856d132d2d",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\u4y\\identity-records\\22-nucode-nu54dk-spi00runtimepins\\build_info.yml",
+    "sha256": "c5373d0983312332aabda5b5d4a310cfbb42d074094cb97fc24db868122731ad",
+    "identity": {
+      "application-source-sha256": "2eb368ca43b612d129ebdd3bfabef9478ec86a772a1331f4b6a447856d132d2d",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core-source-sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

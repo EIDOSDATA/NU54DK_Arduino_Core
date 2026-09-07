@@ -1,0 +1,15 @@
+NU54_PACKAGE_ARCHIVE=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\verified-package-a\nucode-nu54dk-zephyr-0.0.90.zip
+NU54_PACKAGE_CHECKSUMS=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\verified-package-a\nucode-nu54dk-zephyr-0.0.90.CHECKSUMS.sha256
+NU54_PACKAGE_MANIFEST=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\verified-package-a\nucode-nu54dk-zephyr-0.0.90.release-manifest.json
+NU54_PACKAGE_SBOM=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\verified-package-a\nucode-nu54dk-zephyr-0.0.90.spdx.json
+NU54_PACKAGE_LICENSES=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\verified-package-a\nucode-nu54dk-zephyr-0.0.90.license-inventory.json
+NU54_PACKAGE_NOTICES=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\verified-package-a\nucode-nu54dk-zephyr-0.0.90.THIRD_PARTY_NOTICES.md
+NU54_PACKAGE_INDEX=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\verified-package-a\package_nucode_nu54dk_preview_index.json
+NU54_PACKAGE_ARCHIVE=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\verified-package-b\nucode-nu54dk-zephyr-0.0.90.zip
+NU54_PACKAGE_CHECKSUMS=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\verified-package-b\nucode-nu54dk-zephyr-0.0.90.CHECKSUMS.sha256
+NU54_PACKAGE_MANIFEST=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\verified-package-b\nucode-nu54dk-zephyr-0.0.90.release-manifest.json
+NU54_PACKAGE_SBOM=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\verified-package-b\nucode-nu54dk-zephyr-0.0.90.spdx.json
+NU54_PACKAGE_LICENSES=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\verified-package-b\nucode-nu54dk-zephyr-0.0.90.license-inventory.json
+NU54_PACKAGE_NOTICES=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\verified-package-b\nucode-nu54dk-zephyr-0.0.90.THIRD_PARTY_NOTICES.md
+NU54_PACKAGE_INDEX=C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\verified-package-b\package_nucode_nu54dk_preview_index.json
+FINAL_PACKAGE_REPRODUCIBILITY_PASS=7

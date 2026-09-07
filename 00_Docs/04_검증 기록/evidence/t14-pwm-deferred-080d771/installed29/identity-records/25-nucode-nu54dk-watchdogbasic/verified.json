@@ -1,0 +1,105 @@
+{
+  "manifest_path": "C:\\u4y\\examples\\25-nucode-nu54dk-watchdogbasic\\WatchdogBasic.ino.nu54-build.json",
+  "manifest_sha256": "82cd955eb45b9549c4b028197901ed4838e9ea12c26562ac76bf387909d17dd2",
+  "artifacts": {
+    "bin": {
+      "path": "C:/u4y/examples/25-nucode-nu54dk-watchdogbasic/WatchdogBasic.ino.bin",
+      "sha256": "f3dd5fb33bd66e7c2bd2e74717a410516e89b890e76f148d6c3c394fa53aff5e",
+      "size": 106828
+    },
+    "elf": {
+      "path": "C:/u4y/examples/25-nucode-nu54dk-watchdogbasic/WatchdogBasic.ino.elf",
+      "sha256": "5ac5da91ffba8c47ecbab466a2635e6f532f26ae93feb5da808e30e4cbed44b6",
+      "size": 2406064
+    },
+    "hex": {
+      "path": "C:/u4y/examples/25-nucode-nu54dk-watchdogbasic/WatchdogBasic.ino.hex",
+      "sha256": "9ce615520d6c24552a70d912474ac60917abdd670b1d87f3ff9d0e61a55183c1",
+      "size": 300609
+    },
+    "map": {
+      "path": "C:/u4y/examples/25-nucode-nu54dk-watchdogbasic/WatchdogBasic.ino.map",
+      "sha256": "01b0e5efa86cd077a3f19670a6a17c658b3e62dc885a660954e2ce0ed7694e8e",
+      "size": 884920
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:42a61fc6c507e21c78e77063ec69dc4a0709f43c5fbd1c535576440c98f5bb05",
+        "path": "C:/u4y/cache/v1/e3/e34b3f2412466c30b62408caf8dd114b/platform/libraries/NUCODE_NU54DK/examples/WatchdogBasic"
+      },
+      {
+        "content_sha256": "sha256:95fb13858b1e597e73efa01d9c5fcfbd5c3d9d7346644516053b816232d7f453",
+        "path": "C:/u4y/cache/v1/e3/e34b3f2412466c30b62408caf8dd114b/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/u4y/cache/v1/e3/e34b3f2412466c30b62408caf8dd114b/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:62270ed0bca3ce8e6ef7e237f2dd18eafa7129a98d2046e4e14424db5c273576",
+        "path": "C:/u4y/cache/v1/e3/e34b3f2412466c30b62408caf8dd114b/platform/libraries/NUCODE_NU54DK/src"
+      },
+      {
+        "content_sha256": "sha256:bbf784e386b62fedbbbc6370520f755cb0668e97ebb9f3ff449750a19d8f00e5",
+        "path": "C:/u4y/cache/v1/e3/e34b3f2412466c30b62408caf8dd114b/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/u4y/cache/v1/e3/e34b3f2412466c30b62408caf8dd114b/build/nucode_arduino_core_build.yml",
+      "sha256": "901e72c624fea0c71786eb3c634da3f2b1d5355329a07e989a45678623f78106"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/u4y/cache/v1/e3/e34b3f2412466c30b62408caf8dd114b/app/generated-sources/sketch/WatchdogBasic.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/WatchdogBasic.ino.cpp",
+        "sha256": "3be37b9360314cef0ad7eb7a71e5011cd1cece62561268279347329be0732dce",
+        "source_path": "C:/u4y/examples/25-nucode-nu54dk-watchdogbasic/sketch/WatchdogBasic.ino.cpp"
+      },
+      {
+        "compiled_path": "C:/u4y/cache/v1/e3/e34b3f2412466c30b62408caf8dd114b/platform/libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp",
+        "logical_identity": "platform:libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp",
+        "sha256": "7a5fe7013f0a6d1de5799025edb5c19515bce39ff08249954b12bf7885973d2d",
+        "source_path": "C:/u4y/검증 설치/hardware/nucode/zephyr/libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\u4y\\identity-records\\25-nucode-nu54dk-watchdogbasic\\nucode_arduino_core_build.yml",
+    "sha256": "901e72c624fea0c71786eb3c634da3f2b1d5355329a07e989a45678623f78106",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core_source_sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "application_source_sha256": "2347efd697aab5684fd21ea804d2a1d01fef59eccbb85bbc2d46537d65979d97",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\u4y\\identity-records\\25-nucode-nu54dk-watchdogbasic\\build_info.yml",
+    "sha256": "747f2eda3cb7d1f9ca3fadf59e0c04d13b9f4767b2bca0beb1bc567b0772ce19",
+    "identity": {
+      "application-source-sha256": "2347efd697aab5684fd21ea804d2a1d01fef59eccbb85bbc2d46537d65979d97",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core-source-sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

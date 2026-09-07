@@ -1,0 +1,95 @@
+{
+  "source": "080d771ae48e83b4621f3160afed67395ead32cd",
+  "at": "2026-09-07T04:03:50.641782+00:00",
+  "swd_frequency_hz": 10000000,
+  "wiring": "user-confirmed no inter-board jumpers",
+  "vectors_per_board": 972,
+  "image": {
+    "path": "C:\\u4p\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.nojumper_hil\\m25_nojumper_hil\\zephyr\\zephyr.hex",
+    "elf": "C:\\u4p\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.m25.nojumper_hil\\m25_nojumper_hil\\zephyr\\zephyr.elf",
+    "source": "080d771ae48e83b4621f3160afed67395ead32cd",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "hex_sha256": "73b251603f24ebd8d97f8063402ca979baea275102e43f59a42755418ea915fe",
+    "elf_sha256": "771404399a449e7f72086899907cef95495a821daeac8a36d85db932fa922cd2",
+    "symbols": {
+      "nojumper_request": 536914032,
+      "nojumper_response": 536913904,
+      "nojumper_ready": 536913888,
+      "nojumper_revision": 536911744
+    }
+  },
+  "devices": [
+    {
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "passed": 972,
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 8.671,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "ed3516be5f8904b0a720367126d17573516d6a844016e998ddaa9f2cd57edb63"
+      },
+      "initial_identity": [
+        1313493041,
+        1,
+        0,
+        0
+      ],
+      "initial_pin": 2,
+      "postflight": {
+        "ready": [
+          1313493041,
+          1,
+          972,
+          0
+        ],
+        "pwm_enable": [
+          0,
+          0,
+          0
+        ],
+        "p1_14_pin_cnf": 2,
+        "dppi20_channel0": 0
+      }
+    },
+    {
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "passed": 972,
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 5.375,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "50c53c77d93ad74673a823a43ba9294694a8fff7786b275fb0adb660c84a7f13"
+      },
+      "initial_identity": [
+        1313493041,
+        1,
+        0,
+        0
+      ],
+      "initial_pin": 2,
+      "postflight": {
+        "ready": [
+          1313493041,
+          1,
+          972,
+          0
+        ],
+        "pwm_enable": [
+          0,
+          0,
+          0
+        ],
+        "p1_14_pin_cnf": 2,
+        "dppi20_channel0": 0
+      }
+    }
+  ],
+  "status": "passed",
+  "completed_at_utc": "2026-09-07T04:04:35.047451+00:00"
+}

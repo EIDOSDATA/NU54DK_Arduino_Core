@@ -1,0 +1,713 @@
+{
+  "source": "874658a16db18b283ab7f1b2835111aaf34b42fd",
+  "status": "passed",
+  "commands": 1808,
+  "swd_hz": 10000000,
+  "boards": [
+    {
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "commands": 904,
+      "commands_by_operation": {
+        "1": 12,
+        "2": 12,
+        "3": 352,
+        "4": 480,
+        "5": 44,
+        "6": 4
+      },
+      "adc_configure_sample_stop_cycles": 1200,
+      "adc_samples": 26000,
+      "adc_calibration_completions": 600,
+      "adc_last_buffer_raw_snapshots": 12,
+      "adc_extrema_by_request": [
+        {
+          "vector": [
+            2,
+            1,
+            0,
+            1,
+            100,
+            1
+          ],
+          "extrema": [
+            3744,
+            3764,
+            4095,
+            0
+          ]
+        },
+        {
+          "vector": [
+            2,
+            1,
+            0,
+            32,
+            100,
+            1
+          ],
+          "extrema": [
+            3736,
+            3768,
+            4095,
+            0
+          ]
+        },
+        {
+          "vector": [
+            2,
+            1,
+            1,
+            1,
+            100,
+            1
+          ],
+          "extrema": [
+            1004,
+            1064,
+            4095,
+            0
+          ]
+        },
+        {
+          "vector": [
+            2,
+            1,
+            1,
+            32,
+            100,
+            1
+          ],
+          "extrema": [
+            996,
+            1068,
+            4095,
+            0
+          ]
+        },
+        {
+          "vector": [
+            2,
+            1,
+            2,
+            1,
+            100,
+            1
+          ],
+          "extrema": [
+            3744,
+            3768,
+            4095,
+            0
+          ]
+        },
+        {
+          "vector": [
+            2,
+            1,
+            2,
+            32,
+            100,
+            1
+          ],
+          "extrema": [
+            3732,
+            3776,
+            4095,
+            0
+          ]
+        },
+        {
+          "vector": [
+            2,
+            1,
+            3,
+            1,
+            100,
+            1
+          ],
+          "extrema": [
+            1000,
+            1068,
+            4095,
+            0
+          ]
+        },
+        {
+          "vector": [
+            2,
+            1,
+            3,
+            32,
+            100,
+            1
+          ],
+          "extrema": [
+            996,
+            1072,
+            4095,
+            0
+          ]
+        },
+        {
+          "vector": [
+            2,
+            2,
+            0,
+            32,
+            100,
+            1
+          ],
+          "extrema": [
+            3736,
+            3768,
+            996,
+            1068
+          ]
+        },
+        {
+          "vector": [
+            2,
+            2,
+            1,
+            32,
+            100,
+            1
+          ],
+          "extrema": [
+            996,
+            1068,
+            3732,
+            3764
+          ]
+        },
+        {
+          "vector": [
+            2,
+            2,
+            2,
+            32,
+            100,
+            1
+          ],
+          "extrema": [
+            3732,
+            3772,
+            996,
+            1068
+          ]
+        },
+        {
+          "vector": [
+            2,
+            2,
+            3,
+            32,
+            100,
+            1
+          ],
+          "extrema": [
+            996,
+            1072,
+            3732,
+            3772
+          ]
+        }
+      ],
+      "timer_compare_capture_cycles": 3520,
+      "timer_reserved_block_rejections": 3520,
+      "timer_max_observed_error_us": 121,
+      "egu_dppi_received_events": 4800000,
+      "ppib_received_events": 440000,
+      "event_disable_checks": 5240,
+      "event_group_lifecycle_checks": 30640,
+      "event_group_reservation_rejections": 30640,
+      "grtc_time_cycles": 400,
+      "time_observations": [
+        {
+          "vector": [
+            6,
+            1000,
+            0,
+            100,
+            0,
+            1
+          ],
+          "micros_range": [
+            997,
+            1011
+          ],
+          "millis_range": [
+            1,
+            1
+          ],
+          "maximum_timer_difference_us": 13,
+          "last_millis_micros_timer": [
+            1,
+            998,
+            1009
+          ],
+          "maximum_millis_difference_us": 11,
+          "kernel_tick_us": 32
+        },
+        {
+          "vector": [
+            6,
+            1000,
+            1,
+            100,
+            0,
+            1
+          ],
+          "micros_range": [
+            1099,
+            1100
+          ],
+          "millis_range": [
+            1,
+            2
+          ],
+          "maximum_timer_difference_us": 14,
+          "last_millis_micros_timer": [
+            1,
+            1099,
+            1113
+          ],
+          "maximum_millis_difference_us": 901,
+          "kernel_tick_us": 32
+        },
+        {
+          "vector": [
+            6,
+            10000,
+            0,
+            100,
+            0,
+            1
+          ],
+          "micros_range": [
+            9927,
+            9947
+          ],
+          "millis_range": [
+            9,
+            10
+          ],
+          "maximum_timer_difference_us": 84,
+          "last_millis_micros_timer": [
+            10,
+            9942,
+            10023
+          ],
+          "maximum_millis_difference_us": 944,
+          "kernel_tick_us": 32
+        },
+        {
+          "vector": [
+            6,
+            10000,
+            1,
+            100,
+            0,
+            1
+          ],
+          "micros_range": [
+            10091,
+            10093
+          ],
+          "millis_range": [
+            10,
+            11
+          ],
+          "maximum_timer_difference_us": 84,
+          "last_millis_micros_timer": [
+            10,
+            10092,
+            10170
+          ],
+          "maximum_millis_difference_us": 909,
+          "kernel_tick_us": 32
+        }
+      ],
+      "pwm_regression_cycles": 1200,
+      "postflight": {
+        "ready": [
+          1313493041,
+          2,
+          904,
+          0
+        ],
+        "pwm_enable": [
+          0,
+          0,
+          0
+        ],
+        "p1_14_pin_cnf": 2,
+        "dppi20_channel0": 0,
+        "dppi_channels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "saadc_enable": 0
+      },
+      "first_record_at": "2026-09-07T05:35:27.586131+00:00",
+      "last_record_at": "2026-09-07T05:45:37.988441+00:00"
+    },
+    {
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "commands": 904,
+      "commands_by_operation": {
+        "1": 12,
+        "2": 12,
+        "3": 352,
+        "4": 480,
+        "5": 44,
+        "6": 4
+      },
+      "adc_configure_sample_stop_cycles": 1200,
+      "adc_samples": 26000,
+      "adc_calibration_completions": 600,
+      "adc_last_buffer_raw_snapshots": 12,
+      "adc_extrema_by_request": [
+        {
+          "vector": [
+            2,
+            1,
+            0,
+            1,
+            100,
+            1
+          ],
+          "extrema": [
+            3740,
+            3760,
+            4095,
+            0
+          ]
+        },
+        {
+          "vector": [
+            2,
+            1,
+            0,
+            32,
+            100,
+            1
+          ],
+          "extrema": [
+            3732,
+            3764,
+            4095,
+            0
+          ]
+        },
+        {
+          "vector": [
+            2,
+            1,
+            1,
+            1,
+            100,
+            1
+          ],
+          "extrema": [
+            1004,
+            1064,
+            4095,
+            0
+          ]
+        },
+        {
+          "vector": [
+            2,
+            1,
+            1,
+            32,
+            100,
+            1
+          ],
+          "extrema": [
+            1000,
+            1068,
+            4095,
+            0
+          ]
+        },
+        {
+          "vector": [
+            2,
+            1,
+            2,
+            1,
+            100,
+            1
+          ],
+          "extrema": [
+            3736,
+            3768,
+            4095,
+            0
+          ]
+        },
+        {
+          "vector": [
+            2,
+            1,
+            2,
+            32,
+            100,
+            1
+          ],
+          "extrema": [
+            3728,
+            3768,
+            4095,
+            0
+          ]
+        },
+        {
+          "vector": [
+            2,
+            1,
+            3,
+            1,
+            100,
+            1
+          ],
+          "extrema": [
+            1000,
+            1064,
+            4095,
+            0
+          ]
+        },
+        {
+          "vector": [
+            2,
+            1,
+            3,
+            32,
+            100,
+            1
+          ],
+          "extrema": [
+            1000,
+            1072,
+            4095,
+            0
+          ]
+        },
+        {
+          "vector": [
+            2,
+            2,
+            0,
+            32,
+            100,
+            1
+          ],
+          "extrema": [
+            3744,
+            3768,
+            1012,
+            1076
+          ]
+        },
+        {
+          "vector": [
+            2,
+            2,
+            1,
+            32,
+            100,
+            1
+          ],
+          "extrema": [
+            1012,
+            1072,
+            3740,
+            3768
+          ]
+        },
+        {
+          "vector": [
+            2,
+            2,
+            2,
+            32,
+            100,
+            1
+          ],
+          "extrema": [
+            3732,
+            3768,
+            1000,
+            1072
+          ]
+        },
+        {
+          "vector": [
+            2,
+            2,
+            3,
+            32,
+            100,
+            1
+          ],
+          "extrema": [
+            1000,
+            1072,
+            3732,
+            3768
+          ]
+        }
+      ],
+      "timer_compare_capture_cycles": 3520,
+      "timer_reserved_block_rejections": 3520,
+      "timer_max_observed_error_us": 143,
+      "egu_dppi_received_events": 4800000,
+      "ppib_received_events": 440000,
+      "event_disable_checks": 5240,
+      "event_group_lifecycle_checks": 30640,
+      "event_group_reservation_rejections": 30640,
+      "grtc_time_cycles": 400,
+      "time_observations": [
+        {
+          "vector": [
+            6,
+            1000,
+            0,
+            100,
+            0,
+            1
+          ],
+          "micros_range": [
+            994,
+            1009
+          ],
+          "millis_range": [
+            0,
+            1
+          ],
+          "maximum_timer_difference_us": 15,
+          "last_millis_micros_timer": [
+            1,
+            995,
+            1009
+          ],
+          "maximum_millis_difference_us": 996,
+          "kernel_tick_us": 32
+        },
+        {
+          "vector": [
+            6,
+            1000,
+            1,
+            100,
+            0,
+            1
+          ],
+          "micros_range": [
+            1099,
+            1100
+          ],
+          "millis_range": [
+            1,
+            2
+          ],
+          "maximum_timer_difference_us": 16,
+          "last_millis_micros_timer": [
+            1,
+            1100,
+            1116
+          ],
+          "maximum_millis_difference_us": 900,
+          "kernel_tick_us": 32
+        },
+        {
+          "vector": [
+            6,
+            10000,
+            0,
+            100,
+            0,
+            1
+          ],
+          "micros_range": [
+            9908,
+            9931
+          ],
+          "millis_range": [
+            9,
+            10
+          ],
+          "maximum_timer_difference_us": 102,
+          "last_millis_micros_timer": [
+            10,
+            9923,
+            10023
+          ],
+          "maximum_millis_difference_us": 927,
+          "kernel_tick_us": 32
+        },
+        {
+          "vector": [
+            6,
+            10000,
+            1,
+            100,
+            0,
+            1
+          ],
+          "micros_range": [
+            10091,
+            10092
+          ],
+          "millis_range": [
+            10,
+            11
+          ],
+          "maximum_timer_difference_us": 103,
+          "last_millis_micros_timer": [
+            10,
+            10092,
+            10193
+          ],
+          "maximum_millis_difference_us": 908,
+          "kernel_tick_us": 32
+        }
+      ],
+      "pwm_regression_cycles": 1200,
+      "postflight": {
+        "ready": [
+          1313493041,
+          2,
+          904,
+          0
+        ],
+        "pwm_enable": [
+          0,
+          0,
+          0
+        ],
+        "p1_14_pin_cnf": 2,
+        "dppi20_channel0": 0,
+        "dppi_channels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "saadc_enable": 0
+      },
+      "first_record_at": "2026-09-07T05:45:42.957344+00:00",
+      "last_record_at": "2026-09-07T05:55:52.295341+00:00"
+    }
+  ],
+  "journal_sha256": "7013588f510d9c12942bb3eb356df0f683d41d3fcf4ea07b7cbefd80b53c9e85",
+  "raw_adc_note": "SWD snapshots contain the final repetition; every repetition is checked on device",
+  "external_waveform_observed": false,
+  "t12_complete": false,
+  "t13_complete": false
+}

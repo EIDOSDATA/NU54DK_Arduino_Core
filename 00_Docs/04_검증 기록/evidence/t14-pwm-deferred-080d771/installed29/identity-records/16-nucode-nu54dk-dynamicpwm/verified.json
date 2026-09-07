@@ -1,0 +1,95 @@
+{
+  "manifest_path": "C:\\u4y\\examples\\16-nucode-nu54dk-dynamicpwm\\DynamicPWM.ino.nu54-build.json",
+  "manifest_sha256": "6ad748874c68e0b723bf43af06cb2c6b9846387f64b091a5215cd528697f4ede",
+  "artifacts": {
+    "bin": {
+      "path": "C:/u4y/examples/16-nucode-nu54dk-dynamicpwm/DynamicPWM.ino.bin",
+      "sha256": "6598aa8eec02d6e3e15994c298da98b24389c9b347b9708f39deb2497d8bfd71",
+      "size": 106824
+    },
+    "elf": {
+      "path": "C:/u4y/examples/16-nucode-nu54dk-dynamicpwm/DynamicPWM.ino.elf",
+      "sha256": "fa6a047883bcb54726628552b8ae1190f5b66199896704562a8e145995eac3a1",
+      "size": 2331400
+    },
+    "hex": {
+      "path": "C:/u4y/examples/16-nucode-nu54dk-dynamicpwm/DynamicPWM.ino.hex",
+      "sha256": "d4b57d2e6b38e0665efe6a6e50840b7d5ed25c5a1cb65ee9806e1c8c5462be3f",
+      "size": 300588
+    },
+    "map": {
+      "path": "C:/u4y/examples/16-nucode-nu54dk-dynamicpwm/DynamicPWM.ino.map",
+      "sha256": "cabe11c7782434969a3455122024955da3fb98ace9fcb476d5175242ee378550",
+      "size": 808962
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:dcef259bde6e6f2119b6ad24a94ea292d58e4f150cac5b5b343b5dda7af3bf5d",
+        "path": "C:/u4y/cache/v1/e6/e60e2ebda4fbe2140596a53c1d4e5cf9/platform/libraries/NUCODE_NU54DK/examples/DynamicPWM"
+      },
+      {
+        "content_sha256": "sha256:95fb13858b1e597e73efa01d9c5fcfbd5c3d9d7346644516053b816232d7f453",
+        "path": "C:/u4y/cache/v1/e6/e60e2ebda4fbe2140596a53c1d4e5cf9/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/u4y/cache/v1/e6/e60e2ebda4fbe2140596a53c1d4e5cf9/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:d4405d066bc652be83e817a5eb1214fb5c4a5cd5938edd9b175a6a1851446c64",
+        "path": "C:/u4y/cache/v1/e6/e60e2ebda4fbe2140596a53c1d4e5cf9/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/u4y/cache/v1/e6/e60e2ebda4fbe2140596a53c1d4e5cf9/build/nucode_arduino_core_build.yml",
+      "sha256": "d52d90a618fc0c9af98525924931069bea83a19e9bdf78628c5fb0379d6ba0ad"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/u4y/cache/v1/e6/e60e2ebda4fbe2140596a53c1d4e5cf9/app/generated-sources/sketch/DynamicPWM.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/DynamicPWM.ino.cpp",
+        "sha256": "9c68da019eb6e85116e03568f7121cb6f1ab899ff34df0a671b7bc30658d921a",
+        "source_path": "C:/u4y/examples/16-nucode-nu54dk-dynamicpwm/sketch/DynamicPWM.ino.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\u4y\\identity-records\\16-nucode-nu54dk-dynamicpwm\\nucode_arduino_core_build.yml",
+    "sha256": "d52d90a618fc0c9af98525924931069bea83a19e9bdf78628c5fb0379d6ba0ad",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core_source_sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "application_source_sha256": "a3542f9f682ec26279e5af3182a5e63dc221e5e2a0b892b21ed645922ccc14f1",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\u4y\\identity-records\\16-nucode-nu54dk-dynamicpwm\\build_info.yml",
+    "sha256": "5690eda0529900f74df538524cdec2a88e23d37da1e000aa1eb595051f263451",
+    "identity": {
+      "application-source-sha256": "a3542f9f682ec26279e5af3182a5e63dc221e5e2a0b892b21ed645922ccc14f1",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core-source-sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

@@ -1,0 +1,178 @@
+{
+  "source": "874658a16db18b283ab7f1b2835111aaf34b42fd",
+  "status": "Corrected time oracle; two boards 1808 commands passed; T12 whole and T13 not complete",
+  "raw_gzip_roundtrip": "passed",
+  "artifact_note": "ELF/HEX and complete compile databases remain at recorded local build roots; their hashes and provenance are archived. Host mocks are not board executions.",
+  "files": [
+    {
+      "name": "audit_internal.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper-874658a\\audit_internal.py",
+      "normalization": "utf8-lf-single-final-newline",
+      "original_bytes": 5154,
+      "original_sha256": "ef19330ae31950a575968b7c471d87e23e4dcc0b341c24b97b49ece9335d7b73",
+      "normalized_bytes": 5081,
+      "normalized_sha256": "722a594fc85b5490470eaef310000db02e60360de633f66c0eb24d64cf7f4408",
+      "original_archive": "audit_internal.py.raw.gz"
+    },
+    {
+      "name": "build_current.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper-874658a\\build_current.py",
+      "normalization": "utf8-lf-single-final-newline",
+      "original_bytes": 1602,
+      "original_sha256": "fadf599426cfce9842ffa8a5c178ea5b9b247fa9f4cda831d64d64efdc6cdd6f",
+      "normalized_bytes": 1600,
+      "normalized_sha256": "218d187b84202ad904ecac8685b44944dd22660308057fe359b933ad12f615f3",
+      "original_archive": "build_current.py.raw.gz"
+    },
+    {
+      "name": "collect_targets.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper-874658a\\collect_targets.py",
+      "normalization": "utf8-lf-single-final-newline",
+      "original_bytes": 3828,
+      "original_sha256": "a82fc3e34f1ea9499110cdfa74890abc82d436fd8c54ac885e633af8667f7165",
+      "normalized_bytes": 3779,
+      "normalized_sha256": "61fa172ea15105c180e5a8f1ee2360dedd9434b8db266ccf1779e9dae9bbafb4",
+      "original_archive": "collect_targets.py.raw.gz"
+    },
+    {
+      "name": "hardware-attempt1.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper-874658a\\hardware-attempt1.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 75881,
+      "original_sha256": "f98b252836b9048842461886eca01f6cb0db9bce109cdef0988a5eb7c03499ea",
+      "normalized_bytes": 68485,
+      "normalized_sha256": "ee9629caaa15e13a07b46cb0ff6a86233fbfbf7c3b64d319d9595fd75b501420",
+      "original_archive": "hardware-attempt1.json.raw.gz"
+    },
+    {
+      "name": "hardware-attempt1.json.jsonl",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper-874658a\\hardware-attempt1.json.jsonl",
+      "normalization": "utf8-lf",
+      "original_bytes": 572276,
+      "original_sha256": "7013588f510d9c12942bb3eb356df0f683d41d3fcf4ea07b7cbefd80b53c9e85",
+      "normalized_bytes": 570468,
+      "normalized_sha256": "8871cf961987cc2a2f21f21de297e39887c8bf6f0e7cd597dec0a317076c0953",
+      "original_archive": "hardware-attempt1.json.jsonl.raw.gz"
+    },
+    {
+      "name": "hardware-attempt1.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper-874658a\\hardware-attempt1.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 3767,
+      "original_sha256": "fa792d03a5253e49c486f322325e0a900a49e48fa947cbe28ff342253340745d",
+      "normalized_bytes": 3672,
+      "normalized_sha256": "884b2b8b4ab609d5f4665bd895480b7d5f366af5d8c8d51800f94b3c260e1a17",
+      "original_archive": "hardware-attempt1.log.raw.gz"
+    },
+    {
+      "name": "hardware-audit.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper-874658a\\hardware-audit.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 5925,
+      "original_sha256": "4f7adad406925d7e76c50d8bb6c01386dc3f3a340d280657f1ac93008c6847f1",
+      "normalized_bytes": 5924,
+      "normalized_sha256": "bdf1e38da228cd48a1371b0e73e5fc7911a45237f8c0cec592bbb5d8446f051c",
+      "original_archive": "hardware-audit.log.raw.gz"
+    },
+    {
+      "name": "hardware-internal-audit.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper-874658a\\hardware-internal-audit.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 14187,
+      "original_sha256": "eda0494037bb4173fa84efcba699ce011ada4a4b5ce7728703a85d841a061c64",
+      "normalized_bytes": 13474,
+      "normalized_sha256": "05328070d8c320d4b19462c1f440aec301895c37f15b10ea6f10dbec02cb7a08",
+      "original_archive": "hardware-internal-audit.json.raw.gz"
+    },
+    {
+      "name": "nj28-artifact-index.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper-874658a\\nj28-artifact-index.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 6929,
+      "original_sha256": "5adea4b6b3ba81fc3ee666ef535f3d0d078a0bc8592724c43d1f6e501a79630e",
+      "normalized_bytes": 6822,
+      "normalized_sha256": "9b7ecf07a8fee3305c064dfb81a6ae4b2dd0768d2416b10e289e6e217c727e38",
+      "original_archive": "nj28-artifact-index.json.raw.gz"
+    },
+    {
+      "name": "run_hardware.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper-874658a\\run_hardware.py",
+      "normalization": "utf8-lf-single-final-newline",
+      "original_bytes": 4720,
+      "original_sha256": "940397907d7fa1b8c9b59423cc728fe703422cf378b4067cf97c56d58b72909e",
+      "normalized_bytes": 4636,
+      "normalized_sha256": "8679c67e580cb633cecfa50702d2d3d12fe08f472760bb7598bfe10b5b3e74d5",
+      "original_archive": "run_hardware.py.raw.gz"
+    },
+    {
+      "name": "runtime.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper-874658a\\runtime.py",
+      "normalization": "utf8-lf-single-final-newline",
+      "original_bytes": 2618,
+      "original_sha256": "b667e68397a11b121b5dde93b1d0812c7e29a4ad1d5c4369c44cd98ba34eb7b5",
+      "normalized_bytes": 2558,
+      "normalized_sha256": "876bf51b0e7a6f70dde4d217343d7ba76b9dd6650cae57a5878d3c43ab0c7898",
+      "original_archive": "runtime.py.raw.gz"
+    },
+    {
+      "name": "source.txt",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper-874658a\\source.txt",
+      "normalization": "utf8-lf",
+      "original_bytes": 42,
+      "original_sha256": "488c02becff8f9ec8234448e4bbabc8b5c463455aff9f0734b6e183d48abe4e4",
+      "normalized_bytes": 41,
+      "normalized_sha256": "7bc99b306da3a4a54c6e3bd7e3acc9c8e5fba6b0ba20125381f2b1a7f466e3c1",
+      "original_archive": "source.txt.raw.gz"
+    },
+    {
+      "name": "target-artifacts.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper-874658a\\target-artifacts.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 30,
+      "original_sha256": "4b20eb3eaa379cdd0ee3086af131115b2eb5fae13e07699e78408c2ebb33b73f",
+      "normalized_bytes": 29,
+      "normalized_sha256": "f6e26a4022d2bde1adb61b7022f9e19011a6b6e465a642e0df5fe5d19e9a9097",
+      "original_archive": "target-artifacts.log.raw.gz"
+    },
+    {
+      "name": "target-build.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper-874658a\\target-build.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 1785,
+      "original_sha256": "cc12086298c425baca2b5ee174ce63fcaebc9da9a0b563881f2f31e881768e2d",
+      "normalized_bytes": 1766,
+      "normalized_sha256": "767c7422b50802970e577ac7028b217480261fcffbd35f0dca9590b013cd7df5",
+      "original_archive": "target-build.log.raw.gz"
+    },
+    {
+      "name": "target/m12-build-evidence.json",
+      "workspace_original": "C:\\nj28\\m12-build-evidence.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 495,
+      "original_sha256": "9779ef1db2564d9dea5491a44c27eb68b3f7f20c724f2e22564b6ffff8d0e50c",
+      "normalized_bytes": 495,
+      "normalized_sha256": "9779ef1db2564d9dea5491a44c27eb68b3f7f20c724f2e22564b6ffff8d0e50c",
+      "original_archive": "target/m12-build-evidence.json.raw.gz"
+    },
+    {
+      "name": "target/twister.json",
+      "workspace_original": "C:\\nj28\\twister.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 2152,
+      "original_sha256": "143fbfd9d09894566e5535472a3e2613bbf6401696deb410ba1f29fd8259b9e0",
+      "normalized_bytes": 2094,
+      "normalized_sha256": "082e6180e136095ee55500711b010c42b97340a87b8c457c3c072ba4b5a41bc9",
+      "original_archive": "target/twister.json.raw.gz"
+    },
+    {
+      "name": "target/twister.log",
+      "workspace_original": "C:\\nj28\\twister.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 5849,
+      "original_sha256": "f08c5f19bb01a05f60dd031b49f8f3c52f0c82a4c3a330cbd97cba9b0ac5833e",
+      "normalized_bytes": 5805,
+      "normalized_sha256": "33798ac97dad7345a09a3917d6ce103635579e2d5176d5142de46c7dca7619f3",
+      "original_archive": "target/twister.log.raw.gz"
+    }
+  ]
+}

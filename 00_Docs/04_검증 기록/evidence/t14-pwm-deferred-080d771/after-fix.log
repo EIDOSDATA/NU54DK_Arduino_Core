@@ -1,0 +1,8 @@
+test_analog_production (test_r03_fabric_drivers.FabricDriverTests.test_analog_production) ... ok
+test_pwm_deferred_production (test_r03_fabric_drivers.FabricDriverTests.test_pwm_deferred_production) ... ok
+test_stream_production (test_r03_fabric_drivers.FabricDriverTests.test_stream_production) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 6.345s
+
+OK

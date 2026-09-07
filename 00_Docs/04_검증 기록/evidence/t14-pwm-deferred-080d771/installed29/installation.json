@@ -1,0 +1,8 @@
+{
+  "source_commit": "080d771ae48e83b4621f3160afed67395ead32cd",
+  "archive_sha256": "9ec0706cd119041375385a64b2c1becffd7c59af6410be6939fa1608916ad0d5",
+  "platform_root": "C:\\u4y\\검증 설치\\hardware\\nucode\\zephyr",
+  "extracted_root": "C:\\u4y\\archive\\nucode-nu54dk-zephyr-0.0.90",
+  "config": "C:\\u4y\\arduino-cli.yaml",
+  "physical_executed": false
+}
