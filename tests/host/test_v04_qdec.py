@@ -15,6 +15,50 @@ from host_compiler import compiler_command
 
 
 class QdecTests(unittest.TestCase):
+    def test_gpio_observer_all_transitions_wrap_and_clear(self):
+        """! @brief 하드웨어와 독립인 수신 observer의 16전이·wrap·clear 보존을 검사합니다. """
+        source = r'''
+#include "qdec_observer.h"
+#include <cstdio>
+int main()
+{
+    for (unsigned before = 0U; before < 4U; ++before)
+    {
+        for (unsigned after = 0U; after < 4U; ++after)
+        {
+            v04::QdecObserver observer;
+            observer.start(0xFFFFFFF0U, before);
+            observer.sample(0x10U, after);
+            std::printf("%d %u %u %u %u\n", observer.steps, observer.doubles,
+                        observer.transitions, observer.max_gap, observer.phase);
+            observer.clearCounts();
+            if (observer.steps != 0 || observer.doubles != 0U || observer.transitions != 0U ||
+                observer.phase != after || observer.max_gap != 32U)
+            {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+'''
+        compiler = compiler_command()
+        self.assertIsNotNone(compiler)
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / 'qdec-observer.exe'
+            result = subprocess.run([*compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror',
+                                     '-I', str(ROOT / 'tests/zephyr/v04_pair_hil/src'),
+                                     '-x', 'c++', '-', '-o', str(output)], input=source,
+                                    capture_output=True, text=True, timeout=60)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            lines = subprocess.check_output([str(output)], text=True, timeout=10).splitlines()
+        self.assertEqual(len(lines), 16)
+        for index, line in enumerate(lines):
+            before, after = divmod(index, 4)
+            steps, doubles = qdec.decode_samples([before, after])
+            self.assertEqual(list(map(int, line.split())),
+                             [steps, doubles, int(before != after), 32, after])
+
     def test_native_pwm_levels_match_independent_ab_decoder(self):
         """! @brief 실제 C++ 파형의 극성·A/B 배치·idle 복귀를 독립 전이 표로 검사합니다. """
         compiler = compiler_command()

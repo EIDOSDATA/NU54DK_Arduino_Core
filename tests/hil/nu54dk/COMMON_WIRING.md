@@ -1,6 +1,6 @@
 # NU54DK v0.4.0 공통 결선과 연결 검사
 
-현재 실행은 [100번](../../../00_Docs/04_검증%20기록/100_T12_공통_기능_묶음과_T13_조합_확정.md)을 따른다. 4e48252 GPIO/GPIOTE2502·결선105와 3334b17 PWM steady675·새 결선105는 PASS다. 추가 PWM 첫 실패는 마지막 LOOPSDONE에서 REFRESH/ENDDELAY를 적용하지 않는 규칙의 Host 오판이다. 원본을 보존하고 판정을 교정해 추가288→QDEC240→I2S432를 진행한다. `--section signals`는 steady675를 포함하며 `--section additional-signals`는 이 세 후속 부분만 새로 실행한다. 각 실행의 source와 결과를 구분한다. [T13 계획](T13_PLAN.md)의 C→S→U 두 결선 변경은 후속이며 현재 C를 유지한다.
+현재 기능 실행(100·101번): GPIO/GPIOTE2502(4e48252), steady PWM675(3334b17), 추가 PWM288(0db0689), I2S432(b5c86a4)는 PASS다. QDEC 기능240은 누산 누락으로 HOLD다. 마지막 ce48471 선점 대비60회에서 일반 read9/30·IRQ 보호 read7/30이399/400으로 실패했다. GPIO/SAMPLE은 모두400, 보호 구간 최대5µs, 제어 오류0·cleanup63·양쪽 postflight PASS다. 3a0e976 SAMPLE IRQ20·REPORT IRQ20은 모두400으로 일치했으나 기능240이나 안정성 PASS로 확대하지 않는다. 사용자 지시대로 진단 반복을 종료하고 유력 원인·미검증 전기 조건·보완·재개 조건을101번에 남겼다. 제품 core·SDK는 미수정이다. T13은32단독/8동시·C→S→U 두 결선 변경의 계획만 확정했고 QDEC 단독2개와C07은 선행 HOLD다. T12전체·T13실기·지원 범위 확정·RC·공개는 미완료다. 세부 원본은 [101번](../../../00_Docs/04_검증%20기록/101_T12_QDEC_누산_누락_원인_분리.md), 후속 결선은 [T13 계획](T13_PLAN.md)을 따른다.
 
 현재 재검사: exact d8d1e13에서 P1.10을 포함한 17개 신호가 양방향 각 3회, 총 102 net-round PASS다. LOW 자동 해제 2개·양쪽 lease 만료 1개도 PASS이며 종료 후 양쪽 17개 PIN_CNF=0, PWM/DPPI off를 확인했다. 첫 8c1cfe2의 P1.10 실패 원본은 보존하고 원인은 미확정으로 유지한다. 결선 검사 통과이며 GPIO API·T12 전체·T13 이후·RC 완료는 아니다.
 

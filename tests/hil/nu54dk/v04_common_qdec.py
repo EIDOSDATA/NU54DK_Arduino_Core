@@ -32,15 +32,20 @@ def counts(raw, steps, double_transitions):
 
 
 @contextmanager
-def armed(devices, current, append, label, instance, debounce):
-    """! @brief 준비 시 B를 LOW로 만든 뒤 A sampling을 시작하고 양쪽을 반환합니다. """
+def armed(devices, current, append, label, instance, debounce, *, observation_mode=None, read_strategy=None):
+    """! @brief B가 LOW를 유지한 상태에서 A sampling을 시작·정지한 뒤 B를 입력으로 반환합니다. """
     current(520)
     original = None
     try:
         for device in devices:
             expect(device.command(80, (520, 1, CONSENT, 2)), [520, 10000], 'QDEC arm')
         for device in reversed(devices):
-            expect(device.command(83, (instance, debounce)), [0], 'QDEC prepare')
+            values = (instance, debounce) if observation_mode is None else (instance, debounce, observation_mode)
+            if read_strategy is not None:
+                if observation_mode != 3:
+                    raise ProtocolError('read strategy diagnostic requires full observation')
+                values += (read_strategy,)
+            expect(device.command(83, values), [0], 'QDEC prepare')
         time.sleep(.004)
         yield
     except BaseException as error:
@@ -48,8 +53,24 @@ def armed(devices, current, append, label, instance, debounce):
         append(label + '/failure', {'status': 'failed', 'error': str(error)})
         raise
     finally:
+        mismatch = False
+        for page in (0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11):
+            try:
+                raw = devices[0].command(85, (page,), timeout=2)
+                append(label + f'/diagnostic-page{page}', {'status': 'observation', 'words': raw})
+                if page == 1:
+                    mismatch = any(raw)
+            except BaseException as diagnostic_error:
+                append(label + f'/diagnostic-page{page}', {'status': 'unavailable', 'error': str(diagnostic_error)})
+        if mismatch:
+            for offset in range(0, 16, 2):
+                try:
+                    raw = devices[0].command(85, (3, offset), timeout=2)
+                    append(label + f'/read-trace{offset}', {'status': 'observation', 'words': raw})
+                except BaseException as diagnostic_error:
+                    append(label + f'/read-trace{offset}', {'status': 'unavailable', 'error': str(diagnostic_error)})
         rows = []
-        for device in reversed(devices):
+        for device in devices:
             try:
                 words = device.command(81, timeout=2)
                 good = len(words) == 16 and words[1:3] == [0, 0] and words[11:13] == [0, 0] and words[15] == 0
@@ -93,7 +114,7 @@ def run(devices, current, append):
             counts(observe(devices[0], append, label + '/initial', clear=True), 0, 0)
             wave(devices, current, append, label + '/forward', cycles, interval, 0)
             counts(observe(devices[0], append, label + '/forward', clear=False), 4 * cycles, 0)
-            # @brief QDEC를 멈추거나 누산값을 지우지 않고 파형 방향만 바꿉니다.
+            ## @brief QDEC를 멈추거나 누산값을 지우지 않고 파형 방향만 바꿉니다.
             wave(devices, current, append, label + '/reverse', cycles, interval, 1)
             counts(observe(devices[0], append, label + '/forward-plus-reverse', clear=True), 0, 0)
             counts(observe(devices[0], append, label + '/read-after-clear', clear=True), 0, 0)

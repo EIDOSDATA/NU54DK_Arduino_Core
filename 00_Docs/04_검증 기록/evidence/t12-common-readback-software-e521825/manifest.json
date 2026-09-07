@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-09-07T16:37:50.955036+00:00",
+  "source": "e5218255b3796d660a62da7c2dc518b6c1371b66",
+  "scope": "Host/affected pair build/style/contract/package/inventory/docs only",
+  "hardware_pass_claim": false,
+  "whole_t12_complete": false,
+  "t13_physical_executed": false,
+  "checks": [
+    {
+      "name": "common-qdec-readback-final-host",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "host"
+      ],
+      "started_at": "2026-09-07T16:32:06.524262+00:00",
+      "finished_at": "2026-09-07T16:37:11.270344+00:00",
+      "exit_code": 0,
+      "log_sha256": "c878b298ac667626f9d54ff404566d28ebc28173576a8f432768835bb1b73eaf",
+      "groups": 91,
+      "total": 720,
+      "passed": 719,
+      "conditional_skipped": 1
+    },
+    {
+      "name": "common-qdec-readback-exact-target",
+      "command": [
+        "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_zephyr_build.py",
+        "--workspace",
+        "C:\\ncs\\v3.4.0",
+        "--outdir",
+        "C:\\caz04",
+        "--group",
+        "v0.4.0",
+        "--suite",
+        "nucode.v04.pair_dut",
+        "--suite",
+        "nucode.v04.pair_peer",
+        "--jobs",
+        "2"
+      ],
+      "started_at": "2026-09-07T16:31:21.187896+00:00",
+      "finished_at": "2026-09-07T16:33:28.794650+00:00",
+      "exit_code": 0,
+      "log_sha256": "d6b00ab310a4ca30000d837fe67daea8c1b75477acd7d7896ffa453b7133dc5b"
+    },
+    {
+      "name": "common-readback-style",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "tools/format/run_cpp_style.py",
+        "--clang-format",
+        "C:\\Program Files\\LLVM\\bin\\clang-format.exe"
+      ],
+      "started_at": "2026-09-07T16:32:56.242879+00:00",
+      "finished_at": "2026-09-07T16:33:36.962921+00:00",
+      "exit_code": 0,
+      "log_sha256": "50e135445cc75347d4ef15a813ecee74122b3164eac45dd3c961563561bdd004"
+    },
+    {
+      "name": "common-readback-software-contract",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "contract"
+      ],
+      "started_at": "2026-09-07T16:32:43.542672+00:00",
+      "finished_at": "2026-09-07T16:32:46.755026+00:00",
+      "exit_code": 0,
+      "log_sha256": "5156776183acd9620c3d8c66b1ec175afda5dc4a2de945650708d748b9081fce"
+    },
+    {
+      "name": "common-readback-software-package",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "package"
+      ],
+      "started_at": "2026-09-07T16:32:46.757031+00:00",
+      "finished_at": "2026-09-07T16:36:10.695268+00:00",
+      "exit_code": 0,
+      "log_sha256": "378258b86a4abd31d64b8f1caeb8c172c1e3d44414e8ca1c57368c74bc2ae9a3"
+    },
+    {
+      "name": "common-readback-software-inventory",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "inventory"
+      ],
+      "started_at": "2026-09-07T16:36:10.696564+00:00",
+      "finished_at": "2026-09-07T16:36:12.533899+00:00",
+      "exit_code": 0,
+      "log_sha256": "8efc41e1f9734d065dfdb3292806c34b3f3ff16b7b9b69b5d6ae2ac8479703f1"
+    },
+    {
+      "name": "common-readback-software-docs",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "docs"
+      ],
+      "started_at": "2026-09-07T16:36:12.549953+00:00",
+      "finished_at": "2026-09-07T16:36:13.308857+00:00",
+      "exit_code": 0,
+      "log_sha256": "15382fb50a2d89b584a2d43cd8fab0aa58412df71eabe07415fac274952a9cff"
+    }
+  ],
+  "files": [
+    {
+      "path": "common-qdec-readback-final-host.json.gz",
+      "bytes": 471,
+      "raw_sha256": "aae1b88f5d07c79209ff0c10fdae456448df8b536cbf1909357a6232942715d4",
+      "gzip_sha256": "093813e40d6d6210fe8befb2311e8499aff12bd6be22f995f800f804adab9094"
+    },
+    {
+      "path": "common-qdec-readback-final-host.log.gz",
+      "bytes": 179930,
+      "raw_sha256": "c878b298ac667626f9d54ff404566d28ebc28173576a8f432768835bb1b73eaf",
+      "gzip_sha256": "66890927e7733f53ea4c552d87dcae7ed9a96ede535a8dbd38e17467d0ad6b82"
+    },
+    {
+      "path": "common-qdec-readback-exact-target.json.gz",
+      "bytes": 668,
+      "raw_sha256": "fd2bf7cc24405d336b2a59072c26f9b7429b17f807fefac58165d0c8f1b52f9f",
+      "gzip_sha256": "824d975eb0e694d6b77b1aa5d817358f8b07366410ef9dd8fff3ff48d9012073"
+    },
+    {
+      "path": "common-qdec-readback-exact-target.log.gz",
+      "bytes": 2060,
+      "raw_sha256": "d6b00ab310a4ca30000d837fe67daea8c1b75477acd7d7896ffa453b7133dc5b",
+      "gzip_sha256": "658ac53b520620b37fe1df3b4fef2070613ba5bf30bd6bff92ab88f0dcf2aa63"
+    },
+    {
+      "path": "common-readback-style.json.gz",
+      "bytes": 506,
+      "raw_sha256": "3a8e6e10793027034c7be098de5193f8fe58c4dff3f1ae281b4b61446089a213",
+      "gzip_sha256": "7c61b44f36e70485afba3089655d1533c7fa171c0871d3130794aef5143658b6"
+    },
+    {
+      "path": "common-readback-style.log.gz",
+      "bytes": 40,
+      "raw_sha256": "50e135445cc75347d4ef15a813ecee74122b3164eac45dd3c961563561bdd004",
+      "gzip_sha256": "10e03313782b435d9ba426f5bc2c9f7d00142e5c6c17c538bc3cea9c65c78dac"
+    },
+    {
+      "path": "common-readback-software-contract.json.gz",
+      "bytes": 477,
+      "raw_sha256": "a79599d296b6e0130918018e2e8abfa6d2cf8d69b78d6fee66dfc3cd8e31452b",
+      "gzip_sha256": "ec3b0556634996d247cb0fbf897f3b13b031fc73ee73c204c4f8e7d7436b2738"
+    },
+    {
+      "path": "common-readback-software-contract.log.gz",
+      "bytes": 7554,
+      "raw_sha256": "5156776183acd9620c3d8c66b1ec175afda5dc4a2de945650708d748b9081fce",
+      "gzip_sha256": "efd728d31c392e9d2b0ee7e867e56b8bb44225c3f5b5825dcf3bdaafa04b8ff6"
+    },
+    {
+      "path": "common-readback-software-package.json.gz",
+      "bytes": 475,
+      "raw_sha256": "00b119f0d0efdd87efe0857f970252d8222b368f2c217b63b73af81326be1893",
+      "gzip_sha256": "0f54245b7d53cfdd530ac71bf0f3f2f28b7d9dcf8e8f635ff268eb8a595b4e12"
+    },
+    {
+      "path": "common-readback-software-package.log.gz",
+      "bytes": 4209,
+      "raw_sha256": "378258b86a4abd31d64b8f1caeb8c172c1e3d44414e8ca1c57368c74bc2ae9a3",
+      "gzip_sha256": "98c76e00edc0579a4be4607a79139a6c3a6b13a1d7e3a7d918017bfa0a4ce130"
+    },
+    {
+      "path": "common-readback-software-inventory.json.gz",
+      "bytes": 479,
+      "raw_sha256": "b08f2dccfe717e0e35cab26f122f54d1aeb727931d21d7249630f0272751c51f",
+      "gzip_sha256": "3e4382fa959b7095768fd7bd65d7dce68b5219aa437ef9de195db827048b2e30"
+    },
+    {
+      "path": "common-readback-software-inventory.log.gz",
+      "bytes": 1546,
+      "raw_sha256": "8efc41e1f9734d065dfdb3292806c34b3f3ff16b7b9b69b5d6ae2ac8479703f1",
+      "gzip_sha256": "c73c50af0b797e4e53d712027c6c3d2137481c82b8014e1c425e0d378cd735cb"
+    },
+    {
+      "path": "common-readback-software-docs.json.gz",
+      "bytes": 469,
+      "raw_sha256": "36faa2bbb6316075a7d26f3b1b82858f445df54277d8df79f8fb4c0983b8e03d",
+      "gzip_sha256": "9aee374d3441836d964b8e3bfafb4848f4a8e9a081088260272158152cd067f8"
+    },
+    {
+      "path": "common-readback-software-docs.log.gz",
+      "bytes": 69,
+      "raw_sha256": "15382fb50a2d89b584a2d43cd8fab0aa58412df71eabe07415fac274952a9cff",
+      "gzip_sha256": "c0d80868df32c1d4b2cd76fe3d6fd5ede3f30bd0d11d0d0872f1fce116c73cc1"
+    },
+    {
+      "path": "common-completed-source-audit.json.gz",
+      "bytes": 2689,
+      "raw_sha256": "b965168bd05190c04a851ac856030b40f555d3ea78fa55333a8696dfea3e827b",
+      "gzip_sha256": "7448c2a0ec773e45c9e9df359fafc7671abcfb49aa64b93d8cd38e57ac58846f"
+    },
+    {
+      "path": "audit_completed_common.py.gz",
+      "bytes": 3447,
+      "raw_sha256": "c63b829ded18ef26ea7d12a2e01256ccf8a457c3c519e274baae6c326150e264",
+      "gzip_sha256": "bacc638d089cf578ab3c1961a07063642ffd6136622445124950279922ee588f"
+    },
+    {
+      "path": "archive_readback_checks.py.gz",
+      "bytes": 2991,
+      "raw_sha256": "aac422eb8721f08ae115720849ada1a12f1adf21044a48e036301d6aedcd3121",
+      "gzip_sha256": "bd0c50fc86667f699eb69b00e9cda3bbfcd793ef966418f73146c808f8c348dc"
+    }
+  ]
+}

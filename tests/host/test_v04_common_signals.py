@@ -15,6 +15,36 @@ from v04_protocol import ProtocolError
 
 
 class CommonSignalsTests(unittest.TestCase):
+    def test_qdec_first_mismatch_trace_is_preserved_before_cleanup(self):
+        """! @brief 최초 누락의 원본·16개 read ring을 남긴 뒤 양쪽을 정지합니다. """
+        calls, records = [], []
+        class Device:
+            def __init__(self, role):
+                self.image = {'role': role}
+
+            def command(self, opcode, values=(), **options):
+                calls.append((self.image['role'], opcode, values))
+                if opcode == 80:
+                    return [520, 10000]
+                if opcode == 83:
+                    return [0]
+                if opcode == 85:
+                    if values == (2,):
+                        return [400, 0, 16000, 300, 0, 0, 829, 13] * 2
+                    return [326] + [0] * 19
+                if opcode == 81:
+                    return [0] * 16
+                raise AssertionError(opcode)
+        with self.assertRaisesRegex(ProtocolError, '399'):
+            with qdec.armed([Device(1), Device(2)], lambda _: None,
+                            lambda key, row: records.append((key, row)), 'fault', 20, 0):
+                raise ProtocolError('399 instead of400')
+        self.assertEqual([values for role, opcode, values in calls if opcode == 85],
+                         [(0,), (1,), (2,), (4,), (5,), (6,), (7,), (8,), (9,), (10,), (11,)] + [(3, offset) for offset in range(0, 16, 2)])
+        self.assertEqual([(role, opcode) for role, opcode, _ in calls[-2:]], [(1, 81), (2, 81)])
+        self.assertEqual(records[0][1]['status'], 'failed')
+        self.assertEqual(records[-1][1]['status'], 'cleanup')
+
     def test_qdec_heartbeat_does_not_extend_expired_common_session(self):
         calls, checks, records = [], [], []
         class Device:
@@ -41,8 +71,47 @@ class CommonSignalsTests(unittest.TestCase):
             with qdec.armed(devices, current, lambda key, row: records.append((key, row)), 'expiry', 20, 0):
                 qdec.wave(devices, current, lambda *_: None, 'long-wave', 1000, 10000, 0)
         self.assertEqual(checks, [520, 520, 520])
-        self.assertEqual(calls[-2:], [(2, 81), (1, 81)])
+        self.assertEqual(calls[-2:], [(1, 81), (2, 81)])
         self.assertTrue(all(row['stopped'] for row in records[-1][1]['outcomes']))
+
+    def test_qdec_stops_receiver_before_source_and_still_releases_after_stop_failure(self):
+        """! @brief 수신기가 활성인 동안 두 phase가 부유하지 않게 하고 실패 시에도 B를 반환합니다. """
+        for fail_receiver in (False, True):
+            stopped, records = [], []
+            class Device:
+                def __init__(self, role):
+                    self.image = {'role': role}
+
+                def command(self, opcode, values=(), **options):
+                    if opcode == 80:
+                        return [520, 10000]
+                    if opcode == 83:
+                        return [0]
+                    if opcode == 81:
+                        stopped.append(self.image['role'])
+                        if self.image['role'] == 1 and fail_receiver:
+                            raise ProtocolError('injected receiver stop failure')
+                        return [0] * 16
+                    raise AssertionError(opcode)
+
+            def execute():
+                with qdec.armed([Device(1), Device(2)], lambda _: None,
+                                lambda key, row: records.append(row), 'cleanup', 20, 0):
+                    pass
+            if fail_receiver:
+                with self.assertRaisesRegex(ProtocolError, 'cleanup unproven'):
+                    execute()
+            else:
+                execute()
+            self.assertEqual(stopped, [1, 2])
+            self.assertTrue(records[-1]['outcomes'][1]['stopped'])
+
+        archive = ROOT / '00_Docs/04_검증 기록/evidence/t12-common-additional-0db0689-first/result.json.gz'
+        original = json.loads(gzip.decompress(archive.read_bytes()))
+        raw = next(row['words'] for row in original['results'] if row['id'] ==
+                   'V04-COMMON-QDEC/20/debounce0/2000us/100cycles/repeat9/initial/raw-role1')
+        with self.assertRaises(ProtocolError):
+            qdec.counts(raw, 0, 0)
 
     def test_finite_pwm_raw_sequence_rejects_missing_reordered_and_wrong_duty(self):
         self.assertEqual(len(list(modes.vectors())), 288)
