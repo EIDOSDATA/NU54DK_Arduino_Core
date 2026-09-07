@@ -318,9 +318,9 @@ $ArduinoCli = (Get-Command arduino-cli.exe -ErrorAction Stop).Source
 ```
 
 각 명령은 `M12_GATE_PASS=<gate>`로 끝나야 한다. `host` 결과에 compiler 부재로 인한 skip이
-있으면 전체 host 환경이 준비된 것으로 보지 않는다. Windows Application Control이 임시 native
-실행 파일만 차단한 경우에는 시험 출력의 명시적 skip 사유와 target Zephyr 시험 결과를 함께
-판정한다.
+있으면 전체 host 환경이 준비된 것으로 보지 않는다. Windows Application Control이 native
+실행 파일을 차단하면 실패 원본과 도구 경로를 보존한다. Target build나 조건부 skip으로 이를
+Host PASS로 대체하지 않으며, 실행 가능한 도구 환경에서 실제 검사를 다시 통과해야 한다.
 
 ### 9.1 Host 컴파일러의 명시적 선택
 
@@ -352,6 +352,27 @@ Clang의 GNU target·sysroot·LLD 구성은 [공식 toolchain 문서](https://cl
 참고한다. 이 선택은 실행 가능한 별도 컴파일러를 사용하는 절차다. Windows가 차단한 실행 파일의
 복사·이름 변경·보안 정책 변경을 수행하지 않는다. 새 도구에서도 모든 필수 native 시험의 실제
 compile/link/run을 확인하며 과거 GCC 성공을 새 Clang 결과로 집계하지 않는다.
+
+### Host CMake·Ninja 실행 경로
+
+2026-09-07 exact e6979af에서 WinLibs Ninja 실행이 Windows CodeIntegrity 3077/3033으로
+차단됐다. LLVM 22.1.8 compiler·WinLibs UCRT sysroot는 그대로 유지하고, 이미 설치된 고정
+NCS bundle의 CMake·Ninja를 선택해 canonical Host 83그룹 **664 PASS·1 조건부 SKIP**를
+확인했다. [93번 실행 기록](<../04_검증 기록/93_Host_재검증과_T12_이후_남은_작업.md>)에 두 환경과 원본 실패를 구분했다.
+
+위 9.1의 compiler 설정 뒤, host venv Python을 명시한 별도 시험 session에서 다음처럼 선택한다.
+전역 PATH·정책·SDK 파일은 바꾸지 않는다. 재현 wrapper는 93번 증거의 `software_sdktools.py`다.
+
+```powershell
+$HostPython = 'C:/NU54DEV/venv/host-3.12.10/Scripts/python.exe'
+$HostBuildTools = 'C:/ncs/toolchains/dcbdc366a1/opt/bin'
+$env:Path = (Split-Path $HostPython) + ';' + $HostLlvmBin + ';' + $HostBuildTools + ';' + (Join-Path $HostMingwRoot 'bin') + ';' + $env:Path
+Get-Command cmake.exe, ninja.exe | Select-Object Source
+& $HostPython -B .\tools\ci\run_m12_gate.py host
+```
+
+이 결과는 WinLibs Ninja의 차단 해제나 보안 정책 정상화를 뜻하지 않는다. 다른 도구에서 다시
+실행한 전체 검사 결과다. 보안 차단을 compiler 부재 SKIP 또는 target build PASS로 대체하지 않는다.
 
 ### 9.2 고정 SDK와 Arduino 검사
 

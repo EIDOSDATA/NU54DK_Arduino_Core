@@ -1,0 +1,6 @@
+test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 9.802s
+
+OK

@@ -1,0 +1,229 @@
+{
+  "source": "e6979af6545e2cc9525f54695eee965fc25d683e",
+  "status": "canonical Host 83 groups passed with SDK CMake/Ninja; first WinLibs Ninja failure preserved",
+  "raw_gzip_roundtrip": "passed",
+  "hardware_access": false,
+  "artifact_note": "Execution assertions rely on result records; host mock upload strings and preparation errors are not physical tests",
+  "files": [
+    {
+      "name": "audit_host.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\audit_host.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2818,
+      "original_sha256": "5fe65e710d5d8f2db4e5e81629b6bf44e0411c75d1ecc959a9537be8b59aee6c",
+      "normalized_bytes": 2818,
+      "normalized_sha256": "5fe65e710d5d8f2db4e5e81629b6bf44e0411c75d1ecc959a9537be8b59aee6c",
+      "original_archive": "audit_host.py.raw.gz"
+    },
+    {
+      "name": "checkpoint.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\checkpoint.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 373,
+      "original_sha256": "9f425853166a315b5e601a39f95055ccc87e8304dde229612f782cba91dcb8b8",
+      "normalized_bytes": 365,
+      "normalized_sha256": "d606c69b0a556e6d7d090b1ce638ef25f876e3452398b1b422ed60632c7e4439",
+      "original_archive": "checkpoint.json.raw.gz"
+    },
+    {
+      "name": "cmake-sdktools-invocation.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\cmake-sdktools-invocation.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 318,
+      "original_sha256": "0fe41f0ce9e2db40255ad8a6fc24d337a9b9987000b869924491455832a9f57d",
+      "normalized_bytes": 314,
+      "normalized_sha256": "a89fdfe72fc4b6ee187736b67a496f9cc533f74d1e863e10255e9630b776addc",
+      "original_archive": "cmake-sdktools-invocation.log.raw.gz"
+    },
+    {
+      "name": "cmake-sdktools-retry-invocation.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\cmake-sdktools-retry-invocation.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 397,
+      "original_sha256": "3a905175b4e0b118e9c018f5a4ff7f21b5ec51a84c3fc10e90a84b7119ee88f3",
+      "normalized_bytes": 389,
+      "normalized_sha256": "1d204cb21b604bbd3fc4c688a04d020e4f1023e046f83b579852528f37dc8cf8",
+      "original_archive": "cmake-sdktools-retry-invocation.log.raw.gz"
+    },
+    {
+      "name": "cmake-sdktools.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\cmake-sdktools.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1984,
+      "original_sha256": "e3376e6082e39298b9c90340cc5c1f16ec3a9e1d36ed32095749b30ed4b1331c",
+      "normalized_bytes": 1942,
+      "normalized_sha256": "a7bf324bf5168b5b66f6151374b21fc6014223cf58943f581a804697eebff1d3",
+      "original_archive": "cmake-sdktools.json.raw.gz"
+    },
+    {
+      "name": "cmake-sdktools.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\cmake-sdktools.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 263,
+      "original_sha256": "ed6bc75dbc03c67a0c93378543483c27b5b0501466ecc466437001385023387e",
+      "normalized_bytes": 257,
+      "normalized_sha256": "726c0a968a733b165ccfa04f86c01849c5ce7f845932cc63229bd8427ecdab32",
+      "original_archive": "cmake-sdktools.log.raw.gz"
+    },
+    {
+      "name": "code-integrity.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\code-integrity.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1947,
+      "original_sha256": "cc3b616e5bf78a0cffa91e50c5f3db4c6953f7006c352ebeba1fc3e8a156741a",
+      "normalized_bytes": 1920,
+      "normalized_sha256": "534c2f21debbfd4ffe9fa2b8332be172f32df769d67a88fe6fbc4e58dda8b0b3",
+      "original_archive": "code-integrity.json.raw.gz"
+    },
+    {
+      "name": "host-all-audit.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\host-all-audit.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 9925,
+      "original_sha256": "22e52c2a8b53fde50582d6e52b502126e2c67e39fa4387fcee11aa51e6900ab9",
+      "normalized_bytes": 9506,
+      "normalized_sha256": "e5c669d2c898ccf2fed5814cec0e9bab8e224354cb57480b73bb82f4447fb274",
+      "original_archive": "host-all-audit.json.raw.gz"
+    },
+    {
+      "name": "host-all.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\host-all.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1471,
+      "original_sha256": "29c0b23d3a0d6d82833435ce06268fbb9765198b6bc4e242352c3d4b581904d8",
+      "normalized_bytes": 1445,
+      "normalized_sha256": "368798e8250ccd99a0d291a7368d86cae3328af194032ace8c2f7ee5cead9751",
+      "original_archive": "host-all.json.raw.gz"
+    },
+    {
+      "name": "host-all.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\host-all.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 149148,
+      "original_sha256": "34356a22d8c185b6f518da84ee06af832be6b8051fd9c2ecce2c5dd3e3ab07cc",
+      "normalized_bytes": 147619,
+      "normalized_sha256": "05ebc9a567c20ce9a352cbd460b8f414c54dbbb100ab42cf2af80c153ed7ff84",
+      "original_archive": "host-all.log.raw.gz"
+    },
+    {
+      "name": "host-invocation.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\host-invocation.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 6798,
+      "original_sha256": "5e8aab8163102ad356bc9b507fa4494afa75a1ee2650c111eddc8450891abdd7",
+      "normalized_bytes": 6654,
+      "normalized_sha256": "eadd7588e935d8a2528de63861d3bddad797875fa45a44395a68e3db77dbd8fd",
+      "original_archive": "host-invocation.log.raw.gz"
+    },
+    {
+      "name": "host-remaining-invocation.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\host-remaining-invocation.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 37,
+      "original_sha256": "f5368a5e05d4199886d2cc864dec369cad14eac80837e928e92b9c3916d1f05b",
+      "normalized_bytes": 36,
+      "normalized_sha256": "b93d5dd8057f0d25b60299a65873b76362c4d3978321003c39f51df7c004e6bd",
+      "original_archive": "host-remaining-invocation.log.raw.gz"
+    },
+    {
+      "name": "host-remaining.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\host-remaining.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 2883,
+      "original_sha256": "0e2f8f5277c015f8b3214bbcc3da7f8b5b9b0200b5f3bb7d37854c96a1b371f3",
+      "normalized_bytes": 2796,
+      "normalized_sha256": "712136e0ea6e6d2b6844b5f7b76ec955aeadc2068ae1293450728881a506c912",
+      "original_archive": "host-remaining.json.raw.gz"
+    },
+    {
+      "name": "host-remaining.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\host-remaining.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 21376,
+      "original_sha256": "7bac460f8a6b3a92d6d579ea8bd35d36a325f3c0fddd98f35d4fb6e40724e231",
+      "normalized_bytes": 21150,
+      "normalized_sha256": "ffc4f7e60092cf5f0fb9b048104481cd4a7e24ae3365b0596f3e2af2b485df3f",
+      "original_archive": "host-remaining.log.raw.gz"
+    },
+    {
+      "name": "host-sdktools-audit.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\host-sdktools-audit.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 12079,
+      "original_sha256": "4d2ffeb2859371d286ffff0d4b583346e594efa7259e991f478003fc53829e31",
+      "normalized_bytes": 11564,
+      "normalized_sha256": "55f727cd2a377a1b20599c24f902a91a47113ecd23032d267166ec3b7aa69233",
+      "original_archive": "host-sdktools-audit.json.raw.gz"
+    },
+    {
+      "name": "host-sdktools-audit.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\host-sdktools-audit.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 584,
+      "original_sha256": "cd364546fbce1b90bccb54a350344fd6d4a3a658b56c396bc5b28821fc9dc169",
+      "normalized_bytes": 582,
+      "normalized_sha256": "2434ec8e63fc5ec1903ebe5108642239317f79fb8c7e65e838e1308bfa22f706",
+      "original_archive": "host-sdktools-audit.log.raw.gz"
+    },
+    {
+      "name": "host-sdktools-invocation.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\host-sdktools-invocation.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 6958,
+      "original_sha256": "0073699beffba35e1122577abef8efc80d360463b5f784a368542e54318b219b",
+      "normalized_bytes": 6882,
+      "normalized_sha256": "2303a5ecc13132d5b4d323a7715040c7cd15c104bdbc3ac40c01150760bd6f9e",
+      "original_archive": "host-sdktools-invocation.log.raw.gz"
+    },
+    {
+      "name": "host-sdktools.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\host-sdktools.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1899,
+      "original_sha256": "945f04bb357673348335a2926b1bb91f3f9dcd348222f63794945337a6132982",
+      "normalized_bytes": 1863,
+      "normalized_sha256": "534b7cf8d566cb36eaa8143f50a2884f0d1cc239f44d4057d44b0555ba8dbbb8",
+      "original_archive": "host-sdktools.json.raw.gz"
+    },
+    {
+      "name": "host-sdktools.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\host-sdktools.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 165302,
+      "original_sha256": "3684e08a3c1e33056768e9652f8d3f98f8e6714a906aadc9789e5d36699ea20f",
+      "normalized_bytes": 163671,
+      "normalized_sha256": "a27f677964b678bbd738526540813f1d0dc2190b62f3d9dc4ed3afa23643218d",
+      "original_archive": "host-sdktools.log.raw.gz"
+    },
+    {
+      "name": "host_remaining.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\host_remaining.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2771,
+      "original_sha256": "2c56b8c41f40424142907460aeeb174a0364d1d0da54063279ad849d4f4f2949",
+      "normalized_bytes": 2771,
+      "normalized_sha256": "2c56b8c41f40424142907460aeeb174a0364d1d0da54063279ad849d4f4f2949",
+      "original_archive": "host_remaining.py.raw.gz"
+    },
+    {
+      "name": "software.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\software.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2765,
+      "original_sha256": "47f860d0d3b027160240c8cde285345389328c35cd04449eee95501beba53d56",
+      "normalized_bytes": 2765,
+      "normalized_sha256": "47f860d0d3b027160240c8cde285345389328c35cd04449eee95501beba53d56",
+      "original_archive": "software.py.raw.gz"
+    },
+    {
+      "name": "software_sdktools.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\software_sdktools.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 3051,
+      "original_sha256": "3a76225187eb1027e27379e613eb304c8de1f26f969ae9ea9d5e6d75a1c35409",
+      "normalized_bytes": 3051,
+      "normalized_sha256": "3a76225187eb1027e27379e613eb304c8de1f26f969ae9ea9d5e6d75a1c35409",
+      "original_archive": "software_sdktools.py.raw.gz"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{"log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\cmake-sdktools.log", "returncode": 0}
+test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 9.802s
+
+OK
+
