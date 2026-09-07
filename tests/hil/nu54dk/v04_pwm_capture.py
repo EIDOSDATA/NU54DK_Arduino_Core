@@ -80,13 +80,15 @@ def received(vector, status, edges):
             "tolerance_percent": 5, "measured_edges": EDGE_COUNT}
 
 
-def run_case(devices, vector, append):
+def run_case(devices, vector, append, *, fixture_id=408):
     """! @brief B 출력→A capture→원본 보존→B 우선 STOP을 한 case로 묶습니다. """
     receiver, generator = devices
-    label = "V04-PWM-CAPTURE/408/" + "/".join(map(str, vector))
+    if fixture_id not in (408, 508):
+        raise ProtocolError('unsupported PWM wiring contract')
+    label = f"V04-PWM-CAPTURE/{fixture_id}/" + "/".join(map(str, vector))
     try:
         for device in devices:
-            if device.command(40, (408, 1, fixture.CONSENT, 2)) != [408, 10000]:
+            if device.command(40, (fixture_id, 1, fixture.CONSENT, 2)) != [fixture_id, 10000]:
                 raise ProtocolError("PWM fixture arm failed")
             if device.command(41, vector) != [0]:
                 raise ProtocolError("PWM fixture prepare failed")
@@ -147,3 +149,27 @@ def run_confirmed(devices, images, uids, confirmation, fixture_id, append, repet
             fixture.validate_confirmation(confirmation, images, uids, 408)
             run_case(devices, vector,
                      lambda case_id, result: append(f"{case_id}/repeat-{repetition + 1}", result))
+
+
+def compact_vectors():
+    """! @brief 승인된 축별 675조건이며 전체 Cartesian/완전 pairwise와 구별합니다. """
+    for instance in (20, 21, 22):
+        for load in range(4):
+            for slot in range(3 if load == 3 else 4):
+                for duty, polarity in itertools.product((0, 25, 50, 75, 100), (0, 1)):
+                    yield instance, slot, 1000, duty, polarity, load, 4
+                yield instance, slot, 4000, 50, 0, load, 4
+                for count in (32, 256):
+                    yield instance, slot, 1000, 50, 0, load, count
+                for polarity in (0, 1):
+                    yield instance, slot, 4000, 25, polarity, load, 256
+
+
+def run_common(devices, current, append):
+    """! @brief 현재 공통 세션의 508에서 동일 100주기·5% oracle과 cleanup을 사용합니다. """
+    for vector in compact_vectors():
+        current(508)
+        def record(case_id, result):
+            """! @brief 기존 raw/cleanup은 보존하고 실제 기능 성공만 passed로 표시합니다. """
+            append(case_id, result if 'status' in result else {'status': 'passed', **result})
+        run_case(devices, vector, record, fixture_id=508)

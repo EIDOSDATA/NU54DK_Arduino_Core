@@ -1,5 +1,11 @@
 # NU54DK v0.4.0 공통 결선과 연결 검사
 
+현재 후속 실행은 [100번](../../../00_Docs/04_검증%20기록/100_T12_공통_기능_묶음과_T13_조합_확정.md)의
+exact 4e48252 GPIO/GPIOTE campaign이다. GPIO 342·task 720을 통과하고 edge 반복을 진행 중이다.
+아래 d8d1e13은 이전 결선 검사 결과다. 후속 PWM 675+288·QDEC 240·I2S 432조건은 구현·Host·target
+준비를 완료했으며 clean image 실기는 별도다. [T13 계획](T13_PLAN.md)은 현재 C→S→U의 추가 GPIO
+결선 두 단계를 명시한다. 지금은 C 결선을 유지하고 T13을 실행하지 않는다.
+
 현재 재검사: exact d8d1e13에서 P1.10을 포함한 17개 신호가 양방향 각 3회, 총 102 net-round PASS다. LOW 자동 해제 2개·양쪽 lease 만료 1개도 PASS이며 종료 후 양쪽 17개 PIN_CNF=0, PWM/DPPI off를 확인했다. 첫 8c1cfe2의 P1.10 실패 원본은 보존하고 원인은 미확정으로 유지한다. 결선 검사 통과이며 GPIO API·T12 전체·T13 이후·RC 완료는 아니다.
 
 2026-09-07. **신호 17개 + 공통 GND 1개, 총 18가닥.** 기존 PWM P1.14 선과 GND는 유지하고 16가닥을 추가한다.
@@ -64,10 +70,10 @@ P1.10/P1.14는 각 보드 LED buffer의 입력에 연결된 net이다. LED drive
 - 연결 검사용 Fixture 501 revision 1을 별도 catalog에 등록했다. 입력 pull-up과 한쪽 단일 open-drain LOW를 사용하며 LOW는 500ms, arm은 10초 제한이다. 기존 408/420/430/440의 의미와 역사 결과는 유지한다.
 - 실행 시 SWD 10 MHz, exact UID, 배타 probe lock, sector flash와 auto_unlock=false, controlled reset/halt/identity/start를 유지한다. 새 firmware는 자동으로 외부 출력을 시작하지 않는다.
 - QDEC는 `connector_fixture` profile로 A P1.14/1.10을 받아야 한다. 현재 `dap_uart_disabled` profile은 P1.04~07만 허용하므로 pin 상수만 바꾸면 실패한다.
-- P1.04~07의 현재 HIL overlay는 input/output/analog만 허용한다. UART 분리가 확인된 전용 HIL에서 open-drain과 필요한 GPIO/IRQ capability·소유권을 검토하고 Host/target으로 검증한다. 제품 기본 정책을 무조건 완화하지 않는다.
-- GPIO/GPIOTE 전용 명령·원본 관측, PWM sequence/trigger, I2S 연속·단방향, QDEC 추가 동작과 긴 명령 처리를 구현해야 한다. GPIO/GPIOTE·stream 전환을 현재 runner가 자동으로 지원하는 상태가 아니다.
-- 현재 확인 유효시간 30분·firmware 10초 lease는 그대로 적용된다. QDEC 최장 1000cycle×4state×10ms=40초와 장시간 campaign에 맞는 bounded heartbeat/취소를 검증해야 한다. 무제한 확인서나 timeout 해제는 사용하지 않는다. 이 준비 전에는 한 번 확인으로 전체 무인 종료를 보장하지 않는다.
-- 675조건은 코드로 계산한 축소 후보이며 아직 canonical runner에 반영되지 않았다. 각 instance/slot/load의 모든 duty×극성, 각 TOP/길이와 최장·최저속 조합을 남긴다. 모든 조합과 동등한 검출력을 주장하지 않는다.
+- P1.04~07의 전용 HIL overlay에는 UART 분리 조건에 한정하여 open-drain/interrupt capability를 추가했다. 제품 기본 metadata는 유지한다. 502의 소유권 반환·raw drive field·peer 관측을 Host/target 및 현재 실기에서 검사한다.
+- `v04_common_run.py`가 GPIO/task/edge, PWM 675·추가 modes, QDEC, I2S section을 제공한다. 각 실행은 새 clean image의 controlled flash와 전체 501 검사 뒤 시작한다. `signals`는 한 image에서 PWM→PWM modes→QDEC→I2S를 순차 검사한다. `all`은 기존 502 GPIO/task/edge만 뜻하며 모든 section 완료를 뜻하지 않는다.
+- 기존 확인서 30분·firmware 10초 lease를 유지한다. 현재 실행은 사용자의 현재 상태·HW 유지 보고에 묶인 별도 고정 공통 세션을 사용한다. QDEC 40초 파형도 heartbeat를 유지하며 2026-09-08 07:00 KST 만료·probe 단절·identity 불일치에서 다음 출력을 차단한다.
+- 675조건을 `v04_pwm_capture.compact_vectors()`와 공통 508 runner에 적용했다. 각 instance/slot/load의 모든 duty×극성, 각 TOP/길이와 최장·최저속 조합을 남긴다. 전체 2700조건과 동등한 검출력을 주장하지 않는다.
 
 ## 범위 경계
 

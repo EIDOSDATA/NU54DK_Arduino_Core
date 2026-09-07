@@ -7,6 +7,8 @@
 #include "pwm_capture_hil.h"
 #include "wiring_hil.h"
 #include "common_gpio_hil.h"
+#include "common_qdec_hil.h"
+#include "common_i2s_hil.h"
 #include <nucode/AnalogFabric.h>
 #include <nucode/EventFabric.h>
 #include <nucode/SerialFabric.h>
@@ -305,6 +307,22 @@ namespace
             }
             return 0;
         }
+        if (opcode >= 88U && opcode <= 95U)
+        {
+            return commonI2sCommand(opcode, args, nargs, out, count);
+        }
+        if (commonI2sClaimed())
+        {
+            return 403U;
+        }
+        if (opcode >= 80U && opcode <= 87U)
+        {
+            return commonQdecCommand(opcode, args, nargs, out, count);
+        }
+        if (commonQdecClaimed())
+        {
+            return 403U;
+        }
         if (opcode >= 64U && opcode <= 73U)
         {
             return commonGpioCommand(opcode, args, nargs, out, count);
@@ -321,7 +339,7 @@ namespace
         {
             return 403U;
         }
-        if (opcode >= 40U && opcode <= 46U)
+        if ((opcode >= 40U && opcode <= 47U) || (opcode >= 54U && opcode <= 59U))
         {
             return pwmCaptureCommand(opcode, args, nargs, out, count);
         }
@@ -392,9 +410,12 @@ int main()
         servicePwmCapture();
         serviceWiring();
         serviceCommonGpio();
+        serviceCommonQdec();
+        serviceCommonI2s();
         if (v04_request[0] != v04::magic)
         {
-            if (signalNeedsPolling() || commonGpioNeedsPolling())
+            if (signalNeedsPolling() || commonGpioNeedsPolling() || commonQdecNeedsPolling() ||
+                commonI2sNeedsPolling() || pwmCaptureNeedsPolling())
             {
                 k_busy_wait(10U);
             }

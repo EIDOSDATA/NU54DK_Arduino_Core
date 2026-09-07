@@ -1,6 +1,6 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
-현재 첫 기능 실행(100번): exact 645df82의 501 결선 105개와 GPIO negative 2묶음 PASS 후 A P1.14 open-drain raw 0x801을 Host가 옛 DRIVE 형식으로 해석해 중단했다. 실제 nRF54L15 S0/D1 판정을 교정하고 Host 7/7로 검사했다. 코어·결선 변경 없음. 실패 원본과 13:03 UTC 양쪽 입력 복귀를 보존했다. 다음 행동은 새 clean commit/pair build 뒤 501→502 전체 재실행이다. 이 시점 background HIL은 없으며 보드는 645df82 입력 대기다.
+현재 기능 실행(100번): exact 4e48252의 clean pair 2/2(C:/cgc04) 뒤 13:07 UTC부터 501→502를 실행 중이다. 13:55 UTC 관측은 결선 105·GPIO negative 2·GPIO 340·GPIOTE task 720·edge 407 PASS, 실패 0이다. edge 목표는 1440이며 전체 완료가 아니다. session 5261이 두 probe를 배타 소유한다. 다음 PWM 675+추가 모드 288·QDEC 240·I2S 432조건은 준비/Host/target 단계이며 새 실기 전 clean source 고정·pair 재빌드가 필요하다. T13 32 단독/8 동시와 C→S→U 후속 결선은 [확정 계획](../tests/hil/nu54dk/T13_PLAN.md)에 있다. T13 실기는 이번 범위 밖이다. 첫 645df82 open-drain Host 오판 원본은 100번에 보존한다.
 
 현재 실행 범위(2026-09-07 후속): 사용자가 **T12 현재 공통 결선 묶음 검증과 T13 시험 조합·추가 결선 확정까지** 지시했다. 17개 공통 GPIO/GPIOTE, PWM 나머지 모드, QDEC 추가 조건, I2S 연속·단방향을 구현·Host·target·실기로 구분해 진행한다. T13은 조합·자원 충돌·추가 GPIO 결선표를 확정하는 단계이며 soak 실행은 이번 범위에 포함하지 않는다. 새 증거와 문서를 갱신하고 commit/push·CI를 확인한다. T12 전체·T13 실기·후속 gate·RC·공개는 미완료로 유지한다.
 
@@ -25,12 +25,12 @@ T12 다음 준비 범위(2026-09-07): 97번의 첫 capture를 common/grouped/ind
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.37 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.38 |
 | 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 외부/내부 부분 PASS·전체 미완료 |
 | 작성·갱신일 | 2026-09-07 |
-| 작성 직전 기준 commit | `8387d1a7b951bb73ebfb291f6e2251afc3fa53be` — 공통 결선 재검사 증거. 이번 변경은 T13 일반 동시 900초 정책과 생성 문서이며 새 실기 없음 |
+| 작성 직전 기준 commit | `4e4825279a9bd665221c40490c4d9c8781cd27ae` — GPIO/GPIOTE exact 실기 실행 중. 후속 신호 firmware/Host/T13 계획은 그 이후 작업 트리 |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **T12 PWM 나머지 load·buffer·sequence·시작/step·idle inversion 준비. 이후 GPIO/GPIOTE·I2S·QDEC 확장** |
+| 다음 착수 항목 | **502 완료 대기 중 신호 준비 검사·clean commit/build. 이어 508 PWM→520 QDEC→530 I2S 실기, 증거·문서·push/CI** |
 | 이번 요청의 실행 범위 | 새 PC 인수·환경·main/submodule 확인, 첫 PWM peer capture 구현/Host/target과 240조건 실기·증거·commit/push. 후속 PWM 모드·GPIO/GPIOTE·I2S·QDEC를 이어간다. T12 전체·후속 gate 완료 처리 없음 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
@@ -81,9 +81,9 @@ GPIO/GPIOTE 전체·I2S 연속/단방향·QDEC 추가 조건 및 PWM의 나머�
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | 501 d8d1e13의 102+3 PASS는 99번 보존. 100번 현재 공통 기능 범위·새 장치 식별, 502 GPIO/GPIOTE 구현과 Host/pair 준비 진행. 새 기능 실기는 아직 미실행 |
+| 이번에 끝낸 일 | exact 4e48252 결선 105·GPIO 342·task 720 PASS. edge 실행 중. 후속 신호 준비 pair 2/2, Host 12개와 T13 계획 Host 2개 PASS. T13 실제 실행 0 |
 | 진행 중인 T 항목 | [100번](<04_검증 기록/100_T12_공통_기능_묶음과_T13_조합_확정.md>) T12 공통 묶음과 T13 조합·추가 결선 확정. T13 soak는 이번 범위 밖 |
-| 다음 구체적 행동 | 공통 결선의 GPIO/GPIOTE 기능 명령·관측, PWM 675조건 후보 및 나머지 sequence/trigger, QDEC pin/profile·추가 조건, I2S 연속/단방향을 구현·Host/target 검사한다. 각 출력 실행 전 해당 fixture의 현재 조건을 대조한다 |
+| 다음 구체적 행동 | 5261 campaign 완료와 입력/소유권 복귀 후 새 clean image의 controlled flash·501·508/520/530. 실패·cleanup·source 각각 보존. 현재 campaign과 다른 probe 도구를 동시에 열지 않음 |
 | 다음 작업에 필요한 사용자 행동 | 현재 17신호+GND·DAP UART 분리·SWD 연결 유지와 HW 미조작 확인을 받음. 이번 고정 세션은 2026-09-08 07:00 KST 만료. 새 추가 결선은 T13 계획에서 확정하며 이번에는 변경하지 않음 |
 | 외부 결선 상태 | 11:13 새 열거 A COM12/13·B COM14/15, exact UID 고정. 사용자 P1.10 재검사 지시로 11:18~11:19 UTC 501 수행. 11:20 postflight 양쪽 d8d1e13 identity·17 PIN_CNF=0·PWM/DPPI off. 재연결 뒤 COM/확인을 재사용하지 않음 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
@@ -91,12 +91,12 @@ GPIO/GPIOTE 전체·I2S 연속/단방향·QDEC 추가 조건 및 PWM의 나머�
 | 마지막 정식 외부 HIL source | `0d7f3822fe0f1b564ef629613a048b433e8fdeee` — 첫 PWM capture 240/240·cleanup 240/240. 기존 PDM 연속 f02734d·기본 917dc02의 별도 PASS는 보존 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. 420 정의된 기능·준비 취소와 430 I2S 기능 완료. T12 전체·T13 이후·R14·RC·공개는 대기. 공용 자원 경로 변경 이후 필요한 최종-source 통신 회귀는 후속 통합에서 확인 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | 502 공통 기능 Host 전체와 문서 gate 진행. 임시 원본은 새 PC projectless work/common-gpio-*; C:/cga04 pair 준비 build 2/2. source 고정 이후 clean pair 재빌드·501·502 실기 예정. 현재 HIL/soak 없음 |
+| 이 TODO 작성 작업의 실행 중 시험 | `.venv/Scripts/python.exe -X utf8 -B work/run_ncs.py launch_common_gpio_recheck.py execute`, session 5261, 4e48252/C:/cgc04. 원본 `C:/Users/eidos/Documents/Codex/2026-09-07/00-docs-05-v0-3-0/work/common-gpio-hardware-4e48252/result.json.jsonl`. 완료 전 결과 합산/재시작 금지. 전체 Host/docs/contract/package/inventory는 session 40997, prefix common-signal-precommit |
 | 로컬 임시 build·evidence | C:/pcv04 baseline·C:/pwm04 최초 build 실패·C:/pwc04 준비·C:/pwh04 054d08f·C:/pwq04 0d7f382 보존. 97번에 두 flash 실패·성공·raw/SHA 보존. 삭제 실행 없음 |
 | 최종 정렬 gate | clang-format 22.1.8, C/C++/ino 379개 PASS. 한국어 Doxygen·Allman·4칸·중괄호 필수 |
-| CI 확인 | 8387d1a Software SUCCESS(34116575923), Reproducible 진행 중(34116575450), 2026-09-07 11:47 UTC 관측. 이번 900초 정책 후속 push CI는 별도 확인; 이전 source 결과와 구별 |
+| CI 확인 | origin/main 27e0f25 Software SUCCESS(34118608639), Reproducible SUCCESS(34118608640), 2026-09-07 12:46 UTC 관측. 645df82/4e48252 및 후속 변경은 아직 push 전 |
 | 문서 작업 검증 | 시험 JSON·생성 목록·HIL/common 안내·인계·99번을 180/900/3600초 기준으로 갱신. 이전 시간 정책과 physical 원본·readiness HOLD 유지 |
-| 최종 HIL 입력 찾기 | C:/wit04 exact d8d1e13 pair image와 99번 evidence/t12-common-wiring-d8d1e13. 첫 8c1cfe2 실패/C:/wir04도 보존. 새 실행은 clean source/HEX와 새 보드 식별·현재 결선 확인 필요 |
+| 최종 HIL 입력 찾기 | 현재 GPIO/GPIOTE C:/cgc04 exact 4e48252. 후속 준비 C:/cao04는 dirty build이며 flash 금지. 첫 C:/cgb04 exact 645df82 실패는 100번에 보존 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드

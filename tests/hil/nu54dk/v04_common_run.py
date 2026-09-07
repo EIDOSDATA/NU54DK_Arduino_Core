@@ -9,6 +9,10 @@ from pathlib import Path
 import sys
 
 import v04_common_gpio as gpio
+import v04_common_qdec as qdec
+import v04_common_i2s as i2s
+import v04_common_pwm_modes as pwm_modes
+import v04_pwm_capture as pwm
 import v04_common_session as common
 import v04_pair as pair
 import v04_wiring as wiring
@@ -25,7 +29,7 @@ def arguments(argv=None):
     parser.add_argument('--pyocd', required=True, type=Path)
     parser.add_argument('--session-grant', required=True, type=Path)
     parser.add_argument('--evidence', type=Path)
-    parser.add_argument('--section', choices=('all', 'gpio', 'task', 'edge'), default='all')
+    parser.add_argument('--section', choices=('all', 'gpio', 'task', 'edge', 'qdec', 'pwm', 'pwm-modes', 'i2s', 'signals'), default='all')
     parser.add_argument('--execute-fixture', action='store_true')
     parser.add_argument('--cmsis-dap-limit-packets', action='store_true')
     parser.add_argument('--swd-frequency-hz', type=int, default=10000000)
@@ -87,7 +91,22 @@ def main(argv=None):
                         print(f'COMMON_PHYSICAL_PASSED={completed};SECTION={args.section}', flush=True)
             evidence['external_wiring_executed'] = True
             wiring.run_checks(devices, append, lambda: continuity.check(501))
-            gpio.run(devices, continuity.check, append, section=args.section)
+            if args.section == 'signals':
+                for name, execute in (('pwm', pwm.run_common), ('pwm-modes', pwm_modes.run),
+                                      ('qdec', qdec.run), ('i2s', i2s.run)):
+                    print(f'COMMON_SECTION_START={name}', flush=True)
+                    execute(devices, continuity.check, append)
+                    print(f'COMMON_SECTION_PASS={name}', flush=True)
+            elif args.section == 'qdec':
+                qdec.run(devices, continuity.check, append)
+            elif args.section == 'pwm':
+                pwm.run_common(devices, continuity.check, append)
+            elif args.section == 'i2s':
+                i2s.run(devices, continuity.check, append)
+            elif args.section == 'pwm-modes':
+                pwm_modes.run(devices, continuity.check, append)
+            else:
+                gpio.run(devices, continuity.check, append, section=args.section)
             continuity.check(502)
     print('V04_COMMON_CAMPAIGN_PASS', flush=True)
     return 0
