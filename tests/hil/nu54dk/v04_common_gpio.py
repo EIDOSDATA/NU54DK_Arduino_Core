@@ -17,6 +17,11 @@ def expect(actual, wanted, label):
         raise ProtocolError(f'{label}: actual={actual}; expected={wanted}')
 
 
+def open_drain_configuration(word):
+    """! @brief nRF54L15의 분리된 DRIVE0[9:8]=S0, DRIVE1[11:10]=D1을 판정합니다. """
+    expect(word & 0xF00, 0x800, 'nRF54L15 S0/D1 physical drive fields')
+
+
 def observe(device, append, label):
     """! @brief 실패 판정 전에 장치 원본을 보존합니다. """
     words = device.command(68, timeout=2)
@@ -88,7 +93,7 @@ def gpio_case(devices, controller, net, repetition, current, append):
         for value in (0, 1, 0):
             expect(dut.command(67, (value,)), [0], 'open-drain write')
             words = level(dut, append, label + f'/open-drain{value}', net, value, True)
-            expect((words[4] >> 8) & 7, 6, 'S0D1 physical drive mode')
+            open_drain_configuration(words[4])
             level(peer, append, label + f'/open-drain{value}', net, value)
         append(label, {'status': 'passed', 'scope': 'public-gpio-api-peer-levels-pulls-open-drain'})
 

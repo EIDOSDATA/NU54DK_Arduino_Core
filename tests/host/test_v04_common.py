@@ -16,6 +16,14 @@ from v04_protocol import ProtocolError
 
 
 class CommonTests(unittest.TestCase):
+    def test_nrf54_split_drive_fields_and_first_raw_failure(self):
+        """! @brief 실제 첫 raw 0x801과 S0S1/H0D1/옛 3bit 해석을 구별합니다. """
+        gpio.open_drain_configuration(0x801)
+        gpio.open_drain_configuration(0x80D)
+        for invalid in (0x001, 0x101, 0x901, 0x601, 0xC01):
+            with self.assertRaises(ProtocolError):
+                gpio.open_drain_configuration(invalid)
+
     def inputs(self):
         catalog = json.loads(common.CATALOG.read_text(encoding='utf-8'))
         images = [{'role': role, 'board_revision': catalog['board_revision'], 'core_revision': 'c' * 40,

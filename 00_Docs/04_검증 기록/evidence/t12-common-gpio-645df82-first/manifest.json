@@ -1,0 +1,42 @@
+{
+  "source": "645df82c2a9db3e8cc2e5556c75e71a54f78608a",
+  "physical_status": "failed",
+  "wiring_passed": 105,
+  "negative_groups_passed": 2,
+  "gpio_completed_cases": 0,
+  "first_failure": "ProtocolError: S0D1 physical drive mode: actual=0; expected=6",
+  "diagnosis": "Host decoded nRF52 three-bit DRIVE; actual nRF54L15 raw PIN_CNF 0x801 is DRIVE0 S0/DRIVE1 D1. No core code or wiring change.",
+  "cleanup": "Both 17-pin arrays input/no-pull, identity and PWM/DPPI off verified by independent SWD read.",
+  "files": [
+    {
+      "path": "images.json.gz",
+      "raw_sha256": "bc2573e4340b478068151f70700e63240f5da278f2e1609df51a3479085ff84e",
+      "gzip_sha256": "cfefb470c7274eea31d50580c99a5e917e989aa148367fb8364eb743c8a68a44"
+    },
+    {
+      "path": "result.json.gz",
+      "raw_sha256": "f4c6269690a62838a678f775e2438815c5f7721171da9ee1986736bf10e96caa",
+      "gzip_sha256": "2d8b268cec0c1016d21751ded511a1169810994b736a93de9861353e25377f04"
+    },
+    {
+      "path": "result.json.jsonl.gz",
+      "raw_sha256": "f91eaa0ef2860317eedfcfc86450e6d7f747df836599fb9158af4a00c03b7e89",
+      "gzip_sha256": "ce5ac58ad49a12b76f34058e5820b57d7819ab69af39a685cc0dd11da160afe2"
+    },
+    {
+      "path": "common-gpio-645df82-postflight.json.gz",
+      "raw_sha256": "a1668238e24e0c3b3da9a3b4afe65a33f84127f98d9cd4304972cadb752d55bc",
+      "gzip_sha256": "3a73e635208e6f0e472e15984b0af428c2f9b8d8818a392ebe8cc43d3aabe73f"
+    },
+    {
+      "path": "common-gpio-exact-target.log.gz",
+      "raw_sha256": "d971e5229780926e21bffc513a0b396a5417951800ba502041f9937fdac27da7",
+      "gzip_sha256": "1f57b137a57d399eaf010a39eb0d19438ea4de22dc7c5d6c88b28e481debee8e"
+    },
+    {
+      "path": "common-gpio-exact-target.json.gz",
+      "raw_sha256": "5d5e9bb38d2a29d1531a11343d44b5f5219d86c4adb7e6aa1cf2241b1852ee67",
+      "gzip_sha256": "afd24d3ecb26595f488d777cf4a27b60e484360be578792d6b989106cb090ce4"
+    }
+  ]
+}
