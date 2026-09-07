@@ -1,0 +1,127 @@
+{
+  "failed_ci_source": "815f0a5aa7d18ada8f6a00043eaf62353f00cb09",
+  "verified_source": "65f5ae20e5fa91ef260097b2439efa97963ba089",
+  "status": "BLE linker-order correction validated locally with GNU and LLVM; remote result belongs to pushed SHA",
+  "files": [
+    {
+      "name": "ci-815f0a5-host.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-815f0a5-host.log",
+      "original_archive": "ci-815f0a5-host.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "00ec9a2b1adc409f5e6ff39e0d57d39fb3712ee7e047f2aa22c8592ec26740bd",
+      "original_bytes": 221488,
+      "normalized_sha256": "c9ad791b6cd82cec432da720f6e9ff7d71a4a09ae222f270480ce5a38d64c29c",
+      "normalized_bytes": 221484
+    },
+    {
+      "name": "ci-815f0a5-software-jobs.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-815f0a5-software-jobs.json",
+      "original_archive": "ci-815f0a5-software-jobs.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "0bc5b6c9d2300278f84384f4180a8391ab12098b35e776faa01f8690865f8627",
+      "original_bytes": 9736,
+      "normalized_sha256": "0bc5b6c9d2300278f84384f4180a8391ab12098b35e776faa01f8690865f8627",
+      "normalized_bytes": 9736
+    },
+    {
+      "name": "r12-gcc-before.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\r12-gcc-before.log",
+      "original_archive": "r12-gcc-before.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "4eb771dd16703fa90c0c45b6d085f3025949a44cce0fb83937da0de10c1cdcd2",
+      "original_bytes": 202,
+      "normalized_sha256": "c897eb11c47e2dc4177dce94fa7bd3997d7e45b7f5aaaa2acfc9693043bcb911",
+      "normalized_bytes": 196
+    },
+    {
+      "name": "r12-link-order-gcc.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\r12-link-order-gcc.log",
+      "original_archive": "r12-link-order-gcc.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "d5640c73eaa149d5b157cb12d4f87a5f7191656144308d8595853a48b8b22a44",
+      "original_bytes": 728,
+      "normalized_sha256": "396e4c070a602e666740b17f37a35fb012949bdf5a29201bd5d02248ce8ffc0b",
+      "normalized_bytes": 717
+    },
+    {
+      "name": "r12-link-order-gcc.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\r12-link-order-gcc.json",
+      "original_archive": "r12-link-order-gcc.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "fe84adb703f4941f04844d0e3d244a008305c6295f354747cd33a9c599dc14ea",
+      "original_bytes": 792,
+      "normalized_sha256": "785e7341d4631b3451325126bcfabbaf9e6f13fc69da300e9498de5288bb5478",
+      "normalized_bytes": 769
+    },
+    {
+      "name": "r12-link-order-llvm.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\r12-link-order-llvm.log",
+      "original_archive": "r12-link-order-llvm.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "ca86fd3878f176dcb78d176bf844310af448ef228f7fffd88c17862008b963cf",
+      "original_bytes": 728,
+      "normalized_sha256": "240b517c2cada698dabe085e3ee92264cde0e5e87aaaa372c8b9851407a83900",
+      "normalized_bytes": 717
+    },
+    {
+      "name": "r12-link-order-llvm.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\r12-link-order-llvm.json",
+      "original_archive": "r12-link-order-llvm.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "404c04749dba9b1e464c459f3e34344435b856665c1f4253c069be7e7462ac6c",
+      "original_bytes": 779,
+      "normalized_sha256": "ac2ee66675b2986f56181272e4c00a9aca18a1981004b454cc698f2cef117fe9",
+      "normalized_bytes": 756
+    },
+    {
+      "name": "check_ble_link_order.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\check_ble_link_order.py",
+      "original_archive": "check_ble_link_order.py.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "7d2dce6318145b52d6ca44af1d67ee46d2613104bf9efd04ddf0a64c64c07c4c",
+      "original_bytes": 1741,
+      "normalized_sha256": "7d2dce6318145b52d6ca44af1d67ee46d2613104bf9efd04ddf0a64c64c07c4c",
+      "normalized_bytes": 1741
+    },
+    {
+      "name": "check_gcc_host.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\check_gcc_host.py",
+      "original_archive": "check_gcc_host.py.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "bb5721d7e24402ed662101e93ceb52cda5f23e5b04dff40c68cd6906b3c899eb",
+      "original_bytes": 2134,
+      "normalized_sha256": "bb5721d7e24402ed662101e93ceb52cda5f23e5b04dff40c68cd6906b3c899eb",
+      "normalized_bytes": 2134
+    },
+    {
+      "name": "host-gcc-final.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\host-gcc-final.log",
+      "original_archive": "host-gcc-final.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "d30886ef2caa56beac13c5c112e8daa4b43860be66ef63074b71ad7afacb5330",
+      "original_bytes": 168814,
+      "normalized_sha256": "fc9fd0655a80527cdb8bda959cdae7f82f011d7429c5ccc7f3a6ae3ee190e37d",
+      "normalized_bytes": 167150
+    },
+    {
+      "name": "host-gcc-final.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\host-gcc-final.json",
+      "original_archive": "host-gcc-final.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "312319d392b85a7e120b400fe6b0c3b7216435b3f30b2e70f5b5dfa7fc0f32c3",
+      "original_bytes": 697,
+      "normalized_sha256": "faa815c9c58499e5a970840ec94ac5f2bcb7155a421f3f55d954984c25db6687",
+      "normalized_bytes": 681
+    },
+    {
+      "name": "host-gcc-final-audit.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\host-gcc-final-audit.json",
+      "original_archive": "host-gcc-final-audit.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "a415694251b29b4c8e75c1e125f67147fa78f410ce18a6ae35160eba6cfe6f02",
+      "original_bytes": 8726,
+      "normalized_sha256": "42e3d074c92809d81707799b19bad953f782c711021d25973c97820c24b9bcb2",
+      "normalized_bytes": 8286
+    }
+  ]
+}
