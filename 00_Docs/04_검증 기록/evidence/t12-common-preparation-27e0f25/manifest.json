@@ -1,0 +1,63 @@
+{
+  "base_source": "27e0f257860f46bfd43a82742cf087be7eaa9493",
+  "source_was_dirty": true,
+  "physical_function_tests_executed": false,
+  "host_groups": 88,
+  "host_tests": 707,
+  "host_passed": 705,
+  "conditional_skips": 2,
+  "target_preparation_only": "2 builds before final opcode73; exact clean rebuild required",
+  "raw_uid_included": false,
+  "files": [
+    {
+      "path": "common-bundle-initial-state.json.gz",
+      "raw_sha256": "40112429543d16cec1a93ac33d3864c0a05b2c29ec0e55e80a26dc3b748b6ce2",
+      "gzip_sha256": "99e2d9c3b85bd4ae8419ca59a54f083aaf0a39129fdb90055f284f4ac7b80608"
+    },
+    {
+      "path": "common-bundle-session-grant.json.gz",
+      "raw_sha256": "9fd435714d0bbd42ca450ba5cbfb6a3d9e8d7fcffe1cd4a2101c3cb126806576",
+      "gzip_sha256": "016347b33bb3cb46c3dc4c783858df769beb7dbd8f58fe2f1f92728946ad3bce"
+    },
+    {
+      "path": "common-gpio-full-host.log.gz",
+      "raw_sha256": "c72af31ed02ebdaf5214e69f48d3980f9b06b8b06ed39ab730b155a8bee45b5f",
+      "gzip_sha256": "160fed2ddaae9f898fe09aa0839e3e51c0353d6bfb07a7c0981cf3dcfc074119"
+    },
+    {
+      "path": "common-gpio-full-host.json.gz",
+      "raw_sha256": "2664f7a1b8b2a981404dc00ddb24152a2e580e193778f399d7962be31840015c",
+      "gzip_sha256": "8bc454ff6e2559b96e6147fd517f851fd0ad80e27c7af025dcc981010e0ba676"
+    },
+    {
+      "path": "common-gpio-full-docs.log.gz",
+      "raw_sha256": "42f9d618ab1897b3734592fff386e2797596f4e5b8d07229d0ff0d3ef2e36354",
+      "gzip_sha256": "6c70a18220b77427cf963d1969fd35455f1b7adc6175f0ac28da07bd8db50aee"
+    },
+    {
+      "path": "common-gpio-full-docs.json.gz",
+      "raw_sha256": "a3d7ff65c36f5b71820e0b2f03ebad0740c974ec6aa78a4ab933b8224ca8cf42",
+      "gzip_sha256": "d33a9be5d23c149ba1a83d6b4d8bb0908c2aa9676546e5f2b857fdc2c015bf4b"
+    },
+    {
+      "path": "common-gpio-prep-target.log.gz",
+      "raw_sha256": "0a8ed268892f3b4ccc012669604d5afa751bab7124dc66a0e40355b40e3ce185",
+      "gzip_sha256": "a00a47a4ca027e1b670ee7c40a845808a27ffa755da78a2fdade9af6b12e94f1"
+    },
+    {
+      "path": "common-gpio-prep-target.json.gz",
+      "raw_sha256": "4b609ad479b337004d168fe2b8b656f5f8f6f5c06a95c203362fb7007e73d3f9",
+      "gzip_sha256": "c216385930906280e46b08d52de981f299f57146e1dc7d7015cfe738155a92bb"
+    },
+    {
+      "path": "common-gpio-style.log.gz",
+      "raw_sha256": "fa3ce4323a0c7ad2aee7e7c64dcb075ebad6765d0ac2b3682d5a2c38675ac5bd",
+      "gzip_sha256": "7479b2d305ec376cba2f06d3210ab630863d959f11ba3402f46a16e4e94c01ba"
+    },
+    {
+      "path": "common-gpio-style.json.gz",
+      "raw_sha256": "ec19eaadc98f6c952639e258c7757eb2e759279f0bbd1d2dcda670a88011e7ab",
+      "gzip_sha256": "3828bf690a3ff93554539258734e31c087a82994aa49c58b91bcfa42c7b65aef"
+    }
+  ]
+}

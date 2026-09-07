@@ -67,8 +67,16 @@ def stop_pair(devices, append, case_id):
 
 def run_confirmed(devices, images, uids, confirmation, append, *, sleep=time.sleep):
     """! @brief 현재 결선 확인 뒤 102개의 LOW/해제 검사와 pulse/lease 만료를 검증합니다. """
-    for controller_role in (1, 2):
+    def current():
+        """! @brief 기존 실행기는 각 묶음에서 원래 30분 확인 조건을 유지합니다. """
         fixture.validate_confirmation(confirmation, images, uids, 501, catalog_path=CATALOG)
+    return run_checks(devices, append, current, sleep=sleep)
+
+
+def run_checks(devices, append, assert_current, *, sleep=time.sleep):
+    """! @brief 호출자가 제공한 현재 실행 조건 검사 뒤 원본 결선 절차를 수행합니다. """
+    for controller_role in (1, 2):
+        assert_current()
         controller = devices[controller_role - 1]
         label = f'V04-WIRING/501/controller{controller_role}'
         original_error = None
@@ -106,7 +114,7 @@ def run_confirmed(devices, images, uids, confirmation, append, *, sleep=time.sle
     label = 'V04-WIRING/501/timeout'
     original_error = None
     try:
-        fixture.validate_confirmation(confirmation, images, uids, 501, catalog_path=CATALOG)
+        assert_current()
         for device in devices:
             role = device.image['role']
             if device.command(48, (501, 1, fixture.CONSENT, role), timeout=2) != [501, 10000, COUNT]:

@@ -6,6 +6,7 @@
 #include "signal_hil.h"
 #include "pwm_capture_hil.h"
 #include "wiring_hil.h"
+#include "common_gpio_hil.h"
 #include <nucode/AnalogFabric.h>
 #include <nucode/EventFabric.h>
 #include <nucode/SerialFabric.h>
@@ -304,6 +305,14 @@ namespace
             }
             return 0;
         }
+        if (opcode >= 64U && opcode <= 73U)
+        {
+            return commonGpioCommand(opcode, args, nargs, out, count);
+        }
+        if (commonGpioClaimed())
+        {
+            return 403U;
+        }
         if (opcode >= 48U && opcode <= 53U)
         {
             return wiringCommand(opcode, args, nargs, out, count);
@@ -382,9 +391,10 @@ int main()
         serviceSignal();
         servicePwmCapture();
         serviceWiring();
+        serviceCommonGpio();
         if (v04_request[0] != v04::magic)
         {
-            if (signalNeedsPolling())
+            if (signalNeedsPolling() || commonGpioNeedsPolling())
             {
                 k_busy_wait(10U);
             }

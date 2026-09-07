@@ -87,6 +87,21 @@ P1.10/P1.14는 각 보드 LED buffer의 입력에 연결된 net이다. LED drive
 
 ## 결선 검사 실행
 
+### 현재 공통 기능 묶음 실행기
+
+`v04_common_run.py`는 별도 `v04_common_bundle.json`과 사용자 유지 보고를 담은
+`--session-grant`를 사용한다. 기존 501/408/420/430 확인서의 의미나 30분 제한은 바꾸지 않는다.
+고정 세션은 명시적인 현재 결선·유지 보고, exact UID·board·catalog·만료 시각을 요구하며
+최대 12시간이다. 각 clean image의 controlled flash 후 원래 501 검사를 통과해야 502
+GPIO/GPIOTE로 전환한다. 새 image·probe 연결마다 별도 실행 증거를 만들고 단절/identity/명령
+오류가 있으면 다음 case를 중단한다. 10초 firmware lease를 유지한다.
+
+현재 502는 `--section gpio|task|edge|all`을 제공한다. GPIO는 17신호×양방향×10회,
+GPIOTE task는 12채널×양방향×3극성×10회, edge는 12채널×양방향×3극성×2속도×10회다.
+각 edge case는 유한 1000에지를 발생시키며 100/1000 edge/s는 CPU task 신호원의 목표 간격이다.
+관측 count와 최대 poll 간격을 기록하며 정밀 파형 품질 PASS로 확대하지 않는다.
+508/520/530은 공통 배선의 후속 기능 ID로 준비하며 해당 구현·실기는 별도 결과로 기록한다.
+
 실행기는 `tests/hil/nu54dk/v04_wiring_run.py`다. `--dut`/`--peer`에 새로 식별한 exact UID, `--build-root`에 해당 clean commit의 두 role build, `--pyocd`에 고정 도구 경로를 전달한다. `--swd-frequency-hz 10000000`을 유지한다. 실행 옵션이 없으면 probe 접근 없이 준비 정보와 미확인 template만 출력한다.
 
 실제 실행에는 `--execute-fixture --confirmation 현재확인서.json --evidence 새결과.json`이 필요하다. USB 단일 명령 진단이 필요한 이 PC에서는 `--cmsis-dap-limit-packets`를 명시한다. 102회 net-round는 두 방향×17신호×3회이며 각 회차 LOW와 해제 시 양쪽 전체 17개 입력을 기록한다. 마지막에 양쪽 LOW 자동 해제와 10초 lease 반환을 별도로 검사한다.

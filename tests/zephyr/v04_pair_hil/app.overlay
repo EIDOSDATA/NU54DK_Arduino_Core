@@ -15,7 +15,7 @@
  * @brief 이 HIL은 DAP UART 분리 확인 후에만 P1.04~07을 외부 fixture로 사용합니다.
  * @note 일반 board 정책은 유지하며 capability는 DAP UART GPIO Kconfig 조건을 따릅니다.
  */
-#define V04_DAP_GPIO_CAPS (NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_OUTPUT | NUCODE_PIN_CAP_ANALOG)
+#define V04_DAP_GPIO_CAPS (NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_OUTPUT | NUCODE_PIN_CAP_ANALOG | NUCODE_PIN_CAP_OPEN_DRAIN | NUCODE_PIN_CAP_INTERRUPT)
 &arduino_p1_04
 {
     nucode,capability-mask = <V04_DAP_GPIO_CAPS>;

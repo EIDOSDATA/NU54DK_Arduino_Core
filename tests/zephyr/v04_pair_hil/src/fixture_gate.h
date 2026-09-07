@@ -50,6 +50,7 @@ namespace v04
         case 440:
             return FixtureFamily::pdm;
         case 501:
+        case 502:
             return FixtureFamily::wiring;
         default:
             return FixtureFamily::invalid;
@@ -99,6 +100,7 @@ namespace v04
         case 440:
             return Bank::p1;
         case 501:
+        case 502:
             return Bank::mixed;
         default:
             return Bank::invalid;
