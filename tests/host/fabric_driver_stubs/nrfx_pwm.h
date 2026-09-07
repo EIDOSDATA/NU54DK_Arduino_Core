@@ -1,11 +1,28 @@
 /** @file @brief PWM의 정지 실패·완료 callback·반복 시작을 주입하는 fake입니다. */
 #pragma once
 #include <cstdint>
+#include <functional>
 #include <zephyr/irq.h>
 struct NRF_PWM_Type
 {
     bool enabled{false};
     bool stopped{false};
+    bool running{false};
+    std::uint32_t EVENTS_SEQSTARTED[2]{};
+    struct
+    {
+        struct
+        {
+            std::uint32_t READY{0U};
+        } SEQ[2];
+    } EVENTS_DMA;
+    struct
+    {
+        struct
+        {
+            std::uint32_t START{0U};
+        } SEQ[2];
+    } SUBSCRIBE_DMA;
 };
 inline NRF_PWM_Type mock_pwm_regs[3];
 #define NRF_PWM20 (&mock_pwm_regs[0])
@@ -42,6 +59,47 @@ enum
 };
 #define NRF_PWM_PIN_NOT_CONNECTED UINT32_MAX
 #define PWM_DMA_SEQ_MAXCNT_MAXCNT_Msk 0x7FFFU
+#define PWM_SUBSCRIBE_DMA_SEQ_START_EN_Msk (1UL << 31)
+enum nrf_pwm_event_t
+{
+    NRF_PWM_EVENT_SEQSTARTED0,
+    NRF_PWM_EVENT_SEQSTARTED1
+};
+inline std::function<void(NRF_PWM_Type *)> mock_pwm_on_disable;
+inline unsigned mock_pwm_starts = 0, mock_pwm_stop_events = 0;
+inline void mock_pwm_start(NRF_PWM_Type *reg, unsigned sequence = 1U)
+{
+    if (reg->enabled)
+    {
+        reg->running = true;
+        reg->EVENTS_DMA.SEQ[sequence].READY = 1U;
+        reg->EVENTS_SEQSTARTED[sequence] = 1U;
+        ++mock_pwm_starts;
+    }
+}
+inline bool nrf_pwm_event_check(const NRF_PWM_Type *reg, nrf_pwm_event_t event)
+{
+    return reg->EVENTS_SEQSTARTED[event] != 0U;
+}
+inline void nrf_pwm_event_clear(NRF_PWM_Type *reg, nrf_pwm_event_t event)
+{
+    reg->EVENTS_SEQSTARTED[event] = 0U;
+}
+inline void nrf_pwm_disable(NRF_PWM_Type *reg)
+{
+    if (mock_pwm_on_disable)
+    {
+        mock_pwm_on_disable(reg);
+    }
+    reg->enabled = false;
+}
+inline void nrf_pwm_enable(NRF_PWM_Type *reg)
+{
+    reg->enabled = true;
+}
+inline void nrf_barrier_rw()
+{
+}
 struct nrfx_pwm_config_t
 {
     std::uint32_t output_pins[4];
@@ -95,19 +153,26 @@ inline void mock_pwm_event(nrfx_pwm_t *d, nrfx_pwm_event_type_t event)
     const auto key = irq_lock();
     if (event == NRFX_PWM_EVENT_STOPPED)
     {
+        ++mock_pwm_stop_events;
         d->p_reg->enabled = false;
         d->p_reg->stopped = true;
+        d->p_reg->running = false;
     }
     d->handler(event, d->context);
     irq_unlock(key);
 }
 inline std::uintptr_t nrfx_pwm_simple_playback(nrfx_pwm_t *d, const nrf_pwm_sequence_t *sequence,
-                                               unsigned, unsigned)
+                                               unsigned, unsigned flags)
 {
     d->p_reg->enabled = true;
     mock_pwm_sequences[0] = *sequence;
     d->p_reg->stopped = false;
-    return 0x40000000U;
+    if ((flags & NRFX_PWM_FLAG_START_VIA_TASK) != 0U)
+    {
+        return 0x40000000U;
+    }
+    mock_pwm_start(d->p_reg);
+    return 0U;
 }
 inline std::uintptr_t nrfx_pwm_complex_playback(nrfx_pwm_t *d, const nrf_pwm_sequence_t *s,
                                                 const nrf_pwm_sequence_t *next, unsigned count,
@@ -122,7 +187,7 @@ inline void nrfx_pwm_step(nrfx_pwm_t *)
 }
 inline bool nrfx_pwm_stop(nrfx_pwm_t *d, bool)
 {
-    if (mock_pwm_stop_ready)
+    if (mock_pwm_stop_ready && d->p_reg->running)
     {
         mock_pwm_event(d, NRFX_PWM_EVENT_STOPPED);
     }
@@ -134,6 +199,7 @@ inline bool nrfx_pwm_stopped_check(nrfx_pwm_t *d)
 }
 inline void nrfx_pwm_uninit(nrfx_pwm_t *d)
 {
+    d->p_reg->enabled = false;
     d->initialized = false;
     ++mock_pwm_uninits;
 }

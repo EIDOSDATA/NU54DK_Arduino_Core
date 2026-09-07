@@ -213,8 +213,15 @@ namespace nucode::arduino
                                               const PwmSequenceBuffer *sequence1 = nullptr,
                                               std::uint16_t playback_count = 1U, bool loop = false,
                                               bool start_via_task = false) noexcept;
+        /** @brief 지연 시작으로 준비된 active 실행의 START task 주소를 반환합니다.
+         * @note 주소는 해당 실행 동안만 유효하며 stop과 동시에 CPU/ISR에서 호출하면 안 됩니다.
+         */
         [[nodiscard]] std::uintptr_t startTaskAddress() const noexcept;
         [[nodiscard]] AnalogFabricResult step() noexcept;
+        /** @brief 재생을 정지하거나 실제 시작 전 준비를 출력 없이 취소합니다.
+         * @note START의 DPPI 구독을 먼저 해제해야 하며, 활성 구독은 ownership_conflict입니다.
+         * DMA 시작 흔적이 있으면 STOP 확인 전까지 buffer와 pin lease를 유지합니다.
+         */
         [[nodiscard]] AnalogFabricResult stop(std::uint32_t timeout_us = 100000U) noexcept;
         [[nodiscard]] bool takeEvent(PwmSequenceEvent &event) noexcept;
 
