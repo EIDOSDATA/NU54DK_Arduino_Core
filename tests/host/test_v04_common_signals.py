@@ -13,6 +13,35 @@ from v04_protocol import ProtocolError
 
 
 class CommonSignalsTests(unittest.TestCase):
+    def test_qdec_heartbeat_does_not_extend_expired_common_session(self):
+        calls, checks, records = [], [], []
+        class Device:
+            def __init__(self, role):
+                self.image = {'role': role}
+
+            def command(self, opcode, values=(), **options):
+                calls.append((self.image['role'], opcode))
+                if opcode == 80:
+                    return [520, 10000]
+                if opcode in (83, 84):
+                    return [0]
+                if opcode == 81:
+                    return [0] * 16
+                raise AssertionError('lease renewal or observation after expiry')
+
+        def current(identifier):
+            checks.append(identifier)
+            if len(checks) == 3:
+                raise ProtocolError('common session expired')
+
+        devices = [Device(1), Device(2)]
+        with self.assertRaisesRegex(ProtocolError, 'session expired'):
+            with qdec.armed(devices, current, lambda key, row: records.append((key, row)), 'expiry', 20, 0):
+                qdec.wave(devices, current, lambda *_: None, 'long-wave', 1000, 10000, 0)
+        self.assertEqual(checks, [520, 520, 520])
+        self.assertEqual(calls[-2:], [(2, 81), (1, 81)])
+        self.assertTrue(all(row['stopped'] for row in records[-1][1]['outcomes']))
+
     def test_finite_pwm_raw_sequence_rejects_missing_reordered_and_wrong_duty(self):
         self.assertEqual(len(list(modes.vectors())), 288)
         for idle, repeats, delay, plays in itertools.product((0, 1), (0, 9), (0, 3), (52,)):

@@ -133,6 +133,7 @@ def edge_case(devices, controller, vector, polarity, hz, repetition, current, ap
         expect(generator.command(72, (hz, 1000)), [0], 'finite start')
         deadline = started + 1000 / hz * 1.5 + 2
         while True:
+            current(502)
             for device in devices:
                 expect(device.command(69, timeout=2), [0], 'lease renewal')
             raw = observe(generator, append, label + '/progress')

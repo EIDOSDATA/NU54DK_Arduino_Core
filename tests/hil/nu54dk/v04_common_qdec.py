@@ -69,6 +69,7 @@ def wave(devices, current, append, label, cycles, interval, direction):
     origin = time.monotonic()
     deadline = origin + expected_steps * interval / 1e6 * 1.5 + 2
     while True:
+        current(520)
         for device in devices:
             expect(device.command(82), [0], 'QDEC lease')
         sender = observe(devices[1], append, label + '/progress')

@@ -77,6 +77,7 @@ def armed(devices, current, append, label, vector, dppi):
 
 def capture(devices, current, append, label, duration, start=False):
     """! @brief 한정 시간 capture가 끝난 뒤 raw edge와 양쪽 event 상태를 저장합니다. """
+    current(508)
     for device in devices:
         expect(device.command(58), [0], 'PWM lease')
     expect(devices[0].command(47, (duration,)), [0], 'async PWM capture')
@@ -84,6 +85,7 @@ def capture(devices, current, append, label, duration, start=False):
         expect(devices[1].command(56), [0], 'PWM CPU/DPPI START')
     deadline = time.monotonic() + duration / 1e6 + 2
     while True:
+        current(508)
         status = devices[0].command(46)
         if len(status) != 12 or status[3]:
             raise ProtocolError(f'async PWM capture error {status}')
@@ -124,6 +126,7 @@ def run(devices, current, append):
                 expect(devices[1].command(56), [0], 'triggered PWM START')
                 results = []
                 for step, duty in enumerate((25, 50, 75)):
+                    current(508)
                     if step:
                         expect(devices[1].command(57), [0], 'public PWM NEXTSTEP')
                     time.sleep(vector[2] * 2 / 1e6)
