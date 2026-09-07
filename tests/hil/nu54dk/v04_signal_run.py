@@ -3,6 +3,7 @@
 from __future__ import annotations
 import argparse
 from contextlib import ExitStack
+from functools import partial
 import hashlib
 import json
 from pathlib import Path
@@ -36,9 +37,13 @@ def arguments(argv=None):
     parser.add_argument("--execute-fixture", action="store_true")
     parser.add_argument("--pdm-continuous", action="store_true")
     parser.add_argument("--pwm-capture", action="store_true")
+    parser.add_argument("--pwm-load", choices=tuple(pwm_capture.LOADS),
+                        help="capture one load mode with 4/32/256 DMA values")
     parser.add_argument("--cmsis-dap-limit-packets", action="store_true",
                         help="limit CMSIS-DAP to one in-flight USB command; keep SWD frequency")
     args = parser.parse_args(argv)
+    if args.pwm_load is not None and not args.pwm_capture:
+        raise ProtocolError("PWM load sweep requires --pwm-capture")
     if args.pwm_capture and (args.fixture != 408 or args.swd_frequency_hz != 10_000_000 or
                              args.pdm_continuous or args.duration_seconds != 0):
         raise ProtocolError("PWM capture requires fixture 408, SWD 10 MHz and a finite campaign")
@@ -74,6 +79,7 @@ def main(argv=None):
         "external_wiring_executed": False, "repetitions": args.repetitions,
         "pdm_continuous": args.pdm_continuous,
         "pwm_capture": args.pwm_capture,
+        "pwm_capture_load": args.pwm_load,
         "campaign": {"repetitions": args.repetitions,
                      "duration_seconds": args.duration_seconds,
                      "progress_interval_seconds": args.progress_interval_seconds,
@@ -117,7 +123,7 @@ def main(argv=None):
                 journal.flush()
 
             evidence["external_wiring_executed"] = True
-            run_confirmed = (pwm_capture.run_confirmed if args.pwm_capture else
+            run_confirmed = (partial(pwm_capture.run_confirmed, load=args.pwm_load) if args.pwm_capture else
                              pdm_continuous.run_confirmed if args.pdm_continuous else signal.run_confirmed)
             evidence["campaign"].update(campaign.run_cycles(
                 lambda _cycle: run_confirmed(

@@ -3,23 +3,44 @@ from __future__ import annotations
 
 import itertools
 import sys
+import time
 
 import v04_fixture as fixture
 from v04_protocol import ProtocolError
 
 PERIODS = 100
 EDGE_COUNT = PERIODS * 2 + 1
+LOADS = {'common': 0, 'grouped': 1, 'individual': 2, 'wave-form': 3}
 
 
-def vectors():
-    """! @brief 12 slot·두 TOP·다섯 듀티·두 DMA word 극성의 240조건입니다. """
-    yield from itertools.product((20, 21, 22), range(4), (1000, 4000),
-                                 (0, 25, 50, 75, 100), (0, 1))
+def vectors(load=None):
+    """! @brief 기본 240조건 또는 명시한 load의 4/32/256 values만 생성합니다. """
+    if load is not None and load not in LOADS:
+        raise ProtocolError('unsupported PWM capture load')
+    slots = range(3) if load == 'wave-form' else range(4)
+    for vector in itertools.product((20, 21, 22), slots, (1000, 4000),
+                                     (0, 25, 50, 75, 100), (0, 1)):
+        if load is None:
+            yield vector
+        else:
+            for count in (4, 32, 256):
+                yield (*vector, LOADS[load], count)
+
+
+def valid_vector(vector):
+    """! @brief 미구현 load/길이와 WaveForm TOP lane의 출력 사용을 거부합니다. """
+    if len(vector) not in (5, 7) or any(type(value) is not int for value in vector):
+        return False
+    instance, slot, top, duty, polarity = vector[:5]
+    if instance not in (20, 21, 22) or slot not in range(4) or top not in (1000, 4000) or duty not in (0, 25, 50, 75, 100) or polarity not in (0, 1):
+        return False
+    return len(vector) == 5 or (vector[5] in range(4) and vector[6] in (4, 32, 256) and
+                                (vector[5] != 3 or slot < 3))
 
 
 def received(vector, status, edges):
     """! @brief 평균으로 실패를 숨기지 않고 각 100주기·HIGH 폭을 ±5%로 판정합니다. """
-    if vector not in vectors():
+    if not valid_vector(vector):
         raise ProtocolError("unsupported PWM capture vector")
     if (len(status) != 12 or any(type(value) is not int or not 0 <= value <= 0xFFFFFFFF
                                  for value in status) or
@@ -73,6 +94,13 @@ def run_case(devices, vector, append):
             raise ProtocolError("PWM generator start failed")
         capture_reply = receiver.command(43, timeout=2)
         statuses = [device.command(46) for device in devices]
+        if len(vector) == 7:
+            ## @brief common/256/4000의 한 sequence는 1.024초이므로 capture 뒤에도 완료를 기다립니다.
+            deadline = time.monotonic() + 2
+            while (len(statuses[1]) == 12 and statuses[1][3] == 0 and
+                   statuses[1][8] + statuses[1][9] == 0 and time.monotonic() < deadline):
+                time.sleep(0.005)
+                statuses[1] = generator.command(46, timeout=2)
         raw = []
         if len(statuses[0]) != 12 or not 0 <= statuses[0][4] <= EDGE_COUNT:
             raise ProtocolError("PWM capture status length/count invalid")
@@ -90,7 +118,9 @@ def run_case(devices, vector, append):
                 statuses[1][11] != 1 or statuses[1][8] + statuses[1][9] == 0):
             raise ProtocolError("PWM generator error/guard/no sequence progress")
         result = received(vector, statuses[0], raw)
-        append(label, {"vector": list(vector), "scope": "individual-single-buffer-loop-peer-capture",
+        scope = ('individual-single-buffer-loop-peer-capture' if len(vector) == 5 else
+                 'load-and-length-single-buffer-loop-peer-capture')
+        append(label, {"vector": list(vector), "scope": scope,
                        **result})
     finally:
         original = sys.exception()
@@ -108,12 +138,12 @@ def run_case(devices, vector, append):
                 raise ProtocolError(f"PWM cleanup unproven: {cleanup}")
 
 
-def run_confirmed(devices, images, uids, confirmation, fixture_id, append, repetitions=1):
+def run_confirmed(devices, images, uids, confirmation, fixture_id, append, repetitions=1, load=None):
     """! @brief 현재 source·UID·image·408 결선을 매 case 전에 다시 확인합니다. """
     if fixture_id != 408 or type(repetitions) is not int or not 1 <= repetitions <= 100:
         raise ProtocolError("PWM capture requires fixture 408 and bounded repetitions")
     for repetition in range(repetitions):
-        for vector in vectors():
+        for vector in vectors(load):
             fixture.validate_confirmation(confirmation, images, uids, 408)
             run_case(devices, vector,
                      lambda case_id, result: append(f"{case_id}/repeat-{repetition + 1}", result))

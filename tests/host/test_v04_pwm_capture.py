@@ -2,7 +2,11 @@
 import copy
 from pathlib import Path
 import sys
+import subprocess
+import tempfile
 import unittest
+from unittest.mock import patch
+from host_compiler import compiler_command
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "hil/nu54dk"))
 import v04_pwm_capture as capture
@@ -24,6 +28,68 @@ def observation(top=1000, duty=25, first_high=True):
 
 
 class PwmCaptureTests(unittest.TestCase):
+    def test_explicit_load_sweeps_and_waveform_top_lane(self):
+        """! @brief 네 load의 독립 cardinality와 3개 길이·미구현 slot을 검사합니다. """
+        for name, load in (('common', 0), ('grouped', 1), ('individual', 2), ('wave-form', 3)):
+            values = list(capture.vectors(name))
+            self.assertEqual(len(values), 540 if name == 'wave-form' else 720)
+            self.assertEqual(len(set(values)), len(values))
+            self.assertEqual({row[6] for row in values}, {4, 32, 256})
+            self.assertTrue(all(row[5] == load and capture.valid_vector(row) for row in values))
+            for vector in values:
+                if vector[3] in (0, 100):
+                    level = int(vector[3] == 100)
+                    status = [1, 1, 1, 0, 0, level, level, vector[2] * 100, 0, 0, 0, 1]
+                    capture.received(vector, status, [])
+                else:
+                    status, edges = observation(vector[2], vector[3])
+                    capture.received(vector, status, edges)
+        for vector in ((20, 3, 1000, 25, 1, 3, 4), (20, 0, 1000, 25, 1, 4, 4),
+                       (20, 0, 1000, 25, 1, 0, 8), (True, 0, 1000, 25, 1)):
+            self.assertFalse(capture.valid_vector(vector))
+
+    def test_actual_cpp_decoder_layouts_compile_time(self):
+        """! @brief target이 사용하는 helper를 독립 상수 배열의 static_assert로 컴파일합니다. """
+        root = Path(__file__).resolve().parents[2]
+        with tempfile.TemporaryDirectory() as folder:
+            result = subprocess.run(compiler_command() + ['-std=c++17', '-Wall', '-Wextra', '-Werror',
+                '-I', str(root / 'tests/zephyr/v04_pair_hil/src'), '-c',
+                str(root / 'tests/host/v04_pwm_capture_vector_main.cpp'),
+                '-o', str(Path(folder) / 'vector.o')], capture_output=True, text=True, timeout=60)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_long_sequence_wait_is_bounded_and_preserves_failed_raw(self):
+        """! @brief 첫 긴 DMA 완료 대기와 timeout의 raw/STOP 보존을 함께 검사합니다. """
+        class Device:
+            def __init__(self, role, progresses):
+                self.image = {'role': role}
+                self.polls = 0
+                self.progresses = progresses
+            def command(self, opcode, values=(), **kwargs):
+                if opcode == 40:
+                    return [408, 10000]
+                if opcode == 45:
+                    return [0, 1, 1]
+                if opcode == 46:
+                    if self.image['role'] == 1:
+                        return [1, 1, 1, 0, 0, 0, 0, 400000, 0, 0, 0, 1]
+                    self.polls += 1
+                    return [1, 1, 0, 0, 0, 0, 0, 0, int(self.progresses and self.polls >= 3), 0, 0, 1]
+                return [0]
+        for progresses in (True, False):
+            rows = []
+            devices = [Device(1, progresses), Device(2, progresses)]
+            with patch.object(capture.time, 'sleep'), patch.object(capture.time, 'monotonic',
+                    side_effect=[0, 0.01, 0.02, 3]):
+                if progresses:
+                    capture.run_case(devices, (20, 0, 4000, 0, 1, 0, 256), lambda key, value: rows.append(value))
+                    self.assertEqual(devices[1].polls, 3)
+                else:
+                    with self.assertRaises(ProtocolError):
+                        capture.run_case(devices, (20, 0, 4000, 0, 1, 0, 256), lambda key, value: rows.append(value))
+            self.assertEqual(rows[0]['status'], 'observation')
+            self.assertEqual(rows[-1]['status'], 'cleanup')
+
     def test_all_slots_tops_duties_and_polarities_are_explicit(self):
         values = list(capture.vectors())
         self.assertEqual(len(values), 240)
@@ -97,6 +163,9 @@ class PwmCaptureTests(unittest.TestCase):
         self.assertTrue(limited.cmsis_dap_limit_packets)
         self.assertFalse(limited.execute_fixture)
         self.assertEqual(limited.swd_frequency_hz, 10000000)
+        self.assertEqual(runner.arguments(base + ['--pwm-load', 'wave-form']).pwm_load, 'wave-form')
+        with self.assertRaises(ProtocolError):
+            runner.arguments([word for word in base if word != '--pwm-capture'] + ['--pwm-load', 'common'])
         for extra in (['--fixture', '401'], ['--swd-frequency-hz', '1000000'],
                       ['--duration-seconds', '600'], ['--pdm-continuous'], ['--execute-fixture']):
             with self.assertRaises(ProtocolError):

@@ -67,6 +67,25 @@ start·`auto_unlock=false`·확인/lock 계약은 유지한다. [pyOCD 공식 �
 `cmsis_dap.limit_packets`를 사용하고 SDK/driver를 수정하지 않는다. 읽기 성공만으로 flash
 timeout 원인을 확정하지 않으며 옵션·최초 실패·후속 결과를 evidence에 각각 기록한다.
 
+### T12 PWM load·DMA 길이 확장 준비
+
+`--pwm-capture --pwm-load common|grouped|individual|wave-form`은 선택한 load 한 개에서
+4/32/256 values를 각각 검사한다. Common/grouped/individual은 각 720조건이고 WaveForm은
+slot 0~2의 540조건이다. WaveForm의 네 번째 word는 출력 slot 3이 아닌 RAM TOP이다.
+이 모드에서는 register TOP을 반대 값(1000↔4000)으로 두어 RAM TOP 사용을 실제 period로
+구별한다. 나머지 load에서는 선택한 decoder lane과 다른 lane의 duty를 다르게 넣어 매핑을 검사한다.
+
+기존 `--pwm-capture`만 지정하면 240조건 첫 경로를 유지한다. 그 실기는 [97번](<../../../00_Docs/04_검증 기록/97_T12_PWM_peer_capture_첫_240조건_검증.md>)에
+고정되어 있으며 새로운 load/길이 시험의 PASS로 재사용하지 않는다. Opcode 41은 기존 5개 인자
+또는 load ID(0/1/2/3)·value count를 덧붙인 7개 인자만 받는다. 그 밖의 길이·WaveForm slot 3은 거부한다.
+
+Common/256/4000의 한 sequence는 약 1.024초로 100주기 capture보다 길다. Host는 capture 뒤
+첫 sequence 완료를 최대 2초 기다리고, 완료되지 않으면 원본을 보존한 뒤 실패로 처리한다.
+두 보드의 10초 lease·B 우선 STOP·exact image/UID·10 MHz·현재 결선 확인을 유지한다.
+이 확장은 **constant-duty CPU-start loop**이며 sequence0/1의 시간상 순서·유한 end/repeat,
+DPPI START·triggered-step·idle inversion의 완료 근거가 아니다. 다음 실행 전 현재 408 결선의
+확인을 다시 받아야 하며 이전 30분 확인을 자동 연장하지 않는다.
+
 - 보드 target과 build manifest가 기대값과 일치해야 합니다.
 - 일반 upload 경로에서는 mass erase나 recover를 사용하지 않습니다.
 - PMIC 시험은 허용한 address/register의 읽기만 수행합니다.

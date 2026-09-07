@@ -1,10 +1,11 @@
 /**
  * @file pwm_capture_hil.cpp
  * @brief B P1.14 PWM을 A P1.14의 GPIOTE→DPPI→TIMER로 측정하는 첫 경로입니다.
- * @note DMA 개별 slot·정적 level·기본 주기/듀티만 판정하며 모드 전체 PASS가 아닙니다.
+ * @note 일정 duty의 load/길이만 판정하며 sequence 순서·triggered/idle inversion 전체 시험은 아닙니다.
  * SPDX-License-Identifier: MIT
  */
 #include "pwm_capture_hil.h"
+#include "pwm_capture_vector.h"
 #include "fixture_gate.h"
 #include "fixture_hil.h"
 #include "signal_hil.h"
@@ -32,11 +33,12 @@ namespace
     std::uint32_t error = 0U, edge_count = 0U, initial_level = 0U, final_level = 0U;
     std::uint32_t elapsed = 0U, sequence0 = 0U, sequence1 = 0U, playbacks = 0U;
     std::uint32_t top = 0U, duty = 0U;
-    /** @brief DMA 전후 16-byte guard이며 출력값은 한 개 slot에만 설정합니다. */
+    std::uint32_t value_count = 4U;
+    /** @brief 최대 DMA 전후 16-byte guard이며 물리 출력 pin은 선택 slot 한 개에만 연결합니다. */
     struct alignas(4) Dma
     {
         std::uint32_t before[4];
-        std::uint16_t values[4];
+        std::uint16_t values[256];
         std::uint32_t after[4];
     } dma{};
     std::uint32_t edges[edge_capacity][2]{};
@@ -116,33 +118,40 @@ namespace
         return true;
     }
 
-    /** @brief instance/slot/TOP/duty/DMA 극성만 허용하고 미구현 mode는 받지 않습니다. */
-    bool prepare(const std::uint32_t *args)
+    /** @brief 기존 다섯 필드 또는 load/value 수를 포함한 일곱 필드만 허용합니다. */
+    bool prepare(const std::uint32_t *args, std::uint32_t nargs)
     {
+        const v04::PwmCaptureVector vector{args[0],
+                                           args[1],
+                                           args[2],
+                                           args[3],
+                                           args[4],
+                                           nargs == 7U ? args[5] : 2U,
+                                           nargs == 7U ? args[6] : 4U};
         if (prepared || timer_owned || pin_owned || channel_owned || pwm != nullptr ||
-            args[0] < 20U || args[0] > 22U || args[1] > 3U ||
-            (args[2] != 1000U && args[2] != 4000U) || args[3] > 100U || args[3] % 25U ||
-            args[4] > 1U)
+            !vector.valid())
         {
             return false;
         }
         top = args[2];
         duty = args[3];
+        value_count = vector.values;
         error = edge_count = elapsed = sequence0 = sequence1 = playbacks = 0U;
         complete = false;
         for (unsigned index = 0U; index < 4U; ++index)
         {
             dma.before[index] = dma.after[index] = guard_word;
-            dma.values[index] = 0U;
+        }
+        if (!v04::fillPwmCaptureValues(vector, dma.values, 256U))
+        {
+            return false;
         }
         if (role == 2U)
         {
             PwmSequenceConfiguration configuration{};
             configuration.output_pins[args[1]] = PIN_P1_14;
-            configuration.top_value = static_cast<std::uint16_t>(top);
-            /** @brief bit15=1은 HIGH→LOW, bit15=0은 LOW→HIGH이며 비교값을 반대로 만듭니다. */
-            const auto compare = top * (args[4] ? duty : 100U - duty) / 100U;
-            dma.values[args[1]] = static_cast<std::uint16_t>(compare | (args[4] << 15U));
+            configuration.top_value = vector.registerTop();
+            configuration.load = static_cast<PwmSequenceLoad>(vector.load);
             pwm = analogFabric().pwm(static_cast<std::uint8_t>(args[0]));
             prepared =
                 pwm != nullptr && pwm->configure(configuration) == AnalogFabricResult::success;
@@ -316,17 +325,17 @@ std::uint32_t pwmCaptureCommand(std::uint32_t opcode, const std::uint32_t *args,
     {
         return 403U;
     }
-    if (opcode == 41U && nargs == 5U)
+    if (opcode == 41U && (nargs == 5U || nargs == 7U))
     {
-        const bool result = prepare(args);
+        const bool result = prepare(args, nargs);
         out[0] = result ? 0U : 1U;
         count = 1U;
         return result ? 0U : 751U;
     }
     if (opcode == 42U && nargs == 0U && role == 2U && prepared && !started)
     {
-        started =
-            pwm->play({dma.values, 4U, 0U, 0U}, nullptr, 1U, true) == AnalogFabricResult::success;
+        started = pwm->play({dma.values, value_count, 0U, 0U}, nullptr, 1U, true) ==
+                  AnalogFabricResult::success;
         out[0] = started ? 0U : 1U;
         count = 1U;
         return started ? 0U : 752U;

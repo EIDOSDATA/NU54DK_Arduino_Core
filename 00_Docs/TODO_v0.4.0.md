@@ -1,5 +1,7 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
+T12 다음 준비 범위(2026-09-07): 97번의 첫 capture를 common/grouped/individual/wave-form과 4/32/256 values로 확장한다. 동일 408 결선의 정적/일정 duty loop를 load별로 나눠 검사하고, wave-form은 네 번째 word를 TOP으로 사용하므로 출력 slot 0~2만 허용한다. DMA RAM TOP과 설정 register TOP을 다르게 해 decoder 경로를 구별한다. 긴 sequence의 첫 완료를 bounded 대기한 뒤 기존 raw oracle로 판정한다. Host vector/실제 C++ DMA 배열 계약과 target build를 먼저 검사하며, 다음 실기에는 현재 결선 유지 확인을 새로 받는다. Sequence0/1 순서·유한 end/repeat·DPPI START·triggered-step·idle inversion, GPIO/GPIOTE·I2S·QDEC는 이번 확장만으로 완료 처리하지 않는다.
+
 
 최신 체크포인트: [97번](<04_검증 기록/97_T12_PWM_peer_capture_첫_240조건_검증.md>)의 exact 0d7f382에서 첫 PWM capture 기능 240·cleanup 240·14,400주기 PASS를 확인했다. Host 689 PASS·2 조건부 SKIP, pair target 2/2·정렬 373 PASS. 앞선 054d08f CI 15/15도 SUCCESS다. 현재 408 P1.14 두 선 결선은 유지되고 두 보드는 출력 off·입력 상태다. PWM 나머지 모드와 T12 전체·후속 gate는 미완료다.
 
