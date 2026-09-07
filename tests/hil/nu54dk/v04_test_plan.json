@@ -11,7 +11,8 @@
     "recovery_repetitions": 100,
     "handover_repetitions": 100,
     "standalone_soak_seconds": 180,
-    "concurrent_soak_seconds": 7200,
+    "concurrent_soak_seconds": 1800,
+    "representative_soak_seconds": 3600,
     "unexpected_loss_allowed": 0,
     "unexpected_reset_allowed": 0,
     "guard_bytes": 16
@@ -146,23 +147,23 @@
     {
       "id": "V04-SERIAL-CONCURRENCY", "groups": ["uarte", "spim", "spis", "twim", "twis"], "fixture": "peer",
       "modes": ["every-directed-same-block-pair", "handover", "spim00-twim22-concurrent", "wider-topology-follow-up"],
-      "parameters": {"repetitions": 100, "soak_seconds": 7200, "prepared_topology": ["spim00", "twim22"], "follow_up_topology": ["spim00", "uarte20", "uarte21", "twim22", "uarte30"]},
+      "parameters": {"repetitions": 100, "soak_seconds": 1800, "representative_soak_seconds": 3600, "prepared_topology": ["spim00", "twim22"], "follow_up_topology": ["spim00", "uarte20", "uarte21", "twim22", "uarte30"]},
       "oracle": "86개 방향 있는 동일 block 조합을 원자적 거부하고 release 뒤 전환 성공. fixture 201에서 1024-byte SPIM00 전송 중 TWIM22의 PMIC 0x6A/0x0C 읽기 0x41을 확인한다. 더 넓은 topology는 단독 기능 PASS 뒤 T13에서 pin/RAM 비중복과 개별 count/hash를 검증한다.",
       "needs": "T07/T08 준비 완료: 동일 block 충돌과 SPIM00+TWIM22 허용 조합을 실행 가능하게 고정. 5block 최대 조합은 T13 후속이며 준비·build만으로 PASS 처리하지 않음.", "reuse": [], "errata": []
     },
     {
       "id": "V04-ANALOG-CONCURRENCY", "groups": ["saadc", "pwm", "pdm", "i2s", "qdec", "timer", "gpiote", "egu", "dppic", "ppib", "grtc", "gpio"], "fixture": "peer",
       "modes": ["pwm20-pwm21-saadc-onboard", "pwm20-21-22", "pdm20-21", "qdec20-21", "adc-event-stream", "resource-conflict"],
-      "parameters": {"soak_seconds": 7200, "repetitions": 100, "onboard_topology": ["pwm20", "pwm21", "saadc"]},
+      "parameters": {"soak_seconds": 1800, "representative_soak_seconds": 3600, "repetitions": 100, "onboard_topology": ["pwm20", "pwm21", "saadc"]},
       "oracle": "무배선 opcode 5에서 P1.10/P1.14의 PWM20/PWM21과 내부 VDD SAADC DMA를 동시에 활성화해 sample 32개와 두 PWM 완료 event 및 bounded STOP을 확인한다. 더 큰 조합은 단독 PASS 뒤 T13에서 독립 count/hash를 대조한다. 물리 관측 자원 부족을 성공 처리하지 않고 예약 lease 중복은 거부한다.",
-      "needs": "T07/T09: 준비된 무배선 3block 조합을 exact image에서 실행. 최대 허용 topology와 7200초 soak는 T13이며 준비·build만으로 PASS 처리하지 않음.", "reuse": ["tests/hil/nu54dk/v04_pair.py"], "errata": []
+      "needs": "T07/T09: 준비된 무배선 3block 조합을 exact image에서 실행. 최대 허용 topology와 조합별 1800초·전체 대표 한 조합 3600초 soak는 T13이며 준비·build만으로 PASS 처리하지 않음.", "reuse": ["tests/hil/nu54dk/v04_pair.py"], "errata": []
     },
     {
       "id": "V04-SOAK", "groups": ["uarte", "spim", "spis", "twim", "twis", "saadc", "pwm", "pdm", "i2s", "qdec"], "fixture": "mixed",
       "modes": ["standalone-continuous", "buffer-turnover", "metrics"],
       "parameters": {"duration_seconds": 180, "progress_interval_seconds": 5},
       "oracle": "각 instance에서 전체 시간 연속 실행, 양측 count/hash·sequence 완전성, loss/reset/guard 손상 0, 시작·종료 lease 일치. CPU/latency/throughput은 측정법과 기록하고 성능 보증으로 사용하지 않음.",
-      "needs": "T07 준비 완료: campaign runner는 하나의 monotonic session만 계수하고 중단 전 시간을 이어 붙이지 않음. 2026-09-07 사용자 지시로 단독은 각 인스턴스 180초로 조정. 동시 7200초는 유지한다. 실제 요청/연속 실행 시간을 T13에서 기록하며 180초를 이전 600초 또는 장기 안정성 PASS로 확대하지 않음.", "reuse": ["tests/hil/nu54dk/v04_campaign.py"], "errata": []
+      "needs": "T07 준비 완료: campaign runner는 하나의 monotonic session만 계수하고 중단 전 시간을 이어 붙이지 않음. 2026-09-07 사용자 지시로 단독은 각 인스턴스 180초로 조정. 동시는 조합별 1800초, 전체 대표 고부하 한 조합은 3600초로 대체한다. 실제 요청/연속 실행 시간을 T13에서 기록하며 180초를 이전 600초 또는 장기 안정성 PASS로 확대하지 않음.", "reuse": ["tests/hil/nu54dk/v04_campaign.py"], "errata": []
     },
     {
       "id": "V04-SYSTEM-BOUNDARY", "groups": ["system"], "fixture": "contract",

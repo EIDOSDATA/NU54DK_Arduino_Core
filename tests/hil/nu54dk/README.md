@@ -1,5 +1,7 @@
 # NU54DK HIL 시험
 
+공통 결선 최신 준비: [Fixture 501 안내](COMMON_WIRING.md)의 17신호+GND 검사 firmware/runner를 준비했다. [99번](<../../../00_Docs/04_검증 기록/99_공통_결선_검사와_승인_전_자동_진행_계획.md>)에서 단독 180초·동시 1800초·전체 대표 한 조합 3600초 기준과 새 실기 상태를 관리한다. 아래 보드 간 무결선 상태는 이전 94·95번 당시 기록이다.
+
 현재 개발 검증(2026-09-07): [94번](<../../../00_Docs/04_검증 기록/94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>)에서 PWM 미시작 STOP 수정·두 보드 회귀와 전체 software/설치 예제 검증을 완료했다. [95번](<../../../00_Docs/04_검증 기록/95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)의 내부 ADC·TIMER·이벤트·시간 함수와 PWM 회귀도 두 보드 1,808명령 PASS다. 보드 간 결선은 해제됐으며 T12 전체·T13 이후와 RC/공개는 미완료다. 아래 source별 이력의 당시 상태와 현재 재개 조건을 구별한다.
 
 이 디렉터리는 NU54DK 실물 보드가 필요한 host-side 시험만 관리합니다. 일반 host unit test나
@@ -7,6 +9,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 
 | 파일 | 역할 | 주요 fixture |
 | --- | --- | --- |
+| `v04_wiring_run.py` / `v04_wiring.py` | 고정 17신호의 양방향 LOW/해제 102회와 pulse/lease 자동 해제 | Fixture 501, 새 확인서·SWD 10 MHz, GPIO API PASS와 구별 |
 | `v04_nojumper.py` | PWM·내부 ADC·TIMER·EGU/DPPI/PPIB·시간 함수의 exact SWD 명령/판정 | 두 지정 보드 USB/SWD, 보드 간 결선 해제, 94·95번 |
 | `m6_serial_echo.py` | pyOCD flash 후 UART READY·echo 검증 | NU54DK, CMSIS-DAP V2 UART |
 | `m7_i2c_pmic.py` | BQ25186 고정 ID register의 읽기 전용 I2C 검증 | 보드 내장 PMIC |
@@ -649,7 +652,7 @@ progress를 journal에 남깁니다. 중단된 실행은 `interrupted`이며 다
 2026-09-07 사용자 지시로 T13 단독 안정성 목표는 인스턴스별 **180초(3분)**입니다.
 실행기는 기간을 명시적으로 받으므로 해당 단독 campaign에 `--duration-seconds 180`을 전달합니다.
 일반 기능 검사 기본값 0과 공통 실행기 최대 7200초는 유지하며, 전체 기능 sweep 반복을
-각 인스턴스의 연속 부하 증거로 대체하지 않습니다. 동시 시험 시간은 아직 7200초입니다.
+각 인스턴스의 연속 부하 증거로 대체하지 않습니다. 동시 시험은 각 확정 조합 1800초이며, 전체 대표 고부하 한 조합만 3600초로 대체합니다. 대표 한 조합을 family마다 중복 선정하지 않습니다.
 
 R00~R13 이후 exact 154324c의 current-source Fixture 101은 SWD 10 MHz에서 데이터 1,620개·예상 오류 24개를 통과했습니다. [67번 기록](<../../../00_Docs/04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)에 exact 증거를 보존합니다. 전체 current-source T11과 T12/T13 PASS는 아직 아닙니다.
 

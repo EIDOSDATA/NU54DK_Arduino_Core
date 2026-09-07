@@ -18,7 +18,8 @@ namespace v04
         analog,
         qdec,
         i2s,
-        pdm
+        pdm,
+        wiring
     };
 
     /** @brief 결선 ID를 프로토콜 계열로 변환합니다. */
@@ -48,6 +49,8 @@ namespace v04
             return FixtureFamily::i2s;
         case 440:
             return FixtureFamily::pdm;
+        case 501:
+            return FixtureFamily::wiring;
         default:
             return FixtureFamily::invalid;
         }
@@ -59,6 +62,7 @@ namespace v04
         p0 = 0,
         p1 = 1,
         p2 = 2,
+        mixed = 3,
         invalid = 255
     };
 
@@ -94,6 +98,8 @@ namespace v04
         case 430:
         case 440:
             return Bank::p1;
+        case 501:
+            return Bank::mixed;
         default:
             return Bank::invalid;
         }

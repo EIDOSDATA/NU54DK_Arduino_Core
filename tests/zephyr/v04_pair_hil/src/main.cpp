@@ -5,6 +5,7 @@
 #include "fixture_hil.h"
 #include "signal_hil.h"
 #include "pwm_capture_hil.h"
+#include "wiring_hil.h"
 #include <nucode/AnalogFabric.h>
 #include <nucode/EventFabric.h>
 #include <nucode/SerialFabric.h>
@@ -303,6 +304,14 @@ namespace
             }
             return 0;
         }
+        if (opcode >= 48U && opcode <= 53U)
+        {
+            return wiringCommand(opcode, args, nargs, out, count);
+        }
+        if (wiringClaimed())
+        {
+            return 403U;
+        }
         if (opcode >= 40U && opcode <= 46U)
         {
             return pwmCaptureCommand(opcode, args, nargs, out, count);
@@ -349,6 +358,7 @@ namespace
 
 int main()
 {
+    initializeWiringIdle();
     initializeOnboardSerialIdle();
     v04_identity[1] = v04::version;
     v04_identity[2] = role;
@@ -371,6 +381,7 @@ int main()
         serviceFixture();
         serviceSignal();
         servicePwmCapture();
+        serviceWiring();
         if (v04_request[0] != v04::magic)
         {
             if (signalNeedsPolling())
