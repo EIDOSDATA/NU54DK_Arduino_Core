@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 OUTPUT = Path(__file__).with_name('v04_t13_topologies.json')
+QDEC_GATE = 'qdec-active-read-clear'
 
 
 def harness(profile):
@@ -109,6 +110,7 @@ def plan():
     topologies = [{'id': identifier, 'name': name, 'harness': profile,
                    'duration_seconds': 3600 if identifier == 'C05' else 900,
                    'serial_links': links, 'other_components': components,
+                   'required_gates': [QDEC_GATE] if identifier == 'C07' else [],
                    'execution_status': 'not-run', 'runner_status': 'implementation-required'}
                   for identifier, name, links, components in entries]
     standalone = []
@@ -118,6 +120,7 @@ def plan():
         for instance in instances:
             selected = 'U' if kind == 'uarte' and instance == 0 else 'S'
             row = {'kind': kind, 'instance': instance, 'duration_seconds': 180,
+                   'required_gates': [QDEC_GATE] if kind == 'qdec' else [],
                    'harness': selected, 'execution_status': 'not-run'}
             if kind == 'uarte':
                 if instance == 0:
@@ -144,6 +147,14 @@ def plan():
                     'qdec': 'B P1.14/P1.10 phases→A same pins;256us sample/2ms step/5ms read/100cycle direction change'}[kind]
             standalone.append(row)
     return {'schema_version': 1, 'status': 'planning-only', 'physical_executed': False,
+            'prerequisite_gates': {QDEC_GATE: {
+                'status': 'hold', 'reason': 'Active manual read/clear loses counts; preemption protection also reproduces 399/400',
+                'evidence': '../../../00_Docs/04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md',
+                'diagnostic_source': 'ce48471975be66a17368d5d6cb475447ffc9a96e',
+                'affected': ['standalone/qdec20', 'standalone/qdec21', 'C07'],
+                'release_condition': 'Resolve the manual read path and pass the full 240-condition functional regression before the planned read-based soak',
+                'alternative_candidate': 'REPORT-only IRQ matched 20 short runs; requires separate functional, overflow, queue and continuous qualification',
+                'automatic_substitution_allowed': False}},
             'board_revision': 'fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3',
             'harnesses': {key: harness(key) for key in ('C', 'S', 'U')}, 'common_ground': 'GND P2-30 ↔ P2-30',
             'current_harness': 'C', 'future_order': ['S', 'U'], 'standalone': standalone,

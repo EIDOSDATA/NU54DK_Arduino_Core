@@ -67,7 +67,8 @@
       "kind": "physical",
       "required": true,
       "state": "hold",
-      "reason": "safe NU54DK-generated/captured SAADC/PWM/PDM/I2S/QDEC functional signals, DMA, recovery, concurrency and soak evidence are required; precision metrology and third-party device qualification are outside scope"
+      "reason": "active QDEC manual read/clear count loss remains unresolved after timing, delayed-read and IRQ-protection diagnostics; full QDEC additional functional regression, remaining recovery, concurrency and soak evidence are required; precision metrology and third-party device qualification are outside scope",
+      "evidence": ["00_Docs/04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md"]
     },
     {
       "id": "m26_inventory",

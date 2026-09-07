@@ -2,6 +2,22 @@
   "schema_version": 1,
   "status": "planning-only",
   "physical_executed": false,
+  "prerequisite_gates": {
+    "qdec-active-read-clear": {
+      "status": "hold",
+      "reason": "Active manual read/clear loses counts; preemption protection also reproduces 399/400",
+      "evidence": "../../../00_Docs/04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md",
+      "diagnostic_source": "ce48471975be66a17368d5d6cb475447ffc9a96e",
+      "affected": [
+        "standalone/qdec20",
+        "standalone/qdec21",
+        "C07"
+      ],
+      "release_condition": "Resolve the manual read path and pass the full 240-condition functional regression before the planned read-based soak",
+      "alternative_candidate": "REPORT-only IRQ matched 20 short runs; requires separate functional, overflow, queue and continuous qualification",
+      "automatic_substitution_allowed": false
+    }
+  },
   "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
   "harnesses": {
     "C": {
@@ -73,6 +89,7 @@
       "kind": "uarte",
       "instance": 0,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "U",
       "execution_status": "not-run",
       "serial_link": {
@@ -112,6 +129,7 @@
       "kind": "uarte",
       "instance": 20,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -151,6 +169,7 @@
       "kind": "uarte",
       "instance": 21,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -190,6 +209,7 @@
       "kind": "uarte",
       "instance": 22,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -229,6 +249,7 @@
       "kind": "uarte",
       "instance": 30,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -268,6 +289,7 @@
       "kind": "spim",
       "instance": 0,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -307,6 +329,7 @@
       "kind": "spim",
       "instance": 20,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -346,6 +369,7 @@
       "kind": "spim",
       "instance": 21,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -385,6 +409,7 @@
       "kind": "spim",
       "instance": 22,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -424,6 +449,7 @@
       "kind": "spim",
       "instance": 30,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -463,6 +489,7 @@
       "kind": "spis",
       "instance": 0,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -502,6 +529,7 @@
       "kind": "spis",
       "instance": 20,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -541,6 +569,7 @@
       "kind": "spis",
       "instance": 21,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -580,6 +609,7 @@
       "kind": "spis",
       "instance": 22,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -619,6 +649,7 @@
       "kind": "spis",
       "instance": 30,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -658,6 +689,7 @@
       "kind": "twim",
       "instance": 20,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -693,6 +725,7 @@
       "kind": "twim",
       "instance": 21,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -728,6 +761,7 @@
       "kind": "twim",
       "instance": 22,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -763,6 +797,7 @@
       "kind": "twim",
       "instance": 30,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -798,6 +833,7 @@
       "kind": "twis",
       "instance": 20,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -833,6 +869,7 @@
       "kind": "twis",
       "instance": 21,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -868,6 +905,7 @@
       "kind": "twis",
       "instance": 22,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -903,6 +941,7 @@
       "kind": "twis",
       "instance": 30,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "serial_link": {
@@ -938,6 +977,7 @@
       "kind": "saadc",
       "instance": 0,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "configuration": "A internal VDD/AVDD 12bit scan/32samples x2/2ms"
@@ -946,6 +986,7 @@
       "kind": "pwm",
       "instance": 20,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "configuration": "B P1.14→A P1.14; slot0/TOP1000/duty50/individual/32values/loop; A TIMER22 capture"
@@ -954,6 +995,7 @@
       "kind": "pwm",
       "instance": 21,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "configuration": "B P1.14→A P1.14; slot0/TOP1000/duty50/individual/32values/loop; A TIMER22 capture"
@@ -962,6 +1004,7 @@
       "kind": "pwm",
       "instance": 22,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "configuration": "B P1.14→A P1.14; slot0/TOP1000/duty50/individual/32values/loop; A TIMER22 capture"
@@ -970,6 +1013,7 @@
       "kind": "pdm",
       "instance": 20,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "configuration": "A P1.04 clock/P1.06 data/P1.05 CS; B P1.05 clock/P1.07 data/P1.04 CS;16k/mono/1024samples x4"
@@ -978,6 +1022,7 @@
       "kind": "pdm",
       "instance": 21,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "configuration": "A P1.04 clock/P1.06 data/P1.05 CS; B P1.05 clock/P1.07 data/P1.04 CS;16k/mono/1024samples x4"
@@ -986,6 +1031,7 @@
       "kind": "i2s",
       "instance": 20,
       "duration_seconds": 180,
+      "required_gates": [],
       "harness": "S",
       "execution_status": "not-run",
       "configuration": "A master P1.04 SCK/P1.05 LRCK; B slave P1.05 SCK/P1.04 LRCK; TX P1.06/RX P1.07 both;48k/32bit/stereo/256word x3"
@@ -994,6 +1040,9 @@
       "kind": "qdec",
       "instance": 20,
       "duration_seconds": 180,
+      "required_gates": [
+        "qdec-active-read-clear"
+      ],
       "harness": "S",
       "execution_status": "not-run",
       "configuration": "B P1.14/P1.10 phases→A same pins;256us sample/2ms step/5ms read/100cycle direction change"
@@ -1002,6 +1051,9 @@
       "kind": "qdec",
       "instance": 21,
       "duration_seconds": 180,
+      "required_gates": [
+        "qdec-active-read-clear"
+      ],
       "harness": "S",
       "execution_status": "not-run",
       "configuration": "B P1.14/P1.10 phases→A same pins;256us sample/2ms step/5ms read/100cycle direction change"
@@ -1128,6 +1180,7 @@
         }
       ],
       "other_components": [],
+      "required_gates": [],
       "execution_status": "not-run",
       "runner_status": "implementation-required"
     },
@@ -1228,6 +1281,7 @@
         }
       ],
       "other_components": [],
+      "required_gates": [],
       "execution_status": "not-run",
       "runner_status": "implementation-required"
     },
@@ -1324,6 +1378,7 @@
         }
       ],
       "other_components": [],
+      "required_gates": [],
       "execution_status": "not-run",
       "runner_status": "implementation-required"
     },
@@ -1420,6 +1475,7 @@
         }
       ],
       "other_components": [],
+      "required_gates": [],
       "execution_status": "not-run",
       "runner_status": "implementation-required"
     },
@@ -1574,6 +1630,7 @@
         }
       ],
       "other_components": [],
+      "required_gates": [],
       "execution_status": "not-run",
       "runner_status": "implementation-required"
     },
@@ -1667,6 +1724,7 @@
           "configuration": "A internal VDD/AVDD scan 12bit 32samples x2 buffers; 2ms SAMPLE"
         }
       ],
+      "required_gates": [],
       "execution_status": "not-run",
       "runner_status": "implementation-required"
     },
@@ -1792,6 +1850,9 @@
           "configuration": "A internal VDD 12bit/32samples x2; 2ms SAMPLE"
         }
       ],
+      "required_gates": [
+        "qdec-active-read-clear"
+      ],
       "execution_status": "not-run",
       "runner_status": "implementation-required"
     },
@@ -1885,6 +1946,7 @@
           "configuration": "A internal VDD 12bit/32samples x2; 2ms SAMPLE"
         }
       ],
+      "required_gates": [],
       "execution_status": "not-run",
       "runner_status": "implementation-required"
     }

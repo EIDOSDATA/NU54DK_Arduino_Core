@@ -1,6 +1,6 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
-현재 기능 실행(100·101번): GPIO/GPIOTE2502(4e48252), steady PWM675(3334b17), 추가 PWM288(0db0689), I2S432(b5c86a4)는 PASS다. QDEC 기능240은 누산 누락으로 미완료다. exact1e0138a 지연 대비90회에서 공개 read6/30·5µs 뒤 HAL값5/30·공개 read+지연 관측3/30이399/400으로 실패했다. GPIO/SAMPLE400·즉시/늦은 값 변화0, cleanup93·양쪽 postflight PASS다. 3a0e976에서 SAMPLE IRQ20·REPORT IRQ20이 모두400으로 일치했고 종료 후 NVIC7을 확인했다. 다음은 read 구간만 IRQ 보호하는60회 비교다. 사용자 지시에 따라 이 짧은 대비 뒤 미해결이면 제한·추정 원인을 보존하고 다음 허용 문서/검사 작업으로 진행한다. QDEC 자체 DMA는 없고 현재 GPIO 송신에서도 재현했다. 회로도에서 P1.10/1.14의 LED2/4 버퍼 입력 분기를 확인했다. 제품 core는 미수정이다. T13은32단독/8동시·C→S→U 계획만 확정했고 T12전체·T13실기·RC는 미완료다.
+현재 기능 실행(100·101번): GPIO/GPIOTE2502(4e48252), steady PWM675(3334b17), 추가 PWM288(0db0689), I2S432(b5c86a4)는 PASS다. QDEC 기능240은 누산 누락으로 HOLD다. 마지막 ce48471 선점 대비60회에서 일반 read9/30·IRQ 보호 read7/30이399/400으로 실패했다. GPIO/SAMPLE은 모두400, 보호 구간 최대5µs, 제어 오류0·cleanup63·양쪽 postflight PASS다. 3a0e976 SAMPLE IRQ20·REPORT IRQ20은 모두400으로 일치했으나 기능240이나 안정성 PASS로 확대하지 않는다. 사용자 지시대로 진단 반복을 종료하고 유력 원인·미검증 전기 조건·보완·재개 조건을101번에 남겼다. 제품 core·SDK는 미수정이다. T13은32단독/8동시·C→S→U 두 결선 변경의 계획만 확정했고 QDEC 단독2개와C07은 선행 HOLD다. T12전체·T13실기·지원 범위 확정·RC·공개는 미완료다.
 
 현재 실행 범위(2026-09-07 후속): 사용자가 **T12 현재 공통 결선 묶음 검증과 T13 시험 조합·추가 결선 확정까지** 지시했다. 17개 공통 GPIO/GPIOTE, PWM 나머지 모드, QDEC 추가 조건, I2S 연속·단방향을 구현·Host·target·실기로 구분해 진행한다. T13은 조합·자원 충돌·추가 GPIO 결선표를 확정하는 단계이며 soak 실행은 이번 범위에 포함하지 않는다. 새 증거와 문서를 갱신하고 commit/push·CI를 확인한다. T12 전체·T13 실기·후속 gate·RC·공개는 미완료로 유지한다.
 
@@ -25,12 +25,12 @@ T12 다음 준비 범위(2026-09-07): 97번의 첫 capture를 common/grouped/ind
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.48 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.49 |
 | 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 외부/내부 부분 PASS·전체 미완료 |
 | 작성·갱신일 | 2026-09-08 |
-| 작성 직전 기준 commit | `1e0138a1cdb2e1ea3cfc44a0431251657c6ed4b6` — latency90회·14개399 실패·postflight PASS |
+| 작성 직전 기준 commit | `ce48471975be66a17368d5d6cb475447ffc9a96e` — 선점60회·16개399 실패·postflight PASS |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **QDEC 선점 대비60회 → 결과에 따라 수정/회귀 또는 미해결 HOLD 보완 → 문서·증거·push/CI** |
+| 다음 착수 항목 | **QDEC HOLD·T13 선행조건 확정 → 문서·증거·최종 검사·push/CI. T13 실기는 별도 후속** |
 | 이번 요청의 실행 범위 | 새 PC 인수·환경·main/submodule 확인, 첫 PWM peer capture 구현/Host/target과 240조건 실기·증거·commit/push. 후속 PWM 모드·GPIO/GPIOTE·I2S·QDEC를 이어간다. T12 전체·후속 gate 완료 처리 없음 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
@@ -83,20 +83,20 @@ GPIO/GPIOTE 전체·I2S 연속/단방향·QDEC 추가 조건 및 PWM의 나머�
 | --- | --- |
 | 이번에 끝낸 일 | GPIO/GPIOTE2502·steadyPWM675·추가PWM288·I2S432 기능 PASS. 각 exact source·새501·cleanup/postflight 분리 보존. T1332단독/8동시 계획 확정·실기0 |
 | 진행 중인 T 항목 | [100번](<04_검증 기록/100_T12_공통_기능_묶음과_T13_조합_확정.md>) T12 공통 묶음과 T13 조합·추가 결선 확정. T13 soak는 이번 범위 밖 |
-| 다음 구체적 행동 | [101번](<04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md>) timing90 완료 뒤 즉시/5µs 후 ACCREAD 대비. 숫자 보정이나 기존 실패 삭제 금지 |
+| 다음 구체적 행동 | 최종 문서·증거를commit/push하고 exact 원격CI를 확인한다. 이후 새 허용 범위에서 T13 runner/preflight 준비. QDEC HOLD와 C→S→U 결선 경계를 유지하며 추가 원인 실기 재시도를 예약하지 않음 |
 | 다음 작업에 필요한 사용자 행동 | 현재 17신호+GND·DAP UART 분리·SWD 연결 유지와 HW 미조작 확인을 받음. 이번 고정 세션은 2026-09-08 07:00 KST 만료. 새 추가 결선은 T13 계획에서 확정하며 이번에는 변경하지 않음 |
-| 외부 결선 상태 | C17신호+GND·양쪽 DAP UART 분리/SWD 연결 유지 확인. f42dadf 종료 postflight 양쪽17 GPIO 입력·주변장치 off PASS. 고정 세션은2026-09-08 07:00KST까지이며 USB/결선 변경 시 재확인 필요 |
+| 외부 결선 상태 | C17신호+GND 유지 보고. ce48471 종료19:23:08UTC postflight 양쪽17 GPIO 입력·주변장치 off PASS. 고정 세션은2026-09-08 07:00KST 만료이며 후속 결선/USB 변경 시 새 확인 필요 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 다른 PC 재개 | [인계 문서](HANDOFF_v0.4.0_다른_PC.md)의 이전 PC 상태와96/97/99를 보존. 최신 범위·실행 source·결과는 이 TODO와100번 |
-| 마지막 정식 외부 HIL source | QDEC 진단1e0138a 종료(기능 PASS 아님). I2S432는b5c86a4. GPIO4e48252·steady3334b17·모드0db0689 PASS는 당시 source 결과 |
+| 마지막 정식 외부 HIL source | QDEC 진단ce48471 종료(기능 PASS 아님). IRQ40은3a0e976. I2S432는b5c86a4. GPIO4e48252·steady3334b17·모드0db0689 PASS는 당시 source 결과 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. 420 정의된 기능·준비 취소와 430 I2S 기능 완료. T12 전체·T13 이후·R14·RC·공개는 대기. 공용 자원 경로 변경 이후 필요한 최종-source 통신 회귀는 후속 통합에서 확인 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | 현재 probe 실행 없음. session52925 IRQ40 일치·cleanup43·postflight PASS로 종료. read 선점 대비60회 준비 중 |
+| 이 TODO 작성 작업의 실행 중 시험 | 현재 probe 실행 없음. session99436 선점60회·불일치16개·cleanup63·postflight PASS로 종료. 사용자 지시대로 추가 실기 진단 중단·원인/보완 보존 |
 | 로컬 임시 build·evidence | C:/pcv04 baseline·C:/pwm04 최초 build 실패·C:/pwc04 준비·C:/pwh04 054d08f·C:/pwq04 0d7f382 보존. 97번에 두 flash 실패·성공·raw/SHA 보존. 삭제 실행 없음 |
-| 최종 정렬 gate | 1e0138a 정렬388·pair2/2·contract/package/inventory/docs PASS. 전체 Host는 Windows 앱 제어4551이 생성 PWM 실행 파일을 차단하여 FAIL·원본 보존. 보안 정책 변경 없이 후속 source 원격 CI에서 전체 검사 필요 |
-| CI 확인 | 3a0e976까지 origin/main push 완료. Software7/7 SUCCESS, 재현 빌드 진행 중. 원본은101번 IRQ archive의 실제 check snapshot. 인계 f42bda5도15/15 SUCCESS 재확인 |
-| 문서 작업 검증 | T13계획180/900/3600초·C→S→U 두 변경과32단독/8동시를 production route Host로 검사. Software·실기 범위와readiness HOLD 유지 |
-| 최종 HIL 입력 찾기 | GPIO C:/cgc04=4e48252, steady C:/cav04=3334b17, 모드 C:/caw04=0db0689, I2S C:/cax04=b5c86a4, QDEC진단 C:/cbw04=1e0138a. Raw/SHA/postflight는100·101번 |
+| 최종 정렬 gate | 최종 준비 Host94그룹733시험=731PASS·설치CLI/dirty M27 조건부SKIP2. 정렬388·T13 Host3·contract/inventory/package20/docs PASS. ce48471 pair2/2·관련Host16 원본 보존. 이전 Windows4551 실패는 삭제/승격하지 않음 |
+| CI 확인 | 3a0e976 원격15/15 SUCCESS(Software7·재현8), 인계f42bda5도15/15 SUCCESS 재확인. 최종 checkpoint archive에3a 실제 check 원본 보존. 이 문서 포함 최종push의 check 상태는 해당commit GitHub Checks에서 별도 확인 |
+| 문서 작업 검증 | T13계획180/900/3600초·C→S→U 두 변경·32단독/8동시 유지. QDEC20/21 단독과C07 선행HOLD를 JSON에 고정. 다른 조합은 별도 runner/preflight/현재 결선 확인 필요 |
+| 최종 HIL 입력 찾기 | GPIO C:/cgc04=4e48252, steady C:/cav04=3334b17, 모드 C:/caw04=0db0689, I2S C:/cax04=b5c86a4, QDEC진단 C:/cby04=ce48471. Raw/SHA/postflight는100·101번 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드

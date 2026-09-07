@@ -15,6 +15,24 @@ import v04_t13_plan as plan
 
 
 class T13PlanTests(unittest.TestCase):
+    def test_unresolved_qdec_blocks_only_its_planned_read_based_runs(self):
+        """! @brief 짧은 IRQ 일치를 manual read 안정성 PASS로 바꿔 실행하지 못하게 합니다. """
+        data = plan.plan()
+        gate = data['prerequisite_gates'][plan.QDEC_GATE]
+        self.assertEqual(gate['status'], 'hold')
+        self.assertFalse(gate['automatic_substitution_allowed'])
+        self.assertEqual([row['id'] for row in data['topologies'] if row['required_gates']], ['C07'])
+        self.assertEqual([(row['kind'], row['instance']) for row in data['standalone'] if row['required_gates']],
+                         [('qdec', 20), ('qdec', 21)])
+        for row in data['standalone'] + data['topologies']:
+            self.assertEqual(row['execution_status'], 'not-run')
+            for required in row['required_gates']:
+                self.assertIn(required, data['prerequisite_gates'])
+        bad = copy.deepcopy(data)
+        bad['prerequisite_gates'][plan.QDEC_GATE]['status'] = 'passed'
+        with self.assertRaises(AssertionError):
+            plan.validate(bad)
+
     def test_canonical_scope_and_physical_link_directions(self):
         data = json.loads(plan.OUTPUT.read_text(encoding='utf-8'))
         plan.validate(data)
