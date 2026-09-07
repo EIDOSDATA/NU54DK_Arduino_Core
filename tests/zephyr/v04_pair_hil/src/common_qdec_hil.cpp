@@ -47,6 +47,8 @@ namespace
     std::uint32_t read_trace[16][10]{}, trace_next = 0U, trace_total = 0U;
     std::uint32_t first_sample_detail[8]{};
     std::uint32_t read_observation = 0U;
+    std::uint32_t read_strategy = 0U;
+    std::uint32_t read_period_us = 5000U;
 
     /** @brief 비활성 IRQ의 SAMPLERDY를 관측하고 ACC와 별개인 SAMPLE 값을 합산합니다. */
     void observeSample(std::uint32_t now)
@@ -178,12 +180,24 @@ namespace
             max_read_gap = gap;
         }
         last_read = now;
-        const auto *const reg = instance == 20U ? NRF_QDEC20 : NRF_QDEC21;
+        auto *const reg = instance == 20U ? NRF_QDEC20 : NRF_QDEC21;
         const auto before_acc = read_observation >= 2U
                                     ? static_cast<std::uint32_t>(nrf_qdec_acc_get(reg))
                                     : 0x80000000U;
         QdecEvent event{};
-        const auto result = qdec->read(event);
+        auto result = StreamFabricResult::success;
+        if (read_strategy == 1U)
+        {
+            /** @brief 진단 전용으로 개별 task를 대비하며 공개 read의 PASS로 사용하지 않습니다. */
+            nrf_qdec_task_trigger(reg, NRF_QDEC_TASK_RDCLRACC);
+            event.accumulated = nrf_qdec_accread_get(reg);
+            nrf_qdec_task_trigger(reg, NRF_QDEC_TASK_RDCLRDBL);
+            event.double_transitions = nrf_qdec_accdblread_get(reg);
+        }
+        else
+        {
+            result = qdec->read(event);
+        }
         last_driver_acc = event.accumulated;
         if (!mismatch_recorded)
         {
@@ -207,7 +221,8 @@ namespace
         }
         if (result != StreamFabricResult::success || event.driver_error != 0 ||
             event.accumulated <= -1024 || event.accumulated >= 1023 ||
-            event.double_transitions >= 15U || k_cyc_to_us_floor32(gap) > 15000U)
+            event.double_transitions >= 15U ||
+            k_cyc_to_us_floor32(gap) > (read_strategy == 2U ? 6000000U : 15000U))
         {
             error = 2U;
             return false;
@@ -316,7 +331,19 @@ void serviceCommonQdec()
         }
         observeInput(now);
     }
-    if (role == 1U && now - last_read >= k_us_to_cyc_ceil32(5000U))
+    if (role == 1U && read_strategy == 2U)
+    {
+        /** @brief 지우지 않는 대비도 누산 포화·시간 초과 전에 출력 gate를 닫습니다. */
+        const auto *const reg = instance == 20U ? NRF_QDEC20 : NRF_QDEC21;
+        const auto acc = nrf_qdec_acc_get(reg);
+        if (now - last_read > k_us_to_cyc_ceil32(6000000U) || acc <= -900 || acc >= 900 ||
+            nrf_qdec_accdbl_get(reg) >= 14U)
+        {
+            error = 3U;
+            gate.close(stop());
+        }
+    }
+    if (role == 1U && read_strategy != 2U && now - last_read >= k_us_to_cyc_ceil32(read_period_us))
     {
         if (!drain())
         {
@@ -350,6 +377,8 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
         error = reads = doubles = emitted = target_steps = max_read_gap = 0U;
         accumulated = 0;
         read_observation = 0U;
+        read_strategy = 0U;
+        read_period_us = 5000U;
         sampled_steps = last_sample_value = 0;
         sampled_doubles = sample_events = max_sample_gap = trace_next = trace_total = 0U;
         mismatch_recorded = phase_checked = false;
@@ -420,6 +449,16 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
         count = 4U;
         return 0U;
     }
+    if (opcode == 85U && nargs == 1U && args[0] == 5U && role == 1U)
+    {
+        out[0] = read_strategy;
+        out[1] = read_strategy != 1U;
+        out[2] = read_strategy != 2U;
+        out[3] = read_strategy == 2U ? 6000000U : 15000U;
+        out[4] = read_period_us;
+        count = 5U;
+        return 0U;
+    }
     if (opcode == 85U && nargs == 2U && args[0] == 3U && args[1] < 16U && args[1] % 2U == 0U &&
         role == 1U)
     {
@@ -440,12 +479,16 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
         count = 1U;
         return 0U;
     }
-    if (opcode == 83U && (nargs == 2U || (nargs == 3U && args[2] <= 3U)) &&
+    if (opcode == 83U &&
+        (nargs == 2U || (nargs == 3U && args[2] <= 3U) ||
+         (nargs == 4U && args[2] == 3U && args[3] <= 2U)) &&
         (args[0] == 20U || args[0] == 21U) && args[1] <= 1U && !prepared && qdec == nullptr &&
         !generator_token.active)
     {
         instance = args[0];
-        read_observation = nargs == 3U ? args[2] : 0U;
+        read_observation = nargs >= 3U ? args[2] : 0U;
+        read_strategy = nargs == 4U ? args[3] : 0U;
+        read_period_us = nargs == 4U ? 128U : 5000U;
         if (role == 2U)
         {
             const IoResourceId resources[]{gpioIoResource(pinDescription(PIN_P1_14)->gpio),
