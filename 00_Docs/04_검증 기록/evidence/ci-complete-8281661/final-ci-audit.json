@@ -1,0 +1,319 @@
+{
+  "source": "828166109968b2ceb40fc2d9c054255558d995d5",
+  "at_utc": "2026-09-07T07:33:45.843228+00:00",
+  "software_jobs": 7,
+  "reproducible_build_jobs": 8,
+  "status": "passed",
+  "host": {
+    "groups": 85,
+    "reported_tests": 682,
+    "passed": 680,
+    "conditional_skips": 2
+  },
+  "hardware_access": false,
+  "jobs": [
+    {
+      "id": 101649928690,
+      "name": "Reproducible Boards Manager package",
+      "run_id": 34092876776,
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876776/job/101649928690",
+      "conclusion": "success",
+      "workspace_log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101649928690.log",
+      "log_sha256": "3f2b221520d9b271eaf9ec2f7c9de1c36bf5318689dfd339556a15dfe1727715",
+      "log_bytes": 30459,
+      "markers": [
+        "2026-09-07T06:54:22.5711957Z Ran 20 tests in 5.311s",
+        "2026-09-07T06:54:22.5830235Z M12_GATE_PASS=package"
+      ]
+    },
+    {
+      "id": 101649928775,
+      "name": "M23 inventory and M24 serial-fabric contract",
+      "run_id": 34092876776,
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876776/job/101649928775",
+      "conclusion": "success",
+      "workspace_log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101649928775.log",
+      "log_sha256": "688c6463b6e2481a55f838440735d44e4f40fdb36511817ee9d7b33e22acbb14",
+      "log_bytes": 27224,
+      "markers": [
+        "2026-09-07T06:54:15.9941102Z M12_GATE_PASS=inventory"
+      ]
+    },
+    {
+      "id": 101649928778,
+      "name": "Arduino example discovery",
+      "run_id": 34092876776,
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876776/job/101649928778",
+      "conclusion": "success",
+      "workspace_log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101649928778.log",
+      "log_sha256": "cad120e4d7a5b925b12ced2cd1f82402c1037d2780108e3adfb77a6165df013a",
+      "log_bytes": 27740,
+      "markers": [
+        "2026-09-07T06:54:21.2960291Z PASS: examples",
+        "2026-09-07T06:54:21.2960621Z ARDUINO_SMOKE_GROUP_PASS=custom;TESTS=1",
+        "2026-09-07T06:54:21.3165432Z M12_GATE_PASS=examples"
+      ]
+    },
+    {
+      "id": 101649928812,
+      "name": "M14 Core native semantic runtime",
+      "run_id": 34092876776,
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876776/job/101649928812",
+      "conclusion": "success",
+      "workspace_log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101649928812.log",
+      "log_sha256": "5651a81ff63f415b8d3bcc4059b76a311a74a44f889fa5fb27f65d47c4268dbb",
+      "log_bytes": 26483,
+      "markers": [
+        "2026-09-07T06:54:17.0489293Z Ran 5 tests in 1.888s"
+      ]
+    },
+    {
+      "id": 101649928848,
+      "name": "Host unit with Windows PowerShell contracts",
+      "run_id": 34092876776,
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876776/job/101649928848",
+      "conclusion": "success",
+      "workspace_log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-host-success.log",
+      "log_sha256": "c37fbe66b3e781e720f64427cfc189e6b8b0ceba8cd714182b31cddd0ce870b0",
+      "log_bytes": 263343,
+      "markers": [
+        "2026-09-07T06:54:29.1396775Z Ran 4 tests in 0.004s",
+        "2026-09-07T06:54:38.4037698Z Ran 7 tests in 9.177s",
+        "2026-09-07T06:54:38.4875081Z Ran 6 tests in 0.004s",
+        "2026-09-07T06:54:38.6448223Z Ran 6 tests in 0.014s",
+        "2026-09-07T06:54:39.0869967Z Ran 9 tests in 0.059s",
+        "2026-09-07T06:54:43.8676289Z Ran 16 tests in 0.212s",
+        "2026-09-07T06:54:44.0161604Z Ran 6 tests in 0.024s",
+        "2026-09-07T06:54:48.9271393Z Ran 24 tests in 4.766s",
+        "2026-09-07T06:55:00.6573181Z Ran 29 tests in 11.633s",
+        "2026-09-07T06:55:04.5995307Z Ran 11 tests in 3.779s",
+        "2026-09-07T06:55:26.9546854Z Ran 28 tests in 22.151s",
+        "2026-09-07T06:55:29.1674069Z Ran 16 tests in 2.112s",
+        "2026-09-07T06:55:29.9164860Z Ran 11 tests in 0.608s",
+        "2026-09-07T06:55:34.5299587Z Ran 5 tests in 4.520s",
+        "2026-09-07T06:55:34.6992510Z Ran 12 tests in 0.017s",
+        "2026-09-07T06:55:34.9227839Z Ran 6 tests in 0.119s",
+        "2026-09-07T06:55:35.0111249Z Ran 9 tests in 0.005s",
+        "2026-09-07T06:55:35.0910919Z Ran 3 tests in 0.003s",
+        "2026-09-07T06:55:35.2850539Z Ran 16 tests in 0.031s",
+        "2026-09-07T06:55:35.3853135Z Ran 6 tests in 0.009s",
+        "2026-09-07T06:55:35.5116224Z Ran 9 tests in 0.009s",
+        "2026-09-07T06:55:36.3032829Z Ran 25 tests in 0.654s",
+        "2026-09-07T06:55:36.4983774Z Ran 15 tests in 0.036s",
+        "2026-09-07T06:55:36.6806758Z Ran 13 tests in 0.037s",
+        "2026-09-07T06:55:40.5837802Z Ran 25 tests in 3.720s",
+        "2026-09-07T06:55:40.7082913Z Ran 8 tests in 0.035s",
+        "2026-09-07T06:55:40.8320621Z Ran 5 tests in 0.001s",
+        "2026-09-07T06:55:40.9279283Z Ran 6 tests in 0.015s",
+        "2026-09-07T06:55:41.0392474Z Ran 6 tests in 0.001s",
+        "2026-09-07T06:55:41.1576884Z Ran 22 tests in 0.031s",
+        "2026-09-07T06:55:41.2830442Z Ran 10 tests in 0.008s",
+        "2026-09-07T06:55:41.3718897Z Ran 7 tests in 0.004s",
+        "2026-09-07T06:55:41.5903021Z Ran 13 tests in 0.088s",
+        "2026-09-07T06:55:41.6935108Z Ran 4 tests in 0.004s",
+        "2026-09-07T06:55:42.4005107Z Ran 7 tests in 0.605s",
+        "2026-09-07T06:55:42.6108220Z Ran 5 tests in 0.056s",
+        "2026-09-07T06:55:44.3665660Z Ran 8 tests in 1.640s",
+        "2026-09-07T06:55:44.6424980Z Ran 15 tests in 0.162s",
+        "2026-09-07T06:55:44.7813431Z Ran 5 tests in 0.042s",
+        "2026-09-07T06:55:45.6500005Z Ran 5 tests in 0.731s",
+        "2026-09-07T06:55:47.1053746Z Ran 9 tests in 1.303s",
+        "2026-09-07T06:55:47.2287294Z Ran 3 tests in 0.012s",
+        "2026-09-07T06:55:47.8216585Z Ran 13 tests in 0.480s",
+        "2026-09-07T06:55:48.8455397Z Ran 23 tests in 0.869s",
+        "2026-09-07T06:55:49.5360048Z Ran 12 tests in 0.536s",
+        "2026-09-07T06:55:59.1367844Z Ran 3 tests in 3.288s",
+        "2026-09-07T06:56:03.4326188Z Ran 6 tests in 2.288s",
+        "2026-09-07T06:56:04.3127098Z Ran 2 tests in 0.788s",
+        "2026-09-07T06:56:05.0836298Z Ran 4 tests in 0.680s",
+        "2026-09-07T06:56:56.2592493Z Ran 3 tests in 0.008s",
+        "2026-09-07T06:56:57.2208278Z Ran 2 tests in 0.867s",
+        "2026-09-07T06:56:58.0431343Z Ran 6 tests in 0.734s",
+        "2026-09-07T06:56:58.1389120Z Ran 3 tests in 0.001s",
+        "2026-09-07T06:57:09.8364233Z Ran 2 tests in 0.161s",
+        "2026-09-07T06:57:09.9760110Z Ran 12 tests in 0.016s",
+        "2026-09-07T06:57:10.7130733Z Ran 3 tests in 0.642s",
+        "2026-09-07T06:57:10.8543207Z Ran 7 tests in 0.002s",
+        "2026-09-07T06:57:10.9670113Z Ran 8 tests in 0.002s",
+        "2026-09-07T06:57:11.2296298Z Ran 16 tests in 0.126s",
+        "2026-09-07T06:57:11.5706950Z Ran 4 tests in 0.172s",
+        "2026-09-07T06:57:11.9802704Z Ran 7 tests in 0.307s",
+        "2026-09-07T06:57:13.7872293Z Ran 3 tests in 1.399s",
+        "2026-09-07T06:57:14.4541523Z Ran 17 tests in 0.521s",
+        "2026-09-07T06:57:14.5963627Z Ran 10 tests in 0.043s",
+        "2026-09-07T06:57:14.7486813Z Ran 6 tests in 0.019s",
+        "2026-09-07T06:57:14.9544171Z Ran 12 tests in 0.021s",
+        "2026-09-07T06:57:15.1193104Z Ran 10 tests in 0.024s",
+        "2026-09-07T06:57:15.2184009Z Ran 4 tests in 0.000s",
+        "2026-09-07T06:57:15.3165617Z Ran 4 tests in 0.001s",
+        "2026-09-07T06:57:15.4485636Z Ran 10 tests in 0.002s",
+        "2026-09-07T06:57:15.4640985Z M12_GATE_PASS=host"
+      ]
+    },
+    {
+      "id": 101649928855,
+      "name": "CI contract",
+      "run_id": 34092876776,
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876776/job/101649928855",
+      "conclusion": "success",
+      "workspace_log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101649928855.log",
+      "log_sha256": "ba15a5d104f494b35c5bb669e59858ceac5f066ee0a9566cb4ca45dd491718f3",
+      "log_bytes": 34202,
+      "markers": [
+        "2026-09-07T06:54:15.1164639Z Ran 45 tests in 0.034s",
+        "2026-09-07T06:54:15.1313980Z M12_GATE_PASS=contract"
+      ]
+    },
+    {
+      "id": 101649928858,
+      "name": "UTF-8 and local links",
+      "run_id": 34092876776,
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876776/job/101649928858",
+      "conclusion": "success",
+      "workspace_log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101649928858.log",
+      "log_sha256": "f84b8d3be3a5aa541a8cbbca00576f4eb49b929c3b124dbf69be34b08b395b1e",
+      "log_bytes": 25352,
+      "markers": [
+        "2026-09-07T06:54:15.2105179Z [M12] Markdown UTF-8/local-link PASS: 205 files",
+        "2026-09-07T06:54:15.2106044Z M12_GATE_PASS=docs"
+      ]
+    },
+    {
+      "id": 101651109198,
+      "name": "Arduino v0.3.0-compat with pinned Windows prerequisites",
+      "run_id": 34092876773,
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876773/job/101651109198",
+      "conclusion": "success",
+      "workspace_log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101651109198.log",
+      "log_sha256": "3b4883feeec20d25b6956f04a6d43d738d3437e4d4220aabd3a6c8aad04bd34a",
+      "log_bytes": 46173,
+      "markers": [
+        "2026-09-07T07:23:00.8865723Z PASS: ac02b",
+        "2026-09-07T07:31:29.2536881Z PASS: ac03",
+        "2026-09-07T07:31:29.6460047Z PASS: examples",
+        "2026-09-07T07:31:29.6461167Z ARDUINO_SMOKE_GROUP_PASS=v0.3.0-compat;TESTS=3",
+        "2026-09-07T07:31:33.3614847Z SHA256 digest of uploaded artifact is 1ccc85d777c09f74030c973c955bbf31ae535976aaa54cfd6313b65fa6e4d757",
+        "2026-09-07T07:31:33.6422119Z Artifact m12-arduino-v0.3.0-compat-828166109968b2ceb40fc2d9c054255558d995d5 has been successfully uploaded! Final size is 520 bytes. Artifact ID is 10008561087"
+      ]
+    },
+    {
+      "id": 101651109349,
+      "name": "Arduino v0.2.0 with pinned Windows prerequisites",
+      "run_id": 34092876773,
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876773/job/101651109349",
+      "conclusion": "success",
+      "workspace_log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101651109349.log",
+      "log_sha256": "e429138447996af43fee3b6b3f676742807f82717fb983b0e29281397ee0b507",
+      "log_bytes": 48661,
+      "markers": [
+        "2026-09-07T07:17:10.5684682Z PASS: m15",
+        "2026-09-07T07:22:33.2778330Z PASS: m16",
+        "2026-09-07T07:22:33.2780225Z ARDUINO_SMOKE_GROUP_PASS=v0.2.0;TESTS=2",
+        "2026-09-07T07:25:20.4366141Z M17_EXTERNAL_ARDUINO_PASS=D:\\a\\NU54DK_Arduino_Core\\NU54DK_Arduino_Core\\m12-evidence\\v0.2.0\\m17-external-arduino.json",
+        "2026-09-07T07:25:22.1056863Z SHA256 digest of uploaded artifact is 0b7491f7adb3bb4156a0a043912b10296a1022d360f2d4e689dd79c7385a26c4",
+        "2026-09-07T07:25:22.4355978Z Artifact m12-arduino-v0.2.0-828166109968b2ceb40fc2d9c054255558d995d5 has been successfully uploaded! Final size is 833783 bytes. Artifact ID is 10008373262"
+      ]
+    },
+    {
+      "id": 101651109351,
+      "name": "Zephyr v0.2.0 in pinned Nordic container",
+      "run_id": 34092876773,
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876773/job/101651109351",
+      "conclusion": "success",
+      "workspace_log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101651109351.log",
+      "log_sha256": "7c5df963691dbf4d20b2d64f6bac822ea13643f90e32cdb2d1a3dde549f20c5b",
+      "log_bytes": 64716,
+      "markers": [
+        "2026-09-07T07:05:04.5043231Z INFO    - 0 of 10 executed test configurations passed (0.00%), 10 built (not run), 0 failed, 0 errored, with no warnings in 206.23 seconds.",
+        "2026-09-07T07:05:04.5886654Z M12_ZEPHYR_BUILD_PASS=10;GROUP=v0.2.0;M16_ROLE_BUILDS=2;SELECTION=full-group",
+        "2026-09-07T07:14:51.5392194Z INFO    - 1 of 1 executed test configurations passed (100.00%), 0 built (not run), 0 failed, 0 errored, with no warnings in 13.79 seconds.",
+        "2026-09-07T07:14:51.5998246Z M14_QEMU_RUNTIME_PASS=3",
+        "2026-09-07T07:17:51.3728870Z SHA256 digest of uploaded artifact is 11f8faec14923ac5348c754c3d41547a042345deb6ac72f29cfb65947c8a9fe2",
+        "2026-09-07T07:17:51.7544597Z Artifact m12-zephyr-v0.2.0-828166109968b2ceb40fc2d9c054255558d995d5 has been successfully uploaded! Final size is 645415549 bytes. Artifact ID is 10008144857"
+      ]
+    },
+    {
+      "id": 101651109364,
+      "name": "Zephyr v0.3.0 in pinned Nordic container",
+      "run_id": 34092876773,
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876773/job/101651109364",
+      "conclusion": "success",
+      "workspace_log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101651109364.log",
+      "log_sha256": "e9074484f2e6b816d01b633b2d5d88a6d5d3a5589497c8fb8562d3583e24d1fd",
+      "log_bytes": 61095,
+      "markers": [
+        "2026-09-07T07:09:56.8151996Z INFO    - 0 of 19 executed test configurations passed (0.00%), 19 built (not run), 0 failed, 0 errored, with no warnings in 526.73 seconds.",
+        "2026-09-07T07:09:56.8908850Z M12_ZEPHYR_BUILD_PASS=19;GROUP=v0.3.0;M16_ROLE_BUILDS=0;SELECTION=full-group",
+        "2026-09-07T07:13:14.5400341Z SHA256 digest of uploaded artifact is 8e20388c9b546c0a23ff3240ae45e51c11d7576fe1cadeb9b51547c9b9a1aba2",
+        "2026-09-07T07:13:14.7905702Z Artifact m12-zephyr-v0.3.0-828166109968b2ceb40fc2d9c054255558d995d5 has been successfully uploaded! Final size is 496912141 bytes. Artifact ID is 10008008840"
+      ]
+    },
+    {
+      "id": 101651109369,
+      "name": "Arduino v0.1.0 with pinned Windows prerequisites",
+      "run_id": 34092876773,
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876773/job/101651109369",
+      "conclusion": "success",
+      "workspace_log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101651109369.log",
+      "log_sha256": "5123f48624f0eb6fb91a3e4e54c17e1347e58987fad45e19a7e5bb1d4e9488ca",
+      "log_bytes": 44338,
+      "markers": [
+        "2026-09-07T07:07:11.0536769Z PASS: blink",
+        "2026-09-07T07:09:50.6464846Z PASS: m6",
+        "2026-09-07T07:15:32.9594867Z PASS: m7",
+        "2026-09-07T07:15:32.9596697Z ARDUINO_SMOKE_GROUP_PASS=v0.1.0;TESTS=3",
+        "2026-09-07T07:15:37.2476482Z SHA256 digest of uploaded artifact is 1acd78974d916b0f1591e1c550a02fe32512bffd6d64ee3292ed648693e40510",
+        "2026-09-07T07:15:37.5626043Z Artifact m12-arduino-v0.1.0-828166109968b2ceb40fc2d9c054255558d995d5 has been successfully uploaded! Final size is 505 bytes. Artifact ID is 10008079632"
+      ]
+    },
+    {
+      "id": 101651109418,
+      "name": "Zephyr v0.1.0 in pinned Nordic container",
+      "run_id": 34092876773,
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876773/job/101651109418",
+      "conclusion": "success",
+      "workspace_log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101651109418.log",
+      "log_sha256": "ad7cd89c1c2b25615b498776d42c239dac457876c81161fd09d25644a92f956a",
+      "log_bytes": 55939,
+      "markers": [
+        "2026-09-07T07:03:33.4579693Z INFO    - 0 of 4 executed test configurations passed (0.00%), 4 built (not run), 0 failed, 0 errored, with no warnings in 110.23 seconds.",
+        "2026-09-07T07:03:33.5215173Z M12_ZEPHYR_BUILD_PASS=4;GROUP=v0.1.0;M16_ROLE_BUILDS=0;SELECTION=full-group",
+        "2026-09-07T07:04:05.5868108Z SHA256 digest of uploaded artifact is 7ae96350543cc6f714def7dabf732c8607e394d40d2c12ee11d779c75fb5a41c",
+        "2026-09-07T07:04:06.0067581Z Artifact m12-zephyr-v0.1.0-828166109968b2ceb40fc2d9c054255558d995d5 has been successfully uploaded! Final size is 97219749 bytes. Artifact ID is 10007748662"
+      ]
+    },
+    {
+      "id": 101651109427,
+      "name": "Zephyr v0.4.0 in pinned Nordic container",
+      "run_id": 34092876773,
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876773/job/101651109427",
+      "conclusion": "success",
+      "workspace_log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101651109427.log",
+      "log_sha256": "87490b924f4a7831799340a5bf285ed12ebbad880fc7d9f8bb9209f99143699d",
+      "log_bytes": 66854,
+      "markers": [
+        "2026-09-07T07:12:48.5549067Z INFO    - 0 of 28 executed test configurations passed (0.00%), 28 built (not run), 0 failed, 0 errored, with no warnings in 700.08 seconds.",
+        "2026-09-07T07:12:48.7266558Z M12_ZEPHYR_BUILD_PASS=28;GROUP=v0.4.0;M16_ROLE_BUILDS=0;SELECTION=full-group",
+        "2026-09-07T07:18:04.6858478Z SHA256 digest of uploaded artifact is 9db1550f8a1fbf67cd08c16b7942d82b0e86823ba00266cb2af268cb8c47d137",
+        "2026-09-07T07:18:04.9281823Z Artifact m12-zephyr-v0.4.0-828166109968b2ceb40fc2d9c054255558d995d5 has been successfully uploaded! Final size is 677787087 bytes. Artifact ID is 10008151365"
+      ]
+    },
+    {
+      "id": 101651109437,
+      "name": "Arduino v0.3.0-ble with pinned Windows prerequisites",
+      "run_id": 34092876773,
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876773/job/101651109437",
+      "conclusion": "success",
+      "workspace_log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8281661-final\\job-101651109437.log",
+      "log_sha256": "a16a48cfe85b3b8ed359ec16ea2032b457403b052a647a03bf0e31d3f1912b77",
+      "log_bytes": 45320,
+      "markers": [
+        "2026-09-07T07:12:28.9994525Z PASS: m19m20",
+        "2026-09-07T07:14:40.1615550Z PASS: m21",
+        "2026-09-07T07:14:40.1615933Z ARDUINO_SMOKE_GROUP_PASS=v0.3.0-ble;TESTS=2",
+        "2026-09-07T07:14:43.5184968Z SHA256 digest of uploaded artifact is 9252ac45a597fc65d918e3ee2703d25bbe6b37b469945d2eece7957753f47411",
+        "2026-09-07T07:14:43.8740724Z Artifact m12-arduino-v0.3.0-ble-828166109968b2ceb40fc2d9c054255558d995d5 has been successfully uploaded! Final size is 504 bytes. Artifact ID is 10008053037"
+      ]
+    }
+  ]
+}

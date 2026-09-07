@@ -48,4 +48,8 @@ def configure_release_candidates(versions):
 
 
 if __name__ == "__main__":
+    ## @brief -I가 환경 변수를 무시해도 CLI 도움말·진단을 UTF-8로 출력합니다.
+    for _stream in (_sys.stdout, _sys.stderr):
+        if hasattr(_stream, "reconfigure"):
+            _stream.reconfigure(encoding="utf-8")
     raise SystemExit(main())

@@ -1,0 +1,29 @@
+{
+  "source": "828166109968b2ceb40fc2d9c054255558d995d5",
+  "at_utc": "2026-09-07T07:33:13.053750+00:00",
+  "runs": [
+    {
+      "id": 34092876776,
+      "name": "M12 Software Gates",
+      "head_sha": "828166109968b2ceb40fc2d9c054255558d995d5",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876776",
+      "created_at": "2026-09-07T06:53:56Z",
+      "updated_at": "2026-09-07T06:57:20Z"
+    },
+    {
+      "id": 34092876773,
+      "name": "M12 Reproducible Builds",
+      "head_sha": "828166109968b2ceb40fc2d9c054255558d995d5",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34092876773",
+      "created_at": "2026-09-07T06:53:56Z",
+      "updated_at": "2026-09-07T07:31:39Z"
+    }
+  ],
+  "all_observed_runs_successful": true
+}

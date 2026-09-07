@@ -1,0 +1,24 @@
+{
+  "source": "801673704ce2de1e286c0003e2380231595a542b",
+  "dirty": false,
+  "command": [
+    "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts\\python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-v",
+    "-s",
+    "tests/host",
+    "-p",
+    "test_r12_ble_*.py"
+  ],
+  "compiler": "C:\\u4ci15n\\mingw64\\bin\\g++.exe",
+  "flags": [
+    "-fuse-ld=lld"
+  ],
+  "returncode": 1,
+  "log_sha256": "06b03bc725366fb2d6687cd318a764c75bade5211055ee9365102c18eeb0d080",
+  "gcc_version": "g++.exe (x86_64-posix-seh-rev1, Built by MinGW-Builds project) 15.2.0",
+  "ld_version": "GNU ld (GNU Binutils) 2.46.0.20260210"
+}

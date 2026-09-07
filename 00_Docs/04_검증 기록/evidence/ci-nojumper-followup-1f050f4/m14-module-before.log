@@ -1,0 +1,19 @@
+test_m14_core_contract (unittest.loader._FailedTest.test_m14_core_contract) ... ERROR
+
+======================================================================
+ERROR: test_m14_core_contract (unittest.loader._FailedTest.test_m14_core_contract)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_m14_core_contract
+Traceback (most recent call last):
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\unittest\loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_m14_core_contract.py", line 13, in <module>
+    from host_compiler import compiler_command
+ModuleNotFoundError: No module named 'host_compiler'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

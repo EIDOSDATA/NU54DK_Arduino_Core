@@ -1,0 +1,25 @@
+{
+  "parent_source": "1f050f4bb39dc7cbc77e3d4a433af8a907964837",
+  "source_mode": "r06-after",
+  "dirty": true,
+  "short_temp": "C:\\Users\\eidos\\DOCUME~1\\Codex\\2026-0~3\\new-chat\\work\\T14-PW~1",
+  "resolved_temp": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred",
+  "returncode": 0,
+  "command": [
+    "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts\\python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-v",
+    "-s",
+    "tests/host",
+    "-p",
+    "test_r06_windows_recipe.py"
+  ],
+  "log_sha256": "6baf8fbd4484d4c5f162f2311573f642950febf72b954343947128301d411787",
+  "test_source_sha256": {
+    "test_m14_core_contract.py": "f7ba1e3509c5d7412c1332069573b7810addf80b70601dbc1ca530541860a1e4",
+    "test_r06_windows_recipe.py": "0863cd63d93efd0a8b073b8c80fae7d88f9a4f26db99b3c60965affb5e13625a"
+  }
+}

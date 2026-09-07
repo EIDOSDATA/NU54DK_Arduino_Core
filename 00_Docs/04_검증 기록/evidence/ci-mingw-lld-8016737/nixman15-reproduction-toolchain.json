@@ -1,0 +1,9 @@
+{
+  "url": "https://github.com/niXman/mingw-builds-binaries/releases/download/15.2.0-rt_v13-rev1/x86_64-15.2.0-release-posix-seh-ucrt-rt_v13-rev1.7z",
+  "archive_sha256": "029bd02b5bce7c10fd9476165b3fe178239fe1838ad62516b5c3e0921bb283cf",
+  "archive_bytes": 103193634,
+  "destination": "C:\\u4ci15n",
+  "files": 14317,
+  "existing_toolchains_modified": false,
+  "runner_install_script": "https://raw.githubusercontent.com/actions/runner-images/win25-vs2026/20260824.214/images/windows/scripts/build/Install-Mingw64.ps1"
+}

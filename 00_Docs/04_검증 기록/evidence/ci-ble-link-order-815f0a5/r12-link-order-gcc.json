@@ -1,0 +1,23 @@
+{
+  "compiler": "C:\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\g++.exe",
+  "command": [
+    "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts\\python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-v",
+    "-s",
+    "tests/host",
+    "-p",
+    "test_r12_ble_*.py"
+  ],
+  "returncode": 0,
+  "log_sha256": "d5640c73eaa149d5b157cb12d4f87a5f7191656144308d8595853a48b8b22a44",
+  "parent_source": "815f0a5aa7d18ada8f6a00043eaf62353f00cb09",
+  "source_sha256": {
+    "test_r12_ble_gap.py": "3e7da1a57df4c69e4d536215ca04707673a072f7297163507747ed448226f4c3",
+    "test_r12_ble_gatt.py": "f1ebbd6ef81a9243e4c7470910a2e5d76fbdfe1165def53ae690a5ac32598050",
+    "test_r12_ble_security.py": "66eaba2ec6be4e7a924b58d5d73dc2465e6275a722d6f4f5c7b999c423143e55"
+  }
+}

@@ -16,6 +16,7 @@ third-party notices를 재현 가능하게 생성합니다.
 `nu54_package.py`는 기존 CLI와 Python 함수·상수 이름을 유지하는 진입점입니다.
 동일 디렉터리의 `nu54_package_impl`만 명시적으로 로드하므로 외부 CWD나 PYTHONPATH의
 동명 모듈에 의존하지 않습니다. `python -I`에서도 같은 방식으로 동작합니다.
+CLI의 표준 출력과 진단은 Windows 언어 설정과 무관하게 UTF-8을 사용합니다.
 
 | 내부 모듈 | 책임 |
 | --- | --- |

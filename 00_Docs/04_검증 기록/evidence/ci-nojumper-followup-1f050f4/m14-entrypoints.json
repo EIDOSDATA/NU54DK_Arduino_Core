@@ -1,0 +1,37 @@
+{
+  "parent_source": "1f050f4bb39dc7cbc77e3d4a433af8a907964837",
+  "test_source_sha256": "f7ba1e3509c5d7412c1332069573b7810addf80b70601dbc1ca530541860a1e4",
+  "PYTHONPATH_removed": true,
+  "results": [
+    {
+      "mode": "module",
+      "command": [
+        "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "tests.host.test_m14_core_contract"
+      ],
+      "returncode": 0,
+      "log_sha256": "72e26544da0d0b466d6287e8e918a54f230f0d6af5c3a7a6e24f51611ddd909b"
+    },
+    {
+      "mode": "discovery",
+      "command": [
+        "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "tests/host",
+        "-p",
+        "test_m14_core_contract.py"
+      ],
+      "returncode": 0,
+      "log_sha256": "362a783461297784a6f19182d6678eb5c69d60bf3a4fec030d188c3d79ff328a"
+    }
+  ]
+}

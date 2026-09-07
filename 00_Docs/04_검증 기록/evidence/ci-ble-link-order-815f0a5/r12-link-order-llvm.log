@@ -1,0 +1,11 @@
+test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle)
+! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 GAP 수명주기를 검증합니다. ... ok
+test_production_gatt_lifecycle (test_r12_ble_gatt.BleGattTests.test_production_gatt_lifecycle)
+! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 GATT 구현의 대체를 검증합니다. ... ok
+test_production_security_lifecycle (test_r12_ble_security.BleSecurityTests.test_production_security_lifecycle)
+! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 보안 구현의 대체를 검증합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 15.158s
+
+OK

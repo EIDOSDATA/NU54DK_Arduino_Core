@@ -1,0 +1,342 @@
+{
+  "source": "3bc8fad6ca347e5e3cbc888149c0d4d727473c22",
+  "status": "blocked_by_windows_application_control",
+  "groups": [
+    {
+      "name": "test_ac01_contract.py",
+      "tests": 4,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_ac02b_analog_contract.py",
+      "tests": 7,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_ac02b_b2_contract.py",
+      "tests": 6,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_ac03_storage_contract.py",
+      "tests": 6,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_build_matrix_runner.py",
+      "tests": 9,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_compact_tokens.py",
+      "tests": 1,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_fixed_gate_runner.py",
+      "tests": 16,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_host_compiler.py",
+      "tests": 6,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m10_prerequisites.py",
+      "tests": 24,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m10_remote_runner.py",
+      "tests": 29,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m11_rc_hil.py",
+      "tests": 11,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m11_release.py",
+      "tests": 28,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m11_remote_runner.py",
+      "tests": 16,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m13_profiles.py",
+      "tests": 11,
+      "skips": [
+        "'M13 package 설치 후 NUCODE_M13_CLI_DISCOVERY=1로 실행합니다.'"
+      ],
+      "outcome": "OK (skipped=1)"
+    },
+    {
+      "name": "test_m14_core_contract.py",
+      "tests": 5,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m14_pin_hil_runner.py",
+      "tests": 12,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m14_variant_contract.py",
+      "tests": 6,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m15_board_system_contract.py",
+      "tests": 9,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m15_lfxo_contract.py",
+      "tests": 3,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m15_system_off_hil_runner.py",
+      "tests": 16,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m16_ble_contract.py",
+      "tests": 6,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m16_ble_pair.py",
+      "tests": 9,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m17_coverage.py",
+      "tests": 25,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m17_external_arduino.py",
+      "tests": 15,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m17_feasibility.py",
+      "tests": 13,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m18_release.py",
+      "tests": 25,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m19_ble_gap_contract.py",
+      "tests": 8,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m19_ble_gap_hil.py",
+      "tests": 5,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m20_ble_gatt_contract.py",
+      "tests": 6,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m20_ble_gatt_hil.py",
+      "tests": 6,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m21_ble_security_contract.py",
+      "tests": 22,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m21_ble_security_hil.py",
+      "tests": 10,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m21_ble_security_negative.py",
+      "tests": 7,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m22_cleanroom.py",
+      "tests": 13,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m22_fixed_gate.py",
+      "tests": 4,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m22_package_examples.py",
+      "tests": 7,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m22_release.py",
+      "tests": 5,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m23_peripheral_inventory.py",
+      "tests": 8,
+      "skips": [
+        "'Windows Application Control blocked the generated test executable'"
+      ],
+      "outcome": "OK (skipped=1)"
+    },
+    {
+      "name": "test_m24_serial_contract.py",
+      "tests": 15,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m26_system_contract.py",
+      "tests": 5,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m27_package_examples.py",
+      "tests": 5,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m27_release.py",
+      "tests": 9,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m27_staged_candidate.py",
+      "tests": 3,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m8_flash.py",
+      "tests": 13,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m9_cache.py",
+      "tests": 23,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_m9_safety.py",
+      "tests": 12,
+      "skips": [],
+      "outcome": "OK"
+    },
+    {
+      "name": "test_r02_serial_drivers.py",
+      "tests": 1,
+      "skips": [],
+      "outcome": "FAILED (errors=12)"
+    }
+  ],
+  "completed_pass_groups": 46,
+  "reported_test_methods": 505,
+  "skipped": 2,
+  "unexecuted_groups": [
+    "test_r03_fabric_drivers.py",
+    "test_r04_file.py",
+    "test_r05_identity.py",
+    "test_r06_builder_modules.py",
+    "test_r06_windows_recipe.py",
+    "test_r07_event_driver.py",
+    "test_r08_resource_route.py",
+    "test_r09_spi_facade.py",
+    "test_r10_serial_concurrency.py",
+    "test_r11_fabric_data.py",
+    "test_r12_ble_gap.py",
+    "test_r12_ble_gatt.py",
+    "test_r12_ble_security.py",
+    "test_r12_eeprom.py",
+    "test_r12_littlefs.py",
+    "test_r13_generated.py",
+    "test_r13_manifest_revision.py",
+    "test_r13_package_modules.py",
+    "test_v04_campaign.py",
+    "test_v04_cmake_sources.py",
+    "test_v04_dma_memory.py",
+    "test_v04_fixture.py",
+    "test_v04_math.py",
+    "test_v04_nojumper.py",
+    "test_v04_nojumper_internal.py",
+    "test_v04_pair.py",
+    "test_v04_pdm_continuous.py",
+    "test_v04_qdec.py",
+    "test_v04_revision.py",
+    "test_v04_serial_lifecycle.py",
+    "test_v04_signal.py",
+    "test_v04_test_plan.py",
+    "test_v04_uart.py",
+    "test_ac03_storage.py",
+    "test_m24_uarte_onboard.py",
+    "test_m24_twim_onboard.py",
+    "test_m25_onboard.py",
+    "test_m26_onboard.py"
+  ],
+  "log_sha256": "6c36977aed5209e88ecb15cfd8cd1586ec14dc119a44420181a7e2480a2b23e8",
+  "hardware_access": false,
+  "last_complete_local_host": {
+    "source": "65f5ae20e5fa91ef260097b2439efa97963ba089",
+    "passed": 680,
+    "skipped": 1
+  }
+}

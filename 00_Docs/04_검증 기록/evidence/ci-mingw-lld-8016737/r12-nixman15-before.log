@@ -1,0 +1,81 @@
+test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle)
+! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 GAP 수명주기를 검증합니다. ... FAIL
+test_production_gatt_lifecycle (test_r12_ble_gatt.BleGattTests.test_production_gatt_lifecycle)
+! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 GATT 구현의 대체를 검증합니다. ... FAIL
+test_production_security_lifecycle (test_r12_ble_security.BleSecurityTests.test_production_security_lifecycle)
+! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 보안 구현의 대체를 검증합니다. ... FAIL
+
+======================================================================
+FAIL: test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle)
+! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 GAP 수명주기를 검증합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_gap.py", line 33, in test_production_gap_lifecycle
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 1 != 0 : C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccVDpSfU.o:NUCODE_BLE_GAP.cpp:(.text+0x2c1): undefined reference to `nucode::ble::internal::prepareGattDatabase()'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccVDpSfU.o:NUCODE_BLE_GAP.cpp:(.text+0x569): undefined reference to `nucode::ble::internal::pollGatt()'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccVDpSfU.o:NUCODE_BLE_GAP.cpp:(.text+0x772): undefined reference to `nucode::ble::internal::securityDisconnected(bt_conn*)'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccVDpSfU.o:NUCODE_BLE_GAP.cpp:(.text+0x794): undefined reference to `nucode::ble::internal::gattEnded()'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccVDpSfU.o:NUCODE_BLE_GAP.cpp:(.text+0x85b): undefined reference to `nucode::ble::internal::addGattService(nucode::ble::BLEService&)'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccPMPLK2.o:GapConnection.cpp:(.text+0x4fd): undefined reference to `nucode::ble::internal::gattConnected(bt_conn*, unsigned int)'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccPMPLK2.o:GapConnection.cpp:(.text+0x509): undefined reference to `nucode::ble::internal::securityConnected(bt_conn*)'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccPMPLK2.o:GapConnection.cpp:(.text+0x5c0): undefined reference to `nucode::ble::internal::gattDisconnected(bt_conn*, unsigned int)'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccPMPLK2.o:GapConnection.cpp:(.text+0x5cc): undefined reference to `nucode::ble::internal::securityDisconnected(bt_conn*)'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccPMPLK2.o:GapConnection.cpp:(.text+0x74a): undefined reference to `nucode::ble::internal::securityChanged(bt_conn*, unsigned char, bt_security_err)'
+
+collect2.exe: error: ld returned 1 exit status
+
+
+======================================================================
+FAIL: test_production_gatt_lifecycle (test_r12_ble_gatt.BleGattTests.test_production_gatt_lifecycle)
+! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 GATT 구현의 대체를 검증합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_gatt.py", line 38, in test_production_gatt_lifecycle
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 1 != 0 : C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\cc1sfiR3.o:NUCODE_BLE_GAP.cpp:(.text+0x772): undefined reference to `nucode::ble::internal::securityDisconnected(bt_conn*)'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccZNBaRG.o:GapConnection.cpp:(.text+0x509): undefined reference to `nucode::ble::internal::securityConnected(bt_conn*)'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccZNBaRG.o:GapConnection.cpp:(.text+0x5cc): undefined reference to `nucode::ble::internal::securityDisconnected(bt_conn*)'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccZNBaRG.o:GapConnection.cpp:(.text+0x74a): undefined reference to `nucode::ble::internal::securityChanged(bt_conn*, unsigned char, bt_security_err)'
+
+collect2.exe: error: ld returned 1 exit status
+
+
+======================================================================
+FAIL: test_production_security_lifecycle (test_r12_ble_security.BleSecurityTests.test_production_security_lifecycle)
+! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 보안 구현의 대체를 검증합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_security.py", line 49, in test_production_security_lifecycle
+    self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+AssertionError: 1 != 0 : C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccGs4SQm.o:NUCODE_BLE_GAP.cpp:(.text+0x2c1): undefined reference to `nucode::ble::internal::prepareGattDatabase()'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccGs4SQm.o:NUCODE_BLE_GAP.cpp:(.text+0x569): undefined reference to `nucode::ble::internal::pollGatt()'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccGs4SQm.o:NUCODE_BLE_GAP.cpp:(.text+0x794): undefined reference to `nucode::ble::internal::gattEnded()'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccGs4SQm.o:NUCODE_BLE_GAP.cpp:(.text+0x85b): undefined reference to `nucode::ble::internal::addGattService(nucode::ble::BLEService&)'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccY54DXO.o:GapConnection.cpp:(.text+0x4fd): undefined reference to `nucode::ble::internal::gattConnected(bt_conn*, unsigned int)'
+
+C:/u4ci15n/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\eidos\AppData\Local\Temp\ccY54DXO.o:GapConnection.cpp:(.text+0x5c0): undefined reference to `nucode::ble::internal::gattDisconnected(bt_conn*, unsigned int)'
+
+collect2.exe: error: ld returned 1 exit status
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 24.704s
+
+FAILED (failures=3)

@@ -1,0 +1,16 @@
+{
+  "source": "65f5ae20e5fa91ef260097b2439efa97963ba089",
+  "dirty": false,
+  "command": [
+    "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts\\python.exe",
+    "-B",
+    "tools/ci/run_m12_gate.py",
+    "host"
+  ],
+  "returncode": 0,
+  "log_sha256": "d30886ef2caa56beac13c5c112e8daa4b43860be66ef63074b71ad7afacb5330",
+  "short_temp": "C:\\Users\\eidos\\DOCUME~1\\Codex\\2026-0~3\\new-chat\\work\\T14-PW~1",
+  "compiler": "C:\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin\\g++.exe",
+  "gcc_version": "g++.exe (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0",
+  "ld_version": "GNU ld (Binutils for MinGW-W64 x86_64, built by Brecht Sanders, r4) 2.47.20260726"
+}
