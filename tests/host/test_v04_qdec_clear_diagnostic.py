@@ -12,6 +12,56 @@ from v04_protocol import ProtocolError
 
 
 class ClearDiagnosticTests(unittest.TestCase):
+    def test_latency_electrical_and_wait_guards_do_not_replace_public_result(self):
+        self.assertEqual(len(set(diagnostic.vectors((0, 5, 6)))), 90)
+        for fault in ('count', 'pull', 'wait'):
+            records, stopped = [], []
+
+            @contextmanager
+            def armed(*args, **kwargs):
+                try:
+                    yield
+                finally:
+                    stopped.append(True)
+
+            class Device:
+                def __init__(self, role):
+                    self.role = role
+
+                def command(self, opcode, values):
+                    if values == (5,):
+                        return [6, 1, 1, 15000, 128]
+                    if values == (8,):
+                        pin = 0 if self.role == 1 else 3
+                        return [self.role, pin + (4 if fault == 'pull' else 0), pin] + [0] * 5 + [16, 0, 4, 0, 1]
+                    if values == (7,):
+                        return [1, 1, 0, 128 if fault == 'wait' else 5] + [0] * 10
+                    if values == (2,):
+                        return [400, 0, 17000, 330] + [0] * 12
+                    words = [0] * 20
+                    words[1:5] = [400, 0, 400, 100]
+                    return words
+
+            def observe(device, append, label, *, clear):
+                words = [0] * 16
+                words[5] = 0 if clear else 399
+                return words
+
+            with patch.object(diagnostic, 'vectors', return_value=[(6, 1)]), \
+                 patch.object(diagnostic.qdec, 'armed', armed), patch.object(diagnostic.qdec, 'wave'), \
+                 patch.object(diagnostic.qdec, 'observe', observe), patch('builtins.print'):
+                expected = {'count': '1/90', 'pull': 'electrical configuration', 'wait': 'observation timing'}[fault]
+                with self.assertRaisesRegex(ProtocolError, expected):
+                    diagnostic.run([Device(1), Device(2)], lambda _: None,
+                                   lambda key, row: records.append(row), strategies=(0, 5, 6))
+            self.assertEqual(stopped, [True])
+            comparisons = [row for row in records if 'matches' in row]
+            if fault == 'count':
+                self.assertEqual(comparisons[0]['actual'], [399, 0])
+                self.assertFalse(comparisons[0]['matches'])
+            else:
+                self.assertEqual(comparisons, [])
+
     def test_balanced_rotating_methods(self):
         vectors = list(diagnostic.vectors())
         self.assertEqual(len(set(vectors)), 90)

@@ -50,6 +50,8 @@ namespace
     std::uint32_t read_strategy = 0U;
     std::uint32_t read_period_us = 5000U;
     std::uint32_t read_sample_age_min = UINT32_MAX, read_sample_age_max = 0U, read_wait_max = 0U;
+    std::uint32_t late_changes = 0U, late_wait_max = 0U, first_late_change[10]{};
+    std::int32_t late_acc_difference = 0, late_double_difference = 0;
 
     /** @brief 비활성 IRQ의 SAMPLERDY를 관측하고 ACC와 별개인 SAMPLE 값을 합산합니다. */
     void observeSample(std::uint32_t now)
@@ -235,9 +237,9 @@ namespace
             nrf_qdec_task_trigger(reg, NRF_QDEC_TASK_RDCLRDBL);
             event.double_transitions = nrf_qdec_accdblread_get(reg);
         }
-        else if (read_strategy == 3U)
+        else if (read_strategy == 3U || read_strategy == 5U)
         {
-            /** @brief 같은 동시 clear task 뒤 CPU write 완료 barrier만 추가한 대비입니다. */
+            /** @brief 같은 동시 clear task 뒤 CPU write 완료 barrier를 추가한 대비입니다. */
             nrf_qdec_task_trigger(reg, NRF_QDEC_TASK_READCLRACC);
             __DSB();
             event.accumulated = nrf_qdec_accread_get(reg);
@@ -246,6 +248,48 @@ namespace
         else
         {
             result = qdec->read(event);
+        }
+        if (read_strategy == 5U || read_strategy == 6U)
+        {
+            /** @brief 동일 task 결과의 지연 변화를 관측하며 방법6의 공개 반환값은 보정하지 않습니다. */
+            const auto origin = k_cycle_get_32();
+            k_busy_wait(5U);
+            const auto late_acc = nrf_qdec_accread_get(reg);
+            const auto late_double = nrf_qdec_accdblread_get(reg);
+            const auto waited = k_cyc_to_us_floor32(k_cycle_get_32() - origin);
+            if (waited > late_wait_max)
+            {
+                late_wait_max = waited;
+            }
+            if (late_acc != event.accumulated || late_double != event.double_transitions)
+            {
+                if (late_changes == 0U)
+                {
+                    const std::uint32_t values[]{now,
+                                                 reads + 1U,
+                                                 static_cast<std::uint32_t>(event.accumulated),
+                                                 static_cast<std::uint32_t>(late_acc),
+                                                 event.double_transitions,
+                                                 late_double,
+                                                 before_acc,
+                                                 static_cast<std::uint32_t>(sampled_steps),
+                                                 static_cast<std::uint32_t>(observer.steps),
+                                                 waited};
+                    for (unsigned index = 0U; index < 10U; ++index)
+                    {
+                        first_late_change[index] = values[index];
+                    }
+                }
+                ++late_changes;
+                late_acc_difference += late_acc - event.accumulated;
+                late_double_difference += static_cast<std::int32_t>(late_double) -
+                                          static_cast<std::int32_t>(event.double_transitions);
+            }
+            if (read_strategy == 5U)
+            {
+                event.accumulated = late_acc;
+                event.double_transitions = late_double;
+            }
         }
         if (read_strategy == 4U)
         {
@@ -434,6 +478,12 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
         read_period_us = 5000U;
         read_sample_age_min = UINT32_MAX;
         read_sample_age_max = read_wait_max = 0U;
+        late_changes = late_wait_max = 0U;
+        late_acc_difference = late_double_difference = 0;
+        for (auto &word : first_late_change)
+        {
+            word = 0U;
+        }
         sampled_steps = last_sample_value = 0;
         sampled_doubles = sample_events = max_sample_gap = trace_next = trace_total = 0U;
         mismatch_recorded = phase_checked = false;
@@ -507,7 +557,7 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
     if (opcode == 85U && nargs == 1U && args[0] == 5U && role == 1U)
     {
         out[0] = read_strategy;
-        out[1] = read_strategy != 1U && read_strategy != 3U;
+        out[1] = read_strategy != 1U && read_strategy != 3U && read_strategy != 5U;
         out[2] = read_strategy != 2U;
         out[3] = read_strategy == 2U ? 6000000U : 15000U;
         out[4] = read_period_us;
@@ -520,6 +570,45 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
         out[1] = read_sample_age_max;
         out[2] = read_wait_max;
         count = 3U;
+        return 0U;
+    }
+    if (opcode == 85U && nargs == 1U && args[0] == 7U && role == 1U)
+    {
+        out[0] = late_changes;
+        out[1] = static_cast<std::uint32_t>(late_acc_difference);
+        out[2] = static_cast<std::uint32_t>(late_double_difference);
+        out[3] = late_wait_max;
+        for (unsigned index = 0U; index < 10U; ++index)
+        {
+            out[4U + index] = first_late_change[index];
+        }
+        count = 14U;
+        return 0U;
+    }
+    if (opcode == 85U && nargs == 1U && args[0] == 8U)
+    {
+        /** @brief GPIO pull·입력 buffer·drive와 실제 LEDPRE를 출력 변경 없이 기록합니다. */
+        std::uint32_t pin = NRF_GPIO_PIN_MAP(1, 14);
+        const auto *const port = nrf_gpio_pin_port_decode(&pin);
+        const auto *const reg = instance == 20U ? NRF_QDEC20 : NRF_QDEC21;
+        const std::uint32_t values[]{role,
+                                     port->PIN_CNF[14],
+                                     port->PIN_CNF[10],
+                                     port->OUT & phase_mask,
+                                     port->IN & phase_mask,
+                                     reg->PSEL.A,
+                                     reg->PSEL.B,
+                                     reg->PSEL.LED,
+                                     reg->LEDPRE,
+                                     reg->SHORTS,
+                                     reg->INTENSET,
+                                     reg->DBFEN,
+                                     reg->ENABLE};
+        for (unsigned index = 0U; index < 13U; ++index)
+        {
+            out[index] = values[index];
+        }
+        count = 13U;
         return 0U;
     }
     if (opcode == 85U && nargs == 2U && args[0] == 3U && args[1] < 16U && args[1] % 2U == 0U &&
@@ -544,7 +633,7 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
     }
     if (opcode == 83U &&
         (nargs == 2U || (nargs == 3U && args[2] <= 3U) ||
-         (nargs == 4U && args[2] == 3U && args[3] <= 4U)) &&
+         (nargs == 4U && args[2] == 3U && args[3] <= 6U)) &&
         (args[0] == 20U || args[0] == 21U) && args[1] <= 1U && !prepared && qdec == nullptr &&
         !generator_token.active)
     {

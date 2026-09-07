@@ -1,6 +1,6 @@
 # NU54DK v0.4.0 공통 결선과 연결 검사
 
-현재 실행은 [100번](../../../00_Docs/04_검증%20기록/100_T12_공통_기능_묶음과_T13_조합_확정.md)을 따른다. 4e48252 GPIO2502·3334b17 steadyPWM675·0db0689 추가PWM288은 PASS다. b5c86a4 QDEC은26조건 뒤3999/4000으로 중단해 GPIO 독립 계측을 준비한다. I2S는b5c86a4에서432/432 PASS·입력 복귀를 완료했다. e521825 QDEC은40조건 뒤 GPIO400/QDEC399로 중단했고 SAMPLE/read trace를 추가한다. `--section signals`는675+288+240+432, `additional-signals`는288+240+432, `qdec-i2s`는240+432를 선택한다. 각 실행은 새 source/501/cleanup 증거를 남긴다. [T13 계획](T13_PLAN.md)의 C→S→U 두 결선 변경은 후속이며 현재 C를 유지한다.
+현재 기능 실행(100·101번): GPIO/GPIOTE2502(4e48252), steady PWM675(3334b17), 추가 PWM288(0db0689), I2S432(b5c86a4)는 PASS다. QDEC 기능240은 누산 누락으로 미완료다. a7e9b55의 timing90에서 공개 read5/30·DSB5/30 불일치, 샘플 직후 read0/30 불일치를 기록했다. GPIO/SAMPLE400은 유지됐고 양쪽 STOP/postflight를 완료했다. 101번에 Nordic GPIO 요구·실제 드라이버 설정을 대조했으며 다음은 read 결과의5µs 반영 지연 대비다. 제품 core는 미수정이다. T13은32단독/8동시·C→S→U 계획만 확정했고 T12전체·T13실기·RC는 미완료다. 세부 원본은 [101번](../../../00_Docs/04_검증%20기록/101_T12_QDEC_누산_누락_원인_분리.md), 후속 결선은 [T13 계획](T13_PLAN.md)을 따른다.
 
 현재 재검사: exact d8d1e13에서 P1.10을 포함한 17개 신호가 양방향 각 3회, 총 102 net-round PASS다. LOW 자동 해제 2개·양쪽 lease 만료 1개도 PASS이며 종료 후 양쪽 17개 PIN_CNF=0, PWM/DPPI off를 확인했다. 첫 8c1cfe2의 P1.10 실패 원본은 보존하고 원인은 미확정으로 유지한다. 결선 검사 통과이며 GPIO API·T12 전체·T13 이후·RC 완료는 아니다.
 

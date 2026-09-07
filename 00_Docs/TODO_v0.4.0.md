@@ -1,6 +1,6 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
-현재 기능 실행(100번): GPIO/GPIOTE2502(4e48252), steady PWM675(3334b17), 추가 PWM288(0db0689), I2S432(b5c86a4)는 PASS다. QDEC 기능240은 누산 누락으로 미완료다. 30158c6의 clear 방법90회에서 공개 read5/30·개별 task5/30 실패, 완료 후 read0/30 실패를 기록했다. 입력과 SAMPLE은 정상이며 정확한 원인은 미확정이다. 101번에서 Nordic 자료 대조와 read timing 대비를 이어간다. T13은32단독/8동시·C→S→U 계획만 확정했으며 T12전체·T13실기·RC는 미완료다.
+현재 기능 실행(100·101번): GPIO/GPIOTE2502(4e48252), steady PWM675(3334b17), 추가 PWM288(0db0689), I2S432(b5c86a4)는 PASS다. QDEC 기능240은 누산 누락으로 미완료다. a7e9b55의 timing90에서 공개 read5/30·DSB5/30 불일치, 샘플 직후 read0/30 불일치를 기록했다. GPIO/SAMPLE400은 유지됐고 양쪽 STOP/postflight를 완료했다. 101번에 Nordic GPIO 요구·실제 드라이버 설정을 대조했으며 다음은 read 결과의5µs 반영 지연 대비다. 제품 core는 미수정이다. T13은32단독/8동시·C→S→U 계획만 확정했고 T12전체·T13실기·RC는 미완료다.
 
 현재 실행 범위(2026-09-07 후속): 사용자가 **T12 현재 공통 결선 묶음 검증과 T13 시험 조합·추가 결선 확정까지** 지시했다. 17개 공통 GPIO/GPIOTE, PWM 나머지 모드, QDEC 추가 조건, I2S 연속·단방향을 구현·Host·target·실기로 구분해 진행한다. T13은 조합·자원 충돌·추가 GPIO 결선표를 확정하는 단계이며 soak 실행은 이번 범위에 포함하지 않는다. 새 증거와 문서를 갱신하고 commit/push·CI를 확인한다. T12 전체·T13 실기·후속 gate·RC·공개는 미완료로 유지한다.
 
@@ -25,12 +25,12 @@ T12 다음 준비 범위(2026-09-07): 97번의 첫 capture를 common/grouped/ind
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.43 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.44 |
 | 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 외부/내부 부분 PASS·전체 미완료 |
 | 작성·갱신일 | 2026-09-08 |
-| 작성 직전 기준 commit | `30158c666be04d5c64815d75eb1481f74cfba2fe` — QDEC clear90 진단 종료·원인 미확정 |
+| 작성 직전 기준 commit | `a7e9b55ba5a8769c34c660d9288392174422b7d6` — QDEC timing90 진단 종료·원인 미확정 |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **QDEC timing 대비 clean build·실기 → 원인에 근거한 수정/기능240 회귀 → 문서·증거·push/CI** |
+| 다음 착수 항목 | **QDEC 결과 반영 지연 대비 clean build·실기 → 원인에 근거한 수정/기능240 회귀 → 문서·증거·push/CI** |
 | 이번 요청의 실행 범위 | 새 PC 인수·환경·main/submodule 확인, 첫 PWM peer capture 구현/Host/target과 240조건 실기·증거·commit/push. 후속 PWM 모드·GPIO/GPIOTE·I2S·QDEC를 이어간다. T12 전체·후속 gate 완료 처리 없음 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
@@ -83,20 +83,20 @@ GPIO/GPIOTE 전체·I2S 연속/단방향·QDEC 추가 조건 및 PWM의 나머�
 | --- | --- |
 | 이번에 끝낸 일 | GPIO/GPIOTE2502·steadyPWM675·추가PWM288·I2S432 기능 PASS. 각 exact source·새501·cleanup/postflight 분리 보존. T1332단독/8동시 계획 확정·실기0 |
 | 진행 중인 T 항목 | [100번](<04_검증 기록/100_T12_공통_기능_묶음과_T13_조합_확정.md>) T12 공통 묶음과 T13 조합·추가 결선 확정. T13 soak는 이번 범위 밖 |
-| 다음 구체적 행동 | [101번](<04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md>) Nordic 자료 대조 뒤 공개 read/DSB/샘플 후 read timing 대비. 숫자 보정이나 기존 실패 삭제 금지 |
+| 다음 구체적 행동 | [101번](<04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md>) timing90 완료 뒤 즉시/5µs 후 ACCREAD 대비. 숫자 보정이나 기존 실패 삭제 금지 |
 | 다음 작업에 필요한 사용자 행동 | 현재 17신호+GND·DAP UART 분리·SWD 연결 유지와 HW 미조작 확인을 받음. 이번 고정 세션은 2026-09-08 07:00 KST 만료. 새 추가 결선은 T13 계획에서 확정하며 이번에는 변경하지 않음 |
-| 외부 결선 상태 | C17신호+GND·양쪽 DAP UART 분리/SWD 연결 유지 확인. 30158c6 종료 postflight 양쪽17 GPIO 입력·주변장치 off PASS. 고정 세션은2026-09-08 07:00KST까지이며 USB/결선 변경 시 재확인 필요 |
+| 외부 결선 상태 | C17신호+GND·양쪽 DAP UART 분리/SWD 연결 유지 확인. a7e9b55 종료 postflight 양쪽17 GPIO 입력·주변장치 off PASS. 고정 세션은2026-09-08 07:00KST까지이며 USB/결선 변경 시 재확인 필요 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 다른 PC 재개 | [인계 문서](HANDOFF_v0.4.0_다른_PC.md)의 이전 PC 상태와96/97/99를 보존. 최신 범위·실행 source·결과는 이 TODO와100번 |
-| 마지막 정식 외부 HIL source | QDEC 진단30158c6 종료(기능 PASS 아님). I2S432는b5c86a4. GPIO4e48252·steady3334b17·모드0db0689의 PASS를 새 source로 소급하지 않음 |
+| 마지막 정식 외부 HIL source | QDEC 진단a7e9b55 종료(기능 PASS 아님). I2S432는b5c86a4. GPIO4e48252·steady3334b17·모드0db0689의 PASS를 새 source로 소급하지 않음 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. 420 정의된 기능·준비 취소와 430 I2S 기능 완료. T12 전체·T13 이후·R14·RC·공개는 대기. 공용 자원 경로 변경 이후 필요한 최종-source 통신 회귀는 후속 통합에서 확인 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
 | 이 TODO 작성 작업의 실행 중 시험 | 현재 probe 실행 없음. 44561은clear90 완료·10개 숫자 실패·양쪽 STOP/postflightPASS로 종료. 29393 계측80은일치·종료, 30574는기능54뒤실패·종료. 기존 실패 원본 보존 |
 | 로컬 임시 build·evidence | C:/pcv04 baseline·C:/pwm04 최초 build 실패·C:/pwc04 준비·C:/pwh04 054d08f·C:/pwq04 0d7f382 보존. 97번에 두 flash 실패·성공·raw/SHA 보존. 삭제 실행 없음 |
-| 최종 정렬 gate | 30158c6 정렬388 PASS, Host93그룹725시험724PASS·조건부SKIP1, pair2/2·contract/package/inventory/docs PASS. 다음 source는 별도 검사 |
+| 최종 정렬 gate | a7e9b55 정렬388 PASS, Host93그룹726시험724PASS·조건부SKIP2(설치 CLI·문서 편집 중 clean checkout 검사), pair2/2·contract/package/inventory/docs PASS. 다음 source는 별도 검사 |
 | CI 확인 | origin/main 27e0f25 Software SUCCESS(34118608639), Reproducible SUCCESS(34118608640), 2026-09-07 12:46 UTC 관측. 645df82/4e48252 및 후속 변경은 아직 push 전 |
 | 문서 작업 검증 | T13계획180/900/3600초·C→S→U 두 변경과32단독/8동시를 production route Host로 검사. Software·실기 범위와readiness HOLD 유지 |
-| 최종 HIL 입력 찾기 | GPIO C:/cgc04=4e48252, steady C:/cav04=3334b17, 모드 C:/caw04=0db0689, I2S C:/cax04=b5c86a4, QDEC진단 C:/cbs04=30158c6. Raw/SHA/postflight는100·101번 |
+| 최종 HIL 입력 찾기 | GPIO C:/cgc04=4e48252, steady C:/cav04=3334b17, 모드 C:/caw04=0db0689, I2S C:/cax04=b5c86a4, QDEC진단 C:/cbt04=a7e9b55. Raw/SHA/postflight는100·101번 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드

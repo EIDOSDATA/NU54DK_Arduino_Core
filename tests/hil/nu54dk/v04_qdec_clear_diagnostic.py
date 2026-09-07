@@ -21,7 +21,15 @@ def run(devices, current, append, *, strategies=(0, 1, 2), prefix="V04-QDEC-CLEA
             config = devices[0].command(85, (5,))
             append(label + '/strategy', {'status': 'observation', 'words': config})
             bound = 6000000 if strategy == 2 else 15000
-            expect(config, [strategy, int(strategy not in (1, 3)), int(strategy != 2), bound, 128], 'clear strategy')
+            expect(config, [strategy, int(strategy not in (1, 3, 5)), int(strategy != 2), bound, 128], 'clear strategy')
+            if strategy in (5, 6):
+                for role, device in enumerate(devices, 1):
+                    pins = device.command(85, (8,))
+                    append(label + f'/pin-config-role{role}', {'status': 'observation', 'words': pins})
+                    if len(pins) != 13 or pins[0:3] != [role, 0 if role == 1 else 3, 0 if role == 1 else 3]:
+                        raise ProtocolError('QDEC input/output electrical configuration mismatch')
+                    if role == 1 and pins[8:13] != [16, 0, 4, 0, 1]:
+                        raise ProtocolError('QDEC actual LEDPRE/shortcut/interrupt/debounce/enable mismatch')
             initial = qdec.observe(devices[0], append, label + '/initial', clear=True)
             expect((signed(initial[5]), initial[6]), (0, 0), 'clear diagnostic initial counts')
             if initial[8] > bound:
@@ -43,6 +51,11 @@ def run(devices, current, append, *, strategies=(0, 1, 2), prefix="V04-QDEC-CLEA
                 append(label + '/read-timing', {'status': 'observation', 'words': timing})
                 if len(timing) != 3 or not 32 <= timing[0] <= timing[1] <= 64 or timing[2] > 1024:
                     raise ProtocolError('sample-aligned read timing unproven')
+            if strategy in (5, 6):
+                late = devices[0].command(85, (7,))
+                append(label + '/late-read', {'status': 'observation', 'words': late})
+                if len(late) != 14 or not 5 <= late[3] < 128:
+                    raise ProtocolError('delayed register observation timing unproven')
             actual = [signed(hardware[5]), hardware[6]]
             match = actual == [400, 0]
             append(label + '/comparison', {'status': 'observation' if match else 'failed',
