@@ -252,11 +252,13 @@ namespace
         if (read_strategy == 5U || read_strategy == 6U)
         {
             /** @brief 동일 task 결과의 지연 변화를 관측하며 방법6의 공개 반환값은 보정하지 않습니다. */
+            const auto late_interrupt_key = irq_lock();
             const auto origin = k_cycle_get_32();
             k_busy_wait(5U);
             const auto late_acc = nrf_qdec_accread_get(reg);
             const auto late_double = nrf_qdec_accdblread_get(reg);
             const auto waited = k_cyc_to_us_floor32(k_cycle_get_32() - origin);
+            irq_unlock(late_interrupt_key);
             if (waited > late_wait_max)
             {
                 late_wait_max = waited;

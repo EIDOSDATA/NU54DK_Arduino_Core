@@ -1,6 +1,6 @@
 # v0.4.0 다른 PC 재개 인계
 
-현재 기능 실행(100·101번): GPIO/GPIOTE2502(4e48252), steady PWM675(3334b17), 추가 PWM288(0db0689), I2S432(b5c86a4)는 PASS다. QDEC 기능240은 누산 누락으로 미완료다. a7e9b55의 timing90에서 공개 read5/30·DSB5/30 불일치, 샘플 직후 read0/30 불일치를 기록했다. GPIO/SAMPLE400은 유지됐고 양쪽 STOP/postflight를 완료했다. 101번에 Nordic GPIO 요구·실제 드라이버 설정을 대조했으며 다음은 read 결과의5µs 반영 지연 대비다. 제품 core는 미수정이다. T13은32단독/8동시·C→S→U 계획만 확정했고 T12전체·T13실기·RC는 미완료다.
+현재 기능 실행(100·101번): GPIO/GPIOTE2502(4e48252), steady PWM675(3334b17), 추가 PWM288(0db0689), I2S432(b5c86a4)는 PASS다. QDEC 기능240은 누산 누락으로 미완료다. a7e9b55의 timing90에서 공개 read5/30·DSB5/30 불일치, 샘플 직후 read0/30 불일치를 기록했다. GPIO/SAMPLE400은 유지됐고 양쪽 STOP/postflight를 완료했다. 101번에 Nordic GPIO 요구·실제 드라이버 설정을 대조했으며 9c587c9의 반영 지연 대비는6회 뒤GPIO poll129µs로 중단·입력 복귀했다. 다음은5µs 계측 구간의 선점을 제한한 새 image 대비다. 제품 core는 미수정이다. T13은32단독/8동시·C→S→U 계획만 확정했고 T12전체·T13실기·RC는 미완료다.
 
 [T13 후속 GPIO 결선](../tests/hil/nu54dk/T13_PLAN.md)은 C→S→U 두 단계다.
 
