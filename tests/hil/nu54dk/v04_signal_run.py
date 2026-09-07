@@ -13,6 +13,7 @@ import v04_campaign as campaign
 import v04_pair as pair
 import v04_signal as signal
 import v04_pdm_continuous as pdm_continuous
+import v04_pwm_capture as pwm_capture
 from v04_protocol import ProbeLocks, ProtocolError, validate_pair
 from v04_fixture_run import unique_fields
 
@@ -34,7 +35,11 @@ def arguments(argv=None):
     parser.add_argument("--progress-interval-seconds", type=float, default=5)
     parser.add_argument("--execute-fixture", action="store_true")
     parser.add_argument("--pdm-continuous", action="store_true")
+    parser.add_argument("--pwm-capture", action="store_true")
     args = parser.parse_args(argv)
+    if args.pwm_capture and (args.fixture != 408 or args.swd_frequency_hz != 10_000_000 or
+                             args.pdm_continuous or args.duration_seconds != 0):
+        raise ProtocolError("PWM capture requires fixture 408, SWD 10 MHz and a finite campaign")
     if args.pdm_continuous and args.fixture != 440:
         raise ProtocolError("continuous PDM requires fixture 440")
     campaign.validate_options(args.repetitions, args.duration_seconds,
@@ -65,6 +70,7 @@ def main(argv=None):
         "swd_frequency_hz": args.swd_frequency_hz,
         "external_wiring_executed": False, "repetitions": args.repetitions,
         "pdm_continuous": args.pdm_continuous,
+        "pwm_capture": args.pwm_capture,
         "campaign": {"repetitions": args.repetitions,
                      "duration_seconds": args.duration_seconds,
                      "progress_interval_seconds": args.progress_interval_seconds,
@@ -108,7 +114,8 @@ def main(argv=None):
                 journal.flush()
 
             evidence["external_wiring_executed"] = True
-            run_confirmed = pdm_continuous.run_confirmed if args.pdm_continuous else signal.run_confirmed
+            run_confirmed = (pwm_capture.run_confirmed if args.pwm_capture else
+                             pdm_continuous.run_confirmed if args.pdm_continuous else signal.run_confirmed)
             evidence["campaign"].update(campaign.run_cycles(
                 lambda _cycle: run_confirmed(
                     devices, images, uids, confirmation, args.fixture, append, 1),

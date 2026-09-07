@@ -5,4 +5,4 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/read_revision.cmake)
 nucode_hil_revision("${CMAKE_CURRENT_SOURCE_DIR}/../../.." HIL_REVISION)
 target_compile_definitions(app PRIVATE NUCODE_HIL_CORE_REVISION="${HIL_REVISION}")
 target_sources(app PRIVATE src/main.cpp src/serial_hil.cpp src/fixture_hil.cpp
-                           src/signal_hil.cpp)
+                           src/signal_hil.cpp src/pwm_capture_hil.cpp)

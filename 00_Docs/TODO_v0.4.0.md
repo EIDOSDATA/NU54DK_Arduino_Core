@@ -51,6 +51,13 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 
 ## 2. 현재 재개 체크포인트
 
+2026-09-07 새 PC 착수 범위: 실제 `C:/Users/eidos/GitHub/NU54DK_Arduino_Core`의 clean
+`f42bda5`와 원격 main·고정 board gitlink를 확인했다. T12 PWM peer capture의 첫 측정 경로
+(12 slot, TOP 1000/4000, 0/25/50/75/100%, DMA word 극성)을 준비하고 독립 Host oracle·
+pair target build를 검사한다. 새 USB 열거는 probe/COM 모두 0개이며 flash·외부 HIL은 NOT RUN이다.
+GPIO/GPIOTE 전체·I2S 연속/단방향·QDEC 추가 조건 및 PWM의 나머지 모드는 후속 T12로 유지한다.
+먼저 capture 경로가 실제 핀에서 성립하는지 확인한 뒤 그 측정기를 모드 sweep에 확장한다.
+
 | 필드 | 현재 값 |
 | --- | --- |
 | 이번에 끝낸 일 | [94번](<04_검증 기록/94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>) PWM 수정·두 보드 1,944명령, [95번](<04_검증 기록/95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>) 내부 기능 1,808명령 PASS. Host 680 PASS·1 조건부 SKIP, target 61/61 + 변경 HIL 1/1, 설치 예제 29/29 PASS |

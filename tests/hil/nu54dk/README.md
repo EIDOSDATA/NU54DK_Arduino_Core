@@ -34,6 +34,33 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 
 ## 실행 원칙
 
+### T12 PWM peer capture 첫 경로 준비
+
+`v04_signal_run.py --fixture 408 --pwm-capture --swd-frequency-hz 10000000`는
+기존 408 결선 **B GPIO P1.14 → A GPIO P1.14, GND ↔ GND**를 사용하는 별도 측정 모드다.
+현재 준비 범위는 PWM20/21/22 × slot 0~3 × TOP 1000/4000 × duty 0/25/50/75/100% ×
+DMA word bit15 극성 두 가지의 240 vector다. Individual load·4 values·CPU start·loop로 실행한다.
+이 준비는 물리 PASS가 아니며 common/grouped/wave-form, 길이 32/256, sequence0/1 순서·유한
+end/repeat, DPPI START, triggered-step과 pin idle inversion은 후속 범위다.
+
+A는 GPIOTE20 channel 0 → DPPI20 channel 0 → TIMER22 CC0(1 MHz)로 에지 시각을 캡처한다.
+CPU polling은 이벤트/CC/level을 수집하며 timestamp를 생성하지 않는다. 각 비정적 case의
+201개 에지로 100주기와 각각의 HIGH 비율을 독립 판정한다. 주기는 목표의 ±5%, duty는 목표
+비율의 상대 ±5%다. 0/100%는 에지 없음과 100주기 길이의 정적 level을 확인한다. 누락·중복·
+역순·극성·개별 오차·guard 실패를 평균으로 숨기지 않는다. 실제 clock 교정·jitter 보증은 아니다.
+
+첫 측정의 안전 경계는 기존 exact source/board/image·현재 UID·배타 probe lock·sector flash·
+`auto_unlock=false`·controlled start와 30분 이내 결선 확인을 그대로 사용한다. 새 모드는
+SWD 10 MHz와 유한 campaign만 허용한다. 기본 CLI는 preflight-only이며 `--execute-fixture`와
+현재 confirmation 없이는 probe를 열지 않는다. 원본 status/에지를 판정 전에 journal에 남기고,
+중간 측정 실패도 partial raw를 보존한다. 종료는 B 출력 STOP→A capture 자원 반환 순서다.
+
+새 PC에서는 USB/probe를 다시 열거해 A/B 역할을 확인한 뒤 두 USB 분리→위 GPIO 결선→재연결을
+안내한다. 두 DAP UART 분리·SWD 연결, 동일 I/O 전압·공통 GND·전원 레일 비연결과 현재 결선
+완료를 사용자에게 확인받는다. 이전 COM/결선 확인·이 문단 자체를 실행 승인으로 재사용하지 않는다.
+Mailbox 40/41/42/43/44/45/46은 각각 arm/prepare/start/capture/raw/stop/status다. capture의
+transport 성공과 물리 측정 성공은 별도이며 status/error와 Host oracle 모두 통과해야 한다.
+
 - 보드 target과 build manifest가 기대값과 일치해야 합니다.
 - 일반 upload 경로에서는 mass erase나 recover를 사용하지 않습니다.
 - PMIC 시험은 허용한 address/register의 읽기만 수행합니다.

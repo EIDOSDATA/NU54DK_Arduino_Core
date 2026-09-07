@@ -4,6 +4,7 @@
 #include "serial_hil.h"
 #include "fixture_hil.h"
 #include "signal_hil.h"
+#include "pwm_capture_hil.h"
 #include <nucode/AnalogFabric.h>
 #include <nucode/EventFabric.h>
 #include <nucode/SerialFabric.h>
@@ -302,6 +303,14 @@ namespace
             }
             return 0;
         }
+        if (opcode >= 40U && opcode <= 46U)
+        {
+            return pwmCaptureCommand(opcode, args, nargs, out, count);
+        }
+        if (pwmCaptureClaimed())
+        {
+            return 403U;
+        }
         if (opcode >= 16 && opcode <= 28)
         {
             return fixtureCommand(opcode, args, nargs, out, count);
@@ -361,6 +370,7 @@ int main()
         serviceSerial();
         serviceFixture();
         serviceSignal();
+        servicePwmCapture();
         if (v04_request[0] != v04::magic)
         {
             if (signalNeedsPolling())
