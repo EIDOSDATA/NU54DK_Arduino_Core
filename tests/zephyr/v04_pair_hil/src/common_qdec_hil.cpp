@@ -42,6 +42,53 @@ namespace
     v04::QdecObserver observer;
     std::uint32_t first_mismatch[20]{};
     bool mismatch_recorded = false, phase_checked = false;
+    std::int32_t sampled_steps = 0, last_sample_value = 0;
+    std::uint32_t sampled_doubles = 0U, sample_events = 0U, last_sample = 0U, max_sample_gap = 0U;
+    std::uint32_t read_trace[16][10]{}, trace_next = 0U, trace_total = 0U;
+    std::uint32_t first_sample_detail[8]{};
+
+    /** @brief 비활성 IRQ의 SAMPLERDY를 관측하고 ACC와 별개인 SAMPLE 값을 합산합니다. */
+    void observeSample(std::uint32_t now)
+    {
+        auto *const reg = instance == 20U ? NRF_QDEC20 : NRF_QDEC21;
+        if (nrf_qdec_event_check(reg, NRF_QDEC_EVENT_SAMPLERDY))
+        {
+            last_sample_value = nrf_qdec_sample_get(reg);
+            nrf_qdec_event_clear(reg, NRF_QDEC_EVENT_SAMPLERDY);
+            const auto gap = now - last_sample;
+            if (gap > max_sample_gap)
+            {
+                max_sample_gap = gap;
+            }
+            last_sample = now;
+            ++sample_events;
+            if (last_sample_value == 2)
+            {
+                ++sampled_doubles;
+            }
+            else
+            {
+                sampled_steps += last_sample_value;
+            }
+        }
+    }
+
+    /** @brief SAMPLE 관측 품질과 최초 불일치까지 고정된 read ring 위치를 기록합니다. */
+    void sampleDetail(std::uint32_t *out)
+    {
+        const std::uint32_t values[]{static_cast<std::uint32_t>(sampled_steps),
+                                     sampled_doubles,
+                                     sample_events,
+                                     k_cyc_to_us_floor32(max_sample_gap),
+                                     last_sample,
+                                     static_cast<std::uint32_t>(last_sample_value),
+                                     trace_total,
+                                     trace_next};
+        for (unsigned index = 0U; index < 8U; ++index)
+        {
+            out[index] = values[index];
+        }
+    }
 
     /** @brief 두 입력을 같은 port IN 값에서 읽어 순차 GPIO 읽기 사이 전이를 피합니다. */
     std::uint32_t inputPhase()
@@ -99,6 +146,7 @@ namespace
                                        doubles + nrf_qdec_accdbl_get(reg) != observer.doubles))
             {
                 diagnostic(first_mismatch);
+                sampleDetail(first_sample_detail);
                 mismatch_recorded = true;
             }
         }
@@ -129,9 +177,30 @@ namespace
             max_read_gap = gap;
         }
         last_read = now;
+        const auto *const reg = instance == 20U ? NRF_QDEC20 : NRF_QDEC21;
+        const auto before_acc = nrf_qdec_acc_get(reg);
         QdecEvent event{};
         const auto result = qdec->read(event);
         last_driver_acc = event.accumulated;
+        if (!mismatch_recorded)
+        {
+            const std::uint32_t values[]{now,
+                                         reads + 1U,
+                                         static_cast<std::uint32_t>(last_driver_acc),
+                                         static_cast<std::uint32_t>(before_acc),
+                                         static_cast<std::uint32_t>(reg->ACC),
+                                         static_cast<std::uint32_t>(reg->ACCREAD),
+                                         static_cast<std::uint32_t>(sampled_steps),
+                                         static_cast<std::uint32_t>(observer.steps),
+                                         k_cyc_to_us_floor32(now - observer.last_edge),
+                                         static_cast<std::uint32_t>(last_sample_value)};
+            for (unsigned index = 0U; index < 10U; ++index)
+            {
+                read_trace[trace_next][index] = values[index];
+            }
+            trace_next = (trace_next + 1U) % 16U;
+            ++trace_total;
+        }
         if (result != StreamFabricResult::success || event.driver_error != 0 ||
             event.accumulated <= -1024 || event.accumulated >= 1023 ||
             event.double_transitions >= 15U || k_cyc_to_us_floor32(gap) > 15000U)
@@ -237,6 +306,7 @@ void serviceCommonQdec()
     const auto now = k_cycle_get_32();
     if (role == 1U)
     {
+        observeSample(now);
         observeInput(now);
     }
     if (role == 1U && now - last_read >= k_us_to_cyc_ceil32(5000U))
@@ -272,10 +342,23 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
         }
         error = reads = doubles = emitted = target_steps = max_read_gap = 0U;
         accumulated = 0;
+        sampled_steps = last_sample_value = 0;
+        sampled_doubles = sample_events = max_sample_gap = trace_next = trace_total = 0U;
         mismatch_recorded = phase_checked = false;
         for (auto &word : first_mismatch)
         {
             word = 0U;
+        }
+        for (auto &word : first_sample_detail)
+        {
+            word = 0U;
+        }
+        for (auto &row : read_trace)
+        {
+            for (auto &word : row)
+            {
+                word = 0U;
+            }
         }
         out[0] = 520U;
         out[1] = 10000U;
@@ -306,6 +389,26 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
             {
                 out[index] = first_mismatch[index];
             }
+        }
+        count = 20U;
+        return 0U;
+    }
+    if (opcode == 85U && nargs == 1U && args[0] == 2U && role == 1U)
+    {
+        sampleDetail(out);
+        for (unsigned index = 0U; index < 8U; ++index)
+        {
+            out[8U + index] = first_sample_detail[index];
+        }
+        count = 16U;
+        return 0U;
+    }
+    if (opcode == 85U && nargs == 2U && args[0] == 3U && args[1] < 16U && args[1] % 2U == 0U &&
+        role == 1U)
+    {
+        for (unsigned index = 0U; index < 20U; ++index)
+        {
+            out[index] = read_trace[args[1] + index / 10U][index % 10U];
         }
         count = 20U;
         return 0U;
@@ -355,6 +458,9 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
                        qdec->start() == StreamFabricResult::success;
             last_read = k_cycle_get_32();
             observer.start(last_read, inputPhase());
+            last_sample = last_read;
+            nrf_qdec_event_clear(instance == 20U ? NRF_QDEC20 : NRF_QDEC21,
+                                 NRF_QDEC_EVENT_SAMPLERDY);
         }
         out[0] = prepared ? 0U : 1U;
         count = 1U;
@@ -383,6 +489,8 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
             accumulated = 0;
             doubles = 0U;
             observer.clearCounts();
+            sampled_steps = 0;
+            sampled_doubles = 0U;
         }
         return 0U;
     }
@@ -394,6 +502,10 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
         doubles = 0U;
         last_read = k_cycle_get_32();
         observer.start(last_read, inputPhase());
+        sampled_steps = 0;
+        sampled_doubles = 0U;
+        last_sample = last_read;
+        nrf_qdec_event_clear(instance == 20U ? NRF_QDEC20 : NRF_QDEC21, NRF_QDEC_EVENT_SAMPLERDY);
         out[0] = result ? 0U : 1U;
         count = 1U;
         return 0U;

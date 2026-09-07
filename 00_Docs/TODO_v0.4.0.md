@@ -1,6 +1,6 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
-현재 기능 실행(100번): exact4e48252 GPIO/GPIOTE2502·exact3334b17 steadyPWM675·exact0db0689 추가PWM288·exactb5c86a4 I2S432는 PASS다. QDEC은b5c86a4에서26조건 뒤4000 예상에3999로 중단했고, e521825 독립 GPIO observer로 원인을 진단 중이다. 기존 실패 원본·입력 복귀를 보존했다. T13은32단독/8동시와 C→S→U 계획만 확정했다. T12전체·T13실기·RC는 미완료다.
+현재 기능 실행(100번): exact4e48252 GPIO/GPIOTE2502·exact3334b17 steadyPWM675·exact0db0689 추가PWM288·exactb5c86a4 I2S432는 PASS다. QDEC은e521825에서40조건 뒤 GPIO400/QDEC399로 중단했다. 첫 차이는326번째 전이이며 SAMPLE 합산과16-read trace를 추가해 원인을 진단한다. 기존 실패 원본·입력 복귀를 보존했다. T13은32단독/8동시와 C→S→U 계획만 확정했다. T12전체·T13실기·RC는 미완료다.
 
 현재 실행 범위(2026-09-07 후속): 사용자가 **T12 현재 공통 결선 묶음 검증과 T13 시험 조합·추가 결선 확정까지** 지시했다. 17개 공통 GPIO/GPIOTE, PWM 나머지 모드, QDEC 추가 조건, I2S 연속·단방향을 구현·Host·target·실기로 구분해 진행한다. T13은 조합·자원 충돌·추가 GPIO 결선표를 확정하는 단계이며 soak 실행은 이번 범위에 포함하지 않는다. 새 증거와 문서를 갱신하고 commit/push·CI를 확인한다. T12 전체·T13 실기·후속 gate·RC·공개는 미완료로 유지한다.
 
@@ -25,7 +25,7 @@ T12 다음 준비 범위(2026-09-07): 97번의 첫 capture를 common/grouped/ind
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.41 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.42 |
 | 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 외부/내부 부분 PASS·전체 미완료 |
 | 작성·갱신일 | 2026-09-08 |
 | 작성 직전 기준 commit | `e5218255b3796d660a62da7c2dc518b6c1371b66` — I2S432 완료·QDEC 독립 계측 준비 source |
@@ -91,7 +91,7 @@ GPIO/GPIOTE 전체·I2S 연속/단방향·QDEC 추가 조건 및 PWM의 나머�
 | 마지막 정식 외부 HIL source | I2S432 완료는b5c86a4. 현재QDEC 진단 image는e521825. GPIO4e48252·steady3334b17·모드0db0689의 PASS를 새 image source로 소급하지 않음 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. 420 정의된 기능·준비 취소와 430 I2S 기능 완료. T12 전체·T13 이후·R14·RC·공개는 대기. 공용 자원 경로 변경 이후 필요한 최종-source 통신 회귀는 후속 통합에서 확인 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | I2S74696은432PASS·postflightPASS로 종료. QDEC 진단25455만 두 probe를 점유. 5261/64663/57573/1800은 모두 종료했고 원본 보존 |
+| 이 TODO 작성 작업의 실행 중 시험 | I2S74696은432PASS·postflightPASS로 종료. QDEC 진단25455는40PASS 뒤399/400으로 종료·입력복귀 확인. 현재probe 실행 없음. 5261/64663/57573/1800은 모두 종료했고 원본 보존 |
 | 로컬 임시 build·evidence | C:/pcv04 baseline·C:/pwm04 최초 build 실패·C:/pwc04 준비·C:/pwh04 054d08f·C:/pwq04 0d7f382 보존. 97번에 두 flash 실패·성공·raw/SHA 보존. 삭제 실행 없음 |
 | 최종 정렬 gate | e521825 clang-format22.1.8 C/C++/ino388개 PASS. Host91그룹720시험719PASS·조건부SKIP1, 관련 pair2/2·contract/package/inventory/docs PASS |
 | CI 확인 | origin/main 27e0f25 Software SUCCESS(34118608639), Reproducible SUCCESS(34118608640), 2026-09-07 12:46 UTC 관측. 645df82/4e48252 및 후속 변경은 아직 push 전 |

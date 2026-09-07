@@ -15,6 +15,36 @@ from v04_protocol import ProtocolError
 
 
 class CommonSignalsTests(unittest.TestCase):
+    def test_qdec_first_mismatch_trace_is_preserved_before_cleanup(self):
+        """! @brief 최초 누락의 원본·16개 read ring을 남긴 뒤 양쪽을 정지합니다. """
+        calls, records = [], []
+        class Device:
+            def __init__(self, role):
+                self.image = {'role': role}
+
+            def command(self, opcode, values=(), **options):
+                calls.append((self.image['role'], opcode, values))
+                if opcode == 80:
+                    return [520, 10000]
+                if opcode == 83:
+                    return [0]
+                if opcode == 85:
+                    if values == (2,):
+                        return [400, 0, 16000, 300, 0, 0, 829, 13] * 2
+                    return [326] + [0] * 19
+                if opcode == 81:
+                    return [0] * 16
+                raise AssertionError(opcode)
+        with self.assertRaisesRegex(ProtocolError, '399'):
+            with qdec.armed([Device(1), Device(2)], lambda _: None,
+                            lambda key, row: records.append((key, row)), 'fault', 20, 0):
+                raise ProtocolError('399 instead of400')
+        self.assertEqual([values for role, opcode, values in calls if opcode == 85],
+                         [(0,), (1,), (2,)] + [(3, offset) for offset in range(0, 16, 2)])
+        self.assertEqual([(role, opcode) for role, opcode, _ in calls[-2:]], [(1, 81), (2, 81)])
+        self.assertEqual(records[0][1]['status'], 'failed')
+        self.assertEqual(records[-1][1]['status'], 'cleanup')
+
     def test_qdec_heartbeat_does_not_extend_expired_common_session(self):
         calls, checks, records = [], [], []
         class Device:
