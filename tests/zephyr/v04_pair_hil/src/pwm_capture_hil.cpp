@@ -80,7 +80,7 @@ namespace
                         return false;
                     }
                 }
-                for (unsigned index = triggered ? 16U : 4U; index < 16U; ++index)
+                for (unsigned index = triggered ? 16U : 8U; index < 16U; ++index)
                 {
                     if (buffer.values[index] != 0x9669U)
                     {
@@ -414,10 +414,10 @@ namespace
             {
                 buffer.values[index] = 0x9669U;
             }
-            for (unsigned index = 0U; index < (triggered ? 16U : 4U); ++index)
+            for (unsigned index = 0U; index < (triggered ? 16U : 8U); ++index)
             {
                 const auto selected =
-                    triggered ? fractions[index / 4U] : (sequence == 0U ? 25U : 75U);
+                    triggered ? fractions[index / 4U] : fractions[sequence * 2U + index / 4U];
                 const auto fraction = index % 4U == args[1] ? selected : 50U;
                 buffer.values[index] =
                     static_cast<std::uint16_t>(0x8000U | (top * fraction / 100U));
@@ -567,9 +567,9 @@ std::uint32_t pwmCaptureCommand(std::uint32_t opcode, const std::uint32_t *args,
     if (opcode == 55U && nargs == 1U && args[0] <= 1U && role == 2U && prepared && advanced &&
         !started)
     {
-        const PwmSequenceBuffer first{advanced_dma[0].values, triggered ? 16U : 4U, repeats,
+        const PwmSequenceBuffer first{advanced_dma[0].values, triggered ? 16U : 8U, repeats,
                                       end_delay};
-        const PwmSequenceBuffer second{advanced_dma[1].values, 4U, repeats, end_delay};
+        const PwmSequenceBuffer second{advanced_dma[1].values, 8U, repeats, end_delay};
         started = pwm->play(first, triggered ? nullptr : &second,
                             static_cast<std::uint16_t>(playback_count), false,
                             true) == AnalogFabricResult::success;

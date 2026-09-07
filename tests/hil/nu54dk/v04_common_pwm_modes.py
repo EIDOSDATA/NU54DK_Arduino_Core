@@ -17,6 +17,12 @@ def vectors():
         yield (instance, slot, top, 1, idle, 0, 0, 1), dppi
 
 
+def finite_duties(repeats, delay, plays):
+    """! @brief repeats는 모든 frame, end-delay는 각 sequence의 마지막 frame에만 적용합니다. """
+    return ([25] * (1 + repeats) + [50] * (1 + repeats + delay) +
+            [75] * (1 + repeats) + [25] * (1 + repeats + delay)) * plays
+
+
 def finite_received(vector, status, edges):
     """! @brief 시작 전 HIGH의 첫 부분 pulse만 제외하고 전체 sequence 순서를 비교합니다. """
     instance, slot, top, triggered, idle, repeats, delay, plays = vector
@@ -30,7 +36,7 @@ def finite_received(vector, status, edges):
     expect(edges[0][1], 1 - idle, 'finite PWM first transition')
     pulses = [(first[0], second[0] - first[0]) for first, second in zip(edges, edges[1:])
               if first[1] == 1 and second[1] == 0]
-    expected = ([25] * (1 + repeats + delay) + [75] * (1 + repeats + delay)) * plays
+    expected = finite_duties(repeats, delay, plays)
     if idle:
         expected = expected[1:]
     expect(len(pulses), len(expected), 'finite PWM full pulse count')
@@ -116,8 +122,9 @@ def run(devices, current, append):
         label = 'V04-COMMON-PWM-MODES/' + '/'.join(map(str, (*vector, dppi)))
         with armed(devices, current, append, label, vector, dppi):
             if not vector[3]:
+                periods = len(finite_duties(*vector[5:8]))
                 status, generator, modes, edges = capture(devices, current, append, label,
-                                                          vector[2] * 104 + 150000, start=True)
+                                                          vector[2] * periods + 150000, start=True)
                 expect(generator[8:11], [vector[7], vector[7], 1], 'finite sequence/playback events')
                 result = finite_received(vector, status, edges)
                 append(label, {'status': 'passed', 'scope': 'seq0-seq1-repeats-end-delay-task-idle',

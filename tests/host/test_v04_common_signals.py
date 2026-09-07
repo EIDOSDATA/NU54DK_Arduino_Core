@@ -46,7 +46,7 @@ class CommonSignalsTests(unittest.TestCase):
         self.assertEqual(len(list(modes.vectors())), 288)
         for idle, repeats, delay, plays in itertools.product((0, 1), (0, 9), (0, 3), (52,)):
             vector = (20, 0, 1000, 0, idle, repeats, delay, plays)
-            duties = ([25] * (1 + repeats + delay) + [75] * (1 + repeats + delay)) * plays
+            duties = modes.finite_duties(repeats, delay, plays)
             edges = []
             for index, duty in enumerate(duties):
                 edges.extend([[100 + index * 1000, 1], [100 + index * 1000 + duty * 10, 0]])
@@ -61,6 +61,17 @@ class CommonSignalsTests(unittest.TestCase):
                 raw[4] = len(invalid)
                 with self.assertRaises(ProtocolError):
                     modes.finite_received(vector, raw, invalid)
+
+        # @brief 반복·지연의 교환과 총 길이만 같은 잘못된 frame 배분을 각각 거부합니다.
+        vector = (20, 0, 1000, 0, 0, 9, 3, 4)
+        wrong_distribution = ([25] * 13 + [50] * 10 + [75] * 13 + [25] * 10) * 4
+        self.assertEqual(len(wrong_distribution), len(modes.finite_duties(9, 3, 4)))
+        for faulty in (modes.finite_duties(3, 9, 4), wrong_distribution):
+            wrong = [[value, level] for index, duty in enumerate(faulty)
+                     for value, level in ((100 + index * 1000, 1), (100 + index * 1000 + duty * 10, 0))]
+            status = [1, 1, 1, 0, len(wrong), 0, 0, len(faulty) * 1000 + 200000, 0, 0, 0, 1]
+            with self.assertRaises(ProtocolError):
+                modes.finite_received(vector, status, wrong)
 
     def test_compact_pwm_preserves_each_identity_axis_and_duty_polarity(self):
         full = {row for load in pwm.LOADS for row in pwm.vectors(load)}
