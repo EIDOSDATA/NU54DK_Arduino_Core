@@ -53,16 +53,16 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | [93번](<04_검증 기록/93_Host_재검증과_T12_이후_남은_작업.md>)에 Host 83그룹 664 PASS·1 조건부 SKIP, 최초 Ninja 실패·환경별 증거와 T12 이후 잔여 목록 등록 |
+| 이번에 끝낸 일 | [94번](<04_검증 기록/94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>) PWM 지연 시작 취소 수정·exact 080d771 두 보드 1,944 명령/4,320회 PASS. 전체 Host 672 PASS·1 조건부 SKIP, target 61/61 build-only PASS |
 | 진행 중인 T 항목 | Host 재검증 완료. T12는 PWM 모드/capture, ADC calibration API·scan, GPIO/event 전수, I2S 연속·추가 길이/단방향, QDEC 경계 조건이 남는다. T14 공용 PWM STOP·T13 이후 유지 |
-| 다음 구체적 행동 | [94번 준비 기록](<04_검증 기록/94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>)의 수정 전 6 FAIL·수정 후 production 34개 PASS와 무점퍼 target 준비를 clean source로 고정한다. exact image 재빌드 뒤 보드당 960개 기본·100회 반복 12개를 실행한다. 원본은 work/t14-pwm-deferred에 기록한다 |
+| 다음 구체적 행동 | [95번](<04_검증 기록/95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>) 내부 ADC·TIMER·EGU/DPPI/PPIB·기존 시간 함수와 PWM 반복 회귀를 clean source로 고정한 뒤 exact target/HIL을 실행한다. 보드당 904개 계획 |
 | 다음 작업에 필요한 사용자 행동 | 소프트웨어 작업에는 추가 결선이 없다. 무점퍼 실기는 USB/SWD 연결·응답이 필요하다. 새 외부 시험 준비가 끝나면 필요한 GPIO 결선을 안내한다 |
 | 외부 결선 상태 | 2026-09-07 사용자 최신 보고: 보드 간 결선 해제. 이전 440의 clock/gate/data·공통 GND 연결 확인을 현재 유효한 결선으로 사용하지 않는다. USB·DAP UART·SWD 상태 변경 여부는 이번 보고에 포함되지 않았다. 마지막 확인은 DAP UART 분리·SWD 연결, 마지막 실기 종료 상태는 두 보드 주변장치 off·신호 입력 복귀다 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 마지막 정식 외부 HIL source | `f02734d69d9722085771fc1a34d5ed0cf756bc4e` — 연속 기능/cleanup 96·밀도 16 PASS, 미실행 0. 기본 192+32는 코드·설정이 같은 917dc02에서 실행 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. 420 정의된 기능·준비 취소와 430 I2S 기능 완료. T12 전체·T13 이후·R14·RC·공개는 대기. 공용 자원 경로 변경 이후 필요한 최종-source 통신 회귀는 후속 통합에서 확인 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | PWM 수정·Host/target 준비 완료, 새 flash/HIL은 아직 미실행이다. 두 보드 읽기 preflight는 SWD 10 MHz에서 PASS이며 PWM 세 instance off를 확인했다. 다음 exact build/HIL 및 전체 software gate를 진행한다 |
+| 이 TODO 작성 작업의 실행 중 시험 | PWM 새 실기는 완료했고 두 보드는 080d771 nojumper image·주변장치 off 상태다. 설치본 예제 검증과 새 내부 HIL 준비를 진행 중이며 전체 T12는 미완료다 |
 | 로컬 임시 build·evidence | 15개 과거 root의 object/archive 중간 파일 55,537개 제거, 일회성 script 50개는 work/archive/r00-r13-authoring-scripts.zip으로 hash 검증 후 보관. 2,911개 ELF/HEX/설정/log 등은 hash 불변. C:/r13h와 설치본·raw evidence·QEMU 보존; 상세는 65번 기록 |
 | 최종 정렬 gate | clang-format 22.1.8, C/C++/ino 362개 PASS. main.cpp 한 줄의 LF/CRLF 차이만 교정했고 정규화 byte·Git blob은 동일. 한국어 Doxygen·Allman·4칸·중괄호 필수 |
 | CI 확인 | e6979af canonical Host 83그룹 664 PASS·1 M13 설치본 CLI discovery 조건부 SKIP. Native compiler SKIP 0. LLVM/WinLibs sysroot 유지, NCS bundle CMake/Ninja 사용. 최초 WinLibs Ninja 차단은 별도 보존. 새 target/원격 CI 실행 없음 |

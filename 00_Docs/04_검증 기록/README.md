@@ -181,3 +181,5 @@ T12 Fixture 408 exact 87b987d·SWD 10 MHz **48개 기능 PASS**는 [83번 기록
 - [93 — Host 재검증과 T12 이후 남은 작업](93_Host_재검증과_T12_이후_남은_작업.md)
 
 - [94 — T14 PWM 지연 시작 취소와 무점퍼 검증](94_T14_PWM_지연_시작_취소와_무점퍼_검증.md)
+
+- [95. T12 내부 ADC·TIMER·이벤트 무점퍼 검증](95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md): 준비 checkpoint, exact build/HIL 대기.

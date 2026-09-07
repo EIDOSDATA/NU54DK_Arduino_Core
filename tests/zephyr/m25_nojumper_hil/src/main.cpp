@@ -216,9 +216,15 @@ namespace
     }
 } // namespace
 
+#include "nojumper_ownership.h"
+#include "nojumper_adc.h"
+#include "nojumper_timer.h"
+#include "nojumper_event.h"
+#include "nojumper_time.h"
+
 int main()
 {
-    nojumper_ready[1] = nojumper_revision[0] != '\0' ? 1U : 0U;
+    nojumper_ready[1] = nojumper_revision[0] != '\0' ? 2U : 0U;
     nojumper_ready[0] = magic;
     std::uint32_t previous = 0U;
     while (true)
@@ -235,13 +241,36 @@ int main()
                 result[index] = request[index];
             }
             result[2] = 0U;
-            if (request[0] != sequence || request[1] == 0U || request[2] != 1U)
+            if (request[0] != sequence || request[1] == 0U || (request[2] < 1U || request[2] > 6U))
             {
                 result[2] = 1U;
             }
             else
             {
-                exercisePwm(request, result);
+                switch (request[2])
+                {
+                case 1U:
+                    exercisePwm(request, result);
+                    break;
+                case 2U:
+                    exerciseSaadc(request, result);
+                    break;
+                case 3U:
+                    exerciseTimer(request, result);
+                    break;
+                case 4U:
+                    exerciseEvent(request, result);
+                    break;
+                case 5U:
+                    exerciseBridge(request, result);
+                    break;
+                case 6U:
+                    exerciseTime(request, result);
+                    break;
+                default:
+                    result[2] = 1U;
+                    break;
+                }
             }
             for (unsigned index = 1U; index < 32U; ++index)
             {
