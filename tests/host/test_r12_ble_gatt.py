@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 class BleGattTests(unittest.TestCase):
     def test_production_gatt_lifecycle(self):
+        """! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 GATT 구현의 대체를 검증합니다. """
         compiler = compiler_command()
         self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory(prefix='nu54-r12-gatt-') as folder:
@@ -21,8 +22,8 @@ class BleGattTests(unittest.TestCase):
                        '-DCONFIG_NUCODE_BLE_GATT_EVENT_QUEUE_SIZE=24', '-DCONFIG_BT_SETTINGS=1', '-DCONFIG_BT_SMP=1']
             for path in ['tests/host/ble_stubs', 'libraries/NUCODE_BLE/src']:
                 command += ['-I', str(ROOT / path)]
-            command += [str(ROOT / path) for path in ['libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp',
-                        'libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp',
+            command += [str(ROOT / path) for path in ['libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp',
+                        'libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp',
                         'libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp',
                         'libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp',
                         'libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp',
