@@ -99,7 +99,8 @@ def armed(devices, current, append, label, vector):
         for device in (devices[master - 1], devices[2 - master]):
             try:
                 words = device.command(89, timeout=2)
-                good = len(words) == 20 and words[:2] == [0, 0] and words[17] == 0 and words[19] == 0
+                good = (len(words) == 20 and words[:2] == [0, 0] and words[6] == 1 and
+                        words[17] == 0 and words[18:20] == [0, 0])
                 rows.append({'role': device.image['role'], 'stopped': good, 'words': words})
             except BaseException as error:
                 rows.append({'role': device.image['role'], 'stopped': False, 'error': str(error)})

@@ -17,6 +17,32 @@ from v04_protocol import ProtocolError
 
 
 class CommonI2sTests(unittest.TestCase):
+    def test_stop_requires_guard_and_attempts_both_devices(self):
+        calls, records = [], []
+        class Device:
+            def __init__(self, role):
+                self.image = {'role': role}
+
+            def command(self, opcode, values=(), **options):
+                if opcode == 88:
+                    return [530, 10000]
+                if opcode == 90:
+                    return [0]
+                if opcode == 89:
+                    calls.append(self.image['role'])
+                    raw = [0] * 20
+                    raw[6] = int(self.image['role'] == 2)
+                    return raw
+                raise AssertionError('unexpected command')
+
+        with self.assertRaisesRegex(ProtocolError, 'cleanup unproven'):
+            with i2s.armed([Device(1), Device(2)], lambda *_: None,
+                           lambda key, row: records.append((key, row)), 'guard-case',
+                           (1, 16000, 16, 0, 32, 3)):
+                pass
+        self.assertEqual(calls, [1, 2])
+        self.assertEqual([row['stopped'] for row in records[-1][1]['outcomes']], [False, True])
+
     def test_continuous_crc_order_padding_and_direction_failures(self):
         self.assertEqual(len(list(i2s.vectors())), 432)
         for width in (8, 16, 24, 32):
