@@ -12,6 +12,7 @@ import v04_common_gpio as gpio
 import v04_common_qdec as qdec
 import v04_qdec_read_diagnostic as qdec_diagnostic
 import v04_qdec_clear_diagnostic as clear_diagnostic
+import v04_qdec_irq_diagnostic as irq_diagnostic
 import v04_common_i2s as i2s
 import v04_common_pwm_modes as pwm_modes
 import v04_pwm_capture as pwm
@@ -31,7 +32,7 @@ def arguments(argv=None):
     parser.add_argument('--pyocd', required=True, type=Path)
     parser.add_argument('--session-grant', required=True, type=Path)
     parser.add_argument('--evidence', type=Path)
-    parser.add_argument('--section', choices=('all', 'gpio', 'task', 'edge', 'qdec', 'qdec-read-diagnostic', 'qdec-clear-diagnostic', 'qdec-timing-diagnostic', 'qdec-latency-diagnostic', 'pwm', 'pwm-modes', 'i2s', 'signals', 'additional-signals', 'qdec-i2s'), default='all')
+    parser.add_argument('--section', choices=('all', 'gpio', 'task', 'edge', 'qdec', 'qdec-read-diagnostic', 'qdec-clear-diagnostic', 'qdec-timing-diagnostic', 'qdec-latency-diagnostic', 'qdec-irq-diagnostic', 'pwm', 'pwm-modes', 'i2s', 'signals', 'additional-signals', 'qdec-i2s'), default='all')
     parser.add_argument('--execute-fixture', action='store_true')
     parser.add_argument('--cmsis-dap-limit-packets', action='store_true')
     parser.add_argument('--swd-frequency-hz', type=int, default=10000000)
@@ -59,7 +60,7 @@ def main(argv=None):
                              'hex_sha256': image['sha256'], 'elf_sha256': image['elf_sha256'],
                              'record_sha256': image['record_sha256']} for uid, image in zip(uids, images)],
                 'results': []}
-    if args.section in ('qdec-read-diagnostic', 'qdec-clear-diagnostic', 'qdec-timing-diagnostic', 'qdec-latency-diagnostic'):
+    if args.section in ('qdec-read-diagnostic', 'qdec-clear-diagnostic', 'qdec-timing-diagnostic', 'qdec-latency-diagnostic', 'qdec-irq-diagnostic'):
         evidence['type'] = 'v04-common-' + args.section
         evidence['functional_regression'] = False
     if not args.execute_fixture:
@@ -116,6 +117,8 @@ def main(argv=None):
                 clear_diagnostic.run(devices, continuity.check, append, strategies=(0, 3, 4), prefix='V04-QDEC-TIMING-DIAGNOSTIC')
             elif args.section == 'qdec-latency-diagnostic':
                 clear_diagnostic.run(devices, continuity.check, append, strategies=(0, 5, 6), prefix='V04-QDEC-LATENCY-DIAGNOSTIC')
+            elif args.section == 'qdec-irq-diagnostic':
+                irq_diagnostic.run(devices, continuity.check, append)
             elif args.section == 'pwm':
                 pwm.run_common(devices, continuity.check, append)
             elif args.section == 'i2s':

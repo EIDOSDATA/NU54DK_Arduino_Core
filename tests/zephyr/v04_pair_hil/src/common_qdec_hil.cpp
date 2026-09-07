@@ -54,6 +54,10 @@ namespace
     std::int32_t late_acc_difference = 0, late_double_difference = 0;
     std::uint32_t sample_poll_previous = 0U, sample_poll_max = 0U, sample_observe_max = 0U;
     std::uint32_t sample_poll_calls = 0U;
+    std::int32_t irq_sample_steps = 0, irq_report_steps = 0;
+    std::uint32_t irq_sample_count = 0U, irq_sample_doubles = 0U, irq_report_count = 0U;
+    std::uint32_t irq_report_doubles = 0U, irq_event_errors = 0U, irq_service_last = 0U;
+    std::uint32_t irq_service_max = 0U;
 
     /** @brief 비활성 IRQ의 SAMPLERDY를 관측하고 ACC와 별개인 SAMPLE 값을 합산합니다. */
     void observeSample(std::uint32_t now)
@@ -90,6 +94,49 @@ namespace
         if (duration > sample_observe_max)
         {
             sample_observe_max = duration;
+        }
+    }
+
+    /** @brief 공개 IRQ 이벤트 큐에서 실제 SAMPLE 또는 자동 REPORT만 합산합니다. */
+    void observeInterrupts(std::uint32_t now)
+    {
+        const auto gap = now - irq_service_last;
+        if (gap > irq_service_max)
+        {
+            irq_service_max = gap;
+        }
+        irq_service_last = now;
+        QdecEvent event{};
+        while (qdec->takeEvent(event))
+        {
+            if (event.type == QdecEventType::sample && read_strategy == 7U)
+            {
+                ++irq_sample_count;
+                if (event.accumulated == 2)
+                {
+                    ++irq_sample_doubles;
+                }
+                else
+                {
+                    irq_sample_steps += event.accumulated;
+                }
+            }
+            else if (event.type == QdecEventType::report && read_strategy == 8U)
+            {
+                ++irq_report_count;
+                irq_report_steps += event.accumulated;
+                irq_report_doubles += event.double_transitions;
+                accumulated += event.accumulated;
+                doubles += event.double_transitions;
+            }
+            else
+            {
+                ++irq_event_errors;
+            }
+        }
+        if (qdec->lastResult() != StreamFabricResult::success || irq_event_errors != 0U)
+        {
+            error = 5U;
         }
     }
 
@@ -158,7 +205,8 @@ namespace
         {
             phase_checked = false;
         }
-        if (!phase_checked && now - observer.last_edge >= k_us_to_cyc_ceil32(1024U))
+        if (read_strategy != 8U && !phase_checked &&
+            now - observer.last_edge >= k_us_to_cyc_ceil32(1024U))
         {
             phase_checked = true;
             const auto *const reg = instance == 20U ? NRF_QDEC20 : NRF_QDEC21;
@@ -189,6 +237,12 @@ namespace
         if (qdec == nullptr || qdec->state() != StreamFabricState::active)
         {
             return false;
+        }
+        if (read_strategy == 8U)
+        {
+            /** @brief 자동 REPORT 대비에서는 명시적 read/clear를 섞지 않습니다. */
+            observeInterrupts(k_cycle_get_32());
+            return error == 0U;
         }
         unsigned interrupt_key = 0U;
         if (read_strategy == 4U)
@@ -438,11 +492,20 @@ void serviceCommonQdec()
     const auto now = k_cycle_get_32();
     if (role == 1U)
     {
-        if (read_observation == 3U)
+        if (read_observation == 3U && read_strategy < 7U)
         {
             observeSample(now);
         }
+        if (read_strategy >= 7U)
+        {
+            observeInterrupts(now);
+        }
         observeInput(now);
+        if (error != 0U)
+        {
+            gate.close(stop());
+            return;
+        }
     }
     if (role == 1U && read_strategy == 2U)
     {
@@ -456,7 +519,8 @@ void serviceCommonQdec()
             gate.close(stop());
         }
     }
-    if (role == 1U && read_strategy != 2U && now - last_read >= k_us_to_cyc_ceil32(read_period_us))
+    if (role == 1U && read_strategy != 2U && read_strategy != 8U &&
+        now - last_read >= k_us_to_cyc_ceil32(read_period_us))
     {
         if (!drain())
         {
@@ -497,6 +561,9 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
         late_changes = late_wait_max = 0U;
         late_acc_difference = late_double_difference = 0;
         sample_poll_previous = sample_poll_max = sample_observe_max = sample_poll_calls = 0U;
+        irq_sample_steps = irq_report_steps = 0;
+        irq_sample_count = irq_sample_doubles = irq_report_count = irq_report_doubles = 0U;
+        irq_event_errors = irq_service_max = 0U;
         for (auto &word : first_late_change)
         {
             word = 0U;
@@ -574,8 +641,9 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
     if (opcode == 85U && nargs == 1U && args[0] == 5U && role == 1U)
     {
         out[0] = read_strategy;
-        out[1] = read_strategy != 1U && read_strategy != 3U && read_strategy != 5U;
-        out[2] = read_strategy != 2U;
+        out[1] = read_strategy != 1U && read_strategy != 3U && read_strategy != 5U &&
+                 read_strategy != 8U;
+        out[2] = read_strategy != 2U && read_strategy != 8U;
         out[3] = read_strategy == 2U ? 6000000U : 15000U;
         out[4] = read_period_us;
         count = 5U;
@@ -637,6 +705,21 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
         count = 3U;
         return 0U;
     }
+    if (opcode == 85U && nargs == 1U && args[0] == 10U && role == 1U)
+    {
+        /** @brief IRQ 원본 합·이벤트 수·큐 오류와 서비스 간격을 기능 PASS와 구분합니다. */
+        out[0] = static_cast<std::uint32_t>(irq_sample_steps);
+        out[1] = irq_sample_doubles;
+        out[2] = irq_sample_count;
+        out[3] = static_cast<std::uint32_t>(irq_report_steps);
+        out[4] = irq_report_doubles;
+        out[5] = irq_report_count;
+        out[6] = irq_event_errors;
+        out[7] = k_cyc_to_us_floor32(irq_service_max);
+        out[8] = qdec == nullptr ? 0U : static_cast<std::uint32_t>(qdec->lastDriverError());
+        count = 9U;
+        return 0U;
+    }
     if (opcode == 85U && nargs == 2U && args[0] == 3U && args[1] < 16U && args[1] % 2U == 0U &&
         role == 1U)
     {
@@ -659,7 +742,7 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
     }
     if (opcode == 83U &&
         (nargs == 2U || (nargs == 3U && args[2] <= 3U) ||
-         (nargs == 4U && args[2] == 3U && args[3] <= 6U)) &&
+         (nargs == 4U && args[2] == 3U && args[3] <= 8U)) &&
         (args[0] == 20U || args[0] == 21U) && args[1] <= 1U && !prepared && qdec == nullptr &&
         !generator_token.active)
     {
@@ -688,18 +771,19 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
                                                   PIN_P1_10,
                                                   0xFFU,
                                                   args[1] != 0U,
-                                                  false,
+                                                  read_strategy == 7U,
                                                   256U,
                                                   0U,
-                                                  false,
+                                                  read_strategy == 8U,
                                                   StreamElectricalProfile::connector_fixture};
             prepared = qdec != nullptr &&
                        qdec->configure(configuration) == StreamFabricResult::success &&
                        qdec->start() == StreamFabricResult::success;
             last_read = k_cycle_get_32();
+            irq_service_last = last_read;
             observer.start(last_read, inputPhase());
             last_sample = last_read;
-            if (read_observation == 3U)
+            if (read_observation == 3U && read_strategy < 7U)
             {
                 nrf_qdec_event_clear(instance == 20U ? NRF_QDEC20 : NRF_QDEC21,
                                      NRF_QDEC_EVENT_SAMPLERDY);
