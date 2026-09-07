@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "input": "wiring-recheck-input-preflight.json",
+  "notes": "First auxiliary assertion required SLEEPING at one sampled instant. The mailbox main loop wakes every millisecond; RUNNING and SLEEPING are both valid. CPUID, exact identity and all 17 input directions were verified without changing board state."
+}

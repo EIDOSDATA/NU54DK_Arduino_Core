@@ -1,0 +1,177 @@
+{
+  "core_revision": "d8d1e135cfc96c1608c55c81b4f111963f56c10a",
+  "physical_status": "passed",
+  "records": [
+    {
+      "raw_name": "audit.json",
+      "raw_sha256": "9d0a0fe37bd695b9eccdf733c2f1989d7104419b0b3a18ef64c4e6d54ff520d5",
+      "gzip_file": "audit.json.gz",
+      "gzip_sha256": "4a13aa82797b18983c1df12425ec25cb55306cad0020cdc3543bf8a2059fa13b",
+      "lf_file": "audit.json",
+      "lf_sha256": "9d0a0fe37bd695b9eccdf733c2f1989d7104419b0b3a18ef64c4e6d54ff520d5"
+    },
+    {
+      "raw_name": "ci-snapshot.json",
+      "raw_sha256": "0638a3e230b0fb202b574a12c74104a606f0e64e1f019a8b431a477b5665882e",
+      "gzip_file": "ci-snapshot.json.gz",
+      "gzip_sha256": "681c29b85256085b53f62b464b1e1a0c194a8d5d3bbb322717fd78146e809319",
+      "lf_file": "ci-snapshot.json",
+      "lf_sha256": "0638a3e230b0fb202b574a12c74104a606f0e64e1f019a8b431a477b5665882e"
+    },
+    {
+      "raw_name": "confirmation.json",
+      "raw_sha256": "870cb8ee4e78f90dd07c7bab13e25f7bb7e142e9feb823d01e48ec4390122048",
+      "gzip_file": "confirmation.json.gz",
+      "gzip_sha256": "c6eec17f5901dceda143d1f477044785f52885228d99f81c14d1fe30331ad994",
+      "lf_file": "confirmation.json",
+      "lf_sha256": "ad11e6bc59d00437aa9db18dab87e6f3840e36c0026a6ec5119dd7df701a12d1"
+    },
+    {
+      "raw_name": "images.json",
+      "raw_sha256": "7c7b0d495cd546df3ef7688d26766985c61994d4fd0697eb17d6fbf3ccf2f977",
+      "gzip_file": "images.json.gz",
+      "gzip_sha256": "a0b3ddfb43b78763cadfbc10f447fdddf7d5ce0f0b94df52becb03040bfa94cd",
+      "lf_file": "images.json",
+      "lf_sha256": "d075f456b3b2a9d4331e40d89e5a450ffb60d0883358e413c491d6fb9baa37a7"
+    },
+    {
+      "raw_name": "result.json",
+      "raw_sha256": "634b92eafe4c5a75b9bf1f4b6aa07bea36cdc7c896bacbbfd27d8407d89d2939",
+      "gzip_file": "result.json.gz",
+      "gzip_sha256": "3666bbef9aade58ccdbe612d221f7fe0f508d980632ddb2eb3e80519f500b917",
+      "lf_file": "result.json",
+      "lf_sha256": "2870c59131841cf5f324ea4b8c26499e586dde16235190b1bf4ab3e8f9bbf7be"
+    },
+    {
+      "raw_name": "result.json.jsonl",
+      "raw_sha256": "2ae99a0fe66456c2f27e595748401758cb660d060a01adcadd7617aaac493bf5",
+      "gzip_file": "result.json.jsonl.gz",
+      "gzip_sha256": "242764515780999928d63ad24bb169e34d8897fe8f58cd8c373c6ee85d1b92a3",
+      "lf_file": "result.json.jsonl",
+      "lf_sha256": "148826caa12c314e29f2650d3b514645a52e959a8a1fb8e14494980cd212ea7a"
+    },
+    {
+      "raw_name": "wiring-recheck-target.json",
+      "raw_sha256": "d19b26ac70681a2b671ee8d1840fd8ee5619d23125903e93c6e0f805d4ca1431",
+      "gzip_file": "wiring-recheck-target.json.gz",
+      "gzip_sha256": "d811465657dcc6bde919ee0589bb52bcf90d89552b34d7d2c9b04e16a755126f",
+      "lf_file": "wiring-recheck-target.json",
+      "lf_sha256": "7abe52013db460af02a7c3cff67bb528b3e993d6fdc6c8c33d2c63e0a67a4d2f"
+    },
+    {
+      "raw_name": "wiring-recheck-target.log",
+      "raw_sha256": "2b1c6a8039a679a2f428ac4f6678eea049a01c1086e1caa7fa713ae6fc41efbb",
+      "gzip_file": "wiring-recheck-target.log.gz",
+      "gzip_sha256": "b266fcc112888f3040956a6d5d8a3ada26297fbe863f8db0ee7f525d6dd9b5fd"
+    },
+    {
+      "raw_name": "wiring-recheck-m27.json",
+      "raw_sha256": "4271bfe38fbe2640022ddde9b61af47bbe19d28e6afb903e3b4d5c5349a27f21",
+      "gzip_file": "wiring-recheck-m27.json.gz",
+      "gzip_sha256": "8fad8223ed266fc79d3b77b55cf685f72dfa1e91a2c7d759b0327aa11822a224",
+      "lf_file": "wiring-recheck-m27.json",
+      "lf_sha256": "e68f74b2dffb9644984d6024bcba693787bc95ee4cfa536f7b8d9e734dfe1945"
+    },
+    {
+      "raw_name": "wiring-recheck-m27.log",
+      "raw_sha256": "d623c254de95a9c675a5dd3da38cb78856972ce260f0e57eaae51fdf236bbfcf",
+      "gzip_file": "wiring-recheck-m27.log.gz",
+      "gzip_sha256": "448b5df3c4ade9e882f652f2dcf9e8c7811e52124b5750ab59786a4c06ba9da7"
+    },
+    {
+      "raw_name": "wiring-d8d1e13-preflight.json",
+      "raw_sha256": "1fdfe48824cac010c9b01c1e30eb8b77162da6b54bedb31212c8f2211f5b8855",
+      "gzip_file": "wiring-d8d1e13-preflight.json.gz",
+      "gzip_sha256": "2c264d4f797ab52b4a9950de1f07813f09f411761fc8864917aaa13796952cc3",
+      "lf_file": "wiring-d8d1e13-preflight.json",
+      "lf_sha256": "0cb72db27bbc3d7d9a91d5e4916824f9fd61d0704036c54c231baaee12444fad"
+    },
+    {
+      "raw_name": "wiring-d8d1e13-preflight.log",
+      "raw_sha256": "a4b305723655cc0e6d5183cb78cfb41b546c9195fce315fabfddfb8d01d76b69",
+      "gzip_file": "wiring-d8d1e13-preflight.log.gz",
+      "gzip_sha256": "75b125917e6e464f1921e7f1e31cd0e8a5cfa550e79b689cb889863b8b1eb37d"
+    },
+    {
+      "raw_name": "wiring-d8d1e13-hardware.json",
+      "raw_sha256": "75a3a95a63e04ac64b669154f885386f6b06dc4ea49fb21a55b94af4d63461a5",
+      "gzip_file": "wiring-d8d1e13-hardware.json.gz",
+      "gzip_sha256": "8c790d06960de381be65aa38946be4b24e5e4e798734833192301832ad991398",
+      "lf_file": "wiring-d8d1e13-hardware.json",
+      "lf_sha256": "eea06f94ec1536414d0ec90edffd245c81f8cfb85c2452be2bab7a03233c9c3b"
+    },
+    {
+      "raw_name": "wiring-d8d1e13-hardware.log",
+      "raw_sha256": "3dd7358907488ceb430a4c345732c7b1f0898eadfbf1b97dd426f21c6734c2ee",
+      "gzip_file": "wiring-d8d1e13-hardware.log.gz",
+      "gzip_sha256": "5a133e1cd403585eec02686214fa3f739b4704fa4af1cd7f01a3dbdee195a7e5"
+    },
+    {
+      "raw_name": "wiring-recheck-input-preflight.json",
+      "raw_sha256": "f7b5e72c92d8f22b7ca20493544543f414a6f1afe7b16048cffa80ab687cef46",
+      "gzip_file": "wiring-recheck-input-preflight.json.gz",
+      "gzip_sha256": "62cc621e0b596b67bbd95e1e3a122a01d946097b241fc4b4d118c5fb26e4b7ca",
+      "lf_file": "wiring-recheck-input-preflight.json",
+      "lf_sha256": "72e98af79f8bc94689dc2a92f44eda5f4e8025610fa91e45a4b6499abe85c5d9"
+    },
+    {
+      "raw_name": "wiring-recheck-input-audit.json",
+      "raw_sha256": "222247ae4889d151575e41e5e10fa8d5d51a20a7c23e0d82782e038b10cd9288",
+      "gzip_file": "wiring-recheck-input-audit.json.gz",
+      "gzip_sha256": "0e62f648535b1304dd259924b7a93cbbcd6e926e64a4e40f3c6a3f7f9530ffc3",
+      "lf_file": "wiring-recheck-input-audit.json",
+      "lf_sha256": "41603cb29e68932a2f803c6405b55b97276cfb448bec1c63dcd926d031519be2"
+    },
+    {
+      "raw_name": "wiring-recheck-postflight.json",
+      "raw_sha256": "9632599cd797366c338ccefbd29d41c4648a5ac3f9e7eb23f892838b77871b0c",
+      "gzip_file": "wiring-recheck-postflight.json.gz",
+      "gzip_sha256": "2603d87b9e2ba3fb6810d6898e9b1495ea53076f190e3485200fde76a60ced37",
+      "lf_file": "wiring-recheck-postflight.json",
+      "lf_sha256": "6409e23dba304ac09ffa3598e106e2fd31857380d481dc292f396f3a4ab4b823"
+    },
+    {
+      "raw_name": "audit_wiring_recheck.py",
+      "raw_sha256": "15ce625268c9e868b5004361c6970668d14b6c1a491477ceb91bc848dfeb85f6",
+      "gzip_file": "audit_wiring_recheck.py.gz",
+      "gzip_sha256": "a9a635cd03877bf34a5eb3acced28af23623ea37d4f93d5bd9d0b5ac50f13cac"
+    },
+    {
+      "raw_name": "wiring_recheck_input.py",
+      "raw_sha256": "f2305e57f54467ebd0428c7aae5397c6f4431483cf6154da4fabb9fba90d3435",
+      "gzip_file": "wiring_recheck_input.py.gz",
+      "gzip_sha256": "37dac682875e94808d7a7311263120170ece50bc47cfc63f8f3e2ffdce49a710"
+    },
+    {
+      "raw_name": "wiring_recheck_postflight.py",
+      "raw_sha256": "da346a51e17a75cb152680d1f89b8cd1d664253f9de9d7f5594b880f465b6f04",
+      "gzip_file": "wiring_recheck_postflight.py.gz",
+      "gzip_sha256": "09e33f4189379b3eda34c767e3d95cce3d3b975e8214f61726f77ddc4a70efb1"
+    },
+    {
+      "raw_name": "wiring-recheck-final-docs.json",
+      "raw_sha256": "772c1e6dc7e313c47419f3f57703a4b5b36e3557b0ca198c5a1686ea41f4f132",
+      "gzip_file": "wiring-recheck-final-docs.json.gz",
+      "gzip_sha256": "38ab425d80dba423b574f3563c8ade05b23f0398ad57dedba3cd16c11d3056a4",
+      "lf_file": "wiring-recheck-final-docs.json",
+      "lf_sha256": "186dd78972018b792dbc83b3beb09b910c760f8885a868bd7f1a086ab0514628"
+    },
+    {
+      "raw_name": "wiring-recheck-final-docs.log",
+      "raw_sha256": "e5484cd9bc6bf828ed2f22712e347fd086a5a6eed2e93cc20d6506ea1ff15b2f",
+      "gzip_file": "wiring-recheck-final-docs.log.gz",
+      "gzip_sha256": "7370d008d2304d9333faf47653c5a085401fac33073e905ddb1219c3e33fbefd"
+    }
+  ],
+  "passed_net_rounds": 102,
+  "failed_net_rounds": 0,
+  "unexecuted_net_rounds": 0,
+  "passed_p1_10_net_rounds": 6,
+  "pulse_timeout_passes": 2,
+  "dual_lease_timeout_passes": 1,
+  "raw_observations": 416,
+  "cleanup_groups": 3,
+  "scope": "17 signal connections only; no GPIO API, T12 completion, stability or release qualification",
+  "prior_failure": "../t12-common-wiring-8c1cfe2/result.json",
+  "prior_failure_root_cause": "not established; user requested retest without an explicit repair report"
+}

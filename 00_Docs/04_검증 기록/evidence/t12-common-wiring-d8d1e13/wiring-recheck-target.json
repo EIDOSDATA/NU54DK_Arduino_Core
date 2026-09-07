@@ -1,0 +1,24 @@
+{
+  "name": "wiring-recheck-target",
+  "command": [
+    "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_zephyr_build.py",
+    "--workspace",
+    "C:\\ncs\\v3.4.0",
+    "--outdir",
+    "C:\\wit04",
+    "--group",
+    "v0.4.0",
+    "--suite",
+    "nucode.v04.pair_dut",
+    "--suite",
+    "nucode.v04.pair_peer",
+    "--jobs",
+    "2"
+  ],
+  "started_at": "2026-09-07T11:13:00.429186+00:00",
+  "finished_at": "2026-09-07T11:14:46.072800+00:00",
+  "exit_code": 0,
+  "log_sha256": "2b1c6a8039a679a2f428ac4f6678eea049a01c1086e1caa7fa713ae6fc41efbb"
+}

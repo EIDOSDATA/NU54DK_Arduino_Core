@@ -1,0 +1,13 @@
+{
+  "name": "wiring-d8d1e13-preflight",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\run_ncs.py",
+    "wiring_launch_recheck.py",
+    "preflight"
+  ],
+  "started_at": "2026-09-07T11:18:39.252276+00:00",
+  "finished_at": "2026-09-07T11:18:41.406490+00:00",
+  "exit_code": 0,
+  "log_sha256": "a4b305723655cc0e6d5183cb78cfb41b546c9195fce315fabfddfb8d01d76b69"
+}

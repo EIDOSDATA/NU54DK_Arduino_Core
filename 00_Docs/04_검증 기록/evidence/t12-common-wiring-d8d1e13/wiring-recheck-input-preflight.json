@@ -1,0 +1,83 @@
+{
+  "observed_at_utc": "2026-09-07T11:13:01.852274+00:00",
+  "frequency_hz": 10000000,
+  "reset_halt_resume_flash": false,
+  "boards": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "ports": [
+        "COM12",
+        "COM13"
+      ],
+      "core_revision": "8c1cfe27551b46fab101a75de61f502899d0d95c",
+      "cpuid": "0x411fd210",
+      "state": "SLEEPING",
+      "backend_packets": 1,
+      "pwm_enable": [
+        0,
+        0,
+        0
+      ],
+      "dppi20_chen": 0,
+      "p1_14_pin_cnf": 0,
+      "pin_cnf": {
+        "P1.14": 0,
+        "P1.10": 0,
+        "P1.4": 0,
+        "P1.5": 0,
+        "P1.6": 0,
+        "P1.7": 0,
+        "P0.0": 0,
+        "P0.1": 0,
+        "P0.2": 0,
+        "P0.3": 0,
+        "P2.0": 0,
+        "P2.1": 0,
+        "P2.2": 0,
+        "P2.3": 0,
+        "P2.4": 0,
+        "P2.5": 0,
+        "P2.6": 0
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "ports": [
+        "COM14",
+        "COM15"
+      ],
+      "core_revision": "8c1cfe27551b46fab101a75de61f502899d0d95c",
+      "cpuid": "0x411fd210",
+      "state": "RUNNING",
+      "backend_packets": 1,
+      "pwm_enable": [
+        0,
+        0,
+        0
+      ],
+      "dppi20_chen": 0,
+      "p1_14_pin_cnf": 0,
+      "pin_cnf": {
+        "P1.14": 0,
+        "P1.10": 0,
+        "P1.4": 0,
+        "P1.5": 0,
+        "P1.7": 0,
+        "P1.6": 0,
+        "P0.0": 0,
+        "P0.1": 0,
+        "P0.2": 0,
+        "P0.3": 0,
+        "P2.0": 0,
+        "P2.1": 0,
+        "P2.2": 0,
+        "P2.3": 0,
+        "P2.4": 0,
+        "P2.5": 0,
+        "P2.6": 0
+      }
+    }
+  ]
+}

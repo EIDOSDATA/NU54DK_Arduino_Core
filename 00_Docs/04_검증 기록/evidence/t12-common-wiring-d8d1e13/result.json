@@ -1,0 +1,6707 @@
+{
+  "schema_version": 1,
+  "type": "v04-common-wiring-check",
+  "status": "passed",
+  "fixture_id": 501,
+  "fixture_revision": 1,
+  "catalog_sha256": "8d5b0e2bbe328193c1ef114a41dee6e94143d3b4fa3c8eb925fbb600df986775",
+  "core_revision": "d8d1e135cfc96c1608c55c81b4f111963f56c10a",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "17-signal-connectivity-not-gpio-api-or-t12-completion",
+  "swd_frequency_hz": 10000000,
+  "cmsis_dap_limit_packets": true,
+  "external_wiring_executed": true,
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "712f7c734eba5449935f9a53f1a80cba0ac252d10390851bd4e8100a85fea544",
+      "elf_sha256": "ae2f55f593d71a732a98472bd6eb5924319d9c427dc41ffcfdc7965a10ef086f",
+      "record_sha256": "096e4d2a7ba7c8e3c274cfb863f5ef1eca720eefdd22a96b34fe15dad3a14204",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "cmsis_dap_limit_packets": true,
+        "seconds": 4.062,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "df07c4da9f7b6a46c1beea3bc20e37e7a159d52548d4d21108290f6c9986d04b"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "dbf7a835e5d96df2ad07be6d9905c3f3075c1ded032d9751224cfd06de082e28",
+      "elf_sha256": "64a26b3a983d1723ec7caaadfcc9cbd2c7f7aba2e5b5c4a384a285c429b19294",
+      "record_sha256": "096e4d2a7ba7c8e3c274cfb863f5ef1eca720eefdd22a96b34fe15dad3a14204",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "cmsis_dap_limit_packets": true,
+        "seconds": 4.015,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "bcea68185b98c65c4636cecf35da3a58c46ff6a27b29646f253eb31e64566a62"
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "V04-WIRING/501/controller1/baseline/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/baseline/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net1/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131070,
+        1,
+        131071,
+        131071,
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net1/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131070,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net1/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net1/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net1",
+      "status": "passed",
+      "direction": 1,
+      "net": 1,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net2/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131069,
+        2,
+        131071,
+        131071,
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net2/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131069,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net2/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net2/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net2",
+      "status": "passed",
+      "direction": 1,
+      "net": 2,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net3/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131067,
+        4,
+        131071,
+        131071,
+        2,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net3/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131067,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net3/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net3/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net3",
+      "status": "passed",
+      "direction": 1,
+      "net": 3,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net4/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131063,
+        8,
+        131071,
+        131071,
+        3,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net4/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131063,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net4/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net4/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net4",
+      "status": "passed",
+      "direction": 1,
+      "net": 4,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net5/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131055,
+        16,
+        131071,
+        131071,
+        4,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net5/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131055,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net5/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net5/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net5",
+      "status": "passed",
+      "direction": 1,
+      "net": 5,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net6/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131039,
+        32,
+        131071,
+        131071,
+        5,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net6/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131039,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net6/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net6/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net6",
+      "status": "passed",
+      "direction": 1,
+      "net": 6,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net7/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131007,
+        64,
+        131071,
+        131071,
+        6,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net7/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131007,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net7/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net7/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net7",
+      "status": "passed",
+      "direction": 1,
+      "net": 7,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net8/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130943,
+        128,
+        131071,
+        131071,
+        7,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net8/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130943,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net8/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net8/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net8",
+      "status": "passed",
+      "direction": 1,
+      "net": 8,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net9/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130815,
+        256,
+        131071,
+        131071,
+        8,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net9/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130815,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net9/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net9/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net9",
+      "status": "passed",
+      "direction": 1,
+      "net": 9,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net10/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130559,
+        512,
+        131071,
+        131071,
+        9,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net10/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130559,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net10/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net10/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net10",
+      "status": "passed",
+      "direction": 1,
+      "net": 10,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net11/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130047,
+        1024,
+        131071,
+        131071,
+        10,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net11/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130047,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net11/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net11/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net11",
+      "status": "passed",
+      "direction": 1,
+      "net": 11,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net12/low/raw-role1",
+      "status": "observation",
+      "words": [
+        129023,
+        2048,
+        131071,
+        131071,
+        11,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net12/low/raw-role2",
+      "status": "observation",
+      "words": [
+        129023,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net12/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net12/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net12",
+      "status": "passed",
+      "direction": 1,
+      "net": 12,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net13/low/raw-role1",
+      "status": "observation",
+      "words": [
+        126975,
+        4096,
+        131071,
+        131071,
+        12,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net13/low/raw-role2",
+      "status": "observation",
+      "words": [
+        126975,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net13/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net13/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net13",
+      "status": "passed",
+      "direction": 1,
+      "net": 13,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net14/low/raw-role1",
+      "status": "observation",
+      "words": [
+        122879,
+        8192,
+        131071,
+        131071,
+        13,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net14/low/raw-role2",
+      "status": "observation",
+      "words": [
+        122879,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net14/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net14/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net14",
+      "status": "passed",
+      "direction": 1,
+      "net": 14,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net15/low/raw-role1",
+      "status": "observation",
+      "words": [
+        114687,
+        16384,
+        131071,
+        131071,
+        14,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net15/low/raw-role2",
+      "status": "observation",
+      "words": [
+        114687,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net15/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net15/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net15",
+      "status": "passed",
+      "direction": 1,
+      "net": 15,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net16/low/raw-role1",
+      "status": "observation",
+      "words": [
+        98303,
+        32768,
+        131071,
+        131071,
+        15,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net16/low/raw-role2",
+      "status": "observation",
+      "words": [
+        98303,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net16/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net16/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net16",
+      "status": "passed",
+      "direction": 1,
+      "net": 16,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net17/low/raw-role1",
+      "status": "observation",
+      "words": [
+        65535,
+        65536,
+        131071,
+        131071,
+        16,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net17/low/raw-role2",
+      "status": "observation",
+      "words": [
+        65535,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net17/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net17/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round1/net17",
+      "status": "passed",
+      "direction": 1,
+      "net": 17,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net1/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131070,
+        1,
+        131071,
+        131071,
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net1/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131070,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net1/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net1/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net1",
+      "status": "passed",
+      "direction": 1,
+      "net": 1,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net2/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131069,
+        2,
+        131071,
+        131071,
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net2/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131069,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net2/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net2/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net2",
+      "status": "passed",
+      "direction": 1,
+      "net": 2,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net3/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131067,
+        4,
+        131071,
+        131071,
+        2,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net3/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131067,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net3/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net3/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net3",
+      "status": "passed",
+      "direction": 1,
+      "net": 3,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net4/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131063,
+        8,
+        131071,
+        131071,
+        3,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net4/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131063,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net4/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net4/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net4",
+      "status": "passed",
+      "direction": 1,
+      "net": 4,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net5/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131055,
+        16,
+        131071,
+        131071,
+        4,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net5/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131055,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net5/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net5/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net5",
+      "status": "passed",
+      "direction": 1,
+      "net": 5,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net6/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131039,
+        32,
+        131071,
+        131071,
+        5,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net6/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131039,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net6/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net6/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net6",
+      "status": "passed",
+      "direction": 1,
+      "net": 6,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net7/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131007,
+        64,
+        131071,
+        131071,
+        6,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net7/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131007,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net7/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net7/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net7",
+      "status": "passed",
+      "direction": 1,
+      "net": 7,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net8/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130943,
+        128,
+        131071,
+        131071,
+        7,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net8/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130943,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net8/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net8/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net8",
+      "status": "passed",
+      "direction": 1,
+      "net": 8,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net9/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130815,
+        256,
+        131071,
+        131071,
+        8,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net9/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130815,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net9/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net9/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net9",
+      "status": "passed",
+      "direction": 1,
+      "net": 9,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net10/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130559,
+        512,
+        131071,
+        131071,
+        9,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net10/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130559,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net10/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net10/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net10",
+      "status": "passed",
+      "direction": 1,
+      "net": 10,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net11/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130047,
+        1024,
+        131071,
+        131071,
+        10,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net11/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130047,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net11/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net11/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net11",
+      "status": "passed",
+      "direction": 1,
+      "net": 11,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net12/low/raw-role1",
+      "status": "observation",
+      "words": [
+        129023,
+        2048,
+        131071,
+        131071,
+        11,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net12/low/raw-role2",
+      "status": "observation",
+      "words": [
+        129023,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net12/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net12/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net12",
+      "status": "passed",
+      "direction": 1,
+      "net": 12,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net13/low/raw-role1",
+      "status": "observation",
+      "words": [
+        126975,
+        4096,
+        131071,
+        131071,
+        12,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net13/low/raw-role2",
+      "status": "observation",
+      "words": [
+        126975,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net13/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net13/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net13",
+      "status": "passed",
+      "direction": 1,
+      "net": 13,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net14/low/raw-role1",
+      "status": "observation",
+      "words": [
+        122879,
+        8192,
+        131071,
+        131071,
+        13,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net14/low/raw-role2",
+      "status": "observation",
+      "words": [
+        122879,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net14/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net14/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net14",
+      "status": "passed",
+      "direction": 1,
+      "net": 14,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net15/low/raw-role1",
+      "status": "observation",
+      "words": [
+        114687,
+        16384,
+        131071,
+        131071,
+        14,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net15/low/raw-role2",
+      "status": "observation",
+      "words": [
+        114687,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net15/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net15/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net15",
+      "status": "passed",
+      "direction": 1,
+      "net": 15,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net16/low/raw-role1",
+      "status": "observation",
+      "words": [
+        98303,
+        32768,
+        131071,
+        131071,
+        15,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net16/low/raw-role2",
+      "status": "observation",
+      "words": [
+        98303,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net16/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net16/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net16",
+      "status": "passed",
+      "direction": 1,
+      "net": 16,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net17/low/raw-role1",
+      "status": "observation",
+      "words": [
+        65535,
+        65536,
+        131071,
+        131071,
+        16,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net17/low/raw-role2",
+      "status": "observation",
+      "words": [
+        65535,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net17/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net17/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round2/net17",
+      "status": "passed",
+      "direction": 1,
+      "net": 17,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net1/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131070,
+        1,
+        131071,
+        131071,
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net1/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131070,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net1/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net1/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net1",
+      "status": "passed",
+      "direction": 1,
+      "net": 1,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net2/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131069,
+        2,
+        131071,
+        131071,
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net2/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131069,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net2/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net2/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net2",
+      "status": "passed",
+      "direction": 1,
+      "net": 2,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net3/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131067,
+        4,
+        131071,
+        131071,
+        2,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net3/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131067,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net3/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net3/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net3",
+      "status": "passed",
+      "direction": 1,
+      "net": 3,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net4/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131063,
+        8,
+        131071,
+        131071,
+        3,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net4/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131063,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net4/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net4/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net4",
+      "status": "passed",
+      "direction": 1,
+      "net": 4,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net5/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131055,
+        16,
+        131071,
+        131071,
+        4,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net5/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131055,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net5/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net5/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net5",
+      "status": "passed",
+      "direction": 1,
+      "net": 5,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net6/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131039,
+        32,
+        131071,
+        131071,
+        5,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net6/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131039,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net6/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net6/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net6",
+      "status": "passed",
+      "direction": 1,
+      "net": 6,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net7/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131007,
+        64,
+        131071,
+        131071,
+        6,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net7/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131007,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net7/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net7/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net7",
+      "status": "passed",
+      "direction": 1,
+      "net": 7,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net8/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130943,
+        128,
+        131071,
+        131071,
+        7,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net8/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130943,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net8/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net8/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net8",
+      "status": "passed",
+      "direction": 1,
+      "net": 8,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net9/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130815,
+        256,
+        131071,
+        131071,
+        8,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net9/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130815,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net9/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net9/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net9",
+      "status": "passed",
+      "direction": 1,
+      "net": 9,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net10/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130559,
+        512,
+        131071,
+        131071,
+        9,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net10/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130559,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net10/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net10/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net10",
+      "status": "passed",
+      "direction": 1,
+      "net": 10,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net11/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130047,
+        1024,
+        131071,
+        131071,
+        10,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net11/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130047,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net11/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net11/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net11",
+      "status": "passed",
+      "direction": 1,
+      "net": 11,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net12/low/raw-role1",
+      "status": "observation",
+      "words": [
+        129023,
+        2048,
+        131071,
+        131071,
+        11,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net12/low/raw-role2",
+      "status": "observation",
+      "words": [
+        129023,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net12/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net12/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net12",
+      "status": "passed",
+      "direction": 1,
+      "net": 12,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net13/low/raw-role1",
+      "status": "observation",
+      "words": [
+        126975,
+        4096,
+        131071,
+        131071,
+        12,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net13/low/raw-role2",
+      "status": "observation",
+      "words": [
+        126975,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net13/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net13/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net13",
+      "status": "passed",
+      "direction": 1,
+      "net": 13,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net14/low/raw-role1",
+      "status": "observation",
+      "words": [
+        122879,
+        8192,
+        131071,
+        131071,
+        13,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net14/low/raw-role2",
+      "status": "observation",
+      "words": [
+        122879,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net14/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net14/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net14",
+      "status": "passed",
+      "direction": 1,
+      "net": 14,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net15/low/raw-role1",
+      "status": "observation",
+      "words": [
+        114687,
+        16384,
+        131071,
+        131071,
+        14,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net15/low/raw-role2",
+      "status": "observation",
+      "words": [
+        114687,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net15/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net15/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net15",
+      "status": "passed",
+      "direction": 1,
+      "net": 15,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net16/low/raw-role1",
+      "status": "observation",
+      "words": [
+        98303,
+        32768,
+        131071,
+        131071,
+        15,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net16/low/raw-role2",
+      "status": "observation",
+      "words": [
+        98303,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net16/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net16/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net16",
+      "status": "passed",
+      "direction": 1,
+      "net": 16,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net17/low/raw-role1",
+      "status": "observation",
+      "words": [
+        65535,
+        65536,
+        131071,
+        131071,
+        16,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net17/low/raw-role2",
+      "status": "observation",
+      "words": [
+        65535,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net17/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net17/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller1/round3/net17",
+      "status": "passed",
+      "direction": 1,
+      "net": 17,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller1/cleanup",
+      "status": "cleanup",
+      "outcomes": [
+        {
+          "role": 1,
+          "stopped": true,
+          "words": [
+            131071,
+            0,
+            0,
+            0,
+            4294967295,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "stopped": true,
+          "words": [
+            131071,
+            0,
+            0,
+            0,
+            4294967295,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/baseline/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/baseline/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net1/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131070,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net1/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131070,
+        1,
+        131071,
+        131071,
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net1/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net1/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net1",
+      "status": "passed",
+      "direction": 2,
+      "net": 1,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net2/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131069,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net2/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131069,
+        2,
+        131071,
+        131071,
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net2/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net2/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net2",
+      "status": "passed",
+      "direction": 2,
+      "net": 2,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net3/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131067,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net3/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131067,
+        4,
+        131071,
+        131071,
+        2,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net3/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net3/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net3",
+      "status": "passed",
+      "direction": 2,
+      "net": 3,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net4/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131063,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net4/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131063,
+        8,
+        131071,
+        131071,
+        3,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net4/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net4/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net4",
+      "status": "passed",
+      "direction": 2,
+      "net": 4,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net5/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131055,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net5/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131055,
+        16,
+        131071,
+        131071,
+        4,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net5/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net5/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net5",
+      "status": "passed",
+      "direction": 2,
+      "net": 5,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net6/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131039,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net6/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131039,
+        32,
+        131071,
+        131071,
+        5,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net6/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net6/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net6",
+      "status": "passed",
+      "direction": 2,
+      "net": 6,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net7/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131007,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net7/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131007,
+        64,
+        131071,
+        131071,
+        6,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net7/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net7/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net7",
+      "status": "passed",
+      "direction": 2,
+      "net": 7,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net8/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130943,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net8/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130943,
+        128,
+        131071,
+        131071,
+        7,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net8/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net8/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net8",
+      "status": "passed",
+      "direction": 2,
+      "net": 8,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net9/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130815,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net9/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130815,
+        256,
+        131071,
+        131071,
+        8,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net9/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net9/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net9",
+      "status": "passed",
+      "direction": 2,
+      "net": 9,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net10/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130559,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net10/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130559,
+        512,
+        131071,
+        131071,
+        9,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net10/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net10/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net10",
+      "status": "passed",
+      "direction": 2,
+      "net": 10,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net11/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130047,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net11/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130047,
+        1024,
+        131071,
+        131071,
+        10,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net11/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net11/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net11",
+      "status": "passed",
+      "direction": 2,
+      "net": 11,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net12/low/raw-role1",
+      "status": "observation",
+      "words": [
+        129023,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net12/low/raw-role2",
+      "status": "observation",
+      "words": [
+        129023,
+        2048,
+        131071,
+        131071,
+        11,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net12/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net12/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net12",
+      "status": "passed",
+      "direction": 2,
+      "net": 12,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net13/low/raw-role1",
+      "status": "observation",
+      "words": [
+        126975,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net13/low/raw-role2",
+      "status": "observation",
+      "words": [
+        126975,
+        4096,
+        131071,
+        131071,
+        12,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net13/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net13/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net13",
+      "status": "passed",
+      "direction": 2,
+      "net": 13,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net14/low/raw-role1",
+      "status": "observation",
+      "words": [
+        122879,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net14/low/raw-role2",
+      "status": "observation",
+      "words": [
+        122879,
+        8192,
+        131071,
+        131071,
+        13,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net14/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net14/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net14",
+      "status": "passed",
+      "direction": 2,
+      "net": 14,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net15/low/raw-role1",
+      "status": "observation",
+      "words": [
+        114687,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net15/low/raw-role2",
+      "status": "observation",
+      "words": [
+        114687,
+        16384,
+        131071,
+        131071,
+        14,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net15/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net15/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net15",
+      "status": "passed",
+      "direction": 2,
+      "net": 15,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net16/low/raw-role1",
+      "status": "observation",
+      "words": [
+        98303,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net16/low/raw-role2",
+      "status": "observation",
+      "words": [
+        98303,
+        32768,
+        131071,
+        131071,
+        15,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net16/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net16/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net16",
+      "status": "passed",
+      "direction": 2,
+      "net": 16,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net17/low/raw-role1",
+      "status": "observation",
+      "words": [
+        65535,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net17/low/raw-role2",
+      "status": "observation",
+      "words": [
+        65535,
+        65536,
+        131071,
+        131071,
+        16,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net17/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net17/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round1/net17",
+      "status": "passed",
+      "direction": 2,
+      "net": 17,
+      "repetition": 1
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net1/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131070,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net1/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131070,
+        1,
+        131071,
+        131071,
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net1/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net1/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net1",
+      "status": "passed",
+      "direction": 2,
+      "net": 1,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net2/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131069,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net2/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131069,
+        2,
+        131071,
+        131071,
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net2/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net2/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net2",
+      "status": "passed",
+      "direction": 2,
+      "net": 2,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net3/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131067,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net3/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131067,
+        4,
+        131071,
+        131071,
+        2,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net3/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net3/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net3",
+      "status": "passed",
+      "direction": 2,
+      "net": 3,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net4/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131063,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net4/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131063,
+        8,
+        131071,
+        131071,
+        3,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net4/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net4/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net4",
+      "status": "passed",
+      "direction": 2,
+      "net": 4,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net5/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131055,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net5/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131055,
+        16,
+        131071,
+        131071,
+        4,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net5/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net5/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net5",
+      "status": "passed",
+      "direction": 2,
+      "net": 5,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net6/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131039,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net6/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131039,
+        32,
+        131071,
+        131071,
+        5,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net6/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net6/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net6",
+      "status": "passed",
+      "direction": 2,
+      "net": 6,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net7/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131007,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net7/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131007,
+        64,
+        131071,
+        131071,
+        6,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net7/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net7/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net7",
+      "status": "passed",
+      "direction": 2,
+      "net": 7,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net8/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130943,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net8/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130943,
+        128,
+        131071,
+        131071,
+        7,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net8/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net8/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net8",
+      "status": "passed",
+      "direction": 2,
+      "net": 8,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net9/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130815,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net9/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130815,
+        256,
+        131071,
+        131071,
+        8,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net9/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net9/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net9",
+      "status": "passed",
+      "direction": 2,
+      "net": 9,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net10/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130559,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net10/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130559,
+        512,
+        131071,
+        131071,
+        9,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net10/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net10/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net10",
+      "status": "passed",
+      "direction": 2,
+      "net": 10,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net11/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130047,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net11/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130047,
+        1024,
+        131071,
+        131071,
+        10,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net11/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net11/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net11",
+      "status": "passed",
+      "direction": 2,
+      "net": 11,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net12/low/raw-role1",
+      "status": "observation",
+      "words": [
+        129023,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net12/low/raw-role2",
+      "status": "observation",
+      "words": [
+        129023,
+        2048,
+        131071,
+        131071,
+        11,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net12/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net12/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net12",
+      "status": "passed",
+      "direction": 2,
+      "net": 12,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net13/low/raw-role1",
+      "status": "observation",
+      "words": [
+        126975,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net13/low/raw-role2",
+      "status": "observation",
+      "words": [
+        126975,
+        4096,
+        131071,
+        131071,
+        12,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net13/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net13/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net13",
+      "status": "passed",
+      "direction": 2,
+      "net": 13,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net14/low/raw-role1",
+      "status": "observation",
+      "words": [
+        122879,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net14/low/raw-role2",
+      "status": "observation",
+      "words": [
+        122879,
+        8192,
+        131071,
+        131071,
+        13,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net14/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net14/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net14",
+      "status": "passed",
+      "direction": 2,
+      "net": 14,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net15/low/raw-role1",
+      "status": "observation",
+      "words": [
+        114687,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net15/low/raw-role2",
+      "status": "observation",
+      "words": [
+        114687,
+        16384,
+        131071,
+        131071,
+        14,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net15/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net15/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net15",
+      "status": "passed",
+      "direction": 2,
+      "net": 15,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net16/low/raw-role1",
+      "status": "observation",
+      "words": [
+        98303,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net16/low/raw-role2",
+      "status": "observation",
+      "words": [
+        98303,
+        32768,
+        131071,
+        131071,
+        15,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net16/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net16/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net16",
+      "status": "passed",
+      "direction": 2,
+      "net": 16,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net17/low/raw-role1",
+      "status": "observation",
+      "words": [
+        65535,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net17/low/raw-role2",
+      "status": "observation",
+      "words": [
+        65535,
+        65536,
+        131071,
+        131071,
+        16,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net17/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net17/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round2/net17",
+      "status": "passed",
+      "direction": 2,
+      "net": 17,
+      "repetition": 2
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net1/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131070,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net1/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131070,
+        1,
+        131071,
+        131071,
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net1/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net1/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net1",
+      "status": "passed",
+      "direction": 2,
+      "net": 1,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net2/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131069,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net2/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131069,
+        2,
+        131071,
+        131071,
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net2/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net2/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net2",
+      "status": "passed",
+      "direction": 2,
+      "net": 2,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net3/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131067,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net3/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131067,
+        4,
+        131071,
+        131071,
+        2,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net3/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net3/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net3",
+      "status": "passed",
+      "direction": 2,
+      "net": 3,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net4/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131063,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net4/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131063,
+        8,
+        131071,
+        131071,
+        3,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net4/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net4/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net4",
+      "status": "passed",
+      "direction": 2,
+      "net": 4,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net5/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131055,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net5/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131055,
+        16,
+        131071,
+        131071,
+        4,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net5/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net5/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net5",
+      "status": "passed",
+      "direction": 2,
+      "net": 5,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net6/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131039,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net6/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131039,
+        32,
+        131071,
+        131071,
+        5,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net6/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net6/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net6",
+      "status": "passed",
+      "direction": 2,
+      "net": 6,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net7/low/raw-role1",
+      "status": "observation",
+      "words": [
+        131007,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net7/low/raw-role2",
+      "status": "observation",
+      "words": [
+        131007,
+        64,
+        131071,
+        131071,
+        6,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net7/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net7/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net7",
+      "status": "passed",
+      "direction": 2,
+      "net": 7,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net8/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130943,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net8/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130943,
+        128,
+        131071,
+        131071,
+        7,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net8/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net8/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net8",
+      "status": "passed",
+      "direction": 2,
+      "net": 8,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net9/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130815,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net9/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130815,
+        256,
+        131071,
+        131071,
+        8,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net9/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net9/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net9",
+      "status": "passed",
+      "direction": 2,
+      "net": 9,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net10/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130559,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net10/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130559,
+        512,
+        131071,
+        131071,
+        9,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net10/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net10/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net10",
+      "status": "passed",
+      "direction": 2,
+      "net": 10,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net11/low/raw-role1",
+      "status": "observation",
+      "words": [
+        130047,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net11/low/raw-role2",
+      "status": "observation",
+      "words": [
+        130047,
+        1024,
+        131071,
+        131071,
+        10,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net11/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net11/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net11",
+      "status": "passed",
+      "direction": 2,
+      "net": 11,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net12/low/raw-role1",
+      "status": "observation",
+      "words": [
+        129023,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net12/low/raw-role2",
+      "status": "observation",
+      "words": [
+        129023,
+        2048,
+        131071,
+        131071,
+        11,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net12/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net12/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net12",
+      "status": "passed",
+      "direction": 2,
+      "net": 12,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net13/low/raw-role1",
+      "status": "observation",
+      "words": [
+        126975,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net13/low/raw-role2",
+      "status": "observation",
+      "words": [
+        126975,
+        4096,
+        131071,
+        131071,
+        12,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net13/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net13/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net13",
+      "status": "passed",
+      "direction": 2,
+      "net": 13,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net14/low/raw-role1",
+      "status": "observation",
+      "words": [
+        122879,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net14/low/raw-role2",
+      "status": "observation",
+      "words": [
+        122879,
+        8192,
+        131071,
+        131071,
+        13,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net14/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net14/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net14",
+      "status": "passed",
+      "direction": 2,
+      "net": 14,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net15/low/raw-role1",
+      "status": "observation",
+      "words": [
+        114687,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net15/low/raw-role2",
+      "status": "observation",
+      "words": [
+        114687,
+        16384,
+        131071,
+        131071,
+        14,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net15/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net15/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net15",
+      "status": "passed",
+      "direction": 2,
+      "net": 15,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net16/low/raw-role1",
+      "status": "observation",
+      "words": [
+        98303,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net16/low/raw-role2",
+      "status": "observation",
+      "words": [
+        98303,
+        32768,
+        131071,
+        131071,
+        15,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net16/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net16/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net16",
+      "status": "passed",
+      "direction": 2,
+      "net": 16,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net17/low/raw-role1",
+      "status": "observation",
+      "words": [
+        65535,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net17/low/raw-role2",
+      "status": "observation",
+      "words": [
+        65535,
+        65536,
+        131071,
+        131071,
+        16,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net17/released/raw-role1",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net17/released/raw-role2",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/controller2/round3/net17",
+      "status": "passed",
+      "direction": 2,
+      "net": 17,
+      "repetition": 3
+    },
+    {
+      "id": "V04-WIRING/501/controller2/cleanup",
+      "status": "cleanup",
+      "outcomes": [
+        {
+          "role": 1,
+          "stopped": true,
+          "words": [
+            131071,
+            0,
+            0,
+            0,
+            4294967295,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "stopped": true,
+          "words": [
+            131071,
+            0,
+            0,
+            0,
+            4294967295,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/timeout/pulse-role1/raw",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        1,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/timeout/pulse-role1",
+      "status": "passed"
+    },
+    {
+      "id": "V04-WIRING/501/timeout/pulse-role2/raw",
+      "status": "observation",
+      "words": [
+        131071,
+        0,
+        131071,
+        131071,
+        4294967295,
+        1,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/timeout/pulse-role2",
+      "status": "passed"
+    },
+    {
+      "id": "V04-WIRING/501/timeout/lease/raw-role1",
+      "status": "observation",
+      "words": [
+        2,
+        0,
+        0,
+        0,
+        4294967295,
+        1,
+        1,
+        0
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/timeout/lease/raw-role2",
+      "status": "observation",
+      "words": [
+        0,
+        0,
+        0,
+        0,
+        4294967295,
+        1,
+        1,
+        0
+      ]
+    },
+    {
+      "id": "V04-WIRING/501/timeout/lease",
+      "status": "passed",
+      "scope": "both-firmware-leases-expired"
+    },
+    {
+      "id": "V04-WIRING/501/timeout/cleanup",
+      "status": "cleanup",
+      "outcomes": [
+        {
+          "role": 1,
+          "stopped": true,
+          "words": [
+            0,
+            0,
+            0,
+            0,
+            4294967295,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "stopped": true,
+          "words": [
+            450,
+            0,
+            0,
+            0,
+            4294967295,
+            1,
+            1,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "confirmation_sha256": "870cb8ee4e78f90dd07c7bab13e25f7bb7e142e9feb823d01e48ec4390122048",
+  "completed_at_utc": "2026-09-07T11:19:19.661341+00:00"
+}
