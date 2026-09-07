@@ -1,0 +1,29 @@
+test_all_m26_identities_have_a_non_unknown_disposition (tests.host.test_m26_system_contract.M26SystemContractTests.test_all_m26_identities_have_a_non_unknown_disposition) ... ok
+test_raw_radio_is_exclusive_with_managed_ble (tests.host.test_m26_system_contract.M26SystemContractTests.test_raw_radio_is_exclusive_with_managed_ble) ... ok
+test_schematic_hash_and_generated_document_are_exact (tests.host.test_m26_system_contract.M26SystemContractTests.test_schematic_hash_and_generated_document_are_exact) ... ok
+test_silicon_only_capability_cannot_be_public (tests.host.test_m26_system_contract.M26SystemContractTests.test_silicon_only_capability_cannot_be_public) ... ok
+test_supported_state_requires_automated_and_physical_pass (tests.host.test_m26_system_contract.M26SystemContractTests.test_supported_state_requires_automated_and_physical_pass) ... ok
+test_duplicate_json_key_rejected (tests.host.test_v04_test_plan.V04TestPlanTests.test_duplicate_json_key_rejected) ... ok
+test_empty_criteria_and_bad_reuse_path_rejected (tests.host.test_v04_test_plan.V04TestPlanTests.test_empty_criteria_and_bad_reuse_path_rejected) ... ok
+test_exact_inventory_and_generated_document (tests.host.test_v04_test_plan.V04TestPlanTests.test_exact_inventory_and_generated_document) ... ok
+test_instance_omission_rejected (tests.host.test_v04_test_plan.V04TestPlanTests.test_instance_omission_rejected) ... ok
+test_inventory_gate_calls_preparation_validator (tests.host.test_v04_test_plan.V04TestPlanTests.test_inventory_gate_calls_preparation_validator) ... ok
+test_missing_or_duplicate_case_rejected (tests.host.test_v04_test_plan.V04TestPlanTests.test_missing_or_duplicate_case_rejected) ... ok
+test_passing_plan_or_result_field_rejected (tests.host.test_v04_test_plan.V04TestPlanTests.test_passing_plan_or_result_field_rejected) ... ok
+test_qdec_not_dma (tests.host.test_v04_test_plan.V04TestPlanTests.test_qdec_not_dma) ... ok
+test_soak_case_and_limit_durations_cannot_disagree (tests.host.test_v04_test_plan.V04TestPlanTests.test_soak_case_and_limit_durations_cannot_disagree)
+! @brief 시간 단축 뒤 실행 case가 이전 장기 값을 유지하는 설정 오류를 거부합니다. ... ok
+test_unknown_erratum_rejected (tests.host.test_v04_test_plan.V04TestPlanTests.test_unknown_erratum_rejected) ... ok
+test_zero_timeout_and_loss_allowance_rejected (tests.host.test_v04_test_plan.V04TestPlanTests.test_zero_timeout_and_loss_allowance_rejected) ... ok
+test_changed_missing_or_outside_output_is_rejected (tests.host.test_r13_generated.GeneratedContractTests.test_changed_missing_or_outside_output_is_rejected) ... ok
+test_checkout_crlf_preserves_utf8_lf_contract (tests.host.test_r13_generated.GeneratedContractTests.test_checkout_crlf_preserves_utf8_lf_contract) ... ok
+test_nondeterministic_or_omitted_generation_is_rejected (tests.host.test_r13_generated.GeneratedContractTests.test_nondeterministic_or_omitted_generation_is_rejected) ... ok
+test_canonical_scope_and_physical_link_directions (tests.host.test_v04_t13_plan.T13PlanTests.test_canonical_scope_and_physical_link_directions) ... ok
+test_production_route_validator_accepts_all_planned_serial_endpoints (tests.host.test_v04_t13_plan.T13PlanTests.test_production_route_validator_accepts_all_planned_serial_endpoints) ... ok
+test_unresolved_qdec_blocks_only_its_planned_read_based_runs (tests.host.test_v04_t13_plan.T13PlanTests.test_unresolved_qdec_blocks_only_its_planned_read_based_runs)
+! @brief 짧은 IRQ 일치를 manual read 안정성 PASS로 바꿔 실행하지 못하게 합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 1.913s
+
+OK

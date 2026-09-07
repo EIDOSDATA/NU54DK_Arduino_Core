@@ -1,0 +1,19 @@
+{
+  "name": "common-final-clean-m27",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-v",
+    "-s",
+    "tests/host",
+    "-p",
+    "test_m27_release.py"
+  ],
+  "started_at": "2026-09-07T19:37:06.475073+00:00",
+  "finished_at": "2026-09-07T19:37:08.360157+00:00",
+  "exit_code": 0,
+  "log_sha256": "d09fea947564e2025f9b75a771f749836cde943972ae4b30131fb7ec76f0a962"
+}

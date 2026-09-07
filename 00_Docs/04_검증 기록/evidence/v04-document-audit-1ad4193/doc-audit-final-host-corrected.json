@@ -1,0 +1,18 @@
+{
+  "name": "doc-audit-final-host-corrected",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "-v",
+    "tests.host.test_m26_system_contract",
+    "tests.host.test_v04_test_plan",
+    "tests.host.test_r13_generated",
+    "tests.host.test_v04_t13_plan"
+  ],
+  "started_at": "2026-09-07T20:17:59.967912+00:00",
+  "finished_at": "2026-09-07T20:18:02.067959+00:00",
+  "exit_code": 0,
+  "log_sha256": "abbfc5d491a4162d4e9f8a9e5b809c8d43d61da598e00a3c8e100e184471058b"
+}

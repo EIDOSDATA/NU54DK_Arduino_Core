@@ -1,5 +1,7 @@
 # M27 v0.4.0-rc.1 비공개 릴리스 준비
 
+2026-09-08 현재: R00~R13과 승인 route의 T11 단독 회귀는 완료했다. T12 공통 결선의 GPIO/GPIOTE 2,502개·PWM 675+288개·I2S 432개는 source별 PASS다. QDEC 동작 중 수동 read/clear의 누산 누락은 HOLD이며 추가 진단 반복은 종료했다. T13은 32개 단독·8개 동시 조합과 C→S→U 두 결선 변경 계획까지 확정했고 실기는 0회다. 다음 개발 작업은 QDEC 비의존 T13 runner·preflight·복구/전환 판정 준비다. T12 전체·T13 이후·RC·공개는 미완료다. [문서 감사·요구별 증거 대조](<../../00_Docs/04_검증 기록/102_개발_문서_전수_검토와_마일스톤_체크포인트.md>), [실행 TODO](<../../00_Docs/TODO_v0.4.0.md>)를 따른다.
+
 M27 도구는 `v0.4.0-rc.1` package를 두 번 독립 생성해 ZIP·checksum·SBOM·license inventory와
 notices가 byte-identical인지 검증하고 RC index와 HOLD plan을 만든다. 기존 M11/M18/M22 도구와
 공개 `v0.1.0`~`v0.3.0` package allowlist는 수정하지 않는다.

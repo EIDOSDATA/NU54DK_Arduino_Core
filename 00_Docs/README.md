@@ -2,7 +2,7 @@
 
 다른 PC에서 개발을 이어갈 때는 [v0.4.0 인계 문서](HANDOFF_v0.4.0_다른_PC.md)와 [활성 TODO](TODO_v0.4.0.md)를 먼저 읽는다.
 
-현재 개발 검증(2026-09-07): [94번](<04_검증 기록/94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>)에서 PWM 미시작 STOP 수정·두 보드 회귀와 전체 software/설치 예제 검증을 완료했다. [95번](<04_검증 기록/95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)의 내부 ADC·TIMER·이벤트·시간 함수와 PWM 회귀도 두 보드 1,808명령 PASS다. 보드 간 결선은 해제됐으며 T12 전체·T13 이후와 RC/공개는 미완료다. 아래 source별 이력의 당시 상태와 현재 재개 조건을 구별한다.
+2026-09-08 현재: R00~R13과 승인 route의 T11 단독 회귀는 완료했다. T12 공통 결선의 GPIO/GPIOTE 2,502개·PWM 675+288개·I2S 432개는 source별 PASS다. QDEC 동작 중 수동 read/clear의 누산 누락은 HOLD이며 추가 진단 반복은 종료했다. T13은 32개 단독·8개 동시 조합과 C→S→U 두 결선 변경 계획까지 확정했고 실기는 0회다. 다음 개발 작업은 QDEC 비의존 T13 runner·preflight·복구/전환 판정 준비다. T12 전체·T13 이후·RC·공개는 미완료다. [문서 감사·요구별 증거 대조](<04_검증 기록/102_개발_문서_전수_검토와_마일스톤_체크포인트.md>), [실행 TODO](<TODO_v0.4.0.md>)를 따른다.
 
 | 항목 | 내용 |
 | --- | --- |
@@ -71,7 +71,7 @@ T01~T09의 [기능 시험 목록](<./01_아두이노 코어 설계/12_v0.4.0_기
 | M21 | **완료** | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS; host 39/39 |
 | M22 | **완료** | Loaderless 1,456 KiB 경계, stable 재현 build, 29/29 설치본 compile, NU54DK Upload와 `v0.3.0` 정식 공개 |
 | M23 | **완료** | 75개 peripheral identity manifest·생성 matrix·공개 조회 API와 공통 block/channel/DMA 소유권 |
-| M24~M27 | **진행 중** | M24 23개 serial personality 단독 기능 HIL PASS, M25 analog/stream과 전체 동시성·soak 대기; M26 완료, M27 최종 RC·공개 gate HOLD |
+| M24~M27 | **진행 중** | M24 23개 serial personality 단독 기능 HIL PASS, M25 공통 GPIO/PWM/I2S PASS·QDEC HOLD, T13 복구·동시성·soak 미실기; M26 완료, M27 최종 RC·공개 gate HOLD |
 | M28~M33 | **계획** | Bluetooth LE 전 기능군·Mesh·Channel Sounding과 `v0.5.0` |
 | M34~M45 | **장기 계획** | security/update, radio/OpenThread와 Matter 제품선 |
 
@@ -216,6 +216,10 @@ M1~M23과 정식 공개 증거, `v0.3.0` AC-01~AC-03·M19~M22 및 `v0.4.0` M23~M
 5. 사용자 예제는 `libraries/*/examples`를 단일 원본으로 사용한다.
 6. NCS/Zephyr/Toolchain 또는 board revision이 바뀌면 기존 검증의 유효성을 다시 판정한다.
 7. 구조 변경 뒤 UTF-8, 상대 Markdown link와 package allowlist를 함께 검사한다.
+
+## Source별 과거 진행 이력
+
+아래의 완료·미실행·다음 작업은 해당 source 작성 시점의 기록이다. 현재 상태는 문서 첫 요약과 활성 TODO를 따른다.
 
 2026-09-06 후속: [65번 기록](<./04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)의 904 PASS·파일 정리를 보존한다. 이후 DAP UART 연결 전환 뒤 [66번 기록](<./04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>)에서 UART idle bias를 교정하고 온보드 18개 결과·BLE 3개 pair gate를 통과했다. 이후 사용자 결선 완료 확인에 따라 exact 154324c의 current-source T11 Fixture 101을 SWD 10 MHz로 실행해 기능 1,644개를 통과했다. 이후 exact a49cc0d의 Fixture 102 기능 822개를 SWD 10 MHz로 통과했다. 이후 exact 7aece93의 Fixture 103 기능 2,466개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 진단은 별도 보존했다. 이후 exact 0f429e7의 Fixture 201 SPI 기능 18,169개를 SWD 10 MHz로 통과했다. 이후 exact 1349e20의 Fixture 202 SPI 기능 9,084개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 읽기 전용 진단은 별도 보존했다. 이후 exact be49207의 Fixture 203 SPI 기능 27,252개를 SWD 10 MHz로 통과했다. 최초 DUT flash 실패와 읽기 전용 진단은 별도 보존했다. 이후 exact 9a63251의 Fixture 301 TWI 기능 1,986개를 첫 실행·SWD 10 MHz로 통과해 current-source T11 단독 통신 회귀를 완료했다. 이후 T12 Fixture 401 exact a12e444에서 PWM→AIN0 48개 기능을 첫 실행·10 MHz로 통과했다. 이후 Fixture 402 exact ff483a1에서 PWM→AIN1 48개도 첫 실행·10 MHz로 통과했다. 이후 403 exact c95b904에서 PWM→AIN2 48개도 첫 실행·10 MHz로 통과했다. 이후 404 exact e080bbc에서 PWM→AIN3 48개도 첫 실행·10 MHz로 통과했다. 당시 사용자 확인된 407 결선은 A P1.13↔B P1.14였으며 LLVM Host 회귀 뒤 결선 유지를 재확인해 407 첫 실행 12개를 통과했다. 408도 완료했으며 이후 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다.
 

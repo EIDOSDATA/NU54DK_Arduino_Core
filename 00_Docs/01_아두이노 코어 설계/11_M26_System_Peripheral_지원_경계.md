@@ -39,9 +39,11 @@
 | `vpr` | `silicon-only` | `none` | `pass` | `not_applicable` | FLPR/VPR은 별도 firmware image와 IPC 계약이 필요해 단일 Arduino cpuapp Core 범위가 아니다. | cpuapp가 VPR firmware lifecycle과 shared memory를 명시적으로 소유하는 profile에서만 사용한다. |
 | `sqspi` | `silicon-only` | `none` | `pass` | `not_run` | sQSPI soft peripheral은 VPR firmware와 외부 memory fixture가 필요하며 온보드 전용 memory가 없다. | VPR image, assigned pins와 DMA buffer 계약이 모두 있는 별도 profile에서만 사용할 수 있다. |
 
-## M27 전 남은 물리 gate
+## 판정표와 현재 실기 증거의 경계
 
-TEMP와 WDT30 후보 API의 온보드 실행, comparator threshold, NFC antenna/reader, sQSPI 외부 memory, raw RF 계측은 build나 문서 판정으로 대체하지 않는다. M27은 이 항목을 `NOT RUN`으로 보존하고 stable 공개를 HOLD한다.
+이 표는 지원 계약의 상태이며 최신 campaign 결과를 자동으로 합산하지 않는다. TEMP·WDT30의 기본 온보드 실행은 [41번](<../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)에서 PASS했다. 표의 후보 `not_run`은 T15 지원 판정 전 계약 상태로 유지하며 그 실기를 미실행으로 되돌리지 않는다.
+
+COMP/LPCOMP·NFCT·sQSPI·raw RADIO는 각 행의 공개/보드 경계를 따른다. 이를 모두 v0.4.0 필수 외부 실기로 추가하지 않는다. 정밀 품질·외부 부품 호환성은 [42번 합의](<../04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)의 범위 밖이다. 필수 기능·복구·동시성·soak와 최종 RC는 [TODO](../TODO_v0.4.0.md)·readiness를 따르며 공개 HOLD를 유지한다.
 
 ## 단일 원본과 검사
 

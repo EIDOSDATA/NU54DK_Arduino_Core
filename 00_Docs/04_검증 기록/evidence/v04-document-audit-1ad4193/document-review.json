@@ -1,0 +1,2135 @@
+{
+  "schema_version": 1,
+  "baseline_source": "1ad41939398295de9b90f33225b46ebcef8a2a19",
+  "scope": "all tracked first-party narrative docs, excluding raw evidence and vendor docs",
+  "review_method": "UTF-8 full text and status scan for all; active guidance and generated source review. Not a requalification of historical HIL.",
+  "normalization": "reviewed_lf_text_sha256 uses UTF-8 without BOM and LF; worktree_sha256 records actual checkout bytes.",
+  "counts": {
+    "reviewed-preserved-history": 150,
+    "reviewed-unchanged": 36,
+    "updated-current-guidance": 26
+  },
+  "new_record_excluded_from_baseline_count": "00_Docs/04_검증 기록/102_개발_문서_전수_검토와_마일스톤_체크포인트.md",
+  "documents": [
+    {
+      "path": "00_Docs/00_사전 리서치/01_개발_방식_비교_및_아키텍처_결정.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "1139994d49f66716cbbd02be4bd7ece4476911aaf108533281f2c0bb1d5658f0",
+      "reviewed_lf_text_sha256": "1139994d49f66716cbbd02be4bd7ece4476911aaf108533281f2c0bb1d5658f0",
+      "worktree_sha256": "c2c2fb45c77197eb3b042d8221a4e6816b081e8329592439472efbff18ba3c8e",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/00_사전 리서치/02_Arduino_구성_프로필과_예제_노출_결정.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "4b780302fb5977593133440e1bb61151813819e7b6d1f573cb3a8b108f1bcae7",
+      "reviewed_lf_text_sha256": "4b780302fb5977593133440e1bb61151813819e7b6d1f573cb3a8b108f1bcae7",
+      "worktree_sha256": "4923b7e0e615687cdb12fc1e5d6cc29efa2ff726b1f7105473b4fac48160c4e1",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/01_저장소_폴더_구조.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "5fb6fecea3f16a89fd7bb657ab01c443003d51ce2f78d35288544c869011beea",
+      "reviewed_lf_text_sha256": "5fb6fecea3f16a89fd7bb657ab01c443003d51ce2f78d35288544c869011beea",
+      "worktree_sha256": "b5553b4e4fafd21a1efceb0389637f2dd3a1740bc593274d388a498697ce31f2",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "d88866b8756739a8d535ad7d41629b1f0e54ae83dbdc5bfe556971afa5c511eb",
+      "reviewed_lf_text_sha256": "4ab4c7ca56cd4d9b4fbcb0bbd24fc7fd5ab738d26b0b143b0793edce21520e5b",
+      "worktree_sha256": "4ab4c7ca56cd4d9b4fbcb0bbd24fc7fd5ab738d26b0b143b0793edce21520e5b",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/03_핀과_Variant_설계.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "1dce8cb7f9358fb31c05624a2131a4e59991dd51983f03da381ec7f280784c49",
+      "reviewed_lf_text_sha256": "1dce8cb7f9358fb31c05624a2131a4e59991dd51983f03da381ec7f280784c49",
+      "worktree_sha256": "daebf4414df737813666f138dea3f5a24de2779500ab0e15f70bbb7de60c815f",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "ad57d5d80f09be6b249c1d4993bf1ae56d6b57aadb6acb81d3f2ad35b8beabbd",
+      "reviewed_lf_text_sha256": "eeb09d5675734b85e471f738a6963994c3d49dcc0cc4f1174d95bcd0404f7dff",
+      "worktree_sha256": "eeb09d5675734b85e471f738a6963994c3d49dcc0cc4f1174d95bcd0404f7dff",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "80959e7aeff6ebb3e801ea9f2edf57fe1728e7eb1298faa2b53ed3b2c6bb2fc9",
+      "reviewed_lf_text_sha256": "80959e7aeff6ebb3e801ea9f2edf57fe1728e7eb1298faa2b53ed3b2c6bb2fc9",
+      "worktree_sha256": "3f43bed5c8ab66d07fc6c4df151adb02c8bad30a64a166bee7a9c8338b525137",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "b3f00fa58cf7a519341332cd0e2e967c502b2bf48d29ad6df9d83f49db26bf81",
+      "reviewed_lf_text_sha256": "8daa3ff5b40df94260447a509d47d87d98aa7e8f65ec645a9c8fc377911c52c5",
+      "worktree_sha256": "8daa3ff5b40df94260447a509d47d87d98aa7e8f65ec645a9c8fc377911c52c5",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "49bb0138f120ccdda0ab324ef2d8dd80e02182b77a58117fc0aeaaeece736c43",
+      "reviewed_lf_text_sha256": "49bb0138f120ccdda0ab324ef2d8dd80e02182b77a58117fc0aeaaeece736c43",
+      "worktree_sha256": "8e2b17a5443a99f9b358089de4f6d795bdcbddc6f7ba29bd2583bae3e453a5c2",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "d8ec9c063acbe8e0e0adcf9b684f5f21018d30307d686c0206ddb81fd1ce102d",
+      "reviewed_lf_text_sha256": "a2bcff9e8f454c079e3c0e10e351c42f6fcf3079daf11cdbc7c1d22c8eeec4c1",
+      "worktree_sha256": "a2bcff9e8f454c079e3c0e10e351c42f6fcf3079daf11cdbc7c1d22c8eeec4c1",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md",
+      "classification": "generated-contract",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "ffabcb8a5a2cf8aaa925ee49a3a0c02cba9f64efdd34bcc899263e880e6967b4",
+      "reviewed_lf_text_sha256": "ffabcb8a5a2cf8aaa925ee49a3a0c02cba9f64efdd34bcc899263e880e6967b4",
+      "worktree_sha256": "1b280f8539293d1c242032067cc4cb1c00a566e6879b929244792f6c18f4cb7b",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md",
+      "classification": "generated-contract",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "6cdf0def2f195a25c78e8363ceb5d0870ec0b8818294b526841197cd0fcbb1cb",
+      "reviewed_lf_text_sha256": "6cdf0def2f195a25c78e8363ceb5d0870ec0b8818294b526841197cd0fcbb1cb",
+      "worktree_sha256": "c1c1c8f73da46e22cf7863179e09f2ec5ada94a150813c636dce854f4642b67e",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/11_M26_System_Peripheral_지원_경계.md",
+      "classification": "generated-contract",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "4ece400dfb8bfb63a85e06112b81b65632de57dc3d777332cb3e2fa97a16cbfa",
+      "reviewed_lf_text_sha256": "8019628ffc400ec4fd43bcef458205f1ab4881770d7fa0e4640b0b4b503df7fd",
+      "worktree_sha256": "8019628ffc400ec4fd43bcef458205f1ab4881770d7fa0e4640b0b4b503df7fd",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/12_v0.4.0_기능_시험_목록.md",
+      "classification": "generated-contract",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "60b81ce481a0beadc491d7e95822236401e0b53271866744fdb978531a8aa1df",
+      "reviewed_lf_text_sha256": "5a0129fd6de639e0de2e2a62f4d3ef635878a5fd35e0a37c4ee2599d63303d4d",
+      "worktree_sha256": "5a0129fd6de639e0de2e2a62f4d3ef635878a5fd35e0a37c4ee2599d63303d4d",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "45556715ed40fbc6186165c05d64d10270ced98a8e7e56bfe9bbea2f7faa6db4",
+      "reviewed_lf_text_sha256": "45556715ed40fbc6186165c05d64d10270ced98a8e7e56bfe9bbea2f7faa6db4",
+      "worktree_sha256": "09c994b6769aad98d61927769aba2e500452c848b56105e65d48011b22f310c4",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/01_진단_비교와_최종_판단.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "ef34f7cf8c45e439092490f611ecc14ffa02a1b2c10c830dbedba0e3f2d2e42a",
+      "reviewed_lf_text_sha256": "18c8cfd3c87f03740c075bcf098d92a646000041a4817e7ae78763b9bba32804",
+      "worktree_sha256": "18c8cfd3c87f03740c075bcf098d92a646000041a4817e7ae78763b9bba32804",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/02_리팩토링_통합_실행계획.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "a92bbdd0b2d912428e66dce55ca121e8eee39212c5062839a63f06335d830798",
+      "reviewed_lf_text_sha256": "dcefc1e5647365d87a221ec60369e5d476225717b59f50818124888304226bd2",
+      "worktree_sha256": "dcefc1e5647365d87a221ec60369e5d476225717b59f50818124888304226bd2",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/03_리팩토링_착수_시점_및_운영계획.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "40454352cc1df65d87f92ba64c2e06079f8282975fb259c618304b934b9b5c0b",
+      "reviewed_lf_text_sha256": "12355e8b77849279953d7a94837ab78573ced68ae9db67cfd7c8b4ea77df6bab",
+      "worktree_sha256": "12355e8b77849279953d7a94837ab78573ced68ae9db67cfd7c8b4ea77df6bab",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/04_리팩토링_작업지시서_및_검증기록.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "e51ef5e31d873e8ed84997f9c6976f996fb7f5c94b94798700761bdcf83243cc",
+      "reviewed_lf_text_sha256": "fc7378e64960087a1a991e4f64c5012ec531530f471f66ab97f6247717c60c7e",
+      "worktree_sha256": "fc7378e64960087a1a991e4f64c5012ec531530f471f66ab97f6247717c60c7e",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/05_리팩토링_진행_체크리스트.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "ea755b268928fa34adeb3b624e5fbf4db5898692d7b44008fc5e727a183749f3",
+      "reviewed_lf_text_sha256": "3557a8f927876174021daf3d7f1292ed1bf9f2d210518e35b53398da22b6b57e",
+      "worktree_sha256": "3557a8f927876174021daf3d7f1292ed1bf9f2d210518e35b53398da22b6b57e",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/99_최초_리팩토링_설계안_참고.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "7a70186703016eb803ed4c4910370ba2b4094a6dc11ec9c6f15389a28fb85691",
+      "reviewed_lf_text_sha256": "7a70186703016eb803ed4c4910370ba2b4094a6dc11ec9c6f15389a28fb85691",
+      "worktree_sha256": "b1bb60eccf321a30ca32e6bf28681d41424d91f6dbd5ef7b2d09416cd324240e",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/README.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "9b9a2074e60f8b4b210610de3241f4899e22ade3b799344cc9c12ea2a5c81fb0",
+      "reviewed_lf_text_sha256": "03343711617408262ae81721b0d05ceaf980ebbb7c978a039db67caa86ab3be9",
+      "worktree_sha256": "03343711617408262ae81721b0d05ceaf980ebbb7c978a039db67caa86ab3be9",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/01_West_Native_Blink_PoC.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "c1daa6ffcee16e77f442ed5e9a1a2116ea93152d63539cde6d5e72ae3e7de405",
+      "reviewed_lf_text_sha256": "c1daa6ffcee16e77f442ed5e9a1a2116ea93152d63539cde6d5e72ae3e7de405",
+      "worktree_sha256": "bcd4454230c5c621fa0643649681bea225074953e4e739a6a4d6b9a078f5c519",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/02_Build_Adapter_설계.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "604acc682340f2806757bf98ede13b3b3179ed98ae8b08928d69902b833b0ef1",
+      "reviewed_lf_text_sha256": "604acc682340f2806757bf98ede13b3b3179ed98ae8b08928d69902b833b0ef1",
+      "worktree_sha256": "b879088f922499f87817c4d353cd8fc5e929b5369841d279a1679cc7d85645ff",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/03_Arduino_CLI_통합.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "07294bc307d534856a64f732d5f2b489c2275e0dff3011eeabe42b45f4378d39",
+      "reviewed_lf_text_sha256": "07294bc307d534856a64f732d5f2b489c2275e0dff3011eeabe42b45f4378d39",
+      "worktree_sha256": "7091965393f11bd212ded7118e129d24e59522115276e798910c0a6d66f6e2fb",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/04_빌드_캐시와_산출물.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "8726b7258db2c64f5cd2b881e604157ec0e9d3e0a1e811e2ce150b3ba35f61f9",
+      "reviewed_lf_text_sha256": "8726b7258db2c64f5cd2b881e604157ec0e9d3e0a1e811e2ce150b3ba35f61f9",
+      "worktree_sha256": "a36f395116d33823a2155eac9578f78d749fac6620ad40d8e4d983696dd4866a",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/05_업로드와_디버그.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "36da3ad4cd7705e72091450ae1cd0ef537f60b337708778f755e4552f7d39963",
+      "reviewed_lf_text_sha256": "36da3ad4cd7705e72091450ae1cd0ef537f60b337708778f755e4552f7d39963",
+      "worktree_sha256": "46ac25c7312c57527456226efef1dc295eb4a31581cae700c8fd3a65c2ebcfee",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "20d00a09a5d21a203fdcd8327017f2ccc02de94406e6153b6de5da4202a63f57",
+      "reviewed_lf_text_sha256": "20d00a09a5d21a203fdcd8327017f2ccc02de94406e6153b6de5da4202a63f57",
+      "worktree_sha256": "8f6b1681cd822b02050108923b64782e1d65a04bd75df702912e8469d27ffb58",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "cdce8d8175015090c52caa5ac0147f1753af257d4c90fd086632df7c74f23437",
+      "reviewed_lf_text_sha256": "cdce8d8175015090c52caa5ac0147f1753af257d4c90fd086632df7c74f23437",
+      "worktree_sha256": "2b3008a8192d72e5f470e6eeb7b0e5d985a9110bce5dfdcbb8226bbc6359c7e0",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/08_M12_CI_CD와_재현_빌드.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "491a679f2b1d81e862286e2bfa98a6ab890ef340acb0a5acf7bbf9eee2beb320",
+      "reviewed_lf_text_sha256": "491a679f2b1d81e862286e2bfa98a6ab890ef340acb0a5acf7bbf9eee2beb320",
+      "worktree_sha256": "60c12ca97cc3c45f93a751e6009790e97473afb8a88f912fe27fa7915c911bee",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "9d274ea1d572a1d15b39d79c4518ad631a45ceff3c36adcf76b33e056ebae05f",
+      "reviewed_lf_text_sha256": "9d274ea1d572a1d15b39d79c4518ad631a45ceff3c36adcf76b33e056ebae05f",
+      "worktree_sha256": "b1bdd0d746fbe8e5bbdfab07c65f00e0750c44b6b27a5a020c71dbbe65c0c9d2",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/01_Arduino_Runtime_설계.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "a44da3470c46c0ecd3cba5ab6e34b531326ae0d71058de4e7e9e1c3c262649e0",
+      "reviewed_lf_text_sha256": "a44da3470c46c0ecd3cba5ab6e34b531326ae0d71058de4e7e9e1c3c262649e0",
+      "worktree_sha256": "7908d1471a8d2cd4e1580cc4ee749f6328b581e17c7235e62cd8174978774069",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/02_GPIO와_시간_API.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "8aa071bf1fb061d04e970872b5fae8a828efd075972344f89fd10a89156e2f6c",
+      "reviewed_lf_text_sha256": "8aa071bf1fb061d04e970872b5fae8a828efd075972344f89fd10a89156e2f6c",
+      "worktree_sha256": "e3b5ceebf53d6abdabd0a9f1d2094be96c930a2ff2d0c38509477afcc2efef2a",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/03_주변장치_API.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "a648931a2c8ff3ba9f0504a1cfe5af0255d090040dbf2d827347e4a69ea1a1f5",
+      "reviewed_lf_text_sha256": "f8549386f53a4e46178ba6f2591a92b9f77127f1b29c085cdf06acd54aa6ef59",
+      "worktree_sha256": "f8549386f53a4e46178ba6f2591a92b9f77127f1b29c085cdf06acd54aa6ef59",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/04_테스트와_검증.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "b99658935a1390ccaf5e9afd1da3f961b7c8d8a1ce78d34d0c20ef5f5ebd8f98",
+      "reviewed_lf_text_sha256": "4895539d3946e93626738627df44cc034e63d1c9746ca1fcf3ee66886876bca5",
+      "worktree_sha256": "4895539d3946e93626738627df44cc034e63d1c9746ca1fcf3ee66886876bca5",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/05_NU54DK_Board_System_API.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "a02d9a02405c3bf4ba859cb8a44ff4629796dc73b15fe9f20d9ee2dfaf815db4",
+      "reviewed_lf_text_sha256": "a02d9a02405c3bf4ba859cb8a44ff4629796dc73b15fe9f20d9ee2dfaf815db4",
+      "worktree_sha256": "97d4d540cbea9bc9f90d532f090358f132bd033e56eb7baa79f9d365299fc535",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/06_BLE_NUS_API.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "0cb33c714cb27637520c7991088136859a7ebb8465f615e8eb1b8a608ae68e73",
+      "reviewed_lf_text_sha256": "0cb33c714cb27637520c7991088136859a7ebb8465f615e8eb1b8a608ae68e73",
+      "worktree_sha256": "feceaff613733ae472c0069e6945debf0f0a134bf6c3d672476d1a4e4873921b",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/07_BLE_Core_GAP_API.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "804c4c834048ed28cd621aade3112b5cc8bb2cfb892d436630c71daa879ed3b1",
+      "reviewed_lf_text_sha256": "804c4c834048ed28cd621aade3112b5cc8bb2cfb892d436630c71daa879ed3b1",
+      "worktree_sha256": "d6c59cb0a82ca123d499aba2618c51c11694b726ae13c802341483c5fc394540",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/08_BLE_범용_GATT_API.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "25344c1fbf27fcd0924d047acf55edfb01f398ace93b77df0d699d3ad21131e8",
+      "reviewed_lf_text_sha256": "25344c1fbf27fcd0924d047acf55edfb01f398ace93b77df0d699d3ad21131e8",
+      "worktree_sha256": "e5f4ff8a3a1a0994d073ef4ae9bb5f5927720f1ba399c46ae8d9bfa947197b16",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/09_BLE_보안과_표준_Profile_API.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "2c10b69faddaf339dae5acbaf19028b140c271b20613e2ce8c079dcdd64688ea",
+      "reviewed_lf_text_sha256": "2c10b69faddaf339dae5acbaf19028b140c271b20613e2ce8c079dcdd64688ea",
+      "worktree_sha256": "62d79ecf0a5d151d715e80e4f22dfeb3d718bb064fde96615706b0c8d74c8fcc",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/10_Arduino_Storage_API.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "8b16e0a1ae97db2bc0e94aea84d2a8541533d83daa937d9bd3e7ba502bcd543a",
+      "reviewed_lf_text_sha256": "8b16e0a1ae97db2bc0e94aea84d2a8541533d83daa937d9bd3e7ba502bcd543a",
+      "worktree_sha256": "282c952c50dec5aa52123990fea46047abaa8089640f93d2889e4d0721026592",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/01_M1_도구와_보드_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "0e58ec4443ca68a184b94bb47b1d26424ba882e4875087adcde3620d43d7ac2c",
+      "reviewed_lf_text_sha256": "0e58ec4443ca68a184b94bb47b1d26424ba882e4875087adcde3620d43d7ac2c",
+      "worktree_sha256": "a6292c5832694dab28b7aaba4835b947fe52c6d61d54db3464b9a819320461f1",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/02_M2_Zephyr_Module과_Runtime_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "f09dfbffd10a54104f25379d234d31c3def20e4fdb61018a1c0730a71fbb3d53",
+      "reviewed_lf_text_sha256": "f09dfbffd10a54104f25379d234d31c3def20e4fdb61018a1c0730a71fbb3d53",
+      "worktree_sha256": "56671c4320dd0f0947a83e0b8b0593c7e3823b6035b96f9c3564aa8d084dca84",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/03_M3_GPIO_시간과_Scheduler_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "16abbad2e3d62679a2f2d48a5793f2f54780fa9d2de3ff201985d3df39e8c44c",
+      "reviewed_lf_text_sha256": "16abbad2e3d62679a2f2d48a5793f2f54780fa9d2de3ff201985d3df39e8c44c",
+      "worktree_sha256": "ee84878ba18691b9487533ad5af755aac4c7c9c92e17e1088385ab518ac230c5",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/04_M4_ArduinoCore_API_계약_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "4c4b28fb904f964ac7a89686dd0add165bb9dd75d21f166127081fd90fdfbc0d",
+      "reviewed_lf_text_sha256": "4c4b28fb904f964ac7a89686dd0add165bb9dd75d21f166127081fd90fdfbc0d",
+      "worktree_sha256": "83d9f96b1b8d11e88dc919f35cc9255d006149be77dcd12d4980e70c0b207507",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/05_M5_Arduino_CLI_Build_Adapter_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "1d6fca309bd2055b5797902e44511f712840950b6397ecb7486eeb48fc6b2f4c",
+      "reviewed_lf_text_sha256": "1d6fca309bd2055b5797902e44511f712840950b6397ecb7486eeb48fc6b2f4c",
+      "worktree_sha256": "2148c99f9495c14b461f8f3373f632359ed4e7a918ca12999997b4c796e03c3e",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "2b207d209d0f38887d0b9328fbf3d384f1b1a760c9b1ba2b2cf524a8f9196927",
+      "reviewed_lf_text_sha256": "2b207d209d0f38887d0b9328fbf3d384f1b1a760c9b1ba2b2cf524a8f9196927",
+      "worktree_sha256": "02d36b52b9dd895e8cef6a942940c708f44470284ce19beaf24ee5da5beb235f",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "4af14db684ca256b19052f21e65c82d371e4522b79482f5837da2c743fb65e6f",
+      "reviewed_lf_text_sha256": "4af14db684ca256b19052f21e65c82d371e4522b79482f5837da2c743fb65e6f",
+      "worktree_sha256": "9049c928681f1ead60ebf4cef89f1c4a24a42f9852b8868f9aa3a500edea5fe4",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/08_M8_업로드와_디버그_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "c76c3fd4095e64655d45772f15fa4a23c798d44e6fbe54cc8125656e74187df0",
+      "reviewed_lf_text_sha256": "c76c3fd4095e64655d45772f15fa4a23c798d44e6fbe54cc8125656e74187df0",
+      "worktree_sha256": "b1f9bbf0f1122787e6b90bb528241cfc7b9f7da320eab43aa9cf710afcc2aa1f",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/09_M9_증분_빌드_캐시와_재현성_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "177f02e72c584d8bca8cf6a18cf4a7de16636532ea128c31fcb8761fdf7044b2",
+      "reviewed_lf_text_sha256": "177f02e72c584d8bca8cf6a18cf4a7de16636532ea128c31fcb8761fdf7044b2",
+      "worktree_sha256": "5e72911385e6c0bc18cf01071487a6232d418fa5957642516ba0200c76fb9234",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/100_T12_공통_기능_묶음과_T13_조합_확정.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "276c6d6a382fc90de2328c54c265ad3d26ee12682a91a0b5daa0be3c7e339a85",
+      "reviewed_lf_text_sha256": "276c6d6a382fc90de2328c54c265ad3d26ee12682a91a0b5daa0be3c7e339a85",
+      "worktree_sha256": "276c6d6a382fc90de2328c54c265ad3d26ee12682a91a0b5daa0be3c7e339a85",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "a5df2e2c444c1ce3180b1a1fbee2120c47f22f4cf96adb434bb49e0ebcf6314b",
+      "reviewed_lf_text_sha256": "a5df2e2c444c1ce3180b1a1fbee2120c47f22f4cf96adb434bb49e0ebcf6314b",
+      "worktree_sha256": "54694d922526315d26d528bd4fc56238a978181b3fddbc94c3d083aa2aa1e08d",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "0d728f99539ceaed95cfd368a4fc5de5905e9e93448fa96948cbfe433e912452",
+      "reviewed_lf_text_sha256": "0d728f99539ceaed95cfd368a4fc5de5905e9e93448fa96948cbfe433e912452",
+      "worktree_sha256": "8b31c4de98d29833495927bb4fc110c2fdbbc077b3e330c9d2de8c71e2635232",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "0ab494cad4e7d77c32b1bf509a4369a8a9f48054ddba6ac75e45641e8520ad3b",
+      "reviewed_lf_text_sha256": "0ab494cad4e7d77c32b1bf509a4369a8a9f48054ddba6ac75e45641e8520ad3b",
+      "worktree_sha256": "fc02a5140f1383b22a75ab681988488a172740ab3ad0e87b3982ed7c051739a2",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/12_M11_v0.1.0_rc2_공개_후_수동_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "5bd4e84b9182d4084b21000fdd2bf5c6f356d75d402506673129eb28c1bd13ab",
+      "reviewed_lf_text_sha256": "5bd4e84b9182d4084b21000fdd2bf5c6f356d75d402506673129eb28c1bd13ab",
+      "worktree_sha256": "9e395048b4e26ee5447b0230cc3dda4911fdd22837ccd3b747970412d4b01f26",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/13_v0.1.0_정식_릴리스_공개_기록.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "9c1d8263c06318f1e39e5d91423012dfc5f5b8d20c4b2209be22e7d259e50936",
+      "reviewed_lf_text_sha256": "9c1d8263c06318f1e39e5d91423012dfc5f5b8d20c4b2209be22e7d259e50936",
+      "worktree_sha256": "d07d0443ef6e4dd5557848509dcf907f5a9e0896e0a81efee42c42373d48c394",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/14_M12_CI_CD_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "d3a0d76fc8a4d079c8978e391b9dc34fbd41b8c8fe07fbf4eb8302fc94a09f1f",
+      "reviewed_lf_text_sha256": "d3a0d76fc8a4d079c8978e391b9dc34fbd41b8c8fe07fbf4eb8302fc94a09f1f",
+      "worktree_sha256": "5d8e6a488a8c788a871a8cc7728ef2dde856c73770e46f77ed80ec4e80f349eb",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/15_M13_구성_프로필_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "82cebe2636567a39a5baf14ae9d65b0e1e7832a6a200144f3f8d91a22966b166",
+      "reviewed_lf_text_sha256": "82cebe2636567a39a5baf14ae9d65b0e1e7832a6a200144f3f8d91a22966b166",
+      "worktree_sha256": "e2a5138dbc80af33122bac3f629154e15bc02c3a0fdae4c198cc7c65428ed678",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "4a56d3bfe73071ad0088afdbf6dfce97da406d406eee546db6cccca99aa45c7f",
+      "reviewed_lf_text_sha256": "4a56d3bfe73071ad0088afdbf6dfce97da406d406eee546db6cccca99aa45c7f",
+      "worktree_sha256": "92e382f5583ae005ce050650fab660f292eb88ecdd19752c215898bff747c11a",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "b531e05fd570ba2760dfbe842d14b676f87bf22c97d56c10eb86af5026c2d07f",
+      "reviewed_lf_text_sha256": "b531e05fd570ba2760dfbe842d14b676f87bf22c97d56c10eb86af5026c2d07f",
+      "worktree_sha256": "8b872ee1473a628ead2d8a303975f72d72cffa66ae618179e5cb0d5f9f2df989",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "7bb084dab1442fdcffa2888f303bffc94c49d4ebf5120c0b84647e287fbbe925",
+      "reviewed_lf_text_sha256": "7bb084dab1442fdcffa2888f303bffc94c49d4ebf5120c0b84647e287fbbe925",
+      "worktree_sha256": "56ea80b7bf2da038f30855a9f0c46e6047e18bd650e865fc708e4b9172183807",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "bef351f3ecc5cd75181a5c5bbf800451a2a174f4c2036cc53bf654f87d96f01d",
+      "reviewed_lf_text_sha256": "bef351f3ecc5cd75181a5c5bbf800451a2a174f4c2036cc53bf654f87d96f01d",
+      "worktree_sha256": "ff26b43cabfbd707bc0e81f114b5da4a794cae1cb1882c668c2f5f0f6f08f905",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "2b40902e843d763e414b032a6fb1e2fe692faee75e53b295200be819296b8340",
+      "reviewed_lf_text_sha256": "2b40902e843d763e414b032a6fb1e2fe692faee75e53b295200be819296b8340",
+      "worktree_sha256": "b82f128d429735febadc4382c6b930d83dd309d96caa2015ef8c7a8ab0f12802",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "75e805e3db3bd57a585088185892fb5789088faac4b418c280eb67c5be336f58",
+      "reviewed_lf_text_sha256": "75e805e3db3bd57a585088185892fb5789088faac4b418c280eb67c5be336f58",
+      "worktree_sha256": "7c9980d0779dd77f2430699ea63640da8af8fd509ed63f05c4ebd9055ed6267f",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/22_AC-01_GPIO_호환성_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "51b333fd19d970499c820ef8a3116b0b95cacd3610bffe022cdb253c4bb76fee",
+      "reviewed_lf_text_sha256": "51b333fd19d970499c820ef8a3116b0b95cacd3610bffe022cdb253c4bb76fee",
+      "worktree_sha256": "6e9217180afcfbf51483306c5225424877f8dfcbd3c84cbdf808ca599011b74c",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/23_M19_BLE_Core_GAP_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "66422255058da34c67fb4caada8071d4e890d20520360d8c41609d513f5535c6",
+      "reviewed_lf_text_sha256": "66422255058da34c67fb4caada8071d4e890d20520360d8c41609d513f5535c6",
+      "worktree_sha256": "3e1fba911e40a022c8c2581c74b895edeed8f9b3dead306fb9b461131385411d",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/24_M20_범용_GATT_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "75c0761cc494d84e1d1553c7861e646a8a322d1664592a22db39a71ad729850c",
+      "reviewed_lf_text_sha256": "75c0761cc494d84e1d1553c7861e646a8a322d1664592a22db39a71ad729850c",
+      "worktree_sha256": "75c296770fb72908da20dfedb85ede5c92407dcc5590e79ed66c862b3f564c02",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "172ba6b9c614e756a18bd3123f8cf6cb20af8cd370eb9bfd931fb6561c5d56ed",
+      "reviewed_lf_text_sha256": "172ba6b9c614e756a18bd3123f8cf6cb20af8cd370eb9bfd931fb6561c5d56ed",
+      "worktree_sha256": "bb320eccd494054e7c0b5b03ac20e92970602e412e3137d214c1987c1674d2c6",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "b533952bdd01ec7305fd717bacd88f60f671bb885528ebc3747f737ac940fe15",
+      "reviewed_lf_text_sha256": "b533952bdd01ec7305fd717bacd88f60f671bb885528ebc3747f737ac940fe15",
+      "worktree_sha256": "ea533dd983e15320e28c854561dae5b44a941b66e9b187e463dddc6b4053efc4",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "3fa5c4d007d6b9bff7a0922869ea0a9ce5f1fa9bede4aa8ffc5af848426c0fd4",
+      "reviewed_lf_text_sha256": "3fa5c4d007d6b9bff7a0922869ea0a9ce5f1fa9bede4aa8ffc5af848426c0fd4",
+      "worktree_sha256": "35eb75b4e43887ccacdabbf246d376f83cd6b7e2178b5409cac5d66e5c8a8b91",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/28_AC-03_Storage와_Library_호환성_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "577f48e0e53ffea53e4a0108a762e0171dfd2048510592c014070378ea464c17",
+      "reviewed_lf_text_sha256": "577f48e0e53ffea53e4a0108a762e0171dfd2048510592c014070378ea464c17",
+      "worktree_sha256": "ba06b0c15b616e3c6584ddf6a7ca0ec9f90aa0fd82fc57a302e89ac7314be68b",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/29_M22_v0.3.0_rc1_통합_릴리스_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "42bd1d7668b75c0ec2559552b553d109a28ff4336120e1f67545c4ca418041b4",
+      "reviewed_lf_text_sha256": "42bd1d7668b75c0ec2559552b553d109a28ff4336120e1f67545c4ca418041b4",
+      "worktree_sha256": "7d164e2b886ee9995c3957186e8451c7342487eb31385ee324ef5877bc942c6b",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/30_M22_v0.3.0_rc2_통합_릴리스_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "cbdeb4733647fe64f4658effdc895fa4b068a1b3161c7cb37cd74fd326b57333",
+      "reviewed_lf_text_sha256": "cbdeb4733647fe64f4658effdc895fa4b068a1b3161c7cb37cd74fd326b57333",
+      "worktree_sha256": "d0fc406353d5e4feca395268a8ab6636563165d6f67c84ec987add5fd14a76a5",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/31_M22_v0.3.0_rc3_검증과_stable_인계.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "f314b41d65ae0fd8caec8cb4a5baa3fb4be6cf06722478aeb0df5e87e8fbcb11",
+      "reviewed_lf_text_sha256": "f314b41d65ae0fd8caec8cb4a5baa3fb4be6cf06722478aeb0df5e87e8fbcb11",
+      "worktree_sha256": "b3203b8b00fc9dc51a60f74b5fd93f5fe2c0e92ee24157212edb1bc5794ed7a1",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "647db2a0ee8b8909e40b3632787bb0a912a9869f6508fda1beed06c2d7ee43d9",
+      "reviewed_lf_text_sha256": "647db2a0ee8b8909e40b3632787bb0a912a9869f6508fda1beed06c2d7ee43d9",
+      "worktree_sha256": "7a085215ae024f242ab3d9a5ccb7c88d0295d715da56eeab953f5c80a4443008",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/33_M23_Peripheral_Inventory와_공통_소유권_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "cd9ef1e4f60fb4e5b4f6a5e2c3ca24e4e9c0ca291c58389d4a08713fe652edf9",
+      "reviewed_lf_text_sha256": "cd9ef1e4f60fb4e5b4f6a5e2c3ca24e4e9c0ca291c58389d4a08713fe652edf9",
+      "worktree_sha256": "0bf3426feb1e5687f6d7e1694cb6174b71ce3a448f35431c87446ab571a5cdd0",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/34_M24_Serial_Fabric_경로와_API_계약_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "11e96be852e6798b9a4f863f52e385943f3be569890ade589cbfdcd1b182b471",
+      "reviewed_lf_text_sha256": "11e96be852e6798b9a4f863f52e385943f3be569890ade589cbfdcd1b182b471",
+      "worktree_sha256": "1ad629e8887c18e351bc9b9492b834f036a5fd9041df0e75f90ee9925e80936a",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/35_M24_Serial_Fabric_공통_backend_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "1fc229d5c6c72dddd0f5fc4928a648e7e23519a43e17c01baca3bf5aaaf8aada",
+      "reviewed_lf_text_sha256": "1fc229d5c6c72dddd0f5fc4928a648e7e23519a43e17c01baca3bf5aaaf8aada",
+      "worktree_sha256": "f7d905cc1ade2c282eec3a980805d8741b0651599457a8a8b36c1c547677e08f",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "f14603d14564a41a4f2d1aba6bb71fbbe49a84e4fca8ed834a4a057582af0d22",
+      "reviewed_lf_text_sha256": "f14603d14564a41a4f2d1aba6bb71fbbe49a84e4fca8ed834a4a057582af0d22",
+      "worktree_sha256": "d6b48b704709ee66377272b3e0a22e6990f28b27be5879530d1a8e2f81db9693",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "f36b40cfb99330c2462d54712b600b8d2990825f530d5312a686cd09aca597aa",
+      "reviewed_lf_text_sha256": "f36b40cfb99330c2462d54712b600b8d2990825f530d5312a686cd09aca597aa",
+      "worktree_sha256": "4427085e48cbde0bff76abc5b277837d3c2905908b2448a9730c71445a3dfa12",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/38_M26_System_Peripheral_판정과_온보드_HIL_준비.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "85bfc0ee49890b509d6e04533ec458f19fe00935a06631f8630f2805f58f97f7",
+      "reviewed_lf_text_sha256": "85bfc0ee49890b509d6e04533ec458f19fe00935a06631f8630f2805f58f97f7",
+      "worktree_sha256": "82659213d445441e470f208933711e2d3873cf2a4ca4399ec4db3ff25daff91a",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/39_M27_v0.4.0_rc1_자동_준비와_HOLD.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "4746a4c05424163ed6cfd520b368a9f147448e278f66981563896a597cd72df7",
+      "reviewed_lf_text_sha256": "4746a4c05424163ed6cfd520b368a9f147448e278f66981563896a597cd72df7",
+      "worktree_sha256": "ed2cf44a2c2aa08b86a5a4c855e5ddc1cf666cfa0f9952710605f766c4aebce9",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/40_M24_M26_온보드_재개와_USB_UART_진단.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "38506f25c3edbaca4209b82fc3d76bf7064fbe10172a9cfba34ad3be3fe9bebd",
+      "reviewed_lf_text_sha256": "38506f25c3edbaca4209b82fc3d76bf7064fbe10172a9cfba34ad3be3fe9bebd",
+      "worktree_sha256": "be6da071472cabfe5cfbf15df414557b7d71791a695cee9a7822f96214b057ba",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "548330eabbce66afa759083fd634d1b797045ed614dd7788e33664b4bf0f5ae3",
+      "reviewed_lf_text_sha256": "548330eabbce66afa759083fd634d1b797045ed614dd7788e33664b4bf0f5ae3",
+      "worktree_sha256": "c504567499e5d2953439d8e460b12b3a4eb9b10af94b43a699ea7de5d236e1ad",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "e187edd64d864e70b0d478d1d21166738233e5122c259a4940f4f43099c7faa5",
+      "reviewed_lf_text_sha256": "e187edd64d864e70b0d478d1d21166738233e5122c259a4940f4f43099c7faa5",
+      "worktree_sha256": "d480f8e0b883cb7597a82814d6ff9bbdb991137e57d774983b236e5dbfe8163a",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/43_v0.4.0_시험_준비와_구현_대조.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "0b2c90dcc1530b37058b74e4917cdd1b57abd90d14469c24047790a12ef874b5",
+      "reviewed_lf_text_sha256": "0b2c90dcc1530b37058b74e4917cdd1b57abd90d14469c24047790a12ef874b5",
+      "worktree_sha256": "047228e22b1355fdc64bcba71761be7b4b97c4a3a3ded4c4375f7ac464e79eb9",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "6cf9c693c6cf5b7e52ddaa654b43a20cf633215ba6eadbed2e55952ae8e76cb2",
+      "reviewed_lf_text_sha256": "6cf9c693c6cf5b7e52ddaa654b43a20cf633215ba6eadbed2e55952ae8e76cb2",
+      "worktree_sha256": "2582b5946c21800563fbd3022993b7dec486a2503752ce2252c40fa793ec04e1",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "79c972c42bad1da0bccf4554228fd6058fe4969ad6ff311bb6fba4c32e2b524c",
+      "reviewed_lf_text_sha256": "79c972c42bad1da0bccf4554228fd6058fe4969ad6ff311bb6fba4c32e2b524c",
+      "worktree_sha256": "ae34f1953cc64176fd968c77456dc6f637bdc34fb7e4740ed86656ee32bfda50",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "aa66dbba1ab0dd3a1b080f4446bf9ef7862d06436f178fb0c8043bdbc0805511",
+      "reviewed_lf_text_sha256": "aa66dbba1ab0dd3a1b080f4446bf9ef7862d06436f178fb0c8043bdbc0805511",
+      "worktree_sha256": "273405021af1fbff1db5cf21814f1ec93a2aea540e280af98740172ce62b7084",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "c9c3622ef656607df85660ccd1fda3a8d8d1df351a90e68e88b55c726cfe3e09",
+      "reviewed_lf_text_sha256": "c9c3622ef656607df85660ccd1fda3a8d8d1df351a90e68e88b55c726cfe3e09",
+      "worktree_sha256": "328b19dc76fcfab51fd4e296a349ecc381695d9da2ec484a69e13eaab957f4ea",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "09d7a739bd0e62e9a03be39cb3d65e68c47228414960f0a9432d84124ccdefcb",
+      "reviewed_lf_text_sha256": "09d7a739bd0e62e9a03be39cb3d65e68c47228414960f0a9432d84124ccdefcb",
+      "worktree_sha256": "09e2cce006c6136b9915a6c908be4a2e915aabfcc8c3fcc8e44abceec80fb2ce",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "7a739f8feb4731e0774d35d08224d9e4c8f9751306aa4a6484fa100865cb8bef",
+      "reviewed_lf_text_sha256": "7a739f8feb4731e0774d35d08224d9e4c8f9751306aa4a6484fa100865cb8bef",
+      "worktree_sha256": "811c2ed929ece625859008b2088d6d37650f1877ca868c43af37c22855dbe4f8",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "b5eb04524a977578d31f07e9cd6274a5697303c3954d38c855a4f28fc7727b34",
+      "reviewed_lf_text_sha256": "b5eb04524a977578d31f07e9cd6274a5697303c3954d38c855a4f28fc7727b34",
+      "worktree_sha256": "783c9abfa393f5def4c78d7643e4609daeed1a4d09becdf174251c695e146650",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/51_R00_리팩토링_기준선.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "0b9f0441c45796a3bfbe39da780cf94babf6e0380a0bc8c184e913765dcffbaa",
+      "reviewed_lf_text_sha256": "0b9f0441c45796a3bfbe39da780cf94babf6e0380a0bc8c184e913765dcffbaa",
+      "worktree_sha256": "96731405f9cebffea9f475008d3e3ce631f850d880fc82f5c6c556315a4f4e9c",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/52_R01_CMake_source_소속_교정.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "4844773326fd45cdbbaff3ebaeaed051cde397548e58c5f2245fb759e2123f23",
+      "reviewed_lf_text_sha256": "4844773326fd45cdbbaff3ebaeaed051cde397548e58c5f2245fb759e2123f23",
+      "worktree_sha256": "930204e41c13013f523bf0b0af69bc7b2ba5147c1a10f5fa08b8a33dcdd7dd8c",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/53_R02_Serial_완료와_DMA_수명주기.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "444f94755919934288d2f7d8bd5d60c1133def22d35d5f078cb59154790820f5",
+      "reviewed_lf_text_sha256": "444f94755919934288d2f7d8bd5d60c1133def22d35d5f078cb59154790820f5",
+      "worktree_sha256": "5429c7705782f5dbdd0242abe5fc96ec4350ba144445434e0dfc05ce5ebd2850",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/54_R03_Analog_Stream_ISR_정지_동기화.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "d49db2756c5ef52b97c43fe9780b3e5bc341fd04294be65ca89073d6b01f08b9",
+      "reviewed_lf_text_sha256": "d49db2756c5ef52b97c43fe9780b3e5bc341fd04294be65ca89073d6b01f08b9",
+      "worktree_sha256": "fa452015f2c1c672516e87f99dede57fb40ec90cbd20dec206fe053ffb32db89",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/55_R04_File_공유_slot_수명주기.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "6a7513e473e64eadc448818ce51951d616ef3115837d5651d96216b66306eb3e",
+      "reviewed_lf_text_sha256": "6a7513e473e64eadc448818ce51951d616ef3115837d5651d96216b66306eb3e",
+      "worktree_sha256": "2c4e8366f19e5e17c91017d0345c6596b710a58154211a44d12b5c2db9dd1453",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/56_R05_Core_소스와_패키지_identity.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "5926aa5cdb1617ff3f948b1b23f7e49fc5a77caac79fb657d3e24d76ec325606",
+      "reviewed_lf_text_sha256": "5926aa5cdb1617ff3f948b1b23f7e49fc5a77caac79fb657d3e24d76ec325606",
+      "worktree_sha256": "baf8a0e122d1b2cbd0fd7fba86845f1dacd4a70900dfa371353be82c5f29e0fe",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/57_R06_builder_모듈과_설치_경로.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "bbfb7b453a24ecf168506b8870c2805d32758a585eede596d60052aa803fbb42",
+      "reviewed_lf_text_sha256": "bbfb7b453a24ecf168506b8870c2805d32758a585eede596d60052aa803fbb42",
+      "worktree_sha256": "5fd1914bec6afdc83b826245314acd39b09b5c8aa16d29bf8e786f434bd1133e",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/58_R07_EventFabric_책임_분할.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "dffdceaffea395a45708352044b3db1c1bd7139abb78645a00bb441c72c0904d",
+      "reviewed_lf_text_sha256": "dffdceaffea395a45708352044b3db1c1bd7139abb78645a00bb441c72c0904d",
+      "worktree_sha256": "3f427eb6c81b66c59d1715984c1940c56cf1a0db892a03ca85233a4c676cbc93",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/59_R08_자원과_경로_수명주기.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "541a9e0be8848a880c3a9fc973788b54bb70b649ae6ad6c604b4770530cace94",
+      "reviewed_lf_text_sha256": "541a9e0be8848a880c3a9fc973788b54bb70b649ae6ad6c604b4770530cace94",
+      "worktree_sha256": "e6715062d5ad4b559f0a1b3c984fc0b15480a534a33ba032de95871e8d7eb115",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/60_R09_Arduino_SPI_경계.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "05326bffae7e2d3dd152076dab2f76c487dac31f8a7d8097defeb40ebba67472",
+      "reviewed_lf_text_sha256": "05326bffae7e2d3dd152076dab2f76c487dac31f8a7d8097defeb40ebba67472",
+      "worktree_sha256": "c246fcfccc561ced05e0ac4ac05802cc5277ef930cb136e23e1df0a6c8259682",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/61_R10_Serial_Fabric_동시_호출.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "17dfb10d4b149ef92c50711c96766cab83bdcfcef4db5f4b41052c66870cc13f",
+      "reviewed_lf_text_sha256": "17dfb10d4b149ef92c50711c96766cab83bdcfcef4db5f4b41052c66870cc13f",
+      "worktree_sha256": "82f45009d0267340a88d27a0248ea4c269087117abd3c7b5c845e249a52fee56",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/62_R11_Analog_Stream_peripheral_분리.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "8ccbd597fcdf4e710ede464b937b73859597de0ec436e150c3be6a38476bab5c",
+      "reviewed_lf_text_sha256": "8ccbd597fcdf4e710ede464b937b73859597de0ec436e150c3be6a38476bab5c",
+      "worktree_sha256": "572c36ed3327020ae999f1b8849bd469d09c641271232e871193342e17d75f0a",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/63_R12_BLE_Storage_수명주기.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "92c8143c98a07450a6a30a0f45fe126ef923d6f3b10812816b664b8716a6491b",
+      "reviewed_lf_text_sha256": "92c8143c98a07450a6a30a0f45fe126ef923d6f3b10812816b664b8716a6491b",
+      "worktree_sha256": "89040edd54e71a89011d2f202e62ed8d241230cfa72c89dd652da13f983fd9c2",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/64_R13_도구_정책_build_구조.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "26967255a47167a1308d623828057adaaaec4d753e5fe8cfd656a9a452f054ad",
+      "reviewed_lf_text_sha256": "26967255a47167a1308d623828057adaaaec4d753e5fe8cfd656a9a452f054ad",
+      "worktree_sha256": "960810ab9246820cb9afe80fe15b578930994f11b282ac73147bed78ef7994d5",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "97e316381918deff1e3adf41fe013f90e939897a827463f1c207f7276cff7970",
+      "reviewed_lf_text_sha256": "97e316381918deff1e3adf41fe013f90e939897a827463f1c207f7276cff7970",
+      "worktree_sha256": "f56fcdb10c59c723e03d51eba72d4af0d31fe101be565af988dad2268e69e1ea",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "21442e2f01236143dc5ebd135098f5b64022ce297032b822591e0d04f80bd783",
+      "reviewed_lf_text_sha256": "21442e2f01236143dc5ebd135098f5b64022ce297032b822591e0d04f80bd783",
+      "worktree_sha256": "61776457f7f8d9bc9d7b04979b7c864d536223fa98366d6c462711aa3672a40a",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "3916c13dd59bbcae2180251ac1a36120019d951a9c2585ea61a0c24838bcffb6",
+      "reviewed_lf_text_sha256": "3916c13dd59bbcae2180251ac1a36120019d951a9c2585ea61a0c24838bcffb6",
+      "worktree_sha256": "bca946e7356b8448b8a411c749c4f01ee8b4b70fe736bcf2de40378f66e1fea8",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "72b465217c7a8392aca34164915f94c51e8e3d21e4a57a78acf86de08a094c21",
+      "reviewed_lf_text_sha256": "72b465217c7a8392aca34164915f94c51e8e3d21e4a57a78acf86de08a094c21",
+      "worktree_sha256": "a041b00f30912fac75387eb186da91641e194c614e50820b5741dbd2d20fcc14",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "4c807d764aeede707794875d77561f4d6a9efe13351763cbb70cde9705dbb97c",
+      "reviewed_lf_text_sha256": "4c807d764aeede707794875d77561f4d6a9efe13351763cbb70cde9705dbb97c",
+      "worktree_sha256": "4c4775d2338322a9de2b4de73d27d135096121e97a2cfd98653e2e137e7f5e74",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/70_T11_Fixture_201_current_source_SPI_회귀.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "bd7e3ef10a8986ef259ab0566117413175895f4b7abbcb2ecc65bc37fd7360e7",
+      "reviewed_lf_text_sha256": "bd7e3ef10a8986ef259ab0566117413175895f4b7abbcb2ecc65bc37fd7360e7",
+      "worktree_sha256": "7022028999147ea1753a17f9394a753ef5c7ccdcc134ddf013da7c1943096afb",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "4e7ce9f2931bf3d10a23dde28106080a0602720652d46f24342e2f46c87c580f",
+      "reviewed_lf_text_sha256": "4e7ce9f2931bf3d10a23dde28106080a0602720652d46f24342e2f46c87c580f",
+      "worktree_sha256": "3e0cfbb76f31c04f7462ce555a96b982db57e094975008d8d3f0f41cd16e931f",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "a1d725257ba419f8534b51e401570b837c20fba3b678209b645c3c09443903b7",
+      "reviewed_lf_text_sha256": "a1d725257ba419f8534b51e401570b837c20fba3b678209b645c3c09443903b7",
+      "worktree_sha256": "c565a1a03ba8c9062a9598eeb506e931223ca888b4ce785ab9a1c6a3959e71e1",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "c5f624e031cf5ddaa07ad5af0e34439014e1344011b9936768f47ee2285dc463",
+      "reviewed_lf_text_sha256": "c5f624e031cf5ddaa07ad5af0e34439014e1344011b9936768f47ee2285dc463",
+      "worktree_sha256": "d2679ff6887450a982a2f18c52ef04abed595f376e13adf21b215520cec56aff",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "14265f51ad27794b5b9ef4b80cdc3c056d82f0c7258ae51322495cb8ff4f78c3",
+      "reviewed_lf_text_sha256": "14265f51ad27794b5b9ef4b80cdc3c056d82f0c7258ae51322495cb8ff4f78c3",
+      "worktree_sha256": "062e6503afb91acedfd77a86158f9f63974e06a8038055de3b33856743ec71ae",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "2628bc78427aa5d95ac80f7156a8ffe1e6e508a3a66ccb0bcae85a0c6374c097",
+      "reviewed_lf_text_sha256": "2628bc78427aa5d95ac80f7156a8ffe1e6e508a3a66ccb0bcae85a0c6374c097",
+      "worktree_sha256": "ae8ce7da032d6f27c9df288870e3f508d4ac6557576d05c8e3766ae3b5cd4304",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "ee3644bd6e51dd00c6c2371986e82c6f43608c1ae5139ef703a1112fb395bb0d",
+      "reviewed_lf_text_sha256": "ee3644bd6e51dd00c6c2371986e82c6f43608c1ae5139ef703a1112fb395bb0d",
+      "worktree_sha256": "4643c6f840008ef90ec8506bf1b67f99cfc73b83f7ccfc49339ac8488a3dc78f",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "076faa0f124bdf71db7962b06392c0f70c0e62f5623e5842eafa350e2ffd4911",
+      "reviewed_lf_text_sha256": "076faa0f124bdf71db7962b06392c0f70c0e62f5623e5842eafa350e2ffd4911",
+      "worktree_sha256": "c9d8b1f1ce4958f0af7936e3088dec3e0cf3187ca4009ede124b4d5671304889",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "8418ab46e28a1158cd29af71c507d3ff9a08b8756e7a4a3c541a5ee0abb54747",
+      "reviewed_lf_text_sha256": "8418ab46e28a1158cd29af71c507d3ff9a08b8756e7a4a3c541a5ee0abb54747",
+      "worktree_sha256": "dbd0d45ec6145b413c208aefdf6178ea614cc3b39f2bc3ef722c3f99dc07b7f0",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/79_T12_Fixture_406_current_source_공유_AIN5_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "0e1210efebe88caae1f23be67a849c7a3a6ce09d433e813ab62902cfabf1c870",
+      "reviewed_lf_text_sha256": "0e1210efebe88caae1f23be67a849c7a3a6ce09d433e813ab62902cfabf1c870",
+      "worktree_sha256": "45bd79c5b6c23c983185be03a6b981762e33a0b51667c4c4f66adf35953ce20a",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/80_T12_Fixture_407_준비와_Host_실행_차단.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "c40b2e394b0db3cedef87b0dd939204855851a10b89f9d4812ca942c7377e1c8",
+      "reviewed_lf_text_sha256": "c40b2e394b0db3cedef87b0dd939204855851a10b89f9d4812ca942c7377e1c8",
+      "worktree_sha256": "d07959da6bfe1ca5740fa32def106cbc5515de136b595b0807c903f525aaddd6",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/81_T12_Fixture_407_Host_재개와_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "362356c22e07e1ab11f5fafcd20b6854167242d8a94719b3e01db29660951dfe",
+      "reviewed_lf_text_sha256": "362356c22e07e1ab11f5fafcd20b6854167242d8a94719b3e01db29660951dfe",
+      "worktree_sha256": "f7ae77a04e6016582696810fe8b7036fd5472a7f6eb38c062e44098a3b3493cd",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/82_T12_Fixture_407_current_source_공유_AIN6_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "479321b17747967f9f20335e6b793f7b124f829b589d32affba98432c285ebd5",
+      "reviewed_lf_text_sha256": "479321b17747967f9f20335e6b793f7b124f829b589d32affba98432c285ebd5",
+      "worktree_sha256": "dc3d35313aa7df59668206a6cf715f4fe1bd59c506db74a011732434a6c80746",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/83_T12_Fixture_408_current_source_PWM_ADC_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "adf226cfb3640de7c5d339004605397ff8fca11121d5ff0d2e56ffb3fecbbae2",
+      "reviewed_lf_text_sha256": "adf226cfb3640de7c5d339004605397ff8fca11121d5ff0d2e56ffb3fecbbae2",
+      "worktree_sha256": "3dfa638d1cce86ce090ce6860c4851ffab025e41be968db1f0dc2ac954ff8b22",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/84_T12_Fixture_420_current_source_QDEC_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "aa15ce229577dab6cbdf8dbf615deb72adcb1b0ace588094a09e69046b4bf2f5",
+      "reviewed_lf_text_sha256": "aa15ce229577dab6cbdf8dbf615deb72adcb1b0ace588094a09e69046b4bf2f5",
+      "worktree_sha256": "0748e1fad112df8189e7ff13c63f04ea5daf9849aed810aa3fd086e304a30a3e",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/85_T12_Fixture_420_current_source_QDEC_재검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "d229a42df45235e2e84843bbf8cdd77c600418703fe1279b4f789beeb1037b8d",
+      "reviewed_lf_text_sha256": "d229a42df45235e2e84843bbf8cdd77c600418703fe1279b4f789beeb1037b8d",
+      "worktree_sha256": "35cf8e316f6fef075a90c4df17fa9d4fdbfca8c8e685c2e415b8354b1724132b",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/86_T12_Fixture_430_current_source_I2S_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "a72dcb9ff0d338007181965803895cb3bc24377412802ce5878efff56191b93e",
+      "reviewed_lf_text_sha256": "a72dcb9ff0d338007181965803895cb3bc24377412802ce5878efff56191b93e",
+      "worktree_sha256": "8574caed8a098b86debcfbefa224f33084380972cda09d724e35dd967126db37",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/87_T12_Fixture_430_current_source_I2S_재검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "a2a94e42a1523d085144bc8a089c269dff582ddf06f1d3712b603a73932f8c9c",
+      "reviewed_lf_text_sha256": "a2a94e42a1523d085144bc8a089c269dff582ddf06f1d3712b603a73932f8c9c",
+      "worktree_sha256": "91b16cfc00d3ae399145951a546b47056feb12fa96c798f5f92dadf8730eb8d0",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/88_T12_Fixture_440_current_source_PDM_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "1eeff34209616662537bfc320700557aa9cc3427483693d37619eadc438bd7b0",
+      "reviewed_lf_text_sha256": "1eeff34209616662537bfc320700557aa9cc3427483693d37619eadc438bd7b0",
+      "worktree_sha256": "0fa4877c5bd493dca78066426ed6c0ed366618a83ca822e501e8b760293f4a4b",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/89_T12_Fixture_440_clock_gate_분리_진단.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "6eafc1544d2262fd4979619a24f9b9f6e901d4836d8a7fcc17d0dbe9e2eea209",
+      "reviewed_lf_text_sha256": "6eafc1544d2262fd4979619a24f9b9f6e901d4836d8a7fcc17d0dbe9e2eea209",
+      "worktree_sha256": "2aba4ef31a7055b4aa2ab197b4245b4dc4be4d17601a8dd9c847e2def9fa6bd0",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/90_T12_Fixture_440_재결선과_PDM_위상_진단.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "fbf3690cccce56378a5a30fc7b7d9639a5a8cc7b06f9393b0aada41356c924f2",
+      "reviewed_lf_text_sha256": "fbf3690cccce56378a5a30fc7b7d9639a5a8cc7b06f9393b0aada41356c924f2",
+      "worktree_sha256": "e4a57af2322d958ca8eb1d10c56e9eb4de6c2ffc710beb0b5bc1cdde42b594dd",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/91_T12_Fixture_440_PDM_밀도와_연속_DMA_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "48bfbcca7ea22fcf93ea39daecac627cfd46943adf27d9a5097d147d7ef950a9",
+      "reviewed_lf_text_sha256": "48bfbcca7ea22fcf93ea39daecac627cfd46943adf27d9a5097d147d7ef950a9",
+      "worktree_sha256": "58c8a6d02c53f05c66d16cbf0fb73c5746121931e6e14b3d8bd6948d6eb9db83",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/92_T12_Fixture_440_PDM_연속_전체_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "fff80c1c62c1077041294e70c4e6d725a8a88f12665b307299ec7a17db6b1aca",
+      "reviewed_lf_text_sha256": "fff80c1c62c1077041294e70c4e6d725a8a88f12665b307299ec7a17db6b1aca",
+      "worktree_sha256": "97c95052158f1e612c5ac61295de0a3f6d7d000f995c5129690d2cf3bb78cb5f",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/93_Host_재검증과_T12_이후_남은_작업.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "a20bb737f7ce10198ef577cecdaef432ba0137b130ca8d23d14471c88402c724",
+      "reviewed_lf_text_sha256": "a20bb737f7ce10198ef577cecdaef432ba0137b130ca8d23d14471c88402c724",
+      "worktree_sha256": "0078ddd16de21c2b1c46baa86c6ad67bdd69a9308fbc4894d9bbb11c7beaa652",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/94_T14_PWM_지연_시작_취소와_무점퍼_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "b6b40c56c73961eb5d7b94f90c06245886fa3443e3520e6f0a8da7eac6ec0c32",
+      "reviewed_lf_text_sha256": "b6b40c56c73961eb5d7b94f90c06245886fa3443e3520e6f0a8da7eac6ec0c32",
+      "worktree_sha256": "4aab3b2798dfb4fcffb883d368c94abcddb4f9b461cfeaa839b78d111d0417b2",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "eb9ed2a5ea0d7d675f06fa20348ed614d3da9aea1b5e4a580f6dd6e7b9cc58ed",
+      "reviewed_lf_text_sha256": "eb9ed2a5ea0d7d675f06fa20348ed614d3da9aea1b5e4a580f6dd6e7b9cc58ed",
+      "worktree_sha256": "439927fa4d0d882e1faa904c5cbfb6076adc8a74748854dce6350b2452a3f925",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/96_새_PC_인수와_T12_PWM_peer_capture_준비.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "2799eec14407edb85fd618fe51b1d3d7b26c798544a67374d8242d2ac533a625",
+      "reviewed_lf_text_sha256": "2799eec14407edb85fd618fe51b1d3d7b26c798544a67374d8242d2ac533a625",
+      "worktree_sha256": "99e804f9ae464e3dc585a01012f1015d365217d458733438de5ffce4ea55dbf7",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/97_T12_PWM_peer_capture_첫_240조건_검증.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "c07ec7bfd7df89993471070ae08ca0eb9ebf09fc615b4959672ddc29f1e2372e",
+      "reviewed_lf_text_sha256": "c07ec7bfd7df89993471070ae08ca0eb9ebf09fc615b4959672ddc29f1e2372e",
+      "worktree_sha256": "c07ec7bfd7df89993471070ae08ca0eb9ebf09fc615b4959672ddc29f1e2372e",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/98_T13_단독_안정성_3분_기준_조정.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "1c6e7cefd0c4456174e555245cefa832bb9880456a6323646cc23fda1ee687db",
+      "reviewed_lf_text_sha256": "1c6e7cefd0c4456174e555245cefa832bb9880456a6323646cc23fda1ee687db",
+      "worktree_sha256": "1c6e7cefd0c4456174e555245cefa832bb9880456a6323646cc23fda1ee687db",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/99_공통_결선_검사와_승인_전_자동_진행_계획.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "53825583868930f9167336cd4058fc46b3cf7c4d24b46b776b4abdd0e2997d29",
+      "reviewed_lf_text_sha256": "53825583868930f9167336cd4058fc46b3cf7c4d24b46b776b4abdd0e2997d29",
+      "worktree_sha256": "53825583868930f9167336cd4058fc46b3cf7c4d24b46b776b4abdd0e2997d29",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/04_검증 기록/README.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "c5f7100997ebdc7691810dfed7c6e39073083752319701af24a149ecd8b0a330",
+      "reviewed_lf_text_sha256": "918182a9cf60d8f2449e0e9faf478f16a588c74637d122f49293ae687f643f61",
+      "worktree_sha256": "918182a9cf60d8f2449e0e9faf478f16a588c74637d122f49293ae687f643f61",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/README.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "57c9e464d5094abad22c66c5f1186a2efbd7ee5abe1530f7601705d24ad91b90",
+      "reviewed_lf_text_sha256": "f3369e8ab8880cc96f48a141e80538d57102a48ca44fc5275c272d17e33893bd",
+      "worktree_sha256": "f3369e8ab8880cc96f48a141e80538d57102a48ca44fc5275c272d17e33893bd",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/KNOWN_ISSUES.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "4b875f2e99e22793f6cb2c381bb022f9a716002259d1a7feb219f84e2b59e21b",
+      "reviewed_lf_text_sha256": "4b875f2e99e22793f6cb2c381bb022f9a716002259d1a7feb219f84e2b59e21b",
+      "worktree_sha256": "2fab2988c2fb4227350915272e16781f3ac162820765fee7172646dba78629f0",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/MIGRATION.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "07ff78ab6245646f4e5f0f8c43d4c0d8c5fbd00fefaed25b3d510492cc9152d9",
+      "reviewed_lf_text_sha256": "07ff78ab6245646f4e5f0f8c43d4c0d8c5fbd00fefaed25b3d510492cc9152d9",
+      "worktree_sha256": "fd3d6221dac2a221049ede8e0f7b13f6b3afbdeff23990ec63488a8fe034738b",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/README.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "7c488bd92c28a15c9a541588c089aaf097feaca474903c88633a120e8b05886a",
+      "reviewed_lf_text_sha256": "7c488bd92c28a15c9a541588c089aaf097feaca474903c88633a120e8b05886a",
+      "worktree_sha256": "d695377034522993e1d79c0e793f179fcf0861647d4fb7adaea30efdda102b8f",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/RELEASE_NOTES.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "d3e313264b8d4434f8bf5ea901368f283dce5a85bfb331d15e6f0a188893a0f2",
+      "reviewed_lf_text_sha256": "d3e313264b8d4434f8bf5ea901368f283dce5a85bfb331d15e6f0a188893a0f2",
+      "worktree_sha256": "15d03d431e5b1f281c3e01e3fa6bd24ad1f4b42d3498f1b11504b3a80d3b685d",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/TROUBLESHOOTING.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "04e57c56d345c7d32bf54d3f09926c183c90e376499a4f44585948c6a3fccda4",
+      "reviewed_lf_text_sha256": "04e57c56d345c7d32bf54d3f09926c183c90e376499a4f44585948c6a3fccda4",
+      "worktree_sha256": "d0308aef488dc9966fedc4f1d7ae4059068783c14ae81f313f3c3c39dd076600",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/WITHDRAWAL.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "82a59dc248d03eb188077925d0ddd0762b1fd0fc8255e7086510d147992ac3de",
+      "reviewed_lf_text_sha256": "82a59dc248d03eb188077925d0ddd0762b1fd0fc8255e7086510d147992ac3de",
+      "worktree_sha256": "0e2c3842621bdede3b3cf3cbf483550dcadd1abbe941814ed0e93bd645756cc6",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.2/KNOWN_ISSUES.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "0fee3ffb962c0b6b385199f6ad2b430841d724dee0257490ff085ee73fbe9daa",
+      "reviewed_lf_text_sha256": "0fee3ffb962c0b6b385199f6ad2b430841d724dee0257490ff085ee73fbe9daa",
+      "worktree_sha256": "c1f5acab7f18f1b3f94b66eef2b099a8f0008899805bad24ffa4670370b2b653",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.2/MIGRATION.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "eb3d5eba99407a2e0291cb9f19d18b02d4255a8d3ca82de090b8fd777eed8450",
+      "reviewed_lf_text_sha256": "eb3d5eba99407a2e0291cb9f19d18b02d4255a8d3ca82de090b8fd777eed8450",
+      "worktree_sha256": "5faec41eb23258d4d8231ae84c28f30b931829af388563045b97af01d8eb9b94",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.2/README.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "bebe47e302bae2f0d25f9c2048819d3473f5f0679600d5263e60c718dd4d18e7",
+      "reviewed_lf_text_sha256": "bebe47e302bae2f0d25f9c2048819d3473f5f0679600d5263e60c718dd4d18e7",
+      "worktree_sha256": "f0e6ff2a0aee2b8ad250f7ab7ccbba2557166d43ad74d574961505984eb03014",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.2/RELEASE_NOTES.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "4b3fd29c0bd214ad1b86b9b20e81c8a7f61a8e60febf704f2e1a9600d40e9b6c",
+      "reviewed_lf_text_sha256": "4b3fd29c0bd214ad1b86b9b20e81c8a7f61a8e60febf704f2e1a9600d40e9b6c",
+      "worktree_sha256": "a1e8d6da6d3da72aca53c993b91fa647117dcb6a940d7e5af159a52c3af2a857",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.2/TROUBLESHOOTING.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "3fd41b6ca31e4f8daeb9a8cdb0c713637a5c8a664f25b2ac4b3e386dc047b626",
+      "reviewed_lf_text_sha256": "3fd41b6ca31e4f8daeb9a8cdb0c713637a5c8a664f25b2ac4b3e386dc047b626",
+      "worktree_sha256": "c08c2032bb362f7209f6630bcfcb62eb583ca2c83f040fab29ce74b0ab83d623",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0/KNOWN_ISSUES.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "e6963983c051bde33f1c55d2b8cc5649272702fe7a53bc9a1e9f61edf4e8e91c",
+      "reviewed_lf_text_sha256": "e6963983c051bde33f1c55d2b8cc5649272702fe7a53bc9a1e9f61edf4e8e91c",
+      "worktree_sha256": "caa7f002f469739541a1cfa68bce6dc5629f9488d7181ab6278eda9c4f60f63e",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0/MIGRATION.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "0c5f6a999c02864e4aed4c195c72973cdbbbf61cbeec5c62bc8acd2928594638",
+      "reviewed_lf_text_sha256": "0c5f6a999c02864e4aed4c195c72973cdbbbf61cbeec5c62bc8acd2928594638",
+      "worktree_sha256": "d8aa133bb73ef9f84415a753955d6fb37e92c2ab45e85d49240d6a888254c9f1",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0/README.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "a70b289bf373f507fcd414d02656b21151a8a13fc64fa56a8fec7db7ed7f80cd",
+      "reviewed_lf_text_sha256": "a70b289bf373f507fcd414d02656b21151a8a13fc64fa56a8fec7db7ed7f80cd",
+      "worktree_sha256": "21ccfc2813c82517857e6774790375db81697cf0494089ffc84d29a77f49de40",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0/RELEASE_NOTES.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "26ab605fbb2d15ed9bdda56ca84cec31ea8ac4cd9248ba38853333597c8e80bc",
+      "reviewed_lf_text_sha256": "26ab605fbb2d15ed9bdda56ca84cec31ea8ac4cd9248ba38853333597c8e80bc",
+      "worktree_sha256": "c73e706dbf3a47bae0fa92248c8e753af89d5cb34fc363d8a10280b5d447fc1e",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0/TROUBLESHOOTING.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "5b217749db6f4e3a2c5425c9b1c3aec152e55fca6d256b0d0482f525ab4d0843",
+      "reviewed_lf_text_sha256": "5b217749db6f4e3a2c5425c9b1c3aec152e55fca6d256b0d0482f525ab4d0843",
+      "worktree_sha256": "91176a0ce086ca8245360cc7bc2a92b1d28eca6c462cd3594b0fcb78e5eae673",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.2.0/KNOWN_ISSUES.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "f3924b3bbe10f4ff71a28686d11f876c9014349bd1752233348286071a0b9179",
+      "reviewed_lf_text_sha256": "f3924b3bbe10f4ff71a28686d11f876c9014349bd1752233348286071a0b9179",
+      "worktree_sha256": "c8afb98fbd406b4bc275fbc97012301c4b82adc7b94f02cc05bc32a84eecd5d6",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.2.0/MIGRATION.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "461236e9aa729247e4b4b455a7903fb9b250f3076631e5d724fad15da8ba03bf",
+      "reviewed_lf_text_sha256": "461236e9aa729247e4b4b455a7903fb9b250f3076631e5d724fad15da8ba03bf",
+      "worktree_sha256": "1d1c74b19a3655ea58823c244eb7d144d8d3b8cf894cf3e2cbc4e7f4e601b7f3",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.2.0/README.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "dae35307937bba5d30466836329298fa4883c96c978f1f5636ce5d22d60e87e2",
+      "reviewed_lf_text_sha256": "dae35307937bba5d30466836329298fa4883c96c978f1f5636ce5d22d60e87e2",
+      "worktree_sha256": "45da141d46ce8cd8e01ed2fe1d74d7a940e3321e1839b02d54e4da31092938e6",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.2.0/RELEASE_NOTES.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "75aed379c3dbf79bc50886995e72459e07637c71124a0e0bbcb7b8bec9c15217",
+      "reviewed_lf_text_sha256": "75aed379c3dbf79bc50886995e72459e07637c71124a0e0bbcb7b8bec9c15217",
+      "worktree_sha256": "cff4921082b190e71bab5be62a7b9683fdbbab6a11b3919eba71f0d801b02601",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.2.0/TROUBLESHOOTING.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "fbb8b530722981aab0c87a3d59f2ea1fc84cba3303efb7d586b2ee7656536b69",
+      "reviewed_lf_text_sha256": "fbb8b530722981aab0c87a3d59f2ea1fc84cba3303efb7d586b2ee7656536b69",
+      "worktree_sha256": "288bb8c3c6ed0ee39f1b33db9dcb75f4ccf11a3aa667a5f3226e8acccd47bb41",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/CLEANROOM_ABORT.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "1af3bdee4fe8003189e359d729d21296f87aa0802e3bf7f685d4cc427b1c540b",
+      "reviewed_lf_text_sha256": "1af3bdee4fe8003189e359d729d21296f87aa0802e3bf7f685d4cc427b1c540b",
+      "worktree_sha256": "432c022267874538e7b0e816b7f5d3a1442d8861b70a6e8b19735975a9ecaebe",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/KNOWN_ISSUES.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "08e07538debe92f0a7737828717f6f321f342c1833c730877f1ba30f99949510",
+      "reviewed_lf_text_sha256": "08e07538debe92f0a7737828717f6f321f342c1833c730877f1ba30f99949510",
+      "worktree_sha256": "f662c83da8612ca8a0b109f75382415f91e55e6f6d08927512552e391e6a47b7",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/MIGRATION.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "8673780a371695be627cb63ab28f4e48ddb62424265502714a7c7bc985ddbf03",
+      "reviewed_lf_text_sha256": "8673780a371695be627cb63ab28f4e48ddb62424265502714a7c7bc985ddbf03",
+      "worktree_sha256": "8db2d5bb94b900701f41485942cdf67c0509512a2ecc670268a9b738276931d7",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/README.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "a048aa67f36f71668d8f019bb524b4e6fbb509a9420449ededd277485865a125",
+      "reviewed_lf_text_sha256": "a048aa67f36f71668d8f019bb524b4e6fbb509a9420449ededd277485865a125",
+      "worktree_sha256": "fffae3784f7dc32a079fc7f728037f801e713ec9b09065ec5aad4fc712d6de93",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/RELEASE_NOTES.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "105c61f8f2bb2f7a0a191588ab41b8c6e9dad06c1fee4c51cca3ecd49dc5da42",
+      "reviewed_lf_text_sha256": "105c61f8f2bb2f7a0a191588ab41b8c6e9dad06c1fee4c51cca3ecd49dc5da42",
+      "worktree_sha256": "931a3f7a2ee542658cbc7102785c90fca7c69e7601ab0d3e0e5a78722223dec7",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/TESTING.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "1235eaaac1ee8dcbc2c63e1dd15601664023f0d225c1281e4c4a793e480aec8b",
+      "reviewed_lf_text_sha256": "1235eaaac1ee8dcbc2c63e1dd15601664023f0d225c1281e4c4a793e480aec8b",
+      "worktree_sha256": "87f8d473c28eb0698ac79ead79f5ee50de290060665dc8f777c6282babb49131",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/TROUBLESHOOTING.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "7e8d5616a153d8581d7095daeb9a3b8b0c982094b49da53067501c90de168d17",
+      "reviewed_lf_text_sha256": "7e8d5616a153d8581d7095daeb9a3b8b0c982094b49da53067501c90de168d17",
+      "worktree_sha256": "5eedac663b172b8d2d9c90ab0ecba47077c434d3cf9ca6ab1b3596d41586faa2",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/KNOWN_ISSUES.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "d87284278971992fd6c15c9820d530a5d311f5d64c9f988402ebc7e33252e7a7",
+      "reviewed_lf_text_sha256": "d87284278971992fd6c15c9820d530a5d311f5d64c9f988402ebc7e33252e7a7",
+      "worktree_sha256": "9f6e41de51727538a73351bedc52e94be07a4f5101df242f8e9fcc0a5802d31d",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/MIGRATION.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "707a4bc34fcc60bd1de16da23e9bac56aca3aa2a1c8c312f07692450b19f45b4",
+      "reviewed_lf_text_sha256": "707a4bc34fcc60bd1de16da23e9bac56aca3aa2a1c8c312f07692450b19f45b4",
+      "worktree_sha256": "2862b360c1370a95be6011058ede62c8f052fc9b380ca0a6f6405500a3c4d5db",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/README.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "5165492d951f994bf6660ef55756c0bcb757b9da7d263ac52b8b97adb69fdaa2",
+      "reviewed_lf_text_sha256": "5165492d951f994bf6660ef55756c0bcb757b9da7d263ac52b8b97adb69fdaa2",
+      "worktree_sha256": "c755c00c7052afd2980130e0e39939c4729914617fd09ac6addb609aef004402",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/RELEASE_NOTES.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "45984588a41a98fa70c49f911dc32bb498ccc14091a3333c3c1674e05ff6445a",
+      "reviewed_lf_text_sha256": "45984588a41a98fa70c49f911dc32bb498ccc14091a3333c3c1674e05ff6445a",
+      "worktree_sha256": "7dbcc6a56799d566e934bade55ab86861dd939a5793122d584dd6c721a640ac5",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/TESTING.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "a9eed87aa2bea470f86b3cfc114d96487a554f1bed2ff978993afc103c5e4256",
+      "reviewed_lf_text_sha256": "a9eed87aa2bea470f86b3cfc114d96487a554f1bed2ff978993afc103c5e4256",
+      "worktree_sha256": "d869b081f3e58a749e19e841529a3e7b34be582a0a1169452a6f018b612ec26b",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/TROUBLESHOOTING.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "0ed011da506b507d0aa444fd4b081ac2a44a78cd1ad3699938818ffcd276ba91",
+      "reviewed_lf_text_sha256": "0ed011da506b507d0aa444fd4b081ac2a44a78cd1ad3699938818ffcd276ba91",
+      "worktree_sha256": "dddf3ab5e375622c61caf61f773a497c050375f13ea29b73864bccc2935cca7f",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/KNOWN_ISSUES.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "5841ec532a81a706af85053fb2583a9f20518b949d696dea1b9defcfe22303f2",
+      "reviewed_lf_text_sha256": "5841ec532a81a706af85053fb2583a9f20518b949d696dea1b9defcfe22303f2",
+      "worktree_sha256": "e911b510d9e88615b1511213c1a71ecc9d57f7ea85f0a503a3f7c8931498eea1",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/MIGRATION.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "db7e83384a69e2956018be55d2de3393474d3355441f58a00697352c58fca79e",
+      "reviewed_lf_text_sha256": "db7e83384a69e2956018be55d2de3393474d3355441f58a00697352c58fca79e",
+      "worktree_sha256": "77b02c22978f12dc0f86aaf75b09616107d877fbed4efef677c0d133d47012b4",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/README.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "c52a00e14c5136d6259fcce4dcb388ab2e4ed31b5ad9256d8c9769cea2f9bb80",
+      "reviewed_lf_text_sha256": "c52a00e14c5136d6259fcce4dcb388ab2e4ed31b5ad9256d8c9769cea2f9bb80",
+      "worktree_sha256": "3268d6886b3e9db8872e9bc2d2a5cedfd4dae12701872b580496d8f38611d5a6",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/RELEASE_NOTES.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "f28ca379f1b55c488bfc5bda6f3f994e5daf47cf884cad0c3bbd1c8a4ca71350",
+      "reviewed_lf_text_sha256": "f28ca379f1b55c488bfc5bda6f3f994e5daf47cf884cad0c3bbd1c8a4ca71350",
+      "worktree_sha256": "b155fa663f5bacf00355255884d324c00657359d9c11d99f2055c9c1f74db44e",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/TESTING.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "0da896463f9f43f297c206b2ff12685ff67fb516a1203e8b2f3044387442bc48",
+      "reviewed_lf_text_sha256": "0da896463f9f43f297c206b2ff12685ff67fb516a1203e8b2f3044387442bc48",
+      "worktree_sha256": "c354f007ea97baced46dad2270d02ca337fadd2275dfbb465cf45f1260a91796",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/TROUBLESHOOTING.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "20bbe3501b243cfadd0760038ac0e2cfbde34742291c2c18edca4109a9a69a75",
+      "reviewed_lf_text_sha256": "20bbe3501b243cfadd0760038ac0e2cfbde34742291c2c18edca4109a9a69a75",
+      "worktree_sha256": "fc847d138cc70435b698cf661115918c12f7be249588befe6457cb6c1fd88ffd",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/KNOWN_ISSUES.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "ab85cec33f494d90146ef78b7d4938f76ba74fc96702d80a2e54ac44572069c4",
+      "reviewed_lf_text_sha256": "ab85cec33f494d90146ef78b7d4938f76ba74fc96702d80a2e54ac44572069c4",
+      "worktree_sha256": "9cf7b3323911eab6128601b3f17a5c9743117fba49633bba793613467d3e3f67",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/MIGRATION.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "4b351b637ee8e32ef8ef233d71c8b53eca300a63e575005fdee4f1639270cb18",
+      "reviewed_lf_text_sha256": "4b351b637ee8e32ef8ef233d71c8b53eca300a63e575005fdee4f1639270cb18",
+      "worktree_sha256": "64c89277ec9d4db006ec61afc542bf66959b886c3f9e9a1f66abc7de0e14b0b0",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/README.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "8128a866a568e3618ad8d67c3b21bb201b2e666999ce2742ca38cb1b78488cff",
+      "reviewed_lf_text_sha256": "8128a866a568e3618ad8d67c3b21bb201b2e666999ce2742ca38cb1b78488cff",
+      "worktree_sha256": "8ef523add50990c97779702d06c44c8b474613de4e4bdfc608d8a27540a7e356",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/RELEASE_NOTES.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "d292ff2ea0b2340c05c69face1bd19cc1be368f85af5d21b659c3e5a1d9d0e5e",
+      "reviewed_lf_text_sha256": "d292ff2ea0b2340c05c69face1bd19cc1be368f85af5d21b659c3e5a1d9d0e5e",
+      "worktree_sha256": "653c66d0f89829f43b392b9a6181a8f55f45437c4e6fcd66e22365154c910cb0",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/TESTING.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "cbd0643aa072b99e0745d253262e37ef406f735f8c08b851c977cc978fc5ec9e",
+      "reviewed_lf_text_sha256": "cbd0643aa072b99e0745d253262e37ef406f735f8c08b851c977cc978fc5ec9e",
+      "worktree_sha256": "d2244040abd3332151e6bbb52188f8c6219bb88912c0bf481520a99eb65e1944",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/TROUBLESHOOTING.md",
+      "classification": "historical-record",
+      "disposition": "reviewed-preserved-history",
+      "baseline_git_sha256": "b17d4e15a40656d3bf32411711a39147801380e64b7e2c4d9f68b472814e0f0b",
+      "reviewed_lf_text_sha256": "b17d4e15a40656d3bf32411711a39147801380e64b7e2c4d9f68b472814e0f0b",
+      "worktree_sha256": "01506dfa94ec869c3fa6917077d42b470c215b07fe7fc542ce3b9be7dd1b0b31",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0-rc.1/README.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "395e7311bdd09af6be2114367856ae5e03a8e5c5b11c56ab064bb6423c70b441",
+      "reviewed_lf_text_sha256": "8254e4c6118a569721dbb3564e00a20bffc5e3c305d5634dde6971f54f2e347f",
+      "worktree_sha256": "8254e4c6118a569721dbb3564e00a20bffc5e3c305d5634dde6971f54f2e347f",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/HANDOFF_v0.4.0_다른_PC.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "95b4eebef4655dba5e635315ca63c1599992b2f4c5932677442376c6988311cf",
+      "reviewed_lf_text_sha256": "12b780f8019ec7c21f9623f1ead9d822428ed78639c1a11fd644da14451cea3b",
+      "worktree_sha256": "12b780f8019ec7c21f9623f1ead9d822428ed78639c1a11fd644da14451cea3b",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/README.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "15d02312a5f5cec659914e6e6f18abfbd334912d173fbe1f9e0dcd0a526d35af",
+      "reviewed_lf_text_sha256": "8b048c348b98e1290e5787e4c1dcf6fa46b7aaca610ee0f2a46176d235f4b4b9",
+      "worktree_sha256": "8b048c348b98e1290e5787e4c1dcf6fa46b7aaca610ee0f2a46176d235f4b4b9",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "00_Docs/TODO_v0.4.0.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "6b72436aa7e727c96da50de60787e1a07c9fa68bad3b4542392cd10beb9faf17",
+      "reviewed_lf_text_sha256": "0ef4a938d70479008bfddf7081e21539950346b93414ddc6d8cde9ea6b6cccec",
+      "worktree_sha256": "0ef4a938d70479008bfddf7081e21539950346b93414ddc6d8cde9ea6b6cccec",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "AGENTS.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "c24c54ccf4eec42525e107770631993ee233df21ebcf5ba7e457b61d9e3b36b1",
+      "reviewed_lf_text_sha256": "c24c54ccf4eec42525e107770631993ee233df21ebcf5ba7e457b61d9e3b36b1",
+      "worktree_sha256": "758e7e08bd382e2fb3c013daeb974f46a621e17fca0207b0e5f8624c9840bd3b",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "README.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "e8a42a9759b54c5e42b9d669341310615dfec1f65f0ca02a7d88675a70030e6b",
+      "reviewed_lf_text_sha256": "beced3bda5d769feb9a1df1fbdd32612fc1831235da3dab4326203a5a893fa04",
+      "worktree_sha256": "beced3bda5d769feb9a1df1fbdd32612fc1831235da3dab4326203a5a893fa04",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "coverage/ncs-v3.4.0/generated/summary.md",
+      "classification": "generated-contract",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "d39249858e56c5a2a4215e651c62810d1b36125d597cca2fdc4b0580c831a637",
+      "reviewed_lf_text_sha256": "d39249858e56c5a2a4215e651c62810d1b36125d597cca2fdc4b0580c831a637",
+      "worktree_sha256": "d39249858e56c5a2a4215e651c62810d1b36125d597cca2fdc4b0580c831a637",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "packaging/boards-manager/README.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "bac65cb2b4719164ecaa773a73f77f537801bc4f451b7d93d4fc250e68f4e6b6",
+      "reviewed_lf_text_sha256": "bac65cb2b4719164ecaa773a73f77f537801bc4f451b7d93d4fc250e68f4e6b6",
+      "worktree_sha256": "c05ba033b07814fe62ce71bb43ba8f700e2f5ba702caf37f355eedccce174402",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "tests/hil/nu54dk/COMMON_WIRING.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "b02a48e586a1bd1e95ea0243248b036af600e5dfbf9dae6e253f5df4bd806582",
+      "reviewed_lf_text_sha256": "d2db8ec19bee105a43659f115e9ce75ad4fcbfc5e30c4b76648ff908d3244a32",
+      "worktree_sha256": "d2db8ec19bee105a43659f115e9ce75ad4fcbfc5e30c4b76648ff908d3244a32",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "tests/hil/nu54dk/README.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "8793a700c67f46a6a8382824e3cfd3ffe36f5d6ea3b73114536001052b014637",
+      "reviewed_lf_text_sha256": "414abe381c20f55715cd3db969769dd811a3bf9cf884ce49dfe85832abe333db",
+      "worktree_sha256": "414abe381c20f55715cd3db969769dd811a3bf9cf884ce49dfe85832abe333db",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "tests/hil/nu54dk/T13_PLAN.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "ca3da1c61707e3fcdbbe9a6177c189945ca65f8aeda647dc4a640c6571b5ab67",
+      "reviewed_lf_text_sha256": "8aa3367d961005ec8bf8aeb854f78c18be6ef41aa5db50b738c54bfd2bc6b9b0",
+      "worktree_sha256": "8aa3367d961005ec8bf8aeb854f78c18be6ef41aa5db50b738c54bfd2bc6b9b0",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "tests/zephyr/m25_nojumper_hil/README.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "fe9b65a1594f1aa5acb54098781f4d9a90ab9c9d6c16ed635ede75387c18ed5a",
+      "reviewed_lf_text_sha256": "fe9b65a1594f1aa5acb54098781f4d9a90ab9c9d6c16ed635ede75387c18ed5a",
+      "worktree_sha256": "b8d5886801313cedb5445fcfd914cade2366683e8dcb168e9665000f66661710",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "tools/format/README.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "12487f27f65776d2539b4c240d9ad0635060525c549cfcaaa7971dfb14149c97",
+      "reviewed_lf_text_sha256": "12487f27f65776d2539b4c240d9ad0635060525c549cfcaaa7971dfb14149c97",
+      "worktree_sha256": "c0f6f4ed641de17bbc873468285e75d2e4d522f83384fb0fd0b5c7f125694305",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "tools/nu54-prerequisites/README.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "f3b2bbed9a5fbe1542c7246747a4a6d6e8a43bac9fdfd438abb2916368d208df",
+      "reviewed_lf_text_sha256": "f3b2bbed9a5fbe1542c7246747a4a6d6e8a43bac9fdfd438abb2916368d208df",
+      "worktree_sha256": "09b9fe3b4cf8c57ecd85da17da26394c59298ba4def28e656ad16d1cc7ee3e9f",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "tools/peripheral/README.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "30e569954ff8cb0024802c61c769449e28df6a0931070e3eeef5c2274bb0f094",
+      "reviewed_lf_text_sha256": "c0234dc5f7ad17697002efb56c307dced89344b19c7ec74fe6d7380c9cfaefd6",
+      "worktree_sha256": "c0234dc5f7ad17697002efb56c307dced89344b19c7ec74fe6d7380c9cfaefd6",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "tools/release/M11_README.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "f840ada6f46aae92b0b834067391983ffaab7a3f61a31b1ad8b1901ae7b5fbea",
+      "reviewed_lf_text_sha256": "f840ada6f46aae92b0b834067391983ffaab7a3f61a31b1ad8b1901ae7b5fbea",
+      "worktree_sha256": "1d379c2b1f1eb48e98c8696bc848942b0e925bbb01e015ea895a95e436776538",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "tools/release/M18_README.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "d845a2096a649227e2e0d9148a1667184fdaa220934edb016da91379fa9842f9",
+      "reviewed_lf_text_sha256": "d845a2096a649227e2e0d9148a1667184fdaa220934edb016da91379fa9842f9",
+      "worktree_sha256": "4e2aa8b4ecccf7c2945501952b7136746505319ff99c3296b762b9a1bbf48c9e",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "tools/release/M22_README.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "45da71643485b2af07efb6a578606d89c01d77988dada4109469dc69faa722de",
+      "reviewed_lf_text_sha256": "45da71643485b2af07efb6a578606d89c01d77988dada4109469dc69faa722de",
+      "worktree_sha256": "ed8435a5cf471fb867e17ab19104fa032baa5b01c2c82fd14df8830e799cc714",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "tools/release/M27_README.md",
+      "classification": "current-guidance",
+      "disposition": "updated-current-guidance",
+      "baseline_git_sha256": "67f5607eebe87318972148e1669feac99e18900df3bdab945af2321821bfebe1",
+      "reviewed_lf_text_sha256": "4450366e18653e4fd33eb88d1445f33b51d0952c928cccd4e226fbce2ece281e",
+      "worktree_sha256": "4450366e18653e4fd33eb88d1445f33b51d0952c928cccd4e226fbce2ece281e",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "tools/release/README.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "bb03114e21683393359e71eccf8323f4b9984fd77684b25547b4ad2968727ccb",
+      "reviewed_lf_text_sha256": "bb03114e21683393359e71eccf8323f4b9984fd77684b25547b4ad2968727ccb",
+      "worktree_sha256": "bbdeb8b2abc61f4598b68733744f73104409a12555f43bfab717e798aa8062b5",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "tools/remote-windows/README.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "f796568e88e0a48d64796aaf70194714ac26e9a80ecf40959759a5c773a74281",
+      "reviewed_lf_text_sha256": "f796568e88e0a48d64796aaf70194714ac26e9a80ecf40959759a5c773a74281",
+      "worktree_sha256": "51f1174ea0db4d2809a10fb5bc81cda4c324126c307943e0321d9c53eff9b9c2",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    },
+    {
+      "path": "tools/remote-windows/m10/README.md",
+      "classification": "current-guidance",
+      "disposition": "reviewed-unchanged",
+      "baseline_git_sha256": "4bb62b03f33acb71c31f03040f3f1435defc21ed3f0e7c6ded95706f157431ba",
+      "reviewed_lf_text_sha256": "4bb62b03f33acb71c31f03040f3f1435defc21ed3f0e7c6ded95706f157431ba",
+      "worktree_sha256": "38a0ceb807a547d7887a9db8b8525ba1685cd6af4fa44bc668494f93df82a963",
+      "utf8": "pass",
+      "review": "Full-text scope/status scan; current guidance compared to TODO, plans and evidence; historical facts preserved."
+    }
+  ]
+}

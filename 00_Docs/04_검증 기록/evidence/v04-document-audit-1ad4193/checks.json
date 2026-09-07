@@ -1,0 +1,169 @@
+{
+  "source_base": "1ad41939398295de9b90f33225b46ebcef8a2a19",
+  "scope": "Documentation and renderer prose only; no HIL or support promotion",
+  "status": "complete",
+  "checks": [
+    {
+      "record": "doc-audit-final-contract.json",
+      "log": "doc-audit-final-contract.log",
+      "raw_log": "doc-audit-final-contract.log.raw.gz",
+      "log_sha256_basis": "decompressed raw_log",
+      "normalized_log_sha256": "4806e886373c9013fc03a1cacf00591b625987e8e5bd8a2f97ce24edb7c0528a",
+      "name": "doc-audit-final-contract",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "contract"
+      ],
+      "started_at": "2026-09-07T20:16:49.935644+00:00",
+      "finished_at": "2026-09-07T20:16:50.359846+00:00",
+      "exit_code": 0,
+      "log_sha256": "7ec91909efa8c2f9a69f52ac2296687d245c124e2db94d22796a62689a3b33f4"
+    },
+    {
+      "record": "doc-audit-final-docs.json",
+      "log": "doc-audit-final-docs.log",
+      "raw_log": "doc-audit-final-docs.log.raw.gz",
+      "log_sha256_basis": "decompressed raw_log",
+      "normalized_log_sha256": "3688bde9e577493f809565ffcef57a5e0441a86a6a3fb52d27762792f0ee3906",
+      "name": "doc-audit-final-docs",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "docs"
+      ],
+      "started_at": "2026-09-07T20:16:47.734446+00:00",
+      "finished_at": "2026-09-07T20:16:48.334951+00:00",
+      "exit_code": 0,
+      "log_sha256": "102837c976acf7bcc4d54953e4c09132536c302557b3e9ba195d813699e4cdb6"
+    },
+    {
+      "record": "doc-audit-final-host-corrected.json",
+      "log": "doc-audit-final-host-corrected.log",
+      "raw_log": "doc-audit-final-host-corrected.log.raw.gz",
+      "log_sha256_basis": "decompressed raw_log",
+      "normalized_log_sha256": "1e31acaafde5bc84c01395e007088cb785c51000bd08e9dfc5fb7e250ae2af5f",
+      "name": "doc-audit-final-host-corrected",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "tests.host.test_m26_system_contract",
+        "tests.host.test_v04_test_plan",
+        "tests.host.test_r13_generated",
+        "tests.host.test_v04_t13_plan"
+      ],
+      "started_at": "2026-09-07T20:17:59.967912+00:00",
+      "finished_at": "2026-09-07T20:18:02.067959+00:00",
+      "exit_code": 0,
+      "log_sha256": "abbfc5d491a4162d4e9f8a9e5b809c8d43d61da598e00a3c8e100e184471058b"
+    },
+    {
+      "record": "doc-audit-final-host.json",
+      "log": "doc-audit-final-host.log",
+      "raw_log": "doc-audit-final-host.log.raw.gz",
+      "log_sha256_basis": "decompressed raw_log",
+      "normalized_log_sha256": "cd0d0b396b3bc4f1c465c04774ddce30547c3d1168bef0cabba591e95d5c1400",
+      "name": "doc-audit-final-host",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "tests.host.test_m26_system_contract",
+        "tests.host.test_v04_test_plan",
+        "tests.host.test_r13_generated",
+        "tests.host.test_v04_t13_plan"
+      ],
+      "started_at": "2026-09-07T20:17:06.843998+00:00",
+      "finished_at": "2026-09-07T20:17:07.134271+00:00",
+      "exit_code": 1,
+      "log_sha256": "05d11255bf0b39be3159b3a4983f077399e03d3691cbac72f3367ef14c99a117"
+    },
+    {
+      "record": "doc-audit-final-inventory.json",
+      "log": "doc-audit-final-inventory.log",
+      "raw_log": "doc-audit-final-inventory.log.raw.gz",
+      "log_sha256_basis": "decompressed raw_log",
+      "normalized_log_sha256": "b5cec2b07b3908ec8c03031d1a93937e1cbc38bfffb7a5b3557fe8e414e859bb",
+      "name": "doc-audit-final-inventory",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "inventory"
+      ],
+      "started_at": "2026-09-07T20:16:48.343957+00:00",
+      "finished_at": "2026-09-07T20:16:49.935644+00:00",
+      "exit_code": 0,
+      "log_sha256": "8efc41e1f9734d065dfdb3292806c34b3f3ff16b7b9b69b5d6ae2ac8479703f1"
+    },
+    {
+      "record": "doc-audit-final-links-docs.json",
+      "log": "doc-audit-final-links-docs.log",
+      "raw_log": "doc-audit-final-links-docs.log.raw.gz",
+      "log_sha256_basis": "decompressed raw_log",
+      "normalized_log_sha256": "3688bde9e577493f809565ffcef57a5e0441a86a6a3fb52d27762792f0ee3906",
+      "name": "doc-audit-final-links-docs",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "docs"
+      ],
+      "started_at": "2026-09-07T20:19:38.563659+00:00",
+      "finished_at": "2026-09-07T20:19:39.158639+00:00",
+      "exit_code": 0,
+      "log_sha256": "102837c976acf7bcc4d54953e4c09132536c302557b3e9ba195d813699e4cdb6"
+    },
+    {
+      "record": "doc-audit-final-package.json",
+      "log": "doc-audit-final-package.log",
+      "raw_log": "doc-audit-final-package.log.raw.gz",
+      "log_sha256_basis": "decompressed raw_log",
+      "normalized_log_sha256": "fe26ab738c87dbac01d29459141d67360a8a87a08f34bfb9e4875f485be92307",
+      "name": "doc-audit-final-package",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "package"
+      ],
+      "started_at": "2026-09-07T20:16:50.360530+00:00",
+      "finished_at": "2026-09-07T20:18:57.382261+00:00",
+      "exit_code": 0,
+      "log_sha256": "f15378c44a4b6618c73029f4c2ee567e55b15315cf62d8a0292c0c1d5c675f77"
+    },
+    {
+      "record": "doc-audit-final-style.json",
+      "log": "doc-audit-final-style.log",
+      "raw_log": "doc-audit-final-style.log.raw.gz",
+      "log_sha256_basis": "decompressed raw_log",
+      "normalized_log_sha256": "57dd9c14e5fe235f8e1edd29b2b09b463a1d86d95da263379e4c3c6e8edfd661",
+      "name": "doc-audit-final-style",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\format\\run_cpp_style.py",
+        "--clang-format",
+        "C:\\Program Files\\LLVM\\bin\\clang-format.exe"
+      ],
+      "started_at": "2026-09-07T20:18:02.083672+00:00",
+      "finished_at": "2026-09-07T20:18:14.580733+00:00",
+      "exit_code": 0,
+      "log_sha256": "50e135445cc75347d4ef15a813ecee74122b3164eac45dd3c961563561bdd004"
+    }
+  ],
+  "failed_attempt_resolution": "First selective module invocation passed 19 tests but could not import host_compiler for T13; corrected child PYTHONPATH=tests/host and reran all four modules. No repository test/product source changed.",
+  "archive_policy": "Text views use LF for portable Git hashes; matching .raw.gz files preserve exact original bytes. Original runner log_sha256 fields refer to decompressed raw bytes.",
+  "runtime_unchanged": true,
+  "render_sources": {
+    "tools/peripheral/verify_m26_system_contract.py": "fbbde90ff1fb43fc019449d7f2f84c8e2af239c94de61ed71a1f0f5955f7d6a6",
+    "tools/peripheral/verify_v04_test_plan.py": "69cf4a8b71e9da0e8bc06dc558b7992013ceb05ccc4adbe086161f3e3287d163"
+  }
+}

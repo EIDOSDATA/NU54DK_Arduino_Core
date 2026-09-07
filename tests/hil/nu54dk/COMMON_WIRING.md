@@ -1,11 +1,13 @@
 # NU54DK v0.4.0 공통 결선과 연결 검사
 
+2026-09-08 현재: R00~R13과 승인 route의 T11 단독 회귀는 완료했다. T12 공통 결선의 GPIO/GPIOTE 2,502개·PWM 675+288개·I2S 432개는 source별 PASS다. QDEC 동작 중 수동 read/clear의 누산 누락은 HOLD이며 추가 진단 반복은 종료했다. T13은 32개 단독·8개 동시 조합과 C→S→U 두 결선 변경 계획까지 확정했고 실기는 0회다. 다음 개발 작업은 QDEC 비의존 T13 runner·preflight·복구/전환 판정 준비다. T12 전체·T13 이후·RC·공개는 미완료다. [문서 감사·요구별 증거 대조](<../../../00_Docs/04_검증 기록/102_개발_문서_전수_검토와_마일스톤_체크포인트.md>), [실행 TODO](<../../../00_Docs/TODO_v0.4.0.md>)를 따른다.
+
 현재 기능 실행(100·101번): GPIO/GPIOTE2502(4e48252), steady PWM675(3334b17), 추가 PWM288(0db0689), I2S432(b5c86a4)는 PASS다. QDEC 기능240은 누산 누락으로 HOLD다. 마지막 ce48471 선점 대비60회에서 일반 read9/30·IRQ 보호 read7/30이399/400으로 실패했다. GPIO/SAMPLE은 모두400, 보호 구간 최대5µs, 제어 오류0·cleanup63·양쪽 postflight PASS다. 3a0e976 SAMPLE IRQ20·REPORT IRQ20은 모두400으로 일치했으나 기능240이나 안정성 PASS로 확대하지 않는다. 사용자 지시대로 진단 반복을 종료하고 유력 원인·미검증 전기 조건·보완·재개 조건을101번에 남겼다. 제품 core·SDK는 미수정이다. T13은32단독/8동시·C→S→U 두 결선 변경의 계획만 확정했고 QDEC 단독2개와C07은 선행 HOLD다. T12전체·T13실기·지원 범위 확정·RC·공개는 미완료다. 세부 원본은 [101번](../../../00_Docs/04_검증%20기록/101_T12_QDEC_누산_누락_원인_분리.md), 후속 결선은 [T13 계획](T13_PLAN.md)을 따른다.
 
 현재 재검사: exact d8d1e13에서 P1.10을 포함한 17개 신호가 양방향 각 3회, 총 102 net-round PASS다. LOW 자동 해제 2개·양쪽 lease 만료 1개도 PASS이며 종료 후 양쪽 17개 PIN_CNF=0, PWM/DPPI off를 확인했다. 첫 8c1cfe2의 P1.10 실패 원본은 보존하고 원인은 미확정으로 유지한다. 결선 검사 통과이며 GPIO API·T12 전체·T13 이후·RC 완료는 아니다.
 
 2026-09-07. **신호 17개 + 공통 GND 1개, 총 18가닥.** 기존 PWM P1.14 선과 GND는 유지하고 16가닥을 추가한다.
-사용자가 17신호+GND 그대로 결선을 완료했다고 확인했다. Fixture 501 결선 checker를 구현하고 Host/target을 검사했다. 실제 배선 PASS는 새 exact image로 실행한 원본 결과를 따른다. GPIO/GPIOTE/PWM/QDEC/I2S 전체 통합은 후속 작업이다.
+사용자가 17신호+GND 그대로 결선을 완료했다고 확인했다. Fixture 501 결선 checker를 구현하고 Host/target을 검사했다. 실제 배선 PASS는 새 exact image로 실행한 원본 결과를 따른다. 당시 checker 이후 GPIO/GPIOTE·PWM·I2S는 100번에서 통과했다. QDEC 추가 기능은 101번 HOLD다.
 현재 408/420/430 개별 확인서는 이 결선의 확인서가 아니다. `v04_common_fixture.json`의 501 revision 1과 새 exact image/UID hash를 사용한다.
 
 ## 보드 식별과 연결 절차
@@ -68,7 +70,7 @@ P1.10/P1.14는 각 보드 LED buffer의 입력에 연결된 net이다. LED drive
 - QDEC는 `connector_fixture` profile로 A P1.14/1.10을 받아야 한다. 현재 `dap_uart_disabled` profile은 P1.04~07만 허용하므로 pin 상수만 바꾸면 실패한다.
 - P1.04~07의 전용 HIL overlay에는 UART 분리 조건에 한정하여 open-drain/interrupt capability를 추가했다. 제품 기본 metadata는 유지한다. 502의 소유권 반환·raw drive field·peer 관측을 Host/target 및 현재 실기에서 검사한다.
 - `v04_common_run.py`가 GPIO/task/edge, PWM 675·추가 modes, QDEC, I2S section을 제공한다. 각 실행은 새 clean image의 controlled flash와 전체 501 검사 뒤 시작한다. `signals`는 한 image에서 PWM→PWM modes→QDEC→I2S를 순차 검사한다. `all`은 기존 502 GPIO/task/edge만 뜻하며 모든 section 완료를 뜻하지 않는다.
-- 기존 확인서 30분·firmware 10초 lease를 유지한다. 현재 실행은 사용자의 현재 상태·HW 유지 보고에 묶인 별도 고정 공통 세션을 사용한다. QDEC 40초 파형도 heartbeat를 유지하며 2026-09-08 07:00 KST 만료·probe 단절·identity 불일치에서 다음 출력을 차단한다.
+- 기존 확인서 30분·firmware 10초 lease를 유지한다. 종료한 실행은 사용자의 당시 상태·HW 유지 보고에 묶인 고정 공통 세션을 사용했다. 이 세션을 다음 실기의 확인서로 재사용하지 않는다. QDEC 40초 파형도 heartbeat를 유지하며 2026-09-08 07:00 KST 만료·probe 단절·identity 불일치에서 다음 출력을 차단한다.
 - 675조건을 `v04_pwm_capture.compact_vectors()`와 공통 508 runner에 적용했다. 각 instance/slot/load의 모든 duty×극성, 각 TOP/길이와 최장·최저속 조합을 남긴다. 전체 2700조건과 동등한 검출력을 주장하지 않는다.
 
 ## 범위 경계

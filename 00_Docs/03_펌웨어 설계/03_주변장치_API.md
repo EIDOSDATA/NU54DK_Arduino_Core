@@ -313,3 +313,11 @@ commit은 검증 문서가 소유한다.
 - PWM block의 channel별 서로 다른 period와 DAC
 - peripheral I/O의 ISR-safe 호환층
 - P2 GPIO interrupt — CPUAPP GPIOTE 경로가 없어 `NOT_AN_INTERRUPT`
+
+## v0.4.0 후보 QDEC의 현재 제한 — 2026-09-08
+
+기존 stable API 설명과 별도로, 후보 `QdecFabric`의 동작 중 주기적 `read()`는 하드웨어 QDEC가 누산한 값을 CPU가 READCLRACC로 읽고 지운다. GPIO를 CPU가 폴링해 디코딩하는 방식이 아니며 QDEC DMA도 없다. SAMPLE/REPORT IRQ 이벤트 경로는 별도로 존재한다.
+
+추가 기능 시험에서 실제 GPIO/SAMPLE 400에 수동 read 누계가 399가 되는 누락이 재현됐다. 읽기 구간 IRQ 보호만으로 해결되지 않았다. SAMPLE/REPORT IRQ 40회 일치나 파형 종료 후 한 번 읽기의 제한된 성공을 전체 기능/연속 동작 보증으로 확대하지 않는다. 임의 +1 보정이나 IRQ 경로 자동 대체를 적용하지 않았다.
+
+현재 수동 read/clear 추가 기능과 이에 의존한 T13 QDEC20/21 단독·C07은 HOLD다. 유력 원인·회로 부하의 미검증 조건·완화와 재개 조건은 [101번](<../04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md>), 최종 지원 판정은 [TODO T14/T15](../TODO_v0.4.0.md)를 따른다. 이는 사용자용 v0.4.0 지원 확정이나 배포 공지가 아니다.
