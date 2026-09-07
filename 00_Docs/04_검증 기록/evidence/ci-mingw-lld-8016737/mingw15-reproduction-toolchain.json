@@ -1,0 +1,8 @@
+{
+  "url": "https://github.com/brechtsanders/winlibs_mingw/releases/download/15.2.0posix-14.0.0-ucrt-r7/winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-14.0.0-r7.zip",
+  "archive_sha256": "cb2fbad6162540cdf5e1facdce08d4dac359e8cf64f7f696a99274291763b815",
+  "archive_bytes": 267593703,
+  "destination": "C:\\u4ci15",
+  "existing_toolchains_modified": false,
+  "reference_image": "win25-vs2026/20260824.214; MinGW15.*, UCRT, Binutils2.46"
+}

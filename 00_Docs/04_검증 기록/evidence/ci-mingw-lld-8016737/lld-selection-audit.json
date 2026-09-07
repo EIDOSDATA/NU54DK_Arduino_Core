@@ -1,0 +1,17 @@
+{
+  "source": "801673704ce2de1e286c0003e2380231595a542b",
+  "compiler": "g++.exe (x86_64-posix-seh-rev1, Built by MinGW-Builds project) 15.2.0",
+  "bfd_linker": "GNU ld (GNU Binutils) 2.46.0.20260210",
+  "bfd_results": "three native suites failed during link",
+  "lld_build_results": "all three native suites compiled and linked",
+  "lld_runtime_results": {
+    "gap_blocked": 10,
+    "gatt_blocked": 11,
+    "security_passed": 12
+  },
+  "local_all_pass": false,
+  "runtime_block_reason": "Windows application control WinError4551",
+  "security_policy_changed": false,
+  "proposed_ci_change": "Windows Host NUCODE_HOST_CC_FLAGS/NUCODE_HOST_CXX_FLAGS select -fuse-ld=lld",
+  "remote_validation": "pending matching final push SHA"
+}

@@ -1,0 +1,65 @@
+test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle)
+! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 GAP 수명주기를 검증합니다. ... ERROR
+test_production_gatt_lifecycle (test_r12_ble_gatt.BleGattTests.test_production_gatt_lifecycle)
+! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 GATT 구현의 대체를 검증합니다. ... ERROR
+test_production_security_lifecycle (test_r12_ble_security.BleSecurityTests.test_production_security_lifecycle)
+! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 보안 구현의 대체를 검증합니다. ... ERROR
+
+======================================================================
+ERROR: test_production_gap_lifecycle (test_r12_ble_gap.BleGapTests.test_production_gap_lifecycle)
+! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 GAP 수명주기를 검증합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_gap.py", line 32, in test_production_gap_lifecycle
+    result = subprocess.run(command + ['-o', str(binary)], capture_output=True, timeout=60)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_gatt_lifecycle (test_r12_ble_gatt.BleGattTests.test_production_gatt_lifecycle)
+! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 GATT 구현의 대체를 검증합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_gatt.py", line 37, in test_production_gatt_lifecycle
+    result = subprocess.run(command + ['-o', str(binary)], capture_output=True, timeout=60)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+======================================================================
+ERROR: test_production_security_lifecycle (test_r12_ble_security.BleSecurityTests.test_production_security_lifecycle)
+! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 보안 구현의 대체를 검증합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r12_ble_security.py", line 48, in test_production_security_lifecycle
+    result = subprocess.run(command + [str(c_object), '-o', str(binary)], capture_output=True, timeout=60)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+----------------------------------------------------------------------
+Ran 3 tests in 10.980s
+
+FAILED (errors=3)

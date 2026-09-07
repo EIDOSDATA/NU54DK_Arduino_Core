@@ -50,6 +50,9 @@ jobs:
   host:
     name: Host unit with Windows PowerShell contracts
     runs-on: windows-2025
+    env:
+      NUCODE_HOST_CC_FLAGS: '["-fuse-ld=lld"]'
+      NUCODE_HOST_CXX_FLAGS: '["-fuse-ld=lld"]'
     steps:
       - name: Checkout exact source and board package
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -66,7 +69,11 @@ jobs:
           --only-binary=:all: --require-hashes
           -r tools/ci/requirements-host.txt
       - name: Run host unit tests
-        run: python tools/ci/run_m12_gate.py host
+        run: |
+          gcc --version
+          g++ --version
+          ld.lld --version
+          python tools/ci/run_m12_gate.py host
 
   core-semantic:
     name: M14 Core native semantic runtime

@@ -1,0 +1,172 @@
+{
+  "source": "801673704ce2de1e286c0003e2380231595a542b",
+  "status": {
+    "source": "801673704ce2de1e286c0003e2380231595a542b",
+    "compiler": "g++.exe (x86_64-posix-seh-rev1, Built by MinGW-Builds project) 15.2.0",
+    "bfd_linker": "GNU ld (GNU Binutils) 2.46.0.20260210",
+    "bfd_results": "three native suites failed during link",
+    "lld_build_results": "all three native suites compiled and linked",
+    "lld_runtime_results": {
+      "gap_blocked": 10,
+      "gatt_blocked": 11,
+      "security_passed": 12
+    },
+    "local_all_pass": false,
+    "runtime_block_reason": "Windows application control WinError4551",
+    "security_policy_changed": false,
+    "proposed_ci_change": "Windows Host NUCODE_HOST_CC_FLAGS/NUCODE_HOST_CXX_FLAGS select -fuse-ld=lld",
+    "remote_validation": "pending matching final push SHA"
+  },
+  "files": [
+    {
+      "name": "ci-8016737-host.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8016737-host.log",
+      "original_archive": "ci-8016737-host.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "c9ccc08c0b8e7ed1d2c9361a9edaa6115b50ab113c4f518c295c2c2a3c60d69a",
+      "original_bytes": 221740,
+      "normalized_sha256": "121abb7c1e8eb804d6c604ddd2c3e5785cf643fdfe832aa6a8d2d6a46b37b6d6",
+      "normalized_bytes": 221736
+    },
+    {
+      "name": "ci-8016737-software-jobs.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\ci-8016737-software-jobs.json",
+      "original_archive": "ci-8016737-software-jobs.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "cc7632fc65fd4217654f17ab51c041c2fa1720b31d7afb89ec518dcd0185e06b",
+      "original_bytes": 9736,
+      "normalized_sha256": "cc7632fc65fd4217654f17ab51c041c2fa1720b31d7afb89ec518dcd0185e06b",
+      "normalized_bytes": 9736
+    },
+    {
+      "name": "r12-nixman15-before.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\r12-nixman15-before.log",
+      "original_archive": "r12-nixman15-before.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "d5a171f339a8739543c534aa54b05e4141a7cb201eda2cbc9726e54aec254e9f",
+      "original_bytes": 8041,
+      "normalized_sha256": "349beadff8fea0f00cc979d548205c60f09a85b0b4dd493569bfd1931a9d8621",
+      "normalized_bytes": 7980
+    },
+    {
+      "name": "r12-nixman15-before.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\r12-nixman15-before.json",
+      "original_archive": "r12-nixman15-before.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "2b9afad7f258bfa703f8822377b4787459fd1c256c8b698399324662a06205de",
+      "original_bytes": 604,
+      "normalized_sha256": "831163c7496270179fd205d51554e0b0c43fa729420d4fe428b01e8dc7d5abc6",
+      "normalized_bytes": 583
+    },
+    {
+      "name": "r12-nixman15-lld.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\r12-nixman15-lld.log",
+      "original_archive": "r12-nixman15-lld.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "06b03bc725366fb2d6687cd318a764c75bade5211055ee9365102c18eeb0d080",
+      "original_bytes": 33797,
+      "normalized_sha256": "e1aa2584d92abcb92061c3a4c87f54f71f683bb0815c3b7d89211b9ee0ab723b",
+      "normalized_bytes": 33366
+    },
+    {
+      "name": "r12-nixman15-lld.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\r12-nixman15-lld.json",
+      "original_archive": "r12-nixman15-lld.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "bdacde882eee07c1443ab291ab2c0a15eee2fe263778ae8bd6478e53f17c0e83",
+      "original_bytes": 644,
+      "normalized_sha256": "24f3d6c329f6352e484b4986ea46f220b817be3d3465a1ebd4318aaca2ea2457",
+      "normalized_bytes": 620
+    },
+    {
+      "name": "nixman15-reproduction-toolchain.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\nixman15-reproduction-toolchain.json",
+      "original_archive": "nixman15-reproduction-toolchain.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "595db6f08a1a7be27dd3041ed89771b9d638483b3c92315b6f00a5dd3b69a05f",
+      "original_bytes": 531,
+      "normalized_sha256": "9488255c67db6af540e3aef84759e08fcbf8daa6f795f71b616b8ec379812c83",
+      "normalized_bytes": 522
+    },
+    {
+      "name": "prepare_nixman_repro.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\prepare_nixman_repro.py",
+      "original_archive": "prepare_nixman_repro.py.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "df764d76bac3435ef61e1d7576e0be6baa1c76755a3f6f1b2bc0a398076fc315",
+      "original_bytes": 1855,
+      "normalized_sha256": "df764d76bac3435ef61e1d7576e0be6baa1c76755a3f6f1b2bc0a398076fc315",
+      "normalized_bytes": 1855
+    },
+    {
+      "name": "reproduce_ble_compiler.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\reproduce_ble_compiler.py",
+      "original_archive": "reproduce_ble_compiler.py.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "32d25688b87bd8357a066e418eef23cf4ba28f4298ea385d1e47d109e76cee14",
+      "original_bytes": 1852,
+      "normalized_sha256": "32d25688b87bd8357a066e418eef23cf4ba28f4298ea385d1e47d109e76cee14",
+      "normalized_bytes": 1852
+    },
+    {
+      "name": "contract-lld-ci.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\contract-lld-ci.log",
+      "original_archive": "contract-lld-ci.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "1526c7b5a9634f820fd5d310ca9bded728b4bcab013bbd527068269f6171f020",
+      "original_bytes": 7516,
+      "normalized_sha256": "e4ed240ce62105620adf7c8177e99a27e85e4fac7601a50bbb1c09daddfdea4f",
+      "normalized_bytes": 7463
+    },
+    {
+      "name": "contract-lld-ci.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\contract-lld-ci.json",
+      "original_archive": "contract-lld-ci.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "36f25794ea86c158284d15c3c7b3fbe07e7dfe55ddaf2fd80d81ad136cde0cb3",
+      "original_bytes": 1902,
+      "normalized_sha256": "31490b460bea071c82d8e1dc9f33f3385be81c79f98232b980510d3a71de1570",
+      "normalized_bytes": 1866
+    },
+    {
+      "name": "r12-winlibs15-before.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\r12-winlibs15-before.log",
+      "original_archive": "r12-winlibs15-before.log.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "bb2ae3fbd4517e711a126ab42e8916a19a30c5510f30e71fb5bb4d0a67faee05",
+      "original_bytes": 4796,
+      "normalized_sha256": "645b31b3da1afe785ecaffb8e0f257bc229439c755bb3c24d46ff7a511c00a85",
+      "normalized_bytes": 4731
+    },
+    {
+      "name": "mingw15-reproduction-toolchain.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\mingw15-reproduction-toolchain.json",
+      "original_archive": "mingw15-reproduction-toolchain.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "030bf63cb65093259477eeba706153eac0db9574c1fc538eda1553cd4fa3aea7",
+      "original_bytes": 450,
+      "normalized_sha256": "77681919a1a51b28b7f49785b858ba7a1516f2ab436a951557ed22facf39a5b1",
+      "normalized_bytes": 442
+    },
+    {
+      "name": "prepare_mingw15_repro.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\prepare_mingw15_repro.py",
+      "original_archive": "prepare_mingw15_repro.py.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "aa5266350692ed103ac8cbed03f9020b3917a5c86e2cace88195e86e9a7dcb72",
+      "original_bytes": 1630,
+      "normalized_sha256": "aa5266350692ed103ac8cbed03f9020b3917a5c86e2cace88195e86e9a7dcb72",
+      "normalized_bytes": 1630
+    },
+    {
+      "name": "lld-selection-audit.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\lld-selection-audit.json",
+      "original_archive": "lld-selection-audit.json.raw.gz",
+      "normalization": "utf8-splitlines-single-final-newline",
+      "original_sha256": "b8ca7fbe3a5f8647c8ae6ea7216d38d6c1f2c238425a4b3405312fb3dea5c290",
+      "original_bytes": 748,
+      "normalized_sha256": "25348758a3899ef12da7e05c65e0487eb8c76311817c6fe26d07742c97e86123",
+      "normalized_bytes": 731
+    }
+  ]
+}
