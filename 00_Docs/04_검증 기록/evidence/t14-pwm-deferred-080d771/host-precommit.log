@@ -1,0 +1,87 @@
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_ac01_contract.py
+test_connector_dtsi_uses_only_approved_free_gpio_pair (test_ac01_contract.AC01ContractTests.test_connector_dtsi_uses_only_approved_free_gpio_pair) ... ok
+test_safe_interrupt_and_timing_apis_have_real_backends (test_ac01_contract.AC01ContractTests.test_safe_interrupt_and_timing_apis_have_real_backends) ... ok
+test_standard_and_ble_profiles_share_one_connector_definition (test_ac01_contract.AC01ContractTests.test_standard_and_ble_profiles_share_one_connector_definition) ... ok
+test_variant_exposes_connector_capability_and_ownership (test_ac01_contract.AC01ContractTests.test_variant_exposes_connector_capability_and_ownership) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.004s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_ac02b_analog_contract.py
+test_examples_exist (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_examples_exist) ... ok
+test_math_contract_compiles (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_math_contract_compiles) ... ok
+test_production_pwm_route_backend_is_transactional (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_production_pwm_route_backend_is_transactional)
+Production adapter가 B2 route 수명주기와 실패 복구를 사용합니다. ... ok
+test_public_implementation_contains_fixed_policy (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_public_implementation_contains_fixed_policy) ... ok
+test_recovery_failure_is_fail_closed_and_gpio_transition_is_rollbackable (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_recovery_failure_is_fail_closed_and_gpio_transition_is_rollbackable)
+복구 실패가 조용히 상태를 버리거나 route를 재사용하지 않습니다. ... ok
+test_servo_is_fixed_memory_pwm22_backend (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_servo_is_fixed_memory_pwm22_backend) ... ok
+test_target_contract_covers_adc_pwm_tone_servo_and_pm (test_ac02b_analog_contract.Ac02bAnalogContractTests.test_target_contract_covers_adc_pwm_tone_servo_and_pm) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.062s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_ac02b_b2_contract.py
+test_disabled_backends_and_library_discovery_fail_closed (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_disabled_backends_and_library_discovery_fail_closed) ... ok
+test_instance_route_matrix_and_zero_psel_boundary_are_fixed (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_instance_route_matrix_and_zero_psel_boundary_are_fixed) ... ok
+test_lifecycle_and_fail_closed_operations_are_present (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_lifecycle_and_fail_closed_operations_are_present) ... ok
+test_public_concrete_types_and_capabilities_are_explicit (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_public_concrete_types_and_capabilities_are_explicit) ... ok
+test_public_diagnostics_distinguish_runtime_routes_and_serial1 (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_public_diagnostics_distinguish_runtime_routes_and_serial1) ... ok
+test_wire_target_and_extra_instances_are_not_faked (test_ac02b_b2_contract.Ac02bPeripheralContractTests.test_wire_target_and_extra_instances_are_not_faked) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.004s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_ac03_storage_contract.py
+test_approved_legacy_headers_and_examples_exist (test_ac03_storage_contract.AC03StorageContractTests.test_approved_legacy_headers_and_examples_exist)
+! @brief 대표 Arduino include와 세 공개 예제를 검증합니다. ... ok
+test_builder_validates_the_effective_linker_partition (test_ac03_storage_contract.AC03StorageContractTests.test_builder_validates_the_effective_linker_partition)
+! @brief generated DTS와 linker map의 일치를 산출물 공개 전에 검증합니다. ... ok
+test_eeprom_record_and_explicit_commit_contract (test_ac03_storage_contract.AC03StorageContractTests.test_eeprom_record_and_explicit_commit_contract)
+! @brief EEPROM의 mirror, CRC, bounds, 명시적 commit 계약을 검증합니다. ... ok
+test_feature_manifests_are_allowlisted_and_profile_compatible (test_ac03_storage_contract.AC03StorageContractTests.test_feature_manifests_are_allowlisted_and_profile_compatible)
+! @brief EEPROM과 LittleFS의 선언형 build 입력을 검증합니다. ... ok
+test_littlefs_default_mount_cannot_format (test_ac03_storage_contract.AC03StorageContractTests.test_littlefs_default_mount_cannot_format)
+! @brief 기본 mount와 명시적 format 경계를 검증합니다. ... ok
+test_partition_is_common_exact_and_non_overlapping (test_ac03_storage_contract.AC03StorageContractTests.test_partition_is_common_exact_and_non_overlapping)
+! @brief 두 profile이 같은 loaderless flash 분할과 linker 설정을 포함하는지 검증합니다. ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.012s
+
+OK
+[M12] exec: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_build_matrix_runner.py
+test_all_nu54dk_testcase_metadata_is_in_canonical_runner (test_build_matrix_runner.BuildMatrixRunnerTests.test_all_nu54dk_testcase_metadata_is_in_canonical_runner)
+! @brief 독립 testcase YAML을 대조하여 새 target의 canonical 목록 누락을 거부합니다. ... ok
+test_arduino_compile_retries_only_bootstrap_failure (test_build_matrix_runner.BuildMatrixRunnerTests.test_arduino_compile_retries_only_bootstrap_failure) ... ARDUINO_CLI_BOOTSTRAP_RETRY=1/2;DELAY_SECONDS=2
+ok
+test_arduino_groups_are_explicit_and_disjoint (test_build_matrix_runner.BuildMatrixRunnerTests.test_arduino_groups_are_explicit_and_disjoint) ... ok
+test_child_python_output_is_unbuffered (test_build_matrix_runner.BuildMatrixRunnerTests.test_child_python_output_is_unbuffered) ... ok
+test_serial_source_validator_rejects_false_positive_builds (test_build_matrix_runner.BuildMatrixRunnerTests.test_serial_source_validator_rejects_false_positive_builds) ... ok
+test_target_subset_never_silently_escapes_group (test_build_matrix_runner.BuildMatrixRunnerTests.test_target_subset_never_silently_escapes_group) ... ok
+test_zephyr_failure_summary_identifies_scenario (test_build_matrix_runner.BuildMatrixRunnerTests.test_zephyr_failure_summary_identifies_scenario) ... ok
+test_zephyr_groups_partition_every_suite_once (test_build_matrix_runner.BuildMatrixRunnerTests.test_zephyr_groups_partition_every_suite_once) ... FAIL
+test_zephyr_plan_uses_short_isolated_outdirs (test_build_matrix_runner.BuildMatrixRunnerTests.test_zephyr_plan_uses_short_isolated_outdirs) ... ok
+
+======================================================================
+FAIL: test_zephyr_groups_partition_every_suite_once (test_build_matrix_runner.BuildMatrixRunnerTests.test_zephyr_groups_partition_every_suite_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_build_matrix_runner.py", line 46, in test_zephyr_groups_partition_every_suite_once
+    self.assertEqual(
+AssertionError: {'v0.1.0': 4, 'v0.2.0': 10, 'v0.3.0': 19, 'v0.4.0': 28} != {'v0.1.0': 4, 'v0.2.0': 10, 'v0.3.0': 19, 'v0.4.0': 27}
+- {'v0.1.0': 4, 'v0.2.0': 10, 'v0.3.0': 19, 'v0.4.0': 28}
+?                                                      ^
+
++ {'v0.1.0': 4, 'v0.2.0': 10, 'v0.3.0': 19, 'v0.4.0': 27}
+?                                                      ^
+
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.047s
+
+FAILED (failures=1)
+M12_GATE_FAIL: 명령이 종료 코드 1로 실패했습니다: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_build_matrix_runner.py

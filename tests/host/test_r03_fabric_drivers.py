@@ -9,6 +9,10 @@ ROOT=Path(__file__).resolve().parents[2]
 
 
 class FabricDriverTests(unittest.TestCase):
+    def test_pwm_deferred_production(self):
+        self.run_driver('pwm_deferred', ['simple', 'complex', 'repeat', 'commit_failure',
+                                       'started_timeout', 'dma_pending', 'disable_race', 'subscribed'])
+
     def test_analog_production(self):
         self.run_driver('analog',['pwm_timeout','other_progress','overflow','deadline','saadc_timeout','repeat',
                                  'snapshot','release_failure','stop_queue_full','pwm_commit_failure','saadc_commit_failure',

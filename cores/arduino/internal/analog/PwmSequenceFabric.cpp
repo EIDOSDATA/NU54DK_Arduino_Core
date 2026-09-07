@@ -108,6 +108,34 @@ namespace nucode::arduino
             }
         }
 
+        /** @brief nrfx IRQ가 소비하지 않는 DMA 준비·최초 주기 이벤트로 시작 흔적을 확인합니다. */
+        [[nodiscard]] bool pwmStarted(const NRF_PWM_Type *registers) noexcept
+        {
+            nrf_barrier_rw();
+            return registers->EVENTS_DMA.SEQ[0].READY != 0U ||
+                   registers->EVENTS_DMA.SEQ[1].READY != 0U ||
+                   nrf_pwm_event_check(registers, NRF_PWM_EVENT_SEQSTARTED0) ||
+                   nrf_pwm_event_check(registers, NRF_PWM_EVENT_SEQSTARTED1);
+        }
+
+        /** @brief 미시작 PWM은 출력하지 않고 취소하며, disable 경계의 DMA 시작도 재확인합니다. */
+        [[nodiscard]] bool cancelPreparedPwm(const PwmContext &context, nrfx_pwm_t *driver) noexcept
+        {
+            if (context.start_task == 0U || pwmStarted(driver->p_reg))
+            {
+                return false;
+            }
+            nrf_pwm_disable(driver->p_reg);
+            if (pwmStarted(driver->p_reg))
+            {
+                /** @brief 시작과 겹쳤다면 lease를 유지하고 일반 STOP 완료 경로로 넘깁니다. */
+                nrf_pwm_enable(driver->p_reg);
+                nrf_barrier_rw();
+                return false;
+            }
+            return true;
+        }
+
         [[nodiscard]] bool validPwmValueCount(PwmSequenceLoad load, std::size_t count) noexcept
         {
             /** @brief nRF54L15 PWM DMA MAXCNT는 uint16_t 개수가 아니라 byte 단위입니다. */
@@ -382,6 +410,12 @@ namespace nucode::arduino
         }
         if (driver_error == 0)
         {
+            /** @brief 이전 재생의 시작 흔적을 새 DMA 준비 전에 지웁니다. 이후 IRQ는 보존합니다. */
+            driver->p_reg->EVENTS_DMA.SEQ[0].READY = 0U;
+            driver->p_reg->EVENTS_DMA.SEQ[1].READY = 0U;
+            nrf_pwm_event_clear(driver->p_reg, NRF_PWM_EVENT_SEQSTARTED0);
+            nrf_pwm_event_clear(driver->p_reg, NRF_PWM_EVENT_SEQSTARTED1);
+            nrf_barrier_rw();
             std::uint32_t flags = NRFX_PWM_FLAG_SIGNAL_END_SEQ0 | NRFX_PWM_FLAG_SIGNAL_END_SEQ1;
             flags |= loop ? NRFX_PWM_FLAG_LOOP : NRFX_PWM_FLAG_STOP;
             if (start_via_task)
@@ -425,7 +459,9 @@ namespace nucode::arduino
     {
         lockAnalog();
         const auto *const context = pwmContext(instance_);
-        const std::uintptr_t value = context != nullptr ? context->start_task : 0U;
+        const std::uintptr_t value =
+            context != nullptr && context->state == AnalogFabricState::active ? context->start_task
+                                                                              : 0U;
         unlockAnalog();
         return value;
     }
@@ -476,17 +512,32 @@ namespace nucode::arduino
             unlockAnalog();
             return AnalogFabricResult::wrong_state;
         }
+        if (((driver->p_reg->SUBSCRIBE_DMA.SEQ[0].START |
+              driver->p_reg->SUBSCRIBE_DMA.SEQ[1].START) &
+             PWM_SUBSCRIBE_DMA_SEQ_START_EN_Msk) != 0U)
+        {
+            /** @brief 외부 START 구독은 연결 소유자가 먼저 해제해야 합니다. */
+            record(*context, AnalogFabricResult::ownership_conflict);
+            unlockAnalog();
+            return AnalogFabricResult::ownership_conflict;
+        }
         context->state = AnalogFabricState::stopping;
         context->stop_waiting = true;
         const auto generation = context->stop_signal.arm();
+        const bool cancelled = cancelPreparedPwm(*context, driver);
         unlockAnalog();
-        (void)nrfx_pwm_stop(driver, false);
-        const bool stopped = internal::waitFabricStop(
-            [&]
-            {
-                return context->stop_signal.completed(generation) || nrfx_pwm_stopped_check(driver);
-            },
-            timeout_us);
+        if (!cancelled)
+        {
+            (void)nrfx_pwm_stop(driver, false);
+        }
+        const bool stopped =
+            cancelled || internal::waitFabricStop(
+                             [&]
+                             {
+                                 return context->stop_signal.completed(generation) ||
+                                        nrfx_pwm_stopped_check(driver);
+                             },
+                             timeout_us);
         lockAnalog();
         context->stop_waiting = false;
         if (!stopped)
@@ -497,6 +548,11 @@ namespace nucode::arduino
             return AnalogFabricResult::stop_timeout;
         }
         nrfx_pwm_uninit(driver);
+        if (cancelled)
+        {
+            /** @brief 미시작 취소도 논리 stopped를 알리며 하드웨어 STOPPED를 위조하지 않습니다. */
+            pwmEventHandler(NRFX_PWM_EVENT_STOPPED, context);
+        }
         const auto release_result = context->lease.phase == internal::IoLeasePhase::reserved
                                         ? internal::rollbackIoResources(context->lease)
                                         : internal::releaseIoResources(context->lease);

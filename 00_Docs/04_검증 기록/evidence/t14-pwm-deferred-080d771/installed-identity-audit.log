@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\audit_installed.py", line 42, in <module>
+    verify_identity(manifest)
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\installed_examples.py", line 47, in verify_identity
+    assert sha(live_path)==live_ref['sha256']
+           ^^^^^^^^^^^^^^
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t14-pwm-deferred\installed_examples.py", line 10, in sha
+    def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
+                                        ^^^^^^^^^^^^^^^^^
+  File "pathlib.py", line 1019, in read_bytes
+  File "pathlib.py", line 1013, in open
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\u4y\\cache\\v1\\03\\0398215d491042b9951e0f49ebe151c6\\build\\nucode_arduino_core_build.yml'

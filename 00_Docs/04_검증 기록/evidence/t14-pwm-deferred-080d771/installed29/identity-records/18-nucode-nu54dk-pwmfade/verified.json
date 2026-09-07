@@ -1,0 +1,95 @@
+{
+  "manifest_path": "C:\\u4y\\examples\\18-nucode-nu54dk-pwmfade\\PWMFade.ino.nu54-build.json",
+  "manifest_sha256": "12d86c6c796105aa78b2e98781454864364ff55af8b819833bc0dc140c126aab",
+  "artifacts": {
+    "bin": {
+      "path": "C:/u4y/examples/18-nucode-nu54dk-pwmfade/PWMFade.ino.bin",
+      "sha256": "c62bb74c24a5440f43dc1b627c144d680330af0269fddb7ce06e87f67f2f1d96",
+      "size": 106252
+    },
+    "elf": {
+      "path": "C:/u4y/examples/18-nucode-nu54dk-pwmfade/PWMFade.ino.elf",
+      "sha256": "f6bcb349201610936fc9fc0b11a4fdfb5a059eb72f644447e528d6eb7fdc94bd",
+      "size": 2330260
+    },
+    "hex": {
+      "path": "C:/u4y/examples/18-nucode-nu54dk-pwmfade/PWMFade.ino.hex",
+      "sha256": "b39c0ec27a7dd18b64b821b0b36dfc76b7421c8e3e4182f5c0af34337887ed4e",
+      "size": 298947
+    },
+    "map": {
+      "path": "C:/u4y/examples/18-nucode-nu54dk-pwmfade/PWMFade.ino.map",
+      "sha256": "f6c1ff32984c733636dc0b453f0a44e9abd822e8d03c36845afc94ac02431c64",
+      "size": 808530
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:f99d13c79fa83d03679dd869ca7bdf6f53a620b4d45dca3ca5f6c212115b30c9",
+        "path": "C:/u4y/cache/v1/f8/f824598a19bb773c44b7d3d7303b1865/platform/libraries/NUCODE_NU54DK/examples/PWMFade"
+      },
+      {
+        "content_sha256": "sha256:95fb13858b1e597e73efa01d9c5fcfbd5c3d9d7346644516053b816232d7f453",
+        "path": "C:/u4y/cache/v1/f8/f824598a19bb773c44b7d3d7303b1865/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/u4y/cache/v1/f8/f824598a19bb773c44b7d3d7303b1865/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:d07daf7c8ddf40757272d30a6933970eca4f986002af02f1ff5f4a781f186e0b",
+        "path": "C:/u4y/cache/v1/f8/f824598a19bb773c44b7d3d7303b1865/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/u4y/cache/v1/f8/f824598a19bb773c44b7d3d7303b1865/build/nucode_arduino_core_build.yml",
+      "sha256": "86dc7815382a937d6a59122d3e52358c0cc6fbeb5ae1b2b394e20b538c212e03"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/u4y/cache/v1/f8/f824598a19bb773c44b7d3d7303b1865/app/generated-sources/sketch/PWMFade.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/PWMFade.ino.cpp",
+        "sha256": "06a08a36d1d15f2fd794914f3360ee4f6a5ef9bad7a2ea60c44d3405f1ad4c34",
+        "source_path": "C:/u4y/examples/18-nucode-nu54dk-pwmfade/sketch/PWMFade.ino.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\u4y\\identity-records\\18-nucode-nu54dk-pwmfade\\nucode_arduino_core_build.yml",
+    "sha256": "86dc7815382a937d6a59122d3e52358c0cc6fbeb5ae1b2b394e20b538c212e03",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core_source_sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "application_source_sha256": "df0bd271583d861b23ff32a7f284a5fe89a63ea8482eee46e9b3cc712707440b",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\u4y\\identity-records\\18-nucode-nu54dk-pwmfade\\build_info.yml",
+    "sha256": "29cd38343e6644893a04c1dff53b880a1b73934b37a96a8db320a849ba4b5a08",
+    "identity": {
+      "application-source-sha256": "df0bd271583d861b23ff32a7f284a5fe89a63ea8482eee46e9b3cc712707440b",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core-source-sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

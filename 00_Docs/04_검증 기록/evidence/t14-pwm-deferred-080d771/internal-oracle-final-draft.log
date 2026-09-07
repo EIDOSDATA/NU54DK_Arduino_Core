@@ -1,0 +1,11 @@
+test_adc_independent_raw_guards_tail_and_channel_order (__main__.InternalNojumperTests.test_adc_independent_raw_guards_tail_and_channel_order) ... ok
+test_adc_scan_reverse_and_calibration_count (__main__.InternalNojumperTests.test_adc_scan_reverse_and_calibration_count) ... ok
+test_event_and_bridge_require_disable_group_and_overflow_checks (__main__.InternalNojumperTests.test_event_and_bridge_require_disable_group_and_overflow_checks) ... ok
+test_grtc_public_time_requires_elapsed_and_timer_agreement (__main__.InternalNojumperTests.test_grtc_public_time_requires_elapsed_and_timer_agreement) ... ok
+test_timer_shortcuts_and_independent_elapsed_tolerance (__main__.InternalNojumperTests.test_timer_shortcuts_and_independent_elapsed_tolerance) ... ok
+test_vectors_cover_channel_boundaries_and_repetitions (__main__.InternalNojumperTests.test_vectors_cover_channel_boundaries_and_repetitions) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.002s
+
+OK

@@ -1,0 +1,11 @@
+Loading Zephyr default modules (Zephyr base).
+
+warning: Deprecated symbol NRF_PLATFORM_LUMOS is enabled.
+
+
+Used library Version Path
+LittleFS     1.0.0   C:\u4y\검증 설치\hardware\nucode\zephyr\libraries\LittleFS
+
+Used platform Version Path
+nucode:zephyr 0.0.90  C:\u4y\검증 설치\hardware\nucode\zephyr
+Error during build: exit status 1

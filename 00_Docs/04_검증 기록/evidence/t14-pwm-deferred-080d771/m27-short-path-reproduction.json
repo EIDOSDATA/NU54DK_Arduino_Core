@@ -1,0 +1,23 @@
+{
+  "source_after": "874658a16db18b283ab7f1b2835111aaf34b42fd",
+  "source_before": "f17e603fe101a2296398f160cb81a29a54f15671",
+  "short_temp_path": "C:\\Users\\eidos\\DOCUME~1\\Codex\\2026-0~3\\new-chat\\work\\T14-PW~1",
+  "resolved_temp_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred",
+  "same_filesystem_directory": true,
+  "status": "before-failed-after-passed",
+  "runs": [
+    {
+      "mode": "before",
+      "returncode": 1,
+      "log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\m27-short-path-before.log",
+      "log_sha256": "2a8b4c74ce964f8a8730708bea0c7e9a75db2164683f3d6a8bae7b97457802a3"
+    },
+    {
+      "mode": "after",
+      "returncode": 0,
+      "log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred\\m27-short-path-after.log",
+      "log_sha256": "57e697bfb27c328752324ec469c870bb5982ed1839bc46cd230684428ed07aee"
+    }
+  ],
+  "hardware_access": false
+}

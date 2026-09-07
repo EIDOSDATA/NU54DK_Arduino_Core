@@ -1,0 +1,39 @@
+{
+  "source": "080d771ae48e83b4621f3160afed67395ead32cd",
+  "status": "passed",
+  "swd_hz": 10000000,
+  "commands": 1944,
+  "boards": [
+    {
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "commands": 972,
+      "configure_play_stop_cycles": 2160,
+      "cancelled_without_dma_cycles": 984,
+      "reported_stop_us_range": [
+        62,
+        3983
+      ],
+      "cancel_reported_stop_us_range": [
+        63,
+        71
+      ]
+    },
+    {
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "commands": 972,
+      "configure_play_stop_cycles": 2160,
+      "cancelled_without_dma_cycles": 984,
+      "reported_stop_us_range": [
+        62,
+        3996
+      ],
+      "cancel_reported_stop_us_range": [
+        63,
+        71
+      ]
+    }
+  ],
+  "external_waveform_observed": false,
+  "repeat_statistics_note": "every cycle is checked on device; SWD record reports final cycle latch and stop duration within each command",
+  "journal_sha256": "8cbd7f96db11aa9a64ff06bd7e323eb8a486c51f06d36d0c8d7f2eb11c28aa32"
+}

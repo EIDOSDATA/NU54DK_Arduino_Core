@@ -1,0 +1,121 @@
+{
+  "manifest_path": "C:\\u4y\\examples\\01-eeprom-eeprompersistence\\EEPROMPersistence.ino.nu54-build.json",
+  "manifest_sha256": "3ce2b84d74c51012893aa40efda70fb63694f2eb9c9cc134cc7e514ca38e24e3",
+  "artifacts": {
+    "bin": {
+      "path": "C:/u4y/examples/01-eeprom-eeprompersistence/EEPROMPersistence.ino.bin",
+      "sha256": "ae569c07136c74977d1e6f4b6c72bcca6c3cca994f7d8730c0a2646c5f459b10",
+      "size": 112920
+    },
+    "elf": {
+      "path": "C:/u4y/examples/01-eeprom-eeprompersistence/EEPROMPersistence.ino.elf",
+      "sha256": "ec265bf6024ddc2dff7311cf30538ae0781c63023a4a2dfe3e9cb9cbcfbcf862",
+      "size": 2479168
+    },
+    "hex": {
+      "path": "C:/u4y/examples/01-eeprom-eeprompersistence/EEPROMPersistence.ino.hex",
+      "sha256": "c819786c1408311598d64e05395648b732c5b3203f2071ddd81bda350add8379",
+      "size": 317762
+    },
+    "map": {
+      "path": "C:/u4y/examples/01-eeprom-eeprompersistence/EEPROMPersistence.ino.map",
+      "sha256": "c9ed357922875f8a41de58803b762f1be7fd9e4fff2872073c1d5312c7af0ff3",
+      "size": 867532
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:f19325250070a83de8759ce450c18d1db7d666b381de0e2d8bd3c81ae012226c",
+        "path": "C:/u4y/cache/v1/59/5977a48f66eb039a4b70e3d7de98db2b/platform/libraries/EEPROM/examples/EEPROMPersistence"
+      },
+      {
+        "content_sha256": "sha256:95fb13858b1e597e73efa01d9c5fcfbd5c3d9d7346644516053b816232d7f453",
+        "path": "C:/u4y/cache/v1/59/5977a48f66eb039a4b70e3d7de98db2b/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/u4y/cache/v1/59/5977a48f66eb039a4b70e3d7de98db2b/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:be994dcedee0a97652b80c378fa82b902f2d1cbca805ffc922150e851b1684d2",
+        "path": "C:/u4y/cache/v1/59/5977a48f66eb039a4b70e3d7de98db2b/platform/libraries/EEPROM/src"
+      },
+      {
+        "content_sha256": "sha256:576b1893438f863da7bc80d469807d6f49e9a34dbf17bdad7c3a41e771a5998c",
+        "path": "C:/u4y/cache/v1/59/5977a48f66eb039a4b70e3d7de98db2b/platform/libraries/EEPROM/src/internal"
+      },
+      {
+        "content_sha256": "sha256:24965787c67902f4af20de32419772a81e9d97540ae505870d23bff4195653e2",
+        "path": "C:/u4y/cache/v1/59/5977a48f66eb039a4b70e3d7de98db2b/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/u4y/cache/v1/59/5977a48f66eb039a4b70e3d7de98db2b/build/nucode_arduino_core_build.yml",
+      "sha256": "404e32cb4efdbeb59f8d445ace3f27b9f59b924a32b56fd93aea1c43ca9ce4c4"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/u4y/cache/v1/59/5977a48f66eb039a4b70e3d7de98db2b/app/generated-sources/sketch/EEPROMPersistence.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/EEPROMPersistence.ino.cpp",
+        "sha256": "c2f2c4f5f79c9e7f0155f2917192b2d259631786ffb27dee1026f624992d40b0",
+        "source_path": "C:/u4y/examples/01-eeprom-eeprompersistence/sketch/EEPROMPersistence.ino.cpp"
+      },
+      {
+        "compiled_path": "C:/u4y/cache/v1/59/5977a48f66eb039a4b70e3d7de98db2b/platform/libraries/EEPROM/src/EEPROM.cpp",
+        "logical_identity": "platform:libraries/EEPROM/src/EEPROM.cpp",
+        "sha256": "2aedb4d386b6f49a4456498d0b924762660099ca285e83c61ceb416b35a44896",
+        "source_path": "C:/u4y/검증 설치/hardware/nucode/zephyr/libraries/EEPROM/src/EEPROM.cpp"
+      },
+      {
+        "compiled_path": "C:/u4y/cache/v1/59/5977a48f66eb039a4b70e3d7de98db2b/platform/libraries/EEPROM/src/internal/EEPROMRecord.cpp",
+        "logical_identity": "platform:libraries/EEPROM/src/internal/EEPROMRecord.cpp",
+        "sha256": "331381d455b8dd6e7c90355a9cd3351f46d0eaa4ab5a7767da75601eff05de6e",
+        "source_path": "C:/u4y/검증 설치/hardware/nucode/zephyr/libraries/EEPROM/src/internal/EEPROMRecord.cpp"
+      },
+      {
+        "compiled_path": "C:/u4y/cache/v1/59/5977a48f66eb039a4b70e3d7de98db2b/platform/libraries/EEPROM/src/internal/EEPROMSettings.cpp",
+        "logical_identity": "platform:libraries/EEPROM/src/internal/EEPROMSettings.cpp",
+        "sha256": "9a3f70e9b9908612e471f78212bb2d865db797be29fc3e306f5acc65e17c7e95",
+        "source_path": "C:/u4y/검증 설치/hardware/nucode/zephyr/libraries/EEPROM/src/internal/EEPROMSettings.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\u4y\\identity-records\\01-eeprom-eeprompersistence\\nucode_arduino_core_build.yml",
+    "sha256": "404e32cb4efdbeb59f8d445ace3f27b9f59b924a32b56fd93aea1c43ca9ce4c4",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core_source_sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "application_source_sha256": "d2a39b19886779437c6995819de9e09e9b9eb450d74e140d1723cc4f8fec2e72",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\u4y\\identity-records\\01-eeprom-eeprompersistence\\build_info.yml",
+    "sha256": "6ae111b5fd7f6baae5d89d3fbd34475e7c37d5b0673bc30aae8dcde14428d832",
+    "identity": {
+      "application-source-sha256": "d2a39b19886779437c6995819de9e09e9b9eb450d74e140d1723cc4f8fec2e72",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core-source-sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

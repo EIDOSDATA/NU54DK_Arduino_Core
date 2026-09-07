@@ -1,0 +1,75 @@
+{
+  "source": "35f30b25fd318f9c5397da73263fd24df42d6df0",
+  "status": "failed-preserved",
+  "completed_commands": 888,
+  "failed_commands": 1,
+  "not_run_commands_a": 15,
+  "not_run_commands_b": 904,
+  "last_failed_reply": {
+    "request": [
+      889,
+      3186345125,
+      6,
+      1000,
+      0,
+      100,
+      0,
+      1
+    ],
+    "reply": [
+      889,
+      3186345125,
+      4,
+      1000,
+      0,
+      100,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      995,
+      995,
+      1,
+      1,
+      16,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+    "at": "2026-09-07T05:06:14.642469+00:00"
+  },
+  "controlled_failure_cleanup": {
+    "method": "reset-and-halt after recorded failure",
+    "pwm_enable": [
+      0,
+      0,
+      0
+    ],
+    "state": "HALTED",
+    "saadc_enable": 0,
+    "dppi_channels": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "journal_sha256": "36701a66f339d8157ecffdc08d8b2958088f2e64f8a0c0dba576e9712a1f9a4e",
+  "cause": "New HIL busy-wait minimum ignored the existing V04-EVENT five-percent clock tolerance",
+  "not_reclassified_as_pass": true
+}

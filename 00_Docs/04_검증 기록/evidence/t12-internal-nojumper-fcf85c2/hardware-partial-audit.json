@@ -1,0 +1,98 @@
+{
+  "source": "fcf85c2d440b9d389bf08eb42f2f0971a9bdf510",
+  "status": "failed-preserved",
+  "a_commands_passed": 904,
+  "b_commands_passed": 0,
+  "b_failed_commands": 1,
+  "b_not_run_commands": 903,
+  "b_successful_repetitions_in_failed_command": 66,
+  "failed_reply": {
+    "request": [
+      1,
+      2390589672,
+      6,
+      1000,
+      0,
+      100,
+      0,
+      1
+    ],
+    "reply": [
+      1,
+      2390589672,
+      4,
+      1000,
+      0,
+      100,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      997,
+      1011,
+      0,
+      2,
+      13,
+      0,
+      0,
+      0,
+      1,
+      66,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+    "at": "2026-09-07T05:25:23.856300+00:00"
+  },
+  "a_postflight": {
+    "ready": [
+      1313493041,
+      2,
+      904,
+      0
+    ],
+    "pwm_enable": [
+      0,
+      0,
+      0
+    ],
+    "p1_14_pin_cnf": 2,
+    "dppi20_channel0": 0,
+    "dppi_channels": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "saadc_enable": 0
+  },
+  "b_controlled_failure_cleanup": {
+    "method": "reset-and-halt after recorded failure",
+    "pwm_enable": [
+      0,
+      0,
+      0
+    ],
+    "state": "HALTED",
+    "saadc_enable": 0,
+    "dppi_channels": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "journal_sha256": "c39b9028e76ca4e05fd1c2af8d0fbf91e102bdd5fc9b8b526defa3957b8d1eb1",
+  "cause": "Millis integer comparison omitted the distinct observation windows and 32us kernel tick",
+  "not_reclassified_as_pass": true
+}

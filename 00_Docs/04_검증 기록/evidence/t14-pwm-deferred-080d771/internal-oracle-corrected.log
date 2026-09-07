@@ -1,0 +1,20 @@
+test_cancel_rejects_any_dma_or_period_activity (test_v04_nojumper.NojumperTests.test_cancel_rejects_any_dma_or_period_activity) ... ok
+test_failure_is_preserved_before_poisoning_session (test_v04_nojumper.NojumperTests.test_failure_is_preserved_before_poisoning_session) ... ok
+test_identity_result_and_cleanup_fail_closed (test_v04_nojumper.NojumperTests.test_identity_result_and_cleanup_fail_closed) ... ok
+test_plan_has_all_modes_without_duplicate_vectors (test_v04_nojumper.NojumperTests.test_plan_has_all_modes_without_duplicate_vectors) ... ok
+test_started_requires_dma_and_wave_counter (test_v04_nojumper.NojumperTests.test_started_requires_dma_and_wave_counter) ... ok
+test_subscribed_start_must_be_rejected (test_v04_nojumper.NojumperTests.test_subscribed_start_must_be_rejected) ... ok
+test_valid_cancel_and_start_modes (test_v04_nojumper.NojumperTests.test_valid_cancel_and_start_modes) ... ok
+test_adc_independent_raw_guards_tail_and_channel_order (test_v04_nojumper_internal.InternalNojumperTests.test_adc_independent_raw_guards_tail_and_channel_order) ... ok
+test_adc_scan_reverse_and_calibration_count (test_v04_nojumper_internal.InternalNojumperTests.test_adc_scan_reverse_and_calibration_count) ... ok
+test_busy_wait_uses_existing_five_percent_clock_tolerance (test_v04_nojumper_internal.InternalNojumperTests.test_busy_wait_uses_existing_five_percent_clock_tolerance)
+! @brief clock 차이 995us는 허용하고 5% 바깥과 누락된 반복은 거부합니다. ... ok
+test_event_and_bridge_require_disable_group_and_overflow_checks (test_v04_nojumper_internal.InternalNojumperTests.test_event_and_bridge_require_disable_group_and_overflow_checks) ... ok
+test_grtc_public_time_requires_elapsed_and_timer_agreement (test_v04_nojumper_internal.InternalNojumperTests.test_grtc_public_time_requires_elapsed_and_timer_agreement) ... ok
+test_timer_shortcuts_and_independent_elapsed_tolerance (test_v04_nojumper_internal.InternalNojumperTests.test_timer_shortcuts_and_independent_elapsed_tolerance) ... ok
+test_vectors_cover_channel_boundaries_and_repetitions (test_v04_nojumper_internal.InternalNojumperTests.test_vectors_cover_channel_boundaries_and_repetitions) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.004s
+
+OK

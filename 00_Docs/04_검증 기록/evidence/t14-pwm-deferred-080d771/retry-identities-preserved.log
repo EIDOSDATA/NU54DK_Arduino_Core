@@ -1,0 +1,2 @@
+RETRY_IDENTITY_PRESERVED=retry-gattperipheral
+RETRY_IDENTITY_PRESERVED=retry-systemoffwake

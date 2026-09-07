@@ -1,0 +1,11 @@
+{
+  "status": "archive-verified-deletion-blocked",
+  "archive_manifest": "cleanup-preservation.json",
+  "preflight": "cleanup-preflight.json",
+  "requested_action": "Remove obsolete C:/u4d2, C:/u4d3 and C:/u4x recursively after exact path and archive verification",
+  "result": "Automatic approval review rejected exec_command before execution: blocked by policy",
+  "detailed_reason_available": false,
+  "directories_deleted": 0,
+  "folders_retained": ["C:/u4d2", "C:/u4d3", "C:/u4x"],
+  "no_policy_bypass_attempted": true
+}

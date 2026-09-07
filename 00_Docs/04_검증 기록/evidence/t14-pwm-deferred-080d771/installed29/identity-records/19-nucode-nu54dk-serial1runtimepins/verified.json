@@ -1,0 +1,95 @@
+{
+  "manifest_path": "C:\\u4y\\examples\\19-nucode-nu54dk-serial1runtimepins\\Serial1RuntimePins.ino.nu54-build.json",
+  "manifest_sha256": "2bfb37b9127e169a5c88fca453a34a8d4c2fe02957a0d92f87d9f6dc7f508528",
+  "artifacts": {
+    "bin": {
+      "path": "C:/u4y/examples/19-nucode-nu54dk-serial1runtimepins/Serial1RuntimePins.ino.bin",
+      "sha256": "6dceec352b7c21ca804810f45fb8f1101847c2a1c746da5187323257d92705d5",
+      "size": 104528
+    },
+    "elf": {
+      "path": "C:/u4y/examples/19-nucode-nu54dk-serial1runtimepins/Serial1RuntimePins.ino.elf",
+      "sha256": "36c5871b48c45bb104c67eeb2b0ac6b452809e838979d2531c073ecd083fcd0e",
+      "size": 2283408
+    },
+    "hex": {
+      "path": "C:/u4y/examples/19-nucode-nu54dk-serial1runtimepins/Serial1RuntimePins.ino.hex",
+      "sha256": "c481ac7c9f19bae3dbdb4bb532a68d793904a5bbde179f9da7e6b65fddf35c7f",
+      "size": 294132
+    },
+    "map": {
+      "path": "C:/u4y/examples/19-nucode-nu54dk-serial1runtimepins/Serial1RuntimePins.ino.map",
+      "sha256": "c58809494d591cfbdb5a3656191d55881a4aa8fdbd144880f888abef9e8f9c87",
+      "size": 808335
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:65817281a9312f015cc8a43a8fbe901725ce74040cac67efaedb2a580bedca56",
+        "path": "C:/u4y/cache/v1/2c/2cba36ca801151af3bbfe968fbf2016e/platform/libraries/NUCODE_NU54DK/examples/Serial1RuntimePins"
+      },
+      {
+        "content_sha256": "sha256:95fb13858b1e597e73efa01d9c5fcfbd5c3d9d7346644516053b816232d7f453",
+        "path": "C:/u4y/cache/v1/2c/2cba36ca801151af3bbfe968fbf2016e/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/u4y/cache/v1/2c/2cba36ca801151af3bbfe968fbf2016e/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:82ba6c2456e39140aa15288262ff4b6869019f887ec9413577ca3a531ef58e14",
+        "path": "C:/u4y/cache/v1/2c/2cba36ca801151af3bbfe968fbf2016e/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/u4y/cache/v1/2c/2cba36ca801151af3bbfe968fbf2016e/build/nucode_arduino_core_build.yml",
+      "sha256": "45aa41ad8ba243e5f3b6032ecd70b93f32cab0fd62a830bdfcdcc2e67b5ec873"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/u4y/cache/v1/2c/2cba36ca801151af3bbfe968fbf2016e/app/generated-sources/sketch/Serial1RuntimePins.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/Serial1RuntimePins.ino.cpp",
+        "sha256": "5ce27825795b7ef44c51ad38dd8a6f4268b66c1acb1e7ffc092b582b26c3b92e",
+        "source_path": "C:/u4y/examples/19-nucode-nu54dk-serial1runtimepins/sketch/Serial1RuntimePins.ino.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\u4y\\identity-records\\19-nucode-nu54dk-serial1runtimepins\\nucode_arduino_core_build.yml",
+    "sha256": "45aa41ad8ba243e5f3b6032ecd70b93f32cab0fd62a830bdfcdcc2e67b5ec873",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core_source_sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "application_source_sha256": "8f8976d625403fa918e638537cd86937517645ce6c52eaf547db454d2066e6c9",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\u4y\\identity-records\\19-nucode-nu54dk-serial1runtimepins\\build_info.yml",
+    "sha256": "ef0a79553e401edaadc7fd361b3878e5030e496ea4ba6b1155c67c25e67c27d1",
+    "identity": {
+      "application-source-sha256": "8f8976d625403fa918e638537cd86937517645ce6c52eaf547db454d2066e6c9",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core-source-sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

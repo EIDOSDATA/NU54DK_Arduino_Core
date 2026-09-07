@@ -1,0 +1,2 @@
+/** @brief 보드 간 점퍼 없이 사용하는 canonical pin map입니다. */
+#include <nucode/nu54dk-arduino-pins.dtsi>

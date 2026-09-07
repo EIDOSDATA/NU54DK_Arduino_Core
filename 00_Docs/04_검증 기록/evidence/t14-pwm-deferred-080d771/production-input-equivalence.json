@@ -1,0 +1,26 @@
+{
+  "baseline": "080d771ae48e83b4621f3160afed67395ead32cd",
+  "current": "874658a16db18b283ab7f1b2835111aaf34b42fd",
+  "compared_git_paths": [
+    "cores",
+    "libraries",
+    "variants",
+    "zephyr",
+    "tools/nu54-builder",
+    "packaging",
+    "boards.txt",
+    "platform.txt"
+  ],
+  "differences": [],
+  "changed_target_source_paths": [
+    "tests/zephyr/m25_nojumper_hil/README.md",
+    "tests/zephyr/m25_nojumper_hil/prj.conf",
+    "tests/zephyr/m25_nojumper_hil/src/main.cpp",
+    "tests/zephyr/m25_nojumper_hil/src/nojumper_adc.h",
+    "tests/zephyr/m25_nojumper_hil/src/nojumper_event.h",
+    "tests/zephyr/m25_nojumper_hil/src/nojumper_ownership.h",
+    "tests/zephyr/m25_nojumper_hil/src/nojumper_time.h",
+    "tests/zephyr/m25_nojumper_hil/src/nojumper_timer.h"
+  ],
+  "scope": "Production sources/configuration/builder identical; expanded HIL and Host tests have separate source/build evidence. Package identity remains 080d771."
+}

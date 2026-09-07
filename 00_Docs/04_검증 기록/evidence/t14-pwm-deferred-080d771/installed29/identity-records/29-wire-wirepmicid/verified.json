@@ -1,0 +1,99 @@
+{
+  "manifest_path": "C:\\u4y\\examples\\29-wire-wirepmicid\\WirePmicId.ino.nu54-build.json",
+  "manifest_sha256": "1edd98052f78c01c62729a532a663be640ac02fdd20a1842665650323fb6c4a9",
+  "artifacts": {
+    "bin": {
+      "path": "C:/u4y/examples/29-wire-wirepmicid/WirePmicId.ino.bin",
+      "sha256": "d27b96b93f3e7c95a280b79a86c908613847c327dfcdb39be62b4c81267b2ab6",
+      "size": 105232
+    },
+    "elf": {
+      "path": "C:/u4y/examples/29-wire-wirepmicid/WirePmicId.ino.elf",
+      "sha256": "9c49ae4e4ae5055037f9fd69ed287fc55a5c5ec0105ca61be0c3d057827a8753",
+      "size": 2294440
+    },
+    "hex": {
+      "path": "C:/u4y/examples/29-wire-wirepmicid/WirePmicId.ino.hex",
+      "sha256": "b2ab0342e6df1b693c80d99ab757f4ad8bee659398385bd1357d253d5fa7bf0f",
+      "size": 296109
+    },
+    "map": {
+      "path": "C:/u4y/examples/29-wire-wirepmicid/WirePmicId.ino.map",
+      "sha256": "23f03d273286669210463843fb54388603eae7021105b58e4efc1d0d3f9838bf",
+      "size": 809403
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:9de80bd3be8d92293bebfdabd49d3ba01488a8ae8ae6c2051c444124c5943978",
+        "path": "C:/u4y/cache/v1/20/20d343d72de49db9bca434eb83d2987b/platform/libraries/Wire/examples/WirePmicId"
+      },
+      {
+        "content_sha256": "sha256:95fb13858b1e597e73efa01d9c5fcfbd5c3d9d7346644516053b816232d7f453",
+        "path": "C:/u4y/cache/v1/20/20d343d72de49db9bca434eb83d2987b/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/u4y/cache/v1/20/20d343d72de49db9bca434eb83d2987b/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:b776dcc7665a389174905e777b4872bff416425abc7471ff69a21c2397e02963",
+        "path": "C:/u4y/cache/v1/20/20d343d72de49db9bca434eb83d2987b/platform/libraries/Wire/src"
+      },
+      {
+        "content_sha256": "sha256:b9e30a6ca554d50699eefb76afcc9669ba174afde5fa7969f5fd73be17c36111",
+        "path": "C:/u4y/cache/v1/20/20d343d72de49db9bca434eb83d2987b/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/u4y/cache/v1/20/20d343d72de49db9bca434eb83d2987b/build/nucode_arduino_core_build.yml",
+      "sha256": "b262e58fcf3fe0f2abbe775cddd11236526a85f9b9465e6d9150a35270768137"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/u4y/cache/v1/20/20d343d72de49db9bca434eb83d2987b/app/generated-sources/sketch/WirePmicId.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/WirePmicId.ino.cpp",
+        "sha256": "a1182df28a58fc58c97e75deee2d84430a6c5d8d72f01124fffe828cc038303f",
+        "source_path": "C:/u4y/examples/29-wire-wirepmicid/sketch/WirePmicId.ino.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\u4y\\identity-records\\29-wire-wirepmicid\\nucode_arduino_core_build.yml",
+    "sha256": "b262e58fcf3fe0f2abbe775cddd11236526a85f9b9465e6d9150a35270768137",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core_source_sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "application_source_sha256": "1fd94ab36919e8bb4e9726b04560a0155f88a3fe2a040f1c657a3cd622dfb985",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\u4y\\identity-records\\29-wire-wirepmicid\\build_info.yml",
+    "sha256": "a795ea3e88a8c6a562ea5bc9ff373756a74460b1424053f4288016d0928ffb88",
+    "identity": {
+      "application-source-sha256": "1fd94ab36919e8bb4e9726b04560a0155f88a3fe2a040f1c657a3cd622dfb985",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core-source-sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}

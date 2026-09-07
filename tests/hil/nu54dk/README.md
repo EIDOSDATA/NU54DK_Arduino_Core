@@ -1,10 +1,13 @@
 # NU54DK HIL 시험
 
+현재 개발 검증(2026-09-07): [94번](<../../../00_Docs/04_검증 기록/94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>)에서 PWM 미시작 STOP 수정·두 보드 회귀와 전체 software/설치 예제 검증을 완료했다. [95번](<../../../00_Docs/04_검증 기록/95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)의 내부 ADC·TIMER·이벤트·시간 함수와 PWM 회귀도 두 보드 1,808명령 PASS다. 보드 간 결선은 해제됐으며 T12 전체·T13 이후와 RC/공개는 미완료다. 아래 source별 이력의 당시 상태와 현재 재개 조건을 구별한다.
+
 이 디렉터리는 NU54DK 실물 보드가 필요한 host-side 시험만 관리합니다. 일반 host unit test나
 Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정하지 않습니다.
 
 | 파일 | 역할 | 주요 fixture |
 | --- | --- | --- |
+| `v04_nojumper.py` | PWM·내부 ADC·TIMER·EGU/DPPI/PPIB·시간 함수의 exact SWD 명령/판정 | 두 지정 보드 USB/SWD, 보드 간 결선 해제, 94·95번 |
 | `m6_serial_echo.py` | pyOCD flash 후 UART READY·echo 검증 | NU54DK, CMSIS-DAP V2 UART |
 | `m7_i2c_pmic.py` | BQ25186 고정 ID register의 읽기 전용 I2C 검증 | 보드 내장 PMIC |
 | `m7_peripheral_hil.py` | SPI loopback·ADC·PWM token 검증 | 명시된 점퍼와 핀 fixture |

@@ -1,5 +1,7 @@
 # NU54DK Arduino Core
 
+현재 개발 검증(2026-09-07): [94번](<00_Docs/04_검증 기록/94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>)에서 PWM 미시작 STOP 수정·두 보드 회귀와 전체 software/설치 예제 검증을 완료했다. [95번](<00_Docs/04_검증 기록/95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)의 내부 ADC·TIMER·이벤트·시간 함수와 PWM 회귀도 두 보드 1,808명령 PASS다. 보드 간 결선은 해제됐으며 T12 전체·T13 이후와 RC/공개는 미완료다. 아래 source별 이력의 당시 상태와 현재 재개 조건을 구별한다.
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Stable: v0.3.0](https://img.shields.io/badge/stable-v0.3.0-blue.svg)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.3.0)
 [![NCS: v3.4.0](https://img.shields.io/badge/NCS-v3.4.0-00A9CE.svg)](https://github.com/nrfconnect/sdk-nrf)
@@ -253,7 +255,7 @@ SPIM/SPIS20·21·22 전 조합 27,252개 계획 벡터를 통과했습니다.
 TWIM/TWIS20·21·22·30의 기능 record 1,986개와 cleanup 2건을 통과해 T11 단독 기능 검증을
 역사적 체크포인트로 완료했습니다. 이후 R00~R13 리팩토링과 전체 software gate는
 [64번 기록](<./00_Docs/04_검증 기록/64_R13_도구_정책_build_구조.md>)으로 완료했습니다. 최종 source의
-current-source T11은 exact 154324c의 Fixture 101 기능 1,644개를 통과했습니다. Fixture 102도 exact a49cc0d에서 822개를 통과했으며 Fixture 103도 exact 7aece93에서 2,466개를 통과했습니다. 승인 UART route 세 묶음을 완료했고 Fixture 201 SPI도 exact 0f429e7에서 18,169개를 통과했습니다. Fixture 202도 exact 1349e20에서 9,084개를 통과했습니다. Fixture 203도 exact be49207에서 27,252개를 통과해 SPI 세 묶음을 완료했습니다. Fixture 301도 exact 9a63251에서 1,986개를 통과해 current-source T11 단독 회귀를 완료했습니다. T12 Fixture 401 exact a12e444·402 exact ff483a1·403 exact c95b904·404 exact e080bbc에서 각각 48개를 통과했습니다. 405 오픈드레인·406/407 입력 바이어스 각 12개와 408 PWM 48개를 통과했으며 420 QDEC도 완료했으며 430 I2S도 전체 192개를 통과했으며 440 PDM은 모노 DMA 4개 통과 뒤 stereo 실패하여 진단 중입니다.
+current-source T11은 exact 154324c의 Fixture 101 기능 1,644개를 통과했습니다. Fixture 102도 exact a49cc0d에서 822개를 통과했으며 Fixture 103도 exact 7aece93에서 2,466개를 통과했습니다. 승인 UART route 세 묶음을 완료했고 Fixture 201 SPI도 exact 0f429e7에서 18,169개를 통과했습니다. Fixture 202도 exact 1349e20에서 9,084개를 통과했습니다. Fixture 203도 exact be49207에서 27,252개를 통과해 SPI 세 묶음을 완료했습니다. Fixture 301도 exact 9a63251에서 1,986개를 통과해 current-source T11 단독 회귀를 완료했습니다. T12 Fixture 401 exact a12e444·402 exact ff483a1·403 exact c95b904·404 exact e080bbc에서 각각 48개를 통과했습니다. 405 오픈드레인·406/407 입력 바이어스 각 12개와 408 PWM 48개를 통과했으며 420 QDEC도 완료했으며 430 I2S도 전체 192개를 통과했으며 440 PDM은 기본·연속 기능 검증을 완료했습니다. 현재 남은 범위는 위 95번을 따릅니다.
 다음 결선의 사용자 확인 뒤 T12 analog·stream 및 전체 동시성·soak 통합 캠페인을 진행합니다.
 정식 공개는 아직 완료되지 않았습니다.
 검증은 온보드 자원과 두 NU54DK의 통신·합성 신호·capture를 기준으로 합니다. 정밀 계측과 외부

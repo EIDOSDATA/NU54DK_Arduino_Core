@@ -1,0 +1,158 @@
+{
+  "source": "35f30b25fd318f9c5397da73263fd24df42d6df0",
+  "status": "First attempt failed: A 888 pass, one time oracle failure, 15 not run; B 904 not run",
+  "raw_gzip_roundtrip": "passed",
+  "artifact_note": "ELF/HEX and complete compile databases remain at recorded local build roots; their hashes and provenance are archived. Host mocks are not board executions.",
+  "files": [
+    {
+      "name": "audit_partial.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper\\audit_partial.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2101,
+      "original_sha256": "cfd36f4327f320409f59be9bd209dc5262334ceafeecf3247e6760522807118f",
+      "normalized_bytes": 2101,
+      "normalized_sha256": "cfd36f4327f320409f59be9bd209dc5262334ceafeecf3247e6760522807118f",
+      "original_archive": "audit_partial.py.raw.gz"
+    },
+    {
+      "name": "collect_targets.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper\\collect_targets.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 3826,
+      "original_sha256": "dfa5891a1068b177fd90e042cf62623ad9312d505d6a1a4031047562a0f996d2",
+      "normalized_bytes": 3779,
+      "normalized_sha256": "61fa172ea15105c180e5a8f1ee2360dedd9434b8db266ccf1779e9dae9bbafb4",
+      "original_archive": "collect_targets.py.raw.gz"
+    },
+    {
+      "name": "hardware-attempt1.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper\\hardware-attempt1.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 75120,
+      "original_sha256": "b561dcf37a4f18161c649dd7dcd0019fd50c4509ebc8860199c87ebc917da786",
+      "normalized_bytes": 67767,
+      "normalized_sha256": "1947760665f4491bde1ef6c0769cde0704afe35f22a40c9df34432bb28d0c9da",
+      "original_archive": "hardware-attempt1.json.raw.gz"
+    },
+    {
+      "name": "hardware-attempt1.json.jsonl",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper\\hardware-attempt1.json.jsonl",
+      "normalization": "utf8-lf",
+      "original_bytes": 282391,
+      "original_sha256": "36701a66f339d8157ecffdc08d8b2958088f2e64f8a0c0dba576e9712a1f9a4e",
+      "normalized_bytes": 281502,
+      "normalized_sha256": "150fe75dc5b7ee639f92a147427d7cc47b197c6fa876013f8c903f377bff7899",
+      "original_archive": "hardware-attempt1.json.jsonl.raw.gz"
+    },
+    {
+      "name": "hardware-attempt1.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper\\hardware-attempt1.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 2555,
+      "original_sha256": "d7de911701cda0f4fde7679efb350758e3c107bf3ef9a27a1b7c04b77275f4c8",
+      "normalized_bytes": 2501,
+      "normalized_sha256": "5076250a9356cc57e24541cd80ae08de09ae5c5637d5956422f38e9e0452f42d",
+      "original_archive": "hardware-attempt1.log.raw.gz"
+    },
+    {
+      "name": "hardware-partial-audit.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper\\hardware-partial-audit.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1359,
+      "original_sha256": "946d50a1c519616ff3b7ddaafb37ee1516d88c49ffad60a802ae81e1ca9110a0",
+      "normalized_bytes": 1284,
+      "normalized_sha256": "dc69979fe038ec4dec4c7fe2ab5b79da63292a4f23a022d7bb25a1cd759db9b9",
+      "original_archive": "hardware-partial-audit.json.raw.gz"
+    },
+    {
+      "name": "nj26-artifact-index.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper\\nj26-artifact-index.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 6929,
+      "original_sha256": "703ed7bf41dedb5fed92ff39a7c01eea4806a70a98867d8683978071ae023749",
+      "normalized_bytes": 6822,
+      "normalized_sha256": "e56b17d87ccdb08381072a75ddafb216ca52c50ee7540371753ef46d83e2e59c",
+      "original_archive": "nj26-artifact-index.json.raw.gz"
+    },
+    {
+      "name": "run_hardware.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper\\run_hardware.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 4698,
+      "original_sha256": "74fddc6f791b8395b5ac1498104281eab8be9ab23491143abeb406db2b9f1c0c",
+      "normalized_bytes": 4620,
+      "normalized_sha256": "410436a1720055c9fbb15820b8c9b834d7218b5a190eccddbc8c2d5909fd291b",
+      "original_archive": "run_hardware.py.raw.gz"
+    },
+    {
+      "name": "runtime.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper\\runtime.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2616,
+      "original_sha256": "e99b39e54de885df36b9577af83bcd12de72c34b35e4c1850b0faabc6ccdfaef",
+      "normalized_bytes": 2558,
+      "normalized_sha256": "e48d447778d0fdcea096be95bf5784e1f1f0abc78df03251ee423a9653dc6e7d",
+      "original_archive": "runtime.py.raw.gz"
+    },
+    {
+      "name": "source.txt",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper\\source.txt",
+      "normalization": "utf8-lf",
+      "original_bytes": 42,
+      "original_sha256": "df34477322cfe69d59f3a508d5bb25e512140ab7b17d4a5248a14a49a12a3551",
+      "normalized_bytes": 41,
+      "normalized_sha256": "904887ac85344d921c43325fc3154b02b06b490c117259225544e68bf2889392",
+      "original_archive": "source.txt.raw.gz"
+    },
+    {
+      "name": "target-artifacts.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper\\target-artifacts.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 30,
+      "original_sha256": "4b20eb3eaa379cdd0ee3086af131115b2eb5fae13e07699e78408c2ebb33b73f",
+      "normalized_bytes": 29,
+      "normalized_sha256": "f6e26a4022d2bde1adb61b7022f9e19011a6b6e465a642e0df5fe5d19e9a9097",
+      "original_archive": "target-artifacts.log.raw.gz"
+    },
+    {
+      "name": "target-build.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-internal-nojumper\\target-build.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 1787,
+      "original_sha256": "e7c2fbd59b5036f3cdb04f8af58a6329674255c826baf3036a4c9c9170816cfa",
+      "normalized_bytes": 1767,
+      "normalized_sha256": "5325cee4b1201061b95c594540b847f60746d0a6b25800e777f840f53e4c3b79",
+      "original_archive": "target-build.log.raw.gz"
+    },
+    {
+      "name": "target/m12-build-evidence.json",
+      "workspace_original": "C:\\nj26\\m12-build-evidence.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 495,
+      "original_sha256": "9779ef1db2564d9dea5491a44c27eb68b3f7f20c724f2e22564b6ffff8d0e50c",
+      "normalized_bytes": 495,
+      "normalized_sha256": "9779ef1db2564d9dea5491a44c27eb68b3f7f20c724f2e22564b6ffff8d0e50c",
+      "original_archive": "target/m12-build-evidence.json.raw.gz"
+    },
+    {
+      "name": "target/twister.json",
+      "workspace_original": "C:\\nj26\\twister.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 2153,
+      "original_sha256": "a374df89a585c8625f55fbd50adfd331234954c2ea870b1e2d2a127c52b38cdf",
+      "normalized_bytes": 2095,
+      "normalized_sha256": "bbce906329a76ec12dec01b397a847f807d5d10754fde528a6e1143ea7242f76",
+      "original_archive": "target/twister.json.raw.gz"
+    },
+    {
+      "name": "target/twister.log",
+      "workspace_original": "C:\\nj26\\twister.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 5851,
+      "original_sha256": "3f4422f11f8ecbbd1b42c21a428db3bd16ca1a51da708bb8591899a797e5ed8c",
+      "normalized_bytes": 5807,
+      "normalized_sha256": "dd06471cac74041bde4f0feb696f2a55eae189d43797f01695743e9f252153b7",
+      "original_archive": "target/twister.log.raw.gz"
+    }
+  ]
+}

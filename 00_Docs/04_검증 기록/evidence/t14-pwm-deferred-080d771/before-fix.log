@@ -1,0 +1,68 @@
+test_analog_production (test_r03_fabric_drivers.FabricDriverTests.test_analog_production) ... ok
+test_pwm_deferred_production (test_r03_fabric_drivers.FabricDriverTests.test_pwm_deferred_production) ... 
+  test_pwm_deferred_production (test_r03_fabric_drivers.FabricDriverTests.test_pwm_deferred_production) (scenario='simple') ... FAIL
+  test_pwm_deferred_production (test_r03_fabric_drivers.FabricDriverTests.test_pwm_deferred_production) (scenario='complex') ... FAIL
+  test_pwm_deferred_production (test_r03_fabric_drivers.FabricDriverTests.test_pwm_deferred_production) (scenario='repeat') ... FAIL
+  test_pwm_deferred_production (test_r03_fabric_drivers.FabricDriverTests.test_pwm_deferred_production) (scenario='commit_failure') ... FAIL
+  test_pwm_deferred_production (test_r03_fabric_drivers.FabricDriverTests.test_pwm_deferred_production) (scenario='disable_race') ... FAIL
+  test_pwm_deferred_production (test_r03_fabric_drivers.FabricDriverTests.test_pwm_deferred_production) (scenario='subscribed') ... FAIL
+test_stream_production (test_r03_fabric_drivers.FabricDriverTests.test_stream_production) ... ok
+
+======================================================================
+FAIL: test_pwm_deferred_production (test_r03_fabric_drivers.FabricDriverTests.test_pwm_deferred_production) (scenario='simple')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 42, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: pwm->stop(20U) == AnalogFabricResult::success, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_pwm_deferred_driver_main.cpp, line 69
+
+
+======================================================================
+FAIL: test_pwm_deferred_production (test_r03_fabric_drivers.FabricDriverTests.test_pwm_deferred_production) (scenario='complex')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 42, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: pwm->stop(20U) == AnalogFabricResult::success, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_pwm_deferred_driver_main.cpp, line 69
+
+
+======================================================================
+FAIL: test_pwm_deferred_production (test_r03_fabric_drivers.FabricDriverTests.test_pwm_deferred_production) (scenario='repeat')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 42, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: pwm->stop(20U) == AnalogFabricResult::success, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_pwm_deferred_driver_main.cpp, line 69
+
+
+======================================================================
+FAIL: test_pwm_deferred_production (test_r03_fabric_drivers.FabricDriverTests.test_pwm_deferred_production) (scenario='commit_failure')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 42, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: pwm->stop(20U) == AnalogFabricResult::success, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_pwm_deferred_driver_main.cpp, line 69
+
+
+======================================================================
+FAIL: test_pwm_deferred_production (test_r03_fabric_drivers.FabricDriverTests.test_pwm_deferred_production) (scenario='disable_race')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 42, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: pwm->stop(20U) == AnalogFabricResult::success, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_pwm_deferred_driver_main.cpp, line 56
+
+
+======================================================================
+FAIL: test_pwm_deferred_production (test_r03_fabric_drivers.FabricDriverTests.test_pwm_deferred_production) (scenario='subscribed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r03_fabric_drivers.py", line 42, in run_driver
+    self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'))
+AssertionError: 3221226505 != 0 : Assertion failed: pwm->stop(20U) == AnalogFabricResult::ownership_conflict, file C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\r03_pwm_deferred_driver_main.cpp, line 61
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 12.153s
+
+FAILED (failures=6)

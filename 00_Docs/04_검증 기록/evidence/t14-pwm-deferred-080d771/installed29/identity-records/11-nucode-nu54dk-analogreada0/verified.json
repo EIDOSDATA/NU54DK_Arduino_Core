@@ -1,0 +1,95 @@
+{
+  "manifest_path": "C:\\u4y\\examples\\11-nucode-nu54dk-analogreada0\\AnalogReadA0.ino.nu54-build.json",
+  "manifest_sha256": "f93d6ce8a7bd5873c16f10afa9e61bd0c5fa13a2d4908569b5d12bc2f90b83c7",
+  "artifacts": {
+    "bin": {
+      "path": "C:/u4y/examples/11-nucode-nu54dk-analogreada0/AnalogReadA0.ino.bin",
+      "sha256": "9123602e488c1ffa1e81586bd239919cfbb576ba5a59700354a5c641ba04052f",
+      "size": 106004
+    },
+    "elf": {
+      "path": "C:/u4y/examples/11-nucode-nu54dk-analogreada0/AnalogReadA0.ino.elf",
+      "sha256": "4a28dcc97d85f9e2ac57c0d18c6d917357e93206d9ecf8e95724691f0aec3e34",
+      "size": 2329512
+    },
+    "hex": {
+      "path": "C:/u4y/examples/11-nucode-nu54dk-analogreada0/AnalogReadA0.ino.hex",
+      "sha256": "0bc1141177ebd7eaa93ba5cc4d82e66b490ea374279d80c4e9e6d00e8bf9470c",
+      "size": 298264
+    },
+    "map": {
+      "path": "C:/u4y/examples/11-nucode-nu54dk-analogreada0/AnalogReadA0.ino.map",
+      "sha256": "b3128e4343e5f9192419ddcf8b71542f6a8e21b563120f6f3162f41cd0376cca",
+      "size": 809003
+    }
+  },
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:3a56f85fd066c12e0c349360f81404fb0a6775bd54f43f2d77fb57c63d4a83e1",
+        "path": "C:/u4y/cache/v1/ad/add301b28c8ccc34fa2d8fbfb3919b8a/platform/libraries/NUCODE_NU54DK/examples/AnalogReadA0"
+      },
+      {
+        "content_sha256": "sha256:95fb13858b1e597e73efa01d9c5fcfbd5c3d9d7346644516053b816232d7f453",
+        "path": "C:/u4y/cache/v1/ad/add301b28c8ccc34fa2d8fbfb3919b8a/platform/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:eaa448e78af6400d63181c727648bf6a2f1f75393dbcf1dcae67830a75d63685",
+        "path": "C:/u4y/cache/v1/ad/add301b28c8ccc34fa2d8fbfb3919b8a/platform/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:383007cfdf5fd26cf6ec39577500c65edf976a87e6612c4b19bfbab1daf44ecc",
+        "path": "C:/u4y/cache/v1/ad/add301b28c8ccc34fa2d8fbfb3919b8a/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/u4y/cache/v1/ad/add301b28c8ccc34fa2d8fbfb3919b8a/build/nucode_arduino_core_build.yml",
+      "sha256": "e88b4024bf53ef72fcbbbf970bf976ff94db3459bd28e53c0a143a3251cb338c"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/u4y/cache/v1/ad/add301b28c8ccc34fa2d8fbfb3919b8a/app/generated-sources/sketch/AnalogReadA0.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/AnalogReadA0.ino.cpp",
+        "sha256": "849bf6fd0e895d9be36924415cd709efd7288f0ffa12234ca76183ba368fc695",
+        "source_path": "C:/u4y/examples/11-nucode-nu54dk-analogreada0/sketch/AnalogReadA0.ino.cpp"
+      }
+    ]
+  },
+  "live_record": {
+    "path": "C:\\u4y\\identity-records\\11-nucode-nu54dk-analogreada0\\nucode_arduino_core_build.yml",
+    "sha256": "e88b4024bf53ef72fcbbbf970bf976ff94db3459bd28e53c0a143a3251cb338c",
+    "identity": {
+      "source_version": "0.4.0-dev",
+      "package_version": "0.0.90",
+      "core_revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core_source_sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "application_source_sha256": "509a4358cbde1f97f8f2ecb778b56086a298c9148871462e8500055228c54ca5",
+      "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board_source_sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "toolchain_variant": "zephyr",
+      "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "cxx_compiler": "GNU 14.3.0"
+    }
+  },
+  "configure_record": {
+    "path": "C:\\u4y\\identity-records\\11-nucode-nu54dk-analogreada0\\build_info.yml",
+    "sha256": "22d7aadff6392af6ee3fa99404f1534bd422317beb43f6186cd244bbbe971aa1",
+    "identity": {
+      "application-source-sha256": "509a4358cbde1f97f8f2ecb778b56086a298c9148871462e8500055228c54ca5",
+      "board-package-revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "board-source-sha256": "07d4409f4b9cae3767d8e4ec563dc721e9ce2faa50081cbee97f4909dc8b1484",
+      "core-revision": "080d771ae48e83b4621f3160afed67395ead32cd",
+      "core-source-sha256": "afebedb4e6ddfaca03b4f1e608ac50cb9d430207187316d92b2be1389ac7d086",
+      "cxx-compiler": "GNU 14.3.0",
+      "ncs-revision": "99553055607b",
+      "package-version": "0.0.90",
+      "source-version": "0.4.0-dev",
+      "zephyr-revision": "bf801e4e3d19"
+    }
+  },
+  "physical_executed": false
+}
