@@ -26,6 +26,21 @@ def load(name: str):
 class PackageModuleTests(unittest.TestCase):
     """! @brief 실제 CLI와 import 소비자의 경로 호환성을 검사합니다. """
 
+    def test_isolated_cli_uses_utf8_with_legacy_output_encoding(self):
+        """! @brief CP1252 출력 환경에서도 격리 CLI가 한글 도움말을 UTF-8로 출력해야 합니다. """
+        launcher = """import runpy
+import sys
+sys.stdout.reconfigure(encoding='cp1252')
+sys.stderr.reconfigure(encoding='cp1252')
+sys.argv = [sys.argv[1], '--help']
+runpy.run_path(sys.argv[0], run_name='__main__')
+"""
+        result = subprocess.run([sys.executable, "-I", "-c", launcher, str(ENTRY)],
+                                capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("재현 가능한 package", result.stdout.decode("utf-8"))
+        self.assertEqual(result.stderr, b"")
+
     def test_isolated_cli_ignores_foreign_package_and_pythonpath(self):
         with tempfile.TemporaryDirectory(prefix="nu54-r13-설치 공백-") as temporary:
             root = Path(temporary)
