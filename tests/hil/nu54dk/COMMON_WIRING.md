@@ -1,5 +1,7 @@
 # NU54DK v0.4.0 공통 결선과 연결 검사
 
+현재 첫 검사: exact 8c1cfe2에서 A→B P1.14 1회는 통과했고 P1.10 LOW 전달이 없어 중단했다. 양쪽 출력/pull/핀 소유권을 반환했으며 전체 102회 중 1 PASS·1 FAIL·100 미실행이다. 두 USB 분리 후 P1.10(P4-8) 위치·접촉 확인과 재연결을 요청했다.
+
 2026-09-07. **신호 17개 + 공통 GND 1개, 총 18가닥.** 기존 PWM P1.14 선과 GND는 유지하고 16가닥을 추가한다.
 사용자가 17신호+GND 그대로 결선을 완료했다고 확인했다. Fixture 501 결선 checker를 구현하고 Host/target을 검사했다. 실제 배선 PASS는 새 exact image로 실행한 원본 결과를 따른다. GPIO/GPIOTE/PWM/QDEC/I2S 전체 통합은 후속 작업이다.
 현재 408/420/430 개별 확인서는 이 결선의 확인서가 아니다. `v04_common_fixture.json`의 501 revision 1과 새 exact image/UID hash를 사용한다.

@@ -1,0 +1,100 @@
+{
+  "core_revision": "8c1cfe27551b46fab101a75de61f502899d0d95c",
+  "physical_status": "failed",
+  "records": [
+    {
+      "raw_name": "confirmation.json",
+      "raw_sha256": "46bdb513f27888a89e03b13aba42731fa628f690e3a1dcb97aa18ee8774e0827",
+      "gzip_file": "confirmation.json.gz",
+      "gzip_sha256": "cdbecfa3540a38ec8869c675a6c09eaba6dad447100676e4fe20a962f8502cae",
+      "lf_file": "confirmation.json",
+      "lf_sha256": "1631ed581168711623283ef499ad8a9c6ae4502d8a53e550ff8740337f90b563"
+    },
+    {
+      "raw_name": "images.json",
+      "raw_sha256": "75d46f4891869efaddbd171ac46b41551bf942756236544e02149734e078d516",
+      "gzip_file": "images.json.gz",
+      "gzip_sha256": "4b48edd91832123db587e478e62fbb7a83e23e2068b161d1a0565210590329b7",
+      "lf_file": "images.json",
+      "lf_sha256": "dc8bda0b3c4fcb8d04733337b03633d7f25b7105705b230c520fcb38bc9c7933"
+    },
+    {
+      "raw_name": "result.json",
+      "raw_sha256": "a7f1cc6ca2b04b426d3763fee9f16f1662997db80dacfdd3369758b5df308678",
+      "gzip_file": "result.json.gz",
+      "gzip_sha256": "08aa36ff8421f555be013a16d73d4819e3169b95715d536bb9162185c5a2f40b",
+      "lf_file": "result.json",
+      "lf_sha256": "ffb57d3700fafecd68f7556a56614194786ce41cbeba9575a785b6c9aae36233"
+    },
+    {
+      "raw_name": "result.json.jsonl",
+      "raw_sha256": "cf577c5209fcd6e608d9c7c6b28c3844a23f7ea4272a28c857bf6eaf0bff3dcb",
+      "gzip_file": "result.json.jsonl.gz",
+      "gzip_sha256": "05081825a29e3593cdc4dea6a0d13e64a1c2ca611d074790d6a693c48a7720ec",
+      "lf_file": "result.json.jsonl",
+      "lf_sha256": "d2a60a90c8dd5428f32d195b9bf38e34d2c842ee9f6de8ef8e0078cc6933e551"
+    },
+    {
+      "raw_name": "wiring-exact-target.json",
+      "raw_sha256": "d58b73fc38836898f6ebf8eb14caef38442a7ef478b32fb66ae848be83089eaa",
+      "gzip_file": "wiring-exact-target.json.gz",
+      "gzip_sha256": "4dfcb22e70e6e5b53df7a218dddada4745c2ce9edb27cbba37d1616b4d07763c",
+      "lf_file": "wiring-exact-target.json",
+      "lf_sha256": "3d6bd7fc836b90ebe6a1a92bfc7319708a5d1f08308a9e1462dbd90a4abc0fe2"
+    },
+    {
+      "raw_name": "wiring-exact-target.log",
+      "raw_sha256": "498dd5259c2611879031494b68afc5dd1ee31adbb332a0f3e707b02c5f8ea8e0",
+      "gzip_file": "wiring-exact-target.log.gz",
+      "gzip_sha256": "b93a1761eff5b65902d3307004c8d2055f28d3aee41b00fc6448b1beaec6cae8"
+    },
+    {
+      "raw_name": "wiring-exact-m27.json",
+      "raw_sha256": "d5bdcb220bb438867cce489403f5eeaf53a3c3f258952a7773d92b0ef76f34aa",
+      "gzip_file": "wiring-exact-m27.json.gz",
+      "gzip_sha256": "7f51454493f1b3d8c1f49ee36583fe98ba0b0697248680fa615a143bbe74a6b5",
+      "lf_file": "wiring-exact-m27.json",
+      "lf_sha256": "4db581cd42ea97a7a67b2367c3d09a812c4766077cd7df478e20c7371b4d269d"
+    },
+    {
+      "raw_name": "wiring-exact-m27.log",
+      "raw_sha256": "cfb400c3c88314cb85dbe43fd3e1cf3eebbe91bebfb4de89213618a502c1b46a",
+      "gzip_file": "wiring-exact-m27.log.gz",
+      "gzip_sha256": "027589bf3cc10944c8979a6f9ac3e57e224041e9a8ced7de285dff4a4906e082"
+    },
+    {
+      "raw_name": "wiring-8c1cfe2-preflight.json",
+      "raw_sha256": "9a2d4d68d5df07c8e1bd53ff946b6025eca7659dd66cba87708494fa9601e08a",
+      "gzip_file": "wiring-8c1cfe2-preflight.json.gz",
+      "gzip_sha256": "8033f22513e39f2a3b174c776cdb6f62e18de7f4dbd309976a155d68a38d476a",
+      "lf_file": "wiring-8c1cfe2-preflight.json",
+      "lf_sha256": "2420ce333ac6febc047fcaef78f3ea5a1e19fb4f10fe902aa8fa6ea707c868bc"
+    },
+    {
+      "raw_name": "wiring-8c1cfe2-preflight.log",
+      "raw_sha256": "b8929bbf86d95bd8ff6c35e9dd6e1e13ead990a1298213e49935927182effdb2",
+      "gzip_file": "wiring-8c1cfe2-preflight.log.gz",
+      "gzip_sha256": "17e48f979d6b8e8fb7b8b609a8241580413c334c7e4e9293101ace378ab99cc5"
+    },
+    {
+      "raw_name": "wiring-8c1cfe2-hardware.json",
+      "raw_sha256": "9b19fac28414e0bf8ea4271358b821fac4578e119444fcd63938a0982a08cf4b",
+      "gzip_file": "wiring-8c1cfe2-hardware.json.gz",
+      "gzip_sha256": "3752fbb76b8704f89e8515ae8dd8e1d7108d38fc96d87fa156a44770f219d8a4",
+      "lf_file": "wiring-8c1cfe2-hardware.json",
+      "lf_sha256": "3069c7dfbef6a568328adb28ddc1ad2597c953f1167af4f3f437260414ba4b64"
+    },
+    {
+      "raw_name": "wiring-8c1cfe2-hardware.log",
+      "raw_sha256": "2af8d1465c908ce9495fd497ebc381922a76f34f3213ea66eb3f44dddf11bb32",
+      "gzip_file": "wiring-8c1cfe2-hardware.log.gz",
+      "gzip_sha256": "8232597fa180883cf064c6367435f4e8d47974975dadd940ab0c2fc4adea02e3"
+    }
+  ],
+  "passed_net_rounds": 1,
+  "failed_net_rounds": 1,
+  "unexecuted_net_rounds": 100,
+  "pulse_and_lease_timeout_tests": "not run",
+  "cleanup": "both GPIO directions input; no tokens/pulls/active LOW",
+  "failure": "A P1.10 LOW observed locally but B P1.10 remained HIGH; cause not yet established"
+}

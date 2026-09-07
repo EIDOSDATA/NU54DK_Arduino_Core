@@ -1,5 +1,7 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
+최신 실기 체크포인트: [99번](<04_검증 기록/99_공통_결선_검사와_승인_전_자동_진행_계획.md>) exact 8c1cfe2의 501 checker에서 A→B P1.14 첫 회차 PASS, 다음 P1.10 전달 FAIL로 중단했다. 양쪽 출력·pull·pin lease를 모두 해제했다. 102회 중 1 PASS·1 FAIL·100 미실행, 자동 해제 실기도 미실행이다. 사용자의 P1.10(P4-8) 위치/접촉 확인·USB 재연결을 기다리며 다음 출력 시험은 하지 않는다.
+
 현행 검증 기준 조정(2026-09-07): 사용자의 “단독 안정성은 3분으로 줄여” 지시에 따라 T13 단독 연속 실행을 **인스턴스별 180초**로 변경한다. 후속 사용자 동의에 따라 동시 실행은 **조합별 1800초**, 전체 대표 고부하 한 조합은 **3600초로 대체**한다. [98번 결정 기록](<04_검증 기록/98_T13_단독_안정성_3분_기준_조정.md>)을 따른다. 이전 기록의 600초는 당시 계획이며 180초로 소급 재분류하지 않는다. 사용자가 공통 결선을 완료했다고 보고하고 결선 검사 펌웨어를 요청했다. T10/12 공통 결선 검사 준비를 재개하며 실제 출력은 새 보드 식별·정확한 결선 확인·검증된 image 뒤 수행한다.
 
 이번 실행 범위(T10/T12 준비·T13 기준 조정): [99번](<04_검증 기록/99_공통_결선_검사와_승인_전_자동_진행_계획.md>)에 공통 17신호 결선 checker, Host/target 검사, 새 exact 보드 실기, 증거·commit/push를 연결한다. 정식 배포 승인 전 T21까지 자동으로 가능한 후속 작업을 진행하되 결선/스위치/전원 조작이 필요한 단계는 현장 확인을 요청한다. T12 전체·T13 이후·RC·readiness를 준비만으로 완료 처리하지 않는다.
@@ -15,7 +17,7 @@ T12 다음 준비 범위(2026-09-07): 97번의 첫 capture를 common/grouped/ind
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.33 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.34 |
 | 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 외부/내부 부분 PASS·전체 미완료 |
 | 작성·갱신일 | 2026-09-07 |
 | 작성 직전 기준 commit | `65b0c7b8585574595ba11c4e0f7231f7e46ef25b` — 단독 180초 정책 반영. 이번 작업은 501 checker와 동시 1800/3600초 정책이며 source별 실기는 구분 |
@@ -71,22 +73,22 @@ GPIO/GPIOTE 전체·I2S 연속/단방향·QDEC 추가 조건 및 PWM의 나머�
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | Fixture 501 checker·새 catalog·독립 oracle·실행기·현재 안정성 기준 준비. Host 699 PASS·2 조건부 SKIP, pair target 2/2, 정렬 379개 PASS. 아직 이번 source의 외부 신호 실행 전 |
+| 이번에 끝낸 일 | 501 checker 준비·commit/push와 exact 8c1cfe2 첫 실기. P1.14 1회 PASS·P1.10 전달 FAIL, 양쪽 STOP/입력/lease 반환. Host 699 PASS·2 조건부 SKIP 후 clean M27 9/9, pair 2/2 |
 | 진행 중인 T 항목 | T10/T12 공통 결선 검사 준비와 T13 시간 기준 조정. 전체 기능 통합·T12 전체·T13 이후는 미완료 |
-| 다음 구체적 행동 | 준비 코드를 clean commit으로 고정하고 두 역할 image를 다시 빌드한 뒤, 새 exact UID·현재 501 확인서로 102회 결선 검사와 pulse/lease 해제를 실행 |
-| 다음 작업에 필요한 사용자 행동 | 사용자가 17신호+GND, P1.06/1.07만 교차, P2.07/P2.08 미연결을 확인했다. 현재 연결 상태가 바뀌면 알려야 한다. 장시간 경과·결선 전환·전원 복구 등 현장 조작은 해당 단계에서 안내 |
-| 외부 결선 상태 | 10:47:36 UTC 새 SWD 읽기에서 A UID hash=32f71533… COM12/13, B=4574ee31… COM14/15, 양쪽 0d7f382 identity·CPUID·SLEEPING 확인. PWM20/21/22·DPPI20 off, 공통 17개 GPIO 전부 입력. 이 읽기는 실제 신호 대응 PASS가 아님 |
+| 다음 구체적 행동 | P1.10(P4-8) 확인·재연결 응답을 받은 뒤 새 exact image/현재 확인서로 501을 재시험한다. 첫 실패 result를 덮어쓰거나 다음 PWM 시험으로 넘어가지 않는다 |
+| 다음 작업에 필요한 사용자 행동 | 두 USB 분리 후 A P1.10(P4-8)↔B P1.10(P4-8) 위치·접촉 확인, 나머지 16신호+GND 유지, USB 재연결 완료 보고 |
+| 외부 결선 상태 | 사용자 17신호+GND 완료 확인. 10:58 exact 8c1cfe2 양쪽 flash 성공 후 A→B P1.10 전달 실패. cleanup 양쪽 output direction/pull/owned=0, active LOW 없음. A COM12/13·B COM14/15는 10:47 열거 관측이며 재연결 뒤 다시 확인 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 다른 PC 재개 | [인계 문서](HANDOFF_v0.4.0_다른_PC.md)의 이전 PC 상태와 96번 인수, 97번 첫 PWM capture 실기를 구분한다. 최신 실행/후속 범위는 97번과 이 TODO |
 | 마지막 정식 외부 HIL source | `0d7f3822fe0f1b564ef629613a048b433e8fdeee` — 첫 PWM capture 240/240·cleanup 240/240. 기존 PDM 연속 f02734d·기본 917dc02의 별도 PASS는 보존 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. 420 정의된 기능·준비 취소와 430 I2S 기능 완료. T12 전체·T13 이후·R14·RC·공개는 대기. 공용 자원 경로 변경 이후 필요한 최종-source 통신 회귀는 후속 통합에서 확인 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | 501 준비 Host/target 완료, 후속 contract/package/inventory 정리 중. 새 clean build와 첫 501 실기는 다음 단계. 장기 시험 실행 없음 |
+| 이 TODO 작성 작업의 실행 중 시험 | Host/target/501 첫 실행 모두 종료. background HIL·soak 없음. 현재 확인 요청 대기 중이며 외부 출력 미실행 |
 | 로컬 임시 build·evidence | C:/pcv04 baseline·C:/pwm04 최초 build 실패·C:/pwc04 준비·C:/pwh04 054d08f·C:/pwq04 0d7f382 보존. 97번에 두 flash 실패·성공·raw/SHA 보존. 삭제 실행 없음 |
 | 최종 정렬 gate | clang-format 22.1.8, C/C++/ino 379개 PASS. 한국어 Doxygen·Allman·4칸·중괄호 필수 |
 | CI 확인 | f42bda5의 15/15는 96번, 054d08f의 Software 7/7·Reproducible 8/8 SUCCESS는 97번. 0d7f382 로컬 Host 689 PASS·2 SKIP(설치 CLI 조건/Windows native 실행 차단), 계약 45·package 20·pair 2/2. 후속 push CI를 이전 PASS로 대체하지 않음 |
 | 문서 작업 검증 | 99번과 common catalog·실행 안내 및 180/1800/3600초 기준 갱신. 98번 당시 결과와 97번 이전 physical 원본은 보존. 필수 readiness HOLD 유지 |
-| 최종 HIL 입력 찾기 | 새 501은 이번 clean commit으로 다시 준비할 두 role image가 필요하다. C:/wic04는 working-tree build 검사이며 exact flash 입력으로 사용하지 않는다. 이전 실제 source는 C:/pwq04 0d7f382 |
+| 최종 HIL 입력 찾기 | C:/wir04 exact 8c1cfe2 pair image와 99번 evidence/t12-common-wiring-8c1cfe2. 문서 후속 commit과 다음 실행 source는 구분; 새 실행에는 exact clean source와 현재 결선 확인 필요 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드

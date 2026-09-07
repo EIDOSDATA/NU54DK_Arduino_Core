@@ -1,0 +1,13 @@
+{
+  "name": "wiring-8c1cfe2-hardware",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\run_ncs.py",
+    "wiring_launch.py",
+    "execute"
+  ],
+  "started_at": "2026-09-07T10:58:15.538383+00:00",
+  "finished_at": "2026-09-07T10:58:34.473415+00:00",
+  "exit_code": 1,
+  "log_sha256": "2af8d1465c908ce9495fd497ebc381922a76f34f3213ea66eb3f44dddf11bb32"
+}

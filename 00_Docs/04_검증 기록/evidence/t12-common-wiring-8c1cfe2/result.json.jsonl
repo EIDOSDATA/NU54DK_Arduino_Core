@@ -1,0 +1,10 @@
+{"id": "V04-WIRING/501/controller1/baseline/raw-role1", "status": "observation", "words": [131071, 0, 131071, 131071, 4294967295, 0, 0, 1]}
+{"id": "V04-WIRING/501/controller1/baseline/raw-role2", "status": "observation", "words": [131071, 0, 131071, 131071, 4294967295, 0, 0, 1]}
+{"id": "V04-WIRING/501/controller1/round1/net1/low/raw-role1", "status": "observation", "words": [131070, 1, 131071, 131071, 0, 0, 0, 1]}
+{"id": "V04-WIRING/501/controller1/round1/net1/low/raw-role2", "status": "observation", "words": [131070, 0, 131071, 131071, 4294967295, 0, 0, 1]}
+{"id": "V04-WIRING/501/controller1/round1/net1/released/raw-role1", "status": "observation", "words": [131071, 0, 131071, 131071, 4294967295, 0, 0, 1]}
+{"id": "V04-WIRING/501/controller1/round1/net1/released/raw-role2", "status": "observation", "words": [131071, 0, 131071, 131071, 4294967295, 0, 0, 1]}
+{"id": "V04-WIRING/501/controller1/round1/net1", "status": "passed", "direction": 1, "net": 1, "repetition": 1}
+{"id": "V04-WIRING/501/controller1/round1/net2/low/raw-role1", "status": "observation", "words": [131069, 2, 131071, 131071, 1, 0, 0, 1]}
+{"id": "V04-WIRING/501/controller1/round1/net2/low/raw-role2", "status": "observation", "words": [131071, 0, 131071, 131071, 4294967295, 0, 0, 1]}
+{"id": "V04-WIRING/501/controller1/cleanup", "status": "cleanup", "outcomes": [{"role": 1, "stopped": true, "words": [131069, 0, 0, 0, 4294967295, 0, 0, 0]}, {"role": 2, "stopped": true, "words": [131071, 0, 0, 0, 4294967295, 0, 0, 0]}]}

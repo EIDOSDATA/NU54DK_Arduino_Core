@@ -1,0 +1,24 @@
+{
+  "name": "wiring-exact-target",
+  "command": [
+    "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_zephyr_build.py",
+    "--workspace",
+    "C:\\ncs\\v3.4.0",
+    "--outdir",
+    "C:\\wir04",
+    "--group",
+    "v0.4.0",
+    "--suite",
+    "nucode.v04.pair_dut",
+    "--suite",
+    "nucode.v04.pair_peer",
+    "--jobs",
+    "2"
+  ],
+  "started_at": "2026-09-07T10:55:04.528492+00:00",
+  "finished_at": "2026-09-07T10:56:46.880799+00:00",
+  "exit_code": 0,
+  "log_sha256": "498dd5259c2611879031494b68afc5dd1ee31adbb332a0f3e707b02c5f8ea8e0"
+}

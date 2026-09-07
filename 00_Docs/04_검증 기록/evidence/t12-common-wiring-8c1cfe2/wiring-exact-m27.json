@@ -1,0 +1,18 @@
+{
+  "name": "wiring-exact-m27",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests/host",
+    "-p",
+    "test_m27_release.py",
+    "-v"
+  ],
+  "started_at": "2026-09-07T10:55:05.188239+00:00",
+  "finished_at": "2026-09-07T10:55:06.640865+00:00",
+  "exit_code": 0,
+  "log_sha256": "cfb400c3c88314cb85dbe43fd3e1cf3eebbe91bebfb4de89213618a502c1b46a"
+}
