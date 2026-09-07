@@ -1,13 +1,13 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
-직전 완료 범위(T12/T14): PWM 미시작 STOP 결함 수정과 두 보드 1,944명령/4,320회 회귀를 완료했다. 이어 내부 ADC·TIMER·EGU/DPPI/PPIB·시간 함수와 PWM 회귀 1,808명령을 두 보드에서 통과했다. 최종 Host 680 PASS·1 조건부 SKIP, 전체 target 61/61과 확장 target 1/1, 설치 예제 29/29를 검증했다. 상세 source와 최초 실패는 94·95번에 보존한다. 현재 보드 간 결선은 해제됐으며 T12 전체·T13 이후는 미완료다.
+직전 완료 범위(T12/T14): PWM 미시작 STOP 결함 수정과 두 보드 1,944명령/4,320회 회귀를 완료했다. 이어 내부 ADC·TIMER·EGU/DPPI/PPIB·시간 함수와 PWM 회귀 1,808명령을 두 보드에서 통과했다. 완료한 전체 로컬 Host 680 PASS·1 조건부 SKIP, 전체 target 61/61과 확장 target 1/1, 설치 예제 29/29를 검증했다. 상세 source와 최초 실패는 94·95번에 보존한다. 현재 보드 간 결선은 해제됐으며 T12 전체·T13 이후는 미완료다.
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.27 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.28 |
 | 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 외부/내부 부분 PASS·전체 미완료 |
 | 작성·갱신일 | 2026-09-07 |
-| 작성 직전 기준 commit | `65f5ae20e5fa91ef260097b2439efa97963ba089` — CI import/path/weak 링크 순서 교정과 GNU 전체 Host source; 내부 HIL은 874658a, 전체 target·설치 package 제품 source는 080d771 |
+| 작성 직전 기준 commit | `3bc8fad6ca347e5e3cbc888149c0d4d727473c22` — package CLI UTF-8 교정과 최종 Host source; 내부 HIL은 874658a, 전체 target·설치 package 제품 source는 080d771 |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
 | 다음 착수 항목 | **T12 PWM peer capture·GPIO/GPIOTE·I2S 연속/단방향·QDEC 추가 조건. 상세 범위는 95번** |
 | 이번 요청의 실행 범위 | 사용자가 결선 해제 상태에서 자동 진행 가능한 범위의 실행을 지시했다. T14 PWM 미시작 STOP 최소 재현·수정·Host/target/무점퍼 보드 회귀, T12 잔여 시험 준비와 소프트웨어 검증, 문서·정리·commit/push를 수행한다. 보드 접근은 exact UID·SWD 10 MHz·controlled start로 제한한다. 새 결선이나 물리 재연결이 필요하면 해당 실기만 보류하고 독립 작업을 마무리한다 |
@@ -65,7 +65,7 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | 이 TODO 작성 작업의 실행 중 시험 | 없음. 두 보드는 874658a nojumper image의 명령 대기 상태, ready count 904·실패 latch 0. 보드별 원본 journal과 최종 register를 95번에 보존 |
 | 로컬 임시 build·evidence | 최종 C:/u4p·C:/nj26·C:/nj27·C:/nj28·C:/u4y 및 CI 비교용 C:/u4ci15·C:/u4ci15n 유지. 이번 초안/준비 진단 28파일을 hash 검증 ZIP으로 보관. C:/u4d2·C:/u4d3·C:/u4x 삭제는 자동 승인 검토 차단으로 미실행이며 94번에 목록과 이유를 보존. 과거 65번 정리 결과는 유지 |
 | 최종 정렬 gate | clang-format 22.1.8, C/C++/ino 371개 PASS. 한국어 Doxygen·Allman·4칸·중괄호 필수 |
-| CI 확인 | 874658a canonical Host 85그룹 680 PASS·1 조건부 SKIP. 계약 45·package 20·Inventory는 fcf85c2에서 PASS이며 후속 제품 입력 변경은 없다. M13 설치본 발견 11 PASS 별도. 이전 f17e603 M27 short-path 교정 뒤 첫 push 1f050f4에서 R06 short-path와 M14 단독 import 실패를 추가 재현·교정했다. 실제 8.3 TEMP의 전체 Host도 680 PASS·1 조건부 SKIP이며 94번 후속 증거에 기록했다. 815f0a5 원격에서 R12 GAP의 MinGW weak 링크 순서 문제가 추가 확인돼 Stack 기본 정의를 앞에 두었다. 65f5ae2 clean GNU 전체 Host도 680 PASS·1 조건부 SKIP, BLE 세 시험 GNU·LLVM PASS다. 8016737 원격에서 링크 순서만으로 해결되지 않아 같은 niXman15.2로 재현하고 Windows CI Host에 LLD를 선택했다. 로컬은 세 링크 PASS·Security 12 scenario PASS, GAP/GATT 21 scenario는 Windows 정책 차단을 보존했다. 최종 원격 CI는 GitHub Actions의 push source별 Software Gates·Reproducible Builds 원본을 따른다 |
+| CI 확인 | 직전 전체 로컬 PASS는 clean 65f5ae2의 85그룹 680 PASS·1 조건부 SKIP. 최신 3bc8fad 전체 Host는 R02의 WinError 4551로 중단돼 이후 미실행이며 원격 전체 판정을 기다린다. R13 CP1252 재현 포함 6개·package 20개·CI 계약 45개 PASS. 원격 f67f568에서 GNU15/LLD20의 BLE 세 시험 실행 PASS 뒤 package CLI 인코딩 실패를 확인해 진입점에서 교정했다. M13 설치본 발견 11 PASS 별도. 최종 원격 두 workflow는 push SHA별 원본을 따르며 모든 실패·교정은 94번에서 추적한다 |
 | 문서 작업 검증 | 94·95번과 활성 문서에서 결과·source·남은 조건을 연결했다. 원본 433개와 stage 884개 대조·문서 205개 검사를 통과했다. CI 후속 교정은 94번 별도 evidence에 추가하고 변경 문서를 재검사한다. 93번 이하 역사 기록은 유지 |
 | 최종 HIL 입력 찾기 | 95번 evidence/t12-internal-nojumper-874658a에 C:/nj28 exact image·두 보드 1,808명령과 독립 감사·postflight. 최초 35f30b2 실패는 별도 폴더. 기존 외부 PDM은 92번 f02734d이며 결선 해제 후 재실행하지 않음 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
