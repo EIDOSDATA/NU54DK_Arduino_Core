@@ -19,6 +19,12 @@ def verify_observation(gpio, samples, polling):
         raise ProtocolError('SAMPLE polling/processing bound exceeded')
 
 
+def verify_protection(words):
+    """! @brief 낮은 IRQ 우선순위와128us 미만 read 보호·정상 mask 복원을 확인합니다. """
+    if len(words) != 5 or words[0:2] != [7, 1] or not 0 < words[2] < 128 or words[3:] != [0, 0]:
+        raise ProtocolError('protected read duration or IRQ state unproven')
+
+
 def vectors(strategies=(0, 1, 2)):
     """! @brief 각 방법을30회 비교하고 시행 순서를 매번 회전합니다. """
     for repetition in range(1, 31):
@@ -29,6 +35,7 @@ def vectors(strategies=(0, 1, 2)):
 def run(devices, current, append, *, strategies=(0, 1, 2), prefix="V04-QDEC-CLEAR-DIAGNOSTIC"):
     """! @brief 누산 포화 아래400전이에서 clear 동작의 영향을 분리하며 실패는 보존합니다. """
     mismatches = []
+    comparison_count = 30 * len(strategies)
     for strategy, repetition in vectors(strategies):
         label = f'{prefix}/strategy{strategy}/repeat{repetition}'
         with qdec.armed(devices, current, append, label, 20, 0, observation_mode=3, read_strategy=strategy):
@@ -69,6 +76,10 @@ def run(devices, current, append, *, strategies=(0, 1, 2), prefix="V04-QDEC-CLEA
                 append(label + '/late-read', {'status': 'observation', 'words': late})
                 if len(late) != 14 or not 5 <= late[3] < 128:
                     raise ProtocolError('delayed register observation timing unproven')
+            if strategy == 9:
+                protected = devices[0].command(85, (11,))
+                append(label + '/protected-read', {'status': 'observation', 'words': protected})
+                verify_protection(protected)
             actual = [signed(hardware[5]), hardware[6]]
             match = actual == [400, 0]
             append(label + '/comparison', {'status': 'observation' if match else 'failed',
@@ -77,7 +88,7 @@ def run(devices, current, append, *, strategies=(0, 1, 2), prefix="V04-QDEC-CLEA
             if not match:
                 mismatches.append({'strategy': strategy, 'repetition': repetition, 'actual': actual})
         print(f'QDEC_CLEAR_DIAGNOSTIC:strategy={strategy};repeat={repetition};match={int(match)}', flush=True)
-    append(prefix + '/summary', {'status': 'observation', 'comparisons': 90,
+    append(prefix + '/summary', {'status': 'observation', 'comparisons': comparison_count,
            'mismatches': mismatches, 'functional_regression': False})
     if mismatches:
-        raise ProtocolError(f'QDEC clear diagnostic preserved {len(mismatches)}/90 count mismatches')
+        raise ProtocolError(f'QDEC clear diagnostic preserved {len(mismatches)}/{comparison_count} count mismatches')

@@ -12,6 +12,13 @@ from v04_protocol import ProtocolError
 
 
 class ClearDiagnosticTests(unittest.TestCase):
+    def test_protected_read_keeps_counts_strict_and_rejects_mask_or_duration_fault(self):
+        self.assertEqual(len(set(diagnostic.vectors((0, 9)))), 60)
+        diagnostic.verify_protection([7, 1, 20, 0, 0])
+        for values in ([7, 1, 128, 0, 0], [7, 1, 20, 32, 0], [7, 1, 20, 0, 1], [7, 0, 20, 0, 0]):
+            with self.assertRaises(ProtocolError):
+                diagnostic.verify_protection(values)
+
     def test_direct_polling_bounds_reject_possible_missing_samples(self):
         gpio = [0, 400, 0, 400, 129] + [0] * 15
         samples = [400, 0, 17000, 347] + [0] * 12

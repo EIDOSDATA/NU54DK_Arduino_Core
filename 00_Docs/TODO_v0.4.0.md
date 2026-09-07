@@ -1,6 +1,6 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
-현재 기능 실행(100·101번): GPIO/GPIOTE2502(4e48252), steady PWM675(3334b17), 추가 PWM288(0db0689), I2S432(b5c86a4)는 PASS다. QDEC 기능240은 누산 누락으로 미완료다. exact1e0138a 지연 대비90회에서 공개 read6/30·5µs 뒤 HAL값5/30·공개 read+지연 관측3/30이399/400으로 실패했다. GPIO/SAMPLE400·즉시/늦은 값 변화0, cleanup93·양쪽 postflight PASS다. 다음은 사용자 제안에 따른 SAMPLE IRQ와 자동 REPORT IRQ 비교40회다. QDEC 자체 DMA는 없고 현재 GPIO 송신에서도 재현했다. 회로도에서 P1.10/1.14의 LED2/4 버퍼 입력 분기를 확인했다. 제품 core는 미수정이다. T13은32단독/8동시·C→S→U 계획만 확정했고 T12전체·T13실기·RC는 미완료다.
+현재 기능 실행(100·101번): GPIO/GPIOTE2502(4e48252), steady PWM675(3334b17), 추가 PWM288(0db0689), I2S432(b5c86a4)는 PASS다. QDEC 기능240은 누산 누락으로 미완료다. exact1e0138a 지연 대비90회에서 공개 read6/30·5µs 뒤 HAL값5/30·공개 read+지연 관측3/30이399/400으로 실패했다. GPIO/SAMPLE400·즉시/늦은 값 변화0, cleanup93·양쪽 postflight PASS다. 3a0e976에서 SAMPLE IRQ20·REPORT IRQ20이 모두400으로 일치했고 종료 후 NVIC7을 확인했다. 다음은 read 구간만 IRQ 보호하는60회 비교다. 사용자 지시에 따라 이 짧은 대비 뒤 미해결이면 제한·추정 원인을 보존하고 다음 허용 문서/검사 작업으로 진행한다. QDEC 자체 DMA는 없고 현재 GPIO 송신에서도 재현했다. 회로도에서 P1.10/1.14의 LED2/4 버퍼 입력 분기를 확인했다. 제품 core는 미수정이다. T13은32단독/8동시·C→S→U 계획만 확정했고 T12전체·T13실기·RC는 미완료다.
 
 현재 실행 범위(2026-09-07 후속): 사용자가 **T12 현재 공통 결선 묶음 검증과 T13 시험 조합·추가 결선 확정까지** 지시했다. 17개 공통 GPIO/GPIOTE, PWM 나머지 모드, QDEC 추가 조건, I2S 연속·단방향을 구현·Host·target·실기로 구분해 진행한다. T13은 조합·자원 충돌·추가 GPIO 결선표를 확정하는 단계이며 soak 실행은 이번 범위에 포함하지 않는다. 새 증거와 문서를 갱신하고 commit/push·CI를 확인한다. T12 전체·T13 실기·후속 gate·RC·공개는 미완료로 유지한다.
 
@@ -25,12 +25,12 @@ T12 다음 준비 범위(2026-09-07): 97번의 첫 capture를 common/grouped/ind
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.47 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.48 |
 | 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 외부/내부 부분 PASS·전체 미완료 |
 | 작성·갱신일 | 2026-09-08 |
 | 작성 직전 기준 commit | `1e0138a1cdb2e1ea3cfc44a0431251657c6ed4b6` — latency90회·14개399 실패·postflight PASS |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **QDEC IRQ 비교40회·LED 회로 영향 대조 → 근거 있는 수정/기능240 회귀 → 문서·증거·push/CI** |
+| 다음 착수 항목 | **QDEC 선점 대비60회 → 결과에 따라 수정/회귀 또는 미해결 HOLD 보완 → 문서·증거·push/CI** |
 | 이번 요청의 실행 범위 | 새 PC 인수·환경·main/submodule 확인, 첫 PWM peer capture 구현/Host/target과 240조건 실기·증거·commit/push. 후속 PWM 모드·GPIO/GPIOTE·I2S·QDEC를 이어간다. T12 전체·후속 gate 완료 처리 없음 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
@@ -91,10 +91,10 @@ GPIO/GPIOTE 전체·I2S 연속/단방향·QDEC 추가 조건 및 PWM의 나머�
 | 마지막 정식 외부 HIL source | QDEC 진단1e0138a 종료(기능 PASS 아님). I2S432는b5c86a4. GPIO4e48252·steady3334b17·모드0db0689 PASS는 당시 source 결과 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. 420 정의된 기능·준비 취소와 430 I2S 기능 완료. T12 전체·T13 이후·R14·RC·공개는 대기. 공용 자원 경로 변경 이후 필요한 최종-source 통신 회귀는 후속 통합에서 확인 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | 현재 probe 실행 없음. session7132는latency90·14개 숫자 실패·cleanup93·양쪽 postflight PASS로 종료. IRQ 비교 준비 중 |
+| 이 TODO 작성 작업의 실행 중 시험 | 현재 probe 실행 없음. session52925 IRQ40 일치·cleanup43·postflight PASS로 종료. read 선점 대비60회 준비 중 |
 | 로컬 임시 build·evidence | C:/pcv04 baseline·C:/pwm04 최초 build 실패·C:/pwc04 준비·C:/pwh04 054d08f·C:/pwq04 0d7f382 보존. 97번에 두 flash 실패·성공·raw/SHA 보존. 삭제 실행 없음 |
 | 최종 정렬 gate | 1e0138a 정렬388·pair2/2·contract/package/inventory/docs PASS. 전체 Host는 Windows 앱 제어4551이 생성 PWM 실행 파일을 차단하여 FAIL·원본 보존. 보안 정책 변경 없이 후속 source 원격 CI에서 전체 검사 필요 |
-| CI 확인 | origin/main 27e0f25 Software SUCCESS(34118608639), Reproducible SUCCESS(34118608640), 2026-09-07 12:46 UTC 관측. 645df82/4e48252 및 후속 변경은 아직 push 전 |
+| CI 확인 | 3a0e976까지 origin/main push 완료. Software7/7 SUCCESS, 재현 빌드 진행 중. 원본은101번 IRQ archive의 실제 check snapshot. 인계 f42bda5도15/15 SUCCESS 재확인 |
 | 문서 작업 검증 | T13계획180/900/3600초·C→S→U 두 변경과32단독/8동시를 production route Host로 검사. Software·실기 범위와readiness HOLD 유지 |
 | 최종 HIL 입력 찾기 | GPIO C:/cgc04=4e48252, steady C:/cav04=3334b17, 모드 C:/caw04=0db0689, I2S C:/cax04=b5c86a4, QDEC진단 C:/cbw04=1e0138a. Raw/SHA/postflight는100·101번 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |

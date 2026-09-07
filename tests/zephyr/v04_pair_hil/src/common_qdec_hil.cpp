@@ -58,6 +58,7 @@ namespace
     std::uint32_t irq_sample_count = 0U, irq_sample_doubles = 0U, irq_report_count = 0U;
     std::uint32_t irq_report_doubles = 0U, irq_event_errors = 0U, irq_service_last = 0U;
     std::uint32_t irq_service_max = 0U;
+    std::uint32_t protected_read_max = 0U;
 
     /** @brief 비활성 IRQ의 SAMPLERDY를 관측하고 ACC와 별개인 SAMPLE 값을 합산합니다. */
     void observeSample(std::uint32_t now)
@@ -275,6 +276,11 @@ namespace
                 k_busy_wait(4U);
             }
         }
+        if (read_strategy == 9U)
+        {
+            /** @brief 샘플 대기 없이 read 구간만 잠가 CPU 선점과 샘플 위상을 분리합니다. */
+            interrupt_key = irq_lock();
+        }
         const auto now = k_cycle_get_32();
         const auto gap = now - last_read;
         if (gap > max_read_gap)
@@ -361,7 +367,15 @@ namespace
                 event.double_transitions = late_double;
             }
         }
-        if (read_strategy == 4U)
+        if (read_strategy == 9U)
+        {
+            const auto elapsed = k_cycle_get_32() - now;
+            if (elapsed > protected_read_max)
+            {
+                protected_read_max = elapsed;
+            }
+        }
+        if (read_strategy == 4U || read_strategy == 9U)
         {
             irq_unlock(interrupt_key);
         }
@@ -492,11 +506,11 @@ void serviceCommonQdec()
     const auto now = k_cycle_get_32();
     if (role == 1U)
     {
-        if (read_observation == 3U && read_strategy < 7U)
+        if (read_observation == 3U && read_strategy != 7U && read_strategy != 8U)
         {
             observeSample(now);
         }
-        if (read_strategy >= 7U)
+        if (read_strategy == 7U || read_strategy == 8U)
         {
             observeInterrupts(now);
         }
@@ -563,7 +577,7 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
         sample_poll_previous = sample_poll_max = sample_observe_max = sample_poll_calls = 0U;
         irq_sample_steps = irq_report_steps = 0;
         irq_sample_count = irq_sample_doubles = irq_report_count = irq_report_doubles = 0U;
-        irq_event_errors = irq_service_max = 0U;
+        irq_event_errors = irq_service_max = protected_read_max = 0U;
         for (auto &word : first_late_change)
         {
             word = 0U;
@@ -720,6 +734,18 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
         count = 9U;
         return 0U;
     }
+    if (opcode == 85U && nargs == 1U && args[0] == 11U && role == 1U)
+    {
+        /** @brief 시험 중 실제 우선순위·IRQ 활성·짧은 read 보호 시간을 읽기만 합니다. */
+        const auto irq = instance == 20U ? QDEC20_IRQn : QDEC21_IRQn;
+        out[0] = NVIC_GetPriority(irq);
+        out[1] = NVIC_GetEnableIRQ(irq);
+        out[2] = k_cyc_to_us_floor32(protected_read_max);
+        out[3] = __get_BASEPRI();
+        out[4] = __get_PRIMASK();
+        count = 5U;
+        return 0U;
+    }
     if (opcode == 85U && nargs == 2U && args[0] == 3U && args[1] < 16U && args[1] % 2U == 0U &&
         role == 1U)
     {
@@ -742,7 +768,7 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
     }
     if (opcode == 83U &&
         (nargs == 2U || (nargs == 3U && args[2] <= 3U) ||
-         (nargs == 4U && args[2] == 3U && args[3] <= 8U)) &&
+         (nargs == 4U && args[2] == 3U && args[3] <= 9U)) &&
         (args[0] == 20U || args[0] == 21U) && args[1] <= 1U && !prepared && qdec == nullptr &&
         !generator_token.active)
     {
@@ -783,7 +809,7 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
             irq_service_last = last_read;
             observer.start(last_read, inputPhase());
             last_sample = last_read;
-            if (read_observation == 3U && read_strategy < 7U)
+            if (read_observation == 3U && read_strategy != 7U && read_strategy != 8U)
             {
                 nrf_qdec_event_clear(instance == 20U ? NRF_QDEC20 : NRF_QDEC21,
                                      NRF_QDEC_EVENT_SAMPLERDY);
