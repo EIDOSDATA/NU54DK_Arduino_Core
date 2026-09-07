@@ -1,0 +1,20 @@
+{
+  "source": "e9d264c502488754fbda2eabcf174764f703e37d",
+  "status": "pair-build-pass2;physical-not-run;confirmation-expired",
+  "public_core_sdk_board_changed": false,
+  "swd_frequency_hz": 10000000,
+  "whole_pdm_pass": false,
+  "whole_t12_pass": false,
+  "continuous_4_settling_100_measured_buffers": "not implemented or executed",
+  "software": {
+    "signal_host": {
+      "passed": 17,
+      "source": "e9d264c502488754fbda2eabcf174764f703e37d"
+    },
+    "prior_full_host_source": "5273b30c05e1cdf2b7043f39c1f2536f1699bb59",
+    "only_change_since_full_host": "C linkage wrapper around SDK C-only header; target link and signal Host rechecked",
+    "style_files_passed": 361,
+    "target_builds_passed": 2
+  },
+  "physical": {}
+}

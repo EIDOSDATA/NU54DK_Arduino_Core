@@ -1,0 +1,87 @@
+{
+  "source": "e6979af6545e2cc9525f54695eee965fc25d683e",
+  "scope": "Unexecuted groups after this canonical retry stopped at CMake Ninja execution failure; canonical gate remains failed",
+  "prior_attempts": "host-all.log",
+  "groups": [
+    {
+      "pattern": "test_v04_dma_memory.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_fixture.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_math.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_pair.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_pdm_continuous.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_qdec.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_revision.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_serial_lifecycle.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_signal.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_test_plan.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_uart.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_ac03_storage.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\hil\\nu54dk",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_m24_uarte_onboard.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\hil\\nu54dk",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_m24_twim_onboard.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\hil\\nu54dk",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_m25_onboard.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\hil\\nu54dk",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_m26_onboard.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\hil\\nu54dk",
+      "returncode": 0
+    }
+  ]
+}

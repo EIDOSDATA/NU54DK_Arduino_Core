@@ -1,0 +1,20 @@
+{
+  "source": "e9d264c502488754fbda2eabcf174764f703e37d",
+  "fixture_id": 440,
+  "scope": "T10/T12 Fixture440 after USB-off clock/gate wiring correction: verify two independent crossed nets before PDM, canonical full sweep and continuous buffers; documentation commit/push",
+  "user_confirmation_recorded_at_utc": "2026-09-06T21:02:10+00:00",
+  "confirmation_text": "재연결 완료. 다시해.",
+  "wiring": "A P1.04 <-> B P1.05; A P1.05 <-> B P1.04; A P1.06 <-> B P1.07; common GND P2-30",
+  "unconnected_gpio": [
+    "A P1.07",
+    "B P1.06"
+  ],
+  "confirmed_in_context": "Both USB disconnected for the instructed 430-to-440 rewiring then reconnected; DAP UART disconnected, SWD connected, SB/PMIC unchanged, same IO voltage, no joined power rails",
+  "swd_frequency_hz": 10000000,
+  "new_fixture_confirmation": true,
+  "t12_whole_complete_claimed": false,
+  "other_fixture_executed": false,
+  "prior_failed_source": "7641229dca8c37be7a0d07241d407cb14cbf76ca",
+  "change": "HIL stereo generator requests/refcount-releases CONSTLAT; only NRF_SYS_EVENT and NRFX_POWER enabled, IRQ latency support disabled; unchanged oracle; confirmed crossed net isolation passed; fixed C linkage of SDK nrf_sys_event.h; previous link failure preserved",
+  "build_only_failed_source": "5273b30c05e1cdf2b7043f39c1f2536f1699bb59"
+}

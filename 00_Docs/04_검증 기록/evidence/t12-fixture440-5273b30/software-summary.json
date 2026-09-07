@@ -1,0 +1,20 @@
+{
+  "source": "5273b30c05e1cdf2b7043f39c1f2536f1699bb59",
+  "status": "host-pass;pair-link-build-failed2;physical-not-run",
+  "public_core_sdk_board_changed": false,
+  "swd_frequency_hz": 10000000,
+  "whole_pdm_pass": false,
+  "whole_t12_pass": false,
+  "continuous_4_settling_100_measured_buffers": "not implemented or executed",
+  "software": {
+    "full_host": {
+      "total": 661,
+      "passed": 660,
+      "conditional_skips": 1,
+      "groups": 82,
+      "source": "5273b30c05e1cdf2b7043f39c1f2536f1699bb59"
+    },
+    "style_files_passed": 361
+  },
+  "physical": {}
+}

@@ -1,0 +1,19 @@
+{
+  "source": "79e4bdd509bc5b12209364399fe9a115cf3946a7",
+  "observations": 32,
+  "mismatches": [
+    {
+      "case": "NET/1/4/0",
+      "pin": [
+        1,
+        5
+      ],
+      "expected": 0,
+      "actual": 1
+    }
+  ],
+  "wiring_matches_fixture440": false,
+  "cleanup_roles_pass": 2,
+  "scope": "static clock/gate separation; no PDM functional PASS",
+  "source_sha256": "5e65a8ecd7753fe4d7cae43c280419a2c5eb7d7c19724d799ee1863d02ba7f6d"
+}

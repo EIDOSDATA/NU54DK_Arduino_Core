@@ -1,0 +1,16 @@
+[
+  {
+    "role": 1,
+    "added": {
+      "C:/ncs/v3.4.0/zephyr/soc/nordic/common/nrf_sys_event.c": 1
+    },
+    "removed": {}
+  },
+  {
+    "role": 2,
+    "added": {
+      "C:/ncs/v3.4.0/zephyr/soc/nordic/common/nrf_sys_event.c": 1
+    },
+    "removed": {}
+  }
+]

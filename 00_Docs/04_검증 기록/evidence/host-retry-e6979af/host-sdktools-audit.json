@@ -1,0 +1,515 @@
+{
+  "source": "e6979af6545e2cc9525f54695eee965fc25d683e",
+  "canonical_status": "passed",
+  "planned_groups": 83,
+  "executed_groups": 83,
+  "reported_tests": 665,
+  "passed_tests": 664,
+  "skipped_tests": 1,
+  "groups": [
+    {
+      "pattern": "test_ac01_contract.py",
+      "reported_tests": 4,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_ac02b_analog_contract.py",
+      "reported_tests": 7,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_ac02b_b2_contract.py",
+      "reported_tests": 6,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_ac03_storage_contract.py",
+      "reported_tests": 6,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_build_matrix_runner.py",
+      "reported_tests": 9,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_compact_tokens.py",
+      "reported_tests": 1,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_fixed_gate_runner.py",
+      "reported_tests": 16,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_host_compiler.py",
+      "reported_tests": 6,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m10_prerequisites.py",
+      "reported_tests": 24,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m10_remote_runner.py",
+      "reported_tests": 29,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m11_rc_hil.py",
+      "reported_tests": 11,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m11_release.py",
+      "reported_tests": 28,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m11_remote_runner.py",
+      "reported_tests": 16,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m13_profiles.py",
+      "reported_tests": 11,
+      "outcome": "OK (skipped=1)",
+      "skip_reasons": [
+        "'M13 package 설치 후 NUCODE_M13_CLI_DISCOVERY=1로 실행합니다.'"
+      ]
+    },
+    {
+      "pattern": "test_m14_core_contract.py",
+      "reported_tests": 5,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m14_pin_hil_runner.py",
+      "reported_tests": 12,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m14_variant_contract.py",
+      "reported_tests": 6,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m15_board_system_contract.py",
+      "reported_tests": 9,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m15_lfxo_contract.py",
+      "reported_tests": 3,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m15_system_off_hil_runner.py",
+      "reported_tests": 16,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m16_ble_contract.py",
+      "reported_tests": 6,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m16_ble_pair.py",
+      "reported_tests": 9,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m17_coverage.py",
+      "reported_tests": 25,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m17_external_arduino.py",
+      "reported_tests": 15,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m17_feasibility.py",
+      "reported_tests": 13,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m18_release.py",
+      "reported_tests": 25,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m19_ble_gap_contract.py",
+      "reported_tests": 8,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m19_ble_gap_hil.py",
+      "reported_tests": 5,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m20_ble_gatt_contract.py",
+      "reported_tests": 6,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m20_ble_gatt_hil.py",
+      "reported_tests": 6,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m21_ble_security_contract.py",
+      "reported_tests": 22,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m21_ble_security_hil.py",
+      "reported_tests": 10,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m21_ble_security_negative.py",
+      "reported_tests": 7,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m22_cleanroom.py",
+      "reported_tests": 13,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m22_fixed_gate.py",
+      "reported_tests": 4,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m22_package_examples.py",
+      "reported_tests": 7,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m22_release.py",
+      "reported_tests": 5,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m23_peripheral_inventory.py",
+      "reported_tests": 8,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m24_serial_contract.py",
+      "reported_tests": 15,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m26_system_contract.py",
+      "reported_tests": 5,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m27_package_examples.py",
+      "reported_tests": 5,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m27_release.py",
+      "reported_tests": 9,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m27_staged_candidate.py",
+      "reported_tests": 3,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m8_flash.py",
+      "reported_tests": 13,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m9_cache.py",
+      "reported_tests": 23,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m9_safety.py",
+      "reported_tests": 12,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r02_serial_drivers.py",
+      "reported_tests": 1,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r03_fabric_drivers.py",
+      "reported_tests": 2,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r04_file.py",
+      "reported_tests": 1,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r05_identity.py",
+      "reported_tests": 6,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r06_builder_modules.py",
+      "reported_tests": 2,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r06_windows_recipe.py",
+      "reported_tests": 4,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r07_event_driver.py",
+      "reported_tests": 1,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r08_resource_route.py",
+      "reported_tests": 1,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r09_spi_facade.py",
+      "reported_tests": 1,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r10_serial_concurrency.py",
+      "reported_tests": 1,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r11_fabric_data.py",
+      "reported_tests": 1,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r12_ble_gap.py",
+      "reported_tests": 1,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r12_ble_gatt.py",
+      "reported_tests": 1,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r12_ble_security.py",
+      "reported_tests": 1,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r12_eeprom.py",
+      "reported_tests": 1,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r12_littlefs.py",
+      "reported_tests": 1,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r13_generated.py",
+      "reported_tests": 3,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r13_manifest_revision.py",
+      "reported_tests": 2,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_r13_package_modules.py",
+      "reported_tests": 5,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_v04_campaign.py",
+      "reported_tests": 3,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_v04_cmake_sources.py",
+      "reported_tests": 1,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_v04_dma_memory.py",
+      "reported_tests": 2,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_v04_fixture.py",
+      "reported_tests": 12,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_v04_math.py",
+      "reported_tests": 3,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_v04_pair.py",
+      "reported_tests": 16,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_v04_pdm_continuous.py",
+      "reported_tests": 4,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_v04_qdec.py",
+      "reported_tests": 7,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_v04_revision.py",
+      "reported_tests": 1,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_v04_serial_lifecycle.py",
+      "reported_tests": 3,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_v04_signal.py",
+      "reported_tests": 17,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_v04_test_plan.py",
+      "reported_tests": 10,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_v04_uart.py",
+      "reported_tests": 6,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_ac03_storage.py",
+      "reported_tests": 12,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m24_uarte_onboard.py",
+      "reported_tests": 10,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m24_twim_onboard.py",
+      "reported_tests": 4,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m25_onboard.py",
+      "reported_tests": 4,
+      "outcome": "OK",
+      "skip_reasons": []
+    },
+    {
+      "pattern": "test_m26_onboard.py",
+      "reported_tests": 10,
+      "outcome": "OK",
+      "skip_reasons": []
+    }
+  ],
+  "log_sha256": "3684e08a3c1e33056768e9652f8d3f98f8e6714a906aadc9789e5d36699ea20f",
+  "hardware_access": false,
+  "security_policy_changed": false,
+  "scope": "Host runner mocks are not physical board executions"
+}

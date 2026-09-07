@@ -1,0 +1,182 @@
+{
+  "source": "917dc0284b1185d23eeef3f8df31bd3498f78408",
+  "scope": "Only previously unexecuted groups; original full gate remains blocked by WinError4551",
+  "prior_attempts": "host-all.log, host-retry.log, pdm-related.log, pdm-retry.log",
+  "groups": [
+    {
+      "pattern": "test_r03_fabric_drivers.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_r04_file.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_r05_identity.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_r06_builder_modules.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_r06_windows_recipe.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_r07_event_driver.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_r08_resource_route.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_r09_spi_facade.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 1
+    },
+    {
+      "pattern": "test_r10_serial_concurrency.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_r11_fabric_data.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_r12_ble_gap.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 1
+    },
+    {
+      "pattern": "test_r12_ble_gatt.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_r12_ble_security.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_r12_eeprom.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 1
+    },
+    {
+      "pattern": "test_r12_littlefs.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 1
+    },
+    {
+      "pattern": "test_r13_generated.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_r13_manifest_revision.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_r13_package_modules.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_campaign.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_cmake_sources.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 1
+    },
+    {
+      "pattern": "test_v04_dma_memory.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_fixture.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_math.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_pair.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_qdec.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 1
+    },
+    {
+      "pattern": "test_v04_revision.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_serial_lifecycle.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 1
+    },
+    {
+      "pattern": "test_v04_signal.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_test_plan.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_v04_uart.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_ac03_storage.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\hil\\nu54dk",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_m24_uarte_onboard.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\hil\\nu54dk",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_m24_twim_onboard.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\hil\\nu54dk",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_m25_onboard.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\hil\\nu54dk",
+      "returncode": 0
+    },
+    {
+      "pattern": "test_m26_onboard.py",
+      "directory": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\hil\\nu54dk",
+      "returncode": 0
+    }
+  ]
+}

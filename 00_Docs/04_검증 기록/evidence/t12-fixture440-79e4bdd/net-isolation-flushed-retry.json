@@ -1,0 +1,718 @@
+{
+  "status": "passed",
+  "source": "79e4bdd509bc5b12209364399fe9a115cf3946a7",
+  "fixture_id": 440,
+  "scope": "One clock/gate output at a time; all other clock/gate pins input pull-down; PDM disabled",
+  "confirmation_sha256": "91a92818c7046ce408b0781cc3c1c3df72d32f8f3e375480c5993b14d4edf207",
+  "swd_frequency_hz": 10000000,
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "6506bec0570d02108ea9b0f54899f158b0e7b223ac0d0a7ca42286c4a35cbf98",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 3.078,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "e57c20740787e2d66392fa8b489869b500b4d0efd1604a9998f6976bace0117d"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "955e5cb8d2e61f3689f9cc4ac1fa1600b2a52c3fac7b062a18b09e37ea04419d",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 2.968,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "617a893567f9283a435b1dad2fd8ff99ba9611df03daf862758878f5a8f20ddb"
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "NET/1/4/0",
+      "driver_role": 1,
+      "driver_pin": 4,
+      "level": 0,
+      "sample": 0,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 1,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/1/4/0",
+      "driver_role": 1,
+      "driver_pin": 4,
+      "level": 0,
+      "sample": 1,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 1,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/1/4/0",
+      "driver_role": 1,
+      "driver_pin": 4,
+      "level": 0,
+      "sample": 2,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 1,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/1/4/1",
+      "driver_role": 1,
+      "driver_pin": 4,
+      "level": 1,
+      "sample": 0,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 1,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 1,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 1,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/1/4/1",
+      "driver_role": 1,
+      "driver_pin": 4,
+      "level": 1,
+      "sample": 1,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 1,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 1,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 1,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/1/4/1",
+      "driver_role": 1,
+      "driver_pin": 4,
+      "level": 1,
+      "sample": 2,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 1,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 1,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 1,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/1/5/0",
+      "driver_role": 1,
+      "driver_pin": 5,
+      "level": 0,
+      "sample": 0,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 1
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/1/5/0",
+      "driver_role": 1,
+      "driver_pin": 5,
+      "level": 0,
+      "sample": 1,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 1
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/1/5/0",
+      "driver_role": 1,
+      "driver_pin": 5,
+      "level": 0,
+      "sample": 2,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 1
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/1/5/1",
+      "driver_role": 1,
+      "driver_pin": 5,
+      "level": 1,
+      "sample": 0,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 1,
+          "pin_cnf": {
+            "4": 4,
+            "5": 1
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 1,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/1/5/1",
+      "driver_role": 1,
+      "driver_pin": 5,
+      "level": 1,
+      "sample": 1,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 1,
+          "pin_cnf": {
+            "4": 4,
+            "5": 1
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 1,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/1/5/1",
+      "driver_role": 1,
+      "driver_pin": 5,
+      "level": 1,
+      "sample": 2,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 1,
+          "pin_cnf": {
+            "4": 4,
+            "5": 1
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 1,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/2/4/0",
+      "driver_role": 2,
+      "driver_pin": 4,
+      "level": 0,
+      "sample": 0,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 1,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/2/4/0",
+      "driver_role": 2,
+      "driver_pin": 4,
+      "level": 0,
+      "sample": 1,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 1,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/2/4/0",
+      "driver_role": 2,
+      "driver_pin": 4,
+      "level": 0,
+      "sample": 2,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 1,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/2/4/1",
+      "driver_role": 2,
+      "driver_pin": 4,
+      "level": 1,
+      "sample": 0,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 1,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 1,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 1,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/2/4/1",
+      "driver_role": 2,
+      "driver_pin": 4,
+      "level": 1,
+      "sample": 1,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 1,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 1,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 1,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/2/4/1",
+      "driver_role": 2,
+      "driver_pin": 4,
+      "level": 1,
+      "sample": 2,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 1,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 1,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 1,
+            "5": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/2/5/0",
+      "driver_role": 2,
+      "driver_pin": 5,
+      "level": 0,
+      "sample": 0,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/2/5/0",
+      "driver_role": 2,
+      "driver_pin": 5,
+      "level": 0,
+      "sample": 1,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/2/5/0",
+      "driver_role": 2,
+      "driver_pin": 5,
+      "level": 0,
+      "sample": 2,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/2/5/1",
+      "driver_role": 2,
+      "driver_pin": 5,
+      "level": 1,
+      "sample": 0,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 1,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 1,
+          "pin_cnf": {
+            "4": 4,
+            "5": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/2/5/1",
+      "driver_role": 2,
+      "driver_pin": 5,
+      "level": 1,
+      "sample": 1,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 1,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 1,
+          "pin_cnf": {
+            "4": 4,
+            "5": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET/2/5/1",
+      "driver_role": 2,
+      "driver_pin": 5,
+      "level": 1,
+      "sample": 2,
+      "observed": [
+        {
+          "role": 1,
+          "p1_04": 1,
+          "p1_05": 0,
+          "pin_cnf": {
+            "4": 4,
+            "5": 4
+          }
+        },
+        {
+          "role": 2,
+          "p1_04": 0,
+          "p1_05": 1,
+          "pin_cnf": {
+            "4": 4,
+            "5": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "NET-CLEANUP",
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ],
+          "pins_restored": {
+            "4": 12,
+            "5": 2
+          }
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ],
+          "pins_restored": {
+            "4": 12,
+            "5": 2
+          }
+        }
+      ]
+    }
+  ],
+  "functional_pass_claimed": false,
+  "settling_seconds": 0.01,
+  "samples_per_level": 3,
+  "diagnostic_completed": true,
+  "completed_at_utc": "2026-09-06T21:12:04.978259+00:00"
+}

@@ -1,0 +1,279 @@
+{
+  "source": "5273b30c05e1cdf2b7043f39c1f2536f1699bb59",
+  "status": "host-pass;pair-link-build-failed2;physical-not-run",
+  "uid_plaintext_scan": "passed",
+  "raw_gzip_roundtrip": "passed",
+  "artifact_note": "Includes executed and prepared scripts; execution claims come from result files only",
+  "files": [
+    {
+      "name": "audit_results.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\audit_results.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 6588,
+      "original_sha256": "749a6a159087446061175a85c1f2ab90c838855ce9de2109e5e8276d45b23240",
+      "normalized_bytes": 6588,
+      "normalized_sha256": "749a6a159087446061175a85c1f2ab90c838855ce9de2109e5e8276d45b23240",
+      "original_archive": "audit_results.py.raw.gz"
+    },
+    {
+      "name": "build.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\build.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 3752,
+      "original_sha256": "2eb8722c8318efec9b458f989bfe5251b6b2777a728ce17547d04ef74829687f",
+      "normalized_bytes": 3715,
+      "normalized_sha256": "0332ff4d51be598f9a1a6ef6ad7b3a5d3532f23f9386ebe64a0b3c4d0e11d073",
+      "original_archive": "build.log.raw.gz"
+    },
+    {
+      "name": "checkpoint.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\checkpoint.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1170,
+      "original_sha256": "2d70062ee8cfc97c39164b813e11292a776077bcaa167373776373601add3ba7",
+      "normalized_bytes": 1170,
+      "normalized_sha256": "2d70062ee8cfc97c39164b813e11292a776077bcaa167373776373601add3ba7",
+      "original_archive": "checkpoint.json.raw.gz"
+    },
+    {
+      "name": "collect-failed-build-corrected.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\collect-failed-build-corrected.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 54,
+      "original_sha256": "3ef462ae6a04021623a61b53bc437eae596aaa5581f1141a19bc1a2c5df5b663",
+      "normalized_bytes": 53,
+      "normalized_sha256": "f1823dd02633460ceb36499bcd4db9e5129536289a096d930f21872cdd2b08fa",
+      "original_archive": "collect-failed-build-corrected.log.raw.gz"
+    },
+    {
+      "name": "collect-failed-build.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\collect-failed-build.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 507,
+      "original_sha256": "bf0c7599de4ebd9454152e92aba5f4a944af47d66099d7fc80a4d6060fb3f04a",
+      "normalized_bytes": 500,
+      "normalized_sha256": "9eff99f48bc309340cb8465d5d45d011f5ee4af12644d895f0b1822b61731e4a",
+      "original_archive": "collect-failed-build.log.raw.gz"
+    },
+    {
+      "name": "collect_build.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\collect_build.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 3062,
+      "original_sha256": "b4ada82f6a4e3aa03158909eb4b21bb458a524e9fcb5b8888c4a18143075743b",
+      "normalized_bytes": 3062,
+      "normalized_sha256": "b4ada82f6a4e3aa03158909eb4b21bb458a524e9fcb5b8888c4a18143075743b",
+      "original_archive": "collect_build.py.raw.gz"
+    },
+    {
+      "name": "collect_failed_build.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\collect_failed_build.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 1370,
+      "original_sha256": "f43de241ae897989339aab25f883c5068114fd0fb302be6022d512e1ee1a46a3",
+      "normalized_bytes": 1370,
+      "normalized_sha256": "f43de241ae897989339aab25f883c5068114fd0fb302be6022d512e1ee1a46a3",
+      "original_archive": "collect_failed_build.py.raw.gz"
+    },
+    {
+      "name": "collect_failed_build_corrected.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\collect_failed_build_corrected.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 1384,
+      "original_sha256": "3bf37cd0229dc7929f100ec4b55245df0e6624be1c9b190d0df541c6d3d107fe",
+      "normalized_bytes": 1384,
+      "normalized_sha256": "3bf37cd0229dc7929f100ec4b55245df0e6624be1c9b190d0df541c6d3d107fe",
+      "original_archive": "collect_failed_build_corrected.py.raw.gz"
+    },
+    {
+      "name": "diagnostic_template.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\diagnostic_template.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2004,
+      "original_sha256": "b07b336b57bee8baae45d60daea44403c79a30676eea09add18b0a78baa832dc",
+      "normalized_bytes": 2004,
+      "normalized_sha256": "b07b336b57bee8baae45d60daea44403c79a30676eea09add18b0a78baa832dc",
+      "original_archive": "diagnostic_template.py.raw.gz"
+    },
+    {
+      "name": "failed-build-summary.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\failed-build-summary.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1280,
+      "original_sha256": "89e22bbcd3248d6a4ebb01847c0714083b4b563a736ea45181304457b8826297",
+      "normalized_bytes": 1280,
+      "normalized_sha256": "89e22bbcd3248d6a4ebb01847c0714083b4b563a736ea45181304457b8826297",
+      "original_archive": "failed-build-summary.json.raw.gz"
+    },
+    {
+      "name": "gate-host-final.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\gate-host-final.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 1471,
+      "original_sha256": "2e31f66ce0f36bcd5b537b69075c4206b2b1909c14439d4e57344a24cef951dc",
+      "normalized_bytes": 1445,
+      "normalized_sha256": "5301e3b8570b65c27312ce6182125d48f02e5a4e7c997cf30997cebda8cdb423",
+      "original_archive": "gate-host-final.json.raw.gz"
+    },
+    {
+      "name": "gate-host-final.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\gate-host-final.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 164408,
+      "original_sha256": "44ad7281d7368c493412a0619f28811c5bd48a2662f99f50c6b16c2a09b782f4",
+      "normalized_bytes": 162787,
+      "normalized_sha256": "381ea1f704c1dffe4f92fa30ff89f0b45bbf5fc217e8bf7527a613ad92eff946",
+      "original_archive": "gate-host-final.log.raw.gz"
+    },
+    {
+      "name": "host-orchestration.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\host-orchestration.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 6965,
+      "original_sha256": "7c9f143029c9e22d9d31bd4f46e6290d7730944e774c9a64ad604f4065d1e380",
+      "normalized_bytes": 6889,
+      "normalized_sha256": "34bba5e71f6fddd05ed4123c05f7ca11db860dec6e2b38cad48aa1d11c49cb78",
+      "original_archive": "host-orchestration.log.raw.gz"
+    },
+    {
+      "name": "postflight.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\postflight.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2807,
+      "original_sha256": "26b6dc5d101ae35ccc1b71df9261fd57eb2240bb2ad52b2cb6bc699468e767d3",
+      "normalized_bytes": 2807,
+      "normalized_sha256": "26b6dc5d101ae35ccc1b71df9261fd57eb2240bb2ad52b2cb6bc699468e767d3",
+      "original_archive": "postflight.py.raw.gz"
+    },
+    {
+      "name": "prepare.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\prepare.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2032,
+      "original_sha256": "44983258ce7c74ce0a473ffa7171e7e9fbdf80b5db0df01dae2e8c44f2ad00b2",
+      "normalized_bytes": 2032,
+      "normalized_sha256": "44983258ce7c74ce0a473ffa7171e7e9fbdf80b5db0df01dae2e8c44f2ad00b2",
+      "original_archive": "prepare.py.raw.gz"
+    },
+    {
+      "name": "role1-build.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\role1-build.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 50928,
+      "original_sha256": "264aa4d67fae86176458504d8ca334e5d9bb8b5f130de042c0d45079b060eddc",
+      "normalized_bytes": 50525,
+      "normalized_sha256": "ef3156677509d84317a98f595b25ffb51992e76e9c26c4e4472a319e344d935b",
+      "original_archive": "role1-build.log.raw.gz"
+    },
+    {
+      "name": "role1-config.txt",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\role1-config.txt",
+      "normalization": "utf8-lf",
+      "original_bytes": 62283,
+      "original_sha256": "b0e51eb47a6944cb122c2ee399f6127377d4a568c6d96677757ef0f0330b563a",
+      "normalized_bytes": 59993,
+      "normalized_sha256": "3e0ecdc294eaaa2105e77308b04628e5d27d006e8f99de0dd5fa73250253a081",
+      "original_archive": "role1-config.txt.raw.gz"
+    },
+    {
+      "name": "role2-build.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\role2-build.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 50941,
+      "original_sha256": "50f893ef117f2d6c00559ecb736f0196ee5590d4f14a25d728b058b151c17e1e",
+      "normalized_bytes": 50538,
+      "normalized_sha256": "76f7e81d624b49b64037c37ea2f2948329493e78d2dc8aee9acc9e40cb70fc08",
+      "original_archive": "role2-build.log.raw.gz"
+    },
+    {
+      "name": "role2-config.txt",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\role2-config.txt",
+      "normalization": "utf8-lf",
+      "original_bytes": 62283,
+      "original_sha256": "429aac1c4ab9abdd12ef654853770a6ee886f302ef5a1ba49301f514e71b667d",
+      "normalized_bytes": 59993,
+      "normalized_sha256": "e8ac6b2e526cef6814c7725abcde47f26d6ef8d28e38218e9d84c0e5987556ca",
+      "original_archive": "role2-config.txt.raw.gz"
+    },
+    {
+      "name": "run.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\run.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2123,
+      "original_sha256": "66dc7bfe17cc3f59599dad3f43ff025fe4630598bc5dbfed555a2b2bfddf9543",
+      "normalized_bytes": 2123,
+      "normalized_sha256": "66dc7bfe17cc3f59599dad3f43ff025fe4630598bc5dbfed555a2b2bfddf9543",
+      "original_archive": "run.py.raw.gz"
+    },
+    {
+      "name": "runtime.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\runtime.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2558,
+      "original_sha256": "6d5d0a4acbd4104d7edc721d67b29c6f5699023a9209c4789ae564700c2302e0",
+      "normalized_bytes": 2558,
+      "normalized_sha256": "6d5d0a4acbd4104d7edc721d67b29c6f5699023a9209c4789ae564700c2302e0",
+      "original_archive": "runtime.py.raw.gz"
+    },
+    {
+      "name": "software-summary.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\software-summary.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 577,
+      "original_sha256": "b2a80d0482b3acfa36e9f4014ace23bfee72ec7bc4ecb6953e3abb3436d44ba7",
+      "normalized_bytes": 577,
+      "normalized_sha256": "b2a80d0482b3acfa36e9f4014ace23bfee72ec7bc4ecb6953e3abb3436d44ba7",
+      "original_archive": "software-summary.json.raw.gz"
+    },
+    {
+      "name": "software.py",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\software.py",
+      "normalization": "utf8-lf",
+      "original_bytes": 2765,
+      "original_sha256": "47f860d0d3b027160240c8cde285345389328c35cd04449eee95501beba53d56",
+      "normalized_bytes": 2765,
+      "normalized_sha256": "47f860d0d3b027160240c8cde285345389328c35cd04449eee95501beba53d56",
+      "original_archive": "software.py.raw.gz"
+    },
+    {
+      "name": "source.txt",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\source.txt",
+      "normalization": "utf8-lf",
+      "original_bytes": 42,
+      "original_sha256": "ff9df962e8acde1888dee799214229ffb4c9cf7e915a53812df61d0f6c657a4c",
+      "normalized_bytes": 41,
+      "normalized_sha256": "0a3e40a615c6f3d879b205d3a2ceaba36c25157da956ad8f8cb91587c54a3519",
+      "original_archive": "source.txt.raw.gz"
+    },
+    {
+      "name": "style.log",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\style.log",
+      "normalization": "utf8-lf",
+      "original_bytes": 40,
+      "original_sha256": "952cf8ca92cf1937cd4e7f2cd8251b821f75e15ee3e7000ff168854c9583a234",
+      "normalized_bytes": 39,
+      "normalized_sha256": "1a518e303eccf359656a7799f478a7e5e5fb2f78653b6ff0b411049043e3ce67",
+      "original_archive": "style.log.raw.gz"
+    },
+    {
+      "name": "testplan.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\testplan.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 2840,
+      "original_sha256": "9f353f9fe790ce51e5e04d66b324b554f371d93563717ccbbf3cb8694cd8a569",
+      "normalized_bytes": 2764,
+      "normalized_sha256": "d41d1644747a653984ffed3e247520015317733e25bc37e4ea3ad922ca137f5d",
+      "original_archive": "testplan.json.raw.gz"
+    },
+    {
+      "name": "twister.json",
+      "workspace_original": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-constlat\\twister.json",
+      "normalization": "utf8-lf",
+      "original_bytes": 107871,
+      "original_sha256": "e622b1d277b3100312fc788dd8ca761480eeab609909430d0c7e3bb6748c0d13",
+      "normalized_bytes": 107787,
+      "normalized_sha256": "acc897381cc5906e1d3cbcab7de1815c1cbd125d276d2161238369fa3b4f3a39",
+      "original_archive": "twister.json.raw.gz"
+    }
+  ]
+}

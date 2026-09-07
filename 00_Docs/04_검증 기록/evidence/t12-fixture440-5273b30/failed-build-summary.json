@@ -1,0 +1,29 @@
+{
+  "source": "5273b30c05e1cdf2b7043f39c1f2536f1699bb59",
+  "target_build_failures": 2,
+  "cause": "C++ linkage declared by SDK C-only nrf_sys_event.h; fixed by caller extern C wrapper",
+  "flash_executed": false,
+  "pdm_functional_executed": false,
+  "files": [
+    {
+      "file": "role1-build.log",
+      "original_path": "C:\\u4i\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\build.log",
+      "sha256": "264aa4d67fae86176458504d8ca334e5d9bb8b5f130de042c0d45079b060eddc"
+    },
+    {
+      "file": "role1-config.txt",
+      "original_path": "C:\\u4i\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\.config",
+      "sha256": "b0e51eb47a6944cb122c2ee399f6127377d4a568c6d96677757ef0f0330b563a"
+    },
+    {
+      "file": "role2-build.log",
+      "original_path": "C:\\u4i\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\build.log",
+      "sha256": "50f893ef117f2d6c00559ecb736f0196ee5590d4f14a25d728b058b151c17e1e"
+    },
+    {
+      "file": "role2-config.txt",
+      "original_path": "C:\\u4i\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\zephyr\\.config",
+      "sha256": "429aac1c4ab9abdd12ef654853770a6ee886f302ef5a1ba49301f514e71b667d"
+    }
+  ]
+}

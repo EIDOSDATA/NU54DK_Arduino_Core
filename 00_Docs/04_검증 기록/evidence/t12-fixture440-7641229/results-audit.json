@@ -1,0 +1,1354 @@
+{
+  "audit_status": "passed",
+  "campaign_status": "failed",
+  "source": "7641229dca8c37be7a0d07241d407cb14cbf76ca",
+  "fixture_id": 440,
+  "functional_pass": 76,
+  "density_pass": 0,
+  "cleanup_pass": 77,
+  "raw_captures": 77,
+  "audited_functional_samples": 61440,
+  "journal_records": 153,
+  "whole_fixture_pass": false,
+  "failed_cases": 1,
+  "unexecuted_vectors": 115,
+  "error": "ProtocolError: PDM stereo edge/polarity order mismatch: [-17985.287109375, 17998.0625]; expected=(1, -1)",
+  "counts": [
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        25,
+        0,
+        0,
+        1
+      ],
+      "samples": 256,
+      "mean": -12968.93359375,
+      "channel_means": null,
+      "raw_sha256": "28ab2e9841df1a37dd16a5575d86c2553ffd7dc1f0e4ffd4fa8257da51070789"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        25,
+        0,
+        0,
+        2
+      ],
+      "samples": 512,
+      "mean": -13520.779296875,
+      "channel_means": null,
+      "raw_sha256": "1e79bf558cb95a644266910f11704e50f739403a62cdfcde620ccc9b403bc435"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        25,
+        0,
+        1,
+        1
+      ],
+      "samples": 256,
+      "mean": -12968.1875,
+      "channel_means": null,
+      "raw_sha256": "643ece4d4ffff9076e5f095b5ae16803224f395550fbd965dfa1161ff8d5ee22"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        25,
+        0,
+        1,
+        2
+      ],
+      "samples": 512,
+      "mean": -13520.40625,
+      "channel_means": null,
+      "raw_sha256": "797210ef098404c484dca81a4b6fb147afd88966e36198d68f7a1544fb4b0ed1"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        25,
+        1,
+        0,
+        1
+      ],
+      "samples": 256,
+      "mean": -6.7890625,
+      "channel_means": [
+        14881.890625,
+        -14895.46875
+      ],
+      "raw_sha256": "d1229b35894ed1f10526cfadea445ee5df095856e663c2e154832224696bdd24"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        25,
+        1,
+        0,
+        2
+      ],
+      "samples": 512,
+      "mean": -3.734375,
+      "channel_means": [
+        17258.30859375,
+        -17265.77734375
+      ],
+      "raw_sha256": "3a8e31fdf0ed4ab1baa4a5b0c80b1ad9bc50450bb6daf0ced55bcae04215232f"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        25,
+        1,
+        1,
+        1
+      ],
+      "samples": 256,
+      "mean": -3.8359375,
+      "channel_means": [
+        -14895.46875,
+        14887.796875
+      ],
+      "raw_sha256": "10094e1a0179c72f874c6461158aa10d4c90359caafedde70b1909030d1c1ef2"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        25,
+        1,
+        1,
+        2
+      ],
+      "samples": 512,
+      "mean": -3.734375,
+      "channel_means": [
+        -17265.77734375,
+        17258.30859375
+      ],
+      "raw_sha256": "83488238855c730dfb90de3a0b84cc281f80636c9a2fdd08b62025b27d21ebc0"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        50,
+        0,
+        0,
+        1
+      ],
+      "samples": 256,
+      "mean": -2.2890625,
+      "channel_means": null,
+      "raw_sha256": "74aba6bddd0276e5dd6416a77f7b8ab171dc51a5a87ed9dc5c00c3f405b47d76"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        50,
+        0,
+        0,
+        2
+      ],
+      "samples": 512,
+      "mean": -1.14453125,
+      "channel_means": null,
+      "raw_sha256": "841ba459a5902b7363a420210d2243036bff07bbf58b61c7e6f8ed9a501ebf6f"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        50,
+        0,
+        1,
+        1
+      ],
+      "samples": 256,
+      "mean": -0.8125,
+      "channel_means": null,
+      "raw_sha256": "b0da47c54e2c30903b0475f274d10f0114bceb025a9eb59e1a0abc142858bafb"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        50,
+        0,
+        1,
+        2
+      ],
+      "samples": 512,
+      "mean": -0.40625,
+      "channel_means": null,
+      "raw_sha256": "e00e7475fb26b7b745d316da4cb50855b4ab914281448082ab3e609d0b7846ed"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        50,
+        1,
+        0,
+        1
+      ],
+      "samples": 256,
+      "mean": -6.7890625,
+      "channel_means": [
+        14881.890625,
+        -14895.46875
+      ],
+      "raw_sha256": "d1229b35894ed1f10526cfadea445ee5df095856e663c2e154832224696bdd24"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        50,
+        1,
+        0,
+        2
+      ],
+      "samples": 512,
+      "mean": -2.2578125,
+      "channel_means": [
+        17261.26171875,
+        -17265.77734375
+      ],
+      "raw_sha256": "1b99153636a5c94122dd2934e69a37629a4505f40213776a1c3eff35936d172f"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        50,
+        1,
+        1,
+        1
+      ],
+      "samples": 256,
+      "mean": -3.8359375,
+      "channel_means": [
+        -14895.46875,
+        14887.796875
+      ],
+      "raw_sha256": "10094e1a0179c72f874c6461158aa10d4c90359caafedde70b1909030d1c1ef2"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        50,
+        1,
+        1,
+        2
+      ],
+      "samples": 512,
+      "mean": -2.2578125,
+      "channel_means": [
+        -17265.77734375,
+        17261.26171875
+      ],
+      "raw_sha256": "af588faab0fca0336ba412ac6024fcabf0069e2a580a33ed6549cfc6d2212bf2"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        75,
+        0,
+        0,
+        1
+      ],
+      "samples": 256,
+      "mean": 12962.44140625,
+      "channel_means": null,
+      "raw_sha256": "332879b5c0edb9230faba0cf42f03a235d1d96e5cbf06e778652f82288d7474e"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        75,
+        0,
+        0,
+        2
+      ],
+      "samples": 512,
+      "mean": 13516.908203125,
+      "channel_means": null,
+      "raw_sha256": "7bc1c5eb6a59836a0774f74423566db20ba82ba1b794701c57d31cd2f4566b96"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        75,
+        0,
+        1,
+        1
+      ],
+      "samples": 256,
+      "mean": 12964.58984375,
+      "channel_means": null,
+      "raw_sha256": "ef6c7df41b9e238ac5d094dedb7699f4db6a9185d95dc700179e6dd96f5197c9"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        75,
+        0,
+        1,
+        2
+      ],
+      "samples": 512,
+      "mean": 13517.962890625,
+      "channel_means": null,
+      "raw_sha256": "47582dd7ec07347d95093e844c01128bb79592845c75af0ee61d90da7b8c1ad6"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        75,
+        1,
+        0,
+        1
+      ],
+      "samples": 256,
+      "mean": 2.2578125,
+      "channel_means": [
+        -14889.4453125,
+        14893.9609375
+      ],
+      "raw_sha256": "2fbe0abdc986811bcd52d59b5dd0d705e5744626e6d7c54409a9361f44e0d2cf"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        75,
+        1,
+        0,
+        2
+      ],
+      "samples": 512,
+      "mean": 0.6875,
+      "channel_means": [
+        -17262.8671875,
+        17264.2421875
+      ],
+      "raw_sha256": "5bb8ef5551172335d32f9612ad982689a980518aa1e48d9a1f3e76573fb4a965"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        75,
+        1,
+        1,
+        1
+      ],
+      "samples": 256,
+      "mean": -0.75390625,
+      "channel_means": [
+        14893.9609375,
+        -14895.46875
+      ],
+      "raw_sha256": "1838daf35965112f30ce7f7d5ab36e6ff7ddce5f564a69a672772b75dfce17c8"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        75,
+        1,
+        1,
+        2
+      ],
+      "samples": 512,
+      "mean": 0.6875,
+      "channel_means": [
+        17264.2421875,
+        -17262.8671875
+      ],
+      "raw_sha256": "af03147656a7268a39bfe469351e87faf299d8d5ce4f01db6448611898a789a0"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        25,
+        0,
+        0,
+        1
+      ],
+      "samples": 1024,
+      "mean": -13170.4775390625,
+      "channel_means": null,
+      "raw_sha256": "64e3f699d06ca530f8dc7556273413c0c895055aa76fe1d5744cd5a5276d0410"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        25,
+        0,
+        0,
+        2
+      ],
+      "samples": 2048,
+      "mean": -11909.923828125,
+      "channel_means": null,
+      "raw_sha256": "a9997e95540f1d4ea1d01b7c1b716c5cc3387a6e1ae6853203e38a27aeafdeeb"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        25,
+        0,
+        1,
+        1
+      ],
+      "samples": 1024,
+      "mean": -13170.291015625,
+      "channel_means": null,
+      "raw_sha256": "858b37d64cc02745327fb9ce54502ff7a3c869f7261ba229b27326bf37e0b310"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        25,
+        0,
+        1,
+        2
+      ],
+      "samples": 2048,
+      "mean": -11909.83056640625,
+      "channel_means": null,
+      "raw_sha256": "890d8b757522646527034dc33cd6dc6373df60cf3e5fc9fc929834078a7f1d5f"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        25,
+        1,
+        0,
+        1
+      ],
+      "samples": 1024,
+      "mean": -2.20703125,
+      "channel_means": [
+        17998.0625,
+        -18002.4765625
+      ],
+      "raw_sha256": "1add983b076ef0e8e266b961182e78efeb250101208bfa0883cae6379f7b2281"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        25,
+        1,
+        0,
+        2
+      ],
+      "samples": 2048,
+      "mean": -1.45751953125,
+      "channel_means": [
+        17533.6640625,
+        -17536.5791015625
+      ],
+      "raw_sha256": "55988a6190a8f595ae4e50cf6816121c50d2e18becea8dce02218a16fdbf8bfb"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        25,
+        1,
+        1,
+        1
+      ],
+      "samples": 1024,
+      "mean": -2.20703125,
+      "channel_means": [
+        -18002.4765625,
+        17998.0625
+      ],
+      "raw_sha256": "b0c23033ba3dcdafe4cdd89be086ffac67a24ee7d0faaeb9b79ea1f237fd8b78"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        25,
+        1,
+        1,
+        2
+      ],
+      "samples": 2048,
+      "mean": -1.45751953125,
+      "channel_means": [
+        -17536.5791015625,
+        17533.6640625
+      ],
+      "raw_sha256": "8102d08d565840f487e0f383cb4840d00d593c93dd692998965c71586ac9b23c"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        50,
+        0,
+        0,
+        1
+      ],
+      "samples": 1024,
+      "mean": -0.572265625,
+      "channel_means": null,
+      "raw_sha256": "ba4d2d31696ef4c1727d244f7a4ac8ac2d528c3859658ecf80281c946416f39c"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        50,
+        0,
+        0,
+        2
+      ],
+      "samples": 2048,
+      "mean": -0.2861328125,
+      "channel_means": null,
+      "raw_sha256": "a858a336b91685f5eff0a93dd3e4da58c8fd288b9fa44d00beb51454f0ecef2a"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        50,
+        0,
+        1,
+        1
+      ],
+      "samples": 1024,
+      "mean": -0.203125,
+      "channel_means": null,
+      "raw_sha256": "3307f6b662fae677a49a2eb49d9d3e6f28eb59c035eaf7e9e8c5a282bbd01028"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        50,
+        0,
+        1,
+        2
+      ],
+      "samples": 2048,
+      "mean": -0.1015625,
+      "channel_means": null,
+      "raw_sha256": "cb7a172b1d1ac3f4eab27acd2808a4063d57a8fb93cfdbfb7668dbce5ef8fa51"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        50,
+        1,
+        0,
+        1
+      ],
+      "samples": 1024,
+      "mean": -2.20703125,
+      "channel_means": [
+        17998.0625,
+        -18002.4765625
+      ],
+      "raw_sha256": "1add983b076ef0e8e266b961182e78efeb250101208bfa0883cae6379f7b2281"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        50,
+        1,
+        0,
+        2
+      ],
+      "samples": 2048,
+      "mean": -1.08837890625,
+      "channel_means": [
+        17534.40234375,
+        -17536.5791015625
+      ],
+      "raw_sha256": "b973a26cdc556719ec5fa5a9051d1a1d4bfa8276e65d3c40de404de65e1a95bd"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        50,
+        1,
+        1,
+        1
+      ],
+      "samples": 1024,
+      "mean": -1.46875,
+      "channel_means": [
+        -18002.4765625,
+        17999.5390625
+      ],
+      "raw_sha256": "037b6bdc61aa7065426a902c1d1dd9a0a742231a4b85537df45a2ecef2d0aafe"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        50,
+        1,
+        1,
+        2
+      ],
+      "samples": 2048,
+      "mean": -1.45751953125,
+      "channel_means": [
+        -17536.5791015625,
+        17533.6640625
+      ],
+      "raw_sha256": "8102d08d565840f487e0f383cb4840d00d593c93dd692998965c71586ac9b23c"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        75,
+        0,
+        0,
+        1
+      ],
+      "samples": 1024,
+      "mean": 13167.9150390625,
+      "channel_means": null,
+      "raw_sha256": "bca3ef2bd83293f0335f503d3d655099c1f82c9afd187b57f75629fa6f221590"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        75,
+        0,
+        0,
+        2
+      ],
+      "samples": 2048,
+      "mean": 11907.9873046875,
+      "channel_means": null,
+      "raw_sha256": "e7a0e5b619755d1eb27d8d633c1d96bde384e16c955b4bae879aa0230b4e1f75"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        75,
+        0,
+        1,
+        1
+      ],
+      "samples": 1024,
+      "mean": 13168.32421875,
+      "channel_means": null,
+      "raw_sha256": "8c4712779a9aac85fad45eb2b899b632f44cd07b54052078ca2dfd14b0a17384"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        75,
+        0,
+        1,
+        2
+      ],
+      "samples": 2048,
+      "mean": 11908.115234375,
+      "channel_means": null,
+      "raw_sha256": "7fc06183331738663b8527933cb8a367b86a1f9a460de40b4b2c4930b3b2d5a0"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        75,
+        1,
+        0,
+        1
+      ],
+      "samples": 1024,
+      "mean": -0.0966796875,
+      "channel_means": [
+        -18001.119140625,
+        18000.92578125
+      ],
+      "raw_sha256": "fe3d23e726617048ca598418748e94ef8a9ef0b93d1bcb15e65ea141cd84b769"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        75,
+        1,
+        0,
+        2
+      ],
+      "samples": 2048,
+      "mean": -0.7822265625,
+      "channel_means": [
+        -17536.5791015625,
+        17535.0146484375
+      ],
+      "raw_sha256": "d4dc93f523957f70e4f62cbf2621ce0db22855a3cea291519f828162d8bbbf6a"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        75,
+        1,
+        1,
+        1
+      ],
+      "samples": 1024,
+      "mean": -0.0966796875,
+      "channel_means": [
+        18000.92578125,
+        -18001.119140625
+      ],
+      "raw_sha256": "1e7a3e531a86d5c60f75336abc3bce6cb8ae89df522fbc68883f85c609c89cf2"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        1024,
+        75,
+        1,
+        1,
+        2
+      ],
+      "samples": 2048,
+      "mean": -0.484375,
+      "channel_means": [
+        17535.0146484375,
+        -17535.9833984375
+      ],
+      "raw_sha256": "3f5b2d15a171294bc688ac1cb9605d8efca42d0704e547f008a06e46eb1acf4c"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        25,
+        0,
+        0,
+        1
+      ],
+      "samples": 256,
+      "mean": -12968.93359375,
+      "channel_means": null,
+      "raw_sha256": "28ab2e9841df1a37dd16a5575d86c2553ffd7dc1f0e4ffd4fa8257da51070789"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        25,
+        0,
+        0,
+        2
+      ],
+      "samples": 512,
+      "mean": -13520.779296875,
+      "channel_means": null,
+      "raw_sha256": "1e79bf558cb95a644266910f11704e50f739403a62cdfcde620ccc9b403bc435"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        25,
+        0,
+        1,
+        1
+      ],
+      "samples": 256,
+      "mean": -12968.1875,
+      "channel_means": null,
+      "raw_sha256": "643ece4d4ffff9076e5f095b5ae16803224f395550fbd965dfa1161ff8d5ee22"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        25,
+        0,
+        1,
+        2
+      ],
+      "samples": 512,
+      "mean": -13520.40625,
+      "channel_means": null,
+      "raw_sha256": "797210ef098404c484dca81a4b6fb147afd88966e36198d68f7a1544fb4b0ed1"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        25,
+        1,
+        0,
+        1
+      ],
+      "samples": 256,
+      "mean": -6.7890625,
+      "channel_means": [
+        14881.890625,
+        -14895.46875
+      ],
+      "raw_sha256": "d1229b35894ed1f10526cfadea445ee5df095856e663c2e154832224696bdd24"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        25,
+        1,
+        0,
+        2
+      ],
+      "samples": 512,
+      "mean": -2.2578125,
+      "channel_means": [
+        17261.26171875,
+        -17265.77734375
+      ],
+      "raw_sha256": "1b99153636a5c94122dd2934e69a37629a4505f40213776a1c3eff35936d172f"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        25,
+        1,
+        1,
+        1
+      ],
+      "samples": 256,
+      "mean": -6.7890625,
+      "channel_means": [
+        -14895.46875,
+        14881.890625
+      ],
+      "raw_sha256": "1177cd02ade2cc369de03a584e2cd0fe3c6e41e43f08e0a3521a2c018056e906"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        25,
+        1,
+        1,
+        2
+      ],
+      "samples": 512,
+      "mean": -2.2578125,
+      "channel_means": [
+        -17265.77734375,
+        17261.26171875
+      ],
+      "raw_sha256": "af588faab0fca0336ba412ac6024fcabf0069e2a580a33ed6549cfc6d2212bf2"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        50,
+        0,
+        0,
+        1
+      ],
+      "samples": 256,
+      "mean": -2.2890625,
+      "channel_means": null,
+      "raw_sha256": "74aba6bddd0276e5dd6416a77f7b8ab171dc51a5a87ed9dc5c00c3f405b47d76"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        50,
+        0,
+        0,
+        2
+      ],
+      "samples": 512,
+      "mean": -1.14453125,
+      "channel_means": null,
+      "raw_sha256": "841ba459a5902b7363a420210d2243036bff07bbf58b61c7e6f8ed9a501ebf6f"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        50,
+        0,
+        1,
+        1
+      ],
+      "samples": 256,
+      "mean": -0.8125,
+      "channel_means": null,
+      "raw_sha256": "b0da47c54e2c30903b0475f274d10f0114bceb025a9eb59e1a0abc142858bafb"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        50,
+        0,
+        1,
+        2
+      ],
+      "samples": 512,
+      "mean": -0.40625,
+      "channel_means": null,
+      "raw_sha256": "e00e7475fb26b7b745d316da4cb50855b4ab914281448082ab3e609d0b7846ed"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        50,
+        1,
+        0,
+        1
+      ],
+      "samples": 256,
+      "mean": -6.7890625,
+      "channel_means": [
+        14881.890625,
+        -14895.46875
+      ],
+      "raw_sha256": "d1229b35894ed1f10526cfadea445ee5df095856e663c2e154832224696bdd24"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        50,
+        1,
+        0,
+        2
+      ],
+      "samples": 512,
+      "mean": -3.734375,
+      "channel_means": [
+        17258.30859375,
+        -17265.77734375
+      ],
+      "raw_sha256": "3a8e31fdf0ed4ab1baa4a5b0c80b1ad9bc50450bb6daf0ced55bcae04215232f"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        50,
+        1,
+        1,
+        1
+      ],
+      "samples": 256,
+      "mean": -6.7890625,
+      "channel_means": [
+        -14895.46875,
+        14881.890625
+      ],
+      "raw_sha256": "1177cd02ade2cc369de03a584e2cd0fe3c6e41e43f08e0a3521a2c018056e906"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        50,
+        1,
+        1,
+        2
+      ],
+      "samples": 512,
+      "mean": -2.2578125,
+      "channel_means": [
+        -17265.77734375,
+        17261.26171875
+      ],
+      "raw_sha256": "af588faab0fca0336ba412ac6024fcabf0069e2a580a33ed6549cfc6d2212bf2"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        75,
+        0,
+        0,
+        1
+      ],
+      "samples": 256,
+      "mean": 12962.44140625,
+      "channel_means": null,
+      "raw_sha256": "332879b5c0edb9230faba0cf42f03a235d1d96e5cbf06e778652f82288d7474e"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        75,
+        0,
+        0,
+        2
+      ],
+      "samples": 512,
+      "mean": 13516.908203125,
+      "channel_means": null,
+      "raw_sha256": "7bc1c5eb6a59836a0774f74423566db20ba82ba1b794701c57d31cd2f4566b96"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        75,
+        0,
+        1,
+        1
+      ],
+      "samples": 256,
+      "mean": 12964.58984375,
+      "channel_means": null,
+      "raw_sha256": "ef6c7df41b9e238ac5d094dedb7699f4db6a9185d95dc700179e6dd96f5197c9"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        75,
+        0,
+        1,
+        2
+      ],
+      "samples": 512,
+      "mean": 13517.962890625,
+      "channel_means": null,
+      "raw_sha256": "47582dd7ec07347d95093e844c01128bb79592845c75af0ee61d90da7b8c1ad6"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        75,
+        1,
+        0,
+        1
+      ],
+      "samples": 256,
+      "mean": -0.75390625,
+      "channel_means": [
+        -14895.46875,
+        14893.9609375
+      ],
+      "raw_sha256": "5b70a6312c23c43d5b084fd698d2e0fb775c1806ce5bdf7edf264f987c98bd0e"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        75,
+        1,
+        0,
+        2
+      ],
+      "samples": 512,
+      "mean": 0.6875,
+      "channel_means": [
+        -17262.8671875,
+        17264.2421875
+      ],
+      "raw_sha256": "5bb8ef5551172335d32f9612ad982689a980518aa1e48d9a1f3e76573fb4a965"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        75,
+        1,
+        1,
+        1
+      ],
+      "samples": 256,
+      "mean": -0.75390625,
+      "channel_means": [
+        14893.9609375,
+        -14895.46875
+      ],
+      "raw_sha256": "1838daf35965112f30ce7f7d5ab36e6ff7ddce5f564a69a672772b75dfce17c8"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        256,
+        75,
+        1,
+        1,
+        2
+      ],
+      "samples": 512,
+      "mean": -0.767578125,
+      "channel_means": [
+        17264.2421875,
+        -17265.77734375
+      ],
+      "raw_sha256": "91178b33863d8907cfff2a1b108d88b52a0571692e8b4a4910c864703a9c73d7"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        1024,
+        25,
+        0,
+        0,
+        1
+      ],
+      "samples": 1024,
+      "mean": -13170.4775390625,
+      "channel_means": null,
+      "raw_sha256": "64e3f699d06ca530f8dc7556273413c0c895055aa76fe1d5744cd5a5276d0410"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        1024,
+        25,
+        0,
+        0,
+        2
+      ],
+      "samples": 2048,
+      "mean": -11909.923828125,
+      "channel_means": null,
+      "raw_sha256": "a9997e95540f1d4ea1d01b7c1b716c5cc3387a6e1ae6853203e38a27aeafdeeb"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        1024,
+        25,
+        0,
+        1,
+        1
+      ],
+      "samples": 1024,
+      "mean": -13170.291015625,
+      "channel_means": null,
+      "raw_sha256": "858b37d64cc02745327fb9ce54502ff7a3c869f7261ba229b27326bf37e0b310"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        21,
+        1024,
+        25,
+        0,
+        1,
+        2
+      ],
+      "samples": 2048,
+      "mean": -11909.83056640625,
+      "channel_means": null,
+      "raw_sha256": "890d8b757522646527034dc33cd6dc6373df60cf3e5fc9fc929834078a7f1d5f"
+    }
+  ],
+  "capture_scope": "Canonical read_u16 returned samples copied unchanged; startup pin read adds no fixture commands",
+  "not_claimed": [
+    "external microphone compatibility or calibrated audio quality",
+    "4 settling and 100 measured continuous buffers",
+    "T13 injected overflow recovery/concurrency/soak",
+    "T12 whole gate"
+  ],
+  "sha256": {
+    "fixture440-attempt1.json": "82a610536d7ec02c5b42af7d33e42396b903778aa794d32947e385aa0b0bc68b",
+    "fixture440-attempt1.json.jsonl": "7957aa2aad22db7a65d9eb1ba9f44a46979b276472794f431316ee105f4166a0",
+    "pdm-samples.jsonl": "9d503e0d3f8e417b98715180db4c4e23aa7cbfa85d8ac1ea74a063f24e41acb5"
+  }
+}

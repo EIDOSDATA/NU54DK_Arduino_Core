@@ -1,0 +1,32 @@
+[
+  {
+    "path": "C:\\u4c\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\zephyr.hex",
+    "elf": "C:\\u4c\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\zephyr.elf",
+    "sha256": "f414647193652ffd1762d6558937503139b4efc3a60cd66495c67142c77f79f7",
+    "elf_sha256": "7c7908568bcf0cea86e7d5c5eb84684b6eeca28ae47a782b8c6d0c7d0fc37089",
+    "record_sha256": "6aebb679dbea64911aefc53056120a7280c1fc38fc60d26d41e778a6864ae62f",
+    "core_revision": "017f3a55c02e2cd9d2859c7002747d3904ca41ba",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "role": 1,
+    "symbols": {
+      "v04_request": 536952304,
+      "v04_response": 536952176,
+      "v04_identity": 536952112
+    }
+  },
+  {
+    "path": "C:\\u4c\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\zephyr\\zephyr.hex",
+    "elf": "C:\\u4c\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\zephyr\\zephyr.elf",
+    "sha256": "520864617e5e24439c5cb81c7c1dd1c09571ae4a31224299c3e51a8d4578a2c2",
+    "elf_sha256": "a2d8fbfbf22351c60fcf2429855bfa99c31f2e2ced7a7a4fd156bcc271216eb7",
+    "record_sha256": "6aebb679dbea64911aefc53056120a7280c1fc38fc60d26d41e778a6864ae62f",
+    "core_revision": "017f3a55c02e2cd9d2859c7002747d3904ca41ba",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "role": 2,
+    "symbols": {
+      "v04_request": 536952304,
+      "v04_response": 536952176,
+      "v04_identity": 536952112
+    }
+  }
+]

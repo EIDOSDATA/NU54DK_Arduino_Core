@@ -1,0 +1,56 @@
+[
+  {
+    "scenario": "nucode.v04.pair_dut",
+    "source": "017f3a55c02e2cd9d2859c7002747d3904ca41ba",
+    "repository_translation_units": 42,
+    "normalized_config_and_membership_unchanged": true,
+    "changed_translation_units": [
+      "tests/zephyr/v04_pair_hil/src/signal_hil.cpp"
+    ],
+    "prior_source": "36ba819bbe03280fa82c62ef76b00c87a92c2aff",
+    "artifacts": {
+      "zephyr.elf": {
+        "path": "C:\\u4c\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\zephyr.elf",
+        "bytes": 2614444,
+        "sha256": "7c7908568bcf0cea86e7d5c5eb84684b6eeca28ae47a782b8c6d0c7d0fc37089"
+      },
+      "zephyr.hex": {
+        "path": "C:\\u4c\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\zephyr.hex",
+        "bytes": 522874,
+        "sha256": "f414647193652ffd1762d6558937503139b4efc3a60cd66495c67142c77f79f7"
+      },
+      ".config": {
+        "path": "C:\\u4c\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\.config",
+        "bytes": 62203,
+        "sha256": "9ee93f00b2b86062bbf5dd41a870f339c6f45e9aa684a1006d430255b2ae6f3a"
+      }
+    }
+  },
+  {
+    "scenario": "nucode.v04.pair_peer",
+    "source": "017f3a55c02e2cd9d2859c7002747d3904ca41ba",
+    "repository_translation_units": 42,
+    "normalized_config_and_membership_unchanged": true,
+    "changed_translation_units": [
+      "tests/zephyr/v04_pair_hil/src/signal_hil.cpp"
+    ],
+    "prior_source": "36ba819bbe03280fa82c62ef76b00c87a92c2aff",
+    "artifacts": {
+      "zephyr.elf": {
+        "path": "C:\\u4c\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\zephyr\\zephyr.elf",
+        "bytes": 2618104,
+        "sha256": "a2d8fbfbf22351c60fcf2429855bfa99c31f2e2ced7a7a4fd156bcc271216eb7"
+      },
+      "zephyr.hex": {
+        "path": "C:\\u4c\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\zephyr\\zephyr.hex",
+        "bytes": 523811,
+        "sha256": "520864617e5e24439c5cb81c7c1dd1c09571ae4a31224299c3e51a8d4578a2c2"
+      },
+      ".config": {
+        "path": "C:\\u4c\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\zephyr\\.config",
+        "bytes": 62203,
+        "sha256": "421c8211958933feeca69e22db2d62c951c3a2580dbca579af46e49221fdaee2"
+      }
+    }
+  }
+]

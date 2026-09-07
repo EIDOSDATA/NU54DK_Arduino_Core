@@ -1,0 +1,236 @@
+{
+  "status": "failed",
+  "core_revision": "b929b14f37d7d086c9accad748aab83b58a0e7be",
+  "fixture_id": 440,
+  "scope": "Static data wire LOW/HIGH diagnostic only; no PDM clock/start or functional sweep",
+  "confirmation_sha256": "bee6e51b7b9fee66a993855f95e19c776c16c6b989c8a0248b6a2e4dd583a0f0",
+  "swd_frequency_hz": 10000000,
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "c1141b6c4b378a0ee557154ac3b5e1bb19ccbb7bfe321b7d49a98dc461b23f56",
+      "elf_sha256": "4e299826b1dbe8d1d74a61d0e0013aa324c5d1decce45535ddbf35427ed8a11a",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 3.078,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "efa4640589370a019e59606322a6d93b5b47fb45ac18ad21cc3282de0a4561f4"
+      }
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "a0a051fec2df4d4f3afa79d7719a97bf628cc685f023725c46e3d3e06142fe66",
+      "elf_sha256": "6f28d1fb388d1dad178e432cca86ee9f916dace61f9b8c8aa31cda5a62855a07",
+      "flash": {
+        "runner": "pyocd",
+        "target": "nrf54l",
+        "frequency_hz": 10000000,
+        "seconds": 3.047,
+        "mass_erase_requested": false,
+        "recover_requested": false,
+        "output_sha256": "6e6882d353206298b0f6a5f7e7ea73d5fc0e0c33265f3675f63fb1841f4657d0"
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "STATIC-DATA/1/25",
+      "status": "failed",
+      "generator_role": 1,
+      "receiver_role": 2,
+      "receiver_pin": 7,
+      "expected": 0,
+      "levels": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "generator_setup": {
+        "CONFIG0": 197185,
+        "CONFIG1": 1245795,
+        "PUBLISH_IN0": 2147483648,
+        "SUBSCRIBE_OUT1": 2147483648,
+        "DPPI20_CHEN": 1,
+        "GPIO1_IN": 80,
+        "GPIO1_OUT": 64
+      },
+      "receiver_original_pin_cnf": 2,
+      "receiver_read_pin_cnf": 0,
+      "pdm_start_executed": false
+    },
+    {
+      "id": "STATIC-CLEANUP",
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ],
+      "receiver_restored_pin_cnf": 2
+    },
+    {
+      "id": "STATIC-DATA/1/75",
+      "status": "failed",
+      "generator_role": 1,
+      "receiver_role": 2,
+      "receiver_pin": 7,
+      "expected": 1,
+      "levels": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "generator_setup": {
+        "CONFIG0": 197185,
+        "CONFIG1": 197219,
+        "PUBLISH_IN0": 2147483648,
+        "SUBSCRIBE_OUT1": 2147483648,
+        "DPPI20_CHEN": 1,
+        "GPIO1_IN": 16,
+        "GPIO1_OUT": 0
+      },
+      "receiver_original_pin_cnf": 2,
+      "receiver_read_pin_cnf": 0,
+      "pdm_start_executed": false
+    },
+    {
+      "id": "STATIC-CLEANUP",
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ],
+      "receiver_restored_pin_cnf": 2
+    },
+    {
+      "id": "STATIC-DATA/2/25",
+      "status": "failed",
+      "generator_role": 2,
+      "receiver_role": 1,
+      "receiver_pin": 6,
+      "expected": 0,
+      "levels": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "generator_setup": {
+        "CONFIG0": 197201,
+        "CONFIG1": 1245811,
+        "PUBLISH_IN0": 2147483648,
+        "SUBSCRIBE_OUT1": 2147483648,
+        "DPPI20_CHEN": 1,
+        "GPIO1_IN": 176,
+        "GPIO1_OUT": 128
+      },
+      "receiver_original_pin_cnf": 0,
+      "receiver_read_pin_cnf": 0,
+      "pdm_start_executed": false
+    },
+    {
+      "id": "STATIC-CLEANUP",
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ],
+      "receiver_restored_pin_cnf": 0
+    },
+    {
+      "id": "STATIC-DATA/2/75",
+      "status": "failed",
+      "generator_role": 2,
+      "receiver_role": 1,
+      "receiver_pin": 6,
+      "expected": 1,
+      "levels": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "generator_setup": {
+        "CONFIG0": 197201,
+        "CONFIG1": 197235,
+        "PUBLISH_IN0": 2147483648,
+        "SUBSCRIBE_OUT1": 2147483648,
+        "DPPI20_CHEN": 1,
+        "GPIO1_IN": 48,
+        "GPIO1_OUT": 0
+      },
+      "receiver_original_pin_cnf": 0,
+      "receiver_read_pin_cnf": 0,
+      "pdm_start_executed": false
+    },
+    {
+      "id": "STATIC-CLEANUP",
+      "results": [
+        {
+          "role": 1,
+          "result": [
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "result": [
+            0
+          ]
+        }
+      ],
+      "receiver_restored_pin_cnf": 0
+    }
+  ],
+  "error": "AssertionError: ",
+  "completed_at_utc": "2026-09-06T20:32:14.973473+00:00"
+}

@@ -1,0 +1,24 @@
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+Traceback (most recent call last):
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t12-fixture440-rewired\net_isolation_flushed.py", line 20, in <module>
+    device, flash = pair.boot_exact(stack, ConnectHelper, BUNDLE / 'opt/bin/Scripts/pyocd.exe', uid, image, 10000000)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\hil\nu54dk\v04_pair.py", line 119, in boot_exact
+    flash = flash_image(pyocd, uid, image["path"], 120, swd_frequency_hz)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\hil\nu54dk\m24_uarte_onboard.py", line 185, in flash_image
+    raise UarteHilFailure(
+m24_uarte_onboard.UarteHilFailure: pyOCD exited with 1: 0000688 W Board ID 5415 is not recognized [mbed_board]
+
+0000829 W NRF54L15 is not in a secure state [target_nRF54L]
+
+0001078 I Loading C:\u4g\nrf54l15dk_nrf54l15_cpuapp_nu54dk\zephyr_gnu\nucode.v04.pair_peer\v04_pair_hil\zephyr\zephyr.hex [load_cmd]
+
+[---|---|---|---|---|---|---|---|---|----]
+
+[=====0011534 E Probe error during disconnect: [session]
+
+0011534 C Timeout reading from probe <probe-sha256:4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0> [__main__]
+
+

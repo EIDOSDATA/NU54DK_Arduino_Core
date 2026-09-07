@@ -1,0 +1,94 @@
+{
+  "audit_status": "passed",
+  "campaign_status": "failed",
+  "source": "017f3a55c02e2cd9d2859c7002747d3904ca41ba",
+  "fixture_id": 440,
+  "functional_pass": 4,
+  "density_pass": 0,
+  "cleanup_pass": 5,
+  "raw_captures": 5,
+  "audited_functional_samples": 1536,
+  "journal_records": 9,
+  "whole_fixture_pass": false,
+  "failed_cases": 1,
+  "unexecuted_vectors": 187,
+  "error": "ProtocolError: PDM stereo channels are not independently distinguishable: [-14895.46875, -14895.46875]",
+  "counts": [
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        25,
+        0,
+        0,
+        1
+      ],
+      "samples": 256,
+      "mean": -17265.77734375,
+      "channel_means": null,
+      "raw_sha256": "17cfc4ac0eb87786cfa14106459567cc7e46d6ee53c4d84036da472e4f3a7408"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        25,
+        0,
+        0,
+        2
+      ],
+      "samples": 512,
+      "mean": -18002.4765625,
+      "channel_means": null,
+      "raw_sha256": "bb948e69b95e2d195394ca98f2885a165e68da87db6bbf8c4af6ca747b52c91a"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        25,
+        0,
+        1,
+        1
+      ],
+      "samples": 256,
+      "mean": -17265.77734375,
+      "channel_means": null,
+      "raw_sha256": "17cfc4ac0eb87786cfa14106459567cc7e46d6ee53c4d84036da472e4f3a7408"
+    },
+    {
+      "controller_role": 1,
+      "receiver_role": 2,
+      "vector": [
+        20,
+        256,
+        25,
+        0,
+        1,
+        2
+      ],
+      "samples": 512,
+      "mean": -18002.4765625,
+      "channel_means": null,
+      "raw_sha256": "bb948e69b95e2d195394ca98f2885a165e68da87db6bbf8c4af6ca747b52c91a"
+    }
+  ],
+  "capture_scope": "Canonical read_u16 returned samples copied unchanged; startup pin read adds no fixture commands",
+  "not_claimed": [
+    "external microphone compatibility or calibrated audio quality",
+    "4 settling and 100 measured continuous buffers",
+    "T13 injected overflow recovery/concurrency/soak",
+    "T12 whole gate"
+  ],
+  "sha256": {
+    "fixture440-attempt1.json": "fd094a92c86be166647795906133749a861607f412449704211771d67c81a1b8",
+    "fixture440-attempt1.json.jsonl": "6a1d187854d909412d65c06e347bc5ba9658521bbe8f906fb42c6dbd112cb70f",
+    "pdm-samples.jsonl": "55509a5353f325c1cbd02db9d66714b952166cf3181adc3b83856a9cf2f621d6"
+  }
+}

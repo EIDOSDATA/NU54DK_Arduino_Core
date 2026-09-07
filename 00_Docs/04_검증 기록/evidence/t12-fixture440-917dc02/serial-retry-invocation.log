@@ -1,0 +1,8 @@
+{"log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-continuous\\serial-retry.log", "returncode": 0}
+test_production_sync_and_lifetime (test_r02_serial_drivers.SerialDriverTests.test_production_sync_and_lifetime) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 7.831s
+
+OK
+

@@ -10,12 +10,19 @@
 #include "shared_analog_source.h"
 #include "qdec_waveform.h"
 #include "i2s_finite_transfer.h"
+#include "pdm_continuous.h"
 #include <nucode/AnalogFabric.h>
 #include <nucode/SerialFabric.h>
 #include <nucode/StreamFabric.h>
+#include <nucode/EventFabric.h>
 #include <variant.h>
 #include <hal/nrf_gpio.h>
 #include <zephyr/kernel.h>
+/** @brief 고정 SDK의 C 전용 header 선언에 C linkage를 적용합니다. */
+extern "C"
+{
+#include <nrf_sys_event.h>
+}
 #include <string.h>
 
 namespace
@@ -32,7 +39,10 @@ namespace
     bool controller = false;
 
     alignas(4) std::int16_t analog_samples[2][analog_capacity]{};
-    alignas(4) std::int16_t pdm_samples[2][stream_capacity]{};
+    /** @brief payload 0/1과 별도 guard 2/3으로 완료 전에 DMA가 입력을 덮어쓰지 않게 합니다. */
+    alignas(4) std::int16_t pdm_samples[4][stream_capacity]{};
+    v04::PdmContinuous pdm_transfer;
+    bool pdm_continuous = false;
     alignas(4) std::uint16_t pwm_values[16]{};
     /** @brief slot 2는 시작 지연만큼 밀린 payload를 수집하고 slot 3은 정지 중 재사용을 막습니다. */
     alignas(4) std::uint32_t i2s_rx[4][stream_capacity]{};
@@ -68,10 +78,16 @@ namespace
     I2sFabric *i2s = nullptr;
     PdmFabric *pdm = nullptr;
     SpisHandle *pdm_spis = nullptr;
+    GpioteFabric *pdm_gpiote = nullptr;
+    DppiFabric *pdm_dppi = nullptr;
+    bool pdm_clock_owned = false, pdm_data_owned = false, pdm_channel_owned = false;
+    bool pdm_edge_connected = false;
+    bool pdm_constlat_owned = false;
     std::uint32_t pwm_playbacks = 1U, analog_buffers = 1U;
     std::uint32_t i2s_buffers = 1U, pdm_buffers = 1U;
     std::uint32_t analog_completed_mask = 0U, i2s_completed_mask = 0U;
     std::uint32_t pdm_completed_mask = 0U;
+    std::uint32_t pdm_next_slot = 2U;
     std::uint32_t analog_sampled = 0U;
     std::int64_t next_analog_sample_ms = 0;
     bool cs_owned = false;
@@ -180,6 +196,59 @@ namespace
         cs_owned = false;
     }
 
+    /** @brief stereo 신호원의 clock event 연결을 끊은 뒤 task·pin 자원을 반환합니다. */
+    bool stopPdmStereo()
+    {
+        if (pdm_channel_owned)
+        {
+            if (pdm_dppi->disable(0U) != EventFabricResult::success)
+            {
+                return false;
+            }
+            if (pdm_edge_connected)
+            {
+                if (pdm_dppi->disconnect(pdm_gpiote->inEvent(0U), pdm_gpiote->outTask(1U), 0U) !=
+                    EventFabricResult::success)
+                {
+                    return false;
+                }
+                pdm_edge_connected = false;
+            }
+            if (pdm_dppi->releaseChannel(0U) != EventFabricResult::success)
+            {
+                return false;
+            }
+            pdm_channel_owned = false;
+        }
+        if (pdm_data_owned)
+        {
+            if (pdm_gpiote->release(1U) != EventFabricResult::success)
+            {
+                return false;
+            }
+            pdm_data_owned = false;
+        }
+        if (pdm_clock_owned)
+        {
+            if (pdm_gpiote->release(0U) != EventFabricResult::success)
+            {
+                return false;
+            }
+            pdm_clock_owned = false;
+        }
+        pdm_gpiote = nullptr;
+        pdm_dppi = nullptr;
+        if (pdm_constlat_owned)
+        {
+            if (nrf_sys_event_release_global_constlat() != 0)
+            {
+                return false;
+            }
+            pdm_constlat_owned = false;
+        }
+        return true;
+    }
+
     /** @brief 모든 signal handle을 역순으로 정지·해제합니다. */
     bool stopAll()
     {
@@ -208,6 +277,7 @@ namespace
             stopped &= pdm->stop(100000U) == StreamFabricResult::success;
         }
         restoreChipSelect();
+        stopped &= stopPdmStereo();
         if (pdm_spis != nullptr && pdm_spis->state() == SerialFabricState::active)
         {
             stopped &= pdm_spis->deactivate(100000U) == SerialFabricResult::success;
@@ -384,17 +454,67 @@ namespace
         return ready;
     }
 
-    /** @brief PDM receiver 또는 SPIS EasyDMA bitstream source를 준비합니다. */
+    /** @brief stereo는 수신 clock의 양 에지로 data를 뒤집어 반대 부호 채널을 만듭니다. */
+    bool preparePdmStereo(bool inverted)
+    {
+        /** @brief MHz clock 입력의 첫 에지부터 DPPI 지연을 일정하게 유지합니다. */
+        if (nrf_sys_event_request_global_constlat() != 0)
+        {
+            return false;
+        }
+        pdm_constlat_owned = true;
+        pdm_gpiote = eventFabric().gpiote(20U);
+        pdm_dppi = eventFabric().dppi(20U);
+        if (pdm_gpiote == nullptr || pdm_dppi == nullptr)
+        {
+            return false;
+        }
+        pdm_clock_owned = pdm_gpiote->acquireInput(0U, firstPin(), GpiotePolarity::toggle) ==
+                          EventFabricResult::success;
+        if (!pdm_clock_owned)
+        {
+            return false;
+        }
+        const auto clock_pin = NRF_GPIO_PIN_MAP(1U, role == 1U ? 4U : 5U);
+        /** @brief 수신기가 시작하기 전에도 clock 입력을 정해진 LOW로 유지합니다. */
+        nrf_gpio_cfg_input(clock_pin, NRF_GPIO_PIN_PULLDOWN);
+        /** @brief 이전 pull-up의 입력 잔류값으로 stereo 초기 위상이 반전되지 않게 기다립니다. */
+        k_busy_wait(10U);
+        const bool initial_high = (nrf_gpio_pin_read(clock_pin) != 0U) != inverted;
+        pdm_data_owned = pdm_gpiote->acquireOutput(1U, secondPin(), GpiotePolarity::toggle,
+                                                   initial_high) == EventFabricResult::success;
+        if (!pdm_data_owned)
+        {
+            return false;
+        }
+        pdm_channel_owned = pdm_dppi->acquireChannel(0U) == EventFabricResult::success;
+        if (!pdm_channel_owned)
+        {
+            return false;
+        }
+        pdm_edge_connected = pdm_dppi->connect(pdm_gpiote->inEvent(0U), pdm_gpiote->outTask(1U),
+                                               0U) == EventFabricResult::success;
+        return pdm_edge_connected && pdm_dppi->enable(0U) == EventFabricResult::success;
+    }
+
+    /** @brief PDM receiver 또는 mono SPIS·stereo GPIOTE/DPPI 신호원을 준비합니다. */
     bool preparePdm(const std::uint32_t *args)
     {
+        pdm_continuous = args[6] == 100U && args[7] == 4U && args[5] == 2U;
         if ((args[0] != 20U && args[0] != 21U) || args[1] == 0U || args[1] > stream_capacity ||
             (args[2] != 25U && args[2] != 50U && args[2] != 75U) || args[3] > 1U || args[4] > 1U ||
-            (args[5] != 1U && args[5] != 2U))
+            (args[5] != 1U && args[5] != 2U) ||
+            (!pdm_continuous && (args[6] != 0U || args[7] != 0U)))
         {
             return false;
         }
         requested = args[1];
         pdm_buffers = args[5];
+        pdm_next_slot = pdm_buffers == 2U ? 1U : 2U;
+        if (pdm_continuous)
+        {
+            pdm_transfer.reset(requested, args[3] != 0U);
+        }
         if (!controller)
         {
             pdm = streamFabric().pdm(static_cast<std::uint8_t>(args[0]));
@@ -415,6 +535,11 @@ namespace
             cs_owned = true;
             ready = true;
             return true;
+        }
+        if (args[3] != 0U)
+        {
+            ready = preparePdmStereo(args[2] == 75U);
+            return ready;
         }
         const std::uint8_t byte = args[2] == 25U ? 0x11U : args[2] == 50U ? 0x55U : 0x77U;
         const std::size_t source_bytes = requested * pdm_buffers * 8U;
@@ -438,7 +563,7 @@ namespace
         pdm_spis = serialFabric().spis(21U);
         if (pdm_spis == nullptr ||
             pdm_spis->configure({1000000U, SpiFabricMode::mode0, SpiFabricBitOrder::msb_first,
-                                 0U}) != SerialFabricResult::success ||
+                                 byte}) != SerialFabricResult::success ||
             pdm_spis->stage(route) != SerialFabricResult::success ||
             pdm_spis->activate() != SerialFabricResult::success ||
             pdm_spis->queueBuffers(pdm_source, source_bytes, nullptr, 0U) !=
@@ -530,11 +655,12 @@ namespace
             if (!controller && pdm != nullptr && cs_owned)
             {
                 nrf_gpio_pin_clear(cs_psel);
-                result = pdm->start(pdm_samples[0], requested) == StreamFabricResult::success;
-                if (result && pdm_buffers == 2U)
+                auto *buffer = pdm_continuous ? pdm_transfer.next() : pdm_samples[0];
+                result = buffer != nullptr &&
+                         pdm->start(buffer, requested) == StreamFabricResult::success;
+                if (result && pdm_continuous)
                 {
-                    result =
-                        pdm->queueBuffer(pdm_samples[1], requested) == StreamFabricResult::success;
+                    pdm_transfer.queued();
                 }
             }
             break;
@@ -705,12 +831,75 @@ void serviceSignal()
         PdmEvent event{};
         while (pdm->takeEvent(event))
         {
-            if (event.type == PdmEventType::buffer_complete)
+            if (pdm_continuous)
+            {
+                if (event.type == PdmEventType::buffer_needed)
+                {
+                    auto *buffer = pdm_transfer.next();
+                    if (buffer == nullptr ||
+                        pdm->queueBuffer(buffer, requested) != StreamFabricResult::success)
+                    {
+                        error |= 512U;
+                    }
+                    else
+                    {
+                        pdm_transfer.queued();
+                    }
+                }
+                else if (event.type == PdmEventType::buffer_complete)
+                {
+                    if (!pdm_transfer.released(event.buffer, event.samples))
+                    {
+                        error |= 256U;
+                    }
+                    else
+                    {
+                        amount += static_cast<std::uint32_t>(event.samples);
+                        if (pdm_transfer.complete())
+                        {
+                            if (pdm->stop(100000U) == StreamFabricResult::success &&
+                                pdm_transfer.guards())
+                            {
+                                nrf_gpio_pin_set(cs_psel);
+                                complete = true;
+                                pdm = nullptr;
+                            }
+                            else
+                            {
+                                error |= 512U;
+                            }
+                            break;
+                        }
+                    }
+                }
+                else if (event.type == PdmEventType::overflow || event.type == PdmEventType::error)
+                {
+                    error |= 512U;
+                }
+                continue;
+            }
+            if (event.type == PdmEventType::buffer_needed)
+            {
+                if (pdm_next_slot < 4U)
+                {
+                    if (pdm->queueBuffer(pdm_samples[pdm_next_slot], requested) !=
+                        StreamFabricResult::success)
+                    {
+                        error |= 512U;
+                    }
+                    else
+                    {
+                        pdm_next_slot = pdm_next_slot == 1U ? 2U : pdm_next_slot + 1U;
+                    }
+                }
+            }
+            else if (event.type == PdmEventType::buffer_complete)
             {
                 const unsigned slot = event.buffer == pdm_samples[0]   ? 0U
                                       : event.buffer == pdm_samples[1] ? 1U
                                                                        : 2U;
-                if (slot >= pdm_buffers || event.samples != requested)
+                if (slot >= pdm_buffers || event.samples != requested ||
+                    (pdm_completed_mask & (1U << slot)) != 0U || amount != slot * requested)
                 {
                     error |= 256U;
                 }
@@ -718,7 +907,21 @@ void serviceSignal()
                 {
                     pdm_completed_mask |= 1U << slot;
                     amount += static_cast<std::uint32_t>(event.samples);
-                    complete = pdm_completed_mask == ((1U << pdm_buffers) - 1U);
+                    if (pdm_completed_mask == ((1U << pdm_buffers) - 1U))
+                    {
+                        /** @brief 요청 payload 반환 후 guard가 진행하는 동안 정지를 확인합니다. */
+                        if (pdm->stop(100000U) == StreamFabricResult::success)
+                        {
+                            nrf_gpio_pin_set(cs_psel);
+                            complete = true;
+                            pdm = nullptr;
+                        }
+                        else
+                        {
+                            error |= 512U;
+                        }
+                        break;
+                    }
                 }
             }
             else if (event.type == PdmEventType::overflow || event.type == PdmEventType::error)
@@ -848,6 +1051,25 @@ std::uint32_t signalCommand(std::uint32_t opcode, const std::uint32_t *args, std
         return result == StreamFabricResult::success ? 0U : 733U;
     }
     const auto family = v04::fixtureFamily(gate.fixture());
+    /** @brief 완료한 연속 PDM의 반환 순서와 실제 sample 통계만 읽습니다. */
+    if (opcode == 39U && nargs == 1U && family == v04::FixtureFamily::pdm && pdm_continuous &&
+        !controller && complete && error == 0U && pdm_transfer.guards())
+    {
+        const auto *record = pdm_transfer.record(args[0]);
+        if (record != nullptr)
+        {
+            for (unsigned index = 0U; index < 8U; ++index)
+            {
+                out[index] = record[index];
+            }
+            count = 8U;
+            return 0U;
+        }
+    }
+    if (opcode == 37U && family == v04::FixtureFamily::pdm && pdm_continuous)
+    {
+        return 400U;
+    }
     const std::uint32_t available =
         family == v04::FixtureFamily::analog ? requested * analog_buffers
         : family == v04::FixtureFamily::pdm  ? requested * pdm_buffers

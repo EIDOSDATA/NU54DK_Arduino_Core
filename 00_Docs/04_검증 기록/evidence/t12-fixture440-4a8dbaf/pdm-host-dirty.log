@@ -1,0 +1,9 @@
+test_continuous_mode_requires_pdm_fixture (test_v04_pdm_continuous.PdmContinuousTests.test_continuous_mode_requires_pdm_fixture) ... ok
+test_continuous_oracle_rejects_truncation_swaps_and_malformed_stats (test_v04_pdm_continuous.PdmContinuousTests.test_continuous_oracle_rejects_truncation_swaps_and_malformed_stats) ... ok
+test_native_rotation_guard_and_ownership (test_v04_pdm_continuous.PdmContinuousTests.test_native_rotation_guard_and_ownership) ... ok
+test_receiver_gate_precedes_generator_in_both_roles (test_v04_pdm_continuous.PdmContinuousTests.test_receiver_gate_precedes_generator_in_both_roles) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 3.129s
+
+OK

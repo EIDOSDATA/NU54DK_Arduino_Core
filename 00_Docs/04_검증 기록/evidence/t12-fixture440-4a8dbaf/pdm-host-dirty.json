@@ -1,0 +1,32 @@
+{
+  "started_at_utc": "2026-09-07T02:10:23.605194+00:00",
+  "command": [
+    "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts\\python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-v",
+    "-s",
+    "tests/host",
+    "-p",
+    "test_v04*pdm*.py"
+  ],
+  "environment": {
+    "CC": "C:\\NU54DEV\\tools\\LLVM-22.1.8\\bin\\clang.exe",
+    "CXX": "C:\\NU54DEV\\tools\\LLVM-22.1.8\\bin\\clang++.exe",
+    "NUCODE_HOST_CC_FLAGS": "[\"--target=x86_64-w64-windows-gnu\", \"--sysroot=C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64\", \"-fuse-ld=lld\"]",
+    "NUCODE_HOST_CXX_FLAGS": "[\"--target=x86_64-w64-windows-gnu\", \"--sysroot=C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64\", \"-fuse-ld=lld\"]",
+    "PATH": "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts;C:\\NU54DEV\\tools\\LLVM-22.1.8\\bin;C:\\NU54DEV\\tools\\WinLibs-16.1.0-UCRT\\mingw64\\bin;C:\\NU54DEV\\tools\\arduino-cli-1.5.1;C:\\Program Files\\Git\\cmd;C:\\Windows\\System32\\WindowsPowerShell\\v1.0;C:\\Windows\\System32;C:\\Windows"
+  },
+  "source": "4a8dbafe74e251bbc2897775dae15688ab950823",
+  "dirty": true,
+  "compiler_sha256": {
+    "clang.exe": "986af49c2d1eefeac324f724ff54597753d1053927fa5d58a37a457f578e1cf8",
+    "clang++.exe": "986af49c2d1eefeac324f724ff54597753d1053927fa5d58a37a457f578e1cf8",
+    "ld.lld.exe": "72de1900946337aba56616b14713a2efa293ecdf54b945a9d7d0f6676c3b9ecd"
+  },
+  "returncode": 0,
+  "ended_at_utc": "2026-09-07T02:10:27.338254+00:00",
+  "log_sha256": "2a494f08b8ed18e07d25977b3547173b10a0cb973ae0a8d4ae5c4629e1373194"
+}

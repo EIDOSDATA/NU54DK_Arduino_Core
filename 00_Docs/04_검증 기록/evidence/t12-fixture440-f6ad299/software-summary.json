@@ -1,0 +1,86 @@
+{
+  "source": "f6ad2998c47e676f2e84af7fb877d20738ed3aeb",
+  "host": {
+    "total": 661,
+    "passed": 660,
+    "skipped": 1,
+    "groups": 82,
+    "skip_reason": "! @brief 설치된 Arduino CLI가 공개 예제를 노출하는지 확인합니다. ... skipped 'M13 package 설치 후 NUCODE_M13_CLI_DISCOVERY=1로 실행합니다.'",
+    "native_compiler_skips": 0
+  },
+  "style_files": 361,
+  "style_failed": 0,
+  "pair_builds": 2,
+  "fixture440_status": "failed",
+  "functional_pass": 4,
+  "cleanup_pass": 4,
+  "unexecuted_vectors": 187,
+  "postflight_peripherals_off_roles": 2,
+  "postflight_original_assertion": "passed",
+  "prepared_failure_cleanup_unproven": 1,
+  "raw_samples_scope": "Only completed mono DMA vectors are counted; density ordering was not reached",
+  "resolved_devicetree": [
+    {
+      "role": 1,
+      "sha256": "9ea6f4be73aa24a7fb712024bcf4570c0bf99d103c6a883a08ed3288fc28bf4a",
+      "pins": {
+        "4": {
+          "capability-mask": 16,
+          "policy": 5,
+          "ownership": 7
+        },
+        "5": {
+          "capability-mask": 16,
+          "policy": 5,
+          "ownership": 7
+        },
+        "6": {
+          "capability-mask": 16,
+          "policy": 5,
+          "ownership": 7
+        },
+        "7": {
+          "capability-mask": 16,
+          "policy": 5,
+          "ownership": 7
+        }
+      }
+    },
+    {
+      "role": 2,
+      "sha256": "9ea6f4be73aa24a7fb712024bcf4570c0bf99d103c6a883a08ed3288fc28bf4a",
+      "pins": {
+        "4": {
+          "capability-mask": 16,
+          "policy": 5,
+          "ownership": 7
+        },
+        "5": {
+          "capability-mask": 16,
+          "policy": 5,
+          "ownership": 7
+        },
+        "6": {
+          "capability-mask": 16,
+          "policy": 5,
+          "ownership": 7
+        },
+        "7": {
+          "capability-mask": 16,
+          "policy": 5,
+          "ownership": 7
+        }
+      }
+    }
+  ],
+  "public_core_sdk_board_changed": false,
+  "not_reexecuted": [
+    "contract",
+    "inventory",
+    "package",
+    "full product target matrix",
+    "examples",
+    "remote CI"
+  ],
+  "t12_whole_completed": false
+}

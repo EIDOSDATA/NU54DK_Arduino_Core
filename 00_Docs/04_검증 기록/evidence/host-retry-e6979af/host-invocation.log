@@ -1,0 +1,144 @@
+{"log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\host-retry-e6979af\\host-all.log", "returncode": 1}
+ore) (enabled=('TWIM',)) ... FAIL
+  test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('TWIS',)) ... FAIL
+  test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('UARTE', 'SPIM', 'SPIS', 'TWIM', 'TWIS')) ... FAIL
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=())
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 65, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- Configuring incomplete, errors occurred!
+CMake Error at CMakeLists.txt:3 (project):
+  Running
+
+   'C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe' '--version'
+
+  failed with:
+
+   unknown error
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('UARTE',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 65, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- Configuring incomplete, errors occurred!
+CMake Error at CMakeLists.txt:3 (project):
+  Running
+
+   'C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe' '--version'
+
+  failed with:
+
+   unknown error
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('SPIM',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 65, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- Configuring incomplete, errors occurred!
+CMake Error at CMakeLists.txt:3 (project):
+  Running
+
+   'C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe' '--version'
+
+  failed with:
+
+   unknown error
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('SPIS',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 65, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- Configuring incomplete, errors occurred!
+CMake Error at CMakeLists.txt:3 (project):
+  Running
+
+   'C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe' '--version'
+
+  failed with:
+
+   unknown error
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('TWIM',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 65, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- Configuring incomplete, errors occurred!
+CMake Error at CMakeLists.txt:3 (project):
+  Running
+
+   'C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe' '--version'
+
+  failed with:
+
+   unknown error
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('TWIS',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 65, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- Configuring incomplete, errors occurred!
+CMake Error at CMakeLists.txt:3 (project):
+  Running
+
+   'C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe' '--version'
+
+  failed with:
+
+   unknown error
+
+
+
+
+======================================================================
+FAIL: test_personality_sources_belong_only_to_named_core (test_v04_cmake_sources.CoreSourceMembershipTests.test_personality_sources_belong_only_to_named_core) (enabled=('UARTE', 'SPIM', 'SPIS', 'TWIM', 'TWIS'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_cmake_sources.py", line 65, in test_personality_sources_belong_only_to_named_core
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : -- Configuring incomplete, errors occurred!
+CMake Error at CMakeLists.txt:3 (project):
+  Running
+
+   'C:/NU54DEV/tools/WinLibs-16.1.0-UCRT/mingw64/bin/ninja.exe' '--version'
+
+  failed with:
+
+   unknown error
+
+
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.934s
+
+FAILED (failures=7)
+M12_GATE_FAIL: 명령이 종료 코드 1로 실패했습니다: C:\NU54DEV\venv\host-3.12.10\Scripts\python.exe -m unittest discover -v -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_v04_cmake_sources.py
+

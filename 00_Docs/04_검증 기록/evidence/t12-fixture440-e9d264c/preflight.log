@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t12-fixture440-constlat-link\prepare.py", line 26, in <module>
+    fixture.validate_confirmation(confirmation, images, UIDS, 440)
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\hil\nu54dk\v04_fixture.py", line 84, in validate_confirmation
+    raise ProtocolError("fixture confirmation expired or dated in the future")
+v04_protocol.ProtocolError: fixture confirmation expired or dated in the future

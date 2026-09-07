@@ -1,0 +1,28 @@
+{"log": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t12-fixture440-continuous\\pdm-related.log", "returncode": 1}
+test_continuous_mode_requires_pdm_fixture (test_v04_pdm_continuous.PdmContinuousTests.test_continuous_mode_requires_pdm_fixture) ... ok
+test_continuous_oracle_rejects_truncation_swaps_and_malformed_stats (test_v04_pdm_continuous.PdmContinuousTests.test_continuous_oracle_rejects_truncation_swaps_and_malformed_stats) ... ok
+test_native_rotation_guard_and_ownership (test_v04_pdm_continuous.PdmContinuousTests.test_native_rotation_guard_and_ownership) ... ERROR
+test_receiver_gate_precedes_generator_in_both_roles (test_v04_pdm_continuous.PdmContinuousTests.test_receiver_gate_precedes_generator_in_both_roles) ... ok
+
+======================================================================
+ERROR: test_native_rotation_guard_and_ownership (test_v04_pdm_continuous.PdmContinuousTests.test_native_rotation_guard_and_ownership)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_v04_pdm_continuous.py", line 122, in test_native_rotation_guard_and_ownership
+    result = subprocess.run([str(executable)], capture_output=True, text=True, timeout=10)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\NU54DEV\tools\python-3.12.10\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 4551] 애플리케이션 제어 정책에서 이 파일을 차단했습니다
+
+----------------------------------------------------------------------
+Ran 4 tests in 2.866s
+
+FAILED (errors=1)
+

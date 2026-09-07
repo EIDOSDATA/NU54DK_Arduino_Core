@@ -1,0 +1,2 @@
+{"source": "e6979af6545e2cc9525f54695eee965fc25d683e", "canonical_status": "passed", "planned_groups": 83, "executed_groups": 83, "reported_tests": 665, "passed_tests": 664, "skipped_tests": 1, "log_sha256": "3684e08a3c1e33056768e9652f8d3f98f8e6714a906aadc9789e5d36699ea20f", "hardware_access": false, "security_policy_changed": false, "scope": "Host runner mocks are not physical board executions"}
+[{"pattern": "test_m13_profiles.py", "reported_tests": 11, "outcome": "OK (skipped=1)", "skip_reasons": ["'M13 package 설치 후 NUCODE_M13_CLI_DISCOVERY=1로 실행합니다.'"]}]

@@ -1,0 +1,20 @@
+{
+  "source": "f02734d69d9722085771fc1a34d5ed0cf756bc4e",
+  "pair_target_builds_pass": 2,
+  "code_config_dts_membership_identical_to": "917dc0284b1185d23eeef3f8df31bd3498f78408",
+  "continuous_hardware_functional_pass": 96,
+  "continuous_mono_density_comparisons_pass": 16,
+  "continuous_cleanup_pass": 96,
+  "prior_finite_functional_pass": 192,
+  "prior_finite_mono_density_pass": 32,
+  "prior_finite_source": "917dc0284b1185d23eeef3f8df31bd3498f78408",
+  "prior_style_pass": 362,
+  "prior_signal_host_pass": 17,
+  "full_host_status": "blocked; previous Windows WinError4551 and CMake Ninja execution failure retained",
+  "full_host_rerun_this_turn": false,
+  "windows_read_only_evidence": "CodeIntegrity 3077/3033 confirms existing WinLibs Ninja execution blocked",
+  "security_policy_or_binary_changed": false,
+  "remote_ci": "not verified",
+  "whole_t12_pass": false,
+  "new_code_changes": []
+}

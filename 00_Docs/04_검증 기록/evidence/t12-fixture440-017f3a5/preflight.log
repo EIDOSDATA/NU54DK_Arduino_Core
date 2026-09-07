@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "type": "v04-pair-synthetic-signal",
+  "status": "preflight",
+  "fixture_id": 440,
+  "fixture_revision": 5,
+  "catalog_sha256": "e8db80525fcc9545ba6879453c22924d14123361c394702b147cdfec695aa511",
+  "core_revision": "017f3a55c02e2cd9d2859c7002747d3904ca41ba",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",
+  "swd_frequency_hz": 10000000,
+  "external_wiring_executed": false,
+  "repetitions": 1,
+  "campaign": {
+    "repetitions": 1,
+    "duration_seconds": 0,
+    "progress_interval_seconds": 5,
+    "interrupted_duration_reused": false
+  },
+  "devices": [
+    {
+      "role": 1,
+      "uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "hex_sha256": "f414647193652ffd1762d6558937503139b4efc3a60cd66495c67142c77f79f7",
+      "elf_sha256": "7c7908568bcf0cea86e7d5c5eb84684b6eeca28ae47a782b8c6d0c7d0fc37089",
+      "record_sha256": "6aebb679dbea64911aefc53056120a7280c1fc38fc60d26d41e778a6864ae62f"
+    },
+    {
+      "role": 2,
+      "uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "hex_sha256": "520864617e5e24439c5cb81c7c1dd1c09571ae4a31224299c3e51a8d4578a2c2",
+      "elf_sha256": "a2d8fbfbf22351c60fcf2429855bfa99c31f2e2ced7a7a4fd156bcc271216eb7",
+      "record_sha256": "6aebb679dbea64911aefc53056120a7280c1fc38fc60d26d41e778a6864ae62f"
+    }
+  ],
+  "results": [],
+  "fixture": {
+    "id": 440,
+    "family": "pdm",
+    "banks": [
+      1,
+      1
+    ],
+    "instances": [
+      [
+        20,
+        21
+      ],
+      [
+        20,
+        21
+      ]
+    ],
+    "links": [
+      {
+        "dut": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "peer": [
+          "P2",
+          11,
+          "P1.5"
+        ],
+        "signal": "receiver PDM CLK -> generator SPIS SCK"
+      },
+      {
+        "dut": [
+          "P2",
+          10,
+          "P1.6"
+        ],
+        "peer": [
+          "P2",
+          9,
+          "P1.7"
+        ],
+        "signal": "receiver PDM DATA <- generator SPIS MISO"
+      },
+      {
+        "dut": [
+          "P2",
+          11,
+          "P1.5"
+        ],
+        "peer": [
+          "P2",
+          12,
+          "P1.4"
+        ],
+        "signal": "receiver gate LOW -> generator SPIS CSN"
+      },
+      {
+        "dut": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "peer": [
+          "P2",
+          30,
+          "GND"
+        ],
+        "signal": "GND"
+      }
+    ],
+    "notes": "PDM receiver가 clock을 만들고 상대 SPIS EasyDMA가 동기 bitstream을 출력합니다. mono density 순서와 stereo 좌우 channel 분리를 실기에서 판정합니다.",
+    "pullups": []
+  },
+  "confirmation_template": {
+    "fixture_id": 440,
+    "fixture_revision": 5,
+    "catalog_sha256": "e8db80525fcc9545ba6879453c22924d14123361c394702b147cdfec695aa511",
+    "core_revision": "017f3a55c02e2cd9d2859c7002747d3904ca41ba",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "uid_sha256": [
+      "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0"
+    ],
+    "hex_sha256": [
+      "f414647193652ffd1762d6558937503139b4efc3a60cd66495c67142c77f79f7",
+      "520864617e5e24439c5cb81c7c1dd1c09571ae4a31224299c3e51a8d4578a2c2"
+    ],
+    "dap_uart_disconnected_both": false,
+    "swd_connected_both": false,
+    "power_rails_not_joined": false,
+    "equal_io_voltage_confirmed": false,
+    "common_ground_confirmed": false,
+    "links_match_catalog": false,
+    "pullups_match_catalog": false,
+    "extra_outputs_disconnected": false,
+    "confirmed_at_unix": 0,
+    "confirmed_by": ""
+  }
+}
+V04_SIGNAL_PREFLIGHT_ONLY; no probe access, flash, reset or external output

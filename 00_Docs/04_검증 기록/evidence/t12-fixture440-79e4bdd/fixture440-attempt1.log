@@ -1,0 +1,13 @@
+V04_FIXTURE_FAIL: pyOCD exited with 1: 0000797 W Board ID 5415 is not recognized [mbed_board]
+
+0000957 W NRF54L15 is not in a secure state [target_nRF54L]
+
+0001188 I Loading C:\u4g\nrf54l15dk_nrf54l15_cpuapp_nu54dk\zephyr_gnu\nucode.v04.pair_dut\v04_pair_hil\zephyr\zephyr.hex [load_cmd]
+
+[---|---|---|---|---|---|---|---|---|----]
+
+[==0011518 E Probe error during disconnect: [session]
+
+0011518 C Timeout reading from probe <probe-sha256:32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9> [__main__]
+
+

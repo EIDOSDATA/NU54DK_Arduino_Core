@@ -1,0 +1,9 @@
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+Traceback (most recent call last):
+  File "C:\Users\eidos\Documents\Codex\2026-09-06\new-chat\work\t12-fixture440\postflight.py", line 36, in <module>
+    assert all(v == 2 for d in evidence['devices'] for v in d['signal_pin_cnf'].values())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

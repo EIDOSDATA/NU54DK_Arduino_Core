@@ -1,0 +1,43 @@
+{
+  "source_tested": "b929b14f37d7d086c9accad748aab83b58a0e7be",
+  "markdown_files": 198,
+  "command": [
+    "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts\\python.exe",
+    "-B",
+    "tools/ci/run_m12_gate.py",
+    "docs"
+  ],
+  "result": "passed",
+  "log_original_sha256": "d817cf25c9ae0704af95eb4b5f2550279152f3fb906290f0d19c766466ca9fe4",
+  "log_normalized_sha256": "dcbc7c2e93c54b69a4853eac2efd128b9dcfda4e56a75fcc3cff9e554c953abb",
+  "raw_originals_byte_verified": 55,
+  "code_changes_after_source": [],
+  "source_physical_executed": true,
+  "recorded_mono_dma_pass": 4,
+  "valid_fixture_pass": false,
+  "net_isolation_pass": false,
+  "functional_scope": "DMA records do not prove fixture function because clock/gate separation failed",
+  "whole_fixture_pass": false,
+  "failed_cases": 1,
+  "unexecuted_cases": 187,
+  "cleanup_pass": 5,
+  "postflight_roles_pass": 2,
+  "historical_records_modified": false,
+  "next_fixture": 440,
+  "fixture440_executed": true,
+  "next_action": "User USB-off jumper inspection/correction and new confirmation; verify independent clock/gate nets before any PDM start",
+  "staged_files_match_disk_bytes": true,
+  "staged_diff_check": "passed",
+  "scope": [
+    "README.md",
+    "00_Docs/README.md",
+    "00_Docs/TODO_v0.4.0.md",
+    "00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md",
+    "00_Docs/01_아두이노 코어 설계/14_리팩토링/README.md",
+    "00_Docs/01_아두이노 코어 설계/14_리팩토링/05_리팩토링_진행_체크리스트.md",
+    "00_Docs/04_검증 기록/README.md",
+    "tests/hil/nu54dk/README.md",
+    "00_Docs/04_검증 기록/89_T12_Fixture_440_clock_gate_분리_진단.md",
+    "00_Docs/04_검증 기록/evidence/t12-fixture440-b929b14/"
+  ]
+}
