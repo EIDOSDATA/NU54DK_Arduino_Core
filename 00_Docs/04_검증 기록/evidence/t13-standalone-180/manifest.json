@@ -1,0 +1,78 @@
+{
+  "scope": "Plan and documentation change; no hardware execution",
+  "base_commit": "6b6f25b23adc0feb28b492d772d438af253d2659",
+  "input_v04_test_plan_lf_sha256": "9241084c6b36296c8ab4a43bd45ed271c79f57a614d4eea8724578364e7a7817",
+  "standalone_seconds": 180,
+  "concurrent_seconds": 7200,
+  "physical_executed": 0,
+  "checks": [
+    {
+      "name": "standalone-180-generate",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "tools/peripheral/verify_v04_test_plan.py",
+        "--write"
+      ],
+      "started_at": "2026-09-07T10:24:14.988058+00:00",
+      "finished_at": "2026-09-07T10:24:15.124010+00:00",
+      "exit_code": 0,
+      "log_sha256": "da919d3fea6c9506c875a514e46e97f13c54ae44f9efd8495bc0a8d55e7a31b1",
+      "archived_file": "generate.txt",
+      "archived_lf_sha256": "84427a393e22c58de436382434bbc805842fff3ae1bb66cf90c2d8359fd91f8b"
+    },
+    {
+      "name": "standalone-180-test_v04_test_plan",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/host",
+        "-p",
+        "test_v04_test_plan.py",
+        "-v"
+      ],
+      "started_at": "2026-09-07T10:24:15.124010+00:00",
+      "finished_at": "2026-09-07T10:24:15.310832+00:00",
+      "exit_code": 0,
+      "log_sha256": "b5e45012474ae9575bed9d43f97aed8fb1e4672281f388fba4329ffc2cd32e76",
+      "archived_file": "test_v04_test_plan.txt",
+      "archived_lf_sha256": "7b61864890d1d6f88fcea3d0ef7c568f5ee8f976034a30f641400ad718b78316"
+    },
+    {
+      "name": "standalone-180-test_v04_campaign",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/host",
+        "-p",
+        "test_v04_campaign.py",
+        "-v"
+      ],
+      "started_at": "2026-09-07T10:24:15.310832+00:00",
+      "finished_at": "2026-09-07T10:24:15.460844+00:00",
+      "exit_code": 0,
+      "log_sha256": "16ae5dbcf6da6dcd96af9547a35b0e07a6f06f1741927ad7112c54f825a8267e",
+      "archived_file": "test_v04_campaign.txt",
+      "archived_lf_sha256": "953dae808abe647f2c738c35d54f34996c473ebcbb78d24de03fdd5fbc608653"
+    },
+    {
+      "name": "standalone-180-docs",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "tools/ci/run_m12_gate.py",
+        "docs"
+      ],
+      "started_at": "2026-09-07T10:24:15.460844+00:00",
+      "finished_at": "2026-09-07T10:24:15.985407+00:00",
+      "exit_code": 0,
+      "log_sha256": "960d15dfd371a99fad4b16a6ffd9610c400854a4c8bdb7ba845264e6d61819f7",
+      "archived_file": "docs.txt",
+      "archived_lf_sha256": "b11166cf2a49e6abbdd018224bd81b6339b187618d438b592a696f6616ff4350"
+    }
+  ]
+}

@@ -1,5 +1,9 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
+현행 검증 기준 조정(2026-09-07): 사용자의 “단독 안정성은 3분으로 줄여” 지시에 따라 T13 단독 연속 실행을 **인스턴스별 180초**로 변경한다. 동시 실행은 아직 **7200초**이며, 조합별 30분·대표 고부하 조합 60분은 제안일 뿐 적용하지 않는다. [98번 결정 기록](<04_검증 기록/98_T13_단독_안정성_3분_기준_조정.md>)을 따른다. 이전 기록의 600초는 당시 계획이며 180초로 소급 재분류하지 않는다. 실기는 계속 정지 상태다.
+
+재개 준비: `6b6f25b23adc0feb28b492d772d438af253d2659`에 PWM 4-load·4/32/256 values 2700조건 준비 코드를 보존했고 pair target 2/2·정렬 375개를 통과했다. 이 확장의 외부 실기는 0회다. 사용자가 진행을 중지한 뒤 675조건 축소 후보와 17신호+GND 공통 결선을 검토했으나 아직 canonical runner/fixture에 반영하지 않았다. 현재 외부 PASS는 아래 97번의 0d7f382 240조건이며, T12 전체·T13 이후·RC·공개는 미완료다.
+
 T12 다음 준비 범위(2026-09-07): 97번의 첫 capture를 common/grouped/individual/wave-form과 4/32/256 values로 확장한다. 동일 408 결선의 정적/일정 duty loop를 load별로 나눠 검사하고, wave-form은 네 번째 word를 TOP으로 사용하므로 출력 slot 0~2만 허용한다. DMA RAM TOP과 설정 register TOP을 다르게 해 decoder 경로를 구별한다. 긴 sequence의 첫 완료를 bounded 대기한 뒤 기존 raw oracle로 판정한다. Host vector/실제 C++ DMA 배열 계약과 target build를 먼저 검사하며, 다음 실기에는 현재 결선 유지 확인을 새로 받는다. Sequence0/1 순서·유한 end/repeat·DPPI START·triggered-step·idle inversion, GPIO/GPIOTE·I2S·QDEC는 이번 확장만으로 완료 처리하지 않는다.
 
 
@@ -9,10 +13,10 @@ T12 다음 준비 범위(2026-09-07): 97번의 첫 capture를 common/grouped/ind
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.31 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.32 |
 | 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 외부/내부 부분 PASS·전체 미완료 |
 | 작성·갱신일 | 2026-09-07 |
-| 작성 직전 기준 commit | `0d7f3822fe0f1b564ef629613a048b433e8fdeee` — 단일 USB 명령 옵션과 첫 PWM 240조건의 exact 검증 source. 후속 문서·증거만 갱신 |
+| 작성 직전 기준 commit | `6b6f25b23adc0feb28b492d772d438af253d2659` — PWM load/길이 준비 source, 외부 실기 미실행. 실제 첫 capture PASS source는 0d7f382로 구분 |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
 | 다음 착수 항목 | **T12 PWM 나머지 load·buffer·sequence·시작/step·idle inversion 준비. 이후 GPIO/GPIOTE·I2S·QDEC 확장** |
 | 이번 요청의 실행 범위 | 새 PC 인수·환경·main/submodule 확인, 첫 PWM peer capture 구현/Host/target과 240조건 실기·증거·commit/push. 후속 PWM 모드·GPIO/GPIOTE·I2S·QDEC를 이어간다. T12 전체·후속 gate 완료 처리 없음 |
@@ -241,6 +245,7 @@ R00~R14와 연결하고, 구조 변경 뒤 같은 결선을 다시 반복하지 
   - 결선·증거: Fixture 401 exact a12e444 48 PASS·10,368 samples·cleanup 48은 [74번 기록](<./04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 등록. Fixture 402 exact ff483a1 48 PASS는 [75번 기록](<./04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존. Fixture 403 exact c95b904 48 PASS는 [76번 기록](<./04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 등록. Fixture 404 exact e080bbc 48 PASS는 [77번 기록](<./04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 등록. 405 exact 9fc12bf의 공유 AIN4 오픈드레인 12 PASS·2,592 samples는 [78번 기록](<./04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)에 보존. 406 exact 96f38e9 입력 바이어스 12 PASS·2,592 samples는 [79번 기록](<./04_검증 기록/79_T12_Fixture_406_current_source_공유_AIN5_검증.md>)에 보존. 407 exact 4a64c25의 공유 AIN6 입력 바이어스 12 PASS·2,592 samples는 [82번 기록](<04_검증 기록/82_T12_Fixture_407_current_source_공유_AIN6_검증.md>)에 보존. 408 exact 87b987d의 PWM→AIN7 48 PASS·10,368 samples는 [83번 기록](<04_검증 기록/83_T12_Fixture_408_current_source_PWM_ADC_검증.md>)에 보존. 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다. 내부 ADC calibration·scan과 timer/event의 추가 결과는 95번에 보존했다. 남은 PWM period/duty·모드, GPIO/GPIOTE, I2S 100버퍼·1024 word·단방향, QDEC 경계와 event 반복 범위는 [95번 잔여 목록](<04_검증 기록/95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)을 따른다. 기존 HIGH/sample-count·유한 전송 결과로 완료 처리하지 않는다. 정밀 ADC 정확도·교정 전압 측정은 42번에 따라 필수 gate 밖이다.
 
 - [ ] **T13 — 복구·동시 실행·장시간 안정성 검증**
+  - 현행 시간 기준: 사용자 지시로 단독 각 인스턴스 180초. 동시 각 확정 조합 7200초 유지. 결과에는 요청/실제 연속 시간을 모두 기록하고 3분을 10분·2시간 통과로 확대하지 않는다.
   - 상태·선행: 미착수 / T07·해당 T11/T12 단독 PASS·해당 T10 확인.
   - 할 일: 허용 topology의 동시 부하, 충돌 negative, 오류 주입·복구, 반복 handover, 약속한 soak를 실행한다.
   - 완료 기준: source·topology·rate·시간·buffer·loss·latency/CPU 관측 방법과 누수/복구 판정이 기록된다. 장시간 시험을 코드 구현만으로 완료 처리하지 않는다.

@@ -10,7 +10,7 @@
     "stop_timeout_us": 100000,
     "recovery_repetitions": 100,
     "handover_repetitions": 100,
-    "standalone_soak_seconds": 600,
+    "standalone_soak_seconds": 180,
     "concurrent_soak_seconds": 7200,
     "unexpected_loss_allowed": 0,
     "unexpected_reset_allowed": 0,
@@ -160,9 +160,9 @@
     {
       "id": "V04-SOAK", "groups": ["uarte", "spim", "spis", "twim", "twis", "saadc", "pwm", "pdm", "i2s", "qdec"], "fixture": "mixed",
       "modes": ["standalone-continuous", "buffer-turnover", "metrics"],
-      "parameters": {"duration_seconds": 600, "progress_interval_seconds": 5},
+      "parameters": {"duration_seconds": 180, "progress_interval_seconds": 5},
       "oracle": "각 instance에서 전체 시간 연속 실행, 양측 count/hash·sequence 완전성, loss/reset/guard 손상 0, 시작·종료 lease 일치. CPU/latency/throughput은 측정법과 기록하고 성능 보증으로 사용하지 않음.",
-      "needs": "T07 준비 완료: campaign runner는 하나의 monotonic session만 계수하고 중단 전 시간을 이어 붙이지 않음. 실제 600/7200초 결과는 T13에서 기록.", "reuse": ["tests/hil/nu54dk/v04_campaign.py"], "errata": []
+      "needs": "T07 준비 완료: campaign runner는 하나의 monotonic session만 계수하고 중단 전 시간을 이어 붙이지 않음. 2026-09-07 사용자 지시로 단독은 각 인스턴스 180초로 조정. 동시 7200초는 유지한다. 실제 요청/연속 실행 시간을 T13에서 기록하며 180초를 이전 600초 또는 장기 안정성 PASS로 확대하지 않음.", "reuse": ["tests/hil/nu54dk/v04_campaign.py"], "errata": []
     },
     {
       "id": "V04-SYSTEM-BOUNDARY", "groups": ["system"], "fixture": "contract",

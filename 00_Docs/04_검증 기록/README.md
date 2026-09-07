@@ -191,3 +191,5 @@ T12 Fixture 408 exact 87b987d·SWD 10 MHz **48개 기능 PASS**는 [83번 기록
 - [96 — 새 PC 인수와 T12 PWM peer capture 준비](96_새_PC_인수와_T12_PWM_peer_capture_준비.md)
 
 - [97 — T12 PWM peer capture 첫 240조건 검증](97_T12_PWM_peer_capture_첫_240조건_검증.md)
+
+- [98 — T13 단독 안정성 3분 기준 조정](98_T13_단독_안정성_3분_기준_조정.md): 사용자 지시의 180초 계획 변경. 동시 7200초는 유지하며 새 실기 PASS가 아니다.

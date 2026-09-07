@@ -646,6 +646,11 @@ progress를 journal에 남깁니다. 중단된 실행은 `interrupted`이며 다
 `--progress-interval-seconds`가 이 공통 계약을 사용합니다. 단독 기능 실기 PASS 전에는 soak를
 시작하지 않으며, 동시성은 해당 fixture 조합을 별도로 승인한 뒤 수행합니다.
 
+2026-09-07 사용자 지시로 T13 단독 안정성 목표는 인스턴스별 **180초(3분)**입니다.
+실행기는 기간을 명시적으로 받으므로 해당 단독 campaign에 `--duration-seconds 180`을 전달합니다.
+일반 기능 검사 기본값 0과 공통 실행기 최대 7200초는 유지하며, 전체 기능 sweep 반복을
+각 인스턴스의 연속 부하 증거로 대체하지 않습니다. 동시 시험 시간은 아직 7200초입니다.
+
 R00~R13 이후 exact 154324c의 current-source Fixture 101은 SWD 10 MHz에서 데이터 1,620개·예상 오류 24개를 통과했습니다. [67번 기록](<../../../00_Docs/04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)에 exact 증거를 보존합니다. 전체 current-source T11과 T12/T13 PASS는 아직 아닙니다.
 
 Current-source Fixture 102도 exact a49cc0d·SWD 10 MHz에서 데이터 810개·예상 오류 12개를 통과했습니다. [68번 기록](<../../../00_Docs/04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md>)에 원본을 보존합니다.
