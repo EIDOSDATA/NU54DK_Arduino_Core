@@ -1,5 +1,7 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
+T12 현재 실행 보완(2026-09-07): 사용자의 408 결선 완료와 USB 재연결을 확인했다. Exact 054d08f의 첫 peer 연결 No ACK, 두 번째 DUT flash timeout으로 기능 240개는 미도달이다. 두 보드 읽기는 회복됐고 A flash 194,188바이트는 exact HEX와 일치한다. 원인은 미확정이다. 기존 controlled flash·10 MHz·exact UID·sector·auto_unlock=false를 유지하면서 명시적 `--cmsis-dap-limit-packets` 옵션만 추가하고 Host/target 검사 뒤 USB 동시 명령 1개 설정의 진단 campaign을 한 번 수행한다. 이전 실패와 새 설정 결과를 구분하고 PWM 전체 모드·GPIO/GPIOTE·I2S·QDEC 및 후속 gate는 유지한다.
+
 최신 새 PC 체크포인트: [96번](<04_검증 기록/96_새_PC_인수와_T12_PWM_peer_capture_준비.md>)에서 인수 확인과 PWM capture 첫 경로 240 vector 준비를 마쳤다. Exact 5928281 Host 688 PASS·1 조건부 SKIP, pair target 2/2·정렬 373 PASS다. f42bda5 후속 CI도 15/15 SUCCESS다. 현재 probe 2·COM 4와 두 exact UID의 SWD 10 MHz CPUID 읽기를 확인했다. 새 PC flash·외부 신호 실기는 NOT RUN이다.
 
 이전 PC 완료 범위(T12/T14): PWM 미시작 STOP 결함 수정과 두 보드 1,944명령/4,320회 회귀를 완료했다. 이어 내부 ADC·TIMER·EGU/DPPI/PPIB·시간 함수와 PWM 회귀 1,808명령을 두 보드에서 통과했다. 최종 원격 Software 7/7·재현 빌드 8/8과 Host 680 PASS·2 조건부 SKIP, 전체 target 61/61과 확장 target 1/1, 설치 예제 29/29를 검증했다. 상세 source와 최초 실패는 94·95번에 보존한다. 현재 보드 간 결선은 해제됐으며 T12 전체·T13 이후는 미완료다.

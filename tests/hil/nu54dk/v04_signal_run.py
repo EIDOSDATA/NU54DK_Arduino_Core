@@ -36,6 +36,8 @@ def arguments(argv=None):
     parser.add_argument("--execute-fixture", action="store_true")
     parser.add_argument("--pdm-continuous", action="store_true")
     parser.add_argument("--pwm-capture", action="store_true")
+    parser.add_argument("--cmsis-dap-limit-packets", action="store_true",
+                        help="limit CMSIS-DAP to one in-flight USB command; keep SWD frequency")
     args = parser.parse_args(argv)
     if args.pwm_capture and (args.fixture != 408 or args.swd_frequency_hz != 10_000_000 or
                              args.pdm_continuous or args.duration_seconds != 0):
@@ -68,6 +70,7 @@ def main(argv=None):
         "board_revision": images[0]["board_revision"],
         "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",
         "swd_frequency_hz": args.swd_frequency_hz,
+        "cmsis_dap_limit_packets": args.cmsis_dap_limit_packets,
         "external_wiring_executed": False, "repetitions": args.repetitions,
         "pdm_continuous": args.pdm_continuous,
         "pwm_capture": args.pwm_capture,
@@ -103,7 +106,7 @@ def main(argv=None):
             for uid, image in zip(uids, images):
                 device, flash = pair.boot_exact(
                     stack, ConnectHelper, args.pyocd, uid, image,
-                    args.swd_frequency_hz)
+                    args.swd_frequency_hz, cmsis_dap_limit_packets=args.cmsis_dap_limit_packets)
                 devices.append(device)
                 evidence["devices"][image["role"] - 1]["flash"] = flash
 

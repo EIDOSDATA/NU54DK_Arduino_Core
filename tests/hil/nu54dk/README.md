@@ -61,6 +61,12 @@ SWD 10 MHz와 유한 campaign만 허용한다. 기본 CLI는 preflight-only이�
 Mailbox 40/41/42/43/44/45/46은 각각 arm/prepare/start/capture/raw/stop/status다. capture의
 transport 성공과 물리 측정 성공은 별도이며 status/error와 Host oracle 모두 통과해야 한다.
 
+`--cmsis-dap-limit-packets`는 flash와 이후 SWD session의 USB 동시 명령을 1개로 제한하는
+명시적 진단 옵션이다. 기본은 기존 설정이며 SWD 주파수·sector erase·exact UID·controlled
+start·`auto_unlock=false`·확인/lock 계약은 유지한다. [pyOCD 공식 옵션](https://pyocd.io/docs/options.html)의
+`cmsis_dap.limit_packets`를 사용하고 SDK/driver를 수정하지 않는다. 읽기 성공만으로 flash
+timeout 원인을 확정하지 않으며 옵션·최초 실패·후속 결과를 evidence에 각각 기록한다.
+
 - 보드 target과 build manifest가 기대값과 일치해야 합니다.
 - 일반 upload 경로에서는 mass erase나 recover를 사용하지 않습니다.
 - PMIC 시험은 허용한 address/register의 읽기만 수행합니다.

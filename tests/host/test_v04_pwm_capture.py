@@ -92,6 +92,11 @@ class PwmCaptureTests(unittest.TestCase):
         base = ['--dut', 'a', '--peer', 'b', '--build-root', '.', '--pyocd', 'fake',
                 '--fixture', '408', '--pwm-capture', '--swd-frequency-hz', '10000000']
         self.assertFalse(runner.arguments(base).execute_fixture)
+        self.assertFalse(runner.arguments(base).cmsis_dap_limit_packets)
+        limited = runner.arguments(base + ['--cmsis-dap-limit-packets'])
+        self.assertTrue(limited.cmsis_dap_limit_packets)
+        self.assertFalse(limited.execute_fixture)
+        self.assertEqual(limited.swd_frequency_hz, 10000000)
         for extra in (['--fixture', '401'], ['--swd-frequency-hz', '1000000'],
                       ['--duration-seconds', '600'], ['--pdm-continuous'], ['--execute-fixture']):
             with self.assertRaises(ProtocolError):
