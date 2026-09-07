@@ -1,0 +1,147 @@
+{
+  "base_revision": "8387d1a7b951bb73ebfb291f6e2251afc3fa53be",
+  "status": "preparation-only",
+  "physical_executed": false,
+  "observed_at_utc": "2026-09-07T11:48:42.673969+00:00",
+  "limits": {
+    "command_timeout_seconds": 10,
+    "stop_timeout_us": 100000,
+    "recovery_repetitions": 100,
+    "handover_repetitions": 100,
+    "standalone_soak_seconds": 180,
+    "concurrent_soak_seconds": 900,
+    "representative_soak_seconds": 3600,
+    "unexpected_loss_allowed": 0,
+    "unexpected_reset_allowed": 0,
+    "guard_bytes": 16
+  },
+  "plan_lf_sha256": "9c19d20c7272a5b4c4e6ab64925e24235c4bb1431b82898d7319c37b72776596",
+  "unchanged_inputs": [
+    {
+      "path": "tests/hil/nu54dk/v04_fixture.py",
+      "git_lf_sha256": "7ef4a27530721363dd79c9340984a5a9a9283ed54c3298cda205b96120238626"
+    },
+    {
+      "path": "tests/host/test_v04_fixture.py",
+      "git_lf_sha256": "5e9fc7ff82d3033b872b5d3035f9b36fade0b3779f35dfd71a82b5a0308a29ca"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_campaign.py",
+      "git_lf_sha256": "ab6f922facd08cba7f418cd710713a42cc556f8b4ec9a088432d2ae32b3f4005"
+    }
+  ],
+  "standalone_instances": 32,
+  "scope_audit": "only concurrent limit and two case durations changed from 1800 to 900; related needs updated",
+  "sequential_time_estimates": [
+    {
+      "total_combinations_including_representative": 2,
+      "before_minutes": 186,
+      "after_minutes": 171,
+      "saved_minutes": 15
+    },
+    {
+      "total_combinations_including_representative": 4,
+      "before_minutes": 246,
+      "after_minutes": 201,
+      "saved_minutes": 45
+    },
+    {
+      "total_combinations_including_representative": 6,
+      "before_minutes": 306,
+      "after_minutes": 231,
+      "saved_minutes": 75
+    }
+  ],
+  "checks": [
+    {
+      "name": "concurrent15-test_plan",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/host",
+        "-p",
+        "test_v04_test_plan.py"
+      ],
+      "started_at": "2026-09-07T11:47:20.470975+00:00",
+      "finished_at": "2026-09-07T11:47:20.726845+00:00",
+      "exit_code": 0,
+      "log_sha256": "b797cef533352b982120faa29f0312d9da8975f6eb5cf5833657aca61d8f105e",
+      "raw_log_gzip": "concurrent15-test_plan.log.gz",
+      "gzip_sha256": "71bd91f75410da24abf35be62a7950ad734339000f78691a6c329dd321b0a759"
+    },
+    {
+      "name": "concurrent15-campaign",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/host",
+        "-p",
+        "test_v04_campaign.py"
+      ],
+      "started_at": "2026-09-07T11:47:20.728846+00:00",
+      "finished_at": "2026-09-07T11:47:20.881246+00:00",
+      "exit_code": 0,
+      "log_sha256": "383a12fba9b5b327054a24ce7e5739569c4f0b6621facd981f2d6a4271063b3c",
+      "raw_log_gzip": "concurrent15-campaign.log.gz",
+      "gzip_sha256": "dd1c7a35ae039c3ddcbf3ceb6375e249c37c6edf77039649fb9a1dcf667577c7"
+    },
+    {
+      "name": "concurrent15-fixture",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/host",
+        "-p",
+        "test_v04_fixture.py"
+      ],
+      "started_at": "2026-09-07T11:47:20.881246+00:00",
+      "finished_at": "2026-09-07T11:47:21.129114+00:00",
+      "exit_code": 0,
+      "log_sha256": "5a5865705a754966bd159c87abbf5cf4e6dbbfee83b5d3331f50727d91cd6b06",
+      "raw_log_gzip": "concurrent15-fixture.log.gz",
+      "gzip_sha256": "791461c0ba3c2436a4b35663b8db1ded3aa03a757d5544d8bfe75bda4a6746dc"
+    },
+    {
+      "name": "concurrent15-docs",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "docs"
+      ],
+      "started_at": "2026-09-07T11:47:20.920756+00:00",
+      "finished_at": "2026-09-07T11:47:21.504615+00:00",
+      "exit_code": 0,
+      "log_sha256": "e5484cd9bc6bf828ed2f22712e347fd086a5a6eed2e93cc20d6506ea1ff15b2f",
+      "raw_log_gzip": "concurrent15-docs.log.gz",
+      "gzip_sha256": "7370d008d2304d9333faf47653c5a085401fac33073e905ddb1219c3e33fbefd"
+    },
+    {
+      "name": "concurrent15-inventory",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "inventory"
+      ],
+      "started_at": "2026-09-07T11:47:21.504615+00:00",
+      "finished_at": "2026-09-07T11:47:22.904172+00:00",
+      "exit_code": 0,
+      "log_sha256": "8efc41e1f9734d065dfdb3292806c34b3f3ff16b7b9b69b5d6ae2ac8479703f1",
+      "raw_log_gzip": "concurrent15-inventory.log.gz",
+      "gzip_sha256": "c73c50af0b797e4e53d712027c6c3d2137481c82b8014e1c425e0d378cd735cb"
+    }
+  ]
+}
