@@ -49,6 +49,7 @@ namespace
     std::uint32_t read_observation = 0U;
     std::uint32_t read_strategy = 0U;
     std::uint32_t read_period_us = 5000U;
+    std::uint32_t read_sample_age_min = UINT32_MAX, read_sample_age_max = 0U, read_wait_max = 0U;
 
     /** @brief 비활성 IRQ의 SAMPLERDY를 관측하고 ACC와 별개인 SAMPLE 값을 합산합니다. */
     void observeSample(std::uint32_t now)
@@ -173,6 +174,37 @@ namespace
         {
             return false;
         }
+        unsigned interrupt_key = 0U;
+        if (read_strategy == 4U)
+        {
+            /** @brief 고정256us 진단에서 새 샘플 관측 후32~64us 구간으로 clear를 분리합니다. */
+            interrupt_key = irq_lock();
+            const auto origin = k_cycle_get_32();
+            const auto initial_samples = sample_events;
+            while (true)
+            {
+                const auto cycle = k_cycle_get_32();
+                observeSample(cycle);
+                observeInput(cycle);
+                const auto age = k_cyc_to_us_floor32(cycle - last_sample);
+                const auto waited = k_cyc_to_us_floor32(cycle - origin);
+                if (waited > read_wait_max)
+                {
+                    read_wait_max = waited;
+                }
+                if (sample_events != initial_samples && age >= 32U && age <= 64U)
+                {
+                    break;
+                }
+                if (waited > 1024U)
+                {
+                    irq_unlock(interrupt_key);
+                    error = 4U;
+                    return false;
+                }
+                k_busy_wait(4U);
+            }
+        }
         const auto now = k_cycle_get_32();
         const auto gap = now - last_read;
         if (gap > max_read_gap)
@@ -186,6 +218,15 @@ namespace
                                     : 0x80000000U;
         QdecEvent event{};
         auto result = StreamFabricResult::success;
+        const auto sample_age = k_cyc_to_us_floor32(now - last_sample);
+        if (sample_age < read_sample_age_min)
+        {
+            read_sample_age_min = sample_age;
+        }
+        if (sample_age > read_sample_age_max)
+        {
+            read_sample_age_max = sample_age;
+        }
         if (read_strategy == 1U)
         {
             /** @brief 진단 전용으로 개별 task를 대비하며 공개 read의 PASS로 사용하지 않습니다. */
@@ -194,9 +235,21 @@ namespace
             nrf_qdec_task_trigger(reg, NRF_QDEC_TASK_RDCLRDBL);
             event.double_transitions = nrf_qdec_accdblread_get(reg);
         }
+        else if (read_strategy == 3U)
+        {
+            /** @brief 같은 동시 clear task 뒤 CPU write 완료 barrier만 추가한 대비입니다. */
+            nrf_qdec_task_trigger(reg, NRF_QDEC_TASK_READCLRACC);
+            __DSB();
+            event.accumulated = nrf_qdec_accread_get(reg);
+            event.double_transitions = nrf_qdec_accdblread_get(reg);
+        }
         else
         {
             result = qdec->read(event);
+        }
+        if (read_strategy == 4U)
+        {
+            irq_unlock(interrupt_key);
         }
         last_driver_acc = event.accumulated;
         if (!mismatch_recorded)
@@ -379,6 +432,8 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
         read_observation = 0U;
         read_strategy = 0U;
         read_period_us = 5000U;
+        read_sample_age_min = UINT32_MAX;
+        read_sample_age_max = read_wait_max = 0U;
         sampled_steps = last_sample_value = 0;
         sampled_doubles = sample_events = max_sample_gap = trace_next = trace_total = 0U;
         mismatch_recorded = phase_checked = false;
@@ -452,11 +507,19 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
     if (opcode == 85U && nargs == 1U && args[0] == 5U && role == 1U)
     {
         out[0] = read_strategy;
-        out[1] = read_strategy != 1U;
+        out[1] = read_strategy != 1U && read_strategy != 3U;
         out[2] = read_strategy != 2U;
         out[3] = read_strategy == 2U ? 6000000U : 15000U;
         out[4] = read_period_us;
         count = 5U;
+        return 0U;
+    }
+    if (opcode == 85U && nargs == 1U && args[0] == 6U && role == 1U)
+    {
+        out[0] = read_sample_age_min;
+        out[1] = read_sample_age_max;
+        out[2] = read_wait_max;
+        count = 3U;
         return 0U;
     }
     if (opcode == 85U && nargs == 2U && args[0] == 3U && args[1] < 16U && args[1] % 2U == 0U &&
@@ -481,7 +544,7 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
     }
     if (opcode == 83U &&
         (nargs == 2U || (nargs == 3U && args[2] <= 3U) ||
-         (nargs == 4U && args[2] == 3U && args[3] <= 2U)) &&
+         (nargs == 4U && args[2] == 3U && args[3] <= 4U)) &&
         (args[0] == 20U || args[0] == 21U) && args[1] <= 1U && !prepared && qdec == nullptr &&
         !generator_token.active)
     {

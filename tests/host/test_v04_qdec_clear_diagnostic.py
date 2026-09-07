@@ -19,6 +19,41 @@ class ClearDiagnosticTests(unittest.TestCase):
         for strategy in range(3):
             self.assertEqual([repeat for value, repeat in vectors if value == strategy], list(range(1, 31)))
 
+    def test_timing_matrix_and_late_window_rejected(self):
+        vectors = list(diagnostic.vectors((0, 3, 4)))
+        self.assertEqual(len(set(vectors)), 90)
+        self.assertEqual({value for value, _ in vectors}, {0, 3, 4})
+
+        @contextmanager
+        def armed(*args, **kwargs):
+            yield
+
+        class Device:
+            def command(self, opcode, values):
+                if values == (5,):
+                    return [4, 1, 1, 15000, 128]
+                if values == (6,):
+                    return [32, 65, 300]
+                if values == (2,):
+                    return [400, 0, 17000, 330] + [0] * 12
+                words = [0] * 20
+                words[1:5] = [400, 0, 400, 100]
+                return words
+
+        def observe(device, append, label, *, clear):
+            words = [0] * 16
+            words[5] = 0 if clear else 400
+            return words
+
+        records = []
+        with patch.object(diagnostic, 'vectors', return_value=[(4, 1)]), \
+             patch.object(diagnostic.qdec, 'armed', armed), patch.object(diagnostic.qdec, 'wave'), \
+             patch.object(diagnostic.qdec, 'observe', observe):
+            with self.assertRaisesRegex(ProtocolError, 'read timing unproven'):
+                diagnostic.run([Device(), Device()], lambda _: None,
+                               lambda key, row: records.append(row), strategies=(0, 3, 4))
+        self.assertFalse(any('matches' in row for row in records))
+
     def test_mismatch_retained_and_sample_or_control_error_stops(self):
         for failure in ('count', 'sample', 'control'):
             visited, stopped, records, state = [], [], [], {}

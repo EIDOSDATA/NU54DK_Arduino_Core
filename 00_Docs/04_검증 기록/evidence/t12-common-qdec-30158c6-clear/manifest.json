@@ -1,0 +1,702 @@
+{
+  "schema_version": 1,
+  "type": "v04-common-qdec-clear-diagnostic",
+  "archived_at_utc": "2026-09-07T18:01:06.739387+00:00",
+  "core_revision": "30158c666be04d5c64815d75eb1481f74cfba2fe",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "catalog_sha256": "225cec8780e70307089384655a773a9421bcb8d8da2aee379e9301e329d65d0c",
+  "session_grant_sha256": "9fd435714d0bbd42ca450ba5cbfb6a3d9e8d7fcffe1cd4a2101c3cb126806576",
+  "status": "failed",
+  "section": "qdec-clear-diagnostic",
+  "external_wiring_executed": true,
+  "passed": {
+    "V04-WIRING": 105
+  },
+  "failures": [
+    {
+      "id": "V04-QDEC-CLEAR-DIAGNOSTIC/strategy1/repeat4/comparison",
+      "status": "failed",
+      "strategy": 1,
+      "repetition": 4,
+      "expected": [
+        400,
+        0
+      ],
+      "actual": [
+        399,
+        0
+      ],
+      "matches": false,
+      "functional_regression": false
+    },
+    {
+      "id": "V04-QDEC-CLEAR-DIAGNOSTIC/strategy0/repeat6/comparison",
+      "status": "failed",
+      "strategy": 0,
+      "repetition": 6,
+      "expected": [
+        400,
+        0
+      ],
+      "actual": [
+        399,
+        0
+      ],
+      "matches": false,
+      "functional_regression": false
+    },
+    {
+      "id": "V04-QDEC-CLEAR-DIAGNOSTIC/strategy0/repeat7/comparison",
+      "status": "failed",
+      "strategy": 0,
+      "repetition": 7,
+      "expected": [
+        400,
+        0
+      ],
+      "actual": [
+        399,
+        0
+      ],
+      "matches": false,
+      "functional_regression": false
+    },
+    {
+      "id": "V04-QDEC-CLEAR-DIAGNOSTIC/strategy0/repeat13/comparison",
+      "status": "failed",
+      "strategy": 0,
+      "repetition": 13,
+      "expected": [
+        400,
+        0
+      ],
+      "actual": [
+        399,
+        0
+      ],
+      "matches": false,
+      "functional_regression": false
+    },
+    {
+      "id": "V04-QDEC-CLEAR-DIAGNOSTIC/strategy0/repeat16/comparison",
+      "status": "failed",
+      "strategy": 0,
+      "repetition": 16,
+      "expected": [
+        400,
+        0
+      ],
+      "actual": [
+        399,
+        0
+      ],
+      "matches": false,
+      "functional_regression": false
+    },
+    {
+      "id": "V04-QDEC-CLEAR-DIAGNOSTIC/strategy1/repeat17/comparison",
+      "status": "failed",
+      "strategy": 1,
+      "repetition": 17,
+      "expected": [
+        400,
+        0
+      ],
+      "actual": [
+        399,
+        0
+      ],
+      "matches": false,
+      "functional_regression": false
+    },
+    {
+      "id": "V04-QDEC-CLEAR-DIAGNOSTIC/strategy1/repeat19/comparison",
+      "status": "failed",
+      "strategy": 1,
+      "repetition": 19,
+      "expected": [
+        400,
+        0
+      ],
+      "actual": [
+        399,
+        0
+      ],
+      "matches": false,
+      "functional_regression": false
+    },
+    {
+      "id": "V04-QDEC-CLEAR-DIAGNOSTIC/strategy1/repeat21/comparison",
+      "status": "failed",
+      "strategy": 1,
+      "repetition": 21,
+      "expected": [
+        400,
+        0
+      ],
+      "actual": [
+        399,
+        0
+      ],
+      "matches": false,
+      "functional_regression": false
+    },
+    {
+      "id": "V04-QDEC-CLEAR-DIAGNOSTIC/strategy1/repeat23/comparison",
+      "status": "failed",
+      "strategy": 1,
+      "repetition": 23,
+      "expected": [
+        400,
+        0
+      ],
+      "actual": [
+        399,
+        0
+      ],
+      "matches": false,
+      "functional_regression": false
+    },
+    {
+      "id": "V04-QDEC-CLEAR-DIAGNOSTIC/strategy0/repeat30/comparison",
+      "status": "failed",
+      "strategy": 0,
+      "repetition": 30,
+      "expected": [
+        400,
+        0
+      ],
+      "actual": [
+        399,
+        0
+      ],
+      "matches": false,
+      "functional_regression": false
+    }
+  ],
+  "error": "ProtocolError: QDEC clear diagnostic preserved 10/90 count mismatches",
+  "cleanup_records": 93,
+  "postflight_observed_at_utc": "2026-09-07T17:57:51.987334+00:00",
+  "t12_whole_complete": false,
+  "t13_physical_executed": false,
+  "source_inputs": [
+    {
+      "path": "tests/hil/nu54dk/COMMON_WIRING.md",
+      "git_blob_sha256": "4230c667fec26f49f0437ac7aa7ec6b7bb23363cddd542a55645477ce72c6e79"
+    },
+    {
+      "path": "tests/hil/nu54dk/README.md",
+      "git_blob_sha256": "1271a94e963718af6cb251278026b0dc22f9e5c90b2283a8fc011cbd6e652c80"
+    },
+    {
+      "path": "tests/hil/nu54dk/T13_PLAN.md",
+      "git_blob_sha256": "66ed34242e6e64a3a0495699e5d4cbb44bbef6803700b22db6df40077732b939"
+    },
+    {
+      "path": "tests/hil/nu54dk/ac01_gpio_hil.py",
+      "git_blob_sha256": "f3cfc22b112b5e8a02ad5d2bb22bf0d62e6dfd380c7c68561aa40b6a5f440c6a"
+    },
+    {
+      "path": "tests/hil/nu54dk/ac02b_peripheral.py",
+      "git_blob_sha256": "1bae486bd9285eaafc710af641b163c1b9cfe712f6af3ce73310aeb1e924843a"
+    },
+    {
+      "path": "tests/hil/nu54dk/ac03_storage.py",
+      "git_blob_sha256": "ce3e2123b8afd8895051e3bb6ae1c46ffcb0cd89aad1f25584d5e19c7127db78"
+    },
+    {
+      "path": "tests/hil/nu54dk/ble_pair_hil_common.py",
+      "git_blob_sha256": "45620a231d9153b4801b8e4f76e32f424feec04222d6ca66c9a6a53db7238921"
+    },
+    {
+      "path": "tests/hil/nu54dk/m14_pin_hil.py",
+      "git_blob_sha256": "957fa29e1ee408d95bcc0b978693dbc4ffdb83b0507fde53e6f979397097cd29"
+    },
+    {
+      "path": "tests/hil/nu54dk/m15_auto.py",
+      "git_blob_sha256": "0255577e60cdc55572b1856ae91b90fbe7237275422a1e96a663db3cfe6461dd"
+    },
+    {
+      "path": "tests/hil/nu54dk/m15_system_off.py",
+      "git_blob_sha256": "bc7d27fbd77c838e294973ff81049945b18639f0fba22aed1e9a36233f7c61a5"
+    },
+    {
+      "path": "tests/hil/nu54dk/m16_ble_pair.py",
+      "git_blob_sha256": "a0c1fcff6e0112a55caab3ef367b73e562ccaf7e510ae22b704d436a804bf5fa"
+    },
+    {
+      "path": "tests/hil/nu54dk/m19_ble_gap.py",
+      "git_blob_sha256": "056dd2815631070f7f70135e5c7f2b9c16c2e69846f5db158acaccffab15a472"
+    },
+    {
+      "path": "tests/hil/nu54dk/m20_ble_gatt.py",
+      "git_blob_sha256": "cd76e2a8d0975bf0ccb513bd06f0eff9b7cbede09a650821aa982e5c9a38fcc3"
+    },
+    {
+      "path": "tests/hil/nu54dk/m21_ble_security.py",
+      "git_blob_sha256": "6e012262d665d468197eeb8ece257f21fd7a70c90555f139bda6e128bb16792b"
+    },
+    {
+      "path": "tests/hil/nu54dk/m24_twim_onboard.py",
+      "git_blob_sha256": "df3829a0e5786928c1ffe51600bb187cef9e5188bdb1be353e5a6517c8a100ae"
+    },
+    {
+      "path": "tests/hil/nu54dk/m24_uarte_onboard.py",
+      "git_blob_sha256": "60edc27778a9355740c09f424d8cf27da57cdee8c30135a6ed06814ff1cb46c9"
+    },
+    {
+      "path": "tests/hil/nu54dk/m25_onboard.py",
+      "git_blob_sha256": "a52956ec07c3d320165abf595b01df1aa11b895f80a234d2fbd37d10f7ce4f58"
+    },
+    {
+      "path": "tests/hil/nu54dk/m26_onboard.py",
+      "git_blob_sha256": "ca60eaf6e8db480ea9132a43066d52455b36b9d8804b2168e2c330bb34bd9619"
+    },
+    {
+      "path": "tests/hil/nu54dk/m6_serial_echo.py",
+      "git_blob_sha256": "af8f1bf841660c54b25626221355d862df5f31de7fb814ea434eb404e0f3dfaf"
+    },
+    {
+      "path": "tests/hil/nu54dk/m7_i2c_pmic.py",
+      "git_blob_sha256": "6dd2398f6ccbee931ec80445e33e439387ef50b173c01068d09913dbdb2a71df"
+    },
+    {
+      "path": "tests/hil/nu54dk/m7_peripheral_hil.py",
+      "git_blob_sha256": "cc0ad8e7c9142c3558cf3d1dfd75dea8e8fdb187a402af880c3f47e72fa420c0"
+    },
+    {
+      "path": "tests/hil/nu54dk/m8_debug.py",
+      "git_blob_sha256": "e870a97b72ba17a7f38ee8583b06190589157862ef2e9fd228c4a6f898848c1d"
+    },
+    {
+      "path": "tests/hil/nu54dk/m8_upload.py",
+      "git_blob_sha256": "422e637f0a3fc6cb63769131bfee4866a2406d0dec2c33fcc5c389601d9b327b"
+    },
+    {
+      "path": "tests/hil/nu54dk/nu54dk_connector_pinmap.json",
+      "git_blob_sha256": "6bfcf3ac8d5eff25a8a26870382ebf634bd4bef41e0f2ac06170e665b645991d"
+    },
+    {
+      "path": "tests/hil/nu54dk/onboard_start.py",
+      "git_blob_sha256": "44e9a784d464983241acb1c91c4b9878a37a6e261fefbf51734a431fab1607d3"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_ac01_gpio_hil.py",
+      "git_blob_sha256": "2c58bc9520315c5d0fc464ebf1708556ce035bed80ac2e42c1df39a5e6de007f"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_ac02b_peripheral.py",
+      "git_blob_sha256": "bb1d6d9ed279aca12c1efccbd5c31825f429f8dfdb582b01e274b4297d17f0cf"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_ac03_storage.py",
+      "git_blob_sha256": "da9378ae87a1e42d92788e665cfde3410c8dcc79e95ebae116ef75b4508a1fbc"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m14_pin_hil.py",
+      "git_blob_sha256": "e57e833afc1508a00a83752cca5c0e959f3d1e4d6cd8d2a0987bfde65ef2965e"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m15_auto.py",
+      "git_blob_sha256": "5c7a09ca0d1bb5b51225a87f915a9e18e11f2909bb6b1954ea0a64aadf60c372"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m15_system_off.py",
+      "git_blob_sha256": "2392cb98e2459c2eae725d8b62623457b28971458688a9c445fdb787d5e86a8d"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m24_twim_onboard.py",
+      "git_blob_sha256": "a530aa28502760136a96eb7d0191b8ff756c9d54b58a02459176edcab5a247d6"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m24_uarte_onboard.py",
+      "git_blob_sha256": "f33f3146c416b5d6f0454b3edd30f965af71f69748ee740476f351767be6caeb"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m25_onboard.py",
+      "git_blob_sha256": "79424534cb13067298fb69c0a4cdb2010e47e2d22f225a8aec43a825e2d888f7"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m26_onboard.py",
+      "git_blob_sha256": "2ced6dd40d354d034fa3c1cc1127a45e70ba9e9ef160401b00be5135ccc91f56"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m7_i2c_pmic.py",
+      "git_blob_sha256": "85c054688437f87029c1db6d22d5d30f16220b235c99e1617f9f03a5f425e0fd"
+    },
+    {
+      "path": "tests/hil/nu54dk/test_m7_peripheral_hil.py",
+      "git_blob_sha256": "6b90b14d44f2b9b9d18d4143f8983461dc5fdb75524730b159b9441aa2bd8381"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_campaign.py",
+      "git_blob_sha256": "ab6f922facd08cba7f418cd710713a42cc556f8b4ec9a088432d2ae32b3f4005"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_common_bundle.json",
+      "git_blob_sha256": "225cec8780e70307089384655a773a9421bcb8d8da2aee379e9301e329d65d0c"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_common_fixture.json",
+      "git_blob_sha256": "8d5b0e2bbe328193c1ef114a41dee6e94143d3b4fa3c8eb925fbb600df986775"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_common_gpio.py",
+      "git_blob_sha256": "26826f4daf0979c6faf0cf282c57e673c7cd6c6c6f922bdecdca2d97b762a60d"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_common_i2s.py",
+      "git_blob_sha256": "935bc6952918fc92b100a2e40b095b6fb7650c8512e622a8c52a14225e8271b4"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_common_pwm_modes.py",
+      "git_blob_sha256": "2ba5bd1be99d12248b39b51884a61bf6bb5f819356c96524d561c224e1b46de2"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_common_qdec.py",
+      "git_blob_sha256": "e3202cf00ae785f1af25b42b9dabdfa1e8d9bb4143e2029aecafce57ec2ce0f3"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_common_run.py",
+      "git_blob_sha256": "749fafe62643ce07d37edb870d7759491cd006250d63b4932905e692e8501dfe"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_common_session.py",
+      "git_blob_sha256": "fbbdda14eba2699fff055789b2895b2837d04ffb65ddb9a2356241ea4572b36a"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_fixture.py",
+      "git_blob_sha256": "7ef4a27530721363dd79c9340984a5a9a9283ed54c3298cda205b96120238626"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_fixture_run.py",
+      "git_blob_sha256": "1e299e81dbee424eb26e2dfbc1f5492c5234e474bcd4c55023cf7e36d64f6acf"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_fixtures.json",
+      "git_blob_sha256": "26fcb8482b72b9f7bebf5786388a514462aaa5c40e19eb8bb338b9f187e5ca95"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_nojumper.py",
+      "git_blob_sha256": "1e991368729f8fa1fc8d5caf18e8043c27fa10ab8b887fe1242999242f848739"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_pair.py",
+      "git_blob_sha256": "e98ea4ed0455073761318f0b71b8be04e1340ef20be9cc0e4159d4f778a40590"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_pdm_continuous.py",
+      "git_blob_sha256": "9c9cc774de41ef9a6e0a74b5f29bb5ac7ea96b723b27730b398cb6138b6a487e"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_protocol.py",
+      "git_blob_sha256": "f0d4ddcf447f1dbc39a3d25ed444044a24056fb6ff81e91c3c12033026bda1bb"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_pwm_capture.py",
+      "git_blob_sha256": "f5c912f11b9d44abde3bfe8a3961a22f733a0aeae60fe540a89190825cdd748b"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_qdec.py",
+      "git_blob_sha256": "fb2d5774570d31862542799ff979d311034fd51a75a411cdc90e005361f8f409"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_qdec_clear_diagnostic.py",
+      "git_blob_sha256": "866e80229bd168c07783abd77db24cdddd170b18038c16506de1f6bfb9a2640f"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_qdec_read_diagnostic.py",
+      "git_blob_sha256": "c9b005ff8f23326e67c93c3200795c9b326dc6cf04df45ac8b907d208c88ce56"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_signal.py",
+      "git_blob_sha256": "80f56cfd6171c641cb1dc29686fe4ff1a2814b21c6f7d75caf25b9f1c27c37b3"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_signal_run.py",
+      "git_blob_sha256": "be9f6ac4f126dab5b56fd25e02e90dae60dde8cfca18e4adef0d6ac7b12d3fe7"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_t13_plan.py",
+      "git_blob_sha256": "84438aed469f3aba0167edd04bed0baf93740a42b5ea00dc25876f2a41acc848"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_t13_topologies.json",
+      "git_blob_sha256": "6c17cb487472d793ff71cd89fff60eaad96a541d0b71e45fc18b980e2f56038d"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_test_plan.json",
+      "git_blob_sha256": "9c19d20c7272a5b4c4e6ab64925e24235c4bb1431b82898d7319c37b72776596"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_uart.py",
+      "git_blob_sha256": "04005c0c4cd08d51e397c4533b859fc478f3b3acb945e61b03fb631d90f60739"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_wiring.py",
+      "git_blob_sha256": "7695416d7d8139ce0aa96e579a9eef4cdcf297dfe8b53b9fdb8d7c50c7d269bc"
+    },
+    {
+      "path": "tests/hil/nu54dk/v04_wiring_run.py",
+      "git_blob_sha256": "5f688038e257454e216f923dc227f3dc2711279aa82600ba9249cc53b65f6399"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/CMakeLists.txt",
+      "git_blob_sha256": "74b517e62a2eef5019835195fba4f20336cb3831ca7b9228161392f9181757c1"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/Kconfig",
+      "git_blob_sha256": "a95b82ec259c1e864706e0b3e3dc601b8f932da6930437f63b31f98ad6bcc21e"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/app.overlay",
+      "git_blob_sha256": "ad14da62332f8f47f6d827317813c3d3d76ab5a29c20a80497c5c8060968345a"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/prj.conf",
+      "git_blob_sha256": "32222f4cda9c84fd483dd27e9628085a466f5a441fa5c8aac0edc169a24b4207"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/read_revision.cmake",
+      "git_blob_sha256": "f19802719f1cd871856fa99fbf8da8216cac9a5446e527a55ac21bc1b9f662a7"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/common_gpio_hil.cpp",
+      "git_blob_sha256": "24a89673175fc4facdbf0c1ef6bbbaa81bf7662ef113ed1c6ce65bf4a01bc372"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/common_gpio_hil.h",
+      "git_blob_sha256": "74df2316a6f5873f05a485c0fb3454e327a4abd8c4eb3b04b3d67ed5da827d05"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/common_i2s_hil.cpp",
+      "git_blob_sha256": "8ce4e87fb3edd51fa6288ab6249212a8895c8a928ad13d53ba74aeaec0f01d03"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/common_i2s_hil.h",
+      "git_blob_sha256": "a34d2200f4ee996a545583055da13a75766cf33d931501b920c26ce737b02184"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/common_qdec_hil.cpp",
+      "git_blob_sha256": "1f0eb7302ab80e0a64c94962a5b9b08eb74908024e4d5399d8aa7f3cd7a230d4"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/common_qdec_hil.h",
+      "git_blob_sha256": "800c65559c9bef5dda4702d1883fedf33317b1f5c1591eb84c4199cfdd207402"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/common_wiring.h",
+      "git_blob_sha256": "7f651e76f0364bf93617d723c454db55610128fb16898908b8d7d01b2eb7cc86"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/fixture_gate.h",
+      "git_blob_sha256": "8998a4d6851b0d9f70549b2ae0c0c1ef0f84e6625ac5741927f747fc8012e6b1"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/fixture_hil.cpp",
+      "git_blob_sha256": "a176c6d7b108735864665043fd3788163394a073624256d4ecef985aa297aef0"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/fixture_hil.h",
+      "git_blob_sha256": "6baeb1d29406cbfb0b7477647d3f6e3ba7969fec8e040ffa4558899588916bf1"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/i2s_finite_transfer.h",
+      "git_blob_sha256": "2331eddea65b95b6408d609bcaa15ae02bd828a178b34557b24d71745ddbc62f"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/i2s_stream_oracle.h",
+      "git_blob_sha256": "7efcb0f73c57122751174c8ec668958888a6623a3d5fdcbfc10b64293992e175"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/main.cpp",
+      "git_blob_sha256": "d1625d61ce0efba2311c89f34d017c0cfc610819f22209afa386586058b0829d"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/pdm_continuous.h",
+      "git_blob_sha256": "a8e6f3d1ce95b4acc697fafb4e0ee1ed2cde77e73e923aecfcfabb43f3f0750f"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/protocol.h",
+      "git_blob_sha256": "f4a5e8961e46d0ab4d407e6d1c34ad61a85c5a4e53a1daa5aacc3864b0226f36"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/pwm_capture_hil.cpp",
+      "git_blob_sha256": "31aed5ed56ab62178d02bd360c2937f74b6e3d9a437f7db9ca0485c9fc91b3f5"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/pwm_capture_hil.h",
+      "git_blob_sha256": "2c78b075efa852cd5b5ffcf927b89361fca9c3d5f20bec7e4fbb0756da5ce0e8"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/pwm_capture_vector.h",
+      "git_blob_sha256": "7f8470b56cce47f6159008600bf0e2f822016bdf52c42d1a155ebe7ea0790096"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/qdec_observer.h",
+      "git_blob_sha256": "dca73cc4b9dde43e9f8513aef1d9c6e77751f70a4fc9110661b83efb4863e3c9"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/qdec_waveform.h",
+      "git_blob_sha256": "67dcf277d22904d58f18e253e2002a08c697816b9f28891a2e85d5ee6734e0e4"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/serial_hil.cpp",
+      "git_blob_sha256": "eac398ea275c22c379391f7b306af245236827449c05594def1b85ed3838f12f"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/serial_hil.h",
+      "git_blob_sha256": "24ed763ce7dd6974c19b3ecf731626b5ac6968e206d0e2351c3c9a64e08ea136"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/shared_analog_source.h",
+      "git_blob_sha256": "a13a4bc30a45738d2dc6062c74502b17b5d632d8ee9f1b5d948cea2c1f71f5cd"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/signal_hil.cpp",
+      "git_blob_sha256": "978e7dae41c1e8a6e010fa3e30e5ce69bcadf7a8e12d72035e64973708fcbe49"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/signal_hil.h",
+      "git_blob_sha256": "25d4f3940d46dd40f5e4c4e6fe22166b1e6e45de9a2d86da0d777cc9ecdb2903"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/wiring_hil.cpp",
+      "git_blob_sha256": "d879bbebb7575143e4b4db01ba2ceb892c3d943744f216ae04c44116032c5de6"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/src/wiring_hil.h",
+      "git_blob_sha256": "74dc150ff6b84bfab8690ca40707eddff68708983b36669c0cb4c71611eb9788"
+    },
+    {
+      "path": "tests/zephyr/v04_pair_hil/testcase.yaml",
+      "git_blob_sha256": "e550762a376fb0dcaea1ab2801762a35eb33f3fc807abd0b34bafb3f9f67b291"
+    }
+  ],
+  "files": [
+    {
+      "path": "result.json.gz",
+      "raw_sha256": "93dfa52fd771cc4cc4374998648db75aab86d430420010b9164eab4ad8db57f0",
+      "gzip_sha256": "45e8aa32e2bdcbaaa4f838c7b59a36ea4b314c7f8a7849e5363d0d94c28f044d",
+      "raw_bytes": 1446073
+    },
+    {
+      "path": "result.json.jsonl.gz",
+      "raw_sha256": "7892e8942125e0c153dde2c0bc465812d0ac3050d7dd09ea2b3beb5b16b2f75c",
+      "gzip_sha256": "7b656bc8fdcd8e43809c1a0c8309a1de2a3ee278e4b8b30ec66a1b90242b3445",
+      "raw_bytes": 709474
+    },
+    {
+      "path": "images.json.gz",
+      "raw_sha256": "92ee0345dff8cc9887efbf2f7823bb0e13b0c2e7fbe70d4e96853ab46ede5c4c",
+      "gzip_sha256": "2fe65d0fb0870a0b9866373e2fd7d084bc2004c45218b7d5585df52fbb3a3f94",
+      "raw_bytes": 1605
+    },
+    {
+      "path": "common-qdec-clear-30158c6-postflight.json.gz",
+      "raw_sha256": "cf1a1f6b178fd6c0647194cdc5b204b337e27a29d19aea58131e06ae18d2b8ba",
+      "gzip_sha256": "57dda8bcf4a9707cdf5e104cd013524f9ffd701637a83df42b0c911ba8648ad0",
+      "raw_bytes": 2429
+    },
+    {
+      "path": "common-qdec-clear-exact-target.json.gz",
+      "raw_sha256": "32504b5573bc5c28630fd9587fc35db75194618d1bb43b75225ca491eb42871a",
+      "gzip_sha256": "06975a70fd2390d21c78c4fd971e5f458ce63cce314bde53b5fd5ba5f76e25d2",
+      "raw_bytes": 664
+    },
+    {
+      "path": "common-qdec-clear-exact-target.log.gz",
+      "raw_sha256": "dc547c9d58667ced593652bb73b2cdd839681a51a71e79387c380ba016df30e8",
+      "gzip_sha256": "6b156c69257d1c64c577acf14fda61ad39d2ec1f7798b6dd8e82183647f39f9e",
+      "raw_bytes": 2060
+    },
+    {
+      "path": "common-qdec-clear-final-host.json.gz",
+      "raw_sha256": "4a91502795d9fe3ef5bb4edc320354a1692bf963fa7e1f68fdf4966fa473439a",
+      "gzip_sha256": "4ea41ba795b1d8a1e2fd38e80270c1e602b64d8c1aa2deeab86e2806dafe489d",
+      "raw_bytes": 468
+    },
+    {
+      "path": "common-qdec-clear-final-host.log.gz",
+      "raw_sha256": "95b5288d9bcbb1c2838221f8a73e296cba2c413c85a78f293e8cca34ca125f72",
+      "gzip_sha256": "60cec686a20d7281e5c8b895157459e7f58ae4e9dbcfed1d02bb888d79da2b17",
+      "raw_bytes": 181430
+    },
+    {
+      "path": "common-qdec-clear-style.json.gz",
+      "raw_sha256": "8f04fe5474e53b24dcfb0df008bb6f508f59282c78e9d6fb853550f5c8096c05",
+      "gzip_sha256": "c23cff438aaf758d2f4478c7a13527b4575ea04de15b4de19023e7ff6c17b2c8",
+      "raw_bytes": 480
+    },
+    {
+      "path": "common-qdec-clear-style.log.gz",
+      "raw_sha256": "50e135445cc75347d4ef15a813ecee74122b3164eac45dd3c961563561bdd004",
+      "gzip_sha256": "10e03313782b435d9ba426f5bc2c9f7d00142e5c6c17c538bc3cea9c65c78dac",
+      "raw_bytes": 40
+    },
+    {
+      "path": "common-qdec-clear-software-contract.json.gz",
+      "raw_sha256": "6ef7ccda4a38d3277da66e3f027619014729492b7299a22d1a98c443c87c9b5c",
+      "gzip_sha256": "7c54a68dfaf20d1b6e969555b8fda70c789d263576ff34d629e467df290e1afc",
+      "raw_bytes": 479
+    },
+    {
+      "path": "common-qdec-clear-software-contract.log.gz",
+      "raw_sha256": "679bdf8115bd3f28d45ccb3f4454e34faaca4aba9b322c21e9f40d5c589a263d",
+      "gzip_sha256": "12811575d928daf7cc4dccff75a0674ff11114f290c764c59b1c9c69196470b4",
+      "raw_bytes": 7554
+    },
+    {
+      "path": "common-qdec-clear-software-package.json.gz",
+      "raw_sha256": "349fec57ffa24635c42185aeeb298ff9e9c4881f92f1477ebc870dd1c6fe2968",
+      "gzip_sha256": "68d38c537ced9b5a74f2f82be2ad54fb59e17f43c8b729d48a3cae1a43bae138",
+      "raw_bytes": 477
+    },
+    {
+      "path": "common-qdec-clear-software-package.log.gz",
+      "raw_sha256": "2725a6718072733a257701da2747351a7f68a11ddad0702925e034a3acfa5b87",
+      "gzip_sha256": "ce45db0408843e2a3dbcfee3406a98f7884a913d20b37918ab51bd651cb5d45a",
+      "raw_bytes": 4209
+    },
+    {
+      "path": "common-qdec-clear-software-inventory.json.gz",
+      "raw_sha256": "23bedcefd545474875c7a0be954cee5db5ae4470b66b1d398b8a187f6020016e",
+      "gzip_sha256": "e28978d4a54b9d07e8ea82e9e90c447f2d1c81dacb08f1176b148412e66cb481",
+      "raw_bytes": 481
+    },
+    {
+      "path": "common-qdec-clear-software-inventory.log.gz",
+      "raw_sha256": "8efc41e1f9734d065dfdb3292806c34b3f3ff16b7b9b69b5d6ae2ac8479703f1",
+      "gzip_sha256": "c73c50af0b797e4e53d712027c6c3d2137481c82b8014e1c425e0d378cd735cb",
+      "raw_bytes": 1546
+    },
+    {
+      "path": "common-qdec-clear-software-docs.json.gz",
+      "raw_sha256": "7e158d9e9516ced8becf12e8942fabb4bde9a2dfe71cec4622db84e23844003a",
+      "gzip_sha256": "af783d52abf3669dd837603898f9823878bfeab82f9076942a3eca5a914254be",
+      "raw_bytes": 471
+    },
+    {
+      "path": "common-qdec-clear-software-docs.log.gz",
+      "raw_sha256": "15382fb50a2d89b584a2d43cd8fab0aa58412df71eabe07415fac274952a9cff",
+      "gzip_sha256": "c0d80868df32c1d4b2cd76fe3d6fd5ede3f30bd0d11d0d0872f1fce116c73cc1",
+      "raw_bytes": 69
+    }
+  ],
+  "functional_regression": false,
+  "comparisons": 90,
+  "strategy_results": {
+    "0": {
+      "comparisons": 30,
+      "mismatches": 5
+    },
+    "1": {
+      "comparisons": 30,
+      "mismatches": 5
+    },
+    "2": {
+      "comparisons": 30,
+      "mismatches": 0
+    }
+  }
+}

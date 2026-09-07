@@ -54,7 +54,7 @@ def armed(devices, current, append, label, instance, debounce, *, observation_mo
         raise
     finally:
         mismatch = False
-        for page in (0, 1, 2, 4, 5):
+        for page in (0, 1, 2, 4, 5, 6):
             try:
                 raw = devices[0].command(85, (page,), timeout=2)
                 append(label + f'/diagnostic-page{page}', {'status': 'observation', 'words': raw})
