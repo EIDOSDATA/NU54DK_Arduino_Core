@@ -48,6 +48,12 @@ def armed(devices, current, append, label, instance, debounce):
         append(label + '/failure', {'status': 'failed', 'error': str(error)})
         raise
     finally:
+        for page in (0, 1):
+            try:
+                raw = devices[0].command(85, (page,), timeout=2)
+                append(label + f'/diagnostic-page{page}', {'status': 'observation', 'words': raw})
+            except BaseException as diagnostic_error:
+                append(label + f'/diagnostic-page{page}', {'status': 'unavailable', 'error': str(diagnostic_error)})
         rows = []
         for device in devices:
             try:
