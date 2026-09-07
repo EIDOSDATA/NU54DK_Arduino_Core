@@ -4,10 +4,10 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.24 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.25 |
 | 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 외부/내부 부분 PASS·전체 미완료 |
 | 작성·갱신일 | 2026-09-07 |
-| 작성 직전 기준 commit | `874658a16db18b283ab7f1b2835111aaf34b42fd` — 최종 Host·내부 HIL source; 전체 target·설치 package의 제품 source는 080d771 |
+| 작성 직전 기준 commit | `9c9db04057c2f85cf1b718bdbf2d9418eede61c0` — CI 시험 교정과 실제 8.3 TEMP Host source; 내부 HIL은 874658a, 전체 target·설치 package 제품 source는 080d771 |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
 | 다음 착수 항목 | **T12 PWM peer capture·GPIO/GPIOTE·I2S 연속/단방향·QDEC 추가 조건. 상세 범위는 95번** |
 | 이번 요청의 실행 범위 | 사용자가 결선 해제 상태에서 자동 진행 가능한 범위의 실행을 지시했다. T14 PWM 미시작 STOP 최소 재현·수정·Host/target/무점퍼 보드 회귀, T12 잔여 시험 준비와 소프트웨어 검증, 문서·정리·commit/push를 수행한다. 보드 접근은 exact UID·SWD 10 MHz·controlled start로 제한한다. 새 결선이나 물리 재연결이 필요하면 해당 실기만 보류하고 독립 작업을 마무리한다 |
@@ -65,8 +65,8 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | 이 TODO 작성 작업의 실행 중 시험 | 없음. 두 보드는 874658a nojumper image의 명령 대기 상태, ready count 904·실패 latch 0. 보드별 원본 journal과 최종 register를 95번에 보존 |
 | 로컬 임시 build·evidence | 최종 C:/u4p·C:/nj26·C:/nj27·C:/nj28·C:/u4y 유지. 이번 초안/준비 진단 28파일을 hash 검증 ZIP으로 보관. C:/u4d2·C:/u4d3·C:/u4x 삭제는 자동 승인 검토 차단으로 미실행이며 94번에 목록과 이유를 보존. 과거 65번 정리 결과는 유지 |
 | 최종 정렬 gate | clang-format 22.1.8, C/C++/ino 371개 PASS. 한국어 Doxygen·Allman·4칸·중괄호 필수 |
-| CI 확인 | 874658a canonical Host 85그룹 680 PASS·1 조건부 SKIP. 계약 45·package 20·Inventory는 fcf85c2에서 PASS이며 후속 제품 입력 변경은 없다. M13 설치본 발견 11 PASS 별도. 이전 원격 f17e603 M27 임시 short-path fixture 실패를 resolve()로 교정했으며 최종 원격 CI는 GitHub Actions의 push source별 Software Gates·Reproducible Builds 원본을 따른다 |
-| 문서 작업 검증 | 94·95번과 활성 문서에서 결과·source·남은 조건을 연결했다. 원본 gzip roundtrip/SHA를 보존하며 최종 Markdown·stage 검사를 수행한다. 93번 이하 역사 기록은 유지 |
+| CI 확인 | 874658a canonical Host 85그룹 680 PASS·1 조건부 SKIP. 계약 45·package 20·Inventory는 fcf85c2에서 PASS이며 후속 제품 입력 변경은 없다. M13 설치본 발견 11 PASS 별도. 이전 f17e603 M27 short-path 교정 뒤 첫 push 1f050f4에서 R06 short-path와 M14 단독 import 실패를 추가 재현·교정했다. 실제 8.3 TEMP의 전체 Host도 680 PASS·1 조건부 SKIP이며 94번 후속 증거에 기록했다. 최종 원격 CI는 GitHub Actions의 push source별 Software Gates·Reproducible Builds 원본을 따른다 |
+| 문서 작업 검증 | 94·95번과 활성 문서에서 결과·source·남은 조건을 연결했다. 원본 433개와 stage 884개 대조·문서 205개 검사를 통과했다. CI 후속 교정은 94번 별도 evidence에 추가하고 변경 문서를 재검사한다. 93번 이하 역사 기록은 유지 |
 | 최종 HIL 입력 찾기 | 95번 evidence/t12-internal-nojumper-874658a에 C:/nj28 exact image·두 보드 1,808명령과 독립 감사·postflight. 최초 35f30b2 실패는 별도 폴더. 기존 외부 PDM은 92번 f02734d이며 결선 해제 후 재실행하지 않음 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 

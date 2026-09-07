@@ -1,0 +1,18 @@
+...F
+======================================================================
+FAIL: test_package_copy_preserves_identity_recovers_bytes_and_rejects_extra_files (__main__.WindowsRecipeTests.test_package_copy_preserves_identity_recovers_bytes_and_rejects_extra_files)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_r06_windows_recipe.py", line 73, in test_package_copy_preserves_identity_recovers_bytes_and_rejects_extra_files
+    self.assertEqual(provenance['sources'][0]['source_path'], source.as_posix())
+AssertionError: 'C:/Users/eidos/Documents/Codex/2026-09-06/new-chat/work/t[68 chars].cpp' != 'C:/Users/eidos/DOCUME~1/Codex/2026-0~3/new-chat/work/T14-[57 chars].cpp'
+- C:/Users/eidos/Documents/Codex/2026-09-06/new-chat/work/t14-pwm-deferred/nu54-r06-copy-u4ohmool/설치 공백/libraries/Test/src/Test.cpp
+?                 ^^^^^^^^             ^^^^               ^   ^^^^^^^^^^^^
++ C:/Users/eidos/DOCUME~1/Codex/2026-0~3/new-chat/work/T14-PW~1/nu54-r06-copy-u4ohmool/설치 공백/libraries/Test/src/Test.cpp
+?                 ^^^^^^^             ^^               ^   ^^^^
+
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.829s
+
+FAILED (failures=1)

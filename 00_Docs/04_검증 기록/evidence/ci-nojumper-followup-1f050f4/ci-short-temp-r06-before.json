@@ -1,0 +1,19 @@
+{
+  "parent_source": "1f050f4bb39dc7cbc77e3d4a433af8a907964837",
+  "source_mode": "r06-before",
+  "dirty": true,
+  "short_temp": "C:\\Users\\eidos\\DOCUME~1\\Codex\\2026-0~3\\new-chat\\work\\T14-PW~1",
+  "resolved_temp": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred",
+  "returncode": 1,
+  "command": [
+    "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts\\python.exe",
+    "-B",
+    "-c",
+    "from pathlib import Path\nimport subprocess\nimport sys\nrepo = Path('C:/Users/eidos/GitHub/NU54DK_Arduino_Core')\npath = repo / 'tests/host/test_r06_windows_recipe.py'\nsource = subprocess.check_output(['git', 'show', '1f050f4:tests/host/test_r06_windows_recipe.py'], cwd=repo).decode('utf-8')\nsys.path.insert(0, str(path.parent))\nsys.argv = [str(path)]\nglobals()['__file__'] = str(path)\nexec(compile(source, str(path), 'exec'))\n"
+  ],
+  "log_sha256": "e4fd8f739f79837641940740b3a556505a7961d186e734b2154549f77a1bef84",
+  "test_source_sha256": {
+    "test_m14_core_contract.py": "f7ba1e3509c5d7412c1332069573b7810addf80b70601dbc1ca530541860a1e4",
+    "test_r06_windows_recipe.py": "1d6d65077d1f2918f79c0f73ecff49067c5ecc930dc6b61c2c86c1f3f92cb70e"
+  }
+}

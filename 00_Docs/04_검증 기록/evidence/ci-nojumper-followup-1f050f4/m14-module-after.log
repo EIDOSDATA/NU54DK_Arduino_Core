@@ -1,0 +1,10 @@
+test_core_utility_random_f_and_diagnostics_compile_link (tests.host.test_m14_core_contract.M14CoreContractTests.test_core_utility_random_f_and_diagnostics_compile_link) ... ok
+test_disabled_peripheral_stubs_compile_link_and_fail_closed (tests.host.test_m14_core_contract.M14CoreContractTests.test_disabled_peripheral_stubs_compile_link_and_fail_closed) ... ok
+test_generated_native_runtime_semantics (tests.host.test_m14_core_contract.M14CoreContractTests.test_generated_native_runtime_semantics) ... ok
+test_peripheral_config_matrix_has_real_link_targets (tests.host.test_m14_core_contract.M14CoreContractTests.test_peripheral_config_matrix_has_real_link_targets) ... ok
+test_production_sources_are_registered (tests.host.test_m14_core_contract.M14CoreContractTests.test_production_sources_are_registered) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 3.307s
+
+OK

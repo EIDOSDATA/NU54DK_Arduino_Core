@@ -1,0 +1,19 @@
+{
+  "parent_source": "9c9db04057c2f85cf1b718bdbf2d9418eede61c0",
+  "source_mode": "host-clean",
+  "dirty": false,
+  "short_temp": "C:\\Users\\eidos\\DOCUME~1\\Codex\\2026-0~3\\new-chat\\work\\T14-PW~1",
+  "resolved_temp": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-06\\new-chat\\work\\t14-pwm-deferred",
+  "returncode": 0,
+  "command": [
+    "C:\\NU54DEV\\venv\\host-3.12.10\\Scripts\\python.exe",
+    "-B",
+    "tools/ci/run_m12_gate.py",
+    "host"
+  ],
+  "log_sha256": "4c63af757f3841e1615218872db60c7831b3e33b581a9ddcb8c08d5a754326da",
+  "test_source_sha256": {
+    "test_m14_core_contract.py": "f7ba1e3509c5d7412c1332069573b7810addf80b70601dbc1ca530541860a1e4",
+    "test_r06_windows_recipe.py": "0863cd63d93efd0a8b073b8c80fae7d88f9a4f26db99b3c60965affb5e13625a"
+  }
+}
