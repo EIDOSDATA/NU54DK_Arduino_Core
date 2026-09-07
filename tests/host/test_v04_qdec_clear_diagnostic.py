@@ -12,6 +12,22 @@ from v04_protocol import ProtocolError
 
 
 class ClearDiagnosticTests(unittest.TestCase):
+    def test_direct_polling_bounds_reject_possible_missing_samples(self):
+        gpio = [0, 400, 0, 400, 129] + [0] * 15
+        samples = [400, 0, 17000, 347] + [0] * 12
+        diagnostic.verify_observation(gpio, samples, [129, 18, 18000])
+        for polling in ([236, 18, 18000], [129, 18, 16999], [129, 18]):
+            with self.assertRaises(ProtocolError):
+                diagnostic.verify_observation(gpio, samples, polling)
+        bad = samples.copy()
+        bad[3] = 363
+        with self.assertRaisesRegex(ProtocolError, 'bound exceeded'):
+            diagnostic.verify_observation(gpio, bad, [129, 18, 18000])
+        bad = samples.copy()
+        bad[0] = 399
+        with self.assertRaises(ProtocolError):
+            diagnostic.verify_observation(gpio, bad, [129, 18, 18000])
+
     def test_latency_electrical_and_wait_guards_do_not_replace_public_result(self):
         self.assertEqual(len(set(diagnostic.vectors((0, 5, 6)))), 90)
         for fault in ('count', 'pull', 'wait'):
@@ -29,6 +45,8 @@ class ClearDiagnosticTests(unittest.TestCase):
                     self.role = role
 
                 def command(self, opcode, values):
+                    if values == (9,):
+                        return [100, 10, 20000]
                     if values == (5,):
                         return [6, 1, 1, 15000, 128]
                     if values == (8,):
@@ -80,6 +98,8 @@ class ClearDiagnosticTests(unittest.TestCase):
 
         class Device:
             def command(self, opcode, values):
+                if values == (9,):
+                    return [100, 10, 20000]
                 if values == (5,):
                     return [4, 1, 1, 15000, 128]
                 if values == (6,):
@@ -121,6 +141,8 @@ class ClearDiagnosticTests(unittest.TestCase):
             class Device:
                 def command(self, opcode, values):
                     strategy = state['strategy']
+                    if values == (9,):
+                        return [100, 10, 20000]
                     if values == (5,):
                         return [strategy, int(strategy != 1), int(strategy != 2), 6000000 if strategy == 2 else 15000, 128]
                     if values == (2,):
@@ -144,7 +166,7 @@ class ClearDiagnosticTests(unittest.TestCase):
 
             with patch.object(diagnostic.qdec, 'armed', armed), patch.object(diagnostic.qdec, 'wave', wave), \
                  patch.object(diagnostic.qdec, 'observe', observe), patch('builtins.print'):
-                pattern = {'count': '30/90', 'sample': 'SAMPLE observation', 'control': 'lease error'}[failure]
+                pattern = {'count': '30/90', 'sample': 'SAMPLE polling', 'control': 'lease error'}[failure]
                 with self.assertRaisesRegex(ProtocolError, pattern):
                     diagnostic.run([Device(), Device()], lambda _: None, lambda key, row: records.append(row))
             self.assertEqual(visited, stopped)

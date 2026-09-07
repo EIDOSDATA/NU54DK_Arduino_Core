@@ -5,6 +5,20 @@ from v04_pair import signed
 from v04_protocol import ProtocolError
 
 
+def verify_observation(gpio, samples, polling):
+    """! @brief 고정256us 샘플의 직접 poll·처리 시간 상한으로 누락을 배제합니다. """
+    if len(gpio) != 20 or gpio[1:4] != [400, 0, 400] or gpio[4] >= 256 or gpio[5] != 0:
+        raise ProtocolError('clear diagnostic source/GPIO waveform unproven')
+    if len(samples) != 16 or samples[0:2] != [400, 0]:
+        raise ProtocolError('clear diagnostic independent SAMPLE observation unproven')
+    if len(polling) != 3 or polling[2] < samples[2] or polling[2] == 0:
+        raise ProtocolError('SAMPLE polling evidence incomplete')
+    ## @brief 1MHz 시각 양자화 여유2us를 포함해 다음 샘플 전 처리·누락 시 최소 event 간격을 검사합니다.
+    window = polling[0] + polling[1] + 2
+    if window >= 256 or samples[3] + window >= 512:
+        raise ProtocolError('SAMPLE polling/processing bound exceeded')
+
+
 def vectors(strategies=(0, 1, 2)):
     """! @brief 각 방법을30회 비교하고 시행 순서를 매번 회전합니다. """
     for repetition in range(1, 31):
@@ -37,12 +51,11 @@ def run(devices, current, append, *, strategies=(0, 1, 2), prefix="V04-QDEC-CLEA
             qdec.wave(devices, current, append, label + '/forward', 100, 10000, 0)
             before = devices[0].command(85, (0,))
             append(label + '/before-final-read', {'status': 'observation', 'words': before})
-            if len(before) != 20 or before[1:4] != [400, 0, 400] or before[4] >= 128 or before[5] != 0:
-                raise ProtocolError('clear diagnostic source/GPIO waveform unproven')
             samples = devices[0].command(85, (2,))
             append(label + '/samples', {'status': 'observation', 'words': samples})
-            if len(samples) != 16 or samples[0:2] != [400, 0] or samples[3] >= 384:
-                raise ProtocolError('clear diagnostic independent SAMPLE observation unproven')
+            polling = devices[0].command(85, (9,))
+            append(label + '/sample-polling', {'status': 'observation', 'words': polling})
+            verify_observation(before, samples, polling)
             hardware = qdec.observe(devices[0], append, label + '/forward', clear=False)
             if hardware[8] > bound:
                 raise ProtocolError('clear diagnostic drain bound exceeded')

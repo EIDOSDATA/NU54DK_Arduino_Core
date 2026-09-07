@@ -52,10 +52,19 @@ namespace
     std::uint32_t read_sample_age_min = UINT32_MAX, read_sample_age_max = 0U, read_wait_max = 0U;
     std::uint32_t late_changes = 0U, late_wait_max = 0U, first_late_change[10]{};
     std::int32_t late_acc_difference = 0, late_double_difference = 0;
+    std::uint32_t sample_poll_previous = 0U, sample_poll_max = 0U, sample_observe_max = 0U;
+    std::uint32_t sample_poll_calls = 0U;
 
     /** @brief 비활성 IRQ의 SAMPLERDY를 관측하고 ACC와 별개인 SAMPLE 값을 합산합니다. */
     void observeSample(std::uint32_t now)
     {
+        const auto started = k_cycle_get_32();
+        if (sample_poll_calls != 0U && started - sample_poll_previous > sample_poll_max)
+        {
+            sample_poll_max = started - sample_poll_previous;
+        }
+        sample_poll_previous = started;
+        ++sample_poll_calls;
         auto *const reg = instance == 20U ? NRF_QDEC20 : NRF_QDEC21;
         if (nrf_qdec_event_check(reg, NRF_QDEC_EVENT_SAMPLERDY))
         {
@@ -76,6 +85,11 @@ namespace
             {
                 sampled_steps += last_sample_value;
             }
+        }
+        const auto duration = k_cycle_get_32() - started;
+        if (duration > sample_observe_max)
+        {
+            sample_observe_max = duration;
         }
     }
 
@@ -482,6 +496,7 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
         read_sample_age_max = read_wait_max = 0U;
         late_changes = late_wait_max = 0U;
         late_acc_difference = late_double_difference = 0;
+        sample_poll_previous = sample_poll_max = sample_observe_max = sample_poll_calls = 0U;
         for (auto &word : first_late_change)
         {
             word = 0U;
@@ -611,6 +626,15 @@ std::uint32_t commonQdecCommand(std::uint32_t opcode, const std::uint32_t *args,
             out[index] = values[index];
         }
         count = 13U;
+        return 0U;
+    }
+    if (opcode == 85U && nargs == 1U && args[0] == 9U && role == 1U)
+    {
+        /** @brief SAMPLE 처리 주기와 처리 중 선점을 직접 측정해 관측 누락 가능성을 판정합니다. */
+        out[0] = k_cyc_to_us_floor32(sample_poll_max);
+        out[1] = k_cyc_to_us_floor32(sample_observe_max);
+        out[2] = sample_poll_calls;
+        count = 3U;
         return 0U;
     }
     if (opcode == 85U && nargs == 2U && args[0] == 3U && args[1] < 16U && args[1] % 2U == 0U &&

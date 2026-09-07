@@ -40,7 +40,7 @@ class CommonSignalsTests(unittest.TestCase):
                             lambda key, row: records.append((key, row)), 'fault', 20, 0):
                 raise ProtocolError('399 instead of400')
         self.assertEqual([values for role, opcode, values in calls if opcode == 85],
-                         [(0,), (1,), (2,), (4,), (5,), (6,), (7,), (8,)] + [(3, offset) for offset in range(0, 16, 2)])
+                         [(0,), (1,), (2,), (4,), (5,), (6,), (7,), (8,), (9,)] + [(3, offset) for offset in range(0, 16, 2)])
         self.assertEqual([(role, opcode) for role, opcode, _ in calls[-2:]], [(1, 81), (2, 81)])
         self.assertEqual(records[0][1]['status'], 'failed')
         self.assertEqual(records[-1][1]['status'], 'cleanup')
