@@ -50,6 +50,12 @@ Event는 발생 EGU만 CPU로 trigger하고 수신 EGU event를 매번 관측한
 확인한다. 실제 OS가 소유한 GRTC channel을 재할당하는 시험이 아니다. GRTC의 기존 공개 경로는
 Arduino 시간 함수이며 별도 raw GRTC channel API를 가정하지 않는다.
 
+Busy-wait는 nrfx CPU delay와 GRTC의 서로 다른 clock을 사용하므로 V04-EVENT의 ±5%를
+요청 시간과 micros 관측값에 적용한다. Sleep은 요청 시간 이상·스케줄링 여유 3ms 이내,
+두 경로 모두 별도 TIMER 관측과의 차이는 요청 시간의 5% 이내를 요구한다.
+millis와 micros는 양자화 차이 1ms를 허용한다. 최초 35f30b2의 995us 관측을 1000us 미만이라는
+이유로 거부한 판정 오류는 95번에 실패 원본과 함께 보존한다.
+
 확장 명령 892개와 PWM 반복 회귀 12개를 합쳐 보드당 904개를 계획한다. 실제 완료 수는
 검증 기록의 source·원본 journal로 판정한다. TIMER 44 CC에 1000회 비교를 수행한 결과로
 표시하지 않으며, 1000 event 조건은 EGU/DPPI/PPIB 전달 시험에 적용한다.

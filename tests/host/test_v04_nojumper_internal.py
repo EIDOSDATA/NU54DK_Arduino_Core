@@ -53,6 +53,21 @@ class InternalNojumperTests(unittest.TestCase):
         reply[26] = 2
         return request, reply
 
+    def test_busy_wait_uses_existing_five_percent_clock_tolerance(self):
+        """! @brief clock 차이 995us는 허용하고 5% 바깥과 누락된 반복은 거부합니다. """
+        request, reply = reply_for((6, 1000, 0, 100, 0, 1))
+        reply[12:17] = [995, 995, 1, 1, 16]
+        reply[20:22] = [1, 100]
+        hil.validate_reply(request, reply)
+        for minimum, maximum in ((949, 995), (995, 1051)):
+            altered = reply.copy()
+            altered[12:14] = [minimum, maximum]
+            with self.assertRaises(hil.ProtocolError):
+                hil.validate_reply(request, altered)
+        reply[21] = 0
+        with self.assertRaises(hil.ProtocolError):
+            hil.validate_reply(request, reply)
+
     def test_adc_scan_reverse_and_calibration_count(self):
         for reverse in (0, 1):
             request, reply = self.adc(reverse)

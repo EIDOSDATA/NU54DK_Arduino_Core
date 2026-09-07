@@ -15,6 +15,9 @@ namespace
             return;
         }
         auto &timer = *eventFabric().timer(20U);
+        /** @brief nrfx busy-wait와 GRTC의 clock 차이는 시험표의 양방향 5%로 판정합니다. */
+        const auto minimum_elapsed = sleep_ms != 0U ? duration : duration - duration / 20U;
+        const auto maximum_elapsed = sleep_ms != 0U ? duration + 3000U : duration + duration / 20U;
         result[12] = 0xFFFFFFFFU;
         result[14] = 0xFFFFFFFFU;
         for (std::uint32_t run = 0U; run < repetitions; ++run)
@@ -68,8 +71,9 @@ namespace
             const auto expected_ms = elapsed / 1000U;
             const auto error_ms =
                 elapsed_ms > expected_ms ? elapsed_ms - expected_ms : expected_ms - elapsed_ms;
-            if (result[9] != 0U || result[10] != 0U || result[20] != 1U || elapsed < duration ||
-                elapsed > duration + 3000U || error > duration / 20U || error_ms > 1U)
+            if (result[9] != 0U || result[10] != 0U || result[20] != 1U ||
+                elapsed < minimum_elapsed || elapsed > maximum_elapsed || error > duration / 20U ||
+                error_ms > 1U)
             {
                 result[2] = 4U;
                 return;

@@ -42,7 +42,7 @@ class M27PackageExampleTests(unittest.TestCase):
         self.assertEqual(option.default, MODULE.VERSION)
         self.assertEqual(set(option.choices), {MODULE.VERSION, "0.0.90"})
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             cli, config, platform = root / "cli", root / "config", root / "platform"
             cli.touch()
             config.touch()

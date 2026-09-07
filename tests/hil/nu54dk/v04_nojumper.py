@@ -275,10 +275,12 @@ def time_vectors():
 
 
 def validate_time(request, reply):
-    duration, _, repetitions = request[3:6]
+    duration, sleep_ms, repetitions = request[3:6]
+    minimum = duration if sleep_ms else duration - duration // 20
+    maximum = duration + 3000 if sleep_ms else duration + duration // 20
     if any(reply[index] for index in (8, 9, 10)) or reply[20:22] != [1, repetitions]:
         raise ProtocolError('GRTC/TIMER lifecycle failure')
-    if not duration <= reply[12] <= reply[13] <= duration + 3000 or reply[16] > duration // 20:
+    if not minimum <= reply[12] <= reply[13] <= maximum or reply[16] > duration // 20:
         raise ProtocolError('GRTC micros/delay differs from TIMER capture')
     if not reply[12] // 1000 - 1 <= reply[14] <= reply[15] <= reply[13] // 1000 + 1:
         raise ProtocolError('GRTC millis differs from micros')
