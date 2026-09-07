@@ -282,5 +282,12 @@ def validate_time(request, reply):
         raise ProtocolError('GRTC/TIMER lifecycle failure')
     if not minimum <= reply[12] <= reply[13] <= maximum or reply[16] > duration // 20:
         raise ProtocolError('GRTC micros/delay differs from TIMER capture')
-    if not reply[12] // 1000 - 1 <= reply[14] <= reply[15] <= reply[13] // 1000 + 1:
-        raise ProtocolError('GRTC millis differs from micros')
+    if reply[28] != 32 or not reply[12] <= reply[25] <= reply[13] or not reply[14] <= reply[24] <= reply[15]:
+        raise ProtocolError('GRTC raw clock observations/tick mismatch')
+    if abs(reply[26] - reply[25]) > reply[16]:
+        raise ProtocolError('GRTC raw TIMER observation differs from statistics')
+    budget = 1000 + reply[28] + reply[16]
+    if not abs(reply[24] * 1000 - reply[25]) <= reply[27] <= budget:
+        raise ProtocolError('GRTC millis exceeds quantization and observation-window budget')
+    if reply[15] * 1000 > reply[13] + budget or reply[14] * 1000 + budget < reply[12]:
+        raise ProtocolError('GRTC millis extrema differ from micros')

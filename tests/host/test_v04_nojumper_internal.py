@@ -36,6 +36,7 @@ class InternalNojumperTests(unittest.TestCase):
             duration = request[3]
             reply[12:17] = [duration, duration + 10, duration // 1000, duration // 1000, 10]
             reply[20:22] = [1, 100]
+            reply[24:29] = [duration // 1000, duration, duration + 10, 0, 32]
             hil.validate_reply(request, reply)
             for index, value in ((12, 0), (15, 100), (16, 1000), (20, 0), (21, 99)):
                 altered = reply.copy()
@@ -58,6 +59,7 @@ class InternalNojumperTests(unittest.TestCase):
         request, reply = reply_for((6, 1000, 0, 100, 0, 1))
         reply[12:17] = [995, 995, 1, 1, 16]
         reply[20:22] = [1, 100]
+        reply[24:29] = [1, 995, 1011, 5, 32]
         hil.validate_reply(request, reply)
         for minimum, maximum in ((949, 995), (995, 1051)):
             altered = reply.copy()
@@ -67,6 +69,19 @@ class InternalNojumperTests(unittest.TestCase):
         reply[21] = 0
         with self.assertRaises(hil.ProtocolError):
             hil.validate_reply(request, reply)
+
+    def test_millis_quantization_includes_separate_read_windows_and_kernel_tick(self):
+        """! @brief 997us 관측의 2ms 차이는 제한된 양자화로 판정하고 3ms·거짓 원본은 거부합니다. """
+        request, reply = reply_for((6, 1000, 0, 100, 0, 1))
+        reply[12:17] = [997, 1011, 0, 2, 13]
+        reply[20:22] = [1, 100]
+        reply[24:29] = [2, 997, 1010, 1003, 32]
+        hil.validate_reply(request, reply)
+        for index, value in ((15, 3), (24, 3), (25, 996), (26, 1050), (27, 1046), (28, 1000)):
+            altered = reply.copy()
+            altered[index] = value
+            with self.assertRaises(hil.ProtocolError):
+                hil.validate_reply(request, altered)
 
     def test_adc_scan_reverse_and_calibration_count(self):
         for reverse in (0, 1):

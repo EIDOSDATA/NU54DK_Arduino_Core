@@ -13,6 +13,12 @@ delay clock과 system clock 간 오차를 명시하고, 기존 V04-EVENT 시험�
 실패 직후 PWM·ADC·DPPI 모두 off, P1.14 입력 복귀·controlled reset/halt를 확인했다.
 B 보드와 나머지 15개 명령은 첫 실행에서 미실행이다.
 
+두 번째 exact fcf85c2 실행은 A의 904개 모두 PASS, B의 첫 시간 명령은 66회 통과 후
+millis 차이 2를 단순 내림한 micros와 비교하다 중단했다. micros 범위 997~1011us,
+TIMER 차이 최대 13us이며 kernel tick은 31250Hz(32us)다. 서로 다른 읽기 구간과 millis의
+1ms 양자화·kernel tick 하나를 합친 오차 한도로 교정하고 마지막 원본 세 값을 추가한다.
+B 실패/cleanup은 보존하며 제품 시간 코드는 변경하지 않는다.
+
 ## 범위와 현재 상태
 
 - 제품 source는 PWM 수정본 080d771이다. 이번 확장은 전용 HIL·Host 판정기·문서만 변경한다.

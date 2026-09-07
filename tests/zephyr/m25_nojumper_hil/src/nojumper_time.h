@@ -1,6 +1,8 @@
 /** @file @brief GRTC 기반 기존 micros/millis/delay endpoint를 별도 TIMER와 대조합니다. */
 #pragma once
 
+#include <zephyr/sys/time_units.h>
+
 namespace
 {
     void exerciseTime(const std::uint32_t *request, std::uint32_t *result)
@@ -18,6 +20,8 @@ namespace
         /** @brief nrfx busy-wait와 GRTC의 clock 차이는 시험표의 양방향 5%로 판정합니다. */
         const auto minimum_elapsed = sleep_ms != 0U ? duration : duration - duration / 20U;
         const auto maximum_elapsed = sleep_ms != 0U ? duration + 3000U : duration + duration / 20U;
+        const auto tick_us = k_ticks_to_us_ceil32(1U);
+        result[28] = tick_us;
         result[12] = 0xFFFFFFFFU;
         result[14] = 0xFFFFFFFFU;
         for (std::uint32_t run = 0U; run < repetitions; ++run)
@@ -68,12 +72,20 @@ namespace
             }
             result[20] =
                 resourceFree(peripheralIoResource(IoResourceKind::timer_block, 20U, NRF_TIMER20));
-            const auto expected_ms = elapsed / 1000U;
-            const auto error_ms =
-                elapsed_ms > expected_ms ? elapsed_ms - expected_ms : expected_ms - elapsed_ms;
+            const auto milliseconds_us = elapsed_ms * 1000U;
+            const auto error_ms_us =
+                milliseconds_us > elapsed ? milliseconds_us - elapsed : elapsed - milliseconds_us;
+            if (error_ms_us > result[27])
+            {
+                result[27] = error_ms_us;
+            }
+            result[24] = elapsed_ms;
+            result[25] = elapsed;
+            result[26] = captured;
+            /** @brief 서로 다른 읽기 구간, millis의 1ms 단위와 kernel tick 1개를 반영합니다. */
             if (result[9] != 0U || result[10] != 0U || result[20] != 1U ||
                 elapsed < minimum_elapsed || elapsed > maximum_elapsed || error > duration / 20U ||
-                error_ms > 1U)
+                error_ms_us > 1000U + tick_us + error)
             {
                 result[2] = 4U;
                 return;

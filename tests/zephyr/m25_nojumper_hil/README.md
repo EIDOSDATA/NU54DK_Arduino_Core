@@ -53,7 +53,9 @@ Arduino 시간 함수이며 별도 raw GRTC channel API를 가정하지 않는�
 Busy-wait는 nrfx CPU delay와 GRTC의 서로 다른 clock을 사용하므로 V04-EVENT의 ±5%를
 요청 시간과 micros 관측값에 적용한다. Sleep은 요청 시간 이상·스케줄링 여유 3ms 이내,
 두 경로 모두 별도 TIMER 관측과의 차이는 요청 시간의 5% 이내를 요구한다.
-millis와 micros는 양자화 차이 1ms를 허용한다. 최초 35f30b2의 995us 관측을 1000us 미만이라는
+millis와 micros는 1ms 양자화, 고정 31250Hz kernel tick 하나(32us), 별도 TIMER로 관측한
+읽기 구간 차이를 합친 오차 한도로 검사한다. 마지막 micros/millis/TIMER 원본과 최대 오차를
+함께 보존한다. 최초 35f30b2의 995us 관측을 1000us 미만이라는
 이유로 거부한 판정 오류는 95번에 실패 원본과 함께 보존한다.
 
 확장 명령 892개와 PWM 반복 회귀 12개를 합쳐 보드당 904개를 계획한다. 실제 완료 수는
