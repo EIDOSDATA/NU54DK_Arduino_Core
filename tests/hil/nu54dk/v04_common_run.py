@@ -29,7 +29,7 @@ def arguments(argv=None):
     parser.add_argument('--pyocd', required=True, type=Path)
     parser.add_argument('--session-grant', required=True, type=Path)
     parser.add_argument('--evidence', type=Path)
-    parser.add_argument('--section', choices=('all', 'gpio', 'task', 'edge', 'qdec', 'pwm', 'pwm-modes', 'i2s', 'signals', 'additional-signals'), default='all')
+    parser.add_argument('--section', choices=('all', 'gpio', 'task', 'edge', 'qdec', 'pwm', 'pwm-modes', 'i2s', 'signals', 'additional-signals', 'qdec-i2s'), default='all')
     parser.add_argument('--execute-fixture', action='store_true')
     parser.add_argument('--cmsis-dap-limit-packets', action='store_true')
     parser.add_argument('--swd-frequency-hz', type=int, default=10000000)
@@ -91,10 +91,12 @@ def main(argv=None):
                         print(f'COMMON_PHYSICAL_PASSED={completed};SECTION={args.section}', flush=True)
             evidence['external_wiring_executed'] = True
             wiring.run_checks(devices, append, lambda: continuity.check(501))
-            if args.section in ('signals', 'additional-signals'):
+            if args.section in ('signals', 'additional-signals', 'qdec-i2s'):
                 for name, execute in (('pwm', pwm.run_common), ('pwm-modes', pwm_modes.run),
                                       ('qdec', qdec.run), ('i2s', i2s.run)):
                     if args.section == 'additional-signals' and name == 'pwm':
+                        continue
+                    if args.section == 'qdec-i2s' and name in ('pwm', 'pwm-modes'):
                         continue
                     print(f'COMMON_SECTION_START={name}', flush=True)
                     execute(devices, continuity.check, append)

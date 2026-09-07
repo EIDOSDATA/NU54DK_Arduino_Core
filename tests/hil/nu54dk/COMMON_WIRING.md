@@ -1,6 +1,6 @@
 # NU54DK v0.4.0 공통 결선과 연결 검사
 
-현재 실행은 [100번](../../../00_Docs/04_검증%20기록/100_T12_공통_기능_묶음과_T13_조합_확정.md)을 따른다. 4e48252 GPIO/GPIOTE2502·결선105와 3334b17 PWM steady675·새 결선105는 PASS다. 추가 PWM 첫 실패는 마지막 LOOPSDONE에서 REFRESH/ENDDELAY를 적용하지 않는 규칙의 Host 오판이다. 원본을 보존하고 판정을 교정해 추가288→QDEC240→I2S432를 진행한다. `--section signals`는 steady675를 포함하며 `--section additional-signals`는 이 세 후속 부분만 새로 실행한다. 각 실행의 source와 결과를 구분한다. [T13 계획](T13_PLAN.md)의 C→S→U 두 결선 변경은 후속이며 현재 C를 유지한다.
+현재 실행은 [100번](../../../00_Docs/04_검증%20기록/100_T12_공통_기능_묶음과_T13_조합_확정.md)을 따른다. 4e48252 GPIO2502·3334b17 steadyPWM675·0db0689 추가PWM288은 PASS다. 0db0689 QDEC은18조건 뒤 다음 초기값 -1에서 중단했고, A 수신 정지→B 입력 반환 순서를 교정해 재검사한다. `--section signals`는675+288+240+432, `additional-signals`는288+240+432, `qdec-i2s`는240+432를 선택한다. 각 실행은 새 source/501/cleanup 증거를 남긴다. [T13 계획](T13_PLAN.md)의 C→S→U 두 결선 변경은 후속이며 현재 C를 유지한다.
 
 현재 재검사: exact d8d1e13에서 P1.10을 포함한 17개 신호가 양방향 각 3회, 총 102 net-round PASS다. LOW 자동 해제 2개·양쪽 lease 만료 1개도 PASS이며 종료 후 양쪽 17개 PIN_CNF=0, PWM/DPPI off를 확인했다. 첫 8c1cfe2의 P1.10 실패 원본은 보존하고 원인은 미확정으로 유지한다. 결선 검사 통과이며 GPIO API·T12 전체·T13 이후·RC 완료는 아니다.
 

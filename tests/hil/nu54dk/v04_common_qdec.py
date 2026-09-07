@@ -33,7 +33,7 @@ def counts(raw, steps, double_transitions):
 
 @contextmanager
 def armed(devices, current, append, label, instance, debounce):
-    """! @brief 준비 시 B를 LOW로 만든 뒤 A sampling을 시작하고 양쪽을 반환합니다. """
+    """! @brief B가 LOW를 유지한 상태에서 A sampling을 시작·정지한 뒤 B를 입력으로 반환합니다. """
     current(520)
     original = None
     try:
@@ -49,7 +49,7 @@ def armed(devices, current, append, label, instance, debounce):
         raise
     finally:
         rows = []
-        for device in reversed(devices):
+        for device in devices:
             try:
                 words = device.command(81, timeout=2)
                 good = len(words) == 16 and words[1:3] == [0, 0] and words[11:13] == [0, 0] and words[15] == 0
@@ -93,7 +93,7 @@ def run(devices, current, append):
             counts(observe(devices[0], append, label + '/initial', clear=True), 0, 0)
             wave(devices, current, append, label + '/forward', cycles, interval, 0)
             counts(observe(devices[0], append, label + '/forward', clear=False), 4 * cycles, 0)
-            # @brief QDEC를 멈추거나 누산값을 지우지 않고 파형 방향만 바꿉니다.
+            ## @brief QDEC를 멈추거나 누산값을 지우지 않고 파형 방향만 바꿉니다.
             wave(devices, current, append, label + '/reverse', cycles, interval, 1)
             counts(observe(devices[0], append, label + '/forward-plus-reverse', clear=True), 0, 0)
             counts(observe(devices[0], append, label + '/read-after-clear', clear=True), 0, 0)

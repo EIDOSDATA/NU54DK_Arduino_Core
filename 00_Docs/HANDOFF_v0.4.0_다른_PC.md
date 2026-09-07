@@ -1,6 +1,6 @@
 # v0.4.0 다른 PC 재개 인계
 
-현재 기능 실행(100번): exact 4e48252의 GPIO/GPIOTE 기능 2502/2502와 결선 105를 통과했고, 2026-09-07 15:36 UTC 양쪽 17 GPIO 입력·주변장치 off를 확인했다. exact 3334b17의 새 결선 105와 PWM steady 675/675도 통과했다. 추가 모드는 첫 1조건 뒤 terminal STOP의 반복/종료 지연을 Host가 12주기 과다 계산하여 중단했다. 실패·cleanup·postflight 원본은 100번에 보존한다. 규격에 맞게 Host를 교정하고 새 clean source/build에서 추가 PWM 288→QDEC 240→I2S 432를 실행한다. T13 32 단독/8 동시와 C→S→U 결선 계획은 확정했으며 실기는 이번 범위 밖이다.
+현재 기능 실행(100번): exact4e48252 GPIO/GPIOTE2502·결선105, exact3334b17 steadyPWM675·결선105, exact0db0689 추가PWM288·결선105는 PASS다. 0db0689 QDEC은18조건 후 다음 초기값 -1(예상0)에서 중단했다. 직전 B 입력 반환 후 아직 활성인 A가 추가 전이를 읽은 raw를 보존했다. A 수신기 정지→B 발생기 입력 반환 순서로 Host를 교정하고, 초기0 기준을 유지해 QDEC240→I2S432를 새 clean source로 검사한다. 관련 Host16/16 PASS이며 T13은32단독/8동시와 C→S→U 결선 계획만 확정했다. T12전체·T13실기·RC는 미완료다.
 
 [T13 후속 GPIO 결선](../tests/hil/nu54dk/T13_PLAN.md)은 C→S→U 두 단계다.
 

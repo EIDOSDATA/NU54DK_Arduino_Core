@@ -41,8 +41,47 @@ class CommonSignalsTests(unittest.TestCase):
             with qdec.armed(devices, current, lambda key, row: records.append((key, row)), 'expiry', 20, 0):
                 qdec.wave(devices, current, lambda *_: None, 'long-wave', 1000, 10000, 0)
         self.assertEqual(checks, [520, 520, 520])
-        self.assertEqual(calls[-2:], [(2, 81), (1, 81)])
+        self.assertEqual(calls[-2:], [(1, 81), (2, 81)])
         self.assertTrue(all(row['stopped'] for row in records[-1][1]['outcomes']))
+
+    def test_qdec_stops_receiver_before_source_and_still_releases_after_stop_failure(self):
+        """! @brief 수신기가 활성인 동안 두 phase가 부유하지 않게 하고 실패 시에도 B를 반환합니다. """
+        for fail_receiver in (False, True):
+            stopped, records = [], []
+            class Device:
+                def __init__(self, role):
+                    self.image = {'role': role}
+
+                def command(self, opcode, values=(), **options):
+                    if opcode == 80:
+                        return [520, 10000]
+                    if opcode == 83:
+                        return [0]
+                    if opcode == 81:
+                        stopped.append(self.image['role'])
+                        if self.image['role'] == 1 and fail_receiver:
+                            raise ProtocolError('injected receiver stop failure')
+                        return [0] * 16
+                    raise AssertionError(opcode)
+
+            def execute():
+                with qdec.armed([Device(1), Device(2)], lambda _: None,
+                                lambda key, row: records.append(row), 'cleanup', 20, 0):
+                    pass
+            if fail_receiver:
+                with self.assertRaisesRegex(ProtocolError, 'cleanup unproven'):
+                    execute()
+            else:
+                execute()
+            self.assertEqual(stopped, [1, 2])
+            self.assertTrue(records[-1]['outcomes'][1]['stopped'])
+
+        archive = ROOT / '00_Docs/04_검증 기록/evidence/t12-common-additional-0db0689-first/result.json.gz'
+        original = json.loads(gzip.decompress(archive.read_bytes()))
+        raw = next(row['words'] for row in original['results'] if row['id'] ==
+                   'V04-COMMON-QDEC/20/debounce0/2000us/100cycles/repeat9/initial/raw-role1')
+        with self.assertRaises(ProtocolError):
+            qdec.counts(raw, 0, 0)
 
     def test_finite_pwm_raw_sequence_rejects_missing_reordered_and_wrong_duty(self):
         self.assertEqual(len(list(modes.vectors())), 288)
