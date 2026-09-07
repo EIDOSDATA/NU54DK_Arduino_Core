@@ -447,7 +447,9 @@
     "public_raw_is_original": true,
     "public_raw_bytes": 47537,
     "public_raw_sha256": "c47f4a61078849f345ec4ab256cb93373b3b7e7b2c4f30324080a2f5df62dbe4",
-    "normalized_sha256": "c5a7d0c368168e9871c93076f5ab0eb366b28cb15b4e8c56cb229c2e33cff7b0"
+    "normalized_sha256": "22bf3452261f376a89f394638529935919b5c3af53acadbf175f5ec388373493",
+    "initial_normalized_sha256": "c5a7d0c368168e9871c93076f5ab0eb366b28cb15b4e8c56cb229c2e33cff7b0",
+    "normalization": "UTF-8 public text plus Git CRLF-to-LF normalization; raw gzip unchanged"
   },
   {
     "path": "build-054d08f/dut/.config",
@@ -477,7 +479,9 @@
     "public_raw_is_original": true,
     "public_raw_bytes": 47545,
     "public_raw_sha256": "60898c97115d0291e39453d79f7fc19eb54fa5bb14b84b13412b436b6030ac61",
-    "normalized_sha256": "07775a4bd7e176ba1e771bcbd7059bf8c3ca6c8afe4f2e8612c3c6c4d426867e"
+    "normalized_sha256": "c49b4a9f82495ae6f15b8406ba4aa91a2f7aa2ee9c9a0b826f7bec1c8e7606ad",
+    "initial_normalized_sha256": "07775a4bd7e176ba1e771bcbd7059bf8c3ca6c8afe4f2e8612c3c6c4d426867e",
+    "normalization": "UTF-8 public text plus Git CRLF-to-LF normalization; raw gzip unchanged"
   },
   {
     "path": "build-054d08f/peer/.config",
@@ -527,7 +531,9 @@
     "public_raw_is_original": true,
     "public_raw_bytes": 47537,
     "public_raw_sha256": "0ba989a57eb61581c79f97f96ead4ebd261a88cae6d9dbbdc0dd002818f633c6",
-    "normalized_sha256": "de4a7e3b2ee94f8f4f09b0e384b47fbfaafd5769949b045e56c6d173ad1d1fe6"
+    "normalized_sha256": "58a4119a202ea3292b4cc25b7f68170ca161277311a89546fee97062cd7f6856",
+    "initial_normalized_sha256": "de4a7e3b2ee94f8f4f09b0e384b47fbfaafd5769949b045e56c6d173ad1d1fe6",
+    "normalization": "UTF-8 public text plus Git CRLF-to-LF normalization; raw gzip unchanged"
   },
   {
     "path": "build-0d7f382/dut/.config",
@@ -557,7 +563,9 @@
     "public_raw_is_original": true,
     "public_raw_bytes": 47545,
     "public_raw_sha256": "34e3ba2385ed9fcde682cd08b2dada9a93938ff4d7ddbbf50a47c6cbd9a306df",
-    "normalized_sha256": "1780d5ab27331855074e57c1becdd7907d5cfb61435ac0396e1d106d2c042ba0"
+    "normalized_sha256": "e0974618418e2263a06b67f76039cce03e5311515bb07dee4e499efca278cc04",
+    "initial_normalized_sha256": "1780d5ab27331855074e57c1becdd7907d5cfb61435ac0396e1d106d2c042ba0",
+    "normalization": "UTF-8 public text plus Git CRLF-to-LF normalization; raw gzip unchanged"
   },
   {
     "path": "build-0d7f382/peer/.config",

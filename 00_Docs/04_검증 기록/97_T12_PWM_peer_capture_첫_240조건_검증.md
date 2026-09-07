@@ -90,6 +90,12 @@ DMA word 극성과 idle inversion은 별개다. A는 GPIOTE20→DPPI20→TIMER22
 공개용 마스킹 사본이다. 나머지 57개는 원문을 gzip으로 복원할 수 있다. ELF/HEX는 이 PC의
 `C:/pwh04`·`C:/pwq04`에 보존한다. 원본 실패·중간 보존 폴더·build 경로를 삭제하지 않았다.
 
+초기 기록 commit `0128953`의 공개 사본 검사에서는 네 target build.log의 SHA 목록이 Git blob과
+달랐다. 원문에 남아 있던 CRLF를 Git이 추가로 LF로 바꾼 결과이며, 각 360바이트 차이를 줄바꿈만의
+차이로 확인했다. 원문 gzip·원문 SHA는 유지하고 `normalized_sha256`을 실제 Git blob에 맞게
+보정했다. 최초 SHA도 manifest의 `initial_normalized_sha256`에 남겼다. 수정 뒤 58개 Git 사본·
+gzip·공개 UID 비노출을 모두 다시 검사한다. 이는 로그 사본의 metadata 교정이며 실기 결과 변경은 아니다.
+
 다음은 PWM common/grouped/wave-form·32/256 values·sequence0/1 순서와 end/repeat·DPPI
 START·triggered-step·idle inversion의 준비/실기다. 이후 GPIO/GPIOTE, I2S 100 연속 buffer와
 TX-only/RX-only·1024 word, QDEC 1000 cycle·방향 전환·read/clear/restart·invalid transition·반복을
