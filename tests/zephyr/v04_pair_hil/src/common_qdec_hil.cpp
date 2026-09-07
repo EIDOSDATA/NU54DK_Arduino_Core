@@ -38,6 +38,7 @@ namespace
     std::uint32_t doubles = 0U, reads = 0U, max_read_gap = 0U, error = 0U;
     std::uint32_t lease_expirations = 0U;
     std::int32_t accumulated = 0;
+    std::int32_t last_driver_acc = 0;
     v04::QdecObserver observer;
     std::uint32_t first_mismatch[20]{};
     bool mismatch_recorded = false, phase_checked = false;
@@ -69,7 +70,7 @@ namespace
                                      reg->ACCDBLREAD,
                                      reads,
                                      k_cyc_to_us_floor32(now - last_read),
-                                     static_cast<std::uint32_t>(reg->SAMPLE),
+                                     static_cast<std::uint32_t>(last_driver_acc),
                                      reg->SAMPLEPER,
                                      reg->SHORTS,
                                      reg->ENABLE,
@@ -130,6 +131,7 @@ namespace
         last_read = now;
         QdecEvent event{};
         const auto result = qdec->read(event);
+        last_driver_acc = event.accumulated;
         if (result != StreamFabricResult::success || event.driver_error != 0 ||
             event.accumulated <= -1024 || event.accumulated >= 1023 ||
             event.double_transitions >= 15U || k_cyc_to_us_floor32(gap) > 15000U)
