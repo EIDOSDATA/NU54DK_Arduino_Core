@@ -187,13 +187,18 @@ def run_case(devices, selected, controller_role, vector, append):
                                         controller_role))
             if reply != [selected["id"], 10000]:
                 raise ProtocolError(f"signal fixture arm failed: {reply}")
+        if family == "pdm":
+            if receiver.command(34, args) != [0]:
+                raise ProtocolError("signal receiver prepare failed")
+            wait_status(receiver, lambda words: words[2] == 1)
         if controller.command(34, args) != [0]:
             raise ProtocolError("signal generator prepare failed")
         if family == "pdm":
             wait_status(controller, lambda words: words[2] == 1)
-        if receiver.command(34, args) != [0]:
-            raise ProtocolError("signal receiver prepare failed")
-        wait_status(receiver, lambda words: words[2] == 1)
+        else:
+            if receiver.command(34, args) != [0]:
+                raise ProtocolError("signal receiver prepare failed")
+            wait_status(receiver, lambda words: words[2] == 1)
 
         if family == "i2s":
             if receiver.command(35) != [0] or controller.command(35) != [0]:

@@ -12,6 +12,7 @@ import v04_fixture as fixture
 import v04_campaign as campaign
 import v04_pair as pair
 import v04_signal as signal
+import v04_pdm_continuous as pdm_continuous
 from v04_protocol import ProbeLocks, ProtocolError, validate_pair
 from v04_fixture_run import unique_fields
 
@@ -32,7 +33,10 @@ def arguments(argv=None):
     parser.add_argument("--duration-seconds", type=float, default=0)
     parser.add_argument("--progress-interval-seconds", type=float, default=5)
     parser.add_argument("--execute-fixture", action="store_true")
+    parser.add_argument("--pdm-continuous", action="store_true")
     args = parser.parse_args(argv)
+    if args.pdm_continuous and args.fixture != 440:
+        raise ProtocolError("continuous PDM requires fixture 440")
     campaign.validate_options(args.repetitions, args.duration_seconds,
                               args.progress_interval_seconds)
     if args.execute_fixture and (args.confirmation is None or args.evidence is None):
@@ -60,6 +64,7 @@ def main(argv=None):
         "scope": "two-board-analog-pwm-event-pdm-i2s-qdec",
         "swd_frequency_hz": args.swd_frequency_hz,
         "external_wiring_executed": False, "repetitions": args.repetitions,
+        "pdm_continuous": args.pdm_continuous,
         "campaign": {"repetitions": args.repetitions,
                      "duration_seconds": args.duration_seconds,
                      "progress_interval_seconds": args.progress_interval_seconds,
@@ -103,8 +108,9 @@ def main(argv=None):
                 journal.flush()
 
             evidence["external_wiring_executed"] = True
+            run_confirmed = pdm_continuous.run_confirmed if args.pdm_continuous else signal.run_confirmed
             evidence["campaign"].update(campaign.run_cycles(
-                lambda _cycle: signal.run_confirmed(
+                lambda _cycle: run_confirmed(
                     devices, images, uids, confirmation, args.fixture, append, 1),
                 append, args.repetitions, args.duration_seconds,
                 args.progress_interval_seconds))

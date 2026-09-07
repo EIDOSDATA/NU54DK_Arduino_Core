@@ -306,7 +306,7 @@ namespace
         {
             return fixtureCommand(opcode, args, nargs, out, count);
         }
-        if (opcode >= 32 && opcode <= 38)
+        if (opcode >= 32 && opcode <= 39)
         {
             return signalCommand(opcode, args, nargs, out, count);
         }

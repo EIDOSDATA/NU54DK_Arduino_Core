@@ -10,6 +10,7 @@
 #include "shared_analog_source.h"
 #include "qdec_waveform.h"
 #include "i2s_finite_transfer.h"
+#include "pdm_continuous.h"
 #include <nucode/AnalogFabric.h>
 #include <nucode/SerialFabric.h>
 #include <nucode/StreamFabric.h>
@@ -40,6 +41,8 @@ namespace
     alignas(4) std::int16_t analog_samples[2][analog_capacity]{};
     /** @brief payload 0/1과 별도 guard 2/3으로 완료 전에 DMA가 입력을 덮어쓰지 않게 합니다. */
     alignas(4) std::int16_t pdm_samples[4][stream_capacity]{};
+    v04::PdmContinuous pdm_transfer;
+    bool pdm_continuous = false;
     alignas(4) std::uint16_t pwm_values[16]{};
     /** @brief slot 2는 시작 지연만큼 밀린 payload를 수집하고 slot 3은 정지 중 재사용을 막습니다. */
     alignas(4) std::uint32_t i2s_rx[4][stream_capacity]{};
@@ -497,15 +500,21 @@ namespace
     /** @brief PDM receiver 또는 mono SPIS·stereo GPIOTE/DPPI 신호원을 준비합니다. */
     bool preparePdm(const std::uint32_t *args)
     {
+        pdm_continuous = args[6] == 100U && args[7] == 4U && args[5] == 2U;
         if ((args[0] != 20U && args[0] != 21U) || args[1] == 0U || args[1] > stream_capacity ||
             (args[2] != 25U && args[2] != 50U && args[2] != 75U) || args[3] > 1U || args[4] > 1U ||
-            (args[5] != 1U && args[5] != 2U))
+            (args[5] != 1U && args[5] != 2U) ||
+            (!pdm_continuous && (args[6] != 0U || args[7] != 0U)))
         {
             return false;
         }
         requested = args[1];
         pdm_buffers = args[5];
         pdm_next_slot = pdm_buffers == 2U ? 1U : 2U;
+        if (pdm_continuous)
+        {
+            pdm_transfer.reset(requested, args[3] != 0U);
+        }
         if (!controller)
         {
             pdm = streamFabric().pdm(static_cast<std::uint8_t>(args[0]));
@@ -646,7 +655,13 @@ namespace
             if (!controller && pdm != nullptr && cs_owned)
             {
                 nrf_gpio_pin_clear(cs_psel);
-                result = pdm->start(pdm_samples[0], requested) == StreamFabricResult::success;
+                auto *buffer = pdm_continuous ? pdm_transfer.next() : pdm_samples[0];
+                result = buffer != nullptr &&
+                         pdm->start(buffer, requested) == StreamFabricResult::success;
+                if (result && pdm_continuous)
+                {
+                    pdm_transfer.queued();
+                }
             }
             break;
         default:
@@ -816,6 +831,53 @@ void serviceSignal()
         PdmEvent event{};
         while (pdm->takeEvent(event))
         {
+            if (pdm_continuous)
+            {
+                if (event.type == PdmEventType::buffer_needed)
+                {
+                    auto *buffer = pdm_transfer.next();
+                    if (buffer == nullptr ||
+                        pdm->queueBuffer(buffer, requested) != StreamFabricResult::success)
+                    {
+                        error |= 512U;
+                    }
+                    else
+                    {
+                        pdm_transfer.queued();
+                    }
+                }
+                else if (event.type == PdmEventType::buffer_complete)
+                {
+                    if (!pdm_transfer.released(event.buffer, event.samples))
+                    {
+                        error |= 256U;
+                    }
+                    else
+                    {
+                        amount += static_cast<std::uint32_t>(event.samples);
+                        if (pdm_transfer.complete())
+                        {
+                            if (pdm->stop(100000U) == StreamFabricResult::success &&
+                                pdm_transfer.guards())
+                            {
+                                nrf_gpio_pin_set(cs_psel);
+                                complete = true;
+                                pdm = nullptr;
+                            }
+                            else
+                            {
+                                error |= 512U;
+                            }
+                            break;
+                        }
+                    }
+                }
+                else if (event.type == PdmEventType::overflow || event.type == PdmEventType::error)
+                {
+                    error |= 512U;
+                }
+                continue;
+            }
             if (event.type == PdmEventType::buffer_needed)
             {
                 if (pdm_next_slot < 4U)
@@ -989,6 +1051,25 @@ std::uint32_t signalCommand(std::uint32_t opcode, const std::uint32_t *args, std
         return result == StreamFabricResult::success ? 0U : 733U;
     }
     const auto family = v04::fixtureFamily(gate.fixture());
+    /** @brief 완료한 연속 PDM의 반환 순서와 실제 sample 통계만 읽습니다. */
+    if (opcode == 39U && nargs == 1U && family == v04::FixtureFamily::pdm && pdm_continuous &&
+        !controller && complete && error == 0U && pdm_transfer.guards())
+    {
+        const auto *record = pdm_transfer.record(args[0]);
+        if (record != nullptr)
+        {
+            for (unsigned index = 0U; index < 8U; ++index)
+            {
+                out[index] = record[index];
+            }
+            count = 8U;
+            return 0U;
+        }
+    }
+    if (opcode == 37U && family == v04::FixtureFamily::pdm && pdm_continuous)
+    {
+        return 400U;
+    }
     const std::uint32_t available =
         family == v04::FixtureFamily::analog ? requested * analog_buffers
         : family == v04::FixtureFamily::pdm  ? requested * pdm_buffers
