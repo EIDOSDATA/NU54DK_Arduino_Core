@@ -1,0 +1,80 @@
+{
+  "conclusion": "",
+  "headSha": "f42bda55f7b45f7af0a347ecf5f1f516bb34eb6a",
+  "jobs": [
+    {
+      "name": "Zephyr v0.2.0 in pinned Nordic container",
+      "status": "in_progress",
+      "conclusion": "",
+      "databaseId": 101660385128,
+      "startedAt": "2026-09-07T07:35:42Z",
+      "completedAt": "0001-01-01T00:00:00Z",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297/job/101660385128"
+    },
+    {
+      "name": "Arduino v0.2.0 with pinned Windows prerequisites",
+      "status": "in_progress",
+      "conclusion": "",
+      "databaseId": 101660385218,
+      "startedAt": "2026-09-07T07:35:42Z",
+      "completedAt": "0001-01-01T00:00:00Z",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297/job/101660385218"
+    },
+    {
+      "name": "Zephyr v0.3.0 in pinned Nordic container",
+      "status": "in_progress",
+      "conclusion": "",
+      "databaseId": 101660385230,
+      "startedAt": "2026-09-07T07:35:42Z",
+      "completedAt": "0001-01-01T00:00:00Z",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297/job/101660385230"
+    },
+    {
+      "name": "Arduino v0.1.0 with pinned Windows prerequisites",
+      "status": "in_progress",
+      "conclusion": "",
+      "databaseId": 101660385260,
+      "startedAt": "2026-09-07T07:35:42Z",
+      "completedAt": "0001-01-01T00:00:00Z",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297/job/101660385260"
+    },
+    {
+      "name": "Zephyr v0.4.0 in pinned Nordic container",
+      "status": "in_progress",
+      "conclusion": "",
+      "databaseId": 101660385270,
+      "startedAt": "2026-09-07T07:35:42Z",
+      "completedAt": "0001-01-01T00:00:00Z",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297/job/101660385270"
+    },
+    {
+      "name": "Arduino v0.3.0-ble with pinned Windows prerequisites",
+      "status": "in_progress",
+      "conclusion": "",
+      "databaseId": 101660385297,
+      "startedAt": "2026-09-07T07:35:42Z",
+      "completedAt": "0001-01-01T00:00:00Z",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297/job/101660385297"
+    },
+    {
+      "name": "Arduino v0.3.0-compat with pinned Windows prerequisites",
+      "status": "in_progress",
+      "conclusion": "",
+      "databaseId": 101660385317,
+      "startedAt": "2026-09-07T07:35:42Z",
+      "completedAt": "0001-01-01T00:00:00Z",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297/job/101660385317"
+    },
+    {
+      "name": "Zephyr v0.1.0 in pinned Nordic container",
+      "status": "completed",
+      "conclusion": "success",
+      "databaseId": 101660385366,
+      "startedAt": "2026-09-07T07:35:43Z",
+      "completedAt": "2026-09-07T07:41:15Z",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297/job/101660385366"
+    }
+  ],
+  "status": "in_progress",
+  "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297"
+}

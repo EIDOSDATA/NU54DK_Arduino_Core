@@ -1,0 +1,13 @@
+{
+  "name": "baseline-contract",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+    "contract"
+  ],
+  "started_at": "2026-09-07T07:49:06.103362+00:00",
+  "finished_at": "2026-09-07T07:49:06.820065+00:00",
+  "exit_code": 0,
+  "log_sha256": "98b493af6b70b52a64da1e7e567042dc64cd1823cc8c1ae39f3f7eb123b652de"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "baseline-host",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+    "host"
+  ],
+  "started_at": "2026-09-07T07:50:51.075712+00:00",
+  "finished_at": "2026-09-07T07:55:12.419914+00:00",
+  "exit_code": 0,
+  "log_sha256": "03beca3dc21e16fef257b9174c83c6e0e08275be3ae86d4502e9a63e19ee19b9"
+}

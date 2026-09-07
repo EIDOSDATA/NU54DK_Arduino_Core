@@ -1,0 +1,24 @@
+{
+  "name": "pwm-exact-target",
+  "command": [
+    "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_zephyr_build.py",
+    "--workspace",
+    "C:\\ncs\\v3.4.0",
+    "--outdir",
+    "C:\\pwc04",
+    "--group",
+    "v0.4.0",
+    "--suite",
+    "nucode.v04.pair_dut",
+    "--suite",
+    "nucode.v04.pair_peer",
+    "--jobs",
+    "2"
+  ],
+  "started_at": "2026-09-07T08:04:08.224105+00:00",
+  "finished_at": "2026-09-07T08:05:58.154198+00:00",
+  "exit_code": 0,
+  "log_sha256": "76d9e790731e4bfb31eb3e1a94ecffc818d939024d7eba91d51835a576e50dba"
+}

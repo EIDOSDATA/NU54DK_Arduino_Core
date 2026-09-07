@@ -1,0 +1,13 @@
+{
+  "name": "pwm-exact-contract",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+    "contract"
+  ],
+  "started_at": "2026-09-07T08:08:19.241854+00:00",
+  "finished_at": "2026-09-07T08:08:19.625334+00:00",
+  "exit_code": 0,
+  "log_sha256": "d083c721b4264f839c6861eb4deab2fdd821ac6bbba034965e3393335edec273"
+}

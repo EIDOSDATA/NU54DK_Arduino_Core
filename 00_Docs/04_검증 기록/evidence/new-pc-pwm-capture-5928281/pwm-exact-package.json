@@ -1,0 +1,13 @@
+{
+  "name": "pwm-exact-package",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+    "package"
+  ],
+  "started_at": "2026-09-07T08:08:20.969034+00:00",
+  "finished_at": "2026-09-07T08:09:56.192522+00:00",
+  "exit_code": 0,
+  "log_sha256": "2dbd2a7c8dfbab1b38f951c8f4138f6fa57b15355fa849eab066bc9d8954ea6b"
+}

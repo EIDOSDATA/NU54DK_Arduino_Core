@@ -1,0 +1,169 @@
+{
+  "observed_at_utc": "2026-09-07T08:12:19.644130+00:00",
+  "source_revision": "59282818fc3733dae4b247a8942069955eabc2df",
+  "baseline_host": {
+    "groups": 85,
+    "tests": 682,
+    "pass": 680,
+    "skips": 2,
+    "skip_records": [
+      "! @brief 설치된 Arduino CLI가 공개 예제를 노출하는지 확인합니다. ... skipped 'M13 package 설치 후 NUCODE_M13_CLI_DISCOVERY=1로 실행합니다.'",
+      "test_clean_submodule_status_survives_trimmed_first_prefix (test_m27_release.M27ReleaseTests.test_clean_submodule_status_survives_trimmed_first_prefix) ... skipped 'source checkout is intentionally dirty during the unit run'"
+    ],
+    "gate": "passed"
+  },
+  "exact_host": {
+    "groups": 86,
+    "tests": 689,
+    "pass": 688,
+    "skips": 1,
+    "skip_records": [
+      "! @brief 설치된 Arduino CLI가 공개 예제를 노출하는지 확인합니다. ... skipped 'M13 package 설치 후 NUCODE_M13_CLI_DISCOVERY=1로 실행합니다.'"
+    ],
+    "gate": "passed"
+  },
+  "handoff_ci": {
+    "sha": "f42bda55f7b45f7af0a347ecf5f1f516bb34eb6a",
+    "jobs_success": 15,
+    "runs": [
+      "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227435",
+      "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34096227297"
+    ]
+  },
+  "target_suites": 2,
+  "physical_status": "not_run",
+  "probes": 0,
+  "ports": 0,
+  "artifacts": [
+    {
+      "scope": "baseline",
+      "role": "dut",
+      "path": "C:\\pcv04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\zephyr.hex",
+      "bytes": 540302,
+      "sha256": "e0baf777152a3d299abb4b87325c4e502c67c84d39b46207eb8c30925eef2689",
+      "archived_in_git": false
+    },
+    {
+      "scope": "baseline",
+      "role": "dut",
+      "path": "C:\\pcv04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\zephyr.elf",
+      "bytes": 2688696,
+      "sha256": "011918350ebcb18e784c1303a9b1b7ae72f358f62be0971a6b9e2e56471ea29e",
+      "archived_in_git": false
+    },
+    {
+      "scope": "baseline",
+      "role": "dut",
+      "path": "C:\\pcv04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\compile_commands.json",
+      "bytes": 1229723,
+      "sha256": "6dffe6e8487c8932c0e217c518841dccaa6d227f598d3e6a6ac8e38f58482af6",
+      "archived_in_git": false
+    },
+    {
+      "scope": "baseline",
+      "role": "peer",
+      "path": "C:\\pcv04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\zephyr\\zephyr.hex",
+      "bytes": 541128,
+      "sha256": "a213958097951cbed0115e97eb58f3b8e2457435f1d93431004009cae95df27d",
+      "archived_in_git": false
+    },
+    {
+      "scope": "baseline",
+      "role": "peer",
+      "path": "C:\\pcv04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\zephyr\\zephyr.elf",
+      "bytes": 2691992,
+      "sha256": "d2108977e93a0c1162c54508685375bc356f4617aa49a96eaeeac81e5eb44e9a",
+      "archived_in_git": false
+    },
+    {
+      "scope": "baseline",
+      "role": "peer",
+      "path": "C:\\pcv04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\compile_commands.json",
+      "bytes": 1231367,
+      "sha256": "854f14040070ac48331e230c8459adecc9961fdfd18b77dd7762b5bbe73826c8",
+      "archived_in_git": false
+    },
+    {
+      "scope": "draft-failure",
+      "role": "dut",
+      "path": "C:\\pwm04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\zephyr.hex",
+      "bytes": 546234,
+      "sha256": "9ec2d071f6238e1ff22b1ac4c67022e073ad1ffe21b90ba884129f6b62879d14",
+      "archived_in_git": false
+    },
+    {
+      "scope": "draft-failure",
+      "role": "dut",
+      "path": "C:\\pwm04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\zephyr.elf",
+      "bytes": 2712156,
+      "sha256": "3db38380c4455d2202f2933d949bcfb7437e43e0e66ccf47063a102d7e928ae6",
+      "archived_in_git": false
+    },
+    {
+      "scope": "draft-failure",
+      "role": "dut",
+      "path": "C:\\pwm04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\compile_commands.json",
+      "bytes": 1234112,
+      "sha256": "c993e3b206491cfd1e6481c635858a1488687a9c13f1b8bb59077a2c2b187e4f",
+      "archived_in_git": false
+    },
+    {
+      "scope": "draft-failure",
+      "role": "peer",
+      "path": "C:\\pwm04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\compile_commands.json",
+      "bytes": 1235762,
+      "sha256": "b3c23af679fe3a9bab51de697fc2d23788f069e5fa1fd8a078dedda8ec4e4aa1",
+      "archived_in_git": false
+    },
+    {
+      "scope": "exact",
+      "role": "dut",
+      "path": "C:\\pwc04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\zephyr.hex",
+      "bytes": 546303,
+      "sha256": "bd34ec9d63acd6aa3a23517bf1b9a24d9d27d662bb259b8b29be8e7d5bfae4ce",
+      "archived_in_git": false
+    },
+    {
+      "scope": "exact",
+      "role": "dut",
+      "path": "C:\\pwc04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\zephyr\\zephyr.elf",
+      "bytes": 2712324,
+      "sha256": "ea6ec2611de7c7c4470955fcdf02a9cd3ba7a024201a5c1abfe5fc2ed87bf462",
+      "archived_in_git": false
+    },
+    {
+      "scope": "exact",
+      "role": "dut",
+      "path": "C:\\pwc04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_dut\\v04_pair_hil\\compile_commands.json",
+      "bytes": 1234112,
+      "sha256": "1e009178d9f09d6d33348e03dd1bf7db344de262c64701793092c8a01e20fa40",
+      "archived_in_git": false
+    },
+    {
+      "scope": "exact",
+      "role": "peer",
+      "path": "C:\\pwc04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\zephyr\\zephyr.hex",
+      "bytes": 544974,
+      "sha256": "71155ba7dd0f1051388e8522ba07b90c532bf781f89ef19d8fc025a5cac3d1b7",
+      "archived_in_git": false
+    },
+    {
+      "scope": "exact",
+      "role": "peer",
+      "path": "C:\\pwc04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\zephyr\\zephyr.elf",
+      "bytes": 2711676,
+      "sha256": "596c834562312877a3c7a0deecc5035e4547cad45670d4f907a6a0a57625d680",
+      "archived_in_git": false
+    },
+    {
+      "scope": "exact",
+      "role": "peer",
+      "path": "C:\\pwc04\\nrf54l15dk_nrf54l15_cpuapp_nu54dk\\zephyr_gnu\\nucode.v04.pair_peer\\v04_pair_hil\\compile_commands.json",
+      "bytes": 1235762,
+      "sha256": "e1223e76840a10cab63fd07a3d76b3c79b2b757e4b899672eeb92f6c55ed754d",
+      "archived_in_git": false
+    }
+  ],
+  "remaining_required_readiness_gates": 8,
+  "product_input_diff": ""
+}

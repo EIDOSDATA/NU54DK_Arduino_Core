@@ -1,0 +1,13 @@
+{
+  "name": "pwm-exact-host",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+    "host"
+  ],
+  "started_at": "2026-09-07T08:04:19.059891+00:00",
+  "finished_at": "2026-09-07T08:08:19.241854+00:00",
+  "exit_code": 0,
+  "log_sha256": "d835255d3d3545fb249d353265b856cc2ae026fa8a96e3822618330aac86d3ad"
+}

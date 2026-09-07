@@ -1,16 +1,18 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
-직전 완료 범위(T12/T14): PWM 미시작 STOP 결함 수정과 두 보드 1,944명령/4,320회 회귀를 완료했다. 이어 내부 ADC·TIMER·EGU/DPPI/PPIB·시간 함수와 PWM 회귀 1,808명령을 두 보드에서 통과했다. 최종 원격 Software 7/7·재현 빌드 8/8과 Host 680 PASS·2 조건부 SKIP, 전체 target 61/61과 확장 target 1/1, 설치 예제 29/29를 검증했다. 상세 source와 최초 실패는 94·95번에 보존한다. 현재 보드 간 결선은 해제됐으며 T12 전체·T13 이후는 미완료다.
+최신 새 PC 체크포인트: [96번](<04_검증 기록/96_새_PC_인수와_T12_PWM_peer_capture_준비.md>)에서 인수 확인과 PWM capture 첫 경로 240 vector 준비를 마쳤다. Exact 5928281 Host 688 PASS·1 조건부 SKIP, pair target 2/2·정렬 373 PASS다. f42bda5 후속 CI도 15/15 SUCCESS다. 현재 probe 2·COM 4와 두 exact UID의 SWD 10 MHz CPUID 읽기를 확인했다. 새 PC flash·외부 신호 실기는 NOT RUN이다.
+
+이전 PC 완료 범위(T12/T14): PWM 미시작 STOP 결함 수정과 두 보드 1,944명령/4,320회 회귀를 완료했다. 이어 내부 ADC·TIMER·EGU/DPPI/PPIB·시간 함수와 PWM 회귀 1,808명령을 두 보드에서 통과했다. 최종 원격 Software 7/7·재현 빌드 8/8과 Host 680 PASS·2 조건부 SKIP, 전체 target 61/61과 확장 target 1/1, 설치 예제 29/29를 검증했다. 상세 source와 최초 실패는 94·95번에 보존한다. 현재 보드 간 결선은 해제됐으며 T12 전체·T13 이후는 미완료다.
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.29 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.30 |
 | 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 외부/내부 부분 PASS·전체 미완료 |
 | 작성·갱신일 | 2026-09-07 |
-| 작성 직전 기준 commit | `828166109968b2ceb40fc2d9c054255558d995d5` — 최종 원격 두 workflow 15개 job SUCCESS; 내부 HIL은 874658a, 전체 로컬 target·설치 package 제품 source는 080d771 |
+| 작성 직전 기준 commit | `59282818fc3733dae4b247a8942069955eabc2df` — 첫 PWM capture 준비의 clean Host·pair target 검증 source. 이 후속 변경은 문서·증거만 갱신 |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **T12 PWM peer capture·GPIO/GPIOTE·I2S 연속/단방향·QDEC 추가 조건. 상세 범위는 95번** |
-| 이번 요청의 실행 범위 | 사용자가 결선 해제 상태에서 자동 진행 가능한 범위의 실행을 지시했다. T14 PWM 미시작 STOP 최소 재현·수정·Host/target/무점퍼 보드 회귀, T12 잔여 시험 준비와 소프트웨어 검증, 문서·정리·commit/push를 수행한다. 보드 접근은 exact UID·SWD 10 MHz·controlled start로 제한한다. 새 결선이나 물리 재연결이 필요하면 해당 실기만 보류하고 독립 작업을 마무리한다 |
+| 다음 착수 항목 | **T12 PWM 첫 peer capture의 현재 USB/role 확인→exact image→GPIO 결선 확인→240 vector 실기. 이후 PWM 모드·GPIO/GPIOTE·I2S·QDEC 확장** |
+| 이번 요청의 실행 범위 | 새 PC 인수·main/submodule/고정 도구 확인, PWM peer capture 첫 경로 구현과 Host/target 검사, 문서·증거·commit/push. 현재 USB/SWD 읽기 확인, 새 결선 확인 전 외부 실기 NOT RUN. exact UID·SWD 10 MHz·controlled start와 새 결선 확인 유지 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
 마일스톤의 제품 상태는 [로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>), 실제 PASS/FAIL은
@@ -51,31 +53,31 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 
 ## 2. 현재 재개 체크포인트
 
-2026-09-07 새 PC 착수 범위: 실제 `C:/Users/eidos/GitHub/NU54DK_Arduino_Core`의 clean
+2026-09-07 새 PC 착수 당시 범위(완료 결과는 위 96번): 실제 `C:/Users/eidos/GitHub/NU54DK_Arduino_Core`의 clean
 `f42bda5`와 원격 main·고정 board gitlink를 확인했다. T12 PWM peer capture의 첫 측정 경로
 (12 slot, TOP 1000/4000, 0/25/50/75/100%, DMA word 극성)을 준비하고 독립 Host oracle·
-pair target build를 검사한다. 새 USB 열거는 probe/COM 모두 0개이며 flash·외부 HIL은 NOT RUN이다.
+pair target build를 검사한다. 초기 USB 열거는 probe/COM 모두 0개였고 후속 연결 보고 뒤 2 probe·4 COM·SWD 읽기 2/2를 확인했다. flash·외부 HIL은 NOT RUN이다.
 GPIO/GPIOTE 전체·I2S 연속/단방향·QDEC 추가 조건 및 PWM의 나머지 모드는 후속 T12로 유지한다.
 먼저 capture 경로가 실제 핀에서 성립하는지 확인한 뒤 그 측정기를 모드 sweep에 확장한다.
 
 | 필드 | 현재 값 |
 | --- | --- |
-| 이번에 끝낸 일 | [94번](<04_검증 기록/94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>) PWM 수정·두 보드 1,944명령, [95번](<04_검증 기록/95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>) 내부 기능 1,808명령 PASS. Host 680 PASS·1 조건부 SKIP, target 61/61 + 변경 HIL 1/1, 설치 예제 29/29 PASS |
-| 진행 중인 T 항목 | T12 부분 완료. PWM period/duty capture, GPIO/GPIOTE, I2S 연속·1024 word·단방향, QDEC 추가 조건과 event 반복 범위 대조가 남는다. T14 PWM 결함은 해결했고 T13 이후 선행조건은 유지한다 |
-| 다음 구체적 행동 | 95번의 남은 범위에 맞춰 PWM peer capture HIL과 독립 판정을 확장·build한 뒤 GPIO 번호로 결선을 안내한다. 기존 401/408 기능 PASS는 파형 capture PASS가 아니다 |
-| 다음 작업에 필요한 사용자 행동 | 현재 자동 실행 중인 실기는 없다. 다음 외부 시험의 정확한 GPIO 결선 안내 후 두 USB 분리·결선 변경·재연결 확인이 필요하다 |
-| 외부 결선 상태 | 2026-09-07 사용자 최신 보고: 보드 간 결선 해제. 이전 440 결선 확인은 현재 유효하지 않다. 두 USB/SWD로 무점퍼 HIL을 완료했으며 해당 image의 UART/console은 off다. 두 보드 ADC/PWM/DPPI off·P1.14 입력 복귀를 읽었다 |
+| 이번에 끝낸 일 | [96번](<04_검증 기록/96_새_PC_인수와_T12_PWM_peer_capture_준비.md>) 새 PC 인수, f42bda5 CI 15/15, 5928281 Host 688 PASS·1 조건부 SKIP, pair target 2/2, 정렬 373개, 첫 capture 240 vector 준비. 94·95번의 이전 실기 완료 근거 보존 |
+| 진행 중인 T 항목 | T12 부분 완료. 이번은 PWM individual/4 values/CPU start/loop의 첫 측정 경로 준비다. 240 vector 실기와 나머지 PWM 모드·GPIO/GPIOTE·I2S·QDEC는 미완료. T14 PWM 결함 해결과 T13 이후 선행조건 유지 |
+| 다음 구체적 행동 | 현재 A/B UID·USB·SWD 확인을 완료했다. 최신 clean source의 image를 준비하고 B GPIO P1.14→A GPIO P1.14·GND의 현재 결선 확인 뒤 첫 240 vector를 실행한다 |
+| 다음 작업에 필요한 사용자 행동 | 현재 장치 대조 완료. GPIO 안내를 받은 뒤 두 USB 분리·결선·재연결 완료, DAP UART 양쪽 분리/SWD 연결을 확인. 이전 COM/확인은 재사용하지 않음 |
+| 외부 결선 상태 | 사용자 보고는 보드 간 결선 해제. 후속 열거에서 A COM12/13·B COM14/15와 UID hash를 대조했고 양쪽 SWD 10 MHz CPUID 읽기는 PASS다. 현재 image/READY·핀 상태는 미검사다. 이전 874658a 무점퍼 image와 주변장치 off는 95번의 역사 관측 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
-| 다른 PC 재개 | [인계 문서](HANDOFF_v0.4.0_다른_PC.md)에 clone·환경·source·보드 상태·다음 T12와 로컬 보존물을 정리했다. 사용자 요청으로 이번 마무리 후 다른 PC에서 이어간다 |
+| 다른 PC 재개 | [인계 문서](HANDOFF_v0.4.0_다른_PC.md)와 94·95번을 대조해 이 PC 인수를 완료했다. 최신 새 PC source·도구·artifact·남은 행동은 96번 |
 | 마지막 정식 외부 HIL source | `f02734d69d9722085771fc1a34d5ed0cf756bc4e` — 연속 기능/cleanup 96·밀도 16 PASS, 미실행 0. 기본 192+32는 코드·설정이 같은 917dc02에서 실행 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. 420 정의된 기능·준비 취소와 430 I2S 기능 완료. T12 전체·T13 이후·R14·RC·공개는 대기. 공용 자원 경로 변경 이후 필요한 최종-source 통신 회귀는 후속 통합에서 확인 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | 없음. 두 보드는 874658a nojumper image의 명령 대기 상태, ready count 904·실패 latch 0. 보드별 원본 journal과 최종 register를 95번에 보존 |
-| 로컬 임시 build·evidence | 최종 C:/u4p·C:/nj26·C:/nj27·C:/nj28·C:/u4y 및 CI 비교용 C:/u4ci15·C:/u4ci15n 유지. 이번 초안/준비 진단 28파일을 hash 검증 ZIP으로 보관. C:/u4d2·C:/u4d3·C:/u4x 삭제는 자동 승인 검토 차단으로 미실행이며 94번에 목록과 이유를 보존. 과거 65번 정리 결과는 유지 |
-| 최종 정렬 gate | clang-format 22.1.8, C/C++/ino 371개 PASS. 한국어 Doxygen·Allman·4칸·중괄호 필수 |
-| CI 확인 | Exact 8281661 원격 Software Gates 7/7·Reproducible Builds 8/8 SUCCESS. Host 85그룹 680 PASS·2 조건부 SKIP(설치 CLI/NCS 환경 조건). 계약 45·package 20·문서 205 PASS. 로컬 3bc8fad Host의 WinError 4551 중단은 실패 기록으로 유지하며 원격 전체 실행으로 최종 source를 검증했다. M13 설치본 발견 11 PASS와 exact NCS 검사 별도. 94번의 원본 로그·SHA·15개 job 감사 참조. 이 후속 commit은 문서·증거만 갱신한다 |
-| 문서 작업 검증 | 94·95번과 활성 문서에서 결과·source·남은 조건을 연결했다. 원본 433개와 stage 884개 대조·문서 205개 검사를 통과했다. CI 후속 교정은 94번 별도 evidence에 추가하고 변경 문서를 재검사한다. 93번 이하 역사 기록은 유지 |
-| 최종 HIL 입력 찾기 | 95번 evidence/t12-internal-nojumper-874658a에 C:/nj28 exact image·두 보드 1,808명령과 독립 감사·postflight. 최초 35f30b2 실패는 별도 폴더. 기존 외부 PDM은 92번 f02734d이며 결선 해제 후 재실행하지 않음 |
+| 이 TODO 작성 작업의 실행 중 시험 | 새 PC Host·target 프로세스 종료. 현재 USB·SWD 읽기 확인 완료, flash·외부 실기 없음. firmware/ready count/핀 상태는 미검사. 후속 push CI는 해당 SHA에서 별도 조회 |
+| 로컬 임시 build·evidence | 새 PC C:/pcv04 baseline·C:/pwm04 최초 실패·C:/pwc04 exact 5928281 보존. 원본 logs/gzip/SHA는 96번 evidence. 인계 문서의 이전 PC 절대 경로가 여기 존재한다고 가정하지 않음. 삭제 실행 없음 |
+| 최종 정렬 gate | clang-format 22.1.8, C/C++/ino 373개 PASS. 한국어 Doxygen·Allman·4칸·중괄호 필수 |
+| CI 확인 | 새 PC에서 인계 f42bda5 Software 7/7·Reproducible Builds 8/8 SUCCESS를 확인해 96번에 보존했다. 8281661의 기존 15/15와 별도 결과. 이번 5928281 로컬 Host 688 PASS·1 조건부 SKIP, pair 2/2이며 후속 push의 원격 CI는 별도 상태로 조회 |
+| 문서 작업 검증 | 96번에 새 PC 환경·완료/실패·Host/target·artifact와 미실기를 구분했다. 문서 207개·원본 67개와 정규화/gzip SHA 대조 PASS. TODO 체크 완료 범위와 readiness 8개 HOLD 유지 |
+| 최종 HIL 입력 찾기 | 새 PWM 준비 image는 C:/pwc04 exact 5928281, hash와 source 기록은 96번. 문서 후속 commit 뒤 실제 실행은 최신 clean source로 rebuild 필요. 기존 실기 원본은 95번 874658a / 92번 f02734d를 보존 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
 
 이미 있는 기반은 M23 inventory, M24/M25 후보 source/build, M26 지원 경계 판정과 네 온보드
