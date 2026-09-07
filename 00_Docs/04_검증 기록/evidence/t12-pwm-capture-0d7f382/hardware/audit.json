@@ -1,0 +1,69 @@
+{
+  "observed_at_utc": "2026-09-07T08:49:16.300528+00:00",
+  "source": "0d7f3822fe0f1b564ef629613a048b433e8fdeee",
+  "physical_status": "passed within first capture scope",
+  "functional_cases": 240,
+  "cleanup_cases": 240,
+  "raw_observations": 240,
+  "dynamic_cases": 144,
+  "measured_periods": 14400,
+  "raw_edges": 28944,
+  "static_cases": 96,
+  "static_duration_us_range": [
+    100000,
+    400000
+  ],
+  "period_us_range": [
+    1002,
+    4050
+  ],
+  "duty_relative_ratio_range": [
+    "1000/1003",
+    "2077/2005"
+  ],
+  "campaign_seconds": 100.563,
+  "swd_frequency_hz": 10000000,
+  "cmsis_dap_limit_packets": true,
+  "postflight_pass": true,
+  "postflight_pin_cnf": [
+    0,
+    2
+  ],
+  "postflight_first_oracle_error": "scratch script incorrectly required reset PIN_CNF=2 on both roles; A GpioteFabric::release explicitly uses GPIO_INPUT, so A=0 is input-connected/no-pull/no-sense; B PWM release=2 input-disconnected. Original failed assertion and raw observation retained; no hardware state changed.",
+  "host": {
+    "groups": 86,
+    "tests": 691,
+    "pass": 689,
+    "skips": [
+      "! @brief 설치된 Arduino CLI가 공개 예제를 노출하는지 확인합니다. ... skipped 'M13 package 설치 후 NUCODE_M13_CLI_DISCOVERY=1로 실행합니다.'",
+      "test_generated_native_runtime_semantics (test_m14_core_contract.M14CoreContractTests.test_generated_native_runtime_semantics) ... skipped 'Windows Application Control이 생성 native executable 실행을 차단했습니다. compile/link와 constexpr 계약은 별도 PASS이며, 실제 Zephyr 의미 시험은 tests/zephyr/m14_cpp_policy가 담당합니다.'"
+    ]
+  },
+  "journal_sha256": "20f8a7a941550c156dfd63089d4f62a955e846e41d8187f85b18e032be2a7dc1",
+  "flash": [
+    {
+      "runner": "pyocd",
+      "target": "nrf54l",
+      "frequency_hz": 10000000,
+      "cmsis_dap_limit_packets": true,
+      "seconds": 4.032,
+      "mass_erase_requested": false,
+      "recover_requested": false,
+      "output_sha256": "9a41c30366232605fcf81e799e41b90cc7966383decd540d2a022f5cb155f7b1"
+    },
+    {
+      "runner": "pyocd",
+      "target": "nrf54l",
+      "frequency_hz": 10000000,
+      "cmsis_dap_limit_packets": true,
+      "seconds": 7.203,
+      "mass_erase_requested": false,
+      "recover_requested": false,
+      "output_sha256": "ad301501da2bfff2dd7f2daefbab0d8710dee8145dee83b8f42b4a11d81e8d1e"
+    }
+  ],
+  "transport_root_cause": "unresolved; single-packet campaign succeeded, not a universal fix claim",
+  "t12_complete": false,
+  "t13_complete": false,
+  "rc_or_release_complete": false
+}

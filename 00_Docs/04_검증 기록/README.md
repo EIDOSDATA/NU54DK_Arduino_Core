@@ -1,6 +1,6 @@
 # NU54DK Arduino Core — 검증 기록 안내
 
-최신 새 PC 준비: [96번](<96_새_PC_인수와_T12_PWM_peer_capture_준비.md>)의 인수·PWM 첫 capture 준비·Host/target 결과를 따른다. 새 PC 실기 NOT RUN, T12 전체·후속 gate는 유지한다.
+최신 새 PC 실기: [97번](<97_T12_PWM_peer_capture_첫_240조건_검증.md>)에서 첫 PWM peer capture 기능 240·cleanup 240·14,400주기 PASS를 확인했다. 96번 인수·준비와 두 flash 실패를 보존하며 T12 전체·후속 gate는 유지한다.
 
 이전 PC 개발 검증(2026-09-07): [94번](<94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>)에서 PWM 미시작 STOP 수정·두 보드 회귀와 전체 software/설치 예제 검증을 완료했다. [95번](<95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)의 내부 ADC·TIMER·이벤트·시간 함수와 PWM 회귀도 두 보드 1,808명령 PASS다. 보드 간 결선은 해제됐으며 T12 전체·T13 이후와 RC/공개는 미완료다. 아래 source별 이력의 당시 상태와 현재 재개 조건을 구별한다.
 
@@ -187,3 +187,7 @@ T12 Fixture 408 exact 87b987d·SWD 10 MHz **48개 기능 PASS**는 [83번 기록
 - [94 — T14 PWM 지연 시작 취소와 무점퍼 검증](94_T14_PWM_지연_시작_취소와_무점퍼_검증.md)
 
 - [95. T12 내부 ADC·TIMER·이벤트 무점퍼 검증](95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md): exact 874658a 두 보드 1,808명령 PASS, 최초 시간 판정 실패와 미완료 T12 범위 보존.
+
+- [96 — 새 PC 인수와 T12 PWM peer capture 준비](96_새_PC_인수와_T12_PWM_peer_capture_준비.md)
+
+- [97 — T12 PWM peer capture 첫 240조건 검증](97_T12_PWM_peer_capture_첫_240조건_검증.md)
