@@ -9,6 +9,8 @@ namespace t13
     bool uartFaultPrepare(const Case &test, const Endpoint &endpoint);
     bool uartFaultArm();
     bool uartFaultTransmitAllowed();
+    bool uartFaultReceiveAllowed();
+    void uartFaultReceiveSuppressed(bool pending);
     nucode::arduino::UarteParity uartFaultParity();
     void uartFaultSubmitted(std::uint32_t cycle);
     void uartFaultEvent(const nucode::arduino::UarteEvent &event, bool guards);

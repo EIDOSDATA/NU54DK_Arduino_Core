@@ -22,7 +22,8 @@ class UartLineTests(unittest.TestCase):
         policy = (1 if target else 2) if mode == 'parity' else (3 if target else 4)
         return [policy, 21, 1, 1, 5 if target else line.MASK, 2 if target and mode == 'parity' else 4 if target else 0,
                 0, 0, int(target), 1000, 120000 if target else 0, 0 if target else 110000,
-                111000 if policy == 4 else 0, 7 if policy == 4 else 0, int(policy == 4),
+                111000 if policy == 4 else 0, 7 if policy == 4 else 0,
+                line.RX_SUPPRESSED if policy == 2 else int(policy == 4),
                 3 if policy == 1 else 1, 36, 37, 1000000, 1]
 
     def lane(self, mode='parity'):
@@ -70,6 +71,16 @@ class UartLineTests(unittest.TestCase):
             measured = line.inspect(words, self.test, 1, 1, 'break', lane=lane)
             self.assertEqual(measured['break_flag_observed'], bool(mask & 8))
             self.assertFalse(measured['normal_soak_pass'])
+
+    def test_parity_stimulus_requires_no_rx_started_or_owned_buffer(self):
+        """! @brief peer의 불필요한 RX가 열렸거나 새 계측이 없으면 주입 성공을 거부합니다. """
+        words = self.vector(2)
+        self.assertTrue(line.inspect(words, self.test, 1, 2, 'parity')['peer_rx_not_started'])
+        for index, value in ((12, 1), (13, 1), (14, 0), (14, 1)):
+            broken = words[:]
+            broken[index] = value
+            with self.subTest(index=index), self.assertRaises(ProtocolError):
+                line.inspect(broken, self.test, 1, 2, 'parity')
 
     def test_contiguous_8n1_stimulus_can_violate_both_parity_and_8e1_stop(self):
         """! @brief 실제 wire bit 위치를 별도로 구성하여8N1/8E1의 두 오류 가능성을 대조합니다. """

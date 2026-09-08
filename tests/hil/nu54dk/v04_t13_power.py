@@ -131,6 +131,22 @@ def observe_pins(device, append, label):
     append(label, {'status': 'diagnostic', 'words': words,
         'tx_level': (words[4] >> 6) & 1, 'rx_level': (words[4] >> 7) & 1,
         'system_off_pass': False})
+    return words
+
+
+def prepare_uart_pair(devices, policy, append):
+    """! @brief 양쪽 핀 준비 뒤 A의 UART를 켜고 peer reset 전에 실제 수신 준비를 대조합니다. """
+    for device in devices:
+        if device.command(130, (MAGIC, 1) if policy else (MAGIC,), timeout=2) != [1]:
+            raise ProtocolError('T13 power UART/pin preparation failed')
+        append(f'polling/role{device.image["role"]}/before-reset', {'status': 'diagnostic',
+            **inspect_polling(device.command(134, (2,)), device.image['role'], policy)})
+    a = devices[0]
+    if a.image['role'] != 1 or a.command(131, timeout=2) != [1]:
+        raise ProtocolError('T13 A receive start failed before peer reset')
+    words = observe_pins(a, append, 'pins/controller-after-rx-start')
+    if words[7:10] != [8, 38, 39] or words[11:17] != [1, 1, 0, 0, 0, 0]:
+        raise ProtocolError('T13 A UART enable/RX/pins/idle proof missing before peer reset')
 
 
 def inspect(words, *, boots, mode, round_number, seed):
@@ -289,11 +305,7 @@ def execute(args, images, grant, uids, append):
                     raise ProtocolError('separate power image capability missing')
             continuity = session.Continuity(grant, images, uids, devices, available, pair.verify_identity)
             wiring.run_checks(devices, append, continuity.check)
-            for device in devices:
-                if device.command(130, (MAGIC, 1) if policy else (MAGIC,), timeout=2) != [1]:
-                    raise ProtocolError('T13 power UART/pin preparation failed')
-                append(f'polling/role{device.image["role"]}/before-reset', {'status': 'diagnostic',
-                    **inspect_polling(device.command(134, (2,)), device.image['role'], policy)})
+            prepare_uart_pair(devices, policy, append)
             a, b = devices
             append('debug/before', {'status': 'observation', 'words': b.command(134)})
             observe_pins(a, append, 'pins/controller-before-peer-reset')
@@ -318,9 +330,6 @@ def execute(args, images, grant, uids, append):
                 if struct.unpack('<I', raw[56:60])[0] != MAGIC:
                     raise ProtocolError('T13 controller power image changed')
 
-            if a.command(131, timeout=2) != [1]:
-                raise ProtocolError('T13 A receive start failed')
-            observe_pins(a, append, 'pins/controller-after-rx-start')
             relay = Relay(a, b.nonce, b.sequence, a_only_check, append)
             verify_source(relay.command(131), images[1]['core_revision'])
             append('polling/role2/relayed', {'status': 'diagnostic',

@@ -8,6 +8,7 @@ import v04_t13_flow as flow
 import v04_t13_oracle as oracle
 
 MASK = oracle.MASK
+RX_SUPPRESSED = 0x52584F46
 
 
 def validate_selection(test, role, mode):
@@ -67,8 +68,10 @@ def inspect(words, test, role, device_role, mode, *, lane=None):
             if not 1000 <= duration <= 2000 or words[13:15] != [7, 1]:
                 raise ProtocolError('T13 break requires actual HIGH/LOW/HIGH,1ms and GPIO release')
             measured['low_duration_us'] = duration
-        elif words[12:15] != [0, 0, 0]:
-            raise ProtocolError('T13 parity stimulus unexpectedly used GPIO')
+        elif words[12:15] != [0, 0, RX_SUPPRESSED]:
+            raise ProtocolError('T13 parity stimulus peer RX suppression was not proven')
+        else:
+            measured['peer_rx_not_started'] = True
     return measured
 
 

@@ -36,6 +36,10 @@ parity A 네 예행의 mask6은8N1/8E1 불일치 주입으로 생길 수 있는 
 기존 판정기가 mask2만 허용해 거부했습니다. parity bit를 필수로 유지하면서 mask6도 허용하도록
 고쳤습니다. 정상 구간의 오류0 기준은 유지하며 수정 source의 새 예행·100회가 필요합니다.
 기존 CTS12 결과를 보존하고 parity부터 남은42조건의 실행 대열을 교체합니다.
+판정 교정 source b6ac3bef의 새 parity 예행에서 DUT mask6은 확인했지만 주입 peer도 framing/break로
+실패했습니다. 주입 구간에서 필요 없는 peer RX를 열지 않고 실제 RX 미시작을 기록하도록 보완합니다.
+System OFF 중계도 B reset 전에 A RX를 켜서 ENABLE8을 확인하도록 순서를 보완합니다.
+두 보완 모두 아직 새 물리 PASS가 아니며 현재 b6ac3bef의 독립 조건 실행은 계속합니다.
 UART20 B의 첫 수신4byte가 송신 frame2 시작과 일치했습니다. CTS 시험의 양쪽 RX 준비를
 먼저 확인한 뒤 송신하는 절차를1a00a832로 커밋·푸시했습니다. exact Host108·문서·계약·정렬을
 통과했고 두 역할 target·원격 Host838도 통과했습니다. UART20 B 예행 뒤61회는 성공했으나

@@ -89,6 +89,23 @@ bool t13::uartFaultTransmitAllowed()
     return policy == 0U || policy == 2U;
 }
 
+/** @brief 오류 주입 peer는 송신만 하며 정상 경로와 DUT 수신은 그대로 유지합니다. */
+bool t13::uartFaultReceiveAllowed()
+{
+    return policy == 0U || policy == 1U || policy == 3U;
+}
+
+/** @brief parity peer의 RX 미시작 event·DMA 미소유를 STOP 전까지 누적 보존합니다. */
+void t13::uartFaultReceiveSuppressed(bool pending)
+{
+    if (policy == 2U && registers != nullptr)
+    {
+        raw[12] |= nrf_uarte_event_check(registers, NRF_UARTE_EVENT_RXSTARTED) ? 1U : 0U;
+        raw[13] |= pending ? 1U : 0U;
+        raw[14] = 0x52584F46U;
+    }
+}
+
 bool t13::uartFaultArm()
 {
     /** @brief nrfx 초기화 뒤 ENABLE0은 정상이며 RX 시작 전에 최초 오류 관측을 준비합니다. */

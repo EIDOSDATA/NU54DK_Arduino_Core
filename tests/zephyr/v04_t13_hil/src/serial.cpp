@@ -460,6 +460,12 @@ namespace
     {
         const auto kind = lane.endpoint.kind;
         const auto length = lane.endpoint.length;
+        if (kind == Kind::uart && !uartFaultReceiveAllowed())
+        {
+            const bool pending = lane.rx_pending[0] || lane.rx_pending[1];
+            uartFaultReceiveSuppressed(pending);
+            return !pending;
+        }
         if (spi_boundary.prepared && kind == Kind::spis)
         {
             if (spi_boundary.raw[3] != 0U)

@@ -12,6 +12,36 @@ from v04_protocol import ProtocolError, encode
 
 
 class PowerTests(unittest.TestCase):
+    def test_both_uart_pins_precede_controller_rx_and_no_peer_command_is_sent(self):
+        """! @brief 양쪽 준비 후 A RX가 실제 활성화되고 B reset은 호출자에게 남는 순서를 대조합니다. """
+        calls = []
+        words = [power.PINS_MAGIC, 1, 500, 64, 192, 3, 12, 8, 38, 39,
+                 65537, 1, 1, 0, 0, 0, 0, 0, 1, 1]
+        devices = [mock.Mock(image={'role': role}) for role in (1, 2)]
+        def command(role, opcode, args=(), **kwargs):
+            calls.append((role, opcode, args))
+            if opcode == 134:
+                return [power.POLL_MAGIC, role, 0, 0, 0] if args == (2,) else words
+            return [1]
+        for role, device in enumerate(devices, 1):
+            device.command.side_effect = lambda opcode, args=(), role=role, **kw: command(role, opcode, args, **kw)
+        power.prepare_uart_pair(devices, 0, mock.Mock())
+        self.assertEqual(calls, [(1,130,(power.MAGIC,)),(1,134,(2,)),
+            (2,130,(power.MAGIC,)),(2,134,(2,)),(1,131,()),(1,134,(1,))])
+
+    def test_disabled_controller_or_unexpected_traffic_cannot_proceed_to_peer_reset(self):
+        """! @brief ENABLE0·미준비 RX·핀 불일치·기존 오류 또는 트래픽을 reset 전 거부합니다. """
+        original = [power.PINS_MAGIC, 1, 500, 64, 192, 3, 12, 8, 38, 39,
+                    65537, 1, 1, 0, 0, 0, 0, 0, 1, 1]
+        for index, value in ((7,0),(8,39),(9,38),(11,0),(12,0),(13,1),(14,1),(15,1),(16,1)):
+            words = original[:]
+            words[index] = value
+            devices = [mock.Mock(image={'role': role}) for role in (1,2)]
+            devices[0].command.side_effect = [[1],[power.POLL_MAGIC,1,0,0,0],[1],words]
+            devices[1].command.side_effect = [[1],[power.POLL_MAGIC,2,0,0,0]]
+            with self.subTest(index=index), self.assertRaises(ProtocolError):
+                power.prepare_uart_pair(devices,0,mock.Mock())
+
     def test_fast_polling_cannot_select_off_or_a_hundred_repetitions(self):
         """! @brief 비교 정책은 단일 중계만 허용하고 timer/GPIO는 원래 정책을 유지합니다. """
         self.assertEqual(power.polling_policy('bridge-fast-poll', 1), 1)

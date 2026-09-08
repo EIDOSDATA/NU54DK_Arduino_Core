@@ -93,6 +93,9 @@ TWIM controller STOP에서는 추가 제출을 멈춘 뒤30ms를 기다리고 SC
 기존 S TX→RX net을 유지하며 실제 U 실기·RX 공급 지연·정상 soak 완료로 확대하지 않는다.
 
 정상 양방향 baseline250ms와 STOP 이후 DUT는 TX를 억제하고 RX만 동작한다.
+주입 peer는 UART RX를 열지 않는다. DUT 오류 뒤 TX 반환 선의 전이를 불필요한 반대 수신이
+받지 않도록 하며, parity peer raw12/13은 RXSTARTED 관측·RX DMA pending 누적값0,
+raw14는 이 계측을 수행했다는0x52584F46을 요구한다. 기존 peer 오류를 허용하는 변경이 아니다.
 parity는 DUT8E1/peer8N1이며 첫 byte의 even parity가0인 seed를 선택해 stop1과의 불일치를 만든다.
 연속8N1의 다음 start0은8E1 수신기의 stop 위치에 들어올 수 있으므로 최초 실제 error event5·
 parity bit가 반드시 포함된 mask2 또는6·guard를 요구한다. mask6의 framing 관측도 따로 기록한다.
