@@ -56,6 +56,7 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
         original_error = None
         raw_fault = raw_stream = raw_peer_stream = None
         unexpected_i2s_data = False
+        peer_tail = None
         try:
             for device in devices:
                 if device.command(106, (1,), timeout=2) != [1] or device.command(112, (0,), timeout=2) != [1]:
@@ -110,8 +111,22 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
                         original_error = original_error or error
                         break
             if unexpected_i2s_data:
-                runner.failure_snapshots(devices, test, append, label + '/unexpected-data')
-                original_error = original_error or ProtocolError('T13 unexpected I2S receive data error before recovery')
+                captured = {}
+                def capture(identifier, row):
+                    append(identifier, row)
+                    captured[identifier] = row
+                runner.failure_snapshots(devices, test, capture, label + '/unexpected-data')
+                try:
+                    inspect(raw_fault, raw_stream, test, role, mode)
+                    prefix = label + '/unexpected-data/failure/role1/i2s-failure-page'
+                    metadata = captured.get(prefix+'0', {}).get('words', [])
+                    buffer = [word for page in range(1, 17)
+                              for word in captured.get(prefix+str(page), {}).get('words', [])]
+                    peer_tail = inspect_i2s_peer_tail(raw_fault, raw_peer_stream, metadata, buffer, seed, role)
+                    append(label + '/secondary-peer-output-loss', {'status': 'diagnostic', **peer_tail})
+                except (ProtocolError, TypeError, IndexError) as error:
+                    original_error = original_error or ProtocolError(
+                        'T13 unexpected I2S receive data error before recovery: '+str(error))
             stopped = runner.stop_pair(devices, append, label + '/cleanup')
             pins_idle = runner.idle_pins(devices, append, label + '/pins')
         if original_error is not None:
@@ -120,6 +135,8 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
             raise ProtocolError('T13 stream fault STOP/resource return unproven')
         try:
             measured = inspect(raw_fault, raw_stream, test, role, mode)
+            if peer_tail is not None:
+                measured['peer_output_loss'] = peer_tail
             if mode == 2:
                 measured['peer'] = inspect_pdm_peer(raw_peer_stream)
         except ProtocolError as error:
@@ -133,6 +150,31 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
         append(label + '/result', {'status': 'passed', 'fault_seed': seed, 'restart_seed': restart_seed,
                                   'planned_recovery_pass': not preflight, 'normal_soak_pass': False})
         print(f'T13_STREAM_RECOVERY_PROGRESS case={test["name"]} role={role} completed={repetition}/{repeats}', flush=True)
+
+
+def inspect_i2s_peer_tail(fault, peer, metadata, buffer, seed, role):
+    """! @brief B의 검증된 underrun 뒤 마지막 TX word 절단·zero 꼬리만 허용하고 이전 오류를 거부합니다. """
+    if (role != 2 or len(fault) != 20 or len(peer) != 20 or len(metadata) != 20 or
+            peer[:3] != [2, 0, 6] or peer[18:20] != [1, 1] or
+            metadata[11] != peer[4] or metadata[12] != peer[5] or
+            metadata[7] != peer[3] or metadata[6] != peer[15] or
+            metadata[4] != peer[13] or metadata[5] != peer[14]):
+        raise ProtocolError('T13 I2S peer output-loss metadata mismatch')
+    report = oracle.i2s_failure(metadata, buffer, seed, 1)
+    boundary = fault[5]*256
+    first = report['mismatches'][0]
+    if first['index'] not in (boundary-1, boundary):
+        raise ProtocolError('T13 I2S peer error precedes the last submitted TX word')
+    offset = first['index']-report['first_sample']
+    if ((first['index'] == boundary and first['actual'] != 0) or
+            first['actual'] not in [(first['expected'] & (oracle.MASK << bits)) & oracle.MASK
+                                for bits in range(1, 33)] or
+            any(value != 0 for value in buffer[offset+1:])):
+        raise ProtocolError('T13 I2S peer tail is not one truncated word followed by zeros')
+    return {'normal_stream_pass': False, 'target_queued_words': boundary,
+            'first_affected_sample': first['index'], 'affected_words': len(report['mismatches']),
+            'last_submitted_word_truncated': first['index'] == boundary-1,
+            'raw_error_preserved': 6}
 
 
 def inspect_pdm_peer(words):

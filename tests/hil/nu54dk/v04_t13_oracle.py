@@ -51,11 +51,15 @@ def i2s_failure(words, buffer, seed, role):
             words[16] != 1 or words[17] == 0 or words[19] != 256):
         raise ProtocolError('T13 incomplete I2S failure DMA or metadata')
     first_sample = (words[11]-1)*256-words[4]
-    if first_sample < 0 or words[5] != words[11]*256-words[4]:
+    if words[5] != words[11]*256-words[4]:
         raise ProtocolError('T13 I2S failure position/count does not identify one returned buffer')
     mismatches = []
     for offset, actual in enumerate(buffer):
         index = first_sample+offset
+        if index < 0:
+            if actual != 0:
+                raise ProtocolError('T13 I2S first DMA padding is not zero')
+            continue
         expected = i2s_pattern(words[3], index)
         if expected != actual:
             neighbours = [distance for distance in (-4, -2, -1, 1, 2, 4)

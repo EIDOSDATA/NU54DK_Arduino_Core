@@ -1,0 +1,230 @@
+{
+  "source": "096a2d9827d4cd12e2f7f7320d2f3e88ac8ade06",
+  "status": "passed",
+  "phase": "spi-timing-diagnostic",
+  "physical_executed": true,
+  "started_at": "2026-09-08T14:07:12.589252+00:00",
+  "finished_at": "2026-09-08T14:07:59.747156+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/initial/T13-S/preflight/uarte20/result",
+      "status": "observation-complete",
+      "measurement_id": "T13-S/preflight/uarte20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step01/transfer/T13-S/preflight/spim20/result",
+      "status": "observation-complete",
+      "measurement_id": "T13-S/preflight/spim20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step01/result",
+      "status": "observation-complete",
+      "from_name": "uarte20",
+      "to_name": "spim20",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step02/transfer/T13-S/preflight/spim20-reversed/result",
+      "status": "observation-complete",
+      "measurement_id": "T13-S/preflight/spim20-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step02/result",
+      "status": "observation-complete",
+      "from_name": "spim20",
+      "to_name": "spim20-reversed",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step03/transfer/T13-S/preflight/twim20/result",
+      "status": "observation-complete",
+      "measurement_id": "T13-S/preflight/twim20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step03/result",
+      "status": "observation-complete",
+      "from_name": "spim20-reversed",
+      "to_name": "twim20",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step04/transfer/T13-S/preflight/twim20-reversed/result",
+      "status": "observation-complete",
+      "measurement_id": "T13-S/preflight/twim20-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step04/result",
+      "status": "observation-complete",
+      "from_name": "twim20",
+      "to_name": "twim20-reversed",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step05/transfer/T13-S/preflight/uarte20/result",
+      "status": "observation-complete",
+      "measurement_id": "T13-S/preflight/uarte20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step05/result",
+      "status": "observation-complete",
+      "from_name": "twim20-reversed",
+      "to_name": "uarte20",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step06/transfer/T13-S/preflight/twim20-reversed/result",
+      "status": "observation-complete",
+      "measurement_id": "T13-S/preflight/twim20-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step06/result",
+      "status": "observation-complete",
+      "from_name": "uarte20",
+      "to_name": "twim20-reversed",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step07/transfer/T13-S/preflight/twim20/result",
+      "status": "observation-complete",
+      "measurement_id": "T13-S/preflight/twim20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step07/result",
+      "status": "observation-complete",
+      "from_name": "twim20-reversed",
+      "to_name": "twim20",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step08/transfer/T13-S/preflight/spim20-reversed/result",
+      "status": "observation-complete",
+      "measurement_id": "T13-S/preflight/spim20-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step08/result",
+      "status": "observation-complete",
+      "from_name": "twim20",
+      "to_name": "spim20-reversed",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step09/transfer/T13-S/preflight/spim20/result",
+      "status": "observation-complete",
+      "measurement_id": "T13-S/preflight/spim20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step09/result",
+      "status": "observation-complete",
+      "from_name": "spim20-reversed",
+      "to_name": "spim20",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step10/transfer/T13-S/preflight/uarte20/result",
+      "status": "observation-complete",
+      "measurement_id": "T13-S/preflight/uarte20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/repeat001/step10/result",
+      "status": "observation-complete",
+      "from_name": "spim20",
+      "to_name": "uarte20",
+      "planned_handover_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3761,
+      "sha256": "442c288a13422c1c7c15d914b133ee3b854f77956c18922691bf3b0354cc94a0",
+      "gzip_sha256": "7221dd932e328d82a42ccea8a785d2a9cde433d1e0b57be7376ba3bc2cb4c87a"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "e57e6d8756b2581d79bafca15a05847da433ca6dc8ef47b452a7296540e9e429",
+      "gzip_sha256": "3253a63589f85f7e22ed6f5d425ee727c4ce516d77b89447be2b617d36806cdb"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 440723,
+      "sha256": "92266ab62ad84a236a46eef34ddb5238ea2bc768dc07bdff5adeb4a925396d28",
+      "gzip_sha256": "f2b8d576925413d637c5f70a0b42ea311285e601b9b9fad5fd3c19f8a78422b4"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 236321,
+      "sha256": "e040a1dc4207aee506b4feb314da45f3973250736d8d6f00ae996c3a2ccc8cb8",
+      "gzip_sha256": "21f3c31dd32e2350afb0d8f3d15d478b0bf092b0b3c0b733788c943588b3dd2d"
+    },
+    {
+      "file": "spi20-three-4mhz-01-preflight.json.gz",
+      "bytes": 745,
+      "sha256": "1e99f19d0acf5e4c8c29d4aaf5f051eb6db09712d5dbc4450150e4e6ef908ecd",
+      "gzip_sha256": "7c4acb016e263d18f0e88718dd4ba973990e0bbe9e7082d78b475b810a7ae51b"
+    },
+    {
+      "file": "spi20-three-4mhz-01-preflight.log.gz",
+      "bytes": 1680,
+      "sha256": "35789dbed7be2cf690f9e0d88ad196109b37d534c4b35729a36dc337241672ab",
+      "gzip_sha256": "c5c817eec6e5f14fd0f0759f6a2142cd97df92ffa17fa1053d70603d5d0eb114"
+    },
+    {
+      "file": "spi20-three-4mhz-01-execute.json.gz",
+      "bytes": 741,
+      "sha256": "d6a80e709da744a0a430816145d895e41c740f4b661cbb7e26f8b676042238a0",
+      "gzip_sha256": "c094bd404070e47805eeb69ca29f87dd668bbefff1ef70b40c2ea3a1229d4060"
+    },
+    {
+      "file": "spi20-three-4mhz-01-execute.log.gz",
+      "bytes": 138,
+      "sha256": "ac2e1a62f5f9d785dcf7b73cb412d2ddeb35d877df6c8ee84e599f8464b364f4",
+      "gzip_sha256": "f1b86dadd49a04f58dce69dea3fccb19ecfbf315f20e7a3593275374c093f844"
+    }
+  ]
+}

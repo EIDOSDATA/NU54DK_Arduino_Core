@@ -1,0 +1,60 @@
+{
+  "source": "096a2d9827d4cd12e2f7f7320d2f3e88ac8ade06",
+  "status": "failed",
+  "phase": "stream-fault-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T13:57:48.260144+00:00",
+  "finished_at": "2026-09-08T13:58:21.414388+00:00",
+  "error": "ProtocolError: T13 unexpected I2S receive data error before recovery",
+  "case_results": [],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3755,
+      "sha256": "c9da3c17f4d9dc886da9b946166edb696d1c3182728fbc4acea3322be6d89676",
+      "gzip_sha256": "82c1db33c08d1412955f8b437f8e2c8bf997c939a4f80cfc04c8ce1b69d23f65"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "e57e6d8756b2581d79bafca15a05847da433ca6dc8ef47b452a7296540e9e429",
+      "gzip_sha256": "3253a63589f85f7e22ed6f5d425ee727c4ce516d77b89447be2b617d36806cdb"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 147927,
+      "sha256": "1feaa503fd3971b92f7af2aff27ca531cee35c6dc638008cbf6253f3c8845aaf",
+      "gzip_sha256": "9a55f35957e2f1341bc50d91005497e2ae6f246d8e49a1e5ea4af0ec95e3eade"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 84363,
+      "sha256": "f92fa2c050191e0dd474537138237da09931b46233fb7e61b373fd709ad12d01",
+      "gzip_sha256": "c6df0188dcc4dfdb79d2628687bd45b58dbf0cb79ae46f6e91a85cb1c2406c65"
+    },
+    {
+      "file": "i2s-b-three-capture-preflight-01-preflight.json.gz",
+      "bytes": 790,
+      "sha256": "2f5c3f949dd1b7ae536d9211bd928e96197b421344f517537d5e0c6df6c45bbb",
+      "gzip_sha256": "d86ebd9625d03cb24767f1cdea3e4e265e3640204e4f80ea9de1d755d04d64cf"
+    },
+    {
+      "file": "i2s-b-three-capture-preflight-01-preflight.log.gz",
+      "bytes": 1660,
+      "sha256": "12bb6af3516cb9d17622d5a458f625e705625a74c2017f925a804437042681c7",
+      "gzip_sha256": "cad764f0bf737e86b118bbfeb10a7b99f5c72557211393e3422de8239119142c"
+    },
+    {
+      "file": "i2s-b-three-capture-preflight-01-execute.json.gz",
+      "bytes": 786,
+      "sha256": "6f08d7f0e7e8f9e7c44a4e7094779b04c1426f25e27d5f86b893741bbad9e877",
+      "gzip_sha256": "897e893efb6e0902ec14816d093f2c5573b0c29f3cf0d36f80bf56a352bd2c1f"
+    },
+    {
+      "file": "i2s-b-three-capture-preflight-01-execute.log.gz",
+      "bytes": 89,
+      "sha256": "4b1284d9cfbfbb5cb7a611a29935700c80b37a92f28abd8f1ed78cb796c98f70",
+      "gzip_sha256": "18580dd79c778d34363f124bf481d5209e019c8f399356e0b54bd61b835f25ea"
+    }
+  ]
+}

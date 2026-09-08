@@ -1,0 +1,230 @@
+{
+  "source": "2a68cd2a40e7a3e2999a0afe55d0ffb6c2d6f8e2",
+  "status": "passed",
+  "phase": "handover-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T13:43:37.384335+00:00",
+  "finished_at": "2026-09-08T13:44:23.147918+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/handover-preflight/serial22/initial/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step01/transfer/T13-S/preflight/spim22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim22",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step01/result",
+      "status": "passed",
+      "from_name": "uarte22",
+      "to_name": "spim22",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step02/transfer/T13-S/preflight/spim22-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim22-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step02/result",
+      "status": "passed",
+      "from_name": "spim22",
+      "to_name": "spim22-reversed",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step03/transfer/T13-S/preflight/twim22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim22",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step03/result",
+      "status": "passed",
+      "from_name": "spim22-reversed",
+      "to_name": "twim22",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step04/transfer/T13-S/preflight/twim22-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim22-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step04/result",
+      "status": "passed",
+      "from_name": "twim22",
+      "to_name": "twim22-reversed",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step05/transfer/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step05/result",
+      "status": "passed",
+      "from_name": "twim22-reversed",
+      "to_name": "uarte22",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step06/transfer/T13-S/preflight/twim22-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim22-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step06/result",
+      "status": "passed",
+      "from_name": "uarte22",
+      "to_name": "twim22-reversed",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step07/transfer/T13-S/preflight/twim22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim22",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step07/result",
+      "status": "passed",
+      "from_name": "twim22-reversed",
+      "to_name": "twim22",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step08/transfer/T13-S/preflight/spim22-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim22-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step08/result",
+      "status": "passed",
+      "from_name": "twim22",
+      "to_name": "spim22-reversed",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step09/transfer/T13-S/preflight/spim22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim22",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step09/result",
+      "status": "passed",
+      "from_name": "spim22-reversed",
+      "to_name": "spim22",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step10/transfer/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial22/repeat001/step10/result",
+      "status": "passed",
+      "from_name": "spim22",
+      "to_name": "uarte22",
+      "planned_handover_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3758,
+      "sha256": "f6a9f16204fc685f482feac4b14771d2e5056f47c8a3e3f2c77053ff6574d31b",
+      "gzip_sha256": "fc9a762f192047c1b692490e74108c93a425f537842d868a39bcffd28169a653"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "f3eef13e3d2851fd4ca6c3504caa4bacfb8ee8338fd30901218c4df8bbca4ae0",
+      "gzip_sha256": "162d697db0843420433888434d37c8d402c9606c523e1eb54be56b98a8cf2e97"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 434078,
+      "sha256": "103e81ede13591c8ef61e5958970485c478edd39afcb5f6e92fe3098e99bd46f",
+      "gzip_sha256": "48be2af1488b458a151f53e944526055ac12c9257759c9f463b10768c108988f"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 231738,
+      "sha256": "7810981f862bd1589a425280329394f10a2575a2a7ac0247b6f6b33f497002db",
+      "gzip_sha256": "bf3713ccf884d5ae88a5c83c49df762a4196bba95f6acf78ca480df322feadb7"
+    },
+    {
+      "file": "spi22-three-handover-preflight-01-preflight.json.gz",
+      "bytes": 727,
+      "sha256": "1550d48df020a47df4f5dd77db45b2ceb7672b84df97b08f822c5977cd60968a",
+      "gzip_sha256": "8d0922ac1f997d1251eaa4582f446097a729b51d03e6e02eb440fa5442ab2066"
+    },
+    {
+      "file": "spi22-three-handover-preflight-01-preflight.log.gz",
+      "bytes": 1676,
+      "sha256": "38fbafb759d2e1677cff55f98992b52b89ad7a924eb144140ed0c487575a6ecf",
+      "gzip_sha256": "02d06be1ce9d524baa16c5111858e7dadc358a22b377f43ecfd5f435083ab0d6"
+    },
+    {
+      "file": "spi22-three-handover-preflight-01-execute.json.gz",
+      "bytes": 723,
+      "sha256": "9666c267838b3a8236d45cbacb5edc5a5df7b0acfe492849fe3f717de5f0a496",
+      "gzip_sha256": "faaee4b3ad413ca1fd2e3113caac26a1bb5232cc82fb12a3fcbe7e9b58283d75"
+    },
+    {
+      "file": "spi22-three-handover-preflight-01-execute.log.gz",
+      "bytes": 127,
+      "sha256": "80e95157245eedb369af00d95c0184f3cf220b831d21ce6b9a27e472d40dc964",
+      "gzip_sha256": "60a47e33929f1d5cf13e395b95261c9f8271f33bdc19b905b3cbeeead05e70b2"
+    }
+  ]
+}

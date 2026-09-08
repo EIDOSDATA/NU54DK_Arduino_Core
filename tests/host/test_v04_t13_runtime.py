@@ -21,6 +21,19 @@ from v04_protocol import ProtocolError
 
 
 class T13RuntimeTests(unittest.TestCase):
+    def test_handover_starts_target_dma_before_controller_in_both_directions(self):
+        """! @brief 역방향 SPI/TWI에서도 Host 지연에 의존하지 않고 target을 먼저 시작합니다. """
+        import v04_t13_handover as handover
+        devices = [mock.Mock(image={'role': role}) for role in (1, 2)]
+        for instance in (0, 20, 21, 22, 30):
+            initial, sequence = handover.route(instance)
+            for test in [initial, *sequence]:
+                kind = test['serial_links'][0]['a']['kind']
+                expected = [1, 2] if kind in ('spis', 'twis') else [2, 1]
+                with self.subTest(instance=instance, kind=kind):
+                    self.assertEqual([device.image['role'] for device in runner.start_order(devices, test)], expected)
+                    self.assertEqual([device.image['role'] for device in runner.start_order(devices[::-1], test)], expected)
+
     def test_unprepared_peer_keeps_cleanup_session_after_other_prepare_failure(self):
         """! @brief 실제 DAP PWM 준비 거부 순서에서 A의 불필요한403과 STOP 손실을 막습니다. """
         test = next(row for row in cases.cases() if row['id'] == 26)
@@ -62,6 +75,30 @@ class T13RuntimeTests(unittest.TestCase):
                     oracle.i2s_failure(broken, buffer, seed, role)
             with self.assertRaises(ProtocolError):
                 oracle.i2s_failure(words, buffer[:-1], seed, role)
+
+    def test_i2s_first_failure_dma_keeps_padding_separate_from_corrupted_samples(self):
+        """! @brief 첫 DMA의 정상 시작 zero와 실제 bit 오류를 분리하고 변조된 padding을 거부합니다. """
+        from v04_common_i2s import pattern as i2s_pattern
+        for role in (1, 2):
+            for padding in (0, 2, 6, 16):
+                seed = 0x24681357
+                peer_seed = oracle.lane_seed(seed, 0, 3-role)
+                buffer = [0]*padding + [i2s_pattern(peer_seed, index) for index in range(256-padding)]
+                buffer[padding+22] ^= 0x3800
+                words = [20, role, oracle.lane_seed(seed, 0, role), peer_seed, padding,
+                         256-padding, 1, 22, i2s_pattern(peer_seed, 22), buffer[padding+22],
+                         0, 1, 2, 6, 22, 1, 1, 1000000, 100, 256]
+                with self.subTest(role=role, padding=padding):
+                    report = oracle.i2s_failure(words, buffer, seed, role)
+                    self.assertEqual(report['returned_buffer_index'], 0)
+                    self.assertEqual(report['mismatches'][0]['index'], 22)
+                    self.assertEqual(report['mismatches'][0]['xor'], 0x3800)
+                    self.assertEqual(len(report['mismatches']), 1)
+                    self.assertFalse(report['normal_pass'])
+                    if padding:
+                        buffer[padding-1] = 1
+                        with self.assertRaises(ProtocolError):
+                            oracle.i2s_failure(words, buffer, seed, role)
 
     def test_pwm_diagnostic_data_route_reuses_one_existing_s_net(self):
         mapping = plan.harness('S')

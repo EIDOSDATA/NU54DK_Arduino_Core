@@ -1,5 +1,14 @@
 # v0.4.0 다른 PC 재개 인계
 
+2026-09-08 23:05 KST: TWIM400/400으로 고정 serial21/21 완료, 자원 충돌 사용자 수용 완료.
+SPI20 repeat46/step8·SPI21 repeat23/step8은 역방향 첫 byte 오류로 실패했다.
+I2S는096a2d9에서 의도한 B underrun 뒤 A의 TX 마지막 word 절단·zero 꼬리까지 거부한
+판정기 오류를 재현했다. 실제 RX256word와 양쪽 TX RAM을 보존했으며 새 판정의 원본 재대조는
+통과했다. 신규 실기 PASS가 아니다. Host9+3·정렬/문서/계약을 확인했고 역방향 SPI/TWI의
+target 선행 START도 보강한다. 수정본의 clean exact gate 후 I2S·SPI 재시험을 이어간다.
+현재 S 확인은 다음 날10:13:18 KST까지며 모든 신규 실행은105개 결선·양쪽 STOP을 다시 확인한다.
+원본과 상세 상태는109번, T13 전체·U·RC·정식 공개는 미완료다.
+
 2026-09-08 22:43 KST: 고정 serial 취소/NACK21/21 완료(TWIM 새400/400 PASS).
 I2S B 예행은 A 첫 RX 버퍼3word 불일치로 실패했으며 정상3초 대조는 PASS다.
 SPI20·21 기본 예행은 PASS,22는 진행 중이며 정식100회는 별도다. SPI 타이밍 진단의

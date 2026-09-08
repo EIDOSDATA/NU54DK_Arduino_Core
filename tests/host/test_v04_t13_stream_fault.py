@@ -16,6 +16,71 @@ import v04_t13_run as runner
 
 
 class StreamFaultTests(unittest.TestCase):
+    def peer_tail_vector(self):
+        from v04_common_i2s import pattern
+        test, raw, stream = self.vector(1, role=2)
+        raw[5], raw[10], raw[11] = 5, 4, 5
+        stream[4:6] = [4, 5]
+        seed = 0x13579246
+        source_seed = fault.oracle.lane_seed(seed, 0, 2)
+        buffer = [pattern(source_seed, 1278), pattern(source_seed, 1279) & 0xFFFF0000] + [0]*254
+        metadata = [20, 1, fault.oracle.lane_seed(seed, 0, 1), source_seed, 2, 1534,
+                    255, 1279, pattern(source_seed, 1279), buffer[1], 2, 6, 7, 6, 1279, 1, 1, 1000000, 100, 256]
+        peer = [2, 0, 6, 1279, 6, 7, 1536, 0, 0, 0, 0, 0, 0, 2, 1534, 255, 0, 0, 1, 1]
+        return test, raw, stream, seed, metadata, buffer, peer
+
+    def test_i2s_peer_output_loss_requires_last_tx_word_then_zero_tail(self):
+        """! @brief 실제 underrun 뒤 절단된 마지막 word만 분리하며 선행 bit 오류·비zero 꼬리는 거부합니다. """
+        test, raw, stream, seed, metadata, buffer, peer = self.peer_tail_vector()
+        fault.inspect(raw, stream, test, 2, 1)
+        result = fault.inspect_i2s_peer_tail(raw, peer, metadata, buffer, seed, 2)
+        self.assertFalse(result['normal_stream_pass'])
+        self.assertEqual(result['first_affected_sample'], 1279)
+        self.assertTrue(result['last_submitted_word_truncated'])
+        for offset in (0, 1, 100, 255):
+            broken = buffer[:]
+            broken[offset] ^= 1
+            with self.subTest(offset=offset), self.assertRaises(ProtocolError):
+                fault.inspect_i2s_peer_tail(raw, peer, metadata, broken, seed, 2)
+        for bad_role, bad_boundary in ((1, 5), (2, 6), (2, 4)):
+            broken = raw[:]
+            broken[5] = bad_boundary
+            with self.subTest(role=bad_role, queued=bad_boundary), self.assertRaises(ProtocolError):
+                fault.inspect_i2s_peer_tail(broken, peer, metadata, buffer, seed, bad_role)
+
+    def test_i2s_valid_secondary_tail_is_captured_then_stopped_and_restarted(self):
+        test, raw, stream, seed, metadata, buffer, peer = self.peer_tail_vector()
+        devices, observed, order = [], [], []
+        for role in (1, 2):
+            device = mock.Mock(image={'role': role})
+            def command(opcode, *args, current=role, **kwargs):
+                if opcode == 107:
+                    return [1, 1, 65537]
+                if opcode == 115:
+                    return raw[:]
+                if opcode == 104:
+                    return peer[:] if current == 1 else stream[:]
+                if opcode == 99:
+                    return [test['id'], 0, 0, 0, 0, 0] + [0]*10
+                return [1]
+            device.command.side_effect = command
+            devices.append(device)
+        def capture(devices, test, append, label):
+            order.append('capture')
+            prefix = label+'/failure/role1/i2s-failure-page'
+            append(prefix+'0', {'status': 'observation', 'words': metadata})
+            for page in range(1, 17):
+                append(prefix+str(page), {'status': 'observation', 'words': buffer[(page-1)*16:page*16]})
+        with (mock.patch.object(fault.time, 'sleep'), mock.patch.object(fault.secrets, 'randbits', return_value=seed),
+              mock.patch.object(runner, 'failure_snapshots', side_effect=capture),
+              mock.patch.object(runner, 'stop_pair', side_effect=lambda *args: order.append('stop') or True),
+              mock.patch.object(runner, 'idle_pins', return_value=True),
+              mock.patch.object(runner, 'execute_group', side_effect=lambda *args, **kwargs: order.append('restart'))):
+            fault.execute(devices, test, 2, 1, mock.Mock(), lambda name, row: observed.append(row), preflight=True)
+        self.assertEqual(order, ['capture', 'stop', 'restart'])
+        self.assertFalse(observed[-1]['planned_recovery_pass'])
+        self.assertTrue(any(row.get('status') == 'expected-fault-observed' for row in observed))
+
     def test_i2s_data_failure_is_captured_before_cleanup_and_never_restarted(self):
         test, valid, stream = self.vector(1, role=2)
         observations, order, devices = [], [], []

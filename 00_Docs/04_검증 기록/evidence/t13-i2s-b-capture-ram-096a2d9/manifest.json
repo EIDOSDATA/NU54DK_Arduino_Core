@@ -1,0 +1,25 @@
+{
+  "source": "096a2d9827d4cd12e2f7f7320d2f3e88ac8ade06",
+  "physical_executed": true,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "i2s-b-three-capture-preflight-01-readonly-01.json.gz",
+      "bytes": 23243,
+      "sha256": "10676d8635b1f746680b95daf0c1d547580b84208ae77070a6e1c6620a15a45f",
+      "gzip_sha256": "9e1fe6a6cbb9c6a67a5ff8ee93a1ab2ed24f4850e6098460bc77e5c7aa4fc156"
+    },
+    {
+      "file": "i2s-b-three-capture-preflight-01-analysis-01.json.gz",
+      "bytes": 46894,
+      "sha256": "c0e39bb145205e1bfdc2db21c07e9c23efed2b4472ab2cf787aa946fd2bdde2b",
+      "gzip_sha256": "a7dfca5e6ccdd40aaed7f9ebb94160649b38af4c1c829f84ece8133c7a0367c2"
+    },
+    {
+      "file": "i2s-b-three-capture-preflight-01-audit.json.gz",
+      "bytes": 545,
+      "sha256": "e405d3bc644721de5458ae2cbe74532cff875a575480ac7da1b2878ade6d0874",
+      "gzip_sha256": "120c8754cc858f4ca57368520c3269928bb0090fa73ca193dc397dd390c396aa"
+    }
+  ]
+}
