@@ -2,13 +2,13 @@
 
 이번 작업 범위(2026-09-08 T13 S 착수): 사용자가 S 결선으로 재배치했고 최대 12시간 유지·변경 전 통보를 확인했다. 기준 source 6155a85에서 T13 전용 실행기·S 결선 검사·Host/target 검증을 준비한 뒤 S의 단독·복구·동시·안정성 실기를 수행한다. QDEC 진단 재개와 U 결선 실기는 이번 S 실행에 포함하지 않는다. S 묶음 종료 후 U GPIO 표를 다시 안내하고 현재 재배치 확인을 받는다. 진행·exact source·증거·남은 범위는 104번에 기록하며 T13 전체·RC·공개 완료로 확대하지 않는다.
 
-**현재 작업:** [104번 T13 S 착수](<04_검증 기록/104_T13_S_복구_동시_안정성_검증.md>). S 단독 29개·동시 7조합 및 복구/전환 검사를 준비 중이며 실기는 아직 0회다. 사용자 S 확인을 새 세션으로 기록했고 기존 C 확인서를 사용하지 않는다.
+**현재 작업:** [104번 T13 S 진행](<04_검증 기록/104_T13_S_복구_동시_안정성_검증.md>). S 결선은 사용자 점퍼 확인·재연결 뒤 105/105 PASS. 첫 UART preflight의 RX 시작 순서를 교정했다. 새 clean build로 preflight를 재검증하며 S 단독 29개·동시 7조합 및 복구/전환을 이어간다. 장시간/100회 시험 완료는 아직 0개다.
 
 ## 현재 요약 — 2026-09-08
 
 - **완료한 요청 묶음:** T12 현재 공통 결선 기능 시험과 T13 조합·추가 결선 확정. GPIO/GPIOTE 2,502·PWM steady 675 및 추가 모드 288·I2S 432 PASS. QDEC는 일부 문제·제한사항을 리포트에 남기고 검증 작업을 완료했다. T12 마일스톤도 완료이며 실제 실패를 합격으로 바꾸지 않는다.
 - **최종 기준선:** `e547fc0863be5b381ecab26835fb5e872b399a9c`가 main에 있으며 원격 Software 7/7·재현 빌드 8/8 SUCCESS를 확인했다. 이번 103번 후속 문서 commit의 CI는 별도 exact SHA로 확인한다.
-- **현재 장치:** 마지막 ce48471 종료의 입력·peripheral off 근거는 보존한다. 사용자가 S로 재배치했고 새 UID 열거·최대 12시간 유지 확인을 받았다. S 전기 결선 검사와 새 flash는 아직 미실행이다.
+- **현재 장치:** 7a33b77 두 role flash·S 전기 검사 105/105 PASS. 첫 UART 준비 중 framing/break로 정지했으며 reset 없는 SWD 읽기로 양쪽 UART off·17개 입력 복귀를 확인했다. 재연결 후 repair1 확인서의 종료 시각은 원래 12:26:14Z를 유지한다.
 - **현재 개발:** T13 S 전용 결선 checker·serial 지속 측정의 첫 target 2/2·관련 Host 9개를 통과했다. 전체 gate·clean exact build 후 S preflight를 실행하며 stream·복구/전환 100회 구현을 이어간다. QDEC 재진단은 예약하지 않는다. S 종료 뒤 U를 수행한다면 재배치가 필요하며 U 생략 여부는 아직 미확정이다.
 - **TIMER 완료:** 95번의 7개 TIMER·44 CC·4 clear/stop 조합·2 interval·각 10회, 두 보드 총 7,040회 PASS로 기능 검증을 완료 정리했다. EGU/DPPI/PPIB의 1000 event×10을 TIMER의 추가 필수 반복으로 요구하지 않는다. QDEC는 문제 기록 후 진단을 종료했으며 지원 제한을 T14/T15로 이어간다.
 - **별도 대조 기록:** 외부 ADC 401~408의 기능 276개 PASS는 유지한다. 초기 시험표의 100회와 실제 각 조건 1회 실행 차이는 103번에 명시하며, 이번 TIMER 정리로 ADC 100회까지 완료 처리하거나 재실기를 자동 추가하지 않는다. T13의 독립 준비는 진행할 수 있다.
@@ -18,7 +18,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.52 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.53 |
 | 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 기능검증 완료(알려진 QDEC 문제 보고 포함)·T13 S 진행 |
 | 작성·갱신일 | 2026-09-08 |
 | 작성 직전 기준 commit | `e547fc0863be5b381ecab26835fb5e872b399a9c` — 문서 감사·원격 15/15 SUCCESS |
@@ -71,15 +71,15 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | --- | --- |
 | 이번에 끝낸 일 | GPIO/GPIOTE 2,502·steady PWM 675·추가 PWM 288·I2S 432 기능 PASS. 각 exact source·새 501·cleanup/postflight 분리 보존. T13 32단독/8동시 계획 확정·실기 0회. 102번에 문서 전수 검토·local 검사 등록 |
 | 진행 중인 T 항목 | T13 S runner·복구·동시 안정성 준비/실기, T14/T15 알려진 문제 정리와 T17 문서 유지 |
-| 다음 구체적 행동 | T13 S runner의 전체 gate·clean exact build → 새 S 전기 결선 검사·serial preflight. Stream·복구/handover 구현을 이어간다. TIMER 재시험·QDEC 재진단은 예약하지 않으며 최신 진행은 104번 |
+| 다음 구체적 행동 | UART RX를 양쪽 TX idle 준비 뒤 켜도록 교정한 clean source/build → S preflight 재검증. Stream·복구/handover 구현을 이어간다. TIMER 재시험·QDEC 재진단은 예약하지 않으며 최신 진행은 104번 |
 | 다음 작업에 필요한 사용자 행동 | S 변경·최대 12시간 유지 확인 완료. S 종료 후 U로 재배치하고 현재 연결을 확인해야 함 |
-| 외부 결선 상태 | S 17신호+GND 재배치·유지 확인. 새 UID 열거 2026-09-08T00:26:14Z, S 세션 최대 12시간. 전기 결선 checker와 새 firmware flash는 아직 미실행 |
+| 외부 결선 상태 | S 17신호+GND. A P1.05↔B P1.04 점퍼 확인·USB 재연결 후 새 UID/repair1 확인, 전기 결선 105/105 PASS. 원래 세션 만료 2026-09-08T12:26:14Z 유지 |
 | 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
 | 다른 PC 재개 | [인계 문서](HANDOFF_v0.4.0_다른_PC.md)의 이전 PC 상태와96/97/99를 보존. 최신 범위·실행 source·결과는 이 TODO와100번 |
 | 마지막 정식 외부 HIL source | QDEC 진단ce48471 종료(기능 PASS 아님). IRQ40은3a0e976. I2S432는b5c86a4. GPIO4e48252·steady3334b17·모드0db0689 PASS는 당시 source 결과 |
 | 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. 420 정의된 기능·준비 취소와 430 I2S 기능 완료. T12 마일스톤은 사용자 확인으로 완료. T13 이후·R14·RC·공개는 대기. 공용 자원 경로 변경 이후 필요한 최종-source 통신 회귀는 후속 통합에서 확인 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | 현재 probe 실행 없음. session99436 선점60회·불일치16개·cleanup63·postflight PASS로 종료. 사용자 지시대로 추가 실기 진단 중단·원인/보완 보존 |
+| 이 TODO 작성 작업의 실행 중 시험 | 7a33b77 attempt2는 첫 UART START 전 오류로 종료. 양쪽 UART off·17개 GPIO 입력을 별도 read-only로 확인. 실패 원본 보존 후 시작 순서를 교정 중이며 실행 상태 원본은 work/current_common_task_state.json |
 | 로컬 임시 build·evidence | C:/pcv04 baseline·C:/pwm04 최초 build 실패·C:/pwc04 준비·C:/pwh04 054d08f·C:/pwq04 0d7f382 보존. 97번에 두 flash 실패·성공·raw/SHA 보존. 삭제 실행 없음 |
 | 최종 정렬 gate | 최종 준비 Host94그룹733시험=731PASS·설치CLI/dirty M27 조건부SKIP2. 정렬388·T13 Host3·contract/inventory/package20/docs PASS. ce48471 pair2/2·관련Host16 원본 보존. 이전 Windows4551 실패는 삭제/승격하지 않음 |
 | CI 확인 | e547fc0 원격 15/15 SUCCESS(Software 7·재현 8)를 이번 작업에서도 재확인했다. 103번 후속 commit의 원격 CI는 push 후 exact SHA로 별도 조회 |

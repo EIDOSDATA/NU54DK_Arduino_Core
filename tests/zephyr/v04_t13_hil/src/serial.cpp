@@ -35,6 +35,7 @@ namespace
     Lane lanes[max_lanes];
     unsigned lane_count = 0U;
     bool transmitting = false;
+    bool receivers_armed = false;
 
     /** @brief 첫 실패를 보존하며 후속 성공으로 덮지 않습니다. */
     bool failure(Lane &lane, std::uint32_t code, std::uint32_t detail = 0U)
@@ -273,7 +274,8 @@ namespace
             return false;
         }
         lane.active = true;
-        return endpoint.kind == Kind::spim || endpoint.kind == Kind::twim || queuePair(lane);
+        /** @brief 양쪽 TX idle 설정을 마친 뒤 START에서 RX를 켜야 준비 중 break를 받지 않습니다. */
+        return true;
     }
 
     /** @brief API 완료 event를 모두 소진하며 예상하지 않은 취소·오류는 실패로 고정합니다. */
@@ -411,6 +413,7 @@ bool t13::serialPrepare(const Case &test, std::uint32_t seed)
         return false;
     }
     transmitting = false;
+    receivers_armed = false;
     lane_count = test.serial_count;
     for (auto &lane : lanes)
     {
@@ -438,8 +441,16 @@ bool t13::serialStart()
     }
     for (unsigned index = 0U; index < lane_count; ++index)
     {
+        auto &lane = lanes[index];
+        if ((lane.endpoint.kind == Kind::uart || lane.endpoint.kind == Kind::spis ||
+             lane.endpoint.kind == Kind::twis) &&
+            !queuePair(lane))
+        {
+            return false;
+        }
         lanes[index].next_frame = static_cast<std::uint64_t>(k_uptime_get()) + 100U;
     }
+    receivers_armed = true;
     transmitting = true;
     return true;
 }
@@ -458,8 +469,9 @@ void t13::serialService()
         {
             continue;
         }
-        if (lane.endpoint.kind == Kind::uart || lane.endpoint.kind == Kind::spis ||
-            lane.endpoint.kind == Kind::twis)
+        if (receivers_armed &&
+            (lane.endpoint.kind == Kind::uart || lane.endpoint.kind == Kind::spis ||
+             lane.endpoint.kind == Kind::twis))
         {
             queuePair(lane);
         }
@@ -509,6 +521,7 @@ bool t13::serialDrained()
 bool t13::serialStop()
 {
     transmitting = false;
+    receivers_armed = false;
     bool stopped = true;
     for (unsigned index = 0U; index < lane_count; ++index)
     {

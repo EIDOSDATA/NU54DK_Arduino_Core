@@ -93,6 +93,15 @@ def execute_group(devices, group, duration, continuity, append, *, preflight):
                     append(identifier + f'/prepare-lane{index}', {'status': 'observation',
                         'role': device.image['role'], 'words': device.command(100, (index,), timeout=2)})
                 raise ProtocolError('T13 preparation failed')
+        for device in devices:
+            words = device.command(99, timeout=2)
+            append(identifier + f'/prepared/role{device.image["role"]}/engine',
+                   {'status': 'observation', 'words': words})
+            for index in range(len(test['serial_links'])):
+                append(identifier + f'/prepared/role{device.image["role"]}/lane{index}',
+                       {'status': 'observation', 'words': device.command(100, (index,), timeout=2)})
+            if words[0] != test['id'] or words[1:3] != [1, 0] or words[4] != 1:
+                raise ProtocolError('T13 case failed before both peers were ready')
         for device in reversed(devices):
             if device.command(98, timeout=2) != [1]:
                 raise ProtocolError('T13 start failed')
