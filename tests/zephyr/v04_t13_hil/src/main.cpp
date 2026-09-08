@@ -57,7 +57,11 @@ int main()
         if (v04_request[0] != v04::magic)
 #endif
         {
-            if (t13::running())
+            if (t13::running()
+#if defined(CONFIG_NUCODE_T13_POWER)
+                || t13::power::fastPolling()
+#endif
+            )
             {
                 k_busy_wait(10U);
             }

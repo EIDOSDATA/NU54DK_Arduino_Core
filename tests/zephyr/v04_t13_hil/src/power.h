@@ -7,6 +7,7 @@ namespace t13::power
     void initialize(std::uint32_t &sequence, std::uint32_t *nonce);
     void service();
     bool claimed();
+    bool fastPolling();
     bool takeRequest(std::uint32_t *request);
     void remember(std::uint32_t sequence, const std::uint32_t *nonce);
     bool respond(const std::uint32_t *response);

@@ -12,6 +12,30 @@ from v04_protocol import ProtocolError, encode
 
 
 class PowerTests(unittest.TestCase):
+    def test_fast_polling_cannot_select_off_or_a_hundred_repetitions(self):
+        """! @brief 비교 정책은 단일 중계만 허용하고 timer/GPIO는 원래 정책을 유지합니다. """
+        self.assertEqual(power.polling_policy('bridge-fast-poll', 1), 1)
+        for phase in ('bridge', 'timer', 'gpio'):
+            for repeats in (1, 100):
+                self.assertEqual(power.polling_policy(phase, repeats), 0)
+        for phase, repeats in (('bridge-fast-poll', 100), ('bridge-debug', 100), ('other', 1), ('timer', 2)):
+            with self.subTest(phase=phase, repeats=repeats), self.assertRaises(ProtocolError):
+                power.polling_policy(phase, repeats)
+
+    def test_polling_policy_must_survive_reset_with_the_same_role_and_no_error(self):
+        """! @brief reset으로 사라진 정책·다른 역할·오류 응답을 성공으로 바꾸지 않습니다. """
+        for policy in (0, 1):
+            words = [power.POLL_MAGIC, 2, policy, policy, 0]
+            self.assertFalse(power.inspect_polling(words, 2, policy)['system_off_pass'])
+            for index in range(5):
+                broken = words[:]
+                broken[index] ^= 1
+                with self.subTest(policy=policy, index=index), self.assertRaises(ProtocolError):
+                    power.inspect_polling(broken, 2, policy)
+        for words in (None, [], [power.POLL_MAGIC, 2, 1, True, 0]):
+            with self.assertRaises(ProtocolError):
+                power.inspect_polling(words, 2, 1)
+
     def test_live_pins_keep_low_and_separate_observation_from_pass(self):
         """! @brief LOW 상태는 보존하며 손상 응답·다른 역할·잘못된 길이는 거부합니다. """
         device = mock.Mock(image={'role': 1})

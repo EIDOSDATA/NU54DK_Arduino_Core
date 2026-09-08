@@ -51,6 +51,7 @@ namespace
         std::uint32_t nonce[4]{};
         std::uint32_t sequence = 0U, pending = 0U, boots = 0U;
         std::uint32_t mode = 0U, round = 0U, seed = 0U, released = 0U;
+        std::uint32_t poll_mode = 0U;
         std::uint32_t checksum = 0U;
     } retained;
 
@@ -426,7 +427,8 @@ void t13::power::initialize(std::uint32_t &sequence, std::uint32_t *nonce)
         retained_mem_read(retained_device, 0U, reinterpret_cast<std::uint8_t *>(&retained),
                           sizeof(retained)) != 0 ||
         retained.magic_word != magic || retained.checksum != retainedChecksum() ||
-        ::memcmp(retained.source, revision, 40U) != 0 || retained.boots >= 1000U)
+        ::memcmp(retained.source, revision, 40U) != 0 || retained.boots >= 1000U ||
+        retained.poll_mode > 1U)
     {
         retained = {};
         return;
@@ -458,6 +460,12 @@ void t13::power::initialize(std::uint32_t &sequence, std::uint32_t *nonce)
 bool t13::power::claimed()
 {
     return active || wake_token.active || clock_held;
+}
+
+/** @brief 단일 중계 진단에서만 main의 1ms 대기를 10us polling으로 비교합니다. */
+bool t13::power::fastPolling()
+{
+    return claimed() && retained.poll_mode == 1U;
 }
 
 void t13::power::remember(std::uint32_t sequence, const std::uint32_t *nonce)
@@ -572,12 +580,23 @@ std::uint32_t t13::power::command(std::uint32_t opcode, const std::uint32_t *arg
 {
     count = 1U;
     out[0] = 0U;
-    if (opcode == 130U && nargs == 1U && args[0] == magic && !claimed() && error == 0U)
+    if (opcode == 130U && (nargs == 1U || (nargs == 2U && args[1] == 1U)) && args[0] == magic &&
+        !claimed() && error == 0U)
     {
         retained = {};
         retained.magic_word = magic;
+        retained.poll_mode = nargs == 2U ? 1U : 0U;
         ::memcpy(retained.source, revision, 40U);
         out[0] = begin() ? 1U : 0U;
+        return 0U;
+    }
+    if (opcode == 134U && nargs == 1U && args[0] == 2U)
+    {
+        /** @brief polling 진단 정책을 읽기만 하며 lease나 실제 OFF 판정은 변경하지 않습니다. */
+        const std::uint32_t values[]{0x50504F31U, role, retained.poll_mode, fastPolling() ? 1U : 0U,
+                                     error};
+        ::memcpy(out, values, sizeof(values));
+        count = 5U;
         return 0U;
     }
     if (opcode == 134U && nargs == 0U)
@@ -696,7 +715,7 @@ std::uint32_t t13::power::command(std::uint32_t opcode, const std::uint32_t *arg
     }
     if (role == 2U && opcode == 136U && nargs == 3U && from_peer &&
         (args[0] == 1U || args[0] == 2U) && args[1] >= 1U && args[1] <= 100U &&
-        retained_valid == 1U && debugFree() && retained.pending == 0U)
+        retained_valid == 1U && debugFree() && retained.pending == 0U && retained.poll_mode == 0U)
     {
         retained.pending = 2U;
         retained.mode = args[0];

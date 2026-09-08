@@ -21,6 +21,25 @@ RESET_PIN, RESET_GPIO, RESET_TIMER = 1, 128, 2048
 FAULT_MAGIC = 0x50464531
 IDLE_MAGIC = 0x50494431
 PINS_MAGIC = 0x50504931
+POLL_MAGIC = 0x50504F31
+
+
+def polling_policy(phase, repeats):
+    """! @brief 빠른 polling 비교는 단일 bridge에 한정하며 OFF 반복과 분리합니다. """
+    if phase not in ('bridge-debug', 'bridge-fast-poll', 'bridge', 'timer', 'gpio') or repeats not in (1, 100):
+        raise ProtocolError('T13 unsupported power phase or repetition count')
+    if phase in ('bridge-debug', 'bridge-fast-poll') and repeats != 1:
+        raise ProtocolError('T13 bridge diagnostic requires exactly one repetition')
+    return 1 if phase == 'bridge-fast-poll' else 0
+
+
+def inspect_polling(words, role, policy):
+    """! @brief reset 뒤에도 정확한 polling 정책과 활성 상태를 응답으로 대조합니다. """
+    if (role not in (1, 2) or policy not in (0, 1) or not isinstance(words, list) or
+            any(type(value) is not int for value in words) or
+            words != [POLL_MAGIC, role, policy, policy, 0]):
+        raise ProtocolError('T13 power polling policy mismatch')
+    return {'polling_policy': policy, 'fast_polling': bool(policy), 'system_off_pass': False}
 
 
 def fault_region(address, size, symbols):
@@ -247,6 +266,7 @@ def pin_snapshot(target):
 
 
 def execute(args, images, grant, uids, append):
+    policy = polling_policy(args.phase, args.repeats)
     from pyocd.core.helpers import ConnectHelper
     devices, relay = [], None
     detached = False
@@ -270,8 +290,10 @@ def execute(args, images, grant, uids, append):
             continuity = session.Continuity(grant, images, uids, devices, available, pair.verify_identity)
             wiring.run_checks(devices, append, continuity.check)
             for device in devices:
-                if device.command(130, (MAGIC,), timeout=2) != [1]:
+                if device.command(130, (MAGIC, 1) if policy else (MAGIC,), timeout=2) != [1]:
                     raise ProtocolError('T13 power UART/pin preparation failed')
+                append(f'polling/role{device.image["role"]}/before-reset', {'status': 'diagnostic',
+                    **inspect_polling(device.command(134, (2,)), device.image['role'], policy)})
             a, b = devices
             append('debug/before', {'status': 'observation', 'words': b.command(134)})
             observe_pins(a, append, 'pins/controller-before-peer-reset')
@@ -301,13 +323,16 @@ def execute(args, images, grant, uids, append):
             observe_pins(a, append, 'pins/controller-after-rx-start')
             relay = Relay(a, b.nonce, b.sequence, a_only_check, append)
             verify_source(relay.command(131), images[1]['core_revision'])
+            append('polling/role2/relayed', {'status': 'diagnostic',
+                **inspect_polling(relay.command(134, (2,)), 2, policy)})
             if args.phase == 'bridge-debug':
                 append('debug-held/result', {'status': 'diagnostic',
                     **inspect_debug_bridge(relay.command(134))})
             else:
                 inspect(relay.command(134), boots=1, mode=0, round_number=0, seed=0)
-                append('debug/result', {'status': 'passed', 'normal_mode_proven': True,
-                                       'b_swd_accessed_since_detach': False})
+                append('debug/result', {'status': 'diagnostic' if policy else 'passed',
+                    'normal_mode_proven': True, 'b_swd_accessed_since_detach': False,
+                    'fast_polling_diagnostic': bool(policy), 'system_off_pass': False})
 
             def echo(seed, label):
                 challenge = [secrets.randbits(32) for _ in range(20)]
@@ -320,7 +345,7 @@ def execute(args, images, grant, uids, append):
                                'seed': seed, 'frame_bytes_each_direction': 128})
 
             echo(0, 'bridge/fresh-dma')
-            mode = {'bridge-debug': 0, 'bridge': 0, 'timer': 1, 'gpio': 2}[args.phase]
+            mode = {'bridge-debug': 0, 'bridge-fast-poll': 0, 'bridge': 0, 'timer': 1, 'gpio': 2}[args.phase]
             if mode:
                 for repeat in range(1, args.repeats+1):
                     a_only_check()
@@ -419,13 +444,12 @@ def main(argv=None):
     parser.add_argument('--build-root', type=Path, required=True)
     parser.add_argument('--pyocd', type=Path, required=True)
     parser.add_argument('--session-grant', type=Path, required=True)
-    parser.add_argument('--phase', choices=('bridge-debug', 'bridge', 'timer', 'gpio'), required=True)
+    parser.add_argument('--phase', choices=('bridge-debug', 'bridge-fast-poll', 'bridge', 'timer', 'gpio'), required=True)
     parser.add_argument('--repeats', type=int, choices=(1, 100), default=1)
     parser.add_argument('--execute-fixture', action='store_true')
     parser.add_argument('--evidence', type=Path)
     args = parser.parse_args(argv)
-    if args.phase == 'bridge-debug' and args.repeats != 1:
-        raise ProtocolError('debug-held bridge is a single diagnostic, never a recovery campaign')
+    policy = polling_policy(args.phase, args.repeats)
     uids = validate_pair(args.dut, args.peer)
     images = [inspect_power_image(pair.ROOT, args.build_root, role) for role in (1, 2)]
     grant = json.loads(args.session_grant.read_text(encoding='utf-8'))
@@ -434,7 +458,8 @@ def main(argv=None):
         'repeats': args.repeats, 'core_revision': images[0]['core_revision'],
         'board_revision': images[0]['board_revision'], 'swd_frequency_hz': 10000000,
         'scope': 'UART21 DMA quiesce / peer controlled reset and wake; not full T13',
-        'diagnostic_only': args.phase == 'bridge-debug',
+        'diagnostic_only': args.phase in ('bridge-debug', 'bridge-fast-poll'),
+        'polling_policy': policy,
         'system_off_requested': args.phase in ('timer', 'gpio'),
         'results': [], 'session_grant_sha256': hashlib.sha256(args.session_grant.read_bytes()).hexdigest(),
         'devices': [{'role': image['role'], 'uid_sha256': hashlib.sha256(uid.encode()).hexdigest(),

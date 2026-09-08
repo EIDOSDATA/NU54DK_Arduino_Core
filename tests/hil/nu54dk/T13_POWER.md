@@ -46,6 +46,12 @@ checksum으로 보존한다. 명시된 예상 reset 외에는 자동 UART 재시
 정상 debug 분리 bridge나 timer/GPIO 복구 성공으로 대체하지 않는다. B의 중계 sequence를 이용해
 마지막 STOP을 요청하며, 중계 실패 시 자동 재전송하지 않고 lease 종료·원본·핀 상태를 확인한다.
 
+`--phase bridge-fast-poll --repeats 1`은 정상 debug 분리·pin reset을 유지한 단일 진단이다.
+power 소유 구간의 main polling을1ms sleep 대신10us busy wait로 비교한다. 응답 전2ms
+간격·DMA·GPIO·오류 판정은 유지한다. 정책을 checksum retention에 보존하고 reset 전후
+양쪽 응답으로 대조한다. `diagnostic_only=true`이며 firmware도 이 정책에서 OFF 명령을
+거부한다. 성공해도 원래 polling의 bridge나 System OFF 복구 완료로 대체하지 않는다.
+
 고정115200 UART 중계는 요청 RX 완료 후2ms의 응답 간격을 둔다. 다음 RX를 먼저 준비한 뒤
 응답 TX를 시작하며, OFF/최종 STOP 응답에서는 다음 RX를 열지 않는다. RX_DONE을 RX_DISABLED와
 동일시하지 않기 위한 시험 프로토콜 간격이다. 재준비 거부는 `100 + SerialFabricResult` 오류로
@@ -60,10 +66,10 @@ clock 참조를 표시하므로 정리 성공은 이 bit도0이어야 한다. cl
 
 | Opcode | 경로 | 용도 |
 | --- | --- | --- |
-| 130 | SWD A/B | power magic 확인 후 UART TX·wake pin 소유권 준비 |
+| 130 | SWD A/B | power magic 확인 후 UART TX·wake pin 준비. 두 번째 인수1은 단일 빠른 polling 진단 |
 | 131 | SWD A/B, peer B | RX 시작; peer 경로에서는 compiled source 응답 |
 | 132/133 | A | B 요청32word를16word 두 page로 준비·DMA 송신 |
-| 134 | A/B | 인수 없음: debug·reset·retention·DMA20word. 인수1: GPIO·UART 유휴선20word |
+| 134 | A/B | 인수 없음: debug·reset·retention·DMA20word. 인수1: GPIO·UART 유휴선20word. 인수2: polling 정책5word |
 | 135 | A | 받은 B 응답의16word page 조회 |
 | 136 | peer B | mode·회차·seed를 고정하고 응답 종료 후 OFF 예약 |
 | 137 | SWD B / peer B | 예정 pin reset / seed와 결합한 새20word challenge 응답 |
@@ -100,3 +106,6 @@ UARTE21 ENABLE/TX/RX PSEL, XO.STAT, active/RX/TX pending, error, TX/RX count,
 retained boots, TAD system/debug request를 읽는다. 이 조회는 lease를 갱신하지 않는다.
 runner는 기존 연결에서 양쪽 reset 전 상태, A의 peer reset 뒤·RX 시작 뒤·실패 시 상태를
 기록한다. B의 debug 분리 뒤 접근 제한과 nonce·sequence·STOP 판정은 유지한다.
+
+134의 인수2는 magic0x50504F31, role, polling 정책, 현재 빠른 polling 활성, error를 읽는다.
+이 조회도 lease를 갱신하지 않으며 정책0이 기존 실행 경로다.
