@@ -16,6 +16,22 @@ import v04_t13_run as runner
 
 
 class StreamFaultTests(unittest.TestCase):
+    def test_pdm_peer_secondary_cs_end_keeps_error_and_rejects_other_faults(self):
+        words = [3, 0, 6, 0, 0, 1, 0, 0, 2166136261, 2147483647,
+                 2147483648, 0, 0, 0, 1, 0, 0, 0, 1, 1]
+        self.assertTrue(fault.inspect_pdm_peer(words)['cs_release_transfer_complete'])
+        self.assertFalse(fault.inspect_pdm_peer(words)['normal_stream_pass'])
+        for index, value in ((0, 2), (1, 2), (2, 15), (3, 1), (4, 1), (5, 0),
+                             (6, 1), (14, 0), (18, 0), (19, 0)):
+            broken = words[:]
+            broken[index] = value
+            with self.subTest(index=index), self.assertRaises(ProtocolError):
+                fault.inspect_pdm_peer(broken)
+        words[2] = 0
+        self.assertFalse(fault.inspect_pdm_peer(words)['cs_release_transfer_complete'])
+        words[1] = 1
+        self.assertEqual(fault.inspect_pdm_peer(words)['raw_active_before_host_stop'], 1)
+
     def vector(self, mode, role=1, instance=20):
         test = next(row for row in cases.cases() if
                     (row['i2s'] and not row['serial_links'] if mode == 1 else

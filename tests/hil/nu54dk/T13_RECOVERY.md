@@ -1,7 +1,7 @@
 # T13 S 오류 복구 실행 항목과 판정
 
 2026-09-08 f591571의26개와43bc032의 I2S/PWM21/PWM22 세 항목으로 정상 안정성 근거29/36을 확보했다.
-단독29/29·동시0/7이며 source별 증거다. 이전 실패 원인은 미확정이고 복구100회 완료는 아직 없다.
+단독29/29·동시0/7이며 source별 증거다. 고정 serial 복구21항목 중 UART20 TX100회1항목을 완료했다. 이전 실패 원인은 미확정이다.
 원본과 source별 결과는 [104번](<../../../00_Docs/04_검증 기록/104_T13_S_복구_동시_안정성_검증.md>),
 전체 범위와 결선은 [T13 계획](T13_PLAN.md)을 따른다. T12 완료와 QDEC 문제 보고 후 종료 결정은 유지한다.
 
@@ -39,7 +39,7 @@ UART 부분량은 nrfx terminal event가 반환한 실제 길이를 사용하며
 SPI/TWI는 API event의 descriptor 길이와 별도 DMA AMOUNT를 구분한다. SPIM 취소 event는0 길이를 반환할 수 있고,
 TWIM 오류 event는 요청 descriptor 길이를 포함할 수 있으므로 그것만으로 실제 전송량을 판단하지 않는다.
 mode5에서는 RX를 요청하지 않는다. RX AMOUNT는 이전 실행 값이 남을 수 있어 raw만 기록하고
-이번 수신량으로 해석하지 않는다. 아직 새 source의 실기로 확정한 결과는 없다.
+이번 수신량으로 해석하지 않는다. 477e159/03f5ba4의 예행21항목과 UART20 TX100회는104번에 source별로 기록한다.
 
 ## 이 구현으로 완료되지 않는 항목
 
@@ -142,3 +142,12 @@ terminal 길이·buffer 소유권·guard·STOP 후 새 seed 정상 재시작을 
 RXDRDY의 RXD 도착과 RAM 저장을 구분하며 DMA.RX.AMOUNT는 END/MATCH 뒤 갱신된다고 명시한다.
 따라서 진행 중 AMOUNT를 실시간 byte counter로 사용하지 않고 최종 API terminal event의 실제 길이로 판정한다.
 이 보완은 HIL 주입 시점과 증거이며 제품 UART 구현을 바꾼 것이 아니다. 새 source 실기에서 확인해야 한다.
+
+## PDM 반복 STOP과 peer 원본
+
+03f5ba4에서 A의 overflow 자동 STOP 이후 B가 CS 해제 transfer_complete(error6/detail0)를 관측했다.
+B 자동 STOP은 주변장치를 해제했지만 후속 Host STOP의 중복 deactivate가 wrong_state로 실패했다.
+HIL은 해제 성공 뒤에만 source handle을 비워 반복 STOP을 처리한다. 최초 실패 원본과 제품 API는 유지한다.
+Host는 예상한 PDM overflow·가드·양쪽 STOP/clock0/GPIO 반환을 먼저 요구하고 peer가 기록한
+error6/detail0의 CS 종료 또는 오류 없는 정지를 별도로 판정한다. 다른 peer 오류와 가드 손상은 거부한다.
+새 seed 정상1초 재시작까지 통과해야 해당 회의 복구 성공이며 예행은100회 완료가 아니다.

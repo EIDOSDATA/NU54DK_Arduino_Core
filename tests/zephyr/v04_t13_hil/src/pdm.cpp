@@ -270,9 +270,14 @@ bool t13::pdmStop()
             return stats.fail(14U);
         }
     }
-    if (source != nullptr && source->deactivate(100000U) != SerialFabricResult::success)
+    if (source != nullptr)
     {
-        return stats.fail(15U);
+        if (source->deactivate(100000U) != SerialFabricResult::success)
+        {
+            return stats.fail(15U);
+        }
+        /** @brief 자동 STOP 성공 뒤 Host의 반복 STOP이 비활성 handle을 다시 해제하지 않습니다. */
+        source = nullptr;
     }
     stats.active = false;
     return guards() || stats.fail(16U);
