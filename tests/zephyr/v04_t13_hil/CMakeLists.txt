@@ -13,6 +13,6 @@ target_sources_ifdef(CONFIG_NUCODE_T13_POWER app PRIVATE src/power.cpp)
 
 if(CONFIG_NUCODE_T13_UART_TRACE)
     target_sources(app PRIVATE src/uart_trace.cpp)
-    zephyr_link_options(-Wl,--wrap=nrfx_uarte_init
+    target_link_options(app PUBLIC -Wl,--wrap=nrfx_uarte_init
         -Wl,--wrap=nrfx_uarte_rx_buffer_set -Wl,--wrap=nrfx_uarte_rx_enable)
 endif()
