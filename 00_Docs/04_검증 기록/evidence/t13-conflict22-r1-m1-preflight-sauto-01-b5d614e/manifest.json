@@ -1,0 +1,87 @@
+{
+  "source": "b5d614e3d449b6ad0cbba3513499e0890e1ddc65",
+  "status": "passed",
+  "phase": "conflict-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T11:37:11.283588+00:00",
+  "finished_at": "2026-09-08T11:37:45.287152+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/conflict/uarte22/role1/mode1/repeat001/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte22/role1/mode1/repeat001/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte22/role1/mode1/repeat001/result",
+      "status": "passed",
+      "seed": 2850789236,
+      "restart_seed": 937225933,
+      "planned_conflict_pass": false,
+      "normal_soak_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3792,
+      "sha256": "c13870a6382d53ce139b9ff9745864d46f3358d812cee001da9759ef50b22383",
+      "gzip_sha256": "3add9df8973197583c3a0af189b708e666cb6b143112123f570375649f2e4603"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "78fa48bb06a1d1410c47f8888b32e6e16c0379550d3622b77ddc953ab4085e06",
+      "gzip_sha256": "14f768993870ebd850c64427fd97250d3119a53b412d52192f43099e50337a73"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 181460,
+      "sha256": "7b3157b1c44a02cfbbf49a38b39c4d9124a073871af8593bdb857cd81d25d614",
+      "gzip_sha256": "48fcdf965071db1fdbbc4bfa63226bc9881809324356856db5e20390153afe90"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 100806,
+      "sha256": "d800fe14791fc6858703e74c1f3a5638d625898b2907deeb49d0c708430a1e1b",
+      "gzip_sha256": "cf353a28d987b52267b6de962b3b53461fd5225acc688d6842460ec5db032019"
+    },
+    {
+      "file": "conflict22-r1-m1-preflight-sauto-01-preflight.json.gz",
+      "bytes": 777,
+      "sha256": "218725da3aa28105a956a7c8d8d82b986352023891a45b8e589d00c876f4842f",
+      "gzip_sha256": "293616d62e9560c1c2d502da9081c0f342f2defe3b2b55342582493bf064b1a4"
+    },
+    {
+      "file": "conflict22-r1-m1-preflight-sauto-01-preflight.log.gz",
+      "bytes": 1541,
+      "sha256": "589437bf2b219d9e01541d6aa901f5e047d9908b479bca2a363ae4e0cf0da221",
+      "gzip_sha256": "9de9f56cca482b24ffe651d48078286a7fb3579519a833c655eee1dd2a0ead2d"
+    },
+    {
+      "file": "conflict22-r1-m1-preflight-sauto-01-execute.json.gz",
+      "bytes": 773,
+      "sha256": "0ccc5e9e6d60d259f92a0753691627b47c57f81f5f3716d4b0149d878bfe3b16",
+      "gzip_sha256": "d3f4b3424261660a4a19b04ab48c21fd5d8da2d30a353a2a69c8353ba25381cc"
+    },
+    {
+      "file": "conflict22-r1-m1-preflight-sauto-01-execute.log.gz",
+      "bytes": 129,
+      "sha256": "cb668edb9686ede44d31892c7c946f7d7bdc308d7a32e5ca8bb0dddcaf3de356",
+      "gzip_sha256": "99485034705e56f0da429068b231009e716d72674f552ba5c9eb14047f55a26b"
+    }
+  ]
+}

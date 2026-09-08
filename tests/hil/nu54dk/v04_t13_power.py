@@ -18,6 +18,45 @@ from v04_protocol import ProbeLocks, ProtocolError, decode, encode, validate_pai
 MAGIC = 0x504F5731
 MASK = 0xFFFFFFFF
 RESET_PIN, RESET_GPIO, RESET_TIMER = 1, 128, 2048
+FAULT_MAGIC = 0x50464531
+
+
+def fault_region(address, size, symbols):
+    """! @brief 진단 symbol이 SRAM 내부이며 기존 mailbox와 겹치지 않는지 확인합니다. """
+    if (type(address) is not int or size != 80 or address % 4 or
+            not pair.RAM_BEGIN <= address <= pair.RAM_END-80 or any(
+                address < start+(64 if name == 'v04_identity' else 128) and start < address+80
+                for name, start in symbols.items())):
+        raise ProtocolError('T13 power fault symbol outside independent SRAM region')
+    return address
+
+
+def inspect_power_image(repository, build_root, role):
+    """! @brief 기존 exact image 검사 뒤 최초 오류용80byte symbol을 읽기 전용으로 추가합니다. """
+    from elftools.elf.elffile import ELFFile
+    result = pair.inspect_image(repository, build_root, role, family='t13_power_s')
+    with result['elf'].open('rb') as stream:
+        table = ELFFile(stream).get_section_by_name('.symtab')
+        entries = table.get_symbol_by_name('v04_power_fault') if table else []
+        if not entries or len(entries) != 1:
+            raise ProtocolError('T13 power first-fault symbol missing or ambiguous')
+        result['power_fault_address'] = fault_region(int(entries[0]['st_value']),
+            int(entries[0]['st_size']), result['symbols'])
+    return result
+
+
+def read_power_fault(target, image):
+    """! @brief cleanup 접속에서 보존된 첫 오류를 읽으며 잘못된 marker·role을 거부합니다. """
+    raw = bytes(target.read_memory_block8(image['power_fault_address'], 80))
+    if len(raw) != 80:
+        raise ProtocolError('T13 power first-fault snapshot truncated')
+    words = list(struct.unpack('<20I', raw))
+    if words == [0]*20:
+        return {'present': False, 'words': words}
+    if words[0] != FAULT_MAGIC or words[1] != image['role'] or words[3] > 5:
+        raise ProtocolError('T13 power first-fault marker or role mismatch')
+    return {'present': True, 'words': words, 'event_type': words[3], 'error_mask': words[4],
+            'observed_during_cleanup_only': True}
 
 
 def inspect(words, *, boots, mode, round_number, seed):
@@ -264,6 +303,12 @@ def execute(args, images, grant, uids, append):
                         target = device.target
                     raw_identity = bytes(target.read_memory_block8(device.image['symbols']['v04_identity'], 64))
                     pair.verify_identity(raw_identity, index+1, device.image['core_revision'])
+                    try:
+                        append(f'cleanup/role{index+1}/first-uart-fault',
+                            {'status': 'diagnostic', **read_power_fault(target, device.image)})
+                    except BaseException as error:
+                        append(f'cleanup/role{index+1}/first-uart-fault',
+                            {'status': 'unproven', 'error': str(error)})
                     stamp = struct.unpack('<I', raw_identity[60:64])[0]
                     pins = pin_snapshot(target)
                     stopped = stamp & 0xFFFF0007 == 0x53540004 and all(value & 0xD == 0 for value in pins)
@@ -292,7 +337,7 @@ def main(argv=None):
     parser.add_argument('--evidence', type=Path)
     args = parser.parse_args(argv)
     uids = validate_pair(args.dut, args.peer)
-    images = [pair.inspect_image(pair.ROOT, args.build_root, role, family='t13_power_s') for role in (1, 2)]
+    images = [inspect_power_image(pair.ROOT, args.build_root, role) for role in (1, 2)]
     grant = json.loads(args.session_grant.read_text(encoding='utf-8'))
     session.validate(grant, images, uids)
     evidence = {'schema_version': 1, 'type': 'v04-t13-s-power', 'phase': args.phase,

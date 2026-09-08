@@ -57,3 +57,12 @@ checksum으로 보존한다. 명시된 예상 reset 외에는 자동 UART 재시
 OFF 전 DMA 반환 증명, retention 유효, seed, uptime ms.
 
 구현·Host/target 결과와 실제 성공/실패는 [107번 기록](../../../00_Docs/04_검증%20기록/107_T13_S_자동_진행과_System_OFF_계획.md)에 따로 남긴다.
+
+## 최초 UART 오류 원본
+
+`v04_power_fault`는80byte 정렬 SRAM이며 처음 발생한 UARTE event만 기록한다.
+20word는 magic0x50464531, role, uptime, event type, error mask, buffer address, transferred,
+RX pending, TX pending, ready, BAUDRATE, CONFIG, ENABLE, TX/RX PSEL, TX/RX 수준,
+XO.STAT, retained boots, active/wake/TX guard/RX guard bit 순서다. marker는 마지막에 기록한다.
+STOP 뒤에도 남으며 새 부팅 때 초기화한다. cleanup 재접속 시 source/role/주소를 검증하여 읽고,
+진단 읽기 실패와 STOP 증명 실패는 구분한다. 이 SWD 관측은 debug-free/OFF 성공 증거가 아니다.

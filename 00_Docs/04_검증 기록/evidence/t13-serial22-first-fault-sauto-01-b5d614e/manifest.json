@@ -1,0 +1,70 @@
+{
+  "source": "b5d614e3d449b6ad0cbba3513499e0890e1ddc65",
+  "status": "failed",
+  "phase": "handover",
+  "physical_executed": true,
+  "started_at": "2026-09-08T11:45:54.150049+00:00",
+  "finished_at": "2026-09-08T11:46:27.719805+00:00",
+  "error": "ProtocolError: T13 engine unhealthy or lease expired: [9, 0, 0, 0, 0, 0, 397, 25246, 0, 24938, 0, 102, 0, 58729, 0, 1]",
+  "case_results": [
+    {
+      "id": "T13-S/handover/serial22/initial/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3792,
+      "sha256": "c13870a6382d53ce139b9ff9745864d46f3358d812cee001da9759ef50b22383",
+      "gzip_sha256": "3add9df8973197583c3a0af189b708e666cb6b143112123f570375649f2e4603"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "78fa48bb06a1d1410c47f8888b32e6e16c0379550d3622b77ddc953ab4085e06",
+      "gzip_sha256": "14f768993870ebd850c64427fd97250d3119a53b412d52192f43099e50337a73"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 167740,
+      "sha256": "e56209c1b845ed15cb4861265e02cb821cfc71f8e30df247e3bace4c9fd4c352",
+      "gzip_sha256": "831d4d916f4b7c585c34501c85098285e546be3971aa6c5677bb92bc1408a0a4"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 93821,
+      "sha256": "5d41550ff562de099862774291f4486d7b9c8726f53cc807c09cf5581ada9f54",
+      "gzip_sha256": "13caf773a1a60a589700b8ef73c9f070939e18057d20b680c503730897bb0464"
+    },
+    {
+      "file": "serial22-first-fault-sauto-01-preflight.json.gz",
+      "bytes": 703,
+      "sha256": "ab078d49ddcfcb6627c4aa90243e0f571589349bd9d25ecc0a7249a684f7b67a",
+      "gzip_sha256": "83cf60f2b6ca988953a5518c647e6d43ac0a62d806ee6e67b68507f66f06983e"
+    },
+    {
+      "file": "serial22-first-fault-sauto-01-preflight.log.gz",
+      "bytes": 1552,
+      "sha256": "c3f4d16bbe88e27d78541fc14767fdccda0b9c882f134d28d76e2ce697003cc7",
+      "gzip_sha256": "75934c83a677f623563ac9de46d1e5118116f0289c3e791ca7228c58d5cbd798"
+    },
+    {
+      "file": "serial22-first-fault-sauto-01-execute.json.gz",
+      "bytes": 699,
+      "sha256": "ba0579b0952223e7ac8a9ee3abe0dda0ff5373cd81969ee9487656c562a4b02f",
+      "gzip_sha256": "7ced14ba77b5570b570266d7e35b2f233518f41e5a98b5f6202595b2c5cdad23"
+    },
+    {
+      "file": "serial22-first-fault-sauto-01-execute.log.gz",
+      "bytes": 139,
+      "sha256": "453d391fa21ff972f9befde4cba7203f4ff49a370d324fbfa10a94a432a053ad",
+      "gzip_sha256": "ec5e925cbd6f771697f17bb64abecaf70ea690436535e76419309153b32ce4f4"
+    }
+  ]
+}

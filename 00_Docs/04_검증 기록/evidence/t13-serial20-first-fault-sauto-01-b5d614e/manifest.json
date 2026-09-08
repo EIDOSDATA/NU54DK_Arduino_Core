@@ -1,0 +1,86 @@
+{
+  "source": "b5d614e3d449b6ad0cbba3513499e0890e1ddc65",
+  "status": "failed",
+  "phase": "handover",
+  "physical_executed": true,
+  "started_at": "2026-09-08T11:44:29.266018+00:00",
+  "finished_at": "2026-09-08T11:45:04.239753+00:00",
+  "error": "ProtocolError: T13 engine unhealthy or lease expired: [7, 0, 0, 0, 0, 0, 791, 26591, 0, 26281, 0, 114, 0, 69969, 0, 1]",
+  "case_results": [
+    {
+      "id": "T13-S/handover/serial20/initial/T13-S/preflight/uarte20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial20/repeat001/step01/transfer/T13-S/preflight/spim20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial20/repeat001/step01/result",
+      "status": "passed",
+      "from_name": "uarte20",
+      "to_name": "spim20",
+      "planned_handover_pass": true
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3792,
+      "sha256": "c13870a6382d53ce139b9ff9745864d46f3358d812cee001da9759ef50b22383",
+      "gzip_sha256": "3add9df8973197583c3a0af189b708e666cb6b143112123f570375649f2e4603"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "78fa48bb06a1d1410c47f8888b32e6e16c0379550d3622b77ddc953ab4085e06",
+      "gzip_sha256": "14f768993870ebd850c64427fd97250d3119a53b412d52192f43099e50337a73"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 195233,
+      "sha256": "fa7839ec82a3c6031bd649e23f81eec7d4b7714aeafb121ba01c09b9194a4f60",
+      "gzip_sha256": "82adab71ecc9c8fb2afdfcf78a19e72a71507c0964ac0459200b85aa739bc427"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 108105,
+      "sha256": "fbc598a06f5c0b12e905acf096058dbd73f57d72a1d2e0090fd1a19713efa09b",
+      "gzip_sha256": "417ffbd098600f65a8f302d1897d7eab622c86500a1e86396cb76a0839427f3a"
+    },
+    {
+      "file": "serial20-first-fault-sauto-01-preflight.json.gz",
+      "bytes": 703,
+      "sha256": "52d13fa3e02f681be6be8c5207ef8d64a84ff369974f805777986f45c0cc239c",
+      "gzip_sha256": "30c5e743df8ff5c57b0f3692d984f6889d362da0b87f74bac2ef5b9177d07ac3"
+    },
+    {
+      "file": "serial20-first-fault-sauto-01-preflight.log.gz",
+      "bytes": 1552,
+      "sha256": "2c89ef6430ba8e1a7de61b00f2a8de2b3c65cdd2221fee2db6708bf950259722",
+      "gzip_sha256": "6bd42377bc84096b16b54c952991d2168310fce26102b5d0185a9d3682645f6c"
+    },
+    {
+      "file": "serial20-first-fault-sauto-01-execute.json.gz",
+      "bytes": 699,
+      "sha256": "f9ab36f6b8d457278cad3f8d206a570b60b05bc4dfd4e457792e0eb50574c0c7",
+      "gzip_sha256": "4d0a19da4e71a3f7a560a03101625c9e7c3cdc3442d9196bc525e7ea2a9125ca"
+    },
+    {
+      "file": "serial20-first-fault-sauto-01-execute.log.gz",
+      "bytes": 139,
+      "sha256": "6963edf564d4751cb0cceca855979288d80dfa3183de94f69a033caa8076a7b0",
+      "gzip_sha256": "47ab6ef106a6ac38d8b18e317e68c1d0144463b60247ad5cfa71bd5639bd3251"
+    }
+  ]
+}

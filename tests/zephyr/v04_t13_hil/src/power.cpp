@@ -10,6 +10,7 @@
 #include <nucode/SerialFabric.h>
 #include <internal/IoResourceManager.h>
 #include <hal/nrf_gpio.h>
+#include <hal/nrf_uarte.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/hwinfo.h>
 #include <zephyr/drivers/retained_mem.h>
@@ -19,6 +20,12 @@
 #include <string.h>
 
 extern "C" volatile std::uint32_t v04_identity[16];
+
+extern "C"
+{
+    /** @brief 최초 UART 오류를 STOP 이후에도 읽을 수 있는 전용 진단 원본입니다. */
+    alignas(4) volatile std::uint32_t v04_power_fault[20]{};
+}
 
 namespace
 {
@@ -59,6 +66,46 @@ namespace
     {
         v04_identity[15] = 0x53540000U | (wake_token.active ? 1U : 0U) | (active ? 2U : 0U) |
                            (stop_proven ? 4U : 0U) | (error << 8U);
+    }
+
+    /** @brief 최초 실제 UART event와 주변장치·신호 수준을 변경 없이 보존합니다. */
+    void captureFault(const UarteEvent &event)
+    {
+        if (v04_power_fault[0] != 0U)
+        {
+            return;
+        }
+        const auto *registers = NRF_UARTE21;
+        const auto tx_pin = nrf_uarte_tx_pin_get(registers);
+        const auto rx_pin = nrf_uarte_rx_pin_get(registers);
+        const std::uint32_t values[]{0U,
+                                     role,
+                                     static_cast<std::uint32_t>(k_uptime_get()),
+                                     static_cast<std::uint32_t>(event.type),
+                                     event.error_mask,
+                                     reinterpret_cast<std::uintptr_t>(event.buffer),
+                                     static_cast<std::uint32_t>(event.transferred),
+                                     receiving ? 1U : 0U,
+                                     tx_pending ? 1U : 0U,
+                                     ready ? 1U : 0U,
+                                     registers->BAUDRATE,
+                                     registers->CONFIG,
+                                     registers->ENABLE,
+                                     tx_pin,
+                                     rx_pin,
+                                     tx_pin < 96U ? nrf_gpio_pin_read(tx_pin) : UINT32_MAX,
+                                     rx_pin < 96U ? nrf_gpio_pin_read(rx_pin) : UINT32_MAX,
+                                     NRF_CLOCK->XO.STAT,
+                                     retained.boots,
+                                     (active ? 1U : 0U) | (wake_token.active ? 2U : 0U) |
+                                         (tx.guards(frame_bytes) ? 4U : 0U) |
+                                         (rx.guards(frame_bytes) ? 8U : 0U)};
+        for (unsigned index = 1U; index < 20U; ++index)
+        {
+            v04_power_fault[index] = values[index];
+        }
+        __DMB();
+        v04_power_fault[0] = 0x50464531U;
     }
 
     std::uint32_t retainedChecksum()
@@ -359,6 +406,7 @@ void t13::power::service()
             }
             else if (event.type != UarteEventType::rx_buffer_needed)
             {
+                captureFault(event);
                 failure(41U + static_cast<std::uint32_t>(event.type));
             }
         }

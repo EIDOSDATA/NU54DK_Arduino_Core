@@ -1,5 +1,14 @@
 # T13 S 자동 진행과 peer 제어 System OFF 검증 계획
 
+2026-09-08T11:53Z: S 정상 안정성36/36은 완료 상태를 유지한다. 자원 충돌 예행14/14를
+통과했으며100회 반복은 진행 중이다. SPI20/21/22 역할 전환은 최초 불일치 byte를 보존했지만
+실패 상태다. 단독 CTS 예행8조건은 실제100ms 정지/재개 증명 후 정상용100ms 간격 판정에서
+실패했다. 판정기 보강과 새 실기 재검증이 필요하며 기존 실패를 PASS로 바꾸지 않는다.
+System OFF는 bridge UART 오류로 실제 OFF0회이며 최초 error mask 보존 도구를 준비했다.
+TWIM 취소 판정 보강772b47e는 exact target2/2·새 Host9·원격 전체 Host814시험을 확인해
+기존 대기열 뒤 재검증을 등록했다. 현재 S grant 만료21:26:14KST와 U 이전 경계를 유지한다.
+T12/QDEC 검증 작업 완료 결정은 유지하며 T13 전체·T14·RC·정식 공개는 미완료다.
+
 2026-09-08T11:35Z: C01~04·C06·C08 각각900초와 C05 3600초·양쪽 STOP 완료로 동시7/7(100%)이다.
 정상 단독29/29와 합쳐 S 정상 안정성36/36을 source별로 완료했다. T13 전체 완료는 아니다.
 고정 serial17/21·stream3/4·PWM6/6·역할 전환2/5는 source별 근거로 유지한다.
@@ -52,6 +61,11 @@ stream C++ 실행1개 Windows4551 차단을 보존했다.
 [TWIM30](evidence/t13-twi30-proof-sauto-01-2114187/manifest.json),
 [System OFF bridge](evidence/t13-power-bridge-sauto-01-de5ad42/manifest.json),
 [C08](evidence/t13-c08-soak-sauto-01-506680f/manifest.json).
+
+System OFF 후속은 먼저 UART 중계 오류의 최초 event·error mask·baud/config/PSEL·TX/RX 수준·
+clock을 STOP 전에 고정해 보존한다. 기존 bridge에서는 양쪽 stamp의error46(41+UARTE error event5)만
+남아 framing·overrun 등의 세부 원인은 확정할 수 없다. cleanup 재접속에서 새 진단 symbol을 읽되
+이 접속을 정상 debug 해제/실제 OFF 성공 근거로 사용하지 않는다. 현재 진행 중인 충돌 검사는 유지한다.
 
 2026-09-08 후속 구현 범위: T13의 기존 자원 충돌 요구 중 S UART21/22/30에서 같은 block의
 SPI 활성화, 다른 UART의 동일 GPIO 점유, 내부 DMA workspace 겹침을 의도하여 거부의 원자성과
@@ -275,3 +289,28 @@ STOP 전 고정하는 opcode124를 추가한다. 예전 실패에 없던 actual 
 준비 검사 원본: [2114187 TWIM exact build·Host·CI](evidence/t13-twi-proof-preparation-2114187/manifest.json),
 [de5ad42 power exact build·Host·CI와 유한 후속 배치](evidence/t13-power-preparation-de5ad42/manifest.json).
 de5ad42는 기록 시점 원격15검사 중14성공·1진행 중이며 전체 성공으로 기록하지 않는다.
+
+## 11:53Z 최초 SPI 오류와 CTS 판정 대조
+
+b5d614e의 SPI20/21/22 최초 오류 진단은 모두 실패·양쪽 STOP/핀 반환을 보존했다.
+SPI20은 역방향 step02의 A SPIS20 RX frame1 offset339에서 expected0x90/actual0x9E,
+SPI21은 step09 A SPIM21 RX frame30 offset467에서0xC4/0xC7,
+SPI22는 step01 A SPIM22 RX frame0 offset286에서0x31/0x11이다.
+세 최초 오류의 입력은 모두 B GPIO P1.06 → A GPIO P1.07이며 직전4byte는 일치했다.
+guard/lease 오류는 없었다. 공통 입력 경로는 후속 신호/타이밍 진단의 단서이며 전기 원인 확정이 아니다.
+첫 byte에만 해당하는 SPIM errata8을 이번 중간 byte 오류의 확정 원인으로 적용하지 않는다.
+
+원본: [SPI20](evidence/t13-serial20-first-fault-sauto-01-b5d614e/manifest.json),
+[SPI21](evidence/t13-serial21-first-fault-sauto-01-b5d614e/manifest.json),
+[SPI22](evidence/t13-serial22-first-fault-sauto-01-b5d614e/manifest.json).
+
+d44cef2 CTS 단독 예행8조건은 모두 양쪽 실제 HIGH 시간·TX 대기/재개를 먼저 통과했으나
+이후 일반 lane 판정의 최대100ms 기준에 걸렸다. 예를 들어 UART20 role1에서는 DUT HIGH100018us,
+peer100019us, 대상 TX와 peer RX의 최대 완료 간격115ms, 반대 방향20ms를 기록했다.
+기존 실패를 유지한다. 새 판정은 검증된 실제 CTS 구간에 영향받은 한 방향에만 경계를 적용하고
+주입 전 정상 구간·다른 방향·다른 lane·새 seed 정상 재획득은 기존100ms를 유지해야 한다.
+전체 payload/guard/종료/해시 대조도 유지한다. 이 분석은 실기100회 성공이 아니다.
+
+772b47e 재검증 준비 원본은 [보존 목록](evidence/t13-twi-provenance-preparation-772b47e/manifest.json)을
+따른다. System OFF 최초 오류 진단 초안은 power 두 역할 target2/2·Host7·전체 T13 Host86과
+정렬/계약/문서를 통과했다. exact source 두 종류 image와 원격 Host가 확인되기 전에는 예약하지 않는다.

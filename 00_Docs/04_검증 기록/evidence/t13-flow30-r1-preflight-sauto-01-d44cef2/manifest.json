@@ -1,0 +1,60 @@
+{
+  "source": "d44cef23e16321471da10357a628b11dfdf13caa",
+  "status": "failed",
+  "phase": "flow-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T11:50:21.436106+00:00",
+  "finished_at": "2026-09-08T11:50:55.328917+00:00",
+  "error": "ProtocolError: T13 frame completion gap exceeded 100ms",
+  "case_results": [],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3778,
+      "sha256": "22f05a12fa5c938469cb7a5585c18897f5ad4804556a328925539e9acafdcea3",
+      "gzip_sha256": "6d0cb8ea220804773414096ec6b47859865981d645ded47e48bba0080d15b4fc"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "d4174de9e8837c4e4c680e50e43c7644a490a7ad927801fc7fd49a187a464564",
+      "gzip_sha256": "c02af46e64a1195d539db93e477518f91051a7311664c20092be093e7d6a9bf5"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 148549,
+      "sha256": "6f0daa4f2f1229e6cbaa56e61bc65ba2e40311ee02d910fbf37710cdeaf36012",
+      "gzip_sha256": "243c59b15407e8aac04336860a2b3659dfe079912ffa7893b871ef582375a9bd"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 84563,
+      "sha256": "08d65cd2f3e5b7b54c790941a48885782b51b71f8e1af26e3c2dcdae8f7bfe8f",
+      "gzip_sha256": "fe6230be4c0143a25b17ff222f09bdcc48e65b23a25d2b16cb7d16c840a31346"
+    },
+    {
+      "file": "flow30-r1-preflight-sauto-01-preflight.json.gz",
+      "bytes": 725,
+      "sha256": "db07faa4eb896bc2a6852814f4636e5442db51c3052dca90efab68ed6884e04d",
+      "gzip_sha256": "afc8197429ecd800b9ece7412796527a74040f9f16c4e6fe8cd0acc890279efd"
+    },
+    {
+      "file": "flow30-r1-preflight-sauto-01-preflight.log.gz",
+      "bytes": 1540,
+      "sha256": "2c82f78f4ffc2c30a9d5175756126e98d7df1c71620493f0a63b245352368d90",
+      "gzip_sha256": "eb6419f41cad4908c9140bde6e80fc46c3cc91d42ffa827bbdcee3bb48f05624"
+    },
+    {
+      "file": "flow30-r1-preflight-sauto-01-execute.json.gz",
+      "bytes": 721,
+      "sha256": "747d17a6651dd6d226961fbc807945add2c2c63f8105b4bb89455f16fa023aad",
+      "gzip_sha256": "3dc36130f8f5f68344e5ec720cf06e4a87f1136ac30157225de45c3268011320"
+    },
+    {
+      "file": "flow30-r1-preflight-sauto-01-execute.log.gz",
+      "bytes": 75,
+      "sha256": "9ec2ca1df5c788a7310cf7861d63de7aa0c95a34380a3cb32d3b94d22b466ed1",
+      "gzip_sha256": "6167902278fa460c1ff0d7b713d6dac68294a5417d2fcb4f4a37e4bef1570189"
+    }
+  ]
+}

@@ -12,6 +12,31 @@ from v04_protocol import ProtocolError, encode
 
 
 class PowerTests(unittest.TestCase):
+    def test_first_fault_region_cannot_overlap_mailbox_or_leave_sram(self):
+        start = power.pair.RAM_BEGIN
+        symbols = {'v04_request': start, 'v04_response': start+128, 'v04_identity': start+256}
+        self.assertEqual(power.fault_region(start+320, 80, symbols), start+320)
+        for address, size in ((start, 80), (start+316, 80), (start+321, 80),
+                              (start+320, 64), (power.pair.RAM_END-76, 80), (start-80, 80)):
+            with self.subTest(address=address, size=size), self.assertRaises(ProtocolError):
+                power.fault_region(address, size, symbols)
+
+    def test_first_fault_read_preserves_mask_and_rejects_torn_or_foreign_record(self):
+        target = mock.Mock()
+        image = {'role': 2, 'power_fault_address': power.pair.RAM_BEGIN+1024}
+        words = [power.FAULT_MAGIC, 2, 250, 5, 4]+[0]*15
+        target.read_memory_block8.return_value = struct.pack('<20I', *words)
+        self.assertEqual(power.read_power_fault(target, image)['error_mask'], 4)
+        target.read_memory_block8.assert_called_once_with(image['power_fault_address'], 80)
+        for index, value in ((0, 0), (1, 1), (3, 6)):
+            broken = words[:]
+            broken[index] = value
+            target.read_memory_block8.return_value = struct.pack('<20I', *broken)
+            with self.assertRaises(ProtocolError):
+                power.read_power_fault(target, image)
+        target.read_memory_block8.return_value = bytes(80)
+        self.assertFalse(power.read_power_fault(target, image)['present'])
+
     def words(self, mode):
         return [power.MAGIC, 2, 1, 0, 0, 1 if mode == 0 else 2,
                 (1, 2048, 128)[mode], 0, mode, int(mode != 0), 0, 0, 0,
