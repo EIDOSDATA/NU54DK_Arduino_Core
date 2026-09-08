@@ -904,10 +904,8 @@ void t13::serialService()
             continue;
         }
         poll(lane);
-        if (index == 0U)
-        {
-            flowService(lane.sent.completed, lane.tx_pending[0] || lane.tx_pending[1]);
-        }
+        flowService(lane.endpoint, lane.sent.completed, lane.tx_pending[0] || lane.tx_pending[1]);
+        flowBackground(index, lane.endpoint, lane.sent.completed, lane.received.completed);
         captureService();
         if (lane.error != 0U)
         {

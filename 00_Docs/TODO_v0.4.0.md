@@ -1,11 +1,12 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
-2026-09-08T10:11Z: C01~04 각각900초·양쪽 STOP 완료로 동시 안정성4/7(57%), C05 3600초 실행 중이다.
+2026-09-08T10:42Z: C01~04 각각900초·양쪽 STOP 완료로 동시 안정성4/7(57%), C05 3600초 실행 중이다.
 고정 serial17/21·stream3/4·PWM6/6·역할 전환2/5는 source별 근거로 유지한다.
-자원 충돌b5d614e·CTS d44cef2의 exact target/Host/원격 Host를 확인했고 UART parity/break 도구도
-초안 두 역할 target·T13 Host63시험을 통과했다. UART→GPIO 전환 전에 DUT RX를 켜지 않으며
-실제 오류·STOP·새 seed 정상 재시작을 따로 판정한다. 이 도구의 실기는 아직 미실행이다.
-현재 배치→TWIM 계측→System OFF→충돌/CTS를 순차 실행한다. 원래 S 확인서 만료21:26:14KST는
+자원 충돌b5d614e·CTS d44cef2·UART parity/break93e38ff·SPI boundary4f573f0의 exact target와
+로컬 관련 Host 및 원격 전체 Host를 확인했다. 현재 배치→TWIM 계측→System OFF→충돌/CTS→
+UART parity/break→SPI 짧은 DMA/미준비를 순차 예약했다. C01/C05 동시 CTS는 별도 준비 중이다.
+오류의 실제 event·STOP·새 seed 정상 재시작을 요구하며 예약된 도구의 실기 결과는 아직0이다.
+원래 S 확인서 만료21:26:14KST는
 연장하지 않고 종료/STOP이 확인된 독립 항목만 계속한다. T12 완료·QDEC 보고와 U 이전 경계 유지.
 원본·실행 상태는107번을 따르며 아래 날짜별 체크포인트는 과거 이력이다.
 

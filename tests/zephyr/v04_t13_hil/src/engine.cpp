@@ -238,6 +238,11 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         flowSnapshot(out, count);
         return 0U;
     }
+    if (opcode == 154U && nargs == 1U)
+    {
+        flowBackgroundSnapshot(args[0], out, count);
+        return count == 20U ? 0U : 400U;
+    }
     if (opcode == 124U && nargs == 1U)
     {
         serialDataFaultSnapshot(args[0], out, count);

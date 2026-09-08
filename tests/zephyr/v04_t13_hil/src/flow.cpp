@@ -17,6 +17,7 @@ namespace
     std::uint32_t pending_seen = 0U, high_seen = 0U, low_seen = 0U;
     IoResourceToken token{};
     NRF_UARTE_Type *registers = nullptr;
+    std::uint32_t background_counts[20]{}, background_times[20]{};
 
     /** @brief GPIO 입력으로 돌아온 뒤에만 별도 RTS 소유권을 반환합니다. */
     bool release()
@@ -46,11 +47,17 @@ bool t13::flowPrepare(const Case &test, Endpoint &endpoint)
     {
         return true;
     }
-    if (test.serial_count != 1U || test.adc_channels || test.pwm_instance || test.pdm_instance ||
-        test.i2s || endpoint.kind != Kind::uart || endpoint.pin_count != 4U ||
-        endpoint.instance < 20U || (endpoint.instance > 22U && endpoint.instance != 30U) ||
-        endpoint.rate != 1000000U || endpoint.length != 1024U || token.active ||
-        registers != nullptr)
+    const bool concurrent = (test.id == 101U && test.serial_count == 4U) ||
+                            (test.id == 105U && test.serial_count == 5U);
+    if (concurrent && (endpoint.kind != Kind::uart || endpoint.instance != 30U))
+    {
+        return true;
+    }
+    if ((!concurrent && test.serial_count != 1U) || test.harness != 2U || test.adc_channels ||
+        test.pwm_instance || test.pdm_instance || test.i2s || endpoint.kind != Kind::uart ||
+        endpoint.pin_count != 4U || endpoint.instance < 20U ||
+        (endpoint.instance > 22U && endpoint.instance != 30U) || endpoint.rate != 1000000U ||
+        endpoint.length != 1024U || token.active || registers != nullptr)
     {
         return false;
     }
@@ -58,6 +65,12 @@ bool t13::flowPrepare(const Case &test, Endpoint &endpoint)
     physical = UINT32_MAX;
     state = start_cycle = end_cycle = first_frames = last_frames = current_frames = 0U;
     pending_seen = high_seen = low_seen = 0U;
+    for (unsigned index = 0U; index < 20U; ++index)
+    {
+        background_counts[index] = background_times[index] = 0U;
+    }
+    background_times[16] = test.serial_count;
+    background_times[17] = CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC;
     for (unsigned index = 0U; index < 4U; ++index)
     {
         const auto signal = static_cast<SerialSignal>(endpoint.signals[index]);
@@ -135,9 +148,10 @@ bool t13::flowStart()
 }
 
 /** @brief main service를 계속 돌리며 출력 유지 시간과 peer CTS 관측을 독립 기록합니다. */
-void t13::flowService(std::uint32_t completed, bool pending)
+void t13::flowService(const Endpoint &endpoint, std::uint32_t completed, bool pending)
 {
-    if (registers == nullptr || policy == 0U)
+    if (registers == nullptr || policy == 0U || endpoint.kind != Kind::uart ||
+        endpoint.instance != instance)
     {
         return;
     }
@@ -183,6 +197,46 @@ bool t13::flowStop()
         registers = nullptr;
     }
     return released;
+}
+
+/** @brief CTS가 실제 HIGH인 동안에만 다른 lane의 첫·마지막 완료량과 시각을 보존합니다. */
+void t13::flowBackground(unsigned lane, const Endpoint &endpoint, std::uint32_t sent,
+                         std::uint32_t received)
+{
+    if (registers == nullptr || state != 2U || lane >= max_lanes ||
+        (endpoint.kind == Kind::uart && endpoint.instance == instance) ||
+        nrf_gpio_pin_read(physical) == 0U)
+    {
+        return;
+    }
+    const auto bit = 1U << lane;
+    const auto now = k_cycle_get_32();
+    if ((background_times[0] & bit) == 0U)
+    {
+        background_times[0] |= bit;
+        background_times[1U + lane] = now;
+        background_times[11U + lane] = endpoint.instance;
+        background_counts[lane * 4U] = sent;
+        background_counts[lane * 4U + 2U] = received;
+    }
+    background_times[6U + lane] = now;
+    background_counts[lane * 4U + 1U] = sent;
+    background_counts[lane * 4U + 3U] = received;
+}
+
+void t13::flowBackgroundSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count)
+{
+    if (page > 1U)
+    {
+        count = 0U;
+        return;
+    }
+    const auto *values = page == 0U ? background_counts : background_times;
+    for (unsigned index = 0U; index < 20U; ++index)
+    {
+        out[index] = values[index];
+    }
+    count = 20U;
 }
 
 void t13::flowSnapshot(std::uint32_t *out, std::uint32_t &count)

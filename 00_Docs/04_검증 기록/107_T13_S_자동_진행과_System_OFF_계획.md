@@ -1,10 +1,11 @@
 # T13 S 자동 진행과 peer 제어 System OFF 검증 계획
 
-2026-09-08T10:35Z: C01~04 각각900초와 양쪽 STOP 완료로 동시4/7(57%)이며 C05 3600초 실행 중이다.
+2026-09-08T10:43Z: C01~04 각각900초와 양쪽 STOP 완료로 동시4/7(57%)이며 C05 3600초 실행 중이다.
 고정 serial17/21·stream3/4·PWM6/6·역할 전환2/5는 source별 근거로 유지한다.
 CTS d44cef2의 exact 두 역할 target·Host58·원격 Host104묶음788시험 준비를 완료했다.
 UART parity/break는93e38ff exact target2/2·T13 Host63시험·원격 전체 Host105묶음793시험을 통과했다.
-현재 자동 배치→TWIM 계측→System OFF→충돌/CTS→UART parity/break 순서를 유지하며 가능한 독립 준비도 계속한다.
+SPI boundary4f573f0도 exact target2/2·새 Host4시험·원격 전체 Host106묶음797시험을 확인했다.
+현재 자동 배치→TWIM 계측→System OFF→충돌/CTS→UART parity/break→SPI boundary 순서를 유지한다.
 
 2026-09-08 후속 구현 범위: T13의 기존 자원 충돌 요구 중 S UART21/22/30에서 같은 block의
 SPI 활성화, 다른 UART의 동일 GPIO 점유, 내부 DMA workspace 겹침을 의도하여 거부의 원자성과
@@ -38,6 +39,11 @@ PASS로 세지 않고 실패 원본을 보존하며 고정 source의 원격 전�
 
 ## 마일스톤과 현재 상태
 
+후속 구현 범위: 기존 C01/C05의 UART30 CTS100ms 정지·재개를 전용 flow fixture에 추가한다.
+동시에 실행되는 다른 UART/TWI/SPI의 GPIO·DMA 설정은 유지하며 같은 측정 구간의 양방향
+완료량 증가와 전체 payload·guard·STOP·새 seed 복구를 함께 요구한다. 원래900/3600초 정상
+안정성 결과와 분리하며 단독 CTS나 짧은 오류 주입을 장시간 동시 시험의 대체로 삼지 않는다.
+
 다음 도구 구현 범위: 기존 S SPIS00/20/21/22/30의 짧은 DMA와 미준비 조건을 우선 분리한다.
 A controller는1024byte를 요청하고 B target만512byte DMA 또는 미등록 상태로 둔다.
 기존 GPIO/8MHz와 정상 회귀 기준은 유지하며 master RX 전체, target의 실제 AMOUNT/STATUS/
@@ -51,9 +57,16 @@ semaphore·DMA 경계·양쪽 STOP 및 새 seed의 정상 frame을 요구한다.
 SPI boundary 초안 Host는67시험 중 새4개를 포함64개 통과·기존 C++ 실행3개가 WinError4551로
 차단됐다. 최초 target의 SDK accessor const/이름 차이는 읽기 전용 DMA 레지스터 접근으로 수정하고
 초안 두 역할 target2/2·새 Host4시험·정렬·계약·문서 재검사를 통과했다. 고정 source의 exact target과
-원격 전체 Host를 확인한 뒤 UART line 배치 다음 순서에 등록한다. 두 준비 단계의 실제 HIL 결과는 아직0이다.
+원격 전체 Host를 확인해 UART line 배치 다음 순서에 등록했다. 두 준비 단계의 실제 HIL 결과는 아직0이다.
 UART line 준비 원본은 [93e38ff 보존 목록](evidence/t13-uart-line-preparation-93e38ff/manifest.json)에
 실패한 로컬 전체 Host까지 포함했다. 준비 검사와 실기 완료를 구분한다.
+SPI 준비 원본도 [4f573f0 보존 목록](evidence/t13-spi-boundary-preparation-4f573f0/manifest.json)에
+초안 target 실패·Host Windows4551 차단과 수정 후 exact 검사를 구분해 보존했다.
+
+C01/C05 동시 CTS 초안은 두 역할 target2/2와 flow Host6시험을 통과했다. T13 전체 회귀에서
+공유 선택 함수 변경이 단독 parity/break의 입력 범위를 넓히는 문제가 검출되어 단독 조건을 명시했다.
+수정 후70시험 중69개가 통과했고 기존 stream C++ 실행1개는 Windows4551로 차단됐다.
+고정 source의 변경 관련 flow/UART line Host와 원격 전체 Host를 별도로 요구하며 미실행을 PASS로 세지 않는다.
 
 | T13 하위 묶음 | 상태 | 현재 S에서 자동 진행 범위 |
 | --- | --- | --- |

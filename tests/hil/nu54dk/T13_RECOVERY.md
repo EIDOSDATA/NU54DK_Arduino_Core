@@ -129,8 +129,22 @@ Opcode126은 비활성 상태의 policy(0기본/1DUT CTS관측/2peer GPIO)를 �
 128은 정상 송수신이 시작된 뒤 관측·주입을 시작한다.127 순서는 policy, instance, state, 물리 GPIO,
 HIGH 시작/끝 cycle, cycle Hz, 시작/끝/current TX frame, pending TX 관측, HIGH/LOW 관측,
 GPIO token, PIN_CNF, TX/RX/RTS/CTS PSEL, CONFIG다. 실패 시 양쪽 원본을 STOP 전에 보존한다.
-기본 UART20/21/22/30 모두의 양방향8조건이며 C01/C05 flow·RX 공급 지연·parity/break,
+기본 UART20/21/22/30 모두의 양방향8조건이며 RX 공급 지연·parity/break,
 peer hardware RTS 생성 자체·U UART00까지 완료한 것으로 확대하지 않는다.
+
+### C01/C05 UART30과 나머지 통신의 동시 진행
+
+같은 flow-preflight/uart-flow phase에 C01(id101)·C05(id105)를 선택한다. 각각 네/다섯 block 중
+UART30만 위 GPIO peer fixture로 바꾸며 다른 UART/TWI/SPI의 설정과 payload 판정은 유지한다.
+양쪽 역할 각각 한 번의 예행 뒤 성공한 조건만100회 실행한다. 기존 normal soak의900/3600초와
+별도 결과다. 현재 실행 중인 normal C05 image와 앞서 등록한 단독 CTS image는 바꾸지 않는다.
+
+Opcode154(page0/1)는 실제 CTS가 HIGH인 service 구간에서 관측한 다른 lane의 완료량과 시각이다.
+page0은 lane당 네 word(first TX,last TX,first RX,last RX)이며 page1은 관측 mask, lane별 첫 cycle5개,
+마지막 cycle5개, instance5개, lane수, cycle Hz, reserved0 두 개다. 선택 UART와 미사용 lane은0이다.
+각 background lane의 양방향 완료량이 증가하고 관측 구간이 HIGH 안에 포함되며80ms 이상이어야 한다.
+Host도 주입 전/후 모든 lane의 payload·guard·완료량을 대조하고 양쪽 STOP 뒤 새 seed의 원래 topology를
+재획득한다. 중간 실패는 최초 원본을 보존하며 종료 뒤 진행만으로 HIGH 중 진행을 대신하지 않는다.
 
 ## I2S/PDM 공급 중단 복구 준비
 

@@ -7,19 +7,38 @@ from v04_protocol import ProtocolError
 MASK = 0xFFFFFFFF
 
 
-def fixture(test, role):
-    """! @brief peer만 활성화 전2선 UART·별도 GPIO RTS로 바꾸며 원본에 표시합니다. """
-    if (role not in (1, 2) or test['harness'] != 'S' or len(test['serial_links']) != 1 or
+def selected_lane(test):
+    """! @brief 단독 UART 또는 계획에 있는 C01/C05의 UART30만 선택합니다. """
+    links = test['serial_links']
+    if (test['harness'] != 'S' or
             test.get('_reverse_serial') or any(test[key] for key in ('adc_channels', 'pwm_instance', 'pdm_instance', 'i2s'))):
-        raise ProtocolError('T13 flow requires one fixed S UART')
-    link = test['serial_links'][0]
+        raise ProtocolError('T13 flow requires a fixed S UART topology')
+    if len(links) == 1:
+        index = 0
+    elif ((test['id'], test['name'], len(links)) in ((101, 'C01', 4), (105, 'C05', 5))):
+        indices = [index for index, link in enumerate(links) if all(
+            link[key]['kind'] == 'uarte' and link[key]['instance'] == 30 for key in ('a', 'b'))]
+        if len(indices) != 1:
+            raise ProtocolError('T13 concurrent flow needs exactly one UART30')
+        index = indices[0]
+    else:
+        raise ProtocolError('T13 unsupported concurrent flow topology')
+    link = links[index]
     if (link['rate'] != 1000000 or link['buffer_bytes'] != 1024 or
             any(endpoint['kind'] != 'uarte' or endpoint['instance'] not in (20, 21, 22, 30) or
                 set(endpoint['pins']) != {'txd', 'rxd', 'rts', 'cts'} for endpoint in (link['a'], link['b']))):
         raise ProtocolError('T13 unsupported UART flow fixture')
+    return index
+
+
+def fixture(test, role):
+    """! @brief 선택한 peer UART만 활성화 전2선·별도 GPIO RTS로 바꾸며 원본에 표시합니다. """
+    if role not in (1, 2):
+        raise ProtocolError('T13 flow requires an exact board role')
+    index = selected_lane(test)
     modified = copy.deepcopy(test)
-    peer = modified['serial_links'][0]['b' if role == 1 else 'a']
-    modified['_flow_gpio_peer'] = {'role': 3-role, 'rts': peer['pins']['rts'], 'hold_us': 100000}
+    peer = modified['serial_links'][index]['b' if role == 1 else 'a']
+    modified['_flow_gpio_peer'] = {'role': 3-role, 'lane': index, 'rts': peer['pins']['rts'], 'hold_us': 100000}
     del peer['pins']['rts'], peer['pins']['cts']
     return modified
 
@@ -31,7 +50,7 @@ def physical(pin):
 
 def inspect(words, test, role, device_role):
     """! @brief 실제 GPIO 시간·TX 대기·resume·고정 PSEL을 독립 대조합니다. """
-    endpoint = test['serial_links'][0]['a' if device_role == 1 else 'b']
+    endpoint = test['serial_links'][selected_lane(test)]['a' if device_role == 1 else 'b']
     observer = device_role == role
     pin = physical(endpoint['pins']['cts' if observer else 'rts'])
     if (not isinstance(words, list) or len(words) != 20 or
@@ -55,6 +74,55 @@ def inspect(words, test, role, device_role):
             'waiting_tx_seen': bool(words[10]), 'normal_soak_pass': False}
 
 
+def background_progress(before, after, lane_index):
+    """! @brief CTS 대상 외 모든 lane의 양방향 진행을 같은 주입 구간에서 요구합니다. """
+    if len(before) != 2 or len(after) != 2:
+        raise ProtocolError('T13 concurrent flow requires both board snapshots')
+    measured = []
+    for role in range(2):
+        if len(before[role]) != len(after[role]) or not 0 <= lane_index < len(before[role]):
+            raise ProtocolError('T13 concurrent flow lane set drift')
+        for index in range(len(before[role])):
+            if index == lane_index:
+                continue
+            delta = {direction: after[role][index][direction]['frames']-before[role][index][direction]['frames']
+                     for direction in ('tx', 'rx')}
+            if any(value <= 0 for value in delta.values()):
+                raise ProtocolError('T13 background serial stalled during CTS injection')
+            measured.append({'role': role+1, 'lane': index, 'frames': delta})
+    return measured
+
+
+def background_high(counts, times, interval, test, device_role):
+    """! @brief 실제 CTS HIGH 내부 시각에 다른 모든 lane의 TX/RX 완료 증가가 있는지 대조합니다. """
+    target = selected_lane(test)
+    number = len(test['serial_links'])
+    if (number < 2 or device_role not in (1, 2) or
+            any(not isinstance(values, list) or len(values) != 20 or
+                any(type(value) is not int or not 0 <= value <= MASK for value in values)
+                for values in (counts, times, interval)) or
+            times[0] != ((1 << number)-1) ^ (1 << target) or
+            times[16:] != [number, 1000000, 0, 0]):
+        raise ProtocolError('T13 incomplete concurrent CTS HIGH evidence')
+    measured = []
+    total = (interval[5]-interval[4]) & MASK
+    for index in range(5):
+        raw = counts[index*4:index*4+4]
+        if index == target or index >= number:
+            if raw != [0]*4 or any(times[offset+index] for offset in (1, 6, 11)):
+                raise ProtocolError('T13 unexpected lane in CTS background evidence')
+            continue
+        first = (times[1+index]-interval[4]) & MASK
+        last = (times[6+index]-interval[4]) & MASK
+        endpoint = test['serial_links'][index]['a' if device_role == 1 else 'b']
+        if (times[11+index] != endpoint['instance'] or not 0 <= first < last <= total or
+                last-first < 80000 or raw[1] <= raw[0] or raw[3] <= raw[2]):
+            raise ProtocolError('T13 background lane did not advance within actual CTS HIGH')
+        measured.append({'lane': index, 'instance': endpoint['instance'],
+            'observed_high_us': last-first, 'tx_frames': raw[1]-raw[0], 'rx_frames': raw[3]-raw[2]})
+    return measured
+
+
 def execute(devices, test, role, continuity, append, *, preflight):
     import v04_t13_run as runner
     modified = fixture(test, role)
@@ -71,6 +139,8 @@ def execute(devices, test, role, continuity, append, *, preflight):
                 raise ProtocolError('T13 flow policy failed before PREPARE')
         def inject():
             continuity.check()
+            concurrent = len(test['serial_links']) > 1
+            before = runner.snapshots(devices, modified, seed, append, label+'/concurrent/before')[1] if concurrent else None
             for device in (target, peer):
                 if device.command(128, timeout=2) != [1]:
                     raise ProtocolError('T13 CTS observation/injection did not start')
@@ -81,10 +151,23 @@ def execute(devices, test, role, continuity, append, *, preflight):
                 words = device.command(127, timeout=2)
                 suffix = label+'/role'+str(device.image['role'])
                 append(suffix+'/raw', {'status': 'observation', 'words': words})
-                raw.append((device, suffix, words))
-            for device, suffix, words in raw:
+                background = [device.command(154, (page,), timeout=2) for page in range(2)] if concurrent else None
+                if background:
+                    for page, values in enumerate(background):
+                        append(suffix+'/background'+str(page), {'status': 'observation', 'words': values})
+                raw.append((device, suffix, words, background))
+            for device, suffix, words, background in raw:
                 append(suffix+'/interval', {'status': 'expected-stall',
                     **inspect(words, test, role, device.image['role'])})
+                if background:
+                    append(suffix+'/background-high', {'status': 'expected-progress',
+                        'lanes': background_high(*background, words, test, device.image['role']),
+                        'normal_soak_pass': False})
+            if concurrent:
+                after = runner.snapshots(devices, modified, seed, append, label+'/concurrent/after')[1]
+                append(label+'/concurrent/progress', {'status': 'background-progress',
+                    'lanes': background_progress(before, after, selected_lane(test)),
+                    'normal_soak_pass': False})
         runner.execute_group(devices, {'test': modified, 'members': [modified]}, .5,
             continuity, lambda identifier, row: append(label+'/maintained/'+identifier, row),
             preflight=True, seed=seed, during=inject)

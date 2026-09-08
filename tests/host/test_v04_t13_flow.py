@@ -27,9 +27,63 @@ class FlowTests(unittest.TestCase):
                 self.assertEqual(changed['serial_links'][0][target_key], original['serial_links'][0][target_key])
                 self.assertEqual(set(changed['serial_links'][0][peer_key]['pins']), {'txd', 'rxd'})
                 self.assertEqual(len(original['serial_links'][0][peer_key]['pins']), 4)
-        for identifier in (1, 7, 16, 25, 101):
+        for identifier in (1, 7, 16, 25, 102, 106, 108):
             with self.assertRaises(ProtocolError):
                 flow.fixture(tests[identifier], 1)
+
+    def test_concurrent_flow_changes_only_uart30_peer_and_preserves_all_background_links(self):
+        tests = {row['id']: row for row in cases.cases()}
+        for identifier, index in ((101, 3), (105, 4)):
+            for role in (1, 2):
+                original = tests[identifier]
+                changed = flow.fixture(original, role)
+                self.assertEqual(flow.selected_lane(original), index)
+                self.assertEqual(changed['_flow_gpio_peer']['lane'], index)
+                for lane in range(len(original['serial_links'])):
+                    if lane != index:
+                        self.assertEqual(changed['serial_links'][lane], original['serial_links'][lane])
+                self.assertEqual(set(changed['serial_links'][index]['a' if role == 2 else 'b']['pins']), {'txd', 'rxd'})
+                for side in ('a', 'b'):
+                    self.assertEqual(len(original['serial_links'][index][side]['pins']), 4)
+
+    def test_concurrent_progress_rejects_one_stalled_background_direction(self):
+        import copy
+        before = [[{'tx': {'frames': 10}, 'rx': {'frames': 11}} for _ in range(5)] for _ in range(2)]
+        after = [[{'tx': {'frames': 14}, 'rx': {'frames': 15}} for _ in range(5)] for _ in range(2)]
+        self.assertEqual(len(flow.background_progress(before, after, 4)), 8)
+        for role in (0, 1):
+            for lane in range(4):
+                for direction in ('tx', 'rx'):
+                    broken = copy.deepcopy(after)
+                    broken[role][lane][direction] = before[role][lane][direction]
+                    with self.subTest(role=role, lane=lane, direction=direction), self.assertRaises(ProtocolError):
+                        flow.background_progress(before, broken, 4)
+
+    def test_concurrent_progress_must_be_within_actual_high_not_before_or_after(self):
+        tests = {row['id']: row for row in cases.cases()}
+        for identifier, target in ((101, 3), (105, 4)):
+            test = tests[identifier]
+            for role in (1, 2):
+                counts, times, interval = [0]*20, [0]*20, [0]*20
+                interval[4:7] = [1000000, 1100000, 1000000]
+                times[16:18] = [target+1, 1000000]
+                for lane in range(target):
+                    times[0] |= 1 << lane
+                    times[1+lane], times[6+lane] = 1000010, 1099990
+                    times[11+lane] = test['serial_links'][lane]['a' if role == 1 else 'b']['instance']
+                    counts[lane*4:lane*4+4] = [20, 24, 25, 29]
+                self.assertEqual(len(flow.background_high(counts, times, interval, test, role)), target)
+                for lane in range(target):
+                    for offset, value in ((1, 900000), (6, 1100001), (6, 1050000), (11, 99)):
+                        broken = times[:]
+                        broken[offset+lane] = value
+                        with self.subTest(case=identifier, role=role, lane=lane, offset=offset), self.assertRaises(ProtocolError):
+                            flow.background_high(counts, broken, interval, test, role)
+                    for direction in (0, 2):
+                        broken = counts[:]
+                        broken[lane*4+direction+1] = broken[lane*4+direction]
+                        with self.assertRaises(ProtocolError):
+                            flow.background_high(broken, times, interval, test, role)
 
     def vector(self, observer=True):
         return ([1, 21, 3, 39, 1000000, 1100000, 1000000, 10, 10, 14, 1, 1, 1, 0, 12,
