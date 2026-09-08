@@ -1,0 +1,66 @@
+{
+  "source": "b6ac3befdc86daa058a9225abbdcf7b275f6de8f",
+  "physical_executed": true,
+  "reset_halt_resume_flash": true,
+  "files": [
+    {
+      "file": "s123-net3-retest-b6ac3be-01.json.gz",
+      "bytes": 106654,
+      "sha256": "f59a849cccfb16b043e521dbb9580aa5d864e290fcae1c011f8ebbd230e65d6b",
+      "gzip_sha256": "96860e51875a0e3e91147f88c1bc51108ef048e7d32a1ebfc834fdc41dfb87fd"
+    },
+    {
+      "file": "s123-net3-retest-b6ac3be-01.json.jsonl.gz",
+      "bytes": 66912,
+      "sha256": "b6805cc1058b04e7f250199495f13e0bbeb4ea7653f301569cd091182ac56f25",
+      "gzip_sha256": "9b890b259a9f2320134e0c308ac0bff171bf547aa636946d1a8a330531e257ac"
+    },
+    {
+      "file": "s123-existing42-02.before-net3-review.json.gz",
+      "bytes": 5986,
+      "sha256": "c41ab787a4e47942ba6b4eb38263676784569a7049100715952c6120604f32b4",
+      "gzip_sha256": "acf35b96ef4c6f3290e7a0adc93960226619867e75f5acbba417c3a93f7fb5b1"
+    },
+    {
+      "file": "s123-existing42-02.json.gz",
+      "bytes": 6267,
+      "sha256": "e4eac7e41565ce6ac6dbf1e160d7a6f448a3512c7b3c7c98161d36d3a1c4b2dd",
+      "gzip_sha256": "13afddb500b3922828bac634d954878bd52de9bf43941280a6fcae74ceea2eca"
+    },
+    {
+      "file": "retest_failed_t13_gpio.py.gz",
+      "bytes": 11091,
+      "sha256": "14e32c503bada609bd12ad88e7afc0ba4e6f8b40effd7d5828ae7fd2598aca09",
+      "gzip_sha256": "18e69e9a9a1df515ac9499f89adad9057ab08dc03a464bd14e92e5b3d76bb4f8"
+    },
+    {
+      "file": "retest_s123_net3.py.gz",
+      "bytes": 2420,
+      "sha256": "4c4bd4d7639f1a3657a8d18f65e223c23dc8c6a5dd5c136dbdef79f699d2c839",
+      "gzip_sha256": "c2e6b1fbd98210cd3114c4f932b156b47ccfc8f7e1fc0f0d50de6c83ef8a151a"
+    },
+    {
+      "file": "launch_s123_wiring_review.py.gz",
+      "bytes": 911,
+      "sha256": "5c3da97a760b716f02aff2a2ffe9e7bb7b74451daffdb91014b08d59d4ef72f3",
+      "gzip_sha256": "480aa843ac8bf8fa056d32d50498f8f9659549eac41dc4430ccb0b164e4700f8"
+    },
+    {
+      "file": "run_s123_wiring_review.py.gz",
+      "bytes": 334,
+      "sha256": "4813df23764bb501f551439124320f47a61e62406724db159c5f7c242bcaed48",
+      "gzip_sha256": "0d3789f02dd3b365eccaba42d9fba9b86b076c398025cc17fa8f48a8e8494f37"
+    },
+    {
+      "file": "resume_s123_after_net3.py.gz",
+      "bytes": 3056,
+      "sha256": "27eb680cd1ff61dbc58978656b255fb9a0de2667f1368b2bd3b7ec6f76b3550b",
+      "gzip_sha256": "31386256808748acfca6372c89bb45fa6a70efc7200c01ab8751bce261488eb7"
+    }
+  ],
+  "controlled_sector_flash": true,
+  "swd_frequency_hz": 10000000,
+  "mass_erase_unlock": false,
+  "physical_pass_added": false,
+  "scope": "Isolated GPIO20 pulses only; no serial qualification"
+}

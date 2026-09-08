@@ -14,3 +14,7 @@ config NUCODE_T13_POWER
     select POWEROFF
     select HWINFO
     select RETAINED_MEM
+config NUCODE_T13_UART_TRACE
+    bool "Diagnostic UART callback and DMA buffer history"
+    depends on !NUCODE_T13_POWER
+    default n

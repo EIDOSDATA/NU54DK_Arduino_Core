@@ -1,0 +1,60 @@
+{
+  "source": "b6ac3befdc86daa058a9225abbdcf7b275f6de8f",
+  "status": "passed",
+  "phase": "wiring",
+  "physical_executed": true,
+  "started_at": "2026-09-08T18:10:01.097702+00:00",
+  "finished_at": "2026-09-08T18:10:37.667564+00:00",
+  "error": null,
+  "case_results": [],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3792,
+      "sha256": "d94e353a4b21f4a686c3f4a5b95261fd35459853d9d199cb727229023b1ac33e",
+      "gzip_sha256": "da275b1c0a1dc75ea928189fed93cdafe944e41b1086258b4de8830a549d9172"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "fef0755b27056315793d4103376e5bd3d4ebf97622313dd99dc8d114974b511c",
+      "gzip_sha256": "ceb4e61bd6afac2555158cd2d15fb6378a8b79d5ee60f35b8edc64d773f8e1c3"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 130821,
+      "sha256": "74f0c1f71118a468c5b56ed17f56eb8dbbc077a9fdb0ebb40fc171c5979713e4",
+      "gzip_sha256": "ed51e4fd81014323c7ad5e4f2f4e54b6ac3317c64f22050251b929e6da3dc450"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 74730,
+      "sha256": "e1e32981c9fb3e25c4dd31f3c445fe6f53c2e5a2182f5fa626512285bfe653a9",
+      "gzip_sha256": "db5ebcd437aa804f808534634e73ef0abdec158584acb60efe21f379a18ecb62"
+    },
+    {
+      "file": "net3-full-s-wiring-review-01-preflight.json.gz",
+      "bytes": 670,
+      "sha256": "25226c4f09d50ceaea979e13a69de41922cde020d06bffcc593c65013ebd028d",
+      "gzip_sha256": "6f1a861b615b50613eac30bea6a51e340f7ef91a0b85bda5b5323b18363292bb"
+    },
+    {
+      "file": "net3-full-s-wiring-review-01-preflight.log.gz",
+      "bytes": 1638,
+      "sha256": "840643491452d9210bde84fc3d40c5fff63831b2655a0885f0baaf8665172dad",
+      "gzip_sha256": "4d3109f280a92a875e5f40f61573f0a1965ab495ccf6c2236eccc3bda8d0d3bc"
+    },
+    {
+      "file": "net3-full-s-wiring-review-01-execute.json.gz",
+      "bytes": 666,
+      "sha256": "e5bc35d03112dcfc45794d4ef9b55d11bf94c5b55f1dd9bd953ff631d94bf435",
+      "gzip_sha256": "38e89748b2b3b77c6a918307048e1a82ffd51c5a12066478cb92958d6bcbaa43"
+    },
+    {
+      "file": "net3-full-s-wiring-review-01-execute.log.gz",
+      "bytes": 54,
+      "sha256": "5f7267376a8673f4953dd1509e72ad59e0fbec0b05ba384babca9b048e41cfa4",
+      "gzip_sha256": "4aa5d6cb508b8b0b10484f47efe647fc1c1b3f718bcef595e32d12e5f85227d8"
+    }
+  ]
+}

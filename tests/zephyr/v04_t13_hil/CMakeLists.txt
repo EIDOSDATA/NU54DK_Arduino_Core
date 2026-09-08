@@ -10,3 +10,9 @@ target_sources(app PRIVATE src/main.cpp src/wiring.cpp src/engine.cpp src/serial
     src/adc.cpp src/pwm.cpp src/audio.cpp src/pdm.cpp src/flow.cpp src/uart_fault.cpp src/twi_stuck.cpp
     src/spi_timing.cpp)
 target_sources_ifdef(CONFIG_NUCODE_T13_POWER app PRIVATE src/power.cpp)
+
+if(CONFIG_NUCODE_T13_UART_TRACE)
+    target_sources(app PRIVATE src/uart_trace.cpp)
+    zephyr_link_options(-Wl,--wrap=nrfx_uarte_init
+        -Wl,--wrap=nrfx_uarte_rx_buffer_set -Wl,--wrap=nrfx_uarte_rx_enable)
+endif()

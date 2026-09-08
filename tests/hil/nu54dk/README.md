@@ -657,3 +657,13 @@ opcode 39의 8-word 기록은 순서·slot·sample 수·좌우 합계·최솟값
 뒤 미사용 영역을 검사한다. 첫 4개는 평균에서 제외한다. 기본 모드는 기존 1/2 buffer와 전체 PCM 원본 판정을 유지한다. 연속 모드는 장치 통계이며 전체 PCM
 export가 아니다. Stereo 25/50 selector는 같은 0/100% edge pattern, 75 selector는 반전이며 실제 stereo 25/50/75% 발생
 보증은 아니다.
+
+
+### T13 UART 첫 오류 진단
+
+`CONFIG_NUCODE_T13_UART_TRACE=y`는 S/U HIL의 별도 진단 빌드에서만 선택합니다. 기본은 비활성이고
+power image에는 적용하지 않습니다. 실제 nrfx callback·RX buffer 등록 전후의64건 이력을 RAM에
+남기며 SDK·공개 API를 수정하지 않습니다. exact ELF에서 `v04_uart_trace`와 count 주소를 확인하고,
+CPU 정지 뒤 `v04_t13_uart_trace.decode()`로 미게시·잘린·오래된 이력을 거부합니다.
+하드웨어 감시점의 halt와 이력 기록의 IRQ 지연은 정상 실행 시간에 영향을 줄 수 있으므로
+진단을 안정성 PASS에 합산하지 않습니다. 실기에는 기존 UID·10MHz·결선 확인·배타 lock·양쪽 STOP 절차가 그대로 필요합니다.

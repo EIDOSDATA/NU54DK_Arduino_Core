@@ -1,0 +1,60 @@
+{
+  "source": "b6ac3befdc86daa058a9225abbdcf7b275f6de8f",
+  "status": "failed",
+  "phase": "uart-line-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T17:54:35.694589+00:00",
+  "finished_at": "2026-09-08T17:55:23.414792+00:00",
+  "error": "ProtocolError: T13 lease renewal failed",
+  "case_results": [],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3792,
+      "sha256": "d94e353a4b21f4a686c3f4a5b95261fd35459853d9d199cb727229023b1ac33e",
+      "gzip_sha256": "da275b1c0a1dc75ea928189fed93cdafe944e41b1086258b4de8830a549d9172"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "fef0755b27056315793d4103376e5bd3d4ebf97622313dd99dc8d114974b511c",
+      "gzip_sha256": "ceb4e61bd6afac2555158cd2d15fb6378a8b79d5ee60f35b8edc64d773f8e1c3"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 144613,
+      "sha256": "a0acfca87ef1a897d368e1c5f63c0c253b213c3b746b2bf7b54c4a1254be5817",
+      "gzip_sha256": "f748d3c0dec6b907437ef336b92f836f1da37e551335180da42b65c510b5b059"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 82727,
+      "sha256": "83763344e9f8e376a4272843917ceb6e8d662165df24d26be8f3178de46adb35",
+      "gzip_sha256": "63e68333e2847855c44841bee60390cb4b77f5d0b8ea8df8200d5a4af3e16301"
+    },
+    {
+      "file": "s123-02-break-c4-r1-preflight-01-preflight.json.gz",
+      "bytes": 779,
+      "sha256": "dc5583556f84748d56ec717614d2b410f23ed63f7c085518dd3cc892050eb6d5",
+      "gzip_sha256": "3319c665bd2d4625f820e43d74b77fea3b5cc318d18453a8c9547287e190a826"
+    },
+    {
+      "file": "s123-02-break-c4-r1-preflight-01-preflight.log.gz",
+      "bytes": 1662,
+      "sha256": "cb973487456408ba993349a37161034aa62f05531e80bcddd1423263eb184489",
+      "gzip_sha256": "30f9b531fb3b86213e2d7994ea4f514bd4e9f606e7c54e113545000d277eafa6"
+    },
+    {
+      "file": "s123-02-break-c4-r1-preflight-01-execute.json.gz",
+      "bytes": 775,
+      "sha256": "da10ff24dee5952604b17e1ac417e96238b6e19886c43bd937571b9056209030",
+      "gzip_sha256": "aec6cf1046cdda3b2f439552c00d0738c9fe9d4b3694a904645da14c70649598"
+    },
+    {
+      "file": "s123-02-break-c4-r1-preflight-01-execute.log.gz",
+      "bytes": 60,
+      "sha256": "a3f36d32867fd192e7aecc6414fda853617fe5079998256ef42df1db6ff7bc92",
+      "gzip_sha256": "e5473a1bb71d1d75549fe88b3a3aa8784bc1fc78479acebb5cedbf3c4665ff5c"
+    }
+  ]
+}

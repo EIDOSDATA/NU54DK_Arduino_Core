@@ -1,0 +1,60 @@
+{
+  "source": "b6ac3befdc86daa058a9225abbdcf7b275f6de8f",
+  "status": "failed",
+  "phase": "uart-line-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T18:04:05.257117+00:00",
+  "finished_at": "2026-09-08T18:04:21.489947+00:00",
+  "error": "ProtocolError: wiring mismatch: {'levels': {'expected': 131067, 'actual': 131071}}",
+  "case_results": [],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3792,
+      "sha256": "d94e353a4b21f4a686c3f4a5b95261fd35459853d9d199cb727229023b1ac33e",
+      "gzip_sha256": "da275b1c0a1dc75ea928189fed93cdafe944e41b1086258b4de8830a549d9172"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "fef0755b27056315793d4103376e5bd3d4ebf97622313dd99dc8d114974b511c",
+      "gzip_sha256": "ceb4e61bd6afac2555158cd2d15fb6378a8b79d5ee60f35b8edc64d773f8e1c3"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 6600,
+      "sha256": "c0fd0da13dbec80016c97a04ddc34674d51b45c422b59f8453f6fb4784477597",
+      "gzip_sha256": "f3d532da904f8bbdc761806f6c6d94f41b7a79df4ae5407e1068916e39ab19c0"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 2220,
+      "sha256": "6fcbe12d1a12f8fcd8269dd7f360d2645b430af7f3acfb6dbc8342fc8cf2c602",
+      "gzip_sha256": "fac90ed84aa203ba4502e9984c824fa8496e29435e3f3ac6bb6d66e78d3ed6c5"
+    },
+    {
+      "file": "s123-02-break-c2-r2-preflight-01-preflight.json.gz",
+      "bytes": 779,
+      "sha256": "1c9b9c956b6db3742131a7a8a03e021c702bc121f4283acddd90f1c524522b03",
+      "gzip_sha256": "cc5d0f111e0bf73b9081cd593eeab8f26e9c8b8f4ba0d8f017d0282c56c1a076"
+    },
+    {
+      "file": "s123-02-break-c2-r2-preflight-01-preflight.log.gz",
+      "bytes": 1662,
+      "sha256": "a9f1801440572212946e5f03ab5125f9e51e2083fab69e92badb4f2b3756057a",
+      "gzip_sha256": "3e58e424ca093202cf23534da6362fdbbf508312b002c0232d6a5b55fdf976c4"
+    },
+    {
+      "file": "s123-02-break-c2-r2-preflight-01-execute.json.gz",
+      "bytes": 775,
+      "sha256": "a0a91eddd72ac962d6ddafbb1bd37292b0fd394b746096ef0e9978ffa5da8fc6",
+      "gzip_sha256": "7a2397887d2f1bcb7b8e8a2e3791ce39d2dc36fc593e9289168c6669b6ab8b7b"
+    },
+    {
+      "file": "s123-02-break-c2-r2-preflight-01-execute.log.gz",
+      "bytes": 84,
+      "sha256": "a6b901da131a5f19c185332078835b8210eb3c6c72a64cda068f95de7f8ddabe",
+      "gzip_sha256": "a1273cdbeda511a3558a95f59b0da029e07672552b8dee5bfa2630cbdc3dbf9e"
+    }
+  ]
+}
