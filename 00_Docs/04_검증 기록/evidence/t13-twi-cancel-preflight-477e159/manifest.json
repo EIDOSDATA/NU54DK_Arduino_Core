@@ -1,0 +1,129 @@
+{
+  "source": "477e15960a9839871edc85d4d556e5b6b67c8297",
+  "status": "passed",
+  "phase": "fault-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T05:25:27.107080+00:00",
+  "finished_at": "2026-09-08T05:26:10.382811+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/fault-preflight/twim20/mode4/role1/repeat001/restart/T13-S/preflight/twim20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim20",
+      "measured_role": "a",
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/fault-preflight/twim20/mode4/role1/repeat001/result",
+      "status": "passed",
+      "fault_seed": 500140673,
+      "restart_seed": 2214130488,
+      "planned_recovery_pass": false,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/fault-preflight/twim21/mode4/role1/repeat001/restart/T13-S/preflight/twim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21",
+      "measured_role": "a",
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/fault-preflight/twim21/mode4/role1/repeat001/result",
+      "status": "passed",
+      "fault_seed": 2527451674,
+      "restart_seed": 143827875,
+      "planned_recovery_pass": false,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/fault-preflight/twim22/mode4/role1/repeat001/restart/T13-S/preflight/twim22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim22",
+      "measured_role": "a",
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/fault-preflight/twim22/mode4/role1/repeat001/result",
+      "status": "passed",
+      "fault_seed": 1239284106,
+      "restart_seed": 3622469683,
+      "planned_recovery_pass": false,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/fault-preflight/twim30/mode4/role1/repeat001/restart/T13-S/preflight/twim30/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim30",
+      "measured_role": "a",
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/fault-preflight/twim30/mode4/role1/repeat001/result",
+      "status": "passed",
+      "fault_seed": 3846382046,
+      "restart_seed": 2071222375,
+      "planned_recovery_pass": false,
+      "normal_soak_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3755,
+      "sha256": "2b5192933a3292515a591eb3803d25eae4b6b53f3ea8a7269f920c60767f3d0e",
+      "gzip_sha256": "483e287d6c594baad9223b07d3e411fc14822591988cf8599df5decb63e5b454"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "198a6bf4c73302507dd8321015c61ddc9bb697c7c079ed7638763fa2d9268de9",
+      "gzip_sha256": "8c3553229d4deb9f6cbb3d3fe0bfec6bc611c42b2d66f3d5ee1011259eb4e412"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 257156,
+      "sha256": "94000d7d66bb6d2bc50af56ae239e7731197f6076129cce8c6a8adc74a493609",
+      "gzip_sha256": "40dbabf30483fe0ac799014bef96e7889486e1610ecb2695b2d510b357f2ade3"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 140397,
+      "sha256": "6f249b5d69ef6f2584af0d1bcc7cb3903b16506e84f67bd578199bebd925f495",
+      "gzip_sha256": "2f62ababc1f11d2a7c602941ddd3c392e457782255e75c01d55d4b836428dae8"
+    },
+    {
+      "file": "twi-cancel-477e159-preflight1-preflight.json.gz",
+      "bytes": 797,
+      "sha256": "b808b1c71bba7dd4c3f98aacef834e419857d4a892baf0cbbbd1ddeefde31565",
+      "gzip_sha256": "c49ec5a145b8d3a9d91e36653525c3354ff9f871d8d5e18985d5a443210de4b9"
+    },
+    {
+      "file": "twi-cancel-477e159-preflight1-preflight.log.gz",
+      "bytes": 1510,
+      "sha256": "48c69bbb8ee26b408ead862bc1859726e9a047a85ee7a91cd887b3beeb0cb049",
+      "gzip_sha256": "8b0add8c09c7b03a02f178c756e22d85274cdae4707cb0ed43a1b86b96fb5cb9"
+    },
+    {
+      "file": "twi-cancel-477e159-preflight1-execute.json.gz",
+      "bytes": 793,
+      "sha256": "c4653338bfcab08164241d0c746e23de9e3d76958a4b561dfa2b3ea18b21b39a",
+      "gzip_sha256": "649e073a06e736dbc9184aa28e0301ea58ceb01dd619dc766c6b660cb027b0d6"
+    },
+    {
+      "file": "twi-cancel-477e159-preflight1-execute.log.gz",
+      "bytes": 315,
+      "sha256": "8d660c8d2e12b2a44cb8a77b32f234d1ef60efa3ac0eb335e0c590e08c0a0fb4",
+      "gzip_sha256": "ec0822f9197522ea070c64835576faa12aa034baf28c7fcfa8ca4e5f0283ed7b"
+    }
+  ]
+}

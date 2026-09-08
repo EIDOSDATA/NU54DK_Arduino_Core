@@ -2,6 +2,7 @@
 #pragma once
 #include "engine.h"
 #include "measurement.h"
+#include "stream_fault.h"
 #include <zephyr/kernel.h>
 
 namespace t13

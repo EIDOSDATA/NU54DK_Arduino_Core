@@ -1,0 +1,85 @@
+{
+  "source": "f5915719188774442f1b93662a769145c5a0778c",
+  "physical_executed": true,
+  "status": "failed",
+  "normal_soak_passed": 24,
+  "normal_soak_total": 36,
+  "passed_ids": [
+    "T13-S/soak/uarte20/result",
+    "T13-S/soak/uarte21/result",
+    "T13-S/soak/uarte22/result",
+    "T13-S/soak/uarte30/result",
+    "T13-S/soak/spim0/result",
+    "T13-S/soak/spis0/result",
+    "T13-S/soak/spim20/result",
+    "T13-S/soak/spis20/result",
+    "T13-S/soak/spim21/result",
+    "T13-S/soak/spis21/result",
+    "T13-S/soak/spim22/result",
+    "T13-S/soak/spis22/result",
+    "T13-S/soak/spim30/result",
+    "T13-S/soak/spis30/result",
+    "T13-S/soak/twim20/result",
+    "T13-S/soak/twis20/result",
+    "T13-S/soak/twim21/result",
+    "T13-S/soak/twis21/result",
+    "T13-S/soak/twim22/result",
+    "T13-S/soak/twis22/result",
+    "T13-S/soak/twim30/result",
+    "T13-S/soak/twis30/result",
+    "T13-S/soak/saadc0/result",
+    "T13-S/soak/pwm20/result"
+  ],
+  "failure": "PWM21 measured LOW535us versus500us; A error9 after15.506s; source vs capture cause unresolved",
+  "cleanup": "both STOP confirmed; clocks released; all S GPIO input/no-pull",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3753,
+      "sha256": "d2d1173328a247e20349632136f5bc72e0a44a7fc6e3dbdb71d08bafe062b383",
+      "gzip_sha256": "e5eb23a83e2b0937502a1ba10765ae7f68e8bf3096135657fca48a543e4644b4"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1605,
+      "sha256": "63ee86ee93d35ade2282784c99d9943e46c562eacaec7d45f8e877084494ca69",
+      "gzip_sha256": "3922d39c58a06ba844c81456ae07b51e6323796278f147f7138260f6c878a6eb"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 2342268,
+      "sha256": "2c4e160bcd67ff344b2cfadd1ac269fa3aaeece934b6f14d94881a21ac02ac22",
+      "gzip_sha256": "c4d3a30cbc6d4b28bae4a8b1315bf3b7597430fb2629a08e744a8fa9978a5097"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 1131494,
+      "sha256": "104f7c1bdcd48f6baafc6029330bc84946ffe012af6798385b0ffd54cae59c41",
+      "gzip_sha256": "004b5efe25ba373f223aacb59b8f9330ad0c4d500763928c9da11f23ddfde184"
+    },
+    {
+      "file": "soak-all-f591571-attempt1-preflight.json.gz",
+      "bytes": 1111,
+      "sha256": "66c510160e6184fb5b7720ef3b9bf93f4c9f5f7391925455e65b87211008ad32",
+      "gzip_sha256": "d98393978af2161a88dccba68702c71d2bdc792145b6427ed5922c78d5391e63"
+    },
+    {
+      "file": "soak-all-f591571-attempt1-preflight.log.gz",
+      "bytes": 1658,
+      "sha256": "d6d35dddeb55ce0c44424b45c887e241619c440a07c3dad00575c9d571619f60",
+      "gzip_sha256": "44767b91fc25389d2bce01eb04230afe9987fcbd006d516901cadff0c53c74bc"
+    },
+    {
+      "file": "soak-all-f591571-attempt1-execute.json.gz",
+      "bytes": 1107,
+      "sha256": "ec49c9982b5c93dfa6a730629e88383f9d37b718a7566f00eab379c178fd3f77",
+      "gzip_sha256": "0600b36ecf05a731c98d04a22bbf90ece08150a5222454f0d84a5c8c00af3ce3"
+    },
+    {
+      "file": "soak-all-f591571-attempt1-execute.log.gz",
+      "bytes": 3953,
+      "sha256": "4c501d05e98dc5865e43cae8c5a4bbc6615e868adf3adfb76153de39aa8442a5",
+      "gzip_sha256": "204f3cf67a8a6660675b0bea2af8b85bc38ae1a4596470de214fddefe3868578"
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "base_source": "f5915719188774442f1b93662a769145c5a0778c",
+  "working_tree_changes": true,
+  "product_core_changed": false,
+  "implemented_modes": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "physical_executed": false,
+  "full_t13_recovery_implemented": false,
+  "files": [
+    {
+      "file": "t13-serial-fault-host-04.json.gz",
+      "bytes": 496,
+      "sha256": "472f4681fdd2ac5d13f8a76ab9e37555e6eac37646d14890616489b3c991445c",
+      "gzip_sha256": "5884544d7a629c31671ac06bc3aeb7a846f42eda9f5a7d1d69be31b7de822a06"
+    },
+    {
+      "file": "t13-serial-fault-host-04.log.gz",
+      "bytes": 1051,
+      "sha256": "872ca7929f0dc10fc4693bceafaede218b8ecab13d183285eec29aceff8d237f",
+      "gzip_sha256": "26d0365beca6ac60a05f4ef2e7be95927c5c707af005792f0fb1242dbfc981c0"
+    },
+    {
+      "file": "t13-serial-fault-runtime-01.json.gz",
+      "bytes": 501,
+      "sha256": "163419673ed8f8f10b03db23f2d0317b2a1b79f742f97d20cc08b610b6ceed05",
+      "gzip_sha256": "6195df135a9f4db90b960d25403221fc03b8f5ef10833b892b1b01092bef565f"
+    },
+    {
+      "file": "t13-serial-fault-runtime-01.log.gz",
+      "bytes": 2694,
+      "sha256": "fbe51ac361869bda678eff5348f3c8c56b99141efac15846eb8e775b068f21f2",
+      "gzip_sha256": "476da33512dfe904f4af96a12a859d7abac0d5bac4a82bb60451eae180d1ce66"
+    },
+    {
+      "file": "t13-serial-fault-target-dev-02.json.gz",
+      "bytes": 630,
+      "sha256": "1453ac5b98f1402145339af546f0c65df03b222e92543b41badb36974b260a5c",
+      "gzip_sha256": "49133bfcf70c01a2134e5a280b2df55d31ca697cfa38c8ef2839bfd3505bb738"
+    },
+    {
+      "file": "t13-serial-fault-target-dev-02.log.gz",
+      "bytes": 1905,
+      "sha256": "25d8a6e62dd4039703abbb66149c675e43a5baaeb8aac99054e7ca8aed9a6c4c",
+      "gzip_sha256": "deddadf142a324ed8a51e186995c77f1d23a909648de735f2f2ab02c9222ddc2"
+    },
+    {
+      "file": "t13-serial-fault-contract-01.json.gz",
+      "bytes": 438,
+      "sha256": "d1a74f8a516f4f70904c616bf9e6dd020cfc517ba0acb628121eee936a69bb35",
+      "gzip_sha256": "fa8f0c2c49edaec7f09f5a16a9f70c7a928528d8040e6878c7b7cd281b64607e"
+    },
+    {
+      "file": "t13-serial-fault-contract-01.log.gz",
+      "bytes": 7492,
+      "sha256": "9bf8b1f1350da541c55941e38e4f161c5c044d62a2380f29706f81c5ce6bc247",
+      "gzip_sha256": "95a43b519b19d5b6ac061173759764f38887bbc97fd49609db27291202a89890"
+    },
+    {
+      "file": "t13-serial-fault-style-01.json.gz",
+      "bytes": 501,
+      "sha256": "4f431a96863b97955ffc87ef5269b71ef81cdef117c11c68cf6212a55bb3cf62",
+      "gzip_sha256": "c4e5014e585db8738e686153226bac6e3f2fec728aec0a00fafbbcf164277f8e"
+    },
+    {
+      "file": "t13-serial-fault-style-01.log.gz",
+      "bytes": 40,
+      "sha256": "78d55fd05d33a0a2dadd265469541c973d684f4f129a146e6a0d06d717fa0daa",
+      "gzip_sha256": "b3b92d99a9f5968d6da01ffef112dd2b4c3ef8b48a6c2c0986ef0910a44c211a"
+    },
+    {
+      "file": "t13-serial-fault-docs-01.json.gz",
+      "bytes": 430,
+      "sha256": "a642be60aed8a7463495357c60fc220fbf24f91fb1f92094d23a8eb14eef764d",
+      "gzip_sha256": "35ab34cae2a677e7d3887adc6cb94613f569d27e2fd383b729527905aae5784b"
+    },
+    {
+      "file": "t13-serial-fault-docs-01.log.gz",
+      "bytes": 69,
+      "sha256": "c11283b8c51a61aad0504b6d20575681cf2fe3e1824806b7643e4f6159fab4d7",
+      "gzip_sha256": "871f01735bcba29f6dd9516207cde6592e4ad0e36e684751a81117c632e31355"
+    }
+  ]
+}

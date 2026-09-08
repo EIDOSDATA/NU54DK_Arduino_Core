@@ -2,12 +2,15 @@
 #include "engine.h"
 #include "measurement.h"
 #include "cases.h"
+#include "handover.h"
 #include "fixture_gate.h"
 #include <zephyr/kernel.h>
 
 namespace
 {
     const t13::Case *selected = nullptr;
+    t13::Case selected_variant{};
+    bool reverse_serial = false;
     v04::FixtureGate gate;
     bool started = false, quiesced = false, healthy = true;
     std::uint32_t expirations = 0U, max_gap_us = 0U;
@@ -120,8 +123,8 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         {
             out[index + 1U] = plan_hash[index];
         }
-        /** @brief serial·stream·지연 통계를 구분하고 100회 복구 capability는 별도 준비합니다. */
-        out[9] = 7U;
+        /** @brief serial·stream·지연·취소/NACK·역할/PSEL·공급 생략·미시작 PWM을 구분합니다. */
+        out[9] = 511U;
         count = 10U;
         return 0U;
     }
@@ -180,6 +183,59 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         serialPinSnapshot(args[0], out, count);
         return count == 7U ? 0U : 400U;
     }
+    if (opcode == 110U && nargs == 0U)
+    {
+        serialFaultSnapshot(out, count);
+        return 0U;
+    }
+    if (opcode == 120U && nargs == 0U)
+    {
+        serialRxFaultSnapshot(out, count);
+        return 0U;
+    }
+    if (opcode == 115U && nargs == 0U)
+    {
+        streamFaultSnapshot(out, count);
+        return 0U;
+    }
+    if (opcode == 122U && nargs == 0U)
+    {
+        pwmUnstartedSnapshot(out, count);
+        return count == 13U ? 0U : 400U;
+    }
+    if (opcode == 116U && nargs == 1U && args[0] <= 2U && !gate.claimed() && !wiringClaimed())
+    {
+        out[0] = pwmTailPolicy(args[0]) ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 117U && nargs == 0U)
+    {
+        pwmDiagnosticSnapshot(out, count);
+        return 0U;
+    }
+    if (opcode == 119U && nargs == 1U && args[0] <= 1U)
+    {
+        pwmPinSnapshot(args[0], out, count);
+        return 0U;
+    }
+    if (opcode == 118U && nargs == 1U && args[0] <= 16U)
+    {
+        audioDiagnosticSnapshot(args[0], out, count);
+        return 0U;
+    }
+    if (opcode == 112U && nargs == 1U && args[0] <= 1U && !gate.claimed() && !wiringClaimed())
+    {
+        reverse_serial = args[0] != 0U;
+        out[0] = 1U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 113U && nargs == 1U && selected != nullptr && args[0] < selected->serial_count)
+    {
+        serialBusPins(args[0], out, count);
+        return count == 8U ? 0U : 400U;
+    }
     if (opcode == 97U && nargs == 3U && !wiringClaimed() && !gate.claimed())
     {
         selected = nullptr;
@@ -187,7 +243,11 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         {
             if (test.id == args[0] && test.harness == CONFIG_NUCODE_T13_HARNESS)
             {
-                selected = &test;
+                selected_variant = test;
+                if (!reverse_serial || reverseSerialCase(selected_variant))
+                {
+                    selected = &selected_variant;
+                }
                 break;
             }
         }
@@ -220,6 +280,28 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
     if (!gate.live(k_uptime_get()))
     {
         return 403U;
+    }
+    if (opcode == 109U && nargs == 1U && !started && selected != nullptr &&
+        selected->serial_count == 1U && !selected->adc_channels && !selected->pwm_instance &&
+        !selected->pdm_instance && !selected->i2s)
+    {
+        out[0] = serialArmFault(args[0]) ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 114U && nargs == 1U && !started && selected != nullptr)
+    {
+        out[0] = streamArmFault(*selected, args[0]) ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 121U && nargs == 0U && !started && selected != nullptr &&
+        selected->pwm_instance != 0U && selected->serial_count == 0U &&
+        selected->adc_channels == 0U && selected->pdm_instance == 0U && !selected->i2s)
+    {
+        out[0] = pwmArmUnstarted() ? 1U : 0U;
+        count = 1U;
+        return 0U;
     }
     if (opcode == 98U && nargs == 0U && !started)
     {

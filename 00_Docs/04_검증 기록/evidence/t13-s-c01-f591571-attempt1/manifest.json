@@ -1,0 +1,81 @@
+{
+  "source": "f5915719188774442f1b93662a769145c5a0778c",
+  "status": "failed",
+  "physical_executed": true,
+  "normal_passed": 0,
+  "failure": "C01 289.007s A data NACK; B 241/256-byte write; RX prefix241 exact and remaining15 sentinel",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3774,
+      "sha256": "811e36aa1f04b43ebc8f0d1aa530fe4dbab6f6609d18c89d94713cd7af6072f5",
+      "gzip_sha256": "e92c43e8ed09b6c9c170c02709c7a36f42a05eec3c8b9991340bfd362f8af779"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1605,
+      "sha256": "63ee86ee93d35ade2282784c99d9943e46c562eacaec7d45f8e877084494ca69",
+      "gzip_sha256": "3922d39c58a06ba844c81456ae07b51e6323796278f147f7138260f6c878a6eb"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 653948,
+      "sha256": "c606e8623392a8954a10065512150f32f98079e5dc9c086a9394a275416f86dd",
+      "gzip_sha256": "e79d14beb4e41b12f758e57fcd558abbeff083246b3ca7aa05ae65fb27376daf"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 332533,
+      "sha256": "227a01f7d6af35025a7ae003d03067204456aeac7641969bb4b1c0b1d128994b",
+      "gzip_sha256": "7911840ab685cba037a8ffb1f5d0d451189c3ff043a8d1b37c5978d4db2085c3"
+    },
+    {
+      "file": "soak-concurrent-serial-f591571-attempt1-preflight.json.gz",
+      "bytes": 792,
+      "sha256": "e8f128cd35b81bdd9c7d2c114896ba898cc04b8f8f8888342a5df370849901d0",
+      "gzip_sha256": "0f4aa5461ab57dae7b57cddcf19689cdb89ab89bae70ced9e2a9249365d0abc2"
+    },
+    {
+      "file": "soak-concurrent-serial-f591571-attempt1-preflight.log.gz",
+      "bytes": 1375,
+      "sha256": "f2538750aad66ae678e58ef5a9cdf726357208ebba16756fc9638795bfb24d1c",
+      "gzip_sha256": "274d07b40799723179b820e69f2138909abe54c7e8def4122f0a50e42784a194"
+    },
+    {
+      "file": "soak-concurrent-serial-f591571-attempt1-execute.json.gz",
+      "bytes": 788,
+      "sha256": "6170324b41cc338a9748709d041ce646d8b6702b2a6e28544022a7a7c4f6f3ad",
+      "gzip_sha256": "43c0abeb3a42be6dd11c6786bdc43551db9e6e86df4d973a968852ef86454faf"
+    },
+    {
+      "file": "soak-concurrent-serial-f591571-attempt1-execute.log.gz",
+      "bytes": 408,
+      "sha256": "1188bff6fce8f64f3db5969c5338ba7bcade9366dba86f87bf58f9b21737fd2b",
+      "gzip_sha256": "24f9cffd826aeb04a64746b024a9f11d2d6dbfe8ed049f39c6f85757658494a4"
+    },
+    {
+      "file": "soak-concurrent-serial-f591571-attempt1-readonly-01.json.gz",
+      "bytes": 69533,
+      "sha256": "75099e137f9744a4cf9a2cb8ce4c2d9de1bad9d3800af012ae3adc0351695942",
+      "gzip_sha256": "8c4d299fed1ac7815a79c44e6bd2429eba5b4dafa6c48bcff2d9bd68544c7b35"
+    },
+    {
+      "file": "soak-concurrent-serial-f591571-attempt1-buffer-analysis-01.json.gz",
+      "bytes": 30447,
+      "sha256": "e164dd153dce3026f8d97079471c7aa34217c6f31bb32b7d6d92a8ddfc17683f",
+      "gzip_sha256": "ed5d9b5ebd97935a8c188430072aa82e14eba4fe0833c2d55875594f2681a97e"
+    },
+    {
+      "file": "read_t13_c01_failure.py.gz",
+      "bytes": 4052,
+      "sha256": "a574ae631ee15609ae51630ee61c3a348096aecbd6188e56075320f81b3e4256",
+      "gzip_sha256": "2cd7e96941e7d9aa1cf3cc337253945a815725138470a902941c547923ff1d4b"
+    },
+    {
+      "file": "analyze_t13_c01_failure.py.gz",
+      "bytes": 1840,
+      "sha256": "1d29b5b165615d08c365f613fb504243b5d25ef1196eb837ae1a7cf1430e7d14",
+      "gzip_sha256": "dd5d7cf2432571aad2bd77348bb7eeed86736b9bead7b4a9d433872cc94279b4"
+    }
+  ]
+}

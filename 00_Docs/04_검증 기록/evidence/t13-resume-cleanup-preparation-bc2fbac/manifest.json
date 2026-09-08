@@ -1,0 +1,67 @@
+{
+  "base_revision": "bc2fbac60b25c74000bfa92119dead9a175da7aa",
+  "physical_executed": false,
+  "scope": "Host partial preparation STOP fix; code unchanged by initial invalid style gate invocation",
+  "files": [
+    {
+      "file": "t13-resume-cleanup-host-01.json.gz",
+      "bytes": 517,
+      "sha256": "197ef1885c308ad4ce374e3d1ab27bc22cf0edfb4a798450f84812f32ddd1781",
+      "gzip_sha256": "669e2259ef83bde54ee35b5d9b24fc7fe598bd7096b3e40737d8197536a53d8a"
+    },
+    {
+      "file": "t13-resume-cleanup-host-01.log.gz",
+      "bytes": 7329,
+      "sha256": "c48096d5ac7e89ab9f932f75525c1e33921fd88d461d60be98236e5c5ef8dcae",
+      "gzip_sha256": "d125be84c27abd435694f8b2f4c5fa39f491a3af910267ca6a91e184ba926451"
+    },
+    {
+      "file": "t13-resume-cleanup-01-docs.json.gz",
+      "bytes": 466,
+      "sha256": "dac871c7d1debe17350493f91148b570b6bb51530742e66d78407bbd2c0dc8dc",
+      "gzip_sha256": "f0f0ea204f37fa7c9141825ec1f2b2599b59179ef12d5b121ab9551305ddfa88"
+    },
+    {
+      "file": "t13-resume-cleanup-01-docs.log.gz",
+      "bytes": 69,
+      "sha256": "2cf090d30562acde2b58709f2a4f9a02586b55460b439b79b24419679b02897a",
+      "gzip_sha256": "ce9b23064ccfe3a53b65bedf510a5b485831a813198a9f0096e8b90a26d78986"
+    },
+    {
+      "file": "t13-resume-cleanup-01-contract.json.gz",
+      "bytes": 474,
+      "sha256": "fde375574f933982f06e6c7bfa3f4f5841d379981fa4f4455268b71a6e381186",
+      "gzip_sha256": "d37e2c0617d8ccf28b40661b1b44d10ca3e85fada87e931013f0f8fa08b6049c"
+    },
+    {
+      "file": "t13-resume-cleanup-01-contract.log.gz",
+      "bytes": 7554,
+      "sha256": "653659d8a44aad92551043ac1a03278475ff2d84f6df1c9e01b40769ad5ad0b0",
+      "gzip_sha256": "6ae7cd361b86ee909c41b2db99329b7c0534cd22c5289fb99d2303ee3e7a80bb"
+    },
+    {
+      "file": "t13-resume-cleanup-01-style.json.gz",
+      "bytes": 468,
+      "sha256": "a866922d449a5ec6d2f212021287b4159eb5a7955f44f62de397efc13d988137",
+      "gzip_sha256": "a9d7ca73503792232fa8767c5aaaf9a336eee818b90fb2164510d427ce38d1f8"
+    },
+    {
+      "file": "t13-resume-cleanup-01-style.log.gz",
+      "bytes": 258,
+      "sha256": "3b7702f873b85b8dad389813dabe62926742a43c9a4108d75a39089aa64ffe25",
+      "gzip_sha256": "e368b5e904c824358a1b387af01a2edbf23517a1163363fdf03550dc903036ed"
+    },
+    {
+      "file": "t13-resume-cleanup-style-02.json.gz",
+      "bytes": 537,
+      "sha256": "da6ec1ddbfc083a3a527db86a8c938a44cc46ccd629073c99c7dc703d94a9339",
+      "gzip_sha256": "d219ed4647ed37d9afb33dbb9eef5d2ace57a65751493ea08decec6821635b04"
+    },
+    {
+      "file": "t13-resume-cleanup-style-02.log.gz",
+      "bytes": 40,
+      "sha256": "cb4ec05cc7931599781c165e64a6dc4b2bc78349f0b9b0b476f8c74912009001",
+      "gzip_sha256": "49efea3997cc3aa1b6316cc551f4249a0cc596f216487eba7db9c9fb047a873f"
+    }
+  ]
+}

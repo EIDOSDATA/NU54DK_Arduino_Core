@@ -9,6 +9,10 @@
 #include <nucode/SerialFabric.h>
 #include <zephyr/kernel.h>
 #include <hal/nrf_uarte.h>
+#include <hal/nrf_spim.h>
+#include <hal/nrf_twim.h>
+#include <hal/nrf_spis.h>
+#include <hal/nrf_twis.h>
 
 namespace
 {
@@ -40,6 +44,90 @@ namespace
     unsigned lane_count = 0U;
     bool transmitting = false;
     bool receivers_armed = false;
+
+    /** @brief 단독 serial의 의도적 첫 실패와 실제 반환 정보를 정상 통계와 분리합니다. */
+    struct Fault
+    {
+        std::uint32_t mode = 0U, triggered = 0U, result = UINT32_MAX;
+        std::uint32_t event = UINT32_MAX, tx_amount = 0U, rx_amount = 0U;
+        std::uint32_t pointers = 0U, guards = 0U, error = 0U, address = 0U;
+        std::uint32_t submitted_cycle = 0U, requested_cycle = 0U, event_cycle = 0U;
+        std::uint32_t events = 0U;
+        std::uint32_t hardware_tx = 0U, hardware_rx = 0U;
+        std::uint32_t timing_reference = 0U, rx_ready = 0U, rx_completed_before = 0U;
+        std::uint32_t rx_pending_before = 0U;
+    } fault;
+
+    /** @brief SDK가 정의한 공유 serial block 주소만 조회합니다. */
+    NRF_UARTE_Type *serialRegisters(unsigned instance)
+    {
+        switch (instance)
+        {
+        case 0U:
+            return NRF_UARTE00;
+        case 20U:
+            return NRF_UARTE20;
+        case 21U:
+            return NRF_UARTE21;
+        case 22U:
+            return NRF_UARTE22;
+        case 30U:
+            return NRF_UARTE30;
+        default:
+            return nullptr;
+        }
+    }
+
+    /** @brief 정상 frame 판정 전에 첫 오류·취소 event의 길이와 DMA 주소·가드를 보존합니다. */
+    void recordFault(Lane &lane, std::uint32_t event, const void *tx, std::size_t tx_amount,
+                     const void *rx, std::size_t rx_amount, std::uint32_t error,
+                     std::uint32_t address = 0U)
+    {
+        if (fault.triggered == 0U || &lane != &lanes[0])
+        {
+            return;
+        }
+        ++fault.events;
+        if (fault.event != UINT32_MAX)
+        {
+            return;
+        }
+        fault.event = event;
+        fault.tx_amount = static_cast<std::uint32_t>(tx_amount);
+        fault.rx_amount = static_cast<std::uint32_t>(rx_amount);
+        fault.pointers = (tx == lane.tx[0].data() ? 1U : 0U) | (rx == lane.rx[0].data() ? 2U : 0U);
+        fault.guards = 1U;
+        for (unsigned slot = 0U; slot < 2U; ++slot)
+        {
+            fault.guards &= lane.tx[slot].guards(lane.endpoint.length) &&
+                                    lane.rx[slot].guards(lane.endpoint.length)
+                                ? 1U
+                                : 0U;
+        }
+        fault.error = error;
+        fault.address = address;
+        fault.event_cycle = k_cycle_get_32();
+        /** @brief 오류 event의 descriptor 길이를 실제 전송량으로 바꾸어 기록하지 않습니다. */
+        if (lane.endpoint.kind == Kind::spim)
+        {
+            const auto *registers =
+                reinterpret_cast<NRF_SPIM_Type *>(serialRegisters(lane.endpoint.instance));
+            fault.hardware_tx = nrf_spim_tx_amount_get(registers);
+            fault.hardware_rx = nrf_spim_rx_amount_get(registers);
+        }
+        else if (lane.endpoint.kind == Kind::twim)
+        {
+            const auto *registers =
+                reinterpret_cast<NRF_TWIM_Type *>(serialRegisters(lane.endpoint.instance));
+            fault.hardware_tx = nrf_twim_txd_amount_get(registers);
+            fault.hardware_rx = nrf_twim_rxd_amount_get(registers);
+        }
+        else
+        {
+            fault.hardware_tx = fault.tx_amount;
+            fault.hardware_rx = fault.rx_amount;
+        }
+    }
 
     /** @brief 첫 실패를 보존하며 후속 성공으로 덮지 않습니다. */
     bool failure(Lane &lane, std::uint32_t code, std::uint32_t detail = 0U)
@@ -303,6 +391,16 @@ namespace
             UarteEvent event{};
             while (static_cast<UarteHandle *>(lane.handle)->takeEvent(event))
             {
+                if (event.type == UarteEventType::tx_cancelled ||
+                    event.type == UarteEventType::rx_cancelled ||
+                    event.type == UarteEventType::error)
+                {
+                    const bool receive = event.type != UarteEventType::tx_cancelled;
+                    recordFault(lane, static_cast<std::uint32_t>(event.type),
+                                receive ? nullptr : event.buffer, receive ? 0U : event.transferred,
+                                receive ? event.buffer : nullptr, receive ? event.transferred : 0U,
+                                event.error_mask);
+                }
                 if (event.type == UarteEventType::tx_complete)
                 {
                     complete(lane, event.buffer, event.transferred, false);
@@ -327,6 +425,13 @@ namespace
             while (kind == Kind::spim ? static_cast<SpimHandle *>(lane.handle)->takeEvent(event)
                                       : static_cast<SpisHandle *>(lane.handle)->takeEvent(event))
             {
+                if (event.type != SpiFabricEventType::buffers_armed &&
+                    event.type != SpiFabricEventType::buffer_needed)
+                {
+                    recordFault(lane, static_cast<std::uint32_t>(event.type), event.tx_buffer,
+                                event.tx_transferred, event.rx_buffer, event.rx_transferred,
+                                event.error_code);
+                }
                 if (event.type == SpiFabricEventType::transfer_complete)
                 {
                     complete(lane, event.tx_buffer, event.tx_transferred, false);
@@ -348,6 +453,12 @@ namespace
             while (kind == Kind::twim ? static_cast<TwimHandle *>(lane.handle)->takeEvent(event)
                                       : static_cast<TwisHandle *>(lane.handle)->takeEvent(event))
             {
+                if (kind == Kind::twim)
+                {
+                    recordFault(lane, static_cast<std::uint32_t>(event.type), event.tx_buffer,
+                                event.tx_transferred, event.rx_buffer, event.rx_transferred,
+                                event.error_code, event.address);
+                }
                 if (event.type == TwiFabricEventType::transfer_complete ||
                     event.type == TwiFabricEventType::read_complete)
                 {
@@ -406,8 +517,9 @@ namespace
         else
         {
             result = static_cast<TwimHandle *>(lane.handle)
-                         ->transferAsync(0x42U, lane.tx[slot].data(), length, lane.rx[slot].data(),
-                                         length);
+                         ->transferAsync(fault.mode == 5U ? 0x44U : 0x42U, lane.tx[slot].data(),
+                                         length, fault.mode == 5U ? nullptr : lane.rx[slot].data(),
+                                         fault.mode == 5U ? 0U : length);
         }
         if (accepted(lane, result, 60U))
         {
@@ -425,7 +537,64 @@ namespace
                 ++lane.queued_rx;
             }
             lane.next_frame = now + frame_period_ms;
+            if (fault.mode != 0U && fault.mode != 2U && fault.triggered == 0U && &lane == &lanes[0])
+            {
+                fault.triggered = 1U;
+                fault.submitted_cycle = submitted;
+                transmitting = false;
+                if (fault.mode != 5U)
+                {
+                    /** @brief 완료 전에 취소를 요청하되 실제 부분 길이는 event로 별도 증명합니다. */
+                    k_busy_wait(50U);
+                }
+                fault.requested_cycle = k_cycle_get_32();
+                SerialFabricResult cancelled = SerialFabricResult::success;
+                switch (fault.mode)
+                {
+                case 1U:
+                    cancelled = static_cast<UarteHandle *>(lane.handle)->cancelTransmit();
+                    break;
+                case 3U:
+                    cancelled = static_cast<SpimHandle *>(lane.handle)->cancelTransfer();
+                    break;
+                case 4U:
+                    cancelled = static_cast<TwimHandle *>(lane.handle)->cancelTransfer();
+                    break;
+                default:
+                    break;
+                }
+                fault.result = static_cast<std::uint32_t>(cancelled);
+                accepted(lane, cancelled, 72U);
+            }
         }
+    }
+
+    /** @brief 첫 RX 바이트가 실제 도착한 뒤 취소하여 자기 TX와 상대 RX의 시작 편차를 배제합니다. */
+    void cancelAfterReceive(Lane &lane)
+    {
+        if (fault.mode != 2U || fault.triggered != 0U || &lane != &lanes[0] || !receivers_armed ||
+            lane.endpoint.kind != Kind::uart)
+        {
+            return;
+        }
+        const auto *registers = serialRegisters(lane.endpoint.instance);
+        if (!nrf_uarte_event_check(registers, NRF_UARTE_EVENT_RXDRDY))
+        {
+            return;
+        }
+        fault.submitted_cycle = k_cycle_get_32();
+        fault.timing_reference = 1U;
+        fault.rx_ready = 1U;
+        fault.rx_completed_before = lane.received.completed;
+        fault.rx_pending_before = lane.rx_pending[0] ? 1U : 0U;
+        fault.triggered = 1U;
+        transmitting = false;
+        /** @brief RXDRDY는 RAM 저장 완료가 아니므로 실제 부분량은 취소 terminal event로 판정합니다. */
+        k_busy_wait(50U);
+        fault.requested_cycle = k_cycle_get_32();
+        const auto cancelled = static_cast<UarteHandle *>(lane.handle)->cancelReceive();
+        fault.result = static_cast<std::uint32_t>(cancelled);
+        accepted(lane, cancelled, 72U);
     }
 } // namespace
 
@@ -437,6 +606,7 @@ bool t13::serialPrepare(const Case &test, std::uint32_t seed)
     }
     transmitting = false;
     receivers_armed = false;
+    fault = {};
     lane_count = test.serial_count;
     for (auto &lane : lanes)
     {
@@ -501,6 +671,7 @@ void t13::serialService()
         }
         if (lane.error == 0U)
         {
+            cancelAfterReceive(lane);
             submit(lane, k_uptime_get());
         }
     }
@@ -625,25 +796,9 @@ void t13::serialPinSnapshot(unsigned lane, std::uint32_t *out, std::uint32_t &co
         return;
     }
     const auto instance = lanes[lane].endpoint.instance;
-    NRF_UARTE_Type *registers = nullptr;
-    switch (instance)
+    const auto *registers = serialRegisters(instance);
+    if (registers == nullptr)
     {
-    case 0U:
-        registers = NRF_UARTE00;
-        break;
-    case 20U:
-        registers = NRF_UARTE20;
-        break;
-    case 21U:
-        registers = NRF_UARTE21;
-        break;
-    case 22U:
-        registers = NRF_UARTE22;
-        break;
-    case 30U:
-        registers = NRF_UARTE30;
-        break;
-    default:
         count = 0U;
         return;
     }
@@ -655,4 +810,132 @@ void t13::serialPinSnapshot(unsigned lane, std::uint32_t *out, std::uint32_t &co
     out[5] = registers->PSEL.CTS;
     out[6] = registers->ENABLE;
     count = 7U;
+}
+
+/** @brief 준비된 단독 UART/SPI/TWI에서만 고정 취소 또는 peer 미할당 주소 NACK를 허용합니다. */
+bool t13::serialArmFault(std::uint32_t mode)
+{
+    if (lane_count != 1U || receivers_armed || fault.mode != 0U || !lanes[0].active)
+    {
+        return false;
+    }
+    const auto kind = lanes[0].endpoint.kind;
+    if (!((mode >= 1U && mode <= 2U && kind == Kind::uart) || (mode == 3U && kind == Kind::spim) ||
+          (mode >= 4U && mode <= 5U && kind == Kind::twim)))
+    {
+        return false;
+    }
+    fault.mode = mode;
+    if (mode == 2U)
+    {
+        /** @brief 이전 personality·frame의 RXDRDY를 이번 수신 시작으로 재사용하지 않습니다. */
+        nrf_uarte_event_clear(serialRegisters(lanes[0].endpoint.instance), NRF_UARTE_EVENT_RXDRDY);
+    }
+    return true;
+}
+
+/** @brief 의도적 오류 raw를 STOP 뒤에도 유지하며 새 PREPARE만 초기화합니다. */
+void t13::serialFaultSnapshot(std::uint32_t *out, std::uint32_t &count)
+{
+    const auto &lane = lanes[0];
+    const std::uint32_t values[]{fault.mode,
+                                 fault.triggered,
+                                 fault.result,
+                                 static_cast<std::uint32_t>(lane.endpoint.kind),
+                                 lane.endpoint.instance,
+                                 fault.event,
+                                 fault.tx_amount,
+                                 fault.rx_amount,
+                                 fault.pointers,
+                                 fault.guards,
+                                 fault.error,
+                                 fault.address,
+                                 fault.submitted_cycle,
+                                 fault.requested_cycle,
+                                 fault.event_cycle,
+                                 fault.events,
+                                 fault.hardware_tx,
+                                 fault.hardware_rx,
+                                 lane.error,
+                                 CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC};
+    for (unsigned index = 0U; index < 20U; ++index)
+    {
+        out[index] = values[index];
+    }
+    count = 20U;
+}
+
+/** @brief 원래20word 응답을 확장하지 않고 RX 취소 시점의 별도 근거를8word로 보존합니다. */
+void t13::serialRxFaultSnapshot(std::uint32_t *out, std::uint32_t &count)
+{
+    const std::uint32_t values[]{fault.mode,
+                                 fault.timing_reference,
+                                 fault.rx_ready,
+                                 fault.rx_completed_before,
+                                 fault.rx_pending_before,
+                                 fault.submitted_cycle,
+                                 fault.requested_cycle,
+                                 fault.event_cycle};
+    for (unsigned index = 0U; index < 8U; ++index)
+    {
+        out[index] = values[index];
+    }
+    count = 8U;
+}
+
+/** @brief SPI/TWI START 전에 실제 PSEL을 읽으며 없는 signal slot은 disconnected로 표시합니다. */
+void t13::serialBusPins(unsigned index, std::uint32_t *out, std::uint32_t &count)
+{
+    count = 0U;
+    if (index >= max_lanes)
+    {
+        return;
+    }
+    const auto &endpoint = lanes[index].endpoint;
+    const auto *address = serialRegisters(endpoint.instance);
+    if (address == nullptr)
+    {
+        return;
+    }
+    out[0] = static_cast<std::uint32_t>(endpoint.kind);
+    out[1] = endpoint.instance;
+    out[2] = address->ENABLE;
+    for (unsigned slot = 3U; slot < 8U; ++slot)
+    {
+        out[slot] = UINT32_MAX;
+    }
+    if (endpoint.kind == Kind::spim)
+    {
+        const auto *registers = reinterpret_cast<const NRF_SPIM_Type *>(address);
+        out[3] = nrf_spim_sck_pin_get(registers);
+        out[4] = nrf_spim_mosi_pin_get(registers);
+        out[5] = nrf_spim_miso_pin_get(registers);
+        out[6] = nrf_spim_csn_pin_get(registers);
+        out[7] = nrf_spim_dcx_pin_get(registers);
+    }
+    else if (endpoint.kind == Kind::spis)
+    {
+        const auto *registers = reinterpret_cast<const NRF_SPIS_Type *>(address);
+        out[3] = nrf_spis_sck_pin_get(registers);
+        out[4] = nrf_spis_mosi_pin_get(registers);
+        out[5] = nrf_spis_miso_pin_get(registers);
+        out[6] = nrf_spis_csn_pin_get(registers);
+    }
+    else if (endpoint.kind == Kind::twim)
+    {
+        const auto *registers = reinterpret_cast<const NRF_TWIM_Type *>(address);
+        out[3] = nrf_twim_sda_pin_get(registers);
+        out[4] = nrf_twim_scl_pin_get(registers);
+    }
+    else if (endpoint.kind == Kind::twis)
+    {
+        const auto *registers = reinterpret_cast<const NRF_TWIS_Type *>(address);
+        out[3] = nrf_twis_sda_pin_get(registers);
+        out[4] = nrf_twis_scl_pin_get(registers);
+    }
+    else
+    {
+        return;
+    }
+    count = 8U;
 }

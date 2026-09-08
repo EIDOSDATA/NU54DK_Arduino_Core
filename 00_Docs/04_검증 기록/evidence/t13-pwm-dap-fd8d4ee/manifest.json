@@ -1,0 +1,69 @@
+{
+  "source": "fd8d4ee8cadb0ced1be0182e369ecad867e9d4c6",
+  "status": "failed",
+  "physical_executed": true,
+  "normal_passed": 0,
+  "failure": "not started: B unsupported_route because HIL overlay omits PWM capability; A not prepared; later read-only proves both17inputs",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 1749,
+      "sha256": "cf7901f3695a9167d28a1218fdb367fa3ab678d39580e75083da7703f1a8ebe4",
+      "gzip_sha256": "f7417707ba15910b7c4ca92921e1ab9600ac3aebfa97b74bcdcf00915b3a02ed"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "ec4a98a64d687bca29bea5665cdc1682008a4dbea88e76c2aeaa31f35c2976e0",
+      "gzip_sha256": "fb8e9a5ccdfcbe5f6d7f9f24ee9de420a3ea2481d92e003e1060f596c2219421"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 136353,
+      "sha256": "dbffd29c5f11db056d8cae14f2241b9f3cc37cc9ffd8746fd6fd5907aa52ee30",
+      "gzip_sha256": "410bb0062c56371980f9ac956d5894d1ad1dea6bc1585471f7b83051740919bc"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 77616,
+      "sha256": "2f99ecdf2d7f41cdcc90f5945118a7a0ca65462bad4fc11b46626c46046c5e2d",
+      "gzip_sha256": "795a15a5036e2285e865f5830a806c00e8755e12807a2d6f38ceb96f360c599d"
+    },
+    {
+      "file": "pwm21-dap-fd8d4ee-diagnostic1-preflight.json.gz",
+      "bytes": 744,
+      "sha256": "dc41b85c4f485591f8e67c9b11beeb1b8a92f85c7fddded5eabbab72df82125f",
+      "gzip_sha256": "55812aef2f93edcdbe6a78830a4c57c9cfa871044c3d7211e338efa4406bbe92"
+    },
+    {
+      "file": "pwm21-dap-fd8d4ee-diagnostic1-preflight.log.gz",
+      "bytes": 1488,
+      "sha256": "5f7b44018c64d2326b29f8a9a94ceb4a7681967181cba210f035bd0c0c513dd5",
+      "gzip_sha256": "eaec210069976adde715aab14aa4e974ba9c9e00627cb27df6d661ef07551c7c"
+    },
+    {
+      "file": "pwm21-dap-fd8d4ee-diagnostic1-execute.json.gz",
+      "bytes": 740,
+      "sha256": "b962f39664e79d6b31f20a3abce965ecc9ddb2ad29d267e38df83a57502de21a",
+      "gzip_sha256": "3690475563ff19af6d0cc0cb02b0079f0802a25f90107d5118e307e04a26481e"
+    },
+    {
+      "file": "pwm21-dap-fd8d4ee-diagnostic1-execute.log.gz",
+      "bytes": 58,
+      "sha256": "dd20c2266fa073d2ff8b146c5619d2197e33cf8fe044f6db43f1ccfe2cebe533",
+      "gzip_sha256": "4654d7f265470242a8b1a846785bf5b2c4427c677432516c2f5c43114fe2066c"
+    },
+    {
+      "file": "pwm21-dap-fd8d4ee-diagnostic1-readonly.json.gz",
+      "bytes": 5660,
+      "sha256": "a2ee8b55500114fa2de151244eb7a8fbd2145a2697b60adae6e97c694086fa4e",
+      "gzip_sha256": "6cea9f7dfdbf50b8077f634f94f48774164c34f7d6bdd900900d6bddde5bec03"
+    },
+    {
+      "file": "read_t13_start_failure.py.gz",
+      "bytes": 5235,
+      "sha256": "7d00e228c4b5d3647cf2556cf25330271a5e6f78c8c4fefd874fe4fc150981e3",
+      "gzip_sha256": "896db400165a07409feb55910605759c2b0ce5bd7619b4a89c31c1d342600815"
+    }
+  ]
+}

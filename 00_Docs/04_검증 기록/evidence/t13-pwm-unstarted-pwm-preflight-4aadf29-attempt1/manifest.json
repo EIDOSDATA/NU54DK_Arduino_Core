@@ -1,0 +1,115 @@
+{
+  "source": "4aadf29fb4cca1febc39ef556c1c9c2cce8a9e0d",
+  "status": "passed",
+  "phase": "pwm-recovery-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T06:26:11.957154+00:00",
+  "finished_at": "2026-09-08T06:26:59.798867+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm20/mode2/repeat001/restart/T13-S/preflight/pwm20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/pwm20",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm20/mode2/repeat001/result",
+      "status": "passed",
+      "mode": 2,
+      "fault_seed": 3557627496,
+      "restart_seed": 1245343697,
+      "planned_pwm_recovery_pass": false,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm21/mode2/repeat001/restart/T13-S/preflight/pwm21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/pwm21",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm21/mode2/repeat001/result",
+      "status": "passed",
+      "mode": 2,
+      "fault_seed": 2725063089,
+      "restart_seed": 1012551688,
+      "planned_pwm_recovery_pass": false,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm22/mode2/repeat001/restart/T13-S/preflight/pwm22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/pwm22",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm22/mode2/repeat001/result",
+      "status": "passed",
+      "mode": 2,
+      "fault_seed": 243494960,
+      "restart_seed": 2427718025,
+      "planned_pwm_recovery_pass": false,
+      "normal_soak_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3755,
+      "sha256": "777e5b8ffaf8ee5ea8ebc9150c6eb891c8615f8d73788a2c61e86e0f31974152",
+      "gzip_sha256": "181af6813a30c4234186c80f49613bfb878440b04399d041f86c82f3933c11d7"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "bd79a68cd183066829d344076efe300e6d9344d99c825e37e7edbea31a70829a",
+      "gzip_sha256": "5ce4a8b57f0084168f627366efd43ddcf042a5d6d4faa95e87c4e4d3335d6daa"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 216150,
+      "sha256": "6f9aa8ba7c0ae1f56ca449c79d77f0db25589cec2ee42fd6dd49d0a367aaa5dd",
+      "gzip_sha256": "f97334a55d98cd1b6abb17ca81c50af606975ade3c714bbaa30972096bbff31f"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 116653,
+      "sha256": "752a9d1c95997df565a75ce8e3eed7114efc5c73b70a59527b9022a04442bd83",
+      "gzip_sha256": "eb83e90f5cb8b964cb0ceea5bfdd5eb10b416687a03faa51d3c50c19ca70c344"
+    },
+    {
+      "file": "pwm-unstarted-4aadf29-pwm-preflight-1-preflight.json.gz",
+      "bytes": 785,
+      "sha256": "1505f668906c4c6ddbe9bb98d8844a98823096e66d03ec52cf778d8170d2a61a",
+      "gzip_sha256": "92f560dc81c3fc8528134213efc0539473284c4378e433309b042abbc757c178"
+    },
+    {
+      "file": "pwm-unstarted-4aadf29-pwm-preflight-1-preflight.log.gz",
+      "bytes": 1541,
+      "sha256": "140bbda94e04ee561371b7c5cbc23dbd15b0ac87b111712b5339c27a88270a1f",
+      "gzip_sha256": "4c2681454d43567752d682fd4fbf3ba119f2098653e7a464a78a9da023267fd7"
+    },
+    {
+      "file": "pwm-unstarted-4aadf29-pwm-preflight-1-execute.json.gz",
+      "bytes": 781,
+      "sha256": "d34acc5d3e464cd92043ca170b7e0a272e52046948e74c1a1d2bb7d47d63b954",
+      "gzip_sha256": "5f9b95fabf44fe95677335f65b09e5d6c828eb250d71221f8a1dd6ceb9ae7677"
+    },
+    {
+      "file": "pwm-unstarted-4aadf29-pwm-preflight-1-execute.log.gz",
+      "bytes": 247,
+      "sha256": "aba016d0e28c113b14c76c0e4aac53b4c33a614ad25d55c638c09cf211a4af92",
+      "gzip_sha256": "b62847a001565a57bcd98d89b6e54dcaa156cfb57b6d8c1a5b42f229d4b8e102"
+    }
+  ]
+}

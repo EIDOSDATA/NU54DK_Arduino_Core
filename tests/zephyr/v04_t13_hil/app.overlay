@@ -1,1 +1,10 @@
 #include "../v04_pair_hil/app.overlay"
+
+/**
+ * @brief S의 DAP 분리 DATA net에서 단독 PWM 진단을 허용합니다.
+ * @note 생산 핀 정책은 바꾸지 않으며 기존 P1 PWM route와 현재 S 확인을 사용합니다.
+ */
+&arduino_p1_06
+{
+    nucode,capability-mask = <(NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_OUTPUT | NUCODE_PIN_CAP_ANALOG | NUCODE_PIN_CAP_OPEN_DRAIN | NUCODE_PIN_CAP_INTERRUPT | NUCODE_PIN_CAP_PWM)>;
+};

@@ -1,0 +1,21 @@
+{
+  "source": "03f5ba4dd750032d882cc3f7f3e939be2023e629",
+  "type": "read-only-postflight",
+  "physical_executed": true,
+  "reset_halt_resume_flash": false,
+  "swd_frequency_hz": 10000000,
+  "files": [
+    {
+      "file": "pdm-03f5ba4-starvation-preflight1-readonly-enable-01.json.gz",
+      "bytes": 1341,
+      "sha256": "1082d6899662e1bed8fca2e266374adaeffce1492af6e6814022afc7977c987a",
+      "gzip_sha256": "fc0daec12f9225d00666f6519c10975fcbf973adf99523a2489f7e533bb62c9d"
+    },
+    {
+      "file": "read_t13_pdm_stop_failure.py.gz",
+      "bytes": 2716,
+      "sha256": "4eb8925cfca1acab0955d16c5949f66dc747afa2445130dcf5dc9cf96756193d",
+      "gzip_sha256": "19fe472d253d8c7126becf322f37d796f55bcbab02ec77a1210141fd2f9b809b"
+    }
+  ]
+}

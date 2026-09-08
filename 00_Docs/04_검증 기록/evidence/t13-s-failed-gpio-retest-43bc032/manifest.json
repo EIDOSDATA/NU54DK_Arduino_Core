@@ -1,0 +1,33 @@
+{
+  "source": "43bc0320d6681d57d2ec1cd569fef35f7dd8ec0d",
+  "physical_executed": true,
+  "status": "focused-wiring-retest-passed",
+  "functional_or_soak_pass": false,
+  "completed_pulses": 20,
+  "files": [
+    {
+      "file": "p204-p202-retest-43bc032-attempt1.json.gz",
+      "bytes": 106495,
+      "sha256": "60347a8a0e8aacf86b58d9a6cda29f12b07f296f5f5c6e56a0b4878795d65eb3",
+      "gzip_sha256": "2323d1db99c5caca67a467deeee5bfe6df4918a04449399b81cd6179975d9f12"
+    },
+    {
+      "file": "p204-p202-retest-43bc032-attempt1.json.jsonl.gz",
+      "bytes": 66752,
+      "sha256": "75462f124ed60b2f4964bb489f358e7df1d22775bb94a6cad0c0e5577dd0ba12",
+      "gzip_sha256": "7007ae8d58880e643b59998b0e25f79e2b94e2485fcdb6a1b865fa36cc466332"
+    },
+    {
+      "file": "p204-p202-retest-analysis-43bc032.json.gz",
+      "bytes": 530,
+      "sha256": "460b5526f9af544dbea0d27aeb94e7658fa6ee34ed7dfdab8eea379cc241851b",
+      "gzip_sha256": "62484ecf2c1ea486119197dcacf67a1e29829c80110ff98bedfdfd39b360bec4"
+    },
+    {
+      "file": "retest_failed_t13_gpio.py.gz",
+      "bytes": 11091,
+      "sha256": "14e32c503bada609bd12ad88e7afc0ba4e6f8b40effd7d5828ae7fd2598aca09",
+      "gzip_sha256": "18e69e9a9a1df515ac9499f89adad9057ab08dc03a464bd14e92e5b3d76bb4f8"
+    }
+  ]
+}

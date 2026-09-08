@@ -6,6 +6,36 @@ from v04_protocol import ProtocolError
 MASK = 0xFFFFFFFF
 
 
+def i2s_failure(words, buffer, seed, role):
+    """! @brief 최초 실패 DMA의 전체256word를 독립 전역 pattern과 대조하며 원인을 단정하지 않습니다. """
+    from v04_common_i2s import pattern as i2s_pattern
+    if (role not in (1, 2) or len(words) != 20 or len(buffer) != 256 or
+            any(type(word) is not int or not 0 <= word <= MASK for word in words + buffer) or
+            words[:4] != [20, role, lane_seed(seed, 0, role), lane_seed(seed, 0, 3-role)] or
+            words[4] not in range(0, 17, 2) or words[6] == 0 or words[10] >= 3 or
+            words[11] == 0 or words[10] != (words[11]-1) % 3 or
+            not words[11] <= words[12] <= words[11]+2 or words[13:16] != [6, words[7], 1] or
+            words[16] != 1 or words[17] == 0 or words[19] != 256):
+        raise ProtocolError('T13 incomplete I2S failure DMA or metadata')
+    first_sample = (words[11]-1)*256-words[4]
+    if first_sample < 0 or words[5] != words[11]*256-words[4]:
+        raise ProtocolError('T13 I2S failure position/count does not identify one returned buffer')
+    mismatches = []
+    for offset, actual in enumerate(buffer):
+        index = first_sample+offset
+        expected = i2s_pattern(words[3], index)
+        if expected != actual:
+            neighbours = [distance for distance in (-4, -2, -1, 1, 2, 4)
+                          if index+distance >= 0 and i2s_pattern(words[3], index+distance) == actual]
+            mismatches.append({'index':index, 'expected':expected, 'actual':actual,
+                               'xor':expected ^ actual, 'matching_neighbour_offsets':neighbours})
+    if (len(mismatches) != words[6] or not mismatches or
+            [mismatches[0][key] for key in ('index', 'expected', 'actual')] != words[7:10]):
+        raise ProtocolError('T13 I2S raw DMA does not reproduce the device first mismatch')
+    return {'role':role, 'returned_buffer_index':words[11]-1, 'first_sample':first_sample,
+            'mismatches':mismatches, 'normal_pass':False}
+
+
 def uart_pins(words, endpoint):
     """! @brief 실제 UART PSEL의 사용 핀과 미사용 RTS/CTS 분리를 송신 전에 대조합니다. """
     if (len(words) != 7 or any(type(word) is not int or not 0 <= word <= MASK for word in words) or
@@ -22,6 +52,23 @@ def uart_pins(words, endpoint):
     if words[:6] != expected or words[6] not in (0, 8):
         raise ProtocolError(f'T13 UART pin selection mismatch: actual={words}; expected={expected}')
     return dict(zip(('instance', 'hwfc', 'txd', 'rxd', 'rts', 'cts', 'enable'), words))
+
+
+def bus_pins(words, endpoint):
+    """! @brief SPI/TWI의 실제 PSEL과 SPIM 미사용 DCX를 START 전에 대조합니다. """
+    kinds = {'spim': (2, 7), 'spis': (3, 2), 'twim': (4, 6), 'twis': (5, 9)}
+    if endpoint['kind'] not in kinds or len(words) != 8 or any(type(word) is not int or not 0 <= word <= MASK for word in words):
+        raise ProtocolError('T13 invalid SPI/TWI pin snapshot')
+    kind, enable = kinds[endpoint['kind']]
+    signals = ('sck', 'mosi', 'miso', 'csn') if kind in (2, 3) else ('sda', 'scl')
+    pins = []
+    for signal in signals:
+        port, number = map(int, endpoint['pins'][signal][1:].split('.'))
+        pins.append(port * 32 + number)
+    expected = pins + [MASK] * (5-len(pins))
+    if words[:2] != [kind, endpoint['instance']] or words[2] not in (0, enable) or words[3:] != expected:
+        raise ProtocolError(f'T13 SPI/TWI pin selection mismatch: actual={words}; expected={expected}')
+    return {'kind': endpoint['kind'], 'instance': words[1], 'enable': words[2], 'psel': words[3:]}
 
 
 def pattern(seed, index):

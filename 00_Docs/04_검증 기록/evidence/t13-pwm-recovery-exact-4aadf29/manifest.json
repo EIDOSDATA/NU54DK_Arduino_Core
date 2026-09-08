@@ -1,0 +1,43 @@
+{
+  "source": "4aadf29fb4cca1febc39ef556c1c9c2cce8a9e0d",
+  "physical_executed": false,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "t13-pwm-recovery-exact-target-01.json.gz",
+      "bytes": 666,
+      "sha256": "3ae4251a2376b88b57a92c711048fbf323ee26577a9bd52f85e08c922fcb07dc",
+      "gzip_sha256": "01010e2377816efd6343e40920f9ad8170684f652767a5e11a052d694af55de3"
+    },
+    {
+      "file": "t13-pwm-recovery-exact-target-01.log.gz",
+      "bytes": 2060,
+      "sha256": "d8d93f968702bca9d71c94a5a47a30c445932903077fdae273ddd8f0c5b4e4c6",
+      "gzip_sha256": "cc8afeb19e568697811402c5d88e481b52635b500a2e78ca4026098cff6bf1d1"
+    },
+    {
+      "file": "t13-pwm-recovery-exact-host-01.json.gz",
+      "bytes": 497,
+      "sha256": "b81dad0e84786a86ea1274da04fd71690a9048c661da594a15de2283703c0242",
+      "gzip_sha256": "1daf3088241187a05842346e56f95f2a2a4872646a6e6624fbe27a8616a2b82c"
+    },
+    {
+      "file": "t13-pwm-recovery-exact-host-01.log.gz",
+      "bytes": 9877,
+      "sha256": "7a229d18cc86e8b0255fb594e96cf37451a807d2236302cede380382d95210c7",
+      "gzip_sha256": "e2a619fdd8a88b05af821c3e9ed71aed069792593ca3e2fc29bedd82251e7c87"
+    },
+    {
+      "file": "ci-4aadf29-02.json.gz",
+      "bytes": 1802,
+      "sha256": "fda7f9b03759ffb33e96bda9be6aafc34a49579797beef79b06a6f6a3c0543e7",
+      "gzip_sha256": "1015d7996c2cef13b2586d8090adbfb95543032a758c3138c33d3295cb158364"
+    },
+    {
+      "file": "ci-4aadf29-02.host.log.gz",
+      "bytes": 295600,
+      "sha256": "366c6943d9d2a89a43ba131aac3e2a34fe3b996f32a983d85d476f60907ee988",
+      "gzip_sha256": "4532df2df6947ebfc2b0a873363c48429332f963143bd68049ba74d4656970cf"
+    }
+  ]
+}

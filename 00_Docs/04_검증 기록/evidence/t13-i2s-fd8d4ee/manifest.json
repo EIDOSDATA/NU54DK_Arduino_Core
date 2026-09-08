@@ -1,0 +1,93 @@
+{
+  "source": "fd8d4ee8cadb0ced1be0182e369ecad867e9d4c6",
+  "status": "failed",
+  "physical_executed": true,
+  "normal_passed": 0,
+  "failure": "A10776ms first29 mismatches are trailing zero words; B no stream error; both TX3slots independently exact after STOP",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 1749,
+      "sha256": "cf7901f3695a9167d28a1218fdb367fa3ab678d39580e75083da7703f1a8ebe4",
+      "gzip_sha256": "f7417707ba15910b7c4ca92921e1ab9600ac3aebfa97b74bcdcf00915b3a02ed"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "ec4a98a64d687bca29bea5665cdc1682008a4dbea88e76c2aeaa31f35c2976e0",
+      "gzip_sha256": "fb8e9a5ccdfcbe5f6d7f9f24ee9de420a3ea2481d92e003e1060f596c2219421"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 154089,
+      "sha256": "a3642f1fafba08468f6ebdc27a262523f4e2a70c14912fa5dcdb66638ea821d2",
+      "gzip_sha256": "18a2ea9a0d5f818e3885f69a6cdf7b18f67f50d26f9fdad4c79caff7a67895f8"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 87264,
+      "sha256": "51fa9884d6aae9ce765abfc475290caf8740455d27406f7bfe4f0e1250185ae4",
+      "gzip_sha256": "024c5f43855fb7cc37bb5ca6ea916716ae8ef4bdae6478f6fb8d07ddfe73511b"
+    },
+    {
+      "file": "i2s-fd8d4ee-diagnostic1-preflight.json.gz",
+      "bytes": 679,
+      "sha256": "57d40c33219484b5c5ae9c0e7bdd062e4e7a4c93b41220ae46c2805fa2cfa9bd",
+      "gzip_sha256": "240701979c39af8cd2cd2efd5e2ee9abe63b0c82187781fb7bbe474d6ff39091"
+    },
+    {
+      "file": "i2s-fd8d4ee-diagnostic1-preflight.log.gz",
+      "bytes": 1478,
+      "sha256": "8ddd324a31326e9b91e42a60ae0e9622cccb08cd2a0679d067134a28843c65a0",
+      "gzip_sha256": "d8f92e4d1390cdc5bb01757a884fc0e33d31e8102b9f105d7803ede66ad1df71"
+    },
+    {
+      "file": "i2s-fd8d4ee-diagnostic1-execute.json.gz",
+      "bytes": 675,
+      "sha256": "396916c9850c3d4c6b522386309f3467acec5fa5ff2f194915e1d57ee65a2830",
+      "gzip_sha256": "66932e96f236e87e50a132e2651909fd721626e68d44a5072f71d55e58936b41"
+    },
+    {
+      "file": "i2s-fd8d4ee-diagnostic1-execute.log.gz",
+      "bytes": 60,
+      "sha256": "a3f36d32867fd192e7aecc6414fda853617fe5079998256ef42df1db6ff7bc92",
+      "gzip_sha256": "e5473a1bb71d1d75549fe88b3a3aa8784bc1fc78479acebb5cedbf3c4665ff5c"
+    },
+    {
+      "file": "i2s-fd8d4ee-diagnostic1-analysis-01.json.gz",
+      "bytes": 4669,
+      "sha256": "2920e52999ff68f3071ecd03a03d122101eed3d9aa61ac929688332eb99f1a54",
+      "gzip_sha256": "a25b615dc96c62442a39d7aa69783bc27d67bdcdd247d8734fe3abf59fef6c14"
+    },
+    {
+      "file": "i2s-fd8d4ee-diagnostic1-readonly-01.json.gz",
+      "bytes": 22611,
+      "sha256": "f56cdc7e84532e643ab0579c9cd7f5eb81442c0217d2e928833774166d48fe49",
+      "gzip_sha256": "22dcc5d1833bff3a86afdb798916b80de632f01a840f2c6401855c2f1ffc6bb1"
+    },
+    {
+      "file": "i2s-fd8d4ee-diagnostic1-tx-analysis-01.json.gz",
+      "bytes": 876,
+      "sha256": "bbac9ff0d6478925d8a57e6bd1f9ee6b0b67969a99b38faaafb98804ccf03bb8",
+      "gzip_sha256": "f87f241cf711efb7db8e8f3c67ab393cf21992069b92dc53f1f11545cadefdc7"
+    },
+    {
+      "file": "analyze_t13_i2s_failure.py.gz",
+      "bytes": 1074,
+      "sha256": "90e3b5feaa4ef4be7e1d920fe7dfa62a68dfd6fda7b3abef796e43ffe0258b42",
+      "gzip_sha256": "14aa06efefb15d189cb7c3ddec7f1bc3a64ddaadac131de0ea5987a3fdde30c1"
+    },
+    {
+      "file": "read_t13_i2s_failure.py.gz",
+      "bytes": 2815,
+      "sha256": "3b8c16bc0013d5792f9db7aa1b939d14d4c668e01c05702c1b619553e1553965",
+      "gzip_sha256": "2f61c3d6838f049ea4d721763b7df925f6ff8c3923f0b9aaf0532f52dee722c1"
+    },
+    {
+      "file": "analyze_t13_i2s_tx.py.gz",
+      "bytes": 1277,
+      "sha256": "87edca362a5ef30c449c69cb2c19ffde238804a67dd48cb6dd926b323cc38c66",
+      "gzip_sha256": "48e93b9dfe5399213ecd8399b8bd209f14af618f01d9f780eef0fe7b7e9143ce"
+    }
+  ]
+}

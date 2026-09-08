@@ -12,6 +12,10 @@ import time
 
 import v04_pair as pair
 import v04_t13_cases as catalog
+import v04_t13_fault as faults
+import v04_t13_stream_fault as stream_faults
+import v04_t13_pwm_recovery as pwm_recovery
+import v04_t13_handover as handover
 import v04_t13_oracle as oracle
 import v04_t13_session as session
 import v04_wiring as wiring
@@ -84,6 +88,21 @@ def prepared_uart_pins(devices, test, append, label):
         oracle.uart_pins(words, endpoint)
 
 
+def prepared_bus_pins(devices, test, append, label):
+    """! @brief 양쪽 모든 SPI/TWI raw를 보존한 뒤 실제 signal 선택을 대조합니다. """
+    raw = []
+    for device in devices:
+        role = device.image['role']
+        for index, link in enumerate(test['serial_links']):
+            endpoint = link['a' if role == 1 else 'b']
+            if endpoint['kind'] != 'uarte':
+                words = device.command(113, (index,), timeout=2)
+                append(label + f'/role{role}/lane{index}/bus-pins', {'status': 'observation', 'words': words})
+                raw.append((words, endpoint))
+    for words, endpoint in raw:
+        oracle.bus_pins(words, endpoint)
+
+
 def timings(devices, test, append, label):
     """! @brief queue·완료 관측·service 지연의 고정 histogram을 raw와 함께 보존합니다. """
     raw = []
@@ -134,11 +153,50 @@ def stop_pair(devices, append, label):
     return all(row['stopped'] for row in outcomes)
 
 
-def execute_group(devices, group, duration, continuity, append, *, preflight):
+def failure_snapshots(devices, test, append, identifier):
+    """! @brief PREPARE 전 보드에는 보호된 stream 명령을 보내지 않아 STOP 세션을 보존합니다. """
+    for device in devices:
+        prefix = identifier + f'/failure/role{device.image["role"]}'
+        try:
+            engine = device.command(99, timeout=2)
+            append(prefix + '/engine', {'status': 'observation', 'words': engine})
+        except BaseException as error:
+            append(prefix + '/engine', {'status': 'unproven', 'error': f'{type(error).__name__}: {error}'})
+            continue
+        observations = [(107, (0,), 'clock')]
+        if engine[0] == test['id']:
+            observations = [(100, (index,), f'lane{index}') for index in range(len(test['serial_links']))]
+            observations += [(104, (index,), f'stream{index}') for index in oracle.stream_indices(test)]
+            if test['pwm_instance']:
+                observations += [(107, (page,), f'pwm-trace{page}') for page in range(5)]
+                observations += [(117, (), 'pwm-registers')]
+                observations += [(119, (page,), f'pwm-pins-page{page}') for page in range(2)]
+            else:
+                observations += [(107, (0,), 'clock')]
+            if test['i2s']:
+                observations += [(118, (page,), f'i2s-failure-page{page}') for page in range(17)]
+        for opcode, arguments, name in observations:
+            try:
+                append(prefix + '/' + name, {'status': 'observation',
+                    'words': device.command(opcode, arguments, timeout=2)})
+            except BaseException as error:
+                append(prefix + '/' + name, {'status': 'unproven', 'error': f'{type(error).__name__}: {error}'})
+                break
+
+
+def execute_group(devices, group, duration, continuity, append, *, preflight, seed=None):
     """! @brief 중단 시간을 합산하지 않고 설정을 유지한 한 구간만 판정합니다. """
     test = group['test']
-    seed = secrets.randbits(32)
-    identifier = f'T13-S/{"preflight" if preflight else "soak"}/{test["name"]}'
+    seed = secrets.randbits(32) if seed is None else seed
+    diagnostic_mode = test.get('_pwm_diagnostic_tail', 0)
+    if diagnostic_mode not in (0, 1, 2):
+        raise ProtocolError('unsupported fixed PWM diagnostic route')
+    diagnostic = bool(diagnostic_mode)
+    if diagnostic and (not preflight or test['serial_links'] or not test['pwm_instance'] or
+                       test['adc_channels'] or test['pdm_instance'] or test['i2s']):
+        raise ProtocolError('PWM failure tail is restricted to standalone diagnostic observation')
+    phase = 'pwm-diagnostic' if diagnostic else 'preflight' if preflight else 'soak'
+    identifier = f'T13-S/{phase}/{test["name"]}'
     continuity.check()
     append(identifier + '/input', {'status': 'input', 'test': test, 'seed': seed,
         'measured_members': [member['name'] for member in group['members']],
@@ -149,6 +207,10 @@ def execute_group(devices, group, duration, continuity, append, *, preflight):
         for device in devices:
             if device.command(106, (1,), timeout=2) != [1]:
                 raise ProtocolError('T13 precision clock policy failed')
+            if device.command(112, (int(test.get('_reverse_serial', False)),), timeout=2) != [1]:
+                raise ProtocolError('T13 role selection failed')
+            if device.command(116, (int(diagnostic_mode),), timeout=2) != [1]:
+                raise ProtocolError('T13 PWM diagnostic policy failed')
         for device in reversed(devices):
             if device.command(97, (test['id'], seed, 0x53414645), timeout=3) != [1]:
                 words = device.command(99, timeout=2)
@@ -173,9 +235,16 @@ def execute_group(devices, group, duration, continuity, append, *, preflight):
             if words[0] != test['id'] or words[1:3] != [1, 0] or words[4] != 1:
                 raise ProtocolError('T13 case failed before both peers were ready')
         prepared_uart_pins(devices, test, append, identifier + '/prepared')
+        prepared_bus_pins(devices, test, append, identifier + '/prepared')
         for device in reversed(devices):
             if device.command(98, timeout=2) != [1]:
                 raise ProtocolError('T13 start failed')
+        if test['pwm_instance']:
+            for device in devices:
+                append(identifier + f'/started/role{device.image["role"]}/pwm-registers',
+                       {'status': 'observation', 'words': device.command(117, timeout=2)})
+                append(identifier + f'/started/role{device.image["role"]}/pwm-pins',
+                       {'status': 'observation', 'words': device.command(119, (0,), timeout=2)})
         time.sleep(.3)
         first_engines, first_lanes = snapshots(devices, test, seed, append, identifier + '/begin')
         for device in devices:
@@ -240,22 +309,7 @@ def execute_group(devices, group, duration, continuity, append, *, preflight):
     except BaseException as error:
         original_error = error
         append(identifier + '/failure', {'status': 'failed', 'error': f'{type(error).__name__}: {error}'})
-        for device in devices:
-            observations = [(99, (), 'engine')]
-            observations += [(100, (index,), f'lane{index}') for index in range(len(test['serial_links']))]
-            observations += [(104, (index,), f'stream{index}') for index in oracle.stream_indices(test)]
-            if test['pwm_instance']:
-                observations += [(107, (page,), f'pwm-trace{page}') for page in range(5)]
-            else:
-                observations += [(107, (0,), 'clock')]
-            for opcode, arguments, name in observations:
-                try:
-                    append(identifier + f'/failure/role{device.image["role"]}/{name}',
-                           {'status': 'observation', 'words': device.command(opcode, arguments, timeout=2)})
-                except BaseException as read_error:
-                    append(identifier + f'/failure/role{device.image["role"]}/{name}',
-                           {'status': 'unproven', 'error': f'{type(read_error).__name__}: {read_error}'})
-                    break
+        failure_snapshots(devices, test, append, identifier)
     finally:
         stopped = stop_pair(devices, append, identifier + '/cleanup')
         pins_idle = idle_pins(devices, append, identifier + '/pins')
@@ -264,8 +318,9 @@ def execute_group(devices, group, duration, continuity, append, *, preflight):
     if not stopped or not pins_idle:
         raise ProtocolError('T13 STOP or resource return unproven')
     for member in group['members']:
-        append(f'T13-S/{"preflight" if preflight else "soak"}/{member["name"]}/result',
-               {'status': 'passed', 'measurement_id': identifier, 'measured_role': member['measured_role'],
+        append(f'T13-S/{phase}/{member["name"]}/result',
+               {'status': 'observation-complete' if diagnostic else 'passed',
+                'measurement_id': identifier, 'measured_role': member['measured_role'],
                 'requested_seconds': duration, 'planned_soak_pass': not preflight,
                 'same_pair_shared_measurement': len(group['members']) > 1})
 
@@ -278,8 +333,18 @@ def main(argv=None):
     for name in ('build-root', 'pyocd', 'session-grant'):
         parser.add_argument('--' + name, required=True, type=Path)
     parser.add_argument('--evidence', type=Path)
-    parser.add_argument('--phase', choices=('wiring', 'preflight', 'soak'), default='wiring')
+    parser.add_argument('--phase', choices=('wiring', 'preflight', 'soak', 'fault-preflight', 'serial-fault',
+                                          'handover-preflight', 'handover',
+                                          'stream-fault-preflight', 'stream-fault', 'pwm-diagnostic',
+                                          'pwm-recovery-preflight', 'pwm-recovery'), default='wiring')
     parser.add_argument('--cases', nargs='+', type=int, default=[])
+    parser.add_argument('--fault-mode', type=int, choices=range(1, 6))
+    parser.add_argument('--stream-fault-mode', type=int, choices=(1, 2))
+    parser.add_argument('--pwm-recovery-mode', type=int, choices=(1, 2))
+    parser.add_argument('--pwm-diagnostic-route', choices=('led', 'dap'))
+    parser.add_argument('--fault-role', type=int, choices=(1, 2), default=1)
+    parser.add_argument('--reverse-serial', action='store_true')
+    parser.add_argument('--handover-instance', type=int, choices=(0, 20, 21, 22, 30))
     parser.add_argument('--execute-fixture', action='store_true')
     parser.add_argument('--cmsis-dap-limit-packets', action='store_true')
     args = parser.parse_args(argv)
@@ -289,14 +354,56 @@ def main(argv=None):
     grant = json.loads(grant_bytes, object_pairs_hook=unique_fields)
     session.validate(grant, images, uids)
     available_cases = {test['id']: test for test in catalog.cases() if test['harness'] == 'S'}
+    is_handover = args.phase in ('handover-preflight', 'handover')
+    if is_handover:
+        if args.cases or args.handover_instance is None or args.fault_mode is not None or args.reverse_serial:
+            raise ProtocolError('T13 handover requires only its fixed instance selection')
+        initial, sequence = handover.route(args.handover_instance)
+        args.cases = sorted({test['id'] for test in [initial, *sequence]})
+    elif args.handover_instance is not None:
+        raise ProtocolError('handover instance requires a handover phase')
+    if args.reverse_serial:
+        if args.phase not in ('preflight', 'fault-preflight', 'serial-fault'):
+            raise ProtocolError('reversed roles cannot replace the planned normal soak')
+        available_cases = {key: handover.variant(value, True) if key in args.cases else value
+                           for key, value in available_cases.items()}
     if (len(set(args.cases)) != len(args.cases) or any(identifier not in available_cases for identifier in args.cases)
             or (args.phase == 'wiring' and args.cases) or (args.phase != 'wiring' and not args.cases)):
         raise ProtocolError('explicit supported S case set required')
+    is_fault = args.phase in ('fault-preflight', 'serial-fault')
+    is_stream_fault = args.phase in ('stream-fault-preflight', 'stream-fault')
+    is_pwm_recovery = args.phase in ('pwm-recovery-preflight', 'pwm-recovery')
+    if is_pwm_recovery:
+        for identifier in args.cases:
+            pwm_recovery.validate_selection(available_cases[identifier], args.pwm_recovery_mode)
+    elif args.pwm_recovery_mode is not None:
+        raise ProtocolError('PWM recovery mode requires an explicit PWM recovery phase')
+    if is_fault:
+        for identifier in args.cases:
+            faults.validate_selection(available_cases[identifier], args.fault_role, args.fault_mode)
+    elif args.fault_mode is not None:
+        raise ProtocolError('fault mode requires an explicit fault phase')
+    if is_stream_fault:
+        for identifier in args.cases:
+            stream_faults.validate_selection(available_cases[identifier], args.fault_role, args.stream_fault_mode)
+    elif args.stream_fault_mode is not None:
+        raise ProtocolError('stream fault mode requires an explicit stream fault phase')
+    if args.phase == 'pwm-diagnostic':
+        if any(identifier not in (25, 26, 27) for identifier in args.cases):
+            raise ProtocolError('PWM diagnostic requires only standalone PWM20/21/22')
+        available_cases = {key: dict(value, _pwm_diagnostic_tail=2 if args.pwm_diagnostic_route == 'dap' else 1) if key in args.cases else value
+                           for key, value in available_cases.items()}
+    elif args.pwm_diagnostic_route is not None:
+        raise ProtocolError('alternate PWM pins require the diagnostic phase')
     evidence = {'schema_version': 1, 'type': 'v04-t13-s-campaign', 'status': 'preflight',
         'phase': args.phase, 'case_ids': args.cases, 'core_revision': images[0]['core_revision'],
         'board_revision': images[0]['board_revision'], 'catalog_sha256': session.catalog_hash(),
         'session_grant_sha256': hashlib.sha256(grant_bytes).hexdigest(), 'swd_frequency_hz': 10000000,
         'external_wiring_executed': False, 'results': [],
+        'fault_mode': args.fault_mode, 'fault_role': args.fault_role if is_fault or is_stream_fault else None,
+        'stream_fault_mode': args.stream_fault_mode,
+        'pwm_recovery_mode': args.pwm_recovery_mode,
+        'reverse_serial': args.reverse_serial, 'handover_instance': args.handover_instance,
         'devices': [{'role': image['role'], 'uid_sha256': hashlib.sha256(uid.encode()).hexdigest(),
                      'hex_sha256': image['sha256'], 'elf_sha256': image['elf_sha256'],
                      'record_sha256': image['record_sha256']} for uid, image in zip(uids, images)]}
@@ -324,22 +431,40 @@ def main(argv=None):
                     10000000, cmsis_dap_limit_packets=args.cmsis_dap_limit_packets)
                 devices.append(device)
                 evidence['devices'][image['role'] - 1]['flash'] = flash
-                if session.verify_profile(device) & 7 != 7:
+                capability = 511 if is_pwm_recovery else 255
+                if session.verify_profile(device) & capability != capability:
                     raise ProtocolError('T13 serial/stream/timing capabilities missing')
             continuity = session.Continuity(grant, images, uids, devices, available, pair.verify_identity)
             evidence['external_wiring_executed'] = True
             wiring.run_checks(devices, append, continuity.check)
             print('T13_S_WIRING_PASS', flush=True)
-            for group in grouped([available_cases[identifier] for identifier in args.cases]):
-                execute_group(devices, group, 3 if args.phase == 'preflight' else group['test']['duration_seconds'],
-                    continuity, append, preflight=args.phase == 'preflight')
+            if is_handover:
+                handover.execute(devices, args.handover_instance, continuity, append,
+                                 preflight=args.phase == 'handover-preflight')
+            elif is_fault:
+                for identifier in args.cases:
+                    faults.execute(devices, available_cases[identifier], args.fault_role, args.fault_mode,
+                                    continuity, append, preflight=args.phase == 'fault-preflight')
+            elif is_stream_fault:
+                for identifier in args.cases:
+                    stream_faults.execute(devices, available_cases[identifier], args.fault_role,
+                        args.stream_fault_mode, continuity, append, preflight=args.phase == 'stream-fault-preflight')
+            elif is_pwm_recovery:
+                for identifier in args.cases:
+                    pwm_recovery.execute(devices, available_cases[identifier], args.pwm_recovery_mode,
+                        continuity, append, preflight=args.phase == 'pwm-recovery-preflight')
+            else:
+                for group in grouped([available_cases[identifier] for identifier in args.cases]):
+                    execute_group(devices, group, 3 if args.phase == 'preflight' else group['test']['duration_seconds'],
+                        continuity, append, preflight=args.phase in ('preflight', 'pwm-diagnostic'))
             continuity.check()
             for device in devices:
                 words = device.command(51, timeout=2)
                 append(f'T13-S/final-pins/role{device.image["role"]}', {'status': 'observation', 'words': words})
                 if words[1:4] != [0, 0, 0] or words[7] != 0:
                     raise ProtocolError('T13 final pin direction/pull/lease not idle')
-    print('T13_S_CAMPAIGN_PASS; phase=' + args.phase, flush=True)
+    print(('T13_S_DIAGNOSTIC_COMPLETED; no normal-soak qualification' if args.phase == 'pwm-diagnostic'
+           else 'T13_S_CAMPAIGN_PASS; phase=' + args.phase), flush=True)
     return 0
 
 

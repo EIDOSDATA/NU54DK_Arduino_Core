@@ -1,0 +1,132 @@
+{
+  "base_source": "cac9c398f1574296ae8841b9b8cd6cb66922473f",
+  "working_tree_changes": true,
+  "product_core_changed": false,
+  "physical_executed": false,
+  "handover_host_passed": 6,
+  "fault_host_passed": 5,
+  "runtime_host": "12 passed; existing model executable blocked by Windows4551; full remote Host required",
+  "first_target_attempt": "existing C:/t3s04 rejected before build; preserved; fresh C:/t3t04 passed2/2",
+  "files": [
+    {
+      "file": "t13-handover-host-02.json.gz",
+      "bytes": 495,
+      "sha256": "d5f3e0a7443a8cef31f3f0313abe7cb81ad5b554af198bedd7b8cc7276b2f4b2",
+      "gzip_sha256": "1bdde1cf4fba1aca71c02b0885ec67c1981e9e906d7d61c86f88462d945cbccb"
+    },
+    {
+      "file": "t13-handover-host-02.log.gz",
+      "bytes": 1211,
+      "sha256": "52f42715b3a1e6b7e50c30876813d96ecd3c272ea00ad306272e100ca2953fb9",
+      "gzip_sha256": "794b37b90701c4ea3157f3f039a3f2b5ee15c1d7bc81c2c76bb9ac6248288a08"
+    },
+    {
+      "file": "t13-handover-fault-host-01.json.gz",
+      "bytes": 498,
+      "sha256": "9ee9d09ddc29f1ad0aaa9e99487ab10c1e8da414edc5b30c8a7a6cb6c5cece67",
+      "gzip_sha256": "e441bc1ebed47977546898c8e44452883c2ea3f337a47b3e36fddd5ffbe07037"
+    },
+    {
+      "file": "t13-handover-fault-host-01.log.gz",
+      "bytes": 1051,
+      "sha256": "6c3b223766aee7384cc64dd24b577de86c7b3a279afc79caa937714c543dff39",
+      "gzip_sha256": "8d888367efbafbc322afc970aa214f6129a5be82a82f8324593cb446e1912b39"
+    },
+    {
+      "file": "t13-handover-runtime-01.json.gz",
+      "bytes": 497,
+      "sha256": "acbda7952cd00c8875b8274da153d56c01ac102ca051d12e003453bb45a57a73",
+      "gzip_sha256": "ecbe14f79f9ffe31e9aba8232977a7625d444f1bdbb0300a312fb2f6c77efaf3"
+    },
+    {
+      "file": "t13-handover-runtime-01.log.gz",
+      "bytes": 4065,
+      "sha256": "b6036b9a0ad284521376a3871c9f6518481906d909ce7425887e6f535e45c046",
+      "gzip_sha256": "9be94d0e9538729e042e1e040b0623f9c0d8351880b1227b1d8904b48c2da9d1"
+    },
+    {
+      "file": "t13-handover-target-dev-01.json.gz",
+      "bytes": 626,
+      "sha256": "69bfb4d106ec8f99ca26355305014ffe68a4bb2c6f670fae6638344381e85044",
+      "gzip_sha256": "a33ad904e1a1425c0d440eca68d6b57456214daac8c2b8480f2fa57eae00dd3a"
+    },
+    {
+      "file": "t13-handover-target-dev-01.log.gz",
+      "bytes": 86,
+      "sha256": "4f0cf11822d3ca24a2eed9209c4ffbaa04ff9d019a032e12026bf632679e5cf6",
+      "gzip_sha256": "5a33ecb8bbd26c921b5b5244c1349b187b9f0a1d5da07c9c5c0f0cac9a6a04e2"
+    },
+    {
+      "file": "t13-handover-target-dev-02.json.gz",
+      "bytes": 626,
+      "sha256": "371bc9e5ead5df1509eca0485b78bba76cf5f8befa4f7c74d702d1277a60edaa",
+      "gzip_sha256": "1a5aa35d5e97ed6b7ee5ff8eeeb6eb15ce52d165eee82e49fbb76efa9ffd21b3"
+    },
+    {
+      "file": "t13-handover-target-dev-02.log.gz",
+      "bytes": 1905,
+      "sha256": "e107d269f7fd5094b6fcb03e93342f6f00fef4c57da4da5c65c322bd09bf575d",
+      "gzip_sha256": "4f4a6d7af31763fb96085f10bd923befb6648f20f7188fbecfe9a6c75e491bba"
+    },
+    {
+      "file": "t13-handover-style-01.json.gz",
+      "bytes": 497,
+      "sha256": "5094dbb350d06cfe61d92f7f1d4fa7a4edb22b71ae8203cb7d2eb60e060376cd",
+      "gzip_sha256": "df9cdd1c589f3b861212c759fc5f41246a709f69e891c6b1327f2f6d9f121493"
+    },
+    {
+      "file": "t13-handover-style-01.log.gz",
+      "bytes": 40,
+      "sha256": "6f435167c5f61adfc933e454f33cd2515d5367f6366110b96c134cb0999e08c5",
+      "gzip_sha256": "781491a3b1b37f3cdd8f9a21e0223c45e2568a883ec63e9d8f93fcc298734a17"
+    },
+    {
+      "file": "t13-handover-contract-01.json.gz",
+      "bytes": 434,
+      "sha256": "36e71aaeb7c64bf9c826ba8e1376757d9a2501cbda083306b40673f28cfd5d96",
+      "gzip_sha256": "6bbb804ced876fca78b2b57e440428ba7835b0b9d4565309e119c10cade33351"
+    },
+    {
+      "file": "t13-handover-contract-01.log.gz",
+      "bytes": 7492,
+      "sha256": "bef7b774ae4abd5f2ed581d4b47bc0abf7e4cf08d68c3d35790b8b2ebb8a9508",
+      "gzip_sha256": "594014d18ddb3e43b90fc37018624cedc145d508de794f25681e9ddf0cec9849"
+    },
+    {
+      "file": "t13-handover-docs-01.json.gz",
+      "bytes": 426,
+      "sha256": "ce5a893a33c018e78ea84d5465c7aa55a081b79bb0a5c4252de2c9304974118d",
+      "gzip_sha256": "bae2c6fb766e0cb8366fe7d390de0d09945decfd6ad082bae6a3c7365d1876b4"
+    },
+    {
+      "file": "t13-handover-docs-01.log.gz",
+      "bytes": 69,
+      "sha256": "c11283b8c51a61aad0504b6d20575681cf2fe3e1824806b7643e4f6159fab4d7",
+      "gzip_sha256": "871f01735bcba29f6dd9516207cde6592e4ad0e36e684751a81117c632e31355"
+    },
+    {
+      "file": "ci-cac9c39-02.json.gz",
+      "bytes": 1802,
+      "sha256": "3355a9efa58fcbd8146aa39e057616b7b35bdd2df2e87e47e316837859701655",
+      "gzip_sha256": "361640e1218ddadfa4be3396383c09ab25236e82208a42687135f6b5b866839b"
+    },
+    {
+      "file": "ci-cac9c39-02.host.log.gz",
+      "bytes": 288816,
+      "sha256": "906db0126e66a47f8f3c450b6e27d65f252780ae7d2379881f2a754fc0489cf5",
+      "gzip_sha256": "ae7fb61e6bb5b6523ef6753045ab45187f20853c8096aaf333ca79d97defdab9"
+    },
+    {
+      "file": "t13-serial-fault-exact-target-01.json.gz",
+      "bytes": 632,
+      "sha256": "8225f4c41f2bbec147b0ffc42894ccd00c2f882447e0f1a38f4076dd0524ad1f",
+      "gzip_sha256": "9bd576c21a9e1ac753a18e9815b5f45f0dedea2831687233bfea869acb1c9a94"
+    },
+    {
+      "file": "t13-serial-fault-exact-target-01.log.gz",
+      "bytes": 1905,
+      "sha256": "1adb4d584b35fad5d7eadca86a90f9ea84231af0cc4f0126174a04401a86f469",
+      "gzip_sha256": "f838abc1493b2f1e2e27ba985b7fa039fc69391bb56d17d630ed7c94a663ff70"
+    }
+  ]
+}

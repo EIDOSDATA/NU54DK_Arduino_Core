@@ -1,0 +1,45 @@
+{
+  "source": "03f5ba4dd750032d882cc3f7f3e939be2023e629",
+  "physical_executed": false,
+  "target_roles_passed": 2,
+  "local_exact_host": "36 passed; 2 generated executables blocked by Windows4551; not a local38/38PASS",
+  "remote_host": "exact source success; 99groups768tests",
+  "files": [
+    {
+      "file": "t13-rx-activity-exact-target-01.json.gz",
+      "bytes": 665,
+      "sha256": "fefdb8c7a706cc484e18ab953a01c431128e2fbbf01fb83330bc1b8188e6d8ce",
+      "gzip_sha256": "896adce5235e01a9d6dfd471d3375dd2e04198489d01848fef34f34f96d31309"
+    },
+    {
+      "file": "t13-rx-activity-exact-target-01.log.gz",
+      "bytes": 2060,
+      "sha256": "83ddfb41f3955f4421e58cba5d421288d6cc042c3ae08831a3e29665742ec041",
+      "gzip_sha256": "87798823ae75c409b0c247ed05ccac9d245c3f4911a9f747711105a42afc8cf5"
+    },
+    {
+      "file": "t13-rx-activity-exact-host-01.json.gz",
+      "bytes": 496,
+      "sha256": "fb4cb145e025c466675dffea8c43f0749a9cb0640e808cfdb0ffac3d9cc880da",
+      "gzip_sha256": "1fa437fa3a6e0e22aeaa74c445e3b0079946216c22e263803bfaeb0ad6e566db"
+    },
+    {
+      "file": "t13-rx-activity-exact-host-01.log.gz",
+      "bytes": 10516,
+      "sha256": "2c374b93e9c7d4df2794a7f891b34a1b7b49ee5dc54bce5080d7d03db532424f",
+      "gzip_sha256": "6000153d44565d4626fd2da69dc07f3220ea324a748c99b4adc7fa6eef8efb0f"
+    },
+    {
+      "file": "ci-03f5ba4-04.json.gz",
+      "bytes": 1802,
+      "sha256": "db07fac9afcd4b3b3ad674d4cdb953b40e1932af5b12486eecfb15253670975f",
+      "gzip_sha256": "1149df3127d3b6729ed38c42c7c7f1b544faef92b3800ebd4fe77cfc272b6060"
+    },
+    {
+      "file": "ci-03f5ba4-04.host.log.gz",
+      "bytes": 294144,
+      "sha256": "2baa640dc540d8929dd7d92be8c672343bd0c8d6985f0c554dd1cdd930f7e615",
+      "gzip_sha256": "5c787eb464fcefcb30982ca0399feb62e277a3b1749619afcaf9f7f2f80265ae"
+    }
+  ]
+}

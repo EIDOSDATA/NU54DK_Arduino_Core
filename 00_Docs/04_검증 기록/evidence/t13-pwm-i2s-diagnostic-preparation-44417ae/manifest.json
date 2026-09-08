@@ -1,0 +1,120 @@
+{
+  "base_source": "44417aef50a7b80bd6a27d60c09c86b210666900",
+  "working_tree_changes": true,
+  "product_core_changed": false,
+  "physical_executed": false,
+  "first_local_t13_host": "32PASS/1existing stream helper blocked by Windows4551; no protection changes",
+  "final_changed_runtime_host_passed": 16,
+  "final_target_build_passed": 2,
+  "prior_exact_ci": "44417ae Software7/7;98groups762tests=760PASS+2conditionalSKIP",
+  "files": [
+    {
+      "file": "t13-pwm-tail-host-01.json.gz",
+      "bytes": 487,
+      "sha256": "995e9562e1815eb4ff45ed2d4c20b8ad291aa49d77edcefd8065a75e6f42b579",
+      "gzip_sha256": "5cdd39d36a06d0c070ab1ec3b158a8dd57cbd14bfd8d4a82b26ef649e7827b01"
+    },
+    {
+      "file": "t13-pwm-tail-host-01.log.gz",
+      "bytes": 7873,
+      "sha256": "471e44c4533d688320824b2b47d5d5d79ff01754969d670b4d114a36aeacb286",
+      "gzip_sha256": "79a03d5e9cbb859d91645df9da505e1ce171c308835e7888129940b7870b3313"
+    },
+    {
+      "file": "t13-pwm-tail-target-dev-01.json.gz",
+      "bytes": 626,
+      "sha256": "2a32a0707178074a18d67dbdf14adeeda35d0d36628d9e00e89a5dcfbe2967f1",
+      "gzip_sha256": "9d5a4596d58e87f66e8853c405edf6203153bf9515a85b5175d205202e4045df"
+    },
+    {
+      "file": "t13-pwm-tail-target-dev-01.log.gz",
+      "bytes": 1905,
+      "sha256": "09ba846e2222477cda359f738d932419d49a4d03decd73e237652efc80319bad",
+      "gzip_sha256": "49ec944b9851db11a1916ff7c9a1bf7dad8e3302d8143525600d7c74dc090c1d"
+    },
+    {
+      "file": "t13-pwm-i2s-diagnostic-runtime-02.json.gz",
+      "bytes": 507,
+      "sha256": "2d2294bc4a0fb33da6aabce8522bada615d1012bc25612b229f21796e97bc4fe",
+      "gzip_sha256": "76317ade823200360e04a50ec38e99e20a37c5cd5be4978aa65dd34be8dc194e"
+    },
+    {
+      "file": "t13-pwm-i2s-diagnostic-runtime-02.log.gz",
+      "bytes": 3209,
+      "sha256": "dbe084ed874eeec011d5003879837a74e01adc73c9504525bf0f7dfc18e1f151",
+      "gzip_sha256": "0cee190bdeb58f1ca2cc379a161d414841dace9373b624c9b04523a975840400"
+    },
+    {
+      "file": "t13-pwm-i2s-diagnostic-target-dev-01.json.gz",
+      "bytes": 636,
+      "sha256": "1cf7e5974916370ee6a1f73b788e936d44ac4c236e296685ee402b3ee43c1910",
+      "gzip_sha256": "160ac6dad55a54b4ce4447dfb08d50dc25dc02b9eb3936b50b2cd6554f2d7644"
+    },
+    {
+      "file": "t13-pwm-i2s-diagnostic-target-dev-01.log.gz",
+      "bytes": 1905,
+      "sha256": "148c285be54bd4a54bac1ae86738537c229fc9cde81e99892d131c5f0466a6ae",
+      "gzip_sha256": "970722ef96aa5d4bba74f61bd63961a6d49807b5179774f57798177ba7e9fb61"
+    },
+    {
+      "file": "t13-pwm-i2s-diagnostic-style-01.json.gz",
+      "bytes": 507,
+      "sha256": "55fc87e0f69e806dea5d87014b95f94f78ba789448efc3c840b497f6fa723580",
+      "gzip_sha256": "8ff86f5738a8a49749ef49ee36079c00d8f97e260e15f994654f9ce7148baaaa"
+    },
+    {
+      "file": "t13-pwm-i2s-diagnostic-style-01.log.gz",
+      "bytes": 40,
+      "sha256": "cb4ec05cc7931599781c165e64a6dc4b2bc78349f0b9b0b476f8c74912009001",
+      "gzip_sha256": "49efea3997cc3aa1b6316cc551f4249a0cc596f216487eba7db9c9fb047a873f"
+    },
+    {
+      "file": "t13-pwm-i2s-diagnostic-contract-01.json.gz",
+      "bytes": 444,
+      "sha256": "1f119deb8627a63b6a01ae4dd3dbd9cac4619f467922cd1ee1ef7edd524f88d5",
+      "gzip_sha256": "5345c2db8a9d44e84a292d32883661871106256bab7935222b14902e31afe523"
+    },
+    {
+      "file": "t13-pwm-i2s-diagnostic-contract-01.log.gz",
+      "bytes": 7492,
+      "sha256": "21f9cbd82bd473bc64bb2c9ba18af3ac30b948154e1ec42271dbb952fe304aab",
+      "gzip_sha256": "21a7b419f63ec56a82c841e0af665a0a20df4a1e8163cc7df0a45d521fc7fcff"
+    },
+    {
+      "file": "t13-pwm-i2s-diagnostic-docs-01.json.gz",
+      "bytes": 436,
+      "sha256": "12c10ef7e68739ce9ad470cf906ff8dc0a776f1f0b93f71baaef987608584e37",
+      "gzip_sha256": "8e2438e0aec8af3de524bdb83c042bf6ae7d266fd6f0251aa4d797df11f24600"
+    },
+    {
+      "file": "t13-pwm-i2s-diagnostic-docs-01.log.gz",
+      "bytes": 69,
+      "sha256": "c11283b8c51a61aad0504b6d20575681cf2fe3e1824806b7643e4f6159fab4d7",
+      "gzip_sha256": "871f01735bcba29f6dd9516207cde6592e4ad0e36e684751a81117c632e31355"
+    },
+    {
+      "file": "ci-44417ae-01.json.gz",
+      "bytes": 1802,
+      "sha256": "8948d814d2f5b76800670374033085ec51d759704ae1d2c3bd74d8a8be4f3f4e",
+      "gzip_sha256": "548e62c9d61e5b30ac417a992f1319cc11bdb7bacf4cdef02f07a8b5bd46957b"
+    },
+    {
+      "file": "ci-44417ae-01.host.log.gz",
+      "bytes": 292275,
+      "sha256": "867c1954fb6c4903d7e527cdfc166da7144af7c8f2fa043240c8c8cf4ddc3e24",
+      "gzip_sha256": "05ff1f18a76508b69c903f5c37aa891089dd06fba7e6290ded353d73f69502bf"
+    },
+    {
+      "file": "t13-stream-fault-exact-target-01.json.gz",
+      "bytes": 632,
+      "sha256": "3cf41c3d358d4fb6803617f0f2fe87e866dc333e2a7f306d63f79b8a72689779",
+      "gzip_sha256": "4fbf4c906fdd2024b90bcf093c81bcd9dae03033385da2d2133791654e6dc1d5"
+    },
+    {
+      "file": "t13-stream-fault-exact-target-01.log.gz",
+      "bytes": 1905,
+      "sha256": "0d6e35dd3436fc0341af09574e1ff43ef333270ebd841c4051a34b70f8493e4c",
+      "gzip_sha256": "8891f08b81074a36de69e852a7b69a67dc116cbdb3d18d8556bcddf54a57540b"
+    }
+  ]
+}

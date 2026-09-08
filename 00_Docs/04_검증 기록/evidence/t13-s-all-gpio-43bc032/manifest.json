@@ -1,0 +1,88 @@
+{
+  "source": "43bc0320d6681d57d2ec1cd569fef35f7dd8ec0d",
+  "physical_executed": true,
+  "status": "completed-with-signal-failure",
+  "functional_or_soak_pass": false,
+  "completed_pulses": 340,
+  "failed_connection": "A P2.04 <-> B P2.02",
+  "files": [
+    {
+      "file": "all-gpio-audit-43bc032-attempt2.json.gz",
+      "bytes": 1753176,
+      "sha256": "18579ac177106ce34e31545cf9792f8e0fbf2e5826a8e38b7405b22206d828e4",
+      "gzip_sha256": "e5bb525cc7237929e82c33105cd62d0e12510b68bd1136de4f649ba95306810e"
+    },
+    {
+      "file": "all-gpio-audit-43bc032-attempt2.json.jsonl.gz",
+      "bytes": 1111628,
+      "sha256": "a872020dcc913e8708c8a6eeb6784ef2c2ec86ee97cf4cc6e40af9af666c9dbe",
+      "gzip_sha256": "e13df4c2f69715206fae251c3149a10363841153d1970ddd54908780acad4b05"
+    },
+    {
+      "file": "all-gpio-audit-analysis-43bc032.json.gz",
+      "bytes": 4785,
+      "sha256": "0465ce1c188d3e96b2afc99430301b7556607ea01d2ca26260a2e6023a989ad7",
+      "gzip_sha256": "d23e33493de278eb1829023a0bc0f8241c0732839c4fcd1b1bd8fadf45790d40"
+    },
+    {
+      "file": "all-gpio-audit-preparation-failure.json.gz",
+      "bytes": 372,
+      "sha256": "849683a7164a21ecc5a2dc96329aba0c7436c3694de33aefc227408093c6deed",
+      "gzip_sha256": "7925b53793d7bcec24d3771150d1ce3c0cde72ebe1f888cc4e146905a90e62ca"
+    },
+    {
+      "file": "all-gpio-audit-43bc032-attempt1.json.gz",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "file": "audit_t13_all_gpio.py.gz",
+      "bytes": 10959,
+      "sha256": "a00d803e4bd4701aeac40b9c2370809c3248ca80dd58798bbe9bf2deed3757db",
+      "gzip_sha256": "ffbaee5a6cb0f384ff108459ec9faf1d67f1ae7f19c23051151eab257fd1face"
+    },
+    {
+      "file": "repair3-direction-timing-attempt1.json.gz",
+      "bytes": 27829,
+      "sha256": "bf980d07c943a7baa989ea1860ad7071e44510b07880b6d61a787b336e5452fb",
+      "gzip_sha256": "3440433f05b726a38bee8da94fbd3498591a9154a442aee8d38de6a231b11484"
+    },
+    {
+      "file": "repair3-direction-timing-attempt1.json.jsonl.gz",
+      "bytes": 15907,
+      "sha256": "3f2ecd689b21b4aa54c690733724ba8355a79340d00d873bfcfa745d18262ef8",
+      "gzip_sha256": "81622ae149fb863563b11e6c6b464e3dc8bd361fdb39cd2be7c2a8d6e9d8fa70"
+    },
+    {
+      "file": "diagnose_t13_repair3.py.gz",
+      "bytes": 5480,
+      "sha256": "91c079e5b820c68bad9603214c9a8a8773a66d26e12dc0c99571575c23a7ed23",
+      "gzip_sha256": "16e042b089ebc43fe8404d5c661c645e1fe439fb2b102817c727a04205b887b4"
+    },
+    {
+      "file": "ci-29545a3-02.json.gz",
+      "bytes": 3805,
+      "sha256": "3bfbf34935efc35693c362f895cdad6310f3444724d0e195d2dd07e158ae27ac",
+      "gzip_sha256": "1bdd3d3933729ee211bab3cde503c627d2da6a9135c1df859144370221a4d6f7"
+    },
+    {
+      "file": "ci-43bc032-10.json.gz",
+      "bytes": 5498,
+      "sha256": "29e69c2745d5c47b494152d0afaf78666387bcc0306e31c8f7c591ef770321e0",
+      "gzip_sha256": "279c181ce8f56930f4e7711a5e8cd25c8698dfcb37fab4280178f299683a03cd"
+    },
+    {
+      "file": "all-gpio-audit-docs-01-docs.json.gz",
+      "bytes": 467,
+      "sha256": "fc36c826bde2e18f30a019e37243283317f16fd31db3343e9a396b724811fa77",
+      "gzip_sha256": "99c3ce1b9ac02895e34b2b0d5ce6f3e49bc489a3da6f74d33d10fc37908c8f9c"
+    },
+    {
+      "file": "all-gpio-audit-docs-01-docs.log.gz",
+      "bytes": 69,
+      "sha256": "2cf090d30562acde2b58709f2a4f9a02586b55460b439b79b24419679b02897a",
+      "gzip_sha256": "ce9b23064ccfe3a53b65bedf510a5b485831a813198a9f0096e8b90a26d78986"
+    }
+  ]
+}

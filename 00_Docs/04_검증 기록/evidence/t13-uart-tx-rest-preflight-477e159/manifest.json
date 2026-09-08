@@ -1,0 +1,112 @@
+{
+  "source": "477e15960a9839871edc85d4d556e5b6b67c8297",
+  "status": "passed",
+  "phase": "fault-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T05:21:49.302143+00:00",
+  "finished_at": "2026-09-08T05:22:31.169659+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/fault-preflight/uarte21/mode1/role1/repeat001/restart/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/fault-preflight/uarte21/mode1/role1/repeat001/result",
+      "status": "passed",
+      "fault_seed": 3236239093,
+      "restart_seed": 1590849356,
+      "planned_recovery_pass": false,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/fault-preflight/uarte22/mode1/role1/repeat001/restart/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/fault-preflight/uarte22/mode1/role1/repeat001/result",
+      "status": "passed",
+      "fault_seed": 884279005,
+      "restart_seed": 2860679012,
+      "planned_recovery_pass": false,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/fault-preflight/uarte30/mode1/role1/repeat001/restart/T13-S/preflight/uarte30/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte30",
+      "measured_role": "a",
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/fault-preflight/uarte30/mode1/role1/repeat001/result",
+      "status": "passed",
+      "fault_seed": 904996846,
+      "restart_seed": 2881904215,
+      "planned_recovery_pass": false,
+      "normal_soak_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3752,
+      "sha256": "07c0362d90219a558d0cd80fc4c5939730395bf3b44fb75faf9dabd6cc87f0b4",
+      "gzip_sha256": "a8e63829974f64a45a9cbefa12cf45694a4f97d06fb7aa49efbb5ed0c99d57ca"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "198a6bf4c73302507dd8321015c61ddc9bb697c7c079ed7638763fa2d9268de9",
+      "gzip_sha256": "8c3553229d4deb9f6cbb3d3fe0bfec6bc611c42b2d66f3d5ee1011259eb4e412"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 226029,
+      "sha256": "5d497f9b1fba0c3c5345d4a0a3df81d3f6ed7e001cc3060e02a5f0203a240be4",
+      "gzip_sha256": "16b92bffb0b7b8b4b42c3fc8e3f2ad475269401ecfe6e2d2cd49212b9c640b7a"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 124181,
+      "sha256": "cc7c04655abc725b7a3f2644916125d00905a33fcd83dea7257938280b15db42",
+      "gzip_sha256": "d3e5f286497f49d21af9b1fc7e9d8c5efc7704504f9adcd6506eae8d4b5bd950"
+    },
+    {
+      "file": "uart-tx-rest-477e159-preflight1-preflight.json.gz",
+      "bytes": 787,
+      "sha256": "1e2bd6b1bb368be68e5ac8998b1e20187a44eb4a99f95d9878ad15bf8027e835",
+      "gzip_sha256": "e90e3499e0bb873de07c38b5a1bf38e293d7e8608d8692f7f1893d4080d2b0a2"
+    },
+    {
+      "file": "uart-tx-rest-477e159-preflight1-preflight.log.gz",
+      "bytes": 1498,
+      "sha256": "8c07315107eb3e535e1b0ef0c5fd1879051a5b33e69b97de0367ab585976a4d9",
+      "gzip_sha256": "a8fdd46e62e65d5835cb1caa6526ba9f290d33cc291cb7f53801a320219da0b0"
+    },
+    {
+      "file": "uart-tx-rest-477e159-preflight1-execute.json.gz",
+      "bytes": 783,
+      "sha256": "bf7521c2a0ac9448b8c928462fa944d554d13da23831549045c70af1390c319d",
+      "gzip_sha256": "9c2f6382ff564379a0ca277d5f4df997643788bbf7318f68208ccd554454af06"
+    },
+    {
+      "file": "uart-tx-rest-477e159-preflight1-execute.log.gz",
+      "bytes": 255,
+      "sha256": "a4df4dab37ec65dcf97574b3645a5f5165f2250d8a3576813a4590adb716cea5",
+      "gzip_sha256": "c374a61e242207aff64f0f4a2aa690c3f097035936d24ab4348baa1881914327"
+    }
+  ]
+}

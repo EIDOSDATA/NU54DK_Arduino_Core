@@ -1,0 +1,60 @@
+{
+  "source": "43bc0320d6681d57d2ec1cd569fef35f7dd8ec0d",
+  "status": "failed",
+  "phase": "fault-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T04:45:37.966748+00:00",
+  "finished_at": "2026-09-08T04:46:01.533460+00:00",
+  "error": "ProtocolError: wiring mismatch: {'levels': {'expected': 98303, 'actual': 131071}}",
+  "case_results": [],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 5445,
+      "sha256": "8d816ed63ecf456d92502240eaedff161781330df28351f4850acbf19e94ce5d",
+      "gzip_sha256": "ad3e676d8ba65ff2de9ba71b4eb54fb4cf55ff12ba877294b1a3306d492ea027"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "82686cc4e7451483b49c8b4095ef7318efe1090dbc4808d829bc8682a42a45e3",
+      "gzip_sha256": "d122514f5e57277ea2fc2afee67ba834b4d275deb01a3a6c42542bd73d26e651"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 105910,
+      "sha256": "28f87656167e79328b0cb7ad98dd0325dd143e5f5b57638bdb74e82e2f73ee49",
+      "gzip_sha256": "59d4fc4f6cd995599044cc9cac4361576018b23bfa055e8a56a05c9c0a5f4a2a"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 60334,
+      "sha256": "a8031242ceb79eb95a2061fd48e8c29f698243beb7641fcbdf09777ca45ae893",
+      "gzip_sha256": "a9f9fa11f4f2366a83d7b945014eeb1b74dbee4db8b280067bbb36fa6ecbd2af"
+    },
+    {
+      "file": "uart-tx-43bc032-repair2-preflight1-preflight.json.gz",
+      "bytes": 803,
+      "sha256": "03aa98623925726776149ac0e60b954cda282010b626b5bf287f5ef74e44483d",
+      "gzip_sha256": "32fc675ca1606a4d51858c07c7549f8f698c88cb6cc8c0fcd0e8d892e58fbbef"
+    },
+    {
+      "file": "uart-tx-43bc032-repair2-preflight1-preflight.log.gz",
+      "bytes": 1506,
+      "sha256": "b7d0b853f5e84d34a8b9af8009deb620e3a2ee4cb60233454ec7e1b6b9a89e8a",
+      "gzip_sha256": "a9b5c6d937278e2025b9d427fdda376946325d2c9e0974642e070c26df93dd83"
+    },
+    {
+      "file": "uart-tx-43bc032-repair2-preflight1-execute.json.gz",
+      "bytes": 799,
+      "sha256": "acaabaa0268f7902f6fa76d0fc22082efabac0063bae3ea9deb15ae4233983da",
+      "gzip_sha256": "375ccd6ac984d26f0f944411ef893226e93ef878297585ec054bede0dfa8d72b"
+    },
+    {
+      "file": "uart-tx-43bc032-repair2-preflight1-execute.log.gz",
+      "bytes": 83,
+      "sha256": "3253653c942016f564c7cc981709e6c2e2db579a50f01ea564ff539a24ba2ae5",
+      "gzip_sha256": "efff04440a23b33e952623742fd20e361a8c0ddbd209642926d51254633a538b"
+    }
+  ]
+}
