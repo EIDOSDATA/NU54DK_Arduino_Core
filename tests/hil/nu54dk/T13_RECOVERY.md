@@ -70,7 +70,8 @@ Picolibc `EOVERFLOW=139`는 target static_assert와 독립 Host 기대값으로 
 `--phase stream-fault-preflight --stream-fault-mode 1|2 --fault-role 1|2 --cases ...`는 각1회,
 `--phase stream-fault`는 각100회다. I2S A/B와 PDM20/21의 네 role/instance 항목이다.
 매회 양쪽 raw와 STOP·pin·clock 반환 뒤 새 seed의 정상1초 stream을 독립 대조한다.
-이 재시작 구간은180초 안정성의 대체가 아니며, 아직 실기100회 완료는 없다.
+이 재시작 구간은180초 안정성의 대체가 아니다. 현재 source별100회 완료·실패·진행 상태는
+[104번](<../../../00_Docs/04_검증 기록/104_T13_S_복구_동시_안정성_검증.md>)과 활성 TODO를 따른다.
 
 ## PWM/I2S 최초 실패 원인 분리
 
@@ -171,3 +172,8 @@ Opcode121은 PREPARE 뒤 START 전 단독 B PWM에서만 받는 무인자 선택
 Opcode122의13word는 role, PWM instance, deferred 선택, API state, START task 주소,
 ENABLE, SEQSTARTED0/1, LOOPSDONE, STOPPED, guard, cycle, cycle 주파수다.
 Normal soak는 기존 자동 시작을 유지하며 새 capability bit256 없이 이 시험을 실행할 수 없다.
+
+4aadf29에서 예행6/6 후 정식 PWM20 mode2의6번째 정상 재시작이 이전 CC0 캡처로 실패했다.
+TIMER clear/start 뒤 DPPI enable 성공을 먼저 확인하고 event clear·DSB·readback 후 관측을 시작하도록
+HIL 시작 순서를 보완한다. 관측 시작 뒤 timestamp를 버리거나 허용 오차를 완화하지 않는다.
+최초 실패와 수정 전후 source별 실기 상태는104번에 보존한다.

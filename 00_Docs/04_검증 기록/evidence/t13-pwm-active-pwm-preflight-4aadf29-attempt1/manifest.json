@@ -1,0 +1,142 @@
+{
+  "source": "4aadf29fb4cca1febc39ef556c1c9c2cce8a9e0d",
+  "status": "passed",
+  "phase": "pwm-recovery-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T06:27:02.666153+00:00",
+  "finished_at": "2026-09-08T06:27:44.399060+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm20/mode1/repeat001/active/T13-S/preflight/pwm20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/pwm20",
+      "measured_role": null,
+      "requested_seconds": 0.1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm20/mode1/repeat001/restart/T13-S/preflight/pwm20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/pwm20",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm20/mode1/repeat001/result",
+      "status": "passed",
+      "mode": 1,
+      "fault_seed": 2241101068,
+      "restart_seed": 463668405,
+      "planned_pwm_recovery_pass": false,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm21/mode1/repeat001/active/T13-S/preflight/pwm21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/pwm21",
+      "measured_role": null,
+      "requested_seconds": 0.1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm21/mode1/repeat001/restart/T13-S/preflight/pwm21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/pwm21",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm21/mode1/repeat001/result",
+      "status": "passed",
+      "mode": 1,
+      "fault_seed": 3505833713,
+      "restart_seed": 1321320264,
+      "planned_pwm_recovery_pass": false,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm22/mode1/repeat001/active/T13-S/preflight/pwm22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/pwm22",
+      "measured_role": null,
+      "requested_seconds": 0.1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm22/mode1/repeat001/restart/T13-S/preflight/pwm22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/pwm22",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm22/mode1/repeat001/result",
+      "status": "passed",
+      "mode": 1,
+      "fault_seed": 959960506,
+      "restart_seed": 2801839107,
+      "planned_pwm_recovery_pass": false,
+      "normal_soak_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3755,
+      "sha256": "777e5b8ffaf8ee5ea8ebc9150c6eb891c8615f8d73788a2c61e86e0f31974152",
+      "gzip_sha256": "181af6813a30c4234186c80f49613bfb878440b04399d041f86c82f3933c11d7"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "bd79a68cd183066829d344076efe300e6d9344d99c825e37e7edbea31a70829a",
+      "gzip_sha256": "5ce4a8b57f0084168f627366efd43ddcf042a5d6d4faa95e87c4e4d3335d6daa"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 257418,
+      "sha256": "aeab766706bab2e35e42307c03e1104c851ecf7eeeeeafc9f5b29ab8c85d24fe",
+      "gzip_sha256": "179967d4daebf0231fdb0c8e0b558be801f928e575d419f1df4e1adc0a523183"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 140110,
+      "sha256": "7017e37aa04961a78feee214f186051727e054ee55ce4883aaf23bd060319319",
+      "gzip_sha256": "f81074e1cca64214a76fc36245698306109d30107728a0519795adcf765ba77d"
+    },
+    {
+      "file": "pwm-active-4aadf29-pwm-preflight-1-preflight.json.gz",
+      "bytes": 779,
+      "sha256": "9dd3d0079a3457521869f97ddb50b57040f6f94a2280f7b3b70751fde7a4ea01",
+      "gzip_sha256": "122cf95eaae5f3a6ffba46f69885ee2ecc86f39cce0911358976bbe501e06108"
+    },
+    {
+      "file": "pwm-active-4aadf29-pwm-preflight-1-preflight.log.gz",
+      "bytes": 1541,
+      "sha256": "08165e64ef05177c808d51bd73cbf25bedd1448d1ed7b1da2601f8101afe88e9",
+      "gzip_sha256": "aa3bed126c8d40485bba2c52c5f8abd5cb5cc7f971e5c0ab027a3443626a66eb"
+    },
+    {
+      "file": "pwm-active-4aadf29-pwm-preflight-1-execute.json.gz",
+      "bytes": 775,
+      "sha256": "6c402e30e795419dd15282a6bae228584a8f876e39f3ea36e5cf26e5ba395fb6",
+      "gzip_sha256": "6d977d4cbb13a9b7f39adb55d7b0ffeb67cc63ae9c7b37bf8f24fd84b75469a6"
+    },
+    {
+      "file": "pwm-active-4aadf29-pwm-preflight-1-execute.log.gz",
+      "bytes": 247,
+      "sha256": "1720816fd4b66b6aebe1c923bdbb3ddd045214b58990855b1641f02fa3f47164",
+      "gzip_sha256": "1a06935718a0c749b9ffc21baf76ae9fbdbb43e639085e4bfa3ce6563e1ec581"
+    }
+  ]
+}

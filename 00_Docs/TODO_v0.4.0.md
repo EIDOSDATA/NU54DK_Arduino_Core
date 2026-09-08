@@ -1,5 +1,11 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
+T13 PWM 재시작 캡처 보완:4aadf29의 미시작 취소 반복6번째 정상 재시작에서 첫 timestamp가
+이전 실행의 마지막 CC0와 같은1743637, 다음은502로 관측됐다. 시작 시 event clear 뒤 DPPI enable
+사이의 GPIOTE event는 이전 CC를 동반할 수 있다. 기존 실패·엄격한500±8µs 기준을 보존하고
+캡처 gate 활성 뒤 계측 시작 전 event를 동기화해 지우는 최소 HIL 수정을 준비한다.
+동시에 실행하는4aadf29 serial100회 checkout은 수정하지 않는다.
+
 T13 PWM 복구 후속 구현 범위: 기존 S P1.14에서 PWM20/21/22 동작 중 STOP 및 실제 START task를
 호출하지 않은 준비 취소를 각100회로 분리한다. 미시작100ms 동안 양쪽 관측 에지0·출력 idle·
 SEQ/DMA 상태·guard를 보존하고 STOP/clock/pin 반환 뒤 정상 capture 재시작까지 요구한다.
@@ -37,7 +43,8 @@ T13 PWM 원인 분리 준비: PWM21 LOW535µs 실패 직후 최대8에지 또는
 43bc032의 PWM21/22 정상180초와477e159 UART20 TX100회 PASS. 03f5ba4의 UART21/22/30 TX100회 및 RX20/21/22/30 예행도 통과해 고정 serial 예행은21/21, 정식100회는4/21이다.
 I2S20 양쪽 예행과6782084 PDM20/21 수정 후 예행을 통과해 stream 공급 생략 예행4/4다. 최초 PDM STOP 실패는 보존한다.
 리셋 없는 직접 읽기로 양쪽 PDM/SERIAL21 off·GPIO17입력을 확인했다. HIL 해제 성공 뒤 handle을 비우는 수정과 peer 오류 독립 판정을 준비하고 exact 검사를 진행한다.
-6782084/C:/t4f04의 두 role build·Host39개·원격Software7/7과 PDM 예행 이후 I2S/PDM 각100회를 진행한다. PWM 종료 복구6항목은 새 실행기를 준비한다.
+6782084의 I2S A·PDM20·PDM21 각100/100 PASS로 stream 복구3/4항목을 완료했다. I2S B는96회 뒤97번째 정상 재시작에서 수신1word XOR0x3800으로 실패했으며 TX RAM/guard 정상·양쪽 STOP을 확인했다. B100회 항목은 미완료다.
+PWM 종료 복구6항목의4aadf29/C:/t4g04 두 role build와 원격Software7/7·Host100그룹772시험 SUCCESS. Exact 로컬 Host41PASS·Windows4551차단1을 구분한다. 새 PWM 예행6/6 뒤 정식 mode2 PWM20은5회 완료·6번째 정상 재시작의 stale CC 캡처 실패로 중단했다. 양쪽 정지 확인 후 serial RX/SPI/TWI100회는 별도 진행하고 PWM HIL 시작 순서를 보완한다.
 기존 source별 정상 안정성29/36(단독29/29·동시0/7)은 항목별 근거이며 T13 전체 진행률이 아니다. T12·QDEC 완료는 유지한다.
 원래 세션 만료12:26:14Z를 연장하지 않는다. T13 전체·U·RC·공개는 미완료다.
 
@@ -45,7 +52,7 @@ I2S20 양쪽 예행과6782084 PDM20/21 수정 후 예행을 통과해 stream 공
 
 - **완료한 요청 묶음:** T12 현재 공통 결선 기능 시험과 T13 조합·추가 결선 확정. GPIO/GPIOTE 2,502·PWM steady 675 및 추가 모드 288·I2S 432 PASS. QDEC는 일부 문제·제한사항을 리포트에 남기고 검증 작업을 완료했다. T12 마일스톤도 완료이며 실제 실패를 합격으로 바꾸지 않는다.
 - **최종 기준선:** `e547fc0863be5b381ecab26835fb5e872b399a9c`가 main에 있으며 원격 Software 7/7·재현 빌드 8/8 SUCCESS를 확인했다. 이번 103번 후속 문서 commit의 CI는 별도 exact SHA로 확인한다.
-- **현재 장치:** 6782084/C:/t4f04. 현재 S 확인서·exact UID·SWD10MHz에서 I2S/PDM 공급 생략·STOP 복구100회 진행.
+- **현재 장치:** PDM100회6782084/C:/t4f04를 종료하고4aadf29/C:/t4g04 PWM 종료 복구 예행으로 전환한다. 현재 S 확인서·exact UID·SWD10MHz와 새 결선 검사·controlled flash를 유지한다.
 - **현재 개발:** T13 연속 ADC/PWM/I2S/PDM·DMA guard·지연 histogram과 양쪽 raw 우선 보존을 구현했다. Host/target 준비 검사 뒤 새 clean image로 실행한다. 복구/전환100회는 아직 미완료다. QDEC 재진단은 예약하지 않는다. U 생략 여부는 아직 미확정이며 수행한다면 S 종료 뒤 재배치가 필요하다.
 - **TIMER 완료:** 95번의 7개 TIMER·44 CC·4 clear/stop 조합·2 interval·각 10회, 두 보드 총 7,040회 PASS로 기능 검증을 완료 정리했다. EGU/DPPI/PPIB의 1000 event×10을 TIMER의 추가 필수 반복으로 요구하지 않는다. QDEC는 문제 기록 후 진단을 종료했으며 지원 제한을 T14/T15로 이어간다.
 - **별도 대조 기록:** 외부 ADC 401~408의 기능 276개 PASS는 유지한다. 초기 시험표의 100회와 실제 각 조건 1회 실행 차이는 103번에 명시하며, 이번 TIMER 정리로 ADC 100회까지 완료 처리하거나 재실기를 자동 추가하지 않는다. T13의 독립 준비는 진행할 수 있다.

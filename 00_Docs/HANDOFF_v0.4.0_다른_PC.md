@@ -3,8 +3,12 @@
 최신 T13 체크포인트: 실패 선 재검사20/20 PASS 후 사용자 지시로 S 작업을 재개했다.
 43bc032의 PWM21/22 정상180초 PASS로 source별 정상 안정성 근거29/36(단독29/29·동시0/7)이다.
 고정 serial 예행21/21, 정식100회 UART20/21/22/30 TX4/21 완료. 최초 PDM 반복 STOP 실패와 수정 후 예행 통과를 구분한다.
-Stream 예행4/4 후6782084의 I2S A100회1/4 완료, B와 PDM 반복을 진행한다.
-C:/tr13dev는clean6782084/C:/t4f04 실기용, main은 PWM 종료 복구 실행기·문서·증거 갱신용이다. PWM 준비 Host42·정렬·계약·문서는 통과했고 exact build·CI·실기는 후속이다. 상세104/105 및 TODO3.67을 따른다.
+Stream 예행4/4 후6782084의 I2S A100회 완료. B는96회 뒤97번째 정상 재시작의 수신1word 불일치로 미완료다.
+원본·리셋 없는 TX/RX 메모리 분석·양쪽 STOP을 보존한 뒤 PDM20/21 각100회를 별도 완료해 stream 복구3/4다.
+C:/tr13dev는clean4aadf29/C:/t4g04 serial100회 실행용이며6782084 PDM 실행은 종료했다.
+PWM exact 두 role build2/2·원격 Software7/7·Host100그룹772시험 SUCCESS를 확인했다.
+Exact 로컬 Host41PASS·Windows4551 차단1을 구분한다. PWM 예행6/6 뒤 정식 mode2 PWM20은5회 완료 후
+6번째 정상 재시작의 stale CC 캡처로 실패해 HIL gate/event 시작 순서를 보완한다. 상세104/105 및 TODO3.67을 따른다.
 이전 GPIO/PWM/I2S 실패 원인은 미확정이며 T13 전체·U·RC·공개는 미완료다.
 
 

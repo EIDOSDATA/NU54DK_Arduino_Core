@@ -199,10 +199,17 @@ bool t13::pwmStart()
     {
         return stats.fail(7U);
     }
+    if (dppi->enable(0U) != EventFabricResult::success)
+    {
+        return stats.fail(8U);
+    }
+    /** @brief gate가 닫혔을 때 발생한 event가 이전 CC0를 새 에지로 소비하지 않도록 합니다.
+     *  @note 먼저 DPPI를 켜고 계측 시작 경계 이전 event를 지웁니다. 이후 관측은 완화하지 않습니다. */
     *event = 0U;
-    __DMB();
-    stats.active = dppi->enable(0U) == EventFabricResult::success;
-    return stats.active || stats.fail(8U);
+    __DSB();
+    static_cast<void>(*event);
+    stats.active = true;
+    return true;
 }
 
 void t13::captureService()
