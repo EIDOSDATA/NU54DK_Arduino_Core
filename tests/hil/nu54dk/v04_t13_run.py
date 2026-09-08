@@ -12,6 +12,7 @@ import time
 
 import v04_pair as pair
 import v04_t13_cases as catalog
+import v04_t13_fault as faults
 import v04_t13_oracle as oracle
 import v04_t13_session as session
 import v04_wiring as wiring
@@ -134,10 +135,10 @@ def stop_pair(devices, append, label):
     return all(row['stopped'] for row in outcomes)
 
 
-def execute_group(devices, group, duration, continuity, append, *, preflight):
+def execute_group(devices, group, duration, continuity, append, *, preflight, seed=None):
     """! @brief 중단 시간을 합산하지 않고 설정을 유지한 한 구간만 판정합니다. """
     test = group['test']
-    seed = secrets.randbits(32)
+    seed = secrets.randbits(32) if seed is None else seed
     identifier = f'T13-S/{"preflight" if preflight else "soak"}/{test["name"]}'
     continuity.check()
     append(identifier + '/input', {'status': 'input', 'test': test, 'seed': seed,
@@ -278,8 +279,10 @@ def main(argv=None):
     for name in ('build-root', 'pyocd', 'session-grant'):
         parser.add_argument('--' + name, required=True, type=Path)
     parser.add_argument('--evidence', type=Path)
-    parser.add_argument('--phase', choices=('wiring', 'preflight', 'soak'), default='wiring')
+    parser.add_argument('--phase', choices=('wiring', 'preflight', 'soak', 'fault-preflight', 'serial-fault'), default='wiring')
     parser.add_argument('--cases', nargs='+', type=int, default=[])
+    parser.add_argument('--fault-mode', type=int, choices=range(1, 6))
+    parser.add_argument('--fault-role', type=int, choices=(1, 2), default=1)
     parser.add_argument('--execute-fixture', action='store_true')
     parser.add_argument('--cmsis-dap-limit-packets', action='store_true')
     args = parser.parse_args(argv)
@@ -292,11 +295,18 @@ def main(argv=None):
     if (len(set(args.cases)) != len(args.cases) or any(identifier not in available_cases for identifier in args.cases)
             or (args.phase == 'wiring' and args.cases) or (args.phase != 'wiring' and not args.cases)):
         raise ProtocolError('explicit supported S case set required')
+    is_fault = args.phase in ('fault-preflight', 'serial-fault')
+    if is_fault:
+        for identifier in args.cases:
+            faults.validate_selection(available_cases[identifier], args.fault_role, args.fault_mode)
+    elif args.fault_mode is not None:
+        raise ProtocolError('fault mode requires an explicit fault phase')
     evidence = {'schema_version': 1, 'type': 'v04-t13-s-campaign', 'status': 'preflight',
         'phase': args.phase, 'case_ids': args.cases, 'core_revision': images[0]['core_revision'],
         'board_revision': images[0]['board_revision'], 'catalog_sha256': session.catalog_hash(),
         'session_grant_sha256': hashlib.sha256(grant_bytes).hexdigest(), 'swd_frequency_hz': 10000000,
         'external_wiring_executed': False, 'results': [],
+        'fault_mode': args.fault_mode, 'fault_role': args.fault_role if is_fault else None,
         'devices': [{'role': image['role'], 'uid_sha256': hashlib.sha256(uid.encode()).hexdigest(),
                      'hex_sha256': image['sha256'], 'elf_sha256': image['elf_sha256'],
                      'record_sha256': image['record_sha256']} for uid, image in zip(uids, images)]}
@@ -324,15 +334,21 @@ def main(argv=None):
                     10000000, cmsis_dap_limit_packets=args.cmsis_dap_limit_packets)
                 devices.append(device)
                 evidence['devices'][image['role'] - 1]['flash'] = flash
-                if session.verify_profile(device) & 7 != 7:
+                capability = 15 if is_fault else 7
+                if session.verify_profile(device) & capability != capability:
                     raise ProtocolError('T13 serial/stream/timing capabilities missing')
             continuity = session.Continuity(grant, images, uids, devices, available, pair.verify_identity)
             evidence['external_wiring_executed'] = True
             wiring.run_checks(devices, append, continuity.check)
             print('T13_S_WIRING_PASS', flush=True)
-            for group in grouped([available_cases[identifier] for identifier in args.cases]):
-                execute_group(devices, group, 3 if args.phase == 'preflight' else group['test']['duration_seconds'],
-                    continuity, append, preflight=args.phase == 'preflight')
+            if is_fault:
+                for identifier in args.cases:
+                    faults.execute(devices, available_cases[identifier], args.fault_role, args.fault_mode,
+                                   continuity, append, preflight=args.phase == 'fault-preflight')
+            else:
+                for group in grouped([available_cases[identifier] for identifier in args.cases]):
+                    execute_group(devices, group, 3 if args.phase == 'preflight' else group['test']['duration_seconds'],
+                        continuity, append, preflight=args.phase == 'preflight')
             continuity.check()
             for device in devices:
                 words = device.command(51, timeout=2)

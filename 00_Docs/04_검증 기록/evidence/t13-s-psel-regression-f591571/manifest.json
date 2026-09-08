@@ -1,0 +1,147 @@
+{
+  "source": "f5915719188774442f1b93662a769145c5a0778c",
+  "preflight_passed": 36,
+  "preflight_total": 36,
+  "soak_or_recovery_pass": false,
+  "c01_regression": "SPI21 prefix and full S sequence passed; actual unused UART RTS/CTS disconnected",
+  "files": [
+    {
+      "file": "preflight-spi21-c01-f591571-fix01-images.json.gz",
+      "bytes": 1605,
+      "sha256": "63ee86ee93d35ade2282784c99d9943e46c562eacaec7d45f8e877084494ca69",
+      "gzip_sha256": "3922d39c58a06ba844c81456ae07b51e6323796278f147f7138260f6c878a6eb"
+    },
+    {
+      "file": "preflight-spi21-c01-f591571-fix01-result.json.gz",
+      "bytes": 218381,
+      "sha256": "5eae116b1c0bb5fd451a13619acdeadd7ede9d6521b9820ab67befa0aacf6494",
+      "gzip_sha256": "1aba88e66b76323743dfd25815f0fe9c533e3d405610e79c1ddfe8d46c2d1858"
+    },
+    {
+      "file": "preflight-spi21-c01-f591571-fix01-result.json.jsonl.gz",
+      "bytes": 114979,
+      "sha256": "09d127150847bc139f4c15fe48bc6e812b22b8f5df8e42918b379dd4022e1f27",
+      "gzip_sha256": "68f373bed0ecb9a2ab9a687e0fdeab13b31ca51d3470084fe65312b6a356e169"
+    },
+    {
+      "file": "preflight-spi21-c01-f591571-fix01-ci-before-flash.json.gz",
+      "bytes": 3753,
+      "sha256": "d2d1173328a247e20349632136f5bc72e0a44a7fc6e3dbdb71d08bafe062b383",
+      "gzip_sha256": "e5eb23a83e2b0937502a1ba10765ae7f68e8bf3096135657fca48a543e4644b4"
+    },
+    {
+      "file": "preflight-spi21-c01-f591571-fix01-preflight.json.gz",
+      "bytes": 759,
+      "sha256": "0cf480b51fa029d16a29d8f10b15982e38ca1f521ce8db82f58f655fdba8e027",
+      "gzip_sha256": "11a9a431a8be12d8ae90b174602b20ee37119cd4254b508e55c85c463f221cbe"
+    },
+    {
+      "file": "preflight-spi21-c01-f591571-fix01-preflight.log.gz",
+      "bytes": 1358,
+      "sha256": "f255afae7d30ecce3da65f00cd9c8111e4b7e86d89016704623a6a0f387ef283",
+      "gzip_sha256": "ebf6037565efdc75f527783bca338a1a0e69a4373e32b8a9981b6ef739b87d05"
+    },
+    {
+      "file": "preflight-spi21-c01-f591571-fix01-execute.json.gz",
+      "bytes": 755,
+      "sha256": "b2d209e4d4b9a032925b8c736e1c551ec8450064106a82ebd79c08cf18d97096",
+      "gzip_sha256": "539ea21993ddd62a3e8c43175bf11d93cdae098b537a210946a01a4c8906e487"
+    },
+    {
+      "file": "preflight-spi21-c01-f591571-fix01-execute.log.gz",
+      "bytes": 57,
+      "sha256": "0be1cfaa20ecd382832b79bb5b8b8826ecb811c275a36c478bf80d16b34e3a5b",
+      "gzip_sha256": "e7ad18e8719ab8e83398ab5a8329930da05b91c3a5d8b54d9b28c8f2e13cf89a"
+    },
+    {
+      "file": "preflight-all-f591571-attempt1-images.json.gz",
+      "bytes": 1605,
+      "sha256": "63ee86ee93d35ade2282784c99d9943e46c562eacaec7d45f8e877084494ca69",
+      "gzip_sha256": "3922d39c58a06ba844c81456ae07b51e6323796278f147f7138260f6c878a6eb"
+    },
+    {
+      "file": "preflight-all-f591571-attempt1-result.json.gz",
+      "bytes": 959990,
+      "sha256": "18501eb1cabfefb2ec072fde91900fb4fa64266260a87717bef5e6c4a3cbb91d",
+      "gzip_sha256": "0765e315b9e82d34c8ddbfef950cb1d10ed8c641614a6a7c9c5ed95a29feb166"
+    },
+    {
+      "file": "preflight-all-f591571-attempt1-result.json.jsonl.gz",
+      "bytes": 455048,
+      "sha256": "90833d9a590dfbd0f715985275bce7cdf6d47b385ed406492539dcfbecaff35c",
+      "gzip_sha256": "91c826475aa93a0ded3f29b104b6d61d6a3a8121fe8e98047264517a22900d9b"
+    },
+    {
+      "file": "preflight-all-f591571-attempt1-ci-before-flash.json.gz",
+      "bytes": 3753,
+      "sha256": "d2d1173328a247e20349632136f5bc72e0a44a7fc6e3dbdb71d08bafe062b383",
+      "gzip_sha256": "e5eb23a83e2b0937502a1ba10765ae7f68e8bf3096135657fca48a543e4644b4"
+    },
+    {
+      "file": "preflight-all-f591571-attempt1-preflight.json.gz",
+      "bytes": 1126,
+      "sha256": "68427cd55321aa093f2d08f4fa3d9a6da1f6d8b0d058be1e821281513a43e6b4",
+      "gzip_sha256": "3ae6c171944eea362ff8ade57a2401b2c72b553bd261344cd8f700bd05fc7c6f"
+    },
+    {
+      "file": "preflight-all-f591571-attempt1-preflight.log.gz",
+      "bytes": 1663,
+      "sha256": "1d2be92a267f10bac058bd8c46960bd6c5903f518b686fb850aaa9f642cf1e80",
+      "gzip_sha256": "1af2fab27bdc9ae8476ed747bc67581a4926dce4d490874b6426ba815b3c1086"
+    },
+    {
+      "file": "preflight-all-f591571-attempt1-execute.json.gz",
+      "bytes": 1122,
+      "sha256": "d0d7ee40ab8fd96028fb7f41ae19054ef778f7b2054652282cde65ed10692bd0",
+      "gzip_sha256": "7af72f360ab48bd9706f3a621be85e4c9845e60ef61a14581a1811c3abb90b9b"
+    },
+    {
+      "file": "preflight-all-f591571-attempt1-execute.log.gz",
+      "bytes": 57,
+      "sha256": "0be1cfaa20ecd382832b79bb5b8b8826ecb811c275a36c478bf80d16b34e3a5b",
+      "gzip_sha256": "e7ad18e8719ab8e83398ab5a8329930da05b91c3a5d8b54d9b28c8f2e13cf89a"
+    },
+    {
+      "file": "t13-psel-exact-target-01.json.gz",
+      "bytes": 658,
+      "sha256": "0d4a0fbf2f89077d2e4a2336a1d7de43412b65f0c1cd1611ec474734c492ceb6",
+      "gzip_sha256": "1b35b894d81c20e20d21090035cb4e4b6f5e9291c74632242b8d7c6f5ee58dbc"
+    },
+    {
+      "file": "t13-psel-exact-target-01.log.gz",
+      "bytes": 2060,
+      "sha256": "4acdd2232e1c8bd762930d9ba67e883c241ee687295b1b234f626b05908d7bf0",
+      "gzip_sha256": "b2a839c06ecde9f722393dea5fd43dd65a682c8d0a79a694d574cb02b1f938db"
+    },
+    {
+      "file": "launch_t13_s.py.gz",
+      "bytes": 6192,
+      "sha256": "8160dbc36dd324d93c79980ccf42f4e09a00c79f238c53c07efe7767e2134f0b",
+      "gzip_sha256": "9467395d366cc824929d5d546311eaeef7ab68f2e8edc311ed43efc2021e69c7"
+    },
+    {
+      "file": "run_t13_campaign.py.gz",
+      "bytes": 882,
+      "sha256": "96318d7f4c65ddeebcb9dc96ab0d530219d257804d48a79c3f887ed9d2282467",
+      "gzip_sha256": "df78d0cd1160f18211622d491e898d1d6690da90e5d120b85ab85037b94c4680"
+    },
+    {
+      "file": "ci-f591571-05.json.gz",
+      "bytes": 3808,
+      "sha256": "43c1954ee8093d7d4cf94a9893ac69fa9fdb0394a97c899e9ecc194b1d03e5a9",
+      "gzip_sha256": "89784e57ed43514940c23b308c4909c2119ed25fdf0089a5fe17e583c87bcf10"
+    },
+    {
+      "file": "ci-f591571-05.host.log.gz",
+      "bytes": 286974,
+      "sha256": "edc95630fab872808da34807c0a7cd15195200fc13a6c4a7909e0fcf6c70e646",
+      "gzip_sha256": "67c12cf4c655316884e3b31d7150f86285c1b3ef2e4072e8d1dad8c320652d5c"
+    },
+    {
+      "file": "ci-f591571-06.json.gz",
+      "bytes": 3808,
+      "sha256": "17c957b1940d60284795cf5df66cf7586871a7d1f794027949ae367ff4085e04",
+      "gzip_sha256": "ed662d88da8a96436a916311b9d393ddbbc8237266cbd5b4c8c5828780bb3dc7"
+    }
+  ]
+}

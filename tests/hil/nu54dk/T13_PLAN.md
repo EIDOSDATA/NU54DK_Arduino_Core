@@ -131,6 +131,9 @@ PWM은 TOP1000/individual/32 values/loop(C06 50%, C08 25%), QDEC은 256µs sampl
 
 ## 오류 복구와 충돌·handover 시험
 
+구현한 고정 serial 취소/NACK의 mode·원본·100회 판정과 아직 남은 주입은
+[복구 실행 항목](T13_RECOVERY.md)에 구분한다. 정상 안정성 시험과 오류 복구 완료는 별개다.
+
 | 대상 | 의도한 오류 또는 전환 | 각 100회 판정 |
 | --- | --- | --- |
 | UART | DMA 도중 cancel, 제한된 peer RX 공급 지연, 100ms CTS 정지/재개; 별도 peer parity/break | 해당 error/cancel 길이·소유권 확인 후 다음 nonce 정상 송수신. CTS는 단독 4선 및 C01/C05 UART30에서만 |
