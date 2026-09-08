@@ -1,0 +1,10 @@
+mainmenu "NU54DK T13 S/U HIL"
+source "Kconfig.zephyr"
+config NUCODE_V04_HIL_ROLE
+    int "Physical role: 1 DUT, 2 peer"
+    range 1 2
+    default 1
+config NUCODE_T13_HARNESS
+    int "Compiled harness: 2 S, 3 U"
+    range 2 3
+    default 2

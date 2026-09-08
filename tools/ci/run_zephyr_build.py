@@ -78,6 +78,8 @@ SUITE_GROUPS = {
         ("r01_serial", "nucode.r01.all"),
         ("v04_pair_hil", "nucode.v04.pair_dut"),
         ("v04_pair_hil", "nucode.v04.pair_peer"),
+        ("v04_t13_hil", "nucode.v04.t13_s_dut"),
+        ("v04_t13_hil", "nucode.v04.t13_s_peer"),
         ("m23_inventory_contract", "nucode.m23.inventory_contract"),
         ("m24_serial_fabric_contract", "nucode.m24.fabric"),
         ("m24_uarte_driver_contract", "nucode.m24.uarte"),

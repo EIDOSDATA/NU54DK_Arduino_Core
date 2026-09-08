@@ -157,13 +157,13 @@ def plan():
                 'automatic_substitution_allowed': False}},
             'board_revision': 'fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3',
             'harnesses': {key: harness(key) for key in ('C', 'S', 'U')}, 'common_ground': 'GND P2-30 ↔ P2-30',
-            'current_harness': 'C', 'future_order': ['S', 'U'], 'standalone': standalone,
+            'current_harness': 'S', 'future_order': ['U'], 'standalone': standalone,
             'topologies': topologies, 'recovery_repetitions': 100, 'handover_repetitions': 100,
             'unexpected_loss_allowed': 0, 'unexpected_reset_allowed': 0, 'guard_bytes': 16,
             'continuous_measurement_minutes_sequential': 261,
-            'manual_boundaries': ['C→S with both USB disconnected; confirm exact GPIO and DAP switches anew',
+            'manual_boundaries': ['C→S user rewire and maintain confirmation received; electrical checker still required',
                                   'S→U with both USB disconnected; fresh wiring check',
-                                  'System OFF fixture isolation/reconnect remains separate'],
+                                  'System OFF base wake already has evidence; determine applicable new recovery requirement before scheduling isolation/reconnect'],
             'not_covered': ['all pairwise resource/peripheral combinations', 'all UART ports with simultaneous hardware flow control',
                             'unsupported P2 dedicated21 bank', 'T13 physical execution', 'RC or release']}
 

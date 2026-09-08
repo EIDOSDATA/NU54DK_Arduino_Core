@@ -1,0 +1,110 @@
+{
+  "parent": "b895f5d81fcee7a50adf5d75a3397c51d4fa5802",
+  "dirty_preparation": true,
+  "flashed": false,
+  "full_host_pass": false,
+  "files": [
+    {
+      "file": "t13-s-stream-target-dev-01.json.gz",
+      "bytes": 660,
+      "sha256": "045724cabd61b062be18111e18e1f06f9649ed0da7cf2f2aaa44ff74e3835425",
+      "gzip_sha256": "e8fdf718737d639383507f6ba9c0a78e34fe87bce0a16c060e0aba2b42de6df7"
+    },
+    {
+      "file": "t13-s-stream-target-dev-01.log.gz",
+      "bytes": 3273,
+      "sha256": "0332980539cdaff9f0c26df79c64c3b9b54d707aff287b562d445fe283972578",
+      "gzip_sha256": "119bbb4f5f25ff7ca85ecb75844187187fde6bae7343fe171e0dfd45212921f6"
+    },
+    {
+      "file": "t13-s-stream-target-dev-02.json.gz",
+      "bytes": 660,
+      "sha256": "69bfaeeda4c0ae4b0443a6abe47ee9fa4e6e4c25678cca6b62ca9feccbbd7276",
+      "gzip_sha256": "f2b07901b53324f87db8461b1a38f3ef46007764fceccc63f0b7174fbdf21e13"
+    },
+    {
+      "file": "t13-s-stream-target-dev-02.log.gz",
+      "bytes": 2060,
+      "sha256": "8149958eb36f52be890166a90875c143c06e9e4a525875b01db51de9096ab7af",
+      "gzip_sha256": "06f3e55b4ac434d880d5528f9d25ee7108674273423ca48e8a6f8b1457dcc741"
+    },
+    {
+      "file": "t13-s-stream-host-01.json.gz",
+      "bytes": 487,
+      "sha256": "9f89833e9e3eb01ecd7f3bcf18c96e9a0f14316083d4986bbd6b562f9de1ea9d",
+      "gzip_sha256": "085039ad326fc8ae420c506c0e27116b567a4dd12aa0a8bc41339f9b8bd73295"
+    },
+    {
+      "file": "t13-s-stream-host-01.log.gz",
+      "bytes": 3665,
+      "sha256": "5589268f33c4a15161d30f62476dffb39bd29cc4e9b9babca70e886ed10025c3",
+      "gzip_sha256": "32e4ae0ab709f84670b3fa13afdd55cf3a00223e2281be0b7f65cc35cad15364"
+    },
+    {
+      "file": "t13-s-stream-host-02.json.gz",
+      "bytes": 487,
+      "sha256": "78986429ba124024ba93f006f115505898986213444c3b3a0fc58366a3cd35b7",
+      "gzip_sha256": "d66b744b98c4a70af9f74390480c9c11e1db6e889ad094ce80d4d8edb473602b"
+    },
+    {
+      "file": "t13-s-stream-host-02.log.gz",
+      "bytes": 3581,
+      "sha256": "9ee457e6a773b24a5d8b0c7e7869eac26d37cfbb48d4706e765b3e9f43910baa",
+      "gzip_sha256": "57556541dc55365968c22a4f5385cac7c19ef23217a9f39e37dce5ac71f89229"
+    },
+    {
+      "file": "t13-s-stream-full-host-01.json.gz",
+      "bytes": 465,
+      "sha256": "814783c9689a0acb983cc0867940e53d74f5fd30deabddc1e2fc6b1b62ac75a3",
+      "gzip_sha256": "2fefbc62b4f38efd11865bac16227a71c02151b42337737c08a09e0c2e203259"
+    },
+    {
+      "file": "t13-s-stream-full-host-01.log.gz",
+      "bytes": 9451,
+      "sha256": "6700a06445b33bbd526c29c27b94f8462a20b610157388d7d184d9b59f70aeb7",
+      "gzip_sha256": "91690447ec2b56e44b91203dc75690054a2df6856ec61165c5e7f9705d505131"
+    },
+    {
+      "file": "t13-s-stream-style-01.json.gz",
+      "bytes": 531,
+      "sha256": "661189783555dd1c832a008a4d185f594f73edf228066f35332fbd17fd2960ca",
+      "gzip_sha256": "2003a4b398476b9d8a145acfb2c310a08728eee284073a64249c9745c7cf87ed"
+    },
+    {
+      "file": "t13-s-stream-style-01.log.gz",
+      "bytes": 40,
+      "sha256": "78d55fd05d33a0a2dadd265469541c973d684f4f129a146e6a0d06d717fa0daa",
+      "gzip_sha256": "b3b92d99a9f5968d6da01ffef112dd2b4c3ef8b48a6c2c0986ef0910a44c211a"
+    },
+    {
+      "file": "t13-s-stream-docs-01.json.gz",
+      "bytes": 460,
+      "sha256": "dc49135e48de8b2a989b156e18aa7536185cceb73d5f7cdb05b53e27aa7f6e24",
+      "gzip_sha256": "56c3d9c907342e55453536ba272c0d1bc46cbf8a5016540206821e94a78df2cd"
+    },
+    {
+      "file": "t13-s-stream-docs-01.log.gz",
+      "bytes": 69,
+      "sha256": "f854e3084afea4144bc737be5d66e44f445fb127b706910a8c2a82a1c212982d",
+      "gzip_sha256": "02ab10e56cb9b7f74e01d005a4ccc20850c52286d4f579e8b0d3b47f8bd9a32f"
+    },
+    {
+      "file": "t13-s-stream-contract-01.json.gz",
+      "bytes": 468,
+      "sha256": "7b962d7112f6b960c394ac75b1b597e324fef18e5427028b343ee6275a91d3c7",
+      "gzip_sha256": "fb650fbffa365c65de2a82c2ca5fdc5dbf3ba7ac32b93fffcd38dc3ffa40b6f9"
+    },
+    {
+      "file": "t13-s-stream-contract-01.log.gz",
+      "bytes": 7554,
+      "sha256": "0a548de54723a8062718706c26f352e7a0e5315b3cbbd91f939d30aab1799719",
+      "gzip_sha256": "497b5995a1b00ae4bf0d289ac05456f1cfe14f0bf507491342d7c97b6a4153b6"
+    },
+    {
+      "file": "initial-target-peer-build.log.gz",
+      "bytes": 34472,
+      "sha256": "a7f3c111b793288b0e0b7beec04f313cd966b3fdb4854391bfaad807bb257312",
+      "gzip_sha256": "178d2e89528830adbe12a72739ff9dbc135c01a179147bd3a3a7d4218e76027a"
+    }
+  ]
+}

@@ -1,13 +1,23 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
-이번 작업 범위(2026-09-08 후속 정리): 사용자 지시대로 TIMER 기능 검증은 95번의 실제 범위로 완료 정리하고, 다음 마일스톤을 T13 준비·복구·동시·안정성 실기로 명시한다. T12/T13 상태와 승인 전 자동 진행·현장 조작 경계를 문서·시험표에 반영하고 검사·commit/push를 수행한다. 기준 source는 e547fc0이며 새 flash/HIL이나 T12 전체·RC·공개 완료 선언은 아니다.
+이번 작업 범위(2026-09-08 T13 S 착수): 사용자가 S 결선으로 재배치했고 최대 12시간 유지·변경 전 통보를 확인했다. 기준 source 6155a85에서 T13 전용 실행기·S 결선 검사·Host/target 검증을 준비한 뒤 S의 단독·복구·동시·안정성 실기를 수행한다. QDEC 진단 재개와 U 결선 실기는 이번 S 실행에 포함하지 않는다. S 묶음 종료 후 U GPIO 표를 다시 안내하고 현재 재배치 확인을 받는다. 진행·exact source·증거·남은 범위는 104번에 기록하며 T13 전체·RC·공개 완료로 확대하지 않는다.
+
+T14 조치 착수: SPI 뒤 두 선 UART로 바꿀 때 미사용 RTS/CTS PSEL이 남는 현상을 a6367ca의
+송수신 전 레지스터 읽기로 확인했다. C:/tr13dev에서 독점·비활성 조건의 최소 핀 초기화와
+START 전 PSEL 회귀를 준비한다. 104번에 원인 분리와 영향 UART 회귀를 기록하며 T12 완료는 유지한다.
+
+**현재 작업:** [104번 T13 S 진행](<04_검증 기록/104_T13_S_복구_동시_안정성_검증.md>).
+8966da5의 사전검사35/36 PASS는 당시 증거다. a6367ca에서 SPI 선행 시 C01 오류를 재현하고,
+미사용 UART RTS/CTS의 실제 PSEL 잔류를 확인했다. 최소 core 수정·START 전 핀 대조의
+Host13+UART6·target2/2를 완료하고 새 source 원격 Host·영향 실기를 준비한다.
+이전 TWI 첫 NACK·PWM551µs는 원인 미확정이며 정식180/900/3600초·복구100회 완료는0이다.
 
 ## 현재 요약 — 2026-09-08
 
-- **완료한 요청 묶음:** T12 현재 공통 결선 기능 시험과 T13 조합·추가 결선 확정. GPIO/GPIOTE 2,502·PWM steady 675 및 추가 모드 288·I2S 432 PASS. QDEC는 합격이 아니라 원인 분리·보완 기록 후 HOLD로 인계했다.
+- **완료한 요청 묶음:** T12 현재 공통 결선 기능 시험과 T13 조합·추가 결선 확정. GPIO/GPIOTE 2,502·PWM steady 675 및 추가 모드 288·I2S 432 PASS. QDEC는 일부 문제·제한사항을 리포트에 남기고 검증 작업을 완료했다. T12 마일스톤도 완료이며 실제 실패를 합격으로 바꾸지 않는다.
 - **최종 기준선:** `e547fc0863be5b381ecab26835fb5e872b399a9c`가 main에 있으며 원격 Software 7/7·재현 빌드 8/8 SUCCESS를 확인했다. 이번 103번 후속 문서 commit의 CI는 별도 exact SHA로 확인한다.
-- **현재 장치:** 마지막 ce48471 진단 종료 뒤 양쪽 17 GPIO 입력·주변장치 off를 확인했다. 실행 중인 HIL은 없다. C17 결선은 마지막 사용자 보고이며 다음 실기의 현재 결선 확인을 대신하지 않는다.
-- **다음 개발:** T13 전용 runner·preflight·측정과 복구/전환 100회 판정을 구현한다. QDEC20/21 단독·C07은 HOLD하고 다른 조합부터 준비할 수 있다. 실제 시험은 C→S→U **두 번**의 결선 변경과 각 현재 확인이 필요하다.
+- **현재 장치:** a6367ca 두 role, SPI21 뒤 C01 준비만 수행하고 양쪽 STOP·clock 참조0·17개 GPIO 입력 확인. Repair1 원래 만료12:26:14Z를 유지한다.
+- **현재 개발:** T13 연속 ADC/PWM/I2S/PDM·DMA guard·지연 histogram과 양쪽 raw 우선 보존을 구현했다. Host/target 준비 검사 뒤 새 clean image로 실행한다. 복구/전환100회는 아직 미완료다. QDEC 재진단은 예약하지 않는다. U 생략 여부는 아직 미확정이며 수행한다면 S 종료 뒤 재배치가 필요하다.
 - **TIMER 완료:** 95번의 7개 TIMER·44 CC·4 clear/stop 조합·2 interval·각 10회, 두 보드 총 7,040회 PASS로 기능 검증을 완료 정리했다. EGU/DPPI/PPIB의 1000 event×10을 TIMER의 추가 필수 반복으로 요구하지 않는다. QDEC는 문제 기록 후 진단을 종료했으며 지원 제한을 T14/T15로 이어간다.
 - **별도 대조 기록:** 외부 ADC 401~408의 기능 276개 PASS는 유지한다. 초기 시험표의 100회와 실제 각 조건 1회 실행 차이는 103번에 명시하며, 이번 TIMER 정리로 ADC 100회까지 완료 처리하거나 재실기를 자동 추가하지 않는다. T13의 독립 준비는 진행할 수 있다.
 - **시간 기준:** 단독 인스턴스별 180초, 일반 동시 조합별 900초, 대표 C05는 3600초로 대체한다. 계획 전체의 순수 측정은 261분이며 HOLD 3항목을 포함한 계획값이다. 구현·preflight·복구/전환·결선 변경·실패 분석 시간과 릴리스 완료 예상 시간이 아니다.
@@ -16,13 +26,13 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.51 |
-| 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 외부/내부 부분 PASS·전체 미완료 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.57 |
+| 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 기능검증 완료(알려진 QDEC 문제 보고 포함)·T13 S 진행 |
 | 작성·갱신일 | 2026-09-08 |
 | 작성 직전 기준 commit | `e547fc0863be5b381ecab26835fb5e872b399a9c` — 문서 감사·원격 15/15 SUCCESS |
 | 목표 | 합의한 코어 기능 검증을 마치고 Windows용 `v0.4.0` 정식 공개 및 공개 URL 검증 완료 |
-| 다음 착수 항목 | **T13 runner/preflight 준비 → C→S→U 재배선 후 복구·동시·안정성 실기. QDEC는 알려진 문제 기록 후 다음 작업으로 진행** |
-| 이번 요청의 실행 범위 | TIMER 완료 정리·T13 자동 진행/현장 조작 경계·문서/계획 검사·commit/push. 새로운 실기·지원 승격·공개 실행 없음 |
+| 다음 착수 항목 | **T13 S exact build·전기 결선 검사·preflight → S 복구·동시·안정성 → U 범위에 따른 후속 안내** |
+| 이번 요청의 실행 범위 | T12 완료 상태 정정·T13 S 구현/검사/실기·증거/문서 갱신·commit/push. S 종료 후 U 안내 |
 
 이 파일은 대화 기억이나 컨텍스트 요약에 의존하지 않고 작업을 이어가기 위한 **활성 실행 목록**이다.
 마일스톤의 제품 상태는 [로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>), 실제 PASS/FAIL은
@@ -68,19 +78,19 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | 필드 | 현재 값 |
 | --- | --- |
 | 이번에 끝낸 일 | GPIO/GPIOTE 2,502·steady PWM 675·추가 PWM 288·I2S 432 기능 PASS. 각 exact source·새 501·cleanup/postflight 분리 보존. T13 32단독/8동시 계획 확정·실기 0회. 102번에 문서 전수 검토·local 검사 등록 |
-| 진행 중인 T 항목 | T12/T13/T14 상태 정리와 T17 문서 유지. T17 최종 완료는 T15/T16 이후 |
-| 다음 구체적 행동 | T13 runner/preflight·복구/handover·지속 측정 준비 → C→S 결선 확인 뒤 실기 → S→U로 UART00. TIMER 재시험이나 QDEC 재진단을 예약하지 않음. 이번 문서 정리는 103번을 따름 |
-| 다음 작업에 필요한 사용자 행동 | 문서/Host 준비에는 없음. T13 외부 실기 전 C→S 및 S→U 결선 변경·현재 상태 확인 필요. 이전 고정 C 세션을 재사용하지 않음 |
-| 외부 결선 상태 | C17신호+GND 유지 보고. ce48471 종료19:23:08UTC postflight 양쪽17 GPIO 입력·주변장치 off PASS. 고정 세션은2026-09-08 07:00KST 만료이며 후속 결선/USB 변경 시 새 확인 필요 |
-| 작업 checkout 분리 | 없음. 제품 작업은 `main`에 통합됐고 과거 임시 worktree/branch는 정리했다 |
+| 진행 중인 T 항목 | T13 S runner·복구·동시 안정성 준비/실기, T14/T15 알려진 문제 정리와 T17 문서 유지 |
+| 다음 구체적 행동 | T14 UART 미사용 PSEL 수정의 새 exact build·원격 Host → SPI21/C01·영향 UART·전체 S 사전검사 → S 안정성·복구100회. TIMER/QDEC 재진단 없음 |
+| 다음 작업에 필요한 사용자 행동 | S 변경·최대 12시간 유지 확인 완료. S 종료 후 U로 재배치하고 현재 연결을 확인해야 함 |
+| 외부 결선 상태 | S 17신호+GND. A P1.05↔B P1.04 점퍼 확인·USB 재연결 후 새 UID/repair1 확인, 전기 결선 105/105 PASS. 원래 세션 만료 2026-09-08T12:26:14Z 유지 |
+| 작업 checkout 분리 | C:/tr13dev, codex/t13-recovery의 a6367ca 기반 최소 PSEL 수정. main의 장치 실행 source와 분리해 준비한 뒤 통합 |
 | 다른 PC 재개 | [인계 문서](HANDOFF_v0.4.0_다른_PC.md)의 이전 PC 상태와96/97/99를 보존. 최신 범위·실행 source·결과는 이 TODO와100번 |
 | 마지막 정식 외부 HIL source | QDEC 진단ce48471 종료(기능 PASS 아님). IRQ40은3a0e976. I2S432는b5c86a4. GPIO4e48252·steady3334b17·모드0db0689 PASS는 당시 source 결과 |
-| 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. 420 정의된 기능·준비 취소와 430 I2S 기능 완료. T12 전체·T13 이후·R14·RC·공개는 대기. 공용 자원 경로 변경 이후 필요한 최종-source 통신 회귀는 후속 통합에서 확인 |
+| 작성 당시 readiness | 필수 16개 중 미해결 8개 유지. 420 정의된 기능·준비 취소와 430 I2S 기능 완료. T12 마일스톤은 사용자 확인으로 완료. T13 이후·R14·RC·공개는 대기. 공용 자원 경로 변경 이후 필요한 최종-source 통신 회귀는 후속 통합에서 확인 |
 | 알려진 문제 | Fixture 201 RXDELAY와 Fixture 301 TWIS 지연 buffer 재개 결함은 각각 exact 수정 뒤 전체 재시험 PASS. Fixture 301 revision 1 외부 저항 누락 실행은 무효, exact `e25ebb0` 실패는 결함 증거로만 외부 보존. Exact `e2f045c` evidence의 NACK/cancel 복구 record 6쌍은 동일 논리 ID라 journal 순서·seed로 구분하며 기능 누락은 없다. 이후 runner는 오류 원인을 ID에 포함하도록 교정 |
-| 이 TODO 작성 작업의 실행 중 시험 | 현재 probe 실행 없음. session99436 선점60회·불일치16개·cleanup63·postflight PASS로 종료. 사용자 지시대로 추가 실기 진단 중단·원인/보완 보존 |
+| 이 TODO 작성 작업의 실행 중 시험 | a6367ca C01 원인 분리 종료·원본46개 보존. PSEL 수정 Host13+UART6·target2/2·정렬/계약/inventory PASS. 경로 실행 파일 Windows4551은 원격 확인 예정. 현재 process/image는 work/current_common_task_state.json |
 | 로컬 임시 build·evidence | C:/pcv04 baseline·C:/pwm04 최초 build 실패·C:/pwc04 준비·C:/pwh04 054d08f·C:/pwq04 0d7f382 보존. 97번에 두 flash 실패·성공·raw/SHA 보존. 삭제 실행 없음 |
 | 최종 정렬 gate | 최종 준비 Host94그룹733시험=731PASS·설치CLI/dirty M27 조건부SKIP2. 정렬388·T13 Host3·contract/inventory/package20/docs PASS. ce48471 pair2/2·관련Host16 원본 보존. 이전 Windows4551 실패는 삭제/승격하지 않음 |
-| CI 확인 | e547fc0 원격 15/15 SUCCESS(Software 7·재현 8)를 이번 작업에서도 재확인했다. 103번 후속 commit의 원격 CI는 push 후 exact SHA로 별도 조회 |
+| CI 확인 | e547fc0·6155a85·7a33b77 원격 각각15/15 SUCCESS. 3f990da 원격 Host742시험 중740PASS/2SKIP, 전체9성공·후속push로6취소. 8966da5 조회 당시8성공/7진행. 후속 CI는 exact SHA로 별도 조회 | a6367ca Host741PASS/2SKIP, 조회11/15성공·4진행. 새 수정 commit은 별도 확인한다.
 | 문서 작업 검증 | 103번 TIMER 완료 정리·T13 진행 경계. 관련 Host14·계약45·정렬388·문서216·inventory PASS. T13 180/900/3600초·C→S→U와 기존 목표32단독/8동시 유지, QDEC 알려진 제한·진단 종료를 구분 |
 | 최종 HIL 입력 찾기 | GPIO C:/cgc04=4e48252, steady C:/cav04=3334b17, 모드 C:/caw04=0db0689, I2S C:/cax04=b5c86a4, QDEC진단 C:/cby04=ce48471. Raw/SHA/postflight는100·101번 |
 | 커밋 찾기 | `git log -1 -- 00_Docs/TODO_v0.4.0.md`; 자기 commit hash를 본문에 소급 끼워 넣지 않음 |
@@ -235,19 +245,20 @@ R00~R14와 연결하고, 구조 변경 뒤 같은 결선을 다시 반복하지 
 소유한다. R01~R13 뒤 runtime byte가 바뀌면 과거 T11 PASS를 새 source 결과로 복사하지 않는다.
 외부 결선 PASS 캠페인은 R13 뒤 최종 source에 한 번 수행한다.
 
-- [ ] **T12 — M25 입력·출력·스트림 기능 검증**
+- [x] **T12 — M25 입력·출력·스트림 기능 검증**
+  - 완료 결정: 2026-09-08 사용자가 T12 기능검증과 QDEC 문제 보고 후 검증 작업 완료를 명시했다. 실제 미수행 반복과 실패 원본은 유지하며 새 PASS를 만들지 않는다.
   - 최신 진행: 100번의 GPIO/GPIOTE 2,502·PWM 675+288·I2S 432 PASS. TIMER 기능은 95번의 7,040회 PASS 범위로 완료 정리했다. QDEC는 문제·보완 기록 후 진단 종료이며 기능 240조건의 전체 PASS는 아니다. 외부 ADC 초기 반복 수와 실행 차이는 103번에 보존한다. 다음 마일스톤은 T13 준비·실기다.
-  - 상태·선행: 부분 완료 — Fixture 401~404·408 각각 PWM 48 PASS·405 AIN4 오픈드레인·406 AIN5/407 AIN6 입력 바이어스 각각 12 PASS, 420 QDEC 기능 48·준비 취소 6 PASS, 430 I2S 192개 PASS; 440 기본 PDM·밀도 PASS·연속 96/96 PASS·전체 요구 대기 / T05·T06·T09, R00~R13과 current-source T11 회귀 완료, 해당 T10 확인.
+  - 상태·선행: 완료(사용자 확인, QDEC 알려진 문제 보고 포함) — Fixture 401~404·408 각각 PWM 48 PASS·405 AIN4 오픈드레인·406 AIN5/407 AIN6 입력 바이어스 각각 12 PASS, 420 QDEC 기능 48·준비 취소 6 PASS, 430 I2S 192개 PASS; 440 기본 PDM·밀도 PASS·연속 96/96 PASS / T05·T06·T09, R00~R13과 current-source T11 회귀 완료, 해당 T10 확인.
   - 할 일: ADC·PWM·timer/event·PDM·I2S·QDEC의 물리 신호와 예상 sample/frame/count를 비교한다.
   - 완료 기준: 합성 peer 자체의 동작과 코어 기능을 구분해 검증하고 각 instance/mode의 증거가 있다. 신호 생성 실패는 미완료이지 계측 면제가 아니다.
   - 결선·증거: Fixture 401 exact a12e444 48 PASS·10,368 samples·cleanup 48은 [74번 기록](<./04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 등록. Fixture 402 exact ff483a1 48 PASS는 [75번 기록](<./04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존. Fixture 403 exact c95b904 48 PASS는 [76번 기록](<./04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 등록. Fixture 404 exact e080bbc 48 PASS는 [77번 기록](<./04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 등록. 405 exact 9fc12bf의 공유 AIN4 오픈드레인 12 PASS·2,592 samples는 [78번 기록](<./04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)에 보존. 406 exact 96f38e9 입력 바이어스 12 PASS·2,592 samples는 [79번 기록](<./04_검증 기록/79_T12_Fixture_406_current_source_공유_AIN5_검증.md>)에 보존. 407 exact 4a64c25의 공유 AIN6 입력 바이어스 12 PASS·2,592 samples는 [82번 기록](<04_검증 기록/82_T12_Fixture_407_current_source_공유_AIN6_검증.md>)에 보존. 408 exact 87b987d의 PWM→AIN7 48 PASS·10,368 samples는 [83번 기록](<04_검증 기록/83_T12_Fixture_408_current_source_PWM_ADC_검증.md>)에 보존. 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다. 내부 ADC calibration·scan과 timer/event의 추가 결과는 95번에 보존했다. 95번 당시 잔여였던 PWM period/duty·모드, C17 GPIO/GPIOTE와 I2S 연속·단방향은 100번에서 통과했다. TIMER는 95번의 실제 범위로 완료 정리했고 QDEC는 문제 기록 후 진단을 종료했다. 외부 ADC 초기 반복 수 차이와 T13 진행 경계는 103번을 따른다. 기존 HIGH/sample-count·유한 전송 결과로 완료 처리하지 않는다. 정밀 ADC 정확도·교정 전압 측정은 42번에 따라 필수 gate 밖이다.
 
 - [ ] **T13 — 복구·동시 실행·장시간 안정성 검증**
   - 현행 시간 기준: 사용자 지시로 단독 각 인스턴스 180초. 동시 각 확정 조합 900초, 전체 대표 고부하 한 조합 3600초로 대체. 결과에는 요청/실제 연속 시간을 모두 기록하고 3분을 10분·2시간 통과로 확대하지 않는다.
-  - 상태·선행: **계획 완료·runner 구현 필요·실기 0회** / T07·해당 T11/T12 단독 PASS·해당 T10 확인. QDEC20/21 단독과 C07은 수동 read/clear 결함의 선행 HOLD, 다른 조합은 독립 준비 가능.
+  - 상태·선행: **계획 완료·runner 구현 필요·실기 0회** / T07·해당 T11/T12 단독 PASS·해당 T10 확인. QDEC20/21 단독과 C07은 알려진 문제 보고 후 현재 실행 목록에서 제외하며, T12 완료를 다시 보류하지 않는다.
   - 할 일: 허용 topology의 동시 부하, 충돌 negative, 오류 주입·복구, 반복 handover, 약속한 soak를 실행한다.
   - 완료 기준: source·topology·rate·시간·buffer·loss·latency/CPU 관측 방법과 누수/복구 판정이 기록된다. 장시간 시험을 코드 구현만으로 완료 처리하지 않는다.
-  - 결선·증거: [T13 계획](../tests/hil/nu54dk/T13_PLAN.md)과 생성 topology JSON에 32단독/8동시·C→S→U를 고정했다. 계획 Host 3개 PASS는 실기 증거가 아니다. System OFF 격리·재연결은 별도 안내한다.
+  - 결선·증거: [T13 계획](../tests/hil/nu54dk/T13_PLAN.md)과 생성 topology JSON에 원래 32단독/8동시를 보존한다. 현재 S 확인 완료, QDEC 제외·실행 진행은 104번. 기본 System OFF wake 근거와 T13의 새 요구를 먼저 대조하며 격리·재연결을 미확정 필수 단계로 안내하지 않는다.
 
 - [ ] **T14 — 발견된 결함 수정과 재시험**
   - 현재 미해결: 101번 QDEC 동작 중 수동 read/clear 누산 누락. 마지막 일반 9/30·IRQ 보호 7/30이 399/400으로 실패했다. 사용자 지시로 진단 반복을 종료했으며 제품 core는 수정하지 않았다. 짧은 SAMPLE/REPORT IRQ 40회 일치는 대체 API의 기능/안정성 자격이 아니다.
