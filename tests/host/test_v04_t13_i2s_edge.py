@@ -30,6 +30,8 @@ class I2sEdgeTests(unittest.TestCase):
                 observed = 4095 + index
                 boundary += observed
                 trace[base:base + 4] = [boundary, observed, observed, observed]
+            total = sum(trace[index] for index in (5, 9, 13, 17))
+            summary[14:17] = [total, total, total]
         return [summary, first, trace]
 
     def test_only_standalone_i2s20_can_enable_edge_diagnostic(self):
@@ -43,12 +45,17 @@ class I2sEdgeTests(unittest.TestCase):
     def test_normal_dma_requires_physical_and_received_edge_agreement(self):
         for role in (1, 2):
             self.assertTrue(edge.inspect(self.pages(role), role)['diagnostic_only'])
+        for index in (5, 12, 14, 15, 16):
+            broken = self.pages(2)
+            broken[0][index] = 1
+            with self.subTest(role=2, page=0, index=index), self.assertRaises(ProtocolError):
+                edge.inspect(broken, 2)
         for index in (10, 11):
             broken = self.pages(2)
             broken[1][index] = 1 if index == 10 else 0
             with self.subTest(role=2, page=1, index=index), self.assertRaises(ProtocolError):
                 edge.inspect(broken, 2)
-        for index in (0, 2, 3, 4, 5, 6, 7, 8, 13, 17, 19):
+        for index in (0, 2, 3, 4, 5, 6, 7, 8, 13, 14, 15, 16, 17, 19):
             broken = self.pages(1)
             broken[0][index] ^= 1
             with self.subTest(page=0, index=index), self.assertRaises(ProtocolError):
@@ -63,6 +70,33 @@ class I2sEdgeTests(unittest.TestCase):
             broken[2][index] ^= 2
             with self.subTest(page=2, index=index), self.assertRaises(ProtocolError):
                 edge.inspect(broken, 1)
+
+    def test_continuous_trace_allows_only_two_outer_boundary_edges(self):
+        pages = self.pages(1)
+        pages[0][14] += 2
+        pages[2][16] += 2
+        pages[2][17] += 2
+        self.assertEqual(edge.inspect(pages, 1)['observed_total'], pages[0][14])
+        pages[0][14] += 1
+        pages[2][16] += 1
+        pages[2][17] += 1
+        with self.assertRaises(ProtocolError):
+            edge.inspect(pages, 1)
+
+    def test_captured_four_buffer_trace_matches_continuous_oracle(self):
+        """! @brief 실제 S raw의 내부 경계 1회와 측정창 외곽 2회를 재검증합니다. """
+        summary = [0x49324530, 1, 1, 0, 0, 674, 4, 2, 2, 2760711,
+                   4104, 4107, 4107, 0, 16359, 16357, 16357, 0, 0, 0]
+        first = [0x49324531, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+                 674, 674, 0, 0, 0, 0, 0, 2760711, 0, 1]
+        trace = [0x49324554, 1, 4, 674,
+                 4081, 4081, 4079, 4079,
+                 8171, 4090, 4090, 4090,
+                 12250, 4079, 4080, 4080,
+                 16359, 4109, 4107, 4107]
+        result = edge.inspect([summary, first, trace], 1)
+        self.assertEqual(result['observed_total'], 16359)
+        self.assertEqual(result['received_total'], 16357)
 
     def test_firmware_uses_hardware_boundary_and_does_not_reconfigure_gpio_for_observer(self):
         source = (ROOT / 'tests/zephyr/v04_t13_hil/src/audio.cpp').read_text(encoding='utf-8')

@@ -6,6 +6,7 @@ import copy
 from v04_protocol import ProtocolError
 
 MASK = 0xFFFFFFFF
+EDGE_WINDOW_TOLERANCE = 2
 
 
 def fixture(test):
@@ -32,8 +33,8 @@ def inspect(pages, role):
             first[18:20] != [0, 1]):
         raise ProtocolError('T13 I2S edge diagnostic cleanup or first-failure state mismatch')
     if role == 1:
-        if (summary[5] == 0 or summary[6] == 0 or summary[6] > 4 or
-                summary[7] != summary[6] or summary[8] != summary[6] or
+        if (summary[5] == 0 or summary[6] != 4 or summary[7] > summary[6] or
+                summary[8] > summary[6] or
                 first[10] != summary[5] or first[11] != summary[5] or
                 trace[:4] != [0x49324554, 1, summary[6], summary[5]]):
             raise ProtocolError('T13 I2S physical edge count did not match normal DMA data')
@@ -42,16 +43,29 @@ def inspect(pages, role):
             base = 4 + index * 4
             boundary, observed, expected, received = trace[base:base + 4]
             if ((index > 0 and boundary - traces[-1]['boundary'] != observed) or
-                    abs(observed - expected) > 1 or abs(observed - received) > 1):
+                    expected != received or
+                    abs(observed - received) > EDGE_WINDOW_TOLERANCE):
                 raise ProtocolError('T13 I2S physical edge trace linkage mismatch')
             traces.append({'boundary': boundary, 'observed': observed, 'expected': expected,
                            'received': received})
-    elif (any(summary[index] != 0 for index in range(5, 13)) or first[10] != 0 or
+        observed_total = sum(row['observed'] for row in traces)
+        expected_internal = sum(row['expected'] for row in traces)
+        received_internal = sum(row['received'] for row in traces)
+        if (summary[14] != observed_total or
+                not expected_internal <= summary[15] <= expected_internal + 3 or
+                not received_internal <= summary[16] <= received_internal + 3 or
+                summary[15] != summary[16] or
+                abs(summary[14] - summary[16]) > EDGE_WINDOW_TOLERANCE):
+            raise ProtocolError('T13 I2S continuous physical edge total mismatch')
+    elif (any(summary[index] != 0 for index in range(5, 17)) or first[10] != 0 or
           first[11] == 0 or any(trace)):
         raise ProtocolError('T13 I2S peer unexpectedly owned the receive edge observer')
     return {'role': role, 'buffers': summary[5], 'comparisons': summary[6],
             'physical_matches_expected': summary[7], 'physical_matches_received': summary[8],
             'cleanup_failures': summary[17], 'traces': traces if role == 1 else [],
+            'observed_total': summary[14] if role == 1 else 0,
+            'expected_total': summary[15] if role == 1 else 0,
+            'received_total': summary[16] if role == 1 else 0,
             'diagnostic_only': True}
 
 
@@ -67,8 +81,8 @@ def classify_failure(pages):
             first[5:8] != summary[14:17] or first[8] != abs(first[5] - first[6]) or
             first[9] != abs(first[5] - first[7])):
         raise ProtocolError('T13 I2S edge first-failure linkage mismatch')
-    expected_match = first[8] <= 1
-    received_match = first[9] <= 1
+    expected_match = first[8] <= EDGE_WINDOW_TOLERANCE
+    received_match = first[9] <= EDGE_WINDOW_TOLERANCE
     if received_match and not expected_match:
         cause = 'physical-pad-or-peer-output'
     elif expected_match and not received_match:

@@ -46,6 +46,9 @@ namespace
         std::uint32_t pin_cnf_before = 0U, pin_cnf_after = 0U;
         std::uint32_t cleanup_failures = 0U;
         std::uint32_t trace_entries = 0U;
+        std::uint32_t trace_observed_total = 0U;
+        std::uint32_t trace_expected_total = 0U, trace_actual_total = 0U;
+        std::uint32_t trace_expected_last = 0U, trace_actual_last = 0U;
         std::uint32_t trace_boundary[4]{}, trace_delta[4]{};
         std::uint32_t trace_expected[4]{}, trace_actual[4]{};
         std::uint32_t first_registers[20]{};
@@ -91,6 +94,14 @@ namespace
         return count;
     }
 
+    /** @brief 현재 수신 위치의 시작 padding과 peer 기대 word를 한 규칙으로 반환합니다. */
+    std::uint32_t expectedWord(std::uint32_t position)
+    {
+        return position < oracle.padding
+                   ? 0U
+                   : v04::i2sStreamPattern(oracle.seed, position - oracle.padding);
+    }
+
     /** @brief 현재 전역 수신 위치에 해당하는 peer의 기대 전이 수를 계산합니다. */
     std::uint32_t expectedTransitionCount()
     {
@@ -100,9 +111,7 @@ namespace
         for (unsigned index = 0U; index < 256U; ++index)
         {
             const auto position = first_position + index;
-            const auto word = position < oracle.padding
-                                  ? 0U
-                                  : v04::i2sStreamPattern(oracle.seed, position - oracle.padding);
+            const auto word = expectedWord(position);
             for (unsigned bit = 0U; bit < 32U; ++bit)
             {
                 const auto value = (word >> (31U - bit)) & 1U;
@@ -184,6 +193,19 @@ namespace
         if (edge.trace_entries < 4U)
         {
             const auto trace = edge.trace_entries;
+            const auto first_position = stats.completed * 256U;
+            const auto expected_first = expectedWord(first_position) >> 31U;
+            const auto actual_first = rx[slot].values[0] >> 31U;
+            edge.trace_observed_total += edge.last_delta;
+            edge.trace_expected_total += edge.last_expected;
+            edge.trace_actual_total += edge.last_actual;
+            if (trace != 0U)
+            {
+                edge.trace_expected_total += edge.trace_expected_last != expected_first ? 1U : 0U;
+                edge.trace_actual_total += edge.trace_actual_last != actual_first ? 1U : 0U;
+            }
+            edge.trace_expected_last = expectedWord(first_position + 255U) & 1U;
+            edge.trace_actual_last = rx[slot].values[255] & 1U;
             edge.trace_boundary[trace] = edge.last_boundary;
             edge.trace_delta[trace] = edge.last_delta;
             edge.trace_expected[trace] = edge.last_expected;
@@ -773,16 +795,27 @@ void t13::audioEdgeDiagnosticSnapshot(unsigned page, std::uint32_t *out, std::ui
     }
     if (page == 0U)
     {
-        const std::uint32_t values[]{0x49324530U,         role,
-                                     edge.policy,         edge.active,
-                                     edge.boundary_ready, edge.buffers,
-                                     edge.comparisons,    edge.expected_matches,
-                                     edge.actual_matches, edge.last_boundary,
-                                     edge.last_delta,     edge.last_expected,
-                                     edge.last_actual,    edge.first_saved,
-                                     edge.first_delta,    edge.first_expected,
-                                     edge.first_actual,   edge.cleanup_failures,
-                                     edge.pin_cnf_before, edge.pin_cnf_after};
+        const std::uint32_t values[]{
+            0x49324530U,
+            role,
+            edge.policy,
+            edge.active,
+            edge.boundary_ready,
+            edge.buffers,
+            edge.comparisons,
+            edge.expected_matches,
+            edge.actual_matches,
+            edge.last_boundary,
+            edge.last_delta,
+            edge.last_expected,
+            edge.last_actual,
+            edge.first_saved,
+            edge.first_saved ? edge.first_delta : edge.trace_observed_total,
+            edge.first_saved ? edge.first_expected : edge.trace_expected_total,
+            edge.first_saved ? edge.first_actual : edge.trace_actual_total,
+            edge.cleanup_failures,
+            edge.pin_cnf_before,
+            edge.pin_cnf_after};
         for (unsigned index = 0U; index < 20U; ++index)
         {
             out[index] = values[index];
