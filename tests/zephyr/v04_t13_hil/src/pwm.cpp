@@ -5,6 +5,9 @@
 #include <variant.h>
 #include <hal/nrf_gpio.h>
 #include <hal/nrf_timer.h>
+#include <hal/nrf_clock.h>
+#include <zephyr/drivers/clock_control/nrf_clock_control.h>
+#include <zephyr/sys/onoff.h>
 
 namespace
 {
@@ -21,6 +24,56 @@ namespace
     Edges edges;
     unsigned duty = 0U;
     std::uint32_t previous_poll = 0U;
+    bool crystal_requested = true, crystal_held = false;
+    onoff_manager *clock_manager = nullptr;
+    onoff_client clock_client{};
+    std::uint32_t trace[16][5]{}, trace_count = 0U;
+
+    /** @brief 정밀 PWM 비교 동안만 HFXO 참조를 획득하며 다른 clock 사용자의 참조는 유지합니다. */
+    bool requestClock()
+    {
+        if (!crystal_requested)
+        {
+            return true;
+        }
+        clock_manager = z_nrf_clock_control_get_onoff(CLOCK_CONTROL_NRF_SUBSYS_HF);
+        if (clock_manager == nullptr || crystal_held)
+        {
+            return stats.fail(22U);
+        }
+        sys_notify_init_spinwait(&clock_client.notify);
+        const int result = onoff_request(clock_manager, &clock_client);
+        if (result < 0)
+        {
+            return stats.fail(23U, static_cast<std::uint32_t>(result));
+        }
+        crystal_held = true;
+        const auto deadline = k_uptime_get() + 1000;
+        int completed = 0;
+        while (sys_notify_fetch_result(&clock_client.notify, &completed) == -EAGAIN)
+        {
+            if (k_uptime_get() >= deadline)
+            {
+                return stats.fail(24U);
+            }
+            k_sleep(K_MSEC(1));
+        }
+        return completed == 0 || stats.fail(25U, static_cast<std::uint32_t>(completed));
+    }
+
+    bool releaseClock()
+    {
+        if (crystal_held)
+        {
+            const int result = onoff_cancel_or_release(clock_manager, &clock_client);
+            if (result < 0)
+            {
+                return stats.fail(26U, static_cast<std::uint32_t>(result));
+            }
+            crystal_held = false;
+        }
+        return true;
+    }
 
     bool guards()
     {
@@ -34,10 +87,15 @@ bool t13::pwmPrepare(const Case &test)
     pwm = nullptr;
     edges = {};
     previous_poll = 0U;
+    trace_count = 0U;
     duty = test.pwm_duty;
     if (!stats.enabled)
     {
         return true;
+    }
+    if (!requestClock())
+    {
+        return false;
     }
     if (role == 2U)
     {
@@ -133,6 +191,13 @@ void t13::captureService()
         const auto level = nrf_gpio_pin_read(NRF_GPIO_PIN_MAP(1, 14));
         *event = 0U;
         __DMB();
+        auto *record = trace[trace_count % 16U];
+        record[0] = trace_count;
+        record[1] = timestamp;
+        record[2] = level;
+        record[3] = cycle;
+        record[4] = NRF_CLOCK->XO.STAT;
+        ++trace_count;
         if (!edges.consume(timestamp, level, duty))
         {
             stats.fail(9U, edges.count);
@@ -187,7 +252,7 @@ bool t13::pwmStop()
     stats.active = false;
     if (role == 2U)
     {
-        return guards() || stats.fail(19U);
+        return (guards() || stats.fail(19U)) && releaseClock();
     }
     if (channel_owned)
     {
@@ -224,7 +289,42 @@ bool t13::pwmStop()
         }
         timer_owned = false;
     }
-    return guards() || stats.fail(19U);
+    return (guards() || stats.fail(19U)) && releaseClock();
+}
+
+bool t13::pwmClockPolicy(bool crystal)
+{
+    if (stats.active || crystal_held)
+    {
+        return false;
+    }
+    crystal_requested = crystal;
+    return true;
+}
+
+void t13::pwmTraceSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count)
+{
+    if (page == 0U)
+    {
+        const std::uint32_t values[]{crystal_requested,   crystal_held,          NRF_CLOCK->XO.STAT,
+                                     NRF_CLOCK->PLL.STAT, trace_count,           edges.bad,
+                                     edges.count,         edges.maximum_poll_gap};
+        for (unsigned index = 0U; index < 8U; ++index)
+        {
+            out[index] = values[index];
+        }
+        count = 8U;
+        return;
+    }
+    for (unsigned index = 0U; index < 4U; ++index)
+    {
+        const auto slot = (page - 1U) * 4U + index;
+        for (unsigned field = 0U; field < 5U; ++field)
+        {
+            out[index * 5U + field] = trace[slot][field];
+        }
+    }
+    count = 20U;
 }
 
 bool t13::pwmHealthy()

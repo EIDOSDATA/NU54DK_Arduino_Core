@@ -1,0 +1,72 @@
+{
+  "base_source": "3f990da9290fb3c515d4c082989ec2b483e55e48",
+  "working_tree_changes": true,
+  "physical_pass": false,
+  "files": [
+    {
+      "file": "t13-s-pwm-clock-host-01.json.gz",
+      "bytes": 490,
+      "sha256": "c3f728c5fc1972427e05ec9d515e18f78c72f7e7a1d9f38d75b3580cfadb2532",
+      "gzip_sha256": "078b913eabe4016027a7bb4a9683719084cdde762ea62e090004c950ba38e83e"
+    },
+    {
+      "file": "t13-s-pwm-clock-host-01.log.gz",
+      "bytes": 2181,
+      "sha256": "57c0f899dc9cc93bc2901ac002f18cb9494e4033ed3275577db562278d9ddda5",
+      "gzip_sha256": "59c9809ee5760e11e87a3ef95346f79357b76377c4185316c552ea4508f943c0"
+    },
+    {
+      "file": "t13-s-pwm-clock-full-host-01.json.gz",
+      "bytes": 468,
+      "sha256": "6a7507f3541c8a54b5a034eec06118006061b9ed831246c826146ad7f800fec6",
+      "gzip_sha256": "45efe0735909f254b628349ef7c677400ac87ca007cdb5b171ba50bbf6328c22"
+    },
+    {
+      "file": "t13-s-pwm-clock-full-host-01.log.gz",
+      "bytes": 185111,
+      "sha256": "350aada1f290526411df639ffe37970c0e4949c3fc52c46619efc3a58913205f",
+      "gzip_sha256": "9727ec70baa18b34e6eee4ace7b7dbc6ae18d265bd6a8455c06d6f2048313042"
+    },
+    {
+      "file": "t13-s-pwm-clock-target-dev-01.json.gz",
+      "bytes": 663,
+      "sha256": "0f5905d331376356a8b563d35bf8e9f634faf93f25053d666175cfce404d86f8",
+      "gzip_sha256": "9269cd387baf93500a7fc001ce28f0ce33a7c70bbbbb1b5f32987f71c8896fb0"
+    },
+    {
+      "file": "t13-s-pwm-clock-target-dev-01.log.gz",
+      "bytes": 2060,
+      "sha256": "900d0eba7847a5b054e1c0879917f20f3a480c9bdf821eeb4447aa89ae07d2cb",
+      "gzip_sha256": "d9af92c990f5c59ddea3b8f9e68eff6d88f5994fd4f77fe0647459489e23846e"
+    },
+    {
+      "file": "t13-s-pwm-clock-style-01.json.gz",
+      "bytes": 534,
+      "sha256": "17d2796d3f4f7a068d5d73fd5aca89ee2125bd16f1682b4c74de2b9773080d1f",
+      "gzip_sha256": "b951d15cbd5e0f02a823afc4a1d6353f7081be4c12e1d1ab0a3b7b04bcc5df1d"
+    },
+    {
+      "file": "t13-s-pwm-clock-style-01.log.gz",
+      "bytes": 40,
+      "sha256": "78d55fd05d33a0a2dadd265469541c973d684f4f129a146e6a0d06d717fa0daa",
+      "gzip_sha256": "b3b92d99a9f5968d6da01ffef112dd2b4c3ef8b48a6c2c0986ef0910a44c211a"
+    },
+    {
+      "file": "t13-s-pwm-clock-docs-01.json.gz",
+      "bytes": 463,
+      "sha256": "439df6b0d03dabf1ff9d90a0b1eed3a5e4099f29d357f20cac8aba1d74090763",
+      "gzip_sha256": "1b500f16dc54528b3a46f4c7fe0b426ea037e5d7c3fe0da0f0a095701def3a4f"
+    },
+    {
+      "file": "t13-s-pwm-clock-docs-01.log.gz",
+      "bytes": 69,
+      "sha256": "f854e3084afea4144bc737be5d66e44f445fb127b706910a8c2a82a1c212982d",
+      "gzip_sha256": "02ab10e56cb9b7f74e01d005a4ccc20850c52286d4f579e8b0d3b47f8bd9a32f"
+    }
+  ],
+  "full_host": {
+    "groups": 95,
+    "tests": 742,
+    "skipped": 2
+  }
+}

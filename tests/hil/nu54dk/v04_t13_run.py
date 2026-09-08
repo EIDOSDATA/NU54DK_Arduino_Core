@@ -129,6 +129,10 @@ def execute_group(devices, group, duration, continuity, append, *, preflight):
         'service_busy_definition': 'service function wall-cycle duration; not total CPU utilization'})
     original_error = None
     try:
+        if test['pwm_instance']:
+            for device in devices:
+                if device.command(106, (1,), timeout=2) != [1]:
+                    raise ProtocolError('T13 PWM crystal clock policy failed')
         for device in reversed(devices):
             if device.command(97, (test['id'], seed, 0x53414645), timeout=3) != [1]:
                 words = device.command(99, timeout=2)
@@ -157,6 +161,12 @@ def execute_group(devices, group, duration, continuity, append, *, preflight):
                 raise ProtocolError('T13 start failed')
         time.sleep(.3)
         first_engines, first_lanes = snapshots(devices, test, seed, append, identifier + '/begin')
+        if test['pwm_instance']:
+            for device in devices:
+                words = device.command(107, (0,), timeout=2)
+                append(identifier + f'/clock/role{device.image["role"]}', {'status': 'observation', 'words': words})
+                if words[:2] != [1, 1] or words[2] == 0:
+                    raise ProtocolError('T13 PWM crystal reference not held')
         for role_lanes in first_lanes:
             if any(min(row['tx']['frames'], row['rx']['frames']) == 0 for row in role_lanes):
                 raise ProtocolError('T13 traffic not established before measurement')
@@ -214,6 +224,20 @@ def execute_group(devices, group, duration, continuity, append, *, preflight):
     except BaseException as error:
         original_error = error
         append(identifier + '/failure', {'status': 'failed', 'error': f'{type(error).__name__}: {error}'})
+        for device in devices:
+            observations = [(99, (), 'engine')]
+            observations += [(100, (index,), f'lane{index}') for index in range(len(test['serial_links']))]
+            observations += [(104, (index,), f'stream{index}') for index in oracle.stream_indices(test)]
+            if test['pwm_instance']:
+                observations += [(107, (page,), f'pwm-trace{page}') for page in range(5)]
+            for opcode, arguments, name in observations:
+                try:
+                    append(identifier + f'/failure/role{device.image["role"]}/{name}',
+                           {'status': 'observation', 'words': device.command(opcode, arguments, timeout=2)})
+                except BaseException as read_error:
+                    append(identifier + f'/failure/role{device.image["role"]}/{name}',
+                           {'status': 'unproven', 'error': f'{type(read_error).__name__}: {read_error}'})
+                    break
     finally:
         stopped = stop_pair(devices, append, identifier + '/cleanup')
         pins_idle = idle_pins(devices, append, identifier + '/pins')

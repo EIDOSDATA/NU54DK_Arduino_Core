@@ -164,6 +164,17 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         streamSnapshot(args[0], out, count);
         return 0U;
     }
+    if (opcode == 106U && nargs == 1U && args[0] <= 1U && !gate.claimed() && !wiringClaimed())
+    {
+        out[0] = pwmClockPolicy(args[0] != 0U) ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 107U && nargs == 1U && args[0] <= 4U)
+    {
+        pwmTraceSnapshot(args[0], out, count);
+        return 0U;
+    }
     if (opcode == 97U && nargs == 3U && !wiringClaimed() && !gate.claimed())
     {
         selected = nullptr;
@@ -194,6 +205,13 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         count = 1U;
         return 0U;
     }
+    if (opcode == 103U && nargs == 0U)
+    {
+        /** @brief 자동 STOP 뒤 renew 거부도 진단 가능한 응답으로 반환합니다. */
+        out[0] = gate.renew(k_uptime_get()) ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
     if (!gate.live(k_uptime_get()))
     {
         return 403U;
@@ -213,12 +231,6 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         streamQuiesce();
         quiesced = true;
         out[0] = 1U;
-        count = 1U;
-        return 0U;
-    }
-    if (opcode == 103U && nargs == 0U)
-    {
-        out[0] = gate.renew(k_uptime_get()) ? 1U : 0U;
         count = 1U;
         return 0U;
     }

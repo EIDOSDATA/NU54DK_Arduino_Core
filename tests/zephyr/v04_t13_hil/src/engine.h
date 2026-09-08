@@ -20,6 +20,8 @@ namespace t13
     void serialSnapshot(unsigned lane, std::uint32_t *out, std::uint32_t &count);
     void serialTiming(unsigned lane, unsigned metric, std::uint32_t *out, std::uint32_t &count);
     void captureService();
+    bool pwmClockPolicy(bool crystal);
+    void pwmTraceSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count);
     bool streamPrepare(const Case &test, std::uint32_t seed);
     bool streamStart();
     void streamQuiesce();
