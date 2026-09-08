@@ -13,7 +13,7 @@
         "standalone/qdec21",
         "C07"
       ],
-      "release_condition": "Resolve the manual read path and pass the full 240-condition functional regression before the planned read-based soak",
+      "release_condition": "Not scheduled: diagnostic work is closed and the known limitation proceeds to T14/T15. Reopening this read-based trial requires an explicit scope decision and evidence for the selected path; it is not a prerequisite for unrelated T13 work",
       "alternative_candidate": "REPORT-only IRQ matched 20 short runs; requires separate functional, overflow, queue and continuous qualification",
       "automatic_substitution_allowed": false
     }

@@ -323,7 +323,7 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 ### M25 — Analog·timing·audio·event 전 인스턴스
 
-- 상태: **부분 완료** — SAADC AIN0~7·내부 ADC/event, PDM 기본/연속, C17 GPIO/GPIOTE·PWM 675+288·I2S 432 기능 PASS. QDEC 수동 read/clear 추가 기능은 HOLD이며 TIMER 반복 증거 대응과 T13이 남았다. SAADC·PWM, timer/event,
+- 상태: **부분 완료** — SAADC AIN0~7·내부 ADC/event, PDM 기본/연속, C17 GPIO/GPIOTE·PWM 675+288·I2S 432 기능 PASS. TIMER 기능은 95번 범위로 완료 정리했다. QDEC는 알려진 문제 기록 후 진단 종료이며 다음은 T13 준비/실기다. 외부 ADC 반복 수 차이는 103번에 보존한다. SAADC·PWM, timer/event,
   PDM·I2S·QDEC 후보를 구현했다. 구현 이력은
   [M25 검증 기록](<../04_검증 기록/37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md>)을 따른다.
   현재 source별 증거와 잔여 요구는 102번 대조표, 기능 fixture 경계는 42번 범위 합의를 따른다.

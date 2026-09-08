@@ -152,7 +152,7 @@ def plan():
                 'evidence': '../../../00_Docs/04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md',
                 'diagnostic_source': 'ce48471975be66a17368d5d6cb475447ffc9a96e',
                 'affected': ['standalone/qdec20', 'standalone/qdec21', 'C07'],
-                'release_condition': 'Resolve the manual read path and pass the full 240-condition functional regression before the planned read-based soak',
+                'release_condition': 'Not scheduled: diagnostic work is closed and the known limitation proceeds to T14/T15. Reopening this read-based trial requires an explicit scope decision and evidence for the selected path; it is not a prerequisite for unrelated T13 work',
                 'alternative_candidate': 'REPORT-only IRQ matched 20 short runs; requires separate functional, overflow, queue and continuous qualification',
                 'automatic_substitution_allowed': False}},
             'board_revision': 'fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3',

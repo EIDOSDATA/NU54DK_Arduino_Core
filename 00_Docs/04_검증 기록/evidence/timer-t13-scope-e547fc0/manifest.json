@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "status": "passed-documentation-and-plan-checks",
+  "baseline": "e547fc0863be5b381ecab26835fb5e872b399a9c",
+  "physical_executed": false,
+  "new_hardware_result": false,
+  "product_firmware_and_readiness_unchanged": true,
+  "checks": [
+    {
+      "name": "timer-t13-103-host",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "tests.host.test_v04_test_plan",
+        "tests.host.test_v04_t13_plan"
+      ],
+      "started_at": "2026-09-08T00:17:14.552530+00:00",
+      "finished_at": "2026-09-08T00:17:17.180353+00:00",
+      "exit_code": 0,
+      "log_sha256": "98fed15a5dd61f00451e4c01fa5517e5f48ac0255a744534a3d0a03d7e250c2c"
+    },
+    {
+      "name": "timer-t13-103-contract",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "contract"
+      ],
+      "started_at": "2026-09-08T00:17:17.180353+00:00",
+      "finished_at": "2026-09-08T00:17:17.655499+00:00",
+      "exit_code": 0,
+      "log_sha256": "8213de3f195c3c3683c64fd91d49a56158d144ffb1bf8f8e2fe554bec1a4640f"
+    },
+    {
+      "name": "timer-t13-103-style",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\format\\run_cpp_style.py",
+        "--clang-format",
+        "C:\\Program Files\\LLVM\\bin\\clang-format.exe"
+      ],
+      "started_at": "2026-09-08T00:17:17.655499+00:00",
+      "finished_at": "2026-09-08T00:17:29.818727+00:00",
+      "exit_code": 0,
+      "log_sha256": "50e135445cc75347d4ef15a813ecee74122b3164eac45dd3c961563561bdd004"
+    },
+    {
+      "name": "timer-t13-103-inventory",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "inventory"
+      ],
+      "started_at": "2026-09-08T00:18:21.869606+00:00",
+      "finished_at": "2026-09-08T00:18:23.432502+00:00",
+      "exit_code": 0,
+      "log_sha256": "8efc41e1f9734d065dfdb3292806c34b3f3ff16b7b9b69b5d6ae2ac8479703f1"
+    },
+    {
+      "name": "timer-t13-103-docs",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "docs"
+      ],
+      "started_at": "2026-09-08T00:18:23.432502+00:00",
+      "finished_at": "2026-09-08T00:18:24.018190+00:00",
+      "exit_code": 0,
+      "log_sha256": "b2618ab2cb15569ae390fa0b068c1642427008bc226eda1bda1cd9fc6fe1ab22"
+    }
+  ],
+  "external_adc_existing_evidence_audit": [
+    {
+      "fixture": 401,
+      "file": "00_Docs/04_검증 기록/evidence/t12-fixture401-a12e444/fixture401-attempt1.json",
+      "sha256": "a0a3d59935cd10f43bec6dc3e98136323bc8aad2ccfcb944debd7793c474d231",
+      "repetitions": 1,
+      "completed_cycles": 1,
+      "functional": 48,
+      "samples": 10368
+    },
+    {
+      "fixture": 402,
+      "file": "00_Docs/04_검증 기록/evidence/t12-fixture402-ff483a1/fixture402-attempt1.json",
+      "sha256": "a4e8a53021030ec44e20ccc6ea7cad26d92d23cea1d05d40d3ff71c1ac69c999",
+      "repetitions": 1,
+      "completed_cycles": 1,
+      "functional": 48,
+      "samples": 10368
+    },
+    {
+      "fixture": 403,
+      "file": "00_Docs/04_검증 기록/evidence/t12-fixture403-c95b904/fixture403-attempt1.json",
+      "sha256": "7b0651b60cdb9a4f31a9c1ff41cc0f7c0439466a22fe8e322b42c772bd454e0b",
+      "repetitions": 1,
+      "completed_cycles": 1,
+      "functional": 48,
+      "samples": 10368
+    },
+    {
+      "fixture": 404,
+      "file": "00_Docs/04_검증 기록/evidence/t12-fixture404-e080bbc/fixture404-attempt1.json",
+      "sha256": "19444c0143775aedff7fd1f1b5dd3144c5dd9b1720eed57a2aff8210f153a83a",
+      "repetitions": 1,
+      "completed_cycles": 1,
+      "functional": 48,
+      "samples": 10368
+    },
+    {
+      "fixture": 405,
+      "file": "00_Docs/04_검증 기록/evidence/t12-fixture405-9fc12bf/fixture405-attempt1.json",
+      "sha256": "cb933c1bf10942bfa82736850a145ddd58cc36455d37bcce4241cb2bf725ed66",
+      "repetitions": 1,
+      "completed_cycles": 1,
+      "functional": 12,
+      "samples": 2592
+    },
+    {
+      "fixture": 406,
+      "file": "00_Docs/04_검증 기록/evidence/t12-fixture406-96f38e9/fixture406-attempt1.json",
+      "sha256": "f1c5d11b00315006727ebf7cc4f8bcf3bcea45ba932c673dffa629f080698693",
+      "repetitions": 1,
+      "completed_cycles": 1,
+      "functional": 12,
+      "samples": 2592
+    },
+    {
+      "fixture": 407,
+      "file": "00_Docs/04_검증 기록/evidence/t12-fixture407-4a64c25/fixture407-attempt1.json",
+      "sha256": "4b779d1aec6fda8e4ceaf2304b49015427023d9988e8851c17a4e28cd7f3b832",
+      "repetitions": 1,
+      "completed_cycles": 1,
+      "functional": 12,
+      "samples": 2592
+    },
+    {
+      "fixture": 408,
+      "file": "00_Docs/04_검증 기록/evidence/t12-fixture408-87b987d/fixture408-attempt2.json",
+      "sha256": "c8e84a3f5417ea63e62c08574b569987464575fa3d2b4acf81066f0573bd2950",
+      "repetitions": 1,
+      "completed_cycles": 1,
+      "functional": 48,
+      "samples": 10368
+    }
+  ],
+  "source_for_timer_result": "00_Docs/04_검증 기록/95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md",
+  "timer_functional_count_two_boards": 7040,
+  "t13_physical_executed": false,
+  "remote_ci_for_new_commit": "not-yet-observed; query the exact commit after push"
+}
