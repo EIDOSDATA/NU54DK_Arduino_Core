@@ -15,6 +15,7 @@
 #include <hal/nrf_twim.h>
 #include <hal/nrf_spis.h>
 #include <hal/nrf_twis.h>
+#include <hal/nrf_gpio.h>
 
 namespace
 {
@@ -50,6 +51,12 @@ namespace
     Buffer conflict_tx{}, conflict_rx{};
     SerialSignalPin conflict_pins[3]{};
     SerialDmaWorkspace conflict_workspaces[2]{};
+    unsigned spi_boundary_policy = 0U;
+    struct SpiBoundary
+    {
+        std::uint32_t raw[20]{}, before[20]{}, after[20]{}, baseline[20]{};
+        bool prepared = false;
+    } spi_boundary;
 
     /** @brief 단독 serial의 의도적 첫 실패와 실제 반환 정보를 정상 통계와 분리합니다. */
     struct Fault
@@ -83,6 +90,88 @@ namespace
         default:
             return nullptr;
         }
+    }
+
+    /** @brief 실제 SPI DMA·semaphore·CS 수준을 읽기만 하며 다음 전송 전에 보존합니다. */
+    void spiBoundaryRegisters(std::uint32_t *out)
+    {
+        const auto &lane = lanes[0];
+        const bool target = lane.endpoint.kind == Kind::spis;
+        out[0] = spi_boundary_policy;
+        out[1] = static_cast<std::uint32_t>(lane.endpoint.kind);
+        out[2] = lane.endpoint.instance;
+        const auto *common = serialRegisters(lane.endpoint.instance);
+        out[3] = common->ENABLE;
+        if (target)
+        {
+            const auto *reg = reinterpret_cast<const NRF_SPIS_Type *>(common);
+            out[4] = reg->ORC;
+            out[5] = reg->DEF;
+            out[6] = reg->DMA.TX.MAXCNT;
+            out[7] = reg->DMA.RX.MAXCNT;
+            out[8] = reg->DMA.TX.PTR;
+            out[9] = reg->DMA.RX.PTR;
+            out[10] = nrf_spis_sck_pin_get(reg);
+            out[11] = nrf_spis_mosi_pin_get(reg);
+            out[12] = nrf_spis_miso_pin_get(reg);
+            out[13] = nrf_spis_csn_pin_get(reg);
+            out[14] = nrf_spis_status_get(reg);
+            out[15] = nrf_spis_semaphore_status_get(reg);
+            spi_boundary.raw[11] = nrf_spis_tx_amount_get(reg);
+            spi_boundary.raw[12] = nrf_spis_rx_amount_get(reg);
+        }
+        else
+        {
+            const auto *reg = reinterpret_cast<const NRF_SPIM_Type *>(common);
+            out[4] = reg->ORC;
+            out[5] = UINT32_MAX;
+            out[6] = nrf_spim_tx_maxcnt_get(reg);
+            out[7] = nrf_spim_rx_maxcnt_get(reg);
+            out[8] = reg->DMA.TX.PTR;
+            out[9] = reg->DMA.RX.PTR;
+            out[10] = nrf_spim_sck_pin_get(reg);
+            out[11] = nrf_spim_mosi_pin_get(reg);
+            out[12] = nrf_spim_miso_pin_get(reg);
+            out[13] = nrf_spim_csn_pin_get(reg);
+            out[14] = out[15] = UINT32_MAX;
+            spi_boundary.raw[11] = nrf_spim_tx_amount_get(reg);
+            spi_boundary.raw[12] = nrf_spim_rx_amount_get(reg);
+        }
+        out[16] = out[13] < 96U ? nrf_gpio_pin_read(out[13]) : UINT32_MAX;
+        out[17] = 1U;
+        for (unsigned slot = 0U; slot < 2U; ++slot)
+        {
+            out[17] &= lane.tx[slot].guards(1024U) && lane.rx[slot].guards(1024U) ? 1U : 0U;
+        }
+        out[18] = k_cycle_get_32();
+        out[19] = CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC;
+    }
+
+    /** @brief 비정상 frame을 정상 complete 경로로 보내지 않고 최초 event·DMA를 별도로 보존합니다. */
+    bool spiBoundaryEvent(const SpiFabricEvent &event)
+    {
+        if (!spi_boundary.prepared || spi_boundary.raw[2] != 1U ||
+            event.type == SpiFabricEventType::buffers_armed ||
+            event.type == SpiFabricEventType::buffer_needed)
+        {
+            return false;
+        }
+        auto &raw = spi_boundary.raw;
+        if (raw[4] == 0U)
+        {
+            raw[4] = 1U;
+            raw[5] = static_cast<std::uint32_t>(event.type);
+            raw[6] = event.tx_transferred;
+            raw[7] = event.rx_transferred;
+            raw[8] = (event.tx_buffer == lanes[0].tx[0].data() ? 1U : 0U) |
+                     (event.rx_buffer == lanes[0].rx[0].data() ? 2U : 0U);
+            raw[15] = k_cycle_get_32();
+            spiBoundaryRegisters(spi_boundary.after);
+            raw[9] = spi_boundary.after[17];
+            raw[13] = spi_boundary.after[14];
+            raw[14] = spi_boundary.after[15];
+        }
+        return true;
     }
 
     /** @brief 정상 frame 판정 전에 첫 오류·취소 event의 길이와 DMA 주소·가드를 보존합니다. */
@@ -295,6 +384,30 @@ namespace
     {
         const auto kind = lane.endpoint.kind;
         const auto length = lane.endpoint.length;
+        if (spi_boundary.prepared && kind == Kind::spis)
+        {
+            if (spi_boundary.raw[3] != 0U)
+            {
+                return true;
+            }
+            if (!resetRx(lane, 0U) || !fillTx(lane, 0U, 0U))
+            {
+                return false;
+            }
+            if (spi_boundary_policy == 2U)
+            {
+                const auto result =
+                    static_cast<SpisHandle *>(lane.handle)
+                        ->queueBuffers(lane.tx[0].data(), 512U, lane.rx[0].data(), 512U);
+                if (!accepted(lane, result, 83U))
+                {
+                    return false;
+                }
+                lane.tx_pending[0] = lane.rx_pending[0] = true;
+            }
+            spi_boundary.raw[3] = spi_boundary_policy == 2U ? 1U : 2U;
+            return true;
+        }
         if (lane.rx_pending[0] || lane.rx_pending[1] ||
             (kind != Kind::uart && (lane.tx_pending[0] || lane.tx_pending[1])))
         {
@@ -497,6 +610,11 @@ namespace
             while (kind == Kind::spim ? static_cast<SpimHandle *>(lane.handle)->takeEvent(event)
                                       : static_cast<SpisHandle *>(lane.handle)->takeEvent(event))
             {
+                if (spiBoundaryEvent(event))
+                {
+                    failure(lane, 82U, static_cast<std::uint32_t>(event.type));
+                    continue;
+                }
                 if (event.type != SpiFabricEventType::buffers_armed &&
                     event.type != SpiFabricEventType::buffer_needed)
                 {
@@ -614,6 +732,12 @@ namespace
         }
         if (accepted(lane, result, 60U))
         {
+            if (spi_boundary.prepared && kind == Kind::spim)
+            {
+                spi_boundary.raw[3] = 1U;
+                spi_boundary.raw[17] = submitted;
+                transmitting = false;
+            }
             if (kind == Kind::uart)
             {
                 uartFaultSubmitted(submitted);
@@ -711,6 +835,7 @@ bool t13::serialPrepare(const Case &test, std::uint32_t seed)
     transmitting = false;
     receivers_armed = false;
     fault = {};
+    spi_boundary = {};
     lane_count = test.serial_count;
     for (auto &lane : lanes)
     {
@@ -726,6 +851,22 @@ bool t13::serialPrepare(const Case &test, std::uint32_t seed)
             !configure(lane))
         {
             return false;
+        }
+        if (spi_boundary_policy != 0U)
+        {
+            const bool controller = spi_boundary_policy == 1U || spi_boundary_policy == 3U;
+            if (test.serial_count != 1U || test.harness != 2U || test.adc_channels ||
+                test.pwm_instance || test.pdm_instance || test.i2s ||
+                lane.endpoint.length != 1024U || lane.endpoint.rate != 8000000U ||
+                lane.endpoint.kind != (controller ? Kind::spim : Kind::spis))
+            {
+                return false;
+            }
+            spi_boundary.prepared = true;
+            spi_boundary.raw[0] = spi_boundary_policy;
+            spi_boundary.raw[1] = lane.endpoint.instance;
+            spi_boundary.raw[5] = UINT32_MAX;
+            spi_boundary.raw[18] = CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC;
         }
     }
     return true;
@@ -826,6 +967,25 @@ bool t13::serialStop()
 {
     transmitting = false;
     receivers_armed = false;
+    if (spi_boundary.prepared && spi_boundary.raw[19] == 0U)
+    {
+        if (spi_boundary.raw[4] == 0U)
+        {
+            spiBoundaryRegisters(spi_boundary.after);
+            spi_boundary.raw[9] = spi_boundary.after[17];
+            spi_boundary.raw[13] = spi_boundary.after[14];
+            spi_boundary.raw[14] = spi_boundary.after[15];
+        }
+        spi_boundary.raw[10] = 1U;
+        const unsigned first = spi_boundary_policy == 2U ? 512U : 0U;
+        if (spi_boundary_policy == 2U || spi_boundary_policy == 4U)
+        {
+            for (unsigned byte = first; byte < 1024U; ++byte)
+            {
+                spi_boundary.raw[10] &= lanes[0].rx[0].data()[byte] == 0xCCU ? 1U : 0U;
+            }
+        }
+    }
     bool stopped = flowStop();
     for (unsigned index = 0U; index < lane_count; ++index)
     {
@@ -851,9 +1011,80 @@ bool t13::serialStop()
     stopped = uartFaultStop(stopped) && stopped;
     if (stopped)
     {
+        if (spi_boundary.prepared)
+        {
+            spi_boundary.raw[19] = 1U;
+        }
         lane_count = 0U;
     }
     return stopped;
+}
+
+bool t13::serialSpiBoundaryPolicy(unsigned mode)
+{
+    if (lane_count != 0U || mode > 4U)
+    {
+        return false;
+    }
+    spi_boundary_policy = mode;
+    return true;
+}
+
+bool t13::serialSpiBoundaryArm()
+{
+    if (!spi_boundary.prepared || lane_count != 1U || spi_boundary.raw[2] != 0U || receivers_armed)
+    {
+        return false;
+    }
+    spi_boundary.raw[2] = 1U;
+    spi_boundary.raw[16] = k_cycle_get_32();
+    spiBoundaryRegisters(spi_boundary.before);
+    spi_boundary.baseline[0] = spi_boundary.raw[11];
+    spi_boundary.baseline[1] = spi_boundary.raw[12];
+    spi_boundary.baseline[2] = reinterpret_cast<std::uintptr_t>(lanes[0].tx[0].data());
+    spi_boundary.baseline[3] = reinterpret_cast<std::uintptr_t>(lanes[0].rx[0].data());
+    spi_boundary.baseline[4] = 1024U;
+    return true;
+}
+
+void t13::serialSpiBoundarySnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count)
+{
+    if (page > 3U)
+    {
+        count = 0U;
+        return;
+    }
+    const auto *values = page == 0U   ? spi_boundary.raw
+                         : page == 1U ? spi_boundary.before
+                         : page == 2U ? spi_boundary.after
+                                      : spi_boundary.baseline;
+    for (unsigned index = 0U; index < 20U; ++index)
+    {
+        out[index] = values[index];
+    }
+    count = 20U;
+}
+
+/** @brief 양쪽 STOP 이후에만 첫 DMA slot 전체를 반환하며 재구성 전 원본을 보존합니다. */
+void t13::serialSpiBoundaryBuffer(unsigned direction, unsigned page, std::uint32_t *out,
+                                  std::uint32_t &count)
+{
+    if (!spi_boundary.prepared || spi_boundary.raw[19] != 1U || lane_count != 0U ||
+        direction > 1U || page >= 16U)
+    {
+        count = 0U;
+        return;
+    }
+    auto *bytes = direction == 0U ? lanes[0].tx[0].data() : lanes[0].rx[0].data();
+    for (unsigned index = 0U; index < 16U; ++index)
+    {
+        out[index] = 0U;
+        for (unsigned byte = 0U; byte < 4U; ++byte)
+        {
+            out[index] |= std::uint32_t(bytes[page * 64U + index * 4U + byte]) << (byte * 8U);
+        }
+    }
+    count = 16U;
 }
 
 bool t13::serialBreakPrepare()

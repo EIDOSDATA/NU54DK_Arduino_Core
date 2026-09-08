@@ -1,10 +1,10 @@
 # T13 S 자동 진행과 peer 제어 System OFF 검증 계획
 
-2026-09-08T10:10Z: C01~04 각각900초와 양쪽 STOP 완료로 동시4/7(57%)이며 C05 3600초 실행 중이다.
+2026-09-08T10:35Z: C01~04 각각900초와 양쪽 STOP 완료로 동시4/7(57%)이며 C05 3600초 실행 중이다.
 고정 serial17/21·stream3/4·PWM6/6·역할 전환2/5는 source별 근거로 유지한다.
 CTS d44cef2의 exact 두 역할 target·Host58·원격 Host104묶음788시험 준비를 완료했다.
-UART parity/break는 초안 target2/2·T13 Host62시험을 통과했으며 아직 실기 예약 전이다.
-현재 자동 배치→TWIM 계측→System OFF→충돌/CTS 순서를 유지하며 가능한 독립 준비도 계속한다.
+UART parity/break는93e38ff exact target2/2·T13 Host63시험·원격 전체 Host105묶음793시험을 통과했다.
+현재 자동 배치→TWIM 계측→System OFF→충돌/CTS→UART parity/break 순서를 유지하며 가능한 독립 준비도 계속한다.
 
 2026-09-08 후속 구현 범위: T13의 기존 자원 충돌 요구 중 S UART21/22/30에서 같은 block의
 SPI 활성화, 다른 UART의 동일 GPIO 점유, 내부 DMA workspace 겹침을 의도하여 거부의 원자성과
@@ -28,7 +28,7 @@ peer 하드웨어 RTS 자체 검증이나 RX 지연/parity/break의 완료로 �
 UART line 오류 후속 범위: S UART20/21/22/30에서 DUT even parity·peer parity 없음의 오류와,
 peer UART를 완전히 반환한 뒤 원래 TX GPIO에1ms LOW를 주는 break를 준비한다. 대상 DUT는
 의도적 오류 구간에서 TX를 시작하지 않고 실제 UARTE error event·mask와 양쪽 guard·정지 및
-새 seed 정상 재획득을 요구한다. 정상 연속 시험과 구분하며 아직 실기 예약/완료가 아니다.
+새 seed 정상 재획득을 요구한다. 정상 연속 시험과 구분하며 예행을 예약했으나 실기 결과는 아직0이다.
 
 10:15Z 준비 검사: break의 UART→GPIO 전환 동안 DUT RX를 시작하지 않도록 순서를 보강하고
 초안 두 역할 target2/2와 T13 Host63시험·정렬·계약·문서 검사를 통과했다. 전체 Host는
@@ -37,6 +37,23 @@ R03 analog production의12개 하위 실행에서 Windows 응용 프로그램 �
 PASS로 세지 않고 실패 원본을 보존하며 고정 source의 원격 전체 Host를 별도 요구한다.
 
 ## 마일스톤과 현재 상태
+
+다음 도구 구현 범위: 기존 S SPIS00/20/21/22/30의 짧은 DMA와 미준비 조건을 우선 분리한다.
+A controller는1024byte를 요청하고 B target만512byte DMA 또는 미등록 상태로 둔다.
+기존 GPIO/8MHz와 정상 회귀 기준은 유지하며 master RX 전체, target의 실제 AMOUNT/STATUS/
+semaphore·DMA 경계·양쪽 STOP 및 새 seed의 정상 frame을 요구한다. CS 조기 해제는 기존 cancel의
+실제 CS HIGH와 peer 부분량 증거가 충족되는지 별도로 대조하며 이 두 mode의 완료로 합치지 않는다.
+현재 실행/예약 checkout은 수정하지 않는다. 이 단락은 구현 착수 범위이며 실기 PASS가 아니다.
+
+93e38ff UART line source의 exact 두 역할 target·T13 Host63시험과 원격 전체 Host105묶음793시험을
+확인했다. 기존 충돌/CTS 배치 종료 뒤에 UART parity/break16조건 예행을 예약했으며 원래 확인서
+잔여시간이 부족하면 미시작으로 기록한다. 실행된 예행이 성공한 조건만100회 후속을 허용한다.
+SPI boundary 초안 Host는67시험 중 새4개를 포함64개 통과·기존 C++ 실행3개가 WinError4551로
+차단됐다. 최초 target의 SDK accessor const/이름 차이는 읽기 전용 DMA 레지스터 접근으로 수정하고
+초안 두 역할 target2/2·새 Host4시험·정렬·계약·문서 재검사를 통과했다. 고정 source의 exact target과
+원격 전체 Host를 확인한 뒤 UART line 배치 다음 순서에 등록한다. 두 준비 단계의 실제 HIL 결과는 아직0이다.
+UART line 준비 원본은 [93e38ff 보존 목록](evidence/t13-uart-line-preparation-93e38ff/manifest.json)에
+실패한 로컬 전체 Host까지 포함했다. 준비 검사와 실기 완료를 구분한다.
 
 | T13 하위 묶음 | 상태 | 현재 S에서 자동 진행 범위 |
 | --- | --- | --- |

@@ -83,6 +83,29 @@ serial STOP 결과를 보존한다. API descriptor 길이를 실제 DMA 전송�
 완료해야 한 복구 성공으로 센다. 첫 실패에서 해당 조건을 끝내고 원본을 보존한다.
 2026-09-08T10:10Z 기준 초안 두 역할 target·T13 Host62시험을 통과했으며 실기 미실행이다.
 
+## SPIS 짧은 DMA·미준비 frame
+
+`--phase spi-boundary-preflight|spi-boundary --spi-boundary-mode short|unready`와 S SPIM case6~10을
+사용한다. A SPIM/B SPIS의 기존8MHz·1024byte 설정과 GPIO를 유지한다. 예행은1회, 정식은100회다.
+매회 정상250ms baseline·STOP 뒤 B에만512byte TX/RX 한 slot 또는 미등록 DMA를 적용한다.
+A는1024byte 한 frame만 송수신한다. 비정상 frame은 정상 complete 통계에 더하지 않는다.
+
+짧은 DMA는 B의512byte 실제 TX/RX·OVERREAD/OVERFLOW·CPU semaphore 반환을 요구한다.
+A RX 앞512byte는 peer 전역 pattern, 뒤512byte는 ORC255와 같아야 한다. B RX 앞512byte는
+controller pattern이며 나머지는0xCC로 보존돼야 한다. 미준비 조건은 B가 CPU semaphore와
+DMA의 이전 설정/AMOUNT를 유지하고 수신 RAM을 고치지 않으며 A RX1024byte가 DEF255여야 한다.
+이전 AMOUNT를 이번에 수신한 양으로 세지 않는다.
+
+opcode150 정책·151 ARM·152 원본 네 page·153 STOP 이후 TX/RX RAM16page를 사용한다.
+첫 event 시점의 API 길이/주소·DMA·CS HIGH·guard와 양쪽 STOP을 보존하고, 두 보드의 TX/RX
+전체4096byte를 기대 pattern/ORC/DEF/sentinel과 독립 대조한다. STOP 전 DMA RAM을 Host에
+반환하지 않는다. 정책0 복원 뒤 새 seed 정상1초 전송과 STOP까지 성공해야 한 복구로 센다.
+짧은 DMA·미준비 조건을 CS 조기 해제·반대 controller 역할이나 정상 soak의 완료로 확대하지 않는다.
+
+판정 근거는 Nordic의 [SPIS 동작](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/spis.html-concept_abk_lbf_wr?contentId=DpeL3a6spBHM4V72K8W3UA)과
+[semaphore 동작](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/spis.html-semaphore_abk_lbf_wr?contentId=qTcpD0dkFyr9JQP3EcH1fg)이다.
+2026-09-08 구현 준비이며 실기 PASS는 아직 없다.
+
 ## CTS 100ms 정지·재개 전용 fixture
 
 S 단독 UART20/21/22/30에서 `--phase flow-preflight|uart-flow --fault-role 1|2 --cases ...`를

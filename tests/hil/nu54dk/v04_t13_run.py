@@ -19,6 +19,7 @@ import v04_t13_handover as handover
 import v04_t13_conflict as conflicts
 import v04_t13_flow as flows
 import v04_t13_uart_line as uart_lines
+import v04_t13_spi_boundary as spi_boundaries
 import v04_t13_oracle as oracle
 import v04_t13_session as session
 import v04_wiring as wiring
@@ -352,13 +353,15 @@ def main(argv=None):
                                           'pwm-recovery-preflight', 'pwm-recovery',
                                           'conflict-preflight', 'resource-conflict',
                                           'flow-preflight', 'uart-flow',
-                                          'uart-line-preflight', 'uart-line-fault'), default='wiring')
+                                          'uart-line-preflight', 'uart-line-fault',
+                                          'spi-boundary-preflight', 'spi-boundary'), default='wiring')
     parser.add_argument('--cases', nargs='+', type=int, default=[])
     parser.add_argument('--fault-mode', type=int, choices=range(1, 6))
     parser.add_argument('--stream-fault-mode', type=int, choices=(1, 2))
     parser.add_argument('--pwm-recovery-mode', type=int, choices=(1, 2))
     parser.add_argument('--conflict-mode', type=int, choices=(1, 2, 3))
     parser.add_argument('--uart-line-mode', choices=('parity', 'break'))
+    parser.add_argument('--spi-boundary-mode', choices=('short', 'unready'))
     parser.add_argument('--pwm-diagnostic-route', choices=('led', 'dap'))
     parser.add_argument('--fault-role', type=int, choices=(1, 2), default=1)
     parser.add_argument('--reverse-serial', action='store_true')
@@ -394,6 +397,12 @@ def main(argv=None):
     is_conflict = args.phase in ('conflict-preflight', 'resource-conflict')
     is_flow = args.phase in ('flow-preflight', 'uart-flow')
     is_uart_line = args.phase in ('uart-line-preflight', 'uart-line-fault')
+    is_spi_boundary = args.phase in ('spi-boundary-preflight', 'spi-boundary')
+    if is_spi_boundary:
+        for identifier in args.cases:
+            spi_boundaries.validate_selection(available_cases[identifier], args.spi_boundary_mode)
+    elif args.spi_boundary_mode is not None:
+        raise ProtocolError('SPI boundary mode requires an explicit SPI boundary phase')
     if is_uart_line:
         for identifier in args.cases:
             uart_lines.validate_selection(available_cases[identifier], args.fault_role, args.uart_line_mode)
@@ -437,6 +446,7 @@ def main(argv=None):
         'fault_mode': args.fault_mode, 'fault_role': args.fault_role if is_fault or is_stream_fault or is_conflict or is_flow or is_uart_line else None,
         'conflict_mode': args.conflict_mode,
         'uart_line_mode': args.uart_line_mode,
+        'spi_boundary_mode': args.spi_boundary_mode,
         'stream_fault_mode': args.stream_fault_mode,
         'pwm_recovery_mode': args.pwm_recovery_mode,
         'reverse_serial': args.reverse_serial, 'handover_instance': args.handover_instance,
@@ -477,6 +487,10 @@ def main(argv=None):
             if is_handover:
                 handover.execute(devices, args.handover_instance, continuity, append,
                                  preflight=args.phase == 'handover-preflight')
+            elif is_spi_boundary:
+                for identifier in args.cases:
+                    spi_boundaries.execute(devices, available_cases[identifier], args.spi_boundary_mode,
+                        continuity, append, preflight=args.phase == 'spi-boundary-preflight')
             elif is_uart_line:
                 for identifier in args.cases:
                     uart_lines.execute(devices, available_cases[identifier], args.fault_role,

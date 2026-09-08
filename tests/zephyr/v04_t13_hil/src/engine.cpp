@@ -206,6 +206,22 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         count = 1U;
         return 0U;
     }
+    if (opcode == 150U && nargs == 1U && !gate.claimed() && !wiringClaimed())
+    {
+        out[0] = serialSpiBoundaryPolicy(args[0]) ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 152U && nargs == 1U)
+    {
+        serialSpiBoundarySnapshot(args[0], out, count);
+        return count == 20U ? 0U : 400U;
+    }
+    if (opcode == 153U && nargs == 2U)
+    {
+        serialSpiBoundaryBuffer(args[0], args[1], out, count);
+        return count == 16U ? 0U : 400U;
+    }
     if (opcode == 142U && nargs == 0U)
     {
         uartFaultSnapshot(out, count);
@@ -330,6 +346,12 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
     if (opcode == 141U && nargs == 0U && !started)
     {
         out[0] = uartFaultArm() ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 151U && nargs == 0U && !started)
+    {
+        out[0] = serialSpiBoundaryArm() ? 1U : 0U;
         count = 1U;
         return 0U;
     }
