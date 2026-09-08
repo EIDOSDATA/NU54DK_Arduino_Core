@@ -1,5 +1,7 @@
 # NU54DK Boards Manager 패키징
 
+현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../../00_Docs/TODO_v0.4.0.md>)에서 관리합니다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 현재 stable | `v0.3.0` |
@@ -32,8 +34,6 @@ R13의 본문·CLI·산출물 byte 비교는
 [64번 기록](<../../00_Docs/04_검증 기록/64_R13_도구_정책_build_구조.md>)에서 추적합니다.
 
 ## 공개 stable은 불변
-
-2026-09-08 소유자 지시로 v0.3.0 미만의 stable·RC·preview 공급을 종료한다. Stable index는 0.3.0만 제공하며 preview URL은 빈 목록을 유지한다. 원본 이력과 자산은 별도 archive 브랜치에서 보존한다. v0.3.0 태그·설치 ZIP·checksum·SBOM 등 6개 payload/sidecar는 그대로 유지하고, 해당 Release의 catalog index만 현재 공급 목록과 일치시킨다.
 
 역사 버전의 build allowlist와 archive identity는 재현·감사를 위해 유지합니다. 이는 공개 공급
 목록이 아닙니다. 역사 도구는 해당 original SHA/원본 자산을 입력으로 사용하며, 종료한 Release를

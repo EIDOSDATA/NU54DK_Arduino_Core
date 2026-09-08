@@ -1,0 +1,223 @@
+{
+  "source": "ae526602145a2c89e4d609ea1dd68f63ec55cbff",
+  "physical_executed": false,
+  "scope": "documentation cleanup, before-source evidence preserved",
+  "files": [
+    {
+      "file": "v040-doc-review-before.json.gz",
+      "bytes": 249183,
+      "sha256": "35e45693ad990ff48e85e6087d36b65b726eec4064067f80abcfecd27c6855c8",
+      "gzip_sha256": "7036371d40b8260c3917a79b6c0ef74b267ed70c7d7ae6ffb4beb82371523b45"
+    },
+    {
+      "file": "v040-doc-review-final.json.gz",
+      "bytes": 91286,
+      "sha256": "7546fedaba7963bf936c5798175bfdcbfb19e60a2e8808cd77907f6de60346e0",
+      "gzip_sha256": "680a445d372701294094b028f1a9a81243248a6cc3de39743996fc3e890bdd80"
+    },
+    {
+      "file": "v040-doc-cleanup-docs-final-01.json.gz",
+      "bytes": 470,
+      "sha256": "f599b65c0622a7366f548541dcbf15e8fb8f3a20fa39c4319fcfd78c1e7a6140",
+      "gzip_sha256": "ee89db2cd0cc0eafbfa116035e18991dc81ce77c9212f0b05684091bc7108467"
+    },
+    {
+      "file": "v040-doc-cleanup-docs-final-01.log.gz",
+      "bytes": 69,
+      "sha256": "4f0e7b1d14820b09fa80a071bee0134d119bc6f53d2af21b5de377d692642c21",
+      "gzip_sha256": "85e86b9592da9396adfaa49367467f04c2c2dbe10af7acba9be53d200998788c"
+    },
+    {
+      "file": "v040-doc-cleanup-contract-01.json.gz",
+      "bytes": 472,
+      "sha256": "5c2a75428664df9bc334e9d6976345d3e2edae490042987091cb7b1645422212",
+      "gzip_sha256": "45dfa28b54d296d03bfc6ad28abb8cf25cdb7c38e5dcf15c4ed7cccd326c4e46"
+    },
+    {
+      "file": "v040-doc-cleanup-contract-01.log.gz",
+      "bytes": 7554,
+      "sha256": "74cfa54b17e69a5ff6342d3bca9b042d59aede65cd1ab16dc4975112d5506ce7",
+      "gzip_sha256": "e5e09374cb9db877d9dceb0a6562562fce6c4eab4fa9d67c00d54c7a11287402"
+    },
+    {
+      "file": "v040-doc-cleanup-inventory-01.json.gz",
+      "bytes": 474,
+      "sha256": "f35b6d5d3080e9970067dc96f76c4584ef34843647baa81582b6c78b5b02cbb7",
+      "gzip_sha256": "e2180c28864403126a8d962a78c849aab03b6082296ea7462c6594c0270aa8c9"
+    },
+    {
+      "file": "v040-doc-cleanup-inventory-01.log.gz",
+      "bytes": 1546,
+      "sha256": "8efc41e1f9734d065dfdb3292806c34b3f3ff16b7b9b69b5d6ae2ac8479703f1",
+      "gzip_sha256": "c73c50af0b797e4e53d712027c6c3d2137481c82b8014e1c425e0d378cd735cb"
+    },
+    {
+      "file": "v040-doc-cleanup-style-01.json.gz",
+      "bytes": 535,
+      "sha256": "7fa8fc21b9236ac8d86f3d6fe7d09f9bd237a5321c2fab5d64e85f94d24ea90a",
+      "gzip_sha256": "a95ae3447e2bb2f50bc5af27d48b28697d3f6853ed4a9962c4e9d33dd405111d"
+    },
+    {
+      "file": "v040-doc-cleanup-style-01.log.gz",
+      "bytes": 40,
+      "sha256": "42a915550c89eccc023ce5447a143be30d1ea9c8e4c0d892ae5877d24b9d9b61",
+      "gzip_sha256": "4340aaf0c8b048666e48bcd9565c490a2613189ddf243cce8544f4bc9d1af5fa"
+    },
+    {
+      "file": "originals/00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md.gz",
+      "bytes": 59067,
+      "sha256": "c98dd395a7b4941a5e64faa37764293d85f757e9cbbf7773710167c2923b6358",
+      "gzip_sha256": "6ae40b4954450de0d3b03110f0a170484c956bfb3248ea9864caf6306653a366"
+    },
+    {
+      "file": "originals/00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md.gz",
+      "bytes": 13357,
+      "sha256": "eeb09d5675734b85e471f738a6963994c3d49dcc0cc4f1174d95bcd0404f7dff",
+      "gzip_sha256": "0f48a13bf38f13b33e4f2680de9740caa09fb05e7e4b788203a7889de0b494df"
+    },
+    {
+      "file": "originals/00_Docs/01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md.gz",
+      "bytes": 11284,
+      "sha256": "8daa3ff5b40df94260447a509d47d87d98aa7e8f65ec645a9c8fc377911c52c5",
+      "gzip_sha256": "27e87376b459dd7a518ef763057fa3fa9ffe21205ea5b5978f214c5bb5d28732"
+    },
+    {
+      "file": "originals/00_Docs/01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md.gz",
+      "bytes": 41292,
+      "sha256": "7235a31eb155f75725da7e7c43ee745d91c3a9bb23ac87736fe79ff119af1690",
+      "gzip_sha256": "1dafdde4f7ca0b888067a0703e0e451d111bcfe84597d0908c6fac94c57f9ac2"
+    },
+    {
+      "file": "originals/00_Docs/01_아두이노 코어 설계/14_리팩토링/01_진단_비교와_최종_판단.md.gz",
+      "bytes": 26366,
+      "sha256": "1c81e23343933385dfd88c12529c79c05e946e717fe987b9c6991e9918360e77",
+      "gzip_sha256": "c54bd5c7142f86010f75d1de667d4284e13a10c051a54b252bd59399179fa67f"
+    },
+    {
+      "file": "originals/00_Docs/01_아두이노 코어 설계/14_리팩토링/02_리팩토링_통합_실행계획.md.gz",
+      "bytes": 42525,
+      "sha256": "02ac3937e597339e6e498d60ad2d880f8a06d77a96e4fe938c1af9e90b69e45f",
+      "gzip_sha256": "033e27362f9daf611d22d43682080d5c42dd66c2070c5d56a46b35cf71aac9ef"
+    },
+    {
+      "file": "originals/00_Docs/01_아두이노 코어 설계/14_리팩토링/03_리팩토링_착수_시점_및_운영계획.md.gz",
+      "bytes": 34242,
+      "sha256": "6cfcdbc5ec0b5f10649558f49d03ad2179f9294c8ac287c229b0579778e7d6cb",
+      "gzip_sha256": "941826a1acde28a79deaae4dcfd06cae8aea708d75fbf114e1884ccd65cb22dc"
+    },
+    {
+      "file": "originals/00_Docs/01_아두이노 코어 설계/14_리팩토링/04_리팩토링_작업지시서_및_검증기록.md.gz",
+      "bytes": 21356,
+      "sha256": "e8e5a0fbc7d9ae252fa66edff541c979ef7341283eee10a10189815371ec9384",
+      "gzip_sha256": "323a4fe3813bfdc07bc9c11549e1d808bb37c8c5b9ed3f7a49756771a51d3898"
+    },
+    {
+      "file": "originals/00_Docs/01_아두이노 코어 설계/14_리팩토링/05_리팩토링_진행_체크리스트.md.gz",
+      "bytes": 24969,
+      "sha256": "4f205c8b93bef9dea2194cae68aa1ec3ce1db0ae143cbffcbe782019ac169871",
+      "gzip_sha256": "797b6b2dd1bb3e502bd7c7e4e4b17db9ec0aaf1fd95c8b98a45d8b3c3f8a2264"
+    },
+    {
+      "file": "originals/00_Docs/01_아두이노 코어 설계/14_리팩토링/README.md.gz",
+      "bytes": 22491,
+      "sha256": "32b618ef43eef9ff183aed6420b4846e46b7bd8c04c028ed86807f6b85c2772a",
+      "gzip_sha256": "95b0345c9eea7ee09fe1fad513e50fe15949a35da09d18cf94399fc431f6ba08"
+    },
+    {
+      "file": "originals/00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md.gz",
+      "bytes": 27706,
+      "sha256": "b1bdd0d746fbe8e5bbdfab07c65f00e0750c44b6b27a5a020c71dbbe65c0c9d2",
+      "gzip_sha256": "d3249b963b82d53918040f49c67d8c493547899613d1e50d51c01180d6ead467"
+    },
+    {
+      "file": "originals/00_Docs/03_펌웨어 설계/03_주변장치_API.md.gz",
+      "bytes": 20465,
+      "sha256": "f8549386f53a4e46178ba6f2591a92b9f77127f1b29c085cdf06acd54aa6ef59",
+      "gzip_sha256": "ff0291e1b2a91dce75dcf955285fb9750b908869c8dcf369105529e506ad6cba"
+    },
+    {
+      "file": "originals/00_Docs/03_펌웨어 설계/04_테스트와_검증.md.gz",
+      "bytes": 16395,
+      "sha256": "4895539d3946e93626738627df44cc034e63d1c9746ca1fcf3ee66886876bca5",
+      "gzip_sha256": "cd67809aa72b9d90634dff2d8f5493776ca1a4b6359da56d7ae5a16d9a9b0b12"
+    },
+    {
+      "file": "originals/00_Docs/04_검증 기록/README.md.gz",
+      "bytes": 29451,
+      "sha256": "18ad349a57346eecab6501eab483fb72834615252d6aef337477819b42794231",
+      "gzip_sha256": "cc8bbd6d52e55b9984632de52bd611a5581fa68ba3e36b6817943e28e615dec9"
+    },
+    {
+      "file": "originals/00_Docs/05_릴리스/README.md.gz",
+      "bytes": 5571,
+      "sha256": "ece55ca5e4f1b4cc937778cd7440c7d159e33946fe16cedbdcd2cc084315aa85",
+      "gzip_sha256": "bd50a72f174ac88f3799f0b29ba761d1ec0e9d440742c1e18b75154c3dac70e4"
+    },
+    {
+      "file": "originals/00_Docs/05_릴리스/v0.4.0-rc.1/README.md.gz",
+      "bytes": 6318,
+      "sha256": "ac0db68f83b32555e18a761855ccddea1c21ee9e22620f6406d5e99a5e0846db",
+      "gzip_sha256": "9f34761d4aa7221d4d3c722dbf645a203d41f1a2370771ec7cc4d738c1c9ac49"
+    },
+    {
+      "file": "originals/00_Docs/HANDOFF_v0.4.0_다른_PC.md.gz",
+      "bytes": 30258,
+      "sha256": "bfacbee1fe20bab69d3b7387ec88af454e8f8c243661f5c126b9d43054770d61",
+      "gzip_sha256": "915ea7d4ccda39929b1e17e7afbda65e77accee2914e2ab60e3472845d3c229e"
+    },
+    {
+      "file": "originals/00_Docs/README.md.gz",
+      "bytes": 32395,
+      "sha256": "94472eb3f2c6fad50f1f84ed1e89360329f02ac6fb3a2185505accc6733cf974",
+      "gzip_sha256": "b76bcc5864daaa27b873fb5ea9008d995cd975c96651cecfb88c06c706b192a6"
+    },
+    {
+      "file": "originals/00_Docs/TODO_v0.4.0.md.gz",
+      "bytes": 74015,
+      "sha256": "3e452d722124828f9e2bb7c0d2036a63c374a841046e89cc7993d26f9ccab57f",
+      "gzip_sha256": "c07c067a4aff92e8acbc3ca3c85491bcccaf9a4409261d0d813a22b23cb3b960"
+    },
+    {
+      "file": "originals/README.md.gz",
+      "bytes": 33669,
+      "sha256": "d4821977dd4779d322df967b43adea2de49f4972e18f34fb056fbe738709b1a6",
+      "gzip_sha256": "11afbe1961132d656f11a0a727afc9feba892796db08f6b5f88a51cea5b3ed61"
+    },
+    {
+      "file": "originals/packaging/boards-manager/README.md.gz",
+      "bytes": 6044,
+      "sha256": "b5f0fe86eca0c7135e8c5f11e5ab27593260801cfdcaae881c1abdcde5cf0cc3",
+      "gzip_sha256": "3b213a2e997b76f72c7eb00ea101ad5d3e1743af0f311ed2634719f4046ba6f8"
+    },
+    {
+      "file": "originals/tests/hil/nu54dk/COMMON_WIRING.md.gz",
+      "bytes": 14570,
+      "sha256": "a7da14e591519195c2084f570c660903563b304d88c5acb89a422c99d68c57a4",
+      "gzip_sha256": "9b23c15b61e372777e244fcb28becf57291a34214f3a62e4b2432b819fe7c9f7"
+    },
+    {
+      "file": "originals/tests/hil/nu54dk/README.md.gz",
+      "bytes": 66141,
+      "sha256": "ee86830b69ed3853816a2d4277f2362f19331841ccd2955fe2acb2a9f4016be6",
+      "gzip_sha256": "e65e95817616ed4f0292f12adb3141e33d39b2f37b341103db57fe05930e4236"
+    },
+    {
+      "file": "originals/tests/hil/nu54dk/T13_PLAN.md.gz",
+      "bytes": 19747,
+      "sha256": "b09d74a1e53375e0ea0ad6c5e093a4796388290f037958539171ab5f10161ec4",
+      "gzip_sha256": "e41bedded851e3ba2fdf5666a2df6cb24df80a28b863c747cec52c2841687189"
+    },
+    {
+      "file": "originals/tests/hil/nu54dk/T13_RECOVERY.md.gz",
+      "bytes": 35503,
+      "sha256": "7563fb2bf9a2beb7aaad6645d5c09d7a3c8ed99e9fff0c44396e237bc7a2cd1f",
+      "gzip_sha256": "5700174785ba7eb2479a3b43d3e420e2af77f45c0b6f588260b69ccc690836d8"
+    },
+    {
+      "file": "originals/tools/release/M27_README.md.gz",
+      "bytes": 4092,
+      "sha256": "c6e8d82b3eb8adb7abb3c44ed944e1481cb739b73bc90908d6ba9521eb47af3b",
+      "gzip_sha256": "2c8729a08e890b257c3686b30f9eec6d95491d230c5b74959a7234865296142a"
+    }
+  ]
+}

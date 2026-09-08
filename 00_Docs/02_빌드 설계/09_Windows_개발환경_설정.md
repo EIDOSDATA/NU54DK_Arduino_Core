@@ -1,5 +1,7 @@
 # NU54DK Arduino Core — Windows 개발환경 설정
 
+현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../TODO_v0.4.0.md>)에서 관리합니다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-WINDOWS-DEV-001 |
@@ -354,11 +356,6 @@ Clang의 GNU target·sysroot·LLD 구성은 [공식 toolchain 문서](https://cl
 compile/link/run을 확인하며 과거 GCC 성공을 새 Clang 결과로 집계하지 않는다.
 
 ### Host CMake·Ninja 실행 경로
-
-2026-09-07 exact e6979af에서 WinLibs Ninja 실행이 Windows CodeIntegrity 3077/3033으로
-차단됐다. LLVM 22.1.8 compiler·WinLibs UCRT sysroot는 그대로 유지하고, 이미 설치된 고정
-NCS bundle의 CMake·Ninja를 선택해 canonical Host 83그룹 **664 PASS·1 조건부 SKIP**를
-확인했다. [93번 실행 기록](<../04_검증 기록/93_Host_재검증과_T12_이후_남은_작업.md>)에 두 환경과 원본 실패를 구분했다.
 
 위 9.1의 compiler 설정 뒤, host venv Python을 명시한 별도 시험 session에서 다음처럼 선택한다.
 전역 PATH·정책·SDK 파일은 바꾸지 않는다. 재현 wrapper는 93번 증거의 `software_sdktools.py`다.

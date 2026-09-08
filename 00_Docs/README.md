@@ -1,268 +1,70 @@
-# NU54DK Arduino Core — 문서 안내
+# 문서 안내
 
-현재 S 실행의 종료·미완료 목록은 [108번 최종 기록](<04_검증 기록/108_T13_S_자동_실행_종료와_재개_항목.md>)을 따른다.
+현재 정식 배포는 **v0.3.0**, 개발 대상은 **v0.4.0**입니다.
+설치와 사용은 버전별 안내를, 개발 진행은 TODO를 확인하세요.
 
-다른 PC에서 개발을 이어갈 때는 [v0.4.0 인계 문서](HANDOFF_v0.4.0_다른_PC.md)와 [활성 TODO](TODO_v0.4.0.md)를 먼저 읽는다.
-
-2026-09-08 현재: R00~R13·source별 T11 단독 회귀와 **T12 기능검증은 완료**했다. **QDEC도 일부 문제·제한사항을 101번에 보고하고 검증 작업을 완료**했다. 동작 중 수동 read/clear 누산 누락은 미해결이며 실패 결과를 PASS로 변경하지 않는다. 사용자 완료 결정은 T12 마일스톤에 적용하며 알려진 제한은 T14/T15에서 정리한다. 현재는 사용자 S 재배치·실행 중 유지 확인에 따라 T13 실기와 실패 원인 분석을 진행 중이다. S 정상 안정성은 source별 단독29/29·동시7/7, 합계36/36을 완료했다. 이번 S 자동 실행은 확인 시간 안에서 종료했으며 복구·오류 주입·역할 전환의 잔여 항목과 최종 원본은 활성 TODO와108번 기록을 따른다. 새 S 확인 뒤 남은 복구를 이어가며 U UART00·T13 전체·RC·정식 공개는 미완료다. [문서 감사·요구별 증거 대조](<04_검증 기록/102_개발_문서_전수_검토와_마일스톤_체크포인트.md>), [실행 TODO](<TODO_v0.4.0.md>)를 따른다.
-
-| 항목 | 내용 |
+| 목적 | 읽을 문서 |
 | --- | --- |
-| 문서 ID | DOC-INDEX-001 |
-| 문서 체계 개정 | 7.0 |
-| 현재 정식 버전 | `v0.3.0` |
-| 다음 목표 버전 | `v0.4.0` |
-| 최종 갱신일 | 2026-09-07 |
-| 작성자 | Quantum / NUCODE |
+| 처음 설치·업로드 | [프로젝트 README](../README.md), [v0.3.0 사용자 안내](<05_릴리스/v0.3.0/README.md>) |
+| 현재 진행·다음 작업 | [v0.4.0 TODO](TODO_v0.4.0.md) |
+| 다른 PC에서 개발 재개 | [인계 문서](HANDOFF_v0.4.0_다른_PC.md), [Windows 개발환경](<02_빌드 설계/09_Windows_개발환경_설정.md>) |
+| API·GPIO·설계 계약 | 아래 설계 문서 목차 |
+| 실제 검증 결과 | [검증 기록](<04_검증 기록/README.md>) |
+| 결선·실기 실행 | [HIL 안내](../tests/hil/nu54dk/README.md), [T13 S/U 결선](../tests/hil/nu54dk/T13_PLAN.md) |
+| 정식·이전 버전 문서 | [릴리스 안내](<05_릴리스/README.md>) |
 
-이 디렉터리는 Loader 없이 동작하는 Native Full Zephyr 기반 NU54DK Arduino Core의
-**결정, 현재 설계, 제품 계획, 검증 증거와 버전별 사용자 문서**를 관리한다.
+## 설계 문서 목차
 
-`v0.4.0` 작업을 시작하거나 이어받을 때는 [실행 TODO·재개 체크포인트](./TODO_v0.4.0.md)를
-먼저 읽는다. 시험 자동화 준비부터 결선·기능 검증·패키지 통합·RC·정식 공개까지 25개 작업의
-선행조건·완료 기준·사용자 행동을 관리하며, 현재 다음 항목은 TODO의 체크포인트에서 확인한다.
+### 코어·핀·API·로드맵
 
-과거 exact source의 T11은 역사적 단독 기능 체크포인트로 보존한다. R00~R13의 정확성·구조
-리팩토링과 최종 전체 software gate는 [64번 기록](<./04_검증 기록/64_R13_도구_정책_build_구조.md>)으로 완료했다.
-Current-source T11은 exact 154324c의 Fixture 101 기능 1,644개를 통과했다. Fixture 102도 exact a49cc0d에서 822개를 통과했으며 Fixture 103도 exact 7aece93에서 2,466개를 통과했다. 승인 UART route 세 묶음을 완료했고 Fixture 201 SPI도 exact 0f429e7에서 18,169개를 통과했다. Fixture 202도 exact 1349e20에서 9,084개를 통과했다. Fixture 203도 exact be49207에서 27,252개를 통과해 SPI 세 묶음을 완료했다. Fixture 301도 exact 9a63251에서 1,986개를 통과해 current-source T11 단독 회귀를 완료했다. T12 Fixture 401 exact a12e444·402 exact ff483a1·403 exact c95b904·404 exact e080bbc에서 각각 48개를 통과했다. 405 오픈드레인·406/407 입력 바이어스 시험과 408 PWM도 완료했으며 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다.
-Fixture 401~404 각각 48개와 405 오픈드레인 12개를 통과했다. 406·407도 입력 바이어스 각 12개를 통과했으며 408도 PWM 48개를 통과했다.
+- [저장소 구조와 소유권](<01_아두이노 코어 설계/01_저장소_폴더_구조.md>)
+- [제품 로드맵과 구현 마일스톤](<01_아두이노 코어 설계/02_구현_로드맵.md>)
+- [NU54DK Arduino 핀과 Variant 설계](<01_아두이노 코어 설계/03_핀과_Variant_설계.md>)
+- [NU54DK Arduino API 지원 범위](<01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)
+- [NU54DK Arduino Core v0.2.0 — 구현 마일스톤](<01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)
+- [NCS v3.4.0 기능·예제 지원 매트릭스](<01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)
+- [NU54DK Arduino Core v0.3.0 — 구현 마일스톤](<01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)
+- [전 인스턴스·DMA·BLE 경쟁 기준과 마일스톤](<01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)
+- [M23 — nRF54L15/NU54DK Peripheral 인스턴스 매트릭스](<01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)
+- [M24 작업 1~5 — Serial Fabric 전 instance와 EasyDMA](<01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md>)
+- [M26 System Peripheral 지원 경계](<01_아두이노 코어 설계/11_M26_System_Peripheral_지원_경계.md>)
+- [v0.4.0 기능 시험 목록](<01_아두이노 코어 설계/12_v0.4.0_기능_시험_목록.md>)
+- [NU54DK P2/P4 커넥터 핀맵](<01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)
 
-T01~T09의 [기능 시험 목록](<./01_아두이노 코어 설계/12_v0.4.0_기능_시험_목록.md>)과
-[준비·구현 대조 기록](<./04_검증 기록/43_v0.4.0_시험_준비와_구현_대조.md>)에서 대상·합격 기준·남은 보완을 확인한다.
+### 설치·빌드·업로드
 
-## 1. 문서 역할
+- [West Native Blink PoC — M3 역사적 기준선](<02_빌드 설계/01_West_Native_Blink_PoC.md>)
+- [NU54DK Build Adapter 설계 — v0.3.0](<02_빌드 설계/02_Build_Adapter_설계.md>)
+- [Arduino CLI 및 IDE 통합 설계 — v0.3.0](<02_빌드 설계/03_Arduino_CLI_통합.md>)
+- [빌드 캐시와 산출물 — v0.3.0 계약](<02_빌드 설계/04_빌드_캐시와_산출물.md>)
+- [업로드와 디버그 — v0.3.0 지원 경계](<02_빌드 설계/05_업로드와_디버그.md>)
+- [Boards Manager 설치와 패키징 — stable v0.3.0](<02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
+- [구성 프로필과 Arduino 예제 배포 — v0.3.0 정식](<02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md>)
+- [CI/CD와 재현 빌드 — v0.3.0 stable 이후 현재 계약](<02_빌드 설계/08_M12_CI_CD와_재현_빌드.md>)
+- [Windows 개발환경 설정](<02_빌드 설계/09_Windows_개발환경_설정.md>)
 
-| 종류 | 답하는 질문 | 갱신 방식 |
-| --- | --- | --- |
-| ADR | 왜 이 구조와 정책을 선택했는가? | 결정이 바뀔 때만 개정 |
-| 설계 | 현재 구현 계약은 무엇인가? | 구현과 함께 갱신 |
-| Master roadmap | 지금 어디까지 완료했고 다음은 무엇인가? | 단계 상태가 바뀔 때 갱신 |
-| 활성 TODO | 지금 어떤 세부 작업을 어떤 조건으로 재개하는가? | 작업 전 계획·종료 시 체크포인트와 증거 링크 갱신; 완료 뒤 보관/삭제 조건 적용 |
-| 리팩토링 계획 | 어떤 정확성·구조 작업을 언제 어떤 회귀와 함께 수행하는가? | R00~R14 체크리스트와 T/M 연결을 함께 갱신 |
-| 버전 마일스톤 | 해당 버전의 범위와 종료 조건은 무엇이었는가? | 버전 완료 뒤 역사 기록으로 동결 |
-| 검증 기록 | 어떤 revision과 시험이 실제로 통과했는가? | 당시 증거를 보존하고 소급 변경하지 않음 |
-| 릴리스 문서 | 사용자가 특정 버전을 어떻게 설치·이전·진단하는가? | 버전별로 독립 보존 |
+### Runtime·주변장치·BLE·Storage
 
-상세 commit, UID, COM port, CI run, HIL 수치와 checksum은 설계 문서에 반복하지 않고
-[검증 기록](<./04_검증 기록/README.md>) 또는 [릴리스 문서](<./05_릴리스/README.md>)에 둔다.
+- [NU54DK Arduino Runtime 설계](<03_펌웨어 설계/01_Arduino_Runtime_설계.md>)
+- [NU54DK Arduino GPIO와 시간 API 설계](<03_펌웨어 설계/02_GPIO와_시간_API.md>)
+- [NU54DK Arduino 주변장치 API 설계](<03_펌웨어 설계/03_주변장치_API.md>)
+- [NU54DK Arduino Core 테스트와 검증](<03_펌웨어 설계/04_테스트와_검증.md>)
+- [NU54DK Board/System API 설계](<03_펌웨어 설계/05_NU54DK_Board_System_API.md>)
+- [NUCODE BLE NUS API 설계](<03_펌웨어 설계/06_BLE_NUS_API.md>)
+- [BLE Core/GAP API 설계](<03_펌웨어 설계/07_BLE_Core_GAP_API.md>)
+- [BLE 범용 GATT server/client API 설계](<03_펌웨어 설계/08_BLE_범용_GATT_API.md>)
+- [BLE 보안과 표준 Profile API](<03_펌웨어 설계/09_BLE_보안과_표준_Profile_API.md>)
+- [NU54DK Arduino Storage API 설계](<03_펌웨어 설계/10_Arduino_Storage_API.md>)
 
-## 2. 현재 기준
+## 리팩토링과 배경 자료
 
-| 항목 | 기준 |
-| --- | --- |
-| nRF Connect SDK | v3.4.0 |
-| Zephyr | 4.4.0 |
-| 대상 | NU54DK / `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
-| Board 정의 | `board_package/NU54DK_Zephyr_DTS` 고정 Git submodule |
-| 공식 사용자 OS | Windows 10/11 x64 |
-| 기본 flash | 온보드 CMSIS-DAP V2 + pyOCD |
-| 선택 flash | 외장 SEGGER J-Link |
-| Firmware | Loader/LLEXT 없는 전체 Zephyr 정적 image |
+- [R00~R14 리팩토링 안내](<01_아두이노 코어 설계/14_리팩토링/README.md>): 구현 순서·체크리스트·최종 RC 연결
+- [최초 조사·아키텍처 결정](<00_사전 리서치/01_개발_방식_비교_및_아키텍처_결정.md>): 당시 설계 판단
 
-## 3. 현재 상태
+## 문서 관리 원칙
 
-| 범위 | 상태 | 결과 |
-| --- | --- | --- |
-| M0~M11 | **완료** | `v0.1.0` Core, build/upload, package와 clean Windows 기준선 |
-| M12~M18 | **완료** | CI/CD, profile, Core/Variant, Board/System, BLE NUS, NCS coverage와 `v0.2.0` 공개 |
-| AC-01 | **자동 검증 완료** | Core·GPIO·시간 Arduino Compatibility exact-commit HIL PASS |
-| AC-02 | **완료** | exact `0b7f892`의 3-wire fixture에서 Serial1, BQ25186 Wire, local SPI, ADC와 PWM handover 실기 PASS |
-| AC-03 | **완료** | exact `0b7f892`의 두 보드 HIL에서 EEPROM/LittleFS 영속성·손상 거부·복구·정리 PASS |
-| M19 | **자동 검증 완료** | BLE Core/GAP exact-commit 두 보드 RF HIL PASS |
-| M20 | **자동 검증 완료** | 범용 GATT exact-commit 두 보드 RF HIL PASS |
-| M21 | **완료** | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS; host 39/39 |
-| M22 | **완료** | Loaderless 1,456 KiB 경계, stable 재현 build, 29/29 설치본 compile, NU54DK Upload와 `v0.3.0` 정식 공개 |
-| M23 | **완료** | 75개 peripheral identity manifest·생성 matrix·공개 조회 API와 공통 block/channel/DMA 소유권 |
-| M24~M27 | **진행 중** | M24 23개 serial personality 단독 기능 HIL PASS, M25 공통 GPIO/PWM/I2S PASS·QDEC HOLD, T13 복구·동시성·soak 미실기; M26 완료, M27 최종 RC·공개 gate HOLD |
-| M28~M33 | **계획** | Bluetooth LE 전 기능군·Mesh·Channel Sounding과 `v0.5.0` |
-| M34~M45 | **장기 계획** | security/update, radio/OpenThread와 Matter 제품선 |
-
-AC-02A의 구현·시험 경계는
-[핀과 주변장치 소유권 기준선](<./04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md>)에 보존한다.
-AC-02B의 구현 범위와 exact 물리 증거는
-[Peripheral/Analog runtime 기준선](<./04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>)에 보존한다.
-Storage 설계와 RC 준비 경계는 [Arduino Storage API](<./03_펌웨어 설계/10_Arduino_Storage_API.md>),
-[AC-03 기록](<./04_검증 기록/28_AC-03_Storage와_Library_호환성_기준선.md>) 및
-[M22 RC1 기록](<./04_검증 기록/29_M22_v0.3.0_rc1_통합_릴리스_기준선.md>)과
-[M22 RC2 기록](<./04_검증 기록/30_M22_v0.3.0_rc2_통합_릴리스_기준선.md>)에서 역사적 공개 결과를
-보존한다. RC3 memory-contract와 당시 clean-room 인계 경계는
-[M22 RC3 검증·인계 기록](<./04_검증 기록/31_M22_v0.3.0_rc3_검증과_stable_인계.md>)에서 관리한다.
-정식 stable의 재현 build, 설치 수명주기와 공개 identity는
-[v0.3.0 정식 공개 기록](<./04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)에 고정한다.
-정확한 단계 상태의 단일 원본은
-[제품 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)이다. `v0.2.0`의 공개 범위와
-제약은 역사 문서로 보존하며 현재 사용법은 [v0.3.0 릴리스 문서](<./05_릴리스/v0.3.0/README.md>)를 따른다.
-
-여기서 `완료`는 해당 버전에 선언한 제품 범위를 구현·검증했다는 뜻이다. 모든 Arduino 보드의
-API와 제3자 library를 전부 제공한다는 뜻은 아니며, 전체 호환 폭은
-[Arduino API 지원 범위](<./01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)에서 별도로 관리한다.
-
-## 4. 목적별 바로가기
-
-- 구조를 선택한 이유: [ADR-0001](<./00_사전 리서치/01_개발_방식_비교_및_아키텍처_결정.md>)
-- 일반 사용자의 구성 UX: [ADR-0002](<./00_사전 리서치/02_Arduino_구성_프로필과_예제_노출_결정.md>)
-- 현재와 다음 단계: [제품 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)
-- `v0.4.0`의 25개 세부 작업과 인계: [실행 TODO](./TODO_v0.4.0.md)
-- T11 뒤 R00~R13 선행 리팩토링과 통합 실기 순서: [리팩토링 문서 안내](<./01_아두이노 코어 설계/14_리팩토링/README.md>)
-- 전 instance·DMA·BLE 경쟁 격차와 완료 조건: [경쟁 기준과 마일스톤](<./01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)
-- M24 serial block·핀 bank·고급 API·공통 handover backend·온보드/fixture HIL 경계: [Serial Fabric 경로와 공통 backend](<./01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md>)
-- P2/P4 물리 커넥터 번호와 net의 수기 확정 기준: [NU54DK P2/P4 커넥터 핀맵](<./01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)
-- `v0.4.0` 두 보드 기능 HIL과 정밀 계측·외부 부품 호환성의 구분: [코어 기능 검증 범위](<./04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)
-- 첫 외부 UART P2↔P1 fixture의 양방향 1,620-vector 결과: [M24 Fixture 101 실기 검증](<./04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)
-- UART P0↔P1 route의 양방향 810-vector 결과: [M24 Fixture 102 실기 검증](<./04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)
-- UART P1↔P1 전 instance 조합의 양방향 2,430-vector 결과: [M24 Fixture 103 실기 검증](<./04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>)
-- SPI P2↔P1 route의 18,169-vector 결과와 8 MHz 수신 지연 교정: [M24 Fixture 201 실기 검증](<./04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md>)
-- SPI P0↔P1 route의 9,084-vector 결과: [M24 Fixture 202 실기 검증](<./04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md>)
-- SPI P1↔P1 전 instance 조합의 27,252-vector 결과: [M24 Fixture 203 실기 검증](<./04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md>)
-- TWI P1↔P0 전 instance 조합의 1,986-record 결과: [M24 Fixture 301 실기 검증](<./04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md>)
-- M23의 현재 instance별 상태: [Peripheral instance matrix](<./01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)
-- M26 system/security/저수준 기능 판정: [System Peripheral 지원 경계](<./01_아두이노 코어 설계/11_M26_System_Peripheral_지원_경계.md>)
-- 현재 공개 API: [Arduino API 지원 범위](<./01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)
-- Windows source 개발환경: [Windows 개발환경 설정](<./02_빌드 설계/09_Windows_개발환경_설정.md>)
-- 설치·package 구조: [Boards Manager 설계](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
-- 현재 사용자 문서: [v0.3.0 릴리스 문서](<./05_릴리스/v0.3.0/README.md>)
-- 설치·시험 절차: [v0.3.0 Testing](<./05_릴리스/v0.3.0/TESTING.md>)
-- 실제 시험 증거: [검증 기록 안내](<./04_검증 기록/README.md>)
-- 완료된 버전 범위: [v0.3.0 구현 마일스톤](<./01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)
-
-## 5. 문서 구성
-
-### 00. 사전 리서치와 결정
-
-- [ADR-0001 — 개발 방식 비교와 아키텍처 결정](<./00_사전 리서치/01_개발_방식_비교_및_아키텍처_결정.md>)
-- [ADR-0002 — Arduino 구성 profile과 예제 노출 정책](<./00_사전 리서치/02_Arduino_구성_프로필과_예제_노출_결정.md>)
-
-### 01. Arduino Core 설계
-
-- [저장소 구조와 소유권](<./01_아두이노 코어 설계/01_저장소_폴더_구조.md>)
-- [제품 로드맵](<./01_아두이노 코어 설계/02_구현_로드맵.md>)
-- [Pin과 Variant 설계](<./01_아두이노 코어 설계/03_핀과_Variant_설계.md>)
-- [Arduino API 지원 범위](<./01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)
-- [v0.2.0 구현 마일스톤](<./01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md>)
-- [NCS v3.4.0 기능·예제 지원 매트릭스](<./01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)
-- [v0.3.0 구현 마일스톤](<./01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)
-- [전 인스턴스·DMA·BLE 경쟁 기준과 마일스톤](<./01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)
-- [M23 Peripheral instance matrix](<./01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)
-- [M24 Serial Fabric 경로와 API 계약](<./01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md>)
-- [M26 System Peripheral 지원 경계](<./01_아두이노 코어 설계/11_M26_System_Peripheral_지원_경계.md>)
-- [NU54DK P2/P4 커넥터 핀맵](<./01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)
-- [리팩토링 계획·운영·체크리스트](<./01_아두이노 코어 설계/14_리팩토링/README.md>)
-
-### 02. 빌드 설계
-
-- [west-native Blink PoC](<./02_빌드 설계/01_West_Native_Blink_PoC.md>)
-- [Build Adapter](<./02_빌드 설계/02_Build_Adapter_설계.md>)
-- [Arduino CLI와 IDE 통합](<./02_빌드 설계/03_Arduino_CLI_통합.md>)
-- [Build cache와 산출물](<./02_빌드 설계/04_빌드_캐시와_산출물.md>)
-- [Upload와 debug](<./02_빌드 설계/05_업로드와_디버그.md>)
-- [Boards Manager 설치와 package](<./02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
-- [구성 profile과 Arduino 예제](<./02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md>)
-- [CI/CD와 재현 build](<./02_빌드 설계/08_M12_CI_CD와_재현_빌드.md>)
-- [Windows 개발환경 설정](<./02_빌드 설계/09_Windows_개발환경_설정.md>)
-
-### 03. Firmware 설계
-
-- [Arduino Runtime](<./03_펌웨어 설계/01_Arduino_Runtime_설계.md>)
-- [GPIO와 시간 API](<./03_펌웨어 설계/02_GPIO와_시간_API.md>)
-- [주변장치 API](<./03_펌웨어 설계/03_주변장치_API.md>)
-- [시험 전략](<./03_펌웨어 설계/04_테스트와_검증.md>)
-- [NU54DK Board/System API](<./03_펌웨어 설계/05_NU54DK_Board_System_API.md>)
-- [BLE NUS API](<./03_펌웨어 설계/06_BLE_NUS_API.md>)
-- [BLE Core/GAP API](<./03_펌웨어 설계/07_BLE_Core_GAP_API.md>)
-- [BLE 범용 GATT API](<./03_펌웨어 설계/08_BLE_범용_GATT_API.md>)
-- [BLE 보안과 표준 Profile API](<./03_펌웨어 설계/09_BLE_보안과_표준_Profile_API.md>)
-- [Arduino Storage API](<./03_펌웨어 설계/10_Arduino_Storage_API.md>)
-
-### 04. 검증 기록
-
-M1~M23과 정식 공개 증거, `v0.3.0` AC-01~AC-03·M19~M22 및 `v0.4.0` M23~M27의 구현·검증 증거는
-[검증 기록 안내](<./04_검증 기록/README.md>)에서 찾는다. 이 디렉터리의 문서는 당시 revision과
-결과를 보존하는 역사 기록이다.
-
-### 05. 릴리스 문서
-
-현재 stable `v0.3.0`과 보존된 `v0.1.0`/`v0.2.0`/RC 문서는
-[릴리스 문서 안내](<./05_릴리스/README.md>)에서 구분한다.
-릴리스 문서는 `<version>/README.md`를 진입점으로 삼고 같은 역할은 영문 표준 파일명으로
-통일한다. 공개가 끝난 이전 버전의 기능·측정값은 고치지 않고 경로와 색인만 관리한다.
-
-## 6. 단일 원본 규칙
-
-| 정보 | 단일 원본 |
-| --- | --- |
-| 현재·다음 마일스톤 상태 | Master roadmap |
-| `v0.4.0` 세부 작업 상태·다음 행동·재개 조건 | 활성 `TODO_v0.4.0.md`; 완료 근거는 검증 기록에 연결 |
-| 리팩토링 R00~R14 순서·완료 조건 | `01_아두이노 코어 설계/14_리팩토링/`의 통합 실행계획과 진행 체크리스트 |
-| 물리 pin, pinctrl, peripheral route와 runner | Board submodule |
-| HIL용 P2/P4 커넥터 물리 번호↔net 수기 확정표 | `13_NU54DK_P2_P4_커넥터_핀맵.md`와 기계 판독 JSON |
-| Arduino 논리 pin과 API 계약 | Pin/Variant·API 설계 문서와 source |
-| 기능별 NCS 지원 판정 | Machine-readable coverage ledger와 지원 매트릭스 |
-| 실제 PASS/FAIL, revision과 측정값 | 검증 기록 |
-| 공개 archive, checksum과 version별 제약 | 해당 릴리스 문서 |
-| 설치용 최신 stable URL | 저장소 최상위 `README.md`와 package index |
-
-## 7. 제목과 버전 규칙
-
-- 제품 version은 `v0.1.0`, `v0.2.0`, `v0.3.0`처럼 쓰며 package metadata만 `v`를 뺀다.
-- 마일스톤 번호는 제품 version과 독립된 연속 번호다.
-- 문서 개정은 `1.0`, `2.0`처럼 표시하고 제품 SemVer와 혼용하지 않는다.
-- 활성 설계는 현재 계약을 쓰고, 과거 목표·실측값은 검증 또는 릴리스 기록으로 보낸다.
-- 검증 기록의 과거 `다음 단계`, `HOLD`, `NOT RUN`은 당시 판정이며 현재 상태로 읽지 않는다.
-
-## 8. 유지 규칙
-
-1. 구현하지 않은 기능을 지원 완료로 표시하지 않는다.
-2. 마일스톤 완료에는 build, CI 또는 HIL evidence를 연결한다.
-3. Board submodule과 vendored ArduinoCore-API는 문서 정리 중 수정하지 않는다.
-4. 일반 사용자 절차에서 raw `prj.conf`/overlay 편집을 요구하지 않는다.
-5. 사용자 예제는 `libraries/*/examples`를 단일 원본으로 사용한다.
-6. NCS/Zephyr/Toolchain 또는 board revision이 바뀌면 기존 검증의 유효성을 다시 판정한다.
-7. 구조 변경 뒤 UTF-8, 상대 Markdown link와 package allowlist를 함께 검사한다.
-
-## Source별 과거 진행 이력
-
-아래의 완료·미실행·다음 작업은 해당 source 작성 시점의 기록이다. 현재 상태는 문서 첫 요약과 활성 TODO를 따른다.
-
-2026-09-06 후속: [65번 기록](<./04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)의 904 PASS·파일 정리를 보존한다. 이후 DAP UART 연결 전환 뒤 [66번 기록](<./04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>)에서 UART idle bias를 교정하고 온보드 18개 결과·BLE 3개 pair gate를 통과했다. 이후 사용자 결선 완료 확인에 따라 exact 154324c의 current-source T11 Fixture 101을 SWD 10 MHz로 실행해 기능 1,644개를 통과했다. 이후 exact a49cc0d의 Fixture 102 기능 822개를 SWD 10 MHz로 통과했다. 이후 exact 7aece93의 Fixture 103 기능 2,466개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 진단은 별도 보존했다. 이후 exact 0f429e7의 Fixture 201 SPI 기능 18,169개를 SWD 10 MHz로 통과했다. 이후 exact 1349e20의 Fixture 202 SPI 기능 9,084개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 읽기 전용 진단은 별도 보존했다. 이후 exact be49207의 Fixture 203 SPI 기능 27,252개를 SWD 10 MHz로 통과했다. 최초 DUT flash 실패와 읽기 전용 진단은 별도 보존했다. 이후 exact 9a63251의 Fixture 301 TWI 기능 1,986개를 첫 실행·SWD 10 MHz로 통과해 current-source T11 단독 통신 회귀를 완료했다. 이후 T12 Fixture 401 exact a12e444에서 PWM→AIN0 48개 기능을 첫 실행·10 MHz로 통과했다. 이후 Fixture 402 exact ff483a1에서 PWM→AIN1 48개도 첫 실행·10 MHz로 통과했다. 이후 403 exact c95b904에서 PWM→AIN2 48개도 첫 실행·10 MHz로 통과했다. 이후 404 exact e080bbc에서 PWM→AIN3 48개도 첫 실행·10 MHz로 통과했다. 당시 사용자 확인된 407 결선은 A P1.13↔B P1.14였으며 LLVM Host 회귀 뒤 결선 유지를 재확인해 407 첫 실행 12개를 통과했다. 408도 완료했으며 이후 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다.
-
-Current-source T11 첫 UART 회귀의 exact 증거는 [67번 기록](<./04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)에 연결한다. Current-source T11 단독 회귀는 완료했으며 T12~T15와 RC/공개는 미완료다.
-
-Current-source Fixture 102의 exact a49cc0d·822 PASS는 [68번 기록](<./04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md>)에 연결한다.
-
-Current-source Fixture 103의 exact 7aece93·2,466 PASS, 최초 flash 실패·진단은 [69번 기록](<./04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md>)에 연결한다. Current-source UART 세 묶음을 완료했으며 각 exact 증거를 보존한다.
-
-Current-source Fixture 201의 exact 0f429e7·18,169개 기능 PASS는 [70번 기록](<./04_검증 기록/70_T11_Fixture_201_current_source_SPI_회귀.md>)에 연결한다. 해당 exact 원본은 별도로 보존한다.
-
-Current-source Fixture 202의 exact 1349e20·9,084개 기능 PASS, 최초 peer flash 실패·진단은 [71번 기록](<./04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md>)에 연결한다. 해당 exact 원본은 별도로 보존한다.
-
-Current-source Fixture 203의 exact be49207·27,252개 기능 PASS, 최초 DUT flash 실패·진단은 [72번 기록](<./04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 연결한다. 해당 exact 원본은 별도로 보존한다.
-
-Current-source Fixture 301 exact 9a63251·1,986개 기능 PASS와 T11 단독 회귀 완료 근거는 [73번 기록](<./04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 연결한다. 일곱 fixture의 원본 61,423개와 동일 컴파일 입력을 대조했으며 exact identity는 구분 보존한다. T12 Fixture 401~404 각 48개 PASS 뒤 405·406·407도 각각 12개를 완료했고 408도 완료했으며 420 QDEC도 완료했으며 430 I2S도 전체 192개를 통과했고 440 PDM은 기본 기능·밀도와 연속 96개 조합을 통과했으며 M24/M25 전체·T13~T15·RC/공개 gate는 미완료다.
-
-T12 Fixture 401 exact a12e444·SWD 10 MHz 첫 실행 48개 기능 PASS와 10,368 samples·cleanup 48개는 [74번 기록](<04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 보존했다. T12는 부분 완료이며 405 오픈드레인·406/407 입력 바이어스 시험과 408 PWM도 완료했으며 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다. PWM 주기·듀티 capture와 T12 나머지 요구·후속 gate는 이 결과로 완료 처리하지 않는다.
-
-T12 Fixture 402 exact ff483a1·SWD 10 MHz 첫 실행 48개 PASS는 [75번 기록](<04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존했다. 401·402 합계 기능 96개·samples 20,736개이며 각 exact identity는 구분한다. 405 오픈드레인·406/407 입력 바이어스 시험과 408 PWM도 완료했으며 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다.
-
-T12 Fixture 403 exact c95b904·SWD 10 MHz 첫 실행 48개 PASS는 [76번 기록](<04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 보존했다. 401~403 합계 기능 144개·samples 31,104개이며 각 exact identity는 구분한다. 405 오픈드레인·406/407 입력 바이어스 시험과 408 PWM도 완료했으며 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다.
-
-T12 Fixture 404 exact e080bbc·SWD 10 MHz 첫 실행 48개 PASS는 [77번 기록](<04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 보존했다. 401~404 합계 기능 192개·samples 41,472개이며 각 exact identity는 구분한다. 405 오픈드레인·406/407 입력 바이어스 시험과 408 PWM도 완료했으며 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다.
-
-T12 Fixture 405 exact 9fc12bf·SWD 10 MHz **첫 실행 12개 PASS**, LOW/해제/LOW·2,592 samples·cleanup 12개와 GPIO readback은 [78번 기록](<04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)에 보존했다. 공유 AIN4/P1.11의 기능을 확인했으며 이후 406·407도 완료했으며 후속 **408도 완료**했다. 제품 core 변경 없이 Host 648개·pair target 2/2를 통과했고 T12 전체·후속 gate는 미완료다.
-
-T12 Fixture 406 exact 96f38e9·SWD 10 MHz **첫 실행 12개 PASS**, 입력 pull-down/up/down·2,592 samples·cleanup 12개와 GPIO readback은 [79번 기록](<04_검증 기록/79_T12_Fixture_406_current_source_공유_AIN5_검증.md>)에 보존했다. Host 649개·pair target 2/2 PASS. 당시 401~406 합계 기능 216개·samples 46,656개였으며 407의 새 결과는 아래 82번에 구분한다. 이후 사용자가 407 결선 A P1.13↔B P1.14·공통 GND와 USB 분리/재연결을 확인했다. 버튼 미누름·DAP UART 분리/SWD 연결 조건이며 LLVM Host 회귀 뒤 결선 유지를 재확인해 407 첫 실행 12개를 통과했다. 408도 완료했으며 이후 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다. T12 전체·후속 gate는 미완료다.
-
-407 재개 exact 393e419는 설치된 LLVM 22.1.8로 Host **655 PASS·1 조건부 SKIP(총 656)**, 계약 45·package 20·정렬 358·Inventory·예제 발견과 pair/BLE **target 8/8**을 통과했다. BLE 형 변환의 기계어·재배치도 6/6 동일하다. [81번 재개 기록](<04_검증 기록/81_T12_Fixture_407_Host_재개와_검증.md>)에 새 근거를 보존했다. 이전 Windows 차단 원본은 80번에 유지하며 보안 정책을 변경하지 않았다. 이 준비 단계에서는 결선 확인 만료로 실기를 보류했다. 이후 사용자 유지 확인을 받아 actual source 4a64c25의 407 첫 실행을 완료했으며 아래 82번에 구분한다.
-
-T12 Fixture 407 exact 4a64c25·SWD 10 MHz **첫 실행 12개 PASS**는 [82번 기록](<04_검증 기록/82_T12_Fixture_407_current_source_공유_AIN6_검증.md>)에 보존했다. 버튼 미누름 AIN6/P1.13에서 입력 pull-down/up/down·2,592 samples·cleanup 12개와 입력 GPIO 24회·해제 12회를 확인했다. LOW median 0·HIGH median 3752, postflight 양쪽 source/role 확인 PASS. 당시 401~407 누계는 **228개 기능·49,248 samples·228개 cleanup**이었다. 이후 408 결과는 아래 83번에 구분한다. T12 전체·T13 이후와 readiness 미해결 8개는 유지한다.
-
-T12 Fixture 408 exact 87b987d·SWD 10 MHz **48개 기능 PASS**는 [83번 기록](<04_검증 기록/83_T12_Fixture_408_current_source_PWM_ADC_검증.md>)에 보존했다. 최초 DUT flash timeout은 외부 시험 시작 전 실패였으며, 읽기 응답 회복 확인 뒤 한 번의 새 실행으로 10,368 samples·cleanup 48회를 통과했다. 두 runtime identity도 재확인했다. 401~408 누계 **276개 기능·59,616 samples·276개 cleanup**으로 AIN0~7의 개별 기능 근거를 확보했다. 420 QDEC도 완료했다. 현재 **430 I2S는 전체 192개 PASS**이며 440 PDM과 남은 T12 요구·T13 이후·readiness 미해결 8개는 유지한다.
-
-420 QDEC 최신 결과는 [85번 기록](<04_검증 기록/85_T12_Fixture_420_current_source_QDEC_재검증.md>)의 **exact 6bd8d3f 기능 48·cleanup 48·시작 전 취소 6개 PASS**다. SWD 10 MHz, 22.063초 기능 실행과 두 보드 identity·핀 복원·PWM/QDEC 해제를 확인했다. [84번](<04_검증 기록/84_T12_Fixture_420_current_source_QDEC_검증.md>)의 이전 실패·교정 기록은 유지한다. a3d0ab5와 코드·설정이 같음을 대조했으며 이전 전체 Host 656 PASS·1 조건부 SKIP와 정렬 359 PASS는 해당 source 결과로 구분한다. 430 I2S는 아래 87번에서 오류 교정 후 전체 192개 PASS를 기록했다. 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다. 공용 PWM 지연 시작 취소 이슈는 T14, 440 PDM·남은 T12 요구·T13 이후와 readiness 미해결 8개도 유지한다.
-
-430의 이전 세 source 실패·교정·72개 부분 통과 이력은 [86번 기록](<04_검증 기록/86_T12_Fixture_430_current_source_I2S_검증.md>)에 보존한다.
-
-430 I2S 최신 결과는 [87번 기록](<04_검증 기록/87_T12_Fixture_430_current_source_I2S_재검증.md>)의 **exact 36ba819 기능 192·cleanup 192개 PASS**다. 공용 compact DMA token 처리 지연을 교정해 queue 시간이 278~309 us에서 104~112 us로 줄었고, 수신 원본 384개·전체 payload 82,944 word를 독립 대조했다. SWD 10 MHz, 양쪽 identity·I2S off·핀 복원 확인. 전체 Host 659 PASS·1 조건부 SKIP, 계약 45·package 20·Inventory·정렬 361·관련 target 10개 PASS다. 440의 후속 실기는 88~90번에 실패·부분 결과와 재시험 준비로 구분하며, 남은 T12·T13 이후·T14 공용 PWM 이슈·readiness 미해결 8개를 유지한다. 공용 자원 변경 이후의 T11 외부 실기는 이번에 재실행하지 않았다.
-
-440 PDM의 이전 실행은 [88번 기록](<04_검증 기록/88_T12_Fixture_440_current_source_PDM_검증.md>)의 **exact ea4e25a 모노 DMA 4 PASS·첫 stereo FAIL·187 미실행**이다. 밀도 비교는 미도달이며 전체 PDM PASS가 아니다. HIL buffer 공급·신호원·격리된 DAP 핀 metadata를 교정했지만 동일 stereo 채널의 원인은 미해결이다. SWD 10 MHz, cleanup 5회·양쪽 identity/peripheral off·입력 복귀 확인. 전체 Host 660 PASS·1 조건부 SKIP, 정렬 361·pair 2/2 build PASS. 확인 유효시간 20:15:39Z가 지나 440 결선·DAP UART 분리 유지 재확인 후 설정/신호 전달 진단과 전체 재검증을 진행한다. 연속 PDM 4+100 buffer·나머지 T12·T13 이후·T14 공용 PWM·readiness 8개는 유지한다.
-
-440 최신 상태는 [92번 기록](<04_검증 기록/92_T12_Fixture_440_PDM_연속_전체_검증.md>)의 **연속 4+100 버퍼 96개 조합·밀도 비교 16개·cleanup 96개 전체 PASS**다. Exact f02734d에서 SWD 10 MHz로 한 campaign을 완료했고 DMA 반환 9,984개·6,389,760 samples의 장치 통계를 대조했다. 측정 버퍼 각각의 모노 밀도 순서 1,600개·스테레오 부호 4,800개도 PASS다. 기본 기능 192·밀도 비교 32 PASS는 코드·설정이 같은 917dc02의 91번 결과로 구분한다. 두 보드 f02734d identity·주변장치 off·신호 입력 복귀와 pair build 2/2를 확인했다. 전체 Host는 [93번 기록](<04_검증 기록/93_Host_재검증과_T12_이후_남은_작업.md>)의 exact e6979af에서 664 PASS·1 조건부 SKIP로 재검증을 완료했다. LLVM과 WinLibs sysroot를 유지하고 NCS 번들 CMake·Ninja를 선택했다. 440의 기본·연속 기능 검증은 완료했고 추가 결선 확인 요청은 없다. 남은 T12 요구·T13 이후·readiness 8개는 미완료다.
+- 현재 상태와 다음 작업은 TODO 한곳에서 갱신합니다. README·설계 문서에 시각별 실기 보고를 반복하지 않습니다.
+- 설계 문서는 동작·소유권·오류 계약, 검증 기록은 exact source·시험 조건·실제 결과를 설명합니다.
+- 과거 검증·공급 종료 버전 문서는 당시 사실을 보존합니다. 현재 지원·재실행 지시로 읽지 않습니다.
+- 생성 문서는 JSON·생성기를 수정한 뒤 재생성합니다. SDK·서드파티·기존 공개 패키지는 문서 정리로 바꾸지 않습니다.
+- 사용자 결정에 따른 시험 제외·알려진 제한은 성공한 시험과 구분합니다. 범위와 기록을 함께 남깁니다.

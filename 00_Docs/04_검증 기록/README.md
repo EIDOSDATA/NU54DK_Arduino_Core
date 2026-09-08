@@ -1,219 +1,158 @@
-# NU54DK Arduino Core — 검증 기록 안내
+# 검증 기록
 
-자원 충돌 사용자 수용 완료와 새 S 확인 후 세 복구 묶음 재검증은
-[109번](109_T13_S_세_복구_묶음_재검증.md)을 따른다. 아래108번 종료는 이전 세션 이력이다.
+이곳은 시험 당시의 source·환경·조건·성공·실패와 원본을 보존합니다.
+현재 완료 상태와 다음 실행은 [v0.4.0 TODO](../TODO_v0.4.0.md)를 확인하세요.
 
-현재 S 실행의 종료·미완료 목록은 [108번 최종 기록](<108_T13_S_자동_실행_종료와_재개_항목.md>)을 따른다.
+## 최근 확인할 기록
 
-T13 S의 정상 안정성·오류 복구·역할 전환은 별도 완료 기준으로 집계한다.
-과거 실패 원본을 유지하고 현재 source별 완료 수와 실행 중 항목은 아래104번 및 활성 TODO에서 확인한다.
-T12 완료·QDEC 문제 보고 후 종료 결정은 유지한다. 현재 source별 원본·Host/target·진행도는
-[104번](<104_T13_S_복구_동시_안정성_검증.md>)을 따른다. 아래 이전 source 이력은 당시 결과다.
-
-2026-09-08 후속 정정: TIMER 기능은 95번의 두 보드 7,040회 PASS 범위로 완료 정리했다. 다음은 T13 runner 준비와 C→S→U 재배선 후 복구·동시·안정성 실기다. QDEC는 문제 기록 후 진단 종료이며 알려진 제한을 유지한다. 외부 ADC 반복 수 차이와 승인 전 자동 진행·현장 조작 경계는 [103번](<103_TIMER_기능_완료와_T13_진행_경계.md>)을 따른다.
-
-2026-09-08 현재: R00~R13·source별 T11 단독 회귀와 **T12 기능검증은 완료**했다. **QDEC도 일부 문제·제한사항을 101번에 보고하고 검증 작업을 완료**했다. 동작 중 수동 read/clear 누산 누락은 미해결이며 실패 결과를 PASS로 변경하지 않는다. 사용자 완료 결정은 T12 마일스톤에 적용하며 알려진 제한은 T14/T15에서 정리한다. 현재는 사용자 S 재배치·실행 중 유지 확인에 따라 T13 실기와 실패 원인 분석을 진행 중이다. S 정상 안정성은 source별 단독29/29·동시7/7, 합계36/36을 완료했다. 이번 S 자동 실행은 확인 시간 안에서 종료했으며 복구·오류 주입·역할 전환의 잔여 항목과 최종 원본은 활성 TODO와108번 기록을 따른다. 새 S 확인 뒤 남은 복구를 이어가며 U UART00·T13 전체·RC·정식 공개는 미완료다. [문서 감사·요구별 증거 대조](<102_개발_문서_전수_검토와_마일스톤_체크포인트.md>), [실행 TODO](<../TODO_v0.4.0.md>)를 따른다.
-
-현재 공통 기능 묶음과 T13 조합 확정은 [100번](100_T12_공통_기능_묶음과_T13_조합_확정.md)에서 관리한다. GPIO/GPIOTE2502·PWM675+288·I2S432는 source별 PASS다. [101번](101_T12_QDEC_누산_누락_원인_분리.md)의 QDEC 최종 선점 대비60회도 누락이 남아 기능240은 HOLD다. 사용자 지시대로 진단을 종료하고 원인·보완·T13 선행 제한을 남겼다. 구현·build·짧은 IRQ 일치를 새 기능/안정성 PASS로 처리하지 않는다.
-
-새 PC 초기 실기: [97번](<97_T12_PWM_peer_capture_첫_240조건_검증.md>)에서 첫 PWM peer capture 기능 240·cleanup 240·14,400주기 PASS를 확인했다. 96번 인수·준비와 두 flash 실패를 보존하며 최신 결과는 위100·101번을 따른다.
-
-이전 PC 개발 검증(2026-09-07): [94번](<94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>)에서 PWM 미시작 STOP 수정·두 보드 회귀와 전체 software/설치 예제 검증을 완료했다. [95번](<95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)의 내부 ADC·TIMER·이벤트·시간 함수와 PWM 회귀도 두 보드 1,808명령 PASS다. 보드 간 결선은 해제됐으며 T12 전체·T13 이후와 RC/공개는 미완료다. 아래 source별 이력의 당시 상태와 현재 재개 조건을 구별한다.
-
-| 항목 | 내용 |
+| 기록 | 용도 |
 | --- | --- |
-| 문서 성격 | 실행 당시의 revision, 환경, 명령과 결과를 보존하는 역사 증거 |
-| 완료 범위 | M1~M23, M26 판정, `v0.1.0`·`v0.2.0`·`v0.3.0` 정식 공개 |
-| 진행 범위 | `v0.4.0` M24~M25 physical gate와 M27 release 준비 |
-| 현재 정식 버전 | `v0.3.0` |
-| 최종 갱신일 | 2026-09-07 |
+| [110 — 문서 정리와 S 잔여 재개](110_문서_정리와_T13_S_잔여_재개.md) | 이번 작업·문서 감사·S 순서1~3 |
+| [109 — 세 복구 묶음과 연속 전환 제외](109_T13_S_세_복구_묶음_재검증.md) | TWIM 완료, I2S 잔여, 전환 시험 제외 |
+| [108 — 이전 S 실행 종료](108_T13_S_자동_실행_종료와_재개_항목.md) | 이전 실패·미실행·도구 보완 |
+| [107 — S와 System OFF](107_T13_S_자동_진행과_System_OFF_계획.md) | 정상 안정성·추가 오류 복구·전원 검증 |
+| [106 — Git·패키지 정리](106_Git_이력_정리와_구버전_패키지_공급_종료.md) | 공급 종료와 원본 복원 |
+| [101 — QDEC 알려진 문제](101_T12_QDEC_누산_누락_원인_분리.md) | 누산 누락·보완·진단 종료 |
 
-이 디렉터리는 **현재 사용법이나 다음 작업을 설명하는 곳이 아니다.** 각 기록의 `다음 단계`,
-`HOLD`, `미실행`과 `NOT RUN`은 그 문서를 작성한 시점의 경계를 뜻한다. 현재 상태는
-[Master roadmap](<../01_아두이노 코어 설계/02_구현_로드맵.md>), 현재 사용자 절차는
-[v0.3.0 릴리스 문서](<../05_릴리스/v0.3.0/README.md>)를 따른다.
+## 기록 읽는 방법
 
-## v0.1.0 기반 — M1~M11
+- PASS는 기록에 명시된 exact source·역할·핀·속도·시간·조건에만 적용합니다.
+- Host·target build·실제 HIL·설치·공개 결과를 구분합니다. 준비 결과를 실기 PASS로 세지 않습니다.
+- 실패·부분 완료·시험 제외·사용자 수용은 각각 별도로 남깁니다. 후속 결과로 원본을 덮어쓰지 않습니다.
+- `evidence/`의 manifest는 압축 파일과 원본 byte의 SHA-256을 연결합니다.
+- 과거 문서의 “다음 작업”은 당시 계획입니다. 현재 지시는 TODO와 최신 사용자 요청이 우선입니다.
 
-| 단계 | 결과 | 기록 |
-| --- | --- | --- |
-| M1 | 도구·board·CMSIS-DAP/pyOCD 기준선 | [M1 기록](01_M1_도구와_보드_기준선.md) |
-| M2 | Zephyr module과 Arduino runtime 골격 | [M2 기록](02_M2_Zephyr_Module과_Runtime_기준선.md) |
-| M3 | GPIO·시간·scheduler 수직 경로 | [M3 기록](03_M3_GPIO_시간과_Scheduler_기준선.md) |
-| M4 | ArduinoCore-API 계약 | [M4 기록](04_M4_ArduinoCore_API_계약_기준선.md) |
-| M5 | Arduino CLI Build Adapter | [M5 기록](05_M5_Arduino_CLI_Build_Adapter_기준선.md) |
-| M6 | 기본 API·Serial·interrupt | [M6 기록](06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md) |
-| M7 | Wire·SPI·ADC·PWM | [M7 기록](07_M7_Wire_SPI_ADC_PWM_기준선.md) |
-| M8 | upload와 debug | [M8 기록](08_M8_업로드와_디버그_기준선.md) |
-| M9 | 증분 build·cache·재현성 | [M9 기록](09_M9_증분_빌드_캐시와_재현성_기준선.md) |
-| M10 | Boards Manager·clean Windows | [M10 기록](10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md) |
-| M11 RC1 | 기술 gate 통과 뒤 GUI UTF-8 결함으로 회수 | [RC1 역사 기록](11_M11_v0.1.0_rc1_릴리스_후보_기준선.md) |
-| M11 RC2 | clean Windows 설치·compile·upload·실행 | [RC2 수동 검증](12_M11_v0.1.0_rc2_공개_후_수동_검증.md) |
-| Stable | `v0.1.0` 정식 공개 | [v0.1.0 공개 기록](13_v0.1.0_정식_릴리스_공개_기록.md) |
+## 전체 기록 목차
 
-## v0.2.0 개발 — M12~M18
+<details>
+<summary>v0.4.0 최근 실기·인계 — 94~109</summary>
 
-| 단계 | 결과 | 기록 |
-| --- | --- | --- |
-| M12 | CI/CD와 Linux/Windows 재현 build | [M12 기록](14_M12_CI_CD_기준선.md) |
-| M13 | 구성 profile과 Arduino 예제 | [M13 기록](15_M13_구성_프로필_검증.md) |
-| M14 | Core API와 DTS 기반 Variant | [M14 기록](16_M14_Core_API와_Variant_기준선.md) |
-| M15 | NU54DK Board/System API와 System OFF | [M15 기록](17_M15_NU54DK_Board_System_기준선.md) |
-| M16 | BLE NUS Peripheral/Central | [M16 기록](18_M16_BLE_NUS_기준선.md) |
-| M17 | NCS 기능·예제 coverage와 feasibility | [M17 기록](19_M17_NCS_기능과_예제_Coverage_기준선.md) |
-| M18 RC | RC1 공개 검증과 RC2 교정 | [M18 RC 기록](20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md) |
-| Stable | `v0.2.0` 정식 공개와 공개 수명주기 | [v0.2.0 공개 기록](21_v0.2.0_정식_릴리스_공개_기록.md) |
+- [94 — T14 PWM 지연 시작 취소와 무점퍼 검증](<94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>)
+- [95 — T12 내부 ADC·TIMER·이벤트 무점퍼 검증](<95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)
+- [96 — 새 PC 인수 확인과 T12 PWM peer capture 첫 경로 준비](<96_새_PC_인수와_T12_PWM_peer_capture_준비.md>)
+- [97 — T12 PWM peer capture 첫 240조건 검증](<97_T12_PWM_peer_capture_첫_240조건_검증.md>)
+- [98 — T13 단독 안정성 3분 기준 조정](<98_T13_단독_안정성_3분_기준_조정.md>)
+- [99 — 공통 결선 검사와 승인 전 자동 진행 계획](<99_공통_결선_검사와_승인_전_자동_진행_계획.md>)
+- [100 — T12 공통 기능 묶음과 T13 시험 조합 확정](<100_T12_공통_기능_묶음과_T13_조합_확정.md>)
+- [101 — T12 QDEC 누산 누락 원인 분리](<101_T12_QDEC_누산_누락_원인_분리.md>)
+- [102 — 개발 문서 전수 검토와 v0.4.0 마일스톤 체크포인트](<102_개발_문서_전수_검토와_마일스톤_체크포인트.md>)
+- [103 — TIMER 기능 완료 정리와 T13 자동 진행 경계](<103_TIMER_기능_완료와_T13_진행_경계.md>)
+- [104 — T13 S 결선의 복구·동시·안정성 검증](<104_T13_S_복구_동시_안정성_검증.md>)
+- [105 — T13 S GPIO 전수 결선 진단](<105_T13_S_GPIO_전수_결선_진단.md>)
+- [106 — Git 이력 정리와 구버전 패키지 공급 종료](<106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+- [107 — T13 S 자동 진행과 peer 제어 System OFF 검증 계획](<107_T13_S_자동_진행과_System_OFF_계획.md>)
+- [108 — T13 S 자동 실행 종료와 재개 항목](<108_T13_S_자동_실행_종료와_재개_항목.md>)
+- [109 — T13 S 자원 충돌 수용과 세 복구 묶음 재검증](<109_T13_S_세_복구_묶음_재검증.md>)
 
-## v0.3.0 — Arduino Compatibility, BLE와 정식 공개
+</details>
 
-| 작업 | 현재 결과 | 기록 |
-| --- | --- | --- |
-| AC-01 | connector GPIO, open-drain, level IRQ, pulse/shift와 안전한 callback mask의 exact-commit HIL PASS | [AC-01 기록](22_AC-01_GPIO_호환성_검증.md) |
-| M19 | BLE Core/GAP 두 보드 RF HIL PASS; 첫 자동 PHY 요청 실패와 교정 이력 보존 | [M19 기록](23_M19_BLE_Core_GAP_검증.md) |
-| M20 | 범용 GATT server/client 두 보드 RF HIL PASS | [M20 기록](24_M20_범용_GATT_검증.md) |
-| M21 | Core `065d4f5` exact 두 보드 RF HIL + `d1902b1` Windows 11 pairing·HID 입력·bond 복원 PASS; host 39/39 | [M21 기록](25_M21_BLE_보안과_표준_Profile_검증.md) |
-| AC-02A | 고정 슬롯 핀·주변장치 소유권 manager, 부팅 registry와 GPIO 충돌 gate; target ztest 8/8 PASS | [AC-02A 기록](26_AC-02A_핀과_주변장치_소유권_기준선.md) |
-| AC-02B | exact `0b7f892`의 3-wire fixture에서 Serial1·BQ25186 Wire·local SPI·ADC→PWM handover 실기 PASS | [AC-02B 기록](27_AC-02B_Peripheral_Analog_runtime_기준선.md) |
-| AC-03 | exact `0b7f892`의 두 보드에서 EEPROM/LittleFS 영속성·손상 거부·복구·정리 PASS | [AC-03 기록](28_AC-03_Storage와_Library_호환성_기준선.md) |
-| M22 RC1 | fixed gate PASS 뒤 tagged clean-room 실행기 결함으로 formal 검증 중단; tag·자산 불변 보존 | [RC1 기록](29_M22_v0.3.0_rc1_통합_릴리스_기준선.md) |
-| M22 RC2 | 새 plan·4 gate, 29개 설치 예제·실제 Upload·public clean-room lifecycle와 cleanup PASS | [RC2 기록](30_M22_v0.3.0_rc2_통합_릴리스_기준선.md) |
-| M22 RC3 | 1,456 KiB memory contract, fixed gate·29/29 compile와 실제 Upload PASS; 사용자 reset 중단을 기록하고 stable lifecycle로 인계 | [RC3 검증·인계 기록](31_M22_v0.3.0_rc3_검증과_stable_인계.md) |
-| M22 Stable | 독립 package 재현, RC3 runtime 동등성, 설치 lifecycle·29/29 compile·NU54DK Upload와 정식 공개 PASS | [v0.3.0 정식 공개 기록](32_M22_v0.3.0_정식_릴리스_공개_기록.md) |
+<details>
+<summary>v0.4.0 기능 회귀 — 67~93</summary>
 
-## v0.4.0 개발 — Peripheral Parity
+- [67 — T11 Fixture 101 current-source UART 회귀](<67_T11_Fixture_101_current_source_UART_회귀.md>)
+- [68 — T11 Fixture 102 current-source UART 회귀](<68_T11_Fixture_102_current_source_UART_회귀.md>)
+- [69 — T11 Fixture 103 current-source UART 회귀](<69_T11_Fixture_103_current_source_UART_회귀.md>)
+- [70 — T11 Fixture 201 current-source SPI 회귀](<70_T11_Fixture_201_current_source_SPI_회귀.md>)
+- [71 — T11 Fixture 202 current-source SPI 회귀](<71_T11_Fixture_202_current_source_SPI_회귀.md>)
+- [72 — T11 Fixture 203 current-source SPI 회귀](<72_T11_Fixture_203_current_source_SPI_회귀.md>)
+- [73 — T11 Fixture 301 current-source TWI 회귀와 통신 단독 검증 완료](<73_T11_Fixture_301_current_source_TWI_회귀.md>)
+- [74 — T12 Fixture 401 current-source PWM→AIN0 실기 검증](<74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)
+- [75 — T12 Fixture 402 current-source PWM→AIN1 실기 검증](<75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)
+- [76 — T12 Fixture 403 current-source PWM→AIN2 실기 검증](<76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)
+- [77 — T12 Fixture 404 current-source PWM→AIN3 실기 검증](<77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)
+- [78 — T12 Fixture 405 — 공유 AIN4 오픈드레인 실기 검증](<78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)
+- [79 — T12 Fixture 406 — current-source 공유 AIN5 검증](<79_T12_Fixture_406_current_source_공유_AIN5_검증.md>)
+- [80 — T12 Fixture 407 준비와 Host 실행 차단](<80_T12_Fixture_407_준비와_Host_실행_차단.md>)
+- [81 — T12 Fixture 407 — Host 재개와 software 검증](<81_T12_Fixture_407_Host_재개와_검증.md>)
+- [82 — T12 Fixture 407 — current-source 공유 AIN6 검증](<82_T12_Fixture_407_current_source_공유_AIN6_검증.md>)
+- [83 — T12 Fixture 408 — current-source PWM→AIN7 검증](<83_T12_Fixture_408_current_source_PWM_ADC_검증.md>)
+- [84 — T12 Fixture 420 — QDEC 기능 검증과 준비 취소 교정](<84_T12_Fixture_420_current_source_QDEC_검증.md>)
+- [85 — T12 Fixture 420 — QDEC 수정본 재검증 완료](<85_T12_Fixture_420_current_source_QDEC_재검증.md>)
+- [86 — T12 Fixture 430 — I2S 부분 통과와 짧은 버퍼 실패](<86_T12_Fixture_430_current_source_I2S_검증.md>)
+- [87 — T12 Fixture 430 — DMA 자원 처리 지연 교정과 I2S 전체 PASS](<87_T12_Fixture_430_current_source_I2S_재검증.md>)
+- [88 — T12 Fixture 440 — PDM DMA 교정과 스테레오 미해결](<88_T12_Fixture_440_current_source_PDM_검증.md>)
+- [89 — T10/T12 Fixture 440 — clock·gate 네 핀의 전기적 연결 관측](<89_T12_Fixture_440_clock_gate_분리_진단.md>)
+- [90 — T10/T12 Fixture 440 — 재결선과 PDM 위상 진단](<90_T12_Fixture_440_재결선과_PDM_위상_진단.md>)
+- [91 — T12 Fixture 440 — PDM 밀도와 연속 DMA 검증](<91_T12_Fixture_440_PDM_밀도와_연속_DMA_검증.md>)
+- [92 — T12 Fixture 440 — PDM 연속 전체 검증](<92_T12_Fixture_440_PDM_연속_전체_검증.md>)
+- [93 — Host 재검증과 T12 이후 남은 작업](<93_Host_재검증과_T12_이후_남은_작업.md>)
 
-| 작업 | 현재 결과 | 기록 |
-| --- | --- | --- |
-| M23 | 75개 identity manifest·생성 matrix·공개 조회 API, 같은 block 상호배타와 block/channel/DMA 원자적 lease PASS | [M23 기록](33_M23_Peripheral_Inventory와_공통_소유권_기준선.md) |
-| M24 작업 1 | 5개 serial block·23개 personality의 route/API/DMA/errata 계약과 exact DTS·문서 drift gate PASS | [M24 작업 1 기록](34_M24_Serial_Fabric_경로와_API_계약_기준선.md) |
-| M24 작업 2 | Allocation-free typed handle, 원자적 route/DMA lease, bounded handover와 target semantic build PASS | [M24 작업 2 기록](35_M24_Serial_Fabric_공통_backend_기준선.md) |
-| M24 작업 3~6 | 23개 direct adapter source/build PASS, 온보드 runner 준비; SWD `No ACK`와 외부 fixture gate HOLD | [M24 adapter·HIL 기록](36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md) |
-| M25 | Analog·event·stream 전 instance 후보 source/build PASS, 온보드 runner 준비; physical gate HOLD | [M25 기록](37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md) |
-| M26 | System 기능 16개 전수 판정·unknown 0, TEMP·WDT30 runner 준비; physical gate HOLD | [M26 기록](38_M26_System_Peripheral_판정과_온보드_HIL_준비.md) |
-| M27 | 비공개 RC 이중 package 재현·설치본 29/29 compile PASS; physical·공개 gate HOLD | [M27 자동 준비·HOLD 기록](39_M27_v0.4.0_rc1_자동_준비와_HOLD.md) |
-| 온보드 재개 | 새 18/18 build·M26 flash/readback 확인; READY 누락·reset 경계 잡음·USB 이탈로 formal HIL HOLD | [온보드 재개·진단 기록](40_M24_M26_온보드_재개와_USB_UART_진단.md) |
-| 온보드 교정·재검증 | `51c1986` 18/18 build, UART 4개·TWIM 3개·내부 VDD/event·TEMP/WDT30 formal PASS; 외부 fixture·최종 release HOLD | [교정·실기 재검증](41_M24_M26_온보드_protocol_교정과_실기_재검증.md) |
-| 검증 범위 합의 | 두 NU54DK 기반 코어 기능 HIL 유지, 정밀 계측·외부 부품별 호환성은 범위 밖; 미실행 기능·공개 HOLD 유지 | [코어 기능 검증 범위](42_v0.4.0_코어_기능_검증_범위_합의.md) |
-| Fixture 101 UART | exact `2542a01`에서 P2↔P1 UARTE 양방향 data 1,620·예상 오류 24·cleanup 2건 PASS; 다른 fixture HOLD | [M24 Fixture 101 실기 검증](44_M24_Fixture_101_UART_실기_검증.md) |
-| Fixture 102 UART | exact `ff3423e`에서 P0↔P1 UARTE 양방향 data 810·예상 오류 12·cleanup 2건 PASS; Fixture 103·SPI·TWI HOLD | [M24 Fixture 102 실기 검증](45_M24_Fixture_102_UART_실기_검증.md) |
-| Fixture 103 UART | exact `b3c689b`에서 P1↔P1 UARTE20/21/22 전 조합 양방향 data 2,430·예상 오류 36·cleanup 2건 PASS; SPI·TWI HOLD | [M24 Fixture 103 실기 검증](46_M24_Fixture_103_UART_실기_검증.md) |
-| Fixture 201 SPI | exact `f21377e`에서 P2↔P1 SPIM/SPIS 18,169개 계획 벡터·cleanup 2건 PASS; Fixture 202~203·TWI 301 HOLD | [M24 Fixture 201 실기 검증](47_M24_Fixture_201_SPI_실기_검증.md) |
-| Fixture 202 SPI | exact `1a133e6`에서 P0↔P1 SPIM/SPIS 9,084개 계획 벡터·cleanup 2건 PASS; Fixture 203·TWI 301 HOLD | [M24 Fixture 202 실기 검증](48_M24_Fixture_202_SPI_실기_검증.md) |
-| Fixture 203 SPI | exact `4af93da`에서 P1↔P1 SPIM/SPIS 전 조합 27,252개 계획 벡터·cleanup 2건 PASS; TWI 301 HOLD | [M24 Fixture 203 실기 검증](49_M24_Fixture_203_SPI_실기_검증.md) |
-| Fixture 301 TWI | exact `e2f045c`에서 P1↔P0 TWIM/TWIS20·21·22·30 전 조합 1,986개 기능 record·cleanup 2건 PASS; T11 완료, 동시성·soak HOLD | [M24 Fixture 301 실기 검증](50_M24_Fixture_301_TWI_실기_검증.md) |
-| R00 기준선 | exact `ec3bba3`의 API·CLI·저장 계약, software gate와 대표 target 10/10 build-only·ELF/메모리·symbol 기준선; 새 physical NOT RUN | [R00 리팩토링 기준선](51_R00_리팩토링_기준선.md) |
+</details>
 
-## 기록 해석 규칙
+<details>
+<summary>v0.4.0 구현·리팩토링 — 33~66</summary>
 
-R01의 source target 교정과 실제 9개 target build-only 결과는
-[52번 기록](52_R01_CMake_source_소속_교정.md)에 연결한다. 새 physical 결과는 없다.
-R02의 완료·DMA 수명주기 수정은 [53번 기록](53_R02_Serial_완료와_DMA_수명주기.md)의
-production Host 회귀 24개와 target 12/12 build-only에 연결한다.
+- [33 — M23 Peripheral inventory와 공통 소유권 기준선](<33_M23_Peripheral_Inventory와_공통_소유권_기준선.md>)
+- [34 — M24 Serial Fabric 경로와 API 계약 기준선](<34_M24_Serial_Fabric_경로와_API_계약_기준선.md>)
+- [35 — M24 Serial Fabric 공통 backend 기준선](<35_M24_Serial_Fabric_공통_backend_기준선.md>)
+- [36 — M24 Serial Fabric adapter와 온보드 HIL 준비 기록](<36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md>)
+- [37 — M25 Analog·Event·Stream Fabric과 온보드 HIL 준비 기록](<37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md>)
+- [38 — M26 System Peripheral 판정과 온보드 HIL 준비 기록](<38_M26_System_Peripheral_판정과_온보드_HIL_준비.md>)
+- [39 — M27 v0.4.0-rc.1 자동 준비와 HOLD 기록](<39_M27_v0.4.0_rc1_자동_준비와_HOLD.md>)
+- [40 — M24~M26 온보드 재개와 USB·UART 진단](<40_M24_M26_온보드_재개와_USB_UART_진단.md>)
+- [41 — M24~M26 온보드 protocol 교정과 실기 재검증](<41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)
+- [42 — v0.4.0 코어 기능 검증 범위 합의](<42_v0.4.0_코어_기능_검증_범위_합의.md>)
+- [43 — v0.4.0 T01~T09 시험 준비와 구현 대조](<43_v0.4.0_시험_준비와_구현_대조.md>)
+- [44 — M24 Fixture 101 UART 실기 검증](<44_M24_Fixture_101_UART_실기_검증.md>)
+- [45 — M24 Fixture 102 UART 실기 검증](<45_M24_Fixture_102_UART_실기_검증.md>)
+- [46 — M24 Fixture 103 UART 실기 검증](<46_M24_Fixture_103_UART_실기_검증.md>)
+- [47 — M24 Fixture 201 SPI 실기 검증](<47_M24_Fixture_201_SPI_실기_검증.md>)
+- [48 — M24 Fixture 202 SPI 실기 검증](<48_M24_Fixture_202_SPI_실기_검증.md>)
+- [49 — M24 Fixture 203 SPI 실기 검증](<49_M24_Fixture_203_SPI_실기_검증.md>)
+- [50 — M24 Fixture 301 TWI 실기 검증](<50_M24_Fixture_301_TWI_실기_검증.md>)
+- [51 — R00 — 리팩토링 기준선과 characterization 계약](<51_R00_리팩토링_기준선.md>)
+- [52 — R01 — Serial adapter의 Core target 소속 교정](<52_R01_CMake_source_소속_교정.md>)
+- [53 — R02 — Serial 완료·timeout·DMA 수명주기](<53_R02_Serial_완료와_DMA_수명주기.md>)
+- [54 — R03 — Analog/Stream ISR·정지 동기화](<54_R03_Analog_Stream_ISR_정지_동기화.md>)
+- [55 — R04 — LittleFS File 공유 slot 수명주기](<55_R04_File_공유_slot_수명주기.md>)
+- [56 — R05 — Core 소스와 패키지 identity](<56_R05_Core_소스와_패키지_identity.md>)
+- [57 — R06 — builder 모듈과 설치 경로](<57_R06_builder_모듈과_설치_경로.md>)
+- [58 — R07 — EventFabric 책임 분할](<58_R07_EventFabric_책임_분할.md>)
+- [59 — R08 자원 관리자와 runtime route 책임 분리](<59_R08_자원과_경로_수명주기.md>)
+- [60 — R09 Arduino SPI facade/backend 경계](<60_R09_Arduino_SPI_경계.md>)
+- [61 — R10 Serial Fabric 동시 호출과 orchestration 분리](<61_R10_Serial_Fabric_동시_호출.md>)
+- [62 — R11 Analog/Stream peripheral 분리](<62_R11_Analog_Stream_peripheral_분리.md>)
+- [63 — R12 BLE·Storage 수명주기 구조 확대](<63_R12_BLE_Storage_수명주기.md>)
+- [64 — R13 도구·정책·build 구조와 최종 software 입력](<64_R13_도구_정책_build_구조.md>)
+- [65 — R13 후속 USB 무배선 실기와 작업 파일 정리](<65_R13_후속_USB_무배선_실기와_정리.md>)
+- [66 — T09 UART 유휴 bias 교정과 BLE 무배선 회귀](<66_T09_UART_유휴_bias와_BLE_회귀.md>)
 
-완료된 T01~T09 준비·무배선 검증과 T10 이후 외부 결선 경계는 [43번 준비 기록](43_v0.4.0_시험_준비와_구현_대조.md)을 따른다.
-준비 목록과 Host 검사 성공은 새 physical PASS가 아니다.
+</details>
 
-1. 정확한 commit, checksum, 장치 UID, COM port와 수치는 해당 기록을 우선한다.
-2. 과거 record의 완료 판정을 현재 release의 전체 재시험으로 확대하지 않는다.
-3. `build-only`, `NOT RUN`, 수동 확인과 자동 HIL을 서로 같은 PASS로 합치지 않는다.
-4. 설계 변경으로 경로가 이동해도 당시 결과와 artifact identity는 소급 수정하지 않는다.
-5. 현재 지원 여부는 [API 지원 범위](<../01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)와
-   [NCS 지원 매트릭스](<../01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md>)를 함께 확인한다.
+<details>
+<summary>v0.1.0~v0.3.0 역사 기록 — 1~32</summary>
 
-R03 Analog/Stream ISR·stop 및 DMA 실패 수명주기는 [54번 기록](54_R03_Analog_Stream_ISR_정지_동기화.md)의
-production 회귀 26개와 target 5/5 build-only에 연결한다. 새 physical 결과는 없다.
+- [01 — M1 도구 환경과 NU54DK 보드 실기 기준선](<01_M1_도구와_보드_기준선.md>)
+- [02 — M2 Zephyr module과 Arduino runtime 기준선](<02_M2_Zephyr_Module과_Runtime_기준선.md>)
+- [03 — M3 GPIO, 시간과 Scheduler 기준선](<03_M3_GPIO_시간과_Scheduler_기준선.md>)
+- [04 — M4 ArduinoCore-API 계약 기준선](<04_M4_ArduinoCore_API_계약_기준선.md>)
+- [05 — M5 Arduino CLI Build Adapter 기준선](<05_M5_Arduino_CLI_Build_Adapter_기준선.md>)
+- [06 — M6 기본 Arduino API, Serial과 인터럽트 기준선](<06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md>)
+- [07 — M7 Wire·SPI·ADC·PWM 기준선](<07_M7_Wire_SPI_ADC_PWM_기준선.md>)
+- [08 — M8 업로드와 디버그 기준선](<08_M8_업로드와_디버그_기준선.md>)
+- [09 — M9 증분 빌드, 캐시와 재현성 기준선](<09_M9_증분_빌드_캐시와_재현성_기준선.md>)
+- [10 — M10 Boards Manager 패키징과 Clean Windows 기준선](<10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md>)
+- [11 — M11 v0.1.0-rc.1 릴리스 후보 기준선](<11_M11_v0.1.0_rc1_릴리스_후보_기준선.md>)
+- [12 — M11 v0.1.0-rc.2 공개 후 수동 검증 기록](<12_M11_v0.1.0_rc2_공개_후_수동_검증.md>)
+- [13 — v0.1.0 정식 릴리스 공개 기록](<13_v0.1.0_정식_릴리스_공개_기록.md>)
+- [14 — M12 CI/CD와 재현 빌드 기준선](<14_M12_CI_CD_기준선.md>)
+- [15 — M13 구성 프로필 및 예제 배포 검증](<15_M13_구성_프로필_검증.md>)
+- [16 — M14 Core API와 Variant 기준선](<16_M14_Core_API와_Variant_기준선.md>)
+- [17 — M15 NU54DK Board/System 기준선](<17_M15_NU54DK_Board_System_기준선.md>)
+- [18 — M16 BLE NUS 기준선](<18_M16_BLE_NUS_기준선.md>)
+- [19 — M17 NCS 기능과 예제 Coverage 기준선](<19_M17_NCS_기능과_예제_Coverage_기준선.md>)
+- [20 — M18 v0.2.0 RC1·RC2 공개 검증 기록](<20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md>)
+- [21 — v0.2.0 정식 릴리스 공개 기록](<21_v0.2.0_정식_릴리스_공개_기록.md>)
+- [22 — AC-01 connector GPIO와 Arduino 호환 API 검증](<22_AC-01_GPIO_호환성_검증.md>)
+- [23 — M19 BLE Core/GAP 검증](<23_M19_BLE_Core_GAP_검증.md>)
+- [24 — M20 범용 GATT server/client 검증](<24_M20_범용_GATT_검증.md>)
+- [25 — M21 BLE 보안과 표준 Profile 검증](<25_M21_BLE_보안과_표준_Profile_검증.md>)
+- [26 — AC-02A 핀과 주변장치 소유권 기준선](<26_AC-02A_핀과_주변장치_소유권_기준선.md>)
+- [27 — AC-02B Peripheral/Analog runtime 기준선](<27_AC-02B_Peripheral_Analog_runtime_기준선.md>)
+- [28 — AC-03 Storage와 Library 호환성 기준선](<28_AC-03_Storage와_Library_호환성_기준선.md>)
+- [29 — M22 v0.3.0-rc.1 통합 릴리스 기준선](<29_M22_v0.3.0_rc1_통합_릴리스_기준선.md>)
+- [30 — M22 v0.3.0-rc.2 통합 릴리스 기준선](<30_M22_v0.3.0_rc2_통합_릴리스_기준선.md>)
+- [31 — M22 v0.3.0-rc.3 검증과 v0.3.0 stable 인계 기록](<31_M22_v0.3.0_rc3_검증과_stable_인계.md>)
+- [32 — M22 v0.3.0 정식 릴리스 공개 기록](<32_M22_v0.3.0_정식_릴리스_공개_기록.md>)
 
-R04 File 공유 slot 참조·마지막 close·thread 교차는 [55번 기록](55_R04_File_공유_slot_수명주기.md)의
-production 회귀 8개와 AC-03 target 2/2 build-only에 연결한다.
-
-R05 Core 소스·설치 package identity는 [56번 기록](56_R05_Core_소스와_패키지_identity.md)의
-6개 Host 회귀, target 2/2 및 ELF 문자열 확인에 연결한다.
-
-R06 builder 모듈 추출·설치 compile 및 공백 recipe 교정은 [57번 기록](57_R06_builder_모듈과_설치_경로.md)에 연결한다.
-
-R07 EventFabric registry/peripheral 분할은 [58번 기록](58_R07_EventFabric_책임_분할.md)의
-전후 Host·target·symbol·메모리 비교에 연결한다.
-
-R08 자원 정책·transaction·동기화 및 runtime route phase/획득 기록 분리는
-[59번 기록](59_R08_자원과_경로_수명주기.md)에 연결한다.
-
-R09 Arduino SPI facade/backend 분리는 [60번 기록](60_R09_Arduino_SPI_경계.md)에 연결한다.
-
-R10-A Serial Fabric STOP 예약과 동시 호출 수정은 [61번 기록](61_R10_Serial_Fabric_동시_호출.md)에
-연결한다. R10-A/B/C software 완료 당시 current-source T11은 미실행이었다.
-
-R11 Analog/Stream peripheral 분리는 [62번 기록](62_R11_Analog_Stream_peripheral_분리.md)에 연결한다.
-
-R12 BLE·Storage 분리는 [63번 기록](63_R12_BLE_Storage_수명주기.md)에 연결한다. GAP/GATT/Security·Storage와 전체 R12 software 회귀를 완료했다.
-
-R13 도구·정책·build 구조와 최종 software 입력은 [64번 기록](64_R13_도구_정책_build_구조.md)에 연결한다.
-
-R13 뒤 USB 무배선 온보드 904 PASS와 중간 파일 정리는 [65번 기록](65_R13_후속_USB_무배선_실기와_정리.md)에 연결한다. 해당 65번 실행 당시 두 보드는 USB만 연결되어 있었고 외부 current-source T11은 미실행이었다.
-
-DAP UART 연결 전환 뒤 BLE 회귀와 온보드 유휴 bias 교정은 [66번 기록](66_T09_UART_유휴_bias와_BLE_회귀.md)에 연결한다. 해당 66번 실행 당시 외부 current-source T11은 미실행이었다.
-
-사용자 Fixture 101 결선 완료 뒤 exact 154324c·SWD 10 MHz의 기능 1,644 PASS는 [67번 기록](67_T11_Fixture_101_current_source_UART_회귀.md)에 연결한다. 해당 실행 뒤 Fixture 102로 이어졌다.
-
-Exact a49cc0d·SWD 10 MHz의 Fixture 102 기능 822 PASS는 [68번 기록](68_T11_Fixture_102_current_source_UART_회귀.md)에 연결한다. 해당 실행 뒤 Fixture 103으로 이어졌다.
-
-Fixture 103 exact 7aece93·SWD 10 MHz 기능 2,466 PASS와 최초 peer flash 실패·한정 재개는 [69번 기록](69_T11_Fixture_103_current_source_UART_회귀.md)에 보존했다. Current-source UART 세 묶음을 완료했다.
-
-Fixture 201 exact 0f429e7·SWD 10 MHz 기능 18,169 PASS와 새 결선은 [70번 기록](70_T11_Fixture_201_current_source_SPI_회귀.md)에 보존했다. 해당 실행 뒤 Fixture 202로 이어졌다.
-
-Fixture 202 exact 1349e20·SWD 10 MHz 기능 9,084 PASS, 최초 peer flash 실패·한정 재개는 [71번 기록](71_T11_Fixture_202_current_source_SPI_회귀.md)에 보존했다.
-
-Fixture 203 exact be49207·SWD 10 MHz 기능 27,252 PASS, 최초 DUT flash 실패·한정 재개는 [72번 기록](72_T11_Fixture_203_current_source_SPI_회귀.md)에 보존했다. Current-source SPI 세 route를 완료했다.
-
-Fixture 301 exact 9a63251·SWD 10 MHz 첫 실행 1,986 PASS와 current-source T11 단독 통신 회귀 완료는 [73번 기록](73_T11_Fixture_301_current_source_TWI_회귀.md)에 보존했다. UART·SPI·TWI 일곱 묶음 61,423개 기능 결과를 대조했다. 이후 T12 Fixture 401~404도 각각 48개를 통과했으며 405 오픈드레인·406/407 입력 바이어스 시험과 408 PWM도 완료했으며 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다.
-
-T12 Fixture 401 exact a12e444·SWD 10 MHz 첫 실행 48개 기능 PASS와 10,368 samples·cleanup 48개는 [74번 기록](<74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 보존했다. T12는 부분 완료이며 405 오픈드레인·406/407 입력 바이어스 시험과 408 PWM도 완료했으며 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다. PWM 주기·듀티 capture와 T12 나머지 요구·후속 gate는 이 결과로 완료 처리하지 않는다.
-
-T12 Fixture 402 exact ff483a1·SWD 10 MHz 첫 실행 48개 PASS는 [75번 기록](<75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존했다. 401·402 합계 기능 96개·samples 20,736개이며 각 exact identity는 구분한다. 405 오픈드레인·406/407 입력 바이어스 시험과 408 PWM도 완료했으며 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다.
-
-T12 Fixture 403 exact c95b904·SWD 10 MHz 첫 실행 48개 PASS는 [76번 기록](<76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 보존했다. 401~403 합계 기능 144개·samples 31,104개이며 각 exact identity는 구분한다. 405 오픈드레인·406/407 입력 바이어스 시험과 408 PWM도 완료했으며 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다.
-
-T12 Fixture 404 exact e080bbc·SWD 10 MHz 첫 실행 48개 PASS는 [77번 기록](<77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 보존했다. 401~404 합계 기능 192개·samples 41,472개이며 각 exact identity는 구분한다. 405 오픈드레인·406/407 입력 바이어스 시험과 408 PWM도 완료했으며 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다.
-
-T12 Fixture 405 exact 9fc12bf·SWD 10 MHz **첫 실행 12개 PASS**, LOW/해제/LOW·2,592 samples·cleanup 12개와 GPIO readback은 [78번 기록](<78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)에 보존했다. 공유 AIN4/P1.11의 기능을 확인했으며 이후 406·407도 완료했으며 후속 **408도 완료**했다. 제품 core 변경 없이 Host 648개·pair target 2/2를 통과했고 T12 전체·후속 gate는 미완료다.
-
-T12 Fixture 406 exact 96f38e9·SWD 10 MHz **첫 실행 12개 PASS**, 입력 pull-down/up/down·2,592 samples·cleanup 12개와 GPIO readback은 [79번 기록](<79_T12_Fixture_406_current_source_공유_AIN5_검증.md>)에 보존했다. Host 649개·pair target 2/2 PASS. 당시 401~406 합계 기능 216개·samples 46,656개였으며 407의 새 결과는 아래 82번에 구분한다. 이후 사용자가 407 결선 A P1.13↔B P1.14·공통 GND와 USB 분리/재연결을 확인했다. 버튼 미누름·DAP UART 분리/SWD 연결 조건이며 LLVM Host 회귀 뒤 결선 유지를 재확인해 407 첫 실행 12개를 통과했다. 408도 완료했으며 이후 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다. T12 전체·후속 gate는 미완료다.
-
-407 재개 exact 393e419는 설치된 LLVM 22.1.8로 Host **655 PASS·1 조건부 SKIP(총 656)**, 계약 45·package 20·정렬 358·Inventory·예제 발견과 pair/BLE **target 8/8**을 통과했다. BLE 형 변환의 기계어·재배치도 6/6 동일하다. [81번 재개 기록](<81_T12_Fixture_407_Host_재개와_검증.md>)에 새 근거를 보존했다. 이전 Windows 차단 원본은 80번에 유지하며 보안 정책을 변경하지 않았다. 이 준비 단계에서는 결선 확인 만료로 실기를 보류했다. 이후 사용자 유지 확인을 받아 actual source 4a64c25의 407 첫 실행을 완료했으며 아래 82번에 구분한다.
-
-T12 Fixture 407 exact 4a64c25·SWD 10 MHz **첫 실행 12개 PASS**는 [82번 기록](<82_T12_Fixture_407_current_source_공유_AIN6_검증.md>)에 보존했다. 버튼 미누름 AIN6/P1.13에서 입력 pull-down/up/down·2,592 samples·cleanup 12개와 입력 GPIO 24회·해제 12회를 확인했다. LOW median 0·HIGH median 3752, postflight 양쪽 source/role 확인 PASS. 당시 401~407 누계는 **228개 기능·49,248 samples·228개 cleanup**이었다. 이후 408 결과는 아래 83번에 구분한다. T12 전체·T13 이후와 readiness 미해결 8개는 유지한다.
-
-T12 Fixture 408 exact 87b987d·SWD 10 MHz **48개 기능 PASS**는 [83번 기록](<83_T12_Fixture_408_current_source_PWM_ADC_검증.md>)에 보존했다. 최초 DUT flash timeout은 외부 시험 시작 전 실패였으며, 읽기 응답 회복 확인 뒤 한 번의 새 실행으로 10,368 samples·cleanup 48회를 통과했다. 두 runtime identity도 재확인했다. 401~408 누계 **276개 기능·59,616 samples·276개 cleanup**으로 AIN0~7의 개별 기능 근거를 확보했다. 420 QDEC도 완료했다. 현재 **430 I2S는 전체 192개 PASS**이며 440 PDM과 남은 T12 요구·T13 이후·readiness 미해결 8개는 유지한다.
-
-420 QDEC 최신 결과는 [85번 기록](<85_T12_Fixture_420_current_source_QDEC_재검증.md>)의 **exact 6bd8d3f 기능 48·cleanup 48·시작 전 취소 6개 PASS**다. SWD 10 MHz, 22.063초 기능 실행과 두 보드 identity·핀 복원·PWM/QDEC 해제를 확인했다. [84번](<84_T12_Fixture_420_current_source_QDEC_검증.md>)의 이전 실패·교정 기록은 유지한다. a3d0ab5와 코드·설정이 같음을 대조했으며 이전 전체 Host 656 PASS·1 조건부 SKIP와 정렬 359 PASS는 해당 source 결과로 구분한다. 430 I2S는 아래 87번에서 오류 교정 후 전체 192개 PASS를 기록했다. 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다. 공용 PWM 지연 시작 취소 이슈는 T14, 440 PDM·남은 T12 요구·T13 이후와 readiness 미해결 8개도 유지한다.
-
-430의 이전 세 source 실패·교정·72개 부분 통과 이력은 [86번 기록](<86_T12_Fixture_430_current_source_I2S_검증.md>)에 보존한다.
-
-430 I2S 최신 결과는 [87번 기록](<87_T12_Fixture_430_current_source_I2S_재검증.md>)의 **exact 36ba819 기능 192·cleanup 192개 PASS**다. 공용 compact DMA token 처리 지연을 교정해 queue 시간이 278~309 us에서 104~112 us로 줄었고, 수신 원본 384개·전체 payload 82,944 word를 독립 대조했다. SWD 10 MHz, 양쪽 identity·I2S off·핀 복원 확인. 전체 Host 659 PASS·1 조건부 SKIP, 계약 45·package 20·Inventory·정렬 361·관련 target 10개 PASS다. 440의 후속 실기는 88~90번에 실패·부분 결과와 재시험 준비로 구분하며, 남은 T12·T13 이후·T14 공용 PWM 이슈·readiness 미해결 8개를 유지한다. 공용 자원 변경 이후의 T11 외부 실기는 이번에 재실행하지 않았다.
-
-440 PDM의 이전 실행은 [88번 기록](<88_T12_Fixture_440_current_source_PDM_검증.md>)의 **exact ea4e25a 모노 DMA 4 PASS·첫 stereo FAIL·187 미실행**이다. 밀도 비교는 미도달이며 전체 PDM PASS가 아니다. HIL buffer 공급·신호원·격리된 DAP 핀 metadata를 교정했지만 동일 stereo 채널의 원인은 미해결이다. SWD 10 MHz, cleanup 5회·양쪽 identity/peripheral off·입력 복귀 확인. 전체 Host 660 PASS·1 조건부 SKIP, 정렬 361·pair 2/2 build PASS. 확인 유효시간 20:15:39Z가 지나 440 결선·DAP UART 분리 유지 재확인 후 설정/신호 전달 진단과 전체 재검증을 진행한다. 연속 PDM 4+100 buffer·나머지 T12·T13 이후·T14 공용 PWM·readiness 8개는 유지한다.
-
-440 최신 상태는 [92번 기록](<92_T12_Fixture_440_PDM_연속_전체_검증.md>)의 **연속 4+100 버퍼 96개 조합·밀도 비교 16개·cleanup 96개 전체 PASS**다. Exact f02734d에서 SWD 10 MHz로 한 campaign을 완료했고 DMA 반환 9,984개·6,389,760 samples의 장치 통계를 대조했다. 측정 버퍼 각각의 모노 밀도 순서 1,600개·스테레오 부호 4,800개도 PASS다. 기본 기능 192·밀도 비교 32 PASS는 코드·설정이 같은 917dc02의 91번 결과로 구분한다. 두 보드 f02734d identity·주변장치 off·신호 입력 복귀와 pair build 2/2를 확인했다. 전체 Host는 [93번 기록](<93_Host_재검증과_T12_이후_남은_작업.md>)의 exact e6979af에서 664 PASS·1 조건부 SKIP로 재검증을 완료했다. LLVM과 WinLibs sysroot를 유지하고 NCS 번들 CMake·Ninja를 선택했다. 440의 기본·연속 기능 검증은 완료했고 추가 결선 확인 요청은 없다. 남은 T12 요구·T13 이후·readiness 8개는 미완료다.
-
-- [91 — T12 Fixture 440 PDM 밀도와 연속 DMA 검증](91_T12_Fixture_440_PDM_밀도와_연속_DMA_검증.md)
-
-- [92 — T12 Fixture 440 PDM 연속 전체 검증](92_T12_Fixture_440_PDM_연속_전체_검증.md)
-
-- [93 — Host 재검증과 T12 이후 남은 작업](93_Host_재검증과_T12_이후_남은_작업.md)
-
-- [94 — T14 PWM 지연 시작 취소와 무점퍼 검증](94_T14_PWM_지연_시작_취소와_무점퍼_검증.md)
-
-- [95. T12 내부 ADC·TIMER·이벤트 무점퍼 검증](95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md): exact 874658a 두 보드 1,808명령 PASS, 최초 시간 판정 실패와 미완료 T12 범위 보존.
-
-- [96 — 새 PC 인수와 T12 PWM peer capture 준비](96_새_PC_인수와_T12_PWM_peer_capture_준비.md)
-
-- [97 — T12 PWM peer capture 첫 240조건 검증](97_T12_PWM_peer_capture_첫_240조건_검증.md)
-
-- [98 — T13 단독 안정성 3분 기준 조정](98_T13_단독_안정성_3분_기준_조정.md): 사용자 지시의 180초 계획 변경. 당시 동시 7200초는 유지했으며 후속 기준은 99번을 따른다.
-
-- [99 — 공통 결선 검사와 승인 전 자동 진행 계획](99_공통_결선_검사와_승인_전_자동_진행_계획.md): Fixture 501의 첫 P1.10 실패 보존과 d8d1e13 재검사 102+3 PASS, 동시 15분·대표 한 조합 60분 기준, T21까지의 자동 진행 및 현장 조작 경계.
-
-- [102 — 개발 문서 전수 검토와 마일스톤 체크포인트](102_개발_문서_전수_검토와_마일스톤_체크포인트.md): 212개 문서 검토·19 family 증거 대응, QDEC HOLD·T13 계획/실기 분리, 1ad4193 CI 15/15 확인.
-
-- [105 — T13 S GPIO 전수 결선 진단](105_T13_S_GPIO_전수_결선_진단.md): 최초17연결·340pulse에서16정상/1실패, 실패 선 후속20/20 PASS. 사용자 T13 재개 지시 기록.
-
-- [106 — Git 이력 정리와 구버전 패키지 공급 종료](106_Git_이력_정리와_구버전_패키지_공급_종료.md): 소유자 승인 범위, 원본 SHA·자산 백업, v0.3.0 보존과 새 main 대응.
+</details>

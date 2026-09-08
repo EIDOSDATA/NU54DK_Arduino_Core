@@ -1,18 +1,18 @@
 # NU54DK v0.4.0 공통 결선과 연결 검사
 
-2026-09-08 현재: R00~R13·source별 T11 단독 회귀와 **T12 기능검증은 완료**했다. **QDEC도 일부 문제·제한사항을 101번에 보고하고 검증 작업을 완료**했다. 동작 중 수동 read/clear 누산 누락은 미해결이며 실패 결과를 PASS로 변경하지 않는다. 사용자 완료 결정은 T12 마일스톤에 적용하며 알려진 제한은 T14/T15에서 정리한다. 현재는 사용자 S 재배치·실행 중 유지 확인에 따라 T13 실기와 실패 원인 분석을 진행 중이다. S 정상 안정성은 source별 단독29/29·동시7/7, 합계36/36을 완료했다. 이번 S 자동 실행은 확인 시간 안에서 종료했으며 복구·오류 주입·역할 전환의 잔여 항목과 최종 원본은 활성 TODO와108번 기록을 따른다. 새 S 확인 뒤 남은 복구를 이어가며 U UART00·T13 전체·RC·정식 공개는 미완료다. [문서 감사·요구별 증거 대조](<../../../00_Docs/04_검증 기록/102_개발_문서_전수_검토와_마일스톤_체크포인트.md>), [실행 TODO](<../../../00_Docs/TODO_v0.4.0.md>)를 따른다.
+현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../../../00_Docs/TODO_v0.4.0.md>)에서 관리합니다.
 
-현재 기능 실행(100·101번): GPIO/GPIOTE2502(4e48252), steady PWM675(3334b17), 추가 PWM288(0db0689), I2S432(b5c86a4)는 PASS다. QDEC 기능240은 누산 누락으로 HOLD다. 마지막 ce48471 선점 대비60회에서 일반 read9/30·IRQ 보호 read7/30이399/400으로 실패했다. GPIO/SAMPLE은 모두400, 보호 구간 최대5µs, 제어 오류0·cleanup63·양쪽 postflight PASS다. 3a0e976 SAMPLE IRQ20·REPORT IRQ20은 모두400으로 일치했으나 기능240이나 안정성 PASS로 확대하지 않는다. 사용자 지시대로 진단 반복을 종료하고 유력 원인·미검증 전기 조건·보완·재개 조건을101번에 남겼다. 제품 core·SDK는 미수정이다. T13은32단독/8동시·C→S→U 두 결선 변경의 계획만 확정했고 QDEC 단독2개와C07은 선행 HOLD다. T12전체·T13실기·지원 범위 확정·RC·공개는 미완료다. 세부 원본은 [101번](../../../00_Docs/04_검증%20기록/101_T12_QDEC_누산_누락_원인_분리.md), 후속 결선은 [T13 계획](T13_PLAN.md)을 따른다.
+이 문서는 T12에서 사용한 **C 결선과 Fixture501 검사 절차**를 보존합니다.
+현재 T13에는 [S/U 결선표](T13_PLAN.md)를 사용합니다. 아래 C 표대로 현재 S를 되돌리지 마세요.
+T12 기능 검증은 완료했고 QDEC는 문제 보고 후 진단을 종료했습니다.
+실제 결과는 [100번](../../../00_Docs/04_검증%20기록/100_T12_공통_기능_묶음과_T13_조합_확정.md)과
+[101번](../../../00_Docs/04_검증%20기록/101_T12_QDEC_누산_누락_원인_분리.md)에 보존합니다.
 
-현재 재검사: exact d8d1e13에서 P1.10을 포함한 17개 신호가 양방향 각 3회, 총 102 net-round PASS다. LOW 자동 해제 2개·양쪽 lease 만료 1개도 PASS이며 종료 후 양쪽 17개 PIN_CNF=0, PWM/DPPI off를 확인했다. 첫 8c1cfe2의 P1.10 실패 원본은 보존하고 원인은 미확정으로 유지한다. 결선 검사 통과이며 GPIO API·T12 전체·T13 이후·RC 완료는 아니다.
+## 당시 보드 식별과 C 연결 절차
 
-2026-09-07. **신호 17개 + 공통 GND 1개, 총 18가닥.** 기존 PWM P1.14 선과 GND는 유지하고 16가닥을 추가한다.
-사용자가 17신호+GND 그대로 결선을 완료했다고 확인했다. Fixture 501 결선 checker를 구현하고 Host/target을 검사했다. 실제 배선 PASS는 새 exact image로 실행한 원본 결과를 따른다. 당시 checker 이후 GPIO/GPIOTE·PWM·I2S는 100번에서 통과했다. QDEC 추가 기능은 101번 HOLD다.
-현재 408/420/430 개별 확인서는 이 결선의 확인서가 아니다. `v04_common_fixture.json`의 501 revision 1과 새 exact image/UID hash를 사용한다.
-
-## 보드 식별과 연결 절차
-
-10:47:36 UTC(19:47:36 KST) 새 읽기 확인에서 A는 COM12/13, B는 COM14/15다. 두 exact UID와 0d7f382 role identity를 대조했고, reset/halt/flash 없이 CPUID·PWM off·DPPI off 및 양쪽 17개 신호의 입력 방향을 확인했다. COM은 이 관측의 값이며 재연결 뒤 다시 열거한다.
+10:47:36 UTC(19:47:36 KST) 새 읽기 확인에서 A는 COM12/13, B는 COM14/15다. 두 exact UID와 0d7f382 role identity를
+대조했고, reset/halt/flash 없이 CPUID·PWM off·DPPI off 및 양쪽 17개 신호의 입력 방향을 확인했다. COM은 이 관측의 값이며 재연결 뒤 다시
+열거한다.
 A UID SHA-256: `32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9`.
 B UID SHA-256: `4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0`.
 COM 번호는 이 관측의 식별 보조 정보다. 재연결 뒤 exact UID를 다시 열거한다.
@@ -106,8 +106,14 @@ GPIOTE task는 12채널×양방향×3극성×10회, edge는 12채널×양방향�
 관측 count와 최대 poll 간격을 기록하며 정밀 파형 품질 PASS로 확대하지 않는다.
 508/520/530은 공통 배선의 후속 기능 ID로 준비하며 해당 구현·실기는 별도 결과로 기록한다.
 
-실행기는 `tests/hil/nu54dk/v04_wiring_run.py`다. `--dut`/`--peer`에 새로 식별한 exact UID, `--build-root`에 해당 clean commit의 두 role build, `--pyocd`에 고정 도구 경로를 전달한다. `--swd-frequency-hz 10000000`을 유지한다. 실행 옵션이 없으면 probe 접근 없이 준비 정보와 미확인 template만 출력한다.
+실행기는 `tests/hil/nu54dk/v04_wiring_run.py`다. `--dut`/`--peer`에 새로 식별한 exact UID, `--build-root`에 해당
+clean commit의 두 role build, `--pyocd`에 고정 도구 경로를 전달한다. `--swd-frequency-hz 10000000`을 유지한다. 실행 옵션이
+없으면 probe 접근 없이 준비 정보와 미확인 template만 출력한다.
 
-실제 실행에는 `--execute-fixture --confirmation 현재확인서.json --evidence 새결과.json`이 필요하다. USB 단일 명령 진단이 필요한 이 PC에서는 `--cmsis-dap-limit-packets`를 명시한다. 102회 net-round는 두 방향×17신호×3회이며 각 회차 LOW와 해제 시 양쪽 전체 17개 입력을 기록한다. 마지막에 양쪽 LOW 자동 해제와 10초 lease 반환을 별도로 검사한다.
+실제 실행에는 `--execute-fixture --confirmation 현재확인서.json --evidence 새결과.json`이 필요하다. USB 단일 명령 진단이 필요한 이
+PC에서는 `--cmsis-dap-limit-packets`를 명시한다. 102회 net-round는 두 방향×17신호×3회이며 각 회차 LOW와 해제 시 양쪽 전체 17개 입력을
+기록한다. 마지막에 양쪽 LOW 자동 해제와 10초 lease 반환을 별도로 검사한다.
 
-실패 raw와 양쪽 cleanup을 보존하며 그 결과로 다음 PWM 등 출력 모드를 자동 허용하지 않는다. USB 접지를 통한 우회가 있을 수 있으므로 GND 점퍼 자체의 연속성/접촉 저항이나 전압 품질을 이 checker만으로 보증하지 않는다. 최신 준비 및 실제 결과는 저장소의 `00_Docs/04_검증 기록/99_공통_결선_검사와_승인_전_자동_진행_계획.md`에서 관리한다.
+실패 raw와 양쪽 cleanup을 보존하며 그 결과로 다음 PWM 등 출력 모드를 자동 허용하지 않는다. USB 접지를 통한 우회가 있을 수 있으므로 GND 점퍼 자체의
+연속성/접촉 저항이나 전압 품질을 이 checker만으로 보증하지 않는다. 최신 준비 및 실제 결과는 저장소의 `00_Docs/04_검증
+기록/99_공통_결선_검사와_승인_전_자동_진행_계획.md`에서 관리한다.

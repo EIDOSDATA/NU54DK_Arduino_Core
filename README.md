@@ -1,13 +1,5 @@
 # NU54DK Arduino Core
 
-2026-09-08T07:28Z T13: original4aadf29 UART RX400회·SPIM 취소500회·TWI NACK400회를
-완료했다. 고정 serial 복구는17/21이며 TWI 취소4항목은 첫 DMA 판정 실패 조치 뒤에 남는다.
-양쪽 STOP과 원본을 보존했고506680f PWM 후속 실행으로 이동한다. 전체 진행은104번/활성 TODO를 따른다.
-
-2026-09-08 후속 정정: TIMER 기능은 95번의 두 보드 7,040회 PASS 범위로 완료 정리했다. 다음은 T13 runner 준비와 C→S→U 재배선 후 복구·동시·안정성 실기다. QDEC는 문제 기록 후 진단 종료이며 알려진 제한을 유지한다. 외부 ADC 반복 수 차이와 승인 전 자동 진행·현장 조작 경계는 [103번](<00_Docs/04_검증 기록/103_TIMER_기능_완료와_T13_진행_경계.md>)을 따른다.
-
-2026-09-08 현재: R00~R13·source별 T11 단독 회귀와 **T12 기능검증은 완료**했다. **QDEC도 일부 문제·제한사항을 101번에 보고하고 검증 작업을 완료**했다. 동작 중 수동 read/clear 누산 누락은 미해결이며 실패 결과를 PASS로 변경하지 않는다. 사용자 완료 결정은 T12 마일스톤에 적용하며 알려진 제한은 T14/T15에서 정리한다. 현재는 사용자 S 재배치·실행 중 유지 확인에 따라 T13 전용 runner와 실기를 준비 중이다. S 단독 29개·동시 7조합 및 복구/전환을 진행하고 종료 후 U 결선을 안내한다. T13 실제 완료는 아직 0회이며 T13 전체·RC·공개는 미완료다. [문서 감사·요구별 증거 대조](<00_Docs/04_검증 기록/102_개발_문서_전수_검토와_마일스톤_체크포인트.md>), [실행 TODO](<00_Docs/TODO_v0.4.0.md>)를 따른다.
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Stable: v0.3.0](https://img.shields.io/badge/stable-v0.3.0-blue.svg)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.3.0)
 [![NCS: v3.4.0](https://img.shields.io/badge/NCS-v3.4.0-00A9CE.svg)](https://github.com/nrfconnect/sdk-nrf)
@@ -28,6 +20,8 @@ CMSIS-DAP V2와 pyOCD로 업로드합니다.
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 기본 메모리 | Application 1,456 KiB + LittleFS 32 KiB + Settings/ZMS 36 KiB |
 | 배포 구성 | Arduino library 8개, 설치 예제 29개 |
+
+빠르게 찾기: [설치](#빠른-시작) · [지원 범위](#지원-범위) · [개발 현황](00_Docs/TODO_v0.4.0.md) · [문서 안내](00_Docs/README.md)
 
 ## 빠른 시작
 
@@ -229,9 +223,6 @@ payload 동등성, 격리 Boards Manager lifecycle, 설치 예제 29/29 compile�
 [v0.3.0 정식 공개 기록](<./00_Docs/04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)에
 보존합니다.
 
-2026-09-08 소유자 지시로 v0.3.0 미만의 stable·RC·preview 공급을 종료한다. Stable index는 0.3.0만 제공하며 preview URL은 빈 목록을 유지한다. 원본 이력과 자산은 별도 archive 브랜치에서 보존한다. v0.3.0 태그·설치 ZIP·checksum·SBOM 등 6개 payload/sidecar는 그대로 유지하고, 해당 Release의 catalog index만 현재 공급 목록과 일치시킨다.
-상세 범위와 복구 방법은 [106번 기록](<00_Docs/04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)을 따릅니다.
-
 ## 로드맵
 
 | 버전 | 상태 | 범위 |
@@ -239,34 +230,15 @@ payload 동등성, 격리 Boards Manager lifecycle, 설치 예제 29/29 compile�
 | `v0.1.0` | 역사적·비지원 | Core, 기본 API, build/upload와 package |
 | `v0.2.0` | 역사적·비지원 | CI/CD, profile·예제, Board/System과 BLE NUS |
 | `v0.3.0` | **현재 stable** | Arduino compatibility, 동적 peripheral/analog, BLE GAP/GATT/security/profile, storage |
-| `v0.4.0` | 개발 중 | Peripheral 확장: M24 23개 serial personality 단독 기능 HIL PASS, analog/stream·동시성·soak·최종 release gate 대기 |
+| `v0.4.0` | 개발 중 | 전 인스턴스 API 확장. T12 완료, T13 복구 검증·최종 패키지 통합 진행 |
 | `v0.5.0` | 계획 | Bluetooth LE 확장·ISO/LE Audio·Direction Finding·Channel Sounding·Mesh |
 | `v0.6.0` | 계획 | Storage/Crypto, TF-M, 고급 memory layout와 secure update/recovery |
 | `v0.7.0` | 계획 | Radio profile, IEEE 802.15.4, ESB와 OpenThread |
 | `v0.8.0` | 계획 | Matter 기반, application template와 commissioning HIL |
 
-`v0.4.0` 후보는 UART 4개·PMIC I2C 3개, 내부 ADC·event, TEMP·WDT30의
-[온보드 시험](<./00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)을
-통과했고, [UART Fixture 101](<./00_Docs/04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)과
-[Fixture 102](<./00_Docs/04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>),
-[Fixture 103](<./00_Docs/04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>)에서 UARTE00/20의 P2,
-UARTE30의 P0와 UARTE20/21/22의 P1 route 양방향 데이터·DMA·RTS/CTS를 통과했습니다.
-[SPI Fixture 201](<./00_Docs/04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md>)에서는 P2↔P1의
-SPIM/SPIS00·20·21·22, 2/4/8 MHz, Mode 0~3, MSB/LSB와 EasyDMA 18,169개 계획 벡터를 통과했습니다.
-[SPI Fixture 202](<./00_Docs/04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md>)에서는 P0↔P1의
-SPIM/SPIS30·20·21·22에 대한 9,084개 계획 벡터를 통과했습니다.
-[SPI Fixture 203](<./00_Docs/04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md>)에서는 P1↔P1의
-SPIM/SPIS20·21·22 전 조합 27,252개 계획 벡터를 통과했습니다.
-[TWI Fixture 301](<./00_Docs/04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md>)에서는 P1↔P0
-TWIM/TWIS20·21·22·30의 기능 record 1,986개와 cleanup 2건을 통과해 T11 단독 기능 검증을
-역사적 체크포인트로 완료했습니다. 이후 R00~R13 리팩토링과 전체 software gate는
-[64번 기록](<./00_Docs/04_검증 기록/64_R13_도구_정책_build_구조.md>)으로 완료했습니다. 최종 source의
-current-source T11은 exact 154324c의 Fixture 101 기능 1,644개를 통과했습니다. Fixture 102도 exact a49cc0d에서 822개를 통과했으며 Fixture 103도 exact 7aece93에서 2,466개를 통과했습니다. 승인 UART route 세 묶음을 완료했고 Fixture 201 SPI도 exact 0f429e7에서 18,169개를 통과했습니다. Fixture 202도 exact 1349e20에서 9,084개를 통과했습니다. Fixture 203도 exact be49207에서 27,252개를 통과해 SPI 세 묶음을 완료했습니다. Fixture 301도 exact 9a63251에서 1,986개를 통과해 current-source T11 단독 회귀를 완료했습니다. T12 Fixture 401 exact a12e444·402 exact ff483a1·403 exact c95b904·404 exact e080bbc에서 각각 48개를 통과했습니다. 405 오픈드레인·406/407 입력 바이어스 각 12개와 408 PWM 48개를 통과했으며 420 QDEC도 완료했으며 430 I2S도 전체 192개를 통과했으며 440 PDM은 기본·연속 기능 검증을 완료했습니다. 현재 남은 범위는 위 95번을 따릅니다.
-다음 결선의 사용자 확인 뒤 T12 analog·stream 및 전체 동시성·soak 통합 캠페인을 진행합니다.
-정식 공개는 아직 완료되지 않았습니다.
-검증은 온보드 자원과 두 NU54DK의 통신·합성 신호·capture를 기준으로 합니다. 정밀 계측과 외부
-마이크·코덱·엔코더별 호환성·신호 품질은 보증 범위에 포함하지 않으며, 자세한 구분은
-[코어 기능 검증 범위](<./00_Docs/04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)를 따릅니다.
+`v0.4.0`은 개발 중이며 아직 공개되지 않았습니다. 현재 완료 항목과 다음 작업은
+[개발 현황·마일스톤](00_Docs/TODO_v0.4.0.md), 실행 근거는
+[검증 기록](<00_Docs/04_검증 기록/README.md>)에서 확인할 수 있습니다.
 
 ## 동작 구조
 
@@ -325,50 +297,6 @@ git submodule status
 적용합니다. 외부 구성요소에는 각 원 라이선스와 고지가 적용되며 자세한 내용은
 [third-party notices](./third_party/THIRD_PARTY_NOTICES.md)를 확인하십시오.
 
-## Source별 과거 진행 이력
+## 검증 이력
 
-아래의 완료·미실행·다음 작업은 해당 source 작성 시점의 기록이다. 현재 상태는 문서 첫 요약과 활성 TODO를 따른다.
-
-2026-09-06 후속: [65번 기록](<./00_Docs/04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md>)의 904 PASS·파일 정리를 보존한다. 이후 DAP UART 연결 전환 뒤 [66번 기록](<./00_Docs/04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md>)에서 UART idle bias를 교정하고 온보드 18개 결과·BLE 3개 pair gate를 통과했다. 이후 사용자 결선 완료 확인에 따라 exact 154324c의 current-source T11 Fixture 101을 SWD 10 MHz로 실행해 기능 1,644개를 통과했다. 이후 exact a49cc0d의 Fixture 102 기능 822개를 SWD 10 MHz로 통과했다. 이후 exact 7aece93의 Fixture 103 기능 2,466개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 진단은 별도 보존했다. 이후 exact 0f429e7의 Fixture 201 SPI 기능 18,169개를 SWD 10 MHz로 통과했다. 이후 exact 1349e20의 Fixture 202 SPI 기능 9,084개를 SWD 10 MHz로 통과했다. 최초 peer flash 실패와 읽기 전용 진단은 별도 보존했다. 이후 exact be49207의 Fixture 203 SPI 기능 27,252개를 SWD 10 MHz로 통과했다. 최초 DUT flash 실패와 읽기 전용 진단은 별도 보존했다. 이후 exact 9a63251의 Fixture 301 TWI 기능 1,986개를 첫 실행·SWD 10 MHz로 통과해 current-source T11 단독 통신 회귀를 완료했다. 이후 T12 Fixture 401 exact a12e444에서 PWM→AIN0 48개 기능을 첫 실행·10 MHz로 통과했다. 이후 Fixture 402 exact ff483a1에서 PWM→AIN1 48개도 첫 실행·10 MHz로 통과했다. 이후 403 exact c95b904에서 PWM→AIN2 48개도 첫 실행·10 MHz로 통과했다. 이후 404 exact e080bbc에서 PWM→AIN3 48개도 첫 실행·10 MHz로 통과했다. 당시 사용자 확인된 407 결선은 A P1.13↔B P1.14였으며 LLVM Host 회귀 뒤 결선 유지를 재확인해 407 첫 실행 12개를 통과했다. 408도 완료했으며 이후 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다.
-
-Current-source T11 첫 UART 회귀의 exact 증거는 [67번 기록](<./00_Docs/04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)에 연결한다. Current-source T11 단독 회귀는 완료했으며 T12~T15와 RC/공개는 미완료다.
-
-Current-source Fixture 102의 exact a49cc0d·822 PASS는 [68번 기록](<./00_Docs/04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md>)에 연결한다.
-
-Current-source Fixture 103의 exact 7aece93·2,466 PASS, 최초 flash 실패·진단은 [69번 기록](<./00_Docs/04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md>)에 연결한다. Current-source UART 세 묶음을 완료했으며 각 exact 증거를 보존한다.
-
-Current-source Fixture 201의 exact 0f429e7·18,169개 기능 PASS는 [70번 기록](<./00_Docs/04_검증 기록/70_T11_Fixture_201_current_source_SPI_회귀.md>)에 연결한다. 해당 exact 원본은 별도로 보존한다.
-
-Current-source Fixture 202의 exact 1349e20·9,084개 기능 PASS, 최초 peer flash 실패·진단은 [71번 기록](<./00_Docs/04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md>)에 연결한다. 해당 exact 원본은 별도로 보존한다.
-
-Current-source Fixture 203의 exact be49207·27,252개 기능 PASS, 최초 DUT flash 실패·진단은 [72번 기록](<./00_Docs/04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md>)에 연결한다. 해당 exact 원본은 별도로 보존한다.
-
-Current-source Fixture 301 exact 9a63251·1,986개 기능 PASS와 T11 단독 회귀 완료 근거는 [73번 기록](<./00_Docs/04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md>)에 연결한다. 일곱 fixture의 원본 61,423개와 동일 컴파일 입력을 대조했으며 exact identity는 구분 보존한다. T12 Fixture 401~404 각 48개 PASS 뒤 405·406·407도 각각 12개를 완료했고 408도 완료했으며 420 QDEC도 완료했으며 430 I2S도 전체 192개를 통과했고 440 PDM은 기본 기능·밀도와 연속 96개 조합을 통과했으며 M24/M25 전체·T13~T15·RC/공개 gate는 미완료다.
-
-T12 Fixture 401 exact a12e444·SWD 10 MHz 첫 실행 48개 기능 PASS와 10,368 samples·cleanup 48개는 [74번 기록](<00_Docs/04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md>)에 보존했다. T12는 부분 완료이며 405 오픈드레인·406/407 입력 바이어스 시험과 408 PWM도 완료했으며 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다. PWM 주기·듀티 capture와 T12 나머지 요구·후속 gate는 이 결과로 완료 처리하지 않는다.
-
-T12 Fixture 402 exact ff483a1·SWD 10 MHz 첫 실행 48개 PASS는 [75번 기록](<00_Docs/04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md>)에 보존했다. 401·402 합계 기능 96개·samples 20,736개이며 각 exact identity는 구분한다. 405 오픈드레인·406/407 입력 바이어스 시험과 408 PWM도 완료했으며 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다.
-
-T12 Fixture 403 exact c95b904·SWD 10 MHz 첫 실행 48개 PASS는 [76번 기록](<00_Docs/04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md>)에 보존했다. 401~403 합계 기능 144개·samples 31,104개이며 각 exact identity는 구분한다. 405 오픈드레인·406/407 입력 바이어스 시험과 408 PWM도 완료했으며 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다.
-
-T12 Fixture 404 exact e080bbc·SWD 10 MHz 첫 실행 48개 PASS는 [77번 기록](<00_Docs/04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md>)에 보존했다. 401~404 합계 기능 192개·samples 41,472개이며 각 exact identity는 구분한다. 405 오픈드레인·406/407 입력 바이어스 시험과 408 PWM도 완료했으며 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다.
-
-T12 Fixture 405 exact 9fc12bf·SWD 10 MHz **첫 실행 12개 PASS**, LOW/해제/LOW·2,592 samples·cleanup 12개와 GPIO readback은 [78번 기록](<00_Docs/04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md>)에 보존했다. 공유 AIN4/P1.11의 기능을 확인했으며 이후 406·407도 완료했으며 후속 **408도 완료**했다. 제품 core 변경 없이 Host 648개·pair target 2/2를 통과했고 T12 전체·후속 gate는 미완료다.
-
-T12 Fixture 406 exact 96f38e9·SWD 10 MHz **첫 실행 12개 PASS**, 입력 pull-down/up/down·2,592 samples·cleanup 12개와 GPIO readback은 [79번 기록](<00_Docs/04_검증 기록/79_T12_Fixture_406_current_source_공유_AIN5_검증.md>)에 보존했다. Host 649개·pair target 2/2 PASS. 당시 401~406 합계 기능 216개·samples 46,656개였으며 407의 새 결과는 아래 82번에 구분한다. 이후 사용자가 407 결선 A P1.13↔B P1.14·공통 GND와 USB 분리/재연결을 확인했다. 버튼 미누름·DAP UART 분리/SWD 연결 조건이며 LLVM Host 회귀 뒤 결선 유지를 재확인해 407 첫 실행 12개를 통과했다. 408도 완료했으며 이후 420 QDEC도 완료했으며 430 I2S도 exact 36ba819의 전체 192개를 통과했으며 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다. T12 전체·후속 gate는 미완료다.
-
-407 재개 exact 393e419는 설치된 LLVM 22.1.8로 Host **655 PASS·1 조건부 SKIP(총 656)**, 계약 45·package 20·정렬 358·Inventory·예제 발견과 pair/BLE **target 8/8**을 통과했다. BLE 형 변환의 기계어·재배치도 6/6 동일하다. [81번 재개 기록](<00_Docs/04_검증 기록/81_T12_Fixture_407_Host_재개와_검증.md>)에 새 근거를 보존했다. 이전 Windows 차단 원본은 80번에 유지하며 보안 정책을 변경하지 않았다. 이 준비 단계에서는 결선 확인 만료로 실기를 보류했다. 이후 사용자 유지 확인을 받아 actual source 4a64c25의 407 첫 실행을 완료했으며 아래 82번에 구분한다.
-
-T12 Fixture 407 exact 4a64c25·SWD 10 MHz **첫 실행 12개 PASS**는 [82번 기록](<00_Docs/04_검증 기록/82_T12_Fixture_407_current_source_공유_AIN6_검증.md>)에 보존했다. 버튼 미누름 AIN6/P1.13에서 입력 pull-down/up/down·2,592 samples·cleanup 12개와 입력 GPIO 24회·해제 12회를 확인했다. LOW median 0·HIGH median 3752, postflight 양쪽 source/role 확인 PASS. 당시 401~407 누계는 **228개 기능·49,248 samples·228개 cleanup**이었다. 이후 408 결과는 아래 83번에 구분한다. T12 전체·T13 이후와 readiness 미해결 8개는 유지한다.
-
-T12 Fixture 408 exact 87b987d·SWD 10 MHz **48개 기능 PASS**는 [83번 기록](<00_Docs/04_검증 기록/83_T12_Fixture_408_current_source_PWM_ADC_검증.md>)에 보존했다. 최초 DUT flash timeout은 외부 시험 시작 전 실패였으며, 읽기 응답 회복 확인 뒤 한 번의 새 실행으로 10,368 samples·cleanup 48회를 통과했다. 두 runtime identity도 재확인했다. 401~408 누계 **276개 기능·59,616 samples·276개 cleanup**으로 AIN0~7의 개별 기능 근거를 확보했다. 420 QDEC도 완료했다. 현재 **430 I2S는 전체 192개 PASS**이며 440 PDM과 남은 T12 요구·T13 이후·readiness 미해결 8개는 유지한다.
-
-420 QDEC 최신 결과는 [85번 기록](<00_Docs/04_검증 기록/85_T12_Fixture_420_current_source_QDEC_재검증.md>)의 **exact 6bd8d3f 기능 48·cleanup 48·시작 전 취소 6개 PASS**다. SWD 10 MHz, 22.063초 기능 실행과 두 보드 identity·핀 복원·PWM/QDEC 해제를 확인했다. [84번](<00_Docs/04_검증 기록/84_T12_Fixture_420_current_source_QDEC_검증.md>)의 이전 실패·교정 기록은 유지한다. a3d0ab5와 코드·설정이 같음을 대조했으며 이전 전체 Host 656 PASS·1 조건부 SKIP와 정렬 359 PASS는 해당 source 결과로 구분한다. 430 I2S는 아래 87번에서 오류 교정 후 전체 192개 PASS를 기록했다. 440 PDM의 최신 상태는 아래 92번 연속 전체 검증 기록을 따른다. 공용 PWM 지연 시작 취소 이슈는 T14, 440 PDM·남은 T12 요구·T13 이후와 readiness 미해결 8개도 유지한다.
-
-430의 이전 세 source 실패·교정·72개 부분 통과 이력은 [86번 기록](<00_Docs/04_검증 기록/86_T12_Fixture_430_current_source_I2S_검증.md>)에 보존한다.
-
-430 I2S 최신 결과는 [87번 기록](<00_Docs/04_검증 기록/87_T12_Fixture_430_current_source_I2S_재검증.md>)의 **exact 36ba819 기능 192·cleanup 192개 PASS**다. 공용 compact DMA token 처리 지연을 교정해 queue 시간이 278~309 us에서 104~112 us로 줄었고, 수신 원본 384개·전체 payload 82,944 word를 독립 대조했다. SWD 10 MHz, 양쪽 identity·I2S off·핀 복원 확인. 전체 Host 659 PASS·1 조건부 SKIP, 계약 45·package 20·Inventory·정렬 361·관련 target 10개 PASS다. 440의 후속 실기는 88~90번에 실패·부분 결과와 재시험 준비로 구분하며, 남은 T12·T13 이후·T14 공용 PWM 이슈·readiness 미해결 8개를 유지한다. 공용 자원 변경 이후의 T11 외부 실기는 이번에 재실행하지 않았다.
-
-440 PDM의 이전 실행은 [88번 기록](<00_Docs/04_검증 기록/88_T12_Fixture_440_current_source_PDM_검증.md>)의 **exact ea4e25a 모노 DMA 4 PASS·첫 stereo FAIL·187 미실행**이다. 밀도 비교는 미도달이며 전체 PDM PASS가 아니다. HIL buffer 공급·신호원·격리된 DAP 핀 metadata를 교정했지만 동일 stereo 채널의 원인은 미해결이다. SWD 10 MHz, cleanup 5회·양쪽 identity/peripheral off·입력 복귀 확인. 전체 Host 660 PASS·1 조건부 SKIP, 정렬 361·pair 2/2 build PASS. 확인 유효시간 20:15:39Z가 지나 440 결선·DAP UART 분리 유지 재확인 후 설정/신호 전달 진단과 전체 재검증을 진행한다. 연속 PDM 4+100 buffer·나머지 T12·T13 이후·T14 공용 PWM·readiness 8개는 유지한다.
-
-440 최신 상태는 [92번 기록](<00_Docs/04_검증 기록/92_T12_Fixture_440_PDM_연속_전체_검증.md>)의 **연속 4+100 버퍼 96개 조합·밀도 비교 16개·cleanup 96개 전체 PASS**다. Exact f02734d에서 SWD 10 MHz로 한 campaign을 완료했고 DMA 반환 9,984개·6,389,760 samples의 장치 통계를 대조했다. 측정 버퍼 각각의 모노 밀도 순서 1,600개·스테레오 부호 4,800개도 PASS다. 기본 기능 192·밀도 비교 32 PASS는 코드·설정이 같은 917dc02의 91번 결과로 구분한다. 두 보드 f02734d identity·주변장치 off·신호 입력 복귀와 pair build 2/2를 확인했다. 전체 Host는 [93번 기록](<00_Docs/04_검증 기록/93_Host_재검증과_T12_이후_남은_작업.md>)의 exact e6979af에서 664 PASS·1 조건부 SKIP로 재검증을 완료했다. LLVM과 WinLibs sysroot를 유지하고 NCS 번들 CMake·Ninja를 선택했다. 440의 기본·연속 기능 검증은 완료했고 추가 결선 확인 요청은 없다. 남은 T12 요구·T13 이후·readiness 8개는 미완료다.
+실행별 source·결과·원본은 [검증 기록](<00_Docs/04_검증 기록/README.md>)에서 확인합니다.
