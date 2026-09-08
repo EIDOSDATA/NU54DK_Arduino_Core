@@ -33,6 +33,7 @@ namespace
     unsigned diagnostic_mode = 0U;
     std::uint32_t first_failure_pins[20]{};
     bool failure_pins_saved = false;
+    bool deferred_start = false;
 
     /** @brief 기존 S의 LED3 직결 또는 DAP 분리 DATA 교차 net만 진단에 사용합니다. */
     std::uint32_t capturePin()
@@ -108,6 +109,7 @@ bool t13::pwmPrepare(const Case &test)
         return stats.fail(27U);
     }
     stats.enabled = test.pwm_instance != 0U;
+    deferred_start = false;
     pwm = nullptr;
     edges = {};
     previous_poll = 0U;
@@ -185,7 +187,8 @@ bool t13::pwmStart()
     }
     if (role == 2U)
     {
-        const auto result = pwm->play({buffer.values, 32U, 0U, 0U}, nullptr, 1U, true);
+        const auto result =
+            pwm->play({buffer.values, 32U, 0U, 0U}, nullptr, 1U, true, deferred_start);
         stats.active = result == AnalogFabricResult::success;
         stats.queued = stats.active ? 1U : 0U;
         return stats.active || stats.fail(6U, static_cast<std::uint32_t>(result));
@@ -347,6 +350,47 @@ bool t13::pwmClockPolicy(bool crystal)
     }
     crystal_requested = crystal;
     return true;
+}
+
+/** @brief 단독 B PWM의 구성 뒤 실제 START task를 호출하지 않는 준비만 선택합니다. */
+bool t13::pwmArmUnstarted()
+{
+    if (role != 2U || !stats.enabled || stats.active || deferred_start || diagnostic_mode != 0U ||
+        pwm == nullptr || pwm->state() != AnalogFabricState::configured)
+    {
+        return false;
+    }
+    deferred_start = true;
+    return true;
+}
+
+/** @brief 미시작 준비·START task 주소·하드웨어 event·가드를 변경 없이 반환합니다. */
+void t13::pwmUnstartedSnapshot(std::uint32_t *out, std::uint32_t &count)
+{
+    if (role != 2U || pwm == nullptr || !stats.enabled)
+    {
+        count = 0U;
+        return;
+    }
+    const auto *reg = pwmRegisters();
+    const std::uint32_t values[]{role,
+                                 selected_pwm,
+                                 deferred_start,
+                                 static_cast<std::uint32_t>(pwm->state()),
+                                 static_cast<std::uint32_t>(pwm->startTaskAddress()),
+                                 reg->ENABLE,
+                                 reg->EVENTS_SEQSTARTED[0],
+                                 reg->EVENTS_SEQSTARTED[1],
+                                 reg->EVENTS_LOOPSDONE,
+                                 reg->EVENTS_STOPPED,
+                                 guards(),
+                                 k_cycle_get_32(),
+                                 CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC};
+    for (unsigned index = 0U; index < 13U; ++index)
+    {
+        out[index] = values[index];
+    }
+    count = 13U;
 }
 
 bool t13::pwmTailPolicy(unsigned mode)

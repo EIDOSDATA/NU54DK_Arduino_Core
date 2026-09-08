@@ -1,7 +1,7 @@
 # T13 S 오류 복구 실행 항목과 판정
 
 2026-09-08 f591571의26개와43bc032의 I2S/PWM21/PWM22 세 항목으로 정상 안정성 근거29/36을 확보했다.
-단독29/29·동시0/7이며 source별 증거다. 고정 serial 복구21항목 중 UART20 TX100회1항목을 완료했다. 이전 실패 원인은 미확정이다.
+단독29/29·동시0/7이며 source별 증거다. 고정 serial 복구21항목 중 UART20/21/22/30 TX100회4항목을 완료했다. 이전 실패 원인은 미확정이다.
 원본과 source별 결과는 [104번](<../../../00_Docs/04_검증 기록/104_T13_S_복구_동시_안정성_검증.md>),
 전체 범위와 결선은 [T13 계획](T13_PLAN.md)을 따른다. T12 완료와 QDEC 문제 보고 후 종료 결정은 유지한다.
 
@@ -108,7 +108,7 @@ RAMUNDERFLOW·DMA 관측도 읽기 대상으로 추가했다.
 | UART flow·RX 지연·parity/break | 4선100ms CTS 정지/재개, 2선의 제한된 RX 지연, 별도 parity/break 원인 확인과 복구 |
 | SPI slave 조건 | slave 미준비·짧은 DMA 및 CS 조기 종료, 두 역할의 실제 완료·다음 frame 복구 |
 | TWI slave·stuck-low | TWIS 공급 지연, 격리 SDA open-drain LOW100ms와 해제/recoverBus 후0x42 정상 송수신 |
-| I2S/PDM/PWM | 위 공급 중단 실행기의 새 source 실기, PWM 중간 STOP와 미시작 task 취소 구현·실기 |
+| I2S/PDM/PWM | 공급 중단 예행4/4 이후 각100회 진행, 아래 PWM 중간 STOP·미시작 task 취소 실행기 exact 검증·실기 |
 | Serial 역할 전환 | 같은20/21/22/30의 UART·SPI master/slave·TWI master/slave 전환, S의SPI00 역할 전환 |
 | 자원 충돌 | 같은 block·GPIO alias·DMA 겹침·GPIOTE/DPPI 채널/domain·PWM/analogWrite/tone/Servo 중복의 원자적 거부 |
 | U 및 후속 release gate | S 종료 후 U 핀 배치 안내·현재 연결 확인, UART00·지원범위·패키지/RC·승인·공개 |
@@ -151,3 +151,23 @@ HIL은 해제 성공 뒤에만 source handle을 비워 반복 STOP을 처리한�
 Host는 예상한 PDM overflow·가드·양쪽 STOP/clock0/GPIO 반환을 먼저 요구하고 peer가 기록한
 error6/detail0의 CS 종료 또는 오류 없는 정지를 별도로 판정한다. 다른 peer 오류와 가드 손상은 거부한다.
 새 seed 정상1초 재시작까지 통과해야 해당 회의 복구 성공이며 예행은100회 완료가 아니다.
+
+6782084의 PDM20/21 예행은 두 항목 모두 통과했고 I2S 두 역할과 합쳐4/4다.
+PDM은 고정0x55의50% 밀도 신호이며 seed가 바뀐다고 물리 payload가 달라지지는 않는다.
+초기화한 DMA 버퍼의 새 완료·샘플 범위·가드와 재구성 후 진행으로 복구를 판정한다.
+
+## PWM 동작 중 STOP·미시작 준비 취소
+
+`--phase pwm-recovery-preflight|pwm-recovery --pwm-recovery-mode 1|2 --cases 25 26 27`로
+S P1.14 단독 PWM20/21/22만 선택한다. 예행은 각1회, 정식은 각100회로6개 항목이다.
+Mode1은 loop 파형의 실제 capture 뒤 중간 STOP하고 정상1초 capture로 재시작한다.
+Mode2는 B의 start_via_task 재생 준비·active API·유효한 START task 주소를 확인하되
+START를 호출하거나 DPPI START를 구독하지 않는다.100ms 이상 양쪽 pin idle·capture 에지0·
+완료0·SEQSTARTED0·LOOPSDONE0·가드를 확인하고 양쪽 STOP/clock0/pin 반환 후 정상1초 capture로 재시작한다.
+DMA 레지스터 원본은 보존하되 이전 실행 값이 남을 수 있는 AMOUNT를 새 전송량으로 읽지 않는다.
+양쪽 준비·최초 실패의 raw를 보존하고 정지 증명이 없으면 재시작하지 않는다.
+
+Opcode121은 PREPARE 뒤 START 전 단독 B PWM에서만 받는 무인자 선택이다.
+Opcode122의13word는 role, PWM instance, deferred 선택, API state, START task 주소,
+ENABLE, SEQSTARTED0/1, LOOPSDONE, STOPPED, guard, cycle, cycle 주파수다.
+Normal soak는 기존 자동 시작을 유지하며 새 capability bit256 없이 이 시험을 실행할 수 없다.

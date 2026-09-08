@@ -27,6 +27,8 @@ namespace t13
     void captureService();
     bool pwmClockPolicy(bool crystal);
     bool pwmTailPolicy(unsigned mode);
+    bool pwmArmUnstarted();
+    void pwmUnstartedSnapshot(std::uint32_t *out, std::uint32_t &count);
     void pwmDiagnosticSnapshot(std::uint32_t *out, std::uint32_t &count);
     void pwmPinSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count);
     void audioDiagnosticSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count);

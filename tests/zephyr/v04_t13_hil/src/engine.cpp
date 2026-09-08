@@ -123,8 +123,8 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         {
             out[index + 1U] = plan_hash[index];
         }
-        /** @brief serial·stream·지연·취소/NACK·역할/PSEL·공급 생략의 구현을 구분합니다. */
-        out[9] = 255U;
+        /** @brief serial·stream·지연·취소/NACK·역할/PSEL·공급 생략·미시작 PWM을 구분합니다. */
+        out[9] = 511U;
         count = 10U;
         return 0U;
     }
@@ -197,6 +197,11 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
     {
         streamFaultSnapshot(out, count);
         return 0U;
+    }
+    if (opcode == 122U && nargs == 0U)
+    {
+        pwmUnstartedSnapshot(out, count);
+        return count == 13U ? 0U : 400U;
     }
     if (opcode == 116U && nargs == 1U && args[0] <= 2U && !gate.claimed() && !wiringClaimed())
     {
@@ -287,6 +292,14 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
     if (opcode == 114U && nargs == 1U && !started && selected != nullptr)
     {
         out[0] = streamArmFault(*selected, args[0]) ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 121U && nargs == 0U && !started && selected != nullptr &&
+        selected->pwm_instance != 0U && selected->serial_count == 0U &&
+        selected->adc_channels == 0U && selected->pdm_instance == 0U && !selected->i2s)
+    {
+        out[0] = pwmArmUnstarted() ? 1U : 0U;
         count = 1U;
         return 0U;
     }

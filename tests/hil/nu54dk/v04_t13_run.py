@@ -14,6 +14,7 @@ import v04_pair as pair
 import v04_t13_cases as catalog
 import v04_t13_fault as faults
 import v04_t13_stream_fault as stream_faults
+import v04_t13_pwm_recovery as pwm_recovery
 import v04_t13_handover as handover
 import v04_t13_oracle as oracle
 import v04_t13_session as session
@@ -334,10 +335,12 @@ def main(argv=None):
     parser.add_argument('--evidence', type=Path)
     parser.add_argument('--phase', choices=('wiring', 'preflight', 'soak', 'fault-preflight', 'serial-fault',
                                           'handover-preflight', 'handover',
-                                          'stream-fault-preflight', 'stream-fault', 'pwm-diagnostic'), default='wiring')
+                                          'stream-fault-preflight', 'stream-fault', 'pwm-diagnostic',
+                                          'pwm-recovery-preflight', 'pwm-recovery'), default='wiring')
     parser.add_argument('--cases', nargs='+', type=int, default=[])
     parser.add_argument('--fault-mode', type=int, choices=range(1, 6))
     parser.add_argument('--stream-fault-mode', type=int, choices=(1, 2))
+    parser.add_argument('--pwm-recovery-mode', type=int, choices=(1, 2))
     parser.add_argument('--pwm-diagnostic-route', choices=('led', 'dap'))
     parser.add_argument('--fault-role', type=int, choices=(1, 2), default=1)
     parser.add_argument('--reverse-serial', action='store_true')
@@ -369,6 +372,12 @@ def main(argv=None):
         raise ProtocolError('explicit supported S case set required')
     is_fault = args.phase in ('fault-preflight', 'serial-fault')
     is_stream_fault = args.phase in ('stream-fault-preflight', 'stream-fault')
+    is_pwm_recovery = args.phase in ('pwm-recovery-preflight', 'pwm-recovery')
+    if is_pwm_recovery:
+        for identifier in args.cases:
+            pwm_recovery.validate_selection(available_cases[identifier], args.pwm_recovery_mode)
+    elif args.pwm_recovery_mode is not None:
+        raise ProtocolError('PWM recovery mode requires an explicit PWM recovery phase')
     if is_fault:
         for identifier in args.cases:
             faults.validate_selection(available_cases[identifier], args.fault_role, args.fault_mode)
@@ -393,6 +402,7 @@ def main(argv=None):
         'external_wiring_executed': False, 'results': [],
         'fault_mode': args.fault_mode, 'fault_role': args.fault_role if is_fault or is_stream_fault else None,
         'stream_fault_mode': args.stream_fault_mode,
+        'pwm_recovery_mode': args.pwm_recovery_mode,
         'reverse_serial': args.reverse_serial, 'handover_instance': args.handover_instance,
         'devices': [{'role': image['role'], 'uid_sha256': hashlib.sha256(uid.encode()).hexdigest(),
                      'hex_sha256': image['sha256'], 'elf_sha256': image['elf_sha256'],
@@ -421,7 +431,7 @@ def main(argv=None):
                     10000000, cmsis_dap_limit_packets=args.cmsis_dap_limit_packets)
                 devices.append(device)
                 evidence['devices'][image['role'] - 1]['flash'] = flash
-                capability = 255
+                capability = 511 if is_pwm_recovery else 255
                 if session.verify_profile(device) & capability != capability:
                     raise ProtocolError('T13 serial/stream/timing capabilities missing')
             continuity = session.Continuity(grant, images, uids, devices, available, pair.verify_identity)
@@ -439,6 +449,10 @@ def main(argv=None):
                 for identifier in args.cases:
                     stream_faults.execute(devices, available_cases[identifier], args.fault_role,
                         args.stream_fault_mode, continuity, append, preflight=args.phase == 'stream-fault-preflight')
+            elif is_pwm_recovery:
+                for identifier in args.cases:
+                    pwm_recovery.execute(devices, available_cases[identifier], args.pwm_recovery_mode,
+                        continuity, append, preflight=args.phase == 'pwm-recovery-preflight')
             else:
                 for group in grouped([available_cases[identifier] for identifier in args.cases]):
                     execute_group(devices, group, 3 if args.phase == 'preflight' else group['test']['duration_seconds'],
