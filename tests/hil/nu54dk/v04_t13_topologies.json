@@ -79,9 +79,8 @@
     }
   },
   "common_ground": "GND P2-30 ↔ P2-30",
-  "current_harness": "C",
+  "current_harness": "S",
   "future_order": [
-    "S",
     "U"
   ],
   "standalone": [
@@ -1958,9 +1957,9 @@
   "guard_bytes": 16,
   "continuous_measurement_minutes_sequential": 261,
   "manual_boundaries": [
-    "C→S with both USB disconnected; confirm exact GPIO and DAP switches anew",
+    "C→S user rewire and maintain confirmation received; electrical checker still required",
     "S→U with both USB disconnected; fresh wiring check",
-    "System OFF fixture isolation/reconnect remains separate"
+    "System OFF base wake already has evidence; determine applicable new recovery requirement before scheduling isolation/reconnect"
   ],
   "not_covered": [
     "all pairwise resource/peripheral combinations",

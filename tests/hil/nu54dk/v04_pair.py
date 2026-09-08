@@ -57,7 +57,7 @@ def stop_after_uart_failure(device: "Device") -> dict:
         return {"status": "unproven", "error": f"{type(error).__name__}: {error}"}
 
 
-def inspect_image(repository: Path, build_root: Path, role: int) -> dict:
+def inspect_image(repository: Path, build_root: Path, role: int, *, family: str = "pair") -> dict:
     from elftools.elf.elffile import ELFFile
     commit = git_output(repository, "rev-parse", "HEAD")
     if git_output(repository, "status", "--porcelain"):
@@ -66,8 +66,11 @@ def inspect_image(repository: Path, build_root: Path, role: int) -> dict:
     actual_board = git_output(repository / "board_package/NU54DK_Zephyr_DTS", "rev-parse", "HEAD")
     if board != actual_board:
         raise ProtocolError("board gitlink mismatch")
-    scenario = f"nucode.v04.pair_{'dut' if role == 1 else 'peer'}"
-    candidates = list(build_root.glob(f"**/{scenario}/v04_pair_hil/zephyr/zephyr.hex"))
+    if role not in (1, 2) or family not in ("pair", "t13_s"):
+        raise ProtocolError("unknown HIL image family or role")
+    application = "v04_pair_hil" if family == "pair" else "v04_t13_hil"
+    scenario = f"nucode.v04.{family}_{'dut' if role == 1 else 'peer'}"
+    candidates = list(build_root.glob(f"**/{scenario}/{application}/zephyr/zephyr.hex"))
     if len(candidates) != 1:
         raise ProtocolError(f"exactly one image required for {scenario}, found {len(candidates)}")
     image = candidates[0].resolve()

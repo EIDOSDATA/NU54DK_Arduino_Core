@@ -1,0 +1,185 @@
+{
+  "scope": "T13 S serial/wiring preparation; physical_executed false",
+  "baseline": "6155a85449f439feb9512045ebdb2c63f0e2bca5",
+  "working_tree_changes": true,
+  "exact_clean_flash_build_pending": true,
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "full_host": {
+    "groups": 95,
+    "tests": 739,
+    "skips": 2,
+    "passes": 737
+  },
+  "records": [
+    {
+      "name": "t13-s-preparation-target-01",
+      "command": [
+        "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_zephyr_build.py",
+        "--workspace",
+        "C:/ncs/v3.4.0",
+        "--outdir",
+        "C:/t3s04",
+        "--group",
+        "v0.4.0",
+        "--suite",
+        "nucode.v04.t13_s_dut",
+        "--suite",
+        "nucode.v04.t13_s_peer",
+        "--jobs",
+        "2"
+      ],
+      "started_at": "2026-09-08T00:41:16.446664+00:00",
+      "finished_at": "2026-09-08T00:43:09.627266+00:00",
+      "exit_code": 0,
+      "log_sha256": "9ef8fa5d41f24491964e612de69b7b577840907a96e69d16f97f75c631885124",
+      "raw_log": "t13-s-preparation-target-01.log.gz"
+    },
+    {
+      "name": "t13-s-preparation-host-01",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "tests/host",
+        "-p",
+        "test_v04_t13*.py"
+      ],
+      "started_at": "2026-09-08T00:44:14.990603+00:00",
+      "finished_at": "2026-09-08T00:44:17.544844+00:00",
+      "exit_code": 1,
+      "log_sha256": "907823d3834620e363031eab1bf3563aebe95cc23a87edc5b931923dcaa23b1f",
+      "raw_log": "t13-s-preparation-host-01.log.gz"
+    },
+    {
+      "name": "t13-s-preparation-host-02",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "tests/host",
+        "-p",
+        "test_v04_t13*.py"
+      ],
+      "started_at": "2026-09-08T00:44:38.334714+00:00",
+      "finished_at": "2026-09-08T00:44:40.034695+00:00",
+      "exit_code": 0,
+      "log_sha256": "aeaf9d3a1e90c141e0098a9c0ddff699a19e826643af2b0f343a35173addd5df",
+      "raw_log": "t13-s-preparation-host-02.log.gz"
+    },
+    {
+      "name": "t13-s-preparation-host-03",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "tests/host",
+        "-p",
+        "test_v04_t13*.py"
+      ],
+      "started_at": "2026-09-08T00:46:48.477103+00:00",
+      "finished_at": "2026-09-08T00:46:52.031350+00:00",
+      "exit_code": 0,
+      "log_sha256": "fcf04034412601fb810424e53c5ce780ba73ab86577f56991e8430538d9b6a39",
+      "raw_log": "t13-s-preparation-host-03.log.gz"
+    },
+    {
+      "name": "t13-s-preparation-docs-01",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "docs"
+      ],
+      "started_at": "2026-09-08T00:41:48.275065+00:00",
+      "finished_at": "2026-09-08T00:41:49.451610+00:00",
+      "exit_code": 0,
+      "log_sha256": "f854e3084afea4144bc737be5d66e44f445fb127b706910a8c2a82a1c212982d",
+      "raw_log": "t13-s-preparation-docs-01.log.gz"
+    },
+    {
+      "name": "t13-s-preparation-style-02",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\format\\run_cpp_style.py",
+        "--clang-format",
+        "C:\\Program Files\\LLVM\\bin\\clang-format.exe"
+      ],
+      "started_at": "2026-09-08T00:51:50.767984+00:00",
+      "finished_at": "2026-09-08T00:52:09.555192+00:00",
+      "exit_code": 0,
+      "log_sha256": "dae8661bfaf92794dfd064b8c0bf03b3139c0107412013df3beb91db77164b30",
+      "raw_log": "t13-s-preparation-style-02.log.gz"
+    },
+    {
+      "name": "t13-s-contract-01",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "contract"
+      ],
+      "started_at": "2026-09-08T00:47:09.753752+00:00",
+      "finished_at": "2026-09-08T00:47:10.286213+00:00",
+      "exit_code": 0,
+      "log_sha256": "2b0b0069325a11166e56fff8a529093e3b77f5defc1c6bbb1c4ba449ec5b1c0f",
+      "raw_log": "t13-s-contract-01.log.gz"
+    },
+    {
+      "name": "t13-s-full-host-01",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "host-full"
+      ],
+      "started_at": "2026-09-08T00:47:09.262839+00:00",
+      "finished_at": "2026-09-08T00:47:09.407409+00:00",
+      "exit_code": 2,
+      "log_sha256": "85e5269c6a93e0932aca77fe6e873857692dd3f6dcfc25e3980735cd7176e4ec",
+      "raw_log": "t13-s-full-host-01.log.gz"
+    },
+    {
+      "name": "t13-s-full-host-02",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "host"
+      ],
+      "started_at": "2026-09-08T00:47:34.431727+00:00",
+      "finished_at": "2026-09-08T00:47:35.685762+00:00",
+      "exit_code": 1,
+      "log_sha256": "cd38c7497dafbdadf9e8f3fc94ec0088721da96ea9d911175192ed6630e1f6dc",
+      "raw_log": "t13-s-full-host-02.log.gz"
+    },
+    {
+      "name": "t13-s-full-host-03",
+      "command": [
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+        "host"
+      ],
+      "started_at": "2026-09-08T00:48:38.920046+00:00",
+      "finished_at": "2026-09-08T00:52:18.998259+00:00",
+      "exit_code": 0,
+      "log_sha256": "aec2037b3c1f6b580fd60a574160710b6827a4f17d888d28c570c7333c7a3a4d",
+      "raw_log": "t13-s-full-host-03.log.gz"
+    }
+  ]
+}
