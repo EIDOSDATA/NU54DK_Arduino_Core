@@ -1,0 +1,91 @@
+{
+  "source": "902a1da66c2c288a121cc4b77e6d8f48ca6308b3",
+  "physical_executed": false,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "t13-power-poll-exact-power-01.json.gz",
+      "bytes": 641,
+      "sha256": "7c25a4710b72462edc55a30460a7e4d0bf63f81c0746cb8c27a100861c1163c9",
+      "gzip_sha256": "85ec3b834004124cbaa5e73448a400e696d2ebb675166c73153dc1a1e5007e93"
+    },
+    {
+      "file": "t13-power-poll-exact-power-01.log.gz",
+      "bytes": 1917,
+      "sha256": "675c4c8bc8af35c2e036cefa1152e9241c64f6c438f2d65b99bb31c06f61e0e2",
+      "gzip_sha256": "b8d25650f61ffc30d87402bb301c531a94252118db72508e95237fe39e38f237"
+    },
+    {
+      "file": "t13-power-poll-exact-normal-01.json.gz",
+      "bytes": 630,
+      "sha256": "c9b1ad984131a2ead85ce7537286d2d904f6fc630d6968031556585a9327c2a0",
+      "gzip_sha256": "d7d12b23a6da706f48e37f8253b17f6a58f59adbc08a0c585a48194c4f9757a6"
+    },
+    {
+      "file": "t13-power-poll-exact-normal-01.log.gz",
+      "bytes": 1905,
+      "sha256": "c888cb3f0cb3c217ad14412311e22184b657eceffb70eb9dd9548850261d05e4",
+      "gzip_sha256": "8ee7836f52d83ee3217a6736b53204d7fc33838be0a5233345d699d00dcaf6c4"
+    },
+    {
+      "file": "t13-power-poll-exact-host-01.json.gz",
+      "bytes": 495,
+      "sha256": "2c051bc0b42b1c37e8fce65309297f7532072fbf6a21be021b71211429bf1672",
+      "gzip_sha256": "ae1c6db61df456cb6eed1230d50289d4bb79d935a3e5722e138bb7cabb10332e"
+    },
+    {
+      "file": "t13-power-poll-exact-host-01.log.gz",
+      "bytes": 22559,
+      "sha256": "02931e25bd0467f986102e415a5f0c7509878fe3340fc4cd47b9aa39c88c4751",
+      "gzip_sha256": "55495bd3f2d09bed7247ea1e9abc2a99014834659493b1bb82b947483b50413b"
+    },
+    {
+      "file": "t13-power-poll-exact-docs-01.json.gz",
+      "bytes": 434,
+      "sha256": "b4a8d713709f6c3fca93e51cda204266f0d1f30a66bd23dd33274dcfa1a28819",
+      "gzip_sha256": "1017c1cb0606e50b912d7cfa177f0d8ece4c21786c61b468dd44856c18ab93b8"
+    },
+    {
+      "file": "t13-power-poll-exact-docs-01.log.gz",
+      "bytes": 69,
+      "sha256": "4f0e7b1d14820b09fa80a071bee0134d119bc6f53d2af21b5de377d692642c21",
+      "gzip_sha256": "85e86b9592da9396adfaa49367467f04c2c2dbe10af7acba9be53d200998788c"
+    },
+    {
+      "file": "t13-power-poll-exact-contract-01.json.gz",
+      "bytes": 442,
+      "sha256": "bba61a9c5fdd0eb99c2e30f3e19e3dfca41ec2a76c30f72cfd4cdbc9cd9fecb4",
+      "gzip_sha256": "f083ce8d92e8a68616d50dc50d9e63bc987e59b7f8e32177d3351a2be169880b"
+    },
+    {
+      "file": "t13-power-poll-exact-contract-01.log.gz",
+      "bytes": 7492,
+      "sha256": "56b9508f9f7be8740dcb94c6e84b1607505b27fb490eff18dac0190f0c34869c",
+      "gzip_sha256": "a758f9cff8d942ad485eefb8669daf27e1bb1113f4b7aa2fd0516f7b4796f8d6"
+    },
+    {
+      "file": "t13-power-poll-exact-style-01.json.gz",
+      "bytes": 505,
+      "sha256": "0b50f538e388794feaa8865696b5d8f119ed60bae2c720bcbf1ff40d3a244912",
+      "gzip_sha256": "4c346e78966d6a040251f23d5a4d911aece56bf0f8c5aa4c1b71069c29bf80ff"
+    },
+    {
+      "file": "t13-power-poll-exact-style-01.log.gz",
+      "bytes": 40,
+      "sha256": "42a915550c89eccc023ce5447a143be30d1ea9c8e4c0d892ae5877d24b9d9b61",
+      "gzip_sha256": "4340aaf0c8b048666e48bcd9565c490a2613189ddf243cce8544f4bc9d1af5fa"
+    },
+    {
+      "file": "ci-902a1da-power-poll-02.json.gz",
+      "bytes": 3790,
+      "sha256": "6c64eb492d20e910167b1532a14b66c682c7c33bc65f39fe8cb74d947a52eb8b",
+      "gzip_sha256": "9b3100d6926f6cb2ed78d5fe993da4345c04fddb19638cef4746d75dd18de8e1"
+    },
+    {
+      "file": "ci-902a1da-power-poll-02.host.log.gz",
+      "bytes": 317651,
+      "sha256": "5df19fd93b51fb3bf87d2df234235ab4748ce965e9df044c01ad9ceacd4a88ae",
+      "gzip_sha256": "63a26ba212a9dd81762543d275b1701ab66e6bdf9784ec84412b3c2472d278f3"
+    }
+  ]
+}

@@ -43,7 +43,8 @@ def inspect(words, test, role, device_role, mode, *, lane=None):
     measured = {'policy': policy, 'instance': endpoint['instance'], 'normal_soak_pass': False}
     if target:
         mask = words[5]
-        valid_mask = (mask == 2) if mode == 'parity' else (mask != 0 and mask & ~12 == 0)
+        # @brief 8N1의 stop1이 parity 자리로, 다음 start0이 8E1의 stop 자리로 들어올 수 있습니다.
+        valid_mask = (mask in (2, 6)) if mode == 'parity' else (mask != 0 and mask & ~12 == 0)
         elapsed = (words[10]-words[9]) & MASK
         if (words[4] != 5 or not valid_mask or words[8] != 1 or not 0 < elapsed <= 2000000 or
                 words[11:15] != [0, 0, 0, 0] or
@@ -53,6 +54,7 @@ def inspect(words, test, role, device_role, mode, *, lane=None):
             raise ProtocolError(f'T13 UART expected error/guard/stop differs: {words}; lane={lane}')
         measured.update(error_mask=mask, arm_to_error_us=elapsed,
             api_transferred_raw=words[6], api_buffer_raw=words[7],
+            parity_observed=bool(mask & 2),
             framing_observed=bool(mask & 4), break_flag_observed=bool(mask & 8))
     else:
         if words[4:9] != [MASK, 0, 0, 0, 0] or words[10] != 0:

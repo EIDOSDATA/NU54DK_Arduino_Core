@@ -1,0 +1,336 @@
+{
+  "source": "5c4c3e0d21efa42209a814beab6367377a3b020a",
+  "status": "failed",
+  "phase": "uart-flow",
+  "physical_executed": true,
+  "started_at": "2026-09-08T17:07:28.949533+00:00",
+  "finished_at": "2026-09-08T17:09:12.115816+00:00",
+  "error": "ProtocolError: T13 active flow PSEL/HWFC differs from declared fixture",
+  "case_results": [
+    {
+      "id": "T13-S/flow/C05/role2/repeat001/maintained/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat001/reacquired/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat001/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2003300513
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat002/maintained/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat002/reacquired/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat002/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3421877363
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat003/maintained/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat003/reacquired/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat003/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 4050165078
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat004/maintained/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat004/reacquired/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat004/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 308106836
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat005/maintained/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat005/reacquired/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat005/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2531737026
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat006/maintained/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat006/reacquired/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat006/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 1020440469
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat007/maintained/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat007/reacquired/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat007/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 551587632
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat008/maintained/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat008/reacquired/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat008/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 4225833471
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat009/maintained/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat009/reacquired/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat009/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2901881484
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat010/maintained/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat010/reacquired/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat010/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2126808976
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat011/maintained/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat011/reacquired/T13-S/preflight/C05/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/C05",
+      "measured_role": null,
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/C05/role2/repeat011/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3698849544
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3788,
+      "sha256": "b7637ef5f53e5456e64fd41345399d10a064025565c95cdf10eebb80448ec6ed",
+      "gzip_sha256": "c03ad6bcada50d417ab31a9468ebd897c4f637c5e633b4e4ded9895a89306f54"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "fb7c71d9af9fd427953bcc2c23c05e985150fe0757bd3be30ac4233ba2b1e634",
+      "gzip_sha256": "715ab7c700e1683fb64b74a21c7197be1df97df2aaece4302f81a6458d2a96d7"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 2267727,
+      "sha256": "9015cbe510ea08d239bf9d88d7858c252fd676ecd037e2a2361495f000dfe6b6",
+      "gzip_sha256": "f0b41046cd23060bec63f26808d0ac00af13696bb6d7e7c2293c100e5e550f87"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 1117499,
+      "sha256": "10ddb1cc71803264822d6be24fa83f41418c3d5ebc3ee405f3a6c312d22e6fef",
+      "gzip_sha256": "9b4f3300ed5453de8a31b58facdc294fa0aeb546f7fb3ca73bfa1b2ac38108f4"
+    },
+    {
+      "file": "s123-flow-c105-r2-100-01-preflight.json.gz",
+      "bytes": 714,
+      "sha256": "ef76054260203e9beee869ca35de710ad57df4943fab287e4dc02c425977e187",
+      "gzip_sha256": "78f770596e96f28c4a4cd21ca7b2356b6d20e609ab8a3666beb3978cb0fd3092"
+    },
+    {
+      "file": "s123-flow-c105-r2-100-01-preflight.log.gz",
+      "bytes": 1651,
+      "sha256": "ef33361d226050a93510ec6252aecf6c53431e976e6395c5280f0a961cb821d6",
+      "gzip_sha256": "0cd2d82d22e0d662f6c69d031f5ef63aa7d21d27968a3fcef4872affc22aa969"
+    },
+    {
+      "file": "s123-flow-c105-r2-100-01-execute.json.gz",
+      "bytes": 710,
+      "sha256": "c9ed3ad1e821f5e3f0cd38e89dd1cc913575eb3be08661f040527ddfbc7f8497",
+      "gzip_sha256": "2bb4af5a21398cb7cd41ae11a68bd07d4cbcfc43a6f3257f2460b8ddd3eb92c9"
+    },
+    {
+      "file": "s123-flow-c105-r2-100-01-execute.log.gz",
+      "bytes": 654,
+      "sha256": "32bdc4d84e1877e149c8981c07ca73f0e17c47c48d6153d4880d2cdcc69049ca",
+      "gzip_sha256": "a6ad1253ff4472c2bfaa6446af5e6c19cf6ec1b9f2b7782f8d00ddfc8bc84951"
+    }
+  ]
+}

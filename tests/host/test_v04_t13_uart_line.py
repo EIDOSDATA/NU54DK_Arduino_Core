@@ -71,6 +71,39 @@ class UartLineTests(unittest.TestCase):
             self.assertEqual(measured['break_flag_observed'], bool(mask & 8))
             self.assertFalse(measured['normal_soak_pass'])
 
+    def test_contiguous_8n1_stimulus_can_violate_both_parity_and_8e1_stop(self):
+        """! @brief 실제 wire bit 위치를 별도로 구성하여8N1/8E1의 두 오류 가능성을 대조합니다. """
+        for role in (1, 2):
+            for seed in (0, 255, 0xFFFFFFFF):
+                selected = line.seed_for_parity(seed, role)
+                byte = oracle.pattern(oracle.lane_seed(selected, 0, role), 0)
+                wire = [0] + [(byte >> bit) & 1 for bit in range(8)] + [1, 0]
+                expected_parity = sum(wire[1:9]) % 2
+                mask = (2 if wire[9] != expected_parity else 0) | (4 if wire[10] != 1 else 0)
+                self.assertEqual(mask, 6)
+
+    def test_parity_requires_parity_bit_and_rejects_overrun_break_and_unknown_errors(self):
+        words, lane = self.vector(), self.lane()
+        for mask in (2, 6):
+            words[5] = lane[1] = mask
+            result = line.inspect(words, self.test, 1, 1, 'parity', lane=lane)
+            self.assertTrue(result['parity_observed'])
+            self.assertEqual(result['framing_observed'], bool(mask & 4))
+            self.assertFalse(result['normal_soak_pass'])
+        for mask in (0, 1, 3, 4, 7, 8, 10, 12, 14, 16, 0x80000000):
+            words[5] = lane[1] = mask
+            with self.subTest(mask=mask), self.assertRaises(ProtocolError):
+                line.inspect(words, self.test, 1, 1, 'parity', lane=lane)
+
+    def test_compound_parity_error_still_requires_matching_api_mask_and_stop(self):
+        words, lane = self.vector(), self.lane()
+        words[5], lane[1] = 6, 2
+        with self.assertRaises(ProtocolError):
+            line.inspect(words, self.test, 1, 1, 'parity', lane=lane)
+        lane[1], words[19] = 6, 0
+        with self.assertRaises(ProtocolError):
+            line.inspect(words, self.test, 1, 1, 'parity', lane=lane)
+
     def test_clock_or_arm_rejection_never_starts_rx_and_preserves_cleanup(self):
         for bad_clock in (True, False):
             devices = [mock.Mock(), mock.Mock()]

@@ -1,0 +1,86 @@
+{
+  "source": "1a00a8323e0368ca623de7a717009a4087b1ab23",
+  "status": "passed",
+  "phase": "flow-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T17:00:45.379260+00:00",
+  "finished_at": "2026-09-08T17:01:31.691883+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/flow/uarte20/role2/repeat001/maintained/T13-S/preflight/uarte20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte20",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte20/role2/repeat001/reacquired/T13-S/preflight/uarte20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte20",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte20/role2/repeat001/result",
+      "status": "passed",
+      "planned_flow_pass": false,
+      "normal_soak_pass": false,
+      "restart_seed": 1576301997
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3752,
+      "sha256": "03d011f6ba6a3994464f78ee39fe153300a49d86c79d39f51d7f9ff4cb934b7f",
+      "gzip_sha256": "e234d79d12dd3e2ff150fb775b573bb11a2ce8630d618ca6acbf1f6ad72aa29a"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "4dad93dbb31bbfbc5fc882af612e253fc20a81f42e619f1110788ec25400f776",
+      "gzip_sha256": "4687586366063e5893fdda513cd152d8e6e11bb0b0936a3ffa49832a0a737112"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 186684,
+      "sha256": "1205e88e474f3db358e5817d2cfac57559a766a25ad9b69c0e98d894e118d5fc",
+      "gzip_sha256": "c0d5338819e2b4ef6d9a731f9cce9a313e652dd6e6c02df57fc663c4a72d7a99"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 103780,
+      "sha256": "13466307bd8ddd22c804468508ee5749520053fa71d4973da66e8a4cf07fdc54",
+      "gzip_sha256": "79717899914c486e810a99ec4d99edde48613bda1312b632b9c4490e6842bfd1"
+    },
+    {
+      "file": "uart-start-barrier-preflight-01-preflight.json.gz",
+      "bytes": 740,
+      "sha256": "a71d944ecf7429a3ce4f83acbccf0b07bccdef97a9245a6eb28b01da099e7299",
+      "gzip_sha256": "95df2a87a62b3c278c560e83cee15ef506cc482d0fc68587faf235aa5550b1f1"
+    },
+    {
+      "file": "uart-start-barrier-preflight-01-preflight.log.gz",
+      "bytes": 1654,
+      "sha256": "e676585d138e387dfa49c18403246c56b9786e3a778562831f12218013bdf0ed",
+      "gzip_sha256": "bb138ac1e6b7c87e1a4445ad352cd1881d2dfde7a2de9dfec6d8f34f3b9a8358"
+    },
+    {
+      "file": "uart-start-barrier-preflight-01-execute.json.gz",
+      "bytes": 736,
+      "sha256": "59b7d4186215186e0a7944fc0ddc5ce047f3c38b1bf059bac9942e9ee1bbd1a8",
+      "gzip_sha256": "95a6990609f6c80bc64960a44020c31d9bc9a4975a6d768c6d19c025cfc5a4b5"
+    },
+    {
+      "file": "uart-start-barrier-preflight-01-execute.log.gz",
+      "bytes": 115,
+      "sha256": "c309b71a4d2c852b6c4fe5c8f7f3d9a3cc255fd6fa726b168b8847a81c0b307c",
+      "gzip_sha256": "7acd624b054d8bb4ea19b1326201cd89413d42458bdae1769e2e89895ce46f3a"
+    }
+  ]
+}

@@ -94,7 +94,10 @@ TWIM controller STOP에서는 추가 제출을 멈춘 뒤30ms를 기다리고 SC
 
 정상 양방향 baseline250ms와 STOP 이후 DUT는 TX를 억제하고 RX만 동작한다.
 parity는 DUT8E1/peer8N1이며 첫 byte의 even parity가0인 seed를 선택해 stop1과의 불일치를 만든다.
-최초 실제 error event5·mask2·guard를 요구한다. break는 peer UART를 완전히 STOP·반환한 뒤
+연속8N1의 다음 start0은8E1 수신기의 stop 위치에 들어올 수 있으므로 최초 실제 error event5·
+parity bit가 반드시 포함된 mask2 또는6·guard를 요구한다. mask6의 framing 관측도 따로 기록한다.
+overrun·break·알 수 없는 bit나 framing 단독은 parity 주입 성공이 아니다. 정상 baseline과
+새 seed 재시작에서는 여전히 UART 오류0을 요구한다. break는 peer UART를 완전히 STOP·반환한 뒤
 원래 TX GPIO만 S0S1로 HIGH→1ms LOW→HIGH 구동하고 즉시 입력/no-pull로 반환한다.
 양쪽 별도 owner를 겹치거나 활성 UART의 PSEL을 고치지 않는다. 실제 LOW1000~2000µs,
 HIGH/LOW/HIGH 관측·GPIO 반환·DUT 최초 framing/break mask4/8을 요구한다.

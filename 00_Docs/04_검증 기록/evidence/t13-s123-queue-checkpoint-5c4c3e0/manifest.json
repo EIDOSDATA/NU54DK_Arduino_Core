@@ -1,0 +1,13 @@
+{
+  "source": "5c4c3e0d21efa42209a814beab6367377a3b020a",
+  "physical_executed": false,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "s123-existing54-01.json.gz",
+      "bytes": 9683,
+      "sha256": "148f4d4f91debe10112ca5a60d70da7dbf4366921cd596c3c109d249cdad9058",
+      "gzip_sha256": "1533e0aa32c169ecc5b1350a7eba5a9b1300904c58dcb598b79f914e7b086b12"
+    }
+  ]
+}
