@@ -442,12 +442,15 @@ namespace nucode::arduino
             if (atomic_get(&context->rx_active) != 0)
             {
                 const int result = nrfx_uarte_rx_abort(&context->driver, true, true);
-                if ((result != 0) && (result != -EINPROGRESS) && (driver_error == 0))
+                if (result == 0)
+                {
+                    atomic_clear(&context->rx_active);
+                    atomic_clear(&context->cancelling_rx);
+                }
+                else if ((result != -EINPROGRESS) && (driver_error == 0))
                 {
                     driver_error = result;
                 }
-                atomic_clear(&context->rx_active);
-                atomic_clear(&context->cancelling_rx);
             }
             return driver_error == 0 ? SerialFabricResult::success : mapResult(driver_error);
         }

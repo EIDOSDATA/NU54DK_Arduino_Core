@@ -69,6 +69,12 @@ class UartTests(unittest.TestCase):
         self.assertNotIn("atomic_clear(&context.rx_active)", error_case)
         self.assertLess(error_case.index("pushEvent(context"),
                         error_case.index("nrfx_uarte_rx_abort"))
+        stop_case = source.split("SerialFabricResult requestStopAdapter", 1)[1].split(
+            "bool stoppedAdapter", 1)[0]
+        self.assertIn("if (result == 0)", stop_case)
+        self.assertIn("else if ((result != -EINPROGRESS)", stop_case)
+        self.assertLess(stop_case.index("if (result == 0)"),
+                        stop_case.index("atomic_clear(&context->rx_active)"))
 
     def test_dma_state_fail_closed(self):
         uart.check_status([1, 1, 0, 1, 3, 0], 1)
