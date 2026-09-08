@@ -1,0 +1,117 @@
+{
+  "source": "03257b6b84f776fac6640c6ba8d751237f450c45",
+  "status": "failed",
+  "phase": "bridge",
+  "physical_executed": true,
+  "started_at": "2026-09-08T16:15:22.220133+00:00",
+  "finished_at": "2026-09-08T16:16:18.023059+00:00",
+  "error": "ProtocolError: T13 relay response timeout opcode 131",
+  "case_results": [
+    {
+      "id": "cleanup/result",
+      "status": "cleanup",
+      "outcomes": [
+        {
+          "role": 1,
+          "stopped": true,
+          "stamp": 1398013956,
+          "pin_cnf": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "stopped": true,
+          "stamp": 1398025732,
+          "pin_cnf": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "cleanup_proven": true,
+      "b_swd_reopened_for_cleanup": true
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3752,
+      "sha256": "80dbd4ac352d01c7f2765c81271f7b27d599c8705a009fa45804c9ff69870dea",
+      "gzip_sha256": "392cf542910fd2a8899da0d2f79fa35e7cf01ab7eef789527741b2cdba86fad3"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1785,
+      "sha256": "cba3e7eff31b2340d501cb142db1d2bf1e4ca6e5e6ea9647a573892bd4f260ec",
+      "gzip_sha256": "d9f0b6156a47b99049823d4ac7f7115a7a7c90a9ade09b0eef2ffa4603f56bc9"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 134070,
+      "sha256": "6e00836927c855a6e543259cf8407c8f8c0c35b12155742238afada2c9b9fd73",
+      "gzip_sha256": "628ce30ac86e96a6dd4163c941e9eb6caa44b8d36140662df1ad876432bf3705"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 77025,
+      "sha256": "36e15130940f09a66273b1baced0deec06749a7b6e27a3eb0bc9b57aae87667d",
+      "gzip_sha256": "d9e1e8f94bf17484383967ec65bf24d410a6162ec941dea8ec6357386e6e3950"
+    },
+    {
+      "file": "power-clock-bridge-01-preflight.json.gz",
+      "bytes": 681,
+      "sha256": "21c36a69289b9bdcae380c74db26f6af76f665b2a246361c7e711392ce365a3e",
+      "gzip_sha256": "96b16dc1c046815111bdc2a3a134e0a326e6bc4432602ebd8bb15725d8dfac1d"
+    },
+    {
+      "file": "power-clock-bridge-01-preflight.log.gz",
+      "bytes": 1178,
+      "sha256": "b47eae72faf0336d5012333c6f5e0c96e79b13323b3f8f2c5022b174a91c9dc5",
+      "gzip_sha256": "8f5ea2393e14e8e1e268bee4013ff05f26010f27702435fa7e02fb6724c24c96"
+    },
+    {
+      "file": "power-clock-bridge-01-execute.json.gz",
+      "bytes": 677,
+      "sha256": "518a16f519fb6fb0515de30f540a981ff2db9c72ec8d6d4efd305bf93e21d9df",
+      "gzip_sha256": "d8ed21319648829f920ffddbf0b26a68fe96be7dc31cb2f3ee797bb9f4fb8d82"
+    },
+    {
+      "file": "power-clock-bridge-01-execute.log.gz",
+      "bytes": 54,
+      "sha256": "e9ee5e18641f98dfd5ceec795b951d8a95db4fe71bda835c9eaf300cab1c6300",
+      "gzip_sha256": "6f1d99b422e8e92b7fa39d92a45dbbcb50f29f87b1a7a4fef35932fa8da808d7"
+    }
+  ]
+}

@@ -12,6 +12,40 @@ from v04_protocol import ProtocolError, encode
 
 
 class PowerTests(unittest.TestCase):
+    def test_live_pins_keep_low_and_separate_observation_from_pass(self):
+        """! @brief LOW 상태는 보존하며 손상 응답·다른 역할·잘못된 길이는 거부합니다. """
+        device = mock.Mock(image={'role': 1})
+        append = mock.Mock()
+        words = [power.PINS_MAGIC, 1, 500, 64, 0, 3, 12, 8, 38, 39,
+                 65537, 1, 1, 0, 0, 0, 0, 0, 1, 1]
+        device.command.return_value = words
+        power.observe_pins(device, append, 'pins/test')
+        result = append.call_args.args[1]
+        self.assertEqual((result['tx_level'], result['rx_level']), (0, 0))
+        self.assertFalse(result['system_off_pass'])
+        for index, value in ((0, 0), (1, 2), (11, 2), (12, 2), (13, 2), (14, -1)):
+            broken = words[:]
+            broken[index] = value
+            device.command.return_value = broken
+            with self.subTest(index=index), self.assertRaises(ProtocolError):
+                power.observe_pins(device, append, 'pins/test')
+        device.command.return_value = words[:-1]
+        with self.assertRaises(ProtocolError):
+            power.observe_pins(device, append, 'pins/test')
+
+    def test_hardware_fault_does_not_accept_synthetic_queue_overflow(self):
+        """! @brief 합성 큐 초과를 하드웨어 오류로 바꾸지 않으며 실제 저위 비트만 보존합니다. """
+        target = mock.Mock()
+        image = {'role': 2, 'power_hardware_fault_address': power.pair.RAM_BEGIN+2048}
+        words = [power.FAULT_MAGIC, 2, 8, 5, 12]+[0]*15
+        target.read_memory_block8.return_value = struct.pack('<20I', *words)
+        self.assertEqual(power.read_power_hardware_fault(target, image)['error_mask'], 12)
+        for mask in (0, 16, 0x80000000):
+            words[4] = mask
+            target.read_memory_block8.return_value = struct.pack('<20I', *words)
+            with self.subTest(mask=mask), self.assertRaises(ProtocolError):
+                power.read_power_hardware_fault(target, image)
+
     def test_debug_held_bridge_cannot_substitute_for_normal_mode_or_off(self):
         """! @brief debug 유지 진단에는 정상 mode·reset·retention 성공을 부여하지 않습니다. """
         words = [power.MAGIC, 2, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 65537, 1, 2, 0, 0, 0, 800]

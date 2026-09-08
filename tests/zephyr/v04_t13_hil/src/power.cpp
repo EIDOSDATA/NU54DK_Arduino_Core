@@ -27,6 +27,8 @@ extern "C"
 {
     /** @brief 최초 UART 오류를 STOP 이후에도 읽을 수 있는 전용 진단 원본입니다. */
     alignas(4) volatile std::uint32_t v04_power_fault[20]{};
+    /** @brief 합성 큐 초과와 별도로 처음 전달된 하드웨어 오류를 보존합니다. */
+    alignas(4) volatile std::uint32_t v04_power_hardware_fault[20]{};
     /** @brief UART RX 시작 전 내부 pull-up 적용과 실제 유휴 수준을 부팅별로 보존합니다. */
     alignas(4) volatile std::uint32_t v04_power_idle[20]{};
 }
@@ -78,7 +80,11 @@ namespace
     /** @brief 최초 실제 UART event와 주변장치·신호 수준을 변경 없이 보존합니다. */
     void captureFault(const UarteEvent &event)
     {
-        if (v04_power_fault[0] != 0U)
+        const bool first = v04_power_fault[0] == 0U;
+        const bool hardware = event.type == UarteEventType::error && event.error_mask != 0U &&
+                              (event.error_mask & ~0x0FU) == 0U &&
+                              v04_power_hardware_fault[0] == 0U;
+        if (!first && !hardware)
         {
             return;
         }
@@ -109,10 +115,24 @@ namespace
                                          (rx.guards(frame_bytes) ? 8U : 0U)};
         for (unsigned index = 1U; index < 20U; ++index)
         {
-            v04_power_fault[index] = values[index];
+            if (first)
+            {
+                v04_power_fault[index] = values[index];
+            }
+            if (hardware)
+            {
+                v04_power_hardware_fault[index] = values[index];
+            }
         }
         __DMB();
-        v04_power_fault[0] = 0x50464531U;
+        if (first)
+        {
+            v04_power_fault[0] = 0x50464531U;
+        }
+        if (hardware)
+        {
+            v04_power_hardware_fault[0] = 0x50464531U;
+        }
     }
 
     std::uint32_t retainedChecksum()
@@ -585,6 +605,33 @@ std::uint32_t t13::power::command(std::uint32_t opcode, const std::uint32_t *arg
         ::memcpy(out, values, sizeof(values));
         count = 20U;
         deadline = k_uptime_get() + 10000U;
+        return 0U;
+    }
+    if (opcode == 134U && nargs == 1U && args[0] == 1U)
+    {
+        /** @brief reset 전후 소유 GPIO와 UART를 읽기만 하며 lease를 갱신하지 않습니다. */
+        const std::uint32_t values[]{0x50504931U,
+                                     role,
+                                     static_cast<std::uint32_t>(k_uptime_get()),
+                                     NRF_P1->OUT,
+                                     NRF_P1->IN,
+                                     NRF_P1->PIN_CNF[6U],
+                                     NRF_P1->PIN_CNF[7U],
+                                     NRF_UARTE21->ENABLE,
+                                     nrf_uarte_tx_pin_get(NRF_UARTE21),
+                                     nrf_uarte_rx_pin_get(NRF_UARTE21),
+                                     NRF_CLOCK->XO.STAT,
+                                     active,
+                                     receiving,
+                                     tx_pending,
+                                     error,
+                                     tx_count,
+                                     rx_count,
+                                     retained.boots,
+                                     NRF_TAD->SYSPWRUPREQ,
+                                     NRF_TAD->DBGPWRUPREQ};
+        ::memcpy(out, values, sizeof(values));
+        count = 20U;
         return 0U;
     }
     if (opcode == 139U && nargs == 0U)

@@ -1,0 +1,13 @@
+{
+  "source": "03257b6b84f776fac6640c6ba8d751237f450c45",
+  "physical_executed": true,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "power-clock-bridge-01-readonly-01.json.gz",
+      "bytes": 16891,
+      "sha256": "707d2e928bdcc635f319c886ce2bd434a805497911f5dce1014f2c10ae05a992",
+      "gzip_sha256": "455907088f5cb06150d0cab9f874c6477f6543363f388fff34184c2071792acd"
+    }
+  ]
+}

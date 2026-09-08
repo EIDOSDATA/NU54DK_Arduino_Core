@@ -20,6 +20,7 @@ MASK = 0xFFFFFFFF
 RESET_PIN, RESET_GPIO, RESET_TIMER = 1, 128, 2048
 FAULT_MAGIC = 0x50464531
 IDLE_MAGIC = 0x50494431
+PINS_MAGIC = 0x50504931
 
 
 def fault_region(address, size, symbols):
@@ -50,6 +51,14 @@ def inspect_power_image(repository, build_root, role):
             int(idle[0]['st_size']), result['symbols'])
         if abs(result['power_idle_address']-result['power_fault_address']) < 80:
             raise ProtocolError('T13 power idle and fault snapshots overlap')
+        hardware = table.get_symbol_by_name('v04_power_hardware_fault')
+        if not hardware or len(hardware) != 1:
+            raise ProtocolError('T13 power hardware-fault symbol missing or ambiguous')
+        result['power_hardware_fault_address'] = fault_region(int(hardware[0]['st_value']),
+            int(hardware[0]['st_size']), result['symbols'])
+        if any(abs(result['power_hardware_fault_address']-result[key]) < 80 for key in
+               ('power_fault_address', 'power_idle_address')):
+            raise ProtocolError('T13 power hardware-fault snapshot overlaps another record')
     return result
 
 
@@ -81,6 +90,28 @@ def read_power_idle(target, image):
         raise ProtocolError('T13 power initial idle marker/role/pin/pull mismatch')
     return {'present': True, 'words': words, 'rx_before': words[8], 'rx_after': words[10],
             'internal_rx_pull_up': True, 'system_off_pass': False}
+
+
+def read_power_hardware_fault(target, image):
+    """! @brief 큐 초과와 별도로 보존한 저위 네 비트의 최초 UART 오류를 읽습니다. """
+    result = read_power_fault(target, {**image, 'power_fault_address':
+                                     image['power_hardware_fault_address']})
+    if result['present'] and (result['event_type'] != 5 or not 0 < result['error_mask'] <= 15):
+        raise ProtocolError('T13 power hardware-fault record has non-hardware error mask')
+    return result
+
+
+def observe_pins(device, append, label):
+    """! @brief 기존 SWD 연결에서 유휴 신호·GPIO·UART 상태를 읽고 성공 판정 없이 보존합니다. """
+    words = device.command(134, (1,))
+    if (not isinstance(words, list) or len(words) != 20 or words[:2] !=
+            [PINS_MAGIC, device.image['role']] or any(type(value) is not int or
+            not 0 <= value <= MASK for value in words) or
+            any(words[index] not in (0, 1) for index in (11, 12, 13))):
+        raise ProtocolError('T13 power live-pin snapshot malformed or wrong role')
+    append(label, {'status': 'diagnostic', 'words': words,
+        'tx_level': (words[4] >> 6) & 1, 'rx_level': (words[4] >> 7) & 1,
+        'system_off_pass': False})
 
 
 def inspect(words, *, boots, mode, round_number, seed):
@@ -243,6 +274,8 @@ def execute(args, images, grant, uids, append):
                     raise ProtocolError('T13 power UART/pin preparation failed')
             a, b = devices
             append('debug/before', {'status': 'observation', 'words': b.command(134)})
+            observe_pins(a, append, 'pins/controller-before-peer-reset')
+            observe_pins(b, append, 'pins/peer-before-reset')
             if args.phase == 'bridge-debug':
                 if b.command(131, timeout=2) != [1]:
                     raise ProtocolError('T13 debug-held B receive start failed')
@@ -252,6 +285,7 @@ def execute(args, images, grant, uids, append):
                 detached = True
                 detach_and_pin_reset(b, append)
                 time.sleep(.3)
+                observe_pins(a, append, 'pins/controller-after-peer-reset')
 
             def a_only_check():
                 session.validate(grant, images, uids)
@@ -264,6 +298,7 @@ def execute(args, images, grant, uids, append):
 
             if a.command(131, timeout=2) != [1]:
                 raise ProtocolError('T13 A receive start failed')
+            observe_pins(a, append, 'pins/controller-after-rx-start')
             relay = Relay(a, b.nonce, b.sequence, a_only_check, append)
             verify_source(relay.command(131), images[1]['core_revision'])
             if args.phase == 'bridge-debug':
@@ -316,6 +351,12 @@ def execute(args, images, grant, uids, append):
         except BaseException as error:
             original_error = error
             append('failure', {'status': 'failed', 'error': f'{type(error).__name__}: {error}'})
+            if devices and not devices[0].poisoned:
+                try:
+                    observe_pins(devices[0], append, 'pins/controller-at-failure')
+                except BaseException as diagnostic_error:
+                    append('pins/controller-at-failure', {'status': 'unproven',
+                        'error': str(diagnostic_error)})
         finally:
             for device in reversed(devices):
                 try:
@@ -348,6 +389,7 @@ def execute(args, images, grant, uids, append):
                     raw_identity = bytes(target.read_memory_block8(device.image['symbols']['v04_identity'], 64))
                     pair.verify_identity(raw_identity, index+1, device.image['core_revision'])
                     for name, reader in (('first-uart-fault', read_power_fault),
+                                         ('first-hardware-uart-fault', read_power_hardware_fault),
                                          ('initial-uart-idle', read_power_idle)):
                         try:
                             append(f'cleanup/role{index+1}/{name}',

@@ -63,7 +63,7 @@ clock 참조를 표시하므로 정리 성공은 이 bit도0이어야 한다. cl
 | 130 | SWD A/B | power magic 확인 후 UART TX·wake pin 소유권 준비 |
 | 131 | SWD A/B, peer B | RX 시작; peer 경로에서는 compiled source 응답 |
 | 132/133 | A | B 요청32word를16word 두 page로 준비·DMA 송신 |
-| 134 | A/B | debug·reset·retention·DMA·uptime20word 원본 |
+| 134 | A/B | 인수 없음: debug·reset·retention·DMA20word. 인수1: GPIO·UART 유휴선20word |
 | 135 | A | 받은 B 응답의16word page 조회 |
 | 136 | peer B | mode·회차·seed를 고정하고 응답 종료 후 OFF 예약 |
 | 137 | SWD B / peer B | 예정 pin reset / seed와 결합한 새20word challenge 응답 |
@@ -90,3 +90,13 @@ role, uptime, UART21, TX38, RX39, TX PIN_CNF, 이전 RX PIN_CNF·수준, pull-up
 TX 수준, ENABLE, CONFIG, BAUDRATE, XO.STAT, retained boots, active1/RX0/TX0이다.
 첫 오류 원본과 겹치지 않는 SRAM 주소를 검증한다. 이 원본은 LOW→HIGH 변화 또는 여전히 LOW인
 상태를 그대로 보고하며 실제 System OFF·원인 확정의 PASS로 세지 않는다.
+
+`v04_power_hardware_fault`의 독립80byte는 동일 형식으로 최초 저위4bit UART 오류를 보존한다.
+합성 큐 초과0x80000000은 이 영역에 넣지 않으며 기존 최초 오류는 그대로 유지한다.
+이벤트를 버리거나 이벤트 큐 크기를 늘리지 않는다.
+
+134의 인수1은 magic0x50504931, role, uptime, P1 OUT/IN, P1.06/07 PIN_CNF,
+UARTE21 ENABLE/TX/RX PSEL, XO.STAT, active/RX/TX pending, error, TX/RX count,
+retained boots, TAD system/debug request를 읽는다. 이 조회는 lease를 갱신하지 않는다.
+runner는 기존 연결에서 양쪽 reset 전 상태, A의 peer reset 뒤·RX 시작 뒤·실패 시 상태를
+기록한다. B의 debug 분리 뒤 접근 제한과 nonce·sequence·STOP 판정은 유지한다.
