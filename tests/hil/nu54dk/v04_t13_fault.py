@@ -115,12 +115,15 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
                         append(label + f'/final/role{device.image["role"]}/{name}', {'status': 'observation', 'words': words})
                         if opcode == 99 and (len(words) != 16 or words[0] != test['id'] or words[5] != 0):
                             original_error = original_error or ProtocolError('T13 fault reset, case drift or lease expiry')
+                            # @brief PREPARE 전 lane 조회의 403이 정상 STOP 세션까지 잃게 하지 않습니다.
+                            break
                         if opcode == 110 and device is target:
                             raw_fault = words
                     except BaseException as error:
                         append(label + f'/final/role{device.image["role"]}/{name}',
                                {'status': 'unproven', 'error': f'{type(error).__name__}: {error}'})
                         original_error = original_error or error
+                        break
             stopped = runner.stop_pair(devices, append, label + '/cleanup')
             pins_idle = runner.idle_pins(devices, append, label + '/pins')
         if original_error is not None:

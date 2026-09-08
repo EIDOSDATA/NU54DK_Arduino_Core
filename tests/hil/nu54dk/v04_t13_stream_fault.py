@@ -92,6 +92,8 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
                         append(label + f'/final/role{device.image["role"]}/{name}', {'status': 'observation', 'words': words})
                         if opcode == 99 and (len(words) != 16 or words[0] != test['id'] or words[5] != 0):
                             original_error = original_error or ProtocolError('T13 stream fault reset, case drift or lease expiry')
+                            # @brief PREPARE 전 stream 조회를 생략하고 양쪽 STOP 경로를 보존합니다.
+                            break
                         if device is target:
                             if opcode == 115:
                                 raw_fault = words
@@ -101,6 +103,7 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
                         append(label + f'/final/role{device.image["role"]}/{name}',
                                {'status': 'unproven', 'error': f'{type(error).__name__}: {error}'})
                         original_error = original_error or error
+                        break
             stopped = runner.stop_pair(devices, append, label + '/cleanup')
             pins_idle = runner.idle_pins(devices, append, label + '/pins')
         if original_error is not None:
