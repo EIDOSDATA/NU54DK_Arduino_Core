@@ -17,6 +17,7 @@ import v04_t13_stream_fault as stream_faults
 import v04_t13_pwm_recovery as pwm_recovery
 import v04_t13_handover as handover
 import v04_t13_spi_timing as spi_timing
+import v04_t13_i2s_edge as i2s_edges
 import v04_t13_conflict as conflicts
 import v04_t13_flow as flows
 import v04_t13_uart_line as uart_lines
@@ -197,6 +198,8 @@ def failure_snapshots(devices, test, append, identifier):
                 # @brief 긴 DMA 원본 조회 전에 살아 있는 peer의 핀·DMA·IRQ와 최초 오류 상태를 보존합니다.
                 observations += [(118, (page,), f'i2s-failure-page{page}')
                                  for page in (17, 18, 19, *range(17))]
+                if test.get('_i2s_edge_diagnostic'):
+                    observations += [(186, (page,), f'i2s-edge-page{page}') for page in range(3)]
         for opcode, arguments, name in observations:
             try:
                 words = device.command(opcode, arguments, timeout=2)
@@ -252,11 +255,16 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
     diagnostic_mode = test.get('_pwm_diagnostic_tail', 0)
     if diagnostic_mode not in (0, 1, 2):
         raise ProtocolError('unsupported fixed PWM diagnostic route')
-    diagnostic = bool(diagnostic_mode)
-    if diagnostic and (not preflight or test['serial_links'] or not test['pwm_instance'] or
-                       test['adc_channels'] or test['pdm_instance'] or test['i2s']):
+    edge_diagnostic = bool(test.get('_i2s_edge_diagnostic'))
+    diagnostic = bool(diagnostic_mode) or edge_diagnostic
+    if diagnostic_mode and (not preflight or test['serial_links'] or not test['pwm_instance'] or
+                            test['adc_channels'] or test['pdm_instance'] or test['i2s']):
         raise ProtocolError('PWM failure tail is restricted to standalone diagnostic observation')
-    phase = 'pwm-diagnostic' if diagnostic else 'preflight' if preflight else 'soak'
+    if edge_diagnostic and (not preflight or test['serial_links'] or test['adc_channels'] or
+                            test['pwm_instance'] or test['pdm_instance'] or not test['i2s']):
+        raise ProtocolError('I2S edge diagnostic is restricted to standalone observation')
+    phase = ('pwm-diagnostic' if diagnostic_mode else 'i2s-edge-diagnostic'
+             if edge_diagnostic else 'preflight' if preflight else 'soak')
     identifier = f'T13-S/{phase}/{test["name"]}'
     continuity.check()
     append(identifier + '/input', {'status': 'input', 'test': test, 'seed': seed,
@@ -275,6 +283,8 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
                 raise ProtocolError('T13 role selection failed')
             if device.command(116, (int(diagnostic_mode),), timeout=2) != [1]:
                 raise ProtocolError('T13 PWM diagnostic policy failed')
+            if device.command(185, (int(edge_diagnostic),), timeout=2) != [1]:
+                raise ProtocolError('T13 I2S edge diagnostic policy failed')
         for device in reversed(devices):
             if device.command(97, (test['id'], seed, 0x53414645), timeout=3) != [1]:
                 words = device.command(99, timeout=2)
@@ -408,7 +418,8 @@ def main(argv=None):
                                           'spi-boundary-preflight', 'spi-boundary',
                                           'rx-delay-preflight', 'rx-delay',
                                           'twi-stuck-preflight', 'twi-stuck',
-                                          'twis-delay-preflight', 'twis-delay'), default='wiring')
+                                           'twis-delay-preflight', 'twis-delay',
+                                           'i2s-edge-diagnostic'), default='wiring')
     parser.add_argument('--cases', nargs='+', type=int, default=[])
     parser.add_argument('--fault-mode', type=int, choices=range(1, 6))
     parser.add_argument('--stream-fault-mode', type=int, choices=(1, 2))
@@ -423,6 +434,7 @@ def main(argv=None):
     parser.add_argument('--spi-timing-mode', choices=tuple(spi_timing.MODES))
     parser.add_argument('--execute-fixture', action='store_true')
     parser.add_argument('--cmsis-dap-limit-packets', action='store_true')
+    parser.add_argument('--diagnostic-repetitions', type=int, default=1)
     args = parser.parse_args(argv)
     uids = validate_pair(args.dut, args.peer)
     images = [pair.inspect_image(pair.ROOT, args.build_root.resolve(), role, family='t13_s') for role in (1, 2)]
@@ -462,6 +474,13 @@ def main(argv=None):
     is_rx_delay = args.phase in ('rx-delay-preflight', 'rx-delay')
     is_twi_stuck = args.phase in ('twi-stuck-preflight', 'twi-stuck')
     is_twis_delay = args.phase in ('twis-delay-preflight', 'twis-delay')
+    is_i2s_edge = args.phase == 'i2s-edge-diagnostic'
+    if is_i2s_edge:
+        if args.cases != [30] or not 1 <= args.diagnostic_repetitions <= 1000:
+            raise ProtocolError('T13 I2S edge diagnostic requires only case 30')
+        available_cases[30] = i2s_edges.fixture(available_cases[30])
+    elif args.diagnostic_repetitions != 1:
+        raise ProtocolError('diagnostic repetitions require the I2S edge diagnostic phase')
     if is_twis_delay:
         if args.reverse_serial or args.fault_role != 1:
             raise ProtocolError('T13 TWIS delay needs fixed A controller and B target')
@@ -527,7 +546,8 @@ def main(argv=None):
         'stream_fault_mode': args.stream_fault_mode,
         'pwm_recovery_mode': args.pwm_recovery_mode,
         'reverse_serial': args.reverse_serial, 'handover_instance': args.handover_instance,
-        'spi_timing_mode': args.spi_timing_mode, 'diagnostic_only': is_timing,
+        'spi_timing_mode': args.spi_timing_mode, 'diagnostic_only': is_timing or is_i2s_edge,
+        'diagnostic_repetitions': args.diagnostic_repetitions if is_i2s_edge else None,
         'devices': [{'role': image['role'], 'uid_sha256': hashlib.sha256(uid.encode()).hexdigest(),
                      'hex_sha256': image['sha256'], 'elf_sha256': image['elf_sha256'],
                      'record_sha256': image['record_sha256']} for uid, image in zip(uids, images)]}
@@ -565,6 +585,9 @@ def main(argv=None):
             if is_handover:
                 handover.execute(devices, args.handover_instance, continuity, append,
                                  preflight=args.phase != 'handover', timing_mode=args.spi_timing_mode)
+            elif is_i2s_edge:
+                i2s_edges.execute(devices, available_cases[30], args.diagnostic_repetitions,
+                                  continuity, append)
             elif is_twis_delay:
                 for identifier in args.cases:
                     twis_delays.execute(devices, available_cases[identifier], continuity, append,
@@ -615,7 +638,8 @@ def main(argv=None):
                 append(f'T13-S/final-pins/role{device.image["role"]}', {'status': 'observation', 'words': words})
                 if words[1:4] != [0, 0, 0] or words[7] != 0:
                     raise ProtocolError('T13 final pin direction/pull/lease not idle')
-    print(('T13_S_DIAGNOSTIC_COMPLETED; no normal-soak qualification' if args.phase == 'pwm-diagnostic' or is_timing
+    print(('T13_S_DIAGNOSTIC_COMPLETED; no normal-soak qualification'
+           if args.phase == 'pwm-diagnostic' or is_timing or is_i2s_edge
            else 'T13_S_CAMPAIGN_PASS; phase=' + args.phase), flush=True)
     return 0
 

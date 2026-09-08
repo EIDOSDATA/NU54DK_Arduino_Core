@@ -1,10 +1,14 @@
 /** @file @brief 양방향 I2S 3-slot DMA의 모든 반환 word를 전역 위치로 대조합니다. */
 #include "stream_types.h"
 #include "i2s_stream_oracle.h"
+#include <nucode/EventFabric.h>
 #include <nucode/StreamFabric.h>
 #include <variant.h>
+#include <hal/nrf_dppi.h>
 #include <hal/nrf_gpio.h>
+#include <hal/nrf_gpiote.h>
 #include <hal/nrf_i2s.h>
+#include <hal/nrf_timer.h>
 
 namespace
 {
@@ -20,6 +24,323 @@ namespace
     unsigned failed_slot = UINT32_MAX;
     std::uint32_t stop_requests = 0U;
     std::uint32_t first_failure_registers[20]{};
+
+    constexpr std::uint8_t edge_gpiote_channel = 7U;
+    constexpr std::uint8_t edge_count_dppi_channel = 14U;
+    constexpr std::uint8_t edge_boundary_dppi_channel = 15U;
+
+    /** @brief 실제 SDIN 전이와 I2S DMA 경계를 CPU 지연 없이 대조하는 진단 상태입니다. */
+    struct EdgeDiagnostic
+    {
+        bool policy = false, active = false, boundary_ready = false, raw_configured = false;
+        bool timer_owned = false, count_owned = false, boundary_owned = false;
+        bool count_connected = false, boundary_connected = false;
+        TimerFabric *timer = nullptr;
+        DppiFabric *dppi = nullptr;
+        std::uint32_t buffers = 0U, comparisons = 0U;
+        std::uint32_t expected_matches = 0U, actual_matches = 0U;
+        std::uint32_t previous_boundary = 0U, last_boundary = 0U, last_delta = 0U;
+        std::uint32_t last_expected = 0U, last_actual = 0U;
+        std::uint32_t first_boundary = 0U, first_previous = 0U, first_delta = 0U;
+        std::uint32_t first_expected = 0U, first_actual = 0U, first_cycle = 0U;
+        std::uint32_t pin_cnf_before = 0U, pin_cnf_after = 0U;
+        std::uint32_t cleanup_failures = 0U;
+        std::uint32_t first_registers[20]{};
+        bool first_saved = false;
+    } edge;
+
+    EventEndpoint edgeDataEvent()
+    {
+        return {nrf_gpiote_event_address_get(NRF_GPIOTE20,
+                                             nrf_gpiote_in_event_get(edge_gpiote_channel)),
+                20U, EventEndpointRole::publisher};
+    }
+
+    EventEndpoint edgeBoundaryEvent()
+    {
+        return {nrf_i2s_event_address_get(NRF_I2S20, NRF_I2S_EVENT_RXPTRUPD), 20U,
+                EventEndpointRole::publisher};
+    }
+
+    std::uint32_t absoluteDifference(std::uint32_t left, std::uint32_t right)
+    {
+        return left >= right ? left - right : right - left;
+    }
+
+    /** @brief MSB 우선 직렬화한 한 DMA 내부의 논리 전이 수를 계산합니다. */
+    std::uint32_t transitionCount(const std::uint32_t *values)
+    {
+        std::uint32_t count = 0U, previous = 0U;
+        bool begun = false;
+        for (unsigned index = 0U; index < 256U; ++index)
+        {
+            for (unsigned bit = 0U; bit < 32U; ++bit)
+            {
+                const auto value = (values[index] >> (31U - bit)) & 1U;
+                if (begun && value != previous)
+                {
+                    ++count;
+                }
+                previous = value;
+                begun = true;
+            }
+        }
+        return count;
+    }
+
+    /** @brief 현재 전역 수신 위치에 해당하는 peer의 기대 전이 수를 계산합니다. */
+    std::uint32_t expectedTransitionCount()
+    {
+        std::uint32_t count = 0U, previous = 0U;
+        bool begun = false;
+        const auto first_position = stats.completed * 256U;
+        for (unsigned index = 0U; index < 256U; ++index)
+        {
+            const auto position = first_position + index;
+            const auto word = position < oracle.padding
+                                  ? 0U
+                                  : v04::i2sStreamPattern(oracle.seed, position - oracle.padding);
+            for (unsigned bit = 0U; bit < 32U; ++bit)
+            {
+                const auto value = (word >> (31U - bit)) & 1U;
+                if (begun && value != previous)
+                {
+                    ++count;
+                }
+                previous = value;
+                begun = true;
+            }
+        }
+        return count;
+    }
+
+    /** @brief 최초 데이터 불일치 순간의 계수기와 연결 레지스터를 RAM에 보존합니다. */
+    void saveEdgeFailure()
+    {
+        if (!edge.active || edge.first_saved)
+        {
+            return;
+        }
+        edge.first_saved = true;
+        edge.first_boundary = edge.last_boundary;
+        edge.first_previous = edge.previous_boundary - edge.last_delta;
+        edge.first_delta = edge.last_delta;
+        edge.first_expected = edge.last_expected;
+        edge.first_actual = edge.last_actual;
+        edge.first_cycle = k_cycle_get_32();
+        const std::uint32_t values[]{0x49324552U,
+                                     role,
+                                     NRF_GPIOTE20->CONFIG[edge_gpiote_channel],
+                                     NRF_GPIOTE20->PUBLISH_IN[edge_gpiote_channel],
+                                     NRF_GPIOTE20->EVENTS_IN[edge_gpiote_channel],
+                                     NRF_TIMER22->MODE,
+                                     NRF_TIMER22->BITMODE,
+                                     NRF_TIMER22->SUBSCRIBE_COUNT,
+                                     NRF_TIMER22->SUBSCRIBE_CAPTURE[0],
+                                     NRF_TIMER22->CC[0],
+                                     NRF_DPPIC20->CHEN,
+                                     NRF_I2S20->PUBLISH_RXPTRUPD,
+                                     NRF_I2S20->EVENTS_RXPTRUPD,
+                                     NRF_I2S20->RXD.PTR,
+                                     NRF_I2S20->RXTXD.MAXCNT,
+                                     NRF_P1->PIN_CNF[7],
+                                     NRF_P1->IN,
+                                     edge.first_cycle,
+                                     edge.active,
+                                     edge.boundary_ready};
+        for (unsigned index = 0U; index < 20U; ++index)
+        {
+            edge.first_registers[index] = values[index];
+        }
+    }
+
+    /** @brief 반환 DMA 경계의 실제 핀 누적 전이 수를 먼저 고정합니다. */
+    void observeEdgeBoundary()
+    {
+        if (!edge.active || !edge.boundary_ready)
+        {
+            return;
+        }
+        const auto boundary = nrf_timer_cc_get(NRF_TIMER22, NRF_TIMER_CC_CHANNEL0);
+        const auto previous = edge.previous_boundary;
+        edge.last_boundary = boundary;
+        edge.last_delta = boundary - previous;
+        edge.previous_boundary = boundary;
+        ++edge.buffers;
+    }
+
+    /** @brief 초기 네 DMA와 실제 실패 DMA만 계산해 실시간 공급 시점을 교란하지 않습니다. */
+    void compareEdgeBuffer(unsigned slot, bool failure)
+    {
+        if (!edge.active || !edge.boundary_ready || (!failure && edge.buffers > 4U))
+        {
+            return;
+        }
+        edge.last_expected = expectedTransitionCount();
+        edge.last_actual = transitionCount(rx[slot].values);
+        ++edge.comparisons;
+        if (absoluteDifference(edge.last_delta, edge.last_expected) <= 1U)
+        {
+            ++edge.expected_matches;
+        }
+        if (absoluteDifference(edge.last_delta, edge.last_actual) <= 1U)
+        {
+            ++edge.actual_matches;
+        }
+    }
+
+    /** @brief 부분 준비 상태도 역순으로 해제하고 모든 진단 endpoint가 0인지 확인합니다. */
+    bool cleanupEdgeDiagnostic()
+    {
+        if (role != 1U || (!edge.active && !edge.raw_configured && !edge.timer_owned &&
+                           !edge.count_owned && !edge.boundary_owned))
+        {
+            edge.active = false;
+            edge.boundary_ready = false;
+            return true;
+        }
+        std::uint32_t failures = 0U;
+        if (edge.count_owned &&
+            edge.dppi->disable(edge_count_dppi_channel) != EventFabricResult::success)
+        {
+            failures |= 1U << 0U;
+        }
+        if (edge.boundary_owned &&
+            edge.dppi->disable(edge_boundary_dppi_channel) != EventFabricResult::success)
+        {
+            failures |= 1U << 1U;
+        }
+        if (edge.boundary_connected &&
+            edge.dppi->disconnect(edgeBoundaryEvent(), edge.timer->task(TimerTask::capture, 0U),
+                                  edge_boundary_dppi_channel) != EventFabricResult::success)
+        {
+            failures |= 1U << 2U;
+        }
+        edge.boundary_connected = false;
+        if (edge.count_connected &&
+            edge.dppi->disconnect(edgeDataEvent(), edge.timer->task(TimerTask::count),
+                                  edge_count_dppi_channel) != EventFabricResult::success)
+        {
+            failures |= 1U << 3U;
+        }
+        edge.count_connected = false;
+        if (edge.raw_configured)
+        {
+            nrf_gpiote_te_default(NRF_GPIOTE20, edge_gpiote_channel);
+            nrf_gpiote_event_clear(NRF_GPIOTE20, nrf_gpiote_in_event_get(edge_gpiote_channel));
+            edge.raw_configured = false;
+        }
+        if (edge.timer_owned)
+        {
+            if (edge.timer->stop() != EventFabricResult::success ||
+                edge.timer->clear() != EventFabricResult::success)
+            {
+                failures |= 1U << 4U;
+            }
+            nrf_timer_mode_set(NRF_TIMER22, NRF_TIMER_MODE_TIMER);
+            if (edge.timer->release() != EventFabricResult::success)
+            {
+                failures |= 1U << 5U;
+            }
+        }
+        edge.timer_owned = false;
+        if (edge.boundary_owned &&
+            edge.dppi->releaseChannel(edge_boundary_dppi_channel) != EventFabricResult::success)
+        {
+            failures |= 1U << 6U;
+        }
+        edge.boundary_owned = false;
+        if (edge.count_owned &&
+            edge.dppi->releaseChannel(edge_count_dppi_channel) != EventFabricResult::success)
+        {
+            failures |= 1U << 7U;
+        }
+        edge.count_owned = false;
+        edge.active = false;
+        edge.boundary_ready = false;
+        const auto mask = (1UL << edge_count_dppi_channel) | (1UL << edge_boundary_dppi_channel);
+        if (NRF_GPIOTE20->CONFIG[edge_gpiote_channel] != 0U ||
+            NRF_GPIOTE20->PUBLISH_IN[edge_gpiote_channel] != 0U ||
+            NRF_TIMER22->SUBSCRIBE_COUNT != 0U || NRF_TIMER22->SUBSCRIBE_CAPTURE[0] != 0U ||
+            NRF_I2S20->PUBLISH_RXPTRUPD != 0U || (NRF_DPPIC20->CHEN & mask) != 0U)
+        {
+            failures |= 1U << 8U;
+        }
+        edge.cleanup_failures |= failures;
+        return failures == 0U;
+    }
+
+    /** @brief role1의 SDIN을 GPIO 재설정 없이 감시하고 정식 TIMER/DPPI 점유를 구성합니다. */
+    bool prepareEdgeDiagnostic()
+    {
+        if (!edge.policy || role != 1U)
+        {
+            return true;
+        }
+        edge.timer = eventFabric().timer(22U);
+        edge.dppi = eventFabric().dppi(20U);
+        const auto mask = (1UL << edge_count_dppi_channel) | (1UL << edge_boundary_dppi_channel);
+        if (edge.timer == nullptr || edge.dppi == nullptr ||
+            NRF_GPIOTE20->CONFIG[edge_gpiote_channel] != 0U ||
+            NRF_GPIOTE20->PUBLISH_IN[edge_gpiote_channel] != 0U ||
+            NRF_I2S20->PUBLISH_RXPTRUPD != 0U || (NRF_DPPIC20->CHEN & mask) != 0U)
+        {
+            return false;
+        }
+        edge.timer_owned = edge.timer->acquire(1000000U) == EventFabricResult::success;
+        edge.count_owned = edge.timer_owned && edge.dppi->acquireChannel(edge_count_dppi_channel) ==
+                                                   EventFabricResult::success;
+        edge.boundary_owned =
+            edge.count_owned &&
+            edge.dppi->acquireChannel(edge_boundary_dppi_channel) == EventFabricResult::success;
+        if (!edge.boundary_owned)
+        {
+            cleanupEdgeDiagnostic();
+            return false;
+        }
+        nrf_timer_mode_set(NRF_TIMER22, NRF_TIMER_MODE_COUNTER);
+        edge.pin_cnf_before = NRF_P1->PIN_CNF[7];
+        nrf_gpiote_event_configure(NRF_GPIOTE20, edge_gpiote_channel, NRF_GPIO_PIN_MAP(1U, 7U),
+                                   NRF_GPIOTE_POLARITY_TOGGLE);
+        nrf_gpiote_event_enable(NRF_GPIOTE20, edge_gpiote_channel);
+        edge.raw_configured = true;
+        edge.pin_cnf_after = NRF_P1->PIN_CNF[7];
+        edge.count_connected =
+            edge.dppi->connect(edgeDataEvent(), edge.timer->task(TimerTask::count),
+                               edge_count_dppi_channel) == EventFabricResult::success;
+        edge.boundary_connected =
+            edge.count_connected &&
+            edge.dppi->connect(edgeBoundaryEvent(), edge.timer->task(TimerTask::capture, 0U),
+                               edge_boundary_dppi_channel) == EventFabricResult::success;
+        if (!edge.boundary_connected || edge.pin_cnf_before != edge.pin_cnf_after)
+        {
+            cleanupEdgeDiagnostic();
+            return false;
+        }
+        return true;
+    }
+
+    /** @brief I2S START 직전에 계수 경로를 열어 최초 RXPTRUPD를 기준점으로 사용합니다. */
+    bool startEdgeDiagnostic()
+    {
+        if (!edge.policy || role != 1U)
+        {
+            return true;
+        }
+        nrf_gpiote_event_clear(NRF_GPIOTE20, nrf_gpiote_in_event_get(edge_gpiote_channel));
+        nrf_i2s_event_clear(NRF_I2S20, NRF_I2S_EVENT_RXPTRUPD);
+        if (edge.timer->clear() != EventFabricResult::success ||
+            edge.timer->start() != EventFabricResult::success ||
+            edge.dppi->enable(edge_count_dppi_channel) != EventFabricResult::success ||
+            edge.dppi->enable(edge_boundary_dppi_channel) != EventFabricResult::success)
+        {
+            cleanupEdgeDiagnostic();
+            return false;
+        }
+        edge.active = true;
+        edge.boundary_ready = false;
+        return true;
+    }
 
     /** @brief 읽기만으로 DMA·핀 설정·IRQ 상태를 수집하며 event를 지우지 않습니다. */
     void registers(std::uint32_t *out)
@@ -93,6 +414,9 @@ namespace
 
 bool t13::audioPrepare(const Case &test, std::uint32_t seed)
 {
+    const bool edge_policy = edge.policy;
+    edge = {};
+    edge.policy = edge_policy;
     stats.enabled = test.i2s;
     audio = nullptr;
     failed_slot = UINT32_MAX;
@@ -103,7 +427,7 @@ bool t13::audioPrepare(const Case &test, std::uint32_t seed)
     }
     if (!stats.enabled)
     {
-        return true;
+        return !edge.policy;
     }
     seed_tx = laneSeed(seed, 0U, role);
     oracle.reset(laneSeed(seed, 0U, 3U - role), 32U, 0U);
@@ -113,9 +437,14 @@ bool t13::audioPrepare(const Case &test, std::uint32_t seed)
         tx[slot].initialize(0U);
         rx[slot].initialize(0xCCCCCCCCU);
     }
+    if (!prepareEdgeDiagnostic())
+    {
+        return stats.fail(13U);
+    }
     audio = streamFabric().i2s(20U);
     if (audio == nullptr)
     {
+        cleanupEdgeDiagnostic();
         return stats.fail(12U);
     }
     const I2sConfiguration configuration{
@@ -130,8 +459,12 @@ bool t13::audioPrepare(const Case &test, std::uint32_t seed)
         role == 1U,
         StreamElectricalProfile::dap_uart_disabled};
     const auto result = audio->configure(configuration);
-    return result == StreamFabricResult::success ||
-           stats.fail(2U, static_cast<std::uint32_t>(result));
+    if (result != StreamFabricResult::success)
+    {
+        cleanupEdgeDiagnostic();
+        return stats.fail(2U, static_cast<std::uint32_t>(result));
+    }
+    return true;
 }
 
 bool t13::audioStart()
@@ -142,12 +475,18 @@ bool t13::audioStart()
     }
     if (!fill(0U))
     {
+        cleanupEdgeDiagnostic();
         return false;
     }
     submitted[0] = k_cycle_get_32();
+    if (!startEdgeDiagnostic())
+    {
+        return stats.fail(14U);
+    }
     const auto result = audio->start(buffers(0U));
     if (result != StreamFabricResult::success)
     {
+        cleanupEdgeDiagnostic();
         return stats.fail(3U, static_cast<std::uint32_t>(result));
     }
     pending[0] = stats.active = true;
@@ -175,6 +514,8 @@ void t13::audioService()
                 stats.fail(4U, slot);
                 break;
             }
+            observeEdgeBoundary();
+            const auto mismatches_before = oracle.mismatches;
             for (unsigned index = 0U; index < 256U; ++index)
             {
                 if (index % 32U == 0U)
@@ -198,12 +539,14 @@ void t13::audioService()
             stats.padding = oracle.padding;
             stats.extra[0] = oracle.samples;
             stats.extra[1] = oracle.mismatches;
+            compareEdgeBuffer(slot, oracle.mismatches != mismatches_before);
             if (oracle.mismatches != 0U)
             {
                 if (failed_slot == UINT32_MAX)
                 {
                     registers(first_failure_registers);
                     failed_slot = slot;
+                    saveEdgeFailure();
                 }
                 stats.fail(6U, oracle.first_index);
             }
@@ -212,6 +555,12 @@ void t13::audioService()
         }
         else if (event.type == I2sEventType::buffers_needed)
         {
+            if (edge.active && stats.completed == 0U && !edge.boundary_ready)
+            {
+                edge.previous_boundary = nrf_timer_cc_get(NRF_TIMER22, NRF_TIMER_CC_CHANNEL0);
+                edge.last_boundary = edge.previous_boundary;
+                edge.boundary_ready = true;
+            }
             if (stream_fault.skip(2U, stats.completed, stats.queued, k_cycle_get_32()))
             {
                 continue;
@@ -253,25 +602,39 @@ bool t13::audioStop()
     {
         ++stop_requests;
     }
+    bool stopped = true;
     if (audio != nullptr && audio->state() == StreamFabricState::faulted)
     {
-        return stats.fail(9U);
+        stopped = stats.fail(9U);
     }
-    if (audio != nullptr && (audio->state() == StreamFabricState::active ||
-                             audio->state() == StreamFabricState::stopping))
+    else if (audio != nullptr && (audio->state() == StreamFabricState::active ||
+                                  audio->state() == StreamFabricState::stopping))
     {
         const auto result = audio->stop(100000U);
         if (result != StreamFabricResult::success)
         {
-            return stats.fail(10U, static_cast<std::uint32_t>(result));
+            stopped = stats.fail(10U, static_cast<std::uint32_t>(result));
         }
-        for (unsigned pin = 4U; pin <= 7U; ++pin)
+        else
         {
-            nrf_gpio_cfg_input(NRF_GPIO_PIN_MAP(1, pin), NRF_GPIO_PIN_NOPULL);
+            for (unsigned pin = 4U; pin <= 7U; ++pin)
+            {
+                nrf_gpio_cfg_input(NRF_GPIO_PIN_MAP(1, pin), NRF_GPIO_PIN_NOPULL);
+            }
         }
     }
+    const bool edge_clean = cleanupEdgeDiagnostic();
+    if (!edge_clean)
+    {
+        stats.fail(15U, edge.cleanup_failures);
+    }
     stats.active = false;
-    return guards() || stats.fail(11U);
+    const bool guarded = guards();
+    if (!guarded)
+    {
+        stats.fail(11U);
+    }
+    return stopped && edge_clean && guarded;
 }
 
 bool t13::audioHealthy()
@@ -376,4 +739,76 @@ void t13::audioDiagnosticSnapshot(unsigned page, std::uint32_t *out, std::uint32
         out[index] = rx[failed_slot].values[(page - 1U) * 16U + index];
     }
     count = 16U;
+}
+
+bool t13::audioEdgeDiagnosticPolicy(unsigned mode)
+{
+    if (mode > 1U || edge.active || edge.timer_owned || edge.count_owned || edge.boundary_owned)
+    {
+        return false;
+    }
+    edge.policy = mode != 0U;
+    return true;
+}
+
+/** @brief SDIN 전이 판정, 최초 오류 레지스터, 정리 상태를 각각 20 word로 반환합니다. */
+void t13::audioEdgeDiagnosticSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count)
+{
+    if (page > 2U)
+    {
+        count = 0U;
+        return;
+    }
+    if (page == 0U)
+    {
+        const std::uint32_t values[]{0x49324530U,         role,
+                                     edge.policy,         edge.active,
+                                     edge.boundary_ready, edge.buffers,
+                                     edge.comparisons,    edge.expected_matches,
+                                     edge.actual_matches, edge.last_boundary,
+                                     edge.last_delta,     edge.last_expected,
+                                     edge.last_actual,    edge.first_saved,
+                                     edge.first_delta,    edge.first_expected,
+                                     edge.first_actual,   edge.cleanup_failures,
+                                     edge.pin_cnf_before, edge.pin_cnf_after};
+        for (unsigned index = 0U; index < 20U; ++index)
+        {
+            out[index] = values[index];
+        }
+    }
+    else if (page == 1U)
+    {
+        const std::uint32_t values[]{0x49324531U,
+                                     role,
+                                     edge.first_saved,
+                                     edge.first_previous,
+                                     edge.first_boundary,
+                                     edge.first_delta,
+                                     edge.first_expected,
+                                     edge.first_actual,
+                                     absoluteDifference(edge.first_delta, edge.first_expected),
+                                     absoluteDifference(edge.first_delta, edge.first_actual),
+                                     edge.buffers,
+                                     stats.completed,
+                                     stats.error,
+                                     stats.detail,
+                                     edge.first_cycle,
+                                     NRF_P1->PIN_CNF[7],
+                                     NRF_P1->IN,
+                                     NRF_TIMER22->CC[0],
+                                     edge.cleanup_failures,
+                                     guards()};
+        for (unsigned index = 0U; index < 20U; ++index)
+        {
+            out[index] = values[index];
+        }
+    }
+    else
+    {
+        for (unsigned index = 0U; index < 20U; ++index)
+        {
+            out[index] = edge.first_registers[index];
+        }
+    }
+    count = 20U;
 }

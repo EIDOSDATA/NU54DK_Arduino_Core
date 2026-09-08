@@ -47,6 +47,8 @@ namespace t13
     void pwmDiagnosticSnapshot(std::uint32_t *out, std::uint32_t &count);
     void pwmPinSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count);
     void audioDiagnosticSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count);
+    bool audioEdgeDiagnosticPolicy(unsigned mode);
+    void audioEdgeDiagnosticSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count);
     void pwmTraceSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count);
     bool streamPrepare(const Case &test, std::uint32_t seed);
     bool streamStart();

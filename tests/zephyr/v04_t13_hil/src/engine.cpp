@@ -325,6 +325,17 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         serialSpiTimingSnapshot(args[0], out, count);
         return count == 20U ? 0U : 400U;
     }
+    if (opcode == 185U && nargs == 1U && args[0] <= 1U && !gate.claimed() && !wiringClaimed())
+    {
+        out[0] = audioEdgeDiagnosticPolicy(args[0]) ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 186U && nargs == 1U && args[0] <= 2U)
+    {
+        audioEdgeDiagnosticSnapshot(args[0], out, count);
+        return count == 20U ? 0U : 400U;
+    }
     if (opcode == 112U && nargs == 1U && args[0] <= 1U && !gate.claimed() && !wiringClaimed())
     {
         reverse_serial = args[0] != 0U;
