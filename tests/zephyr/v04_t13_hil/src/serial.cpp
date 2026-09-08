@@ -7,6 +7,7 @@
 #include "engine.h"
 #include "flow.h"
 #include "uart_fault.h"
+#include "twi_stuck.h"
 #include "measurement.h"
 #include <nucode/SerialFabric.h>
 #include <zephyr/kernel.h>
@@ -597,8 +598,15 @@ namespace
             endpoint.pin_count,
             lane.workspaces,
             4U};
-        if (!accepted(lane, lane.handle->stage(config), 12U) ||
-            !accepted(lane, lane.handle->activate(), 13U))
+        if (!accepted(lane, lane.handle->stage(config), 12U))
+        {
+            return false;
+        }
+        if (twiStuckEnabled())
+        {
+            return twiStuckPrepare(endpoint, *lane.handle, lane.tx, lane.rx);
+        }
+        if (!accepted(lane, lane.handle->activate(), 13U))
         {
             return false;
         }
@@ -925,8 +933,8 @@ bool t13::serialPrepare(const Case &test, std::uint32_t seed)
             rx_delay.raw[11] = UINT32_MAX;
             rx_delay.raw[18] = CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC;
         }
-        if (!flowPrepare(test, lane.endpoint) || !uartFaultPrepare(test, lane.endpoint) ||
-            !configure(lane))
+        if (!twiStuckSelection(test, lane.endpoint) || !flowPrepare(test, lane.endpoint) ||
+            !uartFaultPrepare(test, lane.endpoint) || !configure(lane))
         {
             return false;
         }
@@ -952,7 +960,7 @@ bool t13::serialPrepare(const Case &test, std::uint32_t seed)
 
 bool t13::serialStart()
 {
-    if (!serialHealthy())
+    if (!serialHealthy() || twiStuckEnabled())
     {
         return false;
     }
@@ -974,6 +982,7 @@ bool t13::serialStart()
 
 void t13::serialService()
 {
+    twiStuckService();
     for (unsigned index = 0U; index < lane_count; ++index)
     {
         auto &lane = lanes[index];
@@ -1068,11 +1077,12 @@ bool t13::serialStop()
             }
         }
     }
-    bool stopped = flowStop();
+    bool stopped = twiStuckStop();
+    stopped = flowStop() && stopped;
     for (unsigned index = 0U; index < lane_count; ++index)
     {
         auto &lane = lanes[index];
-        if (lane.handle != nullptr &&
+        if (lane.handle != nullptr && !twiStuckStaged(*lane.handle) &&
             lane.handle->deactivate(100000U) != SerialFabricResult::success)
         {
             failure(lane, 70U);

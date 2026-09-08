@@ -2,6 +2,7 @@
 #include "engine.h"
 #include "flow.h"
 #include "uart_fault.h"
+#include "twi_stuck.h"
 #include "measurement.h"
 #include "cases.h"
 #include "handover.h"
@@ -218,6 +219,17 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         count = 1U;
         return 0U;
     }
+    if (opcode == 170U && nargs == 1U && !gate.claimed() && !wiringClaimed())
+    {
+        out[0] = twiStuckPolicy(args[0]) ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 173U && nargs == 1U)
+    {
+        twiStuckSnapshot(args[0], out, count);
+        return count == 20U ? 0U : 400U;
+    }
     if (opcode == 162U && nargs == 0U)
     {
         serialRxDelaySnapshot(out, count);
@@ -374,6 +386,18 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
     if (opcode == 151U && nargs == 0U && !started)
     {
         out[0] = serialSpiBoundaryArm() ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 171U && nargs == 0U && !started)
+    {
+        out[0] = twiStuckStart() ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 172U && nargs == 1U && !started)
+    {
+        out[0] = twiStuckRecover(args[0]) ? 1U : 0U;
         count = 1U;
         return 0U;
     }

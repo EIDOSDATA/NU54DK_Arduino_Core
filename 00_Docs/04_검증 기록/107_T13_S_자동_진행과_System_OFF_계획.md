@@ -1,6 +1,6 @@
 # T13 S 자동 진행과 peer 제어 System OFF 검증 계획
 
-2026-09-08T10:53Z: C01~04 각각900초와 양쪽 STOP 완료로 동시4/7(57%)이며 C05 3600초 실행 중이다.
+2026-09-08T10:59Z: C01~04 각각900초와 C05 3600초·양쪽 STOP 완료로 동시5/7(71%)이며 C06을 실행 중이다.
 고정 serial17/21·stream3/4·PWM6/6·역할 전환2/5는 source별 근거로 유지한다.
 CTS d44cef2의 exact 두 역할 target·Host58·원격 Host104묶음788시험 준비를 완료했다.
 UART parity/break는93e38ff exact target2/2·T13 Host63시험·원격 전체 Host105묶음793시험을 통과했다.
@@ -8,6 +8,8 @@ SPI boundary4f573f0도 exact target2/2·새 Host4시험·원격 전체 Host106�
 현재 자동 배치→TWIM 계측→System OFF→충돌/CTS→UART parity/break→SPI boundary 순서를 유지한다.
 그 뒤 e9afcc9의 C01/C05 동시 CTS 예행4조건을 예약했다. exact target2/2·변경 관련 Host6+5시험과
 원격 전체 Host106묶음800시험을 확인했다. 준비 기록은 아래 e9afcc9 보존 목록을 따른다.
+f77e1cb RX 지연도 exact target2/2·새 Host4시험·원격 전체 Host107묶음804시험을 확인해 그 다음
+예행8조건을 예약했다. 모든 후속은 원래21:26:14KST 확인 종료 전에 남은 시간만 사용한다.
 
 2026-09-08 후속 구현 범위: T13의 기존 자원 충돌 요구 중 S UART21/22/30에서 같은 block의
 SPI 활성화, 다른 UART의 동일 GPIO 점유, 내부 DMA workspace 겹침을 의도하여 거부의 원자성과
@@ -40,6 +42,13 @@ R03 analog production의12개 하위 실행에서 Windows 응용 프로그램 �
 PASS로 세지 않고 실패 원본을 보존하며 고정 source의 원격 전체 Host를 별도 요구한다.
 
 ## 마일스톤과 현재 상태
+
+다음 구현 범위: S TWIM20/21/22/30의 SDA LOW100ms 복구를 독립 시험한다. A TWIM은 staged
+상태에서만 recoverBus를 호출하고 B는 TWIS를 활성화하지 않은 채 기존 SDA만 별도 소유한
+open-drain GPIO로 LOW/해제한다. 실제 유지 시간·라인 수준·첫 driver_error/-ECANCELED·해제 뒤
+success와 GPIO/DMA/state 복원을 확인하고 양쪽 STOP 뒤0x42 새 seed 정상 통신을 요구한다.
+20/21/22는 P1.10/14,30은 P0.00/01을 사용하며 P1.02/03·PMIC에는 주입하지 않는다. 활성 TWIM을 clock stretching 중 disable하는
+시험이 아니며, TWIS 버퍼 공급 지연과 다른 controller 역할은 별도 항목으로 남긴다.
 
 다음 구현 범위: S 단독 UART20/21/22/30의 양쪽을 활성화 전에2선으로 구성하고 한쪽 RX 버퍼
 공급을 정확히 한 번2ms 늦춘다. 두 DMA 버퍼가 반환되고 실제 rx_buffer_needed가 추가로 관측된
@@ -80,6 +89,11 @@ C01/C05 동시 CTS 초안은 두 역할 target2/2와 flow Host6시험을 통과�
 RX 공급 지연 초안도 두 역할 target2/2·새 Host4시험·정렬/계약/문서 검사에 통과했다. 전체 T13 Host는
 74개 중73개 통과·기존 production route C++ 실행1개가 Windows4551로 차단됐다. 고정 source의
 관련 Host·target과 원격 전체 Host를 확인한 뒤 동시 CTS 다음에 예행을 등록한다. 현재 RX 지연 실기는0이다.
+f77e1cb의 exact gate와 원격 전체 Host 확인 뒤 등록을 완료했으며 [RX 지연 준비 원본](evidence/t13-rx-delay-preparation-f77e1cb/manifest.json)에
+초안 Windows 차단까지 보존했다. C05의3600초·양쪽 STOP 원본은 [506680f 실기 보존 목록](evidence/t13-c05-soak-sauto-01-506680f/manifest.json)에 있다.
+새 SDA LOW 도구의 Host78시험을 통과했다. 첫 초안 target에서 지원되지 않는 C++ cerrno 헤더를
+발견해 SDK의 errno.h로 정정한 뒤 두 역할 target2/2 재검사를 통과했다. UART30과 같이 TWIM30도 실제 P0 경로임을 Host에서
+검출해 원래 P0.00/01을 사용하도록 수정했다. 이 준비 검사나 과거 정상 TWI를 새 SDA LOW 실기 PASS로 세지 않는다.
 
 | T13 하위 묶음 | 상태 | 현재 S에서 자동 진행 범위 |
 | --- | --- | --- |
@@ -87,7 +101,7 @@ RX 공급 지연 초안도 두 역할 target2/2·새 Host4시험·정렬/계약/
 | 고정 serial 복구 | 17/21 완료, TWIM 취소4개 미완료 | RX 시작/END·이전 AMOUNT 구분 보완 후 재검증 |
 | stream 복구 | 3/4 완료, I2S B97번째 실패 | 원본 분석·원인 분리·재검증 |
 | 역할 전환 | 예행5/5, 정식2/5 완료(serial00·30 각100회), SPI20/21/22 실패 보존 | 최초 RX 오류 계측을 보강하여 원인 분리; 이전 중단47회 합산 금지 |
-| 동시 안정성 | 4/7 완료(C01~04), C05 진행 중(2026-09-08T10:10Z) | C01~06·C08; 일반900초, C05는3600초 |
+| 동시 안정성 | 5/7 완료(C01~05), C06 진행 중(2026-09-08T10:59Z) | C01~06·C08; 일반900초, C05는3600초 |
 | 추가 오류·충돌 | 일부 runner 미구현 | UART flow/지연/parity/break, SPI slave/short/CS, TWI 지연/stuck-low, 자원 충돌의 구현·Host/target·실기 |
 | peer 제어 System OFF | 구현·exact Host/target 준비 완료, 실기0 | S 현재 배치와 TWIM 계측 뒤 bridge 예행부터 실행; 무인 성립 실패 시 원본·한계를 남기고 독립 작업 계속 |
 | U UART00 | 대기 | S→U 현재 재배치 확인 전 실행 금지 |

@@ -164,6 +164,34 @@ Opcode160은 비활성 policy0기본/1지연DUT/2정상peer,161은 정상 동작
 현재 RX/TX frame,현재 request 수,cycle Hz,STOP 증명이다. peer의 지연 전용 필드는0이며 API 결과는
 미수행0xFFFFFFFF다. raw를 양쪽에서 보존한 뒤 판정하고 STOP 전후의 최초 지연 근거가 유지되어야 한다.
 
+## SDA LOW100ms와 staged recoverBus
+
+`twi-stuck-preflight`/`twi-stuck`는 A controller의 고정 TWIM20/21/22/30 각각1회/100회다.
+기존20/21/22 SDA=P1.10·SCL=P1.14,30 SDA=P0.00·SCL=P0.01만 사용한다. PMIC P1.02/03과
+주소0x6A에는 주입하지 않는다. B TWIS를 활성화하지 않고 기존 SDA에 별도 GPIO 소유권을 잡아
+input-connect·내부 pull-up·S0D1 open-drain으로 HIGH를 만든 뒤 LOW100ms를 주고 자동 해제한다.
+
+A도 TWIM을 활성화하지 않은 staged 상태에서 첫 recoverBus를 호출한다. 실제 SDA가 호출 전후
+LOW여야 하고 driver_error10·SDK의-ECANCELED(-140)가20ms 안에 반환되어야 한다. B의 실제
+LOW 유지100000~105000µs와 해제 후 SDA HIGH를 확인한 뒤 두 번째 recoverBus의 success를 요구한다.
+두 호출 전후 ENABLE0·staged1·GPIO PIN_CNF 원상태0·네 DMA buffer의 application 소유와 guard를
+대조한다. staged는 하드웨어를 소유하지 않는 준비 상태이므로 이 전용 경로의 STOP은 GPIO 소유권
+반환과 staged/ENABLE/DMA 근거를 확인한다. 활성 handle의 일반 STOP/deactivate 검사는 유지한다.
+새 seed로 원래0x42/400kHz/256byte 통신을 재획득하여 전체 pattern을 확인해야 회차가 성공한다.
+
+Opcode170은 비활성 policy0기본/1staged controller/2GPIO peer,171은 peer LOW 시작,172(0/1)은
+A의 첫/둘째 recoverBus,173(page0/1/2)는 raw/첫/둘째 호출 메타다. raw 공통 앞6개는 policy,
+instance,prepared,state,SDA,SCL이고 마지막4개는 guard,handle state,cycle Hz,STOP이다.
+A의6~10/11~15는 각각 호출 시작·끝 cycle,API 결과,driver errno,전후 SDA 수준 bitmask다.
+B의6~15는 LOW 시작·끝,LOW 관측,해제 HIGH,실제 output/input/pull-up/open-drain 설정4bit,
+GPIO token,현재 SDA,ENABLE,reserved0 두 개다. 호출 메타20개는 회차,전후 state,전후 ENABLE,
+SDA 전후 PIN_CNF,SCL 전후 PIN_CNF,SDA/SCL,전후 DMA 소유 bitmask,전후 guard,전후 SDA,
+API 결과,driver errno,cycle Hz다. 최초 원본을 STOP 후에도 보존한다.
+
+TWIS 버퍼 공급 지연·반대 controller 역할·활성 DMA 중 stuck bus를 이 결과로 완료 처리하지 않는다.
+clock stretching은 [Nordic TWIS 사양](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/twis.html)에
+따른 별도 조건이며 이번 staged recovery에서는 활성 TWIM을 stretching 중 disable하지 않는다.
+
 ## I2S/PDM 공급 중단 복구 준비
 
 I2S20은 A master와 B slave 각각, PDM20/21은 실제 수신자인 A에서 시험한다.
