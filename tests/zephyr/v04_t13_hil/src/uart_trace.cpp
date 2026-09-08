@@ -9,7 +9,7 @@
 #include <zephyr/kernel.h>
 #include <cstddef>
 #include <cstdint>
-#include <cstring>
+#include <string.h>
 
 extern "C"
 {
@@ -76,7 +76,7 @@ namespace
         if (inspect_buffer && length >= sizeof(first_word) && address >= 0x20000000U &&
             address <= 0x20040000U - sizeof(first_word))
         {
-            std::memcpy(&first_word, buffer, sizeof(first_word));
+            ::memcpy(&first_word, buffer, sizeof(first_word));
         }
         out[6] = first_word;
         const auto *registers = instance->p_reg;
