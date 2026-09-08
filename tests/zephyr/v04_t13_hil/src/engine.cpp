@@ -212,6 +212,17 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         count = 1U;
         return 0U;
     }
+    if (opcode == 160U && nargs == 1U && !gate.claimed() && !wiringClaimed())
+    {
+        out[0] = serialRxDelayPolicy(args[0]) ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 162U && nargs == 0U)
+    {
+        serialRxDelaySnapshot(out, count);
+        return 0U;
+    }
     if (opcode == 152U && nargs == 1U)
     {
         serialSpiBoundarySnapshot(args[0], out, count);
@@ -341,6 +352,12 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
     if (opcode == 128U && nargs == 0U && gate.live(k_uptime_get()) && started && !quiesced)
     {
         out[0] = flowStart() ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 161U && nargs == 0U && gate.live(k_uptime_get()) && started && !quiesced)
+    {
+        out[0] = serialRxDelayArm() ? 1U : 0U;
         count = 1U;
         return 0U;
     }

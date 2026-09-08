@@ -57,6 +57,43 @@ namespace
         std::uint32_t raw[20]{}, before[20]{}, after[20]{}, baseline[20]{};
         bool prepared = false;
     } spi_boundary;
+    unsigned rx_delay_policy = 0U;
+    struct RxDelay
+    {
+        std::uint32_t raw[20]{};
+        bool prepared = false;
+    } rx_delay;
+
+    /** @brief RX 공급 지연에서 두 slot의 실제 DMA 앞뒤 경계를 검사합니다. */
+    bool rxDelayGuards(const Lane &lane)
+    {
+        return lane.tx[0].guards(lane.endpoint.length) && lane.tx[1].guards(lane.endpoint.length) &&
+               lane.rx[0].guards(lane.endpoint.length) && lane.rx[1].guards(lane.endpoint.length);
+    }
+
+    /** @brief 실제 두 버퍼 반환·추가 요청 뒤 한 번만2ms 공급을 미룹니다. */
+    bool rxDelayHold(const Lane &lane)
+    {
+        auto &raw = rx_delay.raw;
+        if (!rx_delay.prepared || rx_delay_policy != 1U || raw[2] == 0U || raw[3] == 2U)
+        {
+            return false;
+        }
+        if (raw[3] == 0U)
+        {
+            if (lane.received.completed <= raw[7] || lane.requests <= raw[10])
+            {
+                return false;
+            }
+            raw[3] = 1U;
+            raw[5] = k_cycle_get_32();
+            raw[8] = lane.received.completed;
+            raw[9] = lane.requests;
+            raw[12] = (lane.rx_pending[0] ? 1U : 0U) | (lane.rx_pending[1] ? 2U : 0U);
+            raw[13] = rxDelayGuards(lane) ? 1U : 0U;
+        }
+        return k_cyc_to_us_floor32(k_cycle_get_32() - raw[5]) < 2000U;
+    }
 
     /** @brief 단독 serial의 의도적 첫 실패와 실제 반환 정보를 정상 통계와 분리합니다. */
     struct Fault
@@ -413,6 +450,10 @@ namespace
         {
             return true;
         }
+        if (kind == Kind::uart && rxDelayHold(lane))
+        {
+            return true;
+        }
         const auto started = k_cycle_get_32();
         for (unsigned slot = 0U; slot < 2U; ++slot)
         {
@@ -427,6 +468,13 @@ namespace
         {
             result = static_cast<UarteHandle *>(lane.handle)
                          ->receiveAsync(lane.rx[0].data(), length, lane.rx[1].data(), length);
+            if (rx_delay.prepared && rx_delay_policy == 1U && rx_delay.raw[3] == 1U)
+            {
+                rx_delay.raw[6] = k_cycle_get_32();
+                rx_delay.raw[11] = static_cast<std::uint32_t>(result);
+                rx_delay.raw[14] = rxDelayGuards(lane) ? 1U : 0U;
+                rx_delay.raw[3] = 2U;
+            }
         }
         else if (kind == Kind::spis)
         {
@@ -836,6 +884,7 @@ bool t13::serialPrepare(const Case &test, std::uint32_t seed)
     receivers_armed = false;
     fault = {};
     spi_boundary = {};
+    rx_delay = {};
     lane_count = test.serial_count;
     for (auto &lane : lanes)
     {
@@ -847,6 +896,35 @@ bool t13::serialPrepare(const Case &test, std::uint32_t seed)
         lane.endpoint = test.serial[role - 1U][index];
         lane.seed_tx = laneSeed(seed, index, role);
         lane.seed_rx = laneSeed(seed, index, 3U - role);
+        if (rx_delay_policy != 0U)
+        {
+            if (test.id < 2U || test.id > 5U || test.serial_count != 1U || test.harness != 2U ||
+                lane.endpoint.kind != Kind::uart || lane.endpoint.pin_count != 4U ||
+                lane.endpoint.rate != 1000000U || lane.endpoint.length != 1024U)
+            {
+                return false;
+            }
+            unsigned count = 0U;
+            for (unsigned pin = 0U; pin < 4U; ++pin)
+            {
+                const auto signal = static_cast<SerialSignal>(lane.endpoint.signals[pin]);
+                if (signal == SerialSignal::txd || signal == SerialSignal::rxd)
+                {
+                    lane.endpoint.pins[count] = lane.endpoint.pins[pin];
+                    lane.endpoint.signals[count++] = lane.endpoint.signals[pin];
+                }
+            }
+            lane.endpoint.pin_count = count;
+            if (count != 2U)
+            {
+                return false;
+            }
+            rx_delay.prepared = true;
+            rx_delay.raw[0] = rx_delay_policy;
+            rx_delay.raw[1] = lane.endpoint.instance;
+            rx_delay.raw[11] = UINT32_MAX;
+            rx_delay.raw[18] = CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC;
+        }
         if (!flowPrepare(test, lane.endpoint) || !uartFaultPrepare(test, lane.endpoint) ||
             !configure(lane))
         {
@@ -965,6 +1043,12 @@ bool t13::serialStop()
 {
     transmitting = false;
     receivers_armed = false;
+    if (rx_delay.prepared && lane_count == 1U)
+    {
+        rx_delay.raw[15] = lanes[0].received.completed;
+        rx_delay.raw[16] = lanes[0].sent.completed;
+        rx_delay.raw[17] = lanes[0].requests;
+    }
     if (spi_boundary.prepared && spi_boundary.raw[19] == 0U)
     {
         if (spi_boundary.raw[4] == 0U)
@@ -1009,6 +1093,10 @@ bool t13::serialStop()
     stopped = uartFaultStop(stopped) && stopped;
     if (stopped)
     {
+        if (rx_delay.prepared)
+        {
+            rx_delay.raw[19] = 1U;
+        }
         if (spi_boundary.prepared)
         {
             spi_boundary.raw[19] = 1U;
@@ -1026,6 +1114,44 @@ bool t13::serialSpiBoundaryPolicy(unsigned mode)
     }
     spi_boundary_policy = mode;
     return true;
+}
+
+bool t13::serialRxDelayPolicy(unsigned mode)
+{
+    if (lane_count != 0U || mode > 2U)
+    {
+        return false;
+    }
+    rx_delay_policy = mode;
+    return true;
+}
+
+bool t13::serialRxDelayArm()
+{
+    if (!rx_delay.prepared || lane_count != 1U || rx_delay.raw[2] != 0U || !receivers_armed)
+    {
+        return false;
+    }
+    rx_delay.raw[2] = 1U;
+    rx_delay.raw[4] = k_cycle_get_32();
+    rx_delay.raw[7] = lanes[0].received.completed;
+    rx_delay.raw[10] = lanes[0].requests;
+    return true;
+}
+
+void t13::serialRxDelaySnapshot(std::uint32_t *out, std::uint32_t &count)
+{
+    if (rx_delay.prepared && lane_count == 1U)
+    {
+        rx_delay.raw[15] = lanes[0].received.completed;
+        rx_delay.raw[16] = lanes[0].sent.completed;
+        rx_delay.raw[17] = lanes[0].requests;
+    }
+    for (unsigned index = 0U; index < 20U; ++index)
+    {
+        out[index] = rx_delay.raw[index];
+    }
+    count = 20U;
 }
 
 bool t13::serialSpiBoundaryArm()

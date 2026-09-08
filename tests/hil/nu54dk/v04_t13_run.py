@@ -20,6 +20,7 @@ import v04_t13_conflict as conflicts
 import v04_t13_flow as flows
 import v04_t13_uart_line as uart_lines
 import v04_t13_spi_boundary as spi_boundaries
+import v04_t13_rx_delay as rx_delays
 import v04_t13_oracle as oracle
 import v04_t13_session as session
 import v04_wiring as wiring
@@ -354,7 +355,8 @@ def main(argv=None):
                                           'conflict-preflight', 'resource-conflict',
                                           'flow-preflight', 'uart-flow',
                                           'uart-line-preflight', 'uart-line-fault',
-                                          'spi-boundary-preflight', 'spi-boundary'), default='wiring')
+                                          'spi-boundary-preflight', 'spi-boundary',
+                                          'rx-delay-preflight', 'rx-delay'), default='wiring')
     parser.add_argument('--cases', nargs='+', type=int, default=[])
     parser.add_argument('--fault-mode', type=int, choices=range(1, 6))
     parser.add_argument('--stream-fault-mode', type=int, choices=(1, 2))
@@ -398,6 +400,10 @@ def main(argv=None):
     is_flow = args.phase in ('flow-preflight', 'uart-flow')
     is_uart_line = args.phase in ('uart-line-preflight', 'uart-line-fault')
     is_spi_boundary = args.phase in ('spi-boundary-preflight', 'spi-boundary')
+    is_rx_delay = args.phase in ('rx-delay-preflight', 'rx-delay')
+    if is_rx_delay:
+        for identifier in args.cases:
+            rx_delays.fixture(available_cases[identifier], args.fault_role)
     if is_spi_boundary:
         for identifier in args.cases:
             spi_boundaries.validate_selection(available_cases[identifier], args.spi_boundary_mode)
@@ -443,7 +449,7 @@ def main(argv=None):
         'board_revision': images[0]['board_revision'], 'catalog_sha256': session.catalog_hash(),
         'session_grant_sha256': hashlib.sha256(grant_bytes).hexdigest(), 'swd_frequency_hz': 10000000,
         'external_wiring_executed': False, 'results': [],
-        'fault_mode': args.fault_mode, 'fault_role': args.fault_role if is_fault or is_stream_fault or is_conflict or is_flow or is_uart_line else None,
+        'fault_mode': args.fault_mode, 'fault_role': args.fault_role if is_fault or is_stream_fault or is_conflict or is_flow or is_uart_line or is_rx_delay else None,
         'conflict_mode': args.conflict_mode,
         'uart_line_mode': args.uart_line_mode,
         'spi_boundary_mode': args.spi_boundary_mode,
@@ -487,6 +493,10 @@ def main(argv=None):
             if is_handover:
                 handover.execute(devices, args.handover_instance, continuity, append,
                                  preflight=args.phase == 'handover-preflight')
+            elif is_rx_delay:
+                for identifier in args.cases:
+                    rx_delays.execute(devices, available_cases[identifier], args.fault_role,
+                        continuity, append, preflight=args.phase == 'rx-delay-preflight')
             elif is_spi_boundary:
                 for identifier in args.cases:
                     spi_boundaries.execute(devices, available_cases[identifier], args.spi_boundary_mode,

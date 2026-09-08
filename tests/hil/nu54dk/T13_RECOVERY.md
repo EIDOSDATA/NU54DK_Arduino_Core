@@ -146,6 +146,24 @@ page0은 lane당 네 word(first TX,last TX,first RX,last RX)이며 page1은 관�
 Host도 주입 전/후 모든 lane의 payload·guard·완료량을 대조하고 양쪽 STOP 뒤 새 seed의 원래 topology를
 재획득한다. 중간 실패는 최초 원본을 보존하며 종료 뒤 진행만으로 HIGH 중 진행을 대신하지 않는다.
 
+## 두 선 UART의 제한된 RX 버퍼 공급 지연
+
+`rx-delay-preflight`/`rx-delay`는 S 단독 UART20/21/22/30의 양쪽 역할 각각1회/100회다.
+양쪽 UART를 활성화 전에TX/RX 두 선으로 구성하고 실제 PSEL/HWFC를 대조한다. 정상 데이터를
+시작한 뒤 선택한 수신자만 두 RX 버퍼가 모두 반환되고 ARM 이후의 추가 rx_buffer_needed를
+확인한 시점에서 공급을 한 번2ms 늦춘다. 다른쪽 수신과 양쪽 송신의20ms frame 주기는 유지한다.
+
+실제 공급 간격은2000~5000µs, ARM→지연 시작은200ms 이하여야 한다. 지연 시작의 RX pending은0,
+실제 수신 완료·요청 수는 ARM 당시보다 커야 하고 재공급 결과 success, 앞뒤 guard가 정상이어야 한다.
+그 이후 실제 RX 완료 증가·전체 frame pattern/hash·양쪽 STOP과 새 seed의 원래4선 UART 복구를
+요구한다. 각500ms 측정은180초 안정성 또는 무제한 RX 지연·임의 frame 간격 지원으로 확대하지 않는다.
+
+Opcode160은 비활성 policy0기본/1지연DUT/2정상peer,161은 정상 동작 중ARM,162는20word 원본이다.
+순서는 policy,instance,armed,state,ARM cycle,지연 시작/재공급 cycle,ARM RX frame,지연 시작 RX frame,
+지연 시작 request 수,ARM request 수,재공급 API 결과,RX pending bitmask,지연 시작/재공급 guard,
+현재 RX/TX frame,현재 request 수,cycle Hz,STOP 증명이다. peer의 지연 전용 필드는0이며 API 결과는
+미수행0xFFFFFFFF다. raw를 양쪽에서 보존한 뒤 판정하고 STOP 전후의 최초 지연 근거가 유지되어야 한다.
+
 ## I2S/PDM 공급 중단 복구 준비
 
 I2S20은 A master와 B slave 각각, PDM20/21은 실제 수신자인 A에서 시험한다.

@@ -1,11 +1,13 @@
 # T13 S 자동 진행과 peer 제어 System OFF 검증 계획
 
-2026-09-08T10:43Z: C01~04 각각900초와 양쪽 STOP 완료로 동시4/7(57%)이며 C05 3600초 실행 중이다.
+2026-09-08T10:53Z: C01~04 각각900초와 양쪽 STOP 완료로 동시4/7(57%)이며 C05 3600초 실행 중이다.
 고정 serial17/21·stream3/4·PWM6/6·역할 전환2/5는 source별 근거로 유지한다.
 CTS d44cef2의 exact 두 역할 target·Host58·원격 Host104묶음788시험 준비를 완료했다.
 UART parity/break는93e38ff exact target2/2·T13 Host63시험·원격 전체 Host105묶음793시험을 통과했다.
 SPI boundary4f573f0도 exact target2/2·새 Host4시험·원격 전체 Host106묶음797시험을 확인했다.
 현재 자동 배치→TWIM 계측→System OFF→충돌/CTS→UART parity/break→SPI boundary 순서를 유지한다.
+그 뒤 e9afcc9의 C01/C05 동시 CTS 예행4조건을 예약했다. exact target2/2·변경 관련 Host6+5시험과
+원격 전체 Host106묶음800시험을 확인했다. 준비 기록은 아래 e9afcc9 보존 목록을 따른다.
 
 2026-09-08 후속 구현 범위: T13의 기존 자원 충돌 요구 중 S UART21/22/30에서 같은 block의
 SPI 활성화, 다른 UART의 동일 GPIO 점유, 내부 DMA workspace 겹침을 의도하여 거부의 원자성과
@@ -39,6 +41,12 @@ PASS로 세지 않고 실패 원본을 보존하며 고정 source의 원격 전�
 
 ## 마일스톤과 현재 상태
 
+다음 구현 범위: S 단독 UART20/21/22/30의 양쪽을 활성화 전에2선으로 구성하고 한쪽 RX 버퍼
+공급을 정확히 한 번2ms 늦춘다. 두 DMA 버퍼가 반환되고 실제 rx_buffer_needed가 추가로 관측된
+시점부터 지연하며20ms frame 주기·1Mbaud·1024byte는 유지한다. 실제 지연 시간·guard·연속 pattern과
+양쪽 STOP·새 seed의 원래4선 복구를 요구한다. 임의의 무제한 RX 미공급이나 손실 없는 최대 속도
+지원으로 확대하지 않는다. 현재 실기/예약 source는 그대로 유지한다.
+
 후속 구현 범위: 기존 C01/C05의 UART30 CTS100ms 정지·재개를 전용 flow fixture에 추가한다.
 동시에 실행되는 다른 UART/TWI/SPI의 GPIO·DMA 설정은 유지하며 같은 측정 구간의 양방향
 완료량 증가와 전체 payload·guard·STOP·새 seed 복구를 함께 요구한다. 원래900/3600초 정상
@@ -67,6 +75,11 @@ C01/C05 동시 CTS 초안은 두 역할 target2/2와 flow Host6시험을 통과�
 공유 선택 함수 변경이 단독 parity/break의 입력 범위를 넓히는 문제가 검출되어 단독 조건을 명시했다.
 수정 후70시험 중69개가 통과했고 기존 stream C++ 실행1개는 Windows4551로 차단됐다.
 고정 source의 변경 관련 flow/UART line Host와 원격 전체 Host를 별도로 요구하며 미실행을 PASS로 세지 않는다.
+동시 CTS [e9afcc9 준비 원본](evidence/t13-concurrent-flow-preparation-e9afcc9/manifest.json)에
+초안 문제 검출·수정과 Windows 차단, exact 검사와 원격 Host를 구분해 보존했다.
+RX 공급 지연 초안도 두 역할 target2/2·새 Host4시험·정렬/계약/문서 검사에 통과했다. 전체 T13 Host는
+74개 중73개 통과·기존 production route C++ 실행1개가 Windows4551로 차단됐다. 고정 source의
+관련 Host·target과 원격 전체 Host를 확인한 뒤 동시 CTS 다음에 예행을 등록한다. 현재 RX 지연 실기는0이다.
 
 | T13 하위 묶음 | 상태 | 현재 S에서 자동 진행 범위 |
 | --- | --- | --- |
