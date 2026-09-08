@@ -1,0 +1,98 @@
+{
+  "source": "7d080ed2fcc9cadfd80bfb21d63c697ec023906b",
+  "status": "failed",
+  "phase": "bridge-fast-poll",
+  "physical_executed": true,
+  "started_at": "2026-09-08T17:36:00.413932+00:00",
+  "finished_at": "2026-09-08T17:36:55.613122+00:00",
+  "error": "ProtocolError: T13 relay response timeout opcode 131",
+  "case_results": [
+    {
+      "id": "cleanup/result",
+      "status": "cleanup",
+      "outcomes": [
+        {
+          "role": 1,
+          "stopped": true,
+          "stamp": 1398013956,
+          "pin_cnf": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "stopped": false,
+          "error": "SWD/JTAG communication failure (No ACK); check USB cable, reduce debugger clock"
+        }
+      ],
+      "cleanup_proven": false,
+      "b_swd_reopened_for_cleanup": true
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3755,
+      "sha256": "7f80d420e140fdda63cd36847d2686f915e29c251a535ec0bb9d46d54c0fdb51",
+      "gzip_sha256": "5409293687821bc0d541898c915f4782489d615b9affa262c2766180ecd1ac67"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1881,
+      "sha256": "fe9cf3e91aa574d87e9ca98e78fda95fe0dc64ac6ec14faf0461db1a5b647f1f",
+      "gzip_sha256": "9ad3665ec977763c18a0793438503dbd53cfd5c8026f02a1d680e277bdb28c1e"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 135863,
+      "sha256": "c6ebb2a1354770db61d72ff9ac9c1f9b49f0cb02784f6467e902710a048f00f8",
+      "gzip_sha256": "831fb92c9d1385e91719946f58083fd81b6edc12975f358228ba8204f597aaea"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 77999,
+      "sha256": "65457849b517454c60e65b988772af42fb6736abf914ab9d714da69450d560c6",
+      "gzip_sha256": "5cb55915bf49495b2666d06bc0a195a849241ce70b9db588f37fc5a3ffa9cdce"
+    },
+    {
+      "file": "power-controller-fast-ready-bridge-01-preflight.json.gz",
+      "bytes": 728,
+      "sha256": "866ea380fe2d88c24e4899d560b3eefbd7a9d6c6fdad1a77513fb082842d4156",
+      "gzip_sha256": "87982035362db180cb740b5a8dbe2e61b05c2b5deeb6709f5e3aaca2ec866eb0"
+    },
+    {
+      "file": "power-controller-fast-ready-bridge-01-preflight.log.gz",
+      "bytes": 1211,
+      "sha256": "42b9770924f9c6a513433766907f4352aaeb9431b43635247202869422221195",
+      "gzip_sha256": "1bf5bc6cf46ede98cf8770f324a11e6353a6929a552c9697a58d32e1501bbead"
+    },
+    {
+      "file": "power-controller-fast-ready-bridge-01-execute.json.gz",
+      "bytes": 724,
+      "sha256": "a4bbdd53c274dcc99e2c232ac2cfee4f37c8e4ddb9db83a843c95dd47a2eafd4",
+      "gzip_sha256": "88b0ff508be3101d570261551b026d2511819c31cc7fc74b0129564fd64179bf"
+    },
+    {
+      "file": "power-controller-fast-ready-bridge-01-execute.log.gz",
+      "bytes": 54,
+      "sha256": "e9ee5e18641f98dfd5ceec795b951d8a95db4fe71bda835c9eaf300cab1c6300",
+      "gzip_sha256": "6f1d99b422e8e92b7fa39d92a45dbbcb50f29f87b1a7a4fef35932fa8da808d7"
+    }
+  ]
+}

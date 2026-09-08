@@ -1,0 +1,70 @@
+{
+  "source": "b6ac3befdc86daa058a9225abbdcf7b275f6de8f",
+  "status": "failed",
+  "phase": "uart-line-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T17:22:17.889372+00:00",
+  "finished_at": "2026-09-08T17:22:51.625196+00:00",
+  "error": "ProtocolError: T13 UART line stimulus peer failed independently",
+  "case_results": [
+    {
+      "id": "T13-S/uart-line/uarte21/role1/parity/repeat001/baseline/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 1749,
+      "sha256": "933bdc125abe3fe9e7df6f11c6f9ecfaabc9930e134bc6701b9a965ea2b968c4",
+      "gzip_sha256": "11ae64f0470871c9b2612dd0c88e3be6b61a05eb65f35f5f38708e2c3762f3eb"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "fef0755b27056315793d4103376e5bd3d4ebf97622313dd99dc8d114974b511c",
+      "gzip_sha256": "ceb4e61bd6afac2555158cd2d15fb6378a8b79d5ee60f35b8edc64d773f8e1c3"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 164434,
+      "sha256": "18e3f0960ab2c7e4197b0a095ef8755f411b0efddd5f8d3d62aa2ece98fc18c5",
+      "gzip_sha256": "108df2a4eccfee990c0313ea148b3e27b5be2adc7a036c19e7bcbe5eb795adc6"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 92139,
+      "sha256": "b84091121e7df14d03590cc58e96dcc557bf0fb2e6578dd267b97d532b8316d7",
+      "gzip_sha256": "7aa4751a9cbff32c1bb7ee0d2cbd842aa6f9d388ddc958eab6a480d4c6ea72bb"
+    },
+    {
+      "file": "s123-02-parity-c3-r1-preflight-01-preflight.json.gz",
+      "bytes": 782,
+      "sha256": "56fc2eb8080283c4d58d890ffbb2482487e1218cfc12ce4ef127012c7aa400fe",
+      "gzip_sha256": "9e81845c47364be5644a34a2533a0d099f89c0085effd84a179331ce9311e402"
+    },
+    {
+      "file": "s123-02-parity-c3-r1-preflight-01-preflight.log.gz",
+      "bytes": 1663,
+      "sha256": "135aef6e52b5475934474c2b9b14e57533e14079e8a12f6d5b14af2f223b80de",
+      "gzip_sha256": "d4cf2d98921fbe2c335af1eb2f41728ceb827956397008c7d615946d1c8fd521"
+    },
+    {
+      "file": "s123-02-parity-c3-r1-preflight-01-execute.json.gz",
+      "bytes": 778,
+      "sha256": "7bf06e518b5213f287ed233592f45849d575bc72f9b3f551940de363e34df36e",
+      "gzip_sha256": "01a5df0794c0011da1c8f7219ea4f25bba8da77fbe3d88ed52dff925f3ff8638"
+    },
+    {
+      "file": "s123-02-parity-c3-r1-preflight-01-execute.log.gz",
+      "bytes": 84,
+      "sha256": "86631168544e74f9f8e0a9773e8854cd43dd3e46c38cd1f11349d32958dba740",
+      "gzip_sha256": "94b5f781f25dd26fbba110f55e3e5ffd9571c02f0632a82f87a331c852285507"
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "source": "7d080ed2fcc9cadfd80bfb21d63c697ec023906b",
+  "physical_executed": true,
+  "reset_halt_resume_flash": true,
+  "files": [
+    {
+      "file": "power-controller-fast-ready-bridge-01-cleanup-readonly-01.json.gz",
+      "bytes": 1981,
+      "sha256": "456c9a1d9b592bdc5f1c6749ee383daaf73dda67c415c9e7bda14dca6891bc62",
+      "gzip_sha256": "2c5373f3c3743b237651fc91184d1a6185b336165a37918f3406668a46698889"
+    },
+    {
+      "file": "power-controller-fast-ready-bridge-01-cleanup-pin-reset-01.json.gz",
+      "bytes": 1739,
+      "sha256": "a6766562b08a5429ac6626f8bf3a3b8646cc10cee9a43223c4ae1d559275fdf6",
+      "gzip_sha256": "826b17dbb2c1d9c1912eea35889405606cd57e15fa61244f2220de84856ff596"
+    },
+    {
+      "file": "power-controller-fast-ready-bridge-01-cleanup-under-reset-01.json.gz",
+      "bytes": 2147,
+      "sha256": "01a43ccd006816aa61ed0ca7010950a62fbd7d30c97125114e35b5cff4573943",
+      "gzip_sha256": "06224596c3ac565eaab38aaa7273249a211757d271e315463fde9d2fc8672a4d"
+    },
+    {
+      "file": "power-controller-fast-ready-bridge-01-cleanup-confirmed-resume-01.json.gz",
+      "bytes": 3735,
+      "sha256": "f092355d04bb6e5d257c0c9911562f3296866e0a58aed768ad657cbe98585d9f",
+      "gzip_sha256": "f164f74b4f1c75fb25a4c71bab8fb019a82260e72c369e4a3dc05f8ba1a154d8"
+    },
+    {
+      "file": "peer-rx-priority-01.json.gz",
+      "bytes": 1838,
+      "sha256": "93da6bdf2df5818ebad945f924491de7ec07d18aa8feab9f785e695fbcd3307b",
+      "gzip_sha256": "32fee6c31a53a6fb3868b54a6089ea5e856587db2bbc230359892f1908fd6ffa"
+    },
+    {
+      "file": "power-fast-ready-once-01.json.gz",
+      "bytes": 736,
+      "sha256": "f0f8fc4be983d3c46924671e623dae7fd1a77ba304efb911aa05a42f087ba54e",
+      "gzip_sha256": "3135cfddc7d35a93fbbeadf285826b93cbfedb5aa1add42a583f29f8c23849c9"
+    },
+    {
+      "file": "peer-rx-priority-01.before-cleanup-review.json.gz",
+      "bytes": 1438,
+      "sha256": "a5fe3f53fb8b55a0d254047196413d0b6aa6ce60a5eba314433ea6b305119006",
+      "gzip_sha256": "17f49a99594c6b36c67c9cf5bdd41cea992ce315f9cb0e2ff25e7bf405853885"
+    },
+    {
+      "file": "power-fast-ready-once-01.before-cleanup-review.json.gz",
+      "bytes": 278,
+      "sha256": "66dd2701a61dceae09ed71f7ec4488959590cf6728d1d1299ecc71be211b49e6",
+      "gzip_sha256": "5bdd5e497f6b83deb71c59585ef5d44aa56b2d99c94ff2dbdb7e28acdbbdca7b"
+    },
+    {
+      "file": "s123-after-power-cleanup-resume-01.json.gz",
+      "bytes": 328,
+      "sha256": "c603f80bf19f88335686af20444a0b6af463e8169eb9aec3dbf59711fe240820",
+      "gzip_sha256": "23ad9b48a530b8b0cc891019bab606bbd0274010e5b4f884e45ad5898d4e1b8e"
+    },
+    {
+      "file": "resume_s123_after_power_cleanup.py.gz",
+      "bytes": 3146,
+      "sha256": "b426be0adbd3a671205f584ba90aaaa670320b16cd8bf279c261a34fa8fba360",
+      "gzip_sha256": "efc3f3db4bec27d7d54f3a7f16f5b81991572452cdd2b2b55db03f199d66032c"
+    },
+    {
+      "file": "resume_power_fast_ready_cleanup.py.gz",
+      "bytes": 605,
+      "sha256": "e28d21e99f1aa4a0ca1ec128d32805e474486e5bafbaad17a61e610025a3eb92",
+      "gzip_sha256": "1721fbdf931652320ae6bee43c6be1a6c30a7ed650eb728cc7ad53ce4055b872"
+    }
+  ],
+  "flash_or_unlock_performed": false,
+  "cleanup_proven": true,
+  "system_off_pass": false,
+  "operations": "Exact-probe read, B pin reset and under-reset connection, known-code resume; both STOP confirmed"
+}

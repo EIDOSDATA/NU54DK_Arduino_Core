@@ -1,0 +1,61 @@
+{
+  "source": "7d080ed2fcc9cadfd80bfb21d63c697ec023906b",
+  "physical_executed": false,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "t13_uart_watch_diagnostic.py.gz",
+      "bytes": 13057,
+      "sha256": "33a19ce87784c57c5f2f8c3965ff88873d19508011c9f1982d7c94bbcb45844f",
+      "gzip_sha256": "d36ebadf5b625d6129b6474e7b44ac3169dc75dcaee47067841cbbffc3eca457"
+    },
+    {
+      "file": "inspect_t13_debug_layout.py.gz",
+      "bytes": 2607,
+      "sha256": "10cfe2298720f392c52453158f4c8005d412cdd31936ff97c7a68d24c658974b",
+      "gzip_sha256": "c69e92c540b4cc7b36a21285959c13046d223234dee5019bff9b3e095ed395d8"
+    },
+    {
+      "file": "launch_t13_uart_watch.py.gz",
+      "bytes": 1698,
+      "sha256": "25323dd9a51e6e422fc44bbd9d80a5acbae66ab1fa87821ea842aadf9cf4cc71",
+      "gzip_sha256": "fa4b72867797ca2bf6732d83d8308e4666c3b14f779504a8a04a7da420750622"
+    },
+    {
+      "file": "run_t13_uart_watch.py.gz",
+      "bytes": 575,
+      "sha256": "6c2e3702ddd34245b5248b8634700c9dc5c24ee06533a7fc19e8460adb1c2990",
+      "gzip_sha256": "5cc020ad98c7a1dcc2cb893390984757466d35c5acc5f3ea8f68fd6a09a7e9cd"
+    },
+    {
+      "file": "start_t13_uart_watch.py.gz",
+      "bytes": 3380,
+      "sha256": "222615e5b28e4f4dfe1dbfb07ead27673817d90279f36082af1b7d49211cd35f",
+      "gzip_sha256": "af983b089fea0d8eb6f0612e4d238f33b3a6d468ed28957c241d197ee6c8c004"
+    },
+    {
+      "file": "check_t13_uart_watch.py.gz",
+      "bytes": 2732,
+      "sha256": "af782cba2fbcdbecbdaa8acff6f46982b261db8d7a1cfd47eb09f7a7a1dffda6",
+      "gzip_sha256": "bf13a2f66a1e0e4dddeac0ea7457e0be45d0738b04f18ee2bfe474f6300392cd"
+    },
+    {
+      "file": "check_t13_uart_watch_capture.py.gz",
+      "bytes": 2614,
+      "sha256": "69d61c50e6da05b1b3a67caa0cbc7a3ecd188ea150945b5af1a9531fb032a064",
+      "gzip_sha256": "40e76db12be0506f827770e7552831b9e6fd47f868312018a44749752d52cfbe"
+    },
+    {
+      "file": "uart-watch-preparation-01.json.gz",
+      "bytes": 13599,
+      "sha256": "a948f3a4ff2434926ef96d151d777d4799285374246dc96a8f29dce189e955fe",
+      "gzip_sha256": "ab578b272226fc531d0e88e44ce7b0b04ebae44f5536ff1a2a9001866d29bd0e"
+    },
+    {
+      "file": "uart-watch-capture-host-01.json.gz",
+      "bytes": 201,
+      "sha256": "6f09086ddabe43459fc330cd2941c759b170528186beffca082cd3d62e1cf691",
+      "gzip_sha256": "dac9eb6323338bf7102b7e5a635b0eb62798a765684a6f1d315732d92ab8ef8e"
+    }
+  ]
+}

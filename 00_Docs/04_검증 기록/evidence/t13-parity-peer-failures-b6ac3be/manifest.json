@@ -1,0 +1,13 @@
+{
+  "source": "b6ac3befdc86daa058a9225abbdcf7b275f6de8f",
+  "physical_executed": false,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "parity-peer-failures-b6ac3be.json.gz",
+      "bytes": 2977,
+      "sha256": "50d1edd293e54edfcacbbdb40961e7874abbaa90824679508c3ee229ebe885fd",
+      "gzip_sha256": "e2f78185c3091c4d9160c742acb43b5eb409a9013e9e0492fadf037f06455644"
+    }
+  ]
+}
