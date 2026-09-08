@@ -101,7 +101,7 @@ class I2sEdgeTests(unittest.TestCase):
         self.assertEqual(result['received_total'], 16357)
 
     def test_second_captured_trace_stays_inside_per_interval_budget(self):
-        """! @brief 두 번째 S raw의 추가 패드 전이를 구간별 상한과 함께 고정합니다. """
+        """! @brief 두 번째 S raw의 추가 패드 전이를 연속 창 상한과 함께 고정합니다. """
         summary = [0x49324530, 1, 1, 0, 0, 668, 4, 3, 3, 2736116,
                    4088, 4081, 4081, 0, 16339, 16336, 16336, 0, 0, 0]
         first = [0x49324531, 1, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -113,6 +113,20 @@ class I2sEdgeTests(unittest.TestCase):
                  16339, 4081, 4081, 4081]
         result = edge.inspect([summary, first, trace], 1)
         self.assertEqual(result['observed_total'] - result['received_total'], 3)
+
+    def test_b_starvation_restart_trace_uses_continuous_total(self):
+        """! @brief 경계 귀속이 한 구간에서 3회 달라도 연속 합계가 맞는 실제 raw를 고정합니다. """
+        summary = [0x49324530, 1, 1, 0, 0, 673, 4, 2, 2, 2756558,
+                   4100, 4095, 4095, 0, 16349, 16347, 16347, 0, 0, 0]
+        first = [0x49324531, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+                 673, 673, 0, 0, 0, 0, 1024, 2756558, 0, 1]
+        trace = [0x49324554, 1, 4, 673,
+                 4081, 4081, 4081, 4081,
+                 8176, 4095, 4092, 4092,
+                 12255, 4079, 4077, 4077,
+                 16349, 4094, 4095, 4095]
+        result = edge.inspect([summary, first, trace], 1)
+        self.assertEqual(result['observed_total'] - result['received_total'], 2)
 
     def test_firmware_uses_hardware_boundary_and_does_not_reconfigure_gpio_for_observer(self):
         source = (ROOT / 'tests/zephyr/v04_t13_hil/src/audio.cpp').read_text(encoding='utf-8')

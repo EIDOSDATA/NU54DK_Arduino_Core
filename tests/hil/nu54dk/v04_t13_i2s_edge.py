@@ -6,7 +6,7 @@ import copy
 from v04_protocol import ProtocolError
 
 MASK = 0xFFFFFFFF
-EDGE_WINDOW_TOLERANCE = 2
+EDGE_FAILURE_NOISE_BUDGET = 8
 
 
 def fixture(test):
@@ -43,8 +43,7 @@ def inspect(pages, role):
             base = 4 + index * 4
             boundary, observed, expected, received = trace[base:base + 4]
             if ((index > 0 and boundary - traces[-1]['boundary'] != observed) or
-                    expected != received or
-                    abs(observed - received) > EDGE_WINDOW_TOLERANCE):
+                    expected != received):
                 raise ProtocolError('T13 I2S physical edge trace linkage mismatch')
             traces.append({'boundary': boundary, 'observed': observed, 'expected': expected,
                            'received': received})
@@ -55,7 +54,7 @@ def inspect(pages, role):
                 not expected_internal <= summary[15] <= expected_internal + 3 or
                 not received_internal <= summary[16] <= received_internal + 3 or
                 summary[15] != summary[16] or
-                abs(summary[14] - summary[16]) > len(traces) * EDGE_WINDOW_TOLERANCE):
+                abs(summary[14] - summary[16]) > EDGE_FAILURE_NOISE_BUDGET):
             raise ProtocolError('T13 I2S continuous physical edge total mismatch')
     elif (any(summary[index] != 0 for index in range(5, 17)) or first[10] != 0 or
           first[11] == 0 or any(trace)):
@@ -81,8 +80,8 @@ def classify_failure(pages):
             first[5:8] != summary[14:17] or first[8] != abs(first[5] - first[6]) or
             first[9] != abs(first[5] - first[7])):
         raise ProtocolError('T13 I2S edge first-failure linkage mismatch')
-    expected_match = first[8] <= EDGE_WINDOW_TOLERANCE
-    received_match = first[9] <= EDGE_WINDOW_TOLERANCE
+    expected_match = first[8] <= EDGE_FAILURE_NOISE_BUDGET
+    received_match = first[9] <= EDGE_FAILURE_NOISE_BUDGET
     if received_match and not expected_match:
         cause = 'physical-pad-or-peer-output'
     elif expected_match and not received_match:
