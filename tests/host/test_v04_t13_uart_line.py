@@ -149,9 +149,11 @@ class UartLineTests(unittest.TestCase):
 
     def test_expected_fault_still_requires_cleanup_and_fresh_normal_restart(self):
         devices = [mock.Mock(), mock.Mock()]
+        calls = []
         for role, device in enumerate(devices, 1):
             device.image = {'role': role}
             def command(opcode, *args, role=role, **kwargs):
+                calls.append((role, opcode))
                 if opcode == 142:
                     return self.vector(role)
                 if opcode == 99:
@@ -172,6 +174,7 @@ class UartLineTests(unittest.TestCase):
                 if cleanup_ok:
                     line.execute(devices, self.test, 1, 'parity', mock.Mock(), lambda name, row: rows.append(row), preflight=True)
                     self.assertEqual(group.call_count, 2)
+                    self.assertLess(calls.index((2, 98)), calls.index((1, 98)))
                     before, after = group.call_args_list
                     self.assertEqual(before.kwargs['seed'] ^ 0x9E3779B9, after.kwargs['seed'])
                     for device in devices:

@@ -120,7 +120,8 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
             if mode == 'break':
                 if peer.command(98, timeout=2) != [1] or peer.command(144, timeout=2) != [1]:
                     raise ProtocolError('T13 released peer TX HIGH was not prepared before DUT RX')
-            for device in ((target,) if mode == 'break' else (target, peer)):
+            # @brief parity 송신기를 먼저 시작하여 DUT RX가 구동되지 않은 선을 관측하지 않게 합니다.
+            for device in ((target,) if mode == 'break' else (peer, target)):
                 if device.command(98, timeout=2) != [1]:
                     raise ProtocolError('T13 UART line START failed')
             if mode == 'break':
