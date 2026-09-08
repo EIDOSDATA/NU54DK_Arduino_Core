@@ -4,6 +4,7 @@
 #include <nucode/StreamFabric.h>
 #include <variant.h>
 #include <hal/nrf_gpio.h>
+#include <hal/nrf_i2s.h>
 
 namespace
 {
@@ -17,6 +18,37 @@ namespace
     std::uint32_t submitted[3]{}, seed_tx = 0U;
     v04::I2sStreamOracle oracle;
     unsigned failed_slot = UINT32_MAX;
+    std::uint32_t stop_requests = 0U;
+    std::uint32_t first_failure_registers[20]{};
+
+    /** @brief 읽기만으로 DMA·핀 설정·IRQ 상태를 수집하며 event를 지우지 않습니다. */
+    void registers(std::uint32_t *out)
+    {
+        const std::uint32_t values[]{0x49325331U,
+                                     role,
+                                     k_cycle_get_32(),
+                                     NRF_I2S20->ENABLE,
+                                     NRF_I2S20->CONFIG.MODE,
+                                     NRF_I2S20->CONFIG.RXEN,
+                                     NRF_I2S20->CONFIG.TXEN,
+                                     NRF_I2S20->TXD.PTR,
+                                     NRF_I2S20->RXD.PTR,
+                                     NRF_I2S20->RXTXD.MAXCNT,
+                                     NRF_I2S20->PSEL.SCK,
+                                     NRF_I2S20->PSEL.LRCK,
+                                     NRF_I2S20->PSEL.SDOUT,
+                                     NRF_I2S20->PSEL.SDIN,
+                                     NRF_P1->PIN_CNF[6],
+                                     NRF_P1->PIN_CNF[7],
+                                     NRF_P1->IN,
+                                     NVIC_GetPriority(I2S20_IRQn),
+                                     NVIC_GetEnableIRQ(I2S20_IRQn),
+                                     NVIC_GetPendingIRQ(I2S20_IRQn)};
+        for (unsigned index = 0U; index < 20U; ++index)
+        {
+            out[index] = values[index];
+        }
+    }
 
     bool guards()
     {
@@ -64,6 +96,11 @@ bool t13::audioPrepare(const Case &test, std::uint32_t seed)
     stats.enabled = test.i2s;
     audio = nullptr;
     failed_slot = UINT32_MAX;
+    stop_requests = 0U;
+    for (auto &value : first_failure_registers)
+    {
+        value = 0U;
+    }
     if (!stats.enabled)
     {
         return true;
@@ -165,6 +202,7 @@ void t13::audioService()
             {
                 if (failed_slot == UINT32_MAX)
                 {
+                    registers(first_failure_registers);
                     failed_slot = slot;
                 }
                 stats.fail(6U, oracle.first_index);
@@ -211,6 +249,10 @@ void t13::audioService()
 
 bool t13::audioStop()
 {
+    if (stats.enabled)
+    {
+        ++stop_requests;
+    }
     if (audio != nullptr && audio->state() == StreamFabricState::faulted)
     {
         return stats.fail(9U);
@@ -245,9 +287,53 @@ void t13::audioSnapshot(std::uint32_t *out)
 /** @brief 최초 불일치의 예상/실제 word와 반환된 DMA 전체를 STOP 뒤에도 읽습니다. */
 void t13::audioDiagnosticSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count)
 {
-    if (!stats.enabled || page > 16U)
+    if (!stats.enabled || page > 19U)
     {
         count = 0U;
+        return;
+    }
+    if (page >= 17U)
+    {
+        if (page == 17U)
+        {
+            registers(out);
+        }
+        else if (page == 18U)
+        {
+            const std::uint32_t values[]{0x49325332U,
+                                         role,
+                                         stats.active,
+                                         stats.error,
+                                         stats.detail,
+                                         stats.completed,
+                                         stats.queued,
+                                         stop_requests,
+                                         failed_slot,
+                                         audio == nullptr ? UINT32_MAX
+                                                          : static_cast<unsigned>(audio->state()),
+                                         NRF_I2S20->EVENTS_STOPPED,
+                                         NRF_I2S20->EVENTS_RXPTRUPD,
+                                         NRF_I2S20->EVENTS_TXPTRUPD,
+                                         NRF_P1->PIN_CNF[4],
+                                         NRF_P1->PIN_CNF[5],
+                                         NRF_I2S20->CONFIG.SWIDTH,
+                                         NRF_I2S20->CONFIG.CHANNELS,
+                                         NRF_I2S20->CONFIG.RATIO,
+                                         k_cycle_get_32(),
+                                         guards()};
+            for (unsigned index = 0U; index < 20U; ++index)
+            {
+                out[index] = values[index];
+            }
+        }
+        else
+        {
+            for (unsigned index = 0U; index < 20U; ++index)
+            {
+                out[index] = first_failure_registers[index];
+            }
+        }
+        count = 20U;
         return;
     }
     if (page == 0U)

@@ -194,7 +194,9 @@ def failure_snapshots(devices, test, append, identifier):
             else:
                 observations += [(107, (0,), 'clock')]
             if test['i2s']:
-                observations += [(118, (page,), f'i2s-failure-page{page}') for page in range(17)]
+                # @brief 긴 DMA 원본 조회 전에 살아 있는 peer의 핀·DMA·IRQ와 최초 오류 상태를 보존합니다.
+                observations += [(118, (page,), f'i2s-failure-page{page}')
+                                 for page in (17, 18, 19, *range(17))]
         for opcode, arguments, name in observations:
             try:
                 words = device.command(opcode, arguments, timeout=2)

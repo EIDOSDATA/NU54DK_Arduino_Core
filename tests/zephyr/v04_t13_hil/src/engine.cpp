@@ -309,7 +309,7 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         pwmPinSnapshot(args[0], out, count);
         return 0U;
     }
-    if (opcode == 118U && nargs == 1U && args[0] <= 16U)
+    if (opcode == 118U && nargs == 1U && args[0] <= 19U)
     {
         audioDiagnosticSnapshot(args[0], out, count);
         return 0U;

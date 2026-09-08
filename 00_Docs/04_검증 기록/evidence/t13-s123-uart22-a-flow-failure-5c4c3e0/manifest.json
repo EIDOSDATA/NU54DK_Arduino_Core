@@ -1,0 +1,1461 @@
+{
+  "source": "5c4c3e0d21efa42209a814beab6367377a3b020a",
+  "status": "failed",
+  "phase": "uart-flow",
+  "physical_executed": true,
+  "started_at": "2026-09-08T15:21:44.348900+00:00",
+  "finished_at": "2026-09-08T15:27:32.405329+00:00",
+  "error": "ProtocolError: T13 active flow PSEL/HWFC differs from declared fixture",
+  "case_results": [
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat001/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat001/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat001/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2335300887
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat002/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat002/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat002/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3318533483
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat003/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat003/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat003/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3949790009
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat004/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat004/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat004/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2537251644
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat005/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat005/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat005/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2343901673
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat006/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat006/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat006/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2337667888
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat007/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat007/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat007/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2285511035
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat008/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat008/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat008/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2659687031
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat009/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat009/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat009/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3463628771
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat010/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat010/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat010/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 884424776
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat011/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat011/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat011/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2616427382
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat012/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat012/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat012/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3668275583
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat013/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat013/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat013/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2089550165
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat014/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat014/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat014/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3579341647
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat015/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat015/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat015/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 1370448253
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat016/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat016/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat016/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3205104949
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat017/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat017/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat017/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2786011595
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat018/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat018/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat018/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3341969230
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat019/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat019/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat019/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2962055920
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat020/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat020/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat020/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2141978391
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat021/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat021/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat021/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3670627647
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat022/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat022/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat022/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 365497532
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat023/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat023/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat023/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 254948421
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat024/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat024/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat024/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3423604330
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat025/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat025/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat025/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 1958385379
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat026/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat026/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat026/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 4038524055
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat027/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat027/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat027/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 902749747
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat028/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat028/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat028/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 1572365882
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat029/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat029/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat029/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 652779373
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat030/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat030/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat030/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 4258462866
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat031/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat031/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat031/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2093772799
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat032/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat032/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat032/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2791036659
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat033/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat033/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat033/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3129752432
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat034/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat034/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat034/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 892489865
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat035/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat035/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat035/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 1591794347
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat036/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat036/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat036/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2902859183
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat037/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat037/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat037/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2642318440
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat038/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat038/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat038/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 602273544
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat039/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat039/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat039/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2303632943
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat040/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat040/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat040/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3530918326
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat041/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat041/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat041/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 4199583021
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat042/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat042/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat042/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 385826017
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat043/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat043/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat043/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2977237544
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat044/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat044/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat044/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2168296820
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat045/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat045/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat045/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 283263203
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat046/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat046/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat046/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2806927353
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat047/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat047/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat047/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 1241878783
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat048/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat048/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat048/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2318342352
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat049/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat049/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat049/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3538975079
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat050/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat050/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat050/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 1782375601
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat051/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat051/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat051/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2207354884
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat052/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat052/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat052/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 182295345
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat053/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat053/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat053/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 193329817
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat054/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat054/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat054/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 92769573
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat055/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat055/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat055/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 454155664
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat056/maintained/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat056/reacquired/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte22/role1/repeat056/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2737653400
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3788,
+      "sha256": "b7637ef5f53e5456e64fd41345399d10a064025565c95cdf10eebb80448ec6ed",
+      "gzip_sha256": "c03ad6bcada50d417ab31a9468ebd897c4f637c5e633b4e4ded9895a89306f54"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "fb7c71d9af9fd427953bcc2c23c05e985150fe0757bd3be30ac4233ba2b1e634",
+      "gzip_sha256": "715ab7c700e1683fb64b74a21c7197be1df97df2aaece4302f81a6458d2a96d7"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 3164826,
+      "sha256": "670a5e327d09e2ed60ef44b63e14c48b8736c026deb2cf7f15d2c202f93e3010",
+      "gzip_sha256": "94f92c85264193f2451657697b1e7feb80d579643e93351d859508d3063d2c0f"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 1620370,
+      "sha256": "ba9f971b703180b265f4706db78246a9b32f5dedaaeee758aea71ead1c3ec165",
+      "gzip_sha256": "1af8553f42ba32d511ea3f0f1a79924f1a20af2672ce84b0770f762cf3394b84"
+    },
+    {
+      "file": "s123-flow-c4-r1-100-01-preflight.json.gz",
+      "bytes": 708,
+      "sha256": "2d44b5f162ae430c05ffcc298032ddad3fa2290aff1a9c0fe72cbde4c494d7bc",
+      "gzip_sha256": "594538595a889b5cc1bb016ed854c27551262d6c4644b7c8e180ed27c0d1b35b"
+    },
+    {
+      "file": "s123-flow-c4-r1-100-01-preflight.log.gz",
+      "bytes": 1649,
+      "sha256": "f4682adf6d822b145e8d0f9f182da3dc0d475bbeccf7d0623bd02840acb8d9bf",
+      "gzip_sha256": "6ebe918a1edd25fd6dd26277cb8f8c7547cd3cb755e66b47ce95d347c7d1847d"
+    },
+    {
+      "file": "s123-flow-c4-r1-100-01-execute.json.gz",
+      "bytes": 704,
+      "sha256": "c531f6d81cd2af45147b14a9b339df356150239075a768d9b7d4a1da06465998",
+      "gzip_sha256": "4bdc546fb1e61b491882f3983512a1c80f955f368f1a0cb9bbda61f0f4865e2c"
+    },
+    {
+      "file": "s123-flow-c4-r1-100-01-execute.log.gz",
+      "bytes": 3218,
+      "sha256": "9b9e7827fc3a7f25263f25e07297f1fb9cf64107dec8475a0e2e7d6d929f2fa0",
+      "gzip_sha256": "4135165398abda70529fd4725d4106b930a2bc5967c70fca82eaefaafdb44078"
+    }
+  ]
+}

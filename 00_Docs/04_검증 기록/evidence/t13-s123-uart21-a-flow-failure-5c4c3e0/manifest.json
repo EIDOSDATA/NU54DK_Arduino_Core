@@ -1,0 +1,236 @@
+{
+  "source": "5c4c3e0d21efa42209a814beab6367377a3b020a",
+  "status": "failed",
+  "phase": "uart-flow",
+  "physical_executed": true,
+  "started_at": "2026-09-08T15:19:37.354732+00:00",
+  "finished_at": "2026-09-08T15:20:36.825475+00:00",
+  "error": "ProtocolError: T13 active flow PSEL/HWFC differs from declared fixture",
+  "case_results": [
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat001/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat001/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat001/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 4122533766
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat002/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat002/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat002/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2815470130
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat003/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat003/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat003/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 2965557147
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat004/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat004/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat004/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3146948490
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat005/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat005/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat005/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 1385340924
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat006/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat006/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat006/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3393440382
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat007/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat007/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.5,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/flow/uarte21/role1/repeat007/result",
+      "status": "passed",
+      "planned_flow_pass": true,
+      "normal_soak_pass": false,
+      "restart_seed": 3146753284
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3788,
+      "sha256": "b7637ef5f53e5456e64fd41345399d10a064025565c95cdf10eebb80448ec6ed",
+      "gzip_sha256": "c03ad6bcada50d417ab31a9468ebd897c4f637c5e633b4e4ded9895a89306f54"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "fb7c71d9af9fd427953bcc2c23c05e985150fe0757bd3be30ac4233ba2b1e634",
+      "gzip_sha256": "715ab7c700e1683fb64b74a21c7197be1df97df2aaece4302f81a6458d2a96d7"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 523912,
+      "sha256": "9e40c2ba9acbaa3bc627df59f3769a58cc1b36c076884f9f7427a1cb0df2659e",
+      "gzip_sha256": "b83a3c01e378c016a600556d0a2af4861a9bb1297f9e09471226afc9c926d47d"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 275439,
+      "sha256": "7f6c7668593fcf26d1666ebdffb0dbb9e15b78694e28d0d41a83c168aebc1b95",
+      "gzip_sha256": "2c22a3fec30590a7ccf0240b8bf251869194dbc5e50e127b8cc65ec4d669accb"
+    },
+    {
+      "file": "s123-flow-c3-r1-100-01-preflight.json.gz",
+      "bytes": 708,
+      "sha256": "cee388c847eb95e4910478e7f78468d8cd678518aa26b70a6c752b7ad36e0a06",
+      "gzip_sha256": "7ca31afc4e08b364bc2e9285597a6b4bdb3482ccd1c47b066e0d6ad768dbc533"
+    },
+    {
+      "file": "s123-flow-c3-r1-100-01-preflight.log.gz",
+      "bytes": 1649,
+      "sha256": "a03492a3091a3e48c61fc659948da9a74d1fb3d3c0546d07333d3b956029aa4a",
+      "gzip_sha256": "d5532ea817bd63121d04cf0ffe4ba8f49913353eb1a4109a0ef54b59b5539477"
+    },
+    {
+      "file": "s123-flow-c3-r1-100-01-execute.json.gz",
+      "bytes": 704,
+      "sha256": "32445d44a19840162c88a36f7655170ce3e81b923721dca90ad275792becb420",
+      "gzip_sha256": "3a33fb7a7328e1925f801beab34e9e39b3818a7694a46700763cd9b22371faec"
+    },
+    {
+      "file": "s123-flow-c3-r1-100-01-execute.log.gz",
+      "bytes": 476,
+      "sha256": "67518ffe55fa8e480e3d26b204d7b2a227dda67d9e1e9144002d7855de48c631",
+      "gzip_sha256": "d07a704167cd9c029d60d9c813dba29e9a7b331e911c54219564d67fc7eb94ce"
+    }
+  ]
+}
