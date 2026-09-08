@@ -1,0 +1,108 @@
+{
+  "source": "43bc0320d6681d57d2ec1cd569fef35f7dd8ec0d",
+  "physical_executed": true,
+  "status": "wiring-failed",
+  "pwm_started": false,
+  "normal_soak_passed": 0,
+  "failed_net": "A P1.05 -> B P1.04 LOW not received",
+  "cleanup": "both checker STOP; directions/pullups/ownership zero; no pulse/lease expiration",
+  "next": "user jumper inspection/reconnection; then fresh exact UID and full S checker",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 5419,
+      "sha256": "778b76a50b44d332c8fc7ace62e8b6c8c8872adafce6d70fa5c809938146368a",
+      "gzip_sha256": "e2b9a250dc9c41b2d89ece12aa052d31b6d16d106ef2abc1c1dcc8d116acfda3"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "82686cc4e7451483b49c8b4095ef7318efe1090dbc4808d829bc8682a42a45e3",
+      "gzip_sha256": "d122514f5e57277ea2fc2afee67ba834b4d275deb01a3a6c42542bd73d26e651"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 7634,
+      "sha256": "113535efd0d7bc6cbdad0b1dc159a599ed014cb802aec8bd3ae5d7d6c3fb1176",
+      "gzip_sha256": "c75cbe15920066d8fedcfbb8a7cf224a344cf0360ab69c41f8ff1ee9da42fbb9"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 2926,
+      "sha256": "60074ae09990844a0969256083c0597ddb8956f89e3fd141c4d5b4d7ed658ae0",
+      "gzip_sha256": "f02f0e86cac8b3eba39fe54e35f846b6208fc4efe5e7a223527238f3e70a06a0"
+    },
+    {
+      "file": "pwm21-dap-43bc032-diagnostic2-preflight.json.gz",
+      "bytes": 744,
+      "sha256": "daf054dfed59cc816ceb15416cedbe5fc5234664554e5f0759036ed80afc9505",
+      "gzip_sha256": "4477bdb402452c45694b7560002b739c7524e918201855acd982d0d1d25d53d9"
+    },
+    {
+      "file": "pwm21-dap-43bc032-diagnostic2-preflight.log.gz",
+      "bytes": 1488,
+      "sha256": "2219898b14629324b376986cf37da3436df3af7155c1e8e2b8e7bcf523e5c52b",
+      "gzip_sha256": "0a0dbe496c32649baae1e6b95b2caa9aa690768cad860b055bfbd5d18c4a0db1"
+    },
+    {
+      "file": "pwm21-dap-43bc032-diagnostic2-execute.json.gz",
+      "bytes": 740,
+      "sha256": "67f6b4b5b4e2a4b924ad9951e0a0ea1c7daf729c8013129ab98b630847dfe27a",
+      "gzip_sha256": "cc0a454cc8dd09b77a5a160e5c5ed355869077122dd65d712e529fea2c5ebb8e"
+    },
+    {
+      "file": "pwm21-dap-43bc032-diagnostic2-execute.log.gz",
+      "bytes": 84,
+      "sha256": "3abe87322d6462827d0d9b5c751ea672fb16c14047a4bb7ac418c669884abab8",
+      "gzip_sha256": "7be76598cc717272b8f92dfe4bff0b8309eeb460baace89dbc7cc21cdb8c2d32"
+    },
+    {
+      "file": "pwm21-dap-43bc032-diagnostic1-preflight.json.gz",
+      "bytes": 744,
+      "sha256": "d5ffd7e258cda47500f3f2344cf22a24537919f6dc0310aeaa30e09cef997e23",
+      "gzip_sha256": "c36c9a4a073d55b90b5b1d191214258dc2d80ede01dc6aba83ee337fabd945b5"
+    },
+    {
+      "file": "pwm21-dap-43bc032-diagnostic1-preflight.log.gz",
+      "bytes": 65,
+      "sha256": "b8bc693ef7f9e6d6fac71506d84522fb29ee85fdee4486d849e83983c89c298c",
+      "gzip_sha256": "4d671cbe84b2e5eb000b5ac4ca8da26b084d5a0cd11b42598d411559072be157"
+    },
+    {
+      "file": "t13-pwm-pin-exact-target-01.json.gz",
+      "bytes": 627,
+      "sha256": "4b2117314b834843d215b8e81feacb11616a71f8da58e926de9d3aac45a2ee0b",
+      "gzip_sha256": "8be6cee1d99138e524ed5fe7a845d14bcaa726e2c4747fe317db320fe5fa4318"
+    },
+    {
+      "file": "t13-pwm-pin-exact-target-01.log.gz",
+      "bytes": 1905,
+      "sha256": "3a355c423e898c9e725c1d425df4f563f76abd2ff6046331273e9ac656502499",
+      "gzip_sha256": "d14da767ee6af7b380561cdd970bc9ee9ae149ae054cd45bdc5ae1b783e96620"
+    },
+    {
+      "file": "ci-43bc032-07.json.gz",
+      "bytes": 5472,
+      "sha256": "7f39bb92113c9b05bdbb4902740adbf52866c2106b94650c55d5e25855f589a3",
+      "gzip_sha256": "7771046728e906eb93ff020975e29ae8b8ffb8715cabf24b7fbb3d2b1c8921b2"
+    },
+    {
+      "file": "ci-43bc032-07.host.log.gz",
+      "bytes": 291790,
+      "sha256": "cd1a6698afdf75c39fabace535029a13015ca952cb2d1eb587d386d0bfb66d6b",
+      "gzip_sha256": "178845e09bdbb54d63268968dc2c6ad608b47518410993f3ef3f68e0c8c150a9"
+    },
+    {
+      "file": "ci-43bc032-08.json.gz",
+      "bytes": 5472,
+      "sha256": "fe9ebb51237883ec1fba81adae05fef724658da9fa45843a0b3c2aec6736d781",
+      "gzip_sha256": "e277c67dda492d84547246e44e27606df43d2d64b76318a7c976c4125ba6e255"
+    },
+    {
+      "file": "t13-hardware-review-notes.md.gz",
+      "bytes": 3055,
+      "sha256": "d35a0f7b5a06d90f3ab95da72a40bfd1c721c25c031e0933209999f29cc15a06",
+      "gzip_sha256": "5c7177c6d356c19656ad8d9cf4eb2c63e4d3badcb2d44c9be891d8d5e4468e04"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "source": "43bc0320d6681d57d2ec1cd569fef35f7dd8ec0d",
+  "status": "passed",
+  "physical_executed": true,
+  "normal_soak_cases": [
+    "i2s20"
+  ],
+  "requested_seconds": 180,
+  "wiring": "Fresh exact UID enumeration and full S checker after repair2 user report",
+  "cleanup": "Both STOP, guards intact, pins idle and clock references zero",
+  "cause": "LRCK contact is a candidate; historical failures are not relabelled",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 5422,
+      "sha256": "e983162785950a95c6ed0df44a737c1e817c9242adee1f836b70b44bf408cb70",
+      "gzip_sha256": "8a6629ae5a699f91838266c6da18930ef643f8b2cb315697d87ea4fe8f43edff"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "82686cc4e7451483b49c8b4095ef7318efe1090dbc4808d829bc8682a42a45e3",
+      "gzip_sha256": "d122514f5e57277ea2fc2afee67ba834b4d275deb01a3a6c42542bd73d26e651"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 270851,
+      "sha256": "6285c3e99d441d0bd51f8518ac58fbdf10cd188220e1fbc7208538d2b12cf661",
+      "gzip_sha256": "61f2cde972fe5d7327d691f74e6dc27072185a90852c1dcd510a3311245f7bb9"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 141233,
+      "sha256": "b0364463a99a728cb7848d68211564c936fc1fbe15eab06d42ccc4c4a5b3e0f2",
+      "gzip_sha256": "b469df1c4b8e047f8a1945ec8eb2ffc1f60984a8a6444c70fae311d38a755dcc"
+    },
+    {
+      "file": "i2s-43bc032-repair2-attempt1-preflight.json.gz",
+      "bytes": 689,
+      "sha256": "65cc25714eb73f12dcd8d80cb9b05c1d7247e38c011c0618ce04cf2506485691",
+      "gzip_sha256": "ff4476ac035413efab3563f63fc81554a890061baa9764d96eac1fa5020b20d5"
+    },
+    {
+      "file": "i2s-43bc032-repair2-attempt1-preflight.log.gz",
+      "bytes": 1478,
+      "sha256": "16bdceaa96775373d989e53d44083a41e23eb81b171e1789ff62159123462a9b",
+      "gzip_sha256": "b2e63f3483ad3c8b83041b684ab319d2d9aa1625a1dfe9baafd9bd4225a4cd1d"
+    },
+    {
+      "file": "i2s-43bc032-repair2-attempt1-execute.json.gz",
+      "bytes": 685,
+      "sha256": "52a6b79c3c31c1dc0d1cfb8eb5b029ed87eab76ca498076f8494d20799e86f6a",
+      "gzip_sha256": "dd036f6a5eb2578f323b9290e338d5cf46fbc2b8a0b9c6a5711bee5e5c51f58a"
+    },
+    {
+      "file": "i2s-43bc032-repair2-attempt1-execute.log.gz",
+      "bytes": 310,
+      "sha256": "e281e2e1f7305e626184d7bbd79f93b0773f5bdfd7f0e3be721a82b910d038c7",
+      "gzip_sha256": "2e61e6e498e04cc67cd828b1128f9882267179012caee327f95fa0ba5eedbe3f"
+    }
+  ]
+}
