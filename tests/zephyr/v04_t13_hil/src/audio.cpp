@@ -16,6 +16,7 @@ namespace
     bool pending[3]{};
     std::uint32_t submitted[3]{}, seed_tx = 0U;
     v04::I2sStreamOracle oracle;
+    unsigned failed_slot = UINT32_MAX;
 
     bool guards()
     {
@@ -62,6 +63,7 @@ bool t13::audioPrepare(const Case &test, std::uint32_t seed)
 {
     stats.enabled = test.i2s;
     audio = nullptr;
+    failed_slot = UINT32_MAX;
     if (!stats.enabled)
     {
         return true;
@@ -161,6 +163,10 @@ void t13::audioService()
             stats.extra[1] = oracle.mismatches;
             if (oracle.mismatches != 0U)
             {
+                if (failed_slot == UINT32_MAX)
+                {
+                    failed_slot = slot;
+                }
                 stats.fail(6U, oracle.first_index);
             }
             stats.complete(256U, submitted[slot]);
@@ -234,4 +240,54 @@ bool t13::audioHealthy()
 void t13::audioSnapshot(std::uint32_t *out)
 {
     stats.snapshot(2U, guards(), out);
+}
+
+/** @brief 최초 불일치의 예상/실제 word와 반환된 DMA 전체를 STOP 뒤에도 읽습니다. */
+void t13::audioDiagnosticSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count)
+{
+    if (!stats.enabled || page > 16U)
+    {
+        count = 0U;
+        return;
+    }
+    if (page == 0U)
+    {
+        const std::uint32_t values[]{20U,
+                                     role,
+                                     seed_tx,
+                                     oracle.seed,
+                                     oracle.padding,
+                                     oracle.samples,
+                                     oracle.mismatches,
+                                     oracle.first_index,
+                                     oracle.first_expected,
+                                     oracle.first_actual,
+                                     failed_slot,
+                                     stats.completed,
+                                     stats.queued,
+                                     stats.error,
+                                     stats.detail,
+                                     guards(),
+                                     audio == nullptr ? UINT32_MAX
+                                                      : static_cast<unsigned>(audio->state()),
+                                     CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC,
+                                     k_cycle_get_32(),
+                                     256U};
+        for (unsigned index = 0U; index < 20U; ++index)
+        {
+            out[index] = values[index];
+        }
+        count = 20U;
+        return;
+    }
+    if (failed_slot >= 3U || stats.error == 0U || stats.active)
+    {
+        count = 0U;
+        return;
+    }
+    for (unsigned index = 0U; index < 16U; ++index)
+    {
+        out[index] = rx[failed_slot].values[(page - 1U) * 16U + index];
+    }
+    count = 16U;
 }

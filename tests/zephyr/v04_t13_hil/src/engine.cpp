@@ -124,7 +124,7 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
             out[index + 1U] = plan_hash[index];
         }
         /** @brief serial·stream·지연·취소/NACK·역할/PSEL·공급 생략의 구현을 구분합니다. */
-        out[9] = 63U;
+        out[9] = 127U;
         count = 10U;
         return 0U;
     }
@@ -191,6 +191,22 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
     if (opcode == 115U && nargs == 0U)
     {
         streamFaultSnapshot(out, count);
+        return 0U;
+    }
+    if (opcode == 116U && nargs == 1U && args[0] <= 2U && !gate.claimed() && !wiringClaimed())
+    {
+        out[0] = pwmTailPolicy(args[0]) ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 117U && nargs == 0U)
+    {
+        pwmDiagnosticSnapshot(out, count);
+        return 0U;
+    }
+    if (opcode == 118U && nargs == 1U && args[0] <= 16U)
+    {
+        audioDiagnosticSnapshot(args[0], out, count);
         return 0U;
     }
     if (opcode == 112U && nargs == 1U && args[0] <= 1U && !gate.claimed() && !wiringClaimed())

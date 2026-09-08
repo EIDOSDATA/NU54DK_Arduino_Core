@@ -104,4 +104,27 @@ namespace t13
             return bad == 0U;
         }
     };
+
+    /** @brief 진단 전용으로 최초 오류 뒤 최대8에지/10ms를 더 관측하되 실패는 유지합니다. */
+    struct FailureTail
+    {
+        bool enabled = false;
+        std::uint32_t first_count = 0U, first_cycle = 0U;
+
+        void observe(std::uint32_t count, std::uint32_t cycle)
+        {
+            if (first_count == 0U)
+            {
+                first_count = count;
+                first_cycle = cycle;
+            }
+        }
+
+        bool stop(std::uint32_t count, std::uint32_t cycle, std::uint32_t frequency) const
+        {
+            return first_count != 0U &&
+                   (!enabled || count - first_count >= 8U ||
+                    static_cast<std::uint32_t>(cycle - first_cycle) >= frequency / 100U);
+        }
+    };
 } // namespace t13

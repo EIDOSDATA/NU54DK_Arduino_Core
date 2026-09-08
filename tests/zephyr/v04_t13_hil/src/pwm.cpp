@@ -28,6 +28,20 @@ namespace
     onoff_manager *clock_manager = nullptr;
     onoff_client clock_client{};
     std::uint32_t trace[16][5]{}, trace_count = 0U;
+    FailureTail failure_tail{};
+    unsigned selected_pwm = 0U;
+    unsigned diagnostic_mode = 0U;
+
+    /** @brief 기존 S의 LED3 직결 또는 DAP 분리 DATA 교차 net만 진단에 사용합니다. */
+    std::uint32_t capturePin()
+    {
+        return NRF_GPIO_PIN_MAP(1, diagnostic_mode == 2U ? 7U : 14U);
+    }
+
+    NRF_PWM_Type *pwmRegisters()
+    {
+        return selected_pwm == 20U ? NRF_PWM20 : selected_pwm == 21U ? NRF_PWM21 : NRF_PWM22;
+    }
 
     /** @brief 정밀 통신·파형 비교 구간의 HFXO 참조를 획득하고 다른 사용자의 참조는 유지합니다. */
     bool requestClock()
@@ -86,11 +100,18 @@ namespace
 
 bool t13::pwmPrepare(const Case &test)
 {
+    if (diagnostic_mode != 0U && (test.pwm_instance == 0U || test.serial_count != 0U ||
+                                  test.adc_channels != 0U || test.pdm_instance != 0U || test.i2s))
+    {
+        return stats.fail(27U);
+    }
     stats.enabled = test.pwm_instance != 0U;
     pwm = nullptr;
     edges = {};
     previous_poll = 0U;
     trace_count = 0U;
+    failure_tail.first_count = failure_tail.first_cycle = 0U;
+    selected_pwm = test.pwm_instance;
     duty = test.pwm_duty;
     /** @brief UART도 정확한 baud clock을 요구하므로 PWM 유무와 무관하게 시험 clock을 준비합니다. */
     if (!requestClock())
@@ -109,7 +130,7 @@ bool t13::pwmPrepare(const Case &test)
             buffer.values[index] = static_cast<std::uint16_t>(0x8000U | duty * 10U);
         }
         PwmSequenceConfiguration configuration{};
-        configuration.output_pins[0] = PIN_P1_14;
+        configuration.output_pins[0] = diagnostic_mode == 2U ? PIN_P1_06 : PIN_P1_14;
         configuration.top_value = 1000U;
         configuration.load = PwmSequenceLoad::individual;
         pwm = analogFabric().pwm(test.pwm_instance);
@@ -133,8 +154,8 @@ bool t13::pwmPrepare(const Case &test)
     {
         return stats.fail(2U);
     }
-    pin_owned =
-        gpiote->acquireInput(0U, PIN_P1_14, GpiotePolarity::toggle) == EventFabricResult::success;
+    pin_owned = gpiote->acquireInput(0U, static_cast<pin_size_t>(pinId(capturePin())),
+                                     GpiotePolarity::toggle) == EventFabricResult::success;
     if (!pin_owned)
     {
         return stats.fail(3U);
@@ -181,6 +202,11 @@ void t13::captureService()
         return;
     }
     const auto cycle = k_cycle_get_32();
+    if (failure_tail.stop(edges.count, cycle, CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC))
+    {
+        stats.fail(9U, failure_tail.first_count);
+        return;
+    }
     if (previous_poll != 0U)
     {
         const auto gap = k_cyc_to_us_floor32(cycle - previous_poll);
@@ -192,7 +218,7 @@ void t13::captureService()
     {
         /** @brief CC0는 DPPI만 기록하며 누락·늦은 GPIO level 관측은 간격/교대 오류로 남깁니다. */
         const auto timestamp = nrf_timer_cc_get(NRF_TIMER22, NRF_TIMER_CC_CHANNEL0);
-        const auto level = nrf_gpio_pin_read(NRF_GPIO_PIN_MAP(1, 14));
+        const auto level = nrf_gpio_pin_read(capturePin());
         *event = 0U;
         __DMB();
         auto *record = trace[trace_count % 16U];
@@ -204,7 +230,11 @@ void t13::captureService()
         ++trace_count;
         if (!edges.consume(timestamp, level, duty))
         {
-            stats.fail(9U, edges.count);
+            failure_tail.observe(edges.count, cycle);
+            if (failure_tail.stop(edges.count, cycle, CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC))
+            {
+                stats.fail(9U, failure_tail.first_count);
+            }
         }
     }
 }
@@ -304,6 +334,84 @@ bool t13::pwmClockPolicy(bool crystal)
     }
     crystal_requested = crystal;
     return true;
+}
+
+bool t13::pwmTailPolicy(unsigned mode)
+{
+    if (mode > 2U || stats.active || crystal_held)
+    {
+        return false;
+    }
+    diagnostic_mode = mode;
+    failure_tail.enabled = mode != 0U;
+    return true;
+}
+
+/** @brief 레지스터는 읽기만 하며 최초 실패 주변의 추가 에지를 PASS로 재해석하지 않습니다. */
+void t13::pwmDiagnosticSnapshot(std::uint32_t *out, std::uint32_t &count)
+{
+    if (!stats.enabled)
+    {
+        count = 0U;
+        return;
+    }
+    if (role == 1U)
+    {
+        const std::uint32_t values[]{role,
+                                     22U,
+                                     NRF_TIMER22->MODE,
+                                     NRF_TIMER22->BITMODE,
+                                     NRF_TIMER22->PRESCALER,
+                                     NRF_TIMER22->CC[0],
+                                     NRF_CLOCK->XO.STAT,
+                                     NRF_GPIOTE20->CONFIG[0],
+                                     NRF_GPIOTE20->PUBLISH_IN[0],
+                                     NRF_TIMER22->SUBSCRIBE_CAPTURE[0],
+                                     failure_tail.enabled,
+                                     failure_tail.first_count,
+                                     edges.bad,
+                                     trace_count,
+                                     failure_tail.first_cycle,
+                                     k_cycle_get_32(),
+                                     nrf_gpio_pin_read(capturePin()),
+                                     NRF_P1->PIN_CNF[capturePin() % 32U],
+                                     NRF_CLOCK->PLL.STAT,
+                                     CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC};
+        for (unsigned index = 0U; index < 20U; ++index)
+        {
+            out[index] = values[index];
+        }
+    }
+    else
+    {
+        const auto *reg = pwmRegisters();
+        const std::uint32_t values[]{role,
+                                     selected_pwm,
+                                     reg->ENABLE,
+                                     reg->MODE,
+                                     reg->COUNTERTOP,
+                                     reg->PRESCALER,
+                                     reg->DECODER,
+                                     reg->LOOP,
+                                     reg->SHORTS,
+                                     reg->EVENTS_RAMUNDERFLOW,
+                                     reg->EVENTS_DMA.SEQ[0].BUSERROR |
+                                         (reg->EVENTS_DMA.SEQ[1].BUSERROR << 1U),
+                                     reg->DMA.SEQ[0].AMOUNT,
+                                     reg->DMA.SEQ[0].CURRENTAMOUNT,
+                                     reg->DMA.SEQ[1].AMOUNT,
+                                     reg->DMA.SEQ[1].CURRENTAMOUNT,
+                                     reg->SEQ[0].REFRESH,
+                                     reg->SEQ[0].ENDDELAY,
+                                     reg->SEQ[1].REFRESH,
+                                     reg->SEQ[1].ENDDELAY,
+                                     NRF_CLOCK->XO.STAT};
+        for (unsigned index = 0U; index < 20U; ++index)
+        {
+            out[index] = values[index];
+        }
+    }
+    count = 20U;
 }
 
 void t13::pwmTraceSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count)

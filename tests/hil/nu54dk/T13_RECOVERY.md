@@ -72,6 +72,37 @@ Picolibc `EOVERFLOW=139`는 target static_assert와 독립 Host 기대값으로 
 매회 양쪽 raw와 STOP·pin·clock 반환 뒤 새 seed의 정상1초 stream을 독립 대조한다.
 이 재시작 구간은180초 안정성의 대체가 아니며, 아직 실기100회 완료는 없다.
 
+## PWM/I2S 최초 실패 원인 분리
+
+f591571의 정식 안정성에서 PWM21 LOW535µs와 I2S 약73초 후 양쪽2word 불일치를 관측했다.
+원본은104번에 보존하며 두 현상을 같은 원인으로 단정하지 않는다.
+
+`--phase pwm-diagnostic --cases 25|26|27 --pwm-diagnostic-route led|dap`는 단독180초 관측이다.
+첫500±8µs 위반 뒤 최대8에지 또는10ms만 더 보존하고 같은 실패로 STOP한다.
+정상 soak와 혼합 topology에는 이 모드를 사용할 수 없다. 오류 없는 진단 종료도
+`observation-complete`이며 정상180초의 PASS나 허용 오차 변경으로 표시하지 않는다.
+`led`는 기존 B P1.14→A P1.14, `dap`는 S에 이미 있는 B P1.06→A P1.07을 사용한다.
+양쪽 DAP UART 분리 확인과 S 확인서가 필요하고 새 점퍼나 GPIO 출력은 추가하지 않는다.
+다른 기능은 이 진단 구간 동안 활성화하지 않는다.
+
+Opcode116은 비활성 상태에서0(기본)/1(LED 진단)/2(DATA 교차 진단)를 선택한다.
+Opcode117은 A의 TIMER22/GPIOTE20 capture 설정·실패 시각·clock과 B의 PWM instance·mode·top·divider·
+decoder·loop·shorts·RAMUNDERFLOW·두 DMA BUSERROR bit·AMOUNT/CURRENTAMOUNT·refresh/enddelay·clock을
+읽기만 한다. B의 DMA BUSERROR는 sequence0/1을bit0/1로 묶는다. START 직후와 실패 뒤 값을 구분한다.
+
+I2S opcode118 page0은 seed·padding·첫 불일치 index/expected/actual·실패slot·반환량·guard·state를,
+page1~16은 STOP 후 해당 반환 DMA의256word를16word씩 보존한다.
+Host는 전체 buffer를 독립 전역 pattern으로 대조해 비트 차이와 인접word 일치를 보고한다.
+이 분석은 원인 확정이나 정상 PASS가 아니다. 이전 f591571 원본에는 expected/actual이 없으므로
+새 source의 재현이 필요하다.
+
+Nordic 문서의 [DPPI 지연 설명](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/ppi.html-concept_latencies)은
+전원 domain과 sleep 상태의 추가 지연을 설명한다. 현재 busy loop·HFXO 관측만으로 그 지연을 원인으로
+확정하지 않는다. [PWM 레지스터](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/pwm.html-topic)의
+RAMUNDERFLOW·DMA 관측도 읽기 대상으로 추가했다.
+[DevZone의 시작 펄스 사례](https://devzone.nordicsemi.com/f/nordic-q-a/124546/first-pwm-pulse-stretched-when-starting-nrfx_pwm_complex_playback-on-nrf54l15)는
+첫 펄스에 관한 별도 사례로 Nordic 측 재현이 없었으며, 이번15초 후 PWM 실패의 확인된 원인이 아니다.
+
 | 남은 항목 | 후속 판정 범위 |
 | --- | --- |
 | UART flow·RX 지연·parity/break | 4선100ms CTS 정지/재개, 2선의 제한된 RX 지연, 별도 parity/break 원인 확인과 복구 |

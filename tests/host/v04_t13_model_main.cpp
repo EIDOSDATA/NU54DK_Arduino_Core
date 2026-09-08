@@ -49,6 +49,22 @@ int main()
     {
         return 14;
     }
+    t13::FailureTail immediate;
+    immediate.observe(100U, 0U);
+    if (!immediate.stop(100U, 0U, 1000000U))
+    {
+        return 15;
+    }
+    t13::FailureTail tail;
+    tail.enabled = true;
+    tail.observe(100U, UINT32_MAX - 999U);
+    tail.observe(101U, 0U);
+    if (tail.first_count != 100U || tail.first_cycle != UINT32_MAX - 999U ||
+        tail.stop(107U, 8999U, 1000000U) || !tail.stop(108U, 8999U, 1000000U) ||
+        !tail.stop(101U, 9000U, 1000000U) || edges.bad != 0U || missing.bad != 1U)
+    {
+        return 16;
+    }
     t13::Buffer buffer{};
     constexpr unsigned lengths[]{4U, 32U, 256U, 1024U};
     for (const auto length : lengths)

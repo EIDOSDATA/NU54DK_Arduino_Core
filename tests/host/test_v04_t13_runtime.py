@@ -21,6 +21,44 @@ from v04_protocol import ProtocolError
 
 
 class T13RuntimeTests(unittest.TestCase):
+    def test_i2s_failure_dma_proves_bit_error_and_neighbour_repetition(self):
+        from v04_common_i2s import pattern as i2s_pattern
+        for role, padding in ((1, 2), (2, 6)):
+            seed = 0x13579246
+            receiver_seed = oracle.lane_seed(seed, 0, 3-role)
+            completed = 28482
+            first = (completed-1)*256-padding
+            buffer = [i2s_pattern(receiver_seed, first+index) for index in range(256)]
+            buffer[246] ^= 1
+            buffer[248] = i2s_pattern(receiver_seed, first+246)
+            words = [20, role, oracle.lane_seed(seed, 0, role), receiver_seed, padding,
+                     completed*256-padding, 2, first+246, i2s_pattern(receiver_seed, first+246),
+                     buffer[246], 2, completed, completed+1, 6, first+246, 1, 1, 1000000, 100, 256]
+            report = oracle.i2s_failure(words, buffer, seed, role)
+            self.assertEqual(report['mismatches'][0]['xor'], 1)
+            self.assertEqual(report['mismatches'][1]['matching_neighbour_offsets'], [-2])
+            self.assertFalse(report['normal_pass'])
+            for index in (3, 5, 6, 7, 8, 9, 11, 15, 16):
+                broken = words[:]
+                broken[index] ^= 1
+                with self.subTest(role=role, index=index), self.assertRaises(ProtocolError):
+                    oracle.i2s_failure(broken, buffer, seed, role)
+            with self.assertRaises(ProtocolError):
+                oracle.i2s_failure(words, buffer[:-1], seed, role)
+
+    def test_pwm_diagnostic_data_route_reuses_one_existing_s_net(self):
+        mapping = plan.harness('S')
+        self.assertEqual(mapping['P1.07'], 'P1.06')
+        self.assertEqual(mapping['P1.14'], 'P1.14')
+
+    def test_pwm_failure_tail_cannot_qualify_normal_soak_or_mixed_topology(self):
+        for identifier, preflight in ((26, False), (106, True), (2, True)):
+            test = dict(next(row for row in cases.cases() if row['id'] == identifier),
+                        _pwm_diagnostic_tail=True)
+            with self.subTest(identifier=identifier, preflight=preflight), self.assertRaises(ProtocolError):
+                runner.execute_group([], {'test':test, 'members':[test]}, 180, mock.Mock(), mock.Mock(),
+                                     preflight=preflight)
+
     def test_uart_pins_reject_observed_spi_residue_and_wrong_route(self):
         """! @brief SPI21 뒤 실제 관측한 두 보드의 RTS/CTS 잔류와 잘못된 연결을 재현합니다. """
         test = next(row for row in cases.cases() if row['id'] == 101)

@@ -1,0 +1,62 @@
+{
+  "source": "f5915719188774442f1b93662a769145c5a0778c",
+  "physical_executed": true,
+  "status": "failed",
+  "normal_soak_passed": 2,
+  "passed_ids": [
+    "T13-S/soak/pdm20/result",
+    "T13-S/soak/pdm21/result"
+  ],
+  "failure": "I2S20 after72.915/72.923s; both error6 and2mismatchedwords; original first expected/actual not captured",
+  "cleanup": "both STOP confirmed; clock refs0; S pins input/no-pull",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3774,
+      "sha256": "811e36aa1f04b43ebc8f0d1aa530fe4dbab6f6609d18c89d94713cd7af6072f5",
+      "gzip_sha256": "e92c43e8ed09b6c9c170c02709c7a36f42a05eec3c8b9991340bfd362f8af779"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1605,
+      "sha256": "63ee86ee93d35ade2282784c99d9943e46c562eacaec7d45f8e877084494ca69",
+      "gzip_sha256": "3922d39c58a06ba844c81456ae07b51e6323796278f147f7138260f6c878a6eb"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 449587,
+      "sha256": "6288ec045dbc99451668b4d260ac6ec90bd9bcd6d55c7b502cd2f537b61f5fdc",
+      "gzip_sha256": "892ef2c236dabb8c7946fc1f88e5c985e0a39532269e411e16c13b6751730237"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 219828,
+      "sha256": "3a9d813cedcf317fb8890b68fc5718e3797a0cfead89e4d6907801c3c07e883a",
+      "gzip_sha256": "4529c68828b8a85b1b831332fa880b4ede979dd17674642d9db15887954a2ed5"
+    },
+    {
+      "file": "soak-stream-serial-f591571-attempt1-preflight.json.gz",
+      "bytes": 817,
+      "sha256": "7e1bfa08d223a356d26f5780931976c2be20e9ca2cbd0de72b5ab5a75c907076",
+      "gzip_sha256": "617d51f895814654d1f8e58b21aa7672f74c775ce407d3718b2eafc4c934cdc0"
+    },
+    {
+      "file": "soak-stream-serial-f591571-attempt1-preflight.log.gz",
+      "bytes": 1402,
+      "sha256": "b62a96288b188a8abe7677afd2aa763be595804226b6cb4c9bd39a6fbb148516",
+      "gzip_sha256": "2842ab0082bddeb68765ad58daabb3a917d72fa8b93177eecf6c2e6e80e4b8bf"
+    },
+    {
+      "file": "soak-stream-serial-f591571-attempt1-execute.json.gz",
+      "bytes": 813,
+      "sha256": "732e8d39bf47e7d72f5e5a648dd563f6044e4ea082f485e626f8fd557edbe986",
+      "gzip_sha256": "09689f7e674f991be3d4bd755130e2dd33b244798166d2371805957bfb410590"
+    },
+    {
+      "file": "soak-stream-serial-f591571-attempt1-execute.log.gz",
+      "bytes": 573,
+      "sha256": "9ee24dcd840d2bac5e40c3a5de8dcc26c6d0df5e9904e4ca890d08f4d39f5b97",
+      "gzip_sha256": "f61bbc244940fc40d62ed7077e2b7eac93d72855162ef0a18ef33a458c907ec0"
+    }
+  ]
+}
