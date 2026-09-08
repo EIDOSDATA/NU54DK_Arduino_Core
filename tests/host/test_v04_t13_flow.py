@@ -10,6 +10,7 @@ import v04_t13_cases as cases
 import v04_t13_plan as plan
 import v04_t13_flow as flow
 import v04_t13_run as runner
+import v04_t13_oracle as oracle
 from v04_protocol import ProtocolError
 
 
@@ -125,6 +126,62 @@ class FlowTests(unittest.TestCase):
         first, last = group.call_args_list
         self.assertEqual(first.kwargs['seed'] ^ 0x9E3779B9, last.kwargs['seed'])
         self.assertFalse(rows[-1]['planned_flow_pass'])
+
+    def pause(self, test, role, seed=123):
+        rows = {}
+        lane = flow.selected_lane(test)
+        for board in (1, 2):
+            endpoint = test['serial_links'][lane]['a' if board == 1 else 'b']
+            observer = role == board
+            raw = self.vector(observer)
+            raw[1] = endpoint['instance']
+            raw[3] = flow.physical(endpoint['pins']['cts' if observer else 'rts'])
+            raw[15:19] = [flow.physical(endpoint['pins'][name]) if observer or name in ('txd', 'rxd')
+                          else flow.MASK for name in ('txd', 'rxd', 'rts', 'cts')]
+            rows[board] = raw
+        return flow.ConfirmedPause(test, role, seed, rows), rows
+
+    def test_pause_is_bound_to_both_proofs_exact_fixture_seed_and_direction(self):
+        for test in (row for row in cases.cases() if row['id'] in (2, 3, 4, 5, 101, 105)):
+            for role in (1, 2):
+                pause, rows = self.pause(test, role)
+                fixture = flow.fixture(test, role)
+                for board in (1, 2):
+                    for lane in range(len(test['serial_links'])):
+                        expected = [100, 100]
+                        if lane == flow.selected_lane(test):
+                            expected[0 if board == role else 1] = 132
+                        self.assertEqual(pause.limits(fixture, 123, board, lane), tuple(expected))
+                for changed, seed in ((test, 123), (fixture, 124)):
+                    with self.assertRaises(ProtocolError):
+                        pause.limits(changed, seed, 1, 0)
+                with self.assertRaises(ProtocolError):
+                    flow.ConfirmedPause(test, role, 123, {1: rows[1]})
+                rows[3-role][5] = rows[3-role][4]+1000
+                with self.assertRaises(ProtocolError):
+                    flow.ConfirmedPause(test, role, 123, rows)
+
+    def test_fault_bound_preserves_payload_checks_and_rejects_other_direction_or_excess_gap(self):
+        test = next(row for row in cases.cases() if row['id'] == 3)
+        pause, _ = self.pause(test, 1)
+        words = [0]*20
+        words[19] = 20
+        for board, offset in ((1, 5), (2, 11)):
+            seed = oracle.lane_seed(123, 0, board)
+            edge = lambda at: sum(oracle.pattern(seed, at+i) << (8*i) for i in range(4))
+            words[offset:offset+6] = [1, 1024, 0, 7, edge(0), edge(1020)]
+        limits = pause.limits(flow.fixture(test, 1), 123, 1, 0)
+        words[17:19] = [115, 20]
+        with self.assertRaises(ProtocolError):
+            oracle.lane(words, 123, 0, 1, 1024)
+        oracle.lane(words, 123, 0, 1, 1024, completion_limits_ms=limits)
+        for index, value in ((17, 133), (18, 101), (0, 1), (1, 1), (9, words[9] ^ 1)):
+            broken = words[:]
+            broken[index] = value
+            with self.subTest(index=index), self.assertRaises(ProtocolError):
+                oracle.lane(broken, 123, 0, 1, 1024, completion_limits_ms=limits)
+        with self.assertRaises(ProtocolError):
+            runner.snapshots([], test, 123, mock.Mock(), 'test', cts_pause={'limit': 132})
 
 
 if __name__ == '__main__':

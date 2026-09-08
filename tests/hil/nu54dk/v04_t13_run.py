@@ -50,8 +50,10 @@ def grouped(tests):
     return groups
 
 
-def snapshots(devices, test, seed, append, label):
+def snapshots(devices, test, seed, append, label, *, cts_pause=None):
     """! @brief 모든 raw를 먼저 보존하고 각 방향의 독립 pattern을 확인합니다. """
+    if cts_pause is not None and not isinstance(cts_pause, flows.ConfirmedPause):
+        raise ProtocolError('T13 completion allowance requires verified CTS evidence')
     raw = []
     for device in devices:
         role = device.image['role']
@@ -75,7 +77,8 @@ def snapshots(devices, test, seed, append, label):
         state['streams'] = {index: oracle.stream(index, words, test, seed, row['role'])
                             for index, words in row['streams'].items()}
         engines.append(state)
-        lanes.append([oracle.lane(words, seed, index, row['role'], test['serial_links'][index]['buffer_bytes'])
+        lanes.append([oracle.lane(words, seed, index, row['role'], test['serial_links'][index]['buffer_bytes'],
+                      completion_limits_ms=cts_pause.limits(test, seed, row['role'], index) if cts_pause else (100, 100))
                       for index, words in enumerate(row['lanes'])])
     return engines, lanes
 
@@ -272,8 +275,7 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
         for role_lanes in first_lanes:
             if any(min(row['tx']['frames'], row['rx']['frames']) == 0 for row in role_lanes):
                 raise ProtocolError('T13 traffic not established before measurement')
-        if during is not None:
-            during()
+        cts_pause = during() if during is not None else None
         start = time.monotonic()
         previous = first_lanes
         previous_engines = first_engines
@@ -284,7 +286,7 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
             for device in devices:
                 if device.command(103, timeout=2) != [1]:
                     raise ProtocolError('T13 lease renewal failed')
-            engines, lanes = snapshots(devices, test, seed, append, identifier + f'/sample{tick}')
+            engines, lanes = snapshots(devices, test, seed, append, identifier + f'/sample{tick}', cts_pause=cts_pause)
             for role in range(2):
                 for index, current in engines[role]['streams'].items():
                     if current['enabled'] and (index != 3 or role != 1):
@@ -300,7 +302,7 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
             if tick % 15 == 0:
                 print(f'T13_PROGRESS case={test["name"]} elapsed={time.monotonic()-start:.1f}s target={duration}s', flush=True)
         measured = time.monotonic() - start
-        end_engines, end_lanes = snapshots(devices, test, seed, append, identifier + '/end')
+        end_engines, end_lanes = snapshots(devices, test, seed, append, identifier + '/end', cts_pause=cts_pause)
         minimum_frames = int(duration * 1000 / 20 * .9)
         for role in range(2):
             if end_engines[role]['elapsed_ms'] - first_engines[role]['elapsed_ms'] < duration * 1000:
@@ -316,7 +318,7 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
             if device.command(101, timeout=2) != [1]:
                 raise ProtocolError('T13 quiesce failed')
         time.sleep(.15)
-        _, drained = snapshots(devices, test, seed, append, identifier + '/drained')
+        _, drained = snapshots(devices, test, seed, append, identifier + '/drained', cts_pause=cts_pause)
         for index in range(len(test['serial_links'])):
             oracle.paired([drained[role][index] for role in range(2)])
         distributions = timings(devices, test, append, identifier + '/timing')

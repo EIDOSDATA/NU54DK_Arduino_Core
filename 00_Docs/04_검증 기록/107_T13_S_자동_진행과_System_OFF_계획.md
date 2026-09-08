@@ -1,5 +1,16 @@
 # T13 S 자동 진행과 peer 제어 System OFF 검증 계획
 
+2026-09-08T12:00Z: fedaa75 최초 UART 오류 진단의 exact power2/2·일반 S2/2·Host7·
+정렬/계약/문서·원격 전체 Host109묶음816시험을 확인해 기존 대열 뒤에 등록했다.
+[준비 원본](evidence/t13-power-diagnostic-preparation-fedaa75/manifest.json)을 따른다.
+Software7개 검사는 성공했으나 Reproducible CI는 대기 상태이며 전체15개 완료가 아니다.
+CTS 구간 판정은 관련 Host8시험을 통과했고 T13 Host88 중86통과/기존 C++ 실행2개가 Windows4551로
+차단됐다. 양쪽 실제 HIGH를 검증하고 동일 fixture/seed·영향받은 방향만 실제 HIGH+20ms+11ms+1ms를
+허용한다. 반대 방향/다른 lane/주입 전/새 seed 정상 재획득은100ms를 유지한다.
+[기존8개 raw 대조](evidence/t13-cts-gap-analysis-d44cef2/manifest.json)는 모두 이 상한 안이지만
+drained hash·새 seed 정상 재획득을 완료한 실기 증거가 없으므로 기존 FAIL은 그대로 유지한다.
+새 exact source의 전체 실기 재검증 전에는 CTS 완료 수를 올리지 않는다.
+
 2026-09-08T11:53Z: S 정상 안정성36/36은 완료 상태를 유지한다. 자원 충돌 예행14/14를
 통과했으며100회 반복은 진행 중이다. SPI20/21/22 역할 전환은 최초 불일치 byte를 보존했지만
 실패 상태다. 단독 CTS 예행8조건은 실제100ms 정지/재개 증명 후 정상용100ms 간격 판정에서
@@ -158,8 +169,8 @@ f77e1cb의 exact gate와 원격 전체 Host 확인 뒤 등록을 완료했으며
 | stream 복구 | 3/4 완료, I2S B97번째 실패 | 원본 분석·원인 분리·재검증 |
 | 역할 전환 | 예행5/5, 정식2/5 완료(serial00·30 각100회), SPI20/21/22 실패 보존 | 최초 RX 오류 계측을 보강하여 원인 분리; 이전 중단47회 합산 금지 |
 | 동시 안정성 | 7/7 완료(C01~06·C08, source별, 2026-09-08T11:29Z) | 일반900초, C05는3600초 |
-| 추가 오류·충돌 | 일부 runner 미구현 | UART flow/지연/parity/break, SPI slave/short/CS, TWI 지연/stuck-low, 자원 충돌의 구현·Host/target·실기 |
-| peer 제어 System OFF | 구현·exact Host/target 준비 완료, 실기0 | S 현재 배치와 TWIM 계측 뒤 bridge 예행부터 실행; 무인 성립 실패 시 원본·한계를 남기고 독립 작업 계속 |
+| 추가 오류·충돌 | 충돌 예행14/14, 단독 CTS 예행8개 판정 충돌로 실패 | CTS 판정 보강 후 새 실기; UART/SPI/TWI 준비 도구는 기존 대열 뒤 실제 실행 결과가 별도로 필요 |
+| peer 제어 System OFF | bridge1회 실패·양쪽 종료, 실제 OFF0 | 최초 UART event/error mask 진단 image로 재확인; bridge 성공 전에 timer/GPIO OFF 진행 금지 |
 | U UART00 | 대기 | S→U 현재 재배치 확인 전 실행 금지 |
 | S 증거 마감 | 진행 중 | 원본·지원 제한·문서·commit/push·CI; 전체 T13 완료로 확대하지 않음 |
 

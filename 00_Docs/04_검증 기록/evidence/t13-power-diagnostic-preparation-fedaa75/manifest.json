@@ -1,0 +1,175 @@
+{
+  "source": "fedaa7504fa6f266b3ca8a520e665151c19c7de5",
+  "physical_executed": false,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "t13-power-diagnostic-exact-target-01.json.gz",
+      "bytes": 648,
+      "sha256": "2a8dd117b46cf7bd4f86e238b23f480e646072782cf910775f17fa5264eb402c",
+      "gzip_sha256": "2d2f3ca01e4f90ddf6e7008cabbd8ed1052147085d5a86d3a685b565d6358e54"
+    },
+    {
+      "file": "t13-power-diagnostic-exact-target-01.log.gz",
+      "bytes": 1917,
+      "sha256": "49793b39aabf8c33712225403470611ae349f4e715745022ba03d33cd2a31357",
+      "gzip_sha256": "621f09d1fdf423f582c04b72a645fd48a23ee2593b757b20817b9b71e0d97f15"
+    },
+    {
+      "file": "t13-power-diagnostic-exact-normal-target-01.json.gz",
+      "bytes": 643,
+      "sha256": "e20057f694425b0507d581842578fbef4c5a8379a123ad747faf0c31ea6a7502",
+      "gzip_sha256": "6fe1ee8ce0de307b45def025d5704d616c40104ddb8d3101168f4c03071f76f7"
+    },
+    {
+      "file": "t13-power-diagnostic-exact-normal-target-01.log.gz",
+      "bytes": 1905,
+      "sha256": "36a311bb92e4bc8fdffe9971243422f00f1294d2f63e307f2eebde9730460c28",
+      "gzip_sha256": "c2827f0460ff768433b6a0ccc35a0aff6e39f28fa66c580d5b912c56d2f0a195"
+    },
+    {
+      "file": "t13-power-diagnostic-exact-unit-01.json.gz",
+      "bytes": 506,
+      "sha256": "f9520122e2164306c474f0750675feb19f0cfd03b1c9a14308c3b539ce113ef8",
+      "gzip_sha256": "9fe4d060e3e4d1a8c58bb240de72c8d5516f14e4e02d7bbc24e2925ae28a6bb1"
+    },
+    {
+      "file": "t13-power-diagnostic-exact-unit-01.log.gz",
+      "bytes": 1339,
+      "sha256": "73616ad2ca73a34f5a4f6e00f40441586512e6d5f0955a55b411f13c4adfa948",
+      "gzip_sha256": "a320082dccd515f4503c2a14dff024f671ba44ffd67840fa3a913f05d0f8d691"
+    },
+    {
+      "file": "t13-power-diagnostic-exact-style-01.json.gz",
+      "bytes": 511,
+      "sha256": "d4e7c10477c24f987fc905a3c6c182c8d3bf6ee3f18458bd6451b2049f7e0a68",
+      "gzip_sha256": "dffeddd72a89cb054c258d5b0a06f5586a5d9dfd77c74389528476f5eca5fda6"
+    },
+    {
+      "file": "t13-power-diagnostic-exact-style-01.log.gz",
+      "bytes": 40,
+      "sha256": "7444a79989b47c0b328e41383b34aecb203a7c340f7d4333d39265b39bb236bc",
+      "gzip_sha256": "582200bffdc54bfada178f02af2b256b0871a3ee0638f177dfe10ee3739ac435"
+    },
+    {
+      "file": "t13-power-diagnostic-exact-docs-01.json.gz",
+      "bytes": 440,
+      "sha256": "6c143767215f59b8d2bbf9aaf786b6922ad9c2b141eda121b7e1da6201993790",
+      "gzip_sha256": "f916f34818d9b06d37c19ea05af304ebe466a5f29ee47c4cd3a96c1ff4d1e613"
+    },
+    {
+      "file": "t13-power-diagnostic-exact-docs-01.log.gz",
+      "bytes": 69,
+      "sha256": "8f37b717b0c0ea100f3eb014539f49a3b38af9d574a54d1a6fc05bdfce6459be",
+      "gzip_sha256": "138af99009340558a498882e3d52c0f27bf5465016e8957a50b5e97eb9f3a540"
+    },
+    {
+      "file": "t13-power-diagnostic-exact-contract-01.json.gz",
+      "bytes": 448,
+      "sha256": "643c19b68af9732fea5cc0b0c944bc3a6295468843519c43e50f5c6451a49d11",
+      "gzip_sha256": "84126ae72bf74a6fc19eee8fb97cf0e10369a29821eb65bbe78e3a262ecd3983"
+    },
+    {
+      "file": "t13-power-diagnostic-exact-contract-01.log.gz",
+      "bytes": 7492,
+      "sha256": "a8b33b2092277a1ec0c3f2cef8d8ecc18e31ce058138e7c03a59141e2419c734",
+      "gzip_sha256": "3525ed5655f8bb0105b8ef16f7d91d7fc21282604f393d6621f6ae580403b018"
+    },
+    {
+      "file": "t13-power-diagnostic-draft-target-01.json.gz",
+      "bytes": 682,
+      "sha256": "3d66c2604dcf313caf6373a50183f20445fe814bb727df29895160eaaeeec08d",
+      "gzip_sha256": "dc98bd2ad8f4968eaf9cb93aab94fbee1134fe37437c2989c3a90a314c599078"
+    },
+    {
+      "file": "t13-power-diagnostic-draft-target-01.log.gz",
+      "bytes": 2072,
+      "sha256": "e5aeb9a147becf899df9814b04bfe56ce56da4d9f421d3a810a11004b5aba604",
+      "gzip_sha256": "e28a4d77e614e93d3e7b37a32079332b5fc65231047e86de45c52ea1f66679db"
+    },
+    {
+      "file": "t13-power-diagnostic-unit-01.json.gz",
+      "bytes": 500,
+      "sha256": "da15e3fda0e0bc1864114b747e5f9071f7c207ff54096a6153c7d157469bce55",
+      "gzip_sha256": "461454e9d77acb9784fee7520dfe760918e0505eb514b742249745a2c7515e81"
+    },
+    {
+      "file": "t13-power-diagnostic-unit-01.log.gz",
+      "bytes": 1339,
+      "sha256": "73616ad2ca73a34f5a4f6e00f40441586512e6d5f0955a55b411f13c4adfa948",
+      "gzip_sha256": "a320082dccd515f4503c2a14dff024f671ba44ffd67840fa3a913f05d0f8d691"
+    },
+    {
+      "file": "t13-power-diagnostic-host-01.json.gz",
+      "bytes": 495,
+      "sha256": "18b545a8a78966b3ee647a2e143ffbfcb2e3d97d7d0107cd6720f7db5e5b7300",
+      "gzip_sha256": "bb049f5aea8ba45dc9f474b00956e22cbdca0ffca8bdc88ab3652e0a7b8fd7e9"
+    },
+    {
+      "file": "t13-power-diagnostic-host-01.log.gz",
+      "bytes": 16769,
+      "sha256": "da59362ae6f09132e4820d96eee47e08efa52357f7c061c0bdeb28709c5b5dd8",
+      "gzip_sha256": "1982360aa6d387c2e969d53b11dfa5eb360c16aae44bfa4d40e1d87be188ee44"
+    },
+    {
+      "file": "t13-power-diagnostic-style-01.json.gz",
+      "bytes": 539,
+      "sha256": "ed954e929c8c65c7b65de57f0772f431c8fcd1217984bc6a3a410add8b7e5599",
+      "gzip_sha256": "22816947bdd737121414397975394d051c8caf23cb7741258cb5b1db62990f83"
+    },
+    {
+      "file": "t13-power-diagnostic-style-01.log.gz",
+      "bytes": 40,
+      "sha256": "7444a79989b47c0b328e41383b34aecb203a7c340f7d4333d39265b39bb236bc",
+      "gzip_sha256": "582200bffdc54bfada178f02af2b256b0871a3ee0638f177dfe10ee3739ac435"
+    },
+    {
+      "file": "ci-fedaa75-01.json.gz",
+      "bytes": 1802,
+      "sha256": "3fb1667d2c77fd4d3bfa44a8bb7df68db212c2a97723586c812b378caa27ff7c",
+      "gzip_sha256": "bd8f332f65e79bce65d68013e12826543b2bbee4bae19c131b125687106a1f24"
+    },
+    {
+      "file": "ci-fedaa75-01.host.log.gz",
+      "bytes": 308055,
+      "sha256": "32928901b4f8efbcb776e72ab3ab70d657147499c886f501ea9ff7b00211c15d",
+      "gzip_sha256": "f327e39542ac242d1d53106c44eef8e6e912a30124b2d4c72272bac40a50aefe"
+    },
+    {
+      "file": "archive-audit-2056-01.json.gz",
+      "bytes": 16681,
+      "sha256": "8c21a40aa0889fc568cdb0fefd17c3e3e4b976bdc43b86d98dfcf5d900d6c406",
+      "gzip_sha256": "f4d06bc6889e196d07645f05a308dbf626544f315ae651720202f2c87b0923fd"
+    },
+    {
+      "file": "launch_t13_power_diagnostic.py.gz",
+      "bytes": 4978,
+      "sha256": "919e3cce83dc7ae7f05c9c1f542a256e4135f5e0991d432787d025f6adf71425",
+      "gzip_sha256": "fec39040ad48700270360a9835e8b424121cfc0495aa31deceb6357f913121fd"
+    },
+    {
+      "file": "register_t13_power_diagnostic.py.gz",
+      "bytes": 2038,
+      "sha256": "dd8b745978605c2d4e2c322560278c82c1dcc49e6f24645f7e754a490c5c5925",
+      "gzip_sha256": "921ea894c5fa21fa356ca9546c5dff19bba8f957f2b16444f9fd5a97d45a5f37"
+    },
+    {
+      "file": "run_t13_power_diagnostic.py.gz",
+      "bytes": 319,
+      "sha256": "c452cce5d3f32dcda9fe89cad3335c762b07daf56b8045e568a7378e8b74259c",
+      "gzip_sha256": "df260d3f5e02b12b86f20c9af08555c25b7d9591e74504f91340b6d3a8f8f7c1"
+    },
+    {
+      "file": "unattended_t13_power_diagnostic.py.gz",
+      "bytes": 3029,
+      "sha256": "ef91520990d5521983e461635a7813e4364cc7b0accbbefdf286ae4a7c74737d",
+      "gzip_sha256": "a689a53d44592db9664528ce3197b824265b6390414706fbc777fa4994d62c4d"
+    },
+    {
+      "file": "power-diagnostic-preparation-provenance.txt.gz",
+      "bytes": 609,
+      "sha256": "929118b32f217fb6f266364546d1d2f6691535439b3db7ec03f342a271eb78b6",
+      "gzip_sha256": "4136602d87b811f1bd052e81bed6ff353649fd782c2d61e9f948996ed310b24e"
+    }
+  ]
+}

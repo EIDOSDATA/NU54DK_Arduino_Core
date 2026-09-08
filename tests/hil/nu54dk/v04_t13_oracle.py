@@ -131,16 +131,20 @@ def direction(words, seed, length):
     return {'frames': completed, 'bytes': count, 'hash': digest}
 
 
-def lane(words, seed, lane_index, role, length):
+def lane(words, seed, lane_index, role, length, *, completion_limits_ms=(100, 100)):
     """! @brief 오류·가드 실패·누락·과도한 frame 정지를 성공으로 수용하지 않습니다. """
     if (len(words) != 20 or any(type(word) is not int or not 0 <= word <= MASK for word in words) or
             words[0] != 0 or words[1] != 0 or words[2] not in (0, 1) or words[19] != 20):
         raise ProtocolError(f'T13 serial failure or invalid snapshot: {words}')
-    if max(words[17:19]) > 100:
-        raise ProtocolError('T13 frame completion gap exceeded 100ms')
+    if (len(completion_limits_ms) != 2 or any(type(limit) is not int or not 100 <= limit <= 160
+                                             for limit in completion_limits_ms)):
+        raise ProtocolError('T13 invalid bounded completion limits')
+    if any(value > limit for value, limit in zip(words[17:19], completion_limits_ms)):
+        raise ProtocolError(f'T13 frame completion gap exceeded limits {completion_limits_ms}ms')
     return {'tx': direction(words[5:11], lane_seed(seed, lane_index, role), length),
             'rx': direction(words[11:17], lane_seed(seed, lane_index, 3 - role), length),
-            'max_queue_us': words[3], 'max_tx_gap_ms': words[17], 'max_rx_gap_ms': words[18]}
+            'max_queue_us': words[3], 'max_tx_gap_ms': words[17], 'max_rx_gap_ms': words[18],
+            'completion_limits_ms': list(completion_limits_ms)}
 
 
 def paired(rows):

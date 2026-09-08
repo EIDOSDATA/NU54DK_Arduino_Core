@@ -93,6 +93,32 @@ def background_progress(before, after, lane_index):
     return measured
 
 
+class ConfirmedPause:
+    """! @brief 양쪽 실제 CTS 증명을 동일 case·seed·방향에만 결합합니다. """
+
+    def __init__(self, test, role, seed, words_by_role):
+        if set(words_by_role) != {1, 2}:
+            raise ProtocolError('T13 CTS pause requires both roles')
+        proofs = [inspect(words_by_role[board], test, role, board) for board in (1, 2)]
+        self.test = fixture(test, role)
+        self.seed, self.role, self.lane = seed, role, selected_lane(test)
+        #! @brief 실제 HIGH 상한에20ms frame 위상·8N1 한 frame·ms 양자화1ms만 더합니다.
+        hold_ms = int((max(row['duration_us'] for row in proofs)+999)//1000)
+        link = test['serial_links'][self.lane]
+        wire_ms = (link['buffer_bytes']*10*1000+link['rate']-1)//link['rate']
+        self.limit = hold_ms+20+wire_ms+1
+
+    def limits(self, test, seed, board_role, lane_index):
+        """! @brief 대상 TX와 반대편 RX 이외에는 원래100ms 기준을 유지합니다. """
+        if (test != self.test or seed != self.seed or board_role not in (1, 2) or
+                not 0 <= lane_index < len(test['serial_links'])):
+            raise ProtocolError('T13 CTS pause belongs to another case, seed or role')
+        limits = [100, 100]
+        if lane_index == self.lane:
+            limits[0 if board_role == self.role else 1] = self.limit
+        return tuple(limits)
+
+
 def background_high(counts, times, interval, test, device_role):
     """! @brief 실제 CTS HIGH 내부 시각에 다른 모든 lane의 TX/RX 완료 증가가 있는지 대조합니다. """
     target = selected_lane(test)
@@ -163,11 +189,16 @@ def execute(devices, test, role, continuity, append, *, preflight):
                     append(suffix+'/background-high', {'status': 'expected-progress',
                         'lanes': background_high(*background, words, test, device.image['role']),
                         'normal_soak_pass': False})
+            pause = ConfirmedPause(test, role, seed, {device.image['role']: words for device, _, words, _ in raw})
+            append(label+'/completion-limits', {'status': 'fault-window-bound',
+                'selected_lane': pause.lane, 'target_role': role, 'limit_ms': pause.limit,
+                'normal_limit_ms': 100, 'normal_soak_pass': False})
             if concurrent:
-                after = runner.snapshots(devices, modified, seed, append, label+'/concurrent/after')[1]
+                after = runner.snapshots(devices, modified, seed, append, label+'/concurrent/after', cts_pause=pause)[1]
                 append(label+'/concurrent/progress', {'status': 'background-progress',
                     'lanes': background_progress(before, after, selected_lane(test)),
                     'normal_soak_pass': False})
+            return pause
         runner.execute_group(devices, {'test': modified, 'members': [modified]}, .5,
             continuity, lambda identifier, row: append(label+'/maintained/'+identifier, row),
             preflight=True, seed=seed, during=inject)
