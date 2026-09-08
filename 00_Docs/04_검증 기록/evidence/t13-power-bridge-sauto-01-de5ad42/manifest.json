@@ -1,0 +1,117 @@
+{
+  "source": "de5ad42ffdc8d38af04ee0d9cf1f7569e2c7e40f",
+  "status": "failed",
+  "phase": "bridge",
+  "physical_executed": true,
+  "started_at": "2026-09-08T11:32:21.374200+00:00",
+  "finished_at": "2026-09-08T11:33:13.704771+00:00",
+  "error": "ProtocolError: firmware failure role=1 op=132 seq=423 status=403 result=[0]",
+  "case_results": [
+    {
+      "id": "cleanup/result",
+      "status": "cleanup",
+      "outcomes": [
+        {
+          "role": 1,
+          "stopped": true,
+          "stamp": 1398025732,
+          "pin_cnf": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "stopped": true,
+          "stamp": 1398025732,
+          "pin_cnf": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "cleanup_proven": true,
+      "b_swd_reopened_for_cleanup": true
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3778,
+      "sha256": "0ad202155f748c8a196db004bf757cb2a2d89798301b6ed72e4a958ff6fa16e0",
+      "gzip_sha256": "77fdd16a2895a2a59251f37e9613d8c752be53eb613090ce951bd4485f92ae2b"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1631,
+      "sha256": "36f8601a1ab6339aea5d296ea9b0157aa25bac27cda9cdc69788d267ceb2cc6d",
+      "gzip_sha256": "c0905887f44ee47dcf5d8adcf907969d0d05680d9a91c6824112c84f9d353094"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 131973,
+      "sha256": "6930c97a8b2d1dd18bc69af3232ab55dffc43dbddf6e576eaefc865eaee95ff2",
+      "gzip_sha256": "dfc62c5ea4ef2609c0449f26754aaebb85fa188faa0bd5e24c952bd3435bbedf"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 76012,
+      "sha256": "e5215d5f76c5928350a7cebef83acc0713c2e482465aad1c9606ebaac0297874",
+      "gzip_sha256": "98739979b82b4f7be416faf0a3e06f06f1daad8357e6fbd86f62af6b9376d98e"
+    },
+    {
+      "file": "power-bridge-sauto-01-preflight.json.gz",
+      "bytes": 647,
+      "sha256": "3df173f8b67ae1bddc2bda3252b383adbcb88ad015e4b5ea6d651ab6db643ed0",
+      "gzip_sha256": "58cf2a07a82ba4fa8f533a28b0ddf280da70aad1212fd94187d41238139194c9"
+    },
+    {
+      "file": "power-bridge-sauto-01-preflight.log.gz",
+      "bytes": 1115,
+      "sha256": "0bf5ef6f725b4c8aa544ef0ce6e788b68111e2490b9d033550af65f4d45ac06f",
+      "gzip_sha256": "5935c21dd81cf27163683dda9ac1b45b8d947eade1e74ecb1338669a2d7071bb"
+    },
+    {
+      "file": "power-bridge-sauto-01-execute.json.gz",
+      "bytes": 643,
+      "sha256": "2ffc01b8299076327db37a801576afacfb08b451b602f5339487c6f80b931c71",
+      "gzip_sha256": "d4abe4e2a789b57170322fa173dd60f2a127ef13b4a935fa5151800b9d378a81"
+    },
+    {
+      "file": "power-bridge-sauto-01-execute.log.gz",
+      "bytes": 77,
+      "sha256": "e70843cdae93cd473e49a6c8bf17d64c064e775c39d4b93c2cb1a0c405b42d2b",
+      "gzip_sha256": "0ac8ff69b37d9a773a2f6f0ace2edc75d12f2f3ab3b31221b8445c70ba12f0a3"
+    }
+  ]
+}

@@ -21,7 +21,7 @@ def validate_selection(test, role, mode):
         raise ProtocolError('T13 unsupported serial fault selection')
 
 
-def inspect(words, test, role, mode):
+def inspect(words, test, role, mode, *, twi_proof=None):
     """! @brief 실제 취소/NACK·부분 DMA·가드를 요구하며 설정 길이를 전송 성공량으로 세지 않습니다. """
     validate_selection(test, role, mode)
     endpoint = test['serial_links'][0]['a' if role == 1 else 'b']
@@ -46,19 +46,34 @@ def inspect(words, test, role, mode):
             position = 6 if mode == 1 else 7
             if not 0 < words[position] < length or words[10] != 0 or words[16:18] != words[6:8]:
                 raise ProtocolError('T13 UART cancellation did not prove a partial transfer')
-        elif not 0 < words[16] < length or words[17] >= length:
+        elif not 0 < words[16] < length or (mode == 3 and words[17] >= length):
             raise ProtocolError('T13 controller cancellation lacks a partial hardware DMA amount')
         if mode == 3 and words[10] != 0:
             raise ProtocolError('T13 SPI cancellation returned an unexpected driver error')
         if mode == 4 and words[11] != 0x42:
             raise ProtocolError('T13 TWI cancellation addressed an unapproved target')
+        if mode == 4:
+            inspect_twi_rx_provenance(twi_proof, words, length)
     return {'mode': mode, 'role': role, 'instance': endpoint['instance'], 'event': event,
             'api_tx_length': words[6], 'api_rx_length': words[7],
-            'observed_tx_amount': words[16], 'observed_rx_amount': None if mode == 5 else words[17],
-            'amount_source': 'uarte_terminal_event' if mode in (1, 2) else 'peripheral_amount_register',
+            'observed_tx_amount': words[16], 'observed_rx_amount': None if mode == 5 else 0 if mode == 4 else words[17],
+            'amount_source': 'uarte_terminal_event' if mode in (1, 2) else
+                            'partial_tx_amount_and_proven_unstarted_rx' if mode == 4 else 'peripheral_amount_register',
             'timing_reference': 'first_rxdrdy_observation' if mode == 2 else 'local_tx_submission',
             'rx_amount_raw': words[17], 'rx_requested': mode != 5,
             'request_after_submit_us': requested_us, 'event_after_submit_us': observed_us}
+
+
+def inspect_twi_rx_provenance(proof, words, length):
+    """! @brief 이전 AMOUNT와 새 RX 미시작·전체 RAM 불변을 모두 증명한 취소만 허용합니다. """
+    if (not isinstance(proof, list) or len(proof) != 20 or len(words) != 20 or
+            any(type(value) is not int or not 0 <= value <= oracle.MASK for value in proof) or
+            proof[:2] != [4, 1] or proof[2] > length or proof[3] > length or
+            proof[4:12] != [0, 0, 0, 0, 0, 0, 1, 0] or
+            proof[12:15] != words[12:15] or proof[15:17] != words[16:18] or
+            proof[17:20] != [length, 6, 1] or words[15] != 1 or
+            proof[16] != proof[3] or not 0 < proof[15] < length):
+        raise ProtocolError('T13 TWIM cancellation lacks prior AMOUNT and proven unstarted RX provenance')
 
 
 def inspect_rx_activity(proof, words):
@@ -84,6 +99,7 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
         original_error = None
         raw_fault = None
         raw_activity = None
+        raw_twi_proof = None
         try:
             for device in devices:
                 if device.command(106, (1,), timeout=2) != [1]:
@@ -136,6 +152,8 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
                             raw_fault = words
                         if opcode == 120 and device is target:
                             raw_activity = words
+                        if opcode == 123 and device is target:
+                            raw_twi_proof = words
                     except BaseException as error:
                         append(label + f'/final/role{device.image["role"]}/{name}',
                                {'status': 'unproven', 'error': f'{type(error).__name__}: {error}'})
@@ -150,7 +168,7 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
         try:
             if mode == 2:
                 inspect_rx_activity(raw_activity, raw_fault)
-            measured = inspect(raw_fault, test, role, mode)
+            measured = inspect(raw_fault, test, role, mode, twi_proof=raw_twi_proof)
         except ProtocolError as error:
             append(label + '/failure', {'status': 'failed', 'error': str(error)})
             raise

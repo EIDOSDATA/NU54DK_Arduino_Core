@@ -48,6 +48,13 @@ TWIM 오류 event는 요청 descriptor 길이를 포함할 수 있으므로 그�
 mode5에서는 RX를 요청하지 않는다. RX AMOUNT는 이전 실행 값이 남을 수 있어 raw만 기록하고
 이번 수신량으로 해석하지 않는다. 477e159/03f5ba4의 예행21항목과 UART20 TX100회는104번에 source별로 기록한다.
 
+Mode4의 현재 판정은 새 RX 미시작 근거인 opcode123을 필수로 요구한다. 전송 전/취소 직전/terminal의
+RXSTARTED·ENDRX가 모두0이고 전체 수신 RAM0xCC 불변, 이전/terminal RX AMOUNT 일치,
+같은 단일 event의 시각·TX 부분량·buffer 길이·ENABLE6을 대조해야만 이번 RX를0으로 기록한다.
+이때 raw RX AMOUNT는 이전 정상 transaction의256일 수 있으며 그대로 보존한다.
+107번의2114187 네 인스턴스 진단으로 원인을 확인했다. 원본 실패를 사후 PASS로 바꾸지 않고
+새 source의100회 취소·정지·재획득을 다시 수행한다. SPI의 양방향 DMA 부분량 기준은 유지한다.
+
 ## 이 구현으로 완료되지 않는 항목
 
 역할 전환 실행기의 source별 실기 완료·실패는107번에 기록한다. `--handover-instance 20|21|22|30`은

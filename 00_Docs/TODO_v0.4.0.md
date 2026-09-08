@@ -1,7 +1,11 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
-2026-09-08T11:24Z: C01~04·C06 각각900초·C05 3600초와 양쪽 STOP 완료로 동시 안정성6/7(86%), C08 실행 중이다.
+2026-09-08T11:35Z: C01~04·C06·C08 각각900초·C05 3600초와 양쪽 STOP 완료로 동시 안정성7/7(100%)이다.
+정상 단독29/29와 합쳐 S 정상 안정성36/36을 source별로 완료했다. T13 전체 완료는 아니다.
 고정 serial17/21·stream3/4·PWM6/6·역할 전환2/5는 source별 근거로 유지한다.
+TWIM 네 인스턴스에서 취소 때 RX AMOUNT256이 이전 정상 수신량의 잔류임을 새 RX 미시작·전체
+수신 RAM 불변으로 확인했다. 판정기의 필수 근거를 보강하고 새100회 재검증을 준비한다.
+System OFF bridge는 UART 중계 오류로 OFF 전 실패·양쪽 STOP 완료이며 자원 충돌 예행을 이어간다.
 자원 충돌b5d614e·CTS d44cef2·UART parity/break93e38ff·SPI boundary4f573f0의 exact target와
 로컬 관련 Host 및 원격 전체 Host를 확인했다. 현재 배치→TWIM 계측→System OFF→충돌/CTS→
 UART parity/break→SPI 짧은 DMA/미준비→e9afcc9 C01/C05 동시 CTS→f77e1cb RX 공급 지연을 순차 예약했다.

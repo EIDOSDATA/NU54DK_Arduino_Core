@@ -1,7 +1,12 @@
 # T13 S 자동 진행과 peer 제어 System OFF 검증 계획
 
-2026-09-08T11:21Z: C01~04·C06 각각900초와 C05 3600초·양쪽 STOP 완료로 동시6/7(86%)이며 C08을 실행 중이다.
+2026-09-08T11:35Z: C01~04·C06·C08 각각900초와 C05 3600초·양쪽 STOP 완료로 동시7/7(100%)이다.
+정상 단독29/29와 합쳐 S 정상 안정성36/36을 source별로 완료했다. T13 전체 완료는 아니다.
 고정 serial17/21·stream3/4·PWM6/6·역할 전환2/5는 source별 근거로 유지한다.
+2114187의 TWIM20/21/22/30은 모두 repeat1 취소+재획득을 통과하고 repeat2의 이전 RX AMOUNT256으로
+기존 판정기에 실패했다. 아래 원인 확인과 새 판정기 재검증을 따른다. de5ad42 System OFF bridge는
+A opcode132의403으로 실패했으며 양쪽 UART error46·STOP/17핀 반환을 확인했다.
+정상 debug 해제 증명·실제 OFF에는 미도달했다. 양쪽 종료가 확인돼 자원 충돌 예행을 이어갔다.
 CTS d44cef2의 exact 두 역할 target·Host58·원격 Host104묶음788시험 준비를 완료했다.
 UART parity/break는93e38ff exact target2/2·T13 Host63시험·원격 전체 Host105묶음793시험을 통과했다.
 SPI boundary4f573f0도 exact target2/2·새 Host4시험·원격 전체 Host106묶음797시험을 확인했다.
@@ -22,6 +27,31 @@ STOP·새 seed 재획득을 요구한다. read_request 지연, 임의 장시간 
 T13 Host82시험 중79개 통과, 기존 handover/route/runtime C++ 실행3개는 Windows4551 차단으로
 미통과 기록을 보존했다. 고정 소스 원격 전체 Host 성공을 추가로 확인하기 전에는 실기를 예약하지 않는다.
 첫 draft target 시도는 이미 존재하는 출력 디렉터리를 거부했으며 기존 디렉터리는 변경하지 않았다.
+95c2bde의 exact target2/2·변경 Host4·원격 전체 Host109묶음812시험을 확인해 SDA LOW 다음으로
+예행4조건을 등록했다. [준비 원본](evidence/t13-twis-delay-preparation-95c2bde/manifest.json)을 따른다.
+
+## TWIM 취소 RX AMOUNT의 출처 확인
+
+2114187의 네 인스턴스 모두 repeat1은 이전/terminal RX AMOUNT0/0, 정상 재획득 이후 repeat2는
+256/256이었다. TX는 모두2byte에서 취소됐고, 새 전송 전 초기화·취소 직전·terminal 관측에서
+RXSTARTED/ENDRX는 모두0이며256byte 수신 RAM 전체가0xCC로 남았다. 같은 event의 시각·길이도
+일치했다. [네 인스턴스 원본 대조](evidence/t13-twi-rx-provenance-analysis-2114187/manifest.json)를 보존했다.
+
+SDK `nrfx/hal/nrf_twim.h`의 RX AMOUNT 설명은 마지막 transaction이며 END/MATCH에서 갱신된다고
+명시한다. `nrfx_twim.c`의 취소 STOPPED 처리는 RXSTARTED/ENDRX를 지우지 않는다.
+이번 TXRX가 TX 단계에서 취소돼 새 RX가 시작되지 않았는데 이전256을 새 부분 RX로 해석한 것이
+기존 판정 실패의 원인이다. 새 판정은 opcode123의20word·새 RX 미시작·전체 RAM 불변·이전 AMOUNT
+일치·단일 terminal event를 매회 필수로 대조하며 raw256과 이번 RX0을 구분한다.
+Core의 취소 구현은 변경하지 않는다. 기존 실패 판정은 그대로 보존하고 새 exact source100회 재검증이
+완료되기 전에는 serial17/21을 올리지 않는다. 관련 Host9시험 통과, T13 Host84 중83통과/기존
+stream C++ 실행1개 Windows4551 차단을 보존했다.
+
+원본: [TWIM20](evidence/t13-twi20-proof-sauto-01-2114187/manifest.json),
+[TWIM21](evidence/t13-twi21-proof-sauto-01-2114187/manifest.json),
+[TWIM22](evidence/t13-twi22-proof-sauto-01-2114187/manifest.json),
+[TWIM30](evidence/t13-twi30-proof-sauto-01-2114187/manifest.json),
+[System OFF bridge](evidence/t13-power-bridge-sauto-01-de5ad42/manifest.json),
+[C08](evidence/t13-c08-soak-sauto-01-506680f/manifest.json).
 
 2026-09-08 후속 구현 범위: T13의 기존 자원 충돌 요구 중 S UART21/22/30에서 같은 block의
 SPI 활성화, 다른 UART의 동일 GPIO 점유, 내부 DMA workspace 겹침을 의도하여 거부의 원자성과
@@ -113,7 +143,7 @@ f77e1cb의 exact gate와 원격 전체 Host 확인 뒤 등록을 완료했으며
 | 고정 serial 복구 | 17/21 완료, TWIM 취소4개 미완료 | RX 시작/END·이전 AMOUNT 구분 보완 후 재검증 |
 | stream 복구 | 3/4 완료, I2S B97번째 실패 | 원본 분석·원인 분리·재검증 |
 | 역할 전환 | 예행5/5, 정식2/5 완료(serial00·30 각100회), SPI20/21/22 실패 보존 | 최초 RX 오류 계측을 보강하여 원인 분리; 이전 중단47회 합산 금지 |
-| 동시 안정성 | 6/7 완료(C01~06), C08 진행 중(2026-09-08T11:21Z) | C01~06·C08; 일반900초, C05는3600초 |
+| 동시 안정성 | 7/7 완료(C01~06·C08, source별, 2026-09-08T11:29Z) | 일반900초, C05는3600초 |
 | 추가 오류·충돌 | 일부 runner 미구현 | UART flow/지연/parity/break, SPI slave/short/CS, TWI 지연/stuck-low, 자원 충돌의 구현·Host/target·실기 |
 | peer 제어 System OFF | 구현·exact Host/target 준비 완료, 실기0 | S 현재 배치와 TWIM 계측 뒤 bridge 예행부터 실행; 무인 성립 실패 시 원본·한계를 남기고 독립 작업 계속 |
 | U UART00 | 대기 | S→U 현재 재배치 확인 전 실행 금지 |

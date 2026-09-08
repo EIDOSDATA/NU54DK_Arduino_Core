@@ -1,0 +1,78 @@
+{
+  "source": "21141876d076937085b86afead3339a9a4608bc2",
+  "status": "failed",
+  "phase": "serial-fault",
+  "physical_executed": true,
+  "started_at": "2026-09-08T11:31:06.229620+00:00",
+  "finished_at": "2026-09-08T11:31:41.122046+00:00",
+  "error": "ProtocolError: T13 controller cancellation lacks a partial hardware DMA amount",
+  "case_results": [
+    {
+      "id": "T13-S/recovery/twim22/mode4/role1/repeat001/restart/T13-S/preflight/twim22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim22",
+      "measured_role": "a",
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/recovery/twim22/mode4/role1/repeat001/result",
+      "status": "passed",
+      "fault_seed": 64470321,
+      "restart_seed": 2648753288,
+      "planned_recovery_pass": true,
+      "normal_soak_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3788,
+      "sha256": "605b761928f3587bce253de62e979b0fac43c3a2dd326b3618b0ff3238ec26e2",
+      "gzip_sha256": "ef2335c24b68817c4fe6b1b73d70b24faf92ac5768da625f1db6459abc190fa6"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "651f1359fdebccd3aebb132520dd4d63002ddf9d0bde1de3981263e82dd678aa",
+      "gzip_sha256": "57f4212a076a1619a34222877c929cc6427e2ab18d228a7119731cac9325824c"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 170009,
+      "sha256": "ad9d12b5bd66bc9892eea0a973852d4fdfeb745842539f97a9596ee08fbc2d60",
+      "gzip_sha256": "11395b9ccd9a36f30cbe6e58a4e58066950a3a00107a5af958f963075446616a"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 94814,
+      "sha256": "c0eb5c834f4f5d69fbb1758a7d57dc74120c692b801ae84fe5980632e31d3d4e",
+      "gzip_sha256": "07c47f5eb94490df668b8b0e61af202fd49a2e2f0cf12008da12ec1589fb5621"
+    },
+    {
+      "file": "twi22-proof-sauto-01-preflight.json.gz",
+      "bytes": 717,
+      "sha256": "d416e3ca907b639840f06ba9fc41148ed77710cb29c767c49a30d392a6082fd7",
+      "gzip_sha256": "f3e89b762418cbb1734806717bff90a85de1de4e56d5deceeda3459b170fa91c"
+    },
+    {
+      "file": "twi22-proof-sauto-01-preflight.log.gz",
+      "bytes": 1510,
+      "sha256": "d2245c0a3f806fe376570607c147bdbd52853234d2e5a255bfe2baa622f81c2f",
+      "gzip_sha256": "85877532d45ae80d8a53180ff2d05f9cf5a174ee12f547f805f43cb4795dfb3f"
+    },
+    {
+      "file": "twi22-proof-sauto-01-execute.json.gz",
+      "bytes": 713,
+      "sha256": "542b4370cec19f7068f73eed50539f8eca626df0168cfe3f6f7b91e96d1e25d5",
+      "gzip_sha256": "ca7d62abb4e50d80aa8acb6a017259b435ad97373794f8bfb0f16ca767da58d5"
+    },
+    {
+      "file": "twi22-proof-sauto-01-execute.log.gz",
+      "bytes": 164,
+      "sha256": "9805f644f16990d93a08b1159c278290c585123f7cbfe54680f31adca9aa1576",
+      "gzip_sha256": "893d138eb3c8e49586cb6e4365c0dda4fe00b70076b2f34b815b51e0519641d4"
+    }
+  ]
+}
