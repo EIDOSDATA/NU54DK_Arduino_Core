@@ -1005,7 +1005,8 @@ void t13::serialConflict(unsigned mode, std::uint32_t *out, std::uint32_t &count
     const auto instance = lane.endpoint.instance;
     if (mode < 1U || mode > 3U || lane_count != 1U || !receivers_armed || !transmitting ||
         !lane.active || lane.endpoint.kind != Kind::uart ||
-        (instance != 21U && instance != 22U && instance != 30U) || !serialHealthy())
+        (instance != 21U && instance != 22U && instance != 30U) ||
+        (instance == 30U && mode != 1U) || !serialHealthy())
     {
         return;
     }
@@ -1068,12 +1069,13 @@ void t13::serialConflict(unsigned mode, std::uint32_t *out, std::uint32_t &count
         conflict_pins[0] = {SerialSignal::txd, pin(SerialSignal::txd)};
         conflict_pins[1] = {SerialSignal::rxd, pin(SerialSignal::rxd)};
     }
-    const SerialFabricConfiguration config{SerialRouteClass::p1_flexible,
-                                           SerialElectricalProfile::dap_uart_disabled,
-                                           conflict_pins,
-                                           mode == 1U ? 3U : 2U,
-                                           conflict_workspaces,
-                                           2U};
+    const SerialFabricConfiguration config{
+        static_cast<SerialRouteClass>(lane.endpoint.bank),
+        static_cast<SerialElectricalProfile>(lane.endpoint.profile),
+        conflict_pins,
+        mode == 1U ? 3U : 2U,
+        conflict_workspaces,
+        2U};
     if (candidate != nullptr && out[3] == 0U)
     {
         out[4] = static_cast<std::uint32_t>(candidate->stage(config));

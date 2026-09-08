@@ -35,7 +35,7 @@ class ConflictTests(unittest.TestCase):
         for identifier in (3, 4, 5):
             test = rows[identifier]
             for role in (1, 2):
-                for mode in (1, 2, 3):
+                for mode in ((1,) if identifier == 5 else (1, 2, 3)):
                     conflict.validate_selection(test, role, mode)
                 link = test['serial_links'][0]
                 local, peer = (link['a'], link['b']) if role == 1 else (link['b'], link['a'])
@@ -45,6 +45,20 @@ class ConflictTests(unittest.TestCase):
         for identifier in (1, 2, 7, 25, 101):
             with self.assertRaises(ProtocolError):
                 conflict.validate_selection(rows[identifier], 1, 1)
+
+    def test_p0_uart30_only_uses_its_own_block_and_bank(self):
+        test = next(row for row in cases.cases() if row['id'] == 5)
+        self.assertEqual(test['serial_links'][0]['a']['bank'], 'p0_flexible')
+        for role in (1, 2):
+            conflict.validate_selection(test, role, 1)
+            for mode in (2, 3):
+                with self.assertRaises(ProtocolError):
+                    conflict.validate_selection(test, role, mode)
+                with self.assertRaises(ProtocolError):
+                    conflict.inspect(self.vector(mode, 30), 30, mode)
+        firmware = (ROOT/'tests/zephyr/v04_t13_hil/src/serial.cpp').read_text(encoding='utf-8')
+        candidate = firmware[firmware.index('void t13::serialConflict'):firmware.index('void t13::serialBusPins')]
+        self.assertIn('static_cast<SerialRouteClass>(lane.endpoint.bank)', candidate)
 
     def test_only_successful_atomic_rejection_reaches_new_seed_reacquisition(self):
         test = next(row for row in cases.cases() if row['id'] == 3)

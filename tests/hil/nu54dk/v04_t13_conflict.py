@@ -11,8 +11,9 @@ def validate_selection(test, role, mode):
             any(test[key] for key in ('adc_channels', 'pwm_instance', 'pdm_instance', 'i2s'))):
         raise ProtocolError('T13 unsupported conflict selection')
     endpoint = test['serial_links'][0]['a' if role == 1 else 'b']
-    if endpoint['kind'] != 'uarte' or endpoint['instance'] not in (21, 22, 30) or len(endpoint['pins']) != 4:
-        raise ProtocolError('T13 conflict requires the fixed four-wire P1 UART fixture')
+    if (endpoint['kind'] != 'uarte' or endpoint['instance'] not in (21, 22, 30) or
+            len(endpoint['pins']) != 4 or (endpoint['instance'] == 30 and mode != 1)):
+        raise ProtocolError('T13 conflict requires UART21/22 or the same-block UART30 condition')
 
 
 def inspect(words, instance, mode):
@@ -20,7 +21,7 @@ def inspect(words, instance, mode):
     other = instance if mode == 1 else 22 if instance == 21 else 21
     if (not isinstance(words, list) or len(words) != 20 or
             any(type(word) is not int or not 0 <= word <= MASK for word in words) or
-            instance not in (21, 22, 30) or mode not in (1, 2, 3) or
+            instance not in (21, 22, 30) or mode not in (1, 2, 3) or (instance == 30 and mode != 1) or
             words[:9] != [mode, instance, other, 0, 0, 2 if mode == 2 else 8, MASK, 3, 3] or
             any(words[index] != words[index+1] for index in range(9, 19, 2)) or
             words[17] == 0 or words[19] != 1):
