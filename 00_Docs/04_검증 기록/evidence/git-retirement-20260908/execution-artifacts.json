@@ -1,0 +1,234 @@
+[
+  {
+    "name": "gate-contract.json",
+    "bytes": 476,
+    "sha256": "d6aa35fa4dff2e206de8bf155a814340ac97b0a5fbe2d14a804fab2b345f1773",
+    "stored": "gate-contract.json.gz",
+    "stored_bytes": 331,
+    "stored_sha256": "fc71756a5ba414ac5545cd04f5f9d19c8ccfca01e674673191db257091ad421c"
+  },
+  {
+    "name": "gate-docs.json",
+    "bytes": 468,
+    "sha256": "af59cd78ccec7ab20d96163dfd7bccab4ed23a4adac860eaa58bf3c5bfcc2a92",
+    "stored": "gate-docs.json.gz",
+    "stored_bytes": 331,
+    "stored_sha256": "41e884cfc04b3b9444c4bdead8ebac3861569beeb8b6eb69445b6c5200d3f39d"
+  },
+  {
+    "name": "gate-host.json",
+    "bytes": 468,
+    "sha256": "3de08cfef2ef87933680679847c85662790b61af10e32ae6d150c7513d9133a5",
+    "stored": "gate-host.json.gz",
+    "stored_bytes": 334,
+    "stored_sha256": "e679b58476587ea3c98c841731f2b20f97c85379dd91f2d394eff23afd590312"
+  },
+  {
+    "name": "gate-inventory.json",
+    "bytes": 478,
+    "sha256": "b773a7197cfde8c0c8a803f315887159aba32f930885b1d5a92e93c2790459e1",
+    "stored": "gate-inventory.json.gz",
+    "stored_bytes": 335,
+    "stored_sha256": "ae75a8d0faa7818bd09be06299bfd6820b761721576f43f428a1d0652d6a5179"
+  },
+  {
+    "name": "gate-package.json",
+    "bytes": 474,
+    "sha256": "f0f2cb1492f540193f2e17ae1556566e8caf8bfbfa3ba6880a9667bc3cf48dcb",
+    "stored": "gate-package.json.gz",
+    "stored_bytes": 336,
+    "stored_sha256": "975a8192595739eed1f47a1554fbc17016cdeb8bf05c479446d33512b15e451a"
+  },
+  {
+    "name": "gate-remote-software.json",
+    "bytes": 2326,
+    "sha256": "352b990a79f4de2656e0b81c02ef130066cce4b9ccb7b052fbe2433e773ddbc9",
+    "stored": "gate-remote-software.json.gz",
+    "stored_bytes": 606,
+    "stored_sha256": "6afd2d2e4b5f25ffdcbe82b934d19c1ca72210d50b214527d13f8132248a2d82"
+  },
+  {
+    "name": "gate-style.json",
+    "bytes": 535,
+    "sha256": "30c349b476207298822ed559d6191b88cfdad6f3d8cd727b48406c0e957f16ee",
+    "stored": "gate-style.json.gz",
+    "stored_bytes": 373,
+    "stored_sha256": "f7146bffda49f499e1c29bce55c8a07c51e81c8f79b33f807997f4bf715c0428"
+  },
+  {
+    "name": "gate-contract.log",
+    "bytes": 7494,
+    "sha256": "5e0fca19a08be7c9166158c719fce612122ed95b551a6743f0abbf0163cba274",
+    "stored": "gate-contract.log.gz",
+    "stored_bytes": 1514,
+    "stored_sha256": "b9a1a78af68267ccfc140018cfbf935670520fd7da76334400d3b8d6488e296d"
+  },
+  {
+    "name": "gate-docs.log",
+    "bytes": 69,
+    "sha256": "9a87359aed36d0366caa8d74245a6522fa3edf9e853db31b1a585f3e483d3b60",
+    "stored": "gate-docs.log.gz",
+    "stored_bytes": 84,
+    "stored_sha256": "876584ed606d951be9314448753feaa9924c06fe3c51f92f8336b8aa787e9370"
+  },
+  {
+    "name": "gate-host.log",
+    "bytes": 148236,
+    "sha256": "1b2e2ac1c3954bc7df4ce42e33ed7a316a95b1e664871af192af8aa6d2a68fbb",
+    "stored": "gate-host.log.gz",
+    "stored_bytes": 28213,
+    "stored_sha256": "2f956b8eb283515ddce9808ca88ddd1b553e9962f3b86853022654ed5f83249b"
+  },
+  {
+    "name": "gate-inventory.log",
+    "bytes": 1336,
+    "sha256": "bdce9c0d1208b23b41c61314b7622a51265ce1154196b65eb93fd23ebb268e91",
+    "stored": "gate-inventory.log.gz",
+    "stored_bytes": 472,
+    "stored_sha256": "4ba92a8127b3583122ca7b720e73eecddf0e54c1728d1af156c590c00066a459"
+  },
+  {
+    "name": "gate-package.log",
+    "bytes": 4436,
+    "sha256": "e2978477dcd079de98677e7717815bed3c78297c2958fa36f3b06b6925fb1ba0",
+    "stored": "gate-package.log.gz",
+    "stored_bytes": 1356,
+    "stored_sha256": "179c19bf7a556f0389601e148ee13aa718a07b955443bb6a77075d0c95dda798"
+  },
+  {
+    "name": "gate-style.log",
+    "bytes": 40,
+    "sha256": "cb4ec05cc7931599781c165e64a6dc4b2bc78349f0b9b0b476f8c74912009001",
+    "stored": "gate-style.log.gz",
+    "stored_bytes": 58,
+    "stored_sha256": "49efea3997cc3aa1b6316cc551f4249a0cc596f216487eba7db9c9fb047a873f"
+  },
+  {
+    "name": "remote-host.log",
+    "bytes": 295937,
+    "sha256": "6b87a251a186be225c01658e905ea1ae9a8f7f9f4a5a8432ec35aa2f7670a806",
+    "stored": "remote-host.log.gz",
+    "stored_bytes": 59092,
+    "stored_sha256": "741fa83d5fd2ed18a901064748ece17a3fdcd34d8b5afecc76c4f875add7e03c"
+  },
+  {
+    "name": "publication-journal.jsonl",
+    "bytes": 6548,
+    "sha256": "c981f82340ec03a0921c912dc7078111b859b5f02a466fd754283890ed0cee26",
+    "stored": "publication-journal.jsonl.gz",
+    "stored_bytes": 1558,
+    "stored_sha256": "38a268ef79195abc2105e6ece13aca471ce4df87c4cbabbcd3d35cd8ca0e58bb"
+  },
+  {
+    "name": "releases-after.json",
+    "bytes": 17136,
+    "sha256": "4614f2c205611821f203167c876be89664a57fb98ab9ee68f73dd12cb67ab800",
+    "stored": "releases-after.json.gz",
+    "stored_bytes": 2370,
+    "stored_sha256": "ce99c2a42c6380b755f3d87047688953522c5cfa71220a1f5bbaa491d8ae2cf3"
+  },
+  {
+    "name": "public-install-verification.json",
+    "bytes": 974,
+    "sha256": "d70463d5e9f323330e2387f454ce8d0b9e1fdd544125a1e3adfcf8244628c2a5",
+    "stored": "public-install-verification.json.gz",
+    "stored_bytes": 537,
+    "stored_sha256": "7b4c7d0f87cbe579ecce20885b8a0077c152f5057063eeb09d859559c7572912"
+  },
+  {
+    "name": "arduino-boards.stdout.json",
+    "bytes": 909,
+    "sha256": "7b630cf4224986d0a035272ec35bea2eb1cb746d774c7fbf048e7b682274e166",
+    "stored": "arduino-boards.stdout.json.gz",
+    "stored_bytes": 373,
+    "stored_sha256": "c0a0936769d8729747ed84396b4b3767b4570552c1edf2c8edda9bd4f95e255e"
+  },
+  {
+    "name": "arduino-install.stdout.json",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stored": "arduino-install.stdout.json.gz",
+    "stored_bytes": 20,
+    "stored_sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+  },
+  {
+    "name": "arduino-list.stdout.json",
+    "bytes": 846,
+    "sha256": "e3d3e487cb01c2e62e2cac89fe14b5cb15a3a51ec4dbc85f681f58456e36595c",
+    "stored": "arduino-list.stdout.json.gz",
+    "stored_bytes": 375,
+    "stored_sha256": "2519de618b71381d865bde364bc08213f996e1c2223bcd1e226b8f3fb1be44d5"
+  },
+  {
+    "name": "arduino-search.stdout.json",
+    "bytes": 802,
+    "sha256": "864b7f5fb0fbdfcc70d483d3efcfb682d73b554acd4f79b2309ca4a461c7f332",
+    "stored": "arduino-search.stdout.json.gz",
+    "stored_bytes": 368,
+    "stored_sha256": "a1597bbca3c7b72520ae2898d9e925d98adeaecad040b253d5ce7ad634a50154"
+  },
+  {
+    "name": "arduino-update.stdout.json",
+    "bytes": 485,
+    "sha256": "891069da5bf524d5a43de1afe59a75c2306158cf974c1f52dc5e82bdc69d5557",
+    "stored": "arduino-update.stdout.json.gz",
+    "stored_bytes": 212,
+    "stored_sha256": "9bc3ed215c3b1f16258a960a6f624adc9e21ed031c8b1f812fa73f1390d34b4d"
+  },
+  {
+    "name": "arduino-boards.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stored": "arduino-boards.stderr.log.gz",
+    "stored_bytes": 20,
+    "stored_sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+  },
+  {
+    "name": "arduino-install.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stored": "arduino-install.stderr.log.gz",
+    "stored_bytes": 20,
+    "stored_sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+  },
+  {
+    "name": "arduino-list.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stored": "arduino-list.stderr.log.gz",
+    "stored_bytes": 20,
+    "stored_sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+  },
+  {
+    "name": "arduino-search.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stored": "arduino-search.stderr.log.gz",
+    "stored_bytes": 20,
+    "stored_sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+  },
+  {
+    "name": "arduino-update.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stored": "arduino-update.stderr.log.gz",
+    "stored_bytes": 20,
+    "stored_sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+  },
+  {
+    "name": "public-package_nucode_nu54dk_index.json",
+    "bytes": 1126,
+    "sha256": "97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57",
+    "stored": "public-package_nucode_nu54dk_index.json.gz",
+    "stored_bytes": 485,
+    "stored_sha256": "79eadc8ee04350f2170393332f799bdb976530cd1b67b278cffb4a7a3dc19973"
+  },
+  {
+    "name": "public-package_nucode_nu54dk_preview_index.json",
+    "bytes": 367,
+    "sha256": "59c88a11f5db8c4a86377b1057cd777721decf4867ebe5876e36954ed8a6ca19",
+    "stored": "public-package_nucode_nu54dk_preview_index.json.gz",
+    "stored_bytes": 221,
+    "stored_sha256": "3db64d76fdf75a5e0d1908782801e75417f0b3a3b19cb142874740a91c87b1e1"
+  }
+]

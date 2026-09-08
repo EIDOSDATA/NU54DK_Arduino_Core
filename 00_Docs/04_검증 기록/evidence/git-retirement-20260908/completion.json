@@ -1,0 +1,23 @@
+{
+  "observed_at": "2026-09-08T07:16:40.958813+00:00",
+  "grouped_history_commits": 23,
+  "policy_commit": "cb2f4c359c65d9d982dff7ea09c81030afe430d8",
+  "policy_source_total_commits": 24,
+  "retained_release": "v0.3.0",
+  "retired_releases": 16,
+  "retired_tags": 16,
+  "retired_assets": 115,
+  "unchanged_v030_payload_assets": 6,
+  "unchanged_v030_tag_object": "8f071ba7d363a62fd60149abc86c676269b95dc1",
+  "installed_payload_files_equal": 230,
+  "software_checks_passed": 7,
+  "host_groups": 100,
+  "host_tests": 772,
+  "local_host": "blocked: WinError4551 while launching SPIM Host executable; remote exact Host passed",
+  "local_package_tests_passed": 21,
+  "ci_contract_tests_passed": 45,
+  "cpp_style_files_passed": 407,
+  "post_install_skipped": true,
+  "t13_complete": false,
+  "rc_or_release_approved": false
+}
