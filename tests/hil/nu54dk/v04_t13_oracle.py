@@ -6,6 +6,39 @@ from v04_protocol import ProtocolError
 MASK = 0xFFFFFFFF
 
 
+def serial_data_fault(words):
+    """! @brief 보존된 첫 오류의 전역 위치·기대 byte를 재계산하며 원인을 단정하지 않습니다. """
+    if (not isinstance(words, list) or len(words) != 20 or
+            any(type(word) is not int or not 0 <= word <= MASK for word in words)):
+        raise ProtocolError('T13 malformed serial first-fault snapshot')
+    if words == [0]*20:
+        return {'payload_fault_recorded': False, 'normal_pass': False}
+    if (words[0] != 1 or words[1] not in (1, 2, 3, 4, 5) or words[2] not in (0, 20, 21, 22, 30) or
+            words[3] not in (0, 1) or words[4] != words[9] % 2 or not 0 <= words[5] < words[13] or
+            not 0 < words[13] <= 1024 or words[13] % 4 or words[14] != 1 or
+            not 0x20000000 <= words[12] <= 0x20040000-words[13] or words[12] % 4 or
+            max(words[6:8]) > 255 or words[6] == words[7]):
+        raise ProtocolError('T13 serial first-fault metadata mismatch')
+    position = words[10] | words[11] << 32
+    if position != words[9]*words[13]:
+        raise ProtocolError('T13 serial frame/byte position mismatch')
+    seed, offset, amount = words[8], words[5], words[13]
+    expected = lambda at: pattern(seed, (position+at) & MASK)
+    window = lambda at: sum(expected(at+i) << (8*i) for i in range(4) if at+i < amount)
+    before = offset-4 if offset >= 4 else 0
+    if (words[7] != expected(offset) or words[17] & 255 != words[6] or
+            words[18:20] != [window(before), window(offset)]):
+        raise ProtocolError('T13 serial raw window does not reproduce first mismatch')
+    neighbours = [distance for distance in (-amount, -4, -2, -1, 1, 2, 4, amount)
+                  if position+offset+distance >= 0 and
+                  pattern(seed, (position+offset+distance) & MASK) == words[6]]
+    return {'payload_fault_recorded': True, 'kind': words[1], 'instance': words[2],
+            'receive': bool(words[3]), 'frame': words[9], 'offset': offset,
+            'actual': words[6], 'expected': words[7], 'xor': words[6] ^ words[7],
+            'matching_pattern_offsets': neighbours, 'preceding_window_matches': words[16] == words[18],
+            'normal_pass': False}
+
+
 def i2s_failure(words, buffer, seed, role):
     """! @brief 최초 실패 DMA의 전체256word를 독립 전역 pattern과 대조하며 원인을 단정하지 않습니다. """
     from v04_common_i2s import pattern as i2s_pattern

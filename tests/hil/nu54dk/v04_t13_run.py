@@ -16,6 +16,7 @@ import v04_t13_fault as faults
 import v04_t13_stream_fault as stream_faults
 import v04_t13_pwm_recovery as pwm_recovery
 import v04_t13_handover as handover
+import v04_t13_conflict as conflicts
 import v04_t13_oracle as oracle
 import v04_t13_session as session
 import v04_wiring as wiring
@@ -166,6 +167,7 @@ def failure_snapshots(devices, test, append, identifier):
         observations = [(107, (0,), 'clock')]
         if engine[0] == test['id']:
             observations = [(100, (index,), f'lane{index}') for index in range(len(test['serial_links']))]
+            observations += [(124, (index,), f'lane{index}-first-data-fault') for index in range(len(test['serial_links']))]
             observations += [(104, (index,), f'stream{index}') for index in oracle.stream_indices(test)]
             if test['pwm_instance']:
                 observations += [(107, (page,), f'pwm-trace{page}') for page in range(5)]
@@ -177,14 +179,17 @@ def failure_snapshots(devices, test, append, identifier):
                 observations += [(118, (page,), f'i2s-failure-page{page}') for page in range(17)]
         for opcode, arguments, name in observations:
             try:
-                append(prefix + '/' + name, {'status': 'observation',
-                    'words': device.command(opcode, arguments, timeout=2)})
+                words = device.command(opcode, arguments, timeout=2)
+                append(prefix + '/' + name, {'status': 'observation', 'words': words})
+                if opcode == 124:
+                    append(prefix + '/' + name + '/analysis', {'status': 'diagnostic',
+                        **oracle.serial_data_fault(words)})
             except BaseException as error:
                 append(prefix + '/' + name, {'status': 'unproven', 'error': f'{type(error).__name__}: {error}'})
                 break
 
 
-def execute_group(devices, group, duration, continuity, append, *, preflight, seed=None):
+def execute_group(devices, group, duration, continuity, append, *, preflight, seed=None, during=None):
     """! @brief 중단 시간을 합산하지 않고 설정을 유지한 한 구간만 판정합니다. """
     test = group['test']
     seed = secrets.randbits(32) if seed is None else seed
@@ -255,6 +260,8 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
         for role_lanes in first_lanes:
             if any(min(row['tx']['frames'], row['rx']['frames']) == 0 for row in role_lanes):
                 raise ProtocolError('T13 traffic not established before measurement')
+        if during is not None:
+            during()
         start = time.monotonic()
         previous = first_lanes
         previous_engines = first_engines
@@ -336,11 +343,13 @@ def main(argv=None):
     parser.add_argument('--phase', choices=('wiring', 'preflight', 'soak', 'fault-preflight', 'serial-fault',
                                           'handover-preflight', 'handover',
                                           'stream-fault-preflight', 'stream-fault', 'pwm-diagnostic',
-                                          'pwm-recovery-preflight', 'pwm-recovery'), default='wiring')
+                                          'pwm-recovery-preflight', 'pwm-recovery',
+                                          'conflict-preflight', 'resource-conflict'), default='wiring')
     parser.add_argument('--cases', nargs='+', type=int, default=[])
     parser.add_argument('--fault-mode', type=int, choices=range(1, 6))
     parser.add_argument('--stream-fault-mode', type=int, choices=(1, 2))
     parser.add_argument('--pwm-recovery-mode', type=int, choices=(1, 2))
+    parser.add_argument('--conflict-mode', type=int, choices=(1, 2, 3))
     parser.add_argument('--pwm-diagnostic-route', choices=('led', 'dap'))
     parser.add_argument('--fault-role', type=int, choices=(1, 2), default=1)
     parser.add_argument('--reverse-serial', action='store_true')
@@ -373,6 +382,12 @@ def main(argv=None):
     is_fault = args.phase in ('fault-preflight', 'serial-fault')
     is_stream_fault = args.phase in ('stream-fault-preflight', 'stream-fault')
     is_pwm_recovery = args.phase in ('pwm-recovery-preflight', 'pwm-recovery')
+    is_conflict = args.phase in ('conflict-preflight', 'resource-conflict')
+    if is_conflict:
+        for identifier in args.cases:
+            conflicts.validate_selection(available_cases[identifier], args.fault_role, args.conflict_mode)
+    elif args.conflict_mode is not None:
+        raise ProtocolError('conflict mode requires an explicit conflict phase')
     if is_pwm_recovery:
         for identifier in args.cases:
             pwm_recovery.validate_selection(available_cases[identifier], args.pwm_recovery_mode)
@@ -400,7 +415,8 @@ def main(argv=None):
         'board_revision': images[0]['board_revision'], 'catalog_sha256': session.catalog_hash(),
         'session_grant_sha256': hashlib.sha256(grant_bytes).hexdigest(), 'swd_frequency_hz': 10000000,
         'external_wiring_executed': False, 'results': [],
-        'fault_mode': args.fault_mode, 'fault_role': args.fault_role if is_fault or is_stream_fault else None,
+        'fault_mode': args.fault_mode, 'fault_role': args.fault_role if is_fault or is_stream_fault or is_conflict else None,
+        'conflict_mode': args.conflict_mode,
         'stream_fault_mode': args.stream_fault_mode,
         'pwm_recovery_mode': args.pwm_recovery_mode,
         'reverse_serial': args.reverse_serial, 'handover_instance': args.handover_instance,
@@ -441,6 +457,10 @@ def main(argv=None):
             if is_handover:
                 handover.execute(devices, args.handover_instance, continuity, append,
                                  preflight=args.phase == 'handover-preflight')
+            elif is_conflict:
+                for identifier in args.cases:
+                    conflicts.execute(devices, available_cases[identifier], args.fault_role,
+                        args.conflict_mode, continuity, append, preflight=args.phase == 'conflict-preflight')
             elif is_fault:
                 for identifier in args.cases:
                     faults.execute(devices, available_cases[identifier], args.fault_role, args.fault_mode,

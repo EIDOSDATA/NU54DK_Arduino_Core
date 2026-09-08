@@ -38,12 +38,16 @@ namespace
         std::uint64_t next_frame = 0U;
         bool tx_pending[2]{}, rx_pending[2]{};
         bool active = false;
+        std::uint32_t data_fault[20]{};
     };
 
     Lane lanes[max_lanes];
     unsigned lane_count = 0U;
     bool transmitting = false;
     bool receivers_armed = false;
+    Buffer conflict_tx{}, conflict_rx{};
+    SerialSignalPin conflict_pins[3]{};
+    SerialDmaWorkspace conflict_workspaces[2]{};
 
     /** @brief 단독 serial의 의도적 첫 실패와 실제 반환 정보를 정상 통계와 분리합니다. */
     struct Fault
@@ -217,6 +221,46 @@ namespace
             const auto expected = pattern(seed, static_cast<std::uint32_t>(direction.bytes) + byte);
             if (buffer.data()[byte] != expected)
             {
+                if (lane.data_fault[0] == 0U)
+                {
+                    /** @brief 자동 STOP 전에 첫 불일치와 앞뒤 원본을 보존하고 덮어쓰지 않습니다. */
+                    auto &raw = lane.data_fault;
+                    raw[0] = 1U;
+                    raw[1] = static_cast<std::uint32_t>(lane.endpoint.kind);
+                    raw[2] = lane.endpoint.instance;
+                    raw[3] = receive ? 1U : 0U;
+                    raw[4] = slot;
+                    raw[5] = byte;
+                    raw[6] = buffer.data()[byte];
+                    raw[7] = expected;
+                    raw[8] = seed;
+                    raw[9] = direction.completed;
+                    raw[10] = static_cast<std::uint32_t>(direction.bytes);
+                    raw[11] = static_cast<std::uint32_t>(direction.bytes >> 32U);
+                    raw[12] = reinterpret_cast<std::uintptr_t>(address);
+                    raw[13] = static_cast<std::uint32_t>(amount);
+                    raw[14] = buffer.guards(lane.endpoint.length) ? 1U : 0U;
+                    raw[15] = observed_cycle;
+                    for (unsigned offset = 0U; offset < 4U; ++offset)
+                    {
+                        const auto before = byte >= 4U ? byte - 4U + offset : offset;
+                        const auto after = byte + offset;
+                        for (unsigned side = 0U; side < 2U; ++side)
+                        {
+                            const auto position = side == 0U ? before : after;
+                            if (position < amount)
+                            {
+                                raw[16U + side] |= std::uint32_t(buffer.data()[position])
+                                                   << (offset * 8U);
+                                raw[18U + side] |=
+                                    std::uint32_t(
+                                        pattern(seed, static_cast<std::uint32_t>(direction.bytes) +
+                                                          position))
+                                    << (offset * 8U);
+                            }
+                        }
+                    }
+                }
                 return failure(lane, receive ? 6U : 7U, byte);
             }
             direction.hash = hashByte(direction.hash, buffer.data()[byte]);
@@ -934,6 +978,137 @@ void t13::serialTwiFaultSnapshot(std::uint32_t *out, std::uint32_t &count)
     for (unsigned index = 0U; index < 20U; ++index)
     {
         out[index] = fault.twi_proof[index];
+    }
+    count = 20U;
+}
+
+/** @brief 첫 payload 오류 원본은 STOP 뒤에도 유지하며 PREPARE에서만 초기화합니다. */
+void t13::serialDataFaultSnapshot(unsigned lane, std::uint32_t *out, std::uint32_t &count)
+{
+    count = 0U;
+    if (lane >= max_lanes)
+    {
+        return;
+    }
+    for (unsigned index = 0U; index < 20U; ++index)
+    {
+        out[index] = lanes[lane].data_fault[index];
+    }
+    count = 20U;
+}
+
+/** @brief 현재 peer 출력과 충돌하지 않는 후보만 사용하여 API의 원자적 점유 거부를 검사합니다. */
+void t13::serialConflict(unsigned mode, std::uint32_t *out, std::uint32_t &count)
+{
+    count = 0U;
+    auto &lane = lanes[0];
+    const auto instance = lane.endpoint.instance;
+    if (mode < 1U || mode > 3U || lane_count != 1U || !receivers_armed || !transmitting ||
+        !lane.active || lane.endpoint.kind != Kind::uart ||
+        (instance != 21U && instance != 22U && instance != 30U) || !serialHealthy())
+    {
+        return;
+    }
+    auto pin = [&lane](SerialSignal signal)
+    {
+        for (unsigned index = 0U; index < lane.endpoint.pin_count; ++index)
+        {
+            if (lane.pins[index].signal == signal)
+            {
+                return lane.pins[index].pin;
+            }
+        }
+        return static_cast<pin_size_t>(UINT32_MAX);
+    };
+    for (unsigned index = 0U; index < 20U; ++index)
+    {
+        out[index] = UINT32_MAX;
+    }
+    const auto alternative = mode == 1U ? instance : instance == 21U ? 22U : 21U;
+    out[0] = mode;
+    out[1] = instance;
+    out[2] = alternative;
+    out[7] = static_cast<std::uint32_t>(lane.handle->state());
+    const auto *registers = serialRegisters(instance);
+    out[9] = registers->PSEL.TXD;
+    out[11] = registers->PSEL.RXD;
+    out[13] = registers->PSEL.RTS;
+    out[15] = registers->PSEL.CTS;
+    out[17] = registers->ENABLE;
+    out[19] = 1U;
+    for (unsigned slot = 0U; slot < 2U; ++slot)
+    {
+        out[19] &=
+            lane.tx[slot].guards(lane.endpoint.length) && lane.rx[slot].guards(lane.endpoint.length)
+                ? 1U
+                : 0U;
+    }
+    static_cast<void>(conflict_tx.initialize(128U));
+    static_cast<void>(conflict_rx.initialize(128U));
+    conflict_workspaces[0] = {conflict_tx.data(), 128U};
+    conflict_workspaces[1] = mode == 2U ? SerialDmaWorkspace{conflict_tx.data() + 4U, 124U}
+                                        : SerialDmaWorkspace{conflict_rx.data(), 128U};
+    SerialFabricHandle *candidate = nullptr;
+    if (mode == 1U)
+    {
+        auto *spi = serialFabric().spim(alternative);
+        candidate = spi;
+        out[3] =
+            spi == nullptr ? UINT32_MAX : static_cast<std::uint32_t>(spi->configure({1000000U}));
+        conflict_pins[0] = {SerialSignal::sck, pin(SerialSignal::txd)};
+        conflict_pins[1] = {SerialSignal::mosi, pin(SerialSignal::rts)};
+        conflict_pins[2] = {SerialSignal::miso, pin(SerialSignal::rxd)};
+    }
+    else
+    {
+        auto *uart = serialFabric().uarte(alternative);
+        candidate = uart;
+        out[3] =
+            uart == nullptr ? UINT32_MAX : static_cast<std::uint32_t>(uart->configure({1000000U}));
+        conflict_pins[0] = {SerialSignal::txd, pin(SerialSignal::txd)};
+        conflict_pins[1] = {SerialSignal::rxd, pin(SerialSignal::rxd)};
+    }
+    const SerialFabricConfiguration config{SerialRouteClass::p1_flexible,
+                                           SerialElectricalProfile::dap_uart_disabled,
+                                           conflict_pins,
+                                           mode == 1U ? 3U : 2U,
+                                           conflict_workspaces,
+                                           2U};
+    if (candidate != nullptr && out[3] == 0U)
+    {
+        out[4] = static_cast<std::uint32_t>(candidate->stage(config));
+        if (out[4] == 0U)
+        {
+            out[5] = static_cast<std::uint32_t>(candidate->activate());
+            if (out[5] == 0U)
+            {
+                /** @brief 잘못 허용된 후보는 즉시 정지하며 이 동작은 성공으로 인정하지 않습니다. */
+                out[6] = static_cast<std::uint32_t>(candidate->deactivate());
+            }
+        }
+    }
+    out[8] = static_cast<std::uint32_t>(lane.handle->state());
+    out[10] = registers->PSEL.TXD;
+    out[12] = registers->PSEL.RXD;
+    out[14] = registers->PSEL.RTS;
+    out[16] = registers->PSEL.CTS;
+    out[18] = registers->ENABLE;
+    for (unsigned slot = 0U; slot < 2U; ++slot)
+    {
+        out[19] &=
+            lane.tx[slot].guards(lane.endpoint.length) && lane.rx[slot].guards(lane.endpoint.length)
+                ? 1U
+                : 0U;
+    }
+    bool intact = out[3] == 0U && out[4] == 0U && out[5] == (mode == 2U ? 2U : 8U) &&
+                  out[6] == UINT32_MAX && out[7] == 3U && out[8] == 3U && out[19] == 1U;
+    for (unsigned index = 9U; index < 19U; index += 2U)
+    {
+        intact &= out[index] == out[index + 1U];
+    }
+    if (!intact)
+    {
+        failure(lane, 75U, mode);
     }
     count = 20U;
 }

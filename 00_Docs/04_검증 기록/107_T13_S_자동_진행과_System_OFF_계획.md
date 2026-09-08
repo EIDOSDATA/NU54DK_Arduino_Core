@@ -1,5 +1,11 @@
 # T13 S 자동 진행과 peer 제어 System OFF 검증 계획
 
+2026-09-08 후속 구현 범위: T13의 기존 자원 충돌 요구 중 S UART21/22/30에서 같은 block의
+SPI 활성화, 다른 UART의 동일 GPIO 점유, 내부 DMA workspace 겹침을 의도하여 거부의 원자성과
+기존 송수신·STOP·새 seed 재획득을 확인한다. 후보 출력은 원래 UART TX/RTS가 연결된 peer 입력만
+사용하며 현재 peer 출력에 새 출력을 배치하지 않는다. Host/target 뒤 양쪽 역할의 각 조건을 예행하고
+시간 안에 가능한 각100회만 수행한다. UART00/20·event/PWM 충돌까지 완료한 것으로 확대하지 않는다.
+
 2026-09-08 소유자 지시를 반영한다. T13 S와 T14의 영향 분석·재시험, T17 증거/문서 유지 범위다.
 U UART00은 현재 결선에서 실행하지 않으며 S 완료 또는 가능한 작업 소진 후 GPIO 재배치를 안내한다.
 T12와 QDEC 문제 보고 후 검증 작업 완료 결정은 유지한다. QDEC 재진단은 새로 예약하지 않는다.
@@ -11,10 +17,10 @@ T12와 QDEC 문제 보고 후 검증 작업 완료 결정은 유지한다. QDEC 
 | PWM STOP/미시작 취소 | original506680f 6/6·600회 완료 | 원본 감사·문서 반영 |
 | 고정 serial 복구 | 17/21 완료, TWIM 취소4개 미완료 | RX 시작/END·이전 AMOUNT 구분 보완 후 재검증 |
 | stream 복구 | 3/4 완료, I2S B97번째 실패 | 원본 분석·원인 분리·재검증 |
-| 역할 전환 | 예행5/5, 정식 첫 block47회에서 Host 중단 | 새 campaign으로 각100회, 이전47회 합산 금지 |
-| 동시 안정성 | 0/7 완료 | C01~06·C08; 일반900초, C05는3600초 |
+| 역할 전환 | 예행5/5, 정식2/5 완료(serial00·30 각100회), SPI20/21/22 실패 보존 | 최초 RX 오류 계측을 보강하여 원인 분리; 이전 중단47회 합산 금지 |
+| 동시 안정성 | 1/7 완료(C01), C02 진행 중(2026-09-08T09:20Z) | C01~06·C08; 일반900초, C05는3600초 |
 | 추가 오류·충돌 | 일부 runner 미구현 | UART flow/지연/parity/break, SPI slave/short/CS, TWI 지연/stuck-low, 자원 충돌의 구현·Host/target·실기 |
-| peer 제어 System OFF | 새로 추가, 실기0 | 아래 단계의 구현·검증; 무인 성립 실패 시 원본·한계를 남기고 독립 작업 계속 |
+| peer 제어 System OFF | 구현·exact Host/target 준비 완료, 실기0 | S 현재 배치와 TWIM 계측 뒤 bridge 예행부터 실행; 무인 성립 실패 시 원본·한계를 남기고 독립 작업 계속 |
 | U UART00 | 대기 | S→U 현재 재배치 확인 전 실행 금지 |
 | S 증거 마감 | 진행 중 | 원본·지원 제한·문서·commit/push·CI; 전체 T13 완료로 확대하지 않음 |
 
@@ -37,8 +43,8 @@ B를 System OFF 시험 보드로 사용하며 DAP UART를 계속 분리하는 �
    양쪽 출력/자원을 반환한다. 새 image를 적용한 부분의 기존 영향 회귀도 별도 판정한다.
 
 구현 사양은 [T13_POWER.md](../../tests/hil/nu54dk/T13_POWER.md)에 고정한다. UART21 P1.06/07의
-128byte 양방향 DMA와 P1.14 open-drain wake를 사용한다. 별도 power image의 Host·초안 target
-검사 중이며 아직 debug 해제나 System OFF 실기를 완료하지 않았다. 일반 S image는 기존 설정을 유지한다.
+128byte 양방향 DMA와 P1.14 open-drain wake를 사용한다. de5ad42의 별도 power 두 역할과 일반 S
+두 역할 target, 원격 Host101묶음778시험이 통과했다. 아직 debug 해제나 System OFF 실기는0이다.
 
 SWD 하드웨어 스위치의 제어선은 현재 S GPIO에 직접 연결돼 있지 않다. 이를 GPIO로 제어한다고
 가정하지 않으며 SDK pyOCD의 debug power-down과 Nordic 정상 모드 복귀 절차를 우선 검증한다.
@@ -64,7 +70,7 @@ U 재배선·사용자 승인·정식 공개는 자동으로 수행한 것으로
 serial20은1회 step09, serial21은5회 step02, serial22는1회 step02의 SPI 단계에서
 engine/renew 오류로 끝났으며 세 실행 모두 양쪽 정지를 증명했다. `lease renewal failed`라는
 문구만으로 확인서 만료나 통신 단절로 단정하지 않는다. lane 최초 오류를 계속 분석한다.
-serial30과 독립 동시 조합은 같은 고정 source의 별도 프로세스로 계속 진행 중이다.
+serial30도 새100/100회 완료했다. C01은900초 연속 실행·양쪽 STOP까지 완료했고 C02를 진행 중이다.
 
 이후 raw 분석에서 세 SPI 단계의 최초 RX payload 불일치(code6)를 확인했다. byte 위치는
 568/749/499이며 firmware lease_expired는0이다. 따라서 공통 오류 문구가 확인서 만료를 뜻하는
@@ -86,3 +92,14 @@ source 고정 후 exact build/원격 Host를 다시 확인한다.
 [serial20 실패](evidence/t13-serial20-handover-sauto-01-506680f/manifest.json),
 [serial21 실패](evidence/t13-serial21-handover-sauto-01-506680f/manifest.json),
 [serial22 실패](evidence/t13-serial22-handover-sauto-01-506680f/manifest.json).
+
+추가 원본: [serial30 100회](evidence/t13-serial30-handover-sauto-01-506680f/manifest.json),
+[C01 900초](evidence/t13-c01-soak-sauto-01-506680f/manifest.json).
+
+다음 source에는 첫 RX payload 불일치의 actual/expected byte·주변4byte·DMA 주소·AMOUNT·guard를
+STOP 전 고정하는 opcode124를 추가한다. 예전 실패에 없던 actual byte를 추정으로 채우지 않는다.
+기존 통과 기준을 유지하며 자원 충돌 opcode125와 함께 Host/target·exact source를 확인한 뒤 실기한다.
+
+준비 검사 원본: [2114187 TWIM exact build·Host·CI](evidence/t13-twi-proof-preparation-2114187/manifest.json),
+[de5ad42 power exact build·Host·CI와 유한 후속 배치](evidence/t13-power-preparation-de5ad42/manifest.json).
+de5ad42는 기록 시점 원격15검사 중14성공·1진행 중이며 전체 성공으로 기록하지 않는다.

@@ -187,3 +187,29 @@ slot, submit/cancel/event cycle, terminal TX/RX AMOUNT, 길이, 전송 전 ENABL
 이벤트 초기화는 첫 전송 제출 전에만 시행한다. 동작 중 이벤트를 지우지 않는다.
 Host는 양쪽 원본을 STOP 전에 보존한다. RX AMOUNT256이 이전 완료 잔류라는 가설은 아직
 실기로 증명하지 않았으며 이 계측 추가로 기존 부분 DMA 판정을 완화하거나 실패를 PASS로 바꾸지 않는다.
+
+## Serial 최초 payload 오류 원본
+
+Opcode124(lane)은 UART/SPI/TWI에서 첫 byte 불일치가 발생한 시점의20word를 보존한다.
+순서는 valid, kind, instance, RX 여부, slot, offset, 실제/기대 byte, seed, 완료 frame,
+전역 byte 위치 low/high, DMA 주소, 길이, guard, cycle, 오류 앞4byte/오류부터4byte 원본,
+같은 위치의 기대4byte 두 개다. 첫4byte 안에서 실패하면 앞 window는 buffer 시작이다.
+STOP이나 나중 event로 원본을 덮어쓰지 않고 새 PREPARE에서만 초기화한다. Host는 최초 오류
+처리에서 STOP 전에 이를 수집한다. 진단 때문에 기존 PASS 범위·속도·허용 오차를 바꾸지 않는다.
+
+## P1 UART의 자원 충돌 거부
+
+`--phase conflict-preflight|resource-conflict --conflict-mode 1|2|3 --cases 3 4 5
+--fault-role 1|2`는 S UART21/22/30의 해당 보드에만 적용한다. 각 mode는 같은 block의 SPI,
+다른 UART의 겹치는 DMA workspace, 다른 UART의 동일 GPIO를 순서대로 뜻한다. 예행은1회,
+정식은100회이며 매회 기존 데이터 유지·양쪽 STOP 뒤 다른 seed로 원래 UART를 재획득한다.
+
+후보 SPI의 SCK/MOSI는 원래 UART TX/RTS 핀, MISO는 원래 RX 핀을 사용하고 CS는 연결하지 않는다.
+후보 UART도 원래 TX/RX를 사용한다. 따라서 후보 활성화가 잘못 허용되더라도 peer 출력 핀으로
+새 출력을 배치하지 않으며 후보를 즉시 STOP하고 실패를 보존한다. GPIO를 임의로 입력받지 않는다.
+
+Opcode125(mode)의20word는 mode, 원래/후보 instance, configure/stage/activate/예외 STOP 결과,
+원래 state 전후, TX/RX/RTS/CTS PSEL 전후, ENABLE 전후, guard다. 기대값은 configure/stage0,
+activate는 mode2 invalid_argument2, 나머지 ownership_conflict8이다. 예외 STOP은 미실행UINT32_MAX,
+기존 state는active3·PSEL/ENABLE 동일·guard1이어야 한다. 진단은 별도 원본이며 정상900초 안정성을
+대신하지 않는다. UART00/20, event/PWM/legacy 중복 등 나머지 충돌 조건은 별도 미완료로 남긴다.

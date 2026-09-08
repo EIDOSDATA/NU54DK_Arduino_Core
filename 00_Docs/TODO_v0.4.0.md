@@ -1,5 +1,12 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
+2026-09-08T09:20Z: original506680f 역할 전환은 serial00·30 각100회로2/5 완료, SPI20/21/22
+실패 원본·양쪽 STOP을 보존했다. 동시 안정성은 C01 900초 완료로1/7, C02 실행 중이다.
+de5ad42의 System OFF 전용·일반 S 두 역할 target과 원격 Host101묶음778시험을 확인했다.
+현재 배치 뒤2114187 TWIM 계측, de5ad42 debug 해제 bridge/타이머/GPIO wake 순으로 예약했다.
+System OFF 실기 PASS는 아직0이며 SPI 최초 오류 보존·P1 UART 자원 충돌 도구는 준비 중이다.
+상태·원본은107번을 따른다. T12 완료·QDEC 보고, T13 U 재배치 전 경계는 유지한다.
+
 2026-09-08T08:51Z: 새 serial00 자원 전환100/100 완료, serial20/21/22는 SPI RX payload 오류로
 정지·보존했고 firmware lease_expired는0이다. serial30 실기는 계속 진행 중이다. 2114187의
 TWIM RX 계측은 Host/두 역할 target·원격 Software gate 통과, 실기 미실행이다. 별도 power image의

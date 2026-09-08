@@ -198,6 +198,11 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         serialTwiFaultSnapshot(out, count);
         return 0U;
     }
+    if (opcode == 124U && nargs == 1U)
+    {
+        serialDataFaultSnapshot(args[0], out, count);
+        return count == 20U ? 0U : 400U;
+    }
     if (opcode == 115U && nargs == 0U)
     {
         streamFaultSnapshot(out, count);
@@ -281,6 +286,12 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         out[0] = gate.renew(k_uptime_get()) ? 1U : 0U;
         count = 1U;
         return 0U;
+    }
+    if (opcode == 125U && nargs == 1U && gate.live(k_uptime_get()) && started && !quiesced &&
+        !wiringClaimed())
+    {
+        serialConflict(args[0], out, count);
+        return count == 20U ? 0U : 400U;
     }
     if (!gate.live(k_uptime_get()))
     {
