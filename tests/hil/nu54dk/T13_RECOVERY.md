@@ -112,6 +112,11 @@ framing만 관측되면 break 입력 복구 결과와 BREAK flag 관측 여부�
 opcode140은 준비 전 정책,141은 ARM,142는20word 최초 원본,143은 준비된 peer break pulse,
 144는 DUT 수신 시작 전 peer UART 반환·GPIO HIGH 준비다. DUT RX를 켠 뒤 오류가 아직 없음을
 확인하고 LOW를 주입해 UART→GPIO 전환 구간의 부유 입력을 break 결과로 세지 않는다.
+ARM은 정상 PREPARE 이후·RX START 이전에 수행한다. nrfx 초기화의 prepare_tx는 ENABLE을0으로
+돌려두므로 이때 ENABLE0 자체를 준비 실패로 보지 않는다. 선택된 healthy case·정상 serial 상태와
+정책/준비/중복 ARM 검사는 유지하며 실제 PSEL·CONFIG·clock·ARM 응답을 보존한다.
+93e38ff의 첫 실기는 정상 PSEL·clock 이후 잘못된 ENABLE 선행조건에서 멈췄다.
+해당 원본은 FAIL로 유지하고, 조건 수정 소스의 실제 오류 주입·복구 성공으로 대체하지 않는다.
 원본은 API의 event·mask·buffer·전송량, device cycle1MHz, 실제 CONFIG/PSEL, GPIO 수준·반환,
 serial STOP 결과를 보존한다. API descriptor 길이를 실제 DMA 전송량으로 해석하지 않는다.
 양쪽 raw를 먼저 보존한 뒤 STOP·clock·17핀 반환, 정책0 복원, 새 seed의 정상1초 송수신과 STOP까지
@@ -283,7 +288,7 @@ RAMUNDERFLOW·DMA 관측도 읽기 대상으로 추가했다.
 | UART flow·RX 지연·parity/break | 4선100ms CTS 정지/재개, 2선의 제한된 RX 지연, 별도 parity/break 원인 확인과 복구 |
 | SPI slave 조건 | slave 미준비·짧은 DMA 및 CS 조기 종료, 두 역할의 실제 완료·다음 frame 복구 |
 | TWI slave·stuck-low | TWIS 공급 지연, 격리 SDA open-drain LOW100ms와 해제/recoverBus 후0x42 정상 송수신 |
-| I2S/PDM/PWM | 공급 중단 예행4/4 이후 각100회 진행, 아래 PWM 중간 STOP·미시작 task 취소 실행기 exact 검증·실기 |
+| I2S/PDM/PWM | stream 정식3/4, I2S B 불일치 조치·재검증; PWM6/6 각100회는 완료 |
 | Serial 역할 전환 | 같은20/21/22/30의 UART·SPI master/slave·TWI master/slave 전환, S의SPI00 역할 전환 |
 | 자원 충돌 | 같은 block·GPIO alias·DMA 겹침·GPIOTE/DPPI 채널/domain·PWM/analogWrite/tone/Servo 중복의 원자적 거부 |
 | U 및 후속 release gate | S 종료 후 U 핀 배치 안내·현재 연결 확인, UART00·지원범위·패키지/RC·승인·공개 |

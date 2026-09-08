@@ -1,0 +1,19 @@
+{
+  "source": "2e5a2c5945fb3545e4f870a3f02b4fc4c55173c5",
+  "physical_executed": false,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "ci-2e5a2c5-02.json.gz",
+      "bytes": 3829,
+      "sha256": "25eb5167a84f1d468a8973b351d82b95d10b3523d301f5ea9f70eb330faa9dcb",
+      "gzip_sha256": "1b3fae556522c4f9ba995980d07eef2449817e50a09843aa0ba78e77962f6ba3"
+    },
+    {
+      "file": "ci-2e5a2c5-02.host.log.gz",
+      "bytes": 308106,
+      "sha256": "5b8994badc49f823a65e1904b0a7ce755fcce8b3fb13064eb20308e6ddeba073",
+      "gzip_sha256": "f949469c43cb56b07e672d7f4d1a54570a8c68a39e1afea24e07cef06ac6fb87"
+    }
+  ]
+}

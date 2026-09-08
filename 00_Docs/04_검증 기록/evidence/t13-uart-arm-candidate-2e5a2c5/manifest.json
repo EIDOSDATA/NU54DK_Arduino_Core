@@ -1,0 +1,109 @@
+{
+  "source": "2e5a2c5945fb3545e4f870a3f02b4fc4c55173c5",
+  "physical_executed": false,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "t13-uart-arm-unit-01.json.gz",
+      "bytes": 496,
+      "sha256": "8d239e4c37fac87e3c570ec4aa22060e0975d8fdbaec60ce540fd8cf7457cff9",
+      "gzip_sha256": "1c08f5376ec2e2ab88dc344f85e3575a2331b9b92723a7a71a19d5af26414220"
+    },
+    {
+      "file": "t13-uart-arm-unit-01.log.gz",
+      "bytes": 1266,
+      "sha256": "50b1fdd6d3e90c7170d67e6e026010a59159b46e706c17c2d281f1580a15f57a",
+      "gzip_sha256": "668ad65e6c2f9a3fa9f76fab153299589b1b643df0297a0840d42bd735e79e77"
+    },
+    {
+      "file": "t13-uart-arm-host-01.json.gz",
+      "bytes": 487,
+      "sha256": "929ffda4e2a60d9327366fcdd29fed5544077ff6f32296227dd0b0a2b04e9874",
+      "gzip_sha256": "242ad600aa9ab5bca310e67412c81e5445557d8f6e8c8130a8d092d70078cce8"
+    },
+    {
+      "file": "t13-uart-arm-host-01.log.gz",
+      "bytes": 17328,
+      "sha256": "6ed4bfe2a06df2a13e2c6b9afb4a9b3d506b33e115b1b7583f1aa33c1dab1a11",
+      "gzip_sha256": "812caac363a685d37e875ce4a7e6fe1030b235e2a73b2acf373f8c4b59b30a9e"
+    },
+    {
+      "file": "t13-uart-arm-target-01.json.gz",
+      "bytes": 656,
+      "sha256": "7501ad36e94849347a158417f2f321ab640b82ac4d4bc1b2dda48d1ead7186d5",
+      "gzip_sha256": "2db4eac792d407fab1f39fa1482ba4308afb2d11a2e203b727d37fbf8e0b931e"
+    },
+    {
+      "file": "t13-uart-arm-target-01.log.gz",
+      "bytes": 2060,
+      "sha256": "6f130895c43977dde0a0e9c8b41c3a7623581fa7865213932d25081cd2df4aee",
+      "gzip_sha256": "d3466a502686454a4affecc3c594cae046862a8f827ca3bc28604ebcfc5152d0"
+    },
+    {
+      "file": "t13-uart-arm-format-01.json.gz",
+      "bytes": 548,
+      "sha256": "d9bf25f0837912be85bde216b7edae0ebd6d4ad40d78ffdb132fce76d2ee284b",
+      "gzip_sha256": "da8fd72824223c051088c9ed053776648caa316ceccdf17ec84abc9a69bc3943"
+    },
+    {
+      "file": "t13-uart-arm-format-01.log.gz",
+      "bytes": 40,
+      "sha256": "570a052c0d7d62573d247b75bae93ef4c55e7ade7a7f2f1733cacc76d586b048",
+      "gzip_sha256": "54051670be21a73c3576cdb2e1912f8657eda13e507278ec98b98e13220c73f6"
+    },
+    {
+      "file": "t13-s-final-style-01.json.gz",
+      "bytes": 530,
+      "sha256": "7bfd7978932f9a96790cd9cfcce2a20ef11116ce852ed4cbdd87f11a7a591a97",
+      "gzip_sha256": "c01fb36ca9ea13f9500f9abdf1fbcd1bb376f5988bc1eda8044a2605f3c08e2f"
+    },
+    {
+      "file": "t13-s-final-style-01.log.gz",
+      "bytes": 40,
+      "sha256": "7444a79989b47c0b328e41383b34aecb203a7c340f7d4333d39265b39bb236bc",
+      "gzip_sha256": "582200bffdc54bfada178f02af2b256b0871a3ee0638f177dfe10ee3739ac435"
+    },
+    {
+      "file": "t13-s-final-contract-01.json.gz",
+      "bytes": 467,
+      "sha256": "a57abf332d3583b4ccf0a5232705bbd841854a089f9ae9a89c7cb8440ce9ca54",
+      "gzip_sha256": "b0044d27840ee8855a962311012bd48884fbceec0625c027e8c3669ec4f746bb"
+    },
+    {
+      "file": "t13-s-final-contract-01.log.gz",
+      "bytes": 7554,
+      "sha256": "8a3003e0a44857f8544668d09008d301ecc89d07bdd6ea9adfb7852c9ee7ecc2",
+      "gzip_sha256": "d53d51200a60463da7080d7dede54ccb9f1a4c9c06c501cd993e137df63b75b3"
+    },
+    {
+      "file": "t13-s-final-docs-02.json.gz",
+      "bytes": 459,
+      "sha256": "49ce70cdf477947daeea5e31591877a6402d2f487a04c8c61b3abfa39d4dc845",
+      "gzip_sha256": "286698112ac53ed906966b25d4e380754b302deae4a1d4aad42605946a7309bc"
+    },
+    {
+      "file": "t13-s-final-docs-02.log.gz",
+      "bytes": 69,
+      "sha256": "27c29c6d07a1e475a72ff89cc76c4bb4b339a05e1a99e5eb2f5727ebddcb7202",
+      "gzip_sha256": "4d413e422cc964c31a5dff40573b2c0cb6320fcd73f7998d835e9b413775fd24"
+    },
+    {
+      "file": "t13-uart-arm-candidate.patch.gz",
+      "bytes": 5031,
+      "sha256": "ef886236b655b7b9540739ae6011a4b45e422a0be689254fb35a9f7420a556f0",
+      "gzip_sha256": "16b6fb95c0dab8aa717a858e7cbbec38fca2623e88ada0b9abe6e5e8a793571a"
+    },
+    {
+      "file": "t13-uart-arm-candidate-provenance.json.gz",
+      "bytes": 1962,
+      "sha256": "7ad4ff4aa2936256306fe9c643722f6dff42e340db2b3b1811a4c26cc1c2e571",
+      "gzip_sha256": "3232d9debecaea92fb467b0b639b10d5e375bff8921ecd74948dec917ea4f876"
+    },
+    {
+      "file": "archive_t13_uart_arm_preparation.py.gz",
+      "bytes": 2238,
+      "sha256": "8d1463870c7cc3ddded00e89a35a69ad2bd9e90324275876bf4d5e17ebdad2f3",
+      "gzip_sha256": "010092e0d80c09aa269524476de0ea423779a8c15f13f797df6f56ae9a24f240"
+    }
+  ]
+}

@@ -71,6 +71,38 @@ class UartLineTests(unittest.TestCase):
             self.assertEqual(measured['break_flag_observed'], bool(mask & 8))
             self.assertFalse(measured['normal_soak_pass'])
 
+    def test_clock_or_arm_rejection_never_starts_rx_and_preserves_cleanup(self):
+        for bad_clock in (True, False):
+            devices = [mock.Mock(), mock.Mock()]
+            calls, rows = [], []
+            for role, device in enumerate(devices, 1):
+                device.image = {'role': role}
+                def command(opcode, *args, role=role, **kwargs):
+                    calls.append((role, opcode))
+                    if opcode == 107:
+                        return [1, 1] if bad_clock else [1, 1, 65537]
+                    if opcode == 141:
+                        return [0]
+                    if opcode == 99:
+                        return [3, 1, 0, 0, 1, 0]+[0]*10
+                    if opcode == 142:
+                        return self.vector(role)
+                    return [1]
+                device.command.side_effect = command
+            with mock.patch.object(runner, 'execute_group') as group, \
+                 mock.patch.object(runner, 'prepared_uart_pins'), \
+                 mock.patch.object(runner, 'stop_pair', return_value=True) as stop, \
+                 mock.patch.object(runner, 'idle_pins', return_value=True) as idle:
+                with self.assertRaisesRegex(ProtocolError, 'clock failed' if bad_clock else 'ARM failed'):
+                    line.execute(devices, self.test, 1, 'parity', mock.Mock(),
+                                 lambda name, row: rows.append((name, row)), preflight=True)
+                self.assertFalse(any(opcode in (98, 143, 144) for _, opcode in calls))
+                self.assertEqual(group.call_count, 1)
+                stop.assert_called_once()
+                idle.assert_called_once()
+                armed = [row for name, row in rows if '/arm/' in name]
+                self.assertEqual(armed, [] if bad_clock else [{'status': 'observation', 'words': [0]}])
+
     def test_expected_fault_still_requires_cleanup_and_fresh_normal_restart(self):
         devices = [mock.Mock(), mock.Mock()]
         for role, device in enumerate(devices, 1):

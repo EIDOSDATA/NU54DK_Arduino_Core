@@ -67,7 +67,7 @@
       "kind": "physical",
       "required": true,
       "state": "hold",
-      "reason": "active QDEC manual read/clear count loss remains unresolved after timing, delayed-read and IRQ-protection diagnostics; full QDEC additional functional regression, remaining recovery, concurrency and soak evidence are required; precision metrology and third-party device qualification are outside scope",
+      "reason": "T12 and QDEC investigation are owner-closed with the manual read/clear limitation reported; do not require another full QDEC diagnostic campaign before unrelated work; remaining T13 stream recovery and final T15 supported-scope decision still require evidence; the known QDEC failure is not a physical PASS; precision metrology and third-party device qualification are outside scope",
       "evidence": ["00_Docs/04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md"]
     },
     {

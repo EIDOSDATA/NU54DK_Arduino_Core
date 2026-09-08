@@ -105,8 +105,12 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
             for device in devices:
                 clock = device.command(107, (0,), timeout=2)
                 append(label+f'/clock/role{device.image["role"]}', {'status': 'observation', 'words': clock})
-                if clock[:2] != [1, 1] or clock[2] == 0 or device.command(141, timeout=2) != [1]:
-                    raise ProtocolError('T13 UART line precision clock/arm failed')
+                if len(clock) < 3 or clock[:2] != [1, 1] or clock[2] == 0:
+                    raise ProtocolError('T13 UART line precision clock failed')
+                armed = device.command(141, timeout=2)
+                append(label+f'/arm/role{device.image["role"]}', {'status': 'observation', 'words': armed})
+                if armed != [1]:
+                    raise ProtocolError('T13 UART line ARM failed before RX START')
             # @brief break는 DUT RX 시작 전에 peer TX GPIO HIGH를 준비합니다.
             if mode == 'break':
                 if peer.command(98, timeout=2) != [1] or peer.command(144, timeout=2) != [1]:

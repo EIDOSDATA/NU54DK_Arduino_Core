@@ -1,0 +1,70 @@
+{
+  "source": "93e38ff6176ac54bf8bf87fa7477933875ccae96",
+  "status": "failed",
+  "phase": "uart-line-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T12:24:20.209693+00:00",
+  "finished_at": "2026-09-08T12:25:38.321486+00:00",
+  "error": "ProtocolError: T13 UART line precision clock/arm failed",
+  "case_results": [
+    {
+      "id": "T13-S/uart-line/uarte20/role1/break/repeat001/baseline/T13-S/preflight/uarte20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3788,
+      "sha256": "6807336d1cddfcabb04eec96b5864d4f88ebeeabf29fe34823aedf383dc50e6e",
+      "gzip_sha256": "bc90673cb4fab3e08b795ab637d3d7ac62efacc75c6f8c81e6dc2665a42b2be0"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "430b9318f369b3fd2159d0b0d415303850fd80881041c2526b61ea074f31f7c8",
+      "gzip_sha256": "dde550b52fbb4cc3ae2c12becf52f9d637d83043936e7299b07e710a79adfaeb"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 161453,
+      "sha256": "d0afe03fd4b68404fd7c2ccb28fef8994ae5dc059fd5f059dfad9921de28fc86",
+      "gzip_sha256": "d9db67b7027bc0fc6a76282c5a6051562a83a9a570e1e72bbdbcd6eaee0a2808"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 90302,
+      "sha256": "cce2e5149cc39949add141ea424359a143b2c32957a8e07791e47bae519b1824",
+      "gzip_sha256": "03dde2b8dd1ded52aa6cda62c24f4d9c23cb6a039e1599e6e437a6f78b737e95"
+    },
+    {
+      "file": "line20-r1-break-preflight-sauto-01-preflight.json.gz",
+      "bytes": 786,
+      "sha256": "b7dd4a318a39794d628b540577ab54ecb58e1caf5e61fa30165572285e889b56",
+      "gzip_sha256": "df302d34bf05d28684a73342fa9b59d475fec230be4f6281c6fe22d31edf895d"
+    },
+    {
+      "file": "line20-r1-break-preflight-sauto-01-preflight.log.gz",
+      "bytes": 1575,
+      "sha256": "31239a1ef3007e5b557c5c5c9c2678ba565d3a703c9a9ce034203827c15ca1b9",
+      "gzip_sha256": "a0698346558858d7f85efe0f260075a21a927772e81fab926dfc6e3fb1a78e7a"
+    },
+    {
+      "file": "line20-r1-break-preflight-sauto-01-execute.json.gz",
+      "bytes": 782,
+      "sha256": "448c7bffefc14a888546fa9476f67cb1ee30266c2045b20350dd529556a5bc20",
+      "gzip_sha256": "27067752876689cb3043a30ffed78d67fb49b82fcc717911c5e679724f138c59"
+    },
+    {
+      "file": "line20-r1-break-preflight-sauto-01-execute.log.gz",
+      "bytes": 76,
+      "sha256": "36d056647f81dcdc1bedefaef729201160f325a3d022ae2a045b8dda9fa9c265",
+      "gzip_sha256": "972b0cffd279040754226140762fc885e77d06d9a023334e37579c23476c9776"
+    }
+  ]
+}

@@ -1,0 +1,2661 @@
+{
+  "source": "b5d614e3d449b6ad0cbba3513499e0890e1ddc65",
+  "status": "passed",
+  "phase": "resource-conflict",
+  "physical_executed": true,
+  "started_at": "2026-09-08T11:51:35.152338+00:00",
+  "finished_at": "2026-09-08T11:58:46.479906+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat001/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat001/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat001/result",
+      "status": "passed",
+      "seed": 2938078680,
+      "restart_seed": 824769633,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat002/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat002/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat002/result",
+      "status": "passed",
+      "seed": 3280972563,
+      "restart_seed": 1572393642,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat003/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat003/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat003/result",
+      "status": "passed",
+      "seed": 4239567913,
+      "restart_seed": 1652938128,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat004/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat004/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat004/result",
+      "status": "passed",
+      "seed": 3967414687,
+      "restart_seed": 1917749286,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat005/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat005/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat005/result",
+      "status": "passed",
+      "seed": 2651094750,
+      "restart_seed": 3344231,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat006/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat006/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat006/result",
+      "status": "passed",
+      "seed": 2985677,
+      "restart_seed": 2652567412,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat007/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat007/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat007/result",
+      "status": "passed",
+      "seed": 155193741,
+      "restart_seed": 2541185076,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat008/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat008/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat008/result",
+      "status": "passed",
+      "seed": 1123712188,
+      "restart_seed": 3704423685,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat009/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat009/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat009/result",
+      "status": "passed",
+      "seed": 3516061447,
+      "restart_seed": 1336258238,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat010/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat010/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat010/result",
+      "status": "passed",
+      "seed": 2968496256,
+      "restart_seed": 785961273,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat011/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat011/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat011/result",
+      "status": "passed",
+      "seed": 1803783303,
+      "restart_seed": 4122277182,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat012/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat012/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat012/result",
+      "status": "passed",
+      "seed": 2465027452,
+      "restart_seed": 215624901,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat013/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat013/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat013/result",
+      "status": "passed",
+      "seed": 3640186010,
+      "restart_seed": 1188015395,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat014/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat014/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat014/result",
+      "status": "passed",
+      "seed": 4211833949,
+      "restart_seed": 1698432484,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat015/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat015/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat015/result",
+      "status": "passed",
+      "seed": 4090081577,
+      "restart_seed": 1845414032,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat016/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat016/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat016/result",
+      "status": "passed",
+      "seed": 3238626309,
+      "restart_seed": 1597963708,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat017/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat017/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat017/result",
+      "status": "passed",
+      "seed": 1780922421,
+      "restart_seed": 4094804364,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat018/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat018/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat018/result",
+      "status": "passed",
+      "seed": 4049352938,
+      "restart_seed": 1869300051,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat019/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat019/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat019/result",
+      "status": "passed",
+      "seed": 2476809670,
+      "restart_seed": 227959935,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat020/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat020/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat020/result",
+      "status": "passed",
+      "seed": 654140272,
+      "restart_seed": 3100252873,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat021/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat021/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat021/result",
+      "status": "passed",
+      "seed": 2382458682,
+      "restart_seed": 271980163,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat022/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat022/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat022/result",
+      "status": "passed",
+      "seed": 1213869752,
+      "restart_seed": 3597489921,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat023/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat023/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat023/result",
+      "status": "passed",
+      "seed": 828268896,
+      "restart_seed": 2942900441,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat024/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat024/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat024/result",
+      "status": "passed",
+      "seed": 624330130,
+      "restart_seed": 3137469483,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat025/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat025/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat025/result",
+      "status": "passed",
+      "seed": 1443546905,
+      "restart_seed": 3359489696,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat026/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat026/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat026/result",
+      "status": "passed",
+      "seed": 1015617362,
+      "restart_seed": 2730389227,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat027/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat027/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat027/result",
+      "status": "passed",
+      "seed": 2254959800,
+      "restart_seed": 407932161,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat028/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat028/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat028/result",
+      "status": "passed",
+      "seed": 2727622963,
+      "restart_seed": 1017331850,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat029/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat029/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat029/result",
+      "status": "passed",
+      "seed": 3342999595,
+      "restart_seed": 1500862866,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat030/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat030/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat030/result",
+      "status": "passed",
+      "seed": 3771746333,
+      "restart_seed": 2129080740,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat031/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat031/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat031/result",
+      "status": "passed",
+      "seed": 3023097762,
+      "restart_seed": 705148443,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat032/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat032/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat032/result",
+      "status": "passed",
+      "seed": 1210171739,
+      "restart_seed": 3591813346,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat033/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat033/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat033/result",
+      "status": "passed",
+      "seed": 3478581539,
+      "restart_seed": 1365346458,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat034/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat034/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat034/result",
+      "status": "passed",
+      "seed": 2830181126,
+      "restart_seed": 914774719,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat035/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat035/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat035/result",
+      "status": "passed",
+      "seed": 651497863,
+      "restart_seed": 3101845566,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat036/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat036/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat036/result",
+      "status": "passed",
+      "seed": 2293866744,
+      "restart_seed": 378460481,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat037/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat037/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat037/result",
+      "status": "passed",
+      "seed": 2092682989,
+      "restart_seed": 3800872788,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat038/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat038/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat038/result",
+      "status": "passed",
+      "seed": 2443497659,
+      "restart_seed": 261335298,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat039/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat039/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat039/result",
+      "status": "passed",
+      "seed": 904912121,
+      "restart_seed": 2883102016,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat040/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat040/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat040/result",
+      "status": "passed",
+      "seed": 3683798113,
+      "restart_seed": 1168455128,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat041/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat041/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat041/result",
+      "status": "passed",
+      "seed": 3681068962,
+      "restart_seed": 1163910683,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat042/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat042/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat042/result",
+      "status": "passed",
+      "seed": 3260537383,
+      "restart_seed": 1549837214,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat043/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat043/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat043/result",
+      "status": "passed",
+      "seed": 1152540712,
+      "restart_seed": 3666155921,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat044/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat044/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat044/result",
+      "status": "passed",
+      "seed": 3493260694,
+      "restart_seed": 1308726319,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat045/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat045/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat045/result",
+      "status": "passed",
+      "seed": 3238339831,
+      "restart_seed": 1597136206,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat046/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat046/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat046/result",
+      "status": "passed",
+      "seed": 1044461498,
+      "restart_seed": 2692107779,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat047/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat047/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat047/result",
+      "status": "passed",
+      "seed": 4101124460,
+      "restart_seed": 1782925525,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat048/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat048/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat048/result",
+      "status": "passed",
+      "seed": 3045603711,
+      "restart_seed": 733954246,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat049/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat049/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat049/result",
+      "status": "passed",
+      "seed": 1622217066,
+      "restart_seed": 4270221523,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat050/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat050/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat050/result",
+      "status": "passed",
+      "seed": 3718898902,
+      "restart_seed": 1134468463,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat051/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat051/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat051/result",
+      "status": "passed",
+      "seed": 699821026,
+      "restart_seed": 3078689371,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat052/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat052/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat052/result",
+      "status": "passed",
+      "seed": 1388426248,
+      "restart_seed": 3438726577,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat053/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat053/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat053/result",
+      "status": "passed",
+      "seed": 3415439900,
+      "restart_seed": 1436812197,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat054/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat054/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat054/result",
+      "status": "passed",
+      "seed": 3622747251,
+      "restart_seed": 1239008714,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat055/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat055/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat055/result",
+      "status": "passed",
+      "seed": 3400747209,
+      "restart_seed": 1417949552,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat056/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat056/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat056/result",
+      "status": "passed",
+      "seed": 3747632644,
+      "restart_seed": 1096232893,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat057/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat057/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat057/result",
+      "status": "passed",
+      "seed": 2681371284,
+      "restart_seed": 31785773,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat058/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat058/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat058/result",
+      "status": "passed",
+      "seed": 1475589511,
+      "restart_seed": 3385117758,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat059/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat059/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat059/result",
+      "status": "passed",
+      "seed": 405010759,
+      "restart_seed": 2249490686,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat060/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat060/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat060/result",
+      "status": "passed",
+      "seed": 1626464375,
+      "restart_seed": 4274428366,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat061/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat061/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat061/result",
+      "status": "passed",
+      "seed": 719012607,
+      "restart_seed": 3035380550,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat062/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat062/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat062/result",
+      "status": "passed",
+      "seed": 4176844966,
+      "restart_seed": 1724047647,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat063/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat063/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat063/result",
+      "status": "passed",
+      "seed": 2472491262,
+      "restart_seed": 224936263,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat064/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat064/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat064/result",
+      "status": "passed",
+      "seed": 2908078488,
+      "restart_seed": 862107681,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat065/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat065/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat065/result",
+      "status": "passed",
+      "seed": 3137636796,
+      "restart_seed": 624160773,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat066/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat066/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat066/result",
+      "status": "passed",
+      "seed": 2931811714,
+      "restart_seed": 814259259,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat067/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat067/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat067/result",
+      "status": "passed",
+      "seed": 2925419621,
+      "restart_seed": 812197340,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat068/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat068/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat068/result",
+      "status": "passed",
+      "seed": 1075236225,
+      "restart_seed": 3726750776,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat069/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat069/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat069/result",
+      "status": "passed",
+      "seed": 215933279,
+      "restart_seed": 2464782566,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat070/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat070/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat070/result",
+      "status": "passed",
+      "seed": 3046901511,
+      "restart_seed": 732659390,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat071/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat071/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat071/result",
+      "status": "passed",
+      "seed": 2600763064,
+      "restart_seed": 87230209,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat072/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat072/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat072/result",
+      "status": "passed",
+      "seed": 3292084568,
+      "restart_seed": 1510883553,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat073/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat073/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat073/result",
+      "status": "passed",
+      "seed": 659143902,
+      "restart_seed": 3112093031,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat074/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat074/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat074/result",
+      "status": "passed",
+      "seed": 2636579628,
+      "restart_seed": 51411605,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat075/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat075/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat075/result",
+      "status": "passed",
+      "seed": 3312891620,
+      "restart_seed": 1531039581,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat076/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat076/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat076/result",
+      "status": "passed",
+      "seed": 435415498,
+      "restart_seed": 2277806195,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat077/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat077/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat077/result",
+      "status": "passed",
+      "seed": 543804864,
+      "restart_seed": 3193877625,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat078/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat078/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat078/result",
+      "status": "passed",
+      "seed": 4026365867,
+      "restart_seed": 1909067282,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat079/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat079/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat079/result",
+      "status": "passed",
+      "seed": 2578343712,
+      "restart_seed": 127475353,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat080/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat080/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat080/result",
+      "status": "passed",
+      "seed": 985960364,
+      "restart_seed": 2767451669,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat081/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat081/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat081/result",
+      "status": "passed",
+      "seed": 4286814817,
+      "restart_seed": 1639244760,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat082/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat082/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat082/result",
+      "status": "passed",
+      "seed": 417999259,
+      "restart_seed": 2262650914,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat083/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat083/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat083/result",
+      "status": "passed",
+      "seed": 2297205844,
+      "restart_seed": 383512045,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat084/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat084/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat084/result",
+      "status": "passed",
+      "seed": 1259543080,
+      "restart_seed": 3575931793,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat085/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat085/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat085/result",
+      "status": "passed",
+      "seed": 1349996420,
+      "restart_seed": 3460314685,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat086/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat086/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat086/result",
+      "status": "passed",
+      "seed": 4281238316,
+      "restart_seed": 1629092501,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat087/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat087/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat087/result",
+      "status": "passed",
+      "seed": 3636330378,
+      "restart_seed": 1183483443,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat088/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat088/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat088/result",
+      "status": "passed",
+      "seed": 1986809550,
+      "restart_seed": 3898292087,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat089/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat089/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat089/result",
+      "status": "passed",
+      "seed": 1465495140,
+      "restart_seed": 3379484637,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat090/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat090/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat090/result",
+      "status": "passed",
+      "seed": 3446240793,
+      "restart_seed": 1398673312,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat091/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat091/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat091/result",
+      "status": "passed",
+      "seed": 3735980643,
+      "restart_seed": 1083831258,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat092/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat092/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat092/result",
+      "status": "passed",
+      "seed": 1127132083,
+      "restart_seed": 3709456906,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat093/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat093/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat093/result",
+      "status": "passed",
+      "seed": 3319449201,
+      "restart_seed": 1542307784,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat094/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat094/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat094/result",
+      "status": "passed",
+      "seed": 2438999446,
+      "restart_seed": 257381423,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat095/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat095/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat095/result",
+      "status": "passed",
+      "seed": 549640469,
+      "restart_seed": 3203768492,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat096/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat096/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat096/result",
+      "status": "passed",
+      "seed": 2673912710,
+      "restart_seed": 22532671,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat097/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat097/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat097/result",
+      "status": "passed",
+      "seed": 1842568536,
+      "restart_seed": 4091815137,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat098/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat098/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat098/result",
+      "status": "passed",
+      "seed": 1552805379,
+      "restart_seed": 3267008442,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat099/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat099/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat099/result",
+      "status": "passed",
+      "seed": 4286809749,
+      "restart_seed": 1639251756,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat100/maintained/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat100/reacquired/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/conflict/uarte21/role1/mode1/repeat100/result",
+      "status": "passed",
+      "seed": 2520843488,
+      "restart_seed": 141983065,
+      "planned_conflict_pass": true,
+      "normal_soak_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3792,
+      "sha256": "c13870a6382d53ce139b9ff9745864d46f3358d812cee001da9759ef50b22383",
+      "gzip_sha256": "3add9df8973197583c3a0af189b708e666cb6b143112123f570375649f2e4603"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "78fa48bb06a1d1410c47f8888b32e6e16c0379550d3622b77ddc953ab4085e06",
+      "gzip_sha256": "14f768993870ebd850c64427fd97250d3119a53b412d52192f43099e50337a73"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 5212000,
+      "sha256": "dfec8665a5f54302200824b817582404c05427246e947cffc57761d819d68ffc",
+      "gzip_sha256": "b7415f5e94ce21a5356f96d93567c241a9328406ad3b5173fbef69282dcf1b72"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 2690007,
+      "sha256": "7cc91ea86ba4896d7196d7d614bd057445f206198f1deeb1bf4d47c1eeb824d6",
+      "gzip_sha256": "a37ecef9ed4baca56a38b6f75a339f85bee1e10647a3476c40722b24b3892c6f"
+    },
+    {
+      "file": "conflict21-r1-m1-100-sauto-01-preflight.json.gz",
+      "bytes": 764,
+      "sha256": "1d08c05f36d2158fe31956628714689ab5f055ffa439e1916ce12325073aa3bf",
+      "gzip_sha256": "0984381dfa23d65d9e767942eeac2ceed6f13ac2d319b18b38fe6100e14e7c85"
+    },
+    {
+      "file": "conflict21-r1-m1-100-sauto-01-preflight.log.gz",
+      "bytes": 1540,
+      "sha256": "55cc229aa5aeea9db714869f43af850bda3ebf07f0d506c233c81ec85726161c",
+      "gzip_sha256": "c43a9d03625ffe4d80ce3bc3125b45a0dcfb851da015bf4ed9f66ead28597323"
+    },
+    {
+      "file": "conflict21-r1-m1-100-sauto-01-execute.json.gz",
+      "bytes": 760,
+      "sha256": "3ee6718a63d05247a30b7fd4c4f9f0abbef4fd2bcfccf7de25c218b99ad9c0b6",
+      "gzip_sha256": "f3bc23f09c742d77a5f3b376dde1609736c9ceb54d0240b35de08672825b52ab"
+    },
+    {
+      "file": "conflict21-r1-m1-100-sauto-01-execute.log.gz",
+      "bytes": 6657,
+      "sha256": "d984501c3585eddb29b0e1680d9c904e5a935070024dd5fd75009f9d27ad5135",
+      "gzip_sha256": "d5ae278e9efdcaa26c594753d209f6f212a579397419aaab5e47cde904a89172"
+    }
+  ]
+}

@@ -1,5 +1,24 @@
 # T13 S 자동 진행과 peer 제어 System OFF 검증 계획
 
+2026-09-08 21:26 KST 최종 실행 상태: **정상 안정성36/36(100%), 충돌 정식5/14(36%)**다.
+serial 복구17/21·stream3/4·PWM6/6·역할 전환2/5이며 T13 S는 미완료다.
+UART parity/break 예행9조건은 RX 이전 ARM의 잘못된 ENABLE 전제로 실패했고7조건은 미시작이다.
+ARM 수정본은 관련 Host6·전체 T13 Host89·두 역할 target2/2를 통과했으나 새 실기는0이다.
+12개 실행 대열은 모두 종료했고56개 완료 실행의 원본 해시·양쪽 STOP·clock0·GPIO 반환을 감사했다.
+S 확인 만료21:26:14를 연장하지 않았으며 새 실기는 현재 상태 확인 후 남은 S 복구부터 재개한다.
+U 재배치만 남은 상태가 아니다. T12/QDEC 보고 후 완료 결정과 T13/RC/공개 미완료를 유지한다.
+미실행 조건·판정 오류 수정·실제 실패·후속 마일스톤은 [108번 최종 기록](<108_T13_S_자동_실행_종료와_재개_항목.md>)을 따른다.
+아래 시각별 진행 보고는 당시 이력이며 현재 실행 중이라는 뜻이 아니다.
+
+2026-09-08T12:10Z: 자원 충돌 UART21 role1의 mode1/2/3 각100회·양쪽 STOP을 완료했다.
+충돌 반복3/14(21.4%)이며 role2 검사를 이어간다. 정상 안정성36/36과 별도 집계한다.
+2e5a2c5의 CTS 판정 보강은 exact target2/2·Host8·원격 전체 Host109묶음818시험을 통과했다.
+[준비 원본](evidence/t13-flow-bound-preparation-2e5a2c5/manifest.json)을 보존하고 기존 대열 뒤
+단독8조건·동시4조건 예행을 등록했다. 이 소스의 새 CTS 실기 결과는 아직0이다.
+현재 문서 입구16곳의 낡은 정상 안정성29/36을36/36으로 정정했다. readiness의 QDEC 전면 재진단
+선행조건 문구도 소유자의 보고 후 종료 결정과 일치시켰다. gate state/required 값은 변경하지 않았다.
+T15에서 알려진 제한을 지원 범위에 반영할 결정은 여전히 필요하다.
+
 2026-09-08T12:00Z: fedaa75 최초 UART 오류 진단의 exact power2/2·일반 S2/2·Host7·
 정렬/계약/문서·원격 전체 Host109묶음816시험을 확인해 기존 대열 뒤에 등록했다.
 [준비 원본](evidence/t13-power-diagnostic-preparation-fedaa75/manifest.json)을 따른다.
@@ -10,6 +29,29 @@ CTS 구간 판정은 관련 Host8시험을 통과했고 T13 Host88 중86통과/�
 [기존8개 raw 대조](evidence/t13-cts-gap-analysis-d44cef2/manifest.json)는 모두 이 상한 안이지만
 drained hash·새 seed 정상 재획득을 완료한 실기 증거가 없으므로 기존 FAIL은 그대로 유지한다.
 새 exact source의 전체 실기 재검증 전에는 CTS 완료 수를 올리지 않는다.
+
+## SPI 입력 경로와 수신 시점의 후속 진단 근거
+
+[고정 board 회로도](<../../board_package/NU54DK_Zephyr_DTS/NU54-DK Schematic.pdf>)의1·6쪽을
+확인했다. P1.07은 SB12를 거쳐 U7의 UARTE_CTS에 연결되고, P1.06은 SB11/UARTE_RTS다.
+LED1~4는 각각 P2.09/P1.10/P2.07/P1.14이므로 P1.07의 오류를 LED Schmitt 입력으로 바로
+설명하지 않는다. DAP UART 분리 확인은 유지하되, OE 비활성과 실제 배선의 용량/반사/타이밍은
+다른 관측이다. [회로도 대조 원본](evidence/t13-spi-route-review-b5d614e/manifest.json)을 보존했다.
+I2S B RX의 별도1word 오류까지 같은 원인으로 합치지 않는다.
+
+현재 SDK MDK는 SPIM20/21/22/30의 core16MHz·RXDELAY reset1을 정의한다.
+[47번](47_M24_Fixture_201_SPI_실기_검증.md)의 과거 수정은 공통값2에 의한 한 bit 지연을1로
+교정했고 실제 TX/ORC100회와 전체 기능을 통과했다. 그 과거 실패와 현재 간헐적 중간 byte 오류는
+동일 현상으로 확정하지 않는다.
+
+[Nordic RXDELAY](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/spim.html-register.iftiming.rxdelay)는
+SPIM core cycle 단위의 샘플 지연이고, [PRESCALER](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/spim.html-register.prescaler)는
+낮은 분주값에서 기본 RXDELAY 조정이 필요할 수 있다고 설명한다. 계산상 core16MHz의1cycle은
+62.5ns이고 SCK8MHz 반주기와 같다. 이는 수신 시점 비교가 필요한 이유이며 RXDELAY0이 정답이라는
+증거가 아니다. SPIS가 수신한 오류까지 controller RXDELAY만으로 설명할 수도 없다.
+후속은 동일 S net에서 별도 진단 소스로8MHz/RXDELAY0 또는4MHz/기존값을 각각 비교하되,
+GPIO 구동·실제 레지스터·최초 오류·전체 payload·STOP을 함께 남겨야 한다.
+낮춘 진단 속도의 통과를 원래8MHz 역할 전환 통과로 대체하지 않는다. 아직 이 비교 실기는 미실행이다.
 
 2026-09-08T11:53Z: S 정상 안정성36/36은 완료 상태를 유지한다. 자원 충돌 예행14/14를
 통과했으며100회 반복은 진행 중이다. SPI20/21/22 역할 전환은 최초 불일치 byte를 보존했지만
@@ -287,13 +329,13 @@ DMA.RX.AMOUNT를 최근 DMA transaction의 END/MATCH에서 갱신하는 값으�
   CS inactive에서 SDO가 floating일 때의 추가 전류 문제다. 통신 오류의 확정 원인이나 현재
   확인된 결선의 변경 사유로 확대하지 않는다.
 - [TWIM105](https://docs.nordicsemi.com/r/bundle/errata_nrf54l15_rev1/page/err/nrf54l15/rev1/latest/anomaly_l15_105.html?contentId=eH3BnjumOZsG8A~kiCmQlw)은
-  clock stretching 중 disable 이후의 무응답과 reset 복구를 설명한다. 아직 미구현인 stuck-low/
+  clock stretching 중 disable 이후의 무응답과 reset 복구를 설명한다. 당시 미구현이던 stuck-low/
   공급 지연 시험은 LOW 해제와 STOP을 먼저 증명해야 하며, 실패 시 reset으로 복구한 결과를
   무reset 정상 복구로 바꾸어 기록하지 않는다.
 
 이 대조는 source 검토이며 실제 silicon revision별 workaround 동작이나 새 실기 PASS가 아니다.
 
-다음 source에는 첫 RX payload 불일치의 actual/expected byte·주변4byte·DMA 주소·AMOUNT·guard를
+당시 후속 source에는 첫 RX payload 불일치의 actual/expected byte·주변4byte·DMA 주소·AMOUNT·guard를
 STOP 전 고정하는 opcode124를 추가한다. 예전 실패에 없던 actual byte를 추정으로 채우지 않는다.
 기존 통과 기준을 유지하며 자원 충돌 opcode125와 함께 Host/target·exact source를 확인한 뒤 실기한다.
 

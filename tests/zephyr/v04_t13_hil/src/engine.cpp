@@ -390,7 +390,7 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
     }
     if (opcode == 141U && nargs == 0U && !started)
     {
-        out[0] = uartFaultArm() ? 1U : 0U;
+        out[0] = selected != nullptr && healthy && serialHealthy() && uartFaultArm() ? 1U : 0U;
         count = 1U;
         return 0U;
     }

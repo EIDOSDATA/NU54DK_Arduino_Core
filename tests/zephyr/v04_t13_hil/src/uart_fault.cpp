@@ -91,7 +91,8 @@ bool t13::uartFaultTransmitAllowed()
 
 bool t13::uartFaultArm()
 {
-    if (policy == 0U || registers == nullptr || registers->ENABLE == 0U || raw[2] != 0U)
+    /** @brief nrfx 초기화 뒤 ENABLE0은 정상이며 RX 시작 전에 최초 오류 관측을 준비합니다. */
+    if (policy == 0U || registers == nullptr || raw[2] != 0U)
     {
         return false;
     }
