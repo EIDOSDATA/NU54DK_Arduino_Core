@@ -1,0 +1,103 @@
+{
+  "base_source": "a6367caf42578d8dd825186d229cfa902a82a562",
+  "working_tree_changes": true,
+  "physical_pass": false,
+  "host": {
+    "runtime_passed": 13,
+    "uart_passed": 6,
+    "initial_attempt": "one incorrect test expectation corrected; production route executable blocked by Windows4551",
+    "full_host": "new exact source remote CI required; no local full PASS claimed"
+  },
+  "files": [
+    {
+      "file": "t13-psel-host-01.json.gz",
+      "bytes": 483,
+      "sha256": "11ffc79f2595eef56289b38dab25df01b541003cbf8dafa107f31997fe3d81bb",
+      "gzip_sha256": "f000c039c21aaea28a79dca7c2fedb02cea38054fd9f8398bc5ebb1b1bec75da"
+    },
+    {
+      "file": "t13-psel-host-01.log.gz",
+      "bytes": 6095,
+      "sha256": "49ccaa861bdcea083fc3bdab230ec064cf228ac5f52881f20c46e8873a6623b2",
+      "gzip_sha256": "47b6ac2681526b6b882688a590a6a9e1f2ab1b7c489bdf50e2b9a071fb39fc69"
+    },
+    {
+      "file": "t13-psel-runtime-host-02.json.gz",
+      "bytes": 498,
+      "sha256": "e9a2364236069480b7d0c3719d20d7e2137932222d6e66180184982a41d432c9",
+      "gzip_sha256": "bf0e5e6b8fabcdc597db57fd85f2f448d7e91a44bd6b9b65181fc664ba924e87"
+    },
+    {
+      "file": "t13-psel-runtime-host-02.log.gz",
+      "bytes": 2694,
+      "sha256": "7e53715396b799a83749003bfe8529219fc94e378df18668cd967634f3388b9b",
+      "gzip_sha256": "1fc62cd5dea0b6b017c99945361d28419a849bdff88de70da3bd7e4a414d74e7"
+    },
+    {
+      "file": "t13-psel-uart-host-01.json.gz",
+      "bytes": 488,
+      "sha256": "566b9b96dd851eec7e8baa5bfdc52373920395de246d42aae36f9d3a3d3aa211",
+      "gzip_sha256": "736e886b445f549700b1812070324bd882d4544b614f6ccbf13a1619d9e9ebbf"
+    },
+    {
+      "file": "t13-psel-uart-host-01.log.gz",
+      "bytes": 721,
+      "sha256": "c2869093b56edcead115bdb96b236d2d5b1038432b8cfde228726886e34ac748",
+      "gzip_sha256": "f2dd45155285167ab6027a80ec9df745abf917480ddee305aa3aee3e7db3552e"
+    },
+    {
+      "file": "t13-psel-target-dev-01.json.gz",
+      "bytes": 622,
+      "sha256": "498b72a053f3e1252b549add3f85ae6abb6a6d5fdb574e753a638140fc16c5ed",
+      "gzip_sha256": "7497fa1e6bea75808f1254c3b5c7bee859dd42627fe985061428b59bfc1dde41"
+    },
+    {
+      "file": "t13-psel-target-dev-01.log.gz",
+      "bytes": 1905,
+      "sha256": "0e99c3d38408fbd944838368946610beda11d9838e0e480818286e6de91a98c7",
+      "gzip_sha256": "d6d23c239a95b585c233df618bd7584f22b65d648fad98aaa210924ae80f5cd0"
+    },
+    {
+      "file": "t13-psel-style-01.json.gz",
+      "bytes": 493,
+      "sha256": "122c31a4d40e29e5b48ca15f56bdbfe0876693e757563a620bc585fca612bd9c",
+      "gzip_sha256": "eed19612e661b05c69fa7d2d153b9d34199f4a7f30b3f9957136b7431929ddcf"
+    },
+    {
+      "file": "t13-psel-style-01.log.gz",
+      "bytes": 40,
+      "sha256": "78d55fd05d33a0a2dadd265469541c973d684f4f129a146e6a0d06d717fa0daa",
+      "gzip_sha256": "b3b92d99a9f5968d6da01ffef112dd2b4c3ef8b48a6c2c0986ef0910a44c211a"
+    },
+    {
+      "file": "t13-psel-contract-01.json.gz",
+      "bytes": 430,
+      "sha256": "dba6ed90b7f26c429b77b4641d84e2a73ba8dbda420fa220fff7313382810056",
+      "gzip_sha256": "abc840cbad0f400fb6c84529d8bfae1f8d65f29a355b50de5b0248d0dca7d0e3"
+    },
+    {
+      "file": "t13-psel-contract-01.log.gz",
+      "bytes": 7492,
+      "sha256": "c3f12ea7622f0b63194b0d0ea45749ab7dd16e4260f755437b3b4607cd2f4812",
+      "gzip_sha256": "43a3f94a32dddeab410aab2c326e6af28e94239fba51a95dfea24f728f70ca96"
+    },
+    {
+      "file": "t13-psel-inventory-01.json.gz",
+      "bytes": 432,
+      "sha256": "ba9806cc6035faee1bf8a7da3282a81c107867767c42fc9d6eeda6053051183c",
+      "gzip_sha256": "e6fac4f6e78b4a944d740541c676ff6c4f6f6005d2866ce24e54c371cb75b75d"
+    },
+    {
+      "file": "t13-psel-inventory-01.log.gz",
+      "bytes": 1329,
+      "sha256": "5c0daf8f87cb9b6c9d3860dfa18fe526301304bb39ba9a6b8b9bccc99aa81bf2",
+      "gzip_sha256": "f8146f4e389f492841186c2df8f699cbf604d1831d2fd64a484dbdf8652e0b6e"
+    },
+    {
+      "file": "check_t13_worktree.py.gz",
+      "bytes": 1666,
+      "sha256": "bb0421786deac86c66c588491f324dc3fb0f22f611786dc9fea1b64d361dcf2f",
+      "gzip_sha256": "22d20ec70c51877f4fbd81b1548c46ae0698f7289a878e11511bafafc327f39a"
+    }
+  ]
+}

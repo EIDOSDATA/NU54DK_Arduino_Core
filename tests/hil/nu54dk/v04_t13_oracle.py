@@ -6,6 +6,24 @@ from v04_protocol import ProtocolError
 MASK = 0xFFFFFFFF
 
 
+def uart_pins(words, endpoint):
+    """! @brief 실제 UART PSEL의 사용 핀과 미사용 RTS/CTS 분리를 송신 전에 대조합니다. """
+    if (len(words) != 7 or any(type(word) is not int or not 0 <= word <= MASK for word in words) or
+            endpoint['kind'] != 'uarte'):
+        raise ProtocolError('T13 invalid UART pin snapshot')
+    pins = endpoint['pins']
+    def raw(signal):
+        if signal not in pins:
+            return MASK
+        port, number = map(int, pins[signal][1:].split('.'))
+        return port * 32 + number
+    expected = [endpoint['instance'], int('rts' in pins),
+                *[raw(signal) for signal in ('txd', 'rxd', 'rts', 'cts')]]
+    if words[:6] != expected or words[6] not in (0, 8):
+        raise ProtocolError(f'T13 UART pin selection mismatch: actual={words}; expected={expected}')
+    return dict(zip(('instance', 'hwfc', 'txd', 'rxd', 'rts', 'cts', 'enable'), words))
+
+
 def pattern(seed, index):
     """! @brief 송신/RX 메모리를 입력으로 사용하지 않는 전역 byte 기대값입니다. """
     index &= MASK

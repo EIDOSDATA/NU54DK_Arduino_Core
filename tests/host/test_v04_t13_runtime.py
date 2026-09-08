@@ -21,6 +21,52 @@ from v04_protocol import ProtocolError
 
 
 class T13RuntimeTests(unittest.TestCase):
+    def test_uart_pins_reject_observed_spi_residue_and_wrong_route(self):
+        """! @brief SPI21 뒤 실제 관측한 두 보드의 RTS/CTS 잔류와 잘못된 연결을 재현합니다. """
+        test = next(row for row in cases.cases() if row['id'] == 101)
+        for role, stale_rts in (('a', 37), ('b', 36)):
+            endpoint = test['serial_links'][1][role]
+            valid = [21, 0, 38, 39, oracle.MASK, oracle.MASK, 0]
+            self.assertEqual(oracle.uart_pins(valid, endpoint)['rts'], oracle.MASK)
+            with self.assertRaises(ProtocolError):
+                oracle.uart_pins([21, 0, 38, 39, stale_rts, 39, 0], endpoint)
+            for index, value in ((0, 20), (1, 1), (2, 37), (3, 38), (4, stale_rts), (5, 39), (6, 7)):
+                broken = valid[:]
+                broken[index] = value
+                with self.subTest(role=role, index=index), self.assertRaises(ProtocolError):
+                    oracle.uart_pins(broken, endpoint)
+
+    def test_uart_pins_require_configured_hardware_flow_control(self):
+        """! @brief 네 선 UART는 실제 RTS/CTS 연결을 유지해야 하며 끊거나 교환하면 실패합니다. """
+        endpoint = {'kind': 'uarte', 'instance': 20,
+                    'pins': {'txd': 'P1.04', 'rxd': 'P1.05', 'rts': 'P1.06', 'cts': 'P1.07'}}
+        valid = [20, 1, 36, 37, 38, 39, 8]
+        self.assertEqual(oracle.uart_pins(valid, endpoint)['hwfc'], 1)
+        for broken in ([20, 0, 36, 37, 38, 39, 8], [20, 1, 36, 37, 39, 38, 8],
+                       [20, 1, 36, 37, oracle.MASK, oracle.MASK, 8]):
+            with self.assertRaises(ProtocolError):
+                oracle.uart_pins(broken, endpoint)
+
+    def test_pin_failure_preserves_other_uart_and_peer_before_judgement(self):
+        """! @brief 첫 UART 핀이 잘못돼도 다른 UART·보드의 raw를 모두 읽은 뒤 판정합니다. """
+        test = next(row for row in cases.cases() if row['id'] == 101)
+        devices = []
+        for role in (1, 2):
+            device = mock.Mock()
+            device.image = {'role': role}
+            device.command.return_value = [0]*7
+            devices.append(device)
+        observed = []
+        with self.assertRaises(ProtocolError):
+            runner.prepared_uart_pins(devices, test, lambda label, row: observed.append(label), 'prepared')
+        self.assertEqual(observed, ['prepared/role1/lane0/pins', 'prepared/role1/lane1/pins',
+                                    'prepared/role1/lane3/pins', 'prepared/role2/lane0/pins',
+                                    'prepared/role2/lane1/pins', 'prepared/role2/lane3/pins'])
+        for device in devices:
+            self.assertEqual(device.command.call_args_list,
+                             [mock.call(108, (0,), timeout=2), mock.call(108, (1,), timeout=2),
+                              mock.call(108, (3,), timeout=2)])
+
     def test_stop_requires_clock_release_and_preserves_other_board_cleanup(self):
         """! @brief GPIO 정지 응답만으로 clock 소유권 잔류를 성공 처리하지 않습니다. """
         for held, unreadable in ((0, False), (1, False), (0, True)):

@@ -19,6 +19,7 @@ namespace t13
     bool serialDrained();
     void serialSnapshot(unsigned lane, std::uint32_t *out, std::uint32_t &count);
     void serialTiming(unsigned lane, unsigned metric, std::uint32_t *out, std::uint32_t &count);
+    void serialPinSnapshot(unsigned lane, std::uint32_t *out, std::uint32_t &count);
     void captureService();
     bool pwmClockPolicy(bool crystal);
     void pwmTraceSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count);

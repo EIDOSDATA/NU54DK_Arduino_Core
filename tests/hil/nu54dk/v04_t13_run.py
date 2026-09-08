@@ -69,6 +69,21 @@ def snapshots(devices, test, seed, append, label):
     return engines, lanes
 
 
+def prepared_uart_pins(devices, test, append, label):
+    """! @brief 양쪽 UART 핀 raw를 먼저 보존하고 START 전 잔류·잘못된 출력을 거부합니다. """
+    raw = []
+    for device in devices:
+        role = device.image['role']
+        for index, link in enumerate(test['serial_links']):
+            endpoint = link['a' if role == 1 else 'b']
+            if endpoint['kind'] == 'uarte':
+                words = device.command(108, (index,), timeout=2)
+                append(label + f'/role{role}/lane{index}/pins', {'status': 'observation', 'words': words})
+                raw.append((words, endpoint))
+    for words, endpoint in raw:
+        oracle.uart_pins(words, endpoint)
+
+
 def timings(devices, test, append, label):
     """! @brief queue·완료 관측·service 지연의 고정 histogram을 raw와 함께 보존합니다. """
     raw = []
@@ -157,6 +172,7 @@ def execute_group(devices, group, duration, continuity, append, *, preflight):
                        {'status': 'observation', 'words': device.command(104, (index,), timeout=2)})
             if words[0] != test['id'] or words[1:3] != [1, 0] or words[4] != 1:
                 raise ProtocolError('T13 case failed before both peers were ready')
+        prepared_uart_pins(devices, test, append, identifier + '/prepared')
         for device in reversed(devices):
             if device.command(98, timeout=2) != [1]:
                 raise ProtocolError('T13 start failed')

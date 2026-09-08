@@ -8,6 +8,7 @@
 #include "measurement.h"
 #include <nucode/SerialFabric.h>
 #include <zephyr/kernel.h>
+#include <hal/nrf_uarte.h>
 
 namespace
 {
@@ -613,4 +614,45 @@ void t13::serialTiming(unsigned lane, unsigned metric, std::uint32_t *out, std::
     }
     lanes[lane].timing[metric].snapshot(out);
     count = 20U;
+}
+
+/** @brief 전송 전 사용·미사용 UART PSEL을 읽어 이전 personality의 핀 선택 잔류를 검출합니다. */
+void t13::serialPinSnapshot(unsigned lane, std::uint32_t *out, std::uint32_t &count)
+{
+    if (lane >= max_lanes || lanes[lane].endpoint.kind != Kind::uart)
+    {
+        count = 0U;
+        return;
+    }
+    const auto instance = lanes[lane].endpoint.instance;
+    NRF_UARTE_Type *registers = nullptr;
+    switch (instance)
+    {
+    case 0U:
+        registers = NRF_UARTE00;
+        break;
+    case 20U:
+        registers = NRF_UARTE20;
+        break;
+    case 21U:
+        registers = NRF_UARTE21;
+        break;
+    case 22U:
+        registers = NRF_UARTE22;
+        break;
+    case 30U:
+        registers = NRF_UARTE30;
+        break;
+    default:
+        count = 0U;
+        return;
+    }
+    out[0] = instance;
+    out[1] = (registers->CONFIG & UARTE_CONFIG_HWFC_Msk) != 0U ? 1U : 0U;
+    out[2] = registers->PSEL.TXD;
+    out[3] = registers->PSEL.RXD;
+    out[4] = registers->PSEL.RTS;
+    out[5] = registers->PSEL.CTS;
+    out[6] = registers->ENABLE;
+    count = 7U;
 }

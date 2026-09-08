@@ -379,6 +379,11 @@ namespace nucode::arduino
             }
             nrf_uarte_event_clear(context->driver.p_reg, NRF_UARTE_EVENT_RXSTARTED);
             nrf_uarte_shorts_set(context->driver.p_reg, 0U);
+            /**
+             * @brief SPI CSN 등과 겹치는 미사용 RTS/CTS 선택도 비활성 block에서 명시적으로 끊습니다.
+             * @note nrfx는 HWFC가 꺼지면 이 PSEL 기록을 생략하므로 이전 personality 값이 남을 수 있습니다.
+             */
+            nrf_uarte_hwfc_pins_set(context->driver.p_reg, rts, cts);
             context->event_head = context->event_tail = context->event_count = 0U;
             context->event_overflow = false;
             for (auto &buffer : context->buffers)

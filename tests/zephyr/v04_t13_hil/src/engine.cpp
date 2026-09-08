@@ -175,6 +175,11 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         pwmTraceSnapshot(args[0], out, count);
         return 0U;
     }
+    if (opcode == 108U && nargs == 1U && selected != nullptr && args[0] < selected->serial_count)
+    {
+        serialPinSnapshot(args[0], out, count);
+        return count == 7U ? 0U : 400U;
+    }
     if (opcode == 97U && nargs == 3U && !wiringClaimed() && !gate.claimed())
     {
         selected = nullptr;
