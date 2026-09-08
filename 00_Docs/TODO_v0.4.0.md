@@ -14,18 +14,24 @@ T13 역할 전환 준비: 같은 S net 안에서 SPI MOSI/MISO 신호명과 mast
 양쪽 함께 전환한다. 새 GPIO는 추가하지 않고 생산 route·실제 PSEL을 START 전에 대조한다.
 serial20/21/22/30의 순·역방향 고정 전환과 serial00의 SPI 역할 전환을 별도100회 항목으로 준비한다.
 
+T13 stream 복구 준비: 같은 격리 checkout에서 I2S20 양쪽·PDM20/21 수신 역할의 정상 네 버퍼 뒤
+단 한 번 공급 요청을 생략한다. 실제 underrun/overflow 원본·가드·STOP 반환·새 seed 재시작을
+별도100회로 판정하는 코드를 준비하며, 제품 API와 정상 안정성 source는 그대로 유지한다.
+
 **현재 작업:** [104번 T13 S 진행](<04_검증 기록/104_T13_S_복구_동시_안정성_검증.md>).
 f591571에서 UART 미사용 PSEL 수정 후 SPI21→C01·전체 S 사전검사36/36을 통과했다.
-같은 image의 정식180/900/3600초 안정성 campaign을 실행 중이다. 실시간 완료 수는 원본 journal과
+정식 안정성은24/36항목 통과 뒤 PWM21 LOW535µs로 실패해 원본과 양쪽 STOP을 보존했다.
+같은 image로 미실행 PDM/I2S·C01~C04를 이어간다. PWM21/22·C05/C06/C08은 원인 분리 후 검사한다. 실시간 완료 수는 원본 journal과
 작업 상태 파일을 확인한다. 별도 checkout의 고정 serial fault5개 mode는 Host5+13·target2/2를
 통과했고 cac9c39 Software7/7도 확인했다. 후속 역할 전환·실제 PSEL Host6와 target2/2를 준비했으며
-새 source 원격 Host가 필요하다. 복구/전환100회 완료는 아직0이다.
+efd0b99 Software7/7·Host757시험(755PASS/2조건부SKIP)을 확인했다.
+후속 stream 복구 Host5·T13 전체Host32·target2/2·정렬407을 통과했고 새 exact source/CI는 별도로 검사한다. 복구/전환100회 완료는 아직0이다.
 
 ## 현재 요약 — 2026-09-08
 
 - **완료한 요청 묶음:** T12 현재 공통 결선 기능 시험과 T13 조합·추가 결선 확정. GPIO/GPIOTE 2,502·PWM steady 675 및 추가 모드 288·I2S 432 PASS. QDEC는 일부 문제·제한사항을 리포트에 남기고 검증 작업을 완료했다. T12 마일스톤도 완료이며 실제 실패를 합격으로 바꾸지 않는다.
 - **최종 기준선:** `e547fc0863be5b381ecab26835fb5e872b399a9c`가 main에 있으며 원격 Software 7/7·재현 빌드 8/8 SUCCESS를 확인했다. 이번 103번 후속 문서 commit의 CI는 별도 exact SHA로 확인한다.
-- **현재 장치:** main f591571/C:/t3o04 두 role에서 soak-all-f591571-attempt1 실행 중. 다른 hardware process를 시작하지 않는다. Repair1 원래 만료12:26:14Z 유지.
+- **현재 장치:** main f591571/C:/t3o04 두 role에서 soak-stream-serial-f591571-attempt1 실행 중. 이전 묶음24PASS·PWM21 FAIL. 다른 hardware process를 시작하지 않는다. Repair1 원래 만료12:26:14Z 유지.
 - **현재 개발:** T13 연속 ADC/PWM/I2S/PDM·DMA guard·지연 histogram과 양쪽 raw 우선 보존을 구현했다. Host/target 준비 검사 뒤 새 clean image로 실행한다. 복구/전환100회는 아직 미완료다. QDEC 재진단은 예약하지 않는다. U 생략 여부는 아직 미확정이며 수행한다면 S 종료 뒤 재배치가 필요하다.
 - **TIMER 완료:** 95번의 7개 TIMER·44 CC·4 clear/stop 조합·2 interval·각 10회, 두 보드 총 7,040회 PASS로 기능 검증을 완료 정리했다. EGU/DPPI/PPIB의 1000 event×10을 TIMER의 추가 필수 반복으로 요구하지 않는다. QDEC는 문제 기록 후 진단을 종료했으며 지원 제한을 T14/T15로 이어간다.
 - **별도 대조 기록:** 외부 ADC 401~408의 기능 276개 PASS는 유지한다. 초기 시험표의 100회와 실제 각 조건 1회 실행 차이는 103번에 명시하며, 이번 TIMER 정리로 ADC 100회까지 완료 처리하거나 재실기를 자동 추가하지 않는다. T13의 독립 준비는 진행할 수 있다.
@@ -35,7 +41,7 @@ f591571에서 UART 미사용 PSEL 수정 후 SPI21→C01·전체 S 사전검사3
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.59 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.60 |
 | 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 기능검증 완료(알려진 QDEC 문제 보고 포함)·T13 S 진행 |
 | 작성·갱신일 | 2026-09-08 |
 | 작성 직전 기준 commit | `e547fc0863be5b381ecab26835fb5e872b399a9c` — 문서 감사·원격 15/15 SUCCESS |

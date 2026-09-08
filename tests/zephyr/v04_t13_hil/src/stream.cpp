@@ -3,6 +3,7 @@
 
 t13::StreamStats t13::stream_stats[4]{};
 bool t13::streams_quiesced = false;
+t13::StreamFault t13::stream_fault{};
 
 bool t13::streamPrepare(const Case &test, std::uint32_t seed)
 {
@@ -11,7 +12,29 @@ bool t13::streamPrepare(const Case &test, std::uint32_t seed)
         stats = {};
     }
     streams_quiesced = false;
+    stream_fault = {};
     return adcPrepare(test) && pwmPrepare(test) && audioPrepare(test, seed) && pdmPrepare(test);
+}
+
+bool t13::streamArmFault(const Case &test, std::uint32_t mode)
+{
+    if (test.serial_count != 0U || test.adc_channels != 0U || test.pwm_instance != 0U ||
+        (mode == 1U && (!test.i2s || test.pdm_instance != 0U)) ||
+        (mode == 2U && (test.i2s || test.pdm_instance == 0U || CONFIG_NUCODE_V04_HIL_ROLE != 1)))
+    {
+        return false;
+    }
+    return stream_fault.arm(mode, mode == 1U ? 20U : test.pdm_instance, CONFIG_NUCODE_V04_HIL_ROLE,
+                            CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC);
+}
+
+void t13::streamFaultSnapshot(std::uint32_t *out, std::uint32_t &count)
+{
+    for (unsigned index = 0U; index < 20U; ++index)
+    {
+        out[index] = stream_fault.words[index];
+    }
+    count = 20U;
 }
 
 bool t13::streamStart()

@@ -7,6 +7,10 @@
 #include <hal/nrf_gpio.h>
 #include <zephyr/device.h>
 #include <zephyr/devicetree.h>
+#include <errno.h>
+
+/** @brief 고정 SDK의 Picolibc 오류 번호를 Host 독립 판정과 함께 고정합니다. */
+static_assert(EOVERFLOW == 139, "T13 PDM overflow oracle requires SDK errno review");
 
 namespace
 {
@@ -166,8 +170,13 @@ void t13::pdmService()
     PdmEvent event{};
     while (pdm->takeEvent(event))
     {
+        stream_fault.event(3U);
         if (event.type == PdmEventType::buffer_needed)
         {
+            if (stream_fault.skip(3U, stats.completed, stats.queued, k_cycle_get_32()))
+            {
+                continue;
+            }
             const auto slot = stats.queued % 4U;
             if (pending[slot])
             {
@@ -223,6 +232,9 @@ void t13::pdmService()
         }
         else
         {
+            stream_fault.observe(3U, static_cast<unsigned>(event.type), event.driver_error,
+                                 k_cycle_get_32(), stats.completed, stats.queued, guards(),
+                                 static_cast<unsigned>(pdm->state()), stats.error, stats.detail);
             stats.fail(11U, static_cast<std::uint32_t>(event.type));
         }
         if (stats.error != 0U)

@@ -32,6 +32,8 @@ namespace t13
     void streamService();
     bool streamStop();
     bool streamHealthy();
+    bool streamArmFault(const Case &test, std::uint32_t mode);
+    void streamFaultSnapshot(std::uint32_t *out, std::uint32_t &count);
     void streamSnapshot(unsigned stream, std::uint32_t *out, std::uint32_t &count);
     void streamTiming(unsigned stream, unsigned metric, std::uint32_t *out, std::uint32_t &count);
     void initializeWiring();

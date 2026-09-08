@@ -43,7 +43,7 @@ mode5에서는 RX를 요청하지 않는다. RX AMOUNT는 이전 실행 값이 �
 
 ## 이 구현으로 완료되지 않는 항목
 
-역할 전환은 후속 개발 중이다. `--handover-instance 20|21|22|30`은
+역할 전환 실행기는 준비됐으며 실기는 미실행이다. `--handover-instance 20|21|22|30`은
 UART→SPIM→SPIS→TWIM→TWIS→UART와 그 역방향의10개 전환을 각100회 수행하도록 고정한다.
 serial00은 S에서 SPIM00→SPIS00→SPIM00 두 전환을 각100회 수행한다.
 `--phase handover-preflight`는 이 순서1회이고 `--phase handover`가100회다.
@@ -53,12 +53,31 @@ serial00은 S에서 SPIM00→SPIS00→SPIM00 두 전환을 각100회 수행한�
 SPI는 양쪽 MOSI/MISO 신호명과 master/slave를 함께 바꾸므로 GPIO net은 그대로다.
 이 경로의 actual PSEL·역할 반전·생산 route 대조는 아직 새 source 실기로 완료하지 않았다.
 
+## I2S/PDM 공급 중단 복구 준비
+
+I2S20은 A master와 B slave 각각, PDM20/21은 실제 수신자인 A에서 시험한다.
+정상 완료 버퍼 네 개 이후의 다음 공급 요청을 단 한 번 생략한다. 정상 버퍼 반환·검증은 계속하고,
+첫 비정상 event와 당시 가드·완료량·queue량·API state를 별도로 보존한다.
+I2S의 실제 `underrun`, PDM의 실제 `overflow`가 오지 않거나 앞서 데이터/가드 오류가 나면 실패다.
+이 오류는 정상 연속 전송 PASS로 바꾸지 않으며 기존 engine의 unhealthy·자동 STOP도 그대로 기록한다.
+
+Opcode114(mode1 I2S/mode2 PDM)는 PREPARE 뒤 START 전의 단독 stream에만 허용한다.
+Opcode115는 20-word 원본을 반환한다. 순서는 mode, stream index, instance, 생략 횟수,
+생략 당시 완료/queue량, 생략 cycle, 최초 오류 event/driver error/cycle, 오류 당시 완료/queue량,
+guard, API state, 생략 뒤 관측 event 수, 예약0, 선행 error/detail, role, cycle 주파수다.
+Picolibc `EOVERFLOW=139`는 target static_assert와 독립 Host 기대값으로 고정한다.
+
+`--phase stream-fault-preflight --stream-fault-mode 1|2 --fault-role 1|2 --cases ...`는 각1회,
+`--phase stream-fault`는 각100회다. I2S A/B와 PDM20/21의 네 role/instance 항목이다.
+매회 양쪽 raw와 STOP·pin·clock 반환 뒤 새 seed의 정상1초 stream을 독립 대조한다.
+이 재시작 구간은180초 안정성의 대체가 아니며, 아직 실기100회 완료는 없다.
+
 | 남은 항목 | 후속 판정 범위 |
 | --- | --- |
 | UART flow·RX 지연·parity/break | 4선100ms CTS 정지/재개, 2선의 제한된 RX 지연, 별도 parity/break 원인 확인과 복구 |
 | SPI slave 조건 | slave 미준비·짧은 DMA 및 CS 조기 종료, 두 역할의 실제 완료·다음 frame 복구 |
 | TWI slave·stuck-low | TWIS 공급 지연, 격리 SDA open-drain LOW100ms와 해제/recoverBus 후0x42 정상 송수신 |
-| I2S/PDM/PWM | 의도적 한 번의 공급 중단·STOP/재구성, PWM 중간 STOP와 미시작 task 취소 |
+| I2S/PDM/PWM | 위 공급 중단 실행기의 새 source 실기, PWM 중간 STOP와 미시작 task 취소 구현·실기 |
 | Serial 역할 전환 | 같은20/21/22/30의 UART·SPI master/slave·TWI master/slave 전환, S의SPI00 역할 전환 |
 | 자원 충돌 | 같은 block·GPIO alias·DMA 겹침·GPIOTE/DPPI 채널/domain·PWM/analogWrite/tone/Servo 중복의 원자적 거부 |
 | U 및 후속 release gate | S 종료 후 U 핀 배치 안내·현재 연결 확인, UART00·지원범위·패키지/RC·승인·공개 |

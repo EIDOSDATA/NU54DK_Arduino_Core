@@ -125,6 +125,7 @@ void t13::audioService()
     I2sEvent event{};
     while (audio->takeEvent(event))
     {
+        stream_fault.event(2U);
         if (event.type == I2sEventType::buffers_complete)
         {
             const auto slot = stats.completed % 3U;
@@ -167,6 +168,10 @@ void t13::audioService()
         }
         else if (event.type == I2sEventType::buffers_needed)
         {
+            if (stream_fault.skip(2U, stats.completed, stats.queued, k_cycle_get_32()))
+            {
+                continue;
+            }
             const auto slot = stats.queued % 3U;
             const auto began = k_cycle_get_32();
             if (!fill(slot))
@@ -186,6 +191,9 @@ void t13::audioService()
         }
         else
         {
+            stream_fault.observe(2U, static_cast<unsigned>(event.type), event.driver_error,
+                                 k_cycle_get_32(), stats.completed, stats.queued, guards(),
+                                 static_cast<unsigned>(audio->state()), stats.error, stats.detail);
             stats.fail(8U, static_cast<std::uint32_t>(event.type));
         }
         if (stats.error != 0U)
