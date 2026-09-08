@@ -188,6 +188,11 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         serialFaultSnapshot(out, count);
         return 0U;
     }
+    if (opcode == 120U && nargs == 0U)
+    {
+        serialRxFaultSnapshot(out, count);
+        return 0U;
+    }
     if (opcode == 115U && nargs == 0U)
     {
         streamFaultSnapshot(out, count);

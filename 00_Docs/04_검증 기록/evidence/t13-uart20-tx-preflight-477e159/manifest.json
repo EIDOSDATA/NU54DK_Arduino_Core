@@ -1,0 +1,78 @@
+{
+  "source": "477e15960a9839871edc85d4d556e5b6b67c8297",
+  "status": "passed",
+  "phase": "fault-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T05:19:57.546126+00:00",
+  "finished_at": "2026-09-08T05:20:31.955941+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/fault-preflight/uarte20/mode1/role1/repeat001/restart/T13-S/preflight/uarte20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte20",
+      "measured_role": "a",
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/fault-preflight/uarte20/mode1/role1/repeat001/result",
+      "status": "passed",
+      "fault_seed": 825241619,
+      "restart_seed": 2936490410,
+      "planned_recovery_pass": false,
+      "normal_soak_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3752,
+      "sha256": "07c0362d90219a558d0cd80fc4c5939730395bf3b44fb75faf9dabd6cc87f0b4",
+      "gzip_sha256": "a8e63829974f64a45a9cbefa12cf45694a4f97d06fb7aa49efbb5ed0c99d57ca"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "198a6bf4c73302507dd8321015c61ddc9bb697c7c079ed7638763fa2d9268de9",
+      "gzip_sha256": "8c3553229d4deb9f6cbb3d3fe0bfec6bc611c42b2d66f3d5ee1011259eb4e412"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 162443,
+      "sha256": "35b14ac3467fe9a2a21f0fd8b39b2947f6b2fa128959f3594f74f3a7877a514c",
+      "gzip_sha256": "cae0fafa7fd1dec319fc968282dc84bb54cb8198e1b762100f3df0b19ec3fd68"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 91209,
+      "sha256": "d9f18d2fda1a54273d4041f5030c519a97802c9412c43b5585e9bdbbba293867",
+      "gzip_sha256": "acf724311a3127398bb49d936d35bfc28caf9a78c8cc31418a6f8d2f32b7da44"
+    },
+    {
+      "file": "uart-tx-477e159-after-resume-preflight1-preflight.json.gz",
+      "bytes": 783,
+      "sha256": "6fb87ad8a5a9a78b2e665d7da1686521ee65c22205c1d6beb1a92133c74b9027",
+      "gzip_sha256": "7edd7a7123e305bf319d6efea2b6cfee56859c2b7ce5d106718e7923f0550068"
+    },
+    {
+      "file": "uart-tx-477e159-after-resume-preflight1-preflight.log.gz",
+      "bytes": 1482,
+      "sha256": "b73d0b0bc21d54115a277daa0337c9310c8a77c83173a63dd545ceb1626aa7e6",
+      "gzip_sha256": "b863769f9b8a2248ebae0ab947177a8006ee8ed0f2ab44bd4e4d1d0cb0328288"
+    },
+    {
+      "file": "uart-tx-477e159-after-resume-preflight1-execute.json.gz",
+      "bytes": 779,
+      "sha256": "2e7b8fafa9a7910b0298c0c2519329f1a665fbfdf5ee196003abff4c83417914",
+      "gzip_sha256": "d4dbff56882ba9a5df0da285f8f77f2bfef75ecce4292540a260564df9619dd9"
+    },
+    {
+      "file": "uart-tx-477e159-after-resume-preflight1-execute.log.gz",
+      "bytes": 127,
+      "sha256": "239ad5cbaa580864f5a93d8e7da55e8c59f5fd3ff16c85321e8e4bc46eb50397",
+      "gzip_sha256": "227b15db0b878cf563f974c513d71669fd74ec9953dbf2ce16ff5889a9bf1e5e"
+    }
+  ]
+}

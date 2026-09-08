@@ -1,0 +1,60 @@
+{
+  "source": "477e15960a9839871edc85d4d556e5b6b67c8297",
+  "status": "failed",
+  "phase": "serial-fault",
+  "physical_executed": true,
+  "started_at": "2026-09-08T05:28:53.055136+00:00",
+  "finished_at": "2026-09-08T05:29:08.318405+00:00",
+  "error": "ProtocolError: wiring mismatch: {'pulse_expirations': {'expected': 0, 'actual': 1}}",
+  "case_results": [],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3755,
+      "sha256": "2b5192933a3292515a591eb3803d25eae4b6b53f3ea8a7269f920c60767f3d0e",
+      "gzip_sha256": "483e287d6c594baad9223b07d3e411fc14822591988cf8599df5decb63e5b454"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "198a6bf4c73302507dd8321015c61ddc9bb697c7c079ed7638763fa2d9268de9",
+      "gzip_sha256": "8c3553229d4deb9f6cbb3d3fe0bfec6bc611c42b2d66f3d5ee1011259eb4e412"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 13001,
+      "sha256": "af6796cd816f5b44a59628600b26a9fcdf2b9c93868b864c9e985c606cee3a4f",
+      "gzip_sha256": "705c376a4458dbf0887c5796fd2bb9b85e71e618538499ff6e300dba7314c05c"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 6061,
+      "sha256": "4889e76c1be581df5d68abd4cfe41533f6bd476f75c06f231bfd49b8bfd7da12",
+      "gzip_sha256": "e01d532fc081bf552a0a8ff2d3513665f0b8569726ea2fbcf96247952e26ca59"
+    },
+    {
+      "file": "uart20-tx-477e159-recovery100-1-preflight.json.gz",
+      "bytes": 764,
+      "sha256": "71411fb2468f2a29cf2ab0c6bc16658f5be9e457f331f31bb8690c7457919139",
+      "gzip_sha256": "89be399d1211f98e800883d9d443e339305874aae3bec2e9727f22ec1878d867"
+    },
+    {
+      "file": "uart20-tx-477e159-recovery100-1-preflight.log.gz",
+      "bytes": 1479,
+      "sha256": "9096bb554fe594ec6344d7bc02b894914878e9ab572037d6efb5ad5c48c62fa2",
+      "gzip_sha256": "d0896762a683e16525c956d2249f8dc252215e5100b74276b04bf1dd7495dcb2"
+    },
+    {
+      "file": "uart20-tx-477e159-recovery100-1-execute.json.gz",
+      "bytes": 760,
+      "sha256": "9974d264de72f8ff2886899515adf6ff7e2089a280776c4a730cc14e8e8161ed",
+      "gzip_sha256": "45b65301c812074e3fe9e7345c60ed3bd6b7dcac8d4f32fe87efc7e9c25d0da5"
+    },
+    {
+      "file": "uart20-tx-477e159-recovery100-1-execute.log.gz",
+      "bytes": 85,
+      "sha256": "0dd4a6dc3e7555e85c7cfa291a294bdc4de427117ffecaacf89437e8c9432d4d",
+      "gzip_sha256": "9378daa3bc1c0f5f47d3f11d392674ba3c6613ea1cfe562ca3cebffd14768dfa"
+    }
+  ]
+}

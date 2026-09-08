@@ -1,0 +1,79 @@
+{
+  "source": "43bc0320d6681d57d2ec1cd569fef35f7dd8ec0d",
+  "status": "passed",
+  "phase": "soak",
+  "physical_executed": true,
+  "started_at": "2026-09-08T05:13:01.271915+00:00",
+  "finished_at": "2026-09-08T05:19:36.267639+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/soak/pwm21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/soak/pwm21",
+      "measured_role": null,
+      "requested_seconds": 180,
+      "planned_soak_pass": true,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/soak/pwm22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/soak/pwm22",
+      "measured_role": null,
+      "requested_seconds": 180,
+      "planned_soak_pass": true,
+      "same_pair_shared_measurement": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 5455,
+      "sha256": "badd9a9840a6f15b3e493a218118b6ca8b26857d93fa30fbbdb806e6a836a10d",
+      "gzip_sha256": "14a474efdc4ede4430e42fe6a99913d17c8604ad57f1a5fe2f191f7ff7b2ca75"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "82686cc4e7451483b49c8b4095ef7318efe1090dbc4808d829bc8682a42a45e3",
+      "gzip_sha256": "d122514f5e57277ea2fc2afee67ba834b4d275deb01a3a6c42542bd73d26e651"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 402094,
+      "sha256": "31a9d127641998d16950be0a9e29f641b034ab23fd57f549f098fb4ac059e505",
+      "gzip_sha256": "1eed76026c07ef969ff5250c800dc5fe486a025d2af59fcf8c55f4c320d3746e"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 197822,
+      "sha256": "a7520ae257c8e4ff00f7fff1da31f30de14ffc0d6fc748281a65b4669de23be2",
+      "gzip_sha256": "b7223f7f4dc88c4ab4224d0883b1c59eee520c1385cfac1831e359b24f6b3c07"
+    },
+    {
+      "file": "pwm21-22-43bc032-after-focused-retest1-preflight.json.gz",
+      "bytes": 720,
+      "sha256": "881b45b4bd7e609f461ec5ad6381c710f388efdd2012b9503dd157d5aff81237",
+      "gzip_sha256": "f22d49f051e99d009f9cc7eb2ff9ee82ee346a83c35e538df16ece08ff2df3e3"
+    },
+    {
+      "file": "pwm21-22-43bc032-after-focused-retest1-preflight.log.gz",
+      "bytes": 1487,
+      "sha256": "83989e1f978adfebca3963fd025d283e13167d993c7dad54264f509ad8128920",
+      "gzip_sha256": "70c6f1d15ee9cf11d0de4f3db35425e192ee098058ddeb82a22ce7d2ec58b55d"
+    },
+    {
+      "file": "pwm21-22-43bc032-after-focused-retest1-execute.json.gz",
+      "bytes": 716,
+      "sha256": "6c2f82f9a50b598f1b020a0fc6c76d0bb765428a40c64e32899383ac3190c2b0",
+      "gzip_sha256": "d1988f5984bbfa95ab94a0d72550456bc0f9be2c11aa5bdd9793691ea8b8ef26"
+    },
+    {
+      "file": "pwm21-22-43bc032-after-focused-retest1-execute.log.gz",
+      "bytes": 567,
+      "sha256": "b66a52fe0a15aac321f2e43e53d0c4d17916d62f0be67231994c93a180794126",
+      "gzip_sha256": "cba013638e194c2950b9eb0733f144c0c6e8368e16b5a8699a86570f4ad5094a"
+    }
+  ]
+}

@@ -22,6 +22,7 @@ namespace t13
     void serialPinSnapshot(unsigned lane, std::uint32_t *out, std::uint32_t &count);
     bool serialArmFault(std::uint32_t mode);
     void serialFaultSnapshot(std::uint32_t *out, std::uint32_t &count);
+    void serialRxFaultSnapshot(std::uint32_t *out, std::uint32_t &count);
     void serialBusPins(unsigned lane, std::uint32_t *out, std::uint32_t &count);
     void captureService();
     bool pwmClockPolicy(bool crystal);

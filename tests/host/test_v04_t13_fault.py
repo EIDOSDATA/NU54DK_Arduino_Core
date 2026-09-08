@@ -25,6 +25,18 @@ class SerialFaultTests(unittest.TestCase):
                  100, 160, 300, 1, *hardware, lane_error, 1000000]
         return test, words
 
+    def test_rx_cancel_requires_new_receive_activity_before_first_frame_completion(self):
+        """! @brief TX 기준·오래된 RX 완료·비활성 수신을 수신 중 취소 성공으로 인정하지 않습니다. """
+        test, valid = self.vector(2)
+        self.assertEqual(fault.inspect(valid, test, 1, 2)['timing_reference'], 'first_rxdrdy_observation')
+        proof = [2, 1, 1, 0, 1] + valid[12:15]
+        fault.inspect_rx_activity(proof, valid)
+        for index in range(8):
+            broken = proof[:]
+            broken[index] ^= 1
+            with self.subTest(index=index), self.assertRaises(ProtocolError):
+                fault.inspect_rx_activity(broken, valid)
+
     def test_each_expected_fault_has_distinct_event_and_hardware_amount(self):
         for mode in fault.MODES:
             test, words = self.vector(mode)

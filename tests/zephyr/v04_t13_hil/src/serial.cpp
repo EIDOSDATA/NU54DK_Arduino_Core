@@ -54,6 +54,8 @@ namespace
         std::uint32_t submitted_cycle = 0U, requested_cycle = 0U, event_cycle = 0U;
         std::uint32_t events = 0U;
         std::uint32_t hardware_tx = 0U, hardware_rx = 0U;
+        std::uint32_t timing_reference = 0U, rx_ready = 0U, rx_completed_before = 0U;
+        std::uint32_t rx_pending_before = 0U;
     } fault;
 
     /** @brief SDK가 정의한 공유 serial block 주소만 조회합니다. */
@@ -535,7 +537,7 @@ namespace
                 ++lane.queued_rx;
             }
             lane.next_frame = now + frame_period_ms;
-            if (fault.mode != 0U && fault.triggered == 0U && &lane == &lanes[0])
+            if (fault.mode != 0U && fault.mode != 2U && fault.triggered == 0U && &lane == &lanes[0])
             {
                 fault.triggered = 1U;
                 fault.submitted_cycle = submitted;
@@ -552,9 +554,6 @@ namespace
                 case 1U:
                     cancelled = static_cast<UarteHandle *>(lane.handle)->cancelTransmit();
                     break;
-                case 2U:
-                    cancelled = static_cast<UarteHandle *>(lane.handle)->cancelReceive();
-                    break;
                 case 3U:
                     cancelled = static_cast<SpimHandle *>(lane.handle)->cancelTransfer();
                     break;
@@ -568,6 +567,34 @@ namespace
                 accepted(lane, cancelled, 72U);
             }
         }
+    }
+
+    /** @brief 첫 RX 바이트가 실제 도착한 뒤 취소하여 자기 TX와 상대 RX의 시작 편차를 배제합니다. */
+    void cancelAfterReceive(Lane &lane)
+    {
+        if (fault.mode != 2U || fault.triggered != 0U || &lane != &lanes[0] || !receivers_armed ||
+            lane.endpoint.kind != Kind::uart)
+        {
+            return;
+        }
+        const auto *registers = serialRegisters(lane.endpoint.instance);
+        if (!nrf_uarte_event_check(registers, NRF_UARTE_EVENT_RXDRDY))
+        {
+            return;
+        }
+        fault.submitted_cycle = k_cycle_get_32();
+        fault.timing_reference = 1U;
+        fault.rx_ready = 1U;
+        fault.rx_completed_before = lane.received.completed;
+        fault.rx_pending_before = lane.rx_pending[0] ? 1U : 0U;
+        fault.triggered = 1U;
+        transmitting = false;
+        /** @brief RXDRDY는 RAM 저장 완료가 아니므로 실제 부분량은 취소 terminal event로 판정합니다. */
+        k_busy_wait(50U);
+        fault.requested_cycle = k_cycle_get_32();
+        const auto cancelled = static_cast<UarteHandle *>(lane.handle)->cancelReceive();
+        fault.result = static_cast<std::uint32_t>(cancelled);
+        accepted(lane, cancelled, 72U);
     }
 } // namespace
 
@@ -644,6 +671,7 @@ void t13::serialService()
         }
         if (lane.error == 0U)
         {
+            cancelAfterReceive(lane);
             submit(lane, k_uptime_get());
         }
     }
@@ -798,6 +826,11 @@ bool t13::serialArmFault(std::uint32_t mode)
         return false;
     }
     fault.mode = mode;
+    if (mode == 2U)
+    {
+        /** @brief 이전 personality·frame의 RXDRDY를 이번 수신 시작으로 재사용하지 않습니다. */
+        nrf_uarte_event_clear(serialRegisters(lanes[0].endpoint.instance), NRF_UARTE_EVENT_RXDRDY);
+    }
     return true;
 }
 
@@ -830,6 +863,24 @@ void t13::serialFaultSnapshot(std::uint32_t *out, std::uint32_t &count)
         out[index] = values[index];
     }
     count = 20U;
+}
+
+/** @brief 원래20word 응답을 확장하지 않고 RX 취소 시점의 별도 근거를8word로 보존합니다. */
+void t13::serialRxFaultSnapshot(std::uint32_t *out, std::uint32_t &count)
+{
+    const std::uint32_t values[]{fault.mode,
+                                 fault.timing_reference,
+                                 fault.rx_ready,
+                                 fault.rx_completed_before,
+                                 fault.rx_pending_before,
+                                 fault.submitted_cycle,
+                                 fault.requested_cycle,
+                                 fault.event_cycle};
+    for (unsigned index = 0U; index < 8U; ++index)
+    {
+        out[index] = values[index];
+    }
+    count = 8U;
 }
 
 /** @brief SPI/TWI START 전에 실제 PSEL을 읽으며 없는 signal slot은 disconnected로 표시합니다. */

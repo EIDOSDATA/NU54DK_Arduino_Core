@@ -1,0 +1,78 @@
+{
+  "source": "477e15960a9839871edc85d4d556e5b6b67c8297",
+  "status": "failed",
+  "phase": "fault-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T05:22:34.136660+00:00",
+  "finished_at": "2026-09-08T05:23:10.756737+00:00",
+  "error": "ProtocolError: T13 serial fault event/ownership/guard mismatch: [2, 1, 0, 1, 21, 3, 0, 0, 0, 1, 0, 0, 2128753929, 2128754009, 2128754307, 1, 0, 0, 23, 1000000]",
+  "case_results": [
+    {
+      "id": "T13-S/fault-preflight/uarte20/mode2/role1/repeat001/restart/T13-S/preflight/uarte20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte20",
+      "measured_role": "a",
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/fault-preflight/uarte20/mode2/role1/repeat001/result",
+      "status": "passed",
+      "fault_seed": 4275426372,
+      "restart_seed": 1625468413,
+      "planned_recovery_pass": false,
+      "normal_soak_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3752,
+      "sha256": "07c0362d90219a558d0cd80fc4c5939730395bf3b44fb75faf9dabd6cc87f0b4",
+      "gzip_sha256": "a8e63829974f64a45a9cbefa12cf45694a4f97d06fb7aa49efbb5ed0c99d57ca"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "198a6bf4c73302507dd8321015c61ddc9bb697c7c079ed7638763fa2d9268de9",
+      "gzip_sha256": "8c3553229d4deb9f6cbb3d3fe0bfec6bc611c42b2d66f3d5ee1011259eb4e412"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 169207,
+      "sha256": "4e44152148a4214714a17d83ac9910bf9aa70facf2d6946f577d066d0ca9c12e",
+      "gzip_sha256": "ec89aec5d3ca4d5ffe5b256362f53e5c38af8ddf321ac39885ac2df92f0cba1b"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 94680,
+      "sha256": "34d5e946439a827e2e6a6bc833be57f355a0a79bd730d1fc4f14f0323b7d6461",
+      "gzip_sha256": "99d1c6cfd41a147cba77d76c8d6f5012be331deea546e2a803ceb3c7949a331c"
+    },
+    {
+      "file": "uart-rx-477e159-preflight1-preflight.json.gz",
+      "bytes": 787,
+      "sha256": "0da069e8a30911c60188e7176f171b40c1d6a31b461583c5e55b05187618b61b",
+      "gzip_sha256": "a32c9e6cabb466fc0cff013f6611c99e5ff0e5a865bce4ca83cc619fce2f676b"
+    },
+    {
+      "file": "uart-rx-477e159-preflight1-preflight.log.gz",
+      "bytes": 1506,
+      "sha256": "41fc67d6be3f222fef69f00ec275894c27bdda08cc484506cdf3653eea93776a",
+      "gzip_sha256": "95a9848a44b28fe82bf8bbaa925e781645f206c8ae416842b94fc9603ba0e137"
+    },
+    {
+      "file": "uart-rx-477e159-preflight1-execute.json.gz",
+      "bytes": 783,
+      "sha256": "02723a435c155c0ac9d9d27e2b7ed7c7743573539d9698fff97812b8cf871bf0",
+      "gzip_sha256": "a0fbcc5aac74840bed71d625472f26bb393eecfb15e4cf146aa2cca8a7c34937"
+    },
+    {
+      "file": "uart-rx-477e159-preflight1-execute.log.gz",
+      "bytes": 244,
+      "sha256": "5f2bcdd3d7939f689bfc74c70165849bba7959cdb27336f8f8bd3258d9057289",
+      "gzip_sha256": "e9fb8f39d16b8a6e700d743e398aeeec9268fca01de196917ba088613184a73a"
+    }
+  ]
+}

@@ -56,8 +56,17 @@ def inspect(words, test, role, mode):
             'api_tx_length': words[6], 'api_rx_length': words[7],
             'observed_tx_amount': words[16], 'observed_rx_amount': None if mode == 5 else words[17],
             'amount_source': 'uarte_terminal_event' if mode in (1, 2) else 'peripheral_amount_register',
+            'timing_reference': 'first_rxdrdy_observation' if mode == 2 else 'local_tx_submission',
             'rx_amount_raw': words[17], 'rx_requested': mode != 5,
             'request_after_submit_us': requested_us, 'event_after_submit_us': observed_us}
+
+
+def inspect_rx_activity(proof, words):
+    """! @brief 실제 첫 RX 바이트·활성 버퍼·같은 취소 시각을 별도 원본으로 대조합니다. """
+    if (not isinstance(proof, list) or len(proof) != 8 or len(words) != 20 or
+            any(type(value) is not int or not 0 <= value <= oracle.MASK for value in proof) or
+            proof[:5] != [2, 1, 1, 0, 1] or proof[5:8] != words[12:15]):
+        raise ProtocolError('T13 RX cancellation lacks fresh first-frame receive activity')
 
 
 def execute(devices, test, role, mode, continuity, append, *, preflight):
@@ -74,6 +83,7 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
         continuity.check()
         original_error = None
         raw_fault = None
+        raw_activity = None
         try:
             for device in devices:
                 if device.command(106, (1,), timeout=2) != [1]:
@@ -109,7 +119,10 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
             append(label + '/failure', {'status': 'failed', 'error': f'{type(error).__name__}: {error}'})
         finally:
             for device in devices:
-                for opcode, args, name in ((99, (), 'engine'), (100, (0,), 'lane'), (110, (), 'fault')):
+                observations = [(99, (), 'engine'), (100, (0,), 'lane'), (110, (), 'fault')]
+                if mode == 2:
+                    observations.append((120, (), 'rx-activity'))
+                for opcode, args, name in observations:
                     try:
                         words = device.command(opcode, args, timeout=2)
                         append(label + f'/final/role{device.image["role"]}/{name}', {'status': 'observation', 'words': words})
@@ -119,6 +132,8 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
                             break
                         if opcode == 110 and device is target:
                             raw_fault = words
+                        if opcode == 120 and device is target:
+                            raw_activity = words
                     except BaseException as error:
                         append(label + f'/final/role{device.image["role"]}/{name}',
                                {'status': 'unproven', 'error': f'{type(error).__name__}: {error}'})
@@ -131,6 +146,8 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
         if not stopped or not pins_idle:
             raise ProtocolError('T13 fault STOP/resource return unproven')
         try:
+            if mode == 2:
+                inspect_rx_activity(raw_activity, raw_fault)
             measured = inspect(raw_fault, test, role, mode)
         except ProtocolError as error:
             append(label + '/failure', {'status': 'failed', 'error': str(error)})

@@ -1,7 +1,7 @@
 # T13 S 오류 복구 실행 항목과 판정
 
-2026-09-08 현재 f591571에서 S 정상 사전검사 36/36과 정상 안정성 26/36항목을 통과했다.
-PWM·I2S·C01 실패 원인을 조사 중이다. 아래 오류 주입은 별도 항목이며 아직 실제 100회 완료가 없다.
+2026-09-08 f591571의26개와43bc032의 I2S/PWM21/PWM22 세 항목으로 정상 안정성 근거29/36을 확보했다.
+단독29/29·동시0/7이며 source별 증거다. 이전 실패 원인은 미확정이고 복구100회 완료는 아직 없다.
 원본과 source별 결과는 [104번](<../../../00_Docs/04_검증 기록/104_T13_S_복구_동시_안정성_검증.md>),
 전체 범위와 결선은 [T13 계획](T13_PLAN.md)을 따른다. T12 완료와 QDEC 문제 보고 후 종료 결정은 유지한다.
 
@@ -10,7 +10,7 @@ PWM·I2S·C01 실패 원인을 조사 중이다. 아래 오류 주입은 별도 
 | mode | S 대상·주입 역할 | 고정 주입 | 필요한 관측 |
 | --- | --- | --- | --- |
 | 1 | UART20/21/22/30, 선택한 물리 role | 첫 TX 제출50µs 뒤 cancelTransmit | tx_cancelled·실제0보다 크고1024보다 작은 길이·정확한 buffer 주소·가드 |
-| 2 | UART20/21/22/30, 선택한 물리 role | 첫 TX 제출50µs 뒤 cancelReceive | rx_cancelled·실제 부분 RX 길이·정확한 buffer 주소·가드 |
+| 2 | UART20/21/22/30, 선택한 물리 role | START 전 RXDRDY 초기화, 첫 실제 RXDRDY 관측50µs 뒤 cancelReceive | rx_cancelled·실제 부분 RX 길이·정확한 buffer 주소·가드 |
 | 3 | SPIM00/20/21/22/30, A controller | 첫 transfer 제출50µs 뒤 cancelTransfer | transfer_cancelled·SPI DMA AMOUNT의 부분 전송·peer 원본·가드 |
 | 4 | TWIM20/21/22/30, A controller | peer0x42의 첫 transfer 제출50µs 뒤 cancelTransfer | transfer_cancelled·TWI DMA AMOUNT의 부분 전송·주소0x42·가드 |
 | 5 | TWIM20/21/22/30, A controller | peer 전용 미할당0x44에 쓰기만 요청 | address_nack·주소0x44·TX DMA AMOUNT0·RX 미요청·가드 |
@@ -123,3 +123,22 @@ RAMUNDERFLOW·DMA 관측도 읽기 대상으로 추가했다.
 fd8d4ee에서 이 설정 누락으로 시작 전 거부된 원본은 104번에 남겼다. 제품 핀 정책은 유지한다.
 한쪽 PREPARE 실패 시 아직 준비하지 않은 상대 보드에는 보호된 stream 명령을 보내지 않고
 engine·clock만 읽는다. 이 경로에서 403으로 STOP 세션까지 잃었던 실행기 문제를 보완했다.
+
+## RX 취소 시점 보완과 예행 결과
+
+477e159의 serial 고정 오류 예행은21항목 중18항목 PASS다. UART TX4개·SPI5개·TWI 취소4개·
+TWI NACK4개와 UART20 RX1개다. UART21 RX는0byte·buffer null로 실패했고 RX22/30은 아직 미실행이다.
+UART21은 이미 RX1024byte 한 frame을 완료했으므로 자기 TX 제출 시각이 상대 RX 중간을 보장하지 않는다.
+양쪽 STOP·clock0·GPIO 입력 반환은 성공했으며 원본을104번에 남겼다.
+
+보완은 RX 취소만 serial service의 첫 실제 RXDRDY 이후50µs에 요청한다. ARM 시 이전 RXDRDY를
+지우고 자기 TX 시각에 RX를 취소하지 않는다. 원래20word fault snapshot의 시각 기준은
+mode2에서 RXDRDY 최초 관측이며 다른 mode는 기존 TX 제출이다. Opcode120의8word는 mode,
+시각 기준(1=RXDRDY), RXDRDY 관측, 취소 전 RX 완료 frame 수, 첫 RX slot pending, 기준/요청/event cycle이다.
+Host는 [2,1,1,0,1]과 원래 fault의 세 cycle 일치를 요구하고 실제0보다 크고1024보다 작은
+terminal 길이·buffer 소유권·guard·STOP 후 새 seed 정상 재시작을 계속 요구한다.
+
+[Nordic UARTE 레지스터](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/uarte.html-topic)는
+RXDRDY의 RXD 도착과 RAM 저장을 구분하며 DMA.RX.AMOUNT는 END/MATCH 뒤 갱신된다고 명시한다.
+따라서 진행 중 AMOUNT를 실시간 byte counter로 사용하지 않고 최종 API terminal event의 실제 길이로 판정한다.
+이 보완은 HIL 주입 시점과 증거이며 제품 UART 구현을 바꾼 것이 아니다. 새 source 실기에서 확인해야 한다.

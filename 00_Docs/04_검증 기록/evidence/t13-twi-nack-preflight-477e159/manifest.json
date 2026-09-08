@@ -1,0 +1,129 @@
+{
+  "source": "477e15960a9839871edc85d4d556e5b6b67c8297",
+  "status": "passed",
+  "phase": "fault-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T05:27:01.923677+00:00",
+  "finished_at": "2026-09-08T05:27:45.098624+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/fault-preflight/twim20/mode5/role1/repeat001/restart/T13-S/preflight/twim20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim20",
+      "measured_role": "a",
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/fault-preflight/twim20/mode5/role1/repeat001/result",
+      "status": "passed",
+      "fault_seed": 3663473622,
+      "restart_seed": 1147884143,
+      "planned_recovery_pass": false,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/fault-preflight/twim21/mode5/role1/repeat001/restart/T13-S/preflight/twim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21",
+      "measured_role": "a",
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/fault-preflight/twim21/mode5/role1/repeat001/result",
+      "status": "passed",
+      "fault_seed": 2324043277,
+      "restart_seed": 347172788,
+      "planned_recovery_pass": false,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/fault-preflight/twim22/mode5/role1/repeat001/restart/T13-S/preflight/twim22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim22",
+      "measured_role": "a",
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/fault-preflight/twim22/mode5/role1/repeat001/result",
+      "status": "passed",
+      "fault_seed": 4203464176,
+      "restart_seed": 1690090569,
+      "planned_recovery_pass": false,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/fault-preflight/twim30/mode5/role1/repeat001/restart/T13-S/preflight/twim30/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim30",
+      "measured_role": "a",
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/fault-preflight/twim30/mode5/role1/repeat001/result",
+      "status": "passed",
+      "fault_seed": 813448907,
+      "restart_seed": 2924169074,
+      "planned_recovery_pass": false,
+      "normal_soak_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3755,
+      "sha256": "2b5192933a3292515a591eb3803d25eae4b6b53f3ea8a7269f920c60767f3d0e",
+      "gzip_sha256": "483e287d6c594baad9223b07d3e411fc14822591988cf8599df5decb63e5b454"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "198a6bf4c73302507dd8321015c61ddc9bb697c7c079ed7638763fa2d9268de9",
+      "gzip_sha256": "8c3553229d4deb9f6cbb3d3fe0bfec6bc611c42b2d66f3d5ee1011259eb4e412"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 257118,
+      "sha256": "35cafa37adc4dfce4a53db3251b4c488e1974773d14ca5513dc08407cb6887ce",
+      "gzip_sha256": "1c142b0e4a96c32aed79800b2a67e13ac34d238589699fc87734b4c4e2318402"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 140360,
+      "sha256": "7c288f91c5b85f56500770b4ee592971d6fb669c232e23548337dc9d855122ce",
+      "gzip_sha256": "d3e8b3a17ee44be2b7945b037fc5005b41c32caea05af86308ab9f80f31aff37"
+    },
+    {
+      "file": "twi-nack-477e159-preflight1-preflight.json.gz",
+      "bytes": 793,
+      "sha256": "dc38d1f0048415308d47a6f0f84a3e4be8429dff112fc62ac0cad626b6bc2e6d",
+      "gzip_sha256": "eee65a7b637544238d02ccc58c1dd6d18fde50d5a59016d038a34104f5cb4a94"
+    },
+    {
+      "file": "twi-nack-477e159-preflight1-preflight.log.gz",
+      "bytes": 1510,
+      "sha256": "37fd52001ce245296cf69c066e360fde2a69c14ebae510103adb623d0ceba2b9",
+      "gzip_sha256": "38912257bd6310413af341c7bfd0952d34c036efa26648e163961e5b735ba642"
+    },
+    {
+      "file": "twi-nack-477e159-preflight1-execute.json.gz",
+      "bytes": 789,
+      "sha256": "39f7c31183c234a2db58c306711bd8bcef77b829b0a33f2b361ad1346862aabd",
+      "gzip_sha256": "ccec7cb0bbca1bd4a97d60aa64485949639895274baea23583299aeb28bdc937"
+    },
+    {
+      "file": "twi-nack-477e159-preflight1-execute.log.gz",
+      "bytes": 315,
+      "sha256": "afe1942371a52a066a0e64d563ac24b79fcc3c609e9df24d53fe9c33268e9928",
+      "gzip_sha256": "7b938b940c3260521d38de1a7dc7676f04abb800a64bd0a09e46061bc9751fef"
+    }
+  ]
+}
