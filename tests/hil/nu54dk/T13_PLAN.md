@@ -1,5 +1,17 @@
 # T13 시험 조합과 후속 GPIO 결선
 
+**최신 사용자 결정 — T13 연속 전환 시험 제외, 실기 중지 유지.**
+UART/SPI/TWI personality 및 master/slave 연속 전환(`handover`) 묶음은 v0.4.0 필수 검증에서
+제외하고 재실행하지 않는다. serial00/20/21/22/30의 기존 5개 항목은 현재 진행률의 분모·분자에서
+모두 제외한다. 기존 2/5 성공·실패 기록은 당시 증거이며 새 PASS나 오류 해결로 변경하지 않는다.
+정상 안정성36/36, 고정 serial 취소/NACK21/21, PWM 복구6/6, 자원 충돌 사용자 수용 완료를 유지한다.
+I2S/PDM 복구는3/4이며 I2S B의 같은 기능 중단·재시작은 별도 잔여 항목이다.
+현재 보드 실기는 사용자 중지 상태다. 자동 대열·이전 실행 명령을 재개하지 않는다.
+남은 오류 복구·System OFF·U·T13 전체·RC·공개를 완료 처리하지 않는다.
+정확한 제외 범위·마지막 실패·다음 작업은 [109번 최신 결정](<../../../00_Docs/04_검증 기록/109_T13_S_세_복구_묶음_재검증.md>)을 따른다.
+
+아래 시각별 체크포인트와 역할 전환 준비 설명은 이 결정 이전의 이력이다.
+
 2026-09-08 22:13 KST 후속:14조건 serial 자원 충돌은 PASS(사용자 수용)로 완료했다.
 예행14/14·5조건 각100회가 실제 근거이며 나머지9조건 반복은 생략 결정이다.
 새 S 유지 확인 뒤 TWIM 취소·I2S B 복구·SPI 역할 전환의 세 묶음을 우선 재검증한다.
@@ -175,11 +187,11 @@ PWM은 TOP1000/individual/32 values/loop(C06 50%, C08 25%), QDEC은 256µs sampl
 | TWI | peer 전용 미할당 0x44 NACK, TWIS buffer 공급 지연, 승인 격리 bus의 한쪽 SDA open-drain LOW 100ms | 제한 시간 내 오류 검출, LOW 해제·필요한 bus clear/STOP 뒤 0x42 정상 read/write. PMIC 0x6A·P1.02/03에는 주입 금지 |
 | I2S/PDM | 한 번의 의도적 buffer 미공급, cancel/STOP, 재구성/재시작 | underrun/overflow/STOP 계약과 guard를 보존하고 새 전역 pattern의 정상 연속 buffer로 복구 |
 | QDEC/PWM | 유한 방향 변경·중간 STOP·다시 시작, PWM 미시작 task 취소 | count/sample/STOP과 시작 전 출력 idle, pin·DMA 반환 후 다음 실행 성공 |
-| 공유 serial block | 같은 20/21/22/30에서 UART↔SPI master/slave↔TWI master/slave 순차 전환 | 이전 block/IRQ/DMA/pin 해제 후 새 personality 활성, peer 재구성 뒤 정상 payload; 동일 block 동시 소유는 원자적 거부 |
+| 공유 serial block 연속 전환 | **사용자 결정으로 필수 검증 제외·재실행 중단** | 기존 증거 보존. 동일 block 동시 소유 거부의 별도 자원 충돌 결과는 유지 |
 | GPIO/stream/PWM/event | active GPIO alias, overlapping DMA, 같은 GPIOTE/DPPI 채널, 다른 domain 연결, PWM과 analogWrite/tone/Servo 중복 | 이전 실행·guard·출력을 훼손하지 않는 거부와 반환 뒤 재획득. DPPI START 구독은 PWM STOP 전에 해제 |
 
 serial00의 SPI↔UART **외부 송수신** handover는 S/U 결선이 서로 달라 무인 반복 대상이 아니다.
-S에서 SPIM00↔SPIS00 역할 전환 100회, U에서 UART00 stop/restart 100회를 별도 수행하고,
+S의 SPIM00↔SPIS00 연속 역할 전환도 제외한다. U의 UART00 stop/restart는 별도 복구 범위이며,
 서로 다른 personality ownership 거부는 Host/target 입력 상태 검사로 구분한다. 재결선이
 필요한 실제 UART↔SPI 전환을 수행한 것처럼 기록하지 않는다.
 

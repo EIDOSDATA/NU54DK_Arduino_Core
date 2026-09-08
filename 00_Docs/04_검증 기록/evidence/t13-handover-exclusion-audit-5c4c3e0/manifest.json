@@ -1,0 +1,43 @@
+{
+  "source": "5c4c3e0d21efa42209a814beab6367377a3b020a",
+  "physical_executed": false,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "spi20-three-order-100-01-audit.json.gz",
+      "bytes": 673,
+      "sha256": "38b76c4a90d75314e570fea5a39593cbb88b211a38162cf1e019c58b4f8a5c7a",
+      "gzip_sha256": "71fd7c20e6b42346318e17cac92668389b657694989f13065b248242c89809f3"
+    },
+    {
+      "file": "spi20-three-order-100-01-handover-audit.json.gz",
+      "bytes": 410,
+      "sha256": "ec15509a4804032d4a3636bb94f26917840a668c40b2f8c3fe5b8401577944f5",
+      "gzip_sha256": "95774a1bd7efd34849e35949e9bf4de58687a8b596eb667a9d81406f32376a8a"
+    },
+    {
+      "file": "t13-handover-exclusion-style-01.json.gz",
+      "bytes": 541,
+      "sha256": "b0b6bebce4d281a228f9503ce76a616c76992ed45c35b62e73cb4a394acee3cb",
+      "gzip_sha256": "a8de786f472a124ae300dd31968dd57f12d41a7f9c5617794af07b4d2d9717b2"
+    },
+    {
+      "file": "t13-handover-exclusion-style-01.log.gz",
+      "bytes": 40,
+      "sha256": "42a915550c89eccc023ce5447a143be30d1ea9c8e4c0d892ae5877d24b9d9b61",
+      "gzip_sha256": "4340aaf0c8b048666e48bcd9565c490a2613189ddf243cce8544f4bc9d1af5fa"
+    },
+    {
+      "file": "ci-5c4c3e0-exclusion-01.json.gz",
+      "bytes": 3811,
+      "sha256": "b46ef18945cb37a808830a8e912e9e1f3c6932f8556d77a59dd6ec795716bae3",
+      "gzip_sha256": "bf932cfbca8c79b590e024057c1b88138daea5dbdbde3e6df0ae3813d9fd73f5"
+    },
+    {
+      "file": "ci-5c4c3e0-exclusion-01.host.log.gz",
+      "bytes": 313345,
+      "sha256": "e22d16314bee5dd5e7e62d6157bd973277276ddfe3538c8dcec8c129900c859f",
+      "gzip_sha256": "662347d17abdbb8d7a79105f6750501b2f7f17d3f3d7b2720a07527e35e95a99"
+    }
+  ]
+}
