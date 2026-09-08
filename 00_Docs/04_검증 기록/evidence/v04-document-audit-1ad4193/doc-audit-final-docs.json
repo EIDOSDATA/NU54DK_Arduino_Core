@@ -1,0 +1,13 @@
+{
+  "name": "doc-audit-final-docs",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+    "docs"
+  ],
+  "started_at": "2026-09-07T20:16:47.734446+00:00",
+  "finished_at": "2026-09-07T20:16:48.334951+00:00",
+  "exit_code": 0,
+  "log_sha256": "102837c976acf7bcc4d54953e4c09132536c302557b3e9ba195d813699e4cdb6"
+}

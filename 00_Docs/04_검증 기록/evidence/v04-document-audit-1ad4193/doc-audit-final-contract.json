@@ -1,0 +1,13 @@
+{
+  "name": "doc-audit-final-contract",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+    "contract"
+  ],
+  "started_at": "2026-09-07T20:16:49.935644+00:00",
+  "finished_at": "2026-09-07T20:16:50.359846+00:00",
+  "exit_code": 0,
+  "log_sha256": "7ec91909efa8c2f9a69f52ac2296687d245c124e2db94d22796a62689a3b33f4"
+}

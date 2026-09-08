@@ -1,5 +1,7 @@
 # NU54DK Arduino Core — 전 인스턴스·DMA·BLE 경쟁 기준과 마일스톤
 
+2026-09-08 현재: R00~R13과 승인 route의 T11 단독 회귀는 완료했다. T12 공통 결선의 GPIO/GPIOTE 2,502개·PWM 675+288개·I2S 432개는 source별 PASS다. QDEC 동작 중 수동 read/clear의 누산 누락은 HOLD이며 추가 진단 반복은 종료했다. T13은 32개 단독·8개 동시 조합과 C→S→U 두 결선 변경 계획까지 확정했고 실기는 0회다. 다음 개발 작업은 QDEC 비의존 T13 runner·preflight·복구/전환 판정 준비다. T12 전체·T13 이후·RC·공개는 미완료다. [문서 감사·요구별 증거 대조](<../04_검증 기록/102_개발_문서_전수_검토와_마일스톤_체크포인트.md>), [실행 TODO](<../TODO_v0.4.0.md>)를 따른다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
@@ -321,17 +323,17 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 ### M25 — Analog·timing·audio·event 전 인스턴스
 
-- 상태: **source/build/semantic과 내부 VDD·event 기본 HIL 완료, 추가 기능 HIL 대기** — SAADC·PWM, timer/event,
+- 상태: **부분 완료** — SAADC AIN0~7·내부 ADC/event, PDM 기본/연속, C17 GPIO/GPIOTE·PWM 675+288·I2S 432 기능 PASS. TIMER 기능은 95번 범위로 완료 정리했다. QDEC는 알려진 문제 기록 후 진단 종료이며 다음은 T13 준비/실기다. 외부 ADC 반복 수 차이는 103번에 보존한다. SAADC·PWM, timer/event,
   PDM·I2S·QDEC 후보를 구현했다. 구현 이력은
   [M25 검증 기록](<../04_검증 기록/37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md>)을 따른다.
-  현재 PASS는 41번 기록, 남은 기능 fixture 경계는 42번 범위 합의를 따른다.
+  현재 source별 증거와 잔여 요구는 102번 대조표, 기능 fixture 경계는 42번 범위 합의를 따른다.
 
 - SAADC 8채널 scan/differential/internal/calibration/oversampling/continuous DMA를 제공한다.
 - PWM20/21/22의 12 hardware channel allocator와 sequence/DPPI/DMA를 `analogWrite`, `tone`, Servo와
   충돌 없이 통합한다.
 - TIMER00/10/20~24, GPIOTE20/30, EGU10/20, DPPIC00/10/20/30,
   PPIB00/01/10/11/20/21/22/30과 GRTC 고급 경로를 제공한다.
-- PDM20/21, I2S20과 QDEC20/21의 streaming/double-buffer API와 fixture를 추가한다.
+- PDM20/21·I2S20은 DMA streaming/double-buffer API, QDEC20/21은 하드웨어 누산·read/clear·IRQ event API와 fixture를 사용한다. QDEC에는 DMA가 없다.
 - LED·button·VBAT monitor와 내부 event 경로는 보드 자체 자동 runner에 우선 배치한다. 외부 기능
   시험은 두 NU54DK의 안전한 ADC 입력·PWM capture·PDM/I2S/QDEC 합성 신호/loopback을 사용한다.
   실제 핀을 통과하는 신호와 기대 sample/frame/count는 필수이며 handle 생성으로 대체하지 않는다.

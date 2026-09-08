@@ -1,0 +1,14 @@
+{
+  "name": "doc-audit-final-style",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\format\\run_cpp_style.py",
+    "--clang-format",
+    "C:\\Program Files\\LLVM\\bin\\clang-format.exe"
+  ],
+  "started_at": "2026-09-07T20:18:02.083672+00:00",
+  "finished_at": "2026-09-07T20:18:14.580733+00:00",
+  "exit_code": 0,
+  "log_sha256": "50e135445cc75347d4ef15a813ecee74122b3164eac45dd3c961563561bdd004"
+}

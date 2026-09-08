@@ -1,0 +1,13 @@
+{
+  "name": "doc-audit-final-inventory",
+  "command": [
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tools\\ci\\run_m12_gate.py",
+    "inventory"
+  ],
+  "started_at": "2026-09-07T20:16:48.343957+00:00",
+  "finished_at": "2026-09-07T20:16:49.935644+00:00",
+  "exit_code": 0,
+  "log_sha256": "8efc41e1f9734d065dfdb3292806c34b3f3ff16b7b9b69b5d6ae2ac8479703f1"
+}

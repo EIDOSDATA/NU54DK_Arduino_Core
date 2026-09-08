@@ -1,5 +1,7 @@
 # NU54DK Arduino Core v0.4.0-rc.1 — 준비 상태
 
+2026-09-08 현재: R00~R13과 승인 route의 T11 단독 회귀는 완료했다. T12 공통 결선의 GPIO/GPIOTE 2,502개·PWM 675+288개·I2S 432개는 source별 PASS다. QDEC 동작 중 수동 read/clear의 누산 누락은 HOLD이며 추가 진단 반복은 종료했다. T13은 32개 단독·8개 동시 조합과 C→S→U 두 결선 변경 계획까지 확정했고 실기는 0회다. 다음 개발 작업은 QDEC 비의존 T13 runner·preflight·복구/전환 판정 준비다. T12 전체·T13 이후·RC·공개는 미완료다. [문서 감사·요구별 증거 대조](<../../04_검증 기록/102_개발_문서_전수_검토와_마일스톤_체크포인트.md>), [실행 TODO](<../../TODO_v0.4.0.md>)를 따른다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 제품선 | Peripheral Parity |
@@ -13,8 +15,7 @@
 초안이다. Source/build가 끝난 후보 기능도 실제 HIL과 release gate 전에는 공개 지원이 아니다.
 
 후속 작업의 순서·현재 재개 위치는 [v0.4.0 실행 TODO](../../TODO_v0.4.0.md)를 따른다.
-T11 역사적 체크포인트 뒤 R00~R13과 전체 software gate를 완료하고, 최종 exact source의
-current-source T11 회귀와 T12~T15를 한 번의 통합 실기로 진행한다. T16~T18 사용자용 통합 뒤
+R00~R13과 source별 current-source T11 단독 회귀는 완료했다. 현재 T12 부분 완료·QDEC HOLD이며 T13 실기와 T15 지원 판정이 남았다. T16~T18 사용자용 통합 뒤
 R14에서 그 결과를 포함한 RC를 고정한다. 세부 범위는
 [리팩토링 계획](<../../01_아두이노 코어 설계/14_리팩토링/README.md>)을 따른다. T19~T21은
 RC/stable 비공개 검증,
@@ -59,9 +60,9 @@ TWIM/TWIS20·21·22·30 기능 record 1,986개도 통과해 M24 단독 통신 �
 
 ## 공개 전 필수 항목
 
-1. R00~R05 기준선·CMake·Serial·Analog/Stream·File·제품 identity 정확성
-2. R06~R13 builder·Event·자원/route·SPI/Serial·Analog/Stream·BLE/Storage·package 구조 리팩토링과 전체 software gate
-3. 최종 exact source의 current-source T11 UART·SPI·TWI 단독 기능 회귀
+1. 완료 근거 유지: R00~R05 기준선·CMake·Serial·Analog/Stream·File·제품 identity 정확성
+2. 완료 근거 유지: R06~R13 builder·Event·자원/route·SPI/Serial·Analog/Stream·BLE/Storage·package 구조 리팩토링과 전체 software gate
+3. source별 current-source T11 단독 회귀 완료 근거 유지. 후속 runtime 변경의 영향 회귀는 새 exact source로 수행
 4. M24의 허용 최대 동시성·반복 복구·처리량·soak
 5. M25 analog/PWM/PDM/I2S/QDEC 합성 신호·capture, 기본 timing·DMA·overrun·복구·동시성·soak
 6. M26 TEMP·WDT30 reset 온보드 PASS 증거 유지와 관련 변경 시 회귀 검증

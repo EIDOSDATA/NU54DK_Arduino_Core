@@ -105,9 +105,9 @@
     {
       "id": "V04-EVENT", "groups": ["timer", "egu", "dppic", "ppib", "grtc"], "fixture": "onboard",
       "modes": ["all-available-channels", "compare-capture", "group-enable-disable", "bridge-domain", "ownership-negative", "grtc-existing-endpoint"],
-      "parameters": {"timer_frequency_hz": [1000000], "interval_ticks": [1000, 10000], "events": 1000, "repetitions": 10, "tolerance_percent": 5},
+      "parameters": {"timer_frequency_hz": [1000000], "interval_ticks": [1000, 10000], "timer_repetitions_per_configuration": 10, "egu_dppi_ppib_events_per_repetition": 1000, "egu_dppi_ppib_repetitions": 10, "grtc_repetitions_per_configuration": 100, "tolerance_percent": 5},
       "oracle": "각 domain 발생 count와 capture/compare 일치, disable 뒤 증가 0, release 뒤 예약 0. PPIB는 대응하는 양 끝으로 domain 경계 연결 검증. 예약 system channel은 거부가 기대 결과.",
-      "needs": "T02/T05: 전체 channel 수·PPIB 쌍·GRTC 공개 endpoint를 source와 대조. 빈 handle을 동작 증거로 사용하지 않음.", "reuse": ["tests/hil/nu54dk/m25_onboard.py"], "errata": []
+      "needs": "T02/T05/T12: 95번의 TIMER 44 CC·clear/stop 4조합·2 interval·각 10회, 두 보드 7,040회 PASS를 기능 완료 근거로 사용한다. 103번 사용자 지시로 반복 요구 대응을 닫으며 EGU/DPPI/PPIB의 1000 event×10을 TIMER 추가 필수 시험으로 확대하지 않는다. GRTC는 기존 endpoint의 1/10ms busy/sleep 각 100회다. 빈 handle을 동작 증거로 사용하지 않음.", "reuse": ["tests/hil/nu54dk/m25_onboard.py", "tests/hil/nu54dk/v04_nojumper.py"], "errata": []
     },
     {
       "id": "V04-PDM", "groups": ["pdm"], "fixture": "peer",
