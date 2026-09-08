@@ -1,0 +1,34 @@
+{
+  "source": "28cf8804d80193d16822fdc61cfbdba817924c5b",
+  "physical_executed": true,
+  "reset_performed": true,
+  "resume_performed": true,
+  "flash_or_unlock_performed": false,
+  "physical_pass_added": false,
+  "files": [
+    {
+      "file": "power-pins-bridge-01-cleanup-pin-reset-01.json.gz",
+      "bytes": 1739,
+      "sha256": "99f9a82eb032debc0538b4ec50a3bb559c6f709da19ae5c332a60eb3e419b1a3",
+      "gzip_sha256": "3b5e6341a6117d1575e3416c6dbfb65c13fa8915620dd35515f0b02847843126"
+    },
+    {
+      "file": "power-pins-bridge-01-cleanup-under-reset-01.json.gz",
+      "bytes": 2147,
+      "sha256": "6e4272868445d3434a69c1d21190c41cea1120271ffba1cc59a24a51c7b391c3",
+      "gzip_sha256": "4a2fbd86bdf7adf88027e781a7d3e9faf24fca4adab3e89427373099cd1bf8c8"
+    },
+    {
+      "file": "power-pins-bridge-01-boot-readonly-01.json.gz",
+      "bytes": 947,
+      "sha256": "31b7dee711302d9effbc100e9225306392d93e5469c292fe8b6b3d6f34e672ae",
+      "gzip_sha256": "8794df2c6081af6403b1fcea29bcc3025835ad48c4e101bfc44bc9aab3afda5a"
+    },
+    {
+      "file": "power-pins-bridge-01-cleanup-confirmed-resume-01.json.gz",
+      "bytes": 3736,
+      "sha256": "f31c3afb6f4a3ab4004427608c222be1cc145f8eb172f3389b6a6fb745a21e02",
+      "gzip_sha256": "afa7fb28ef1315d9680965e524174c1854b30e6e5134add862e2cfd72c7851f9"
+    }
+  ]
+}
