@@ -90,11 +90,11 @@ def inspect(words, *, boots, mode, round_number, seed):
             words[:3] != [MAGIC, 2, 1] or words[4] != 0 or words[5] != boots or
             words[6] != (RESET_PIN if mode == 0 else RESET_TIMER if mode == 1 else RESET_GPIO) or
             words[7:10] != [0, mode, round_number] or words[10:13] != [0, 0, 0] or
-            words[16:19] != [int(mode != 0), 1, seed]):
+            words[16:19] != [int(mode != 0), 1, seed] or words[13] & 0x10000 == 0):
         raise ProtocolError(f'T13 power normal-mode/reset/retention mismatch: {words}')
     return {'boots': boots, 'mode': mode, 'round': round_number, 'seed': seed,
             'reset_cause': words[6], 'debug_requests': words[10:13],
-            'dma_release_proven': bool(words[16]), 'uptime_ms': words[19]}
+            'dma_release_proven': bool(words[16]), 'xo_stat': words[13], 'uptime_ms': words[19]}
 
 
 def verify_source(words, source):
@@ -110,7 +110,7 @@ def inspect_debug_bridge(words):
             any(type(value) is not int or not 0 <= value <= MASK for value in words) or
             words[:3] != [MAGIC, 2, 1] or words[4:6] != [0, 0] or
             words[7:13] != [0, 0, 0, 1, 1, 1] or words[16:19] != [0, 0, 0] or
-            words[14] < 1 or words[15] < 2):
+            words[14] < 1 or words[15] < 2 or words[13] & 0x10000 == 0):
         raise ProtocolError('T13 debug-held UART bridge state mismatch')
     return {'normal_mode_proven': False, 'system_off_pass': False,
             'debug_requests': words[10:13], 'tx_frames': words[14], 'rx_frames': words[15]}
@@ -357,7 +357,7 @@ def execute(args, images, grant, uids, append):
                                 {'status': 'unproven', 'error': str(error)})
                     stamp = struct.unpack('<I', raw_identity[60:64])[0]
                     pins = pin_snapshot(target)
-                    stopped = stamp & 0xFFFF0007 == 0x53540004 and all(value & 0xD == 0 for value in pins)
+                    stopped = stamp & 0xFFFF000F == 0x53540004 and all(value & 0xD == 0 for value in pins)
                     outcomes.append({'role': index+1, 'stopped': stopped, 'stamp': stamp, 'pin_cnf': pins})
                 except BaseException as error:
                     outcomes.append({'role': index+1, 'stopped': False, 'error': str(error)})

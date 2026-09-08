@@ -32,8 +32,9 @@ DMA·GPIO·IRQ·RAM과 종료 원본을 보존했으며 원인은 미확정입�
 완료했고 UART21·22 A CTS는 각각8·57회차 실패 원본을 보존했습니다. 기존54조건의 나머지를
 실행합니다. System OFF는 새 bridge도 응답 timeout으로 실패했고, 실패 후 B pin reset으로
 SWD와 양쪽 정지를 확인했습니다. debug 유지 진단도 첫 응답에서 실패했으며 B의 RX1/TX0·
-수신 재준비 오류11을 RAM에서 확인했습니다. 다음 변경은 전용 power 시험의 응답 전2ms 간격과
-RX 재준비 후 TX 순서이며 exact Host/target 뒤 재검증합니다. 실제 OFF 성공은0회입니다.
+수신 재준비 오류11을 RAM에서 확인했습니다. 응답 전2ms·RX 준비 후 TX로 보완한 e791a58은
+debug 유지 진단을 통과했지만 debug 분리 후에는 B RX0/TX0·lease 만료로 실패했습니다.
+다음 변경은 전용 power UART 구간의 HFXO 참조 획득·OFF/STOP 전 반환입니다. 실제 OFF 성공은0회입니다.
 S 결선을 유지합니다. U 재배치·QDEC 재진단·연속 handover·정식 공개는 이번 자동 실행에 포함하지 않습니다.
 
 | 순서 | 결선 | 작업 |

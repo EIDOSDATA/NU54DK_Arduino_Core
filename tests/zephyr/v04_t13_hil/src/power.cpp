@@ -12,11 +12,13 @@
 #include <hal/nrf_gpio.h>
 #include <hal/nrf_uarte.h>
 #include <zephyr/device.h>
+#include <zephyr/drivers/clock_control/nrf_clock_control.h>
 #include <zephyr/drivers/hwinfo.h>
 #include <zephyr/drivers/retained_mem.h>
 #include <zephyr/drivers/timer/nrf_grtc_timer.h>
 #include <zephyr/kernel.h>
 #include <zephyr/sys/poweroff.h>
+#include <zephyr/sys/onoff.h>
 #include <string.h>
 
 extern "C" volatile std::uint32_t v04_identity[16];
@@ -62,12 +64,15 @@ namespace
     bool active = false, receiving = false, tx_pending = false, ready = false;
     bool stop_after_reply = false;
     bool stop_proven = true;
+    onoff_manager *clock_manager = nullptr;
+    onoff_client clock_client{};
+    bool clock_held = false;
 
     /** @brief UART 응답을 잃어도 재접속 뒤 읽기만으로 STOP 증거를 확인하게 합니다. */
     void stamp()
     {
         v04_identity[15] = 0x53540000U | (wake_token.active ? 1U : 0U) | (active ? 2U : 0U) |
-                           (stop_proven ? 4U : 0U) | (error << 8U);
+                           (stop_proven ? 4U : 0U) | (clock_held ? 8U : 0U) | (error << 8U);
     }
 
     /** @brief 최초 실제 UART event와 주변장치·신호 수준을 변경 없이 보존합니다. */
@@ -139,6 +144,50 @@ namespace
         return false;
     }
 
+    /** @brief 디버그 유무와 관계없이 UART 구간의 외부 크리스털 참조를 획득합니다. */
+    bool requestClock()
+    {
+        clock_manager = z_nrf_clock_control_get_onoff(CLOCK_CONTROL_NRF_SUBSYS_HF);
+        if (clock_manager == nullptr || clock_held)
+        {
+            return failure(50U);
+        }
+        sys_notify_init_spinwait(&clock_client.notify);
+        if (onoff_request(clock_manager, &clock_client) < 0)
+        {
+            return failure(51U);
+        }
+        clock_held = true;
+        const auto until = k_uptime_get() + 1000U;
+        int completed = 0, notification = -EAGAIN;
+        while ((notification = sys_notify_fetch_result(&clock_client.notify, &completed)) ==
+               -EAGAIN)
+        {
+            if (k_uptime_get() >= until)
+            {
+                return failure(52U);
+            }
+            k_sleep(K_MSEC(1));
+        }
+        return (notification == 0 && completed == 0 &&
+                (NRF_CLOCK->XO.STAT & CLOCK_XO_STAT_STATE_Msk) != 0U) ||
+               failure(53U);
+    }
+
+    /** @brief 이 시험이 획득한 참조만 취소·반환하며 다른 사용자의 참조는 유지합니다. */
+    bool releaseClock()
+    {
+        if (clock_held)
+        {
+            if (onoff_cancel_or_release(clock_manager, &clock_client) < 0)
+            {
+                return failure(54U);
+            }
+            clock_held = false;
+        }
+        return true;
+    }
+
     /** @brief DMA STOP와 pin 입력 복귀를 모두 확인한 경우에만 active를 해제합니다. */
     bool stopUart()
     {
@@ -175,6 +224,7 @@ namespace
         wake_at = wake_end = off_after = 0U;
         stop_after_reply = false;
         const bool stopped = stopUart();
+        const bool clock_released = stopped && releaseClock();
         nrf_gpio_cfg_input(wake_pin, NRF_GPIO_PIN_NOPULL);
         bool released = true;
         if (wake_token.active)
@@ -183,7 +233,7 @@ namespace
         }
         retained.magic_word = 0U;
         const bool saved = save();
-        stop_proven = saved && stopped && released;
+        stop_proven = saved && stopped && released && clock_released;
         stamp();
         return stop_proven;
     }
@@ -224,6 +274,10 @@ namespace
         }
         nrf_gpio_cfg_input(wake_pin, NRF_GPIO_PIN_NOPULL);
         stop_proven = false;
+        if (!requestClock())
+        {
+            return false;
+        }
         uart = serialFabric().uarte(21U);
         pins[0].pin = static_cast<pin_size_t>(t13::pinId(38U));
         pins[1].pin = static_cast<pin_size_t>(t13::pinId(39U));
@@ -309,7 +363,7 @@ namespace
     void enterOff()
     {
         off_after = 0U;
-        if (!debugFree() || !stopUart())
+        if (!debugFree() || !stopUart() || !releaseClock())
         {
             failure(30U);
             return;
@@ -383,7 +437,7 @@ void t13::power::initialize(std::uint32_t &sequence, std::uint32_t *nonce)
 
 bool t13::power::claimed()
 {
-    return active || wake_token.active;
+    return active || wake_token.active || clock_held;
 }
 
 void t13::power::remember(std::uint32_t sequence, const std::uint32_t *nonce)

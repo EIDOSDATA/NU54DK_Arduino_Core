@@ -1,0 +1,25 @@
+{
+  "source": "e791a589aed26faf0cc3f646c73beb373141fb3d",
+  "physical_executed": true,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "power-turnaround-bridge-01-readonly-01.json.gz",
+      "bytes": 15687,
+      "sha256": "55cda490e2fcdcfba71b78df95a71b3b8f00b1e8dedaa06b10394ab04f45cf95",
+      "gzip_sha256": "99bb5f5fbcc26632e88ae658ba25b79df9b2e9c7497f582ddbb3bdaea4398825"
+    },
+    {
+      "file": "read_t13_power_turnaround_ram.py.gz",
+      "bytes": 394,
+      "sha256": "e26e11cda8123dae5fd338d49cbf8c82fdca01f3f97841169e81de1ccca97128",
+      "gzip_sha256": "204bb69ab4660edfd504732ed5032fc0dab7f5003419710913a868822e67bde2"
+    },
+    {
+      "file": "read_t13_power_debug_ram.py.gz",
+      "bytes": 3358,
+      "sha256": "1a922d84cb35b4f9de07a40451c1f7d788f5ef96227da52bf5f2f7204ccff0c2",
+      "gzip_sha256": "afc4986d71af9212c73446a4d1e74139208397b807702c20f8268d198d28f251"
+    }
+  ]
+}

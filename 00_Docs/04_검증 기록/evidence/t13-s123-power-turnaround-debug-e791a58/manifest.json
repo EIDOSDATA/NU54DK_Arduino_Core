@@ -1,0 +1,130 @@
+{
+  "source": "e791a589aed26faf0cc3f646c73beb373141fb3d",
+  "status": "passed",
+  "phase": "bridge-debug",
+  "physical_executed": true,
+  "started_at": "2026-09-08T16:04:11.105538+00:00",
+  "finished_at": "2026-09-08T16:04:53.954203+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "debug-held/result",
+      "status": "diagnostic",
+      "normal_mode_proven": false,
+      "system_off_pass": false,
+      "debug_requests": [
+        1,
+        1,
+        1
+      ],
+      "tx_frames": 1,
+      "rx_frames": 2
+    },
+    {
+      "id": "cleanup/result",
+      "status": "cleanup",
+      "outcomes": [
+        {
+          "role": 1,
+          "stopped": true,
+          "stamp": 1398013956,
+          "pin_cnf": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "role": 2,
+          "stopped": true,
+          "stamp": 1398013956,
+          "pin_cnf": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "cleanup_proven": true,
+      "b_swd_reopened_for_cleanup": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3712,
+      "sha256": "ffb80a1277cb0ec9ec82860b7c724449d8ae685609d97e1a0b6dd248aaa1954a",
+      "gzip_sha256": "dda6d118ab0d80a39b01e157dd5cd70baff3906d4085be3df748e18cc63a4c8b"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1785,
+      "sha256": "34b3e1ead4ffe5a91ae4b4e5748cd4490a8598e91deee778f38289a07acf9917",
+      "gzip_sha256": "f02ee7868319e31b72b04beaa3d811a8e14eff22a31e05c8d06ca091c687014b"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 138491,
+      "sha256": "e0c6a3c94e63f99069f33a67b026c4518c9a70db7c809eaaa98be18666bba3d6",
+      "gzip_sha256": "d16a2b9e00a040d8a30dc6c66548e089996de1990cdbe00044cc777c79771eb7"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 80350,
+      "sha256": "cdd9ab0171b4e5c8d0446ef83837c7e862b2e9ae639857ca32543dd7def53c5f",
+      "gzip_sha256": "5d6cf95018e9af98de9c2b9803a31786b34e3dbdf3534513f4a4fad2df758e23"
+    },
+    {
+      "file": "power-turnaround-debug-01-preflight.json.gz",
+      "bytes": 700,
+      "sha256": "ad55ae1b4f2740676b7b9deaf983e54bd0f11a562c2a07af2520bf3263dd397e",
+      "gzip_sha256": "5ab0a90baa3fdf7d752fdda1c21c510489618604a4370af99f9e0862c97e0cea"
+    },
+    {
+      "file": "power-turnaround-debug-01-preflight.log.gz",
+      "bytes": 1183,
+      "sha256": "3d8b8afaa3d54b18ba6149b56dc3985bc1d5769120399ab3e96870697cab24c3",
+      "gzip_sha256": "564760dbcc7075ba205ecdee036d27fb64cb94591338cee0184807b51bf4dac8"
+    },
+    {
+      "file": "power-turnaround-debug-01-execute.json.gz",
+      "bytes": 696,
+      "sha256": "7a1779ae3f3cd66cf97b09746707993bc68ed45c559a28dbf56725c16c0dac24",
+      "gzip_sha256": "bcdd99f50f17e563fd1b13ddee97fde7b75cb45f23971fd1f0530ffe7b1b014d"
+    },
+    {
+      "file": "power-turnaround-debug-01-execute.log.gz",
+      "bytes": 67,
+      "sha256": "a84e065c18fe60ac1d2e694df25d035945184656393a198b2578adad7915698c",
+      "gzip_sha256": "a21b25dbcac3bfc846e88b48f71a409df7add13c7027356f947a4ffec718da9f"
+    }
+  ]
+}

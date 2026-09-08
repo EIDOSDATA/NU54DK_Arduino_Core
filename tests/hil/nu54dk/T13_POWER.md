@@ -51,6 +51,11 @@ checksum으로 보존한다. 명시된 예상 reset 외에는 자동 UART 재시
 동일시하지 않기 위한 시험 프로토콜 간격이다. 재준비 거부는 `100 + SerialFabricResult` 오류로
 보존하며 자동 재시도하지 않는다. 이 변경은 일반 UART 속도·오류 판정을 완화하지 않는다.
 
+전용 power image도 UART 활성화 전에 Zephyr on/off 관리자로 HFXO 참조를 획득한다.
+UART DMA 정지 후 이 참조를 반환하고 XO 정지 확인 뒤 OFF에 들어간다. reset/wake 뒤에는
+다시 획득하며 정상 bridge 응답은 XO 실행 bit를 요구한다. STOP stamp의 bit3은 아직 보유한
+clock 참조를 표시하므로 정리 성공은 이 bit도0이어야 한다. clock을 강제로 정지시키지 않는다.
+
 ## Mailbox
 
 | Opcode | 경로 | 용도 |

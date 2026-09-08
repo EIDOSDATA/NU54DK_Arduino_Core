@@ -14,14 +14,14 @@ from v04_protocol import ProtocolError, encode
 class PowerTests(unittest.TestCase):
     def test_debug_held_bridge_cannot_substitute_for_normal_mode_or_off(self):
         """! @brief debug 유지 진단에는 정상 mode·reset·retention 성공을 부여하지 않습니다. """
-        words = [power.MAGIC, 2, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 2, 0, 0, 0, 800]
+        words = [power.MAGIC, 2, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 65537, 1, 2, 0, 0, 0, 800]
         result = power.inspect_debug_bridge(words)
         self.assertFalse(result['normal_mode_proven'])
         self.assertFalse(result['system_off_pass'])
         with self.assertRaises(ProtocolError):
             power.inspect(words, boots=1, mode=0, round_number=0, seed=0)
         for index, value in ((1, 1), (2, 0), (4, 1), (5, 1), (7, 1), (8, 1),
-                             (10, 0), (11, 0), (12, 0), (14, 0), (15, 1), (17, 1)):
+                             (10, 0), (11, 0), (12, 0), (13, 0), (14, 0), (15, 1), (17, 1)):
             broken = words[:]
             broken[index] = value
             with self.subTest(index=index), self.assertRaises(ProtocolError):
@@ -108,6 +108,16 @@ class PowerTests(unittest.TestCase):
         for raw in (None, self.words(1)[:-1], self.words(1)+[0]):
             with self.assertRaises(ProtocolError):
                 power.inspect(raw, boots=2, mode=1, round_number=1, seed=77)
+
+    def test_normal_uart_bridge_requires_running_crystal(self):
+        """! @brief debug 해제·reset 원인이 맞아도 XO가 정지한 응답은 거부합니다. """
+        for mode in (0, 1, 2):
+            words = self.words(mode)
+            for clock in (0, 1):
+                words[13] = clock
+                with self.subTest(mode=mode, clock=clock), self.assertRaises(ProtocolError):
+                    power.inspect(words, boots=words[5], mode=mode,
+                                  round_number=words[9], seed=words[18])
 
     def test_relay_validates_full_nonce_sequence_and_never_retries_uncertain_command(self):
         nonce = bytes(range(16))
