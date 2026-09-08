@@ -1,0 +1,70 @@
+{
+  "source": "506680f5a1df7d944e547cb573abcd39ffb6dcbf",
+  "status": "passed",
+  "phase": "soak",
+  "physical_executed": true,
+  "started_at": "2026-09-08T09:42:15.493305+00:00",
+  "finished_at": "2026-09-08T09:57:48.529619+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/soak/C04/result",
+      "status": "passed",
+      "measurement_id": "T13-S/soak/C04",
+      "measured_role": null,
+      "requested_seconds": 900,
+      "planned_soak_pass": true,
+      "same_pair_shared_measurement": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3776,
+      "sha256": "91747f298314039655c3a2a26c43df08aaaff5d4abb2b10f00715bb0ae6f1bab",
+      "gzip_sha256": "1362d7eb79921fa9f18ad062f0c8bb8ae5a224fee46877c2d5c9dc9143e817ef"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "fa5f69eede0d13baeea8c09c7d1ce370e8d83470aad9274b3895313dd54c86b5",
+      "gzip_sha256": "aabd2e5ceb9f74535d4c27b78e7c4ddb2e51ac358c25d0ffa4df9caa00eafe4d"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 1572149,
+      "sha256": "749eecde7c7759fb3572e8f1d68170e9be346df420931b6ca573b5972bf2d51c",
+      "gzip_sha256": "f53ab2ea43967a3aa337fb5e894c2a8c6504bc215a77d48c253da88e77b24cd1"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 782888,
+      "sha256": "abc508c08805bc288513d21f9b7476264c25ff66e79f733d470bf92d2850defe",
+      "gzip_sha256": "fd0ad87e0f17c77b0429db9457695c0c49453d4ac2057c23b4d875e4d17985ea"
+    },
+    {
+      "file": "c04-soak-sauto-01-preflight.json.gz",
+      "bytes": 668,
+      "sha256": "6e51c5309b11abf0bcdef8ee30b87eab8f7d6a5fd06f97123824cc7f2b13ec4f",
+      "gzip_sha256": "04da5500a436bf449ab163b3b480a20f8dc834ee6e30fa04da0772d3e564f296"
+    },
+    {
+      "file": "c04-soak-sauto-01-preflight.log.gz",
+      "bytes": 1509,
+      "sha256": "b0e398b84458e21cad8e8ddf62c033eddb1e224b00c97eee5f8c3167d745eb0c",
+      "gzip_sha256": "584ce203a0b4e21f5fd879ad9d4c7a8261f3960e42a9a963a5770bcd8336a53c"
+    },
+    {
+      "file": "c04-soak-sauto-01-execute.json.gz",
+      "bytes": 664,
+      "sha256": "2565e9c381a1b225f6964099df541bfd36afbf5b702a3f89609f8fa4e4fa85c2",
+      "gzip_sha256": "10f84f67afd18c15905f641865f48bd7dba99f56b6260ac98198e362bf8ee903"
+    },
+    {
+      "file": "c04-soak-sauto-01-execute.log.gz",
+      "bytes": 1399,
+      "sha256": "cbfd638a152b44333757816986e8b13ecd14036e8f75a128d3c8a93e29384287",
+      "gzip_sha256": "4811d23abaa174d1598272d526bab8fc416a8ae1cb9b84275ca437e0c2366ff9"
+    }
+  ]
+}

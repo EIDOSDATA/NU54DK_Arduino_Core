@@ -18,6 +18,7 @@ import v04_t13_pwm_recovery as pwm_recovery
 import v04_t13_handover as handover
 import v04_t13_conflict as conflicts
 import v04_t13_flow as flows
+import v04_t13_uart_line as uart_lines
 import v04_t13_oracle as oracle
 import v04_t13_session as session
 import v04_wiring as wiring
@@ -171,6 +172,8 @@ def failure_snapshots(devices, test, append, identifier):
             observations += [(124, (index,), f'lane{index}-first-data-fault') for index in range(len(test['serial_links']))]
             if test.get('_flow_gpio_peer'):
                 observations += [(127, (), 'cts-flow')]
+            if test.get('_uart_line_fault'):
+                observations += [(142, (), 'uart-line-fault')]
             observations += [(104, (index,), f'stream{index}') for index in oracle.stream_indices(test)]
             if test['pwm_instance']:
                 observations += [(107, (page,), f'pwm-trace{page}') for page in range(5)]
@@ -348,12 +351,14 @@ def main(argv=None):
                                           'stream-fault-preflight', 'stream-fault', 'pwm-diagnostic',
                                           'pwm-recovery-preflight', 'pwm-recovery',
                                           'conflict-preflight', 'resource-conflict',
-                                          'flow-preflight', 'uart-flow'), default='wiring')
+                                          'flow-preflight', 'uart-flow',
+                                          'uart-line-preflight', 'uart-line-fault'), default='wiring')
     parser.add_argument('--cases', nargs='+', type=int, default=[])
     parser.add_argument('--fault-mode', type=int, choices=range(1, 6))
     parser.add_argument('--stream-fault-mode', type=int, choices=(1, 2))
     parser.add_argument('--pwm-recovery-mode', type=int, choices=(1, 2))
     parser.add_argument('--conflict-mode', type=int, choices=(1, 2, 3))
+    parser.add_argument('--uart-line-mode', choices=('parity', 'break'))
     parser.add_argument('--pwm-diagnostic-route', choices=('led', 'dap'))
     parser.add_argument('--fault-role', type=int, choices=(1, 2), default=1)
     parser.add_argument('--reverse-serial', action='store_true')
@@ -388,6 +393,12 @@ def main(argv=None):
     is_pwm_recovery = args.phase in ('pwm-recovery-preflight', 'pwm-recovery')
     is_conflict = args.phase in ('conflict-preflight', 'resource-conflict')
     is_flow = args.phase in ('flow-preflight', 'uart-flow')
+    is_uart_line = args.phase in ('uart-line-preflight', 'uart-line-fault')
+    if is_uart_line:
+        for identifier in args.cases:
+            uart_lines.validate_selection(available_cases[identifier], args.fault_role, args.uart_line_mode)
+    elif args.uart_line_mode is not None:
+        raise ProtocolError('UART line mode requires an explicit UART line phase')
     if is_flow:
         for identifier in args.cases:
             flows.fixture(available_cases[identifier], args.fault_role)
@@ -423,8 +434,9 @@ def main(argv=None):
         'board_revision': images[0]['board_revision'], 'catalog_sha256': session.catalog_hash(),
         'session_grant_sha256': hashlib.sha256(grant_bytes).hexdigest(), 'swd_frequency_hz': 10000000,
         'external_wiring_executed': False, 'results': [],
-        'fault_mode': args.fault_mode, 'fault_role': args.fault_role if is_fault or is_stream_fault or is_conflict or is_flow else None,
+        'fault_mode': args.fault_mode, 'fault_role': args.fault_role if is_fault or is_stream_fault or is_conflict or is_flow or is_uart_line else None,
         'conflict_mode': args.conflict_mode,
+        'uart_line_mode': args.uart_line_mode,
         'stream_fault_mode': args.stream_fault_mode,
         'pwm_recovery_mode': args.pwm_recovery_mode,
         'reverse_serial': args.reverse_serial, 'handover_instance': args.handover_instance,
@@ -465,6 +477,10 @@ def main(argv=None):
             if is_handover:
                 handover.execute(devices, args.handover_instance, continuity, append,
                                  preflight=args.phase == 'handover-preflight')
+            elif is_uart_line:
+                for identifier in args.cases:
+                    uart_lines.execute(devices, available_cases[identifier], args.fault_role,
+                        args.uart_line_mode, continuity, append, preflight=args.phase == 'uart-line-preflight')
             elif is_flow:
                 for identifier in args.cases:
                     flows.execute(devices, available_cases[identifier], args.fault_role,

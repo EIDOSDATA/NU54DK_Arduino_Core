@@ -1,5 +1,11 @@
 # T13 S 자동 진행과 peer 제어 System OFF 검증 계획
 
+2026-09-08T10:10Z: C01~04 각각900초와 양쪽 STOP 완료로 동시4/7(57%)이며 C05 3600초 실행 중이다.
+고정 serial17/21·stream3/4·PWM6/6·역할 전환2/5는 source별 근거로 유지한다.
+CTS d44cef2의 exact 두 역할 target·Host58·원격 Host104묶음788시험 준비를 완료했다.
+UART parity/break는 초안 target2/2·T13 Host62시험을 통과했으며 아직 실기 예약 전이다.
+현재 자동 배치→TWIM 계측→System OFF→충돌/CTS 순서를 유지하며 가능한 독립 준비도 계속한다.
+
 2026-09-08 후속 구현 범위: T13의 기존 자원 충돌 요구 중 S UART21/22/30에서 같은 block의
 SPI 활성화, 다른 UART의 동일 GPIO 점유, 내부 DMA workspace 겹침을 의도하여 거부의 원자성과
 기존 송수신·STOP·새 seed 재획득을 확인한다. 후보 출력은 원래 UART TX/RTS가 연결된 peer 입력만
@@ -19,6 +25,17 @@ TX/RX 두 선과 별도 GPIO RTS 소유권으로 구성한다. peer가 기존 RT
 peer 하드웨어 RTS 자체 검증이나 RX 지연/parity/break의 완료로 확대하지 않는다.
 근거: [Nordic UARTE 핀 설정](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/uarte.html-concept_wmv_f2m_wr).
 
+UART line 오류 후속 범위: S UART20/21/22/30에서 DUT even parity·peer parity 없음의 오류와,
+peer UART를 완전히 반환한 뒤 원래 TX GPIO에1ms LOW를 주는 break를 준비한다. 대상 DUT는
+의도적 오류 구간에서 TX를 시작하지 않고 실제 UARTE error event·mask와 양쪽 guard·정지 및
+새 seed 정상 재획득을 요구한다. 정상 연속 시험과 구분하며 아직 실기 예약/완료가 아니다.
+
+10:15Z 준비 검사: break의 UART→GPIO 전환 동안 DUT RX를 시작하지 않도록 순서를 보강하고
+초안 두 역할 target2/2와 T13 Host63시험·정렬·계약·문서 검사를 통과했다. 전체 Host는
+R03 analog production의12개 하위 실행에서 Windows 응용 프로그램 제어 WinError4551로
+차단됐다. 다른 R03 PWM/stream은 통과했으며 보안 정책을 변경하지 않는다. 이 로컬 전체 검사를
+PASS로 세지 않고 실패 원본을 보존하며 고정 source의 원격 전체 Host를 별도 요구한다.
+
 ## 마일스톤과 현재 상태
 
 | T13 하위 묶음 | 상태 | 현재 S에서 자동 진행 범위 |
@@ -27,7 +44,7 @@ peer 하드웨어 RTS 자체 검증이나 RX 지연/parity/break의 완료로 �
 | 고정 serial 복구 | 17/21 완료, TWIM 취소4개 미완료 | RX 시작/END·이전 AMOUNT 구분 보완 후 재검증 |
 | stream 복구 | 3/4 완료, I2S B97번째 실패 | 원본 분석·원인 분리·재검증 |
 | 역할 전환 | 예행5/5, 정식2/5 완료(serial00·30 각100회), SPI20/21/22 실패 보존 | 최초 RX 오류 계측을 보강하여 원인 분리; 이전 중단47회 합산 금지 |
-| 동시 안정성 | 2/7 완료(C01·02), C03 진행 중(2026-09-08T09:36Z) | C01~06·C08; 일반900초, C05는3600초 |
+| 동시 안정성 | 4/7 완료(C01~04), C05 진행 중(2026-09-08T10:10Z) | C01~06·C08; 일반900초, C05는3600초 |
 | 추가 오류·충돌 | 일부 runner 미구현 | UART flow/지연/parity/break, SPI slave/short/CS, TWI 지연/stuck-low, 자원 충돌의 구현·Host/target·실기 |
 | peer 제어 System OFF | 구현·exact Host/target 준비 완료, 실기0 | S 현재 배치와 TWIM 계측 뒤 bridge 예행부터 실행; 무인 성립 실패 시 원본·한계를 남기고 독립 작업 계속 |
 | U UART00 | 대기 | S→U 현재 재배치 확인 전 실행 금지 |
@@ -81,6 +98,8 @@ engine/renew 오류로 끝났으며 세 실행 모두 양쪽 정지를 증명했
 문구만으로 확인서 만료나 통신 단절로 단정하지 않는다. lane 최초 오류를 계속 분석한다.
 serial30도 새100/100회 완료했다. C01·C02는 각각900초 연속 실행·양쪽 STOP까지 완료했고 C03을 진행 중이다.
 
+2026-09-08T09:42Z: C03도900초·양쪽 STOP을 통과했고 C04를 시작했다.
+
 이후 raw 분석에서 세 SPI 단계의 최초 RX payload 불일치(code6)를 확인했다. byte 위치는
 568/749/499이며 firmware lease_expired는0이다. 따라서 공통 오류 문구가 확인서 만료를 뜻하는
 것은 아니다. 전기 파형·peer buffer 원인을 아직 확정하지 않았고 재결선을 요구하지 않는다.
@@ -106,10 +125,49 @@ source 고정 후 exact build/원격 Host를 다시 확인한다.
 [C01 900초](evidence/t13-c01-soak-sauto-01-506680f/manifest.json),
 [C02 900초](evidence/t13-c02-soak-sauto-01-506680f/manifest.json).
 
+[C03 900초 원본](evidence/t13-c03-soak-sauto-01-506680f/manifest.json)도 별도로 보존했다.
+[C04 900초 원본](evidence/t13-c04-soak-sauto-01-506680f/manifest.json)은 별도의 연속 측정과 양쪽 STOP을 보존한다.
+
 자원 충돌14조건의 b5d614e는 exact 두 역할 target·T13 Host55시험·원격 Host103묶음785시험을
 확인했다. b5d614e 이전884c642의 UART30 bank 선택 오류는 실기 적용 전에 수정했고 원본을 유지한다.
 CTS GPIO 주입 도구는 초안 두 역할 target과 T13 전체 Host58시험·형식·계약 검사를 통과했다.
 둘 다 아직 실기 PASS가 아니며 고정 source와 개별 예행을 요구한다.
+
+d44cef2 CTS image는 exact 두 역할 target·Host58시험·원격 Host104묶음788시험을 통과했다.
+이전 source의 build가 있던 C:/t4f04에는 덮어쓰지 않았고, 새 C:/t4l04에 별도 빌드했다.
+원본: [b5d614e 충돌 준비](evidence/t13-conflict-preparation-b5d614e/manifest.json),
+[d44cef2 CTS 준비](evidence/t13-flow-preparation-d44cef2/manifest.json).
+
+## TWIM 취소 AMOUNT 대조 근거
+
+[Nordic nRF54L15 TWIM register 설명](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/twim.html-topic?contentId=ZCNrRd3TXd2U_Zlq48Iw7Q)은
+DMA.RX.AMOUNT를 최근 DMA transaction의 END/MATCH에서 갱신하는 값으로 정의한다.
+현재 SDK nrfx_twim.c의 TXRX는 TX buffer와 RX buffer를 설정하고 LASTTX→STARTRX shortcut으로
+수신을 시작한다. TX 도중 취소했을 때 RX AMOUNT가 이전 정상 전송의256으로 남을 수 있다는
+가설과 맞지만, 아직 이번 원본으로 확정하지 않는다. opcode123의 시작 전 값·RXREADY/END·
+수신 RAM·실제 TX 부분량을 함께 수집한다. 시작/완료 event0만으로 이번 RX가 없었다고 단정하지
+않고 driver의 event clear 경로도 대조한다. 기존 실패의 판정이나 원본을 미리 바꾸지 않는다.
+
+## Nordic errata와 현재 실패의 대조
+
+- [SPIM8](https://docs.nordicsemi.com/r/bundle/errata_nrf54l15_rev1/page/err/nrf54l15/rev1/latest/anomaly_l15_8.html?contentId=kxYSRXGTZ75bNAvYNrfIlg)은
+  CPHA0·PRESCALER>2·첫 송신 bit1 조건의 MOSI 문제다. 현재 SDK nrfx_spim.c는 해당 조건에
+  CSNDUR와 START 전/STARTED 후 offset0xc84 workaround를 적용하는 경로를 포함한다.
+  core SpimFabric.cpp는 nrfx_spim_init/xfer를 사용하며 CS duration255를 설정한다.
+  최초 오류 byte568/749/499만으로 이 errata가 원인이라고 확정하지 않는다. 특히 normal master의
+  RX는 MISO 방향이므로 MOSI errata와 구분한다. 첫 실제 byte 원본을 추가한 이유다.
+- [SPIM21](https://docs.nordicsemi.com/r/bundle/errata_nrf54l15_rev1/page/err/nrf54l15/rev1/latest/anomaly_l15_21.html?contentId=e9uUoQU3VuanCppXyAz5CA)은
+  clock 종료 뒤 MOSI의 추가 전이를 설명하며 문서상 consequence는 없다. 전송 중 RX 불일치의
+  직접 근거로 사용하지 않는다.
+- [SPIS54](https://docs.nordicsemi.com/r/bundle/errata_nrf54l15_rev1/page/err/nrf54l15/rev1/latest/anomaly_l15_54.html?contentId=ksFfAvV4L1vT0n4CwKBeIg)은
+  CS inactive에서 SDO가 floating일 때의 추가 전류 문제다. 통신 오류의 확정 원인이나 현재
+  확인된 결선의 변경 사유로 확대하지 않는다.
+- [TWIM105](https://docs.nordicsemi.com/r/bundle/errata_nrf54l15_rev1/page/err/nrf54l15/rev1/latest/anomaly_l15_105.html?contentId=eH3BnjumOZsG8A~kiCmQlw)은
+  clock stretching 중 disable 이후의 무응답과 reset 복구를 설명한다. 아직 미구현인 stuck-low/
+  공급 지연 시험은 LOW 해제와 STOP을 먼저 증명해야 하며, 실패 시 reset으로 복구한 결과를
+  무reset 정상 복구로 바꾸어 기록하지 않는다.
+
+이 대조는 source 검토이며 실제 silicon revision별 workaround 동작이나 새 실기 PASS가 아니다.
 
 다음 source에는 첫 RX payload 불일치의 actual/expected byte·주변4byte·DMA 주소·AMOUNT·guard를
 STOP 전 고정하는 opcode124를 추가한다. 예전 실패에 없던 actual byte를 추정으로 채우지 않는다.

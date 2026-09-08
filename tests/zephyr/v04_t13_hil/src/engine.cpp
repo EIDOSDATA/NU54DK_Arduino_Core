@@ -1,6 +1,7 @@
 /** @file @brief 고정 시험 ID·10초 lease·실제 측정 시각과 정지 판정을 관리합니다. */
 #include "engine.h"
 #include "flow.h"
+#include "uart_fault.h"
 #include "measurement.h"
 #include "cases.h"
 #include "handover.h"
@@ -199,6 +200,17 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         serialTwiFaultSnapshot(out, count);
         return 0U;
     }
+    if (opcode == 140U && nargs == 1U && !gate.claimed() && !wiringClaimed())
+    {
+        out[0] = uartFaultPolicy(args[0]) ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 142U && nargs == 0U)
+    {
+        uartFaultSnapshot(out, count);
+        return 0U;
+    }
     if (opcode == 126U && nargs == 1U && !gate.claimed() && !wiringClaimed())
     {
         out[0] = flowPolicy(args[0]) ? 1U : 0U;
@@ -314,6 +326,24 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
     if (!gate.live(k_uptime_get()))
     {
         return 403U;
+    }
+    if (opcode == 141U && nargs == 0U && !started)
+    {
+        out[0] = uartFaultArm() ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 143U && nargs == 0U && started && !quiesced)
+    {
+        out[0] = uartFaultBreakPulse() ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 144U && nargs == 0U && started && !quiesced)
+    {
+        out[0] = serialBreakPrepare() ? 1U : 0U;
+        count = 1U;
+        return 0U;
     }
     if (opcode == 109U && nargs == 1U && !started && selected != nullptr &&
         selected->serial_count == 1U && !selected->adc_channels && !selected->pwm_instance &&

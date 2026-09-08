@@ -60,6 +60,29 @@ serial00은 S에서 SPIM00→SPIS00→SPIM00 두 전환을 각100회 수행한�
 SPI는 양쪽 MOSI/MISO 신호명과 master/slave를 함께 바꾸므로 GPIO net은 그대로다.
 미완료 instance를 다른 instance의 성공으로 대체하지 않는다.
 
+## UART parity·break 오류 주입
+
+`--phase uart-line-preflight|uart-line-fault --uart-line-mode parity|break --fault-role 1|2`
+와 S UART20/21/22/30의 case2/3/4/5를 사용한다. 예행1회와 정식100회를 분리한다.
+기존 S TX→RX net을 유지하며 실제 U 실기·RX 공급 지연·정상 soak 완료로 확대하지 않는다.
+
+정상 양방향 baseline250ms와 STOP 이후 DUT는 TX를 억제하고 RX만 동작한다.
+parity는 DUT8E1/peer8N1이며 첫 byte의 even parity가0인 seed를 선택해 stop1과의 불일치를 만든다.
+최초 실제 error event5·mask2·guard를 요구한다. break는 peer UART를 완전히 STOP·반환한 뒤
+원래 TX GPIO만 S0S1로 HIGH→1ms LOW→HIGH 구동하고 즉시 입력/no-pull로 반환한다.
+양쪽 별도 owner를 겹치거나 활성 UART의 PSEL을 고치지 않는다. 실제 LOW1000~2000µs,
+HIGH/LOW/HIGH 관측·GPIO 반환·DUT 최초 framing/break mask4/8을 요구한다.
+framing만 관측되면 break 입력 복구 결과와 BREAK flag 관측 여부를 따로 기록한다.
+
+opcode140은 준비 전 정책,141은 ARM,142는20word 최초 원본,143은 준비된 peer break pulse,
+144는 DUT 수신 시작 전 peer UART 반환·GPIO HIGH 준비다. DUT RX를 켠 뒤 오류가 아직 없음을
+확인하고 LOW를 주입해 UART→GPIO 전환 구간의 부유 입력을 break 결과로 세지 않는다.
+원본은 API의 event·mask·buffer·전송량, device cycle1MHz, 실제 CONFIG/PSEL, GPIO 수준·반환,
+serial STOP 결과를 보존한다. API descriptor 길이를 실제 DMA 전송량으로 해석하지 않는다.
+양쪽 raw를 먼저 보존한 뒤 STOP·clock·17핀 반환, 정책0 복원, 새 seed의 정상1초 송수신과 STOP까지
+완료해야 한 복구 성공으로 센다. 첫 실패에서 해당 조건을 끝내고 원본을 보존한다.
+2026-09-08T10:10Z 기준 초안 두 역할 target·T13 Host62시험을 통과했으며 실기 미실행이다.
+
 ## CTS 100ms 정지·재개 전용 fixture
 
 S 단독 UART20/21/22/30에서 `--phase flow-preflight|uart-flow --fault-role 1|2 --cases ...`를

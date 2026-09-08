@@ -6,6 +6,7 @@
  */
 #include "engine.h"
 #include "flow.h"
+#include "uart_fault.h"
 #include "measurement.h"
 #include <nucode/SerialFabric.h>
 #include <zephyr/kernel.h>
@@ -362,7 +363,7 @@ namespace
             if (handle != nullptr)
             {
                 result = handle->configure(
-                    {endpoint.rate, UarteParity::none, endpoint.pin_count == 4U, true});
+                    {endpoint.rate, uartFaultParity(), endpoint.pin_count == 4U, true});
             }
             break;
         }
@@ -454,6 +455,14 @@ namespace
             UarteEvent event{};
             while (static_cast<UarteHandle *>(lane.handle)->takeEvent(event))
             {
+                if (event.type == UarteEventType::error)
+                {
+                    const bool guards = lane.tx[0].guards(lane.endpoint.length) &&
+                                        lane.tx[1].guards(lane.endpoint.length) &&
+                                        lane.rx[0].guards(lane.endpoint.length) &&
+                                        lane.rx[1].guards(lane.endpoint.length);
+                    uartFaultEvent(event, guards);
+                }
                 if (event.type == UarteEventType::tx_cancelled ||
                     event.type == UarteEventType::rx_cancelled ||
                     event.type == UarteEventType::error)
@@ -554,6 +563,7 @@ namespace
     {
         const auto kind = lane.endpoint.kind;
         if (!transmitting || now < lane.next_frame || lane.tx_pending[0] || lane.tx_pending[1] ||
+            (kind == Kind::uart && !uartFaultTransmitAllowed()) ||
             (kind != Kind::uart && kind != Kind::spim && kind != Kind::twim))
         {
             return;
@@ -604,6 +614,10 @@ namespace
         }
         if (accepted(lane, result, 60U))
         {
+            if (kind == Kind::uart)
+            {
+                uartFaultSubmitted(submitted);
+            }
             const auto elapsed = k_cyc_to_us_floor32(k_cycle_get_32() - submitted);
             lane.timing[2].add(elapsed);
             lane.max_queue_us = elapsed > lane.max_queue_us ? elapsed : lane.max_queue_us;
@@ -708,7 +722,8 @@ bool t13::serialPrepare(const Case &test, std::uint32_t seed)
         lane.endpoint = test.serial[role - 1U][index];
         lane.seed_tx = laneSeed(seed, index, role);
         lane.seed_rx = laneSeed(seed, index, 3U - role);
-        if (!flowPrepare(test, lane.endpoint) || !configure(lane))
+        if (!flowPrepare(test, lane.endpoint) || !uartFaultPrepare(test, lane.endpoint) ||
+            !configure(lane))
         {
             return false;
         }
@@ -833,11 +848,17 @@ bool t13::serialStop()
             }
         }
     }
+    stopped = uartFaultStop(stopped) && stopped;
     if (stopped)
     {
         lane_count = 0U;
     }
     return stopped;
+}
+
+bool t13::serialBreakPrepare()
+{
+    return uartFaultBreakReady() && serialStop() && uartFaultBreakPrepare();
 }
 
 void t13::serialSnapshot(unsigned index, std::uint32_t *out, std::uint32_t &count)

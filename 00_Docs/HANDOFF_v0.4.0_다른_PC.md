@@ -1,5 +1,14 @@
 # v0.4.0 다른 PC 재개 인계
 
+2026-09-08T10:11Z: C01~04 각각900초·양쪽 STOP 완료로 동시 안정성4/7(57%), C05 3600초 실행 중이다.
+고정 serial17/21·stream3/4·PWM6/6·역할 전환2/5는 source별 근거다.107번 최신 원본을 따른다.
+실행 중인506680f checkout을 고치지 않는다. 현재 배치 이후2114187 TWIM→de5ad42 System OFF→
+b5d614e 충돌/SPI 최초 오류 보존→d44cef2 CTS 순으로 예약했다. 모두 exact Host/target/원격 Host
+근거가 있고, 예행 성공과 양쪽 STOP 및 원래 확인서 잔여시간을 요구한다.
+UART parity/break 도구는 별도 초안 target2/2·T13 Host63시험 단계이며 실기 예약 전이다.
+S 확인 만료21:26:14KST 이후 Host/target·분석·문서는 계속하되 새 실기는 실행하지 않는다.
+T12 완료·QDEC 제한 보고를 유지하고 T13/U/RC/정식 공개 완료로 확대하지 않는다.
+
 2026-09-08T09:36Z: C01·C02 각각900초와 양쪽 STOP 완료로 동시 안정성2/7, C03 실행 중이다.
 자원 충돌14조건(b5d614e)의 exact target·Host·원격 Host 준비를 마쳤고 CTS100ms 전용 peer GPIO
 도구는 초안 Host/target을 통과했다. 현재 S 배치→TWIM 계측→System OFF bridge/wake→충돌·CTS
