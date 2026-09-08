@@ -41,7 +41,7 @@ class SpiTimingTests(unittest.TestCase):
             for role, kind in ((1, 2), (2, 3)):
                 endpoint = test['serial_links'][0]['a' if role == 1 else 'b']
                 settings = [16000000//rate, 0 if mode == 'rxdelay0' else 1, 255] if kind == 2 else [timing.MASK]*3
-                words = [timing.MODES[mode], kind, 21, rate, 7 if kind == 2 else 2, 0,
+                words = [timing.MODES[mode], kind, 21, rate, 0 if kind == 2 else 2, 0,
                          *settings, 0, 0, 0, 0, 0, 0, 0, 1, 128000000, role, 1]
                 self.assertTrue(timing.inspect(words, endpoint, rate, mode, role)['diagnostic_only'])
                 for index in (0, 1, 2, 3, 4, 5, 6, 7, 8, 18, 19):
@@ -49,6 +49,11 @@ class SpiTimingTests(unittest.TestCase):
                     changed[index] ^= 1
                     with self.assertRaises(ProtocolError):
                         timing.inspect(changed, endpoint, rate, mode, role)
+                if kind == 2:
+                    active = words[:]
+                    active[4] = 7
+                    with self.assertRaises(ProtocolError):
+                        timing.inspect(active, endpoint, rate, mode, role)
 
     def test_both_raw_records_survive_first_configuration_failure(self):
         test = timing.fixture(next(row for row in cases.cases() if row['name'] == 'spim21'), 'baseline')

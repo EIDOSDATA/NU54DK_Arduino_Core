@@ -1,0 +1,60 @@
+{
+  "source": "7c0fde3233fc8bf90ce146080453a9602e2b20cb",
+  "status": "failed",
+  "phase": "stream-fault-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T13:34:46.014263+00:00",
+  "finished_at": "2026-09-08T13:35:20.280489+00:00",
+  "error": "ProtocolError: T13 stream fault event/order/guard mismatch: [1, 2, 20, 0, 0, 0, 0, 4294967295, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1000000]; stream=[2, 1, 0, 0, 1, 3, 256, 0, 3857193124, 2147483647, 2147483648, 0, 1038881041, 6, 250, 0, 0, 166, 1, 1]",
+  "case_results": [],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3776,
+      "sha256": "a2edf4818f935fa193dc82978e2c20c9f3926e0984604de29a8786c3ad25b17e",
+      "gzip_sha256": "8fdbb31f85c49027b56a19701d72893d47a7ec6a5f289e8dd6605ea94a9ad56c"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "169184c56599bf7bdbad2ae72d5e50d344d26c82e2dcb1d6eabd97d3db116fb4",
+      "gzip_sha256": "e56e5f2c581510f051e9bfb3dcaad344148513eb0198ec490e36079137924c55"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 140591,
+      "sha256": "7707bd161db0779c49eda2dbff9ff2ca4f0f5b721fa2faffa6ddd126fecbfdb0",
+      "gzip_sha256": "a4a16307c892ed22a327bf31ef1dd45f55462922383605fc6fd29c245c3ea4eb"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 79422,
+      "sha256": "5f97d57fb5187b551be82e9293e65f2603b6a6abbaf6ca577aeba0e3b7f375f4",
+      "gzip_sha256": "ee8e8cc88e059a67bf716746bc12d968ea119aebf0efde4a07c85278aeb2f1e0"
+    },
+    {
+      "file": "i2s-b-three-preflight-01-preflight.json.gz",
+      "bytes": 772,
+      "sha256": "c072716bf741f535c4d8de705fba8b6ecb60305e83d4523944c3badfb20f4d94",
+      "gzip_sha256": "0da1438126be8173426d5e4732df23b6b19352ee1843a08ef22db1b2e18db7a5"
+    },
+    {
+      "file": "i2s-b-three-preflight-01-preflight.log.gz",
+      "bytes": 1603,
+      "sha256": "d0fa2d53b3aeb9556a02b7632a83f2b18e083f2660f44abde26a03363584652c",
+      "gzip_sha256": "f41d063626f49dcd79a548b04fd64cd6faf7f23ccac57692087e4f63f762cf35"
+    },
+    {
+      "file": "i2s-b-three-preflight-01-execute.json.gz",
+      "bytes": 768,
+      "sha256": "61148a70e5d88877e7d3d895d4a193b5e3717504e2a572c02e460bc5ae9ae624",
+      "gzip_sha256": "1f2262bb3af23f0ef8598b4fe5e170510d0520683347f9c60111bf23e1c001e9"
+    },
+    {
+      "file": "i2s-b-three-preflight-01-execute.log.gz",
+      "bytes": 268,
+      "sha256": "521d98b3385a3e42d594e84e56b259459df20c05707605101fd47c6c3ad773fa",
+      "gzip_sha256": "b182870956c182e35772e2c860c6c878f268ed477bcb6952f76a90e44bb5a683"
+    }
+  ]
+}

@@ -74,7 +74,8 @@ bool t13::spiTimingConfigured(const Endpoint &endpoint)
         return true;
     }
     auto *reg = registers(endpoint.instance);
-    if (reg == nullptr || reg->ENABLE != SPIM_ENABLE_ENABLE_Enabled || endpoint.rate != 8000000U)
+    /** @brief nrfx는 transfer 제출 때 ENABLE을 켜므로 준비 완료 시점에는 비활성 상태입니다. */
+    if (reg == nullptr || reg->ENABLE != SPIM_ENABLE_ENABLE_Disabled || endpoint.rate != 8000000U)
     {
         return false;
     }

@@ -1,0 +1,70 @@
+{
+  "source": "2a68cd2a40e7a3e2999a0afe55d0ffb6c2d6f8e2",
+  "status": "failed",
+  "phase": "spi-timing-diagnostic",
+  "physical_executed": true,
+  "started_at": "2026-09-08T13:35:46.721757+00:00",
+  "finished_at": "2026-09-08T13:36:29.884660+00:00",
+  "error": "ProtocolError: T13 SPI timing diagnostic configuration mismatch",
+  "case_results": [
+    {
+      "id": "T13-S/spi-timing-diagnostic/serial20/initial/T13-S/preflight/uarte20/result",
+      "status": "observation-complete",
+      "measurement_id": "T13-S/preflight/uarte20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3755,
+      "sha256": "62fe50e5dd1cfb975d802b90a786efb073b597ba51f6acdb1dff130238af9bb5",
+      "gzip_sha256": "78234f1489007234a180651ce2a903c9bdfcc21a18d793aaa4719db871466b42"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "f3eef13e3d2851fd4ca6c3504caa4bacfb8ee8338fd30901218c4df8bbca4ae0",
+      "gzip_sha256": "162d697db0843420433888434d37c8d402c9606c523e1eb54be56b98a8cf2e97"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 169126,
+      "sha256": "759904be01117a74506faf1c785ee295599d13c0cb70c82b1c900b31a267b3f4",
+      "gzip_sha256": "de3762bf432bb84a013152db7511805db367930da9f9aee38afb1bfa09e57569"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 94744,
+      "sha256": "a170711cc9cb9eb24cdb7c8b1fc22ca53601717179a3b256992e6a6baf3bfbe6",
+      "gzip_sha256": "1a79cee5f8db8b1e82f0f4474652d40d1fec846f422706d0c0d07dfa28fb43e1"
+    },
+    {
+      "file": "spi20-three-baseline-02-preflight.json.gz",
+      "bytes": 753,
+      "sha256": "ad25f3054f91ab4081780b1f6f983309a3dd24bd41ba4f8292c2b63b4aa1fed4",
+      "gzip_sha256": "246b11c55d14109965b715a6b2c7bad6a8263d386cd694f78f2b2df63dc103e2"
+    },
+    {
+      "file": "spi20-three-baseline-02-preflight.log.gz",
+      "bytes": 1684,
+      "sha256": "610bdecae5e7400a5c559aa837063ba7555a337a195f6dec74145341e9b545dc",
+      "gzip_sha256": "40f4b1c4c17dc6081219816ae299fd6f2b68fd380157a813164238d1477fdf64"
+    },
+    {
+      "file": "spi20-three-baseline-02-execute.json.gz",
+      "bytes": 749,
+      "sha256": "0010e7f01e41da1e1d6d2f403e91d9f884860b773d016f754fbac3147a4b740d",
+      "gzip_sha256": "b5b76d3e2407a8d4334a91cde711983a09f0ca3298107112dd106e526ab159b1"
+    },
+    {
+      "file": "spi20-three-baseline-02-execute.log.gz",
+      "bytes": 84,
+      "sha256": "91067560d1e6306b7ea10bf9ec6f4469fe2d5e60daa3a5ec12024764588f5be8",
+      "gzip_sha256": "124729ac31f5687e3cb3f46b1729084b3d84472b9a13a73e1d0b3a8aaa4978cf"
+    }
+  ]
+}

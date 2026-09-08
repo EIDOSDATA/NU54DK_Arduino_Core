@@ -32,7 +32,7 @@ def inspect(words, endpoint, rate, mode, role):
     kind = {'spim': 2, 'spis': 3}[endpoint['kind']]
     if (len(words) != 20 or any(type(value) is not int or not 0 <= value <= MASK for value in words) or
             words[:4] != [MODES[mode], kind, endpoint['instance'], rate] or
-            words[4:6] != [7 if kind == 2 else 2, 0] or words[17] == 0 or words[18:] != [role, 1]):
+            words[4:6] != [0 if kind == 2 else 2, 0] or words[17] == 0 or words[18:] != [role, 1]):
         raise ProtocolError('T13 SPI timing diagnostic configuration mismatch')
     expected = [16000000 // rate, 0 if mode == 'rxdelay0' else 1, 255] if kind == 2 else [MASK]*3
     if words[6:9] != expected:

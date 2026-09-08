@@ -16,6 +16,44 @@ import v04_t13_run as runner
 
 
 class StreamFaultTests(unittest.TestCase):
+    def test_i2s_data_failure_is_captured_before_cleanup_and_never_restarted(self):
+        test, valid, stream = self.vector(1, role=2)
+        observations, order, devices = [], [], []
+        for role in (1, 2):
+            device = mock.Mock(image={'role': role})
+            def command(opcode, *args, current_role=role, **kwargs):
+                if opcode == 107:
+                    return [1, 1, 65537]
+                if opcode == 115:
+                    return valid[:]
+                if opcode == 104:
+                    words = stream[:]
+                    if current_role == 1:
+                        words[2:4] = [6, 22]
+                    return words
+                if opcode == 99:
+                    return [test['id'], 0, 0, 0, 0, 0] + [0]*10
+                return [1]
+            device.command.side_effect = command
+            devices.append(device)
+        def capture(*args):
+            self.assertTrue(any(label.endswith('/final/role2/stream') for label, _ in observations))
+            order.append('capture')
+        def stop(*args):
+            order.append('stop')
+            return True
+        with (mock.patch.object(fault.time, 'sleep'),
+              mock.patch.object(runner, 'failure_snapshots', side_effect=capture) as snapshot,
+              mock.patch.object(runner, 'stop_pair', side_effect=stop),
+              mock.patch.object(runner, 'idle_pins', return_value=True),
+              mock.patch.object(runner, 'execute_group') as restart):
+            with self.assertRaisesRegex(ProtocolError, 'unexpected I2S receive data'):
+                fault.execute(devices, test, 2, 1, mock.Mock(),
+                              lambda label, row: observations.append((label, row)), preflight=True)
+            snapshot.assert_called_once()
+            restart.assert_not_called()
+        self.assertEqual(order, ['capture', 'stop'])
+
     def test_pdm_peer_secondary_cs_end_keeps_error_and_rejects_other_faults(self):
         words = [3, 0, 6, 0, 0, 1, 0, 0, 2166136261, 2147483647,
                  2147483648, 0, 0, 0, 1, 0, 0, 0, 1, 1]

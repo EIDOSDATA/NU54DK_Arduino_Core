@@ -1,0 +1,70 @@
+{
+  "source": "2a68cd2a40e7a3e2999a0afe55d0ffb6c2d6f8e2",
+  "status": "passed",
+  "phase": "preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T13:37:10.095602+00:00",
+  "finished_at": "2026-09-08T13:37:46.249197+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/preflight/i2s20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/i2s20",
+      "measured_role": null,
+      "requested_seconds": 3,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3755,
+      "sha256": "62fe50e5dd1cfb975d802b90a786efb073b597ba51f6acdb1dff130238af9bb5",
+      "gzip_sha256": "78234f1489007234a180651ce2a903c9bdfcc21a18d793aaa4719db871466b42"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "f3eef13e3d2851fd4ca6c3504caa4bacfb8ee8338fd30901218c4df8bbca4ae0",
+      "gzip_sha256": "162d697db0843420433888434d37c8d402c9606c523e1eb54be56b98a8cf2e97"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 149666,
+      "sha256": "7f25e2cf0144fe21cbf90d3ad39b2f55dff49dba4e0cfdd6c7e611aa8515774e",
+      "gzip_sha256": "881bd38048df8f918f3772fc2d827c460d4552a48723bd53013ef93fa7433ed1"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 83521,
+      "sha256": "4ac9041e423b565c61b602292cee4a08412b3b3f99addeb234c86c5fa48f3f10",
+      "gzip_sha256": "a57ea71e4ce24c53a01e02923999bdebd41f7aad4b8d696191729bda98e30a6c"
+    },
+    {
+      "file": "i2s-three-normal-diagnostic-01-preflight.json.gz",
+      "bytes": 700,
+      "sha256": "1de267076b9a634459e54683c52003e16cd366e4a2d7e58e1103daf8f62d827c",
+      "gzip_sha256": "2bfd0a4315b330119e360d83d7625240e59e3d2fad2bf435de0fa0d82186753f"
+    },
+    {
+      "file": "i2s-three-normal-diagnostic-01-preflight.log.gz",
+      "bytes": 1653,
+      "sha256": "c0173c43cd4332d7d56d5dc234fdeb454859b251f4a736f5d92a7118a944b55a",
+      "gzip_sha256": "ae60ffd81fe4417ab8ecf754a52dbc3ff2c78f7e5c6e9ff273749a193785d6c6"
+    },
+    {
+      "file": "i2s-three-normal-diagnostic-01-execute.json.gz",
+      "bytes": 696,
+      "sha256": "3a55416c9b1de8c75e59a9910b065c384e4947892480d4df4e93d49e824bacb3",
+      "gzip_sha256": "13a70380b678d9178f56735d2da083748533043aae24423d19365d744e01f62a"
+    },
+    {
+      "file": "i2s-three-normal-diagnostic-01-execute.log.gz",
+      "bytes": 57,
+      "sha256": "0be1cfaa20ecd382832b79bb5b8b8826ecb811c275a36c478bf80d16b34e3a5b",
+      "gzip_sha256": "e7ad18e8719ab8e83398ab5a8329930da05b91c3a5d8b54d9b28c8f2e13cf89a"
+    }
+  ]
+}

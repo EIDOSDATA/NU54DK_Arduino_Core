@@ -55,6 +55,7 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
         continuity.check()
         original_error = None
         raw_fault = raw_stream = raw_peer_stream = None
+        unexpected_i2s_data = False
         try:
             for device in devices:
                 if device.command(106, (1,), timeout=2) != [1] or device.command(112, (0,), timeout=2) != [1]:
@@ -90,6 +91,8 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
                     try:
                         words = device.command(opcode, args, timeout=2)
                         append(label + f'/final/role{device.image["role"]}/{name}', {'status': 'observation', 'words': words})
+                        if mode == 1 and opcode == 104 and len(words) == 20 and words[2] == 6:
+                            unexpected_i2s_data = True
                         if opcode == 99 and (len(words) != 16 or words[0] != test['id'] or words[5] != 0):
                             original_error = original_error or ProtocolError('T13 stream fault reset, case drift or lease expiry')
                             # @brief PREPARE 전 stream 조회를 생략하고 양쪽 STOP 경로를 보존합니다.
@@ -106,6 +109,9 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
                                {'status': 'unproven', 'error': f'{type(error).__name__}: {error}'})
                         original_error = original_error or error
                         break
+            if unexpected_i2s_data:
+                runner.failure_snapshots(devices, test, append, label + '/unexpected-data')
+                original_error = original_error or ProtocolError('T13 unexpected I2S receive data error before recovery')
             stopped = runner.stop_pair(devices, append, label + '/cleanup')
             pins_idle = runner.idle_pins(devices, append, label + '/pins')
         if original_error is not None:

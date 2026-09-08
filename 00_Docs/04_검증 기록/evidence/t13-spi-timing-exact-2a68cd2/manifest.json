@@ -1,0 +1,85 @@
+{
+  "source": "2a68cd2a40e7a3e2999a0afe55d0ffb6c2d6f8e2",
+  "physical_executed": false,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "spi-timing-preparation-2a68cd2.json.gz",
+      "bytes": 5114,
+      "sha256": "d0cea64c89b2a6c5b672d940fea2daadb36b9e3dff6d6c18d1fd6ad51851a1f3",
+      "gzip_sha256": "3b408ac979736d120bab93057460f743923e2181ecdee157b00c274be7f3e0d4"
+    },
+    {
+      "file": "t13-spi-timing-exact-target-01.json.gz",
+      "bytes": 629,
+      "sha256": "4363a2d4481bc3defc5d9ced25e6ab186afc07c9ac1ee2b815f9d22d81efcc0d",
+      "gzip_sha256": "053c80127c5e19c1e6ac65d46de314365dcfbac3bc94648d65cd578bbc36bace"
+    },
+    {
+      "file": "t13-spi-timing-exact-target-01.log.gz",
+      "bytes": 1900,
+      "sha256": "aa2b7daa2614813e459639ac231eb801a7d7cf6badee06b106ed93fbe228400d",
+      "gzip_sha256": "3d4817d7101159e73a040037070b9616c6ec10eed03f37f456194fa9420a3b12"
+    },
+    {
+      "file": "t13-spi-timing-exact-unit-01.json.gz",
+      "bytes": 505,
+      "sha256": "3e87bf9e63e1e527cc0bb69a317d73b66b4274032c2cfd7c6848092c6a4df4bf",
+      "gzip_sha256": "fb1bba82eb0a52f89e9193291183f7164a5248cb2e1b9f8f112621db1204ba43"
+    },
+    {
+      "file": "t13-spi-timing-exact-unit-01.log.gz",
+      "bytes": 840,
+      "sha256": "3cb444773af1f7f8b374a366c2b890ae9e361101c488d38294185d925c825129",
+      "gzip_sha256": "ab59b7650e65ac7cb1b3f908a48da248fdb2df4ceb0f314ff6d3174d3910a5c7"
+    },
+    {
+      "file": "t13-spi-timing-exact-style-01.json.gz",
+      "bytes": 504,
+      "sha256": "b411a151f66433cc8aa0301b08c5ec89fd303e4b53d45ee63b3c90aa02d9ae91",
+      "gzip_sha256": "a043fb14b8485b8981542c8fb1c8329deb44cbeb6d81872bce227f38a6cd4f23"
+    },
+    {
+      "file": "t13-spi-timing-exact-style-01.log.gz",
+      "bytes": 40,
+      "sha256": "42a915550c89eccc023ce5447a143be30d1ea9c8e4c0d892ae5877d24b9d9b61",
+      "gzip_sha256": "4340aaf0c8b048666e48bcd9565c490a2613189ddf243cce8544f4bc9d1af5fa"
+    },
+    {
+      "file": "t13-spi-timing-exact-contract-01.json.gz",
+      "bytes": 441,
+      "sha256": "c00ec109057bb2487755acf3df420fcb375a2eddd961a6c0b0d75177d200001a",
+      "gzip_sha256": "7a822102f086599004b86a30287c0ef29c389774a096a6c274dc5bd2f453d7f6"
+    },
+    {
+      "file": "t13-spi-timing-exact-contract-01.log.gz",
+      "bytes": 7490,
+      "sha256": "f956a7a4f78699c8e571d24d90049e4fe5f4433d7908183c3cee0e6c38f559a5",
+      "gzip_sha256": "eb3c6e4b4f8b115b598a677fa36ad23c626dc646a1acc69a95de7e57713ea31d"
+    },
+    {
+      "file": "t13-spi-timing-exact-docs-01.json.gz",
+      "bytes": 433,
+      "sha256": "e19527de558cf0acc1ada33f411efa85f58f31b0a8fa3af94206c963cdd8c20d",
+      "gzip_sha256": "0aa5b5e26f00ecd757324090188d928e2721de268e88e146509cd51e1510c112"
+    },
+    {
+      "file": "t13-spi-timing-exact-docs-01.log.gz",
+      "bytes": 69,
+      "sha256": "0b1bbc60eac0ef3469f3a8c05f3ba8c207e837d0130b7cfb477316e99c3928fa",
+      "gzip_sha256": "0eaa7dd6dac820303305250d6f56b24f440bc94525392a9ba395709e00bba88b"
+    },
+    {
+      "file": "ci-2a68cd2-03.json.gz",
+      "bytes": 3805,
+      "sha256": "3c7bc7842e5775712839c68c2e52d2a775a8862089cdca6cb9ace2ae95893eca",
+      "gzip_sha256": "8f2b0819718835d68884e01ce8bdbf9aa31d3c6ce13344a83cdc2ee9b953ecf4"
+    },
+    {
+      "file": "ci-2a68cd2-03.host.log.gz",
+      "bytes": 310671,
+      "sha256": "7198a91854184bf1039534f489283c7fa64162f29901ad6c2c67e6159112c87b",
+      "gzip_sha256": "b84b086e78ad39448a339f4a5ee2e25c2a5ed6e584dfb5fbdabf682e47428838"
+    }
+  ]
+}
