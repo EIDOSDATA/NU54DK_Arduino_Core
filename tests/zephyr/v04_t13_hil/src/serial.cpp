@@ -11,6 +11,8 @@
 #include <hal/nrf_uarte.h>
 #include <hal/nrf_spim.h>
 #include <hal/nrf_twim.h>
+#include <hal/nrf_spis.h>
+#include <hal/nrf_twis.h>
 
 namespace
 {
@@ -828,4 +830,61 @@ void t13::serialFaultSnapshot(std::uint32_t *out, std::uint32_t &count)
         out[index] = values[index];
     }
     count = 20U;
+}
+
+/** @brief SPI/TWI START 전에 실제 PSEL을 읽으며 없는 signal slot은 disconnected로 표시합니다. */
+void t13::serialBusPins(unsigned index, std::uint32_t *out, std::uint32_t &count)
+{
+    count = 0U;
+    if (index >= max_lanes)
+    {
+        return;
+    }
+    const auto &endpoint = lanes[index].endpoint;
+    const auto *address = serialRegisters(endpoint.instance);
+    if (address == nullptr)
+    {
+        return;
+    }
+    out[0] = static_cast<std::uint32_t>(endpoint.kind);
+    out[1] = endpoint.instance;
+    out[2] = address->ENABLE;
+    for (unsigned slot = 3U; slot < 8U; ++slot)
+    {
+        out[slot] = UINT32_MAX;
+    }
+    if (endpoint.kind == Kind::spim)
+    {
+        const auto *registers = reinterpret_cast<const NRF_SPIM_Type *>(address);
+        out[3] = nrf_spim_sck_pin_get(registers);
+        out[4] = nrf_spim_mosi_pin_get(registers);
+        out[5] = nrf_spim_miso_pin_get(registers);
+        out[6] = nrf_spim_csn_pin_get(registers);
+        out[7] = nrf_spim_dcx_pin_get(registers);
+    }
+    else if (endpoint.kind == Kind::spis)
+    {
+        const auto *registers = reinterpret_cast<const NRF_SPIS_Type *>(address);
+        out[3] = nrf_spis_sck_pin_get(registers);
+        out[4] = nrf_spis_mosi_pin_get(registers);
+        out[5] = nrf_spis_miso_pin_get(registers);
+        out[6] = nrf_spis_csn_pin_get(registers);
+    }
+    else if (endpoint.kind == Kind::twim)
+    {
+        const auto *registers = reinterpret_cast<const NRF_TWIM_Type *>(address);
+        out[3] = nrf_twim_sda_pin_get(registers);
+        out[4] = nrf_twim_scl_pin_get(registers);
+    }
+    else if (endpoint.kind == Kind::twis)
+    {
+        const auto *registers = reinterpret_cast<const NRF_TWIS_Type *>(address);
+        out[3] = nrf_twis_sda_pin_get(registers);
+        out[4] = nrf_twis_scl_pin_get(registers);
+    }
+    else
+    {
+        return;
+    }
+    count = 8U;
 }

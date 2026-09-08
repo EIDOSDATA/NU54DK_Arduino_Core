@@ -78,6 +78,8 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
             for device in devices:
                 if device.command(106, (1,), timeout=2) != [1]:
                     raise ProtocolError('T13 fault clock policy failed')
+                if device.command(112, (int(test.get('_reverse_serial', False)),), timeout=2) != [1]:
+                    raise ProtocolError('T13 fault role selection failed')
             for device in reversed(devices):
                 if device.command(97, (test['id'], seed, 0x53414645), timeout=3) != [1]:
                     raise ProtocolError('T13 fault preparation failed')
@@ -86,6 +88,7 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
                 if clock[:2] != [1, 1] or clock[2] == 0:
                     raise ProtocolError('T13 fault precision clock not held')
             runner.prepared_uart_pins(devices, test, append, label + '/prepared')
+            runner.prepared_bus_pins(devices, test, append, label + '/prepared')
             if target.command(109, (mode,), timeout=2) != [1]:
                 raise ProtocolError('T13 fixed fault could not be armed')
             for device in reversed(devices):

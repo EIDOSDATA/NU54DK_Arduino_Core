@@ -13,6 +13,7 @@ import time
 import v04_pair as pair
 import v04_t13_cases as catalog
 import v04_t13_fault as faults
+import v04_t13_handover as handover
 import v04_t13_oracle as oracle
 import v04_t13_session as session
 import v04_wiring as wiring
@@ -85,6 +86,21 @@ def prepared_uart_pins(devices, test, append, label):
         oracle.uart_pins(words, endpoint)
 
 
+def prepared_bus_pins(devices, test, append, label):
+    """! @brief 양쪽 모든 SPI/TWI raw를 보존한 뒤 실제 signal 선택을 대조합니다. """
+    raw = []
+    for device in devices:
+        role = device.image['role']
+        for index, link in enumerate(test['serial_links']):
+            endpoint = link['a' if role == 1 else 'b']
+            if endpoint['kind'] != 'uarte':
+                words = device.command(113, (index,), timeout=2)
+                append(label + f'/role{role}/lane{index}/bus-pins', {'status': 'observation', 'words': words})
+                raw.append((words, endpoint))
+    for words, endpoint in raw:
+        oracle.bus_pins(words, endpoint)
+
+
 def timings(devices, test, append, label):
     """! @brief queue·완료 관측·service 지연의 고정 histogram을 raw와 함께 보존합니다. """
     raw = []
@@ -150,6 +166,8 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
         for device in devices:
             if device.command(106, (1,), timeout=2) != [1]:
                 raise ProtocolError('T13 precision clock policy failed')
+            if device.command(112, (int(test.get('_reverse_serial', False)),), timeout=2) != [1]:
+                raise ProtocolError('T13 role selection failed')
         for device in reversed(devices):
             if device.command(97, (test['id'], seed, 0x53414645), timeout=3) != [1]:
                 words = device.command(99, timeout=2)
@@ -174,6 +192,7 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
             if words[0] != test['id'] or words[1:3] != [1, 0] or words[4] != 1:
                 raise ProtocolError('T13 case failed before both peers were ready')
         prepared_uart_pins(devices, test, append, identifier + '/prepared')
+        prepared_bus_pins(devices, test, append, identifier + '/prepared')
         for device in reversed(devices):
             if device.command(98, timeout=2) != [1]:
                 raise ProtocolError('T13 start failed')
@@ -279,10 +298,13 @@ def main(argv=None):
     for name in ('build-root', 'pyocd', 'session-grant'):
         parser.add_argument('--' + name, required=True, type=Path)
     parser.add_argument('--evidence', type=Path)
-    parser.add_argument('--phase', choices=('wiring', 'preflight', 'soak', 'fault-preflight', 'serial-fault'), default='wiring')
+    parser.add_argument('--phase', choices=('wiring', 'preflight', 'soak', 'fault-preflight', 'serial-fault',
+                                          'handover-preflight', 'handover'), default='wiring')
     parser.add_argument('--cases', nargs='+', type=int, default=[])
     parser.add_argument('--fault-mode', type=int, choices=range(1, 6))
     parser.add_argument('--fault-role', type=int, choices=(1, 2), default=1)
+    parser.add_argument('--reverse-serial', action='store_true')
+    parser.add_argument('--handover-instance', type=int, choices=(0, 20, 21, 22, 30))
     parser.add_argument('--execute-fixture', action='store_true')
     parser.add_argument('--cmsis-dap-limit-packets', action='store_true')
     args = parser.parse_args(argv)
@@ -292,6 +314,19 @@ def main(argv=None):
     grant = json.loads(grant_bytes, object_pairs_hook=unique_fields)
     session.validate(grant, images, uids)
     available_cases = {test['id']: test for test in catalog.cases() if test['harness'] == 'S'}
+    is_handover = args.phase in ('handover-preflight', 'handover')
+    if is_handover:
+        if args.cases or args.handover_instance is None or args.fault_mode is not None or args.reverse_serial:
+            raise ProtocolError('T13 handover requires only its fixed instance selection')
+        initial, sequence = handover.route(args.handover_instance)
+        args.cases = sorted({test['id'] for test in [initial, *sequence]})
+    elif args.handover_instance is not None:
+        raise ProtocolError('handover instance requires a handover phase')
+    if args.reverse_serial:
+        if args.phase not in ('preflight', 'fault-preflight', 'serial-fault'):
+            raise ProtocolError('reversed roles cannot replace the planned normal soak')
+        available_cases = {key: handover.variant(value, True) if key in args.cases else value
+                           for key, value in available_cases.items()}
     if (len(set(args.cases)) != len(args.cases) or any(identifier not in available_cases for identifier in args.cases)
             or (args.phase == 'wiring' and args.cases) or (args.phase != 'wiring' and not args.cases)):
         raise ProtocolError('explicit supported S case set required')
@@ -307,6 +342,7 @@ def main(argv=None):
         'session_grant_sha256': hashlib.sha256(grant_bytes).hexdigest(), 'swd_frequency_hz': 10000000,
         'external_wiring_executed': False, 'results': [],
         'fault_mode': args.fault_mode, 'fault_role': args.fault_role if is_fault else None,
+        'reverse_serial': args.reverse_serial, 'handover_instance': args.handover_instance,
         'devices': [{'role': image['role'], 'uid_sha256': hashlib.sha256(uid.encode()).hexdigest(),
                      'hex_sha256': image['sha256'], 'elf_sha256': image['elf_sha256'],
                      'record_sha256': image['record_sha256']} for uid, image in zip(uids, images)]}
@@ -334,14 +370,17 @@ def main(argv=None):
                     10000000, cmsis_dap_limit_packets=args.cmsis_dap_limit_packets)
                 devices.append(device)
                 evidence['devices'][image['role'] - 1]['flash'] = flash
-                capability = 15 if is_fault else 7
+                capability = 31
                 if session.verify_profile(device) & capability != capability:
                     raise ProtocolError('T13 serial/stream/timing capabilities missing')
             continuity = session.Continuity(grant, images, uids, devices, available, pair.verify_identity)
             evidence['external_wiring_executed'] = True
             wiring.run_checks(devices, append, continuity.check)
             print('T13_S_WIRING_PASS', flush=True)
-            if is_fault:
+            if is_handover:
+                handover.execute(devices, args.handover_instance, continuity, append,
+                                 preflight=args.phase == 'handover-preflight')
+            elif is_fault:
                 for identifier in args.cases:
                     faults.execute(devices, available_cases[identifier], args.fault_role, args.fault_mode,
                                    continuity, append, preflight=args.phase == 'fault-preflight')

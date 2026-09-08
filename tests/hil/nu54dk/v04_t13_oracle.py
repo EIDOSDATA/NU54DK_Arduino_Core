@@ -24,6 +24,23 @@ def uart_pins(words, endpoint):
     return dict(zip(('instance', 'hwfc', 'txd', 'rxd', 'rts', 'cts', 'enable'), words))
 
 
+def bus_pins(words, endpoint):
+    """! @brief SPI/TWI의 실제 PSEL과 SPIM 미사용 DCX를 START 전에 대조합니다. """
+    kinds = {'spim': (2, 7), 'spis': (3, 2), 'twim': (4, 6), 'twis': (5, 9)}
+    if endpoint['kind'] not in kinds or len(words) != 8 or any(type(word) is not int or not 0 <= word <= MASK for word in words):
+        raise ProtocolError('T13 invalid SPI/TWI pin snapshot')
+    kind, enable = kinds[endpoint['kind']]
+    signals = ('sck', 'mosi', 'miso', 'csn') if kind in (2, 3) else ('sda', 'scl')
+    pins = []
+    for signal in signals:
+        port, number = map(int, endpoint['pins'][signal][1:].split('.'))
+        pins.append(port * 32 + number)
+    expected = pins + [MASK] * (5-len(pins))
+    if words[:2] != [kind, endpoint['instance']] or words[2] not in (0, enable) or words[3:] != expected:
+        raise ProtocolError(f'T13 SPI/TWI pin selection mismatch: actual={words}; expected={expected}')
+    return {'kind': endpoint['kind'], 'instance': words[1], 'enable': words[2], 'psel': words[3:]}
+
+
 def pattern(seed, index):
     """! @brief 송신/RX 메모리를 입력으로 사용하지 않는 전역 byte 기대값입니다. """
     index &= MASK

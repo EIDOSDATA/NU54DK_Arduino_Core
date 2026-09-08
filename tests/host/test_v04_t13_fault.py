@@ -101,6 +101,7 @@ class SerialFaultTests(unittest.TestCase):
                 devices.append(device)
             with (self.subTest(corrupt=corrupt), mock.patch.object(fault.time, 'sleep'),
                   mock.patch.object(runner, 'prepared_uart_pins'),
+                  mock.patch.object(runner, 'prepared_bus_pins'),
                   mock.patch.object(runner, 'execute_group') as restart):
                 run = lambda: fault.execute(devices, test, 1, 1, mock.Mock(),
                     lambda label, row: observations.append((label, row)), preflight=True)

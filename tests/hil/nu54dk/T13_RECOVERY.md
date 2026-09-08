@@ -43,6 +43,16 @@ mode5에서는 RX를 요청하지 않는다. RX AMOUNT는 이전 실행 값이 �
 
 ## 이 구현으로 완료되지 않는 항목
 
+역할 전환은 후속 개발 중이다. `--handover-instance 20|21|22|30`은
+UART→SPIM→SPIS→TWIM→TWIS→UART와 그 역방향의10개 전환을 각100회 수행하도록 고정한다.
+serial00은 S에서 SPIM00→SPIS00→SPIM00 두 전환을 각100회 수행한다.
+`--phase handover-preflight`는 이 순서1회이고 `--phase handover`가100회다.
+매 전환은 양쪽 STOP·clock/pin 반환 후 새 personality로 구성하고 실제 PSEL을 확인한 다음,
+서로 다른 seed의250ms 정상 양방향 구간·완료량·hash·가드를 대조한다.
+첫 송수신 성립을 위한300ms 준비와150ms drain은250ms 측정 밖이다.
+SPI는 양쪽 MOSI/MISO 신호명과 master/slave를 함께 바꾸므로 GPIO net은 그대로다.
+이 경로의 actual PSEL·역할 반전·생산 route 대조는 아직 새 source 실기로 완료하지 않았다.
+
 | 남은 항목 | 후속 판정 범위 |
 | --- | --- |
 | UART flow·RX 지연·parity/break | 4선100ms CTS 정지/재개, 2선의 제한된 RX 지연, 별도 parity/break 원인 확인과 복구 |

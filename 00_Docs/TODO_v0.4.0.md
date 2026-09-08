@@ -10,11 +10,16 @@ T13 후속 준비: f591571 실기와 분리한 C:/tr13dev에서 단독 UART TX/R
 고정 주입과 raw 보존을 구현한다. 실제 DMA 부분량·가드·오류·STOP 뒤 새 nonce 복구를 각각 판정하며
 단순 재시작을 나머지 오류 주입·flow·역할 전환·stream·자원 충돌의 완료로 세지 않는다.
 
+T13 역할 전환 준비: 같은 S net 안에서 SPI MOSI/MISO 신호명과 master/slave, TWI controller/target을
+양쪽 함께 전환한다. 새 GPIO는 추가하지 않고 생산 route·실제 PSEL을 START 전에 대조한다.
+serial20/21/22/30의 순·역방향 고정 전환과 serial00의 SPI 역할 전환을 별도100회 항목으로 준비한다.
+
 **현재 작업:** [104번 T13 S 진행](<04_검증 기록/104_T13_S_복구_동시_안정성_검증.md>).
 f591571에서 UART 미사용 PSEL 수정 후 SPI21→C01·전체 S 사전검사36/36을 통과했다.
 같은 image의 정식180/900/3600초 안정성 campaign을 실행 중이다. 실시간 완료 수는 원본 journal과
 작업 상태 파일을 확인한다. 별도 checkout의 고정 serial fault5개 mode는 Host5+13·target2/2를
-통과했고 새 source의 CI와 실기를 준비한다. 복구/전환100회 완료는 아직0이다.
+통과했고 cac9c39 Software7/7도 확인했다. 후속 역할 전환·실제 PSEL Host6와 target2/2를 준비했으며
+새 source 원격 Host가 필요하다. 복구/전환100회 완료는 아직0이다.
 
 ## 현재 요약 — 2026-09-08
 
@@ -30,7 +35,7 @@ f591571에서 UART 미사용 PSEL 수정 후 SPI21→C01·전체 S 사전검사3
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.58 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.59 |
 | 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 기능검증 완료(알려진 QDEC 문제 보고 포함)·T13 S 진행 |
 | 작성·갱신일 | 2026-09-08 |
 | 작성 직전 기준 commit | `e547fc0863be5b381ecab26835fb5e872b399a9c` — 문서 감사·원격 15/15 SUCCESS |
