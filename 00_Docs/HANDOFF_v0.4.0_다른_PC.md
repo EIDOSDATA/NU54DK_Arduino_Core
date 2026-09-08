@@ -1,6 +1,6 @@
 # v0.4.0 다른 PC 재개 인계
 
-2026-09-08T11:10Z: C01~04 각각900초·C05 3600초와 양쪽 STOP 완료로 동시 안정성5/7(71%), C06 실행 중이다.
+2026-09-08T11:24Z: C01~04·C06 각각900초·C05 3600초와 양쪽 STOP 완료로 동시 안정성6/7(86%), C08 실행 중이다.
 고정 serial17/21·stream3/4·PWM6/6·역할 전환2/5는 source별 근거다.107번 최신 원본을 따른다.
 실행 중인506680f checkout을 고치지 않는다. 현재 배치 이후2114187 TWIM→de5ad42 System OFF→
 b5d614e 충돌/SPI 최초 오류 보존→d44cef2 CTS 순으로 예약했다. 모두 exact Host/target/원격 Host
@@ -8,7 +8,9 @@ b5d614e 충돌/SPI 최초 오류 보존→d44cef2 CTS 순으로 예약했다. �
 이후93e38ff UART parity/break16조건과4f573f0 SPI 짧은 DMA/미준비10조건의 예행을 예약했다.
 각각 exact 두 역할 target·로컬 관련 Host와 원격 전체 Host105묶음793시험/106묶음797시험을 확인했다.
 C01/C05 동시 CTS e9afcc9와 RX 공급 지연 f77e1cb도 exact target·관련 Host·원격 전체 Host800/804시험을
-확인해 그 뒤로 예약했다. SDA LOW100ms staged recovery는 초안 Host78시험 통과·target 검사 중이다.
+확인해 그 뒤로 예약했다. SDA LOW100ms staged recovery도3fac751 exact target2/2·변경 Host4·
+원격 전체 Host808시험을 확인해 예약했다. TWIS 최초 write 요청 뒤2ms 공급 지연 도구는
+초안 Host4·target2/2를 통과했으며 고정 소스·원격 전체 Host 검사 뒤에만 등록한다.
 예약 항목의 실기 결과는 아직0이다. 등록 checkout은 수정하지 않는다.
 S 확인 만료21:26:14KST 이후 Host/target·분석·문서는 계속하되 새 실기는 실행하지 않는다.
 T12 완료·QDEC 제한 보고를 유지하고 T13/U/RC/정식 공개 완료로 확대하지 않는다.

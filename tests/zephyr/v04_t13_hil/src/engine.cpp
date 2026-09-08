@@ -225,6 +225,17 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         count = 1U;
         return 0U;
     }
+    if (opcode == 180U && nargs == 1U && !gate.claimed() && !wiringClaimed())
+    {
+        out[0] = serialTwisDelayPolicy(args[0]) ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 181U && nargs == 0U)
+    {
+        serialTwisDelaySnapshot(out, count);
+        return 0U;
+    }
     if (opcode == 173U && nargs == 1U)
     {
         twiStuckSnapshot(args[0], out, count);

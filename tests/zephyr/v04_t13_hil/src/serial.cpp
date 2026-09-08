@@ -64,12 +64,48 @@ namespace
         std::uint32_t raw[20]{};
         bool prepared = false;
     } rx_delay;
+    unsigned twis_delay_policy = 0U;
+    struct TwisDelay
+    {
+        std::uint32_t raw[20]{};
+        std::uint32_t scl = UINT32_MAX;
+        bool prepared = false;
+    } twis_delay;
 
     /** @brief RX 공급 지연에서 두 slot의 실제 DMA 앞뒤 경계를 검사합니다. */
     bool rxDelayGuards(const Lane &lane)
     {
         return lane.tx[0].guards(lane.endpoint.length) && lane.tx[1].guards(lane.endpoint.length) &&
                lane.rx[0].guards(lane.endpoint.length) && lane.rx[1].guards(lane.endpoint.length);
+    }
+
+    /** @brief 최초 실제 write 요청 뒤2ms 동안 공급을 미루며 SCL 수준을 관측합니다. */
+    bool twisDelayHold(const Lane &lane)
+    {
+        auto &raw = twis_delay.raw;
+        if (!twis_delay.prepared || twis_delay_policy != 2U || raw[3] == 2U)
+        {
+            return false;
+        }
+        if (raw[6] != 1U || raw[7] != 1U)
+        {
+            return true;
+        }
+        const auto now = k_cycle_get_32();
+        const auto level = nrf_gpio_pin_read(twis_delay.scl);
+        if (raw[3] == 0U)
+        {
+            raw[3] = 1U;
+            raw[4] = now;
+            raw[8] = level;
+            raw[13] = (lane.tx_pending[0] ? 1U : 0U) | (lane.tx_pending[1] ? 2U : 0U) |
+                      (lane.rx_pending[0] ? 4U : 0U) | (lane.rx_pending[1] ? 8U : 0U);
+            raw[14] = rxDelayGuards(lane) ? 1U : 0U;
+        }
+        raw[9] = level;
+        raw[10] += level;
+        ++raw[11];
+        return k_cyc_to_us_floor32(now - raw[4]) < 2000U;
     }
 
     /** @brief 실제 두 버퍼 반환·추가 요청 뒤 한 번만2ms 공급을 미룹니다. */
@@ -455,6 +491,10 @@ namespace
         {
             return true;
         }
+        if (kind == Kind::twis && twisDelayHold(lane))
+        {
+            return true;
+        }
         const auto started = k_cycle_get_32();
         for (unsigned slot = 0U; slot < 2U; ++slot)
         {
@@ -488,6 +528,13 @@ namespace
             result = static_cast<TwisHandle *>(lane.handle)
                          ->queueBuffers(lane.tx[0].data(), length, lane.rx[0].data(), length,
                                         lane.tx[1].data(), length, lane.rx[1].data(), length);
+            if (twis_delay.prepared && twis_delay_policy == 2U && twis_delay.raw[3] == 1U)
+            {
+                twis_delay.raw[5] = k_cycle_get_32();
+                twis_delay.raw[12] = static_cast<std::uint32_t>(result);
+                twis_delay.raw[15] = rxDelayGuards(lane) ? 1U : 0U;
+                twis_delay.raw[3] = 2U;
+            }
         }
         if (!accepted(lane, result, 8U))
         {
@@ -699,6 +746,18 @@ namespace
             while (kind == Kind::twim ? static_cast<TwimHandle *>(lane.handle)->takeEvent(event)
                                       : static_cast<TwisHandle *>(lane.handle)->takeEvent(event))
             {
+                if (twis_delay.prepared && twis_delay_policy == 2U && twis_delay.raw[3] == 0U)
+                {
+                    if (event.type == TwiFabricEventType::write_request && event.error_code == 1U &&
+                        event.rx_buffer == nullptr)
+                    {
+                        twis_delay.raw[6] = 1U;
+                    }
+                    if (event.type == TwiFabricEventType::buffer_needed && event.error_code == 2U)
+                    {
+                        twis_delay.raw[7] = 1U;
+                    }
+                }
                 if (kind == Kind::twim)
                 {
                     recordFault(lane, static_cast<std::uint32_t>(event.type), event.tx_buffer,
@@ -893,6 +952,7 @@ bool t13::serialPrepare(const Case &test, std::uint32_t seed)
     fault = {};
     spi_boundary = {};
     rx_delay = {};
+    twis_delay = {};
     lane_count = test.serial_count;
     for (auto &lane : lanes)
     {
@@ -904,6 +964,34 @@ bool t13::serialPrepare(const Case &test, std::uint32_t seed)
         lane.endpoint = test.serial[role - 1U][index];
         lane.seed_tx = laneSeed(seed, index, role);
         lane.seed_rx = laneSeed(seed, index, 3U - role);
+        if (twis_delay_policy != 0U)
+        {
+            if (test.id < 16U || test.id > 19U || test.serial_count != 1U || test.harness != 2U ||
+                test.adc_channels || test.pwm_instance || test.pdm_instance || test.i2s ||
+                twis_delay_policy != role || lane.endpoint.pin_count != 2U ||
+                lane.endpoint.rate != 400000U || lane.endpoint.length != 256U ||
+                lane.endpoint.kind != (role == 1U ? Kind::twim : Kind::twis))
+            {
+                return false;
+            }
+            for (unsigned pin = 0U; pin < lane.endpoint.pin_count; ++pin)
+            {
+                if (static_cast<SerialSignal>(lane.endpoint.signals[pin]) == SerialSignal::scl)
+                {
+                    twis_delay.scl = lane.endpoint.pins[pin];
+                }
+            }
+            if (twis_delay.scl != (lane.endpoint.instance == 30U ? 1U : 46U))
+            {
+                return false;
+            }
+            twis_delay.prepared = true;
+            twis_delay.raw[0] = twis_delay_policy;
+            twis_delay.raw[1] = lane.endpoint.instance;
+            twis_delay.raw[2] = 1U;
+            twis_delay.raw[12] = UINT32_MAX;
+            twis_delay.raw[18] = CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC;
+        }
         if (rx_delay_policy != 0U)
         {
             if (test.id < 2U || test.id > 5U || test.serial_count != 1U || test.harness != 2U ||
@@ -1050,6 +1138,20 @@ bool t13::serialDrained()
 
 bool t13::serialStop()
 {
+    if (twis_delay.prepared && twis_delay_policy == 1U && lane_count == 1U && lanes[0].active)
+    {
+        /** @brief 제한된 peer 공급·진행 중 전송을 기다리고 SCL LOW이면 TWIM을 비활성화하지 않습니다. */
+        k_busy_wait(30000U);
+        if (nrf_gpio_pin_read(twis_delay.scl) == 0U)
+        {
+            return false;
+        }
+    }
+    if (twis_delay.prepared && lane_count == 1U)
+    {
+        twis_delay.raw[16] = lanes[0].received.completed;
+        twis_delay.raw[17] = lanes[0].sent.completed;
+    }
     transmitting = false;
     receivers_armed = false;
     if (rx_delay.prepared && lane_count == 1U)
@@ -1103,6 +1205,10 @@ bool t13::serialStop()
     stopped = uartFaultStop(stopped) && stopped;
     if (stopped)
     {
+        if (twis_delay.prepared)
+        {
+            twis_delay.raw[19] = 1U;
+        }
         if (rx_delay.prepared)
         {
             rx_delay.raw[19] = 1U;
@@ -1134,6 +1240,30 @@ bool t13::serialRxDelayPolicy(unsigned mode)
     }
     rx_delay_policy = mode;
     return true;
+}
+
+bool t13::serialTwisDelayPolicy(unsigned mode)
+{
+    if (lane_count != 0U || mode > 2U)
+    {
+        return false;
+    }
+    twis_delay_policy = mode;
+    return true;
+}
+
+void t13::serialTwisDelaySnapshot(std::uint32_t *out, std::uint32_t &count)
+{
+    if (twis_delay.prepared && lane_count == 1U)
+    {
+        twis_delay.raw[16] = lanes[0].received.completed;
+        twis_delay.raw[17] = lanes[0].sent.completed;
+    }
+    for (unsigned index = 0U; index < 20U; ++index)
+    {
+        out[index] = twis_delay.raw[index];
+    }
+    count = 20U;
 }
 
 bool t13::serialRxDelayArm()

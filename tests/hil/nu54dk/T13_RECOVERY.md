@@ -60,6 +60,26 @@ serial00은 S에서 SPIM00→SPIS00→SPIM00 두 전환을 각100회 수행한�
 SPI는 양쪽 MOSI/MISO 신호명과 master/slave를 함께 바꾸므로 GPIO net은 그대로다.
 미완료 instance를 다른 instance의 성공으로 대체하지 않는다.
 
+## TWIS 최초 write 버퍼 공급 지연
+
+`twis-delay-preflight`/`twis-delay`는 S의 A TWIM→B TWIS20/21/22/30 각1회/100회다.
+400kHz·256byte·기존 SDA/SCL·내부 pull-up을 유지한다. B는 최초 START에서 버퍼를 제공하지 않고
+실제 write_request(buf_req=1, RX pointer 없음)와 buffer_needed(write=2)를 모두 받은 다음2ms 기다린다.
+그동안 SCL 입력의 LOW 관측 횟수와 HIGH 관측0회를 기록한 뒤 두 TX/RX 버퍼를 한 번에 공급한다.
+이는 매 서비스 시점의 디지털 관측이며 연속 파형을 오실로스코프로 측정한 근거는 아니다.
+정상 양방향 전체 payload·양쪽 STOP/clock/17핀 반환과 새 seed의 기본 구성 재획득을 요구한다.
+read_request 지연이나 임의 장시간 stretch·반대 controller 역할의 완료로 확대하지 않는다.
+
+Opcode180은 비활성 policy0기본/1A controller/2B delayed target,181은20word 원본이다.
+raw는 policy,instance,prepared,state,지연 시작/공급 완료 cycle,write_request 확인,
+write buffer_needed 확인,SCL 최초/마지막 수준,HIGH 관측 수,전체 관측 수,queueBuffers 결과,
+공급 전 pending bitmask,공급 전/후 guard,RX/TX 완료량,cycle Hz1MHz,STOP이다.
+B의 state2·2000~5000µs·두 실제 요청·SCL LOW 샘플2개 이상/HIGH0개·pending0·guard1을 요구한다.
+A는 지연 필드0·API 미호출 sentinel을 유지한다. 최종 raw는 STOP 전후 불변·완료량 단조 증가를 확인한다.
+TWIM controller STOP에서는 추가 제출을 멈춘 뒤30ms를 기다리고 SCL이 여전히 LOW이면
+비활성화를 시도하지 않고 종료 미증명으로 남긴다. 이는 활성 clock stretch 중 disable을 피하기 위한
+제한된 시험 경계이며, 무한 대기나 nrfx errata105의 공용 수정이 아니다.
+
 ## UART parity·break 오류 주입
 
 `--phase uart-line-preflight|uart-line-fault --uart-line-mode parity|break --fault-role 1|2`

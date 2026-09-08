@@ -22,6 +22,7 @@ import v04_t13_uart_line as uart_lines
 import v04_t13_spi_boundary as spi_boundaries
 import v04_t13_rx_delay as rx_delays
 import v04_t13_twi_stuck as twi_stuck
+import v04_t13_twis_delay as twis_delays
 import v04_t13_oracle as oracle
 import v04_t13_session as session
 import v04_wiring as wiring
@@ -177,6 +178,8 @@ def failure_snapshots(devices, test, append, identifier):
                 observations += [(127, (), 'cts-flow')]
             if test.get('_uart_line_fault'):
                 observations += [(142, (), 'uart-line-fault')]
+            if test.get('_twis_supply_delay'):
+                observations += [(181, (), 'twis-supply-delay')]
             observations += [(104, (index,), f'stream{index}') for index in oracle.stream_indices(test)]
             if test['pwm_instance']:
                 observations += [(107, (page,), f'pwm-trace{page}') for page in range(5)]
@@ -358,7 +361,8 @@ def main(argv=None):
                                           'uart-line-preflight', 'uart-line-fault',
                                           'spi-boundary-preflight', 'spi-boundary',
                                           'rx-delay-preflight', 'rx-delay',
-                                          'twi-stuck-preflight', 'twi-stuck'), default='wiring')
+                                          'twi-stuck-preflight', 'twi-stuck',
+                                          'twis-delay-preflight', 'twis-delay'), default='wiring')
     parser.add_argument('--cases', nargs='+', type=int, default=[])
     parser.add_argument('--fault-mode', type=int, choices=range(1, 6))
     parser.add_argument('--stream-fault-mode', type=int, choices=(1, 2))
@@ -404,6 +408,12 @@ def main(argv=None):
     is_spi_boundary = args.phase in ('spi-boundary-preflight', 'spi-boundary')
     is_rx_delay = args.phase in ('rx-delay-preflight', 'rx-delay')
     is_twi_stuck = args.phase in ('twi-stuck-preflight', 'twi-stuck')
+    is_twis_delay = args.phase in ('twis-delay-preflight', 'twis-delay')
+    if is_twis_delay:
+        if args.reverse_serial or args.fault_role != 1:
+            raise ProtocolError('T13 TWIS delay needs fixed A controller and B target')
+        for identifier in args.cases:
+            twis_delays.fixture(available_cases[identifier])
     if is_twi_stuck:
         if not args.cases or args.reverse_serial or args.fault_role != 1:
             raise ProtocolError('T13 stuck SDA needs explicit fixed cases with A controller')
@@ -457,7 +467,7 @@ def main(argv=None):
         'board_revision': images[0]['board_revision'], 'catalog_sha256': session.catalog_hash(),
         'session_grant_sha256': hashlib.sha256(grant_bytes).hexdigest(), 'swd_frequency_hz': 10000000,
         'external_wiring_executed': False, 'results': [],
-        'fault_mode': args.fault_mode, 'fault_role': args.fault_role if is_fault or is_stream_fault or is_conflict or is_flow or is_uart_line or is_rx_delay or is_twi_stuck else None,
+        'fault_mode': args.fault_mode, 'fault_role': args.fault_role if is_fault or is_stream_fault or is_conflict or is_flow or is_uart_line or is_rx_delay or is_twi_stuck or is_twis_delay else None,
         'conflict_mode': args.conflict_mode,
         'uart_line_mode': args.uart_line_mode,
         'spi_boundary_mode': args.spi_boundary_mode,
@@ -501,6 +511,10 @@ def main(argv=None):
             if is_handover:
                 handover.execute(devices, args.handover_instance, continuity, append,
                                  preflight=args.phase == 'handover-preflight')
+            elif is_twis_delay:
+                for identifier in args.cases:
+                    twis_delays.execute(devices, available_cases[identifier], continuity, append,
+                        preflight=args.phase == 'twis-delay-preflight')
             elif is_twi_stuck:
                 for identifier in args.cases:
                     twi_stuck.execute(devices, available_cases[identifier], continuity, append,

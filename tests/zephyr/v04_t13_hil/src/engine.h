@@ -29,6 +29,8 @@ namespace t13
     bool serialSpiBoundaryPolicy(unsigned mode);
     bool serialRxDelayPolicy(unsigned mode);
     bool serialRxDelayArm();
+    bool serialTwisDelayPolicy(unsigned mode);
+    void serialTwisDelaySnapshot(std::uint32_t *out, std::uint32_t &count);
     void serialRxDelaySnapshot(std::uint32_t *out, std::uint32_t &count);
     bool serialSpiBoundaryArm();
     void serialSpiBoundarySnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count);

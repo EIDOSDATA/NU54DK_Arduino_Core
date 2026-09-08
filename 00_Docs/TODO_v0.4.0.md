@@ -1,12 +1,14 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
-2026-09-08T11:10Z: C01~04 각각900초·C05 3600초와 양쪽 STOP 완료로 동시 안정성5/7(71%), C06 실행 중이다.
+2026-09-08T11:24Z: C01~04·C06 각각900초·C05 3600초와 양쪽 STOP 완료로 동시 안정성6/7(86%), C08 실행 중이다.
 고정 serial17/21·stream3/4·PWM6/6·역할 전환2/5는 source별 근거로 유지한다.
 자원 충돌b5d614e·CTS d44cef2·UART parity/break93e38ff·SPI boundary4f573f0의 exact target와
 로컬 관련 Host 및 원격 전체 Host를 확인했다. 현재 배치→TWIM 계측→System OFF→충돌/CTS→
 UART parity/break→SPI 짧은 DMA/미준비→e9afcc9 C01/C05 동시 CTS→f77e1cb RX 공급 지연을 순차 예약했다.
 동시 CTS와 RX 지연도 exact 두 역할 target·관련 Host·원격 전체 Host800/804시험을 확인했다.
-SDA LOW100ms staged recoverBus 도구는 초안 Host78시험을 통과했고 target을 검사 중이다.
+SDA LOW100ms staged recoverBus도3fac751 exact target2/2·변경 Host4·원격 전체 Host808시험을 확인해
+그 다음으로 예약했다. TWIS 최초 write 요청 뒤2ms 공급 지연도 초안 Host4·target2/2를 통과했으며
+실기 등록 전 고정 소스 검사와 원격 전체 Host를 확인한다.
 오류의 실제 event·STOP·새 seed 정상 재시작을 요구하며 예약된 도구의 실기 결과는 아직0이다.
 원래 S 확인서 만료21:26:14KST는
 연장하지 않고 종료/STOP이 확인된 독립 항목만 계속한다. T12 완료·QDEC 보고와 U 이전 경계 유지.

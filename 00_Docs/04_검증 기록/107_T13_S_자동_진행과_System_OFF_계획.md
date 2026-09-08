@@ -1,6 +1,6 @@
 # T13 S 자동 진행과 peer 제어 System OFF 검증 계획
 
-2026-09-08T10:59Z: C01~04 각각900초와 C05 3600초·양쪽 STOP 완료로 동시5/7(71%)이며 C06을 실행 중이다.
+2026-09-08T11:21Z: C01~04·C06 각각900초와 C05 3600초·양쪽 STOP 완료로 동시6/7(86%)이며 C08을 실행 중이다.
 고정 serial17/21·stream3/4·PWM6/6·역할 전환2/5는 source별 근거로 유지한다.
 CTS d44cef2의 exact 두 역할 target·Host58·원격 Host104묶음788시험 준비를 완료했다.
 UART parity/break는93e38ff exact target2/2·T13 Host63시험·원격 전체 Host105묶음793시험을 통과했다.
@@ -10,6 +10,18 @@ SPI boundary4f573f0도 exact target2/2·새 Host4시험·원격 전체 Host106�
 원격 전체 Host106묶음800시험을 확인했다. 준비 기록은 아래 e9afcc9 보존 목록을 따른다.
 f77e1cb RX 지연도 exact target2/2·새 Host4시험·원격 전체 Host107묶음804시험을 확인해 그 다음
 예행8조건을 예약했다. 모든 후속은 원래21:26:14KST 확인 종료 전에 남은 시간만 사용한다.
+SDA LOW도3fac751의 exact target2/2·새 Host4시험·원격 전체 Host108묶음808시험을 통과해
+RX 지연 다음으로 예행4조건을 예약했다. [준비 원본](evidence/t13-twi-stuck-preparation-3fac751/manifest.json)과
+[C06 실기 원본](evidence/t13-c06-soak-sauto-01-506680f/manifest.json)을 별도로 보존했다.
+
+다음 구현 범위는 S TWIS20/21/22/30의 최초 write_request와 buffer_needed를 실제로 관측한 뒤
+첫 버퍼 공급을2ms 지연하는 것이다. B의 실제 SCL LOW 관측·공급 전후 guard·정상 양방향 payload·
+STOP·새 seed 재획득을 요구한다. read_request 지연, 임의 장시간 clock stretch, 반대 controller
+역할까지 검증한 것으로 확대하지 않는다. 기존 동작 중인 이미지와 배치는 변경하지 않는다.
+11:26Z 초안 검사는 두 역할 target2/2·변경 Host4·정렬·계약·문서를 통과했다.
+T13 Host82시험 중79개 통과, 기존 handover/route/runtime C++ 실행3개는 Windows4551 차단으로
+미통과 기록을 보존했다. 고정 소스 원격 전체 Host 성공을 추가로 확인하기 전에는 실기를 예약하지 않는다.
+첫 draft target 시도는 이미 존재하는 출력 디렉터리를 거부했으며 기존 디렉터리는 변경하지 않았다.
 
 2026-09-08 후속 구현 범위: T13의 기존 자원 충돌 요구 중 S UART21/22/30에서 같은 block의
 SPI 활성화, 다른 UART의 동일 GPIO 점유, 내부 DMA workspace 겹침을 의도하여 거부의 원자성과
@@ -101,7 +113,7 @@ f77e1cb의 exact gate와 원격 전체 Host 확인 뒤 등록을 완료했으며
 | 고정 serial 복구 | 17/21 완료, TWIM 취소4개 미완료 | RX 시작/END·이전 AMOUNT 구분 보완 후 재검증 |
 | stream 복구 | 3/4 완료, I2S B97번째 실패 | 원본 분석·원인 분리·재검증 |
 | 역할 전환 | 예행5/5, 정식2/5 완료(serial00·30 각100회), SPI20/21/22 실패 보존 | 최초 RX 오류 계측을 보강하여 원인 분리; 이전 중단47회 합산 금지 |
-| 동시 안정성 | 5/7 완료(C01~05), C06 진행 중(2026-09-08T10:59Z) | C01~06·C08; 일반900초, C05는3600초 |
+| 동시 안정성 | 6/7 완료(C01~06), C08 진행 중(2026-09-08T11:21Z) | C01~06·C08; 일반900초, C05는3600초 |
 | 추가 오류·충돌 | 일부 runner 미구현 | UART flow/지연/parity/break, SPI slave/short/CS, TWI 지연/stuck-low, 자원 충돌의 구현·Host/target·실기 |
 | peer 제어 System OFF | 구현·exact Host/target 준비 완료, 실기0 | S 현재 배치와 TWIM 계측 뒤 bridge 예행부터 실행; 무인 성립 실패 시 원본·한계를 남기고 독립 작업 계속 |
 | U UART00 | 대기 | S→U 현재 재배치 확인 전 실행 금지 |
