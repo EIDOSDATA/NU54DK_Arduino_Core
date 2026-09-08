@@ -37,6 +37,7 @@ namespace t13
     void serialSpiBoundaryBuffer(unsigned direction, unsigned page, std::uint32_t *out,
                                  std::uint32_t &count);
     void serialBusPins(unsigned lane, std::uint32_t *out, std::uint32_t &count);
+    void serialSpiTimingSnapshot(unsigned lane, std::uint32_t *out, std::uint32_t &count);
     void captureService();
     bool pwmClockPolicy(bool crystal);
     bool pwmTailPolicy(unsigned mode);

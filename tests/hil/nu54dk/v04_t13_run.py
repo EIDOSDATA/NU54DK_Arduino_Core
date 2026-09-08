@@ -16,6 +16,7 @@ import v04_t13_fault as faults
 import v04_t13_stream_fault as stream_faults
 import v04_t13_pwm_recovery as pwm_recovery
 import v04_t13_handover as handover
+import v04_t13_spi_timing as spi_timing
 import v04_t13_conflict as conflicts
 import v04_t13_flow as flows
 import v04_t13_uart_line as uart_lines
@@ -177,6 +178,8 @@ def failure_snapshots(devices, test, append, identifier):
         if engine[0] == test['id']:
             observations = [(100, (index,), f'lane{index}') for index in range(len(test['serial_links']))]
             observations += [(124, (index,), f'lane{index}-first-data-fault') for index in range(len(test['serial_links']))]
+            if test.get('_spi_timing_mode'):
+                observations += [(183, (0,), 'spi-timing')]
             if test.get('_flow_gpio_peer'):
                 observations += [(127, (), 'cts-flow')]
             if test.get('_uart_line_fault'):
@@ -207,6 +210,8 @@ def failure_snapshots(devices, test, append, identifier):
 def execute_group(devices, group, duration, continuity, append, *, preflight, seed=None, during=None):
     """! @brief 중단 시간을 합산하지 않고 설정을 유지한 한 구간만 판정합니다. """
     test = group['test']
+    if test.get('_spi_timing_mode') and not preflight:
+        raise ProtocolError('T13 SPI timing diagnostic cannot replace normal soak')
     seed = secrets.randbits(32) if seed is None else seed
     diagnostic_mode = test.get('_pwm_diagnostic_tail', 0)
     if diagnostic_mode not in (0, 1, 2):
@@ -225,6 +230,8 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
     original_error = None
     try:
         for device in devices:
+            if device.command(182, (spi_timing.MODES.get(test.get('_spi_timing_mode'), 0),), timeout=2) != [1]:
+                raise ProtocolError('T13 SPI timing policy selection failed')
             if device.command(106, (1,), timeout=2) != [1]:
                 raise ProtocolError('T13 precision clock policy failed')
             if device.command(112, (int(test.get('_reverse_serial', False)),), timeout=2) != [1]:
@@ -256,6 +263,8 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
                 raise ProtocolError('T13 case failed before both peers were ready')
         prepared_uart_pins(devices, test, append, identifier + '/prepared')
         prepared_bus_pins(devices, test, append, identifier + '/prepared')
+        if test.get('_spi_timing_mode'):
+            spi_timing.observe(devices, test, append, identifier + '/prepared')
         for device in reversed(devices):
             if device.command(98, timeout=2) != [1]:
                 raise ProtocolError('T13 start failed')
@@ -340,7 +349,7 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
         raise ProtocolError('T13 STOP or resource return unproven')
     for member in group['members']:
         append(f'T13-S/{phase}/{member["name"]}/result',
-               {'status': 'observation-complete' if diagnostic else 'passed',
+               {'status': 'observation-complete' if diagnostic or test.get('_spi_timing_mode') else 'passed',
                 'measurement_id': identifier, 'measured_role': member['measured_role'],
                 'requested_seconds': duration, 'planned_soak_pass': not preflight,
                 'same_pair_shared_measurement': len(group['members']) > 1})
@@ -355,7 +364,7 @@ def main(argv=None):
         parser.add_argument('--' + name, required=True, type=Path)
     parser.add_argument('--evidence', type=Path)
     parser.add_argument('--phase', choices=('wiring', 'preflight', 'soak', 'fault-preflight', 'serial-fault',
-                                          'handover-preflight', 'handover',
+                                          'handover-preflight', 'handover', 'spi-timing-diagnostic',
                                           'stream-fault-preflight', 'stream-fault', 'pwm-diagnostic',
                                           'pwm-recovery-preflight', 'pwm-recovery',
                                           'conflict-preflight', 'resource-conflict',
@@ -376,6 +385,7 @@ def main(argv=None):
     parser.add_argument('--fault-role', type=int, choices=(1, 2), default=1)
     parser.add_argument('--reverse-serial', action='store_true')
     parser.add_argument('--handover-instance', type=int, choices=(0, 20, 21, 22, 30))
+    parser.add_argument('--spi-timing-mode', choices=tuple(spi_timing.MODES))
     parser.add_argument('--execute-fixture', action='store_true')
     parser.add_argument('--cmsis-dap-limit-packets', action='store_true')
     args = parser.parse_args(argv)
@@ -385,7 +395,13 @@ def main(argv=None):
     grant = json.loads(grant_bytes, object_pairs_hook=unique_fields)
     session.validate(grant, images, uids)
     available_cases = {test['id']: test for test in catalog.cases() if test['harness'] == 'S'}
-    is_handover = args.phase in ('handover-preflight', 'handover')
+    is_timing = args.phase == 'spi-timing-diagnostic'
+    if is_timing:
+        if args.spi_timing_mode is None or args.handover_instance not in (20, 21, 22):
+            raise ProtocolError('T13 timing diagnostic requires explicit mode and serial20/21/22')
+    elif args.spi_timing_mode is not None:
+        raise ProtocolError('T13 SPI timing mode requires diagnostic phase')
+    is_handover = args.phase in ('handover-preflight', 'handover', 'spi-timing-diagnostic')
     if is_handover:
         if args.cases or args.handover_instance is None or args.fault_mode is not None or args.reverse_serial:
             raise ProtocolError('T13 handover requires only its fixed instance selection')
@@ -476,6 +492,7 @@ def main(argv=None):
         'stream_fault_mode': args.stream_fault_mode,
         'pwm_recovery_mode': args.pwm_recovery_mode,
         'reverse_serial': args.reverse_serial, 'handover_instance': args.handover_instance,
+        'spi_timing_mode': args.spi_timing_mode, 'diagnostic_only': is_timing,
         'devices': [{'role': image['role'], 'uid_sha256': hashlib.sha256(uid.encode()).hexdigest(),
                      'hex_sha256': image['sha256'], 'elf_sha256': image['elf_sha256'],
                      'record_sha256': image['record_sha256']} for uid, image in zip(uids, images)]}
@@ -512,7 +529,7 @@ def main(argv=None):
             print('T13_S_WIRING_PASS', flush=True)
             if is_handover:
                 handover.execute(devices, args.handover_instance, continuity, append,
-                                 preflight=args.phase == 'handover-preflight')
+                                 preflight=args.phase != 'handover', timing_mode=args.spi_timing_mode)
             elif is_twis_delay:
                 for identifier in args.cases:
                     twis_delays.execute(devices, available_cases[identifier], continuity, append,
@@ -563,7 +580,7 @@ def main(argv=None):
                 append(f'T13-S/final-pins/role{device.image["role"]}', {'status': 'observation', 'words': words})
                 if words[1:4] != [0, 0, 0] or words[7] != 0:
                     raise ProtocolError('T13 final pin direction/pull/lease not idle')
-    print(('T13_S_DIAGNOSTIC_COMPLETED; no normal-soak qualification' if args.phase == 'pwm-diagnostic'
+    print(('T13_S_DIAGNOSTIC_COMPLETED; no normal-soak qualification' if args.phase == 'pwm-diagnostic' or is_timing
            else 'T13_S_CAMPAIGN_PASS; phase=' + args.phase), flush=True)
     return 0
 

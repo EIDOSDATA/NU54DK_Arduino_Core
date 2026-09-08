@@ -9,6 +9,7 @@
 #include "uart_fault.h"
 #include "twi_stuck.h"
 #include "measurement.h"
+#include "spi_timing.h"
 #include <nucode/SerialFabric.h>
 #include <zephyr/kernel.h>
 #include <hal/nrf_uarte.h>
@@ -659,7 +660,7 @@ namespace
         }
         lane.active = true;
         /** @brief 양쪽 TX idle 설정을 마친 뒤 START에서 RX를 켜야 준비 중 break를 받지 않습니다. */
-        return true;
+        return spiTimingConfigured(endpoint);
     }
 
     /** @brief API 완료 event를 모두 소진하며 예상하지 않은 취소·오류는 실패로 고정합니다. */
@@ -1691,4 +1692,16 @@ void t13::serialBusPins(unsigned index, std::uint32_t *out, std::uint32_t &count
         return;
     }
     count = 8U;
+}
+
+/** @brief 정상 전송 또는 실패 후의 실제 SPI 타이밍과 공통 GPIO 상태를 읽습니다. */
+void t13::serialSpiTimingSnapshot(unsigned index, std::uint32_t *out, std::uint32_t &count)
+{
+    count = 0U;
+    if (index >= max_lanes)
+    {
+        return;
+    }
+    spiTimingSnapshot(lanes[index].endpoint, out);
+    count = 20U;
 }

@@ -1,0 +1,91 @@
+{
+  "source": "7c0fde3233fc8bf90ce146080453a9602e2b20cb",
+  "physical_executed": false,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "t13-spi-timing-draft-host-01.json.gz",
+      "bytes": 495,
+      "sha256": "1b9571c73315ef5b9f70aa26dd723cbeebc48454daf03d6058285fa9dbe7a322",
+      "gzip_sha256": "67337be5dcfd59e98713e273558b9adddd4585337c1f25b0dd18857c9a700b56"
+    },
+    {
+      "file": "t13-spi-timing-draft-host-01.log.gz",
+      "bytes": 20935,
+      "sha256": "7c09eb74cb2e7d8befc6e2a801d58532b0fff1c21ba8cdf4e9ef2a62683c976a",
+      "gzip_sha256": "1ddf5bca7f357cc7ad418c8699213ab66d2b4625e743562c4e6897d64fe5e1fa"
+    },
+    {
+      "file": "t13-spi-timing-draft-unit-01.json.gz",
+      "bytes": 505,
+      "sha256": "6ef6ce5e9768d4cf698e7f978d091031e262fb62d08bb121735e77a6263da797",
+      "gzip_sha256": "e1fa4429205aa94b8957d7e6c75224cc435e7ec7adf260dc8002e95ad6cb68f2"
+    },
+    {
+      "file": "t13-spi-timing-draft-unit-01.log.gz",
+      "bytes": 840,
+      "sha256": "32e4acc697ab6bb6676bf4ca3a9035635c9f717c83a7c2f68e2576ed3efc9486",
+      "gzip_sha256": "04d5bde1c42b7d0e21641f9063c0794c1ebc1c51c1c1a9d0f3ea583108864354"
+    },
+    {
+      "file": "t13-spi-timing-draft-target-01.json.gz",
+      "bytes": 665,
+      "sha256": "431d5c13486e60276a1e3064c1206a9f9b3e1a66cdb5c7115651764009855697",
+      "gzip_sha256": "3e7680ce15aa24e7e9cb1c0f52ad0732714ecdebeeca8274381e37eec783935a"
+    },
+    {
+      "file": "t13-spi-timing-draft-target-01.log.gz",
+      "bytes": 141,
+      "sha256": "d65b9355c5b5746103dabf0ba1d87f256eb1be6f395c952a30e162c52a1e9117",
+      "gzip_sha256": "ff85ca4047e6d2a8349bec70c7d2abcb34a4e2fc39c0cd578d63ccb4779924fb"
+    },
+    {
+      "file": "t13-spi-timing-draft-target-02.json.gz",
+      "bytes": 664,
+      "sha256": "7df3bd04d7e76a9841d598066354c3748b8dd769b3a476e50ee95545c22cd439",
+      "gzip_sha256": "811c57f80a9f73091145b59604f792f671180f155a3edcc8053ba85d5e272c44"
+    },
+    {
+      "file": "t13-spi-timing-draft-target-02.log.gz",
+      "bytes": 2060,
+      "sha256": "8694eb87a011646de6479721833d65acf75b801841b21383a6d9ced57589a541",
+      "gzip_sha256": "de1149b0739ef5124383a5032c117c948ef62a54a02acb6c6a96d69b62e5f28c"
+    },
+    {
+      "file": "t13-spi-timing-draft-format-01.json.gz",
+      "bytes": 556,
+      "sha256": "67e42dc7601cd860b005fca72fae979a516595adb67434e4de3534b9bb88b31d",
+      "gzip_sha256": "51bcee3ceae200d368efef5dd797924f1ab8b64fd27f615613aa6b181ecbe56d"
+    },
+    {
+      "file": "t13-spi-timing-draft-format-01.log.gz",
+      "bytes": 40,
+      "sha256": "34a88454ef707aefe224ab9abc5d7aeb979969801f99df6c237dbf733db90930",
+      "gzip_sha256": "658177de1f5236745f1fe7331b73f71160b5894e184b4dfcd978298d4d469162"
+    },
+    {
+      "file": "t13-spi-timing-draft-contract-01.json.gz",
+      "bytes": 476,
+      "sha256": "4ecf8a0de90819938e9c3e8b2a1ae7b7995170a69730efd58c268e2eade30a88",
+      "gzip_sha256": "d38c5af3902ff387c7a1ec6a1803ece4632763b1d08e0d0a2dd768ea0eb8f2ba"
+    },
+    {
+      "file": "t13-spi-timing-draft-contract-01.log.gz",
+      "bytes": 7554,
+      "sha256": "047486cfba612e9b2a3684cab54fd96b96bff0ae61b12f2587a9aa18529ce00c",
+      "gzip_sha256": "c80e7084cf7c19604028b0e0b83b1e6d1687ec0b63e25403071a1857cb2ff853"
+    },
+    {
+      "file": "t13-spi-timing-draft-docs-01.json.gz",
+      "bytes": 468,
+      "sha256": "b1cd48fd038216153586711ef553c270ba9c7012042334e28bea971097e3e5af",
+      "gzip_sha256": "defb4b4a2e0bc6c58a25d0ca0b1163db67f7a50a4e39e573206a6bdd27c76c25"
+    },
+    {
+      "file": "t13-spi-timing-draft-docs-01.log.gz",
+      "bytes": 69,
+      "sha256": "0b1bbc60eac0ef3469f3a8c05f3ba8c207e837d0130b7cfb477316e99c3928fa",
+      "gzip_sha256": "0eaa7dd6dac820303305250d6f56b24f440bc94525392a9ba395709e00bba88b"
+    }
+  ]
+}

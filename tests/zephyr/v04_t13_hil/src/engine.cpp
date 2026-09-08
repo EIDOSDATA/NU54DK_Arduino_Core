@@ -6,6 +6,7 @@
 #include "measurement.h"
 #include "cases.h"
 #include "handover.h"
+#include "spi_timing.h"
 #include "fixture_gate.h"
 #include <zephyr/kernel.h>
 
@@ -313,6 +314,17 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         audioDiagnosticSnapshot(args[0], out, count);
         return 0U;
     }
+    if (opcode == 182U && nargs == 1U && !gate.claimed() && !wiringClaimed())
+    {
+        out[0] = spiTimingPolicy(args[0]) ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 183U && nargs == 1U && selected != nullptr && args[0] < selected->serial_count)
+    {
+        serialSpiTimingSnapshot(args[0], out, count);
+        return count == 20U ? 0U : 400U;
+    }
     if (opcode == 112U && nargs == 1U && args[0] <= 1U && !gate.claimed() && !wiringClaimed())
     {
         reverse_serial = args[0] != 0U;
@@ -333,7 +345,8 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
             if (test.id == args[0] && test.harness == CONFIG_NUCODE_T13_HARNESS)
             {
                 selected_variant = test;
-                if (!reverse_serial || reverseSerialCase(selected_variant))
+                if ((!reverse_serial || reverseSerialCase(selected_variant)) &&
+                    spiTimingCase(selected_variant))
                 {
                     selected = &selected_variant;
                 }

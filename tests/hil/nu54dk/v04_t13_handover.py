@@ -52,11 +52,18 @@ def route(instance):
                   twi_reverse, twi, spi_reverse, spi, uart]
 
 
-def execute(devices, instance, continuity, append, *, preflight):
+def execute(devices, instance, continuity, append, *, preflight, timing_mode=None):
     """! @brief reset/flash 없이 매 전환의 STOP·새 PSEL·다른 payload와 다음 peer frame을 증명합니다. """
     import v04_t13_run as runner
+    import v04_t13_spi_timing as timing
+    if timing_mode is not None and (not preflight or instance not in (20, 21, 22)):
+        raise ProtocolError('T13 timing comparison cannot be used as planned handover100')
     initial, sequence = route(instance)
-    root = f'T13-S/{"handover-preflight" if preflight else "handover"}/serial{instance}'
+    if timing_mode is not None:
+        initial = timing.fixture(initial, timing_mode)
+        sequence = [timing.fixture(test, timing_mode) for test in sequence]
+    phase = 'spi-timing-diagnostic' if timing_mode else 'handover-preflight' if preflight else 'handover'
+    root = f'T13-S/{phase}/serial{instance}'
     first_seed = secrets.randbits(32)
     sequence_index = 0
     def run(test, label):
@@ -73,7 +80,7 @@ def execute(devices, instance, continuity, append, *, preflight):
             label = root + f'/repeat{repetition:03}/step{step:02}'
             append(label + '/input', {'status': 'input', 'from': previous, 'to': following})
             run(following, label + '/transfer')
-            append(label + '/result', {'status': 'passed', 'from_name': previous['name'],
+            append(label + '/result', {'status': 'observation-complete' if timing_mode else 'passed', 'from_name': previous['name'],
                                      'to_name': following['name'], 'planned_handover_pass': not preflight})
             previous = following
         print(f'T13_HANDOVER_PROGRESS block={instance} rounds={repetition}/{rounds} transitions={repetition*len(sequence)}/{rounds*len(sequence)}', flush=True)
