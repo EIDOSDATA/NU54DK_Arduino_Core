@@ -1,0 +1,70 @@
+{
+  "source": "43bc0320d6681d57d2ec1cd569fef35f7dd8ec0d",
+  "status": "passed",
+  "phase": "pwm-diagnostic",
+  "physical_executed": true,
+  "started_at": "2026-09-08T04:37:53.049906+00:00",
+  "finished_at": "2026-09-08T04:41:30.439138+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/pwm-diagnostic/pwm21/result",
+      "status": "observation-complete",
+      "measurement_id": "T13-S/pwm-diagnostic/pwm21",
+      "measured_role": null,
+      "requested_seconds": 180,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 5425,
+      "sha256": "b74b614c9bbf9b5afda4b51f567bd8fee39298d1928ffba6c4b0e3cd6de130c3",
+      "gzip_sha256": "99872f2a18ce79de8173ab635a6712eccf9254e49b0a675bb07dd4170544048b"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "82686cc4e7451483b49c8b4095ef7318efe1090dbc4808d829bc8682a42a45e3",
+      "gzip_sha256": "d122514f5e57277ea2fc2afee67ba834b4d275deb01a3a6c42542bd73d26e651"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 269153,
+      "sha256": "cd312d89943a4dde862f6e53dbd54f1455b7022dd75ae710fe9da63cc78af08e",
+      "gzip_sha256": "ed6055425660614d96cb8e4947ac0b9a0c121eab614570ec90c3f6e7737c3ba1"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 139444,
+      "sha256": "89eb63168101a62abfa24e2f920b87f7c660da438341bac827f27406c7f68767",
+      "gzip_sha256": "5ba402dd0b5ae86918634d7710ff2e68f79936fb2f5206d4bc12e3c11226155a"
+    },
+    {
+      "file": "pwm21-dap-43bc032-repair2-diagnostic1-preflight.json.gz",
+      "bytes": 760,
+      "sha256": "29b0d6ac7fd0b5f9275eaeb40697b8e5e6f17e1f4353f43312bbb184f685499a",
+      "gzip_sha256": "f63b47e7a090f9932230dfbfef9d3074e1fc3b1a09866b3c152167ef51ad8509"
+    },
+    {
+      "file": "pwm21-dap-43bc032-repair2-diagnostic1-preflight.log.gz",
+      "bytes": 1488,
+      "sha256": "91db4fdef452040811a13b072a6142d65863e080589bc939031a9bc8e86f7565",
+      "gzip_sha256": "567e9d1511b6af087edbe357cffa55543457d8974005ad2a6ebe63ff3b40c6fb"
+    },
+    {
+      "file": "pwm21-dap-43bc032-repair2-diagnostic1-execute.json.gz",
+      "bytes": 756,
+      "sha256": "3a015b46cb877c8ace9111c5dbfa85b4ab06494d44707752b69fa83261ce7d23",
+      "gzip_sha256": "3df0c8234271982908ba3dcf54eb4baaba145388c3ca9c4c66dd31abbf6b1dcf"
+    },
+    {
+      "file": "pwm21-dap-43bc032-repair2-diagnostic1-execute.log.gz",
+      "bytes": 335,
+      "sha256": "d9771543d0d6b9ffe40f62a2cf58d249fc6bb7d6731c754ae216a939ecc77eb4",
+      "gzip_sha256": "d024d2619498182494752d0a61f8b0bb9376509c1d0a1c1d8b9b4d9136d8f9c2"
+    }
+  ]
+}

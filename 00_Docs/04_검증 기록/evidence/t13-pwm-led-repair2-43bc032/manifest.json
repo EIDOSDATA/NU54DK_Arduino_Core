@@ -1,0 +1,70 @@
+{
+  "source": "43bc0320d6681d57d2ec1cd569fef35f7dd8ec0d",
+  "status": "passed",
+  "phase": "pwm-diagnostic",
+  "physical_executed": true,
+  "started_at": "2026-09-08T04:41:48.639191+00:00",
+  "finished_at": "2026-09-08T04:45:25.454137+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/pwm-diagnostic/pwm21/result",
+      "status": "observation-complete",
+      "measurement_id": "T13-S/pwm-diagnostic/pwm21",
+      "measured_role": null,
+      "requested_seconds": 180,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 5425,
+      "sha256": "b74b614c9bbf9b5afda4b51f567bd8fee39298d1928ffba6c4b0e3cd6de130c3",
+      "gzip_sha256": "99872f2a18ce79de8173ab635a6712eccf9254e49b0a675bb07dd4170544048b"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "82686cc4e7451483b49c8b4095ef7318efe1090dbc4808d829bc8682a42a45e3",
+      "gzip_sha256": "d122514f5e57277ea2fc2afee67ba834b4d275deb01a3a6c42542bd73d26e651"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 270699,
+      "sha256": "54715e50a1f81280596aca3238af0faffc4889e248c0457d229349fc9176346f",
+      "gzip_sha256": "4e9af775c6676cdd0012b0a9d0b8a0315da6fb2ba4067507fc88c734ead0d4a0"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 140174,
+      "sha256": "c6c05228237b0a1f551aab560202cc205e0993ed58147c4ef65973f2966ae4c5",
+      "gzip_sha256": "5afec32ac8119c91caf9d93bf4d01833f3d755669b65d5449ece6d68521f6729"
+    },
+    {
+      "file": "pwm21-led-43bc032-repair2-diagnostic1-preflight.json.gz",
+      "bytes": 760,
+      "sha256": "086cf8b057779c76d8c8e934d5ee7c9bf24edabbb4f88fa343eb23ddb2c77a38",
+      "gzip_sha256": "82d47c4dd505761b0076fd081fc2490d8cc7a768b22f8187f26b7560229f0087"
+    },
+    {
+      "file": "pwm21-led-43bc032-repair2-diagnostic1-preflight.log.gz",
+      "bytes": 1488,
+      "sha256": "91db4fdef452040811a13b072a6142d65863e080589bc939031a9bc8e86f7565",
+      "gzip_sha256": "567e9d1511b6af087edbe357cffa55543457d8974005ad2a6ebe63ff3b40c6fb"
+    },
+    {
+      "file": "pwm21-led-43bc032-repair2-diagnostic1-execute.json.gz",
+      "bytes": 756,
+      "sha256": "6dcaed4354b6075e68f4931a0c47be40a78965252fee243a9ff6b2f2bcf92a8d",
+      "gzip_sha256": "d5c3b66b0f9c1a48d5a4efe0ff7fdada26e217c76f81bb124d0ff1da8a94349d"
+    },
+    {
+      "file": "pwm21-led-43bc032-repair2-diagnostic1-execute.log.gz",
+      "bytes": 335,
+      "sha256": "118ac3b75d33f121346a719962af4f36f038010379aac64482d93d2a7d154926",
+      "gzip_sha256": "ceb5caa491c41f5d6a5f189cab5c10db495d9efbb526328b9102e0a4792d7b36"
+    }
+  ]
+}
