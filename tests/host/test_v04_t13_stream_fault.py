@@ -99,6 +99,41 @@ class StreamFaultTests(unittest.TestCase):
         with self.assertRaises(ProtocolError):
             fault.inspect_i2s_peer_tail(raw, peer, metadata, buffer, seed, 2)
 
+    def test_i2s_stop_can_truncate_final_stereo_pair_only_with_exact_fault_proof(self):
+        """! @brief 마지막 pair의 MSB 보존과 이후 zero만 허용하고 더 이른 손상·다른 생략 상태는 거부합니다. """
+        from v04_common_i2s import pattern
+        test, raw, stream, seed, metadata, buffer, peer = self.peer_tail_vector()
+        buffer = [buffer[0] & 0xFFFFC000]+[0]*255
+        metadata[6:10] = [256, 1278, pattern(metadata[3], 1278), buffer[0]]
+        metadata[14] = peer[3] = 1278
+        peer[15] = 256
+        result = fault.inspect_i2s_peer_tail(raw, peer, metadata, buffer, seed, 2)
+        self.assertTrue(result['last_stereo_frame_truncated'])
+        self.assertFalse(result['normal_stream_pass'])
+        for offset in (0, 1, 255):
+            broken = buffer[:]
+            broken[offset] ^= 1
+            if offset == 0:
+                broken_metadata = metadata[:]
+                broken_metadata[9] = broken[0]
+            else:
+                broken_metadata = metadata
+            with self.subTest(offset=offset), self.assertRaises(ProtocolError):
+                fault.inspect_i2s_peer_tail(raw, peer, broken_metadata, broken, seed, 2)
+        for index in (4, 5, 10, 11):
+            broken = raw[:]
+            broken[index] += 1
+            with self.subTest(fault=index), self.assertRaises(ProtocolError):
+                fault.inspect_i2s_peer_tail(broken, peer, metadata, buffer, seed, 2)
+        # @brief 실제 metadata와 payload를 함께 바꿔도 마지막 frame보다 앞선 zero 손상은 거부합니다.
+        earlier_metadata = metadata[:]
+        earlier_metadata[5] = peer[14] = 1533
+        earlier_metadata[7] = earlier_metadata[14] = peer[3] = 1277
+        earlier_metadata[8] = pattern(metadata[3], 1277)
+        earlier_metadata[9] = 0
+        with self.assertRaises(ProtocolError):
+            fault.inspect_i2s_peer_tail(raw, peer, earlier_metadata, [0]*256, seed, 2)
+
     def test_i2s_data_failure_is_captured_before_cleanup_and_never_restarted(self):
         test, valid, stream = self.vector(1, role=2)
         observations, order, devices = [], [], []

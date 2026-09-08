@@ -1,0 +1,163 @@
+{
+  "source": "5c4c3e0d21efa42209a814beab6367377a3b020a",
+  "status": "failed",
+  "phase": "stream-fault",
+  "physical_executed": true,
+  "started_at": "2026-09-08T14:58:25.411790+00:00",
+  "finished_at": "2026-09-08T14:59:14.034026+00:00",
+  "error": "ProtocolError: T13 unexpected I2S receive data error before recovery: T13 I2S peer error precedes the last submitted TX word",
+  "case_results": [
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat001/restart/T13-S/preflight/i2s20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/i2s20",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat001/result",
+      "status": "passed",
+      "fault_seed": 1509444578,
+      "restart_seed": 3352244827,
+      "planned_recovery_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat002/restart/T13-S/preflight/i2s20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/i2s20",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat002/result",
+      "status": "passed",
+      "fault_seed": 1413974714,
+      "restart_seed": 3396399875,
+      "planned_recovery_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat003/restart/T13-S/preflight/i2s20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/i2s20",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat003/result",
+      "status": "passed",
+      "fault_seed": 1711248454,
+      "restart_seed": 4224249343,
+      "planned_recovery_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat004/restart/T13-S/preflight/i2s20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/i2s20",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat004/result",
+      "status": "passed",
+      "fault_seed": 2529526054,
+      "restart_seed": 150141087,
+      "planned_recovery_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat005/restart/T13-S/preflight/i2s20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/i2s20",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat005/result",
+      "status": "passed",
+      "fault_seed": 2058423704,
+      "restart_seed": 3834016801,
+      "planned_recovery_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat006/restart/T13-S/preflight/i2s20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/i2s20",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat006/result",
+      "status": "passed",
+      "fault_seed": 1947177490,
+      "restart_seed": 3929598891,
+      "planned_recovery_pass": true,
+      "normal_soak_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3788,
+      "sha256": "b7637ef5f53e5456e64fd41345399d10a064025565c95cdf10eebb80448ec6ed",
+      "gzip_sha256": "c03ad6bcada50d417ab31a9468ebd897c4f637c5e633b4e4ded9895a89306f54"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "fb7c71d9af9fd427953bcc2c23c05e985150fe0757bd3be30ac4233ba2b1e634",
+      "gzip_sha256": "715ab7c700e1683fb64b74a21c7197be1df97df2aaece4302f81a6458d2a96d7"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 372986,
+      "sha256": "7cbc6029184e1d0272acfcec8ff7ab33b17b7a54dedada98cc2296433ae44e79",
+      "gzip_sha256": "d98b092b7f25f0a2915493da1217cef45cb5bac2a798ba996e16e7ee9890bc69"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 206368,
+      "sha256": "ae61d525985e37966ac75df983f251e00185809fcdbead5651af491fa788ab0a",
+      "gzip_sha256": "8fb8e938ba9257de484a7a0653ab1d699dd1075b3fcb0b7de44ea8f7555e1678"
+    },
+    {
+      "file": "i2s-b-s123-100-01-preflight.json.gz",
+      "bytes": 740,
+      "sha256": "ed16e4fe45cbf9696e0661c95005faa476698d2584e340d875d3878ac0f5478d",
+      "gzip_sha256": "469ef90a3fd86f02f28795da9a9840b2cea1985aae92a5db6bd98e647dd0740f"
+    },
+    {
+      "file": "i2s-b-s123-100-01-preflight.log.gz",
+      "bytes": 1650,
+      "sha256": "9d83184d0d4e5bcb02e54b42b844a0fc43b81cc79970546005b9ba4df262637c",
+      "gzip_sha256": "90537e299c385d33525721c7522af9d91e33c3bad743577ca242fdb16cddd1d6"
+    },
+    {
+      "file": "i2s-b-s123-100-01-execute.json.gz",
+      "bytes": 736,
+      "sha256": "3f1999aed8653cc30692b4a94e0579af5b30b0dc501eca9767e76494058c4991",
+      "gzip_sha256": "5a60862f935d7d15b9bc3838d43d5f5a3d92c6fc5c20db45728f95ba3771257f"
+    },
+    {
+      "file": "i2s-b-s123-100-01-execute.log.gz",
+      "bytes": 529,
+      "sha256": "4e78a9349c1c5a5e1d6a79fc973f492c16a9049ce0d8159b1b329ad82da92ac9",
+      "gzip_sha256": "f5f531ae3be0034742cf3a4c98aec0211f5b481d05fc9bdc2064a52cd49f974c"
+    }
+  ]
+}

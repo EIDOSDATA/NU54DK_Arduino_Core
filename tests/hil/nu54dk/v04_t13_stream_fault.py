@@ -153,7 +153,7 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
 
 
 def inspect_i2s_peer_tail(fault, peer, metadata, buffer, seed, role):
-    """! @brief 검증된 B underrun의 마지막 word 또는 nrfx 버퍼 재사용 첫 word 절단·zero 꼬리만 구분합니다. """
+    """! @brief 검증된 B underrun의 마지막 stereo frame 또는 버퍼 재사용 첫 word 절단을 구분합니다. """
     from v04_common_i2s import pattern as i2s_pattern
     if (role != 2 or len(fault) != 20 or len(peer) != 20 or len(metadata) != 20 or
             peer[:3] != [2, 0, 6] or peer[18:20] != [1, 1] or
@@ -164,8 +164,12 @@ def inspect_i2s_peer_tail(fault, peer, metadata, buffer, seed, role):
     report = oracle.i2s_failure(metadata, buffer, seed, 1)
     boundary = fault[5]*256
     first = report['mismatches'][0]
-    if first['index'] not in (boundary-1, boundary):
-        raise ProtocolError('T13 I2S peer error precedes the last submitted TX word')
+    # @brief TXPTRUPD는 직렬 송신 완료보다 먼저 발생하므로 STOP 시 마지막 stereo frame은 진행 중일 수 있습니다.
+    # @brief 현재 양방향32-bit fixture의2word 시작 지연과4완료/5제출의 단일 생략 원본까지 요구합니다.
+    if (first['index'] not in (boundary-2, boundary-1, boundary) or
+            first['index'] == boundary-2 and
+            (metadata[4] != 2 or fault[4:6] != [4, 5] or fault[10:12] != [4, 5])):
+        raise ProtocolError('T13 I2S peer error precedes the bounded final stereo frame')
     offset = first['index']-report['first_sample']
     repeated = first['index'] == boundary
     before_stop = i2s_pattern(metadata[3], boundary-256) if repeated else first['expected']
@@ -176,6 +180,7 @@ def inspect_i2s_peer_tail(fault, peer, metadata, buffer, seed, role):
     return {'normal_stream_pass': False, 'target_queued_words': boundary,
             'first_affected_sample': first['index'], 'affected_words': len(report['mismatches']),
             'last_submitted_word_truncated': first['index'] == boundary-1,
+            'last_stereo_frame_truncated': first['index'] == boundary-2,
             'last_tx_buffer_reuse_truncated': repeated,
             'raw_error_preserved': 6}
 

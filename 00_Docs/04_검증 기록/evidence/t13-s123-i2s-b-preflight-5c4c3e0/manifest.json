@@ -1,0 +1,78 @@
+{
+  "source": "5c4c3e0d21efa42209a814beab6367377a3b020a",
+  "status": "passed",
+  "phase": "stream-fault-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T14:57:17.596333+00:00",
+  "finished_at": "2026-09-08T14:57:52.486942+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/stream-fault-preflight/i2s20/role2/repeat001/restart/T13-S/preflight/i2s20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/i2s20",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/stream-fault-preflight/i2s20/role2/repeat001/result",
+      "status": "passed",
+      "fault_seed": 2103720860,
+      "restart_seed": 3813884453,
+      "planned_recovery_pass": false,
+      "normal_soak_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3788,
+      "sha256": "b7637ef5f53e5456e64fd41345399d10a064025565c95cdf10eebb80448ec6ed",
+      "gzip_sha256": "c03ad6bcada50d417ab31a9468ebd897c4f637c5e633b4e4ded9895a89306f54"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "fb7c71d9af9fd427953bcc2c23c05e985150fe0757bd3be30ac4233ba2b1e634",
+      "gzip_sha256": "715ab7c700e1683fb64b74a21c7197be1df97df2aaece4302f81a6458d2a96d7"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 169064,
+      "sha256": "78c980a873b8c85f4c856acdea7a382071beb439f71255d00449e381deac696d",
+      "gzip_sha256": "72ddaeec959c9839c70ce18cbaa0774aebfdc3693e4e1abdf2b8d770d39c2db9"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 95783,
+      "sha256": "f7cd3747234212acfc6690124971c26fbc2497407f39cbc380046b739e6533f7",
+      "gzip_sha256": "d3526de4a06c428e942e7bdec57fd0c4a8cfc1bad0e4f7f95957c2f485445da5"
+    },
+    {
+      "file": "i2s-b-s123-preflight-01-preflight.json.gz",
+      "bytes": 762,
+      "sha256": "a3ddc875deac047ed5b2954291a1a397c70b60cb384e4f02e5efdacf9e68e98a",
+      "gzip_sha256": "933d7e263e270f51d2063838c67ba2a86cbe4d6ad860d733c16d6a596cc8f81a"
+    },
+    {
+      "file": "i2s-b-s123-preflight-01-preflight.log.gz",
+      "bytes": 1660,
+      "sha256": "b60d0983b0d49656547a86fdea2e6a89ab1bbb4b8b5a999d6ae9626afb39e588",
+      "gzip_sha256": "a42bc67c121366b1a7526bb2670873a184f4467ef71f36231efdb6fdef3680ca"
+    },
+    {
+      "file": "i2s-b-s123-preflight-01-execute.json.gz",
+      "bytes": 758,
+      "sha256": "04931d9258155db859d70ce756593cbb514fbf647c4ad89c80c8e74b89ce2d00",
+      "gzip_sha256": "96f6a0808d46b4e86316a136b867649138aaeea009beaf52dd30fb532b1e6500"
+    },
+    {
+      "file": "i2s-b-s123-preflight-01-execute.log.gz",
+      "bytes": 132,
+      "sha256": "71d8da560877d455c2d84bf566c90c73aaa170b3dd65aab4af4f168e18777fd9",
+      "gzip_sha256": "7170536645fa7838f7f53537c283d7bd862f5e00de6a56419817667ef49fde35"
+    }
+  ]
+}
