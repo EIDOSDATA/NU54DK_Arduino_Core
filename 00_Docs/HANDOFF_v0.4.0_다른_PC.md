@@ -1,5 +1,11 @@
 # v0.4.0 다른 PC 재개 인계
 
+2026-09-08 23:17 KST:1486a13의 target2/2·관련 Host12·원격 전체 Host828 PASS.
+SPI20 시작 순서 수정 예행 PASS 후 정식100회를 실행 중이다. I2S는 정상 underrun 뒤
+이미 재사용된 마지막 DMA 첫 word 일부를 별도로 식별하도록 보강 중이다. 두 형태의 실제
+원본 재대조와 Host10을 통과했으며 새 exact 소스에서 재시작·100회를 확인해야 한다.
+직전 I2S 예행 FAIL·RAM 원본과 현재 SPI 실행은109번에 보존했다. S/U/RC 전체 완료가 아니다.
+
 2026-09-08 23:05 KST: TWIM400/400으로 고정 serial21/21 완료, 자원 충돌 사용자 수용 완료.
 SPI20 repeat46/step8·SPI21 repeat23/step8은 역방향 첫 byte 오류로 실패했다.
 I2S는096a2d9에서 의도한 B underrun 뒤 A의 TX 마지막 word 절단·zero 꼬리까지 거부한

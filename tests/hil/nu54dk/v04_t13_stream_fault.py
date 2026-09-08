@@ -153,7 +153,8 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
 
 
 def inspect_i2s_peer_tail(fault, peer, metadata, buffer, seed, role):
-    """! @brief B의 검증된 underrun 뒤 마지막 TX word 절단·zero 꼬리만 허용하고 이전 오류를 거부합니다. """
+    """! @brief 검증된 B underrun의 마지막 word 또는 nrfx 버퍼 재사용 첫 word 절단·zero 꼬리만 구분합니다. """
+    from v04_common_i2s import pattern as i2s_pattern
     if (role != 2 or len(fault) != 20 or len(peer) != 20 or len(metadata) != 20 or
             peer[:3] != [2, 0, 6] or peer[18:20] != [1, 1] or
             metadata[11] != peer[4] or metadata[12] != peer[5] or
@@ -166,14 +167,16 @@ def inspect_i2s_peer_tail(fault, peer, metadata, buffer, seed, role):
     if first['index'] not in (boundary-1, boundary):
         raise ProtocolError('T13 I2S peer error precedes the last submitted TX word')
     offset = first['index']-report['first_sample']
-    if ((first['index'] == boundary and first['actual'] != 0) or
-            first['actual'] not in [(first['expected'] & (oracle.MASK << bits)) & oracle.MASK
+    repeated = first['index'] == boundary
+    before_stop = i2s_pattern(metadata[3], boundary-256) if repeated else first['expected']
+    if (first['actual'] not in [(before_stop & (oracle.MASK << bits)) & oracle.MASK
                                 for bits in range(1, 33)] or
             any(value != 0 for value in buffer[offset+1:])):
         raise ProtocolError('T13 I2S peer tail is not one truncated word followed by zeros')
     return {'normal_stream_pass': False, 'target_queued_words': boundary,
             'first_affected_sample': first['index'], 'affected_words': len(report['mismatches']),
             'last_submitted_word_truncated': first['index'] == boundary-1,
+            'last_tx_buffer_reuse_truncated': repeated,
             'raw_error_preserved': 6}
 
 

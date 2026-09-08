@@ -1,0 +1,67 @@
+{
+  "source": "1486a1306ae0e0c6bba5b766120aacd229c0fcc0",
+  "physical_executed": false,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "t13-i2s-reuse-tail-draft-1486a13.patch.gz",
+      "bytes": 3840,
+      "sha256": "2db0212c26541226c593f69ea7501949b7d0f13c95030e6b3b52464b4e81dd0c",
+      "gzip_sha256": "74a5fbb13c4936ca99ebe2bd49d061038b00a86879a1231775d1ada4f98252ba"
+    },
+    {
+      "file": "i2s-b-three-tail-preflight-01-tail-replay-01.json.gz",
+      "bytes": 783,
+      "sha256": "f7aa1fd0ca6bbd45a51a842e847ec426049594bf6dd8ad081bdb11eee0702fff",
+      "gzip_sha256": "a8e2ad68514218b76ddc86f1847ff3d63ab203658cf62735fdc624c8d81e763c"
+    },
+    {
+      "file": "i2s-b-three-capture-preflight-01-tail-replay-03.json.gz",
+      "bytes": 786,
+      "sha256": "eb6facdb6265b495bdcc98c6f754871e4dbd617b5e0da122ce2d8c3f1ef55791",
+      "gzip_sha256": "88c0a5828e513a8b86291b66088f558cdff8dd220a6a79ff58b1d0e64601dac0"
+    },
+    {
+      "file": "spi-three-timing-summary-01.json.gz",
+      "bytes": 3866,
+      "sha256": "64800e6940816ab2a6315ec046a5615080bb4d971593e45e0e8a9f7fdfda1b89",
+      "gzip_sha256": "0a6ff0273b02ed4f82df0572eb3c6d90c9987907bf3fe77137470ed58f48e4d4"
+    },
+    {
+      "file": "t13-i2s-reuse-tail-host-01.json.gz",
+      "bytes": 505,
+      "sha256": "6bfb8e930521112583c8f73e5faeaf8e85a74dd4f5461359295711b6f64af44d",
+      "gzip_sha256": "b4efcefa6d48aa22d12df2d4337b872115d451e7b58873872579d7e227ae92c3"
+    },
+    {
+      "file": "t13-i2s-reuse-tail-host-01.log.gz",
+      "bytes": 2291,
+      "sha256": "764e2620c9564967456ec0adbbf166c7766d67b90a23c1d524fba4871c0c12d1",
+      "gzip_sha256": "954363d0e5001892a6e21999547ff44d3a0e9fdd69d66d2f8ce6d7c68bffbf82"
+    },
+    {
+      "file": "t13-i2s-reuse-tail-docs-01.json.gz",
+      "bytes": 466,
+      "sha256": "c7a76206b66de966c3440163504fd23932179b49180871e7ec5ce5f7f818c438",
+      "gzip_sha256": "0962e0268defdbaa4a4c236205819fef6582241ebab8bc90b3d3d07d9010f60d"
+    },
+    {
+      "file": "t13-i2s-reuse-tail-docs-01.log.gz",
+      "bytes": 69,
+      "sha256": "0b1bbc60eac0ef3469f3a8c05f3ba8c207e837d0130b7cfb477316e99c3928fa",
+      "gzip_sha256": "0eaa7dd6dac820303305250d6f56b24f440bc94525392a9ba395709e00bba88b"
+    },
+    {
+      "file": "t13-i2s-reuse-tail-contract-01.json.gz",
+      "bytes": 474,
+      "sha256": "484a3d0c882d6b81589dcf74a437ec0f8b7b75d0eb9f877d46a7340ff64082d8",
+      "gzip_sha256": "c843332600f2941783863c958a8f960d1d2594bb7702fb8082686c34f4c58de4"
+    },
+    {
+      "file": "t13-i2s-reuse-tail-contract-01.log.gz",
+      "bytes": 7554,
+      "sha256": "7a36ca345e56d85f2d9a1f693ffebc0c22451158a5315aa7f0ceea350e6c8cb8",
+      "gzip_sha256": "e3d85683ce43e954e1096660c10c081649be968411bb6c900321abc40d11a8bf"
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "source": "1486a1306ae0e0c6bba5b766120aacd229c0fcc0",
+  "status": "passed",
+  "phase": "handover-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T14:13:52.266861+00:00",
+  "finished_at": "2026-09-08T14:14:38.096921+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/handover-preflight/serial20/initial/T13-S/preflight/uarte20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step01/transfer/T13-S/preflight/spim20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step01/result",
+      "status": "passed",
+      "from_name": "uarte20",
+      "to_name": "spim20",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step02/transfer/T13-S/preflight/spim20-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim20-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step02/result",
+      "status": "passed",
+      "from_name": "spim20",
+      "to_name": "spim20-reversed",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step03/transfer/T13-S/preflight/twim20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step03/result",
+      "status": "passed",
+      "from_name": "spim20-reversed",
+      "to_name": "twim20",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step04/transfer/T13-S/preflight/twim20-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim20-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step04/result",
+      "status": "passed",
+      "from_name": "twim20",
+      "to_name": "twim20-reversed",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step05/transfer/T13-S/preflight/uarte20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step05/result",
+      "status": "passed",
+      "from_name": "twim20-reversed",
+      "to_name": "uarte20",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step06/transfer/T13-S/preflight/twim20-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim20-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step06/result",
+      "status": "passed",
+      "from_name": "uarte20",
+      "to_name": "twim20-reversed",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step07/transfer/T13-S/preflight/twim20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step07/result",
+      "status": "passed",
+      "from_name": "twim20-reversed",
+      "to_name": "twim20",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step08/transfer/T13-S/preflight/spim20-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim20-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step08/result",
+      "status": "passed",
+      "from_name": "twim20",
+      "to_name": "spim20-reversed",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step09/transfer/T13-S/preflight/spim20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step09/result",
+      "status": "passed",
+      "from_name": "spim20-reversed",
+      "to_name": "spim20",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step10/transfer/T13-S/preflight/uarte20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte20",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial20/repeat001/step10/result",
+      "status": "passed",
+      "from_name": "spim20",
+      "to_name": "uarte20",
+      "planned_handover_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 1749,
+      "sha256": "f8897651ab45d7a4cbcb251da902529961b976b5bc071d6434f7e47ac5707d59",
+      "gzip_sha256": "3b05af564ffc4e986895287aebaeb5427ecca83f652ba1c5c0fb179ea171ebdb"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "55ef53a106120ea9e155a3930261e271fe3279f7aefafab9a9d4a26d65b3853c",
+      "gzip_sha256": "7ca89c6e4033cdc13edd783c635ae13712313523bfebcf25380221675c71e691"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 436459,
+      "sha256": "01a3dce98e33f20f5cb26fff4f2055146a961e7728fb5a3735412feedc41f779",
+      "gzip_sha256": "a675b9e8c7a40f0a7b7fdf18fbb5f9d6c05515db9387a348e91d327558b11c32"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 233456,
+      "sha256": "37a7f84f70daba9e1c4b7470820313f2ca3e1625084d37b8fb43b679c9910f64",
+      "gzip_sha256": "ffa4f0281b2d832af3cdd7f0d40bbeb0691bef646143b1e3ae22af05930b981f"
+    },
+    {
+      "file": "spi20-three-order-preflight-01-preflight.json.gz",
+      "bytes": 722,
+      "sha256": "245bf0a8b7bc281831710bfde23e09b59ebcdaa17ed2f70d71f6a121551608f0",
+      "gzip_sha256": "a79f266585f0e29e5f17fbc47b98b341a160a79cfa10ba5b4c212526b40ce986"
+    },
+    {
+      "file": "spi20-three-order-preflight-01-preflight.log.gz",
+      "bytes": 1676,
+      "sha256": "03c8159bd0f5944d18daff9e41b27c16f2b11332f64db31e777c4022a98ef5a9",
+      "gzip_sha256": "274619bb737463a69bf8d9879ad2595105f4c1ac4f792b40951a9ca1dc174185"
+    },
+    {
+      "file": "spi20-three-order-preflight-01-execute.json.gz",
+      "bytes": 718,
+      "sha256": "bd721531671ea5861c02b6d304aeed9d4865cc44a2cc32749fb51632580e0903",
+      "gzip_sha256": "131e90a7797f5173160b32e8e3c63f6489e3622f4f2cf2242a8963441e7d4c47"
+    },
+    {
+      "file": "spi20-three-order-preflight-01-execute.log.gz",
+      "bytes": 127,
+      "sha256": "037cd0944f39c10cc22b1a914f6c219dac0391fdd606717b41f6c6b04e1739d8",
+      "gzip_sha256": "48d5ae631020b6507ffdd5be24c04a1a6682485fffed3cbb61da8e6c1e34ac5e"
+    }
+  ]
+}

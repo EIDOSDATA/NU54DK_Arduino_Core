@@ -1,0 +1,60 @@
+{
+  "source": "1486a1306ae0e0c6bba5b766120aacd229c0fcc0",
+  "status": "failed",
+  "phase": "stream-fault-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T14:12:12.833252+00:00",
+  "finished_at": "2026-09-08T14:12:46.840837+00:00",
+  "error": "ProtocolError: T13 unexpected I2S receive data error before recovery: T13 I2S peer tail is not one truncated word followed by zeros",
+  "case_results": [],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 1749,
+      "sha256": "f8897651ab45d7a4cbcb251da902529961b976b5bc071d6434f7e47ac5707d59",
+      "gzip_sha256": "3b05af564ffc4e986895287aebaeb5427ecca83f652ba1c5c0fb179ea171ebdb"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "55ef53a106120ea9e155a3930261e271fe3279f7aefafab9a9d4a26d65b3853c",
+      "gzip_sha256": "7ca89c6e4033cdc13edd783c635ae13712313523bfebcf25380221675c71e691"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 148000,
+      "sha256": "711988fc7213b72e90aa8b2e9f5f63fdaf948d0cdd63234e6e58f047647d665d",
+      "gzip_sha256": "68da65e5b6f9474eff5efc2c72b23dccc7580356a77940e1f660c7c5a6cd97af"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 84373,
+      "sha256": "43c3512bf29c669edd8fce2e32a33b4fa4878041c8704fde880188d41dc21726",
+      "gzip_sha256": "b991cb767ef32cf25446a5456b49c40cbd7cfd115af0246c6ff5c95846e8b3ce"
+    },
+    {
+      "file": "i2s-b-three-tail-preflight-01-preflight.json.gz",
+      "bytes": 781,
+      "sha256": "4d5b8ad9fce7d9f4b45d23ea6e36fdc4cf30610ea0e44400604f4553d420d122",
+      "gzip_sha256": "179abc86d673da9b19b180bce6fc6819c3d852e480248978ad40e60d9a2d3882"
+    },
+    {
+      "file": "i2s-b-three-tail-preflight-01-preflight.log.gz",
+      "bytes": 1660,
+      "sha256": "cbe567b873d759542aeac7360062df407e5df1398839ce4f9ccad27e308a7c58",
+      "gzip_sha256": "2c9659df2a77e3f8ec4022ba932fd7e07769ac8aff35685047eb054981c872a1"
+    },
+    {
+      "file": "i2s-b-three-tail-preflight-01-execute.json.gz",
+      "bytes": 777,
+      "sha256": "43e8691bb62b69c802d252d2ab379ed28037908c922845bbeeb0f322aca3fbc9",
+      "gzip_sha256": "146f5ede8dd5d075ca94085ded6f23d8628b67c3280eb308d10f3d4494d755b7"
+    },
+    {
+      "file": "i2s-b-three-tail-preflight-01-execute.log.gz",
+      "bytes": 152,
+      "sha256": "855f9498d06834dba21c8d0f4dce36e5c33cb2076587cd77997868a9a27921e6",
+      "gzip_sha256": "2b11b681b201b173d5b36f5f0dc43776c30bb231c29178b4217d8a4d4ee602e4"
+    }
+  ]
+}

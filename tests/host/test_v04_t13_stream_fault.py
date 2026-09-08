@@ -81,6 +81,24 @@ class StreamFaultTests(unittest.TestCase):
         self.assertFalse(observed[-1]['planned_recovery_pass'])
         self.assertTrue(any(row.get('status') == 'expected-fault-observed' for row in observed))
 
+    def test_i2s_underrun_reuses_exact_last_buffer_before_stop(self):
+        """! @brief nrfx가 이미 재사용한 마지막 DMA 첫 word의 절단과 이후 zero만 인정합니다. """
+        from v04_common_i2s import pattern
+        test, raw, stream, seed, metadata, buffer, peer = self.peer_tail_vector()
+        source_seed = metadata[3]
+        buffer[1] = pattern(source_seed, 1279)
+        buffer[2] = pattern(source_seed, 1024) & 0xFFC00000
+        metadata[6:10] = [254, 1280, pattern(source_seed, 1280), buffer[2]]
+        metadata[14] = peer[3] = 1280
+        peer[15] = 254
+        result = fault.inspect_i2s_peer_tail(raw, peer, metadata, buffer, seed, 2)
+        self.assertTrue(result['last_tx_buffer_reuse_truncated'])
+        self.assertFalse(result['normal_stream_pass'])
+        buffer[2] = pattern(source_seed, 1280) & 0xFFC00000
+        metadata[9] = buffer[2]
+        with self.assertRaises(ProtocolError):
+            fault.inspect_i2s_peer_tail(raw, peer, metadata, buffer, seed, 2)
+
     def test_i2s_data_failure_is_captured_before_cleanup_and_never_restarted(self):
         test, valid, stream = self.vector(1, role=2)
         observations, order, devices = [], [], []
