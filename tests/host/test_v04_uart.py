@@ -60,6 +60,16 @@ class UartTests(unittest.TestCase):
         self.assertIn("NRF_GPIO_PIN_MAP(1, 4), NRF_GPIO_PIN_PULLUP", firmware)
         self.assertIn("handle = nullptr;\n        initializeOnboardSerialIdle();", firmware)
 
+    def test_hardware_error_stops_rx_before_disabled_state(self):
+        root = Path(__file__).resolve().parents[2]
+        source = (root / "cores/arduino/UarteFabric.cpp").read_text(encoding="utf-8")
+        error_case = source.split("case NRFX_UARTE_EVT_ERROR:", 1)[1].split("default:", 1)[0]
+        self.assertIn("atomic_cas(&context.cancelling_rx, 0, 1)", error_case)
+        self.assertIn("nrfx_uarte_rx_abort(&context.driver, true, false)", error_case)
+        self.assertNotIn("atomic_clear(&context.rx_active)", error_case)
+        self.assertLess(error_case.index("pushEvent(context"),
+                        error_case.index("nrfx_uarte_rx_abort"))
+
     def test_dma_state_fail_closed(self):
         uart.check_status([1, 1, 0, 1, 3, 0], 1)
         uart.check_status([2, 1, 0, 3, 3, 3], 2)

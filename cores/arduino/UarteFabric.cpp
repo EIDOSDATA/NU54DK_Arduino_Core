@@ -295,10 +295,24 @@ namespace nucode::arduino
                 atomic_clear(&context.cancelling_rx);
                 break;
             case NRFX_UARTE_EVT_ERROR:
-                atomic_clear(&context.rx_active);
                 setBufferState(context, event->data.error.rx.p_buffer, DmaBufferState::error);
                 pushEvent(context, {UarteEventType::error, event->data.error.rx.p_buffer,
                                     event->data.error.rx.length, event->data.error.error_mask});
+                /**
+                 * @brief 첫 하드웨어 오류 뒤 RX를 실제로 정지해 반복 ERROR IRQ를 차단합니다.
+                 *
+                 * rx_active는 RX_DISABLED callback에서만 내립니다. 오류 callback에서 먼저 내리면
+                 * requestStopAdapter()가 동작 중인 하드웨어 RX를 정지된 것으로 오인할 수 있습니다.
+                 */
+                if ((atomic_get(&context.rx_active) != 0) &&
+                    atomic_cas(&context.cancelling_rx, 0, 1))
+                {
+                    const int result = nrfx_uarte_rx_abort(&context.driver, true, false);
+                    if ((result != 0) && (result != -EINPROGRESS))
+                    {
+                        atomic_clear(&context.cancelling_rx);
+                    }
+                }
                 break;
             default:
                 break;

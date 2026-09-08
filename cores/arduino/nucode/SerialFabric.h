@@ -130,7 +130,11 @@ namespace nucode::arduino
         bool continuous_receive{false};
     };
 
-    /** @brief 완료 queue에서 읽는 UARTE async event입니다. */
+    /**
+     * @brief 완료 queue에서 읽는 UARTE async event입니다.
+     * @note 수신 하드웨어 오류는 error로 먼저 게시하고 RX를 정지합니다. 정지 과정의 부분 버퍼는
+     *       정상 완료가 아닌 rx_cancelled로 뒤따를 수 있습니다.
+     */
     struct UarteEvent
     {
         UarteEventType type{UarteEventType::error};
