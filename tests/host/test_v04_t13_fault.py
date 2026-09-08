@@ -130,6 +130,36 @@ class SerialFaultTests(unittest.TestCase):
                     self.assertIn(mock.call(102, timeout=2), device.command.call_args_list)
                 self.assertTrue(any(label.endswith('/final/role2/fault') for label, _ in observations))
 
+    def test_twi_raw_provenance_is_saved_before_cleanup_without_relaxing_oracle(self):
+        """! @brief 이전 RX AMOUNT 가설은 원본만 수집하며 아직 통과 근거로 사용하지 않습니다. """
+        test, raw = self.vector(4)
+        raw[17] = test['serial_links'][0]['buffer_bytes']
+        observations = []
+        devices = []
+        proof = list(range(20))
+        for role in (1, 2):
+            device = mock.Mock()
+            device.image = {'role': role}
+            def command(opcode, *args, **kwargs):
+                return {107: [1, 1, 65537, 0, 0, 0, 0, 0], 110: raw[:],
+                        123: proof[:], 99: [test['id'], 0, 0, 0, 0, 0] + [0]*10,
+                        100: [0]*20}.get(opcode, [1])
+            device.command.side_effect = command
+            devices.append(device)
+        with (mock.patch.object(fault.time, 'sleep'),
+              mock.patch.object(runner, 'prepared_uart_pins'),
+              mock.patch.object(runner, 'prepared_bus_pins'),
+              mock.patch.object(runner, 'stop_pair', return_value=True) as stop,
+              mock.patch.object(runner, 'idle_pins', return_value=True),
+              mock.patch.object(runner, 'execute_group') as restart):
+            with self.assertRaises(ProtocolError):
+                fault.execute(devices, test, 1, 4, mock.Mock(),
+                    lambda name, row: observations.append((name, row)), preflight=True)
+            stop.assert_called_once()
+            restart.assert_not_called()
+        self.assertEqual([row['words'] for name, row in observations
+                          if name.endswith('/twi-rx-provenance')], [proof, proof])
+
 
 if __name__ == '__main__':
     unittest.main()

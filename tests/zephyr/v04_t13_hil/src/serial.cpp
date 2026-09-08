@@ -56,6 +56,7 @@ namespace
         std::uint32_t hardware_tx = 0U, hardware_rx = 0U;
         std::uint32_t timing_reference = 0U, rx_ready = 0U, rx_completed_before = 0U;
         std::uint32_t rx_pending_before = 0U;
+        std::uint32_t twi_proof[20]{};
     } fault;
 
     /** @brief SDK가 정의한 공유 serial block 주소만 조회합니다. */
@@ -121,6 +122,23 @@ namespace
                 reinterpret_cast<NRF_TWIM_Type *>(serialRegisters(lane.endpoint.instance));
             fault.hardware_tx = nrf_twim_txd_amount_get(registers);
             fault.hardware_rx = nrf_twim_rxd_amount_get(registers);
+            if (fault.mode == 4U)
+            {
+                auto &proof = fault.twi_proof;
+                proof[8] = nrf_twim_event_check(registers, NRF_TWIM_EVENT_RXSTARTED) ? 1U : 0U;
+                proof[9] = nrf_twim_event_check(registers, NRF_TWIM_EVENT_ENDRX) ? 1U : 0U;
+                proof[10] = 1U;
+                for (unsigned byte = 0U; byte < lane.endpoint.length; ++byte)
+                {
+                    proof[10] &= lane.rx[0].data()[byte] == 0xCCU ? 1U : 0U;
+                }
+                proof[12] = fault.submitted_cycle;
+                proof[13] = fault.requested_cycle;
+                proof[14] = fault.event_cycle;
+                proof[15] = fault.hardware_tx;
+                proof[16] = fault.hardware_rx;
+                proof[19] = fault.events;
+            }
         }
         else
         {
@@ -516,6 +534,24 @@ namespace
         }
         else
         {
+            if (fault.mode == 4U && fault.triggered == 0U && &lane == &lanes[0])
+            {
+                /** @brief 비활성 DMA의 이전 AMOUNT와 새 RX 시작 근거를 전송 전에 분리합니다. */
+                auto *registers =
+                    reinterpret_cast<NRF_TWIM_Type *>(serialRegisters(lane.endpoint.instance));
+                auto &proof = fault.twi_proof;
+                proof[0] = fault.mode;
+                proof[1] = 1U;
+                proof[2] = nrf_twim_txd_amount_get(registers);
+                proof[3] = nrf_twim_rxd_amount_get(registers);
+                nrf_twim_event_clear(registers, NRF_TWIM_EVENT_RXSTARTED);
+                nrf_twim_event_clear(registers, NRF_TWIM_EVENT_ENDRX);
+                proof[4] = nrf_twim_event_check(registers, NRF_TWIM_EVENT_RXSTARTED) ? 1U : 0U;
+                proof[5] = nrf_twim_event_check(registers, NRF_TWIM_EVENT_ENDRX) ? 1U : 0U;
+                proof[11] = slot;
+                proof[17] = length;
+                proof[18] = registers->ENABLE;
+            }
             result = static_cast<TwimHandle *>(lane.handle)
                          ->transferAsync(fault.mode == 5U ? 0x44U : 0x42U, lane.tx[slot].data(),
                                          length, fault.mode == 5U ? nullptr : lane.rx[slot].data(),
@@ -558,8 +594,17 @@ namespace
                     cancelled = static_cast<SpimHandle *>(lane.handle)->cancelTransfer();
                     break;
                 case 4U:
+                {
+                    /** @brief 취소 직전과 terminal event의 RX 시작 상태를 각각 보존합니다. */
+                    const auto *registers =
+                        reinterpret_cast<NRF_TWIM_Type *>(serialRegisters(lane.endpoint.instance));
+                    fault.twi_proof[6] =
+                        nrf_twim_event_check(registers, NRF_TWIM_EVENT_RXSTARTED) ? 1U : 0U;
+                    fault.twi_proof[7] =
+                        nrf_twim_event_check(registers, NRF_TWIM_EVENT_ENDRX) ? 1U : 0U;
                     cancelled = static_cast<TwimHandle *>(lane.handle)->cancelTransfer();
                     break;
+                }
                 default:
                     break;
                 }
@@ -881,6 +926,16 @@ void t13::serialRxFaultSnapshot(std::uint32_t *out, std::uint32_t &count)
         out[index] = values[index];
     }
     count = 8U;
+}
+
+/** @brief 취소한 TWIM의 이전 AMOUNT·새 RX 이벤트·수신 RAM을 해석 없이 반환합니다. */
+void t13::serialTwiFaultSnapshot(std::uint32_t *out, std::uint32_t &count)
+{
+    for (unsigned index = 0U; index < 20U; ++index)
+    {
+        out[index] = fault.twi_proof[index];
+    }
+    count = 20U;
 }
 
 /** @brief SPI/TWI START 전에 실제 PSEL을 읽으며 없는 signal slot은 disconnected로 표시합니다. */

@@ -1,0 +1,726 @@
+{
+  "source": "506680f5a1df7d944e547cb573abcd39ffb6dcbf",
+  "status": "failed",
+  "phase": "handover",
+  "physical_executed": true,
+  "started_at": "2026-09-08T08:29:20.250558+00:00",
+  "finished_at": "2026-09-08T08:30:45.973836+00:00",
+  "error": "ProtocolError: T13 engine unhealthy or lease expired: [8, 0, 0, 0, 0, 0, 1120, 77143, 0, 76833, 0, 195, 0, 107578, 0, 1]",
+  "case_results": [
+    {
+      "id": "T13-S/handover/serial21/initial/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step01/transfer/T13-S/preflight/spim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step01/result",
+      "status": "passed",
+      "from_name": "uarte21",
+      "to_name": "spim21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step02/transfer/T13-S/preflight/spim21-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step02/result",
+      "status": "passed",
+      "from_name": "spim21",
+      "to_name": "spim21-reversed",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step03/transfer/T13-S/preflight/twim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step03/result",
+      "status": "passed",
+      "from_name": "spim21-reversed",
+      "to_name": "twim21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step04/transfer/T13-S/preflight/twim21-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step04/result",
+      "status": "passed",
+      "from_name": "twim21",
+      "to_name": "twim21-reversed",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step05/transfer/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step05/result",
+      "status": "passed",
+      "from_name": "twim21-reversed",
+      "to_name": "uarte21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step06/transfer/T13-S/preflight/twim21-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step06/result",
+      "status": "passed",
+      "from_name": "uarte21",
+      "to_name": "twim21-reversed",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step07/transfer/T13-S/preflight/twim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step07/result",
+      "status": "passed",
+      "from_name": "twim21-reversed",
+      "to_name": "twim21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step08/transfer/T13-S/preflight/spim21-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step08/result",
+      "status": "passed",
+      "from_name": "twim21",
+      "to_name": "spim21-reversed",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step09/transfer/T13-S/preflight/spim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step09/result",
+      "status": "passed",
+      "from_name": "spim21-reversed",
+      "to_name": "spim21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step10/transfer/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat001/step10/result",
+      "status": "passed",
+      "from_name": "spim21",
+      "to_name": "uarte21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step01/transfer/T13-S/preflight/spim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step01/result",
+      "status": "passed",
+      "from_name": "uarte21",
+      "to_name": "spim21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step02/transfer/T13-S/preflight/spim21-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step02/result",
+      "status": "passed",
+      "from_name": "spim21",
+      "to_name": "spim21-reversed",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step03/transfer/T13-S/preflight/twim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step03/result",
+      "status": "passed",
+      "from_name": "spim21-reversed",
+      "to_name": "twim21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step04/transfer/T13-S/preflight/twim21-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step04/result",
+      "status": "passed",
+      "from_name": "twim21",
+      "to_name": "twim21-reversed",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step05/transfer/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step05/result",
+      "status": "passed",
+      "from_name": "twim21-reversed",
+      "to_name": "uarte21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step06/transfer/T13-S/preflight/twim21-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step06/result",
+      "status": "passed",
+      "from_name": "uarte21",
+      "to_name": "twim21-reversed",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step07/transfer/T13-S/preflight/twim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step07/result",
+      "status": "passed",
+      "from_name": "twim21-reversed",
+      "to_name": "twim21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step08/transfer/T13-S/preflight/spim21-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step08/result",
+      "status": "passed",
+      "from_name": "twim21",
+      "to_name": "spim21-reversed",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step09/transfer/T13-S/preflight/spim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step09/result",
+      "status": "passed",
+      "from_name": "spim21-reversed",
+      "to_name": "spim21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step10/transfer/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat002/step10/result",
+      "status": "passed",
+      "from_name": "spim21",
+      "to_name": "uarte21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step01/transfer/T13-S/preflight/spim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step01/result",
+      "status": "passed",
+      "from_name": "uarte21",
+      "to_name": "spim21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step02/transfer/T13-S/preflight/spim21-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step02/result",
+      "status": "passed",
+      "from_name": "spim21",
+      "to_name": "spim21-reversed",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step03/transfer/T13-S/preflight/twim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step03/result",
+      "status": "passed",
+      "from_name": "spim21-reversed",
+      "to_name": "twim21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step04/transfer/T13-S/preflight/twim21-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step04/result",
+      "status": "passed",
+      "from_name": "twim21",
+      "to_name": "twim21-reversed",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step05/transfer/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step05/result",
+      "status": "passed",
+      "from_name": "twim21-reversed",
+      "to_name": "uarte21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step06/transfer/T13-S/preflight/twim21-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step06/result",
+      "status": "passed",
+      "from_name": "uarte21",
+      "to_name": "twim21-reversed",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step07/transfer/T13-S/preflight/twim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step07/result",
+      "status": "passed",
+      "from_name": "twim21-reversed",
+      "to_name": "twim21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step08/transfer/T13-S/preflight/spim21-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step08/result",
+      "status": "passed",
+      "from_name": "twim21",
+      "to_name": "spim21-reversed",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step09/transfer/T13-S/preflight/spim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step09/result",
+      "status": "passed",
+      "from_name": "spim21-reversed",
+      "to_name": "spim21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step10/transfer/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat003/step10/result",
+      "status": "passed",
+      "from_name": "spim21",
+      "to_name": "uarte21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step01/transfer/T13-S/preflight/spim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step01/result",
+      "status": "passed",
+      "from_name": "uarte21",
+      "to_name": "spim21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step02/transfer/T13-S/preflight/spim21-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step02/result",
+      "status": "passed",
+      "from_name": "spim21",
+      "to_name": "spim21-reversed",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step03/transfer/T13-S/preflight/twim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step03/result",
+      "status": "passed",
+      "from_name": "spim21-reversed",
+      "to_name": "twim21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step04/transfer/T13-S/preflight/twim21-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step04/result",
+      "status": "passed",
+      "from_name": "twim21",
+      "to_name": "twim21-reversed",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step05/transfer/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step05/result",
+      "status": "passed",
+      "from_name": "twim21-reversed",
+      "to_name": "uarte21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step06/transfer/T13-S/preflight/twim21-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step06/result",
+      "status": "passed",
+      "from_name": "uarte21",
+      "to_name": "twim21-reversed",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step07/transfer/T13-S/preflight/twim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/twim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step07/result",
+      "status": "passed",
+      "from_name": "twim21-reversed",
+      "to_name": "twim21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step08/transfer/T13-S/preflight/spim21-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step08/result",
+      "status": "passed",
+      "from_name": "twim21",
+      "to_name": "spim21-reversed",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step09/transfer/T13-S/preflight/spim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step09/result",
+      "status": "passed",
+      "from_name": "spim21-reversed",
+      "to_name": "spim21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step10/transfer/T13-S/preflight/uarte21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat004/step10/result",
+      "status": "passed",
+      "from_name": "spim21",
+      "to_name": "uarte21",
+      "planned_handover_pass": true
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat005/step01/transfer/T13-S/preflight/spim21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim21",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial21/repeat005/step01/result",
+      "status": "passed",
+      "from_name": "uarte21",
+      "to_name": "spim21",
+      "planned_handover_pass": true
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3776,
+      "sha256": "91747f298314039655c3a2a26c43df08aaaff5d4abb2b10f00715bb0ae6f1bab",
+      "gzip_sha256": "1362d7eb79921fa9f18ad062f0c8bb8ae5a224fee46877c2d5c9dc9143e817ef"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "fa5f69eede0d13baeea8c09c7d1ce370e8d83470aad9274b3895313dd54c86b5",
+      "gzip_sha256": "aabd2e5ceb9f74535d4c27b78e7c4ddb2e51ac358c25d0ffa4df9caa00eafe4d"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 1270892,
+      "sha256": "13a1ad6cd7f28c4ec3fea122a750f81f13acd74b24fbb67953066bcd3e06f810",
+      "gzip_sha256": "b95ae5fd9765cd199da8d5cbe7960ffba26193ba2cbf0abd3fb0f77e89217802"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 662300,
+      "sha256": "c4f695968ef8577be33f0b6e37d7a3f071bb297bf977a7af1554e3b32fb198fb",
+      "gzip_sha256": "1afb32c2bc54d3752b8790a8acec7c007c745732cff877882f73e6eb4930061a"
+    },
+    {
+      "file": "serial21-handover-sauto-01-preflight.json.gz",
+      "bytes": 701,
+      "sha256": "6e5723cba0b323b18c34c03805aaac21176d757469f7661d5e06e7b609ad3faa",
+      "gzip_sha256": "d17653a44ada8d37ced00adb100a653d8809665e0092eac993c1f479f36a9276"
+    },
+    {
+      "file": "serial21-handover-sauto-01-preflight.log.gz",
+      "bytes": 1526,
+      "sha256": "36d06e9e0d278437740df01a8740e1d0495f1a9d9ff42d9da6e6e7735f7a01a3",
+      "gzip_sha256": "cb890d4ec6683c63af957c545187568b6038ed0862e1ca0aa15d6054e2b5a0d3"
+    },
+    {
+      "file": "serial21-handover-sauto-01-execute.json.gz",
+      "bytes": 697,
+      "sha256": "b856f7d83134b610f3db40cd29f404ae6e2020982b9f1133a6d63b6c3063926e",
+      "gzip_sha256": "2b245cad93adb3842aa2cca5a4841ae58c51fe3bc7dd57283131135da4eb1d85"
+    },
+    {
+      "file": "serial21-handover-sauto-01-execute.log.gz",
+      "bytes": 401,
+      "sha256": "7a9fea2ce858081146e75d9e2e50cf3b9277231cc0b6af22af9bd74ab01b800a",
+      "gzip_sha256": "6cba6e4f3154efa6c3bbf8a289a06f5462232c59b5f334409e6321cdc5d722f0"
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "source": "506680f5a1df7d944e547cb573abcd39ffb6dcbf",
+  "status": "passed",
+  "phase": "pwm-recovery-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T07:28:41.975381+00:00",
+  "finished_at": "2026-09-08T07:29:24.056275+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm20/mode2/repeat001/restart/T13-S/preflight/pwm20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/pwm20",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm20/mode2/repeat001/result",
+      "status": "passed",
+      "mode": 2,
+      "fault_seed": 1559910544,
+      "restart_seed": 3268223273,
+      "planned_pwm_recovery_pass": false,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm21/mode2/repeat001/restart/T13-S/preflight/pwm21/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/pwm21",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm21/mode2/repeat001/result",
+      "status": "passed",
+      "mode": 2,
+      "fault_seed": 2499781191,
+      "restart_seed": 180935678,
+      "planned_pwm_recovery_pass": false,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm22/mode2/repeat001/restart/T13-S/preflight/pwm22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/pwm22",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/pwm-recovery-preflight/pwm22/mode2/repeat001/result",
+      "status": "passed",
+      "mode": 2,
+      "fault_seed": 2607188103,
+      "restart_seed": 89256254,
+      "planned_pwm_recovery_pass": false,
+      "normal_soak_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3776,
+      "sha256": "91747f298314039655c3a2a26c43df08aaaff5d4abb2b10f00715bb0ae6f1bab",
+      "gzip_sha256": "1362d7eb79921fa9f18ad062f0c8bb8ae5a224fee46877c2d5c9dc9143e817ef"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "fa5f69eede0d13baeea8c09c7d1ce370e8d83470aad9274b3895313dd54c86b5",
+      "gzip_sha256": "aabd2e5ceb9f74535d4c27b78e7c4ddb2e51ac358c25d0ffa4df9caa00eafe4d"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 216156,
+      "sha256": "c80b6f3dfd95449597161dbb6749b516b102e5bb7c4beea48b5ea7d10f42b022",
+      "gzip_sha256": "41854164b98c072855a964193e0e1ae191156debd49c92bd928ec12737f5f56e"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 116659,
+      "sha256": "f0ecbddc9977b7ef3e0107ea96c57a66c9c996a50c2866b64bdcc54f686fab50",
+      "gzip_sha256": "06ed23940ce5a7daee5cabaf4865fd4f491e67ecbe4ff5e8d39c160ccef5c71c"
+    },
+    {
+      "file": "pwm-unstarted-506680f-pwm-preflight-1-preflight.json.gz",
+      "bytes": 785,
+      "sha256": "d05f4ed22442da613738231203b169c86b4cd817e2e7e3efa3bd13e8a7e55729",
+      "gzip_sha256": "3e9670529ee7792f62b079b4378c56dc61e92b25efabd985529ef20e299332f2"
+    },
+    {
+      "file": "pwm-unstarted-506680f-pwm-preflight-1-preflight.log.gz",
+      "bytes": 1541,
+      "sha256": "1fde1e3a0d10a3726a80b6e8808b0710edeec8b97a02b8e4705f946ce2964557",
+      "gzip_sha256": "36d593143fedbad64ea8e635ba904c009521c8a5796a9d800a781829ba8ea3b0"
+    },
+    {
+      "file": "pwm-unstarted-506680f-pwm-preflight-1-execute.json.gz",
+      "bytes": 781,
+      "sha256": "3f6fe609fbdb79f569e278aa2fd84463a646dd7b8bab11bc2cf3e0db5608f4de",
+      "gzip_sha256": "3eadf1a35aaf2d2531eb34481fdd1f952c453373d616f5c027a2ec456060bb26"
+    },
+    {
+      "file": "pwm-unstarted-506680f-pwm-preflight-1-execute.log.gz",
+      "bytes": 247,
+      "sha256": "aba016d0e28c113b14c76c0e4aac53b4c33a614ad25d55c638c09cf211a4af92",
+      "gzip_sha256": "b62847a001565a57bcd98d89b6e54dcaa156cfb57b6d8c1a5b42f229d4b8e102"
+    }
+  ]
+}

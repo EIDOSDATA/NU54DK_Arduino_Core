@@ -122,6 +122,8 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
                 observations = [(99, (), 'engine'), (100, (0,), 'lane'), (110, (), 'fault')]
                 if mode == 2:
                     observations.append((120, (), 'rx-activity'))
+                if mode == 4:
+                    observations.append((123, (), 'twi-rx-provenance'))
                 for opcode, args, name in observations:
                     try:
                         words = device.command(opcode, args, timeout=2)

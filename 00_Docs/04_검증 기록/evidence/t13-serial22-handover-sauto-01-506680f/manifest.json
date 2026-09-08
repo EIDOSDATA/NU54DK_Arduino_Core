@@ -1,0 +1,86 @@
+{
+  "source": "506680f5a1df7d944e547cb573abcd39ffb6dcbf",
+  "status": "failed",
+  "phase": "handover",
+  "physical_executed": true,
+  "started_at": "2026-09-08T08:30:49.303363+00:00",
+  "finished_at": "2026-09-08T08:31:26.827837+00:00",
+  "error": "ProtocolError: T13 engine unhealthy or lease expired: [9, 0, 0, 0, 0, 0, 676, 26901, 0, 26593, 0, 97, 0, 56182, 0, 1]",
+  "case_results": [
+    {
+      "id": "T13-S/handover/serial22/initial/T13-S/preflight/uarte22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/uarte22",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial22/repeat001/step01/transfer/T13-S/preflight/spim22/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim22",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover/serial22/repeat001/step01/result",
+      "status": "passed",
+      "from_name": "uarte22",
+      "to_name": "spim22",
+      "planned_handover_pass": true
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3776,
+      "sha256": "91747f298314039655c3a2a26c43df08aaaff5d4abb2b10f00715bb0ae6f1bab",
+      "gzip_sha256": "1362d7eb79921fa9f18ad062f0c8bb8ae5a224fee46877c2d5c9dc9143e817ef"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "fa5f69eede0d13baeea8c09c7d1ce370e8d83470aad9274b3895313dd54c86b5",
+      "gzip_sha256": "aabd2e5ceb9f74535d4c27b78e7c4ddb2e51ac358c25d0ffa4df9caa00eafe4d"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 193119,
+      "sha256": "f783014f2a1c8e7e869ffeacccd3cbc1e0a5c3a5f6a1d4581c7c8967257b29b7",
+      "gzip_sha256": "98230309db18049e183c870bf5b2455e17218fb3d2d0edecbd1011b6aed7c784"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 106682,
+      "sha256": "182bb8b682fd76c91cee34d0811a983dd4b01e6b39320af998e480a59c415f6c",
+      "gzip_sha256": "e9a8736f78a1041d7be37f66982eb15bbbe33ad917636214609e0a3f9a386e36"
+    },
+    {
+      "file": "serial22-handover-sauto-01-preflight.json.gz",
+      "bytes": 701,
+      "sha256": "98f425fd538ea5439524fc907f63941f1e42efc2bf3c670f60d8b46d761b4f5f",
+      "gzip_sha256": "05e88952ea8d77384a3ff8d4d2c7eb9d66c665591f37069b076a59b3e0e23bdc"
+    },
+    {
+      "file": "serial22-handover-sauto-01-preflight.log.gz",
+      "bytes": 1526,
+      "sha256": "5beadfbf04dff966fd3246c37e8e4d4a76e6c40f4e68ca1047b3c5eec4271273",
+      "gzip_sha256": "c65208ef371f9ccac0ab948bcddce87bdebcce3ae693222bd24c5bb1cdd88e9d"
+    },
+    {
+      "file": "serial22-handover-sauto-01-execute.json.gz",
+      "bytes": 697,
+      "sha256": "063198fa923ca4f1ae710f3419929f3d936369d404eeb64fe058a8bb71a96609",
+      "gzip_sha256": "ebae78ff8f24a7e03bcca8d757cf134dd8c0b073acbd4f82a6a72286b2da7bfd"
+    },
+    {
+      "file": "serial22-handover-sauto-01-execute.log.gz",
+      "bytes": 138,
+      "sha256": "2e690a69626326e01d21e396a5d43516f51d4c2fd9fae2918fec0e1d7b463a0a",
+      "gzip_sha256": "bca913937f79ef3dacb9962fa668eb617874463058385aab6c98c46d3df4f9c9"
+    }
+  ]
+}

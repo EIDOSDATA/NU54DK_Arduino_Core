@@ -177,3 +177,13 @@ Normal soak는 기존 자동 시작을 유지하며 새 capability bit256 없이
 TIMER clear/start 뒤 DPPI enable 성공을 먼저 확인하고 event clear·DSB·readback 후 관측을 시작하도록
 HIL 시작 순서를 보완한다. 관측 시작 뒤 timestamp를 버리거나 허용 오차를 완화하지 않는다.
 최초 실패와 수정 전후 source별 실기 상태는104번에 보존한다.
+
+## TWIM 취소 RX 원본 계측
+
+Opcode123은 mode4 취소에서 이전 DMA AMOUNT와 새 RX 시작 여부를 분리해 보존한다.
+20word 순서는 mode, 계측 준비, 이전 TX/RX AMOUNT, 전송 전 clear 뒤 RXREADY/RXEND,
+취소 직전 RXREADY/RXEND, 첫 terminal 관측 RXREADY/RXEND, RX RAM 전체0xCC 유지,
+slot, submit/cancel/event cycle, terminal TX/RX AMOUNT, 길이, 전송 전 ENABLE, event 수다.
+이벤트 초기화는 첫 전송 제출 전에만 시행한다. 동작 중 이벤트를 지우지 않는다.
+Host는 양쪽 원본을 STOP 전에 보존한다. RX AMOUNT256이 이전 완료 잔류라는 가설은 아직
+실기로 증명하지 않았으며 이 계측 추가로 기존 부분 DMA 판정을 완화하거나 실패를 PASS로 바꾸지 않는다.

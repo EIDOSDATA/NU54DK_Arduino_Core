@@ -1,5 +1,18 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
+2026-09-08T08:24Z 자동 진행 범위: 사용자가 A 제어/B 시험 방식의 System OFF 자동화를
+T13에 추가하고, U UART00 재배선 직전까지 가능한 작업을 모두 계속하도록 지시했다.
+현재 S 17신호+GND·DAP UART 분리·SWD 연결을 유지한다. 기존 확인서의 만료는 연장하지 않는다.
+PWM 복구 original506680f 각100회 6/6(600/600)과 역할 전환 예행5/5를 완료했다.
+정식 handover 첫 serial00은47/100 뒤 Host 프로세스가 사라졌다. 원본·lease 자동 정지를 보존하고
+동일 source/nonce의 STOP 확인에서 양쪽 clock0·17 GPIO 입력/no-pull을 확인했다.
+STOP 응답은 [stopped, healthy] 두 word이며 초기 정리 helper의 한 word 비교 오류는 별도 감사로
+정정했다. 해당47회를 새100회에 합산하지 않으며 미완료 원본을 PASS로 바꾸지 않는다.
+새 정식 전환 → 독립 동시7조합 → 준비된 추가 복구/System OFF 검증 순으로 진행한다.
+실패하면 원본과 양쪽 STOP을 확인한 뒤 독립 항목을 계속한다. 정지를 증명하지 못하면 실기만
+중단하고 구현·분석·문서 작업을 계속한다. 상세 계획은107번이며 T13/U/RC/공개는 미완료다.
+
+
 T13 후속 체크포인트(2026-09-08T07:28Z): original4aadf29의 UART RX20/21/22/30
 각100회(총400)와 SPIM00/20/21/22/30 각100회(총500)를 완료했고 양쪽 STOP·원본을 보존했다.
 이전 UART TX4항목을 합쳐 종료·보존한 고정 serial 복구는13/21항목이다. TWI 취소20은1회 뒤
@@ -464,3 +477,6 @@ T14 재현 이슈: PWM `play(..., start_via_task=true)` 뒤 START task 없이 `s
 440 PDM의 이전 실행은 [88번 기록](<04_검증 기록/88_T12_Fixture_440_current_source_PDM_검증.md>)의 **exact ea4e25a 모노 DMA 4 PASS·첫 stereo FAIL·187 미실행**이다. 밀도 비교는 미도달이며 전체 PDM PASS가 아니다. HIL buffer 공급·신호원·격리된 DAP 핀 metadata를 교정했지만 동일 stereo 채널의 원인은 미해결이다. SWD 10 MHz, cleanup 5회·양쪽 identity/peripheral off·입력 복귀 확인. 전체 Host 660 PASS·1 조건부 SKIP, 정렬 361·pair 2/2 build PASS. 확인 유효시간 20:15:39Z가 지나 440 결선·DAP UART 분리 유지 재확인 후 설정/신호 전달 진단과 전체 재검증을 진행한다. 연속 PDM 4+100 buffer·나머지 T12·T13 이후·T14 공용 PWM·readiness 8개는 유지한다.
 
 440 최신 상태는 [92번 기록](<04_검증 기록/92_T12_Fixture_440_PDM_연속_전체_검증.md>)의 **연속 4+100 버퍼 96개 조합·밀도 비교 16개·cleanup 96개 전체 PASS**다. Exact f02734d에서 SWD 10 MHz로 한 campaign을 완료했고 DMA 반환 9,984개·6,389,760 samples의 장치 통계를 대조했다. 측정 버퍼 각각의 모노 밀도 순서 1,600개·스테레오 부호 4,800개도 PASS다. 기본 기능 192·밀도 비교 32 PASS는 코드·설정이 같은 917dc02의 91번 결과로 구분한다. 두 보드 f02734d identity·주변장치 off·신호 입력 복귀와 pair build 2/2를 확인했다. 전체 Host는 [93번 기록](<04_검증 기록/93_Host_재검증과_T12_이후_남은_작업.md>)의 exact e6979af에서 664 PASS·1 조건부 SKIP로 재검증을 완료했다. LLVM과 WinLibs sysroot를 유지하고 NCS 번들 CMake·Ninja를 선택했다. 440의 기본·연속 기능 검증은 완료했고 추가 결선 확인 요청은 없다. 남은 T12 요구·T13 이후·readiness 8개는 미완료다.
+
+
+현재 U 직전 자동 실행·peer 제어 System OFF의 추가 범위는 [107번 계획](<04_검증 기록/107_T13_S_자동_진행과_System_OFF_계획.md>)을 따른다.

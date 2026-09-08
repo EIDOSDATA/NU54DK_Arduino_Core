@@ -1,0 +1,102 @@
+{
+  "source": "506680f5a1df7d944e547cb573abcd39ffb6dcbf",
+  "status": "passed",
+  "phase": "handover-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T08:00:58.507598+00:00",
+  "finished_at": "2026-09-08T08:01:33.602312+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/handover-preflight/serial0/initial/T13-S/preflight/spim0/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim0",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial0/repeat001/step01/transfer/T13-S/preflight/spim0-reversed/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim0-reversed",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial0/repeat001/step01/result",
+      "status": "passed",
+      "from_name": "spim0",
+      "to_name": "spim0-reversed",
+      "planned_handover_pass": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial0/repeat001/step02/transfer/T13-S/preflight/spim0/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/spim0",
+      "measured_role": "a",
+      "requested_seconds": 0.25,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/handover-preflight/serial0/repeat001/step02/result",
+      "status": "passed",
+      "from_name": "spim0-reversed",
+      "to_name": "spim0",
+      "planned_handover_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3776,
+      "sha256": "91747f298314039655c3a2a26c43df08aaaff5d4abb2b10f00715bb0ae6f1bab",
+      "gzip_sha256": "1362d7eb79921fa9f18ad062f0c8bb8ae5a224fee46877c2d5c9dc9143e817ef"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "fa5f69eede0d13baeea8c09c7d1ce370e8d83470aad9274b3895313dd54c86b5",
+      "gzip_sha256": "aabd2e5ceb9f74535d4c27b78e7c4ddb2e51ac358c25d0ffa4df9caa00eafe4d"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 209196,
+      "sha256": "740223964e873dceb05c858635fc432ffd6049e44534f6e94f099a743cfdd775",
+      "gzip_sha256": "3d1152f7ae4b1554c89399295710de3c5284ae6b5db6a9640a7739b76d793522"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 115081,
+      "sha256": "52197643906bc49f95875e1be26f9f1100eab728f9f635b4c1b10c83beb6b3ce",
+      "gzip_sha256": "6a438260220d427b42a803451646fae52e12c21a4c7b5f00cdea6e214ed42dc2"
+    },
+    {
+      "file": "serial0-506680f-handover-preflight-1-preflight.json.gz",
+      "bytes": 730,
+      "sha256": "97f02b3c199ca2eb631014e7ecbb3072bb3f5ab0a84e97105c1a63b9b7142944",
+      "gzip_sha256": "178ea634f9d7d835b2a0a9034d3f4659b6a267e0332f7010e3e99c6e35948f55"
+    },
+    {
+      "file": "serial0-506680f-handover-preflight-1-preflight.log.gz",
+      "bytes": 1518,
+      "sha256": "a3768b09aec0e737ed6046a6e0b042339d9c450f37db99ac1c193e40c71b9d39",
+      "gzip_sha256": "29f8ae113189a7da7ea49ea83ca363539e458ce636b6207515221c9b75f2da33"
+    },
+    {
+      "file": "serial0-506680f-handover-preflight-1-execute.json.gz",
+      "bytes": 726,
+      "sha256": "fc89b149fe47ff1aaa75e42e46aeee66b1e868e992f5a3e9655bd095d82594da",
+      "gzip_sha256": "42ab705aacf8b296eeafc09ebf4ab518763d6615f35c4858c6e21435f102cf04"
+    },
+    {
+      "file": "serial0-506680f-handover-preflight-1-execute.log.gz",
+      "bytes": 124,
+      "sha256": "74431d06dd680418fbdec3af54d52c02f901019656f20bbbe030c1ca012d75e3",
+      "gzip_sha256": "2bb409783bbecb5d5d83a64b0a7b6287f72a2b7587947f3a5812ab356de2242e"
+    }
+  ]
+}
