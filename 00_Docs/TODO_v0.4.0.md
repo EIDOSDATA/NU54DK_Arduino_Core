@@ -1,5 +1,9 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
+T13 후속 진단 보완: fd8d4ee의 대체 PWM 경로는 HIL overlay의 PWM capability 누락으로
+START 전에 거부됐다. T13 전용 P1.06 capability를 보완하고 실제 PWM PSEL·GPIOTE IRQ enable,
+진단 첫 실패의 핀/clock 상태를 보존한다. 제품 정책·정상 통과 기준과 기존 S 물리 결선은 유지한다.
+
 이번 작업 범위(2026-09-08 T13 S 착수): 사용자가 S 결선으로 재배치했고 최대 12시간 유지·변경 전 통보를 확인했다. 기준 source 6155a85에서 T13 전용 실행기·S 결선 검사·Host/target 검증을 준비한 뒤 S의 단독·복구·동시·안정성 실기를 수행한다. QDEC 진단 재개와 U 결선 실기는 이번 S 실행에 포함하지 않는다. S 묶음 종료 후 U GPIO 표를 다시 안내하고 현재 재배치 확인을 받는다. 진행·exact source·증거·남은 범위는 104번에 기록하며 T13 전체·RC·공개 완료로 확대하지 않는다.
 
 T14 조치 착수: SPI 뒤 두 선 UART로 바꿀 때 미사용 RTS/CTS PSEL이 남는 현상을 a6367ca의
@@ -26,18 +30,19 @@ T13 PWM 원인 분리 준비: PWM21 LOW535µs 실패 직후 최대8에지 또는
 f591571에서 UART 미사용 PSEL 수정 후 SPI21→C01·전체 S 사전검사36/36을 통과했다.
 정식 안정성은24/36항목 통과 뒤 PWM21 LOW535µs로 실패해 원본과 양쪽 STOP을 보존했다.
 PDM20/21도180초 PASS로 누계26/36이다. I2S는72.9초에서 양쪽2word 불일치로 실패했다.
-같은 image로 미실행 C01~C04를 이어가며 I2S·PWM21/22·C05/C06/C08은 원인 분리 후 검사한다. 실시간 완료 수는 원본 journal과
+C01도289초에서TWI data NACK/241byte부분수신으로실패했다. 후속fd8d4ee 진단의PWM·I2S 원본을추가확보했다.
+현재실기는정지했으며 대체PWM route capability와첫실패핀/IRQ관측을보완한뒤원인분리를이어간다. 실시간 완료 수는 원본 journal과
 작업 상태 파일을 확인한다. 별도 checkout의 고정 serial fault5개 mode는 Host5+13·target2/2를
 통과했고 cac9c39 Software7/7도 확인했다. 후속 역할 전환·실제 PSEL Host6와 target2/2를 준비했으며
 efd0b99 Software7/7·Host757시험(755PASS/2조건부SKIP)을 확인했다.
 stream 복구44417ae의 exact build2/2·Software7/7·Host760PASS/2SKIP도 확인했다.
-후속 PWM/I2S 진단 runtime Host16·target2/2·정렬407은 통과했고 새 source CI는 별도로 검사한다. 복구/전환100회 완료는 아직0이다.
+fd8d4ee exact target2/2·Software7/7·Host763PASS/2SKIP를확인했다. 후속진단은별도실패증거다. 복구/전환100회 완료는 아직0이다.
 
 ## 현재 요약 — 2026-09-08
 
 - **완료한 요청 묶음:** T12 현재 공통 결선 기능 시험과 T13 조합·추가 결선 확정. GPIO/GPIOTE 2,502·PWM steady 675 및 추가 모드 288·I2S 432 PASS. QDEC는 일부 문제·제한사항을 리포트에 남기고 검증 작업을 완료했다. T12 마일스톤도 완료이며 실제 실패를 합격으로 바꾸지 않는다.
 - **최종 기준선:** `e547fc0863be5b381ecab26835fb5e872b399a9c`가 main에 있으며 원격 Software 7/7·재현 빌드 8/8 SUCCESS를 확인했다. 이번 103번 후속 문서 commit의 CI는 별도 exact SHA로 확인한다.
-- **현재 장치:** main f591571/C:/t3o04 두 role에서 soak-concurrent-serial-f591571-attempt1 실행 중. 이전 두 묶음26PASS·PWM21/I2S FAIL. 다른 hardware process를 시작하지 않는다. Repair1 원래 만료12:26:14Z 유지.
+- **현재 장치:** fd8d4ee/C:/t4a04 I2S 진단 종료. 양쪽STOP·clock ref0·S input/no-pull 확인, 활성 hardware process 없음. f591571 정상 안정성26PASS·PWM21/I2S/C01 FAIL. Repair1 원래 만료12:26:14Z 유지.
 - **현재 개발:** T13 연속 ADC/PWM/I2S/PDM·DMA guard·지연 histogram과 양쪽 raw 우선 보존을 구현했다. Host/target 준비 검사 뒤 새 clean image로 실행한다. 복구/전환100회는 아직 미완료다. QDEC 재진단은 예약하지 않는다. U 생략 여부는 아직 미확정이며 수행한다면 S 종료 뒤 재배치가 필요하다.
 - **TIMER 완료:** 95번의 7개 TIMER·44 CC·4 clear/stop 조합·2 interval·각 10회, 두 보드 총 7,040회 PASS로 기능 검증을 완료 정리했다. EGU/DPPI/PPIB의 1000 event×10을 TIMER의 추가 필수 반복으로 요구하지 않는다. QDEC는 문제 기록 후 진단을 종료했으며 지원 제한을 T14/T15로 이어간다.
 - **별도 대조 기록:** 외부 ADC 401~408의 기능 276개 PASS는 유지한다. 초기 시험표의 100회와 실제 각 조건 1회 실행 차이는 103번에 명시하며, 이번 TIMER 정리로 ADC 100회까지 완료 처리하거나 재실기를 자동 추가하지 않는다. T13의 독립 준비는 진행할 수 있다.
@@ -47,7 +52,7 @@ stream 복구44417ae의 exact build2/2·Software7/7·Host760PASS/2SKIP도 확인
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 ID / 개정 | TODO-V04-001 / 3.61 |
+| 문서 ID / 개정 | TODO-V04-001 / 3.62 |
 | 상태 | 활성 TODO — R00~R13·기존 source별 T11 완료, T14 PWM 결함 회귀 완료, T12 기능검증 완료(알려진 QDEC 문제 보고 포함)·T13 S 진행 |
 | 작성·갱신일 | 2026-09-08 |
 | 작성 직전 기준 commit | `e547fc0863be5b381ecab26835fb5e872b399a9c` — 문서 감사·원격 15/15 SUCCESS |
@@ -100,7 +105,7 @@ R14, T19→T25를 기본으로 한다. 독립적인 준비는 겹쳐 진행할 �
 | --- | --- |
 | 이번에 끝낸 일 | GPIO/GPIOTE 2,502·steady PWM 675·추가 PWM 288·I2S 432 기능 PASS. 각 exact source·새 501·cleanup/postflight 분리 보존. T13 32단독/8동시 계획 확정·실기 0회. 102번에 문서 전수 검토·local 검사 등록 |
 | 진행 중인 T 항목 | T13 S runner·복구·동시 안정성 준비/실기, T14/T15 알려진 문제 정리와 T17 문서 유지 |
-| 다음 구체적 행동 | f591571 S 정식 안정성 계속 → 새 고정 serial fault source CI·1회 예행·각100회 → 남은 flow/stream/전환/충돌 구현·실기. TIMER/QDEC 재진단 없음 |
+| 다음 구체적 행동 | PWM/I2S/C01 원인분리와영향회귀 → 고정serial/stream fault·역할전환1회예행/100회 → 남은조건구현·실기. TIMER/QDEC 재진단 없음 |
 | 다음 작업에 필요한 사용자 행동 | S 변경·최대 12시간 유지 확인 완료. S 종료 후 U로 재배치하고 현재 연결을 확인해야 함 |
 | 외부 결선 상태 | S 17신호+GND. A P1.05↔B P1.04 점퍼 확인·USB 재연결 후 새 UID/repair1 확인, 전기 결선 105/105 PASS. 원래 세션 만료 2026-09-08T12:26:14Z 유지 |
 | 작업 checkout 분리 | main f591571은 안정성 source로 유지. C:/tr13dev의 codex/t13-recovery에서 제품 core 변경 없이 오류 주입 시험기를 준비 |

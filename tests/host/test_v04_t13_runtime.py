@@ -21,6 +21,23 @@ from v04_protocol import ProtocolError
 
 
 class T13RuntimeTests(unittest.TestCase):
+    def test_unprepared_peer_keeps_cleanup_session_after_other_prepare_failure(self):
+        """! @brief 실제 DAP PWM 준비 거부 순서에서 A의 불필요한403과 STOP 손실을 막습니다. """
+        test = next(row for row in cases.cases() if row['id'] == 26)
+        devices = []
+        for role in (1, 2):
+            device = mock.Mock()
+            device.image = {'role': role}
+            device.command.side_effect = lambda opcode, args=(), timeout=2, role=role: (
+                ([0] if role == 1 else [26]) + [0]*15 if opcode == 99 else [0]*20)
+            devices.append(device)
+        records = []
+        runner.failure_snapshots(devices, test, lambda name, row: records.append(name), 'test')
+        self.assertEqual(devices[0].command.call_args_list,
+                         [mock.call(99, timeout=2), mock.call(107, (0,), timeout=2)])
+        self.assertIn(mock.call(104, (1,), timeout=2), devices[1].command.call_args_list)
+        self.assertIn('test/failure/role2/pwm-pins-page1', records)
+
     def test_i2s_failure_dma_proves_bit_error_and_neighbour_repetition(self):
         from v04_common_i2s import pattern as i2s_pattern
         for role, padding in ((1, 2), (2, 6)):

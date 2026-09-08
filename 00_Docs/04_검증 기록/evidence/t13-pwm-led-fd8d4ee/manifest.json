@@ -1,0 +1,57 @@
+{
+  "source": "fd8d4ee8cadb0ced1be0182e369ecad867e9d4c6",
+  "status": "failed",
+  "physical_executed": true,
+  "normal_passed": 0,
+  "failure": "diagnostic only; A first two observed edges5500us apart; automatic STOP at16ms; root cause unresolved",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 1749,
+      "sha256": "cf7901f3695a9167d28a1218fdb367fa3ab678d39580e75083da7703f1a8ebe4",
+      "gzip_sha256": "f7417707ba15910b7c4ca92921e1ab9600ac3aebfa97b74bcdcf00915b3a02ed"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "ec4a98a64d687bca29bea5665cdc1682008a4dbea88e76c2aeaa31f35c2976e0",
+      "gzip_sha256": "fb8e9a5ccdfcbe5f6d7f9f24ee9de420a3ea2481d92e003e1060f596c2219421"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 142221,
+      "sha256": "5e4ded4f3fc9da4812acad1b21baa839e9c744caf18d85da42a21a5aaa5b5e50",
+      "gzip_sha256": "54bd57516f1ca0ca3d197c84549696dc3cd843bdf8377fb66daddd6d82cbf8bf"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 80075,
+      "sha256": "590719648054cd58ee84f8f9e37d597830e5fe0a018ab8f2d79291baa043e957",
+      "gzip_sha256": "6ad9dcd5e102f5b5dfffc93bc16f875fd6857fd371f9d5e3ffb8b914c152de55"
+    },
+    {
+      "file": "pwm21-led-fd8d4ee-diagnostic1-preflight.json.gz",
+      "bytes": 744,
+      "sha256": "41e93be667d40412cfd83c09b04cb8e82356ce82a3fcb4419676685a85e2dd25",
+      "gzip_sha256": "72b8d6ec45aa9640050fdbb3b05012222c3d4e363a483ef2d72d282636273eee"
+    },
+    {
+      "file": "pwm21-led-fd8d4ee-diagnostic1-preflight.log.gz",
+      "bytes": 1488,
+      "sha256": "5f7b44018c64d2326b29f8a9a94ceb4a7681967181cba210f035bd0c0c513dd5",
+      "gzip_sha256": "eaec210069976adde715aab14aa4e974ba9c9e00627cb27df6d661ef07551c7c"
+    },
+    {
+      "file": "pwm21-led-fd8d4ee-diagnostic1-execute.json.gz",
+      "bytes": 740,
+      "sha256": "c4b1d631074106b93e31d0cb783da4d1afd1b0920661c125fd762a68b1d1a88e",
+      "gzip_sha256": "f29a9462f71ddd2a18df3f59a2c8323d796fec595f4c6cb5d9846576a2451022"
+    },
+    {
+      "file": "pwm21-led-fd8d4ee-diagnostic1-execute.log.gz",
+      "bytes": 138,
+      "sha256": "1d8219810082223d030b5686f2741ffc0f53bdbb3d0d5eee69ce41c6fc508b20",
+      "gzip_sha256": "02a8b175f2cd0ed3a807b68fe41bedcbcd0f34cc151627625e23e9ab46c135e2"
+    }
+  ]
+}

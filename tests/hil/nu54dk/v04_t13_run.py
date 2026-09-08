@@ -152,6 +152,37 @@ def stop_pair(devices, append, label):
     return all(row['stopped'] for row in outcomes)
 
 
+def failure_snapshots(devices, test, append, identifier):
+    """! @brief PREPARE 전 보드에는 보호된 stream 명령을 보내지 않아 STOP 세션을 보존합니다. """
+    for device in devices:
+        prefix = identifier + f'/failure/role{device.image["role"]}'
+        try:
+            engine = device.command(99, timeout=2)
+            append(prefix + '/engine', {'status': 'observation', 'words': engine})
+        except BaseException as error:
+            append(prefix + '/engine', {'status': 'unproven', 'error': f'{type(error).__name__}: {error}'})
+            continue
+        observations = [(107, (0,), 'clock')]
+        if engine[0] == test['id']:
+            observations = [(100, (index,), f'lane{index}') for index in range(len(test['serial_links']))]
+            observations += [(104, (index,), f'stream{index}') for index in oracle.stream_indices(test)]
+            if test['pwm_instance']:
+                observations += [(107, (page,), f'pwm-trace{page}') for page in range(5)]
+                observations += [(117, (), 'pwm-registers')]
+                observations += [(119, (page,), f'pwm-pins-page{page}') for page in range(2)]
+            else:
+                observations += [(107, (0,), 'clock')]
+            if test['i2s']:
+                observations += [(118, (page,), f'i2s-failure-page{page}') for page in range(17)]
+        for opcode, arguments, name in observations:
+            try:
+                append(prefix + '/' + name, {'status': 'observation',
+                    'words': device.command(opcode, arguments, timeout=2)})
+            except BaseException as error:
+                append(prefix + '/' + name, {'status': 'unproven', 'error': f'{type(error).__name__}: {error}'})
+                break
+
+
 def execute_group(devices, group, duration, continuity, append, *, preflight, seed=None):
     """! @brief 중단 시간을 합산하지 않고 설정을 유지한 한 구간만 판정합니다. """
     test = group['test']
@@ -211,6 +242,8 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
             for device in devices:
                 append(identifier + f'/started/role{device.image["role"]}/pwm-registers',
                        {'status': 'observation', 'words': device.command(117, timeout=2)})
+                append(identifier + f'/started/role{device.image["role"]}/pwm-pins',
+                       {'status': 'observation', 'words': device.command(119, (0,), timeout=2)})
         time.sleep(.3)
         first_engines, first_lanes = snapshots(devices, test, seed, append, identifier + '/begin')
         for device in devices:
@@ -275,25 +308,7 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
     except BaseException as error:
         original_error = error
         append(identifier + '/failure', {'status': 'failed', 'error': f'{type(error).__name__}: {error}'})
-        for device in devices:
-            observations = [(99, (), 'engine')]
-            observations += [(100, (index,), f'lane{index}') for index in range(len(test['serial_links']))]
-            observations += [(104, (index,), f'stream{index}') for index in oracle.stream_indices(test)]
-            if test['pwm_instance']:
-                observations += [(107, (page,), f'pwm-trace{page}') for page in range(5)]
-                observations += [(117, (), 'pwm-registers')]
-            else:
-                observations += [(107, (0,), 'clock')]
-            if test['i2s']:
-                observations += [(118, (page,), f'i2s-failure-page{page}') for page in range(17)]
-            for opcode, arguments, name in observations:
-                try:
-                    append(identifier + f'/failure/role{device.image["role"]}/{name}',
-                           {'status': 'observation', 'words': device.command(opcode, arguments, timeout=2)})
-                except BaseException as read_error:
-                    append(identifier + f'/failure/role{device.image["role"]}/{name}',
-                           {'status': 'unproven', 'error': f'{type(read_error).__name__}: {read_error}'})
-                    break
+        failure_snapshots(devices, test, append, identifier)
     finally:
         stopped = stop_pair(devices, append, identifier + '/cleanup')
         pins_idle = idle_pins(devices, append, identifier + '/pins')
@@ -406,7 +421,7 @@ def main(argv=None):
                     10000000, cmsis_dap_limit_packets=args.cmsis_dap_limit_packets)
                 devices.append(device)
                 evidence['devices'][image['role'] - 1]['flash'] = flash
-                capability = 127
+                capability = 255
                 if session.verify_profile(device) & capability != capability:
                     raise ProtocolError('T13 serial/stream/timing capabilities missing')
             continuity = session.Continuity(grant, images, uids, devices, available, pair.verify_identity)

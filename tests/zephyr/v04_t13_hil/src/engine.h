@@ -27,6 +27,7 @@ namespace t13
     bool pwmClockPolicy(bool crystal);
     bool pwmTailPolicy(unsigned mode);
     void pwmDiagnosticSnapshot(std::uint32_t *out, std::uint32_t &count);
+    void pwmPinSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count);
     void audioDiagnosticSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count);
     void pwmTraceSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count);
     bool streamPrepare(const Case &test, std::uint32_t seed);

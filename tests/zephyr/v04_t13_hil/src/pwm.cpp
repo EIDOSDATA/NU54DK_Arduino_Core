@@ -31,6 +31,8 @@ namespace
     FailureTail failure_tail{};
     unsigned selected_pwm = 0U;
     unsigned diagnostic_mode = 0U;
+    std::uint32_t first_failure_pins[20]{};
+    bool failure_pins_saved = false;
 
     /** @brief 기존 S의 LED3 직결 또는 DAP 분리 DATA 교차 net만 진단에 사용합니다. */
     std::uint32_t capturePin()
@@ -110,6 +112,11 @@ bool t13::pwmPrepare(const Case &test)
     edges = {};
     previous_poll = 0U;
     trace_count = 0U;
+    failure_pins_saved = false;
+    for (auto &value : first_failure_pins)
+    {
+        value = 0U;
+    }
     failure_tail.first_count = failure_tail.first_cycle = 0U;
     selected_pwm = test.pwm_instance;
     duty = test.pwm_duty;
@@ -230,6 +237,12 @@ void t13::captureService()
         ++trace_count;
         if (!edges.consume(timestamp, level, duty))
         {
+            if (diagnostic_mode != 0U && !failure_pins_saved)
+            {
+                std::uint32_t count = 0U;
+                pwmPinSnapshot(0U, first_failure_pins, count);
+                failure_pins_saved = count == 20U;
+            }
             failure_tail.observe(edges.count, cycle);
             if (failure_tail.stop(edges.count, cycle, CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC))
             {
@@ -348,6 +361,83 @@ bool t13::pwmTailPolicy(unsigned mode)
 }
 
 /** @brief 레지스터는 읽기만 하며 최초 실패 주변의 추가 에지를 PASS로 재해석하지 않습니다. */
+/** @brief 출력 PSEL과 입력 GPIOTE IRQ 소유 상태를 읽고 진단의 첫 실패값을 보존합니다. */
+void t13::pwmPinSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count)
+{
+    if (!stats.enabled)
+    {
+        count = 0U;
+        return;
+    }
+    if (page == 1U)
+    {
+        for (unsigned index = 0U; index < 20U; ++index)
+        {
+            out[index] = first_failure_pins[index];
+        }
+        count = 20U;
+        return;
+    }
+    if (role == 1U)
+    {
+        const auto pin = capturePin() % 32U;
+        const std::uint32_t values[]{role,
+                                     diagnostic_mode,
+                                     capturePin(),
+                                     NRF_P1->PIN_CNF[pin],
+                                     (NRF_P1->IN >> pin) & 1U,
+                                     (NRF_P1->OUT >> pin) & 1U,
+                                     NRF_GPIOTE20->CONFIG[0],
+                                     NRF_GPIOTE20->INTENSET0,
+                                     NRF_GPIOTE20->INTENSET1,
+                                     NRF_GPIOTE20->EVENTS_IN[0],
+                                     NRF_GPIOTE20->PUBLISH_IN[0],
+                                     NRF_TIMER22->SUBSCRIBE_CAPTURE[0],
+                                     NRF_DPPIC20->CHEN,
+                                     NRF_TIMER22->CC[0],
+                                     NRF_CLOCK->XO.STAT,
+                                     NRF_CLOCK->PLL.STAT,
+                                     k_cycle_get_32(),
+                                     trace_count,
+                                     edges.bad,
+                                     stats.active};
+        for (unsigned index = 0U; index < 20U; ++index)
+        {
+            out[index] = values[index];
+        }
+    }
+    else
+    {
+        const auto *reg = pwmRegisters();
+        const unsigned pin = diagnostic_mode == 2U ? 6U : 14U;
+        const std::uint32_t values[]{role,
+                                     diagnostic_mode,
+                                     selected_pwm,
+                                     reg->PSEL.OUT[0],
+                                     reg->PSEL.OUT[1],
+                                     reg->PSEL.OUT[2],
+                                     reg->PSEL.OUT[3],
+                                     NRF_P1->PIN_CNF[pin],
+                                     (NRF_P1->IN >> pin) & 1U,
+                                     (NRF_P1->OUT >> pin) & 1U,
+                                     reg->ENABLE,
+                                     reg->EVENTS_SEQSTARTED[0],
+                                     reg->EVENTS_SEQSTARTED[1],
+                                     reg->EVENTS_LOOPSDONE,
+                                     reg->EVENTS_STOPPED,
+                                     NRF_CLOCK->XO.STAT,
+                                     NRF_CLOCK->PLL.STAT,
+                                     k_cycle_get_32(),
+                                     stats.completed,
+                                     stats.error};
+        for (unsigned index = 0U; index < 20U; ++index)
+        {
+            out[index] = values[index];
+        }
+    }
+    count = 20U;
+}
+
 void t13::pwmDiagnosticSnapshot(std::uint32_t *out, std::uint32_t &count)
 {
     if (!stats.enabled)
