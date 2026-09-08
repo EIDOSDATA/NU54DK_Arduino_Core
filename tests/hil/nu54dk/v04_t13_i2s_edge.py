@@ -25,23 +25,34 @@ def inspect(pages, role):
             any(type(value) is not int or not 0 <= value <= MASK
                 for page in pages for value in page)):
         raise ProtocolError('T13 I2S edge diagnostic snapshot shape mismatch')
-    summary, first, registers = pages
+    summary, first, trace = pages
     if (summary[:5] != [0x49324530, role, 1, 0, 0] or summary[13] != 0 or
             summary[17] != 0 or summary[18] != summary[19] or
             first[:3] != [0x49324531, role, 0] or first[12:15] != [0, 0, 0] or
-            first[18:20] != [0, 1] or any(registers)):
+            first[18:20] != [0, 1]):
         raise ProtocolError('T13 I2S edge diagnostic cleanup or first-failure state mismatch')
     if role == 1:
         if (summary[5] == 0 or summary[6] == 0 or summary[6] > 4 or
                 summary[7] != summary[6] or summary[8] != summary[6] or
-                first[10] != summary[5] or first[11] != summary[5]):
+                first[10] != summary[5] or first[11] != summary[5] or
+                trace[:4] != [0x49324554, 1, summary[6], summary[5]]):
             raise ProtocolError('T13 I2S physical edge count did not match normal DMA data')
+        traces = []
+        for index in range(trace[2]):
+            base = 4 + index * 4
+            boundary, observed, expected, received = trace[base:base + 4]
+            if ((index > 0 and boundary - traces[-1]['boundary'] != observed) or
+                    abs(observed - expected) > 1 or abs(observed - received) > 1):
+                raise ProtocolError('T13 I2S physical edge trace linkage mismatch')
+            traces.append({'boundary': boundary, 'observed': observed, 'expected': expected,
+                           'received': received})
     elif (any(summary[index] != 0 for index in range(5, 13)) or first[10] != 0 or
-          first[11] == 0):
+          first[11] == 0 or any(trace)):
         raise ProtocolError('T13 I2S peer unexpectedly owned the receive edge observer')
     return {'role': role, 'buffers': summary[5], 'comparisons': summary[6],
             'physical_matches_expected': summary[7], 'physical_matches_received': summary[8],
-            'cleanup_failures': summary[17], 'diagnostic_only': True}
+            'cleanup_failures': summary[17], 'traces': traces if role == 1 else [],
+            'diagnostic_only': True}
 
 
 def classify_failure(pages):

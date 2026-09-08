@@ -21,7 +21,16 @@ class I2sEdgeTests(unittest.TestCase):
                    4095 if role == 1 else 0, 0, 0, 0, 0, 0, 2, 2]
         first = [0x49324531, role, 0, 0, 0, 0, 0, 0, 0, 0,
                  summary[5], 64, 0, 0, 0, 2, 0, 123, 0, 1]
-        return [summary, first, [0] * 20]
+        trace = [0] * 20
+        if role == 1:
+            trace[:4] = [0x49324554, role, 4, summary[5]]
+            boundary = 1000
+            for index in range(4):
+                base = 4 + index * 4
+                observed = 4095 + index
+                boundary += observed
+                trace[base:base + 4] = [boundary, observed, observed, observed]
+        return [summary, first, trace]
 
     def test_only_standalone_i2s20_can_enable_edge_diagnostic(self):
         selected = edge.fixture(next(test for test in cases.cases() if test['id'] == 30))
@@ -49,6 +58,11 @@ class I2sEdgeTests(unittest.TestCase):
             broken[1][index] ^= 1
             with self.subTest(page=1, index=index), self.assertRaises(ProtocolError):
                 edge.inspect(broken, 1)
+        for index in (0, 1, 2, 3, 5, 6, 7, 8):
+            broken = self.pages(1)
+            broken[2][index] ^= 2
+            with self.subTest(page=2, index=index), self.assertRaises(ProtocolError):
+                edge.inspect(broken, 1)
 
     def test_firmware_uses_hardware_boundary_and_does_not_reconfigure_gpio_for_observer(self):
         source = (ROOT / 'tests/zephyr/v04_t13_hil/src/audio.cpp').read_text(encoding='utf-8')
@@ -56,6 +70,7 @@ class I2sEdgeTests(unittest.TestCase):
         self.assertIn('TimerTask::count', source)
         self.assertIn('TimerTask::capture', source)
         self.assertIn('edge.pin_cnf_before != edge.pin_cnf_after', source)
+        self.assertIn('edge.trace_boundary[trace] = edge.last_boundary', source)
         observer = source[source.index('bool prepareEdgeDiagnostic()'):source.index('bool startEdgeDiagnostic()')]
         self.assertNotIn('nrf_gpio_cfg', observer)
         runner = (ROOT / 'tests/hil/nu54dk/v04_t13_run.py').read_text(encoding='utf-8')

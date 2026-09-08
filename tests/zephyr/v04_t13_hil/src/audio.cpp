@@ -45,6 +45,9 @@ namespace
         std::uint32_t first_expected = 0U, first_actual = 0U, first_cycle = 0U;
         std::uint32_t pin_cnf_before = 0U, pin_cnf_after = 0U;
         std::uint32_t cleanup_failures = 0U;
+        std::uint32_t trace_entries = 0U;
+        std::uint32_t trace_boundary[4]{}, trace_delta[4]{};
+        std::uint32_t trace_expected[4]{}, trace_actual[4]{};
         std::uint32_t first_registers[20]{};
         bool first_saved = false;
     } edge;
@@ -178,6 +181,15 @@ namespace
         }
         edge.last_expected = expectedTransitionCount();
         edge.last_actual = transitionCount(rx[slot].values);
+        if (edge.trace_entries < 4U)
+        {
+            const auto trace = edge.trace_entries;
+            edge.trace_boundary[trace] = edge.last_boundary;
+            edge.trace_delta[trace] = edge.last_delta;
+            edge.trace_expected[trace] = edge.last_expected;
+            edge.trace_actual[trace] = edge.last_actual;
+            ++edge.trace_entries;
+        }
         ++edge.comparisons;
         if (absoluteDifference(edge.last_delta, edge.last_expected) <= 1U)
         {
@@ -751,7 +763,7 @@ bool t13::audioEdgeDiagnosticPolicy(unsigned mode)
     return true;
 }
 
-/** @brief SDIN 전이 판정, 최초 오류 레지스터, 정리 상태를 각각 20 word로 반환합니다. */
+/** @brief SDIN 전이 판정, 최초 네 DMA 추적값, 최초 오류 레지스터를 반환합니다. */
 void t13::audioEdgeDiagnosticSnapshot(unsigned page, std::uint32_t *out, std::uint32_t &count)
 {
     if (page > 2U)
@@ -805,9 +817,34 @@ void t13::audioEdgeDiagnosticSnapshot(unsigned page, std::uint32_t *out, std::ui
     }
     else
     {
-        for (unsigned index = 0U; index < 20U; ++index)
+        if (edge.first_saved)
         {
-            out[index] = edge.first_registers[index];
+            for (unsigned index = 0U; index < 20U; ++index)
+            {
+                out[index] = edge.first_registers[index];
+            }
+        }
+        else if (role == 1U)
+        {
+            out[0] = 0x49324554U;
+            out[1] = role;
+            out[2] = edge.trace_entries;
+            out[3] = edge.buffers;
+            for (unsigned index = 0U; index < 4U; ++index)
+            {
+                const auto base = 4U + index * 4U;
+                out[base] = edge.trace_boundary[index];
+                out[base + 1U] = edge.trace_delta[index];
+                out[base + 2U] = edge.trace_expected[index];
+                out[base + 3U] = edge.trace_actual[index];
+            }
+        }
+        else
+        {
+            for (unsigned index = 0U; index < 20U; ++index)
+            {
+                out[index] = 0U;
+            }
         }
     }
     count = 20U;
