@@ -27,15 +27,16 @@
 ## 2. 현재 재개 체크포인트
 
 **현재 작업:** 전체 문서 정리·커밋·푸시를 완료하고 현재 장치와 S 조건을 대조해 순서1~3을 재개했습니다.
-I2S B는 마지막 frame 판정 보완 뒤 새 예행을 통과했지만 정식55회 성공 후56번째 정상 재시작에서 실패했습니다.
-UART20 A CTS100회는 완료했고 UART21·22 A CTS는 각각8·57회차 실패 원본을 보존했습니다.
-기존54조건 중 나머지를 실행합니다. System OFF의 전용 RX pull-up·시작 수준 진단은 exact 빌드와
-원격 Host831시험을 통과했으며 bridge 재확인이 남았습니다. I2S는 오류 직후 DMA·GPIO·IRQ 계측을 준비합니다.
+I2S B는 새 계측 source182ef13의 예행 뒤5회 성공·6회차 정상 구간13word 불일치로 실패했습니다.
+DMA·GPIO·IRQ·RAM과 종료 원본을 보존했으며 원인은 미확정입니다. UART20·30 A CTS100회는
+완료했고 UART21·22 A CTS는 각각8·57회차 실패 원본을 보존했습니다. 기존54조건의 나머지를
+실행합니다. System OFF는 새 bridge도 응답 timeout으로 실패했고, 실패 후 B pin reset으로
+SWD와 양쪽 정지를 확인했습니다. debug 유지 UART 진단을 준비하며 실제 OFF 성공은0회입니다.
 S 결선을 유지합니다. U 재배치·QDEC 재진단·연속 handover·정식 공개는 이번 자동 실행에 포함하지 않습니다.
 
 | 순서 | 결선 | 작업 |
 | --- | --- | --- |
-| 1 | S | I2S B 공급 중단·정상 복구. afb5431 예행PASS·정식55/100 뒤56회차 정상 재시작 데이터 오류. 원본 보존·추가 원인 조사 |
+| 1 | S | I2S B 공급 중단·정상 복구.182ef13 예행PASS·5/100 뒤6회차 정상 구간13word 오류. 원본 보존·추가 원인 조사 |
 | 2 | S | UART CTS12·parity/break16·RX 공급 지연8, SPIS 짧은 DMA/미준비10, TWI stuck-low4·TWIS write 공급 지연4의 기존54조건 |
 | 3 | S | System OFF bridge·timer/GPIO wake. CS 조기 종료·TWIS read 지연·GPIOTE/DPPI/domain·PWM/Arduino API 충돌의 기존 요구와 구현·증거 대조 |
 | 4 | U | S 범위 정리 뒤 GPIO 배치를 안내하고 현재 재배치 확인. UART00 안정성·flow·취소·재시작 |

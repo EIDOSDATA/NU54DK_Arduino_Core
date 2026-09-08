@@ -12,6 +12,21 @@ from v04_protocol import ProtocolError, encode
 
 
 class PowerTests(unittest.TestCase):
+    def test_debug_held_bridge_cannot_substitute_for_normal_mode_or_off(self):
+        """! @brief debug 유지 진단에는 정상 mode·reset·retention 성공을 부여하지 않습니다. """
+        words = [power.MAGIC, 2, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 2, 0, 0, 0, 800]
+        result = power.inspect_debug_bridge(words)
+        self.assertFalse(result['normal_mode_proven'])
+        self.assertFalse(result['system_off_pass'])
+        with self.assertRaises(ProtocolError):
+            power.inspect(words, boots=1, mode=0, round_number=0, seed=0)
+        for index, value in ((1, 1), (2, 0), (4, 1), (5, 1), (7, 1), (8, 1),
+                             (10, 0), (11, 0), (12, 0), (14, 0), (15, 1), (17, 1)):
+            broken = words[:]
+            broken[index] = value
+            with self.subTest(index=index), self.assertRaises(ProtocolError):
+                power.inspect_debug_bridge(broken)
+
     def test_idle_snapshot_preserves_low_and_high_without_claiming_off_success(self):
         """! @brief LOW 관측을 숨기지 않으며 잘못된 pull·role·핀과 찢어진 응답을 거부합니다. """
         target = mock.Mock()

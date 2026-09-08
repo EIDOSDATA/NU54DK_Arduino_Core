@@ -104,6 +104,18 @@ def verify_source(words, source):
         raise ProtocolError('T13 power peer source mismatch after reset')
 
 
+def inspect_debug_bridge(words):
+    """! @brief debug를 유지한 UART 진단을 정상 mode·절전 복구와 구분합니다. """
+    if (not isinstance(words, list) or len(words) != 20 or
+            any(type(value) is not int or not 0 <= value <= MASK for value in words) or
+            words[:3] != [MAGIC, 2, 1] or words[4:6] != [0, 0] or
+            words[7:13] != [0, 0, 0, 1, 1, 1] or words[16:19] != [0, 0, 0] or
+            words[14] < 1 or words[15] < 2):
+        raise ProtocolError('T13 debug-held UART bridge state mismatch')
+    return {'normal_mode_proven': False, 'system_off_pass': False,
+            'debug_requests': words[10:13], 'tx_frames': words[14], 'rx_frames': words[15]}
+
+
 class Relay:
     """! @brief B의 nonce/sequence를 유지하며 A의 두 page mailbox만 사용하는 중계입니다. """
     def __init__(self, controller, nonce, sequence, check, append):
@@ -231,11 +243,15 @@ def execute(args, images, grant, uids, append):
                     raise ProtocolError('T13 power UART/pin preparation failed')
             a, b = devices
             append('debug/before', {'status': 'observation', 'words': b.command(134)})
-            if b.command(137, timeout=2) != [1]:
-                raise ProtocolError('T13 explicit expected pin reset could not be armed')
-            detached = True
-            detach_and_pin_reset(b, append)
-            time.sleep(.3)
+            if args.phase == 'bridge-debug':
+                if b.command(131, timeout=2) != [1]:
+                    raise ProtocolError('T13 debug-held B receive start failed')
+            else:
+                if b.command(137, timeout=2) != [1]:
+                    raise ProtocolError('T13 explicit expected pin reset could not be armed')
+                detached = True
+                detach_and_pin_reset(b, append)
+                time.sleep(.3)
 
             def a_only_check():
                 session.validate(grant, images, uids)
@@ -250,9 +266,13 @@ def execute(args, images, grant, uids, append):
                 raise ProtocolError('T13 A receive start failed')
             relay = Relay(a, b.nonce, b.sequence, a_only_check, append)
             verify_source(relay.command(131), images[1]['core_revision'])
-            inspect(relay.command(134), boots=1, mode=0, round_number=0, seed=0)
-            append('debug/result', {'status': 'passed', 'normal_mode_proven': True,
-                                   'b_swd_accessed_since_detach': False})
+            if args.phase == 'bridge-debug':
+                append('debug-held/result', {'status': 'diagnostic',
+                    **inspect_debug_bridge(relay.command(134))})
+            else:
+                inspect(relay.command(134), boots=1, mode=0, round_number=0, seed=0)
+                append('debug/result', {'status': 'passed', 'normal_mode_proven': True,
+                                       'b_swd_accessed_since_detach': False})
 
             def echo(seed, label):
                 challenge = [secrets.randbits(32) for _ in range(20)]
@@ -265,7 +285,7 @@ def execute(args, images, grant, uids, append):
                                'seed': seed, 'frame_bytes_each_direction': 128})
 
             echo(0, 'bridge/fresh-dma')
-            mode = {'bridge': 0, 'timer': 1, 'gpio': 2}[args.phase]
+            mode = {'bridge-debug': 0, 'bridge': 0, 'timer': 1, 'gpio': 2}[args.phase]
             if mode:
                 for repeat in range(1, args.repeats+1):
                     a_only_check()
@@ -299,7 +319,7 @@ def execute(args, images, grant, uids, append):
         finally:
             for device in reversed(devices):
                 try:
-                    if detached and device is devices[-1]:
+                    if device is devices[-1] and (detached or relay is not None):
                         if relay is not None and not relay.poisoned:
                             append('cleanup/b-reply', {'status': 'observation', 'words': relay.command(139)})
                     elif not device.poisoned:
@@ -357,11 +377,13 @@ def main(argv=None):
     parser.add_argument('--build-root', type=Path, required=True)
     parser.add_argument('--pyocd', type=Path, required=True)
     parser.add_argument('--session-grant', type=Path, required=True)
-    parser.add_argument('--phase', choices=('bridge', 'timer', 'gpio'), required=True)
+    parser.add_argument('--phase', choices=('bridge-debug', 'bridge', 'timer', 'gpio'), required=True)
     parser.add_argument('--repeats', type=int, choices=(1, 100), default=1)
     parser.add_argument('--execute-fixture', action='store_true')
     parser.add_argument('--evidence', type=Path)
     args = parser.parse_args(argv)
+    if args.phase == 'bridge-debug' and args.repeats != 1:
+        raise ProtocolError('debug-held bridge is a single diagnostic, never a recovery campaign')
     uids = validate_pair(args.dut, args.peer)
     images = [inspect_power_image(pair.ROOT, args.build_root, role) for role in (1, 2)]
     grant = json.loads(args.session_grant.read_text(encoding='utf-8'))
@@ -370,6 +392,8 @@ def main(argv=None):
         'repeats': args.repeats, 'core_revision': images[0]['core_revision'],
         'board_revision': images[0]['board_revision'], 'swd_frequency_hz': 10000000,
         'scope': 'UART21 DMA quiesce / peer controlled reset and wake; not full T13',
+        'diagnostic_only': args.phase == 'bridge-debug',
+        'system_off_requested': args.phase in ('timer', 'gpio'),
         'results': [], 'session_grant_sha256': hashlib.sha256(args.session_grant.read_bytes()).hexdigest(),
         'devices': [{'role': image['role'], 'uid_sha256': hashlib.sha256(uid.encode()).hexdigest(),
                      'image_sha256': image['sha256'], 'elf_sha256': image['elf_sha256']}

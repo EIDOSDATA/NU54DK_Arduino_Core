@@ -1,0 +1,31 @@
+{
+  "source": "da89d2af8e4f77967dfc411a10afdd4bb2fecbb8",
+  "physical_executed": false,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "power-idle-bridge-01-cleanup-readonly-01.json.gz",
+      "bytes": 1603,
+      "sha256": "1eddd174a3fcf5893f1a79c46716acad50d6a4b7f529cc1a7e55cff3fa0b8d5a",
+      "gzip_sha256": "09cdaebe39306b89c3c728214f1fb0360fd11e4bbc336529c58de0383c3410cd"
+    },
+    {
+      "file": "power-idle-bridge-01-cleanup-pin-reset-01.json.gz",
+      "bytes": 1582,
+      "sha256": "f35ca9e2a5b176dae9195aa15b1084adc05982d161414dd2123a880ff83dbf9f",
+      "gzip_sha256": "6254cf439757ba8afef108c15a10d3079986745ea9bea58a4a54f18a83d6627d"
+    },
+    {
+      "file": "power-idle-bridge-01-cleanup-pin-reset-02.json.gz",
+      "bytes": 2637,
+      "sha256": "9b4e4ee1f62bb96d785194085830d4256eb991520bebc03faaca90551d018671",
+      "gzip_sha256": "855319cb27f070306753ebc63cf626e619d9c32147df6961d1e5d4422abef81c"
+    },
+    {
+      "file": "power-idle-cleanup-correction-01.json.gz",
+      "bytes": 484,
+      "sha256": "7c33d2e0e18f7f538f91697680370cb9f37fe8d468c375cf6c61b6e16a62181b",
+      "gzip_sha256": "7f9a3deef5b81abd4b38fc13a56dee7350ad9a02af7a1b33c3f8039114f42c7f"
+    }
+  ]
+}

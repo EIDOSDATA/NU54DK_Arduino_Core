@@ -40,6 +40,12 @@ checksum으로 보존한다. 명시된 예상 reset 외에는 자동 UART 재시
 실행은 현재 S grant와 `--execute-fixture --evidence`가 필요하다. 예행1회를100회로 세지 않는다.
 새 회차 전 남은 확인 시간이20초 미만이면 시작하지 않는다. 사용자 확인의 원래 만료를 연장하지 않는다.
 
+`--phase bridge-debug --repeats 1`은 응답 손실 원인을 구분하는 단일 진단이다. B의 debug를
+유지하고 pin reset·OFF 없이 같은 UART GPIO·DMA와 source/challenge를 검사한다. 이 결과에는
+`diagnostic_only=true`, `system_off_requested=false`, `normal_mode_proven=false`를 기록한다.
+정상 debug 분리 bridge나 timer/GPIO 복구 성공으로 대체하지 않는다. B의 중계 sequence를 이용해
+마지막 STOP을 요청하며, 중계 실패 시 자동 재전송하지 않고 lease 종료·원본·핀 상태를 확인한다.
+
 ## Mailbox
 
 | Opcode | 경로 | 용도 |

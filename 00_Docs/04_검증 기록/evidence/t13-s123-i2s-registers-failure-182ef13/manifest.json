@@ -1,0 +1,146 @@
+{
+  "source": "182ef13f4e9b766e96b0ae1783376ff2b1838d30",
+  "status": "failed",
+  "phase": "stream-fault",
+  "physical_executed": true,
+  "started_at": "2026-09-08T15:43:09.099177+00:00",
+  "finished_at": "2026-09-08T15:43:57.495876+00:00",
+  "error": "ProtocolError: T13 engine unhealthy or lease expired: [30, 0, 0, 1, 0, 0, 592, 39676, 0, 37994, 0, 1588, 0, 760999, 0, 1]",
+  "case_results": [
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat001/restart/T13-S/preflight/i2s20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/i2s20",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat001/result",
+      "status": "passed",
+      "fault_seed": 236912242,
+      "restart_seed": 2418640843,
+      "planned_recovery_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat002/restart/T13-S/preflight/i2s20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/i2s20",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat002/result",
+      "status": "passed",
+      "fault_seed": 4170887467,
+      "restart_seed": 1722665106,
+      "planned_recovery_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat003/restart/T13-S/preflight/i2s20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/i2s20",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat003/result",
+      "status": "passed",
+      "fault_seed": 3913034838,
+      "restart_seed": 1997231599,
+      "planned_recovery_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat004/restart/T13-S/preflight/i2s20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/i2s20",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat004/result",
+      "status": "passed",
+      "fault_seed": 4199472775,
+      "restart_seed": 1685694270,
+      "planned_recovery_pass": true,
+      "normal_soak_pass": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat005/restart/T13-S/preflight/i2s20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/i2s20",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/stream-recovery/i2s20/role2/repeat005/result",
+      "status": "passed",
+      "fault_seed": 718928142,
+      "restart_seed": 3035529399,
+      "planned_recovery_pass": true,
+      "normal_soak_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3752,
+      "sha256": "451c356c7e8e24c78d3422e0a755126f603f44371b9c687a3f1f06a1cddc4ba2",
+      "gzip_sha256": "d6a8d5caf04406e529557e28d8646aea230c6dec84d214d52a4248243eac9d6a"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "cd8e709a57d3c1ccdb76ee7b8553e918b9cf43f195d284b0aeb7d13d511e5287",
+      "gzip_sha256": "61f69b386eb440882c8f161d3eb6596636f45c671e524d6c471c2c56d9971a43"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 382501,
+      "sha256": "ac3428592d69a1e46c5fec29f603ffb330fb7e335a0c0687a30d639ba13eb835",
+      "gzip_sha256": "23fcfbe1afa896e1462043bd132479baa2f4e05776f0167756e3f0dbbf905914"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 213087,
+      "sha256": "f6d5c7667876d8db8cec2ea74d7a58b872c832bf212012aab5e442e6e0480279",
+      "gzip_sha256": "86e6eb259e51054c9b95c18737b151ca584c1617b92419b584c13f26bef723da"
+    },
+    {
+      "file": "i2s-registers-100-01-preflight.json.gz",
+      "bytes": 755,
+      "sha256": "5ef952ce5cf2364bfb1f98afcbcf78483bed8599b927a89e048197c629c411e8",
+      "gzip_sha256": "49a9360250201b8f99a217b07731a3dfa3b04054f7fbfea6526213032a820d36"
+    },
+    {
+      "file": "i2s-registers-100-01-preflight.log.gz",
+      "bytes": 1650,
+      "sha256": "d7d87d0d655cbf1304b7db1b2b2b672b4b2198b126e30c1642e71c285a937b6f",
+      "gzip_sha256": "25249666024f07e6cef7dc0fb53d559b6a512a1b498ec4fffe15b51d8c57c94c"
+    },
+    {
+      "file": "i2s-registers-100-01-execute.json.gz",
+      "bytes": 751,
+      "sha256": "f57bac6a424f506f28a3d6d5c04877f0f3e9f732e343530c123b45b6e15d805d",
+      "gzip_sha256": "f9e0c20712c2f441059c2c85a50161579d0f29eb600615dc21d320c47c998e98"
+    },
+    {
+      "file": "i2s-registers-100-01-execute.log.gz",
+      "bytes": 462,
+      "sha256": "3fa09f2680168e844b4bc1db33ceaf8a1121edffebf11e63b77519e43f2dbe05",
+      "gzip_sha256": "2db1260cc8c5cb4ca7e566f92b7181d0032e3842847d34efa442fd2b4bb8f83b"
+    }
+  ]
+}
