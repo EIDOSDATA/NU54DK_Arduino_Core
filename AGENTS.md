@@ -1,5 +1,11 @@
 # Repository work handoff
 
+Owner-authorized exception (2026-09-08): retire public versions below v0.3.0 and
+compact main history while preserving original evidence and assets on an archive branch.
+Keep the v0.3.0 tag and payload unchanged; update its catalog only. See
+[the retirement record](<00_Docs/04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>).
+
+
 For v0.4.0 implementation, verification, documentation, or release work:
 
 1. Before taking task actions, read `00_Docs/TODO_v0.4.0.md` completely, including its

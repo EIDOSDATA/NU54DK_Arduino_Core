@@ -127,7 +127,8 @@
       "kind": "automated",
       "required": true,
       "state": "passed",
-      "evidence": ["00_Docs/05_릴리스/README.md"]
+      "evidence": ["00_Docs/05_릴리스/README.md", "00_Docs/04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md"],
+      "reason": "owner-authorized retirement is backed up; retained v0.3.0 tag and payload remain immutable; catalog is mutable"
     },
     {
       "id": "project_owner_approval",

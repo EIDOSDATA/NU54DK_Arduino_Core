@@ -486,13 +486,17 @@ class M18ReleaseTests(unittest.TestCase):
                     2630,
                     "14fe2eb10b4dd77a219d48060c32c21bdd97370f6d6f8be699d9118f8973e007",
                 ),
+                "retirement-2026-09-08": (
+                    1126,
+                    "97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57",
+                ),
             },
         )
         current = (REPO_ROOT / M18.EXPECTED_STABLE_INDEX_FILENAME).read_bytes()
         current_identity = (len(current), hashlib.sha256(current).hexdigest())
         self.assertEqual(
             current_identity,
-            M18.PUBLISHED_STABLE_ROOT_INDEX_IDENTITIES["0.3.0"],
+            M18.PUBLISHED_STABLE_ROOT_INDEX_IDENTITIES["retirement-2026-09-08"],
         )
         M18.assert_stable_root_index(FakeRunner(), REPO_ROOT, CORE_COMMIT)
 

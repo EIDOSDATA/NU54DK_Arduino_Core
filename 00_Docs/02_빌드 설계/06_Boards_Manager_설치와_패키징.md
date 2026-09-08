@@ -5,7 +5,7 @@
 | Package | `nucode:zephyr` |
 | Board FQBN | `nucode:zephyr:nu54dk` |
 | 현재 stable | `0.3.0` |
-| 보존한 downgrade 버전 | `0.2.0`, `0.1.0` |
+| 공개 downgrade 버전 | 없음; 0.3.0 미만은 공급 종료 |
 | 공식 사용자 OS | Windows 10/11 x64 |
 
 ## Stable index와 설치
@@ -16,8 +16,8 @@ Arduino IDE와 Arduino CLI의 일반 update channel은 다음 URL입니다.
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-Index는 최신순 `0.3.0`, `0.2.0`, `0.1.0`을 제공합니다. 이전 버전은 비지원 상태지만 재현성과
-downgrade를 위해 항목을 보존합니다. RC/preview index는 신규 설치에 사용하지 않습니다.
+Index는 `0.3.0`만 제공합니다. 2026-09-08 소유자 지시로 이전 stable·RC·preview 공급을
+종료합니다. 원본은 [106번 보존 기록](<../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)을 따릅니다.
 
 Arduino CLI 설치 예시:
 

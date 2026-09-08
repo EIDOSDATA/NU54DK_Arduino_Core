@@ -48,6 +48,11 @@ PUBLISHED_STABLE_ROOT_INDEX_IDENTITIES = {
         2630,
         "14fe2eb10b4dd77a219d48060c32c21bdd97370f6d6f8be699d9118f8973e007",
     ),
+    ## @brief 소유자가 승인한 구버전 공급 종료 후 catalog의 exact byte입니다.
+    "retirement-2026-09-08": (
+        1126,
+        "97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57",
+    ),
 }
 EXPECTED_PINS = {
     "NCS_VERSION": "v3.4.0",

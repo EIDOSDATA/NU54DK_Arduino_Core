@@ -254,19 +254,19 @@ class M10PackagingTests(unittest.TestCase):
         """! @brief 장기 사용자 endpoint의 stable index identity를 검증합니다. """
 
         index = REPO_ROOT / PACKAGE.STABLE_INDEX_FILENAME
-        self.assertEqual(index.stat().st_size, 2630)
+        self.assertEqual(index.stat().st_size, 1126)
         self.assertEqual(
             hashlib.sha256(index.read_bytes()).hexdigest(),
-            "14fe2eb10b4dd77a219d48060c32c21bdd97370f6d6f8be699d9118f8973e007",
+            "97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57",
         )
         self.assertNotEqual(PACKAGE.RC_INDEX_FILENAME, PACKAGE.STABLE_INDEX_FILENAME)
         document = PACKAGE.validate_index(index)
         platforms = document["packages"][0]["platforms"]
         self.assertEqual(
             [platform["version"] for platform in platforms],
-            ["0.3.0", "0.2.0", "0.1.0"],
+            ["0.3.0"],
         )
-        for platform, version in zip(platforms, ("0.3.0", "0.2.0", "0.1.0"), strict=True):
+        for platform, version in zip(platforms, ("0.3.0",), strict=True):
             identity = PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES[version]
             self.assertEqual(platform["archiveFileName"], PACKAGE.archive_filename(version))
             self.assertEqual(
@@ -299,8 +299,19 @@ class M10PackagingTests(unittest.TestCase):
         crlf_bytes = stable_bytes.replace(b"\n", b"\r\n")
         self.assertNotEqual(
             hashlib.sha256(crlf_bytes).hexdigest(),
-            "14fe2eb10b4dd77a219d48060c32c21bdd97370f6d6f8be699d9118f8973e007",
+            "97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57",
         )
+
+    def test_10ab_retired_preview_feed_advertises_no_downloads(self) -> None:
+        """! @brief 종료된 preview URL이 구버전 설치 항목을 다시 제공하지 않게 합니다. """
+
+        document = json.loads((REPO_ROOT / PACKAGE.INDEX_FILENAME).read_text(encoding="utf-8"))
+        self.assertEqual(len(document["packages"]), 1)
+        package = document["packages"][0]
+        self.assertEqual(package["name"], PACKAGE.VENDOR)
+        self.assertEqual(package["websiteURL"], PACKAGE.REPOSITORY_URL)
+        self.assertEqual(package["platforms"], [])
+        self.assertEqual(package["tools"], [])
 
     def test_11_supported_versions_are_fail_closed(self) -> None:
         self.assertEqual(PACKAGE.LEGACY_PREVIEW_VERSIONS[-2:], ("0.0.92", "0.0.93"))
@@ -358,7 +369,7 @@ class M10PackagingTests(unittest.TestCase):
         platforms = document["packages"][0]["platforms"]
         self.assertEqual(
             [platform["version"] for platform in platforms],
-            ["0.3.0", "0.2.0", "0.1.0"],
+            ["0.3.0"],
         )
         self.assertEqual(
             platforms[0]["url"],

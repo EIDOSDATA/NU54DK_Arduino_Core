@@ -77,6 +77,5 @@ Stable ZIP의 version-independent runtime payload SHA-256은 RC3와 같은
 
 ## 이전 버전 정책
 
-`v0.1.0`, `v0.2.0`과 모든 RC는 신규 수정·지원 대상에서 제외된 역사 버전입니다. 재현성과
-검증 감사, 안전한 downgrade를 위해 이미 공개한 tag·Release asset과 stable index 항목은
-삭제하거나 덮어쓰지 않습니다. 신규 설치와 문제 보고는 `v0.3.0`을 기준으로 합니다.
+2026-09-08 소유자 지시로 v0.3.0 미만의 stable·RC·preview 공급을 종료한다. Stable index는 0.3.0만 제공하며 preview URL은 빈 목록을 유지한다. 원본 이력과 자산은 별도 archive 브랜치에서 보존한다. v0.3.0 태그·설치 ZIP·checksum·SBOM 등 6개 payload/sidecar는 그대로 유지하고, 해당 Release의 catalog index만 현재 공급 목록과 일치시킨다.
+신규 설치와 문제 보고는 `v0.3.0`을 기준으로 합니다.

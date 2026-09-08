@@ -5,12 +5,12 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | RELEASE-INDEX-001 |
-| 문서 개정 | 2.1 |
+| 문서 개정 | 2.2 |
 | 현재 정식 버전 | `v0.3.0` |
 | 설치 channel | Stable Boards Manager index |
 | 공식 사용자 OS | Windows 10/11 x64 |
-| 이전 버전 상태 | 역사적·비지원, 공개 자산은 불변 보존 |
-| 최종 갱신일 | 2026-09-04 |
+| 이전 버전 상태 | 공개 공급 종료, archive 브랜치에 원본 보존 |
+| 최종 갱신일 | 2026-09-08 |
 
 신규 설치, 지원 요청과 현재 API 기준은 `v0.3.0` 문서를 사용합니다. 이전 stable과 RC 문서는
 당시 artifact, migration 경계와 검증 판단을 보존하는 역사 자료입니다.
@@ -40,8 +40,8 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 
 ## 보존된 이전 stable
 
-`v0.1.0`과 `v0.2.0`은 신규 수정·지원 대상이 아닙니다. 하지만 재현성 감사와 검증된
-downgrade를 위해 공개 tag·Release asset과 stable index 항목을 삭제하거나 덮어쓰지 않습니다.
+2026-09-08 소유자 지시로 v0.3.0 미만의 stable·RC·preview 공급을 종료한다. Stable index는 0.3.0만 제공하며 preview URL은 빈 목록을 유지한다. 원본 이력과 자산은 별도 archive 브랜치에서 보존한다. v0.3.0 태그·설치 ZIP·checksum·SBOM 등 6개 payload/sidecar는 그대로 유지하고, 해당 Release의 catalog index만 현재 공급 목록과 일치시킨다.
+[106번 정리·보존 기록](<../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)을 참조합니다.
 
 ### v0.2.0
 
@@ -61,8 +61,8 @@ downgrade를 위해 공개 tag·Release asset과 stable index 항목을 삭제�
 
 ## 보존된 v0.3.0 Release Candidate
 
-RC1~RC3는 stable 설치 channel이 아닙니다. 당시 공개 자산과 기록은 교정 과정과 승격 근거를
-보존하기 위해 그대로 유지합니다.
+RC1~RC3의 공개 Release·tag·설치 목록은 공급 종료 대상입니다. 교정 과정과 승격 근거는
+아래 역사 문서와 archive 브랜치의 원본 자산에 보존합니다.
 
 | 후보 | 상태 | 문서 |
 | --- | --- | --- |
@@ -78,8 +78,8 @@ RC1~RC3는 stable 설치 channel이 아닙니다. 당시 공개 자산과 기록
 
 ## 문서와 자산 보존 규칙
 
-1. 공개한 tag, archive, checksum, SBOM과 Release 문서는 덮어쓰지 않습니다.
-2. Stable index에는 최신 버전을 앞에 두고 검증된 이전 stable을 downgrade용으로 보존합니다.
-3. 최신 stable URL과 version별 불변 Release index를 구분합니다.
+1. 현재 공급하는 v0.3.0 tag·설치 archive·checksum·SBOM은 그대로 유지합니다.
+2. 소유자가 승인한 2026-09-08 공급 종료 대상은 원본을 archive 브랜치로 보존합니다.
+3. Stable root와 v0.3.0 Release catalog는 0.3.0만 제공하며 preview catalog는 빈 목록입니다.
 4. 실제 검증 수치는 [검증 기록](<../04_검증 기록/README.md>)에서 확인합니다.
 5. 다음 버전 계획은 [제품 로드맵](<../01_아두이노 코어 설계/02_구현_로드맵.md>)에서 관리합니다.

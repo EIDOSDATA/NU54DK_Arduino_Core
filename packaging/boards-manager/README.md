@@ -33,12 +33,11 @@ R13의 본문·CLI·산출물 byte 비교는
 
 ## 공개 stable은 불변
 
-공개된 `v0.1.0`, `v0.2.0`, `v0.3.0`의 tag, ZIP, 부속 자산과 version별 index snapshot은
-덮어쓰거나 다시 만들지 않습니다. Stable index는 최신순 `0.3.0`, `0.2.0`, `0.1.0`을
-제공하며 이전 항목의 URL, 크기와 checksum을 유지합니다.
+2026-09-08 소유자 지시로 v0.3.0 미만의 stable·RC·preview 공급을 종료한다. Stable index는 0.3.0만 제공하며 preview URL은 빈 목록을 유지한다. 원본 이력과 자산은 별도 archive 브랜치에서 보존한다. v0.3.0 태그·설치 ZIP·checksum·SBOM 등 6개 payload/sidecar는 그대로 유지하고, 해당 Release의 catalog index만 현재 공급 목록과 일치시킨다.
 
-이전 버전은 신규 지원 대상이 아니지만, 재현성 감사와 검증된 downgrade를 위해 공개 자산과
-index 항목을 삭제하지 않습니다. 새 릴리스는 새 version/tag/asset으로만 추가합니다.
+역사 버전의 build allowlist와 archive identity는 재현·감사를 위해 유지합니다. 이는 공개 공급
+목록이 아닙니다. 역사 도구는 해당 original SHA/원본 자산을 입력으로 사용하며, 종료한 Release를
+재공개하지 않습니다. 자세한 내용은 [106번 기록](<../../00_Docs/04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)을 따릅니다.
 
 ## 고정 stable identity
 
