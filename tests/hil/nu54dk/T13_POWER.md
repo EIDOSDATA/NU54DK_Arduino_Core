@@ -10,6 +10,8 @@ T13에 추가한 UART DMA 정지·System OFF·복구 경로다. 기존 M15의 �
   B는 GPIO wake 직전 input/pull-up/SENSE_LOW, LOW가 이미 걸려 있으면 진입 거부.
 - S 17신호+GND를 유지한다. 나머지 신호는 입력/no-pull이다. UART21 115200 8N1·flow off,
   role별128byte TX/RX DMA workspace 두 개를 사용한다. DAP UART는 계속 분리한다.
+- UART의 소유 RX P1.07은 상대 reset/OFF 동안 LOW로 뜨지 않도록 내부 pull-up을 적용한다.
+  STOP 뒤에는 input/no-pull로 반환한다. 외부 저항이나 추가 결선을 요구하는 설정이 아니다.
 - B의 SWD 하드웨어 스위치를 GPIO로 제어한다고 가정하지 않는다. pyOCD의 정상 disconnect로
   core debug와 DP power request를 해제한 뒤 CMSIS-DAP nRESET만20ms 사용한다.
   pin-only reset에는 SWD connect·DP/AP 접근을 수행하지 않는다. 실제 성립은 peer 응답으로 판정한다.
@@ -66,3 +68,9 @@ RX pending, TX pending, ready, BAUDRATE, CONFIG, ENABLE, TX/RX PSEL, TX/RX 수�
 XO.STAT, retained boots, active/wake/TX guard/RX guard bit 순서다. marker는 마지막에 기록한다.
 STOP 뒤에도 남으며 새 부팅 때 초기화한다. cleanup 재접속 시 source/role/주소를 검증하여 읽고,
 진단 읽기 실패와 STOP 증명 실패는 구분한다. 이 SWD 관측은 debug-free/OFF 성공 증거가 아니다.
+
+`v04_power_idle`의 별도80byte는 초기 RX 설정 전후를 보존한다.20word는 magic0x50494431,
+role, uptime, UART21, TX38, RX39, TX PIN_CNF, 이전 RX PIN_CNF·수준, pull-up 뒤 RX PIN_CNF·수준,
+TX 수준, ENABLE, CONFIG, BAUDRATE, XO.STAT, retained boots, active1/RX0/TX0이다.
+첫 오류 원본과 겹치지 않는 SRAM 주소를 검증한다. 이 원본은 LOW→HIGH 변화 또는 여전히 LOW인
+상태를 그대로 보고하며 실제 System OFF·원인 확정의 PASS로 세지 않는다.

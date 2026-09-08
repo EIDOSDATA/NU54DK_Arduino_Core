@@ -1,0 +1,78 @@
+{
+  "source": "afb5431e3553c68244524f82edf8e4f9538326fb",
+  "status": "passed",
+  "phase": "stream-fault-preflight",
+  "physical_executed": true,
+  "started_at": "2026-09-08T15:11:54.300105+00:00",
+  "finished_at": "2026-09-08T15:12:39.109880+00:00",
+  "error": null,
+  "case_results": [
+    {
+      "id": "T13-S/stream-fault-preflight/i2s20/role2/repeat001/restart/T13-S/preflight/i2s20/result",
+      "status": "passed",
+      "measurement_id": "T13-S/preflight/i2s20",
+      "measured_role": null,
+      "requested_seconds": 1,
+      "planned_soak_pass": false,
+      "same_pair_shared_measurement": false
+    },
+    {
+      "id": "T13-S/stream-fault-preflight/i2s20/role2/repeat001/result",
+      "status": "passed",
+      "fault_seed": 3067349687,
+      "restart_seed": 685994766,
+      "planned_recovery_pass": false,
+      "normal_soak_pass": false
+    }
+  ],
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "bytes": 3752,
+      "sha256": "6ff5a6f5d0cff2ebf4d641cf514091986e41a474bd245ff5abad5baa481bf386",
+      "gzip_sha256": "917bd9810f446432d9b51a1cda74ef4352ae8646828ade35d82236dfdb678245"
+    },
+    {
+      "file": "images.json.gz",
+      "bytes": 1607,
+      "sha256": "a338e0fe0806b262f429297979017c59f29230fe78ba6fdc5950ce85378beca0",
+      "gzip_sha256": "a8cd62b4f40b65de05f8070251fb284251758daf59f614a1609a1842b172c585"
+    },
+    {
+      "file": "result.json.gz",
+      "bytes": 169133,
+      "sha256": "fea588a01cd2fd84fff6bdb21686177dbfcfdc4ed0e43a16d280b3c87b93f87d",
+      "gzip_sha256": "edfaa77c91f4dae24bcd07b4a683f7aa3bf506008f162ce0a97007cb03f3c508"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "bytes": 95837,
+      "sha256": "ef028b603704b6451308f3f32fdae4c5bb4e16d6ef4a9dd56a0e3260179e0587",
+      "gzip_sha256": "1c5e89f0054792f33f43575efa417b65435bf22338a3431cb182ff6b89d7589a"
+    },
+    {
+      "file": "i2s-stereo-s123-preflight-01-preflight.json.gz",
+      "bytes": 778,
+      "sha256": "c0cfe4c54649a33ca3c116fbe69e103b4f8c2074423a65a1ee0bfa8d9f86e051",
+      "gzip_sha256": "eebc6056ef7d6a46adbf6a1a8990be8dccc0c07c598d2eafac11a7cdb7506994"
+    },
+    {
+      "file": "i2s-stereo-s123-preflight-01-preflight.log.gz",
+      "bytes": 1660,
+      "sha256": "f23ee06a20c0df9be1d73849cb926cbf52270793375818bbc8615708f66eaedd",
+      "gzip_sha256": "c405b469f2eec9da62c9656c98081ed6050ae657b80fa5376245b9ec30b488c2"
+    },
+    {
+      "file": "i2s-stereo-s123-preflight-01-execute.json.gz",
+      "bytes": 774,
+      "sha256": "aaa8c5927b2471903e3d08295e2cf2205e29a84f16fe33f6a01a4726230ae001",
+      "gzip_sha256": "83033f2effe92a8ccd38cb8516138ac8d32001fa052cce3601b2675406b8b559"
+    },
+    {
+      "file": "i2s-stereo-s123-preflight-01-execute.log.gz",
+      "bytes": 132,
+      "sha256": "71d8da560877d455c2d84bf566c90c73aaa170b3dd65aab4af4f168e18777fd9",
+      "gzip_sha256": "7170536645fa7838f7f53537c283d7bd862f5e00de6a56419817667ef49fde35"
+    }
+  ]
+}

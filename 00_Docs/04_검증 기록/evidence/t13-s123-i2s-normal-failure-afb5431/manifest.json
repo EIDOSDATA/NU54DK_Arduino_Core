@@ -1,0 +1,31 @@
+{
+  "source": "afb5431e3553c68244524f82edf8e4f9538326fb",
+  "physical_executed": true,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "i2s-stereo-s123-100-01-readonly-01.json.gz",
+      "bytes": 23243,
+      "sha256": "3c4faa6aff4b92e79bcab34c1c70a864399a8adcd5baeccee8ae3e95e8a528df",
+      "gzip_sha256": "684d46853cd78fd063726636ee730b1bdeaab076f8c5ee9c4d7781fceb6ac4b7"
+    },
+    {
+      "file": "i2s-stereo-s123-100-01-analysis-01.json.gz",
+      "bytes": 2648282,
+      "sha256": "0a046c57a3179e81eb683e90058621951131e01bb36c4e9d3c4890063edeed27",
+      "gzip_sha256": "46db952f650919546209643daf60ddb7133ec3a20d272e62dc315eaf20420bca"
+    },
+    {
+      "file": "i2s-stereo-s123-100-01-tx-analysis-01.json.gz",
+      "bytes": 871,
+      "sha256": "b50fe5dc6613becf13fd31b3491947ce8e582764e0e36a520c8103564d7c2143",
+      "gzip_sha256": "ad7c1ccc6f17ddbbb16812e6cd69b3ae51ac5a65223a562647114329ba400b6f"
+    },
+    {
+      "file": "i2s-stereo-s123-100-01-audit.json.gz",
+      "bytes": 646,
+      "sha256": "fde180a2d8faf748f658ef807e94931b739682cfd88eadb247fe95a9c3cbe3c6",
+      "gzip_sha256": "bb9912e3fad3c543e575f71c837e9d52b17bc8f9136f5717f1d577214eebfd45"
+    }
+  ]
+}

@@ -12,6 +12,28 @@ from v04_protocol import ProtocolError, encode
 
 
 class PowerTests(unittest.TestCase):
+    def test_idle_snapshot_preserves_low_and_high_without_claiming_off_success(self):
+        """! @brief LOW 관측을 숨기지 않으며 잘못된 pull·role·핀과 찢어진 응답을 거부합니다. """
+        target = mock.Mock()
+        image = {'role': 2, 'power_idle_address': power.pair.RAM_BEGIN+2048}
+        words = [power.IDLE_MAGIC, 2, 3, 21, 38, 39, 3, 0, 0, 12, 1, 1, 0, 4096, 30801920, 0, 1, 1, 0, 0]
+        for level in (0, 1):
+            words[10] = level
+            target.read_memory_block8.return_value = struct.pack('<20I', *words)
+            result = power.read_power_idle(target, image)
+            self.assertEqual(result['rx_after'], level)
+            self.assertFalse(result['system_off_pass'])
+        for index, value in ((0, 0), (1, 1), (3, 22), (4, 39), (5, 38),
+                             (8, 2), (9, 0), (10, 2), (11, 2), (18, 1)):
+            broken = words[:]
+            broken[index] = value
+            target.read_memory_block8.return_value = struct.pack('<20I', *broken)
+            with self.subTest(index=index), self.assertRaises(ProtocolError):
+                power.read_power_idle(target, image)
+        target.read_memory_block8.return_value = bytes(79)
+        with self.assertRaises(ProtocolError):
+            power.read_power_idle(target, image)
+
     def test_first_fault_region_cannot_overlap_mailbox_or_leave_sram(self):
         start = power.pair.RAM_BEGIN
         symbols = {'v04_request': start, 'v04_response': start+128, 'v04_identity': start+256}

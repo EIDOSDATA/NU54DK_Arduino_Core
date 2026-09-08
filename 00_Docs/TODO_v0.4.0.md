@@ -27,13 +27,14 @@
 ## 2. 현재 재개 체크포인트
 
 **현재 작업:** 전체 문서 정리·커밋·푸시를 완료하고 현재 장치와 S 조건을 대조해 순서1~3을 재개했습니다.
-I2S B는 새 예행1회 통과 뒤 정식6회 성공·7번째 공급 중단 꼬리 판정 실패를 보존했습니다.
-UART CTS부터 기존54조건을 실행하며 I2S 판정 보완과 System OFF 준비를 병행합니다.
+I2S B는 마지막 frame 판정 보완 뒤 새 예행을 통과했지만 정식55회 성공 후56번째 정상 재시작에서 실패했습니다.
+UART20 A CTS100회는 완료했고 기존54조건의 나머지를 실행합니다. System OFF bridge는 RX LOW의
+framing/break 원본을 확보했으며 전용 RX pull-up과 시작 수준 진단을 준비합니다.
 S 결선을 유지합니다. U 재배치·QDEC 재진단·연속 handover·정식 공개는 이번 자동 실행에 포함하지 않습니다.
 
 | 순서 | 결선 | 작업 |
 | --- | --- | --- |
-| 1 | S | I2S B 공급 중단·정상 복구.5c4c3e0 예행PASS·정식6/100 뒤7회차 실패. 마지막 stereo frame 판정 보완 후 새100회 필요 |
+| 1 | S | I2S B 공급 중단·정상 복구. afb5431 예행PASS·정식55/100 뒤56회차 정상 재시작 데이터 오류. 원본 보존·추가 원인 조사 |
 | 2 | S | UART CTS12·parity/break16·RX 공급 지연8, SPIS 짧은 DMA/미준비10, TWI stuck-low4·TWIS write 공급 지연4의 기존54조건 |
 | 3 | S | System OFF bridge·timer/GPIO wake. CS 조기 종료·TWIS read 지연·GPIOTE/DPPI/domain·PWM/Arduino API 충돌의 기존 요구와 구현·증거 대조 |
 | 4 | U | S 범위 정리 뒤 GPIO 배치를 안내하고 현재 재배치 확인. UART00 안정성·flow·취소·재시작 |

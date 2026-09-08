@@ -25,6 +25,8 @@ extern "C"
 {
     /** @brief 최초 UART 오류를 STOP 이후에도 읽을 수 있는 전용 진단 원본입니다. */
     alignas(4) volatile std::uint32_t v04_power_fault[20]{};
+    /** @brief UART RX 시작 전 내부 pull-up 적용과 실제 유휴 수준을 부팅별로 보존합니다. */
+    alignas(4) volatile std::uint32_t v04_power_idle[20]{};
 }
 
 namespace
@@ -240,6 +242,39 @@ namespace
             return failure(14U);
         }
         active = true;
+        /**
+         * @brief 상대 보드 reset·OFF 동안 해제되는 UART 선을 내부 pull-up으로 유휴 HIGH에 둡니다.
+         * @note 소유한 RX만 변경하며 STOP에서는 기존 input/no-pull로 반환합니다.
+         */
+        const auto before_rx_cnf = NRF_P1->PIN_CNF[7U];
+        const auto before_rx_level = nrf_gpio_pin_read(39U);
+        nrf_gpio_cfg_input(39U, NRF_GPIO_PIN_PULLUP);
+        const std::uint32_t idle[]{0U,
+                                   role,
+                                   static_cast<std::uint32_t>(k_uptime_get()),
+                                   21U,
+                                   38U,
+                                   39U,
+                                   NRF_P1->PIN_CNF[6U],
+                                   before_rx_cnf,
+                                   before_rx_level,
+                                   NRF_P1->PIN_CNF[7U],
+                                   nrf_gpio_pin_read(39U),
+                                   nrf_gpio_pin_read(38U),
+                                   NRF_UARTE21->ENABLE,
+                                   NRF_UARTE21->CONFIG,
+                                   NRF_UARTE21->BAUDRATE,
+                                   NRF_CLOCK->XO.STAT,
+                                   retained.boots,
+                                   1U,
+                                   0U,
+                                   0U};
+        for (unsigned index = 1U; index < 20U; ++index)
+        {
+            v04_power_idle[index] = idle[index];
+        }
+        __DMB();
+        v04_power_idle[0] = 0x50494431U;
         deadline = k_uptime_get() + 10000U;
         return true;
     }

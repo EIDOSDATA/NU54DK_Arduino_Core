@@ -19,6 +19,7 @@ MAGIC = 0x504F5731
 MASK = 0xFFFFFFFF
 RESET_PIN, RESET_GPIO, RESET_TIMER = 1, 128, 2048
 FAULT_MAGIC = 0x50464531
+IDLE_MAGIC = 0x50494431
 
 
 def fault_region(address, size, symbols):
@@ -42,6 +43,13 @@ def inspect_power_image(repository, build_root, role):
             raise ProtocolError('T13 power first-fault symbol missing or ambiguous')
         result['power_fault_address'] = fault_region(int(entries[0]['st_value']),
             int(entries[0]['st_size']), result['symbols'])
+        idle = table.get_symbol_by_name('v04_power_idle')
+        if not idle or len(idle) != 1:
+            raise ProtocolError('T13 power initial idle symbol missing or ambiguous')
+        result['power_idle_address'] = fault_region(int(idle[0]['st_value']),
+            int(idle[0]['st_size']), result['symbols'])
+        if abs(result['power_idle_address']-result['power_fault_address']) < 80:
+            raise ProtocolError('T13 power idle and fault snapshots overlap')
     return result
 
 
@@ -57,6 +65,22 @@ def read_power_fault(target, image):
         raise ProtocolError('T13 power first-fault marker or role mismatch')
     return {'present': True, 'words': words, 'event_type': words[3], 'error_mask': words[4],
             'observed_during_cleanup_only': True}
+
+
+def read_power_idle(target, image):
+    """! @brief 부팅별 pull-up 설정 전후 원본을 읽으며 실제 OFF 성공으로 확대하지 않습니다. """
+    raw = bytes(target.read_memory_block8(image['power_idle_address'], 80))
+    if len(raw) != 80:
+        raise ProtocolError('T13 power initial idle snapshot truncated')
+    words = list(struct.unpack('<20I', raw))
+    if words == [0]*20:
+        return {'present': False, 'words': words}
+    if (words[:2] != [IDLE_MAGIC, image['role']] or words[3:6] != [21, 38, 39] or
+            words[8] not in (0, 1) or words[9] & 15 != 12 or
+            words[10] not in (0, 1) or words[11] not in (0, 1) or words[17:] != [1, 0, 0]):
+        raise ProtocolError('T13 power initial idle marker/role/pin/pull mismatch')
+    return {'present': True, 'words': words, 'rx_before': words[8], 'rx_after': words[10],
+            'internal_rx_pull_up': True, 'system_off_pass': False}
 
 
 def inspect(words, *, boots, mode, round_number, seed):
@@ -303,12 +327,14 @@ def execute(args, images, grant, uids, append):
                         target = device.target
                     raw_identity = bytes(target.read_memory_block8(device.image['symbols']['v04_identity'], 64))
                     pair.verify_identity(raw_identity, index+1, device.image['core_revision'])
-                    try:
-                        append(f'cleanup/role{index+1}/first-uart-fault',
-                            {'status': 'diagnostic', **read_power_fault(target, device.image)})
-                    except BaseException as error:
-                        append(f'cleanup/role{index+1}/first-uart-fault',
-                            {'status': 'unproven', 'error': str(error)})
+                    for name, reader in (('first-uart-fault', read_power_fault),
+                                         ('initial-uart-idle', read_power_idle)):
+                        try:
+                            append(f'cleanup/role{index+1}/{name}',
+                                {'status': 'diagnostic', **reader(target, device.image)})
+                        except BaseException as error:
+                            append(f'cleanup/role{index+1}/{name}',
+                                {'status': 'unproven', 'error': str(error)})
                     stamp = struct.unpack('<I', raw_identity[60:64])[0]
                     pins = pin_snapshot(target)
                     stopped = stamp & 0xFFFF0007 == 0x53540004 and all(value & 0xD == 0 for value in pins)
