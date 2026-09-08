@@ -109,7 +109,9 @@ def stop_pair(devices, append, label):
     for device in devices:
         try:
             words = device.command(102, timeout=2)
-            outcomes.append({'role': device.image['role'], 'words': words, 'stopped': words[0] == 1})
+            clock = device.command(107, (0,), timeout=2)
+            outcomes.append({'role': device.image['role'], 'words': words, 'clock': clock,
+                             'stopped': words[0] == 1 and clock[1] == 0})
         except BaseException as error:
             outcomes.append({'role': device.image['role'], 'stopped': False,
                              'error': f'{type(error).__name__}: {error}'})
@@ -129,10 +131,9 @@ def execute_group(devices, group, duration, continuity, append, *, preflight):
         'service_busy_definition': 'service function wall-cycle duration; not total CPU utilization'})
     original_error = None
     try:
-        if test['pwm_instance']:
-            for device in devices:
-                if device.command(106, (1,), timeout=2) != [1]:
-                    raise ProtocolError('T13 PWM crystal clock policy failed')
+        for device in devices:
+            if device.command(106, (1,), timeout=2) != [1]:
+                raise ProtocolError('T13 precision clock policy failed')
         for device in reversed(devices):
             if device.command(97, (test['id'], seed, 0x53414645), timeout=3) != [1]:
                 words = device.command(99, timeout=2)
@@ -161,12 +162,11 @@ def execute_group(devices, group, duration, continuity, append, *, preflight):
                 raise ProtocolError('T13 start failed')
         time.sleep(.3)
         first_engines, first_lanes = snapshots(devices, test, seed, append, identifier + '/begin')
-        if test['pwm_instance']:
-            for device in devices:
-                words = device.command(107, (0,), timeout=2)
-                append(identifier + f'/clock/role{device.image["role"]}', {'status': 'observation', 'words': words})
-                if words[:2] != [1, 1] or words[2] == 0:
-                    raise ProtocolError('T13 PWM crystal reference not held')
+        for device in devices:
+            words = device.command(107, (0,), timeout=2)
+            append(identifier + f'/clock/role{device.image["role"]}', {'status': 'observation', 'words': words})
+            if words[:2] != [1, 1] or words[2] == 0:
+                raise ProtocolError('T13 precision clock reference not held')
         for role_lanes in first_lanes:
             if any(min(row['tx']['frames'], row['rx']['frames']) == 0 for row in role_lanes):
                 raise ProtocolError('T13 traffic not established before measurement')
@@ -230,6 +230,8 @@ def execute_group(devices, group, duration, continuity, append, *, preflight):
             observations += [(104, (index,), f'stream{index}') for index in oracle.stream_indices(test)]
             if test['pwm_instance']:
                 observations += [(107, (page,), f'pwm-trace{page}') for page in range(5)]
+            else:
+                observations += [(107, (0,), 'clock')]
             for opcode, arguments, name in observations:
                 try:
                     append(identifier + f'/failure/role{device.image["role"]}/{name}',

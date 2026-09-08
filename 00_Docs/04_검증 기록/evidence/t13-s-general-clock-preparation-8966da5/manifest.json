@@ -1,0 +1,86 @@
+{
+  "base_source": "8966da5571464dcb55503eb3d0129f93311d008d",
+  "working_tree_changes": true,
+  "physical_pass": false,
+  "files": [
+    {
+      "file": "t13-s-general-clock-host-01.json.gz",
+      "bytes": 494,
+      "sha256": "352876ce2a59c68934df98332bf86157f0cce80099e1fe8a86d2e41782837084",
+      "gzip_sha256": "c6a87176285eb53176f628818cc7ac41520b5a05c7c8f465dbaaad08a48a5ee9"
+    },
+    {
+      "file": "t13-s-general-clock-host-01.log.gz",
+      "bytes": 2459,
+      "sha256": "087d7c92060647a0c4233592b1da20c0e56e7aae362f453cbb49ba1ef7376f93",
+      "gzip_sha256": "689bd1a6c0cd906b82b8731dda9962c74dffe07909f40e534cbd86f5305b1271"
+    },
+    {
+      "file": "t13-s-general-clock-full-host-01.json.gz",
+      "bytes": 472,
+      "sha256": "31e107ba636858abb2f853f3704f44069c3a8bffeb71066a5b2e9ab555d41e8b",
+      "gzip_sha256": "d4483ab2685112ac60549983ad7d63d1145ebdd57b5c13940894500f654cb274"
+    },
+    {
+      "file": "t13-s-general-clock-full-host-01.log.gz",
+      "bytes": 152886,
+      "sha256": "5fb4b5912a3fd09dc129fa1131dcf7d5668e31b3fee0ddaf494b391dd8c519c5",
+      "gzip_sha256": "2f3c1aaffb405ddf0cb6d1a09fed87339ee14106b936b4257522e9c191ba0804"
+    },
+    {
+      "file": "t13-s-general-clock-target-dev-01.json.gz",
+      "bytes": 667,
+      "sha256": "ca5d62be79a7cd8e78c73009a941c19093a73cfdf1afb31c624783930b0cedc6",
+      "gzip_sha256": "5c2555da5d43c5c95503be5d40285f3a5306ae86f0a7f1a78d41bcb90b5cbf64"
+    },
+    {
+      "file": "t13-s-general-clock-target-dev-01.log.gz",
+      "bytes": 2060,
+      "sha256": "6f07706c5ce777f4513fd81d031a022b35890f10eb9eb5d190b770284a52a44f",
+      "gzip_sha256": "fd46fd539c43885a05161c2b9e3e7566f4f35a4674709cb05780ab9061b15d1f"
+    },
+    {
+      "file": "t13-s-general-clock-style-01.json.gz",
+      "bytes": 538,
+      "sha256": "e3cd30370cc782b082e96d2f57ab15025cde51b49667c697ffb969c3defe3cad",
+      "gzip_sha256": "33b0da50cccd03ff3c6b03386f2e8b9ddd9d8b546a0f79209b934960d61629a3"
+    },
+    {
+      "file": "t13-s-general-clock-style-01.log.gz",
+      "bytes": 40,
+      "sha256": "78d55fd05d33a0a2dadd265469541c973d684f4f129a146e6a0d06d717fa0daa",
+      "gzip_sha256": "b3b92d99a9f5968d6da01ffef112dd2b4c3ef8b48a6c2c0986ef0910a44c211a"
+    },
+    {
+      "file": "t13-s-general-clock-docs-01.json.gz",
+      "bytes": 467,
+      "sha256": "26780a8339499320b77a1534b7b8da7f525b2cecc0731280b6357f66fa90e833",
+      "gzip_sha256": "2b460dded6a9e195ecb08f16759f2da79eb320080e561b02e9b699e9de5ff560"
+    },
+    {
+      "file": "t13-s-general-clock-docs-01.log.gz",
+      "bytes": 69,
+      "sha256": "f854e3084afea4144bc737be5d66e44f445fb127b706910a8c2a82a1c212982d",
+      "gzip_sha256": "02ab10e56cb9b7f74e01d005a4ccc20850c52286d4f579e8b0d3b47f8bd9a32f"
+    },
+    {
+      "file": "ci-3f990da-05.json.gz",
+      "bytes": 3841,
+      "sha256": "af0b6a5c41730653d81a2b1d768cf9145bf330a8ceafe5b8eeff1a9a7a9ecaa1",
+      "gzip_sha256": "0e725b8abe77d68888b684a7628bb271add3f39753849d58436c89d1d22e2d02"
+    },
+    {
+      "file": "ci-8966da5-01.json.gz",
+      "bytes": 3808,
+      "sha256": "39d382a4fa00d975ff430ac927c2bd454336c320b8f574a7518efc48dd227b24",
+      "gzip_sha256": "1e2abb0341aa564a82536702e2985ad69eb6fd3b2ed8870d62a9beb0445ca704"
+    }
+  ],
+  "full_host": {
+    "completed": false,
+    "reported_groups": 73,
+    "reported_tests": 580,
+    "skipped": 2,
+    "blocked_at": "test_v04_math.py: WinError4551 app control policy"
+  }
+}

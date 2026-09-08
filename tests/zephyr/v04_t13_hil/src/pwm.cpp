@@ -29,7 +29,7 @@ namespace
     onoff_client clock_client{};
     std::uint32_t trace[16][5]{}, trace_count = 0U;
 
-    /** @brief 정밀 PWM 비교 동안만 HFXO 참조를 획득하며 다른 clock 사용자의 참조는 유지합니다. */
+    /** @brief 정밀 통신·파형 비교 구간의 HFXO 참조를 획득하고 다른 사용자의 참조는 유지합니다. */
     bool requestClock()
     {
         if (!crystal_requested)
@@ -49,8 +49,9 @@ namespace
         }
         crystal_held = true;
         const auto deadline = k_uptime_get() + 1000;
-        int completed = 0;
-        while (sys_notify_fetch_result(&clock_client.notify, &completed) == -EAGAIN)
+        int completed = 0, notification = -EAGAIN;
+        while ((notification = sys_notify_fetch_result(&clock_client.notify, &completed)) ==
+               -EAGAIN)
         {
             if (k_uptime_get() >= deadline)
             {
@@ -58,7 +59,9 @@ namespace
             }
             k_sleep(K_MSEC(1));
         }
-        return completed == 0 || stats.fail(25U, static_cast<std::uint32_t>(completed));
+        return (notification == 0 && completed == 0) ||
+               stats.fail(25U,
+                          static_cast<std::uint32_t>(notification != 0 ? notification : completed));
     }
 
     bool releaseClock()
@@ -89,13 +92,14 @@ bool t13::pwmPrepare(const Case &test)
     previous_poll = 0U;
     trace_count = 0U;
     duty = test.pwm_duty;
-    if (!stats.enabled)
-    {
-        return true;
-    }
+    /** @brief UART도 정확한 baud clock을 요구하므로 PWM 유무와 무관하게 시험 clock을 준비합니다. */
     if (!requestClock())
     {
         return false;
+    }
+    if (!stats.enabled)
+    {
+        return true;
     }
     if (role == 2U)
     {

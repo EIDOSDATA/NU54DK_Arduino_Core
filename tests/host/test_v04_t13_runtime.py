@@ -21,6 +21,28 @@ from v04_protocol import ProtocolError
 
 
 class T13RuntimeTests(unittest.TestCase):
+    def test_stop_requires_clock_release_and_preserves_other_board_cleanup(self):
+        """! @brief GPIO 정지 응답만으로 clock 소유권 잔류를 성공 처리하지 않습니다. """
+        for held, unreadable in ((0, False), (1, False), (0, True)):
+            devices = []
+            for role in (1, 2):
+                device = mock.Mock()
+                device.image = {'role': role}
+                def command(opcode, *args, current_role=role, **kwargs):
+                    if opcode == 102:
+                        return [1, 1]
+                    if current_role == 1 and unreadable:
+                        raise ProtocolError('clock observation unavailable')
+                    return [1, held if current_role == 1 else 0, 0, 0, 0, 0, 0, 0]
+                device.command.side_effect = command
+                devices.append(device)
+            observations = []
+            with self.subTest(held=held, unreadable=unreadable):
+                result = runner.stop_pair(devices, lambda label, row: observations.append(row), 'stop')
+                self.assertEqual(result, held == 0 and not unreadable)
+                self.assertEqual(len(observations[0]['outcomes']), 2)
+                self.assertTrue(observations[0]['outcomes'][1]['stopped'])
+
     def test_timing_rejects_impossible_sum_and_maximum(self):
         bins = [2, 1, 1] + [0]*13
         valid = [4, 4, 7, 0] + bins
