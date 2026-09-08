@@ -18,12 +18,16 @@ namespace t13
     bool serialHealthy();
     bool serialDrained();
     void serialSnapshot(unsigned lane, std::uint32_t *out, std::uint32_t &count);
+    void serialTiming(unsigned lane, unsigned metric, std::uint32_t *out, std::uint32_t &count);
+    void captureService();
     bool streamPrepare(const Case &test, std::uint32_t seed);
     bool streamStart();
+    void streamQuiesce();
     void streamService();
     bool streamStop();
     bool streamHealthy();
     void streamSnapshot(unsigned stream, std::uint32_t *out, std::uint32_t &count);
+    void streamTiming(unsigned stream, unsigned metric, std::uint32_t *out, std::uint32_t &count);
     void initializeWiring();
     bool wiringClaimed();
     void wiringService();

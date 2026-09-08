@@ -6,6 +6,7 @@ import sys
 import subprocess
 import tempfile
 import unittest
+from unittest import mock
 
 from host_compiler import compiler_command
 
@@ -20,6 +21,62 @@ from v04_protocol import ProtocolError
 
 
 class T13RuntimeTests(unittest.TestCase):
+    def test_timing_rejects_impossible_sum_and_maximum(self):
+        bins = [2, 1, 1] + [0]*13
+        valid = [4, 4, 7, 0] + bins
+        self.assertEqual(oracle.timing(valid)['count'], 4)
+        for index, value in ((0, 3), (1, 8), (2, 3), (3, 1), (19, 1)):
+            broken = valid[:]
+            broken[index] = value
+            with self.subTest(index=index), self.assertRaises(ProtocolError):
+                oracle.timing(broken)
+        with self.assertRaises(ProtocolError):
+            oracle.timing([1, 4, 3, 0, 0, 0, 1] + [0]*13)
+        self.assertEqual(oracle.timing([0]*20)['total_us'], 0)
+
+    def test_stream_oracle_rejects_missing_samples_bad_guards_and_waveform(self):
+        test = next(row for row in cases.cases() if row['id'] == 106)
+        seed = 71
+        adc = [0, 1, 0, 0, 10, 12, 320, 0, 123, 1000, 1200, 1100, 1101, 0, 160, 2, 32, 3, 1, 1]
+        pwm = [1, 1, 0, 0, 20, 0, 20, 0, 0, 500, 500, 500, 500, 0, 100, 9600, 10, 0, 1, 1]
+        peer_seed = oracle.lane_seed(seed, 0, 2)
+        pattern = lambda index: ((peer_seed + 0x9E3779B9*(index+1)) ^ ((index << 16) | (index >> 16))) & oracle.MASK
+        audio = [2, 1, 0, 0, 10, 12, 2560, 0, 0, 0, 0, pattern(2302), pattern(2557), 2, 2558, 0, 3, 4, 1, 1]
+        for index, words in ((0, adc), (1, pwm), (2, audio)):
+            self.assertGreater(oracle.stream(index, words, test, seed, 1)['units'], 0)
+            for position, value in ((1, 0), (2, 1), (4, 0), (6, words[6]-1), (18, 0)):
+                broken = words[:]
+                broken[position] = value
+                with self.subTest(index=index, position=position), self.assertRaises(ProtocolError):
+                    oracle.stream(index, broken, test, seed, 1)
+        for words, position in ((adc, 9), (pwm, 9), (audio, 11)):
+            broken = words[:]
+            broken[position] = 0
+            with self.assertRaises(ProtocolError):
+                oracle.stream(words[0], broken, test, seed, 1)
+        test_pdm = next(row for row in cases.cases() if row['id'] == 108)
+        pdm = [3, 1, 0, 0, 10, 12, 10240, 0, 0, 0, 0, 10, 20, 0, 15000, 16000, 64, 10, 1, 1]
+        self.assertEqual(oracle.stream(3, pdm, test_pdm, seed, 1)['rate'], 16000)
+        for position, value in ((11, 4097), (14, 4096*1024+1), (16, 151)):
+            broken = pdm[:]
+            broken[position] = value
+            with self.assertRaises(ProtocolError):
+                oracle.stream(3, broken, test_pdm, seed, 1)
+
+    def test_fault_snapshot_preserves_other_board_and_stream_before_judgement(self):
+        test = next(row for row in cases.cases() if row['id'] == 106)
+        devices = []
+        for role in (1, 2):
+            device = mock.Mock()
+            device.image = {'role': role}
+            device.command.return_value = [0]*20
+            devices.append(device)
+        observations = []
+        with self.assertRaises(ProtocolError):
+            runner.snapshots(devices, test, 1, lambda identifier, row: observations.append(identifier), 'failure')
+        self.assertEqual(len(observations), 2*(1+len(test['serial_links'])+3))
+        self.assertIn('failure/role2/stream2', observations)
+
     def test_target_buffer_guards_and_pattern_match_independent_host(self):
         with tempfile.TemporaryDirectory() as folder:
             exe = Path(folder) / 't13-model.exe'

@@ -1,5 +1,6 @@
 /** @file @brief 고정 시험 ID·10초 lease·실제 측정 시각과 정지 판정을 관리합니다. */
 #include "engine.h"
+#include "measurement.h"
 #include "cases.h"
 #include "fixture_gate.h"
 #include <zephyr/kernel.h>
@@ -12,6 +13,7 @@ namespace
     std::uint32_t expirations = 0U, max_gap_us = 0U;
     std::uint32_t previous_cycle = 0U;
     std::uint64_t start_ms = 0U, stop_ms = 0U, busy_cycles = 0U;
+    t13::Timing service_timing;
 
     /** @brief 정지 증명에 실패하면 gate를 fault로 남기고 GPIO를 강제로 바꾸지 않습니다. */
     bool stop()
@@ -93,7 +95,9 @@ void t13::service()
     {
         stop();
     }
-    busy_cycles += static_cast<std::uint32_t>(k_cycle_get_32() - cycle);
+    const auto elapsed = static_cast<std::uint32_t>(k_cycle_get_32() - cycle);
+    busy_cycles += elapsed;
+    service_timing.add(k_cyc_to_us_floor32(elapsed));
 }
 
 std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std::uint32_t nargs,
@@ -116,8 +120,8 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         {
             out[index + 1U] = plan_hash[index];
         }
-        /** @brief 현재 준비 단계의 serial 측정만 광고하고 미구현 stream을 성공으로 대체하지 않습니다. */
-        out[9] = 1U;
+        /** @brief serial·stream·지연 통계를 구분하고 100회 복구 capability는 별도 준비합니다. */
+        out[9] = 7U;
         count = 10U;
         return 0U;
     }
@@ -136,6 +140,28 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         out[0] = stop() ? 1U : 0U;
         out[1] = healthy ? 1U : 0U;
         count = 2U;
+        return 0U;
+    }
+    if (opcode == 105U && nargs == 2U && selected != nullptr && args[1] < 3U)
+    {
+        if (args[0] == UINT32_MAX)
+        {
+            service_timing.snapshot(out);
+            count = 20U;
+        }
+        else if (args[0] >= 0x100U && args[0] < 0x104U)
+        {
+            streamTiming(args[0] - 0x100U, args[1], out, count);
+        }
+        else if (args[0] < selected->serial_count)
+        {
+            serialTiming(args[0], args[1], out, count);
+        }
+        return count == 20U ? 0U : 400U;
+    }
+    if (opcode == 104U && nargs == 1U && selected != nullptr && args[0] < 4U)
+    {
+        streamSnapshot(args[0], out, count);
         return 0U;
     }
     if (opcode == 97U && nargs == 3U && !wiringClaimed() && !gate.claimed())
@@ -157,6 +183,7 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         started = quiesced = false;
         healthy = true;
         start_ms = stop_ms = busy_cycles = 0U;
+        service_timing = {};
         previous_cycle = max_gap_us = 0U;
         healthy = streamPrepare(*selected, args[1]) && serialPrepare(*selected, args[1]);
         out[0] = healthy ? 1U : 0U;
@@ -183,6 +210,7 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
     if (opcode == 101U && nargs == 0U && started)
     {
         serialQuiesce();
+        streamQuiesce();
         quiesced = true;
         out[0] = 1U;
         count = 1U;

@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: MIT
  */
 #include "engine.h"
+#include "measurement.h"
 #include <nucode/SerialFabric.h>
 #include <zephyr/kernel.h>
 
@@ -23,6 +24,8 @@ namespace
         SerialSignalPin pins[4]{};
         SerialDmaWorkspace workspaces[4]{};
         Direction sent{}, received{};
+        Timing timing[3]{};
+        std::uint32_t submitted_tx[2]{}, submitted_rx[2]{};
         std::uint32_t seed_tx = 0U, seed_rx = 0U;
         std::uint32_t queued_tx = 0U, queued_rx = 0U;
         std::uint32_t error = 0U, driver_error = 0U;
@@ -63,6 +66,10 @@ namespace
         }
         for (unsigned byte = 0U; byte < lane.endpoint.length; ++byte)
         {
+            if (byte % 64U == 0U)
+            {
+                captureService();
+            }
             lane.tx[slot].data()[byte] = pattern(lane.seed_tx, frame * lane.endpoint.length + byte);
         }
         return true;
@@ -80,6 +87,7 @@ namespace
     /** @brief 기대 slot·길이·가드·모든 byte를 검증한 실제 완료만 누적합니다. */
     bool complete(Lane &lane, const void *address, std::size_t amount, bool receive)
     {
+        const auto observed_cycle = k_cycle_get_32();
         auto &direction = receive ? lane.received : lane.sent;
         const unsigned slot = direction.completed % 2U;
         auto &buffer = receive ? lane.rx[slot] : lane.tx[slot];
@@ -95,24 +103,27 @@ namespace
         const auto seed = receive ? lane.seed_rx : lane.seed_tx;
         for (unsigned byte = 0U; byte < amount; ++byte)
         {
+            if (byte % 64U == 0U)
+            {
+                captureService();
+            }
             const auto expected = pattern(seed, static_cast<std::uint32_t>(direction.bytes) + byte);
             if (buffer.data()[byte] != expected)
             {
                 return failure(lane, receive ? 6U : 7U, byte);
             }
+            direction.hash = hashByte(direction.hash, buffer.data()[byte]);
         }
         direction.first_word = 0U;
         direction.last_word = 0U;
-        for (unsigned byte = 0U; byte < amount; ++byte)
-        {
-            direction.hash = hashByte(direction.hash, buffer.data()[byte]);
-        }
         for (unsigned byte = 0U; byte < 4U; ++byte)
         {
             direction.first_word |= std::uint32_t(buffer.data()[byte]) << (8U * byte);
             direction.last_word |= std::uint32_t(buffer.data()[amount - 4U + byte]) << (8U * byte);
         }
         direction.bytes += amount;
+        lane.timing[receive ? 1U : 0U].add(k_cyc_to_us_floor32(
+            observed_cycle - (receive ? lane.submitted_rx[slot] : lane.submitted_tx[slot])));
         const auto now = static_cast<std::uint64_t>(k_uptime_get());
         if (direction.last_completion_ms != 0U &&
             now - direction.last_completion_ms > direction.max_completion_gap_ms)
@@ -168,13 +179,17 @@ namespace
             return false;
         }
         lane.rx_pending[0] = lane.rx_pending[1] = true;
+        lane.submitted_rx[0] = lane.submitted_rx[1] = started;
         lane.queued_rx += 2U;
         if (kind != Kind::uart)
         {
             lane.tx_pending[0] = lane.tx_pending[1] = true;
+            lane.submitted_tx[0] = lane.submitted_tx[1] = started;
             lane.queued_tx += 2U;
         }
         const auto elapsed = k_cyc_to_us_floor32(k_cycle_get_32() - started);
+        lane.timing[2].add(elapsed);
+        captureService();
         if (elapsed > lane.max_queue_us)
         {
             lane.max_queue_us = elapsed;
@@ -374,6 +389,7 @@ namespace
         {
             return;
         }
+        const auto submitted = k_cycle_get_32();
         SerialFabricResult result = SerialFabricResult::wrong_state;
         if (kind == Kind::uart)
         {
@@ -394,11 +410,17 @@ namespace
         }
         if (accepted(lane, result, 60U))
         {
+            const auto elapsed = k_cyc_to_us_floor32(k_cycle_get_32() - submitted);
+            lane.timing[2].add(elapsed);
+            lane.max_queue_us = elapsed > lane.max_queue_us ? elapsed : lane.max_queue_us;
+            captureService();
             lane.tx_pending[slot] = true;
+            lane.submitted_tx[slot] = submitted;
             ++lane.queued_tx;
             if (kind != Kind::uart)
             {
                 lane.rx_pending[slot] = true;
+                lane.submitted_rx[slot] = submitted;
                 ++lane.queued_rx;
             }
             lane.next_frame = now + frame_period_ms;
@@ -465,6 +487,7 @@ void t13::serialService()
             continue;
         }
         poll(lane);
+        captureService();
         if (lane.error != 0U)
         {
             continue;
@@ -578,5 +601,16 @@ void t13::serialSnapshot(unsigned index, std::uint32_t *out, std::uint32_t &coun
     out[17] = lane.sent.max_completion_gap_ms;
     out[18] = lane.received.max_completion_gap_ms;
     out[19] = static_cast<std::uint32_t>(frame_period_ms);
+    count = 20U;
+}
+
+void t13::serialTiming(unsigned lane, unsigned metric, std::uint32_t *out, std::uint32_t &count)
+{
+    if (lane >= max_lanes || metric >= 3U)
+    {
+        count = 0U;
+        return;
+    }
+    lanes[lane].timing[metric].snapshot(out);
     count = 20U;
 }

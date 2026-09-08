@@ -1,0 +1,95 @@
+{
+  "source": "7a33b77f9ed49a671deb2673441c6adc271c6f73",
+  "checks": [
+    {
+      "name": "Zephyr v0.2.0 in pinned Nordic container",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34175097693/job/101902823405"
+    },
+    {
+      "name": "Arduino v0.3.0-compat with pinned Windows prerequisites",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34175097693/job/101902823388"
+    },
+    {
+      "name": "Zephyr v0.1.0 in pinned Nordic container",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34175097693/job/101902823372"
+    },
+    {
+      "name": "Arduino v0.1.0 with pinned Windows prerequisites",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34175097693/job/101902823368"
+    },
+    {
+      "name": "Arduino v0.3.0-ble with pinned Windows prerequisites",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34175097693/job/101902823350"
+    },
+    {
+      "name": "M14 Core native semantic runtime",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34175097663/job/101902823327"
+    },
+    {
+      "name": "Arduino example discovery",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34175097663/job/101902823312"
+    },
+    {
+      "name": "Arduino v0.2.0 with pinned Windows prerequisites",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34175097693/job/101902823310"
+    },
+    {
+      "name": "CI contract",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34175097663/job/101902823278"
+    },
+    {
+      "name": "M23 inventory and M24 serial-fabric contract",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34175097663/job/101902823271"
+    },
+    {
+      "name": "UTF-8 and local links",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34175097663/job/101902823269"
+    },
+    {
+      "name": "Host unit with Windows PowerShell contracts",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34175097663/job/101902823262"
+    },
+    {
+      "name": "Zephyr v0.4.0 in pinned Nordic container",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34175097693/job/101902823252"
+    },
+    {
+      "name": "Zephyr v0.3.0 in pinned Nordic container",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34175097693/job/101902823217"
+    },
+    {
+      "name": "Reproducible Boards Manager package",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34175097663/job/101902823185"
+    }
+  ]
+}

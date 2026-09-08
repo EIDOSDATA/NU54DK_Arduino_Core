@@ -80,7 +80,8 @@ TWI는 peer 내부 pull-up의 실제 통신을 먼저 확인하며, 실패하면
 
 아래 표의 UART20/21은 동시 P1 pin 수에 맞춘 2선이며 UART30만 RTS/CTS 4선이다.
 단독 flow 시험을 생략하는 의미가 아니다. 동시에 사용되는 buffer는 모두 별도 RAM이며
-요청 영역 앞뒤 16-byte guard를 둔다. T13은 아직 전용 동시 runner 구현이 필요하다.
+요청 영역 앞뒤 16-byte guard를 둔다. 전용 runner의 구현·실기 진행은
+[104번](../../../00_Docs/04_검증%20기록/104_T13_S_복구_동시_안정성_검증.md)에 기록한다.
 
 | ID | 동시에 계속 활성화할 경로 | 시간 | 선택 이유 |
 | --- | --- | --- | --- |
@@ -98,8 +99,8 @@ I2S runner를 S에서 그대로 실행해서는 안 된다. C06은 A SCK=P1.04/L
 B SCK=P1.05/LRCK=P1.04, 양쪽 TX=P1.06/RX=P1.07이다. C08은 A CLK=P1.04,
 DATA=P1.06, CS=P1.05 → B SCK=P1.05, MISO=P1.07, CS=P1.04다. B MOSI=P1.06은 입력이다.
 
-C01~C04·C07은 현재 C에서도 peer pin 재할당으로 계획할 수 있고 C06은 현재 530 배치가
-맞지만, 이번 요청에서는 **T13 실행을 하지 않는다**. 후속 실행 때 S로 모아 재결선 횟수를 줄인다.
+C01~C04·C07은 이전 C에서도 peer pin 재할당으로 계획할 수 있고 C06은 이전 530 배치가
+맞지만, 현재 실행은 사용자가 확인한 **S에 모은 C01~C06·C08**이다. C07은 알려진 QDEC 제한으로 제외한다.
 C05의 SPI00과 C08의 기존 PDM 신호원은 C에서 실행하지 않는다.
 
 I2S는 48 kHz/32-bit/stereo/256 word×3 슬롯, PDM은 16 kHz/mono/1024 sample×4,
@@ -113,8 +114,10 @@ PWM은 TOP1000/individual/32 values/loop(C06 50%, C08 25%), QDEC은 256µs sampl
   raw/CRC와 순서, DMA 소유권과 guard를 검사한다. 같은 정상 buffer를 반복 읽어 PASS로 세지 않는다.
 - 시작/종료 device monotonic 시각, 실제 계속 활성 상태, 완료 byte/sample/edge 수, 누락·중복,
   의도하지 않은 reset, 오류 event와 최대 buffer 공급 시간을 저장한다. 예상 밖 loss/reset은 0이어야 한다.
-- 매 서비스 구간의 cycle 수로 busy/idle 및 최대 service gap을 기록하고, buffer 요청→queue,
-  시작→완료 지연의 histogram/max를 남긴다. 이것을 계측 장비의 IRQ latency와 동일시하지 않는다.
+- 매 service 구간의 cycle 수·최대 service gap, queue 처리와 API 제출→완료 event 관측의
+  histogram/max/합계를 기록한다. Service 밖의 시간에는 mailbox·대기·OS 작업도 포함되므로
+  순수 CPU idle/사용률로 표시하지 않는다. IRQ 발생→진입이나 하드웨어 요청→Host 관측 지연의
+  측정도 아니다. 계측되지 않은 구간을 이 histogram의 PASS로 대체하지 않는다.
 - 180/900/3600초 동안 정상 데이터 흐름을 끊지 않는다. 매 vector에서 STOP하는 sweep은
   이 연속 시간의 대체 근거가 아니다. 의도적 오류/복구·handover는 아래 별도 ID에서 실행한다.
 - STOP 후 DMA·pin·DPPI 구독·IRQ/clock 소유권 반환을 확인하고 17개 net을 입력으로 복원한다.
