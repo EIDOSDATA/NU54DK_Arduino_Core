@@ -1,0 +1,43 @@
+{
+  "source": "506680f5a1df7d944e547cb573abcd39ffb6dcbf",
+  "physical_executed": false,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "t13-pwm-capture-arm-exact-host-01.log.gz",
+      "bytes": 8394,
+      "sha256": "27d6d8a5bd1809fa512ba986dc36d1918df9b2aa6cff4aa08cb250cca86e9023",
+      "gzip_sha256": "f0bba5d1059fa3c898540a7b04e1e5e76c6efec44d63644497489825794d06bf"
+    },
+    {
+      "file": "t13-pwm-capture-arm-exact-host-01.json.gz",
+      "bytes": 500,
+      "sha256": "e6382746c06f5ab4b7198eb1c8ed932c69f66a4f7786d8807075d2255bd246d6",
+      "gzip_sha256": "ef6865bbd0fb11678eed31451675e902cf8c804e9a1c040dc36593dfb5e0c9d8"
+    },
+    {
+      "file": "t13-pwm-capture-arm-exact-target-01.log.gz",
+      "bytes": 2060,
+      "sha256": "a9974e616ce20c6a17adbef515842b917831fa31ff6e3e09259a760b497880e6",
+      "gzip_sha256": "ab113bbcf993b84a5eea575b3b10e69b9d9cc2bad7bf6ced3ef74188166a205b"
+    },
+    {
+      "file": "t13-pwm-capture-arm-exact-target-01.json.gz",
+      "bytes": 669,
+      "sha256": "633b2024de59b585b7bc7e3b0b4a58dc855ed3166781dd10c1ce59e034adeb3f",
+      "gzip_sha256": "53a14e23329d7ed89125a407737b37d51e0b2a3dc00383c4922b55976b326958"
+    },
+    {
+      "file": "ci-506680f-03.json.gz",
+      "bytes": 1802,
+      "sha256": "6719f911573d8e6045db15e68c6855058cb9dcf96aefa9cdb9f74b0343c33ebb",
+      "gzip_sha256": "84d912f5c920f6c82ec429ceeff25e820dba497d0e997fb1b44d9d77585c02b3"
+    },
+    {
+      "file": "ci-506680f-03.host.log.gz",
+      "bytes": 295593,
+      "sha256": "d5a75143a1868b1385ec8447b1433060a96ca552c6919d8517d8a77c6e283b0c",
+      "gzip_sha256": "a3f8502098e10dded8d87e2f7de9fe3014f984f5bee83c50e9aeb400967a8b3f"
+    }
+  ]
+}

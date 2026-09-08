@@ -1,0 +1,19 @@
+{
+  "source": "cf4b1523e15600d1da17be827615ed8f411c8e62",
+  "physical_executed": false,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "ci-cf4b152-retirement-01.json.gz",
+      "bytes": 3805,
+      "sha256": "6c77ebbdd70da8d042642601a7e4961b97a2e26b8e3d4c6b8faf07d39d2f2ff0",
+      "gzip_sha256": "a458fecd45b1346f470db4aeb57ac7f071d603cf29aa326fc35c88d1ccfddd57"
+    },
+    {
+      "file": "ci-cf4b152-retirement-01.host.log.gz",
+      "bytes": 293129,
+      "sha256": "c1b05876ce3d5c07a782d4e352af6edeb345bb62e034e6c8ce1b6b9d8e6e059e",
+      "gzip_sha256": "1168c7443b7690d6b158d05865aae334d441f25f7512dc2ed354035442c8b643"
+    }
+  ]
+}

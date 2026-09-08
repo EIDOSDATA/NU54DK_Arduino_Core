@@ -1,5 +1,21 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
+T13 후속 체크포인트(2026-09-08T07:28Z): original4aadf29의 UART RX20/21/22/30
+각100회(총400)와 SPIM00/20/21/22/30 각100회(총500)를 완료했고 양쪽 STOP·원본을 보존했다.
+이전 UART TX4항목을 합쳐 종료·보존한 고정 serial 복구는13/21항목이다. TWI 취소20은1회 뒤
+2번째 반복에서 TX AMOUNT2·RX AMOUNT256/길이256으로 부분 DMA 판정에 실패했다.
+배선 사전검사·guard·양쪽 STOP은 정상이며 첫 실패를 보존한다. RX 이전 전송량 잔류가 유력한
+진단 가설이고 제품 오류나 결선 오류로 확정하지 않는다. 독립 NACK4인스턴스100회 묶음도
+완료했다. NACK20/21/22/30 각100회(총400)와 양쪽 STOP까지 확인해 고정 serial 복구는
+17/21항목, 약81%다. 남은4항목은 TWI 취소20/21/22/30이다. NACK 원본 archive도 보존했다.
+
+원래12시간 S 확인서·exact UID·SWD10MHz·controlled flash를 유지한다. NACK 묶음 전체 PASS와
+양쪽 STOP이 확인되면, 이미 검증한 original506680f/C:/t4h04로 이동해 PWM 예행6조건 다음
+STOP/미시작 취소6항목 각100회를 순차 실행한다. 최초 실패에서 후속 실행을 중단하고 원본과
+정지 근거를 보존한다. Git 정리 뒤 main SHA와 이 original 실기 SHA를 혼합하지 않는다.
+T12·QDEC 검증 작업 완료와 알려진 제한은 유지하며 T13 전체·U·RC·공개는 미완료다.
+
+
 Git/패키지 정리 완료(2026-09-08 소유자 승인): 공개16릴리스·115자산·16태그 공급 종료,
 v0.3.0 payload6개·태그 유지 및 격리 설치230파일 동등성 확인. cb2f4c3 Software7/7·Host772시험
 SUCCESS. 원격 main은24커밋으로 정리했으며 이 후속 기록은 별도다. 아래는 수행한 범위다.
@@ -65,7 +81,7 @@ PWM 종료 복구6항목의4aadf29/C:/t4g04 두 role build와 원격Software7/7�
 
 - **완료한 요청 묶음:** T12 현재 공통 결선 기능 시험과 T13 조합·추가 결선 확정. GPIO/GPIOTE 2,502·PWM steady 675 및 추가 모드 288·I2S 432 PASS. QDEC는 일부 문제·제한사항을 리포트에 남기고 검증 작업을 완료했다. T12 마일스톤도 완료이며 실제 실패를 합격으로 바꾸지 않는다.
 - **최종 기준선:** `e547fc0863be5b381ecab26835fb5e872b399a9c`가 main에 있으며 원격 Software 7/7·재현 빌드 8/8 SUCCESS를 확인했다. 이번 103번 후속 문서 commit의 CI는 별도 exact SHA로 확인한다.
-- **현재 장치:** PDM100회6782084/C:/t4f04를 종료하고4aadf29/C:/t4g04 PWM 종료 복구 예행으로 전환한다. 현재 S 확인서·exact UID·SWD10MHz와 새 결선 검사·controlled flash를 유지한다.
+- **현재 장치:** original4aadf29/C:/t4g04의 독립 TWI NACK400회와 양쪽 STOP을 완료했다. original506680f/C:/t4h04 PWM 후속으로 이동한다. 현재 S 확인서·exact UID·SWD10MHz와 새 결선 검사·controlled flash를 유지한다.
 - **현재 개발:** T13 연속 ADC/PWM/I2S/PDM·DMA guard·지연 histogram과 양쪽 raw 우선 보존을 구현했다. Host/target 준비 검사 뒤 새 clean image로 실행한다. 복구/전환100회는 아직 미완료다. QDEC 재진단은 예약하지 않는다. U 생략 여부는 아직 미확정이며 수행한다면 S 종료 뒤 재배치가 필요하다.
 - **TIMER 완료:** 95번의 7개 TIMER·44 CC·4 clear/stop 조합·2 interval·각 10회, 두 보드 총 7,040회 PASS로 기능 검증을 완료 정리했다. EGU/DPPI/PPIB의 1000 event×10을 TIMER의 추가 필수 반복으로 요구하지 않는다. QDEC는 문제 기록 후 진단을 종료했으며 지원 제한을 T14/T15로 이어간다.
 - **별도 대조 기록:** 외부 ADC 401~408의 기능 276개 PASS는 유지한다. 초기 시험표의 100회와 실제 각 조건 1회 실행 차이는 103번에 명시하며, 이번 TIMER 정리로 ADC 100회까지 완료 처리하거나 재실기를 자동 추가하지 않는다. T13의 독립 준비는 진행할 수 있다.

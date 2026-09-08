@@ -1,0 +1,19 @@
+{
+  "source": "4aadf29fb4cca1febc39ef556c1c9c2cce8a9e0d",
+  "physical_executed": false,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "twi-cancel-4aadf29-analysis.json.gz",
+      "bytes": 4336,
+      "sha256": "6858befbecd7e0d5c537de36fbdfb30175edf170a5ad18ca54b9fae26aa251b7",
+      "gzip_sha256": "b3b50c1454f2bfe528265cd2f0374950adefa1ccf04a440c0229b1f93ab83cd0"
+    },
+    {
+      "file": "serial-recovery-batch-4aadf29-attempt1.json.gz",
+      "bytes": 909,
+      "sha256": "c501f98b9c5c892d7571d06a6d60830f429382f39f2a6d4fbb760fb236502554",
+      "gzip_sha256": "645d5564ef07336ebf9930ac65e1979750c4dfd0e8613ffae93039772b1ae831"
+    }
+  ]
+}
