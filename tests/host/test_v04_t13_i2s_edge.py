@@ -71,11 +71,13 @@ class I2sEdgeTests(unittest.TestCase):
             with self.subTest(page=2, index=index), self.assertRaises(ProtocolError):
                 edge.inspect(broken, 1)
 
-    def test_continuous_trace_allows_only_two_outer_boundary_edges(self):
+    def test_four_bounded_intervals_allow_only_aggregate_window_budget(self):
         pages = self.pages(1)
-        pages[0][14] += 2
-        pages[2][16] += 2
-        pages[2][17] += 2
+        for index in range(4):
+            base = 4 + index * 4
+            pages[2][base] += (index + 1) * 2
+            pages[2][base + 1] += 2
+        pages[0][14] += 8
         self.assertEqual(edge.inspect(pages, 1)['observed_total'], pages[0][14])
         pages[0][14] += 1
         pages[2][16] += 1
@@ -97,6 +99,20 @@ class I2sEdgeTests(unittest.TestCase):
         result = edge.inspect([summary, first, trace], 1)
         self.assertEqual(result['observed_total'], 16359)
         self.assertEqual(result['received_total'], 16357)
+
+    def test_second_captured_trace_stays_inside_per_interval_budget(self):
+        """! @brief 두 번째 S raw의 추가 패드 전이를 구간별 상한과 함께 고정합니다. """
+        summary = [0x49324530, 1, 1, 0, 0, 668, 4, 3, 3, 2736116,
+                   4088, 4081, 4081, 0, 16339, 16336, 16336, 0, 0, 0]
+        first = [0x49324531, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+                 668, 668, 0, 0, 0, 0, 1024, 2736116, 0, 1]
+        trace = [0x49324554, 1, 4, 668,
+                 4071, 4071, 4070, 4070,
+                 8160, 4089, 4088, 4088,
+                 12258, 4098, 4096, 4096,
+                 16339, 4081, 4081, 4081]
+        result = edge.inspect([summary, first, trace], 1)
+        self.assertEqual(result['observed_total'] - result['received_total'], 3)
 
     def test_firmware_uses_hardware_boundary_and_does_not_reconfigure_gpio_for_observer(self):
         source = (ROOT / 'tests/zephyr/v04_t13_hil/src/audio.cpp').read_text(encoding='utf-8')
@@ -127,20 +143,23 @@ class I2sEdgeTests(unittest.TestCase):
         self.assertEqual(edge.classify_failure(pages)['cause'], 'ambiguous-transition-count')
 
     def test_unrelated_failure_is_not_replaced_by_edge_classifier_error(self):
-        import v04_t13_run as runner
+        import v04_t13_stream_fault as stream_faults
         selected = next(test for test in cases.cases() if test['id'] == 30)
         rows = []
 
-        def fail(_devices, _group, _duration, _continuity, append, **_kwargs):
+        def fail(_devices, _test, _role, _mode, _continuity, append, **_kwargs):
             for page in range(3):
                 append(f'T13-S/i2s-edge-diagnostic/i2s20/failure/role1/'
                        f'i2s-edge-page{page}', {'words': [0] * 20})
             raise RuntimeError('original failure')
 
-        with mock.patch.object(runner, 'execute_group', side_effect=fail):
+        with mock.patch.object(stream_faults, 'execute', side_effect=fail) as recovery:
             with self.assertRaisesRegex(RuntimeError, 'original failure'):
                 edge.execute([], selected, 1, None,
                              lambda identifier, row: rows.append((identifier, row)))
+        self.assertEqual(recovery.call_args.args[2:4], (2, 1))
+        self.assertTrue(recovery.call_args.kwargs['preflight'])
+        self.assertTrue(recovery.call_args.kwargs['restart_test']['_i2s_edge_diagnostic'])
         self.assertEqual(rows[-1][1]['status'], 'unproven')
 
 

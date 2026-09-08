@@ -40,10 +40,14 @@ def inspect(words, stream, test, role, mode):
             'event_after_skip_us': elapsed_us, 'driver_error_raw': words[8]}
 
 
-def execute(devices, test, role, mode, continuity, append, *, preflight):
+def execute(devices, test, role, mode, continuity, append, *, preflight, restart_test=None):
     """! @brief 최초 실패 원본과 양쪽 STOP을 보존하고 정상 재시작까지 한 복구 회로 셉니다. """
     import v04_t13_run as runner
     validate_selection(test, role, mode)
+    expected_restart = {**test, '_i2s_edge_diagnostic': True}
+    if restart_test is not None and (not preflight or mode != 1 or role != 2 or
+                                     restart_test != expected_restart):
+        raise ProtocolError('T13 I2S edge observer requires exact B-starvation restart fixture')
     target = next(device for device in devices if device.image['role'] == role)
     index = 2 if mode == 1 else 3
     repeats = 1 if preflight else 100
@@ -58,6 +62,10 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
         unexpected_i2s_data = False
         peer_tail = None
         try:
+            if restart_test is not None:
+                for device in devices:
+                    if device.command(185, (0,), timeout=2) != [1]:
+                        raise ProtocolError('T13 pre-starvation edge observer reset failed')
             for device in devices:
                 if device.command(106, (1,), timeout=2) != [1] or device.command(112, (0,), timeout=2) != [1]:
                     raise ProtocolError('T13 stream fault clock/role policy failed')
@@ -144,7 +152,9 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
             raise
         append(label + '/fault-observed', {'status': 'expected-fault-observed', **measured})
         restart_seed = seed ^ 0x9E3779B9
-        runner.execute_group(devices, {'test': test, 'members': [test]}, 1, continuity,
+        recovery_test = restart_test if restart_test is not None else test
+        runner.execute_group(devices, {'test': recovery_test, 'members': [recovery_test]}, 1,
+            continuity,
             lambda identifier, row: append(label + '/restart/' + identifier, row),
             preflight=True, seed=restart_seed)
         append(label + '/result', {'status': 'passed', 'fault_seed': seed, 'restart_seed': restart_seed,

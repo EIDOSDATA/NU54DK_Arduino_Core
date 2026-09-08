@@ -55,7 +55,7 @@ def inspect(pages, role):
                 not expected_internal <= summary[15] <= expected_internal + 3 or
                 not received_internal <= summary[16] <= received_internal + 3 or
                 summary[15] != summary[16] or
-                abs(summary[14] - summary[16]) > EDGE_WINDOW_TOLERANCE):
+                abs(summary[14] - summary[16]) > len(traces) * EDGE_WINDOW_TOLERANCE):
             raise ProtocolError('T13 I2S continuous physical edge total mismatch')
     elif (any(summary[index] != 0 for index in range(5, 17)) or first[10] != 0 or
           first[11] == 0 or any(trace)):
@@ -95,8 +95,8 @@ def classify_failure(pages):
 
 
 def execute(devices, test, repetitions, continuity, append):
-    """! @brief 짧은 정상 재시작을 반복하고 첫 오류 raw는 공통 failure 경로에 보존합니다. """
-    import v04_t13_run as runner
+    """! @brief B 공급 생략 뒤 정상 재시작을 반복하고 첫 오류 raw를 보존합니다. """
+    import v04_t13_stream_fault as stream_faults
     selected = fixture(test)
     if not isinstance(repetitions, int) or not 1 <= repetitions <= 1000:
         raise ProtocolError('T13 I2S edge diagnostic repetition count is invalid')
@@ -111,8 +111,8 @@ def execute(devices, test, repetitions, continuity, append):
                 captured[int(identifier.rsplit('page', 1)[1])] = row['words']
 
         try:
-            runner.execute_group(devices, {'test': selected, 'members': [selected]}, 1,
-                                 continuity, record, preflight=True)
+            stream_faults.execute(devices, test, 2, 1, continuity, record, preflight=True,
+                                  restart_test=selected)
         except BaseException:
             if set(captured) == {0, 1, 2}:
                 try:

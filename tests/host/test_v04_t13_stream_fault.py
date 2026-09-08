@@ -241,6 +241,18 @@ class StreamFaultTests(unittest.TestCase):
             with self.subTest(identifier=identifier, mode=mode), self.assertRaises(ProtocolError):
                 fault.validate_selection(test, 1, mode)
 
+    def test_edge_observer_requires_exact_b_starvation_restart_fixture(self):
+        """! @brief 정상 회복 관측기는 B I2S 생략의 정확한 preflight에만 결합합니다. """
+        test, _, _ = self.vector(1, role=2)
+        restart = {**test, '_i2s_edge_diagnostic': True}
+        for preflight, role, changed in ((False, 2, None), (True, 1, None),
+                                         (True, 2, {'id': 29})):
+            candidate = {**restart, **(changed or {})}
+            with self.subTest(preflight=preflight, role=role, changed=changed), \
+                    self.assertRaises(ProtocolError):
+                fault.execute([], test, role, 1, mock.Mock(), lambda *_: None,
+                              preflight=preflight, restart_test=candidate)
+
     def test_cleanup_and_both_peer_raw_precede_judgement_and_nonce_restart(self):
         test, valid, stream = self.vector(1)
         for corrupt, stop_ok in ((False, True), (True, True), (False, False)):
