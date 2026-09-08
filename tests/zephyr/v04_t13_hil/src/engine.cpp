@@ -459,12 +459,25 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         count = 1U;
         return 0U;
     }
-    if (opcode == 98U && nargs == 0U && !started)
+    if (opcode == 98U && (nargs == 0U || (nargs == 1U && args[0] == 1U)) && !started)
     {
+        const bool hold_transmit = nargs == 1U;
+        if (hold_transmit && (selected == nullptr || selected->harness != 2U ||
+                              !((selected->id >= 2U && selected->id <= 5U) ||
+                                selected->id == 101U || selected->id == 105U)))
+        {
+            return 400U;
+        }
         start_ms = k_uptime_get();
-        started = streamStart() && serialStart();
+        started = streamStart() && serialStart(hold_transmit);
         healthy &= started;
         out[0] = started ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 184U && nargs == 0U && started && !quiesced)
+    {
+        out[0] = serialReleaseStart() ? 1U : 0U;
         count = 1U;
         return 0U;
     }

@@ -11,7 +11,8 @@ namespace t13
     std::uint32_t command(std::uint32_t opcode, const std::uint32_t *args, std::uint32_t nargs,
                           std::uint32_t *out, std::uint32_t &count);
     bool serialPrepare(const Case &test, std::uint32_t seed);
-    bool serialStart();
+    bool serialStart(bool hold_transmit = false);
+    bool serialReleaseStart();
     void serialService();
     void serialQuiesce();
     bool serialStop();

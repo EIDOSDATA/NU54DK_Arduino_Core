@@ -218,7 +218,32 @@ def start_order(devices, test):
     return sorted(devices, key=lambda device: device.image['role'], reverse=True)
 
 
-def execute_group(devices, group, duration, continuity, append, *, preflight, seed=None, during=None):
+def start_devices(devices, test, append, identifier, *, serial_start_barrier=False):
+    """! @brief 고정 CTS 시험에서는 양쪽 RX 준비 응답을 받은 뒤 송신을 허용합니다. """
+    if serial_start_barrier and (test['harness'] != 'S' or test['id'] not in (2, 3, 4, 5, 101, 105)):
+        raise ProtocolError('T13 serial start barrier is restricted to fixed S CTS cases')
+    ordered = start_order(devices, test)
+    if {device.image['role'] for device in ordered} != {1, 2} or len(ordered) != 2:
+        raise ProtocolError('T13 start requires both distinct roles')
+    append(identifier + '/start-order', {'status': 'observation',
+        'roles': [device.image['role'] for device in ordered],
+        'serial_start_barrier': serial_start_barrier})
+    origin = time.monotonic()
+    for device in ordered:
+        if device.command(98, (1,) if serial_start_barrier else (), timeout=2) != [1]:
+            raise ProtocolError('T13 start failed')
+        append(identifier + f'/start-ready/role{device.image["role"]}', {'status': 'observation',
+            'host_elapsed_seconds': time.monotonic()-origin, 'transmit_held': serial_start_barrier})
+    if serial_start_barrier:
+        for device in ordered:
+            if device.command(184, timeout=2) != [1]:
+                raise ProtocolError('T13 serial transmission release failed')
+            append(identifier + f'/start-released/role{device.image["role"]}', {'status': 'observation',
+                'host_elapsed_seconds': time.monotonic()-origin, 'both_receivers_prepared': True})
+
+
+def execute_group(devices, group, duration, continuity, append, *, preflight, seed=None, during=None,
+                  serial_start_barrier=False):
     """! @brief 중단 시간을 합산하지 않고 설정을 유지한 한 구간만 판정합니다. """
     test = group['test']
     if test.get('_spi_timing_mode') and not preflight:
@@ -237,6 +262,7 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
     append(identifier + '/input', {'status': 'input', 'test': test, 'seed': seed,
         'measured_members': [member['name'] for member in group['members']],
         'duration_seconds': duration, 'frame_period_ms': 20,
+        'serial_start_barrier': serial_start_barrier,
         'service_busy_definition': 'service function wall-cycle duration; not total CPU utilization'})
     original_error = None
     try:
@@ -276,12 +302,7 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
         prepared_bus_pins(devices, test, append, identifier + '/prepared')
         if test.get('_spi_timing_mode'):
             spi_timing.observe(devices, test, append, identifier + '/prepared')
-        ordered = start_order(devices, test)
-        append(identifier + '/start-order', {'status': 'observation',
-            'roles': [device.image['role'] for device in ordered]})
-        for device in ordered:
-            if device.command(98, timeout=2) != [1]:
-                raise ProtocolError('T13 start failed')
+        start_devices(devices, test, append, identifier, serial_start_barrier=serial_start_barrier)
         if test['pwm_instance']:
             for device in devices:
                 append(identifier + f'/started/role{device.image["role"]}/pwm-registers',

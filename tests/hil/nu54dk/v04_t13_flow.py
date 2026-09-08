@@ -201,14 +201,14 @@ def execute(devices, test, role, continuity, append, *, preflight):
             return pause
         runner.execute_group(devices, {'test': modified, 'members': [modified]}, .5,
             continuity, lambda identifier, row: append(label+'/maintained/'+identifier, row),
-            preflight=True, seed=seed, during=inject)
+            preflight=True, seed=seed, during=inject, serial_start_barrier=True)
         for device in devices:
             if device.command(126, (0,), timeout=2) != [1]:
                 raise ProtocolError('T13 GPIO flow policy was not released')
         restarted = seed ^ 0x9E3779B9
         runner.execute_group(devices, {'test': test, 'members': [test]}, .5,
             continuity, lambda identifier, row: append(label+'/reacquired/'+identifier, row),
-            preflight=True, seed=restarted)
+            preflight=True, seed=restarted, serial_start_barrier=True)
         append(label+'/result', {'status': 'passed', 'planned_flow_pass': not preflight,
                                 'normal_soak_pass': False, 'restart_seed': restarted})
         print(f'T13_FLOW_PROGRESS case={test["name"]} role={role} completed={repeat}/{repeats}', flush=True)

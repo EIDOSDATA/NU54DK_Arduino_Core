@@ -50,6 +50,7 @@ namespace
     unsigned lane_count = 0U;
     bool transmitting = false;
     bool receivers_armed = false;
+    bool start_held = false;
     Buffer conflict_tx{}, conflict_rx{};
     SerialSignalPin conflict_pins[3]{};
     SerialDmaWorkspace conflict_workspaces[2]{};
@@ -950,6 +951,7 @@ bool t13::serialPrepare(const Case &test, std::uint32_t seed)
     }
     transmitting = false;
     receivers_armed = false;
+    start_held = false;
     fault = {};
     spi_boundary = {};
     rx_delay = {};
@@ -1047,7 +1049,7 @@ bool t13::serialPrepare(const Case &test, std::uint32_t seed)
     return true;
 }
 
-bool t13::serialStart()
+bool t13::serialStart(bool hold_transmit)
 {
     if (!serialHealthy() || twiStuckEnabled())
     {
@@ -1065,6 +1067,23 @@ bool t13::serialStart()
         lanes[index].next_frame = static_cast<std::uint64_t>(k_uptime_get()) + 100U;
     }
     receivers_armed = true;
+    start_held = hold_transmit;
+    transmitting = !hold_transmit;
+    return true;
+}
+
+/** @brief 양쪽 RX 준비 확인 뒤 고정 serial 시험의 송신만 허용합니다. */
+bool t13::serialReleaseStart()
+{
+    if (!receivers_armed || !start_held || transmitting || !serialHealthy())
+    {
+        return false;
+    }
+    for (unsigned index = 0U; index < lane_count; ++index)
+    {
+        lanes[index].next_frame = static_cast<std::uint64_t>(k_uptime_get()) + 100U;
+    }
+    start_held = false;
     transmitting = true;
     return true;
 }
@@ -1155,6 +1174,7 @@ bool t13::serialStop()
     }
     transmitting = false;
     receivers_armed = false;
+    start_held = false;
     if (rx_delay.prepared && lane_count == 1U)
     {
         rx_delay.raw[15] = lanes[0].received.completed;
