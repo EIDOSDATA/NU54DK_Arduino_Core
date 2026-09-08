@@ -194,10 +194,15 @@ namespace
         {
             return true;
         }
-        if (!active || uart == nullptr || !rx.initialize(frame_bytes) ||
-            uart->receiveAsync(rx.data(), frame_bytes) != SerialFabricResult::success)
+        if (!active || uart == nullptr || !rx.initialize(frame_bytes))
         {
             return failure(11U);
+        }
+        const auto result = uart->receiveAsync(rx.data(), frame_bytes);
+        if (result != SerialFabricResult::success)
+        {
+            /** @brief 재준비 거부 원인을 UART event 오류와 분리해 보존합니다. */
+            return failure(100U + static_cast<std::uint32_t>(result));
         }
         receiving = true;
         return true;
@@ -474,7 +479,17 @@ bool t13::power::takeRequest(std::uint32_t *request)
 
 bool t13::power::respond(const std::uint32_t *response)
 {
-    return send(response) && ((off_after != 0U || stop_after_reply) || armReceive());
+    /**
+     * @brief 고정 115200 중계에서 RX 완료 뒤 2ms를 두고 수신 준비 후 응답합니다.
+     * @note RX_DONE과 RX_DISABLED는 다른 시점입니다. 이 간격은 시험 프로토콜의
+     *       turnaround이며 재준비 실패를 재시도하거나 정상 UART 오류를 숨기지 않습니다.
+     */
+    k_sleep(K_MSEC(2));
+    if (off_after == 0U && !stop_after_reply && !armReceive())
+    {
+        return false;
+    }
+    return send(response);
 }
 
 std::uint32_t t13::power::command(std::uint32_t opcode, const std::uint32_t *args,

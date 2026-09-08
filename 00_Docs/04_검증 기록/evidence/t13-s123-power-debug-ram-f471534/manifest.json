@@ -1,0 +1,19 @@
+{
+  "source": "f4715344e40c128fdb0b265a949cf3f42617d0a5",
+  "physical_executed": true,
+  "reset_halt_resume_flash": false,
+  "files": [
+    {
+      "file": "power-debug-bridge-01-readonly-01.json.gz",
+      "bytes": 15688,
+      "sha256": "7342bf5bafc7121a918de9fe47eecf0b4be247cb050ef7bc185bed14776b78a6",
+      "gzip_sha256": "9b71c1ceb65e4121b60a41027013dc51f3f9e9139703298b3f4c951dfae0cb2a"
+    },
+    {
+      "file": "read_t13_power_debug_ram.py.gz",
+      "bytes": 3358,
+      "sha256": "1a922d84cb35b4f9de07a40451c1f7d788f5ef96227da52bf5f2f7204ccff0c2",
+      "gzip_sha256": "afc4986d71af9212c73446a4d1e74139208397b807702c20f8268d198d28f251"
+    }
+  ]
+}

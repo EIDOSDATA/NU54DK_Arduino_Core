@@ -46,6 +46,11 @@ checksum으로 보존한다. 명시된 예상 reset 외에는 자동 UART 재시
 정상 debug 분리 bridge나 timer/GPIO 복구 성공으로 대체하지 않는다. B의 중계 sequence를 이용해
 마지막 STOP을 요청하며, 중계 실패 시 자동 재전송하지 않고 lease 종료·원본·핀 상태를 확인한다.
 
+고정115200 UART 중계는 요청 RX 완료 후2ms의 응답 간격을 둔다. 다음 RX를 먼저 준비한 뒤
+응답 TX를 시작하며, OFF/최종 STOP 응답에서는 다음 RX를 열지 않는다. RX_DONE을 RX_DISABLED와
+동일시하지 않기 위한 시험 프로토콜 간격이다. 재준비 거부는 `100 + SerialFabricResult` 오류로
+보존하며 자동 재시도하지 않는다. 이 변경은 일반 UART 속도·오류 판정을 완화하지 않는다.
+
 ## Mailbox
 
 | Opcode | 경로 | 용도 |
