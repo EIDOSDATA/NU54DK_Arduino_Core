@@ -1,0 +1,17 @@
+/** @file @brief Nordic System OFF 예제와 같은 마지막4KiB를 checksum 보호 상태에 예약합니다. */
+/ {
+    cpuapp_sram@2002e000 {
+        compatible = "zephyr,memory-region", "mmio-sram";
+        reg = <0x2002e000 DT_SIZE_K(4)>;
+        zephyr,memory-region = "RetainedMem";
+        status = "okay";
+        t13_retained: retainedmem {
+            compatible = "zephyr,retained-ram";
+            status = "okay";
+        };
+    };
+};
+&cpuapp_sram {
+    reg = <0x20000000 DT_SIZE_K(184)>;
+    ranges = <0x0 0x20000000 0x2e000>;
+};

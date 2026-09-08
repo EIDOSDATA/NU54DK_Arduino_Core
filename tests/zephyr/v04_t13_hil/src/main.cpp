@@ -2,6 +2,9 @@
 #include "engine.h"
 #include "protocol.h"
 #include <zephyr/kernel.h>
+#if defined(CONFIG_NUCODE_T13_POWER)
+#include "power.h"
+#endif
 
 extern "C"
 {
@@ -36,11 +39,23 @@ int main()
     v04_identity[0] = v04::magic;
     std::uint32_t last_sequence = 0;
     std::uint32_t session_nonce[4]{};
+#if defined(CONFIG_NUCODE_T13_POWER)
+    v04_identity[14] = 0x504F5731U;
+    t13::power::initialize(last_sequence, session_nonce);
+#endif
     while (true)
     {
         t13::wiringService();
         t13::service();
+#if defined(CONFIG_NUCODE_T13_POWER)
+        std::uint32_t request[v04::words]{}, response[v04::words]{};
+        bool from_peer = false;
+        t13::power::service();
+        from_peer = t13::power::takeRequest(request);
+        if (!from_peer && v04_request[0] != v04::magic)
+#else
         if (v04_request[0] != v04::magic)
+#endif
         {
             if (t13::running())
             {
@@ -53,12 +68,18 @@ int main()
             continue;
         }
         __DMB();
+#if !defined(CONFIG_NUCODE_T13_POWER)
         std::uint32_t request[v04::words]{}, response[v04::words]{};
-        for (unsigned index = 0; index < v04::words; ++index)
+        constexpr bool from_peer = false;
+#endif
+        if (!from_peer)
         {
-            request[index] = v04_request[index];
+            for (unsigned index = 0; index < v04::words; ++index)
+            {
+                request[index] = v04_request[index];
+            }
+            v04_request[0] = 0;
         }
-        v04_request[0] = 0;
         for (unsigned index = 0; index < 9; ++index)
         {
             response[index] = request[index];
@@ -80,10 +101,34 @@ int main()
                 session_nonce[index] = request[5 + index];
             }
             last_sequence = request[2];
-            response[9] =
-                t13::command(request[4], request + 11, request[10], response + 11, response[10]);
+#if defined(CONFIG_NUCODE_T13_POWER)
+            if (request[4] >= 130U && request[4] <= 139U)
+            {
+                response[9] = t13::power::command(request[4], request + 11, request[10],
+                                                  response + 11, response[10], from_peer);
+            }
+            else if (t13::power::claimed())
+            {
+                response[9] = 403U;
+            }
+            else
+#endif
+            {
+                response[9] = t13::command(request[4], request + 11, request[10], response + 11,
+                                           response[10]);
+            }
+#if defined(CONFIG_NUCODE_T13_POWER)
+            t13::power::remember(last_sequence, session_nonce);
+#endif
         }
         response[31] = v04::checksum(response);
+#if defined(CONFIG_NUCODE_T13_POWER)
+        if (from_peer)
+        {
+            static_cast<void>(t13::power::respond(response));
+            continue;
+        }
+#endif
         v04_response[0] = 0;
         for (unsigned index = 1; index < v04::words; ++index)
         {

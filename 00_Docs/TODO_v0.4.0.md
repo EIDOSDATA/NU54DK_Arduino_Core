@@ -1,5 +1,11 @@
 # v0.4.0 릴리스까지의 실행 TODO와 재개 기록
 
+2026-09-08T08:51Z: 새 serial00 자원 전환100/100 완료, serial20/21/22는 SPI RX payload 오류로
+정지·보존했고 firmware lease_expired는0이다. serial30 실기는 계속 진행 중이다. 2114187의
+TWIM RX 계측은 Host/두 역할 target·원격 Software gate 통과, 실기 미실행이다. 별도 power image의
+A UART21 중계·B debug 해제/reset·timer/P1.14 wake 구현과 초안 Host/target을 준비했으며 실기는0이다.
+세부 실행 상태와 실패 원본은107번을 따른다. T12 완료·QDEC 보고, U 재배치 전 경계는 유지한다.
+
 2026-09-08T08:24Z 자동 진행 범위: 사용자가 A 제어/B 시험 방식의 System OFF 자동화를
 T13에 추가하고, U UART00 재배선 직전까지 가능한 작업을 모두 계속하도록 지시했다.
 현재 S 17신호+GND·DAP UART 분리·SWD 연결을 유지한다. 기존 확인서의 만료는 연장하지 않는다.

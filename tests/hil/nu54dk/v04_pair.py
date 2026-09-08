@@ -66,7 +66,7 @@ def inspect_image(repository: Path, build_root: Path, role: int, *, family: str 
     actual_board = git_output(repository / "board_package/NU54DK_Zephyr_DTS", "rev-parse", "HEAD")
     if board != actual_board:
         raise ProtocolError("board gitlink mismatch")
-    if role not in (1, 2) or family not in ("pair", "t13_s"):
+    if role not in (1, 2) or family not in ("pair", "t13_s", "t13_power_s"):
         raise ProtocolError("unknown HIL image family or role")
     application = "v04_pair_hil" if family == "pair" else "v04_t13_hil"
     scenario = f"nucode.v04.{family}_{'dut' if role == 1 else 'peer'}"

@@ -8,3 +8,4 @@ target_compile_definitions(app PRIVATE NUCODE_HIL_CORE_REVISION="${HIL_REVISION}
 target_include_directories(app PRIVATE src ../v04_pair_hil/src)
 target_sources(app PRIVATE src/main.cpp src/wiring.cpp src/engine.cpp src/serial.cpp src/stream.cpp
     src/adc.cpp src/pwm.cpp src/audio.cpp src/pdm.cpp)
+target_sources_ifdef(CONFIG_NUCODE_T13_POWER app PRIVATE src/power.cpp)

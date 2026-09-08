@@ -36,6 +36,10 @@ B를 System OFF 시험 보드로 사용하며 DAP UART를 계속 분리하는 �
 7. 첫 예행이 성립하면 타이머/GPIO 각100회 복구를 목표로 한다. 장치/확인서 제한 전에 유한 종료하고
    양쪽 출력/자원을 반환한다. 새 image를 적용한 부분의 기존 영향 회귀도 별도 판정한다.
 
+구현 사양은 [T13_POWER.md](../../tests/hil/nu54dk/T13_POWER.md)에 고정한다. UART21 P1.06/07의
+128byte 양방향 DMA와 P1.14 open-drain wake를 사용한다. 별도 power image의 Host·초안 target
+검사 중이며 아직 debug 해제나 System OFF 실기를 완료하지 않았다. 일반 S image는 기존 설정을 유지한다.
+
 SWD 하드웨어 스위치의 제어선은 현재 S GPIO에 직접 연결돼 있지 않다. 이를 GPIO로 제어한다고
 가정하지 않으며 SDK pyOCD의 debug power-down과 Nordic 정상 모드 복귀 절차를 우선 검증한다.
 이 과정에서 수동 스위치나 추가 배선이 실제로 필요해지면 그 항목을 중단하고 다른 S 작업을 계속한다.
@@ -62,11 +66,20 @@ engine/renew 오류로 끝났으며 세 실행 모두 양쪽 정지를 증명했
 문구만으로 확인서 만료나 통신 단절로 단정하지 않는다. lane 최초 오류를 계속 분석한다.
 serial30과 독립 동시 조합은 같은 고정 source의 별도 프로세스로 계속 진행 중이다.
 
+이후 raw 분석에서 세 SPI 단계의 최초 RX payload 불일치(code6)를 확인했다. byte 위치는
+568/749/499이며 firmware lease_expired는0이다. 따라서 공통 오류 문구가 확인서 만료를 뜻하는
+것은 아니다. 전기 파형·peer buffer 원인을 아직 확정하지 않았고 재결선을 요구하지 않는다.
+
 TWIM 취소의 opcode123 원본 계측을 추가했다. 이전 AMOUNT, 이번 RXREADY/RXEND,
 수신 RAM과 취소 cycle을 분리해 보존하며 기존 통과 기준은 유지한다. 실기 전 Host/target 및
 exact source 검사를 요구한다. 로컬 T13 Host43시험 중42개는 통과했고 한 C++ 실행 시험은
 Windows 응용 프로그램 제어 WinError4551로 실행이 차단됐다. 정책을 해제하지 않으며 원격
 전체 Host 결과를 별도로 확인한다. 이는 해당 C++ 시험 PASS가 아니다.
+
+2114187 계측 source의 로컬 두 역할 target과 원격 Software gate가 통과했다. System OFF 별도
+image 초안은 두 역할 빌드, 정상/오류 판정 Host5시험, 계약·문서 검사까지 통과했다. 초안 build의
+`cstring` 헤더 실패는 최소 C++ 환경의 C 헤더로 고쳤다. 아직 보드에 이 image를 적용하지 않았으며
+source 고정 후 exact build/원격 Host를 다시 확인한다.
 
 원본: [중단 정지 감사](evidence/t13-handover-interruption-cleanup-506680f/manifest.json),
 [새 serial00 100회](evidence/t13-serial0-handover-sauto-01-506680f/manifest.json),

@@ -8,3 +8,9 @@ config NUCODE_T13_HARNESS
     int "Compiled harness: 2 S, 3 U"
     range 2 3
     default 2
+config NUCODE_T13_POWER
+    bool "S UART relay and System OFF verification image"
+    default n
+    select POWEROFF
+    select HWINFO
+    select RETAINED_MEM
