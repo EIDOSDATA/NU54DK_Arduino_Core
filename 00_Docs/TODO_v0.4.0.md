@@ -27,28 +27,27 @@
 ## 2. 현재 재개 체크포인트
 
 **현재 작업:** 요청한 순서1~3 중 **2단계 S 오류·복구 시험**을 실행하고 있습니다.
-전체 문서의 초기 정리·커밋·푸시는 완료했습니다. 순서1~3의 확정 완료는 **8/58(13.8%)**이며,
+전체 문서의 초기 정리·커밋·푸시는 완료했습니다. 순서1~3의 확정 완료는 **22/58(37.9%)**이며,
 분모는 I2S1·기존 S54·System OFF timer/GPIO2·기존 요구 대조1입니다. v0.4.0 전체 진행률이 아닙니다.
 
 - **1단계 I2S:** source182ef13 예행 뒤5회 성공,6회차 정상 재시작13word 오류. DMA·핀·IRQ·RAM
   원본을 보존했고 원인은 미확정입니다.
-- **2단계 S:** UART20/30 A와 UART21/22/30 B의 CTS100회,5조건 완료. 다른 CTS 오류와
-  parity/break 정상 구간의 framing/break 오류는 미해결입니다. source7d080ed2의 parity peer
-  RX 미시작 보완은 UART20 A 예행을 통과했지만21회 뒤22회차 정상 재시작에서 실패했습니다.
-  독립 b6ac3bef 대열의 UART21 A·UART30 A break가 각각100회 완료됐습니다.
-  다음 사전검사의 A P1.04→B P1.05 LOW 실패는 한 선 양방향20회·전체105개 재검사에서 재현되지
-  않았습니다. 양쪽 STOP·17핀 반환 확인 뒤 아직 실행하지 않은 S30조건을 재개했습니다.
-  수정 parity의 나머지7조건은 아직 미실행입니다.
+- **2단계 S:** UART CTS5조건과 UART20/21/22/30 양쪽 parity8·break8조건이 각각100회
+  완료됐습니다. hardware-error callback 폭주와 pending RX abort 중복 정지를 제품 코드에서
+  수정했고, trace OFF image로 모든 line 조건의 양쪽 STOP·clock0·17핀 반환·새 정상 재시작을
+  확인했습니다. UART30 B parity90회차에서 나온 mask14는 peer 송신보다 DUT RX를 먼저 연 시험
+  시작 순서로 분리했고, peer 송신 우선 source2e4ec73에서 예행1회와100/100을 통과했습니다.
+  남은 기존 S는 CTS7·RX 공급 지연8·SPIS 경계10·TWI stuck-low4·TWIS 공급 지연4의33조건입니다.
 - **3단계:** 기존 요구와 구현·증거 대조는 완료했습니다. System OFF는 실제 성공0회입니다.
   A RX 준비 후 B reset 보완과 빠른 polling 비교 모두 최초 중계 응답이 없었습니다.
   빠른 비교 뒤 B SWD No ACK는 controlled reset·정확한 부팅 코드 확인·resume으로 정리했고,
   양쪽 STOP·clock 반환·17핀 입력 복귀를 확인했습니다. 실패 시점 B RAM은 복원하지 못했습니다.
-- **진단 보강:** exact7d080ed2의 하드웨어 감시점으로14회차 정상 baseline에서 B의 첫 데이터 오류를
-  잡았습니다. B RX 두 버퍼가 예상26/27 대신27/28 frame과 각각1024byte 전부 일치했습니다.
-  A 오류0·양쪽 ENABLE8·새 ERROR event0·DMA BUSERROR0·queue overflow0였고, 이전 ERRORSRC2/12는
-  시작 전후에 그대로였습니다. 감시점 해제·양쪽 STOP 뒤 독립 S 대열을 재개했습니다.
-  다음은 진단 전용 UART callback·buffer 등록 이력으로 IRQ 완료 당시 내용과 나중의 RAM을 대조합니다.
-  기본 비활성 옵션이며 Host119을 통과했습니다. 새 trace target·실기는 아직 미실행이고 원인 미확정입니다.
+- **진단 보강:** exact8f6596d trace에서 hardware error callback이 짧은 시간에 반복돼 event queue가
+  넘치는 현상을 CMSIS-DAP로 포착했습니다. source16f298b에서 첫 오류 뒤 RX abort를 요청했지만
+  진행 중인 async abort를 lifecycle STOP이 다시 정리해 wrong-state 재시작이 남았습니다.
+  source46b7dc2는 pending abort 완료를 기다리도록 수정했고 trace ON/OFF 예행과 UART line15조건을
+  통과했습니다. UART30 B의 별도 희귀 BREAK는 제품 오류 허용으로 숨기지 않고 HIL 시작 순서를
+  source2e4ec73에서 교정했습니다. 실패·레지스터·RAM과 성공 원본은 110번 기록에 보존합니다.
 
 실패·보완 이력과 exact source별 결과는 [110번](<04_검증 기록/110_문서_정리와_T13_S_잔여_재개.md>)에 보존합니다.
 S 결선을 유지하며 U 재배치·QDEC 재진단·연속 handover·정식 공개는 이번 자동 실행에 포함하지 않습니다.
@@ -70,7 +69,7 @@ S 결선을 유지하며 U 재배치·QDEC 재진단·연속 handover·정식 �
   main의 문서 커밋을 이전 image의 검증 source로 바꾸지 않습니다.
 - 현재 S는17신호+GND입니다. P1.04/05·P1.06/07·P2.02/04 교차, P2.07/08 미연결입니다.
   정확한 A↔B 표는 [T13 결선](../tests/hil/nu54dk/T13_PLAN.md)을 따릅니다.
-- 기존 S 유지 확인은2026-09-08 22:13:18 KST부터 다음 날10:13:18 KST까지입니다.
+- 기존 S 유지 확인은2026-09-09 03:44:02 KST부터15:44:02 KST까지입니다.
   사용자 변경 보고·USB 이탈·확인 만료를 확인하며, 만료를 임의 연장하거나 이전 COM을 재사용하지 않습니다.
 - SWD는10MHz, exact UID, 배타 lock, sector flash, `auto_unlock=false`, controlled reset/start입니다.
   원시 UID는 공개하지 않으며 자동 mass erase/unlock/recover는 하지 않습니다.

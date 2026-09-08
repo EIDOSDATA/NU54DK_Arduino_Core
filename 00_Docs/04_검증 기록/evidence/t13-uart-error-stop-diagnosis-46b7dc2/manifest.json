@@ -1,0 +1,261 @@
+{
+  "sources": [
+    "8f6596df021df239db1f97ae3b343f96c011046f",
+    "16f298b674e3ce6d9445c545129770486953b51c",
+    "46b7dc219ef0c6881a7fed2abb9a1f21c9890c3d"
+  ],
+  "physical_executed": true,
+  "result": "hardware error callback storm and pending RX abort lifecycle fixed",
+  "product_fix_commits": [
+    "16f298b674e3ce6d9445c545129770486953b51c",
+    "46b7dc219ef0c6881a7fed2abb9a1f21c9890c3d"
+  ],
+  "files": [
+    {
+      "file": "uart20-a-callback-trace-watch-01--images.json.gz",
+      "bytes": 1607,
+      "sha256": "f2241b9006225b1a32de5412891c7a66f19468d108f23cadaa5ada3a54e71181",
+      "gzip_sha256": "cd511bcd79cde3e971161f0ce47a6c592de329e178c5c82209ad8da508d7ff71"
+    },
+    {
+      "file": "uart20-a-callback-trace-watch-01--ci-before-flash.json.gz",
+      "bytes": 3752,
+      "sha256": "9d027d3f50adf113aeff73a84dd5f45512f3b8fd6e5a6e235f13304032aeff55",
+      "gzip_sha256": "39770b7665197075983ecf8bf17244070d1dfdd968efd867490ea63dbc6ef8bb"
+    },
+    {
+      "file": "uart20-a-callback-trace-watch-01--result.json.gz",
+      "bytes": 175242,
+      "sha256": "fa21d9450e6bce2d9991842d8141b562f54517bef977a11a0a676f3a842bfbdf",
+      "gzip_sha256": "3b4b85783c789ef59d7592afcf69fac162c5984faca9ae8174f97873d360dd16"
+    },
+    {
+      "file": "uart20-a-callback-trace-watch-01-audit.json.gz",
+      "bytes": 818,
+      "sha256": "fc94d5956f28f2d40ffac089c1171fa41daa34376bf02ae726468f5b3b79a2f1",
+      "gzip_sha256": "3fc336b0007e1d0ab896a5ff35c121a6f75282e9a76edb373e0528654ffd32d3"
+    },
+    {
+      "file": "uart20-a-trace-off-parity-compare-01--images.json.gz",
+      "bytes": 1607,
+      "sha256": "0f25e08e358ae7908fc1de33683deeda4acbec498539f6efc4ce00d52cc84833",
+      "gzip_sha256": "ed5127c0bd2d25f8bae6de8fc48a6473fb04e856e3975fc9224502ef5877f102"
+    },
+    {
+      "file": "uart20-a-trace-off-parity-compare-01--ci-before-flash.json.gz",
+      "bytes": 3755,
+      "sha256": "e02ba545c57a73e3a81aed7489f74fe256ad34803bd21615f34b06245472135f",
+      "gzip_sha256": "e45b3291feb1e0e5f4d62a7f2584cced7a9cd1bb59b64c6847afa10a7306fd53"
+    },
+    {
+      "file": "uart20-a-trace-off-parity-compare-01--result.json.gz",
+      "bytes": 190797,
+      "sha256": "4424d20d79e0011169f7a6fc56f7f8cbebe9970a9e7784095b1e12e2c63d33a5",
+      "gzip_sha256": "e22747bc06d36fafe50f0a1051c22dc87f7a16173ee702c33ea2c9b41cff3e10"
+    },
+    {
+      "file": "uart20-a-trace-off-parity-compare-01-audit.json.gz",
+      "bytes": 550,
+      "sha256": "20fa8b95e10a7d84724a8ad96baf4bb97f7e9f7c2489ab6fb3bd8a47c2502c68",
+      "gzip_sha256": "e93b3626f5f3a9af744e092635ead4dbde9a5dd96da6db8611be27ce4bef5f42"
+    },
+    {
+      "file": "uart20-a-error-stop-trace-16f298b-01--images.json.gz",
+      "bytes": 1607,
+      "sha256": "0fcbfd217b621eb6f45de57dd7e59efeb244c3b63334c22227fdcb2c705efb03",
+      "gzip_sha256": "7e5bbcf8623f173cd43c48806029a7d0b8ae0338956e4c6e99b12f8907a909ac"
+    },
+    {
+      "file": "uart20-a-error-stop-trace-16f298b-01--ci-before-flash.json.gz",
+      "bytes": 3752,
+      "sha256": "c7b0e8ff613628ac2b57f0fd165d8633c5efb58c2de1c8ab1e1ee0ef8be8b32a",
+      "gzip_sha256": "bacba957d923e79ca4e3ff0aa8ac250c1ce025e72cf7838441adfde7a30607d2"
+    },
+    {
+      "file": "uart20-a-error-stop-trace-16f298b-01--result.json.gz",
+      "bytes": 172231,
+      "sha256": "47d8f8eda731275b4ca9d44f0b7bdfe655a59f01cf74bc0978c67a9108c23dcd",
+      "gzip_sha256": "17dfc6065de99eeb258e1d47436f47fc88974025e9c1122dd5ea08732b8e00c8"
+    },
+    {
+      "file": "uart20-a-error-stop-trace-46b7dc2-01--images.json.gz",
+      "bytes": 1607,
+      "sha256": "c2cce3cd299b6d93e65a02aba54e2e0f2bec1b3aa9d0c1a168eff853a3565e86",
+      "gzip_sha256": "18c1198b989e1ead3ec52ec9e1152e4028e30de517c32239d181e914f3af3bac"
+    },
+    {
+      "file": "uart20-a-error-stop-trace-46b7dc2-01--ci-before-flash.json.gz",
+      "bytes": 1749,
+      "sha256": "d6d746a5f654be86e4c0456cdcc114fde71deb858b7e94301a58656e911efcc0",
+      "gzip_sha256": "1d72ae448f7d076b98a2d952475e64ec5aa497251aba47e3d4a4d88041b945d8"
+    },
+    {
+      "file": "uart20-a-error-stop-trace-46b7dc2-01--result.json.gz",
+      "bytes": 190782,
+      "sha256": "e65b273a81a14d62641f82bf7f27ac7ee7ac74b05897da0baf820c1616aa96c9",
+      "gzip_sha256": "71ffbaa57200f1fb13fea8973f3876fce9ba5da57168c02831306445670e7b09"
+    },
+    {
+      "file": "uart20-a-error-stop-trace-46b7dc2-01-audit.json.gz",
+      "bytes": 550,
+      "sha256": "4fcfa98a82f6f3624268b8c456a2f766f1140252f2ffca46594db1d3c79cb34f",
+      "gzip_sha256": "c625b3b504c202771b71c2a66db7b2949c66328cd9aa1f962a2aeff0278a481e"
+    },
+    {
+      "file": "uart20-a-callback-trace-watch-01-stopped-debugger-state-01.json.gz",
+      "bytes": 456846,
+      "sha256": "b2c59ad54ad6b5ba06f0350ff015c3bad563f59e53e25f619f61141570d36d39",
+      "gzip_sha256": "d884e7cc575fb64aea58893e61fc8a9dff58742b90087738b6bf7c81ab77453d"
+    },
+    {
+      "file": "uart20-a-error-stop-trace-16f298b-01-stopped-debugger-state-01.json.gz",
+      "bytes": 454697,
+      "sha256": "96dbb08153ecdb968890d1c94b2a12512199e9bb58abb632ea6cb97364a0e132",
+      "gzip_sha256": "2d4c94106f44cf1a8392539bb00f98ee3671ab842afaf041bab94a35275039f0"
+    },
+    {
+      "file": "uart20-a-error-stop-trace-46b7dc2-01-stopped-debugger-state-01.json.gz",
+      "bytes": 455753,
+      "sha256": "1f7410c304bfa355ebb8165a3b588a14c84d982f5e55373e976aeb02e074b0cc",
+      "gzip_sha256": "7259da4ebaa642c9ed17fbeec9c91cbb047410f90afef28cd54df7408bf671e0"
+    },
+    {
+      "file": "uart-error-stop-build-inspection-16f298b.json.gz",
+      "bytes": 940,
+      "sha256": "3172d43df7f558e5dedb77e1a481564283510d3e8a977e094e18f9b4262df387",
+      "gzip_sha256": "639175b21fd416aa24e86096a26232d0be95630b19461cf6ffa7ad5382dd2c4d"
+    },
+    {
+      "file": "uart-error-stop-build-inspection-46b7dc2.json.gz",
+      "bytes": 940,
+      "sha256": "58bbf0ac6c914e1718ff26fbd3e1c7c2aed941feab65772a1415d7f94294c01b",
+      "gzip_sha256": "2932c6a9e772eb55d8b8348705fed51ce35aefb612b283ab194965424af346b4"
+    },
+    {
+      "file": "uart-error-stop-off-build-inspection-46b7dc2.json.gz",
+      "bytes": 823,
+      "sha256": "791b997430f556bffe4abd10cdd4a94c7ba8be1246dfab1cf15330bf4f82be82",
+      "gzip_sha256": "788162cce11300dd2d56cf55e22deeea552e95304aed1c590abd35d6ea8b96db"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-16f298b-uart-host.json.gz",
+      "bytes": 461,
+      "sha256": "e3f5a31eb8c7c0feb985faec689e23145cc6a4e7a3d2f650d3508170869ea2cf",
+      "gzip_sha256": "a1f7b29e0aee472883f9bc00d223d3a556baa290424c5df7b7bd8e12914bb52b"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-16f298b-uart-host.log.gz",
+      "bytes": 934,
+      "sha256": "2eae4149e2dca2bbf2bfa5b959538a875a1680b17b55a4dde7af54a3e6e573de",
+      "gzip_sha256": "cd5e1b778578e70fac083b32ba2c3bfd16c3827039926764634ab4574d118b88"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-16f298b-t13-host.json.gz",
+      "bytes": 510,
+      "sha256": "2cdde635cdb6ae1e84bb92f153c6ffcaad67cdf9a60ed9e775d3b7dcb2743ab7",
+      "gzip_sha256": "955621a08934811351b3477add85b583fbf69fdda0f6949d852b946c86c38132"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-16f298b-t13-host.log.gz",
+      "bytes": 24565,
+      "sha256": "1279561e1bed1ba9a5a5dc54046dce0b39d776b060f28ba07e76981f7f357027",
+      "gzip_sha256": "dc81f9c8dfe89346b3149fcb5873c8b1b366a2d2c73b31fb2d87c976b7d6b118"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-16f298b-docs.json.gz",
+      "bytes": 479,
+      "sha256": "78971b880fc5fc6c2a64f8d2f355a241971a99508e3bba7694ce4b91a9f7cf86",
+      "gzip_sha256": "244bc8270ed48e9c5d7255431b541ae4de3373c23a69e1188fb0503c01b2ec1a"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-16f298b-docs.log.gz",
+      "bytes": 69,
+      "sha256": "4f0e7b1d14820b09fa80a071bee0134d119bc6f53d2af21b5de377d692642c21",
+      "gzip_sha256": "85e86b9592da9396adfaa49367467f04c2c2dbe10af7acba9be53d200998788c"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-16f298b-contract.json.gz",
+      "bytes": 487,
+      "sha256": "ed74e5f09ca77327908e11cb51cddf2952b7e3cd18269fa5735ee2914aea4f32",
+      "gzip_sha256": "62668b425d01bfd35bb785a8926fb963307b9495f0f2a4c0d0187a1e3222e242"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-16f298b-contract.log.gz",
+      "bytes": 7554,
+      "sha256": "9fd110fe2077117d5ea9d20c407e84ac3e39f1db1178c614b0c5e52abd8f280a",
+      "gzip_sha256": "4d777659fde0643b1f42011c6f7fa471763f2f82bcb96b6c19eb6f02df3b3d4d"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-16f298b-style.json.gz",
+      "bytes": 550,
+      "sha256": "f10a019741de298ffad0a3407dd90be2b905c7d2b855dfea7397bf5d7dff7711",
+      "gzip_sha256": "dfc2f9658d221cb60a0bda61fb83cc949051bd4caed7d51b64bfd8183007852f"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-16f298b-style.log.gz",
+      "bytes": 40,
+      "sha256": "527aa97189d818b10084ee26b13cde97bc7888c45440d704121609b71bd277e8",
+      "gzip_sha256": "a28ae83ca2363e1304ffed840943c0fc0cdd00dd0b2db1bd258df104a367b737"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-46b7dc2-uart-host.json.gz",
+      "bytes": 461,
+      "sha256": "02234c2eda043617198c0011dbd39f5f035f0ed9b7a7570bc6d8cf690a3160bd",
+      "gzip_sha256": "c1bcb88efabe27a681c8279fec686a4bd44048428ba5efbdd400788bf52c0b9f"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-46b7dc2-uart-host.log.gz",
+      "bytes": 934,
+      "sha256": "9855e5a9329634c3270f643ba6368c6eada3448e6e7d217d1dd3371750ffa968",
+      "gzip_sha256": "b3517da3c3712be359062216d3f959c65147973387561b229b49920feb01b5a8"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-46b7dc2-t13-host.json.gz",
+      "bytes": 510,
+      "sha256": "627f5b0aba8b124d9e41ad5ecd8aeb186803d6e875fbe3c6260a6af255763236",
+      "gzip_sha256": "6c1bf08eccf86f47e25c9f5c0dcf83e7549b7dd660f8811d0b784ece97616643"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-46b7dc2-t13-host.log.gz",
+      "bytes": 24565,
+      "sha256": "bb728e935ab5999a0081a739a095ecea580c0aa65dc1b97e76e32dfefbb5d58a",
+      "gzip_sha256": "92e8d7564f3e5ae5b4c03a849ba235b20c6be50b83d721acaf1614ef462af77a"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-46b7dc2-docs.json.gz",
+      "bytes": 479,
+      "sha256": "2f56e56b812e19aaa6ad9aadccfc707bf5256ec059d63705c44c7e3f03f197b3",
+      "gzip_sha256": "503ecf0d7486ba9beb666dc8bca457cc7c50f86b0997ef27b604e10eb8c70ff2"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-46b7dc2-docs.log.gz",
+      "bytes": 69,
+      "sha256": "4f0e7b1d14820b09fa80a071bee0134d119bc6f53d2af21b5de377d692642c21",
+      "gzip_sha256": "85e86b9592da9396adfaa49367467f04c2c2dbe10af7acba9be53d200998788c"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-46b7dc2-contract.json.gz",
+      "bytes": 487,
+      "sha256": "c9744182867e64ffb324ec3b10b68baa1089a214ce7c9faed08073c468c71792",
+      "gzip_sha256": "e70773413e7f6cc161cdd8b93f612952ad50bfb41c3f32f0930168e347ef768c"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-46b7dc2-contract.log.gz",
+      "bytes": 7554,
+      "sha256": "e366ddd96b9f0c03104a20dd0457766a29849fcb15aaad20b9bd1f8bc68dc64c",
+      "gzip_sha256": "1f77d22eedaca09ee063b4de0d0dca97f465272de2f553675ad45c7f05b6921e"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-46b7dc2-style.json.gz",
+      "bytes": 550,
+      "sha256": "eb77c6a66e6bbea4f53c71c4ff3aa23a9cd39fc7e5524606877f2dece7e7bc14",
+      "gzip_sha256": "60ee2da69604db70579cbb27cce55f3dcfc00f53aa5c7470d1062b2fe8ec66d1"
+    },
+    {
+      "file": "t13-uarte-error-stop-exact-46b7dc2-style.log.gz",
+      "bytes": 40,
+      "sha256": "527aa97189d818b10084ee26b13cde97bc7888c45440d704121609b71bd277e8",
+      "gzip_sha256": "a28ae83ca2363e1304ffed840943c0fc0cdd00dd0b2db1bd258df104a367b737"
+    }
+  ]
+}
