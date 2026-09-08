@@ -1,5 +1,8 @@
 # T13 S 오류 복구 실행 항목과 판정
 
+현재 완료 수는 [107번 자동 진행 기록](../../../00_Docs/04_검증%20기록/107_T13_S_자동_진행과_System_OFF_계획.md)을
+따른다. 아래 날짜/source별 수치는 당시 체크포인트이며 현재 완료 수와 합산하지 않는다.
+
 자원 충돌 경로 정정: 현재 단독 UART30은 P0이며 같은 block SPI 활성화 거부만 시험한다.
 UART21/22에는 세 mode를 모두 적용한다. 다른 P1 UART의 P0 route를 잘못 요청해 발생한
 route 오류를 GPIO/DMA 소유권 거부로 세지 않는다. 총14개 role/mode 조건이며 실기 전이다.
@@ -47,7 +50,7 @@ mode5에서는 RX를 요청하지 않는다. RX AMOUNT는 이전 실행 값이 �
 
 ## 이 구현으로 완료되지 않는 항목
 
-역할 전환 실행기는 준비됐으며 실기는 미실행이다. `--handover-instance 20|21|22|30`은
+역할 전환 실행기의 source별 실기 완료·실패는107번에 기록한다. `--handover-instance 20|21|22|30`은
 UART→SPIM→SPIS→TWIM→TWIS→UART와 그 역방향의10개 전환을 각100회 수행하도록 고정한다.
 serial00은 S에서 SPIM00→SPIS00→SPIM00 두 전환을 각100회 수행한다.
 `--phase handover-preflight`는 이 순서1회이고 `--phase handover`가100회다.
@@ -55,7 +58,33 @@ serial00은 S에서 SPIM00→SPIS00→SPIM00 두 전환을 각100회 수행한�
 서로 다른 seed의250ms 정상 양방향 구간·완료량·hash·가드를 대조한다.
 첫 송수신 성립을 위한300ms 준비와150ms drain은250ms 측정 밖이다.
 SPI는 양쪽 MOSI/MISO 신호명과 master/slave를 함께 바꾸므로 GPIO net은 그대로다.
-이 경로의 actual PSEL·역할 반전·생산 route 대조는 아직 새 source 실기로 완료하지 않았다.
+미완료 instance를 다른 instance의 성공으로 대체하지 않는다.
+
+## CTS 100ms 정지·재개 전용 fixture
+
+S 단독 UART20/21/22/30에서 `--phase flow-preflight|uart-flow --fault-role 1|2 --cases ...`를
+사용한다. 전자는1회이고 후자는100회다. 새 source/현재 S·exact UID·10MHz·controlled flash와
+결선 사전검사가 필요하다. 아직 실기를 완료하지 않았다.
+
+시험할 role은4선 hardware flow를 그대로 사용한다. peer는 UART 활성화 전에 TX/RX2선과
+별도 소유한 GPIO RTS로 구성하여 기존 RTS→DUT CTS 연결에100ms HIGH를 주입한다.
+peer UART의 RTS/CTS PSEL은 disconnected이고, 원본의 `_flow_gpio_peer`가 변형을 명시한다.
+활성 UARTE의 PSEL을 변경하거나 두 출력으로 한 net을 구동하지 않는다. 출력은 S의 P1.06 또는
+P0.02/P0.03 중 원래 RTS에만 배치하며 GPIO 소유권 반환·입력/no-pull 복귀를 요구한다.
+
+양쪽 정상 payload가 먼저 흐른 뒤 observer를 ARM하고 peer GPIO를 HIGH로 바꾼다.
+peer device 시각은100000~105000µs, DUT CTS 입력 관측은90000~120000µs여야 한다.
+보류 중인 TX가 관측돼야 하고 HIGH 구간의 완료 증가는 경계상1frame 이하, LOW 복귀 뒤에는
+새 frame 완료가 있어야 한다. 별도의 정상500ms·전역 pattern/순서/guard와 양쪽 STOP 뒤,
+GPIO 주입 정책을 해제하고 새 seed로 원래4선 경로를 재획득해500ms 정상 데이터를 대조한다.
+각500ms는180초 정상 안정성의 대체 근거가 아니다.
+
+Opcode126은 비활성 상태의 policy(0기본/1DUT CTS관측/2peer GPIO)를 고른다.127은20word 원본,
+128은 정상 송수신이 시작된 뒤 관측·주입을 시작한다.127 순서는 policy, instance, state, 물리 GPIO,
+HIGH 시작/끝 cycle, cycle Hz, 시작/끝/current TX frame, pending TX 관측, HIGH/LOW 관측,
+GPIO token, PIN_CNF, TX/RX/RTS/CTS PSEL, CONFIG다. 실패 시 양쪽 원본을 STOP 전에 보존한다.
+기본 UART20/21/22/30 모두의 양방향8조건이며 C01/C05 flow·RX 공급 지연·parity/break,
+peer hardware RTS 생성 자체·U UART00까지 완료한 것으로 확대하지 않는다.
 
 ## I2S/PDM 공급 중단 복구 준비
 

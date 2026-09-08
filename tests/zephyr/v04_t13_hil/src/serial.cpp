@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: MIT
  */
 #include "engine.h"
+#include "flow.h"
 #include "measurement.h"
 #include <nucode/SerialFabric.h>
 #include <zephyr/kernel.h>
@@ -707,7 +708,7 @@ bool t13::serialPrepare(const Case &test, std::uint32_t seed)
         lane.endpoint = test.serial[role - 1U][index];
         lane.seed_tx = laneSeed(seed, index, role);
         lane.seed_rx = laneSeed(seed, index, 3U - role);
-        if (!configure(lane))
+        if (!flowPrepare(test, lane.endpoint) || !configure(lane))
         {
             return false;
         }
@@ -747,6 +748,10 @@ void t13::serialService()
             continue;
         }
         poll(lane);
+        if (index == 0U)
+        {
+            flowService(lane.sent.completed, lane.tx_pending[0] || lane.tx_pending[1]);
+        }
         captureService();
         if (lane.error != 0U)
         {
@@ -806,7 +811,7 @@ bool t13::serialStop()
 {
     transmitting = false;
     receivers_armed = false;
-    bool stopped = true;
+    bool stopped = flowStop();
     for (unsigned index = 0U; index < lane_count; ++index)
     {
         auto &lane = lanes[index];

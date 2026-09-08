@@ -17,6 +17,7 @@ import v04_t13_stream_fault as stream_faults
 import v04_t13_pwm_recovery as pwm_recovery
 import v04_t13_handover as handover
 import v04_t13_conflict as conflicts
+import v04_t13_flow as flows
 import v04_t13_oracle as oracle
 import v04_t13_session as session
 import v04_wiring as wiring
@@ -168,6 +169,8 @@ def failure_snapshots(devices, test, append, identifier):
         if engine[0] == test['id']:
             observations = [(100, (index,), f'lane{index}') for index in range(len(test['serial_links']))]
             observations += [(124, (index,), f'lane{index}-first-data-fault') for index in range(len(test['serial_links']))]
+            if test.get('_flow_gpio_peer'):
+                observations += [(127, (), 'cts-flow')]
             observations += [(104, (index,), f'stream{index}') for index in oracle.stream_indices(test)]
             if test['pwm_instance']:
                 observations += [(107, (page,), f'pwm-trace{page}') for page in range(5)]
@@ -344,7 +347,8 @@ def main(argv=None):
                                           'handover-preflight', 'handover',
                                           'stream-fault-preflight', 'stream-fault', 'pwm-diagnostic',
                                           'pwm-recovery-preflight', 'pwm-recovery',
-                                          'conflict-preflight', 'resource-conflict'), default='wiring')
+                                          'conflict-preflight', 'resource-conflict',
+                                          'flow-preflight', 'uart-flow'), default='wiring')
     parser.add_argument('--cases', nargs='+', type=int, default=[])
     parser.add_argument('--fault-mode', type=int, choices=range(1, 6))
     parser.add_argument('--stream-fault-mode', type=int, choices=(1, 2))
@@ -383,6 +387,10 @@ def main(argv=None):
     is_stream_fault = args.phase in ('stream-fault-preflight', 'stream-fault')
     is_pwm_recovery = args.phase in ('pwm-recovery-preflight', 'pwm-recovery')
     is_conflict = args.phase in ('conflict-preflight', 'resource-conflict')
+    is_flow = args.phase in ('flow-preflight', 'uart-flow')
+    if is_flow:
+        for identifier in args.cases:
+            flows.fixture(available_cases[identifier], args.fault_role)
     if is_conflict:
         for identifier in args.cases:
             conflicts.validate_selection(available_cases[identifier], args.fault_role, args.conflict_mode)
@@ -415,7 +423,7 @@ def main(argv=None):
         'board_revision': images[0]['board_revision'], 'catalog_sha256': session.catalog_hash(),
         'session_grant_sha256': hashlib.sha256(grant_bytes).hexdigest(), 'swd_frequency_hz': 10000000,
         'external_wiring_executed': False, 'results': [],
-        'fault_mode': args.fault_mode, 'fault_role': args.fault_role if is_fault or is_stream_fault or is_conflict else None,
+        'fault_mode': args.fault_mode, 'fault_role': args.fault_role if is_fault or is_stream_fault or is_conflict or is_flow else None,
         'conflict_mode': args.conflict_mode,
         'stream_fault_mode': args.stream_fault_mode,
         'pwm_recovery_mode': args.pwm_recovery_mode,
@@ -457,6 +465,10 @@ def main(argv=None):
             if is_handover:
                 handover.execute(devices, args.handover_instance, continuity, append,
                                  preflight=args.phase == 'handover-preflight')
+            elif is_flow:
+                for identifier in args.cases:
+                    flows.execute(devices, available_cases[identifier], args.fault_role,
+                        continuity, append, preflight=args.phase == 'flow-preflight')
             elif is_conflict:
                 for identifier in args.cases:
                     conflicts.execute(devices, available_cases[identifier], args.fault_role,

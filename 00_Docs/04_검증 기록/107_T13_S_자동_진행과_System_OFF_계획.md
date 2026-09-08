@@ -12,6 +12,13 @@ UART00/20·event/PWM 충돌까지 완료한 것으로 확대하지 않는다.
 U UART00은 현재 결선에서 실행하지 않으며 S 완료 또는 가능한 작업 소진 후 GPIO 재배치를 안내한다.
 T12와 QDEC 문제 보고 후 검증 작업 완료 결정은 유지한다. QDEC 재진단은 새로 예약하지 않는다.
 
+UART CTS 후속 구현 범위: S 단독20/21/22/30의 한쪽은4선 DUT로 유지하고, peer는 활성화 전
+TX/RX 두 선과 별도 GPIO RTS 소유권으로 구성한다. peer가 기존 RTS→DUT CTS net을100ms HIGH로
+유지한 뒤 LOW로 돌린다. 실행 중 UARTE PSEL을 변경하지 않는다. 양쪽 device 시각·실제 CTS 수준·
+대기 TX·완료량·정상 payload 재개·STOP·새 seed 재획득을 요구한다. 이 fixture 변경은 원본에 표시하며
+peer 하드웨어 RTS 자체 검증이나 RX 지연/parity/break의 완료로 확대하지 않는다.
+근거: [Nordic UARTE 핀 설정](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/uarte.html-concept_wmv_f2m_wr).
+
 ## 마일스톤과 현재 상태
 
 | T13 하위 묶음 | 상태 | 현재 S에서 자동 진행 범위 |
@@ -20,7 +27,7 @@ T12와 QDEC 문제 보고 후 검증 작업 완료 결정은 유지한다. QDEC 
 | 고정 serial 복구 | 17/21 완료, TWIM 취소4개 미완료 | RX 시작/END·이전 AMOUNT 구분 보완 후 재검증 |
 | stream 복구 | 3/4 완료, I2S B97번째 실패 | 원본 분석·원인 분리·재검증 |
 | 역할 전환 | 예행5/5, 정식2/5 완료(serial00·30 각100회), SPI20/21/22 실패 보존 | 최초 RX 오류 계측을 보강하여 원인 분리; 이전 중단47회 합산 금지 |
-| 동시 안정성 | 1/7 완료(C01), C02 진행 중(2026-09-08T09:20Z) | C01~06·C08; 일반900초, C05는3600초 |
+| 동시 안정성 | 2/7 완료(C01·02), C03 진행 중(2026-09-08T09:36Z) | C01~06·C08; 일반900초, C05는3600초 |
 | 추가 오류·충돌 | 일부 runner 미구현 | UART flow/지연/parity/break, SPI slave/short/CS, TWI 지연/stuck-low, 자원 충돌의 구현·Host/target·실기 |
 | peer 제어 System OFF | 구현·exact Host/target 준비 완료, 실기0 | S 현재 배치와 TWIM 계측 뒤 bridge 예행부터 실행; 무인 성립 실패 시 원본·한계를 남기고 독립 작업 계속 |
 | U UART00 | 대기 | S→U 현재 재배치 확인 전 실행 금지 |
@@ -72,7 +79,7 @@ U 재배선·사용자 승인·정식 공개는 자동으로 수행한 것으로
 serial20은1회 step09, serial21은5회 step02, serial22는1회 step02의 SPI 단계에서
 engine/renew 오류로 끝났으며 세 실행 모두 양쪽 정지를 증명했다. `lease renewal failed`라는
 문구만으로 확인서 만료나 통신 단절로 단정하지 않는다. lane 최초 오류를 계속 분석한다.
-serial30도 새100/100회 완료했다. C01은900초 연속 실행·양쪽 STOP까지 완료했고 C02를 진행 중이다.
+serial30도 새100/100회 완료했다. C01·C02는 각각900초 연속 실행·양쪽 STOP까지 완료했고 C03을 진행 중이다.
 
 이후 raw 분석에서 세 SPI 단계의 최초 RX payload 불일치(code6)를 확인했다. byte 위치는
 568/749/499이며 firmware lease_expired는0이다. 따라서 공통 오류 문구가 확인서 만료를 뜻하는
@@ -96,7 +103,13 @@ source 고정 후 exact build/원격 Host를 다시 확인한다.
 [serial22 실패](evidence/t13-serial22-handover-sauto-01-506680f/manifest.json).
 
 추가 원본: [serial30 100회](evidence/t13-serial30-handover-sauto-01-506680f/manifest.json),
-[C01 900초](evidence/t13-c01-soak-sauto-01-506680f/manifest.json).
+[C01 900초](evidence/t13-c01-soak-sauto-01-506680f/manifest.json),
+[C02 900초](evidence/t13-c02-soak-sauto-01-506680f/manifest.json).
+
+자원 충돌14조건의 b5d614e는 exact 두 역할 target·T13 Host55시험·원격 Host103묶음785시험을
+확인했다. b5d614e 이전884c642의 UART30 bank 선택 오류는 실기 적용 전에 수정했고 원본을 유지한다.
+CTS GPIO 주입 도구는 초안 두 역할 target과 T13 전체 Host58시험·형식·계약 검사를 통과했다.
+둘 다 아직 실기 PASS가 아니며 고정 source와 개별 예행을 요구한다.
 
 다음 source에는 첫 RX payload 불일치의 actual/expected byte·주변4byte·DMA 주소·AMOUNT·guard를
 STOP 전 고정하는 opcode124를 추가한다. 예전 실패에 없던 actual byte를 추정으로 채우지 않는다.

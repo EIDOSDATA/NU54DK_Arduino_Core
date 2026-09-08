@@ -1,5 +1,6 @@
 /** @file @brief 고정 시험 ID·10초 lease·실제 측정 시각과 정지 판정을 관리합니다. */
 #include "engine.h"
+#include "flow.h"
 #include "measurement.h"
 #include "cases.h"
 #include "handover.h"
@@ -198,6 +199,17 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
         serialTwiFaultSnapshot(out, count);
         return 0U;
     }
+    if (opcode == 126U && nargs == 1U && !gate.claimed() && !wiringClaimed())
+    {
+        out[0] = flowPolicy(args[0]) ? 1U : 0U;
+        count = 1U;
+        return 0U;
+    }
+    if (opcode == 127U && nargs == 0U)
+    {
+        flowSnapshot(out, count);
+        return 0U;
+    }
     if (opcode == 124U && nargs == 1U)
     {
         serialDataFaultSnapshot(args[0], out, count);
@@ -292,6 +304,12 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
     {
         serialConflict(args[0], out, count);
         return count == 20U ? 0U : 400U;
+    }
+    if (opcode == 128U && nargs == 0U && gate.live(k_uptime_get()) && started && !quiesced)
+    {
+        out[0] = flowStart() ? 1U : 0U;
+        count = 1U;
+        return 0U;
     }
     if (!gate.live(k_uptime_get()))
     {
