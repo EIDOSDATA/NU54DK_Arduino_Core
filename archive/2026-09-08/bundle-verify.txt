@@ -1,0 +1,28 @@
+The bundle contains these 24 refs:
+4aadf29fb4cca1febc39ef556c1c9c2cce8a9e0d refs/heads/codex/t13-recovery
+506680f5a1df7d944e547cb573abcd39ffb6dcbf refs/heads/main
+506680f5a1df7d944e547cb573abcd39ffb6dcbf refs/remotes/origin/HEAD
+43bc0320d6681d57d2ec1cd569fef35f7dd8ec0d refs/remotes/origin/codex/t13-recovery
+506680f5a1df7d944e547cb573abcd39ffb6dcbf refs/remotes/origin/main
+5698c76ccb47258082218cb1fcdb693e0d49bc78 refs/tags/m10-preview-0.0.90
+bc79b2956ab97fbad118aa256656e5917749881d refs/tags/m10-preview-0.0.91
+222d94e4bb8b13a05e0f9b7e1b99a955404c4da7 refs/tags/m10-preview-0.0.92
+7e2249e27a606104c5058afe039bf1956520a2d0 refs/tags/m10-preview-0.0.93
+33ca3da299079c189a35994e5ba6c7e0d819da7b refs/tags/m10-preview-0.0.94
+33ca3da299079c189a35994e5ba6c7e0d819da7b refs/tags/m10-preview-0.0.95
+5d965f83a6b8ce385d5014dfcae9b24e2fb0c1a1 refs/tags/m10-preview-0.0.96
+5d965f83a6b8ce385d5014dfcae9b24e2fb0c1a1 refs/tags/m10-preview-0.0.97
+deb80e6d93df28b23046d2134e2c3b15182af532 refs/tags/v0.1.0
+d4b7fc2df47cbe5f860af5c3ffa0f04ea8ecb637 refs/tags/v0.1.0-rc.2
+e2cc90114f84cdf29c2aa263aba62d9bde9da8a9 refs/tags/v0.2.0
+c08dff36258231cd4b2fb5268033dcd52c186498 refs/tags/v0.2.0-rc.1
+1c5dcecfc0dba2ef25e06963dcba61c63f454db9 refs/tags/v0.2.0-rc.2
+8f071ba7d363a62fd60149abc86c676269b95dc1 refs/tags/v0.3.0
+4657f2a267e3ef045571ff2a8b5f6fed60d61e69 refs/tags/v0.3.0-rc.1
+88dbc48c4b09b03bd4f96686ceca16e594b25d1b refs/tags/v0.3.0-rc.2
+c9dd8c4916eb84f900d437baa3da2e0f492a56e5 refs/tags/v0.3.0-rc.3
+506680f5a1df7d944e547cb573abcd39ffb6dcbf HEAD
+4aadf29fb4cca1febc39ef556c1c9c2cce8a9e0d worktrees/tr13dev/HEAD
+The bundle records a complete history.
+The bundle uses this hash algorithm: sha1
+C:/Users/eidos/Documents/Codex/2026-09-07/00-docs-05-v0-3-0/work/git-retirement-20260908/original-all-refs.bundle is okay

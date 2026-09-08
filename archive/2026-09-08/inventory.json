@@ -1,0 +1,27 @@
+{
+  "observed_utc": "2026-09-08T06:54:47.468369+00:00",
+  "main": "506680f5a1df7d944e547cb573abcd39ffb6dcbf",
+  "v030": "94ee3fec29ba9f86835b6cb3d96ab13ce2cf8c11",
+  "refs": "4aadf29fb4cca1febc39ef556c1c9c2cce8a9e0d refs/heads/codex/t13-recovery\n506680f5a1df7d944e547cb573abcd39ffb6dcbf refs/heads/main\n506680f5a1df7d944e547cb573abcd39ffb6dcbf refs/remotes/origin/HEAD\n43bc0320d6681d57d2ec1cd569fef35f7dd8ec0d refs/remotes/origin/codex/t13-recovery\n506680f5a1df7d944e547cb573abcd39ffb6dcbf refs/remotes/origin/main\n5698c76ccb47258082218cb1fcdb693e0d49bc78 refs/tags/m10-preview-0.0.90\nbc79b2956ab97fbad118aa256656e5917749881d refs/tags/m10-preview-0.0.91\n222d94e4bb8b13a05e0f9b7e1b99a955404c4da7 refs/tags/m10-preview-0.0.92\n7e2249e27a606104c5058afe039bf1956520a2d0 refs/tags/m10-preview-0.0.93\n33ca3da299079c189a35994e5ba6c7e0d819da7b refs/tags/m10-preview-0.0.94\n33ca3da299079c189a35994e5ba6c7e0d819da7b refs/tags/m10-preview-0.0.95\n5d965f83a6b8ce385d5014dfcae9b24e2fb0c1a1 refs/tags/m10-preview-0.0.96\n5d965f83a6b8ce385d5014dfcae9b24e2fb0c1a1 refs/tags/m10-preview-0.0.97\ndeb80e6d93df28b23046d2134e2c3b15182af532 refs/tags/v0.1.0\nd4b7fc2df47cbe5f860af5c3ffa0f04ea8ecb637 refs/tags/v0.1.0-rc.2\ne2cc90114f84cdf29c2aa263aba62d9bde9da8a9 refs/tags/v0.2.0\nc08dff36258231cd4b2fb5268033dcd52c186498 refs/tags/v0.2.0-rc.1\n1c5dcecfc0dba2ef25e06963dcba61c63f454db9 refs/tags/v0.2.0-rc.2\n8f071ba7d363a62fd60149abc86c676269b95dc1 refs/tags/v0.3.0\n4657f2a267e3ef045571ff2a8b5f6fed60d61e69 refs/tags/v0.3.0-rc.1\n88dbc48c4b09b03bd4f96686ceca16e594b25d1b refs/tags/v0.3.0-rc.2\nc9dd8c4916eb84f900d437baa3da2e0f492a56e5 refs/tags/v0.3.0-rc.3\n",
+  "remote_refs": "43bc0320d6681d57d2ec1cd569fef35f7dd8ec0d\trefs/heads/codex/t13-recovery\n506680f5a1df7d944e547cb573abcd39ffb6dcbf\trefs/heads/main\n5698c76ccb47258082218cb1fcdb693e0d49bc78\trefs/tags/m10-preview-0.0.90\ndc7af5cc485e6fc1627e01b5fa508963127c861d\trefs/tags/m10-preview-0.0.90^{}\nbc79b2956ab97fbad118aa256656e5917749881d\trefs/tags/m10-preview-0.0.91\ndc7af5cc485e6fc1627e01b5fa508963127c861d\trefs/tags/m10-preview-0.0.91^{}\n222d94e4bb8b13a05e0f9b7e1b99a955404c4da7\trefs/tags/m10-preview-0.0.92\n1508a6db1a065674948d640227918f2399fde5b9\trefs/tags/m10-preview-0.0.92^{}\n7e2249e27a606104c5058afe039bf1956520a2d0\trefs/tags/m10-preview-0.0.93\n1508a6db1a065674948d640227918f2399fde5b9\trefs/tags/m10-preview-0.0.93^{}\n33ca3da299079c189a35994e5ba6c7e0d819da7b\trefs/tags/m10-preview-0.0.94\n33ca3da299079c189a35994e5ba6c7e0d819da7b\trefs/tags/m10-preview-0.0.95\n5d965f83a6b8ce385d5014dfcae9b24e2fb0c1a1\trefs/tags/m10-preview-0.0.96\n5d965f83a6b8ce385d5014dfcae9b24e2fb0c1a1\trefs/tags/m10-preview-0.0.97\ndeb80e6d93df28b23046d2134e2c3b15182af532\trefs/tags/v0.1.0\n5dbc5e37270e477d21f578dd877f4b5226b44a0d\trefs/tags/v0.1.0^{}\nd4b7fc2df47cbe5f860af5c3ffa0f04ea8ecb637\trefs/tags/v0.1.0-rc.2\nf290930bf1b23134a4c383669efce76f626cacbe\trefs/tags/v0.1.0-rc.2^{}\ne2cc90114f84cdf29c2aa263aba62d9bde9da8a9\trefs/tags/v0.2.0\n41fc44e452d2b6eef4b46307af6c277499f8d2d5\trefs/tags/v0.2.0^{}\nc08dff36258231cd4b2fb5268033dcd52c186498\trefs/tags/v0.2.0-rc.1\n1c5dcecfc0dba2ef25e06963dcba61c63f454db9\trefs/tags/v0.2.0-rc.2\n8f071ba7d363a62fd60149abc86c676269b95dc1\trefs/tags/v0.3.0\n94ee3fec29ba9f86835b6cb3d96ab13ce2cf8c11\trefs/tags/v0.3.0^{}\n4657f2a267e3ef045571ff2a8b5f6fed60d61e69\trefs/tags/v0.3.0-rc.1\n8dafcb722dc31ef5890922b92a5b7ee8dd91c32f\trefs/tags/v0.3.0-rc.1^{}\n88dbc48c4b09b03bd4f96686ceca16e594b25d1b\trefs/tags/v0.3.0-rc.2\nbb7a4eace689af707ea429a1911e4cb98da97329\trefs/tags/v0.3.0-rc.2^{}\nc9dd8c4916eb84f900d437baa3da2e0f492a56e5\trefs/tags/v0.3.0-rc.3\n543adc87cbc6984856ca6e1850413bc7a72c5476\trefs/tags/v0.3.0-rc.3^{}\n",
+  "release_count": 17,
+  "retained_tag": "v0.3.0",
+  "retired_tags": [
+    "v0.3.0-rc.3",
+    "v0.3.0-rc.2",
+    "v0.3.0-rc.1",
+    "v0.2.0",
+    "v0.2.0-rc.2",
+    "v0.2.0-rc.1",
+    "v0.1.0",
+    "v0.1.0-rc.2",
+    "m10-preview-0.0.97",
+    "m10-preview-0.0.96",
+    "m10-preview-0.0.95",
+    "m10-preview-0.0.94",
+    "m10-preview-0.0.93",
+    "m10-preview-0.0.92",
+    "m10-preview-0.0.91",
+    "m10-preview-0.0.90"
+  ]
+}

@@ -1,0 +1,236 @@
+5a28abef4952fb495ae5d10525db37028e186b18 release: publish v0.3.0 stable
+1017c5fcf73474fb13a91ab999553d4e7cc1fd58 docs: record v0.3.0 public lifecycle
+64a175dfe1677dcd93948bb4721bdbdb7798daaa docs: align v0.3.0 support matrix
+bae0957d2425e4418199a2a3a018bf8e9a0dc356 docs: clarify README support status
+f027a786d4969ee6c438a7fabb5afd5783cd2195 docs: plan full peripheral and BLE parity
+fb58c80496372bee423e011d5c9e546a132f8601 docs: organize historical release documentation
+16257c1fb50a5134afd58a09ff557d10d56eba09 docs: add Windows development environment guide
+e329733d4152d0d9e45461ac5392888bf95de112 feat: establish M23 peripheral ownership contract
+ac01950c7dfacd1c749fe8f8b6d64ae2f3ad42d4 docs: record M23 completion
+bf5d129603d8c7da8060f8ee7ba04af641f6f6f2 feat: define M24 serial fabric contract
+d5bc5f0c3714f99622e595276bea713dd8669d77 docs: record M24 serial contract baseline
+aff666411a3d80bcf1008c74ff4f4a989d9dd351 fix: normalize M24 evidence hashes across OSes
+a2dce0124397eaa8233a6b14651a5a0982d6b41e docs: record M24 cross-platform CI correction
+785ccab0fd7d4d8ebc3787c2d4e7dfc0d33229b2 ci: parallelize release-era build validation
+1266b6cef1cee180eb032764d4799aefec20a2b0 fix: retry transient Arduino CLI bootstrap
+b661431dd49ba60507368f92db469b3e7c02a56e docs: classify onboard M24 HIL resources
+9680a56de3ffa8a56a4ff7f39894bd93e5f343af feat: add M24 serial fabric handover core
+e343cbcf32ff7e194688a17d53671017b7e941a7 docs: record M24 serial fabric backend baseline
+3bd1cc1f3a0055ae72c527621ec97af8da74c388 feat: add all-instance UARTE EasyDMA adapters
+98534d235eb0b8084b2f46746bdc19ece048e09a test: add onboard UARTE instance images
+96e8f6409e8e5124c7267b82f143b29cd9b2e8bf test: automate onboard UARTE EasyDMA HIL
+2e2f822144a59ea55d0cb640469f6c9bc500fca4 test: make UARTE HIL startup observable
+14954b1d437bc31451906c0dffcd8a4a80f300e9 feat: add all-instance SPI EasyDMA adapters
+cec32fb5e58e7f637c5dc4c1a86de9d53ec5ada4 feat: add all-instance TWI EasyDMA adapters
+b59aee4dc5e5a3ca19dbf5b83f4ac2094c47e676 test: automate onboard TWIM PMIC HIL
+ad16b8792afe2598a9b9ba6ea4445cba280e160b docs: record M24 adapter and HIL hold
+d00e90a1235c8bf1c3166e9c34afc742b33950d5 feat: add M25 SAADC and PWM DMA fabric
+4baaf6eeeb741eb6299d5b0a7397425fdcb671ae feat: add M25 event routing fabric
+6299c9e6b9089bd030f76f446112ef09a2a8ee21 feat: add M25 audio and encoder fabric
+3c715111df4bcce18f7d03c124ba9473a1ccfb1d test: add M25 onboard integration gate
+5cc03431eee51cb26225daac4ab8e9f35309876f feat: add M26 system capability fabric
+d1a79eb48bc9ab53714d260ce4bae9de694ba3e7 style: normalize peripheral fabric sources
+0bbbfe0ee2f2aebeda14566b6772a2bff404bab8 test: add M26 onboard system gate
+d988f389fd4e6c96c6717750794141a82c3cbd93 feat: stage M27 release readiness
+ffdef81410651fa832115662e2b650d25799ee38 fix: accept clean submodule status in M27 staging
+4001e43b80db4ab39a50974639643ea01a1873a5 test: automate M27 staged package examples
+1d3afd6af8b84a1e215d890e7921deade2853cf6 perf: parallelize M27 package example builds
+91d12847fedddc2af95dc131b9c1c78b0fa39a03 docs: record M27 automated gates and physical hold
+e4d3ae70bb815a2f6a762e7116915729ff8a9b22 fix: disable automatic unlock in onboard HIL flashing
+00fd1709f469fe04034c82b1d9290fe200e68fa7 fix: validate watchdog reset cause and record onboard diagnostics
+f55bfa30808b7c9fbffdcf4d0585095b016765bc fix: frame onboard HIL results across watchdog reset
+d4b5bc66cbaf62eebd8c9d1a686e107641c76188 fix: start onboard firmware after halted UART synchronization
+5276f9abab9e411f7783e1b6afb042224da0c2a5 fix: trigger manual SAADC sampling after DMA readiness
+64376828e23a39ecffaec49bccd5802d62628ca4 fix: release disabled console resources for serial fabric
+51c1986242b60ac99df643ee4291946aa83b9986 fix: enable TWIM hardware before accepting transfers
+7dbfef795c1a2272df0264869a8a787de0c04844 docs: record passing M24-M26 onboard gates and remaining release holds
+d67ac3ffd68ce927b729c09c9ec72dddb61c52f5 docs: finalize onboard verification checks
+6c18d4c316f13eb373da6cada5675cdc82a0cf6f docs: scope v0.4 verification to core functional HIL
+8503e3dd95ffc2fab9c5844c3a550fbf50507deb docs: add resumable v0.4.0 release TODO checklist
+866852fe1df37a7875915ab0ea308f4ea69ccc01 test: prepare v0.4 inventory plan and exact dual-board mailbox HIL
+34475a0571443c086bf0d1b7af488151027d59b6 test: fix dual-board SPIS build configuration and boot identity
+01fc2d779ca0fa04f73e0ceca8dca18c6d2e515b fix: correct per-instance TIMER clocks and reject absent SAADC inputs
+0143ddc33f0664f42665034a0e868f014f89b868 fix: release pair HIL PMIC pins from NFC and prepare onboard UART probes
+6a4540329cc50c688b9f05f185a252ae634838a6 fix: use minimal libc in UART HIL buffers
+e4b70abfcf9e20a137afc7bfec985960963d0625 feat: expose SAADC gain for unsaturated candidate sampling
+e61594aadc7bc8e9c7c72a14d50e3efab7a4d634 test: integrate UART vectors and guard serial personality handover
+5e6ef070a7d405282e832ea2af6771e4b595328d feat: add bounded continuous UART receive for DMA pairs
+077bf7efc5adbebf9ba9977a17effb16522151ea fix: bound candidate DMA counts and preserve qualified UART diagnostics
+6e19ce8d85bf4f5e41947598f047bec1bc607caf merge: retain owner formatting alongside v0.4 test preparation
+94d53aebb8cdac182e3eca8b8ad58806b0af19d0 fix: scope HIL revision trust and stabilize inactive DAP inputs
+3b292485dab20f553bb27189026b1450c79749c5 fix: preserve serial route state and lease cross-domain power
+6ea315ef2ad71b8b7cfed1d24270bc45b214bf75 fix: use errno header available in minimal Zephyr C++
+696defbc6c6c5f9374cb5daa221a278d6acb3514 feat: prepare v0.4 peripheral validation and normalize style
+661fad93b9f68177d4c5e34e888a6546e72486e3 test: record v0.4 clean onboard validation
+8ebf3cc577bf28abcd44fac557d2ae1a29ffa226 docs: record v0.4 preparation CI results [skip ci]
+c74e9fa4f12e6d45699eae69f7656bdb4eb898bd fix(hil): 회로도 기준 fixture 핀 번호 교정
+a817c8355e49ff5cec0341f712698f11c6078b27 docs(hil): T10 핀 교정과 재검증 기록
+f09cd25b7efdfb3ae9e321459f782d0582c2b0da Revert "docs(hil): T10 핀 교정과 재검증 기록"
+ca5a3f2d807e7f797559d866766264e094bfaf16 Revert "fix(hil): 회로도 기준 fixture 핀 번호 교정"
+15565f780f61bacdebecfd9f7036995b1e44210b docs(hil): 사용자 확정 P2 P4 핀맵 고정
+2542a014c2f4dcf4309bd5372701291d1ace2f82 fix(hil): 지연 UART RX의 SPI 분기 진입 방지
+ff3423ea8b6e9a8419d72b493d02874deaac9dca test(m24): Fixture 101 UART 실기 증거 반영
+9602f9ac9ecd4d80abfeb92488ed9537700aacf5 test(m24): Fixture 102 UART 실기 증거 반영
+b3c689b07f1a23e479a78bd2f852a650fd4a86d5 test(m24): UARTE fixture 오류 원인 보존
+7ba5edab02f3f5f710b9fb4d32622ea304b9df2f docs(m24): Fixture 103 UART 실기 증거 반영
+c1fba459db0a7f40ebbdd765802c4979d791a286 test(m24): SPIM 공통 유효 주파수로 교정
+60655735dd0fc8514f7f414938b0d2ad2aaa0dcf fix(m24): SPIS zero-length buffer event 계약 보존
+b011b5e947403437119f7dc2b54c853e321bf334 test(m24): 분할 SPI 수신 전체 범위 검증
+8e63fb9805e3671398871eefbafac46e79b4dbd7 test(m24): SPIS 재무장 후 다음 구간 시작
+0bf51c4f5e103823cfd5a58f89a77326aea79f5f test(m24): SPI 분할 전송 lease 갱신
+9cd48b4adce0fd2f93004100effe9ba53f5856d0 test(m24): controller lease를 마지막에 갱신
+097475e2a36612757d71ed07764cb59f3129631c test(m24): SPI handover opcode를 dispatcher에 연결
+3fbcdb6cf8dced5246651b0ec3c802cb55d12268 fix(m24): SPI 하드웨어 CSN timing 보장
+2a219a9fcca46ec01a1d968ccb33d8ac3b922feb fix(m24): SPI CSN timing 단위 교정
+a254d0158d79944e2f091612bd1b86deca2086d4 fix(m24): serial SPIM 수신 지연 교정
+f21377ee9bbfee35a05748d4e5ba3ab1fd6b79b9 test(v04): 10MHz SWD 폴링 최적화
+1a133e69a66a75504a311100d4936c174e2fd4fa docs(m24): Fixture 201 SPI 실기 검증 기록
+4af93daa542b4b84e39381317d4747b3df3ff5c8 docs(m24): Fixture 202 SPI 실기 검증 기록
+ddbe2aae6796c63f83471aea36e170579a5676f6 docs(m24): Fixture 203 SPI 실기 검증 기록
+e25ebb0c4c6bbbee9321b18b0956581c95ed4e05 test(m24): Fixture 301 내부 풀업 사용
+e2f045c1b4272d986d17456c5af051fe8af74f19 fix(m24): TWIS 지연 버퍼 전송 재개
+25c7f035cc10093a370a693871fe2704a5a069f3 docs(v04): T11 검증과 리팩토링 계획 통합
+ec3bba331b4ce99667b42312512715818e66c1df docs(v04): 리팩토링을 통합 실기 전에 배치
+d2c125c6d92204bbb0389c91d9a5b3324604bb4a docs(r00): 공개 계약과 target characterization 기준선 고정
+eed0b6c043e3a3b031f5e1e3d1353bb05da5fb9b fix(r01): Serial adapter source를 명시적 Core target에 등록
+7e9270dce84bb72917bca11693521493d1caf492 fix(r02): Serial 동기 완료와 STOP 확인 및 DMA 수명주기 보호
+6b794807a0e3c8b86cfab5bc3a58b6bd0bf809b9 fix(fabric): preserve DMA leases until confirmed analog and stream stop
+1145e72f7fe3e0899d6812d43ddc0a3e0daa9541 fix(littlefs): serialize shared File references and final close
+feaccc720f1b4ca66632b0e8a86d6534dd2c3efa fix(identity): bind runtime and build records to canonical Core source version
+f1b3fa4d0a461ae73c9cc05be889914208d26fa5 refactor(builder): R06 순수 모듈과 설치 계약 추출
+8b6cb9795f7762c37c0f3cd86a32577139b9b3ee fix(builder): Windows 설치 경로와 build 복사본 검증
+37d52fa07c3715ab3c1e2bbef50f8a6a6bafa31a refactor(event): registry와 peripheral 책임 분리
+8d39e578639594abc748b81a531d5409f32e83d6 refactor(core): separate resource transactions and runtime route recovery (R08)
+b3a6b90d783e1c8fa05ca0eb6470c7dfb4a9af59 fix(test): link resource table in standalone M3 target (R08)
+1c956b7227c381aeaa6043627b9244b7b5d080a3 refactor(spi): separate Arduino transactions from Zephyr backend (R09)
+7be9f7160a35cf3b052734ea0867bb9cd0ce3516 fix(serial): reserve blocks while waiting outside global mutex (R10)
+ca46425626e6aef3f0b0e388c1c5316cbaefc919 refactor(serial): separate registry IRQ and lifecycle ownership (R10)
+f1501ed6aa0491d0a61a1dfb1f0f7d3b545f901c fix(hil): record actual synchronous controller scope (R10)
+86b53f817ceb812d7366eb8d9afd6cf71edd2b91 refactor(fabric): split analog and stream peripheral lifecycles (R11)
+ee177893d5af7519b879ce691b2b7055387dabe7 refactor(ble): separate GAP lifecycle and peripheral responsibilities (R12-A)
+b7f79fd0f6b8232bf4bac5ed4b2a87cd7c63b08a refactor(ble): isolate GATT database server and client lifecycle (R12-B)
+c90d2b19c910fff4e1ebf04b46de5f0e8e55186c fix(ble): keep HIDS SDK calls in C and gate optional PHY helper (R12-C0)
+4e5dd7db550d6e278839ba55cb8cd8811c1a63b2 refactor(ble): split Security pairing bond and standard profiles (R12-C1)
+480d7800442d2169197edce08daf53418a1c0389 refactor(storage): R12 record와 File 수명주기 경계 분리
+a1b19aaaf94847e00ec284884b5f8c0fa2117215 refactor(package): R13 입력 생성 검증 책임과 호환 진입점 분리
+fd8c69b7ae39d49655eae955b96d80020c26b466 fix(build): SPI driver 미선택 route 참조 차단과 M21 target 누락 보완
+3ab31b1a0cc690b7c9fdb8e6375130dd75c596cf refactor(build): R13 Kconfig 기능과 source provenance 경계 분리
+499fde3931248fe44f94bab3dc656bfef5111a38 refactor(policy): R13 생성 drift와 software package 증거 경계 통합
+b9c30042f23ff2de65280f29ae81149e104cebf2 fix(test): R13 설치 smoke provenance 경로와 identity fixture 보완
+cf966a8ed614713235cd8178bd4b1eb8ab120d36 fix(build): R13 Git-less package revision의 CMake 복원 교정
+c94298f925410fbef78300d8af4d7a1b3fef4aaf docs: complete R13 software gates and T11 handoff
+32535c124633d6effbfa1c9397737c091d6e3b8b docs: record USB-only onboard regression and cleanup
+18a7cbec9cceed38d6c866131afdac9e6ffbc4b8 docs: confirm disabled DAP UART and next USB test setup
+373d98da055b83e86b039448965d630e8d546497 fix(hil): bias idle DAP UART inputs before controlled start
+154324ce7a865522374066ca957ebc98909c7c19 docs: record connected UART and BLE regression before T11
+a49cc0dbc1ef8bf5f697106d873bdce55f5911df test(hil): record current-source Fixture 101 UART regression
+7aece93395f0d74272816894a18c2c5e3f1a2abe test(hil): record current-source Fixture 102 UART regression
+0f429e7ab9b5b8e24f4ff19e47abe60014975547 test(hil): complete current-source UART fixture regression
+1349e208073d0fd7d3b020a5e9facf771b371237 test(hil): record current-source SPI fixture 201 regression
+be4920757fd9faf2ea38721d2aa374246a259f29 test(hil): record current-source SPI fixture 202 regression
+9a63251ed6f8b9916d8e49d8210414b21c5c7267 test(hil): record current-source SPI fixture 203 regression
+a12e444cfb5ef47471c0e0d436f082acfd200c19 test(hil): complete current-source T11 communication regression
+ff483a1bbd2a7f275b2c59126ef0e9af09211872 test(hil): verify T12 fixture 401 PWM to ADC
+c95b9049a62e7c911e4b67104a8f36391ab7e168 test(hil): verify T12 fixture 402 PWM to ADC
+e080bbc8f07a0ad751d83dacdb259d395b69be5b test(hil): verify T12 fixture 403 PWM to ADC
+b6611d7f4de9f40673583f36a4c1ee9fb20b2a43 test(hil): verify T12 fixture 404 PWM to ADC
+9fc12bfbdafbb8a4450ed6cc61ca97b9c1efd220 test(hil): add open-drain AIN4 fixture 405
+911b6ac0ea28d0f8dc634d10dec41037fdf9edd5 test(hil): verify T12 fixture 405 shared AIN4
+96f38e9486c69cda2c76b48029bc0dc9404d9709 test(hil): add input-bias AIN5 fixture 406
+e698b96d08036ffe3c9d464b8121947679a8efee test(hil): verify T12 fixture 406 shared AIN5
+076685aa78247ec18e4fd95be50b2123a1f043fa test(hil): prepare input-bias AIN6 fixture 407
+8d9677a6d359789792f6e42483fc67f4f77dbcaf docs(hil): record fixture 407 host execution blocker
+a70fa0ab307f99f1d669ce6fb352cdb47c6d5273 docs(hil): compare prior host success with Windows denial
+393e419f4c855037d4e6221c315f9be808a7d274 test(host): support explicit Clang compiler selection
+4a64c2562fdd5e9169faecf56b43043a0afec67c docs(hil): record restored Host checks for fixture 407
+87b987d9ed50855e0134f2c637c00706572719a5 docs(hil): record fixture 407 AIN6 validation
+beebef829de94f92a3a0b6b8b0a6ed2447d3b560 docs(hil): record fixture 408 AIN7 validation
+fc9f1536e2caf4efee387c1a69b3a4c9e24adf3b test(hil): correct QDEC waveform polarity and prepared idle
+a3d0ab59bcee7a7940177fd768ad0f4a7c40c65c test(hil): make QDEC prepared cancellation restore idle pins
+6bd8d3f15ad29fc21f7a58c736cd86e917a3d314 docs(test): record QDEC results and pending cancellation retest
+56a88a5c9b9c68055fccfa9b185a7f1cb6aa4a73 docs(hil): record fixture 420 QDEC and prepared-cancel passes
+c4611822d5a1180741989a351112b8784d610d5d fix(hil): service I2S buffer requests before finite capture ends
+7c44abffb30402c56cb5e2fd7a1c21829b3b3a16 fix(hil): retain I2S startup tail and verify every packed sample
+ee50ca2fbc58b40760015022b45bd0362cd9d678 docs(hil): record fixture 430 partial passes and short-buffer failure
+70971f41aa1e0485d3e974fc8a4cd4f123ae2f33 test(hil): trace I2S start and buffer service timing
+36ba819bbe03280fa82c62ef76b00c87a92c2aff fix(core): acquire compact DMA tokens without full lease conversions
+8685cd8b361b0a8178b1c77227ede7c5e980aaa6 docs(hil): record fixture 430 full pass after DMA token fix
+017f3a55c02e2cd9d2859c7002747d3904ca41ba test(hil): supply PDM guard buffers and stop after payload release
+f6ad2998c47e676f2e84af7fb877d20738ed3aeb test(hil): generate independent PDM stereo channels from clock edges
+ea4e25a035dbc9219e417bf2a2056ce6f9a2e09c test(hil): declare isolated DAP pads for PDM event generation
+b929b14f37d7d086c9accad748aab83b58a0e7be docs: preserve fixture 440 partial PDM results and stereo blocker
+79e4bdd509bc5b12209364399fe9a115cf3946a7 docs: diagnose coupled clock and gate nets in fixture 440
+7641229dca8c37be7a0d07241d407cb14cbf76ca fix(hil): settle PDM clock input before stereo phase initialization
+8c8ec57a63f9f047386e0d2769faa9f30ecad24a fix(hil): hold constant latency while generating stereo PDM
+5273b30c05e1cdf2b7043f39c1f2536f1699bb59 build(hil): limit system event support to constant latency
+e9d264c502488754fbda2eabcf174764f703e37d fix(hil): use C linkage for Nordic system event API
+4a8dbafe74e251bbc2897775dae15688ab950823 docs: record fixture 440 rewiring and PDM phase diagnostics
+917dc0284b1185d23eeef3f8df31bd3498f78408 test: prepare PDM gate before source and verify continuous DMA
+f02734d69d9722085771fc1a34d5ed0cf756bc4e docs: record PDM density fix and continuous DMA checkpoint
+e6979af6545e2cc9525f54695eee965fc25d683e docs: record complete PDM continuous hardware validation
+f17e603fe101a2296398f160cb81a29a54f15671 docs: record Host recovery and remaining T12 validation
+080d771ae48e83b4621f3160afed67395ead32cd fix: cancel unstarted PWM and add no-jumper regression
+35f30b25fd318f9c5397da73263fd24df42d6df0 test: expand no-jumper ADC and event verification
+fcf85c2d440b9d389bf08eb42f2f0971a9bdf510 test: correct clock tolerance and Windows fixture paths
+874658a16db18b283ab7f1b2835111aaf34b42fd test: account for clock observation and tick quantization
+1f050f4bb39dc7cbc77e3d4a433af8a907964837 docs: record no-jumper verification and remaining T12 work
+9c9db04057c2f85cf1b718bdbf2d9418eede61c0 test: support standalone M14 and resolved Windows fixtures
+815f0a5aa7d18ada8f6a00043eaf62353f00cb09 docs: preserve CI fixture reproductions and corrected Host results
+65f5ae20e5fa91ef260097b2439efa97963ba089 test: link BLE weak defaults before PE-COFF callers
+801673704ce2de1e286c0003e2380231595a542b docs: record GNU BLE link-order verification
+f67f568a9a4d62aa5075537fc5a2592137450fe2 ci: use LLD for Windows native weak symbol tests
+3bc8fad6ca347e5e3cbc888149c0d4d727473c22 fix: emit UTF-8 from the isolated package CLI
+828166109968b2ceb40fc2d9c054255558d995d5 docs: record isolated package UTF-8 validation
+f42bda55f7b45f7af0a347ecf5f1f516bb34eb6a docs: finalize CI evidence and cross-PC handoff
+59282818fc3733dae4b247a8942069955eabc2df test: prepare first T12 PWM peer capture path
+054d08fc869cb4089434f02800b5c438c1407be9 docs: record new-PC verification and PWM capture checkpoint
+0d7f3822fe0f1b564ef629613a048b433e8fdeee test: add explicit CMSIS-DAP single-packet diagnostics
+0128953a040cae058140fa89f4b63bcf3711284d docs: record first PWM peer capture 240-case HIL
+cf963d5ce47170d979d72ff95ec26610052069b0 docs: align PWM log manifest with Git newline normalization
+6b6f25b23adc0feb28b492d772d438af253d2659 test: extend PWM peer capture to decoder loads and DMA lengths
+65b0c7b8585574595ba11c4e0f7231f7e46ef25b test: reduce standalone stability plan to three minutes
+8c1cfe27551b46fab101a75de61f502899d0d95c test: add bounded common wiring checker and shorten concurrent soak plan
+d8d1e135cfc96c1608c55c81b4f111963f56c10a docs: record common wiring P1.10 failure and safe cleanup
+8387d1a7b951bb73ebfb291f6e2251afc3fa53be docs(hil): record passing P1.10 and common wiring recheck
+27e0f257860f46bfd43a82742cf087be7eaa9493 test(hil): shorten concurrent stability checks to 15 minutes
+645df82c2a9db3e8cc2e5556c75e71a54f78608a test(hil): prepare fixed-harness GPIO and GPIOTE campaign
+4e4825279a9bd665221c40490c4d9c8781cd27ae test(hil): decode nRF54L15 split open-drain fields
+c215eb84164d0a97f7898ae24e1530aa93445fcd test(hil): prepare common signal capture and T13 wiring plan
+c77274c6d5cb9d7fcef2a209b596e3e12997832d test(hil): require intact I2S guards after stop
+1fc3962557a399d8c5c77406c16cc5a964a9fa40 test(hil): enforce common session during active waveforms
+3334b1777327cc8106644a4c49760736d0f1d864 test(hil): distinguish PWM repeat and end-delay waveforms
+0db0689b6fcf2264748406947bb9dd23575abce3 test(hil): apply documented PWM terminal stop timing
+b5c86a49d2a2161fe5fa137609ed78a18e2925b7 test(hil): stop QDEC receiver before floating phase inputs
+f46bf60226b7e4f3fc52d4185f10172774b019fc test(hil): capture independent QDEC phase diagnostics
+e5218255b3796d660a62da7c2dc518b6c1371b66 test(hil): retain QDEC driver read value in fault snapshot
+c6b87a25fd284dec30745699d8ec1049a9ff9966 docs(hil): preserve complete common I2S campaign and source audits
+8dbed876bd54a55eda471ad1fa016f0147428703 test(hil): trace QDEC sampling and accumulator reads independently
+235936015c457a3b33b47f8ea0d5945e3f368e0e test(hil): compare QDEC observation access and preserve SAMPLE mismatch
+30158c666be04d5c64815d75eb1481f74cfba2fe test(hil): isolate QDEC clear task timing with bounded contrasts
+a7e9b55ba5a8769c34c660d9288392174422b7d6 test(hil): isolate QDEC clear timing and document Nordic findings
+9c587c9463e4a7041acb005418817ff6759d000b test(hil): distinguish QDEC accumulator publication latency
+f42dadfbd9b9c546f00c154b82e3d764530eac5c test(hil): bound preemption during QDEC latency observation
+1e0138a1cdb2e1ea3cfc44a0431251657c6ed4b6 test(hil): measure QDEC sample polling bounds directly
+3a0e976f7567f032cf8e5abded3cf33ee213434c test: compare QDEC sample and report interrupts and preserve latency failures
+ce48471975be66a17368d5d6cb475447ffc9a96e test: isolate QDEC read preemption and preserve IRQ comparisons
+1ad41939398295de9b90f33225b46ebcef8a2a19 test: preserve unresolved QDEC diagnostics and gate T13 read-based runs
+e547fc0863be5b381ecab26835fb5e872b399a9c docs: reconcile v0.4.0 milestones and remaining verification
+6155a85449f439feb9512045ebdb2c63f0e2bca5 docs: close TIMER scope and clarify T13 automation boundaries
+7a33b77f9ed49a671deb2673441c6adc271c6f73 test: prepare T13 S serial preflight and close T12 milestone
+b895f5d81fcee7a50adf5d75a3397c51d4fa5802 test: defer T13 receivers until both peers are prepared
+3f990da9290fb3c515d4c082989ec2b483e55e48 test: add continuous T13 stream measurement and preserve preflight faults
+8966da5571464dcb55503eb3d0129f93311d008d test: pin PWM capture clock and preserve T13 failure traces
+a6367caf42578d8dd825186d229cfa902a82a562 test: hold precision clock across T13 serial measurements
+f5915719188774442f1b93662a769145c5a0778c fix: disconnect unused UART flow pins after serial handover
+cac9c398f1574296ae8841b9b8cd6cb66922473f test: prepare bounded T13 serial cancel and NACK recovery
+efd0b991eb7bfc68b1b21061af49746ed8e98dfb test: verify T13 serial role handover and actual pin routing
+44417aef50a7b80bd6a27d60c09c86b210666900 test: prepare T13 stream starvation recovery and preserve PWM21 failure
+fd8d4ee8cadb0ced1be0182e369ecad867e9d4c6 test: preserve PWM post-failure edges and I2S mismatch buffers
+43bc0320d6681d57d2ec1cd569fef35f7dd8ec0d test: preserve T13 failures and repair PWM diagnostic routing
+29545a33c611219ce1b7ab544b84b3afe561b0ed docs: record T13 S reconnection and I2S stability evidence
+bc2fbac60b25c74000bfa92119dead9a175da7aa docs: record full S GPIO audit and isolate P2.04 to P2.02 failure
+477e15960a9839871edc85d4d556e5b6b67c8297 fix(hil): preserve pair STOP after partial recovery preparation
+03f5ba4dd750032d882cc3f7f3e939be2023e629 fix(hil): trigger RX cancellation from observed receive activity
+678208425f8f83bd3c0a9b045d840a4e1cf8ec08 fix(hil): preserve successful PDM peer stop across repeated cleanup
+4aadf29fb4cca1febc39ef556c1c9c2cce8a9e0d feat(hil): verify PWM active and unstarted stop recovery
+506680f5a1df7d944e547cb573abcd39ffb6dcbf fix(hil): arm PWM capture before clearing stale events

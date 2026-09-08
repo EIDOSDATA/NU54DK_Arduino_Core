@@ -1,0 +1,985 @@
+{
+  "assets": [
+    {
+      "tag": "m10-preview-0.0.90",
+      "asset_id": 532616500,
+      "name": "nucode-nu54dk-zephyr-0.0.90.CHECKSUMS.sha256",
+      "bytes": 552,
+      "sha256": "8f3b8b0acb404d789b02475771811e179aeae733d604324b48d75ed7fd57f35d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.90/nucode-nu54dk-zephyr-0.0.90.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "m10-preview-0.0.90",
+      "asset_id": 532616497,
+      "name": "nucode-nu54dk-zephyr-0.0.90.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.90/nucode-nu54dk-zephyr-0.0.90.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "m10-preview-0.0.90",
+      "asset_id": 532616501,
+      "name": "nucode-nu54dk-zephyr-0.0.90.license-inventory.json",
+      "bytes": 9300,
+      "sha256": "96a33e7c74e704bc6e1940cae1b7cde7610416c796e0a6b2cf064b172db164a2",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.90/nucode-nu54dk-zephyr-0.0.90.license-inventory.json"
+    },
+    {
+      "tag": "m10-preview-0.0.90",
+      "asset_id": 532616502,
+      "name": "nucode-nu54dk-zephyr-0.0.90.release-manifest.json",
+      "bytes": 52142,
+      "sha256": "674f5d455ff94bfc48823925491d1564aa4026cce63b13f4e8db7a9d97c523b9",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.90/nucode-nu54dk-zephyr-0.0.90.release-manifest.json"
+    },
+    {
+      "tag": "m10-preview-0.0.90",
+      "asset_id": 532616498,
+      "name": "nucode-nu54dk-zephyr-0.0.90.spdx.json",
+      "bytes": 100223,
+      "sha256": "d01369342dcc77a4cd16176458aced3523c3ae8764e67c72cfd7c187ad605886",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.90/nucode-nu54dk-zephyr-0.0.90.spdx.json"
+    },
+    {
+      "tag": "m10-preview-0.0.90",
+      "asset_id": 532616507,
+      "name": "nucode-nu54dk-zephyr-0.0.90.zip",
+      "bytes": 757832,
+      "sha256": "b08dee3e742f9e1133aabd2fd0069d02580ec2ca38e379c88d4dddd3cd9e490b",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.90/nucode-nu54dk-zephyr-0.0.90.zip"
+    },
+    {
+      "tag": "m10-preview-0.0.91",
+      "asset_id": 532616627,
+      "name": "nucode-nu54dk-zephyr-0.0.91.CHECKSUMS.sha256",
+      "bytes": 552,
+      "sha256": "d5fefa1fb7a69ea73309b4ead044e71b56e9d0e49e20870c5fdcde23418c2458",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.91/nucode-nu54dk-zephyr-0.0.91.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "m10-preview-0.0.91",
+      "asset_id": 532616595,
+      "name": "nucode-nu54dk-zephyr-0.0.91.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.91/nucode-nu54dk-zephyr-0.0.91.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "m10-preview-0.0.91",
+      "asset_id": 532616597,
+      "name": "nucode-nu54dk-zephyr-0.0.91.license-inventory.json",
+      "bytes": 9300,
+      "sha256": "95e9754c2be64c3e940e3f0f49e44ed79ea23343afd6e89db613d2df579d4b8e",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.91/nucode-nu54dk-zephyr-0.0.91.license-inventory.json"
+    },
+    {
+      "tag": "m10-preview-0.0.91",
+      "asset_id": 532616626,
+      "name": "nucode-nu54dk-zephyr-0.0.91.release-manifest.json",
+      "bytes": 52142,
+      "sha256": "2b56c31c104b3e3638199cee4a8d63eec4431e7ad7cb45d28e80b75a371f2ddb",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.91/nucode-nu54dk-zephyr-0.0.91.release-manifest.json"
+    },
+    {
+      "tag": "m10-preview-0.0.91",
+      "asset_id": 532616599,
+      "name": "nucode-nu54dk-zephyr-0.0.91.spdx.json",
+      "bytes": 100223,
+      "sha256": "44c1e49cffe71bcf55d6ff0011f8daaf42d83548897d5839eb58932a227b2d70",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.91/nucode-nu54dk-zephyr-0.0.91.spdx.json"
+    },
+    {
+      "tag": "m10-preview-0.0.91",
+      "asset_id": 532616634,
+      "name": "nucode-nu54dk-zephyr-0.0.91.zip",
+      "bytes": 757832,
+      "sha256": "fc79cac3c195666d5040425c21f9b559fd6ebc17c4056e1300c82b0bda1c9a40",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.91/nucode-nu54dk-zephyr-0.0.91.zip"
+    },
+    {
+      "tag": "m10-preview-0.0.92",
+      "asset_id": 532636953,
+      "name": "nucode-nu54dk-zephyr-0.0.92.CHECKSUMS.sha256",
+      "bytes": 552,
+      "sha256": "2aa0fd9df278505ec1061135de5fcd4f2febde0eaca799fff5a0f4d26bf82af6",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.92/nucode-nu54dk-zephyr-0.0.92.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "m10-preview-0.0.92",
+      "asset_id": 532636954,
+      "name": "nucode-nu54dk-zephyr-0.0.92.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.92/nucode-nu54dk-zephyr-0.0.92.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "m10-preview-0.0.92",
+      "asset_id": 532636952,
+      "name": "nucode-nu54dk-zephyr-0.0.92.license-inventory.json",
+      "bytes": 9300,
+      "sha256": "97f2bab16a3b8413c757e5f3c840fb8495379c30b8937139dc6907ca70aaf263",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.92/nucode-nu54dk-zephyr-0.0.92.license-inventory.json"
+    },
+    {
+      "tag": "m10-preview-0.0.92",
+      "asset_id": 532636955,
+      "name": "nucode-nu54dk-zephyr-0.0.92.release-manifest.json",
+      "bytes": 52142,
+      "sha256": "4c61a5339de49089ff4664e002fe603fc77809a64793b5133bc03ab52696bf85",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.92/nucode-nu54dk-zephyr-0.0.92.release-manifest.json"
+    },
+    {
+      "tag": "m10-preview-0.0.92",
+      "asset_id": 532636956,
+      "name": "nucode-nu54dk-zephyr-0.0.92.spdx.json",
+      "bytes": 100223,
+      "sha256": "56f8174e3bac7025b302a074a323b9d6c0b7a0aab47c4fdc79270788fa8e305f",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.92/nucode-nu54dk-zephyr-0.0.92.spdx.json"
+    },
+    {
+      "tag": "m10-preview-0.0.92",
+      "asset_id": 532636961,
+      "name": "nucode-nu54dk-zephyr-0.0.92.zip",
+      "bytes": 757927,
+      "sha256": "60d0d6528c1f786c2cb0df47f2622c8824311cc107f65ff4320c41d4cc0c9cbf",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.92/nucode-nu54dk-zephyr-0.0.92.zip"
+    },
+    {
+      "tag": "m10-preview-0.0.93",
+      "asset_id": 532637029,
+      "name": "nucode-nu54dk-zephyr-0.0.93.CHECKSUMS.sha256",
+      "bytes": 552,
+      "sha256": "1f83667fed0a23798075b44c52e5ad6152b29db6f839da54aba759f9fc18efcd",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.93/nucode-nu54dk-zephyr-0.0.93.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "m10-preview-0.0.93",
+      "asset_id": 532637032,
+      "name": "nucode-nu54dk-zephyr-0.0.93.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.93/nucode-nu54dk-zephyr-0.0.93.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "m10-preview-0.0.93",
+      "asset_id": 532637027,
+      "name": "nucode-nu54dk-zephyr-0.0.93.license-inventory.json",
+      "bytes": 9300,
+      "sha256": "5f15aea7a043249c71239aab1824fc237c991915574e287d8f1940c99f3ff6da",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.93/nucode-nu54dk-zephyr-0.0.93.license-inventory.json"
+    },
+    {
+      "tag": "m10-preview-0.0.93",
+      "asset_id": 532637031,
+      "name": "nucode-nu54dk-zephyr-0.0.93.release-manifest.json",
+      "bytes": 52142,
+      "sha256": "ef0da29ba7bf831c4c570b84219698b5d0e60ee235c2bdd4daf33bd025ba5598",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.93/nucode-nu54dk-zephyr-0.0.93.release-manifest.json"
+    },
+    {
+      "tag": "m10-preview-0.0.93",
+      "asset_id": 532637028,
+      "name": "nucode-nu54dk-zephyr-0.0.93.spdx.json",
+      "bytes": 100223,
+      "sha256": "d9fc4478bf3f08b9b0fb815def9b5dc78cebee1b7be9e2932e30957537e8f648",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.93/nucode-nu54dk-zephyr-0.0.93.spdx.json"
+    },
+    {
+      "tag": "m10-preview-0.0.93",
+      "asset_id": 532637040,
+      "name": "nucode-nu54dk-zephyr-0.0.93.zip",
+      "bytes": 757927,
+      "sha256": "59bfedf906cfdc61ca3e07a4dd0b034cc2f6a3212d121f1b22a15f7fc7fb69e2",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.93/nucode-nu54dk-zephyr-0.0.93.zip"
+    },
+    {
+      "tag": "m10-preview-0.0.94",
+      "asset_id": 532772666,
+      "name": "nucode-nu54dk-zephyr-0.0.94.CHECKSUMS.sha256",
+      "bytes": 552,
+      "sha256": "df3685a6ca6f1dd02832cc113a1b99fa9fd698648beb8fc86c179ee588322379",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.94/nucode-nu54dk-zephyr-0.0.94.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "m10-preview-0.0.94",
+      "asset_id": 532772684,
+      "name": "nucode-nu54dk-zephyr-0.0.94.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.94/nucode-nu54dk-zephyr-0.0.94.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "m10-preview-0.0.94",
+      "asset_id": 532772668,
+      "name": "nucode-nu54dk-zephyr-0.0.94.license-inventory.json",
+      "bytes": 9300,
+      "sha256": "57fb5353a6e8db0c3c3f4afccd0be60e55d74597b51329bc374ef562d29e8201",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.94/nucode-nu54dk-zephyr-0.0.94.license-inventory.json"
+    },
+    {
+      "tag": "m10-preview-0.0.94",
+      "asset_id": 532772665,
+      "name": "nucode-nu54dk-zephyr-0.0.94.release-manifest.json",
+      "bytes": 52336,
+      "sha256": "920090ea49298d00ddc6468caacf57f89a2677f5920a8f79412f9f46c6f01d69",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.94/nucode-nu54dk-zephyr-0.0.94.release-manifest.json"
+    },
+    {
+      "tag": "m10-preview-0.0.94",
+      "asset_id": 532772667,
+      "name": "nucode-nu54dk-zephyr-0.0.94.spdx.json",
+      "bytes": 100223,
+      "sha256": "a52fb7a2fc9f324316ad7896996da7b73aa2e1bf13bd07faf30593e70ed738e7",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.94/nucode-nu54dk-zephyr-0.0.94.spdx.json"
+    },
+    {
+      "tag": "m10-preview-0.0.94",
+      "asset_id": 532772670,
+      "name": "nucode-nu54dk-zephyr-0.0.94.zip",
+      "bytes": 759743,
+      "sha256": "78dfdb0e26267a9f98a7e8821b29027d25eeb0a5cbbd71901e39bb52354eb05b",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.94/nucode-nu54dk-zephyr-0.0.94.zip"
+    },
+    {
+      "tag": "m10-preview-0.0.95",
+      "asset_id": 532772742,
+      "name": "nucode-nu54dk-zephyr-0.0.95.CHECKSUMS.sha256",
+      "bytes": 552,
+      "sha256": "4f498a0c3421c28afa8d7c2135015085206c88a03578623e07cadf523824d097",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.95/nucode-nu54dk-zephyr-0.0.95.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "m10-preview-0.0.95",
+      "asset_id": 532772765,
+      "name": "nucode-nu54dk-zephyr-0.0.95.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.95/nucode-nu54dk-zephyr-0.0.95.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "m10-preview-0.0.95",
+      "asset_id": 532772749,
+      "name": "nucode-nu54dk-zephyr-0.0.95.license-inventory.json",
+      "bytes": 9300,
+      "sha256": "323c504e75282cbd2827e87426a0ab8b0e5d0a5816ead3a8f39a422e42468a4b",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.95/nucode-nu54dk-zephyr-0.0.95.license-inventory.json"
+    },
+    {
+      "tag": "m10-preview-0.0.95",
+      "asset_id": 532772750,
+      "name": "nucode-nu54dk-zephyr-0.0.95.release-manifest.json",
+      "bytes": 52336,
+      "sha256": "51b1a10a6de867aa1b7a3945910ff7d6063ef1ba40f9d0cd7402c0bdbb0effce",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.95/nucode-nu54dk-zephyr-0.0.95.release-manifest.json"
+    },
+    {
+      "tag": "m10-preview-0.0.95",
+      "asset_id": 532772747,
+      "name": "nucode-nu54dk-zephyr-0.0.95.spdx.json",
+      "bytes": 100223,
+      "sha256": "7d925c09e77c272b9824b9121a6f8b92fb4fcaa30ed7932b169ee236b3ea561c",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.95/nucode-nu54dk-zephyr-0.0.95.spdx.json"
+    },
+    {
+      "tag": "m10-preview-0.0.95",
+      "asset_id": 532772743,
+      "name": "nucode-nu54dk-zephyr-0.0.95.zip",
+      "bytes": 759743,
+      "sha256": "dc6bb668e94c0231981195349c7666077a08fd64ae9a39568531f1b2629fd9a5",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.95/nucode-nu54dk-zephyr-0.0.95.zip"
+    },
+    {
+      "tag": "m10-preview-0.0.96",
+      "asset_id": 532798639,
+      "name": "nucode-nu54dk-zephyr-0.0.96.CHECKSUMS.sha256",
+      "bytes": 552,
+      "sha256": "9f6f1dad7178ae42067a94a08bcdc934e39d335168b41c91a3c52dc262a71f7a",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.96/nucode-nu54dk-zephyr-0.0.96.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "m10-preview-0.0.96",
+      "asset_id": 532798645,
+      "name": "nucode-nu54dk-zephyr-0.0.96.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.96/nucode-nu54dk-zephyr-0.0.96.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "m10-preview-0.0.96",
+      "asset_id": 532798635,
+      "name": "nucode-nu54dk-zephyr-0.0.96.license-inventory.json",
+      "bytes": 9300,
+      "sha256": "2d437279159344473458aaa27bff931061d999ab21f4a61122a6ffbef7db5e45",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.96/nucode-nu54dk-zephyr-0.0.96.license-inventory.json"
+    },
+    {
+      "tag": "m10-preview-0.0.96",
+      "asset_id": 532798623,
+      "name": "nucode-nu54dk-zephyr-0.0.96.release-manifest.json",
+      "bytes": 52336,
+      "sha256": "cad138a01cac231be189b664151ddd450c70c7caf19ede4b47c6a76d165e2e10",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.96/nucode-nu54dk-zephyr-0.0.96.release-manifest.json"
+    },
+    {
+      "tag": "m10-preview-0.0.96",
+      "asset_id": 532798627,
+      "name": "nucode-nu54dk-zephyr-0.0.96.spdx.json",
+      "bytes": 100223,
+      "sha256": "f0afbd24df39b15c9ad544a81598d496268680e545cf78487fccd22a5aebad83",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.96/nucode-nu54dk-zephyr-0.0.96.spdx.json"
+    },
+    {
+      "tag": "m10-preview-0.0.96",
+      "asset_id": 532798626,
+      "name": "nucode-nu54dk-zephyr-0.0.96.zip",
+      "bytes": 759743,
+      "sha256": "5b595a142834fee87272b6a48017e6a6c6767dcef38b932000c4effaf1eed296",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.96/nucode-nu54dk-zephyr-0.0.96.zip"
+    },
+    {
+      "tag": "m10-preview-0.0.97",
+      "asset_id": 532798850,
+      "name": "nucode-nu54dk-zephyr-0.0.97.CHECKSUMS.sha256",
+      "bytes": 552,
+      "sha256": "0f6501404f2da8a43692fe51a71bf13a77749710a22bb6f14db5631237c7068d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.97/nucode-nu54dk-zephyr-0.0.97.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "m10-preview-0.0.97",
+      "asset_id": 532798867,
+      "name": "nucode-nu54dk-zephyr-0.0.97.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.97/nucode-nu54dk-zephyr-0.0.97.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "m10-preview-0.0.97",
+      "asset_id": 532798860,
+      "name": "nucode-nu54dk-zephyr-0.0.97.license-inventory.json",
+      "bytes": 9300,
+      "sha256": "92967abff31cb7bac5e19433872fee0a71ad5f7f88361b299382a422af226c89",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.97/nucode-nu54dk-zephyr-0.0.97.license-inventory.json"
+    },
+    {
+      "tag": "m10-preview-0.0.97",
+      "asset_id": 532798852,
+      "name": "nucode-nu54dk-zephyr-0.0.97.release-manifest.json",
+      "bytes": 52336,
+      "sha256": "f0e2a52c231a34fa7583caa24832cea41596c856bc679fbfd71bdc912837b432",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.97/nucode-nu54dk-zephyr-0.0.97.release-manifest.json"
+    },
+    {
+      "tag": "m10-preview-0.0.97",
+      "asset_id": 532798849,
+      "name": "nucode-nu54dk-zephyr-0.0.97.spdx.json",
+      "bytes": 100223,
+      "sha256": "dd5173d9612f7e1728891b9bec7eebb335ec69dc2079d7f9c45cd081bd2dd00a",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.97/nucode-nu54dk-zephyr-0.0.97.spdx.json"
+    },
+    {
+      "tag": "m10-preview-0.0.97",
+      "asset_id": 532798854,
+      "name": "nucode-nu54dk-zephyr-0.0.97.zip",
+      "bytes": 759743,
+      "sha256": "699e9f05e818fee87a0c0ca390eb32cc3c6e3e19a1a8cdba0dccfb02cb49890f",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/m10-preview-0.0.97/nucode-nu54dk-zephyr-0.0.97.zip"
+    },
+    {
+      "tag": "v0.1.0",
+      "asset_id": 533818912,
+      "name": "nucode-nu54dk-zephyr-0.1.0.CHECKSUMS.sha256",
+      "bytes": 547,
+      "sha256": "4d165b7fe3cedcf40181e21589f641cb716052968be4e78beb25a005be79fa09",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0/nucode-nu54dk-zephyr-0.1.0.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "v0.1.0",
+      "asset_id": 533818920,
+      "name": "nucode-nu54dk-zephyr-0.1.0.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0/nucode-nu54dk-zephyr-0.1.0.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "v0.1.0",
+      "asset_id": 533818911,
+      "name": "nucode-nu54dk-zephyr-0.1.0.license-inventory.json",
+      "bytes": 9387,
+      "sha256": "2b58552fc332f1b63fcdcb1d41b0f2f4dbea41fb0da20ecf6a0b3f68be55698c",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0/nucode-nu54dk-zephyr-0.1.0.license-inventory.json"
+    },
+    {
+      "tag": "v0.1.0",
+      "asset_id": 533818913,
+      "name": "nucode-nu54dk-zephyr-0.1.0.release-manifest.json",
+      "bytes": 52308,
+      "sha256": "c2171df48c9a6bb14f4ec7454a3d8bd976c18490280ca6925b46ad6742f96b04",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0/nucode-nu54dk-zephyr-0.1.0.release-manifest.json"
+    },
+    {
+      "tag": "v0.1.0",
+      "asset_id": 533818914,
+      "name": "nucode-nu54dk-zephyr-0.1.0.spdx.json",
+      "bytes": 100207,
+      "sha256": "7cf6beffed246f50405455da6d4d8905c6b437596503ee44ea952d069f18fcef",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0/nucode-nu54dk-zephyr-0.1.0.spdx.json"
+    },
+    {
+      "tag": "v0.1.0",
+      "asset_id": 533818915,
+      "name": "nucode-nu54dk-zephyr-0.1.0.zip",
+      "bytes": 760412,
+      "sha256": "722a46685b97aff42a75fb84db8ea74de75f3c32f59ea58225cd86d5acd141a6",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0/nucode-nu54dk-zephyr-0.1.0.zip"
+    },
+    {
+      "tag": "v0.1.0",
+      "asset_id": 533818921,
+      "name": "package_nucode_nu54dk_index.json",
+      "bytes": 1125,
+      "sha256": "385445512ba6bb842024979e8314f2f953eb15a14e3ce72076b6d475e2e7583d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0/package_nucode_nu54dk_index.json"
+    },
+    {
+      "tag": "v0.1.0-rc.2",
+      "asset_id": 533759021,
+      "name": "m11-rc-plan.json",
+      "bytes": 3412,
+      "sha256": "123c71044cc7ef40306d60e1c5d52d493e2c00e3ffddd14f868aa63a1a028b51",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0-rc.2/m11-rc-plan.json"
+    },
+    {
+      "tag": "v0.1.0-rc.2",
+      "asset_id": 533759009,
+      "name": "nucode-nu54dk-zephyr-0.1.0-rc.2.CHECKSUMS.sha256",
+      "bytes": 572,
+      "sha256": "e54eaf4b5453efc7cfc6cd2b1b12300dd8b3db1353697cb95971697db31609a0",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0-rc.2/nucode-nu54dk-zephyr-0.1.0-rc.2.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "v0.1.0-rc.2",
+      "asset_id": 533759018,
+      "name": "nucode-nu54dk-zephyr-0.1.0-rc.2.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0-rc.2/nucode-nu54dk-zephyr-0.1.0-rc.2.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "v0.1.0-rc.2",
+      "asset_id": 533759012,
+      "name": "nucode-nu54dk-zephyr-0.1.0-rc.2.license-inventory.json",
+      "bytes": 9304,
+      "sha256": "7e977e441b67df531085bd13525f7979eeeade258748efa81a5caede9e45db3a",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0-rc.2/nucode-nu54dk-zephyr-0.1.0-rc.2.license-inventory.json"
+    },
+    {
+      "tag": "v0.1.0-rc.2",
+      "asset_id": 533759007,
+      "name": "nucode-nu54dk-zephyr-0.1.0-rc.2.release-manifest.json",
+      "bytes": 52338,
+      "sha256": "f62d523f0fb3e63e15047653f905229ff85bdd42069755f80bf17e510ca10e20",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0-rc.2/nucode-nu54dk-zephyr-0.1.0-rc.2.release-manifest.json"
+    },
+    {
+      "tag": "v0.1.0-rc.2",
+      "asset_id": 533759008,
+      "name": "nucode-nu54dk-zephyr-0.1.0-rc.2.spdx.json",
+      "bytes": 100232,
+      "sha256": "2796695b60b75644d215fd237519e2a457b01109f19f01d7f31e93de0880d552",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0-rc.2/nucode-nu54dk-zephyr-0.1.0-rc.2.spdx.json"
+    },
+    {
+      "tag": "v0.1.0-rc.2",
+      "asset_id": 533759010,
+      "name": "nucode-nu54dk-zephyr-0.1.0-rc.2.zip",
+      "bytes": 761689,
+      "sha256": "40885577f1e27db216e792bcd61a78fdbed6b42706336d8eedc79c8dd23fd9ff",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0-rc.2/nucode-nu54dk-zephyr-0.1.0-rc.2.zip"
+    },
+    {
+      "tag": "v0.1.0-rc.2",
+      "asset_id": 533759020,
+      "name": "package_nucode_nu54dk_rc_index.json",
+      "bytes": 1150,
+      "sha256": "5db331457ad49ab66a816c242d1fd0b2e39ba085b4f5bc2438c41907c8868cdd",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.1.0-rc.2/package_nucode_nu54dk_rc_index.json"
+    },
+    {
+      "tag": "v0.2.0",
+      "asset_id": 536936501,
+      "name": "nucode-nu54dk-zephyr-0.2.0.CHECKSUMS.sha256",
+      "bytes": 547,
+      "sha256": "a032a45c0c832f12429f93317b5c852437c507369a046d31e9469419485e2b80",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0/nucode-nu54dk-zephyr-0.2.0.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "v0.2.0",
+      "asset_id": 536936510,
+      "name": "nucode-nu54dk-zephyr-0.2.0.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0/nucode-nu54dk-zephyr-0.2.0.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "v0.2.0",
+      "asset_id": 536936499,
+      "name": "nucode-nu54dk-zephyr-0.2.0.license-inventory.json",
+      "bytes": 11246,
+      "sha256": "485ad42b698bd325f3d94759cc90b7df553e9ec35333f6e3e252dbe7d8e5b0fb",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0/nucode-nu54dk-zephyr-0.2.0.license-inventory.json"
+    },
+    {
+      "tag": "v0.2.0",
+      "asset_id": 536936503,
+      "name": "nucode-nu54dk-zephyr-0.2.0.release-manifest.json",
+      "bytes": 62983,
+      "sha256": "f5a8de8a04d460c58b43a88bcfa0ac7e4d51dd8a67fe0279e28e249eedcc0f3d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0/nucode-nu54dk-zephyr-0.2.0.release-manifest.json"
+    },
+    {
+      "tag": "v0.2.0",
+      "asset_id": 536936502,
+      "name": "nucode-nu54dk-zephyr-0.2.0.spdx.json",
+      "bytes": 119509,
+      "sha256": "65babe79f6332c7aff465c4c246b76817a5a867cd87c5547be1f12abd2f5909e",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0/nucode-nu54dk-zephyr-0.2.0.spdx.json"
+    },
+    {
+      "tag": "v0.2.0",
+      "asset_id": 536936500,
+      "name": "nucode-nu54dk-zephyr-0.2.0.zip",
+      "bytes": 932376,
+      "sha256": "1c2b4dddd6da0c1530f9d32630ec7d5b5285cff28c826a9a95c864226aeaea6e",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0/nucode-nu54dk-zephyr-0.2.0.zip"
+    },
+    {
+      "tag": "v0.2.0",
+      "asset_id": 536936515,
+      "name": "package_nucode_nu54dk_index.json",
+      "bytes": 1877,
+      "sha256": "5ae7fbe13f71c52950879064685694cf4b062557572f187e81476639724e5344",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0/package_nucode_nu54dk_index.json"
+    },
+    {
+      "tag": "v0.2.0-rc.1",
+      "asset_id": 536577852,
+      "name": "NU54DK_0.2.0-rc.1_EVIDENCE.json",
+      "bytes": 4841,
+      "sha256": "20c07ef064691721c70b706df0af9f62fd6f665466eefcf7b2713b6ec6d59755",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.1/NU54DK_0.2.0-rc.1_EVIDENCE.json"
+    },
+    {
+      "tag": "v0.2.0-rc.1",
+      "asset_id": 536577855,
+      "name": "NU54DK_0.2.0-rc.1_KNOWN_ISSUES.md",
+      "bytes": 8577,
+      "sha256": "0fc96df2f2bde0951644252903eab2ca173148e83233e02a846e886c04c41c61",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.1/NU54DK_0.2.0-rc.1_KNOWN_ISSUES.md"
+    },
+    {
+      "tag": "v0.2.0-rc.1",
+      "asset_id": 536577853,
+      "name": "NU54DK_0.2.0-rc.1_MIGRATION.md",
+      "bytes": 8713,
+      "sha256": "c3e8e227b181b868a43169e52b8eb868282d5991ffcf078e31e2820eacb64a91",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.1/NU54DK_0.2.0-rc.1_MIGRATION.md"
+    },
+    {
+      "tag": "v0.2.0-rc.1",
+      "asset_id": 536577857,
+      "name": "NU54DK_0.2.0-rc.1_RELEASE_NOTES.md",
+      "bytes": 8662,
+      "sha256": "2d8f434ab4ce27c4d2b7318ccac2fa698577a4a695603cadd91d2a62c0abae82",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.1/NU54DK_0.2.0-rc.1_RELEASE_NOTES.md"
+    },
+    {
+      "tag": "v0.2.0-rc.1",
+      "asset_id": 536577858,
+      "name": "NU54DK_0.2.0-rc.1_TROUBLESHOOTING.md",
+      "bytes": 10267,
+      "sha256": "d6aab7e428713cb72848f5e29130305d4e3c7b1b63084801fa24c1be596d473e",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.1/NU54DK_0.2.0-rc.1_TROUBLESHOOTING.md"
+    },
+    {
+      "tag": "v0.2.0-rc.1",
+      "asset_id": 536577882,
+      "name": "nucode-nu54dk-zephyr-0.2.0-rc.1.CHECKSUMS.sha256",
+      "bytes": 572,
+      "sha256": "4298eaefc1d979ccfaf40cf9cb76ab33d00360352cabf552c18df1341bdaaa3c",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.1/nucode-nu54dk-zephyr-0.2.0-rc.1.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "v0.2.0-rc.1",
+      "asset_id": 536577885,
+      "name": "nucode-nu54dk-zephyr-0.2.0-rc.1.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.1/nucode-nu54dk-zephyr-0.2.0-rc.1.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "v0.2.0-rc.1",
+      "asset_id": 536577884,
+      "name": "nucode-nu54dk-zephyr-0.2.0-rc.1.license-inventory.json",
+      "bytes": 11163,
+      "sha256": "d9e70ff97517c78672bb5ab4302f31bb0433a6e25050f4a8afa6a3c88687bab1",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.1/nucode-nu54dk-zephyr-0.2.0-rc.1.license-inventory.json"
+    },
+    {
+      "tag": "v0.2.0-rc.1",
+      "asset_id": 536577886,
+      "name": "nucode-nu54dk-zephyr-0.2.0-rc.1.release-manifest.json",
+      "bytes": 63011,
+      "sha256": "ffdaf856721a8f98ec7f5961045fbd95ea91a239966a674233cbfc37b477eb31",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.1/nucode-nu54dk-zephyr-0.2.0-rc.1.release-manifest.json"
+    },
+    {
+      "tag": "v0.2.0-rc.1",
+      "asset_id": 536577890,
+      "name": "nucode-nu54dk-zephyr-0.2.0-rc.1.spdx.json",
+      "bytes": 119534,
+      "sha256": "942acfaf4192ead47b59f443b85bd65dbc885925643824d39640051f99033dce",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.1/nucode-nu54dk-zephyr-0.2.0-rc.1.spdx.json"
+    },
+    {
+      "tag": "v0.2.0-rc.1",
+      "asset_id": 536577894,
+      "name": "nucode-nu54dk-zephyr-0.2.0-rc.1.zip",
+      "bytes": 932591,
+      "sha256": "1816b4cad454c5df4b6e0a4d7eebe6aea51eb2cde2c22b6d6efb0c089535a9c8",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.1/nucode-nu54dk-zephyr-0.2.0-rc.1.zip"
+    },
+    {
+      "tag": "v0.2.0-rc.1",
+      "asset_id": 536577896,
+      "name": "package_nucode_nu54dk_rc_index.json",
+      "bytes": 1150,
+      "sha256": "6dcf24a5e95b66565a21535ad5b6e60d823504dde03f213e80a458df881568fb",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.1/package_nucode_nu54dk_rc_index.json"
+    },
+    {
+      "tag": "v0.2.0-rc.2",
+      "asset_id": 536733648,
+      "name": "NU54DK_0.2.0-rc.2_EVIDENCE.json",
+      "bytes": 4841,
+      "sha256": "74e425220f3534d31328a228ef99e0058740c8d3c4cc3974cd69f8910fbb9750",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/NU54DK_0.2.0-rc.2_EVIDENCE.json"
+    },
+    {
+      "tag": "v0.2.0-rc.2",
+      "asset_id": 536733646,
+      "name": "NU54DK_0.2.0-rc.2_KNOWN_ISSUES.md",
+      "bytes": 8341,
+      "sha256": "fc13fb33c65c9efdeb2df91bfda95c63801b9dd9c68ae40c280ad77e1f8d638e",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/NU54DK_0.2.0-rc.2_KNOWN_ISSUES.md"
+    },
+    {
+      "tag": "v0.2.0-rc.2",
+      "asset_id": 536733650,
+      "name": "NU54DK_0.2.0-rc.2_MIGRATION.md",
+      "bytes": 9227,
+      "sha256": "8107773785f0afd0231433aa767db20d0e9038b4faac3d19efc8ade4536a088b",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/NU54DK_0.2.0-rc.2_MIGRATION.md"
+    },
+    {
+      "tag": "v0.2.0-rc.2",
+      "asset_id": 536733647,
+      "name": "NU54DK_0.2.0-rc.2_RELEASE_NOTES.md",
+      "bytes": 9458,
+      "sha256": "faa50f532c0bc3d482e52bd09f9a716feba4486d982c4d5b3c878076b8455698",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/NU54DK_0.2.0-rc.2_RELEASE_NOTES.md"
+    },
+    {
+      "tag": "v0.2.0-rc.2",
+      "asset_id": 536733649,
+      "name": "NU54DK_0.2.0-rc.2_TROUBLESHOOTING.md",
+      "bytes": 10442,
+      "sha256": "6ebf1d6ea02ccc227c015ba9f4e09e1f4693201524408d3f8985a81d62c0875a",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/NU54DK_0.2.0-rc.2_TROUBLESHOOTING.md"
+    },
+    {
+      "tag": "v0.2.0-rc.2",
+      "asset_id": 536733665,
+      "name": "nucode-nu54dk-zephyr-0.2.0-rc.2.CHECKSUMS.sha256",
+      "bytes": 572,
+      "sha256": "0458443fbe70a30d9eec0eae7baf579d40082754cdad51d6523db2fdf3a002ea",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/nucode-nu54dk-zephyr-0.2.0-rc.2.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "v0.2.0-rc.2",
+      "asset_id": 536733666,
+      "name": "nucode-nu54dk-zephyr-0.2.0-rc.2.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/nucode-nu54dk-zephyr-0.2.0-rc.2.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "v0.2.0-rc.2",
+      "asset_id": 536733667,
+      "name": "nucode-nu54dk-zephyr-0.2.0-rc.2.license-inventory.json",
+      "bytes": 11163,
+      "sha256": "e1805e5e6f7ccef9d3736ef9492a85b9c0ba8d5cc1473dbda5a61deece2bd47f",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/nucode-nu54dk-zephyr-0.2.0-rc.2.license-inventory.json"
+    },
+    {
+      "tag": "v0.2.0-rc.2",
+      "asset_id": 536733671,
+      "name": "nucode-nu54dk-zephyr-0.2.0-rc.2.release-manifest.json",
+      "bytes": 63013,
+      "sha256": "80ff7eaf07bbd0011145df549136a3be9a50547078386f369446a7e2bc82f715",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/nucode-nu54dk-zephyr-0.2.0-rc.2.release-manifest.json"
+    },
+    {
+      "tag": "v0.2.0-rc.2",
+      "asset_id": 536733672,
+      "name": "nucode-nu54dk-zephyr-0.2.0-rc.2.spdx.json",
+      "bytes": 119534,
+      "sha256": "a13aaf47b9fd472378ae46c2529fa627340e3476bf58230b6d66ce42062b9d6a",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/nucode-nu54dk-zephyr-0.2.0-rc.2.spdx.json"
+    },
+    {
+      "tag": "v0.2.0-rc.2",
+      "asset_id": 536733682,
+      "name": "nucode-nu54dk-zephyr-0.2.0-rc.2.zip",
+      "bytes": 933913,
+      "sha256": "753712094ff2500d8ab4b6184a27b2a0ad44bfece0236bd3788d01cd9c1ad7af",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/nucode-nu54dk-zephyr-0.2.0-rc.2.zip"
+    },
+    {
+      "tag": "v0.2.0-rc.2",
+      "asset_id": 536733683,
+      "name": "package_nucode_nu54dk_rc_index.json",
+      "bytes": 1150,
+      "sha256": "fa73f3ba34ecfc84984aa836f423cb0d31a2ce56518fac6c56b99ec8dd70f89b",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.2.0-rc.2/package_nucode_nu54dk_rc_index.json"
+    },
+    {
+      "tag": "v0.3.0",
+      "asset_id": 542008039,
+      "name": "nucode-nu54dk-zephyr-0.3.0.CHECKSUMS.sha256",
+      "bytes": 547,
+      "sha256": "96f14d3a4b8ac347a172a70cf10150aaf78b1102241ae1e1db29271cbd6550d0",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0/nucode-nu54dk-zephyr-0.3.0.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "v0.3.0",
+      "asset_id": 542008047,
+      "name": "nucode-nu54dk-zephyr-0.3.0.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0/nucode-nu54dk-zephyr-0.3.0.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "v0.3.0",
+      "asset_id": 542008036,
+      "name": "nucode-nu54dk-zephyr-0.3.0.license-inventory.json",
+      "bytes": 15715,
+      "sha256": "30780f4f2dcd4ff4a7364c63256835f62786a96ded14d3033ef96df2ea1fcff7",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0/nucode-nu54dk-zephyr-0.3.0.license-inventory.json"
+    },
+    {
+      "tag": "v0.3.0",
+      "asset_id": 542008038,
+      "name": "nucode-nu54dk-zephyr-0.3.0.release-manifest.json",
+      "bytes": 93251,
+      "sha256": "88570fc50bc9a5a76edf6ba5faf905adf1a36bc979da960d891aa23160451a71",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0/nucode-nu54dk-zephyr-0.3.0.release-manifest.json"
+    },
+    {
+      "tag": "v0.3.0",
+      "asset_id": 542008037,
+      "name": "nucode-nu54dk-zephyr-0.3.0.spdx.json",
+      "bytes": 174388,
+      "sha256": "8b8fe2c938403aadf2b03c60a0c2f44c8197fefec2f0d44f6e47f1b1e4187411",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0/nucode-nu54dk-zephyr-0.3.0.spdx.json"
+    },
+    {
+      "tag": "v0.3.0",
+      "asset_id": 542008035,
+      "name": "nucode-nu54dk-zephyr-0.3.0.zip",
+      "bytes": 1660169,
+      "sha256": "138740bcf6c458992fdb5c8eb81d6110d28b0baee18c68f5d8cb050e2e0e1ecc",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0/nucode-nu54dk-zephyr-0.3.0.zip"
+    },
+    {
+      "tag": "v0.3.0",
+      "asset_id": 542008046,
+      "name": "package_nucode_nu54dk_index.json",
+      "bytes": 2630,
+      "sha256": "14fe2eb10b4dd77a219d48060c32c21bdd97370f6d6f8be699d9118f8973e007",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0/package_nucode_nu54dk_index.json"
+    },
+    {
+      "tag": "v0.3.0-rc.1",
+      "asset_id": 539688531,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.1.CHECKSUMS.sha256",
+      "bytes": 572,
+      "sha256": "a34ed1f67910bebb1dd9473dd3c3d34d23380d1ff98b48dd720036e1d46b1189",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.1/nucode-nu54dk-zephyr-0.3.0-rc.1.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "v0.3.0-rc.1",
+      "asset_id": 539688528,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.1.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.1/nucode-nu54dk-zephyr-0.3.0-rc.1.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "v0.3.0-rc.1",
+      "asset_id": 539688532,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.1.license-inventory.json",
+      "bytes": 15632,
+      "sha256": "77477fb846fad60a67bd013b28b72ba114761a09e0534366fd3171e7e36faa09",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.1/nucode-nu54dk-zephyr-0.3.0-rc.1.license-inventory.json"
+    },
+    {
+      "tag": "v0.3.0-rc.1",
+      "asset_id": 539688524,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.1.release-manifest.json",
+      "bytes": 93281,
+      "sha256": "c8e1eb6ec83d034956eb742bbc84d98704dce29ba56abb1caf56cbb54143ff0c",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.1/nucode-nu54dk-zephyr-0.3.0-rc.1.release-manifest.json"
+    },
+    {
+      "tag": "v0.3.0-rc.1",
+      "asset_id": 539688540,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.1.spdx.json",
+      "bytes": 174413,
+      "sha256": "62c0d3c2b2fa87a83f993675c9963d7237f4f5d7a63569245e87b2c3b217e08b",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.1/nucode-nu54dk-zephyr-0.3.0-rc.1.spdx.json"
+    },
+    {
+      "tag": "v0.3.0-rc.1",
+      "asset_id": 539688525,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.1.zip",
+      "bytes": 1657530,
+      "sha256": "e40245fd7236dadd5cb79fc394d1fa92944f53b207ad9314274d8257e538afd8",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.1/nucode-nu54dk-zephyr-0.3.0-rc.1.zip"
+    },
+    {
+      "tag": "v0.3.0-rc.1",
+      "asset_id": 539688543,
+      "name": "package_nucode_nu54dk_rc_index.json",
+      "bytes": 1151,
+      "sha256": "124d00ebd440dd893ba4b476650fb5938e61693b17bfd6aa8f7df77675815cfd",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.1/package_nucode_nu54dk_rc_index.json"
+    },
+    {
+      "tag": "v0.3.0-rc.2",
+      "asset_id": 539853632,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.2.CHECKSUMS.sha256",
+      "bytes": 572,
+      "sha256": "30a69b6adc34f84f7cbb7f2f0d2bd4e6137bf539b1d154de7c9f14435d019d2e",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.2/nucode-nu54dk-zephyr-0.3.0-rc.2.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "v0.3.0-rc.2",
+      "asset_id": 539853636,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.2.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.2/nucode-nu54dk-zephyr-0.3.0-rc.2.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "v0.3.0-rc.2",
+      "asset_id": 539853634,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.2.license-inventory.json",
+      "bytes": 15632,
+      "sha256": "1c97a1d6731a587b39fb1a2f61eaf392cdefe230357e87cf584046ba857a6c10",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.2/nucode-nu54dk-zephyr-0.3.0-rc.2.license-inventory.json"
+    },
+    {
+      "tag": "v0.3.0-rc.2",
+      "asset_id": 539853637,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.2.release-manifest.json",
+      "bytes": 93281,
+      "sha256": "14cd2157c5784009739d9bb3e7377aacdfbf46a76cb89d9cb5ec29381cfffe93",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.2/nucode-nu54dk-zephyr-0.3.0-rc.2.release-manifest.json"
+    },
+    {
+      "tag": "v0.3.0-rc.2",
+      "asset_id": 539853647,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.2.spdx.json",
+      "bytes": 174413,
+      "sha256": "d1a0f6d5c93aa14d6e242359178dbb60d19b5e8ddab8b6dad791ca5ddbc489e3",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.2/nucode-nu54dk-zephyr-0.3.0-rc.2.spdx.json"
+    },
+    {
+      "tag": "v0.3.0-rc.2",
+      "asset_id": 539853635,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.2.zip",
+      "bytes": 1657530,
+      "sha256": "b52e39c7aa9e550624a556487cb7b6e537f551c4fbd833e7a61cf28aa91e15f6",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.2/nucode-nu54dk-zephyr-0.3.0-rc.2.zip"
+    },
+    {
+      "tag": "v0.3.0-rc.2",
+      "asset_id": 539853648,
+      "name": "package_nucode_nu54dk_rc_index.json",
+      "bytes": 1151,
+      "sha256": "59eb03d17d5198ab1e3b526bed641fee9cd9e02a10a1bbc89bcd026ba2a1f43b",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.2/package_nucode_nu54dk_rc_index.json"
+    },
+    {
+      "tag": "v0.3.0-rc.3",
+      "asset_id": 540989702,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.3.CHECKSUMS.sha256",
+      "bytes": 572,
+      "sha256": "945ae9519e1f417777139817c2969bd295b54ca509dc60ef3d37a0bfc45686f9",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.3/nucode-nu54dk-zephyr-0.3.0-rc.3.CHECKSUMS.sha256"
+    },
+    {
+      "tag": "v0.3.0-rc.3",
+      "asset_id": 540989703,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.3.THIRD_PARTY_NOTICES.md",
+      "bytes": 1813,
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.3/nucode-nu54dk-zephyr-0.3.0-rc.3.THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "tag": "v0.3.0-rc.3",
+      "asset_id": 540989699,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.3.license-inventory.json",
+      "bytes": 15632,
+      "sha256": "4802bdf097454b92b9fc8ae977385355deab3886abe380e570949c3b2c9dd33c",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.3/nucode-nu54dk-zephyr-0.3.0-rc.3.license-inventory.json"
+    },
+    {
+      "tag": "v0.3.0-rc.3",
+      "asset_id": 540989698,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.3.release-manifest.json",
+      "bytes": 93281,
+      "sha256": "bf9db0dc1d6a4b76dbd7f8ee89c7db9018cf35a0905d30888ac68fd1f0415642",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.3/nucode-nu54dk-zephyr-0.3.0-rc.3.release-manifest.json"
+    },
+    {
+      "tag": "v0.3.0-rc.3",
+      "asset_id": 540989711,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.3.spdx.json",
+      "bytes": 174413,
+      "sha256": "fd3363e75ce7899464dda0a2e773ebe8fa3220347a60d07dcb1c77ac56cfb6e9",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.3/nucode-nu54dk-zephyr-0.3.0-rc.3.spdx.json"
+    },
+    {
+      "tag": "v0.3.0-rc.3",
+      "asset_id": 540989701,
+      "name": "nucode-nu54dk-zephyr-0.3.0-rc.3.zip",
+      "bytes": 1662446,
+      "sha256": "926879740bbc0117bb7dbf39be7d9b3cc2aff6c2e97e754a5c1d6961baacf41e",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.3/nucode-nu54dk-zephyr-0.3.0-rc.3.zip"
+    },
+    {
+      "tag": "v0.3.0-rc.3",
+      "asset_id": 540989713,
+      "name": "package_nucode_nu54dk_rc_index.json",
+      "bytes": 1151,
+      "sha256": "1c62f8f546dc3e309d5d17e87af84ae2446081997a382058b04f167ffb3f131e",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.3/package_nucode_nu54dk_rc_index.json"
+    }
+  ],
+  "bundle_sha256": "bfac36c38edfa18379664d953b2df54e17caf6ea2e2d02718526ea30d1d1f171",
+  "bundle_bytes": 49733115,
+  "retired_archive_sha256": "8e17d95a53aa524d94c63c8411c733a007180218f0399d66bc093a9664c3c7a2",
+  "retired_archive_bytes": 4036219,
+  "remote_mutation": false
+}
