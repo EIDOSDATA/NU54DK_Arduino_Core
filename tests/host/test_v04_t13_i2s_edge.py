@@ -156,6 +156,8 @@ class I2sEdgeTests(unittest.TestCase):
         runner = (ROOT / 'tests/hil/nu54dk/v04_t13_run.py').read_text(encoding='utf-8')
         self.assertIn('device.command(185, (edge_diagnostic_mode,)', runner)
         self.assertIn("'diagnostic_only': is_timing or is_i2s_edge", runner)
+        engine = (ROOT / 'tests/zephyr/v04_t13_hil/src/engine.cpp').read_text(encoding='utf-8')
+        self.assertIn('opcode == 185U && nargs == 1U && args[0] <= 2U', engine)
 
     def test_first_failure_classifies_physical_internal_and_ambiguous_edges(self):
         pages = self.pages(1)
