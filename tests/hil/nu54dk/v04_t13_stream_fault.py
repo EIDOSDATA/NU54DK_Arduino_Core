@@ -53,6 +53,7 @@ def execute(devices, test, role, mode, continuity, append, *, preflight, restart
     target = next(device for device in devices if device.image['role'] == role)
     index = 2 if mode == 1 else 3
     repeats = 1 if preflight else 100
+    pre_starvation_mode = 2 if restart_mode == 2 else 0
     for repetition in range(1, repeats + 1):
         label = f'T13-S/{"stream-fault-preflight" if preflight else "stream-recovery"}/{test["name"]}/role{role}/repeat{repetition:03}'
         seed = secrets.randbits(32)
@@ -66,7 +67,7 @@ def execute(devices, test, role, mode, continuity, append, *, preflight, restart
         try:
             if restart_test is not None:
                 for device in devices:
-                    if device.command(185, (0,), timeout=2) != [1]:
+                    if device.command(185, (pre_starvation_mode,), timeout=2) != [1]:
                         raise ProtocolError('T13 pre-starvation edge observer reset failed')
             for device in devices:
                 if device.command(106, (1,), timeout=2) != [1] or device.command(112, (0,), timeout=2) != [1]:

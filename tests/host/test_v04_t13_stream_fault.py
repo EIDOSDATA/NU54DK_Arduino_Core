@@ -253,6 +253,40 @@ class StreamFaultTests(unittest.TestCase):
                 fault.execute([], test, role, 1, mock.Mock(), lambda *_: None,
                               preflight=preflight, restart_test=candidate)
 
+    def test_swapped_route_is_selected_before_starvation_prepare(self):
+        """! @brief 교환 경로 진단은 공급 중단 전후에 같은 I2S data route를 사용합니다. """
+        test, raw, stream = self.vector(1, role=2)
+        restart = {**test, '_i2s_edge_diagnostic': 2}
+        devices = []
+        for role in (1, 2):
+            device = mock.Mock(image={'role': role})
+
+            def command(opcode, *args, current=role, **kwargs):
+                if opcode == 107:
+                    return [1, 1, 65537, 0, 0, 0, 0, 0]
+                if opcode == 115:
+                    return raw[:]
+                if opcode == 104:
+                    return stream[:] if current == 2 else [2, 0, 0, 0] + [0] * 14 + [1, 1]
+                if opcode == 99:
+                    return [test['id'], 0, 0, 0, 0, 0] + [0] * 10
+                return [1]
+
+            device.command.side_effect = command
+            devices.append(device)
+        with (mock.patch.object(fault.time, 'sleep'),
+              mock.patch.object(runner, 'stop_pair', return_value=True),
+              mock.patch.object(runner, 'idle_pins', return_value=True),
+              mock.patch.object(runner, 'execute_group')):
+            fault.execute(devices, test, 2, 1, mock.Mock(), lambda *_: None,
+                          preflight=True, restart_test=restart)
+        for device in devices:
+            route = next(index for index, call in enumerate(device.command.call_args_list)
+                         if call.args[:2] == (185, (2,)))
+            prepare = next(index for index, call in enumerate(device.command.call_args_list)
+                           if call.args[0] == 97)
+            self.assertLess(route, prepare)
+
     def test_cleanup_and_both_peer_raw_precede_judgement_and_nonce_restart(self):
         test, valid, stream = self.vector(1)
         for corrupt, stop_ok in ((False, True), (True, True), (False, False)):
