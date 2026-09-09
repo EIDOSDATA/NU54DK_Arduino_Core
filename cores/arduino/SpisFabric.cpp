@@ -55,6 +55,8 @@ namespace nucode::arduino
             bool event_overflow{false};
             bool next_requested{false};
             bool transfer_started{false};
+            bool rx_ready{false};
+            bool tx_ready{false};
             atomic_t active{0};
             atomic_t buffers_active{0};
             atomic_t initialized{0};
@@ -229,18 +231,25 @@ namespace nucode::arduino
             return result;
         }
 
-        /** @brief 실제 DMA 시작 뒤에만 다음 pair의 semaphore ACQUIRE를 예약합니다. */
-        void requestNextAfterStart(SpisContext &context) noexcept
+        /** @brief 활성화한 모든 DMA 방향이 READY인 뒤 다음 pair의 semaphore ACQUIRE를 예약합니다. */
+        void requestNextAfterReady(SpisContext &context, bool rx_ready, bool tx_ready) noexcept
         {
             BufferPair failed{};
             int result = 0;
             {
                 const k_spinlock_key_t key = k_spin_lock(&context.lock);
-                context.transfer_started = true;
-                result = requestNextLocked(context);
-                if (result != 0)
+                context.rx_ready = context.rx_ready || rx_ready;
+                context.tx_ready = context.tx_ready || tx_ready;
+                const bool all_ready = ((context.current.rx_size == 0U) || context.rx_ready) &&
+                                       ((context.current.tx_size == 0U) || context.tx_ready);
+                if (!context.transfer_started && all_ready)
                 {
-                    failed = context.next;
+                    context.transfer_started = true;
+                    result = requestNextLocked(context);
+                    if (result != 0)
+                    {
+                        failed = context.next;
+                    }
                 }
                 k_spin_unlock(&context.lock, key);
             }
@@ -277,6 +286,8 @@ namespace nucode::arduino
             {
                 const k_spinlock_key_t key = k_spin_lock(&context.lock);
                 context.transfer_started = false;
+                context.rx_ready = false;
+                context.tx_ready = false;
                 completed = context.current;
                 completed.state = DmaBufferState::completed;
                 if (context.next_requested)
@@ -373,6 +384,8 @@ namespace nucode::arduino
             context->event_overflow = false;
             context->next_requested = false;
             context->transfer_started = false;
+            context->rx_ready = false;
+            context->tx_ready = false;
             atomic_set(&context->initialized, 1);
             nrf_spis_event_clear(context->driver.p_reg, NRF_SPIS_EVENT_RXSTARTED);
             nrf_spis_event_clear(context->driver.p_reg, NRF_SPIS_EVENT_TXSTARTED);
@@ -402,6 +415,8 @@ namespace nucode::arduino
                 context->next.state = DmaBufferState::cancelled;
                 context->next_requested = false;
                 context->transfer_started = false;
+                context->rx_ready = false;
+                context->tx_ready = false;
                 atomic_clear(&context->buffers_active);
             }
             driver_error = 0;
@@ -433,6 +448,8 @@ namespace nucode::arduino
             context->next = {};
             context->next_requested = false;
             context->transfer_started = false;
+            context->rx_ready = false;
+            context->tx_ready = false;
             driver_error = 0;
             return SerialFabricResult::success;
         }
@@ -455,7 +472,7 @@ namespace nucode::arduino
                 }
                 if (rx_started || tx_started)
                 {
-                    requestNextAfterStart(*context);
+                    requestNextAfterReady(*context, rx_started, tx_started);
                 }
                 nrfx_spis_irq_handler(&context->driver);
             }
@@ -545,6 +562,8 @@ namespace nucode::arduino
                                        : BufferPair{};
             context->next_requested = false;
             context->transfer_started = false;
+            context->rx_ready = false;
+            context->tx_ready = false;
             k_spin_unlock(&context->lock, key);
         }
         atomic_set(&context->buffers_active, 1);
@@ -642,6 +661,8 @@ namespace nucode::arduino
         context->next.state = DmaBufferState::cancelled;
         context->next_requested = false;
         context->transfer_started = false;
+        context->rx_ready = false;
+        context->tx_ready = false;
         atomic_clear(&context->buffers_active);
         const int result =
             nrfx_spis_init(&context->driver, &context->driver_configuration, spisEvent, context);

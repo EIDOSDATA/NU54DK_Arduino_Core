@@ -158,8 +158,12 @@ inline void mock_spis_transfer_done(nrfx_spis_t &driver, std::size_t tx_amount,
     driver.cb.handler(&event, driver.cb.context);
 }
 
-inline void mock_spis_transfer_started(nrfx_spis_t &driver)
+inline void mock_spis_rx_started(nrfx_spis_t &driver)
 {
     driver.p_reg->rx_started = true;
+}
+
+inline void mock_spis_tx_started(nrfx_spis_t &driver)
+{
     driver.p_reg->tx_started = true;
 }
