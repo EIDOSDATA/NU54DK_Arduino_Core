@@ -473,12 +473,13 @@ std::uint32_t t13::command(std::uint32_t opcode, const std::uint32_t *args, std:
     if (opcode == 98U && (nargs == 0U || (nargs == 1U && args[0] == 1U)) && !started)
     {
         const bool hold_transmit = nargs == 1U;
-        const bool fixed_flow_case =
+        const bool fixed_barrier_case =
             selected != nullptr &&
             ((selected->harness == 2U && ((selected->id >= 2U && selected->id <= 5U) ||
+                                          (selected->id >= 6U && selected->id <= 10U) ||
                                           selected->id == 101U || selected->id == 105U)) ||
              (selected->harness == 3U && selected->id == 1U));
-        if (hold_transmit && !fixed_flow_case)
+        if (hold_transmit && !fixed_barrier_case)
         {
             return 400U;
         }

@@ -67,6 +67,8 @@ class StartBarrierTests(unittest.TestCase):
         start = source[source.index('bool t13::serialStart'):source.index('bool t13::serialReleaseStart')]
         self.assertIn('!lane.initial_spis_armed', start)
         self.assertLess(start.index('poll(lane);'), start.index('receivers_armed = true;'))
+        engine = (ROOT / 'tests/zephyr/v04_t13_hil/src/engine.cpp').read_text(encoding='utf-8')
+        self.assertIn('(selected->id >= 6U && selected->id <= 10U)', engine)
 
     def test_original_start_has_no_release_and_other_topologies_are_rejected(self):
         devices = self.devices()
