@@ -15,8 +15,8 @@
 | T13 PWM 복구 | 완료 | 6/6 |
 | T13 serial 자원 충돌 | 사용자 수용 완료 | 예행14/14·5조건 각100회. 나머지9조건 반복 생략 |
 | T13 연속 통신 종류·역할 전환 | 범위 제외 | 사용자 지시로 중단. 기존5항목을 진행률에서 제외, 재실행 없음 |
-| T13 I2S/PDM 복구 | 3/4 | I2S B 공급 중단 후 정상 재시작이 남음 |
-| T13 나머지 S 오류 복구·System OFF·U | 미완료 | 아래 실행 순서 참조 |
+| T13 I2S/PDM 복구 | 3/4·원인 경계 분리 | 원래 B P1.06→A P1.07 경로는 물리 전이 소실, 교환 경로100/100 |
+| T13 나머지 S 오류 복구·System OFF·U | 미완료·결선 HOLD | A P1.06↔B P1.07 점퍼 open 복구 뒤 아래 순서 재개 |
 | T14~T18 결함·지원·사용자 통합 | 진행/대기 | QDEC 제한 포함, 최종 지원 승격·패키지 통합은 미완료 |
 | R14·T19~T25 RC·승인·공개 | 대기 | 공개 승인과 실제 배포는 별도 |
 
@@ -30,13 +30,20 @@
 전체 문서의 초기 정리·커밋·푸시는 완료했습니다. 순서1~3의 확정 완료는 **22/58(37.9%)**이며,
 분모는 I2S1·기존 S54·System OFF timer/GPIO2·기존 요구 대조1입니다. v0.4.0 전체 진행률이 아닙니다.
 
-- **1단계 I2S:** source182ef13 예행 뒤5회 성공,6회차 정상 재시작13word 오류. DMA·핀·IRQ·RAM
-  원본을 보존했고 원인은 미확정입니다.
+- **1단계 I2S:** 원래 `B P1.06 -> A P1.07` 경로의 수신 오류는 패드 관측 전이도 기대보다
+  부족했습니다. 같은 I2S/DMA/clock에서 교환한 `B P1.07 -> A P1.06` 경로는 공급 중단과 새 seed
+  재시작100/100을 통과했습니다. 따라서 주변장치·공통 소프트웨어보다 원래 두 endpoint와 그 사이
+  물리 경로로 경계를 좁혔지만 고정 S 결선에서는 두 endpoint를 개별 분리할 수 없어 formal1조건은
+  PASS가 아닙니다.
 - **2단계 S:** UART CTS5조건과 UART20/21/22/30 양쪽 parity8·break8조건이 각각100회
   완료됐습니다. hardware-error callback 폭주와 pending RX abort 중복 정지를 제품 코드에서
   수정했고, trace OFF image로 모든 line 조건의 양쪽 STOP·clock0·17핀 반환·새 정상 재시작을
   확인했습니다. UART30 B parity90회차에서 나온 mask14는 peer 송신보다 DUT RX를 먼저 연 시험
   시작 순서로 분리했고, peer 송신 우선 source2e4ec73에서 예행1회와100/100을 통과했습니다.
+  C01의 추가 디버거·비대칭 drive 비교 뒤, 연속 UARTE가 최초 두 DMA buffer 뒤 반환 buffer를
+  재공급하지 않은 문제와 TWIS가 두 번째 queue record 승격 뒤 hardware pointer를 prepare하지 않은
+  문제를 source c21e57a2에서 수정했습니다. exact Host134·style418·docs225·contract45·두 역할
+  target와 원격 Software gate는 통과했지만 C01 실기는 아래 물리 open 때문에 아직 미검증입니다.
   남은 기존 S는 CTS7·RX 공급 지연8·SPIS 경계10·TWI stuck-low4·TWIS 공급 지연4의33조건입니다.
 - **3단계:** 기존 요구와 구현·증거 대조는 완료했습니다. System OFF는 실제 성공0회입니다.
   A RX 준비 후 B reset 보완과 빠른 polling 비교 모두 최초 중계 응답이 없었습니다.
@@ -47,14 +54,22 @@
   진행 중인 async abort를 lifecycle STOP이 다시 정리해 wrong-state 재시작이 남았습니다.
   source46b7dc2는 pending abort 완료를 기다리도록 수정했고 trace ON/OFF 예행과 UART line15조건을
   통과했습니다. UART30 B의 별도 희귀 BREAK는 제품 오류 허용으로 숨기지 않고 HIL 시작 순서를
-  source2e4ec73에서 교정했습니다. 실패·레지스터·RAM과 성공 원본은 110번 기록에 보존합니다.
+  source2e4ec73에서 교정했습니다. C01에서는 TWI 단독·UART/TWI 다중 DWT 감시와 양쪽 drive 분리를
+  수행한 뒤 위 두 버퍼 수명주기 원인을 수정했습니다. 실패·레지스터·RAM과 성공 원본은 110번
+  기록에 보존합니다.
+
+현재 실기 HOLD 원인은 **A P1.06(P2-10) ↔ B P1.07(P2-9) 점퍼 한 가닥의 open**입니다. 전체
+결선에서 net5 LOW가 전달되지 않았고, 해당 선만 양방향10회씩 검사한20pulse 모두에서 송신
+`OUT=0/DIR=1/PIN_CNF=2061`, 수신 `IN=1/DIR=0/PIN_CNF=12`가 유지됐습니다. 양 끝 재삽입 확인
+전에는 같은 실행을 반복하지 않습니다. 양쪽 보드는 SLEEPING이고17핀 `PIN_CNF=0`, 실행 process는
+없습니다. 재삽입 뒤 전체 결선105조건부터 통과시킨 다음 c21e57a2 C01 예행·100회를 재개합니다.
 
 실패·보완 이력과 exact source별 결과는 [110번](<04_검증 기록/110_문서_정리와_T13_S_잔여_재개.md>)에 보존합니다.
 S 결선을 유지하며 U 재배치·QDEC 재진단·연속 handover·정식 공개는 이번 자동 실행에 포함하지 않습니다.
 
 | 순서 | 결선 | 작업 |
 | --- | --- | --- |
-| 1 | S | I2S B 공급 중단·정상 복구.182ef13 예행PASS·5/100 뒤6회차 정상 구간13word 오류. 원본 보존·추가 원인 조사 |
+| 1 | S | I2S B 원래 endpoint 경로 한계 문서화. 교환 endpoint100/100은 formal PASS로 소급하지 않음 |
 | 2 | S | UART CTS12·parity/break16·RX 공급 지연8, SPIS 짧은 DMA/미준비10, TWI stuck-low4·TWIS write 공급 지연4의 기존54조건 |
 | 3 | S | System OFF bridge·timer/GPIO wake. CS 조기 종료·TWIS read 지연·GPIOTE/DPPI/domain·PWM/Arduino API 충돌의 기존 요구와 구현·증거 대조 |
 | 4 | U | S 범위 정리 뒤 GPIO 배치를 안내하고 현재 재배치 확인. UART00 안정성·flow·취소·재시작 |
