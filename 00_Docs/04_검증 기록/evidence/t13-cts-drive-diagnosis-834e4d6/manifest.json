@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "source": "834e4d61bc5e1b893ba41f0273a135c170c67d48",
+  "physical_executed": true,
+  "diagnostic_only": true,
+  "physical_pass_added": false,
+  "standard_drive_first_error": "role1 UART21 framing mask 0x04 after four RX bytes",
+  "high_drive_observation": "two independent C01 start windows without a watchpoint hit",
+  "firmware_changed_during_comparison": false,
+  "wiring_changed_during_comparison": false,
+  "files": [
+    {
+      "file": "cts-c101-r1-834e-watch-01--images.json.gz",
+      "bytes": 1607,
+      "sha256": "0fba1f08f1e43fbae9badd95f20b6a59032526475eaf6ee45c3ed75e4744d3b4",
+      "gzip_sha256": "ca206351266096de95be2d6fb9bc3e268ba5448e4800941de2bc3c94ec7d7940"
+    },
+    {
+      "file": "cts-c101-r1-834e-watch-01--ci-before-flash.json.gz",
+      "bytes": 3755,
+      "sha256": "e120cdb892cb4d6940727328ab8289ed6e625a5c199d328b90a6ca782667a3b4",
+      "gzip_sha256": "fef341242b2810f23f934c72d45fd2196cb150bbed4c0517f5240309d803bc3b"
+    },
+    {
+      "file": "cts-c101-r1-834e-watch-01--result.json.gz",
+      "bytes": 245684,
+      "sha256": "354beb477670dd1daf2db17a8a09b7f5ab43cddb42436fbeda35203f604a411a",
+      "gzip_sha256": "fdd1f114fff0d9b68dc036fc2c3d19ce36c0c3576b81e0185b4b09aba96b6dbe"
+    },
+    {
+      "file": "cts-c101-r1-834e-watch-01--result.json.jsonl.gz",
+      "bytes": 149213,
+      "sha256": "35f47929abee052ec80a32d4355b0cb29b3d470dd6b52ad29b7c9f8edd2918b1",
+      "gzip_sha256": "e1b443336685deb76bdaa6aaccb67ea4f6c9dfe91bdb5acf258505aac9fb8e72"
+    },
+    {
+      "file": "cts-c101-r1-834e-watch-01--result.before-diagnostic-classification.json.gz",
+      "bytes": 245509,
+      "sha256": "3f597273c3bd9cd8db0b055c5af37c0be595f5de9da5d3e269f788b43de65e03",
+      "gzip_sha256": "a46a96ee79651f8a1eb7eb4decc1f69a905861ecd20c2446a931cf6fb1e7d27d"
+    },
+    {
+      "file": "cts-c101-r1-834e-driveh-watch-01--images.json.gz",
+      "bytes": 1607,
+      "sha256": "0fba1f08f1e43fbae9badd95f20b6a59032526475eaf6ee45c3ed75e4744d3b4",
+      "gzip_sha256": "ca206351266096de95be2d6fb9bc3e268ba5448e4800941de2bc3c94ec7d7940"
+    },
+    {
+      "file": "cts-c101-r1-834e-driveh-watch-01--ci-before-flash.json.gz",
+      "bytes": 3773,
+      "sha256": "2cab6df7991168d6173e8384c5e48cce952e5b5d01418b4b3ced84a57094dde3",
+      "gzip_sha256": "cf648317094c7e4b0e07e6c520fe2640352b7b44764676efe79479c3ffe5893d"
+    },
+    {
+      "file": "cts-c101-r1-834e-driveh-watch-01--result.json.gz",
+      "bytes": 311050,
+      "sha256": "d3ed8f6533101a6b63111c830fb6558b946a70b6474c7c1197bde13e8ab1bb76",
+      "gzip_sha256": "ba182b32ff16b5549962f59349356726d13d82e0c64ed889683558177a8ccbda"
+    },
+    {
+      "file": "cts-c101-r1-834e-driveh-watch-01--result.json.jsonl.gz",
+      "bytes": 166459,
+      "sha256": "917744f9a98982fe682531f737324753390ba2efd21429b6001cfdb2d3a774f5",
+      "gzip_sha256": "7230997a3dcaf8c869746fd5ae3b36f0836f1d82bbc3712a920358dd34536a9e"
+    },
+    {
+      "file": "cts-c101-r1-834e-driveh-watch-01--result.before-diagnostic-classification.json.gz",
+      "bytes": 310852,
+      "sha256": "36f126b85ceba333e74d0e53b4a0f0832a3b119d9d13cbd8d84e7dbba6ef120d",
+      "gzip_sha256": "3b49860601050ce20ec6ae2ab6f2471a9680a0d826271d2c479f7081a635bb56"
+    },
+    {
+      "file": "cts-c101-r1-834e-driveh-watch-01--diagnostic-audit.json.gz",
+      "bytes": 1750,
+      "sha256": "cb98b8f72708c8a875f3afda27620a85d3acd1d6a024f48f158ea5bbac62c831",
+      "gzip_sha256": "7fb429f676b68e51ab094465dea9733f671a0eabd9272c81a3e8c7090b4f1a27"
+    },
+    {
+      "file": "cts-c101-r1-834e-watch-01-stopped-debugger-state-01.json.gz",
+      "bytes": 101074,
+      "sha256": "930793bb15bf21afa50458c1857883f1b942f826d753ead575b98713b70605bd",
+      "gzip_sha256": "0552911a87df0f0d154aa0ab47d0849c3feb0bc19e401f9eb20d33a19c422ce6"
+    },
+    {
+      "file": "cts-c101-r1-834e-driveh-watch-01-stopped-debugger-state-01.json.gz",
+      "bytes": 101113,
+      "sha256": "580acd87deae1dd221077d8b4916381ea4cb15b06da4ddbd8dafa26ee61161e3",
+      "gzip_sha256": "fbe594cbed4ef55e99883506d96c7e069a134de73ef11f37b5e06bfd8f9b2a0b"
+    },
+    {
+      "file": "cts_c101_watch_diagnostic.py.gz",
+      "bytes": 8611,
+      "sha256": "f329a98a1befff486965408a42abc5272aa18714b505e52c7ca2c0184e42d893",
+      "gzip_sha256": "d49222196f72d992afb4bc527865d596c0dbc626737d8fae3a81d296c8f9d9f9"
+    },
+    {
+      "file": "cts_c101_drive_watch_diagnostic.py.gz",
+      "bytes": 1586,
+      "sha256": "d0b88987f02d96710cf13e7fdc4e6d59961b8ffd9f667fa0ebe651fa1beb9707",
+      "gzip_sha256": "caa2788cd3ff0fa10c7ec9190aae63cd1103045071be090bfa6883af76f0f42d"
+    },
+    {
+      "file": "launch_cts_c101_watch.py.gz",
+      "bytes": 2235,
+      "sha256": "ae37377786e9a4468388f5e20fbc7496a44ecc578052e3037dacc229ab427b33",
+      "gzip_sha256": "9602bb71b4db644a9e7e7629e435e8821b9f41cb7e20f2b245a285ee844be617"
+    },
+    {
+      "file": "launch_cts_c101_drive_watch.py.gz",
+      "bytes": 2283,
+      "sha256": "1e6f1a028e6d061fca32abc038806c42fc1ef9d7df6d18502b9cc6239db6cba9",
+      "gzip_sha256": "038712c10afb3d3e1df767e143eaf1738c16549d38ff2d05afd2c905d2a9b043"
+    },
+    {
+      "file": "read_cts_c101_watch_stopped_state.py.gz",
+      "bytes": 568,
+      "sha256": "06a8f9b4115ebcddad33256c6a5490a82dcb83408790396e9746f1e84d02d88f",
+      "gzip_sha256": "3a2a064c789f89e61a221c10bd3d8a079fc317f2f5ce84b72bcdd70e8c351e19"
+    },
+    {
+      "file": "read_cts_c101_drive_watch_stopped_state.py.gz",
+      "bytes": 441,
+      "sha256": "ce63cb181747a009fdd198d2e167ff869150460d1ccd24eb5a2760ffb8e553da",
+      "gzip_sha256": "f45321409aef28dcc4380518d1cc901b4898ac719bf02ef3414f9039766af0a0"
+    },
+    {
+      "file": "audit_cts_drive_diagnosis.py.gz",
+      "bytes": 4354,
+      "sha256": "f358c57f57c5e93d6f207a3528cc812e112e9fabd86ad234d3b5443df7320d09",
+      "gzip_sha256": "d020e6d7038ade74e60b9223866a9f63f03691c926fd2d4b0a9654155db2c627"
+    },
+    {
+      "file": "t13-cts-drive-host-01.json.gz",
+      "bytes": 461,
+      "sha256": "c9610ae4fa2b300df7cf4da5c1a9cc5e4e44a1d2a2d3e5301b88b481a8d29838",
+      "gzip_sha256": "e84abeac511fd14fd359e3df435780106b31915f0e6f5d1ab441fe1ec7621f20"
+    },
+    {
+      "file": "t13-cts-drive-host-01.log.gz",
+      "bytes": 216499,
+      "sha256": "035f8c1e5cc5df9b0ce4289c9e69687a40537ddc1ec6fc31bce2540dbb48faa4",
+      "gzip_sha256": "e14606a014b0a448daff6b071e4b124441ff8161591d74f8a7b748c4bf121f56"
+    },
+    {
+      "file": "t13-cts-drive-style-01.json.gz",
+      "bytes": 532,
+      "sha256": "2a78ad744ed9f94e5a9bc8aa20cc5b882942b42ef333e88904f689a3a9525951",
+      "gzip_sha256": "f82a648431fbe677c1d3825179983471a22c4896f4ffdfeeb00a2c0687d236d0"
+    },
+    {
+      "file": "t13-cts-drive-style-01.log.gz",
+      "bytes": 2115,
+      "sha256": "b905cfbb45d77f93b87589d3406ced882b897dc5738b75f3c3a4bb6141e1ee0a",
+      "gzip_sha256": "aba1c391c6273f2b04c1b886ca7140d446bb3e861d73a5b6d12bcb39ce17f149"
+    },
+    {
+      "file": "t13-cts-drive-format-01.json.gz",
+      "bytes": 549,
+      "sha256": "107cdc626d1d4991091565d435f0bebd2d40e359841d7c4309d3e82fee1e5634",
+      "gzip_sha256": "acb210b7227e10782e8fd132b62fd6f21c1a79b2c648a68c9819132d57ca815d"
+    },
+    {
+      "file": "t13-cts-drive-format-01.log.gz",
+      "bytes": 40,
+      "sha256": "fffd860f3e37d97c91ce876f1264c7460751ffe75d09ad2bfa94569856ce6a39",
+      "gzip_sha256": "dc9981299baf37b5bec7f6e1ab6a21e86b5499f3dc724002294093bdb27489ee"
+    },
+    {
+      "file": "t13-cts-drive-style-02.json.gz",
+      "bytes": 532,
+      "sha256": "4432438c9e9de20a1ab774276d15bd522d8b45b723dc250fe2a134782e8b7e25",
+      "gzip_sha256": "98d603958f1f96c0076592732f8ccaf45897316ec0510dc6fb7f02eb8d63ba8b"
+    },
+    {
+      "file": "t13-cts-drive-style-02.log.gz",
+      "bytes": 40,
+      "sha256": "527aa97189d818b10084ee26b13cde97bc7888c45440d704121609b71bd277e8",
+      "gzip_sha256": "460ab874f43e27552b477e2ec9ad7e5b5ce3086293451cb7459c1f12f7ac0305"
+    },
+    {
+      "file": "t13-cts-drive-contract-01.json.gz",
+      "bytes": 469,
+      "sha256": "bb12f34810fb8ca63486e725f3adbdc0d8580c338199553e97a647bde47f78e2",
+      "gzip_sha256": "92809453385f8c02ae7fe2ec99bbc4027e076deb1111a1b7765ac2c82c26b5b6"
+    },
+    {
+      "file": "t13-cts-drive-contract-01.log.gz",
+      "bytes": 7554,
+      "sha256": "107f449c1a0a25f0359039c837718f3c04771968a17e1019593f9f12f89a39f5",
+      "gzip_sha256": "70875fe8d100ea90a458983d545a1e86e38c3213c10ff709298fac0ae87f5051"
+    },
+    {
+      "file": "t13-cts-drive-docs-01.json.gz",
+      "bytes": 461,
+      "sha256": "25e2ab08ae0732a1139385ce87d9ba3a1586e42d676fc0a6dcab9638aae2300e",
+      "gzip_sha256": "24c833f20869c73cc71fdeafd27926cccc192002e1cf6cd3f2d6c6906da9644d"
+    },
+    {
+      "file": "t13-cts-drive-docs-01.log.gz",
+      "bytes": 69,
+      "sha256": "4f0e7b1d14820b09fa80a071bee0134d119bc6f53d2af21b5de377d692642c21",
+      "gzip_sha256": "80599d4e70c6aab1826a4d608ad8ff2644c4aff1d9ca5d1d079290e6ec6f9886"
+    },
+    {
+      "file": "t13-cts-drive-target-01.json.gz",
+      "bytes": 658,
+      "sha256": "430769e3604e21aa3b4f3f757236791d84cc96cfa9c2e9ae24993a02c6662058",
+      "gzip_sha256": "7d3ef26f61a868355085586bc4f46e57b367e6558c1b8feeecbb5e2759f1c191"
+    },
+    {
+      "file": "t13-cts-drive-target-01.log.gz",
+      "bytes": 2060,
+      "sha256": "a72d1bff6fda5219fca171dcb189fb51dc175e3e04a2f24b11538694df40eaf7",
+      "gzip_sha256": "68b8728024cec0db0e620f72c0f4c4b0e756089c67398103fd890720d40ea5b1"
+    }
+  ]
+}

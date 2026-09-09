@@ -10,6 +10,7 @@
 #include "internal/SerialFabricBackend.h"
 #include "serial_fabric_routes.h"
 
+#include <hal/nrf_gpio.h>
 #include <nrfx_uarte.h>
 
 #include <zephyr/irq.h>
@@ -143,6 +144,24 @@ namespace nucode::arduino
             default:
                 return false;
             }
+        }
+
+        /**
+         * @brief 격리된 DAP UART 패드의 1 Mbit/s TX를 고구동으로 전환합니다.
+         * @details nrfx 초기화가 만든 방향·입력·pull·sense와 보드별 확장 필드는 보존하고
+         *          DRIVE0/DRIVE1만 H0H1으로 바꿉니다.
+         */
+        void configureIsolatedDapTxDrive(const ValidatedSerialRoute &route,
+                                         const UarteConfiguration &configuration,
+                                         std::uint32_t tx) noexcept
+        {
+            if ((route.electrical_profile != SerialElectricalProfile::dap_uart_disabled) ||
+                (configuration.baud_rate != 1000000U))
+            {
+                return;
+            }
+            const auto drive = NRF_GPIO_PIN_H0H1;
+            nrf_gpio_reconfigure(tx, nullptr, nullptr, nullptr, &drive, nullptr);
         }
 
         [[nodiscard]] const SerialSignalPin *signalPin(const ValidatedSerialRoute &route,
@@ -416,6 +435,7 @@ namespace nucode::arduino
                 }
                 return mapResult(driver_error);
             }
+            configureIsolatedDapTxDrive(route, context->configuration, tx);
             context->route = route;
             atomic_set(&context->active, 1);
             irq_enable(NRFX_IRQ_NUMBER_GET(context->driver.p_reg));

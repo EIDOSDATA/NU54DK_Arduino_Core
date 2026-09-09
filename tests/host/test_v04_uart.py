@@ -76,6 +76,24 @@ class UartTests(unittest.TestCase):
         self.assertLess(stop_case.index("if (result == 0)"),
                         stop_case.index("atomic_clear(&context->rx_active)"))
 
+    def test_isolated_dap_uart_1m_tx_uses_high_drive(self):
+        """! @brief 격리 DAP 1 Mbit/s TX만 nrfx 초기화 뒤 H0H1으로 바뀝니다. """
+        root = Path(__file__).resolve().parents[2]
+        source = (root / "cores/arduino/UarteFabric.cpp").read_text(encoding="utf-8")
+        helper = source.split("void configureIsolatedDapTxDrive", 1)[1].split(
+            "[[nodiscard]] const SerialSignalPin", 1)[0]
+        self.assertIn("SerialElectricalProfile::dap_uart_disabled", helper)
+        self.assertIn("configuration.baud_rate != 1000000U", helper)
+        self.assertIn("const auto drive = NRF_GPIO_PIN_H0H1", helper)
+        self.assertIn("nrf_gpio_reconfigure(tx, nullptr, nullptr, nullptr, &drive, nullptr)",
+                      helper)
+        activation = source.split("SerialFabricResult activateAdapter", 1)[1].split(
+            "SerialFabricResult requestStopAdapter", 1)[0]
+        self.assertLess(activation.index("nrfx_uarte_init(&context->driver"),
+                        activation.index("configureIsolatedDapTxDrive"))
+        self.assertLess(activation.index("configureIsolatedDapTxDrive"),
+                        activation.index("context->route = route"))
+
     def test_dma_state_fail_closed(self):
         uart.check_status([1, 1, 0, 1, 3, 0], 1)
         uart.check_status([2, 1, 0, 3, 3, 3], 2)
