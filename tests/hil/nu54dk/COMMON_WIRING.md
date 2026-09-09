@@ -63,19 +63,20 @@ P1.10/P1.14는 각 보드 LED buffer의 입력에 연결된 net이다. LED drive
 
 시험은 위 순서대로 수행하고, 전환 전에 이전 출력과 DMA를 정지한 뒤 관련 pin/DPPI/GPIOTE lease를 반환한다. 반환이 증명되지 않으면 다음 시험을 시작하지 않는다. 통신 손실 시 독립 firmware timeout으로 출력이 해제되는 경로를 검증한다.
 
-## 실행기와 남은 통합 준비
+## T12 실행기 계약
 
 - 연결 검사용 Fixture 501 revision 1을 별도 catalog에 등록했다. 입력 pull-up과 한쪽 단일 open-drain LOW를 사용하며 LOW는 500ms, arm은 10초 제한이다. 기존 408/420/430/440의 의미와 역사 결과는 유지한다.
 - 실행 시 SWD 10 MHz, exact UID, 배타 probe lock, sector flash와 auto_unlock=false, controlled reset/halt/identity/start를 유지한다. 새 firmware는 자동으로 외부 출력을 시작하지 않는다.
 - QDEC는 `connector_fixture` profile로 A P1.14/1.10을 받아야 한다. 현재 `dap_uart_disabled` profile은 P1.04~07만 허용하므로 pin 상수만 바꾸면 실패한다.
 - P1.04~07의 전용 HIL overlay에는 UART 분리 조건에 한정하여 open-drain/interrupt capability를 추가했다. 제품 기본 metadata는 유지한다. 502의 소유권 반환·raw drive field·peer 관측을 Host/target 및 현재 실기에서 검사한다.
 - `v04_common_run.py`가 GPIO/task/edge, PWM 675·추가 modes, QDEC, I2S section을 제공한다. 각 실행은 새 clean image의 controlled flash와 전체 501 검사 뒤 시작한다. `signals`는 한 image에서 PWM→PWM modes→QDEC→I2S를 순차 검사한다. `all`은 기존 502 GPIO/task/edge만 뜻하며 모든 section 완료를 뜻하지 않는다.
-- 기존 확인서 30분·firmware 10초 lease를 유지한다. 종료한 실행은 사용자의 당시 상태·HW 유지 보고에 묶인 고정 공통 세션을 사용했다. 이 세션을 다음 실기의 확인서로 재사용하지 않는다. QDEC 40초 파형도 heartbeat를 유지하며 2026-09-08 07:00 KST 만료·probe 단절·identity 불일치에서 다음 출력을 차단한다.
+- 당시 C 실행기는 30분 확인서 또는 최대 12시간 공통 세션을 사용했다. 이는 과거 실행 계약이며
+  현재 유지 중인 S 결선의 확인 만료 기준이 아니다. Firmware 10초 lease와 출력 해제는 별도 보호로 유지한다.
 - 675조건을 `v04_pwm_capture.compact_vectors()`와 공통 508 runner에 적용했다. 각 instance/slot/load의 모든 duty×극성, 각 TOP/길이와 최장·최저속 조합을 남긴다. 전체 2700조건과 동등한 검출력을 주장하지 않는다.
 
 ## 범위 경계
 
-이 공통 결선은 남은 PWM/QDEC/I2S와 위 17개 GPIO, 가용 GPIOTE 채널을 한 배선으로 검사하기 위한 것이다. **31개 pad 전체·T12 전체 완료를 뜻하지 않는다.**
+이 공통 결선은 T12 PWM/QDEC/I2S와 위 17개 GPIO, 가용 GPIOTE 채널을 한 배선으로 검사하기 위한 것이다. **31개 pad 전체·T12 전체 완료를 뜻하지 않는다.**
 
 - P1.00/01(LFXO), P1.02/03(PMIC I2C), P1.11(INT), P1.12(VBAT), P2.08(PG), P2.10(CE)는 이 출력 결선에서 제외한다. 기존 내부/공유 회로 증거와 허용 동작·거부 계약을 대응하며 부족한 기능 근거는 남긴다.
 - P0.04·P1.08/09/13 버튼, P2.07(LED/SWO), P2.09(LED)는 공통 선에 넣지 않는다. 기존 온보드 결과 또는 별도 조건으로 대응하며 미실행을 PASS로 바꾸지 않는다. 버튼 실제 누르기는 현재 자동 기능 시험 범위 밖이다.
@@ -91,12 +92,12 @@ P1.10/P1.14는 각 보드 LED buffer의 입력에 연결된 net이다. LED drive
 
 ## 결선 검사 실행
 
-### 현재 공통 기능 묶음 실행기
+### 보존된 C 공통 기능 실행기
 
 `v04_common_run.py`는 별도 `v04_common_bundle.json`과 사용자 유지 보고를 담은
 `--session-grant`를 사용한다. 기존 501/408/420/430 확인서의 의미나 30분 제한은 바꾸지 않는다.
-고정 세션은 명시적인 현재 결선·유지 보고, exact UID·board·catalog·만료 시각을 요구하며
-최대 12시간이다. 각 clean image의 controlled flash 후 원래 501 검사를 통과해야 502
+당시 고정 세션은 결선·유지 보고, exact UID·board·catalog·만료 시각을 요구했고
+최대 12시간이었다. 이 구형 C 계약을 현재 S 재개에 적용하지 않는다. 각 clean image의 controlled flash 후 원래 501 검사를 통과해야 502
 GPIO/GPIOTE로 전환한다. 새 image·probe 연결마다 별도 실행 증거를 만들고 단절/identity/명령
 오류가 있으면 다음 case를 중단한다. 10초 firmware lease를 유지한다.
 
@@ -104,7 +105,8 @@ GPIO/GPIOTE로 전환한다. 새 image·probe 연결마다 별도 실행 증거�
 GPIOTE task는 12채널×양방향×3극성×10회, edge는 12채널×양방향×3극성×2속도×10회다.
 각 edge case는 유한 1000에지를 발생시키며 100/1000 edge/s는 CPU task 신호원의 목표 간격이다.
 관측 count와 최대 poll 간격을 기록하며 정밀 파형 품질 PASS로 확대하지 않는다.
-508/520/530은 공통 배선의 후속 기능 ID로 준비하며 해당 구현·실기는 별도 결과로 기록한다.
+508/520/530의 후속 PWM·QDEC·I2S 구현과 실기 결과는 100~101번 기록에 보존했다.
+QDEC 미해결 제한과 사용자 검증 종료를 전체 PASS로 바꾸지 않는다.
 
 실행기는 `tests/hil/nu54dk/v04_wiring_run.py`다. `--dut`/`--peer`에 새로 식별한 exact UID, `--build-root`에 해당
 clean commit의 두 role build, `--pyocd`에 고정 도구 경로를 전달한다. `--swd-frequency-hz 10000000`을 유지한다. 실행 옵션이
@@ -115,5 +117,5 @@ PC에서는 `--cmsis-dap-limit-packets`를 명시한다. 102회 net-round는 두
 기록한다. 마지막에 양쪽 LOW 자동 해제와 10초 lease 반환을 별도로 검사한다.
 
 실패 raw와 양쪽 cleanup을 보존하며 그 결과로 다음 PWM 등 출력 모드를 자동 허용하지 않는다. USB 접지를 통한 우회가 있을 수 있으므로 GND 점퍼 자체의
-연속성/접촉 저항이나 전압 품질을 이 checker만으로 보증하지 않는다. 최신 준비 및 실제 결과는 저장소의 `00_Docs/04_검증
-기록/99_공통_결선_검사와_승인_전_자동_진행_계획.md`에서 관리한다.
+연속성/접촉 저항이나 전압 품질을 이 checker만으로 보증하지 않는다. 당시 준비는 [99번](<../../../00_Docs/04_검증 기록/99_공통_결선_검사와_승인_전_자동_진행_계획.md>),
+실제 결과는 [100번](<../../../00_Docs/04_검증 기록/100_T12_공통_기능_묶음과_T13_조합_확정.md>)에 보존한다.

@@ -66,17 +66,18 @@ python tools/ci/run_m12_gate.py examples --arduino-cli <exact-path>
 2. exact west workspace를 준비하고 cache key를 lock에서 계산한다.
 3. `run_zephyr_build.py --group <버전>`으로 아래 build-only suite를 네 job에서 동시에 실행한다.
 4. `v0.2.0` job에서만 `run_m17_feasibility.py`와 `run_m14_qemu.py`를 실행한다.
-5. `v0.4.0` job에서만 exact NCS DTS에 대한 M23 inventory와 M24 serial-fabric 계약을 검사한다.
+5. `v0.4.0` job에서만 exact NCS DTS에 대한 M23 inventory, M24 serial-fabric, M26 system과 M27 readiness HOLD 계약을 검사한다.
 6. 그룹별 결과를 서로 다른 14일 보존 artifact로 게시한다.
 
 | Group | 시나리오 수 | 현재 source에서 확인하는 도입 범위 |
 | --- | ---: | --- |
 | `v0.1.0` | 4 | M3 runtime, M4 API contract, M6·M7 Core API |
 | `v0.2.0` | 10 | M14 Core/variant, M15 Board/System, M16 BLE NUS, M17 direct sensor |
-| `v0.3.0` | 15 | M19 GAP, M20 GATT, AC-01 GPIO, AC-02 peripheral/analog, AC-03 storage |
-| `v0.4.0` | 1 | 현재 개발 중인 M23 inventory production image |
+| `v0.3.0` | 19 | M19 GAP, M20 GATT, M21 Security, AC-01 GPIO, AC-02 peripheral/analog, AC-03 storage |
+| `v0.4.0` | 34 | R01 구성, pair/T13 HIL build, M23 inventory, M24 Serial, M25 Analog/Event/Stream, M26 System |
 
-전체 30개 시나리오는 중복·누락 없이 위 네 그룹에 정확히 한 번만 속한다. Matrix의
+2026-09-09의 `tools/ci/run_zephyr_build.py` 기준 67개 시나리오가 위 네 그룹에 속한다.
+증감 시에는 이 표가 아니라 runner의 `SUITE_GROUPS`를 실행 목록의 원본으로 사용한다. Matrix의
 `fail-fast: false` 때문에 한 그룹이 실패해도 나머지 그룹은 끝까지 실행되어 영향 범위를 한 번에
 알 수 있다. 각 `twister.json`과 `m12-build-evidence.json`은 group 이름, 실제 시나리오와 내부
 병렬도(`--jobs`)를 기록한다. Twister 실패 메시지는 실패한 scenario·status·reason을 요약한다.
@@ -88,7 +89,7 @@ Arduino runtime 정식 지원을 뜻하지 않는다.
 
 1. Python `3.12.10`, Arduino CLI `1.5.1`과 고정 Nordic prerequisite를 준비한다.
 2. 설치된 NCS/Zephyr/board revision을 lock과 대조한다.
-3. `tests/arduino-cli/run_smoke.py --group <버전>`을 아래 세 Windows job에서 동시에 실행한다.
+3. `tests/arduino-cli/run_smoke.py --group <버전>`을 아래 네 Windows job에서 동시에 실행한다.
 4. `v0.2.0` job에서만 `run_m17_external_arduino.py`로 고정 외부 library를 격리 compile한다.
 5. 그룹별 전체 log와 결과를 서로 다른 14일 보존 artifact로 게시한다.
 

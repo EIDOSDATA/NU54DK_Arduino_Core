@@ -1,5 +1,7 @@
 # T12 Fixture 406 — current-source 공유 AIN5 검증
 
+> 과거 검증 이력입니다. 준비·다음 작업·실행 조건은 기록 당시 기준이며, 현재 상태는 [v0.4.0 TODO](../TODO_v0.4.0.md)를 따릅니다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID / 개정 | NU54-T12-F406-001 / 1.0 |
@@ -9,7 +11,7 @@
 | 실제 시험 source | `96f38e9486c69cda2c76b48029bc0dc9404d9709` |
 | 보드 gitlink | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | Fixture catalog | revision 4, ID 406 |
-| 실제 신호 시험 구간 | 7.094초; build/flash 시간 제외 |
+| 실제 신호 시험 구간 | 7.094 초; build/flash 시간 제외 |
 | 다음 작업 | **407 AIN6/P1.13 → 408 AIN7/P1.14 필수 후속** |
 
 ## 결선과 신호원
@@ -23,7 +25,7 @@ A DUT P1.12/AIN5(P4-10) ↔ B peer P1.14(P4-12), 공통 GND(P2-30)다. 이전 A 
 [보드 원본 회로도](<../../board_package/NU54DK_Zephyr_DTS/NU54-DK Schematic.pdf>) 1·3쪽에서
 P1.12 → SB4 → VBAT_MON, R8 470kΩ/VBAT·R11 1MΩ/GND·C12 100nF 공유 회로를 대조했다.
 B P1.14는 **시험 내내 INPUT**을 유지하고 내부 pull-down → pull-up → pull-down으로 입력을 바꾼다.
-각 단계 25ms 정착 후 2ms 간격의 manual SAADC SAMPLE을 사용한다. 강한 출력은 활성화하지 않으며
+각 단계 25 ms 정착 후 2 ms 간격의 manual SAADC SAMPLE을 사용한다. 강한 출력은 활성화하지 않으며
 SB4와 PMIC를 변경하지 않았다. 실제 SB4 연결 상태·배터리 전압·PMIC 동작은 측정하지 않았다.
 
 ## 구현과 software 검증
@@ -43,12 +45,12 @@ Host 회귀로 보존했다. Fixture gate·runner allowlist·catalog·시험 계
 | 계약 | 45 tests PASS |
 | 생성 목록 / Inventory | 75 identities·19 families / 75·23·16 PASS |
 | C/C++ 정렬 | 358 files PASS; 한국어 Doxygen·BSD/Allman·4칸·중괄호 필수 |
-| exact pair target | DUT/peer **2/2 PASS**, C:/u3m, 117.09초, build warning 없음 |
-| readiness | 필수 16개 중 blocker 8개 유지 |
+| exact pair target | DUT/peer **2/2 PASS**, C:/u3m, 117.09 초, build warning 없음 |
+| readiness | 필수 16 개 중 blocker 8 개 유지 |
 
 [software 검증](evidence/t12-fixture406-96f38e9/software-verification.json), [target build](evidence/t12-fixture406-96f38e9/target-build-evidence.json),
 [artifact index](evidence/t12-fixture406-96f38e9/target-artifact-index.json)에 log·도구·SDK와 산출물 hash를 연결했다.
-이번 변경은 시험 harness 확장으로 pair 2개 target을 빌드했다. R13 전체 target·package·예제 검사는
+이번 변경은 시험 harness 확장으로 pair 2 개 target을 빌드했다. R13 전체 target·package·예제 검사는
 64번의 당시 source 근거로 유지한다. 준비 중 실패나 실기 재시도는 없었다.
 
 ## 실제 결과와 독립 판정
@@ -68,9 +70,9 @@ LOW 전 sample은 -256~512, HIGH 전 sample은 1024 초과~4095여야 PASS다.
 LOW 전체 raw 범위 120~148, HIGH 3,716~3,740이다. 총 **2,592 samples**의 raw array와 SHA-256을
 별도 계산해 재검산했다. 이는 공유 입력의 LOW/HIGH 기능이며 교정된 ADC 전압·정확도 결과가 아니다.
 
-실제 GPIO 설정을 시작/종료 사이 24회 읽었다. B P1.14의 raw PIN_CNF mask 0xF0F는 LOW 0x4,
+실제 GPIO 설정을 시작/종료 사이 24 회 읽었다. B P1.14의 raw PIN_CNF mask 0xF0F는 LOW 0x4,
 HIGH 0xC로 모두 INPUT이다. 각 vector 뒤 B 먼저, A 다음 순서로 disarm [0]을 확인했고,
-B no-pull INPUT 복귀(raw mask 0)를 12회 확인했다. JSON과 journal은 기능 12·cleanup 12·campaign 2,
+B no-pull INPUT 복귀(raw mask 0)를 12 회 확인했다. JSON과 journal은 기능 12·cleanup 12·campaign 2,
 총 26 record가 순서까지 일치한다. [독립 감사](evidence/t12-fixture406-96f38e9/results-audit.json)에 검사 결과를 보존했다.
 
 | 원본 | SHA-256 |
@@ -95,16 +97,16 @@ non-secure 상태 안내는 원본 log에 남겼고, target/CPUID/full source/�
 | 2 | `7d4e9ee8c86895cd41636f56dadc9c71f32570b275eccb9f658b504d94af8b2c` | `8136abc4ddaf627e6483ccaded98a1bba644b6db02da4c3358859665bb7149a1` |
 
 [실행 wrapper](evidence/t12-fixture406-96f38e9/run.py)와 [runtime](evidence/t12-fixture406-96f38e9/runtime.py)는 exact source·image·두 UID hash를 고정한다.
-[원본 manifest](evidence/t12-fixture406-96f38e9/raw-files.json)의 **42개 입력**은 UTF-8 LF 사본 및 원본 byte gzip으로 보존했고,
+[원본 manifest](evidence/t12-fixture406-96f38e9/raw-files.json)의 **42 개 입력**은 UTF-8 LF 사본 및 원본 byte gzip으로 보존했고,
 gzip roundtrip·원본/정규화 SHA-256·평문 UID 없음 검사를 통과했다. 원본 log의 줄바꿈도 gzip으로 복원된다.
 이 문서 이후 commit은 문서·증거 등록이며 실기 image source와 구분한다.
 
-## 다음 작업과 남은 범위
+## 당시 후속 작업과 남은 범위
 
-401~404의 PWM 192개·41,472 samples, 405의 오픈드레인 12개·2,592 samples,
-406의 입력 바이어스 12개·2,592 samples를 합쳐 **216개 기능·46,656 samples·216개 cleanup**이다.
+401~404의 PWM 192 개·41,472 samples, 405의 오픈드레인 12 개·2,592 samples,
+406의 입력 바이어스 12 개·2,592 samples를 합쳐 **216 개 기능·46,656 samples·216 개 cleanup**이다.
 AIN0~5의 해당 기능 경로까지 완료했으며 각 실행의 exact source는 구분한다.
-**407·408 모두 필수**다. 이후 420 PDM·430 I2S·440 QDEC와 PWM period/duty capture,
+**407·408 모두 필수**다. 이후 440 PDM·430 I2S·420 QDEC와 PWM period/duty capture,
 ADC calibration/채널 순서 등 전체 T12 요구가 남아 있다. T13~T15·통합·RC·공개도 미완료다.
 
 다음 407 결선 안내: 양쪽 USB를 분리하고 A 쪽 신호선만 **P1.12에서 P1.13/AIN6(P4-11)**로 옮긴다.
@@ -118,8 +120,8 @@ GitHub Actions의 이번 source 상태는 별도로 확인하지 않았다.
 
 ## 최종 문서 검증
 
-활성 문서와 새 79번 기록 9개를 갱신했다. Markdown UTF-8·내부 링크 **188 files**, 계약 45개,
-Inventory 75/23/16 및 readiness blocker 8개 유지 검사를 통과했다.
+활성 문서와 새 79번 기록 9 개를 갱신했다. Markdown UTF-8·내부 링크 **188 files**, 계약 45 개,
+Inventory 75/23/16 및 readiness blocker 8 개 유지 검사를 통과했다.
 [문서 검증 기록](evidence/t12-fixture406-96f38e9/documentation-verification.json)에 공개한 log의
 정규화 byte hash를 보존했다. 사전 software 검증의 hash는 raw-files manifest와 gzip 원본 byte를 기준으로 한다.
 문서 등록 뒤 링크 검사를 한 번 더 수행하고 staged 원본 gzip·hash·변경 경계를 대조한 뒤 commit·main push한다.

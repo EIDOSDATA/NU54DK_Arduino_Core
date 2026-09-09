@@ -22,7 +22,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m15_auto.py` | identity·uptime·GRTC callback·Settings·WDT 비-System-OFF 자동 검증 | 공식 Ubuntu CI artifact, NU54DK, CMSIS-DAP V2 UART |
 | `m15_system_off.py` | SWD 격리 뒤 timed GRTC→사용자 SW0 System OFF 결합 검증 | 공식 Ubuntu CI artifact, NU54DK, CMSIS-DAP V2 UART, debug-control SW1, 사용자 SW0 |
 | `ac01_gpio_hil.py` | P2 loopback GPIO·pulse·shift와 SW0 자기구동 level IRQ·callback mask 자동 검증 | NU54DK 한 대, 같은 보드 P2.5↔P2.6 점퍼 한 가닥, CMSIS-DAP V2 UART |
-| `ac02b_peripheral.py` | 동적 Serial1·Wire·SPI·PWM·ADC pair HIL과 exact 증적 생성 | NU54DK 두 대, 아래 4개 점퍼, 각 보드 USB/DAPLink UART |
+| `ac02b_peripheral.py` | 동적 Serial1·Wire·SPI·PWM·ADC pair HIL과 exact 증적 생성 | NU54DK 두 대, 아래 3개 점퍼, 각 보드 USB/DAPLink UART |
 | `m19_ble_gap.py` | GAP UUID/manufacturer filter·연결·재연결 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
 | `m20_ble_gatt.py` | 범용 GATT read/write/notify/indicate·재발견 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
 | `m21_ble_security.py` | pairing·bond 복원/삭제/repair와 BAS/DIS/HID protocol 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
@@ -39,57 +39,17 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 
 ## 실행 원칙
 
-### T12 PWM peer capture 첫 경로 준비
+현재 T13은 [S/U 계획](T13_PLAN.md)의 전용 실행기를 사용합니다. 아래 M14~T12 절차는
+해당 기능을 검증한 고정 fixture 계약이며 현재 S 결선을 옛 fixture로 변경하라는 안내가 아닙니다.
+QDEC·시리얼 핸드오버 제외와 시간 기반 유지 확인 만료 폐기는 TODO의 최신 사용자 지시를 따릅니다.
+기존 실행기의 확인서 시한과 firmware 명령 lease는 별개입니다. 이번 문서 편집은 실행기 코드를
+변경하지 않으므로, 후속 실기 재개 전에 구형 시한 검사를 현행 지시와 일치시켜야 합니다.
 
-`v04_signal_run.py --fixture 408 --pwm-capture --swd-frequency-hz 10000000`는
-기존 408 결선 **B GPIO P1.14 → A GPIO P1.14, GND ↔ GND**를 사용하는 별도 측정 모드다.
-현재 준비 범위는 PWM20/21/22 × slot 0~3 × TOP 1000/4000 × duty 0/25/50/75/100% ×
-DMA word bit15 극성 두 가지의 240 vector다. Individual load·4 values·CPU start·loop로 실행한다.
-이 준비는 물리 PASS가 아니며 common/grouped/wave-form, 길이 32/256, sequence0/1 순서·유한
-end/repeat, DPPI START, triggered-step과 pin idle inversion은 후속 범위다.
-
-A는 GPIOTE20 channel 0 → DPPI20 channel 0 → TIMER22 CC0(1 MHz)로 에지 시각을 캡처한다.
-CPU polling은 이벤트/CC/level을 수집하며 timestamp를 생성하지 않는다. 각 비정적 case의
-201개 에지로 100주기와 각각의 HIGH 비율을 독립 판정한다. 주기는 목표의 ±5%, duty는 목표
-비율의 상대 ±5%다. 0/100%는 에지 없음과 100주기 길이의 정적 level을 확인한다. 누락·중복·
-역순·극성·개별 오차·guard 실패를 평균으로 숨기지 않는다. 실제 clock 교정·jitter 보증은 아니다.
-
-첫 측정의 안전 경계는 기존 exact source/board/image·현재 UID·배타 probe lock·sector flash·
-`auto_unlock=false`·controlled start와 30분 이내 결선 확인을 그대로 사용한다. 새 모드는
-SWD 10 MHz와 유한 campaign만 허용한다. 기본 CLI는 preflight-only이며 `--execute-fixture`와
-현재 confirmation 없이는 probe를 열지 않는다. 원본 status/에지를 판정 전에 journal에 남기고,
-중간 측정 실패도 partial raw를 보존한다. 종료는 B 출력 STOP→A capture 자원 반환 순서다.
-
-새 PC에서는 USB/probe를 다시 열거해 A/B 역할을 확인한 뒤 두 USB 분리→위 GPIO 결선→재연결을
-안내한다. 두 DAP UART 분리·SWD 연결, 동일 I/O 전압·공통 GND·전원 레일 비연결과 현재 결선
-완료를 사용자에게 확인받는다. 이전 COM/결선 확인·이 문단 자체를 실행 승인으로 재사용하지 않는다.
-Mailbox 40/41/42/43/44/45/46은 각각 arm/prepare/start/capture/raw/stop/status다. capture의
-transport 성공과 물리 측정 성공은 별도이며 status/error와 Host oracle 모두 통과해야 한다.
-
-`--cmsis-dap-limit-packets`는 flash와 이후 SWD session의 USB 동시 명령을 1개로 제한하는
-명시적 진단 옵션이다. 기본은 기존 설정이며 SWD 주파수·sector erase·exact UID·controlled
-start·`auto_unlock=false`·확인/lock 계약은 유지한다. [pyOCD 공식 옵션](https://pyocd.io/docs/options.html)의
-`cmsis_dap.limit_packets`를 사용하고 SDK/driver를 수정하지 않는다. 읽기 성공만으로 flash
-timeout 원인을 확정하지 않으며 옵션·최초 실패·후속 결과를 evidence에 각각 기록한다.
-
-### T12 PWM load·DMA 길이 확장 준비
-
-`--pwm-capture --pwm-load common|grouped|individual|wave-form`은 선택한 load 한 개에서
-4/32/256 values를 각각 검사한다. Common/grouped/individual은 각 720조건이고 WaveForm은
-slot 0~2의 540조건이다. WaveForm의 네 번째 word는 출력 slot 3이 아닌 RAM TOP이다.
-이 모드에서는 register TOP을 반대 값(1000↔4000)으로 두어 RAM TOP 사용을 실제 period로
-구별한다. 나머지 load에서는 선택한 decoder lane과 다른 lane의 duty를 다르게 넣어 매핑을 검사한다.
-
-기존 `--pwm-capture`만 지정하면 240조건 첫 경로를 유지한다. 그 실기는 [97번](<../../../00_Docs/04_검증 기록/97_T12_PWM_peer_capture_첫_240조건_검증.md>)에
-고정되어 있으며 새로운 load/길이 시험의 PASS로 재사용하지 않는다. Opcode 41은 기존 5개 인자
-또는 load ID(0/1/2/3)·value count를 덧붙인 7개 인자만 받는다. 그 밖의 길이·WaveForm slot 3은 거부한다.
-
-Common/256/4000의 한 sequence는 약 1.024초로 100주기 capture보다 길다. Host는 capture 뒤
-첫 sequence 완료를 최대 2초 기다리고, 완료되지 않으면 원본을 보존한 뒤 실패로 처리한다.
-두 보드의 10초 lease·B 우선 STOP·exact image/UID·10 MHz·현재 결선 확인을 유지한다.
-이 확장은 **constant-duty CPU-start loop**이며 sequence0/1의 시간상 순서·유한 end/repeat,
-DPPI START·triggered-step·idle inversion의 완료 근거가 아니다. 다음 실행 전 현재 408 결선의
-확인을 다시 받아야 하며 이전 30분 확인을 자동 연장하지 않는다.
+T12 PWM capture의 초기 240조건은 [97번](<../../../00_Docs/04_검증 기록/97_T12_PWM_peer_capture_첫_240조건_검증.md>),
+공통 675조건과 추가 mode는 [100번](<../../../00_Docs/04_검증 기록/100_T12_공통_기능_묶음과_T13_조합_확정.md>)에
+기록했습니다. Load·DMA 길이·opcode별 상세 준비 과정은
+[정리 전 실행 안내](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/0dda7f9dac30845e4fdb8f9bd28da22a906dcb9d/tests/hil/nu54dk/README.md)에
+보존합니다. 완료된 준비 계획을 현재 미실행 작업으로 다시 등록하지 않습니다.
 
 - 보드 target과 build manifest가 기대값과 일치해야 합니다.
 - 일반 upload 경로에서는 mass erase나 recover를 사용하지 않습니다.
@@ -516,12 +476,12 @@ raw code를 교정된 전압이나 외부 채널 정확도 결과로 해석하�
 sample/frame/count, DMA·복구·허용 동시성·soak는 반드시 검증합니다. 필요한 pull-up 등 수동 부품과
 전압·공통 GND·DAP UART switch·출력 충돌 확인은 생략하지 않습니다.
 
-PDM/I2S/QDEC peer 신호 generator/receiver와 판정기는 build-only까지 준비했습니다. 이는 실제 핀에서
-신호가 성립했다는 뜻이 아니며 T10 결선 뒤 실행하기 전까지 `NOT RUN`입니다. 신호 생성 또는 수신이
-실패하면 HOLD로 남깁니다. 정밀 정확도·jitter·전력·음질·부품별 호환성은 `범위 밖·미측정`으로
+PDM/I2S와 Analog 기능 실기는 T12 기록에 source별로 완료됐고 QDEC는 알려진 문제를 보존한 채
+사용자가 검증 종료를 결정했습니다. 새 source의 준비·build를 새 실기 PASS로 간주하지 않습니다.
+신호 생성 또는 수신 실패는 실제 실패로 기록합니다. 정밀 정확도·jitter·전력·음질·부품별 호환성은 `범위 밖·미측정`으로
 구분하며 코어 기능 PASS로부터 추정하지 않습니다.
 
-### 외부 UART/SPI/TWI fixture 모듈과 현재 실행 상태
+### 외부 UART/SPI/TWI 고정 fixture 계약
 
 [v04_fixtures.json](v04_fixtures.json)은 보드 소유자가 수기로 확정한
 [P2/P4 커넥터 핀맵](<../../../00_Docs/01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)과
@@ -537,7 +497,7 @@ GPIO P2.6~10, PMIC I2C·INT, VBAT divider, LFXO에는 이 UART/SPI/TWI 시험을
 STOP 미증명은 fault latch와 자원 보존으로 남습니다. 활성 외부 시험 동안 온보드 UART/PMIC
 명령은 거부하고, 한 번에 한 controller만 생성합니다. 물리 스위치 감지는 하지 않습니다.
 
-[v04_fixture.py](v04_fixture.py)는 역할·UID/image hash·30분 이내 사용자 결선 확인을 검사하고,
+[v04_fixture.py](v04_fixture.py)는 역할·UID/image hash·기존 30분 확인서 계약을 검사하고,
 UART 135-vector, SPI 1,513-vector, TWI 328-vector를 준비합니다. UART는 단일·이중 RX buffer,
 parity와 RTS/CTS를 포함하며 SPI/TWI controller는 동기·비동기 전송, peripheral/target은 단일·이중
 buffer를 구분합니다. RX는 SWD mailbox로
@@ -563,8 +523,8 @@ TWI 추가 두 vector는 peer가 SDA를 LOW로 고정한 동안 복구 실패, �
 `nrfx_twis_tx_prepare()` 또는 `nrfx_twis_rx_prepare()`를 호출하고, 성공한 buffer를 DMA 소유로
 전환한 뒤 clock stretch를 해제합니다. Buffer 방향이 맞지 않으면 전송을 방치하지 않고 거부합니다.
 SPI fixture 201의 role 1에는 1,024-byte SPIM00 비동기 전송 중 온보드 TWIM22 PMIC read를
-수행하는 허용 동시성 case가 추가되어 있습니다. 더 넓은 5-block 동시성 및 7,200초 soak는 단독
-기능 실기 PASS 뒤 T13에서 수행하며 build-only 결과로 대체하지 않습니다.
+수행하는 허용 동시성 case가 있습니다. 현재 T13의 허용 조합과 합의된 180/900/3600초 기준은
+[T13 계획](T13_PLAN.md)을 따릅니다. 아래 일반 campaign의 7,200초 상한은 현재 필수 시험 시간이 아닙니다.
 TWI 301은 target 역할의 TWIS가 SDA/SCL 내부 pull-up을 명시적으로 활성화합니다. 외부 pull-up 저항과
 두 보드 전원 rail 연결은 사용하지 않습니다. 확인 JSON의 `pullups_match_catalog`는 외부 pull-up과
 전원 rail 연결이 없다는 사용자 확인을 포함하며, 참이 아니면 실행을 거부합니다. 내부 pull-up은 외부
@@ -582,7 +542,8 @@ Fixture 101은 exact `2542a01`에서 양방향 UARTE data 1,620건과 예상 오
 보존합니다. Fixture 103은 exact `b3c689b`에서 UARTE20/21/22 P1↔P1 전 조합 양방향 data
 2,430건과 예상 오류 36건을 통과했습니다. 중간 `FRAMING` 오류와 축소 재현·최종 전체 PASS의
 구분은 [Fixture 103 실기 기록](<../../../00_Docs/04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>)에
-보존합니다. UART Fixture 101~103의 결과를 아직 실행하지 않은 SPI/TWI에 확대하지 않습니다.
+보존합니다. 각 결과는 해당 source의 단독 기능 증거입니다. 이후 UART/SPI/TWI 일곱 묶음의 current-source
+회귀 완료는 [67~73번 기록](<../../../00_Docs/04_검증 기록/README.md>)에서 확인합니다.
 
 두 번째 보드 COM8/P0 DAP CTS 고정에 대해 2026-09-05 사용자가 HW 엔지니어의 납땜 이슈
 진단을 전달했습니다. 정상 DUT의 RTS/CTS 결과는 유지하며, 해당 peer 경로는 FAIL 기록을 보존하고
@@ -596,10 +557,10 @@ QDEC의 계획된 2/10ms 상태 간격에는 nrfx 기본 16384us sampling이 너
 격리된 P1.4/P1.6에서 받는 firmware와 runner를 준비했습니다. 이 oracle과 build PASS는 QDEC 실기
 PASS가 아닙니다.
 
-### Analog·stream 합성 신호 fixture — 아직 T10 실행 안내가 아님
+### Analog·stream 합성 신호 고정 fixture 계약
 
 `v04_signal_run.py`는 기본적으로 preflight만 출력합니다. `--execute-fixture`, 현재 source·두 UID·
-두 image hash에 묶인 30분 이내 confirmation, 새 evidence 경로가 모두 있어야 flash와 외부 출력을
+두 image hash에 묶인 기존 30분 confirmation, 새 evidence 경로가 모두 있어야 flash와 외부 출력을
 시도합니다. fixture 401~408과 420은 회로 안전상 peer인 role 2만 generator가 될 수 있습니다. 430/440은
 두 role을 번갈아 clock/generator로 검사합니다.
 
@@ -651,7 +612,7 @@ progress를 journal에 남깁니다. 중단된 실행은 `interrupted`이며 다
 `--progress-interval-seconds`가 이 공통 계약을 사용합니다. 단독 기능 실기 PASS 전에는 soak를
 시작하지 않으며, 동시성은 해당 fixture 조합을 별도로 승인한 뒤 수행합니다.
 
-R00~R13 이후 exact 154324c의 current-source Fixture 101은 SWD 10 MHz에서 데이터 1,620개·예상 오류 24개를 통과했습니다. [67번 기록](<../../../00_Docs/04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)에 exact 증거를 보존합니다. 전체 current-source T11과 T12/T13 PASS는 아직 아닙니다.
+R00~R13 이후 exact 154324c의 current-source Fixture 101은 SWD 10 MHz에서 데이터 1,620개·예상 오류 24개를 통과했습니다. [67번 기록](<../../../00_Docs/04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)에 exact 증거를 보존합니다. 이 단일 결과를 전체 T11/T12/T13 PASS로 확대하지 않습니다. 후속 T11·T12 완료와 T13 잔여는 TODO가 기준입니다.
 
 Fixture 440의 `--pdm-continuous`는 4개 안정화 + 100개 측정 버퍼를 전송 중단 없이 수신한다. 수신기 gate HIGH를 신호원보다 먼저 준비하며,
 opcode 39의 8-word 기록은 순서·slot·sample 수·좌우 합계·최솟값/최댓값·FNV다. 네 DMA slot의 전후 canary와 256-sample buffer

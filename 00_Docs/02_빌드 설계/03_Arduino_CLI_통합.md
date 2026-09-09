@@ -251,7 +251,7 @@ J-Link는 `upload_probe=jlink`와
 ### Serial Monitor와 Debug
 
 Serial Monitor는 target UART의 VCOM bridge이며 SWD probe ID와 별개다. Arduino IDE Debug 버튼의
-자동 toolchain/debugserver 구성은 v0.2.0 정식 지원 범위가 아니다. Full Zephyr ELF를 이용한
+자동 toolchain/debugserver 구성은 v0.3.0 정식 지원 범위가 아니다. Full Zephyr ELF를 이용한
 수동 west debug 경계는 [업로드와 디버그](./05_업로드와_디버그.md)를 따른다.
 
 ## 8. Library와 구성 경계

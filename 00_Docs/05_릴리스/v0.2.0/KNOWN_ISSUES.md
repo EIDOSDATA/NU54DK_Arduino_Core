@@ -1,5 +1,8 @@
 # NU54DK Arduino Core v0.2.0 알려진 제약
 
+> 보존 문서: `v0.2.0`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+
 > **상태: v0.2.0 정식 릴리스.** 이 문서는 API 이름이나 compile 결과를 실제 hardware
 > 지원보다 넓게 해석하지 않기 위한 공개 경계다.
 
@@ -25,7 +28,7 @@
 - 이번 공개 예제 transparent bridge HIL은 M16의 frame boundary·disconnect/reconnect 전문
   HIL 전체를 다시 실행한 결과가 아니다.
 - RC1과 RC2의 tag·자산은 각각 불변 기록이며 stable 자산으로 덮어쓰지 않는다.
-- 일반 사용자는 stable index의 `v0.2.0`을 사용한다. `v0.1.0`은 downgrade용으로 함께 보존한다.
+- 당시 stable index는 `v0.2.0`과 downgrade용 `v0.1.0`을 제공했다. 현재 공급 목록에는 두 버전 모두 없다.
 - Windows 이외의 Linux/macOS package 설치는 공식 지원·검증 대상이 아니다.
 - 첫 설치는 고정 NCS와 Toolchain을 받기 때문에 오래 걸리고 많은 디스크 공간이 필요하다.
 - offline 설치, 인증 proxy와 기업 TLS inspection 환경은 공식 검증하지 않았다.

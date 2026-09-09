@@ -1,5 +1,8 @@
 # NU54DK Arduino Core v0.2.0 릴리스 노트
 
+> 보존 문서: `v0.2.0`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+
 > **상태: 정식 릴리스.** RC2 Boards Manager 설치·`post_install`, 설치본 예제 14/14
 > compile, 명시 UID upload, UART READY와 BLE NUS 양방향 transparent bridge 검증을
 > 통과한 동일 runtime payload를 별도 stable package·tag·Release로 승격했다.
@@ -35,7 +38,8 @@ Arduino CLI로 compile하고, NU54DK에서 Blink upload, SerialEcho 왕복 및 �
 - `NUSPeripheral` 예제는 `received` event를 같은 `Serial`에 기록하지 않는다. BLE에서 받은
   byte는 Stream 경로로만 출력하고, 광고·연결·ready·해제·오류 상태만 사람이 읽는 로그로 남긴다.
 
-RC1과 RC2의 tag·자산은 불변 candidate 기록으로 유지하며 신규 설치에는 `v0.2.0` stable을 사용한다.
+RC1과 RC2의 tag·자산을 덮어쓰지 않고 별도 `v0.2.0` stable로 승격했다. 이 버전들은 현재
+공급 종료 상태이며 원본은 archive에서 보존한다.
 
 ## M12~M17 주요 변경
 

@@ -1,51 +1,23 @@
-# v0.1.0 마이그레이션 안내
+# v0.1.0 마이그레이션 기록
 
-| 항목 | 내용 |
-| --- | --- |
-| 대상 | M10 preview, `v0.1.0-rc.2` 또는 소스 직접 빌드 사용자 |
-| 도착 버전 | `v0.1.0` |
-| 지원 운영체제 | Windows 10/11 x64 |
-| 펌웨어 구조 | Loader/LLEXT 없는 Native Full Zephyr image |
+> 보존 문서: `v0.1.0`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
 
-## 1. stable index로 전환
+## 당시 전환과 변경점
 
-Arduino IDE의 **Additional Boards Manager URLs**에서 preview·RC 전용 URL을 제거하고 다음
-stable URL을 등록한다.
+- 전환: M10 preview·RC2·소스 빌드 → 최초 stable.
+- RC용 URL에서 stable index로 전환했다. Firmware runtime·DTS·pin·Upload 구현은 RC2와 동등하고 stable archive·checksum은 별도였다.
+- RC2 수동 HIL과 stable exact package 검증은 다른 증거다. 당시 `0.0.96`/`0.0.97`은 일반 배포판이 아닌 lifecycle 검증용 preview였다.
 
-```text
-https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
-```
+## 재현할 때 유지할 경계
 
-Boards Manager를 갱신한 뒤 `NUCODE NU54DK Zephyr Boards`의 `0.1.0`을 설치한다. 보드는
-`NU54DK (nRF54L15, Zephyr)`를 선택한다.
+- 보드 FQBN은 `nucode:zephyr:nu54dk`, 기준 NCS는 v3.4.0, Toolchain은 `dcbdc366a1`이다.
+- 과거 설치 명령·per-tag URL은 현재 제공되는 설치 경로가 아니다. 원본 artifact와 source identity를 먼저 대조한다.
+- 버전 전환 전 Sketch·저장 데이터를 백업한다. 공유 NCS/Toolchain을 임의 삭제하거나 다른 version의 build output을 섞지 않는다.
+- Storage API가 있는 버전은 EEPROM의 명시적 `commit()`과 LittleFS의 비파괴 mount를 따른다. Format/reset은 데이터 삭제이며 자동 진단 수단이 아니다.
 
-## 2. RC2에서 이동
+## 근거와 현재 이동 경로
 
-1. Arduino IDE, Serial Monitor와 실행 중인 pyOCD를 닫는다.
-2. RC2 전용 index URL을 stable URL로 교체한다.
-3. Boards Manager index를 갱신하고 `0.1.0`을 설치한다.
-4. IDE를 재시작하고 Blink를 clean compile한다.
-5. 실제 NU54DK Upload가 필요하면 CMSIS-DAP(pyOCD)를 선택한다.
-
-NCS v3.4.0과 Toolchain bundle `dcbdc366a1`의 검증 완료 marker가 일치하면 대용량
-prerequisite를 다시 내려받지 않고 재사용한다. Core 제거가 공유 NCS/Toolchain을 삭제하지 않는
-것은 의도된 동작이다.
-
-## 3. preview에서 이동
-
-`0.0.96`과 `0.0.97`은 M10 수명주기 검증용 preview다. 일반 사용자는 stable URL로 전환하고
-`0.1.0`을 설치한다. 실패 이력인 `0.0.90`~`0.0.95`나 회수된 `v0.1.0-rc.1`로 downgrade하지
-않는다.
-
-## 4. Arduino CLI
-
-```powershell
-$IndexUrl = 'https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json'
-arduino-cli config add board_manager.additional_urls $IndexUrl
-arduino-cli core update-index
-arduino-cli core install nucode:zephyr@0.1.0 --run-post-install
-arduino-cli board details --fqbn nucode:zephyr:nu54dk
-```
-
-설치 후 [v0.1.0 알려진 제약](KNOWN_ISSUES.md)과
-[문제 해결](TROUBLESHOOTING.md)을 확인한다.
+[정식 공개 기록](<../../04_검증 기록/13_v0.1.0_정식_릴리스_공개_기록.md>)에 당시 source·검증 결과가 있다. 상세한 예전 설치 순서는
+[정리 전 문서 원본](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/0dda7f9dac30845e4fdb8f9bd28da22a906dcb9d/00_Docs/05_%EB%A6%B4%EB%A6%AC%EC%8A%A4/v0.1.0/MIGRATION.md)으로 보존한다.
+현재 사용자는 [v0.3.0 마이그레이션](../v0.3.0/MIGRATION.md)을 따른다.

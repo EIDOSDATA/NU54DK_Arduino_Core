@@ -1,7 +1,7 @@
 # R04 — LittleFS File 공유 slot 수명주기
 
 2026-09-06, 시작 source `6b79480`. 종료 commit은 이 문서의 최초 commit으로 식별한다.
-다음은 R05 제품 identity 원본 정리다.
+후속 제품 identity 원본 정리는 [56번 기록](56_R05_Core_소스와_패키지_identity.md)에 기록한다.
 
 ## 변경 계약
 

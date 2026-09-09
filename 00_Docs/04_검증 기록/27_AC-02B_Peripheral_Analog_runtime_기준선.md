@@ -56,7 +56,7 @@ UART20 console만 boot-fixed owner이며, I2C22·SPI00·PWM20/21/22는 각 Ardui
 
 ### 2.2 Serial
 
-| 객체 | 현재 개발 계약 |
+| 객체 | 당시 개발 계약 |
 | --- | --- |
 | `Serial` | `DT_CHOSEN(zephyr_console)`을 빌리는 non-owning wrapper. 115200 8N1과 현재 hardware 설정을 확인하고 RX lifecycle만 시작·종료한다. Console pinctrl·baud·전원 ownership은 바꾸지 않는다. |
 | `Serial1` | 독립 `uart30`. 기본 RX P0.1/TX P0.0이며 `setPins(rx, tx)`는 종료 상태의 승인된 P0 route만 stage한다. `begin/end/rebegin`, 고정 IRQ RX queue와 polling TX를 제공한다. |
@@ -125,7 +125,7 @@ AIN6·AIN7의 software 지원은 보드 회로의 pull-up, switch, LED 저항과
 
 ### 2.6 PWM, tone과 Servo
 
-| 기능 | 전용 block | 현재 개발 계약 |
+| 기능 | 전용 block | 당시 개발 계약 |
 | --- | --- | --- |
 | `analogWrite()` | PWM20 | 최대 4 channel, 같은 block의 active channel은 period 공유 |
 | `tone()`/`noTone()` | PWM21 | 한 channel, 50% duty, 선택적 duration work |
@@ -174,7 +174,7 @@ Host parser PASS는 target 전기 동작을 뜻하지 않는다.
 ## 4. Arduino 예제 기준선
 
 이 자동 기준선을 만들 당시 source tree에는 public library 6개와 Arduino 예제 27개가 있었다.
-후속 AC-03이 EEPROM/LittleFS를 추가한 현재 RC 후보는 library 8개·예제 29개이며, 그 통합
+후속 AC-03이 EEPROM/LittleFS를 추가한 당시 RC 후보는 library 8개·예제 29개이며, 그 통합
 compile 결과는 M22 기록이 소유한다.
 
 | Library | 예제 |

@@ -1,10 +1,13 @@
 # NU54DK Arduino Core v0.3.0-rc.2 알려진 제약
 
+> 보존 문서: `v0.3.0-rc.2`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+
 > 이 문서는 RC2의 공개 기능 이름을 실제 검증보다 넓게 해석하지 않기 위한 경계입니다.
 
 ## 1. RC와 검증 상태
 
-- 현재 stable은 `v0.2.0`입니다. `v0.3.0-rc.2`는 production stable이 아닙니다.
+- 당시 stable은 `v0.2.0`입니다. `v0.3.0-rc.2`는 production stable이 아닙니다.
 - RC2는 Public Prerelease로 공개됐고 exact Core commit, tag, 자산과 final evidence를 고정했습니다.
 - RC1의 local fixed gate PASS를 RC2 PASS로 상속하지 않습니다.
 - RC1 public clean-room 실패는 tagged release harness가 Nordic 설치 leaf를 먼저 만든 문제입니다.

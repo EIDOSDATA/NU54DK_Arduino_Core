@@ -1,7 +1,8 @@
 # R13 도구·정책·build 구조와 최종 software 입력
 
-상태: R13 구현·최종 software gate 완료. current-source T11 직전 대기. R12 `480d780` 뒤 R13-A package, R13-B Kconfig/CMake,
-R13-C 정책·증거와 전체 software gate를 순서대로 기록한다. flash/HIL은 실행하지 않는다.
+당시 결과: **R13 구현·최종 software gate 완료; 이 단계의 flash/HIL NOT RUN**.
+R12 `480d780` 뒤 package·Kconfig/CMake·정책 분리, 발견 결함과 최종 gate를 기록한다.
+후속 USB 무배선·UART/BLE 실기는 [65번 기록](65_R13_후속_USB_무배선_실기와_정리.md)·[66번 기록](66_T09_UART_유휴_bias와_BLE_회귀.md), 단독 통신 회귀 완료는 [73번 기록](73_T11_Fixture_301_current_source_TWI_회귀.md)에 있다.
 
 ## R13-A package 책임 분리
 
@@ -22,7 +23,7 @@ notices·index 7개를 비교해 byte 동일을 확인했다. 이 preview는 소
 새 Host 5개는 한국어·공백 CWD의 `-I`, 외부 PYTHONPATH 동명 package 차단, 두 독립
 import 소비자, repository 기본값, 오류 marker/exit 2와 실패 전 출력 미생성을 검증한다.
 
-## R13-B 착수 범위
+## R13-B 분리 범위
 
 Kconfig의 symbol·default·depends/select·menu 순서를 보존한 기능별 include와,
 CMake의 명시적 source 선택·provenance·build record target include를 분리한다.
@@ -108,7 +109,7 @@ application 설정 전체를 사용한다. M21에서 발견한 SPI driver 누락
 [기준선 target](evidence/r13b-a1b19aa/target-baseline.json),
 [CMake Host](evidence/r13b-a1b19aa/cmake-host.txt),
 [목록 검사](evidence/r13b-a1b19aa/matrix-host.txt)를 보존한다.
-R13-C 정책·증거 구조와 최종 전체 gate를 계속한다.
+후속 R13-C 정책·증거 구조와 최종 gate는 아래 절에 이어진다.
 
 ## R13-C 정책·예제 gate·문서 역할
 
@@ -198,7 +199,8 @@ SHA가 있지만 configure의 `build_info.yml`과 매 build의 live YAML은 `unk
 진행 중인 설치 smoke는 이미 압축 해제한 불변 `499fde3` package와 변경 없는 smoke helper를
 사용한다. R13-E commit 뒤 새 source로 전체 target·Host·package·설치 29개를 검증하고,
 각 설치 compile 직후 configure/live SHA를 둘 다 확인해 cache 정리 전에 원본 YAML을 보존한다.
-영향받는 M7 provenance와 M8 compile도 새 package로 재시험한다. R13은 아직 완료 체크하지 않는다.
+영향받는 M7 provenance와 M8 compile도 새 package로 재시험하는 계획이었다.
+이 E 단계에서는 R13 완료 전이었으며, 최종 판정은 아래 절에 기록한다.
 current-source T11과 모든 flash/HIL은 NOT RUN이다.
 
 ## R13 최종 software 판정과 실기 인계
@@ -261,8 +263,13 @@ QEMU는 작업 work/qemu에만 압축 해제했고 설치 프로그램·전역 P
 [source 보존](evidence/r13-final-cf966a8/source-audit.json)에 원본 경로와 해시를 연결한다.
 
 R00~R13 완료는 current-source T11, T12/T13, 물리 BLE/Storage, T16~T18·R14·T19~T25 완료가 아니다.
-GitHub Actions 최신 상태와 공개 승인은 확인하지 않았다. 다음은
-[Fixture 101](44_M24_Fixture_101_UART_실기_검증.md)의 전원 OFF 결선 확인이다.
+GitHub Actions 최신 상태와 공개 승인은 확인하지 않았다.
+
+### 당시 실기 인계 조건
+
+아래는 R13 종료 당시의 인계 기록이며 현재 결선 변경 지시가 아니다.
+현재 실행 범위는 [활성 TODO](../TODO_v0.4.0.md)를 따른다. 당시 다음 단계는
+[Fixture 101](44_M24_Fixture_101_UART_실기_검증.md)의 전원 OFF 결선 확인이었다.
 현재 하드웨어를 관측하지 않았다. 마지막 알려진 Fixture 301 신호선이 남아 있을 수 있다.
 양쪽 USB와 모든 전원을 끄고 이전 신호선을 제거한 뒤 UART 4선과 공통 GND를 연결한다.
 외부 pull-up·보드 간 전원 rail 없이 DISABLE_UART 분리·DISABLE_SWD 연결, 동일 I/O 전압·

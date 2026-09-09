@@ -1,5 +1,8 @@
 # M25 Analog·Event·Stream Fabric과 온보드 HIL 준비 기록
 
+> 아래 HOLD·FAIL·NOT RUN은 기록 당시의 판정이다. 후속 protocol 교정·온보드 재시험은
+> [41번 기록](41_M24_M26_온보드_protocol_교정과_실기_재검증.md), 이후 실행 범위와 진행 상태는 [활성 TODO](../TODO_v0.4.0.md)에서 확인한다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | VERIFY-M25-PERIPHERAL-FABRIC-001 |
@@ -49,7 +52,7 @@ commit하거나 rollback한다. ISR은 고정 크기 event만 적재하며 사�
 | Host regression | `M12_GATE_PASS=host` |
 | 온보드 image RAM | 256 KiB 경계 안에서 link PASS |
 
-## 4. 물리 실행 결과와 남은 gate
+## 4. 당시 물리 실행 결과와 미실행 범위
 
 | 항목 | 결과 |
 | --- | --- |
@@ -62,6 +65,7 @@ commit하거나 rollback한다. ISR은 고정 크기 event만 적재하며 사�
 | PDM·I2S·QDEC 신호·overflow/underrun | 외부 source/sink fixture 필요 |
 | 최대 동시성·장시간 soak·CPU·전력 | 외부 fixture와 계측 필요 |
 
-재연결 뒤 먼저 배선 없는 M25 runner를 실행한다. 그 PASS는 내부 event와 VDD 경로에만 적용한다.
+당시 후속 순서는 재연결 뒤 배선 없는 M25 runner를 실행하는 것이었다.
+그 PASS는 내부 event와 VDD 경로에만 적용하도록 구분했다.
 외부 신호 품질, 모든 instance 단독·동시 실행과 장시간 수치는 별도 fixture evidence 없이는 PASS로
 표시하지 않는다.

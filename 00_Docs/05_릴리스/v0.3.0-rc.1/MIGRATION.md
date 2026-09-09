@@ -1,82 +1,24 @@
-# NU54DK Arduino Core v0.3.0-rc.1 마이그레이션
+# v0.3.0-rc.1 마이그레이션 기록
 
-> 이 절차는 `v0.2.0` stable에서 RC를 **시험**하는 방법입니다. RC 검증이 끝나면 stable로
-> 되돌릴 수 있으며 stable index는 계속 유지됩니다.
+> 보존 문서: `v0.3.0-rc.1`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
 
-## 1. RC index 추가
+## 당시 전환과 변경점
 
-Arduino IDE의 `File → Preferences → Additional Boards Manager URLs`에 다음 URL을 추가합니다.
+- 전환: v0.2.0 stable → RC1.
+- EEPROM 1,024-byte mirror, LittleFS 32 KiB, 확장 주변장치·BLE를 추가했다. Library 8개·예제 29개를 배포했다.
+- 당시 선언한 696 KiB 두 slot과 maximum 712,704 byte는 RC1의 역사적 계약이다. 실제 linker 경계와의 불일치는 RC3에서 교정했다. RC1 clean-room 실패는 검증기가 Nordic 설치 leaf를 미리 만든 문제이며 package API 결함으로 단정하지 않는다.
 
-```text
-https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.1/package_nucode_nu54dk_rc_index.json
-```
+## 재현할 때 유지할 경계
 
-기존 stable URL을 삭제할 필요는 없습니다. Boards Manager에서 설치할 version을 반드시
-`0.3.0-rc.1`로 확인하십시오.
+- 보드 FQBN은 `nucode:zephyr:nu54dk`, 기준 NCS는 v3.4.0, Toolchain은 `dcbdc366a1`이다.
+- 과거 설치 명령·per-tag URL은 현재 제공되는 설치 경로가 아니다. 원본 artifact와 source identity를 먼저 대조한다.
+- 버전 전환 전 Sketch·저장 데이터를 백업한다. 공유 NCS/Toolchain을 임의 삭제하거나 다른 version의 build output을 섞지 않는다.
+- Storage API가 있는 버전은 EEPROM의 명시적 `commit()`과 LittleFS의 비파괴 mount를 따른다. Format/reset은 데이터 삭제이며 자동 진단 수단이 아니다.
 
-## 2. 설치 전 보존
+## 근거와 현재 이동 경로
 
-1. EEPROM, Settings와 filesystem에 중요한 데이터가 있으면 응용의 export 기능으로 백업합니다.
-2. Arduino IDE, Serial Monitor, debugger와 다른 pyOCD/J-Link process를 닫습니다.
-3. 현재 설치 version, Feature set과 Upload probe를 기록합니다.
-4. 여러 NU54DK가 연결됐다면 시험 대상 CMSIS-DAP UID를 로컬에만 기록합니다.
-
-RC Upload는 전체 Zephyr image를 기록합니다. EEPROM은 Settings/ZMS의 `arduino/eeprom`, LittleFS는
-새 전용 partition을 사용하므로 과거 application의 임의 storage layout과 호환된다고 가정하면 안 됩니다.
-
-## 3. RC 설치와 기본 확인
-
-1. Boards Manager에서 `NUCODE NU54DK Zephyr Boards`를 검색합니다.
-2. `0.3.0-rc.1`을 명시적으로 선택해 설치합니다.
-3. 첫 설치의 Nordic prerequisite 다운로드와 `post_install`이 끝날 때까지 기다립니다.
-4. Arduino IDE를 재시작합니다.
-5. `NU54DK (nRF54L15, Zephyr)`와 `Standard peripherals`를 선택합니다.
-6. Blink를 clean compile·upload해 stable build cache가 섞이지 않았는지 확인합니다.
-7. Storage 예제를 실행하기 전에 [Known issues](./KNOWN_ISSUES.md)를 읽습니다.
-
-전체 RC 확인 순서는 [Testing](./TESTING.md)을 따릅니다.
-
-## 4. Sketch 변경점
-
-### EEPROM
-
-```cpp
-#include <EEPROM.h>
-
-EEPROM.begin(1024);
-EEPROM.put(0, value);
-EEPROM.commit();  // 영구 저장은 이 호출이 성공해야 완료됩니다.
-```
-
-`write()`나 `put()`만 호출하고 reset하면 변경은 사라집니다. 손상된 record는 자동 초기화하지
-않으며 사용자가 데이터 삭제를 승인한 뒤 `EEPROM.reset()`을 호출해야 합니다.
-
-### LittleFS
-
-```cpp
-#include <LittleFS.h>
-
-if (!LittleFS.begin(false)) {
-  // 진단 후 데이터 삭제를 승인한 경우에만 LittleFS.format()을 호출합니다.
-}
-```
-
-자동 format 의존 코드는 비파괴 기본 정책과 다릅니다. `begin(true)` 또는 `format()`은 기존
-filesystem 내용을 삭제할 수 있습니다.
-
-### BLE와 주변장치
-
-- BLE 예제는 해당 BLE Feature set을 선택합니다.
-- Runtime pin 변경은 peripheral이 종료된 상태에서만 수행합니다.
-- 기본 `Serial`은 계속 CMSIS-DAP VCOM 기반 Zephyr console이며 `Serial1`과 다른 객체입니다.
-
-## 5. Stable v0.2.0으로 복귀
-
-1. Boards Manager에서 version `0.2.0`을 선택해 다시 설치합니다.
-2. IDE를 재시작하고 `Standard peripherals`에서 Blink를 clean compile합니다.
-3. Stable image를 Upload합니다.
-4. RC 전용 EEPROM/LittleFS 데이터가 stable API에서 보이지 않는 것은 정상입니다.
-5. RC 시험을 끝냈다면 Additional URLs에서 RC URL만 제거할 수 있습니다. Stable URL은 유지합니다.
-
-RC를 제거해도 공유 NCS/Toolchain prerequisite를 임의로 삭제하지 마십시오.
+[RC1 중단 기록](CLEANROOM_ABORT.md)에 당시 source·검증 결과가 있다. 상세한 예전 설치 순서는
+[정리 전 문서 원본](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/0dda7f9dac30845e4fdb8f9bd28da22a906dcb9d/00_Docs/05_%EB%A6%B4%EB%A6%AC%EC%8A%A4/v0.3.0-rc.1/MIGRATION.md)으로 보존한다.
+현재 사용자는 [v0.3.0 마이그레이션](../v0.3.0/MIGRATION.md)을 따른다.
 

@@ -66,7 +66,7 @@ Filesystem facade는 SD, 외부 flash, secure storage 또는 모든 ESP FS 확�
 
 ## 5. Package와 예제
 
-현재 RC 후보는 8개 bundled library와 Arduino 예제 29개를 가진다.
+당시 RC 후보는 8개 bundled library와 Arduino 예제 29개를 가졌다.
 
 | 분류 | 수 | AC-03 추가 |
 | --- | ---: | --- |

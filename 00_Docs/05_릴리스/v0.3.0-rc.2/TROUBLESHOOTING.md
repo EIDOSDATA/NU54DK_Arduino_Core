@@ -1,6 +1,9 @@
 # NU54DK Arduino Core v0.3.0-rc.2 문제 해결
 
-> `v0.3.0-rc.2`는 Public Prerelease로 공개돼 있습니다. Production stable은 계속
+> 보존 문서: `v0.3.0-rc.2`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+
+> `v0.3.0-rc.2`는 Public Prerelease로 공개돼 있습니다. 당시 production stable은
 > `v0.2.0`이므로 RC2 시험과 정식 사용 channel을 구분하십시오.
 
 | 항목 | 값 |

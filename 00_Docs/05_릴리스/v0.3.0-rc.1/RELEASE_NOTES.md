@@ -1,6 +1,9 @@
 # NU54DK Arduino Core v0.3.0-rc.1 릴리스 노트
 
-> **Release Candidate입니다.** 현재 stable은 `v0.2.0`입니다. AC-02B·AC-03 physical HIL은
+> 보존 문서: `v0.3.0-rc.1`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+
+> **Release Candidate입니다.** 당시 stable은 `v0.2.0`입니다. AC-02B·AC-03 physical HIL은
 > 완료됐지만 package·public clean-room은 M22에서 별도로 검증하므로 알려진 제약을 확인하십시오.
 
 ## 주요 변경

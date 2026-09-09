@@ -1,5 +1,7 @@
 # T12 Fixture 407 — current-source 공유 AIN6 검증
 
+> 과거 검증 이력입니다. 준비·다음 작업·실행 조건은 기록 당시 기준이며, 현재 상태는 [v0.4.0 TODO](../TODO_v0.4.0.md)를 따릅니다.
+
 | 항목 | 값 |
 | --- | --- |
 | 문서 ID / 개정 | NU54-T12-F407-001 / 1.0 |
@@ -7,11 +9,11 @@
 | Exact Core source | `4a64c2562fdd5e9169faecf56b43043a0afec67c` |
 | Board gitlink | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | Fixture catalog | revision 5, ID 407 |
-| 결과 | SWD **10 MHz**, 첫 실행 **12개 기능 PASS**, 연속 campaign 7.141초 |
+| 결과 | SWD **10 MHz**, 첫 실행 **12 개 기능 PASS**, 연속 campaign 7.141 초 |
 | 다음 작업 | **408/AIN7 재결선·사용자 확인**, T12 전체는 부분 완료 |
 
 사용자의 “ㅇㅇ 그대로야” 답변을 2026-09-06T14:55:35Z에 기록하고, 확인 유효시간 안에
-exact pair image를 빌드·확인한 뒤 407을 실행했다. 실기 재시도는 없었다. 7.141초는
+exact pair image를 빌드·확인한 뒤 407을 실행했다. 실기 재시도는 없었다. 7.141 초는
 campaign 시간이며 준비·빌드·업로드 시간은 포함하지 않는다.
 
 ## 결선과 시험 조건
@@ -28,7 +30,7 @@ USB 분리 후 결선·재연결의 이전 확인은 2026-09-06T13:47:49Z이며 
 A P1.13은 SW1 net/물리 SW2 버튼과 공유하므로 버튼 미누름 상태만 검사했다.
 B P1.14의 LED4 net은 R34 330Ω을 거쳐 U9B NC7WZ17P6X 입력에 연결된다.
 이번 신호원은 출력 드라이버나 PWM을 켜지 않고 입력 바이어스만 바꿨다.
-각 단계에서 25ms 정착 후 manual SAADC 2ms 간격·12bit·gain 1/4·oversample 1을 사용했다.
+각 단계에서 25 ms 정착 후 manual SAADC 2 ms 간격·12bit·gain 1/4·oversample 1을 사용했다.
 
 ## Source·software·target 근거
 
@@ -39,9 +41,9 @@ pair/BLE target 8/8을 완료했다. 이번 source 4a64c25까지의 전체 Git �
 기존 결과를 새 실행으로 세지 않고 이전 source에 유지했다. Windows 보안 정책 변경은 없다.
 
 이번에는 actual clean HEAD의 pair DUT/peer를 `C:/u3p`에 새로 빌드해 **2/2 PASS**, 오류·경고 0,
-117.38초를 확인했다. NCS v3.4.0 revision `99553055607b2e9885fbc80ccd11fa9da81c2df0`,
+117.38 초를 확인했다. NCS v3.4.0 revision `99553055607b2e9885fbc80ccd11fa9da81c2df0`,
 Zephyr `bf801e4e3d19e1ffa76164346480cb7734dd2800`, bundle `dcbdc366a1`을 유지했다.
-각 역할의 repository translation unit 42개·정규화 설정·전체 source 소속은 이전 준비 pair와 동일하다.
+각 역할의 repository translation unit 42 개·정규화 설정·전체 source 소속은 이전 준비 pair와 동일하다.
 [입력 비교](evidence/t12-fixture407-4a64c25/build-input-comparison.json), [target 기록](evidence/t12-fixture407-4a64c25/target-build-evidence.json),
 [artifact index](evidence/t12-fixture407-4a64c25/target-artifact-index.json)가 실제 source·HEX/ELF·설정을 연결한다.
 
@@ -52,7 +54,7 @@ Zephyr `bf801e4e3d19e1ffa76164346480cb7734dd2800`, bundle `dcbdc366a1`을 유지
 
 ## 실제 결과와 독립 감사
 
-32/256 sample 길이 × single/double DMA buffer × LOW/HIGH/LOW의 12개 vector를 모두 실행했다.
+32/256 sample 길이 × single/double DMA buffer × LOW/HIGH/LOW의 12 개 vector를 모두 실행했다.
 모든 LOW는 -256~512, 모든 HIGH는 1024 초과~4095 기준을 만족했다.
 
 | 길이 / buffer | 단계별 samples | LOW 전 / HIGH / LOW 후 median | 세 단계 전체 min / max |
@@ -64,9 +66,9 @@ Zephyr `bf801e4e3d19e1ffa76164346480cb7734dd2800`, bundle `dcbdc366a1`을 유지
 
 총 **2,592 samples**, LOW 범위 -20~12, HIGH 범위 3740~3768이다. 각 원본 sample의 개수·hash,
 DMA 상태·GPIO 입력 모드·phase 전환을 [독립 감사](evidence/t12-fixture407-4a64c25/results-audit.json)로 대조했다.
-GPIO 입력 readback 24회는 raw mask `0xF0F`에서 LOW `0x4`·HIGH `0xC`이며,
-cleanup 12회 모두 B→A 정지를 확인했다. B의 해제 readback 12회는 INPUT no-pull raw 0이다.
-기능 12개·cleanup 12개·campaign 관리 2개의 총 26개 journal record가 최종 JSON과 순서까지 일치한다.
+GPIO 입력 readback 24 회는 raw mask `0xF0F`에서 LOW `0x4`·HIGH `0xC`이며,
+cleanup 12 회 모두 B→A 정지를 확인했다. B의 해제 readback 12 회는 INPUT no-pull raw 0이다.
+기능 12 개·cleanup 12 개·campaign 관리 2 개의 총 26 개 journal record가 최종 JSON과 순서까지 일치한다.
 
 | 원본 | 원본 byte SHA-256 |
 | --- | --- |
@@ -83,17 +85,17 @@ cleanup 12회 모두 B→A 정지를 확인했다. B의 해제 readback 12회는
 
 ## 보존·완료 경계와 다음 결선
 
-[원본 manifest](evidence/t12-fixture407-4a64c25/raw-files.json)의 입력 **33개**는 UTF-8 LF 사본과 원본 byte gzip으로 보존했다.
+[원본 manifest](evidence/t12-fixture407-4a64c25/raw-files.json)의 입력 **33 개**는 UTF-8 LF 사본과 원본 byte gzip으로 보존했다.
 원본 gzip 복원·SHA-256·UID 원문 부재와 Git stage byte 일치를 검증한다. 이전 80번 차단·81번 준비
 기록과 모든 이전 실기 증거는 변경하지 않는다. 현재 image·log·재현용 입력은 필요한 증거이므로 유지한다.
-최종 [문서 검사](evidence/t12-fixture407-4a64c25/docs-verification.json)는 Markdown **191개 PASS**를 기록한다.
+최종 [문서 검사](evidence/t12-fixture407-4a64c25/docs-verification.json)는 Markdown **191 개 PASS**를 기록한다.
 진행 중 시험 프로세스가 없는 것을 확인한 뒤 문서·증거를 commit하고 main에 push한다.
 
 [누계 감사](evidence/t12-fixture407-4a64c25/analog-coverage-audit.json)는 이전 401~406 원본 gzip의 hash와 기능·cleanup·DMA count를
-대조했다. 각 exact source를 구분한 401~407 합계는 **228개 기능·49,248 samples·228개 cleanup**이다.
+대조했다. 각 exact source를 구분한 401~407 합계는 **228 개 기능·49,248 samples·228 개 cleanup**이다.
 AIN0~6의 개별 기능 근거이며 408/AIN7은 아직 미실행이다. 버튼 동작·debounce·wake,
 교정 전압·정밀 ADC, PWM period/duty capture, 전체 T12·T13 이후의 완료를 뜻하지 않는다.
-Readiness 필수 16개 중 미해결 8개를 유지한다. 후속 catalog는 **420 QDEC·430 I2S·440 PDM**이며
+Readiness 필수 16 개 중 미해결 8 개를 유지한다. 후속 catalog는 **420 QDEC·430 I2S·440 PDM**이며
 79번 다음 단계 문장의 420/440 이름은 반대로 기재된 과거 안내다. 실제 catalog를 기준으로 진행한다.
 
 다음 408은 양쪽 USB를 분리하고 A 쪽 신호선을 **P1.13에서 P1.14/AIN7(P4-12)**로 옮긴다.

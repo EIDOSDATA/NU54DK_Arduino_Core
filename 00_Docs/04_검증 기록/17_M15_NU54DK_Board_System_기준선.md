@@ -141,8 +141,8 @@ Artifact digest는 GitHub Actions API가 반환한 64자리 SHA-256을 기록했
 
 | 보드 | CMSIS-DAP UID | UART | Device ID | WDT expiry 관측 | 판정 |
 | --- | --- | --- | --- | --- | --- |
-| 보드 1 | `5415360300052840fcd47678fd7d106d` | `COM13` | `d7548c79f065439b` | `1.953 s` | PASS |
-| 보드 2 | `5415360300052840d9e1e32cc887aaf1` | `COM14` | `fe68a78c3a5d743d` | `1.937 s` | PASS |
+| 보드 1 | `<PROBE_UID_2>` | `COM13` | `d7548c79f065439b` | `1.953 s` | PASS |
+| 보드 2 | `<PROBE_UID_3>` | `COM14` | `fe68a78c3a5d743d` | `1.937 s` | PASS |
 
 두 실행은 다음 scope를 정확히 검증했다.
 
@@ -232,7 +232,7 @@ reset cause `128`을 요구한다. 2026-08-30 실제 실행에서 두 단계 모
 
 | 항목 | 결과 |
 | --- | --- |
-| 보드 | CMSIS-DAP V2 UID `5415360300052840fcd47678fd7d106d`, UART `COM13` |
+| 보드 | CMSIS-DAP V2 UID `<PROBE_UID_2>`, UART `COM13` |
 | Fixture | `DISABLE_SWD`만 격리, `DISABLE_UART` 연결 유지 |
 | Timed wake | `2062 ms`, `RESET_CLOCK`, cause `2048`, supported `2483` |
 | Button wake | 사용자 SW0/P1.13 active-low, `20406 ms`, `LOW_POWER_WAKE`, cause `128`, supported `2483` |
@@ -249,11 +249,12 @@ reset cause `128`을 요구한다. 2026-08-30 실제 실행에서 두 단계 모
 두 파일은 로컬 `build/` 증적이며 Git 추적 대상이 아니다. 이 문서에는 exact commit, 공식 artifact,
 image와 두 증적의 digest를 기록해 실행 provenance를 고정한다.
 
-## 9. 완료 조건과 다음 단계
+## 9. 완료 조건과 당시 후속 단계
 
 M15 자동 비-System-OFF HIL은 두 보드에서 PASS했고, 한 번의 SWD-only 격리 세션에서 timed
 GRTC wake와 사용자 SW0/P1.13 wake를 순서대로 모두 통과했다. M15의 차단 gate는 모두 닫혔다.
 
 PMIC battery electrical HIL은 프로젝트 소유자가 승인한 범위 제외이므로 완료를 차단하지 않는다.
 계속 `NOT RUN`과 사용자 책임으로 표시하며 전기적으로 검증된 완전 지원으로 확대하지 않는다.
-PMIC 제약을 유지한 상태로 M15를 **완료**로 판정한다. 다음 구현 단계는 M16 basic BLE다.
+PMIC 제약을 유지한 상태로 M15를 **완료**로 판정했다. 후속 basic BLE 결과는
+[M16 기록](18_M16_BLE_NUS_기준선.md)에 별도로 보존한다.

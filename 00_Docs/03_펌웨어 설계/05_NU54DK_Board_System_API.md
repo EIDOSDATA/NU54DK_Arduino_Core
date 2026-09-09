@@ -15,7 +15,7 @@
 
 ## 1. 목적과 범위
 
-`v0.2.0`은 NU54DK에 종속된 board identity, reset, watchdog, GRTC, 내부 settings 저장소,
+`v0.2.0`부터 NU54DK에 종속된 board identity, reset, watchdog, GRTC, 내부 settings 저장소,
 System OFF와 BQ25186 전원 관리 기능을 `NUCODE_NU54DK` Arduino library 안에 캡슐화한다.
 일반 사용자는 `prj.conf`나 Devicetree overlay를 직접 편집하지 않고 `<NUCODE_NU54DK.h>`와
 전역 객체 `NU54DK`를 사용한다.
@@ -261,6 +261,6 @@ PMIC write API의 존재나 software semantic test를 전기적 안전성 PASS�
 PMIC 전기 HIL은 승인된 범위 제외이며 해당 API를 전기적으로 검증된 완전 지원으로 표시하지
 않는다. `v0.3.0`의 AC-01 자동 검증과 M19·M20·M21 구현·검증은 완료됐으며 Board/System 계약은
 이 BLE 단계들의 변경 대상이 아니다. 완료된 AC-03 storage facade는 `nucode/` namespace,
-BLE bond와 고정 partition 소유권을 깨지 않는 회귀 증거를 제공한다. 현재 개발 상태와
-검증 링크는 [v0.3.0 마일스톤](<../01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)에서
-관리한다.
+BLE bond와 고정 partition 소유권을 깨지 않는 회귀 증거를 제공한다.
+Stable 완료 근거는 [v0.3.0 마일스톤](<../01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>),
+현재 개발 상태는 [v0.4.0 TODO](../TODO_v0.4.0.md)에서 관리한다.

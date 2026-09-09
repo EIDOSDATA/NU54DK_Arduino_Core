@@ -1,10 +1,13 @@
 # NU54DK Arduino Core v0.3.0-rc.1 알려진 제약
 
+> 보존 문서: `v0.3.0-rc.1`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+
 > 이 문서는 RC의 공개 기능 이름을 실제 검증보다 넓게 해석하지 않기 위한 경계입니다.
 
 ## 1. RC와 검증 상태
 
-- 현재 stable은 `v0.2.0`입니다. `v0.3.0-rc.1`은 production stable이 아닙니다.
+- 당시 stable은 `v0.2.0`입니다. `v0.3.0-rc.1`은 production stable이 아닙니다.
 - AC-02B exact 3-wire HIL과 AC-03 exact 두 보드 HIL은 `0b7f892`에서 PASS했습니다. 이 결과는
   승인 fixture 밖의 pin·전기 정확도·OS·peer 조합을 보증하지 않습니다.
 - RC 설치, 29개 예제 compile, Upload와 clean-room 결과는 M22 검증 기록에 evidence가 생긴 뒤에만

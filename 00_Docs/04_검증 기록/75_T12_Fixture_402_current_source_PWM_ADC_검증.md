@@ -1,14 +1,16 @@
 # T12 Fixture 402 current-source PWM→AIN1 실기 검증
 
+> 과거 검증 이력입니다. 준비·다음 작업·실행 조건은 기록 당시 기준이며, 현재 상태는 [v0.4.0 TODO](../TODO_v0.4.0.md)를 따릅니다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 기록일 | 2026-09-06 |
 | 범위 | Fixture 402 단독 한 cycle; T12 전체는 부분 완료 |
 | Exact Core | `ff483a1bbd2a7f275b2c59126ef0e9af09211872` |
 | Board gitlink | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| Build | `C:/u3i` DUT/peer 2/2 build-only PASS, failed/error/warning 0, 113.32초 |
+| Build | `C:/u3i` DUT/peer 2/2 build-only PASS, failed/error/warning 0, 113.32 초 |
 | SWD | flash·mailbox·종료 read-only 확인 모두 **10,000,000 Hz** |
-| 결과 | 첫 실행 **48개 기능 PASS**, 연속 26.469초 |
+| 결과 | 첫 실행 **48 개 기능 PASS**, 연속 26.469 초 |
 | 다음 | Fixture 403: A 입력을 P1.05에서 P1.06/AIN2로 이동, 전원 OFF 결선과 새 확인 필요 |
 
 ## 결선 확인과 exact 입력
@@ -17,7 +19,7 @@
 402 결선을 GPIO 번호로 안내했다. 사용자는 “결선 완료 402 테스트 시작해.”라고 확인했다.
 [체크포인트](evidence/t12-fixture402-ff483a1/checkpoint.json)와 [확인서](evidence/t12-fixture402-ff483a1/confirmation.json)에 원래 시각
 11:52:52 UTC, catalog revision 2·두 UID SHA·role·exact source·HEX hash와 조건을 연결했다.
-확인 시각을 갱신하지 않고 30분 안에 실행했다. 전기적 결선과 스위치는 사용자 확인이며
+확인 시각을 갱신하지 않고 30 분 안에 실행했다. 전기적 결선과 스위치는 사용자 확인이며
 USB 열거 또는 소프트웨어가 직접 계측한 사실로 확대하지 않는다.
 
 | 연결 | A/DUT, role 1 | B/peer, role 2 |
@@ -39,19 +41,19 @@ identity는 이전 a12e444와 별도다.
 
 ## 실기 결과와 독립 감사
 
-PWM20·21·22 × channel slot 0~3 × 32/256 samples × 단일/이중 DMA buffer = **48개**를 검사했다.
+PWM20·21·22 × channel slot 0~3 × 32/256 samples × 단일/이중 DMA buffer = **48 개**를 검사했다.
 출력은 B P1.14로 순차 route하며 top 1021·compare 512·individual load를 사용한다.
 A의 SAADC는 AIN1·12-bit·gain 1/4이며 수동 SAMPLE로 수집한다. 준비·시작·완료·오류 0,
 DMA 반환 pointer/길이·완료 mask, 요청/수집 sample 수와 HIGH 관측을 판정했다.
 
 전체 **10,368 samples**를 읽고 vector별 sample hash·min/max를 보존했다.
-LOW(raw <256)는 48개, HIGH(raw >256)는
-48개 vector에서 관측했으며 raw 범위는
+LOW(raw <256)는 48 개, HIGH(raw >256)는
+48 개 vector에서 관측했으며 raw 범위는
 -372~3776이다. 이는 교정 전압·ADC 정확도나 PWM 주기·듀티 측정값이 아니다.
 
-각 vector 뒤 두 역할 모두 disarm `[0]`을 확인했다. Cleanup 48개와 campaign 2개는 기능 PASS에서
-제외하고 journal 총 98개로 보존했다. 동일 cleanup 논리 ID는 바로 앞 기능 record와 순서로 대응한다.
-[독립 감사](evidence/t12-fixture402-ff483a1/results-audit.json)는 별도 48개 계획·고유 기능 ID·전체 순서·상태·길이·해제,
+각 vector 뒤 두 역할 모두 disarm `[0]`을 확인했다. Cleanup 48 개와 campaign 2 개는 기능 PASS에서
+제외하고 journal 총 98 개로 보존했다. 동일 cleanup 논리 ID는 바로 앞 기능 record와 순서로 대응한다.
+[독립 감사](evidence/t12-fixture402-ff483a1/results-audit.json)는 별도 48 개 계획·고유 기능 ID·전체 순서·상태·길이·해제,
 JSON/journal 일치·두 image/UID·10 MHz를 대조했다.
 
 | 원본 | SHA-256 |
@@ -65,28 +67,28 @@ reset/flash 없이 CPUID `0x411fd210`, full 40-byte commit·role을 2/2 검증�
 CPU snapshot은 A SLEEPING·B SLEEPING이다.
 
 [부분 coverage 감사](evidence/t12-fixture402-ff483a1/analog-coverage-audit.json)는 이전 401의 원본 gzip을 복원하고
-원래 SHA를 검사한 뒤 현재 402와 각각 48개 고유 계획을 대조했다. 두 fixture의 합계는 기능
-**96개**, cleanup **96개**, samples **20,736개**다. 각 exact source는 별도 유지한다.
-T11의 61,423개 결과와 역사 실패도 보존하며 합계가 하나의 frozen-source 캠페인이라는 뜻은 아니다.
+원래 SHA를 검사한 뒤 현재 402와 각각 48 개 고유 계획을 대조했다. 두 fixture의 합계는 기능
+**96 개**, cleanup **96 개**, samples **20,736 개**다. 각 exact source는 별도 유지한다.
+T11의 61,423 개 결과와 역사 실패도 보존하며 합계가 하나의 frozen-source 캠페인이라는 뜻은 아니다.
 
 ## T12의 남은 범위
 
 401·402는 PWM route와 외부 AIN0·AIN1의 수집/DMA/정지 근거다. 현재 oracle의 필수 판정은
 HIGH와 sample 수이고 LOW는 min/max의 추가 관측이다. PWM period/duty capture, ADC
 calibration/채널 순서, timer/event 등 T12 전체 요구는 별도 검증해야 한다.
-후속 403·404·408·420·430·440과 T13 동시성·600/7,200초 soak, T14~T15 판정,
+후속 403·404·408·420·430·440과 T13 동시성·600/7,200 초 soak, T14~T15 판정,
 최종 통합·RC·공개는 미완료다. M24/M25 전체와 readiness gate를 승격하지 않았다.
 GitHub Actions는 미확인이며 SDK·board·제품 source·과거 evidence·공개 자산은 보존했다.
 
 ## 문서와 증거 검증
 
-활성 문서 9개에 결과와 다음 결선을 반영했다. Markdown UTF-8·내부 링크 184개, 계약 45개,
-inventory 75개·Serial identity 23개·System capability 16개를 통과했다. Readiness는 필수 16개 중
-blocker 8개를 유지한다. [software 검사 기록](evidence/t12-fixture402-ff483a1/software-verification.json)에
+활성 문서 9 개에 결과와 다음 결선을 반영했다. Markdown UTF-8·내부 링크 184 개, 계약 45 개,
+inventory 75 개·Serial identity 23 개·System capability 16 개를 통과했다. Readiness는 필수 16 개 중
+blocker 8 개를 유지한다. [software 검사 기록](evidence/t12-fixture402-ff483a1/software-verification.json)에
 canonical 명령과 log hash를 보존했다. 제품 코드 변경이 없어 이전 full Host·package·전체 target
 결과는 해당 source의 역사 증거로 유지한다.
 
-이번 실행·준비 입력 32개를 UTF-8/LF 사본과 원본 byte gzip으로 보존하고 hash·복원 일치·
+이번 실행·준비 입력 32 개를 UTF-8/LF 사본과 원본 byte gzip으로 보존하고 hash·복원 일치·
 UID 비공개를 검사했다. 실제 시험 source와 최종 문서 commit을 구분하며 commit·main push와
 checkout·board·SDK·작업 프로세스 종료 점검은 최종 작업 산출물에 기록한다.
 

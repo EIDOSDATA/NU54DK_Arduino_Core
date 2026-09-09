@@ -74,11 +74,13 @@ dual-slot layout을 노출한다. Arduino Tools에는 임의 숫자 입력 대�
 ```cpp
 #include <EEPROM.h>
 
-if (EEPROM.begin(EEPROMClass::maximum_size)) {
-  EEPROM.update(0, 42);
-  if (!EEPROM.commit()) {
-    // EEPROM.lastError()와 lastDriverError()를 확인한다.
-  }
+if (EEPROM.begin(EEPROMClass::maximum_size))
+{
+    EEPROM.update(0, 42);
+    if (!EEPROM.commit())
+    {
+        /** @brief EEPROM.lastError()와 lastDriverError()를 확인한다. */
+    }
 }
 ```
 
@@ -103,15 +105,17 @@ record다. EEPROM은 물리 EEPROM이나 byte 단위 전원 차단 원자성을 
 ```cpp
 #include <LittleFS.h>
 
-if (!LittleFS.begin(false)) {
-  // 자동 포맷하지 않는다. 데이터 삭제를 승인한 경우에만 format()을 호출한다.
+if (!LittleFS.begin(false))
+{
+    /** @brief 자동 포맷하지 않는다. 데이터 삭제를 승인한 경우에만 format()을 호출한다. */
 }
 
 File file = LittleFS.open("/counter.bin", FILE_WRITE);
-if (file) {
-  file.write(7);
-  file.flush();
-  file.close();
+if (file)
+{
+    file.write(7);
+    file.flush();
+    file.close();
 }
 ```
 

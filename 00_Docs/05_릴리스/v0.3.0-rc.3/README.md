@@ -1,17 +1,18 @@
 # NU54DK Arduino Core v0.3.0-rc.3 릴리스 후보
 
-2026-09-08 현재 이 버전의 공개 공급은 종료됐다. 아래 내용은 당시 검증·배포의 역사 기록이다.
-원본 자산은 [106번 보존 기록](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)을 따른다.
+> 보존 문서: `v0.3.0-rc.3`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+
 
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | RELEASE-v0.3.0-rc.3-INDEX-001 |
 | 대상 버전 | `v0.3.0-rc.3` / package version `0.3.0-rc.3` |
 | 채널 | 별도 RC Boards Manager index를 사용하는 Public GitHub Prerelease |
-| 현재 정식 버전 | `v0.2.0` |
+| 당시 정식 버전 | `v0.2.0` |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 지원 보드 | NU54DK / `nucode:zephyr:nu54dk` |
-| 현재 상태 | 공개 검증 수용 / `v0.3.0` stable 인계 기준 |
+| 당시 판정 | 공개 검증 수용 / `v0.3.0` stable 인계 기준 |
 | 작성자 | Quantum / NUCODE |
 
 `v0.3.0-rc.3`는 RC2에서 발견한 RRAM 표시와 실제 linker 경계의 불일치를 교정하는 후보입니다.
@@ -19,9 +20,8 @@ Loader가 없는 현재 실행 구조에 맞춰 사용하지 않던 boot reserva
 layout에서 제거했습니다. Application은 저장소를 제외한 RRAM 전체인
 `0x000000..0x16c000`, 1,490,944 byte(1,456 KiB)를 사용합니다.
 
-LittleFS 32 KiB와 Settings/ZMS 36 KiB의 주소는 RC2와 동일하게 유지합니다. MCUboot/DFU
-dual-slot은 실제 update·rollback 기능과 함께 `v0.4.0` M24의 검증된 고급 Memory layout으로
-제공할 계획이며 RC3 기본값에는 포함하지 않습니다.
+LittleFS 32 KiB와 Settings/ZMS 36 KiB의 주소는 RC2와 동일하게 유지합니다. MCUboot/DFU dual-slot은 당시 후속 제안이었고 RC3에는 포함하지 않았습니다.
+현재 v0.4.0 계획은 Peripheral Parity이며 이 과거 M24 제안을 현행 약속으로 사용하지 않습니다.
 
 ## 문서
 

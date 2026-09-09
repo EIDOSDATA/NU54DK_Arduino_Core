@@ -1,14 +1,16 @@
 # T12 Fixture 408 — current-source PWM→AIN7 검증
 
+> 과거 검증 이력입니다. 준비·다음 작업·실행 조건은 기록 당시 기준이며, 현재 상태는 [v0.4.0 TODO](../TODO_v0.4.0.md)를 따릅니다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 기록일 | 2026-09-07 Asia/Seoul, 원본 시각은 UTC |
 | Exact Core | `87b987d9ed50855e0134f2c637c00706572719a5` |
 | Board gitlink | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | Fixture | revision 5, ID 408, controller B/role 2 |
-| Build | C:/u3q pair 2/2 PASS, failed/error/warning 0, 116.06초 |
+| Build | C:/u3q pair 2/2 PASS, failed/error/warning 0, 116.06 초 |
 | SWD | flash·mailbox·읽기 전용 진단·postflight 모두 **10,000,000 Hz** |
-| 실기 | attempt2에서 **48개 기능 PASS**, campaign **26.375초**; 첫 DUT flash 실패 구분 |
+| 실기 | attempt2에서 **48 개 기능 PASS**, campaign **26.375 초**; 첫 DUT flash 실패 구분 |
 | 다음 | **420 QDEC** 별도 재결선·확인; 전체 T12는 부분 완료 |
 
 ## 결선과 실행 입력
@@ -31,7 +33,7 @@ Source 393e419의 전체 Host **655 PASS·1 조건부 SKIP(총 656)**·관련 11
 Inventory·예제 발견·pair/BLE target 8/8은 [81번](81_T12_Fixture_407_Host_재개와_검증.md)에 유지한다.
 [software 입력 비교](evidence/t12-fixture408-87b987d/software-input-comparison.json)는 87b987d까지 문서·역사 증거 외 변경이 없음을 확인했다.
 이를 새 software 실행으로 세지 않았다. 새 exact pair는 NCS v3.4.0·bundle dcbdc366a1로 빌드했고,
-각 역할의 repository translation unit 42개·정규화 설정·source 소속은 직전 407 pair와 동일하다.
+각 역할의 repository translation unit 42 개·정규화 설정·source 소속은 직전 407 pair와 동일하다.
 [build 비교](evidence/t12-fixture408-87b987d/build-input-comparison.json), [build 기록](evidence/t12-fixture408-87b987d/target-build-evidence.json),
 [artifact index](evidence/t12-fixture408-87b987d/target-artifact-index.json)에 SDK revision·설정·실제 image identity를 보존했다.
 
@@ -44,7 +46,7 @@ Inventory·예제 발견·pair/BLE target 8/8은 [81번](81_T12_Fixture_407_Host
 
 [attempt1](evidence/t12-fixture408-87b987d/fixture408-attempt1.json)은 A/DUT sector flash 도중 CMSIS-DAP 응답 timeout으로
 2026-09-06T15:40:08.004339Z에 실패했다. B flash 전이며 `external_wiring_executed=false`,
-기능 record 0개다. 이 결과를 ADC 기능 실패나 PASS로 세지 않는다.
+기능 record 0 개다. 이 결과를 ADC 기능 실패나 PASS로 세지 않는다.
 
 [읽기 전용 진단](evidence/t12-fixture408-87b987d/probe-diagnostic.json)은 flash/reset/fixture 명령 없이 두 보드의
 10 MHz CPUID `0x411fd210`과 COM 포트 네 개를 확인했다. A HALTED·B SLEEPING이었다.
@@ -55,15 +57,15 @@ Sector erase·auto_unlock=false를 유지했고 mass erase/recover·unlock·속�
 
 ## 408 실기와 결과 감사
 
-PWM20/21/22 × channel slot 0~3 × 32/256 samples × 단일/이중 DMA = **48개**다.
+PWM20/21/22 × channel slot 0~3 × 32/256 samples × 단일/이중 DMA = **48 개**다.
 B P1.14로 순차 route하고 top 1021·compare 512·individual load를 사용했다.
 A AIN7은 12-bit·gain 1/4·manual SAMPLE이다. 요청·수집 수, 완료·오류 상태,
 DMA 반환 길이와 HIGH 관측을 검사했다. **10,368 samples**를 읽어 vector별 min/max·sample hash를 기록했다.
-전체 raw 범위는 **-24~3780**, LOW(<256)와 HIGH(>256)는 각각 **48개 vector**에서 관측했다.
+전체 raw 범위는 **-24~3780**, LOW(<256)와 HIGH(>256)는 각각 **48 개 vector**에서 관측했다.
 HIGH와 sample count가 필수 oracle이며 LOW는 추가 관측이다. 교정 전압이나 PWM 주기·듀티 측정값은 아니다.
 
-기능마다 A→B disarm `[0]`을 확인해 **cleanup 48개**를 남겼다. Campaign 관리 2개를 더한
-98개 journal record는 최종 JSON과 순서까지 같다. [독립 감사](evidence/t12-fixture408-87b987d/results-audit.json)는 별도 48개 계획,
+기능마다 A→B disarm `[0]`을 확인해 **cleanup 48 개**를 남겼다. Campaign 관리 2 개를 더한
+98 개 journal record는 최종 JSON과 순서까지 같다. [독립 감사](evidence/t12-fixture408-87b987d/results-audit.json)는 별도 48 개 계획,
 고유 ID·순서·상태·DMA count·cleanup·확인서 hash·두 image/UID·SWD를 대조했다.
 PWM 기록은 개별 sample 배열 대신 min/max·hash를 저장하므로 사후 감사에서 sample hash를 재계산했다고 주장하지 않는다.
 
@@ -73,25 +75,25 @@ PWM 기록은 개별 sample 배열 대신 min/max·hash를 저장하므로 사�
 | [fixture408-attempt2.json.jsonl](evidence/t12-fixture408-87b987d/fixture408-attempt2.json.jsonl) | `c5609349fd1ec0669864c1db7c82fbb62dfb326717004db915f5f7a583913dd4` |
 
 [최종 실행 log](evidence/t12-fixture408-87b987d/fixture408-attempt2.log)의 `V04_SIGNAL_PASS=two-board-synthetic-signal`과
-[실행 wrapper](evidence/t12-fixture408-87b987d/run-attempt2.py)를 보존했다. 26.375초는 완료 campaign이며 build·flash 시간은 별도다.
+[실행 wrapper](evidence/t12-fixture408-87b987d/run-attempt2.py)를 보존했다. 26.375 초는 완료 campaign이며 build·flash 시간은 별도다.
 2026-09-06T15:43:04.482525+00:00의 [postflight](evidence/t12-fixture408-87b987d/postflight.json)는 추가 flash/reset/fixture 명령 없이
 full source·role·protocol·CPUID를 양쪽에서 확인했다. 당시 상태는 둘 다 SLEEPING이었다.
 
 ## 누계·남은 범위·보존
 
 [누계 감사](evidence/t12-fixture408-87b987d/analog-coverage-audit.json)는 이전 401~407 원본 gzip의 hash·기능 수·cleanup·DMA count를 대조했다.
-401~404·408 PWM 각 48개와 405 오픈드레인·406/407 입력 바이어스 각 12개를 합쳐
-**276개 기능·59,616 samples·276개 cleanup**이다. AIN0~7 모두 각 exact source에서 개별 기능 근거를 확보했다.
+401~404·408 PWM 각 48 개와 405 오픈드레인·406/407 입력 바이어스 각 12 개를 합쳐
+**276 개 기능·59,616 samples·276 개 cleanup**이다. AIN0~7 모두 각 exact source에서 개별 기능 근거를 확보했다.
 공유 채널 시험을 PWM 시험과 같은 범위로 합치거나 한 frozen-source campaign으로 바꾸지 않는다.
 
 **420 QDEC·430 I2S·440 PDM**, PWM period/duty capture·ADC calibration API/채널 순서·timer/event 등
-전체 T12 요구와 T13 동시성·600/7,200초 soak·최종 통합·RC·공개는 남아 있다.
-M24/M25 전체와 readiness 필수 16개 중 미해결 8개는 유지한다. 새 원격 GitHub Actions는 미확인이다.
+전체 T12 요구와 T13 동시성·600/7,200 초 soak·최종 통합·RC·공개는 남아 있다.
+M24/M25 전체와 readiness 필수 16 개 중 미해결 8 개는 유지한다. 새 원격 GitHub Actions는 미확인이다.
 
-[원본 manifest](evidence/t12-fixture408-87b987d/raw-files.json)의 **45개 입력**은 UTF-8 LF 사본과 원본 byte gzip으로 보존했다.
+[원본 manifest](evidence/t12-fixture408-87b987d/raw-files.json)의 **45 개 입력**은 UTF-8 LF 사본과 원본 byte gzip으로 보존했다.
 최초 실패·진단·재실행·build·postflight를 포함하며 UID 원문 부재·gzip 복원·SHA·Git stage byte를 검사한다.
 기존 검증 기록·SDK·board·공개 자산과 현재 image·재현 입력은 유지했다. 새 불필요한 저장소 파일은 없다.
-최종 [문서 검사](evidence/t12-fixture408-87b987d/docs-verification.json)는 Markdown **192개 PASS**다.
+최종 [문서 검사](evidence/t12-fixture408-87b987d/docs-verification.json)는 Markdown **192 개 PASS**다.
 문서·증거를 commit·main push한 뒤 clean checkout·remote 일치·시험 프로세스 종료를 확인한다.
 
 ## 다음 결선: 420 QDEC

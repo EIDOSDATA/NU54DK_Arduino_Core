@@ -3,6 +3,7 @@
 | 항목 | 값 |
 | --- | --- |
 | 상태 | 완료 |
+| 기록 성격 | v0.1.0 개발 당시의 완료 기준선; 검증 source·실행 범위는 아래 기록 기준 |
 | 검증일 | 2026-08-27 |
 | 작성자 | Quantum / NUCODE |
 | Core 기준 commit | `1c5b9d07dbf2` + 본 M4 변경 |
@@ -191,6 +192,7 @@ M4 완료가 다음 기능을 의미하지 않는다.
 - 일반 Arduino library corpus 호환
 - LGPL binary 배포 의무의 최종 법률 판단
 
-M5는 이 고정 snapshot을 build input으로 사용해 Arduino CLI 수직 경로를 검증할 수 있다.
-M6는 공통 source와 생산 `Arduino.h`의 type/linkage를 한 번만 정의하도록 통합하고 실제
-semantic test를 추가해야 한다.
+당시 후속 과제는 이 snapshot을 사용한 Arduino CLI 수직 경로와 공통 source·생산
+`Arduino.h`의 단일 type/linkage·semantic test 통합이었다. 완료 결과는
+[M5](05_M5_Arduino_CLI_Build_Adapter_기준선.md)와
+[M6](06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md)에 기록한다.

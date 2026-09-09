@@ -100,7 +100,10 @@ M25의 `4092`는 12-bit raw code이며 full scale에 가깝다. 이 gate는 내�
 - 요구사항을 설치하지 않은 standalone Python으로 시작한 Host 시험은 PyYAML 부재로 실패했다.
   이미 준비된 hash 고정 host venv로 재실행해 통과했다. 해당 실패를 firmware 결함으로 분류하지 않는다.
 
-## 5. 남은 physical·release gate
+## 5. 당시 남은 physical·release gate
+
+이 절은 당시 계획이다. 이후 기능 검증 범위는 [42번 합의](42_v0.4.0_코어_기능_검증_범위_합의.md),
+최신 사용자 변경과 진행은 [활성 TODO](../TODO_v0.4.0.md)에 따른다.
 
 외부 UART/SPI/TWIS peer·loopback, SAADC 외부 정확도와 PWM timing, PDM/I2S/QDEC 실제 신호,
 최대 동시성·오류 주입·처리량·장시간 soak·CPU·전력은 이 온보드 PASS로 대체하지 않는다.

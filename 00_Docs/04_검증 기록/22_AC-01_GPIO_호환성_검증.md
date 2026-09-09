@@ -204,7 +204,7 @@ SW0 자기구동 전용 preflight에서는 다음 항목이 실제 보드에서 
 | Core revision | `ac10ba3b253bd6bf76bcf73aa2c79278304908a4` |
 | Board revision | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | 완료 시각 | `2026-08-31T10:29:09.489187+00:00` |
-| Probe/UART | CMSIS-DAP V2 `5415360300052840fcd47678fd7d106d`, `COM13` |
+| Probe/UART | CMSIS-DAP V2 `<PROBE_UID_2>`, `COM13` |
 | Image SHA-256 | `c4537e956de0af14950fc95ff2a7b068a0a61adfcf1752e2f5cdd9f5419e53d2` |
 | Transcript SHA-256 | `4113e897efafa17c8db5f548138f7e08e30c2792e57bb43a3df610cfad982f4f` |
 | 측정값 | short pulse `1554 us`, long pulse `20048 us`, heartbeat delta `10` |
@@ -218,4 +218,5 @@ shift 최종 상태, SW0 P1.13 LOW/HIGH one-shot·rearm 및 nested callback mask
 
 AC-01의 source/host·target build와 요구한 물리 HIL은 모두 통과했다. 이 판정은 `v0.3.0` 개발
 마일스톤의 자동 검증 완료이며, 공개 stable package 지원 선언은 AC-02·AC-03과 M21을 포함한 M22
-릴리스 gate 뒤에만 수행한다. 외부 pull-up 상승시간·부하 전기 HIL은 승인된 비차단 제외로 유지한다.
+릴리스 gate 뒤에만 수행하도록 구분했다. 후속 공개 결과는 [32번 정식 공개 기록](32_M22_v0.3.0_정식_릴리스_공개_기록.md)에 있다.
+외부 pull-up 상승시간·부하 전기 HIL은 승인된 비차단 제외로 유지한다.

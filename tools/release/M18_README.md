@@ -2,8 +2,8 @@
 
 > **역사적 RC 자동화:** 이 문서는 RC2 Draft 생성·검증에 사용한 절차를 고정한다. RC 전용
 > 도구는 stable 공개를 의도적으로 수행하지 않는다. 후속 `v0.2.0`은 별도 stable package,
-> tag와 Release로 승격하며 현재 설치·공개 상태는
-> [`v0.2.0` 릴리스 문서](../../00_Docs/05_릴리스/v0.2.0/README.md)를 따른다.
+> tag와 Release로 승격했다. 당시 버전은 공급 종료 상태이며 현재 설치 안내는
+> [릴리스 문서 안내](../../00_Docs/05_릴리스/README.md)를 따른다.
 
 이 도구는 exact clean commit에서 `0.2.0-rc.2` package와 RC index를 두 번 독립 생성해
 byte 재현성을 확인하고, GitHub의 **Draft + prerelease metadata**를 가진 내부 Release object와
@@ -39,12 +39,17 @@ artifact byte와 SHA-256을 비교한다. M18 당시 plan과 evidence에 기록�
 네 문서 경로는 command line으로 바꿀 수 없다. repository URL, NCS/Zephyr/toolchain pin,
 `0.1.0-rc.2` + `0.2.0-rc.1` + `0.2.0-rc.2` RC allowlist, RC/stable index 이름과 release asset 이름도
 고정 계약이다. 다만 후속 공개로 root stable index가 정상 확장된 사실과 M18 역사 경계를
-구분하기 위해 다음 두 공개 byte identity만 별도 read-only 허용목록으로 인정한다.
+구분한다. 아래 두 값은 M18 당시 경계다. 현행 도구의 별도 read-only 허용목록에는
+후속 v0.3.0 최초 catalog와 2026-09-08 공급 종료 catalog도 포함한다.
 
 - `v0.1.0` latest index: 1,125 byte,
   `385445512ba6bb842024979e8314f2f953eb15a14e3ce72076b6d475e2e7583d`
 - `v0.2.0` latest index (`0.2.0`, `0.1.0` 순서): 1,877 byte,
   `5ae7fbe13f71c52950879064685694cf4b062557572f187e81476639724e5344`
+
+현행 catalog는 1,126 byte, SHA-256
+`97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57`이며 0.3.0만 제공한다.
+이 추가 허용은 과거 plan의 수치 변경이나 구버전 재공개 허가가 아니다.
 
 root index는 worktree와 exact commit에서 같은 허용 byte여야 한다. 다른 JSON, CRLF 변환,
 한 byte 변경이나 commit/worktree 불일치는 모두 거부한다. 이 허용목록은 현재 main에서 역사적

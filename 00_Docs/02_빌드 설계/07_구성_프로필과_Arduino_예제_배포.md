@@ -111,7 +111,7 @@ feature_set=ble      → ble
 사용하지 않은 library의 feature는 build에 들어가지 않는다. 동일한 profile이라도 선택 feature가
 다르면 final cache identity가 다르다.
 
-Sketch root의 `prj.conf`와 `app.overlay`는 전문가용 마지막 override로 허용한다. 공개 14개
+Sketch root의 `prj.conf`와 `app.overlay`는 전문가용 마지막 override로 허용한다. v0.3.0 공개 29개
 예제는 이 sidecar에 의존하지 않으며 profile/library 내부 설정만으로 compile해야 한다.
 임의 snippet, module 또는 CMake 주입은 공개 override 계약이 아니다.
 

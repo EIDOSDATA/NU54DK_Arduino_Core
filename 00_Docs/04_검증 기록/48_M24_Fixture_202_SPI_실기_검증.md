@@ -1,5 +1,8 @@
 # M24 Fixture 202 SPI 실기 검증
 
+> 리팩토링 이전 source의 실기 기록이다. 같은 fixture의 후속 회귀는 [71번 기록](71_T11_Fixture_202_current_source_SPI_회귀.md)에 있으며,
+> 아래 수치·실패·판정은 이 기록의 exact source에만 적용한다. 현재 결선·실행 순서는 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 기록 ID | VALIDATION-M24-SPI-FIXTURE-048 |
@@ -80,7 +83,7 @@ mailbox timeout, STOP 미증명 또는 probe 이탈은 없었다. 공통 runner�
 Evidence에는 raw UID를 넣지 않고 role별 UID SHA-256, image identity, confirmation hash,
 fixture catalog hash, SWD 설정과 flash 결과를 보존했다.
 
-## 5. 판정과 다음 단계
+## 5. 판정과 당시 후속 단계
 
 Fixture 202의 P0↔P1 route에서 SPIM/SPIS30·20·21·22의 계획된 양방향 data path,
 EasyDMA, SPI mode·bit order, ORC, 단일/이중 buffer handover와 cancel 뒤 정상 재시작은

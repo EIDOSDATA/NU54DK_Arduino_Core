@@ -1,14 +1,16 @@
 # T12 Fixture 404 current-source PWM→AIN3 실기 검증
 
+> 과거 검증 이력입니다. 준비·다음 작업·실행 조건은 기록 당시 기준이며, 현재 상태는 [v0.4.0 TODO](../TODO_v0.4.0.md)를 따릅니다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 기록일 | 2026-09-06 |
 | 범위 | Fixture 404 단독 한 cycle; T12 전체 부분 완료 |
 | Exact Core | `e080bbc8f07a0ad751d83dacdb259d395b69be5b` |
 | Board gitlink | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| Build | `C:/u3k` DUT/peer 2/2 build-only PASS, failed/error/warning 0, 112.06초 |
+| Build | `C:/u3k` DUT/peer 2/2 build-only PASS, failed/error/warning 0, 112.06 초 |
 | SWD | flash·mailbox·종료 read-only 확인 모두 **10,000,000 Hz** |
-| 결과 | 첫 실행 **48개 기능 PASS**, 연속 26.5초 |
+| 결과 | 첫 실행 **48 개 기능 PASS**, 연속 26.5 초 |
 | 다음 | Fixture 408: A P1.07→P1.14/AIN7, 전원 OFF 결선 변경과 새 확인 |
 
 ## 결선 확인과 exact 입력
@@ -18,7 +20,7 @@ P1.06에서 P1.07/AIN3로 옮기는 404 안내를 제공했다. 사용자가 “
 직전 결선 안내 상태의 실행 지시로 기록했다. [체크포인트](evidence/t12-fixture404-e080bbc/checkpoint.json)와
 [확인서](evidence/t12-fixture404-e080bbc/confirmation.json)에 2026-09-06T12:25:28+00:00의 원래 기록 시각,
 catalog revision 2·두 UID SHA·role·exact source·HEX hash와 조건을 연결했다.
-시각 갱신 없이 30분 이내 실행했다. 이는 사용자 지시 문맥에 따른 확인이며 소프트웨어의 직접 전기 계측은 아니다.
+시각 갱신 없이 30 분 이내 실행했다. 이는 사용자 지시 문맥에 따른 확인이며 소프트웨어의 직접 전기 계측은 아니다.
 
 | 연결 | A/DUT, role 1 | B/peer, role 2 |
 | --- | --- | --- |
@@ -39,18 +41,18 @@ NCS v3.4.0·bundle dcbdc366a1·GNU Arm 14.3·bundled Python·pyOCD 0.42.0을 사
 
 ## 실기와 독립 감사
 
-PWM20·21·22 × channel slot 0~3 × 32/256 samples × 단일/이중 DMA buffer = **48개**다.
+PWM20·21·22 × channel slot 0~3 × 32/256 samples × 단일/이중 DMA buffer = **48 개**다.
 B P1.14로 순차 route하며 top 1021·compare 512·individual load를 사용한다.
 A SAADC는 AIN3·12-bit·gain 1/4이며 수동 SAMPLE로 수집한다. 준비·시작·완료·오류 0,
 DMA 반환 pointer/길이·완료 mask, 요청/수집 sample 수와 HIGH 관측을 판정했다.
 
 전체 **10,368 samples**를 읽고 vector별 sample hash·min/max를 기록했다.
-LOW(raw <256)는 48개, HIGH(raw >256)는 48개 vector에서 관측했다.
+LOW(raw <256)는 48 개, HIGH(raw >256)는 48 개 vector에서 관측했다.
 전체 raw 범위는 -440~3776이며 교정 전압·ADC 정확도나 PWM 주기·듀티 측정값이 아니다.
 
-매 vector 뒤 양쪽 disarm `[0]`을 확인했다. Cleanup 48개와 campaign 2개는 기능 PASS에서
-제외했으며 journal은 총 98개다. 같은 cleanup 논리 ID는 바로 앞 기능 record와 순서로 대응한다.
-[독립 감사](evidence/t12-fixture404-e080bbc/results-audit.json)는 별도 48개 계획·고유 ID·전체 순서·상태·길이·해제,
+매 vector 뒤 양쪽 disarm `[0]`을 확인했다. Cleanup 48 개와 campaign 2 개는 기능 PASS에서
+제외했으며 journal은 총 98 개다. 같은 cleanup 논리 ID는 바로 앞 기능 record와 순서로 대응한다.
+[독립 감사](evidence/t12-fixture404-e080bbc/results-audit.json)는 별도 48 개 계획·고유 ID·전체 순서·상태·길이·해제,
 JSON/journal 일치·image/UID·10 MHz를 대조했다.
 
 | 원본 | SHA-256 |
@@ -64,9 +66,9 @@ reset/flash 없이 CPUID `0x411fd210`, full 40-byte commit·role을 2/2 검증�
 CPU snapshot은 A SLEEPING·B SLEEPING이다.
 
 [부분 coverage 감사](evidence/t12-fixture404-e080bbc/analog-coverage-audit.json)는 이전 401~403의 원본 gzip을 복원하고
-각 SHA를 확인한 뒤 현재 404까지 별도 48개 고유 계획을 대조했다. 네 fixture 합계는 기능
-**192개**, cleanup **192개**, samples **41,472개**다.
-각 exact source는 구분하며 하나의 frozen-source 캠페인으로 합치지 않는다. T11의 61,423개
+각 SHA를 확인한 뒤 현재 404까지 별도 48 개 고유 계획을 대조했다. 네 fixture 합계는 기능
+**192 개**, cleanup **192 개**, samples **41,472 개**다.
+각 exact source는 구분하며 하나의 frozen-source 캠페인으로 합치지 않는다. T11의 61,423 개
 기능 결과와 과거 실패·공개 자산은 보존했다.
 
 ## T12의 남은 범위
@@ -74,18 +76,18 @@ CPU snapshot은 A SLEEPING·B SLEEPING이다.
 401~404는 PWM route와 AIN0~3의 수집/DMA/정지 근거다. HIGH와 sample 수가 현재 oracle의
 필수 판정이며 LOW는 min/max의 추가 관측이다. PWM period/duty capture, ADC calibration/
 채널 순서, timer/event 등 T12 전체 요구는 별도로 검증해야 한다.
-408·420·430·440과 T13 동시성·600/7,200초 soak, T14~T15 판정, 최종 통합·RC·공개는
+408·420·430·440과 T13 동시성·600/7,200 초 soak, T14~T15 판정, 최종 통합·RC·공개는
 미완료다. M24/M25 전체와 readiness gate를 승격하지 않았다. GitHub Actions는 미확인이다.
 
 ## 문서와 증거 검증
 
-활성 문서 9개에 결과와 다음 결선을 반영했다. Markdown UTF-8·내부 링크 186개, 계약 45개,
-inventory 75개·Serial identity 23개·System capability 16개를 통과했다. Readiness는 필수 16개 중
-blocker 8개를 유지한다. [software 검사 기록](evidence/t12-fixture404-e080bbc/software-verification.json)에
+활성 문서 9 개에 결과와 다음 결선을 반영했다. Markdown UTF-8·내부 링크 186 개, 계약 45 개,
+inventory 75 개·Serial identity 23 개·System capability 16 개를 통과했다. Readiness는 필수 16 개 중
+blocker 8 개를 유지한다. [software 검사 기록](evidence/t12-fixture404-e080bbc/software-verification.json)에
 canonical 명령과 log hash를 보존했다. 제품 코드 변경이 없어 이전 full Host·package·전체 target
 결과는 해당 source의 역사 증거로 유지한다.
 
-이번 실행·준비 입력 32개를 UTF-8/LF 사본과 원본 byte gzip으로 보존하고 hash·복원 일치·
+이번 실행·준비 입력 32 개를 UTF-8/LF 사본과 원본 byte gzip으로 보존하고 hash·복원 일치·
 UID 비공개를 검사했다. 실제 시험 source와 최종 문서 commit을 구분하며 commit·main push와
 checkout·board·SDK·작업 프로세스 종료 점검은 최종 작업 산출물에 기록한다.
 

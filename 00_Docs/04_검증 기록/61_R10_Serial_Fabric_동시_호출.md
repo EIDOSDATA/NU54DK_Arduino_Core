@@ -1,7 +1,8 @@
 # R10 Serial Fabric 동시 호출과 orchestration 분리
 
-상태: R10-A/B/C software 완료; current-source T11 미실행. 시작 commit `1c956b7227c381aeaa6043627b9244b7b5d080a3`.
-T14의 동시성 수정·구조 회귀이며 current-source T11은 실행하지 않는다.
+당시 결과: R10-A/B/C software 완료; 이 단계의 current-source T11 미실행. 시작 commit `1c956b7227c381aeaa6043627b9244b7b5d080a3`.
+T14의 동시성 수정·구조 회귀 기록이다. 이후 단독 통신 실기 회귀 완료는
+[73번 기록](73_T11_Fixture_301_current_source_TWI_회귀.md)에 별도로 보존한다.
 
 ## 구현 전 책임 대응표
 

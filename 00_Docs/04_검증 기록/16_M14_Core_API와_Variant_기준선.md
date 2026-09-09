@@ -273,7 +273,7 @@ NCS v3.4.0 target gate는 7/7 build-only, failed/error/warning 0건으로
 | 항목 | 실기 결과 |
 | --- | --- |
 | 최종 상태 | `passed`, `NUCODE_M14_PIN_HIL_PASS` |
-| probe | CMSIS-DAP V2, UID `5415360300052840fcd47678fd7d106d` |
+| probe | CMSIS-DAP V2, UID `<PROBE_UID_2>` |
 | UART | COM13, 115200 baud |
 | flash | DAPLink-MSD sequence 1, 120,320 byte, mass erase/recover 없음 |
 | Core | `dabcc81198742b28f650eedd9902d8996cf9bd2f` |
@@ -341,4 +341,5 @@ exception/RTTI는 기본 비활성·expert opt-in 정책을 유지한다. 고정
 NU54DK에서 통과했으므로 M14 완료 조건을 모두 충족한다. `PIN_LED1`은 `PIN_PWM0` 소유권
 때문에 의도적으로 digital 거부하며, UART/I2C/SPI·일반 connector pin은 이번 범위에서
 공개하지 않는다. exception/RTTI NU54DK actual-runtime, debounce와 일반 pin ownership 같은
-명시적 범위 밖 제한도 그대로 유지한다. 다음 단계는 M15 board/system library다.
+명시적 범위 밖 제한도 그대로 유지한다. 후속 board/system 결과는
+[M15 기록](17_M15_NU54DK_Board_System_기준선.md)에 별도로 보존한다.

@@ -1,5 +1,8 @@
 # M24~M26 온보드 재개와 USB·UART 진단
 
+> 아래 HOLD·FAIL·NOT RUN은 기록 당시의 판정이다. 후속 protocol 교정·온보드 재시험은
+> [41번 기록](41_M24_M26_온보드_protocol_교정과_실기_재검증.md), 이후 실행 범위와 진행 상태는 [활성 TODO](../TODO_v0.4.0.md)에서 확인한다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | VERIFY-V04-ONBOARD-RESUME-001 |
@@ -68,7 +71,7 @@ Code Integrity Operational의 3033/3077 이벤트에서 Nordic
 target 환경 분리 및 차단 파일 확인 절차는
 [Windows 개발환경 설정](<../02_빌드 설계/09_Windows_개발환경_설정.md#host-mingw와-target-도구의-path-분리>)에 추가했다.
 
-## 4. 남은 순서
+## 4. 당시 후속 진단 계획
 
 1. 기존 DUT의 USB/VCOM 연결이 안정적으로 유지되는지 확인한다.
 2. READY 송신과 VCOM 수신·reset 순서를 재현해 초기 누락과 reset 경계 잡음의 원인을 분리한다.

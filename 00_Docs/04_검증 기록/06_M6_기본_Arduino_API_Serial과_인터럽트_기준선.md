@@ -172,7 +172,7 @@ Flash recipe는 M8 범위이므로 이 단계의 CLI 명령은 compile까지만 
 현재 `tests/hil/nu54dk/m6_serial_echo.py`에 보관된 HIL 실행기가 다음 전체 경로를 자동
 수행했다. 파일 이동은 시험 결과를 다시 생성하거나 기존 PASS를 변경하지 않는다.
 
-1. UID가 `54153603000528402aae46c5e8e3712a`인 NU54DK DAPLink MSD 식별
+1. UID가 `<PROBE_UID_1>`인 NU54DK DAPLink MSD 식별
 2. target과 UID가 일치하는 COM10 선택
 3. SerialEcho HEX 기록 및 DAPLink `Flash Sequence` 증가와 `SUCCESS` 확인
 4. COM10 115200 8N1에서 `NUCODE_M6_SERIAL_READY` 수신

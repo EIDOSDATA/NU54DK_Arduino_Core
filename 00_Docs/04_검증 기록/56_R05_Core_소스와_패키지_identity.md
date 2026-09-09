@@ -1,7 +1,7 @@
 # R05 — Core 소스와 패키지 identity
 
 2026-09-06, 시작 source `1145e72`. 종료 commit은 이 문서의 최초 commit으로 식별한다.
-다음은 R06 nu54-builder 모듈화와 설치 경로 검증이다.
+후속 nu54-builder 모듈화와 설치 경로 검증은 [57번 기록](57_R06_builder_모듈과_설치_경로.md)에 기록한다.
 
 ## 원본과 수명주기
 

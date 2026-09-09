@@ -40,7 +40,9 @@ checksum으로 보존한다. 명시된 예상 reset 외에는 자동 UART 재시
 
 `v04_t13_power.py --phase bridge|timer|gpio --repeats 1|100`은 기본 read-only preflight다.
 실행은 현재 S grant와 `--execute-fixture --evidence`가 필요하다. 예행1회를100회로 세지 않는다.
-새 회차 전 남은 확인 시간이20초 미만이면 시작하지 않는다. 사용자 확인의 원래 만료를 연장하지 않는다.
+기존 runner에는 회차 시작 전 확인 잔여 20초 검사가 있다. 사용자는 유지 중인 S 결선의
+시간 기반 만료를 폐기했으므로 후속 실기 전에 이 시한 검사를 현행 지시와 정합화해야 한다.
+문서 정리만으로 코드 검사가 바뀐 것은 아니다. Firmware 10초 lease·STOP·전기 검사는 유지한다.
 
 `--phase bridge-debug --repeats 1`은 응답 손실 원인을 구분하는 단일 진단이다. B의 debug를
 유지하고 pin reset·OFF 없이 같은 UART GPIO·DMA와 source/challenge를 검사한다. 이 결과에는
@@ -82,7 +84,9 @@ clock 참조를 표시하므로 정리 성공은 이 bit도0이어야 한다. cl
 예정 reset, mode, round, TAD system/debug request, C_DEBUGEN, XO.STAT, TX/RX 완료 수,
 OFF 전 DMA 반환 증명, retention 유효, seed, uptime ms.
 
-구현·Host/target 결과와 실제 성공/실패는 [107번 기록](../../../00_Docs/04_검증%20기록/107_T13_S_자동_진행과_System_OFF_계획.md)에 따로 남긴다.
+초기 구현은 [107번 기록](<../../../00_Docs/04_검증 기록/107_T13_S_자동_진행과_System_OFF_계획.md>),
+최신 Host/target 준비와 중계 실패·실기 잔여는 [110번 기록](<../../../00_Docs/04_검증 기록/110_문서_정리와_T13_S_잔여_재개.md>)을 따른다.
+전용 image 준비와 실제 OFF/wake 성공은 별개다.
 
 ## 최초 UART 오류 원본
 

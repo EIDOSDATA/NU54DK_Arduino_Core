@@ -1,75 +1,23 @@
-# NU54DK Arduino Core v0.3.0-rc.3 마이그레이션
+# v0.3.0-rc.3 마이그레이션 기록
 
-> `v0.3.0-rc.3`는 시험용 Release Candidate입니다. 현재 정식 설치 channel은 stable
-> `v0.2.0`입니다.
+> 보존 문서: `v0.3.0-rc.3`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
 
-## 1. 이동 전 원칙
+## 당시 전환과 변경점
 
-- Stable index와 RC3 per-tag index는 별도 URL입니다.
-- 과거 RC per-tag URL은 RC3를 자동 제공하지 않으므로 RC3 URL로 교체합니다.
-- Core 제거 또는 version 변경 때문에 공유 NCS와 Toolchain directory를 삭제하지 않습니다.
-- EEPROM, Settings/ZMS와 LittleFS의 중요한 데이터는 먼저 별도로 백업합니다.
-- RC3는 application linker 경계를 바꾸므로 최소한 Blink clean compile·upload를 다시 수행합니다.
+- 전환: v0.2.0 stable·RC2 → RC3.
+- 사용하지 않던 boot reservation·두 번째 slot을 제거하고 loaderless application을 `0x000000..0x16c000`, 1,490,944 byte로 일치시켰다. DTS·linker·Arduino maximum을 함께 검사한다.
+- LittleFS 시작 `0x16c000`과 Settings/ZMS 시작 `0x174000`은 RC2와 같다. 주소가 같아도 데이터 자동 migration·보존을 보증하지 않는다. RC1/RC2로 돌아갈 때의 maximum 712,704 byte는 원본 artifact의 역사 값이다.
 
-## 2. RC3 index 추가
+## 재현할 때 유지할 경계
 
-RC3가 Public Prerelease로 공개된 뒤 Arduino IDE의
-`File → Preferences → Additional Boards Manager URLs`에 다음 URL을 추가합니다.
+- 보드 FQBN은 `nucode:zephyr:nu54dk`, 기준 NCS는 v3.4.0, Toolchain은 `dcbdc366a1`이다.
+- 과거 설치 명령·per-tag URL은 현재 제공되는 설치 경로가 아니다. 원본 artifact와 source identity를 먼저 대조한다.
+- 버전 전환 전 Sketch·저장 데이터를 백업한다. 공유 NCS/Toolchain을 임의 삭제하거나 다른 version의 build output을 섞지 않는다.
+- Storage API가 있는 버전은 EEPROM의 명시적 `commit()`과 LittleFS의 비파괴 mount를 따른다. Format/reset은 데이터 삭제이며 자동 진단 수단이 아니다.
 
-```text
-https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.3.0-rc.3/package_nucode_nu54dk_rc_index.json
-```
+## 근거와 현재 이동 경로
 
-Stable URL은 그대로 유지할 수 있습니다.
-
-```text
-https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
-```
-
-동일한 `nucode:zephyr` package의 RC1/RC2/RC3 per-tag URL을 동시에 둘 필요는 없습니다. 이전
-RC URL을 제거하고 현재 시험할 RC3 URL만 남깁니다.
-
-## 3. Stable v0.2.0 또는 RC2에서 RC3로 이동
-
-1. 중요한 Sketch와 storage 데이터를 백업합니다.
-2. RC3 Release 페이지가 Public Prerelease인지 확인합니다.
-3. RC3 index를 Additional Boards Manager URLs에 추가합니다.
-4. Boards Manager에서 `NUCODE NU54DK Zephyr Boards`를 찾습니다.
-5. Version `0.3.0-rc.3`를 명시적으로 선택해 설치합니다.
-6. Post-install 실행을 승인하고 prerequisite 검증이 끝날 때까지 기다립니다.
-7. Arduino IDE를 다시 시작하고 Board, Feature set과 Upload probe를 다시 확인합니다.
-8. Blink를 clean compile·upload하고 출력의 maximum program storage가 `1490944` byte인지
-   확인합니다.
-9. 사용 중인 Storage, 주변장치 또는 BLE 예제를 순서대로 확인합니다.
-
-RC3는 loaderless application의 `0x000000..0x16c000` 범위를 linker에 동일하게 적용합니다. RC2의 논리
-696 KiB slot 두 개는 제거되지만 LittleFS `0x16c000`과 Settings/ZMS `0x174000` 시작 주소는
-같습니다. 일반 Upload가 storage 보존을 보장하는 migration 도구는 아니므로 중요한 데이터는
-반드시 백업합니다.
-
-## 4. Sketch와 사용법 변경점
-
-일반 Sketch API와 29개 예제 목록은 RC2에서 바뀌지 않습니다. 주요 변경은 build·memory
-contract입니다.
-
-- Standard와 BLE profile 모두 같은 1,490,944-byte application 범위를 사용합니다.
-- 기존 Sketch가 712,704 byte를 넘더라도 새 한도 안이면 build할 수 있습니다.
-- 큰 image는 compile 성공만 확인하지 말고 실제 Upload와 boot를 확인합니다.
-- RC3에는 Memory layout 선택 메뉴가 없습니다. 임의 partition override는 정식 지원하지 않습니다.
-- EEPROM 변경은 `commit()` 전에는 영구 저장되지 않습니다.
-- LittleFS는 `begin(false)`로 비파괴 mount하고, format은 데이터 삭제를 승인한 뒤에만 수행합니다.
-- Runtime pin 변경은 capability와 소유권 충돌을 fail-closed로 거부할 수 있습니다.
-
-## 5. Stable v0.2.0 또는 RC2로 복귀
-
-1. 중요한 RC3 storage 데이터를 백업합니다.
-2. Boards Manager에서 되돌릴 version을 명시적으로 선택합니다.
-3. 해당 stable 또는 per-tag index URL이 등록돼 있는지 확인합니다.
-4. 설치 뒤 Arduino IDE를 다시 시작합니다.
-5. 해당 version에서 제공한 Feature set과 예제 범위로 Sketch를 되돌립니다.
-6. Blink를 clean compile·upload해 기본 경로를 확인합니다.
-7. RC3 index가 더 필요 없으면 Additional Boards Manager URLs에서 제거합니다.
-
-과거 RC로 복귀하면 Arduino가 다시 712,704-byte maximum을 표시합니다. 이는 해당 역사
-artifact의 계약이며 RC3 파일로 고쳐 쓰지 않습니다. Version 사이의 partition 차이를 반복 시험할
-때는 중요 데이터가 없는 시험 보드를 사용하십시오.
+[RC3 검증·인계 기록](<../../04_검증 기록/31_M22_v0.3.0_rc3_검증과_stable_인계.md>)에 당시 source·검증 결과가 있다. 상세한 예전 설치 순서는
+[정리 전 문서 원본](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/0dda7f9dac30845e4fdb8f9bd28da22a906dcb9d/00_Docs/05_%EB%A6%B4%EB%A6%AC%EC%8A%A4/v0.3.0-rc.3/MIGRATION.md)으로 보존한다.
+현재 사용자는 [v0.3.0 마이그레이션](../v0.3.0/MIGRATION.md)을 따른다.

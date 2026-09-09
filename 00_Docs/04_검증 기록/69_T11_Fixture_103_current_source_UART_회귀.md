@@ -9,7 +9,7 @@
 | Build | `C:/u3c` DUT/peer 2/2 build-only PASS, failed/error/warning 0, 110.57초 |
 | SWD | flash·mailbox·종료 확인 모두 **10,000,000 Hz**, 속도 하향 없음 |
 | 실기 | 최종 실행 **2,466개 기능 PASS, 기능 실패 0개**, 708.0초; 최초 peer flash 실패 1개 별도 보존 |
-| 다음 | Fixture 201 SPI 전원 OFF 결선 변경과 사용자 확인 |
+| 당시 다음 | Fixture 201 SPI 전원 OFF 결선 변경과 사용자 확인 |
 
 ## Exact 입력과 승인 결선
 
@@ -18,6 +18,9 @@
 [새 확인서](evidence/t11-fixture103-7aece93/confirmation.json)에 이 확인을 남겼다. Catalog revision 2, 두 exact UID SHA·
 역할·source·image hash와 스위치·전압 조건을 묶고 확인서의 30분 유효기간 안에 시작했다.
 이는 사용자 확인이며 배선을 전기적으로 계측했다는 뜻은 아니다.
+
+위 30분 제한은 당시 확인 절차의 기록이다. 현행 시간제 사용자 확인 만료는 폐기했으며,
+펌웨어 watchdog·lease·STOP 보호와 구분한다. 현재 정책은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
 
 | A/DUT | 방향 | B/peer |
 | --- | --- | --- |
@@ -116,7 +119,9 @@ package·전체 target 결과를 새 source의 실행 결과로 복사하지 않
 최종 GitHub Actions 상태는 미확인이다. 최종 commit·main push와 checkout·board·SDK·작업
 프로세스 점검은 작업 산출물에 기록하며 본문의 실기 source를 문서 commit으로 바꾸지 않는다.
 
-## 다음: Fixture 201 SPI
+## 당시 다음: Fixture 201 SPI
+
+이 절은 해당 fixture 종료 당시의 안내다. 이후 T11 완료 결과는 [73번 통신 회귀 완료 기록](73_T11_Fixture_301_current_source_TWI_회귀.md), 현재 결선·진행은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
 
 **두 USB를 모두 분리한 뒤 A 쪽 신호선 네 개만 아래처럼 옮긴다. B와 공통 GND는 그대로다.**
 현재 A 핀 순서가 앞선 UART 안내와 다르므로 유지할 B 핀을 함께 대조한다.

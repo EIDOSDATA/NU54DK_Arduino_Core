@@ -1,14 +1,16 @@
 # T12 Fixture 401 current-source PWM→AIN0 실기 검증
 
+> 과거 검증 이력입니다. 준비·다음 작업·실행 조건은 기록 당시 기준이며, 현재 상태는 [v0.4.0 TODO](../TODO_v0.4.0.md)를 따릅니다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 기록일 | 2026-09-06 |
 | 범위 | T12의 Fixture 401 단독 한 cycle; T12 전체는 부분 완료 |
 | Exact Core | `a12e444cfb5ef47471c0e0d436f082acfd200c19` |
 | Board gitlink | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| Build | `C:/u3h` DUT/peer 2/2 build-only PASS, failed/error/warning 0, 118.09초 |
+| Build | `C:/u3h` DUT/peer 2/2 build-only PASS, failed/error/warning 0, 118.09 초 |
 | SWD | flash·mailbox·종료 확인 모두 **10,000,000 Hz** |
-| 결과 | 첫 실행 **48개 기능 PASS**, 실기 연속 26.5초 |
+| 결과 | 첫 실행 **48 개 기능 PASS**, 실기 연속 26.5 초 |
 | 다음 | Fixture 402 PWM→AIN1 전원 OFF 결선 변경과 새 사용자 확인 |
 
 ## 사용자 지시와 exact 입력
@@ -18,7 +20,7 @@
 “T12가 맞다면 이제 시작하도록 해.”라고 지시했다. 이를 직전 결선 안내에 따른 시작 지시로 해석한
 근거와 11:37:59 UTC의 기록 시각을 [체크포인트](evidence/t12-fixture401-a12e444/checkpoint.json)에 보존했다.
 [확인서](evidence/t12-fixture401-a12e444/confirmation.json)는 catalog revision 2, 두 UID SHA·role·exact source·HEX와
-조건을 결합한다. 원래 시각을 갱신하지 않고 30분 이내 실행했다. 사용자 지시의 문맥에 따른
+조건을 결합한다. 원래 시각을 갱신하지 않고 30 분 이내 실행했다. 사용자 지시의 문맥에 따른
 결선 확인이며 소프트웨어가 스위치·전기적 연결을 직접 계측했다는 뜻은 아니다.
 
 | 신호 | A/DUT, role 1 | B/peer, role 2 |
@@ -53,12 +55,12 @@ NCS v3.4.0, bundle dcbdc366a1, GNU Arm 14.3, bundled Python과 pyOCD 0.42.0을 �
 수행한다. 준비·시작·완료 상태와 오류 0, 요청 길이·완료 sample 수, HIGH 관측을 판정한다.
 버퍼 반환 이벤트에서 buffer pointer/길이를 확인하고 완료 mask로 단일·이중 버퍼를 구분한다.
 전체 **10,368 samples**를 읽어 vector별 SHA-256와 최솟값·최댓값을 기록했다.
-48개 모두 LOW 영역(raw <256)과 HIGH 영역(raw >256)을 관측했으며 전체 raw 범위는
+48 개 모두 LOW 영역(raw <256)과 HIGH 영역(raw >256)을 관측했으며 전체 raw 범위는
 -220~3768이었다. 이 값은 교정 전압이나 ADC 정확도 보증이 아니다.
 
-매 vector 뒤 두 역할 모두 signal disarm `[0]`을 확인했다. **Cleanup 48개·campaign 2개**를
-기능 PASS와 분리했으며 journal은 총 98개다. Cleanup의 동일 논리 ID는 바로 앞 기능 record와
-순서로 대응한다. [독립 감사](evidence/t12-fixture401-a12e444/results-audit.json)는 별도 작성한 48개 조합과 고유 기능 ID,
+매 vector 뒤 두 역할 모두 signal disarm `[0]`을 확인했다. **Cleanup 48 개·campaign 2 개**를
+기능 PASS와 분리했으며 journal은 총 98 개다. Cleanup의 동일 논리 ID는 바로 앞 기능 record와
+순서로 대응한다. [독립 감사](evidence/t12-fixture401-a12e444/results-audit.json)는 별도 작성한 48 개 조합과 고유 기능 ID,
 전체 순서·길이·상태·해제 결과, final JSON과 journal 일치, exact image/UID·10 MHz를 확인했다.
 
 | 원본 | SHA-256 |
@@ -80,22 +82,22 @@ CPUID `0x411fd210`, 전체 40-byte commit과 role을 2/2 검증했다. CPU snaps
 401 PASS는 PWM 출력 route와 외부 AIN0 수집·DMA 완료·정지를 확인한다. 현재 oracle은 HIGH와
 sample 수를 필수 판정하며 LOW 관측은 저장된 min/max에서 추가 확인한 사실이다. PWM 주기·듀티를
 peer capture로 측정한 결과는 아니다. 별도 timer/event/capture, ADC calibration·채널 순서 등
-T12 전체 요구와 아직 연결하지 않은 경로를 이 48개로 완료 처리하지 않는다.
+T12 전체 요구와 아직 연결하지 않은 경로를 이 48 개로 완료 처리하지 않는다.
 
-다음 analog 402·403·404·408과 QDEC 420·I2S 430·PDM 440, T13 동시성·600/7,200초 soak,
+다음 analog 402·403·404·408과 QDEC 420·I2S 430·PDM 440, T13 동시성·600/7,200 초 soak,
 T14~T15 판정, T16~T18 통합과 R14/RC·공개가 남아 있다. M25 physical gate와 readiness는
 미완료 상태를 유지한다. GitHub Actions는 미확인이며 이전 local full software 근거를
 새 frozen RC의 PASS로 바꾸지 않는다. 기존 실패·SDK·board·공개 자산과 과거 기록은 보존한다.
 
 ## 문서와 증거 검증
 
-활성 문서 9개에 결과와 다음 결선을 반영했다. Markdown UTF-8·내부 링크 183개, 계약 45개,
-inventory 75개·Serial identity 23개·System capability 16개를 통과했다. Readiness는 필수 16개 중
-blocker 8개를 유지한다. [software 검사 기록](evidence/t12-fixture401-a12e444/software-verification.json)에
+활성 문서 9 개에 결과와 다음 결선을 반영했다. Markdown UTF-8·내부 링크 183 개, 계약 45 개,
+inventory 75 개·Serial identity 23 개·System capability 16 개를 통과했다. Readiness는 필수 16 개 중
+blocker 8 개를 유지한다. [software 검사 기록](evidence/t12-fixture401-a12e444/software-verification.json)에
 canonical 명령과 log hash를 보존했다. 제품 코드 변경이 없어 이전 full Host·package·전체 target
 결과는 해당 source의 역사 증거로 유지한다.
 
-이번 실행·준비 입력 32개를 UTF-8/LF 사본과 원본 byte gzip으로 보존하고 hash·복원 일치·
+이번 실행·준비 입력 32 개를 UTF-8/LF 사본과 원본 byte gzip으로 보존하고 hash·복원 일치·
 UID 비공개를 검사했다. 실제 시험 source와 최종 문서 commit을 구분하며 commit·main push와
 checkout·board·SDK·작업 프로세스 종료 점검은 최종 작업 산출물에 기록한다.
 

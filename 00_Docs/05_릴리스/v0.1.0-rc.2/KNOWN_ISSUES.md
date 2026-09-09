@@ -1,5 +1,8 @@
 # v0.1.0-rc.2 알려진 제약
 
+> 보존 문서: `v0.1.0-rc.2`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+
 > **공개 완료:** 이 제약 목록은 2026-08-28에 공개한 `v0.1.0-rc.2` 기준이다. 공개 index와
 > ZIP을 사용한 Arduino IDE 2.3.10 backend 설치 완료 경로를 검증했다. 공개 후 별도 clean
 > Windows의 compile과 실제 NU54DK upload·실행도 프로젝트 소유자가 수동 확인했다.
@@ -23,8 +26,8 @@ API 이름이나 header가 존재해도 아래 범위를 넘어서는 지원을 
   download와 사용자 영역 설치를 사용한다.
 - offline 설치와 인증 proxy는 공식 검증하지 않았다.
 - Core uninstall은 공유 NCS와 Toolchain을 자동 삭제하지 않는다.
-- 후속 정식 버전은 `v0.1.0`이다. 신규 설치는 stable index를 사용하며 rc.2 index와
-  Prerelease는 당시 검증 이력으로 유지한다.
+- 당시 후속 정식 버전은 `v0.1.0`이었다. 두 버전 모두 현재 공개 공급 종료 상태이며,
+  index·Prerelease 원본은 archive에서 보존한다.
 - rc.1은 `post_install` gRPC UTF-8 오류로 회수됐다. 설치가 완료됐을 수 있어도 새 설치나
   downgrade 대상으로 사용하지 않는다.
 - rc.2 공개 시점에는 probe가 연결되지 않았고 별도 clean Windows PC가 오프라인이어서 새

@@ -67,6 +67,5 @@ TIMER·EGU·GPIOTE·PPIB의 하드웨어 동작은 Host 결과로 승격하지 �
 변경하지 않았다. package는 기존 cores 하위 포함 정책을 유지하며 최종 실제 설치 ZIP 전체
 예제 검증은 R13의 exact source gate로 수행한다.
 
-다음 R08은 기존 IoResourceManager의 identity/충돌 정책과 예약·commit·rollback 경계를
-분리하고 RuntimePeripheralRoute의 phase와 실제 획득 자원 기록을 분리한다.
-부분 pin handover·PM·pinctrl 실패에서 남은 lease와 fail-closed 상태를 먼저 Host로 고정한다.
+후속 R08의 자원·route 책임 분리와 부분 pin handover·PM·pinctrl 실패 회귀는
+[59번 기록](59_R08_자원과_경로_수명주기.md)에 별도로 기록한다.

@@ -9,7 +9,7 @@
 | Build | `C:/u3d` DUT/peer 2/2 build-only PASS, failed/error/warning 0, 115.72초 |
 | SWD | flash·mailbox·종료 확인 모두 **10,000,000 Hz**, 속도 하향 없음 |
 | 실기 | 첫 실행 **18,169개 기능 PASS, 실패 0개**, 2175.312초 |
-| 다음 | Fixture 202 SPI 전원 OFF 결선 변경과 사용자 확인 |
+| 당시 다음 | Fixture 202 SPI 전원 OFF 결선 변경과 사용자 확인 |
 
 ## Exact 입력과 사용자 결선 확인
 
@@ -18,6 +18,9 @@
 catalog revision 2, exact 두 UID SHA·역할·source·HEX hash와 스위치·전압 조건을 연결한다.
 사용자 확인 시각부터 30분 안에 시작한 단일 연속 cycle이며 확인 시각을 중간에 갱신하지 않았다.
 결선은 사용자 확인에 근거하며 전기적 계측 결과로 해석하지 않는다.
+
+위 30분 제한은 당시 확인 절차의 기록이다. 현행 시간제 사용자 확인 만료는 폐기했으며,
+펌웨어 watchdog·lease·STOP 보호와 구분한다. 현재 정책은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
 
 | 신호 | A/DUT | B/peer |
 | --- | --- | --- |
@@ -103,7 +106,9 @@ canonical 명령과 log hash를 보존했다. 제품 코드 변경이 없어 이
 UID 비공개를 검사했다. 실제 시험 source와 최종 문서 commit을 구분하며 commit·main push와
 checkout·board·SDK·작업 프로세스 종료 점검은 최종 작업 산출물에 기록한다.
 
-## 다음: Fixture 202 SPI
+## 당시 다음: Fixture 202 SPI
+
+이 절은 해당 fixture 종료 당시의 안내다. 이후 T11 완료 결과는 [73번 통신 회귀 완료 기록](73_T11_Fixture_301_current_source_TWI_회귀.md), 현재 결선·진행은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
 
 **두 USB 전원을 모두 분리하고 A 쪽 신호선 네 개를 아래처럼 옮긴다. B와 GND는 그대로다.**
 [다음 결선 감사](evidence/t11-fixture201-0f429e7/next-wiring-audit.json)는 catalog와 사용자 확정 connector pinmap을 대조했다.

@@ -10,7 +10,7 @@
 | SWD 설정 | flash·attach·mailbox·종료 identity 확인 모두 **10,000,000 Hz**; 속도 하향·재시도 없음 |
 | 실제 결과 | 기능 **1,644 PASS**, 실패 0; cleanup 2개와 campaign 2개는 기능 PASS 수에서 제외 |
 | 연속 cycle 시간 | 476.25초; 장시간 soak 판정 아님 |
-| 다음 작업 | Fixture 102 전원 OFF 결선 변경과 사용자 완료 확인 |
+| 당시 다음 작업 | Fixture 102 전원 OFF 결선 변경과 사용자 완료 확인 |
 
 ## 사용자 확인과 exact 입력
 
@@ -18,6 +18,9 @@
 요청했다. 이를 [체크포인트](evidence/t11-fixture101-154324c/checkpoint.json)에 기록하고 30분 유효기간 안에
 exact 이미지·catalog·두 UID SHA에 묶인 [확인서](evidence/t11-fixture101-154324c/confirmation.json)를 검증했다.
 이는 사용자 결선 확인이며 전기적 계측으로 배선을 증명했다는 뜻은 아니다.
+
+위 30분 제한은 당시 확인 절차의 기록이다. 현행 시간제 사용자 확인 만료는 폐기했으며,
+펌웨어 watchdog·lease·STOP 보호와 구분한다. 현재 정책은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
 
 두 보드는 D/COM5·COM6의 A/DUT와 E/COM7·COM8의 B/peer이며
 [USB 식별 결과](evidence/t11-fixture101-154324c/usb-inventory.json)에 UID SHA만 보존한다. DAP UART는 양쪽
@@ -94,7 +97,9 @@ canonical 명령·log hash를 연결한다. 이번 변경은 문서·증거뿐�
 최종 GitHub Actions 상태는 미확인이다. 최종 commit/push와 checkout·SDK·작업 프로세스 점검은
 작업 산출물에 기록하고, 이 문서의 source hash를 자기 문서 commit으로 소급 변경하지 않는다.
 
-## 다음 결선과 남은 범위
+## 당시 다음 결선과 남은 범위
+
+이 절은 해당 fixture 종료 당시의 안내다. 이후 T11 완료 결과는 [73번 통신 회귀 완료 기록](73_T11_Fixture_301_current_source_TWI_회귀.md), 현재 결선·진행은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
 
 이번 PASS는 Fixture 101만이다. Current-source T11 전체 완료 표시는 보류하며 다음은
 Fixture 102, 이어서 103·201·202·203·301이다. T12~T15와 RC/공개 gate는 계속 대기한다.

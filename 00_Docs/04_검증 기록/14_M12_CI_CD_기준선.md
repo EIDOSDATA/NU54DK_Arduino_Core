@@ -1,6 +1,6 @@
 # M12 CI/CD와 재현 빌드 기준선
 
-## 1. 목적과 현재 판정
+## 1. 목적과 당시 최종 판정
 
 M12는 GitHub-hosted software 검증, exact NCS 기반 재현 build와 self-hosted NU54DK HIL을
 분리하는 단계다. 2026-08-29 기준 최종 결과는 다음과 같다.

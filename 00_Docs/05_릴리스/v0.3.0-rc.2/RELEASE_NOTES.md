@@ -1,6 +1,9 @@
 # NU54DK Arduino Core v0.3.0-rc.2 릴리스 노트
 
-> **공개 검증을 완료한 Release Candidate 문서입니다.** 현재 stable은 `v0.2.0`이며,
+> 보존 문서: `v0.3.0-rc.2`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+
+> **공개 검증을 완료한 Release Candidate 문서입니다.** 당시 stable은 `v0.2.0`이며,
 > `v0.3.0-rc.2`는 production stable이 아닌 Public Prerelease입니다.
 
 ## RC2 교정 목적

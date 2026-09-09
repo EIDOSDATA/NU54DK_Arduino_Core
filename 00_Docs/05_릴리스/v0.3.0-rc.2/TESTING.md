@@ -1,6 +1,9 @@
 # GitHub v0.3.0-rc.2 설치와 시험
 
-> `v0.3.0-rc.2`는 공개 검증을 완료한 Public Prerelease입니다. Production stable은 계속
+> 보존 문서: `v0.3.0-rc.2`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+
+> `v0.3.0-rc.2`는 공개 검증을 완료한 Public Prerelease입니다. 당시 production stable은
 > `v0.2.0`이므로 RC2를 시험할 때만 아래 per-tag index를 명시적으로 추가하십시오.
 
 ## 1. GitHub RC 자산 확인

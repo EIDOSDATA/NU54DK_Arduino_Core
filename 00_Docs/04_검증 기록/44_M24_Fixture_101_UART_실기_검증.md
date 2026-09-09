@@ -1,5 +1,8 @@
 # M24 Fixture 101 UART 실기 검증
 
+> 리팩토링 이전 source의 실기 기록이다. 같은 fixture의 후속 회귀는 [67번 기록](67_T11_Fixture_101_current_source_UART_회귀.md)에 있으며,
+> 아래 수치·실패·판정은 이 기록의 exact source에만 적용한다. 현재 결선·실행 순서는 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 기록 ID | VALIDATION-M24-UART-FIXTURE-044 |
@@ -89,7 +92,7 @@ Evidence에는 raw UID 대신 SHA-256, role별 HEX·ELF·build record hash, fixt
 confirmation hash, sector erase·no recover, 100 kHz SWD 기록이 들어 있다. 실패한 실행을 성공
 파일로 덮어쓰지 않았으며 최종 `status`는 `passed`다.
 
-## 5. 판정과 다음 단계
+## 5. 판정과 당시 후속 단계
 
 Fixture 101에서 사용한 UARTE instance·bank·양방향 data path·EasyDMA·RTS/CTS 경로는
 기능 PASS다. 이 결과는 전기 파형 품질이나 모든 임의 핀 route의 보증이 아니다. M24 전체를

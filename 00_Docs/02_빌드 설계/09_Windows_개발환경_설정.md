@@ -226,7 +226,9 @@ NU54DK의 debug USB connector를 **data 통신이 가능한 cable**로 연결한
 
 `--pyocd` 실행 파일을 받는 HIL runner는 8절의 **전체 NCS 환경**에서 실행한다. 실행 전에
 `(Get-Command python.exe).Source`가 `$NcsPython`과 같은지, 위 module 경로가 해당 bundle 내부인지
-확인한다. 다른 Python 3.14 등의 package 경로가 나오면 flash를 시작하지 않는다.
+확인한다. 기본 bundled 경로를 의도했는데 다른 Python의 package가 섞였으면 먼저 경로를 교정한다.
+별도 Python/pyOCD를 의도적으로 고정한 진단 runner는 해당 검증 기록의 실행 파일·버전·module 경로를 따른다.
+그 결과를 bundled upload 경로의 PASS로 대체하지 않으며, 별도 도구 사용을 이유로 SDK 내부를 교체하지 않는다.
 
 ## 8. Nordic Toolchain terminal이 필요한 경우
 

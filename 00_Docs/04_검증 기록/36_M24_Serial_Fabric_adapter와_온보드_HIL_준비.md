@@ -1,5 +1,8 @@
 # M24 Serial Fabric adapter와 온보드 HIL 준비 기록
 
+> 아래 HOLD·FAIL·NOT RUN은 기록 당시의 판정이다. 후속 protocol 교정·온보드 재시험은
+> [41번 기록](41_M24_M26_온보드_protocol_교정과_실기_재검증.md), 이후 실행 범위와 진행 상태는 [활성 TODO](../TODO_v0.4.0.md)에서 확인한다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | VERIFY-M24-SERIAL-FABRIC-003 |
@@ -61,7 +64,8 @@ TWIS target 구동은 거부한다.
 | UARTE data path | NOT RUN |
 | TWIM20/21/22 BQ25186 `0x6A/0x0C` read-only | NOT RUN |
 
-내일 USB 전원을 완전히 분리·재연결한 뒤 다음 순서로 재실행한다.
+당시 재개 계획은 USB 전원 분리·재연결 뒤 아래 순서로 재시험하는 것이었다.
+현재 보드의 결선 변경 지시가 아니며 후속 실행 결과는 41번에 있다.
 
 1. `pyocd list`에서 probe와 COM 두 포트를 확인한다.
 2. exact clean build의 UARTE runner를 실행해 4개 READY/32-byte reverse를 확인한다.

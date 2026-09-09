@@ -1,7 +1,8 @@
 # R06 — builder 모듈과 설치 경로
 
 상태: R06-A/B 완료. 시작 source `feaccc7`. R06-A는 `f1b3fa4`, R06-B 종료는
-Windows 설치 build 복사본 구현 commit으로 식별한다. 다음은 R07 EventFabric이다. 실기 NOT RUN.
+Windows 설치 build 복사본 구현 commit으로 식별한다. 이 단계의 실기는 NOT RUN이며,
+후속 EventFabric 분리 결과는 [58번 기록](58_R07_EventFabric_책임_분할.md)에 있다.
 
 ## 추출 전 책임과 의존성
 
@@ -24,7 +25,7 @@ Windows 설치 build 복사본 구현 commit으로 식별한다. 다음은 R07 E
 기존 `.cmd`와 Python entry, CLI argument/diagnostic/exit, schema 및 파일 형식은 보존한다.
 entry는 신뢰된 자기 설치 경로에서만 package를 로드하고 `-I`를 유지한다.
 
-## 검증 계획
+## 검증 범위
 
 분할 전 CLI help/invalid argument 7개를 외부 CWD에서 고정했다. 함수 AST와 출력 대조,
 기존 Host·contract·inventory·package 검사, 한국어·공백 경로와 압축 해제 설치본 `-I`,
@@ -73,7 +74,7 @@ Doxygen 주석의 marker 10행을 기대했다. 기대 행을 실제 의도적 �
 교정하고 같은 설치 image/toolchain의 진단 회귀를 다시 통과했다. 제품 컴파일 동작은
 변경하지 않았다. [재시험](evidence/r06-feaccc7/error-retry.txt)에 결과를 연결한다.
 
-## R06-B 발견한 설치 경로 결함과 다음 수정
+## R06-B 설치 경로 결함과 수정 과정
 
 `C:/r6pkg/설치 공백/hardware/nucode/zephyr`에서 실제 Arduino CLI 1.5.1 compile은
 recipe 실행 시 첫 공백에서 launcher 경로가 잘려 실패했다. 기존 builder/launcher를 복사한

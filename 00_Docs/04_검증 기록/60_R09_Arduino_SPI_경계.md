@@ -59,7 +59,5 @@ target compile과 mock driver는 실제 SCK·CS·DMA 종료 또는 결선 PASS�
 [메모리·symbol·소속](evidence/r09-8d39e57/target-comparison.json),
 [분할 전](evidence/r09-8d39e57/before.txt)과 [후](evidence/r09-8d39e57/after-initial.txt)를 보존한다.
 
-다음 R10은 기존 Serial Fabric 5개 adapter를 유지하면서 registry·IRQ·lifecycle을
-분리하고 STOP 대기의 전역 mutex 범위를 줄인다. 같은 handle/block의 교차 연산은
-예약된 상태로 거부하고 다른 block의 진행을 실제 Host thread로 확인한다.
-직접 nrfx와 Arduino backend의 Kconfig 상호 배제는 유지한다.
+후속 R10의 Serial Fabric registry·IRQ·lifecycle 분리, STOP 잠금과 교차 호출 회귀는
+[61번 기록](61_R10_Serial_Fabric_동시_호출.md)에 별도로 기록한다.

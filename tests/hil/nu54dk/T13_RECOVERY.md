@@ -2,20 +2,18 @@
 
 현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../../../00_Docs/TODO_v0.4.0.md>)에서 관리합니다.
 
-현재 완료 수는 [109번 세 묶음 재검증](../../../00_Docs/04_검증%20기록/109_T13_S_세_복구_묶음_재검증.md)을
-따른다. 아래 날짜/source별 수치는 당시 체크포인트이며 현재 완료 수와 합산하지 않는다.
+현재 완료 수와 제외 범위는 TODO, source별 최신 결과는
+[110번 기록](<../../../00_Docs/04_검증 기록/110_문서_정리와_T13_S_잔여_재개.md>)이 기준입니다.
+이 문서는 각 오류의 주입 방법·opcode·판정 계약을 설명합니다. 과거 예행 수치는 현재 완료 수에 합산하지 않습니다.
 
-자원 충돌 경로 정정: 현재 단독 UART30은 P0이며 같은 block SPI 활성화 거부만 시험한다.
-UART21/22에는 세 mode를 모두 적용한다. 다른 P1 UART의 P0 route를 잘못 요청해 발생한
-route 오류를 GPIO/DMA 소유권 거부로 세지 않는다. 총14개 role/mode 조건의 예행을 통과했으며
-100회 반복은 별도 진행 중이다(2026-09-08T11:58Z).
-
-CTS 판정 보강: 실제 양쪽100ms HIGH와 대상 TX 대기·재개를 먼저 증명한 동일 case/seed에만
-완료 간격 기준을 부여한다. 영향받은 대상 TX와 peer RX의 상한은 실제 HIGH를 ms로 올림한 값에
-20ms frame 위상, 8N1 1024byte 전송11ms, ms 양자화1ms를 더한 값이다.
-주입 전·반대 방향·다른 lane·새 seed 정상4선 재획득은100ms를 유지한다. payload/guard/양방향
-drained 길이와 해시/STOP을 모두 대조한다. 이 fault 구간을 정상 안정성 PASS로 집계하지 않는다.
-기존 d44cef2의8개 실패는 유지하고 새 source에서 전체 절차를 재검증한다.
+| 찾을 내용 | 절 |
+| --- | --- |
+| 취소/NACK 공통 판정 | 고정 serial 오류 · 한 회의 완료 조건 |
+| UART line/flow/RX 지연 | parity·break · CTS 정지/재개 · RX 버퍼 공급 지연 |
+| SPI/TWI 경계 | SPIS 짧은 DMA·미준비 · TWIS 공급 지연 · SDA LOW/recoverBus |
+| Stream/PWM | I2S/PDM 공급 중단 · PWM STOP·미시작 취소 |
+| 실패 관측 | PWM/I2S 진단 · opcode 120/123/124 원본 |
+| 자원 충돌·제외 | P1 UART 충돌 · 연속 전환 제외 |
 
 ## 먼저 구현한 고정 serial 오류
 
@@ -57,8 +55,8 @@ Mode4의 현재 판정은 새 RX 미시작 근거인 opcode123을 필수로 요�
 RXSTARTED·ENDRX가 모두0이고 전체 수신 RAM0xCC 불변, 이전/terminal RX AMOUNT 일치,
 같은 단일 event의 시각·TX 부분량·buffer 길이·ENABLE6을 대조해야만 이번 RX를0으로 기록한다.
 이때 raw RX AMOUNT는 이전 정상 transaction의256일 수 있으며 그대로 보존한다.
-107번의2114187 네 인스턴스 진단으로 원인을 확인했다. 원본 실패를 사후 PASS로 바꾸지 않고
-새 source의100회 취소·정지·재획득을 다시 수행한다. SPI의 양방향 DMA 부분량 기준은 유지한다.
+107번의 `2114187` 네 인스턴스 진단으로 원인을 확인했고 후속 각 100회 취소·정지·재획득을
+완료했다. 실행별 결과는 109번에 보존하며 원본 실패를 사후 PASS로 바꾸지 않는다. SPI의 양방향 DMA 부분량 기준은 유지한다.
 
 ## 연속 전환 제외
 
@@ -251,7 +249,7 @@ Picolibc `EOVERFLOW=139`는 target static_assert와 독립 Host 기대값으로 
 
 ## PWM/I2S 최초 실패 원인 분리
 
-f591571의 정식 안정성에서 PWM21 LOW535µs와 I2S 약73초 후 양쪽2word 불일치를 관측했다.
+과거 `f591571`의 정식 안정성에서 PWM21 LOW 535µs와 I2S 약 73초 후 양쪽 2word 불일치를 관측했다.
 원본은104번에 보존하며 두 현상을 같은 원인으로 단정하지 않는다.
 
 `--phase pwm-diagnostic --cases 25|26|27 --pwm-diagnostic-route led|dap`는 단독180초 관측이다.
@@ -270,8 +268,8 @@ decoder·loop·shorts·RAMUNDERFLOW·두 DMA BUSERROR bit·AMOUNT/CURRENTAMOUNT�
 I2S opcode118 page0은 seed·padding·첫 불일치 index/expected/actual·실패slot·반환량·guard·state를,
 page1~16은 STOP 후 해당 반환 DMA의256word를16word씩 보존한다.
 Host는 전체 buffer를 독립 전역 pattern으로 대조해 비트 차이와 인접word 일치를 보고한다.
-이 분석은 원인 확정이나 정상 PASS가 아니다. 이전 f591571 원본에는 expected/actual이 없으므로
-새 source의 재현이 필요하다.
+이 분석은 원인 확정이나 정상 PASS가 아니다. 이전 `f591571` 원본에는 expected/actual이 없었다.
+후속 재현과 원래 endpoint 경로 진단은 110번에 보존한다.
 
 Nordic 문서의 [DPPI 지연 설명](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/ppi.html-concept_latencies)은
 전원 domain과 sleep 상태의 추가 지연을 설명한다. 현재 busy loop·HFXO 관측만으로 그 지연을 원인으로
@@ -280,15 +278,10 @@ RAMUNDERFLOW·DMA 관측도 읽기 대상으로 추가했다.
 [DevZone의 시작 펄스 사례](https://devzone.nordicsemi.com/f/nordic-q-a/124546/first-pwm-pulse-stretched-when-starting-nrfx_pwm_complex_playback-on-nrf54l15)는
 첫 펄스에 관한 별도 사례로 Nordic 측 재현이 없었으며, 이번15초 후 PWM 실패의 확인된 원인이 아니다.
 
-| 남은 항목 | 후속 판정 범위 |
-| --- | --- |
-| UART flow·RX 지연·parity/break | 4선100ms CTS 정지/재개, 2선의 제한된 RX 지연, 별도 parity/break 원인 확인과 복구 |
-| SPI slave 조건 | slave 미준비·짧은 DMA 및 CS 조기 종료, 두 역할의 실제 완료·다음 frame 복구 |
-| TWI slave·stuck-low | TWIS 공급 지연, 격리 SDA open-drain LOW100ms와 해제/recoverBus 후0x42 정상 송수신 |
-| I2S/PDM/PWM | stream 정식3/4, I2S B 불일치 조치·재검증; PWM6/6 각100회는 완료 |
-| Serial 역할 전환 | 같은20/21/22/30의 UART·SPI master/slave·TWI master/slave 전환, S의SPI00 역할 전환 |
-| 자원 충돌 | 같은 block·GPIO alias·DMA 겹침·GPIOTE/DPPI 채널/domain·PWM/analogWrite/tone/Servo 중복의 원자적 거부 |
-| U 및 후속 release gate | S 종료 후 U 핀 배치 안내·현재 연결 확인, UART00·지원범위·패키지/RC·승인·공개 |
+진단 구현 시점의 미완료 목록은 현재 작업 목록으로 유지하지 않는다. UART line/CTS/RX 지연과
+고정 serial·PWM 복구의 후속 완료, I2S·SPI/TWI·System OFF 잔여는 TODO와 110번에서 관리한다.
+자원 충돌은 예행 14/14와 5조건 각 100회를 사용자가 수용했고 나머지 9조건 반복은 생략했다.
+시리얼 핸드오버는 제외했으므로 후속 대열에 넣지 않는다.
 
 전체100회 복구 capability나 T13 완료를 이 다섯 mode의 구현/빌드로 선언하지 않는다.
 
@@ -300,10 +293,10 @@ fd8d4ee에서 이 설정 누락으로 시작 전 거부된 원본은 104번에 �
 한쪽 PREPARE 실패 시 아직 준비하지 않은 상대 보드에는 보호된 stream 명령을 보내지 않고
 engine·clock만 읽는다. 이 경로에서 403으로 STOP 세션까지 잃었던 실행기 문제를 보완했다.
 
-## RX 취소 시점 보완과 예행 결과
+## RX 취소 주입 시점과 opcode 120
 
-477e159의 serial 고정 오류 예행은21항목 중18항목 PASS다. UART TX4개·SPI5개·TWI 취소4개·
-TWI NACK4개와 UART20 RX1개다. UART21 RX는0byte·buffer null로 실패했고 RX22/30은 아직 미실행이다.
+당시 `477e159`의 serial 고정 오류 예행은 21항목 중 18항목 PASS였다. UART TX4개·SPI5개·TWI 취소4개·
+TWI NACK4개와 UART20 RX1개다. UART21 RX는 0byte·buffer null로 실패했고 RX22/30은 그 시점에는 미실행이었다.
 UART21은 이미 RX1024byte 한 frame을 완료했으므로 자기 TX 제출 시각이 상대 RX 중간을 보장하지 않는다.
 양쪽 STOP·clock0·GPIO 입력 반환은 성공했으며 원본을104번에 남겼다.
 
@@ -317,7 +310,8 @@ terminal 길이·buffer 소유권·guard·STOP 후 새 seed 정상 재시작을 
 [Nordic UARTE 레지스터](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/uarte.html-topic)는
 RXDRDY의 RXD 도착과 RAM 저장을 구분하며 DMA.RX.AMOUNT는 END/MATCH 뒤 갱신된다고 명시한다.
 따라서 진행 중 AMOUNT를 실시간 byte counter로 사용하지 않고 최종 API terminal event의 실제 길이로 판정한다.
-이 보완은 HIL 주입 시점과 증거이며 제품 UART 구현을 바꾼 것이 아니다. 새 source 실기에서 확인해야 한다.
+이 보완은 HIL 주입 시점 교정이며 제품 UART 구현을 바꾼 것이 아니다. 후속 고정 serial 21/21 완료는
+109번에 별도 source로 기록했다.
 
 ## PDM 반복 STOP과 peer 원본
 
@@ -360,8 +354,9 @@ Opcode123은 mode4 취소에서 이전 DMA AMOUNT와 새 RX 시작 여부를 분
 취소 직전 RXREADY/RXEND, 첫 terminal 관측 RXREADY/RXEND, RX RAM 전체0xCC 유지,
 slot, submit/cancel/event cycle, terminal TX/RX AMOUNT, 길이, 전송 전 ENABLE, event 수다.
 이벤트 초기화는 첫 전송 제출 전에만 시행한다. 동작 중 이벤트를 지우지 않는다.
-Host는 양쪽 원본을 STOP 전에 보존한다. RX AMOUNT256이 이전 완료 잔류라는 가설은 아직
-실기로 증명하지 않았으며 이 계측 추가로 기존 부분 DMA 판정을 완화하거나 실패를 PASS로 바꾸지 않는다.
+Host는 양쪽 원본을 STOP 전에 보존한다. RX AMOUNT 256이 이전 완료 잔류라는 판단은
+107번의 `2114187` 진단에서 새 RX 미시작·RAM 불변 근거로 확인했다. 이 결과로 초기 실패를
+PASS로 바꾸거나 SPI/TWI의 실제 부분 DMA 판정을 완화하지 않는다.
 
 ## Serial 최초 payload 오류 원본
 
@@ -387,4 +382,15 @@ Opcode125(mode)의20word는 mode, 원래/후보 instance, configure/stage/activa
 원래 state 전후, TX/RX/RTS/CTS PSEL 전후, ENABLE 전후, guard다. 기대값은 configure/stage0,
 activate는 mode2 invalid_argument2, 나머지 ownership_conflict8이다. 예외 STOP은 미실행UINT32_MAX,
 기존 state는active3·PSEL/ENABLE 동일·guard1이어야 한다. 진단은 별도 원본이며 정상900초 안정성을
-대신하지 않는다. UART00/20, event/PWM/legacy 중복 등 나머지 충돌 조건은 별도 미완료로 남긴다.
+대신하지 않는다. UART30은 P0 route이므로 같은 block 거부만, UART21/22는 세 mode를 적용해
+총 14 role/mode 조건이다. 현재 사용자 수용·반복 생략 범위는 109번과 TODO를 따르며
+이 계약 문장으로 제외된 반복을 다시 예약하지 않는다.
+
+## CTS 판정의 시간 경계
+
+실제 양쪽 100ms HIGH와 대상 TX 대기·재개를 먼저 증명한 동일 case/seed에만 완료 간격 기준을
+부여한다. 영향받은 TX와 peer RX 상한은 실제 HIGH를 ms로 올림한 값에 frame 위상 20ms,
+8N1 1,024byte 전송 11ms, ms 양자화 1ms를 더한 값이다.
+주입 전·반대 방향·다른 lane·새 seed 정상 4선 재획득은 100ms를 유지한다.
+Payload·guard·양방향 drained 길이·hash·STOP을 함께 대조한다. 이 fault 구간은 정상 안정성
+PASS가 아니며 초기 `d44cef2`의 8개 실패는 원본으로 보존한다.

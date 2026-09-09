@@ -37,7 +37,7 @@ Boards Manager에서 `NUCODE NU54DK Zephyr Boards`를 검색해 `0.3.0`을 설�
 - 핀·주변장치 소유권 충돌을 동적 할당 없이 거부하는 runtime manager
 
 함수 이름이 존재한다는 사실만으로 모든 pin, instance, mode 또는 외부 장치가 지원되는 것은
-아닙니다. 정확한 범위는 [Arduino API 지원 범위](<../../01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)와
+아닙니다. 정확한 범위는 [v0.3.0 source의 API 지원 범위](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/94ee3fec29ba9f86835b6cb3d96ab13ce2cf8c11/00_Docs/01_%EC%95%84%EB%91%90%EC%9D%B4%EB%85%B8%20%EC%BD%94%EC%96%B4%20%EC%84%A4%EA%B3%84/04_Arduino_API_%EC%A7%80%EC%9B%90_%EB%B2%94%EC%9C%84.md)와
 [알려진 제약](./KNOWN_ISSUES.md)을 함께 확인하십시오.
 
 ## 기본 RRAM 계약
@@ -51,7 +51,7 @@ Boards Manager에서 `NUCODE NU54DK Zephyr Boards`를 검색해 `0.3.0`을 설�
 Arduino maximum Sketch size, Devicetree code partition과 실제 linker FLASH 경계는 모두
 1,490,944 byte입니다. MCUboot/DFU dual-slot은 이 버전에 포함되지 않습니다.
 
-## 고정 공개 자산
+## 최초 공개 자산 identity
 
 | 자산 | 크기 | SHA-256 |
 | --- | ---: | --- |
@@ -62,6 +62,10 @@ Arduino maximum Sketch size, Devicetree code partition과 실제 linker FLASH �
 | `nucode-nu54dk-zephyr-0.3.0.spdx.json` | 174,388 | `8b8fe2c938403aadf2b03c60a0c2f44c8197fefec2f0d44f6e47f1b1e4187411` |
 | `nucode-nu54dk-zephyr-0.3.0.THIRD_PARTY_NOTICES.md` | 1,813 | `d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d` |
 | `package_nucode_nu54dk_index.json` | 2,630 | `14fe2eb10b4dd77a219d48060c32c21bdd97370f6d6f8be699d9118f8973e007` |
+
+위 index 행은 최초 공개 당시 snapshot입니다. 2026-09-08 공급 종료 이후 현재 catalog는
+1,126 byte, SHA-256 `97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57`이며
+0.3.0만 제공합니다. ZIP과 나머지 5개 sidecar는 변경하지 않았습니다.
 
 Stable ZIP의 version-independent runtime payload SHA-256은 RC3와 같은
 `658b7014df7faa0dc96c16c6499bf5f4d568ddf8807196c08c6a4cf65e66e835`입니다.

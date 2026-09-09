@@ -9,7 +9,7 @@
 | Build | `C:/u3b` DUT/peer 2/2 build-only PASS, failed/error/warning 0, 115.21초 |
 | SWD | flash·mailbox·종료 확인 모두 **10,000,000 Hz**, 하향·재시도 없음 |
 | 실기 결과 | **822개 기능 PASS, 실패 0개**, 239.5초 |
-| 다음 | Fixture 103 전원 OFF 결선 변경과 사용자 확인 |
+| 당시 다음 | Fixture 103 전원 OFF 결선 변경과 사용자 확인 |
 
 ## 확인한 입력과 결선
 
@@ -18,6 +18,9 @@
 [새 확인서](evidence/t11-fixture102-a49cc0d/confirmation.json)는 해당 사용자 확인을 기록한다. 확인서는 catalog revision 2,
 exact source·두 image·UID SHA·역할·스위치·전압 조건에 묶이고 30분 유효기간 안에 검증했다.
 이는 사용자 확인에 근거하며 배선의 전기적 계측 증명은 아니다.
+
+위 30분 제한은 당시 확인 절차의 기록이다. 현행 시간제 사용자 확인 만료는 폐기했으며,
+펌웨어 watchdog·lease·STOP 보호와 구분한다. 현재 정책은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
 
 | A/DUT | 방향 | B/peer |
 | --- | --- | --- |
@@ -92,7 +95,9 @@ full Host·package·전체 target 결과를 새 source의 실행 결과로 복�
 검사했다. 최종 GitHub Actions 상태는 미확인이다. 최종 commit·main push와 checkout·board·
 SDK·작업 프로세스 점검은 작업 산출물에 기록하며, 본문의 실기 source를 문서 commit으로 바꾸지 않는다.
 
-## 다음 결선: Fixture 103
+## 당시 다음 결선: Fixture 103
+
+이 절은 해당 fixture 종료 당시의 안내다. 이후 T11 완료 결과는 [73번 통신 회귀 완료 기록](73_T11_Fixture_301_current_source_TWI_회귀.md), 현재 결선·진행은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
 
 **두 USB를 모두 분리한 뒤 A 쪽 신호선 네 개만 아래처럼 옮긴다. B와 공통 GND는 그대로다.**
 

@@ -56,7 +56,8 @@ Build Adapter는 generated Devicetree code partition, linker map과 Arduino maxi
 - RC3/stable runtime payload SHA-256 일치
 - 격리 Boards Manager upgrade·downgrade·uninstall 수명주기
 - 설치본 Blink compile과 NU54DK CMSIS-DAP/pyOCD upload
-- annotated `v0.3.0` tag와 7개 불변 Release asset
+- 최초 공개 시 annotated `v0.3.0` tag와 Release asset 7개 검증
+- 이후 공급 종료 정책에 따라 catalog만 갱신, tag·설치 ZIP과 5개 sidecar는 불변
 
 정확한 commit, hash, 실행 경계와 공개 결과는
 [v0.3.0 정식 공개 기록](<../../04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)에

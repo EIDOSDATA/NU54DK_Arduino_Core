@@ -119,9 +119,11 @@ manifest evidence로 연결했으며 새 기능의 `not-run`을 임의로 PASS�
   그 뒤 대표 Zephyr suite를 빌드한다.
 - `m23_inventory_contract` target suite가 전체 대표 build 집합에 포함된다.
 
-## 6. 다음 단계
+## 6. 당시 후속 단계
 
 M24는 이 기준선 위에서 UARTE00/20/21/22/30, SPIM/SPIS00/20/21/22/30,
 TWIM/TWIS20/21/22/30의 실제 선택 API와 sync/async DMA 수명주기를 구현한다. 같은 block 충돌,
 다른 block 동시 실행, timeout/cancel/error/System OFF 복구와 실제 NU54DK HIL을 통과하기 전에는
 manifest의 해당 상태를 지원으로 승격하지 않는다.
+
+후속 구현 결과는 [34번 기록](34_M24_Serial_Fabric_경로와_API_계약_기준선.md)에 보존한다. 현재 실행 범위와 우선순위는 [활성 TODO](../TODO_v0.4.0.md)를 따른다.

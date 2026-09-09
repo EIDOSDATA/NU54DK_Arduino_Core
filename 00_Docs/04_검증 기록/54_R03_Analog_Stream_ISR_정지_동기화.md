@@ -1,7 +1,8 @@
 # R03 — Analog/Stream ISR·정지 동기화
 
 2026-09-06, 시작 source `7e9270d`. 종료 commit은 이 문서의 최초 commit으로 식별한다.
-파일 이동 없이 정확성을 교정했다. 다음은 R04 LittleFS 공유 File 참조 관리다.
+파일 이동 없이 정확성을 교정했다. 후속 LittleFS 공유 File 참조 관리는
+[55번 기록](55_R04_File_공유_slot_수명주기.md)에 기록한다.
 
 ## 공유 상태와 정지 계약
 

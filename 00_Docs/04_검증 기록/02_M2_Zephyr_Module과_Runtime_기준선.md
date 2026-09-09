@@ -4,6 +4,7 @@
 | --- | --- |
 | 문서 상태 | 완료 |
 | M2 상태 | **완료** — clean module·runtime·정책·negative build와 기존 runtime HIL 통과 |
+| 기록 성격 | v0.1.0 개발 당시의 완료 기준선; 검증 source·실행 범위는 아래 기록 기준 |
 | 검증일 | 2026-08-26 (Asia/Seoul) |
 | 작성자 | Quantum / NUCODE |
 | 대상 구조 | Loader/LLEXT 없는 Native Full Zephyr 정적 이미지 |

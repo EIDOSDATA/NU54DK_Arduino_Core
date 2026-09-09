@@ -49,7 +49,7 @@ Production backend는 Devicetree chosen, alias와 profile overlay를 소비한�
 AC-02A는 공개 주변장치 객체를 늘리기 전에 pad와 peripheral block의 충돌을 fail-closed로 검출하는
 공통 기반을 추가했다.
 
-| 항목 | 현재 내부 계약 |
+| 항목 | v0.4.0 M23까지 확장된 내부 계약 |
 | --- | --- |
 | 저장 구조 | heap 없는 고정 슬롯, 설정 가능한 최대 slot 수 |
 | 자원 key | GPIO `controller + pin`, peripheral block·channel의 domain+instance, DMA RAM byte range |
@@ -58,6 +58,8 @@ AC-02A는 공개 주변장치 객체를 늘리기 전에 pad와 peripheral block
 | 수명 보호 | 64-bit generation과 manager epoch로 stale lease 거부 |
 | 문맥 | thread 전용 변경·조회; ISR 요청은 `invalid_context`로 거부 |
 | 부팅 고정 owner | UART20 console의 pad와 block만 고정 |
+
+`v0.3.0` stable의 lease 상한은 8개다. 위 16개와 추가 owner/key는 M23 개발 경로의 확장이며 stable 계약에 소급하지 않는다.
 
 Registry는 DTS pinctrl을 읽어 UART20 console을 `active`로 표시하며 GPIO가 이를 덮어쓰지 못하게
 한다. I2C22, SPI00, UART30과 PWM20/21/22는 부팅 고정 owner가 아니라 AC-02B runtime lifecycle이
@@ -259,8 +261,9 @@ manifest에 고정된 capability·검증 snapshot이다.
 
 M24 작업 1은 [Serial Fabric 경로와 API 계약](<../01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md>)에
 5개 공유 block과 23개 UARTE/SPIM/SPIS/TWIM/TWIS identity의 핀 bank, 기존 singleton 불변 조건,
-향후 allocation-free typed handle과 DMA 수명주기를 고정했다. 이 계약은 아직 새 공개 header나
-driver 지원을 뜻하지 않으며 manifest의 미구현 상태는 그대로 유지한다.
+allocation-free typed handle과 DMA 수명주기를 고정했다. 이후 개발 source에는 `nucode/SerialFabric.h`와
+23개 personality adapter가 추가됐으나 `v0.3.0`의 공개 API 범위가 늘어난 것은 아니다.
+계약 manifest의 상태와 실제 HIL 진행은 구별하고, 개발 검증·지원 확정은 [v0.4.0 TODO](../TODO_v0.4.0.md)를 따른다.
 
 ## 11. 설정과 profile
 
@@ -321,7 +324,7 @@ commit은 검증 문서가 소유한다.
 추가 기능 시험에서 실제 GPIO/SAMPLE 400에 수동 read 누계가 399가 되는 누락이 재현됐다. 읽기 구간 IRQ 보호만으로 해결되지 않았다. SAMPLE/REPORT
 IRQ 40회 일치나 파형 종료 후 한 번 읽기의 제한된 성공을 전체 기능/연속 동작 보증으로 확대하지 않는다. 임의 +1 보정이나 IRQ 경로 자동 대체를 적용하지 않았다.
 
-수동 read/clear 누산 문제는 알려진 제한으로 남겼고 사용자 지시로 QDEC 검증 작업을 완료했다.
+수동 read/clear 누산 문제는 알려진 제한으로 남겼고 사용자 지시로 추가 QDEC 검증을 제외했다.
 이에 의존하는 T13 QDEC20/21 단독·C07은 실행 목록에서 제외한다.
 유력 원인·회로 부하의 미검증 조건·완화는 [101번](<../04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md>),
 최종 지원 판정은 [TODO T14/T15](../TODO_v0.4.0.md)를 따른다.

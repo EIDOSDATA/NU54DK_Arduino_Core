@@ -157,8 +157,9 @@ record와 evidence/transcript digest를 기록해 실행 provenance를 고정한
 NUS echo HIL의 성공을 위 기능의 지원으로 확대하지 않는다. Zephyr/NCS 공개 `bt_*` API 직접
 사용은 가능하지만 각 기능은 별도 build/semantic/HIL 증거를 가져야 지원으로 선언한다.
 
-## 9. 완료 조건과 다음 단계
+## 9. 완료 조건과 당시 후속 단계
 
 M16은 NUS Peripheral/Central Stream, 두 Arduino 예제, `BLE NUS` profile, host/target contract와
-두 보드 물리 HIL을 모두 통과했다. 이 명시적 범위에서 M16 상태는 **완료**다. 다음 단계는 M17
-NCS v3.4.0 기능·예제 coverage record, 대표 sensor/direct build와 무선 기능 build feasibility다.
+두 보드 물리 HIL을 모두 통과했다. 이 명시적 범위에서 M16 상태는 **완료**다.
+후속 NCS v3.4.0 기능·예제 coverage, 대표 sensor/direct build와 무선 기능 build feasibility는
+[M17 기록](19_M17_NCS_기능과_예제_Coverage_기준선.md)에 보존한다.

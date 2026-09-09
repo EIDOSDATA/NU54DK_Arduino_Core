@@ -25,6 +25,19 @@ For v0.4.0 implementation, verification, documentation, or release work:
 6. Keep the TODO while work remains. Archive or remove it only under its retention
    conditions, updating this entry point and incoming links in the same change.
 
+## Current S work authorization
+
+The owner excludes QDEC diagnostics and serial handover from this work. Read all documentation
+before the requested documentation cleanup; then report that cleanup before hardware work.
+For S resume, check the full GPIO harness first. The owner confirms the maintained wiring and
+revokes arbitrary time-based reconfirmation expiry. Keep firmware watchdogs, command leases,
+exclusive probe locks and STOP/pin-release checks. A fresh fault requires connectivity checks
+and CMSIS-DAP diagnosis, not blind retries or an invented time-expiry blocker.
+Finish the remaining S scope before U wiring guidance/preparation; U physical work needs its
+actual changed wiring verified. Every progress report must state the completed scope and percentage;
+distinguish documentation progress from the S 58-condition physical denominator. See the active TODO
+for counts and exact evidence.
+
 ## First-party C/C++ style
 
 Use Korean Doxygen comments, BSD/Allman braces, four-space indentation and tab width.

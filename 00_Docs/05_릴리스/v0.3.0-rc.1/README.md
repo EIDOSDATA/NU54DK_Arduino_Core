@@ -1,21 +1,22 @@
 # NU54DK Arduino Core v0.3.0-rc.1 릴리스 후보
 
-2026-09-08 현재 이 버전의 공개 공급은 종료됐다. 아래 내용은 당시 검증·배포의 역사 기록이다.
-원본 자산은 [106번 보존 기록](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)을 따른다.
+> 보존 문서: `v0.3.0-rc.1`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+
 
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | RELEASE-v0.3.0-rc.1-INDEX-001 |
 | 대상 버전 | `v0.3.0-rc.1` / package version `0.3.0-rc.1` |
 | 채널 | Public GitHub Prerelease + 별도 RC Boards Manager index |
-| 현재 정식 버전 | `v0.2.0` |
+| 당시 정식 버전 | `v0.2.0` |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 지원 보드 | NU54DK / `nucode:zephyr:nu54dk` |
 | 상태 | M22 RC 공개·clean-room 검증용 후보; stable 승격 아님 |
 | 작성자 | Quantum / NUCODE |
 
 `v0.3.0-rc.1`은 Arduino Compatibility AC-01~AC-03과 BLE M19~M21을 하나의 package로
-통합해 공개 설치 경로를 검증하기 위한 후보입니다. Stable index와 현재 정식 `v0.2.0`은 이
+통합해 공개 설치 경로를 검증하기 위한 후보입니다. Stable index와 당시 정식 `v0.2.0`은 이
 RC를 공개해도 변경하지 않습니다.
 
 ## 문서

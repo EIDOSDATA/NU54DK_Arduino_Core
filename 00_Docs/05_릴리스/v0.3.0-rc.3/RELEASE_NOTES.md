@@ -1,6 +1,9 @@
 # NU54DK Arduino Core v0.3.0-rc.3 릴리스 노트
 
-> **Release Candidate 문서입니다.** 현재 production stable은 `v0.2.0`입니다.
+> 보존 문서: `v0.3.0-rc.3`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+
+> **Release Candidate 문서입니다.** 당시 production stable은 `v0.2.0`입니다.
 
 RC3 고정 host/package/Upload gate와 공개 설치본 29/29 compile은 통과했습니다. 공개 clean-room의
 Upload 단계는 사용자 reset 개입으로 중단됐고 같은 설치본의 즉시 재Upload는 성공했습니다.
@@ -40,8 +43,8 @@ CPUAPP RRAM 1,524 KiB 가운데 영구 저장소 68 KiB를 제외한 전체를 �
 LittleFS와 Settings/ZMS 주소는 RC2와 동일합니다. 일반 Upload가 mass erase를 하지 않아도
 version 전환 전에는 중요한 데이터를 백업해야 합니다.
 
-RC3가 제공하는 layout은 위 기본값 하나입니다. MCUboot/DFU dual-slot과 signed update·rollback은
-`v0.4.0` M24에서 검증된 고급 Memory layout preset으로 제공할 계획입니다. 임의 byte 입력 또는
+RC3가 제공한 layout은 위 기본값 하나입니다. MCUboot/DFU dual-slot과 signed update·rollback의
+당시 v0.4.0 M24 제안은 현재 실행 범위에서 제외됐습니다. 임의 byte 입력 또는
 Sketch overlay만으로 partition을 바꾸는 경로는 RC3 정식 지원 범위가 아닙니다.
 
 ## 이어받은 Arduino 기능

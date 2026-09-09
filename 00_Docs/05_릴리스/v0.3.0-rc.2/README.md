@@ -1,17 +1,18 @@
 # NU54DK Arduino Core v0.3.0-rc.2 릴리스 후보
 
-2026-09-08 현재 이 버전의 공개 공급은 종료됐다. 아래 내용은 당시 검증·배포의 역사 기록이다.
-원본 자산은 [106번 보존 기록](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)을 따른다.
+> 보존 문서: `v0.3.0-rc.2`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+
 
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | RELEASE-v0.3.0-rc.2-INDEX-001 |
 | 대상 버전 | `v0.3.0-rc.2` / package version `0.3.0-rc.2` |
 | 채널 | 별도 RC Boards Manager index를 사용하는 Public GitHub Prerelease |
-| 현재 정식 버전 | `v0.2.0` |
+| 당시 정식 버전 | `v0.2.0` |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 지원 보드 | NU54DK / `nucode:zephyr:nu54dk` |
-| 현재 상태 | **RC2 공개 검증 완료 — v0.3.0 stable 승격 대기** |
+| 당시 판정 | **RC2 공개 검증 완료 — v0.3.0 stable 승격 대기** |
 | 작성자 | Quantum / NUCODE |
 
 `v0.3.0-rc.2`는 `v0.3.0-rc.1`의 공개 package 기능을 이어받아 M22 전체 공개 설치
@@ -22,7 +23,7 @@ clean-room 도구가 Nordic SDK와 Toolchain 설치 대상 leaf를 먼저 만든
 RC2 Public Prerelease와 7개 고정 자산은
 [GitHub Release](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.3.0-rc.2)에
 공개됐습니다. 설치본 예제 29/29, 실제 pyOCD Upload, 공개 URL clean-room lifecycle·cleanup 및
-stable index 불변 검증을 통과했습니다. RC2는 검증된 시험 후보이며 production stable은 계속
+stable index 불변 검증을 통과했습니다. RC2는 검증된 시험 후보이며 당시 production stable은
 `v0.2.0`입니다.
 
 ## 문서

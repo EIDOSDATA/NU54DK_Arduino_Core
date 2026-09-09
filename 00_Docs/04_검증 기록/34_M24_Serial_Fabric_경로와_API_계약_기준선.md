@@ -131,9 +131,11 @@ checkout EOL 불변 host test를 추가했다. 이 실패는 peripheral 계약�
   대표 Zephyr build를 시작한다.
 - 계약 또는 생성 문서가 drift하거나 신규 identity가 HIL 없이 공개 상태로 승격되면 gate가 실패한다.
 
-## 8. 다음 단계
+## 8. 당시 후속 단계
 
 M24 작업 2에서 공통 serial-fabric backend, allocation-free typed handle과 같은 block의 안전한
-personality handover를 구현한다. 이어 작업 3~5의 driver와 자동 runner를 준비하고, 작업 6에서는
+personality handover를 구현하는 계획이었다. 이어 작업 3~5의 driver와 자동 runner를 준비하고, 작업 6에서는
 먼저 무배선 7개를 실행한 뒤 외부 fixture 16개와 최대 동시성·성능·전력 시험을 수행한다. 이 모든
 물리 증거가 생기기 전에는 신규 공개 지원이나 HIL 상태를 승격하지 않는다.
+
+후속 구현 결과는 [35번 기록](35_M24_Serial_Fabric_공통_backend_기준선.md)에 보존한다. 현재 실행 범위와 우선순위는 [활성 TODO](../TODO_v0.4.0.md)를 따른다.

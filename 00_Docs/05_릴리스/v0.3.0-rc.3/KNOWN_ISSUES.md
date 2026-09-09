@@ -1,10 +1,13 @@
 # NU54DK Arduino Core v0.3.0-rc.3 알려진 제약
 
+> 보존 문서: `v0.3.0-rc.3`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+
 > 이 문서는 RC3의 공개 기능을 실제 검증보다 넓게 해석하지 않기 위한 경계입니다.
 
 ## 1. RC와 Release 상태
 
-- 현재 stable은 `v0.2.0`입니다. `v0.3.0-rc.3`는 production stable이 아닙니다.
+- 당시 stable은 `v0.2.0`입니다. `v0.3.0-rc.3`는 production stable이 아닙니다.
 - RC1과 RC2의 tag·자산은 역사적으로 고정돼 있으며 RC3 byte로 교체하지 않습니다.
 - RC3의 고정 gate와 공개 설치본 29/29 compile은 통과했습니다. clean-room Upload 중 사용자
   reset으로 자동 lifecycle tail은 미실행이며 stable 공개 전 별도 lifecycle에서 판정합니다.
@@ -19,7 +22,7 @@
 - RC3에는 사용자가 임의 slot 크기를 입력하는 Tools 메뉴가 없습니다.
 - Sketch `app.overlay`가 병합되더라도 code partition, linker, Arduino maximum size와 storage
   migration을 함께 검증하지 않은 layout은 지원하지 않습니다.
-- MCUboot/DFU dual-slot과 signed update·rollback은 `v0.4.0` M24 범위입니다.
+- MCUboot/DFU dual-slot과 signed update·rollback은 RC3에 없습니다. 당시 v0.4.0 M24 제안은 현행 계획이 아닙니다.
 - 기본 Upload는 CMSIS-DAP V2 + pyOCD이며 여러 probe에서는 명시적 UID 경로를 사용합니다.
 - 일반 Upload는 mass erase 또는 recover를 자동 실행하지 않습니다.
 

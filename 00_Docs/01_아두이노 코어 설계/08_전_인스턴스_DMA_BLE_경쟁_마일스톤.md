@@ -6,7 +6,7 @@
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
 | 문서 개정 | 2.4 |
-| 문서 상태 | M23·M26 완료 / M24 역사적 단독 기능 HIL PASS / R00~R13 뒤 current-source M24·M25·동시성·soak / M27 준비 중 |
+| 문서 상태 | 고정 source 비교와 M23~M33 설계·완료 기준; 실행 상태는 TODO 참조 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.3.0` stable / commit `bae0957d2425e4418199a2a3a018bf8e9a0dc356` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
@@ -280,34 +280,37 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
   sync/async·double-buffer API가 target build를 통과했다. 온보드 UARTE 4개와 TWIM 3개의
   기본 data-path는 `51c1986`에서 PASS했다. Exact 결과는
   [온보드 교정·재검증](<../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)을 따른다.
-  `2542a01`에서는 Fixture 101의 P2↔P1 UARTE 양방향 정상 data 1,620건과 예상 오류 24건을
-  통과했다. 정확한 범위는 [Fixture 101 기록](<../04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)을
-  따른다. `ff3423e`에서는 Fixture 102의 P0↔P1 UARTE 양방향 정상 data 810건과 예상 오류
-  12건을 통과했다. 정확한 범위는 [Fixture 102 기록](<../04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)을
-  따른다. `b3c689b`에서는 Fixture 103의 P1↔P1 UARTE20/21/22 전 조합 양방향 정상 data
-  2,430건과 예상 오류 36건을 통과했다. 실제 `FRAMING` 실패와 재현 분리·최종 PASS는
-  [Fixture 103 기록](<../04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>)을 따른다.
-  `f21377e`에서는 Fixture 201의 P2↔P1 SPIM/SPIS00·20·21·22 조합에서 계획 ID 18,169개를
-  모두 통과했다. 8 MHz SPIM20 계열의 수신 지연 교정과 정확한 범위는
-  [Fixture 201 기록](<../04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md>)을 따른다.
-  `1a133e6`에서는 Fixture 202의 P0↔P1 SPIM/SPIS30·20·21·22 조합에서 계획 ID 9,084개를
-  모두 통과했다. 정확한 범위는 [Fixture 202 기록](<../04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md>)을
-  따른다. `4af93da`에서는 Fixture 203의 P1↔P1 SPIM/SPIS20·21·22 전 조합에서 계획 ID
-  27,252개를 모두 통과했다. 정확한 범위는
-  [Fixture 203 기록](<../04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md>)을 따른다.
-  `e2f045c`에서는 Fixture 301의 P1↔P0 TWIM/TWIS20·21·22·30 전 조합에서 기능 record
-  1,986개와 cleanup 2건을 통과했다. 내부 pull-up 계약, 지연 buffer clock-stretch 결함 교정과
-  정확한 범위는 [Fixture 301 기록](<../04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md>)을 따른다.
-  이전 SWD `No ACK` 기록은 보존하며 기본 PASS를 전체 복구·동시성 PASS로 확대하지 않는다.
+
+#### 리팩토링 전 단독 HIL의 근거
+
+| Fixture | exact source | 당시 PASS 범위 | 근거 |
+| --- | --- | --- | --- |
+| 101 UART P2↔P1 | `2542a01` | 정상 1,620·예상 오류 24·cleanup 2 | [44](<../04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>) |
+| 102 UART P0↔P1 | `ff3423e` | 정상 810·예상 오류 12·cleanup 2 | [45](<../04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>) |
+| 103 UART P1↔P1 | `b3c689b` | 정상 2,430·예상 오류 36·cleanup 2 | [46](<../04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>) |
+| 201 SPI P2↔P1 | `f21377e` | 계획 ID 18,169 | [47](<../04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md>) |
+| 202 SPI P0↔P1 | `1a133e6` | 계획 ID 9,084 | [48](<../04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md>) |
+| 203 SPI P1↔P1 | `4af93da` | 계획 ID 27,252 | [49](<../04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md>) |
+| 301 TWI P1↔P0 | `e2f045c` | 기능 1,986·cleanup 2 | [50](<../04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md>) |
+
+UART 103의 접촉 교란·`FRAMING`, SPI 201의 8 MHz 수신 지연/RXDELAY 교정,
+TWI 301의 내부 pull-up·clock-stretch 지연 buffer 결함은 각 실패 원본과 함께 보존한다.
+SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recovery 범위는 47번이 소유한다.
+
+이후 current-source T11 완료 근거는 리팩토링 체크리스트와 67~73번 기록을 따른다.
+이전 SWD `No ACK`는 보존하며 기본 PASS를 전체 복구·동시성 PASS로 확대하지 않는다.
+
+#### API와 검증 경계
 
 - UARTE00/20/21/22/30, SPIM/SPIS00/20/21/22/30, TWIM/TWIS20/21/22/30을 구현한다.
 - Arduino 호환 singleton과 고급 instance factory/direct handle의 책임을 분리한다.
 - UARTE의 고정 event ring과 두-buffer 연속 RX, SPI·I2C sync/async,
   target/peripheral double buffer와 공통 DMA 수명주기를 제공한다. 범용 N-buffer circular DMA queue로
   과장하지 않으며 더 깊은 queue와 backpressure 최적화는 별도 성능 gate에서 판단한다.
-- 완료 gate: 각 personality 단독 HIL, 같은 block 충돌 negative·반복 handover, 다른 block 최대 동시
+- 현재 완료 gate: 각 personality 단독 HIL, 같은 block 충돌 negative, 다른 block 최대 동시
   HIL, timeout/cancel/error/System OFF 복구, throughput·CPU·손실·soak 기록.
   전원 모드 lease의 올바른 해제는 필수이며 외부 계측 기반 전류·파형 보증은 제외한다.
+  최초 계획의 반복 Serial handover 검증은 사용자 지시로 제외했으며, 이미 구현한 backend를 제거한다는 뜻은 아니다.
 - T11 단독 기능 체크포인트 뒤 R01 CMake source 소속부터 R13 구조화까지 완료한다. Runtime/link byte
   영향에 따라 필요한 Fixture 101~301을 R13 뒤 최종 exact image로 재검증한 뒤에만 M24 동시성·soak
   기준으로 사용한다.
@@ -323,10 +326,11 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 ### M25 — Analog·timing·audio·event 전 인스턴스
 
-- 상태: **부분 완료** — SAADC AIN0~7·내부 ADC/event, PDM 기본/연속, C17 GPIO/GPIOTE·PWM 675+288·I2S 432 기능 PASS. TIMER 기능은 95번 범위로 완료 정리했다. QDEC는 알려진 문제 기록 후 진단 종료이며 다음은 T13 준비/실기다. 외부 ADC 반복 수 차이는 103번에 보존한다. SAADC·PWM, timer/event,
-  PDM·I2S·QDEC 후보를 구현했다. 구현 이력은
-  [M25 검증 기록](<../04_검증 기록/37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md>)을 따른다.
-  현재 source별 증거와 잔여 요구는 102번 대조표, 기능 fixture 경계는 42번 범위 합의를 따른다.
+- 상태: 기능 검증과 알려진 제한 정리 완료, 동시성·복구·soak의 현행 판정은 TODO 참조.
+  구현 이력은 [M25 검증 기록](<../04_검증 기록/37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md>),
+  source별 요구 대조는 102번, 외부 ADC 반복 수 차이는 103번, fixture 경계는 42번 기록에 보존한다.
+- 주요 기능 결과: SAADC AIN0~7·내부 ADC/event, PDM 기본/연속, C17 GPIO/GPIOTE·PWM 675+288·I2S 432 PASS.
+  TIMER는 95번의 실제 범위로 완료 정리했다. QDEC는 알려진 문제가 남아 있고 사용자 지시로 추가 검증을 제외한다.
 
 - SAADC 8채널 scan/differential/internal/calibration/oversampling/continuous DMA를 제공한다.
 - PWM20/21/22의 12 hardware channel allocator와 sequence/DPPI/DMA를 `analogWrite`, `tone`, Servo와
@@ -337,7 +341,8 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 - LED·button·VBAT monitor와 내부 event 경로는 보드 자체 자동 runner에 우선 배치한다. 외부 기능
   시험은 두 NU54DK의 안전한 ADC 입력·PWM capture·PDM/I2S/QDEC 합성 신호/loopback을 사용한다.
   실제 핀을 통과하는 신호와 기대 sample/frame/count는 필수이며 handle 생성으로 대체하지 않는다.
-- 완료 gate: 전 instance 단독·허용 동시 기능 HIL, 기본 timing·DMA overflow/underrun·복구·long-run soak.
+- 완료 gate: 현행 범위에 포함된 instance의 단독·허용 동시 기능 HIL, 기본 timing·DMA overflow/underrun·복구·long-run soak.
+  QDEC20/21과 C07은 현재 실행 대상이 아니다. 원래 전 instance 목표와 실제 검증 범위를 구분한다.
   정밀 ADC 정확도·jitter·음질·신호 품질, 실제 마이크·코덱·엔코더별 호환성은 필수 gate에서 제외한다.
   합성 peer 신호를 아직 구현하거나 검증하지 못한 경로는 `NOT RUN`/HOLD를 유지한다.
 - R03에서 ISR/thread 진단 snapshot, queue overflow, stop generation과 lock 대기 계약을 먼저 고정하고

@@ -6,7 +6,7 @@
 | 범위 | T09/T14 추가 USB·온보드·BLE; 외부 current-source T11 직전 정지 |
 | 최초 exact source | `18a7cbec9cceed38d6c866131afdac9e6ffbc4b8` |
 | Board gitlink | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| 최신 사용자 확인 | 전원 OFF 후 DAP UART 연결 전환·USB 재연결 완료, SWD 연결 유지, 보드 간 선 없음 |
+| 당시 사용자 확인 | 전원 OFF 후 DAP UART 연결 전환·USB 재연결 완료, SWD 연결 유지, 보드 간 선 없음 |
 | 최종 결과 | BLE 3개 pair gate PASS; 수정 source 373d98d의 온보드 8개 runner·18개 결과 PASS; 외부 T11 NOT RUN |
 
 ## 최초 결과와 교정 근거
@@ -129,7 +129,7 @@ TODO도 보존했다. 이번 변경의 C/C++·SDK·board·third-party 정렬/삭
 검증 중 다시 생성된 Python cache 3개 디렉터리의 17개 파일, 217,893바이트만 추가 정리했다.
 [삭제 전 경로·hash와 결과](evidence/usb-connected-373d98d/cache-cleanup.json)를 남겼다.
 
-## 종료 상태와 다음 작업
+## 종료 상태와 당시 후속 작업
 
 마지막에는 `C:/u2b`의 exact 373d98d DUT/peer image를 sector flash하고 CPUID `0x411fd210`,
 RAM의 full runtime commit·role 및 독립 nonce ping을 양쪽 모두 확인했다.
@@ -137,8 +137,11 @@ RAM의 full runtime commit·role 및 독립 nonce ping을 양쪽 모두 확인�
 identity/ping 2개 결과다. 이를 전체 primitives 904건이나 외부 fixture 시험으로 확대하지 않는다.
 실기 프로세스는 모두 종료했고 보드에는 위 pair image가 남아 있다.
 
-현재 스위치는 DAP UART 연결, SWD 연결이며 보드 간 선은 없다. **외부 current-source T11은
-NOT RUN**이다. 다음 작업은 전원을 모두 끄고 [Fixture 101 결선표](44_M24_Fixture_101_UART_실기_검증.md)에
+종료 당시 스위치는 DAP UART 연결, SWD 연결이며 보드 간 선은 없었다. **이 실행에서 외부
+current-source T11은 NOT RUN**이었다. 이후 완료 결과는 [73번 통신 회귀 완료 기록](73_T11_Fixture_301_current_source_TWI_회귀.md)에 있다.
+아래는 당시 후속 계획이며 현재 실행·결선 기준은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+
+당시 다음 작업은 전원을 모두 끄고 [Fixture 101 결선표](44_M24_Fixture_101_UART_실기_검증.md)에
 따라 UART 4선+GND를 연결하고 DAP UART를 분리한 뒤 사용자의 완료 확인을 받는 것이다.
 보드 사이 전원선은 연결하지 않는다. 결선·스위치 확인 전에는 외부 fixture 명령을 보내지 않는다.
 최종 문서 commit은 제품 입력을 바꾸지 않지만, 다음 HIL은 당시 clean HEAD와 exact build/runtime

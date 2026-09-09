@@ -118,7 +118,7 @@ Service UUID exact filter가 UART nonce 전체 128 bit를 over-air로 결합하�
 | --- | --- | --- |
 | Core revision | `0103a8434ac205a953c981385ae26a2a64aeeccc` | 동일 |
 | Board revision | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` | 동일 |
-| Probe/UART | `5415360300052840d9e1e32cc887aaf1` / `COM14` | `5415360300052840fcd47678fd7d106d` / `COM13` |
+| Probe/UART | `<PROBE_UID_3>` / `COM14` | `<PROBE_UID_2>` / `COM13` |
 | Image SHA-256 | `22f2b5917bfb18d84d0abcfc2f901d4c960b5fbc7a49b03a1051a77adfe18883` | `66ed78694dd7a23cf12aea0ce1a533f05fd9d205552a06b1bed3f916695a221b` |
 | Transcript SHA-256 | `2254eeab43bdf03e8994b8c064c93423e11a4f5d6b820812930be4636c25f578` | `de6cfd27a997c6ffe9faadfe35cc70eab0a2274d239bb02f9411df4e5bf05232` |
 | 연결 round | 1, 2 | 1, 2 |

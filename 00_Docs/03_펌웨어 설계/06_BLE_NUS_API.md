@@ -94,14 +94,15 @@ Build Adapter는 Arduino source discovery에서 `<NUCODE_BLE.h>`를 찾고 featu
 | `beginCentral()` | Bluetooth/NUS client를 준비하고 Central 역할 선택 |
 | `scanForNus(exact_name)` | exact local name을 active scan하고 NUS peer에 자동 연결 |
 | `disconnect()` | 현재 연결을 비동기로 종료; 자동 재광고/재검색은 유지 |
-| `end()` | 광고·검색·자동 재시작을 중단하고 active connection의 종료를 요청 |
+| `end()` | 광고·검색·자동 재시작을 중단하고 pending/active connection의 종료를 요청 |
 
 한 image의 전역 `BLESerial`은 한 시점에 Peripheral 또는 Central 역할 하나만 가진다. 역할을
 중복 시작하거나 잘못된 역할의 API를 호출하면 명시적 오류로 실패한다. Bluetooth stack과 NUS
 module은 image 수명 동안 한 번만 초기화하며 `end()`는 radio 동작과 role lifecycle을 끝내지만
-Zephyr Bluetooth stack 자체를 unload하지 않는다. Scan callback에서 만든 `pending_connection`은
-현재 `end()`가 취소하지 않으므로 연결 시도 중 호출하면 종료 뒤 연결이 성립할 수 있다. 완전한
-비동기 연결 취소까지 보장하는 API로 해석하지 않는다.
+Zephyr Bluetooth stack 자체를 unload하지 않는다. `v0.3.0`의 `end()`는 scan callback이 만든
+`pending_connection`도 분리하여 disconnect를 요청하고 참조를 반환한다. Pending/active 연결이 있으면
+recycle/종료 처리가 끝날 때까지 facade 소유권을 유지한다. 호출 반환 자체가 모든 비동기 종료의 완료를 뜻하지는 않는다.
+이 동작은 고정 [v0.3.0 구현](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/v0.3.0/libraries/NUCODE_BLE/src/NUCODE_BLE.cpp)의 `NusSerial::end()` 기준이다.
 
 ### 4.2 상태와 event
 

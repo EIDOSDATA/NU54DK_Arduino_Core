@@ -1,15 +1,16 @@
 # NU54DK Arduino Core v0.2.0 릴리스 문서
 
-2026-09-08 현재 이 버전의 공개 공급은 종료됐다. 아래 내용은 당시 검증·배포의 역사 기록이다.
-원본 자산은 [106번 보존 기록](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)을 따른다.
+> 보존 문서: `v0.2.0`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+
 
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | RELEASE-v0.2.0-INDEX-001 |
 | 대상 버전 | `v0.2.0` |
-| 현재 상태 | **정식 공개 완료** |
+| 당시 판정 | **정식 공개 완료** |
 | M18 최종 상태 | `stable-release-published` |
-| 현재 정식 버전 | `v0.2.0` |
+| 당시 정식 버전 | `v0.2.0` |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 지원 보드 | NU54DK / `nucode:zephyr:nu54dk` |
 | 작성자 | Quantum / NUCODE |
@@ -74,14 +75,13 @@ append-only 사실로 고정했다. RC2 표의 hash는 stable hash로 재사용�
 | `v0.2.0` stable 공개·latest 지정 | **완료 — Release ID `379370208`** |
 | stable 공개 Boards Manager 수명주기 | **PASS — 설치·upgrade·downgrade·재설치·compile·uninstall** |
 
-Draft와 staged ZIP 절차는 공개 전 검증 경계의 역사로 보존한다. 신규 설치는 root stable
-index를 사용하며 RC index는 과거 candidate 재현에만 사용한다.
+Draft와 staged ZIP 절차는 공개 전 검증 경계의 역사로 보존한다. 신규 설치는 현재 stable 안내를 따른다. 이 문서의 RC/stable URL은 당시 공개 identity로 보존한다.
 
 ## 4. 공개 경계
 
 - `v0.1.0` tag, Release와 index 항목은 이전 stable의 불변 기록으로 유지한다.
 - [`v0.2.0`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.2.0)은 정식
-  tag와 별도 asset을 가진 현재 stable이다.
+  tag와 별도 asset을 가진 당시 stable이다.
 - [`v0.2.0-rc.2`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.2.0-rc.2)는
   실제 Git tag와 12개 asset을 가진 Public Prerelease다.
 - `v0.2.0-rc.2`는 candidate 역사이며 latest로 승격하거나 자산을 교체하지 않는다.

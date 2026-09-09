@@ -9,8 +9,8 @@ SDK, `third_party`, board submodule, 기존 공개 ZIP·asset은 대상이 아�
 - 동작·소유권·오류·제한을 정확하게 설명하고 구현과 다른 보증을 추가하지 않음.
 
 기준 도구는 clang-format **22.1.8**입니다. 다른 도구 버전으로 전 파일을 재정렬하지 않습니다.
-사용자 요청에 따라 현재 T01~T09 준비를 끝낸 뒤, 최종 커밋·푸시 전에 전체 정렬과 회귀 검사를
-수행합니다. [.clang-format](../../.clang-format)은 반복 실행 기준입니다.
+변경한 코드의 정렬과 필요한 회귀를 확인한 뒤 커밋·푸시합니다. 완료된 T01~T09를 다시
+대기 조건으로 사용하지 않습니다. [.clang-format](../../.clang-format)은 반복 실행 기준입니다.
 
 ```powershell
 $Format = 'C:\NU54DEV\tools\LLVM-22.1.8\bin\clang-format.exe'

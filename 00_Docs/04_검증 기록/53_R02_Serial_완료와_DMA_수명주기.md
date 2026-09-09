@@ -1,7 +1,8 @@
 # R02 — Serial 완료·timeout·DMA 수명주기
 
 2026-09-06, 시작 source `eed0b6c`. 종료 commit은 이 문서의 최초 commit으로 식별한다.
-Host/fault injection과 target 회귀를 완료했다. 다음 작업은 R03 Analog/Stream의 ISR·stop 동기화다.
+Host/fault injection과 target 회귀를 완료했다. 후속 R03 Analog/Stream ISR·stop 동기화는
+[54번 기록](54_R03_Analog_Stream_ISR_정지_동기화.md)에 기록한다.
 
 ## 교정한 계약
 
@@ -83,5 +84,5 @@ API·CLI·builder schema·저장 형식·partition migration은 없다. 동기 �
 Runtime byte가 달라지므로 과거 exact T11 PASS를 새 source에 적용하지 않는다.
 
 R13 뒤 최종 source에서 Fixture 101~103 UART, 201~203 SPI, 301 TWI의 sync/async·같은 주소 재사용·
-cancel/NACK/정상 재시작을 검증해야 한다. 현재 작업은 flash/HIL 없이 current-source T11 직전까지다.
+cancel/NACK/정상 재시작을 검증해야 한다. 이 R02 기록은 flash/HIL을 포함하지 않으며, 후속 통신 실기 완료는 [73번 기록](73_T11_Fixture_301_current_source_TWI_회귀.md)에 있다.
 되돌림 단위는 내부 guard, SPIM/TWIM 완료·정지 수정, 나머지 adapter guard, pair count 집계와 새 Host 시험이다.

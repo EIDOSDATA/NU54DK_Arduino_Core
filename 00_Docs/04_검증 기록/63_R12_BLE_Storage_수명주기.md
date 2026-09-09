@@ -1,6 +1,7 @@
 # R12 BLE·Storage 수명주기 구조 확대
 
-상태: R12-A/B/C/D software 완료. R11 `86b53f8` 뒤의 T14/T15 software 회귀다. current-source T11 이후의 물리 시험은 미실행이다.
+당시 결과: R12-A/B/C/D software 완료. R11 `86b53f8` 뒤의 T14/T15 software 회귀다.
+이 기록에는 current-source T11 이후의 물리 시험을 포함하지 않는다.
 
 | 단계 | 책임 | 보존·검증할 계약 |
 | --- | --- | --- |
@@ -57,8 +58,7 @@ C header로 수정했으며 SDK는 수정하지 않았다. C:/r12a 실패와 r12
 [기준선](evidence/r12a-86b53f8/target-before.json),
 [메모리·symbol](evidence/r12a-86b53f8/target-comparison.json),
 [실제 Host](evidence/r12a-86b53f8/gap-after.txt)를 보존한다.
-다음은 R12-B GATT database/server/client 및 lifecycle 분리·fault injection이다.
-R12 전체는 B/C/D 완료 전까지 진행 중이며 current-source T11은 NOT RUN이다.
+당시 후속 B/C/D 작업의 결과는 아래 절에 이어진다. A 단계의 current-source T11은 NOT RUN이다.
 
 ## R12-B GATT 결과
 
@@ -103,9 +103,9 @@ target 4개를 다시 확인했다. C:/r12b 중간 결과도 로컬 보존한다
 [target](evidence/r12b-ee17789/target-build.json),
 [메모리·symbol](evidence/r12b-ee17789/target-comparison.json),
 [Host 전](evidence/r12b-ee17789/gatt-before.txt)·[후](evidence/r12b-ee17789/gatt-after.txt)를 보존한다.
-다음은 R12-C Security/profile의 pairing·bond·HIDS/BAS/DIS 수명주기 분리다.
+후속 Security/profile 작업은 아래 C0/C1 절에 기록한다.
 
-## R12-C0 M21 baseline compile 보정 착수
+## R12-C0 M21 baseline compile 결함
 
 추가 M21 기준선 3개가 미사용 PHY helper와 NCS HIDS C header의 deprecated enum 위치 경고로
 실패했다. 파일 분리 전에 PHY helper를 해당 feature 조건 안에 두고, HIDS SDK 호출과 init
@@ -182,7 +182,7 @@ pending reference 이동, 고정 queue 24개, boot bond snapshot 배열을 그�
 [target](evidence/r12c1-c90d2b1/target-build.json),
 [메모리·symbol](evidence/r12c1-c90d2b1/target-comparison.json),
 [실제 Host](evidence/r12c1-c90d2b1/security-after.txt)를 보존한다.
-다음은 R12-D EEPROM/LittleFS다. R12 전체는 D 완료 전까지 진행 중이며 실기 NOT RUN이다.
+후속 EEPROM/LittleFS 결과는 아래 D 절에 기록한다. C1 단계의 실기는 NOT RUN이다.
 
 ## R12-D Storage 결과
 
@@ -226,5 +226,5 @@ Host가 통과했으며, 이 수정은 production 동기화 동작을 바꾸지 
 [File](evidence/r12d-4e5dd7d/file-after.txt) 실제 Host 로그를 보존한다.
 
 R12 전체 software 작업을 완료했다. BLE 무선·실제 bonding 저장·flash 내구성·전원 차단,
-current-source T11/T12/T13은 NOT RUN이며 기존 지원 수준은 그대로다. 다음은 R13 package,
-정책 생성, Kconfig/CMake 구조와 최종 전체 software 검증이다.
+이 단계의 current-source T11/T12/T13은 NOT RUN이며 기존 지원 수준은 그대로였다.
+후속 package·정책·Kconfig/CMake와 최종 software gate는 [64번 기록](64_R13_도구_정책_build_구조.md)에 기록한다.

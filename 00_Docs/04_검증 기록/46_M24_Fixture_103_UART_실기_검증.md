@@ -1,5 +1,8 @@
 # M24 Fixture 103 UART 실기 검증
 
+> 리팩토링 이전 source의 실기 기록이다. 같은 fixture의 후속 회귀는 [69번 기록](69_T11_Fixture_103_current_source_UART_회귀.md)에 있으며,
+> 아래 수치·실패·판정은 이 기록의 exact source에만 적용한다. 현재 결선·실행 순서는 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 기록 ID | VALIDATION-M24-UART-FIXTURE-046 |
@@ -44,7 +47,8 @@ dry-run도 통과했다.
 `0x0200`, event tag 6(`UarteEventType::error`에 1을 더한 값), UARTE error mask `0x04`
 (`FRAMING`)의 결합이다. Role 2는 첫 1,024-byte RX buffer를 완료한 상태였고 guard 손상은 없었다.
 따라서 이 실패는 취소 수명주기나 event ring overflow가 아니라 stop bit를 HIGH로 읽지 못한 실제
-선로/접촉 오류로 분류했다.
+당시에는 선로/접촉 오류로 분류했다. 다만 이 register 관측만으로 물리 접촉 불량을
+확정한 것은 아니다.
 
 결선을 움직이지 않은 상태에서 다음 두 진단을 수행했다.
 
@@ -106,7 +110,7 @@ CMSIS-DAP timeout 한 건이 있었으나 probe 열거가 회복된 뒤 새 evid
 Evidence에는 raw UID를 넣지 않고 role별 UID SHA-256, image identity, confirmation hash,
 fixture catalog hash, SWD 설정과 flash 결과를 보존했다. 최종 전체 파일의 `status`는 `passed`다.
 
-## 5. 판정과 다음 단계
+## 5. 판정과 당시 후속 단계
 
 Fixture 103의 P1 route에서 UARTE20·21·22 전 조합의 양방향 data path, EasyDMA,
 parity, RTS/CTS, 오류 뒤 재시작은 기능 PASS다. Fixture 101~103으로 계획한 UART 외부 fixture는

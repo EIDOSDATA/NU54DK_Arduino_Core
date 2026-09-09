@@ -1,5 +1,8 @@
 # M24 Fixture 301 TWI 실기 검증
 
+> 리팩토링 이전 source의 실기 기록이다. 같은 fixture의 후속 회귀는 [73번 기록](73_T11_Fixture_301_current_source_TWI_회귀.md)에 있으며,
+> 아래 수치·실패·판정은 이 기록의 exact source에만 적용한다. 현재 결선·실행 순서는 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 기록 ID | VALIDATION-M24-TWI-FIXTURE-050 |
@@ -90,7 +93,7 @@ raw UID를 넣지 않고 SHA-256만 보존했다.
 | [전체 JSON](evidence/e2f045c/fixture301-full-10mhz-e2f045c.json) | 1,724,358 byte | `39a90ff35ff3287976d5623d0faa7af620675b4a7b789849315a8c15e64f2209` |
 | [append-only journal](evidence/e2f045c/fixture301-full-10mhz-e2f045c.json.jsonl) | 925,411 byte | `f3902404de3f042f4d1774924df4bb8f83f922d9e225c19ee4fde03a8102e07a` |
 
-## 5. 판정과 다음 단계
+## 5. 판정과 당시 후속 단계
 
 Fixture 301에서 TWIM/TWIS20·21·22·30의 양방향 data path, EasyDMA, 100/400/1,000 kHz,
 단일·이중 buffer, target clock-stretch, NACK·cancel·stuck-SDA와 정상 복귀는 기능 PASS다.
@@ -98,5 +101,6 @@ Fixture 101~103 UART, 201~203 SPI와 합치면 T11이 요구한 23개 serial per
 단독 통신 경로는 모두 actual HIL로 검증됐다.
 
 이 판정은 고급 API의 stable 공개나 M24 전체 완료가 아니다. T13의 더 넓은 서로 다른 block
-동시 실행, 충돌 negative 반복, 처리량·CPU·손실과 600/7,200초 soak가 남아 있다. 다음 순서는
-T12 M25 합성 신호 기능 검증이며, 첫 결선은 Fixture 401의 PWM→AIN0 경로다.
+동시 실행, 충돌 negative 반복, 처리량·CPU·손실과 600/7,200초 soak는 당시 후속 계획이었다.
+이후 soak 기준은 [활성 TODO](../TODO_v0.4.0.md)의 180/900/3,600초 단계로 대체됐다. 당시 다음 순서는
+T12 M25 합성 신호 기능 검증과 Fixture 401 PWM→AIN0 결선이었다.

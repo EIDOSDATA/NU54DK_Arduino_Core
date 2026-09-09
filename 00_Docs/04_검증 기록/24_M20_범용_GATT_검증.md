@@ -107,7 +107,7 @@ Exact JSON evidence와 두 raw transcript는 최종 실행에서 생성됐습니
 | --- | --- | --- |
 | Core revision | `0103a8434ac205a953c981385ae26a2a64aeeccc` | 동일 |
 | Board revision | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` | 동일 |
-| Probe/UART | `5415360300052840d9e1e32cc887aaf1` / `COM14` | `5415360300052840fcd47678fd7d106d` / `COM13` |
+| Probe/UART | `<PROBE_UID_3>` / `COM14` | `<PROBE_UID_2>` / `COM13` |
 | Image SHA-256 | `d317a81aef8ace0d5c40d97deeb4cd664174daa337ae78ed81ac87e7f25fdcb8` | `a89a40cedc054b81848ab28eb4def9f95d53d1426f202d4dce313b34b06aa475` |
 | Transcript SHA-256 | `af405398240ee1f50245e8e092bde543293ebeb1606da462383bbb539f071d62` | `fed256ad2c475a4a86adff93f333a40da87d7babb2985a002e7344e19ef33026` |
 | 연결·discovery round | 연결 1, 2 | 연결·discovery 1, 2 |

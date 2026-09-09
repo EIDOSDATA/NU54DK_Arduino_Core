@@ -1,7 +1,7 @@
 # R01 — Serial adapter의 Core target 소속 교정
 
 2026-09-06, 시작 source `d2c125c` (`main`). 종료 commit은 이 문서의 최초 commit으로 식별한다.
-R00의 [51번 기준선](51_R00_리팩토링_기준선.md)에 이어 F01을 재현하고 교정했다.
+R00의 [51번 기준선](51_R00_리팩토링_기준선.md)에 이어 F05(CMake source 소속)를 재현하고 교정했다.
 
 SPIM/SPIS/TWIM/TWIS가 Core library 생성 전 호출한 `zephyr_library_sources()`는 상위 library에
 source를 붙였다. 네 호출을 기존 `NUCODE_ARDUINO_CORE_SOURCES` 목록 추가로 바꿔 UARTE와 같은

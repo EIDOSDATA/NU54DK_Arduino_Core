@@ -48,8 +48,8 @@ gate 뒤에만 수행한다.
 | Evidence 생성 UTC | `2026-08-31T14:09:16.017248Z` |
 | Evidence 상태 | `schema_version=3`, `status=passed` |
 | 실행 nonce | `4fc3a7fd39b216a27c3f4ac1c640aaa5` |
-| Central | DAPLink `5415360300052840fcd47678fd7d106d`, `COM13` |
-| Peripheral | DAPLink `5415360300052840d9e1e32cc887aaf1`, `COM14` |
+| Central | DAPLink `<PROBE_UID_2>`, `COM13` |
+| Peripheral | DAPLink `<PROBE_UID_3>`, `COM14` |
 | Mass erase 요청 | `false` |
 | Factory reset 실행 | `false` |
 
@@ -254,8 +254,8 @@ $Evidence = "$CoreRoot\build\m21\hil\m21-ble-security-$($Commit.Substring(0,7)).
 python "$CoreRoot\tests\hil\nu54dk\m21_ble_security.py" `
   --peripheral-hex $PeripheralHex `
   --central-hex $CentralHex `
-  --peripheral-board-id "5415360300052840d9e1e32cc887aaf1" `
-  --central-board-id "5415360300052840fcd47678fd7d106d" `
+  --peripheral-board-id "<PROBE_UID_3>" `
+  --central-board-id "<PROBE_UID_2>" `
   --expected-core-revision $Commit `
   --evidence $Evidence
 ```
@@ -341,7 +341,7 @@ raw transcript는 같은 디렉터리에 생성되며, evidence가 기록한 SHA
 | Core revision | `d1902b16804a27b77b153eeb9d11a10e088a59ae` |
 | Board package revision | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | Arduino FQBN | `nucode:zephyr:nu54dk:feature_set=ble,upload_probe=pyocd_uid` |
-| Board | DAPLink `5415360300052840fcd47678fd7d106d`, `COM13` |
+| Board | DAPLink `<PROBE_UID_2>`, `COM13` |
 | 운영체제 | Windows 11 Pro 25H2 x64, build `26200.9168` |
 | Bluetooth adapter | Intel Wireless Bluetooth, driver `23.140.0.5` |
 | NCS / Zephyr | NCS `v3.4.0` / Zephyr `4.4.0` |
@@ -408,11 +408,12 @@ BLE bond restored and verified after reboot
 별도 공용 Kconfig 추가는 필요하지 않다. BLE core queue와 stack/settings lifecycle은 M19/M20 공용
 구현이 소유하고 M21 feature conf는 보안·표준 profile symbol만 소유한다.
 
-## 10. 최종 판정과 다음 단계
+## 10. 최종 판정과 당시 후속 단계
 
 두 보드 RF HIL은 암호화된 GATT HID report map, CCC와 report payload의 protocol을 검증했고,
 Windows 11 수동 검증은 운영체제 pairing UI·HID host stack·실제 키 입력과 bond 재연결을 확인했다.
 따라서 M21은 **완료**다.
 
-`v0.3.0` 전체는 아직 정식 지원이 아니다. 다음 순서는 AC-02 주변장치 호환성, AC-03
-Storage·대표 library 호환성, M22 통합 package·clean Windows·RC/stable gate다.
+M21 완료 당시에는 `v0.3.0` 전체가 정식 지원 단계가 아니었다. 이후 AC-02 주변장치 호환성,
+AC-03 Storage·대표 library 호환성, M22 통합 package·clean Windows·RC/stable gate를 거쳐
+정식 공개했다. 공개 판정은 [32번 정식 공개 기록](32_M22_v0.3.0_정식_릴리스_공개_기록.md)에 따로 보존한다.

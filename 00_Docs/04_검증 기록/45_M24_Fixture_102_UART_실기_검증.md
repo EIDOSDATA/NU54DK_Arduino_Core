@@ -1,5 +1,8 @@
 # M24 Fixture 102 UART 실기 검증
 
+> 리팩토링 이전 source의 실기 기록이다. 같은 fixture의 후속 회귀는 [68번 기록](68_T11_Fixture_102_current_source_UART_회귀.md)에 있으며,
+> 아래 수치·실패·판정은 이 기록의 exact source에만 적용한다. 현재 결선·실행 순서는 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 기록 ID | VALIDATION-M24-UART-FIXTURE-045 |
@@ -82,7 +85,7 @@ Evidence에는 role별 image identity, confirmation hash, fixture catalog hash, 
 sector erase·no recover 기록이 들어 있다. 결과 파일의 최종 `status`는 `passed`이며 원본은
 사용자 Documents 증거 디렉터리에도 별도로 보존한다.
 
-## 5. 판정과 다음 단계
+## 5. 판정과 당시 후속 단계
 
 Fixture 102에서 사용한 UARTE30 P0 route와 UARTE20·21·22 P1 route의 양방향 data path,
 EasyDMA, parity, RTS/CTS, 오류 뒤 재시작은 기능 PASS다. 이 결과는 전기 파형 품질이나 모든

@@ -1,5 +1,8 @@
 # M22 v0.3.0-rc.3 릴리스 자동화
 
+이 문서는 공급 종료된 RC의 역사적 실행 계약입니다. 아래 공개 순서는 현재 실행 지시가 아니며,
+차기 버전 준비는 [M27](M27_README.md), 현재 설치는 [릴리스 안내](../../00_Docs/05_릴리스/README.md)를 따릅니다.
+
 `v0.3.0-rc.1`은 공개 뒤 clean-room 실행기가 Nordic installer 소유 leaf를 먼저
 생성하는 결함으로 formal 검증을 중단한 불변 후보입니다. RC1 tag와 7개 자산은
 교체하지 않습니다. RC2는 실행기를 교정해 전체 gate를 통과한 불변 후보이며, RC3는
@@ -41,9 +44,12 @@ M22 Python 도구 자체가 GitHub 공개 작업을 수행하지 않았다는 �
 
 로컬 `m22-rc3-plan.json`, gate evidence, log와 final evidence는 Release asset으로
 올리지 않는다. stable index `package_nucode_nu54dk_index.json`도 RC asset이 아니다.
-M22는 이 stable index가 1,877 byte이고 SHA-256이
-`5ae7fbe13f71c52950879064685694cf4b062557572f187e81476639724e5344`인지를
-exact commit과 worktree 양쪽에서 확인한다.
+M22 당시 stable index 기준은 1,877 byte이고 SHA-256이
+`5ae7fbe13f71c52950879064685694cf4b062557572f187e81476639724e5344`였다.
+현행 validator는 후속 v0.3.0 최초 index와 공급 종료 후 catalog의 고정 identity도
+허용한다. 현재 catalog는 1,126 byte, SHA-256
+`97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57`이다.
+허용 byte를 exact commit과 worktree 양쪽에서 확인하며 과거 plan의 기준을 바꾸지는 않는다.
 
 ## clean-room 정리 계약
 

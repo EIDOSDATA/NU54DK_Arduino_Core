@@ -4,6 +4,7 @@
 | --- | --- |
 | 문서 상태 | 완료 |
 | M3 판정 | **완료** — sample 3종 pristine build, expected-fail 및 NU54DK Twister HIL 9/9 통과 |
+| 기록 성격 | v0.1.0 개발 당시의 완료 기준선; 검증 source·실행 범위는 아래 기록 기준 |
 | 검증일 | 2026-08-27 (Asia/Seoul) |
 | 작성자 | Quantum / NUCODE |
 | 대상 구조 | Loader/LLEXT 없는 Native Full Zephyr 정적 이미지 |

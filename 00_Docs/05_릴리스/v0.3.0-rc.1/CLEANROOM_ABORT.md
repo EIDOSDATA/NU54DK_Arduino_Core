@@ -1,13 +1,16 @@
 # v0.3.0-rc.1 public clean-room 검증 중단 기록
 
+> 보존 문서: `v0.3.0-rc.1`의 공개 공급은 2026-09-08 종료됐습니다. 아래 내용은 당시 계약·기록이며,
+> 현재 설치·지원은 [v0.3.0 안내](../v0.3.0/README.md)를 따릅니다. [원본 보존](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)
+
 | 항목 | 내용 |
 | --- | --- |
 | 기록 ID | RELEASE-v0.3.0-rc.1-CLEANROOM-ERRATUM-001 |
 | 대상 | `v0.3.0-rc.1` |
 | 판정 | **Public Prerelease 보존 / formal M22 clean-room 검증 중단** |
 | 판정일 | 2026-09-02 |
-| 교정 후보 | `v0.3.0-rc.2` — 아직 공개 전 |
-| 현재 stable | `v0.2.0` — 변경 없음 |
+| 당시 교정 후보 | `v0.3.0-rc.2` — 후속 공개·검증은 30번 기록 참조 |
+| 당시 stable | `v0.2.0` — 변경 없음 |
 | 작성자 | Quantum / NUCODE |
 
 ## 1. 요약
@@ -37,7 +40,7 @@ RC1을 `public-rc1-validated`로 선언하지 않습니다.
 | Release URL | <https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.3.0-rc.1> |
 | Plan SHA-256 | `a99c0998c61ad0fe2ffb43b7093626e5ad57760650a422b4bf3949ec219b1217` |
 
-RC1 tag와 자산은 실패를 숨기기 위해 이동, 삭제, 교체 또는 재업로드하지 않습니다.
+RC1 실패와 원본 자산은 보존합니다. 이후 승인된 공개 공급 종료·archive 이관은 106번 기록의 별도 결정입니다.
 
 ## 3. 공개 자산
 
