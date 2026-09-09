@@ -213,8 +213,9 @@ input-connect·내부 pull-up·S0D1 open-drain으로 HIGH를 만든 뒤 LOW100ms
 A도 TWIM을 활성화하지 않은 staged 상태에서 첫 recoverBus를 호출한다. 실제 SDA가 호출 전후
 LOW여야 하고 driver_error10·SDK의-ECANCELED(-140)가20ms 안에 반환되어야 한다. B의 실제
 LOW 유지100000~105000µs와 해제 후 SDA HIGH를 확인한 뒤 두 번째 recoverBus의 success를 요구한다.
-두 호출 전후 ENABLE0·staged1·GPIO PIN_CNF 원상태0·네 DMA buffer의 application 소유와 guard를
-대조한다. staged는 하드웨어를 소유하지 않는 준비 상태이므로 이 전용 경로의 STOP은 GPIO 소유권
+두 호출 전후 ENABLE0·staged1·GPIO PIN_CNF 원상태0·네 DMA buffer가 queued/DMA 소유가 아닌
+application-owned 또는 completed/cancelled/error 반환 완료 상태인지와 guard를 대조한다. staged는
+하드웨어를 소유하지 않는 준비 상태이므로 이 전용 경로의 STOP은 GPIO 소유권
 반환과 staged/ENABLE/DMA 근거를 확인한다. 활성 handle의 일반 STOP/deactivate 검사는 유지한다.
 새 seed로 원래0x42/400kHz/256byte 통신을 재획득하여 전체 pattern을 확인해야 회차가 성공한다.
 

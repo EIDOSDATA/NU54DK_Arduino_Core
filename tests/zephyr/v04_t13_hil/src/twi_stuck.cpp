@@ -27,7 +27,7 @@ namespace
                rx[0].guards(256U) && rx[1].guards(256U);
     }
 
-    /** @brief API가 네 DMA buffer를 모두 application 소유로 보고하는지 독립 확인합니다. */
+    /** @brief 네 DMA buffer가 queued/DMA 소유가 아닌 반환 완료 상태인지 독립 확인합니다. */
     std::uint32_t buffers()
     {
         if (handle == nullptr || tx == nullptr || rx == nullptr)
@@ -41,7 +41,10 @@ namespace
             const auto state =
                 policy == 1U ? static_cast<TwimHandle *>(handle)->bufferState(addresses[index])
                              : static_cast<TwisHandle *>(handle)->bufferState(addresses[index]);
-            flags |= state == DmaBufferState::application_owned ? 1U << index : 0U;
+            const bool returned =
+                state == DmaBufferState::application_owned || state == DmaBufferState::completed ||
+                state == DmaBufferState::cancelled || state == DmaBufferState::error;
+            flags |= returned ? 1U << index : 0U;
         }
         return flags;
     }
