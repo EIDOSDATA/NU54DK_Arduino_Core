@@ -91,7 +91,8 @@ def execute(devices, test, mode, continuity, append, *, preflight):
         label = f'T13-S/spi-boundary/{test["name"]}/{mode}/repeat{repeat:03}'
         append(label+'/input', {'status': 'input', 'test': test, 'seed': seed, 'mode': mode})
         runner.execute_group(devices, {'test': test, 'members': [test]}, .25, continuity,
-            lambda name, row: append(label+'/baseline/'+name, row), preflight=True, seed=seed)
+            lambda name, row: append(label+'/baseline/'+name, row), preflight=True, seed=seed,
+            serial_start_barrier=True)
         original_error = None
         observed = {}
         try:
@@ -175,7 +176,8 @@ def execute(devices, test, mode, continuity, append, *, preflight):
                 raise ProtocolError('T13 SPI boundary policy not cleared')
         restart_seed = seed ^ 0x9E3779B9
         runner.execute_group(devices, {'test': test, 'members': [test]}, 1, continuity,
-            lambda name, row: append(label+'/restart/'+name, row), preflight=True, seed=restart_seed)
+            lambda name, row: append(label+'/restart/'+name, row), preflight=True,
+            seed=restart_seed, serial_start_barrier=True)
         append(label+'/result', {'status': 'passed', 'fault_seed': seed, 'restart_seed': restart_seed,
             'planned_spi_boundary_pass': not preflight, 'normal_soak_pass': False})
         print(f'T13_SPI_BOUNDARY_PROGRESS case={test["name"]} mode={mode} completed={repeat}/{repeats}', flush=True)

@@ -55,12 +55,25 @@ class StartBarrierTests(unittest.TestCase):
         engine = (ROOT / 'tests/zephyr/v04_t13_hil/src/engine.cpp').read_text(encoding='utf-8')
         self.assertIn('selected->harness == 3U && selected->id == 1U', engine)
 
+    def test_spi_baseline_waits_for_both_start_responses_and_spis_dma_arm(self):
+        """! @brief SPI 정상 기준선은 두 단계 장벽과 SPIS 하드웨어 준비 확인을 함께 사용합니다. """
+        devices = self.devices()
+        test = {'id': 10, 'harness': 'S', 'serial_links': []}
+        runner.start_devices(devices, test, lambda *args: None, 'test',
+                             serial_start_barrier=True)
+        self.assertEqual(self.calls,
+                         [(2, 98, (1,)), (1, 98, (1,)), (2, 184, ()), (1, 184, ())])
+        source = (ROOT / 'tests/zephyr/v04_t13_hil/src/serial.cpp').read_text(encoding='utf-8')
+        start = source[source.index('bool t13::serialStart'):source.index('bool t13::serialReleaseStart')]
+        self.assertIn('!lane.initial_spis_armed', start)
+        self.assertLess(start.index('poll(lane);'), start.index('receivers_armed = true;'))
+
     def test_original_start_has_no_release_and_other_topologies_are_rejected(self):
         devices = self.devices()
         test = {'id': 2, 'harness': 'S', 'serial_links': []}
         runner.start_devices(devices, test, lambda *args: None, 'test')
         self.assertEqual(self.calls, [(2, 98, ()), (1, 98, ())])
-        for changed in ({**test, 'harness': 'U'}, {**test, 'id': 6},
+        for changed in ({**test, 'harness': 'U'}, {**test, 'id': 11},
                         {**test, 'id': 1}, {'id': 2, 'harness': 'U', 'serial_links': []}):
             with self.assertRaises(ProtocolError):
                 runner.start_devices(devices, changed, lambda *args: None, 'test', serial_start_barrier=True)

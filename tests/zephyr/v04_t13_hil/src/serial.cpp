@@ -42,6 +42,7 @@ namespace
         std::uint32_t max_queue_us = 0U, requests = 0U;
         std::uint64_t next_frame = 0U;
         bool tx_pending[2]{}, rx_pending[2]{};
+        bool initial_spis_armed = false;
         bool active = false;
         std::uint32_t data_fault[20]{};
     };
@@ -813,7 +814,11 @@ namespace
                         provideSpiBuffers(lane);
                     }
                 }
-                else if (event.type != SpiFabricEventType::buffers_armed)
+                else if (event.type == SpiFabricEventType::buffers_armed)
+                {
+                    lane.initial_spis_armed = true;
+                }
+                else
                 {
                     failure(lane, 30U + static_cast<std::uint32_t>(event.type), event.error_code);
                 }
@@ -1142,6 +1147,40 @@ bool t13::serialStart(bool hold_transmit)
             return false;
         }
         lanes[index].next_frame = static_cast<std::uint64_t>(k_uptime_get()) + 100U;
+    }
+    const auto deadline = static_cast<std::uint64_t>(k_uptime_get()) + 100U;
+    while (true)
+    {
+        bool ready = true;
+        for (unsigned index = 0U; index < lane_count; ++index)
+        {
+            auto &lane = lanes[index];
+            if (lane.endpoint.kind == Kind::spis &&
+                !(spi_boundary.prepared && spi_boundary_policy == 4U) && !lane.initial_spis_armed)
+            {
+                poll(lane);
+                ready = ready && lane.initial_spis_armed;
+            }
+        }
+        if (ready)
+        {
+            break;
+        }
+        if (!serialHealthy() || static_cast<std::uint64_t>(k_uptime_get()) >= deadline)
+        {
+            for (unsigned index = 0U; index < lane_count; ++index)
+            {
+                auto &lane = lanes[index];
+                if (lane.endpoint.kind == Kind::spis &&
+                    !(spi_boundary.prepared && spi_boundary_policy == 4U) &&
+                    !lane.initial_spis_armed)
+                {
+                    return failure(lane, 18U);
+                }
+            }
+            return false;
+        }
+        k_yield();
     }
     receivers_armed = true;
     start_held = hold_transmit;

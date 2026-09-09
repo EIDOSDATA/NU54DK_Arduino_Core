@@ -120,6 +120,8 @@ class SpiBoundaryTests(unittest.TestCase):
                     self.assertFalse(rows[-1][1]['planned_spi_boundary_pass'])
                     first, restart = group.call_args_list
                     self.assertEqual(first.kwargs['seed'] ^ 0x9E3779B9, restart.kwargs['seed'])
+                    self.assertTrue(first.kwargs['serial_start_barrier'])
+                    self.assertTrue(restart.kwargs['serial_start_barrier'])
                 else:
                     with self.assertRaises(ProtocolError):
                         boundary.execute(devices, self.test, 'short', mock.Mock(), lambda name, row: rows.append((name, row)), preflight=True)

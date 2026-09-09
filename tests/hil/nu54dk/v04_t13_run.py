@@ -254,7 +254,7 @@ def start_order(devices, test):
 
 def start_devices(devices, test, append, identifier, *, serial_start_barrier=False):
     """! @brief 고정 CTS 시험에서는 양쪽 RX 준비 응답을 받은 뒤 송신을 허용합니다. """
-    barrier_cases = {'S': (2, 3, 4, 5, 101, 105), 'U': (1,)}
+    barrier_cases = {'S': (2, 3, 4, 5, 6, 7, 8, 9, 10, 101, 105), 'U': (1,)}
     if serial_start_barrier and test['id'] not in barrier_cases.get(test['harness'], ()):
         raise ProtocolError('T13 serial start barrier is restricted to fixed CTS cases')
     ordered = start_order(devices, test)
