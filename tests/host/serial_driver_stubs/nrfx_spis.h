@@ -7,7 +7,41 @@
 
 struct NRF_SPIS_Type
 {
+    bool rx_started{false};
+    bool tx_started{false};
+    std::uint32_t interrupt_mask{0U};
 };
+
+enum nrf_spis_event_t
+{
+    NRF_SPIS_EVENT_RXSTARTED,
+    NRF_SPIS_EVENT_TXSTARTED,
+};
+
+inline constexpr std::uint32_t NRF_SPIS_INT_RXREADY_MASK = 1U;
+inline constexpr std::uint32_t NRF_SPIS_INT_TXREADY_MASK = 2U;
+
+inline bool nrf_spis_event_check(const NRF_SPIS_Type *registers, nrf_spis_event_t event)
+{
+    return event == NRF_SPIS_EVENT_RXSTARTED ? registers->rx_started : registers->tx_started;
+}
+
+inline void nrf_spis_event_clear(NRF_SPIS_Type *registers, nrf_spis_event_t event)
+{
+    if (event == NRF_SPIS_EVENT_RXSTARTED)
+    {
+        registers->rx_started = false;
+    }
+    else
+    {
+        registers->tx_started = false;
+    }
+}
+
+inline void nrf_spis_int_enable(NRF_SPIS_Type *registers, std::uint32_t mask)
+{
+    registers->interrupt_mask |= mask;
+}
 
 inline NRF_SPIS_Type mock_spis_regs[5];
 
@@ -122,4 +156,10 @@ inline void mock_spis_transfer_done(nrfx_spis_t &driver, std::size_t tx_amount,
 {
     const nrfx_spis_event_t event{NRFX_SPIS_XFER_DONE, tx_amount, rx_amount};
     driver.cb.handler(&event, driver.cb.context);
+}
+
+inline void mock_spis_transfer_started(nrfx_spis_t &driver)
+{
+    driver.p_reg->rx_started = true;
+    driver.p_reg->tx_started = true;
 }

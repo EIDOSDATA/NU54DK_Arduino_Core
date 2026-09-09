@@ -123,11 +123,16 @@ int main()
            SerialFabricResult::success);
     assert(mock_spis_buffer_sets.size() == 1U);
 
-    /** @brief 첫 pair가 armed되면 다음 pair의 ACQUIRE가 END보다 먼저 예약돼야 합니다. */
+    /** @brief 첫 pair의 armed 통지는 다음 pair로 첫 CS 전에 교체하지 않아야 합니다. */
     mock_spis_buffers_armed(driver);
+    assert(mock_spis_buffer_sets.size() == 1U);
+    expectEvent(*handle, SpiFabricEventType::buffers_armed, memory, memory + 16U);
+
+    /** @brief 실제 DMA 시작 event 뒤에만 다음 pair의 ACQUIRE를 예약합니다. */
+    mock_spis_transfer_started(driver);
+    handleIrq(20U);
     assert(mock_spis_buffer_sets.size() == 2U);
     assert(mock_spis_buffer_sets[1].tx == memory + 32U);
-    expectEvent(*handle, SpiFabricEventType::buffers_armed, memory, memory + 16U);
 
     mock_spis_transfer_done(driver, 8U, 8U);
     assert(mock_spis_buffer_sets.size() == 2U);
@@ -138,9 +143,13 @@ int main()
     mock_spis_buffers_armed(driver);
     expectEvent(*handle, SpiFabricEventType::buffers_armed, memory + 32U, memory + 48U);
     assert(handle->provideNextBuffers(memory, 8U, memory + 16U, 8U) == SerialFabricResult::success);
-    assert(mock_spis_buffer_sets.size() == 3U);
+    assert(mock_spis_buffer_sets.size() == 2U);
     assert(handle->provideNextBuffers(memory + 64U, 8U, memory + 80U, 8U) ==
            SerialFabricResult::wrong_state);
+
+    mock_spis_transfer_started(driver);
+    handleIrq(20U);
+    assert(mock_spis_buffer_sets.size() == 3U);
 
     mock_spis_transfer_done(driver, 8U, 8U);
     assert(mock_spis_buffer_sets.size() == 3U);
