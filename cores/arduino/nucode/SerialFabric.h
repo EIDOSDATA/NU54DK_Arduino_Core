@@ -307,6 +307,12 @@ namespace nucode::arduino
         [[nodiscard]] SerialFabricResult receiveAsync(void *first_buffer, std::size_t first_size,
                                                       void *second_buffer = nullptr,
                                                       std::size_t second_size = 0U) noexcept;
+        /**
+         * @brief 연속 수신의 rx_buffer_needed event에 완료된 버퍼를 다시 공급합니다.
+         * @note 최초 receiveAsync()에 전달한 두 버퍼 중 소유권이 반환된 버퍼만 허용합니다.
+         */
+        [[nodiscard]] SerialFabricResult provideReceiveBuffer(void *buffer,
+                                                              std::size_t size) noexcept;
         [[nodiscard]] SerialFabricResult cancelTransmit() noexcept;
         [[nodiscard]] SerialFabricResult cancelReceive() noexcept;
         [[nodiscard]] bool takeEvent(UarteEvent &event) noexcept;

@@ -653,6 +653,52 @@ namespace nucode::arduino
         return SerialFabricResult::success;
     }
 
+    SerialFabricResult UarteHandle::provideReceiveBuffer(void *buffer, std::size_t size) noexcept
+    {
+        if (k_is_in_isr())
+        {
+            return SerialFabricResult::invalid_context;
+        }
+        const internal::SerialFabricOperationGuard operation_guard;
+        auto *const context = contextFor(instance());
+        if ((context == nullptr) ||
+            !internal::isSerialFabricHandleActive(SerialPersonality::uarte, instance()) ||
+            !context->configuration.continuous_receive || (atomic_get(&context->rx_active) == 0) ||
+            (atomic_get(&context->cancelling_rx) != 0))
+        {
+            return SerialFabricResult::wrong_state;
+        }
+        if ((size == 0U) || (size > UINT16_MAX) || !leasedBuffer(*context, buffer, size))
+        {
+            return SerialFabricResult::invalid_argument;
+        }
+        {
+            const k_spinlock_key_t key = k_spin_lock(&context->lock);
+            auto *const record = bufferFor(*context, buffer);
+            if ((record == nullptr) || (record->size != size) ||
+                (record->state != DmaBufferState::completed))
+            {
+                k_spin_unlock(&context->lock, key);
+                return SerialFabricResult::wrong_state;
+            }
+            /** @brief nrfx 호출 직후 완료 IRQ가 선점해도 completed를 되돌리지 않도록 표시합니다. */
+            record->state = DmaBufferState::queued;
+            k_spin_unlock(&context->lock, key);
+        }
+        const int result =
+            nrfx_uarte_rx_buffer_set(&context->driver, static_cast<std::uint8_t *>(buffer), size);
+        {
+            const k_spinlock_key_t key = k_spin_lock(&context->lock);
+            auto *const record = bufferFor(*context, buffer);
+            if ((record != nullptr) && (record->state == DmaBufferState::queued))
+            {
+                record->state = result == 0 ? DmaBufferState::dma_owned : DmaBufferState::completed;
+            }
+            k_spin_unlock(&context->lock, key);
+        }
+        return mapResult(result);
+    }
+
     SerialFabricResult UarteHandle::cancelTransmit() noexcept
     {
         if (k_is_in_isr())

@@ -274,18 +274,37 @@ namespace nucode::arduino
         void completeRead(TwisContext &context, std::size_t amount, bool error)
         {
             BufferRecord completed{};
+            BufferRecord promoted{};
             {
                 const k_spinlock_key_t key = k_spin_lock(&context.lock);
                 completed = context.tx[0];
                 completed.state = error ? DmaBufferState::error : DmaBufferState::completed;
                 context.tx[0] = context.tx[1];
                 context.tx[1] = {};
+                promoted = context.tx[0];
+                k_spin_unlock(&context.lock, key);
+            }
+            const int prepare_result =
+                (!error && (promoted.address != nullptr))
+                    ? nrfx_twis_tx_prepare(&context.driver, promoted.address, promoted.size)
+                    : 0;
+            if (!error && (promoted.address != nullptr))
+            {
+                const k_spinlock_key_t key = k_spin_lock(&context.lock);
+                context.tx[0].state =
+                    prepare_result == 0 ? DmaBufferState::dma_owned : DmaBufferState::error;
                 k_spin_unlock(&context.lock, key);
             }
             pushEvent(context,
                       {error ? TwiFabricEventType::error : TwiFabricEventType::read_complete,
                        context.configuration.primary_address, completed.address, nullptr, amount,
                        0U, error ? nrfx_twis_error_get_and_clear(&context.driver) : 0U});
+            if (prepare_result != 0)
+            {
+                pushEvent(context, {TwiFabricEventType::error,
+                                    context.configuration.primary_address, promoted.address,
+                                    nullptr, 0U, 0U, static_cast<std::uint32_t>(-prepare_result)});
+            }
             if (context.tx[0].address == nullptr)
             {
                 emitBufferNeeded(context, true);
@@ -296,12 +315,26 @@ namespace nucode::arduino
         void completeWrite(TwisContext &context, std::size_t amount, bool error)
         {
             BufferRecord completed{};
+            BufferRecord promoted{};
             {
                 const k_spinlock_key_t key = k_spin_lock(&context.lock);
                 completed = context.rx[0];
                 completed.state = error ? DmaBufferState::error : DmaBufferState::completed;
                 context.rx[0] = context.rx[1];
                 context.rx[1] = {};
+                promoted = context.rx[0];
+                k_spin_unlock(&context.lock, key);
+            }
+            const int prepare_result =
+                (!error && (promoted.address != nullptr))
+                    ? nrfx_twis_rx_prepare(&context.driver, const_cast<void *>(promoted.address),
+                                           promoted.size)
+                    : 0;
+            if (!error && (promoted.address != nullptr))
+            {
+                const k_spinlock_key_t key = k_spin_lock(&context.lock);
+                context.rx[0].state =
+                    prepare_result == 0 ? DmaBufferState::dma_owned : DmaBufferState::error;
                 k_spin_unlock(&context.lock, key);
             }
             pushEvent(context,
@@ -309,6 +342,13 @@ namespace nucode::arduino
                        context.configuration.primary_address, nullptr,
                        const_cast<void *>(completed.address), 0U, amount,
                        error ? nrfx_twis_error_get_and_clear(&context.driver) : 0U});
+            if (prepare_result != 0)
+            {
+                pushEvent(context,
+                          {TwiFabricEventType::error, context.configuration.primary_address,
+                           nullptr, const_cast<void *>(promoted.address), 0U, 0U,
+                           static_cast<std::uint32_t>(-prepare_result)});
+            }
             if (context.rx[0].address == nullptr)
             {
                 emitBufferNeeded(context, false);

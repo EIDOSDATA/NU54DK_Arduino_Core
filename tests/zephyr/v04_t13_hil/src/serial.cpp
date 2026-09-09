@@ -670,6 +670,32 @@ namespace
         return spiTimingConfigured(endpoint);
     }
 
+    /** @brief 반환된 UART RX slot을 두 번째 DMA가 끝나기 전에 연속 수신에 다시 공급합니다. */
+    bool provideReceiveBuffer(Lane &lane)
+    {
+        if ((lane.error != 0U) || (lane.received.completed == 0U) || rxDelayHold(lane) ||
+            !uartFaultReceiveAllowed())
+        {
+            return true;
+        }
+        const unsigned slot = (lane.received.completed - 1U) % 2U;
+        if (lane.rx_pending[slot] || !resetRx(lane, slot))
+        {
+            return failure(lane, 14U, slot);
+        }
+        const auto submitted = k_cycle_get_32();
+        const auto result = static_cast<UarteHandle *>(lane.handle)
+                                ->provideReceiveBuffer(lane.rx[slot].data(), lane.endpoint.length);
+        if (!accepted(lane, result, 15U))
+        {
+            return false;
+        }
+        lane.rx_pending[slot] = true;
+        lane.submitted_rx[slot] = submitted;
+        ++lane.queued_rx;
+        return true;
+    }
+
     /** @brief API 완료 event를 모두 소진하며 예상하지 않은 취소·오류는 실패로 고정합니다. */
     void poll(Lane &lane)
     {
@@ -708,6 +734,7 @@ namespace
                 else if (event.type == UarteEventType::rx_buffer_needed)
                 {
                     ++lane.requests;
+                    provideReceiveBuffer(lane);
                 }
                 else
                 {

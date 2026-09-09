@@ -211,6 +211,18 @@ class M24SerialContractTests(unittest.TestCase):
         self.assertIn("nrfx_twis_tx_prepare(&context->driver, tx_buffer, tx_size)", queue)
         self.assertIn("nrfx_twis_rx_prepare(&context->driver, rx_buffer, rx_size)", queue)
 
+    def test_twis_promoted_buffers_are_prepared_before_the_next_request(self) -> None:
+        """Source regression only; T13 C01 proves the repeated-start physical path."""
+        source = (REPOSITORY / "cores/arduino/TwisFabric.cpp").read_text(encoding="utf-8")
+        read = source.split("void completeRead(", 1)[1].split("void completeWrite(", 1)[0]
+        write = source.split("void completeWrite(", 1)[1].split("void twisEvent(", 1)[0]
+        self.assertIn("promoted = context.tx[0];", read)
+        self.assertIn("nrfx_twis_tx_prepare(", read)
+        self.assertLess(read.index("nrfx_twis_tx_prepare("), read.index("pushEvent(context"))
+        self.assertIn("promoted = context.rx[0];", write)
+        self.assertIn("nrfx_twis_rx_prepare(", write)
+        self.assertLess(write.index("nrfx_twis_rx_prepare("), write.index("pushEvent(context"))
+
     def test_spim_hardware_csn_meets_nrf54l15_spis_timing(self) -> None:
         """Source regression only; Fixture 201 proves the physical timing path."""
         source = (REPOSITORY / "cores/arduino/SpimFabric.cpp").read_text(
