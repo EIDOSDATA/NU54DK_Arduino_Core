@@ -12,6 +12,16 @@ from v04_protocol import ProtocolError, encode
 
 
 class PowerTests(unittest.TestCase):
+    def test_probe_inventory_is_forbidden_after_peer_debug_detach(self):
+        """! @brief B System OFF 중 전체 probe 열거가 DIF wake를 일으키지 않게 합니다. """
+        helper = mock.Mock()
+        helper.get_all_connected_probes.return_value = [mock.Mock(unique_id='AABB')]
+        self.assertEqual(power.connected_probe_uids(helper, False), {'aabb'})
+        with self.assertRaisesRegex(ProtocolError, 'prohibited'):
+            power.connected_probe_uids(helper, True)
+        helper.get_all_connected_probes.assert_called_once_with(blocking=False)
+        self.assertEqual(power.PEER_PIN_RESET_SETTLE_SECONDS, .7)
+
     def test_both_uart_pins_precede_controller_rx_and_no_peer_command_is_sent(self):
         """! @brief 양쪽 준비 후 A RX가 실제 활성화되고 B reset은 호출자에게 남는 순서를 대조합니다. """
         calls = []

@@ -115,13 +115,17 @@ def boot_exact(
     uid: str,
     image: dict,
     swd_frequency_hz: int = 1_000_000,
-    *, cmsis_dap_limit_packets: bool = False,
+    *, cmsis_dap_limit_packets: bool = False, flash_connect_mode: str | None = None,
 ):
     """Flash/start one exact role image; caller owns the pair's exclusive locks."""
     if sha256_file(image["path"]) != image["sha256"] or sha256_file(image["elf"]) != image["elf_sha256"]:
         raise ProtocolError("image changed after preflight")
     ## @brief 기본 flash 호출은 유지하고 명시된 경우에만 USB 명령 동시성을 제한합니다.
-    flash_options = {"cmsis_dap_limit_packets": True} if cmsis_dap_limit_packets else {}
+    flash_options = {}
+    if cmsis_dap_limit_packets:
+        flash_options["cmsis_dap_limit_packets"] = True
+    if flash_connect_mode is not None:
+        flash_options["connect_mode"] = flash_connect_mode
     flash = flash_image(pyocd, uid, image["path"], 120, swd_frequency_hz, **flash_options)
     options = {"auto_unlock": False, "connect_mode": "attach", "resume_on_disconnect": False}
     if cmsis_dap_limit_packets:

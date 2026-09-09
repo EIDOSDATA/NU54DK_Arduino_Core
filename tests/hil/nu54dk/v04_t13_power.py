@@ -22,6 +22,7 @@ FAULT_MAGIC = 0x50464531
 IDLE_MAGIC = 0x50494431
 PINS_MAGIC = 0x50504931
 POLL_MAGIC = 0x50504F31
+PEER_PIN_RESET_SETTLE_SECONDS = .7
 
 
 def polling_policy(phase, repeats):
@@ -31,6 +32,14 @@ def polling_policy(phase, repeats):
     if phase in ('bridge-debug', 'bridge-fast-poll') and repeats != 1:
         raise ProtocolError('T13 bridge diagnostic requires exactly one repetition')
     return 1 if phase == 'bridge-fast-poll' else 0
+
+
+def connected_probe_uids(connect_helper, peer_debug_detached):
+    """! @brief System OFF 대상을 분리한 뒤에는 전체 DAP 열거를 금지합니다. """
+    if peer_debug_detached:
+        raise ProtocolError('T13 probe enumeration prohibited after peer debug detach')
+    return {probe.unique_id.lower() for probe in
+            connect_helper.get_all_connected_probes(blocking=False)}
 
 
 def inspect_polling(words, role, policy):
@@ -290,14 +299,14 @@ def execute(args, images, grant, uids, append):
     cleanup_proven = False
     with ProbeLocks(uids), ExitStack() as stack:
         def available():
-            return {probe.unique_id.lower() for probe in ConnectHelper.get_all_connected_probes(blocking=False)}
+            return connected_probe_uids(ConnectHelper, detached)
         if not set(uids).issubset(available()):
             raise ProtocolError('both current exact probes required')
         try:
             for uid, image in zip(uids, images):
                 session.validate(grant, images, uids)
                 device, flash = pair.boot_exact(stack, ConnectHelper, args.pyocd, uid, image,
-                    10000000, cmsis_dap_limit_packets=True)
+                    10000000, cmsis_dap_limit_packets=True, flash_connect_mode='under-reset')
                 devices.append(device)
                 append(f'flash/role{image["role"]}', {'status': 'observation', 'flash': flash})
                 session.verify_profile(device)
@@ -318,13 +327,11 @@ def execute(args, images, grant, uids, append):
                     raise ProtocolError('T13 explicit expected pin reset could not be armed')
                 detached = True
                 detach_and_pin_reset(b, append)
-                time.sleep(.3)
+                time.sleep(PEER_PIN_RESET_SETTLE_SECONDS)
                 observe_pins(a, append, 'pins/controller-after-peer-reset')
 
             def a_only_check():
                 session.validate(grant, images, uids)
-                if not set(uids).issubset(available()):
-                    raise ProtocolError('T13 exact USB probe disconnected')
                 raw = bytes(a.target.read_memory_block8(images[0]['symbols']['v04_identity'], 64))
                 pair.verify_identity(raw, 1, images[0]['core_revision'])
                 if struct.unpack('<I', raw[56:60])[0] != MAGIC:

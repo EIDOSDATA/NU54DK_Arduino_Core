@@ -24,6 +24,8 @@ power 모듈·RAM retention·poweroff를 추가하지 않는다. 마지막 SRAM4
 checksum으로 보존한다. 명시된 예상 reset 외에는 자동 UART 재시작을 하지 않는다.
 
 1. exact source/UID·SWD10MHz·controlled flash 후 기존 S 전기 검사를 모두 수행한다.
+   직전 System OFF로 debug power가 해제된 B도 다시 기록할 수 있도록 flash 접속은
+   `under-reset`을 사용한다. sector erase·exact UID·`auto_unlock=false`·`--no-reset`은 그대로다.
 2. 양쪽 TX idle 준비 뒤 A RX를 먼저 시작한다. A ENABLE8·실제 PSEL·RX pending1·기존 오류/트래픽0을
    확인한 다음 B의 예정 pin reset을 기록한다. B debug session을 닫고 pin-only reset한다.
    A의 UART가 ENABLE0인 상태에서 B가 먼저 RX를 시작하지 않도록 실행 순서를 고정한다.
@@ -38,11 +40,15 @@ checksum으로 보존한다. 명시된 예상 reset 외에는 자동 UART 재시
    마지막 cleanup에서만 허용하며 이 접근이 B를 깨웠다면 System OFF 성공에 포함하지 않는다.
    identity 마지막word의 STOP stamp·소유권·17 PIN_CNF를 확인한다.
 
+B pin-only reset 해제 후에는0.7초를 보장한 뒤 첫 UART 중계를 시작한다. B debug session을
+닫은 뒤부터 cleanup 전까지는 `get_all_connected_probes`를 포함한 전체 CMSIS-DAP 열거를
+금지한다. 중계 중 상태 검사는 이미 열려 있는 A session의 exact identity만 읽는다.
+이를 어기면 nRF54L15의 DIF reset으로 B가 깨어나므로 GRTC/GPIO wake PASS로 세지 않는다.
+
 `v04_t13_power.py --phase bridge|timer|gpio --repeats 1|100`은 기본 read-only preflight다.
 실행은 현재 S grant와 `--execute-fixture --evidence`가 필요하다. 예행1회를100회로 세지 않는다.
-기존 runner에는 회차 시작 전 확인 잔여 20초 검사가 있다. 사용자는 유지 중인 S 결선의
-시간 기반 만료를 폐기했으므로 후속 실기 전에 이 시한 검사를 현행 지시와 정합화해야 한다.
-문서 정리만으로 코드 검사가 바뀐 것은 아니다. Firmware 10초 lease·STOP·전기 검사는 유지한다.
+유지 중인 S 결선에는 시간 기반 만료를 적용하지 않는다. Firmware 10초 lease·STOP·
+전기 검사·probe lock은 유지하며 회차 시작 전 exact grant·A runtime identity를 계속 확인한다.
 
 `--phase bridge-debug --repeats 1`은 응답 손실 원인을 구분하는 단일 진단이다. B의 debug를
 유지하고 pin reset·OFF 없이 같은 UART GPIO·DMA와 source/challenge를 검사한다. 이 결과에는

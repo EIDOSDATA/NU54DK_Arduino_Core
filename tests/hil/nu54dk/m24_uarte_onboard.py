@@ -135,11 +135,13 @@ def matching_port_names(port_records: Iterable[Any], probe_id: str) -> list[str]
 
 def pyocd_command(
     pyocd: Path, probe_id: str, image: Path, swd_frequency_hz: int = 1_000_000,
-    *, cmsis_dap_limit_packets: bool = False,
+    *, cmsis_dap_limit_packets: bool = False, connect_mode: str | None = None,
 ) -> list[str]:
     """! @brief 기존 sector/UID/속도 계약에 명시적 USB 단일 명령 옵션만 추가합니다. """
     if type(cmsis_dap_limit_packets) is not bool:
         raise UarteHilFailure("CMSIS-DAP packet limit must be boolean.")
+    if connect_mode not in (None, "under-reset"):
+        raise UarteHilFailure("unsupported pyOCD flash connect mode.")
     command = [
         str(pyocd),
         "load",
@@ -160,6 +162,8 @@ def pyocd_command(
     ]
     if cmsis_dap_limit_packets:
         command.extend(("-O", "cmsis_dap.limit_packets=true"))
+    if connect_mode is not None:
+        command.extend(("--connect", connect_mode))
     return [*command, str(image)]
 
 
@@ -169,14 +173,15 @@ def flash_image(
     image: Path,
     timeout_seconds: float,
     swd_frequency_hz: int = 1_000_000,
-    *, cmsis_dap_limit_packets: bool = False,
+    *, cmsis_dap_limit_packets: bool = False, connect_mode: str | None = None,
 ) -> dict[str, Any]:
     if timeout_seconds <= 0:
         raise UarteHilFailure("--flash-timeout must be positive.")
     if swd_frequency_hz <= 0:
         raise UarteHilFailure("--swd-frequency-hz must be positive.")
     command = pyocd_command(pyocd, probe_id, image, swd_frequency_hz,
-                           cmsis_dap_limit_packets=cmsis_dap_limit_packets)
+                           cmsis_dap_limit_packets=cmsis_dap_limit_packets,
+                           connect_mode=connect_mode)
     started = time.monotonic()
     try:
         result = subprocess.run(
@@ -198,6 +203,7 @@ def flash_image(
         "target": "nrf54l",
         "frequency_hz": swd_frequency_hz,
         "cmsis_dap_limit_packets": cmsis_dap_limit_packets,
+        "connect_mode": connect_mode or "default",
         "seconds": round(time.monotonic() - started, 3),
         "mass_erase_requested": False,
         "recover_requested": False,

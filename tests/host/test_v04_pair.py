@@ -44,7 +44,9 @@ class V04PairTests(unittest.TestCase):
         args = (Path('pyocd.exe'), 'a' * 32, Path('candidate.hex'), 10000000)
         default = onboard.pyocd_command(*args)
         limited = onboard.pyocd_command(*args, cmsis_dap_limit_packets=True)
+        under_reset = onboard.pyocd_command(*args, connect_mode='under-reset')
         self.assertEqual(limited, default[:-1] + ['-O', 'cmsis_dap.limit_packets=true', default[-1]])
+        self.assertEqual(under_reset, default[:-1] + ['--connect', 'under-reset', default[-1]])
         self.assertIn('auto_unlock=false', limited)
         self.assertIn('resume_on_disconnect=false', limited)
         self.assertEqual(limited[limited.index('--erase') + 1], 'sector')
@@ -54,6 +56,8 @@ class V04PairTests(unittest.TestCase):
         self.assertIn('--no-reset', limited)
         with self.assertRaises(onboard.UarteHilFailure):
             onboard.pyocd_command(*args, cmsis_dap_limit_packets='false')
+        with self.assertRaises(onboard.UarteHilFailure):
+            onboard.pyocd_command(*args, connect_mode='attach')
 
     def test_single_packet_option_reaches_flash_and_control_session(self):
         """! @brief flash와 mailbox 모두 같은 명시적 USB 설정을 받고 controlled start를 유지합니다. """
@@ -69,9 +73,10 @@ class V04PairTests(unittest.TestCase):
         with patch.object(runner, 'sha256_file', side_effect=lambda path: path.suffix[1:]), \
              patch.object(runner, 'flash_image', return_value={}) as flash, ExitStack() as stack:
             runner.boot_exact(stack, helper, Path('pyocd.exe'), 'b' * 32, image, 10000000,
-                              cmsis_dap_limit_packets=True)
+                              cmsis_dap_limit_packets=True, flash_connect_mode='under-reset')
         flash.assert_called_once_with(Path('pyocd.exe'), 'b' * 32, Path('candidate.hex'), 120,
-                                      10000000, cmsis_dap_limit_packets=True)
+                                      10000000, cmsis_dap_limit_packets=True,
+                                      connect_mode='under-reset')
         call = helper.session_with_chosen_probe.call_args.kwargs
         self.assertEqual(call['unique_id'], 'b' * 32)
         self.assertEqual(call['frequency'], 10000000)
