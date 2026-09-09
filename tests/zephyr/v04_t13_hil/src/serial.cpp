@@ -1306,6 +1306,9 @@ bool t13::serialStop()
             spi_boundary.raw[13] = spi_boundary.after[14];
             spi_boundary.raw[14] = spi_boundary.after[15];
         }
+        /** @brief DMA ISR 직후 snapshot과 분리해 STOP 직전의 실제 CS 유휴 수준을 보존합니다. */
+        const auto csn = spi_boundary.after[13];
+        spi_boundary.after[16] = csn < 96U ? nrf_gpio_pin_read(csn) : UINT32_MAX;
         spi_boundary.raw[10] = 1U;
         const unsigned first = spi_boundary_policy == 2U ? 512U : 0U;
         if (spi_boundary_policy == 2U || spi_boundary_policy == 4U)

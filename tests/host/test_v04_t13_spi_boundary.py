@@ -83,6 +83,13 @@ class SpiBoundaryTests(unittest.TestCase):
         self.assertTrue(result['rx_amount_is_previous'])
         self.assertFalse(result['normal_soak_pass'])
 
+    def test_hil_refreshes_csn_after_event_before_deactivate(self):
+        source = (ROOT/'tests/zephyr/v04_t13_hil/src/serial.cpp').read_text(encoding='utf-8')
+        stop = source[source.index('bool t13::serialStop()'):source.index('bool t13::serialSpiBoundaryPolicy')]
+        self.assertIn('const auto csn = spi_boundary.after[13];', stop)
+        self.assertIn('spi_boundary.after[16] = csn < 96U ? nrf_gpio_pin_read(csn)', stop)
+        self.assertLess(stop.index('spi_boundary.after[16] ='), stop.index('lane.handle->deactivate'))
+
     def test_full_capture_precedes_inspection_and_reacquire_needs_cleanup(self):
         devices = [mock.Mock(), mock.Mock()]
         for role, device in enumerate(devices, 1):
