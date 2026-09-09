@@ -21,6 +21,33 @@ from v04_protocol import ProtocolError
 
 
 class T13RuntimeTests(unittest.TestCase):
+    def test_i2s_firmware_error_is_not_masked_by_lease_rejection(self):
+        """! @brief 실제 I2S 오류 뒤 lease 거부가 와도 원인과 raw stream을 먼저 보고합니다. """
+        test = next(row for row in cases.cases() if row['id'] == 30)
+        device = mock.Mock(image={'role': 1})
+        device.command.side_effect = lambda opcode, args=(), timeout=2: (
+            [0] if opcode == 103 else [2, 0, 6, 134217] + [0] * 16)
+        records = []
+        with self.assertRaisesRegex(ProtocolError, 'I2S receive data mismatch'):
+            runner.renew_lease(device, test,
+                               lambda identifier, row: records.append((identifier, row)), 'sample')
+        self.assertEqual(records[0], ('sample/lease-rejected/role1',
+                                     {'status': 'observation', 'words': [0]}))
+        self.assertEqual(records[1][0], 'sample/lease-rejected/role1/stream2')
+        self.assertEqual(records[1][1]['words'][:4], [2, 0, 6, 134217])
+
+    def test_non_i2s_lease_rejection_keeps_generic_error(self):
+        """! @brief 다른 peripheral의 lease 거부는 근거 없이 I2S 오류로 바꾸지 않습니다. """
+        test = next(row for row in cases.cases() if row['id'] == 20)
+        device = mock.Mock(image={'role': 2})
+        device.command.return_value = [0]
+        records = []
+        with self.assertRaisesRegex(ProtocolError, 'T13 lease renewal failed'):
+            runner.renew_lease(device, test,
+                               lambda identifier, row: records.append((identifier, row)), 'sample')
+        self.assertEqual(device.command.call_args_list, [mock.call(103, timeout=2)])
+        self.assertEqual(records[0][0], 'sample/lease-rejected/role2')
+
     def test_handover_starts_target_dma_before_controller_in_both_directions(self):
         """! @brief 역방향 SPI/TWI에서도 Host 지연에 의존하지 않고 target을 먼저 시작합니다. """
         import v04_t13_handover as handover

@@ -212,6 +212,28 @@ def failure_snapshots(devices, test, append, identifier):
                 break
 
 
+def renew_lease(device, test, append, identifier):
+    """! @brief lease 거부 직후 firmware stream 오류를 먼저 보존해 상위 오류 가림을 막습니다. """
+    words = device.command(103, timeout=2)
+    if words == [1]:
+        return
+    role = device.image['role']
+    append(identifier + f'/lease-rejected/role{role}',
+           {'status': 'observation', 'words': words})
+    if test['i2s']:
+        try:
+            stream = device.command(104, (2,), timeout=2)
+            append(identifier + f'/lease-rejected/role{role}/stream2',
+                   {'status': 'observation', 'words': stream})
+        except BaseException as error:
+            append(identifier + f'/lease-rejected/role{role}/stream2',
+                   {'status': 'unproven', 'error': f'{type(error).__name__}: {error}'})
+        else:
+            if len(stream) == 20 and stream[:3] == [2, 0, 6]:
+                raise ProtocolError('T13 I2S receive data mismatch preceded lease renewal rejection')
+    raise ProtocolError('T13 lease renewal failed')
+
+
 def start_order(devices, test):
     """! @brief 단독 역방향 SPI/TWI는 수신 target의 DMA 준비가 끝난 뒤 controller를 시작합니다. """
     if len(test['serial_links']) == 1:
@@ -255,7 +277,10 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
     diagnostic_mode = test.get('_pwm_diagnostic_tail', 0)
     if diagnostic_mode not in (0, 1, 2):
         raise ProtocolError('unsupported fixed PWM diagnostic route')
-    edge_diagnostic = bool(test.get('_i2s_edge_diagnostic'))
+    edge_diagnostic_mode = test.get('_i2s_edge_diagnostic', 0)
+    if type(edge_diagnostic_mode) is not int or edge_diagnostic_mode not in (0, 1, 2):
+        raise ProtocolError('unsupported fixed I2S edge diagnostic route')
+    edge_diagnostic = edge_diagnostic_mode != 0
     diagnostic = bool(diagnostic_mode) or edge_diagnostic
     if diagnostic_mode and (not preflight or test['serial_links'] or not test['pwm_instance'] or
                             test['adc_channels'] or test['pdm_instance'] or test['i2s']):
@@ -283,7 +308,7 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
                 raise ProtocolError('T13 role selection failed')
             if device.command(116, (int(diagnostic_mode),), timeout=2) != [1]:
                 raise ProtocolError('T13 PWM diagnostic policy failed')
-            if device.command(185, (int(edge_diagnostic),), timeout=2) != [1]:
+            if device.command(185, (edge_diagnostic_mode,), timeout=2) != [1]:
                 raise ProtocolError('T13 I2S edge diagnostic policy failed')
         for device in reversed(devices):
             if device.command(97, (test['id'], seed, 0x53414645), timeout=3) != [1]:
@@ -338,8 +363,7 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
             time.sleep(min(2, max(.1, duration - (time.monotonic() - start))))
             continuity.check()
             for device in devices:
-                if device.command(103, timeout=2) != [1]:
-                    raise ProtocolError('T13 lease renewal failed')
+                renew_lease(device, test, append, identifier + f'/sample{tick}')
             engines, lanes = snapshots(devices, test, seed, append, identifier + f'/sample{tick}', cts_pause=cts_pause)
             for role in range(2):
                 for index, current in engines[role]['streams'].items():
@@ -435,6 +459,7 @@ def main(argv=None):
     parser.add_argument('--execute-fixture', action='store_true')
     parser.add_argument('--cmsis-dap-limit-packets', action='store_true')
     parser.add_argument('--diagnostic-repetitions', type=int, default=1)
+    parser.add_argument('--i2s-edge-route', choices=('original', 'swapped'))
     args = parser.parse_args(argv)
     uids = validate_pair(args.dut, args.peer)
     images = [pair.inspect_image(pair.ROOT, args.build_root.resolve(), role, family='t13_s') for role in (1, 2)]
@@ -478,9 +503,12 @@ def main(argv=None):
     if is_i2s_edge:
         if args.cases != [30] or not 1 <= args.diagnostic_repetitions <= 1000:
             raise ProtocolError('T13 I2S edge diagnostic requires only case 30')
-        available_cases[30] = i2s_edges.fixture(available_cases[30])
+        edge_mode = 2 if args.i2s_edge_route == 'swapped' else 1
+        available_cases[30] = i2s_edges.fixture(available_cases[30], edge_mode)
     elif args.diagnostic_repetitions != 1:
         raise ProtocolError('diagnostic repetitions require the I2S edge diagnostic phase')
+    elif args.i2s_edge_route is not None:
+        raise ProtocolError('alternate I2S data pins require the edge diagnostic phase')
     if is_twis_delay:
         if args.reverse_serial or args.fault_role != 1:
             raise ProtocolError('T13 TWIS delay needs fixed A controller and B target')
@@ -548,6 +576,7 @@ def main(argv=None):
         'reverse_serial': args.reverse_serial, 'handover_instance': args.handover_instance,
         'spi_timing_mode': args.spi_timing_mode, 'diagnostic_only': is_timing or is_i2s_edge,
         'diagnostic_repetitions': args.diagnostic_repetitions if is_i2s_edge else None,
+        'i2s_edge_route': ('swapped' if edge_mode == 2 else 'original') if is_i2s_edge else None,
         'devices': [{'role': image['role'], 'uid_sha256': hashlib.sha256(uid.encode()).hexdigest(),
                      'hex_sha256': image['sha256'], 'elf_sha256': image['elf_sha256'],
                      'record_sha256': image['record_sha256']} for uid, image in zip(uids, images)]}

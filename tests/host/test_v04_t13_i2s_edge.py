@@ -12,9 +12,9 @@ from v04_protocol import ProtocolError
 
 
 class I2sEdgeTests(unittest.TestCase):
-    def pages(self, role):
+    def pages(self, role, mode=1):
         """! @brief 정상 STOP 뒤 role별 20-word 표본을 만듭니다. """
-        summary = [0x49324530, role, 1, 0, 0, 64 if role == 1 else 0,
+        summary = [0x49324530, role, mode, 0, 0, 64 if role == 1 else 0,
                    4 if role == 1 else 0, 4 if role == 1 else 0,
                    4 if role == 1 else 0, 123 if role == 1 else 0,
                    4096 if role == 1 else 0, 4095 if role == 1 else 0,
@@ -36,11 +36,26 @@ class I2sEdgeTests(unittest.TestCase):
 
     def test_only_standalone_i2s20_can_enable_edge_diagnostic(self):
         selected = edge.fixture(next(test for test in cases.cases() if test['id'] == 30))
-        self.assertTrue(selected['_i2s_edge_diagnostic'])
+        self.assertEqual(selected['_i2s_edge_diagnostic'], 1)
+        swapped = edge.fixture(next(test for test in cases.cases() if test['id'] == 30), 2)
+        self.assertEqual(swapped['_i2s_edge_diagnostic'], 2)
         for test in cases.cases():
             if test['id'] != 30:
                 with self.subTest(identifier=test['id']), self.assertRaises(ProtocolError):
                     edge.fixture(test)
+        with self.assertRaises(ProtocolError):
+            edge.fixture(next(test for test in cases.cases() if test['id'] == 30), 3)
+
+    def test_swapped_route_preserves_edge_classification_with_explicit_identity(self):
+        pages = self.pages(1, 2)
+        pages[0][3:5] = [1, 1]
+        pages[0][13:17] = [1, 3500, 4095, 3501]
+        pages[1][2] = 1
+        pages[1][5:10] = [3500, 4095, 3501, 595, 1]
+        pages[2][:2] = [0x49324552, 1]
+        result = edge.classify_failure(pages, 2)
+        self.assertEqual(result['cause'], 'physical-pad-or-peer-output')
+        self.assertEqual(result['route'], 'swapped')
 
     def test_normal_dma_requires_physical_and_received_edge_agreement(self):
         for role in (1, 2):
@@ -135,10 +150,11 @@ class I2sEdgeTests(unittest.TestCase):
         self.assertIn('TimerTask::capture', source)
         self.assertIn('edge.pin_cnf_before != edge.pin_cnf_after', source)
         self.assertIn('edge.trace_boundary[trace] = edge.last_boundary', source)
+        self.assertIn('edge.policy == 2U', source)
         observer = source[source.index('bool prepareEdgeDiagnostic()'):source.index('bool startEdgeDiagnostic()')]
         self.assertNotIn('nrf_gpio_cfg', observer)
         runner = (ROOT / 'tests/hil/nu54dk/v04_t13_run.py').read_text(encoding='utf-8')
-        self.assertIn('device.command(185, (int(edge_diagnostic),)', runner)
+        self.assertIn('device.command(185, (edge_diagnostic_mode,)', runner)
         self.assertIn("'diagnostic_only': is_timing or is_i2s_edge", runner)
 
     def test_first_failure_classifies_physical_internal_and_ambiguous_edges(self):
@@ -175,6 +191,16 @@ class I2sEdgeTests(unittest.TestCase):
         self.assertTrue(recovery.call_args.kwargs['preflight'])
         self.assertTrue(recovery.call_args.kwargs['restart_test']['_i2s_edge_diagnostic'])
         self.assertEqual(rows[-1][1]['status'], 'unproven')
+
+    def test_swapped_route_reaches_exact_b_starvation_restart_fixture(self):
+        """! @brief 교환 data route가 boolean으로 축소되지 않고 재시작까지 전달됩니다. """
+        import v04_t13_stream_fault as stream_faults
+        selected = next(test for test in cases.cases() if test['id'] == 30)
+        selected = edge.fixture(selected, 2)
+        with mock.patch.object(stream_faults, 'execute', side_effect=RuntimeError('stop')) as recovery:
+            with self.assertRaisesRegex(RuntimeError, 'stop'):
+                edge.execute([], selected, 1, None, lambda *_: None)
+        self.assertEqual(recovery.call_args.kwargs['restart_test']['_i2s_edge_diagnostic'], 2)
 
 
 if __name__ == '__main__':

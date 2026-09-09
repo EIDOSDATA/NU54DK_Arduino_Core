@@ -32,7 +32,8 @@ namespace
     /** @brief 실제 SDIN 전이와 I2S DMA 경계를 CPU 지연 없이 대조하는 진단 상태입니다. */
     struct EdgeDiagnostic
     {
-        bool policy = false, active = false, boundary_ready = false, raw_configured = false;
+        unsigned policy = 0U;
+        bool active = false, boundary_ready = false, raw_configured = false;
         bool timer_owned = false, count_owned = false, boundary_owned = false;
         bool count_connected = false, boundary_connected = false;
         TimerFabric *timer = nullptr;
@@ -54,6 +55,12 @@ namespace
         std::uint32_t first_registers[20]{};
         bool first_saved = false;
     } edge;
+
+    /** @brief 진단 route에서 role1이 실제 수신하는 SDIN 핀을 반환합니다. */
+    unsigned edgeInputPin()
+    {
+        return edge.policy == 2U ? 6U : 7U;
+    }
 
     EventEndpoint edgeDataEvent()
     {
@@ -155,7 +162,7 @@ namespace
                                      NRF_I2S20->EVENTS_RXPTRUPD,
                                      NRF_I2S20->RXD.PTR,
                                      NRF_I2S20->RXTXD.MAXCNT,
-                                     NRF_P1->PIN_CNF[7],
+                                     NRF_P1->PIN_CNF[edgeInputPin()],
                                      NRF_P1->IN,
                                      edge.first_cycle,
                                      edge.active,
@@ -304,7 +311,7 @@ namespace
         return failures == 0U;
     }
 
-    /** @brief role1의 SDIN을 GPIO 재설정 없이 감시하고 정식 TIMER/DPPI 점유를 구성합니다. */
+    /** @brief role1의 선택된 SDIN을 GPIO 재설정 없이 감시하고 TIMER/DPPI를 구성합니다. */
     bool prepareEdgeDiagnostic()
     {
         if (!edge.policy || role != 1U)
@@ -333,12 +340,13 @@ namespace
             return false;
         }
         nrf_timer_mode_set(NRF_TIMER22, NRF_TIMER_MODE_COUNTER);
-        edge.pin_cnf_before = NRF_P1->PIN_CNF[7];
-        nrf_gpiote_event_configure(NRF_GPIOTE20, edge_gpiote_channel, NRF_GPIO_PIN_MAP(1U, 7U),
-                                   NRF_GPIOTE_POLARITY_TOGGLE);
+        const auto input_pin = edgeInputPin();
+        edge.pin_cnf_before = NRF_P1->PIN_CNF[input_pin];
+        nrf_gpiote_event_configure(NRF_GPIOTE20, edge_gpiote_channel,
+                                   NRF_GPIO_PIN_MAP(1U, input_pin), NRF_GPIOTE_POLARITY_TOGGLE);
         nrf_gpiote_event_enable(NRF_GPIOTE20, edge_gpiote_channel);
         edge.raw_configured = true;
-        edge.pin_cnf_after = NRF_P1->PIN_CNF[7];
+        edge.pin_cnf_after = NRF_P1->PIN_CNF[input_pin];
         edge.count_connected =
             edge.dppi->connect(edgeDataEvent(), edge.timer->task(TimerTask::count),
                                edge_count_dppi_channel) == EventFabricResult::success;
@@ -448,7 +456,7 @@ namespace
 
 bool t13::audioPrepare(const Case &test, std::uint32_t seed)
 {
-    const bool edge_policy = edge.policy;
+    const unsigned edge_policy = edge.policy;
     edge = {};
     edge.policy = edge_policy;
     stats.enabled = test.i2s;
@@ -481,12 +489,13 @@ bool t13::audioPrepare(const Case &test, std::uint32_t seed)
         cleanupEdgeDiagnostic();
         return stats.fail(12U);
     }
+    const bool swapped_data_route = edge.policy == 2U;
     const I2sConfiguration configuration{
         static_cast<pin_size_t>(role == 1U ? PIN_P1_04 : PIN_P1_05),
         static_cast<pin_size_t>(role == 1U ? PIN_P1_05 : PIN_P1_04),
         0xFFU,
-        PIN_P1_06,
-        PIN_P1_07,
+        static_cast<pin_size_t>(swapped_data_route ? PIN_P1_07 : PIN_P1_06),
+        static_cast<pin_size_t>(swapped_data_route ? PIN_P1_06 : PIN_P1_07),
         48000U,
         I2sSampleWidth::bits32,
         I2sChannels::stereo,
@@ -777,11 +786,11 @@ void t13::audioDiagnosticSnapshot(unsigned page, std::uint32_t *out, std::uint32
 
 bool t13::audioEdgeDiagnosticPolicy(unsigned mode)
 {
-    if (mode > 1U || edge.active || edge.timer_owned || edge.count_owned || edge.boundary_owned)
+    if (mode > 2U || edge.active || edge.timer_owned || edge.count_owned || edge.boundary_owned)
     {
         return false;
     }
-    edge.policy = mode != 0U;
+    edge.policy = mode;
     return true;
 }
 
@@ -838,7 +847,7 @@ void t13::audioEdgeDiagnosticSnapshot(unsigned page, std::uint32_t *out, std::ui
                                      stats.error,
                                      stats.detail,
                                      edge.first_cycle,
-                                     NRF_P1->PIN_CNF[7],
+                                     NRF_P1->PIN_CNF[edgeInputPin()],
                                      NRF_P1->IN,
                                      NRF_TIMER22->CC[0],
                                      edge.cleanup_failures,

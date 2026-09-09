@@ -44,8 +44,10 @@ def execute(devices, test, role, mode, continuity, append, *, preflight, restart
     """! @brief 최초 실패 원본과 양쪽 STOP을 보존하고 정상 재시작까지 한 복구 회로 셉니다. """
     import v04_t13_run as runner
     validate_selection(test, role, mode)
-    expected_restart = {**test, '_i2s_edge_diagnostic': True}
+    restart_mode = 0 if restart_test is None else restart_test.get('_i2s_edge_diagnostic', 0)
+    expected_restart = {**test, '_i2s_edge_diagnostic': restart_mode}
     if restart_test is not None and (not preflight or mode != 1 or role != 2 or
+                                     type(restart_mode) is not int or restart_mode not in (1, 2) or
                                      restart_test != expected_restart):
         raise ProtocolError('T13 I2S edge observer requires exact B-starvation restart fixture')
     target = next(device for device in devices if device.image['role'] == role)
