@@ -124,6 +124,11 @@ namespace
             {
                 return false;
             }
+            if (lane.rx_pending[0] || lane.rx_pending[1])
+            {
+                /** @brief 첫 추가 요청은 보존하되 두 번째 DMA 버퍼 반환 전에는 공급하지 않습니다. */
+                return true;
+            }
             raw[3] = 1U;
             raw[5] = k_cycle_get_32();
             raw[8] = lane.received.completed;
@@ -517,6 +522,13 @@ namespace
         {
             result = static_cast<UarteHandle *>(lane.handle)
                          ->receiveAsync(lane.rx[0].data(), length, lane.rx[1].data(), length);
+            if (rx_delay.prepared && rx_delay_policy == 1U && rx_delay.raw[3] == 1U)
+            {
+                rx_delay.raw[6] = k_cycle_get_32();
+                rx_delay.raw[11] = static_cast<std::uint32_t>(result);
+                rx_delay.raw[14] = rxDelayGuards(lane) ? 1U : 0U;
+                rx_delay.raw[3] = 2U;
+            }
         }
         else if (kind == Kind::spis)
         {
@@ -679,14 +691,6 @@ namespace
         const auto submitted = k_cycle_get_32();
         const auto result = static_cast<UarteHandle *>(lane.handle)
                                 ->provideReceiveBuffer(lane.rx[slot].data(), lane.endpoint.length);
-        if (rx_delay.prepared && rx_delay_policy == 1U && rx_delay.raw[3] == 1U)
-        {
-            /** @brief 전체 RX 재시작이 아니라 보류한 단일 버퍼의 실제 공급 시각을 보존합니다. */
-            rx_delay.raw[6] = submitted;
-            rx_delay.raw[11] = static_cast<std::uint32_t>(result);
-            rx_delay.raw[14] = rxDelayGuards(lane) ? 1U : 0U;
-            rx_delay.raw[3] = 2U;
-        }
         if (!accepted(lane, result, 15U))
         {
             return false;
@@ -1133,11 +1137,6 @@ void t13::serialService()
             continue;
         }
         poll(lane);
-        if (lane.endpoint.kind == Kind::uart && rx_delay.prepared && rx_delay_policy == 1U &&
-            rx_delay.raw[3] == 1U && !provideReceiveBuffer(lane))
-        {
-            continue;
-        }
         flowService(lane.endpoint, lane.sent.completed, lane.tx_pending[0] || lane.tx_pending[1]);
         flowBackground(index, lane.endpoint, lane.sent.completed, lane.received.completed);
         captureService();
