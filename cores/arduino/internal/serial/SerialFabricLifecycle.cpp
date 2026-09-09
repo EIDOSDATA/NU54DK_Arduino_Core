@@ -63,13 +63,22 @@ namespace nucode::arduino::internal::serial
             record(context, result, driver_error);
         }
 
+        /** @brief 비동기 SPIS 선택과 P2 전용 block 20 경로의 시작 지연을 막습니다. */
+        [[nodiscard]] constexpr bool needsConstantLatency(SerialPersonality personality,
+                                                          std::uint8_t instance,
+                                                          SerialRouteClass route) noexcept
+        {
+            return personality == SerialPersonality::spis ||
+                   (instance == 20U && route == SerialRouteClass::p2_dedicated20);
+        }
+
         /**
          * @brief 전체 독점 lease가 예약된 뒤에만 핀 snapshot을 읽습니다.
          *
          * 검증·staging 중이거나 충돌한 획득 뒤에는 패드를 건드리지 않습니다.
          */
-        bool saveRouteState(HandleContext &context, std::uint8_t instance,
-                            int &driver_error) noexcept
+        bool saveRouteState(HandleContext &context, SerialPersonality personality,
+                            std::uint8_t instance, int &driver_error) noexcept
         {
             context.saved_pin_count = 0U;
             for (std::size_t index = 0; index < context.route.pin_count; ++index)
@@ -86,7 +95,7 @@ namespace nucode::arduino::internal::serial
                 saved.output = nrf_gpio_pin_out_read(saved.psel);
                 ++context.saved_pin_count;
             }
-            if (instance == 20U && context.route.route == SerialRouteClass::p2_dedicated20)
+            if (needsConstantLatency(personality, instance, context.route.route))
             {
                 driver_error = nrfx_power_constlat_mode_request();
                 /** @brief EALREADY도 증가시킨 nrfx 공유 참조 횟수를 되돌립니다. */
@@ -286,7 +295,7 @@ namespace nucode::arduino
 
         context.state = SerialFabricState::activating;
         int driver_error = 0;
-        if (!saveRouteState(context, instance_, driver_error))
+        if (!saveRouteState(context, personality_, instance_, driver_error))
         {
             int restore_error = 0;
             const bool restored = restoreRouteState(context, restore_error);
@@ -512,7 +521,7 @@ namespace nucode::arduino::internal
         }
         int driver_error = 0;
         SerialFabricResult result = SerialFabricResult::success;
-        if (!saveRouteState(context, instance, driver_error))
+        if (!saveRouteState(context, personality, instance, driver_error))
         {
             result = SerialFabricResult::driver_error;
         }

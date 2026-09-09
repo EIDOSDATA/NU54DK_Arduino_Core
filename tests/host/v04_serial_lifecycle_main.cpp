@@ -22,6 +22,7 @@ bool reserve_fail = false, commit_fail = false, activate_fail = false;
 bool stop_ready = true, stop_fail = false, deactivate_fail = false;
 bool rollback_fail = false, recovery_fail = false;
 bool reserved = false;
+SerialPersonality active_personality = SerialPersonality::uarte;
 int nrfx_power_constlat_mode_request()
 {
     ++requests;
@@ -107,7 +108,8 @@ SerialFabricResult activate(std::uint8_t instance, const ValidatedSerialRoute &r
                             int &) noexcept
 {
     assert(reserved);
-    if (instance == 20 && route.route == SerialRouteClass::p2_dedicated20)
+    if ((instance == 20 && route.route == SerialRouteClass::p2_dedicated20) ||
+        active_personality == SerialPersonality::spis)
     {
         assert(refs > 0);
     }
@@ -154,7 +156,8 @@ SerialFabricResult recover(std::uint8_t instance, const ValidatedSerialRoute &ro
     return SerialFabricResult::success;
 }
 
-UarteHandle *prepare(std::uint8_t instance = 20)
+SerialFabricHandle *prepare(std::uint8_t instance = 20,
+                            SerialPersonality personality = SerialPersonality::uarte)
 {
     /** @brief 가짜 driver 상태만 초기화합니다. */
     resetSerialFabricForTest();
@@ -172,9 +175,13 @@ UarteHandle *prepare(std::uint8_t instance = 20)
     mock_gpio[2].PIN_CNF[0] = 42;
     mock_gpio[2].PIN_CNF[9] = 77;
     mock_gpio[2].out = (1U << 2) | (1U << 9);
-    assert(registerSerialFabricAdapter(SerialPersonality::uarte, instance, adapter) ==
+    active_personality = personality;
+    assert(registerSerialFabricAdapter(personality, instance, adapter) ==
            SerialFabricResult::success);
-    auto *handle = serialFabric().uarte(instance);
+    SerialFabricHandle *handle =
+        personality == SerialPersonality::spis
+            ? static_cast<SerialFabricHandle *>(serialFabric().spis(instance))
+            : static_cast<SerialFabricHandle *>(serialFabric().uarte(instance));
     assert(handle->stage({SerialRouteClass::p2_dedicated20,
                           SerialElectricalProfile::connector_fixture, pins, 2}) ==
            SerialFabricResult::success);
@@ -232,6 +239,18 @@ int main()
     handle = prepare(0);
     assert(handle->activate() == SerialFabricResult::success && requests == 0);
     assert(handle->deactivate() == SerialFabricResult::success && frees == 0);
+    restored();
+
+    handle = prepare(0, SerialPersonality::spis);
+    assert(handle->activate() == SerialFabricResult::success && refs == 1 && requests == 1);
+    assert(handle->deactivate() == SerialFabricResult::success);
+    assert(refs == 0 && frees == 1 && releases == 1);
+    restored();
+
+    handle = prepare(0, SerialPersonality::spis);
+    activate_fail = true;
+    assert(handle->activate() == SerialFabricResult::driver_error);
+    assert(refs == 0 && requests == 1 && frees == 1 && rollbacks == 1 && !reserved);
     restored();
 
     handle = prepare();
