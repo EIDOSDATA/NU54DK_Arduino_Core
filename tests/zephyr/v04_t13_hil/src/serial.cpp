@@ -520,8 +520,12 @@ namespace
         SerialFabricResult result = SerialFabricResult::wrong_state;
         if (kind == Kind::uart)
         {
-            result = static_cast<UarteHandle *>(lane.handle)
-                         ->receiveAsync(lane.rx[0].data(), length, lane.rx[1].data(), length);
+            /** @brief 누적 완료 순서에 맞춰 첫 RX DMA 버퍼를 다시 등록합니다. */
+            const unsigned first = lane.received.completed % 2U;
+            const unsigned second = 1U - first;
+            result =
+                static_cast<UarteHandle *>(lane.handle)
+                    ->receiveAsync(lane.rx[first].data(), length, lane.rx[second].data(), length);
             if (rx_delay.prepared && rx_delay_policy == 1U && rx_delay.raw[3] == 1U)
             {
                 rx_delay.raw[6] = k_cycle_get_32();

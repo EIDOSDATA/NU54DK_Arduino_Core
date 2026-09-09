@@ -70,6 +70,10 @@ class UartTests(unittest.TestCase):
                         hold.index("raw[3] = 1U;"))
         queue_pair = t13.split("bool queuePair(Lane &lane)", 1)[1].split(
             "bool configure(Lane &lane)", 1)[0]
+        self.assertIn("const unsigned first = lane.received.completed % 2U;", queue_pair)
+        self.assertIn("const unsigned second = 1U - first;", queue_pair)
+        self.assertIn("->receiveAsync(lane.rx[first].data(), length,", queue_pair)
+        self.assertIn("lane.rx[second].data(), length);", queue_pair)
         self.assertIn("rx_delay.raw[6] = k_cycle_get_32();", queue_pair)
         self.assertIn("rx_delay.raw[3] = 2U;", queue_pair)
         firmware = (root / "tests/zephyr/v04_pair_hil/src/serial_hil.cpp").read_text(encoding="utf-8")
