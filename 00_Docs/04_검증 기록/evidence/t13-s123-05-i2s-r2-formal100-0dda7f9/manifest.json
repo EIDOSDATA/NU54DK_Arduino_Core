@@ -1,0 +1,62 @@
+{
+  "source": "0dda7f9dac30845e4fdb8f9bd28da22a906dcb9d",
+  "build": "C:/t5u04",
+  "physical_executed": true,
+  "flash_performed": true,
+  "swd_frequency_hz": 10000000,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "campaign": "s123-05-i2s-r2-formal100-01",
+  "status": "passed",
+  "scope": "I2S20 role2 starvation/restart formal 100",
+  "planned_recovery_pass": 100,
+  "actual_recovery_pass": 100,
+  "cleanup_groups": 203,
+  "idle_observations": 400,
+  "ordered_s_progress_before": "37/58",
+  "ordered_s_progress_after": "38/58",
+  "qualification": "I2S 원래 role2 경로 1조건 정식 PASS",
+  "schema_version": 1,
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-i2s-r2-formal100-01\\ci-before-flash.json",
+      "bytes": 3776,
+      "sha256": "726591dd9678cd6edd36055b09cbf0998e97fef525cc3b2ca7a76cf13bea2f14",
+      "gzip_bytes": 550,
+      "gzip_sha256": "39e0af77ad187793247fdca6c47aac858a5a03f9f2c0acb5fc6265530cf629d7"
+    },
+    {
+      "file": "images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-i2s-r2-formal100-01\\images.json",
+      "bytes": 1607,
+      "sha256": "514f14d24dc198923ab8ba5df0ba5074e6566e97f98ce6be27494e215c461d9d",
+      "gzip_bytes": 548,
+      "gzip_sha256": "55374e2e31cdc19446035157bffcc3b7e7dc632973cbe4be899e74b3f1b8bd2e"
+    },
+    {
+      "file": "result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-i2s-r2-formal100-01\\result.json",
+      "bytes": 4224645,
+      "sha256": "76444dc68b90fc016f141e6757a36ae107a935168513adb5c533614b0320c6be",
+      "gzip_bytes": 272398,
+      "gzip_sha256": "4e24ad9b82466e0d7eca05cfcd8f765f986a42ba8d01bc3957fd170feb62037b"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-i2s-r2-formal100-01\\result.json.jsonl",
+      "bytes": 2307461,
+      "sha256": "46aab4dd66a42c87a2b3f22ff15ddde7dc94c0dda8d921ce7b7fb7248f7eee6b",
+      "gzip_bytes": 147996,
+      "gzip_sha256": "d2a540a244b61bcf5c6ca0b92b2c2931f9390d56375dc61807c5509249914e1d"
+    },
+    {
+      "file": "audit.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-i2s-r2-formal100-01-audit.json",
+      "bytes": 600,
+      "sha256": "80fe8482ee33473a6cb61b09e763214e74f47b09a26a9f98b326e6da0c297bdd",
+      "gzip_bytes": 358,
+      "gzip_sha256": "68a3e3c60ac2b0cb360be483c9ad80bbe2196c9220dbf2bd2c471c8b93f9a763"
+    }
+  ]
+}

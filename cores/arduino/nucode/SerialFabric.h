@@ -362,6 +362,14 @@ namespace nucode::arduino
                                                       std::size_t next_tx_size = 0U,
                                                       void *next_rx_buffer = nullptr,
                                                       std::size_t next_rx_size = 0U) noexcept;
+        /**
+         * @brief 현재 SPIS transaction 중 다음 DMA buffer pair를 미리 예약합니다.
+         * @details `buffer_needed` event 뒤 반환된 buffer를 다시 공급하면 다음 CS 경계 전에
+         *          semaphore handover를 시작하여 연속 transaction의 무버퍼 구간을 없앱니다.
+         */
+        [[nodiscard]] SerialFabricResult provideNextBuffers(const void *tx_buffer,
+                                                            std::size_t tx_size, void *rx_buffer,
+                                                            std::size_t rx_size) noexcept;
         [[nodiscard]] SerialFabricResult cancelBuffers() noexcept;
         [[nodiscard]] bool takeEvent(SpiFabricEvent &event) noexcept;
         [[nodiscard]] DmaBufferState bufferState(const void *buffer) const noexcept;

@@ -1,0 +1,78 @@
+{
+  "source": "0dda7f9dac30845e4fdb8f9bd28da22a906dcb9d",
+  "build": "C:/t5u04",
+  "physical_executed": true,
+  "flash_performed": true,
+  "swd_frequency_hz": 10000000,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "campaign": "s123-05-spi-short-formal100-01",
+  "status": "failed",
+  "scope": "SPIM00/20/21/22/30 short-boundary formal block",
+  "completed_before_failure": {
+    "spim00": 100,
+    "spim20": 100,
+    "spim21": 100
+  },
+  "first_failure": {
+    "instance": "spim22",
+    "repeat": 51,
+    "phase": "normal restart",
+    "frame": 12,
+    "offset": 0,
+    "expected": 95,
+    "actual": 0,
+    "role1_lane_error": 6,
+    "role2_payload_fault": false,
+    "fault_seed": 3832777470,
+    "restart_seed": 2051339079
+  },
+  "cleanup_groups": 1056,
+  "idle_observations": 2106,
+  "qualified_spi_conditions": 0,
+  "ordered_s_progress_changed": false,
+  "qualification": "다섯 조건을 한 정식 block으로 재실행하기 전에는 부분 성공을 집계하지 않음",
+  "schema_version": 1,
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-spi-short-formal100-01\\ci-before-flash.json",
+      "bytes": 3776,
+      "sha256": "726591dd9678cd6edd36055b09cbf0998e97fef525cc3b2ca7a76cf13bea2f14",
+      "gzip_bytes": 550,
+      "gzip_sha256": "39e0af77ad187793247fdca6c47aac858a5a03f9f2c0acb5fc6265530cf629d7"
+    },
+    {
+      "file": "images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-spi-short-formal100-01\\images.json",
+      "bytes": 1607,
+      "sha256": "514f14d24dc198923ab8ba5df0ba5074e6566e97f98ce6be27494e215c461d9d",
+      "gzip_bytes": 548,
+      "gzip_sha256": "55374e2e31cdc19446035157bffcc3b7e7dc632973cbe4be899e74b3f1b8bd2e"
+    },
+    {
+      "file": "result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-spi-short-formal100-01\\result.json",
+      "bytes": 32357214,
+      "sha256": "bd702294a4cebf56ab7b6cbcef1ef3b92ad21fc612d6280244f7ce3d01e81708",
+      "gzip_bytes": 2807029,
+      "gzip_sha256": "7fe12317d790f03b8b3b2902e123ec1af64213a52e8fa850278d05fb1842d3ca"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-spi-short-formal100-01\\result.json.jsonl",
+      "bytes": 17739260,
+      "sha256": "9ceddb02ae9b85cf45521cabef7c4d25e300a9d169b435ba654dec38ec88b698",
+      "gzip_bytes": 2508681,
+      "gzip_sha256": "4b93842f0be4b76b37daf5dbdd746d8382e2b302c8683e1774ed1ee2f2d7e01f"
+    },
+    {
+      "file": "audit.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-spi-short-formal100-01-audit.json",
+      "bytes": 643,
+      "sha256": "4de04e7aaff12dc1a87fab124eb5b2aeb23bbd8a1ad7b666328d05b98b208eaa",
+      "gzip_bytes": 395,
+      "gzip_sha256": "469daecd4958db9a5aed72838a22b4c47609423f50438c7bb4c264ab7bd75ffd"
+    }
+  ]
+}

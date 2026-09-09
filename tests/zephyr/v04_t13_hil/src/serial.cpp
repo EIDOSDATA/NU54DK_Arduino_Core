@@ -705,6 +705,37 @@ namespace
         return true;
     }
 
+    /** @brief 완료된 SPIS slot을 현재 transaction 중 다음 semaphore pair로 다시 공급합니다. */
+    bool provideSpiBuffers(Lane &lane)
+    {
+        if (lane.error != 0U || lane.endpoint.kind != Kind::spis || lane.sent.completed == 0U ||
+            lane.sent.completed != lane.received.completed)
+        {
+            return lane.error != 0U;
+        }
+        const unsigned slot = (lane.sent.completed - 1U) % 2U;
+        if (lane.tx_pending[slot] || lane.rx_pending[slot] || !fillTx(lane, slot, lane.queued_tx) ||
+            !resetRx(lane, slot))
+        {
+            return failure(lane, 16U, slot);
+        }
+        const auto submitted = k_cycle_get_32();
+        const auto result = static_cast<SpisHandle *>(lane.handle)
+                                ->provideNextBuffers(lane.tx[slot].data(), lane.endpoint.length,
+                                                     lane.rx[slot].data(), lane.endpoint.length);
+        if (!accepted(lane, result, 17U))
+        {
+            return false;
+        }
+        lane.tx_pending[slot] = true;
+        lane.rx_pending[slot] = true;
+        lane.submitted_tx[slot] = submitted;
+        lane.submitted_rx[slot] = submitted;
+        ++lane.queued_tx;
+        ++lane.queued_rx;
+        return true;
+    }
+
     /** @brief API 완료 event를 모두 소진하며 예상하지 않은 취소·오류는 실패로 고정합니다. */
     void poll(Lane &lane)
     {
@@ -777,6 +808,10 @@ namespace
                 else if (event.type == SpiFabricEventType::buffer_needed)
                 {
                     ++lane.requests;
+                    if (kind == Kind::spis)
+                    {
+                        provideSpiBuffers(lane);
+                    }
                 }
                 else if (event.type != SpiFabricEventType::buffers_armed)
                 {

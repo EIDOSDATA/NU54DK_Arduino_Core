@@ -1,11 +1,9 @@
-"""! @brief S/U별 현재 확인·고정 만료·exact 두 image의 실행 경계를 검증합니다. """
+"""! @brief S/U별 유지 결선·exact 두 image의 실행 경계를 검증합니다. """
 from __future__ import annotations
 
 import hashlib
 import json
-import math
 import struct
-import time
 
 import v04_t13_cases as catalog
 import v04_t13_plan as plan
@@ -24,9 +22,8 @@ def harness_code(harness):
     return 2 if harness == 'S' else 3
 
 
-def validate(grant, images, uids, *, harness='S', now=None):
-    """! @brief 과거 C 확인·다른 UID·소스 혼합·미래 확인·12시간 초과를 거부합니다. """
-    now = time.time() if now is None else now
+def validate(grant, images, uids, *, harness='S'):
+    """! @brief 과거 C 확인·다른 UID·소스 혼합과 유지되지 않은 결선을 거부합니다. """
     if len(images) != 2 or len(uids) != 2 or uids[0].lower() == uids[1].lower():
         raise ProtocolError('T13 requires two distinct exact roles')
     harness_code(harness)
@@ -42,11 +39,6 @@ def validate(grant, images, uids, *, harness='S', now=None):
     }
     if any(type(grant.get(key)) is not type(value) or grant.get(key) != value for key, value in expected.items()):
         raise ProtocolError(f'T13 {harness} current wiring or target report mismatch')
-    start, end = grant.get('confirmed_at_unix'), grant.get('expires_at_unix')
-    if (type(start) not in (int, float) or type(end) not in (int, float) or
-            not all(math.isfinite(value) for value in (start, end, now)) or
-            not start <= now < end or not 0 < end - start <= 43200):
-        raise ProtocolError(f'T13 {harness} confirmation expired or invalid')
     for key in ('user_wiring_report', 'user_maintain_reply'):
         if not isinstance(grant.get(key), str) or not grant[key].strip():
             raise ProtocolError('T13 explicit current user report missing')
@@ -67,21 +59,20 @@ def verify_profile(device, harness='S'):
 
 
 class Continuity:
-    """! @brief 한 연결에서만 유효하며 만료·단절·reset 뒤 자동 재접속하지 않습니다. """
+    """! @brief 한 연결에서만 유효하며 단절·reset 뒤 자동 재접속하지 않습니다. """
     def __init__(self, grant, images, uids, devices, enumerate_uids, verify_identity, *,
                  harness='S'):
         self.grant, self.images, self.uids, self.devices = grant, images, uids, devices
         self.enumerate_uids, self.verify_identity = enumerate_uids, verify_identity
         self.harness = harness
         harness_code(harness)
-        self.deadline = time.monotonic() + grant['expires_at_unix'] - time.time()
         self.faulted = False
 
     def check(self):
-        """! @brief 실제 출력 전 현재 대상·runtime source와 고정 만료를 재검사합니다. """
+        """! @brief 실제 출력 전 현재 대상·runtime source와 유지 결선을 재검사합니다. """
         try:
-            if self.faulted or time.monotonic() >= self.deadline:
-                raise ProtocolError(f'T13 {self.harness} session faulted or expired')
+            if self.faulted:
+                raise ProtocolError(f'T13 {self.harness} session faulted')
             validate(self.grant, self.images, self.uids, harness=self.harness)
             if not set(self.uids).issubset(self.enumerate_uids()):
                 raise ProtocolError('T13 exact probe disconnected')

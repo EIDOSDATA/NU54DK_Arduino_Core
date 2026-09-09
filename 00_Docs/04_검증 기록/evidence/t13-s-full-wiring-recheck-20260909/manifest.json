@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "source": "3f4a18906f6d72df45f5a07f901b6a7aef716a2a",
+  "build": "C:/t5t04",
+  "status": "failed",
+  "phase": "maintained-S-full-GPIO-connectivity",
+  "physical_executed": true,
+  "flash_performed": false,
+  "swd_frequency_hz": 10000000,
+  "started_at": "2026-09-09T12:51:01.288433+00:00",
+  "finished_at": "2026-09-09T12:52:15.245157+00:00",
+  "scope": "17 nets, both directions, 10 repetitions, open-drain LOW only",
+  "planned_pulses": 340,
+  "completed_pulses": 340,
+  "passed_connections": 16,
+  "failed_connections": 1,
+  "failed_net": 7,
+  "failed_connection": "A P0.00 (P2-25) <-> B P0.00 (P2-25)",
+  "mismatching_observations": 80,
+  "sample_delays_ms": [
+    5,
+    50,
+    150
+  ],
+  "failure": {
+    "a_to_b": "A P0.00 OUT=0 DIR=1 PIN_CNF=2061; B P0.00 IN stayed HIGH PIN_CNF=12",
+    "b_to_a": "B P0.00 OUT=0 DIR=1 PIN_CNF=2061; A P0.00 IN stayed HIGH PIN_CNF=12",
+    "firmware_and_direct_registers_agree": true,
+    "all_released_levels_high": true,
+    "classification": "DC continuity absent on the endpoint pair; fixed harness cannot distinguish jumper/contact from an individual header/pad endpoint"
+  },
+  "cleanup": {
+    "both_stop": true,
+    "both_states": [
+      "SLEEPING",
+      "SLEEPING"
+    ],
+    "output_pin_count": 0,
+    "pins_checked_per_board": 17
+  },
+  "qualification": {
+    "functional_or_soak_pass": false,
+    "ordered_s_progress_changed": false,
+    "ordered_s_completed": 37,
+    "ordered_s_total": 58
+  },
+  "files": [
+    {
+      "file": "result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-full-s-wiring-readonly-review-20260909-02.json",
+      "bytes": 1781128,
+      "sha256": "ee926a934f41bfd4dcd515ac00fed34c9b1b79da0006854b066d28016785c1df",
+      "gzip_bytes": 118248,
+      "gzip_sha256": "84a785f8e01176967238afc1facbaae4d0a1ab693028d44d253904fc72a6169d"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-full-s-wiring-readonly-review-20260909-02.json.jsonl",
+      "bytes": 1139045,
+      "sha256": "45063dff88fa6d00d7885de5533660301e2b844c7a91a1ffcfb3cb52fcb8c75c",
+      "gzip_bytes": 106391,
+      "gzip_sha256": "760c15ba7c2643297845a0edfc8f817ab0c9b27d460e0437a6bc88f2d3aaa4d0"
+    },
+    {
+      "file": "runner.py.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-09\\new-chat\\work\\run_full_s_wiring_3f4_readonly.py",
+      "bytes": 5832,
+      "sha256": "6354b3c365e1bb3ef98762fb3b038a698533440071cd91ef737dc24d0051d7a2",
+      "gzip_bytes": 2543,
+      "gzip_sha256": "292afcc2a7e3035fc142c1e3055af101c294cc3bebbaf28048e87519f23d5fa8"
+    },
+    {
+      "file": "current-swd.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\current-swd.json",
+      "bytes": 885,
+      "sha256": "eb4e826cf365c15032d073dab1a374d61b413abcbbd19dc58d15c00a53d1ec4b",
+      "gzip_bytes": 452,
+      "gzip_sha256": "da2fc6585ebf88d564cebfb872c0e2a5826a768295d45a1dbf0d05f04e2b0b32"
+    }
+  ]
+}

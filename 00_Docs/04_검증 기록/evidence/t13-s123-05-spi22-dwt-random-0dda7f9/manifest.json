@@ -1,0 +1,77 @@
+{
+  "source": "0dda7f9dac30845e4fdb8f9bd28da22a906dcb9d",
+  "build": "C:/t5u04",
+  "physical_executed": true,
+  "flash_performed": true,
+  "swd_frequency_hz": 10000000,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "campaign": "s123-05-spi22-restart-dwt-02",
+  "status": "diagnostic-no-trigger",
+  "scope": "SPIM22 normal restart, random seed, DWT lane.error watch",
+  "repetitions": 100,
+  "watch_hits": 0,
+  "cleanup_groups": 300,
+  "idle_observations": 600,
+  "qualified_spi_conditions": 0,
+  "diagnostic_only": true,
+  "schema_version": 1,
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-spi22-restart-dwt-02\\ci-before-flash.json",
+      "bytes": 3776,
+      "sha256": "726591dd9678cd6edd36055b09cbf0998e97fef525cc3b2ca7a76cf13bea2f14",
+      "gzip_bytes": 550,
+      "gzip_sha256": "39e0af77ad187793247fdca6c47aac858a5a03f9f2c0acb5fc6265530cf629d7"
+    },
+    {
+      "file": "images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-spi22-restart-dwt-02\\images.json",
+      "bytes": 1607,
+      "sha256": "514f14d24dc198923ab8ba5df0ba5074e6566e97f98ce6be27494e215c461d9d",
+      "gzip_bytes": 548,
+      "gzip_sha256": "55374e2e31cdc19446035157bffcc3b7e7dc632973cbe4be899e74b3f1b8bd2e"
+    },
+    {
+      "file": "result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-spi22-restart-dwt-02\\result.json",
+      "bytes": 10158984,
+      "sha256": "b4735021032ba554de2a575a39da6504e919302728b33b6f5d7aa9be5ccad89d",
+      "gzip_bytes": 959349,
+      "gzip_sha256": "bbd6682ac1062c27ebcd02c3aaf033b26d9715b1bcdfa3b02d1fed657728d747"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-spi22-restart-dwt-02\\result.json.jsonl",
+      "bytes": 5586631,
+      "sha256": "8cdead155007741f3c40f61499304e23027a8103ebf37c33443b3fe0b77a65ce",
+      "gzip_bytes": 818387,
+      "gzip_sha256": "ddeb354d3f74c025b1224c1e71d44e67638971f7a71343ee5e8aaa262e6e4e63"
+    },
+    {
+      "file": "diagnostic.py.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-09\\new-chat\\work\\spi22_restart_watch_diagnostic.py",
+      "bytes": 20270,
+      "sha256": "c849e8a7c0ee03c1feecb19d32849680c4d78d9013e041a3f23e8b0ca4e487f8",
+      "gzip_bytes": 5695,
+      "gzip_sha256": "9c5de35ae65a4befcb65e12af2887b1b832b388044cf1688616805cf677ff2cf"
+    },
+    {
+      "file": "launcher.py.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-09\\new-chat\\work\\launch_t13_spi22_watch_py314.py",
+      "bytes": 1823,
+      "sha256": "4453723f12207df30cced2e5f6473dd183befa7dd81ac6cc3ba47f54cc4be1d4",
+      "gzip_bytes": 929,
+      "gzip_sha256": "3660e0171a4814c760c4bbcca73c42d6dc7c554ea4cd2c59ac30dd05a1e67837"
+    },
+    {
+      "file": "runner.py.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-09\\new-chat\\work\\run_t13_spi22_watch_py314.py",
+      "bytes": 691,
+      "sha256": "373be82b75c8525336f246c248a997388ea997f5f58ed8af9a00c2be0689c2bb",
+      "gzip_bytes": 497,
+      "gzip_sha256": "00c172c292f8b426601175707e2747d69cdaf94e678dd01f56a5f005976230aa"
+    }
+  ]
+}

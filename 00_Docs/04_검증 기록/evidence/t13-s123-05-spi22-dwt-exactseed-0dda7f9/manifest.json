@@ -1,0 +1,55 @@
+{
+  "source": "0dda7f9dac30845e4fdb8f9bd28da22a906dcb9d",
+  "build": "C:/t5u04",
+  "physical_executed": true,
+  "flash_performed": true,
+  "swd_frequency_hz": 10000000,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "campaign": "s123-05-spi22-restart-dwt-03-exactseed",
+  "status": "diagnostic-no-trigger",
+  "scope": "SPIM22 normal restart, exact failed seed pair, DWT lane.error watch",
+  "repetitions": 100,
+  "fault_seed": 3832777470,
+  "restart_seed": 2051339079,
+  "watch_hits": 0,
+  "cleanup_groups": 300,
+  "idle_observations": 600,
+  "qualified_spi_conditions": 0,
+  "diagnostic_only": true,
+  "schema_version": 1,
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-spi22-restart-dwt-03-exactseed\\ci-before-flash.json",
+      "bytes": 3776,
+      "sha256": "726591dd9678cd6edd36055b09cbf0998e97fef525cc3b2ca7a76cf13bea2f14",
+      "gzip_bytes": 550,
+      "gzip_sha256": "39e0af77ad187793247fdca6c47aac858a5a03f9f2c0acb5fc6265530cf629d7"
+    },
+    {
+      "file": "images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-spi22-restart-dwt-03-exactseed\\images.json",
+      "bytes": 1607,
+      "sha256": "514f14d24dc198923ab8ba5df0ba5074e6566e97f98ce6be27494e215c461d9d",
+      "gzip_bytes": 548,
+      "gzip_sha256": "55374e2e31cdc19446035157bffcc3b7e7dc632973cbe4be899e74b3f1b8bd2e"
+    },
+    {
+      "file": "result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-spi22-restart-dwt-03-exactseed\\result.json",
+      "bytes": 10158444,
+      "sha256": "c1f460d57ed29d334ae771c1aa08b56072d8d5716e226b2e690e952b66b5d7d8",
+      "gzip_bytes": 961548,
+      "gzip_sha256": "62f5b993827112acb3e2f81f88cc4b23ae5bc30e08c799635511edcf72996326"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-05-spi22-restart-dwt-03-exactseed\\result.json.jsonl",
+      "bytes": 5586037,
+      "sha256": "aba647616e6a0c549bf8a4e3fd0109db93af855e890c8fdfedfbb58dd31790c0",
+      "gzip_bytes": 818783,
+      "gzip_sha256": "3822949a2c6a2aef76670b05e458c9707c46e75c5bf5591370f4cc2a86c54224"
+    }
+  ]
+}

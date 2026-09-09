@@ -358,8 +358,6 @@ def execute(args, images, grant, uids, append):
             if mode:
                 for repeat in range(1, args.repeats+1):
                     a_only_check()
-                    if grant['expires_at_unix'] - time.time() < 20:
-                        raise ProtocolError('T13 insufficient current session time for another wake cycle')
                     seed = secrets.randbits(32)
                     if mode == 2 and a.command(138, (2000,), timeout=2) != [1]:
                         raise ProtocolError('T13 fixed P1.14 open-drain wake schedule failed')

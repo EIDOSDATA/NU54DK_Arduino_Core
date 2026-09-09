@@ -53,6 +53,7 @@ namespace nucode::arduino
             std::uint8_t event_tail{0U};
             std::uint8_t event_count{0U};
             bool event_overflow{false};
+            bool next_requested{false};
             atomic_t active{0};
             atomic_t buffers_active{0};
             atomic_t initialized{0};
@@ -204,13 +205,55 @@ namespace nucode::arduino
             k_spin_unlock(&context.lock, key);
         }
 
+        /** @brief SPIS가 현재 semaphore를 소유한 동안 다음 pair의 CPU ACQUIRE를 예약합니다. */
+        int requestNextLocked(SpisContext &context) noexcept
+        {
+            if (context.next_requested ||
+                ((context.next.tx == nullptr) && (context.next.rx == nullptr)))
+            {
+                return 0;
+            }
+            const int result = nrfx_spis_buffers_set(
+                &context.driver, static_cast<const std::uint8_t *>(context.next.tx),
+                context.next.tx_size, static_cast<std::uint8_t *>(context.next.rx),
+                context.next.rx_size);
+            if (result == 0)
+            {
+                context.next_requested = true;
+            }
+            else
+            {
+                context.next.state = DmaBufferState::error;
+            }
+            return result;
+        }
+
         void spisEvent(const nrfx_spis_event_t *event, void *opaque)
         {
             auto &context = *static_cast<SpisContext *>(opaque);
             if (event->evt_type == NRFX_SPIS_BUFFERS_SET_DONE)
             {
-                pushEvent(context, {SpiFabricEventType::buffers_armed, context.current.tx,
-                                    context.current.rx, 0U, 0U, 0U});
+                BufferPair armed{};
+                BufferPair failed{};
+                int result = 0;
+                {
+                    const k_spinlock_key_t key = k_spin_lock(&context.lock);
+                    context.current.state = DmaBufferState::dma_owned;
+                    armed = context.current;
+                    result = requestNextLocked(context);
+                    if (result != 0)
+                    {
+                        failed = context.next;
+                    }
+                    k_spin_unlock(&context.lock, key);
+                }
+                pushEvent(context,
+                          {SpiFabricEventType::buffers_armed, armed.tx, armed.rx, 0U, 0U, 0U});
+                if (result != 0)
+                {
+                    pushEvent(context, {SpiFabricEventType::error, failed.tx, failed.rx, 0U, 0U,
+                                        static_cast<std::uint32_t>(-result)});
+                }
                 return;
             }
             if (event->evt_type != NRFX_SPIS_XFER_DONE)
@@ -219,14 +262,23 @@ namespace nucode::arduino
             }
 
             BufferPair completed{};
-            BufferPair next{};
+            bool promoted = false;
             {
                 const k_spinlock_key_t key = k_spin_lock(&context.lock);
                 completed = context.current;
                 completed.state = DmaBufferState::completed;
-                context.current = completed;
-                next = context.next;
-                context.next = {};
+                if (context.next_requested)
+                {
+                    context.current = context.next;
+                    context.current.state = DmaBufferState::queued;
+                    context.next = {};
+                    context.next_requested = false;
+                    promoted = true;
+                }
+                else
+                {
+                    context.current = completed;
+                }
                 k_spin_unlock(&context.lock, key);
             }
             /**
@@ -238,25 +290,11 @@ namespace nucode::arduino
             pushEvent(context, {SpiFabricEventType::transfer_complete, completed.tx, completed.rx,
                                 event->tx_amount, event->rx_amount, 0U});
 
-            if ((next.tx != nullptr) || (next.rx != nullptr))
+            if (promoted)
             {
-                const int result = nrfx_spis_buffers_set(
-                    &context.driver, static_cast<const std::uint8_t *>(next.tx), next.tx_size,
-                    static_cast<std::uint8_t *>(next.rx), next.rx_size);
-                if (result == 0)
-                {
-                    next.state = DmaBufferState::dma_owned;
-                    const k_spinlock_key_t key = k_spin_lock(&context.lock);
-                    context.current = next;
-                    k_spin_unlock(&context.lock, key);
-                    return;
-                }
-                next.state = DmaBufferState::error;
-                const k_spinlock_key_t key = k_spin_lock(&context.lock);
-                context.current = next;
-                k_spin_unlock(&context.lock, key);
-                pushEvent(context, {SpiFabricEventType::error, next.tx, next.rx, 0U, 0U,
-                                    static_cast<std::uint32_t>(-result)});
+                pushEvent(context,
+                          {SpiFabricEventType::buffer_needed, nullptr, nullptr, 0U, 0U, 0U});
+                return;
             }
             atomic_clear(&context.buffers_active);
             pushEvent(context, {SpiFabricEventType::buffer_needed, nullptr, nullptr, 0U, 0U, 0U});
@@ -321,6 +359,7 @@ namespace nucode::arduino
             context->event_tail = 0U;
             context->event_count = 0U;
             context->event_overflow = false;
+            context->next_requested = false;
             atomic_set(&context->initialized, 1);
             atomic_set(&context->active, 1);
             irq_enable(NRFX_IRQ_NUMBER_GET(context->driver.p_reg));
@@ -344,6 +383,7 @@ namespace nucode::arduino
             {
                 context->current.state = DmaBufferState::cancelled;
                 context->next.state = DmaBufferState::cancelled;
+                context->next_requested = false;
                 atomic_clear(&context->buffers_active);
             }
             driver_error = 0;
@@ -373,6 +413,7 @@ namespace nucode::arduino
             context->route = {};
             context->current = {};
             context->next = {};
+            context->next_requested = false;
             driver_error = 0;
             return SerialFabricResult::success;
         }
@@ -467,6 +508,7 @@ namespace nucode::arduino
             context->next = next_valid ? BufferPair{next_tx_buffer, next_tx_size, next_rx_buffer,
                                                     next_rx_size, DmaBufferState::queued}
                                        : BufferPair{};
+            context->next_requested = false;
             k_spin_unlock(&context->lock, key);
         }
         atomic_set(&context->buffers_active, 1);
@@ -481,6 +523,61 @@ namespace nucode::arduino
             return mapResult(result);
         }
         return SerialFabricResult::success;
+    }
+
+    SerialFabricResult SpisHandle::provideNextBuffers(const void *tx_buffer, std::size_t tx_size,
+                                                      void *rx_buffer, std::size_t rx_size) noexcept
+    {
+        if (k_is_in_isr())
+        {
+            return SerialFabricResult::invalid_context;
+        }
+        const internal::SerialFabricOperationGuard operation_guard;
+        auto *const context = contextFor(instance());
+        if ((context == nullptr) ||
+            !internal::isSerialFabricHandleActive(SerialPersonality::spis, instance()))
+        {
+            return SerialFabricResult::wrong_state;
+        }
+        if (((tx_buffer == nullptr) != (tx_size == 0U)) ||
+            ((rx_buffer == nullptr) != (rx_size == 0U)) || ((tx_size == 0U) && (rx_size == 0U)) ||
+            (tx_size > UINT16_MAX) || (rx_size > UINT16_MAX) ||
+            !leasedBuffer(*context, tx_buffer, tx_size) ||
+            !leasedBuffer(*context, rx_buffer, rx_size))
+        {
+            return SerialFabricResult::invalid_argument;
+        }
+        BufferPair failed{};
+        int result = 0;
+        {
+            const k_spinlock_key_t key = k_spin_lock(&context->lock);
+            const bool current_usable = context->current.state == DmaBufferState::queued ||
+                                        context->current.state == DmaBufferState::dma_owned;
+            if (atomic_get(&context->initialized) == 0 ||
+                atomic_get(&context->buffers_active) == 0 || !current_usable ||
+                context->next_requested || context->next.tx != nullptr ||
+                context->next.rx != nullptr)
+            {
+                k_spin_unlock(&context->lock, key);
+                return SerialFabricResult::wrong_state;
+            }
+            context->next = {tx_buffer, tx_size, rx_buffer, rx_size, DmaBufferState::queued};
+            if (context->current.state == DmaBufferState::dma_owned)
+            {
+                result = requestNextLocked(*context);
+                if (result != 0)
+                {
+                    failed = context->next;
+                }
+            }
+            k_spin_unlock(&context->lock, key);
+        }
+        if (result != 0)
+        {
+            pushEvent(*context, {SpiFabricEventType::error, failed.tx, failed.rx, 0U, 0U,
+                                 static_cast<std::uint32_t>(-result)});
+        }
+        return mapResult(result);
     }
 
     SerialFabricResult SpisHandle::cancelBuffers() noexcept
@@ -507,6 +604,7 @@ namespace nucode::arduino
         atomic_clear(&context->initialized);
         context->current.state = DmaBufferState::cancelled;
         context->next.state = DmaBufferState::cancelled;
+        context->next_requested = false;
         atomic_clear(&context->buffers_active);
         const int result =
             nrfx_spis_init(&context->driver, &context->driver_configuration, spisEvent, context);

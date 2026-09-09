@@ -10,6 +10,24 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 class SerialDriverTests(unittest.TestCase):
+    def test_spis_prequeues_and_refills_the_next_semaphore_pair(self):
+        compiler = compiler_command()
+        self.assertIsNotNone(compiler)
+        with tempfile.TemporaryDirectory(prefix='nu54-r02-spis-') as temporary:
+            binary = Path(temporary) / 'SPIS.exe'
+            command = [*compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
+                       '-I', str(ROOT/'tests/host/serial_driver_stubs'),
+                       '-I', str(ROOT/'tests/host/serial_fabric_stubs'),
+                       '-I', str(ROOT/'cores/arduino'), '-I', str(ROOT/'variants/nu54dk'),
+                       str(ROOT/'cores/arduino/SerialFabric.cpp'),
+                       str(ROOT/'cores/arduino/internal/serial/SerialFabricRegistry.cpp'),
+                       str(ROOT/'cores/arduino/internal/serial/SerialFabricLifecycle.cpp'),
+                       str(ROOT/'tests/host/r02_spis_driver_main.cpp'), '-o', str(binary)]
+            result = subprocess.run(command, capture_output=True, timeout=60)
+            self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+            result = subprocess.run([str(binary)], capture_output=True, timeout=10)
+            self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+
     def test_production_sync_and_lifetime(self):
         compiler = compiler_command()
         self.assertIsNotNone(compiler)

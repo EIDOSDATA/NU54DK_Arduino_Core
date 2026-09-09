@@ -3,7 +3,7 @@
 현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../../../00_Docs/TODO_v0.4.0.md>)에서 관리합니다.
 
 현재 완료 수와 제외 범위는 TODO, source별 최신 결과는
-[110번 기록](<../../../00_Docs/04_검증 기록/110_문서_정리와_T13_S_잔여_재개.md>)이 기준입니다.
+[111번 기록](<../../../00_Docs/04_검증 기록/111_T13_S_I2S_완료와_SPIS_연속_버퍼_교정.md>)이 기준입니다.
 이 문서는 각 오류의 주입 방법·opcode·판정 계약을 설명합니다. 과거 예행 수치는 현재 완료 수에 합산하지 않습니다.
 
 | 찾을 내용 | 절 |
@@ -139,7 +139,11 @@ opcode150 정책·151 ARM·152 원본 네 page·153 STOP 이후 TX/RX RAM16page�
 
 판정 근거는 Nordic의 [SPIS 동작](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/spis.html-concept_abk_lbf_wr?contentId=DpeL3a6spBHM4V72K8W3UA)과
 [semaphore 동작](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/spis.html-semaphore_abk_lbf_wr?contentId=qTcpD0dkFyr9JQP3EcH1fg)이다.
-2026-09-08 구현 준비이며 실기 PASS는 아직 없다.
+2026-09-09 예행 다섯 인스턴스는 통과했지만 정식 short 묶음은 SPIM22 51회차 정상 재시작
+frame12의 zero RX로 실패했다. 기존 SPIS adapter가 다음 pair를 END 뒤에 요청해 semaphore 선행
+handover를 만들지 못한 구조 결함을 교정했다. 정확한 실패 seed를 포함한 DWT 진단 200회는 추가
+오류가 없었으며 자격에 더하지 않는다. 수정 exact source로 short 다섯 조건 전체와 unready 다섯
+조건을 재실행하기 전이므로 SPI 완료 수는 0/10이다. 상세 원본은 111번을 따른다.
 
 ## CTS 100ms 정지·재개 전용 fixture
 

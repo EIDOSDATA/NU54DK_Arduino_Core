@@ -301,31 +301,29 @@ class T13RuntimeTests(unittest.TestCase):
         self.assertEqual(cases.generated_tokens(cases.OUTPUT.read_text(encoding='utf-8')),
                          cases.generated_tokens(cases.render()))
 
-    def test_session_rejects_foreign_wiring_and_time_identity_changes(self):
+    def test_session_rejects_foreign_wiring_and_identity_changes(self):
         uids = ['a' * 32, 'b' * 32]
         images = [{'role': role, 'board_revision': plan.plan()['board_revision'],
                    'core_revision': 'c' * 40} for role in (1, 2)]
         grant = dict(type='v04-t13-s-session', harness='S', catalog_sha256=session.catalog_hash(),
             uid_sha256=[hashlib.sha256(uid.encode()).hexdigest() for uid in uids],
-            confirmed_at_unix=1000, expires_at_unix=44200,
             user_wiring_report='S 연결', user_maintain_reply='실행 중 유지')
         for key in ('maintain_harness_until_end', 'notify_before_usb_wiring_switch_changes',
                     'dap_uart_disconnected_both', 'swd_connected_both', 'equal_io_voltage_confirmed',
                     'power_rails_not_joined', 'common_ground_confirmed', 'links_match_catalog',
                     'external_pullups_disconnected', 'extra_outputs_disconnected'):
             grant[key] = True
-        session.validate(grant, images, uids, now=2000)
-        for key, value in (('harness', 'C'), ('harness', 'U'), ('expires_at_unix', 44201),
-                           ('confirmed_at_unix', 2001), ('expires_at_unix', float('nan')),
+        session.validate(grant, images, uids)
+        session.validate({**grant, 'confirmed_at_unix': -1, 'expires_at_unix': float('nan')},
+                         images, uids)
+        for key, value in (('harness', 'C'), ('harness', 'U'),
                            ('links_match_catalog', 1), ('catalog_sha256', '0' * 64),
                            ('user_maintain_reply', '')):
             with self.subTest(key=key, value=value), self.assertRaises(ProtocolError):
-                session.validate({**grant, key: value}, images, uids, now=2000)
-        with self.assertRaises(ProtocolError):
-            session.validate(grant, images, uids, now=44200)
+                session.validate({**grant, key: value}, images, uids)
         images[1]['core_revision'] = 'd' * 40
         with self.assertRaises(ProtocolError):
-            session.validate(grant, images, uids, now=2000)
+            session.validate(grant, images, uids)
 
     def test_u_session_requires_its_own_current_grant_and_compiled_identity(self):
         """! @brief 기 S 확인을 U 결선·image 권한으로 재사용하지 않습니다. """
@@ -334,18 +332,17 @@ class T13RuntimeTests(unittest.TestCase):
                    'core_revision': 'c' * 40} for role in (1, 2)]
         grant = dict(type='v04-t13-u-session', harness='U', catalog_sha256=session.catalog_hash(),
             uid_sha256=[hashlib.sha256(uid.encode()).hexdigest() for uid in uids],
-            confirmed_at_unix=1000, expires_at_unix=44200,
             user_wiring_report='U 연결', user_maintain_reply='실행 중 유지')
         for key in ('maintain_harness_until_end', 'notify_before_usb_wiring_switch_changes',
                     'dap_uart_disconnected_both', 'swd_connected_both', 'equal_io_voltage_confirmed',
                     'power_rails_not_joined', 'common_ground_confirmed', 'links_match_catalog',
                     'external_pullups_disconnected', 'extra_outputs_disconnected'):
             grant[key] = True
-        session.validate(grant, images, uids, harness='U', now=2000)
+        session.validate(grant, images, uids, harness='U')
         for requested, changed in (('S', {}), ('U', {'type': 'v04-t13-s-session'}),
                                    ('U', {'harness': 'S'})):
             with self.subTest(requested=requested, changed=changed), self.assertRaises(ProtocolError):
-                session.validate({**grant, **changed}, images, uids, harness=requested, now=2000)
+                session.validate({**grant, **changed}, images, uids, harness=requested)
         digest = bytes.fromhex(session.catalog_hash())
         identity = [0x54313303] + [int.from_bytes(digest[index:index + 4], 'little')
                                      for index in range(0, 32, 4)] + [0x1FF]
