@@ -13,12 +13,16 @@ KINDS = {'uarte': 1, 'spim': 2, 'twim': 4}
 
 
 def validate_selection(test, role, mode):
-    """! @brief 승인된 단독 serial의 해당 controller·UART만 고정 오류 주입을 선택합니다. """
-    if (mode not in MODES or role not in (1, 2) or test['harness'] != 'S' or
+    """! @brief S controller/UART와 U UARTE00의 승인된 고정 오류만 선택합니다. """
+    if (mode not in MODES or role not in (1, 2) or test['harness'] not in ('S', 'U') or
             len(test['serial_links']) != 1 or any(test[key] for key in
             ('adc_channels', 'pwm_instance', 'pdm_instance', 'i2s')) or
             test['serial_links'][0]['a' if role == 1 else 'b']['kind'] != MODES[mode][0]):
         raise ProtocolError('T13 unsupported serial fault selection')
+    endpoint = test['serial_links'][0]['a' if role == 1 else 'b']
+    if test['harness'] == 'U' and ((test['id'], test['name'], endpoint['instance']) !=
+                                  (1, 'uarte0', 0) or mode not in (1, 2)):
+        raise ProtocolError('T13 U permits only UARTE00 TX/RX cancellation')
 
 
 def inspect(words, test, role, mode, *, twi_proof=None):
@@ -91,7 +95,7 @@ def execute(devices, test, role, mode, continuity, append, *, preflight):
     target = next(device for device in devices if device.image['role'] == role)
     repeats = 1 if preflight else 100
     for repetition in range(1, repeats + 1):
-        label = f'T13-S/{"fault-preflight" if preflight else "recovery"}/{test["name"]}/mode{mode}/role{role}/repeat{repetition:03}'
+        label = f'T13-{test["harness"]}/{"fault-preflight" if preflight else "recovery"}/{test["name"]}/mode{mode}/role{role}/repeat{repetition:03}'
         seed = secrets.randbits(32)
         append(label + '/input', {'status': 'input', 'seed': seed, 'test': test,
                                  'mode': mode, 'role': role, 'repetition': repetition})

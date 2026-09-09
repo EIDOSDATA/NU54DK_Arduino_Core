@@ -1,4 +1,4 @@
-"""! @brief S 결선 checker와 T13의 실제 지속 전송을 exact source·UID로 실행합니다. """
+"""! @brief S/U 결선 checker와 T13의 실제 지속 전송을 exact source·UID로 실행합니다. """
 from __future__ import annotations
 
 import argparse
@@ -30,6 +30,15 @@ import v04_t13_session as session
 import v04_wiring as wiring
 from v04_fixture_run import unique_fields
 from v04_protocol import ProbeLocks, ProtocolError, validate_pair
+
+U_PHASES = ('wiring', 'preflight', 'soak', 'fault-preflight', 'serial-fault',
+            'flow-preflight', 'uart-flow')
+
+
+def validate_harness_phase(harness, phase, *, reverse_serial=False):
+    """! @brief U에서 UARTE00 정상·HWFC·취소 외 S 전용 실행을 거부합니다. """
+    if harness == 'U' and (phase not in U_PHASES or reverse_serial):
+        raise ProtocolError('T13 U permits only fixed UARTE00 normal, flow and cancellation phases')
 
 
 def serial_only(test):
@@ -245,8 +254,9 @@ def start_order(devices, test):
 
 def start_devices(devices, test, append, identifier, *, serial_start_barrier=False):
     """! @brief 고정 CTS 시험에서는 양쪽 RX 준비 응답을 받은 뒤 송신을 허용합니다. """
-    if serial_start_barrier and (test['harness'] != 'S' or test['id'] not in (2, 3, 4, 5, 101, 105)):
-        raise ProtocolError('T13 serial start barrier is restricted to fixed S CTS cases')
+    barrier_cases = {'S': (2, 3, 4, 5, 101, 105), 'U': (1,)}
+    if serial_start_barrier and test['id'] not in barrier_cases.get(test['harness'], ()):
+        raise ProtocolError('T13 serial start barrier is restricted to fixed CTS cases')
     ordered = start_order(devices, test)
     if {device.image['role'] for device in ordered} != {1, 2} or len(ordered) != 2:
         raise ProtocolError('T13 start requires both distinct roles')
@@ -290,7 +300,7 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
         raise ProtocolError('I2S edge diagnostic is restricted to standalone observation')
     phase = ('pwm-diagnostic' if diagnostic_mode else 'i2s-edge-diagnostic'
              if edge_diagnostic else 'preflight' if preflight else 'soak')
-    identifier = f'T13-S/{phase}/{test["name"]}'
+    identifier = f'T13-{test["harness"]}/{phase}/{test["name"]}'
     continuity.check()
     append(identifier + '/input', {'status': 'input', 'test': test, 'seed': seed,
         'measured_members': [member['name'] for member in group['members']],
@@ -417,7 +427,7 @@ def execute_group(devices, group, duration, continuity, append, *, preflight, se
     if not stopped or not pins_idle:
         raise ProtocolError('T13 STOP or resource return unproven')
     for member in group['members']:
-        append(f'T13-S/{phase}/{member["name"]}/result',
+        append(f'T13-{test["harness"]}/{phase}/{member["name"]}/result',
                {'status': 'observation-complete' if diagnostic or test.get('_spi_timing_mode') else 'passed',
                 'measurement_id': identifier, 'measured_role': member['measured_role'],
                 'requested_seconds': duration, 'planned_soak_pass': not preflight,
@@ -432,6 +442,7 @@ def main(argv=None):
     for name in ('build-root', 'pyocd', 'session-grant'):
         parser.add_argument('--' + name, required=True, type=Path)
     parser.add_argument('--evidence', type=Path)
+    parser.add_argument('--harness', choices=('S', 'U'), default='S')
     parser.add_argument('--phase', choices=('wiring', 'preflight', 'soak', 'fault-preflight', 'serial-fault',
                                           'handover-preflight', 'handover', 'spi-timing-diagnostic',
                                           'stream-fault-preflight', 'stream-fault', 'pwm-diagnostic',
@@ -462,11 +473,15 @@ def main(argv=None):
     parser.add_argument('--i2s-edge-route', choices=('original', 'swapped'))
     args = parser.parse_args(argv)
     uids = validate_pair(args.dut, args.peer)
-    images = [pair.inspect_image(pair.ROOT, args.build_root.resolve(), role, family='t13_s') for role in (1, 2)]
+    family = f't13_{args.harness.lower()}'
+    images = [pair.inspect_image(pair.ROOT, args.build_root.resolve(), role, family=family)
+              for role in (1, 2)]
     grant_bytes = args.session_grant.read_bytes()
     grant = json.loads(grant_bytes, object_pairs_hook=unique_fields)
-    session.validate(grant, images, uids)
-    available_cases = {test['id']: test for test in catalog.cases() if test['harness'] == 'S'}
+    session.validate(grant, images, uids, harness=args.harness)
+    available_cases = {test['id']: test for test in catalog.cases()
+                       if test['harness'] == args.harness}
+    validate_harness_phase(args.harness, args.phase, reverse_serial=args.reverse_serial)
     is_timing = args.phase == 'spi-timing-diagnostic'
     if is_timing:
         if args.spi_timing_mode is None or args.handover_instance not in (20, 21, 22):
@@ -488,7 +503,7 @@ def main(argv=None):
                            for key, value in available_cases.items()}
     if (len(set(args.cases)) != len(args.cases) or any(identifier not in available_cases for identifier in args.cases)
             or (args.phase == 'wiring' and args.cases) or (args.phase != 'wiring' and not args.cases)):
-        raise ProtocolError('explicit supported S case set required')
+        raise ProtocolError(f'explicit supported T13 {args.harness} case set required')
     is_fault = args.phase in ('fault-preflight', 'serial-fault')
     is_stream_fault = args.phase in ('stream-fault-preflight', 'stream-fault')
     is_pwm_recovery = args.phase in ('pwm-recovery-preflight', 'pwm-recovery')
@@ -562,7 +577,8 @@ def main(argv=None):
                            for key, value in available_cases.items()}
     elif args.pwm_diagnostic_route is not None:
         raise ProtocolError('alternate PWM pins require the diagnostic phase')
-    evidence = {'schema_version': 1, 'type': 'v04-t13-s-campaign', 'status': 'preflight',
+    evidence = {'schema_version': 1, 'type': f'v04-t13-{args.harness.lower()}-campaign',
+        'status': 'preflight', 'harness': args.harness,
         'phase': args.phase, 'case_ids': args.cases, 'core_revision': images[0]['core_revision'],
         'board_revision': images[0]['board_revision'], 'catalog_sha256': session.catalog_hash(),
         'session_grant_sha256': hashlib.sha256(grant_bytes).hexdigest(), 'swd_frequency_hz': 10000000,
@@ -599,18 +615,19 @@ def main(argv=None):
                 raise ProtocolError('T13 requires both exact probes before flash')
             devices = []
             for uid, image in zip(uids, images):
-                session.validate(grant, images, uids)
+                session.validate(grant, images, uids, harness=args.harness)
                 device, flash = pair.boot_exact(stack, ConnectHelper, args.pyocd, uid, image,
                     10000000, cmsis_dap_limit_packets=args.cmsis_dap_limit_packets)
                 devices.append(device)
                 evidence['devices'][image['role'] - 1]['flash'] = flash
                 capability = 511 if is_pwm_recovery else 255
-                if session.verify_profile(device) & capability != capability:
+                if session.verify_profile(device, args.harness) & capability != capability:
                     raise ProtocolError('T13 serial/stream/timing capabilities missing')
-            continuity = session.Continuity(grant, images, uids, devices, available, pair.verify_identity)
+            continuity = session.Continuity(grant, images, uids, devices, available,
+                                            pair.verify_identity, harness=args.harness)
             evidence['external_wiring_executed'] = True
             wiring.run_checks(devices, append, continuity.check)
-            print('T13_S_WIRING_PASS', flush=True)
+            print(f'T13_{args.harness}_WIRING_PASS', flush=True)
             if is_handover:
                 handover.execute(devices, args.handover_instance, continuity, append,
                                  preflight=args.phase != 'handover', timing_mode=args.spi_timing_mode)
@@ -664,12 +681,13 @@ def main(argv=None):
             continuity.check()
             for device in devices:
                 words = device.command(51, timeout=2)
-                append(f'T13-S/final-pins/role{device.image["role"]}', {'status': 'observation', 'words': words})
+                append(f'T13-{args.harness}/final-pins/role{device.image["role"]}',
+                       {'status': 'observation', 'words': words})
                 if words[1:4] != [0, 0, 0] or words[7] != 0:
                     raise ProtocolError('T13 final pin direction/pull/lease not idle')
-    print(('T13_S_DIAGNOSTIC_COMPLETED; no normal-soak qualification'
+    print((f'T13_{args.harness}_DIAGNOSTIC_COMPLETED; no normal-soak qualification'
            if args.phase == 'pwm-diagnostic' or is_timing or is_i2s_edge
-           else 'T13_S_CAMPAIGN_PASS; phase=' + args.phase), flush=True)
+           else f'T13_{args.harness}_CAMPAIGN_PASS; phase=' + args.phase), flush=True)
     return 0
 
 
@@ -677,5 +695,5 @@ if __name__ == '__main__':
     try:
         raise SystemExit(main())
     except (ProtocolError, OSError, ValueError) as error:
-        print(f'T13_S_FAIL: {error}', file=sys.stderr)
+        print(f'T13_FAIL: {error}', file=sys.stderr)
         raise SystemExit(1)

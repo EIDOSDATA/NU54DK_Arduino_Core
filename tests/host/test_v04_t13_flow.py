@@ -15,6 +15,28 @@ from v04_protocol import ProtocolError
 
 
 class FlowTests(unittest.TestCase):
+    def test_u_flow_accepts_only_fixed_uarte00_and_crossed_p2_control_lines(self):
+        tests = {row['id']: row for row in cases.cases() if row['harness'] == 'U'}
+        test = tests[1]
+        self.assertEqual(flow.selected_lane(test), 0)
+        for role in (1, 2):
+            changed = flow.fixture(test, role)
+            a, b = test['serial_links'][0]['a'], test['serial_links'][0]['b']
+            self.assertEqual(plan.harness('U')[a['pins']['rts']], b['pins']['cts'])
+            self.assertEqual(plan.harness('U')[a['pins']['cts']], b['pins']['rts'])
+            self.assertEqual(changed['_flow_gpio_peer']['rts'],
+                             test['serial_links'][0]['b' if role == 1 else 'a']['pins']['rts'])
+            pause, _ = self.pause(test, role)
+            self.assertEqual(pause.lane, 0)
+        for mutation in ({'id': 2}, {'name': 'uarte20'}, {'harness': 'S'}):
+            changed = {**test, **mutation}
+            with self.subTest(mutation=mutation), self.assertRaises(ProtocolError):
+                flow.selected_lane(changed)
+        firmware = (ROOT / 'tests/zephyr/v04_t13_hil/src/flow.cpp').read_text(encoding='utf-8')
+        self.assertIn('test.harness == 3U && test.id == 1U', firmware)
+        self.assertIn('DEVICE_DT_GET(DT_NODELABEL(gpio2))', firmware)
+        self.assertIn('instance == 0U    ? NRF_UARTE00', firmware)
+
     def test_fixed_existing_rts_cts_mapping_and_peer_only_override(self):
         tests = {row['id']: row for row in cases.cases()}
         for identifier in (2, 3, 4, 5):
@@ -28,7 +50,7 @@ class FlowTests(unittest.TestCase):
                 self.assertEqual(changed['serial_links'][0][target_key], original['serial_links'][0][target_key])
                 self.assertEqual(set(changed['serial_links'][0][peer_key]['pins']), {'txd', 'rxd'})
                 self.assertEqual(len(original['serial_links'][0][peer_key]['pins']), 4)
-        for identifier in (1, 7, 16, 25, 102, 106, 108):
+        for identifier in (7, 16, 25, 102, 106, 108):
             with self.assertRaises(ProtocolError):
                 flow.fixture(tests[identifier], 1)
 

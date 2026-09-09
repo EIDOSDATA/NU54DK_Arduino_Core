@@ -11,6 +11,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | 파일 | 역할 | 주요 fixture |
 | --- | --- | --- |
 | `v04_wiring_run.py` / `v04_wiring.py` | 고정 17신호의 양방향 LOW/해제 102회와 pulse/lease 자동 해제 | Fixture 501, 새 확인서·SWD 10 MHz, GPIO API PASS와 구별 |
+| `v04_t13_run.py` | exact S/U image의 지속 통신·고정 오류·STOP 판정 | S/U별 별도 확인서, U는 UARTE00 normal/HWFC/cancel만 |
 | `v04_nojumper.py` | PWM·내부 ADC·TIMER·EGU/DPPI/PPIB·시간 함수의 exact SWD 명령/판정 | 두 지정 보드 USB/SWD, 보드 간 결선 해제, 94·95번 |
 | `m6_serial_echo.py` | pyOCD flash 후 UART READY·echo 검증 | NU54DK, CMSIS-DAP V2 UART |
 | `m7_i2c_pmic.py` | BQ25186 고정 ID register의 읽기 전용 I2C 검증 | 보드 내장 PMIC |

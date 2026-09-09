@@ -61,6 +61,19 @@ S→U에서는 A P2.00/.02/.04/.05에서 오는 네 선의 B 끝을 위 표대�
 P1.04/05 교차는 유지한다. Header 위치가 필요한 경우 [현재 GPIO/header 표](COMMON_WIRING.md)를
 함께 보되 `P2.02`라는 GPIO를 `P2` header의 2번 핀으로 오해하지 않는다.
 
+### U 실행 소프트웨어 경계
+
+U는 `nucode.v04.t13_u_dut`/`nucode.v04.t13_u_peer` 두 image와 firmware
+`CONFIG_NUCODE_T13_HARNESS=3`을 사용한다. Host runner는 `--harness U --cases 1`을
+요구하며 UARTE00 1 Mbit/s 8N1 full-duplex 180초, 양방향100 ms RTS→CTS 정지/재개,
+TX/RX DMA 취소·STOP 뒤 새 nonce 재시작만 허용한다. U에서 SPI/TWI/I2S/PDM/PWM,
+parity/break, reverse-serial, resource handover를 요청하면 probe를 열기 전에 거부한다.
+
+S 확인서는 U에 재사용하지 않는다. 실제 U 실행 전에 두 USB를 분리하고 위 네 선을
+재배치한 뒤, 현재 UID·U 결선·DAP UART 분리·SWD 연결·전압·전원 레일·GND를
+다시 확인한 `v04-t13-u-session` 승인서가 필요하다. 그 다음 U 전체17선
+open-drain 결선 검사가 통과하기 전에는 push-pull 통신을 시작하지 않는다.
+
 ## 단독 32개와 동시 8조합
 
 단독은 UART 5·SPIM 5·SPIS 5·TWIM 4·TWIS 4·SAADC 1·PWM 3·PDM 2·I2S 1·QDEC 2,

@@ -518,6 +518,21 @@ class M12CiContractTests(unittest.TestCase):
             module.SUITE_GROUPS["v0.4.0"],
         )
 
+    ## @brief T13 UARTE00의 두 role image가 S와 독립적으로 canonical build에 포함됩니다.
+    def test_zephyr_build_includes_t13_u_role_images(self) -> None:
+        path = REPOSITORY / "tools" / "ci" / "run_zephyr_build.py"
+        spec = importlib.util.spec_from_file_location("nu54_t13_u_build_gate", path)
+        self.assertIsNotNone(spec)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        self.assertTrue(
+            {
+                ("v04_t13_hil", "nucode.v04.t13_u_dut"),
+                ("v04_t13_hil", "nucode.v04.t13_u_peer"),
+            }.issubset(set(module.SUITE_GROUPS["v0.4.0"]))
+        )
+
     ## @brief AC-01 production contract와 자동 loopback HIL image가 원격 build gate에 포함되는지 검사합니다.
     def test_zephyr_build_includes_ac01_contract_and_hil_image(self) -> None:
         path = REPOSITORY / "tools" / "ci" / "run_zephyr_build.py"

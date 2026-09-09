@@ -13,6 +13,20 @@ tests:
     extra_configs:
       - CONFIG_NUCODE_V04_HIL_ROLE=2
       - CONFIG_NUCODE_T13_HARNESS=2
+  nucode.v04.t13_u_dut:
+    platform_allow: nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    build_only: true
+    tags: [nucode, v04, hil, t13]
+    extra_configs:
+      - CONFIG_NUCODE_V04_HIL_ROLE=1
+      - CONFIG_NUCODE_T13_HARNESS=3
+  nucode.v04.t13_u_peer:
+    platform_allow: nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    build_only: true
+    tags: [nucode, v04, hil, t13]
+    extra_configs:
+      - CONFIG_NUCODE_V04_HIL_ROLE=2
+      - CONFIG_NUCODE_T13_HARNESS=3
   nucode.v04.t13_power_s_dut:
     platform_allow: nrf54l15dk/nrf54l15/cpuapp/nu54dk
     build_only: true

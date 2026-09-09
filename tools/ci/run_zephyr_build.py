@@ -80,6 +80,8 @@ SUITE_GROUPS = {
         ("v04_pair_hil", "nucode.v04.pair_peer"),
         ("v04_t13_hil", "nucode.v04.t13_s_dut"),
         ("v04_t13_hil", "nucode.v04.t13_s_peer"),
+        ("v04_t13_hil", "nucode.v04.t13_u_dut"),
+        ("v04_t13_hil", "nucode.v04.t13_u_peer"),
         ("v04_t13_hil", "nucode.v04.t13_power_s_dut"),
         ("v04_t13_hil", "nucode.v04.t13_power_s_peer"),
         ("m23_inventory_contract", "nucode.m23.inventory_contract"),

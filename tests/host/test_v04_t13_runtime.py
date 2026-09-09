@@ -327,6 +327,47 @@ class T13RuntimeTests(unittest.TestCase):
         with self.assertRaises(ProtocolError):
             session.validate(grant, images, uids, now=2000)
 
+    def test_u_session_requires_its_own_current_grant_and_compiled_identity(self):
+        """! @brief 기 S 확인을 U 결선·image 권한으로 재사용하지 않습니다. """
+        uids = ['a' * 32, 'b' * 32]
+        images = [{'role': role, 'board_revision': plan.plan()['board_revision'],
+                   'core_revision': 'c' * 40} for role in (1, 2)]
+        grant = dict(type='v04-t13-u-session', harness='U', catalog_sha256=session.catalog_hash(),
+            uid_sha256=[hashlib.sha256(uid.encode()).hexdigest() for uid in uids],
+            confirmed_at_unix=1000, expires_at_unix=44200,
+            user_wiring_report='U 연결', user_maintain_reply='실행 중 유지')
+        for key in ('maintain_harness_until_end', 'notify_before_usb_wiring_switch_changes',
+                    'dap_uart_disconnected_both', 'swd_connected_both', 'equal_io_voltage_confirmed',
+                    'power_rails_not_joined', 'common_ground_confirmed', 'links_match_catalog',
+                    'external_pullups_disconnected', 'extra_outputs_disconnected'):
+            grant[key] = True
+        session.validate(grant, images, uids, harness='U', now=2000)
+        for requested, changed in (('S', {}), ('U', {'type': 'v04-t13-s-session'}),
+                                   ('U', {'harness': 'S'})):
+            with self.subTest(requested=requested, changed=changed), self.assertRaises(ProtocolError):
+                session.validate({**grant, **changed}, images, uids, harness=requested, now=2000)
+        digest = bytes.fromhex(session.catalog_hash())
+        identity = [0x54313303] + [int.from_bytes(digest[index:index + 4], 'little')
+                                     for index in range(0, 32, 4)] + [0x1FF]
+        device = mock.Mock()
+        device.command.return_value = identity
+        self.assertEqual(session.verify_profile(device, 'U'), 0x1FF)
+        identity[0] = 0x54313302
+        with self.assertRaises(ProtocolError):
+            session.verify_profile(device, 'U')
+
+    def test_u_runner_is_fail_closed_to_fixed_uart00_phases(self):
+        """! @brief U는 S 버스·stream·전원·역방향 변형을 실행 전에 거부합니다. """
+        for phase in runner.U_PHASES:
+            runner.validate_harness_phase('U', phase)
+        for phase in ('stream-fault', 'spi-boundary', 'twi-stuck', 'twis-delay',
+                      'uart-line-fault', 'handover', 'pwm-recovery'):
+            with self.subTest(phase=phase), self.assertRaises(ProtocolError):
+                runner.validate_harness_phase('U', phase)
+        with self.assertRaises(ProtocolError):
+            runner.validate_harness_phase('U', 'preflight', reverse_serial=True)
+        runner.validate_harness_phase('S', 'spi-boundary')
+
     def test_missing_duplicate_and_corrupt_completion_are_rejected(self):
         seed, length, count = 37, 256, 3
         total = length * count

@@ -44,12 +44,24 @@ class StartBarrierTests(unittest.TestCase):
                                  lambda *args: None, 'test', serial_start_barrier=True)
         self.assertEqual(self.calls, [(2, 98, (1,)), (1, 98, (1,))])
 
+    def test_u_uarte00_uses_the_same_two_receiver_barrier(self):
+        """! @brief U case1도 양쪽 RX 응답 전에 TX를 풀지 않습니다. """
+        devices = self.devices()
+        test = {'id': 1, 'harness': 'U', 'serial_links': []}
+        runner.start_devices(devices, test, lambda *args: None, 'test',
+                             serial_start_barrier=True)
+        self.assertEqual(self.calls,
+                         [(2, 98, (1,)), (1, 98, (1,)), (2, 184, ()), (1, 184, ())])
+        engine = (ROOT / 'tests/zephyr/v04_t13_hil/src/engine.cpp').read_text(encoding='utf-8')
+        self.assertIn('selected->harness == 3U && selected->id == 1U', engine)
+
     def test_original_start_has_no_release_and_other_topologies_are_rejected(self):
         devices = self.devices()
         test = {'id': 2, 'harness': 'S', 'serial_links': []}
         runner.start_devices(devices, test, lambda *args: None, 'test')
         self.assertEqual(self.calls, [(2, 98, ()), (1, 98, ())])
-        for changed in ({**test, 'harness': 'U'}, {**test, 'id': 6}):
+        for changed in ({**test, 'harness': 'U'}, {**test, 'id': 6},
+                        {**test, 'id': 1}, {'id': 2, 'harness': 'U', 'serial_links': []}):
             with self.assertRaises(ProtocolError):
                 runner.start_devices(devices, changed, lambda *args: None, 'test', serial_start_barrier=True)
 

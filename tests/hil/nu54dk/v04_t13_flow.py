@@ -1,4 +1,4 @@
-"""! @brief 기존 S의 RTS→CTS 결선으로100ms 정지와 완전한 payload 재개를 검사합니다. """
+"""! @brief 고정 S/U의 RTS→CTS 결선으로100ms 정지와 payload 재개를 검사합니다. """
 import copy
 import secrets
 import time
@@ -8,14 +8,16 @@ MASK = 0xFFFFFFFF
 
 
 def selected_lane(test):
-    """! @brief 단독 UART 또는 계획에 있는 C01/C05의 UART30만 선택합니다. """
+    """! @brief S의 단독/C01/C05 UART와 U의 단독 UARTE00만 선택합니다. """
     links = test['serial_links']
-    if (test['harness'] != 'S' or
+    harness = test['harness']
+    if (harness not in ('S', 'U') or
             test.get('_reverse_serial') or any(test[key] for key in ('adc_channels', 'pwm_instance', 'pdm_instance', 'i2s'))):
-        raise ProtocolError('T13 flow requires a fixed S UART topology')
+        raise ProtocolError('T13 flow requires a fixed S/U UART topology')
     if len(links) == 1:
         index = 0
-    elif ((test['id'], test['name'], len(links)) in ((101, 'C01', 4), (105, 'C05', 5))):
+    elif harness == 'S' and ((test['id'], test['name'], len(links)) in
+                             ((101, 'C01', 4), (105, 'C05', 5))):
         indices = [index for index, link in enumerate(links) if all(
             link[key]['kind'] == 'uarte' and link[key]['instance'] == 30 for key in ('a', 'b'))]
         if len(indices) != 1:
@@ -24,8 +26,11 @@ def selected_lane(test):
     else:
         raise ProtocolError('T13 unsupported concurrent flow topology')
     link = links[index]
+    allowed_instances = (0,) if harness == 'U' else (20, 21, 22, 30)
+    if harness == 'U' and (test['id'], test['name']) != (1, 'uarte0'):
+        raise ProtocolError('T13 U flow requires only the fixed UARTE00 case')
     if (link['rate'] != 1000000 or link['buffer_bytes'] != 1024 or
-            any(endpoint['kind'] != 'uarte' or endpoint['instance'] not in (20, 21, 22, 30) or
+            any(endpoint['kind'] != 'uarte' or endpoint['instance'] not in allowed_instances or
                 set(endpoint['pins']) != {'txd', 'rxd', 'rts', 'cts'} for endpoint in (link['a'], link['b']))):
         raise ProtocolError('T13 unsupported UART flow fixture')
     return index
@@ -157,7 +162,7 @@ def execute(devices, test, role, continuity, append, *, preflight):
     repeats = 1 if preflight else 100
     for repeat in range(1, repeats+1):
         seed = secrets.randbits(32)
-        label = f'T13-S/flow/{test["name"]}/role{role}/repeat{repeat:03}'
+        label = f'T13-{test["harness"]}/flow/{test["name"]}/role{role}/repeat{repeat:03}'
         append(label+'/input', {'status': 'input', 'seed': seed, 'test': modified,
                                'original_test': test, 'role': role})
         for device, mode in ((target, 1), (peer, 2)):

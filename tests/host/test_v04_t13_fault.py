@@ -53,6 +53,22 @@ class SerialFaultTests(unittest.TestCase):
                  100, 160, 300, 1, *hardware, lane_error, 1000000]
         return test, words
 
+    def test_u_fault_accepts_only_uarte00_tx_and_rx_cancellation(self):
+        test = next(row for row in cases.cases() if row['harness'] == 'U')
+        for role in (1, 2):
+            for mode in (1, 2):
+                _, words = self.vector(mode)
+                words[4] = 0
+                with self.subTest(role=role, mode=mode):
+                    result = fault.inspect(words, test, role, mode)
+                    self.assertEqual(result['instance'], 0)
+            for mode in (3, 4, 5):
+                with self.subTest(role=role, mode=mode), self.assertRaises(ProtocolError):
+                    fault.validate_selection(test, role, mode)
+        for changed in ({**test, 'id': 2}, {**test, 'name': 'uarte20'}):
+            with self.assertRaises(ProtocolError):
+                fault.validate_selection(changed, 1, 1)
+
     def test_valid_twi_provenance_reaches_fresh_restart_only_after_pair_cleanup(self):
         test, words = self.vector(4)
         words[17] = 256

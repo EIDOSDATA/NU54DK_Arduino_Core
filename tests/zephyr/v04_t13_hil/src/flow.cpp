@@ -47,17 +47,21 @@ bool t13::flowPrepare(const Case &test, Endpoint &endpoint)
     {
         return true;
     }
-    const bool concurrent = (test.id == 101U && test.serial_count == 4U) ||
-                            (test.id == 105U && test.serial_count == 5U);
+    const bool concurrent = test.harness == 2U && ((test.id == 101U && test.serial_count == 4U) ||
+                                                   (test.id == 105U && test.serial_count == 5U));
     if (concurrent && (endpoint.kind != Kind::uart || endpoint.instance != 30U))
     {
         return true;
     }
-    if ((!concurrent && test.serial_count != 1U) || test.harness != 2U || test.adc_channels ||
-        test.pwm_instance || test.pdm_instance || test.i2s || endpoint.kind != Kind::uart ||
-        endpoint.pin_count != 4U || endpoint.instance < 20U ||
-        (endpoint.instance > 22U && endpoint.instance != 30U) || endpoint.rate != 1000000U ||
-        endpoint.length != 1024U || token.active || registers != nullptr)
+    const bool standalone_s = test.harness == 2U && test.serial_count == 1U &&
+                              endpoint.instance >= 20U &&
+                              (endpoint.instance <= 22U || endpoint.instance == 30U);
+    const bool standalone_u =
+        test.harness == 3U && test.id == 1U && test.serial_count == 1U && endpoint.instance == 0U;
+    if ((!concurrent && !standalone_s && !standalone_u) || test.adc_channels || test.pwm_instance ||
+        test.pdm_instance || test.i2s || endpoint.kind != Kind::uart || endpoint.pin_count != 4U ||
+        endpoint.rate != 1000000U || endpoint.length != 1024U || token.active ||
+        registers != nullptr)
     {
         return false;
     }
@@ -79,15 +83,17 @@ bool t13::flowPrepare(const Case &test, Endpoint &endpoint)
             physical = endpoint.pins[index];
         }
     }
-    if (physical != 38U && physical != 39U && physical != 2U && physical != 3U)
+    if (physical != 38U && physical != 39U && physical != 2U && physical != 3U && physical != 68U &&
+        physical != 69U)
     {
         return false;
     }
     if (policy == 2U)
     {
-        const gpio_dt_spec gpio{physical >= 32U ? DEVICE_DT_GET(DT_NODELABEL(gpio1))
-                                                : DEVICE_DT_GET(DT_NODELABEL(gpio0)),
-                                static_cast<gpio_pin_t>(physical % 32U), 0U};
+        const struct device *const ports[]{DEVICE_DT_GET(DT_NODELABEL(gpio0)),
+                                           DEVICE_DT_GET(DT_NODELABEL(gpio1)),
+                                           DEVICE_DT_GET(DT_NODELABEL(gpio2))};
+        const gpio_dt_spec gpio{ports[physical / 32U], static_cast<gpio_pin_t>(physical % 32U), 0U};
         const auto resource = gpioIoResource(gpio);
         if (acquireIoResources({IoOwnerKind::application, 244U}, &resource, 1U,
                                IoAcquirePolicy::exclusive, token) != IoResourceResult::success)
@@ -114,7 +120,8 @@ bool t13::flowPrepare(const Case &test, Endpoint &endpoint)
         nrf_gpio_cfg(physical, NRF_GPIO_PIN_DIR_OUTPUT, NRF_GPIO_PIN_INPUT_CONNECT,
                      NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_S0S1, NRF_GPIO_PIN_NOSENSE);
     }
-    registers = instance == 20U   ? NRF_UARTE20
+    registers = instance == 0U    ? NRF_UARTE00
+                : instance == 20U ? NRF_UARTE20
                 : instance == 21U ? NRF_UARTE21
                 : instance == 22U ? NRF_UARTE22
                                   : NRF_UARTE30;

@@ -13,7 +13,7 @@ RX_SUPPRESSED = 0x52584F46
 
 def validate_selection(test, role, mode):
     """! @brief 기존 S의 네 선 UART만 사용하며 별도 GPIO 출력을 추가하지 않습니다. """
-    if mode not in ('parity', 'break') or len(test['serial_links']) != 1:
+    if test['harness'] != 'S' or mode not in ('parity', 'break') or len(test['serial_links']) != 1:
         raise ProtocolError('T13 unsupported UART line fault')
     flow.fixture(test, role)
 
