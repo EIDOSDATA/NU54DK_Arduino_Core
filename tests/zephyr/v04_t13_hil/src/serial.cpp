@@ -98,6 +98,11 @@ namespace
         const auto level = nrf_gpio_pin_read(twis_delay.scl);
         if (raw[3] == 0U)
         {
+            /** @brief 요청 event 직후 TWIS가 stretch를 시작하기 전의 HIGH 과도 구간은 측정하지 않습니다. */
+            if (level != 0U)
+            {
+                return true;
+            }
             raw[3] = 1U;
             raw[4] = now;
             raw[8] = level;

@@ -68,14 +68,16 @@ RXSTARTED·ENDRX가 모두0이고 전체 수신 RAM0xCC 불변, 이전/terminal 
 
 `twis-delay-preflight`/`twis-delay`는 S의 A TWIM→B TWIS20/21/22/30 각1회/100회다.
 400kHz·256byte·기존 SDA/SCL·내부 pull-up을 유지한다. B는 최초 START에서 버퍼를 제공하지 않고
-실제 write_request(buf_req=1, RX pointer 없음)와 buffer_needed(write=2)를 모두 받은 다음2ms 기다린다.
-그동안 SCL 입력의 LOW 관측 횟수와 HIGH 관측0회를 기록한 뒤 두 TX/RX 버퍼를 한 번에 공급한다.
+실제 write_request(buf_req=1, RX pointer 없음)와 buffer_needed(write=2)를 모두 받은 뒤, TWIS가 SCL LOW
+stretch를 시작한 첫 표본부터2ms 기다린다. 요청 event 처리와 하드웨어 LOW 전환 사이의 HIGH 과도 표본은
+측정 시작 전 상태이며 지연 시간에 넣지 않는다. 측정 구간의 SCL LOW 횟수와 HIGH0회를 기록한 뒤 두 TX/RX
+버퍼를 한 번에 공급한다.
 이는 매 서비스 시점의 디지털 관측이며 연속 파형을 오실로스코프로 측정한 근거는 아니다.
 정상 양방향 전체 payload·양쪽 STOP/clock/17핀 반환과 새 seed의 기본 구성 재획득을 요구한다.
 read_request 지연이나 임의 장시간 stretch·반대 controller 역할의 완료로 확대하지 않는다.
 
 Opcode180은 비활성 policy0기본/1A controller/2B delayed target,181은20word 원본이다.
-raw는 policy,instance,prepared,state,지연 시작/공급 완료 cycle,write_request 확인,
+raw는 policy,instance,prepared,state,첫 SCL LOW 지연 시작/공급 완료 cycle,write_request 확인,
 write buffer_needed 확인,SCL 최초/마지막 수준,HIGH 관측 수,전체 관측 수,queueBuffers 결과,
 공급 전 pending bitmask,공급 전/후 guard,RX/TX 완료량,cycle Hz1MHz,STOP이다.
 B의 state2·2000~5000µs·두 실제 요청·SCL LOW 샘플2개 이상/HIGH0개·pending0·guard1을 요구한다.
