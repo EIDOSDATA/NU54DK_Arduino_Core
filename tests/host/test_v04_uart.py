@@ -63,6 +63,18 @@ class UartTests(unittest.TestCase):
         )
         self.assertIn("->provideReceiveBuffer(lane.rx[slot].data()", t13)
         self.assertLess(t13.index("++lane.requests;"), t13.index("provideReceiveBuffer(lane);"))
+        refill = t13.split("bool provideReceiveBuffer(Lane &lane)", 1)[1].split(
+            "void poll(Lane &lane)", 1)[0]
+        self.assertIn("rx_delay.raw[6] = submitted;", refill)
+        self.assertIn("rx_delay.raw[3] = 2U;", refill)
+        queue_pair = t13.split("bool queuePair(Lane &lane)", 1)[1].split(
+            "bool configure(Lane &lane)", 1)[0]
+        self.assertNotIn("rx_delay.raw[6]", queue_pair)
+        service = t13.split("void t13::serialService()", 1)[1].split(
+            "void t13::serialQuiesce()", 1)[0]
+        self.assertIn("rx_delay.raw[3] == 1U && !provideReceiveBuffer(lane)", service)
+        self.assertLess(service.index("!provideReceiveBuffer(lane)"),
+                        service.index("queuePair(lane)"))
         firmware = (root / "tests/zephyr/v04_pair_hil/src/serial_hil.cpp").read_text(encoding="utf-8")
         self.assertIn("NRF_GPIO_PIN_MAP(0, 0), NRF_GPIO_PIN_PULLUP", firmware)
         self.assertIn("NRF_GPIO_PIN_MAP(1, 4), NRF_GPIO_PIN_PULLUP", firmware)
