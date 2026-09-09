@@ -363,6 +363,8 @@ namespace nucode::arduino
                 return SerialFabricResult::invalid_argument;
             }
             context->driver_configuration = NRFX_SPIS_DEFAULT_CONFIG(sck, mosi, miso, csn);
+            /** @brief controller가 transaction 사이 CSN 구동을 해제해도 비선택 HIGH를 유지합니다. */
+            context->driver_configuration.csn_pullup = NRF_GPIO_PIN_PULLUP;
             context->driver_configuration.mode = mode;
             context->driver_configuration.bit_order =
                 context->configuration.bit_order == SpiFabricBitOrder::lsb_first

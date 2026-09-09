@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <vector>
 
+#include <hal/nrf_gpio.h>
+
 struct NRF_SPIS_Type
 {
     bool rx_started{false};
@@ -76,6 +78,7 @@ struct nrfx_spis_config_t
     nrf_spis_mode_t mode{NRF_SPIS_MODE_0};
     int bit_order{NRF_SPIS_BIT_ORDER_MSB_FIRST};
     std::uint8_t orc{0U};
+    nrf_gpio_pin_pull_t csn_pullup{NRF_GPIO_PIN_NOPULL};
 };
 
 #define NRFX_SPIS_DEFAULT_CONFIG(sck, mosi, miso, csn)                                             \

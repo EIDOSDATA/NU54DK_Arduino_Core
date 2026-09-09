@@ -117,6 +117,8 @@ int main()
     };
     assert(handle->stage(configuration) == SerialFabricResult::success);
     assert(handle->activate() == SerialFabricResult::success);
+    assert(nucode::arduino::contextFor(20U)->driver_configuration.csn_pullup ==
+           NRF_GPIO_PIN_PULLUP);
 
     auto &driver = nucode::arduino::contextFor(20U)->driver;
     assert(handle->queueBuffers(memory, 8U, memory + 16U, 8U, memory + 32U, 8U, memory + 48U, 8U) ==

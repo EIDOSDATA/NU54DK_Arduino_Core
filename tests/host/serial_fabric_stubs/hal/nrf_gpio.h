@@ -1,5 +1,13 @@
 #pragma once
 #include <cstdint>
+
+enum nrf_gpio_pin_pull_t
+{
+    NRF_GPIO_PIN_NOPULL,
+    NRF_GPIO_PIN_PULLDOWN,
+    NRF_GPIO_PIN_PULLUP,
+};
+
 struct NRF_GPIO_Type
 {
     std::uint32_t PIN_CNF[32]{};
