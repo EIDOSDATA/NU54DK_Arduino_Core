@@ -1,7 +1,7 @@
 # v0.4.0 개발 현황과 실행 TODO
 
 현재 정식 배포는 **v0.3.0**입니다. v0.4.0은 합의한 T13 S/U, T14 충돌 판정,
-T15 지원 범위, T16 설치 통합, T17 문서 정리와 T18 공개 절차 준비를 종료했으며 R14/T19 RC 고정 단계입니다.
+T15 지원 범위, T16 설치 통합, T17 문서 정리, T18 공개 절차 준비와 R14/T19 RC 고정을 종료했으며 T20 설치 수명주기 단계입니다.
 현재 상태와 다음 작업은 이 문서에서 관리하고, 실행별 원본은 [검증 기록](<04_검증 기록/README.md>)에 보존합니다.
 
 ## 1. 현재 상태
@@ -23,7 +23,7 @@ T15 지원 범위, T16 설치 통합, T17 문서 정리와 T18 공개 절차 준
 | T16 설치 통합 | **완료** | `fabric` profile·facade·예제·30개 후보 lock. 118번 |
 | T17 문서·지원 매트릭스 정리 | **완료** | public 62/75, QDEC20/21 unsupported, 사용자 문서 5종. 119번 |
 | T18 공개 절차 준비 | **완료** | stable 생성·검증, 승인 evidence 결합과 공개 명령 분리. 120번 |
-| R14·T19 RC 고정·전체 회귀 | **진행 중** | exact clean RC와 software gate 재실행 |
+| R14·T19 RC 고정·전체 회귀 | **완료** | 35/35 target, Host·문서·inventory, RC 이중 재현 PASS |
 | T20~T25 설치·stable·승인·공개 | 대기 | 공개 승인과 실제 배포는 별도 |
 
 QDEC·시리얼 핸드오버·T13 peer 제어 System OFF 제외와 충돌 반복 생략은 범위 결정이며 새 물리
@@ -38,7 +38,7 @@ flash·U 실기가 없었습니다. 당시 검토 범위와 검사 결과는
 [114번](<04_검증 기록/114_전체_문서_정비와_남은_마일스톤.md>)에 기록합니다.
 
 **T13 U 최소 결선·exact image·물리 실기를 완료했습니다.** 완료한 S/U 시험을 다시 시작하지 않습니다.
-현재 기술 단계는 R14/T19에서 T18까지의 통합 source를 고정하고 전체 software gate를 다시 실행하는 것입니다.
+현재 기술 단계는 T20에서 고정 RC의 Boards Manager 설치·30개 예제·Upload·version 전환·제거·재설치를 검증하는 것입니다.
 T13 종료는 [115번](<04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md>)에 기록했으며 정식 공개를 포함하지 않습니다.
 
 2026-09-10 후속 실행 결과: `7f78a36c`에서 U 결선 검사를 net 11·13·15·16으로 한정하고
@@ -251,7 +251,7 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
 - [x] **R00~R13:** 정확성 안정화·구조 리팩토링과 software gate 완료.
   단계별 기준·완료 근거는 [리팩토링 체크리스트](<01_아두이노 코어 설계/14_리팩토링/05_리팩토링_진행_체크리스트.md>)에서 관리합니다.
 - [x] **current-source T11:** R13 이후 영향 통신의 단독 회귀 완료. 후속 runtime 변경은 영향받는 동일 조건을 재검증합니다.
-- [ ] **R14:** T16~T18 사용자 통합 뒤 T11~T15 결과를 포함해 RC를 다시 고정하고 T19로 전환합니다.
+- [x] **R14:** T16~T18 사용자 통합 뒤 T11~T15 결과를 포함해 RC를 다시 고정하고 T19로 전환했습니다. [121번 기록](<./04_검증 기록/121_T19_RC_소스_고정과_전체_회귀.md>)을 따릅니다.
 
 - [x] **T12 — M25 입력·출력·스트림 기능 검증:** 합의한 범위를 사용자가 완료로 수용했습니다.
   미실행 반복과 실패 원본을 유지하며, 제외된 조건을 PASS나 결함 해결로 바꾸지 않습니다.
@@ -307,15 +307,15 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
   - 검증: 과거 stable allowlist를 영구 변경하지 않는 실행 중 후보 구성과 승인 전 외부 명령 미호출을 unit/contract로 확인했습니다.
   - 결선·증거: 새 flash·결선·공개 작업 없음. T18 완료가 공개 실행 허가는 아닙니다. [120번 기록](<./04_검증 기록/120_T18_stable_공개_절차와_승인_차단.md>)을 따릅니다.
 
-- [ ] **T19 — RC 소스 고정과 전체 회귀 검사**
-  - 상태·선행: **현재 단계**. frozen RC 없음 / R14와 T14~T18.
-  - 할 일: exact clean Core/board/SDK/toolchain과 예제 집합을 고정하고 Host·문서·inventory·필요한 기존 회귀·전체 target build·CI를 실행한다.
-  - 완료 기준: 고정 RC의 모든 해당 gate와 artifact provenance가 통과한다. 소스가 바뀌면 영향 분석 후 필요한 gate를 다시 실행한다.
-  - 결선·증거: software gate에는 불필요, 관련 실기 회귀는 별도. 증거 미등록.
+- [x] **T19 — RC 소스 고정과 전체 회귀 검사**
+  - 완료 결과: exact Core/board/SDK/toolchain을 고정하고 Host·문서·inventory·35개 target build와 RC package 이중 재현성을 통과했습니다.
+  - 해결 결과: T16 crypto object의 Windows 절대 경로가 261자가 되어 archive가 실패한 원인을 특정하고 출력 경로를 `C:\t`로 제한해 35/35를 재검증했습니다.
+  - 변경 영향: 이후 문서·readiness 변경은 runtime package 입력에서 제외합니다. runtime source가 바뀌면 전체 target gate를 다시 실행합니다.
+  - 결선·증거: 새 flash·결선 없음. [121번 기록](<./04_검증 기록/121_T19_RC_소스_고정과_전체_회귀.md>)을 따릅니다.
 
 - [ ] **T20 — RC 패키지 재현성·설치 수명주기 검증**
-  - 상태·선행: 과거 비공개 29/29 기록만 있음, 최종 검증 대기 / T19.
-  - 할 일: ZIP·SBOM·checksum·license·manifest를 독립 생성 두 번으로 비교하고 격리 설치·전체 예제 build·실제 upload·제거·재설치·버전 전환을 검사한다.
+  - 상태·선행: **현재 단계**. RC ZIP·SBOM·checksum·license·manifest 이중 재현 PASS, 설치 수명주기 대기 / T19.
+  - 할 일: 재현성이 확인된 RC를 격리 설치하고 전체 예제 build·실제 upload·제거·재설치·version 전환을 검사한다.
   - 완료 기준: 현재 예제 전체(기존 29개 + 새로 추가한 예제)를 lock/발견 목록과 대조한다. 직접 staging compile을 Boards Manager 전체 lifecycle로 대체하지 않는다.
   - 결선·증거: 설치/compile에는 불필요, upload에는 지정 USB 보드 필요; 기능별 실행은 해당 결선 필요. 최종 증거 미등록.
 
@@ -372,8 +372,8 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
 | --- | --- | --- |
 | `m24_fixture_hil` | T04·T07~T11·T13~T15 | **PASS** |
 | `m25_fixture_hil` | T05~T10·T12~T15 | **PASS**; QDEC는 partial·비공개 경계 |
-| `host_regression`, `documentation`, `zephyr_repro_build` | T16~T19, T21의 변경 영향 재검증 | frozen RC pending |
-| `package_reproducibility` | T20·T21 | frozen RC pending |
+| `host_regression`, `documentation`, `zephyr_repro_build` | T16~T19, T21의 변경 영향 재검증 | **PASS**; runtime 변경 시 재실행 |
+| `package_reproducibility` | T20·T21 | **PASS**; T21 stable 이중 재현 대기 |
 | `boards_manager_lifecycle` | T20·T21; 공개 후 검증은 추가로 T24 | 필수 physical HOLD |
 | `project_owner_approval` | T22 | human HOLD |
 

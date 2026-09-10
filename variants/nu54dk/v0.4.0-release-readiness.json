@@ -119,29 +119,29 @@
       "id": "host_regression",
       "kind": "automated",
       "required": true,
-      "state": "pending",
-      "reason": "must run again against the frozen RC commit"
+      "state": "passed",
+      "evidence": ["00_Docs/04_검증 기록/121_T19_RC_소스_고정과_전체_회귀.md"]
     },
     {
       "id": "documentation",
       "kind": "automated",
       "required": true,
-      "state": "pending",
-      "reason": "must run again against the frozen RC commit"
+      "state": "passed",
+      "evidence": ["00_Docs/04_검증 기록/121_T19_RC_소스_고정과_전체_회귀.md"]
     },
     {
       "id": "zephyr_repro_build",
       "kind": "automated",
       "required": true,
-      "state": "pending",
-      "reason": "full v0.4.0 group must run against the frozen RC commit"
+      "state": "passed",
+      "evidence": ["00_Docs/04_검증 기록/121_T19_RC_소스_고정과_전체_회귀.md"]
     },
     {
       "id": "package_reproducibility",
       "kind": "automated",
       "required": true,
-      "state": "pending",
-      "reason": "two isolated 0.4.0-rc.1 package builds must be byte-identical"
+      "state": "passed",
+      "evidence": ["00_Docs/04_검증 기록/121_T19_RC_소스_고정과_전체_회귀.md"]
     },
     {
       "id": "boards_manager_lifecycle",
