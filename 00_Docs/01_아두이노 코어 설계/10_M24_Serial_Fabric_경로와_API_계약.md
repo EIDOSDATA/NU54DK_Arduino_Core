@@ -1,7 +1,7 @@
 # M24 작업 1~5 — Serial Fabric 전 instance와 EasyDMA
 
 > 이 파일은 `variants/nu54dk/serial-fabric-contract.json`에서 자동 생성합니다. 직접 수정하지 마세요.
-> 공통 backend와 23개 personality adapter의 source/build/semantic·단독 기능 HIL 및 S 결과를 확보했습니다. U 실기·미커버 요구 판정·최종 지원과 설치 통합은 남아 있습니다. 현재 상태는 [TODO](../TODO_v0.4.0.md)를 따릅니다.
+> 공통 backend와 23개 personality adapter의 source/build/semantic·단독 기능 HIL 및 S/U 결과를 확보했습니다. 미커버 요구 판정·최종 지원과 설치 통합은 남아 있습니다. 현재 상태는 [TODO](../TODO_v0.4.0.md)를 따릅니다.
 
 | 항목 | 값 |
 | --- | --- |
@@ -9,7 +9,7 @@
 | 제품선 | `v0.4.0` / M24 |
 | SoC / SDK | `nRF54L15` / `v3.4.0` / Zephyr `4.4.0` |
 | Board | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` / `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| 상태 | 작업 1~5 완료, 단독 기능·S 결과 확보, U 실기·T15 지원 판정·T16 설치 통합 대기 |
+| 상태 | 작업 1~5 완료, 단독 기능·S/U 결과 확보, T15 지원 판정·T16 설치 통합 대기 |
 | 갱신일 | 2026-09-10 |
 
 ## 1. 이번 작업의 경계
@@ -28,7 +28,7 @@ M24의 후속 순서는 다음과 같다.
 3. **작업 3(완료):** UARTE 5개와 async RX/TX DMA source/build/semantic
 4. **작업 4(완료):** SPIM/SPIS 각 5개와 sync/async·double buffer source/build/semantic
 5. **작업 5(완료):** TWIM/TWIS 각 4개와 repeated-start·target double buffer source/build/semantic
-6. **작업 6(진행):** 온보드·UART/SPI/TWI 단독 기능과 S 결과 확보. U 실기·T14/T15 최종 판정 대기
+6. **작업 6(진행):** 온보드·UART/SPI/TWI 단독 기능과 S/U 결과 확보. T14/T15 최종 판정 대기
 
 현재 온보드 증거는 [41번 기록](<../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>),
 UART Fixture 101~103은 [44번](<../04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)·[45번](<../04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)·[46번](<../04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>),

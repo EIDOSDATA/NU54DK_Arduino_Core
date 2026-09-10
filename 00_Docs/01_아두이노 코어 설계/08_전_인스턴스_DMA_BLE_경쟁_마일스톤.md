@@ -4,7 +4,7 @@
 
 이 문서의 경쟁 비교와 초기 engineering 목표는 제품 방향을 설명합니다. 현재 실행 범위에서는
 QDEC 추가 진단·반복 Serial handover·T13 peer 제어 System OFF 추가 2조건을 제외합니다.
-S 정상·동시성·복구 결과와 C05 1시간 soak는 확보했으며, U 실기·미커버 요구 판정·최종 지원
+S 정상·동시성·복구 결과, C05 1시간 soak와 U 실기를 확보했으며 미커버 요구 판정·최종 지원
 통합은 남아 있습니다. 과거 목표 표를 읽고 완료·제외된 시험을 다시 예약하지 않습니다.
 
 | 항목 | 내용 |
@@ -273,7 +273,7 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 ### M24 — Serial fabric 전 인스턴스와 DMA
 
-- 상태: **작업 1~5 완료, 작업 6의 단독 기능·S 결과 확보, U 실기·최종 지원 통합 대기** — 5개 block·23개 personality, 핀 bank, singleton/고급 API 경계,
+- 상태: **작업 1~5 완료, 작업 6의 단독 기능·S/U 결과 확보, 최종 지원 통합 대기** — 5개 block·23개 personality, 핀 bank, singleton/고급 API 경계,
   DMA lifecycle과 관련 errata를 [M24 Serial Fabric 계약](10_M24_Serial_Fabric_경로와_API_계약.md)에
   고정하고 CI drift 검사를 연결했다. 회로도 재검토로 단독 HIL primary 자원 6개와 무배선 자동화
   후보 7개·외부 fixture 필요 16개도 계약에 추가했다. 실행 결과는
@@ -327,7 +327,7 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 | 3 | UARTE 5개와 async RX/TX DMA | **source/build/semantic 완료 · Fixture 101~103 외부 route PASS** |
 | 4 | SPIM/SPIS 각 5개와 sync/async·double buffer | **source/build/semantic 완료 · Fixture 201~203 P2/P0/P1↔P1 PASS** |
 | 5 | TWIM/TWIS 각 4개와 repeated-start·target double buffer | **source/build/semantic·Fixture 301 단독 기능 HIL 완료** |
-| 6 | 온보드·peer 기능, 충돌·허용 동시성·복구·성능·soak | **단독 기능·S 결과 확보, U 실기와 T14/T15 판정 대기** |
+| 6 | 온보드·peer 기능, 충돌·허용 동시성·복구·성능·soak | **단독 기능·S/U 결과 확보, T14/T15 판정 대기** |
 
 ### M25 — Analog·timing·audio·event 전 인스턴스
 

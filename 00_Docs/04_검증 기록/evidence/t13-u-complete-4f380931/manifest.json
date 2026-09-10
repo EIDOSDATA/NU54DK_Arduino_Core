@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "source": "4f38093181d9ecc51076acb5a29c2fd3b900107a",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "status": "physical-pass",
+  "physical_executed": true,
+  "flash_performed": true,
+  "harness": "U",
+  "case_ids": [
+    1
+  ],
+  "wiring_net_ids": [
+    11,
+    13,
+    15,
+    16
+  ],
+  "catalog_sha256": "1e9c35e58fd2af499d0b279fcaeb9313a400f9b426d72e57a5b648f9d9da9faf",
+  "target_builds": {
+    "result": "2/2 PASS",
+    "role1_hex_sha256": "ec87d55803b61f871c93654f7bf239d82a56db0205add5bee73d427ac8722216",
+    "role1_elf_sha256": "5c5ea39d39fbb3091d75f8f249fec927d2fa2c477bd419da04050321afd2dee9",
+    "role2_hex_sha256": "d34e8db75f86b724ec3722337b221168f1f39cf690c59dd9da8854d770e86a61",
+    "role2_elf_sha256": "0235eac2e527377033ddfeafed315d234b125773697c3f490efc84534206caf5"
+  },
+  "probe_uid_sha256": {
+    "role1": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+    "role2": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0"
+  },
+  "results": {
+    "wiring": "PASS; four nets, both directions, three repetitions, pulse and lease expiry",
+    "normal_preflight": "PASS",
+    "normal_soak": "PASS; requested 180 seconds, host continuous 180.28962219995447 seconds",
+    "flow_role1": "PASS; preflight 1/1 and formal 100/100",
+    "flow_role2": "PASS; preflight 1/1 and formal 100/100",
+    "tx_cancel_role1": "PASS; preflight 1/1 and formal 100/100",
+    "tx_cancel_role2": "PASS; preflight 1/1 and formal 100/100",
+    "rx_cancel_role1": "PASS; preflight 1/1 and formal 100/100",
+    "rx_cancel_role2": "PASS; preflight 1/1 and formal 100/100",
+    "final_pins": "PASS; both roles idle after every campaign"
+  },
+  "diagnosis": {
+    "initial_failure": "The first normal preflight timed out while reflashing role1 before wiring or UART traffic; external_wiring_executed=false.",
+    "read_only_swd": "Both probes responded at 10 MHz with Cortex-M33 CPUID 0x411fd210. P2 OUT/IN/DIR and P2.00/P2.02/P2.04/P2.05 PIN_CNF were idle. Role1 remained halted after the flash timeout; role2 was sleeping.",
+    "resolution": "The same source and images passed after enabling cmsis_dap.limit_packets. This classifies the event as a CMSIS-DAP transfer timeout, not a wiring or UARTE failure. The failed original is preserved."
+  },
+  "files": [
+    {
+      "file": "01-wiring.json.gz",
+      "bytes": 36484,
+      "sha256": "16b4931abc11c457430ad8d64a315ca7a25e76269def049bf7a5e8df764d81b7",
+      "gzip_bytes": 2224,
+      "gzip_sha256": "ac6751be40da670b7d4049e52e708f7a3088959f2c4b8d599fef5ccd84ae6204"
+    },
+    {
+      "file": "02-normal-preflight.json.gz",
+      "bytes": 2287,
+      "sha256": "5cca3c8b6d1589bf4142e60655e6fcf588a57c6d9d759779365c47196a2bd01d",
+      "gzip_bytes": 1170,
+      "gzip_sha256": "f2c87761412fffec07d2277f7cceccb1223431e507cfc28c68e62d2756dfb70d"
+    },
+    {
+      "file": "02b-normal-preflight-limitpackets.json.gz",
+      "bytes": 61361,
+      "sha256": "76df620a9fac4421188f38ce8b6c1517402084b957a92dca186f52b0ac4c3a0b",
+      "gzip_bytes": 4655,
+      "gzip_sha256": "c61be0d87ac98b19699b0ca5ff00d1acb4f00b1919c5f4c334fb1eda0d3ed731"
+    },
+    {
+      "file": "03-normal-soak.json.gz",
+      "bytes": 187439,
+      "sha256": "bcac00161e6e1aff4525a5d2beb1e9d74f3f5246e2a82c65fb474619a32f2a3b",
+      "gzip_bytes": 16330,
+      "gzip_sha256": "ce7e2e8d7012fd9b8c345542cfc0cd72d1eafe3a561659dbcc264a6612729ea2"
+    },
+    {
+      "file": "04-flow-preflight-role1.json.gz",
+      "bytes": 92211,
+      "sha256": "162b92b8fd23c6a44612ec930dfe31587900ac413c41bfbec7736d57e0aa5df4",
+      "gzip_bytes": 6475,
+      "gzip_sha256": "2c4c38df8ef86226a0dd1e85181bfb66447738b22d55b2e32c053e5af200e558"
+    },
+    {
+      "file": "05-flow-preflight-role2.json.gz",
+      "bytes": 92202,
+      "sha256": "7de2dd2bd460660d539357635636372474496b9740d2ed960bfa3440f599a622",
+      "gzip_bytes": 6378,
+      "gzip_sha256": "2ac8c688d9bd66507772e0ca4e64a23f72f979dcdf16ed3ef5f5fcb1696c85e7"
+    },
+    {
+      "file": "06-flow-role1.json.gz",
+      "bytes": 5611611,
+      "sha256": "38ac04501a2d230302c422855024402ae4a7351961dadc2cdb0584b0460cb918",
+      "gzip_bytes": 337084,
+      "gzip_sha256": "dd11e8b67681302a8393745d7613c0700ceb50654e31d04c87a8ea898b56e6ad"
+    },
+    {
+      "file": "07-flow-role2.json.gz",
+      "bytes": 5613279,
+      "sha256": "63a18dc0d0585f3d5123308dbf7e5f9e745001f8ab251283364b31a8899e77ff",
+      "gzip_bytes": 330034,
+      "gzip_sha256": "b864fa486407f799e3060b0c8824fb8ef53f3c8580975b63384d586a6c69e34a"
+    },
+    {
+      "file": "08-fault-preflight-tx-role1.json.gz",
+      "bytes": 69558,
+      "sha256": "9ba3ddd7b55e87748800bacb24b34a34ef2ac66e29445a178539cc918e1e7d7f",
+      "gzip_bytes": 5017,
+      "gzip_sha256": "5aa10ee843974734ba0219c243a1a5fd25b5f74b1d0cc7b430db30946d2851c5"
+    },
+    {
+      "file": "09-fault-preflight-tx-role2.json.gz",
+      "bytes": 69553,
+      "sha256": "484859553a4b6272dab61fe8aed0267054a89ef21ea3d77bb02af511ccb0112b",
+      "gzip_bytes": 4986,
+      "gzip_sha256": "69d0f4535ecd8710cf21cb8ae4de6bafbe5c57796d3fe9c9f6e93254bdec41ac"
+    },
+    {
+      "file": "10-fault-preflight-rx-role1.json.gz",
+      "bytes": 70110,
+      "sha256": "d4b4612f5e50c9c37246cf4fb99fa97bcb7d035d79d043f60da3e7f44faa7310",
+      "gzip_bytes": 5092,
+      "gzip_sha256": "131832a97757bcf7fa86d4dc4a770e96ce09591a5c45b180598d0dcd044fa45d"
+    },
+    {
+      "file": "11-fault-preflight-rx-role2.json.gz",
+      "bytes": 70106,
+      "sha256": "f3dcb7a30f1210fd800999aeec9f8c66950945b286c0b405623074d198506067",
+      "gzip_bytes": 5071,
+      "gzip_sha256": "6f9162925ef0e93644bf64ad4bcf4ffd3aa25817be36ebe81ca97394feb2f6b2"
+    },
+    {
+      "file": "12-fault-tx-role1.json.gz",
+      "bytes": 3303617,
+      "sha256": "00b113bff04e295962d6839439918febeaa9a4fc827e9dcb02c8e7ece33af716",
+      "gzip_bytes": 215092,
+      "gzip_sha256": "6db47ce0b31927f826f33abf2046b9103dd5197e448f9a4104fc7ec4df74db17"
+    },
+    {
+      "file": "13-fault-tx-role2.json.gz",
+      "bytes": 3303527,
+      "sha256": "ef2f6d0a70054f6e8d67a092051393aa1eafbc5e0b4dd8b5bb4399bb0b63f477",
+      "gzip_bytes": 215104,
+      "gzip_sha256": "399a41c8dea30506d5a5db3d29d651821c9933fb083f25e2d224ebeff5af2c8c"
+    },
+    {
+      "file": "14-fault-rx-role1.json.gz",
+      "bytes": 3357272,
+      "sha256": "6b30bd49d1fb712472c3ad39e6cf0839dd7580fbb1ee45822789da5614b5585b",
+      "gzip_bytes": 231195,
+      "gzip_sha256": "297f77caae9561abfbd157771cf117b8b9b7b6299ccb3ffb6a06908f432b6ca2"
+    },
+    {
+      "file": "15-fault-rx-role2.json.gz",
+      "bytes": 3356548,
+      "sha256": "a62243101dd5237e78c0c5055c2d8ac206ae03e39d413d3cf8db3c94d2892012",
+      "gzip_bytes": 227633,
+      "gzip_sha256": "171910fe5052e7b4a401fb8f4d2a983436731f2964e9eb2d2250421ad8cd9a83"
+    }
+  ]
+}
