@@ -11,6 +11,7 @@ CATALOG = Path(__file__).with_name('v04_common_fixture.json')
 COUNT = 17
 MASK = (1 << COUNT) - 1
 NONE = 0xFFFFFFFF
+UART00_NETS = (10, 12, 14, 15)
 
 
 def observed(words, *, low=None, controller=False, armed=True,
@@ -73,8 +74,12 @@ def run_confirmed(devices, images, uids, confirmation, append, *, sleep=time.sle
     return run_checks(devices, append, current, sleep=sleep)
 
 
-def run_checks(devices, append, assert_current, *, sleep=time.sleep):
-    """! @brief 호출자가 제공한 현재 실행 조건 검사 뒤 원본 결선 절차를 수행합니다. """
+def run_checks(devices, append, assert_current, *, nets=None, sleep=time.sleep):
+    """! @brief 현재 실행 조건을 검사한 뒤 선택한 실제 신호선만 양방향으로 대조합니다. """
+    selected_nets = tuple(range(COUNT)) if nets is None else tuple(nets)
+    if (len(selected_nets) < 2 or len(set(selected_nets)) != len(selected_nets)
+            or any(type(net) is not int or not 0 <= net < COUNT for net in selected_nets)):
+        raise ProtocolError('wiring check requires at least two unique valid nets')
     for controller_role in (1, 2):
         assert_current()
         controller = devices[controller_role - 1]
@@ -87,7 +92,7 @@ def run_checks(devices, append, assert_current, *, sleep=time.sleep):
             sleep(.01)
             snapshots(devices, append, label + '/baseline')
             for repetition in range(3):
-                for net in range(COUNT):
+                for net in selected_nets:
                     case_id = label + f'/round{repetition + 1}/net{net + 1}'
                     for device in devices:
                         if device.command(53, timeout=2) != [0]:
@@ -120,7 +125,7 @@ def run_checks(devices, append, assert_current, *, sleep=time.sleep):
             if device.command(48, (501, 1, fixture.CONSENT, role), timeout=2) != [501, 10000, COUNT]:
                 raise ProtocolError('timeout test arm failed')
         # @brief 서로 다른 두 net을 순차 구동하며 다음 LOW 전에 이전 pulse가 해제됐는지 읽습니다.
-        for device, net in zip(devices, (0, 1)):
+        for device, net in zip(devices, selected_nets[:2]):
             if device.command(50, (net,), timeout=2) != [net, 500]:
                 raise ProtocolError('timeout LOW failed')
             sleep(.65)

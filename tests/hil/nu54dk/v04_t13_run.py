@@ -41,6 +41,11 @@ def validate_harness_phase(harness, phase, *, reverse_serial=False):
         raise ProtocolError('T13 U permits only fixed UARTE00 normal, flow and cancellation phases')
 
 
+def wiring_nets(harness):
+    """! @brief U는 실제 UARTE00 네 신호만, S는 고정 17신호 전체를 검사합니다. """
+    return wiring.UART00_NETS if harness == 'U' else None
+
+
 def serial_only(test):
     """! @brief 통신 pair의 중복 측정 시간을 계산할 때 순수 serial 시험을 구분합니다. """
     return bool(test['serial_links']) and not any(test[key] for key in
@@ -626,7 +631,10 @@ def main(argv=None):
             continuity = session.Continuity(grant, images, uids, devices, available,
                                             pair.verify_identity, harness=args.harness)
             evidence['external_wiring_executed'] = True
-            wiring.run_checks(devices, append, continuity.check)
+            evidence['wiring_net_ids'] = [net + 1 for net in
+                                          (wiring_nets(args.harness) or range(wiring.COUNT))]
+            wiring.run_checks(devices, append, continuity.check,
+                              nets=wiring_nets(args.harness))
             print(f'T13_{args.harness}_WIRING_PASS', flush=True)
             if is_handover:
                 handover.execute(devices, args.handover_instance, continuity, append,

@@ -355,6 +355,8 @@ class T13RuntimeTests(unittest.TestCase):
 
     def test_u_runner_is_fail_closed_to_fixed_uart00_phases(self):
         """! @brief U는 S 버스·stream·전원·역방향 변형을 실행 전에 거부합니다. """
+        self.assertEqual(runner.wiring_nets('U'), (10, 12, 14, 15))
+        self.assertIsNone(runner.wiring_nets('S'))
         for phase in runner.U_PHASES:
             runner.validate_harness_phase('U', phase)
         for phase in ('stream-fault', 'spi-boundary', 'twi-stuck', 'twis-delay',

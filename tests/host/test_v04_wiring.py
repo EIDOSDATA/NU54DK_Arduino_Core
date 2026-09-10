@@ -94,6 +94,14 @@ class WiringTests(unittest.TestCase):
         self.assertEqual([row['status'] for row in rows], ['observation', 'observation', 'cleanup'])
         self.assertTrue(all(device.calls == [48, 51, 49] for device in devices))
 
+    def test_selected_net_set_is_validated_before_device_access(self):
+        """! @brief UARTE00 부분 결선 검사가 중복·범위 밖·부족한 net을 거부합니다. """
+        for nets in ((10,), (10, 10), (10, 17), (10, True)):
+            with self.subTest(nets=nets), self.assertRaises(ProtocolError):
+                wiring.run_checks([], lambda *_: None, lambda: None, nets=nets,
+                                  sleep=lambda _: None)
+        self.assertEqual(wiring.UART00_NETS, (10, 12, 14, 15))
+
     def test_cli_requires_explicit_execution_and_ten_mhz(self):
         """! @brief 기본 실행은 무장치 preflight이며 확인서 없는 flash를 거부합니다. """
         args = ['--dut', 'a', '--peer', 'b', '--build-root', '.', '--pyocd', 'fake']
