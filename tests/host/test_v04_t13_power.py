@@ -179,6 +179,21 @@ class PowerTests(unittest.TestCase):
             with self.subTest(index=index), self.assertRaises(ProtocolError):
                 power.inspect_debug_bridge(broken)
 
+    def test_debug_baseline_does_not_require_traffic_before_receive_start(self):
+        """! @brief 격리 전 기준 상태는 무트래픽을 요구하며 이후 bridge 판정과 구분합니다. """
+        words = [power.MAGIC, 2, 1, 0, 0, 0, power.RESET_PIN, 0, 0, 0, 1, 1, 1,
+                 65537, 0, 0, 0, 0, 0, 800]
+        result = power.inspect_debug_baseline(words)
+        self.assertEqual(result['debug_requests'], [1, 1, 1])
+        self.assertFalse(result['system_off_pass'])
+        with self.assertRaises(ProtocolError):
+            power.inspect_debug_bridge(words)
+        for index in (0, 1, 2, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18):
+            broken = words[:]
+            broken[index] = 0 if index == 13 else broken[index] ^ 1
+            with self.subTest(index=index), self.assertRaises(ProtocolError):
+                power.inspect_debug_baseline(broken)
+
     def test_physical_swd_isolation_proves_normal_bridge_without_reset_or_retention(self):
         """! @brief 물리 SWD 격리 상태는 reset·retention 성공과 혼동하지 않습니다. """
         words = [power.MAGIC, 2, 1, 0, 0, 0, power.RESET_PIN, 0, 0, 0, 0, 0, 0,

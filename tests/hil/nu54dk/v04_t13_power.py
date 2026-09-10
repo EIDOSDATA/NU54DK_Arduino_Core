@@ -229,6 +229,18 @@ def inspect_debug_bridge(words):
             'debug_requests': words[10:13], 'tx_frames': words[14], 'rx_frames': words[15]}
 
 
+def inspect_debug_baseline(words):
+    """! @brief UART 중계 시작 전 debug 연결 B의 무오류 기준 상태를 검증합니다. """
+    if (not isinstance(words, list) or len(words) != 20 or
+            any(type(value) is not int or not 0 <= value <= MASK for value in words) or
+            words[:3] != [MAGIC, 2, 1] or words[4:6] != [0, 0] or
+            words[6:13] != [RESET_PIN, 0, 0, 0, 1, 1, 1] or
+            words[14:19] != [0, 0, 0, 0, 0] or words[13] & 0x10000 == 0):
+        raise ProtocolError(f'T13 debug-held UART baseline state mismatch: {words}')
+    return {'boots': words[5], 'reset_cause': words[6], 'debug_requests': words[10:13],
+            'tx_frames': words[14], 'rx_frames': words[15], 'system_off_pass': False}
+
+
 def inspect_physically_isolated_bridge(words, boots):
     """! @brief reset 없이 물리 SWD만 격리한 B의 일반 실행 상태를 검증합니다. """
     if (not isinstance(words, list) or len(words) != 20 or
@@ -452,7 +464,7 @@ def execute(args, images, grant, uids, append, switch_swd=None):
             append('debug/before', {'status': 'observation', 'words': before})
             initial_boots = before[5]
             if switch_swd is not None:
-                inspect_debug_bridge(before)
+                inspect_debug_baseline(before)
             observe_pins(a, append, 'pins/controller-before-peer-reset')
             observe_pins(b, append, 'pins/peer-before-reset')
             if args.phase == 'bridge-debug':
