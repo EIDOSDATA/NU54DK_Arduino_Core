@@ -16,6 +16,7 @@ class BleGapTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='nu54-r12-gap-') as folder:
             binary = Path(folder) / 'gap.exe'
             command = [*compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
+                       '-DNUCODE_HOST_STRONG_DEFAULT_HOOKS=1',
                        '-DCONFIG_BT_DEVICE_NAME_MAX=32', '-DCONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE=24',
                        '-DCONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE=8', '-DCONFIG_BT_USER_PHY_UPDATE=1',
                        '-DCONFIG_BT_SETTINGS=1', '-DCONFIG_BT_SMP=1']
