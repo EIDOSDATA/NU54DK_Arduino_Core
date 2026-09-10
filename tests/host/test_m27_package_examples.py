@@ -28,6 +28,7 @@ class M27PackageExampleTests(unittest.TestCase):
             {item["profile"] for item in records}, {"standard", "ble", "fabric"}
         )
         self.assertEqual(MODULE.VERSION, "0.4.0-rc.1")
+        self.assertEqual(MODULE.STABLE_VERSION, "0.4.0")
 
     def test_m22_historical_runner_remains_pinned(self) -> None:
         self.assertEqual(MODULE.BASE.VERSION, "0.3.0-rc.3")
@@ -42,7 +43,10 @@ class M27PackageExampleTests(unittest.TestCase):
         parser = MODULE.build_parser()
         option = parser._option_string_actions["--package-version"]
         self.assertEqual(option.default, MODULE.VERSION)
-        self.assertEqual(set(option.choices), {MODULE.VERSION, "0.0.90"})
+        self.assertEqual(
+            set(option.choices),
+            {MODULE.VERSION, MODULE.STABLE_VERSION, "0.0.90"},
+        )
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
             cli, config, platform = root / "cli", root / "config", root / "platform"
@@ -54,6 +58,11 @@ class M27PackageExampleTests(unittest.TestCase):
             for version, milestone, evidence_type in [
                 ("0.0.90", "R13", "staged-software-package-examples"),
                 (MODULE.VERSION, "M27", "staged-candidate-package-examples"),
+                (
+                    MODULE.STABLE_VERSION,
+                    "M27",
+                    "installed-stable-package-examples",
+                ),
             ]:
                 args = argparse.Namespace(
                     package_version=version, arduino_cli=cli, config=config, platform_root=platform,
@@ -77,7 +86,7 @@ class M27PackageExampleTests(unittest.TestCase):
         source = SCRIPT.read_text(encoding="utf-8")
         self.assertIn("ThreadPoolExecutor(max_workers=args.workers)", source)
         self.assertIn("results.sort", source)
-        self.assertIn('"milestone": "M27"', source)
+        self.assertIn('milestone = "M27"', source)
         self.assertNotIn("core install", source)
 
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief 고정 30개 예제를 설치 package에서 빌드하고 로컬 software 증거와 RC 증거를 구분합니다. """
+"""! @brief 고정 30개 예제를 설치 package에서 빌드하고 software·RC·stable 증거를 구분합니다. """
 
 from __future__ import annotations
 
@@ -18,6 +18,7 @@ REPOSITORY = Path(__file__).resolve().parents[2]
 BASE_RUNNER_PATH = Path(__file__).with_name("run_m22_package_examples.py")
 LOCK_PATH = Path(__file__).with_name("m27-package-examples.lock.json")
 VERSION = "0.4.0-rc.1"
+STABLE_VERSION = "0.4.0"
 FQBN = "nucode:zephyr:nu54dk"
 EXPECTED_EXAMPLE_COUNT = 30
 
@@ -74,7 +75,7 @@ def load_example_lock(path: Path = LOCK_PATH) -> list[dict[str, str]]:
 
 def run_gate(args: argparse.Namespace) -> dict[str, Any]:
     package_version = getattr(args, "package_version", VERSION)
-    if package_version not in (VERSION, "0.0.90"):
+    if package_version not in (VERSION, STABLE_VERSION, "0.0.90"):
         raise PackageExamplesFailure("unsupported example validation package version")
     cli = args.arduino_cli.resolve()
     config = args.config.resolve()
@@ -192,10 +193,19 @@ def run_gate(args: argparse.Namespace) -> dict[str, Any]:
             "M27 package example failures: " + "; ".join(sorted(failures))
         )
     results.sort(key=lambda record: int(record["sequence"]))
+    if package_version == "0.0.90":
+        milestone = "R13"
+        evidence_type = "staged-software-package-examples"
+    elif package_version == STABLE_VERSION:
+        milestone = "M27"
+        evidence_type = "installed-stable-package-examples"
+    else:
+        milestone = "M27"
+        evidence_type = "staged-candidate-package-examples"
     evidence = {
         "schema_version": 1,
-        "milestone": "M27" if package_version == VERSION else "R13",
-        "evidence_type": "staged-candidate-package-examples" if package_version == VERSION else "staged-software-package-examples",
+        "milestone": milestone,
+        "evidence_type": evidence_type,
         "status": "passed",
         "release_version": package_version,
         "fqbn": FQBN,
@@ -214,11 +224,15 @@ def run_gate(args: argparse.Namespace) -> dict[str, Any]:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Compile all examples from staged NU54DK v0.4.0-rc.1"
+        description="Compile all examples from an installed NU54DK v0.4.0 package"
     )
     parser.add_argument("--arduino-cli", type=Path, required=True)
-    parser.add_argument("--package-version", choices=(VERSION, "0.0.90"), default=VERSION,
-                        help="기존 RC 또는 공개하지 않는 R13 software 검증용 preview")
+    parser.add_argument(
+        "--package-version",
+        choices=(VERSION, STABLE_VERSION, "0.0.90"),
+        default=VERSION,
+        help="M27 RC·stable 또는 공개하지 않는 R13 software 검증용 preview",
+    )
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--platform-root", type=Path, required=True)
     parser.add_argument("--build-root", type=Path, required=True)
