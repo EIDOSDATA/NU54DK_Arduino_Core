@@ -244,7 +244,7 @@ payload 동등성, 격리 Boards Manager lifecycle, 설치 예제 29/29 compile�
 | `v0.1.0` | 역사적·비지원 | Core, 기본 API, build/upload와 package |
 | `v0.2.0` | 역사적·비지원 | CI/CD, profile·예제, Board/System과 BLE NUS |
 | `v0.3.0` | **현재 stable** | Arduino compatibility, 동적 peripheral/analog, BLE GAP/GATT/security/profile, storage |
-| `v0.4.0` | 개발 중 | 전 인스턴스 API 확장. T13~T20·R14 완료, T21 stable 최종 검사 진행 중 |
+| `v0.4.0` | 공개 승인 대기 | 전 인스턴스 API 확장. T13~T21·R14 완료, T22 프로젝트 소유자 승인 대기 |
 | `v0.5.0` | 계획 | Bluetooth LE 확장·ISO/LE Audio·Direction Finding·Channel Sounding·Mesh |
 | `v0.6.0` | 계획 | Storage/Crypto, TF-M, 고급 memory layout와 secure update/recovery |
 | `v0.7.0` | 계획 | Radio profile, IEEE 802.15.4, ESB와 OpenThread |

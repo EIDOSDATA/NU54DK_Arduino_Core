@@ -6,9 +6,8 @@ M27 도구는 `v0.4.0-rc.1` package를 두 번 독립 생성해 ZIP·checksum·S
 notices가 byte-identical인지 검증하고 RC index와 HOLD plan을 만든다. 기존 M11/M18/M22 도구와
 공개 `v0.1.0`~`v0.3.0` package allowlist는 수정하지 않는다.
 
-아래 RC 명령은 비공개 후보를 준비합니다. T18에서 추가한 stable 도구는 T21의 비공개 stable
-산출물과 T23 공개 경로를 준비하지만, 현재 기술 gate와 T22 승인이 없으므로 실행 가능한 공개
-권한을 뜻하지 않습니다.
+아래 RC 명령은 비공개 후보를 준비합니다. T18에서 추가한 stable 도구로 T21 비공개 stable
+산출물과 최종 검사를 완료했습니다. T22 승인은 아직 없으므로 T23 공개 권한을 뜻하지 않습니다.
 
 이 도구에는 tag, push, GitHub Release, stable index 갱신이나 공개 명령이 없다. M24~M26 physical
 gate, Boards Manager 전체 수명주기와 프로젝트 소유자 승인이 모두 PASS가 되기 전에는 plan의
@@ -111,3 +110,28 @@ commit을 지정한 T22 승인 JSON을 필수로 받습니다. 승인 파일이 
 
 T18에서는 위 실제 게시 명령을 실행하지 않습니다. T22의 명시적 소유자 승인 전에는 승인 JSON을
 만들거나 두 게시 명령을 호출해서도 안 됩니다.
+
+## T21 설치 stable 예제 검증
+
+Stable archive를 격리 Boards Manager 환경에 설치한 뒤 아래 실행기로 설치본의 발견 목록과 M27
+lock을 대조하고 예제 30개를 clean compile합니다. `--platform-root`는 개발 저장소가 아니라 실제
+설치된 `0.4.0` 경로여야 합니다.
+
+```powershell
+python tools/release/run_m27_package_examples.py `
+  --arduino-cli "C:\Program Files\Arduino CLI\arduino-cli.exe" `
+  --package-version 0.4.0 `
+  --config C:\nu54-m27-installed\arduino-cli.yaml `
+  --platform-root C:\nu54-m27-installed\data\packages\nucode\hardware\zephyr\0.4.0 `
+  --build-root C:\nu54-m27-installed\stable-examples `
+  --ncs-root C:\ncs\v3.4.0 `
+  --toolchain-root C:\ncs\toolchains\dcbdc366a1 `
+  --cache-root C:\nu54-m27-installed\local\NU54\c `
+  --forbid-root C:\source\NU54DK_Arduino_Core `
+  --evidence C:\nu54-m27-installed\m27-stable-package-examples.json `
+  --workers 4
+```
+
+성공 표식은 `M27_PACKAGE_EXAMPLES_PASS=30`, evidence type은
+`installed-stable-package-examples`입니다. 이 compile은 실제 Upload를 대신하지 않으므로 T21에서는
+설치본 Blink도 별도로 Upload했습니다. 결과는 [123번 기록](<../../00_Docs/04_검증 기록/123_T21_stable_패키지와_최종_검사.md>)에 있습니다.

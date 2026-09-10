@@ -1,7 +1,8 @@
 # v0.4.0 개발 현황과 실행 TODO
 
 현재 정식 배포는 **v0.3.0**입니다. v0.4.0은 합의한 T13 S/U, T14 충돌 판정,
-T15 지원 범위, T16 설치 통합, T17 문서 정리, T18 공개 절차 준비, R14/T19 RC 고정과 T20 설치 수명주기를 종료했으며 T21 stable 최종 검사 단계입니다.
+T15 지원 범위, T16 설치 통합, T17 문서 정리, T18 공개 절차 준비, R14/T19 RC 고정,
+T20 설치 수명주기와 T21 stable 최종 검사를 종료했으며 T22 공개 승인 대기 단계입니다.
 현재 상태와 다음 작업은 이 문서에서 관리하고, 실행별 원본은 [검증 기록](<04_검증 기록/README.md>)에 보존합니다.
 
 ## 1. 현재 상태
@@ -25,7 +26,8 @@ T15 지원 범위, T16 설치 통합, T17 문서 정리, T18 공개 절차 준�
 | T18 공개 절차 준비 | **완료** | stable 생성·검증, 승인 evidence 결합과 공개 명령 분리. 120번 |
 | R14·T19 RC 고정·전체 회귀 | **완료** | 35/35 target, Host·문서·inventory, RC 이중 재현 PASS |
 | T20 RC 설치 수명주기 | **완료** | 설치·30/30 예제·실제 Upload·전환·제거·재설치 PASS |
-| T21~T25 stable·승인·공개 | 진행/대기 | 공개 승인과 실제 배포는 별도 |
+| T21 stable 최종 검사 | **완료** | stable 이중 재현·30/30 예제·실제 Upload·RC runtime 동등성 PASS. 123번 |
+| T22~T25 승인·공개·마무리 | 대기 | T22 프로젝트 소유자 승인부터 별도 진행 |
 
 QDEC·시리얼 핸드오버·T13 peer 제어 System OFF 제외와 충돌 반복 생략은 범위 결정이며 새 물리
 PASS가 아닙니다.
@@ -39,7 +41,9 @@ flash·U 실기가 없었습니다. 당시 검토 범위와 검사 결과는
 [114번](<04_검증 기록/114_전체_문서_정비와_남은_마일스톤.md>)에 기록합니다.
 
 **T13 U 최소 결선·exact image·물리 실기를 완료했습니다.** 완료한 S/U 시험을 다시 시작하지 않습니다.
-현재 기술 단계는 T21에서 T20 결과를 반영한 exact commit의 RC/stable 후보를 만들고 이중 재현·runtime 동등성·stable 설치를 최종 검사하는 것입니다.
+T21에서 T20 결과를 반영한 RC/stable 이중 재현·runtime 동등성·stable 설치·실제 Upload를
+완료했습니다. 현재 단계는 T22에서 exact 결과와 공개 자산을 프로젝트 소유자가 확인하고 명시적으로
+승인하는 것입니다.
 T13 종료는 [115번](<04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md>)에 기록했으며 정식 공개를 포함하지 않습니다.
 
 2026-09-10 후속 실행 결과: `7f78a36c`에서 U 결선 검사를 net 11·13·15·16으로 한정하고
@@ -320,11 +324,11 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
   - 경계: 과거 `0.3.0` byte는 변경하지 않았고 과거 post-install을 현행 URL로 소급 검증하지 않았습니다. tag·Release·stable index도 쓰지 않았습니다.
   - 결선·증거: 새 GPIO 기능 시험 없음. 지정 CMSIS-DAP 1회 Upload. [122번 기록](<./04_검증 기록/122_T20_RC_설치_수명주기와_실제_Upload.md>)을 따릅니다.
 
-- [ ] **T21 — 정식 0.4.0 패키지 생성·최종 검사**
-  - 상태·선행: **현재 단계** / T19·T20 완료.
-  - 할 일: stable metadata와 exact commit으로 비공개 산출물을 만들고 이중 재현, 설치본 예제·실제 upload, RC 대비 runtime payload를 검사한다.
-  - 완료 기준: metadata-only 전환의 실행 코드 동등성이 입증되거나, 실행 코드가 다르면 영향받는 build/실기/설치 검증을 재수행한다. 기술 gate 결과와 후보 최종 문서가 일치한다.
-  - 결선·증거: package 검사는 불필요, 업로드는 USB, 변경 기능은 해당 결선 필요. 아직 tag·Release·공개 index를 만들지 않음.
+- [x] **T21 — 정식 0.4.0 패키지 생성·최종 검사**
+  - 완료 결과: 비공개 RC/stable package를 각각 두 번 생성해 byte 재현성을 확인했고 정규화 runtime payload가 같았습니다.
+  - 설치 검증: 격리 Boards Manager stable 설치, 발견·clean compile 30/30, 대표 Blink 실제 pyOCD Upload를 통과했습니다.
+  - 변경 영향: T19 이후 host hook 호환성을 보완하고 Host·계약·문서·inventory를 재검증했습니다. 이후 설치 예제 실행기와 문서 변경은 runtime 입력에서 제외됩니다.
+  - 결선·증거: 기존 S/U 기능 시험은 반복하지 않았고 USB Upload 1회만 수행했습니다. tag·Release·공개 index는 만들지 않았습니다. [123번 기록](<./04_검증 기록/123_T21_stable_패키지와_최종_검사.md>)을 따릅니다.
 
 ## 7. D단계 — 공개와 마무리 (T22~T25)
 
@@ -358,9 +362,9 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
 
 | 순서 | 단계 | 완료해야 하는 결과 |
 | --- | --- | --- |
-| 1 | R14·T19 | RC 고정과 Host·문서·inventory·target/CI 전체 회귀 |
-| 2 | T20~T21 | 재현 package, 전체 예제 설치/업로드 수명주기와 비공개 stable 패키지 검사 |
-| 3 | T22~T24 | exact 결과에 대한 소유자 공개 승인, tag/Release/index 공개, 공개 URL 설치·업로드 검증 |
+| 1 | T22 | exact 결과·공개 자산에 대한 프로젝트 소유자 승인 |
+| 2 | T23 | 승인한 tag·Release asset·stable index 공개 |
+| 3 | T24 | 공개 URL 설치·build·Upload·제거·재설치·전환 검증 |
 | 4 | T25 | 최종 기록·커밋·푸시·CI 확인과 정확히 식별한 임시 산출물 정리 |
 
 이는 남은 순서이지 이번 문서 정비에서 실행한 작업 목록이 아닙니다. T16 이후 release gate의
@@ -374,8 +378,8 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
 | `m24_fixture_hil` | T04·T07~T11·T13~T15 | **PASS** |
 | `m25_fixture_hil` | T05~T10·T12~T15 | **PASS**; QDEC는 partial·비공개 경계 |
 | `host_regression`, `documentation`, `zephyr_repro_build` | T16~T19, T21의 변경 영향 재검증 | **PASS**; runtime 변경 시 재실행 |
-| `package_reproducibility` | T20·T21 | **PASS**; T21 stable 이중 재현 대기 |
-| `boards_manager_lifecycle` | T20·T21; 공개 후 검증은 추가로 T24 | **PASS**; T21 stable·T24 공개 URL은 별도 |
+| `package_reproducibility` | T20·T21 | **PASS**; RC/stable 이중 재현과 runtime 동등성 확인 |
+| `boards_manager_lifecycle` | T20·T21; 공개 후 검증은 추가로 T24 | **PASS**; RC/stable 로컬 설치 완료, T24 공개 URL은 별도 |
 | `project_owner_approval` | T22 | human HOLD |
 
 M23·후보 source/build·기본 onboard·M26 판정·기존 자산 불변 gate의 근거는 기존 ledger에 있다.
