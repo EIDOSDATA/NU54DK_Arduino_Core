@@ -1,5 +1,6 @@
 """! @brief 자동 System OFF의 실제 reset·nonce·debug 해제·정리 경계를 검증합니다. """
 from pathlib import Path
+from contextlib import ExitStack
 import struct
 import sys
 import unittest
@@ -124,20 +125,23 @@ class PowerTests(unittest.TestCase):
         target = mock.Mock()
         image = {'role': 2, 'power_wake_address': power.pair.RAM_BEGIN+2560}
         words = [power.WAKE_MAGIC, 2, 1, 7, 12, 65535, 0, 0, 0, 0, 0,
-                 1, 3, 4, 1, 8, 1024, 32, 0, 1]
-        target.read_memory_block8.return_value = struct.pack('<20I', *words)
+                 1, 3, 4, 1, 8, 1234, 0, 3, 2000000, 1024, 32, 0, 1]
+        target.read_memory_block8.return_value = struct.pack('<24I', *words)
         result = power.read_power_wake(target, image)
         self.assertEqual(result['grtc_active_cc_mask'], 8)
+        self.assertEqual(result['grtc_counter'], 1234)
+        self.assertEqual(result['grtc_active_channel'], 3)
+        self.assertEqual(result['grtc_compare_delta'], 2000000)
         self.assertEqual(result['resetreas_after_boot'], 1024)
         self.assertFalse(result['expected_wake'])
         self.assertFalse(result['system_off_pass'])
-        for index, value in ((0, 0), (1, 1), (2, 0), (3, 0), (18, 2), (19, 0)):
+        for index, value in ((0, 0), (1, 1), (2, 0), (3, 0), (22, 2), (23, 0)):
             broken = words[:]
             broken[index] = value
-            target.read_memory_block8.return_value = struct.pack('<20I', *broken)
+            target.read_memory_block8.return_value = struct.pack('<24I', *broken)
             with self.subTest(index=index), self.assertRaises(ProtocolError):
                 power.read_power_wake(target, image)
-        target.read_memory_block8.return_value = bytes(79)
+        target.read_memory_block8.return_value = bytes(95)
         with self.assertRaises(ProtocolError):
             power.read_power_wake(target, image)
 
@@ -154,7 +158,8 @@ class PowerTests(unittest.TestCase):
         for token in ('NRF_P1->PIN_CNF[14U]', 'NRF_P1->IN', 'NRF_P1->LATCH',
                       'NRF_P1->DETECTMODE', 'nrf_reset_resetreas_get(NRF_RESET)',
                       'NRF_GRTC->MODE', 'NRF_GRTC->TIMEOUT', 'NRF_GRTC->WAKETIME',
-                      'NRF_GRTC->STATUS.LFTIMER', 'GRTC_CC_CCEN_ACTIVE_Msk'):
+                      'NRF_GRTC->STATUS.LFTIMER', 'GRTC_CC_CCEN_ACTIVE_Msk',
+                      'nrf_grtc_sys_counter_get', 'nrf_grtc_sys_counter_cc_get'):
             self.assertIn(token, source)
 
     def test_debug_held_bridge_cannot_substitute_for_normal_mode_or_off(self):
@@ -315,6 +320,32 @@ class PowerTests(unittest.TestCase):
         self.assertEqual(calls, ['session-close', 'probe-open', True, False, False, 'probe-close'])
         probe.connect.assert_not_called()
         self.assertTrue(device.target.session.options['resume_on_disconnect'])
+
+    def test_cleanup_attach_retries_only_three_times_and_preserves_second_success(self):
+        """! @brief 첫 attach가 OFF를 깨우기만 한 경우 한정 재접속으로 진단 원본을 보존합니다. """
+        helper = mock.Mock()
+        connection = mock.MagicMock()
+        connection.target.read_memory_block8.return_value = bytes(64)
+        helper.session_with_chosen_probe.side_effect = [RuntimeError('No ACK'), connection]
+        image = {'role': 2, 'core_revision': 'a'*40,
+                 'symbols': {'v04_identity': power.pair.RAM_BEGIN}}
+        append = mock.Mock()
+        with ExitStack() as stack, mock.patch.object(power.time, 'sleep'), \
+                mock.patch.object(power.pair, 'verify_identity'):
+            target, identity = power.reopen_peer_for_cleanup(
+                stack, helper, 'peer', image, append)
+        self.assertIs(target, connection.target)
+        self.assertEqual(identity, bytes(64))
+        self.assertEqual(helper.session_with_chosen_probe.call_count, 2)
+        self.assertEqual(append.call_args.args[1]['attempt'], 2)
+
+        helper.reset_mock()
+        helper.session_with_chosen_probe.side_effect = RuntimeError('No ACK')
+        with ExitStack() as stack, mock.patch.object(power.time, 'sleep'):
+            with self.assertRaisesRegex(ProtocolError, 'after 3 attempts'):
+                power.reopen_peer_for_cleanup(stack, helper, 'peer', image, append)
+        self.assertEqual(helper.session_with_chosen_probe.call_count,
+                         power.CLEANUP_ATTACH_ATTEMPTS)
 
 
 if __name__ == '__main__':

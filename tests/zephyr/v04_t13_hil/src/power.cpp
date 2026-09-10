@@ -9,6 +9,7 @@
 #include "protocol.h"
 #include <nucode/SerialFabric.h>
 #include <internal/IoResourceManager.h>
+#include <hal/nrf_grtc.h>
 #include <hal/nrf_gpio.h>
 #include <hal/nrf_reset.h>
 #include <hal/nrf_uarte.h>
@@ -34,7 +35,7 @@ extern "C"
     /** @brief UART RX 시작 전 내부 pull-up 적용과 실제 유휴 수준을 부팅별로 보존합니다. */
     alignas(4) volatile std::uint32_t v04_power_idle[20]{};
     /** @brief System OFF 직전 기상 설정과 다음 부팅 reset 원인을 함께 보존합니다. */
-    alignas(4) volatile std::uint32_t v04_power_wake[20]{};
+    alignas(4) volatile std::uint32_t v04_power_wake[24]{};
 }
 
 namespace
@@ -58,7 +59,7 @@ namespace
         std::uint32_t sequence = 0U, pending = 0U, boots = 0U;
         std::uint32_t mode = 0U, round = 0U, seed = 0U, released = 0U;
         std::uint32_t poll_mode = 0U;
-        std::uint32_t wake[16]{};
+        std::uint32_t wake[20]{};
         std::uint32_t checksum = 0U;
     } retained;
 
@@ -390,6 +391,8 @@ namespace
     void captureWakeRegisters()
     {
         std::uint32_t active_channels = 0U;
+        std::uint32_t active_channel = UINT32_MAX;
+        std::uint64_t active_compare = 0U;
 #if NRF_GPIO_HAS_RETENTION
         const auto gpio_retention = nrf_gpio_port_retain_get(NRF_P1);
 #else
@@ -401,8 +404,16 @@ namespace
             if ((NRF_GRTC->CC[channel].CCEN & GRTC_CC_CCEN_ACTIVE_Msk) != 0U)
             {
                 active_channels |= 1UL << channel;
+                if (active_channel == UINT32_MAX)
+                {
+                    active_channel = channel;
+                    active_compare = nrf_grtc_sys_counter_cc_get(NRF_GRTC, channel);
+                }
             }
         }
+        const auto counter = nrf_grtc_sys_counter_get(NRF_GRTC);
+        const auto compare_delta =
+            active_channel == UINT32_MAX ? UINT64_MAX : active_compare - counter;
         const std::uint32_t values[]{wake_magic,
                                      role,
                                      retained.mode,
@@ -418,7 +429,11 @@ namespace
                                      NRF_GRTC->TIMEOUT,
                                      NRF_GRTC->WAKETIME,
                                      NRF_GRTC->STATUS.LFTIMER,
-                                     active_channels};
+                                     active_channels,
+                                     static_cast<std::uint32_t>(counter),
+                                     static_cast<std::uint32_t>(counter >> 32U),
+                                     active_channel,
+                                     static_cast<std::uint32_t>(compare_delta)};
         ::memcpy(retained.wake, values, sizeof(values));
     }
 
@@ -496,10 +511,10 @@ void t13::power::initialize(std::uint32_t &sequence, std::uint32_t *nonce)
             : pending == 2U && retained.released == 1U &&
                   reset_cause == (retained.mode == 1U ? RESET_CLOCK : RESET_LOW_POWER_WAKE);
     ::memcpy(const_cast<std::uint32_t *>(v04_power_wake), retained.wake, sizeof(retained.wake));
-    v04_power_wake[16] = nrf_reset_resetreas_get(NRF_RESET);
-    v04_power_wake[17] = reset_cause;
-    v04_power_wake[18] = expected ? 1U : 0U;
-    v04_power_wake[19] = retained.released;
+    v04_power_wake[20] = nrf_reset_resetreas_get(NRF_RESET);
+    v04_power_wake[21] = reset_cause;
+    v04_power_wake[22] = expected ? 1U : 0U;
+    v04_power_wake[23] = retained.released;
     if (!expected)
     {
         retained.magic_word = 0U;

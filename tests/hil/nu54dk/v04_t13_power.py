@@ -25,6 +25,7 @@ PINS_MAGIC = 0x50504931
 POLL_MAGIC = 0x50504F31
 POWER_SWD_FREQUENCY_HZ = 1_000_000
 PEER_PIN_RESET_SETTLE_SECONDS = .7
+CLEANUP_ATTACH_ATTEMPTS = 3
 
 
 def polling_policy(phase, repeats):
@@ -53,11 +54,12 @@ def inspect_polling(words, role, policy):
     return {'polling_policy': policy, 'fast_polling': bool(policy), 'system_off_pass': False}
 
 
-def fault_region(address, size, symbols):
+def fault_region(address, size, symbols, expected_size=80):
     """! @brief 진단 symbol이 SRAM 내부이며 기존 mailbox와 겹치지 않는지 확인합니다. """
-    if (type(address) is not int or size != 80 or address % 4 or
-            not pair.RAM_BEGIN <= address <= pair.RAM_END-80 or any(
-                address < start+(64 if name == 'v04_identity' else 128) and start < address+80
+    if (type(address) is not int or size != expected_size or address % 4 or
+            expected_size <= 0 or not pair.RAM_BEGIN <= address <= pair.RAM_END-expected_size or any(
+                address < start+(64 if name == 'v04_identity' else 128) and
+                start < address+expected_size
                 for name, start in symbols.items())):
         raise ProtocolError('T13 power fault symbol outside independent SRAM region')
     return address
@@ -93,8 +95,9 @@ def inspect_power_image(repository, build_root, role):
         if not wake or len(wake) != 1:
             raise ProtocolError('T13 power wake-register symbol missing or ambiguous')
         result['power_wake_address'] = fault_region(int(wake[0]['st_value']),
-            int(wake[0]['st_size']), result['symbols'])
-        if any(abs(result['power_wake_address']-result[key]) < 80 for key in
+            int(wake[0]['st_size']), result['symbols'], 96)
+        if any(result['power_wake_address'] < result[key]+80 and
+               result[key] < result['power_wake_address']+96 for key in
                ('power_fault_address', 'power_idle_address', 'power_hardware_fault_address')):
             raise ProtocolError('T13 power wake-register snapshot overlaps another record')
     return result
@@ -141,14 +144,14 @@ def read_power_hardware_fault(target, image):
 
 def read_power_wake(target, image):
     """! @brief OFF 직전 설정과 다음 부팅 원시 reset 원인을 같은 원본으로 검증합니다. """
-    raw = bytes(target.read_memory_block8(image['power_wake_address'], 80))
-    if len(raw) != 80:
+    raw = bytes(target.read_memory_block8(image['power_wake_address'], 96))
+    if len(raw) != 96:
         raise ProtocolError('T13 power wake-register snapshot truncated')
-    words = list(struct.unpack('<20I', raw))
-    if words == [0]*20:
+    words = list(struct.unpack('<24I', raw))
+    if words == [0]*24:
         return {'present': False, 'words': words}
     if (words[:2] != [WAKE_MAGIC, image['role']] or words[2] not in (1, 2) or
-            words[3] == 0 or words[18] not in (0, 1) or words[19] != 1):
+            words[3] == 0 or words[22] not in (0, 1) or words[23] != 1):
         raise ProtocolError('T13 power wake-register marker/role/state mismatch')
     return {'present': True, 'words': words, 'mode': words[2], 'round': words[3],
             'gpio_pin_cnf': words[4], 'gpio_in': words[5], 'gpio_latch': words[6],
@@ -156,8 +159,10 @@ def read_power_wake(target, image):
             'resetreas_before_off': words[10], 'grtc_mode': words[11],
             'grtc_timeout': words[12], 'grtc_waketime': words[13],
             'grtc_lftimer_status': words[14], 'grtc_active_cc_mask': words[15],
-            'resetreas_after_boot': words[16], 'zephyr_reset_cause': words[17],
-            'expected_wake': bool(words[18]), 'dma_release_proven': True,
+            'grtc_counter': words[16] | (words[17] << 32),
+            'grtc_active_channel': words[18], 'grtc_compare_delta': words[19],
+            'resetreas_after_boot': words[20], 'zephyr_reset_cause': words[21],
+            'expected_wake': bool(words[22]), 'dma_release_proven': True,
             'system_off_pass': False}
 
 
@@ -322,6 +327,44 @@ def pin_snapshot(target):
     return [target.read32(base + 0x80 + pin*4) for base, pins in groups for pin in pins]
 
 
+def reopen_peer_for_cleanup(stack, connect_helper, uid, image, append):
+    """! @brief OFF를 깨운 첫 attach 실패 뒤 진단 원본을 읽도록 최대 3회만 재접속합니다. """
+    last_error = None
+    for attempt in range(1, CLEANUP_ATTACH_ATTEMPTS+1):
+        connection = None
+        try:
+            connection = connect_helper.session_with_chosen_probe(unique_id=uid,
+                target_override='nrf54l', frequency=POWER_SWD_FREQUENCY_HZ,
+                blocking=False, no_config=True,
+                options={'auto_unlock': False, 'connect_mode': 'attach',
+                         'resume_on_disconnect': False, 'cmsis_dap.limit_packets': True})
+            if connection is None:
+                raise ProtocolError('cleanup probe missing')
+            stack.enter_context(connection)
+            target = connection.target
+            # @brief 실패한 OFF를 debug로 깨울 수 있는 cleanup은 성공 시험에 포함하지 않습니다.
+            time.sleep(.3)
+            raw_identity = bytes(target.read_memory_block8(image['symbols']['v04_identity'], 64))
+            pair.verify_identity(raw_identity, image['role'], image['core_revision'])
+            append('cleanup/role2/attach', {'status': 'observation', 'attempt': attempt,
+                'maximum_attempts': CLEANUP_ATTACH_ATTEMPTS})
+            return target, raw_identity
+        except BaseException as error:
+            last_error = error
+            append('cleanup/role2/attach-attempt', {'status': 'unproven', 'attempt': attempt,
+                'maximum_attempts': CLEANUP_ATTACH_ATTEMPTS,
+                'error': f'{type(error).__name__}: {error}'})
+            if connection is not None:
+                try:
+                    connection.close()
+                except BaseException:
+                    pass
+            if attempt < CLEANUP_ATTACH_ATTEMPTS:
+                time.sleep(.2)
+    raise ProtocolError(f'T13 cleanup attach failed after {CLEANUP_ATTACH_ATTEMPTS} attempts: '
+                        f'{type(last_error).__name__}: {last_error}')
+
+
 def execute(args, images, grant, uids, append):
     policy = polling_policy(args.phase, args.repeats)
     from pyocd.core.helpers import ConnectHelper
@@ -445,22 +488,16 @@ def execute(args, images, grant, uids, append):
             outcomes = []
             for index, device in enumerate(devices):
                 try:
+                    raw_identity = None
                     if detached and index == 1:
-                        connection = ConnectHelper.session_with_chosen_probe(unique_id=uids[1],
-                            target_override='nrf54l', frequency=POWER_SWD_FREQUENCY_HZ,
-                            blocking=False, no_config=True,
-                            options={'auto_unlock': False, 'connect_mode': 'attach',
-                                     'resume_on_disconnect': False, 'cmsis_dap.limit_packets': True})
-                        if connection is None:
-                            raise ProtocolError('cleanup probe missing')
-                        stack.enter_context(connection)
-                        target = connection.target
-                        # @brief 실패한 OFF를 debug로 깨울 수 있는 cleanup은 성공 시험에 포함하지 않습니다.
-                        time.sleep(.3)
+                        target, raw_identity = reopen_peer_for_cleanup(stack, ConnectHelper,
+                            uids[1], device.image, append)
                     else:
                         target = device.target
-                    raw_identity = bytes(target.read_memory_block8(device.image['symbols']['v04_identity'], 64))
-                    pair.verify_identity(raw_identity, index+1, device.image['core_revision'])
+                    if raw_identity is None:
+                        raw_identity = bytes(target.read_memory_block8(
+                            device.image['symbols']['v04_identity'], 64))
+                        pair.verify_identity(raw_identity, index+1, device.image['core_revision'])
                     for name, reader in (('first-uart-fault', read_power_fault),
                                          ('first-hardware-uart-fault', read_power_hardware_fault),
                                          ('initial-uart-idle', read_power_idle),
