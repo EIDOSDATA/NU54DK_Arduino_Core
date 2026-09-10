@@ -12,12 +12,13 @@ stable을 설치해 예제 30/30 clean compile과 실제 CMSIS-DAP Upload도 통
 ## 소스와 최종 후보
 
 T21 runtime 검사는 `9e9bbf9ab96bee9ee3d6b7b506d5590cff5d9db2`를 기준으로 수행했습니다.
-이후 변경은 설치 stable 예제 실행기·계약 테스트와 이 기록을 포함한 문서뿐이며 runtime package
-입력은 바꾸지 않았습니다. 최종 문서 commit의 authoritative identity와 artifact hash는 다음
-로컬 plan에 보존합니다.
+이후 변경은 설치 stable 예제 실행기·계약 테스트, 이 기록을 포함한 문서와 release-readiness
+근거 갱신입니다. 예비·최종 archive를 비교한 결과 설치 payload에서 달라진 원본은 패키지에 포함된
+`variants/nu54dk/v0.4.0-release-readiness.json`뿐이며 실행 코드·라이브러리·보드 정의는 같습니다.
+최종 문서 commit의 authoritative identity와 artifact hash는 다음 로컬 plan에 보존합니다.
 
-- RC plan: `C:\m27-t21-final-rc\m27-release-plan.json`
-- Stable plan: `C:\m27-t21-final-stable\m27-stable-release-plan.json`
+- RC plan: `C:\m27-t21-authoritative-rc\m27-release-plan.json`
+- Stable plan: `C:\m27-t21-authoritative-stable\m27-stable-release-plan.json`
 
 최종 plan은 clean local `HEAD`와 `origin/main`이 같은 상태에서 다시 생성·검증합니다. Stable
 plan은 모든 비인간 gate를 PASS로 판정하되 `project_owner_approval` 하나 때문에 게시를 HOLD합니다.
@@ -33,7 +34,11 @@ plan은 모든 비인간 gate를 PASS로 판정하되 `project_owner_approval` �
 | Target | 35/35 PASS. T19 runtime 이후 source 변경 없음 |
 | RC package | 독립 2회 byte-identical |
 | Stable package | 독립 2회 byte-identical |
-| RC/Stable runtime | 동일, SHA-256 `365e73f28327fbfe29fa683f7bd0dbd7aa900008c047e5b0deb8e5cbe381ff04` |
+| RC/Stable runtime | 동일, SHA-256 `0883219f9ea96ca82f41a6056f9966b108619aac26c8029645a47f091fde9cd3` |
+
+이 fingerprint는 `platform.txt`의 version만 정규화하고 readiness를 포함한 전체 설치 payload를
+해시합니다. 따라서 예비 후보의 fingerprint와 달라졌지만 archive 비교로 readiness 근거 갱신만
+차이임을 확인했고, 같은 최종 commit의 RC와 stable은 정확히 일치합니다.
 
 GCC 16의 Windows PE-COFF weak hook 차이는 host 기본 hook을 보완해 해결했습니다. 이후 Windows
 Smart App Control이 새로 링크한 일부 unsigned GCC host 실행 파일을 차단해, 같은 host gate를
