@@ -25,11 +25,10 @@ PDM의 검증된 clock/CS 배치도 이전 C 결선의 I2S용 P1.04/05 직결과
 
 전체 결선 순서는 **C → S → U**이며 C→S 변경은 이미 완료했다. 현재 S에서 SPI00·PDM과
 허용 동시 조합을 검증하고 있고 U는 UART00 단독/flow/복구용 후속이다.
-System OFF는 기존 S의 UART21 중계와 P1.14 GPIO wake를 사용한다. B debug session을 정상 종료한
-뒤 debug-control `DISABLE_SWD`만 물리 격리하고 timer/GPIO를 한 구간에서 연속 실행한다.
-논리 disconnect·DP power down·SWD Dormant와 Nordic 공식 예제까지 대조해 물리 격리가 필수임을
-확정했다. 최신 근거는 [112번](<../../../00_Docs/04_검증 기록/112_T13_S_SPI_TWI_완료와_System_OFF_원인.md>)을
-따른다. 추가 배선은 없으며 현재 S 시험의 미완료를 U 재배치로 해결된 것으로 세지 않는다.
+System OFF 추가 결합 시험은 기존 S의 UART21 중계와 P1.14 GPIO wake를 사용하도록 준비했다.
+공개 API의 GRTC·사용자 버튼 wake는 M15에서 이미 실기 PASS했고 이후 해당 구현의 실질 변경이
+없으므로, T13 peer 제어 timer/GPIO 2조건은 필수 S gate에서 제외했다. T13 PASS로 소급하지 않으며
+최신 근거는 [113번](<../../../00_Docs/04_검증 기록/113_T13_S_범위_종료와_U_준비.md>)을 따른다.
 예약 P2.07/08이나 PMIC 선은 추가하지 않는다.
 
 각 단계에서 두 USB를 분리하고 아래 B 쪽 끝을 옮긴 후, GPIO 대응·GND·동일 I/O 전압,
@@ -182,5 +181,5 @@ P2 dedicated21 bank, LFXO/PMIC/버튼/전원 신호를 추가 자유 GPIO로 쓰
 TIMER 기능 완료 정리·QDEC 알려진 제한·외부 ADC 반복 수 차이는103번에 구분한다. 후속 runtime 변경의 영향 T11 회귀, T14 결함 조치, T15 지원 범위,
 T16~T18 통합·문서·절차, R14/RC·전체 회귀·사용자 승인·정식 배포는 각각 후속 gate다.
 
-U 직전 peer 제어 System OFF의 현재 범위는 TODO와
-[112번 기록](<../../../00_Docs/04_검증 기록/112_T13_S_SPI_TWI_완료와_System_OFF_원인.md>)을 따른다.
+U 직전 S 종료 범위와 peer 제어 System OFF 제외는 TODO와
+[113번 기록](<../../../00_Docs/04_검증 기록/113_T13_S_범위_종료와_U_준비.md>)을 따른다.

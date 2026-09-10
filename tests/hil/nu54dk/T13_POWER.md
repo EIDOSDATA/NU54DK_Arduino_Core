@@ -1,5 +1,10 @@
 # S 결선에서 A가 제어하는 B System OFF 시험
 
+> 현재 v0.4.0 S 종료 범위에서는 이 T13 peer 제어 결합 시험을 필수 gate로 사용하지 않는다.
+> 공개 `BoardSystem` API의 GRTC·사용자 버튼 System OFF wake는 M15 실기에서 완료됐고,
+> 이 문서의 T13 timer/GPIO PASS는 주장하지 않는다. 범위 결정과 마지막 원본은
+> [113번 기록](<../../../00_Docs/04_검증 기록/113_T13_S_범위_종료와_U_준비.md>)을 따른다.
+
 T13에 추가한 UART DMA 정지·System OFF·복구 경로다. 기존 M15의 사용자 SW0/P1.13 검증과
 별도로 기록한다. 이 경로의 성공을 전체 peripheral System OFF·T13·T14·RC 완료로 확대하지 않는다.
 

@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "source": "dee41fe62eea96f718bcb46e96c1312c7507d5be",
+  "physical_executed": true,
+  "flash_performed": true,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "status": "closed-without-t13-qualification",
+  "scope": "T13 peer-controlled System OFF 추가 결합 시험의 마지막 시도와 GPIO 진단",
+  "qualification": "T13 timer/GPIO PASS를 주장하지 않음. 기존 M15에서 동일 공개 API의 GRTC와 버튼 wake가 실기 PASS했고 이후 API 구현 변경이 없어 중복 결합 시험을 범위 제외함.",
+  "ordered_s_result": {
+    "passed": 56,
+    "excluded": 2,
+    "total": 58,
+    "scope_closed": true
+  },
+  "attempts": [
+    {
+      "campaign": "s123-42-system-off-timer-gpio-b0a732cc-formal",
+      "result": "net5 LOW 전달 실패"
+    },
+    {
+      "campaign": "s123-43-system-off-timer-gpio-b0a732cc-formal",
+      "result": "pre-traffic 판정기 오류; 후속 수정"
+    },
+    {
+      "campaign": "s123-44-system-off-timer-gpio-dee41fe6-formal",
+      "result": "net5 LOW 전달 실패"
+    },
+    {
+      "campaign": "s123-45-system-off-timer-gpio-dee41fe6-formal",
+      "result": "net3 LOW 전달 실패"
+    }
+  ],
+  "cleanup": "A/B P1.04 PIN_CNF=0, CPU 실행 후 sleep; 추가 출력 없음",
+  "files": [
+    {
+      "file": "s123-42-system-off-timer-gpio-b0a732cc-formal--ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-42-system-off-timer-gpio-b0a732cc-formal\\ci-before-flash.json",
+      "bytes": 3755,
+      "sha256": "b5f3956ee29dba98cc53989b6b533b6c748d5ca77ee3ccce256ad196c365c5b4",
+      "gzip_bytes": 564,
+      "gzip_sha256": "61be2da57e9c1eb99a6efd2a9552c31a895070944721d9028ab8938afc5188d8"
+    },
+    {
+      "file": "s123-42-system-off-timer-gpio-b0a732cc-formal--images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-42-system-off-timer-gpio-b0a732cc-formal\\images.json",
+      "bytes": 1953,
+      "sha256": "c2fde31c3fa9e68a63525e7c5a539e34cc5976752c585986fb2933a39a2a2d41",
+      "gzip_bytes": 627,
+      "gzip_sha256": "a3b6d9599553c1f42debf10d79f782e493ed71f00a71e4cf767959cf7fc57ca4"
+    },
+    {
+      "file": "s123-42-system-off-timer-gpio-b0a732cc-formal--result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-42-system-off-timer-gpio-b0a732cc-formal\\result.json",
+      "bytes": 13953,
+      "sha256": "880cad6ba203146abc9925f51d25f0e738d24a6fd55fea8cfd4a20f3d6f821e8",
+      "gzip_bytes": 1748,
+      "gzip_sha256": "6aeae41e96520eb753d26dfc9583f9cfdcdc7ae65f707d3b7099b0695d3c252f"
+    },
+    {
+      "file": "s123-42-system-off-timer-gpio-b0a732cc-formal--result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-42-system-off-timer-gpio-b0a732cc-formal\\result.json.jsonl",
+      "bytes": 6463,
+      "sha256": "71313916cd9a190d836ca80365dcf92a15208f88310e7d034abc7ccc864fa854",
+      "gzip_bytes": 958,
+      "gzip_sha256": "d7ea9aa33021a0fcba8523216a751669a4cd7be3d1cd48c619587baa3e608a02"
+    },
+    {
+      "file": "s123-43-system-off-timer-gpio-b0a732cc-formal--ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-43-system-off-timer-gpio-b0a732cc-formal\\ci-before-flash.json",
+      "bytes": 3758,
+      "sha256": "e664237a2cfe3d4a379fcface1be346f2ab3fafc7cc06f840eee9a87279e27de",
+      "gzip_bytes": 565,
+      "gzip_sha256": "29e7566d010a295cef4e93810089a225e76efa41635aebefee81032320c4333b"
+    },
+    {
+      "file": "s123-43-system-off-timer-gpio-b0a732cc-formal--images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-43-system-off-timer-gpio-b0a732cc-formal\\images.json",
+      "bytes": 1953,
+      "sha256": "c2fde31c3fa9e68a63525e7c5a539e34cc5976752c585986fb2933a39a2a2d41",
+      "gzip_bytes": 627,
+      "gzip_sha256": "a3b6d9599553c1f42debf10d79f782e493ed71f00a71e4cf767959cf7fc57ca4"
+    },
+    {
+      "file": "s123-43-system-off-timer-gpio-b0a732cc-formal--result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-43-system-off-timer-gpio-b0a732cc-formal\\result.json",
+      "bytes": 136848,
+      "sha256": "94b76b0fa2ac83b256edba0c4552019880f55dc4c2e60306ab1a76e37b52608a",
+      "gzip_bytes": 4590,
+      "gzip_sha256": "95de0bcf1b566167525968aa8e9cbf057ff2877bb25c54c3ec724d213983c78c"
+    },
+    {
+      "file": "s123-43-system-off-timer-gpio-b0a732cc-formal--result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-43-system-off-timer-gpio-b0a732cc-formal\\result.json.jsonl",
+      "bytes": 78170,
+      "sha256": "8edfc7a61a48ff3d32fb32e9bd4d9eb8ff77b0cb1292ac8cfe06d30cf5fb15c0",
+      "gzip_bytes": 3493,
+      "gzip_sha256": "ee8d60659343110bd8d58bb2af6d4b78045bd64e97db0ec54a7ff6365886f0d7"
+    },
+    {
+      "file": "s123-44-system-off-timer-gpio-dee41fe6-formal--ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-44-system-off-timer-gpio-dee41fe6-formal\\ci-before-flash.json",
+      "bytes": 3742,
+      "sha256": "58560bee3c286e1e5e594b4837cb51a7c715ba9c385058e1d1fdc7706ed60449",
+      "gzip_bytes": 571,
+      "gzip_sha256": "7afbd3d2b32464b42955b8f9916f8327d3898920f0b7528bccaf03e403b69727"
+    },
+    {
+      "file": "s123-44-system-off-timer-gpio-dee41fe6-formal--images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-44-system-off-timer-gpio-dee41fe6-formal\\images.json",
+      "bytes": 1953,
+      "sha256": "2bfd6dc41a1ebbc2ab987c1cc3788066112d83e492691fd37d798bb737a87b13",
+      "gzip_bytes": 627,
+      "gzip_sha256": "6b212c1a498d813b2368ae893880ce8b10b7213587b56f96e581fad17921683a"
+    },
+    {
+      "file": "s123-44-system-off-timer-gpio-dee41fe6-formal--result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-44-system-off-timer-gpio-dee41fe6-formal\\result.json",
+      "bytes": 13953,
+      "sha256": "78cb186aed34ddc1bd583243c63e749138a9cae1d7e4a40daa47fc1483a2b7a5",
+      "gzip_bytes": 1752,
+      "gzip_sha256": "ce20fc6925ba547ea2f38aa02dbaf84baa28d4ea3ba23a3d6cd575d7ef9f4086"
+    },
+    {
+      "file": "s123-44-system-off-timer-gpio-dee41fe6-formal--result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-44-system-off-timer-gpio-dee41fe6-formal\\result.json.jsonl",
+      "bytes": 6463,
+      "sha256": "72f2a5eed275e54f94195dba6085ddf43a4b3c4283f8e6a004cf97abdbb45a9a",
+      "gzip_bytes": 959,
+      "gzip_sha256": "b5af2061d82aac76aade3cfb45520087dfbfa3159e06aaa0ee5f974f43b5e05a"
+    },
+    {
+      "file": "s123-45-system-off-timer-gpio-dee41fe6-formal--ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-45-system-off-timer-gpio-dee41fe6-formal\\ci-before-flash.json",
+      "bytes": 3755,
+      "sha256": "b6303f6e18025b678c9c748651a745aaaf95da9f8421195b0108dd7af766a3ff",
+      "gzip_bytes": 563,
+      "gzip_sha256": "77002a5089af49eb9524097281f7e7c3b04d8916b7f5f21c14c0d7a46baddef2"
+    },
+    {
+      "file": "s123-45-system-off-timer-gpio-dee41fe6-formal--images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-45-system-off-timer-gpio-dee41fe6-formal\\images.json",
+      "bytes": 1953,
+      "sha256": "2bfd6dc41a1ebbc2ab987c1cc3788066112d83e492691fd37d798bb737a87b13",
+      "gzip_bytes": 627,
+      "gzip_sha256": "6b212c1a498d813b2368ae893880ce8b10b7213587b56f96e581fad17921683a"
+    },
+    {
+      "file": "s123-45-system-off-timer-gpio-dee41fe6-formal--result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-45-system-off-timer-gpio-dee41fe6-formal\\result.json",
+      "bytes": 11534,
+      "sha256": "ca602512d17084ee1b9f94f6df7910f4968486dd9a02a90121bb08eec32dc153",
+      "gzip_bytes": 1668,
+      "gzip_sha256": "2918715afc29e71482f70494bce6c7ce985902f1f90bdf2afcda78e6ebe2345c"
+    },
+    {
+      "file": "s123-45-system-off-timer-gpio-dee41fe6-formal--result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-45-system-off-timer-gpio-dee41fe6-formal\\result.json.jsonl",
+      "bytes": 5050,
+      "sha256": "f772fe1cebeb5483b17b452ef7daff133a1dfdc4962160d0bc01f08842397f97",
+      "gzip_bytes": 885,
+      "gzip_sha256": "5fc29f46cd6b83505f2686e0eb61063742a0a23026a3ac0f7aa77fce9c3f5614"
+    },
+    {
+      "file": "s123-42-net5-b0a-readonly-recheck-01.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-42-net5-b0a-readonly-recheck-01.json",
+      "bytes": 1280343,
+      "sha256": "71c494d6a4a37494c481d73c9f811ca89758942c5d5590fc0f1d6a31c14424c8",
+      "gzip_bytes": 72336,
+      "gzip_sha256": "28e919377223f733641e573865487822f263e168ad8a4f324cf8f6bfe984de3e"
+    },
+    {
+      "file": "s123-42-net5-b0a-readonly-recheck-01.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-42-net5-b0a-readonly-recheck-01.json.jsonl",
+      "bytes": 693284,
+      "sha256": "e6d148f90c8a5b99a98f5b8d11cde225d2b602c6b4afde957d51cd54a819147b",
+      "gzip_bytes": 53651,
+      "gzip_sha256": "6a7ecabe1b0d71c7faf929ad97fb71ede398dc990ebfa6aa3cc776a771e8c478"
+    },
+    {
+      "file": "s123-42-net5-b0a-direct-dap-01.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-42-net5-b0a-direct-dap-01.json",
+      "bytes": 21290,
+      "sha256": "c7c6542372e23573b673125344735e02d89cbe8d09ee37705ec72fcfa080e722",
+      "gzip_bytes": 821,
+      "gzip_sha256": "27e604de72fa57291f13fc5d4cfd80dd7de7c169fc1f0006627db50b7088e03e"
+    },
+    {
+      "file": "s123-44-net5-dee-direct-dap-02.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-44-net5-dee-direct-dap-02.json",
+      "bytes": 27131,
+      "sha256": "dba98fd91b0cc9af95208d1a6162de65b312ef52e64f5cb5530f798f9de0779b",
+      "gzip_bytes": 897,
+      "gzip_sha256": "a7ddf124d0174ad9c49bfe1142dcdcfce67f67c2350a82110483062d6a19c084"
+    },
+    {
+      "file": "s123-44-net5-dee-uart-switch-reseat-dap-03.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-44-net5-dee-uart-switch-reseat-dap-03.json",
+      "bytes": 21290,
+      "sha256": "ac10c7f1e923b315381b95667956705cfa46fb331efb28b461dddbcf9b3339a9",
+      "gzip_bytes": 822,
+      "gzip_sha256": "2750753d343c1cad1faee31899ad7caa5c73e8d5b912df0c734561911fe693fd"
+    },
+    {
+      "file": "s123-45-net3-dee-direct-dap-04.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-45-net3-dee-direct-dap-04.json",
+      "bytes": 850,
+      "sha256": "8789ce5a5e260184c3d0540b234c045d98d46ac3a0cf398db1e8877b3e8bfe8e",
+      "gzip_bytes": 498,
+      "gzip_sha256": "c56c6b02c7507c52deae419b6c1d4d533d390683b064c513a8887369a0f72726"
+    },
+    {
+      "file": "s123-45-net3-dee-direct-dap-05.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-45-net3-dee-direct-dap-05.json",
+      "bytes": 863,
+      "sha256": "d99299920ef10eb1ef29a2fda0e935d4441e186943f567240cda083bd80bf627",
+      "gzip_bytes": 507,
+      "gzip_sha256": "cd0b9407f96ae840f9d34f79ef5b6b3a62c6e8d33468d2e8ea933b0e4493a0c0"
+    }
+  ]
+}

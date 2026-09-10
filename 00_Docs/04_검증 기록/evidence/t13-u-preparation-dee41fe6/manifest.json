@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "source": "dee41fe62eea96f718bcb46e96c1312c7507d5be",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "status": "software-ready",
+  "physical_executed": false,
+  "flash_performed": false,
+  "build_root": "C:/tz20",
+  "target_builds": "nucode.v04.t13_u_dut and nucode.v04.t13_u_peer; 2/2",
+  "focused_host": "48/48",
+  "broad_t13_host": "149/151 passed; 2 generated executables blocked by Windows application control, not assertion failures",
+  "remote_gates": [
+    {
+      "name": "M12 Software Gates",
+      "run": 34440392750,
+      "conclusion": "success",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34440392750"
+    },
+    {
+      "name": "M12 Reproducible Builds",
+      "run": 34440392752,
+      "conclusion": "success",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34440392752"
+    }
+  ],
+  "allowed_u_scope": [
+    "UARTE00 1 Mbit/s 8N1 full-duplex 180 seconds",
+    "both-role RTS/CTS pause and resume",
+    "TX DMA cancellation and fresh restart",
+    "RX DMA cancellation and fresh restart"
+  ],
+  "excluded_before_probe": [
+    "SPI/TWI/I2S/PDM/PWM",
+    "parity/break",
+    "reverse serial",
+    "resource handover",
+    "T13 System OFF"
+  ],
+  "next": "사용자 S-to-U 네 선 재배치 뒤 별도 v04-t13-u-session을 만들고, 전체 17선 open-drain 검사 전에는 push-pull UARTE00을 실행하지 않음",
+  "files": [
+    {
+      "file": "dee41fe6-u-prep-target-2of2.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\dee41fe6-u-prep-target-2of2.json",
+      "bytes": 628,
+      "sha256": "e8ac7034e8e477a9afd67a98ef3709a62380a3e52f2b8c7e24f19027331bb682",
+      "gzip_bytes": 366,
+      "gzip_sha256": "b7e2cd2e84bfa193d71e7bbfbbffd8eea7575f4acf65ee37e53a63c7e316890b"
+    },
+    {
+      "file": "dee41fe6-u-prep-target-2of2.log.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\dee41fe6-u-prep-target-2of2.log",
+      "bytes": 1905,
+      "sha256": "5f62e31dc7007ffdd73ac41d244d21d21ba71601c34447dfc115ee28fd08b59b",
+      "gzip_bytes": 827,
+      "gzip_sha256": "347139e64def540cda2fbe24d5a2deb35e7c59a1cd818bd55831ca338c9b67e7"
+    },
+    {
+      "file": "dee41fe6-u-prep-images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\dee41fe6-u-prep-images.json",
+      "bytes": 1118,
+      "sha256": "35e32649cc672be7cf563093837b1463eab16f5c81d9ddfbd21fd87f83206460",
+      "gzip_bytes": 535,
+      "gzip_sha256": "10272f0474fbc892572f8e3d8ecba02458181db302f7a6133f150eb5eb29b427"
+    }
+  ]
+}

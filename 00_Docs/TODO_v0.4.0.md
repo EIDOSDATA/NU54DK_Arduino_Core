@@ -1,6 +1,7 @@
 # v0.4.0 개발 현황과 실행 TODO
 
-현재 정식 배포는 **v0.3.0**입니다. v0.4.0은 T13 복구 검증 중이며 RC·정식 공개 전입니다.
+현재 정식 배포는 **v0.3.0**입니다. v0.4.0은 T13 S 정리와 U 실행 준비를 마쳤으며
+RC·정식 공개 전입니다.
 현재 상태와 다음 작업은 이 문서에서 관리하고, 실행별 원본은 [검증 기록](<04_검증 기록/README.md>)에 보존합니다.
 
 ## 1. 현재 상태
@@ -16,12 +17,13 @@
 | T13 serial 자원 충돌 | 사용자 수용 완료 | 예행 14/14, 5조건 각 100회. 나머지 9조건 반복 생략 승인 |
 | T13 연속 통신 종류·역할 전환 | 범위 제외 | 시리얼 핸드오버 재실행·추가 검증 없음 |
 | T13 I2S/PDM 복구 | 4/4 | I2S role2 공급 중단·재시작 정식 100/100 완료. 111번 |
-| 요청한 잔여 S 1~3단계 | **56/58 (96.6%)** | SPI·TWI·TWIS 완료. System OFF 2조건만 남음 |
-| U 준비 | 소프트웨어 준비 완료 | 전용 image·Host·CI 통과. U 재결선과 실기는 미실행 |
+| 요청한 잔여 S 1~3단계 | **범위 종료: PASS 56 + 제외 2 / 58** | System OFF 2조건은 기존 M15 실기와 중복되는 T13 추가 결합 시험으로 제외. 113번 |
+| U 준비 | **실행 준비 완료** | `dee41fe6` 전용 image 2/2·U Host 48/48·원격 CI 통과. U 재결선과 실기는 미실행 |
 | T14~T18 결함·지원·사용자 통합 | 진행/대기 | 알려진 제한 정리와 최종 지원 판정·패키지 통합 |
 | R14·T19~T25 RC·승인·공개 | 대기 | 공개 승인과 실제 배포는 별도 |
 
-QDEC·시리얼 핸드오버 제외와 충돌 반복 생략은 사용자 범위 결정이며 새 물리 PASS가 아닙니다.
+QDEC·시리얼 핸드오버·T13 peer 제어 System OFF 제외와 충돌 반복 생략은 범위 결정이며 새 물리
+PASS가 아닙니다.
 기존 정상 36조건과 수용된 시험을 다시 예약하지 않습니다.
 
 ## 2. 현재 재개 체크포인트
@@ -47,8 +49,8 @@ QDEC·시리얼 핸드오버 제외와 충돌 반복 생략은 사용자 범위 
 | SPI 경계 복구 | 10 / 10 | short·unready, 5개 인스턴스 각 100회 |
 | TWI SDA stuck-low | 4 / 4 | TWIM20/21/22/30 각 100회 |
 | TWIS 공급 지연 | 4 / 4 | TWIS20/21/22/30 각 100회 |
-| System OFF timer/GPIO | 0 / 2 | 물리 `DISABLE_SWD` 격리 뒤 연속 정식 실행 대기 |
-| **합계** | **56 / 58** | **96.6%, 잔여 2조건** |
+| T13 peer 제어 System OFF timer/GPIO | 제외 2 / 2 | T13 추가 결합 PASS는 주장하지 않음. 동일 공개 API는 M15 GRTC·버튼 wake 실기 PASS |
+| **합계** | **PASS 56 + 제외 2 / 58** | **요청한 S 범위 종료, 미실행을 PASS로 계산하지 않음** |
 
 ### 해결한 문제와 아직 남은 문제
 
@@ -62,13 +64,15 @@ QDEC·시리얼 핸드오버 제외와 충돌 반복 생략은 사용자 범위 
 | I2S role2 재검증 | 0dda7f9의 원래 starvation/restart 정식 100/100, cleanup 203·idle 400 통과 | 완료. 진단용 교환 경로와 구분 |
 | SPI SPIS 연속 버퍼 | short 정식 SPIM22 재시작 frame12가 zero RX. DWT 무작위/정확 seed 각 100회 추가 오류 없음 | 선행 semaphore 예약·시작 장벽·CS inactive·상수 지연을 교정하고 short/unready 10조건 각 100회 완료 |
 | TWI/TWIS | 반환 terminal buffer 재공급과 TWIS 지연 측정 기준을 교정 | stuck-low 4조건·공급 지연 4조건 각 100회 완료 |
-| System OFF | 102/102 연결성과 bridge 정상. GRTC compare 약 2초, P1.14 SENSE_LOW·실제 LOW, DP power down을 레지스터로 확인 | Nordic 공식 예제도 논리 disconnect/Dormant에서 `boots=1, off_count=1`. B debug-control `DISABLE_SWD` 물리 격리 필수 |
+| System OFF | M15에서 GRTC cause 2048과 사용자 SW0/P1.13 cause 128을 한 SWD 격리 세션에서 실기 PASS. 이후 공개 API 구현의 실질 변경 없음 | T13 UART21 DMA·peer 제어 결합은 추가 회귀이므로 제외. T13 PASS로 소급하지 않음 |
 
 원인 분석·수정 source·캠페인과 원본 위치는
 [110번](<04_검증 기록/110_문서_정리와_T13_S_잔여_재개.md>)과
 [111번](<04_검증 기록/111_T13_S_I2S_완료와_SPIS_연속_버퍼_교정.md>)을 따릅니다.
 [112번](<04_검증 기록/112_T13_S_SPI_TWI_완료와_System_OFF_원인.md>)에 SPI/TWI/TWIS 완료와
 System OFF 레지스터·공식 예제 기준선을 정리했습니다.
+[113번](<04_검증 기록/113_T13_S_범위_종료와_U_준비.md>)은 마지막 재실행·GPIO 진단, 기존 M15와의
+중복 판정, S 범위 종료와 U 준비 기준을 기록합니다.
 디버거 관측, 변경된 경로의 성공, 예행과 부분 반복은 정식 완료 수에 더하지 않습니다.
 
 ### 실행 source와 준비 상태
@@ -76,13 +80,14 @@ System OFF 레지스터·공식 예제 기준선을 정리했습니다.
 | 용도 | source / build | 확인된 범위 |
 | --- | --- | --- |
 | 마지막 실기 image | `3f4a18906f6d72df45f5a07f901b6a7aef716a2a` / `C:/t5t04` | RX 지연 완료, 양쪽 STOP·핀 반환 |
-| 현재 System OFF 진단 기준 | `6ae56e41c5983c9c8af52f57cf40e0fc424d67a9` / `C:/tz15` | power DUT/peer, Host 22/22, target 2/2, 원격 Host 성공 |
+| 마지막 T13 System OFF 시도 | `dee41fe62eea96f718bcb46e96c1312c7507d5be` / `C:/tz19` | T13 결합 PASS 없음, 원본 보존 뒤 범위 제외 |
 | S 정식 완료 image | `914ccd16`·`1c02f9de`·`d39f0742`·`e8e776e9` | SPI short/unready 10, TWI 4, TWIS 4 각 100회 |
-| U image | `0dda7f9d` / `C:/t5u04` | U 전용 image·Host·CI 준비. U 재결선·실기 미실행 |
-| System OFF 다음 실행 | timer→GPIO 결합 실행기 | B SWD 준비 후 한 번 격리, 두 wake 연속, SWD 복원 뒤 cleanup |
+| U image | `dee41fe6` / `C:/tz20` | U 전용 DUT/peer 2/2, U Host 48/48, Software Gates·Reproducible Builds 성공 |
+| 공개 System OFF 기능 근거 | `c47239d954c45fd173d8d1393e3ea5c9c86e111a` | M15 timed/button 실기 PASS; 후속 API 실질 변경 없음 |
 
-U 준비 완료는 UART00 180초 full-duplex, 양 역할 RTS/CTS와 TX/RX 취소 시험을 위한 소프트웨어
-준비를 뜻합니다. S 확인을 U 재결선 확인으로 재사용하지 않으며, U 실기 완료를 뜻하지 않습니다.
+U 실행 준비 완료는 UART00 180초 full-duplex, 양 역할 RTS/CTS와 TX/RX 취소 시험을 위한 exact
+image·Host·원격 gate 준비를 뜻합니다. S 확인을 U 재결선 확인으로 재사용하지 않으며, U 실기 완료를
+뜻하지 않습니다.
 CMSIS-DAP 2개 열거는 USB 식별만 확인한 것으로 SWD 연결·GPIO 결선 정상의 증거가 아닙니다.
 
 ### 결선 확인과 실패 처리
