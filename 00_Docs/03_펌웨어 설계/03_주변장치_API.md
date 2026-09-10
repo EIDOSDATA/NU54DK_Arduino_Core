@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-PERIPHERAL-001 |
-| 문서 개정 | 4.1 |
+| 문서 개정 | 4.2 |
 | 문서 상태 | `v0.3.0` 정식 계약 + M23 개발 기준선 |
-| 최종 갱신일 | 2026-09-03 |
+| 최종 갱신일 | 2026-09-10 |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
 ## 1. 목적
@@ -164,8 +164,9 @@ NACK과 driver 오류는 Arduino 상태 값으로 변환하되 원래 errno를 �
 유효하다. 다른 Zephyr I2C client와 bus-wide lock을 공유하지 않으므로 여러 client는 application이
 transaction을 직렬화해야 한다. Stock NCS v3.4 controller backend 경계에 따라 target/slave
 `begin(address)`, `onReceive()`/`onRequest()`, read `requestFrom(..., false)`와 `Wire1`은
-capability에 포함하지 않고 fail-closed한다. Cross-board P1.2/P1.3 continuity 불연속을 확인했기
-때문에 HIL은 peer TWIS를 사용하지 않는다. DUT 온보드 BQ25186 `0x6A`의 read-only register
+capability에 포함하지 않고 fail-closed한다. AC-02B 당시 fixture에서는 cross-board P1.2/P1.3
+continuity 불연속을 확인해 peer TWIS를 사용하지 않았다. 이는 모든 후속 결선의 영구 단선 판정이 아니다.
+해당 stable Wire HIL은 DUT 온보드 BQ25186 `0x6A`의 read-only register
 `0x0C == 0x41`을 100/400 kHz repeated-start와 end/rebegin으로 검증한다. 이는 Arduino target
 지원 또는 임의 PMIC write를 뜻하지 않는다.
 

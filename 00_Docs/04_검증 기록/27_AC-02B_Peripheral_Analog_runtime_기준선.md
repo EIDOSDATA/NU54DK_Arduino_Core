@@ -1,5 +1,9 @@
 # AC-02B Peripheral/Analog runtime 기준선
 
+> AC-02B 종료 당시의 구현·실패·최종 PASS를 보존한 기록이다. 아래 M22 대기는 당시 상태이며,
+> 후속 통합 결과는 [32번 정식 릴리스 기록](32_M22_v0.3.0_정식_릴리스_공개_기록.md),
+> 현재 개발 상태는 [활성 TODO](../TODO_v0.4.0.md)에서 확인한다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 기록 ID | VALIDATION-AC02B-001 |
@@ -13,7 +17,7 @@
 | 최종 검증 source | `0b7f89283cd82a68a7f3f0910f4fc59b8dd01bfb` |
 | Evidence | `build/ac02b/hil/ac02b-0b7f89283cd8-3wire.evidence.json` |
 | Evidence SHA-256 | `04BE0189656EA2E9FEED95DE1F9167C33CA76C717917D2DFAB3FE67E14F3BA13` |
-| 후속 gate | M22 전체 29개 clean package compile·Upload·public clean-room |
+| 당시 후속 gate | M22 전체 29개 clean package compile·Upload·public clean-room |
 
 ## 1. 판정 요약
 
@@ -32,7 +36,7 @@ API 실패로 판정하지 않고 cross-board fixture 경로 실패로 분리했
 - 교정 물리 Serial1/Wire/SPI/PWM/ADC HIL: **PASS**
 - AC-02B 전체 완료: **완료**
 - AC-02 전체 완료: **완료**
-- `v0.3.0` stable 지원 선언: **아님 — M22 RC/stable gate 대기**
+- 당시 `v0.3.0` stable 지원 선언: **아님 — M22 RC/stable gate 대기**
 
 `build-only`, parser PASS 또는 준비된 HIL token을 실제 전기·통신 PASS로 확대하지 않는다.
 

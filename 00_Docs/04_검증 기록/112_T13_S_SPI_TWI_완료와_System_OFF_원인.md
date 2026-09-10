@@ -4,7 +4,7 @@
 > 기존 M15의 GRTC·사용자 버튼 System OFF 실기와 중복되는 추가 결합 회귀로 범위에서 제외했다.
 > T13 PASS로 바꾸지 않으며, 최신 S 종료 상태는 [113번](113_T13_S_범위_종료와_U_준비.md)을 따른다.
 
-## 현재 결론
+## 당시 결론
 
 고정 S 결선에서 SPI 경계 10조건, TWI stuck-low 4조건, TWIS 공급 지연 4조건을 모두
 정식 완료했다. 요청한 S 1~3단계는 **56/58(96.6%)**이며, 남은 것은 System OFF timer와
@@ -82,7 +82,7 @@ T13 코드만 수정해 해결할 수 있는 현상이 아니다.
 
 - [공식 예제 artifact hash와 유지 RAM](evidence/t13-s123-power-official-baseline-20260910/manifest.json)
 
-## 남은 실행 순서
+## 당시 남은 실행 순서 — 후속 제외 결정은 113번
 
 1. A/B 모두 SWD Enable에서 exact image 기록·102회 연결성·UART bridge 준비를 마친다.
 2. B debug session을 정상 종료한 직후 B의 debug-control `DISABLE_SWD`만 격리한다.

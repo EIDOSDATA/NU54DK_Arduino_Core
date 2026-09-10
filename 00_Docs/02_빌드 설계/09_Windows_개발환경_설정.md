@@ -5,11 +5,11 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-WINDOWS-DEV-001 |
-| 문서 개정 | 1.5 |
+| 문서 개정 | 1.6 |
 | 문서 상태 | 현재 source 개발 기준 |
 | 적용 제품 버전 | `v0.3.0` stable 이후 `main` |
 | 지원 host | Windows 10/11 x64 |
-| 최종 갱신일 | 2026-09-06 |
+| 최종 갱신일 | 2026-09-10 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 새 Windows PC에서 NU54DK Arduino Core의 source를 수정하고 로컬 gate와 실물 보드
@@ -166,6 +166,12 @@ powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass `
   -Json
 ```
 
+이후 gate 명령에서 사용할 NCS version 디렉터리도 지정합니다.
+
+```powershell
+$NcsRoot = Join-Path $env:USERPROFILE 'ncs\v3.4.0'
+```
+
 기본 위치 대신 `C:\ncs` 같은 경로를 선택하려면 설치와 검증에 항상 같은 base root를
 넘긴다. Build Adapter에는 version 디렉터리와 Toolchain 디렉터리를 각각 지정한다.
 
@@ -178,7 +184,8 @@ powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass `
   -File .\tools\nu54-prerequisites\verify-nordic.ps1 `
   -PlatformRoot . -NcsRoot $NcsBase -Json
 
-$env:NUCODE_NCS_ROOT = Join-Path $NcsBase 'v3.4.0'
+$NcsRoot = Join-Path $NcsBase 'v3.4.0'
+$env:NUCODE_NCS_ROOT = $NcsRoot
 $env:NUCODE_TOOLCHAIN_ROOT = Join-Path $NcsBase 'toolchains\dcbdc366a1'
 ```
 
@@ -390,7 +397,7 @@ hardware 경로에서 실행할 수 있다. 이 시험은 시간이 오래 걸�
 ```powershell
 & $Python .\tests\arduino-cli\run_smoke.py `
   --cli $ArduinoCli `
-  --tests blink library config error parallel incremental m6 m7 m8 m9 m11 m15 m16 m21 ac02b ac03 examples
+  --tests blink library config error parallel incremental m6 m7 m8 m9 m11 m15 m16 m19m20 m21 ac02b ac03 examples
 ```
 
 릴리스에서 도입한 기능군별로 원인을 빠르게 나누려면 `--tests` 대신 `--group`을 쓴다.

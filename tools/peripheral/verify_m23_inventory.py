@@ -528,6 +528,7 @@ def render_matrix(manifest: dict[str, Any], instances: list[dict[str, Any]]) -> 
         "",
         "> 이 파일은 `variants/nu54dk/peripheral-manifest.json`에서 자동 생성합니다. 직접 수정하지 마세요.",
         "> 표의 `candidate`, `absent`, `not-run`은 현재 지원 선언이 아닙니다.",
+        "> 이 표는 manifest의 지원 판정이며 최신 실기 결과의 자동 집계가 아닙니다. 현재 진행은 [TODO](../TODO_v0.4.0.md), source별 근거는 [검증 기록](<../04_검증 기록/README.md>)을 확인합니다. 최종 지원 반영은 T15에서 수행합니다.",
         "",
         "| 항목 | 값 |",
         "| --- | --- |",

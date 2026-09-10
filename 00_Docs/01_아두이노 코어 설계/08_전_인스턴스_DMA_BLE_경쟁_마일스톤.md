@@ -2,6 +2,11 @@
 
 현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../TODO_v0.4.0.md>)에서 관리합니다.
 
+이 문서의 경쟁 비교와 초기 engineering 목표는 제품 방향을 설명합니다. 현재 실행 범위에서는
+QDEC 추가 진단·반복 Serial handover·T13 peer 제어 System OFF 추가 2조건을 제외합니다.
+S 정상·동시성·복구 결과와 C05 1시간 soak는 확보했으며, U 실기·미커버 요구 판정·최종 지원
+통합은 남아 있습니다. 과거 목표 표를 읽고 완료·제외된 시험을 다시 예약하지 않습니다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
@@ -268,7 +273,7 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 ### M24 — Serial fabric 전 인스턴스와 DMA
 
-- 상태: **작업 1~5 source/build/semantic 완료, 작업 6의 23개 serial personality 단독 기능 HIL PASS·동시성/성능/soak 대기** — 5개 block·23개 personality, 핀 bank, singleton/고급 API 경계,
+- 상태: **작업 1~5 완료, 작업 6의 단독 기능·S 결과 확보, U 실기·최종 지원 통합 대기** — 5개 block·23개 personality, 핀 bank, singleton/고급 API 경계,
   DMA lifecycle과 관련 errata를 [M24 Serial Fabric 계약](10_M24_Serial_Fabric_경로와_API_계약.md)에
   고정하고 CI drift 검사를 연결했다. 회로도 재검토로 단독 HIL primary 자원 6개와 무배선 자동화
   후보 7개·외부 fixture 필요 16개도 계약에 추가했다. 실행 결과는
@@ -307,13 +312,13 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 - UARTE의 고정 event ring과 두-buffer 연속 RX, SPI·I2C sync/async,
   target/peripheral double buffer와 공통 DMA 수명주기를 제공한다. 범용 N-buffer circular DMA queue로
   과장하지 않으며 더 깊은 queue와 backpressure 최적화는 별도 성능 gate에서 판단한다.
-- 현재 완료 gate: 각 personality 단독 HIL, 같은 block 충돌 negative, 다른 block 최대 동시
-  HIL, timeout/cancel/error/System OFF 복구, throughput·CPU·손실·soak 기록.
+- 완료 판정 축: 각 personality 단독 HIL, 같은 block 충돌 negative, 허용 topology의 동시
+  HIL, timeout/cancel/error 복구, throughput·CPU·손실·soak 기록.
   전원 모드 lease의 올바른 해제는 필수이며 외부 계측 기반 전류·파형 보증은 제외한다.
-  최초 계획의 반복 Serial handover 검증은 사용자 지시로 제외했으며, 이미 구현한 backend를 제거한다는 뜻은 아니다.
-- T11 단독 기능 체크포인트 뒤 R01 CMake source 소속부터 R13 구조화까지 완료한다. Runtime/link byte
-  영향에 따라 필요한 Fixture 101~301을 R13 뒤 최종 exact image로 재검증한 뒤에만 M24 동시성·soak
-  기준으로 사용한다.
+  반복 Serial handover와 T13 peer 제어 System OFF 추가 결합은 사용자 지시로 제외했다.
+  구현 backend나 M15 공개 System OFF 지원을 제거한다는 뜻은 아니다.
+- R00~R13과 이후 T11 회귀는 완료했다. 후속 runtime/link 변경이 있으면 실제 영향에 따라
+  필요한 동일 조건을 재검증하며, 과거 source의 PASS를 새 image에 복사하지 않는다.
 
 | 작업 | 범위 | 상태 |
 | --- | --- | --- |
@@ -322,7 +327,7 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 | 3 | UARTE 5개와 async RX/TX DMA | **source/build/semantic 완료 · Fixture 101~103 외부 route PASS** |
 | 4 | SPIM/SPIS 각 5개와 sync/async·double buffer | **source/build/semantic 완료 · Fixture 201~203 P2/P0/P1↔P1 PASS** |
 | 5 | TWIM/TWIS 각 4개와 repeated-start·target double buffer | **source/build/semantic·Fixture 301 단독 기능 HIL 완료** |
-| 6 | 7개 온보드 + 16개 loopback/peer 기능 HIL, 충돌·허용 최대동시·복구·성능·soak | **23개 단독 기능 HIL PASS · 최대 동시성·성능·soak 대기** |
+| 6 | 온보드·peer 기능, 충돌·허용 동시성·복구·성능·soak | **단독 기능·S 결과 확보, U 실기와 T14/T15 판정 대기** |
 
 ### M25 — Analog·timing·audio·event 전 인스턴스
 

@@ -51,21 +51,17 @@ R13의 본문·CLI·산출물 byte 비교는
 stable 이름의 build를 허용합니다. `PUBLISHED_STABLE_ARCHIVE_IDENTITIES`는 통합 index에 넣는
 과거 ZIP을 최신 allowlist로 재해석하지 않고 공개 byte로 검증합니다.
 
-## Stable package 생성
+## 버전별 생성 경로
 
-새 stable 공개 전 exact release commit의 깨끗한 worktree에서 실행합니다.
+| 대상 | 사용할 절차 |
+| --- | --- |
+| 비공개 `v0.4.0-rc.1` 후보 | [M27 prepare](../../tools/release/M27_README.md) |
+| 정식 `v0.4.0` 후보 | [TODO T18~T21](../../00_Docs/TODO_v0.4.0.md)의 절차 준비·RC 고정·최종 검증; 현재 공개 HOLD |
+| 이미 공개한 stable | 아래 exact tag 감사 절차 |
 
-```powershell
-.\packaging\boards-manager\build-stable.ps1 `
-  -Version 0.3.0 `
-  -Commit HEAD `
-  -OutputDirectory C:\NU54DEV\stable\candidate `
-  -VenvPath C:\NU54DEV\venv\host-3.12.10
-```
-
-`build-stable.ps1`은 기존 stable ZIP을 공개 identity로 검증하고 최신순 통합 index를 만듭니다.
-생성 결과는 자동으로 게시되지 않습니다. 두 독립 output directory에서 실행한 모든 산출물의
-byte가 일치하고 host/docs/package/lifecycle/HIL gate가 통과한 뒤에만 공개합니다.
+현재 `main`에서 `-Version 0.3.0 -Commit HEAD`로 새 package를 만들지 않습니다. `0.3.0`은 위
+고정 source에서만 생성 가능한 공개 버전입니다. 생성기는 산출물을 자동 게시하지 않으며, 새 버전의
+공개는 이중 재현·Host·문서·package·lifecycle·HIL gate와 소유자의 최종 승인 뒤 별도 수행합니다.
 
 ## 공개 stable 감사
 

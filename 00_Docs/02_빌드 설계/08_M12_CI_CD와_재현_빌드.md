@@ -204,21 +204,25 @@ upload와 UART READY를 실행한다. Hardware evidence는 30일 보존한다. P
 배선과 runner 보안은 운영자가 관리한다.
 
 HIL workflow가 존재하거나 queue에 들어갔다는 사실은 PASS가 아니다. 완료 artifact와 검증
-기록이 있어야 실기 판정에 사용할 수 있다. `v0.3.0` 검증은 AC-01 exact commit
-`ac10ba3b253bd6bf76bcf73aa2c79278304908a4`, M19/M20 exact commit
-`0103a8434ac205a953c981385ae26a2a64aeeccc`, M21 exact commit
-`065d4f573618aca5da1e715915622e987208b775`의 HIL PASS를 각각 검증 기록에 고정한다. M21의
-후속 `d1902b16804a27b77b153eeb9d11a10e088a59ae`는 Windows 11 실제 HID pairing·문자 입력과
-재부팅 bond 복원을 통과했고 host 39/39도 PASS했다. 자동 RF evidence와 Windows 수동 evidence는
-서로 소급 변경하지 않고 별도 판정 계층으로 보존한다. M21과 AC-02·AC-03은 완료됐으며 M22는
-이 증거를 stable package·public lifecycle gate에 연결해 완료했다.
+기록이 있어야 실기 판정에 사용할 수 있다. Source별 결과와 세부 횟수는 아래 원본에서 확인한다.
+자동 RF evidence와 Windows 수동 HID evidence는 별도로 보존하며, 과거 PASS를 현재 build의
+실기 결과로 합산하지 않는다.
+
+| 기능 | 실기 원본 |
+| --- | --- |
+| GPIO 호환성 | [AC-01](<../04_검증 기록/22_AC-01_GPIO_호환성_검증.md>) |
+| BLE GAP·GATT | [M19](<../04_검증 기록/23_M19_BLE_Core_GAP_검증.md>), [M20](<../04_검증 기록/24_M20_범용_GATT_검증.md>) |
+| BLE 보안·Windows HID | [M21](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>) |
+| Peripheral·Analog | [AC-02B](<../04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>) |
+| Storage·library | [AC-03](<../04_검증 기록/28_AC-03_Storage와_Library_호환성_기준선.md>) |
+| v0.3.0 package·공개 수명주기 | [M22 정식 공개](<../04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>) |
+| v0.4.0 현재 실기·제외 범위 | [실행 TODO](../TODO_v0.4.0.md) |
 
 AC-02B의 `ac02b_hil_dut`와 `ac02b_hil_peer`는 Linux/Windows 재현 build에서 **build-only**다.
 `tests/hil/nu54dk/ac02b_peripheral.py`의 물리 실행은 두 probe UID, 두 COM port, exact image hash,
 nonce와 3-wire fixture 승인을 요구한다. 승인 전에는 `WIRING_REQUIRED`로 중지하며 build artifact나
-READY token만으로 physical PASS를 만들지 않는다. Cross-board I2C continuity 불연속을 분리한
-최종 fixture는 공통 GND, peer P2.5↔DUT P1.12 공유 ADC-drive→PWM polling 선과 DUT local
-P2.2↔P2.4 SPI loopback이다. Exact `0b7f892`에서 모든 물리 항목이 PASS했다.
+READY token만으로 physical PASS를 만들지 않는다. 실제 결선과 당시 결과는 위 AC-02B 원본을
+따른다. 이 과거 fixture를 현재 T13 S/U 결선으로 사용하지 않는다.
 
 AC-03 HIL은 같은 exact image를 서로 다른 두 보드에서 순차 실행하며 EEPROM mirror와 전용 LittleFS
 시험 파일을 변경한다. `--allow-destructive-storage`, exact commit/build record와 새 evidence 경로가

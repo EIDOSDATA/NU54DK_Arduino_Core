@@ -2,9 +2,23 @@
 
 현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../../../00_Docs/TODO_v0.4.0.md>)에서 관리합니다.
 
-현재 완료 수와 제외 범위는 TODO, source별 최신 결과는
-[111번 기록](<../../../00_Docs/04_검증 기록/111_T13_S_I2S_완료와_SPIS_연속_버퍼_교정.md>)이 기준입니다.
-이 문서는 각 오류의 주입 방법·opcode·판정 계약을 설명합니다. 과거 예행 수치는 현재 완료 수에 합산하지 않습니다.
+S 합의 범위는 **56 PASS + System OFF 2건 제외로 정리 완료(100%)**입니다. U 준비는 완료했고 실기는 NOT RUN입니다.
+종료 근거는 [113번](<../../../00_Docs/04_검증 기록/113_T13_S_범위_종료와_U_준비.md>),
+남은 마일스톤은 [114번](<../../../00_Docs/04_검증 기록/114_전체_문서_정비와_남은_마일스톤.md>)과 TODO를 따릅니다.
+이 문서는 완료된 시험의 주입 방법·opcode·판정 계약을 보존합니다. 아래 명령은 S 시험을 다시 시작하라는 지시가 아니며,
+과거 예행 수치는 현재 완료 수에 합산하지 않습니다.
+
+| S 후속 결과 | 완료 경계 |
+| --- | --- |
+| UART line/flow/RX 공급 지연 | 정식 결과는 110번과 원본 evidence에 보존 |
+| I2S 공급 중단 | 남았던 B 역할까지 완료, 111번 |
+| SPI short/unready | 10/10 완료, 112번 |
+| TWI stuck-low·TWIS write 공급 지연 | 각각 4/4 완료, 112번 |
+| T13 System OFF | 추가 2건 제외, 기존 M15 공개 API PASS 유지, 113번 |
+
+110번의 요구–증거 대조에서 구분한 조기 CS, TWIS read 공급 지연, 전체 GPIO/overlap,
+active GPIOTE/DPPI와 PWM/analogWrite/tone/Servo 충돌의 미커버 경계는 T14/T15에서 판단합니다.
+문서 대조 완료를 해당 실기 전체의 PASS로 확대하지 않습니다.
 
 | 찾을 내용 | 절 |
 | --- | --- |
@@ -118,7 +132,8 @@ ARM은 정상 PREPARE 이후·RX START 이전에 수행한다. nrfx 초기화의
 serial STOP 결과를 보존한다. API descriptor 길이를 실제 DMA 전송량으로 해석하지 않는다.
 양쪽 raw를 먼저 보존한 뒤 STOP·clock·17핀 반환, 정책0 복원, 새 seed의 정상1초 송수신과 STOP까지
 완료해야 한 복구 성공으로 센다. 첫 실패에서 해당 조건을 끝내고 원본을 보존한다.
-2026-09-08T10:10Z 기준 초안 두 역할 target·T13 Host62시험을 통과했으며 실기 미실행이다.
+2026-09-08T10:10Z 초안 당시에는 두 역할 target·T13 Host 62시험만 통과했고 실기는 미실행이었다.
+후속 정식 UART line 결과는 110번에 보존하며, 이 초안을 현재 미실행 목록으로 사용하지 않는다.
 
 ## SPIS 짧은 DMA·미준비 frame
 
@@ -145,13 +160,14 @@ opcode150 정책·151 ARM·152 원본 네 page·153 STOP 이후 TX/RX RAM16page�
 frame12의 zero RX로 실패했다. 기존 SPIS adapter가 다음 pair를 END 뒤에 요청해 semaphore 선행
 handover를 만들지 못한 구조 결함을 교정했다. 정확한 실패 seed를 포함한 DWT 진단 200회는 추가
 오류가 없었으며 자격에 더하지 않는다. 수정 exact source로 short 다섯 조건 전체와 unready 다섯
-조건을 재실행하기 전이므로 SPI 완료 수는 0/10이다. 상세 원본은 111번을 따른다.
+조건을 재실행하기 전이어서 당시 SPI 완료 수는 0/10이었다. 최초 실패·수정은 111번에 보존한다.
+후속 short 5조건과 unready 5조건의 각 100회 완료는 112번이며, 현재 SPI 경계는 10/10 완료다.
 
 ## CTS 100ms 정지·재개 전용 fixture
 
 S 단독 UART20/21/22/30에서 `--phase flow-preflight|uart-flow --fault-role 1|2 --cases ...`를
 사용한다. 전자는1회이고 후자는100회다. 새 source/현재 S·exact UID·10MHz·controlled flash와
-결선 사전검사가 필요하다. 아직 실기를 완료하지 않았다.
+결선 사전검사가 필요하다. 이 절의 초안 이후 실기를 완료했으며, 정식 결과는 110번을 따른다.
 
 시험할 role은4선 hardware flow를 그대로 사용한다. peer는 UART 활성화 전에 TX/RX2선과
 별도 소유한 GPIO RTS로 구성하여 기존 RTS→DUT CTS 연결에100ms HIGH를 주입한다.
@@ -178,7 +194,7 @@ peer hardware RTS 생성 자체·U UART00까지 완료한 것으로 확대하지
 같은 flow-preflight/uart-flow phase에 C01(id101)·C05(id105)를 선택한다. 각각 네/다섯 block 중
 UART30만 위 GPIO peer fixture로 바꾸며 다른 UART/TWI/SPI의 설정과 payload 판정은 유지한다.
 양쪽 역할 각각 한 번의 예행 뒤 성공한 조건만100회 실행한다. 기존 normal soak의900/3600초와
-별도 결과다. 현재 실행 중인 normal C05 image와 앞서 등록한 단독 CTS image는 바꾸지 않는다.
+별도 결과다. 이 계약을 추가한 당시에는 실행 중인 normal C05 image와 앞서 등록한 단독 CTS image를 바꾸지 않았다.
 
 Opcode154(page0/1)는 실제 CTS가 HIGH인 service 구간에서 관측한 다른 lane의 완료량과 시각이다.
 page0은 lane당 네 word(first TX,last TX,first RX,last RX)이며 page1은 관측 mask, lane별 첫 cycle5개,
@@ -251,8 +267,9 @@ Picolibc `EOVERFLOW=139`는 target static_assert와 독립 Host 기대값으로 
 `--phase stream-fault-preflight --stream-fault-mode 1|2 --fault-role 1|2 --cases ...`는 각1회,
 `--phase stream-fault`는 각100회다. I2S A/B와 PDM20/21의 네 role/instance 항목이다.
 매회 양쪽 raw와 STOP·pin·clock 반환 뒤 새 seed의 정상1초 stream을 독립 대조한다.
-이 재시작 구간은180초 안정성의 대체가 아니다. 현재 source별100회 완료·실패·진행 상태는
-[104번](<../../../00_Docs/04_검증 기록/104_T13_S_복구_동시_안정성_검증.md>)과 활성 TODO를 따른다.
+이 재시작 구간은 180초 안정성의 대체가 아니다. 초기 source별 완료·실패는
+[104번](<../../../00_Docs/04_검증 기록/104_T13_S_복구_동시_안정성_검증.md>), 남았던 I2S B의 정식 완료는
+[111번](<../../../00_Docs/04_검증 기록/111_T13_S_I2S_완료와_SPIS_연속_버퍼_교정.md>)에 보존한다. 현재 네 조건은 모두 완료했다.
 
 ## PWM/I2S 최초 실패 원인 분리
 
@@ -285,8 +302,8 @@ RAMUNDERFLOW·DMA 관측도 읽기 대상으로 추가했다.
 [DevZone의 시작 펄스 사례](https://devzone.nordicsemi.com/f/nordic-q-a/124546/first-pwm-pulse-stretched-when-starting-nrfx_pwm_complex_playback-on-nrf54l15)는
 첫 펄스에 관한 별도 사례로 Nordic 측 재현이 없었으며, 이번15초 후 PWM 실패의 확인된 원인이 아니다.
 
-진단 구현 시점의 미완료 목록은 현재 작업 목록으로 유지하지 않는다. UART line/CTS/RX 지연과
-고정 serial·PWM 복구의 후속 완료, I2S·SPI/TWI·System OFF 잔여는 TODO와 110번에서 관리한다.
+진단 구현 시점의 미완료 목록은 현재 작업 목록으로 유지하지 않는다. UART·고정 serial·PWM·I2S·SPI/TWI의
+후속 완료와 T13 System OFF 제외는 113번과 TODO를 따른다.
 자원 충돌은 예행 14/14와 5조건 각 100회를 사용자가 수용했고 나머지 9조건 반복은 생략했다.
 시리얼 핸드오버는 제외했으므로 후속 대열에 넣지 않는다.
 

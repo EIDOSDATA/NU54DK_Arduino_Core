@@ -1,6 +1,10 @@
 # T13 S I2S 완료와 SPIS 연속 버퍼 교정
 
-## 결과
+> 과거 체크포인트입니다. 아래 38/58·잔여 20조건은 당시 상태이며, 후속 SPI/TWI 완료는 112번,
+> S 56 PASS + System OFF 2건 제외와 U 준비 완료·실기 NOT RUN은
+> [113번](113_T13_S_범위_종료와_U_준비.md)에 기록했습니다. 아래 다음 순서는 현행 재실행 지시가 아닙니다.
+
+## 당시 결과
 
 2026-09-09 유지 중인 S 결선에서 I2S20 role2 공급 중단·재시작 정식 100회를 완료했다.
 이 결과로 요청한 S 1~3단계는 **38/58(65.5%)**, 잔여는 SPI 10·TWI 4·TWIS 4·
@@ -77,10 +81,9 @@ NRFX fake는 첫 pair armed 뒤 두 번째 `buffers_set`이 발생하는지, END
 현재 수정본의 T13 S DUT/peer target 2/2가 경고 없이 빌드됐다. 이 dirty-source 빌드는 컴파일 확인이며
 실기 자격은 다음 exact 커밋의 새 image에만 부여한다.
 
-## 다음 순서
+## 당시 다음 순서
 
 1. 수정·계약·증거 문서를 커밋하고 push한 exact SHA에서 S DUT/peer image를 새로 빌드한다.
 2. SPIM22 집중 예행 뒤 SPI short 다섯 조건을 각 100회 정식 재실행한다.
 3. SPI unready 다섯 조건, TWI stuck-low 네 조건, TWIS 지연 네 조건, System OFF 두 조건을 실행한다.
 4. S 증거를 감사하고 UARTE00 전용 U image·실행 준비까지만 확정한다. U 재결선·실기는 실행하지 않는다.
-

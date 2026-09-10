@@ -11,8 +11,7 @@ T12 기능 검증은 완료했고 QDEC는 문제 보고 후 진단을 종료했�
 ## 당시 보드 식별과 C 연결 절차
 
 10:47:36 UTC(19:47:36 KST) 새 읽기 확인에서 A는 COM12/13, B는 COM14/15다. 두 exact UID와 0d7f382 role identity를
-대조했고, reset/halt/flash 없이 CPUID·PWM off·DPPI off 및 양쪽 17개 신호의 입력 방향을 확인했다. COM은 이 관측의 값이며 재연결 뒤 다시
-열거한다.
+대조했고, reset/halt/flash 없이 CPUID·PWM off·DPPI off 및 양쪽 17개 신호의 입력 방향을 확인했다.
 A UID SHA-256: `32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9`.
 B UID SHA-256: `4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0`.
 COM 번호는 이 관측의 식별 보조 정보다. 재연결 뒤 exact UID를 다시 열거한다.

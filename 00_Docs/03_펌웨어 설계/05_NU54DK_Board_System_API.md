@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-M15-BOARD-SYSTEM-001 |
-| 문서 개정 | 2.0 |
+| 문서 개정 | 2.1 |
 | 문서 상태 | `v0.3.0` 정식 계약 |
 | 적용 제품 버전 | `v0.3.0` |
-| 최종 갱신일 | 2026-09-03 |
+| 최종 갱신일 | 2026-09-10 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 기준 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
@@ -144,6 +144,11 @@ Arduino 사용자 버튼과 다른 부품이다. GRTC timed wake와 사용자 �
 Exact image, reset cause, 시간, transcript와 commit은
 [M15 NU54DK Board/System 기준선](<../04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)만
 소유한다. GRTC alarm callback 성공을 System OFF wake 성공으로 확대하지 않는다.
+
+v0.4.0 T13에 추가한 UART DMA 정지 후 peer 제어 timer/GPIO System OFF 2건은 사용자 결정으로
+필수 범위에서 제외했다. 이 결정은 위 M15 공개 BUTTON/TIMER API의 기존 실기 PASS를 취소하거나,
+추가 T13 시험을 통과한 것으로 바꾸지 않는다. 범위 결정은
+[113번 S 종료 기록](<../04_검증 기록/113_T13_S_범위_종료와_U_준비.md>)을 따른다.
 
 ## 9. BQ25186 PMIC 안전 경계
 

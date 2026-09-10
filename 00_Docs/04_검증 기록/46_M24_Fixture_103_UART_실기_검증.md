@@ -46,9 +46,9 @@ dry-run도 통과했다.
 보강 image의 첫 전체 실행은 148개 result에서 `0x04060200`을 기록했다. 이는 기존 비정상 bit
 `0x0200`, event tag 6(`UarteEventType::error`에 1을 더한 값), UARTE error mask `0x04`
 (`FRAMING`)의 결합이다. Role 2는 첫 1,024-byte RX buffer를 완료한 상태였고 guard 손상은 없었다.
-따라서 이 실패는 취소 수명주기나 event ring overflow가 아니라 stop bit를 HIGH로 읽지 못한 실제
-당시에는 선로/접촉 오류로 분류했다. 다만 이 register 관측만으로 물리 접촉 불량을
-확정한 것은 아니다.
+따라서 이 실패는 취소 수명주기나 event ring overflow가 아니라 stop bit를 HIGH로 읽지 못한
+FRAMING 오류로 확인했다. 당시에는 선로/접촉 오류로 분류했지만 이 register 관측만으로
+물리 접촉 불량을 확정한 것은 아니다.
 
 결선을 움직이지 않은 상태에서 다음 두 진단을 수행했다.
 

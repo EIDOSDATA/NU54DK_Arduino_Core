@@ -4,6 +4,16 @@
 R12 `480d780` 뒤 package·Kconfig/CMake·정책 분리, 발견 결함과 최종 gate를 기록한다.
 후속 USB 무배선·UART/BLE 실기는 [65번 기록](65_R13_후속_USB_무배선_실기와_정리.md)·[66번 기록](66_T09_UART_유휴_bias와_BLE_회귀.md), 단독 통신 회귀 완료는 [73번 기록](73_T11_Fixture_301_current_source_TWI_회귀.md)에 있다.
 
+## 최종 결과 빠른 찾기
+
+최종 구현 source `cf966a8ed614713235cd8178bd4b1eb8ab120d36`에서 Host 639 PASS·조건부
+1 SKIP, target build 60/60, 설치 예제 compile 29/29, QEMU 실제 실행 3/3을 확인했다.
+이 수치는 software 검증이며 이 단계의 보드 flash/HIL PASS가 아니다.
+
+- 최종 수치·예외·원본 근거: [R13 최종 software 판정과 실기 인계](#r13-최종-software-판정과-실기-인계)
+- 분리 과정과 최초 실패: 아래 R13-A~E 이력
+- 현재 작업 상태: [활성 TODO](../TODO_v0.4.0.md)
+
 ## R13-A package 책임 분리
 
 기존 entrypoint에서 함수·자료형 43개를 책임별 내부 모듈로 이동했다. model/channels는

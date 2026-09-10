@@ -68,16 +68,10 @@ BLE profile과 J-Link 경로는 [Arduino CLI 통합](03_Arduino_CLI_통합.md)�
 ## Package 생성 계약
 
 재현 가능한 ZIP과 metadata 생성기는
-[`nu54_package.py`](../../packaging/boards-manager/nu54_package.py)입니다. Exact release
-commit의 깨끗한 worktree에서 `build-stable.ps1`을 실행합니다.
-
-```powershell
-.\packaging\boards-manager\build-stable.ps1 `
-  -Version 0.3.0 `
-  -Commit HEAD `
-  -OutputDirectory C:\NU54DEV\stable\candidate `
-  -VenvPath C:\NU54DEV\venv\host-3.12.10
-```
+[`nu54_package.py`](../../packaging/boards-manager/nu54_package.py)입니다. 이미 공개한 `v0.3.0`을
+감사할 때는 해당 tag의 별도 worktree와 원래 도구를 사용합니다. 명령과 고정 identity는
+[패키징 안내](../../packaging/boards-manager/README.md#공개-stable-감사)에 모아 두었습니다.
+현재 `main`의 HEAD를 `0.3.0`으로 다시 포장하지 않습니다.
 
 Package gate는 archive root, allowlist, executable metadata, version, board submodule revision,
 checksum, release manifest, SPDX와 license inventory를 검증합니다. Index는 검증한 archive만
@@ -86,6 +80,10 @@ checksum, release manifest, SPDX와 license inventory를 검증합니다. Index�
 공개 stable은 exact source commit과 ZIP byte identity를 고정합니다. 같은 version으로 다른
 source를 포장하거나 tag·asset을 이동·교체하지 않습니다. 이미 공개한 이전 stable은 해당 tag의
 별도 worktree에서 감사하고 현재 도구로 재생성하지 않습니다.
+
+차기 `v0.4.0-rc.1` 비공개 후보는 [M27 도구](../../tools/release/M27_README.md)를 사용합니다.
+정식 `v0.4.0` 생성·검증·공개 절차는 [TODO T18~T24](../TODO_v0.4.0.md)의 남은 작업이며,
+현재 패키징 안내나 과거 공개 결과만으로 완료 처리하지 않습니다.
 
 ## v0.3.0 공개 기준
 

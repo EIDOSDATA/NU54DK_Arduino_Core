@@ -1,5 +1,9 @@
 # AC-03 Storage와 Library 호환성 기준선
 
+> AC-03 종료 당시의 구현·실기 판정과 메모리 배치를 보존한 기록이다. 이후 M22 통합 결과는
+> [32번 정식 릴리스 기록](32_M22_v0.3.0_정식_릴리스_공개_기록.md),
+> 현재 개발 상태는 [활성 TODO](../TODO_v0.4.0.md)에서 확인한다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 기록 ID | VALIDATION-AC03-001 |
@@ -23,11 +27,15 @@ contract와 두 보드 HIL runner를 구현했다. Exact build/HIL 안전성 교
 - Host contract, target contract/HIL image build와 profile smoke: **PASS**
 - 두 NU54DK reset 영속성·손상 복구 HIL: **PASS — 각 보드 reset 3회와 cleanup 확인**
 - AC-03 전체 완료: **완료**
-- `v0.3.0` stable 지원 선언: **아님 — M22 RC/stable gate 대기**
+- 당시 `v0.3.0` stable 지원 선언: **아님 — M22 RC/stable gate 대기**
 
 Parser, build 또는 준비된 token만으로 reset persistence와 storage recovery PASS를 만들지 않는다.
 
-## 2. 고정 storage layout
+## 2. 당시 고정 storage layout
+
+아래 696 KiB dual-slot은 AC-03 당시 값이다. 후속 RC3에서 application을
+`0x000000..0x16c000`의 1,456 KiB loaderless 영역으로 교정했다.
+[31번 메모리 계약](31_M22_v0.3.0_rc3_검증과_stable_인계.md)의 최종 배치와 혼용하지 않는다.
 
 | 영역 | 시작 | 크기 | 계약 |
 | --- | ---: | ---: | --- |

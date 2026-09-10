@@ -3,7 +3,13 @@
 현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../../../00_Docs/TODO_v0.4.0.md>)에서 관리합니다.
 
 빠르게 찾기: [현재 S/U 결선](T13_PLAN.md) · [오류 복구](T13_RECOVERY.md) ·
-[System OFF](T13_POWER.md) · [과거 T12 C 결선](COMMON_WIRING.md)
+[기존 공개 System OFF 검증](<../../../00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) ·
+[제외된 T13 System OFF 설계](T13_POWER.md) · [과거 T12 C 결선](COMMON_WIRING.md)
+
+S 합의 범위는 56 PASS와 System OFF 2건 제외로 정리 완료했습니다. 정상 S 36조건에는 C05 1시간 soak도 포함됩니다.
+U 소프트웨어 준비는 완료했지만 U 재결선·flash·실기는 NOT RUN입니다.
+현재 종료 근거는 [113번](<../../../00_Docs/04_검증 기록/113_T13_S_범위_종료와_U_준비.md>),
+남은 마일스톤은 [114번](<../../../00_Docs/04_검증 기록/114_전체_문서_정비와_남은_마일스톤.md>)을 확인합니다.
 
 이 디렉터리는 NU54DK 실물 보드가 필요한 host-side 시험만 관리합니다. 일반 host unit test나
 Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정하지 않습니다.

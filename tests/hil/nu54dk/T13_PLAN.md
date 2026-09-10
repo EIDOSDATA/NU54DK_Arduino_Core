@@ -1,19 +1,22 @@
 # T13 시험 조합과 S/U GPIO 결선
 
-현재 결선은 **S**입니다. S 잔여 검증을 정리한 다음 U로 변경합니다.
-현재 결과·자동 실행 순서·사용자 확인 범위는 [TODO](../../../00_Docs/TODO_v0.4.0.md),
-오류 주입 절차는 [복구 안내](T13_RECOVERY.md), 전원 복구는 [System OFF 안내](T13_POWER.md)를 따릅니다.
+현재 결선은 **S**이며, 합의한 S 범위는 **56 PASS + System OFF 2건 제외로 정리 완료(100%)**입니다.
+U 소프트웨어 준비도 완료했지만, U 재결선·flash·실기는 **NOT RUN**입니다.
+현재 결과와 다음 마일스톤은 [TODO](../../../00_Docs/TODO_v0.4.0.md),
+오류 주입 계약은 [복구 안내](T13_RECOVERY.md), 제외된 추가 전원 시험 설계는 [T13 System OFF](T13_POWER.md)를 확인합니다.
 
 ## 현재 적용 범위
 
-- 단독180초·일반 동시900초·대표C05 3600초를 유지합니다. 정상 S36항목은 source별 완료했습니다.
+- 단독 180초·일반 동시 900초·대표 C05 3600초를 유지합니다. 정상 S 36항목은 source별 완료했습니다.
+  C05의 1시간 soak도 이미 PASS했으며, U 뒤의 미실행 필수 시험으로 중복 등록하지 않습니다.
 - QDEC20/21·C07은 알려진 문제 보고 후 제외했습니다. T12 완료를 다시 보류하지 않습니다.
 - serial00/20/21/22/30의 연속 personality/역할 전환과 같은 경로의 timing 진단은 사용자 결정으로 제외했습니다.
   과거 handover2/5를 현재 미완료 항목으로 요구하거나 다시 실행하지 않습니다.
 - 제외 결정은 오류 수정·새 PASS가 아닙니다. 같은 기능의 취소·STOP·정상 재시작은 별도 복구 범위입니다.
 - [Topology JSON](v04_t13_topologies.json)은 원래32단독/8동시 정의입니다. QDEC의 required gate와 현재 제외 결정을 함께 적용합니다.
-- 원본 결과는 [109번](../../../00_Docs/04_검증%20기록/109_T13_S_세_복구_묶음_재검증.md),
-  현재 재개 결과는 [112번](../../../00_Docs/04_검증%20기록/112_T13_S_SPI_TWI_완료와_System_OFF_원인.md)에 기록합니다.
+- S 종료·U 준비는 [113번](<../../../00_Docs/04_검증 기록/113_T13_S_범위_종료와_U_준비.md>),
+  전체 문서 정리와 남은 마일스톤은 [114번](<../../../00_Docs/04_검증 기록/114_전체_문서_정비와_남은_마일스톤.md>)을 따릅니다.
+  이전 기록의 미완료 수치와 다음 실행은 각 source 당시의 상태입니다.
 
 ## 결선 변경이 필요한 이유와 순서
 
@@ -23,8 +26,8 @@ SPIS는 **MISO=P2.02, MOSI=P2.04**다. 같은 P2 GPIO끼리 연결하면 SPIM/SP
 data 출력끼리 이어지므로 실행할 수 없다. UART00은 별도의 RX/TX·CTS/RTS 교차가 필요하다.
 PDM의 검증된 clock/CS 배치도 이전 C 결선의 I2S용 P1.04/05 직결과 다르다.
 
-전체 결선 순서는 **C → S → U**이며 C→S 변경은 이미 완료했다. 현재 S에서 SPI00·PDM과
-허용 동시 조합을 검증하고 있고 U는 UART00 단독/flow/복구용 후속이다.
+전체 결선 순서는 **C → S → U**이며 C→S 변경과 합의한 S 검증은 완료했다.
+U는 아직 실행하지 않은 UART00 단독/flow/복구용 후속이다.
 System OFF 추가 결합 시험은 기존 S의 UART21 중계와 P1.14 GPIO wake를 사용하도록 준비했다.
 공개 API의 GRTC·사용자 버튼 wake는 M15에서 이미 실기 PASS했고 이후 해당 구현의 실질 변경이
 없으므로, T13 peer 제어 timer/GPIO 2조건은 필수 S gate에서 제외했다. T13 PASS로 소급하지 않으며
@@ -81,6 +84,10 @@ open-drain 결선 검사가 통과하기 전에는 push-pull 통신을 시작하
 
 ## 단독 32개와 동시 8조합
 
+다음은 원래 계획의 전체 정의다. QDEC 단독 2개와 C07을 제외한 현재 대상은 단독 30개·동시 7조합이며,
+S의 단독 29개·동시 7조합은 완료했고 UARTE00 단독 1개가 남았다. 후속 runtime 변경의 영향 회귀는
+기존 완료 이력과 분리해 결정한다.
+
 단독은 UART 5·SPIM 5·SPIS 5·TWIM 4·TWIS 4·SAADC 1·PWM 3·PDM 2·I2S 1·QDEC 2,
 각 180초다. 각 대상의 역할·route·핀·속도·buffer는 JSON의 `standalone`에 고정했다.
 UART00만 U, 나머지는 S다. UART는 1 Mbaud/8N1/1024 byte×2/RTS-CTS,
@@ -136,8 +143,11 @@ PWM은 TOP1000/individual/32 values/loop(C06 50%, C08 25%), QDEC은 256µs sampl
 
 ## 오류 복구·자원 충돌과 제외 범위
 
-구현한 고정 serial 취소/NACK의 mode·원본·100회 판정과 아직 남은 주입은
-[복구 실행 항목](T13_RECOVERY.md)에 구분한다. 정상 안정성 시험과 오류 복구 완료는 별개다.
+구현한 고정 serial 취소/NACK의 mode·원본·100회 판정은
+[복구 실행 항목](T13_RECOVERY.md)에 보존한다. 정상 안정성 시험과 오류 복구 완료는 별개다.
+아래는 원래 오류·충돌 요구의 전체 정의이지 남은 S 실행 대열이 아니다. 조기 CS, TWIS read 공급 지연,
+전체 GPIO/overlap, active GPIOTE/DPPI 및 PWM/analogWrite/tone/Servo 충돌의 추가 증거 경계는
+[110번 요구 대조](<../../../00_Docs/04_검증 기록/110_문서_정리와_T13_S_잔여_재개.md>)와 T14/T15에서 판단한다.
 
 | 대상 | 의도한 오류 또는 전환 | 각 100회 판정 |
 | --- | --- | --- |
@@ -145,7 +155,7 @@ PWM은 TOP1000/individual/32 values/loop(C06 50%, C08 25%), QDEC은 256µs sampl
 | SPI | controller CS 조기 해제·slave 미준비/짧은 DMA, 도중 cancel | 불완전 frame을 정상 PASS로 인정하지 않고 다음 CS frame 전체 복구 |
 | TWI | peer 전용 미할당 0x44 NACK, TWIS buffer 공급 지연, 승인 격리 bus의 한쪽 SDA open-drain LOW 100ms | 제한 시간 내 오류 검출, LOW 해제·필요한 bus clear/STOP 뒤 0x42 정상 read/write. PMIC 0x6A·P1.02/03에는 주입 금지 |
 | I2S/PDM | 한 번의 의도적 buffer 미공급, cancel/STOP, 재구성/재시작 | underrun/overflow/STOP 계약과 guard를 보존하고 새 전역 pattern의 정상 연속 buffer로 복구 |
-| QDEC/PWM | 유한 방향 변경·중간 STOP·다시 시작, PWM 미시작 task 취소 | count/sample/STOP과 시작 전 출력 idle, pin·DMA 반환 후 다음 실행 성공 |
+| QDEC/PWM | 원래 QDEC 방향 변경·STOP 요구는 제외. PWM STOP·미시작 task 취소는 완료 | QDEC 원본과 알려진 제한 유지. PWM 출력 idle·pin·DMA 반환·재획득 판정은 복구 기록 참조 |
 | 공유 serial block 연속 전환 | **사용자 결정으로 필수 검증 제외·재실행 중단** | 기존 증거 보존. 동일 block 동시 소유 거부의 별도 자원 충돌 결과는 유지 |
 | GPIO/stream/PWM/event | active GPIO alias, overlapping DMA, 같은 GPIOTE/DPPI 채널, 다른 domain 연결, PWM과 analogWrite/tone/Servo 중복 | 이전 실행·guard·출력을 훼손하지 않는 거부와 반환 뒤 재획득. DPPI START 구독은 PWM STOP 전에 해제 |
 
@@ -172,8 +182,9 @@ PREPARE/STOP에서 송신 보류 상태를 초기화하며 수신 준비 실패 
 QDEC의 알려진 제한 보고와 완료 결정을 반영한 현재 S 정상 대상은 단독29개와 동시7개로,
 **29×180 + 6×900 + 3600 = 14,220초, 3시간 57분**의 전체 측정 분량이다. 이미 완료한 측정까지
 포함한 양이며 앞으로 남은 시간 예측이 아니다. U UART00 180초는 별도이며 QDEC 재진단은 예약하지 않는다.
-짧은 preflight, 남은 복구 반복, 결선 두 단계, 구현·실패 조사·최종 감사 시간은 별도다.
-양쪽 peer 결과로 일부 시간을 묶을 가능성은 실제 instance별 연속 증거를 감사한 뒤 결정한다.
+위 시간에는 preflight·복구 반복·결선·원인 조사·감사가 포함되지 않는다. C→S와 합의한 S 반복은 이미 완료했다.
+실제 남은 U는 S→U 한 차례 재결선·17선 검사·단독 180초 및 양 역할 CTS/TX/RX 복구이며,
+후속 영향 회귀·T14/T15 판단과 최종 감사 시간은 별도로 결정한다.
 
 다섯 block 동시 대표 한 조합을 모든 통신/stream 조합의 PASS로 확대하지 않는다.
 P1의 승인 출력 여섯 개로 P1 UART 세 개를 모두 4선 flow로 동시에 쓰는 구성은 불가능하다.

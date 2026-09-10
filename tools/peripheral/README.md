@@ -27,7 +27,7 @@ python tools/peripheral/verify_m23_inventory.py --ncs-root C:\ncs\v3.4.0
 python tools/peripheral/verify_m24_serial_contract.py --ncs-root C:\ncs\v3.4.0
 ```
 
-Profile/feature schema는 builder configuration 모듈과 library의 기존 `nucode.features.yml`,
+Profile/feature schema는 builder configuration 모듈과 `libraries/*/zephyr/feature.yml`,
 `variants/nu54dk/profiles`가 소유한다. Readiness는
 [v0.4.0-release-readiness.json](../../variants/nu54dk/v0.4.0-release-readiness.json)이 소유하며
 [M27](../release/m27_release.py)의 16개 gate 검사가 이를 대조한다. 생성기 성공으로
