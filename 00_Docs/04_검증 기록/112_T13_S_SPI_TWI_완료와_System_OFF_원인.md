@@ -7,8 +7,8 @@
 ## 당시 결론
 
 고정 S 결선에서 SPI 경계 10조건, TWI stuck-low 4조건, TWIS 공급 지연 4조건을 모두
-정식 완료했다. 요청한 S 1~3단계는 **56/58(96.6%)**이며, 남은 것은 System OFF timer와
-GPIO wake 두 조건이다. QDEC과 시리얼 핸드오버는 사용자 결정대로 제외한다.
+정식 완료했다. 당시 요청한 S 1~3단계는 **56/58(96.6%)**였다. 이후 S 범위는 113번에서
+종료했으며, 아래 System OFF 추가 결합 진단은 현재 문제·재실행 목록이 아니다.
 
 System OFF 실패는 GPIO 단선이나 T13의 GRTC/GPIO 설정 실패가 아니다. 재연결 뒤 17개 신호를
 양방향 3회 검사해 **102/102**, UART21 DMA bridge와 양 보드 cleanup을 통과했다. nRF54L15
@@ -17,18 +17,18 @@ A가 예약한 LOW도 실제 도착했다. pyOCD의 DP power request/ack 해제�
 적용해도 wake하지 않았다.
 
 T13과 독립된 NCS v3.4.0 공식 `system_off` 예제도 같은 보드에서 2초 GRTC wake를 두 조건으로
-실행했으나 모두 유지 RAM이 `boots=1, off_count=1`에 머물렀다. 따라서 NU54DK의 온보드
-debug-control 2연 SW1에서 **B의 `DISABLE_SWD`만 물리적으로 격리**해야 한다. A SWD와 양쪽
-`DISABLE_UART`, 17개 GPIO·GND·USB는 그대로 유지한다.
+실행했으나 모두 유지 RAM이 `boots=1, off_count=1`에 머물렀다. 당시에는 NU54DK의 온보드
+debug-control 2연 SW1에서 B의 `DISABLE_SWD`만 격리하는 진단을 후속으로 제안했다.
+이 추가 진단은 이후 범위 종료했으므로 현재 스위치 조작이나 재실행을 요구하지 않는다.
 
 ## 정식 완료 결과
 
-| 범위 | exact source | 결과 | S 누계 |
+| 범위 | exact source | 결과·해결 상태 | 당시 S 누계 |
 | --- | --- | ---: | ---: |
-| SPI short, SPIM00/20/21/22/30 | `914ccd16` | 5조건 × 100회 | 43/58 |
-| SPI unready, SPIM00/20/21/22/30 | `1c02f9de` | 5조건 × 100회 | 48/58 |
-| TWI SDA stuck-low, TWIM20/21/22/30 | `d39f0742` | 4조건 × 100회 | 52/58 |
-| TWIS 공급 지연, TWIS20/21/22/30 | `e8e776e9` | 4조건 × 100회 | 56/58 |
+| SPI short, SPIM00/20/21/22/30 | `914ccd16` | **해결 완료**, 5조건 × 100회 | 43/58 |
+| SPI unready, SPIM00/20/21/22/30 | `1c02f9de` | **해결 완료**, 5조건 × 100회 | 48/58 |
+| TWI SDA stuck-low, TWIM20/21/22/30 | `d39f0742` | **해결 완료**, 4조건 × 100회 | 52/58 |
+| TWIS 2ms 공급 지연, TWIS20/21/22/30 | `e8e776e9` | **해결 완료**, 4조건 × 100회·사용자 수용 완료 | 56/58 |
 
 SPI 두 묶음은 각각 계획한 경계 오류 1,000회, TWI는 기대한 error/recovery 400회,
 TWIS는 기대한 지연 800회를 관측했다. 각 묶음의 정상 재시작, 측정 종료, 양 보드 STOP과
@@ -82,14 +82,8 @@ T13 코드만 수정해 해결할 수 있는 현상이 아니다.
 
 - [공식 예제 artifact hash와 유지 RAM](evidence/t13-s123-power-official-baseline-20260910/manifest.json)
 
-## 당시 남은 실행 순서 — 후속 제외 결정은 113번
+## 후속 종료 상태
 
-1. A/B 모두 SWD Enable에서 exact image 기록·102회 연결성·UART bridge 준비를 마친다.
-2. B debug session을 정상 종료한 직후 B의 debug-control `DISABLE_SWD`만 격리한다.
-3. 같은 격리 구간에서 GRTC timer wake와 P1.14 GPIO wake를 순서대로 한 번씩 검증한다.
-4. 두 wake 뒤 B `DISABLE_SWD`를 Enable로 복원하고, 양 보드 STOP·17핀 입력 반환·유지 RAM을 감사한다.
-5. 2조건이 통과하면 S를 58/58로 마감하고 기존 U image·Host·CI·결선표를 감사한다. U 재결선과
-   U 실기는 실행하지 않는다.
-
-각 wake는 source, boot 증가, exact reset cause, mode·round·seed, DMA 반환, fresh UART challenge와
-시간 범위를 모두 만족해야 한다. debug reset·로그 단절·공식 예제 실패 자체는 PASS가 아니다.
+당시 System OFF 추가 실행 순서는 폐기했다. 공개 API의 M15 GRTC·버튼 wake 실기 완료를 확인하고
+S 56 PASS + 추가 결합 2조건 범위 종료, U 준비 100%로 정리했다([113번](113_T13_S_범위_종료와_U_준비.md)).
+실행하지 않은 추가 결합을 PASS로 바꾸지 않으며 U 실기는 미실행이다.

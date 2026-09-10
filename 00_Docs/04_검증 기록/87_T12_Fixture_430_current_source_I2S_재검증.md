@@ -1,4 +1,4 @@
-# T12 Fixture 430 — DMA 자원 처리 지연 교정과 I2S 전체 PASS
+# T12 Fixture 430 — DMA 자원 처리 지연 해결 완료와 I2S 전체 PASS
 
 > 과거 검증 이력입니다. 준비·다음 작업·실행 조건은 기록 당시 기준이며, 현재 상태는 [v0.4.0 TODO](../TODO_v0.4.0.md)를 따릅니다.
 
@@ -30,7 +30,7 @@
 
 사용자가 USB 분리 후 연결했던 430 결선 유지 확인을 적용했다. DAP UART 분리·SWD 연결·SB/PMIC 설정 유지, MCK 미연결 조건이다. [Confirmation](evidence/t12-fixture430-36ba819/confirmation.json)은 재확인 시각, source·catalog·두 image hash·probe digest를 연결한다. 30 분 유효기간인 19:05:58Z 전에 두 실행을 마쳤으며 시각을 임의 갱신하지 않았다. 원래 430 요청 문구와 이번 결선 유지 답변은 [checkpoint](evidence/t12-fixture430-36ba819/checkpoint.json)에 함께 보존한다. Sector flash·제어 시작만 사용했으며 mass erase·recover·auto-unlock·속도 하향은 없었다.
 
-## 원인과 교정
+## 원인과 교정 — 해결 완료
 
 | Source | 실제 결과 |
 | --- | --- |
@@ -85,4 +85,4 @@ Canonical payload read 결과는 변경 없이 저장했다. 완료된 각 paylo
 
 440에서는 **A P1.07과 B P1.06을 연결하지 않는다**. Firmware의 고정 board-role별 clock/gate/data 배치에 따른 3 개 신호선이며, 반대 방향 data 선을 추가하면 안 된다. [Fixture catalog](../../tests/hil/nu54dk/v04_fixtures.json)와 [signal HIL](../../tests/zephyr/v04_pair_hil/src/signal_hil.cpp)을 따라 재확인한다.
 
-남은 T12는 440 PDM, PWM period/duty capture, ADC calibration API·다중 채널 순서, timer/event의 전체 요구다. T13 복구·동시성·soak, T14 공용 PWM의 실제 START 전 start_via_task STOP timeout, T15 이후 통합, R14·RC/공개와 readiness 미해결 8 개를 유지한다. 공용 자원 경로 변경 이후 필요한 최종-source 통신 회귀도 후속 통합에서 확인한다. 이번 430 기능 PASS는 주파수/jitter 정밀 측정·외부 codec 호환·오디오 품질·주입한 underrun/overrun 복구 검증을 포함하지 않는다.
+당시 남은 T12는 440 PDM, PWM capture, ADC calibration·다중 채널, timer/event였다. PDM 기본·연속 검증은 [91번](91_T12_Fixture_440_PDM_밀도와_연속_DMA_검증.md)·[92번](92_T12_Fixture_440_PDM_연속_전체_검증.md)에서 완료했고, 공용 PWM의 실제 START 전 `start_via_task` STOP timeout은 **해결 완료([94번](94_T14_PWM_지연_시작_취소와_무점퍼_검증.md))**다. 나머지 현재 작업은 활성 TODO를 따른다. 이번 430 기능 PASS는 주파수/jitter 정밀 측정·외부 codec 호환·오디오 품질·주입한 underrun/overrun 복구 검증을 포함하지 않는다.

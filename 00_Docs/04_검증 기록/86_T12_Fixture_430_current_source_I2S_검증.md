@@ -1,8 +1,10 @@
-# T12 Fixture 430 — I2S 부분 통과와 짧은 버퍼 실패
+# T12 Fixture 430 — I2S 짧은 버퍼 실패 이력과 후속 해결 완료
 
 > 과거 검증 이력입니다. 준비·다음 작업·실행 조건은 기록 당시 기준이며, 현재 상태는 [v0.4.0 TODO](../TODO_v0.4.0.md)를 따릅니다.
 
-**Exact 7c44abffb30402c56cb5e2fd7a1c21829b3b3a16에서 192 개 계획 중 72 개가 통과했으며, 73번째 조건에서 실패했다. 나머지 119 개는 미실행이고 430 전체는 FAIL이다. 양쪽 disarm과 I2S 정지·핀 복원은 확인했다.**
+현재 문제 상태: 짧은 버퍼의 DMA 처리 지연은 **해결 완료**입니다. [87번](87_T12_Fixture_430_current_source_I2S_재검증.md)의 `36ba819`에서 동일 조건을 포함한 전체 192개를 통과했습니다. 아래 원래 실행의 FAIL·미실행은 보존합니다.
+
+**당시 결과:** Exact 7c44abffb30402c56cb5e2fd7a1c21829b3b3a16에서 192개 계획 중 72개가 통과했으며 73번째 조건에서 실패했다. 나머지 119개는 미실행이고 해당 430 campaign은 FAIL이다. 양쪽 disarm과 I2S 정지·핀 복원은 확인했다.
 
 기록일은 2026-09-07 Asia/Seoul이며 원본 시각은 UTC다. [85번](85_T12_Fixture_420_current_source_QDEC_재검증.md)의 420 전체 PASS는 별도 source의 과거 결과로 유지한다.
 
@@ -37,7 +39,7 @@ USB 분리 후 이전 420 신호선을 제거하고 아래 430 결선을 한 사
 | 같은 c461182의 별도 진단 | 양쪽 master 역할·폭 4종·채널 3종의 24 개 startup 진단. [원본](evidence/t12-fixture430-c461182/startup-diagnostic.json)은 기능 PASS가 아니며 모든 양쪽 cleanup [0]. 앞 행 postflight는 이 진단보다 앞선 시각이다 |
 | 7c44abffb30402c56cb5e2fd7a1c21829b3b3a16 / C:/u3x | tail 전체 반환·별도 guard·packed sample 전체 비교 교정 후 72 PASS, 1 FAIL, 119 NOT RUN. [정식 결과](evidence/t12-fixture430-7c44abf/fixture430-attempt1.json)와 [읽기 전용 postflight](evidence/t12-fixture430-7c44abf/postflight.json) |
 
-## 교정한 범위와 남은 오류
+## 당시 교정 범위와 오류 — 후속 해결 완료
 
 공용 core·SDK·board는 수정하지 않았다. HIL이 연속 I2S의 다음 buffer 요청을 처리하지 않던 부분을 수정하고, payload slot 0/1 뒤 tail slot 2와 정지용 guard slot 3을 제출한다. Tail 전체가 실제 반환된 뒤 STOP하여 시작 지연만큼 뒤로 밀린 마지막 sample까지 수집한다. 시작 시 빈 frame이 있을 수 있고 반환된 STOP buffer는 부분 전송일 수 있다는 구분은 [Nordic 송수신 설명](https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/i2s.html-concept_wvj_ssy_vr)과 고정 SDK의 nrfx_i2s.h callback 계약을 참조했다.
 
@@ -45,7 +47,7 @@ USB 분리 후 이전 420 신호선을 제거하고 아래 430 결선을 한 사
 
 최종 실행은 role 1 master의 16 kHz 전체 48 개와 48 kHz 8/16-bit 24 개를 통과했다. **48 kHz·24-bit·stereo·32-word·단일 buffer**에서 role 1 상태 `[1,1,1,0,128,32,32,1]`이 발생했다. 기능 완료 플래그는 0이며 성공으로 인정하지 않았다. 128은 현재 HIL의 queue/underrun/stop 공통 오류 비트여서 정확한 발생 위치를 더 좁혀야 한다. 실패 후 [RAM 읽기 진단](evidence/t12-fixture430-7c44abf/i2s-buffer-diagnostic.json)에서는 role 1 첫 RX buffer가 끝부분 데이터로 덮인 상태를 관측했다. 짧은 DMA 구간의 buffer 재사용과 일치하지만 HIL service 지연과 공용 Fabric 내부 지연 중 근본 원인은 아직 확정하지 않았다.
 
-다음 교정에서는 start 반환부터 첫 queue까지 시간, buffer 요청/반환 순서와 오류 발생 위치를 분리해 확인한다. 32-word 조건을 늘리거나 실패 조건을 제외해 통과시키지 않는다. 수정 뒤 새 clean source의 전체 192 개를 다시 실행해야 하며 서로 다른 source의 부분 PASS를 합산하지 않는다.
+**후속 해결 완료:** [87번](87_T12_Fixture_430_current_source_I2S_재검증.md)에서 queue 처리 지연을 추적하고 compact DMA token 처리를 교정했다. 32-word 조건·oracle을 유지한 채 새 exact source의 전체 192개를 다시 통과했으며 서로 다른 source의 부분 PASS를 합산하지 않았다.
 
 ## 부분 결과와 종료 감사
 
@@ -59,8 +61,8 @@ USB 분리 후 이전 420 신호선을 제거하고 아래 430 결선을 한 사
 
 세 source 원본은 [56a88a5 manifest](evidence/t12-fixture430-56a88a5/raw-files.json), [c461182 manifest](evidence/t12-fixture430-c461182/raw-files.json), [7c44abf manifest](evidence/t12-fixture430-7c44abf/raw-files.json)에 UTF-8 LF 사본·원래 byte gzip·SHA-256으로 보존한다. 준비된 전체 PASS 감사 script의 존재는 실행 성공 근거가 아니며 이번에 실행한 감사는 partial-results-audit이다. [문서 검사](evidence/t12-fixture430-7c44abf/docs-verification.json)는 Markdown 195 개, 원본 복원·scope·stage byte 대조를 기록한다. 사용 중인 I2S helper/native 검증은 유지했으며 제거할 저장소 임시 파일은 없었다. 기존 실패 기록·공개 자산·SDK·board는 보존한다.
 
-## 재개 조건
+## 당시 재개 조건 — 현재 재실행 지시 아님
 
 원래 결선 확인은 **2026-09-06T18:13:49Z**에 만료했다. 최종 실패 실행은 18:13:17Z에 끝났고, 다음 실기 전에 현재 430 결선·스위치 유지 재확인을 요청했다. 만료 후 새 신호 시험은 실행하지 않았다. 재확인을 받은 새 시각만 기록하고 실제 clean HEAD의 exact pair를 빌드·검사해 재개한다. 문서 commit은 마지막 업로드 source와 다르다.
 
-[완료 상태](evidence/t12-fixture430-7c44abf/completion-status.json)와 활성 TODO에 남은 430 오류를 유지한다. 440 PDM은 미실행이며 별도 USB 분리·재결선 확인이 필요하다. PWM period/duty capture·ADC calibration API/다중 채널 순서·남은 timer/event 요구, T13 복구·동시성·soak, T14 공용 PWM deferred START 취소 결함, T15 이후 통합·R14/공개 및 readiness 미해결 8 개도 유지한다. 이번 부분 결과로 T12 전체나 M25를 완료 처리하지 않는다.
+[완료 상태](evidence/t12-fixture430-7c44abf/completion-status.json)는 이 실행의 실패 원본이다. 430 짧은 버퍼 오류는 **해결 완료([87번](87_T12_Fixture_430_current_source_I2S_재검증.md))**, 440 PDM 기본·연속 검증은 **완료([91번](91_T12_Fixture_440_PDM_밀도와_연속_DMA_검증.md)·[92번](92_T12_Fixture_440_PDM_연속_전체_검증.md))**, 공용 PWM deferred START 취소 결함은 **해결 완료([94번](94_T14_PWM_지연_시작_취소와_무점퍼_검증.md))**다. 나머지 현재 작업은 활성 TODO를 따르며 이 과거 부분 결과로 T12 전체나 M25를 완료 처리하지 않는다.

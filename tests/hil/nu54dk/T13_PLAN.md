@@ -1,7 +1,8 @@
 # T13 시험 조합과 S/U GPIO 결선
 
-현재 결선은 **S**이며, 합의한 S 범위는 **56 PASS + System OFF 2건 제외로 정리 완료(100%)**입니다.
-U 소프트웨어 준비도 완료했지만, U 재결선·flash·실기는 **NOT RUN**입니다.
+합의한 S 범위는 **56 PASS + System OFF 2건 제외로 정리 완료(100%)**입니다.
+현재 결선은 **UARTE00 4신호+GND**이며 사용자가 완료를 확인했습니다. U flash·실기는 진행 중이고
+아직 PASS가 아닙니다.
 현재 결과와 다음 마일스톤은 [TODO](../../../00_Docs/TODO_v0.4.0.md),
 오류 주입 계약은 [복구 안내](T13_RECOVERY.md), 제외된 추가 전원 시험 설계는 [T13 System OFF](T13_POWER.md)를 확인합니다.
 
@@ -12,6 +13,8 @@ U 소프트웨어 준비도 완료했지만, U 재결선·flash·실기는 **NOT
 - QDEC20/21·C07은 알려진 문제 보고 후 제외했습니다. T12 완료를 다시 보류하지 않습니다.
 - serial00/20/21/22/30의 연속 personality/역할 전환과 같은 경로의 timing 진단은 사용자 결정으로 제외했습니다.
   과거 handover2/5를 현재 미완료 항목으로 요구하거나 다시 실행하지 않습니다.
+- SPI CS 조기 종료의 별도 slave 판정은 추가 검증에서 제외했습니다. TWIS는 완료한 2ms 공급
+  지연 시험으로 수용하며, 별도 read-request 지연 시험을 요구하지 않습니다.
 - 제외 결정은 오류 수정·새 PASS가 아닙니다. 같은 기능의 취소·STOP·정상 재시작은 별도 복구 범위입니다.
 - [Topology JSON](v04_t13_topologies.json)은 원래32단독/8동시 정의입니다. QDEC의 required gate와 현재 제외 결정을 함께 적용합니다.
 - S 종료·U 준비는 [113번](<../../../00_Docs/04_검증 기록/113_T13_S_범위_종료와_U_준비.md>),
@@ -77,10 +80,11 @@ U는 `nucode.v04.t13_u_dut`/`nucode.v04.t13_u_peer` 두 image와 firmware
 TX/RX DMA 취소·STOP 뒤 새 nonce 재시작만 허용한다. U에서 SPI/TWI/I2S/PDM/PWM,
 parity/break, reverse-serial, resource handover를 요청하면 probe를 열기 전에 거부한다.
 
-S 확인서는 U에 재사용하지 않는다. 실제 U 실행 전에 두 USB를 분리하고 위 네 선을
-재배치한 뒤, 현재 UID·U 결선·DAP UART 분리·SWD 연결·전압·전원 레일·GND를
-다시 확인한 `v04-t13-u-session` 승인서가 필요하다. 그 다음 U 전체17선
-open-drain 결선 검사가 통과하기 전에는 push-pull 통신을 시작하지 않는다.
+S 확인서는 U에 재사용하지 않는다. 실제 U 실행 전에 두 USB를 분리하고 UART00의 TX↔RX·
+RTS↔CTS 네 선과 GND를 연결한 뒤, 현재 UID·U 결선·DAP UART 분리·SWD 연결·전압·전원 레일·
+GND를 다시 확인한 `v04-t13-u-session` 승인서가 필요하다. U 실행기는 net 11·13·15·16의
+양방향 open-drain 검사가 통과하기 전에는 push-pull 통신을 시작하지 않는다. 연결하지 않은
+나머지 13신호는 U 결선 PASS의 대상이 아니다. S의 17신호 검사 범위는 유지한다.
 
 ## 단독 32개와 동시 8조합
 
@@ -145,19 +149,18 @@ PWM은 TOP1000/individual/32 values/loop(C06 50%, C08 25%), QDEC은 256µs sampl
 
 구현한 고정 serial 취소/NACK의 mode·원본·100회 판정은
 [복구 실행 항목](T13_RECOVERY.md)에 보존한다. 정상 안정성 시험과 오류 복구 완료는 별개다.
-아래는 원래 오류·충돌 요구의 전체 정의이지 남은 S 실행 대열이 아니다. 조기 CS, TWIS read 공급 지연,
-전체 GPIO/overlap, active GPIOTE/DPPI 및 PWM/analogWrite/tone/Servo 충돌의 추가 증거 경계는
+아래는 합의 범위의 완료·미완료 판정표이며, 제외한 항목은 표에서 제거했다.
+전체 GPIO/overlap, active GPIOTE/DPPI 및 PWM/analogWrite/tone/Servo 충돌의 추가 증거 경계만
 [110번 요구 대조](<../../../00_Docs/04_검증 기록/110_문서_정리와_T13_S_잔여_재개.md>)와 T14/T15에서 판단한다.
 
-| 대상 | 의도한 오류 또는 전환 | 각 100회 판정 |
+| 대상 | 현재 상태 | 합의한 오류 주입·판정 |
 | --- | --- | --- |
-| UART | DMA 도중 cancel, 제한된 peer RX 공급 지연, 100ms CTS 정지/재개; 별도 peer parity/break | 해당 error/cancel 길이·소유권 확인 후 다음 nonce 정상 송수신. CTS는 단독 4선 및 C01/C05 UART30에서만 |
-| SPI | controller CS 조기 해제·slave 미준비/짧은 DMA, 도중 cancel | 불완전 frame을 정상 PASS로 인정하지 않고 다음 CS frame 전체 복구 |
-| TWI | peer 전용 미할당 0x44 NACK, TWIS buffer 공급 지연, 승인 격리 bus의 한쪽 SDA open-drain LOW 100ms | 제한 시간 내 오류 검출, LOW 해제·필요한 bus clear/STOP 뒤 0x42 정상 read/write. PMIC 0x6A·P1.02/03에는 주입 금지 |
-| I2S/PDM | 한 번의 의도적 buffer 미공급, cancel/STOP, 재구성/재시작 | underrun/overflow/STOP 계약과 guard를 보존하고 새 전역 pattern의 정상 연속 buffer로 복구 |
-| QDEC/PWM | 원래 QDEC 방향 변경·STOP 요구는 제외. PWM STOP·미시작 task 취소는 완료 | QDEC 원본과 알려진 제한 유지. PWM 출력 idle·pin·DMA 반환·재획득 판정은 복구 기록 참조 |
-| 공유 serial block 연속 전환 | **사용자 결정으로 필수 검증 제외·재실행 중단** | 기존 증거 보존. 동일 block 동시 소유 거부의 별도 자원 충돌 결과는 유지 |
-| GPIO/stream/PWM/event | active GPIO alias, overlapping DMA, 같은 GPIOTE/DPPI 채널, 다른 domain 연결, PWM과 analogWrite/tone/Servo 중복 | 이전 실행·guard·출력을 훼손하지 않는 거부와 반환 뒤 재획득. DPPI START 구독은 PWM STOP 전에 해제 |
+| S UART | **관련 문제 해결 완료·복구 검증 완료** | DMA 취소, RX 공급 지연, CTS 정지·재개, parity/break 뒤 길이·소유권·정상 송수신 확인 |
+| SPI | **연속 버퍼 문제 해결 완료·복구 검증 완료** | controller 도중 취소의 부분 DMA·정상 재시작, slave short/unready와 다음 frame 복구 |
+| TWI/TWIS | **관련 문제 해결 완료·복구 검증 완료** | 0x44 NACK, 2ms TWIS 공급 지연, SDA LOW 100ms와 해제·bus clear/STOP 뒤 정상 read/write |
+| I2S/PDM | **관련 문제 해결 완료·복구 검증 완료** | 한 번의 buffer 미공급·cancel/STOP 뒤 guard 보존과 정상 stream 재시작 |
+| PWM | **STOP·재시작 문제 해결 완료** | 동작 중 STOP·미시작 task 취소, 출력 idle·pin·DMA 반환·재획득 |
+| GPIO/stream/PWM/event 충돌 3종 | **검증·판정 미완료** | 중복 요청 거부와 기존 동작·guard·출력 보존. 위 UART 충돌 결과를 전체로 확대하지 않음 |
 
 serial00의 SPI↔UART **외부 송수신** handover는 S/U 결선이 서로 달라 무인 반복 대상이 아니다.
 S의 SPIM00↔SPIS00 연속 역할 전환도 제외한다. U의 UART00 stop/restart는 별도 복구 범위이며,
@@ -183,7 +186,7 @@ QDEC의 알려진 제한 보고와 완료 결정을 반영한 현재 S 정상 �
 **29×180 + 6×900 + 3600 = 14,220초, 3시간 57분**의 전체 측정 분량이다. 이미 완료한 측정까지
 포함한 양이며 앞으로 남은 시간 예측이 아니다. U UART00 180초는 별도이며 QDEC 재진단은 예약하지 않는다.
 위 시간에는 preflight·복구 반복·결선·원인 조사·감사가 포함되지 않는다. C→S와 합의한 S 반복은 이미 완료했다.
-실제 남은 U는 S→U 한 차례 재결선·17선 검사·단독 180초 및 양 역할 CTS/TX/RX 복구이며,
+실제 남은 U는 완료한 U 최소 결선의 4신호 검사·단독 180초 및 양 역할 CTS/TX/RX 복구이며,
 후속 영향 회귀·T14/T15 판단과 최종 감사 시간은 별도로 결정한다.
 
 다섯 block 동시 대표 한 조합을 모든 통신/stream 조합의 PASS로 확대하지 않는다.

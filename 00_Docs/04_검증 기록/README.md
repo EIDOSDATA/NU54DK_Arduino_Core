@@ -13,14 +13,13 @@
 | --- | --- |
 | [114 — 전체 문서 정비와 남은 마일스톤](114_전체_문서_정비와_남은_마일스톤.md) | 전수 검토·현행/역사 분리·U 및 T14 이후 남은 작업 |
 | [113 — S 범위 종료와 U 준비](113_T13_S_범위_종료와_U_준비.md) | PASS 56 + 제외 2, System OFF 중복 판정·마지막 GPIO 진단·U 준비 |
-| [112 — SPI·TWI 완료와 System OFF 원인](112_T13_S_SPI_TWI_완료와_System_OFF_원인.md) | 당시 S 56/58·레지스터·공식 예제·물리 SWD 격리 원인 |
-| [111 — I2S 완료와 SPIS 교정](111_T13_S_I2S_완료와_SPIS_연속_버퍼_교정.md) | I2S 완료·SPI 최초 실패와 원인 수정 |
-| [110 — 문서 정리와 S 잔여 재개](110_문서_정리와_T13_S_잔여_재개.md) | 전수 문서 감사·UART 원인 수정·U 준비 증거 |
-| [109 — 세 복구 묶음과 연속 전환 제외](109_T13_S_세_복구_묶음_재검증.md) | 당시 TWIM 완료·I2S 잔여와 전환 시험 제외 결정 |
+| [112 — SPI·TWI 완료와 System OFF 원인](112_T13_S_SPI_TWI_완료와_System_OFF_원인.md) | **SPI/TWI/TWIS 문제 해결 완료**·정식 재검증·전원 시험 이력 |
+| [111 — I2S 완료와 SPIS 교정](111_T13_S_I2S_완료와_SPIS_연속_버퍼_교정.md) | **I2S·SPIS 문제 해결 완료**·최초 실패와 수정 근거 |
+| [110 — 문서 정리와 S 잔여 재개](110_문서_정리와_T13_S_잔여_재개.md) | **UART·C01·RX 지연 문제 해결 완료**·문서 감사·준비 근거 |
+| [109 — 세 복구 묶음 재검증](109_T13_S_세_복구_묶음_재검증.md) | **TWIM 취소·후속 I2S 문제 해결 완료**·당시 실행 이력 |
 | [108 — 이전 S 실행 종료](108_T13_S_자동_실행_종료와_재개_항목.md) | 이전 실패·미실행·도구 보완 |
 | [107 — S와 System OFF](107_T13_S_자동_진행과_System_OFF_계획.md) | 정상 안정성·추가 오류 복구·전원 검증 |
 | [106 — Git·패키지 정리](106_Git_이력_정리와_구버전_패키지_공급_종료.md) | 공급 종료와 원본 복원 |
-| [101 — QDEC 알려진 문제](101_T12_QDEC_누산_누락_원인_분리.md) | 누산 누락·보완·진단 종료 |
 
 ## 기록 읽는 방법
 
@@ -35,7 +34,7 @@
 <details>
 <summary>v0.4.0 최근 실기·인계 — 94~114</summary>
 
-- [94 — T14 PWM 지연 시작 취소와 무점퍼 검증](<94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>)
+- [94 — T14 PWM 지연 시작 취소와 무점퍼 검증](<94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>) — **PWM 미시작 STOP 문제 해결 완료**
 - [95 — T12 내부 ADC·TIMER·이벤트 무점퍼 검증](<95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)
 - [96 — 새 PC 인수 확인과 T12 PWM peer capture 첫 경로 준비](<96_새_PC_인수와_T12_PWM_peer_capture_준비.md>)
 - [97 — T12 PWM peer capture 첫 240조건 검증](<97_T12_PWM_peer_capture_첫_240조건_검증.md>)
@@ -81,13 +80,13 @@
 - [83 — T12 Fixture 408 — current-source PWM→AIN7 검증](<83_T12_Fixture_408_current_source_PWM_ADC_검증.md>)
 - [84 — T12 Fixture 420 — QDEC 기능 검증과 준비 취소 교정](<84_T12_Fixture_420_current_source_QDEC_검증.md>)
 - [85 — T12 Fixture 420 — QDEC 수정본 재검증 완료](<85_T12_Fixture_420_current_source_QDEC_재검증.md>)
-- [86 — T12 Fixture 430 — I2S 부분 통과와 짧은 버퍼 실패](<86_T12_Fixture_430_current_source_I2S_검증.md>)
-- [87 — T12 Fixture 430 — DMA 자원 처리 지연 교정과 I2S 전체 PASS](<87_T12_Fixture_430_current_source_I2S_재검증.md>)
-- [88 — T12 Fixture 440 — PDM DMA 교정과 스테레오 미해결](<88_T12_Fixture_440_current_source_PDM_검증.md>)
+- [86 — T12 Fixture 430 — I2S 짧은 버퍼 실패 이력](<86_T12_Fixture_430_current_source_I2S_검증.md>) — **후속 해결 완료(87번)**
+- [87 — T12 Fixture 430 — DMA 자원 처리 지연 교정과 I2S 전체 PASS](<87_T12_Fixture_430_current_source_I2S_재검증.md>) — **해결 완료**
+- [88 — T12 Fixture 440 — PDM DMA·스테레오 진단 이력](<88_T12_Fixture_440_current_source_PDM_검증.md>) — **후속 해결 완료(91~92번)**
 - [89 — T10/T12 Fixture 440 — clock·gate 네 핀의 전기적 연결 관측](<89_T12_Fixture_440_clock_gate_분리_진단.md>)
 - [90 — T10/T12 Fixture 440 — 재결선과 PDM 위상 진단](<90_T12_Fixture_440_재결선과_PDM_위상_진단.md>)
-- [91 — T12 Fixture 440 — PDM 밀도와 연속 DMA 검증](<91_T12_Fixture_440_PDM_밀도와_연속_DMA_검증.md>)
-- [92 — T12 Fixture 440 — PDM 연속 전체 검증](<92_T12_Fixture_440_PDM_연속_전체_검증.md>)
+- [91 — T12 Fixture 440 — PDM 밀도와 연속 DMA 검증](<91_T12_Fixture_440_PDM_밀도와_연속_DMA_검증.md>) — **위상·gate 준비 문제 해결 완료**
+- [92 — T12 Fixture 440 — PDM 연속 전체 검증](<92_T12_Fixture_440_PDM_연속_전체_검증.md>) — **연속 검증 완료(96/96)**
 - [93 — Host 재검증과 T12 이후 남은 작업](<93_Host_재검증과_T12_이후_남은_작업.md>)
 
 </details>

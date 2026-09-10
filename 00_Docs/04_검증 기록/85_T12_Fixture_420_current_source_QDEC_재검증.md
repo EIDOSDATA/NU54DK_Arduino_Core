@@ -6,7 +6,7 @@
 
 [84번](84_T12_Fixture_420_current_source_QDEC_검증.md)의 첫 파형 실패와 fc9f153 취소 실패는 당시 결과로 보존한다.
 이번에는 a3d0ab5의 마지막 GPIO LOW 준비·복원 교정과 같은 코드를 실제 clean main에서 다시 빌드하여 검증했다.
-공용 PwmSequenceFabric의 미시작 deferred START 취소 결함은 T14 미해결 항목이며, 이 HIL 결과로 수정 완료 처리하지 않는다.
+공용 PwmSequenceFabric의 미시작 deferred START 취소 결함은 당시 T14 미해결이었다. **후속 해결 완료: [94번](94_T14_PWM_지연_시작_취소와_무점퍼_검증.md), `080d771` 수정·두 보드 회귀.** 이 420 HIL 우회 결과 자체를 공용 결함의 수정 근거로 사용하지 않는다.
 
 ## Source와 새 확인
 
@@ -85,5 +85,5 @@ C/C++ 정렬 **359 PASS**는 [84번의 software 근거](evidence/t12-fixture420-
 
 MCK 연결은 없다. DAP UART 분리·SWD 연결·기존 SB/PMIC 유지 조건의 새 사용자 확인 후 430을 진행한다.
 401~408의 276 기능·59,616 samples·276 cleanup 근거는 [83번](83_T12_Fixture_408_current_source_PWM_ADC_검증.md)에 유지한다.
-440 PDM·남은 T12 요구·T13 복구/동시성/soak·T14 공용 PWM 결함·T15 이후 통합·R14/공개와 readiness 미해결 8 개는 유지한다.
+당시 잔여에는 440 PDM·남은 T12 요구·T13 복구/동시성/soak·T15 이후 통합·R14/공개와 readiness 8 개가 있었다. 공용 PWM 결함은 **후속 해결 완료([94번](94_T14_PWM_지연_시작_취소와_무점퍼_검증.md))**이며 현재 잔여 목록은 활성 TODO를 따른다.
 [완료 상태](evidence/t12-fixture420-6bd8d3f/completion-status.json)와 활성 TODO를 다음 작업의 출발점으로 사용한다.

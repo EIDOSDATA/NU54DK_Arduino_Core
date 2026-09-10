@@ -36,6 +36,9 @@ result는 재사용하지 않았고 USB 전원을 다시 인가한 뒤 exact `e2
 
 ## 2. 선행 실패와 수정
 
+TWIS 지연 버퍼 재개 결함은 **해결 완료**다. 아래 최초 결선 무효·실패 기록은 그대로 보존하며,
+수정 뒤 전체 Fixture 301의 통과 근거는 3절과 원본을 따른다.
+
 첫 실행 exact `ddbe2aa`는 fixture catalog revision 1의 외부 2.2 kΩ pull-up 조건으로 승인됐지만
 실제 결선에 해당 저항이 없었다. 330개 기능 record 뒤 clock-stretch에서 timeout이 발생했으므로
 결선 계약 불일치로 무효화했으며 코어 FAIL이나 PASS로 사용하지 않았다.

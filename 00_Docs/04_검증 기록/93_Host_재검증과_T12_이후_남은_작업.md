@@ -2,6 +2,8 @@
 
 > 과거 검증 이력입니다. 준비·다음 작업·실행 조건은 기록 당시 기준이며, 현재 상태는 [v0.4.0 TODO](../TODO_v0.4.0.md)를 따릅니다.
 
+현재 문제 상태: Host 실행 환경 차단은 아래 전체 재검증으로 **해결 완료**입니다. 당시 우선 과제였던 공용 PWM 미시작 STOP 결함도 **해결 완료([94번](94_T14_PWM_지연_시작_취소와_무점퍼_검증.md))**입니다. 아래 T12·이후 표는 당시 대조 이력이며 현재 잔여 목록이 아닙니다.
+
 **Exact e6979af6545e2cc9525f54695eee965fc25d683e의 canonical Host 83 그룹은 664 PASS·1 조건부 SKIP로 완료했다. LLVM compiler와 WinLibs sysroot를 유지하고 CMake·Ninja만 기존 NCS bundle에서 선택했다. 보드·보안 정책·제품 코드는 변경하지 않았다.**
 
 기록일: 2026-09-07. 사용자가 “Windows 실행 차단으로 미완료인 전체 Host 검사? 다시 함 해봐. 그리고 나머지 요구사항과 해야 할 일을 나열해.”라고 요청했다. 아래 결과는 Host/mock 검사이며 새 flash·실기가 아니다. 보드의 마지막 결과는 [92번 PDM 연속 전체 검증](92_T12_Fixture_440_PDM_연속_전체_검증.md)의 f02734d다.
@@ -21,7 +23,7 @@ SKIP 1 개는 `test_m13_profiles.py`의 설치본 Arduino CLI discovery다. `NUC
 
 첫 실패 시각의 [CodeIntegrity 3077/3033](evidence/host-retry-e6979af/code-integrity.json)는 WinLibs `cmake.exe`가 같은 디렉터리의 `ninja.exe`를 실행할 때 차단됐음을 확인한다. 새 선택은 `C:/ncs/toolchains/dcbdc366a1/opt/bin`의 기존 CMake/Ninja다. 차단된 실행 파일을 복사·수정하거나 정책/예외를 바꾸지 않았다. 이 환경은 child process PATH에만 적용한다. [재현 wrapper](evidence/host-retry-e6979af/software_sdktools.py), [Windows 안내](<../02_빌드 설계/09_Windows_개발환경_설정.md>)에 연결한다.
 
-## T12에서 남은 기능 검증
+## 당시 T12 잔여 기능 대조
 
 [42번 범위 합의](42_v0.4.0_코어_기능_검증_범위_합의.md), [시험표](<../01_아두이노 코어 설계/12_v0.4.0_기능_시험_목록.md>), 현재 runner와 실기 기록을 대조했다. 기존 fixture 기본 sweep의 PASS와 전체 family 요구는 다르다. 새 요구를 추가한 목록이 아니라, 현재 증거로 아직 닫을 수 없는 시험표 항목이다. 실행 전에 family별 vector·관측 자원·안전한 결선과 허용 오차를 확정해야 한다.
 
@@ -37,11 +39,11 @@ SKIP 1 개는 `test_m13_profiles.py`의 설치본 Arduino CLI discovery다. `NUC
 
 앞선 “ADC 정량 검증” 표현은 **calibration API와 채널 순서 등 코어 기능 검증**으로 바로잡는다. 외부 교정 전압원·오실로스코프·마이크/코덱/엔코더 호환성·정밀 jitter/음질은 42번에 따라 필수 준비물이나 보증 범위가 아니다. GPIO port 이름이 모든 pad의 구동 허가를 뜻하지 않으며 공유 ADC 핀의 기존 오픈드레인/입력 바이어스 제한은 유지한다.
 
-## 이후 작업 순서
+## 당시 후속 작업 순서
 
 | 순서 / 단계 | 해야 할 일 |
 | --- | --- |
-| 우선 T14 | 공용 PWM에서 `play(start_via_task=true)` 후 실제 START 없이 `stop()`할 때 timeout하는 결함 재현·수정·Host/target 회귀. 필요 실기는 별도 결선 계획. 420 HIL 우회만으로 해결되지 않음 |
+| T14 공용 PWM | **해결 완료([94번](94_T14_PWM_지연_시작_취소와_무점퍼_검증.md))** — `play(start_via_task=true)` 후 실제 START 없이 `stop()`할 때 timeout하던 결함을 `080d771`에서 수정하고 Host·두 보드 실기로 재검증. 420 HIL 우회와 구분 |
 | T12 | 위 잔여 기능의 실행기·독립 판정·target build 준비 후 필요한 묶음별 실기 |
 | T13 | DMA 경계·16-byte guard 기준·메모리/정렬 사전 거부, cancel/stop/restart·timeout 시 lease·강제 오류/복구, handover/복구 100 회, 동일 block 방향 충돌 86 개·허용 동시 조합, 단독 600 초·동시 7200 초 soak. loss/reset/guard 손상 0·count/hash·자원 반환·관측 방법 기록 |
 | T14/T15 | 이후 발견한 결함 수정·영향 회귀, 최종 source의 instance/mode/route/rate/동시 조합 지원 matrix·실기 근거 확정. 공용 DMA 자원 변경 이후 필요한 T11 회귀 포함 |

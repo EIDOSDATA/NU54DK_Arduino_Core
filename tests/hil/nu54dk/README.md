@@ -7,7 +7,7 @@
 [제외된 T13 System OFF 설계](T13_POWER.md) · [과거 T12 C 결선](COMMON_WIRING.md)
 
 S 합의 범위는 56 PASS와 System OFF 2건 제외로 정리 완료했습니다. 정상 S 36조건에는 C05 1시간 soak도 포함됩니다.
-U 소프트웨어 준비는 완료했지만 U 재결선·flash·실기는 NOT RUN입니다.
+UARTE00 4신호+GND 결선은 완료했고 U flash·실기는 진행 중이며 아직 PASS가 아닙니다.
 현재 종료 근거는 [113번](<../../../00_Docs/04_검증 기록/113_T13_S_범위_종료와_U_준비.md>),
 남은 마일스톤은 [114번](<../../../00_Docs/04_검증 기록/114_전체_문서_정비와_남은_마일스톤.md>)을 확인합니다.
 
@@ -17,7 +17,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | 파일 | 역할 | 주요 fixture |
 | --- | --- | --- |
 | `v04_wiring_run.py` / `v04_wiring.py` | 고정 17신호의 양방향 LOW/해제 102회와 pulse/lease 자동 해제 | Fixture 501, 새 확인서·SWD 10 MHz, GPIO API PASS와 구별 |
-| `v04_t13_run.py` | exact S/U image의 지속 통신·고정 오류·STOP 판정 | S/U별 별도 확인서, U는 UARTE00 normal/HWFC/cancel만 |
+| `v04_t13_run.py` | exact S/U image의 지속 통신·고정 오류·STOP 판정 | S는 17신호, U는 UARTE00 net 11·13·15·16만 검사; U 기능은 normal/HWFC/cancel만 |
 | `v04_nojumper.py` | PWM·내부 ADC·TIMER·EGU/DPPI/PPIB·시간 함수의 exact SWD 명령/판정 | 두 지정 보드 USB/SWD, 보드 간 결선 해제, 94·95번 |
 | `m6_serial_echo.py` | pyOCD flash 후 UART READY·echo 검증 | NU54DK, CMSIS-DAP V2 UART |
 | `m7_i2c_pmic.py` | BQ25186 고정 ID register의 읽기 전용 I2C 검증 | 보드 내장 PMIC |

@@ -4,6 +4,11 @@
 > S 56 PASS + System OFF 2건 제외와 U 준비 완료·실기 NOT RUN은
 > [113번](113_T13_S_범위_종료와_U_준비.md)에 기록했습니다. 아래 다음 순서는 현행 재실행 지시가 아닙니다.
 
+2026-09-10 후속 정리: 사용자가 과거 I2S 수신 오류·전이 손실은 결선 문제였음을 확인했다.
+현재 미해결 목록에서 해당 항목을 제거한다. 아래 당시 관측과 원본은 이력으로 보존하며,
+정식 role2 100/100의 **해결 완료** 상태는 유지한다. SPIS 연속 버퍼 문제도 후속 112번의
+short/unready 10조건 각 100회 재검증으로 **해결 완료**했다.
+
 ## 당시 결과
 
 2026-09-09 유지 중인 S 결선에서 I2S20 role2 공급 중단·재시작 정식 100회를 완료했다.
@@ -12,7 +17,7 @@ System OFF 2의 **20조건**이다. QDEC와 시리얼 핸드오버는 사용자 
 
 이어 실행한 SPI short-boundary 정식 묶음은 SPIM00/20/21 각 100회를 마친 뒤 SPIM22의
 51회차 정상 재시작에서 실패했다. 다섯 인스턴스를 한 정식 묶음으로 판정하므로 앞의 부분 성공을
-SPI 완료 수에 더하지 않았다. 실패 원인을 수정한 exact source로 SPI 5조건 전체를 다시 실행한다.
+SPI 완료 수에 더하지 않았다. 이후 수정한 exact source의 SPI 5조건 전체 재실행을 완료했다(112번).
 
 ## 결선 관측의 해석
 
@@ -26,7 +31,7 @@ SPI 완료 수에 더하지 않았다. 실패 원인을 수정한 exact source�
 - [첫 전수 검사: net6 관측](evidence/t13-s-full-wiring-review-20260909/manifest.json)
 - [무변경 재검사: net7 관측](evidence/t13-s-full-wiring-recheck-20260909/manifest.json)
 
-## I2S 정식 완료
+## I2S 수신·복구 — 해결 완료
 
 source `0dda7f9dac30845e4fdb8f9bd28da22a906dcb9d`, build `C:/t5u04`에서 I2S20
 role2 starvation/restart를 100/100 통과했다. 의도한 underrun 100, 새 seed 정상 재시작 100,
@@ -35,7 +40,7 @@ role2 starvation/restart를 100/100 통과했다. 의도한 underrun 100, 새 se
 
 - [I2S 정식 원본과 무결성](evidence/t13-s123-05-i2s-r2-formal100-0dda7f9/manifest.json)
 
-## SPI 최초 실패
+## SPI 연속 버퍼 — 해결 완료, 최초 실패 원본 보존
 
 같은 source의 SPI short-boundary 예행은 SPIM00/20/21/22/30 모두 통과했다. 정식 묶음에서는
 SPIM00/20/21 각 100회를 통과했고 SPIM22 51회차의 의도한 512-byte 경계 시험 뒤 정상 재시작이
@@ -81,9 +86,9 @@ NRFX fake는 첫 pair armed 뒤 두 번째 `buffers_set`이 발생하는지, END
 현재 수정본의 T13 S DUT/peer target 2/2가 경고 없이 빌드됐다. 이 dirty-source 빌드는 컴파일 확인이며
 실기 자격은 다음 exact 커밋의 새 image에만 부여한다.
 
-## 당시 다음 순서
+## 후속 완료 결과
 
-1. 수정·계약·증거 문서를 커밋하고 push한 exact SHA에서 S DUT/peer image를 새로 빌드한다.
-2. SPIM22 집중 예행 뒤 SPI short 다섯 조건을 각 100회 정식 재실행한다.
-3. SPI unready 다섯 조건, TWI stuck-low 네 조건, TWIS 지연 네 조건, System OFF 두 조건을 실행한다.
-4. S 증거를 감사하고 UARTE00 전용 U image·실행 준비까지만 확정한다. U 재결선·실기는 실행하지 않는다.
+수정 exact source로 SPI short/unready 10조건, TWI stuck-low 4조건, TWIS 2ms 공급 지연 4조건을
+각 100회 완료했다([112번](112_T13_S_SPI_TWI_완료와_System_OFF_원인.md)).
+S 범위 종료와 U 준비는 [113번](113_T13_S_범위_종료와_U_준비.md)에 기록했다.
+이전 다음 실행 순서는 폐기하며 완료한 S를 다시 실행하지 않는다. U 실기는 미실행이다.

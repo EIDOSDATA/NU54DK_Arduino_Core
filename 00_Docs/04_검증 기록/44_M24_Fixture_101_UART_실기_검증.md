@@ -41,7 +41,7 @@
 따라서 당시 무응답의 직접 원인은 잘못된 GPIO 기능 할당이 아니라 DAP UART가 물리적으로 함께
 연결된 상태였다.
 
-### 지연 RX fixture 분기 결함
+### 지연 RX fixture 분기 결함 — 해결 완료
 
 `15565f7` image의 첫 인스턴스 조합에서 일반 UART vector 132개는 통과했지만, RTS/CTS sender를
 먼저 시작하고 receiver RX를 100 ms 늦게 여는 vector가 peer `wrong_state`로 실패했다. 원인은

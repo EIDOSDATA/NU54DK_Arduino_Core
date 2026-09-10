@@ -2,7 +2,9 @@
 
 > 과거 검증 이력입니다. 준비·다음 작업·실행 조건은 기록 당시 기준이며, 현재 상태는 [v0.4.0 TODO](../TODO_v0.4.0.md)를 따릅니다.
 
-**재결선 후 clock/gate 분리는 통과했다. PDM은 최신 실기 source에서 76 개 조합을 통과한 뒤 stereo 좌우 부호 실패가 발생했다. 후속 CONSTLAT 보완은 빌드를 통과했으며, 결선 유지 확인 만료로 실기는 아직 실행하지 않았다.**
+현재 문제 상태: PDM 위상·준비 순서 문제는 **해결 완료**입니다. [91번](91_T12_Fixture_440_PDM_밀도와_연속_DMA_검증.md)의 기본·밀도 시험과 [92번](92_T12_Fixture_440_PDM_연속_전체_검증.md)의 연속 96/96에서 재검증했습니다. 아래 중간 실패·미실행은 보존합니다.
+
+**당시 결과:** 재결선 후 clock/gate 분리는 통과했다. PDM은 76개 조합을 통과한 뒤 stereo 좌우 부호 실패가 발생했다. 후속 CONSTLAT 보완은 빌드를 통과했지만 이 기록 시점에는 결선 유지 확인 만료로 실기를 실행하지 않았다.
 
 기록일 2026-09-07 Asia/Seoul, 아래 시각은 UTC다. [89번](89_T12_Fixture_440_clock_gate_분리_진단.md)의 이전 결선 관측과 [88번](88_T12_Fixture_440_current_source_PDM_검증.md)의 실패 원본은 그대로 보존한다.
 
@@ -31,7 +33,7 @@
 
 진단과 canonical upload에서 SWD timeout 세 건(B 두 번·A 한 번)이 발생했다. 각각 읽기 전용 CPUID 응답을 확인한 뒤 한 번의 새 실행을 수행했으며, 실패 원본과 후속 성공을 분리 보존했다. Recover·mass erase·속도 하향·자동 무한 재시도는 없었다. 첫 SWD 쓰기 순서 문제를 다른 SWD timeout의 원인으로 확정하지 않는다.
 
-## 위상 보완과 남은 확인
+## 당시 위상 보완 — 후속 해결 완료
 
 초기 입력 안정화는 처음 실패하던 stereo를 통과시켰지만 76 개 뒤 같은 부호 반전이 재발했다. 초기값만으로 문제 전체가 해결됐다고 보지 않는다. [7641229 설정 trace](evidence/t12-fixture440-7641229/setup-trace.jsonl)는 실패 당시 initial output LOW와 PDM21 MODE=2·입력 pin 설정을 보존한다.
 
@@ -45,8 +47,8 @@
 
 네 source의 원본 **196 개**를 UTF-8 LF 사본·원래 byte gzip·SHA-256으로 보존한다. Manifest는 각각 [79e4bdd](evidence/t12-fixture440-79e4bdd/raw-files.json), [7641229](evidence/t12-fixture440-7641229/raw-files.json), [5273b30](evidence/t12-fixture440-5273b30/raw-files.json), [e9d264c](evidence/t12-fixture440-e9d264c/raw-files.json)에 있다. 준비 script는 실행 사실을 뜻하지 않는다. [문서 검증](evidence/t12-fixture440-e9d264c/docs-verification.json)은 Markdown 199 개·원본 복원·stage byte 검사를 기록한다. 기존 역사 파일·SDK·board·공개 자산은 보존했다. 새 저장소 임시 파일은 없으며 재개용 build와 실패 원본은 사용 중이므로 제거하지 않았다.
 
-## 재개
+## 당시 재개 대기 — 현재 재실행 지시 아님
 
 21:02:10Z 결선 확인은 21:32:10Z 만료됐다. 최종 [preflight](evidence/t12-fixture440-e9d264c/preflight.log)는 이를 거부했으며 e9d264c는 업로드하지 않았다. 현재 양쪽 보드는 **7641229**, 관련 peripheral off·신호 입력이다. [마지막 postflight](evidence/t12-fixture440-7641229/postflight.json)를 참조한다. 실행 중 시험은 없다.
 
-사용자에게 440 결선과 DAP UART 분리 **유지 여부만** 질문해 답변을 기다린다. 답변 뒤 clean HEAD exact pair로 192 개 전체와 mono density 32 개를 처음부터 실행하고 CONSTLAT 요청/해제를 확인한다. 연속 settling 4·measured 100 buffer는 아직 구현·실행하지 않았으므로 별도로 완료해야 한다. T12 PWM capture·ADC calibration/다중 채널·timer/event, T13 이후·T14 공용 PWM STOP·readiness 미해결 8 개도 유지한다. 원격 CI는 확인하지 않았다.
+이때 440 결선 유지 답변과 전체 재검증을 기다렸다. 후속 91·92번에서 기본 192개·밀도 32개와 settling 4·measured 100-buffer 연속 96개를 완료했다. 공용 PWM STOP 결함도 **해결 완료([94번](94_T14_PWM_지연_시작_취소와_무점퍼_검증.md))**이며 현재 잔여는 활성 TODO를 따른다. 이 기록 당시 원격 CI는 확인하지 않았다.

@@ -2,7 +2,9 @@
 
 > 과거 검증 이력입니다. 준비·다음 작업·실행 조건은 기록 당시 기준이며, 현재 상태는 [v0.4.0 TODO](../TODO_v0.4.0.md)를 따릅니다.
 
-**fc9f153의 기능 48 개는 통과했다. 이후 START 전 취소에서 STOP 실패를 발견했고, 마지막 수정 a3d0ab5의 실기 재검증은 결선 유지 답변 대기다. 420 최종 완료로 처리하지 않는다.**
+현재 문제 상태: 공용 PWM 미시작 STOP 결함은 **해결 완료**입니다([94번](94_T14_PWM_지연_시작_취소와_무점퍼_검증.md), `080d771`). 아래 실패·대기 기록은 당시 결과이며 QDEC 전체 결함 해결을 뜻하지 않습니다.
+
+**당시 결과:** fc9f153의 기능 48개는 통과했다. 이후 START 전 취소에서 STOP 실패를 발견했고 마지막 수정 a3d0ab5의 실기 재검증을 기다렸다. 이 기록 시점에는 420 최종 완료로 처리하지 않았다.
 
 | Source / build | 관측 결과 | 상태 |
 | --- | --- | --- |
@@ -51,7 +53,7 @@ Debounce on/off는 설정·정상 신호 수신 범위이며 실제 bounce 주�
 
 [추가 prepared-cancel](evidence/t12-fixture420-fc9f153/prepared-cancel.json)은 START 전에 두 출력 LOW·QDEC `[0,0,0]`를 확인했다.
 하지만 첫 PWM20/QDEC20 조합의 B disarm이 `status=730, result=[1]`로 실패하여 전체 진단은 FAIL이며 나머지 5 개는 실행하지 않았다.
-원인은 미시작 `start_via_task=true` PWM에서 STOP 완료를 확인하지 못한 것이다. 기능 48 PASS와 합쳐 전체 PASS라고 하지 않는다.
+원인은 미시작 `start_via_task=true` PWM에서 STOP 완료를 확인하지 못한 것이다. **후속 해결 완료: [94번](94_T14_PWM_지연_시작_취소와_무점퍼_검증.md)의 공용 PWM 수정·실기 회귀.** 당시 기능 48 PASS와 합쳐 이 실행을 전체 PASS라고 하지 않는다.
 [읽기 전용 snapshot](evidence/t12-fixture420-fc9f153/postflight-stored.json)은 두 runtime identity와 B의 잔여 설정을 보존했다.
 처음 postflight wrapper가 dirty checkout 검사로 probe 접근 전 실패한 [로그](evidence/t12-fixture420-fc9f153/postflight-after-cancel.log)도 삭제하지 않았다.
 그 뒤 [B 제어 리셋](evidence/t12-fixture420-fc9f153/cleanup-reset.json)으로 파형 재시험·flash 없이 자원을 회수했다. full source/role 재확인,
@@ -62,7 +64,7 @@ PWM20/21/22 ENABLE=0, P1.14/P1.10 PIN_CNF=2를 읽어 reset cleanup을 확인했
 a3d0ab5에서는 START 전 DMA 활성화 대신 두 송신 GPIO의 OUT/PIN_CNF를 저장하고 LOW로 준비한다.
 START에서 기존 PWM play를 호출하며, STOP 확인 후 또는 시작 전 취소 시 원래 GPIO 상태를 복원한다.
 STOP timeout 상태는 다음 stopAll에서 다시 STOP을 확인하며 해제 증거 없이 복원하지 않는다.
-고정 pin allowlist·fixture gate·기존 HIL 단독 점유 경계 안의 변경이다. public PwmSequenceFabric의 미시작 deferred START 취소 동작 자체는 **T14 미해결 이슈**로 추적한다.
+고정 pin allowlist·fixture gate·기존 HIL 단독 점유 경계 안의 변경이다. public PwmSequenceFabric의 미시작 deferred START 취소는 당시 T14 미해결이었으며, **후속 해결 완료** 근거는 [94번](94_T14_PWM_지연_시작_취소와_무점퍼_검증.md)이다.
 
 | 검사 | 결과와 source |
 | --- | --- |

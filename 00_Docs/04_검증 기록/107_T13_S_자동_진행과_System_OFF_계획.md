@@ -9,19 +9,19 @@
 | 항목 | 2026-09-08 최종 관측 | 후속 판정 |
 | --- | --- | --- |
 | 정상 안정성 | 단독 29/29, 동시 7/7, 합계 36/36 | source별 완료. C01~04·C06·C08 각 900 초, C05 3600 초 |
-| 고정 serial 복구 | 17/21 | TWIM 취소 4 조건의 이전 RX AMOUNT 판정 오류 확인; 정식 완료는 109번 |
-| Stream / PWM 복구 | 3/4 / 6/6 | I2S B 97번째 재시작 오류 미해결, PWM 600 회 완료 |
+| 고정 serial 복구 | 당시 17/21 | **해결 완료** — TWIM 취소 판정 교정과 정식 21/21 완료는 109번 |
+| Stream / PWM 복구 | 당시 3/4 / 6/6 | **해결 완료** — I2S는 사용자 결선 문제 확인과 111번 원래 role2 100/100, PWM은 600 회 완료 |
 | Serial 역할 전환 | 예행 5/5, 정식 2/5 | serial00·30 각 100 회; SPI20/21/22 실패 보존. 이후 사용자 제외 |
 | 자원 충돌 | 예행 14/14, 정식 5/14 | 이후 9 조건 반복 면제·사용자 수용은 109번. 추가 실기 PASS가 아님 |
-| CTS | 단독 예행 8 조건 실패 | 실제 정지/재개 뒤 정상 간격 상한을 잘못 적용한 판정 문제. 새 source 재검증 필요 |
-| UART parity/break | 예행 9실패·7미시작 | RX 활성 전 ARM ENABLE 전제 수정, 당시 새 실기 0 |
+| CTS | 단독 예행 8 조건 실패 | **해결 완료** — 주입 간격 판정·버퍼 재공급을 교정하고 110번 12조건 각 100회 완료 |
+| UART parity/break | 예행 9실패·7미시작 | **해결 완료** — ARM 전제·RX 오류 정리·시작 순서를 교정하고 110번 16조건 각 100회 완료 |
 | System OFF | bridge 실패, 실제 OFF 0 회 | debug 유지 진단·정상 bridge·timer/GPIO wake를 구분 |
 | 실행 마감 | 12 대열 종료, 56완료 실행 감사 | 최초 실패·양쪽 STOP·clock 0·핀 반환 보존 |
 
 이 표의 미완료는 당시 상태다. 후속 CTS·RX 지연·UART line 완료는 110번, S 종료와 U 준비는 113번에서 확인한다.
 중간 진행률과 다음 실행 예약을 현재 지시처럼 반복하던 문단은 결과·준비 표로 통합했다.
 
-## 원인 분석: TWIM 취소의 RX AMOUNT
+## 원인 분석: TWIM 취소의 RX AMOUNT — 해결 완료
 
 2114187의 네 인스턴스 모두 repeat1은 이전/terminal RX AMOUNT0/0, 정상 재획득 이후 repeat2는
 256/256이었다. TX는 모두 2 byte에서 취소됐고, 새 전송 전 초기화·취소 직전·terminal 관측에서
@@ -33,8 +33,8 @@ SDK `nrfx/hal/nrf_twim.h`의 RX AMOUNT 설명은 마지막 transaction이며 END
 이번 TXRX가 TX 단계에서 취소돼 새 RX가 시작되지 않았는데 이전 256을 새 부분 RX로 해석한 것이
 기존 판정 실패의 원인이다. 새 판정은 opcode123의 20 word·새 RX 미시작·전체 RAM 불변·이전 AMOUNT
 일치·단일 terminal event를 매회 필수로 대조하며 raw256과 이번 RX0을 구분한다.
-Core의 취소 구현은 변경하지 않는다. 기존 실패 판정은 그대로 보존하고 새 exact source100 회 재검증이
-완료되기 전에는 serial17/21을 올리지 않는다. 관련 Host 9 시험 통과, T13 Host 84 중 83통과/기존
+Core의 취소 구현은 변경하지 않았다. 당시 실패 판정은 그대로 보존하며, 후속 exact `7c0fde3`에서
+네 인스턴스 각 100회 재검증을 완료했다([109번](109_T13_S_세_복구_묶음_재검증.md)). 관련 Host 9 시험 통과, T13 Host 84 중 83통과/기존
 stream C++ 실행 1 개 Windows4551 차단을 보존했다.
 
 원본: [TWIM20](evidence/t13-twi20-proof-sauto-01-2114187/manifest.json),
@@ -79,9 +79,8 @@ SPIM core cycle 단위의 샘플 지연이고, [PRESCALER](https://docs.nordicse
 낮은 분주값에서 기본 RXDELAY 조정이 필요할 수 있다고 설명한다. 계산상 core16 MHz의 1cycle은
 62.5ns이고 SCK8 MHz 반주기와 같다. 이는 수신 시점 비교가 필요한 이유이며 RXDELAY0이 정답이라는
 증거가 아니다. SPIS가 수신한 오류까지 controller RXDELAY만으로 설명할 수도 없다.
-후속은 동일 S net에서 별도 진단 소스로 8 MHz/RXDELAY0 또는 4 MHz/기존값을 각각 비교하되,
-GPIO 구동·실제 레지스터·최초 오류·전체 payload·STOP을 함께 남겨야 한다.
-낮춘 진단 속도의 통과를 원래 8 MHz 역할 전환 통과로 대체하지 않는다. 아직 이 비교 실기는 미실행이다.
+당시 제안했던 8 MHz/RXDELAY0·4 MHz/기존값 비교는 후속 이력으로만 보존한다.
+낮춘 진단 속도의 통과를 원래 8 MHz 역할 전환 통과로 대체하지 않으며, 추가 실행 대상으로 등록하지 않는다.
 
 ### 최초 byte 보존 계측
 
@@ -97,7 +96,7 @@ guard·lease 오류는 없었다. 공통 경로는 진단 단서이지 전기 �
 Opcode124는 첫 byte·전후 4 byte·DMA 주소·AMOUNT·guard를 STOP 전에 보존했다.
 이전 실패에 없던 actual byte를 추정하지 않았다. 당시 계획한 속도/RXDELAY 비교는 현재 handover 제외 범위다.
 
-## 원인 분석: CTS 주입 구간의 판정 상한
+## 원인 분석: CTS 주입 구간의 판정 상한 — 해결 완료
 
 d44cef2 단독 예행 8 조건은 실제 CTS HIGH와 TX 정지/재개를 통과했지만 정상 lane의 100 ms 상한에서 실패했다.
 UART20 role1 원본은 DUT HIGH 100018 µs, peer 100019 µs, 해당 TX/peer RX 완료 간격 115 ms,
@@ -107,6 +106,7 @@ UART20 role1 원본은 DUT HIGH 100018 µs, peer 100019 µs, 해당 TX/peer RX �
 HIGH + 20 ms + 11 ms + 1 ms 경계를 적용했다. 반대 방향·다른 lane·주입 전·새 seed 재획득은 100 ms,
 전체 payload·guard·drained hash·양쪽 STOP은 그대로 요구한다.
 기존 8 개 raw는 새 상한 안이지만 새 seed 재획득 증거가 없으므로 FAIL을 PASS로 바꾸지 않았다.
+후속 단독·동시 CTS 12조건 각 100회 완료 근거는 [110번](110_문서_정리와_T13_S_잔여_재개.md)이다.
 
 ## 수정·준비 검사와 실제 실행의 구분
 
@@ -146,15 +146,14 @@ UART line 초안의 전체 Host는 R03 analog production 12 개 하위 실행도
 | SDA LOW | staged A recoverBus, B open-drain LOW 100 ms 후 해제; 처음 실패·해제 뒤 success·0x42 복구 | 활성 stretching 중 disable·PMIC·반대 controller |
 | TWIS 공급 지연 | 최초 write_request/buffer_needed 뒤 2 ms; SCL LOW·guard·양방향 복구 | read_request 지연·장시간 stretching |
 
-## System OFF 설계와 최초 실패
+## 과거 System OFF 추가 결합 설계와 최초 실패
 
 기존 M15 timed GRTC·SW0/P1.13 wake PASS는 유지한다. 이 T13 시험은 A 제어/B 시험 보드,
 UART21 P1.06/07의 128 byte 양방향 DMA와 기존 P1.14 open-drain wake를 쓰는 별도 경로다.
 
-1. exact image·UID·전체 S 결선 검사 뒤 A의 SWD로 명령/결과를 중계한다.
-2. B debug power request를 해제하고 정상 모드 복귀/reset을 확인한다. OFF 중 B SWD에 접근하지 않는다.
-3. DMA·buffer·clock을 반환한 뒤 timer/GPIO wake 각각 100 회를 판정한다.
-4. nonce·회차·무응답·RESETREAS·retention·새 pattern 복구를 대조한다. RESET_DEBUG나 단순 reset은 PASS가 아니다.
+당시 설계는 A의 SWD 중계, B debug power 해제, DMA·buffer·clock 반환, timer/GPIO wake 각 100회,
+nonce·RESETREAS·retention·새 pattern 대조였다. 이후 추가 결합 범위는 종료했으며 이 설계를
+현재 실행 지시로 사용하지 않는다. 공개 System OFF API의 기존 실기 완료 근거와 최종 범위는 113번을 따른다.
 
 de5ad42의 최초 bridge는 A opcode132 응답 403, 양쪽 UART error 46(41+event 5)이었다.
 양쪽 STOP·17 핀 반환은 확인했지만 정상 debug 해제나 OFF에 도달하지 않았다.

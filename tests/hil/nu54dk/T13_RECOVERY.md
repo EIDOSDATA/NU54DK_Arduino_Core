@@ -2,22 +2,25 @@
 
 현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../../../00_Docs/TODO_v0.4.0.md>)에서 관리합니다.
 
-S 합의 범위는 **56 PASS + System OFF 2건 제외로 정리 완료(100%)**입니다. U 준비는 완료했고 실기는 NOT RUN입니다.
+S 합의 범위는 **56 PASS + System OFF 2건 제외로 정리 완료(100%)**입니다. UARTE00 4신호+GND
+결선은 완료했고 U 실기는 진행 중이며 아직 PASS가 아닙니다.
 종료 근거는 [113번](<../../../00_Docs/04_검증 기록/113_T13_S_범위_종료와_U_준비.md>),
 남은 마일스톤은 [114번](<../../../00_Docs/04_검증 기록/114_전체_문서_정비와_남은_마일스톤.md>)과 TODO를 따릅니다.
 이 문서는 완료된 시험의 주입 방법·opcode·판정 계약을 보존합니다. 아래 명령은 S 시험을 다시 시작하라는 지시가 아니며,
 과거 예행 수치는 현재 완료 수에 합산하지 않습니다.
 
-| S 후속 결과 | 완료 경계 |
-| --- | --- |
-| UART line/flow/RX 공급 지연 | 정식 결과는 110번과 원본 evidence에 보존 |
-| I2S 공급 중단 | 남았던 B 역할까지 완료, 111번 |
-| SPI short/unready | 10/10 완료, 112번 |
-| TWI stuck-low·TWIS write 공급 지연 | 각각 4/4 완료, 112번 |
-| T13 System OFF | 추가 2건 제외, 기존 M15 공개 API PASS 유지, 113번 |
+| S 후속 결과 | 현재 상태 | 완료 근거 |
+| --- | --- | --- |
+| UART line/flow/RX 공급 지연 | **관련 문제 해결 완료** | 정식 결과는 110번과 원본 evidence에 보존 |
+| I2S 공급 중단 시험의 수신·재시작 오류 | **해결 완료 — 결선 문제** | 남았던 B 역할까지 정식 100/100, 111번 |
+| SPI short/unready | **연속 버퍼 문제 해결 완료** | 10/10 완료, 112번 |
+| TWI stuck-low·TWIS write 공급 지연 | **관련 문제 해결 완료** | 각각 4/4 완료, 112번 |
+| PWM 미시작 취소·재시작 | **해결 완료** | core 수정은 94번, S 복구 6/6은 109번 |
 
-110번의 요구–증거 대조에서 구분한 조기 CS, TWIS read 공급 지연, 전체 GPIO/overlap,
-active GPIOTE/DPPI와 PWM/analogWrite/tone/Servo 충돌의 미커버 경계는 T14/T15에서 판단합니다.
+사용자 결정으로 SPI CS 조기 종료의 별도 slave 판정은 추가 검증에서 제외했습니다.
+TWIS는 완료한 2ms 공급 지연 시험으로 수용하며 별도 read-request 지연 시험을 요구하지 않습니다.
+110번의 요구–증거 대조 중 전체 GPIO/overlap, active GPIOTE/DPPI와
+PWM/analogWrite/tone/Servo 충돌 3종의 미커버 경계만 T14/T15에서 판단합니다.
 문서 대조 완료를 해당 실기 전체의 PASS로 확대하지 않습니다.
 
 | 찾을 내용 | 절 |
@@ -317,7 +320,7 @@ fd8d4ee에서 이 설정 누락으로 시작 전 거부된 원본은 104번에 �
 한쪽 PREPARE 실패 시 아직 준비하지 않은 상대 보드에는 보호된 stream 명령을 보내지 않고
 engine·clock만 읽는다. 이 경로에서 403으로 STOP 세션까지 잃었던 실행기 문제를 보완했다.
 
-## RX 취소 주입 시점과 opcode 120
+## RX 취소 주입 시점과 opcode 120 — 해결 완료
 
 당시 `477e159`의 serial 고정 오류 예행은 21항목 중 18항목 PASS였다. UART TX4개·SPI5개·TWI 취소4개·
 TWI NACK4개와 UART20 RX1개다. UART21 RX는 0byte·buffer null로 실패했고 RX22/30은 그 시점에는 미실행이었다.
@@ -337,7 +340,7 @@ RXDRDY의 RXD 도착과 RAM 저장을 구분하며 DMA.RX.AMOUNT는 END/MATCH �
 이 보완은 HIL 주입 시점 교정이며 제품 UART 구현을 바꾼 것이 아니다. 후속 고정 serial 21/21 완료는
 109번에 별도 source로 기록했다.
 
-## PDM 반복 STOP과 peer 원본
+## PDM 반복 STOP과 peer 원본 — 해결 완료
 
 03f5ba4에서 A의 overflow 자동 STOP 이후 B가 CS 해제 transfer_complete(error6/detail0)를 관측했다.
 B 자동 STOP은 주변장치를 해제했지만 후속 Host STOP의 중복 deactivate가 wrong_state로 실패했다.
@@ -347,6 +350,7 @@ error6/detail0의 CS 종료 또는 오류 없는 정지를 별도로 판정한�
 새 seed 정상1초 재시작까지 통과해야 해당 회의 복구 성공이며 예행은100회 완료가 아니다.
 
 6782084의 PDM20/21 예행은 두 항목 모두 통과했고 I2S 두 역할과 합쳐4/4다.
+후속 PDM20/21 정식 각 100회까지 완료하여 반복 STOP 문제는 **해결 완료**다. 원본은 104번에 보존한다.
 PDM은 고정0x55의50% 밀도 신호이며 seed가 바뀐다고 물리 payload가 달라지지는 않는다.
 초기화한 DMA 버퍼의 새 완료·샘플 범위·가드와 재구성 후 진행으로 복구를 판정한다.
 
@@ -370,6 +374,7 @@ Normal soak는 기존 자동 시작을 유지하며 새 capability bit256 없이
 TIMER clear/start 뒤 DPPI enable 성공을 먼저 확인하고 event clear·DSB·readback 후 관측을 시작하도록
 HIL 시작 순서를 보완한다. 관측 시작 뒤 timestamp를 버리거나 허용 오차를 완화하지 않는다.
 최초 실패와 수정 전후 source별 실기 상태는104번에 보존한다.
+현재 상태는 **해결 완료**다. 후속 S PWM 복구 6조건 각 100회 완료 근거는 109번을 따른다.
 
 ## TWIM 취소 RX 원본 계측
 

@@ -35,7 +35,16 @@ exclusive probe locks and STOP/pin-release checks. A fresh fault requires connec
 and CMSIS-DAP diagnosis, not blind retries or an invented time-expiry blocker.
 The requested S scope is closed (56 PASS plus 2 excluded peer-controlled System OFF conditions),
 and U software/image preparation is complete. Do not restart completed S work from historical
-instructions. U physical work remains NOT RUN and needs its actual changed wiring verified.
+instructions. The owner confirmed the minimal UARTE00 four-signal wiring; U physical execution is
+in progress and must not be recorded as PASS before its actual results. The U checker tests only
+those four connected signal nets, while the S checker retains its full 17-signal scope.
+The owner removed the historical GPIO/SWD diagnostics from the current issue list, excluded
+additional SPI early-CS slave-frame qualification, and accepted the completed 2 ms TWIS delay
+tests without requiring separate read-request delay tests. Do not requeue those items or
+promote the scope decisions to new physical PASS results. Preserve original evidence.
+Issue documentation must put an explicit resolved status beside fixed problems and omit excluded
+items from current issue and remaining-work tables. Keep historical results and restrictions
+separate; pending validation is not a confirmed defect. The active TODO is the status index.
 Every progress report must state the completed scope and percentage;
 distinguish documentation progress from the S 58-condition physical denominator. See the active TODO
 for counts and exact evidence.

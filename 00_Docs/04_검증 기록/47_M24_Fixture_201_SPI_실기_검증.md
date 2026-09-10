@@ -36,7 +36,7 @@ Confirmation은 fixture catalog 개정, 두 UID hash, exact role image hash, 공
 전압·스위치·출력 충돌 금지 조건에 묶었다. 새 source/image마다 새 confirmation을
 사용했으며 이전 source의 PASS를 최종 결과에 재사용하지 않았다.
 
-## 2. 8 MHz 한 bit 수신 지연 진단과 교정
+## 2. 8 MHz 한 bit 수신 지연 진단과 교정 — 해결 완료
 
 초기 전체 실행은 SPIM20↔SPIS20의 8 MHz, Mode 0, MSB first, 1-byte
 controller→peripheral vector에서 controller가 SPIS ORC `0x96`대신 `0x2D`를 수신했다.

@@ -1,8 +1,10 @@
-# T12 Fixture 440 — PDM DMA 교정과 스테레오 미해결
+# T12 Fixture 440 — PDM DMA·스테레오 실패 이력과 후속 해결 완료
 
 > 과거 검증 이력입니다. 준비·다음 작업·실행 조건은 기록 당시 기준이며, 현재 상태는 [v0.4.0 TODO](../TODO_v0.4.0.md)를 따릅니다.
 
-**Fixture 440은 미완료다. 최신 exact ea4e25a에서 모노 DMA 4 개를 통과한 뒤 첫 스테레오에서 두 채널이 같아 실패했다. 나머지 187 개와 밀도 비교는 미실행이며, 양쪽 cleanup 5 회·읽기 전용 자원 해제 확인은 통과했다.**
+현재 문제 상태: PDM buffer 공급·합성 신호원·준비 순서 문제는 **해결 완료**입니다. [91번](91_T12_Fixture_440_PDM_밀도와_연속_DMA_검증.md)의 기본 192개·밀도 32개, [92번](92_T12_Fixture_440_PDM_연속_전체_검증.md)의 연속 96/96 통과가 후속 근거입니다. 아래 FAIL·미실행은 당시 실행 원본입니다.
+
+**당시 결과:** Exact ea4e25a에서 모노 DMA 4개를 통과한 뒤 첫 스테레오에서 두 채널이 같아 실패했다. 나머지 187개와 밀도 비교는 미실행이며, 양쪽 cleanup 5회·읽기 전용 자원 해제 확인은 통과했다. 해당 Fixture 440 campaign은 미완료로 보존한다.
 
 기록일은 2026-09-07 Asia/Seoul, 원본 시각은 UTC다. [87번 I2S 결과](87_T12_Fixture_430_current_source_I2S_재검증.md)는 다른 source의 완료 기록으로 보존한다. 이번에는 HIL 시험 프로그램의 PDM buffer 공급·신호원·핀 metadata를 수정했으며 공개 코어·API·SDK·board gitlink는 변경하지 않았다.
 
@@ -45,7 +47,7 @@
 
 f6ad299의 prepare 실패에서는 해당 핀의 metadata가 UART 전용·analog capability로 남아 EventFabric이 경로를 거부했다. UART를 끈 [pair HIL overlay](../../tests/zephyr/v04_pair_hil/app.overlay)에서만 P1.04~07을 DAP GPIO Kconfig 조건부 input/output/analog로 지정했다. [해석된 DTS](evidence/t12-fixture440-ea4e25a/role1-zephyr.dts)와 [두 역할 요약](evidence/t12-fixture440-ea4e25a/software-summary.json)은 capability 19, policy 4, ownership 9를 확인한다. 일반 board pin 정책을 변경하지 않았다. 이 수정으로 prepare는 통과했지만 스테레오 오류는 남았다.
 
-## 최신 부분 결과의 범위
+## 당시 부분 결과의 범위 — 후속 해결 완료
 
 전체 계획은 PDM20/21 × 256/1024 sample × density 인자 25/50/75 × mono/stereo × left edge 2종 × 단일/이중 buffer × generator role 2종 = **192 개**다. 이전 source의 부분 PASS를 합산하지 않는다.
 
@@ -76,10 +78,10 @@ f6ad299의 prepare 실패에서는 해당 핀의 metadata가 UART 전용·analog
 
 원본 **167 개**는 source별 manifest에 UTF-8 LF 사본·원래 byte gzip·SHA-256으로 보존한다: [8685cd8 40 개](evidence/t12-fixture440-8685cd8/raw-files.json), [017f3a5 41 개](evidence/t12-fixture440-017f3a5/raw-files.json), [f6ad299 40 개](evidence/t12-fixture440-f6ad299/raw-files.json), [ea4e25a 46 개](evidence/t12-fixture440-ea4e25a/raw-files.json). 준비 script의 존재를 실기 실행 증거로 삼지 않는다. [문서 검증](evidence/t12-fixture440-ea4e25a/docs-verification.json)은 Markdown 197 개·원본 gzip 복원·변경 범위·Git stage byte를 대조한다. 기존 87번 이하 기록·evidence·공개 자산은 보존했다. HIL 수정·회귀 검사·raw 증거는 모두 사용 중이며 제거할 저장소 임시 파일은 없었다.
 
-## 재개 조건과 남은 일
+## 당시 재개 조건과 계획 — 현재 재실행 지시 아님
 
 440 결선은 마지막 사용자 확인 상태로 기록되어 있다. [실행기](../../tests/hil/nu54dk/v04_fixture.py)의 30 분 확인 유효시간은 **2026-09-06T20:15:39Z에 만료**됐다. 새 flash/신호 실행 전에 현재 결선과 DAP UART 분리 상태가 그대로인지 새 사용자 답변을 받아야 한다. 이미 실행된 결과나 USB 장치 열거로 확인 시각을 갱신하지 않는다. 문서 commit은 업로드 source와 다르므로 재개할 때 실제 clean HEAD pair를 다시 빌드·식별한다.
 
 다음 순서는 같은 440 결선 유지 확인 → source/receiver 설정과 정적 신호 전달 진단 → 오류 교정 → 해당 exact source의 전체 192 개·32 개 mono density 비교·cleanup 재검증이다. 이후 **PDM settling buffer 4 개와 측정용 연속 buffer 100 개** 요구도 별도로 수행해야 한다. 이번 단일/이중 buffer 결과는 그 요구를 대체하지 않는다.
 
-남은 T12 PWM period/duty capture·ADC calibration/다중 채널 순서·timer/event 요구, T13 복구·동시성·soak, T14 공용 PWM의 START 전 STOP timeout, T15 이후 통합·R14·RC/공개와 readiness 미해결 8 개는 유지한다. 외부 PDM microphone 호환·교정된 오디오 품질은 이번 합성 신호 범위가 아니다.
+공용 PWM의 START 전 STOP timeout도 **후속 해결 완료([94번](94_T14_PWM_지연_시작_취소와_무점퍼_검증.md))**다. 그 밖의 현재 잔여는 활성 TODO를 따른다. 외부 PDM microphone 호환·교정된 오디오 품질은 이번 합성 신호 범위가 아니다.
