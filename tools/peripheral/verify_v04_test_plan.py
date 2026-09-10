@@ -116,7 +116,7 @@ def render(plan: dict, inventory: list[dict], root: Path = ROOT) -> str:
              "- TIMER 기능 완료와 다음 T13 진행 경계는 [103번 정정](<../04_검증 기록/103_TIMER_기능_완료와_T13_진행_경계.md>)을 따른다. TIMER 각 조건 10회와 EGU/DPPI/PPIB 1000 event×10을 구분한다. 외부 ADC 초기 100회와 실제 각 조건 1회 차이도 별도 보존한다.",
              "- T13 실제 조합·결선·선행 HOLD: [T13 계획](../../tests/hil/nu54dk/T13_PLAN.md). 단독 180초·일반 동시 900초·대표 C05 3600초이며 계획 확정은 실기 PASS가 아니다.",
              "- 현재 범위: QDEC20/21·C07, 반복 serial handover, T13 peer 제어 System OFF 추가 2조건은 제외다. 아래 초기 vector·반복 수는 현재 실행 대열이 아니며 제외 결정을 번복하지 않는다.",
-             "- S 정상 36조건(C05 3600초 포함)과 요청한 S 복구 범위는 종료했고 U 준비도 완료했다. U 실기와 미커버 요구의 T14/T15 판정은 남아 있다. [113번 경계](<../04_검증 기록/113_T13_S_범위_종료와_U_준비.md>)와 [TODO](../TODO_v0.4.0.md)를 따른다.",
+             "- S 정상 36조건(C05 3600초 포함), 요청한 S 복구 범위와 U 실기를 종료했다. 미커버 요구의 T14/T15 판정은 남아 있다. [113번 경계](<../04_검증 기록/113_T13_S_범위_종료와_U_준비.md>), [115번 U 완료](<../04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md>)와 [TODO](../TODO_v0.4.0.md)를 따른다.",
              "- 원본: [시험 JSON](../../tests/hil/nu54dk/v04_test_plan.json), 검사: [verify_v04_test_plan.py](../../tools/peripheral/verify_v04_test_plan.py).",
              "- 각 family/instance/mode는 별도 결과 ID를 가진다. 적용 불가 mode는 이유를 기록하며 암묵적으로 PASS하지 않는다.",
              "- 기능 sweep는 각 rate·buffer·mode를 기준 설정에서 하나씩 변경하고, protocol mode×bit order는 전 조합을 검사한다. soak는 단독 통과한 기준 설정으로 별도 실행한다.",
