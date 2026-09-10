@@ -4,6 +4,7 @@ from __future__ import annotations
 import hashlib as _hashlib
 import importlib.util as _importlib_util
 from pathlib import Path as _Path
+import re as _re
 import sys as _sys
 
 
@@ -43,6 +44,43 @@ def configure_release_candidates(versions):
         + model.RELEASE_CANDIDATE_VERSIONS + model.STABLE_VERSIONS
     )
     for name in ("RELEASE_CANDIDATE_VERSIONS", "PACKAGE_VERSIONS", "WINDOWS_SAFE_VERSIONS"):
+        globals()[name] = getattr(model, name)
+        setattr(implementation, name, getattr(model, name))
+
+
+## @brief 공개 전 stable 후보를 현재 프로세스에만 고정해 패키징합니다.
+def configure_unpublished_stable(version, commit):
+    """! @brief 영구 allowlist를 바꾸지 않고 승인 전 stable 후보 하나를 구성합니다. """
+    model = implementation.model
+    if version in model.STABLE_VERSIONS or version in model.PACKAGE_VERSIONS:
+        raise model.PackageError(f"이미 등록된 package version입니다: {version}")
+    if not _re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", version):
+        raise model.PackageError(f"stable version 형식이 유효하지 않습니다: {version}")
+    if not _re.fullmatch(r"[0-9a-f]{40}", commit):
+        raise model.PackageError("stable 후보 commit은 40자리 소문자 SHA-1이어야 합니다.")
+
+    model.STABLE_VERSIONS = model.STABLE_VERSIONS + (version,)
+    model.STABLE_RELEASE_COMMITS[version] = commit
+    model.STABLE_LEGAL_REVIEW_STATUSES[version] = model.LEGAL_REVIEW_REQUIRED
+    model.PACKAGE_VERSIONS = (
+        model.SUPPORTED_VERSIONS
+        + model.RELEASE_CANDIDATE_VERSIONS
+        + model.STABLE_VERSIONS
+    )
+    model.WINDOWS_SAFE_VERSIONS = (
+        model.FAILED_M10_PREVIEW_VERSIONS
+        + model.SAFE_PREVIEW_VERSIONS
+        + model.RELEASE_CANDIDATE_VERSIONS
+        + model.STABLE_VERSIONS
+    )
+    implementation.channels.STABLE_VERSIONS = model.STABLE_VERSIONS
+    for name in (
+        "STABLE_VERSIONS",
+        "STABLE_RELEASE_COMMITS",
+        "STABLE_LEGAL_REVIEW_STATUSES",
+        "PACKAGE_VERSIONS",
+        "WINDOWS_SAFE_VERSIONS",
+    ):
         globals()[name] = getattr(model, name)
         setattr(implementation, name, getattr(model, name))
 

@@ -199,6 +199,13 @@ def run_inventory_gate() -> None:
             "contract",
         )
     )
+    run_checked(
+        (
+            sys.executable,
+            REPOSITORY / "tools" / "release" / "m27_stable_release.py",
+            "contract",
+        )
+    )
 
 
 ## @brief 선택한 software gate만 실행합니다.

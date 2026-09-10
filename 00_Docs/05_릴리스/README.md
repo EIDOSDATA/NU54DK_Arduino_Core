@@ -5,7 +5,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | RELEASE-INDEX-001 |
-| 문서 개정 | 2.3 |
+| 문서 개정 | 2.4 |
 | 현재 정식 버전 | `v0.3.0` |
 | 설치 channel | Stable Boards Manager index |
 | 공식 사용자 OS | Windows 10/11 x64 |
@@ -34,8 +34,9 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 
 ## 다음 버전 준비 — v0.4.0-rc.1
 
-`v0.4.0-rc.1`은 공개 tag·Release·index가 없습니다. M24~M26 physical gate와 T16 설치 통합은
-완료했지만 T18~T21 release gate와 T22 승인이 남아 있으므로 설치 대상으로 사용하지 않습니다.
+`v0.4.0-rc.1`은 공개 tag·Release·index가 없습니다. M24~M26 physical gate와 T16~T18 사용자
+통합·공개 절차 준비는 완료했지만 R14/T19~T21 release gate와 T22 승인이 남아 있으므로 설치
+대상으로 사용하지 않습니다.
 
 - [내부 준비](v0.4.0-rc.1/README.md)
 - [Release notes](v0.4.0-rc.1/RELEASE_NOTES.md)

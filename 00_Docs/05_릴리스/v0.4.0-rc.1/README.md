@@ -26,7 +26,7 @@
 | M24 | `fabric` profile의 UARTE·SPIM/SPIS·TWIM/TWIS 23개 | 단독 HIL·route·공개 원장 PASS, 미실행 동시 조합은 보증하지 않음 |
 | M25 | SAADC·PWM·timer/event·PDM·I2S 직접 API | 검증 범위 공개, QDEC만 unsupported·추가 진단 제외 |
 | M26 | 16개 system 기능의 지원 경계 | TEMP·WDT30 실기 PASS를 `SystemFabric`에 연결, 나머지는 행별 경계 유지 |
-| M27 | checksum·SBOM·license·RC index·HOLD plan | T18 이후 최종 비공개 package를 다시 생성·검증, 공개 권한 없음 |
+| M27 | checksum·SBOM·license·RC/stable HOLD plan | T18 절차 완료, R14/T19 이후 최종 비공개 package 재생성·검증 필요 |
 
 초기 M27의 격리 staging 예제 29/29 compile 결과는
 [39번 기록](<../../04_검증 기록/39_M27_v0.4.0_rc1_자동_준비와_HOLD.md>)의 당시 source에 한정됩니다.
@@ -43,7 +43,7 @@ T16 이후 현재 후보는 `NUCODE Peripheral Fabric` 예제를 포함한 **30�
 - UARTE00 별도 4-net 결선 검사, 정상 180초, RTS/CTS 200회와 TX/RX 취소 400회를 완료했습니다.
   완료 근거는 [115번 기록](<../../04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md>)에 있습니다.
 - T14/T15의 원인·수정·지원 범위 확정과 T16 설치 profile 통합을 완료했습니다.
-- T17 문서·지원 매트릭스 정리를 완료했습니다. T18 공개 절차를 준비한 뒤 R14/T19에서 RC를 고정합니다.
+- T17 문서·지원 매트릭스와 T18 stable 준비·승인 차단 절차를 완료했습니다. 현재 R14/T19에서 RC를 고정합니다.
 - T20~T21 비공개 package 검증 뒤 T22 소유자 승인 전에는 tag·Release·stable index를 쓰지 않습니다.
 
 ## 실기 검증 경계
@@ -59,7 +59,7 @@ T16 이후 현재 후보는 `NUCODE Peripheral Fabric` 예제를 포함한 **30�
 ## 공개 전 gate
 
 1. T11~T15의 source별 기능·복구·동시성 결과와 제외·제한사항 확정 — 완료
-2. T16 설치 profile·API·예제 통합과 T17 문서·지원 원장 — 완료; T18 공개 절차 진행
+2. T16 설치 profile·API·예제 통합, T17 문서·지원 원장과 T18 공개 절차 — 완료
 3. R14 frozen RC의 Host·문서·전체 target build·이중 package 재현
 4. 격리 Boards Manager 설치·전체 예제 compile·실제 Upload·제거·재설치·version 전환
 5. T22 프로젝트 소유자의 결과별 명시적 공개 승인
