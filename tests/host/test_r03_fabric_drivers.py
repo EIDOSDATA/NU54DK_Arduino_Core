@@ -14,7 +14,8 @@ class FabricDriverTests(unittest.TestCase):
                                        'started_timeout', 'dma_pending', 'disable_race', 'subscribed'])
 
     def test_analog_production(self):
-        self.run_driver('analog',['pwm_timeout','other_progress','overflow','deadline','saadc_timeout','repeat',
+        self.run_driver('analog',['pwm_timeout','other_progress','overflow','deadline','saadc_timeout',
+                                  'pwm_block_identity','repeat',
                                  'snapshot','release_failure','stop_queue_full','pwm_commit_failure','saadc_commit_failure',
                                  'saadc_queue_commit_failure'])
 

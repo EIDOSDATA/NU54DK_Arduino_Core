@@ -104,6 +104,17 @@ int main(int argc, char **argv)
             assert(dppi->enable(0U) == EventFabricResult::success);
             assert(NRF_DPPIC20->enabled == 1U);
         }
+        else if (std::strcmp(argv[1], "active_conflict") == 0)
+        {
+            assert(dppi->connect(publisher, subscriber, 0U) == EventFabricResult::success);
+            assert(dppi->enable(0U) == EventFabricResult::success);
+            const auto endpoints_before = mock_endpoints;
+            assert(dppi->acquireChannel(0U) == EventFabricResult::wrong_state);
+            assert(dppi->connect({0x1100U, 20U, EventEndpointRole::publisher}, subscriber, 0U) ==
+                   EventFabricResult::ownership_conflict);
+            assert(NRF_DPPIC20->enabled == 1U);
+            assert(mock_endpoints == endpoints_before);
+        }
         else if (std::strcmp(argv[1], "isr") == 0)
         {
             mock_in_isr = true;

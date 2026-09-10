@@ -7,7 +7,9 @@ import unittest
 from host_compiler import compiler_command
 
 ROOT = Path(__file__).resolve().parents[2]
-SCENARIOS = ['lookup', 'invalid', 'capacity', 'disconnect', 'release', 'isr', 'threads']
+SCENARIOS = [
+    'lookup', 'invalid', 'capacity', 'disconnect', 'release', 'active_conflict', 'isr', 'threads'
+]
 
 
 class EventDriverTests(unittest.TestCase):

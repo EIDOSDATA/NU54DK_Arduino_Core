@@ -7,8 +7,26 @@ from unittest.mock import Mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'hil/nu54dk'))
 from v04_nojumper import Device, ProtocolError, pwm_vectors, validate_reply
 
+ROOT = Path(__file__).resolve().parents[2]
+
 
 class NojumperTests(unittest.TestCase):
+    def test_firmware_checks_the_canonical_pwm_block_key(self):
+        source = (
+            ROOT
+            / 'tests'
+            / 'zephyr'
+            / 'm25_nojumper_hil'
+            / 'src'
+            / 'main.cpp'
+        ).read_text(encoding='utf-8')
+        self.assertIn(
+            'peripheralIoResource(IoResourceKind::pwm_block, instance)', source
+        )
+        self.assertNotIn(
+            'peripheralIoResource(IoResourceKind::pwm_block, instance,', source
+        )
+
     def record(self, flags=1):
         request = [1, 919, 1, 20, flags, 2, 1000, 1]
         reply = request[:] + [0] * 24

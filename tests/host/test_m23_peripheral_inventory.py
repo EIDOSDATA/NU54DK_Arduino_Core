@@ -258,16 +258,19 @@ int main()
     alignas(4) static std::uint8_t memory[128]{};
     static std::uint8_t domain_a;
     static std::uint8_t domain_b;
+    const gpio_dt_spec primary_pin{&domain_a, 7U, 0U};
+    const gpio_dt_spec alias_pin{&domain_a, 7U, 0U};
     resetIoResourceManagerForTest();
 
     const IoResourceId first[] = {
         peripheralIoResource(IoResourceKind::serial_block, 21U),
         peripheralIoResource(IoResourceKind::dppi_channel, 3U, &domain_a),
         peripheralIoResource(IoResourceKind::timer_channel, 1U, &domain_a),
+        gpioIoResource(primary_pin),
         dmaMemoryIoResource(&memory[0], 32U),
     };
     IoResourceLease uart{};
-    if (reserveIoResources({IoOwnerKind::serial, 21U}, first, 4U,
+    if (reserveIoResources({IoOwnerKind::serial, 21U}, first, 5U,
                            IoAcquirePolicy::exclusive, uart) != IoResourceResult::success ||
         commitIoResources(uart) != IoResourceResult::success)
     {
@@ -281,6 +284,19 @@ int main()
         IoResourceResult::conflict)
     {
         return 2;
+    }
+
+    const auto same_pin_alias = gpioIoResource(alias_pin);
+    IoResourceLease alias_conflict{};
+    IoResourceSnapshot alias_snapshot{};
+    if (reserveIoResources({IoOwnerKind::gpio, 7U}, &same_pin_alias, 1U,
+                           IoAcquirePolicy::exclusive, alias_conflict, &alias_snapshot) !=
+            IoResourceResult::conflict ||
+        alias_snapshot.state != IoResourceState::active ||
+        alias_snapshot.owner.kind != IoOwnerKind::serial ||
+        alias_snapshot.owner.instance != 21U)
+    {
+        return 8;
     }
 
     const IoResourceId second[] = {

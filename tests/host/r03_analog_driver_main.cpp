@@ -2,6 +2,7 @@
 #include "../../cores/arduino/AnalogFabric.cpp"
 #include "../../cores/arduino/internal/analog/SaadcFabric.cpp"
 #include "../../cores/arduino/internal/analog/PwmSequenceFabric.cpp"
+#include "../../cores/arduino/internal/resource/IoResourcePolicy.h"
 #include "fabric_driver_stubs/resource_mock.h"
 #include <condition_variable>
 #include <cstring>
@@ -124,6 +125,38 @@ int main(int argc, char **argv)
         assert(waited_us == 21);
         mock_saadc_event(NRFX_SAADC_EVT_FINISHED);
         assert(saadc.stop(1) == AnalogFabricResult::success);
+    }
+    else if (std::strcmp(argv[1], "pwm_block_identity") == 0)
+    {
+        bool block_found = false;
+        bool gpio_found = false;
+        bool dma_found = false;
+        assert(mock_last_lease_owner.kind == nucode::arduino::internal::IoOwnerKind::pwm);
+        assert(mock_last_lease_owner.instance == 20U);
+        for (std::size_t index = 0U; index < mock_last_lease_resource_count; ++index)
+        {
+            const auto &resource = mock_last_lease_resources[index];
+            if (resource.kind == nucode::arduino::internal::IoResourceKind::pwm_block)
+            {
+                const auto runtime_resource = nucode::arduino::internal::peripheralIoResource(
+                    nucode::arduino::internal::IoResourceKind::pwm_block, 20U);
+                assert(resource.domain == nullptr);
+                assert(resource.index == 20U);
+                assert(nucode::arduino::internal::io_resource_detail::resourcesConflict(
+                    resource, runtime_resource));
+                block_found = true;
+            }
+            else if (resource.kind == nucode::arduino::internal::IoResourceKind::gpio_pin)
+            {
+                gpio_found = true;
+            }
+            else if (resource.kind == nucode::arduino::internal::IoResourceKind::dma_memory)
+            {
+                dma_found = true;
+            }
+        }
+        assert(block_found && gpio_found && dma_found);
+        assert(pwm->stop(1) == AnalogFabricResult::success);
     }
     else if (std::strcmp(argv[1], "repeat") == 0)
     {

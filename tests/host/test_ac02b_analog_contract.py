@@ -103,6 +103,14 @@ class Ac02bAnalogContractTests(unittest.TestCase):
         adapter = (
             ROOT / "variants" / "nu54dk" / "pwm_runtime_routes.cpp"
         ).read_text(encoding="utf-8")
+        sequence_fabric = (
+            ROOT
+            / "cores"
+            / "arduino"
+            / "internal"
+            / "analog"
+            / "PwmSequenceFabric.cpp"
+        ).read_text(encoding="utf-8")
         header = (
             ROOT / "variants" / "nu54dk" / "pwm_runtime_routes.h"
         ).read_text(encoding="utf-8")
@@ -111,6 +119,11 @@ class Ac02bAnalogContractTests(unittest.TestCase):
             self.assertIn(f"IoOwnerKind::pwm, {instance}U", adapter)
             self.assertIn(f"IoResourceKind::pwm_block, {instance}U", adapter)
             self.assertIn(f"DT_NODELABEL(pwm{instance})", adapter)
+        self.assertIn(
+            "peripheralIoResource(IoResourceKind::pwm_block, instance_)",
+            sequence_fabric,
+        )
+        self.assertNotIn("instance_, driver->p_reg", sequence_fabric)
         for token in (
             "buildPeripheralRoute",
             "state->runtime_route->deactivate()",

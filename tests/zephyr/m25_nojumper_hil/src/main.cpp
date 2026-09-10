@@ -178,8 +178,7 @@ namespace
             result[11] = static_cast<std::uint32_t>(pwm->state());
             result[17] = registers->ENABLE;
             result[19] = guardsValid() ? 1U : 0U;
-            result[20] = resourceFree(peripheralIoResource(IoResourceKind::pwm_block, instance,
-                                                           registers)) &&
+            result[20] = resourceFree(peripheralIoResource(IoResourceKind::pwm_block, instance)) &&
                          resourceFree(gpioIoResource(gpio)) &&
                          resourceFree(dmaMemoryIoResource(first.values, 16U)) &&
                          resourceFree(dmaMemoryIoResource(second.values, 16U));

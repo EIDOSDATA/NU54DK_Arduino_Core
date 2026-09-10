@@ -342,7 +342,7 @@ namespace nucode::arduino
         IoResourceId resources[internal::io_resource_lease_capacity]{};
         std::size_t resource_count = 0U;
         resources[resource_count++] =
-            internal::peripheralIoResource(IoResourceKind::pwm_block, instance_, driver->p_reg);
+            internal::peripheralIoResource(IoResourceKind::pwm_block, instance_);
         for (const pin_size_t pin : context->configuration.output_pins)
         {
             if (pin == disconnected_pin)

@@ -10,6 +10,11 @@ device mock_gpio0{0}, mock_gpio1{1}, mock_gpio2{2};
 inline std::atomic<int> mock_live_leases{0};
 inline bool mock_release_failure = false;
 inline bool mock_commit_failure = false;
+inline nucode::arduino::internal::IoResourceOwner mock_last_lease_owner{};
+inline std::array<nucode::arduino::internal::IoResourceId,
+                  nucode::arduino::internal::io_resource_lease_capacity>
+    mock_last_lease_resources{};
+inline std::size_t mock_last_lease_resource_count = 0U;
 namespace nucode::arduino::internal
 {
     const PinDescription *pinDescription(std::size_t pin) noexcept
@@ -33,11 +38,18 @@ namespace nucode::arduino::internal
         }();
         return pin < pins.size() ? &pins[pin] : nullptr;
     }
-    IoResourceResult reserveIoResources(IoResourceOwner owner, const IoResourceId *,
+    IoResourceResult reserveIoResources(IoResourceOwner owner, const IoResourceId *resources,
                                         std::size_t count, IoAcquirePolicy, IoResourceLease &lease,
                                         IoResourceSnapshot *) noexcept
     {
         assert(lease.phase == IoLeasePhase::empty);
+        assert(count <= mock_last_lease_resources.size());
+        mock_last_lease_owner = owner;
+        mock_last_lease_resource_count = count;
+        for (std::size_t index = 0U; index < count; ++index)
+        {
+            mock_last_lease_resources[index] = resources[index];
+        }
         lease.owner = owner;
         lease.count = count;
         lease.phase = IoLeasePhase::reserved;
