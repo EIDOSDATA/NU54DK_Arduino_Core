@@ -119,6 +119,44 @@ class PowerTests(unittest.TestCase):
             with self.subTest(mask=mask), self.assertRaises(ProtocolError):
                 power.read_power_hardware_fault(target, image)
 
+    def test_wake_register_snapshot_preserves_off_and_boot_sides(self):
+        """! @brief OFF 직전 설정과 cleanup DIF reset을 성공으로 확대하지 않고 보존합니다. """
+        target = mock.Mock()
+        image = {'role': 2, 'power_wake_address': power.pair.RAM_BEGIN+2560}
+        words = [power.WAKE_MAGIC, 2, 1, 7, 12, 65535, 0, 0, 0, 0, 0,
+                 1, 3, 4, 1, 8, 1024, 32, 0, 1]
+        target.read_memory_block8.return_value = struct.pack('<20I', *words)
+        result = power.read_power_wake(target, image)
+        self.assertEqual(result['grtc_active_cc_mask'], 8)
+        self.assertEqual(result['resetreas_after_boot'], 1024)
+        self.assertFalse(result['expected_wake'])
+        self.assertFalse(result['system_off_pass'])
+        for index, value in ((0, 0), (1, 1), (2, 0), (3, 0), (18, 2), (19, 0)):
+            broken = words[:]
+            broken[index] = value
+            target.read_memory_block8.return_value = struct.pack('<20I', *broken)
+            with self.subTest(index=index), self.assertRaises(ProtocolError):
+                power.read_power_wake(target, image)
+        target.read_memory_block8.return_value = bytes(79)
+        with self.assertRaises(ProtocolError):
+            power.read_power_wake(target, image)
+
+    def test_target_captures_wake_registers_before_poweroff(self):
+        """! @brief reset clear·GRTC 준비·snapshot·retention 저장·OFF 순서를 고정합니다. """
+        source = (ROOT/'tests/zephyr/v04_t13_hil/src/power.cpp').read_text(encoding='utf-8')
+        start = source.index('void enterOff()')
+        end = source.index('\n    }\n} // namespace', start)
+        body = source[start:end]
+        order = [body.index(token) for token in ('hwinfo_clear_reset_cause()',
+            'z_nrf_grtc_wakeup_prepare(2000000U)', 'captureWakeRegisters();',
+            'if (!save())', 'sys_poweroff();')]
+        self.assertEqual(order, sorted(order))
+        for token in ('NRF_P1->PIN_CNF[14U]', 'NRF_P1->IN', 'NRF_P1->LATCH',
+                      'NRF_P1->DETECTMODE', 'nrf_reset_resetreas_get(NRF_RESET)',
+                      'NRF_GRTC->MODE', 'NRF_GRTC->TIMEOUT', 'NRF_GRTC->WAKETIME',
+                      'NRF_GRTC->STATUS.LFTIMER', 'GRTC_CC_CCEN_ACTIVE_Msk'):
+            self.assertIn(token, source)
+
     def test_debug_held_bridge_cannot_substitute_for_normal_mode_or_off(self):
         """! @brief debug 유지 진단에는 정상 mode·reset·retention 성공을 부여하지 않습니다. """
         words = [power.MAGIC, 2, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 65537, 1, 2, 0, 0, 0, 800]

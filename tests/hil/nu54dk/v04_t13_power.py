@@ -20,6 +20,7 @@ MASK = 0xFFFFFFFF
 RESET_PIN, RESET_GPIO, RESET_TIMER = 1, 128, 2048
 FAULT_MAGIC = 0x50464531
 IDLE_MAGIC = 0x50494431
+WAKE_MAGIC = 0x50574B31
 PINS_MAGIC = 0x50504931
 POLL_MAGIC = 0x50504F31
 POWER_SWD_FREQUENCY_HZ = 1_000_000
@@ -88,6 +89,14 @@ def inspect_power_image(repository, build_root, role):
         if any(abs(result['power_hardware_fault_address']-result[key]) < 80 for key in
                ('power_fault_address', 'power_idle_address')):
             raise ProtocolError('T13 power hardware-fault snapshot overlaps another record')
+        wake = table.get_symbol_by_name('v04_power_wake')
+        if not wake or len(wake) != 1:
+            raise ProtocolError('T13 power wake-register symbol missing or ambiguous')
+        result['power_wake_address'] = fault_region(int(wake[0]['st_value']),
+            int(wake[0]['st_size']), result['symbols'])
+        if any(abs(result['power_wake_address']-result[key]) < 80 for key in
+               ('power_fault_address', 'power_idle_address', 'power_hardware_fault_address')):
+            raise ProtocolError('T13 power wake-register snapshot overlaps another record')
     return result
 
 
@@ -128,6 +137,28 @@ def read_power_hardware_fault(target, image):
     if result['present'] and (result['event_type'] != 5 or not 0 < result['error_mask'] <= 15):
         raise ProtocolError('T13 power hardware-fault record has non-hardware error mask')
     return result
+
+
+def read_power_wake(target, image):
+    """! @brief OFF 직전 설정과 다음 부팅 원시 reset 원인을 같은 원본으로 검증합니다. """
+    raw = bytes(target.read_memory_block8(image['power_wake_address'], 80))
+    if len(raw) != 80:
+        raise ProtocolError('T13 power wake-register snapshot truncated')
+    words = list(struct.unpack('<20I', raw))
+    if words == [0]*20:
+        return {'present': False, 'words': words}
+    if (words[:2] != [WAKE_MAGIC, image['role']] or words[2] not in (1, 2) or
+            words[3] == 0 or words[18] not in (0, 1) or words[19] != 1):
+        raise ProtocolError('T13 power wake-register marker/role/state mismatch')
+    return {'present': True, 'words': words, 'mode': words[2], 'round': words[3],
+            'gpio_pin_cnf': words[4], 'gpio_in': words[5], 'gpio_latch': words[6],
+            'gpio_detectmode': words[7], 'gpio_retain': words[8], 'xo_stat': words[9],
+            'resetreas_before_off': words[10], 'grtc_mode': words[11],
+            'grtc_timeout': words[12], 'grtc_waketime': words[13],
+            'grtc_lftimer_status': words[14], 'grtc_active_cc_mask': words[15],
+            'resetreas_after_boot': words[16], 'zephyr_reset_cause': words[17],
+            'expected_wake': bool(words[18]), 'dma_release_proven': True,
+            'system_off_pass': False}
 
 
 def observe_pins(device, append, label):
@@ -432,7 +463,8 @@ def execute(args, images, grant, uids, append):
                     pair.verify_identity(raw_identity, index+1, device.image['core_revision'])
                     for name, reader in (('first-uart-fault', read_power_fault),
                                          ('first-hardware-uart-fault', read_power_hardware_fault),
-                                         ('initial-uart-idle', read_power_idle)):
+                                         ('initial-uart-idle', read_power_idle),
+                                         ('wake-registers', read_power_wake)):
                         try:
                             append(f'cleanup/role{index+1}/{name}',
                                 {'status': 'diagnostic', **reader(target, device.image)})

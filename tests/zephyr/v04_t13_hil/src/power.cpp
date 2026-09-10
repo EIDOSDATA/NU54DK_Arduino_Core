@@ -10,6 +10,7 @@
 #include <nucode/SerialFabric.h>
 #include <internal/IoResourceManager.h>
 #include <hal/nrf_gpio.h>
+#include <hal/nrf_reset.h>
 #include <hal/nrf_uarte.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/clock_control/nrf_clock_control.h>
@@ -32,6 +33,8 @@ extern "C"
     alignas(4) volatile std::uint32_t v04_power_hardware_fault[20]{};
     /** @brief UART RX 시작 전 내부 pull-up 적용과 실제 유휴 수준을 부팅별로 보존합니다. */
     alignas(4) volatile std::uint32_t v04_power_idle[20]{};
+    /** @brief System OFF 직전 기상 설정과 다음 부팅 reset 원인을 함께 보존합니다. */
+    alignas(4) volatile std::uint32_t v04_power_wake[20]{};
 }
 
 namespace
@@ -40,6 +43,7 @@ namespace
     using namespace nucode::arduino::internal;
     constexpr std::uint32_t role = CONFIG_NUCODE_V04_HIL_ROLE;
     constexpr std::uint32_t magic = 0x504F5731U;
+    constexpr std::uint32_t wake_magic = 0x50574B31U;
     constexpr unsigned frame_bytes = 128U, wake_pin = 46U;
     constexpr char revision[] = NUCODE_HIL_CORE_REVISION;
     const auto *const retained_device = DEVICE_DT_GET(DT_NODELABEL(t13_retained));
@@ -54,6 +58,7 @@ namespace
         std::uint32_t sequence = 0U, pending = 0U, boots = 0U;
         std::uint32_t mode = 0U, round = 0U, seed = 0U, released = 0U;
         std::uint32_t poll_mode = 0U;
+        std::uint32_t wake[16]{};
         std::uint32_t checksum = 0U;
     } retained;
 
@@ -381,6 +386,36 @@ namespace
                (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) == 0U;
     }
 
+    /** @brief System OFF 직전 GPIO·GRTC·clock·reset 원시 레지스터를 retention에 고정합니다. */
+    void captureWakeRegisters()
+    {
+        std::uint32_t active_channels = 0U;
+        for (unsigned channel = 0U; channel < GRTC_CC_MaxCount; ++channel)
+        {
+            if ((NRF_GRTC->CC[channel].CCEN & GRTC_CC_CCEN_ACTIVE_Msk) != 0U)
+            {
+                active_channels |= 1UL << channel;
+            }
+        }
+        const std::uint32_t values[]{wake_magic,
+                                     role,
+                                     retained.mode,
+                                     retained.round,
+                                     NRF_P1->PIN_CNF[14U],
+                                     NRF_P1->IN,
+                                     NRF_P1->LATCH,
+                                     NRF_P1->DETECTMODE,
+                                     nrf_gpio_port_retain_get(NRF_P1),
+                                     NRF_CLOCK->XO.STAT,
+                                     nrf_reset_resetreas_get(NRF_RESET),
+                                     NRF_GRTC->MODE,
+                                     NRF_GRTC->TIMEOUT,
+                                     NRF_GRTC->WAKETIME,
+                                     NRF_GRTC->STATUS.LFTIMER,
+                                     active_channels};
+        ::memcpy(retained.wake, values, sizeof(values));
+    }
+
     /** @brief 응답 DMA 종료 후 UART 소유권과 HFXO 정지를 먼저 증명하고 System OFF에 들어갑니다. */
     void enterOff()
     {
@@ -416,8 +451,14 @@ namespace
                 return;
             }
         }
-        if (!save() || hwinfo_clear_reset_cause() != 0 ||
+        if (hwinfo_clear_reset_cause() != 0 ||
             (retained.mode == 1U && z_nrf_grtc_wakeup_prepare(2000000U) != 0))
+        {
+            failure(33U);
+            return;
+        }
+        captureWakeRegisters();
+        if (!save())
         {
             failure(33U);
             return;
@@ -446,6 +487,11 @@ void t13::power::initialize(std::uint32_t &sequence, std::uint32_t *nonce)
             ? reset_cause == RESET_PIN
             : pending == 2U && retained.released == 1U &&
                   reset_cause == (retained.mode == 1U ? RESET_CLOCK : RESET_LOW_POWER_WAKE);
+    ::memcpy(const_cast<std::uint32_t *>(v04_power_wake), retained.wake, sizeof(retained.wake));
+    v04_power_wake[16] = nrf_reset_resetreas_get(NRF_RESET);
+    v04_power_wake[17] = reset_cause;
+    v04_power_wake[18] = expected ? 1U : 0U;
+    v04_power_wake[19] = retained.released;
     if (!expected)
     {
         retained.magic_word = 0U;
