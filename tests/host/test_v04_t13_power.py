@@ -12,6 +12,14 @@ from v04_protocol import ProtocolError, encode
 
 
 class PowerTests(unittest.TestCase):
+    def test_gpio_wake_uses_zephyr_level_detection_path(self):
+        """! @brief nRF54L15 GPIO wake가 PIN_CNF 직접 설정으로 퇴행하지 않게 합니다. """
+        source = (ROOT/'tests/zephyr/v04_t13_hil/src/power.cpp').read_text(encoding='utf-8')
+        self.assertIn('gpio_pin_configure(wake_gpio.port, wake_gpio.pin,', source)
+        self.assertIn('gpio_pin_interrupt_configure(wake_gpio.port, wake_gpio.pin,', source)
+        self.assertIn('GPIO_INT_LEVEL_LOW', source)
+        self.assertNotIn('nrf_gpio_cfg_sense_input(wake_pin', source)
+
     def test_probe_inventory_is_forbidden_after_peer_debug_detach(self):
         """! @brief B System OFF 중 전체 probe 열거가 DIF wake를 일으키지 않게 합니다. """
         helper = mock.Mock()

@@ -13,6 +13,7 @@
 #include <hal/nrf_uarte.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/clock_control/nrf_clock_control.h>
+#include <zephyr/drivers/gpio.h>
 #include <zephyr/drivers/hwinfo.h>
 #include <zephyr/drivers/retained_mem.h>
 #include <zephyr/drivers/timer/nrf_grtc_timer.h>
@@ -42,6 +43,7 @@ namespace
     constexpr unsigned frame_bytes = 128U, wake_pin = 46U;
     constexpr char revision[] = NUCODE_HIL_CORE_REVISION;
     const auto *const retained_device = DEVICE_DT_GET(DT_NODELABEL(t13_retained));
+    const gpio_dt_spec wake_gpio{DEVICE_DT_GET(DT_NODELABEL(gpio1)), 14U, 0U};
 
     /** @brief source·nonce·정확한 다음 reset 단계까지 checksum으로 묶어 보존합니다. */
     struct Retained
@@ -286,8 +288,7 @@ namespace
         {
             return false;
         }
-        const gpio_dt_spec gpio{DEVICE_DT_GET(DT_NODELABEL(gpio1)), 14U, 0U};
-        const auto resource = gpioIoResource(gpio);
+        const auto resource = gpioIoResource(wake_gpio);
         if (acquireIoResources({IoOwnerKind::application, 243U}, &resource, 1U,
                                IoAcquirePolicy::exclusive, wake_token) != IoResourceResult::success)
         {
@@ -402,8 +403,15 @@ namespace
         retained.released = 1U;
         if (retained.mode == 2U)
         {
-            nrf_gpio_cfg_sense_input(wake_pin, NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_SENSE_LOW);
-            if (nrf_gpio_pin_read(wake_pin) != 1U)
+            /**
+             * @brief nRF54L15의 System OFF GPIO 기상은 Zephyr의 검증된 level 감지 경로로
+             *        GPIOTE PORT 감지까지 구성합니다.
+             */
+            if (gpio_pin_configure(wake_gpio.port, wake_gpio.pin,
+                                   GPIO_INPUT | GPIO_PULL_UP) != 0 ||
+                gpio_pin_interrupt_configure(wake_gpio.port, wake_gpio.pin,
+                                             GPIO_INT_LEVEL_LOW) != 0 ||
+                gpio_pin_get(wake_gpio.port, wake_gpio.pin) != 1)
             {
                 failure(32U);
                 return;
