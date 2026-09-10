@@ -155,8 +155,8 @@ PWM은 TOP1000/individual/32 values/loop(C06 50%, C08 25%), QDEC은 256µs sampl
 구현한 고정 serial 취소/NACK의 mode·원본·100회 판정은
 [복구 실행 항목](T13_RECOVERY.md)에 보존한다. 정상 안정성 시험과 오류 복구 완료는 별개다.
 아래는 합의 범위의 완료·미완료 판정표이며, 제외한 항목은 표에서 제거했다.
-전체 GPIO/overlap, active GPIOTE/DPPI 및 PWM/analogWrite/tone/Servo 충돌의 추가 증거 경계만
-[110번 요구 대조](<../../../00_Docs/04_검증 기록/110_문서_정리와_T13_S_잔여_재개.md>)와 T14/T15에서 판단한다.
+전체 GPIO/overlap, active GPIOTE/DPPI 및 PWM/analogWrite/tone/Servo 충돌의 추가 증거 경계는
+후속 [116번 T14 판정](<../../../00_Docs/04_검증 기록/116_T14_자원_충돌_판정과_PWM_식별_교정.md>)에서 완료했다.
 
 | 대상 | 현재 상태 | 합의한 오류 주입·판정 |
 | --- | --- | --- |
@@ -165,7 +165,7 @@ PWM은 TOP1000/individual/32 values/loop(C06 50%, C08 25%), QDEC은 256µs sampl
 | TWI/TWIS | **관련 문제 해결 완료·복구 검증 완료** | 0x44 NACK, 2ms TWIS 공급 지연, SDA LOW 100ms와 해제·bus clear/STOP 뒤 정상 read/write |
 | I2S/PDM | **관련 문제 해결 완료·복구 검증 완료** | 한 번의 buffer 미공급·cancel/STOP 뒤 guard 보존과 정상 stream 재시작 |
 | PWM | **STOP·재시작 문제 해결 완료** | 동작 중 STOP·미시작 task 취소, 출력 idle·pin·DMA 반환·재획득 |
-| GPIO/stream/PWM/event 충돌 3종 | **검증·판정 미완료** | 중복 요청 거부와 기존 동작·guard·출력 보존. 위 UART 충돌 결과를 전체로 확대하지 않음 |
+| GPIO/stream/PWM/event 충돌 3종 | **T14 후속 검증·판정 완료** | production 자원 계약·target build·두 보드 HIL. 상세 범위는 116번 |
 
 serial00의 SPI↔UART **외부 송수신** handover는 S/U 결선이 서로 달라 무인 반복 대상이 아니다.
 S의 SPIM00↔SPIS00 연속 역할 전환도 제외한다. U의 UART00 stop/restart는 별도 복구 범위이며,
@@ -192,7 +192,7 @@ QDEC의 알려진 제한 보고와 완료 결정을 반영한 현재 S 정상 �
 포함한 양이며 앞으로 남은 시간 예측이 아니다. U UART00 180초는 별도이며 QDEC 재진단은 예약하지 않는다.
 위 시간에는 preflight·복구 반복·결선·원인 조사·감사가 포함되지 않는다. C→S와 합의한 S 반복,
 U 최소 결선 4신호 검사·단독 180초와 양 역할 CTS/TX/RX 복구는 모두 완료했다.
-남은 것은 T13 재실행이 아니라 후속 영향 회귀·T14/T15 판단이다.
+T13 종료 뒤 T14 판정까지 완료했으며, 다음은 T15 지원 범위 확정이다.
 
 다섯 block 동시 대표 한 조합을 모든 통신/stream 조합의 PASS로 확대하지 않는다.
 P1의 승인 출력 여섯 개로 P1 UART 세 개를 모두 4선 flow로 동시에 쓰는 구성은 불가능하다.

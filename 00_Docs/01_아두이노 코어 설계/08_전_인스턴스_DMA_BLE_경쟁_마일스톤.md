@@ -4,8 +4,8 @@
 
 이 문서의 경쟁 비교와 초기 engineering 목표는 제품 방향을 설명합니다. 현재 실행 범위에서는
 QDEC 추가 진단·반복 Serial handover·T13 peer 제어 System OFF 추가 2조건을 제외합니다.
-S 정상·동시성·복구 결과, C05 1시간 soak와 U 실기를 확보했으며 미커버 요구 판정·최종 지원
-통합은 남아 있습니다. 과거 목표 표를 읽고 완료·제외된 시험을 다시 예약하지 않습니다.
+S 정상·동시성·복구 결과, C05 1시간 soak, U 실기와 T14 미커버 요구 판정을 확보했습니다.
+T15 최종 지원 통합은 남아 있습니다. 과거 목표 표를 읽고 완료·제외된 시험을 다시 예약하지 않습니다.
 
 | 항목 | 내용 |
 | --- | --- |
@@ -327,11 +327,11 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 | 3 | UARTE 5개와 async RX/TX DMA | **source/build/semantic 완료 · Fixture 101~103 외부 route PASS** |
 | 4 | SPIM/SPIS 각 5개와 sync/async·double buffer | **source/build/semantic 완료 · Fixture 201~203 P2/P0/P1↔P1 PASS** |
 | 5 | TWIM/TWIS 각 4개와 repeated-start·target double buffer | **source/build/semantic·Fixture 301 단독 기능 HIL 완료** |
-| 6 | 온보드·peer 기능, 충돌·허용 동시성·복구·성능·soak | **단독 기능·S/U 결과 확보, T14/T15 판정 대기** |
+| 6 | 온보드·peer 기능, 충돌·허용 동시성·복구·성능·soak | **단독 기능·S/U·T14 충돌 판정 확보, T15 지원 확정 대기** |
 
 ### M25 — Analog·timing·audio·event 전 인스턴스
 
-- 상태: 기능 검증과 알려진 제한 정리 완료, 동시성·복구·soak의 현행 판정은 TODO 참조.
+- 상태: 기능 검증과 알려진 제한 정리, T14 PWM/event 자원 충돌 판정 완료. T15 지원 반영은 TODO 참조.
   구현 이력은 [M25 검증 기록](<../04_검증 기록/37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md>),
   source별 요구 대조는 102번, 외부 ADC 반복 수 차이는 103번, fixture 경계는 42번 기록에 보존한다.
 - 주요 기능 결과: SAADC AIN0~7·내부 ADC/event, PDM 기본/연속, C17 GPIO/GPIOTE·PWM 675+288·I2S 432 PASS.

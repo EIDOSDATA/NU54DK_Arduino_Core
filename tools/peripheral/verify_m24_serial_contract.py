@@ -797,7 +797,7 @@ def render_document(contract: dict[str, Any]) -> str:
         "3. **작업 3(완료):** UARTE 5개와 async RX/TX DMA source/build/semantic",
         "4. **작업 4(완료):** SPIM/SPIS 각 5개와 sync/async·double buffer source/build/semantic",
         "5. **작업 5(완료):** TWIM/TWIS 각 4개와 repeated-start·target double buffer source/build/semantic",
-        "6. **작업 6(진행):** 온보드·UART/SPI/TWI 단독 기능과 S/U 결과 확보. T14/T15 최종 판정 대기",
+        "6. **작업 6(진행):** 온보드·UART/SPI/TWI 단독 기능과 S/U·T14 충돌 판정 확보. T15 최종 지원 판정 대기",
         "",
         "현재 온보드 증거는 [41번 기록](<../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>),",
         "UART Fixture 101~103은 [44번](<../04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)·[45번](<../04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)·[46번](<../04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>),",
