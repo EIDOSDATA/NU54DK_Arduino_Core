@@ -476,6 +476,8 @@ namespace
 
 void t13::power::initialize(std::uint32_t &sequence, std::uint32_t *nonce)
 {
+    /** @brief 역할별 최적화 뒤에도 양쪽 image의 고정 진단 symbol 계약을 유지합니다. */
+    v04_power_wake[0] = 0U;
     static_cast<void>(hwinfo_get_reset_cause(&reset_cause));
     if (role != 2U || !device_is_ready(retained_device) ||
         retained_mem_read(retained_device, 0U, reinterpret_cast<std::uint8_t *>(&retained),
