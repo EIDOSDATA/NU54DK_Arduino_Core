@@ -61,7 +61,7 @@ QDEC·시리얼 핸드오버 제외와 충돌 반복 생략은 사용자 범위 
 | I2S net6 과거 진단 | 원래 경로 수신 오류와 패드 전이 부족, 반대 endpoint 진단 100회 성공을 보존 | 후속 원래 role2 정식 100/100으로 완료. 과거 실패 원인은 소급 변경하지 않음 |
 | I2S role2 재검증 | 0dda7f9의 원래 starvation/restart 정식 100/100, cleanup 203·idle 400 통과 | 완료. 진단용 교환 경로와 구분 |
 | SPI SPIS 연속 버퍼 | short 정식 SPIM22 재시작 frame12가 zero RX. DWT 무작위/정확 seed 각 100회 추가 오류 없음 | END 뒤 next 요청의 무버퍼 구간을 선행 semaphore 예약으로 교정. exact SPI 10조건 재시험 전 |
-| System OFF | 선행 중계 무응답과 당시 B RAM 소실 기록 보존. 새 전용 image·Host 준비 완료 | 실제 OFF/wake 성공 없음. GRTC 결함으로 확정하지 않음 |
+| System OFF | 중계·debug 해제·DMA 반환은 통과. GRTC wake image의 LFXO가 생산/M15의 외부 커패시터 override 대신 내부 17 pF를 쓴 불일치를 교정 중 | 실제 OFF/wake 성공 전. 새 exact image로 GPIO와 timer를 분리 재검증 |
 
 원인 분석·수정 source·캠페인과 원본 위치는
 [110번](<04_검증 기록/110_문서_정리와_T13_S_잔여_재개.md>)과

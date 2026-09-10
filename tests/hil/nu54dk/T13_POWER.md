@@ -22,6 +22,9 @@ T13에 추가한 UART DMA 정지·System OFF·복구 경로다. 기존 M15의 �
 power 모듈·RAM retention·poweroff를 추가하지 않는다. 마지막 SRAM4KiB는 Nordic sample과 같은
 0x2002e000에 예약하고 source40자·nonce·sequence·예정 reset 원인·회차·seed·DMA 반환을
 checksum으로 보존한다. 명시된 예상 reset 외에는 자동 UART 재시작을 하지 않는다.
+GRTC wake에 쓰이는 LFXO는 생산 image와 M15 System OFF 성공 image와 동일하게 NU54DK에
+실장된 외부 부하 커패시터 DTSI를 사용한다. 보드 기본 internal 17 pF로 되돌아가면 계약시험이
+실패한다.
 
 1. exact source/UID·SWD1MHz·controlled flash 후 기존 S 전기 검사를 모두 수행한다.
    직전 System OFF로 debug power가 해제된 B도 다시 기록할 수 있도록 flash 접속은

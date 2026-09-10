@@ -14,6 +14,7 @@ CONSUMERS = (
     REPOSITORY / "tests" / "zephyr" / "m15_board" / "app.overlay",
     REPOSITORY / "tests" / "zephyr" / "m15_hil" / "app.overlay",
     REPOSITORY / "tests" / "zephyr" / "m15_wake" / "app.overlay",
+    REPOSITORY / "tests" / "zephyr" / "v04_t13_hil" / "app.overlay",
 )
 
 
@@ -30,8 +31,8 @@ class M15LfxoContractTests(unittest.TestCase):
         )
         self.assertNotIn("external-clock-source", source)
 
-    def test_all_arduino_and_m15_builds_include_the_shared_fragment(self) -> None:
-        """! @brief 모든 Arduino 빌드와 M15 image가 같은 DTSI를 사용하도록 고정합니다. """
+    def test_all_system_off_builds_include_the_shared_fragment(self) -> None:
+        """! @brief Arduino와 모든 System OFF image가 같은 DTSI를 사용하도록 고정합니다. """
         for path in CONSUMERS:
             with self.subTest(path=path.relative_to(REPOSITORY).as_posix()):
                 source = path.read_text(encoding="utf-8")

@@ -1,4 +1,5 @@
 #include "../v04_pair_hil/app.overlay"
+#include <nucode/nu54dk-lfxo-external-caps.dtsi>
 
 /**
  * @brief S의 DAP 분리 DATA net에서 단독 PWM 진단을 허용합니다.
