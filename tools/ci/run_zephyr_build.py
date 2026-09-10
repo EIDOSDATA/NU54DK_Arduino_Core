@@ -107,7 +107,8 @@ SUITE_GROUPS = {
     ),
 }
 SUITES = tuple(suite for group in SUITE_GROUPS.values() for suite in group)
-WINDOWS_OUTDIR_MAX_LENGTH = 8
+## @brief 가장 긴 T16 crypto object도 legacy archive 도구의 260자 경계 안에 둡니다.
+WINDOWS_OUTDIR_MAX_LENGTH = 4
 M15_DIRECTORIES = ("m15_board", "m15_hil", "m15_wake")
 
 
@@ -130,7 +131,7 @@ def validate_outdir_path(outdir: Path) -> None:
         raise BuildFailure(
             "Windows Twister outdir가 너무 깁니다. "
             f"{WINDOWS_OUTDIR_MAX_LENGTH}자 이하의 짧은 절대 경로를 사용하십시오: "
-            r"예: C:\t\m12"
+            r"예: C:\t"
         )
 
 

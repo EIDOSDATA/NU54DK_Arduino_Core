@@ -687,7 +687,18 @@ class M12CiContractTests(unittest.TestCase):
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         source = path.read_text(encoding="utf-8")
-        self.assertLessEqual(module.WINDOWS_OUTDIR_MAX_LENGTH, 8)
+        self.assertLessEqual(module.WINDOWS_OUTDIR_MAX_LENGTH, 4)
+        longest_archive_object_suffix = (
+            r"\nrf54l15dk_nrf54l15_cpuapp_nu54dk\zephyr_gnu"
+            r"\nucode.t16.peripheral_profile\t16_peripheral_profile_contract"
+            r"\modules\nrf\subsys\nrf_security\src\drivers\cracen\CMakeFiles"
+            r"\cracen_psa_driver.dir\cracenpsa\src\internal\pake"
+            r"\cracen_spake2p_key_management.c.obj"
+        )
+        self.assertLessEqual(
+            len(r"C:\t" + longest_archive_object_suffix),
+            259,
+        )
         self.assertIn("WINDOWS_OUTDIR_MAX_LENGTH", source)
         self.assertIn("validate_outdir_path(outdir)", source)
 
