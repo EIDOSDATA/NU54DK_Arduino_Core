@@ -179,6 +179,20 @@ class PowerTests(unittest.TestCase):
             with self.subTest(index=index), self.assertRaises(ProtocolError):
                 power.inspect_debug_bridge(broken)
 
+    def test_physical_swd_isolation_proves_normal_bridge_without_reset_or_retention(self):
+        """! @brief 물리 SWD 격리 상태는 reset·retention 성공과 혼동하지 않습니다. """
+        words = [power.MAGIC, 2, 1, 0, 0, 0, power.RESET_PIN, 0, 0, 0, 0, 0, 0,
+                 65537, 2, 3, 0, 0, 0, 900]
+        result = power.inspect_physically_isolated_bridge(words, 0)
+        self.assertTrue(result['normal_mode_proven'])
+        self.assertFalse(result['system_off_pass'])
+        self.assertTrue(result['pin_reset_skipped'])
+        for index in (0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17, 18):
+            broken = words[:]
+            broken[index] = 0 if index == 13 else broken[index] ^ 1
+            with self.subTest(index=index), self.assertRaises(ProtocolError):
+                power.inspect_physically_isolated_bridge(broken, 0)
+
     def test_idle_snapshot_preserves_low_and_high_without_claiming_off_success(self):
         """! @brief LOW 관측을 숨기지 않으며 잘못된 pull·role·핀과 찢어진 응답을 거부합니다. """
         target = mock.Mock()
@@ -341,12 +355,28 @@ class PowerTests(unittest.TestCase):
         self.assertEqual(calls, ['session-close', ('switch', 'isolate'), 'probe-open',
                          ('reset', True), ('reset', False), ('reset', False), 'probe-close'])
 
+    def test_physical_swd_isolation_does_not_reopen_probe_or_reset_target(self):
+        """! @brief System OFF 경로는 격리 뒤 B CMSIS-DAP와 nRESET을 전혀 사용하지 않습니다. """
+        device = mock.Mock()
+        device.target.session.options = {}
+        device.target.session.probe = mock.Mock(spec=['open', 'assert_reset'])
+        calls = []
+        device.target.session.close.side_effect = lambda: calls.append('session-close')
+        switch = lambda stage: calls.append(('switch', stage))
+        append = mock.Mock()
+        power.detach_and_isolate_without_reset(device, append, switch)
+        self.assertEqual(calls, ['session-close', ('switch', 'isolate')])
+        device.target.session.probe.open.assert_not_called()
+        device.target.session.probe.assert_reset.assert_not_called()
+        self.assertFalse(append.call_args.args[1]['probe_access_after_isolation'])
+
     def test_cleanup_attach_retries_only_three_times_and_preserves_second_success(self):
         """! @brief 첫 attach가 OFF를 깨우기만 한 경우 한정 재접속으로 진단 원본을 보존합니다. """
         helper = mock.Mock()
         connection = mock.MagicMock()
         connection.target.read_memory_block8.return_value = bytes(64)
         helper.session_with_chosen_probe.side_effect = [RuntimeError('No ACK'), connection]
+        helper.get_all_connected_probes.return_value = [mock.Mock(unique_id='peer')]
         image = {'role': 2, 'core_revision': 'a'*40,
                  'symbols': {'v04_identity': power.pair.RAM_BEGIN}}
         append = mock.Mock()
@@ -366,6 +396,24 @@ class PowerTests(unittest.TestCase):
                 power.reopen_peer_for_cleanup(stack, helper, 'peer', image, append)
         self.assertEqual(helper.session_with_chosen_probe.call_count,
                          power.CLEANUP_ATTACH_ATTEMPTS)
+
+    def test_cleanup_probe_resolution_accepts_only_the_same_stable_suffix(self):
+        """! @brief 재열거 prefix만 달라진 B는 허용하고 누락·중복·다른 보드는 거부합니다. """
+        helper = mock.Mock()
+        append = mock.Mock()
+        requested = '5415360300052840d9e1e32cc887aaf1'
+        helper.get_all_connected_probes.return_value = [
+            mock.Mock(unique_id='5415360300052840fcd47678fd7d106d'),
+            mock.Mock(unique_id='5400360300052840d9e1e32cc887aaf1')]
+        resolved = power.resolve_cleanup_uid(helper, requested, append)
+        self.assertEqual(resolved, '5400360300052840d9e1e32cc887aaf1')
+        self.assertTrue(append.call_args.args[1]['stable_suffix_match'])
+        for observed in ([], [requested, '5400360300052840d9e1e32cc887aaf1'],
+                         ['5415360300052840fcd47678fd7d106d']):
+            helper.get_all_connected_probes.return_value = [mock.Mock(unique_id=uid)
+                                                             for uid in observed]
+            with self.subTest(observed=observed), self.assertRaises(ProtocolError):
+                power.resolve_cleanup_uid(helper, requested, append)
 
 
 if __name__ == '__main__':

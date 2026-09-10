@@ -229,6 +229,21 @@ def inspect_debug_bridge(words):
             'debug_requests': words[10:13], 'tx_frames': words[14], 'rx_frames': words[15]}
 
 
+def inspect_physically_isolated_bridge(words, boots):
+    """! @brief reset 없이 물리 SWD만 격리한 B의 일반 실행 상태를 검증합니다. """
+    if (not isinstance(words, list) or len(words) != 20 or
+            any(type(value) is not int or not 0 <= value <= MASK for value in words) or
+            words[:3] != [MAGIC, 2, 1] or words[4] != 0 or words[5] != boots or
+            words[6] != RESET_PIN or
+            words[7:13] != [0, 0, 0, 0, 0, 0] or words[16:19] != [0, 0, 0] or
+            words[13] & 0x10000 == 0):
+        raise ProtocolError(f'T13 physical-SWD-isolated bridge state mismatch: {words}')
+    return {'normal_mode_proven': True, 'system_off_pass': False, 'boots': boots,
+            'reset_cause': words[6], 'debug_requests': words[10:13],
+            'tx_frames': words[14], 'rx_frames': words[15], 'xo_stat': words[13],
+            'pin_reset_skipped': True, 'physical_swd_isolated': True}
+
+
 class Relay:
     """! @brief B의 nonce/sequence를 유지하며 A의 두 page mailbox만 사용하는 중계입니다. """
     def __init__(self, controller, nonce, sequence, check, append):
@@ -326,11 +341,45 @@ def detach_and_pin_reset(device, append, switch_swd=None):
                               'b_dp_ap_access_after_disconnect': False})
 
 
+def detach_and_isolate_without_reset(device, append, switch_swd):
+    """! @brief 실행 중인 B의 debug session을 닫고 물리 SWD만 격리합니다. """
+    if switch_swd is None:
+        raise ProtocolError('T13 reset-free detach requires physical SWD switch control')
+    connection = device.target.session
+    connection.options['resume_on_disconnect'] = True
+    connection.close()
+    append('debug/detached', {'status': 'observation', 'resume_on_disconnect': True,
+                             'normal_mode_proven': False})
+    switch_swd('isolate')
+    append('debug/physical-swd-isolated', {'status': 'observation',
+        'board': 'B', 'disable_swd': True, 'disable_uart': True,
+        'gpio_wiring_changed': False, 'pin_reset_skipped': True,
+        'probe_access_after_isolation': False})
+
+
 def pin_snapshot(target):
     """! @brief 제어 응답 손실 시에도 직접 읽은17개 GPIO와 UART ENABLE을 보존합니다. """
     groups = ((0x5010A000, (0, 1, 2, 3)), (0x500D8200, (4, 5, 6, 7, 10, 14)),
               (0x50050400, (0, 1, 2, 3, 4, 5, 6)))
     return [target.read32(base + 0x80 + pin*4) for base, pins in groups for pin in pins]
+
+
+def resolve_cleanup_uid(connect_helper, requested_uid, append):
+    """! @brief 복원 뒤 다시 열거된 동일 CMSIS-DAP를 안정 suffix로 식별합니다. """
+    observed = [probe.unique_id.lower() for probe in
+                connect_helper.get_all_connected_probes(blocking=False)]
+    requested = requested_uid.lower()
+    matches = [uid for uid in observed if uid == requested or
+               (len(requested) > 4 and len(uid) == len(requested) and
+                uid[4:] == requested[4:])]
+    if len(matches) != 1:
+        raise ProtocolError('cleanup peer probe missing or ambiguous after SWD restore')
+    resolved = matches[0]
+    append('cleanup/role2/probe-resolution', {'status': 'observation',
+        'requested_uid_sha256': hashlib.sha256(requested.encode()).hexdigest(),
+        'resolved_uid_sha256': hashlib.sha256(resolved.encode()).hexdigest(),
+        'stable_suffix_match': resolved != requested})
+    return resolved
 
 
 def reopen_peer_for_cleanup(stack, connect_helper, uid, image, append):
@@ -339,7 +388,8 @@ def reopen_peer_for_cleanup(stack, connect_helper, uid, image, append):
     for attempt in range(1, CLEANUP_ATTACH_ATTEMPTS+1):
         connection = None
         try:
-            connection = connect_helper.session_with_chosen_probe(unique_id=uid,
+            resolved_uid = resolve_cleanup_uid(connect_helper, uid, append)
+            connection = connect_helper.session_with_chosen_probe(unique_id=resolved_uid,
                 target_override='nrf54l', frequency=POWER_SWD_FREQUENCY_HZ,
                 blocking=False, no_config=True,
                 options={'auto_unlock': False, 'connect_mode': 'attach',
@@ -398,12 +448,23 @@ def execute(args, images, grant, uids, append, switch_swd=None):
             wiring.run_checks(devices, append, continuity.check)
             prepare_uart_pair(devices, policy, append)
             a, b = devices
-            append('debug/before', {'status': 'observation', 'words': b.command(134)})
+            before = b.command(134)
+            append('debug/before', {'status': 'observation', 'words': before})
+            initial_boots = before[5]
+            if switch_swd is not None:
+                inspect_debug_bridge(before)
             observe_pins(a, append, 'pins/controller-before-peer-reset')
             observe_pins(b, append, 'pins/peer-before-reset')
             if args.phase == 'bridge-debug':
                 if b.command(131, timeout=2) != [1]:
                     raise ProtocolError('T13 debug-held B receive start failed')
+            elif switch_swd is not None:
+                if b.command(131, timeout=2) != [1]:
+                    raise ProtocolError('T13 B receive start failed before physical SWD isolation')
+                detached = True
+                detach_and_isolate_without_reset(b, append, switch_swd)
+                time.sleep(.2)
+                observe_pins(a, append, 'pins/controller-after-peer-isolation')
             else:
                 if b.command(137, timeout=2) != [1]:
                     raise ProtocolError('T13 explicit expected pin reset could not be armed')
@@ -426,6 +487,10 @@ def execute(args, images, grant, uids, append, switch_swd=None):
             if args.phase == 'bridge-debug':
                 append('debug-held/result', {'status': 'diagnostic',
                     **inspect_debug_bridge(relay.command(134))})
+            elif switch_swd is not None:
+                append('debug/result', {'status': 'passed',
+                    **inspect_physically_isolated_bridge(relay.command(134), initial_boots),
+                    'b_swd_accessed_since_detach': False, 'fast_polling_diagnostic': False})
             else:
                 inspect(relay.command(134), boots=1, mode=0, round_number=0, seed=0)
                 append('debug/result', {'status': 'diagnostic' if policy else 'passed',
@@ -452,6 +517,7 @@ def execute(args, images, grant, uids, append, switch_swd=None):
                 'timer-gpio': (('timer', 1), ('gpio', 2)),
             }[args.phase]
             completed_cycles = 0
+            wake_boot_base = initial_boots if switch_swd is not None else 1
             for phase_name, mode in modes:
                 for repeat in range(1, args.repeats+1):
                     a_only_check()
@@ -469,7 +535,7 @@ def execute(args, images, grant, uids, append, switch_swd=None):
                     verify_source(relay.command(131), images[1]['core_revision'])
                     words = relay.command(134)
                     completed_cycles += 1
-                    result = inspect(words, boots=completed_cycles+1, mode=mode,
+                    result = inspect(words, boots=wake_boot_base+completed_cycles, mode=mode,
                                      round_number=repeat, seed=seed)
                     reset_after = time.monotonic() - started - words[19]/1000
                     if not 1.5 <= reset_after <= 3.3:
@@ -509,6 +575,7 @@ def execute(args, images, grant, uids, append, switch_swd=None):
                 append('debug/physical-swd-restored', {'status': 'observation',
                     'board': 'B', 'disable_swd': False, 'disable_uart': True,
                     'gpio_wiring_changed': False})
+                time.sleep(2.0)
             outcomes = []
             for index, device in enumerate(devices):
                 try:
