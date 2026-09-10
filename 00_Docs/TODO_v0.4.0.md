@@ -100,7 +100,9 @@ CMSIS-DAP 2개 열거는 USB 식별만 확인한 것으로 SWD 연결·GPIO 결�
 - 실제 결선 변경, USB/전원 변화, STOP 실패 등 새 이상은 확인·진단 대상으로 기록합니다.
   물리 재결선이 꼭 필요하면 정확한 선과 필요한 조치를 안내합니다.
 - 양쪽 STOP·clock 해제·GPIO 반환을 확인한 뒤 다음 시험을 시작합니다.
-  SWD 10 MHz, exact UID, sector flash, `auto_unlock=false`를 유지하며 mass erase/unlock/recover는 금지합니다.
+  기본 S는 SWD 10 MHz를 유지하고 System OFF 전용 경로는 debug power 해제 후 재접속
+  안정성을 위해 1 MHz `under-reset`을 사용합니다. exact UID·sector flash·`auto_unlock=false`를
+  유지하며 mass erase/unlock/recover는 금지합니다.
 - S 정리 뒤 U 배치를 안내합니다. 이번 자동 범위는 U 준비까지이며, QDEC 재진단·시리얼 핸드오버·정식 공개는 제외합니다.
 
 ### 구현·문서·Git 규칙

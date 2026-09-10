@@ -22,6 +22,7 @@ FAULT_MAGIC = 0x50464531
 IDLE_MAGIC = 0x50494431
 PINS_MAGIC = 0x50504931
 POLL_MAGIC = 0x50504F31
+POWER_SWD_FREQUENCY_HZ = 1_000_000
 PEER_PIN_RESET_SETTLE_SECONDS = .7
 
 
@@ -306,7 +307,8 @@ def execute(args, images, grant, uids, append):
             for uid, image in zip(uids, images):
                 session.validate(grant, images, uids)
                 device, flash = pair.boot_exact(stack, ConnectHelper, args.pyocd, uid, image,
-                    10000000, cmsis_dap_limit_packets=True, flash_connect_mode='under-reset')
+                    POWER_SWD_FREQUENCY_HZ, cmsis_dap_limit_packets=True,
+                    flash_connect_mode='under-reset')
                 devices.append(device)
                 append(f'flash/role{image["role"]}', {'status': 'observation', 'flash': flash})
                 session.verify_profile(device)
@@ -414,7 +416,8 @@ def execute(args, images, grant, uids, append):
                 try:
                     if detached and index == 1:
                         connection = ConnectHelper.session_with_chosen_probe(unique_id=uids[1],
-                            target_override='nrf54l', frequency=10000000, blocking=False, no_config=True,
+                            target_override='nrf54l', frequency=POWER_SWD_FREQUENCY_HZ,
+                            blocking=False, no_config=True,
                             options={'auto_unlock': False, 'connect_mode': 'attach',
                                      'resume_on_disconnect': False, 'cmsis_dap.limit_packets': True})
                         if connection is None:
@@ -470,7 +473,8 @@ def main(argv=None):
     session.validate(grant, images, uids)
     evidence = {'schema_version': 1, 'type': 'v04-t13-s-power', 'phase': args.phase,
         'repeats': args.repeats, 'core_revision': images[0]['core_revision'],
-        'board_revision': images[0]['board_revision'], 'swd_frequency_hz': 10000000,
+        'board_revision': images[0]['board_revision'],
+        'swd_frequency_hz': POWER_SWD_FREQUENCY_HZ,
         'scope': 'UART21 DMA quiesce / peer controlled reset and wake; not full T13',
         'diagnostic_only': args.phase in ('bridge-debug', 'bridge-fast-poll'),
         'polling_policy': policy,

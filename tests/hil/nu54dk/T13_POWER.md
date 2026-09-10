@@ -23,9 +23,11 @@ power 모듈·RAM retention·poweroff를 추가하지 않는다. 마지막 SRAM4
 0x2002e000에 예약하고 source40자·nonce·sequence·예정 reset 원인·회차·seed·DMA 반환을
 checksum으로 보존한다. 명시된 예상 reset 외에는 자동 UART 재시작을 하지 않는다.
 
-1. exact source/UID·SWD10MHz·controlled flash 후 기존 S 전기 검사를 모두 수행한다.
+1. exact source/UID·SWD1MHz·controlled flash 후 기존 S 전기 검사를 모두 수행한다.
    직전 System OFF로 debug power가 해제된 B도 다시 기록할 수 있도록 flash 접속은
    `under-reset`을 사용한다. sector erase·exact UID·`auto_unlock=false`·`--no-reset`은 그대로다.
+   System OFF 후 B의 debug power가 해제된 상태에서 10MHz flash가 CMSIS-DAP probe read
+   timeout을 남긴 원본을 보존하고, power 실행기만 안정적으로 확인한 1 MHz를 사용한다.
 2. 양쪽 TX idle 준비 뒤 A RX를 먼저 시작한다. A ENABLE8·실제 PSEL·RX pending1·기존 오류/트래픽0을
    확인한 다음 B의 예정 pin reset을 기록한다. B debug session을 닫고 pin-only reset한다.
    A의 UART가 ENABLE0인 상태에서 B가 먼저 RX를 시작하지 않도록 실행 순서를 고정한다.

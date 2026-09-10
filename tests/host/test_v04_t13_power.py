@@ -21,6 +21,7 @@ class PowerTests(unittest.TestCase):
             power.connected_probe_uids(helper, True)
         helper.get_all_connected_probes.assert_called_once_with(blocking=False)
         self.assertEqual(power.PEER_PIN_RESET_SETTLE_SECONDS, .7)
+        self.assertEqual(power.POWER_SWD_FREQUENCY_HZ, 1_000_000)
 
     def test_both_uart_pins_precede_controller_rx_and_no_peer_command_is_sent(self):
         """! @brief 양쪽 준비 후 A RX가 실제 활성화되고 B reset은 호출자에게 남는 순서를 대조합니다. """
