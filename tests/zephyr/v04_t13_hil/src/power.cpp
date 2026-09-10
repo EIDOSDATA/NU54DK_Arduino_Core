@@ -390,6 +390,12 @@ namespace
     void captureWakeRegisters()
     {
         std::uint32_t active_channels = 0U;
+#if NRF_GPIO_HAS_RETENTION
+        const auto gpio_retention = nrf_gpio_port_retain_get(NRF_P1);
+#else
+        /** @brief 이 SoC header가 GPIO retention register를 노출하지 않음을 원본 값으로 표시합니다. */
+        constexpr std::uint32_t gpio_retention = UINT32_MAX;
+#endif
         for (unsigned channel = 0U; channel < GRTC_CC_MaxCount; ++channel)
         {
             if ((NRF_GRTC->CC[channel].CCEN & GRTC_CC_CCEN_ACTIVE_Msk) != 0U)
@@ -405,7 +411,7 @@ namespace
                                      NRF_P1->IN,
                                      NRF_P1->LATCH,
                                      NRF_P1->DETECTMODE,
-                                     nrf_gpio_port_retain_get(NRF_P1),
+                                     gpio_retention,
                                      NRF_CLOCK->XO.STAT,
                                      nrf_reset_resetreas_get(NRF_RESET),
                                      NRF_GRTC->MODE,
