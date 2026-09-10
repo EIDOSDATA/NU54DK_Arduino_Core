@@ -407,10 +407,9 @@ namespace
              * @brief nRF54L15의 System OFF GPIO 기상은 Zephyr의 검증된 level 감지 경로로
              *        GPIOTE PORT 감지까지 구성합니다.
              */
-            if (gpio_pin_configure(wake_gpio.port, wake_gpio.pin,
-                                   GPIO_INPUT | GPIO_PULL_UP) != 0 ||
-                gpio_pin_interrupt_configure(wake_gpio.port, wake_gpio.pin,
-                                             GPIO_INT_LEVEL_LOW) != 0 ||
+            if (gpio_pin_configure(wake_gpio.port, wake_gpio.pin, GPIO_INPUT | GPIO_PULL_UP) != 0 ||
+                gpio_pin_interrupt_configure(wake_gpio.port, wake_gpio.pin, GPIO_INT_LEVEL_LOW) !=
+                    0 ||
                 gpio_pin_get(wake_gpio.port, wake_gpio.pin) != 1)
             {
                 failure(32U);
