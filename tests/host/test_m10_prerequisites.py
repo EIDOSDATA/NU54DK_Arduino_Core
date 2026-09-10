@@ -149,7 +149,7 @@ class M10PrerequisiteContractTests(unittest.TestCase):
         self.assertEqual(pins["nrfutil"]["version"], "8.2.1")
         self.assertEqual(
             pins["nrfutil"]["sha256"],
-            "1d291d8a9d6bb5bec18454f8d95064aed7f62e8997ec1c4511f13bdf1124c037",
+            "22cb1bd03fc29016670c1fc8408a78bd213286ecc1156c70712485d77b097c75",
         )
         self.assertTrue(pins["nrfutil"]["url"].startswith("https://files.nordicsemi.com/"))
         self.assertEqual(pins["sdk_manager"]["version"], "1.16.1")

@@ -22,6 +22,13 @@ from .serialization import (
 )
 
 
+## @brief 공식 고정 URL에서 확인한 nRF Util 8.2.1의 승인된 재빌드 byte입니다.
+NRFUTIL_8_2_1_SHA256 = (
+    "1d291d8a9d6bb5bec18454f8d95064aed7f62e8997ec1c4511f13bdf1124c037",
+    "22cb1bd03fc29016670c1fc8408a78bd213286ecc1156c70712485d77b097c75",
+)
+
+
 ## @brief 소스 파일에 선언된 SPDX 식별자를 수집합니다.
 def declared_spdx_identifiers(files: Iterable[SourceFile]) -> dict[str, list[str]]:
     result: dict[str, list[str]] = {}
@@ -71,7 +78,6 @@ def build_external_prerequisites(
         raise PackageError(f"pins.json 외부 전제조건 필드가 불완전합니다: {error}") from error
     expected = {
         "nrfutil_version": "8.2.1",
-        "nrfutil_sha256": "1d291d8a9d6bb5bec18454f8d95064aed7f62e8997ec1c4511f13bdf1124c037",
         "sdk_manager_version": "1.16.1",
         "ncs_version": NCS_VERSION,
         "ncs_revision": NCS_REVISION,
@@ -81,6 +87,10 @@ def build_external_prerequisites(
     for key, value in expected.items():
         if fixed[key] != value:
             raise PackageError(f"pins.json {key}가 release 계약과 다릅니다: {fixed[key]!r}")
+    if fixed["nrfutil_sha256"] not in NRFUTIL_8_2_1_SHA256:
+        raise PackageError(
+            "pins.json nrfutil_sha256가 승인한 nRF Util 8.2.1 byte가 아닙니다."
+        )
     if not isinstance(fixed["nrfutil_url"], str) or not fixed["nrfutil_url"].startswith("https://"):
         raise PackageError("nRF Util pin URL은 HTTPS여야 합니다.")
 

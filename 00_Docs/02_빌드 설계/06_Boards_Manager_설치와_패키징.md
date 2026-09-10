@@ -40,7 +40,7 @@ arduino-cli board listall nucode:zephyr
 | 구성 요소 | 고정 값 |
 | --- | --- |
 | nRF Util | `8.2.1` |
-| nRF Util SHA-256 | `1d291d8a9d6bb5bec18454f8d95064aed7f62e8997ec1c4511f13bdf1124c037` |
+| nRF Util SHA-256 | `22cb1bd03fc29016670c1fc8408a78bd213286ecc1156c70712485d77b097c75` |
 | `sdk-manager` | `1.16.1` |
 | nRF Connect SDK | `v3.4.0` / `99553055607b2e9885fbc80ccd11fa9da81c2df0` |
 | Zephyr | `4.4.0` / `bf801e4e3d19e1ffa76164346480cb7734dd2800` |

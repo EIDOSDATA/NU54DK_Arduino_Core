@@ -32,7 +32,11 @@ class M27ReleaseTests(unittest.TestCase):
         self.assertNotIn("package_reproducibility", blockers)
         self.assertNotIn("m24_fixture_hil", blockers)
         self.assertNotIn("m25_fixture_hil", blockers)
-        self.assertIn("host_regression", blockers)
+        self.assertTrue(
+            set(blockers).issubset(
+                {"boards_manager_lifecycle", "project_owner_approval"}
+            )
+        )
         self.assertIn("project_owner_approval", blockers)
 
     def test_owner_scope_excludes_metrology_not_functional_hil(self) -> None:

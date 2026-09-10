@@ -4,7 +4,7 @@
     "version": "v3.4.0"
   },
   "nrfutil": {
-    "sha256": "1d291d8a9d6bb5bec18454f8d95064aed7f62e8997ec1c4511f13bdf1124c037",
+    "sha256": "22cb1bd03fc29016670c1fc8408a78bd213286ecc1156c70712485d77b097c75",
     "url": "https://files.nordicsemi.com/artifactory/swtools/external/nrfutil/executables/x86_64-pc-windows-msvc/nrfutil.exe",
     "version": "8.2.1"
   },
