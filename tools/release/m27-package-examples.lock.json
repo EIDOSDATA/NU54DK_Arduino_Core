@@ -9,6 +9,7 @@
     {"example": "NUSCentral", "library": "NUCODE BLE", "library_directory": "NUCODE_BLE", "profile": "ble"},
     {"example": "NUSPeripheral", "library": "NUCODE BLE", "library_directory": "NUCODE_BLE", "profile": "ble"},
     {"example": "SecureKeyboard", "library": "NUCODE BLE Security", "library_directory": "NUCODE_BLE_Security", "profile": "ble"},
+    {"example": "FabricCapabilities", "library": "NUCODE Peripheral Fabric", "library_directory": "NUCODE_Peripheral_Fabric", "profile": "fabric"},
     {"example": "AnalogChannels", "library": "NUCODE NU54DK", "library_directory": "NUCODE_NU54DK", "profile": "standard"},
     {"example": "AnalogReadA0", "library": "NUCODE NU54DK", "library_directory": "NUCODE_NU54DK", "profile": "standard"},
     {"example": "AnalogResolution", "library": "NUCODE NU54DK", "library_directory": "NUCODE_NU54DK", "profile": "standard"},

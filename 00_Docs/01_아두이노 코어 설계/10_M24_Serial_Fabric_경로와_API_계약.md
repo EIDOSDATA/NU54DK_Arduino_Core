@@ -1,7 +1,7 @@
 # M24 작업 1~5 — Serial Fabric 전 instance와 EasyDMA
 
 > 이 파일은 `variants/nu54dk/serial-fabric-contract.json`에서 자동 생성합니다. 직접 수정하지 마세요.
-> 공통 backend와 23개 personality adapter의 source/build/semantic·단독 기능 HIL 및 S/U 결과를 확보했습니다. 미커버 요구 판정·최종 지원과 설치 통합은 남아 있습니다. 현재 상태는 [TODO](../TODO_v0.4.0.md)를 따릅니다.
+> 공통 backend와 23개 personality adapter의 source/build/semantic·단독 기능 HIL 및 S/U 결과를 확보했고 T16 설치 profile에 통합했습니다. 최종 RC·package gate 상태는 [TODO](../TODO_v0.4.0.md)를 따릅니다.
 
 | 항목 | 값 |
 | --- | --- |
@@ -9,7 +9,7 @@
 | 제품선 | `v0.4.0` / M24 |
 | SoC / SDK | `nRF54L15` / `v3.4.0` / Zephyr `4.4.0` |
 | Board | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` / `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| 상태 | 작업 1~6·T15 지원 판정 완료, T16 설치 통합 대기 |
+| 상태 | 작업 1~6·T15 지원 판정·T16 설치 통합 완료 |
 | 갱신일 | 2026-09-10 |
 
 ## 1. 이번 작업의 경계
@@ -51,7 +51,7 @@ TWI Fixture 301은 [50번 기록](<../04_검증 기록/50_M24_Fixture_301_TWI_�
 
 고급 후보 API는 `<nucode/SerialFabric.h>`의 `nucode::arduino::serialFabric()`에서
 allocation 없는 typed handle로 제공한다. Raw base address는 받지 않고 kind+instance로만
-선택한다. Header와 구현은 개발 source에 있으며 Kconfig 기본값은 off다. 일반 사용자 설치 profile·예제·지원 통합은 T16에서 확정한다.
+선택한다. Header와 구현의 Kconfig 기본값은 off이며, T16의 명시적 `fabric` profile과 `NUCODE Peripheral Fabric` library를 선택할 때만 설치본에서 활성화된다.
 
 | 선택 함수 | 반환 handle | 허용 instance |
 | --- | --- | --- |

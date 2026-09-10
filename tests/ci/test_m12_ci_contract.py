@@ -517,6 +517,10 @@ class M12CiContractTests(unittest.TestCase):
             ("m25_onboard_hil", "nucode.m25.onboard_hil"),
             module.SUITE_GROUPS["v0.4.0"],
         )
+        self.assertIn(
+            ("t16_peripheral_profile_contract", "nucode.t16.peripheral_profile"),
+            module.SUITE_GROUPS["v0.4.0"],
+        )
 
     ## @brief T13 UARTE00의 두 role image가 S와 독립적으로 canonical build에 포함됩니다.
     def test_zephyr_build_includes_t13_u_role_images(self) -> None:

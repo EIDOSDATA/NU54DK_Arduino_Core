@@ -23,8 +23,10 @@ SPEC.loader.exec_module(MODULE)
 class M27PackageExampleTests(unittest.TestCase):
     def test_lock_has_exact_version_profiles_and_count(self) -> None:
         records = MODULE.load_example_lock()
-        self.assertEqual(len(records), 29)
-        self.assertEqual({item["profile"] for item in records}, {"standard", "ble"})
+        self.assertEqual(len(records), 30)
+        self.assertEqual(
+            {item["profile"] for item in records}, {"standard", "ble", "fabric"}
+        )
         self.assertEqual(MODULE.VERSION, "0.4.0-rc.1")
 
     def test_m22_historical_runner_remains_pinned(self) -> None:
@@ -68,7 +70,7 @@ class M27PackageExampleTests(unittest.TestCase):
                 self.assertEqual(evidence["release_version"], version)
                 self.assertEqual(evidence["milestone"], milestone)
                 self.assertEqual(evidence["evidence_type"], evidence_type)
-                self.assertEqual(evidence["compiled_count"], 29)
+                self.assertEqual(evidence["compiled_count"], 30)
                 self.assertEqual(json.loads(args.evidence.read_text(encoding="utf-8")), evidence)
 
     def test_runner_parallelizes_independent_build_roots(self) -> None:

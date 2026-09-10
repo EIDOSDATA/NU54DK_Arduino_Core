@@ -1,0 +1,82 @@
+/**
+ * @file app.overlay
+ * @brief T16 설치 profile과 동일한 직접 Peripheral Fabric route를 검증합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <nucode/nu54dk-arduino-connectors.dtsi>
+#include <nucode/nu54dk-arduino-pins.dtsi>
+#include <nucode/nu54dk-arduino-runtime.dtsi>
+
+/ {
+    chosen {
+        /delete-property/ zephyr,console;
+        /delete-property/ zephyr,shell-uart;
+        /delete-property/ zephyr,uart-mcumgr;
+        /delete-property/ zephyr,bt-mon-uart;
+        /delete-property/ zephyr,bt-c2h-uart;
+    };
+};
+
+&uart20 {
+    status = "disabled";
+};
+
+&uart30 {
+    status = "disabled";
+};
+
+#define NUCODE_T16_DAP_GPIO_CAPS                                                                    \
+    (NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_OUTPUT | NUCODE_PIN_CAP_ANALOG |                         \
+     NUCODE_PIN_CAP_OPEN_DRAIN | NUCODE_PIN_CAP_INTERRUPT)
+
+&arduino_p1_04 {
+    nucode,capability-mask = <NUCODE_T16_DAP_GPIO_CAPS>;
+    nucode,policy = <NUCODE_PIN_POLICY_CONDITIONAL_DAP_UART>;
+    nucode,ownership = <NUCODE_PIN_OWNER_CONDITIONAL>;
+};
+
+&arduino_p1_05 {
+    nucode,capability-mask = <NUCODE_T16_DAP_GPIO_CAPS>;
+    nucode,policy = <NUCODE_PIN_POLICY_CONDITIONAL_DAP_UART>;
+    nucode,ownership = <NUCODE_PIN_OWNER_CONDITIONAL>;
+};
+
+&arduino_p1_06 {
+    nucode,capability-mask = <NUCODE_T16_DAP_GPIO_CAPS>;
+    nucode,policy = <NUCODE_PIN_POLICY_CONDITIONAL_DAP_UART>;
+    nucode,ownership = <NUCODE_PIN_OWNER_CONDITIONAL>;
+};
+
+&arduino_p1_07 {
+    nucode,capability-mask = <NUCODE_T16_DAP_GPIO_CAPS>;
+    nucode,policy = <NUCODE_PIN_POLICY_CONDITIONAL_DAP_UART>;
+    nucode,ownership = <NUCODE_PIN_OWNER_CONDITIONAL>;
+};
+
+#undef NUCODE_T16_DAP_GPIO_CAPS
+
+&uicr {
+    nfct-pins-as-gpios;
+};
+
+&spi22 {
+    compatible = "nordic,nrf-spis";
+    /delete-property/ rx-delay-supported;
+    /delete-property/ rx-delay;
+    def-char = <0xff>;
+    status = "disabled";
+};
+
+&temp {
+    status = "okay";
+};
+
+&wdt30 {
+    status = "okay";
+};
+
+&wdt31 {
+    status = "okay";
+};

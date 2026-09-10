@@ -24,6 +24,7 @@ EXAMPLE_RUNNER = Path(__file__).with_name("run_m27_package_examples.py")
 M27_RELEASE = Path(__file__).with_name("m27_release.py")
 MAX_ARCHIVE_FILES = 4096
 MAX_ARCHIVE_BYTES = 256 * 1024 * 1024
+EXPECTED_EXAMPLE_COUNT = 30
 
 
 class StagedCandidateFailure(RuntimeError):
@@ -212,8 +213,10 @@ def run_gate(args: argparse.Namespace) -> Path:
         raise StagedCandidateFailure("staged example evidence is invalid") from error
     if example_result.get("status") != "passed" or example_result.get(
         "compiled_count"
-    ) != 29:
-        raise StagedCandidateFailure("staged example evidence did not pass 29 examples")
+    ) != EXPECTED_EXAMPLE_COUNT:
+        raise StagedCandidateFailure(
+            f"staged example evidence did not pass {EXPECTED_EXAMPLE_COUNT} examples"
+        )
     evidence = {
         "schema_version": 1,
         "milestone": "M27",
@@ -230,7 +233,7 @@ def run_gate(args: argparse.Namespace) -> Path:
         "platform_root": str(platform),
         "arduino_data_isolated": True,
         "public_installation_modified": False,
-        "compiled_examples": 29,
+        "compiled_examples": EXPECTED_EXAMPLE_COUNT,
         "example_evidence_sha256": sha256_file(examples_evidence),
         "completed_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
     }
@@ -262,7 +265,9 @@ def main(arguments: Sequence[str] | None = None) -> int:
         if not 1 <= args.workers <= 8:
             raise StagedCandidateFailure("workers is outside 1..8")
         evidence = run_gate(args)
-        print(f"M27_STAGED_CANDIDATE_PASS=29;EVIDENCE={evidence}")
+        print(
+            f"M27_STAGED_CANDIDATE_PASS={EXPECTED_EXAMPLE_COUNT};EVIDENCE={evidence}"
+        )
         return 0
     except StagedCandidateFailure as error:
         print(f"M27_STAGED_CANDIDATE_FAIL: {error}", file=sys.stderr)

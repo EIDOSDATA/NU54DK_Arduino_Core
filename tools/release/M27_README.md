@@ -43,7 +43,7 @@ python tools/release/m27_release.py validate-plan `
 ## 현행 비공개 후보의 예제 검증
 
 공개 Boards Manager 설치 전에는 생성된 ZIP을 격리 Arduino data 디렉터리에 직접 staging하고,
-현재 lock에 고정된 예제 29개와 설치본의 발견 목록을 대조해 전부 compile한다. 이 단계는 기존
+현재 lock에 고정된 예제 30개와 설치본의 발견 목록을 대조해 전부 compile한다. 이 단계는 기존
 Arduino15와 공개 index를 수정하지 않으며 upload도 수행하지 않는다.
 
 ```powershell
@@ -57,12 +57,12 @@ python tools/release/m27_staged_candidate.py `
   --workers 4
 ```
 
-성공 표식은 `M27_STAGED_CANDIDATE_PASS=29`이며 workspace 안에 package별 build와
+성공 표식은 `M27_STAGED_CANDIDATE_PASS=30`이며 workspace 안에 package별 build와
 `m27-package-examples.json`, `m27-staged-candidate.json` 증적을 남긴다. 기본 4개 worker는 서로
 분리된 build 경로를 사용하고 결과를 lock 순서로 다시 정렬한다.
 
-29개는 현행 도구의 후보 예제 집합이다. T16에서 사용자 예제를 추가하면 lock·발견 목록·검증 도구를
-함께 갱신하고 T20/T21에서 최종 설치본의 전체 예제를 검증한다. 이 staging compile은 실제 Upload나
+30개는 T16 Peripheral Fabric 예제를 포함한 현행 후보 예제 집합이다. T20/T21에서 최종 설치본의
+전체 예제를 다시 검증한다. 이 staging compile은 실제 Upload나
 Boards Manager 설치·제거·재설치·버전 전환을 대신하지 않는다.
 
 Physical evidence를 확보한 뒤에는

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief 고정 29개 예제를 설치 package에서 빌드하고 로컬 software 증거와 RC 증거를 구분합니다. """
+"""! @brief 고정 30개 예제를 설치 package에서 빌드하고 로컬 software 증거와 RC 증거를 구분합니다. """
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ BASE_RUNNER_PATH = Path(__file__).with_name("run_m22_package_examples.py")
 LOCK_PATH = Path(__file__).with_name("m27-package-examples.lock.json")
 VERSION = "0.4.0-rc.1"
 FQBN = "nucode:zephyr:nu54dk"
-EXPECTED_EXAMPLE_COUNT = 29
+EXPECTED_EXAMPLE_COUNT = 30
 
 
 def load_base_runner() -> Any:
@@ -62,7 +62,7 @@ def load_example_lock(path: Path = LOCK_PATH) -> list[dict[str, str]]:
             raise PackageExamplesFailure("M27 example lock record schema is invalid")
         if not all(isinstance(value, str) and value for value in record.values()):
             raise PackageExamplesFailure("M27 example lock contains an empty value")
-        if record["profile"] not in {"standard", "ble"}:
+        if record["profile"] not in {"standard", "ble", "fabric"}:
             raise PackageExamplesFailure("M27 example profile is invalid")
         identity = (record["library"], record["example"])
         if identity in identities:

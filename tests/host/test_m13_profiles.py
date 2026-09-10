@@ -37,6 +37,7 @@ class M13ProfileContractTests(unittest.TestCase):
                 "nucode.ble.nus",
                 "nucode.ble.security",
                 "nucode.board",
+                "nucode.peripheral.fabric",
                 "nucode.wire",
                 "nucode.spi",
                 "nucode.servo",
@@ -100,6 +101,7 @@ class M13ProfileContractTests(unittest.TestCase):
                 "CustomGattCentral",
                 "CustomGattPeripheral",
                 "SecureKeyboard",
+                "FabricCapabilities",
             },
         )
         for sketch in examples:

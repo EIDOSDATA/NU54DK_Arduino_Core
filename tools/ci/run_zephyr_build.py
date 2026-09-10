@@ -103,6 +103,7 @@ SUITE_GROUPS = {
         ("m25_nojumper_hil", "nucode.m25.nojumper_hil"),
         ("m26_system_fabric_contract", "nucode.m26.system"),
         ("m26_onboard_hil", "nucode.m26.onboard_hil"),
+        ("t16_peripheral_profile_contract", "nucode.t16.peripheral_profile"),
     ),
 }
 SUITES = tuple(suite for group in SUITE_GROUPS.values() for suite in group)

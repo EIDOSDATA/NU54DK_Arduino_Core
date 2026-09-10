@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "id": "fabric",
+  "display_name": "Peripheral Fabric (DAP UART disconnected)",
+  "board": "nucode:zephyr:nu54dk",
+  "zephyr_board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "ncs_version": "v3.4.0",
+  "conf": "prj.conf",
+  "overlay": "app.overlay",
+  "features": ["gpio", "time", "peripheral_fabric"],
+  "conflicts": [],
+  "requires_hil": ["serial_fabric", "analog_fabric", "event_fabric", "stream_fabric", "system_fabric"]
+}
