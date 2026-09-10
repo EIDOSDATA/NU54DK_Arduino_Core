@@ -4,8 +4,8 @@
 
 이 문서의 경쟁 비교와 초기 engineering 목표는 제품 방향을 설명합니다. 현재 실행 범위에서는
 QDEC 추가 진단·반복 Serial handover·T13 peer 제어 System OFF 추가 2조건을 제외합니다.
-S 정상·동시성·복구 결과, C05 1시간 soak, U 실기와 T14 미커버 요구 판정을 확보했습니다.
-T15 최종 지원 통합은 남아 있습니다. 과거 목표 표를 읽고 완료·제외된 시험을 다시 예약하지 않습니다.
+S 정상·동시성·복구 결과, C05 1시간 soak, U 실기, T14 미커버 요구 판정과 T15 지원 범위를
+확정했습니다. T16 설치 통합은 남아 있습니다. 완료·제외된 시험을 다시 예약하지 않습니다.
 
 | 항목 | 내용 |
 | --- | --- |
@@ -273,7 +273,7 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 ### M24 — Serial fabric 전 인스턴스와 DMA
 
-- 상태: **작업 1~5 완료, 작업 6의 단독 기능·S/U 결과 확보, 최종 지원 통합 대기** — 5개 block·23개 personality, 핀 bank, singleton/고급 API 경계,
+- 상태: **작업 1~6·T15 지원 판정 완료, T16 설치 통합 대기** — 5개 block·23개 personality, 핀 bank, singleton/고급 API 경계,
   DMA lifecycle과 관련 errata를 [M24 Serial Fabric 계약](10_M24_Serial_Fabric_경로와_API_계약.md)에
   고정하고 CI drift 검사를 연결했다. 회로도 재검토로 단독 HIL primary 자원 6개와 무배선 자동화
   후보 7개·외부 fixture 필요 16개도 계약에 추가했다. 실행 결과는
@@ -327,11 +327,11 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 | 3 | UARTE 5개와 async RX/TX DMA | **source/build/semantic 완료 · Fixture 101~103 외부 route PASS** |
 | 4 | SPIM/SPIS 각 5개와 sync/async·double buffer | **source/build/semantic 완료 · Fixture 201~203 P2/P0/P1↔P1 PASS** |
 | 5 | TWIM/TWIS 각 4개와 repeated-start·target double buffer | **source/build/semantic·Fixture 301 단독 기능 HIL 완료** |
-| 6 | 온보드·peer 기능, 충돌·허용 동시성·복구·성능·soak | **단독 기능·S/U·T14 충돌 판정 확보, T15 지원 확정 대기** |
+| 6 | 온보드·peer 기능, 충돌·허용 동시성·복구·성능·soak | **T15 지원·physical gate 확정 완료** |
 
 ### M25 — Analog·timing·audio·event 전 인스턴스
 
-- 상태: 기능 검증과 알려진 제한 정리, T14 PWM/event 자원 충돌 판정 완료. T15 지원 반영은 TODO 참조.
+- 상태: 기능 검증·T14 자원 충돌 판정과 T15 지원 반영 완료. QDEC20/21은 partial·internal candidate로 유지.
   구현 이력은 [M25 검증 기록](<../04_검증 기록/37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md>),
   source별 요구 대조는 102번, 외부 ADC 반복 수 차이는 103번, fixture 경계는 42번 기록에 보존한다.
 - 주요 기능 결과: SAADC AIN0~7·내부 ADC/event, PDM 기본/연속, C17 GPIO/GPIOTE·PWM 675+288·I2S 432 PASS.
@@ -372,7 +372,7 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 
 ### M27 — `v0.4.0` Peripheral Parity 릴리스
 
-- 상태: **비공개 후보 자동 gate PASS / 공개 HOLD** — package·SBOM·checksum·index 이중 재현과
+- 상태: **M24/M25 physical gate PASS / 공개 HOLD** — package·SBOM·checksum·index 이중 재현과
   staging 설치본 예제 29/29 compile을 통과했다. M24~M26의 필수 physical evidence와 frozen RC
   release gate 전에는 tag·GitHub Release·stable index를 만들거나 공개하지 않는다. Exact 결과는
   [M27 자동 준비·HOLD 기록](<../04_검증 기록/39_M27_v0.4.0_rc1_자동_준비와_HOLD.md>)을 따른다.

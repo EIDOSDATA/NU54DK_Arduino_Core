@@ -30,7 +30,9 @@ class M27ReleaseTests(unittest.TestCase):
         )
         self.assertFalse(ready)
         self.assertNotIn("package_reproducibility", blockers)
-        self.assertIn("m24_fixture_hil", blockers)
+        self.assertNotIn("m24_fixture_hil", blockers)
+        self.assertNotIn("m25_fixture_hil", blockers)
+        self.assertIn("host_regression", blockers)
         self.assertIn("project_owner_approval", blockers)
 
     def test_owner_scope_excludes_metrology_not_functional_hil(self) -> None:
@@ -43,7 +45,8 @@ class M27ReleaseTests(unittest.TestCase):
         for gate_id in ("m24_fixture_hil", "m25_fixture_hil"):
             self.assertTrue(gates[gate_id]["required"])
             self.assertEqual(gates[gate_id]["kind"], "physical")
-            self.assertEqual(gates[gate_id]["state"], "hold")
+            self.assertEqual(gates[gate_id]["state"], "passed")
+            self.assertTrue(gates[gate_id]["evidence"])
 
     def test_scope_drift_or_missing_decision_is_rejected(self) -> None:
         original = MODULE.validate_contract()

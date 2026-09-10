@@ -177,7 +177,14 @@ class M24SerialContractTests(unittest.TestCase):
             self.assertEqual(states["build"], "pass", identity)
             self.assertEqual(states["semantic"], "pass", identity)
             self.assertEqual(states["hil"], "pass", identity)
-            self.assertEqual(states["concurrent_hil"], "not_run", identity)
+            expected_concurrent_hil = (
+                "partial"
+                if identity in MODULE.EXPECTED_CONCURRENT_PARTIAL
+                else "not_run"
+            )
+            self.assertEqual(
+                states["concurrent_hil"], expected_concurrent_hil, identity
+            )
             self.assertTrue(item["evidence"], identity)
 
     def test_candidate_header_and_handover_sources_are_required(self) -> None:

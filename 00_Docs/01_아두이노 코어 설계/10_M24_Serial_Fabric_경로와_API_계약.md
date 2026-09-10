@@ -9,7 +9,7 @@
 | 제품선 | `v0.4.0` / M24 |
 | SoC / SDK | `nRF54L15` / `v3.4.0` / Zephyr `4.4.0` |
 | Board | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` / `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| 상태 | 작업 1~5 완료, 단독 기능·S/U 결과 확보, T15 지원 판정·T16 설치 통합 대기 |
+| 상태 | 작업 1~6·T15 지원 판정 완료, T16 설치 통합 대기 |
 | 갱신일 | 2026-09-10 |
 
 ## 1. 이번 작업의 경계
@@ -28,7 +28,7 @@ M24의 후속 순서는 다음과 같다.
 3. **작업 3(완료):** UARTE 5개와 async RX/TX DMA source/build/semantic
 4. **작업 4(완료):** SPIM/SPIS 각 5개와 sync/async·double buffer source/build/semantic
 5. **작업 5(완료):** TWIM/TWIS 각 4개와 repeated-start·target double buffer source/build/semantic
-6. **작업 6(진행):** 온보드·UART/SPI/TWI 단독 기능과 S/U·T14 충돌 판정 확보. T15 최종 지원 판정 대기
+6. **작업 6(완료):** 온보드·UART/SPI/TWI 단독 기능과 S/U·T14 충돌 판정을 T15 지원 범위에 반영
 
 현재 온보드 증거는 [41번 기록](<../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>),
 UART Fixture 101~103은 [44번](<../04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)·[45번](<../04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)·[46번](<../04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>),

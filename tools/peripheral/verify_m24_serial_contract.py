@@ -67,6 +67,11 @@ EXPECTED_SINGLETONS = {
     "SPI": "spim00",
 }
 EXPECTED_FORBIDDEN_ALIASES = {"Serial2", "SPI_HS", "Wire1"}
+EXPECTED_CONCURRENT_PARTIAL = {
+    "uarte20", "uarte21", "uarte30", "spim00", "spim20", "spim30",
+    "spis00", "spis20", "spis30", "twim21", "twim22", "twim30",
+    "twis21", "twis22", "twis30",
+}
 EXPECTED_SELECTORS = {
     "uarte": ("UarteHandle", (0, 20, 21, 22, 30)),
     "spim": ("SpimHandle", (0, 20, 21, 22, 30)),
@@ -638,6 +643,12 @@ def validate_manifest_alignment(contract: dict[str, Any], identities: set[str]) 
     public = {item["public_object"]: item["id"] for item in m24.values() if item["public_object"]}
     if public != EXPECTED_SINGLETONS:
         raise ContractFailure("manifest public objects differ from the M24 contract")
+    concurrent_partial = {
+        item["id"] for item in m24.values()
+        if item["states"]["concurrent_hil"] == "partial"
+    }
+    if concurrent_partial != EXPECTED_CONCURRENT_PARTIAL:
+        raise ContractFailure("manifest T15 concurrent HIL set drifted")
     candidates = identities - set(EXPECTED_SINGLETONS.values())
     for identity in candidates:
         item = m24[identity]
@@ -655,7 +666,9 @@ def validate_manifest_alignment(contract: dict[str, Any], identities: set[str]) 
             or states["build"] != "pass"
             or states["semantic"] != "pass"
             or states["hil"] != "pass"
-            or states["concurrent_hil"] != "not_run"
+            or states["concurrent_hil"] != (
+                "partial" if identity in EXPECTED_CONCURRENT_PARTIAL else "not_run"
+            )
             or item["dma"]["public_mode"] != expected_dma
             or not item["evidence"]
         ):
@@ -778,7 +791,7 @@ def render_document(contract: dict[str, Any]) -> str:
         "| 제품선 | `v0.4.0` / M24 |",
         f"| SoC / SDK | `{identity['soc']}` / `{identity['ncs_version']}` / Zephyr `{identity['zephyr_version']}` |",
         f"| Board | `{identity['board']}` / `{identity['board_revision']}` |",
-        "| 상태 | 작업 1~5 완료, 단독 기능·S/U 결과 확보, T15 지원 판정·T16 설치 통합 대기 |",
+        "| 상태 | 작업 1~6·T15 지원 판정 완료, T16 설치 통합 대기 |",
         "| 갱신일 | 2026-09-10 |",
         "",
         "## 1. 이번 작업의 경계",
@@ -797,7 +810,7 @@ def render_document(contract: dict[str, Any]) -> str:
         "3. **작업 3(완료):** UARTE 5개와 async RX/TX DMA source/build/semantic",
         "4. **작업 4(완료):** SPIM/SPIS 각 5개와 sync/async·double buffer source/build/semantic",
         "5. **작업 5(완료):** TWIM/TWIS 각 4개와 repeated-start·target double buffer source/build/semantic",
-        "6. **작업 6(진행):** 온보드·UART/SPI/TWI 단독 기능과 S/U·T14 충돌 판정 확보. T15 최종 지원 판정 대기",
+        "6. **작업 6(완료):** 온보드·UART/SPI/TWI 단독 기능과 S/U·T14 충돌 판정을 T15 지원 범위에 반영",
         "",
         "현재 온보드 증거는 [41번 기록](<../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>),",
         "UART Fixture 101~103은 [44번](<../04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)·[45번](<../04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)·[46번](<../04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>),",

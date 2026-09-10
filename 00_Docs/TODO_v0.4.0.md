@@ -1,7 +1,7 @@
 # v0.4.0 개발 현황과 실행 TODO
 
-현재 정식 배포는 **v0.3.0**입니다. v0.4.0은 합의한 T13 S/U와 T14 충돌 판정을 종료했고
-T15의 최종 지원 판정을 앞두고 있으며 RC·정식 공개 전입니다.
+현재 정식 배포는 **v0.3.0**입니다. v0.4.0은 합의한 T13 S/U, T14 충돌 판정과
+T15 최종 지원 범위 반영을 종료했으며 T16 사용자 통합·RC·정식 공개 전입니다.
 현재 상태와 다음 작업은 이 문서에서 관리하고, 실행별 원본은 [검증 기록](<04_검증 기록/README.md>)에 보존합니다.
 
 ## 1. 현재 상태
@@ -19,7 +19,8 @@ T15의 최종 지원 판정을 앞두고 있으며 RC·정식 공개 전입니�
 | 요청한 잔여 S 1~3단계 | **범위 종료: PASS 56 + 제외 2 / 58** | System OFF 2조건은 기존 M15 실기와 중복되는 T13 추가 결합 시험으로 제외. 113번 |
 | T13 U 준비·실행 | **완료** | `4f380931` exact image에서 UARTE00 180초, RTS/CTS 200/200, TX/RX 취소 400/400 PASS. 115번 |
 | T14 결함·충돌 판정 | **완료** | PWM 자원 식별 1건 해결, 세 미커버 요구 판정 완료. 116번 |
-| T15~T18 지원·사용자 통합 | 진행/대기 | 알려진 제한 정리와 최종 지원 판정·패키지 통합 |
+| T15 지원 범위 확정 | **완료** | M24/M25 fixture physical gate PASS, QDEC partial·비공개 유지. 117번 |
+| T16~T18 사용자 통합 | 진행/대기 | 후보 API·profile·예제의 설치본 통합과 최종 사용자 문서 |
 | R14·T19~T25 RC·승인·공개 | 대기 | 공개 승인과 실제 배포는 별도 |
 
 QDEC·시리얼 핸드오버·T13 peer 제어 System OFF 제외와 충돌 반복 생략은 범위 결정이며 새 물리
@@ -34,7 +35,7 @@ flash·U 실기가 없었습니다. 당시 검토 범위와 검사 결과는
 [114번](<04_검증 기록/114_전체_문서_정비와_남은_마일스톤.md>)에 기록합니다.
 
 **T13 U 최소 결선·exact image·물리 실기를 완료했습니다.** 완료한 S/U 시험을 다시 시작하지 않습니다.
-현재 기술 단계는 T15에서 instance·mode·route별 결과와 지원 범위를 확정하는 것입니다.
+현재 기술 단계는 T16에서 후보 API·profile·예제를 설치본에 통합하는 것입니다.
 T13 종료는 [115번](<04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md>)에 기록했으며 정식 공개를 포함하지 않습니다.
 
 2026-09-10 후속 실행 결과: `7f78a36c`에서 U 결선 검사를 net 11·13·15·16으로 한정하고
@@ -51,6 +52,12 @@ Markdown 229개 UTF-8·로컬 링크와 diff 검사를 통과했으며 비문서
 자원 관리자 회귀로 판정했습니다. Fabric PWM의 자원 식별 불일치 1건을 발견해 `24582dcc`에서
 교정했고, Host·target build와 두 nRF54L15 보드의 28 command·520 cycle HIL을 통과했습니다.
 세부 근거는 [116번](<04_검증 기록/116_T14_자원_충돌_판정과_PWM_식별_교정.md>)을 따릅니다.
+
+2026-09-10 T15 완료: 75개 manifest의 HIL·동시 HIL 상태를 원본 결과에 맞춰 교정했습니다.
+M24는 23 identity 기능 HIL pass, M25는 34 pass·QDEC20/21 partial이며,
+`m24_fixture_hil`과 `m25_fixture_hil`을 PASS로 확정했습니다. release blocker는 8개에서 6개로
+줄었고, frozen RC·설치·공개 gate는 그대로 남습니다. 세부 근거는
+[117번](<04_검증 기록/117_T15_지원_범위와_Physical_Gate_확정.md>)을 따릅니다.
 
 2026-09-10 후속 사용자 결정: GPIO 전달·SWD 진단은 현재 문제 목록에서 제거합니다.
 SPI CS 조기 종료의 별도 slave 판정은 추가 검증에서 제외하고, TWIS는 완료한 2ms 공급 지연
@@ -258,16 +265,16 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
   - 회귀: 계약 46개, 전체 Host, inventory·생성 계약, target 4/4 build, 두 보드 28 command·520 cycle HIL을 통과했습니다.
   - 결선·증거: [116번 기록](<./04_검증 기록/116_T14_자원_충돌_판정과_PWM_식별_교정.md>)과 익명화한 `hardware.json`을 따릅니다.
 
-- [ ] **T15 — 실기 결과와 지원 범위 확정**
-  - 상태·선행: 대기 / R00~R13 최종 source의 current-source T11과 T12~T14.
-  - 할 일: instance·mode·route·rate·동시 조합별 결과를 matrix/manifest/검증 기록에 반영한다.
-  - 완료 기준: 요구된 기능 HIL을 증거로 판정하고 미측정 품질은 범위 밖으로 표시한다. M24/M25 physical gate가 적법하게 갱신되며 unsupported 경로를 숨기지 않는다.
-  - 결선·증거: 정리 자체는 불필요. 아직 전체 지원 승격 없음.
+- [x] **T15 — 실기 결과와 지원 범위 확정**
+  - 완료 결과: M24 23 identity HIL pass, M25 34 pass·QDEC20/21 partial을 manifest에 반영했습니다.
+  - 지원 경계: public 14개와 internal candidate를 분리하고, 미실행 동시 조합과 QDEC 제한을 숨기지 않습니다.
+  - readiness: `m24_fixture_hil`·`m25_fixture_hil` PASS, 전체 release blocker 6개 유지.
+  - 결선·증거: 추가 실기 없음. [117번 기록](<./04_검증 기록/117_T15_지원_범위와_Physical_Gate_확정.md>)을 따릅니다.
 
 ## 6. C단계 — 사용자용 패키지와 최종 RC (T16~T21)
 
 - [ ] **T16 — 검증된 후보 API를 사용자용 설치 경로에 통합**
-  - 상태·선행: 대기 / T15; 사전 설계·예제 초안은 준비 가능하나 지원 승격은 HIL 이후.
+  - 상태·선행: **현재 단계** / T15 완료. 후보 source와 검증된 지원 경계를 설치본에 연결합니다.
   - 할 일: Kconfig 후보와 설치 profile·공개 header·사용 예제·capability를 통합한다. 일반 사용자가 임의 raw 설정 편집을 하지 않도록 사용 경로를 정리한다.
   - 완료 기준: 실제 설치본에서 기능을 선택·사용하고 기존 singleton identity와 충돌 계약이 유지된다. 변경된 실행 코드/profile은 영향받는 HIL을 다시 통과한다.
   - 결선·증거: 코드·패키지 준비에는 결선 불필요, 영향받는 실기는 해당 결선 필요. 증거 미등록.
@@ -334,13 +341,12 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
 
 | 순서 | 단계 | 완료해야 하는 결과 |
 | --- | --- | --- |
-| 1 | T15 | 완료한 T14 판정과 실기 결과를 instance/mode/route별 최종 지원·readiness에 반영 |
-| 2 | T16~T18 | 후보 API·profile·예제를 설치본에 통합, 최종 사용자 문서, stable 생성/검증 절차 준비 |
+| 1 | T16~T18 | 후보 API·profile·예제를 설치본에 통합, 최종 사용자 문서, stable 생성/검증 절차 준비 |
 | 3 | R14·T19~T21 | RC 고정, 전체 회귀·재현 build, 전체 예제 설치/업로드 수명주기, 비공개 stable 패키지 검사 |
 | 4 | T22~T24 | exact 결과에 대한 소유자 공개 승인, tag/Release/index 공개, 공개 URL 설치·업로드 검증 |
 | 5 | T25 | 최종 기록·커밋·푸시·CI 확인과 정확히 식별한 임시 산출물 정리 |
 
-이는 남은 순서이지 이번 문서 정비에서 실행한 작업 목록이 아닙니다. T15 이후 release gate의
+이는 남은 순서이지 이번 문서 정비에서 실행한 작업 목록이 아닙니다. T16 이후 release gate의
 작업량이 동일하지 않으므로 S의 58조건이나 완료한 T 번호 개수로 v0.4.0 전체 진행률을
 계산하지 않습니다. T13의 합의한 S/U 범위는 100%이며 정식 릴리스는 미완료입니다.
 
@@ -348,15 +354,15 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
 
 | Readiness gate | 연결 작업 | 현재 판정 |
 | --- | --- | --- |
-| `m24_fixture_hil` | T04·T07~T11·T13~T15 | 필수 physical HOLD |
-| `m25_fixture_hil` | T05~T10·T12~T15 | 필수 physical HOLD |
+| `m24_fixture_hil` | T04·T07~T11·T13~T15 | **PASS** |
+| `m25_fixture_hil` | T05~T10·T12~T15 | **PASS**; QDEC는 partial·비공개 경계 |
 | `host_regression`, `documentation`, `zephyr_repro_build` | T16~T19, T21의 변경 영향 재검증 | frozen RC pending |
 | `package_reproducibility` | T20·T21 | frozen RC pending |
 | `boards_manager_lifecycle` | T20·T21; 공개 후 검증은 추가로 T24 | 필수 physical HOLD |
 | `project_owner_approval` | T22 | human HOLD |
 
 M23·후보 source/build·기본 onboard·M26 판정·기존 자산 불변 gate의 근거는 기존 ledger에 있다.
-이 목록을 만들었다고 gate state를 바꾸지 않는다. 준비 완료와 실기 PASS, RC 통과와 정식 공개,
+M24/M25 physical gate는 T15 증거 대조로 PASS가 됐고 나머지 state는 유지한다. 실기 PASS와 RC 통과·정식 공개,
 정식 공개와 공개 URL 검증 완료를 각각 구분한다.
 
 ## 9. 매 작업 종료 시 남길 인계 내용

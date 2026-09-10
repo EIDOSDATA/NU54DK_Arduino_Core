@@ -42,8 +42,20 @@
       "id": "m24_fixture_hil",
       "kind": "physical",
       "required": true,
-      "state": "hold",
-      "reason": "all 23 serial personalities passed approved-route standalone data-path, DMA and recovery HIL; wider allowed concurrency, repeated recovery, performance and soak evidence remain required; external measurement equipment is not required"
+      "state": "passed",
+      "evidence": [
+        "00_Docs/04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md",
+        "00_Docs/04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md",
+        "00_Docs/04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md",
+        "00_Docs/04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md",
+        "00_Docs/04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md",
+        "00_Docs/04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md",
+        "00_Docs/04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md",
+        "00_Docs/04_검증 기록/104_T13_S_복구_동시_안정성_검증.md",
+        "00_Docs/04_검증 기록/112_T13_S_SPI_TWI_완료와_System_OFF_원인.md",
+        "00_Docs/04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md",
+        "00_Docs/04_검증 기록/116_T14_자원_충돌_판정과_PWM_식별_교정.md"
+      ]
     },
     {
       "id": "m25_source_build",
@@ -66,9 +78,25 @@
       "id": "m25_fixture_hil",
       "kind": "physical",
       "required": true,
-      "state": "hold",
-      "reason": "T12 and QDEC investigation are owner-closed with the manual read/clear limitation reported; do not require another full QDEC diagnostic campaign before unrelated work; remaining T13 stream recovery and final T15 supported-scope decision still require evidence; the known QDEC failure is not a physical PASS; precision metrology and third-party device qualification are outside scope",
-      "evidence": ["00_Docs/04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md"]
+      "state": "passed",
+      "evidence": [
+        "00_Docs/04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md",
+        "00_Docs/04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md",
+        "00_Docs/04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md",
+        "00_Docs/04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md",
+        "00_Docs/04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md",
+        "00_Docs/04_검증 기록/79_T12_Fixture_406_current_source_공유_AIN5_검증.md",
+        "00_Docs/04_검증 기록/82_T12_Fixture_407_current_source_공유_AIN6_검증.md",
+        "00_Docs/04_검증 기록/83_T12_Fixture_408_current_source_PWM_ADC_검증.md",
+        "00_Docs/04_검증 기록/87_T12_Fixture_430_current_source_I2S_재검증.md",
+        "00_Docs/04_검증 기록/92_T12_Fixture_440_PDM_연속_전체_검증.md",
+        "00_Docs/04_검증 기록/95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md",
+        "00_Docs/04_검증 기록/97_T12_PWM_peer_capture_첫_240조건_검증.md",
+        "00_Docs/04_검증 기록/100_T12_공통_기능_묶음과_T13_조합_확정.md",
+        "00_Docs/04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md",
+        "00_Docs/04_검증 기록/111_T13_S_I2S_완료와_SPIS_연속_버퍼_교정.md",
+        "00_Docs/04_검증 기록/116_T14_자원_충돌_판정과_PWM_식별_교정.md"
+      ]
     },
     {
       "id": "m26_inventory",
