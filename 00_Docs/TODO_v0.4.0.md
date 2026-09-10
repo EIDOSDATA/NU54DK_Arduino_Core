@@ -1,7 +1,7 @@
 # v0.4.0 개발 현황과 실행 TODO
 
 현재 정식 배포는 **v0.3.0**입니다. v0.4.0은 합의한 T13 S/U, T14 충돌 판정,
-T15 지원 범위, T16 설치 통합, T17 문서 정리, T18 공개 절차 준비와 R14/T19 RC 고정을 종료했으며 T20 설치 수명주기 단계입니다.
+T15 지원 범위, T16 설치 통합, T17 문서 정리, T18 공개 절차 준비, R14/T19 RC 고정과 T20 설치 수명주기를 종료했으며 T21 stable 최종 검사 단계입니다.
 현재 상태와 다음 작업은 이 문서에서 관리하고, 실행별 원본은 [검증 기록](<04_검증 기록/README.md>)에 보존합니다.
 
 ## 1. 현재 상태
@@ -24,7 +24,8 @@ T15 지원 범위, T16 설치 통합, T17 문서 정리, T18 공개 절차 준�
 | T17 문서·지원 매트릭스 정리 | **완료** | public 62/75, QDEC20/21 unsupported, 사용자 문서 5종. 119번 |
 | T18 공개 절차 준비 | **완료** | stable 생성·검증, 승인 evidence 결합과 공개 명령 분리. 120번 |
 | R14·T19 RC 고정·전체 회귀 | **완료** | 35/35 target, Host·문서·inventory, RC 이중 재현 PASS |
-| T20~T25 설치·stable·승인·공개 | 대기 | 공개 승인과 실제 배포는 별도 |
+| T20 RC 설치 수명주기 | **완료** | 설치·30/30 예제·실제 Upload·전환·제거·재설치 PASS |
+| T21~T25 stable·승인·공개 | 진행/대기 | 공개 승인과 실제 배포는 별도 |
 
 QDEC·시리얼 핸드오버·T13 peer 제어 System OFF 제외와 충돌 반복 생략은 범위 결정이며 새 물리
 PASS가 아닙니다.
@@ -38,7 +39,7 @@ flash·U 실기가 없었습니다. 당시 검토 범위와 검사 결과는
 [114번](<04_검증 기록/114_전체_문서_정비와_남은_마일스톤.md>)에 기록합니다.
 
 **T13 U 최소 결선·exact image·물리 실기를 완료했습니다.** 완료한 S/U 시험을 다시 시작하지 않습니다.
-현재 기술 단계는 T20에서 고정 RC의 Boards Manager 설치·30개 예제·Upload·version 전환·제거·재설치를 검증하는 것입니다.
+현재 기술 단계는 T21에서 T20 결과를 반영한 exact commit의 RC/stable 후보를 만들고 이중 재현·runtime 동등성·stable 설치를 최종 검사하는 것입니다.
 T13 종료는 [115번](<04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md>)에 기록했으며 정식 공개를 포함하지 않습니다.
 
 2026-09-10 후속 실행 결과: `7f78a36c`에서 U 결선 검사를 net 11·13·15·16으로 한정하고
@@ -313,14 +314,14 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
   - 변경 영향: 이후 문서·readiness 변경은 runtime package 입력에서 제외합니다. runtime source가 바뀌면 전체 target gate를 다시 실행합니다.
   - 결선·증거: 새 flash·결선 없음. [121번 기록](<./04_검증 기록/121_T19_RC_소스_고정과_전체_회귀.md>)을 따릅니다.
 
-- [ ] **T20 — RC 패키지 재현성·설치 수명주기 검증**
-  - 상태·선행: **현재 단계**. RC ZIP·SBOM·checksum·license·manifest 이중 재현 PASS, 설치 수명주기 대기 / T19.
-  - 할 일: 재현성이 확인된 RC를 격리 설치하고 전체 예제 build·실제 upload·제거·재설치·version 전환을 검사한다.
-  - 완료 기준: 현재 예제 전체(기존 29개 + 새로 추가한 예제)를 lock/발견 목록과 대조한다. 직접 staging compile을 Boards Manager 전체 lifecycle로 대체하지 않는다.
-  - 결선·증거: 설치/compile에는 불필요, upload에는 지정 USB 보드 필요; 기능별 실행은 해당 결선 필요. 최종 증거 미등록.
+- [x] **T20 — RC 패키지 재현성·설치 수명주기 검증**
+  - 완료 결과: 격리 Boards Manager 설치, lock/발견 목록 30/30 clean compile, 실제 pyOCD Upload, `0.3.0` 전환, 제거·재설치와 prerequisite 보존을 통과했습니다.
+  - 해결 결과: Nordic 공식 URL의 같은 nRF Util version byte 변경은 서명·version을 확인해 새 exact hash로 고정했습니다. 저전력 firmware의 SWD `No ACK`는 under-reset/halt로 원인을 분리하고 정상 Upload했습니다.
+  - 경계: 과거 `0.3.0` byte는 변경하지 않았고 과거 post-install을 현행 URL로 소급 검증하지 않았습니다. tag·Release·stable index도 쓰지 않았습니다.
+  - 결선·증거: 새 GPIO 기능 시험 없음. 지정 CMSIS-DAP 1회 Upload. [122번 기록](<./04_검증 기록/122_T20_RC_설치_수명주기와_실제_Upload.md>)을 따릅니다.
 
 - [ ] **T21 — 정식 0.4.0 패키지 생성·최종 검사**
-  - 상태·선행: 대기 / T19·T20.
+  - 상태·선행: **현재 단계** / T19·T20 완료.
   - 할 일: stable metadata와 exact commit으로 비공개 산출물을 만들고 이중 재현, 설치본 예제·실제 upload, RC 대비 runtime payload를 검사한다.
   - 완료 기준: metadata-only 전환의 실행 코드 동등성이 입증되거나, 실행 코드가 다르면 영향받는 build/실기/설치 검증을 재수행한다. 기술 gate 결과와 후보 최종 문서가 일치한다.
   - 결선·증거: package 검사는 불필요, 업로드는 USB, 변경 기능은 해당 결선 필요. 아직 tag·Release·공개 index를 만들지 않음.
@@ -374,7 +375,7 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
 | `m25_fixture_hil` | T05~T10·T12~T15 | **PASS**; QDEC는 partial·비공개 경계 |
 | `host_regression`, `documentation`, `zephyr_repro_build` | T16~T19, T21의 변경 영향 재검증 | **PASS**; runtime 변경 시 재실행 |
 | `package_reproducibility` | T20·T21 | **PASS**; T21 stable 이중 재현 대기 |
-| `boards_manager_lifecycle` | T20·T21; 공개 후 검증은 추가로 T24 | 필수 physical HOLD |
+| `boards_manager_lifecycle` | T20·T21; 공개 후 검증은 추가로 T24 | **PASS**; T21 stable·T24 공개 URL은 별도 |
 | `project_owner_approval` | T22 | human HOLD |
 
 M23·후보 source/build·기본 onboard·M26 판정·기존 자산 불변 gate의 근거는 기존 ledger에 있다.

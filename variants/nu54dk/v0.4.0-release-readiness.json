@@ -147,8 +147,8 @@
       "id": "boards_manager_lifecycle",
       "kind": "physical",
       "required": true,
-      "state": "hold",
-      "reason": "isolated install, all examples, upload, uninstall and version transition are required"
+      "state": "passed",
+      "evidence": ["00_Docs/04_검증 기록/122_T20_RC_설치_수명주기와_실제_Upload.md"]
     },
     {
       "id": "legacy_assets_immutable",

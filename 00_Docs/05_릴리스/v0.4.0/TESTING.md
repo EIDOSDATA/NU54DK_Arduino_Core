@@ -10,6 +10,7 @@
 | T13 오류 복구·UARTE00 | 합의 범위 완료 |
 | T14 PWM 소유권 교정 | Host·target·두 보드 520 cycle PASS |
 | T19 frozen RC | Host·문서·inventory·target 35/35·이중 package 재현 PASS |
+| T20 RC 설치 수명주기 | 격리 설치·예제 30/30·실제 Upload·전환·제거·재설치 PASS |
 
 실행별 exact source·결선·명령과 실패 원본은
 [검증 기록](<../../04_검증 기록/README.md>)에서 확인합니다. `PASS`는 적힌 source·조건에만
