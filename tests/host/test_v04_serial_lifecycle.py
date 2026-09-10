@@ -4,7 +4,7 @@ import subprocess
 import tempfile
 import unittest
 
-from host_compiler import compiler_command
+from host_compiler import compiler_command, run_executable
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -35,7 +35,7 @@ class SerialLifecycleTests(unittest.TestCase):
                     "-I", str(ROOT / "variants/nu54dk"), str(ROOT / "variants/nu54dk/serial_fabric_routes.cpp"),
                     str(ROOT / "tests/host/v04_serial_routes_main.cpp"), "-o", str(binary)], capture_output=True, timeout=60)
                 self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
-                result = subprocess.run([str(binary)], capture_output=True, timeout=10)
+                result = run_executable([str(binary)], capture_output=True, timeout=10)
                 self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
 
     def test_native_production_lifecycle(self):
@@ -49,7 +49,7 @@ class SerialLifecycleTests(unittest.TestCase):
                 str(ROOT / "cores/arduino/internal/serial/SerialFabricLifecycle.cpp"),
                 str(ROOT / "tests/host/v04_serial_lifecycle_main.cpp"), "-o", str(binary)], capture_output=True, timeout=60)
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
-            result = subprocess.run([str(binary)], capture_output=True, timeout=10)
+            result = run_executable([str(binary)], capture_output=True, timeout=10)
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
 
 

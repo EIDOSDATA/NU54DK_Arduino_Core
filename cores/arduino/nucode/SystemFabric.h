@@ -1,6 +1,6 @@
 /**
  * @file SystemFabric.h
- * @brief TEMP와 WDT30/31을 노출하는 v0.4 후보 system API입니다.
+ * @brief `fabric` profile의 TEMP·WDT system API입니다.
  *
  * SPDX-License-Identifier: MIT
  */

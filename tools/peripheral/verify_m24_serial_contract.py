@@ -241,8 +241,8 @@ def validate_schema_contract(schema: dict[str, Any]) -> None:
     properties = schema.get("properties", {})
     if properties.get("schema_version", {}).get("const") != 2:
         raise ContractFailure("schema version must describe onboard HIL resources")
-    if properties.get("advanced_api", {}).get("properties", {}).get("status", {}).get("const") != "candidate-source-not-released":
-        raise ContractFailure("schema must keep the advanced API source candidate unreleased")
+    if properties.get("advanced_api", {}).get("properties", {}).get("status", {}).get("const") != "profile-scoped-public-candidate":
+        raise ContractFailure("schema must keep the profile-scoped API pre-release")
 
 
 def validate_identity(identity: dict[str, Any]) -> None:
@@ -332,7 +332,7 @@ def validate_surface(contract: dict[str, Any]) -> None:
         "advanced_api",
     )
     expected_scalars = {
-        "status": "candidate-source-not-released",
+        "status": "profile-scoped-public-candidate",
         "header": "nucode/SerialFabric.h",
         "namespace": "nucode::arduino",
         "factory": "serialFabric()",
@@ -353,14 +353,14 @@ def validate_surface(contract: dict[str, Any]) -> None:
     if not isinstance(rules, list) or len(rules) < 8 or len(set(rules)) != len(rules):
         raise ContractFailure("advanced API rules must be unique and exhaustive")
     joined = " ".join(rules).lower()
-    for token in ("raw register", "same serial block", "dma", "singleton", "source candidate"):
+    for token in ("raw register", "same serial block", "dma", "singleton", "fabric profile"):
         if token not in joined:
             raise ContractFailure(f"advanced API rules omit {token!r}")
 
     required_sources = (PUBLIC_HEADER_PATH, *BACKEND_SOURCE_PATHS, ROUTE_SOURCE_PATH)
     missing = [path.relative_to(REPOSITORY).as_posix() for path in required_sources if not path.is_file()]
     if missing:
-        raise ContractFailure(f"advanced API candidate source is missing: {missing}")
+        raise ContractFailure(f"advanced API profile source is missing: {missing}")
     header = PUBLIC_HEADER_PATH.read_text(encoding="utf-8")
     backend = "\n".join(path.read_text(encoding="utf-8") for path in BACKEND_SOURCE_PATHS)
     route = ROUTE_SOURCE_PATH.read_text(encoding="utf-8")
@@ -649,8 +649,8 @@ def validate_manifest_alignment(contract: dict[str, Any], identities: set[str]) 
     }
     if concurrent_partial != EXPECTED_CONCURRENT_PARTIAL:
         raise ContractFailure("manifest T15 concurrent HIL set drifted")
-    candidates = identities - set(EXPECTED_SINGLETONS.values())
-    for identity in candidates:
+    fabric_identities = identities - set(EXPECTED_SINGLETONS.values())
+    for identity in fabric_identities:
         item = m24[identity]
         states = item["states"]
         expected_dma = {
@@ -662,7 +662,7 @@ def validate_manifest_alignment(contract: dict[str, Any], identities: set[str]) 
         }[item["kind"]]
         if (
             states["source"] != "implemented"
-            or states["exposure"] != "internal"
+            or states["exposure"] != "public"
             or states["build"] != "pass"
             or states["semantic"] != "pass"
             or states["hil"] != "pass"
@@ -670,9 +670,11 @@ def validate_manifest_alignment(contract: dict[str, Any], identities: set[str]) 
                 "partial" if identity in EXPECTED_CONCURRENT_PARTIAL else "not_run"
             )
             or item["dma"]["public_mode"] != expected_dma
+            or item["route"]["state"] != "verified"
+            or "SerialFabric" not in item["public_api"]
             or not item["evidence"]
         ):
-            raise ContractFailure(f"functionally verified candidate identity state drifted: {identity}")
+            raise ContractFailure(f"profile-scoped public identity state drifted: {identity}")
 
 
 def validate_repository_routes() -> None:
@@ -799,8 +801,8 @@ def render_document(contract: dict[str, Any]) -> str:
         "이 계약은 23개 serial personality의 실제 identity, 공유 block, 허용 pin bank, 현재 route,",
         "고급 선택 API와 DMA 수명주기를 고정한다. 작업 2에서 allocation-free typed handle, 원자적",
         "route/DMA lease, bounded stop과 fail-closed handover를 구현했고 작업 3~5에서 UARTE, SPIM/SPIS,",
-        "TWIM/TWIS direct nrfx adapter를 연결했다. Kconfig는 기본 off인 v0.4.0 후보다.",
-        "S 정상 36조건에는 C05 3600초 soak가 포함된다. 완료한 S 시험을 다시 예약하지 않으며, 최종 지원·설치 package gate 전에는 stable 공개 지원으로 승격하지 않는다.",
+        "TWIM/TWIS direct nrfx adapter를 연결했다. Kconfig는 기본 off이고 명시적 `fabric` profile에서만 켜진다.",
+        "S 정상 36조건에는 C05 3600초 soak가 포함된다. 완료한 S 시험을 다시 예약하지 않으며, T16 공개 원장 반영은 v0.4.0 stable이 이미 배포됐다는 뜻이 아니다.",
         "반복 Serial handover와 T13 peer 제어 System OFF 추가 2조건은 제외했다. 아래 원래 계약의 gate 목록을 현재 재실행 지시로 사용하지 않는다. 기존 M15 System OFF PASS는 유지한다.",
         "",
         "M24의 후속 순서는 다음과 같다.",
@@ -816,7 +818,8 @@ def render_document(contract: dict[str, Any]) -> str:
         "UART Fixture 101~103은 [44번](<../04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)·[45번](<../04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)·[46번](<../04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>),",
         "SPI Fixture 201~203은 [47번](<../04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md>)·[48번](<../04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md>)·[49번 기록](<../04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md>)을 따른다.",
         "TWI Fixture 301은 [50번 기록](<../04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md>)을 따른다.",
-        "`functional-hil-pass`는 해당 단독 route의 기능 HIL 판정이며 전체 동시성·soak 또는 공개 지원 완료가 아니다.",
+        "`functional-hil-pass`는 해당 단독 route의 기능 HIL 판정이다. T16 `fabric` profile에서 API를 선택할 수 있지만,",
+        "`concurrent_hil=not_run`인 조합까지 동시 지원하거나 v0.4.0 stable이 이미 공개됐다는 뜻은 아니다.",
         "",
         "## 2. 공개 객체와 고급 API",
         "",
@@ -833,7 +836,7 @@ def render_document(contract: dict[str, Any]) -> str:
             "",
             f"독립 hardware처럼 보이는 가짜 별칭 `{aliases}`은 만들지 않는다.",
             "",
-            "고급 후보 API는 `<nucode/SerialFabric.h>`의 `nucode::arduino::serialFabric()`에서",
+            "Profile-scoped 공개 API는 `<nucode/SerialFabric.h>`의 `nucode::arduino::serialFabric()`에서",
             "allocation 없는 typed handle로 제공한다. Raw base address는 받지 않고 kind+instance로만",
             "선택한다. Header와 구현의 Kconfig 기본값은 off이며, T16의 명시적 `fabric` profile과 `NUCODE Peripheral Fabric` library를 선택할 때만 설치본에서 활성화된다.",
             "",
@@ -933,7 +936,7 @@ def render_document(contract: dict[str, Any]) -> str:
             "## 6. 단독 HIL 기준 route",
             "",
             "`current-verified`는 기존 v0.3.0 증거가 있는 route, `functional-hil-pass`는 M24 단독 기능 HIL을",
-            "통과한 고정 route다. 두 상태 모두 고급 API의 v0.4.0 stable 공개 승인을 뜻하지 않는다.",
+            "통과한 고정 route다. 후자는 T16 `fabric` profile에 공개됐지만 v0.4.0 stable 공개 승인은 T22까지 HOLD다.",
             "",
             "| Identity | Route | 핀 | 실행 분류 / 자원 | 상태 | 선행조건 |",
             "| --- | --- | --- | --- | --- | --- |",
@@ -998,7 +1001,7 @@ def render_document(contract: dict[str, Any]) -> str:
             "- M23 inventory: [`variants/nu54dk/peripheral-manifest.json`](../../variants/nu54dk/peripheral-manifest.json)",
             "",
             "검증기는 exact block/base/IRQ/personality, 6개 보드 시험 자원, 23개 HIL route, P2 dedicated pin map, 보드 source",
-            "checksum, stable singleton, 가짜 alias, lifecycle·errata, candidate/stable 경계와 생성 문서 drift를",
+            "checksum, stable singleton, 가짜 alias, lifecycle·errata, profile/stable 경계와 생성 문서 drift를",
             "검사한다. `--ncs-root`를 주면 고정 NCS DTS의 checksum, node base와 IRQ도 대조한다.",
             "",
             "## 11. 근거",

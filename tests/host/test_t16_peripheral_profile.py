@@ -125,6 +125,39 @@ class T16PeripheralProfileTests(unittest.TestCase):
         self.assertRegex(header, r"Support\s+qdec;")
         self.assertRegex(header, r"Support::unsupported,\s*Support::supported,")
 
+    def test_support_ledger_matches_the_profile_surface(self) -> None:
+        """! @brief T16 공개 family와 원장의 노출·HIL 상태가 일치하는지 확인합니다. """
+
+        manifest = json.loads(
+            (REPOSITORY / "variants" / "nu54dk" / "peripheral-manifest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        lookup = {item["id"]: item for item in manifest["instances"]}
+        serial = [item for item in manifest["instances"] if item["milestone"] == "M24"]
+        self.assertEqual(len(serial), 23)
+        for item in serial:
+            self.assertEqual(item["route"]["state"], "verified", item["id"])
+            self.assertEqual(item["states"]["exposure"], "public", item["id"])
+            self.assertEqual(item["states"]["hil"], "pass", item["id"])
+            self.assertIn("SerialFabric", item["public_api"], item["id"])
+
+        for identifier in ("pdm20", "pdm21", "i2s20"):
+            item = lookup[identifier]
+            self.assertEqual(item["route"]["state"], "verified", identifier)
+            self.assertEqual(item["states"]["exposure"], "public", identifier)
+            self.assertIn("StreamFabric", item["public_api"], identifier)
+        for identifier in ("qdec20", "qdec21"):
+            item = lookup[identifier]
+            self.assertEqual(item["states"]["exposure"], "internal", identifier)
+            self.assertEqual(item["states"]["hil"], "partial", identifier)
+
+        for identifier in ("temp", "wdt30", "wdt31"):
+            item = lookup[identifier]
+            self.assertEqual(item["states"]["exposure"], "public", identifier)
+            self.assertEqual(item["states"]["hil"], "pass", identifier)
+            self.assertIn("SystemFabric", item["public_api"], identifier)
+
     def test_m27_example_lock_uses_fabric_profile(self) -> None:
         """! @brief 설치 package가 새 예제를 fabric profile로 컴파일하도록 고정합니다. """
 

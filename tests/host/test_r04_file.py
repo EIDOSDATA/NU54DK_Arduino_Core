@@ -4,7 +4,7 @@ import subprocess
 import tempfile
 import unittest
 
-from host_compiler import compiler_command
+from host_compiler import compiler_command, run_executable
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -23,7 +23,7 @@ class FileLifetimeTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
             for scenario in ['value', 'mutex', 'threads', 'stale', 'saturation', 'close_error', 'isr', 'last_threads']:
                 with self.subTest(scenario=scenario):
-                    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=30)
+                    result = run_executable([str(binary), scenario], capture_output=True, timeout=30)
                     self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
 
 

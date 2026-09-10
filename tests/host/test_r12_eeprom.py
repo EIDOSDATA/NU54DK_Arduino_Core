@@ -6,7 +6,7 @@ import tempfile
 import unittest
 import zlib
 
-from host_compiler import compiler_command
+from host_compiler import compiler_command, run_executable
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -29,7 +29,7 @@ class EepromPersistenceTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
 
             def run(scenario, path):
-                result = subprocess.run([str(binary), scenario, str(path)], capture_output=True, timeout=10)
+                result = run_executable([str(binary), scenario, str(path)], capture_output=True, timeout=10)
                 self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
 
             def record(payload):

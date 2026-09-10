@@ -31,33 +31,33 @@
     },
     {
       "id": "temp",
-      "disposition": "partial",
-      "surface": "internal",
-      "board_boundary": "온칩 TEMP라 외부 배선이 필요 없고 centi-Celsius 후보 API와 target contract를 제공한다.",
+      "disposition": "supported",
+      "surface": "public",
+      "board_boundary": "온칩 TEMP를 fabric profile의 centi-Celsius API로 제공하며 외부 배선이 필요 없다.",
       "coexistence": "Zephyr sensor driver가 단일 TEMP block을 직렬화한다.",
       "automated_gate": "pass",
-      "physical_gate": "not_run",
-      "evidence": ["cores/arduino/SystemFabric.cpp", "cores/arduino/nucode/SystemFabric.h", "tests/zephyr/m26_system_fabric_contract/src/main.cpp"]
+      "physical_gate": "pass",
+      "evidence": ["cores/arduino/SystemFabric.cpp", "cores/arduino/nucode/SystemFabric.h", "tests/zephyr/m26_system_fabric_contract/src/main.cpp", "00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md"]
     },
     {
       "id": "wdt30",
-      "disposition": "partial",
-      "surface": "internal",
-      "board_boundary": "secure-domain WDT30 후보 handle을 빌드하지만 reset-cause HIL 전에는 공개하지 않는다.",
+      "disposition": "supported",
+      "surface": "public",
+      "board_boundary": "WDT30 handle은 fabric profile에서 제공하며 configure·start·feed·reset-cause 실기를 통과했다.",
       "coexistence": "한 WDT block의 timeout channel은 해당 Zephyr watchdog device가 소유한다.",
       "automated_gate": "pass",
-      "physical_gate": "not_run",
-      "evidence": ["cores/arduino/SystemFabric.cpp", "cores/arduino/nucode/SystemFabric.h", "tests/zephyr/m26_system_fabric_contract/src/main.cpp"]
+      "physical_gate": "pass",
+      "evidence": ["cores/arduino/SystemFabric.cpp", "cores/arduino/nucode/SystemFabric.h", "tests/zephyr/m26_system_fabric_contract/src/main.cpp", "00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md"]
     },
     {
       "id": "wdt31",
       "disposition": "supported",
       "surface": "public",
-      "board_boundary": "BoardSystem.watchdog가 application-domain WDT31을 사용한다.",
-      "coexistence": "SystemFabric 후보와 BoardSystem production path는 같은 image에서 함께 활성화하지 않는다.",
+      "board_boundary": "standard/ble의 BoardSystem과 fabric의 SystemFabric이 application-domain WDT31을 사용한다.",
+      "coexistence": "fabric profile의 SystemFabric과 standard/ble의 BoardSystem 경로는 같은 image에서 함께 활성화하지 않는다.",
       "automated_gate": "pass",
       "physical_gate": "pass",
-      "evidence": ["libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp", "00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md"]
+      "evidence": ["libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp", "cores/arduino/SystemFabric.cpp", "cores/arduino/nucode/SystemFabric.h", "tests/zephyr/m26_system_fabric_contract/src/main.cpp", "00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md"]
     },
     {
       "id": "nfct",

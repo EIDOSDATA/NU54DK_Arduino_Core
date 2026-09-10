@@ -25,7 +25,7 @@ artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI
 | `core-semantic` | M14 Core C++ native semantic runtime |
 | `documents` | tracked Markdown UTF-8과 local link |
 | `package` | Boards Manager package 2회 재현성과 strict validation |
-| `example-discovery` | Arduino CLI `1.5.1`에서 현재 소스 트리를 임시 platform으로 설치해 8개 library·예제 29개 열거 |
+| `example-discovery` | Arduino CLI `1.5.1`에서 현재 소스 트리를 임시 platform으로 설치해 v0.4 후보 library 9개·예제 30개 열거 |
 
 Checkout은 submodule을 recursive로 받고 full history를 사용한다. Workflow permission은
 `contents: read`이며 같은 ref의 중복 실행은 취소한다.
@@ -39,6 +39,8 @@ M12와 정식 `v0.2.0`의 역사적 기준은 public library 4개·예제 14개�
 EEPROM/LittleFS까지 포함한 library 8개·예제 29개다. `Standard peripherals` 22개와
 BLE 7개를 M22 package lock과 installed-package gate로 모두 compile했다. 현재 29개 기대값을
 과거 `v0.2.0` artifact 기록에 소급 적용하지 않는다.
+T16 이후 `main`의 v0.4 후보는 `NUCODE Peripheral Fabric` library·예제 1개를 더해 9개·30개다.
+CI의 현재-source discovery 수와 공개 v0.3.0 stable 수를 같은 값으로 표현하지 않는다.
 
 로컬 진입점은 다음과 같다.
 
@@ -74,9 +76,9 @@ python tools/ci/run_m12_gate.py examples --arduino-cli <exact-path>
 | `v0.1.0` | 4 | M3 runtime, M4 API contract, M6·M7 Core API |
 | `v0.2.0` | 10 | M14 Core/variant, M15 Board/System, M16 BLE NUS, M17 direct sensor |
 | `v0.3.0` | 19 | M19 GAP, M20 GATT, M21 Security, AC-01 GPIO, AC-02 peripheral/analog, AC-03 storage |
-| `v0.4.0` | 34 | R01 구성, pair/T13 HIL build, M23 inventory, M24 Serial, M25 Analog/Event/Stream, M26 System |
+| `v0.4.0` | 35 | R01 구성, pair/T13 HIL build, M23 inventory, M24 Serial, M25 Analog/Event/Stream, M26 System, T16 Fabric profile |
 
-2026-09-09의 `tools/ci/run_zephyr_build.py` 기준 67개 시나리오가 위 네 그룹에 속한다.
+2026-09-10의 `tools/ci/run_zephyr_build.py` 기준 68개 시나리오가 위 네 그룹에 속한다.
 증감 시에는 이 표가 아니라 runner의 `SUITE_GROUPS`를 실행 목록의 원본으로 사용한다. Matrix의
 `fail-fast: false` 때문에 한 그룹이 실패해도 나머지 그룹은 끝까지 실행되어 영향 범위를 한 번에
 알 수 있다. 각 `twister.json`과 `m12-build-evidence.json`은 group 이름, 실제 시나리오와 내부

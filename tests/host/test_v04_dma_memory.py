@@ -4,7 +4,7 @@ import subprocess
 import tempfile
 import unittest
 
-from host_compiler import compiler_command
+from host_compiler import compiler_command, run_executable
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -21,7 +21,7 @@ class DmaMemoryTests(unittest.TestCase):
                  str(ROOT / "tests/host/v04_dma_memory_main.cpp"), "-o", str(binary)],
                 capture_output=True, text=True, timeout=60)
             self.assertEqual(result.returncode, 0, result.stderr)
-            result = subprocess.run([str(binary)], capture_output=True, text=True, timeout=10)
+            result = run_executable([str(binary)], capture_output=True, text=True, timeout=10)
             self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_all_candidate_dma_fabrics_use_full_range_validation(self):

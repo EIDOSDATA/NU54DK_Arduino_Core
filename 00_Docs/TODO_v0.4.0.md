@@ -1,7 +1,7 @@
 # v0.4.0 개발 현황과 실행 TODO
 
 현재 정식 배포는 **v0.3.0**입니다. v0.4.0은 합의한 T13 S/U, T14 충돌 판정,
-T15 지원 범위와 T16 설치 통합을 종료했으며 T17 문서 정리·RC·정식 공개 전입니다.
+T15 지원 범위, T16 설치 통합과 T17 문서 정리를 종료했으며 T18 공개 절차 준비 단계입니다.
 현재 상태와 다음 작업은 이 문서에서 관리하고, 실행별 원본은 [검증 기록](<04_검증 기록/README.md>)에 보존합니다.
 
 ## 1. 현재 상태
@@ -21,7 +21,8 @@ T15 지원 범위와 T16 설치 통합을 종료했으며 T17 문서 정리·RC�
 | T14 결함·충돌 판정 | **완료** | PWM 자원 식별 1건 해결, 세 미커버 요구 판정 완료. 116번 |
 | T15 지원 범위 확정 | **완료** | M24/M25 fixture physical gate PASS, QDEC partial·비공개 유지. 117번 |
 | T16 설치 통합 | **완료** | `fabric` profile·facade·예제·30개 후보 lock. 118번 |
-| T17~T18 문서·공개 절차 준비 | 진행/대기 | 최종 사용자 문서와 stable 생성·검증 절차 |
+| T17 문서·지원 매트릭스 정리 | **완료** | public 62/75, QDEC20/21 unsupported, 사용자 문서 5종. 119번 |
+| T18 공개 절차 준비 | **진행 중** | stable 생성·검증·공개 차단 절차 |
 | R14·T19~T25 RC·승인·공개 | 대기 | 공개 승인과 실제 배포는 별도 |
 
 QDEC·시리얼 핸드오버·T13 peer 제어 System OFF 제외와 충돌 반복 생략은 범위 결정이며 새 물리
@@ -36,7 +37,7 @@ flash·U 실기가 없었습니다. 당시 검토 범위와 검사 결과는
 [114번](<04_검증 기록/114_전체_문서_정비와_남은_마일스톤.md>)에 기록합니다.
 
 **T13 U 최소 결선·exact image·물리 실기를 완료했습니다.** 완료한 S/U 시험을 다시 시작하지 않습니다.
-현재 기술 단계는 T17에서 설치 경로를 포함한 최종 사용자 문서·지원 매트릭스를 정리하는 것입니다.
+현재 기술 단계는 T18에서 RC→stable 생성·검증 절차와 승인 전 공개 차단을 준비하는 것입니다.
 T13 종료는 [115번](<04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md>)에 기록했으며 정식 공개를 포함하지 않습니다.
 
 2026-09-10 후속 실행 결과: `7f78a36c`에서 U 결선 검사를 net 11·13·15·16으로 한정하고
@@ -65,6 +66,13 @@ M24는 23 identity 기능 HIL pass, M25는 34 pass·QDEC20/21 partial이며,
 빌드했고 target 324/324, 영향 Host 24 PASS·조건부 1 SKIP, CI 46/46을 통과했습니다. QDEC는
 `unsupported`, v0.3.0 stable 예제는 29개로 유지합니다. 세부 근거는
 [118번](<04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md>)을 따릅니다.
+
+2026-09-10 T17 완료: T16에서 설치 경로에 연결한 지원 범위를 manifest·계약·생성 문서·사용자
+문서에 일치시켰습니다. 75개 identity 중 62개는 `public`과 HIL `pass`, QDEC20/21은
+`internal`·`partial`과 profile `unsupported`로 유지합니다. 이 검증 기록을 포함한 Markdown 239개 UTF-8·로컬 링크,
+Host·CI·inventory·generated·style 검사를 통과했고, release notes·migration·known issues·testing·
+troubleshooting 문서를 추가했습니다. 과거 검증 기록은 당시 조건의 증거이므로 삭제하지 않았습니다.
+세부 근거는 [119번](<04_검증 기록/119_T17_문서와_지원_매트릭스_정리.md>)을 따릅니다.
 
 2026-09-10 후속 사용자 결정: GPIO 전달·SWD 진단은 현재 문제 목록에서 제거합니다.
 SPI CS 조기 종료의 별도 slave 판정은 추가 검증에서 제외하고, TWIS는 완료한 2ms 공급 지연
@@ -274,7 +282,7 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
 
 - [x] **T15 — 실기 결과와 지원 범위 확정**
   - 완료 결과: M24 23 identity HIL pass, M25 34 pass·QDEC20/21 partial을 manifest에 반영했습니다.
-  - 지원 경계: public 14개와 internal candidate를 분리하고, 미실행 동시 조합과 QDEC 제한을 숨기지 않습니다.
+  - 지원 경계: T15 당시 public 14개와 설치 통합 전 internal candidate를 분리했습니다. T16~T17에서 지원 판정이 끝난 identity를 `fabric` profile public으로 승격했고 QDEC 제한은 유지합니다.
   - readiness: `m24_fixture_hil`·`m25_fixture_hil` PASS, 전체 release blocker 6개 유지.
   - 결선·증거: 추가 실기 없음. [117번 기록](<./04_검증 기록/117_T15_지원_범위와_Physical_Gate_확정.md>)을 따릅니다.
 
@@ -286,14 +294,14 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
   - 검증: 실제 격리 설치본과 T16 target build, Host·CI·inventory·style gate를 통과했습니다.
   - 결선·증거: 새 flash·결선 없음. [118번 기록](<./04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md>)을 따릅니다.
 
-- [ ] **T17 — 문서·지원 매트릭스 정리**
-  - 상태·선행: **현재 단계** / T15·T16 완료.
-  - 할 일: README·API·예제·pin/ownership·제한·환경·마일스톤·migration/release notes를 실제 범위와 맞춘다.
-  - 완료 기준: 상태 칸은 일관된 상태값만 쓰고 제한은 설명으로 분리한다. 생성 원본/문서가 일치하며 과거 검증·공개 자산을 소급 변경하지 않는다.
-  - 결선·증거: 불필요. 이번 전체 문서 유지 검사는 114번에 등록한다. T15/T16 이후 최종 지원·설치 경로·migration 검사가 남으므로 T17 전체 완료로 표시하지 않는다.
+- [x] **T17 — 문서·지원 매트릭스 정리**
+  - 완료 결과: README·API·예제·pin/ownership·제한·환경·마일스톤과 release notes·migration·known issues·testing·troubleshooting을 실제 `fabric` 지원 범위에 맞췄습니다.
+  - 지원 원장: 75개 identity 중 public/HIL pass 62개, QDEC20/21 internal/partial·unsupported, 나머지 system identity 11개는 근거에 따라 internal 또는 none입니다.
+  - 검증: 생성 원본/문서, Host·CI·inventory·문서·style gate를 통과했고 과거 검증·공개 자산은 소급 변경하지 않았습니다.
+  - 결선·증거: 새 flash·결선·물리 PASS 없음. [119번 기록](<./04_검증 기록/119_T17_문서와_지원_매트릭스_정리.md>)을 따릅니다.
 
 - [ ] **T18 — M27 정식 공개 절차 준비**
-  - 상태·선행: 비공개 prepare 도구만 있음, stable 절차 미완료 / T15~T17.
+  - 상태·선행: **현재 단계**. 비공개 prepare 도구만 있음, stable 절차 미완료 / T15~T17 완료.
   - 할 일: RC→stable package·검증·공개 경로를 별도 변경으로 준비하고 잘못된 version/commit·누락 evidence·기존 asset 덮어쓰기를 거부하도록 검사한다.
   - 완료 기준: prepare/dry-run과 실제 publication이 구분되고 모든 technical gate·최종 승인 전에는 tag/Release/index 쓰기가 불가능하다. 계약/unit 검사를 통과한다.
   - 결선·증거: 준비에 불필요. T18 완료가 공개 실행 허가는 아니며 증거 미등록.
@@ -348,10 +356,10 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
 
 | 순서 | 단계 | 완료해야 하는 결과 |
 | --- | --- | --- |
-| 1 | T16~T18 | 후보 API·profile·예제를 설치본에 통합, 최종 사용자 문서, stable 생성/검증 절차 준비 |
-| 3 | R14·T19~T21 | RC 고정, 전체 회귀·재현 build, 전체 예제 설치/업로드 수명주기, 비공개 stable 패키지 검사 |
-| 4 | T22~T24 | exact 결과에 대한 소유자 공개 승인, tag/Release/index 공개, 공개 URL 설치·업로드 검증 |
-| 5 | T25 | 최종 기록·커밋·푸시·CI 확인과 정확히 식별한 임시 산출물 정리 |
+| 1 | T18 | stable 생성/검증 절차와 승인 전 공개 차단 준비 |
+| 2 | R14·T19~T21 | RC 고정, 전체 회귀·재현 build, 전체 예제 설치/업로드 수명주기, 비공개 stable 패키지 검사 |
+| 3 | T22~T24 | exact 결과에 대한 소유자 공개 승인, tag/Release/index 공개, 공개 URL 설치·업로드 검증 |
+| 4 | T25 | 최종 기록·커밋·푸시·CI 확인과 정확히 식별한 임시 산출물 정리 |
 
 이는 남은 순서이지 이번 문서 정비에서 실행한 작업 목록이 아닙니다. T16 이후 release gate의
 작업량이 동일하지 않으므로 S의 58조건이나 완료한 T 번호 개수로 v0.4.0 전체 진행률을

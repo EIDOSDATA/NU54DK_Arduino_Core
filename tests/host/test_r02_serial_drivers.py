@@ -4,7 +4,7 @@ import subprocess
 import tempfile
 import unittest
 
-from host_compiler import compiler_command
+from host_compiler import compiler_command, run_executable
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -25,7 +25,7 @@ class SerialDriverTests(unittest.TestCase):
                        str(ROOT/'tests/host/r02_spis_driver_main.cpp'), '-o', str(binary)]
             result = subprocess.run(command, capture_output=True, timeout=60)
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
-            result = subprocess.run([str(binary)], capture_output=True, timeout=10)
+            result = run_executable([str(binary)], capture_output=True, timeout=10)
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
 
     def test_production_sync_and_lifetime(self):
@@ -45,7 +45,7 @@ class SerialDriverTests(unittest.TestCase):
                 for scenario in ('stale', 'consumer', 'overflow', 'deadline', 'stop_failure', 'submit_deactivate',
                                  'reservation', 'errors', 'generation_wrap', 'late_stop', 'wait_deactivate', 'other_thread'):
                     with self.subTest(personality=personality, scenario=scenario):
-                        result = subprocess.run([str(binary), scenario], capture_output=True, timeout=10)
+                        result = run_executable([str(binary), scenario], capture_output=True, timeout=10)
                         self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
 
 

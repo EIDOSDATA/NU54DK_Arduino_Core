@@ -4,7 +4,7 @@ import subprocess
 import tempfile
 import unittest
 
-from host_compiler import compiler_command
+from host_compiler import compiler_command, run_executable
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -32,7 +32,7 @@ class LittleFsPersistenceTests(unittest.TestCase):
                              'busy_mount', 'path_mode', 'read', 'format_retry']:
                 with self.subTest(scenario=scenario):
                     before = image.read_bytes() if image.exists() else None
-                    result = subprocess.run([str(binary), scenario, str(image)], capture_output=True, timeout=10)
+                    result = run_executable([str(binary), scenario, str(image)], capture_output=True, timeout=10)
                     self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
                     if scenario not in ['write', 'format_retry']:
                         self.assertEqual(image.read_bytes(), before)

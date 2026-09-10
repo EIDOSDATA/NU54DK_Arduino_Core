@@ -2,7 +2,7 @@
 
 > 이 파일은 `variants/nu54dk/peripheral-manifest.json`에서 자동 생성합니다. 직접 수정하지 마세요.
 > 표의 `candidate`, `absent`, `not-run`은 현재 지원 선언이 아닙니다.
-> 이 표는 manifest의 지원 판정이며 최신 실기 결과의 자동 집계가 아닙니다. T15 지원 반영은 [117번 기록](<../04_검증 기록/117_T15_지원_범위와_Physical_Gate_확정.md>), 이후 진행은 [TODO](../TODO_v0.4.0.md)를 확인합니다.
+> 이 표는 manifest의 지원 판정이며 최신 실기 결과의 자동 집계가 아닙니다. T15 physical 판정은 [117번](<../04_검증 기록/117_T15_지원_범위와_Physical_Gate_확정.md>), T16 설치 노출은 [118번](<../04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md>), 이후 진행은 [TODO](../TODO_v0.4.0.md)를 확인합니다.
 
 | 항목 | 값 |
 | --- | --- |
@@ -11,8 +11,8 @@
 | Board | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | Manifest schema | `1` |
 | 추적 identity | **75개** |
-| 현재 public surface가 있는 identity | **17개** |
-| 현재 HIL PASS identity | **60개** |
+| 현재 public surface가 있는 identity | **62개** |
+| 현재 HIL PASS identity | **62개** |
 | 후속 구현 배정 | M24 23 / M25 36 / M26 16 |
 
 ## 판정 읽는 법
@@ -27,29 +27,29 @@
 
 | Identity | block / DTS | board route | source / public | DMA | build | semantic | HIL | concurrent |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `uarte00` | `serial00` / `uart00` | candidate: `header-p2` | implemented / internal: — | EasyDMA/16 bit; driver; double-buffered | pass | pass | pass | not-run |
-| `uarte20` | `serial20` / `uart20` | verified: `console-p1.4-p1.7` | implemented / public: `Serial`, `HardwareSerial` | EasyDMA/16 bit; driver; none | pass | pass | pass | partial |
-| `uarte21` | `serial21` / `uart21` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; driver; double-buffered | pass | pass | pass | partial |
-| `uarte22` | `serial22` / `uart22` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; driver; double-buffered | pass | pass | pass | not-run |
-| `uarte30` | `serial30` / `uart30` | verified: `dap-vcom-p0.0-p0.3` | implemented / public: `Serial1`, `Nu54HardwareSerial` | EasyDMA/16 bit; driver; none | pass | pass | pass | partial |
-| `spim00` | `serial00` / `spi00` | verified: `header-p2.1-p2.4` | implemented / public: `SPI`, `SPIClass` | EasyDMA/16 bit; driver; synchronous | pass | pass | pass | partial |
-| `spim20` | `serial20` / `spi20` | candidate: `header-p1-console-conflict` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | partial |
-| `spim21` | `serial21` / `spi21` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | not-run |
-| `spim22` | `serial22` / `spi22` | candidate: `header-p1-wire-conflict` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | not-run |
-| `spim30` | `serial30` / `spi30` | candidate: `header-p0-dap-conflict` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | partial |
-| `spis00` | `serial00` / `spi00` | candidate: `header-p2` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
-| `spis20` | `serial20` / `spi20` | candidate: `header-p1-console-conflict` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
-| `spis21` | `serial21` / `spi21` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
-| `spis22` | `serial22` / `spi22` | candidate: `header-p1-wire-conflict` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
-| `spis30` | `serial30` / `spi30` | candidate: `header-p0-dap-conflict` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
-| `twim20` | `serial20` / `i2c20` | candidate: `header-p1-console-conflict` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | not-run |
-| `twim21` | `serial21` / `i2c21` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | partial |
-| `twim22` | `serial22` / `i2c22` | verified: `header-p1.2-p1.3` | implemented / public: `Wire`, `TwoWire` | EasyDMA/16 bit; driver; synchronous | pass | pass | pass | partial |
-| `twim30` | `serial30` / `i2c30` | candidate: `header-p0-dap-conflict` | implemented / internal: — | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | partial |
-| `twis20` | `serial20` / `i2c20` | candidate: `header-p1-console-conflict` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
-| `twis21` | `serial21` / `i2c21` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
-| `twis22` | `serial22` / `i2c22` | candidate: `header-p1-wire-route` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
-| `twis30` | `serial30` / `i2c30` | candidate: `header-p0-dap-conflict` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
+| `uarte00` | `serial00` / `uart00` | verified: `header-p2` | implemented / public: `SerialFabric` | EasyDMA/16 bit; driver; double-buffered | pass | pass | pass | not-run |
+| `uarte20` | `serial20` / `uart20` | verified: `console-p1.4-p1.7` | implemented / public: `Serial`, `SerialFabric`, `HardwareSerial` | EasyDMA/16 bit; driver; none | pass | pass | pass | partial |
+| `uarte21` | `serial21` / `uart21` | verified: `header-p1` | implemented / public: `SerialFabric` | EasyDMA/16 bit; driver; double-buffered | pass | pass | pass | partial |
+| `uarte22` | `serial22` / `uart22` | verified: `header-p1` | implemented / public: `SerialFabric` | EasyDMA/16 bit; driver; double-buffered | pass | pass | pass | not-run |
+| `uarte30` | `serial30` / `uart30` | verified: `dap-vcom-p0.0-p0.3` | implemented / public: `Serial1`, `SerialFabric`, `Nu54HardwareSerial` | EasyDMA/16 bit; driver; none | pass | pass | pass | partial |
+| `spim00` | `serial00` / `spi00` | verified: `header-p2.1-p2.4` | implemented / public: `SPI`, `SerialFabric`, `SPIClass` | EasyDMA/16 bit; driver; synchronous | pass | pass | pass | partial |
+| `spim20` | `serial20` / `spi20` | verified: `header-p1-console-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | partial |
+| `spim21` | `serial21` / `spi21` | verified: `header-p1` | implemented / public: `SerialFabric` | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | not-run |
+| `spim22` | `serial22` / `spi22` | verified: `header-p1-wire-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | not-run |
+| `spim30` | `serial30` / `spi30` | verified: `header-p0-dap-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | partial |
+| `spis00` | `serial00` / `spi00` | verified: `header-p2` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
+| `spis20` | `serial20` / `spi20` | verified: `header-p1-console-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
+| `spis21` | `serial21` / `spi21` | verified: `header-p1` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
+| `spis22` | `serial22` / `spi22` | verified: `header-p1-wire-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
+| `spis30` | `serial30` / `spi30` | verified: `header-p0-dap-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
+| `twim20` | `serial20` / `i2c20` | verified: `header-p1-console-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | not-run |
+| `twim21` | `serial21` / `i2c21` | verified: `header-p1` | implemented / public: `SerialFabric` | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | partial |
+| `twim22` | `serial22` / `i2c22` | verified: `header-p1.2-p1.3` | implemented / public: `Wire`, `SerialFabric`, `TwoWire` | EasyDMA/16 bit; driver; synchronous | pass | pass | pass | partial |
+| `twim30` | `serial30` / `i2c30` | verified: `header-p0-dap-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | partial |
+| `twis20` | `serial20` / `i2c20` | verified: `header-p1-console-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
+| `twis21` | `serial21` / `i2c21` | verified: `header-p1` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
+| `twis22` | `serial22` / `i2c22` | verified: `header-p1-wire-route` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
+| `twis30` | `serial30` / `i2c30` | verified: `header-p0-dap-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
 
 ## M25 배정 identity
 
@@ -58,37 +58,37 @@
 | `gpio0` | `—` / `gpio0` | verified: `header-p0-conditional-dap` | implemented / public: `pinMode`, `digitalRead`, `digitalWrite` | 없음 | pass | pass | pass | partial |
 | `gpio1` | `—` / `gpio1` | verified: `header-p1-mixed-policy` | implemented / public: `pinMode`, `digitalRead`, `digitalWrite` | 없음 | pass | pass | pass | partial |
 | `gpio2` | `—` / `gpio2` | verified: `header-p2-mixed-policy` | implemented / public: `pinMode`, `digitalRead`, `digitalWrite` | 없음 | pass | pass | pass | partial |
-| `gpiote20` | `—` / `gpiote20` | verified: `gpio1-events` | internal / public: `attachInterrupt` | 없음 | pass | pass | pass | partial |
-| `gpiote30` | `—` / `gpiote30` | verified: `gpio0-events` | internal / public: `attachInterrupt` | 없음 | pass | pass | pass | not-run |
-| `egu10` | `—` / `egu10` | not-required: `internal-event` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `egu20` | `—` / `egu20` | not-required: `internal-event` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `dppic00` | `—` / `dppic00` | not-required: `domain-00` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `dppic10` | `—` / `dppic10` | not-required: `domain-10` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `dppic20` | `—` / `dppic20` | not-required: `domain-20` | implemented / internal: — | 없음 | pass | pass | pass | partial |
-| `dppic30` | `—` / `dppic30` | not-required: `domain-30` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `ppib00` | `—` / `ppib00` | not-required: `domain-00-bridge` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `ppib01` | `—` / `ppib01` | not-required: `domain-00-bridge` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `ppib10` | `—` / `ppib10` | not-required: `domain-10-bridge` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `ppib11` | `—` / `ppib11` | not-required: `domain-10-bridge` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `ppib20` | `—` / `ppib20` | not-required: `domain-20-bridge` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `ppib21` | `—` / `ppib21` | not-required: `domain-20-bridge` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `ppib22` | `—` / `ppib22` | not-required: `domain-20-bridge` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `ppib30` | `—` / `ppib30` | not-required: `domain-30-bridge` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `timer00` | `—` / `timer00` | not-required: `domain-00` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `timer10` | `—` / `timer10` | not-required: `domain-10` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `timer20` | `—` / `timer20` | not-required: `domain-20` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `timer21` | `—` / `timer21` | not-required: `domain-20` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `timer22` | `—` / `timer22` | not-required: `domain-20` | implemented / internal: — | 없음 | pass | pass | pass | partial |
-| `timer23` | `—` / `timer23` | not-required: `domain-20` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
-| `timer24` | `—` / `timer24` | not-required: `domain-20` | implemented / internal: — | 없음 | pass | pass | pass | not-run |
+| `gpiote20` | `—` / `gpiote20` | verified: `gpio1-events` | implemented / public: `EventFabric`, `attachInterrupt` | 없음 | pass | pass | pass | partial |
+| `gpiote30` | `—` / `gpiote30` | verified: `gpio0-events` | implemented / public: `EventFabric`, `attachInterrupt` | 없음 | pass | pass | pass | not-run |
+| `egu10` | `—` / `egu10` | not-required: `internal-event` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `egu20` | `—` / `egu20` | not-required: `internal-event` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `dppic00` | `—` / `dppic00` | not-required: `domain-00` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `dppic10` | `—` / `dppic10` | not-required: `domain-10` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `dppic20` | `—` / `dppic20` | not-required: `domain-20` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | partial |
+| `dppic30` | `—` / `dppic30` | not-required: `domain-30` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `ppib00` | `—` / `ppib00` | not-required: `domain-00-bridge` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `ppib01` | `—` / `ppib01` | not-required: `domain-00-bridge` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `ppib10` | `—` / `ppib10` | not-required: `domain-10-bridge` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `ppib11` | `—` / `ppib11` | not-required: `domain-10-bridge` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `ppib20` | `—` / `ppib20` | not-required: `domain-20-bridge` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `ppib21` | `—` / `ppib21` | not-required: `domain-20-bridge` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `ppib22` | `—` / `ppib22` | not-required: `domain-20-bridge` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `ppib30` | `—` / `ppib30` | not-required: `domain-30-bridge` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `timer00` | `—` / `timer00` | not-required: `domain-00` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `timer10` | `—` / `timer10` | not-required: `domain-10` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `timer20` | `—` / `timer20` | not-required: `domain-20` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `timer21` | `—` / `timer21` | not-required: `domain-20` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `timer22` | `—` / `timer22` | not-required: `domain-20` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | partial |
+| `timer23` | `—` / `timer23` | not-required: `domain-20` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
+| `timer24` | `—` / `timer24` | not-required: `domain-20` | implemented / public: `EventFabric` | 없음 | pass | pass | pass | not-run |
 | `grtc` | `—` / `grtc` | not-required: `system-counter` | partial / public: `millis`, `micros`, `BoardSystem.counter`, `BoardSystem.alarm` | 없음 | pass | pass | pass | not-run |
-| `saadc` | `—` / `adc` | partial: `ain0-ain7-policy-limited` | implemented / public: `analogRead` | EasyDMA/16 bit; driver; continuous | pass | pass | pass | partial |
-| `pwm20` | `—` / `pwm20` | verified: `header-p1-runtime` | implemented / public: `analogWrite` | EasyDMA/15 bit; driver; double-buffered | pass | pass | pass | partial |
-| `pwm21` | `—` / `pwm21` | verified: `header-p1-runtime` | implemented / public: `tone`, `noTone` | EasyDMA/15 bit; driver; double-buffered | pass | pass | pass | partial |
-| `pwm22` | `—` / `pwm22` | verified: `header-p1-runtime` | implemented / public: `Servo` | EasyDMA/15 bit; driver; double-buffered | pass | pass | pass | not-run |
-| `pdm20` | `—` / `pdm20` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
-| `pdm21` | `—` / `pdm21` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
-| `i2s20` | `—` / `i2s20` | candidate: `header-p1` | implemented / internal: — | EasyDMA/16 bit; driver; double-buffered | pass | pass | pass | partial |
+| `saadc` | `—` / `adc` | partial: `ain0-ain7-policy-limited` | implemented / public: `AnalogFabric`, `analogRead` | EasyDMA/16 bit; driver; continuous | pass | pass | pass | partial |
+| `pwm20` | `—` / `pwm20` | verified: `header-p1-runtime` | implemented / public: `AnalogFabric`, `analogWrite` | EasyDMA/15 bit; driver; double-buffered | pass | pass | pass | partial |
+| `pwm21` | `—` / `pwm21` | verified: `header-p1-runtime` | implemented / public: `AnalogFabric`, `tone`, `noTone` | EasyDMA/15 bit; driver; double-buffered | pass | pass | pass | partial |
+| `pwm22` | `—` / `pwm22` | verified: `header-p1-runtime` | implemented / public: `AnalogFabric`, `Servo` | EasyDMA/15 bit; driver; double-buffered | pass | pass | pass | not-run |
+| `pdm20` | `—` / `pdm20` | verified: `header-p1` | implemented / public: `StreamFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
+| `pdm21` | `—` / `pdm21` | verified: `header-p1` | implemented / public: `StreamFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
+| `i2s20` | `—` / `i2s20` | verified: `header-p1` | implemented / public: `StreamFabric` | EasyDMA/16 bit; driver; double-buffered | pass | pass | pass | partial |
 | `qdec20` | `—` / `qdec20` | candidate: `header-p1` | implemented / internal: — | 없음 | pass | pass | partial | not-run |
 | `qdec21` | `—` / `qdec21` | candidate: `header-p1` | implemented / internal: — | 없음 | pass | pass | partial | not-run |
 
@@ -98,9 +98,9 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `comp` | `comparator106` / `comp` | candidate: `analog-input-policy` | absent / none: — | 없음 | not-run | not-run | not-run | not-run |
 | `lpcomp` | `comparator106` / `comp` | candidate: `analog-input-policy` | absent / none: — | 없음 | not-run | not-run | not-run | not-run |
-| `temp` | `—` / `temp` | not-required: `on-chip` | implemented / internal: — | 없음 | pass | pass | not-run | not-run |
-| `wdt30` | `—` / `wdt30` | not-required: `secure-domain` | implemented / internal: — | 없음 | pass | pass | not-run | not-run |
-| `wdt31` | `—` / `wdt31` | not-required: `application-domain` | partial / public: `BoardSystem.watchdog` | 없음 | pass | pass | pass | not-run |
+| `temp` | `—` / `temp` | not-required: `on-chip` | implemented / public: `SystemFabric` | 없음 | pass | pass | pass | not-run |
+| `wdt30` | `—` / `wdt30` | not-required: `secure-domain` | implemented / public: `SystemFabric` | 없음 | pass | pass | pass | not-run |
+| `wdt31` | `—` / `wdt31` | not-required: `application-domain` | implemented / public: `BoardSystem.watchdog`, `SystemFabric` | 없음 | pass | pass | pass | not-run |
 | `nfct` | `—` / `nfct` | candidate: `p1.2-p1.3-wire-conflict` | absent / none: — | EasyDMA/9 bit; direct 예정; none | not-run | not-run | not-run | not-run |
 | `radio` | `—` / `radio` | not-required: `on-chip-antenna-network` | partial / public: `NUCODE_BLE` | EasyDMA; driver; none | pass | pass | pass | not-run |
 | `cracen` | `security` / `—` | not-required: `secure-system` | internal / internal: — | EasyDMA; driver; none | partial | not-run | not-run | not-run |

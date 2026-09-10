@@ -17,8 +17,8 @@
 이 계약은 23개 serial personality의 실제 identity, 공유 block, 허용 pin bank, 현재 route,
 고급 선택 API와 DMA 수명주기를 고정한다. 작업 2에서 allocation-free typed handle, 원자적
 route/DMA lease, bounded stop과 fail-closed handover를 구현했고 작업 3~5에서 UARTE, SPIM/SPIS,
-TWIM/TWIS direct nrfx adapter를 연결했다. Kconfig는 기본 off인 v0.4.0 후보다.
-S 정상 36조건에는 C05 3600초 soak가 포함된다. 완료한 S 시험을 다시 예약하지 않으며, 최종 지원·설치 package gate 전에는 stable 공개 지원으로 승격하지 않는다.
+TWIM/TWIS direct nrfx adapter를 연결했다. Kconfig는 기본 off이고 명시적 `fabric` profile에서만 켜진다.
+S 정상 36조건에는 C05 3600초 soak가 포함된다. 완료한 S 시험을 다시 예약하지 않으며, T16 공개 원장 반영은 v0.4.0 stable이 이미 배포됐다는 뜻이 아니다.
 반복 Serial handover와 T13 peer 제어 System OFF 추가 2조건은 제외했다. 아래 원래 계약의 gate 목록을 현재 재실행 지시로 사용하지 않는다. 기존 M15 System OFF PASS는 유지한다.
 
 M24의 후속 순서는 다음과 같다.
@@ -34,7 +34,8 @@ M24의 후속 순서는 다음과 같다.
 UART Fixture 101~103은 [44번](<../04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)·[45번](<../04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)·[46번](<../04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>),
 SPI Fixture 201~203은 [47번](<../04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md>)·[48번](<../04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md>)·[49번 기록](<../04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md>)을 따른다.
 TWI Fixture 301은 [50번 기록](<../04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md>)을 따른다.
-`functional-hil-pass`는 해당 단독 route의 기능 HIL 판정이며 전체 동시성·soak 또는 공개 지원 완료가 아니다.
+`functional-hil-pass`는 해당 단독 route의 기능 HIL 판정이다. T16 `fabric` profile에서 API를 선택할 수 있지만,
+`concurrent_hil=not_run`인 조합까지 동시 지원하거나 v0.4.0 stable이 이미 공개됐다는 뜻은 아니다.
 
 ## 2. 공개 객체와 고급 API
 
@@ -49,7 +50,7 @@ TWI Fixture 301은 [50번 기록](<../04_검증 기록/50_M24_Fixture_301_TWI_�
 
 독립 hardware처럼 보이는 가짜 별칭 `Serial2`, `SPI_HS`, `Wire1`은 만들지 않는다.
 
-고급 후보 API는 `<nucode/SerialFabric.h>`의 `nucode::arduino::serialFabric()`에서
+Profile-scoped 공개 API는 `<nucode/SerialFabric.h>`의 `nucode::arduino::serialFabric()`에서
 allocation 없는 typed handle로 제공한다. Raw base address는 받지 않고 kind+instance로만
 선택한다. Header와 구현의 Kconfig 기본값은 off이며, T16의 명시적 `fabric` profile과 `NUCODE Peripheral Fabric` library를 선택할 때만 설치본에서 활성화된다.
 
@@ -72,7 +73,7 @@ allocation 없는 typed handle로 제공한다. Raw base address는 받지 않�
 - Different serial blocks may run together only when pin and DMA leases are disjoint.
 - Unsupported instance, route, profile or electrical policy fails before any register or pin change.
 - Standard Arduino singleton behavior and identity remain unchanged when the advanced API is enabled.
-- The advanced header exists only as a Kconfig-disabled source candidate and remains absent from stable releases until driver, build, semantic and required HIL gates pass.
+- The advanced header is enabled only by the explicit fabric profile, remains disabled in standard and ble profiles, and is not a published stable release until the final release gates pass.
 
 ## 3. 물리 block과 가능한 personality
 
@@ -124,7 +125,7 @@ fixture 없이 자동화한다. P1 DAP UART를 시험할 때 P0 DAP UART를 제�
 ## 6. 단독 HIL 기준 route
 
 `current-verified`는 기존 v0.3.0 증거가 있는 route, `functional-hil-pass`는 M24 단독 기능 HIL을
-통과한 고정 route다. 두 상태 모두 고급 API의 v0.4.0 stable 공개 승인을 뜻하지 않는다.
+통과한 고정 route다. 후자는 T16 `fabric` profile에 공개됐지만 v0.4.0 stable 공개 승인은 T22까지 HOLD다.
 
 | Identity | Route | 핀 | 실행 분류 / 자원 | 상태 | 선행조건 |
 | --- | --- | --- | --- | --- | --- |
@@ -221,7 +222,7 @@ UARTE20과 핀이 겹치지 않는 P1.10/P1.14 connector fixture route를 사용
 - M23 inventory: [`variants/nu54dk/peripheral-manifest.json`](../../variants/nu54dk/peripheral-manifest.json)
 
 검증기는 exact block/base/IRQ/personality, 6개 보드 시험 자원, 23개 HIL route, P2 dedicated pin map, 보드 source
-checksum, stable singleton, 가짜 alias, lifecycle·errata, candidate/stable 경계와 생성 문서 drift를
+checksum, stable singleton, 가짜 alias, lifecycle·errata, profile/stable 경계와 생성 문서 drift를
 검사한다. `--ncs-root`를 주면 고정 NCS DTS의 checksum, node base와 IRQ도 대조한다.
 
 ## 11. 근거

@@ -5,10 +5,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-API-001 |
-| 문서 개정 | 6.0 |
-| 대상 | `v0.3.0` stable |
-| 최종 갱신일 | 2026-09-03 |
-| 상태 | **정식 공개 범위** |
+| 문서 개정 | 6.1 |
+| 대상 | `v0.3.0` stable + `v0.4.0-dev` 추가 범위 |
+| 최종 갱신일 | 2026-09-10 |
+| 상태 | **v0.3 정식 공개 / v0.4 비공개 후보** |
 
 ## 판정 기준
 
@@ -27,6 +27,26 @@
 
 `v0.3.0`은 선언한 제품 범위를 완료했지만 모든 Arduino 보드의 API, 모든 pin/peripheral
 instance와 제3자 library 전체를 지원한다는 뜻은 아닙니다.
+
+## v0.4.0 `fabric` profile 추가 범위
+
+아래 표는 v0.3.0 stable 계약에 소급하지 않는 v0.4.0 개발 후보입니다. Arduino에서
+`Peripheral Fabric (DAP UART disconnected)`를 선택하고 `<NUCODE_Peripheral_Fabric.h>`를 포함할
+때만 활성화됩니다. `standard`·`ble` profile의 기존 singleton 동작은 바꾸지 않습니다.
+
+| API/영역 | v0.4 후보 상태 | 지원 경계 |
+| --- | --- | --- |
+| `SerialFabric` | 지원된 범위 | UARTE 5·SPIM 5·SPIS 5·TWIM 4·TWIS 4 identity와 실기 통과 route |
+| `AnalogFabric` | 지원된 범위 | SAADC scan/continuous DMA와 PWM20/21/22 sequence |
+| `EventFabric` | 지원된 범위 | GPIOTE 2·EGU 2·DPPIC 4·PPIB 8·TIMER 7 identity |
+| `StreamFabric` PDM/I2S | 지원된 범위 | PDM20/21과 I2S20의 double-buffer 수명주기 |
+| `SystemFabric` | 지원된 범위 | 온칩 TEMP centi-Celsius와 WDT30 configure/start/feed/reset-cause |
+| `StreamFabric` QDEC20/21 | **미지원** | manual read/clear 누산 제한으로 capability `unsupported`; 추가 진단 제외 |
+
+각 identity의 단독 HIL은 통과했지만 manifest의 `concurrent_hil=partial/not_run`은 그대로 유지합니다.
+따라서 특정 identity가 공개 API에 있다는 사실만으로 모든 가능한 동시 조합을 보증하지 않습니다.
+DAP UART와 같은 핀을 쓰는 route는 switch 분리와 profile의 전기 선행조건을 만족해야 합니다.
+v0.4.0 stable 공개 자체는 T22 소유자 승인 전까지 HOLD입니다.
 
 ## Runtime과 공통 API
 

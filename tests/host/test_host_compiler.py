@@ -3,7 +3,7 @@
 import unittest
 from unittest.mock import patch
 
-from host_compiler import compiler_command
+from host_compiler import compiler_command, run_executable
 
 
 class HostCompilerTests(unittest.TestCase):
@@ -43,6 +43,26 @@ class HostCompilerTests(unittest.TestCase):
                 compiler_command()
             with self.assertRaises(ValueError):
                 compiler_command("rust")
+
+    def test_application_control_start_race_is_retried_with_a_bound(self):
+        blocked = OSError("blocked")
+        blocked.winerror = 4551
+        completed = object()
+        with patch("host_compiler.os.name", "nt"), \
+                patch("host_compiler.subprocess.run", side_effect=[blocked, completed]) as runner, \
+                patch("host_compiler.time.sleep") as sleeper:
+            self.assertIs(run_executable(["generated.exe"]), completed)
+        self.assertEqual(runner.call_count, 2)
+        sleeper.assert_called_once_with(0.25)
+
+    def test_non_policy_start_error_is_not_retried(self):
+        failure = OSError("missing")
+        failure.winerror = 2
+        with patch("host_compiler.os.name", "nt"), \
+                patch("host_compiler.subprocess.run", side_effect=failure) as runner:
+            with self.assertRaises(OSError):
+                run_executable(["missing.exe"])
+        runner.assert_called_once()
 
 
 if __name__ == "__main__":

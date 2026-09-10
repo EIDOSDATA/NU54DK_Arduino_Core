@@ -84,10 +84,10 @@ class M22PackageExamplesTests(unittest.TestCase):
             (record["library"], record["example"]) for record in self.lock
         })
 
-    def test_lock_matches_every_repository_library_example(self) -> None:
-        """! @brief package source에 추가된 Arduino 예제가 lock 밖으로 빠지지 않습니다. """
+    def test_stable_lock_matches_v03_examples_and_excludes_v04_candidate(self) -> None:
+        """! @brief v0.3 lock과 후속 v0.4 후보 예제의 경계를 고정합니다. """
 
-        source_examples = {
+        all_source_examples = {
             (
                 sketch.relative_to(REPOSITORY / "libraries").parts[0],
                 sketch.parent.name,
@@ -100,7 +100,15 @@ class M22PackageExamplesTests(unittest.TestCase):
             (record["library_directory"], record["example"])
             for record in self.lock
         }
+        stable_directories = {record["library_directory"] for record in self.lock}
+        source_examples = {
+            item for item in all_source_examples if item[0] in stable_directories
+        }
         self.assertEqual(source_examples, locked_examples)
+        self.assertEqual(
+            all_source_examples - source_examples,
+            {("NUCODE_Peripheral_Fabric", "FabricCapabilities")},
+        )
 
     def test_discovery_accepts_only_installed_platform_paths(self) -> None:
         """! @brief Arduino CLI가 설치본에서 열거한 exact 29개만 승인합니다. """

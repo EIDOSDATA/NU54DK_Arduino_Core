@@ -3,7 +3,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
-from host_compiler import compiler_command
+from host_compiler import compiler_command, run_executable
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -21,5 +21,5 @@ class CompactTokenTests(unittest.TestCase):
                 str(ROOT / 'cores/arduino/internal/resource/IoResourceTable.cpp'), '-o', str(binary)])
             result = subprocess.run(command, capture_output=True, timeout=60)
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
-            result = subprocess.run([str(binary)], capture_output=True, timeout=20)
+            result = run_executable([str(binary)], capture_output=True, timeout=20)
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))

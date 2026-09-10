@@ -10,19 +10,29 @@
 이 문서는 공개 릴리스 노트가 아니라 준비 범위와 공개 조건을 설명합니다.
 현재 진행 수치와 실행별 이력은 TODO와 [검증 기록](<../../04_검증 기록/README.md>)에서 관리합니다.
 
+| 사용자 문서 | 링크 |
+| --- | --- |
+| 변경 내용 | [Release notes](RELEASE_NOTES.md) |
+| v0.3.0 Sketch 이동 | [Migration](MIGRATION.md) |
+| 검증 범위와 최종 재실행 | [Testing](TESTING.md) |
+| 진단 절차 | [Troubleshooting](TROUBLESHOOTING.md) |
+| 제한·미지원 범위 | [Known issues](KNOWN_ISSUES.md) |
+
 ## 준비된 기술 범위
 
 | 묶음 | 준비 범위 | 해석 |
 | --- | --- | --- |
 | M23 | 75개 peripheral identity, block/channel/DMA 소유권 계약 | 지원·실기 상태는 개별 항목별로 판정 |
-| M24 | UARTE·SPIM/SPIS·TWIM/TWIS 인스턴스 후보와 실행기 | 단독 기능 완료와 복구·동시성 완료는 별개 |
-| M25 | SAADC·PWM·timer/event·PDM·I2S 및 QDEC 후보 | QDEC 알려진 문제 보존, 추가 진단·검증 제외 |
-| M26 | 16개 system 기능의 지원 경계, TEMP·WDT 후보 | 기존 온보드 결과와 후속 영향 회귀 구분 |
-| M27 | 이중 package 재현, checksum·SBOM·license·RC index·HOLD plan | 비공개 준비만 수행, 공개 권한 없음 |
+| M24 | `fabric` profile의 UARTE·SPIM/SPIS·TWIM/TWIS 23개 | 단독 HIL·route·공개 원장 PASS, 미실행 동시 조합은 보증하지 않음 |
+| M25 | SAADC·PWM·timer/event·PDM·I2S 직접 API | 검증 범위 공개, QDEC만 unsupported·추가 진단 제외 |
+| M26 | 16개 system 기능의 지원 경계 | TEMP·WDT30 실기 PASS를 `SystemFabric`에 연결, 나머지는 행별 경계 유지 |
+| M27 | checksum·SBOM·license·RC index·HOLD plan | T18 이후 최종 비공개 package를 다시 생성·검증, 공개 권한 없음 |
 
 초기 M27의 격리 staging 예제 29/29 compile 결과는
 [39번 기록](<../../04_검증 기록/39_M27_v0.4.0_rc1_자동_준비와_HOLD.md>)의 당시 source에 한정됩니다.
 최종 frozen RC의 설치·Upload·수명주기 통과로 재사용하지 않습니다.
+T16 이후 현재 후보는 `NUCODE Peripheral Fabric` 예제를 포함한 **30개**이며 최종 T20에서 전부
+다시 검사합니다.
 
 ## 현재 범위 결정
 
@@ -32,8 +42,9 @@
   wake 실기와 중복되는 T13 peer 제어 System OFF 추가 결합 시험입니다.
 - UARTE00 별도 4-net 결선 검사, 정상 180초, RTS/CTS 200회와 TX/RX 취소 400회를 완료했습니다.
   완료 근거는 [115번 기록](<../../04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md>)에 있습니다.
-- T14/T15에서 원인·수정·동일 조건 결과·사용자 영향을 정리하고 지원 범위를 확정합니다.
-- T16~T18 사용자 통합 후 R14에서 RC를 고정하고 T19~T25 검증·승인·공개를 진행합니다.
+- T14/T15의 원인·수정·지원 범위 확정과 T16 설치 profile 통합을 완료했습니다.
+- T17 문서·지원 매트릭스 정리를 완료했습니다. T18 공개 절차를 준비한 뒤 R14/T19에서 RC를 고정합니다.
+- T20~T21 비공개 package 검증 뒤 T22 소유자 승인 전에는 tag·Release·stable index를 쓰지 않습니다.
 
 ## 실기 검증 경계
 
@@ -47,8 +58,8 @@
 
 ## 공개 전 gate
 
-1. T11~T15의 source별 기능·복구·동시성 결과와 제외·제한사항 확정
-2. T16~T18 사용자 API·예제·profile·패키지 통합
+1. T11~T15의 source별 기능·복구·동시성 결과와 제외·제한사항 확정 — 완료
+2. T16 설치 profile·API·예제 통합과 T17 문서·지원 원장 — 완료; T18 공개 절차 진행
 3. R14 frozen RC의 Host·문서·전체 target build·이중 package 재현
 4. 격리 Boards Manager 설치·전체 예제 compile·실제 Upload·제거·재설치·version 전환
 5. T22 프로젝트 소유자의 결과별 명시적 공개 승인

@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-PERIPHERAL-001 |
-| 문서 개정 | 4.2 |
-| 문서 상태 | `v0.3.0` 정식 계약 + M23 개발 기준선 |
+| 문서 개정 | 4.3 |
+| 문서 상태 | `v0.3.0` 정식 계약 + `v0.4.0` Fabric 후보 |
 | 최종 갱신일 | 2026-09-10 |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
@@ -25,7 +25,7 @@ commit은 `04_검증 기록`으로 이동하고 여기에는 제품 동작만 �
 | runtime owner/resource 상태 | `cores/arduino/internal/IoResourceManager.h` |
 | runtime pinctrl/PM route | `cores/arduino/internal/RuntimePeripheralRoute.*`, `variants/nu54dk/peripheral_routes.*` |
 | 부팅 고정 자원 registry | `variants/nu54dk/io_resource_registry.cpp` — UART20 console만 고정 |
-| 일반 사용자 subsystem 선택 | `standard`/`ble` profile과 library feature manifest |
+| 일반 사용자 subsystem 선택 | `standard`/`ble`/`fabric` profile과 library feature manifest |
 | Sketch별 custom 구성 | expert `prj.conf`/overlay |
 
 Core에 `uart20`, `i2c22`, `spi00`과 실제 pin 번호를 별도 board truth로 복제하지 않는다.
@@ -262,9 +262,15 @@ manifest에 고정된 capability·검증 snapshot이다.
 
 M24 작업 1은 [Serial Fabric 경로와 API 계약](<../01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md>)에
 5개 공유 block과 23개 UARTE/SPIM/SPIS/TWIM/TWIS identity의 핀 bank, 기존 singleton 불변 조건,
-allocation-free typed handle과 DMA 수명주기를 고정했다. 이후 개발 source에는 `nucode/SerialFabric.h`와
-23개 personality adapter가 추가됐으나 `v0.3.0`의 공개 API 범위가 늘어난 것은 아니다.
-계약 manifest의 상태와 실제 HIL 진행은 구별하고, 개발 검증·지원 확정은 [v0.4.0 TODO](../TODO_v0.4.0.md)를 따른다.
+allocation-free typed handle과 DMA 수명주기를 고정했다. T16은 `nucode/SerialFabric.h`와 23개
+personality adapter를 명시적 `fabric` profile의 설치 사용자 경로로 연결했다. 이는 `v0.4.0-dev`의
+profile-scoped 공개 후보이며 `v0.3.0`의 공개 API 범위를 늘리지 않는다. 단독 HIL과 공개 노출은
+통과했지만 `concurrent_hil=partial/not_run`인 조합을 전체 동시성 보증으로 확대하지 않는다.
+
+같은 profile에서 `AnalogFabric`, `EventFabric`, PDM/I2S `StreamFabric`, TEMP/WDT30
+`SystemFabric`도 설치 진입점을 갖는다. QDEC20/21은 header source가 있어도 capability
+`unsupported`이며 공개 지원 범위가 아니다. 세부 identity와 근거는 M23 생성 매트릭스와
+[T16 기록](<../04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md>)을 따른다.
 
 ## 11. 설정과 profile
 
@@ -280,8 +286,9 @@ allocation-free typed handle과 DMA 수명주기를 고정했다. 이후 개발 
 | `CONFIG_NUCODE_ARDUINO_ADC` | AIN0~AIN7 metadata와 SAADC backend |
 | `CONFIG_NUCODE_ARDUINO_PWM` | PWM20 analogWrite와 PWM21 tone runtime backend |
 | `CONFIG_NUCODE_ARDUINO_SERVO` | Servo library용 PWM22 backend |
+| `CONFIG_NUCODE_ARDUINO_*_FABRIC` | `fabric` profile 전용 Serial/Analog/Event/Stream/System 직접 API |
 
-Module 자체의 최소 Kconfig와 Arduino `standard`/`ble` profile 기본값은 구분한다. 일반 사용자는
+Module 자체의 최소 Kconfig와 Arduino `standard`/`ble`/`fabric` profile 기본값은 구분한다. 일반 사용자는
 Arduino IDE feature set을 선택하고 raw conf/overlay는 expert escape hatch로만 사용한다.
 
 ## 12. Radio와 USB 경계
@@ -328,5 +335,6 @@ IRQ 40회 일치나 파형 종료 후 한 번 읽기의 제한된 성공을 전�
 수동 read/clear 누산 문제는 알려진 제한으로 남겼고 사용자 지시로 추가 QDEC 검증을 제외했다.
 이에 의존하는 T13 QDEC20/21 단독·C07은 실행 목록에서 제외한다.
 유력 원인·회로 부하의 미검증 조건·완화는 [101번](<../04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md>),
-최종 지원 판정은 [TODO T14/T15](../TODO_v0.4.0.md)를 따른다.
-이 결정은 수동 read/clear 오류 해결이나 사용자용 v0.4.0 지원 확정이 아니다.
+최종 T15 판정과 T16 설치 capability는 [117번](<../04_검증 기록/117_T15_지원_범위와_Physical_Gate_확정.md>)과
+[118번](<../04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md>)을 따른다.
+QDEC는 수동 read/clear 오류가 해결되지 않아 사용자용 v0.4.0 지원에서 제외했습니다.

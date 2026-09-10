@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-RUNTIME-001 |
-| 문서 개정 | 4.0 |
-| 문서 상태 | `v0.3.0` 정식 계약 |
-| 최종 갱신일 | 2026-09-03 |
+| 문서 개정 | 4.1 |
+| 문서 상태 | `v0.3.0` 정식 계약 + `v0.4.0` profile 경계 |
+| 최종 갱신일 | 2026-09-10 |
 | 실행 방식 | Loader 없는 Native Full Zephyr 정적 firmware |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
@@ -46,7 +46,7 @@ SoC Boot ROM, 선택적인 bootloader, sysbuild 보조 image와 probe firmware�
 | Arduino 수명주기 | `cores/arduino/main.cpp` |
 | post-loop scheduler 정책 | `cores/arduino/internal/runtime_scheduler.cpp` |
 | 논리 핀 | `variants/nu54dk` |
-| 일반 사용자 구성 | `variants/nu54dk/profiles/{standard,ble}`와 library feature manifest |
+| 일반 사용자 구성 | `variants/nu54dk/profiles/{standard,ble,fabric}`와 library feature manifest |
 | expert 구성 | Sketch의 `prj.conf`, `app.overlay`, Zephyr/NCS 공개 API |
 
 Runtime에 UART/GPIO 번호, Flash 주소와 partition 크기를 다시 하드코딩하지 않는다.
@@ -146,7 +146,7 @@ ISR에서는 heap, mutex, sleep, blocking driver API와 문자열 logging을 호
 ## 8. C++ 정책
 
 - Core는 C++17 이상을 요구한다.
-- 기본 `standard`와 `ble` profile은 exception과 RTTI를 활성화하지 않는다.
+- `standard`, `ble`, `fabric` profile은 exception과 RTTI를 활성화하지 않는다.
 - 정적 객체 constructor에서 hardware를 활성화하지 않는다. `Serial`, `Wire`, `SPI`와 library
   전역 객체는 `begin()` 또는 Runtime 시작 뒤 장치를 사용한다.
 - `String`은 bounded libc heap을 사용하므로 allocation 실패 가능성을 보존한다.

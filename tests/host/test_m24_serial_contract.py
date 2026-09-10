@@ -163,7 +163,7 @@ class M24SerialContractTests(unittest.TestCase):
         self.assertEqual(MODULE.canonical_source_payload(cr, "lf-normalized"), lf)
         self.assertNotEqual(MODULE.canonical_source_payload(crlf, "raw"), lf)
 
-    def test_functionally_verified_candidates_remain_internal_until_release(self) -> None:
+    def test_functionally_verified_identities_are_profile_scoped_public(self) -> None:
         manifest = MODULE.strict_json_object(MODULE.MANIFEST_PATH)
         m24 = {item["id"]: item for item in manifest["instances"] if item["milestone"] == "M24"}
         current = set(MODULE.EXPECTED_SINGLETONS.values())
@@ -173,7 +173,9 @@ class M24SerialContractTests(unittest.TestCase):
                 continue
             states = item["states"]
             self.assertEqual(states["source"], "implemented", identity)
-            self.assertEqual(states["exposure"], "internal", identity)
+            self.assertEqual(states["exposure"], "public", identity)
+            self.assertEqual(item["route"]["state"], "verified", identity)
+            self.assertIn("SerialFabric", item["public_api"], identity)
             self.assertEqual(states["build"], "pass", identity)
             self.assertEqual(states["semantic"], "pass", identity)
             self.assertEqual(states["hil"], "pass", identity)

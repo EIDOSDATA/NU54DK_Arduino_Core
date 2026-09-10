@@ -1,6 +1,6 @@
 /**
  * @file AnalogFabric.h
- * @brief SAADC scan과 PWM sequence를 노출하는 v0.4 후보 API입니다.
+ * @brief `fabric` profile의 SAADC scan과 PWM sequence API입니다.
  *
  * SPDX-License-Identifier: MIT
  */

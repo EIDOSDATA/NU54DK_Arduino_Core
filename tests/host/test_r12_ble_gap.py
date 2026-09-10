@@ -4,7 +4,7 @@ import subprocess
 import tempfile
 import unittest
 
-from host_compiler import compiler_command
+from host_compiler import compiler_command, run_executable
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -35,7 +35,7 @@ class BleGapTests(unittest.TestCase):
                              'reentrant', 'pending_end', 'scan_copy', 'driver_failure',
                              'settings_failure', 'advertising']:
                 with self.subTest(scenario=scenario):
-                    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=10)
+                    result = run_executable([str(binary), scenario], capture_output=True, timeout=10)
                     self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
 
 

@@ -3,6 +3,8 @@
 import json
 import os
 import shutil
+import subprocess
+import time
 
 
 def compiler_command(language="c++", optional=False):
@@ -26,3 +28,16 @@ def compiler_command(language="c++", optional=False):
     if not isinstance(flags, list) or not all(isinstance(flag, str) for flag in flags):
         raise AssertionError(f"{flags_variable} must be a JSON string array")
     return [compiler, *flags]
+
+
+def run_executable(command, *, application_control_retries=2, retry_delay_seconds=0.25, **kwargs):
+    """! @brief Windows 정책이 새 실행 파일 검사를 마칠 때까지 제한적으로 다시 시작합니다. """
+    for attempt in range(application_control_retries + 1):
+        try:
+            return subprocess.run(command, **kwargs)
+        except OSError as error:
+            blocked = os.name == "nt" and getattr(error, "winerror", None) == 4551
+            if not blocked or attempt == application_control_retries:
+                raise
+            time.sleep(retry_delay_seconds)
+    raise AssertionError("실행 재시도 상태가 올바르지 않습니다.")

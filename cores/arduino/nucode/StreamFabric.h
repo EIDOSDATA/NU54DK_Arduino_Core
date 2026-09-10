@@ -1,6 +1,6 @@
 /**
  * @file StreamFabric.h
- * @brief PDM, I2S와 QDEC 전 instance를 노출하는 v0.4 후보 API입니다.
+ * @brief `fabric` profile의 PDM·I2S API와 미지원 QDEC 후보입니다.
  *
  * SPDX-License-Identifier: MIT
  */

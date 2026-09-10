@@ -1,6 +1,6 @@
 /**
  * @file SerialFabric.h
- * @brief nRF54L15 공유 serial block을 안전하게 선택하는 v0.4 후보 API입니다.
+ * @brief `fabric` profile에서 공유 serial block을 안전하게 선택하는 API입니다.
  *
  * SPDX-License-Identifier: MIT
  */

@@ -9,12 +9,14 @@
 [115번](115_T13_U_UART00_완료와_T13_종료.md), T14 충돌 판정과 PWM 교정은
 [116번](116_T14_자원_충돌_판정과_PWM_식별_교정.md), T15 지원 범위와 physical gate는
 [117번](117_T15_지원_범위와_Physical_Gate_확정.md), T16 설치 통합은
-[118번](118_T16_Peripheral_Fabric_설치_통합.md)에서 확인합니다.
+[118번](118_T16_Peripheral_Fabric_설치_통합.md), T17 사용자 문서와 지원 원장 확정은
+[119번](119_T17_문서와_지원_매트릭스_정리.md)에서 확인합니다.
 
 ## 최근 확인할 기록
 
 | 기록 | 용도 |
 | --- | --- |
+| [119 — T17 문서와 지원 매트릭스 정리](119_T17_문서와_지원_매트릭스_정리.md) | **T17 완료·public 62/75·사용자 문서·QDEC unsupported 경계** |
 | [118 — T16 Peripheral Fabric 설치 통합](118_T16_Peripheral_Fabric_설치_통합.md) | **T16 완료·fabric profile·설치 예제·QDEC unsupported 경계** |
 | [117 — T15 지원 범위와 Physical Gate 확정](117_T15_지원_범위와_Physical_Gate_확정.md) | **T15 완료·M24/M25 physical PASS·QDEC partial 경계** |
 | [116 — T14 자원 충돌 판정과 PWM 식별 교정](116_T14_자원_충돌_판정과_PWM_식별_교정.md) | **T14 완료·PWM 자원 결함 해결·두 보드 520 cycle PASS** |
@@ -40,7 +42,7 @@
 ## 전체 기록 목차
 
 <details>
-<summary>v0.4.0 최근 실기·인계 — 94~118</summary>
+<summary>v0.4.0 최근 실기·인계 — 94~119</summary>
 
 - [94 — T14 PWM 지연 시작 취소와 무점퍼 검증](<94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>) — **PWM 미시작 STOP 문제 해결 완료**
 - [95 — T12 내부 ADC·TIMER·이벤트 무점퍼 검증](<95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)
@@ -67,6 +69,7 @@
 - [116 — T14 자원 충돌 판정과 PWM 식별 교정](<116_T14_자원_충돌_판정과_PWM_식별_교정.md>) — **T14 완료·결함 1건 해결·미해결 0건**
 - [117 — T15 지원 범위와 Physical Gate 확정](<117_T15_지원_범위와_Physical_Gate_확정.md>) — **T15 완료·M24/M25 fixture gate PASS**
 - [118 — T16 Peripheral Fabric 설치 통합](<118_T16_Peripheral_Fabric_설치_통합.md>) — **T16 완료·설치 profile/예제 통합**
+- [119 — T17 문서와 지원 매트릭스 정리](<119_T17_문서와_지원_매트릭스_정리.md>) — **T17 완료·public 62/75·사용자 문서 확정**
 
 </details>
 

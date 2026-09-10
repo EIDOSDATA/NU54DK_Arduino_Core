@@ -4,7 +4,7 @@ import subprocess
 import tempfile
 import unittest
 
-from host_compiler import compiler_command
+from host_compiler import compiler_command, run_executable
 
 ROOT = Path(__file__).resolve().parents[2]
 SCENARIOS = ['lifecycle', 'route_fail', 'end_retry', 'settings', 'modes', 'thread',
@@ -30,7 +30,7 @@ class SpiFacadeTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
             for scenario in SCENARIOS:
                 with self.subTest(scenario=scenario):
-                    result = subprocess.run([str(binary), scenario], capture_output=True, timeout=20)
+                    result = run_executable([str(binary), scenario], capture_output=True, timeout=20)
                     self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
 
 

@@ -7,7 +7,7 @@
 | 제품선 / 마일스톤 | `v0.4.0` / `M26` |
 | Board | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | 전체 판정 | 16개, unknown 0개 |
-| 상태 합계 | `not-applicable` 1, `partial` 6, `silicon-only` 7, `supported` 2 |
+| 상태 합계 | `not-applicable` 1, `partial` 4, `silicon-only` 7, `supported` 4 |
 | raw RADIO 정책 | `exclusive-with-managed-ble-and-not-public-in-v0.4.0` |
 
 ## 상태 의미
@@ -24,9 +24,9 @@
 | --- | --- | --- | --- | --- | --- | --- |
 | `comp` | `silicon-only` | `none` | `pass` | `not_run` | AIN0~AIN7은 P1 header에 있으나 comparator API와 threshold fixture는 v0.4.0 공개 범위가 아니다. | LPCOMP와 comparator106 block을 상호배타적으로 사용해야 한다. |
 | `lpcomp` | `silicon-only` | `none` | `pass` | `not_run` | AIN0~AIN7은 P1 header에 있으나 저전력 comparator fixture와 Arduino API는 후속 제품선 범위다. | COMP와 comparator106 block을 상호배타적으로 사용해야 한다. |
-| `temp` | `partial` | `internal` | `pass` | `not_run` | 온칩 TEMP라 외부 배선이 필요 없고 centi-Celsius 후보 API와 target contract를 제공한다. | Zephyr sensor driver가 단일 TEMP block을 직렬화한다. |
-| `wdt30` | `partial` | `internal` | `pass` | `not_run` | secure-domain WDT30 후보 handle을 빌드하지만 reset-cause HIL 전에는 공개하지 않는다. | 한 WDT block의 timeout channel은 해당 Zephyr watchdog device가 소유한다. |
-| `wdt31` | `supported` | `public` | `pass` | `pass` | BoardSystem.watchdog가 application-domain WDT31을 사용한다. | SystemFabric 후보와 BoardSystem production path는 같은 image에서 함께 활성화하지 않는다. |
+| `temp` | `supported` | `public` | `pass` | `pass` | 온칩 TEMP를 fabric profile의 centi-Celsius API로 제공하며 외부 배선이 필요 없다. | Zephyr sensor driver가 단일 TEMP block을 직렬화한다. |
+| `wdt30` | `supported` | `public` | `pass` | `pass` | WDT30 handle은 fabric profile에서 제공하며 configure·start·feed·reset-cause 실기를 통과했다. | 한 WDT block의 timeout channel은 해당 Zephyr watchdog device가 소유한다. |
+| `wdt31` | `supported` | `public` | `pass` | `pass` | standard/ble의 BoardSystem과 fabric의 SystemFabric이 application-domain WDT31을 사용한다. | fabric profile의 SystemFabric과 standard/ble의 BoardSystem 경로는 같은 image에서 함께 활성화하지 않는다. |
 | `nfct` | `silicon-only` | `none` | `pass` | `not_run` | NFC1/NFC2는 P1.2/P1.3 header와 Wire에 공유되며 보드에 NFC antenna matching network가 없다. | NFCT를 선택하면 Wire/TWIM22와 해당 두 pad를 동시에 사용할 수 없다. |
 | `radio` | `partial` | `public` | `pass` | `pass` | 온보드 2.4 GHz RF 경로는 NUCODE_BLE의 검증된 BLE 범위에서 사용한다. | raw RADIO는 managed BLE controller와 배타적이며 v0.4.0 public surface가 아니다. |
 | `cracen` | `partial` | `internal` | `partial` | `not_applicable` | 온칩 security accelerator이며 NCS PSA/RNG direct build 경로만 검증됐다. | PSA Crypto와 NCS security subsystem이 자원과 key lifecycle을 소유한다. |
@@ -41,7 +41,7 @@
 
 ## 판정표와 현재 실기 증거의 경계
 
-이 표는 지원 계약의 상태이며 최신 campaign 결과를 자동으로 합산하지 않는다. TEMP·WDT30의 기본 온보드 실행은 [41번](<../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)에서 PASS했다. 표의 후보 `not_run`은 T15에서 비공개·부분 지원 경계로 유지했으며 그 실기를 미실행으로 되돌리지 않는다.
+TEMP·WDT30의 기본 온보드 실행은 [41번](<../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)에서 PASS했고, T16의 명시적 `fabric` profile 설치 경로에 연결했다. WDT31의 기존 `BoardSystem.watchdog` 공개 계약은 유지한다.
 
 COMP/LPCOMP·NFCT·sQSPI·raw RADIO는 각 행의 공개/보드 경계를 따른다. 이를 모두 v0.4.0 필수 외부 실기로 추가하지 않는다. 정밀 품질·외부 부품 호환성은 [42번 합의](<../04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)의 범위 밖이다. 필수 기능·복구·동시성·soak와 최종 RC는 [TODO](../TODO_v0.4.0.md)·readiness를 따르며 공개 HOLD를 유지한다.
 

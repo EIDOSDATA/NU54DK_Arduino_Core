@@ -1,6 +1,6 @@
 /**
  * @file EventFabric.h
- * @brief TIMER/GPIOTE/EGU/DPPI/PPIB 전 instance의 v0.4 후보 API입니다.
+ * @brief `fabric` profile의 TIMER/GPIOTE/EGU/DPPI/PPIB API입니다.
  *
  * SPDX-License-Identifier: MIT
  */

@@ -331,7 +331,7 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 
 ### M25 — Analog·timing·audio·event 전 인스턴스
 
-- 상태: 기능 검증·T14 자원 충돌 판정과 T15 지원 반영 완료. QDEC20/21은 partial·internal candidate로 유지.
+- 상태: 기능 검증·T14 자원 충돌 판정·T15 physical 판정과 T16 설치 노출 완료. QDEC20/21만 partial·internal candidate로 유지.
   구현 이력은 [M25 검증 기록](<../04_검증 기록/37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md>),
   source별 요구 대조는 102번, 외부 ADC 반복 수 차이는 103번, fixture 경계는 42번 기록에 보존한다.
 - 주요 기능 결과: SAADC AIN0~7·내부 ADC/event, PDM 기본/연속, C17 GPIO/GPIOTE·PWM 675+288·I2S 432 PASS.
@@ -372,9 +372,9 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 
 ### M27 — `v0.4.0` Peripheral Parity 릴리스
 
-- 상태: **M24/M25 physical gate PASS / 공개 HOLD** — package·SBOM·checksum·index 이중 재현과
-  staging 설치본 예제 29/29 compile을 통과했다. M24~M26의 필수 physical evidence와 frozen RC
-  release gate 전에는 tag·GitHub Release·stable index를 만들거나 공개하지 않는다. Exact 결과는
+- 상태: **M24/M25 physical gate·T16 설치 통합 PASS / 공개 HOLD** — 초기 source에서 package·SBOM·
+  checksum·index 이중 재현과 staging 예제 29/29 compile을 통과했다. T16 이후 후보는 30개이며
+  frozen RC에서 다시 검증한다. T18~T21 release gate 전에는 tag·GitHub Release·stable index를 만들거나 공개하지 않는다. Exact 초기 결과는
   [M27 자동 준비·HOLD 기록](<../04_검증 기록/39_M27_v0.4.0_rc1_자동_준비와_HOLD.md>)을 따른다.
 
 - M23~M26 manifest, examples, HIL, package install과 clean-environment 재현 build를 통합한다.

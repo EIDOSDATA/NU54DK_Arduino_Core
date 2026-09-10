@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tests/hil/nu54dk"))
 import v04_protocol
 
-from host_compiler import compiler_command
+from host_compiler import compiler_command, run_executable
 
 
 class V04MathTests(unittest.TestCase):
@@ -23,11 +23,11 @@ class V04MathTests(unittest.TestCase):
                 str(ROOT / "tests/host/v04_math_main.cpp"), "-o", str(binary)], capture_output=True, timeout=60)
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
             valid = v04_protocol.encode(bytes(range(16)), 71, 1, 2, [20, 100, 400000])
-            result = subprocess.run([str(binary)], input=valid, capture_output=True, timeout=10)
+            result = run_executable([str(binary)], input=valid, capture_output=True, timeout=10)
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual(int(result.stdout), v04_protocol.checksum(valid[:-4]))
             for broken in (valid[:-1], valid[:-4] + bytes(4), v04_protocol.encode(bytes(range(16)), 71, 2, 2)):
-                result = subprocess.run([str(binary)], input=broken, capture_output=True, timeout=10)
+                result = run_executable([str(binary)], input=broken, capture_output=True, timeout=10)
                 self.assertNotEqual(result.returncode, 0)
 
     def test_target_clock_uses_actual_instance_and_internal_adc_is_soc_specific(self):

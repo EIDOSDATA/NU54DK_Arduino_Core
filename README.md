@@ -101,6 +101,20 @@ NU54DK를 연결한 뒤 `Verify`, `Upload` 순서로 실행합니다. 온보드 
 정식 package에는 Standard profile 22개와 BLE profile 7개, 총 29개 예제가 들어 있습니다.
 설치본 29/29 compile과 대표 Blink pyOCD upload를 정식 승격 gate에서 확인했습니다.
 
+### v0.4.0 개발 후보
+
+현재 `main`에는 T16에서 추가한 `Peripheral Fabric (DAP UART disconnected)` profile과
+`NUCODE Peripheral Fabric` 예제 1개가 있습니다. 따라서 **v0.4.0 후보는 library 9개·예제 30개**이며,
+이미 공개된 v0.3.0의 8개·29개와 구분합니다. 이 profile은 검증된 Serial·Analog·Event·PDM·I2S와
+TEMP/WDT30 직접 API를 활성화하고 기존 `standard`·`ble` singleton 구성을 함께 켜지 않습니다.
+QDEC는 노출 header에 후보 source가 남아 있어도 capability가 `unsupported`이며 제품 지원이 아닙니다.
+
+사용자는 `Tools → Feature set → Peripheral Fabric (DAP UART disconnected)`와
+`#include <NUCODE_Peripheral_Fabric.h>`로 진입합니다. DAP UART switch를 물리적으로 분리해야 하는
+P0/P1 route는 profile 이름과 각 API의 electrical profile 선행조건을 따라야 합니다. v0.4.0은 아직
+공개 stable이 아니며 최종 RC·설치 수명주기·소유자 승인을 통과하기 전에는 Boards Manager 설치
+대상으로 안내하지 않습니다.
+
 ## 지원 범위
 
 상태값은 다음 세 가지로만 구분합니다. `지원`은 `v0.3.0`이 선언한 범위를 구현·검증했다는
@@ -230,7 +244,7 @@ payload 동등성, 격리 Boards Manager lifecycle, 설치 예제 29/29 compile�
 | `v0.1.0` | 역사적·비지원 | Core, 기본 API, build/upload와 package |
 | `v0.2.0` | 역사적·비지원 | CI/CD, profile·예제, Board/System과 BLE NUS |
 | `v0.3.0` | **현재 stable** | Arduino compatibility, 동적 peripheral/analog, BLE GAP/GATT/security/profile, storage |
-| `v0.4.0` | 개발 중 | 전 인스턴스 API 확장. T13~T16 완료, 최종 문서·RC·패키지 검증 대기 |
+| `v0.4.0` | 개발 중 | 전 인스턴스 API 확장. T13~T17 완료, T18 공개 절차 준비 진행 중 |
 | `v0.5.0` | 계획 | Bluetooth LE 확장·ISO/LE Audio·Direction Finding·Channel Sounding·Mesh |
 | `v0.6.0` | 계획 | Storage/Crypto, TF-M, 고급 memory layout와 secure update/recovery |
 | `v0.7.0` | 계획 | Radio profile, IEEE 802.15.4, ESB와 OpenThread |

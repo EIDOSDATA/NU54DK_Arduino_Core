@@ -25,8 +25,8 @@ DOCUMENT_PATH = (
 EXPECTED_DISPOSITIONS = {
     "comp": "silicon-only",
     "lpcomp": "silicon-only",
-    "temp": "partial",
-    "wdt30": "partial",
+    "temp": "supported",
+    "wdt30": "supported",
     "wdt31": "supported",
     "nfct": "silicon-only",
     "radio": "partial",
@@ -211,9 +211,9 @@ def render_document(contract: dict[str, Any], capabilities: list[dict[str, Any]]
         )
     lines.extend([
         "", "## 판정표와 현재 실기 증거의 경계", "",
-        "이 표는 지원 계약의 상태이며 최신 campaign 결과를 자동으로 합산하지 않는다. TEMP·WDT30의 "
-        "기본 온보드 실행은 [41번](<../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)에서 "
-        "PASS했다. 표의 후보 `not_run`은 T15에서 비공개·부분 지원 경계로 유지했으며 그 실기를 미실행으로 되돌리지 않는다.",
+        "TEMP·WDT30의 기본 온보드 실행은 "
+        "[41번](<../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)에서 PASS했고, "
+        "T16의 명시적 `fabric` profile 설치 경로에 연결했다. WDT31의 기존 `BoardSystem.watchdog` 공개 계약은 유지한다.",
         "",
         "COMP/LPCOMP·NFCT·sQSPI·raw RADIO는 각 행의 공개/보드 경계를 따른다. 이를 모두 v0.4.0 필수 "
         "외부 실기로 추가하지 않는다. 정밀 품질·외부 부품 호환성은 "
