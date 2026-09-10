@@ -1,9 +1,10 @@
-# 구성 프로필과 Arduino 예제 배포 — v0.3.0 정식
+# 구성 프로필과 Arduino 예제 배포 — v0.3.0 정식·v0.4.0 개발
 
 | 항목 | 현재 계약 |
 | --- | --- |
-| profile | `standard`, `ble` |
+| `v0.3.0` 정식 profile | `standard`, `ble` |
 | `v0.3.0` 정식 사용자 예제 | 8개 library, 총 29개; Standard 22 / BLE 7 |
+| `v0.4.0` 개발 추가 | `fabric` profile, Peripheral Fabric 예제 1개 |
 | 기본 profile | `standard` |
 | BLE feature ID | `nucode.ble.nus` |
 | BLE config | `ble-nus.conf` |
@@ -24,7 +25,11 @@ variants/nu54dk/profiles/
 │   ├── profile.json
 │   ├── prj.conf
 │   └── app.overlay
-└── ble/
+├── ble/
+│   ├── profile.json
+│   ├── prj.conf
+│   └── app.overlay
+└── fabric/
     ├── profile.json
     ├── prj.conf
     └── app.overlay
@@ -52,15 +57,21 @@ libraries/<Library>/
 | --- | --- | --- | --- |
 | `standard` | Standard peripherals | GPIO, Serial, Wire, SPI, ADC, PWM | 일반 Arduino sketch |
 | `ble` | BLE NUS | standard 기능 + BLE | NUS peripheral/central |
+| `fabric` | Peripheral Fabric (DAP UART disconnected) | GPIO, time, 직접 Fabric | v0.4.0 고급 주변장치 API |
 
-두 profile 모두 board `nrf54l15dk/nrf54l15/cpuapp/nu54dk`, NCS `v3.4.0`과 각 profile의
+세 profile 모두 board `nrf54l15dk/nrf54l15/cpuapp/nu54dk`, NCS `v3.4.0`과 각 profile의
 `prj.conf`, `app.overlay`를 고정한다. `boards.txt`의 `도구 → Feature set` 메뉴가
 `build.nu54_profile`을 다음처럼 설정한다.
 
 ~~~text
 feature_set=standard → standard
 feature_set=ble      → ble
+feature_set=fabric   → fabric
 ~~~
+
+`fabric`은 v0.4.0 개발 profile입니다. 직접 nrfx IRQ와 peripheral block을 소유하므로 standard
+singleton을 함께 활성화하지 않습니다. P1.4~P1.7을 route로 쓰려면 보드의 DAP UART가 물리적으로
+분리돼 있어야 합니다.
 
 ---
 
@@ -76,9 +87,12 @@ feature_set=ble      → ble
 | `Servo` | `nucode.servo` | `servo.conf`, overlay 없음 | `standard`, `ble` |
 | `EEPROM` | `nucode.eeprom` | `eeprom.conf`, overlay 없음 | `standard`, `ble` |
 | `LittleFS` | `nucode.littlefs` | `littlefs.conf`, overlay 없음 | `standard`, `ble` |
+| `NUCODE_Peripheral_Fabric` | `nucode.peripheral.fabric` | `peripheral-fabric.conf`, overlay 없음 | `fabric`만 |
 
-정식 `v0.3.0` feature ID allowlist는 위 여덟 항목이다. `v0.2.0` archive가 앞의 네 항목만
-가졌다는 사실은 해당 버전의 역사 기록으로 유지한다. BLE NUS feature manifest의 핵심 값은 다음과 같다.
+정식 `v0.3.0` feature ID allowlist는 `NUCODE_Peripheral_Fabric`을 제외한 여덟 항목입니다.
+마지막 항목은 T16에서 추가한 v0.4.0 개발 경로이며 v0.3.0 archive를 소급 변경하지 않습니다.
+`v0.2.0` archive가 앞의 네 항목만 가졌다는 사실도 해당 버전의 역사 기록으로 유지합니다.
+BLE NUS feature manifest의 핵심 값은 다음과 같습니다.
 
 ~~~json
 {
@@ -171,6 +185,10 @@ Wire target/callback/no-STOP, `Wire1`, `SPI1`은 profile을 선택해도 활성�
 archive가 일치하는지 확인하고 설치본 29개를 모두 compile했다.
 AC-03 두 예제는 `standard`와 `ble` profile build 입력을 각각 별도 smoke로 검사한다.
 
+v0.4.0 후보 lock은 `NUCODE Peripheral Fabric/FabricCapabilities`를 더한 30개입니다. 이 예제는
+`fabric` profile만 사용하고 sidecar 없이 빌드됩니다. QDEC는 capability에서 `unsupported`이며,
+T20/T21에서 30개 전체 설치 package 검증을 다시 수행합니다.
+
 외부 Arduino library 호환성은 bundled feature allowlist에 자동 편입하지 않고 M17의 고정된
 별도 gate로 검증한다.
 
@@ -181,6 +199,8 @@ AC-03 두 예제는 `standard`와 `ble` profile build 입력을 각각 별도 sm
 - [`boards.txt`](../../boards.txt)
 - [`standard` profile](../../variants/nu54dk/profiles/standard/profile.json)
 - [`ble` profile](../../variants/nu54dk/profiles/ble/profile.json)
+- [`fabric` profile](../../variants/nu54dk/profiles/fabric/profile.json)
+- [`NUCODE Peripheral Fabric` feature](../../libraries/NUCODE_Peripheral_Fabric/zephyr/feature.yml)
 - [`NUCODE_BLE` feature](../../libraries/NUCODE_BLE/zephyr/feature.yml)
 - [M13 구성 프로필 검증](<../04_검증 기록/15_M13_구성_프로필_검증.md>)
 - [M15 Board/System 기준선](<../04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>)
@@ -188,5 +208,6 @@ AC-03 두 예제는 `standard`와 `ble` profile build 입력을 각각 별도 sm
 - [M17 NCS 기능과 예제 coverage](<../04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)
 - [v0.2.0 정식 릴리스 공개 기록](<../04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md>)
 - [AC-02B Peripheral/Analog runtime 기준선](<../04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>)
+- [T16 Peripheral Fabric 설치 통합](<../04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md>)
 - [Arduino Storage API](<../03_펌웨어 설계/10_Arduino_Storage_API.md>)
 - [AC-03 Storage와 Library 호환성 기준선](<../04_검증 기록/28_AC-03_Storage와_Library_호환성_기준선.md>)

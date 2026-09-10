@@ -5,7 +5,7 @@
 이 문서의 경쟁 비교와 초기 engineering 목표는 제품 방향을 설명합니다. 현재 실행 범위에서는
 QDEC 추가 진단·반복 Serial handover·T13 peer 제어 System OFF 추가 2조건을 제외합니다.
 S 정상·동시성·복구 결과, C05 1시간 soak, U 실기, T14 미커버 요구 판정과 T15 지원 범위를
-확정했습니다. T16 설치 통합은 남아 있습니다. 완료·제외된 시험을 다시 예약하지 않습니다.
+확정했고 T16 설치 profile 통합도 완료했습니다. 완료·제외된 시험을 다시 예약하지 않습니다.
 
 | 항목 | 내용 |
 | --- | --- |
@@ -273,7 +273,7 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 ### M24 — Serial fabric 전 인스턴스와 DMA
 
-- 상태: **작업 1~6·T15 지원 판정 완료, T16 설치 통합 대기** — 5개 block·23개 personality, 핀 bank, singleton/고급 API 경계,
+- 상태: **작업 1~6·T15 지원 판정·T16 설치 통합 완료** — 5개 block·23개 personality, 핀 bank, singleton/고급 API 경계,
   DMA lifecycle과 관련 errata를 [M24 Serial Fabric 계약](10_M24_Serial_Fabric_경로와_API_계약.md)에
   고정하고 CI drift 검사를 연결했다. 회로도 재검토로 단독 HIL primary 자원 6개와 무배선 자동화
   후보 7개·외부 fixture 필요 16개도 계약에 추가했다. 실행 결과는
