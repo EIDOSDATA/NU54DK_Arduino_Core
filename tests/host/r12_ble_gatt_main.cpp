@@ -6,6 +6,26 @@
 #include <cstring>
 #include <iostream>
 using namespace nucode::ble;
+
+namespace nucode::ble::internal
+{
+    /** @brief GATT 단독 호스트 시험에서 Security 연결 통지를 소비합니다. */
+    void securityConnected(struct bt_conn *) noexcept
+    {
+    }
+
+    /** @brief GATT 단독 호스트 시험에서 Security 해제 통지를 소비합니다. */
+    void securityDisconnected(struct bt_conn *) noexcept
+    {
+    }
+
+    /** @brief GATT 단독 호스트 시험에서 Security 변경 통지를 소비합니다. */
+    void securityChanged(struct bt_conn *, bt_security_t,
+                         enum bt_security_err) noexcept
+    {
+    }
+}
+
 constexpr BLEProperty properties = BLEProperty::read | BLEProperty::write |
                                    BLEProperty::write_without_response | BLEProperty::notify |
                                    BLEProperty::indicate;

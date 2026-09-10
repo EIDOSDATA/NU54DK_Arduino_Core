@@ -7,6 +7,48 @@
 #include <cstring>
 #include <iostream>
 using namespace nucode::ble;
+
+namespace nucode::ble::internal
+{
+    /** @brief Security 단독 호스트 시험에는 사용자 GATT database가 없습니다. */
+    int prepareGattDatabase() noexcept
+    {
+        return 0;
+    }
+
+    /** @brief Security 단독 호스트 시험에는 사용자 GATT schema가 없습니다. */
+    bool hasGattSchema() noexcept
+    {
+        return false;
+    }
+
+    /** @brief Security 단독 호스트 시험에서 GATT poll을 생략합니다. */
+    void pollGatt() noexcept
+    {
+    }
+
+    /** @brief Security 단독 호스트 시험에서 GATT 연결 통지를 소비합니다. */
+    void gattConnected(struct bt_conn *, std::uint32_t) noexcept
+    {
+    }
+
+    /** @brief Security 단독 호스트 시험에서 GATT 해제 통지를 소비합니다. */
+    void gattDisconnected(struct bt_conn *, std::uint32_t) noexcept
+    {
+    }
+
+    /** @brief Security 단독 호스트 시험에서 GATT 종료 통지를 소비합니다. */
+    void gattEnded() noexcept
+    {
+    }
+
+    /** @brief Security 단독 호스트 시험에서 사용자 GATT service를 거부합니다. */
+    bool addGattService(BLEService &) noexcept
+    {
+        return false;
+    }
+}
+
 std::array<unsigned, 16> events{};
 bool accept_in_callback = false;
 void observed(const SecurityEventRecord &event, void *)

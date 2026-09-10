@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 class BleGattTests(unittest.TestCase):
     def test_production_gatt_lifecycle(self):
-        """! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 GATT 구현의 대체를 검증합니다. """
+        """! @brief PE-COFF 보안 기본 훅을 보완하고 GATT 구현의 대체를 검증합니다. """
         compiler = compiler_command()
         self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory(prefix='nu54-r12-gatt-') as folder:

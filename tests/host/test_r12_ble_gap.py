@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 class BleGapTests(unittest.TestCase):
     def test_production_gap_lifecycle(self):
-        """! @brief PE-COFF 기본 weak 정의를 먼저 링크하고 GAP 수명주기를 검증합니다. """
+        """! @brief PE-COFF 기본 훅을 강하게 링크하고 GAP 수명주기를 검증합니다. """
         compiler = compiler_command()
         self.assertIsNotNone(compiler)
         with tempfile.TemporaryDirectory(prefix='nu54-r12-gap-') as folder:
