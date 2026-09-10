@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "source": "NCS v3.4.0 official sample",
+  "physical_executed": true,
+  "flash_performed": true,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "campaign": "official-system-off-normal-and-swd-dormant",
+  "status": "failed-as-diagnostic",
+  "scope": "Nordic 공식 System OFF GRTC 2초 예제의 유지 RAM 기준선",
+  "qualification": "두 조건 모두 boots=1/off_count=1; T13 PASS 아님, 물리 SWD 격리 필요",
+  "files": [
+    {
+      "file": "official-system-off-baseline.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-09\\new-chat\\work\\official-system-off-baseline.json",
+      "bytes": 1637,
+      "sha256": "f02509d960228710e7df8f3e8ca3d2e93fb23cb96aa114bbb9dd4b9bb4c530db",
+      "gzip_bytes": 964,
+      "gzip_sha256": "9d5e1b21274d887176b2dd524629f6e590db5f8a7231162ebd406c7054cae15d"
+    }
+  ]
+}

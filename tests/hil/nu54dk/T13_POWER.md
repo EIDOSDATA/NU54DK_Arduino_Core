@@ -13,8 +13,9 @@ T13에 추가한 UART DMA 정지·System OFF·복구 경로다. 기존 M15의 �
 - UART의 소유 RX P1.07은 상대 reset/OFF 동안 LOW로 뜨지 않도록 내부 pull-up을 적용한다.
   STOP 뒤에는 input/no-pull로 반환한다. 외부 저항이나 추가 결선을 요구하는 설정이 아니다.
 - B의 SWD 하드웨어 스위치를 GPIO로 제어한다고 가정하지 않는다. pyOCD의 정상 disconnect로
-  core debug와 DP power request를 해제한 뒤 CMSIS-DAP nRESET만20ms 사용한다.
-  pin-only reset에는 SWD connect·DP/AP 접근을 수행하지 않는다. 실제 성립은 peer 응답으로 판정한다.
+  core debug와 DP power request를 해제한 뒤 **B debug-control SW1의 `DISABLE_SWD`만 물리적으로
+  격리**한다. `DISABLE_UART`, S 17신호·GND와 USB는 유지한다. 그 뒤 CMSIS-DAP nRESET만20ms
+  사용하며 pin-only reset에는 SWD connect·DP/AP 접근을 수행하지 않는다.
 
 ## 별도 image와 단계
 
@@ -50,8 +51,10 @@ B pin-only reset 해제 후에는0.7초를 보장한 뒤 첫 UART 중계를 시�
 금지한다. 중계 중 상태 검사는 이미 열려 있는 A session의 exact identity만 읽는다.
 이를 어기면 nRF54L15의 DIF reset으로 B가 깨어나므로 GRTC/GPIO wake PASS로 세지 않는다.
 
-`v04_t13_power.py --phase bridge|timer|gpio --repeats 1|100`은 기본 read-only preflight다.
+`v04_t13_power.py --phase bridge|timer|gpio|timer-gpio --repeats 1|100`은 기본 read-only preflight다.
 실행은 현재 S grant와 `--execute-fixture --evidence`가 필요하다. 예행1회를100회로 세지 않는다.
+System OFF 실행은 `--manual-swd-switch`가 필수다. `timer-gpio`는 B SWD를 한 번 격리한 상태에서
+timer와 GPIO를 각1회 연속 검증하고, 둘 다 끝난 뒤 SWD 복원을 확인해 cleanup한다.
 유지 중인 S 결선에는 시간 기반 만료를 적용하지 않는다. Firmware 10초 lease·STOP·
 전기 검사·probe lock은 유지하며 회차 시작 전 exact grant·A runtime identity를 계속 확인한다.
 
@@ -97,6 +100,7 @@ OFF 전 DMA 반환 증명, retention 유효, seed, uptime ms.
 
 초기 구현은 [107번 기록](<../../../00_Docs/04_검증 기록/107_T13_S_자동_진행과_System_OFF_계획.md>),
 최신 Host/target 준비와 중계 실패·실기 잔여는 [110번 기록](<../../../00_Docs/04_검증 기록/110_문서_정리와_T13_S_잔여_재개.md>)을 따른다.
+SPI/TWI/TWIS 완료와 물리 SWD 격리 원인은 [112번 기록](<../../../00_Docs/04_검증 기록/112_T13_S_SPI_TWI_완료와_System_OFF_원인.md>)을 따른다.
 전용 image 준비와 실제 OFF/wake 성공은 별개다.
 
 ## 최초 UART 오류 원본

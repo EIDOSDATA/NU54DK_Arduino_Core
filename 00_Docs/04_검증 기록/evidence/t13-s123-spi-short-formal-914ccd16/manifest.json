@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "source": "914ccd16",
+  "physical_executed": true,
+  "flash_performed": true,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "campaign": "s123-06-10-spi-short-formal-914-01",
+  "status": "passed",
+  "scope": "SPIM00/20/21/22/30 short-boundary recovery 각 100회",
+  "qualification": "SPI short 5조건 정식 PASS; S 진행 38/58에서 43/58",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-06-10-spi-short-formal-914-01\\ci-before-flash.json",
+      "bytes": 3752,
+      "sha256": "a41cbfad203d99fbaf0c3cfcf15c85da8c2dceb577955c228c0472757cfe995b",
+      "gzip_bytes": 567,
+      "gzip_sha256": "f4e477e2f07fcc4b322ae3c9276655e6cde517f670a126ba83e6a740d88f60e5"
+    },
+    {
+      "file": "images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-06-10-spi-short-formal-914-01\\images.json",
+      "bytes": 1603,
+      "sha256": "ca5b7fdd90cbe41350f1c4099dfcc8709514cde7164268c1e7bab80a6bf484d4",
+      "gzip_bytes": 547,
+      "gzip_sha256": "5fca7e85fa42ea612bd6151a3af2d8f89ce7f2c70b212a3f4507c2d4361ece64"
+    },
+    {
+      "file": "result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-06-10-spi-short-formal-914-01\\result.json",
+      "bytes": 46554754,
+      "sha256": "bc5125ea810fc9deeffebd3f707840d039168ae2a94f0a0273e4669d0ff94f65",
+      "gzip_bytes": 3961846,
+      "gzip_sha256": "104af986f89aeb895f7f3838b9d90d23fa34b693704c7fc45e55de1736a5df13"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-06-10-spi-short-formal-914-01\\result.json.jsonl",
+      "bytes": 25665029,
+      "sha256": "6b208d198e841a2caeb05bd136cb81be89aa5298c1416bded63e8d63f15b80fb",
+      "gzip_bytes": 3560129,
+      "gzip_sha256": "9f6a5590ab85d54a8e6c21c3a1f8f82487c1189bc6eeaf44b666f1e7a4d23fe4"
+    }
+  ]
+}

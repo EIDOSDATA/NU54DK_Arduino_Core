@@ -68,7 +68,9 @@ class PowerTests(unittest.TestCase):
         for phase in ('bridge', 'timer', 'gpio'):
             for repeats in (1, 100):
                 self.assertEqual(power.polling_policy(phase, repeats), 0)
-        for phase, repeats in (('bridge-fast-poll', 100), ('bridge-debug', 100), ('other', 1), ('timer', 2)):
+        self.assertEqual(power.polling_policy('timer-gpio', 1), 0)
+        for phase, repeats in (('bridge-fast-poll', 100), ('bridge-debug', 100),
+                               ('timer-gpio', 100), ('other', 1), ('timer', 2)):
             with self.subTest(phase=phase, repeats=repeats), self.assertRaises(ProtocolError):
                 power.polling_policy(phase, repeats)
 
@@ -320,6 +322,24 @@ class PowerTests(unittest.TestCase):
         self.assertEqual(calls, ['session-close', 'probe-open', True, False, False, 'probe-close'])
         probe.connect.assert_not_called()
         self.assertTrue(device.target.session.options['resume_on_disconnect'])
+
+    def test_physical_swd_isolation_precedes_pin_reset(self):
+        """! @brief B debug session을 닫은 뒤에만 물리 SWD를 격리하고 nRESET을 실행합니다. """
+        device = mock.Mock()
+        device.target.session.options = {}
+        probe = mock.Mock(spec=['open', 'close', 'assert_reset', 'is_reset_asserted'])
+        device.target.session.probe = probe
+        probe.is_reset_asserted.return_value = False
+        calls = []
+        device.target.session.close.side_effect = lambda: calls.append('session-close')
+        probe.open.side_effect = lambda: calls.append('probe-open')
+        probe.assert_reset.side_effect = lambda level: calls.append(('reset', level))
+        probe.close.side_effect = lambda: calls.append('probe-close')
+        switch = lambda stage: calls.append(('switch', stage))
+        with mock.patch.object(power.time, 'sleep'):
+            power.detach_and_pin_reset(device, mock.Mock(), switch)
+        self.assertEqual(calls, ['session-close', ('switch', 'isolate'), 'probe-open',
+                         ('reset', True), ('reset', False), ('reset', False), 'probe-close'])
 
     def test_cleanup_attach_retries_only_three_times_and_preserves_second_success(self):
         """! @brief 첫 attach가 OFF를 깨우기만 한 경우 한정 재접속으로 진단 원본을 보존합니다. """

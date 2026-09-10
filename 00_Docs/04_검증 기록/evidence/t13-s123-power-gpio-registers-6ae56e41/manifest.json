@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "source": "6ae56e41",
+  "physical_executed": true,
+  "flash_performed": true,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "campaign": "s123-36-gpio-registers-6ae56e41-diagnostic",
+  "status": "failed-as-diagnostic",
+  "scope": "P1.14 SENSE/IN과 controller LOW pulse 진단",
+  "qualification": "SENSE_LOW와 실제 LOW 정상, wake 미관측; System OFF PASS 아님",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-36-gpio-registers-6ae56e41-diagnostic\\ci-before-flash.json",
+      "bytes": 3764,
+      "sha256": "30407c1c8f77bf413b047f26b60baae9037d3378003b1532325d3a602287ac06",
+      "gzip_bytes": 582,
+      "gzip_sha256": "e161706730008003d248e2823c121fa9c2382129b148633cb56def9e83faa556"
+    },
+    {
+      "file": "images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-36-gpio-registers-6ae56e41-diagnostic\\images.json",
+      "bytes": 1953,
+      "sha256": "bdf805cdc948e4c7d0a4ee8fb194163ac502ff458973e4cf22f3576ddd10a8d1",
+      "gzip_bytes": 626,
+      "gzip_sha256": "267f4c33f5c76ce905dfe26b8c6743de8e343527ace10402ac6dbf9d2245cc3d"
+    },
+    {
+      "file": "result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-36-gpio-registers-6ae56e41-diagnostic\\result.json",
+      "bytes": 145371,
+      "sha256": "5aabc7db7e793ce48c089a8236a8ee9ac827e0447e6f35abb7950545a6ca1c39",
+      "gzip_bytes": 6257,
+      "gzip_sha256": "402990f1a5305fc4a3753cbc522fc0f7dd5d250270718401e38042d9d94e1d3c"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-36-gpio-registers-6ae56e41-diagnostic\\result.json.jsonl",
+      "bytes": 84378,
+      "sha256": "3619f8b84b6bd490fe1bf382b6488267fc4dea17d9c53b9b361a394d7b6b3e5b",
+      "gzip_bytes": 5164,
+      "gzip_sha256": "82eb7a63094a2e1b35eeaf6872c65f9a7c968c1ca2a77623aaee5ce7471137bc"
+    }
+  ]
+}

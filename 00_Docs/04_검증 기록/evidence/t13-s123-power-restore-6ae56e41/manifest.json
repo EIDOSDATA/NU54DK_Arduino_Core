@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "source": "6ae56e41",
+  "physical_executed": true,
+  "flash_performed": true,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "campaign": "s123-38-official-baseline-restore-6ae56e41-diagnostic",
+  "status": "passed",
+  "scope": "공식 예제 진단 뒤 exact T13 복구와 102/102 연결성·bridge",
+  "qualification": "보드와 S 결선 복구 PASS; System OFF PASS 아님",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-38-official-baseline-restore-6ae56e41-diagnostic\\ci-before-flash.json",
+      "bytes": 3776,
+      "sha256": "77e0833bfb2bb06acaa868472ebc90c985e61ce009f249bd994767eb722bc8f9",
+      "gzip_bytes": 553,
+      "gzip_sha256": "4871f5f88639a1972a124bbfafab22b6079da0d37ada9fd00647cca4167eaa4f"
+    },
+    {
+      "file": "images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-38-official-baseline-restore-6ae56e41-diagnostic\\images.json",
+      "bytes": 1953,
+      "sha256": "bdf805cdc948e4c7d0a4ee8fb194163ac502ff458973e4cf22f3576ddd10a8d1",
+      "gzip_bytes": 626,
+      "gzip_sha256": "267f4c33f5c76ce905dfe26b8c6743de8e343527ace10402ac6dbf9d2245cc3d"
+    },
+    {
+      "file": "result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-38-official-baseline-restore-6ae56e41-diagnostic\\result.json",
+      "bytes": 143740,
+      "sha256": "5ca24241b946f69dbbc485de77a424df3fb8b73a44d09e8b85cc141ce2ed55d4",
+      "gzip_bytes": 5850,
+      "gzip_sha256": "1f1a988d18cf789c6ea62b8ebcf5eb107ed9030ce34226929ce2c14cabc7e20a"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-38-official-baseline-restore-6ae56e41-diagnostic\\result.json.jsonl",
+      "bytes": 83449,
+      "sha256": "bc7a91b4aa4d0f5ecbe2a4c2236fbe261d31b3fe92a2eb1b8b4e2ceb8ab9d513",
+      "gzip_bytes": 4775,
+      "gzip_sha256": "1df87ca1f4280ced5a06522e14359c2d545c10e1ccdbb32e6ce72a40e7bc5b4a"
+    }
+  ]
+}

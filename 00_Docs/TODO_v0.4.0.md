@@ -16,7 +16,7 @@
 | T13 serial 자원 충돌 | 사용자 수용 완료 | 예행 14/14, 5조건 각 100회. 나머지 9조건 반복 생략 승인 |
 | T13 연속 통신 종류·역할 전환 | 범위 제외 | 시리얼 핸드오버 재실행·추가 검증 없음 |
 | T13 I2S/PDM 복구 | 4/4 | I2S role2 공급 중단·재시작 정식 100/100 완료. 111번 |
-| 요청한 잔여 S 1~3단계 | **38/58 (65.5%)** | 잔여 20조건. 집계와 다음 순서는 아래 2절 |
+| 요청한 잔여 S 1~3단계 | **56/58 (96.6%)** | SPI·TWI·TWIS 완료. System OFF 2조건만 남음 |
 | U 준비 | 소프트웨어 준비 완료 | 전용 image·Host·CI 통과. U 재결선과 실기는 미실행 |
 | T14~T18 결함·지원·사용자 통합 | 진행/대기 | 알려진 제한 정리와 최종 지원 판정·패키지 통합 |
 | R14·T19~T25 RC·승인·공개 | 대기 | 공개 승인과 실제 배포는 별도 |
@@ -44,11 +44,11 @@ QDEC·시리얼 핸드오버 제외와 충돌 반복 생략은 사용자 범위 
 | UART RX 공급 지연 | 8 / 8 | 양 역할 400/400씩, 합계 800회 |
 | 기존 요구·구현·증거 대조 | 1 / 1 | 대조 완료, 미실기를 PASS로 대체하지 않음 |
 | I2S 원래 경로 복구 | 1 / 1 | role2 starvation/restart 정식 100/100 완료 |
-| SPI 경계 복구 | 0 / 10 | short SPIM22 정상 재시작 실패 원인 수정, exact 전체 재시험 전 |
-| TWI SDA stuck-low | 0 / 4 | 남은 실기 |
-| TWIS 공급 지연 | 0 / 4 | 남은 실기 |
-| System OFF timer/GPIO | 0 / 2 | 선행 중계 문제 포함, 새 실기 성공 0회 |
-| **합계** | **38 / 58** | **65.5%, 잔여 20조건** |
+| SPI 경계 복구 | 10 / 10 | short·unready, 5개 인스턴스 각 100회 |
+| TWI SDA stuck-low | 4 / 4 | TWIM20/21/22/30 각 100회 |
+| TWIS 공급 지연 | 4 / 4 | TWIS20/21/22/30 각 100회 |
+| System OFF timer/GPIO | 0 / 2 | 물리 `DISABLE_SWD` 격리 뒤 연속 정식 실행 대기 |
+| **합계** | **56 / 58** | **96.6%, 잔여 2조건** |
 
 ### 해결한 문제와 아직 남은 문제
 
@@ -60,12 +60,15 @@ QDEC·시리얼 핸드오버 제외와 충돌 반복 생략은 사용자 범위 
 | net5: A P1.06 ↔ B P1.07 | 과거 LOW 전달 실패 후 같은 선 재검사 20/20, 불일치 0 | 현재도 단선이라고 단정하지 않음. 전체 S 연결성은 실기 재개 때 다시 확인 |
 | I2S net6 과거 진단 | 원래 경로 수신 오류와 패드 전이 부족, 반대 endpoint 진단 100회 성공을 보존 | 후속 원래 role2 정식 100/100으로 완료. 과거 실패 원인은 소급 변경하지 않음 |
 | I2S role2 재검증 | 0dda7f9의 원래 starvation/restart 정식 100/100, cleanup 203·idle 400 통과 | 완료. 진단용 교환 경로와 구분 |
-| SPI SPIS 연속 버퍼 | short 정식 SPIM22 재시작 frame12가 zero RX. DWT 무작위/정확 seed 각 100회 추가 오류 없음 | END 뒤 next 요청의 무버퍼 구간을 선행 semaphore 예약으로 교정. exact SPI 10조건 재시험 전 |
-| System OFF | 중계·debug 해제·DMA 반환은 통과. GRTC wake image의 LFXO가 생산/M15의 외부 커패시터 override 대신 내부 17 pF를 쓴 불일치를 교정 중 | 실제 OFF/wake 성공 전. 새 exact image로 GPIO와 timer를 분리 재검증 |
+| SPI SPIS 연속 버퍼 | short 정식 SPIM22 재시작 frame12가 zero RX. DWT 무작위/정확 seed 각 100회 추가 오류 없음 | 선행 semaphore 예약·시작 장벽·CS inactive·상수 지연을 교정하고 short/unready 10조건 각 100회 완료 |
+| TWI/TWIS | 반환 terminal buffer 재공급과 TWIS 지연 측정 기준을 교정 | stuck-low 4조건·공급 지연 4조건 각 100회 완료 |
+| System OFF | 102/102 연결성과 bridge 정상. GRTC compare 약 2초, P1.14 SENSE_LOW·실제 LOW, DP power down을 레지스터로 확인 | Nordic 공식 예제도 논리 disconnect/Dormant에서 `boots=1, off_count=1`. B debug-control `DISABLE_SWD` 물리 격리 필수 |
 
 원인 분석·수정 source·캠페인과 원본 위치는
 [110번](<04_검증 기록/110_문서_정리와_T13_S_잔여_재개.md>)과
 [111번](<04_검증 기록/111_T13_S_I2S_완료와_SPIS_연속_버퍼_교정.md>)을 따릅니다.
+[112번](<04_검증 기록/112_T13_S_SPI_TWI_완료와_System_OFF_원인.md>)에 SPI/TWI/TWIS 완료와
+System OFF 레지스터·공식 예제 기준선을 정리했습니다.
 디버거 관측, 변경된 경로의 성공, 예행과 부분 반복은 정식 완료 수에 더하지 않습니다.
 
 ### 실행 source와 준비 상태
@@ -73,11 +76,10 @@ QDEC·시리얼 핸드오버 제외와 충돌 반복 생략은 사용자 범위 
 | 용도 | source / build | 확인된 범위 |
 | --- | --- | --- |
 | 마지막 실기 image | `3f4a18906f6d72df45f5a07f901b6a7aef716a2a` / `C:/t5t04` | RX 지연 완료, 양쪽 STOP·핀 반환 |
-| 현재 코드 기준 | `0dda7f9dac30845e4fdb8f9bd28da22a906dcb9d` | U 전용 경로 준비. 문서 편집이 실기 source를 바꾸지 않음 |
-| S/U image | 위 `0dda7f9d` / `C:/t5u04` | target 4/4, 관련 Host 106, style 418, docs 225, contract 46 |
-| System OFF image | 위 `0dda7f9d` / `C:/t5v04` | DUT/peer build 2/2, Host 16/16. flash·실기 미실행 |
-| 잔여 S 실행기 | 위 `0dda7f9d` | 관련 Host 36/36, 유한 배치 준비. 실기 미실행 |
-| 원격 CI | `0dda7f9d` | Software `34321129052`, Reproducible Builds `34321128937` 성공 |
+| 현재 System OFF 진단 기준 | `6ae56e41c5983c9c8af52f57cf40e0fc424d67a9` / `C:/tz15` | power DUT/peer, Host 22/22, target 2/2, 원격 Host 성공 |
+| S 정식 완료 image | `914ccd16`·`1c02f9de`·`d39f0742`·`e8e776e9` | SPI short/unready 10, TWI 4, TWIS 4 각 100회 |
+| U image | `0dda7f9d` / `C:/t5u04` | U 전용 image·Host·CI 준비. U 재결선·실기 미실행 |
+| System OFF 다음 실행 | timer→GPIO 결합 실행기 | B SWD 준비 후 한 번 격리, 두 wake 연속, SWD 복원 뒤 cleanup |
 
 U 준비 완료는 UART00 180초 full-duplex, 양 역할 RTS/CTS와 TX/RX 취소 시험을 위한 소프트웨어
 준비를 뜻합니다. S 확인을 U 재결선 확인으로 재사용하지 않으며, U 실기 완료를 뜻하지 않습니다.

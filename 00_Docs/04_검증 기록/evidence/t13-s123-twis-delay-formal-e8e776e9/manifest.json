@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "source": "e8e776e9",
+  "physical_executed": true,
+  "flash_performed": true,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "campaign": "s123-15-18-twis-delay-formal-e8e7-01",
+  "status": "passed",
+  "scope": "TWIS20/21/22/30 공급 지연 recovery 각 100회",
+  "qualification": "TWIS 지연 4조건 정식 PASS; S 진행 52/58에서 56/58",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-15-18-twis-delay-formal-e8e7-01\\ci-before-flash.json",
+      "bytes": 3755,
+      "sha256": "1d6cb31f48c425a18cc38a50df548328fadad1274ed382ac40143cc1f50d2db1",
+      "gzip_bytes": 568,
+      "gzip_sha256": "1d728628e1e5f09c6b6091d224afbc5dfea25e153a38e6b1517c4441277a001c"
+    },
+    {
+      "file": "images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-15-18-twis-delay-formal-e8e7-01\\images.json",
+      "bytes": 1603,
+      "sha256": "ad85d5e159658408d8227e8c871c49d73b1168b6cd23412daf356e899b573ffd",
+      "gzip_bytes": 550,
+      "gzip_sha256": "02ce186575d46db7c2db49ea9cb06ca49c27e463c841a229d303c74b5cb0c9a8"
+    },
+    {
+      "file": "result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-15-18-twis-delay-formal-e8e7-01\\result.json",
+      "bytes": 21657446,
+      "sha256": "bb19d0b36fe0cc29fad42cb0f7b613c059e07fcc61f3271101a4c1443b78a0f5",
+      "gzip_bytes": 1004394,
+      "gzip_sha256": "263526f0cbea4e8d671aebca2741c1ac86cebe24d68cc42166d7bfc64fa5bdae"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-15-18-twis-delay-formal-e8e7-01\\result.json.jsonl",
+      "bytes": 11084034,
+      "sha256": "947a923f97ad3f3ed1181ccea36edc3b6015edff4aee0f32618fb6b4563747fa",
+      "gzip_bytes": 756418,
+      "gzip_sha256": "5a78ef2273ef9effdfb4beef5ca1814ceabcf3c4505bc29a7036c94d35bb3157"
+    }
+  ]
+}

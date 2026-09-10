@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "source": "1c02f9de",
+  "physical_executed": true,
+  "flash_performed": true,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "campaign": "s123-06-10-spi-unready-formal-1c02-01",
+  "status": "passed",
+  "scope": "SPIM00/20/21/22/30 unready-boundary recovery 각 100회",
+  "qualification": "SPI unready 5조건 정식 PASS; S 진행 43/58에서 48/58",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-06-10-spi-unready-formal-1c02-01\\ci-before-flash.json",
+      "bytes": 3752,
+      "sha256": "949c2e3545596dac582ce7a62db197aef951303e4f3f3c8072b75351a6ed80d0",
+      "gzip_bytes": 560,
+      "gzip_sha256": "b2b4eef299ae5f264461f92bd1ace85f4e74742cd616d17005828ada54105313"
+    },
+    {
+      "file": "images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-06-10-spi-unready-formal-1c02-01\\images.json",
+      "bytes": 1603,
+      "sha256": "d533c5bdc4d01943c597e26dd686a94f5ab4a9da3abb1257b96b6414fc97617f",
+      "gzip_bytes": 550,
+      "gzip_sha256": "3f5c92ae06c2a6a59bcf0ff8297f48673103b6a4308ec8177923b462483dda27"
+    },
+    {
+      "file": "result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-06-10-spi-unready-formal-1c02-01\\result.json",
+      "bytes": 46759176,
+      "sha256": "96f2fea1474d65467a11d0b4a6393835cd16046d3f791600dc72967a8659cfbf",
+      "gzip_bytes": 3918918,
+      "gzip_sha256": "28a539b66d2e33552c936efdded9d961900b7148ca8a629681806d3eb85bfcc0"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-06-10-spi-unready-formal-1c02-01\\result.json.jsonl",
+      "bytes": 25869449,
+      "sha256": "08dceac814f2610223e89459f24ad7082f02c319160c5f7c6623c22e5bf7fe47",
+      "gzip_bytes": 3541590,
+      "gzip_sha256": "14cb076092a350c9cad05828c31c1e9eb0a69aa08ecc197a11071d9742c52cac"
+    }
+  ]
+}

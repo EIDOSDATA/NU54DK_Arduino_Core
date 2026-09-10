@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "source": "6ae56e41",
+  "physical_executed": true,
+  "flash_performed": true,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "campaign": "s123-37-swd-dormant-timer-6ae56e41-diagnostic",
+  "status": "failed-as-diagnostic",
+  "scope": "SWD-DP power down과 Arm SWD Dormant 뒤 GRTC wake 진단",
+  "qualification": "논리 SWD Dormant로도 wake 미관측; 물리 SWD 격리 필요",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-37-swd-dormant-timer-6ae56e41-diagnostic\\ci-before-flash.json",
+      "bytes": 3770,
+      "sha256": "d4859cc3a71a6d076ca41bb1d47c7e8e9bd744b963dd653a65814430c56ebc2c",
+      "gzip_bytes": 573,
+      "gzip_sha256": "b08a23dea3ba0dc07eb139fb758327eaca17ae135c7bfd479ecb29f14b576e85"
+    },
+    {
+      "file": "images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-37-swd-dormant-timer-6ae56e41-diagnostic\\images.json",
+      "bytes": 1953,
+      "sha256": "bdf805cdc948e4c7d0a4ee8fb194163ac502ff458973e4cf22f3576ddd10a8d1",
+      "gzip_bytes": 626,
+      "gzip_sha256": "267f4c33f5c76ce905dfe26b8c6743de8e343527ace10402ac6dbf9d2245cc3d"
+    },
+    {
+      "file": "result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-37-swd-dormant-timer-6ae56e41-diagnostic\\result.json",
+      "bytes": 145539,
+      "sha256": "0b3477c813a5ce76a57bf373714d60f649102cefd724b4491a54218df4790e1f",
+      "gzip_bytes": 6325,
+      "gzip_sha256": "5a18b56eecb5ae6c3b792246845973f92b158cefb951d2f421435787cc089c9b"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-37-swd-dormant-timer-6ae56e41-diagnostic\\result.json.jsonl",
+      "bytes": 84505,
+      "sha256": "2a16649a9201e8e1f5c6946f549d82b6783eae494a8f996e7d40978b87bfc3d2",
+      "gzip_bytes": 5230,
+      "gzip_sha256": "0637c9128944c17495cf2628a559f46b3cd09f5095fcb8dbb5571a460d67af0f"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "source": "d39f0742",
+  "physical_executed": true,
+  "flash_performed": true,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "campaign": "s123-11-14-twi-stuck-formal-d39f-01",
+  "status": "passed",
+  "scope": "TWIM20/21/22/30 SDA stuck-low recovery 각 100회",
+  "qualification": "TWI stuck-low 4조건 정식 PASS; S 진행 48/58에서 52/58",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-11-14-twi-stuck-formal-d39f-01\\ci-before-flash.json",
+      "bytes": 3755,
+      "sha256": "0617a79a62e7075fc057940a37bfd4f0e058626a59b04d578b85f9158f145c20",
+      "gzip_bytes": 564,
+      "gzip_sha256": "693bf3ffeaa7cd510c8418a382f0d628e4232d51415e2af93678c3fb1781f4ac"
+    },
+    {
+      "file": "images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-11-14-twi-stuck-formal-d39f-01\\images.json",
+      "bytes": 1603,
+      "sha256": "632e4ede577daa5e65b0218da78545abc3d46166e1af8a1ff8b5064aa1eaa66c",
+      "gzip_bytes": 548,
+      "gzip_sha256": "c6612a980a5aeb1a2876963a6178a11bc12760cf06465627f159062e0edf8649"
+    },
+    {
+      "file": "result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-11-14-twi-stuck-formal-d39f-01\\result.json",
+      "bytes": 22686474,
+      "sha256": "87a46a079e6ec003db0a70dcbf2edc8c85e101d6b29f88ebebac0d8ee159612d",
+      "gzip_bytes": 1115177,
+      "gzip_sha256": "fe9508814b92e8c929fb9cf3227597ae14edf85f53227b83404004a243b14c31"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-11-14-twi-stuck-formal-d39f-01\\result.json.jsonl",
+      "bytes": 11449863,
+      "sha256": "0c2143ee8d34518463e250cf33eb2a18e40c8ceb44362b87bf3fe92fadb63ec4",
+      "gzip_bytes": 794916,
+      "gzip_sha256": "0527e32bc14eb36b94f36e526633fab3ef41e7f12a6a2d14e5707cfdb20d3e81"
+    }
+  ]
+}

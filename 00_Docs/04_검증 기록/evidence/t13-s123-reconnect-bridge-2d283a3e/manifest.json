@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "source": "2d283a3e",
+  "physical_executed": true,
+  "flash_performed": true,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "campaign": "s123-33-reconnect-bridge-2d283a3e-diagnostic",
+  "status": "passed",
+  "scope": "재연결 뒤 17선 양방향 3회와 UART21 DMA bridge",
+  "qualification": "102/102 연결성과 bridge 진단 PASS; System OFF PASS 아님",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-33-reconnect-bridge-2d283a3e-diagnostic\\ci-before-flash.json",
+      "bytes": 3773,
+      "sha256": "2ebc604508a79b5f589f38a9445dd776661cccea8b7418e7a9d2e33554c29954",
+      "gzip_bytes": 563,
+      "gzip_sha256": "61710357225ea8daa30697f61a1d8fb2276aa9b83c8f1b91d8331e6362b4d877"
+    },
+    {
+      "file": "images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-33-reconnect-bridge-2d283a3e-diagnostic\\images.json",
+      "bytes": 1953,
+      "sha256": "bcbcf9bec540dca3d10374a08579667884341440d1d6e521fff4bb1c5a4b34d4",
+      "gzip_bytes": 626,
+      "gzip_sha256": "66c01ebac01a5f82fa0467b7fac6d691e4bf78957290997f81041c9669edfbc2"
+    },
+    {
+      "file": "result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-33-reconnect-bridge-2d283a3e-diagnostic\\result.json",
+      "bytes": 143353,
+      "sha256": "4f190983704994db01b37e2df7ba203d6c634bb98838cfea5e31686508836fe8",
+      "gzip_bytes": 5753,
+      "gzip_sha256": "a991090c188b0557caa5a06fabd247573d4a5ab185e0e6d89d3f96b3ba1d0670"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-33-reconnect-bridge-2d283a3e-diagnostic\\result.json.jsonl",
+      "bytes": 83191,
+      "sha256": "d950cd04febce9e0d44f57dc7fae7de0d95961dd888f777a9d7de8720475802d",
+      "gzip_bytes": 4669,
+      "gzip_sha256": "e82d564f1e3979e6d10750e1d8b2634b4d33276fa3912187f63b1f1ebe64db85"
+    }
+  ]
+}

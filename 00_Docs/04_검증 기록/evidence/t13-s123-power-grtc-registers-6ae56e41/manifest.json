@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "source": "6ae56e41",
+  "physical_executed": true,
+  "flash_performed": true,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "campaign": "s123-35-grtc-compare-6ae56e41-diagnostic",
+  "status": "failed-as-diagnostic",
+  "scope": "GRTC compare와 reset 원인 유지 RAM 진단",
+  "qualification": "compare 약 2초 정상, wake 미관측; System OFF PASS 아님",
+  "files": [
+    {
+      "file": "ci-before-flash.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-35-grtc-compare-6ae56e41-diagnostic\\ci-before-flash.json",
+      "bytes": 3755,
+      "sha256": "9b0f9e0da45e56bf4b5bb3af0e2e8a93385e5a6db6b957f2b6bbebafe798389b",
+      "gzip_bytes": 577,
+      "gzip_sha256": "cdd00d026e605caa4f069cd0b62f7452f04814361f41ded83cf4576cdff8e8c3"
+    },
+    {
+      "file": "images.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-35-grtc-compare-6ae56e41-diagnostic\\images.json",
+      "bytes": 1953,
+      "sha256": "bdf805cdc948e4c7d0a4ee8fb194163ac502ff458973e4cf22f3576ddd10a8d1",
+      "gzip_bytes": 626,
+      "gzip_sha256": "267f4c33f5c76ce905dfe26b8c6743de8e343527ace10402ac6dbf9d2245cc3d"
+    },
+    {
+      "file": "result.json.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-35-grtc-compare-6ae56e41-diagnostic\\result.json",
+      "bytes": 145383,
+      "sha256": "f67c795460d6ba52fae8ea035901042f56abdbe8e9684db50ee24de0582a9325",
+      "gzip_bytes": 6275,
+      "gzip_sha256": "a70aa305a9a3b941c59ca052e8ba073c7a3e931068ad3e232c4bdd56c7da235d"
+    },
+    {
+      "file": "result.json.jsonl.gz",
+      "source_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-07\\00-docs-05-v0-3-0\\work\\t13-s-20260908\\s123-35-grtc-compare-6ae56e41-diagnostic\\result.json.jsonl",
+      "bytes": 84389,
+      "sha256": "565b0884e5d494ddbe4165a7cf50fa55245194e59f464fd80a0af5836e37a684",
+      "gzip_bytes": 5185,
+      "gzip_sha256": "ce177c4700846b56cc4672e7e2aa0e15a2098c80485050a72b0ce3ea5a04bd25"
+    }
+  ]
+}

@@ -30,10 +30,11 @@ CLEANUP_ATTACH_ATTEMPTS = 3
 
 def polling_policy(phase, repeats):
     """! @brief 빠른 polling 비교는 단일 bridge에 한정하며 OFF 반복과 분리합니다. """
-    if phase not in ('bridge-debug', 'bridge-fast-poll', 'bridge', 'timer', 'gpio') or repeats not in (1, 100):
+    if phase not in ('bridge-debug', 'bridge-fast-poll', 'bridge', 'timer', 'gpio',
+                     'timer-gpio') or repeats not in (1, 100):
         raise ProtocolError('T13 unsupported power phase or repetition count')
-    if phase in ('bridge-debug', 'bridge-fast-poll') and repeats != 1:
-        raise ProtocolError('T13 bridge diagnostic requires exactly one repetition')
+    if phase in ('bridge-debug', 'bridge-fast-poll', 'timer-gpio') and repeats != 1:
+        raise ProtocolError('T13 diagnostic or combined power phase requires one repetition')
     return 1 if phase == 'bridge-fast-poll' else 0
 
 
@@ -297,14 +298,19 @@ class Relay:
                     'b_swd_accessed': False})
 
 
-def detach_and_pin_reset(device, append):
-    """! @brief pyOCD 정상 disconnect 후 CMSIS-DAP nRESET만 사용하며 B DP/AP를 다시 열지 않습니다. """
+def detach_and_pin_reset(device, append, switch_swd=None):
+    """! @brief pyOCD 정상 disconnect와 선택적 SWD 물리 격리 후 nRESET만 사용합니다. """
     connection = device.target.session
     probe = connection.probe
     connection.options['resume_on_disconnect'] = True
     connection.close()
     append('debug/detached', {'status': 'observation', 'resume_on_disconnect': True,
                             'normal_mode_proven': False})
+    if switch_swd is not None:
+        switch_swd('isolate')
+        append('debug/physical-swd-isolated', {'status': 'observation',
+            'board': 'B', 'disable_swd': True, 'disable_uart': True,
+            'gpio_wiring_changed': False})
     probe.open()
     try:
         probe.assert_reset(True)
@@ -365,7 +371,7 @@ def reopen_peer_for_cleanup(stack, connect_helper, uid, image, append):
                         f'{type(last_error).__name__}: {last_error}')
 
 
-def execute(args, images, grant, uids, append):
+def execute(args, images, grant, uids, append, switch_swd=None):
     policy = polling_policy(args.phase, args.repeats)
     from pyocd.core.helpers import ConnectHelper
     devices, relay = [], None
@@ -402,7 +408,7 @@ def execute(args, images, grant, uids, append):
                 if b.command(137, timeout=2) != [1]:
                     raise ProtocolError('T13 explicit expected pin reset could not be armed')
                 detached = True
-                detach_and_pin_reset(b, append)
+                detach_and_pin_reset(b, append, switch_swd)
                 time.sleep(PEER_PIN_RESET_SETTLE_SECONDS)
                 observe_pins(a, append, 'pins/controller-after-peer-reset')
 
@@ -437,8 +443,16 @@ def execute(args, images, grant, uids, append):
                                'seed': seed, 'frame_bytes_each_direction': 128})
 
             echo(0, 'bridge/fresh-dma')
-            mode = {'bridge-debug': 0, 'bridge-fast-poll': 0, 'bridge': 0, 'timer': 1, 'gpio': 2}[args.phase]
-            if mode:
+            modes = {
+                'bridge-debug': (),
+                'bridge-fast-poll': (),
+                'bridge': (),
+                'timer': (('timer', 1),),
+                'gpio': (('gpio', 2),),
+                'timer-gpio': (('timer', 1), ('gpio', 2)),
+            }[args.phase]
+            completed_cycles = 0
+            for phase_name, mode in modes:
                 for repeat in range(1, args.repeats+1):
                     a_only_check()
                     seed = secrets.randbits(32)
@@ -454,15 +468,20 @@ def execute(args, images, grant, uids, append):
                         time.sleep(remaining)
                     verify_source(relay.command(131), images[1]['core_revision'])
                     words = relay.command(134)
-                    result = inspect(words, boots=repeat+1, mode=mode, round_number=repeat, seed=seed)
+                    completed_cycles += 1
+                    result = inspect(words, boots=completed_cycles+1, mode=mode,
+                                     round_number=repeat, seed=seed)
                     reset_after = time.monotonic() - started - words[19]/1000
                     if not 1.5 <= reset_after <= 3.3:
                         raise ProtocolError(f'T13 reset did not occur in the timed wake window: {reset_after}')
-                    echo(seed, f'cycle{repeat:03}/fresh-dma')
-                    append(f'cycle{repeat:03}/result', {'status': 'passed', **result,
+                    label = f'{phase_name}/cycle{repeat:03}' if len(modes) > 1 else f'cycle{repeat:03}'
+                    echo(seed, f'{label}/fresh-dma')
+                    append(f'{label}/result', {'status': 'passed', **result,
                         'reset_after_submit_seconds': reset_after, 'b_swd_accessed': False,
                         'planned_100_recovery_pass': args.repeats == 100})
-                    print(f'T13_POWER_PROGRESS phase={args.phase} completed={repeat}/{args.repeats}', flush=True)
+                    total_cycles = len(modes)*args.repeats
+                    print(f'T13_POWER_PROGRESS phase={args.phase} '
+                          f'completed={completed_cycles}/{total_cycles}', flush=True)
         except BaseException as error:
             original_error = error
             append('failure', {'status': 'failed', 'error': f'{type(error).__name__}: {error}'})
@@ -485,6 +504,11 @@ def execute(args, images, grant, uids, append):
                     append('cleanup/reply-failure', {'status': 'unproven', 'error': str(error)})
             # @brief 통신 실패 후에는 고정 lease의 자동 STOP을 기다리고 읽기만으로 자원을 확인합니다.
             time.sleep(10.5 if original_error else .4)
+            if detached and switch_swd is not None:
+                switch_swd('restore')
+                append('debug/physical-swd-restored', {'status': 'observation',
+                    'board': 'B', 'disable_swd': False, 'disable_uart': True,
+                    'gpio_wiring_changed': False})
             outcomes = []
             for index, device in enumerate(devices):
                 try:
@@ -530,11 +554,18 @@ def main(argv=None):
     parser.add_argument('--build-root', type=Path, required=True)
     parser.add_argument('--pyocd', type=Path, required=True)
     parser.add_argument('--session-grant', type=Path, required=True)
-    parser.add_argument('--phase', choices=('bridge-debug', 'bridge-fast-poll', 'bridge', 'timer', 'gpio'), required=True)
+    parser.add_argument('--phase', choices=('bridge-debug', 'bridge-fast-poll', 'bridge',
+                        'timer', 'gpio', 'timer-gpio'), required=True)
     parser.add_argument('--repeats', type=int, choices=(1, 100), default=1)
+    parser.add_argument('--manual-swd-switch', action='store_true')
     parser.add_argument('--execute-fixture', action='store_true')
     parser.add_argument('--evidence', type=Path)
     args = parser.parse_args(argv)
+    if args.phase == 'timer-gpio' and args.repeats != 1:
+        raise ProtocolError('combined timer/GPIO phase permits one formal cycle each')
+    if (args.execute_fixture and args.phase in ('timer', 'gpio', 'timer-gpio') and
+            not args.manual_swd_switch):
+        raise ProtocolError('System OFF execution requires physical B DISABLE_SWD isolation')
     policy = polling_policy(args.phase, args.repeats)
     uids = validate_pair(args.dut, args.peer)
     images = [inspect_power_image(pair.ROOT, args.build_root, role) for role in (1, 2)]
@@ -547,7 +578,9 @@ def main(argv=None):
         'scope': 'UART21 DMA quiesce / peer controlled reset and wake; not full T13',
         'diagnostic_only': args.phase in ('bridge-debug', 'bridge-fast-poll'),
         'polling_policy': policy,
-        'system_off_requested': args.phase in ('timer', 'gpio'),
+        'system_off_requested': args.phase in ('timer', 'gpio', 'timer-gpio'),
+        'physical_swd_isolation_required': args.phase in ('timer', 'gpio', 'timer-gpio'),
+        'manual_swd_switch': args.manual_swd_switch,
         'results': [], 'session_grant_sha256': hashlib.sha256(args.session_grant.read_bytes()).hexdigest(),
         'devices': [{'role': image['role'], 'uid_sha256': hashlib.sha256(uid.encode()).hexdigest(),
                      'image_sha256': image['sha256'], 'elf_sha256': image['elf_sha256']}
@@ -564,7 +597,26 @@ def main(argv=None):
             journal.write(json.dumps(row)+'\n')
             journal.flush()
         evidence['external_wiring_executed'] = True
-        execute(args, images, grant, uids, append)
+        def switch_swd(stage):
+            """! @brief B debug-control SW1의 물리 격리·복원을 명시적 token으로 확인합니다. """
+            prompts = {
+                'isolate': ('T13_SWITCH_B_SWD_DISABLE: B만 SWD Disable, UART Disable 유지, '
+                            'GPIO/USB 유지 후 B_SWD_DISABLED 입력: '),
+                'restore': ('T13_SWITCH_B_SWD_ENABLE: B만 SWD Enable로 복원, UART Disable 유지, '
+                            'GPIO/USB 유지 후 B_SWD_ENABLED 입력: '),
+            }
+            expected = {'isolate': 'B_SWD_DISABLED', 'restore': 'B_SWD_ENABLED'}
+            if stage not in prompts:
+                raise ProtocolError('unknown physical SWD switch stage')
+            try:
+                response = input(prompts[stage])
+            except (EOFError, OSError) as error:
+                raise ProtocolError(f'physical SWD switch confirmation unavailable: {error}') from error
+            if response.strip() != expected[stage]:
+                raise ProtocolError(f'{expected[stage]} confirmation missing')
+
+        execute(args, images, grant, uids, append,
+                switch_swd if args.manual_swd_switch else None)
     print(f'T13_POWER_PASS phase={args.phase} repeats={args.repeats}; full_T13_completed=0')
     return 0
 
