@@ -135,10 +135,16 @@ Sketch root의 `prj.conf`와 `app.overlay`는 전문가용 마지막 override로
 `0x000000..0x16c000`의 1,490,944 byte(1,456 KiB), LittleFS와 Settings/ZMS는 RRAM 끝의
 32 KiB와 36 KiB다. Feature set 선택은 메모리 layout을 암묵적으로 바꾸지 않는다.
 
-MCUboot/DFU dual-slot은 `v0.6.0` M36의 고급 선택 layout이다. 향후 제공할 때에는
-`Tools → Memory layout`의 검증된 preset이 profile과 독립된 명시적 입력이 되고, fixed partition,
-linker 경계, Arduino maximum size와 cache identity가 함께 바뀌어야 한다. 현재는 임의 숫자나
-Sketch `app.overlay` 하나만으로 partition을 바꾸는 구성을 정식 지원하지 않는다.
+향후 `v0.5.0` M30에서 BLE DFU용 최소 MCUboot·signed update·rollback 기반을 먼저
+설계·검증한다. 제한된 고정 layout과 제공 경로(profile 또는 application template)를 선택하는
+단계이며, 아직 새 profile·feature·Tools 메뉴를 제공하지 않는다.
+
+`v0.6.0` M36은 이 최소 기반을 여러 layout·update transport로 확장하는 후속 계획이다.
+고급 `Tools → Memory layout`을 제공할 때에는 검증된 preset이 feature set과 별개의 명시적
+입력이 되고, fixed partition, linker 경계, Arduino maximum size와 cache identity가 함께
+바뀌어야 한다. 현재는 임의 숫자나 Sketch `app.overlay` 하나만으로 partition을 바꾸는 구성을
+정식 지원하지 않는다. M30과 M36 모두 미착수이며, M30 착수·인계 조건은
+[v0.5.0 착수 계획](../TODO_v0.5.0.md)을 따른다.
 
 ---
 

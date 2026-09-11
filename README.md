@@ -148,7 +148,8 @@ QDEC는 기본 정·역회전과 SAMPLE/REPORT event 경로를 지원합니다.
 | 설치·이전 버전에서 이동 | [Boards Manager 설치](<00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md>) · [마이그레이션](<00_Docs/05_릴리스/v0.4.0/MIGRATION.md>) |
 | API·핀·설계 | [전체 문서 목차](00_Docs/README.md) · [API 지원 범위](<00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>) |
 | 개발 환경·빌드 구조 | [Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>) · [Build Adapter](<00_Docs/02_빌드 설계/02_Build_Adapter_설계.md>) |
-| 릴리스·검증·향후 계획 | [v0.4.0 릴리스 문서](<00_Docs/05_릴리스/v0.4.0/README.md>) · [완료 기록](00_Docs/TODO_v0.4.0.md) · [로드맵](<00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md>) |
+| 릴리스·검증 | [v0.4.0 릴리스 문서](<00_Docs/05_릴리스/v0.4.0/README.md>) · [완료 기록](00_Docs/TODO_v0.4.0.md) |
+| 향후 개발 계획 | [제품 로드맵](<00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md>) · [v0.5.0 착수 계획](00_Docs/TODO_v0.5.0.md) — 계획·미착수이며 현재 지원과 별개 |
 | 문제 보고 | [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues) |
 
 ### 소스에서 개발하기

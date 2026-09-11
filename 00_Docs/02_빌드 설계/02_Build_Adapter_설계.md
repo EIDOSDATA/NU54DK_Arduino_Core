@@ -201,8 +201,21 @@ v0.3.0 RC3에서 도입해 v0.4.0에서도 유지하는 메모리 계약은 load
 68 KiB다. Adapter와 release gate는 Devicetree code partition, linker FLASH 범위와
 `boards.txt` maximum size가 모두 `0x000000..0x16c000`을 가리키는지 확인해야 한다. 전문가
 `app.overlay`가 마지막에 병합되더라도 이 경계를 조용히 우회하거나 Arduino size 표시만 바꾸는
-구성은 지원하지 않는다. MCUboot/DFU dual-slot과 검증된 memory-layout 선택은 `v0.6.0` M36에서
-cache·package identity에 포함할 별도 입력으로 추가한다.
+구성은 지원하지 않는다.
+
+### 4.1 향후 update profile의 인계 경계
+
+`v0.5.0` M30은 BLE DFU용 최소 secure-update 기반을 설계·검증하는 계획이다. 착수 시 제한된
+고정 layout, MCUboot 최초 설치와 서명 update 산출물의 생성·검증·업로드 경로를 정하고,
+Build Adapter 통합과 별도 application template 중 제공 방식을 선택한다. 현재 Adapter의
+`--no-sysbuild` 단일 image 및 native Zephyr 산출물 계약을 옵션 하나로 우회하지 않는다.
+새 경로는 image·layout·서명 정책을 식별하는 manifest와 cache 계약을 함께 정의해야 한다.
+
+`v0.6.0` M36은 M30에서 확정한 최소 계약을 여러 layout·update transport로 확장하고
+hardening하는 후속 계획이다. 검증된 memory-layout 선택과 sysbuild/multi-image 경로를
+제공하려면 cache·package identity, 산출물 검증과 upload 계약도 함께 확장해야 한다.
+두 단계 모두 미착수이며, 현재 `v0.4.0`의 지원 범위와 기본 loaderless layout은 바뀌지 않는다.
+M30의 결정 항목과 완료 조건은 [v0.5.0 착수 계획](../TODO_v0.5.0.md)을 따른다.
 
 ## 5. 경로와 상태
 

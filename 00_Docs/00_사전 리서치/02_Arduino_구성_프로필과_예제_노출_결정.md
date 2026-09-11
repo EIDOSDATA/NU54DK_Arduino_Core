@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | ADR-0002 |
-| 문서 개정 | 2.1 |
+| 문서 개정 | 2.2 |
 | 문서 상태 | **Accepted** |
 | 결정일 | 2026-08-28 |
 | 적용 범위 | `v0.2.0` 이후 구성 UX와 Arduino 예제 소유권 |
@@ -93,11 +93,16 @@ Loaderless 제품선의 기본값은 **단일 application이 영구 저장소를
 layout**이다. 향후 boot/update 기능을 사용하지 않는 사용자에게 MCUboot 예약과 두 번째 image
 slot 비용을 기본으로 부과하지 않는다.
 
-MCUboot/DFU, signed update와 rollback이 필요한 사용자는 `v0.6.0` M36에서 제공할 검증된 고급
-Memory layout을 명시적으로 선택한다. 이 선택은 단순 Devicetree 조각이 아니라 code partition,
-linker 최대 범위, Arduino maximum size, storage 주소와 migration 정책을 묶은 profile 계약이다.
-Tools 메뉴에는 임의 byte 입력보다 시험한 preset만 제공한다. 전문가 `app.overlay`도 같은 충돌
-검사와 linker assertion을 통과할 때만 지원 조합으로 인정한다.
+향후 `v0.5.0` M30은 BLE DFU에 필요한 최소 MCUboot·signed update·rollback 기반을 먼저
+설계·검증한다. 이 단계에서 제한된 고정 layout과 제공 경로(profile 또는 application template)를
+선택하며, 현재 `v0.4.0` profile에 boot 영역이나 update slot을 추가한다는 뜻은 아니다.
+
+`v0.6.0` M36은 M30의 최소 기반을 여러 layout·update transport와 검증된 고급 Memory layout
+선택으로 확장하는 후속 계획이다. Layout 선택은 단순 Devicetree 조각이 아니라 code partition,
+linker 최대 범위, Arduino maximum size, storage 주소와 migration 정책을 묶은 계약이다.
+Tools 메뉴에는 임의 byte 입력보다 시험한 preset만 제공하며, 전문가 `app.overlay`도 같은 충돌
+검사와 linker assertion을 통과할 때만 지원 조합으로 인정한다. M30과 M36 모두 아직 미착수이며,
+M30의 선행 결정·완료 조건은 [v0.5.0 착수 계획](../TODO_v0.5.0.md)에서 관리한다.
 
 ---
 
@@ -186,3 +191,4 @@ Profile, feature 또는 공개 예제를 바꿀 때 다음을 확인한다.
 | 2026-08-28 | Accepted | Arduino 예제를 platform library 경로의 단일 원본으로 결정 |
 | 2026-08-31 | Refined | 구현 목록과 미래형 설명을 제거하고 결정 중심으로 축약 |
 | 2026-09-02 | Refined | Loaderless 단일 application을 기본값으로, MCUboot/DFU dual-slot을 검증된 고급 layout으로 분리 |
+| 2026-09-12 | Refined | M30의 최소 BLE DFU 기반과 M36의 다중 layout·transport 확장 계획을 분리; 현재 loaderless 계약 유지 |
