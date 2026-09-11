@@ -6,6 +6,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -52,6 +53,20 @@ class V041ReleaseTests(unittest.TestCase):
         for relative in RELEASE.DOCUMENT_PATHS.values():
             self.assertTrue((ROOT / relative).is_file(), relative)
         self.assertTrue((ROOT / "00_Docs/05_릴리스/v0.4.1/README.md").is_file())
+
+    def test_git_output_preserves_clean_submodule_prefix(self):
+        """! @brief Git 출력 끝만 정리하고 submodule 정상 공백은 보존하는지 확인합니다. """
+        completed = RELEASE.subprocess.CompletedProcess(
+            args=("git", "submodule", "status"),
+            returncode=0,
+            stdout=b" 1111111111111111111111111111111111111111 board\r\n",
+            stderr=b"",
+        )
+        with patch.object(RELEASE.subprocess, "run", return_value=completed):
+            self.assertEqual(
+                RELEASE.git_output(ROOT, ("submodule", "status")),
+                " 1111111111111111111111111111111111111111 board",
+            )
 
     def test_plan_rejects_multiple_catalog_versions(self):
         """! @brief plan이 과거 version을 stable catalog에 섞으면 거부하는지 확인합니다. """

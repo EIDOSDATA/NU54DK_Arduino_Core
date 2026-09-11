@@ -92,7 +92,7 @@ def git_output(repository: Path, arguments: Sequence[str]) -> str:
     )
     if result.returncode != 0:
         raise ReleaseFailure(result.stderr.decode("utf-8", "replace").strip())
-    return result.stdout.decode("ascii", "strict").strip()
+    return result.stdout.decode("ascii", "strict").rstrip()
 
 
 ## @brief exact clean main source와 submodule 상태를 검증합니다.
