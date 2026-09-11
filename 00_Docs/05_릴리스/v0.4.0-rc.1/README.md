@@ -1,14 +1,19 @@
-# NU54DK Arduino Core v0.4.0-rc.1 — 내부 준비
+# NU54DK Arduino Core v0.4.0-rc.1 — 보존된 내부 후보
 
 | 항목 | 상태 |
 | --- | --- |
 | 제품선 | Peripheral Parity |
-| RC 공개 | HOLD — tag·GitHub Release·공개 index 없음 |
-| 현재 설치 대상 | [v0.3.0 stable](../v0.3.0/README.md) |
-| 현재 개발 상태·다음 작업 | [v0.4.0 TODO](../../TODO_v0.4.0.md) |
+| RC 공개 | 비공개 유지 — tag·GitHub Release·공개 index 없음 |
+| 후속 정식 버전 | [v0.4.0 stable](../v0.4.0/README.md) — 공개·T24/T25 완료 |
+| 완료 범위 | [v0.4.0 TODO](../../TODO_v0.4.0.md) |
 
-이 문서는 공개 릴리스 노트가 아니라 준비 범위와 공개 조건을 설명합니다.
-현재 진행 수치와 실행별 이력은 TODO와 [검증 기록](<../../04_검증 기록/README.md>)에서 관리합니다.
+이 문서는 정식 v0.4.0을 준비할 때 사용한 비공개 후보의 절차와 판단을 보존합니다. 정식
+package와 정규화 runtime 동등성을 확인했고 T01~T25를 완료했습니다. 설치에는
+[현재 stable 안내](../v0.4.0/README.md)를 사용합니다.
+
+이 폴더의 문서에 남아 있는 HOLD·예정 gate·“현재 stable v0.3.0”은 작성 당시 상태이며,
+오늘의 미완료 작업이나 설치 정책이 아닙니다. 최종 결과는
+[125번 마감 기록](<../../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)에서 확인합니다.
 
 | 사용자 문서 | 링크 |
 | --- | --- |
@@ -26,15 +31,15 @@
 | M24 | `fabric` profile의 UARTE·SPIM/SPIS·TWIM/TWIS 23개 | 단독 HIL·route·공개 원장 PASS, 미실행 동시 조합은 보증하지 않음 |
 | M25 | SAADC·PWM·timer/event·PDM·I2S·QDEC 직접 API | QDEC20/21은 기본·event 경로 지원, 반복 manual read/clear 무손실 제외 |
 | M26 | 16개 system 기능의 지원 경계 | TEMP·WDT30 실기 PASS를 `SystemFabric`에 연결, 나머지는 행별 경계 유지 |
-| M27 | checksum·SBOM·license·RC/stable HOLD plan | T18 절차 완료, R14/T19 이후 최종 비공개 package 재생성·검증 필요 |
+| M27 | checksum·SBOM·license·RC/stable HOLD plan | R14/T19~T21 후보·stable 검증 후 T22 승인·T23~T25 공개 마감 완료 |
 
 초기 M27의 격리 staging 예제 29/29 compile 결과는
 [39번 기록](<../../04_검증 기록/39_M27_v0.4.0_rc1_자동_준비와_HOLD.md>)의 당시 source에 한정됩니다.
 최종 frozen RC의 설치·Upload·수명주기 통과로 재사용하지 않습니다.
-T16 이후 현재 후보는 `NUCODE Peripheral Fabric` 예제를 포함한 **30개**이며 최종 T20에서 전부
-다시 검사합니다.
+T16 이후 후보는 `NUCODE Peripheral Fabric` 예제를 포함한 **30개**이며 최종 T20/T21에서 전부
+다시 검사했습니다. 공개 후 T24 설치본에서도 30/30 compile을 완료했습니다.
 
-## 현재 범위 결정
+## 최종 범위 결정
 
 - R00~R13과 source별 T11 단독 회귀는 완료했습니다. T12는 QDEC 문제 보고를 포함해 사용자가 수용했습니다.
 - QDEC20/21은 기본 정·역회전과 SAMPLE/REPORT event 경로를 지원합니다. 반복 manual
@@ -44,8 +49,10 @@ T16 이후 현재 후보는 `NUCODE Peripheral Fabric` 예제를 포함한 **30�
 - UARTE00 별도 4-net 결선 검사, 정상 180초, RTS/CTS 200회와 TX/RX 취소 400회를 완료했습니다.
   완료 근거는 [115번 기록](<../../04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md>)에 있습니다.
 - T14/T15의 원인·수정·지원 범위 확정과 T16 설치 profile 통합을 완료했습니다.
-- T17 문서·지원 매트릭스와 T18 stable 준비·승인 차단 절차를 완료했습니다. 현재 R14/T19에서 RC를 고정합니다.
-- T20~T21 비공개 package 검증 뒤 T22 소유자 승인 전에는 tag·Release·stable index를 쓰지 않습니다.
+- T17 문서·지원 매트릭스와 T18 stable 준비·승인 차단 절차를 완료했고 R14/T19에서 RC를 고정했습니다.
+- T20~T21 비공개 package 검증과 T22 소유자 승인을 거쳐 T23 tag·Release·stable index를 공개했습니다.
+- 공개 identity 64개의 HIL 상태는 62 PASS와 QDEC20/21 2 PARTIAL입니다. QDEC의 제한 명시
+  공개 지원 결정은 [124번 기록](<../../04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md>)을 따릅니다.
 
 ## 실기 검증 경계
 
@@ -57,16 +64,17 @@ T16 이후 현재 후보는 `NUCODE Peripheral Fabric` 예제를 포함한 **30�
 합성 peer를 포함한 실제 데이터·DMA·오류 복구·동시성·합의된 안정성 조건은 증거로 판정하며,
 미실행이나 범위 제외를 PASS로 기록하지 않습니다.
 
-## 공개 전 gate
+## 공개 gate 완료 이력
 
 1. T11~T15의 source별 기능·복구·동시성 결과와 제외·제한사항 확정 — 완료
 2. T16 설치 profile·API·예제 통합, T17 문서·지원 원장과 T18 공개 절차 — 완료
-3. R14 frozen RC의 Host·문서·전체 target build·이중 package 재현
-4. 격리 Boards Manager 설치·전체 예제 compile·실제 Upload·제거·재설치·version 전환
-5. T22 프로젝트 소유자의 결과별 명시적 공개 승인
-6. T23 공개 후 T24 공개 URL 검사와 T25 마무리
+3. R14 frozen RC의 Host·문서·전체 target build·이중 package 재현 — 완료
+4. 격리 Boards Manager 설치·전체 예제 compile·실제 Upload·제거·재설치·version 전환 — 완료
+5. T22 프로젝트 소유자의 결과별 명시적 공개 승인 — 완료
+6. T23 공개 후 T24 공개 URL 검사와 T25 마무리 — 완료
 
 [Readiness](../../../variants/nu54dk/v0.4.0-release-readiness.json)와
-[M27 도구](../../../tools/release/M27_README.md)의 HOLD는 문서 정리만으로 해제하지 않습니다.
+[M27 도구](../../../tools/release/M27_README.md)의 승인 경계는 실제 증거와 T22 승인으로 판정했습니다.
+역사적 RC plan의 HOLD 표식은 그대로 보존하며, 현재 정식 공개 상태와 구분합니다.
 공개 payload는 덮어쓰지 않으며 구버전 공급 종료·원본 archive 보존은
 [106번 결정](<../../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)을 따릅니다.

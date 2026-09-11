@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-BLE-GAP-001 |
-| 문서 개정 | 1.1 |
-| 문서 상태 | `v0.3.0` 정식 계약 |
-| 적용 제품 버전 | `v0.3.0` stable |
-| 최종 갱신일 | 2026-09-03 |
+| 문서 개정 | 1.2 |
+| 문서 상태 | v0.4.0에서도 유지하는 정식 GAP 계약 |
+| 적용 제품 버전 | `v0.3.0`·`v0.4.0`의 `ble` profile |
+| 최종 갱신일 | 2026-09-12 |
 | 대상 library | `NUCODE_BLE` |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
 
@@ -16,7 +16,7 @@ M19는 NUS에 종속되지 않는 Arduino 친화 BLE lifecycle과 GAP API를 제
 Zephyr type을 노출하지 않으며, 동적 할당 없이 단일 연결과 31-byte legacy advertising을
 명시적으로 지원합니다.
 
-이 API는 `v0.3.0`에서 정식 지원합니다. Exact-commit 두 보드 RF PASS는
+이 API는 `v0.3.0`부터 정식 지원하며 v0.4.0에서도 같은 공개 범위를 유지합니다. 도입 당시 두 보드 RF PASS는
 [M19 BLE Core/GAP 검증](<../04_검증 기록/23_M19_BLE_Core_GAP_검증.md>), stable package 승격은
 [v0.3.0 정식 공개 기록](<../04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)이 소유합니다.
 

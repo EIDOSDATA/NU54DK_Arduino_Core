@@ -1,10 +1,13 @@
 # NU54DK v0.4.0 공통 결선과 연결 검사
 
-현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../../../00_Docs/TODO_v0.4.0.md>)에서 관리합니다.
+v0.4.0의 T01~T25는 완료했습니다. 최종 지원·검증 범위는
+[v0.4.0 완료 TODO](<../../../00_Docs/TODO_v0.4.0.md>)에서 확인합니다.
 
 이 문서는 T12에서 사용한 **C 결선과 Fixture501 검사 절차**를 보존합니다.
-현재 T13에는 [S/U 결선표](T13_PLAN.md)를 사용합니다. 아래 C 표대로 현재 S를 되돌리지 마세요.
-T12 기능 검증은 완료했고 QDEC는 문제 보고 후 진단을 종료했습니다.
+후속 T13은 별도의 [S/U 결선표](T13_PLAN.md)로 완료했습니다. 아래 C 표는 현재 결선 상태나
+재연결 지시가 아닙니다. U 시험에 필요한 선은 UART00 신호 4개와 GND뿐입니다.
+T12 기능 검증은 완료했고 QDEC는 manual `read()/clear` 제한 보고 후 진단을 종료했습니다.
+QDEC20/21의 기본 정·역회전과 SAMPLE/REPORT event는 최종 공개 지원 범위에 포함됩니다.
 실제 결과는 [100번](../../../00_Docs/04_검증%20기록/100_T12_공통_기능_묶음과_T13_조합_확정.md)과
 [101번](../../../00_Docs/04_검증%20기록/101_T12_QDEC_누산_누락_원인_분리.md)에 보존합니다.
 
@@ -70,7 +73,7 @@ P1.10/P1.14는 각 보드 LED buffer의 입력에 연결된 net이다. LED drive
 - P1.04~07의 전용 HIL overlay에는 UART 분리 조건에 한정하여 open-drain/interrupt capability를 추가했다. 제품 기본 metadata는 유지한다. 502의 소유권 반환·raw drive field·peer 관측을 Host/target 및 현재 실기에서 검사한다.
 - `v04_common_run.py`가 GPIO/task/edge, PWM 675·추가 modes, QDEC, I2S section을 제공한다. 각 실행은 새 clean image의 controlled flash와 전체 501 검사 뒤 시작한다. `signals`는 한 image에서 PWM→PWM modes→QDEC→I2S를 순차 검사한다. `all`은 기존 502 GPIO/task/edge만 뜻하며 모든 section 완료를 뜻하지 않는다.
 - 당시 C 실행기는 30분 확인서 또는 최대 12시간 공통 세션을 사용했다. 이는 과거 실행 계약이며
-  현재 유지 중인 S 결선의 확인 만료 기준이 아니다. Firmware 10초 lease와 출력 해제는 별도 보호로 유지한다.
+  사용자가 유지한다고 확인한 S 결선의 확인 만료 기준이 아니다. Firmware 10초 lease와 출력 해제는 별도 보호로 유지한다.
 - 675조건을 `v04_pwm_capture.compact_vectors()`와 공통 508 runner에 적용했다. 각 instance/slot/load의 모든 duty×극성, 각 TOP/길이와 최장·최저속 조합을 남긴다. 전체 2700조건과 동등한 검출력을 주장하지 않는다.
 
 ## 범위 경계
@@ -79,7 +82,9 @@ P1.10/P1.14는 각 보드 LED buffer의 입력에 연결된 net이다. LED drive
 
 - P1.00/01(LFXO), P1.02/03(PMIC I2C), P1.11(INT), P1.12(VBAT), P2.08(PG), P2.10(CE)는 이 출력 결선에서 제외한다. 기존 내부/공유 회로 증거와 허용 동작·거부 계약을 대응하며 부족한 기능 근거는 남긴다.
 - P0.04·P1.08/09/13 버튼, P2.07(LED/SWO), P2.09(LED)는 공통 선에 넣지 않는다. 기존 온보드 결과 또는 별도 조건으로 대응하며 미실행을 PASS로 바꾸지 않는다. 버튼 실제 누르기는 현재 자동 기능 시험 범위 밖이다.
-- 완료된 PDM은 이 결선에 묶지 않는다. PDM 재시험, T11 변경 영향 회귀, T13의 넓은 동시 topology·단독 180초·동시 900초·전체 대표 한 조합 3600초 안정성 검사, System OFF 재연결과 릴리즈 설치 검증은 별도 계획이다.
+- PDM·T11 영향 회귀·T13 단독/동시 안정성·릴리스 설치 검증은 이 C 결선의 PASS에 포함하지 않는다.
+  각 source의 별도 완료 근거를 TODO에서 확인한다. T13 peer 제어 System OFF 추가 2조건은
+  기존 M15 GRTC·버튼 wake 증거와 범위 제외 결정으로 구분하며 새 PASS로 세지 않는다.
 
 ## 검토 근거
 

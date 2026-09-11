@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-PIN-001 |
-| 문서 개정 | 5.1 |
-| 문서 상태 | `v0.3.0` 정식 계약 |
-| 최종 갱신일 | 2026-09-05 |
+| 문서 개정 | 5.2 |
+| 문서 상태 | `v0.4.0` 정식 계약; v0.3.0 핀 ID 호환 유지 |
+| 최종 갱신일 | 2026-09-12 |
 | 대상 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 
 ## 1. 목적
@@ -15,8 +15,8 @@
 자원을 Arduino용 capability·policy·route metadata로 투영하고 Variant는 공개 이름과 안정된 논리
 ID를 제공한다.
 
-정식 `v0.2.0` package의 10/7 sparse-pin 계약은 역사적 공개 계약으로 유지한다. `v0.3.0`
-stable은 기존 `0..11` ID를 보존하면서 module/header의 나머지 물리 pad에 canonical ID
+정식 `v0.2.0` package의 10/7 sparse-pin 계약은 역사적 공개 계약으로 유지한다. `v0.3.0`부터
+기존 `0..11` ID를 보존하면서 module/header의 나머지 물리 pad에 canonical ID
 `12..31`을 부여한다. 기본 `standard`/`ble` profile의 불변식은 32개 논리 역할, 31개 실제 pad,
 20개 digital-capable canonical pad와 8개 analog channel이다. ID 4 `PIN_LED1`은 P1.10의 ID 3
 `PIN_PWM0`으로 정규화되므로 논리 역할 수와 실제 pad 수가 하나 다르다.
@@ -149,13 +149,16 @@ peripheral block을 사용 중인지는 AC-02A의 내부 `IoResourceManager`가 
 
 - 자원은 `kind + domain + index`로 식별한다. GPIO는 controller device와 controller 내부 pin을
   결합하므로 서로 다른 Arduino 별칭이 같은 pad를 가리키면 같은 자원으로 충돌한다.
-- owner는 `gpio`, `adc`, `pwm`, `wire`, `spi`, `serial`, `system`과 instance로 식별한다.
-- 최대 8개 자원을 한 lease에서 `reserve → commit`하거나 driver 실패 시 `rollback`한다. 확정한
-  lease는 내부 `release`가 가능하고 batch 전체가 원자적으로 성공하거나 실패한다.
+- owner는 `gpio`, `adc`, `pwm`, `wire`, `spi`, `serial`, `system` 및 Fabric의 timer/event/stream
+  종류와 instance로 식별한다.
+- v0.4.0은 최대 16개 자원을 한 lease에서 `reserve → commit`하거나 driver 실패 시 `rollback`한다.
+  확정한 lease는 내부 `release`가 가능하고 batch 전체가 원자적으로 성공하거나 실패한다.
+  이전 v0.3.0의 상한은 8개다.
 - 64-bit generation과 manager epoch로 복사되거나 오래된 lease가 새 소유권을 변경하지 못하게 한다.
 - ISR에서는 조회·소유권 변경을 거부하고 heap·문자열 logging을 사용하지 않는다.
 
-부팅 registry는 UART20 console pad와 serial block만 고정 active owner로 등록한다. UART30,
+`standard`/`ble` 부팅 registry는 UART20 console pad와 serial block만 고정 active owner로 등록한다.
+`fabric` profile은 console을 비활성화하고 직접 Fabric handle이 자원을 예약한다. UART30,
 I2C22, SPI00과 PWM20/21/22는 boot-fixed owner가 아니다. Registry는 실제 driver나 pinctrl 상태를
 바꾸지 않고 Core의 충돌 판정만 초기화한다.
 
@@ -217,7 +220,7 @@ token을 사용한다. `formatDiagnostic()`의 한 줄 형식은
 
 현재 canonical mapping은 source/host 검사와 NU54DK target build를 통과했다. AC-01 GPIO HIL과
 AC-02B 주변장치 handover의 exact 3-wire HIL도 완료됐다. Wire는 DUT 온보드 BQ25186 read-only
-경로를 사용하며 cross-board P1.2/P1.3은 continuity 불연속으로 fixture에서 제외한다. 공유
+경로를 사용했으며 당시 cross-board P1.2/P1.3은 continuity 불연속으로 fixture에서 제외했다. 공유
 P2.5↔P1.12 선은 ADC 구동 뒤 A0/P1.12 PWM polling capture에 재사용한다. 이 설계 문서에는 실행별
 횟수와 로그를 복제하지 않는다.
 

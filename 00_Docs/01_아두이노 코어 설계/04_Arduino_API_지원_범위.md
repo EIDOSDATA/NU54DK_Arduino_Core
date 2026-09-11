@@ -5,9 +5,9 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-API-001 |
-| 문서 개정 | 6.2 |
+| 문서 개정 | 6.3 |
 | 대상 | `v0.4.0` stable |
-| 최종 갱신일 | 2026-09-11 |
+| 최종 갱신일 | 2026-09-12 |
 | 상태 | **v0.4 정식 공개** |
 
 ## 판정 기준
@@ -40,10 +40,11 @@ instance와 제3자 library 전체를 지원한다는 뜻은 아닙니다.
 | `AnalogFabric` | 지원된 범위 | SAADC scan/continuous DMA와 PWM20/21/22 sequence |
 | `EventFabric` | 지원된 범위 | GPIOTE 2·EGU 2·DPPIC 4·PPIB 8·TIMER 7 identity |
 | `StreamFabric` PDM/I2S | 지원된 범위 | PDM20/21과 I2S20의 double-buffer 수명주기 |
-| `SystemFabric` | 지원된 범위 | 온칩 TEMP centi-Celsius와 WDT30 configure/start/feed/reset-cause |
+| `SystemFabric` | 지원된 범위 | 온칩 TEMP centi-Celsius와 WDT30/31 configure/start/feed. Reset-cause 실기 근거는 WDT30 |
 | `StreamFabric` QDEC20/21 | **지원** | 기본 정·역회전·debounce와 SAMPLE/REPORT event 누산; 반복 manual read/clear 무손실은 보증하지 않음 |
 
-각 identity의 단독 HIL은 통과했지만 manifest의 `concurrent_hil=partial/not_run`은 그대로 유지합니다.
+QDEC20/21은 기본·event 시험을 근거로 지원하며 manifest의 단독 HIL은 `partial`로 유지합니다.
+나머지 공개 Fabric identity의 단독 HIL `pass`와 별개로 `concurrent_hil=partial/not_run`도 유지합니다.
 따라서 특정 identity가 공개 API에 있다는 사실만으로 모든 가능한 동시 조합을 보증하지 않습니다.
 DAP UART와 같은 핀을 쓰는 route는 switch 분리와 profile의 전기 선행조건을 만족해야 합니다.
 v0.4.0은 T22 소유자 승인 뒤 stable로 공개됐으며 공개 URL 설치 검증까지 완료했습니다.
@@ -226,8 +227,8 @@ Arduino 계약은 아닙니다. 외부 sensor library compile, crypto sample bui
 ## 명시적 미지원 범위
 
 - Loader/LLEXT, native USB device, UF2와 OTA/DFU
-- `Wire1`, Wire target/slave와 no-STOP read
-- `SPI1`, SPI peripheral mode
+- 일반 Arduino Wire API의 `Wire1`, target/slave와 no-STOP read. Fabric의 TWIS는 별도 지원
+- 일반 Arduino SPI API의 `SPI1`, peripheral mode. Fabric의 SPIS는 별도 지원
 - DAC, Wi-Fi와 Ethernet
 - External filesystem과 일반 secure storage
 - BLE Mesh, ISO, Channel Sounding과 multiprotocol

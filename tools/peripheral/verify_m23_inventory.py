@@ -514,7 +514,7 @@ def _dma_display(item: dict[str, Any]) -> str:
     if not dma["hardware"]:
         return "없음"
     bits = f"/{dma['max_count_bits']} bit" if dma["max_count_bits"] else ""
-    managed = "driver" if dma["driver_managed"] else "direct 예정"
+    managed = "driver" if dma["driver_managed"] else "direct"
     return f"EasyDMA{bits}; {managed}; {_display(dma['public_mode'])}"
 
 
@@ -528,7 +528,7 @@ def render_matrix(manifest: dict[str, Any], instances: list[dict[str, Any]]) -> 
         "",
         "> 이 파일은 `variants/nu54dk/peripheral-manifest.json`에서 자동 생성합니다. 직접 수정하지 마세요.",
         "> 표의 `candidate`, `absent`, `not-run`은 현재 지원 선언이 아닙니다.",
-        "> 이 표는 manifest의 지원 판정이며 최신 실기 결과의 자동 집계가 아닙니다. T15 physical 판정은 [117번](<../04_검증 기록/117_T15_지원_범위와_Physical_Gate_확정.md>), T16 설치 노출은 [118번](<../04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md>), 이후 진행은 [TODO](../TODO_v0.4.0.md)를 확인합니다.",
+        "> 이 표는 manifest의 지원 판정이며 최신 실기 결과의 자동 집계가 아닙니다. 최종 QDEC 지원 계약은 [124번](<../04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md>), 정식 공개·설치 결과는 [125번](<../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>), 단계별 완료는 [TODO](../TODO_v0.4.0.md)를 확인합니다.",
         "",
         "| 항목 | 값 |",
         "| --- | --- |",
@@ -539,11 +539,12 @@ def render_matrix(manifest: dict[str, Any], instances: list[dict[str, Any]]) -> 
         f"| 추적 identity | **{len(instances)}개** |",
         f"| 현재 public surface가 있는 identity | **{current_public}개** |",
         f"| 현재 HIL PASS identity | **{hil_pass}개** |",
-        f"| 후속 구현 배정 | M24 {counts['M24']} / M25 {counts['M25']} / M26 {counts['M26']} |",
+        f"| 구현 마일스톤별 배정 | M24 {counts['M24']} / M25 {counts['M25']} / M26 {counts['M26']} |",
         "",
         "## 판정 읽는 법",
         "",
         "- `source`는 NU54DK Core 자체 구현 수준이며 upstream driver 존재 여부와 다릅니다.",
+        "- DMA의 `driver`/`direct`는 제어 방식입니다. 구현·공개·검증 여부는 별도 상태 열로 확인합니다.",
         "- `public`은 Arduino 사용자가 선택할 surface가 있다는 뜻이지 전 기능 완료를 뜻하지 않습니다.",
         "- `build`, `semantic`, `HIL`, `concurrent`는 서로 독립이며 앞 단계 PASS가 뒤 단계 PASS를 대신하지 않습니다.",
         "- 같은 `block` 값의 personality는 같은 register/IRQ 자원을 공유하므로 동시에 사용할 수 없습니다.",

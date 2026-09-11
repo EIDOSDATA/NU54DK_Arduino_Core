@@ -1,8 +1,10 @@
 # NU54DK HIL 시험
 
-현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../../../00_Docs/TODO_v0.4.0.md>)에서 관리합니다.
+v0.4.0의 T01~T25와 합의한 HIL 범위는 완료했습니다. 이 문서는 재현에 필요한 실행기·fixture
+계약을 보존하며 현재 보드의 결선 상태를 나타내지 않습니다. 최종 지원·검증 범위는
+[v0.4.0 완료 TODO](<../../../00_Docs/TODO_v0.4.0.md>)에서 확인합니다.
 
-빠르게 찾기: [현재 S/U 결선](T13_PLAN.md) · [오류 복구](T13_RECOVERY.md) ·
+빠르게 찾기: [완료한 S/U 결선과 U 최소 4신호](T13_PLAN.md) · [오류 복구](T13_RECOVERY.md) ·
 [기존 공개 System OFF 검증](<../../../00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) ·
 [제외된 T13 System OFF 설계](T13_POWER.md) · [과거 T12 C 결선](COMMON_WIRING.md)
 
@@ -13,6 +15,19 @@ U 완료와 T13 종료는 [115번](<../../../00_Docs/04_검증 기록/115_T13_U_
 
 이 디렉터리는 NU54DK 실물 보드가 필요한 host-side 시험만 관리합니다. 일반 host unit test나
 Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정하지 않습니다.
+
+## 시험별 바로가기
+
+| 찾을 내용 | 절 |
+| --- | --- |
+| 공통 실행 경계 | [실행 원칙](#실행-원칙) |
+| 온보드 GPIO·버튼 | [M14 신규 핀](#m14-신규-핀-hil), [AC-01 loopback](#ac-01-p25p26-gpio-loopback-hil) |
+| 온보드 system | [M15 CI artifact](#m15-공식-ci-artifact-계약), [M15 System OFF](#m15-system-off-결합-hil) |
+| 기존 Arduino API | [AC-02B 주변장치 pair](#ac-02b-동적-주변장치-pair-hil), [BLE pair](#m19m20m21-두-보드-ble-hil) |
+| Peripheral Fabric | [M24~M26 온보드](#v040-m24m26-무배선-온보드-gate), [두 보드 완료 기준](#v040-두-보드-기능-fixture의-완료-기준) |
+| T13 진단 | [UART 첫 오류 이력](#t13-uart-첫-오류-진단), [복구 판정 안내](T13_RECOVERY.md) |
+
+## 실행기 목록
 
 | 파일 | 역할 | 주요 fixture |
 | --- | --- | --- |
@@ -45,9 +60,10 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 
 ## 실행 원칙
 
-현재 T13은 [S/U 계획](T13_PLAN.md)의 전용 실행기를 사용합니다. 아래 M14~T12 절차는
-해당 기능을 검증한 고정 fixture 계약이며 현재 S 결선을 옛 fixture로 변경하라는 안내가 아닙니다.
-QDEC·시리얼 핸드오버 제외와 시간 기반 유지 확인 만료 폐기는 TODO의 최신 사용자 지시를 따릅니다.
+T13은 [S/U 계획](T13_PLAN.md)의 전용 실행기로 완료했습니다. 아래 M14~T12 절차는
+해당 기능을 검증한 고정 fixture 계약이며 보드 결선을 옛 fixture로 변경하라는 안내가 아닙니다.
+QDEC20/21은 기본 정·역회전과 SAMPLE/REPORT event 경로를 공개 지원합니다. 반복 manual
+`read()/clear`의 무손실과 반복 Serial personality handover는 검증·보증 범위에서 제외했습니다.
 T13 S/U 실행기는 결선 유지 확인에 임의 만료 시간을 적용하지 않습니다. firmware 명령 lease,
 watchdog, exact UID/image 확인과 단절 뒤 fault latch는 별개의 실행 안전 경계로 계속 유지합니다.
 과거 T10~T12 fixture의 확인서 시한은 해당 역사 실행 계약이며 소급 변경하지 않습니다.
@@ -472,8 +488,8 @@ M25의 수동 SAADC 모드에서는 `start()`가 DMA를 준비하고, `ready` ev
 변환을 요청합니다. `stop_timeout`이면 lease는 유지되며 `stop()`을 재시도해야 합니다. 내부 VDD
 raw code를 교정된 전압이나 외부 채널 정확도 결과로 해석하지 않습니다.
 
-현재 온보드 PASS와 exact JSON은 [교정·실기 재검증](<../../../00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>)을,
-최종 release 절차의 이력은 [M27 자동 준비·HOLD 기록](<../../../00_Docs/04_검증 기록/39_M27_v0.4.0_rc1_자동_준비와_HOLD.md>)을 따릅니다.
+초기 온보드 PASS와 exact JSON은 [교정·실기 재검증](<../../../00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>),
+최종 릴리스·설치 검증은 [125번 마감 기록](<../../../00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)을 따릅니다.
 
 ## v0.4.0 두 보드 기능 fixture의 완료 기준
 
@@ -483,8 +499,9 @@ raw code를 교정된 전압이나 외부 채널 정확도 결과로 해석하�
 sample/frame/count, DMA·복구·허용 동시성·soak는 반드시 검증합니다. 필요한 pull-up 등 수동 부품과
 전압·공통 GND·DAP UART switch·출력 충돌 확인은 생략하지 않습니다.
 
-PDM/I2S와 Analog 기능 실기는 T12 기록에 source별로 완료됐고 QDEC는 알려진 문제를 보존한 채
-사용자가 검증 종료를 결정했습니다. 새 source의 준비·build를 새 실기 PASS로 간주하지 않습니다.
+PDM/I2S와 Analog 기능 실기는 T12 기록에 source별로 완료했습니다. QDEC20/21은 manual
+`read()/clear` 제한을 보존한 채 기본·event 경로를 공개 지원하며, HIL 상태는 PARTIAL입니다.
+최종 공개 identity 64개의 HIL은 62 PASS와 QDEC 2 PARTIAL로 구분합니다. 새 source의 준비·build를 새 실기 PASS로 간주하지 않습니다.
 신호 생성 또는 수신 실패는 실제 실패로 기록합니다. 정밀 정확도·jitter·전력·음질·부품별 호환성은 `범위 밖·미측정`으로
 구분하며 코어 기능 PASS로부터 추정하지 않습니다.
 
@@ -530,8 +547,8 @@ TWI 추가 두 vector는 peer가 SDA를 LOW로 고정한 동안 복구 실패, �
 `nrfx_twis_tx_prepare()` 또는 `nrfx_twis_rx_prepare()`를 호출하고, 성공한 buffer를 DMA 소유로
 전환한 뒤 clock stretch를 해제합니다. Buffer 방향이 맞지 않으면 전송을 방치하지 않고 거부합니다.
 SPI fixture 201의 role 1에는 1,024-byte SPIM00 비동기 전송 중 온보드 TWIM22 PMIC read를
-수행하는 허용 동시성 case가 있습니다. 현재 T13의 허용 조합과 합의된 180/900/3600초 기준은
-[T13 계획](T13_PLAN.md)을 따릅니다. 아래 일반 campaign의 7,200초 상한은 현재 필수 시험 시간이 아닙니다.
+수행하는 허용 동시성 case가 있습니다. 완료한 T13의 허용 조합과 합의된 180/900/3600초 기준은
+[T13 계획](T13_PLAN.md)을 따릅니다. 아래 일반 campaign의 7,200초 상한은 별도의 필수 시험 시간이 아닙니다.
 TWI 301은 target 역할의 TWIS가 SDA/SCL 내부 pull-up을 명시적으로 활성화합니다. 외부 pull-up 저항과
 두 보드 전원 rail 연결은 사용하지 않습니다. 확인 JSON의 `pullups_match_catalog`는 외부 pull-up과
 전원 rail 연결이 없다는 사용자 확인을 포함하며, 참이 아니면 실행을 거부합니다. 내부 pull-up은 외부
@@ -553,8 +570,9 @@ Fixture 101은 exact `2542a01`에서 양방향 UARTE data 1,620건과 예상 오
 회귀 완료는 [67~73번 기록](<../../../00_Docs/04_검증 기록/README.md>)에서 확인합니다.
 
 두 번째 보드 COM8/P0 DAP CTS 고정에 대해 2026-09-05 사용자가 HW 엔지니어의 납땜 이슈
-진단을 전달했습니다. 정상 DUT의 RTS/CTS 결과는 유지하며, 해당 peer 경로는 FAIL 기록을 보존하고
-반복 실행을 중단합니다. 이를 전체 코어 RTS/CTS 미지원 또는 다른 USB 문제의 원인으로 일반화하지 않습니다.
+진단을 전달했습니다. 당시 정상 DUT의 RTS/CTS 결과는 유지하고 해당 peer 경로의 FAIL 기록을
+보존한 뒤 반복 실행을 중단했습니다. 이 역사적 관측을 현재 미해결 항목이나 전체 코어 RTS/CTS
+미지원으로 일반화하지 않습니다. 후속 T13의 S/U 결과는 위 완료 기록으로 구분합니다.
 
 QDEC의 계획된 2/10ms 상태 간격에는 nrfx 기본 16384us sampling이 너무 느립니다. 후보 API에
 `sample_period_us`·`led_pre_us`·`report_events`를 추가하고 기존 기본값은 보존했습니다.
@@ -619,7 +637,10 @@ progress를 journal에 남깁니다. 중단된 실행은 `interrupted`이며 다
 `--progress-interval-seconds`가 이 공통 계약을 사용합니다. 단독 기능 실기 PASS 전에는 soak를
 시작하지 않으며, 동시성은 해당 fixture 조합을 별도로 승인한 뒤 수행합니다.
 
-R00~R13 이후 exact 154324c의 current-source Fixture 101은 SWD 10 MHz에서 데이터 1,620개·예상 오류 24개를 통과했습니다. [67번 기록](<../../../00_Docs/04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)에 exact 증거를 보존합니다. 이 단일 결과를 전체 T11/T12/T13 PASS로 확대하지 않습니다. 후속 T11·T12 완료와 T13 잔여는 TODO가 기준입니다.
+R00~R13 이후 exact `154324c`의 Fixture 101은 SWD 10 MHz에서 데이터 1,620개·예상 오류 24개를
+통과했습니다. [67번 기록](<../../../00_Docs/04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md>)에
+exact 증거를 보존합니다. 이 단일 결과를 전체 T11/T12/T13 PASS로 확대하지 않습니다.
+후속 T11~T13을 포함한 최종 완료 범위는 TODO가 기준입니다.
 
 Fixture 440의 `--pdm-continuous`는 4개 안정화 + 100개 측정 버퍼를 전송 중단 없이 수신한다. 수신기 gate HIGH를 신호원보다 먼저 준비하며,
 opcode 39의 8-word 기록은 순서·slot·sample 수·좌우 합계·최솟값/최댓값·FNV다. 네 DMA slot의 전후 canary와 256-sample buffer
@@ -631,7 +652,7 @@ export가 아니다. Stereo 25/50 selector는 같은 0/100% edge pattern, 75 sel
 ### T13 UART 첫 오류 진단
 
 `CONFIG_NUCODE_T13_UART_TRACE=y`는 S/U HIL의 별도 진단 빌드에서만 선택합니다. 기본은 비활성이고
-power image에는 적용하지 않습니다. 실제 nrfx callback·RX buffer 등록 전후의64건 이력을 RAM에
+power image에는 적용하지 않습니다. 실제 nrfx callback·RX buffer 등록 전후의 64건 이력을 RAM에
 남기며 SDK·공개 API를 수정하지 않습니다. exact ELF에서 `v04_uart_trace`와 count 주소를 확인하고,
 CPU 정지 뒤 `v04_t13_uart_trace.decode()`로 미게시·잘린·오래된 이력을 거부합니다.
 하드웨어 감시점의 halt와 이력 기록의 IRQ 지연은 정상 실행 시간에 영향을 줄 수 있으므로

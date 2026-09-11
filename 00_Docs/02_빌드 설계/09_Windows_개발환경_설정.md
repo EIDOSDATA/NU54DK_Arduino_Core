@@ -5,11 +5,11 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-WINDOWS-DEV-001 |
-| 문서 개정 | 1.6 |
+| 문서 개정 | 1.7 |
 | 문서 상태 | 현재 source 개발 기준 |
 | 적용 제품 버전 | `v0.4.0` stable 이후 `main` |
 | 지원 host | Windows 10/11 x64 |
-| 최종 갱신일 | 2026-09-11 |
+| 최종 갱신일 | 2026-09-12 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 새 Windows PC에서 NU54DK Arduino Core의 source를 수정하고 로컬 gate와 실물 보드
@@ -440,7 +440,7 @@ checkout이나 당시 공개 ZIP을 다시 build하는 절차는 아니다. 자�
 [CI/CD와 재현 build](./08_M12_CI_CD와_재현_빌드.md)를 따른다.
 
 정식 설치본의 build/upload 수명주기를 확인하려면 source staging 시험으로 대체하지 말고
-[v0.3.0 설치와 시험](../05_릴리스/v0.3.0/TESTING.md)의 stable Boards Manager 절차를 사용한다.
+[v0.4.0 설치와 시험](../05_릴리스/v0.4.0/TESTING.md)의 stable Boards Manager 절차를 사용한다.
 
 ### C/C++ 코드 정렬 도구
 
@@ -474,6 +474,10 @@ gate와 해당 Zephyr target build를 다시 실행하고, 동작 설명 일반 
 - HIL 문서가 지정한 jumper wire와 pin fixture
 - 외장 J-Link 경로를 시험할 때만 SEGGER J-Link Software와 외장 probe
 
+커넥터 위치는 [13번 확정 P2/P4 핀맵](<../01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)을
+기준으로 한다. GPIO port 이름과 커넥터 번호를 구분하고, 보드 submodule의 과거 pinout 번호만으로
+결선하지 않는다.
+
 `v0.4.0`은 [코어 기능 검증 범위 합의](<../04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)에
 따라 두 NU54DK의 peer/loopback·합성 신호·capture를 사용한다. 별도 로직 분석기·오실로스코프·
 교정 신호원·실제 마이크/코덱/엔코더는 필수가 아니다. 필요한 pull-up 등 수동 부품은 시험별로
@@ -502,7 +506,7 @@ exact Core/board revision, artifact hash, probe와 COM 선택, wiring 조건과 
 | `clang-format 22.1.8 필요` | 위 명령으로 정확한 사용자 범위 버전을 설치하고 `--clang-format`에 실제 경로 지정 |
 
 Prerequisite 설치 log는 `%LOCALAPPDATA%\NUCODE\NU54DK_Arduino_Core\logs`에 남는다. 정식
-Core 설치·빌드 문제는 [v0.3.0 문제 해결](../05_릴리스/v0.3.0/TROUBLESHOOTING.md)도 함께
+Core 설치·빌드 문제는 [v0.4.0 문제 해결](../05_릴리스/v0.4.0/TROUBLESHOOTING.md)도 함께
 확인한다.
 
 ## 12. 완료 점검표
@@ -525,5 +529,5 @@ Core 설치·빌드 문제는 [v0.3.0 문제 해결](../05_릴리스/v0.3.0/TROU
 - [Boards Manager 설치와 package](./06_Boards_Manager_설치와_패키징.md)
 - [CI/CD와 재현 build](./08_M12_CI_CD와_재현_빌드.md)
 - [NU54DK HIL 시험](../../tests/hil/nu54dk/README.md)
-- [v0.3.0 설치와 시험](../05_릴리스/v0.3.0/TESTING.md)
-- [v0.3.0 문제 해결](../05_릴리스/v0.3.0/TROUBLESHOOTING.md)
+- [v0.4.0 설치와 시험](../05_릴리스/v0.4.0/TESTING.md)
+- [v0.4.0 문제 해결](../05_릴리스/v0.4.0/TROUBLESHOOTING.md)

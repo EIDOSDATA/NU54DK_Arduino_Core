@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-PERIPHERAL-001 |
-| 문서 개정 | 4.4 |
+| 문서 개정 | 4.5 |
 | 문서 상태 | `v0.4.0` 정식 singleton·Fabric 계약 |
-| 최종 갱신일 | 2026-09-11 |
+| 최종 갱신일 | 2026-09-12 |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
 ## 1. 목적
@@ -59,11 +59,13 @@ AC-02A는 공개 주변장치 객체를 늘리기 전에 pad와 peripheral block
 | 문맥 | thread 전용 변경·조회; ISR 요청은 `invalid_context`로 거부 |
 | 부팅 고정 owner | UART20 console의 pad와 block만 고정 |
 
-`v0.3.0` stable의 lease 상한은 8개다. 위 16개와 추가 owner/key는 M23 개발 경로의 확장이며 stable 계약에 소급하지 않는다.
+`v0.3.0` stable의 lease 상한은 8개다. 위 16개와 추가 owner/key는 M23에서 도입한 v0.4.0 정식
+계약이며 이전 v0.3.0 자산에 소급하지 않는다.
 
-Registry는 DTS pinctrl을 읽어 UART20 console을 `active`로 표시하며 GPIO가 이를 덮어쓰지 못하게
+`standard`/`ble` registry는 DTS pinctrl을 읽어 UART20 console을 `active`로 표시하며 GPIO가 이를 덮어쓰지 못하게
 한다. I2C22, SPI00, UART30과 PWM20/21/22는 부팅 고정 owner가 아니라 AC-02B runtime lifecycle이
-동적으로 소유한다.
+동적으로 소유한다. `fabric` profile은 console과 해당 singleton을 비활성화하고 직접 Fabric
+handle이 같은 공통 자원 관리자를 사용한다.
 
 AC-02B는 `PinHandover`와 `RuntimePeripheralRoute`를 연결해 기존 GPIO mode/latch/interrupt를
 snapshot하고, peripheral pinctrl default/sleep 상태와 runtime PM을 적용한 뒤 종료 시 복원한다.
@@ -75,8 +77,8 @@ clock domain과 DMA RAM range를 추가했다. 같은 serial instance의 UARTE·
 하나의 `serial_block` key를 공유해 동시에 예약할 수 없다. 서로 다른 block은 pin·event·timer와
 서로 겹치지 않는 DMA buffer까지 한 lease에 담아 함께 사용할 수 있다. DMA range는 byte 단위로
 겹치면 owner가 같더라도 별도 lease를 허용하지 않으며, null·0 byte·비정규 offset은
-`invalid_argument`로 거부한다. 이는 M24 이후 async driver가 사용할 공통 안전 계약이며, 그
-driver나 전 instance HIL이 이미 완료됐다는 뜻은 아니다.
+`invalid_argument`로 거부한다. 이는 M24 이후 async driver가 사용하는 공통 안전 계약이다.
+개별 구현·HIL·동시성 판정은 아래 inventory의 독립 상태 축으로 확인한다.
 
 ### 3.2 M23 instance inventory와 공개 identity
 
@@ -263,12 +265,12 @@ manifest에 고정된 capability·검증 snapshot이다.
 M24 작업 1은 [Serial Fabric 경로와 API 계약](<../01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md>)에
 5개 공유 block과 23개 UARTE/SPIM/SPIS/TWIM/TWIS identity의 핀 bank, 기존 singleton 불변 조건,
 allocation-free typed handle과 DMA 수명주기를 고정했다. T16은 `nucode/SerialFabric.h`와 23개
-personality adapter를 명시적 `fabric` profile의 설치 사용자 경로로 연결했다. 이는 `v0.4.0-dev`의
-profile-scoped 공개 후보이며 `v0.3.0`의 공개 API 범위를 늘리지 않는다. 단독 HIL과 공개 노출은
+personality adapter를 명시적 `fabric` profile의 설치 사용자 경로로 연결했다. 이는 `v0.4.0`의
+정식 지원 범위이며 `v0.3.0`의 공개 API 범위를 늘리지 않는다. 단독 HIL과 공개 노출은
 통과했지만 `concurrent_hil=partial/not_run`인 조합을 전체 동시성 보증으로 확대하지 않는다.
 
-같은 profile에서 `AnalogFabric`, `EventFabric`, PDM/I2S/QDEC20/21 `StreamFabric`, TEMP/WDT30
-`SystemFabric`도 설치 진입점을 갖는다. QDEC20/21은 SAMPLE/REPORT event 누산을 공개 지원하며,
+같은 profile에서 `AnalogFabric`, `EventFabric`, PDM/I2S/QDEC20/21의 `StreamFabric`,
+TEMP·WDT30/31의 `SystemFabric`도 설치 진입점을 갖는다. QDEC20/21은 SAMPLE/REPORT event 누산을 공개 지원하며,
 동작 중 반복 manual `read()/clear`의 무손실 누산은 보증하지 않는다. 세부 identity와 근거는
 M23 생성 매트릭스, [T16 기록](<../04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md>)과
 [T22 전 재확정 기록](<../04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md>)을 따른다.
@@ -294,7 +296,7 @@ Arduino IDE feature set을 선택하고 raw conf/overlay는 expert escape hatch�
 
 ## 12. Radio와 USB 경계
 
-- `v0.2.0`의 BLE wrapper는 NUS Peripheral/Central `Stream`만 제공한다.
+- v0.4.0의 BLE 범위는 NUS, GAP/GATT, 보안과 표준 profile의 검증된 계약을 유지한다.
 - 802.15.4, ESB, OpenThread와 Matter는 현재 runtime 미지원이다.
 - BLE와 다른 radio stack의 multiprotocol 동시 운용을 임의로 활성화하지 않는다.
 - nRF54L15 target의 native USB device API, CDC, Keyboard와 Mouse를 제공하지 않는다.
@@ -316,7 +318,10 @@ exact 3-wire fixture에서 Serial1, BQ25186 Wire, local SPI, ADC raw 0/3757과 A
 25%·75% polling capture를 통과했다. Exact transaction 수, frequency, payload, raw 측정값과
 commit은 검증 문서가 소유한다.
 
-## 14. 명시적 범위 밖
+## 14. Singleton API의 명시적 범위 밖
+
+아래는 `standard`/`ble`의 Arduino singleton 경계다. `fabric`에서 제공하는 별도 TWIS/SPIS와
+Analog/Stream API의 지원을 부정하는 목록이 아니다.
 
 - 기본 console `Serial`의 baud·pin·hardware runtime 재구성 또는 bounded TX queue
 - I2C target/slave·callback, read no-STOP `requestFrom(..., false)`, `Wire1`과 bus-wide arbitration
@@ -326,21 +331,15 @@ commit은 검증 문서가 소유한다.
 - peripheral I/O의 ISR-safe 호환층
 - P2 GPIO interrupt — CPUAPP GPIOTE 경로가 없어 `NOT_AN_INTERRUPT`
 
-## v0.4.0 QDEC 지원과 현재 제한 — 2026-09-11
+## 15. QDEC20/21 지원과 제한
 
-기존 stable API 설명과 별도로, 후보 `QdecFabric`의 동작 중 주기적 `read()`는 하드웨어 QDEC가 누산한 값을 CPU가 READCLRACC로 읽고 지운다. GPIO를 CPU가 폴링해 디코딩하는 방식이 아니며 QDEC DMA도 없다. SAMPLE/REPORT IRQ 이벤트 경로는 별도로 존재한다.
+v0.4.0 `fabric` profile의 `QdecFabric`은 기본 정·역회전과 SAMPLE/REPORT event 누산을 지원한다.
+연속 카운트에는 이 event 경로를 사용한다. QDEC는 하드웨어 누산기이며 GPIO polling이나 DMA
+기반 decoder가 아니다.
 
-추가 기능 시험에서 실제 GPIO/SAMPLE 400에 수동 read 누계가 399가 되는 누락이 재현됐다. 읽기
-구간 IRQ 보호만으로 해결되지 않았다. SAMPLE/REPORT IRQ 40회 일치와 기본 정·역회전 시험은
-QDEC20/21 지원 근거로 사용한다. 반면 파형 종료 후 한 번 읽기의 제한된 성공을 동작 중 반복
-manual read/clear의 무손실 보증으로 확대하지 않는다. 임의 +1 보정이나 IRQ 경로 자동 대체를
-적용하지 않았다.
+`read()`는 READCLRACC로 현재 누산값을 읽고 지운다. 동작 중 반복 manual read/clear에서는 누락이
+재현돼 무손실 누산을 보증하지 않는다. 이 경로의 T13 단독·C07 추가 검증은 제외했으며,
+기본·event 지원 근거와 구분해 manifest HIL을 `partial`로 보존한다.
 
-수동 read/clear 누산 문제는 알려진 제한으로 남겼고 사용자 지시로 추가 QDEC 검증을 제외했다.
-이에 의존하는 T13 QDEC20/21 단독·C07은 실행 목록에서 제외한다.
-유력 원인·회로 부하의 미검증 조건·완화는 [101번](<../04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md>),
-최종 T15 판정과 T16 설치 capability는 [117번](<../04_검증 기록/117_T15_지원_범위와_Physical_Gate_확정.md>),
-[118번](<../04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md>)과
-[124번](<../04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md>)을 따른다.
-QDEC20/21은 사용자용 v0.4.0에서 지원하며 연속 카운트에는 기본 SAMPLE/REPORT event 경로를
-사용한다. 동작 중 반복 manual `read()/clear`의 무손실 누산은 지원 보증 범위가 아니다.
+원인 분석과 시험 수치는 [101번 기록](<../04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md>),
+최종 지원 결정은 [124번 기록](<../04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md>)이 소유한다.

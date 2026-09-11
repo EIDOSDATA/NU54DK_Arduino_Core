@@ -51,9 +51,14 @@ switch 상태, 공통 GND와 I/O 전압을 실제 배선에 맞게 확인하십�
 
 ## 검증 해석
 
+공개 identity 64개의 단독 HIL 상태는 **62 PASS + QDEC20/21 2 PARTIAL**입니다.
 M24 Serial 23개 identity, M25 공개 대상 Analog/Event/Stream, M26 TEMP/WDT30과 합의한
-동시성·오류 복구·안정성 범위를 실제 NU54DK로 검증했습니다. QDEC20/21은 기본 정·역회전과
+동시성·오류 복구·안정성 범위의 근거를 실제 NU54DK로 확보했습니다. QDEC20/21은 기본 정·역회전과
 SAMPLE/REPORT event 누산을 지원하지만 반복 manual `read()/clear`의 무손실은 보증하지
 않습니다. 반복 Serial personality handover, 모든 주변장치 동시 조합과 정밀 계측·모든 외부
 부품 조합도 보증 범위가 아닙니다. 상세 근거는 [검증 기록](<../../04_검증 기록/README.md>)과
 [Known issues](KNOWN_ISSUES.md)를 따릅니다.
+
+Release에 게시한 사용자 문서 5종은 공개 당시 byte를 보존합니다. 본문에 “공개 identity의 HIL
+통과”로 요약된 부분도 위 PASS/PARTIAL 구분을 적용하며, QDEC의 과거 제한을 전체 PASS로
+바꾸지 않습니다. 최종 지원 결정은 [124번 기록](<../../04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md>)에 있습니다.

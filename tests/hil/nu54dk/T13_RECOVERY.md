@@ -1,18 +1,19 @@
 # T13 S 오류 복구 실행 항목과 판정
 
-현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../../../00_Docs/TODO_v0.4.0.md>)에서 관리합니다.
+v0.4.0의 T01~T25는 완료했습니다. 최종 지원·검증 범위는
+[v0.4.0 완료 TODO](<../../../00_Docs/TODO_v0.4.0.md>)에서 확인합니다.
 
 S 합의 범위는 **56 PASS + System OFF 2건 제외로 정리 완료(100%)**입니다. UARTE00 4신호+GND의
 정상 180초·RTS/CTS 200회·TX/RX 취소 400회도 완료했습니다.
 종료 근거는 [113번](<../../../00_Docs/04_검증 기록/113_T13_S_범위_종료와_U_준비.md>),
-U 완료는 [115번](<../../../00_Docs/04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md>), 남은 마일스톤은 TODO를 따릅니다.
+U 완료는 [115번](<../../../00_Docs/04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md>), 전체 릴리스 마감은
+[125번](<../../../00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)을 따릅니다.
 이 문서는 완료된 시험의 주입 방법·opcode·판정 계약을 보존합니다. 아래 명령은 S 시험을 다시 시작하라는 지시가 아니며,
 과거 예행 수치는 현재 완료 수에 합산하지 않습니다.
 
 | S 후속 결과 | 현재 상태 | 완료 근거 |
 | --- | --- | --- |
 | UART line/flow/RX 공급 지연 | **관련 문제 해결 완료** | 정식 결과는 110번과 원본 evidence에 보존 |
-| I2S 공급 중단 시험의 수신·재시작 오류 | **해결 완료 — 결선 문제** | 남았던 B 역할까지 정식 100/100, 111번 |
 | SPI short/unready | **연속 버퍼 문제 해결 완료** | 10/10 완료, 112번 |
 | TWI stuck-low·TWIS write 공급 지연 | **관련 문제 해결 완료** | 각각 4/4 완료, 112번 |
 | PWM 미시작 취소·재시작 | **해결 완료** | core 수정은 94번, S 복구 6/6은 109번 |
@@ -26,53 +27,58 @@ PWM/analogWrite/tone/Servo 충돌 3종은 후속
 
 | 찾을 내용 | 절 |
 | --- | --- |
-| 취소/NACK 공통 판정 | 고정 serial 오류 · 한 회의 완료 조건 |
-| UART line/flow/RX 지연 | parity·break · CTS 정지/재개 · RX 버퍼 공급 지연 |
-| SPI/TWI 경계 | SPIS 짧은 DMA·미준비 · TWIS 공급 지연 · SDA LOW/recoverBus |
-| Stream/PWM | I2S/PDM 공급 중단 · PWM STOP·미시작 취소 |
-| 실패 관측 | PWM/I2S 진단 · opcode 120/123/124 원본 |
-| 자원 충돌·제외 | P1 UART 충돌 · 연속 전환 제외 |
+| 취소/NACK 공통 판정 | [고정 serial 오류](#먼저-구현한-고정-serial-오류) · [한 회의 완료 조건](#한-회의-완료-조건) |
+| UART line/flow/RX 지연 | [parity·break](#uart-paritybreak-오류-주입) · [CTS 정지/재개](#cts-100ms-정지재개-전용-fixture) · [RX 버퍼 공급 지연](#두-선-uart의-제한된-rx-버퍼-공급-지연) |
+| SPI/TWI 경계 | [SPIS 짧은 DMA·미준비](#spis-짧은-dma미준비-frame) · [TWIS 공급 지연](#twis-최초-write-버퍼-공급-지연) · [SDA LOW/recoverBus](#sda-low100ms와-staged-recoverbus) |
+| Stream/PWM | [I2S/PDM 공급 중단](#i2spdm-공급-중단-복구-준비) · [PWM STOP·미시작 취소](#pwm-동작-중-stop미시작-준비-취소) |
+| 실패 관측 | [PWM/I2S 진단 이력](#pwmi2s-최초-실패-원인-분리) · [RX 취소 원본](#rx-취소-주입-시점과-opcode-120--해결-완료) · [TWIM 원본](#twim-취소-rx-원본-계측) · [Serial payload 원본](#serial-최초-payload-오류-원본) |
+| 자원 충돌·제외 | [P1 UART 충돌](#p1-uart의-자원-충돌-거부) · [연속 전환 제외](#연속-전환-제외) |
 
 ## 먼저 구현한 고정 serial 오류
 
 | mode | S 대상·주입 역할 | 고정 주입 | 필요한 관측 |
 | --- | --- | --- | --- |
-| 1 | UART20/21/22/30, 선택한 물리 role | 첫 TX 제출50µs 뒤 cancelTransmit | tx_cancelled·실제0보다 크고1024보다 작은 길이·정확한 buffer 주소·가드 |
-| 2 | UART20/21/22/30, 선택한 물리 role | START 전 RXDRDY 초기화, 첫 실제 RXDRDY 관측50µs 뒤 cancelReceive | rx_cancelled·실제 부분 RX 길이·정확한 buffer 주소·가드 |
-| 3 | SPIM00/20/21/22/30, A controller | 첫 transfer 제출50µs 뒤 cancelTransfer | transfer_cancelled·SPI DMA AMOUNT의 부분 전송·peer 원본·가드 |
-| 4 | TWIM20/21/22/30, A controller | peer0x42의 첫 transfer 제출50µs 뒤 cancelTransfer | transfer_cancelled·TWI DMA AMOUNT의 부분 전송·주소0x42·가드 |
-| 5 | TWIM20/21/22/30, A controller | peer 전용 미할당0x44에 쓰기만 요청 | address_nack·주소0x44·TX DMA AMOUNT0·RX 미요청·가드 |
+| 1 | UART20/21/22/30, 선택한 물리 role | 첫 TX 제출 50 µs 뒤 `cancelTransmit` | `tx_cancelled`·실제 길이 0 초과/1024 미만·정확한 buffer 주소·가드 |
+| 2 | UART20/21/22/30, 선택한 물리 role | START 전 RXDRDY 초기화, 첫 실제 RXDRDY 관측 50 µs 뒤 `cancelReceive` | `rx_cancelled`·실제 부분 RX 길이·정확한 buffer 주소·가드 |
+| 3 | SPIM00/20/21/22/30, A controller | 첫 transfer 제출 50 µs 뒤 `cancelTransfer` | `transfer_cancelled`·SPI DMA AMOUNT의 부분 전송·peer 원본·가드 |
+| 4 | TWIM20/21/22/30, A controller | peer 0x42의 첫 transfer 제출 50 µs 뒤 `cancelTransfer` | `transfer_cancelled`·TWI DMA AMOUNT의 부분 전송·주소 0x42·가드 |
+| 5 | TWIM20/21/22/30, A controller | peer 전용 미할당 주소 0x44에 쓰기만 요청 | `address_nack`·주소 0x44·TX DMA AMOUNT 0·RX 미요청·가드 |
 
-한 role의 UART를 기준으로 mode/instance21항목이며 각100회다. 다른 role을 실행하면 그 role의
+한 role의 UART를 기준으로 mode/instance 21항목이며 각 100회다. 다른 role을 실행하면 그 role의
 별도 결과로 기록한다. 같은 SPI/TWI pair의 peer 관측을 반대 controller 역할의 주입으로 세지 않는다.
-UART00은 U 결선에서 mode1/2를 양 역할 각 100회 완료했다. PMIC0x6A와 P1.02/03에는 주입하지 않는다.
+UART00은 U 결선에서 mode 1/2를 양 역할 각 100회 완료했다. PMIC 0x6A와 P1.02/03에는 주입하지 않는다.
 
 단독 serial·허용 kind/role만 선택할 수 있고 임의 주소·GPIO·취소 지연 입력은 받지 않는다.
-`--phase fault-preflight`는 선택한 각 항목1회, `--phase serial-fault`는 각100회다.
+`--phase fault-preflight`는 선택한 각 항목 1회, `--phase serial-fault`는 각 100회다.
 `--fault-mode 1..5`, `--fault-role 1|2`, 기존 고정 `--cases`를 명시한다.
-명시적 execute 전에는 image·계획만 검사하며 source/UID/S 확인서/10MHz/controlled flash 규칙은 같다.
+명시적 execute 전에는 image·계획만 검사하며 source/UID/S 확인서/10 MHz/controlled flash 규칙은 같다.
 
 ## 한 회의 완료 조건
 
 1. 새 seed로 양쪽을 PREPARE하고 HFXO 참조 및 UART 실제 PSEL을 확인한다.
-2. 선택한 보드만 고정 오류를 ARM하고 양쪽 START 뒤 최대2초 동안 관측한다.
-3. 오류 raw, 양쪽 engine/lane/fault를 모두 보존한다. 예상 오류로 healthy가0이 되는 것을
+2. 선택한 보드만 고정 오류를 ARM하고 양쪽 START 뒤 최대 2초 동안 관측한다.
+3. 오류 raw, 양쪽 engine/lane/fault를 모두 보존한다. 예상 오류로 `healthy`가 0이 되는 것을
    정상 전송 PASS로 바꾸지 않는다. reset·lease 만료·잘못된 case는 실패다.
 4. 양쪽 STOP·guard·pin·clock 반환을 확인한 뒤 event·주소·부분 길이를 독립 대조한다.
-5. `seed XOR 0x9E3779B9`의 다른 데이터로 다시 구성해 정상1초 양방향 송수신·완료량·hash·가드를
-   확인하고 STOP한다. 이1초는180초 안정성의 대체 근거가 아니다.
+5. `seed XOR 0x9E3779B9`의 다른 데이터로 다시 구성해 정상 1초 양방향 송수신·완료량·hash·가드를
+   확인하고 STOP한다. 이 1초는 180초 안정성의 대체 근거가 아니다.
 6. 위 조건을 모두 만족한 회만 성공으로 기록한다. 최초 실패에서 중단하고 원본을 보존한다.
 
 UART 부분량은 nrfx terminal event가 반환한 실제 길이를 사용하며 별도 레지스터 대조로 표시하지 않는다.
-SPI/TWI는 API event의 descriptor 길이와 별도 DMA AMOUNT를 구분한다. SPIM 취소 event는0 길이를 반환할 수 있고,
+SPI/TWI는 API event의 descriptor 길이와 별도 DMA AMOUNT를 구분한다. SPIM 취소 event는 0 길이를 반환할 수 있고,
 TWIM 오류 event는 요청 descriptor 길이를 포함할 수 있으므로 그것만으로 실제 전송량을 판단하지 않는다.
-mode5에서는 RX를 요청하지 않는다. RX AMOUNT는 이전 실행 값이 남을 수 있어 raw만 기록하고
-이번 수신량으로 해석하지 않는다. 477e159/03f5ba4의 예행21항목과 UART20 TX100회는104번에 source별로 기록한다.
+Mode 5에서는 RX를 요청하지 않는다. RX AMOUNT는 이전 실행 값이 남을 수 있어 raw만 기록하고
+이번 수신량으로 해석하지 않는다. `477e159`/`03f5ba4`의 예행 21항목과 UART20 TX 100회는
+104번에 source별로 기록한다.
 
-Mode4의 현재 판정은 새 RX 미시작 근거인 opcode123을 필수로 요구한다. 전송 전/취소 직전/terminal의
-RXSTARTED·ENDRX가 모두0이고 전체 수신 RAM0xCC 불변, 이전/terminal RX AMOUNT 일치,
-같은 단일 event의 시각·TX 부분량·buffer 길이·ENABLE6을 대조해야만 이번 RX를0으로 기록한다.
-이때 raw RX AMOUNT는 이전 정상 transaction의256일 수 있으며 그대로 보존한다.
+Mode 4는 새 RX 미시작 근거인 opcode 123을 필수로 요구한다. 이번 RX를 0으로 기록하려면
+다음을 모두 대조한다.
+
+- 전송 전·취소 직전·terminal의 RXSTARTED와 ENDRX가 모두 0
+- 전체 수신 RAM의 0xCC 불변과 이전/terminal RX AMOUNT 일치
+- 같은 단일 event의 시각·TX 부분량·buffer 길이·ENABLE 값 6
+
+이때 raw RX AMOUNT는 이전 정상 transaction의 256일 수 있으며 그대로 보존한다.
 107번의 `2114187` 네 인스턴스 진단으로 원인을 확인했고 후속 각 100회 취소·정지·재획득을
 완료했다. 실행별 결과는 109번에 보존하며 원본 실패를 사후 PASS로 바꾸지 않는다. SPI의 양방향 DMA 부분량 기준은 유지한다.
 
@@ -84,14 +90,14 @@ RXSTARTED·ENDRX가 모두0이고 전체 수신 RAM0xCC 불변, 이전/terminal 
 
 ## TWIS 최초 write 버퍼 공급 지연
 
-`twis-delay-preflight`/`twis-delay`는 S의 A TWIM→B TWIS20/21/22/30 각1회/100회다.
-400kHz·256byte·기존 SDA/SCL·내부 pull-up을 유지한다. B는 최초 START에서 버퍼를 제공하지 않고
+`twis-delay-preflight`/`twis-delay`는 S의 A TWIM→B TWIS20/21/22/30 각 1회/100회다.
+400 kHz·256 byte·기존 SDA/SCL·내부 pull-up을 유지한다. B는 최초 START에서 버퍼를 제공하지 않고
 실제 write_request(buf_req=1, RX pointer 없음)와 buffer_needed(write=2)를 모두 받은 뒤, TWIS가 SCL LOW
-stretch를 시작한 첫 표본부터2ms 기다린다. 요청 event 처리와 하드웨어 LOW 전환 사이의 HIGH 과도 표본은
-측정 시작 전 상태이며 지연 시간에 넣지 않는다. 측정 구간의 SCL LOW 횟수와 HIGH0회를 기록한 뒤 두 TX/RX
+stretch를 시작한 첫 표본부터 2 ms 기다린다. 요청 event 처리와 하드웨어 LOW 전환 사이의 HIGH 과도 표본은
+측정 시작 전 상태이며 지연 시간에 넣지 않는다. 측정 구간의 SCL LOW 횟수와 HIGH 0회를 기록한 뒤 두 TX/RX
 버퍼를 한 번에 공급한다.
 이는 매 서비스 시점의 디지털 관측이며 연속 파형을 오실로스코프로 측정한 근거는 아니다.
-정상 양방향 전체 payload·양쪽 STOP/clock/17핀 반환과 새 seed의 기본 구성 재획득을 요구한다.
+정상 양방향 전체 payload·양쪽 STOP/clock/17개 핀 반환과 새 seed의 기본 구성 재획득을 요구한다.
 read_request 지연이나 임의 장시간 stretch·반대 controller 역할의 완료로 확대하지 않는다.
 
 Opcode180은 비활성 policy0기본/1A controller/2B delayed target,181은20word 원본이다.

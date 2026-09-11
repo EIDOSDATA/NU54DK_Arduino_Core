@@ -47,9 +47,11 @@ artifact byte와 SHA-256을 비교한다. M18 당시 plan과 evidence에 기록�
 - `v0.2.0` latest index (`0.2.0`, `0.1.0` 순서): 1,877 byte,
   `5ae7fbe13f71c52950879064685694cf4b062557572f187e81476639724e5344`
 
-현행 catalog는 1,126 byte, SHA-256
-`97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57`이며 0.3.0만 제공한다.
-이 추가 허용은 과거 plan의 수치 변경이나 구버전 재공개 허가가 아니다.
+2026-09-08 공급 종료 catalog는 1,126 byte, SHA-256
+`97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57`이며 당시 0.3.0만 제공했다.
+현재 stable catalog는 0.4.0과 0.3.0을 제공하며 exact identity는
+[125번 공개 기록](<../../00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)을 따른다.
+후속 catalog 허용은 과거 plan의 수치 변경이나 구버전 재공개 허가가 아니다.
 
 root index는 worktree와 exact commit에서 같은 허용 byte여야 한다. 다른 JSON, CRLF 변환,
 한 byte 변경이나 commit/worktree 불일치는 모두 거부한다. 이 허용목록은 현재 main에서 역사적

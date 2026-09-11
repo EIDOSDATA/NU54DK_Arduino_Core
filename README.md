@@ -1,73 +1,59 @@
 # NU54DK Arduino Core
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+**nRF54L15에서 Arduino Sketch를 실행하세요.**
+NCS와 Zephyr를 기반으로 Sketch와 library를 하나의 firmware로 빌드하고,
+온보드 CMSIS-DAP으로 업로드합니다. 별도 Loader는 필요하지 않습니다.
+
 [![Stable: v0.4.0](https://img.shields.io/badge/stable-v0.4.0-blue.svg)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.4.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![NCS: v3.4.0](https://img.shields.io/badge/NCS-v3.4.0-00A9CE.svg)](https://github.com/nrfconnect/sdk-nrf)
 [![Software Gates](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/workflows/m12-software-gates.yml/badge.svg?branch=main)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/workflows/m12-software-gates.yml)
 [![Reproducible Builds](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/workflows/m12-reproducible-build.yml/badge.svg?branch=main)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/workflows/m12-reproducible-build.yml)
 
-NU54DK에서 Arduino Sketch를 **Loader 없는 전체 Zephyr firmware**로 빌드하는 Arduino Core입니다.
-Sketch와 Arduino library를 nRF Connect SDK build graph에 통합해 ELF·HEX·BIN을 만들고, 온보드
-CMSIS-DAP V2와 pyOCD로 업로드합니다.
+[빠른 시작](#빠른-시작) · [지원 기능](#지원-기능) · [예제](#예제) · [문서](#문서) · [릴리스](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.4.0)
 
-| 항목 | 현재 기준 |
-| --- | --- |
-| 정식 버전 | [`v0.4.0`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.4.0) |
-| 지원 보드 | NU54DK / nRF54L15 CPUAPP |
-| Arduino FQBN | `nucode:zephyr:nu54dk` |
-| SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
-| 사용자 환경 | Windows 10/11 x64, Arduino IDE 2.x |
-| 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
-| 기본 메모리 | Application 1,456 KiB + LittleFS 32 KiB + Settings/ZMS 36 KiB |
-| 배포 구성 | Arduino library 9개, 설치 예제 30개 |
-
-빠르게 찾기: [설치](#빠른-시작) · [지원 범위](#지원-범위) · [개발 현황](00_Docs/TODO_v0.4.0.md) · [문서 안내](00_Docs/README.md)
+| 보드 | 개발 환경 | 기반 SDK | 업로드 |
+| --- | --- | --- | --- |
+| **NU54DK · nRF54L15 CPUAPP** | Windows 10/11 x64 · Arduino IDE 2.x | NCS v3.4.0 · Zephyr 4.4.0 | CMSIS-DAP V2 + pyOCD |
 
 ## 빠른 시작
 
-### 1. 준비물
+### 1. Boards Manager에 추가
 
-- Windows 10/11 x64
-- Arduino IDE 2.x
-- 인터넷 연결과 NCS/Toolchain을 저장할 디스크 공간
-- NU54DK와 데이터 통신이 가능한 USB cable
-
-관리자 권한, nRF Connect for Desktop과 nRF Connect for VS Code는 필수 조건이 아닙니다.
-
-### 2. Boards Manager URL 추가
-
-Arduino IDE의 `File → Preferences → Additional Boards Manager URLs`에 다음 주소를 추가합니다.
+Arduino IDE의 `File → Preferences → Additional Boards Manager URLs`에 아래 주소를 넣습니다.
 
 ```text
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-### 3. Core 설치
+`Boards Manager`에서 **NUCODE NU54DK Zephyr Boards**를 찾아 **0.4.0**을 설치합니다.
+post-install 실행 확인이 나오면 승인하고, NCS와 고정 Toolchain 설치가 끝날 때까지 기다립니다.
 
-1. `Tools → Board → Boards Manager`를 엽니다.
-2. `NUCODE NU54DK Zephyr Boards`를 검색합니다.
-3. 버전 `0.4.0`을 설치합니다.
-4. post-install 실행 확인이 나오면 승인합니다.
-5. NCS v3.4.0과 고정 Toolchain 설치가 끝날 때까지 기다립니다.
+첫 설치에는 인터넷 연결과 SDK를 저장할 디스크 공간이 필요합니다. 관리자 권한이나
+nRF Connect for Desktop/VS Code, 별도 Git·Python 설치는 필수가 아닙니다.
 
-첫 설치는 Nordic SDK와 Toolchain을 내려받으므로 오래 걸릴 수 있습니다. 문제가 생기면
-[v0.4.0 문제 해결](<./00_Docs/05_릴리스/v0.4.0/TROUBLESHOOTING.md>)을 확인하십시오.
+### 2. 보드와 기능 선택
 
-### 4. 보드와 기능 구성 선택
+보드는 `NU54DK (nRF54L15, Zephyr)`, Upload probe는 `CMSIS-DAP (pyOCD)`를 선택합니다.
+`Tools → Feature set`은 Sketch에 맞춰 고릅니다.
 
-| Arduino IDE 메뉴 | 일반 Sketch | BLE Sketch |
-| --- | --- | --- |
-| `Tools → Board` | `NU54DK (nRF54L15, Zephyr)` | 동일 |
-| `Tools → Feature set` | `Standard peripherals` | `BLE NUS` |
-| `Tools → Upload probe` | `CMSIS-DAP (pyOCD)` | 동일 |
+| Feature set | 용도 |
+| --- | --- |
+| `Standard peripherals` | GPIO, Serial, Wire, SPI, ADC, PWM, Storage 등 일반 Arduino Sketch |
+| `BLE NUS` | NUS와 GAP/GATT·보안·표준 BLE profile 예제 |
+| `Peripheral Fabric (DAP UART disconnected)` | 인스턴스·DMA를 직접 제어하는 고급 API. DAP UART 분리 조건 준수 |
 
-일반 사용자는 `prj.conf`나 Devicetree overlay를 직접 작성하지 않아도 됩니다.
-직접 instance·DMA API를 사용할 때만 `Peripheral Fabric (DAP UART disconnected)`를 선택하고
-아래 전기 조건을 따릅니다.
+일반 사용자는 `prj.conf`나 Devicetree overlay를 직접 작성할 필요가 없습니다.
+CLI의 기본 FQBN은 `nucode:zephyr:nu54dk`입니다.
 
-### 5. 첫 Blink 업로드
+### 3. Blink 업로드
 
-`File → Examples → NUCODE NU54DK → Blink`를 열거나 다음 Sketch를 사용합니다.
+데이터 통신이 가능한 USB cable로 NU54DK를 연결합니다.
+`File → Examples → NUCODE NU54DK → Blink`를 열고 **Verify → Upload**를 실행합니다.
+온보드 LED가 250 ms 간격으로 점멸하면 기본 경로가 정상입니다.
+
+<details>
+<summary>Blink Sketch 보기</summary>
 
 ```cpp
 void setup()
@@ -84,200 +70,90 @@ void loop()
 }
 ```
 
-NU54DK를 연결한 뒤 `Verify`, `Upload` 순서로 실행합니다. 온보드 LED가 250 ms 간격으로
-점멸하면 기본 경로가 정상입니다.
+</details>
 
-## 포함된 Arduino 예제
+설치·업로드가 막히면 [문제 해결](<00_Docs/05_릴리스/v0.4.0/TROUBLESHOOTING.md>)을 확인하세요.
+여러 보드의 UID 지정과 외장 J-Link 사용은 [업로드·디버그 안내](<00_Docs/02_빌드 설계/05_업로드와_디버그.md>)에 있습니다.
 
-| Library | 예제 |
+## 지원 기능
+
+### 일반 Arduino API
+
+| 영역 | v0.4.0 지원 범위 |
 | --- | --- |
-| [`NUCODE NU54DK`](./libraries/NUCODE_NU54DK/examples) | AnalogChannels, AnalogReadA0, AnalogResolution, Blink, BoardInfo, CounterAlarm, DynamicPWM, InterruptButton, PWMFade, Serial1RuntimePins, SerialEcho, SettingsStorage, SPI00RuntimePins, SystemOffWake, ToneOutput, WatchdogBasic, WireRuntimePins |
-| [`Wire`](./libraries/Wire/examples) | WirePmicId |
-| [`SPI`](./libraries/SPI/examples) | SPITransaction |
-| [`Servo`](./libraries/Servo/examples) | Sweep |
-| [`NUCODE BLE`](./libraries/NUCODE_BLE/examples) | CustomGattCentral, CustomGattPeripheral, GAPCentral, GAPPeripheral, NUSCentral, NUSPeripheral |
-| [`NUCODE BLE Security`](./libraries/NUCODE_BLE_Security/examples) | SecureKeyboard |
-| [`EEPROM`](./libraries/EEPROM/examples) | EEPROMPersistence |
-| [`LittleFS`](./libraries/LittleFS/examples) | LittleFSPersistence |
-| [`NUCODE Peripheral Fabric`](./libraries/NUCODE_Peripheral_Fabric/examples) | FabricCapabilities |
+| Runtime·GPIO·시간 | `setup()`/`loop()`, digital I/O, interrupt, `millis()`/`micros()`, delay와 pulse |
+| Serial | DAP UART `Serial`, UART30 기반 `Serial1`와 runtime pin route |
+| Wire·SPI | **부분 지원:** Wire는 I2C22 master, SPI는 SPI00 controller. 둘 다 runtime pin route 제공 |
+| Analog·출력 | ADC 채널·resolution, 동적 PWM, `tone()`, Servo |
+| Storage | EEPROM facade 1,024 byte, 내부 LittleFS 32 KiB, Settings/ZMS |
+| BLE | NUS, GAP Peripheral/Central, 범용 GATT, pairing·bonding, BAS·DIS·HID keyboard |
+| Board·System | Board identity, watchdog, GRTC, System OFF와 timed/button wake |
 
-정식 package에는 Standard profile 22개, BLE profile 7개와 Fabric profile 1개, 총 30개 예제가
-들어 있습니다. 공개 index에서 새로 설치한 package의 30/30 compile, 대표 Blink pyOCD upload,
-0.3.0 전환과 제거·재설치까지 정식 공개 후 검증했습니다.
+`Serial`은 native USB CDC가 아닙니다. Wire target/slave·`Wire1`, SPI peripheral·`SPI1`은
+일반 Arduino API에서 제공하지 않습니다. 직접 인스턴스 제어는 아래 Fabric API를 사용합니다.
 
-### v0.4.0 Peripheral Fabric
+### Peripheral Fabric
 
-v0.4.0에는 `Peripheral Fabric (DAP UART disconnected)` profile과 `NUCODE Peripheral Fabric`
-예제 1개가 추가됐습니다. 이 profile은 검증된 Serial·Analog·Event·PDM·I2S·
-QDEC20/21과 TEMP/WDT30 직접 API를 활성화하고 기존 `standard`·`ble` singleton 구성을 함께
-켜지 않습니다. QDEC 연속 카운트는 SAMPLE/REPORT event 경로를 사용하며, 동작 중 반복 manual
-`read()/clear`의 무손실 누산은 보증하지 않습니다.
+`fabric` 기능 구성과 `#include <NUCODE_Peripheral_Fabric.h>`로 진입합니다.
+이 구성은 기존 `standard`·`ble`의 singleton 주변장치를 함께 활성화하지 않습니다.
 
-사용자는 `Tools → Feature set → Peripheral Fabric (DAP UART disconnected)`와
-`#include <NUCODE_Peripheral_Fabric.h>`로 진입합니다. DAP UART switch를 물리적으로 분리해야 하는
-P0/P1 route는 profile 이름과 각 API의 electrical profile 선행조건을 따라야 합니다.
+| 영역 | 직접 제어 범위 |
+| --- | --- |
+| Serial Fabric | UARTE·SPIM·SPIS **00/20/21/22/30**, TWIM·TWIS **20/21/22/30** |
+| Analog·Event·Stream | SAADC, PWM, TIMER, GPIOTE/DPPI, PDM, I2S |
+| QDEC·System | **QDEC20/21 지원**, TEMP·WDT30/31 |
 
-## 지원 범위
+QDEC는 기본 정·역회전과 SAMPLE/REPORT event 경로를 지원합니다.
+동작 중 반복 manual `read()/clear`의 무손실 누산은 보증하지 않습니다.
+각 인스턴스의 핀·DMA·공유 자원 조건은 [인스턴스 매트릭스](<00_Docs/01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)와
+[Serial Fabric 계약](<00_Docs/01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md>)을 따릅니다.
 
-상태값은 다음 세 가지로만 구분합니다. `지원`은 `v0.4.0`이 선언한 범위를 구현·검증했다는
-뜻이고, `부분 지원`은 해당 Arduino API군의 일부 instance나 mode만 제공한다는 뜻입니다.
-`미지원`은 공개 API·예제·runtime 검증이 없는 범위입니다.
+> 반복 Serial personality handover와 모든 주변장치의 동시 조합은 보증하지 않습니다.
+> 정밀 ADC 정확도·jitter·음질·신호 무결성은 기능시험 범위 밖입니다.
+> 전체 공개 계약은 [API 지원 범위](<00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)와
+> [알려진 제약](<00_Docs/05_릴리스/v0.4.0/KNOWN_ISSUES.md>)을 확인하세요.
 
-| 영역 | 상태 | 요약 |
-| --- | --- | --- |
-| Runtime | 지원 | `setup()`, 반복 `loop()`, C++ 전역 객체 |
-| Digital GPIO | 지원 | Connector, LED, button과 open-drain GPIO |
-| Time | 지원 | `millis()`, `micros()`, delay, `yield()`와 pulse API |
-| GPIO Interrupt | 지원 | Edge·level interrupt와 Arduino callback |
-| Serial | 지원 | DAP UART `Serial`과 UART30 기반 `Serial1` |
-| Wire/I2C | 부분 지원 | I2C22 master controller와 runtime pin route |
-| SPI | 부분 지원 | SPI00 controller와 runtime pin route |
-| ADC | 지원 | 공개 analog input 채널과 resolution 변환 |
-| PWM/Tone/Servo | 지원 | 동적 PWM, `tone()`과 bundled Servo |
-| Storage | 지원 | EEPROM facade와 내부 LittleFS |
-| BLE | 지원 | NUS, GAP/GATT, security와 표준 profile |
-| Board/System | 지원 | Board identity, WDT, GRTC, Settings와 System OFF |
-| Upload/Debug | 지원 | pyOCD 기본, 외장 J-Link 선택 경로 |
+## 예제
 
-<details>
-<summary>Core, GPIO, Time과 Serial 세부 범위</summary>
+9개 library에 **30개 예제**가 포함됩니다: Standard 22개 · BLE 7개 · Fabric 1개.
 
-- Digital GPIO와 interrupt는 Variant capability에 등록된 connector·LED·button pin을 사용합니다.
-- Level interrupt의 `LOW`/`HIGH`는 GPIOTE가 가능한 pin에서 지원합니다.
-- `noInterrupts()`는 Arduino GPIO callback을 막지만 모든 Zephyr system IRQ를 전역 차단하지 않습니다.
-- `Serial`은 DAP UART이며 native USB CDC가 아닙니다. `Serial1`은 승인된 UART30 pin route를
-  사용합니다.
+| 해보고 싶은 것 | 시작할 예제 |
+| --- | --- |
+| LED와 보드 정보 | [Blink](libraries/NUCODE_NU54DK/examples/Blink), [BoardInfo](libraries/NUCODE_NU54DK/examples/BoardInfo) |
+| 통신과 runtime pin 변경 | [Serial1RuntimePins](libraries/NUCODE_NU54DK/examples/Serial1RuntimePins), [WireRuntimePins](libraries/NUCODE_NU54DK/examples/WireRuntimePins), [SPI00RuntimePins](libraries/NUCODE_NU54DK/examples/SPI00RuntimePins) |
+| Analog와 PWM | [AnalogChannels](libraries/NUCODE_NU54DK/examples/AnalogChannels), [DynamicPWM](libraries/NUCODE_NU54DK/examples/DynamicPWM) |
+| BLE 통신·보안 | [NUSPeripheral](libraries/NUCODE_BLE/examples/NUSPeripheral), [CustomGattCentral](libraries/NUCODE_BLE/examples/CustomGattCentral), [SecureKeyboard](libraries/NUCODE_BLE_Security/examples/SecureKeyboard) |
+| 영구 저장·저전력 | [LittleFSPersistence](libraries/LittleFS/examples/LittleFSPersistence), [SystemOffWake](libraries/NUCODE_NU54DK/examples/SystemOffWake) |
+| Fabric capability 조회 | [FabricCapabilities](libraries/NUCODE_Peripheral_Fabric/examples/FabricCapabilities) |
 
-</details>
+전체 목록과 예제별 profile은 [예제 배포 안내](<00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md>)에 있습니다.
+공개 package의 **30/30 예제 compile**, 대표 Blink Upload, 버전 전환·제거·재설치는
+[정식 공개 검증 기록](<00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)에서 확인할 수 있습니다.
+예제 build 통과와 각 주변장치의 실기 검증 범위는 별개로 기록합니다.
 
-<details>
-<summary>Wire, SPI, Analog와 Storage 세부 범위</summary>
+## 사용 전 확인
 
-- Wire는 I2C22 master, 100/400 kHz와 runtime pin 변경을 지원합니다. Target/slave,
-  `requestFrom(..., false)`와 `Wire1`은 지원하지 않습니다.
-- SPI는 SPI00, mode 0~3, Sketch 소유 chip-select와 runtime pin 변경을 지원합니다. `SPI1`과
-  peripheral mode는 지원하지 않습니다.
-- ADC는 공개 AIN 채널의 raw code와 resolution 변환을 제공합니다.
-- PWM, tone과 Servo는 pin·period·hardware ownership 충돌이 없을 때 동적으로 할당됩니다.
-- EEPROM facade는 1,024 byte, 내부 LittleFS partition은 32 KiB입니다.
+- 실제 결선은 [P2/P4 커넥터 핀맵](<00_Docs/01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)을 기준으로 합니다.
+  Fabric의 DAP UART 분리 등 각 API의 전기적 선행조건을 지키세요.
+- Native USB, OTA/DFU와 외부 filesystem은 지원하지 않습니다.
+- Storage format/reset은 데이터를 지웁니다. 버전 이동 전에는 필요한 데이터를 백업하세요.
+- GPIO interrupt callback에서 blocking·heap 할당·`Serial`·`delay()`를 사용하지 마세요.
+- Servo는 적합한 외부 전원과 공통 GND를 사용하세요. PMIC write는 매 boot 명시적 승인이 필요합니다.
+- Active debugger/SWD는 System OFF와 reset cause 관측에 영향을 줄 수 있습니다.
 
-</details>
+## 문서
 
-<details>
-<summary>BLE 세부 범위</summary>
+| 찾는 내용 | 안내 |
+| --- | --- |
+| 설치·이전 버전에서 이동 | [Boards Manager 설치](<00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md>) · [마이그레이션](<00_Docs/05_릴리스/v0.4.0/MIGRATION.md>) |
+| API·핀·설계 | [전체 문서 목차](00_Docs/README.md) · [API 지원 범위](<00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>) |
+| 개발 환경·빌드 구조 | [Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>) · [Build Adapter](<00_Docs/02_빌드 설계/02_Build_Adapter_설계.md>) |
+| 릴리스·검증·향후 계획 | [v0.4.0 릴리스 문서](<00_Docs/05_릴리스/v0.4.0/README.md>) · [완료 기록](00_Docs/TODO_v0.4.0.md) · [로드맵](<00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md>) |
+| 문제 보고 | [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues) |
 
-- 지원: NUS Peripheral/Central, GAP Peripheral/Central, 범용 GATT, SMP pairing·bonding,
-  BAS, DIS와 HID keyboard
-- 미지원: BLE Mesh, ISO, Channel Sounding과 검증되지 않은 multiprotocol
+### 소스에서 개발하기
 
-</details>
-
-<details>
-<summary>Board/System과 Upload/Debug 세부 범위</summary>
-
-- Board/System은 board identity, watchdog, GRTC, Settings/ZMS와 System OFF를 제공합니다.
-- PMIC API는 승인된 register·field만 다루며 write는 매 boot 명시적으로 승인해야 합니다.
-- CMSIS-DAP/pyOCD가 기본 Upload 경로입니다. 외장 J-Link는 별도 SEGGER Software, VTref와
-  올바른 SWD 배선이 필요합니다.
-- 일반 Upload는 mass erase나 recover를 자동 실행하지 않습니다.
-
-</details>
-
-전체 함수별 의미와 pin·mode·오류 계약은
-[Arduino API 지원 범위](<./00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)를 기준으로 합니다.
-
-## 메모리 구조
-
-| 영역 | 범위 | 크기 |
-| --- | --- | ---: |
-| Application | `0x000000..0x16c000` | 1,490,944 byte / 1,456 KiB |
-| LittleFS | `0x16c000..0x174000` | 32 KiB |
-| Settings/ZMS | `0x174000..0x17d000` | 36 KiB |
-
-Arduino maximum Sketch size, Devicetree code partition과 Zephyr linker가 같은 경계를 사용합니다.
-MCUboot/DFU dual-slot과 signed update/rollback은 `v0.6.0` Security/Update 제품선의 계획 범위입니다.
-
-## 업로드 Probe 선택
-
-- CMSIS-DAP가 한 대면 `CMSIS-DAP (pyOCD)`가 자동 선택합니다.
-- 두 대 이상이면 `CMSIS-DAP with UID (pyOCD)`를 선택하고 대상 UID를 명시합니다.
-- UID는 COM 번호나 DAPLink drive 문자가 아닙니다.
-- 외장 J-Link는 별도 SEGGER Software, VTref와 올바른 SWD 배선이 필요합니다.
-- 일반 Upload는 mass erase 또는 recover를 자동 실행하지 않습니다.
-
-Arduino CLI에서 명시적 CMSIS-DAP UID를 사용할 때는 compile과 upload에 같은 board option을
-지정합니다.
-
-```powershell
---board-options upload_probe=pyocd_uid `
---upload-field probe_id=<CMSIS-DAP-UID>
-```
-
-## 주요 제약과 안전 주의
-
-- 공식 사용자 환경은 Windows 10/11 x64입니다.
-- NCS와 Toolchain은 Core ZIP에 재배포하지 않고 Nordic 공식 배포에서 설치합니다.
-- Loader, native USB, OTA/DFU와 외부 filesystem은 지원하지 않습니다.
-- Storage의 format/reset은 데이터를 삭제할 수 있습니다. version 이동 전에 백업하십시오.
-- GPIO interrupt callback 안에서 blocking, heap 할당, `Serial` 또는 `delay()`를 사용하지 마십시오.
-- PWM, tone과 Servo는 pin·period·hardware ownership 충돌을 거부할 수 있습니다.
-- Servo motor 전원은 GPIO가 아닌 적합한 외부 전원을 쓰고 공통 GND를 연결하십시오.
-- BLE 지원은 명시한 GAP/GATT/security/profile 범위이며 전체 BLE interoperability 인증이 아닙니다.
-- PMIC write는 매 boot 명시적 승인이 필요합니다. 실제 배터리 전기·온도 보호 검증은 사용자
-  조건에서 별도로 수행해야 합니다.
-- Active debugger/SWD는 System OFF와 reset cause를 방해할 수 있습니다.
-- source tree의 `NU54DK.coreVersion()`은 `0.4.0-dev`, 정식 package는 `0.4.0`을 반환합니다.
-  배포 identity는 Boards Manager 설치 version과 release manifest로 확인하십시오.
-
-전체 경계는 [v0.4.0 알려진 제약](<./00_Docs/05_릴리스/v0.4.0/KNOWN_ISSUES.md>)을 확인하십시오.
-
-## 검증과 릴리스 정책
-
-`v0.4.0`은 Host/software/docs/package gate, 35/35 target build, 독립 package 재현 build,
-RC runtime 동등성, 격리 Boards Manager lifecycle과 실제 NU54DK upload를 통과했습니다. 공개 뒤
-stable index에서 다시 설치해 예제 30/30 compile, upload, 0.3.0 전환과 제거·재설치도 확인했습니다.
-정확한 identity와 실행 결과는
-[v0.4.0 정식 공개 기록](<./00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)에
-보존합니다.
-
-## 로드맵
-
-| 버전 | 상태 | 범위 |
-| --- | --- | --- |
-| `v0.1.0` | 역사적·비지원 | Core, 기본 API, build/upload와 package |
-| `v0.2.0` | 역사적·비지원 | CI/CD, profile·예제, Board/System과 BLE NUS |
-| `v0.3.0` | 이전 stable·설치 가능 | Arduino compatibility, 동적 peripheral/analog, BLE GAP/GATT/security/profile, storage |
-| `v0.4.0` | **현재 stable** | 전 인스턴스 API 확장과 Peripheral Fabric, T01~T25 완료 |
-| `v0.5.0` | 계획 | Bluetooth LE 확장·ISO/LE Audio·Direction Finding·Channel Sounding·Mesh |
-| `v0.6.0` | 계획 | Storage/Crypto, TF-M, 고급 memory layout와 secure update/recovery |
-| `v0.7.0` | 계획 | Radio profile, IEEE 802.15.4, ESB와 OpenThread |
-| `v0.8.0` | 계획 | Matter 기반, application template와 commissioning HIL |
-
-`v0.4.0`의 완료 항목과 공개 결과는 [완료 TODO](00_Docs/TODO_v0.4.0.md), 실행 근거는
-[검증 기록](<00_Docs/04_검증 기록/README.md>)에서 확인할 수 있습니다.
-
-## 동작 구조
-
-```text
-Arduino Sketch와 library
-        ↓
-Arduino CLI/IDE source discovery
-        ↓
-NU54 Build Adapter
-        ↓
-NCS v3.4.0 + Zephyr 4.4.0 전체 build graph
-        ↓
-ELF / HEX / BIN / map
-        ↓
-CMSIS-DAP V2 + pyOCD 또는 외장 J-Link
-```
-
-## 저장소 복제
-
-Source 수정, host gate, Nordic Toolchain과 실물 HIL까지 준비하려면
-[Windows 개발환경 설정](<./00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>)을 먼저
-확인하십시오. 일반 Arduino 사용자의 Boards Manager 설치에는 Git, MinGW 또는 별도 Python이
-필요하지 않습니다.
+Boards Manager 설치가 아닌 Core 개발 시에만 저장소와 submodule을 복제합니다.
 
 ```powershell
 git clone --recurse-submodules https://github.com/EIDOSDATA/NU54DK_Arduino_Core.git
@@ -285,34 +161,12 @@ cd NU54DK_Arduino_Core
 git submodule status
 ```
 
-보드 정의는 [Nucode01/NU54DK_Zephyr_DTS](https://github.com/Nucode01/NU54DK_Zephyr_DTS)를
-단일 원본으로 사용합니다. Core 작업에서는 `board_package/NU54DK_Zephyr_DTS` 내부를 수정하지
-않습니다.
-
-## 문서
-
-- [전체 문서 안내](./00_Docs/README.md)
-- [v0.4.0 완료 TODO·체크포인트](./00_Docs/TODO_v0.4.0.md)
-- [리팩토링 계획·운영·진행 체크리스트](<./00_Docs/01_아두이노 코어 설계/14_리팩토링/README.md>)
-- [v0.4.0 릴리스 문서](<./00_Docs/05_릴리스/v0.4.0/README.md>)
-- [v0.4.0 마이그레이션](<./00_Docs/05_릴리스/v0.4.0/MIGRATION.md>)
-- [v0.4.0 문제 해결](<./00_Docs/05_릴리스/v0.4.0/TROUBLESHOOTING.md>)
-- [Arduino API 지원 범위](<./00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)
-- [Windows 개발환경 설정](<./00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>)
-- [Boards Manager 설치와 package](<./00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)
-- [제품 로드맵](<./00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md>)
-- [전 인스턴스·DMA·BLE 경쟁 기준](<./00_Docs/01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)
-- [M24 Serial Fabric 경로와 API 계약](<./00_Docs/01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md>)
-- [M23 Peripheral instance matrix](<./00_Docs/01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md>)
-- [검증 기록](<./00_Docs/04_검증 기록/README.md>)
-- [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues)
+보드 정의의 원본은 [NU54DK_Zephyr_DTS](https://github.com/Nucode01/NU54DK_Zephyr_DTS)입니다.
+Core 작업에서는 보드 submodule을 임의 수정하지 않습니다.
+`NU54DK.coreVersion()`은 소스 식별자 `0.4.0-dev`를 반환합니다. 정식 설치본에서도 이 값은 같으며,
+배포 버전 `0.4.0`은 Boards Manager·`platform.txt`·release manifest로 확인합니다.
 
 ## 작성자와 라이선스
 
-작성자는 **NUCODE의 Quantum**입니다. NUCODE가 작성한 코드는 [MIT License](LICENSE)를
-적용합니다. 외부 구성요소에는 각 원 라이선스와 고지가 적용되며 자세한 내용은
-[third-party notices](./third_party/THIRD_PARTY_NOTICES.md)를 확인하십시오.
-
-## 검증 이력
-
-실행별 source·결과·원본은 [검증 기록](<00_Docs/04_검증 기록/README.md>)에서 확인합니다.
+**NUCODE의 Quantum**이 개발합니다. NUCODE 작성 코드는 [MIT License](LICENSE)를 적용합니다.
+외부 구성요소의 라이선스와 고지는 [Third-party notices](third_party/THIRD_PARTY_NOTICES.md)를 확인하세요.

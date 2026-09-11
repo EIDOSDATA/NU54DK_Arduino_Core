@@ -1,7 +1,7 @@
 # M24 작업 1~5 — Serial Fabric 전 instance와 EasyDMA
 
 > 이 파일은 `variants/nu54dk/serial-fabric-contract.json`에서 자동 생성합니다. 직접 수정하지 마세요.
-> 공통 backend와 23개 personality adapter의 source/build/semantic·단독 기능 HIL 및 S/U 결과를 확보했고 T16 설치 profile에 통합했습니다. 최종 RC·package gate 상태는 [TODO](../TODO_v0.4.0.md)를 따릅니다.
+> 공통 backend와 23개 personality adapter의 source/build/semantic·단독 기능 HIL 및 S/U 결과를 확보했고 v0.4.0의 `fabric` profile로 공개했습니다. 최종 상태는 [완료 TODO](../TODO_v0.4.0.md)를 따릅니다.
 
 | 항목 | 값 |
 | --- | --- |
@@ -9,10 +9,10 @@
 | 제품선 | `v0.4.0` / M24 |
 | SoC / SDK | `nRF54L15` / `v3.4.0` / Zephyr `4.4.0` |
 | Board | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` / `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| 상태 | 작업 1~6·T15 지원 판정·T16 설치 통합 완료 |
-| 갱신일 | 2026-09-10 |
+| 상태 | 작업 1~6·T15 지원 판정·T16 설치 통합·T25 공개 마감 완료 |
+| 갱신일 | 2026-09-12 |
 
-## 1. 이번 작업의 경계
+## 1. 계약의 범위
 
 이 계약은 23개 serial personality의 실제 identity, 공유 block, 허용 pin bank, 현재 route,
 고급 선택 API와 DMA 수명주기를 고정한다. 작업 2에서 allocation-free typed handle, 원자적
@@ -21,7 +21,7 @@ TWIM/TWIS direct nrfx adapter를 연결했다. Kconfig는 기본 off이고 명�
 S 정상 36조건에는 C05 3600초 soak가 포함된다. 완료한 S 시험을 다시 예약하지 않으며, T16 공개 원장 반영 뒤 T19~T24 release gate도 완료했다.
 반복 Serial handover와 T13 peer 제어 System OFF 추가 2조건은 제외했다. 아래 원래 계약의 gate 목록을 현재 재실행 지시로 사용하지 않는다. 기존 M15 System OFF PASS는 유지한다.
 
-M24의 후속 순서는 다음과 같다.
+M24의 완료 순서는 다음과 같다.
 
 1. **작업 1(완료):** route/API/errata 계약과 자동 drift 검사
 2. **작업 2(완료):** 공통 serial-fabric backend, typed handle과 personality handover
@@ -30,7 +30,7 @@ M24의 후속 순서는 다음과 같다.
 5. **작업 5(완료):** TWIM/TWIS 각 4개와 repeated-start·target double buffer source/build/semantic
 6. **작업 6(완료):** 온보드·UART/SPI/TWI 단독 기능과 S/U·T14 충돌 판정을 T15 지원 범위에 반영
 
-현재 온보드 증거는 [41번 기록](<../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>),
+초기 온보드 증거는 [41번 기록](<../04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md>),
 UART Fixture 101~103은 [44번](<../04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md>)·[45번](<../04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md>)·[46번](<../04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md>),
 SPI Fixture 201~203은 [47번](<../04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md>)·[48번](<../04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md>)·[49번 기록](<../04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md>)을 따른다.
 TWI Fixture 301은 [50번 기록](<../04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md>)을 따른다.
@@ -73,7 +73,7 @@ allocation 없는 typed handle로 제공한다. Raw base address는 받지 않�
 - Different serial blocks may run together only when pin and DMA leases are disjoint.
 - Unsupported instance, route, profile or electrical policy fails before any register or pin change.
 - Standard Arduino singleton behavior and identity remain unchanged when the advanced API is enabled.
-- The advanced header is enabled only by the explicit fabric profile, remains disabled in standard and ble profiles, and is not a published stable release until the final release gates pass.
+- The advanced header is available in stable v0.4.0 only through the explicit fabric profile and remains disabled in standard and ble profiles.
 
 ## 3. 물리 block과 가능한 personality
 

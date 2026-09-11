@@ -37,7 +37,7 @@ NCS DTS 변경은 target build 전에 fail-closed한다.
 
 M12와 정식 `v0.2.0`의 역사적 기준은 public library 4개·예제 14개다. 정식 `v0.3.0`은
 EEPROM/LittleFS까지 포함한 library 8개·예제 29개다. `Standard peripherals` 22개와
-BLE 7개를 M22 package lock과 installed-package gate로 모두 compile했다. 현재 29개 기대값을
+BLE 7개를 M22 package lock과 installed-package gate로 모두 compile했다. 해당 29개 기대값을
 과거 `v0.2.0` artifact 기록에 소급 적용하지 않는다.
 v0.4.0 stable은 `NUCODE Peripheral Fabric` library·예제 1개를 더해 9개·30개다. Stable index는
 0.4.0과 전환용 0.3.0을 함께 제공하며 각각의 고정 package lock과 identity를 검사한다.
@@ -68,7 +68,9 @@ python tools/ci/run_m12_gate.py examples --arduino-cli <exact-path>
 2. exact west workspace를 준비하고 cache key를 lock에서 계산한다.
 3. `run_zephyr_build.py --group <버전>`으로 아래 build-only suite를 네 job에서 동시에 실행한다.
 4. `v0.2.0` job에서만 `run_m17_feasibility.py`와 `run_m14_qemu.py`를 실행한다.
-5. `v0.4.0` job에서만 exact NCS DTS에 대한 M23 inventory, M24 serial-fabric, M26 system과 M27 readiness HOLD 계약을 검사한다.
+5. `v0.4.0` job에서만 exact NCS DTS에 대한 M23 inventory, M24 serial-fabric, M26 system과
+   M27 후보 공개 차단·stable 공개 계약을 검사한다. `HOLD contract`라는 step 이름은 후보 도구의
+   오공개 방지 검사를 뜻하며, 이미 완료한 v0.4.0 릴리스가 HOLD라는 뜻은 아니다.
 6. 그룹별 결과를 서로 다른 14일 보존 artifact로 게시한다.
 
 | Group | 시나리오 수 | 현재 source에서 확인하는 도입 범위 |

@@ -1,16 +1,18 @@
 # NU54DK Arduino Core — 릴리스 문서 안내
 
-v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)에서 관리합니다.
+**현재 정식 버전은 v0.4.0이며 T01~T25를 완료했습니다.** 신규 설치와 지원 요청은 아래 v0.4.0
+문서를 사용합니다. 공개·설치 검증 결과는 [125번 마감 기록](<../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>),
+완료 범위는 [v0.4.0 TODO](../TODO_v0.4.0.md)에서 확인합니다.
 
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | RELEASE-INDEX-001 |
-| 문서 개정 | 2.5 |
+| 문서 개정 | 2.6 |
 | 현재 정식 버전 | `v0.4.0` |
 | 설치 channel | Stable Boards Manager index |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 이전 버전 상태 | `v0.3.0` stable index에 설치 가능, 그 이전 version은 역사 자료로 보존 |
-| 최종 갱신일 | 2026-09-11 |
+| 최종 갱신일 | 2026-09-12 |
 
 신규 설치, 지원 요청과 현재 API 기준은 `v0.4.0` 문서를 사용합니다. 이전 stable과 RC 문서는
 당시 artifact, migration 경계와 검증 판단을 보존하는 역사 자료입니다.
@@ -32,45 +34,29 @@ Stable package index:
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-## 보존된 v0.4.0 내부 후보 — v0.4.0-rc.1
+## 버전별 상태와 문서
 
-`v0.4.0-rc.1`은 공개 설치 대상으로 게시하지 않은 내부 후보입니다. 정식 `v0.4.0`과 정규화
-runtime 동등성을 확인했으며, 설치에는 위 stable index의 `0.4.0`을 사용합니다.
+| 버전 | 현재 상태 | 문서 |
+| --- | --- | --- |
+| `v0.4.0` | 현재 stable·신규 설치와 지원 기준 | [현재 릴리스](v0.4.0/README.md) |
+| `v0.4.0-rc.1` | 비공개 내부 후보·정식 runtime 동등성 확인 완료 | [후보 절차 기록](v0.4.0-rc.1/README.md) |
+| `v0.3.0` | 이전 stable·Sketch 전환과 복구용 설치 가능 | [이전 릴리스](v0.3.0/README.md) |
+| `v0.2.0` | 공급 종료·역사 자료 | [보존 문서](v0.2.0/README.md) |
+| `v0.1.0` | 공급 종료·역사 자료 | [보존 문서](v0.1.0/README.md) |
 
-- [내부 준비](v0.4.0-rc.1/README.md)
-- [Release notes](v0.4.0-rc.1/RELEASE_NOTES.md)
-- [Migration](v0.4.0-rc.1/MIGRATION.md)
-- [Testing](v0.4.0-rc.1/TESTING.md)
-- [Troubleshooting](v0.4.0-rc.1/TROUBLESHOOTING.md)
-- [Known issues](v0.4.0-rc.1/KNOWN_ISSUES.md)
+각 버전 README에서 해당 Release notes·Migration·Testing·Troubleshooting·Known issues로
+이동할 수 있습니다. 이전 버전 문서의 “현재 stable”, 지원 대상과 예정 gate는 **작성 당시의
+상태**입니다. 현재 설치·지원 정책보다 우선하지 않으며, 과거 후보를 다시 공개하라는 지시도 아닙니다.
 
-## 보존된 이전 버전
+## 검증 수치와 보존 문서 해석
 
-### v0.3.0
+v0.4.0의 공개 identity는 **64개**, 단독 HIL 상태는 **62 PASS + QDEC20/21 2 PARTIAL**입니다.
+QDEC20/21은 기본 정·역회전과 SAMPLE/REPORT event를 지원하지만 반복 manual `read()/clear`의
+무손실을 보증하지 않습니다. “공개 identity HIL 통과”와 같은 요약을 QDEC까지 포함한 전 항목
+PASS로 읽지 않습니다. 최종 범위는 [124번 지원 결정](<../04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md>)을 따릅니다.
 
-`v0.3.0`은 이전 stable이며 기존 Sketch 전환과 복구를 위해 stable index에 함께 제공합니다.
-신규 설치와 지원 요청은 `v0.4.0`을 기준으로 합니다.
-
-- [릴리스 개요](v0.3.0/README.md)
-- [Migration](v0.3.0/MIGRATION.md)
-- [Troubleshooting](v0.3.0/TROUBLESHOOTING.md)
-- [Known issues](v0.3.0/KNOWN_ISSUES.md)
-
-### v0.2.0
-
-- [릴리스 개요](v0.2.0/README.md)
-- [Release notes](v0.2.0/RELEASE_NOTES.md)
-- [Migration](v0.2.0/MIGRATION.md)
-- [Troubleshooting](v0.2.0/TROUBLESHOOTING.md)
-- [Known issues](v0.2.0/KNOWN_ISSUES.md)
-
-### v0.1.0
-
-- [릴리스 개요](v0.1.0/README.md)
-- [Release notes](v0.1.0/RELEASE_NOTES.md)
-- [Migration](v0.1.0/MIGRATION.md)
-- [Troubleshooting](v0.1.0/TROUBLESHOOTING.md)
-- [Known issues](v0.1.0/KNOWN_ISSUES.md)
+정식 Release에 포함된 사용자 문서 5종은 공개 당시 byte를 보존합니다. 현행 지원 범위·시점에
+대한 보충 안내는 이 페이지와 각 버전 README에서 제공하며, 과거 실패나 제외를 새 PASS로 바꾸지 않습니다.
 
 ## 보존된 v0.3.0 Release Candidate
 

@@ -45,6 +45,17 @@ class M23PeripheralInventoryTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
         self.assertIn("M23_INVENTORY_PASS=instances:75", result.stdout)
 
+    def test_dma_display_separates_control_mode_from_support_state(self) -> None:
+        direct = next(
+            item for item in self.instances
+            if item["dma"]["hardware"] and not item["dma"]["driver_managed"]
+        )
+        display = MODULE._dma_display(direct)
+        self.assertIn("; direct;", display)
+        self.assertNotIn("예정", display)
+        document = MODULE.render_matrix(self.manifest, self.instances)
+        self.assertIn("구현·공개·검증 여부는 별도 상태 열", document)
+
     def test_exhaustive_instance_omission_is_rejected(self) -> None:
         mutated = copy.deepcopy(self.manifest)
         mutated["instances"] = [

@@ -5,16 +5,23 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../../00_Docs/TODO_
 관리합니다. 아래 준비·승인·게시 명령은 정식 공개 전에 사용한 절차 기록이며, 공개된 0.4.0을
 다른 byte로 다시 만드는 재실행 지시가 아닙니다.
 
-M27 도구는 `v0.4.0-rc.1` package를 두 번 독립 생성해 ZIP·checksum·SBOM·license inventory와
-notices가 byte-identical인지 검증하고 RC index와 HOLD plan을 만든다. 기존 M11/M18/M22 도구와
-공개 `v0.1.0`~`v0.3.0` package allowlist는 수정하지 않는다.
+| 도구 | 책임 | 외부 게시 |
+| --- | --- | --- |
+| `m27_release.py` | 비공개 RC 이중 재현·RC index·HOLD plan | 없음 |
+| `m27_staged_candidate.py` | 격리된 후보 ZIP의 예제 compile | 없음 |
+| `m27_stable_release.py` | stable 이중 재현·승인 검사·Release와 index 게시 | T22 승인 JSON과 exact plan이 있는 T23 절차만 허용 |
+| `run_m27_package_examples.py` | 설치된 package의 예제 30개 compile | 없음 |
+
+RC 준비 도구는 `v0.4.0-rc.1` package를 두 번 독립 생성해 ZIP·checksum·SBOM·license inventory와
+notices가 byte-identical인지 검증하고 RC index와 HOLD plan을 만듭니다. 과거 M11/M18/M22의
+실행 계약과 공개 stable의 고정 자산을 이 RC 절차로 변경하지 않습니다.
 
 아래 RC 명령은 비공개 후보를 준비한 절차입니다. T18에서 추가한 stable 도구로 T21 비공개 stable
 산출물과 최종 검사를 완료했고 T22 승인 뒤 T23~T25까지 마감했습니다.
 
-이 도구에는 tag, push, GitHub Release, stable index 갱신이나 공개 명령이 없다. M24~M26 physical
-gate, Boards Manager 전체 수명주기와 프로젝트 소유자 승인이 모두 PASS가 되기 전에는 plan의
-`publication_allowed`가 항상 `false`다.
+`m27_release.py`에는 tag, push, GitHub Release, stable index 갱신이나 공개 명령이 없습니다.
+Stable 게시 명령은 `m27_stable_release.py`에만 있으며, 기술 gate와 프로젝트 소유자 승인 없이는
+실행할 수 없습니다. RC 준비 plan의 `publication_allowed=false`를 최종 공개 상태로 읽지 않습니다.
 
 ## 계약 확인
 
@@ -28,7 +35,7 @@ python tools/release/m27_release.py contract
 
 ```powershell
 python tools/release/m27_release.py prepare `
-  --repository C:\Users\eidos\GitHub\NU54DK_Arduino_Core `
+  --repository C:\source\NU54DK_Arduino_Core `
   --output-dir C:\nu54-m27-rc1 `
   --commit HEAD
 ```
@@ -43,10 +50,10 @@ python tools/release/m27_release.py validate-plan `
   --plan C:\nu54-m27-rc1\m27-release-plan.json
 ```
 
-## 현행 비공개 후보의 예제 검증
+## 비공개 후보의 예제 검증 이력
 
 공개 Boards Manager 설치 전에는 생성된 ZIP을 격리 Arduino data 디렉터리에 직접 staging하고,
-현재 lock에 고정된 예제 30개와 설치본의 발견 목록을 대조해 전부 compile한다. 이 단계는 기존
+M27 lock에 고정된 예제 30개와 설치본의 발견 목록을 대조해 전부 compile한다. 이 단계는 기존
 Arduino15와 공개 index를 수정하지 않으며 upload도 수행하지 않는다.
 
 ```powershell
@@ -54,8 +61,8 @@ python tools/release/m27_staged_candidate.py `
   --archive C:\nu54-m27-rc1\artifacts\nucode-nu54dk-zephyr-0.4.0-rc.1.zip `
   --workspace C:\nu54-m27-stage `
   --arduino-cli "C:\Program Files\Arduino CLI\arduino-cli.exe" `
-  --ncs-root C:\Users\eidos\ncs\v3.4.0 `
-  --toolchain-root C:\Users\eidos\ncs\toolchains\dcbdc366a1 `
+  --ncs-root C:\ncs\v3.4.0 `
+  --toolchain-root C:\ncs\toolchains\dcbdc366a1 `
   --prerequisite-state-root "$env:LOCALAPPDATA\NUCODE\NU54DK_Arduino_Core\prerequisites" `
   --workers 4
 ```
@@ -64,16 +71,15 @@ python tools/release/m27_staged_candidate.py `
 `m27-package-examples.json`, `m27-staged-candidate.json` 증적을 남긴다. 기본 4개 worker는 서로
 분리된 build 경로를 사용하고 결과를 lock 순서로 다시 정렬한다.
 
-30개는 T16 Peripheral Fabric 예제를 포함한 현행 후보 예제 집합이다. T20/T21에서 최종 설치본의
-전체 예제를 다시 검증한다. 이 staging compile은 실제 Upload나
+30개는 T16 Peripheral Fabric 예제를 포함한 v0.4.0 예제 집합입니다. T20/T21에서 최종 설치본의
+전체 예제를 다시 검증했고 T24 공개 URL 재설치에서도 30/30 compile을 완료했습니다. 이 staging compile은 실제 Upload나
 Boards Manager 설치·제거·재설치·버전 전환을 대신하지 않는다.
 
-Physical evidence를 확보한 뒤에는
+공개 전에는 physical evidence를 확보한 뒤
 `variants/nu54dk/v0.4.0-release-readiness.json`의 각 gate를 exact evidence와 함께 갱신하고,
-frozen RC commit에서 host·docs·전체 v0.4.0 Zephyr·package·Boards Manager gate를 다시 실행한다.
-Stable 공개 절차의 준비·검사는 T18의 `m27_stable_release.py`로 분리했다. 준비 코드를 만들었다고
-공개를 허용하지 않으며, 실제 tag·Release·index 쓰기는 모든 technical gate와 최종 사용자 승인을
-확인한 T23에서만 수행한다.
+frozen RC commit에서 Host·문서·전체 v0.4.0 Zephyr·package·Boards Manager gate를 다시 실행했습니다.
+Stable 준비·검사는 T18의 `m27_stable_release.py`로 분리했으며, 실제 tag·Release·index 쓰기는
+모든 technical gate와 최종 사용자 승인을 확인한 T23에서 수행했습니다.
 
 ## T18 stable 준비·공개 차단 계약
 
@@ -85,12 +91,12 @@ python tools/release/m27_stable_release.py contract
 ```
 
 T19~T20 결과로 모든 기술 gate가 PASS한 뒤, exact RC plan과 같은 commit에서 T21의 비공개
-stable package를 두 번 생성합니다. `00_Docs/05_릴리스/v0.4.0/`의 최종 사용자 문서도 같은
-commit에서 읽습니다.
+stable package를 두 번 생성했습니다. `00_Docs/05_릴리스/v0.4.0/`의 최종 사용자 문서도 같은
+commit에서 읽었습니다. 다음 명령은 당시 준비 순서를 보존한 예시입니다.
 
 ```powershell
 python tools/release/m27_stable_release.py prepare `
-  --repository C:\Users\eidos\GitHub\NU54DK_Arduino_Core `
+  --repository C:\source\NU54DK_Arduino_Core `
   --output-dir C:\nu54-m27-stable `
   --commit <40자리-exact-commit> `
   --rc-plan C:\nu54-m27-rc1\m27-release-plan.json

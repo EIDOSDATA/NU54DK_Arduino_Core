@@ -11,7 +11,9 @@
 | 작성자 | Quantum / NUCODE |
 
 `v0.3.0`은 NU54DK용 loaderless Arduino Core의 이전 stable이며 전환·복구를 위해 stable index에
-계속 제공합니다. 신규 설치와 지원 요청은 `v0.4.0`을 기준으로 합니다. Sketch와 선택한 Arduino
+계속 제공합니다. 신규 설치와 지원 요청은 [v0.4.0](../v0.4.0/README.md)을 기준으로 합니다.
+이 폴더의 버전별 문서는 공개 당시 기능·제약과 검증 판단을 보존합니다. 본문의 “현재 버전”이나
+지원 요청 기준을 오늘의 정책으로 적용하지 않습니다. Sketch와 선택한 Arduino
 library를 nRF Connect SDK v3.4.0/Zephyr 4.4.0의 전체 image로 빌드하며, 온보드
 CMSIS-DAP V2와 pyOCD를 기본 업로드 경로로 사용합니다.
 
@@ -64,9 +66,11 @@ Arduino maximum Sketch size, Devicetree code partition과 실제 linker FLASH �
 | `nucode-nu54dk-zephyr-0.3.0.THIRD_PARTY_NOTICES.md` | 1,813 | `d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d` |
 | `package_nucode_nu54dk_index.json` | 2,630 | `14fe2eb10b4dd77a219d48060c32c21bdd97370f6d6f8be699d9118f8973e007` |
 
-위 index 행은 최초 공개 당시 snapshot입니다. 2026-09-08 공급 종료 이후 현재 catalog는
+위 index 행은 최초 공개 당시 snapshot입니다. 2026-09-08 공급 종료 당시 catalog는
 1,126 byte, SHA-256 `97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57`이며
-0.3.0만 제공합니다. ZIP과 나머지 5개 sidecar는 변경하지 않았습니다.
+0.3.0만 제공했습니다. 이후 v0.4.0 공개로 현재 catalog는 `0.4.0`, `0.3.0`을 제공합니다.
+현재 index identity는 [125번 기록](<../../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)을 따릅니다.
+v0.3.0 ZIP과 나머지 5개 sidecar는 변경하지 않았습니다.
 
 Stable ZIP의 version-independent runtime payload SHA-256은 RC3와 같은
 `658b7014df7faa0dc96c16c6499bf5f4d568ddf8807196c08c6a4cf65e66e835`입니다.
@@ -82,5 +86,9 @@ Stable ZIP의 version-independent runtime payload SHA-256은 RC3와 같은
 
 ## 이전 버전 정책
 
-2026-09-08 소유자 지시로 v0.3.0 미만의 stable·RC·preview 공급을 종료한다. Stable index는 0.3.0만 제공하며 preview URL은 빈 목록을 유지한다. 원본 이력과 자산은 별도 archive 브랜치에서 보존한다. v0.3.0 태그·설치 ZIP·checksum·SBOM 등 6개 payload/sidecar는 그대로 유지하고, 해당 Release의 catalog index만 현재 공급 목록과 일치시킨다.
-신규 설치와 문제 보고는 `v0.3.0`을 기준으로 합니다.
+2026-09-08 소유자 지시로 v0.3.0 미만의 stable·RC·preview 공급을 종료했습니다. 원본 이력과
+자산은 별도 archive 브랜치에서 보존합니다. v0.3.0 태그·설치 ZIP·checksum·SBOM 등 6개
+payload/sidecar는 유지하며, 해당 Release의 catalog index만 당시 공급 목록과 일치시켰습니다.
+
+현재 stable root는 `0.4.0`, `0.3.0`을 제공하고 preview URL은 빈 목록입니다. 신규 설치와 문제
+보고는 [현재 릴리스 안내](../README.md)를 따릅니다.

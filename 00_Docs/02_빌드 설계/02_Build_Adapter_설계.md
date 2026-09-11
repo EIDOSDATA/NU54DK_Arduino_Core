@@ -177,7 +177,11 @@ NU54_RAM_USED=<bytes>
 `boards.txt`의 `build.nu54_profile`이 기본 profile을 선택한다.
 
 - `standard`: 표준 GPIO/Serial/Wire/SPI/ADC/PWM 구성
-- `ble`: 표준 주변장치에 BLE NUS 사용 경계를 추가
+- `ble`: 표준 주변장치에 검증된 NUS·GAP/GATT·보안 library 사용 경계를 추가
+- `fabric`: 표준 singleton을 비활성화하고 직접 Peripheral Fabric API를 선택
+
+`fabric`의 DAP UART 분리 조건과 library 호환 범위는
+[구성 프로필과 예제 배포](./07_구성_프로필과_Arduino_예제_배포.md)를 따른다.
 
 설정 병합 순서는 다음과 같다.
 
@@ -192,7 +196,8 @@ Feature는 Arduino source/include record에서 실제로 선택된 bundled libra
 외부 library가 임의 `feature.yml`을 설치했다고 신뢰하지 않는다. profile, manifest와 fragment
 내용은 최종 cache identity와 artifact provenance에 포함한다.
 
-RC3의 기본 메모리 계약은 loaderless 단일 application 1,490,944 byte와 끝단 영구 저장소
+v0.3.0 RC3에서 도입해 v0.4.0에서도 유지하는 메모리 계약은 loaderless 단일 application
+1,490,944 byte와 끝단 영구 저장소
 68 KiB다. Adapter와 release gate는 Devicetree code partition, linker FLASH 범위와
 `boards.txt` maximum size가 모두 `0x000000..0x16c000`을 가리키는지 확인해야 한다. 전문가
 `app.overlay`가 마지막에 병합되더라도 이 경계를 조용히 우회하거나 Arduino size 표시만 바꾸는
@@ -268,3 +273,4 @@ Arduino build path의 생성 source만 cache mirror로 옮긴다.
 - [M9 증분 빌드·캐시·재현성 기준선](<../04_검증 기록/09_M9_증분_빌드_캐시와_재현성_기준선.md>)
 - [M13 구성 profile 및 예제 배포 검증](<../04_검증 기록/15_M13_구성_프로필_검증.md>)
 - [v0.2.0 정식 릴리스 공개 기록](<../04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md>)
+- [v0.4.0 공개 설치·빌드·Upload 검증](<../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)

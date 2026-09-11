@@ -56,7 +56,7 @@ NCS/Toolchain은 Core ZIP에 넣지 않고 `post_install.bat`이 Nordic 공식 �
 
 ```powershell
 $BuildPath = Join-Path $PWD 'build\blink'
-$Sketch = "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.3.0\libraries\NUCODE_NU54DK\examples\Blink"
+$Sketch = "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.4.0\libraries\NUCODE_NU54DK\examples\Blink"
 arduino-cli compile --fqbn nucode:zephyr:nu54dk --build-path $BuildPath $Sketch
 arduino-cli upload --fqbn nucode:zephyr:nu54dk --build-path $BuildPath $Sketch
 ```
@@ -86,16 +86,15 @@ source를 포장하거나 tag·asset을 이동·교체하지 않습니다. 이�
 공개 identity와 공개 URL 설치 결과는 [125번 기록](<../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)에
 고정했습니다.
 
-## v0.3.0 공개 기준
+## v0.4.0 공개 검증
 
-- 두 독립 package build의 모든 산출물 byte 일치
-- RC3와 stable의 version-independent runtime payload 일치
-- Host, docs와 package validator PASS
-- 격리 `0.2.0 → 0.3.0 → 0.2.0 → 0.3.0 → uninstall` lifecycle
-- 설치된 package의 예제 29/29 compile과 Blink NU54DK pyOCD upload
-- Annotated tag, 정확히 7개 Release asset과 공개 URL 재검증
+- RC/stable 이중 생성의 byte 재현성과 runtime payload 동등성 확인
+- 승인된 source에 tag·GitHub Release와 11개 자산 공개
+- 실제 공개 index/archive의 identity 확인 후 격리 설치
+- 설치 예제 30/30 compile과 Blink NU54DK pyOCD upload
+- `0.4.0 → 0.3.0 → 0.4.0`, 제거·재설치와 prerequisite 보존 확인
 
-정확한 자산과 실행 결과는
-[v0.3.0 정식 공개 기록](<../04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)을
-기준으로 합니다. 사용자 진단은 [v0.3.0 문제 해결](<../05_릴리스/v0.3.0/TROUBLESHOOTING.md>)을
-확인하십시오.
+결과와 공개 자산은 [v0.4.0 최종 기록](<../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>),
+사용자 진단은 [v0.4.0 문제 해결](<../05_릴리스/v0.4.0/TROUBLESHOOTING.md>)을 따릅니다.
+이전 버전의 예제 29개·자산 7개 등 당시 기준은
+[v0.3.0 정식 공개 기록](<../04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)에 보존합니다.

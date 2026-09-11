@@ -2,7 +2,7 @@
 
 > 이 파일은 `variants/nu54dk/peripheral-manifest.json`에서 자동 생성합니다. 직접 수정하지 마세요.
 > 표의 `candidate`, `absent`, `not-run`은 현재 지원 선언이 아닙니다.
-> 이 표는 manifest의 지원 판정이며 최신 실기 결과의 자동 집계가 아닙니다. T15 physical 판정은 [117번](<../04_검증 기록/117_T15_지원_범위와_Physical_Gate_확정.md>), T16 설치 노출은 [118번](<../04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md>), 이후 진행은 [TODO](../TODO_v0.4.0.md)를 확인합니다.
+> 이 표는 manifest의 지원 판정이며 최신 실기 결과의 자동 집계가 아닙니다. 최종 QDEC 지원 계약은 [124번](<../04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md>), 정식 공개·설치 결과는 [125번](<../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>), 단계별 완료는 [TODO](../TODO_v0.4.0.md)를 확인합니다.
 
 | 항목 | 값 |
 | --- | --- |
@@ -13,11 +13,12 @@
 | 추적 identity | **75개** |
 | 현재 public surface가 있는 identity | **64개** |
 | 현재 HIL PASS identity | **62개** |
-| 후속 구현 배정 | M24 23 / M25 36 / M26 16 |
+| 구현 마일스톤별 배정 | M24 23 / M25 36 / M26 16 |
 
 ## 판정 읽는 법
 
 - `source`는 NU54DK Core 자체 구현 수준이며 upstream driver 존재 여부와 다릅니다.
+- DMA의 `driver`/`direct`는 제어 방식입니다. 구현·공개·검증 여부는 별도 상태 열로 확인합니다.
 - `public`은 Arduino 사용자가 선택할 surface가 있다는 뜻이지 전 기능 완료를 뜻하지 않습니다.
 - `build`, `semantic`, `HIL`, `concurrent`는 서로 독립이며 앞 단계 PASS가 뒤 단계 PASS를 대신하지 않습니다.
 - 같은 `block` 값의 personality는 같은 register/IRQ 자원을 공유하므로 동시에 사용할 수 없습니다.
@@ -37,19 +38,19 @@
 | `spim21` | `serial21` / `spi21` | verified: `header-p1` | implemented / public: `SerialFabric` | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | not-run |
 | `spim22` | `serial22` / `spi22` | verified: `header-p1-wire-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | not-run |
 | `spim30` | `serial30` / `spi30` | verified: `header-p0-dap-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | partial |
-| `spis00` | `serial00` / `spi00` | verified: `header-p2` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
-| `spis20` | `serial20` / `spi20` | verified: `header-p1-console-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
-| `spis21` | `serial21` / `spi21` | verified: `header-p1` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
-| `spis22` | `serial22` / `spi22` | verified: `header-p1-wire-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
-| `spis30` | `serial30` / `spi30` | verified: `header-p0-dap-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
+| `spis00` | `serial00` / `spi00` | verified: `header-p2` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct; double-buffered | pass | pass | pass | partial |
+| `spis20` | `serial20` / `spi20` | verified: `header-p1-console-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct; double-buffered | pass | pass | pass | partial |
+| `spis21` | `serial21` / `spi21` | verified: `header-p1` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct; double-buffered | pass | pass | pass | not-run |
+| `spis22` | `serial22` / `spi22` | verified: `header-p1-wire-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct; double-buffered | pass | pass | pass | not-run |
+| `spis30` | `serial30` / `spi30` | verified: `header-p0-dap-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct; double-buffered | pass | pass | pass | partial |
 | `twim20` | `serial20` / `i2c20` | verified: `header-p1-console-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | not-run |
 | `twim21` | `serial21` / `i2c21` | verified: `header-p1` | implemented / public: `SerialFabric` | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | partial |
 | `twim22` | `serial22` / `i2c22` | verified: `header-p1.2-p1.3` | implemented / public: `Wire`, `SerialFabric`, `TwoWire` | EasyDMA/16 bit; driver; synchronous | pass | pass | pass | partial |
 | `twim30` | `serial30` / `i2c30` | verified: `header-p0-dap-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; driver; asynchronous | pass | pass | pass | partial |
-| `twis20` | `serial20` / `i2c20` | verified: `header-p1-console-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
-| `twis21` | `serial21` / `i2c21` | verified: `header-p1` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
-| `twis22` | `serial22` / `i2c22` | verified: `header-p1-wire-route` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
-| `twis30` | `serial30` / `i2c30` | verified: `header-p0-dap-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
+| `twis20` | `serial20` / `i2c20` | verified: `header-p1-console-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct; double-buffered | pass | pass | pass | not-run |
+| `twis21` | `serial21` / `i2c21` | verified: `header-p1` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct; double-buffered | pass | pass | pass | partial |
+| `twis22` | `serial22` / `i2c22` | verified: `header-p1-wire-route` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct; double-buffered | pass | pass | pass | partial |
+| `twis30` | `serial30` / `i2c30` | verified: `header-p0-dap-conflict` | implemented / public: `SerialFabric` | EasyDMA/16 bit; direct; double-buffered | pass | pass | pass | partial |
 
 ## M25 배정 identity
 
@@ -86,8 +87,8 @@
 | `pwm20` | `—` / `pwm20` | verified: `header-p1-runtime` | implemented / public: `AnalogFabric`, `analogWrite` | EasyDMA/15 bit; driver; double-buffered | pass | pass | pass | partial |
 | `pwm21` | `—` / `pwm21` | verified: `header-p1-runtime` | implemented / public: `AnalogFabric`, `tone`, `noTone` | EasyDMA/15 bit; driver; double-buffered | pass | pass | pass | partial |
 | `pwm22` | `—` / `pwm22` | verified: `header-p1-runtime` | implemented / public: `AnalogFabric`, `Servo` | EasyDMA/15 bit; driver; double-buffered | pass | pass | pass | not-run |
-| `pdm20` | `—` / `pdm20` | verified: `header-p1` | implemented / public: `StreamFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
-| `pdm21` | `—` / `pdm21` | verified: `header-p1` | implemented / public: `StreamFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
+| `pdm20` | `—` / `pdm20` | verified: `header-p1` | implemented / public: `StreamFabric` | EasyDMA/16 bit; direct; double-buffered | pass | pass | pass | partial |
+| `pdm21` | `—` / `pdm21` | verified: `header-p1` | implemented / public: `StreamFabric` | EasyDMA/16 bit; direct; double-buffered | pass | pass | pass | not-run |
 | `i2s20` | `—` / `i2s20` | verified: `header-p1` | implemented / public: `StreamFabric` | EasyDMA/16 bit; driver; double-buffered | pass | pass | pass | partial |
 | `qdec20` | `—` / `qdec20` | verified: `header-p1` | implemented / public: `StreamFabric` | 없음 | pass | pass | partial | not-run |
 | `qdec21` | `—` / `qdec21` | verified: `header-p1` | implemented / public: `StreamFabric` | 없음 | pass | pass | partial | not-run |
@@ -101,7 +102,7 @@
 | `temp` | `—` / `temp` | not-required: `on-chip` | implemented / public: `SystemFabric` | 없음 | pass | pass | pass | not-run |
 | `wdt30` | `—` / `wdt30` | not-required: `secure-domain` | implemented / public: `SystemFabric` | 없음 | pass | pass | pass | not-run |
 | `wdt31` | `—` / `wdt31` | not-required: `application-domain` | implemented / public: `BoardSystem.watchdog`, `SystemFabric` | 없음 | pass | pass | pass | not-run |
-| `nfct` | `—` / `nfct` | candidate: `p1.2-p1.3-wire-conflict` | absent / none: — | EasyDMA/9 bit; direct 예정; none | not-run | not-run | not-run | not-run |
+| `nfct` | `—` / `nfct` | candidate: `p1.2-p1.3-wire-conflict` | absent / none: — | EasyDMA/9 bit; direct; none | not-run | not-run | not-run | not-run |
 | `radio` | `—` / `radio` | not-required: `on-chip-antenna-network` | partial / public: `NUCODE_BLE` | EasyDMA; driver; none | pass | pass | pass | not-run |
 | `cracen` | `security` / `—` | not-required: `secure-system` | internal / internal: — | EasyDMA; driver; none | partial | not-run | not-run | not-run |
 | `kmu` | `security` / `—` | not-required: `secure-system` | absent / none: — | 없음 | not-run | not-run | not-run | not-run |
@@ -111,7 +112,7 @@
 | `clock` | `system` / `clock` | not-required: `soc-system` | internal / internal: — | 없음 | pass | partial | partial | not-run |
 | `cache` | `system` / `—` | not-required: `cpuapp-system` | internal / internal: — | 없음 | pass | not-run | not-run | not-run |
 | `vpr` | `—` / `cpuflpr_vpr` | not-required: `cpuflpr` | absent / none: — | 없음 | not-run | not-run | not-run | not-run |
-| `sqspi` | `—` / `—` | candidate: `vpr-softperipheral-board-audit` | absent / none: — | EasyDMA; direct 예정; none | not-run | not-run | not-run | not-run |
+| `sqspi` | `—` / `—` | candidate: `vpr-softperipheral-board-audit` | absent / none: — | EasyDMA; direct; none | not-run | not-run | not-run | not-run |
 
 ## 단일 원본과 검사
 

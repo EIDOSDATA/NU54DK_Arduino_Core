@@ -56,7 +56,7 @@ stable 이름의 build를 허용합니다. `PUBLISHED_STABLE_ARCHIVE_IDENTITIES`
 
 | 대상 | 사용할 절차 |
 | --- | --- |
-| 비공개 `v0.4.0-rc.1` 후보 | [M27 prepare](../../tools/release/M27_README.md) |
+| 보존된 비공개 `v0.4.0-rc.1` 후보 | [M27 prepare 절차 기록](../../tools/release/M27_README.md); 준비·검증 완료 |
 | 정식 `v0.4.0` | [완료 TODO](../../00_Docs/TODO_v0.4.0.md)와 [125번 기록](<../../00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>); 공개 완료 |
 | 이미 공개한 stable | 아래 exact tag 감사 절차 |
 
@@ -64,10 +64,10 @@ stable 이름의 build를 허용합니다. `PUBLISHED_STABLE_ARCHIVE_IDENTITIES`
 만들지 않습니다. 두 version은 위 고정 source에서만 생성 가능한 공개 버전입니다. 생성기는 산출물을 자동 게시하지 않으며, 새 version의
 공개는 이중 재현·Host·문서·package·lifecycle·HIL gate와 소유자의 최종 승인 뒤 별도 수행합니다.
 
-## 공개 v0.3.0 감사 예시
+## 공개 stable 감사
 
 이미 공개한 stable 재현은 해당 tag의 별도 worktree에서만 수행합니다. 현재 `main`의 packaging
-tool로 과거 source를 다시 포장하지 않습니다.
+tool로 과거 source를 다시 포장하지 않습니다. 다음은 v0.3.0의 고정 자산을 감사하는 예시입니다.
 
 ```powershell
 git worktree add C:\NU54DEV\audit-v0.3.0 v0.3.0
@@ -94,9 +94,10 @@ git submodule update --init --recursive
 - channel별 index 파일명, URL, version 순서, archive 크기와 SHA-256
 - 공개 stable의 exact commit 및 immutable ZIP identity
 
-정식 공개 절차와 결과는
-[v0.3.0 공개 기록](<../../00_Docs/04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)을
-기준으로 합니다.
+현재 정식 공개 절차와 결과는
+[v0.4.0 공개·T24/T25 마감 기록](<../../00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)을
+기준으로 합니다. 이전 v0.3.0 공개 결과는
+[32번 기록](<../../00_Docs/04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)에 보존합니다.
 
 ## 역사적 preview/RC
 

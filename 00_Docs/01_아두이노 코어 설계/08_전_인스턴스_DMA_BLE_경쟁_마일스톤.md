@@ -4,18 +4,19 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 
 이 문서의 경쟁 비교와 초기 engineering 목표는 제품 방향을 설명합니다. 현재 실행 범위에서는
 QDEC 추가 진단·반복 Serial handover·T13 peer 제어 System OFF 추가 2조건을 제외합니다.
-S 정상·동시성·복구 결과, C05 1시간 soak, U 실기, T14 미커버 요구 판정과 T15 지원 범위를
-확정했고 T16 설치 profile 통합도 완료했습니다. 완료·제외된 시험을 다시 예약하지 않습니다.
+S 정상·동시성·복구 결과와 U 실기를 포함한 합의 범위를 종료하고 T22 승인·T23 공개·T24 설치
+검증·T25 마감까지 완료했습니다. QDEC20/21은 기본·SAMPLE/REPORT event를 제한 명시 지원합니다.
+완료·제외된 시험을 다시 예약하지 않습니다.
 
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 2.5 |
+| 문서 개정 | 2.6 |
 | 문서 상태 | 고정 source 비교와 M23~M33 설계·완료 기준; 실행 상태는 TODO 참조 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.4.0` stable / release source `ad829439e570c7510fce2f8cc7252e5b9ef32b04` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
-| 최종 갱신일 | 2026-09-11 |
+| 최종 갱신일 | 2026-09-12 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 nRF54L15 주변장치의 **모든 실제 인스턴스**, EasyDMA 경로와 Bluetooth LE 기능군을
@@ -35,9 +36,10 @@ source로 current-source T11 회귀와 T12~T15를 한 번 수행하고 R14에서
 
 ---
 
-## 1. 결론
+## 1. v0.3.0 시점의 비교 결론
 
-비교 결과는 다음과 같다.
+1~7절은 아래 고정 source의 v0.3.0 비교와 당시 목표입니다. v0.4.0에서 이룬 결과는 8절에
+분리하며, 과거 격차를 현재 미구현 목록으로 해석하지 않습니다. 비교 결과는 다음과 같습니다.
 
 1. 비교 대상은 bare-metal register wrapper와 base-address 생성자를 통해 UARTE, SPIM/SPIS,
    TWIM/TWIS, PWM, PDM, I2S, QDEC 등 **더 많은 인스턴스에 닿는 소스 경로**를 제공한다.
@@ -63,7 +65,7 @@ block의 허용 조합을 동시에 실행하며, DMA 수명주기와 오류 복
 
 | 대상 | 고정 기준 | 용도 |
 | --- | --- | --- |
-| NU54DK Core | `bae0957d2425e4418199a2a3a018bf8e9a0dc356` | 현재 공개 API·driver·resource manager 판정 |
+| NU54DK Core | `bae0957d2425e4418199a2a3a018bf8e9a0dc356` | v0.3.0 당시 공개 API·driver·resource manager 비교 |
 | 비교 Core | [`a6bb998`](https://github.com/lolren/nrf54-arduino-core/tree/a6bb99879aa14cbff362a5478d5f1189848b4200) | 구현·예제·README 판정 |
 | nRF54L15 | [Nordic Product Specification](https://docs.nordicsemi.com/bundle/ps_nrf54l15/page/keyfeatures_html5.html) | 실제 peripheral·EasyDMA·radio 능력 |
 | NCS/Zephyr | NCS v3.4.0에 고정된 DTS·Kconfig·driver source | NU54DK에서 사용할 upstream 경로 |
@@ -138,7 +140,7 @@ TWIM/TWIS는 같은 register base와 IRQ 자원을 personality별로 공유하�
 | PWM | PWM20/21/22, 각 4 channel | PWM20 `analogWrite`, PWM21 `tone`, PWM22 Servo | 세 base, 4채널·sequence mode·DPPI/DMA | 12 HW channel의 명시적 allocator, sequence/loop/DPPI와 동시 HIL |
 | PDM | PDM20/21 | 미지원 | 두 base, capture·double buffer 경로 | 두 instance stream, clock/pin route, overrun과 동시 DMA HIL |
 | I2S | I2S20 | 미지원 | TX/RX/duplex double-buffer 경로 | TX/RX/duplex, word/clock format, underrun/overrun과 codec HIL |
-| QDEC | QDEC20/21 | 지원 | 두 base 선택 경로 | 기본·SAMPLE/REPORT event 지원; 반복 manual read/clear 무손실 제외 |
+| QDEC | QDEC20/21 | 미지원 | 두 base 선택 경로 | v0.4.0의 기본·SAMPLE/REPORT event 지원 결과와 manual read/clear 제한은 아래 M25 참조 |
 | COMP/LPCOMP | 각 1 기능군 | 미지원 | register wrapper와 예제 경로 | 입력 route·reference·hysteresis·wake/DPPI, analog conflict HIL |
 | TEMP | 1 | NCS direct 가능, 공개 wrapper 없음 | wrapper | accuracy 경계와 blocking/async API, radio calibration 간섭 확인 |
 | WDT | WDT30/31 | Board/System WDT 한 경로 HIL | base wrapper | 두 instance, channel·pause·reset reason·System OFF 정책 |
@@ -238,7 +240,7 @@ Nordic [nRF54L15 qualification matrix](https://docs.nordicsemi.com/bundle/comp_m
 
 ---
 
-## 7. 우선순위별 실제 격차
+## 7. v0.3.0 기준 격차와 개발 우선순위
 
 | 우선순위 | 격차 | 이유 |
 | --- | --- | --- |
@@ -375,10 +377,12 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 
 ### M27 — `v0.4.0` Peripheral Parity 릴리스
 
-- 상태: **M24/M25 physical gate·T16 설치 통합 PASS / 공개 HOLD** — 초기 source에서 package·SBOM·
-  checksum·index 이중 재현과 staging 예제 29/29 compile을 통과했다. T16 이후 후보는 30개이며
-  frozen RC에서 다시 검증한다. T18~T21 release gate 전에는 tag·GitHub Release·stable index를 만들거나 공개하지 않는다. Exact 초기 결과는
-  [M27 자동 준비·HOLD 기록](<../04_검증 기록/39_M27_v0.4.0_rc1_자동_준비와_HOLD.md>)을 따른다.
+- 상태: **완료 / v0.4.0 정식 공개** — M24/M25 physical gate와 T16 설치 통합 뒤 QDEC 지원 범위를
+  재확정했고 T19~T21 RC/stable 검증을 다시 통과했다. T22 승인, T23 tag·Release·stable index 공개,
+  T24 공개 설치본 예제 30/30·Upload·설치 수명주기와 T25 마감을 완료했다. 최종 결과는
+  [125번 기록](<../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)을 따른다.
+  [39번 초기 HOLD 기록](<../04_검증 기록/39_M27_v0.4.0_rc1_자동_준비와_HOLD.md>)의 29개 staging
+  예제 결과는 당시 준비 이력으로 보존한다.
 
 - M23~M26 manifest, examples, HIL, package install과 clean-environment 재현 build를 통합한다.
 - 비교 Core의 공개 예제와 동일 use case를 독립 시험으로 실행하고 부족한 항목은 known limitation에

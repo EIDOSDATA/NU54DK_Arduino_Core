@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-M16-BLE-NUS-001 |
-| 문서 개정 | 2.0 |
-| 문서 상태 | `v0.3.0` 정식 NUS 계약 |
-| 적용 제품 버전 | `v0.3.0` stable |
-| 최종 갱신일 | 2026-09-03 |
+| 문서 개정 | 2.1 |
+| 문서 상태 | v0.4.0에서도 유지하는 정식 NUS 계약 |
+| 적용 제품 버전 | `v0.3.0`·`v0.4.0`의 `ble` profile |
+| 최종 갱신일 | 2026-09-12 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 기준 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
@@ -15,7 +15,7 @@
 
 ## 1. 목적과 지원 범위
 
-`v0.2.0`은 NCS의 Nordic UART Service(NUS)를 Arduino `Stream` 형태로 제공한다. 일반 사용자는
+`v0.2.0`부터 NCS의 Nordic UART Service(NUS)를 Arduino `Stream` 형태로 제공한다. 일반 사용자는
 `prj.conf`나 overlay를 직접 편집하지 않고 Arduino IDE에서 `BLE NUS` feature set을 선택한 뒤
 `<NUCODE_BLE.h>`와 전역 객체 `BLESerial`을 사용한다.
 

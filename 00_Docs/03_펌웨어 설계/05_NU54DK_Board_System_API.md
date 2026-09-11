@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-M15-BOARD-SYSTEM-001 |
-| 문서 개정 | 2.1 |
-| 문서 상태 | `v0.3.0` 정식 계약 |
-| 적용 제품 버전 | `v0.3.0` |
-| 최종 갱신일 | 2026-09-10 |
+| 문서 개정 | 2.2 |
+| 문서 상태 | v0.4.0에서도 유지하는 Board/System 정식 계약 |
+| 적용 제품 버전 | `v0.3.0`·`v0.4.0`의 `standard`/`ble` |
+| 최종 갱신일 | 2026-09-12 |
 | 작성자 | Quantum / NUCODE |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 기준 보드 | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
@@ -71,7 +71,7 @@ NU54DK.boardModel();
 | `boardTarget()` | build에 사용한 Zephyr board target |
 | `socName()` | build의 SoC 이름 |
 | `ncsVersion()` / `zephyrVersion()` | 고정 compatibility identity |
-| `coreVersion()` | 구현은 역사적 문자열 `0.2.0-dev`를 반환하므로 배포 identity로 사용하지 않음; 설치 version과 release manifest를 기준으로 확인 |
+| `coreVersion()` | `CoreIdentity.h`의 `NUCODE_CORE_SOURCE_VERSION` 반환; 현재 source 값은 `0.4.0-dev`이며 설치 배포 version은 `platform.txt`와 release manifest로 확인 |
 | `deviceId()` | `hwinfo_get_device_id()`의 raw 값을 16진 문자열로 복사 |
 | `resetReport()` | reset cause와 하드웨어 지원 mask를 함께 반환 |
 | `clearResetCause()` | 누적 reset cause latch 제거 |
@@ -190,7 +190,7 @@ NU54DK.pmicAuthorizeWrites(
         acknowledge_unverified_battery_hardware);
 NU54DK.pmicSetRegisterWatchdog(
     nucode::nu54dk::PmicRegisterWatchdog::disabled);
-// 필요한 충전·SYS 설정
+/** @brief 필요한 충전·SYS 설정을 이 위치에서 적용한다. */
 NU54DK.pmicRevokeWrites();
 ```
 
@@ -212,8 +212,8 @@ R/W register를 기본값으로 복원하고, 다른 두 timed 값은 각각 160
 
 ### 9.3 검증하지 않은 전기 동작
 
-현재 시험 장비에는 배터리가 연결되지 않았다. 따라서 다음 항목은 **battery electrical HIL
-NOT RUN**이며 사용자가 자신의 배터리, 전원, 온도 조건과 제품 안전 요구사항에 맞춰 직접
+M15 검증 당시 시험 장비에는 배터리가 연결되지 않았다. 다음 항목은 현재도 **battery electrical
+HIL NOT RUN**이며 사용자가 자신의 배터리, 전원, 온도 조건과 제품 안전 요구사항에 맞춰 직접
 검증해야 한다.
 
 - 실제 충전 전압과 충전 전류
@@ -268,4 +268,4 @@ PMIC 전기 HIL은 승인된 범위 제외이며 해당 API를 전기적으로 �
 이 BLE 단계들의 변경 대상이 아니다. 완료된 AC-03 storage facade는 `nucode/` namespace,
 BLE bond와 고정 partition 소유권을 깨지 않는 회귀 증거를 제공한다.
 Stable 완료 근거는 [v0.3.0 마일스톤](<../01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>),
-현재 개발 상태는 [v0.4.0 TODO](../TODO_v0.4.0.md)에서 관리한다.
+v0.4.0 완료 상태는 [완료 기록](../TODO_v0.4.0.md)에서 관리한다.

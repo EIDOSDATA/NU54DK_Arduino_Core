@@ -3,12 +3,12 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-STORAGE-001 |
-| 문서 개정 | 1.2 |
+| 문서 개정 | 1.3 |
 | 적용 버전 | `v0.3.0`·`v0.4.0` stable 호환 계약 |
 | 현재 정식 버전 | `v0.4.0` |
 | 구현 | `EEPROM`, `LittleFS` bundled library |
 | 검증 상태 | AC-03 host/target/package와 exact 두 보드 영속성·복구 HIL PASS |
-| 최종 갱신일 | 2026-09-11 |
+| 최종 갱신일 | 2026-09-12 |
 
 ## 1. 목적과 지원 경계
 
@@ -21,6 +21,9 @@ AC-03은 NU54DK의 내부 RRAM을 Arduino 사용자가 익숙한 `EEPROM`과 `Li
 - 두 facade는 thread 문맥에서만 blocking storage 작업을 허용한다.
 - 외부 QSPI flash, SD, secure storage, 암호화와 power-fail 보증은 이 계약에 포함하지 않는다.
 - API 이름이나 compile 성공을 임의 제3자 library 전체 호환으로 확대하지 않는다.
+
+두 library는 `standard`와 `ble` profile에서 사용한다. 직접 Peripheral Fabric을 선택한
+`fabric` profile에는 이 storage feature를 함께 활성화하지 않는다.
 
 ## 2. 기본 RRAM layout
 
@@ -54,7 +57,7 @@ mass erase를 하지 않는 한 이 주소의 데이터는 그대로 남을 수 
 
 ### 2.2 고급 메모리 layout 계획
 
-RC3가 정식 제공하는 layout은 위 loaderless 단일 application 하나다. Sketch의 전문가용
+v0.4.0이 제공하는 layout은 RC3에서 도입한 위 loaderless 단일 application 하나다. Sketch의 전문가용
 `prj.conf`와 `app.overlay` 합성 경로가 있다는 사실만으로 임의 partition을 지원한다고 선언하지
 않는다. 메모리 경계를 바꾸려면 다음 항목이 하나의 선택 단위로 움직여야 한다.
 
@@ -146,7 +149,7 @@ Sketch에서 `<EEPROM.h>` 또는 `<LittleFS.h>`를 include하면 Build Adapter�
 | EEPROM | `EEPROMPersistence` | `Standard peripherals` |
 | LittleFS | `LittleFSPersistence` | `Standard peripherals` |
 
-두 예제는 `v0.3.0` stable의 29개 설치 예제에 포함된다. BLE profile에서도 build 입력은
+두 예제는 `v0.4.0` stable의 30개 설치 예제에 포함된다. BLE profile에서도 build 입력은
 호환되지만, 예제 메뉴의 기본 사용 안내는 storage 동작만 분리해 보는 `Standard peripherals`다.
 
 ## 6. 실패 진단
@@ -185,6 +188,6 @@ exact image·commit·board identity가 없으면 실행하지 않는다. 실제 
 - 암호화 filesystem, secure storage와 PSA protected storage
 - directory iterator와 모든 ESP/Adafruit FS 확장 함수의 완전 호환
 - 파일 system 전체의 transaction/power-fail 원자성 보증
-- RC3에서 임의 partition 크기를 입력하거나 사용자 overlay만으로 저장 layout을 교체하는 구성
+- 임의 partition 크기를 입력하거나 사용자 overlay만으로 저장 layout을 교체하는 구성
 - MCUboot/DFU dual-slot과 update/rollback — `v0.6.0` M36의 검증된 고급 layout 범위
 - 제품 수명 기준의 wear/endurance 보증

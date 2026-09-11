@@ -11,7 +11,7 @@
 
 ## 실제 실행과 판정
 
-- Exact43bc032/C:/t4c04 두 역할, 새 probe 열거·UID hash·identity/plan 확인, SWD10 MHz·controlled flash.
+- Exact `43bc032`/`C:/t4c04` 두 역할, 새 probe 열거·UID hash·identity/plan 확인, SWD 10 MHz·controlled flash.
 - 2026-09-08T04:56:38Z~04:58:08Z. 각 net 양방향 10 회, 총 340 회의 단일 open-drain LOW/입력 해제.
 - LOW 요청 후 목표 5/50/150 ms의 세 관측과 해제 후 관측. 실제 Host 시각을 개별 보존했다.
 - 각 LOW의 첫 관측에서 CPU를 halt하지 않고 GPIO IN/OUT/DIR/PIN_CNF도 직접 읽었다.
