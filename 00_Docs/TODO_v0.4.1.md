@@ -10,9 +10,9 @@
 | P41-02 코드·정책·문서 | 완료 | 설치기 수정·0.4.1 사용자 문서·이전 버전 지원 종료 표현 일치 |
 | P41-03 로컬·원격 gate | 완료 | Host·package·문서·inventory와 exact source 원격 CI 15/15 PASS |
 | P41-04 비공개 package | 완료 | 0.4.1 archive/sidecar 이중 생성·byte 재현·단독 index 검증 |
-| P41-05 공개 | 진행 중 | exact 승인 source의 tag·Release·asset 검증 완료, 단독 index 게시 중 |
-| P41-06 공개 URL 설치 | 미착수 | index에 0.4.1만 노출, 격리 설치·예제 30/30 compile |
-| P41-07 마감 | 미착수 | 영구 identity·문서·기록 갱신, commit·push·exact CI 확인 |
+| P41-05 공개 | 완료 | exact 승인 source에 tag·Release 생성, asset byte 재검증·단독 index 게시 |
+| P41-06 공개 URL 설치 | 완료 | index에 0.4.1만 노출, 격리 설치·예제 30/30 compile PASS |
+| P41-07 마감 | 완료 | 영구 identity·문서·기록 갱신, commit·push·exact CI 확인 |
 
 ## 지원·보존 계약
 
@@ -24,3 +24,8 @@
   SDK·Toolchain pin, board gitlink, firmware API와 HIL image는 변경하지 않는다.
 
 진행 결과와 exact identity는 [129번 기록](<04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)에 남긴다.
+
+## 완료 판정
+
+2026-09-12에 P41-01~P41-07을 모두 완료했다. 현재 Arduino stable catalog는 `0.4.1`
+하나만 제공하며, 다음 제품 개발은 [v0.5.0 TODO](TODO_v0.5.0.md)에서 별도로 관리한다.
